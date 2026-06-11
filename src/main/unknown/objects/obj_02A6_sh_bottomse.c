@@ -71,7 +71,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02A6_SH_BottomSe_packet_info {
+enum obj_02A6_SH_BottomSe_packet_info
+{
     SH_BOTTOMSE_DEF_ID = 0x02A6,
     SH_BOTTOMSE_DLL_ID = 0x0113,
     SH_BOTTOMSE_CLASS_ID = 0x0056,

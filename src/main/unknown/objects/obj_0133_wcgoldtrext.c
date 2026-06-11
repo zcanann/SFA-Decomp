@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0133_WCGoldTrexT_packet_info {
+enum obj_0133_WCGoldTrexT_packet_info
+{
     WCGOLDTREXT_DEF_ID = 0x0133,
     WCGOLDTREXT_DLL_ID = 0x00ED,
     WCGOLDTREXT_CLASS_ID = 0x0006,

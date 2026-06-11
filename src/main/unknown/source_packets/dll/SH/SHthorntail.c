@@ -48,7 +48,8 @@
 /*
  * Packet constants only. Promote names and boundaries after EN inspection.
  */
-enum shthorntail_packet_info {
+enum shthorntail_packet_info
+{
     PACKET_DLL_01AD = 0x01AD,
     PACKET_CLASS_0044 = 0x0044,
     PACKET_DEF_02AE = 0x02AE,

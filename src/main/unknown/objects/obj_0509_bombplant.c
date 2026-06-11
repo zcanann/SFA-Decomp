@@ -51,7 +51,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0509_BombPlant_packet_info {
+enum obj_0509_BombPlant_packet_info
+{
     BOMBPLANT_DEF_ID = 0x0509,
     BOMBPLANT_DLL_ID = 0x01A9,
     BOMBPLANT_CLASS_ID = 0x002B,

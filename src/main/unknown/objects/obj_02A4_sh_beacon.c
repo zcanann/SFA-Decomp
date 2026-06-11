@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02A4_SH_Beacon_packet_info {
+enum obj_02A4_SH_Beacon_packet_info
+{
     SH_BEACON_DEF_ID = 0x02A4,
     SH_BEACON_DLL_ID = 0x01B3,
     SH_BEACON_CLASS_ID = 0x0030,

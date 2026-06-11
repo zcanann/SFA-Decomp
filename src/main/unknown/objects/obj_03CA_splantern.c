@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03CA_SPLantern_packet_info {
+enum obj_03CA_SPLantern_packet_info
+{
     SPLANTERN_DEF_ID = 0x03CA,
     SPLANTERN_DLL_ID = 0x0284,
     SPLANTERN_CLASS_ID = 0x0070,

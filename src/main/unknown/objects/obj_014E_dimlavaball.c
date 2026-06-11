@@ -54,7 +54,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_014E_DIMLavaBall_packet_info {
+enum obj_014E_DIMLavaBall_packet_info
+{
     DIMLAVABALL_DEF_ID = 0x014E,
     DIMLAVABALL_DLL_ID = 0x01BF,
     DIMLAVABALL_CLASS_ID = 0x0045,

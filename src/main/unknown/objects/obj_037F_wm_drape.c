@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_037F_WM_drape_packet_info {
+enum obj_037F_WM_drape_packet_info
+{
     WM_DRAPE_DEF_ID = 0x037F,
     WM_DRAPE_DLL_ID = 0x02AD,
     WM_DRAPE_CLASS_ID = 0x007F,

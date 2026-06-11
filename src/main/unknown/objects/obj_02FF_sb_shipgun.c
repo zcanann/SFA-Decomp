@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02FF_SB_ShipGun_packet_info {
+enum obj_02FF_SB_ShipGun_packet_info
+{
     SB_SHIPGUN_DEF_ID = 0x02FF,
     SB_SHIPGUN_DLL_ID = 0x01EC,
     SB_SHIPGUN_CLASS_ID = 0x0030,

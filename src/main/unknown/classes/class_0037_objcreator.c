@@ -102,7 +102,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0037_ObjCreator_defs {
+enum class_0037_ObjCreator_defs
+{
     OBJCREATOR_DR_CREATOR = 0x0450,
     OBJCREATOR_VFP_OBJCREA = 0x033E,
     OBJCREATOR_DFP_OBJCREA = 0x0375,

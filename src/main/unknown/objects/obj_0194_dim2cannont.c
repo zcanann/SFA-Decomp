@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0194_DIM2CannonT_packet_info {
+enum obj_0194_DIM2CannonT_packet_info
+{
     DIM2CANNONT_DEF_ID = 0x0194,
     DIM2CANNONT_DLL_ID = 0x01C5,
     DIM2CANNONT_CLASS_ID = 0x0030,

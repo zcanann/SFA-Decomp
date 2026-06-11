@@ -6,7 +6,8 @@
 #include "main/objanim_update.h"
 #include "main/objfx.h"
 
-typedef struct WarpstoneUpdateMenuAnimObjState {
+typedef struct WarpstoneUpdateMenuAnimObjState
+{
     u8 pad0[0x8 - 0x0];
     u8 unk8;
     u8 pad9[0x10 - 0x9];
@@ -30,7 +31,7 @@ extern undefined4 FUN_80042bec();
 extern undefined8 FUN_80043030();
 extern undefined4 FUN_80044404();
 extern int playerHasKrazoaSpirit();
-extern void padGetAnalogInput(int controller, s8 *horizontal, s8 *vertical);
+extern void padGetAnalogInput(int controller, s8* horizontal, s8* vertical);
 extern undefined4 FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern undefined4 FUN_80294cd0();
@@ -73,7 +74,7 @@ extern f32 lbl_803E6130;
  */
 int warpstone_getExtraSize(void)
 {
-  return 0xd8;
+    return 0xd8;
 }
 
 /*
@@ -91,7 +92,7 @@ int warpstone_getExtraSize(void)
  */
 int warpstone_getObjectTypeId(void)
 {
-  return 0x48;
+    return 0x48;
 }
 
 /* void f() { fn_X(N); } pattern. */
@@ -103,34 +104,39 @@ extern void Obj_FreeObject(int obj);
 
 void warpstone_free(int obj, int mode)
 {
-    int *state = ((GameObject *)obj)->extra;
-    if (*(void **)state != NULL && mode == 0) {
+    int* state = ((GameObject*)obj)->extra;
+    if (*(void**)state != NULL && mode == 0)
+    {
         ObjLink_DetachChild(obj, state[0]);
         Obj_FreeObject(state[0]);
     }
 }
 
-extern int ObjHits_GetPriorityHitWithPosition(int obj, int a, int b, int c, f32 *x, f32 *y, f32 *z);
+extern int ObjHits_GetPriorityHitWithPosition(int obj, int a, int b, int c, f32* x, f32* y, f32* z);
 extern int randFn_80080100(int max);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void objAudioFn_800393f8(int obj, int *p, int a, int b, int c, int d);
+extern void objAudioFn_800393f8(int obj, int* p, int a, int b, int c, int d);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803E54A0;
 
 void warpstone_hitDetect(int obj)
 {
-    int *state = ((GameObject *)obj)->extra;
+    int* state = ((GameObject*)obj)->extra;
     f32 pos[3];
     int p[3];
 
-    if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &pos[0], &pos[1], &pos[2]) != 0) {
+    if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &pos[0], &pos[1], &pos[2]) != 0)
+    {
         pos[0] += playerMapOffsetX;
         pos[2] += playerMapOffsetZ;
-        objLightFn_8009a1dc((void *)obj, lbl_803E54A0, p, 1, 0);
-        if (randFn_80080100(3) != 0) {
+        objLightFn_8009a1dc((void*)obj, lbl_803E54A0, p, 1, 0);
+        if (randFn_80080100(3) != 0)
+        {
             Sfx_PlayFromObject(obj, SFXbaddie_haga_death);
-        } else {
+        }
+        else
+        {
             Sfx_PlayFromObject(obj, SFXbaddie_haga_death);
         }
         objAudioFn_800393f8(obj, state + 5, 171, -1280, -1, 0);
@@ -140,27 +146,29 @@ void warpstone_hitDetect(int obj)
 extern void objRenderFn_8003b8f4(f32);
 extern int Obj_GetPlayerObject(void);
 extern int fn_80296464(void);
-extern int *Obj_GetActiveModel(int player);
+extern int* Obj_GetActiveModel(int player);
 extern void fn_80295B2C(int player, f32 x, f32 y, f32 z);
 extern void playerRender(int player, int p2, int p3, int p4, int p5, int last);
 extern f32 lbl_803E549C;
 
 void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    void *player;
-    int *state = ((GameObject *)obj)->extra;
-    int *model;
+    void* player;
+    int* state = ((GameObject*)obj)->extra;
+    int* model;
     f32 z;
     f32 y;
     f32 x;
     s32 v = visible;
-    if (v != 0) {
+    if (v != 0)
+    {
         objRenderFn_8003b8f4(lbl_803E549C);
-        player = (void *)Obj_GetPlayerObject();
-        if (player != NULL && fn_80296464() != 0) {
+        player = (void*)Obj_GetPlayerObject();
+        if (player != NULL && fn_80296464() != 0)
+        {
             model = Obj_GetActiveModel((int)player);
-            *(u16 *)((char *)model + 24) = (u16)(*(u16 *)((char *)model + 24) & ~0x8);
-            ObjPath_GetPointWorldPosition(obj, ((WarpstoneUpdateMenuAnimObjState *)state)->unk8, &x, &y, &z, 0);
+            *(u16*)((char*)model + 24) = (u16)(*(u16*)((char*)model + 24) & ~0x8);
+            ObjPath_GetPointWorldPosition(obj, ((WarpstoneUpdateMenuAnimObjState*)state)->unk8, &x, &y, &z, 0);
             fn_80295B2C((int)player, x, y, z);
             playerRender((int)player, p2, p3, p4, p5, -1);
         }
@@ -172,7 +180,7 @@ extern void unlockLevel(int a, int b, int c);
 extern int mapGetDirIdx(int mapId);
 extern void lockLevel(int dirIdx, int locked);
 extern void mapUnload(int dirIdx, int flags);
-extern MapEventInterface **gMapEventInterface;
+extern MapEventInterface** gMapEventInterface;
 
 #define WARPSTONE_MAP_EVENT_SET(mapId, value) \
     (*gMapEventInterface)->setMode((mapId), (value))
@@ -187,9 +195,11 @@ int warpstone_handleMenuOptionInput(undefined4 p1, undefined4 p2, int option)
     Obj_GetPlayerObject();
     padGetAnalogInput(0, &horizontal, &vertical);
 
-    switch (option) {
+    switch (option)
+    {
     case 0x14:
-        if (horizontal < 0) {
+        if (horizontal < 0)
+        {
             loadMapAndParent(0x42);
             unlockLevel(0, 0, 1);
             lockLevel(mapGetDirIdx(0x42), 0);
@@ -201,24 +211,33 @@ int warpstone_handleMenuOptionInput(undefined4 p1, undefined4 p2, int option)
         break;
 
     case 0x15:
-        if (vertical > 0 && lbl_803DC050 == 0) {
+        if (vertical > 0 && lbl_803DC050 == 0)
+        {
             Sfx_PlayFromObject(0, 0x418);
             return 1;
         }
         break;
 
     case 0x16:
-        if (horizontal > 0 && playerHasKrazoaSpirit(1, 0) != 0) {
+        if (horizontal > 0 && playerHasKrazoaSpirit(1, 0) != 0)
+        {
             loadMapAndParent(0x42);
             lockLevel(mapGetDirIdx(0x42), 0);
             lockLevel(mapGetDirIdx(7), 1);
-            if (GameBit_Get(0xbfd) != 0) {
+            if (GameBit_Get(0xbfd) != 0)
+            {
                 WARPSTONE_MAP_EVENT_SET(0x42, 2);
-            } else if (GameBit_Get(0xff) != 0) {
+            }
+            else if (GameBit_Get(0xff) != 0)
+            {
                 WARPSTONE_MAP_EVENT_SET(0x42, 2);
-            } else if (GameBit_Get(0xc6e) != 0) {
+            }
+            else if (GameBit_Get(0xc6e) != 0)
+            {
                 WARPSTONE_MAP_EVENT_SET(0x42, 2);
-            } else if (GameBit_Get(0xc85) != 0) {
+            }
+            else if (GameBit_Get(0xc85) != 0)
+            {
                 WARPSTONE_MAP_EVENT_SET(0x42, 2);
             }
             Sfx_PlayFromObject(0, 0x418);
@@ -226,18 +245,21 @@ int warpstone_handleMenuOptionInput(undefined4 p1, undefined4 p2, int option)
         }
         break;
 
-    case 0x17: {
-        int hasSpirit = playerHasKrazoaSpirit(1, 0);
-        if (horizontal > 0 && hasSpirit == 0) {
-            Sfx_PlayFromObject(0, 0x418);
-            return 1;
+    case 0x17:
+        {
+            int hasSpirit = playerHasKrazoaSpirit(1, 0);
+            if (horizontal > 0 && hasSpirit == 0)
+            {
+                Sfx_PlayFromObject(0, 0x418);
+                return 1;
+            }
+            break;
         }
-        break;
-    }
 
     case 0x18:
         lbl_803DDBF4 = 1;
-        if (vertical > 0) {
+        if (vertical > 0)
+        {
             loadMapAndParent(9);
             lockLevel(mapGetDirIdx(9), 0);
             lockLevel(mapGetDirIdx(7), 1);
@@ -247,7 +269,8 @@ int warpstone_handleMenuOptionInput(undefined4 p1, undefined4 p2, int option)
         break;
 
     case 0x19:
-        if ((getButtonsJustPressed(0) & 0x200) != 0) {
+        if ((getButtonsJustPressed(0) & 0x200) != 0)
+        {
             unlockLevel(0, 0, 1);
             mapUnload(mapGetDirIdx(0x42), 0x20000000);
             mapUnload(mapGetDirIdx(0x17), 0x20000000);
@@ -279,41 +302,48 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
     int i;
     int child;
     u8 command;
-    int state = *(int *)&((GameObject *)obj)->extra;
-    ObjAnimUpdateState *animUpdate = (ObjAnimUpdateState *)animObj;
+    int state = *(int*)&((GameObject*)obj)->extra;
+    ObjAnimUpdateState* animUpdate = (ObjAnimUpdateState*)animObj;
 
-    if (animatedObjGetSeqId(animObj) == 0x35f) {
+    if (animatedObjGetSeqId(animObj) == 0x35f)
+    {
         fn_80080360(animObj, 0x2648);
-        if (getCurUiDll() != 0x10) {
+        if (getCurUiDll() != 0x10)
+        {
             loadUiDll(0x10);
         }
     }
 
-    child = *(int *)state;
-    if ((void *)child != NULL) {
+    child = *(int*)state;
+    if ((void*)child != NULL)
+    {
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
-            (child, ((GameObject *)obj)->anim.currentMoveProgress -
-                        ((GameObject *)child)->anim.currentMoveProgress,
-             timeDelta, NULL);
+        (child, ((GameObject*)obj)->anim.currentMoveProgress -
+         ((GameObject*)child)->anim.currentMoveProgress,
+         timeDelta, NULL);
     }
 
     animUpdate->conditionCallback = (ObjAnimSequenceConditionCallback)warpstone_handleMenuOptionInput;
     animUpdate->freeCallback = (ObjAnimSequenceFreeCallback)warpstone_loadBaseUi;
 
-    if ((s8)animUpdate->sequenceEventActive != 0) {
-        *(u8 *)(state + 0xa) = *(u8 *)(state + 0xa) & ~3;
-        if (playerFn_801d6d58() != 0) {
-            *(u8 *)(state + 0xa) = *(u8 *)(state + 0xa) | 1;
+    if ((s8)animUpdate->sequenceEventActive != 0)
+    {
+        *(u8*)(state + 0xa) = *(u8*)(state + 0xa) & ~3;
+        if (playerFn_801d6d58() != 0)
+        {
+            *(u8*)(state + 0xa) = *(u8*)(state + 0xa) | 1;
         }
         {
             int hit = (GameBit_Get(0x2e8) != 0 || GameBit_Get(0x123) != 0) ? 1 : 0;
-            if (hit) {
-                *(u8 *)(state + 0xa) = *(u8 *)(state + 0xa) | 2;
+            if (hit)
+            {
+                *(u8*)(state + 0xa) = *(u8*)(state + 0xa) | 2;
             }
         }
         animUpdate->sequenceEventActive = 0;
 
-        if (GameBit_Get(*(s16 *)(state + 0xe)) != 0 && animatedObjGetSeqId(animObj) == 0x35f) {
+        if (GameBit_Get(*(s16*)(state + 0xe)) != 0 && animatedObjGetSeqId(animObj) == 0x35f)
+        {
             AudioStream_CancelPrepared();
             seqClearTaskTexts();
             doNothing_8000CF54(0);
@@ -321,20 +351,22 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
         }
     }
 
-    for (i = 0; i < animUpdate->eventCount; i++) {
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
         command = animUpdate->eventIds[i];
-        switch (command) {
+        switch (command)
+        {
         case 0x17:
-            *(u8 *)(state + 0xd4) = *(u8 *)(state + 0xd4) | 4;
+            *(u8*)(state + 0xd4) = *(u8*)(state + 0xd4) | 4;
             Sfx_PlayFromObject(0, 0x420);
             break;
 
         case 3:
-            ((WarpstoneUpdateMenuAnimObjState *)state)->unk8 = 0;
+            ((WarpstoneUpdateMenuAnimObjState*)state)->unk8 = 0;
             break;
 
         case 4:
-            ((WarpstoneUpdateMenuAnimObjState *)state)->unk8 = 1;
+            ((WarpstoneUpdateMenuAnimObjState*)state)->unk8 = 1;
             break;
 
         case 6:
@@ -351,7 +383,7 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
             break;
 
         case 0xa:
-            *(u8 *)(state + 9) = *(u8 *)(state + 9) ^ 1;
+            *(u8*)(state + 9) = *(u8*)(state + 9) ^ 1;
             break;
 
         case 9:
@@ -372,11 +404,12 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
         case 0xe:
         case 0xf:
         case 0x10:
-            if (getCurUiDll() == 0x10) {
+            if (getCurUiDll() == 0x10)
+            {
                 int dll16 = getDLL16();
-                (*(void (**)(int))(*(int *)dll16 + 0x10))(command - 0xd);
+                (*(void (**)(int))(*(int*)dll16 + 0x10))(command - 0xd);
             }
-            GameBit_Set(*(s16 *)(state + 0xe), 1);
+            GameBit_Set(*(s16*)(state + 0xe), 1);
             GameBit_Set(0x887, 1);
             break;
 

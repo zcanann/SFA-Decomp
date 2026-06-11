@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0445_DR_Seqobj_packet_info {
+enum obj_0445_DR_Seqobj_packet_info
+{
     DR_SEQOBJ_DEF_ID = 0x0445,
     DR_SEQOBJ_DLL_ID = 0x0112,
     DR_SEQOBJ_CLASS_ID = 0x0055,

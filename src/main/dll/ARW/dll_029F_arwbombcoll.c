@@ -5,27 +5,45 @@
 #include "main/objhits_types.h"
 #include "main/obj_placement.h"
 
-typedef struct ArwbombcollHandleArwingHitPlacement {
+typedef struct ArwbombcollHandleArwingHitPlacement
+{
     u8 pad0[0x1E - 0x0];
     s16 eventId;
 } ArwbombcollHandleArwingHitPlacement;
 
-typedef struct ARWBombCollSetup {
+typedef struct ARWBombCollSetup
+{
     ObjPlacement base;
     s8 rotX;
     u8 pad19[0x24 - 0x19];
 } ARWBombCollSetup;
 
-STATIC_ASSERT(sizeof(ARWBombCollSetup) == 0x24);
-STATIC_ASSERT(offsetof(ARWBombCollSetup, rotX) == 0x18);
+STATIC_ASSERT (
+sizeof
+(ARWBombCollSetup)
+==
+0x24
+);
+STATIC_ASSERT (offsetof
+(ARWBombCollSetup
+,
+rotX
+)
+==
+0x18
+);
 
 int arwbombcoll_getExtraSize(void) { return 8; }
 
 int arwbombcoll_getObjectTypeId(void) { return 0; }
 
-void arwbombcoll_free(void) {}
+void arwbombcoll_free(void)
+{
+}
 
-void arwbombcoll_hitDetect(void) {}
+void arwbombcoll_hitDetect(void)
+{
+}
 
 void arwbombcoll_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
@@ -34,49 +52,69 @@ void arwbombcoll_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 
 void arwbombcoll_init(int obj, int setup)
 {
-    ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
-    ARWBombCollSetup *mapData = (ARWBombCollSetup *)setup;
+    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
+    ARWBombCollSetup* mapData = (ARWBombCollSetup*)setup;
 
-    ((GameObject *)obj)->anim.rotX = (s16)(mapData->rotX << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotX << 8);
     objAnim->alpha = 0;
 }
 
-void arwbombcoll_release(void) {}
+void arwbombcoll_release(void)
+{
+}
 
-void arwbombcoll_initialise(void) {}
+void arwbombcoll_initialise(void)
+{
+}
 
-void arwbombcoll_updateMovingAxis(int obj, RingState *state) {
+void arwbombcoll_updateMovingAxis(int obj, RingState* state)
+{
     u8 mode = state->route;
     u16 raw = state->linkId;
-    if (mode == 1 || mode == 3) {
+    if (mode == 1 || mode == 3)
+    {
         f32 cur, lim, edge;
-        ((GameObject *)obj)->anim.localPosX = state->pullHeight * timeDelta + ((GameObject *)obj)->anim.localPosX;
-        cur = ((GameObject *)obj)->anim.localPosX;
+        ((GameObject*)obj)->anim.localPosX = state->pullHeight * timeDelta + ((GameObject*)obj)->anim.localPosX;
+        cur = ((GameObject*)obj)->anim.localPosX;
         lim = state->origX;
-        edge = lim + (f32)(u32)raw;
-        if (cur > edge) {
-            ((GameObject *)obj)->anim.localPosX = edge - (cur - edge);
+        edge = lim + (f32)(u32)
+        raw;
+        if (cur > edge)
+        {
+            ((GameObject*)obj)->anim.localPosX = edge - (cur - edge);
             state->pullHeight = -state->pullHeight;
-        } else {
-            edge = lim - (f32)(u32)raw;
-            if (cur < edge) {
-                ((GameObject *)obj)->anim.localPosX = edge - (cur - edge);
+        }
+        else
+        {
+            edge = lim - (f32)(u32)
+            raw;
+            if (cur < edge)
+            {
+                ((GameObject*)obj)->anim.localPosX = edge - (cur - edge);
                 state->pullHeight = -state->pullHeight;
             }
         }
-    } else if (mode == 4 || mode == 5) {
+    }
+    else if (mode == 4 || mode == 5)
+    {
         f32 cur, lim, edge;
-        ((GameObject *)obj)->anim.localPosY = state->pullHeight * timeDelta + ((GameObject *)obj)->anim.localPosY;
-        cur = ((GameObject *)obj)->anim.localPosY;
+        ((GameObject*)obj)->anim.localPosY = state->pullHeight * timeDelta + ((GameObject*)obj)->anim.localPosY;
+        cur = ((GameObject*)obj)->anim.localPosY;
         lim = state->origY;
-        edge = lim + (f32)(u32)raw;
-        if (cur > edge) {
-            ((GameObject *)obj)->anim.localPosY = edge - (cur - edge);
+        edge = lim + (f32)(u32)
+        raw;
+        if (cur > edge)
+        {
+            ((GameObject*)obj)->anim.localPosY = edge - (cur - edge);
             state->pullHeight = -state->pullHeight;
-        } else {
-            edge = lim - (f32)(u32)raw;
-            if (cur < edge) {
-                ((GameObject *)obj)->anim.localPosY = edge - (cur - edge);
+        }
+        else
+        {
+            edge = lim - (f32)(u32)
+            raw;
+            if (cur < edge)
+            {
+                ((GameObject*)obj)->anim.localPosY = edge - (cur - edge);
                 state->pullHeight = -state->pullHeight;
             }
         }
@@ -84,36 +122,50 @@ void arwbombcoll_updateMovingAxis(int obj, RingState *state) {
 }
 
 #pragma peephole on
-void arwbombcoll_handleArwingHit(int obj, RingState *state, int arwing) {
-    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
+void arwbombcoll_handleArwingHit(int obj, RingState* state, int arwing)
+{
+    int setup = *(int*)&((GameObject*)obj)->anim.placementData;
     u8 mode = state->mode;
-    if (mode == 0) {
+    if (mode == 0)
+    {
         Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
-        if (*(s16 *)(arwing + 0x46) == 0x601) {
+        if (*(s16*)(arwing + 0x46) == 0x601)
+        {
             arwarwing_addShield(arwing, 1);
             arwarwing_addScore(arwing, 0xa);
         }
-    } else if (mode == 1) {
+    }
+    else if (mode == 1)
+    {
         Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
-        if (*(s16 *)(arwing + 0x46) == 0x601) {
+        if (*(s16*)(arwing + 0x46) == 0x601)
+        {
             arwarwing_addMaxShield(arwing, 1);
             arwarwing_addShield(arwing, arwarwing_getMaxShield(arwing));
         }
-    } else if (mode == 3 || mode == 4) {
+    }
+    else if (mode == 3 || mode == 4)
+    {
         Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
-        gameBitIncrement(((ArwbombcollHandleArwingHitPlacement *)setup)->eventId);
-    } else {
+        gameBitIncrement(((ArwbombcollHandleArwingHitPlacement*)setup)->eventId);
+    }
+    else
+    {
         Sfx_PlayFromObject(arwing, SFXbaddie_vambat_attack);
-        if (*(s16 *)(arwing + 0x46) == 0x601) {
+        if (*(s16*)(arwing + 0x46) == 0x601)
+        {
             int seg;
             arwarwing_incrementCollectedRingCount(arwing);
             arwarwing_addShield(arwing, 1);
             arwarwing_addScore(arwing, 0x14);
             seg = arwarwing_getRequiredRingCount(arwing);
-            if (arwarwing_getCollectedRingCount(arwing) == seg) {
+            if (arwarwing_getCollectedRingCount(arwing) == seg)
+            {
                 if (state->flags.bit20)
                     gameTextFn_80125ba4(7);
-            } else {
+            }
+            else
+            {
                 if (state->flags.bit20)
                     gameTextFn_80125ba4(9);
             }
@@ -123,26 +175,32 @@ void arwbombcoll_handleArwingHit(int obj, RingState *state, int arwing) {
 }
 
 #pragma peephole off
-int arwbombcoll_checkArwingCollision(int obj, RingState *state, int arwing) {
-    RingFlags *f = &state->flags;
-    if (f->bit10) {
-        f32 dx = ((GameObject *)obj)->anim.localPosX - *(f32 *)(arwing + 0xc);
-        f32 dy = ((GameObject *)obj)->anim.localPosY - *(f32 *)(arwing + 0x10);
+int arwbombcoll_checkArwingCollision(int obj, RingState* state, int arwing)
+{
+    RingFlags* f = &state->flags;
+    if (f->bit10)
+    {
+        f32 dx = ((GameObject*)obj)->anim.localPosX - *(f32*)(arwing + 0xc);
+        f32 dy = ((GameObject*)obj)->anim.localPosY - *(f32*)(arwing + 0x10);
         f32 dz;
         if (dy < lbl_803E70A0)
             dy = -dy;
-        dz = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(arwing + 0x14);
-        if (dy <= lbl_803E70A4) {
+        dz = ((GameObject*)obj)->anim.localPosZ - *(f32*)(arwing + 0x14);
+        if (dy <= lbl_803E70A4)
+        {
             if (dx * dx + dz * dz < lbl_803E70A8)
                 return 1;
         }
-    } else {
-        f32 objZ = ((GameObject *)obj)->anim.localPosZ;
-        f32 currentZDelta = objZ - *(f32 *)(arwing + 0x14);
-        f32 previousZDelta = objZ - *(f32 *)(arwing + 0x88);
-        if (currentZDelta <= lbl_803E70A0 && previousZDelta >= lbl_803E70A0) {
-            f32 dx = ((GameObject *)obj)->anim.localPosX - *(f32 *)(arwing + 0xc);
-            f32 dy = ((GameObject *)obj)->anim.localPosY - *(f32 *)(arwing + 0x10);
+    }
+    else
+    {
+        f32 objZ = ((GameObject*)obj)->anim.localPosZ;
+        f32 currentZDelta = objZ - *(f32*)(arwing + 0x14);
+        f32 previousZDelta = objZ - *(f32*)(arwing + 0x88);
+        if (currentZDelta <= lbl_803E70A0 && previousZDelta >= lbl_803E70A0)
+        {
+            f32 dx = ((GameObject*)obj)->anim.localPosX - *(f32*)(arwing + 0xc);
+            f32 dy = ((GameObject*)obj)->anim.localPosY - *(f32*)(arwing + 0x10);
             if (sqrtf(dx * dx + dy * dy) < lbl_803E70AC)
                 return 1;
             if (state->mode == 2 && f->bit20)
@@ -154,78 +212,99 @@ int arwbombcoll_checkArwingCollision(int obj, RingState *state, int arwing) {
 
 void arwbombcoll_update(int obj)
 {
-    ObjAnimComponent *objAnim;
-    ArwBombFlags *flags;
+    ObjAnimComponent* objAnim;
+    ArwBombFlags* flags;
     int arw;
-    ARWBombCollState *state;
+    ARWBombCollState* state;
     int a2;
     f32 thr;
 
     arw = getArwing();
-    objAnim = &((GameObject *)obj)->anim;
-    state = ((GameObject *)obj)->extra;
+    objAnim = &((GameObject*)obj)->anim;
+    state = ((GameObject*)obj)->extra;
     flags = &state->flags;
 
-    if (state->lifetime > (thr = lbl_803E707C)) {
+    if (state->lifetime > (thr = lbl_803E707C))
+    {
         state->lifetime -= timeDelta;
-        if (state->lifetime <= thr) {
+        if (state->lifetime <= thr)
+        {
             Obj_FreeObject(obj);
             return;
         }
     }
 
-    if ((u32)arw != 0 && arwarwing_isExplodingOrWarping(arw) != 0) {
+    if ((u32)arw != 0 && arwarwing_isExplodingOrWarping(arw) != 0)
+    {
         flags->b80 = 0;
-        ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ObjHits_EnableObject(obj);
         return;
     }
 
-    if (flags->b80 == 0) {
+    if (flags->b80 == 0)
+    {
         a2 = getArwing();
-        if ((((u32)a2 != 0) ? (((GameObject *)obj)->anim.localPosZ - *(f32 *)(a2 + 0x14) < lbl_803E7080) : 0) != 0) {
+        if ((((u32)a2 != 0) ? (((GameObject*)obj)->anim.localPosZ - *(f32*)(a2 + 0x14) < lbl_803E7080) : 0) != 0)
+        {
             goto active;
         }
     }
-    ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+    ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     objAnim->alpha = 0;
     return;
-active : {
+active :
+    {
         int v;
-        v = (int)(lbl_803E7084 * timeDelta + (f32)(u32)objAnim->alpha);
-        if (v > 0xff) {
+        v = (int)
+        (lbl_803E7084 * timeDelta + (f32)(u32)
+        objAnim->alpha
+        )
+        ;
+        if (v > 0xff)
+        {
             v = 0xff;
         }
         objAnim->alpha = v;
-        ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-        ((GameObject *)obj)->anim.rotX = lbl_803E7088 * timeDelta + (f32) * &((GameObject *)obj)->anim.rotX;
+        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        ((GameObject*)obj)->anim.rotX = lbl_803E7088 * timeDelta + (f32) * &((GameObject*)obj)->anim.rotX;
         ObjHits_SetHitVolumeSlot(obj, 0x13, 0, 0);
-        if (flags->b40 != 0) {
-            if ((u32)(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0 &&
-                (u32)(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == (u32)getArwing()) {
+        if (flags->b40 != 0)
+        {
+            if ((u32)(*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
+                (u32)(*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject == (u32)
+                getArwing())
+            {
                 arwarwing_addScore(arw, 0x19);
                 flags->b80 = 1;
-                ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject(obj);
             }
-        } else {
+        }
+        else
+        {
             int hit;
             if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0 && (u32)hit != 0 &&
-                (*(s16 *)(hit + 0x46) == 0x604 || *(s16 *)(hit + 0x46) == 0x605)) {
+                (*(s16*)(hit + 0x46) == 0x604 || *(s16*)(hit + 0x46) == 0x605))
+            {
                 arwarwing_addScore(arw, 0xf);
                 flags->b40 = 1;
                 Obj_SetActiveModelIndex(obj, 1);
                 spawnExplosion(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
             }
-            if ((u32)(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0 &&
-                (u32)(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == (u32)getArwing()) {
-                ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+            if ((u32)(*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
+                (u32)(*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject == (u32)
+                getArwing())
+            {
+                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject(obj);
                 spawnExplosion(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
             }
         }
-        if ((u32)arw != 0 && flags->b80 != 0) {
-            switch (((GameObject *)obj)->anim.seqId) {
+        if ((u32)arw != 0 && flags->b80 != 0)
+        {
+            switch (((GameObject*)obj)->anim.seqId)
+            {
             case 0x609:
                 Sfx_PlayFromObject(obj, SFXbaddie_eba_hit);
                 arwarwing_upgradeLaserLevel(arw);

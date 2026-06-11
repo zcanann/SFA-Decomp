@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_025A_MMP_CraterF_packet_info {
+enum obj_025A_MMP_CraterF_packet_info
+{
     MMP_CRATERF_DEF_ID = 0x025A,
     MMP_CRATERF_DLL_ID = 0x01E7,
     MMP_CRATERF_CLASS_ID = 0x0030,

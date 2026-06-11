@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_007B_DrakorHover_packet_info {
+enum obj_007B_DrakorHover_packet_info
+{
     DRAKORHOVER_DEF_ID = 0x007B,
     DRAKORHOVER_DLL_ID = 0x0271,
     DRAKORHOVER_CLASS_ID = 0x0030,

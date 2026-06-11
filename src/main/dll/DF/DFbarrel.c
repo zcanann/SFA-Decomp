@@ -4,7 +4,7 @@
 extern f32 lbl_803E4DF8;
 extern f32 lbl_803E4DFC;
 
-extern void DFPulley_integrateLinks(u8 *self);
+extern void DFPulley_integrateLinks(u8 * self);
 
 #define DFBARREL_ROPE_PART_SIZE 0x34
 #define DFBARREL_ROPE_LINK_SIZE 0x24
@@ -26,75 +26,89 @@ extern void DFPulley_integrateLinks(u8 *self);
  * EN v1.0 Address: 0x801C0FD8
  * EN v1.0 Size: 480b
  */
-void DFRope_UpdateSimulation(u8 *self)
+void DFRope_UpdateSimulation(u8* self)
 {
-  int j;
-  u8 *link;
-  int k;
-  u8 *parts;
-  int i;
-  u8 *partIter;
-  Vec tmp;
-  f32 zero;
-  u8 *partsInit;
+    int j;
+    u8* link;
+    int k;
+    u8* parts;
+    int i;
+    u8* partIter;
+    Vec tmp;
+    f32 zero;
+    u8* partsInit;
 
-  partsInit = (u8 *)*(int *)(self + 0x0);
-  parts = partsInit;
+    partsInit = (u8*)*(int*)(self + 0x0);
+    parts = partsInit;
 
-  if ((s8)self[0x34] < -DFBARREL_SWAY_LIMIT) {
-    self[0x35] = DFBARREL_SWAY_DIR_INCREASING;
-  }
-  if ((s8)self[0x34] > DFBARREL_SWAY_LIMIT) {
-    self[0x35] = DFBARREL_SWAY_DIR_DECREASING;
-  }
-  if ((s8)self[0x35] == DFBARREL_SWAY_DIR_DECREASING) {
-    self[0x34]--;
-  } else {
-    self[0x34]++;
-  }
-
-  i = 1;
-  partIter = partsInit + DFBARREL_ROPE_PART_SIZE;
-  {
-    f32 rate = lbl_803E4DF8;
-    for (; i < (int)self[0x8] - 1; i++) {
-      *(f32 *)(partIter + 0x18) =
-          *(f32 *)(partIter + 0x18) + rate * (f32)(int)(s8)self[0x34];
-      partIter += DFBARREL_ROPE_PART_SIZE;
+    if ((s8)self[0x34] < -DFBARREL_SWAY_LIMIT)
+    {
+        self[0x35] = DFBARREL_SWAY_DIR_INCREASING;
     }
-  }
-
-  k = 0;
-  zero = lbl_803E4DFC;
-  for (; k < *(int *)(self + 0x28); k++) {
-    link = (u8 *)*(int *)(self + 0x4);
-    for (j = 0; j < (int)self[0x8] - 1; j++, link += DFBARREL_ROPE_LINK_SIZE) {
-      PSVECSubtract((Vec *)*(int *)(link + 0x4), (Vec *)*(int *)(link + 0x8), &tmp);
-      *(f32 *)(link + 0x0) = PSVECMag(&tmp);
-      if (*(f32 *)(link + 0x0) > *(f32 *)(link + 0x14)) {
-        *(f32 *)(link + 0xC) = lbl_803E4DFC;
-      }
-      if (zero == *(f32 *)(link + 0xC)) {
-        *(f32 *)(link + 0x20) = zero;
-        *(f32 *)(link + 0x1C) = zero;
-        *(f32 *)(link + 0x18) = zero;
-      } else {
-        PSVECScale(&tmp, (Vec *)(link + 0x18),
-                   -*(f32 *)(link + 0x10) * (*(f32 *)(link + 0x0) - *(f32 *)(link + 0xC)));
-      }
+    if ((s8)self[0x34] > DFBARREL_SWAY_LIMIT)
+    {
+        self[0x35] = DFBARREL_SWAY_DIR_DECREASING;
     }
-    DFPulley_integrateLinks(self);
-  }
-
-  i = 0;
-  {
-    f32 cleanZero = lbl_803E4DFC;
-    for (; i < (int)self[0x8]; i++, parts += DFBARREL_ROPE_PART_SIZE) {
-      *(f32 *)(parts + 0x18) = cleanZero;
-      *(f32 *)(parts + 0x1C) = cleanZero;
-      *(f32 *)(parts + 0x20) = cleanZero;
+    if ((s8)self[0x35] == DFBARREL_SWAY_DIR_DECREASING)
+    {
+        self[0x34]--;
     }
-  }
+    else
+    {
+        self[0x34]++;
+    }
+
+    i = 1;
+    partIter = partsInit + DFBARREL_ROPE_PART_SIZE;
+    {
+        f32 rate = lbl_803E4DF8;
+        for (; i < (int)self[0x8] - 1; i++)
+        {
+            *(f32*)(partIter + 0x18) =
+                *(f32*)(partIter + 0x18) + rate * (f32)(int)(s8)
+            self[0x34];
+            partIter += DFBARREL_ROPE_PART_SIZE;
+        }
+    }
+
+    k = 0;
+    zero = lbl_803E4DFC;
+    for (; k < *(int*)(self + 0x28); k++)
+    {
+        link = (u8*)*(int*)(self + 0x4);
+        for (j = 0; j < (int)self[0x8] - 1; j++, link += DFBARREL_ROPE_LINK_SIZE)
+        {
+            PSVECSubtract((Vec*)*(int*)(link + 0x4), (Vec*)*(int*)(link + 0x8), &tmp);
+            *(f32*)(link + 0x0) = PSVECMag(&tmp);
+            if (*(f32*)(link + 0x0) > *(f32*)(link + 0x14))
+            {
+                *(f32*)(link + 0xC) = lbl_803E4DFC;
+            }
+            if (zero == *(f32*)(link + 0xC))
+            {
+                *(f32*)(link + 0x20) = zero;
+                *(f32*)(link + 0x1C) = zero;
+                *(f32*)(link + 0x18) = zero;
+            }
+            else
+            {
+                PSVECScale(&tmp, (Vec*)(link + 0x18),
+                           -*(f32*)(link + 0x10) * (*(f32*)(link + 0x0) - *(f32*)(link + 0xC)));
+            }
+        }
+        DFPulley_integrateLinks(self);
+    }
+
+    i = 0;
+    {
+        f32 cleanZero = lbl_803E4DFC;
+        for (; i < (int)self[0x8]; i++, parts += DFBARREL_ROPE_PART_SIZE)
+        {
+            *(f32*)(parts + 0x18) = cleanZero;
+            *(f32*)(parts + 0x1C) = cleanZero;
+            *(f32*)(parts + 0x20) = cleanZero;
+        }
+    }
 }
 
 /*
@@ -104,28 +118,30 @@ void DFRope_UpdateSimulation(u8 *self)
  * EN v1.0 Address: 0x801C11B8
  * EN v1.0 Size: 128b
  */
-void DFRopeLink_AttachNodes(DFRopeLink *linkSelf, DFRopeNode *firstNode, DFRopeNode *secondNode)
+void DFRopeLink_AttachNodes(DFRopeLink* linkSelf, DFRopeNode* firstNode, DFRopeNode* secondNode)
 {
-  u8 *nodeLinkIter;
-  int firstLinkIndex;
-  int secondLinkIndex;
+    u8* nodeLinkIter;
+    int firstLinkIndex;
+    int secondLinkIndex;
 
-  firstLinkIndex = 0;
-  secondLinkIndex = 0;
-  nodeLinkIter = (u8 *)firstNode;
-  while (*(u32 *)(nodeLinkIter + DFBARREL_NODE_LINKS_OFFSET) != 0) {
-    nodeLinkIter += 4;
-    firstLinkIndex++;
-  }
-  nodeLinkIter = (u8 *)secondNode;
-  while (*(u32 *)(nodeLinkIter + DFBARREL_NODE_LINKS_OFFSET) != 0) {
-    nodeLinkIter += 4;
-    secondLinkIndex++;
-  }
-  if (firstLinkIndex > (int)firstNode->linkCount) return;
-  if (secondLinkIndex > (int)secondNode->linkCount) return;
-  firstNode->links[firstLinkIndex] = linkSelf;
-  secondNode->links[secondLinkIndex] = linkSelf;
-  linkSelf->a = firstNode;
-  linkSelf->b = secondNode;
+    firstLinkIndex = 0;
+    secondLinkIndex = 0;
+    nodeLinkIter = (u8*)firstNode;
+    while (*(u32*)(nodeLinkIter + DFBARREL_NODE_LINKS_OFFSET) != 0)
+    {
+        nodeLinkIter += 4;
+        firstLinkIndex++;
+    }
+    nodeLinkIter = (u8*)secondNode;
+    while (*(u32*)(nodeLinkIter + DFBARREL_NODE_LINKS_OFFSET) != 0)
+    {
+        nodeLinkIter += 4;
+        secondLinkIndex++;
+    }
+    if (firstLinkIndex > (int)firstNode->linkCount) return;
+    if (secondLinkIndex > (int)secondNode->linkCount) return;
+    firstNode->links[firstLinkIndex] = linkSelf;
+    secondNode->links[secondLinkIndex] = linkSelf;
+    linkSelf->a = firstNode;
+    linkSelf->b = secondNode;
 }

@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0041_Area_defs {
+enum class_0041_Area_defs
+{
     AREA_AREA = 0x04D5,
 };
 #endif

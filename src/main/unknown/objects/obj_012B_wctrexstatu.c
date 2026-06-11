@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_012B_WCTrexStatu_packet_info {
+enum obj_012B_WCTrexStatu_packet_info
+{
     WCTREXSTATU_DEF_ID = 0x012B,
     WCTREXSTATU_DLL_ID = 0x0292,
     WCTREXSTATU_CLASS_ID = 0x0030,

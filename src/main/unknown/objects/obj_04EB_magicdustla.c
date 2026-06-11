@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04EB_MagicDustLa_packet_info {
+enum obj_04EB_MagicDustLa_packet_info
+{
     MAGICDUSTLA_DEF_ID = 0x04EB,
     MAGICDUSTLA_DLL_ID = 0x00FF,
     MAGICDUSTLA_CLASS_ID = 0x0006,

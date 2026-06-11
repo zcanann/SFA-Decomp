@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01FE_CCgoldbar_packet_info {
+enum obj_01FE_CCgoldbar_packet_info
+{
     CCGOLDBAR_DEF_ID = 0x01FE,
     CCGOLDBAR_DLL_ID = 0x00ED,
     CCGOLDBAR_CLASS_ID = 0x0006,

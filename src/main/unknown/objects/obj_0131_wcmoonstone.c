@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0131_WCMoonStone_packet_info {
+enum obj_0131_WCMoonStone_packet_info
+{
     WCMOONSTONE_DEF_ID = 0x0131,
     WCMOONSTONE_DLL_ID = 0x00ED,
     WCMOONSTONE_CLASS_ID = 0x0006,

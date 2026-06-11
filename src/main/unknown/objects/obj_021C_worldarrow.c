@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_021C_WORLDarrow_packet_info {
+enum obj_021C_WORLDarrow_packet_info
+{
     WORLDARROW_DEF_ID = 0x021C,
     WORLDARROW_DLL_ID = 0x01D3,
     WORLDARROW_CLASS_ID = 0x0061,

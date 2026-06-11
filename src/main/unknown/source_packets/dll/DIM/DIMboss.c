@@ -47,7 +47,8 @@
 /*
  * Packet constants only. Promote names and boundaries after EN inspection.
  */
-enum dimboss_packet_info {
+enum dimboss_packet_info
+{
     PACKET_DLL_01E0 = 0x01E0,
     PACKET_CLASS_001C = 0x001C,
     PACKET_DEF_006E = 0x006E,

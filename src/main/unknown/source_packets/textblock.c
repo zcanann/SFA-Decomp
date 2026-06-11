@@ -47,7 +47,8 @@
 /*
  * Packet constants only. Promote names and boundaries after EN inspection.
  */
-enum textblock_packet_info {
+enum textblock_packet_info
+{
     PACKET_DLL_0239 = 0x0239,
     PACKET_CLASS_0030 = 0x0030,
     PACKET_DEF_02C8 = 0x02C8,

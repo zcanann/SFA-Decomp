@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0330_VFP_RoundDo_packet_info {
+enum obj_0330_VFP_RoundDo_packet_info
+{
     VFP_ROUNDDO_DEF_ID = 0x0330,
     VFP_ROUNDDO_DLL_ID = 0x00F4,
     VFP_ROUNDDO_CLASS_ID = 0x0038,

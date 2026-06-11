@@ -2,30 +2,33 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-typedef struct DrCloudPerState {
+typedef struct DrCloudPerState
+{
     f32 normalX;
     f32 normalY;
     f32 normalZ;
     f32 planeDistance;
 } DrCloudPerState;
 
-typedef struct DrCloudPerObject {
+typedef struct DrCloudPerObject
+{
     s16 yaw;
     u8 pad02[0x0c - 0x02];
     f32 posX;
     f32 posY;
     f32 posZ;
     u8 pad18[0x4c - 0x18];
-    void *setup;
+    void* setup;
     u8 pad50[0xac - 0x50];
     s8 mapDir;
     u8 padAD[0xb0 - 0xad];
     u16 flagsB0;
     u8 padB2[0xb8 - 0xb2];
-    DrCloudPerState *state;
+    DrCloudPerState* state;
 } DrCloudPerObject;
 
-typedef struct DrCloudPerSetup {
+typedef struct DrCloudPerSetup
+{
     u8 pad00[0x18];
     s8 yawByte;
     s8 cloudIndex;
@@ -49,50 +52,61 @@ void drcloudper_free(int obj)
     ObjGroup_RemoveObject(obj, DRCLOUDPER_GROUP_SURFACE);
 }
 
-void drcloudper_render(void) {}
+void drcloudper_render(void)
+{
+}
 
-void drcloudper_hitDetect(void) {}
+void drcloudper_hitDetect(void)
+{
+}
 
-void drcloudper_update(void) {}
+void drcloudper_update(void)
+{
+}
 
-void drcloudper_release(void) {}
+void drcloudper_release(void)
+{
+}
 
-void drcloudper_initialise(void) {}
+void drcloudper_initialise(void)
+{
+}
 
 int drcloudper_setScale(int obj)
 {
-    DrCloudPerObject *cloud = (DrCloudPerObject *)obj;
-    DrCloudPerSetup *setup = (DrCloudPerSetup *)cloud->setup;
-    if ((u32)GameBit_Get(setup->gameBit) == 0) {
+    DrCloudPerObject* cloud = (DrCloudPerObject*)obj;
+    DrCloudPerSetup* setup = (DrCloudPerSetup*)cloud->setup;
+    if ((u32)GameBit_Get(setup->gameBit) == 0)
+    {
         return 0;
     }
     GameBit_Set(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT, setup->cloudIndex);
     (*gMapEventInterface)->setAnimEvent(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
-    (*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
+    (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
     return 1;
 }
 
 int drcloudper_selectActiveCloud(int obj)
 {
-    DrCloudPerObject *cloud = (DrCloudPerObject *)obj;
-    DrCloudPerSetup *setup = (DrCloudPerSetup *)cloud->setup;
+    DrCloudPerObject* cloud = (DrCloudPerObject*)obj;
+    DrCloudPerSetup* setup = (DrCloudPerSetup*)cloud->setup;
 
     GameBit_Set(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT, setup->cloudIndex);
-    (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
+    (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
     return 0;
 }
 
 #pragma peephole on
 void drcloudper_init(int obj, int setup)
 {
-    DrCloudPerObject *cloud;
-    DrCloudPerSetup *setupData;
-    DrCloudPerState *state;
+    DrCloudPerObject* cloud;
+    DrCloudPerSetup* setupData;
+    DrCloudPerState* state;
 
     ObjGroup_AddObject(obj, DRCLOUDPER_GROUP_TRIGGER);
     ObjGroup_AddObject(obj, DRCLOUDPER_GROUP_SURFACE);
-    cloud = (DrCloudPerObject *)obj;
-    setupData = (DrCloudPerSetup *)setup;
+    cloud = (DrCloudPerObject*)obj;
+    setupData = (DrCloudPerSetup*)setup;
     {
         int yawTmp = setupData->yawByte << 8;
         cloud->yaw = (s16)yawTmp;
@@ -105,7 +119,8 @@ void drcloudper_init(int obj, int setup)
         -(state->normalZ * cloud->posZ) +
         (state->normalX * cloud->posX + state->normalY * cloud->posY);
     cloud->flagsB0 |= DRCLOUDPER_OBJECT_FLAGS;
-    if (setupData->cloudIndex == GameBit_Get(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT)) {
+    if (setupData->cloudIndex == GameBit_Get(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT))
+    {
         (*gMapEventInterface)->setAnimEvent(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
     }
 }

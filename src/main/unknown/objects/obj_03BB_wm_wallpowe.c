@@ -52,7 +52,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03BB_WM_Wallpowe_packet_info {
+enum obj_03BB_WM_Wallpowe_packet_info
+{
     WM_WALLPOWE_DEF_ID = 0x03BB,
     WM_WALLPOWE_DLL_ID = 0x0208,
     WM_WALLPOWE_CLASS_ID = 0x0030,

@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0025_ChukChuk_packet_info {
+enum obj_0025_ChukChuk_packet_info
+{
     CHUKCHUK_DEF_ID = 0x0025,
     CHUKCHUK_DLL_ID = 0x00CC,
     CHUKCHUK_CLASS_ID = 0x001C,

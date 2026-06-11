@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00A1_CFLightWall_packet_info {
+enum obj_00A1_CFLightWall_packet_info
+{
     CFLIGHTWALL_DEF_ID = 0x00A1,
     CFLIGHTWALL_DLL_ID = 0x012E,
     CFLIGHTWALL_CLASS_ID = 0x0061,

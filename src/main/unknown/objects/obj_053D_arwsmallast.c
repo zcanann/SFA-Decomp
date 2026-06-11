@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_053D_ARWSmallAst_packet_info {
+enum obj_053D_ARWSmallAst_packet_info
+{
     ARWSMALLAST_DEF_ID = 0x053D,
     ARWSMALLAST_DLL_ID = 0x02A6,
     ARWSMALLAST_CLASS_ID = 0x007C,

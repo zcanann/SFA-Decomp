@@ -8,19 +8,21 @@ extern u8 vidListNodes[];
 #define voicePrioritySortLinks (vidListNodes + 0xac0)
 
 extern u32 vidCurrentId;
-extern void *vidRoot;
-extern void *vidFree;
+extern void* vidRoot;
+extern void* vidFree;
 extern u16 voicePrioSortRootListRoot;
-extern McmdVoiceState *synthVoice;
+extern McmdVoiceState* synthVoice;
 extern void voiceUnregister(int state);
 
-typedef struct VoicePriorityLink {
+typedef struct VoicePriorityLink
+{
     u8 prev;
     u8 next;
     u16 active;
 } VoicePriorityLink;
 
-typedef struct VoicePrioritySortLink {
+typedef struct VoicePrioritySortLink
+{
     u16 next;
     u16 prev;
 } VoicePrioritySortLink;
@@ -46,35 +48,45 @@ typedef struct VoicePrioritySortLink {
 
 void vidRemoveVoice(int state)
 {
-    McmdVoiceState *s = (McmdVoiceState *)state;
-    if (s->voiceHandle != 0xffffffff) {
+    McmdVoiceState* s = (McmdVoiceState*)state;
+    if (s->voiceHandle != 0xffffffff)
+    {
         voiceUnregister(state);
-        if (s->voicePrevHandle != 0xffffffff) {
+        if (s->voicePrevHandle != 0xffffffff)
+        {
             synthVoice[s->voicePrevHandle & 0xff].voiceNextHandle =
                 s->voiceNextHandle;
-            if (s->voiceNextHandle != 0xffffffff) {
+            if (s->voiceNextHandle != 0xffffffff)
+            {
                 synthVoice[s->voiceNextHandle & 0xff].voicePrevHandle =
                     s->voicePrevHandle;
             }
             VID_UNLINK(vidListNode);
             s->vidListNode = 0;
-        } else if (s->voiceNextHandle != 0xffffffff) {
+        }
+        else if (s->voiceNextHandle != 0xffffffff)
+        {
             s->vidListNode->internalId = s->voiceNextHandle;
             synthVoice[s->voiceNextHandle & 0xff].voicePrevHandle = 0xffffffff;
             synthVoice[s->voiceNextHandle & 0xff].vidMasterListNode =
                 s->vidMasterListNode;
-            if (s->vidListNode != s->vidMasterListNode) {
+            if (s->vidListNode != s->vidMasterListNode)
+            {
                 VID_UNLINK(vidListNode);
                 s->vidListNode = 0;
             }
             s->vidListNode = 0;
             s->vidMasterListNode = 0;
-        } else if (s->vidListNode != s->vidMasterListNode) {
+        }
+        else if (s->vidListNode != s->vidMasterListNode)
+        {
             VID_UNLINK(vidListNode);
             s->vidListNode = 0;
             VID_UNLINK(vidMasterListNode);
             s->vidMasterListNode = 0;
-        } else {
+        }
+        else
+        {
             VID_UNLINK(vidListNode);
             s->vidListNode = 0;
             s->vidMasterListNode = 0;
@@ -93,7 +105,7 @@ void vidRemoveVoice(int state)
  */
 int vidMakeRoot(int state)
 {
-    McmdVoiceState *s = (McmdVoiceState *)state;
+    McmdVoiceState* s = (McmdVoiceState*)state;
     s->vidMasterListNode = s->vidListNode;
     return s->vidListNode->id;
 }
@@ -110,55 +122,69 @@ int vidMakeRoot(int state)
  */
 u32 vidMakeNew(int state, int returnNewId)
 {
-    McmdVoiceState *s = (McmdVoiceState *)state;
+    McmdVoiceState* s = (McmdVoiceState*)state;
     u32 nextId;
-    int **cursor;
-    int **node;
-    int **prev;
-    int **freeNode;
+    int** cursor;
+    int** node;
+    int** prev;
+    int** freeNode;
 
-    do {
+    do
+    {
         nextId = vidCurrentId;
         vidCurrentId = nextId + 1;
-    } while (nextId == 0xffffffffU);
+    }
+    while (nextId == 0xffffffffU);
 
     cursor = vidRoot;
     prev = 0;
-    while ((node = cursor) != 0) {
-        if ((u32)node[2] > nextId) {
+    while ((node = cursor) != 0)
+    {
+        if ((u32)node[2] > nextId)
+        {
             break;
         }
-        if ((u32)node[2] == nextId) {
-            do {
+        if ((u32)node[2] == nextId)
+        {
+            do
+            {
                 nextId = vidCurrentId;
                 vidCurrentId = nextId + 1;
-            } while (nextId == 0xffffffffU);
+            }
+            while (nextId == 0xffffffffU);
         }
         prev = node;
-        cursor = (int **)*node;
+        cursor = (int**)*node;
     }
 
-    if ((freeNode = (int **)vidFree) == 0) {
+    if ((freeNode = (int**)vidFree) == 0)
+    {
         return 0xffffffffU;
     }
-    if ((vidFree = *(void **)vidFree) != 0) {
-        *(u32 *)((u8 *)vidFree + 4) = 0;
+    if ((vidFree = *(void**)vidFree) != 0)
+    {
+        *(u32*)((u8*)vidFree + 4) = 0;
     }
-    if (prev == 0) {
+    if (prev == 0)
+    {
         vidRoot = freeNode;
-    } else {
-        *prev = (int *)freeNode;
     }
-    freeNode[1] = (int *)prev;
-    *freeNode = (int *)node;
-    if (node != 0) {
-        node[1] = (int *)freeNode;
+    else
+    {
+        *prev = (int*)freeNode;
     }
-    freeNode[2] = (int *)nextId;
-    freeNode[3] = (int *)s->voiceHandle;
-    s->vidMasterListNode = (McmdVidListNode *)(((u32)returnNewId != 0) ? (u32)freeNode : 0);
-    s->vidListNode = (McmdVidListNode *)freeNode;
-    if ((u32)returnNewId != 0) {
+    freeNode[1] = (int*)prev;
+    *freeNode = (int*)node;
+    if (node != 0)
+    {
+        node[1] = (int*)freeNode;
+    }
+    freeNode[2] = (int*)nextId;
+    freeNode[3] = (int*)s->voiceHandle;
+    s->vidMasterListNode = (McmdVidListNode*)(((u32)returnNewId != 0) ? (u32)freeNode : 0);
+    s->vidListNode = (McmdVidListNode*)freeNode;
+    if ((u32)returnNewId != 0)
+    {
         return nextId;
     }
     return s->voiceHandle;
@@ -173,25 +199,28 @@ u32 vidMakeNew(int state, int returnNewId)
  * EN v1.1 Address: 0x8027949C
  * EN v1.1 Size: 80b
  */
-static int *get_vidlist(u32 id)
+static int* get_vidlist(u32 id)
 {
-    int *node;
+    int* node;
     node = vidRoot;
-    while (node != NULL) {
-        if (*(u32 *)(node + 2) == id) return node;
-        if (*(u32 *)(node + 2) > id) break;
-        node = *(int **)node;
+    while (node != NULL)
+    {
+        if (*(u32*)(node + 2) == id) return node;
+        if (*(u32*)(node + 2) > id) break;
+        node = *(int**)node;
     }
     return NULL;
 }
 
 int vidGetInternalId(u32 id)
 {
-    int *node;
+    int* node;
 
-    if (id != 0xffffffffU) {
-        if ((node = get_vidlist(id)) != NULL) {
-            return *(int *)(node + 3);
+    if (id != 0xffffffffU)
+    {
+        if ((node = get_vidlist(id)) != NULL)
+        {
+            return *(int*)(node + 3);
         }
     }
     return -1;
@@ -207,54 +236,68 @@ int vidGetInternalId(u32 id)
  * EN v1.1 Address: 0x802794EC
  * EN v1.1 Size: 224b
  */
-typedef struct VoicePrioVoiceRec {
+typedef struct VoicePrioVoiceRec
+{
     u8 prev;
     u8 next;
     u16 user;
 } VoicePrioVoiceRec;
 
-typedef struct VoicePrioRootRec {
+typedef struct VoicePrioRootRec
+{
     u16 next;
     u16 prev;
 } VoicePrioRootRec;
 
-typedef struct VoicePrioBlockRec {
+typedef struct VoicePrioBlockRec
+{
     u8 vidNodes[0x8C0];
-    VoicePrioVoiceRec prioVoices[64];   /* 0x8C0 */
-    u8 prioVoicesRoot[256];             /* 0x9C0 */
+    VoicePrioVoiceRec prioVoices[64]; /* 0x8C0 */
+    u8 prioVoicesRoot[256]; /* 0x9C0 */
     VoicePrioRootRec prioRootList[256]; /* 0xAC0 */
 } VoicePrioBlockRec;
 
 void voiceRemovePriority(int state)
 {
-    McmdVoiceState *s = (McmdVoiceState *)state;
-    VoicePrioBlockRec *vb;
-    VoicePrioVoiceRec *vps;
-    VoicePrioRootRec *pr;
+    McmdVoiceState* s = (McmdVoiceState*)state;
+    VoicePrioBlockRec* vb;
+    VoicePrioVoiceRec* vps;
+    VoicePrioRootRec* pr;
 
-    vb = (VoicePrioBlockRec *)vidListNodes;
-    vps = (VoicePrioVoiceRec *)&((u8 *)voicePriorityLinks)[(s->voiceHandle & 0xff) << 2];
-    if (vps->user != 1) {
+    vb = (VoicePrioBlockRec*)vidListNodes;
+    vps = (VoicePrioVoiceRec*)&((u8*)voicePriorityLinks)[(s->voiceHandle & 0xff) << 2];
+    if (vps->user != 1)
+    {
         return;
     }
-    if (vps->prev != 0xff) {
+    if (vps->prev != 0xff)
+    {
         vb->prioVoices[vps->prev].next = vps->next;
-    } else {
+    }
+    else
+    {
         vb->prioVoicesRoot[s->priorityGroup] = vps->next;
     }
-    if (vps->next != 0xff) {
+    if (vps->next != 0xff)
+    {
         vb->prioVoices[vps->next].prev = vps->prev;
-    } else if (vps->prev == 0xff) {
+    }
+    else if (vps->prev == 0xff)
+    {
         u32 prevv;
-        pr = (VoicePrioRootRec *)((u8 *)vb + ((u32)s->priorityGroup << 2));
-        prevv = *(u16 *)((u8 *)pr + 2754);
-        pr = (VoicePrioRootRec *)((u8 *)pr + 2752);
-        if (prevv != 0xffff) {
+        pr = (VoicePrioRootRec*)((u8*)vb + ((u32)s->priorityGroup << 2));
+        prevv = *(u16*)((u8*)pr + 2754);
+        pr = (VoicePrioRootRec*)((u8*)pr + 2752);
+        if (prevv != 0xffff)
+        {
             vb->prioRootList[prevv].next = pr->next;
-        } else {
+        }
+        else
+        {
             voicePrioSortRootListRoot = pr->next;
         }
-        if (pr->next != 0xffff) {
+        if (pr->next != 0xffff)
+        {
             vb->prioRootList[pr->next].prev = pr->prev;
         }
     }

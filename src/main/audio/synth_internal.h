@@ -44,7 +44,8 @@ typedef signed char s8;
 #define SYNTH_FADE_ACTION_DISABLED 4
 #define SYNTH_INVALID_LINK_ID 0xFFFFFFFF
 
-typedef struct SynthCallbackLink {
+typedef struct SynthCallbackLink
+{
     struct SynthCallbackLink* next;
     struct SynthCallbackLink* prev;
     u32 callbackId;
@@ -54,7 +55,8 @@ typedef struct SynthCallbackLink {
     u8 unk12[2];
 } SynthCallbackLink;
 
-typedef struct SynthPendingUpdate {
+typedef struct SynthPendingUpdate
+{
     u8 studio;
     u8 unk01[3];
     u32 mixValue0;
@@ -65,7 +67,8 @@ typedef struct SynthPendingUpdate {
     u32 output;
 } SynthPendingUpdate;
 
-typedef struct SynthDelayedNode {
+typedef struct SynthDelayedNode
+{
     struct SynthDelayedNode* next;
     struct SynthDelayedNode* prev;
     u8 voiceIndex;
@@ -73,15 +76,19 @@ typedef struct SynthDelayedNode {
     u8 pad[2];
 } SynthDelayedNode;
 
-typedef union SynthDelayedActionWord {
+typedef union SynthDelayedActionWord
+{
     u32 word;
-    struct {
+
+    struct
+    {
         u8 action;
         u8 pad[3];
     } bytes;
 } SynthDelayedActionWord;
 
-typedef struct SynthDelayedEntry {
+typedef struct SynthDelayedEntry
+{
     SynthDelayedNode nodes[3];
     u32 word0;
     u32 word1;
@@ -89,7 +96,8 @@ typedef struct SynthDelayedEntry {
     u32 word3;
 } SynthDelayedEntry;
 
-typedef struct SynthDelayStorage {
+typedef struct SynthDelayStorage
+{
     u32 studioChannelScales[SYNTH_STUDIO_CHANNEL_SCALE_STUDIO_COUNT][SYNTH_VOICE_NOTE_COUNT];
     SynthDelayedNode* bucketHeads[SYNTH_DELAY_BUCKET_COUNT][3];
 } SynthDelayStorage;
@@ -97,7 +105,8 @@ typedef struct SynthDelayStorage {
 /* The 0x404 voice-slot record is the canonical McmdVoiceState (mcmd.h);
  * the former McmdVoiceState view is retired. */
 
-typedef struct SynthFade {
+typedef struct SynthFade
+{
     f32 current;
     f32 target;
     f32 start;
@@ -114,12 +123,14 @@ typedef struct SynthFade {
     u8 pad[2];
 } SynthFade;
 
-typedef struct SynthPitchPoint {
+typedef struct SynthPitchPoint
+{
     u32 threshold;
     u32 value;
 } SynthPitchPoint;
 
-typedef struct SynthChannelState {
+typedef struct SynthChannelState
+{
     s32 eventActive;
     SynthPitchPoint* eventCursor;
     u32 currentValue;
@@ -131,12 +142,14 @@ typedef struct SynthChannelState {
     u8 unk31[0x38 - 0x31];
 } SynthChannelState;
 
-typedef struct SynthTrackCursor {
+typedef struct SynthTrackCursor
+{
     u8* base;
     void* current;
 } SynthTrackCursor;
 
-typedef struct SynthSequenceEvent {
+typedef struct SynthSequenceEvent
+{
     struct SynthSequenceEvent* next;
     struct SynthSequenceEvent* prev;
     u32 value;
@@ -147,7 +160,8 @@ typedef struct SynthSequenceEvent {
     u8 pad16[2];
 } SynthSequenceEvent;
 
-typedef struct SynthSequenceState {
+typedef struct SynthSequenceState
+{
     u32 currentValue;
     u32 valueOffset;
     u8* stream;
@@ -164,12 +178,14 @@ typedef struct SynthSequenceState {
     u8 pad29[3];
 } SynthSequenceState;
 
-typedef struct SynthTimeWord {
+typedef struct SynthTimeWord
+{
     u32 low;
     u32 high;
 } SynthTimeWord;
 
-typedef struct SynthSequenceQueue {
+typedef struct SynthSequenceQueue
+{
     u8* masterTrackBase;
     u8* masterTrackCursor;
     u32 bpm;
@@ -184,21 +200,24 @@ typedef struct SynthSequenceQueue {
     u8 unk37;
 } SynthSequenceQueue;
 
-typedef struct SynthCallbackControllerState {
+typedef struct SynthCallbackControllerState
+{
     u8 listIndex;
     u8 unk01;
     u16 value16;
     u8 unk04[0x38 - 4];
 } SynthCallbackControllerState;
 
-typedef struct SynthTrackCommand {
+typedef struct SynthTrackCommand
+{
     u32 value0;
     u32 value1;
     u16 command;
     u16 arg;
 } SynthTrackCommand;
 
-typedef struct SynthStartRequest {
+typedef struct SynthStartRequest
+{
     u32 handle;
     u16 fadeTime;
     u8 pad06[2];
@@ -219,20 +238,23 @@ typedef struct SynthStartRequest {
     u8 pad27;
 } SynthStartRequest;
 
-typedef struct SynthKeyGroupState {
+typedef struct SynthKeyGroupState
+{
     u8 unk00[0x36];
     u8 active;
     u8 pad37;
 } SynthKeyGroupState;
 
 /* The voice tail overlays sequence events, queue/keygroup state, and callback controller state. */
-typedef struct SynthVoiceEventScratch {
+typedef struct SynthVoiceEventScratch
+{
     u8 unk00[4];
     SynthSequenceEvent channelEvents[SYNTH_SEQUENCE_TRACK_COUNT];
     u8* keyGroupMap;
 } SynthVoiceEventScratch;
 
-typedef union SynthVoiceControllerOverlay {
+typedef union SynthVoiceControllerOverlay
+{
     SynthSequenceQueue sequenceQueues[SYNTH_VOICE_NOTE_COUNT];
     SynthKeyGroupState keyGroupStates[SYNTH_VOICE_NOTE_COUNT];
     SynthChannelState channelStates[SYNTH_VOICE_NOTE_COUNT];
@@ -240,18 +262,21 @@ typedef union SynthVoiceControllerOverlay {
     u8 raw[0x380];
 } SynthVoiceControllerOverlay;
 
-typedef struct SynthVoiceScratch {
+typedef struct SynthVoiceScratch
+{
     SynthVoiceEventScratch eventScratch;
     SynthVoiceControllerOverlay overlay;
 } SynthVoiceScratch;
 
-typedef struct SynthProgramState {
+typedef struct SynthProgramState
+{
     u16 macId;
     u8 priority;
     u8 maxVoices;
 } SynthProgramState;
 
-typedef struct SynthVoice {
+typedef struct SynthVoice
+{
     struct SynthVoice* next;
     struct SynthVoice* prev;
     u8 state;
@@ -282,7 +307,8 @@ typedef struct SynthVoice {
     SynthSequenceQueue section[SYNTH_VOICE_NOTE_COUNT];
 } SynthVoice;
 
-typedef struct SynthVoiceRuntime {
+typedef struct SynthVoiceRuntime
+{
     SynthCallbackLink callbacks[SYNTH_CALLBACK_COUNT];
     SynthVoice voices[SYNTH_MAX_VOICES];
     u16 voiceNotes[SYNTH_MAX_VOICES][SYNTH_VOICE_NOTE_COUNT];
@@ -341,7 +367,7 @@ extern u32 gSynthNextHandle;
 #define SYNTH_VOICE_SLOT_FLAGS64(slot) (*(u64*)&(slot)->inputFlags)
 
 /* Recovered semantics for external audio helpers. */
-void synthReleaseVoiceSlot(McmdVoiceState* slot);
+void synthReleaseVoiceSlot(McmdVoiceState * slot);
 u32 synthLookupCallbackLinkId(u32 callbackId);
 void synthCopyControllerValue(u32 controller, McmdVoiceState* dst, McmdVoiceState* src);
 void synthScaleFadeTime(s32* value);
@@ -355,7 +381,7 @@ extern const f32 lbl_803E846C;
 
 void synthInitVoices(void);
 void synthSetStudioChannelScale(s32 value, u8 studioIndex, u32 channelIndex);
-u32 synthGetVoiceSlotChannelScale(McmdVoiceState* slot);
+u32 synthGetVoiceSlotChannelScale(McmdVoiceState * slot);
 SynthSequenceEvent* synthGetNextChannelEvent(u8 channel);
 void synthInsertChannelEvent(SynthSequenceQueue* queue, SynthSequenceEvent* event);
 SynthSequenceEvent* synthHandleSequenceEvent(SynthSequenceEvent* event, u8 groupIndex, u32* output);

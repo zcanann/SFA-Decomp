@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_033B_VFP_statueb_packet_info {
+enum obj_033B_VFP_statueb_packet_info
+{
     VFP_STATUEB_DEF_ID = 0x033B,
     VFP_STATUEB_DLL_ID = 0x021A,
     VFP_STATUEB_CLASS_ID = 0x0030,

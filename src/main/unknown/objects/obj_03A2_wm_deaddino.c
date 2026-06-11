@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03A2_WM_deaddino_packet_info {
+enum obj_03A2_WM_deaddino_packet_info
+{
     WM_DEADDINO_DEF_ID = 0x03A2,
     WM_DEADDINO_DLL_ID = 0x028A,
     WM_DEADDINO_CLASS_ID = 0x0030,

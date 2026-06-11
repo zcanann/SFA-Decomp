@@ -38,7 +38,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_007A_StaffActivated_defs {
+enum class_007A_StaffActivated_defs
+{
     STAFFACTIVATED_STAFFLEVERO = 0x05B1,
     STAFFACTIVATED_STAFFBOOSTP = 0x05AD,
     STAFFACTIVATED_STAFFBOULDE_05AE = 0x05AE,

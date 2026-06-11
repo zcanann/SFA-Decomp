@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0577_FernTree_packet_info {
+enum obj_0577_FernTree_packet_info
+{
     FERNTREE_DEF_ID = 0x0577,
     FERNTREE_DLL_ID = 0x02AF,
     FERNTREE_CLASS_ID = 0x007F,

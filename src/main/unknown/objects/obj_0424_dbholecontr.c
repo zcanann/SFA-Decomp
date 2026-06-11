@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0424_DBHoleContr_packet_info {
+enum obj_0424_DBHoleContr_packet_info
+{
     DBHOLECONTR_DEF_ID = 0x0424,
     DBHOLECONTR_DLL_ID = 0x0243,
     DBHOLECONTR_CLASS_ID = 0x0030,

@@ -55,7 +55,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00B9_CFPrisonCag_packet_info {
+enum obj_00B9_CFPrisonCag_packet_info
+{
     CFPRISONCAG_DEF_ID = 0x00B9,
     CFPRISONCAG_DLL_ID = 0x0154,
     CFPRISONCAG_CLASS_ID = 0x003F,

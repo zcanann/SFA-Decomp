@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04FC_TreasureChe_packet_info {
+enum obj_04FC_TreasureChe_packet_info
+{
     TREASURECHE_DEF_ID = 0x04FC,
     TREASURECHE_DLL_ID = 0x011D,
     TREASURECHE_CLASS_ID = 0x0030,

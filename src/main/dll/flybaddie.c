@@ -6,10 +6,10 @@
 #define DBSH_SHRINE_GB_ACTIVE 0xefa
 #define DBSH_SHRINE_GB_INITIALIZED 0xf08
 
-extern void ObjMsg_AllocQueue(DbshShrineObject *obj, int capacity);
-extern void *objCreateLight(int obj, int lightType);
+extern void ObjMsg_AllocQueue(DbshShrineObject* obj, int capacity);
+extern void* objCreateLight(int obj, int lightType);
 extern void GameBit_Set(u32 id, u32 value);
-extern MapEventInterface **gMapEventInterface;
+extern MapEventInterface** gMapEventInterface;
 
 #define MAP_EVENT_GET_ANIM(mapId, eventId) \
     (*gMapEventInterface)->getAnimEvent((mapId), (eventId))
@@ -29,9 +29,9 @@ extern MapEventInterface **gMapEventInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dbsh_shrine_init(DbshShrineObject *obj)
+void dbsh_shrine_init(DbshShrineObject* obj)
 {
-    DbshShrineRuntime *runtime;
+    DbshShrineRuntime* runtime;
 
     runtime = obj->runtime;
     obj->messageFn = fn_801C8EBC;
@@ -43,7 +43,8 @@ void dbsh_shrine_init(DbshShrineObject *obj)
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(DBSH_SHRINE_GB_FIRST_RISE, 0);
 
-    if (MAP_EVENT_GET_ANIM(obj->mapId, 1) == 0) {
+    if (MAP_EVENT_GET_ANIM(obj->mapId, 1) == 0)
+    {
         MAP_EVENT_SET_ANIM(obj->mapId, 1, 1);
     }
 
@@ -52,7 +53,8 @@ void dbsh_shrine_init(DbshShrineObject *obj)
     obj->startZ = obj->z;
     obj->introDelay = 1;
 
-    if (runtime->light == 0) {
+    if (runtime->light == 0)
+    {
         runtime->light = objCreateLight(0, 1);
     }
 

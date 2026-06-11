@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04FA_LargeCrateL_packet_info {
+enum obj_04FA_LargeCrateL_packet_info
+{
     LARGECRATEL_DEF_ID = 0x04FA,
     LARGECRATEL_DLL_ID = 0x0105,
     LARGECRATEL_CLASS_ID = 0x0030,

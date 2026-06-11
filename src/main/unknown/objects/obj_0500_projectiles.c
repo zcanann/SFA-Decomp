@@ -55,7 +55,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0500_ProjectileS_packet_info {
+enum obj_0500_ProjectileS_packet_info
+{
     PROJECTILES_DEF_ID = 0x0500,
     PROJECTILES_DLL_ID = 0x00F9,
     PROJECTILES_CLASS_ID = 0x0051,

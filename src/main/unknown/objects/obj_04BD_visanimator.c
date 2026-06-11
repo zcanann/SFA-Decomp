@@ -52,7 +52,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04BD_VisAnimator_packet_info {
+enum obj_04BD_VisAnimator_packet_info
+{
     VISANIMATOR_DEF_ID = 0x04BD,
     VISANIMATOR_DLL_ID = 0x013A,
     VISANIMATOR_CLASS_ID = 0x004E,

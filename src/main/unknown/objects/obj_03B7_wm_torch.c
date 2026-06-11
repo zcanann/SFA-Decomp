@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03B7_WM_Torch_packet_info {
+enum obj_03B7_WM_Torch_packet_info
+{
     WM_TORCH_DEF_ID = 0x03B7,
     WM_TORCH_DLL_ID = 0x0204,
     WM_TORCH_CLASS_ID = 0x0030,

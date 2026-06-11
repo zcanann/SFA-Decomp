@@ -53,7 +53,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04DF_BlueMushroo_packet_info {
+enum obj_04DF_BlueMushroo_packet_info
+{
     BLUEMUSHROO_DEF_ID = 0x04DF,
     BLUEMUSHROO_DLL_ID = 0x01A7,
     BLUEMUSHROO_CLASS_ID = 0x0029,

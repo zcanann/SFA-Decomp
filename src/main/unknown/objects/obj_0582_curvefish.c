@@ -46,7 +46,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0582_CurveFish_packet_info {
+enum obj_0582_CurveFish_packet_info
+{
     CURVEFISH_DEF_ID = 0x0582,
     CURVEFISH_DLL_ID = 0x0103,
     CURVEFISH_CLASS_ID = 0x0069,

@@ -50,7 +50,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_0256_DIMSnowHorn1_slot {
+enum dll_0256_DIMSnowHorn1_slot
+{
     DIMSNOWHORN1_INITIALISE = 0,
     DIMSNOWHORN1_RELEASE = 1,
     DIMSNOWHORN1_INIT = 3,

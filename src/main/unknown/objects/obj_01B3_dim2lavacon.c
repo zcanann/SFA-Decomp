@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01B3_DIM2LavaCon_packet_info {
+enum obj_01B3_DIM2LavaCon_packet_info
+{
     DIM2LAVACON_DEF_ID = 0x01B3,
     DIM2LAVACON_DLL_ID = 0x01DE,
     DIM2LAVACON_CLASS_ID = 0x0030,

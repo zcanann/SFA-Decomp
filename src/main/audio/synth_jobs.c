@@ -46,7 +46,8 @@ extern f32 lbl_803E77D8;
  */
 typedef u32 (*SynthStreamUpdateFn)(u8* buffer, u32 length, u8* buffer2, u32 length2, u32 user);
 
-typedef struct SynthSampleInfo {
+typedef struct SynthSampleInfo
+{
     u32 info;
     void* addr;
     void* extraData;
@@ -61,10 +62,11 @@ extern u8 synthJobTableCountdown;
 extern u8 synthJobTablePeriod;
 extern u8* synthVoice;
 extern void DCInvalidateRange(void* addr, u32 size);
-extern void* hwFlushStream(u8 handle);                /* gets the stream play buffer */
-extern u32 hwChangeStudio(u32 voice);                 /* gets the stream playback position */
+extern void* hwFlushStream(u8 handle); /* gets the stream play buffer */
+extern u32 hwChangeStudio(u32 voice); /* gets the stream playback position */
 extern void hwGetPos(u8* buffer, u32 offset, u32 length, u8 handle, u32 callback, u32 user); /* flushes stream data */
-extern void hwInitSamplePlayback(u32 voice, u32 keyInfo, SynthSampleInfo* sample, u32 a, s32 b, u32 voiceId, u32 c, u32 d);
+extern void hwInitSamplePlayback(u32 voice, u32 keyInfo, SynthSampleInfo* sample, u32 a, s32 b, u32 voiceId, u32 c,
+                                 u32 d);
 extern void hwSetPitch(u32 voice, s32 pitch);
 extern void hwStart(u32 voice, u8 studio);
 extern void hwSetStreamLoopPS(u32 voice, u32 ps);
@@ -81,7 +83,8 @@ void synthUpdateJobTable(void)
     f32 volScale;
     f32 freqScale;
 
-    if (synthJobTableCountdown != 0) {
+    if (synthJobTableCountdown != 0)
+    {
         --synthJobTableCountdown;
         return;
     }
@@ -89,8 +92,10 @@ void synthUpdateJobTable(void)
     volScale = lbl_803E77D8;
     freqScale = lbl_803E77E8;
     si = synthJobTable;
-    for (i = 0; i < lbl_803BD150[0x210]; ++i, ++si) {
-        switch (si->state) {
+    for (i = 0; i < lbl_803BD150[0x210]; ++i, ++si)
+    {
+        switch (si->state)
+        {
         case 1:
             newsmp.info = si->frq | 0x40000000;
             newsmp.addr = hwFlushStream(si->streamHandle);
@@ -100,7 +105,8 @@ void synthUpdateJobTable(void)
             newsmp.loopLength = si->size;
             si->adpcm.loopPS = si->adpcm.initialPS = *si->buffer;
             DCInvalidateRange(si->buffer, 1);
-            switch (si->format) {
+            switch (si->format)
+            {
             case 0:
                 newsmp.compType = 2;
                 break;
@@ -111,36 +117,46 @@ void synthUpdateJobTable(void)
             }
             hwInitSamplePlayback(si->voice, 0xFFFF, &newsmp, 1, -1,
                                  *(u32*)(synthVoice + si->voice * 0x404 + 0xF4), 1, 1);
-            hwSetPitch(si->voice, freqScale * ((f32)si->frq / (f32)*(u32*)lbl_803BD150));
+            hwSetPitch(si->voice, freqScale * ((f32)si->frq / (f32) * (u32*)lbl_803BD150));
             hwSetVolume(si->voice, 0, volScale * si->volume, volScale * si->leftVolume,
                         volScale * si->rightVolume, si->pan << 16, si->surroundPan << 16);
             hwStart(si->voice, si->studio);
             si->state = 2;
-            if (!(si->flags & 0x20000)) {
+            if (!(si->flags & 0x20000))
+            {
                 hwGetPos(si->buffer, 0, si->bytes, si->streamHandle, 0, 0);
             }
             break;
         case 2:
             cpos = hwChangeStudio(si->voice);
 
-            if (si->format == 1) {
+            if (si->format == 1)
+            {
                 cpos = (cpos / 14) * 14;
             }
 
-            if (si->last != cpos) {
-                if (si->last < cpos) {
-                    switch (si->format) {
+            if (si->last != cpos)
+            {
+                if (si->last < cpos)
+                {
+                    switch (si->format)
+                    {
                     case 0:
                         if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + si->last * 2,
                                                                        cpos - si->last, 0, 0,
                                                                        si->callbackUser)) != 0 &&
-                            si->state == 2) {
+                            si->state == 2)
+                        {
                             cpos = (si->last + len) % si->size;
-                            if (!(si->flags & 0x20000)) {
-                                if (cpos != 0) {
+                            if (!(si->flags & 0x20000))
+                            {
+                                if (cpos != 0)
+                                {
                                     hwGetPos(si->buffer, si->last * 2, (cpos - si->last) * 2,
                                              si->streamHandle, 0, 0);
-                                } else {
+                                }
+                                else
+                                {
                                     hwGetPos(si->buffer, si->last * 2, (si->size - si->last) * 2,
                                              si->streamHandle, 0, 0);
                                 }
@@ -152,13 +168,18 @@ void synthUpdateJobTable(void)
                         off = (si->last / 14) * 8;
                         if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + off, cpos - si->last,
                                                                        0, 0, si->callbackUser)) != 0 &&
-                            si->state == 2) {
+                            si->state == 2)
+                        {
                             cpos = (si->last + len) % si->size;
-                            if (!(si->flags & 0x20000)) {
-                                if (cpos != 0) {
+                            if (!(si->flags & 0x20000))
+                            {
+                                if (cpos != 0)
+                                {
                                     hwGetPos(si->buffer, off, ((cpos + 13) / 14) * 8 - off,
                                              si->streamHandle, 0, 0);
-                                } else {
+                                }
+                                else
+                                {
                                     hwGetPos(si->buffer, off, si->bytes - off, si->streamHandle, 0, 0);
                                 }
                             }
@@ -166,19 +187,27 @@ void synthUpdateJobTable(void)
                         }
                         break;
                     }
-                } else if (cpos == 0) {
-                    switch (si->format) {
+                }
+                else if (cpos == 0)
+                {
+                    switch (si->format)
+                    {
                     case 0:
                         if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + si->last * 2,
                                                                        si->size - si->last, 0, 0,
                                                                        si->callbackUser)) != 0 &&
-                            si->state == 2) {
+                            si->state == 2)
+                        {
                             cpos = (si->last + len) % si->size;
-                            if (!(si->flags & 0x20000)) {
-                                if (cpos == 0) {
+                            if (!(si->flags & 0x20000))
+                            {
+                                if (cpos == 0)
+                                {
                                     hwGetPos(si->buffer, si->last * 2, si->bytes - si->last * 2,
                                              si->streamHandle, 0, 0);
-                                } else {
+                                }
+                                else
+                                {
                                     hwGetPos(si->buffer, si->last * 2, (cpos - si->last) * 2,
                                              si->streamHandle, 0, 0);
                                 }
@@ -191,12 +220,17 @@ void synthUpdateJobTable(void)
                         if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + off,
                                                                        si->size - si->last, 0, 0,
                                                                        si->callbackUser)) != 0 &&
-                            si->state == 2) {
+                            si->state == 2)
+                        {
                             cpos = (si->last + len) % si->size;
-                            if (!(si->flags & 0x20000)) {
-                                if (cpos == 0) {
+                            if (!(si->flags & 0x20000))
+                            {
+                                if (cpos == 0)
+                                {
                                     hwGetPos(si->buffer, off, si->bytes - off, si->streamHandle, 0, 0);
-                                } else {
+                                }
+                                else
+                                {
                                     hwGetPos(si->buffer, off, ((cpos + 13) / 14) * 8 - off,
                                              si->streamHandle, 0, 0);
                                 }
@@ -205,23 +239,33 @@ void synthUpdateJobTable(void)
                         }
                         break;
                     }
-                } else {
-                    switch (si->format) {
+                }
+                else
+                {
+                    switch (si->format)
+                    {
                     case 0:
                         if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + si->last * 2,
                                                                        si->size - si->last, si->buffer,
                                                                        cpos, si->callbackUser)) != 0 &&
-                            si->state == 2) {
+                            si->state == 2)
+                        {
                             cpos = (si->last + len) % si->size;
-                            if (!(si->flags & 0x20000)) {
-                                if (len > si->size - si->last) {
+                            if (!(si->flags & 0x20000))
+                            {
+                                if (len > si->size - si->last)
+                                {
                                     hwGetPos(si->buffer, si->last * 2, si->bytes - si->last * 2,
                                              si->streamHandle, 0, 0);
                                     hwGetPos(si->buffer, 0, cpos * 2, si->streamHandle, 0, 0);
-                                } else if (cpos == 0) {
+                                }
+                                else if (cpos == 0)
+                                {
                                     hwGetPos(si->buffer, si->last * 2, si->bytes - si->last * 2,
                                              si->streamHandle, 0, 0);
-                                } else {
+                                }
+                                else
+                                {
                                     hwGetPos(si->buffer, si->last * 2, (cpos - si->last) * 2,
                                              si->streamHandle, 0, 0);
                                 }
@@ -234,15 +278,22 @@ void synthUpdateJobTable(void)
                         if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + off,
                                                                        si->size - si->last, si->buffer,
                                                                        cpos, si->callbackUser)) != 0 &&
-                            si->state == 2) {
+                            si->state == 2)
+                        {
                             cpos = (si->last + len) % si->size;
-                            if (!(si->flags & 0x20000)) {
-                                if (len > si->size - si->last) {
+                            if (!(si->flags & 0x20000))
+                            {
+                                if (len > si->size - si->last)
+                                {
                                     hwGetPos(si->buffer, off, si->bytes - off, si->streamHandle, 0, 0);
                                     hwGetPos(si->buffer, 0, (cpos / 14) * 8, si->streamHandle, 0, 0);
-                                } else if (cpos == 0) {
+                                }
+                                else if (cpos == 0)
+                                {
                                     hwGetPos(si->buffer, off, si->bytes - off, si->streamHandle, 0, 0);
-                                } else {
+                                }
+                                else
+                                {
                                     hwGetPos(si->buffer, off, ((cpos + 13) / 14) * 8 - off,
                                              si->streamHandle, 0, 0);
                                 }
@@ -253,7 +304,8 @@ void synthUpdateJobTable(void)
                     }
                 }
 
-                if (si->state == 2 && !(si->flags & 0x20000) && si->format == 1) {
+                if (si->state == 2 && !(si->flags & 0x20000) && si->format == 1)
+                {
                     hwSetStreamLoopPS(si->voice, *(u32*)((u32)si->buffer + 0x40000000) >> 24);
                 }
             }
@@ -263,23 +315,28 @@ void synthUpdateJobTable(void)
 }
 
 /* Pattern wrappers. */
-void doNothing_802737E8(void) {}
+void doNothing_802737E8(void)
+{
+}
 
 void synthCancelJob(int voice)
 {
-    SynthJob *job;
+    SynthJob* job;
     int state;
 
     job = synthJobTable + voice;
     state = job->state;
-    if (state < 3) {
-        if (state >= 1) {
+    if (state < 3)
+    {
+        if (state >= 1)
+        {
             goto cancel;
         }
     }
     return;
 cancel:
-    if ((u32)state == 2) {
+    if ((u32)state == 2)
+    {
         voiceBreakAndFree(job->voice);
     }
     job->state = 3;
@@ -288,24 +345,30 @@ cancel:
 
 void synthRefreshJobVolumes(void)
 {
-    SynthJob *job;
+    SynthJob* job;
     u32 i;
     f32 volumeScale;
 
     sndBegin();
     volumeScale = lbl_803E77D8;
     job = synthJobTable;
-    for (i = 0; i < lbl_803BD150[0x210]; i++) {
-        if (job->state != 0) {
+    for (i = 0; i < lbl_803BD150[0x210]; i++)
+    {
+        if (job->state != 0)
+        {
             job->pan = job->savedPan;
             job->surroundPan = job->savedSurroundPan;
-            if ((synthFlags & 1) != 0) {
+            if ((synthFlags & 1) != 0)
+            {
                 job->pan = 0x40;
                 job->surroundPan = 0;
-            } else if ((synthFlags & 2) == 0) {
+            }
+            else if ((synthFlags & 2) == 0)
+            {
                 job->surroundPan = 0;
             }
-            if (job->state != 3) {
+            if (job->state != 3)
+            {
                 hwSetVolume(job->voice, 0, volumeScale * job->volume,
                             volumeScale * job->leftVolume, volumeScale * job->rightVolume,
                             job->pan << 0x10, job->surroundPan << 0x10);
@@ -318,33 +381,43 @@ void synthRefreshJobVolumes(void)
 
 #define DATA_KEYMAP_TAB ((DataRefEntry *)(base + 0x4600))
 
-int dataInsertKeymap(u16 keymapId, void *keymapData)
+int dataInsertKeymap(u16 keymapId, void* keymapData)
 {
-    u8 *base = dataSmpSDirTable;
+    u8* base = dataSmpSDirTable;
     long i;
     long j;
 
     sndBegin();
-    for (i = 0; i < dataKeymapNum && DATA_KEYMAP_TAB[i].key < keymapId; ++i)
-        ;
-    if (i < dataKeymapNum) {
-        if (keymapId != DATA_KEYMAP_TAB[i].key) {
-            if (dataKeymapNum < 256) {
+    for (i = 0; i < dataKeymapNum && DATA_KEYMAP_TAB[i].key < keymapId; ++i);
+    if (i < dataKeymapNum)
+    {
+        if (keymapId != DATA_KEYMAP_TAB[i].key)
+        {
+            if (dataKeymapNum < 256)
+            {
                 for (j = dataKeymapNum - 1; j >= i; --j)
                     DATA_KEYMAP_TAB[j + 1] = DATA_KEYMAP_TAB[j];
                 ++dataKeymapNum;
-            } else {
+            }
+            else
+            {
                 sndEnd();
                 return 0;
             }
-        } else {
+        }
+        else
+        {
             DATA_KEYMAP_TAB[i].refCount++;
             sndEnd();
             return 0;
         }
-    } else if (dataKeymapNum < 256) {
+    }
+    else if (dataKeymapNum < 256)
+    {
         ++dataKeymapNum;
-    } else {
+    }
+    else
+    {
         sndEnd();
         return 0;
     }
@@ -358,17 +431,18 @@ int dataInsertKeymap(u16 keymapId, void *keymapData)
 
 int dataRemoveKeymap(u16 keymapId)
 {
-    u8 *base = dataSmpSDirTable;
+    u8* base = dataSmpSDirTable;
     long i;
     long j;
     long n;
 
     sndBegin();
     n = dataKeymapNum;
-    for (i = 0; i < n && keymapId != DATA_KEYMAP_TAB[i].key; ++i)
-        ;
-    if (i != n && --DATA_KEYMAP_TAB[i].refCount == 0) {
-        for (j = i + 1; j < n; j++) {
+    for (i = 0; i < n && keymapId != DATA_KEYMAP_TAB[i].key; ++i);
+    if (i != n && --DATA_KEYMAP_TAB[i].refCount == 0)
+    {
+        for (j = i + 1; j < n; j++)
+        {
             DATA_KEYMAP_TAB[j - 1] = DATA_KEYMAP_TAB[j];
         }
         --dataKeymapNum;

@@ -58,7 +58,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00E3_CFAmbientCl_packet_info {
+enum obj_00E3_CFAmbientCl_packet_info
+{
     CFAMBIENTCL_DEF_ID = 0x00E3,
     CFAMBIENTCL_DLL_ID = 0x014C,
     CFAMBIENTCL_CLASS_ID = 0x0040,

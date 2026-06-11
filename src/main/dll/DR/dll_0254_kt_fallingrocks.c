@@ -5,7 +5,8 @@
 
 #include "main/audio/sfx_ids.h"
 
-typedef struct KtfallingrocksPlacement {
+typedef struct KtfallingrocksPlacement
+{
     u8 pad0[0x20 - 0x0];
     u16 unk20;
     u8 pad22[0x24 - 0x22];
@@ -17,47 +18,63 @@ int ktfallingrocks_getExtraSize(void) { return 0x0; }
 
 int ktfallingrocks_getObjectTypeId(void) { return 0x0; }
 
-void ktfallingrocks_hitDetect(void) {}
-
-void ktfallingrocks_initialise(void) {}
-
-void ktfallingrocks_release(void) {}
-
-void ktfallingrocks_init(int obj) {
-    ((GameObject *)obj)->animEventCallback = NULL;
+void ktfallingrocks_hitDetect(void)
+{
 }
 
-void ktfallingrocks_free(u8 *obj) {
+void ktfallingrocks_initialise(void)
+{
+}
+
+void ktfallingrocks_release(void)
+{
+}
+
+void ktfallingrocks_init(int obj)
+{
+    ((GameObject*)obj)->animEventCallback = NULL;
+}
+
+void ktfallingrocks_free(u8* obj)
+{
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void ktfallingrocks_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
-    if (visible != 0) {
+void ktfallingrocks_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
+{
+    if (visible != 0)
+    {
         return;
     }
 }
 
-void ktfallingrocks_update(int obj) {
-    int q = *(int *)&((GameObject *)obj)->anim.placementData;
+void ktfallingrocks_update(int obj)
+{
+    int q = *(int*)&((GameObject*)obj)->anim.placementData;
     ObjPosParams params;
-    char *player;
+    char* player;
     int i;
-    if (GameBit_Get(((KtfallingrocksPlacement *)q)->unk24) == 0) {
+    if (GameBit_Get(((KtfallingrocksPlacement*)q)->unk24) == 0)
+    {
         return;
     }
     player = Obj_GetPlayerObject();
-    if (player == NULL) {
+    if (player == NULL)
+    {
         return;
     }
-    ((GameObject *)obj)->anim.localPosX = *(f32 *)(player + 0xc);
-    ((GameObject *)obj)->anim.localPosZ = *(f32 *)(player + 0x14);
-    for (i = 0; i < 10; i++) {
-        params.x = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-200, 200);
-        params.y = ((GameObject *)obj)->anim.localPosY;
-        params.z = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-200, 200);
+    ((GameObject*)obj)->anim.localPosX = *(f32*)(player + 0xc);
+    ((GameObject*)obj)->anim.localPosZ = *(f32*)(player + 0x14);
+    for (i = 0; i < 10; i++)
+    {
+        params.x = ((GameObject*)obj)->anim.localPosX + (f32)(int)
+        randomGetRange(-200, 200);
+        params.y = ((GameObject*)obj)->anim.localPosY;
+        params.z = ((GameObject*)obj)->anim.localPosZ + (f32)(int)
+        randomGetRange(-200, 200);
         (*gPartfxInterface)->spawnObject(
-            (void *)obj, ((KtfallingrocksPlacement *)q)->unk20, &params, 0x200001, -1, NULL);
+            (void*)obj, ((KtfallingrocksPlacement*)q)->unk20, &params, 0x200001, -1, NULL);
     }
     Sfx_PlayFromObject(obj, SFXbaddie_haga_spin);
-    GameBit_Set(((KtfallingrocksPlacement *)q)->unk24, 0);
+    GameBit_Set(((KtfallingrocksPlacement*)q)->unk24, 0);
 }

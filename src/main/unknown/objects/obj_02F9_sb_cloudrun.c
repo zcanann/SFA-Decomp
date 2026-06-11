@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02F9_SB_Cloudrun_packet_info {
+enum obj_02F9_SB_Cloudrun_packet_info
+{
     SB_CLOUDRUN_DEF_ID = 0x02F9,
     SB_CLOUDRUN_DLL_ID = 0x0259,
     SB_CLOUDRUN_CLASS_ID = 0x0030,

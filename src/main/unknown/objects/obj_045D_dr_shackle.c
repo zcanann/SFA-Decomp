@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_045D_DR_Shackle_packet_info {
+enum obj_045D_DR_Shackle_packet_info
+{
     DR_SHACKLE_DEF_ID = 0x045D,
     DR_SHACKLE_DLL_ID = 0x026E,
     DR_SHACKLE_CLASS_ID = 0x0030,

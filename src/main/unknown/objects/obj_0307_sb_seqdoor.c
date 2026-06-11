@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0307_SB_SeqDoor_packet_info {
+enum obj_0307_SB_SeqDoor_packet_info
+{
     SB_SEQDOOR_DEF_ID = 0x0307,
     SB_SEQDOOR_DLL_ID = 0x01F1,
     SB_SEQDOOR_CLASS_ID = 0x0030,

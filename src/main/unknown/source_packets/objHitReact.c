@@ -37,6 +37,7 @@
 /*
  * Packet constants only. Promote names and boundaries after EN inspection.
  */
-enum objhitreact_packet_info {
+enum objhitreact_packet_info
+{
 };
 #endif

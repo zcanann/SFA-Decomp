@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0125_WCSunDoor_packet_info {
+enum obj_0125_WCSunDoor_packet_info
+{
     WCSUNDOOR_DEF_ID = 0x0125,
     WCSUNDOOR_DLL_ID = 0x012E,
     WCSUNDOOR_CLASS_ID = 0x0061,

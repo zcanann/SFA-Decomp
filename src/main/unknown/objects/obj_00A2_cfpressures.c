@@ -59,7 +59,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00A2_CFPressureS_packet_info {
+enum obj_00A2_CFPressureS_packet_info
+{
     CFPRESSURES_DEF_ID = 0x00A2,
     CFPRESSURES_DLL_ID = 0x01FE,
     CFPRESSURES_CLASS_ID = 0x0033,

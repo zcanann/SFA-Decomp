@@ -81,7 +81,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_015E_DIMShackleK_packet_info {
+enum obj_015E_DIMShackleK_packet_info
+{
     DIMSHACKLEK_DEF_ID = 0x015E,
     DIMSHACKLEK_DLL_ID = 0x00ED,
     DIMSHACKLEK_CLASS_ID = 0x0006,

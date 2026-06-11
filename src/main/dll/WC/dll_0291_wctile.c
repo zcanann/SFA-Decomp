@@ -3,17 +3,19 @@
 #include "main/obj_placement.h"
 
 typedef struct WCTileIface WCTileIface;
-struct WCTileIface {
-    int pad00[8];                                                              /* 0x00 */
-    void (*moveToTileA)(int obj, int x, int y, int px, int pz, WCTileIface *); /* 0x20 */
-    int pad24[2];                                                              /* 0x24 */
-    int (*getTileIndexA)(int x, int y, WCTileIface *);                         /* 0x2c */
-    void (*getTileXYA)(int idx, void *xOut, void *yOut, WCTileIface *);        /* 0x30 */
-    int pad34[2];                                                              /* 0x34 */
-    void (*moveToTileB)(int obj, int x, int y, int px, int pz, WCTileIface *); /* 0x3c */
-    int pad40[2];                                                              /* 0x40 */
-    int (*getTileIndexB)(int x, int y, WCTileIface *);                         /* 0x48 */
-    void (*getTileXYB)(int idx, void *xOut, void *yOut, WCTileIface *);        /* 0x4c */
+
+struct WCTileIface
+{
+    int pad00[8]; /* 0x00 */
+    void (*moveToTileA)(int obj, int x, int y, int px, int pz, WCTileIface*); /* 0x20 */
+    int pad24[2]; /* 0x24 */
+    int (*getTileIndexA)(int x, int y, WCTileIface*); /* 0x2c */
+    void (*getTileXYA)(int idx, void* xOut, void* yOut, WCTileIface*); /* 0x30 */
+    int pad34[2]; /* 0x34 */
+    void (*moveToTileB)(int obj, int x, int y, int px, int pz, WCTileIface*); /* 0x3c */
+    int pad40[2]; /* 0x40 */
+    int (*getTileIndexB)(int x, int y, WCTileIface*); /* 0x48 */
+    void (*getTileXYB)(int idx, void* xOut, void* yOut, WCTileIface*); /* 0x4c */
 };
 
 #define WCTILE_EXTRA_SIZE 0xc
@@ -52,7 +54,8 @@ struct WCTileIface {
 #define WCTILE_TARGET_TILE(state) (*(s16 *)((u8 *)(state) + WCTILE_STATE_TARGET_TILE))
 #define WCTILE_MODE(state) (*(s16 *)((u8 *)(state) + WCTILE_STATE_MODE))
 
-typedef struct WCTileState {
+typedef struct WCTileState
+{
     int controller;
     s16 tileX;
     s16 tileY;
@@ -60,7 +63,8 @@ typedef struct WCTileState {
     s16 mode;
 } WCTileState;
 
-typedef struct WCTileSetup {
+typedef struct WCTileSetup
+{
     ObjPlacement base;
     u8 unk18;
     s8 modelIndex;
@@ -68,16 +72,84 @@ typedef struct WCTileSetup {
     u8 pad1C[0x24 - 0x1C];
 } WCTileSetup;
 
-STATIC_ASSERT(sizeof(WCTileState) == WCTILE_EXTRA_SIZE);
-STATIC_ASSERT(offsetof(WCTileState, controller) == WCTILE_STATE_CONTROLLER);
-STATIC_ASSERT(offsetof(WCTileState, tileX) == WCTILE_STATE_TILE_X);
-STATIC_ASSERT(offsetof(WCTileState, tileY) == WCTILE_STATE_TILE_Y);
-STATIC_ASSERT(offsetof(WCTileState, targetTile) == WCTILE_STATE_TARGET_TILE);
-STATIC_ASSERT(offsetof(WCTileState, mode) == WCTILE_STATE_MODE);
-STATIC_ASSERT(sizeof(WCTileSetup) == 0x24);
-STATIC_ASSERT(offsetof(WCTileSetup, base.posY) == 0x0c);
-STATIC_ASSERT(offsetof(WCTileSetup, modelIndex) == WCTILE_MODEL_INDEX_OFFSET);
-STATIC_ASSERT(offsetof(WCTileSetup, initialTile) == WCTILE_INITIAL_TILE_OFFSET);
+STATIC_ASSERT (
+sizeof
+(WCTileState)
+==
+WCTILE_EXTRA_SIZE
+);
+STATIC_ASSERT (offsetof
+(WCTileState
+,
+controller
+)
+==
+WCTILE_STATE_CONTROLLER
+);
+STATIC_ASSERT (offsetof
+(WCTileState
+,
+tileX
+)
+==
+WCTILE_STATE_TILE_X
+);
+STATIC_ASSERT (offsetof
+(WCTileState
+,
+tileY
+)
+==
+WCTILE_STATE_TILE_Y
+);
+STATIC_ASSERT (offsetof
+(WCTileState
+,
+targetTile
+)
+==
+WCTILE_STATE_TARGET_TILE
+);
+STATIC_ASSERT (offsetof
+(WCTileState
+,
+mode
+)
+==
+WCTILE_STATE_MODE
+);
+STATIC_ASSERT (
+sizeof
+(WCTileSetup)
+==
+0x24
+);
+STATIC_ASSERT (offsetof
+(WCTileSetup
+,
+base
+.
+posY
+)
+==
+0x0c
+);
+STATIC_ASSERT (offsetof
+(WCTileSetup
+,
+modelIndex
+)
+==
+WCTILE_MODEL_INDEX_OFFSET
+);
+STATIC_ASSERT (offsetof
+(WCTileSetup
+,
+initialTile
+)
+==
+WCTILE_INITIAL_TILE_OFFSET
+);
 
 #define WCTILE_STATE_IFACE(state) (*(WCTileIface **)(*(int *)((state)->controller + 0x68)))
 
@@ -85,36 +157,43 @@ int wctile_getExtraSize(void) { return WCTILE_EXTRA_SIZE; }
 
 int wctile_getObjectTypeId(int obj)
 {
-    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int modelIndex = *(s8 *)(*(int *)&((GameObject *)obj)->anim.placementData + WCTILE_MODEL_INDEX_OFFSET);
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    int modelIndex = *(s8*)(*(int*)&((GameObject*)obj)->anim.placementData + WCTILE_MODEL_INDEX_OFFSET);
     int modelCount = objAnim->modelInstance->modelCount;
 
-    if (modelIndex >= modelCount) {
+    if (modelIndex >= modelCount)
+    {
         modelIndex = 0;
     }
     return (modelIndex << WCTILE_RENDER_TYPE_SHIFT) | WCTILE_RENDER_TYPE_BASE;
 }
 
-void wctile_free(void) {}
+void wctile_free(void)
+{
+}
 
 void wctile_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible != 0) {
+    if (visible != 0)
+    {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6DF0);
     }
 }
 
-void wctile_hitDetect(void) {}
-
-void wctile_init(u8 *obj, u8 *setupBytes)
+void wctile_hitDetect(void)
 {
-    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    WCTileState *state = ((GameObject *)obj)->extra;
-    WCTileSetup *setup = (WCTileSetup *)setupBytes;
+}
 
-    ((GameObject *)obj)->anim.localPosY = lbl_803E6DFC + setup->base.posY;
+void wctile_init(u8* obj, u8* setupBytes)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    WCTileState* state = ((GameObject*)obj)->extra;
+    WCTileSetup* setup = (WCTileSetup*)setupBytes;
+
+    ((GameObject*)obj)->anim.localPosY = lbl_803E6DFC + setup->base.posY;
     objAnim->bankIndex = setup->modelIndex;
-    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
+    {
         objAnim->bankIndex = 0;
     }
     state->targetTile = setup->initialTile;
@@ -122,43 +201,56 @@ void wctile_init(u8 *obj, u8 *setupBytes)
     objAnim->alpha = 0;
 }
 
-void wctile_release(void) {}
+void wctile_release(void)
+{
+}
 
-void wctile_initialise(void) {}
+void wctile_initialise(void)
+{
+}
 
 void wctile_update(int obj)
 {
-    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     f32 nearest = lbl_803E6DF4;
-    WCTileState *state = ((GameObject *)obj)->extra;
+    WCTileState* state = ((GameObject*)obj)->extra;
 
-    if ((void *)state->controller == NULL) {
+    if ((void*)state->controller == NULL)
+    {
         state->controller = ObjGroup_FindNearestObject(WCTILE_CONTROLLER_GROUP, obj, &nearest);
         objAnim->alpha = 0;
         return;
     }
-    ((GameObject *)obj)->anim.rotX += (s16)(lbl_803E6DF8 * timeDelta);
-    if (state->mode != WCTILE_MODE_HIDDEN) {
-        if (objAnim->bankIndex == WCTILE_VARIANT_A) {
+    ((GameObject*)obj)->anim.rotX += (s16)(lbl_803E6DF8 * timeDelta);
+    if (state->mode != WCTILE_MODE_HIDDEN)
+    {
+        if (objAnim->bankIndex == WCTILE_VARIANT_A)
+        {
             if ((u32)GameBit_Get(WCTILE_GAMEBIT_A_HIDE) != 0)
                 state->mode = WCTILE_MODE_HIDDEN;
             else if ((u32)GameBit_Get(WCTILE_GAMEBIT_A_FADE) != 0)
                 state->mode = WCTILE_MODE_FADE_OUT;
-        } else {
+        }
+        else
+        {
             if ((u32)GameBit_Get(WCTILE_GAMEBIT_B_HIDE) != 0)
                 state->mode = WCTILE_MODE_HIDDEN;
             else if ((u32)GameBit_Get(WCTILE_GAMEBIT_B_FADE) != 0)
                 state->mode = WCTILE_MODE_FADE_OUT;
         }
     }
-    switch (state->mode) {
+    switch (state->mode)
+    {
     case WCTILE_MODE_INIT_MOVE:
-        if (objAnim->bankIndex == WCTILE_VARIANT_A) {
+        if (objAnim->bankIndex == WCTILE_VARIANT_A)
+        {
             WCTILE_STATE_IFACE(state)->getTileXYA(state->targetTile, &state->tileX,
                                                   &state->tileY, WCTILE_STATE_IFACE(state));
             WCTILE_STATE_IFACE(state)->moveToTileA(obj, state->tileX, state->tileY, obj + 0xc,
                                                    obj + 0x14, WCTILE_STATE_IFACE(state));
-        } else {
+        }
+        else
+        {
             WCTILE_STATE_IFACE(state)->getTileXYB(state->targetTile, &state->tileX,
                                                   &state->tileY, WCTILE_STATE_IFACE(state));
             WCTILE_STATE_IFACE(state)->moveToTileB(obj, state->tileX, state->tileY, obj + 0xc,
@@ -180,14 +272,18 @@ void wctile_update(int obj)
                 v = 0;
             objAnim->alpha = v;
         }
-        if (objAnim->alpha == 0) {
-            if (objAnim->bankIndex == WCTILE_VARIANT_A) {
+        if (objAnim->alpha == 0)
+        {
+            if (objAnim->bankIndex == WCTILE_VARIANT_A)
+            {
                 WCTILE_STATE_IFACE(state)->getTileXYA(state->targetTile, &state->tileX,
                                                       &state->tileY, WCTILE_STATE_IFACE(state));
                 WCTILE_STATE_IFACE(state)->moveToTileA(obj, state->tileX, state->tileY, obj + 0xc,
                                                        obj + 0x14, WCTILE_STATE_IFACE(state));
                 state->mode = WCTILE_MODE_FADE_IN;
-            } else {
+            }
+            else
+            {
                 WCTILE_STATE_IFACE(state)->getTileXYB(state->targetTile, &state->tileX,
                                                       &state->tileY, WCTILE_STATE_IFACE(state));
                 WCTILE_STATE_IFACE(state)->moveToTileB(obj, state->tileX, state->tileY, obj + 0xc,
@@ -214,12 +310,15 @@ void wctile_update(int obj)
                 v = WCTILE_ALPHA_OPAQUE;
             objAnim->alpha = v;
         }
-        if (objAnim->bankIndex == WCTILE_VARIANT_A) {
+        if (objAnim->bankIndex == WCTILE_VARIANT_A)
+        {
             if (state->targetTile !=
                 (u8)WCTILE_STATE_IFACE(state)->getTileIndexA(state->tileX, state->tileY,
                                                              WCTILE_STATE_IFACE(state)))
                 state->mode = WCTILE_MODE_INACTIVE;
-        } else {
+        }
+        else
+        {
             if (state->targetTile !=
                 (u8)WCTILE_STATE_IFACE(state)->getTileIndexB(state->tileX, state->tileY,
                                                              WCTILE_STATE_IFACE(state)))

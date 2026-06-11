@@ -1,7 +1,8 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/baddie/TumbleweedBush.h"
 
-typedef struct TitleMenuItem {
+typedef struct TitleMenuItem
+{
     s16 x;
     s16 y;
     u8 flags;
@@ -11,23 +12,29 @@ typedef struct TitleMenuItem {
     s16 minValue;
     s16 maxValue;
     s16 value;
-    union {
+
+    union
+    {
         s16 textId;
-        struct {
+
+        struct
+        {
             u16 phraseId;
             u16 windowId;
         } window;
     } extra;
 } TitleMenuItem;
 
-typedef struct LinkTextureSlot {
+typedef struct LinkTextureSlot
+{
     void* texture;
     s16 assetId;
     u8 width;
     u8 pad7;
 } LinkTextureSlot;
 
-typedef struct LinkMenuItem {
+typedef struct LinkMenuItem
+{
     u16 textId;
     u16 boxId;
     s16 field04;
@@ -36,10 +43,13 @@ typedef struct LinkMenuItem {
     s16 x;
     s16 y;
     u8 pad0E[2];
-    union {
+
+    union
+    {
         int textureAssetId;
         void* texture;
     };
+
     u16 field14;
     u16 flags;
     u8 pad18[2];
@@ -179,96 +189,126 @@ undefined4 Link_update(void)
     s8 verticalInput;
 
     item = &lbl_803A9458[(s8)linkSelected];
-    if ((s8)lbl_803DD911 == 0) {
+    if ((s8)lbl_803DD911 == 0)
+    {
         return -1;
     }
 
     result = -1;
-    if (getHudHiddenFrameCount() != 0) {
+    if (getHudHiddenFrameCount() != 0)
+    {
         return -1;
     }
 
     padGetAnalogInput(0, &horizontalInput, &verticalInput);
-    if (linkIsRotated != 0) {
+    if (linkIsRotated != 0)
+    {
         s8 oldHorizontal = horizontalInput;
         horizontalInput = verticalInput;
-        verticalInput = (s8)-oldHorizontal;
+        verticalInput = (s8) - oldHorizontal;
     }
 
-    if (verticalInput != 0) {
+    if (verticalInput != 0)
+    {
         horizontalInput = 0;
     }
 
-    if (((horizontalInput != 0) || (verticalInput != 0)) && (linkFlag_803dd8f8 != 0)) {
-        if ((verticalInput < 0) && (item->downLink != -1) && LINK_IS_NAVIGABLE(item->downLink)) {
+    if (((horizontalInput != 0) || (verticalInput != 0)) && (linkFlag_803dd8f8 != 0))
+    {
+        if ((verticalInput < 0) && (item->downLink != -1) && LINK_IS_NAVIGABLE(item->downLink))
+        {
             padClearAnalogInputY(0);
             linkSelected = item->downLink;
             linkCount_803dd90e = 0xff;
-        } else if ((verticalInput > 0) && (item->upLink != -1) &&
-                   LINK_IS_NAVIGABLE(item->upLink)) {
+        }
+        else if ((verticalInput > 0) && (item->upLink != -1) &&
+            LINK_IS_NAVIGABLE(item->upLink))
+        {
             padClearAnalogInputY(0);
             linkSelected = item->upLink;
             linkCount_803dd90e = 0xff;
         }
 
-        if (item->state != -1) {
+        if (item->state != -1)
+        {
             item = &lbl_803A9458[item->state];
-            if ((horizontalInput < 0) && (item->leftLink != -1)) {
+            if ((horizontalInput < 0) && (item->leftLink != -1))
+            {
                 padClearAnalogInputX(0);
                 lbl_803A9458[(s8)linkSelected].state = item->leftLink;
                 linkCount_803dd90e = 0xff;
-            } else if ((horizontalInput > 0) && (item->rightLink != -1)) {
+            }
+            else if ((horizontalInput > 0) && (item->rightLink != -1))
+            {
                 padClearAnalogInputX(0);
                 lbl_803A9458[(s8)linkSelected].state = item->rightLink;
                 linkCount_803dd90e = 0xff;
             }
-        } else {
+        }
+        else
+        {
             if ((horizontalInput < 0) && (item->leftLink != -1) &&
-                LINK_IS_NAVIGABLE(item->leftLink)) {
+                LINK_IS_NAVIGABLE(item->leftLink))
+            {
                 padClearAnalogInputX(0);
                 linkSelected = item->leftLink;
                 linkCount_803dd90e = 0xff;
-            } else if ((horizontalInput > 0) && (item->rightLink != -1) &&
-                       LINK_IS_NAVIGABLE(item->rightLink)) {
+            }
+            else if ((horizontalInput > 0) && (item->rightLink != -1) &&
+                LINK_IS_NAVIGABLE(item->rightLink))
+            {
                 padClearAnalogInputX(0);
                 linkSelected = item->rightLink;
                 linkCount_803dd90e = 0xff;
             }
         }
 
-        if ((s8)linkSelected < 0) {
+        if ((s8)linkSelected < 0)
+        {
             linkSelected = (s8)((s8)lbl_803DD911 - 1);
         }
-        if ((s8)linkSelected >= (s8)lbl_803DD911) {
+        if ((s8)linkSelected >= (s8)lbl_803DD911)
+        {
             linkSelected = 0;
         }
     }
 
-    if (lbl_803DD913 != 0) {
+    if (lbl_803DD913 != 0)
+    {
         buttons = getButtonsJustPressed(0);
-        if ((buttons & 0x1100) != 0) {
+        if ((buttons & 0x1100) != 0)
+        {
             if (((lbl_803A9458[(s8)linkSelected].flags & LINK_FLAG_NO_ACCEPT) == 0) &&
-                (GameBit_Get(0x44f) == 0)) {
+                (GameBit_Get(0x44f) == 0))
+            {
                 buttonDisable(0, 0x1100);
                 result = 1;
             }
-        } else if ((buttons & 0x200) != 0) {
+        }
+        else if ((buttons & 0x200) != 0)
+        {
             buttonDisable(0, 0x200);
             result = 0;
         }
     }
 
-    if (lbl_803DD910 != 0) {
+    if (lbl_803DD910 != 0)
+    {
         linkCount_803dd90e = (s16)(linkCount_803dd90e + framesThisStep * 5);
-    } else {
+    }
+    else
+    {
         linkCount_803dd90e = (s16)(linkCount_803dd90e - framesThisStep * 5);
     }
 
-    if (linkCount_803dd90e > 0xff) {
+    if (linkCount_803dd90e > 0xff)
+    {
         linkCount_803dd90e = (s16)(0xff - (linkCount_803dd90e - 0xff));
         lbl_803DD910 = (s8)(lbl_803DD910 ^ 1);
-    } else if (linkCount_803dd90e < 0) {
-        linkCount_803dd90e = (s16)-linkCount_803dd90e;
+    }
+    else if (linkCount_803dd90e < 0)
+    {
+        linkCount_803dd90e = (s16) - linkCount_803dd90e;
         lbl_803DD910 = (s8)(lbl_803DD910 ^ 1);
     }
 
@@ -324,13 +364,17 @@ extern void gameTextAppendStr(void* str, int windowId);
 /* EN v1.0 0x80131598  size: 116b  Toggle enabled bit on item->flags. */
 void TitleMenuItem_setEnabled(TitleMenuItem* item, int flag)
 {
-    if (flag != 0) {
-        if ((item->flags & TITLE_MENU_FLAG_ENABLED) == 0) {
+    if (flag != 0)
+    {
+        if ((item->flags & TITLE_MENU_FLAG_ENABLED) == 0)
+        {
             lbl_803DD918 = 0;
             lbl_803DD91C = (f32)item->value;
         }
         item->flags = (u8)(item->flags | TITLE_MENU_FLAG_ENABLED);
-    } else {
+    }
+    else
+    {
         item->flags = (u8)(item->flags & ~TITLE_MENU_FLAG_ENABLED);
     }
 }
@@ -350,43 +394,56 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
     int drawAlpha;
     f32 markerX;
 
-    switch (item->kind) {
+    switch (item->kind)
+    {
     case 0:
         drawTexture(lbl_803A9DB8[1], (u8)(((u8)alpha * 0xb4) >> 8),
                     (f32)item->x, (f32)item->y, 0x100);
 
         texture = lbl_803A9DB8[0];
         markerX = (f32)(int)((f32)item->extra.textId *
-                             ((f32)(item->value - item->minValue) /
-                              (f32)(item->maxValue - item->minValue)) +
-                             (f32)item->x - (f32)(*(u16*)((u8*)texture + 0xa) >> 1));
+            ((f32)(item->value - item->minValue) /
+                (f32)(item->maxValue - item->minValue)) +
+            (f32)item->x - (f32)(*(u16*)((u8*)texture + 0xa) >> 1));
         drawTexture(texture, (u8)(((u8)alpha * 0xff) >> 8),
                     markerX, (f32)(item->y - 4), 0x100);
         break;
     case 1:
-        if ((item->flags & TITLE_MENU_FLAG_ENABLED) != 0) {
-            if (item->value != 0) {
+        if ((item->flags & TITLE_MENU_FLAG_ENABLED) != 0)
+        {
+            if (item->value != 0)
+            {
                 textureIndex = 2;
-            } else {
+            }
+            else
+            {
                 textureIndex = 4;
             }
-        } else if (item->value != 0) {
+        }
+        else if (item->value != 0)
+        {
             textureIndex = 3;
-        } else {
+        }
+        else
+        {
             textureIndex = 5;
         }
 
         drawAlpha = (u8)alpha;
-        if ((item->flags & TITLE_MENU_FLAG_A_TOGGLE) != 0) {
+        if ((item->flags & TITLE_MENU_FLAG_A_TOGGLE) != 0)
+        {
             drawAlpha >>= 1;
         }
         drawTexture(lbl_803A9DB8[textureIndex], (u8)drawAlpha,
                     (f32)item->x, (f32)item->y, 0x100);
         break;
     case 2:
-        if ((item->flags & TITLE_MENU_FLAG_MUSIC_PREVIEW) != 0) {
+        if ((item->flags & TITLE_MENU_FLAG_MUSIC_PREVIEW) != 0)
+        {
             phrase = gameTextGetPhrase(item->extra.window.phraseId, 0);
-        } else {
+        }
+        else
+        {
             phrase = gameTextGetPhrase(item->extra.window.phraseId, item->value);
         }
         gameTextSetColor(0, 0, 0, (u8)((alpha * 0x96) >> 8));
@@ -399,7 +456,8 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
     }
 
     item->frameDelay--;
-    if (item->frameDelay < 0) {
+    if (item->frameDelay < 0)
+    {
         item->frameDelay = 0;
     }
 }
@@ -414,38 +472,49 @@ void TitleMenuItem_update(TitleMenuItem* item)
     s16 sliderDelta;
     s16 previewVolume;
 
-    if ((item->flags & TITLE_MENU_FLAG_ENABLED) == 0) {
+    if ((item->flags & TITLE_MENU_FLAG_ENABLED) == 0)
+    {
         return;
     }
 
     item->flags = (u8)(item->flags & ~(TITLE_MENU_FLAG_MOVED_LEFT |
-                                        TITLE_MENU_FLAG_MOVED_RIGHT |
-                                        TITLE_MENU_FLAG_CHANGED));
+        TITLE_MENU_FLAG_MOVED_RIGHT |
+        TITLE_MENU_FLAG_CHANGED));
     oldValue = item->value;
     item->frameDelay = 4;
 
-    switch (item->kind) {
+    switch (item->kind)
+    {
     case 2:
         stickX = padGetStickX(0);
-        if (stickX > 0x23) {
+        if (stickX > 0x23)
+        {
             move = 1;
-        } else if (stickX < -0x23) {
+        }
+        else if (stickX < -0x23)
+        {
             move = -1;
-        } else {
+        }
+        else
+        {
             move = 0;
         }
 
         gatedMove = move;
-        if (lbl_803DD920 != 0) {
+        if (lbl_803DD920 != 0)
+        {
             gatedMove = 0;
         }
         lbl_803DD920 = (s8)move;
 
-        if (gatedMove < 0) {
+        if (gatedMove < 0)
+        {
             Sfx_PlayFromObject(0, SFXsp_sa_def01);
             item->value--;
             item->flags = (u8)(item->flags | TITLE_MENU_FLAG_MOVED_LEFT);
-        } else if (gatedMove > 0) {
+        }
+        else if (gatedMove > 0)
+        {
             Sfx_PlayFromObject(0, SFXsp_sa_def01);
             item->value++;
             item->flags = (u8)(item->flags | TITLE_MENU_FLAG_MOVED_RIGHT);
@@ -457,25 +526,33 @@ void TitleMenuItem_update(TitleMenuItem* item)
 
         if ((sliderDelta == 0) ||
             ((lbl_803DD91C < (f32)item->minValue) && (sliderDelta < 0)) ||
-            (((f32)item->maxValue < lbl_803DD91C) && (sliderDelta > 0))) {
+            (((f32)item->maxValue < lbl_803DD91C) && (sliderDelta > 0)))
+        {
             lbl_803DD918 = 0;
-        } else {
+        }
+        else
+        {
             lbl_803DD918 = (s16)(lbl_803E21F0 * (f32)(s16)(sliderDelta - lbl_803DD918) +
-                                 (f32)lbl_803DD918);
+                (f32)lbl_803DD918);
             Sfx_KeepAliveLoopedObjectSound(0, 0x3b9);
         }
 
         lbl_803DD91C += (f32)lbl_803DD918 / lbl_803E21F4;
         item->value = (s16)(lbl_803E21F8 + lbl_803DD91C);
 
-        if ((item->flags & TITLE_MENU_FLAG_VOLUME_PREVIEW) != 0) {
+        if ((item->flags & TITLE_MENU_FLAG_VOLUME_PREVIEW) != 0)
+        {
             previewVolume = item->value;
-            if (previewVolume > 0x7f) {
+            if (previewVolume > 0x7f)
+            {
                 previewVolume = 0x7f;
             }
-            if (previewVolume < 0) {
+            if (previewVolume < 0)
+            {
                 previewVolume = 0;
-            } else if (previewVolume > 0x7f) {
+            }
+            else if (previewVolume > 0x7f)
+            {
                 previewVolume = 0x7f;
             }
             Sfx_SetObjectSfxVolume(0, 0x3b9, (u8)previewVolume, lbl_803E21F8);
@@ -483,33 +560,45 @@ void TitleMenuItem_update(TitleMenuItem* item)
         break;
     default:
         if (((item->flags & TITLE_MENU_FLAG_A_TOGGLE) == 0) &&
-            ((getButtonsJustPressed(0) & 0x100) != 0)) {
+            ((getButtonsJustPressed(0) & 0x100) != 0))
+        {
             Sfx_PlayFromObject(0, SFXsp_sa_def02);
             item->value = (s16)(item->value ^ 1);
         }
         break;
     }
 
-    if (item->value > item->maxValue) {
-        if ((item->flags & TITLE_MENU_FLAG_WRAP) == 0) {
+    if (item->value > item->maxValue)
+    {
+        if ((item->flags & TITLE_MENU_FLAG_WRAP) == 0)
+        {
             item->value = item->maxValue;
-        } else {
+        }
+        else
+        {
             item->value = 0;
         }
-    } else if (item->value < item->minValue) {
-        if ((item->flags & TITLE_MENU_FLAG_WRAP) == 0) {
+    }
+    else if (item->value < item->minValue)
+    {
+        if ((item->flags & TITLE_MENU_FLAG_WRAP) == 0)
+        {
             item->value = item->minValue;
-        } else {
+        }
+        else
+        {
             item->value = item->maxValue;
         }
     }
 
-    if (oldValue != item->value) {
+    if (oldValue != item->value)
+    {
         item->flags = (u8)(item->flags | TITLE_MENU_FLAG_CHANGED);
     }
 
     if (((item->flags & TITLE_MENU_FLAG_MUSIC_PREVIEW) != 0) &&
-        ((item->flags & TITLE_MENU_FLAG_CHANGED) != 0)) {
+        ((item->flags & TITLE_MENU_FLAG_CHANGED) != 0))
+    {
         Music_PlayTrackByIndex(item->value);
     }
 }
@@ -518,18 +607,24 @@ void TitleMenuItem_update(TitleMenuItem* item)
 int Dummy3E_func05_ret_1(void) { return 1; }
 
 /* EN v1.0 0x80132010  size: 4b   Empty no-op. */
-void Dummy3E_func04_nop(void) {}
+void Dummy3E_func04_nop(void)
+{
+}
 
 /* EN v1.0 0x80132014  size: 8b   Trivial 0-returner. */
 int Dummy3E_func03_ret_0(void) { return 0; }
 
 /* EN v1.0 0x8013201C  size: 4b   Empty no-op. */
-void Dummy3E_release(void) {}
+void Dummy3E_release(void)
+{
+}
 
 /* EN v1.0 0x80132020  size: 4b   Empty no-op. */
-void Dummy3E_initialise(void) {}
+void Dummy3E_initialise(void)
+{
+}
 
-extern u8  linkTextures[0x30];
+extern u8 linkTextures[0x30];
 extern s16 lbl_8031C2A8[6];
 extern void mm_free(void);
 extern void fn_8001BDD4(int);
@@ -537,9 +632,12 @@ extern void fn_8001BDD4(int);
 /* EN v1.0 0x80131540  size: 48b  Toggle A-button bit of item->flags. */
 void TitleMenuItem_setAButtonToggle(TitleMenuItem* item, int flag)
 {
-    if (flag != 0) {
+    if (flag != 0)
+    {
         item->flags = (u8)(item->flags & ~TITLE_MENU_FLAG_A_TOGGLE);
-    } else {
+    }
+    else
+    {
         item->flags = (u8)(item->flags | TITLE_MENU_FLAG_A_TOGGLE);
     }
 }
@@ -588,10 +686,12 @@ TitleMenuItem* TitleMenuItem_createWithWindow(int phraseId, int windowId, s16 mi
 {
     TitleMenuItem* item;
 
-    if (value < minValue) {
+    if (value < minValue)
+    {
         value = minValue;
     }
-    if (value > maxValue) {
+    if (value > maxValue)
+    {
         value = maxValue;
     }
 
@@ -612,10 +712,12 @@ TitleMenuItem* TitleMenuItem_create(s16 x, s16 y, s16 minValue, s16 maxValue, s1
 {
     TitleMenuItem* item;
 
-    if (value < minValue) {
+    if (value < minValue)
+    {
         value = minValue;
     }
-    if (value > maxValue) {
+    if (value > maxValue)
+    {
         value = maxValue;
     }
 
@@ -637,10 +739,12 @@ TitleMenuItem* TitleMenuItem_createWithText(s16 x, s16 y, s16 minValue, s16 maxV
 {
     TitleMenuItem* item;
 
-    if (value < minValue) {
+    if (value < minValue)
+    {
         value = minValue;
     }
-    if (value > maxValue) {
+    if (value > maxValue)
+    {
         value = maxValue;
     }
 
@@ -666,8 +770,10 @@ void fn_80131F0C(void)
     i = 0;
     p = lbl_803A9DB8;
     assetIds = (s16*)lbl_8031C2A8;
-    for (; i < 6; i++) {
-        if (*p == 0) {
+    for (; i < 6; i++)
+    {
+        if (*p == 0)
+        {
             *p = textureLoadAsset(*assetIds);
         }
         p++;
@@ -682,7 +788,8 @@ void Link_release(void)
 
     i = 0;
     p = linkTextures;
-    for (; i < 6; i++) {
+    for (; i < 6; i++)
+    {
         textureFree(*(void**)p);
         p += 8;
     }
@@ -696,7 +803,8 @@ void Link_initialise(void)
 
     i = 0;
     slot = (LinkTextureSlot*)linkTextures;
-    for (; i < 6; i++) {
+    for (; i < 6; i++)
+    {
         slot->texture = textureLoadAsset(slot->assetId);
         slot++;
     }
@@ -720,7 +828,8 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
 
     src = items;
     defaultText = lbl_8031C1A8;
-    if (count <= 40) {
+    if (count <= 40)
+    {
         lbl_803DD911 = (s8)count;
         linkCount_803dd90e = 0xff;
         linkSelected = (s8)selected;
@@ -730,50 +839,62 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
         memcpy(lbl_803A9458, items, count * sizeof(LinkMenuItem));
 
         item = lbl_803A9458;
-        for (i = 0; i < count; i++) {
+        for (i = 0; i < count; i++)
+        {
             linkedIndex = item->upLink;
-            if ((linkedIndex < -1) || (linkedIndex >= count)) {
+            if ((linkedIndex < -1) || (linkedIndex >= count))
+            {
                 OSReport(defaultText + 0xa4, linkedIndex);
             }
 
             linkedIndex = item->downLink;
-            if ((linkedIndex < -1) || (linkedIndex >= count)) {
+            if ((linkedIndex < -1) || (linkedIndex >= count))
+            {
                 OSReport(defaultText + 0xb8, linkedIndex);
             }
 
             linkedIndex = item->leftLink;
-            if ((linkedIndex < -1) || (linkedIndex >= count)) {
+            if ((linkedIndex < -1) || (linkedIndex >= count))
+            {
                 OSReport(defaultText + 0xd0, linkedIndex);
             }
 
             linkedIndex = item->rightLink;
-            if ((linkedIndex < -1) || (linkedIndex >= count)) {
+            if ((linkedIndex < -1) || (linkedIndex >= count))
+            {
                 OSReport(defaultText + 0xe8, linkedIndex);
             }
 
-            if (src->textureAssetId != -1) {
+            if (src->textureAssetId != -1)
+            {
                 item->texture = textureLoadAsset(src->textureAssetId);
-            } else {
+            }
+            else
+            {
                 item->texture = NULL;
             }
 
-            if ((item->flags & 0x10) != 0) {
+            if ((item->flags & 0x10) != 0)
+            {
                 item->field14 = 0;
                 item->field08 = 0;
             }
 
-            if ((item->flags & 0x04) != 0) {
+            if ((item->flags & 0x04) != 0)
+            {
                 linkInitTextures(item);
             }
 
             linkedIndex = item->leftLink;
-            if ((linkedIndex != -1) && ((item->flags & 0x08) != 0)) {
+            if ((linkedIndex != -1) && ((item->flags & 0x08) != 0))
+            {
                 LinkMenuItem* linked = &lbl_803A9458[linkedIndex];
                 item->x = linked->x + linked->field14;
                 item->field04 = linked->field04 + linked->field14;
             }
 
-            if ((item->flags & 0x0400) != 0) {
+            if ((item->flags & 0x0400) != 0)
+            {
                 item->x -= (s16)(item->field14 >> 1);
                 item->field04 = item->x;
             }
@@ -789,7 +910,8 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
         lbl_803DD8FE = selectedRed;
         lbl_803DD8FC = selectedGreen;
         lbl_803DD8FA = selectedBlue;
-        if (defaultMessage != NULL) {
+        if (defaultMessage != NULL)
+        {
             defaultText = defaultMessage;
         }
         lbl_803DD908 = defaultText;
@@ -803,7 +925,8 @@ void TitleMenuItem_release(void)
 
     i = 0;
     p = lbl_803A9DB8;
-    for (; i < 6; i++) {
+    for (; i < 6; i++)
+    {
         textureFree(*p);
         *p = NULL;
         p++;
@@ -817,8 +940,10 @@ void Link_free(void)
 
     i = 0;
     item = lbl_803A9458;
-    for (; i < (s8)lbl_803DD911; i++) {
-        if (item->texture != NULL) {
+    for (; i < (s8)lbl_803DD911; i++)
+    {
+        if (item->texture != NULL)
+        {
             textureFree(item->texture);
         }
         item++;

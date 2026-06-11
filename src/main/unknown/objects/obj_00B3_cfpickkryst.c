@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00B3_CFPickKryst_packet_info {
+enum obj_00B3_CFPickKryst_packet_info
+{
     CFPICKKRYST_DEF_ID = 0x00B3,
     CFPICKKRYST_DLL_ID = 0x00ED,
     CFPICKKRYST_CLASS_ID = 0x0006,

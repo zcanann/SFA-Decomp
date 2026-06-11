@@ -5,7 +5,8 @@
 #include "main/screen_transition.h"
 #include "main/worldobj.h"
 
-typedef struct {
+typedef struct
+{
     f32 f0;
     f32 f4;
     f32 f8;
@@ -16,7 +17,7 @@ typedef struct {
 } GreatFoxFxEntry;
 
 extern void ModelLightStruct_free(int model);
-extern ScreenTransitionInterface **gScreenTransitionInterface;
+extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern void objRenderFn_8003b8f4(f32 e);
 extern f32 lbl_803E6678;
 extern int randomGetRange(int min, int max);
@@ -26,10 +27,10 @@ extern int fn_8012DDAC(void);
 extern int lbl_803DDD34;
 extern int modelLightStruct_getActiveState(int model);
 extern void queueGlowRender(int model);
-extern EffectInterface **gPartfxInterface;
-extern void vecRotateZXY(void *in, void *out);
+extern EffectInterface** gPartfxInterface;
+extern void vecRotateZXY(void* in, void* out);
 extern int ObjList_FindObjectById(int id);
-extern f32 Vec_distance(void *a, void *b);
+extern f32 Vec_distance(void* a, void* b);
 extern int objCreateLight(int obj, int arg);
 extern void modelLightStruct_setLightKind(int light, int v);
 extern void modelLightStruct_setPosition(int light, f32 a, f32 b, f32 c);
@@ -64,14 +65,14 @@ extern f32 lbl_803E6658;
 extern f32 lbl_803E6660;
 extern f32 lbl_803E6664;
 extern f32 lbl_803E666C;
-extern void objfx_spawnMaskedHitEffect(int obj, f32 scale, int a, int b, int c, void *params);
-extern void objfx_spawnLightPulse(int obj, f32 scale, int a, int b, int c, f32 arg2, void *params);
+extern void objfx_spawnMaskedHitEffect(int obj, f32 scale, int a, int b, int c, void* params);
+extern void objfx_spawnLightPulse(int obj, f32 scale, int a, int b, int c, f32 arg2, void* params);
 
 int worldobj_getExtraSize(void);
 void worldobj_hitDetect(void);
 void worldobj_release(void);
 void worldobj_initialise(void);
-int worldobj_getObjectTypeId(int *obj);
+int worldobj_getObjectTypeId(int* obj);
 void worldobj_free(int obj);
 void worldobj_init(int obj, int arg);
 void worldobj_spawnGreatFoxEffects(int obj);
@@ -80,31 +81,42 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 int worldobj_getExtraSize(void) { return 0x284; }
 
-void worldobj_hitDetect(void) {}
+void worldobj_hitDetect(void)
+{
+}
 
-void worldobj_release(void) {}
+void worldobj_release(void)
+{
+}
 
-void worldobj_initialise(void) {}
+void worldobj_initialise(void)
+{
+}
 
-int worldobj_getObjectTypeId(int *obj) {
-    if (((WorldObjSetup *)((GameObject *)obj)->anim.placementData)->objectId != 0x5e3) {
+int worldobj_getObjectTypeId(int* obj)
+{
+    if (((WorldObjSetup*)((GameObject*)obj)->anim.placementData)->objectId != 0x5e3)
+    {
         return 0x0;
     }
     return 0x8;
 }
 
-void worldobj_free(int obj) {
-    WorldObjState *state = ((GameObject *)obj)->extra;
-    if (*(void **)&state->light != NULL) {
+void worldobj_free(int obj)
+{
+    WorldObjState* state = ((GameObject*)obj)->extra;
+    if (*(void**)&state->light != NULL)
+    {
         ModelLightStruct_free(state->light);
         state->light = 0;
     }
     (*gExpgfxInterface)->freeSource(obj);
 }
 
-void worldobj_init(int obj, int arg) {
-    WorldObjState *state = ((GameObject *)obj)->extra;
-    WorldObjSetup *setup = (WorldObjSetup *)arg;
+void worldobj_init(int obj, int arg)
+{
+    WorldObjState* state = ((GameObject*)obj)->extra;
+    WorldObjSetup* setup = (WorldObjSetup*)arg;
     int objA, objB;
     int sub;
     int idx;
@@ -112,7 +124,8 @@ void worldobj_init(int obj, int arg) {
     f32 base;
     f32 d;
 
-    switch (setup->objectId) {
+    switch (setup->objectId)
+    {
     case 0x5dd:
     case 0x5ed:
     case 0x5ee:
@@ -126,32 +139,45 @@ void worldobj_init(int obj, int arg) {
     case 0x80f:
         objA = ObjList_FindObjectById(0x42fe7);
         objB = ObjList_FindObjectById(0x4305a);
-        base = ((GameObject *)objB)->anim.localPosY - ((GameObject *)objA)->anim.localPosY;
-        state->orbitStartY = (((GameObject *)objA)->anim.localPosY - base) + (f32)(int)randomGetRange(-0x3e8, 0x3e8);
-        state->orbitEndY = ((GameObject *)objB)->anim.localPosY + (f32)(int)randomGetRange(-5, 5);
-        state->scale = lbl_803E6668 * ((f32)(int)randomGetRange(0, 0x64) / lbl_803E66B4) + lbl_803E6668;
-        ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * state->scale;
+        base = ((GameObject*)objB)->anim.localPosY - ((GameObject*)objA)->anim.localPosY;
+        state->orbitStartY = (((GameObject*)objA)->anim.localPosY - base) + (f32)(int)
+        randomGetRange(-0x3e8, 0x3e8);
+        state->orbitEndY = ((GameObject*)objB)->anim.localPosY + (f32)(int)
+        randomGetRange(-5, 5);
+        state->scale = lbl_803E6668 * ((f32)(int)
+        randomGetRange(0, 0x64) / lbl_803E66B4
+        )
+        +lbl_803E6668;
+        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * state->scale;
         state->spinXStep = (s8)randomGetRange(0xa, 0x19);
-        if (randomGetRange(0, 1) != 0) {
+        if (randomGetRange(0, 1) != 0)
+        {
             state->spinXStep = (s8)(-state->spinXStep);
             state->orbitAngle = 0x8000;
         }
-        base = (f32)(int)randomGetRange(0xc8, 0x190);
-        d = Vec_distance((char *)objB + 0x18, (char *)objA + 0x18);
+        base = (f32)(int)
+        randomGetRange(0xc8, 0x190);
+        d = Vec_distance((char*)objB + 0x18, (char*)objA + 0x18);
         state->orbitRadiusZ = lbl_803E66C8 * d + base;
-        state->orbitRadiusX = state->orbitRadiusZ * (lbl_803E66CC * ((f32)(int)randomGetRange(0, 0x64) / lbl_803E66B4) + lbl_803E66CC);
-        *(int *)(obj + 0) = objCreateLight(obj, 1);
-        if (*(int *)(obj + 0) != 0) {
-            modelLightStruct_setLightKind(*(int *)(obj + 0), 2);
-            modelLightStruct_setPosition(*(int *)(obj + 0), lbl_803E665C, lbl_803E665C, lbl_803E665C);
-            modelLightStruct_setDiffuseColor(*(int *)(obj + 0), 0xff, 0xff, 0xff, 0);
-            modelLightStruct_setDistanceAttenuation(*(int *)(obj + 0), lbl_803E66AC, lbl_803E66D0);
-            modelLightStruct_setupGlow(*(int *)(obj + 0), 0, 0xff, 0xff, 0xff, 0x82, lbl_803E66D4 * state->scale);
-            modelLightStruct_setGlowProjectionRadius(*(int *)(obj + 0), lbl_803E66A0);
+        state->orbitRadiusX = state->orbitRadiusZ * (lbl_803E66CC * ((f32)(int)
+        randomGetRange(0, 0x64) / lbl_803E66B4
+        )
+        +lbl_803E66CC
+        )
+        ;
+        *(int*)(obj + 0) = objCreateLight(obj, 1);
+        if (*(int*)(obj + 0) != 0)
+        {
+            modelLightStruct_setLightKind(*(int*)(obj + 0), 2);
+            modelLightStruct_setPosition(*(int*)(obj + 0), lbl_803E665C, lbl_803E665C, lbl_803E665C);
+            modelLightStruct_setDiffuseColor(*(int*)(obj + 0), 0xff, 0xff, 0xff, 0);
+            modelLightStruct_setDistanceAttenuation(*(int*)(obj + 0), lbl_803E66AC, lbl_803E66D0);
+            modelLightStruct_setupGlow(*(int*)(obj + 0), 0, 0xff, 0xff, 0xff, 0x82, lbl_803E66D4 * state->scale);
+            modelLightStruct_setGlowProjectionRadius(*(int*)(obj + 0), lbl_803E66A0);
         }
         break;
     case 0x5f5:
-        ((GameObject *)obj)->anim.rootMotionScale = lbl_803E66D8;
+        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E66D8;
         break;
     case 0x5e3:
         state->controlByte = 0;
@@ -160,26 +186,28 @@ void worldobj_init(int obj, int arg) {
     case 0x5e2:
         idx = setup->variant;
         Obj_SetActiveModelIndex(obj, idx);
-        ((GameObject *)obj)->anim.alpha = lbl_803DC210[idx];
-        for (i = 0; i < 0xb; i++) {
-            sub = *(int *)&((GameObject *)obj)->anim.placementData;
-            if (Obj_IsLoadingLocked() != 0) {
+        ((GameObject*)obj)->anim.alpha = lbl_803DC210[idx];
+        for (i = 0; i < 0xb; i++)
+        {
+            sub = *(int*)&((GameObject*)obj)->anim.placementData;
+            if (Obj_IsLoadingLocked() != 0)
+            {
                 int o2 = Obj_AllocObjectSetup(0x20, 0x5da);
-                *(u8 *)(o2 + 4) = *(u8 *)(sub + 4);
-                *(u8 *)(o2 + 6) = *(u8 *)(sub + 6);
-                *(u8 *)(o2 + 5) = *(u8 *)(sub + 5);
-                *(u8 *)(o2 + 7) = *(u8 *)(sub + 7);
-                *(f32 *)(o2 + 8) = ((GameObject *)obj)->anim.localPosX;
-                *(f32 *)(o2 + 0xc) = ((GameObject *)obj)->anim.localPosY;
-                *(f32 *)(o2 + 0x10) = ((GameObject *)obj)->anim.localPosZ;
-                Obj_SetupObject(o2, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, 0);
+                *(u8*)(o2 + 4) = *(u8*)(sub + 4);
+                *(u8*)(o2 + 6) = *(u8*)(sub + 6);
+                *(u8*)(o2 + 5) = *(u8*)(sub + 5);
+                *(u8*)(o2 + 7) = *(u8*)(sub + 7);
+                *(f32*)(o2 + 8) = ((GameObject*)obj)->anim.localPosX;
+                *(f32*)(o2 + 0xc) = ((GameObject*)obj)->anim.localPosY;
+                *(f32*)(o2 + 0x10) = ((GameObject*)obj)->anim.localPosZ;
+                Obj_SetupObject(o2, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
             }
         }
         break;
     case 0x5da:
-        ((GameObject *)obj)->anim.rotZ = (s16)randomGetRange(0, 0xffff);
-        ((GameObject *)obj)->anim.rotY = (s16)randomGetRange(0, 0xffff);
-        ((GameObject *)obj)->anim.rotX = (s16)randomGetRange(0, 0xffff);
+        ((GameObject*)obj)->anim.rotZ = (s16)randomGetRange(0, 0xffff);
+        ((GameObject*)obj)->anim.rotY = (s16)randomGetRange(0, 0xffff);
+        ((GameObject*)obj)->anim.rotX = (s16)randomGetRange(0, 0xffff);
         state->controlByte = (u8)randomGetRange(0, 0xff);
         state->spinZStep = (s8)randomGetRange(-0xa, 0xa);
         state->spinYStep = (s8)randomGetRange(-0xa, 0xa);
@@ -224,11 +252,11 @@ extern void modelLightStruct_updateGlowAlpha(int light);
 extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void modelLightStruct_setDirection(int light, f32 a, f32 b, f32 c);
-extern void objfx_spawnFlaggedTrailBurst(int obj, f32 scale, int a, int b, int c, void *vec);
+extern void objfx_spawnFlaggedTrailBurst(int obj, f32 scale, int a, int b, int c, void* vec);
 extern void ObjLink_AttachChild(int obj, int child, int slot);
-extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32 *x, f32 *y, f32 *z, int flag);
+extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int flag);
 extern int objFindTexture(int obj, int a, int b);
-extern u8 *Camera_GetCurrentViewSlot(void);
+extern u8* Camera_GetCurrentViewSlot(void);
 extern f32 lbl_8032A200[];
 extern f32 lbl_803E667C;
 extern f32 lbl_803E6680;
@@ -244,76 +272,88 @@ extern f32 lbl_803E66A8;
 extern f32 lbl_803E66B0;
 extern f32 lbl_803E66B8;
 
-void worldobj_update(int obj) {
+void worldobj_update(int obj)
+{
     s16 rot[3];
     f32 vec[10];
     WorldObjEffectParams params;
-    WorldObjState *state;
-    WorldObjSetup *setup;
+    WorldObjState* state;
+    WorldObjSetup* setup;
     int objA;
     int objB;
     int tmp;
     u8 i;
     int child;
     int tex;
-    u8 *view;
+    u8* view;
     f32 dx;
     f32 dy;
     f32 dz;
     f32 dist;
     f32 sv;
 
-    state = ((GameObject *)obj)->extra;
-    setup = (WorldObjSetup *)((GameObject *)obj)->anim.placementData;
+    state = ((GameObject*)obj)->extra;
+    setup = (WorldObjSetup*)((GameObject*)obj)->anim.placementData;
 
-    switch (setup->objectId) {
+    switch (setup->objectId)
+    {
     case 0x80f:
-        if (state->orbitAngle > 0x8000 || state->orbitAngle < 0) {
-            if (*(void **)&state->light != NULL) {
+        if (state->orbitAngle > 0x8000 || state->orbitAngle < 0)
+        {
+            if (*(void**)&state->light != NULL)
+            {
                 modelLightStruct_setEnabled(state->light, 0, lbl_803E6678);
             }
-            tmp = (int)((f32)((GameObject *)obj)->anim.alpha - lbl_803E667C * timeDelta);
-            if (tmp < 0) {
+            tmp = (int)((f32)((GameObject*)obj)->anim.alpha - lbl_803E667C * timeDelta);
+            if (tmp < 0)
+            {
                 tmp = 0;
             }
-            ((GameObject *)obj)->anim.alpha = tmp;
-            if (((GameObject *)obj)->anim.alpha == 0) {
+            ((GameObject*)obj)->anim.alpha = tmp;
+            if (((GameObject*)obj)->anim.alpha == 0)
+            {
                 Obj_FreeObject(obj);
             }
-        } else {
+        }
+        else
+        {
             objA = ObjList_FindObjectById(0x42fe7);
             objB = ObjList_FindObjectById(0x4305a);
-            if ((void *)objA != NULL && (void *)objB != NULL) {
+            if ((void*)objA != NULL && (void*)objB != NULL)
+            {
                 state->orbitAngle =
                     (int)((f32)state->spinXStep * timeDelta + (f32)state->orbitAngle);
                 vec[0] = state->orbitRadiusX *
-                          mathCosf(lbl_803E6680 * (f32)state->orbitAngle / lbl_803E6684);
+                    mathCosf(lbl_803E6680 * (f32)state->orbitAngle / lbl_803E6684);
                 vec[1] = lbl_803E665C;
                 vec[2] = state->orbitRadiusZ *
-                          mathSinf(lbl_803E6680 * (f32)state->orbitAngle / lbl_803E6684);
-                dx = ((GameObject *)objB)->anim.localPosX - ((GameObject *)objA)->anim.localPosX;
-                dz = ((GameObject *)objB)->anim.localPosZ - ((GameObject *)objA)->anim.localPosZ;
+                    mathSinf(lbl_803E6680 * (f32)state->orbitAngle / lbl_803E6684);
+                dx = ((GameObject*)objB)->anim.localPosX - ((GameObject*)objA)->anim.localPosX;
+                dz = ((GameObject*)objB)->anim.localPosZ - ((GameObject*)objA)->anim.localPosZ;
                 rot[0] = getAngle(dx, dz);
                 rot[1] = 0;
                 rot[2] = 0;
                 vecRotateZXY(rot, vec);
-                ((GameObject *)obj)->anim.localPosX = vec[0] + (((GameObject *)objA)->anim.localPosX - dx);
-                ((GameObject *)obj)->anim.localPosY =
+                ((GameObject*)obj)->anim.localPosX = vec[0] + (((GameObject*)objA)->anim.localPosX - dx);
+                ((GameObject*)obj)->anim.localPosY =
                     state->orbitStartY +
                     (f32)state->orbitAngle *
-                        (state->orbitEndY - state->orbitStartY) / lbl_803E6688;
-                ((GameObject *)obj)->anim.localPosZ = vec[2] + (((GameObject *)objA)->anim.localPosZ - dz);
+                    (state->orbitEndY - state->orbitStartY) / lbl_803E6688;
+                ((GameObject*)obj)->anim.localPosZ = vec[2] + (((GameObject*)objA)->anim.localPosZ - dz);
             }
-            ((GameObject *)obj)->anim.velocityX = oneOverTimeDelta * (((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX);
-            ((GameObject *)obj)->anim.velocityZ = oneOverTimeDelta * (((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ);
-            vec[0] = ((GameObject *)obj)->anim.velocityX;
+            ((GameObject*)obj)->anim.velocityX = oneOverTimeDelta * (((GameObject*)obj)->anim.localPosX - ((GameObject*)
+                obj)->anim.previousLocalPosX);
+            ((GameObject*)obj)->anim.velocityZ = oneOverTimeDelta * (((GameObject*)obj)->anim.localPosZ - ((GameObject*)
+                obj)->anim.previousLocalPosZ);
+            vec[0] = ((GameObject*)obj)->anim.velocityX;
             vec[1] = lbl_803E665C;
-            vec[2] = ((GameObject *)obj)->anim.velocityZ;
+            vec[2] = ((GameObject*)obj)->anim.velocityZ;
             objfx_spawnFlaggedTrailBurst(obj, lbl_803E6668 * state->scale, 2, 0xdf,
                                          8, vec);
-            ((GameObject *)obj)->anim.rotX = lbl_803E668C * timeDelta + (f32)((GameObject *)obj)->anim.rotX;
-            ((GameObject *)obj)->anim.rotY = lbl_803E6690 * timeDelta + (f32)((GameObject *)obj)->anim.rotY;
-            if (*(void **)&state->light != NULL && modelLightStruct_getActiveState(state->light) != 0) {
+            ((GameObject*)obj)->anim.rotX = lbl_803E668C * timeDelta + (f32)((GameObject*)obj)->anim.rotX;
+            ((GameObject*)obj)->anim.rotY = lbl_803E6690 * timeDelta + (f32)((GameObject*)obj)->anim.rotY;
+            if (*(void**)&state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
+            {
                 modelLightStruct_updateGlowAlpha(state->light);
             }
         }
@@ -321,25 +361,29 @@ void worldobj_update(int obj) {
     case 0x740:
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
             (obj, lbl_803E6694, timeDelta, NULL);
-        ((GameObject *)obj)->anim.rotX = lbl_803E668C * timeDelta + (f32)((GameObject *)obj)->anim.rotX;
+        ((GameObject*)obj)->anim.rotX = lbl_803E668C * timeDelta + (f32)((GameObject*)obj)->anim.rotX;
         break;
     case 0x5dc:
-        if (((GameObject *)obj)->unkF4 == 0) {
-            ((GameObject *)obj)->unkF4 = ObjList_FindObjectById(0x431dc);
-            ObjLink_AttachChild(obj, ((GameObject *)obj)->unkF4, 0);
+        if (((GameObject*)obj)->unkF4 == 0)
+        {
+            ((GameObject*)obj)->unkF4 = ObjList_FindObjectById(0x431dc);
+            ObjLink_AttachChild(obj, ((GameObject*)obj)->unkF4, 0);
         }
-        if (((GameObject *)obj)->unkF8 == 0) {
-            ((GameObject *)obj)->unkF8 = ObjList_FindObjectById(0x4325b);
-            ObjLink_AttachChild(obj, ((GameObject *)obj)->unkF8, 0);
+        if (((GameObject*)obj)->unkF8 == 0)
+        {
+            ((GameObject*)obj)->unkF8 = ObjList_FindObjectById(0x4325b);
+            ObjLink_AttachChild(obj, ((GameObject*)obj)->unkF8, 0);
         }
         tex = objFindTexture(obj, 0, 0);
-        if ((void *)tex != NULL) {
-            tmp = (s16)-*(s16 *)(tex + 8);
+        if ((void*)tex != NULL)
+        {
+            tmp = (s16) - *(s16*)(tex + 8);
             tmp -= 2;
-            if ((s16)tmp < 0) {
+            if ((s16)tmp < 0)
+            {
                 tmp += 0x2710;
             }
-            *(s16 *)(tex + 8) = (s16)-tmp;
+            *(s16*)(tex + 8) = (s16) - tmp;
         }
         break;
     case 0x5dd:
@@ -350,64 +394,73 @@ void worldobj_update(int obj) {
     case 0x5f1:
     case 0x5f2:
     case 0x5f3:
-        if (state->effectState == 2) {
-            for (i = 0; i < 0x16; i++) {
-                char *pathPoint = WorldObj_GetPathPointWork(state, i);
-                ObjPath_GetPointWorldPosition(obj, i, (f32 *)(pathPoint + 0x10), (f32 *)(pathPoint + 0x14),
-                                              (f32 *)(pathPoint + 0x18), 0);
+        if (state->effectState == 2)
+        {
+            for (i = 0; i < 0x16; i++)
+            {
+                char* pathPoint = WorldObj_GetPathPointWork(state, i);
+                ObjPath_GetPointWorldPosition(obj, i, (f32*)(pathPoint + 0x10), (f32*)(pathPoint + 0x14),
+                                              (f32*)(pathPoint + 0x18), 0);
             }
         }
         break;
     case 0x5e2:
-        switch (setup->variant) {
+        switch (setup->variant)
+        {
         case 0:
-            ((GameObject *)obj)->anim.rotX += 0x64;
+            ((GameObject*)obj)->anim.rotX += 0x64;
             break;
         case 1:
-            ((GameObject *)obj)->anim.rotY += 0x64;
+            ((GameObject*)obj)->anim.rotY += 0x64;
             break;
         case 2:
-            ((GameObject *)obj)->anim.rotZ += 0x64;
+            ((GameObject*)obj)->anim.rotZ += 0x64;
             break;
         }
         break;
     case 0x5da:
-        ((GameObject *)obj)->anim.rotX += state->spinXStep;
-        ((GameObject *)obj)->anim.rotY += state->spinYStep;
-        ((GameObject *)obj)->anim.rotZ += state->spinZStep;
+        ((GameObject*)obj)->anim.rotX += state->spinXStep;
+        ((GameObject*)obj)->anim.rotY += state->spinYStep;
+        ((GameObject*)obj)->anim.rotZ += state->spinZStep;
         state->controlByte += 2;
         sv = mathCosf(lbl_803E6680 * (f32)(s16)(state->controlByte << 8) / lbl_803E6684);
-        ((GameObject *)obj)->anim.rootMotionScale = lbl_803E669C * (lbl_803E6678 + sv) + lbl_803E6698;
+        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E669C * (lbl_803E6678 + sv) + lbl_803E6698;
         break;
     case 0x5db:
-        ((GameObject *)obj)->anim.rotX = 0x21a8;
-        ((GameObject *)obj)->anim.rootMotionScale = lbl_803E66A0;
+        ((GameObject*)obj)->anim.rotX = 0x21a8;
+        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E66A0;
         break;
     case 0x5f5:
-        ((GameObject *)obj)->anim.rotX += 1;
+        ((GameObject*)obj)->anim.rotX += 1;
         break;
     case 0x602:
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
-            (obj, lbl_803E66A4, timeDelta, (ObjAnimEventList *)&vec[3]);
+            (obj, lbl_803E66A4, timeDelta, (ObjAnimEventList*)&vec[3]);
         break;
     case 0x5e3:
-        if (state->controlByte != ((ObjAnimComponent *)obj)->bankIndex) {
+        if (state->controlByte != ((ObjAnimComponent*)obj)->bankIndex)
+        {
             Obj_SetActiveModelIndex(obj, state->controlByte);
         }
-        if (state->spinZStep != (gAudioStreamCurrentId != 0)) {
-            if (gAudioStreamCurrentId != 0) {
+        if (state->spinZStep != (gAudioStreamCurrentId != 0))
+        {
+            if (gAudioStreamCurrentId != 0)
+            {
                 ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
                     (obj, 1, lbl_803E665C, 0);
-            } else {
+            }
+            else
+            {
                 ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
                     (obj, 0, lbl_803E665C, 0);
             }
         }
         state->spinZStep = gAudioStreamCurrentId != 0;
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
-            (obj, lbl_8032A200[state->controlByte], timeDelta,
-             (ObjAnimEventList *)&vec[3]);
-        if (state->effectState == 0 && *(void **)&state->light != NULL) {
+        (obj, lbl_8032A200[state->controlByte], timeDelta,
+         (ObjAnimEventList*)&vec[3]);
+        if (state->effectState == 0 && *(void**)&state->light != NULL)
+        {
             ModelLightStruct_free(state->light);
             state->light = 0;
         }
@@ -418,86 +471,104 @@ void worldobj_update(int obj) {
     case 0x5d6:
     case 0x5d7:
     case 0x5d8:
-        if (((GameObject *)obj)->unkF8 == 0) {
+        if (((GameObject*)obj)->unkF8 == 0)
+        {
             child = ObjList_FindObjectById(state->attachChildObjectId);
-            if ((void *)child != NULL) {
-                *(f32 *)(child + 8) *= lbl_803E6668;
-                *(u8 *)(child + 0x36) = 0x96;
-                *(s16 *)(child + 6) |= 0x4000;
+            if ((void*)child != NULL)
+            {
+                *(f32*)(child + 8) *= lbl_803E6668;
+                *(u8*)(child + 0x36) = 0x96;
+                *(s16*)(child + 6) |= 0x4000;
                 ObjLink_AttachChild(obj, child, 0);
-                ((GameObject *)obj)->unkF8 = 1;
+                ((GameObject*)obj)->unkF8 = 1;
             }
         }
-        if (((GameObject *)obj)->unkF4 != 0 && *(void **)&state->lookAtTargetRef != NULL) {
+        if (((GameObject*)obj)->unkF4 != 0 && *(void**)&state->lookAtTargetRef != NULL)
+        {
             view = Camera_GetCurrentViewSlot();
-            dx = *(f32 *)(view + 0xc) - ((GameObject *)obj)->anim.localPosX;
-            dy = *(f32 *)(view + 0x10) - ((GameObject *)obj)->anim.localPosY;
-            dz = *(f32 *)(view + 0x14) - ((GameObject *)obj)->anim.localPosZ;
+            dx = *(f32*)(view + 0xc) - ((GameObject*)obj)->anim.localPosX;
+            dy = *(f32*)(view + 0x10) - ((GameObject*)obj)->anim.localPosY;
+            dz = *(f32*)(view + 0x14) - ((GameObject*)obj)->anim.localPosZ;
             dist = sqrtf(dx * dx + dy * dy + dz * dz);
-            if (dist > lbl_803E665C) {
+            if (dist > lbl_803E665C)
+            {
                 dx /= dist;
                 dy /= dist;
                 dz /= dist;
             }
             sv = lbl_803E66A8;
-            *(f32 *)(state->lookAtTargetRef + 0xc) = sv * dx + ((GameObject *)obj)->anim.localPosX;
-            *(f32 *)(state->lookAtTargetRef + 0x10) = sv * dy + ((GameObject *)obj)->anim.localPosY;
-            *(f32 *)(state->lookAtTargetRef + 0x14) = sv * dz + ((GameObject *)obj)->anim.localPosZ;
+            *(f32*)(state->lookAtTargetRef + 0xc) = sv * dx + ((GameObject*)obj)->anim.localPosX;
+            *(f32*)(state->lookAtTargetRef + 0x10) = sv * dy + ((GameObject*)obj)->anim.localPosY;
+            *(f32*)(state->lookAtTargetRef + 0x14) = sv * dz + ((GameObject*)obj)->anim.localPosZ;
         }
-        if (state->effectState != 0) {
+        if (state->effectState != 0)
+        {
             if ((u8)fn_8012DDAC() == 0 &&
                 (*gScreenTransitionInterface)->isFinished() != 0 &&
-                lbl_803DDD34 == 0) {
-                if (*(void **)&state->light == NULL) {
+                lbl_803DDD34 == 0)
+            {
+                if (*(void**)&state->light == NULL)
+                {
                     state->light = objCreateLight(obj, 1);
-                    if (*(void **)&state->light != NULL) {
+                    if (*(void**)&state->light != NULL)
+                    {
                         modelLightStruct_setLightKind(state->light, 2);
                         modelLightStruct_setPosition(state->light, lbl_803E665C, lbl_803E66AC,
-                                            lbl_803E665C);
+                                                     lbl_803E665C);
                         modelLightStruct_setDiffuseColor(state->light, 0xff, 0, 0, 0xff);
                         modelLightStruct_setDiffuseTargetColor(state->light, 0, 0, 0, 0xff);
                         modelLightStruct_setEnabled(state->light, 1, lbl_803E665C);
                         modelLightStruct_setDistanceAttenuation(state->light, lbl_803E66B0, lbl_803E66B4);
                         modelLightStruct_startColorFade(state->light, 2, 0x3c);
                         modelLightStruct_setDirection(state->light, lbl_803E665C, lbl_803E6644,
-                                                lbl_803E665C);
+                                                      lbl_803E665C);
                     }
                 }
-            } else if (*(void **)&state->light != NULL) {
+            }
+            else if (*(void**)&state->light != NULL)
+            {
                 ModelLightStruct_free(state->light);
                 state->light = 0;
             }
-            ((WorldObjState *)((GameObject *)lbl_803DDD30)->extra)->effectState = 1;
-            ((GameObject *)lbl_803DDD30)->anim.localPosX = ((GameObject *)obj)->anim.localPosX;
-            ((GameObject *)lbl_803DDD30)->anim.localPosY = lbl_803E66B8 + ((GameObject *)obj)->anim.localPosY;
-            ((GameObject *)lbl_803DDD30)->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ;
+            ((WorldObjState*)((GameObject*)lbl_803DDD30)->extra)->effectState = 1;
+            ((GameObject*)lbl_803DDD30)->anim.localPosX = ((GameObject*)obj)->anim.localPosX;
+            ((GameObject*)lbl_803DDD30)->anim.localPosY = lbl_803E66B8 + ((GameObject*)obj)->anim.localPosY;
+            ((GameObject*)lbl_803DDD30)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ;
             objA = ObjList_FindObjectById(0x4300c);
-            if ((void *)objA != NULL && (((GameObject *)objA)->anim.flags & OBJANIM_FLAG_HIDDEN)) {
+            if ((void*)objA != NULL && (((GameObject*)objA)->anim.flags & OBJANIM_FLAG_HIDDEN))
+            {
                 Obj_SetActiveModelIndex(lbl_803DDD30, 1);
-            } else {
+            }
+            else
+            {
                 Obj_SetActiveModelIndex(lbl_803DDD30, 0);
             }
-        } else if (*(void **)&state->light != NULL) {
+        }
+        else if (*(void**)&state->light != NULL)
+        {
             ModelLightStruct_free(state->light);
             state->light = 0;
         }
         break;
     case 0x61e:
-        ((GameObject *)obj)->anim.rotY = 0x3448;
-        ((GameObject *)obj)->anim.rotX = 0x4000;
-        switch (setup->variant) {
+        ((GameObject*)obj)->anim.rotY = 0x3448;
+        ((GameObject*)obj)->anim.rotX = 0x4000;
+        switch (setup->variant)
+        {
         case 0:
-            ((GameObject *)obj)->anim.rotZ -= 0xe;
+            ((GameObject*)obj)->anim.rotZ -= 0xe;
             break;
         case 1:
-            ((GameObject *)obj)->anim.rotZ -= 0x10;
+            ((GameObject*)obj)->anim.rotZ -= 0x10;
             break;
         case 2:
-            ((GameObject *)obj)->anim.rotZ -= 0x13;
+            ((GameObject*)obj)->anim.rotZ -= 0x13;
             break;
         }
-        if (state->controlByte == 0) {
-            switch (setup->variant) {
+        if (state->controlByte == 0)
+        {
+            switch (setup->variant)
+            {
             case 0:
                 worldobj_spawnAsteroidBatch(obj, 0xfa, 0x113, -0x5, 0x5, 0x4b, 0x6f3);
                 worldobj_spawnAsteroidBatch(obj, 0xfa, 0x113, -0x7, 0x7, 0x4b, 0x6f4);
@@ -529,15 +600,17 @@ void worldobj_update(int obj) {
     }
 }
 
-void worldobj_spawnGreatFoxEffects(int obj) {
+void worldobj_spawnGreatFoxEffects(int obj)
+{
     WorldObjEffectParams params;
     u8 i;
     f32 s;
     f32 k;
 
-    for (i = 0, k = lbl_803E6640; i < 0xa; i++) {
-        GreatFoxFxEntry *e;
-        s = ((GameObject *)obj)->anim.rootMotionScale;
+    for (i = 0, k = lbl_803E6640; i < 0xa; i++)
+    {
+        GreatFoxFxEntry* e;
+        s = ((GameObject*)obj)->anim.rootMotionScale;
         e = &lbl_8032A210[i];
         params.offsetX = k * (s * e->f0);
         params.offsetY = k * (s * e->f4);
@@ -545,31 +618,35 @@ void worldobj_spawnGreatFoxEffects(int obj) {
         objfx_spawnMaskedHitEffect(obj, s * e->fc, 3, e->f10, e->f11, &params);
     }
     params.effectScale = lbl_803E6644;
-    params.offsetX = lbl_803E6640 * (lbl_803E6648 * ((GameObject *)obj)->anim.rootMotionScale);
-    params.offsetY = lbl_803E6640 * (lbl_803E664C * ((GameObject *)obj)->anim.rootMotionScale);
-    params.offsetZ = lbl_803E6640 * (lbl_803E6650 * ((GameObject *)obj)->anim.rootMotionScale);
-    objfx_spawnLightPulse(obj, lbl_803E6654 * ((GameObject *)obj)->anim.rootMotionScale, 1, 0, 6, lbl_803E6658, &params);
+    params.offsetX = lbl_803E6640 * (lbl_803E6648 * ((GameObject*)obj)->anim.rootMotionScale);
+    params.offsetY = lbl_803E6640 * (lbl_803E664C * ((GameObject*)obj)->anim.rootMotionScale);
+    params.offsetZ = lbl_803E6640 * (lbl_803E6650 * ((GameObject*)obj)->anim.rootMotionScale);
+    objfx_spawnLightPulse(obj, lbl_803E6654 * ((GameObject*)obj)->anim.rootMotionScale, 1, 0, 6, lbl_803E6658, &params);
     params.offsetX = lbl_803E665C;
-    params.offsetY = lbl_803E6640 * (lbl_803E6660 * ((GameObject *)obj)->anim.rootMotionScale);
-    params.offsetZ = lbl_803E6640 * (lbl_803E6664 * ((GameObject *)obj)->anim.rootMotionScale);
-    objfx_spawnLightPulse(obj, lbl_803E6654 * ((GameObject *)obj)->anim.rootMotionScale, 1, 0, 6, lbl_803E6668, &params);
-    params.offsetX = lbl_803E6640 * (lbl_803E666C * ((GameObject *)obj)->anim.rootMotionScale);
-    params.offsetY = lbl_803E6640 * (lbl_803E664C * ((GameObject *)obj)->anim.rootMotionScale);
-    params.offsetZ = lbl_803E6640 * (lbl_803E6650 * ((GameObject *)obj)->anim.rootMotionScale);
-    objfx_spawnLightPulse(obj, lbl_803E6654 * ((GameObject *)obj)->anim.rootMotionScale, 1, 0, 6, lbl_803E6658, &params);
+    params.offsetY = lbl_803E6640 * (lbl_803E6660 * ((GameObject*)obj)->anim.rootMotionScale);
+    params.offsetZ = lbl_803E6640 * (lbl_803E6664 * ((GameObject*)obj)->anim.rootMotionScale);
+    objfx_spawnLightPulse(obj, lbl_803E6654 * ((GameObject*)obj)->anim.rootMotionScale, 1, 0, 6, lbl_803E6668, &params);
+    params.offsetX = lbl_803E6640 * (lbl_803E666C * ((GameObject*)obj)->anim.rootMotionScale);
+    params.offsetY = lbl_803E6640 * (lbl_803E664C * ((GameObject*)obj)->anim.rootMotionScale);
+    params.offsetZ = lbl_803E6640 * (lbl_803E6650 * ((GameObject*)obj)->anim.rootMotionScale);
+    objfx_spawnLightPulse(obj, lbl_803E6654 * ((GameObject*)obj)->anim.rootMotionScale, 1, 0, 6, lbl_803E6658, &params);
 }
 
-void worldobj_spawnAsteroidBatch(int obj, int xMin, int xMax, int yMin, int yMax, int count, int dispatchId) {
+void worldobj_spawnAsteroidBatch(int obj, int xMin, int xMax, int yMin, int yMax, int count, int dispatchId)
+{
     s16 rot[3];
     f32 vec[3];
     WorldObjEffectParams params;
     int i;
     f32 base;
 
-    for (i = 0, base = lbl_803E665C; i < count; i++) {
+    for (i = 0, base = lbl_803E665C; i < count; i++)
+    {
         vec[0] = base;
-        vec[1] = (f32)(int)randomGetRange(xMin, xMax);
-        vec[2] = (f32)(int)randomGetRange(yMin, yMax);
+        vec[1] = (f32)(int)
+        randomGetRange(xMin, xMax);
+        vec[2] = (f32)(int)
+        randomGetRange(yMin, yMax);
         rot[0] = 0;
         rot[1] = 0;
         rot[2] = (s16)randomGetRange(-0x7fff, 0x7fff);
@@ -578,33 +655,40 @@ void worldobj_spawnAsteroidBatch(int obj, int xMin, int xMax, int yMin, int yMax
         params.offsetY = vec[1];
         params.offsetZ = vec[2];
         params.dispatchTimer = 0x64;
-        (*gPartfxInterface)->spawnObject((void *)obj, dispatchId, &params, 2,
-                                                            -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, dispatchId, &params, 2,
+                                         -1, NULL);
     }
 }
 
-void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
-    WorldObjState *state = ((GameObject *)p1)->extra;
-    int modelId = ((WorldObjSetup *)((GameObject *)p1)->anim.placementData)->objectId;
+void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    WorldObjState* state = ((GameObject*)p1)->extra;
+    int modelId = ((WorldObjSetup*)((GameObject*)p1)->anim.placementData)->objectId;
 
-    if (modelId == 0x5f5) {
+    if (modelId == 0x5f5)
+    {
         objRenderFn_8003b8f4(lbl_803E6678);
         return;
     }
-    if (visible == 0) {
+    if (visible == 0)
+    {
         return;
     }
-    if (modelId == 0x61e) {
+    if (modelId == 0x61e)
+    {
         return;
     }
-    switch (modelId) {
+    switch (modelId)
+    {
     case 0x5de:
-        if (state->effectState == 0) {
+        if (state->effectState == 0)
+        {
             objRenderFn_8003b8f4(lbl_803E6678);
         }
         break;
     case 0x5e3:
-        if (randomGetRange(0, 0x19) != 0 && state->effectState != 0) {
+        if (randomGetRange(0, 0x19) != 0 && state->effectState != 0)
+        {
             GXSetScissor(0x1e0, 0x32, 0x82, 0x96);
             ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6678);
             Camera_ApplyCurrentViewport(p2);
@@ -612,18 +696,25 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
         break;
     case 0x740:
         if (state->effectState != 0 && (u8)fn_8012DDAC() == 0 &&
-            (*gScreenTransitionInterface)->isFinished() != 0) {
-            if (lbl_803DDD34 != 0) {
+            (*gScreenTransitionInterface)->isFinished() != 0)
+        {
+            if (lbl_803DDD34 != 0)
+            {
                 lbl_803DDD34 = lbl_803DDD34 - 1;
-            } else {
+            }
+            else
+            {
                 ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6678);
             }
-        } else {
+        }
+        else
+        {
             lbl_803DDD34 = 2;
         }
         break;
     case 0x80f:
-        if (*(void **)&state->light != NULL && modelLightStruct_getActiveState(state->light) != 0) {
+        if (*(void**)&state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
+        {
             queueGlowRender(state->light);
         }
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6678);

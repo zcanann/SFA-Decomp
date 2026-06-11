@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0579_tallpalmtre_packet_info {
+enum obj_0579_tallpalmtre_packet_info
+{
     TALLPALMTRE_DEF_ID = 0x0579,
     TALLPALMTRE_DLL_ID = 0x02AF,
     TALLPALMTRE_CLASS_ID = 0x007F,

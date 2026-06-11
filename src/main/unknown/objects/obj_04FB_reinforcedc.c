@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04FB_ReinforcedC_packet_info {
+enum obj_04FB_ReinforcedC_packet_info
+{
     REINFORCEDC_DEF_ID = 0x04FB,
     REINFORCEDC_DLL_ID = 0x0104,
     REINFORCEDC_CLASS_ID = 0x0030,

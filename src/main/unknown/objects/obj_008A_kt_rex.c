@@ -54,7 +54,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_008A_KT_Rex_packet_info {
+enum obj_008A_KT_Rex_packet_info
+{
     KT_REX_DEF_ID = 0x008A,
     KT_REX_DLL_ID = 0x0250,
     KT_REX_CLASS_ID = 0x006D,

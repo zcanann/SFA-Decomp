@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04AC_Landed_Arwi_packet_info {
+enum obj_04AC_Landed_Arwi_packet_info
+{
     LANDED_ARWI_DEF_ID = 0x04AC,
     LANDED_ARWI_DLL_ID = 0x011B,
     LANDED_ARWI_CLASS_ID = 0x0054,

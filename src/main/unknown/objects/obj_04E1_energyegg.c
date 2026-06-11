@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04E1_EnergyEgg_packet_info {
+enum obj_04E1_EnergyEgg_packet_info
+{
     ENERGYEGG_DEF_ID = 0x04E1,
     ENERGYEGG_DLL_ID = 0x00ED,
     ENERGYEGG_CLASS_ID = 0x0006,

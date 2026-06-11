@@ -80,7 +80,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_003E_Kooshy_packet_info {
+enum obj_003E_Kooshy_packet_info
+{
     KOOSHY_DEF_ID = 0x003E,
     KOOSHY_DLL_ID = 0x00C9,
     KOOSHY_CLASS_ID = 0x001C,

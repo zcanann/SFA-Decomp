@@ -80,7 +80,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_002E_GCRobotPatr_packet_info {
+enum obj_002E_GCRobotPatr_packet_info
+{
     GCROBOTPATR_DEF_ID = 0x002E,
     GCROBOTPATR_DLL_ID = 0x00C9,
     GCROBOTPATR_CLASS_ID = 0x001C,

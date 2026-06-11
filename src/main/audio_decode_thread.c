@@ -1,10 +1,11 @@
 #include "main/audio_decode_thread.h"
 
-extern void *AudioDecoderForOnMemory(void *);
-extern void *AudioDecoder(void *);
+extern void* AudioDecoderForOnMemory(void*);
+extern void* AudioDecoder(void*);
 extern int gAttractMovieAudioThreadActive;
 
-typedef struct THPAudioDecodeContext {
+typedef struct THPAudioDecodeContext
+{
     OSMessage freeAudioBuffers[3];
     OSMessage decodedAudioBuffers[3];
     OSMessageQueue freeQueue;
@@ -28,18 +29,23 @@ extern THPAudioDecodeContext lbl_803A4448;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-BOOL CreateAudioDecodeThread(OSPriority priority, void *param)
+BOOL CreateAudioDecodeThread(OSPriority priority, void* param)
 {
-    THPAudioDecodeContext *context = &lbl_803A4448;
+    THPAudioDecodeContext* context = &lbl_803A4448;
 
-    if (param != NULL) {
+    if (param != NULL)
+    {
         if (OSCreateThread(&context->thread, AudioDecoderForOnMemory, param,
-                           &context->thread, 0x1000, priority, 1) == 0) {
+                           &context->thread, 0x1000, priority, 1) == 0)
+        {
             return 0;
         }
-    } else {
+    }
+    else
+    {
         if (OSCreateThread(&context->thread, AudioDecoder, NULL,
-                           &context->thread, 0x1000, priority, 1) == 0) {
+                           &context->thread, 0x1000, priority, 1) == 0)
+        {
             return 0;
         }
     }

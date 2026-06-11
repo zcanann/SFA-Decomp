@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_059C_CmbSrc_packet_info {
+enum obj_059C_CmbSrc_packet_info
+{
     CMBSRC_DEF_ID = 0x059C,
     CMBSRC_DLL_ID = 0x02B1,
     CMBSRC_CLASS_ID = 0x007E,

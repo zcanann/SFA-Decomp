@@ -52,7 +52,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_008E_KT_RexFloor_packet_info {
+enum obj_008E_KT_RexFloor_packet_info
+{
     KT_REXFLOOR_DEF_ID = 0x008E,
     KT_REXFLOOR_DLL_ID = 0x0251,
     KT_REXFLOOR_CLASS_ID = 0x006C,

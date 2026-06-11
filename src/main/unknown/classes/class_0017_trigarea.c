@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0017_TrigArea_defs {
+enum class_0017_TrigArea_defs
+{
     TRIGAREA_TRIGAREA = 0x051D,
 };
 #endif

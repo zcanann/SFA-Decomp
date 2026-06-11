@@ -51,7 +51,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_049C_MagicCaveTo_packet_info {
+enum obj_049C_MagicCaveTo_packet_info
+{
     MAGICCAVETO_DEF_ID = 0x049C,
     MAGICCAVETO_DLL_ID = 0x011F,
     MAGICCAVETO_CLASS_ID = 0x007D,

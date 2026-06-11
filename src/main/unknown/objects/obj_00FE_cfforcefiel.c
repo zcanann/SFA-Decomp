@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00FE_CFForceFiel_packet_info {
+enum obj_00FE_CFForceFiel_packet_info
+{
     CFFORCEFIEL_DEF_ID = 0x00FE,
     CFFORCEFIEL_DLL_ID = 0x015B,
     CFFORCEFIEL_CLASS_ID = 0x0030,

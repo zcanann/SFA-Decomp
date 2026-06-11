@@ -54,7 +54,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_0126_Trigger_slot {
+enum dll_0126_Trigger_slot
+{
     TRIGGER_INITIALISE = 0,
     TRIGGER_RELEASE = 1,
     TRIGGER_INIT = 3,

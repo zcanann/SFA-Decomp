@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_026A_NWCellLock_packet_info {
+enum obj_026A_NWCellLock_packet_info
+{
     NWCELLLOCK_DEF_ID = 0x026A,
     NWCELLLOCK_DLL_ID = 0x012E,
     NWCELLLOCK_CLASS_ID = 0x0061,

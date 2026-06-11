@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0009_AnimTricky_packet_info {
+enum obj_0009_AnimTricky_packet_info
+{
     ANIMTRICKY_DEF_ID = 0x0009,
     ANIMTRICKY_DLL_ID = 0x00C6,
     ANIMTRICKY_CLASS_ID = 0x0010,

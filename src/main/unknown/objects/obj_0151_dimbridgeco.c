@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0151_DIMBridgeCo_packet_info {
+enum obj_0151_DIMBridgeCo_packet_info
+{
     DIMBRIDGECO_DEF_ID = 0x0151,
     DIMBRIDGECO_DLL_ID = 0x00ED,
     DIMBRIDGECO_CLASS_ID = 0x0006,

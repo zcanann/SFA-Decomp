@@ -36,7 +36,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_01EE_SB_CannonBall_slot {
+enum dll_01EE_SB_CannonBall_slot
+{
     SB_CANNONBALL_INITIALISE = 0,
     SB_CANNONBALL_RELEASE = 1,
     SB_CANNONBALL_INIT = 3,

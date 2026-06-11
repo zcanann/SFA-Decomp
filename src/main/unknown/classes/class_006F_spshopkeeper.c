@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_006F_SPShopKeeper_defs {
+enum class_006F_SPShopKeeper_defs
+{
     SPSHOPKEEPER_SPSHOPKEEPE = 0x03C3,
 };
 #endif

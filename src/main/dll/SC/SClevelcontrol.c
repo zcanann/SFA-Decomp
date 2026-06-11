@@ -1,8 +1,8 @@
 #include "main/dll/SC/SClevelcontrol.h"
 
-extern void ObjPath_GetPointWorldPosition(SHthorntailObject *obj,int pointIndex,f32 *x,f32 *y,f32 *z,int param_6);
+extern void ObjPath_GetPointWorldPosition(SHthorntailObject* obj, int pointIndex, f32* x, f32* y, f32* z, int param_6);
 extern void objRenderFn_8003b8f4(f32 scale);
-extern void dll_2E_func06(SHthorntailObject *obj,SHthorntailRuntime *runtime,int param_3);
+extern void dll_2E_func06(SHthorntailObject* obj, SHthorntailRuntime* runtime, int param_3);
 
 extern f32 lbl_803E5448;
 
@@ -19,19 +19,21 @@ extern f32 lbl_803E5448;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SHthorntail_render(SHthorntailObject *obj)
+void SHthorntail_render(SHthorntailObject* obj)
 {
-  SHthorntailRuntime *runtime;
-  int pointIndex;
+    SHthorntailRuntime* runtime;
+    int pointIndex;
 
-  runtime = obj->runtime;
-  objRenderFn_8003b8f4(lbl_803E5448);
-  dll_2E_func06(obj,runtime,0);
-  pointIndex = 0;
-  do {
-    ObjPath_GetPointWorldPosition(obj,pointIndex,&runtime->renderPathPoints[0].x,&runtime->renderPathPoints[0].y,
-                &runtime->renderPathPoints[0].z,0);
-    runtime = (SHthorntailRuntime *)((int)runtime + sizeof(Vec));
-    pointIndex = pointIndex + 1;
-  } while (pointIndex < SHTHORNTAIL_RENDER_PATH_POINT_COUNT);
+    runtime = obj->runtime;
+    objRenderFn_8003b8f4(lbl_803E5448);
+    dll_2E_func06(obj, runtime, 0);
+    pointIndex = 0;
+    do
+    {
+        ObjPath_GetPointWorldPosition(obj, pointIndex, &runtime->renderPathPoints[0].x, &runtime->renderPathPoints[0].y,
+                                      &runtime->renderPathPoints[0].z, 0);
+        runtime = (SHthorntailRuntime*)((int)runtime + sizeof(Vec));
+        pointIndex = pointIndex + 1;
+    }
+    while (pointIndex < SHTHORNTAIL_RENDER_PATH_POINT_COUNT);
 }

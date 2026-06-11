@@ -23,7 +23,8 @@
  */
 
 #if 0
-enum dll_026B_DR_Chimmey_slot {
+enum dll_026B_DR_Chimmey_slot
+{
     DRCHIMMEY_INIT = 3,
     DRCHIMMEY_UPDATE = 4,
     DRCHIMMEY_RENDER = 6,

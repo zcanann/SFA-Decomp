@@ -3,7 +3,7 @@
 
 extern u16 hwIrqLevel;
 extern u32 oldState;
-extern void *(*gSalMallocHook)(u32 size);
+extern void*(*gSalMallocHook)(u32 size);
 extern u32 salLastTick;
 extern u16 dspCmdFirstSize;
 extern u32 dspCmdList;
@@ -12,8 +12,8 @@ extern volatile u32 salDspInitIsDone;
 extern DSPTaskInfo lbl_803D4880;
 extern u16 lbl_80330840[];
 extern u16 lbl_803DC628[4];
-extern void dspInitCallback(void *task);
-extern void dspResumeCallback(void *task);
+extern void dspInitCallback(void* task);
+extern void dspResumeCallback(void* task);
 
 /*
  * --INFO--
@@ -27,7 +27,7 @@ int salInitDsp(u32 flags)
     lbl_803D4880.iram_mmem_addr = lbl_80330840;
     lbl_803D4880.iram_length = lbl_803DC628[0];
     lbl_803D4880.iram_addr = 0;
-    lbl_803D4880.dram_mmem_addr = (u16 *)((u8 *)&lbl_803D4880 + 0x60);
+    lbl_803D4880.dram_mmem_addr = (u16*)((u8*)&lbl_803D4880 + 0x60);
     lbl_803D4880.dram_length = 0x2000;
     lbl_803D4880.dram_addr = 0;
     lbl_803D4880.dsp_init_vector = 0x10;
@@ -42,7 +42,9 @@ int salInitDsp(u32 flags)
     DSPAddTask(&lbl_803D4880);
     salDspInitIsDone = 0;
     sndEnd();
-    while (salDspInitIsDone == 0) {}
+    while (salDspInitIsDone == 0)
+    {
+    }
     sndBegin();
     return 1;
 }
@@ -71,7 +73,8 @@ void sndEnd(void)
 
     count = hwIrqLevel - 1;
     hwIrqLevel = count;
-    if (count == 0) {
+    if (count == 0)
+    {
         OSRestoreInterrupts(oldState);
     }
 }
@@ -86,7 +89,9 @@ void sndEnd(void)
 int salStartDsp(void)
 {
     DSPHalt();
-    while (DSPGetDMAStatus() != 0) {}
+    while (DSPGetDMAStatus() != 0)
+    {
+    }
     DSPAssertInt();
     return 1;
 }
@@ -101,15 +106,19 @@ int salStartDsp(void)
 void salCtrlDsp(u32 param_1)
 {
     u32 elapsed = salGetStartDelay();
-    salBuildCommandList((s16 *)param_1, elapsed);
+    salBuildCommandList((s16*)param_1, elapsed);
     {
         u32 saved = dspCmdList;
         salDspCallbackEnabled = 0;
         PPCSync();
         DSPSendMailToDSP(((u32)0xbabe << 16) | dspCmdFirstSize);
-        while (DSPCheckMailToDSP() != 0) {}
+        while (DSPCheckMailToDSP() != 0)
+        {
+        }
         DSPSendMailToDSP(saved);
-        while (DSPCheckMailToDSP() != 0) {}
+        while (DSPCheckMailToDSP() != 0)
+        {
+        }
     }
 }
 
@@ -152,7 +161,8 @@ void sndBegin(void)
 {
     u16 count = hwIrqLevel;
     hwIrqLevel = count + 1;
-    if (count == 0) {
+    if (count == 0)
+    {
         oldState = OSDisableInterrupts();
     }
 }

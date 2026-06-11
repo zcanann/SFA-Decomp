@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0309_SB_DeckDoor_packet_info {
+enum obj_0309_SB_DeckDoor_packet_info
+{
     SB_DECKDOOR_DEF_ID = 0x0309,
     SB_DECKDOOR_DLL_ID = 0x01F1,
     SB_DECKDOOR_CLASS_ID = 0x0030,

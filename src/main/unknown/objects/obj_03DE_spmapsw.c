@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03DE_SPMapSW_packet_info {
+enum obj_03DE_SPMapSW_packet_info
+{
     SPMAPSW_DEF_ID = 0x03DE,
     SPMAPSW_DLL_ID = 0x0284,
     SPMAPSW_CLASS_ID = 0x0070,

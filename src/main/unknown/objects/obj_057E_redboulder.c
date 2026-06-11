@@ -63,7 +63,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_057E_RedBoulder_packet_info {
+enum obj_057E_RedBoulder_packet_info
+{
     REDBOULDER_DEF_ID = 0x057E,
     REDBOULDER_DLL_ID = 0x02B0,
     REDBOULDER_CLASS_ID = 0x0061,

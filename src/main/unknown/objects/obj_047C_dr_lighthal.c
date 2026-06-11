@@ -58,7 +58,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_047C_DR_LightHal_packet_info {
+enum obj_047C_DR_LightHal_packet_info
+{
     DR_LIGHTHAL_DEF_ID = 0x047C,
     DR_LIGHTHAL_DLL_ID = 0x027F,
     DR_LIGHTHAL_CLASS_ID = 0x0030,

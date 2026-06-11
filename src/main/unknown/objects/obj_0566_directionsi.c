@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0566_DirectionSi_packet_info {
+enum obj_0566_DirectionSi_packet_info
+{
     DIRECTIONSI_DEF_ID = 0x0566,
     DIRECTIONSI_DLL_ID = 0x012E,
     DIRECTIONSI_CLASS_ID = 0x0061,

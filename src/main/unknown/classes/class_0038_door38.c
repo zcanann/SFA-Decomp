@@ -48,7 +48,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0038_Door38_defs {
+enum class_0038_Door38_defs
+{
     DOOR38_VFP_ROUNDDO = 0x0330,
     DOOR38_VFP_SMALLRO = 0x0325,
     DOOR38_CFPOWERDOOR = 0x00CB,

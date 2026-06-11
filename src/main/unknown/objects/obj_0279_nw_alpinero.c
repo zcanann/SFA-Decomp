@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0279_NW_alpinero_packet_info {
+enum obj_0279_NW_alpinero_packet_info
+{
     NW_ALPINERO_DEF_ID = 0x0279,
     NW_ALPINERO_DLL_ID = 0x00ED,
     NW_ALPINERO_CLASS_ID = 0x0006,

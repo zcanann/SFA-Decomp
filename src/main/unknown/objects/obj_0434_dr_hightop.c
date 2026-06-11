@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0434_DR_HighTop_packet_info {
+enum obj_0434_DR_HighTop_packet_info
+{
     DR_HIGHTOP_DEF_ID = 0x0434,
     DR_HIGHTOP_DLL_ID = 0x0272,
     DR_HIGHTOP_CLASS_ID = 0x0030,

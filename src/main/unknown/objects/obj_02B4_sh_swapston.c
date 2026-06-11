@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02B4_SH_swapston_packet_info {
+enum obj_02B4_SH_swapston_packet_info
+{
     SH_SWAPSTON_DEF_ID = 0x02B4,
     SH_SWAPSTON_DLL_ID = 0x01B0,
     SH_SWAPSTON_CLASS_ID = 0x0061,

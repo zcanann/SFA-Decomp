@@ -66,9 +66,9 @@ extern f32 lbl_803E3AEC;
 extern f32 lbl_803DBDD8;
 extern u8 framesThisStep;
 extern u8 lbl_803DDAD8;
-extern EffectInterface **gPartfxInterface;
-extern f32 Curve_EvalBSpline(f32 t, void *control, int mode);
-extern f32 Vec_distance(void *a, void *b);
+extern EffectInterface** gPartfxInterface;
+extern f32 Curve_EvalBSpline(f32 t, void* control, int mode);
+extern f32 Vec_distance(void* a, void* b);
 extern int objCreateLight(int obj, int type);
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
@@ -81,9 +81,16 @@ extern f32 mathSinf(f32 value);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-void LanternFireFly_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3AA0); }
 
-void LanternFireFly_hitDetect(void) {}
+void LanternFireFly_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E3AA0);
+}
+
+void LanternFireFly_hitDetect(void)
+{
+}
 
 #define LANTERN_SPAWN_FX(obj, id, a, b, c, d) \
     (*gPartfxInterface)->spawnObject((void *)obj, id, (void *)a, b, c, (void *)d)
@@ -99,45 +106,55 @@ extern void fn_801869DC(int obj);
 
 void LanternFireFly_update(int obj)
 {
-    LanternFireFlyState *state;
+    LanternFireFlyState* state;
     int player;
     f32 velocity[3];
     f32 stepScale;
 
-    state = ((GameObject *)obj)->extra;
+    state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
-    ((GameObject *)obj)->anim.previousLocalPosX = ((GameObject *)obj)->anim.localPosX;
-    ((GameObject *)obj)->anim.previousLocalPosY = ((GameObject *)obj)->anim.localPosY;
-    ((GameObject *)obj)->anim.previousLocalPosZ = ((GameObject *)obj)->anim.localPosZ;
+    ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
+    ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
+    ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
 
-    if (state->splineT > lbl_803E3AA0) {
+    if (state->splineT > lbl_803E3AA0)
+    {
         state->splineT -= lbl_803E3AA0;
-        if (state->animFrame < 4) {
+        if (state->animFrame < 4)
+        {
             fn_801868D0(obj);
-        } else if (state->animFrame == 7) {
+        }
+        else if (state->animFrame == 7)
+        {
             state->animFrame = 0;
-        } else {
+        }
+        else
+        {
             state->animFrame++;
         }
         fn_801869DC(obj);
     }
 
-    ((GameObject *)obj)->anim.localPosX = state->anchorX + Curve_EvalBSpline(state->splineT, state->controlX, 0);
-    ((GameObject *)obj)->anim.localPosY = state->anchorY + Curve_EvalBSpline(state->splineT, state->controlY, 0);
-    ((GameObject *)obj)->anim.localPosZ = state->anchorZ + Curve_EvalBSpline(state->splineT, state->controlZ, 0);
+    ((GameObject*)obj)->anim.localPosX = state->anchorX + Curve_EvalBSpline(state->splineT, state->controlX, 0);
+    ((GameObject*)obj)->anim.localPosY = state->anchorY + Curve_EvalBSpline(state->splineT, state->controlY, 0);
+    ((GameObject*)obj)->anim.localPosZ = state->anchorZ + Curve_EvalBSpline(state->splineT, state->controlZ, 0);
 
-    if (LANTERN_FIREFLY_IS_ACTIVE(state)) {
+    if (LANTERN_FIREFLY_IS_ACTIVE(state))
+    {
         state->speed =
-            (f32)(lbl_803E3AC4 * Vec_distance((void *)&((GameObject *)obj)->anim.worldPosX, (void *)(Obj_GetPlayerObject() + 0x18)) + lbl_803E3AC0);
+            (f32)(lbl_803E3AC4 * Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX,
+                                              (void*)(Obj_GetPlayerObject() + 0x18)) + lbl_803E3AC0);
     }
     state->splineT += state->speed * timeDelta;
 
-    if ((state->stateId == 1 || state->stateId == 4) && LANTERN_FIREFLY_IS_ACTIVE(state) && state->lightSpawned == 0) {
+    if ((state->stateId == 1 || state->stateId == 4) && LANTERN_FIREFLY_IS_ACTIVE(state) && state->lightSpawned == 0)
+    {
         int light;
 
         state->lightSpawned = 1;
         light = objCreateLight(obj, 1);
-        if (light != 0) {
+        if (light != 0)
+        {
             modelLightStruct_setLightKind(light, 2);
             modelLightStruct_setDiffuseColor(light, 100, 0xff, 100, 0);
             lightSetFieldBC_8001db14(light, 1);
@@ -145,42 +162,50 @@ void LanternFireFly_update(int obj)
             modelLightStruct_setAffectsAabbLightSelection(light, 1);
         }
         state->light = light;
-        if (!LANTERN_FIREFLY_IS_ACTIVE(state)) {
+        if (!LANTERN_FIREFLY_IS_ACTIVE(state))
+        {
             lbl_803DDAD8 = 1;
         }
     }
 
-    velocity[0] = ((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX;
-    velocity[1] = ((GameObject *)obj)->anim.localPosY - ((GameObject *)obj)->anim.previousLocalPosY;
-    velocity[2] = ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ;
+    velocity[0] = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
+    velocity[1] = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
+    velocity[2] = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ;
     stepScale = lbl_803E3AA0 /
-        ((f32)(s32)(sqrtf(velocity[0] * velocity[0] + velocity[1] * velocity[1] + velocity[2] * velocity[2]) /
-                         lbl_803E3AC8) +
-            1.0f);
+    ((f32)(s32)(sqrtf(velocity[0] * velocity[0] + velocity[1] * velocity[1] + velocity[2] * velocity[2]) /
+            lbl_803E3AC8) +
+        1.0f);
     velocity[0] *= stepScale;
     velocity[1] *= stepScale;
     velocity[2] *= stepScale;
 
-    if (LANTERN_FIREFLY_IS_ACTIVE(state)) {
+    if (LANTERN_FIREFLY_IS_ACTIVE(state))
+    {
         Sfx_KeepAliveLoopedObjectSound(obj, 0x43b);
-        if (lbl_803DBDD8 < (f32)state->timer) {
-            if (state->stateId == 1 || state->stateId == 4) {
+        if (lbl_803DBDD8 < (f32)state->timer)
+        {
+            if (state->stateId == 1 || state->stateId == 4)
+            {
                 LANTERN_SPAWN_FX(obj, 0x19f, 0, 1, -1, 0);
                 LANTERN_SPAWN_FX(obj, 0x1a0, 0, 1, -1, 0);
-            } else {
+            }
+            else
+            {
                 LANTERN_SPAWN_FX(obj, 0x1bd, 0, 1, -1, 0);
             }
         }
         state->timer -= framesThisStep;
-        if (state->timer < 0) {
+        if (state->timer < 0)
+        {
             gameBitDecrement(0x698);
             Obj_FreeObject(obj);
             return;
         }
-        state->anchorX = *(f32 *)(player + 0x18);
-        state->anchorY = lbl_803E3AA8 + *(f32 *)(player + 0x1c);
-        state->anchorZ = *(f32 *)(player + 0x20);
-        if (state->light != 0 && state->timer < 0xb4) {
+        state->anchorX = *(f32*)(player + 0x18);
+        state->anchorY = lbl_803E3AA8 + *(f32*)(player + 0x1c);
+        state->anchorZ = *(f32*)(player + 0x20);
+        if (state->light != 0 && state->timer < 0xb4)
+        {
             f32 atten;
 
             atten = (f32)state->timer *
@@ -188,7 +213,9 @@ void LanternFireFly_update(int obj)
             Sfx_KeepAliveLoopedObjectSound(0, 0x460);
             modelLightStruct_setDistanceAttenuation(state->light, atten, lbl_803E3AD4 + atten);
         }
-    } else {
+    }
+    else
+    {
         LANTERN_SPAWN_FX_VEC(obj, 0x19f, 0, 1, -1, 0, velocity[0], velocity[1], velocity[2]);
         LANTERN_SPAWN_FX(obj, 0x1a0, 0, 1, -1, 0);
     }
@@ -201,14 +228,14 @@ void LanternFireFly_update(int obj)
 
 void LanternFireFly_init(int obj, int def)
 {
-    LanternFireFlyState *state;
-    LanternFireFlySpawnDef *spawnDef;
+    LanternFireFlyState* state;
+    LanternFireFlySpawnDef* spawnDef;
     f32 zero;
     s16 randValue;
     int flagValue;
 
-    state = ((GameObject *)obj)->extra;
-    spawnDef = (LanternFireFlySpawnDef *)def;
+    state = ((GameObject*)obj)->extra;
+    spawnDef = (LanternFireFlySpawnDef*)def;
     ObjGroup_AddObject(obj, 0x30);
 
     zero = lbl_803E3AB8;
@@ -248,27 +275,33 @@ void LanternFireFly_init(int obj, int def)
     state->modeFlags = (u8)((state->modeFlags & 0x3F) | (flagValue << 6));
 }
 
-void LanternFireFly_release(void) {}
-void LanternFireFly_initialise(void) {}
+void LanternFireFly_release(void)
+{
+}
+
+void LanternFireFly_initialise(void)
+{
+}
 
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
-extern int loadObjectAtObject(int *obj);
+extern int loadObjectAtObject(int* obj);
 extern f32 lbl_803E3AE8;
 
-int FireFlyLantern_spawnFireFly(int *obj) {
-    FireFlyLanternSpawnSetup *setup;
+int FireFlyLantern_spawnFireFly(int* obj)
+{
+    FireFlyLanternSpawnSetup* setup;
     if (Obj_IsLoadingLocked() == 0) return 0;
-    setup = (FireFlyLanternSpawnSetup *)Obj_AllocObjectSetup(sizeof(FireFlyLanternSpawnSetup), 1084);
+    setup = (FireFlyLanternSpawnSetup*)Obj_AllocObjectSetup(sizeof(FireFlyLanternSpawnSetup), 1084);
     setup->objectType = 1084;
     setup->setupType = 9;
     setup->field04 = 2;
     setup->field06 = 0xff;
     setup->field05 = 4;
     setup->field07 = 8;
-    setup->x = ((GameObject *)obj)->anim.localPosX;
-    setup->y = lbl_803E3AE8 + ((GameObject *)obj)->anim.localPosY;
-    setup->z = ((GameObject *)obj)->anim.localPosZ;
+    setup->x = ((GameObject*)obj)->anim.localPosX;
+    setup->y = lbl_803E3AE8 + ((GameObject*)obj)->anim.localPosY;
+    setup->z = ((GameObject*)obj)->anim.localPosZ;
     setup->field19 = 4;
     setup->field1A = 0x514;
     setup->field1C = 40;
@@ -276,22 +309,26 @@ int FireFlyLantern_spawnFireFly(int *obj) {
     return loadObjectAtObject(obj);
 }
 
-int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
+int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    FireFlyLanternState *state;
-    int *slot;
-    void *child;
+    FireFlyLanternState* state;
+    int* slot;
+    void* child;
     int i;
     f32 yOffset;
 
-    state = ((GameObject *)obj)->extra;
+    state = ((GameObject*)obj)->extra;
     i = 0;
-    while (i < animUpdate->eventCount) {
-        if (animUpdate->eventIds[i] == 1) {
-            if (state->fireflyCount != 0) {
-                child = (void *)state->fireflies[state->fireflyCount - 1];
-                if (child != 0) {
-                    (*(void (*)(void *))(*(int *)(*(int *)(*(int *)((u8 *)child + 0x68)) + 0x24)))(child);
+    while (i < animUpdate->eventCount)
+    {
+        if (animUpdate->eventIds[i] == 1)
+        {
+            if (state->fireflyCount != 0)
+            {
+                child = (void*)state->fireflies[state->fireflyCount - 1];
+                if (child != 0)
+                {
+                    (*(void (*)(void*))(*(int*)(*(int*)(*(int*)((u8*)child + 0x68)) + 0x24)))(child);
                 }
                 --state->fireflyCount;
                 --state->remainingCount;
@@ -301,14 +338,16 @@ int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
         i++;
     }
 
-    ((FireFlyLanternStateFlags *)&state->flags)->finished = 1;
+    ((FireFlyLanternStateFlags*)&state->flags)->finished = 1;
     i = 0;
     slot = state->fireflies;
     yOffset = lbl_803E3AEC;
-    while (i < state->fireflyCount) {
-        child = (void *)*slot;
-        (*(void (*)(void *, f32, f32, f32))(*(int *)(*(int *)(*(int *)((u8 *)child + 0x68)) + 0x28)))(
-            child, ((GameObject *)obj)->anim.localPosX, yOffset + ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);
+    while (i < state->fireflyCount)
+    {
+        child = (void*)*slot;
+        (*(void (*)(void*, f32, f32, f32))(*(int*)(*(int*)(*(int*)((u8*)child + 0x68)) + 0x28)))(
+            child, ((GameObject*)obj)->anim.localPosX, yOffset + ((GameObject*)obj)->anim.localPosY,
+            ((GameObject*)obj)->anim.localPosZ);
         slot++;
         i++;
     }
@@ -320,12 +359,14 @@ int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 int FireFlyLantern_getExtraSize(void) { return 0x24; }
 int FireFlyLantern_getObjectTypeId(void) { return 0x8; }
 
-extern void *getTrickyObject(void);
-extern void trickyImpress(void *trickyObj);
+extern void* getTrickyObject(void);
+extern void trickyImpress(void* trickyObj);
 
-void FireFlyLantern_free(int obj) {
-    void *tricky = getTrickyObject();
-    if (tricky != NULL) {
+void FireFlyLantern_free(int obj)
+{
+    void* tricky = getTrickyObject();
+    if (tricky != NULL)
+    {
         trickyImpress(tricky);
     }
     ObjGroup_RemoveObject(obj, 15);
@@ -337,30 +378,36 @@ void FireFlyLantern_render(void) { objRenderFn_8003b8f4(lbl_803E3AF0); }
 
 void FireFlyLantern_update(int obj)
 {
-    FireFlyLanternState *state;
-    FireFlyLanternSpawnSetup *def;
-    void *child;
+    FireFlyLanternState* state;
+    FireFlyLanternSpawnSetup* def;
+    void* child;
     int i;
     int shouldFree;
-    int *slot;
+    int* slot;
 
-    state = ((GameObject *)obj)->extra;
-    def = *(FireFlyLanternSpawnSetup **)&((GameObject *)obj)->anim.placementData;
+    state = ((GameObject*)obj)->extra;
+    def = *(FireFlyLanternSpawnSetup**)&((GameObject*)obj)->anim.placementData;
     shouldFree = 0;
 
-    if ((s8)def->field19 == 1) {
-        if (state->fireflyCount != 0) {
-            child = (void *)state->fireflies[0];
-            if (child != 0) {
-                (*(void (*)(void *))(*(int *)(*(int *)(*(int *)((u8 *)child + 0x68)) + 0x24)))(child);
+    if ((s8)def->field19 == 1)
+    {
+        if (state->fireflyCount != 0)
+        {
+            child = (void*)state->fireflies[0];
+            if (child != 0)
+            {
+                (*(void (*)(void*))(*(int*)(*(int*)(*(int*)((u8*)child + 0x68)) + 0x24)))(child);
             }
             gameBitDecrement(state->gameBit);
         }
         shouldFree = 1;
-    } else if (((FireFlyLanternStateFlags *)&state->flags)->finished != 0) {
+    }
+    else if (((FireFlyLanternStateFlags*)&state->flags)->finished != 0)
+    {
         i = 0;
         slot = state->fireflies;
-        while (i < state->fireflyCount) {
+        while (i < state->fireflyCount)
+        {
             Obj_FreeObject(*slot);
             slot++;
             i++;
@@ -368,7 +415,8 @@ void FireFlyLantern_update(int obj)
         shouldFree = 1;
     }
 
-    if (shouldFree != 0) {
+    if (shouldFree != 0)
+    {
         Obj_FreeObject(obj);
     }
 }

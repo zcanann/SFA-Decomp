@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0468_IceHole_packet_info {
+enum obj_0468_IceHole_packet_info
+{
     ICEHOLE_DEF_ID = 0x0468,
     ICEHOLE_DLL_ID = 0x0273,
     ICEHOLE_CLASS_ID = 0x0030,

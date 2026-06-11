@@ -9,35 +9,35 @@ extern undefined4 randomGetRange(int param_1, int param_2);
 extern int Obj_GetPlayerObject(void);
 extern u8 Obj_IsLoadingLocked(void);
 extern undefined4 Obj_FreeObject(int param_1);
-extern int loadObjectAtObject(FirePipeObject *obj, void *spawnDef);
+extern int loadObjectAtObject(FirePipeObject* obj, void* spawnDef);
 extern void Obj_InsertIntoUpdateList(int obj);
-extern void Obj_RemoveFromUpdateList(FirePipeObject *obj);
+extern void Obj_RemoveFromUpdateList(FirePipeObject * obj);
 extern int mmSetFreeDelay(int delay);
-extern void mm_free(void *ptr);
-extern undefined4 ObjHits_EnableObject(FirePipeObject *obj);
-extern void ObjHits_DisableObject(FirePipeObject *obj);
-extern int ObjHits_GetPriorityHit(FirePipeObject *obj, int a, int b, int c);
-extern void Obj_StartModelFadeIn(FirePipeObject *obj, int timer);
+extern void mm_free(void* ptr);
+extern undefined4 ObjHits_EnableObject(FirePipeObject * obj);
+extern void ObjHits_DisableObject(FirePipeObject * obj);
+extern int ObjHits_GetPriorityHit(FirePipeObject* obj, int a, int b, int c);
+extern void Obj_StartModelFadeIn(FirePipeObject* obj, int timer);
 extern int Obj_AllocObjectSetup(int size, int objectId);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 objRenderFn_8003b8f4(int param_1, int param_2, int param_3, int param_4, int param_5, double scale);
 extern undefined4 queueGlowRender(void);
-extern void storeZeroToFloatParam(f32 *param_1);
-extern void s16toFloat(f32 *param_1, s16 param_2);
-extern void fn_80098B18(FirePipeObject *obj, f32 scale, int type, int a, int b, int c);
-extern int objIsFrozen(FirePipeObject *obj);
+extern void storeZeroToFloatParam(f32 * param_1);
+extern void s16toFloat(f32* param_1, s16 param_2);
+extern void fn_80098B18(FirePipeObject* obj, f32 scale, int type, int a, int b, int c);
+extern int objIsFrozen(FirePipeObject * obj);
 extern int fn_80080150(int timer);
 extern int timerCountDown(int timer);
-extern int modelLightStruct_createPointLight(FirePipeObject *obj, int r, int g, int b, int a);
+extern int modelLightStruct_createPointLight(FirePipeObject* obj, int r, int g, int b, int a);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
 extern int modelLightStruct_getActiveState(int light);
 extern void modelLightStruct_updateGlowAlpha(int light);
-extern void Sfx_PlayFromObjectLimited(FirePipeObject *obj, int sfxId, int limit);
-extern void Sfx_KeepAliveLoopedObjectSoundLimited(FirePipeObject *obj, int sfxId, int limit);
+extern void Sfx_PlayFromObjectLimited(FirePipeObject* obj, int sfxId, int limit);
+extern void Sfx_KeepAliveLoopedObjectSoundLimited(FirePipeObject* obj, int sfxId, int limit);
 
 extern f32 lbl_803DC340;
 extern f32 lbl_803DC344;
@@ -58,7 +58,8 @@ extern f32 lbl_803E6B98;
 extern f64 lbl_803E6BA0;
 extern f32 lbl_803E6BA8;
 
-typedef struct {
+typedef struct
+{
     u8 bit7 : 1;
     u8 bit6 : 1;
     u8 bit5 : 1;
@@ -69,39 +70,43 @@ typedef struct {
     u8 bit0 : 1;
 } FirePipeBitFlags;
 
-typedef void (*FirePipeEffectInitFn)(int obj, void *spawnDef, int param_3);
+typedef void (*FirePipeEffectInitFn)(int obj, void* spawnDef, int param_3);
 
 #pragma dont_inline on
-int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *spawnDef)
+int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* spawnDef)
 {
     int i;
     int effectObj;
     int freeDelay;
 
-    if (Obj_IsLoadingLocked() == 0) {
+    if (Obj_IsLoadingLocked() == 0)
+    {
         return 0;
     }
-    for (i = 0; i < extra->effectCount; i++) {
+    for (i = 0; i < extra->effectCount; i++)
+    {
         effectObj = extra->effectObjs[i];
-        if ((*(u16 *)(effectObj + 0xb0) & 0x200) == 0) {
-            *(u16 *)(effectObj + 0xb0) |= 0x200;
-            memcpy(*(void **)(effectObj + 0x4c), spawnDef, *(u8 *)((int)spawnDef + 2));
-            *(s16 *)(effectObj + 6) &= ~0x4000;
-            *(float *)(effectObj + 0xc) = *(float *)((int)spawnDef + 8);
-            *(float *)(effectObj + 0x10) = *(float *)((int)spawnDef + 0xc);
-            *(float *)(effectObj + 0x14) = *(float *)((int)spawnDef + 0x10);
-            (*(FirePipeEffectInitFn *)(**(int **)(effectObj + 0x68) + 4))(effectObj, spawnDef, 0);
+        if ((*(u16*)(effectObj + 0xb0) & 0x200) == 0)
+        {
+            *(u16*)(effectObj + 0xb0) |= 0x200;
+            memcpy(*(void**)(effectObj + 0x4c), spawnDef, *(u8*)((int)spawnDef + 2));
+            *(s16*)(effectObj + 6) &= ~0x4000;
+            *(float*)(effectObj + 0xc) = *(float*)((int)spawnDef + 8);
+            *(float*)(effectObj + 0x10) = *(float*)((int)spawnDef + 0xc);
+            *(float*)(effectObj + 0x14) = *(float*)((int)spawnDef + 0x10);
+            (*(FirePipeEffectInitFn*)(**(int**)(effectObj + 0x68) + 4))(effectObj, spawnDef, 0);
             freeDelay = mmSetFreeDelay(0);
             mm_free(spawnDef);
             mmSetFreeDelay(freeDelay);
             Obj_InsertIntoUpdateList(effectObj);
-            *(u16 *)(effectObj + 0xb0) &= ~0x8000;
+            *(u16*)(effectObj + 0xb0) &= ~0x8000;
             return effectObj;
         }
     }
     effectObj = loadObjectAtObject(obj, spawnDef);
-    if (extra->effectCount != 8) {
-        *(u16 *)(effectObj + 0xb0) |= 0x200;
+    if (extra->effectCount != 8)
+    {
+        *(u16*)(effectObj + 0xb0) |= 0x200;
         i = extra->effectCount++;
         extra->effectObjs[i] = effectObj;
     }
@@ -109,59 +114,68 @@ int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *
 }
 #pragma dont_inline reset
 
-void firepipe_releaseEffectObject(FirePipeObject *obj)
+void firepipe_releaseEffectObject(FirePipeObject* obj)
 {
-    if ((*(u16 *)((int)obj + 0xb0) & 0x200) != 0) {
+    if ((*(u16*)((int)obj + 0xb0) & 0x200) != 0)
+    {
         ObjHits_DisableObject(obj);
-        *(u16 *)((int)obj + 0xb0) &= ~0x200;
+        *(u16*)((int)obj + 0xb0) &= ~0x200;
         Obj_RemoveFromUpdateList(obj);
-        *(u16 *)((int)obj + 0xb0) |= 0x8000;
-        *(s16 *)((int)obj + 6) |= 0x4000;
-    } else {
+        *(u16*)((int)obj + 0xb0) |= 0x8000;
+        *(s16*)((int)obj + 6) |= 0x4000;
+    }
+    else
+    {
         Obj_FreeObject((int)obj);
     }
 }
 
-int firepipe_clearLinkedUpdateFlag(FirePipeObject *obj)
+int firepipe_clearLinkedUpdateFlag(FirePipeObject* obj)
 {
-    ((FirePipeBitFlags *)&obj->extra->flags)->bit2 = 0;
+    ((FirePipeBitFlags*)&obj->extra->flags)->bit2 = 0;
     return 1;
 }
 
-int firepipe_setLinkedUpdateFlag(FirePipeObject *obj)
+int firepipe_setLinkedUpdateFlag(FirePipeObject* obj)
 {
-    ((FirePipeBitFlags *)&obj->extra->flags)->bit2 = 1;
+    ((FirePipeBitFlags*)&obj->extra->flags)->bit2 = 1;
     return 1;
 }
 
-void firepipe_updateState(FirePipeObject *obj)
+void firepipe_updateState(FirePipeObject* obj)
 {
-    FirePipeExtra *extra;
-    FirePipeMapData *mapData;
-    FirePipeBitFlags *flags;
+    FirePipeExtra* extra;
+    FirePipeMapData* mapData;
+    FirePipeBitFlags* flags;
     int priorityHit;
-    u8 *spawnDef;
-    u8 *effectObj;
+    u8* spawnDef;
+    u8* effectObj;
     f32 radius;
     f32 nearAtten;
     f32 farAtten;
 
     extra = obj->extra;
-    mapData = (FirePipeMapData *)obj->objectDef;
-    flags = (FirePipeBitFlags *)&extra->flags;
+    mapData = (FirePipeMapData*)obj->objectDef;
+    flags = (FirePipeBitFlags*)&extra->flags;
     Obj_GetPlayerObject();
 
-    if (obj->callback != NULL) {
+    if (obj->callback != NULL)
+    {
         ObjHits_DisableObject(obj);
-        if (flags->bit2 == 0) {
+        if (flags->bit2 == 0)
+        {
             return;
         }
         flags->bit3 = 1;
-    } else {
-        priorityHit = ObjHits_GetPriorityHit(obj,0,0,0);
-        switch (obj->objectId) {
+    }
+    else
+    {
+        priorityHit = ObjHits_GetPriorityHit(obj, 0, 0, 0);
+        switch (obj->objectId)
+        {
         case 0x70a:
-            if ((priorityHit == 0xf) || (priorityHit == 0xe)) {
+            if ((priorityHit == 0xf) || (priorityHit == 0xe))
+            {
                 flags->bit6 = 0;
                 storeZeroToFloatParam(&extra->cycleTimer);
                 s16toFloat(&extra->cycleTimer, 0x12c);
@@ -174,147 +188,189 @@ void firepipe_updateState(FirePipeObject *obj)
         case 0x731:
         case 0x732:
         default:
-            if (priorityHit == 0x10) {
-                FirePipeMapData *md0 = (FirePipeMapData *)obj->objectDef;
-                Obj_StartModelFadeIn(obj,0x12c);
-                GameBit_Set(md0->gameBit,1);
+            if (priorityHit == 0x10)
+            {
+                FirePipeMapData* md0 = (FirePipeMapData*)obj->objectDef;
+                Obj_StartModelFadeIn(obj, 0x12c);
+                GameBit_Set(md0->gameBit, 1);
                 flags->bit4 = 1;
             }
             break;
         }
     }
 
-    if ((flags->bit4 == 0) && (mapData->gameBit != -1)) {
-        if (flags->bit7 != GameBit_Get(mapData->gameBit)) {
-            if ((flags->bit6 = !GameBit_Get(mapData->gameBit)) != 0) {
-                FirePipeExtra *ex2;
-                FirePipeMapData *md2;
+    if ((flags->bit4 == 0) && (mapData->gameBit != -1))
+    {
+        if (flags->bit7 != GameBit_Get(mapData->gameBit))
+        {
+            if ((flags->bit6 = !GameBit_Get(mapData->gameBit)) != 0)
+            {
+                FirePipeExtra* ex2;
+                FirePipeMapData* md2;
                 s16 cycleTime;
-                md2 = (FirePipeMapData *)obj->objectDef;
+                md2 = (FirePipeMapData*)obj->objectDef;
                 ex2 = obj->extra;
                 storeZeroToFloatParam(&ex2->cycleTimer);
                 cycleTime = md2->cycleTime;
-                if (cycleTime != 0) {
-                    if (md2->timer != 0) {
-                        if (md2->timer < 0) {
+                if (cycleTime != 0)
+                {
+                    if (md2->timer != 0)
+                    {
+                        if (md2->timer < 0)
+                        {
                             s16toFloat(&ex2->cycleTimer,
-                                       (s16)randomGetRange(1,cycleTime * 0x3c));
-                        } else {
+                                       (s16)randomGetRange(1, cycleTime * 0x3c));
+                        }
+                        else
+                        {
                             s16toFloat(&ex2->cycleTimer, (s16)(md2->timer * 0x3c));
-                            if (md2->timer >= md2->cycleTime) {
-                                ((FirePipeBitFlags *)&ex2->flags)->bit6 = 0;
+                            if (md2->timer >= md2->cycleTime)
+                            {
+                                ((FirePipeBitFlags*)&ex2->flags)->bit6 = 0;
                             }
                         }
-                    } else {
+                    }
+                    else
+                    {
                         s16toFloat(&ex2->cycleTimer, (s16)(cycleTime * 0x3c));
                     }
                 }
-            } else {
+            }
+            else
+            {
                 storeZeroToFloatParam(&extra->cycleTimer);
             }
         }
         flags->bit7 = (u8)GameBit_Get(mapData->gameBit);
     }
 
-    if (flags->bit6 != 0) {
-        if (((((GameObject *)obj)->objectFlags & 0x800) != 0) || (obj->callback != NULL)) {
-            fn_80098B18(obj,lbl_803E6B70 * (f32)mapData->scale,(u8)extra->effectType,0,0,0);
+    if (flags->bit6 != 0)
+    {
+        if (((((GameObject*)obj)->objectFlags & 0x800) != 0) || (obj->callback != NULL))
+        {
+            fn_80098B18(obj, lbl_803E6B70 * (f32)mapData->scale, (u8)extra->effectType, 0, 0, 0);
         }
     }
 
-    if (objIsFrozen(obj) != 0) {
+    if (objIsFrozen(obj) != 0)
+    {
         flags->bit6 = 0;
         flags->bit4 = 1;
         goto sound_update;
     }
 
-    if (flags->bit4 != 0) {
+    if (flags->bit4 != 0)
+    {
         flags->bit6 = 1;
         flags->bit4 = 0;
-        GameBit_Set(mapData->gameBit,(u8)flags->bit7);
+        GameBit_Set(mapData->gameBit, (u8)flags->bit7);
     }
 
-    if ((fn_80080150((int)&extra->cycleTimer) != 0) && (flags->bit6 == 0)) {
-        if (extra->cycleTimer < (f32)lbl_803DC348) {
-            if ((extra->subObj == 0) && (flags->bit0 != 0)) {
-                extra->subObj = modelLightStruct_createPointLight(obj,0xff,0x80,0,0);
-                if (extra->subObj != 0) {
-                    modelLightStruct_setEnabled(extra->subObj,0,lbl_803E6B74);
-                    modelLightStruct_setEnabled(extra->subObj,1,lbl_803E6B78);
-                    if (obj->objectId == 0x6f9) {
-                        modelLightStruct_setupGlow(extra->subObj,0,0,0xb4,0xff,0x64,
-                                    lbl_803DC34C * obj->scale);
-                    } else {
-                        modelLightStruct_setupGlow(extra->subObj,0,0xff,0x80,0,0x64,
-                                    lbl_803DC34C * obj->scale);
+    if ((fn_80080150((int)&extra->cycleTimer) != 0) && (flags->bit6 == 0))
+    {
+        if (extra->cycleTimer < (f32)lbl_803DC348)
+        {
+            if ((extra->subObj == 0) && (flags->bit0 != 0))
+            {
+                extra->subObj = modelLightStruct_createPointLight(obj, 0xff, 0x80, 0, 0);
+                if (extra->subObj != 0)
+                {
+                    modelLightStruct_setEnabled(extra->subObj, 0, lbl_803E6B74);
+                    modelLightStruct_setEnabled(extra->subObj, 1, lbl_803E6B78);
+                    if (obj->objectId == 0x6f9)
+                    {
+                        modelLightStruct_setupGlow(extra->subObj, 0, 0, 0xb4, 0xff, 0x64,
+                                                   lbl_803DC34C * obj->scale);
                     }
-                    modelLightStruct_setPosition(extra->subObj,lbl_803E6B74,*(f32 *)&lbl_803E6B74,lbl_803E6B7C);
+                    else
+                    {
+                        modelLightStruct_setupGlow(extra->subObj, 0, 0xff, 0x80, 0, 0x64,
+                                                   lbl_803DC34C * obj->scale);
+                    }
+                    modelLightStruct_setPosition(extra->subObj, lbl_803E6B74, *(f32*)&lbl_803E6B74, lbl_803E6B7C);
                     radius = lbl_803E6B80 * obj->scale;
-                    nearAtten = (radius < lbl_803E6B84) ? lbl_803E6B84
-                              : ((radius > lbl_803E6B88) ? lbl_803E6B88 : radius);
+                    nearAtten = (radius < lbl_803E6B84)
+                                    ? lbl_803E6B84
+                                    : ((radius > lbl_803E6B88) ? lbl_803E6B88 : radius);
                     farAtten = lbl_803E6B8C + radius;
                     {
                         int light = extra->subObj;
                         modelLightStruct_setDistanceAttenuation(light, nearAtten,
-                            (farAtten < lbl_803E6B90) ? lbl_803E6B90
-                          : ((farAtten > lbl_803E6B94) ? lbl_803E6B94 : farAtten));
+                                                                (farAtten < lbl_803E6B90)
+                                                                    ? lbl_803E6B90
+                                                                    : ((farAtten > lbl_803E6B94)
+                                                                           ? lbl_803E6B94
+                                                                           : farAtten));
                     }
                 }
             }
-        } else if (extra->subObj != 0) {
-            modelLightStruct_setEnabled(extra->subObj,0,lbl_803E6B98);
-            if (modelLightStruct_getActiveState(extra->subObj) == 0) {
+        }
+        else if (extra->subObj != 0)
+        {
+            modelLightStruct_setEnabled(extra->subObj, 0, lbl_803E6B98);
+            if (modelLightStruct_getActiveState(extra->subObj) == 0)
+            {
                 modelLightStruct_freeSlot((int)&extra->subObj);
             }
         }
     }
 
-    if (timerCountDown((int)extra + 0x24) != 0) {
-        if (mapData->cycleTime != 0) {
+    if (timerCountDown((int)extra + 0x24) != 0)
+    {
+        if (mapData->cycleTime != 0)
+        {
             s16toFloat(&extra->cycleTimer, (s16)(mapData->cycleTime * 0x3c));
         }
         flags->bit6 = (flags->bit6 == 0);
     }
 
 sound_update:
-    if ((flags->bit6 != 0) && (timerCountDown((int)&extra->emitTimer) != 0)) {
-        FirePipeExtra *ex3;
-        FirePipeMapData *md3;
-        md3 = (FirePipeMapData *)obj->objectDef;
+    if ((flags->bit6 != 0) && (timerCountDown((int)&extra->emitTimer) != 0))
+    {
+        FirePipeExtra* ex3;
+        FirePipeMapData* md3;
+        md3 = (FirePipeMapData*)obj->objectDef;
         ex3 = obj->extra;
-        spawnDef = (u8 *)Obj_AllocObjectSetup(0x24,0x1b5);
+        spawnDef = (u8*)Obj_AllocObjectSetup(0x24, 0x1b5);
         spawnDef[4] = 2;
-        *(s8 *)(spawnDef + 0x19) = (s8)ex3->effectMode;
-        *(s16 *)(spawnDef + 0x1a) = md3->scale;
-        *(f32 *)(spawnDef + 8) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)(spawnDef + 0xc) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)(spawnDef + 0x10) = ((GameObject *)obj)->anim.localPosZ;
-        if (spawnDef == 0) {
+        *(s8*)(spawnDef + 0x19) = (s8)ex3->effectMode;
+        *(s16*)(spawnDef + 0x1a) = md3->scale;
+        *(f32*)(spawnDef + 8) = ((GameObject*)obj)->anim.localPosX;
+        *(f32*)(spawnDef + 0xc) = ((GameObject*)obj)->anim.localPosY;
+        *(f32*)(spawnDef + 0x10) = ((GameObject*)obj)->anim.localPosZ;
+        if (spawnDef == 0)
+        {
             effectObj = 0;
-        } else {
-            effectObj = (u8 *)firepipe_spawnEffectObject(extra,obj,(void *)spawnDef);
         }
-        if (effectObj != 0) {
-            *(f32 *)(effectObj + 0xc) = ((GameObject *)obj)->anim.localPosX;
-            *(f32 *)(effectObj + 0x10) = ((GameObject *)obj)->anim.localPosY;
-            *(f32 *)(effectObj + 0x14) = ((GameObject *)obj)->anim.localPosZ;
-            *(s16 *)(effectObj + 0) = ((GameObject *)obj)->anim.rotX;
-            *(s16 *)(effectObj + 2) = ((GameObject *)obj)->anim.rotY;
-            *(f32 *)(effectObj + 0x28) = lbl_803DC344;
+        else
+        {
+            effectObj = (u8*)firepipe_spawnEffectObject(extra, obj, (void*)spawnDef);
+        }
+        if (effectObj != 0)
+        {
+            *(f32*)(effectObj + 0xc) = ((GameObject*)obj)->anim.localPosX;
+            *(f32*)(effectObj + 0x10) = ((GameObject*)obj)->anim.localPosY;
+            *(f32*)(effectObj + 0x14) = ((GameObject*)obj)->anim.localPosZ;
+            *(s16*)(effectObj + 0) = ((GameObject*)obj)->anim.rotX;
+            *(s16*)(effectObj + 2) = ((GameObject*)obj)->anim.rotY;
+            *(f32*)(effectObj + 0x28) = lbl_803DC344;
         }
         storeZeroToFloatParam(&extra->emitTimer);
         s16toFloat(&extra->emitTimer, (s16)lbl_803DC350);
     }
 
-    if (flags->bit6 != 0) {
-        if (flags->bit5 == 0) {
-            Sfx_PlayFromObjectLimited(obj,SFXand_missilelaunch,3);
+    if (flags->bit6 != 0)
+    {
+        if (flags->bit5 == 0)
+        {
+            Sfx_PlayFromObjectLimited(obj, SFXand_missilelaunch, 3);
         }
-        Sfx_KeepAliveLoopedObjectSoundLimited(obj,SFXand_suck_lp,2);
+        Sfx_KeepAliveLoopedObjectSoundLimited(obj, SFXand_suck_lp, 2);
     }
     flags->bit5 = flags->bit6;
 
-    if (extra->subObj != 0) {
+    if (extra->subObj != 0)
+    {
         modelLightStruct_updateGlowAlpha(extra->subObj);
     }
 }
@@ -325,7 +381,7 @@ int firepipe_getExtraSize(void)
     return 0x44;
 }
 
-undefined4 firepipe_stateCallback(FirePipeObject *obj)
+undefined4 firepipe_stateCallback(FirePipeObject* obj)
 {
     firepipe_updateState(obj);
     return 0;
@@ -336,42 +392,46 @@ int firepipe_getObjectTypeId(void)
     return 1;
 }
 
-void firepipe_free(FirePipeObject *obj)
+void firepipe_free(FirePipeObject* obj)
 {
     int i;
-    undefined4 *iter;
-    FirePipeExtra *extra;
+    undefined4* iter;
+    FirePipeExtra* extra;
 
     extra = obj->extra;
     ObjGroup_RemoveObject(obj, 0x4a);
     i = 0;
-    iter = (undefined4 *)extra;
-    while (i < (int)(uint)extra->effectCount) {
+    iter = (undefined4*)extra;
+    while (i < (int)(uint)extra->effectCount)
+    {
         Obj_FreeObject(*iter);
         iter = iter + 1;
         i++;
     }
-    if ((uint)extra->subObj != 0) {
+    if ((uint)extra->subObj != 0)
+    {
         modelLightStruct_freeSlot((int)&extra->subObj);
     }
 }
 
-void firepipe_render(FirePipeObject *obj, int param_2, int param_3, int param_4, int param_5, char param_6)
+void firepipe_render(FirePipeObject* obj, int param_2, int param_3, int param_4, int param_5, char param_6)
 {
-    FirePipeExtra *extra;
+    FirePipeExtra* extra;
     int subObj;
 
     extra = obj->extra;
     subObj = extra->subObj;
-    if ((uint)subObj != 0 && *(byte *)(subObj + 0x2f8) != 0 && *(byte *)(subObj + 0x4c) != 0) {
+    if ((uint)subObj != 0 && *(byte*)(subObj + 0x2f8) != 0 && *(byte*)(subObj + 0x4c) != 0)
+    {
         queueGlowRender();
     }
-    if (param_6 != '\0' && (uint)((extra->flags >> 1) & 1) != 0) {
+    if (param_6 != '\0' && (uint)((extra->flags >> 1) & 1) != 0)
+    {
         objRenderFn_8003b8f4((int)obj, param_2, param_3, param_4, param_5, (double)lbl_803E6B78);
     }
 }
 
-void firepipe_update(FirePipeObject *obj)
+void firepipe_update(FirePipeObject* obj)
 {
     obj->statusFlags = (u8)(obj->statusFlags | 8);
     firepipe_updateState(obj);
@@ -380,13 +440,13 @@ void firepipe_update(FirePipeObject *obj)
 static inline f64 firepipe_u32AsDouble(u32 value)
 {
     u64 bits = CONCAT44(0x43300000, value);
-    return *(f64 *)&bits;
+    return *(f64*)&bits;
 }
 
-void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
+void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
 {
-    FirePipeExtra *extra;
-    FirePipeExtra *extra2;
+    FirePipeExtra* extra;
+    FirePipeExtra* extra2;
     int def;
     short startTime;
     short cycleTime;
@@ -394,45 +454,56 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
     uint val;
 
     extra = obj->extra;
-    if ((int)mapData->scale != 0) {
-        f32 scale = lbl_803E6BA8 * (f32)(s32)mapData->scale;
-        obj->scale = scale * *(float *)(*(int *)((int)obj + 0x50) + 4);
+    if ((int)mapData->scale != 0)
+    {
+        f32 scale = lbl_803E6BA8 * (f32)(s32)
+        mapData->scale;
+        obj->scale = scale * *(float*)(*(int*)((int)obj + 0x50) + 4);
     }
-    if (mapData->gameBit != -1) {
+    if (mapData->gameBit != -1)
+    {
         bitVal = GameBit_Get((int)mapData->gameBit);
-        ((FirePipeBitFlags *)&extra->flags)->bit6 = (u8)bitVal;
+        ((FirePipeBitFlags*)&extra->flags)->bit6 = (u8)bitVal;
     }
-    else {
-        ((FirePipeBitFlags *)&extra->flags)->bit6 = 1;
+    else
+    {
+        ((FirePipeBitFlags*)&extra->flags)->bit6 = 1;
     }
     obj->sequenceCallback = firepipe_stateCallback;
     {
         def = (int)obj->objectDef;
         extra2 = obj->extra;
         storeZeroToFloatParam(&extra2->cycleTimer);
-        cycleTime = *(short *)(def + 0x1a);
-        if (cycleTime != 0) {
-            startTime = *(short *)(def + 0x20);
-            if (startTime != 0) {
-                if (startTime < 0) {
+        cycleTime = *(short*)(def + 0x1a);
+        if (cycleTime != 0)
+        {
+            startTime = *(short*)(def + 0x20);
+            if (startTime != 0)
+            {
+                if (startTime < 0)
+                {
                     cycleTime = randomGetRange(1, cycleTime * 0x3c);
                     s16toFloat(&extra2->cycleTimer, (int)cycleTime);
                 }
-                else {
+                else
+                {
                     s16toFloat(&extra2->cycleTimer, (int)(short)(startTime * 0x3c));
-                    if (*(short *)(def + 0x20) >= *(short *)(def + 0x1a)) {
-                        ((FirePipeBitFlags *)&extra2->flags)->bit6 = 0;
+                    if (*(short*)(def + 0x20) >= *(short*)(def + 0x1a))
+                    {
+                        ((FirePipeBitFlags*)&extra2->flags)->bit6 = 0;
                     }
                 }
             }
-            else {
+            else
+            {
                 s16toFloat(&extra2->cycleTimer, (int)(short)(cycleTime * 0x3c));
             }
         }
         extra->clearVolumeA = 0;
         extra->clearVolumeB = 0;
         cycleTime = obj->objectId;
-        switch (cycleTime) {
+        switch (cycleTime)
+        {
         case 0x6f9:
             extra->effectType = 10;
             extra->effectMode = 1;
@@ -476,31 +547,35 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
         obj->modeX = (short)((int)mapData->modeX << 8);
         obj->modeY = (ushort)mapData->modeY << 8;
         ObjHits_EnableObject(obj);
-        ((FirePipeBitFlags *)&extra->flags)->bit4 = 0;
+        ((FirePipeBitFlags*)&extra->flags)->bit4 = 0;
         extra->activeSpawn = 0;
         bitVal = GameBit_Get((int)mapData->gameBit);
         {
             uint clz = __cntlzw(bitVal);
-            ((FirePipeBitFlags *)&extra->flags)->bit7 = (u8)(clz >> 5);
+            ((FirePipeBitFlags*)&extra->flags)->bit7 = (u8)(clz >> 5);
         }
-        if ((mapData->flags & 1) != 0) {
+        if ((mapData->flags & 1) != 0)
+        {
             val = 0;
         }
-        else {
+        else
+        {
             val = 1;
         }
-        ((FirePipeBitFlags *)&extra->flags)->bit1 = val;
-        if ((mapData->flags & 2) != 0) {
+        ((FirePipeBitFlags*)&extra->flags)->bit1 = val;
+        if ((mapData->flags & 2) != 0)
+        {
             val = 0;
         }
-        else {
+        else
+        {
             val = 1;
         }
-        ((FirePipeBitFlags *)&extra->flags)->bit0 = val;
+        ((FirePipeBitFlags*)&extra->flags)->bit0 = val;
         storeZeroToFloatParam(&extra->emitTimer);
         s16toFloat(&extra->emitTimer, 0x14);
         ObjGroup_AddObject(obj, 0x4a);
-        ((FirePipeBitFlags *)&extra->flags)->bit2 = 0;
+        ((FirePipeBitFlags*)&extra->flags)->bit2 = 0;
         extra->subObj = 0;
     }
 }

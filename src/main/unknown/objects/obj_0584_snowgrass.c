@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0584_SnowGrass_packet_info {
+enum obj_0584_SnowGrass_packet_info
+{
     SNOWGRASS_DEF_ID = 0x0584,
     SNOWGRASS_DLL_ID = 0x02AD,
     SNOWGRASS_CLASS_ID = 0x007F,

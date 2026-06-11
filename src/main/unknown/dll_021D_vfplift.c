@@ -38,7 +38,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_021D_VFPLift_slot {
+enum dll_021D_VFPLift_slot
+{
     VFPLIFT_INITIALISE = 0,
     VFPLIFT_RELEASE = 1,
     VFPLIFT_INIT = 3,

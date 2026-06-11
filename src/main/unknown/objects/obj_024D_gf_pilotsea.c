@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_024D_GF_Pilotsea_packet_info {
+enum obj_024D_GF_Pilotsea_packet_info
+{
     GF_PILOTSEA_DEF_ID = 0x024D,
     GF_PILOTSEA_DLL_ID = 0x012E,
     GF_PILOTSEA_CLASS_ID = 0x0061,

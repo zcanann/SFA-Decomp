@@ -54,7 +54,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01A2_DIM2Explode_packet_info {
+enum obj_01A2_DIM2Explode_packet_info
+{
     DIM2EXPLODE_DEF_ID = 0x01A2,
     DIM2EXPLODE_DLL_ID = 0x013E,
     DIM2EXPLODE_CLASS_ID = 0x0050,

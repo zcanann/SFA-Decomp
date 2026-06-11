@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01B9_IMSeqObject_packet_info {
+enum obj_01B9_IMSeqObject_packet_info
+{
     IMSEQOBJECT_DEF_ID = 0x01B9,
     IMSEQOBJECT_DLL_ID = 0x0112,
     IMSEQOBJECT_CLASS_ID = 0x0055,

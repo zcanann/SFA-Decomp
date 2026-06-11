@@ -59,7 +59,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0375_DFP_ObjCrea_packet_info {
+enum obj_0375_DFP_ObjCrea_packet_info
+{
     DFP_OBJCREA_DEF_ID = 0x0375,
     DFP_OBJCREA_DLL_ID = 0x022A,
     DFP_OBJCREA_CLASS_ID = 0x0037,

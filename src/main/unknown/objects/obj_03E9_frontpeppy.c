@@ -71,7 +71,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03E9_FrontPeppy_packet_info {
+enum obj_03E9_FrontPeppy_packet_info
+{
     FRONTPEPPY_DEF_ID = 0x03E9,
     FRONTPEPPY_DLL_ID = 0x02C0,
     FRONTPEPPY_CLASS_ID = 0x0030,

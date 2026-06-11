@@ -8,21 +8,22 @@
 extern uint GameBit_Get(int eventId);
 extern void ObjHits_DisableObject(u32 obj);
 extern u32 randomGetRange(int min, int max);
-extern void hitDetect_calcSweptSphereBounds(u32 *boundsOut, f32 *startPoints, f32 *endPoints, f32 *radii,
-                        int pointCount);
-extern void hitDetectFn_800691c0(int obj, void *bounds, uint mask, int flags);
-extern u8 hitDetectFn_80067958(int obj, f32 *startPoints, f32 *endPoints, int pointCount,
-                               void *outHits, int flags);
+extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f32* endPoints, f32* radii,
+                                            int pointCount);
+extern void hitDetectFn_800691c0(int obj, void* bounds, uint mask, int flags);
+extern u8 hitDetectFn_80067958(int obj, f32* startPoints, f32* endPoints, int pointCount,
+                               void* outHits, int flags);
 
 extern f32 lbl_803AC7A0[4];
-extern void *lbl_803DDAC8;
+extern void* lbl_803DDAC8;
 extern f32 lbl_803E39AC;
 extern f32 lbl_803E39E8;
 extern f32 lbl_803E39F4;
 
-typedef union LargeCrateVariantRemap {
-  s16 entries[6];
-  int words[3];
+typedef union LargeCrateVariantRemap
+{
+    s16 entries[6];
+    int words[3];
 } LargeCrateVariantRemap;
 
 extern LargeCrateVariantRemap lbl_802C2280;
@@ -37,74 +38,82 @@ extern LargeCrateVariantRemap lbl_802C228C;
  * EN v1.1 Address: 0x801841F4
  * EN v1.1 Size: 568b
  */
-void largecrate_init(int obj, u8 *initData)
+void largecrate_init(int obj, u8* initData)
 {
-  int state;
-  u32 r3rand;
-  f32 fr;
-  LargeCrateVariantRemap constArrA;
-  LargeCrateVariantRemap constArrB;
-  short id;
+    int state;
+    u32 r3rand;
+    f32 fr;
+    LargeCrateVariantRemap constArrA;
+    LargeCrateVariantRemap constArrB;
+    short id;
 
-  /* copy two constant blobs to stack (used as lookup arrays) */
-  constArrA = lbl_802C2280;
-  constArrB = lbl_802C228C;
+    /* copy two constant blobs to stack (used as lookup arrays) */
+    constArrA = lbl_802C2280;
+    constArrB = lbl_802C228C;
 
-  state = *(int *)&((GameObject *)obj)->extra;
-  ((GameObject *)obj)->animEventCallback = (void *)LargeCrate_SeqFn;
-  *(short *)obj = (short)((int)(signed char)initData[0x18] << 8);
-  ((CfForcefieldState *)state)->enableGameBit = *(short *)(initData + 0x1e);
+    state = *(int*)&((GameObject*)obj)->extra;
+    ((GameObject*)obj)->animEventCallback = (void*)LargeCrate_SeqFn;
+    *(short*)obj = (short)((int)(signed char)initData[0x18] << 8);
+    ((CfForcefieldState*)state)->enableGameBit = *(short*)(initData + 0x1e);
 
-  id = *(short *)(initData + 0x1c);
-  if (id == LARGECRATE_TIMER_SENTINEL_DISABLED) {
-    *(int *)state = LARGECRATE_TIMER_SENTINEL_DISABLED;
-  }
-  else if (id == LARGECRATE_TIMER_SENTINEL_FOREVER) {
-    *(int *)state = -1;
-  }
-  else {
-    *(int *)state = (int)id * LARGECRATE_TIMER_SCALE_FRAMES;
-  }
+    id = *(short*)(initData + 0x1c);
+    if (id == LARGECRATE_TIMER_SENTINEL_DISABLED)
+    {
+        *(int*)state = LARGECRATE_TIMER_SENTINEL_DISABLED;
+    }
+    else if (id == LARGECRATE_TIMER_SENTINEL_FOREVER)
+    {
+        *(int*)state = -1;
+    }
+    else
+    {
+        *(int*)state = (int)id * LARGECRATE_TIMER_SCALE_FRAMES;
+    }
 
-  if (GameBit_Get((int)((CfForcefieldState *)state)->enableGameBit) != 0) {
-    *(float *)(state + 4) = lbl_803E39AC;
-    ObjHits_DisableObject((u32)obj);
-  }
+    if (GameBit_Get((int)((CfForcefieldState*)state)->enableGameBit) != 0)
+    {
+        *(float*)(state + 4) = lbl_803E39AC;
+        ObjHits_DisableObject((u32)obj);
+    }
 
-  ((CfForcefieldState *)state)->unk11 = initData[0x19];
-  lbl_803DDAC8 = Resource_Acquire(LARGECRATE_RESOURCE_ID, LARGECRATE_RESOURCE_MODE);
-  r3rand = randomGetRange(LARGECRATE_RANDOM_DELAY_MIN, LARGECRATE_RANDOM_DELAY_MAX);
-  ((CfForcefieldState *)state)->randomTimer = (short)(r3rand + LARGECRATE_RANDOM_DELAY_BASE);
-  ((CfForcefieldState *)state)->countdown = LARGECRATE_DEFAULT_COUNTDOWN;
-  ((CfForcefieldState *)state)->unk12 = (u8)*(short *)(initData + 0x1a);
-  ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | LARGECRATE_OBJECT_FLAGS);
-  *(short *)obj = (short)((int)(signed char)initData[0x18] << 8);
+    ((CfForcefieldState*)state)->unk11 = initData[0x19];
+    lbl_803DDAC8 = Resource_Acquire(LARGECRATE_RESOURCE_ID, LARGECRATE_RESOURCE_MODE);
+    r3rand = randomGetRange(LARGECRATE_RANDOM_DELAY_MIN, LARGECRATE_RANDOM_DELAY_MAX);
+    ((CfForcefieldState*)state)->randomTimer = (short)(r3rand + LARGECRATE_RANDOM_DELAY_BASE);
+    ((CfForcefieldState*)state)->countdown = LARGECRATE_DEFAULT_COUNTDOWN;
+    ((CfForcefieldState*)state)->unk12 = (u8) * (short*)(initData + 0x1a);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | LARGECRATE_OBJECT_FLAGS);
+    *(short*)obj = (short)((int)(signed char)initData[0x18] << 8);
 
-  id = ((GameObject *)obj)->anim.seqId;
-  if (id == LARGECRATE_VARIANT_A) {
-    ((CfForcefieldState *)state)->unk11 = (u8)constArrA.entries[((CfForcefieldState *)state)->unk11];
-    ((CfForcefieldState *)state)->sfxIdA = LARGECRATE_VARIANT_A_SFX_A;
-    ((CfForcefieldState *)state)->sfxIdB = LARGECRATE_VARIANT_A_SFX_B;
-  }
-  else if (id == LARGECRATE_VARIANT_B || id == LARGECRATE_VARIANT_C) {
-    ((CfForcefieldState *)state)->unk11 = (u8)constArrB.entries[((CfForcefieldState *)state)->unk11];
-    ((CfForcefieldState *)state)->sfxIdA = LARGECRATE_VARIANT_B_SFX_A;
-    ((CfForcefieldState *)state)->sfxIdB = LARGECRATE_VARIANT_B_SFX_B;
-  }
+    id = ((GameObject*)obj)->anim.seqId;
+    if (id == LARGECRATE_VARIANT_A)
+    {
+        ((CfForcefieldState*)state)->unk11 = (u8)constArrA.entries[((CfForcefieldState*)state)->unk11];
+        ((CfForcefieldState*)state)->sfxIdA = LARGECRATE_VARIANT_A_SFX_A;
+        ((CfForcefieldState*)state)->sfxIdB = LARGECRATE_VARIANT_A_SFX_B;
+    }
+    else if (id == LARGECRATE_VARIANT_B || id == LARGECRATE_VARIANT_C)
+    {
+        ((CfForcefieldState*)state)->unk11 = (u8)constArrB.entries[((CfForcefieldState*)state)->unk11];
+        ((CfForcefieldState*)state)->sfxIdA = LARGECRATE_VARIANT_B_SFX_A;
+        ((CfForcefieldState*)state)->sfxIdB = LARGECRATE_VARIANT_B_SFX_B;
+    }
 
-  ((CfForcefieldState *)state)->unk20 = 0;
-  r3rand = randomGetRange(LARGECRATE_RANDOM_DELAY_MIN, LARGECRATE_RANDOM_BOB_MAX);
-  fr = (float)(int)r3rand;
-  fr = lbl_803E39E8 + fr;
-  *(float *)(state + 0x1c) = fr;
-  *(float *)(state + 0x24) = ((GameObject *)obj)->anim.localPosX;
+    ((CfForcefieldState*)state)->unk20 = 0;
+    r3rand = randomGetRange(LARGECRATE_RANDOM_DELAY_MIN, LARGECRATE_RANDOM_BOB_MAX);
+    fr = (float)(int)r3rand;
+    fr = lbl_803E39E8 + fr;
+    *(float*)(state + 0x1c) = fr;
+    *(float*)(state + 0x24) = ((GameObject*)obj)->anim.localPosX;
 
-  if (((GameObject *)obj)->anim.seqId == LARGECRATE_VARIANT_C) {
-    ((CfForcefieldState *)state)->unk28 = 0;
-  }
-  else {
-    ((CfForcefieldState *)state)->unk28 = 2;
-  }
+    if (((GameObject*)obj)->anim.seqId == LARGECRATE_VARIANT_C)
+    {
+        ((CfForcefieldState*)state)->unk28 = 0;
+    }
+    else
+    {
+        ((CfForcefieldState*)state)->unk28 = 2;
+    }
 }
 
 /*
@@ -138,81 +147,90 @@ void largecrate_initialise(void)
  */
 int objHitboxFn_801843c0(int obj)
 {
-  typedef struct HitDetectResults {
-    f32 hitInfo[4][4];
-    f32 radii[4];
-    u8 axisTable[12];
-    u32 solidFlags[4];
-  } HitDetectResults;
+    typedef struct HitDetectResults
+    {
+        f32 hitInfo[4][4];
+        f32 radii[4];
+        u8 axisTable[12];
+        u32 solidFlags[4];
+    } HitDetectResults;
 
-  u8 *state;
-  u32 sweptBounds[6];
-  f32 endPoints[12];
-  f32 startPoints[12];
-  HitDetectResults results;
-  int idx;
-  u8 hit;
+    u8* state;
+    u32 sweptBounds[6];
+    f32 endPoints[12];
+    f32 startPoints[12];
+    HitDetectResults results;
+    int idx;
+    u8 hit;
 
-  state = *(u8 **)&((GameObject *)obj)->anim.hitReactState;
-  if (state != 0) {
-    endPoints[0] = ((GameObject *)obj)->anim.localPosX;
-    endPoints[1] = ((GameObject *)obj)->anim.localPosY;
-    endPoints[2] = ((GameObject *)obj)->anim.localPosZ;
-    startPoints[0] = ((GameObject *)obj)->anim.previousLocalPosX;
-    startPoints[1] = ((GameObject *)obj)->anim.previousLocalPosY;
-    startPoints[2] = ((GameObject *)obj)->anim.previousLocalPosZ;
-    results.radii[0] = lbl_803E39F4;
-    *(s8 *)&results.axisTable[0] = -1;
-    results.axisTable[4] = 0x3;
-  } else {
+    state = *(u8**)&((GameObject*)obj)->anim.hitReactState;
+    if (state != 0)
+    {
+        endPoints[0] = ((GameObject*)obj)->anim.localPosX;
+        endPoints[1] = ((GameObject*)obj)->anim.localPosY;
+        endPoints[2] = ((GameObject*)obj)->anim.localPosZ;
+        startPoints[0] = ((GameObject*)obj)->anim.previousLocalPosX;
+        startPoints[1] = ((GameObject*)obj)->anim.previousLocalPosY;
+        startPoints[2] = ((GameObject*)obj)->anim.previousLocalPosZ;
+        results.radii[0] = lbl_803E39F4;
+        *(s8*)&results.axisTable[0] = -1;
+        results.axisTable[4] = 0x3;
+    }
+    else
+    {
+        return 0;
+    }
+
+    hitDetect_calcSweptSphereBounds(sweptBounds, startPoints, endPoints, results.radii, 1);
+    hitDetectFn_800691c0(obj, sweptBounds, ((ObjHitsPriorityState*)state)->trackContactMask, 1);
+    hit = hitDetectFn_80067958(obj, startPoints, endPoints, 1, &results, 0);
+    if (hit != 0)
+    {
+        if ((hit & 1) != 0)
+        {
+            idx = 0;
+        }
+        else if ((hit & 2) != 0)
+        {
+            idx = 1;
+        }
+        else if ((hit & 4) != 0)
+        {
+            idx = 2;
+        }
+        else
+        {
+            idx = 3;
+        }
+
+        ((ObjHitsPriorityState*)state)->contactHitVolume = results.axisTable[idx];
+        ((ObjHitsPriorityState*)state)->contactPosX = endPoints[idx * 3];
+        ((ObjHitsPriorityState*)state)->contactPosY = endPoints[idx * 3 + 1];
+        ((ObjHitsPriorityState*)state)->contactPosZ = endPoints[idx * 3 + 2];
+        lbl_803AC7A0[0] = results.hitInfo[idx][0];
+        lbl_803AC7A0[1] = results.hitInfo[idx][1];
+        lbl_803AC7A0[2] = results.hitInfo[idx][2];
+        lbl_803AC7A0[3] = results.hitInfo[idx][3];
+
+        if (results.solidFlags[idx] != 0)
+        {
+            ((ObjHitsPriorityState*)state)->contactFlags = *(u8*)&((ObjHitsPriorityState*)state)->contactFlags | 2;
+            ((GameObject*)obj)->anim.localPosX = ((ObjHitsPriorityState*)state)->contactPosX;
+            ((GameObject*)obj)->anim.localPosY = ((ObjHitsPriorityState*)state)->contactPosY;
+            ((GameObject*)obj)->anim.localPosZ = ((ObjHitsPriorityState*)state)->contactPosZ;
+            ((ObjHitsPriorityState*)state)->localPosX = ((GameObject*)obj)->anim.previousLocalPosX;
+            ((ObjHitsPriorityState*)state)->localPosY = ((GameObject*)obj)->anim.previousLocalPosY;
+            ((ObjHitsPriorityState*)state)->localPosZ = ((GameObject*)obj)->anim.previousLocalPosZ;
+            return 1;
+        }
+        ((ObjHitsPriorityState*)state)->contactFlags = *(u8*)&((ObjHitsPriorityState*)state)->contactFlags | 1;
+        ((GameObject*)obj)->anim.localPosX = ((ObjHitsPriorityState*)state)->contactPosX;
+        ((GameObject*)obj)->anim.localPosY = ((ObjHitsPriorityState*)state)->contactPosY;
+        ((GameObject*)obj)->anim.localPosZ = ((ObjHitsPriorityState*)state)->contactPosZ;
+        ((ObjHitsPriorityState*)state)->localPosX = ((GameObject*)obj)->anim.previousLocalPosX;
+        ((ObjHitsPriorityState*)state)->localPosY = ((GameObject*)obj)->anim.previousLocalPosY;
+        ((ObjHitsPriorityState*)state)->localPosZ = ((GameObject*)obj)->anim.previousLocalPosZ;
+        return 1;
+    }
     return 0;
-  }
-
-  hitDetect_calcSweptSphereBounds(sweptBounds, startPoints, endPoints, results.radii, 1);
-  hitDetectFn_800691c0(obj, sweptBounds, ((ObjHitsPriorityState *)state)->trackContactMask, 1);
-  hit = hitDetectFn_80067958(obj, startPoints, endPoints, 1, &results, 0);
-  if (hit != 0) {
-
-  if ((hit & 1) != 0) {
-    idx = 0;
-  }
-  else if ((hit & 2) != 0) {
-    idx = 1;
-  }
-  else if ((hit & 4) != 0) {
-    idx = 2;
-  }
-  else {
-    idx = 3;
-  }
-
-  ((ObjHitsPriorityState *)state)->contactHitVolume = results.axisTable[idx];
-  ((ObjHitsPriorityState *)state)->contactPosX = endPoints[idx * 3];
-  ((ObjHitsPriorityState *)state)->contactPosY = endPoints[idx * 3 + 1];
-  ((ObjHitsPriorityState *)state)->contactPosZ = endPoints[idx * 3 + 2];
-  lbl_803AC7A0[0] = results.hitInfo[idx][0];
-  lbl_803AC7A0[1] = results.hitInfo[idx][1];
-  lbl_803AC7A0[2] = results.hitInfo[idx][2];
-  lbl_803AC7A0[3] = results.hitInfo[idx][3];
-
-  if (results.solidFlags[idx] != 0) {
-    ((ObjHitsPriorityState *)state)->contactFlags = *(u8 *)&((ObjHitsPriorityState *)state)->contactFlags | 2;
-    ((GameObject *)obj)->anim.localPosX = ((ObjHitsPriorityState *)state)->contactPosX;
-    ((GameObject *)obj)->anim.localPosY = ((ObjHitsPriorityState *)state)->contactPosY;
-    ((GameObject *)obj)->anim.localPosZ = ((ObjHitsPriorityState *)state)->contactPosZ;
-    ((ObjHitsPriorityState *)state)->localPosX = ((GameObject *)obj)->anim.previousLocalPosX;
-    ((ObjHitsPriorityState *)state)->localPosY = ((GameObject *)obj)->anim.previousLocalPosY;
-    ((ObjHitsPriorityState *)state)->localPosZ = ((GameObject *)obj)->anim.previousLocalPosZ;
-    return 1;
-  }
-  ((ObjHitsPriorityState *)state)->contactFlags = *(u8 *)&((ObjHitsPriorityState *)state)->contactFlags | 1;
-  ((GameObject *)obj)->anim.localPosX = ((ObjHitsPriorityState *)state)->contactPosX;
-  ((GameObject *)obj)->anim.localPosY = ((ObjHitsPriorityState *)state)->contactPosY;
-  ((GameObject *)obj)->anim.localPosZ = ((ObjHitsPriorityState *)state)->contactPosZ;
-  ((ObjHitsPriorityState *)state)->localPosX = ((GameObject *)obj)->anim.previousLocalPosX;
-  ((ObjHitsPriorityState *)state)->localPosY = ((GameObject *)obj)->anim.previousLocalPosY;
-  ((ObjHitsPriorityState *)state)->localPosZ = ((GameObject *)obj)->anim.previousLocalPosZ;
-  return 1;
-  }
-  return 0;
 }

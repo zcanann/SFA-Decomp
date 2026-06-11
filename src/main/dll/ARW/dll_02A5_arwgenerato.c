@@ -5,9 +5,13 @@ int arwgenerato_getExtraSize(void) { return 4; }
 
 int arwgenerato_getObjectTypeId(void) { return 0; }
 
-void arwgenerato_free(void) {}
+void arwgenerato_free(void)
+{
+}
 
-void arwgenerato_hitDetect(void) {}
+void arwgenerato_hitDetect(void)
+{
+}
 
 void arwgenerato_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
@@ -16,27 +20,35 @@ void arwgenerato_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 
 void arwgenerato_init(int obj, int setup)
 {
-    ARWGeneratorState *state = ((GameObject *)obj)->extra;
-    ARWGeneratorSetup *mapData = (ARWGeneratorSetup *)setup;
+    ARWGeneratorState* state = ((GameObject*)obj)->extra;
+    ARWGeneratorSetup* mapData = (ARWGeneratorSetup*)setup;
 
-    state->spawnTimer = (f32)(u32)mapData->spawnInterval;
+    state->spawnTimer = (f32)(u32)
+    mapData->spawnInterval;
 }
 
-void arwgenerato_release(void) {}
+void arwgenerato_release(void)
+{
+}
 
-void arwgenerato_initialise(void) {}
+void arwgenerato_initialise(void)
+{
+}
 
 void arwgenerato_update(int obj)
 {
-    ARWGeneratorState *state = ((GameObject *)obj)->extra;
-    ARWGeneratorSetup *mapData = (ARWGeneratorSetup *)((GameObject *)obj)->anim.placementData;
+    ARWGeneratorState* state = ((GameObject*)obj)->extra;
+    ARWGeneratorSetup* mapData = (ARWGeneratorSetup*)((GameObject*)obj)->anim.placementData;
     f32 timer = state->spawnTimer;
     f32 thr = lbl_803E7154;
 
-    if (timer > thr) {
+    if (timer > thr)
+    {
         state->spawnTimer = timer - timeDelta;
-        if (state->spawnTimer <= thr) {
-            switch (mapData->spawnMode) {
+        if (state->spawnTimer <= thr)
+        {
+            switch (mapData->spawnMode)
+            {
             case 0:
                 fn_802317A8(obj, state, mapData);
                 break;
@@ -44,7 +56,8 @@ void arwgenerato_update(int obj)
                 fn_802315EC(obj, state, mapData);
                 break;
             }
-            state->spawnTimer = (f32)(u32)mapData->spawnInterval;
+            state->spawnTimer = (f32)(u32)
+            mapData->spawnInterval;
         }
     }
 }

@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0306_SB_KyteCage_packet_info {
+enum obj_0306_SB_KyteCage_packet_info
+{
     SB_KYTECAGE_DEF_ID = 0x0306,
     SB_KYTECAGE_DLL_ID = 0x01F0,
     SB_KYTECAGE_CLASS_ID = 0x0030,

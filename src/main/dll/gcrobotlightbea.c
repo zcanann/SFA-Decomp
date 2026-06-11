@@ -5,7 +5,8 @@
 #include "main/mapEvent.h"
 #include "main/resource.h"
 
-typedef struct SmallbasketState {
+typedef struct SmallbasketState
+{
     u8 pad0[0x5 - 0x0];
     s8 unk5;
     s8 unk6;
@@ -14,7 +15,6 @@ typedef struct SmallbasketState {
     u8 padA[0x14 - 0xA];
     s32 unk14;
 } SmallbasketState;
-
 
 
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -49,13 +49,13 @@ extern f32 lbl_803E45F8;
 extern f32 lbl_803E45FC;
 
 extern u8 Obj_IsLoadingLocked(void);
-extern int fn_80296AE8(u8 *obj);
-extern int fn_80296AD4(u8 *obj);
-extern u8 *Obj_AllocObjectSetup(int size, int typeId);
-extern u8 *Obj_SetupObject(u8 *setup, int a, int b, int c, void *d);
+extern int fn_80296AE8(u8 * obj);
+extern int fn_80296AD4(u8 * obj);
+extern u8* Obj_AllocObjectSetup(int size, int typeId);
+extern u8* Obj_SetupObject(u8* setup, int a, int b, int c, void* d);
 extern f32 sqrtf(f32 x);
 extern int getAngle(f32 dx, f32 dz);
-extern void vecRotateZXY(void *in, void *out);
+extern void vecRotateZXY(void* in, void* out);
 
 extern f32 lbl_803AC790[];
 extern f32 lbl_803E3930;
@@ -79,13 +79,14 @@ extern f32 lbl_803E3964;
  * EN v1.0 Address: 0x801816F8
  * EN v1.0 Size: 2820b
  */
-int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
+int fn_801816F8(u8* obj, u8* player, u8* dataIn)
+{
     int mode;
-    u8 *data;
-    f32 *vel;
+    u8* data;
+    f32* vel;
     u8 slowMo;
-    u8 *setup;
-    u8 *spawned;
+    u8* setup;
+    u8* spawned;
     int bit;
     int max;
     int ang;
@@ -95,7 +96,8 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
     f32 ratio;
     f32 sc;
     f32 mag;
-    struct {
+    struct
+    {
         s16 f8;
         s16 fa;
         s16 fc;
@@ -108,74 +110,102 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
 
     data = dataIn;
     slowMo = 0;
-    bit = *(s16 *)(data + 0x1c);
-    if (bit != -1) {
+    bit = *(s16*)(data + 0x1c);
+    if (bit != -1)
+    {
         GameBit_Set(bit, 1);
     }
-    if (Obj_IsLoadingLocked() == 0) {
+    if (Obj_IsLoadingLocked() == 0)
+    {
         return 0;
     }
     vel = lbl_803AC790;
-    if (vel[1] < lbl_803E393C) {
+    if (vel[1] < lbl_803E393C)
+    {
         slowMo = 1;
     }
-    if (data[0x1e] == 7) {
-        num = (f32)(int)fn_80296AE8(player);
-        den = (f32)(int)fn_80296AD4(player);
+    if (data[0x1e] == 7)
+    {
+        num = (f32)(int)
+        fn_80296AE8(player);
+        den = (f32)(int)
+        fn_80296AD4(player);
         ratio = num / den;
         ratio = ratio * lbl_803E3930;
-        if (ratio <= lbl_803E3940) {
+        if (ratio <= lbl_803E3940)
+        {
             mode = 6;
-        } else if (ratio <= lbl_803E3944) {
-            if ((int)randomGetRange(0, (s16)(int)(ratio - lbl_803E3940)) < 7) {
+        }
+        else if (ratio <= lbl_803E3944)
+        {
+            if ((int)randomGetRange(0, (s16)(int)(ratio - lbl_803E3940)) < 7)
+            {
                 mode = 6;
                 max = (s16)(den * lbl_803E393C);
-                if (max < 1) {
+                if (max < 1)
+                {
                     max = 1;
                 }
                 randomGetRange(1, max);
-            } else {
+            }
+            else
+            {
                 mode = 1;
                 randomGetRange(1, 4);
             }
-        } else {
+        }
+        else
+        {
             return 1;
         }
-    } else {
+    }
+    else
+    {
         mode = data[0x1e];
     }
 
-    switch ((s16)mode) {
+    switch ((s16)mode)
+    {
     case 1:
         setup = Obj_AllocObjectSetup(0x24, 0x3d3);
-        ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
-        ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
-        ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
-        *(s16 *)(setup + 0x1a) = 0x190;
-        spawned = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, ((GameObject *)obj)->anim.parent);
-        if (slowMo) {
+        ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
+        ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
+        ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
+        *(s16*)(setup + 0x1a) = 0x190;
+        spawned = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
+        if (slowMo)
+        {
             sc = lbl_803E3948;
-            ((GameObject *)spawned)->anim.velocityX = sc * lbl_803AC790[0];
-            ((GameObject *)spawned)->anim.velocityY = lbl_803E394C * vel[1];
-            ((GameObject *)spawned)->anim.velocityZ = sc * vel[2];
-        } else {
-            ((GameObject *)spawned)->anim.velocityX = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
-            ((GameObject *)spawned)->anim.velocityZ = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
+            ((GameObject*)spawned)->anim.velocityX = sc * lbl_803AC790[0];
+            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * vel[1];
+            ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
-        mag = ((GameObject *)spawned)->anim.velocityX * ((GameObject *)spawned)->anim.velocityX;
-        mag += ((GameObject *)spawned)->anim.velocityZ * ((GameObject *)spawned)->anim.velocityZ;
-        if (mag != lbl_803E3938) {
+        else
+        {
+            ((GameObject*)spawned)->anim.velocityX = ((GameObject*)obj)->anim.localPosX - *(f32*)(player + 0xc);
+            ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)obj)->anim.localPosZ - *(f32*)(player + 0x14);
+        }
+        mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
+        mag += ((GameObject*)spawned)->anim.velocityZ * ((GameObject*)spawned)->anim.velocityZ;
+        if (mag != lbl_803E3938)
+        {
             mag = sqrtf(mag);
-            ((GameObject *)spawned)->anim.velocityX = ((GameObject *)spawned)->anim.velocityX / mag;
-            ((GameObject *)spawned)->anim.velocityZ = ((GameObject *)spawned)->anim.velocityZ / mag;
+            ((GameObject*)spawned)->anim.velocityX = ((GameObject*)spawned)->anim.velocityX / mag;
+            ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)spawned)->anim.velocityZ / mag;
         }
-        ((GameObject *)spawned)->anim.velocityX =
-            ((GameObject *)spawned)->anim.velocityX *
-            -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        ((GameObject *)spawned)->anim.velocityZ =
-            ((GameObject *)spawned)->anim.velocityZ *
-            -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        ((GameObject *)spawned)->anim.velocityY = lbl_803E3958;
+        ((GameObject*)spawned)->anim.velocityX =
+            ((GameObject*)spawned)->anim.velocityX *
+            -(lbl_803E3954 * (f32)(int)
+        randomGetRange(0, 0x19) - lbl_803E3950
+        )
+        ;
+        ((GameObject*)spawned)->anim.velocityZ =
+            ((GameObject*)spawned)->anim.velocityZ *
+            -(lbl_803E3954 * (f32)(int)
+        randomGetRange(0, 0x19) - lbl_803E3950
+        )
+        ;
+        ((GameObject*)spawned)->anim.velocityY = lbl_803E3958;
         spread.f14 = lbl_803E3938;
         spread.f18 = lbl_803E3938;
         spread.f1c = lbl_803E3938;
@@ -184,47 +214,60 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         spread.fa = 0;
         spread.f8 = (s16)randomGetRange(-10000, 10000);
         vecRotateZXY(&spread.f8, spawned + 0x24);
-        ang = (u16)(s16)getAngle(((GameObject *)spawned)->anim.velocityX, -((GameObject *)spawned)->anim.velocityZ);
-        diff = *(s16 *)spawned - ang;
-        if (diff > 0x8000) {
+        ang = (u16)(s16)
+        getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
+        diff = *(s16*)spawned - ang;
+        if (diff > 0x8000)
+        {
             diff -= 0xffff;
         }
-        if (diff < -0x8000) {
+        if (diff < -0x8000)
+        {
             diff += 0xffff;
         }
-        *(s16 *)spawned = diff;
+        *(s16*)spawned = diff;
         break;
     case 2:
         setup = Obj_AllocObjectSetup(0x24, 0x3d4);
-        *(s8 *)(setup + 0x18) = (s8)randomGetRange(-0x7f, 0x7e);
-        ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
-        ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
-        ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
-        *(s16 *)(setup + 0x1a) = 0x190;
-        spawned = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, ((GameObject *)obj)->anim.parent);
-        if (slowMo) {
+        *(s8*)(setup + 0x18) = (s8)randomGetRange(-0x7f, 0x7e);
+        ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
+        ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
+        ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
+        *(s16*)(setup + 0x1a) = 0x190;
+        spawned = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
+        if (slowMo)
+        {
             sc = lbl_803E3948;
-            ((GameObject *)spawned)->anim.velocityX = sc * lbl_803AC790[0];
-            ((GameObject *)spawned)->anim.velocityY = lbl_803E394C * vel[1];
-            ((GameObject *)spawned)->anim.velocityZ = sc * vel[2];
-        } else {
-            ((GameObject *)spawned)->anim.velocityX = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
-            ((GameObject *)spawned)->anim.velocityZ = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
+            ((GameObject*)spawned)->anim.velocityX = sc * lbl_803AC790[0];
+            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * vel[1];
+            ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
-        mag = ((GameObject *)spawned)->anim.velocityX * ((GameObject *)spawned)->anim.velocityX;
-        mag += ((GameObject *)spawned)->anim.velocityZ * ((GameObject *)spawned)->anim.velocityZ;
-        if (mag != lbl_803E3938) {
+        else
+        {
+            ((GameObject*)spawned)->anim.velocityX = ((GameObject*)obj)->anim.localPosX - *(f32*)(player + 0xc);
+            ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)obj)->anim.localPosZ - *(f32*)(player + 0x14);
+        }
+        mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
+        mag += ((GameObject*)spawned)->anim.velocityZ * ((GameObject*)spawned)->anim.velocityZ;
+        if (mag != lbl_803E3938)
+        {
             mag = sqrtf(mag);
-            ((GameObject *)spawned)->anim.velocityX = ((GameObject *)spawned)->anim.velocityX / mag;
-            ((GameObject *)spawned)->anim.velocityZ = ((GameObject *)spawned)->anim.velocityZ / mag;
+            ((GameObject*)spawned)->anim.velocityX = ((GameObject*)spawned)->anim.velocityX / mag;
+            ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)spawned)->anim.velocityZ / mag;
         }
-        ((GameObject *)spawned)->anim.velocityX =
-            ((GameObject *)spawned)->anim.velocityX *
-            -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        ((GameObject *)spawned)->anim.velocityZ =
-            ((GameObject *)spawned)->anim.velocityZ *
-            -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        ((GameObject *)spawned)->anim.velocityY = lbl_803E3958;
+        ((GameObject*)spawned)->anim.velocityX =
+            ((GameObject*)spawned)->anim.velocityX *
+            -(lbl_803E3954 * (f32)(int)
+        randomGetRange(0, 0x19) - lbl_803E3950
+        )
+        ;
+        ((GameObject*)spawned)->anim.velocityZ =
+            ((GameObject*)spawned)->anim.velocityZ *
+            -(lbl_803E3954 * (f32)(int)
+        randomGetRange(0, 0x19) - lbl_803E3950
+        )
+        ;
+        ((GameObject*)spawned)->anim.velocityY = lbl_803E3958;
         spread.f14 = lbl_803E3938;
         spread.f18 = lbl_803E3938;
         spread.f1c = lbl_803E3938;
@@ -233,47 +276,60 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         spread.fa = 0;
         spread.f8 = (s16)randomGetRange(-10000, 10000);
         vecRotateZXY(&spread.f8, spawned + 0x24);
-        ang = (u16)(s16)getAngle(((GameObject *)spawned)->anim.velocityX, -((GameObject *)spawned)->anim.velocityZ);
-        diff = *(s16 *)spawned - ang;
-        if (diff > 0x8000) {
+        ang = (u16)(s16)
+        getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
+        diff = *(s16*)spawned - ang;
+        if (diff > 0x8000)
+        {
             diff -= 0xffff;
         }
-        if (diff < -0x8000) {
+        if (diff < -0x8000)
+        {
             diff += 0xffff;
         }
-        *(s16 *)spawned = diff;
+        *(s16*)spawned = diff;
         break;
     case 3:
         setup = Obj_AllocObjectSetup(0x24, 0x3d5);
-        *(s8 *)(setup + 0x18) = (s8)randomGetRange(-0x7f, 0x7e);
-        ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
-        ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
-        ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
-        *(s16 *)(setup + 0x1a) = 0x7d0;
-        spawned = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, ((GameObject *)obj)->anim.parent);
-        if (slowMo) {
+        *(s8*)(setup + 0x18) = (s8)randomGetRange(-0x7f, 0x7e);
+        ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
+        ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
+        ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
+        *(s16*)(setup + 0x1a) = 0x7d0;
+        spawned = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
+        if (slowMo)
+        {
             sc = lbl_803E3948;
-            ((GameObject *)spawned)->anim.velocityX = sc * lbl_803AC790[0];
-            ((GameObject *)spawned)->anim.velocityY = lbl_803E394C * vel[1];
-            ((GameObject *)spawned)->anim.velocityZ = sc * vel[2];
-        } else {
-            ((GameObject *)spawned)->anim.velocityX = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
-            ((GameObject *)spawned)->anim.velocityZ = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
+            ((GameObject*)spawned)->anim.velocityX = sc * lbl_803AC790[0];
+            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * vel[1];
+            ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
-        mag = ((GameObject *)spawned)->anim.velocityX * ((GameObject *)spawned)->anim.velocityX;
-        mag += ((GameObject *)spawned)->anim.velocityZ * ((GameObject *)spawned)->anim.velocityZ;
-        if (mag != lbl_803E3938) {
+        else
+        {
+            ((GameObject*)spawned)->anim.velocityX = ((GameObject*)obj)->anim.localPosX - *(f32*)(player + 0xc);
+            ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)obj)->anim.localPosZ - *(f32*)(player + 0x14);
+        }
+        mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
+        mag += ((GameObject*)spawned)->anim.velocityZ * ((GameObject*)spawned)->anim.velocityZ;
+        if (mag != lbl_803E3938)
+        {
             mag = sqrtf(mag);
-            ((GameObject *)spawned)->anim.velocityX = ((GameObject *)spawned)->anim.velocityX / mag;
-            ((GameObject *)spawned)->anim.velocityZ = ((GameObject *)spawned)->anim.velocityZ / mag;
+            ((GameObject*)spawned)->anim.velocityX = ((GameObject*)spawned)->anim.velocityX / mag;
+            ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)spawned)->anim.velocityZ / mag;
         }
-        ((GameObject *)spawned)->anim.velocityX =
-            ((GameObject *)spawned)->anim.velocityX *
-            -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        ((GameObject *)spawned)->anim.velocityZ =
-            ((GameObject *)spawned)->anim.velocityZ *
-            -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        ((GameObject *)spawned)->anim.velocityY = lbl_803E3958;
+        ((GameObject*)spawned)->anim.velocityX =
+            ((GameObject*)spawned)->anim.velocityX *
+            -(lbl_803E3954 * (f32)(int)
+        randomGetRange(0, 0x19) - lbl_803E3950
+        )
+        ;
+        ((GameObject*)spawned)->anim.velocityZ =
+            ((GameObject*)spawned)->anim.velocityZ *
+            -(lbl_803E3954 * (f32)(int)
+        randomGetRange(0, 0x19) - lbl_803E3950
+        )
+        ;
+        ((GameObject*)spawned)->anim.velocityY = lbl_803E3958;
         spread.f14 = lbl_803E3938;
         spread.f18 = lbl_803E3938;
         spread.f1c = lbl_803E3938;
@@ -282,62 +338,82 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         spread.fa = 0;
         spread.f8 = (s16)randomGetRange(-10000, 10000);
         vecRotateZXY(&spread.f8, spawned + 0x24);
-        ang = (u16)(s16)getAngle(((GameObject *)spawned)->anim.velocityX, -((GameObject *)spawned)->anim.velocityZ);
-        diff = *(s16 *)spawned - ang;
-        if (diff > 0x8000) {
+        ang = (u16)(s16)
+        getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
+        diff = *(s16*)spawned - ang;
+        if (diff > 0x8000)
+        {
             diff -= 0xffff;
         }
-        if (diff < -0x8000) {
+        if (diff < -0x8000)
+        {
             diff += 0xffff;
         }
-        *(s16 *)spawned = diff;
+        *(s16*)spawned = diff;
         break;
     case 5:
     case 6:
-        if (data[0x1e] == 5) {
+        if (data[0x1e] == 5)
+        {
             setup = Obj_AllocObjectSetup(0x30, 0xb);
-        } else {
+        }
+        else
+        {
             setup = Obj_AllocObjectSetup(0x30, 0x3cd);
         }
         setup[0x1a] = 0x14;
-        *(s16 *)(setup + 0x2c) = -1;
-        *(s16 *)(setup + 0x1c) = -1;
-        if ((s8)data[9] != 0) {
-            ((ObjPlacement *)setup)->posX =
-                ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-0xf, 0xf);
-            ((ObjPlacement *)setup)->posY = lbl_803E395C + ((GameObject *)obj)->anim.localPosY;
-            ((ObjPlacement *)setup)->posZ =
-                ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-0xf, 0xf);
-        } else {
-            ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
-            ((ObjPlacement *)setup)->posY = lbl_803E3960 + ((GameObject *)obj)->anim.localPosY;
-            ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
+        *(s16*)(setup + 0x2c) = -1;
+        *(s16*)(setup + 0x1c) = -1;
+        if ((s8)data[9] != 0)
+        {
+            ((ObjPlacement*)setup)->posX =
+                ((GameObject*)obj)->anim.localPosX + (f32)(int)
+            randomGetRange(-0xf, 0xf);
+            ((ObjPlacement*)setup)->posY = lbl_803E395C + ((GameObject*)obj)->anim.localPosY;
+            ((ObjPlacement*)setup)->posZ =
+                ((GameObject*)obj)->anim.localPosZ + (f32)(int)
+            randomGetRange(-0xf, 0xf);
         }
-        *(s16 *)(setup + 0x24) = -1;
-        spawned = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, ((GameObject *)obj)->anim.parent);
-        if (slowMo) {
+        else
+        {
+            ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
+            ((ObjPlacement*)setup)->posY = lbl_803E3960 + ((GameObject*)obj)->anim.localPosY;
+            ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
+        }
+        *(s16*)(setup + 0x24) = -1;
+        spawned = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
+        if (slowMo)
+        {
             sc = lbl_803E3948;
-            ((GameObject *)spawned)->anim.velocityX = sc * lbl_803AC790[0];
-            ((GameObject *)spawned)->anim.velocityY = lbl_803E394C * vel[1];
-            ((GameObject *)spawned)->anim.velocityZ = sc * vel[2];
+            ((GameObject*)spawned)->anim.velocityX = sc * lbl_803AC790[0];
+            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * vel[1];
+            ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
-        mag = ((GameObject *)spawned)->anim.velocityX * ((GameObject *)spawned)->anim.velocityX;
-        mag += ((GameObject *)spawned)->anim.velocityZ * ((GameObject *)spawned)->anim.velocityZ;
-        if (mag != lbl_803E3938) {
+        mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
+        mag += ((GameObject*)spawned)->anim.velocityZ * ((GameObject*)spawned)->anim.velocityZ;
+        if (mag != lbl_803E3938)
+        {
             mag = sqrtf(mag);
-            ((GameObject *)spawned)->anim.velocityX = ((GameObject *)spawned)->anim.velocityX / (mag = lbl_803E3964 * mag);
-            ((GameObject *)spawned)->anim.velocityZ = ((GameObject *)spawned)->anim.velocityZ / mag;
+            ((GameObject*)spawned)->anim.velocityX = ((GameObject*)spawned)->anim.velocityX / (mag = lbl_803E3964 *
+                mag);
+            ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)spawned)->anim.velocityZ / mag;
         }
-        ((GameObject *)spawned)->anim.velocityX =
-            ((GameObject *)spawned)->anim.velocityX *
-            -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        ((GameObject *)spawned)->anim.velocityZ =
-            ((GameObject *)spawned)->anim.velocityZ *
-            -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        ((GameObject *)spawned)->anim.velocityY = lbl_803E3958;
-        (*(code *)(*(int *)*(int *)&((GameObject *)spawned)->anim.dll + 0x2c))(
-            spawned, ((GameObject *)spawned)->anim.velocityX, ((GameObject *)spawned)->anim.velocityY,
-            ((GameObject *)spawned)->anim.velocityZ);
+        ((GameObject*)spawned)->anim.velocityX =
+            ((GameObject*)spawned)->anim.velocityX *
+            -(lbl_803E3954 * (f32)(int)
+        randomGetRange(0, 0x19) - lbl_803E3950
+        )
+        ;
+        ((GameObject*)spawned)->anim.velocityZ =
+            ((GameObject*)spawned)->anim.velocityZ *
+            -(lbl_803E3954 * (f32)(int)
+        randomGetRange(0, 0x19) - lbl_803E3950
+        )
+        ;
+        ((GameObject*)spawned)->anim.velocityY = lbl_803E3958;
+        (*(code*)(*(int*)*(int*)&((GameObject*)spawned)->anim.dll + 0x2c))(
+            spawned, ((GameObject*)spawned)->anim.velocityX, ((GameObject*)spawned)->anim.velocityY,
+            ((GameObject*)spawned)->anim.velocityZ);
         spread.f14 = lbl_803E3938;
         spread.f18 = lbl_803E3938;
         spread.f1c = lbl_803E3938;
@@ -346,27 +422,30 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         spread.fa = 0;
         spread.f8 = (s16)randomGetRange(-10000, 10000);
         vecRotateZXY(&spread.f8, spawned + 0x24);
-        ang = (u16)(s16)getAngle(((GameObject *)spawned)->anim.velocityX, -((GameObject *)spawned)->anim.velocityZ);
-        diff = *(s16 *)spawned - ang;
-        if (diff > 0x8000) {
+        ang = (u16)(s16)
+        getAngle(((GameObject*)spawned)->anim.velocityX, -((GameObject*)spawned)->anim.velocityZ);
+        diff = *(s16*)spawned - ang;
+        if (diff > 0x8000)
+        {
             diff -= 0xffff;
         }
-        if (diff < -0x8000) {
+        if (diff < -0x8000)
+        {
             diff += 0xffff;
         }
-        *(s16 *)spawned = diff;
+        *(s16*)spawned = diff;
         break;
     }
     return 1;
 }
 
-extern int objBboxFn_800640cc(void *from, void *to, f32 radius, int mode, void *hit, void *obj,
+extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj,
                               int p7, int p8, int p9, int p10);
-extern void hitDetect_calcSweptSphereBounds(u32 *boundsOut, f32 *startPoints, f32 *endPoints,
-                                            f32 *radii, int pointCount);
-extern void hitDetectFn_800691c0(u8 *obj, void *bounds, uint mask, int flags);
-extern u8 hitDetectFn_80067958(u8 *obj, f32 *startPoints, f32 *endPoints, int pointCount,
-                               void *outHits, int flags);
+extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f32* endPoints,
+                                            f32* radii, int pointCount);
+extern void hitDetectFn_800691c0(u8* obj, void* bounds, uint mask, int flags);
+extern u8 hitDetectFn_80067958(u8* obj, f32* startPoints, f32* endPoints, int pointCount,
+                               void* outHits, int flags);
 extern f32 lbl_803E3970;
 
 /*
@@ -376,18 +455,20 @@ extern f32 lbl_803E3970;
  * EN v1.0 Address: 0x801821FC
  * EN v1.0 Size: 776b
  */
-int fn_801821FC(u8 *obj) {
-    typedef struct {
+int fn_801821FC(u8* obj)
+{
+    typedef struct
+    {
         f32 hitInfo[4][4];
         f32 radii[4];
         s8 axes[12];
         u32 solidFlags[4];
     } HitDetectResults;
 
-    u8 *st;
-    s8 *axes;
-    f32 *endY;
-    f32 *endZ;
+    u8* st;
+    s8* axes;
+    f32* endY;
+    f32* endZ;
     int idx;
     u8 hit;
     f32 fz;
@@ -396,79 +477,94 @@ int fn_801821FC(u8 *obj) {
     f32 startPoints[12];
     u32 sweptBounds[6];
 
-    st = *(u8 **)&((GameObject *)obj)->anim.hitReactState;
-    if (objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E3970, 1, 0, obj, 1, -1, 0xff, 0) != 0) {
-        ((ObjHitsPriorityState *)st)->contactFlags |= 1;
-        ((ObjHitsPriorityState *)st)->localPosX = ((GameObject *)obj)->anim.previousLocalPosX;
-        ((ObjHitsPriorityState *)st)->localPosY = ((GameObject *)obj)->anim.previousLocalPosY;
-        ((ObjHitsPriorityState *)st)->localPosZ = ((GameObject *)obj)->anim.previousLocalPosZ;
+    st = *(u8**)&((GameObject*)obj)->anim.hitReactState;
+    if (objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E3970, 1, 0, obj, 1, -1, 0xff, 0) != 0)
+    {
+        ((ObjHitsPriorityState*)st)->contactFlags |= 1;
+        ((ObjHitsPriorityState*)st)->localPosX = ((GameObject*)obj)->anim.previousLocalPosX;
+        ((ObjHitsPriorityState*)st)->localPosY = ((GameObject*)obj)->anim.previousLocalPosY;
+        ((ObjHitsPriorityState*)st)->localPosZ = ((GameObject*)obj)->anim.previousLocalPosZ;
         fz = lbl_803E3938;
-        ((GameObject *)obj)->anim.velocityX = fz;
-        ((GameObject *)obj)->anim.velocityY = fz;
-        ((GameObject *)obj)->anim.velocityZ = fz;
+        ((GameObject*)obj)->anim.velocityX = fz;
+        ((GameObject*)obj)->anim.velocityY = fz;
+        ((GameObject*)obj)->anim.velocityZ = fz;
         return 1;
     }
 
-    if ((int)(((ObjHitsPriorityState *)st)->objectHitMask >> 4) != 0 && (s8)st[0x70] == 0) {
-        endPoints[0] = ((GameObject *)obj)->anim.localPosX;
-        *(endY = &endPoints[1]) = ((GameObject *)obj)->anim.localPosY;
-        *(endZ = &endPoints[2]) = ((GameObject *)obj)->anim.localPosZ;
-        startPoints[0] = ((GameObject *)obj)->anim.previousLocalPosX;
-        startPoints[1] = ((GameObject *)obj)->anim.previousLocalPosY;
-        startPoints[2] = ((GameObject *)obj)->anim.previousLocalPosZ;
-        hitResults.radii[0] = (f32)((ObjHitsPriorityState *)st)->primaryRadius;
+    if ((int)(((ObjHitsPriorityState*)st)->objectHitMask >> 4) != 0 && (s8)st[0x70] == 0)
+    {
+        endPoints[0] = ((GameObject*)obj)->anim.localPosX;
+        *(endY = &endPoints[1]) = ((GameObject*)obj)->anim.localPosY;
+        *(endZ = &endPoints[2]) = ((GameObject*)obj)->anim.localPosZ;
+        startPoints[0] = ((GameObject*)obj)->anim.previousLocalPosX;
+        startPoints[1] = ((GameObject*)obj)->anim.previousLocalPosY;
+        startPoints[2] = ((GameObject*)obj)->anim.previousLocalPosZ;
+        hitResults.radii[0] = (f32)((ObjHitsPriorityState*)st)->primaryRadius;
         *(axes = hitResults.axes) = -1;
         axes[4] = 3;
-    } else {
+    }
+    else
+    {
         return 0;
     }
 
     hitDetect_calcSweptSphereBounds(sweptBounds, startPoints, endPoints, hitResults.radii, 1);
-    hitDetectFn_800691c0(obj, sweptBounds, ((ObjHitsPriorityState *)st)->trackContactMask, 1);
+    hitDetectFn_800691c0(obj, sweptBounds, ((ObjHitsPriorityState*)st)->trackContactMask, 1);
     hit = hitDetectFn_80067958(obj, startPoints, endPoints, 1, &hitResults, 0);
-    if (hit != 0) {
-        if (hit & 1) {
+    if (hit != 0)
+    {
+        if (hit & 1)
+        {
             idx = 0;
-        } else if (hit & 2) {
+        }
+        else if (hit & 2)
+        {
             idx = 1;
-        } else if (hit & 4) {
+        }
+        else if (hit & 4)
+        {
             idx = 2;
-        } else {
+        }
+        else
+        {
             idx = 3;
         }
         st[0xac] = axes[idx];
-        ((ObjHitsPriorityState *)st)->contactPosX = endPoints[idx * 3];
-        ((ObjHitsPriorityState *)st)->contactPosY = endY[idx * 3];
-        ((ObjHitsPriorityState *)st)->contactPosZ = endZ[idx * 3];
+        ((ObjHitsPriorityState*)st)->contactPosX = endPoints[idx * 3];
+        ((ObjHitsPriorityState*)st)->contactPosY = endY[idx * 3];
+        ((ObjHitsPriorityState*)st)->contactPosZ = endZ[idx * 3];
         lbl_803AC790[0] = hitResults.hitInfo[idx][0];
         lbl_803AC790[1] = hitResults.hitInfo[idx][1];
         lbl_803AC790[2] = hitResults.hitInfo[idx][2];
         lbl_803AC790[3] = hitResults.hitInfo[idx][3];
-        if (hitResults.solidFlags[idx] != 0) {
-            ((ObjHitsPriorityState *)st)->contactFlags |= 2;
-            ((GameObject *)obj)->anim.localPosX = ((ObjHitsPriorityState *)st)->contactPosX;
-            ((GameObject *)obj)->anim.localPosY = ((ObjHitsPriorityState *)st)->contactPosY;
-            ((GameObject *)obj)->anim.localPosZ = ((ObjHitsPriorityState *)st)->contactPosZ;
-            ((ObjHitsPriorityState *)st)->localPosX = ((GameObject *)obj)->anim.previousLocalPosX;
-            ((ObjHitsPriorityState *)st)->localPosY = ((GameObject *)obj)->anim.previousLocalPosY;
-            ((ObjHitsPriorityState *)st)->localPosZ = ((GameObject *)obj)->anim.previousLocalPosZ;
+        if (hitResults.solidFlags[idx] != 0)
+        {
+            ((ObjHitsPriorityState*)st)->contactFlags |= 2;
+            ((GameObject*)obj)->anim.localPosX = ((ObjHitsPriorityState*)st)->contactPosX;
+            ((GameObject*)obj)->anim.localPosY = ((ObjHitsPriorityState*)st)->contactPosY;
+            ((GameObject*)obj)->anim.localPosZ = ((ObjHitsPriorityState*)st)->contactPosZ;
+            ((ObjHitsPriorityState*)st)->localPosX = ((GameObject*)obj)->anim.previousLocalPosX;
+            ((ObjHitsPriorityState*)st)->localPosY = ((GameObject*)obj)->anim.previousLocalPosY;
+            ((ObjHitsPriorityState*)st)->localPosZ = ((GameObject*)obj)->anim.previousLocalPosZ;
             fz = lbl_803E3938;
-            ((GameObject *)obj)->anim.velocityX = fz;
-            ((GameObject *)obj)->anim.velocityY = fz;
-            ((GameObject *)obj)->anim.velocityZ = fz;
+            ((GameObject*)obj)->anim.velocityX = fz;
+            ((GameObject*)obj)->anim.velocityY = fz;
+            ((GameObject*)obj)->anim.velocityZ = fz;
             return 1;
-        } else {
-            ((ObjHitsPriorityState *)st)->contactFlags |= 1;
-            ((GameObject *)obj)->anim.localPosX = ((ObjHitsPriorityState *)st)->contactPosX;
-            ((GameObject *)obj)->anim.localPosY = ((ObjHitsPriorityState *)st)->contactPosY;
-            ((GameObject *)obj)->anim.localPosZ = ((ObjHitsPriorityState *)st)->contactPosZ;
-            ((ObjHitsPriorityState *)st)->localPosX = ((GameObject *)obj)->anim.previousLocalPosX;
-            ((ObjHitsPriorityState *)st)->localPosY = ((GameObject *)obj)->anim.previousLocalPosY;
-            ((ObjHitsPriorityState *)st)->localPosZ = ((GameObject *)obj)->anim.previousLocalPosZ;
+        }
+        else
+        {
+            ((ObjHitsPriorityState*)st)->contactFlags |= 1;
+            ((GameObject*)obj)->anim.localPosX = ((ObjHitsPriorityState*)st)->contactPosX;
+            ((GameObject*)obj)->anim.localPosY = ((ObjHitsPriorityState*)st)->contactPosY;
+            ((GameObject*)obj)->anim.localPosZ = ((ObjHitsPriorityState*)st)->contactPosZ;
+            ((ObjHitsPriorityState*)st)->localPosX = ((GameObject*)obj)->anim.previousLocalPosX;
+            ((ObjHitsPriorityState*)st)->localPosY = ((GameObject*)obj)->anim.previousLocalPosY;
+            ((ObjHitsPriorityState*)st)->localPosZ = ((GameObject*)obj)->anim.previousLocalPosZ;
             fz = lbl_803E3938;
-            ((GameObject *)obj)->anim.velocityX = fz;
-            ((GameObject *)obj)->anim.velocityY = fz;
-            ((GameObject *)obj)->anim.velocityZ = fz;
+            ((GameObject*)obj)->anim.velocityX = fz;
+            ((GameObject*)obj)->anim.velocityY = fz;
+            ((GameObject*)obj)->anim.velocityZ = fz;
             return 1;
         }
     }
@@ -490,14 +586,14 @@ int fn_801821FC(u8 *obj) {
  */
 int smallbasket_getExtraSize(void)
 {
-  return 0x24;
+    return 0x24;
 }
 
 extern void smallbasket_init();
 extern void smallbasket_update();
 extern void smallbasket_render(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
-                              undefined4 param_5, char param_6);
-extern ModgfxInterface **gModgfxInterface;
+                               undefined4 param_5, char param_6);
+extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDAC0;
 extern void ObjGroup_RemoveObject(int obj, int flag);
 
@@ -510,12 +606,12 @@ extern void ObjGroup_RemoveObject(int obj, int flag);
  */
 void smallbasket_free(int param_1)
 {
-  (*gModgfxInterface)->detachSource((void *)param_1);
-  Resource_Release(lbl_803DDAC0);
-  ObjGroup_RemoveObject(param_1, 0x10);
+    (*gModgfxInterface)->detachSource((void*)param_1);
+    Resource_Release(lbl_803DDAC0);
+    ObjGroup_RemoveObject(param_1, 0x10);
 }
 
-extern MapEventInterface **gMapEventInterface;
+extern MapEventInterface** gMapEventInterface;
 extern f32 lbl_803E3974;
 extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4,
                                  undefined4 p5, double scale);
@@ -530,33 +626,34 @@ extern void* Obj_GetPlayerObject(void);
  */
 void objThrowFn_80182504(int param_1)
 {
-  struct LocalArgs {
-    short f8;
-    short fa;
-    short fc;
-    short pad_e;
-    float f10;
-    float f14;
-    float f18;
-    float f1c;
-  } local;
-  int extra;
-  short* player;
-  extra = *(int *)&((GameObject *)param_1)->extra;
-  player = (short*)Obj_GetPlayerObject();
-  ((SmallbasketState *)extra)->unk6 = 0;
-  ((SmallbasketState *)extra)->unk5 = 0;
-  ((SmallbasketState *)extra)->unk9 = 1;
-  ((GameObject *)param_1)->anim.velocityY = lbl_803E3958;
-  ((GameObject *)param_1)->anim.velocityZ = lbl_803E3974;
-  local.f14 = lbl_803E3938;
-  local.f18 = lbl_803E3938;
-  local.f1c = lbl_803E3938;
-  local.f10 = lbl_803E3950;
-  local.fc = 0;
-  local.fa = 0;
-  local.f8 = *player;
-  vecRotateZXY(&local.f8, (void*)&((GameObject *)param_1)->anim.velocityX);
+    struct LocalArgs
+    {
+        short f8;
+        short fa;
+        short fc;
+        short pad_e;
+        float f10;
+        float f14;
+        float f18;
+        float f1c;
+    } local;
+    int extra;
+    short* player;
+    extra = *(int*)&((GameObject*)param_1)->extra;
+    player = (short*)Obj_GetPlayerObject();
+    ((SmallbasketState*)extra)->unk6 = 0;
+    ((SmallbasketState*)extra)->unk5 = 0;
+    ((SmallbasketState*)extra)->unk9 = 1;
+    ((GameObject*)param_1)->anim.velocityY = lbl_803E3958;
+    ((GameObject*)param_1)->anim.velocityZ = lbl_803E3974;
+    local.f14 = lbl_803E3938;
+    local.f18 = lbl_803E3938;
+    local.f1c = lbl_803E3938;
+    local.f10 = lbl_803E3950;
+    local.fc = 0;
+    local.fa = 0;
+    local.f8 = *player;
+    vecRotateZXY(&local.f8, (void*)&((GameObject*)param_1)->anim.velocityX);
 }
 
 /*
@@ -569,24 +666,33 @@ void objThrowFn_80182504(int param_1)
 void smallbasket_render(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
                         undefined4 param_5, char param_6)
 {
-  int extra;
-  int result;
-  short field_a;
-  extra = *(int *)&((GameObject *)param_1)->extra;
-  result = (*gMapEventInterface)->isTimedEventActive(*(int*)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x14));
-  if (result == 0) {
-    ((GameObject *)param_1)->anim.flags = ((GameObject *)param_1)->anim.flags | 0x4000;
-  } else {
-    field_a = *(short*)(extra + 0xa);
-    if ((field_a != 0 && field_a <= 0x32) || ((SmallbasketState *)extra)->unk14 != 0) {
-      ((GameObject *)param_1)->anim.flags = ((GameObject *)param_1)->anim.flags | 0x4000;
-    } else if (((GameObject *)param_1)->unkF8 != 0 && param_6 != -1) {
-      ((GameObject *)param_1)->anim.flags = ((GameObject *)param_1)->anim.flags | 0x4000;
-    } else {
-      objRenderFn_8003b8f4((void*)param_1, param_2, param_3, param_4, param_5,
-                            (double)lbl_803E3950);
+    int extra;
+    int result;
+    short field_a;
+    extra = *(int*)&((GameObject*)param_1)->extra;
+    result = (*gMapEventInterface)->isTimedEventActive(
+        *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14));
+    if (result == 0)
+    {
+        ((GameObject*)param_1)->anim.flags = ((GameObject*)param_1)->anim.flags | 0x4000;
     }
-  }
+    else
+    {
+        field_a = *(short*)(extra + 0xa);
+        if ((field_a != 0 && field_a <= 0x32) || ((SmallbasketState*)extra)->unk14 != 0)
+        {
+            ((GameObject*)param_1)->anim.flags = ((GameObject*)param_1)->anim.flags | 0x4000;
+        }
+        else if (((GameObject*)param_1)->unkF8 != 0 && param_6 != -1)
+        {
+            ((GameObject*)param_1)->anim.flags = ((GameObject*)param_1)->anim.flags | 0x4000;
+        }
+        else
+        {
+            objRenderFn_8003b8f4((void*)param_1, param_2, param_3, param_4, param_5,
+                                 (double)lbl_803E3950);
+        }
+    }
 }
 
 ObjectDescriptor gSmallBasketObjDescriptor = {

@@ -55,7 +55,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_042C_DRProjectil_packet_info {
+enum obj_042C_DRProjectil_packet_info
+{
     DRPROJECTIL_DEF_ID = 0x042C,
     DRPROJECTIL_DLL_ID = 0x00F9,
     DRPROJECTIL_CLASS_ID = 0x0051,

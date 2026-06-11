@@ -72,7 +72,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02E3_SC_stepping_packet_info {
+enum obj_02E3_SC_stepping_packet_info
+{
     SC_STEPPING_DEF_ID = 0x02E3,
     SC_STEPPING_DLL_ID = 0x0110,
     SC_STEPPING_CLASS_ID = 0x0053,

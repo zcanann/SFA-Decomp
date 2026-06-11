@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0531_ARWSilverRi_packet_info {
+enum obj_0531_ARWSilverRi_packet_info
+{
     ARWSILVERRI_DEF_ID = 0x0531,
     ARWSILVERRI_DLL_ID = 0x02A0,
     ARWSILVERRI_CLASS_ID = 0x0030,

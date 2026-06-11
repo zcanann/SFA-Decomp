@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0374_DFP_LevelCo_packet_info {
+enum obj_0374_DFP_LevelCo_packet_info
+{
     DFP_LEVELCO_DEF_ID = 0x0374,
     DFP_LEVELCO_DLL_ID = 0x0229,
     DFP_LEVELCO_CLASS_ID = 0x0030,

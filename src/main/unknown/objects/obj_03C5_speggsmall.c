@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03C5_SPEggSmall_packet_info {
+enum obj_03C5_SPEggSmall_packet_info
+{
     SPEGGSMALL_DEF_ID = 0x03C5,
     SPEGGSMALL_DLL_ID = 0x0284,
     SPEGGSMALL_CLASS_ID = 0x0070,

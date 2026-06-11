@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_011D_WCSeqObject_packet_info {
+enum obj_011D_WCSeqObject_packet_info
+{
     WCSEQOBJECT_DEF_ID = 0x011D,
     WCSEQOBJECT_DLL_ID = 0x0112,
     WCSEQOBJECT_CLASS_ID = 0x0055,

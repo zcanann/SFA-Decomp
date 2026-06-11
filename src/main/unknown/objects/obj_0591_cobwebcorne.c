@@ -73,7 +73,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0591_CobwebCorne_packet_info {
+enum obj_0591_CobwebCorne_packet_info
+{
     COBWEBCORNE_DEF_ID = 0x0591,
     COBWEBCORNE_DLL_ID = 0x011A,
     COBWEBCORNE_CLASS_ID = 0x0061,

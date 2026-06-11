@@ -4,13 +4,15 @@ extern u32 hwIsActive(u32 voice);
 extern u32 get_vidlist(u32 id);
 extern void synthCancelJob(int voice);
 
-typedef struct VoiceListNode {
+typedef struct VoiceListNode
+{
     u8 prev;
     u8 next;
     u16 time;
 } VoiceListNode;
 
-typedef struct VidListBlock {
+typedef struct VidListBlock
+{
     u8 vidLists[0x800];
     u8 midiKeySlots[0x80];
     u8 directSlots[0x40];
@@ -20,7 +22,7 @@ typedef struct VidListBlock {
     VoiceListNode freeList[0x40];
 } VidListBlock;
 
-extern SynthVoiceState *synthVoice;
+extern SynthVoiceState* synthVoice;
 extern VidListBlock vidListNodes;
 extern u8 lbl_803BD150[];
 extern u8 gSynthInitialized;
@@ -43,10 +45,11 @@ extern VoiceListNode voiceFreeListSlots[0x40];
  */
 void voiceInitPriorityTables(void)
 {
-    VidListBlock *vb = &vidListNodes;
+    VidListBlock* vb = &vidListNodes;
     u32 i;
 
-    for (i = 0; i < lbl_803BD150[0x210]; i++) {
+    for (i = 0; i < lbl_803BD150[0x210]; i++)
+    {
         voiceFreeListSlots[i].prev = i - 1;
         voiceFreeListSlots[i].next = i + 1;
         voiceFreeListSlots[i].time = 1;
@@ -55,10 +58,12 @@ void voiceInitPriorityTables(void)
     vb->freeList[lbl_803BD150[0x210] - 1].next = 0xff;
     voiceListRoot = 0;
     voiceListInsert = lbl_803BD150[0x210] - 1;
-    for (i = 0; i < lbl_803BD150[0x210]; i++) {
+    for (i = 0; i < lbl_803BD150[0x210]; i++)
+    {
         voicePriorityLinks[i].time = 0;
     }
-    for (i = 0; i < 0x100; i++) {
+    for (i = 0; i < 0x100; i++)
+    {
         voicePriorityGroupHeads[i] = 0xff;
     }
     voicePrioSortRootListRoot = 0xffff;
@@ -75,7 +80,8 @@ void voiceInitPriorityTables(void)
 void voiceBreakAndFree(u32 voice)
 {
     if (voice == SYNTH_INVALID_VOICE) return;
-    if (hwIsActive(voice) != 0) {
+    if (hwIsActive(voice) != 0)
+    {
         hwBreak(voice);
     }
     synthVoice[voice].handle = voice;
@@ -90,15 +96,17 @@ void voiceBreakAndFree(u32 voice)
  */
 void voiceKill(u32 voice)
 {
-    SynthVoiceState *voiceState = SYNTH_VOICE_STATE(voice);
+    SynthVoiceState* voiceState = SYNTH_VOICE_STATE(voice);
 
-    if (voiceState->activeHandle != 0) {
+    if (voiceState->activeHandle != 0)
+    {
         vidRemoveVoice((int)voiceState);
         voiceState->cFlags &= ~3;
         voiceState->priorityTick = 0;
         voiceFree((int)voiceState);
     }
-    if (voiceState->callbackActive != 0) {
+    if (voiceState->callbackActive != 0)
+    {
         synthCancelJob(voice);
     }
     hwBreak(voice);
@@ -116,18 +124,24 @@ int voiceKillById(u32 id)
     u32 nextHandle;
     u32 i;
 
-    if (gSynthInitialized != 0) {
+    if (gSynthInitialized != 0)
+    {
         u32 s;
-        if ((id != SYNTH_INVALID_VOICE) && ((s = get_vidlist(id)) != 0)) {
-            id = *(u32 *)(s + 0xc);
-        } else {
+        if ((id != SYNTH_INVALID_VOICE) && ((s = get_vidlist(id)) != 0))
+        {
+            id = *(u32*)(s + 0xc);
+        }
+        else
+        {
             id = SYNTH_INVALID_VOICE;
         }
 
-        for (; id != SYNTH_INVALID_VOICE; id = nextHandle) {
+        for (; id != SYNTH_INVALID_VOICE; id = nextHandle)
+        {
             i = (u8)id;
             nextHandle = SYNTH_VOICE_STATE(i)->nextHandle;
-            if (id == SYNTH_VOICE_STATE(i)->handle) {
+            if (id == SYNTH_VOICE_STATE(i)->handle)
+            {
                 voiceKill(i);
                 result = 0;
             }
@@ -145,7 +159,7 @@ int voiceKillById(u32 id)
  */
 int voiceIsRegistered(int state)
 {
-    SynthVoiceState *voiceState = (SynthVoiceState *)state;
+    SynthVoiceState* voiceState = (SynthVoiceState*)state;
     u32 voice = voiceState->handle;
     u8 a;
     u8 b;
@@ -155,7 +169,8 @@ int voiceIsRegistered(int state)
     if (a == SYNTH_INVALID_VOICE_U8) goto fail;
     b = voiceState->midiChannel;
     v = (u8)voice;
-    if (b == SYNTH_INVALID_VOICE_U8) {
+    if (b == SYNTH_INVALID_VOICE_U8)
+    {
         if (voiceDirectSlots[v] == v) return 1;
         goto fail;
     }
@@ -171,7 +186,7 @@ fail:
  */
 void voiceRegister(int state)
 {
-    SynthVoiceState *voiceState = (SynthVoiceState *)state;
+    SynthVoiceState* voiceState = (SynthVoiceState*)state;
     u32 voice = voiceState->handle;
     u8 a;
     u8 b;
@@ -181,9 +196,12 @@ void voiceRegister(int state)
     if (a == SYNTH_INVALID_VOICE_U8) return;
     b = voiceState->midiChannel;
     v = (u8)voice;
-    if (b == SYNTH_INVALID_VOICE_U8) {
+    if (b == SYNTH_INVALID_VOICE_U8)
+    {
         voiceDirectSlots[v] = v;
-    } else {
+    }
+    else
+    {
         voiceMidiKeySlots[b][a] = v;
     }
 }

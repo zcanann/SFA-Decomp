@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_033D_VFP_LevelCo_packet_info {
+enum obj_033D_VFP_LevelCo_packet_info
+{
     VFP_LEVELCO_DEF_ID = 0x033D,
     VFP_LEVELCO_DLL_ID = 0x0216,
     VFP_LEVELCO_CLASS_ID = 0x0030,

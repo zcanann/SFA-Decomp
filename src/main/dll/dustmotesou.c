@@ -14,17 +14,20 @@ void dustmotesou_free(int obj)
 
 void dustmotesou_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible != 0) {
+    if (visible != 0)
+    {
         return;
     }
 }
 
-void dustmotesou_hitDetect(void) {}
+void dustmotesou_hitDetect(void)
+{
+}
 
 void dustmotesou_init(int obj, int setup)
 {
-    DustMoteSouObject *source = (DustMoteSouObject *)obj;
-    DustMoteSouMapData *mapData = (DustMoteSouMapData *)setup;
+    DustMoteSouObject* source = (DustMoteSouObject*)obj;
+    DustMoteSouMapData* mapData = (DustMoteSouMapData*)setup;
 
     source->objAnim.rotZ = (s16)(mapData->rotZ << 8);
     source->objAnim.rotY = (s16)(mapData->rotY << 8);
@@ -34,61 +37,80 @@ void dustmotesou_init(int obj, int setup)
 
 void dustmotesou_update(int obj)
 {
-    DustMoteSouObject *source = (DustMoteSouObject *)obj;
-    DustMoteSouMapData *mapData = (DustMoteSouMapData *)source->objAnim.placementData;
+    DustMoteSouObject* source = (DustMoteSouObject*)obj;
+    DustMoteSouMapData* mapData = (DustMoteSouMapData*)source->objAnim.placementData;
 
-    if (mapData->gameBit != -1 && (u32)GameBit_Get(mapData->gameBit) == 0) {
+    if (mapData->gameBit != -1 && (u32)GameBit_Get(mapData->gameBit) == 0)
+    {
         return;
     }
-    if (source->objAnim.seqId == DUSTMOTESOU_SEQ_TAIL_LIGHT) {
-        if (mapData->effectId == 0) {
+    if (source->objAnim.seqId == DUSTMOTESOU_SEQ_TAIL_LIGHT)
+    {
+        if (mapData->effectId == 0)
+        {
             return;
         }
-        if (mapData->effectParamA == 0) {
+        if (mapData->effectParamA == 0)
+        {
             return;
         }
         objfx_spawnMaskedHitEffect(obj, mapData->effectId, mapData->effectParamA, mapData->scale,
-                    mapData->effectParamB, 0);
+                                   mapData->effectParamB, 0);
         return;
     }
-    if (source->objAnim.seqId == DUSTMOTESOU_SEQ_FIREWORK) {
-        if (mapData->effectId == 0) {
+    if (source->objAnim.seqId == DUSTMOTESOU_SEQ_FIREWORK)
+    {
+        if (mapData->effectId == 0)
+        {
             return;
         }
-        if (mapData->effectParamA == 0) {
+        if (mapData->effectParamA == 0)
+        {
             return;
         }
         hitDetectFn_80097070(obj, mapData->effectId, mapData->effectParamA,
                              mapData->scale, mapData->effectParamB, 0);
         return;
     }
-    if (mapData->effectId == 0) {
+    if (mapData->effectId == 0)
+    {
         return;
     }
-    if (mapData->effectParamA == 0) {
+    if (mapData->effectParamA == 0)
+    {
         return;
     }
-    if (mapData->effectParamB == 0) {
+    if (mapData->effectParamB == 0)
+    {
         return;
     }
-    if (mapData->burstMode == DUSTMOTESOU_BURST_BOX) {
+    if (mapData->burstMode == DUSTMOTESOU_BURST_BOX)
+    {
         ((void (*)(int, int, int, int, f32, f32, f32, f32, int, int, int))objfx_spawnBoxBurst)(
             obj, mapData->effectId, mapData->effectParamA, mapData->effectParamB,
             mapData->scale, (f32)(u32)mapData->spreadX,
             (f32)(u32)mapData->spreadY, (f32)(u32)mapData->spreadZ,
             mapData->effectFlags, 0, 0);
-    } else if (mapData->burstMode == DUSTMOTESOU_BURST_ARCED) {
+    }
+    else if (mapData->burstMode == DUSTMOTESOU_BURST_ARCED)
+    {
         objfx_spawnArcedBurst(obj, mapData->effectId, mapData->scale,
-                               mapData->effectParamA, mapData->effectParamB, mapData->effectFlags,
-                               (f32)(u32)mapData->spreadX, (f32)(u32)mapData->spreadY,
-                               (f32)(u32)mapData->spreadZ, 0, 0);
-    } else {
+                              mapData->effectParamA, mapData->effectParamB, mapData->effectFlags,
+                              (f32)(u32)mapData->spreadX, (f32)(u32)mapData->spreadY,
+                              (f32)(u32)mapData->spreadZ, 0, 0);
+    }
+    else
+    {
         objfx_spawnDirectionalBurst(obj, mapData->effectId, mapData->effectParamA, mapData->effectParamB,
-                       mapData->scale, (f32)(u32)mapData->spreadX,
-                       mapData->effectFlags, 0, 0);
+                                    mapData->scale, (f32)(u32)mapData->spreadX,
+                                    mapData->effectFlags, 0, 0);
     }
 }
 
-void dustmotesou_release(void) {}
+void dustmotesou_release(void)
+{
+}
 
-void dustmotesou_initialise(void) {}
+void dustmotesou_initialise(void)
+{
+}

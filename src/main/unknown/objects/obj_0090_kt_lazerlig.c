@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0090_KT_Lazerlig_packet_info {
+enum obj_0090_KT_Lazerlig_packet_info
+{
     KT_LAZERLIG_DEF_ID = 0x0090,
     KT_LAZERLIG_DLL_ID = 0x0253,
     KT_LAZERLIG_CLASS_ID = 0x0030,

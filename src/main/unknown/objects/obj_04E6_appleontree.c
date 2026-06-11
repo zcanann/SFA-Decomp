@@ -51,7 +51,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04E6_AppleOnTree_packet_info {
+enum obj_04E6_AppleOnTree_packet_info
+{
     APPLEONTREE_DEF_ID = 0x04E6,
     APPLEONTREE_DLL_ID = 0x0117,
     APPLEONTREE_CLASS_ID = 0x005D,

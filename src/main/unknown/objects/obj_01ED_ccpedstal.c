@@ -59,7 +59,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01ED_CCpedstal_packet_info {
+enum obj_01ED_CCpedstal_packet_info
+{
     CCPEDSTAL_DEF_ID = 0x01ED,
     CCPEDSTAL_DLL_ID = 0x018A,
     CCPEDSTAL_CLASS_ID = 0x0061,

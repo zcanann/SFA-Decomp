@@ -63,7 +63,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0587_SnowBoulder_packet_info {
+enum obj_0587_SnowBoulder_packet_info
+{
     SNOWBOULDER_DEF_ID = 0x0587,
     SNOWBOULDER_DLL_ID = 0x02B0,
     SNOWBOULDER_CLASS_ID = 0x0061,

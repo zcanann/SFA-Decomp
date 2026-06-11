@@ -75,7 +75,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_029A_SH_BombWall_packet_info {
+enum obj_029A_SH_BombWall_packet_info
+{
     SH_BOMBWALL_DEF_ID = 0x029A,
     SH_BOMBWALL_DLL_ID = 0x015A,
     SH_BOMBWALL_CLASS_ID = 0x0063,

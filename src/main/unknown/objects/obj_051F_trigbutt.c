@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_051F_TrigButt_packet_info {
+enum obj_051F_TrigButt_packet_info
+{
     TRIGBUTT_DEF_ID = 0x051F,
     TRIGBUTT_DLL_ID = 0x0126,
     TRIGBUTT_CLASS_ID = 0x0019,

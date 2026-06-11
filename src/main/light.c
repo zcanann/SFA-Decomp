@@ -40,8 +40,8 @@ extern uint FUN_8028683c();
 extern undefined4 FUN_80286884();
 extern undefined4 FUN_80286888();
 
-extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern MapEventInterface **gMapEventInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern MapEventInterface** gMapEventInterface;
 extern undefined4 DAT_803de940;
 extern f64 DOUBLE_803e6d90;
 extern f64 DOUBLE_803e6da8;
@@ -56,18 +56,24 @@ extern f32 lbl_803E6DB8;
 extern f32 lbl_803E6DBC;
 
 /* Per-object extra state for SeqPoint (seqpoint_getExtraSize == 0x10). */
-typedef struct SeqPointState {
+typedef struct SeqPointState
+{
     f32 triggerRadius;
     s16 conditionBit; /* gamebit gating modes 1-5 */
-    s16 disableBit;   /* gamebit that permanently disables the point */
-    s16 sequenceId;   /* trigger id fired at the player; switched in the SeqFn */
+    s16 disableBit; /* gamebit that permanently disables the point */
+    s16 sequenceId; /* trigger id fired at the player; switched in the SeqFn */
     u8 pad0A[3];
     u8 done;
     u8 mode; /* 0 radius, 1 bit, 2 radius+bit, 3/4 bit-once (sets it), 5 bit repeat */
     u8 pad0F;
 } SeqPointState;
 
-STATIC_ASSERT(sizeof(SeqPointState) == 0x10);
+STATIC_ASSERT (
+sizeof
+(SeqPointState)
+==
+0x10
+);
 
 /*
  * --INFO--
@@ -82,8 +88,8 @@ STATIC_ASSERT(sizeof(SeqPointState) == 0x10);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void *Obj_GetPlayerObject(void);
-extern f32 Vec_distance(void *a, void *b);
+extern void* Obj_GetPlayerObject(void);
+extern f32 Vec_distance(void* a, void* b);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
@@ -93,13 +99,18 @@ extern f32 lbl_803E6100;
 void vfpblock1_update(int obj)
 {
     int player = (int)Obj_GetPlayerObject();
-    f32 dist = Vec_distance((void *)(player + 0x18), (void *)&((GameObject *)obj)->anim.worldPosX);
-    if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) != 0) {
-        if (dist < lbl_803E6100) {
+    f32 dist = Vec_distance((void*)(player + 0x18), (void*)&((GameObject*)obj)->anim.worldPosX);
+    if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) != 0)
+    {
+        if (dist < lbl_803E6100)
+        {
             Sfx_PlayFromObject(obj, SFXsp_guardian_call2);
         }
-    } else {
-        if (dist >= lbl_803E6100) {
+    }
+    else
+    {
+        if (dist >= lbl_803E6100)
+        {
             Sfx_StopObjectChannel(obj, 0x40);
         }
     }
@@ -136,8 +147,8 @@ void vfpblock1_update(int obj)
  */
 void FUN_801fc978(int param_1)
 {
-  FUN_8003b818(param_1);
-  return;
+    FUN_8003b818(param_1);
+    return;
 }
 
 
@@ -155,68 +166,73 @@ void FUN_801fc978(int param_1)
  * PAL Size: TODO
  */
 undefined4
-FUN_801fcccc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10
-            ,int param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
-            undefined4 param_15,undefined4 param_16)
+FUN_801fcccc(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
+             , int param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
+             undefined4 param_15, undefined4 param_16)
 {
-  char cVar2;
-  undefined4 uVar1;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  undefined8 extraout_f1;
-  undefined8 uVar7;
-  undefined8 extraout_f1_00;
-  
-  iVar6 = *(int *)&((GameObject *)param_9)->extra;
-  *(undefined2 *)(param_11 + 0x70) = 0xffff;
-  *(undefined *)(param_11 + 0x56) = 0;
-  for (iVar5 = 0; iVar5 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar5 = iVar5 + 1) {
-    if ((*(short *)(iVar6 + 8) == 0xd) && (*(char *)(param_11 + iVar5 + 0x81) == '\x14')) {
-      FUN_80017698(0x500,0);
-      FUN_80017698(0xd72,1);
-      FUN_80017698(0xd44,1);
-      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_9)->anim.mapEventSlot,1,1);
-      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_9)->anim.mapEventSlot,2,1);
-      iVar4 = (int)*gMapEventInterface;
-      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_9)->anim.mapEventSlot,0x16,1);
-      cVar2 = (*gMapEventInterface)->getMode((int)((GameObject *)param_9)->anim.mapEventSlot);
-      if (cVar2 == '\x01') {
-        uVar7 = extraout_f1;
-        FUN_80042b9c(0,0,1);
-        uVar1 = FUN_80044404(0x46);
-        FUN_80042bec(uVar1,1);
-        uVar1 = FUN_80044404(4);
-        FUN_80042bec(uVar1,0);
-        FUN_80041ff8(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x46);
-        iVar3 = (int)*gMapEventInterface;
-        (*gMapEventInterface)->setMode(0x12,2);
-        FUN_80053c98(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x7c,'\0',iVar3,
-                     iVar4,param_13,param_14,param_15,param_16);
-      }
-      else {
-        cVar2 = (*gMapEventInterface)->getMode((int)((GameObject *)param_9)->anim.mapEventSlot);
-        if (cVar2 == '\x02') {
-          uVar7 = extraout_f1_00;
-          FUN_80042b9c(0,0,1);
-          uVar1 = FUN_80044404(0x46);
-          FUN_80042bec(uVar1,1);
-          uVar1 = FUN_80044404(4);
-          FUN_80042bec(uVar1,0);
-          FUN_80041ff8(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x46);
-          (*gMapEventInterface)->setMode(0xb,4);
-          iVar3 = (int)*gMapEventInterface;
-          (*gMapEventInterface)->setMode(8,6);
-          FUN_80053c98(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x7c,'\0',iVar3
-                       ,iVar4,param_13,param_14,param_15,param_16);
+    char cVar2;
+    undefined4 uVar1;
+    int iVar3;
+    int iVar4;
+    int iVar5;
+    int iVar6;
+    undefined8 extraout_f1;
+    undefined8 uVar7;
+    undefined8 extraout_f1_00;
+
+    iVar6 = *(int*)&((GameObject*)param_9)->extra;
+    *(undefined2*)(param_11 + 0x70) = 0xffff;
+    *(undefined*)(param_11 + 0x56) = 0;
+    for (iVar5 = 0; iVar5 < (int)(uint) * (byte*)(param_11 + 0x8b); iVar5 = iVar5 + 1)
+    {
+        if ((*(short*)(iVar6 + 8) == 0xd) && (*(char*)(param_11 + iVar5 + 0x81) == '\x14'))
+        {
+            FUN_80017698(0x500, 0);
+            FUN_80017698(0xd72, 1);
+            FUN_80017698(0xd44, 1);
+            (*gMapEventInterface)->setAnimEvent((int)((GameObject*)param_9)->anim.mapEventSlot, 1, 1);
+            (*gMapEventInterface)->setAnimEvent((int)((GameObject*)param_9)->anim.mapEventSlot, 2, 1);
+            iVar4 = (int)*gMapEventInterface;
+            (*gMapEventInterface)->setAnimEvent((int)((GameObject*)param_9)->anim.mapEventSlot, 0x16, 1);
+            cVar2 = (*gMapEventInterface)->getMode((int)((GameObject*)param_9)->anim.mapEventSlot);
+            if (cVar2 == '\x01')
+            {
+                uVar7 = extraout_f1;
+                FUN_80042b9c(0, 0, 1);
+                uVar1 = FUN_80044404(0x46);
+                FUN_80042bec(uVar1, 1);
+                uVar1 = FUN_80044404(4);
+                FUN_80042bec(uVar1, 0);
+                FUN_80041ff8(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x46);
+                iVar3 = (int)*gMapEventInterface;
+                (*gMapEventInterface)->setMode(0x12, 2);
+                FUN_80053c98(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x7c, '\0', iVar3,
+                             iVar4, param_13, param_14, param_15, param_16);
+            }
+            else
+            {
+                cVar2 = (*gMapEventInterface)->getMode((int)((GameObject*)param_9)->anim.mapEventSlot);
+                if (cVar2 == '\x02')
+                {
+                    uVar7 = extraout_f1_00;
+                    FUN_80042b9c(0, 0, 1);
+                    uVar1 = FUN_80044404(0x46);
+                    FUN_80042bec(uVar1, 1);
+                    uVar1 = FUN_80044404(4);
+                    FUN_80042bec(uVar1, 0);
+                    FUN_80041ff8(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x46);
+                    (*gMapEventInterface)->setMode(0xb, 4);
+                    iVar3 = (int)*gMapEventInterface;
+                    (*gMapEventInterface)->setMode(8, 6);
+                    FUN_80053c98(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, 0x7c, '\0', iVar3
+                                 , iVar4, param_13, param_14, param_15, param_16);
+                }
+            }
         }
-      }
+        *(undefined*)(param_11 + iVar5 + 0x81) = 0;
     }
-    *(undefined *)(param_11 + iVar5 + 0x81) = 0;
-  }
-  return 0;
+    return 0;
 }
 
 
@@ -226,32 +242,94 @@ void FUN_801fc374(undefined4 param_1)
 
 int FUN_801fc4f4(void)
 {
-  return 4;
+    return 4;
 }
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void vfpblock1_release(void) {}
-void vfpblock1_initialise(void) {}
-void vfpplatform_hitDetect(void) {}
-void vfpplatform_release(void) {}
-void vfpplatform_initialise(void) {}
-void vfpdoorswitch_hitDetect(void) {}
-void vfpdoorswitch_release(void) {}
-void vfpdoorswitch_initialise(void) {}
-void seqpoint_free(void) {}
-void seqpoint_hitDetect(void) {}
-void seqpoint_release(void) {}
-void seqpoint_initialise(void) {}
-void vfpdraghead_render(void) {}
-void vfpdraghead_hitDetect(void) {}
-void vfpdraghead_release(void) {}
-void vfpdraghead_initialise(void) {}
-void vfpcoreplat_hitDetect(void) {}
-void vfpcoreplat_update(void) {}
-void vfpcoreplat_release(void) {}
-void vfpcoreplat_initialise(void) {}
-void dll_224_free_nop(void) {}
+void vfpblock1_release(void)
+{
+}
+
+void vfpblock1_initialise(void)
+{
+}
+
+void vfpplatform_hitDetect(void)
+{
+}
+
+void vfpplatform_release(void)
+{
+}
+
+void vfpplatform_initialise(void)
+{
+}
+
+void vfpdoorswitch_hitDetect(void)
+{
+}
+
+void vfpdoorswitch_release(void)
+{
+}
+
+void vfpdoorswitch_initialise(void)
+{
+}
+
+void seqpoint_free(void)
+{
+}
+
+void seqpoint_hitDetect(void)
+{
+}
+
+void seqpoint_release(void)
+{
+}
+
+void seqpoint_initialise(void)
+{
+}
+
+void vfpdraghead_render(void)
+{
+}
+
+void vfpdraghead_hitDetect(void)
+{
+}
+
+void vfpdraghead_release(void)
+{
+}
+
+void vfpdraghead_initialise(void)
+{
+}
+
+void vfpcoreplat_hitDetect(void)
+{
+}
+
+void vfpcoreplat_update(void)
+{
+}
+
+void vfpcoreplat_release(void)
+{
+}
+
+void vfpcoreplat_initialise(void)
+{
+}
+
+void dll_224_free_nop(void)
+{
+}
 
 /* 8b "li r3, N; blr" returners. */
 int vfpplatform_getExtraSize(void) { return 0x6; }
@@ -269,91 +347,112 @@ int dll_224_getExtraSize_ret_6(void) { return 0x6; }
 int dll_224_getObjectTypeId(void) { return 0x0; }
 
 /* "tail-call into (**gExpgfxInterface)[6]" free stub. */
-void vfpplatform_free(int obj) {
+void vfpplatform_free(int obj)
+{
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-void vfpdoorswitch_free(int obj) {
+
+void vfpdoorswitch_free(int obj)
+{
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-void vfpcoreplat_free(int obj) {
+
+void vfpcoreplat_free(int obj)
+{
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
 #pragma scheduling off
 #pragma peephole off
-void vfpblock1_init(int obj, int data) {
-    int state = *(int *)&((GameObject *)obj)->extra;
-    *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
-    *(s16 *)state = *(s16 *)(data + 0x1e);
-    ((GameObject *)obj)->objectFlags |= 0x6000;
+void vfpblock1_init(int obj, int data)
+{
+    int state = *(int*)&((GameObject*)obj)->extra;
+    *(s16*)obj = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
+    *(s16*)state = *(s16*)(data + 0x1e);
+    ((GameObject*)obj)->objectFlags |= 0x6000;
 }
-void vfpplatform_init(int obj, int data) {
-    int state = *(int *)&((GameObject *)obj)->extra;
-    *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
-    *(s16 *)state = *(s16 *)(data + 0x20);
-    *(u8 *)(state + 2) = 0;
-    *(u8 *)(state + 3) = *(u8 *)(data + 0x19);
-    ((GameObject *)obj)->objectFlags |= 0x2000;
+
+void vfpplatform_init(int obj, int data)
+{
+    int state = *(int*)&((GameObject*)obj)->extra;
+    *(s16*)obj = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
+    *(s16*)state = *(s16*)(data + 0x20);
+    *(u8*)(state + 2) = 0;
+    *(u8*)(state + 3) = *(u8*)(data + 0x19);
+    ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
 extern f32 lbl_803E6144;
 extern f32 lbl_803E6148;
 extern u32 GameBit_Get(int);
 
-void vfpcoreplat_init(int obj, int data) {
-    int state = *(int *)&((GameObject *)obj)->extra;
-    *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
-    *(s16 *)state = *(s16 *)(data + 0x20);
+void vfpcoreplat_init(int obj, int data)
+{
+    int state = *(int*)&((GameObject*)obj)->extra;
+    *(s16*)obj = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
+    *(s16*)state = *(s16*)(data + 0x20);
     *(int (**)(void))(obj + 0xBC) = return0_801FD13C;
-    if (((GameObject *)obj)->anim.seqId == 0x3cb) {
-        if (GameBit_Get(0x4e9) != 0) {
-            ((GameObject *)obj)->anim.rootMotionScale = lbl_803E6144 * *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
+    if (((GameObject*)obj)->anim.seqId == 0x3cb)
+    {
+        if (GameBit_Get(0x4e9) != 0)
+        {
+            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E6144 * *(f32*)(*(int*)&((GameObject*)obj)->anim.
+                modelInstance + 4);
         }
-        if (GameBit_Get(0x63c) != 0) {
-            ((GameObject *)obj)->anim.rootMotionScale = lbl_803E6148 * *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
+        if (GameBit_Get(0x63c) != 0)
+        {
+            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E6148 * *(f32*)(*(int*)&((GameObject*)obj)->anim.
+                modelInstance + 4);
         }
     }
-    ((GameObject *)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
 extern void GameBit_Set(int eventId, int value);
 extern u32 lbl_803DDCC8;
 extern f32 lbl_803E6150;
 
-typedef struct SpellStoneUseState {
+typedef struct SpellStoneUseState
+{
     s16 completeGameBit;
     s16 requiredGameBit;
     u8 used;
 } SpellStoneUseState;
 
-void spellStoneUseFn_801fd270(int obj) {
-    SpellStoneUseState *state = ((GameObject *)obj)->extra;
+void spellStoneUseFn_801fd270(int obj)
+{
+    SpellStoneUseState* state = ((GameObject*)obj)->extra;
     s16 cond = 1;
-    void *player = Obj_GetPlayerObject();
+    void* player = Obj_GetPlayerObject();
     if (player == NULL) return;
-    if (state->requiredGameBit != -1) {
+    if (state->requiredGameBit != -1)
+    {
         cond = (s16)GameBit_Get(state->requiredGameBit);
     }
     if ((s16)GameBit_Get(state->completeGameBit) != 0) return;
     if (state->used != 0) return;
     if ((s16)cond == 0) return;
-    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x08;
-    if ((*gGameUIInterface)->isEventReady(lbl_803DDCC8) != 0) {
-        if (Vec_distance((void *)&((GameObject *)obj)->anim.worldPosX, (char *)player + 0x18) < lbl_803E6150) {
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x08;
+    if ((*gGameUIInterface)->isEventReady(lbl_803DDCC8) != 0)
+    {
+        if (Vec_distance((void*)&((GameObject*)obj)->anim.worldPosX, (char*)player + 0x18) < lbl_803E6150)
+        {
             GameBit_Set(state->completeGameBit, 1);
             state->used = 1;
-            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x08;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x08;
         }
     }
 }
 
-extern ModgfxInterface **gModgfxInterface;
-extern void *lbl_803DDCC0;
+extern ModgfxInterface** gModgfxInterface;
+extern void* lbl_803DDCC0;
 #pragma peephole on
-void vfpdraghead_free(int obj) {
+void vfpdraghead_free(int obj)
+{
     (*gExpgfxInterface)->freeSource2((u32)obj);
-    (*gModgfxInterface)->freeSourceEffects((void *)obj);
-    if (lbl_803DDCC0 != NULL) {
+    (*gModgfxInterface)->freeSourceEffects((void*)obj);
+    if (lbl_803DDCC0 != NULL)
+    {
         Resource_Release(lbl_803DDCC0);
     }
     lbl_803DDCC0 = NULL;
@@ -362,61 +461,84 @@ void vfpdraghead_free(int obj) {
 extern f32 lbl_803E6138;
 
 /* Per-object extra state for VFPDragHead (vfpdraghead_getExtraSize == 0xC). */
-typedef struct VfpDragHeadState {
-    s16 gameBitA;     /* toggled by hits; drives the 0x390 breath fx */
-    s16 gameBitB;     /* suppresses idle fx when set (variant 2) */
-    s16 unk_04;       /* init: 100 */
+typedef struct VfpDragHeadState
+{
+    s16 gameBitA; /* toggled by hits; drives the 0x390 breath fx */
+    s16 gameBitB; /* suppresses idle fx when set (variant 2) */
+    s16 unk_04; /* init: 100 */
     s16 despawnTimer; /* variant 0x3C5: init 0x78, counts down to free */
     u8 pad08[3];
-    u8 headIndex;     /* from def+0x1A; matched against lbl_803DDCC6 */
+    u8 headIndex; /* from def+0x1A; matched against lbl_803DDCC6 */
 } VfpDragHeadState;
 
-STATIC_ASSERT(sizeof(VfpDragHeadState) == 0xC);
+STATIC_ASSERT (
+sizeof
+(VfpDragHeadState)
+==
+0xC
+);
 
 #pragma peephole off
-void vfpdraghead_init(int obj, int data) {
-    VfpDragHeadState *state = ((GameObject *)obj)->extra;
-    if (((GameObject *)obj)->anim.seqId == 0x3c5) {
+void vfpdraghead_init(int obj, int data)
+{
+    VfpDragHeadState* state = ((GameObject*)obj)->extra;
+    if (((GameObject*)obj)->anim.seqId == 0x3c5)
+    {
         state->despawnTimer = 0x78;
-        ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * lbl_803E6138;
+        ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4) *
+            lbl_803E6138;
         ObjHits_SetHitVolumeSlot(obj, 0xE, 1, 0);
-    } else {
-        *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
     }
-    state->gameBitA = *(s16 *)(data + 0x1e);
-    state->gameBitB = *(s16 *)(data + 0x20);
+    else
+    {
+        *(s16*)obj = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
+    }
+    state->gameBitA = *(s16*)(data + 0x1e);
+    state->gameBitB = *(s16*)(data + 0x20);
     state->unk_04 = 0x64;
-    state->headIndex = (u8)*(s16 *)(data + 0x1a);
-    if (*(s8 *)(data + 0x19) == 1) {
-        ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * lbl_803E6138;
+    state->headIndex = (u8) * (s16*)(data + 0x1a);
+    if (*(s8*)(data + 0x19) == 1)
+    {
+        ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4) *
+            lbl_803E6138;
     }
-    ((GameObject *)obj)->objectFlags |= 0x6000;
+    ((GameObject*)obj)->objectFlags |= 0x6000;
     lbl_803DDCC0 = Resource_Acquire(0xA5, 1);
 }
 
-extern void fn_801FC6F4(int, int, ObjAnimUpdateState *);
-void seqpoint_init(int obj, int data) {
-    SeqPointState *state = ((GameObject *)obj)->extra;
+extern void fn_801FC6F4(int, int, ObjAnimUpdateState*);
+
+void seqpoint_init(int obj, int data)
+{
+    SeqPointState* state = ((GameObject*)obj)->extra;
     *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801FC6F4;
-    *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
-    state->triggerRadius = (f32)*(s16 *)(data + 0x1a);
-    state->sequenceId = *(s16 *)(data + 0x1c);
-    state->mode = *(u8 *)(data + 0x19);
-    state->conditionBit = *(s16 *)(data + 0x1e);
-    state->disableBit = *(s16 *)(data + 0x20);
-    ((GameObject *)obj)->objectFlags |= 0x2000;
+    *(s16*)obj = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
+    state->triggerRadius = (f32) * (s16*)(data + 0x1a);
+    state->sequenceId = *(s16*)(data + 0x1c);
+    state->mode = *(u8*)(data + 0x19);
+    state->conditionBit = *(s16*)(data + 0x1e);
+    state->disableBit = *(s16*)(data + 0x20);
+    ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E6128;
 extern void objRenderFn_8003b8f4(f32);
-void seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E6128); }
+
+void seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E6128);
+}
 
 extern f32 lbl_803E610C;
-void vfpplatform_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
-    int state = *(int *)&((GameObject *)obj)->extra;
+
+void vfpplatform_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int state = *(int*)&((GameObject*)obj)->extra;
     s32 v = visible;
-    if (v != 0 && *(u8 *)(state + 3) != 0x63) {
+    if (v != 0 && *(u8*)(state + 3) != 0x63)
+    {
         ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E610C);
     }
 }
@@ -430,21 +552,23 @@ void vfpcoreplat_render(void) { objRenderFn_8003b8f4(lbl_803E6140); }
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void vfpdoorswitch_updateExplodingVariant(int obj);
 
-typedef struct {
+typedef struct
+{
     s16 gameBitId;
-    u8 activated:1;
-    u8 exploded:1;
-    u8 _state2_lo:6;
+    u8 activated : 1;
+    u8 exploded : 1;
+    u8 _state2_lo : 6;
 } VfpDoorSwitchState;
 
 void vfpdoorswitch_update(int obj)
 {
-    VfpDoorSwitchState *state;
-    if (((GameObject *)obj)->anim.seqId != 0x3e7) {
+    VfpDoorSwitchState* state;
+    if (((GameObject*)obj)->anim.seqId != 0x3e7)
+    {
         vfpdoorswitch_updateExplodingVariant(obj);
         return;
     }
-    state = ((GameObject *)obj)->extra;
+    state = ((GameObject*)obj)->extra;
     if (state->activated != 0) return;
     if (GameBit_Get(state->gameBitId) == 0) return;
     Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
@@ -454,29 +578,32 @@ void vfpdoorswitch_update(int obj)
     state->activated = 1;
 }
 
-void vfpdoorswitch_init(int obj, int data) {
-    VfpDoorSwitchState *state = ((GameObject *)obj)->extra;
-    *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
-    ((GameObject *)obj)->anim.rotZ = (s16)(((s32)*(s8 *)(data + 0x19)) << 8);
-    ((GameObject *)obj)->anim.rotY = *(s16 *)(data + 0x1c);
-    state->gameBitId = *(s16 *)(data + 0x1e);
-    if (GameBit_Get(state->gameBitId) != 0) {
+void vfpdoorswitch_init(int obj, int data)
+{
+    VfpDoorSwitchState* state = ((GameObject*)obj)->extra;
+    *(s16*)obj = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
+    ((GameObject*)obj)->anim.rotZ = (s16)(((s32) * (s8*)(data + 0x19)) << 8);
+    ((GameObject*)obj)->anim.rotY = *(s16*)(data + 0x1c);
+    state->gameBitId = *(s16*)(data + 0x1e);
+    if (GameBit_Get(state->gameBitId) != 0)
+    {
         ((ObjAnimSetProgressObjectFirstFn)ObjAnim_SetMoveProgress)(obj, lbl_803E611C);
         state->activated = 1;
         state->exploded = 1;
-        ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
-    if (((GameObject *)obj)->anim.seqId == 0x3e7 && state->activated != 0) {
-        *(u8 *)&((GameObject *)obj)->anim.bankIndex = 1;
+    if (((GameObject*)obj)->anim.seqId == 0x3e7 && state->activated != 0)
+    {
+        *(u8*)&((GameObject*)obj)->anim.bankIndex = 1;
     }
-    ((GameObject *)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
 extern int Camera_GetCurrentViewSlot(void);
-extern void PSVECSubtract(void *a, void *b, void *ab);
-extern void PSVECNormalize(void *in, void *out);
-extern void PSVECScale(void *in, void *out, f32 scale);
-extern void PSVECAdd(void *a, void *b, void *ab);
+extern void PSVECSubtract(void* a, void* b, void* ab);
+extern void PSVECNormalize(void* in, void* out);
+extern void PSVECScale(void* in, void* out, f32 scale);
+extern void PSVECAdd(void* a, void* b, void* ab);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern f32 lbl_803E6118;
 extern f32 lbl_803E6120;
@@ -485,32 +612,37 @@ extern f32 timeDelta;
 
 void vfpdoorswitch_updateExplodingVariant(int obj)
 {
-    VfpDoorSwitchState *state = ((GameObject *)obj)->extra;
+    VfpDoorSwitchState* state = ((GameObject*)obj)->extra;
     int camView = Camera_GetCurrentViewSlot();
 
-    if (state->activated == 0) {
-        if (GameBit_Get(state->gameBitId) != 0) {
+    if (state->activated == 0)
+    {
+        if (GameBit_Get(state->gameBitId) != 0)
+        {
             Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             Sfx_PlayFromObject(obj, SFXsp_skeep_mumb4);
             Sfx_PlayFromObject(obj, 0x494);
             state->activated = 1;
         }
     }
-    if (state->activated != 0) {
+    if (state->activated != 0)
+    {
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6118, timeDelta, NULL);
-        if (state->exploded == 0) {
-            if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E611C) {
+        if (state->exploded == 0)
+        {
+            if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E611C)
+            {
                 f32 vec[3];
-                PSVECSubtract((void *)(camView + 0xC), (void *)(obj + 0xC), vec);
+                PSVECSubtract((void*)(camView + 0xC), (void*)(obj + 0xC), vec);
                 PSVECNormalize(vec, vec);
                 PSVECScale(vec, vec, lbl_803E6120);
-                PSVECAdd((void *)(obj + 0xC), vec, (void *)(obj + 0xC));
-                ((GameObject *)obj)->anim.worldPosX = ((GameObject *)obj)->anim.localPosX;
-                ((GameObject *)obj)->anim.worldPosY = ((GameObject *)obj)->anim.localPosY;
-                ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;
+                PSVECAdd((void*)(obj + 0xC), vec, (void*)(obj + 0xC));
+                ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
+                ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
+                ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
                 spawnExplosion(obj, lbl_803E6124, 1, 1, 0, 0, 0, 0, 0);
                 state->exploded = 1;
-                ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
         }
     }
@@ -520,28 +652,32 @@ void dll_224_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (vi
 
 
 #pragma peephole on
-void seqpoint_update(int *obj)
+void seqpoint_update(int* obj)
 {
-    void *player = Obj_GetPlayerObject();
-    SeqPointState *self = ((GameObject *)obj)->extra;
+    void* player = Obj_GetPlayerObject();
+    SeqPointState* self = ((GameObject*)obj)->extra;
     int key = self->disableBit;
 
-    if (key != -1) {
-        if (self->done != 0) {
+    if (key != -1)
+    {
+        if (self->done != 0)
+        {
             if (GameBit_Get(key) != 0) return;
             GameBit_Set(self->disableBit, 1);
             self->done = 1;
             return;
         }
-        if (GameBit_Get(key) != 0) {
+        if (GameBit_Get(key) != 0)
+        {
             self->done = 1;
             return;
         }
     }
     if (self->done != 0) return;
-    switch (self->mode) {
+    switch (self->mode)
+    {
     case 0:
-        if (Vec_distance((char *)obj + 0x18, (char *)player + 0x18) >= self->triggerRadius) return;
+        if (Vec_distance((char*)obj + 0x18, (char*)player + 0x18) >= self->triggerRadius) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
@@ -552,14 +688,14 @@ void seqpoint_update(int *obj)
         self->done = 1;
         break;
     case 2:
-        if (Vec_distance((char *)obj + 0x18, (char *)player + 0x18) >= self->triggerRadius) return;
+        if (Vec_distance((char*)obj + 0x18, (char*)player + 0x18) >= self->triggerRadius) return;
         if (self->conditionBit == -1) return;
         if (GameBit_Get(self->conditionBit) == 0) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
         break;
     case 3:
-        if (Vec_distance((char *)obj + 0x18, (char *)player + 0x18) >= self->triggerRadius) return;
+        if (Vec_distance((char*)obj + 0x18, (char*)player + 0x18) >= self->triggerRadius) return;
         if (self->conditionBit == -1) return;
         if (GameBit_Get(self->conditionBit) != 0) return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
@@ -581,52 +717,65 @@ void seqpoint_update(int *obj)
     }
 }
 
-extern EffectInterface **gPartfxInterface;
-extern void Obj_FreeObject(int *obj);
+extern EffectInterface** gPartfxInterface;
+extern void Obj_FreeObject(int* obj);
 extern u32 randomGetRange(int min, int max);
 extern s16 lbl_803DDCC4;
 extern u8 lbl_803DDCC6;
 
 #pragma peephole off
-void vfpdraghead_update(int *obj)
+void vfpdraghead_update(int* obj)
 {
-    int state = *(s8 *)(*(char **)&((GameObject *)obj)->anim.placementData + 0x19);
-    VfpDragHeadState *self2;
+    int state = *(s8*)(*(char**)&((GameObject*)obj)->anim.placementData + 0x19);
+    VfpDragHeadState* self2;
 
-    if (state == 2) {
-        self2 = ((GameObject *)obj)->extra;
+    if (state == 2)
+    {
+        self2 = ((GameObject*)obj)->extra;
         lbl_803DDCC4 -= (s16)timeDelta;
         if (GameBit_Get(self2->gameBitB) != 0) return;
         if (lbl_803DDCC4 > 0xc8) return;
         if (self2->headIndex != lbl_803DDCC6) return;
         if (randomGetRange(0, 2) != 0) return;
         (*gPartfxInterface)->spawnObject(obj, 0x391, NULL, 4, -1, NULL);
-    } else if (((GameObject *)obj)->anim.seqId == 0x3c5) {
-        self2 = ((GameObject *)obj)->extra;
+    }
+    else if (((GameObject*)obj)->anim.seqId == 0x3c5)
+    {
+        self2 = ((GameObject*)obj)->extra;
         self2->despawnTimer -= (s16)timeDelta;
-        ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.velocityX * timeDelta + ((GameObject *)obj)->anim.localPosX;
-        ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
-        ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.velocityZ * timeDelta + ((GameObject *)obj)->anim.localPosZ;
+        ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.
+            localPosX;
+        ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.
+            localPosY;
+        ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.
+            localPosZ;
         if (self2->despawnTimer > 0) return;
         Obj_FreeObject(obj);
-    } else if (state == 0) {
-        self2 = ((GameObject *)obj)->extra;
+    }
+    else if (state == 0)
+    {
+        self2 = ((GameObject*)obj)->extra;
         lbl_803DDCC4 -= (s16)timeDelta;
         if (GameBit_Get(0x522) != 0) return;
         if (lbl_803DDCC4 > 0xc8) return;
         if (self2->headIndex != lbl_803DDCC6) return;
         if (randomGetRange(0, 2) != 0) return;
         (*gPartfxInterface)->spawnObject(obj, 0x391, NULL, 4, -1, NULL);
-    } else if (state == 1) {
-        self2 = ((GameObject *)obj)->extra;
-        if (GameBit_Get(self2->gameBitA) != 0) {
+    }
+    else if (state == 1)
+    {
+        self2 = ((GameObject*)obj)->extra;
+        if (GameBit_Get(self2->gameBitA) != 0)
+        {
             (*gPartfxInterface)->spawnObject(obj, 0x390, NULL, 4, -1, NULL);
             (*gPartfxInterface)->spawnObject(obj, 0x390, NULL, 4, -1, NULL);
-            if (randomGetRange(0, 1) != 0) {
+            if (randomGetRange(0, 1) != 0)
+            {
                 (*gPartfxInterface)->spawnObject(obj, 0x391, NULL, 4, -1, NULL);
             }
         }
-        if ((s16)ObjHits_GetPriorityHit((int)obj, (int *)0, (int *)0, (uint *)0) != 0) {
+        if ((s16)ObjHits_GetPriorityHit((int)obj, (int*)0, (int*)0, (uint*)0) != 0)
+        {
             GameBit_Set(self2->gameBitA, 1 - GameBit_Get(self2->gameBitA));
         }
     }
@@ -638,33 +787,39 @@ extern int mapGetDirIdx(int);
 extern undefined4 loadMapAndParent(int);
 extern void warpToMap(int, int);
 
-void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState *ctx)
+void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
 {
-    SeqPointState *state = ((GameObject *)obj)->extra;
+    SeqPointState* state = ((GameObject*)obj)->extra;
     int i;
 
     ctx->activeHitVolumePair = -1;
     ctx->sequenceEventActive = 0;
-    for (i = 0; i < ctx->eventCount; i++) {
-        switch (state->sequenceId) {
+    for (i = 0; i < ctx->eventCount; i++)
+    {
+        switch (state->sequenceId)
+        {
         case 0:
             break;
         case 13:
-            if ((int)ctx->eventIds[i] == 20) {
+            if ((int)ctx->eventIds[i] == 20)
+            {
                 GameBit_Set(0x500, 0);
                 GameBit_Set(0xd72, 1);
                 GameBit_Set(0xd44, 1);
-                (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 1, 1);
-                (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 2, 1);
-                (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 22, 1);
-                if ((*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot) == 1) {
+                (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 1, 1);
+                (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 2, 1);
+                (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 22, 1);
+                if ((*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot) == 1)
+                {
                     unlockLevel(0, 0, 1);
                     lockLevel(mapGetDirIdx(70), 1);
                     lockLevel(mapGetDirIdx(4), 0);
                     loadMapAndParent(70);
                     (*gMapEventInterface)->setMode(18, 2);
                     warpToMap(124, 0);
-                } else if ((*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot) == 2) {
+                }
+                else if ((*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot) == 2)
+                {
                     unlockLevel(0, 0, 1);
                     lockLevel(mapGetDirIdx(70), 1);
                     lockLevel(mapGetDirIdx(4), 0);
@@ -684,223 +839,304 @@ extern f32 lbl_803E6108;
 
 void fn_801FBAC8(int obj)
 {
-    int params = *(int *)&((GameObject *)obj)->anim.placementData;
-    int state = *(int *)&((GameObject *)obj)->extra;
-    if (GameBit_Get(*(s16 *)state) != 0) {
-        *(u8 *)(state + 2) = 6;
+    int params = *(int*)&((GameObject*)obj)->anim.placementData;
+    int state = *(int*)&((GameObject*)obj)->extra;
+    if (GameBit_Get(*(s16*)state) != 0)
+    {
+        *(u8*)(state + 2) = 6;
     }
-    switch (*(u8 *)(state + 2)) {
+    switch (*(u8*)(state + 2))
+    {
     case 6:
-        if (((GameObject *)obj)->anim.localPosZ < ((ObjPlacement *)params)->posZ) {
-            ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ + timeDelta;
-            if (((GameObject *)obj)->anim.localPosZ >= ((ObjPlacement *)params)->posZ) {
-                ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)params)->posZ;
+        if (((GameObject*)obj)->anim.localPosZ < ((ObjPlacement*)params)->posZ)
+        {
+            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + timeDelta;
+            if (((GameObject*)obj)->anim.localPosZ >= ((ObjPlacement*)params)->posZ)
+            {
+                ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)params)->posZ;
             }
-        } else if (((GameObject *)obj)->anim.localPosZ > ((ObjPlacement *)params)->posZ) {
-            ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ - timeDelta;
-            if (((GameObject *)obj)->anim.localPosZ <= ((ObjPlacement *)params)->posZ) {
-                ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)params)->posZ;
+        }
+        else if (((GameObject*)obj)->anim.localPosZ > ((ObjPlacement*)params)->posZ)
+        {
+            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ - timeDelta;
+            if (((GameObject*)obj)->anim.localPosZ <= ((ObjPlacement*)params)->posZ)
+            {
+                ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)params)->posZ;
             }
-        } else {
-            if (GameBit_Get(*(s16 *)state) == 0) {
-                *(u8 *)(state + 2) = 3;
+        }
+        else
+        {
+            if (GameBit_Get(*(s16*)state) == 0)
+            {
+                *(u8*)(state + 2) = 3;
             }
         }
         break;
     case 0:
-        if (GameBit_Get(*(s16 *)state) == 0) {
-            *(u8 *)(state + 2) = 3;
+        if (GameBit_Get(*(s16*)state) == 0)
+        {
+            *(u8*)(state + 2) = 3;
         }
         break;
-    case 1: {
-        s16 timer = *(s16 *)(state + 4);
-        if (timer != 0) {
-            *(s16 *)(state + 4) = timer - (int)timeDelta;
-            if (*(s16 *)(state + 4) <= 0) {
-                *(s16 *)(state + 4) = 0;
+    case 1:
+        {
+            s16 timer = *(s16*)(state + 4);
+            if (timer != 0)
+            {
+                *(s16*)(state + 4) = timer - (int)timeDelta;
+                if (*(s16*)(state + 4) <= 0)
+                {
+                    *(s16*)(state + 4) = 0;
+                }
             }
-        } else if (*(u8 *)(state + 3) == 0) {
-            if (((GameObject *)obj)->anim.localPosZ == ((ObjPlacement *)params)->posZ - lbl_803E6108) {
-                *(u8 *)(state + 2) = 2;
+            else if (*(u8*)(state + 3) == 0)
+            {
+                if (((GameObject*)obj)->anim.localPosZ == ((ObjPlacement*)params)->posZ - lbl_803E6108)
+                {
+                    *(u8*)(state + 2) = 2;
+                }
+                if (((GameObject*)obj)->anim.localPosZ == lbl_803E6108 + ((ObjPlacement*)params)->posZ)
+                {
+                    *(u8*)(state + 2) = 3;
+                }
             }
-            if (((GameObject *)obj)->anim.localPosZ == lbl_803E6108 + ((ObjPlacement *)params)->posZ) {
-                *(u8 *)(state + 2) = 3;
+            else
+            {
+                if (((GameObject*)obj)->anim.localPosZ == ((ObjPlacement*)params)->posZ - lbl_803E6108)
+                {
+                    *(u8*)(state + 2) = 4;
+                }
+                if (((GameObject*)obj)->anim.localPosZ == lbl_803E6108 + ((ObjPlacement*)params)->posZ)
+                {
+                    *(u8*)(state + 2) = 5;
+                }
             }
-        } else {
-            if (((GameObject *)obj)->anim.localPosZ == ((ObjPlacement *)params)->posZ - lbl_803E6108) {
-                *(u8 *)(state + 2) = 4;
-            }
-            if (((GameObject *)obj)->anim.localPosZ == lbl_803E6108 + ((ObjPlacement *)params)->posZ) {
-                *(u8 *)(state + 2) = 5;
-            }
+            break;
         }
-        break;
-    }
-    case 2: {
-        f32 thr = lbl_803E6108;
-        if (((GameObject *)obj)->anim.localPosZ < thr + ((ObjPlacement *)params)->posZ) {
-            ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ + timeDelta;
-            if (((GameObject *)obj)->anim.localPosZ >= thr + ((ObjPlacement *)params)->posZ) {
-                ((GameObject *)obj)->anim.localPosZ = thr + ((ObjPlacement *)params)->posZ;
-                *(u8 *)(state + 2) = 1;
-                *(s16 *)(state + 4) = 20;
+    case 2:
+        {
+            f32 thr = lbl_803E6108;
+            if (((GameObject*)obj)->anim.localPosZ < thr + ((ObjPlacement*)params)->posZ)
+            {
+                ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + timeDelta;
+                if (((GameObject*)obj)->anim.localPosZ >= thr + ((ObjPlacement*)params)->posZ)
+                {
+                    ((GameObject*)obj)->anim.localPosZ = thr + ((ObjPlacement*)params)->posZ;
+                    *(u8*)(state + 2) = 1;
+                    *(s16*)(state + 4) = 20;
+                }
             }
+            break;
         }
-        break;
-    }
-    case 3: {
-        f32 thr = lbl_803E6108;
-        if (((GameObject *)obj)->anim.localPosZ > ((ObjPlacement *)params)->posZ - thr) {
-            ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ - timeDelta;
-            if (((GameObject *)obj)->anim.localPosZ <= ((ObjPlacement *)params)->posZ - thr) {
-                ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)params)->posZ - thr;
-                *(u8 *)(state + 2) = 1;
-                *(s16 *)(state + 4) = 20;
+    case 3:
+        {
+            f32 thr = lbl_803E6108;
+            if (((GameObject*)obj)->anim.localPosZ > ((ObjPlacement*)params)->posZ - thr)
+            {
+                ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ - timeDelta;
+                if (((GameObject*)obj)->anim.localPosZ <= ((ObjPlacement*)params)->posZ - thr)
+                {
+                    ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)params)->posZ - thr;
+                    *(u8*)(state + 2) = 1;
+                    *(s16*)(state + 4) = 20;
+                }
             }
+            break;
         }
-        break;
-    }
     }
 }
 
 
 void vfpplatform_update(int obj)
 {
-    int params = *(int *)&((GameObject *)obj)->anim.placementData;
-    int state = *(int *)&((GameObject *)obj)->extra;
-    u8 s3 = *(u8 *)(state + 3);
-    if (s3 == 10) {
-        if (GameBit_Get(*(s16 *)state) != 0) {
-            (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
+    int params = *(int*)&((GameObject*)obj)->anim.placementData;
+    int state = *(int*)&((GameObject*)obj)->extra;
+    u8 s3 = *(u8*)(state + 3);
+    if (s3 == 10)
+    {
+        if (GameBit_Get(*(s16*)state) != 0)
+        {
+            (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         }
-    } else {
-        int xi = (int)((GameObject *)obj)->anim.localPosX;
-        int yi = (int)((GameObject *)obj)->anim.localPosZ;
-        int txi = (int)((ObjPlacement *)params)->posX;
-        int tyi = (int)((ObjPlacement *)params)->posZ;
-        if (s3 != 99) {
-            if (((GameObject *)obj)->anim.seqId == 960) {
+    }
+    else
+    {
+        int xi = (int)((GameObject*)obj)->anim.localPosX;
+        int yi = (int)((GameObject*)obj)->anim.localPosZ;
+        int txi = (int)((ObjPlacement*)params)->posX;
+        int tyi = (int)((ObjPlacement*)params)->posZ;
+        if (s3 != 99)
+        {
+            if (((GameObject*)obj)->anim.seqId == 960)
+            {
                 fn_801FBAC8(obj);
-            } else {
-                switch (*(u8 *)(state + 2)) {
+            }
+            else
+            {
+                switch (*(u8*)(state + 2))
+                {
                 case 0:
-                    if (GameBit_Get(*(s16 *)state) != 0) {
-                        *(u8 *)(state + 2) = 1;
+                    if (GameBit_Get(*(s16*)state) != 0)
+                    {
+                        *(u8*)(state + 2) = 1;
                     }
                     break;
-                case 1: {
-                    s16 timer = *(s16 *)(state + 4);
-                    if (timer != 0) {
-                        *(s16 *)(state + 4) = timer - (int)timeDelta;
-                        if (*(s16 *)(state + 4) <= 0) {
-                            *(s16 *)(state + 4) = 0;
-                        }
-                    } else if (s3 == 0) {
-                        if (yi == tyi - 60) {
-                            *(u8 *)(state + 2) = 2;
-                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
-                        }
-                        if (yi == tyi) {
-                            *(u8 *)(state + 2) = 3;
-                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
-                        }
-                    } else if (s3 == 3) {
-                        if (xi == txi - 60) {
-                            *(u8 *)(state + 2) = 2;
-                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
-                        }
-                        if (xi == txi) {
-                            *(u8 *)(state + 2) = 3;
-                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
-                        }
-                    } else {
-                        if (yi == tyi + 60) {
-                            *(u8 *)(state + 2) = 4;
-                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
-                        }
-                        if (yi == tyi) {
-                            *(u8 *)(state + 2) = 5;
-                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
-                        }
-                    }
-                    break;
-                }
-                case 2:
-                    if (s3 == 3) {
-                        if (xi < txi) {
-                            ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.localPosX + timeDelta;
-                            if ((int)((GameObject *)obj)->anim.localPosX >= txi) {
-                                ((GameObject *)obj)->anim.localPosX = (f32)txi;
-                                *(u8 *)(state + 2) = 1;
+                case 1:
+                    {
+                        s16 timer = *(s16*)(state + 4);
+                        if (timer != 0)
+                        {
+                            *(s16*)(state + 4) = timer - (int)timeDelta;
+                            if (*(s16*)(state + 4) <= 0)
+                            {
+                                *(s16*)(state + 4) = 0;
                             }
                         }
-                    } else {
-                        if (yi < tyi) {
-                            ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ + timeDelta;
-                            if ((int)((GameObject *)obj)->anim.localPosZ >= tyi) {
-                                ((GameObject *)obj)->anim.localPosZ = (f32)tyi;
-                                *(u8 *)(state + 2) = 1;
+                        else if (s3 == 0)
+                        {
+                            if (yi == tyi - 60)
+                            {
+                                *(u8*)(state + 2) = 2;
+                                Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
+                            }
+                            if (yi == tyi)
+                            {
+                                *(u8*)(state + 2) = 3;
+                                Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
+                            }
+                        }
+                        else if (s3 == 3)
+                        {
+                            if (xi == txi - 60)
+                            {
+                                *(u8*)(state + 2) = 2;
+                                Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
+                            }
+                            if (xi == txi)
+                            {
+                                *(u8*)(state + 2) = 3;
+                                Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
+                            }
+                        }
+                        else
+                        {
+                            if (yi == tyi + 60)
+                            {
+                                *(u8*)(state + 2) = 4;
+                                Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
+                            }
+                            if (yi == tyi)
+                            {
+                                *(u8*)(state + 2) = 5;
+                                Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
+                            }
+                        }
+                        break;
+                    }
+                case 2:
+                    if (s3 == 3)
+                    {
+                        if (xi < txi)
+                        {
+                            ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX + timeDelta;
+                            if ((int)((GameObject*)obj)->anim.localPosX >= txi)
+                            {
+                                ((GameObject*)obj)->anim.localPosX = (f32)txi;
+                                *(u8*)(state + 2) = 1;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (yi < tyi)
+                        {
+                            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + timeDelta;
+                            if ((int)((GameObject*)obj)->anim.localPosZ >= tyi)
+                            {
+                                ((GameObject*)obj)->anim.localPosZ = (f32)tyi;
+                                *(u8*)(state + 2) = 1;
                             }
                         }
                     }
                     break;
                 case 3:
-                    if (s3 == 3) {
-                        if (xi > txi - 60) {
-                            ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.localPosX - timeDelta;
-                            if ((int)((GameObject *)obj)->anim.localPosX <= txi - 60) {
-                                ((GameObject *)obj)->anim.localPosX = (f32)(txi - 60);
-                                *(u8 *)(state + 2) = 1;
-                                *(s16 *)(state + 4) = 200;
+                    if (s3 == 3)
+                    {
+                        if (xi > txi - 60)
+                        {
+                            ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX - timeDelta;
+                            if ((int)((GameObject*)obj)->anim.localPosX <= txi - 60)
+                            {
+                                ((GameObject*)obj)->anim.localPosX = (f32)(txi - 60);
+                                *(u8*)(state + 2) = 1;
+                                *(s16*)(state + 4) = 200;
                             }
                         }
-                    } else {
-                        if (yi > tyi - 60) {
-                            ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ - timeDelta;
-                            if ((int)((GameObject *)obj)->anim.localPosZ <= tyi - 60) {
-                                ((GameObject *)obj)->anim.localPosZ = (f32)(tyi - 60);
-                                *(u8 *)(state + 2) = 1;
-                                *(s16 *)(state + 4) = 200;
+                    }
+                    else
+                    {
+                        if (yi > tyi - 60)
+                        {
+                            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ - timeDelta;
+                            if ((int)((GameObject*)obj)->anim.localPosZ <= tyi - 60)
+                            {
+                                ((GameObject*)obj)->anim.localPosZ = (f32)(tyi - 60);
+                                *(u8*)(state + 2) = 1;
+                                *(s16*)(state + 4) = 200;
                             }
                         }
                     }
                     break;
                 case 4:
-                    if (s3 == 3) {
-                        if (xi > txi) {
-                            ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.localPosX - timeDelta;
-                            if ((int)((GameObject *)obj)->anim.localPosX <= txi) {
-                                ((GameObject *)obj)->anim.localPosX = (f32)txi;
-                                *(u8 *)(state + 2) = 1;
+                    if (s3 == 3)
+                    {
+                        if (xi > txi)
+                        {
+                            ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX - timeDelta;
+                            if ((int)((GameObject*)obj)->anim.localPosX <= txi)
+                            {
+                                ((GameObject*)obj)->anim.localPosX = (f32)txi;
+                                *(u8*)(state + 2) = 1;
                             }
                         }
-                    } else {
-                        if (yi > tyi) {
-                            ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ - timeDelta;
-                            if ((int)((GameObject *)obj)->anim.localPosZ <= tyi) {
-                                ((GameObject *)obj)->anim.localPosZ = (f32)tyi;
-                                *(u8 *)(state + 2) = 1;
+                    }
+                    else
+                    {
+                        if (yi > tyi)
+                        {
+                            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ - timeDelta;
+                            if ((int)((GameObject*)obj)->anim.localPosZ <= tyi)
+                            {
+                                ((GameObject*)obj)->anim.localPosZ = (f32)tyi;
+                                *(u8*)(state + 2) = 1;
                             }
                         }
                     }
                     break;
                 case 5:
-                    if (s3 == 3) {
-                        if (xi < txi + 60) {
-                            ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.localPosX + timeDelta;
-                            if ((int)((GameObject *)obj)->anim.localPosX >= txi + 60) {
-                                ((GameObject *)obj)->anim.localPosX = (f32)(txi + 60);
-                                *(u8 *)(state + 2) = 1;
-                                *(s16 *)(state + 4) = 200;
+                    if (s3 == 3)
+                    {
+                        if (xi < txi + 60)
+                        {
+                            ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.localPosX + timeDelta;
+                            if ((int)((GameObject*)obj)->anim.localPosX >= txi + 60)
+                            {
+                                ((GameObject*)obj)->anim.localPosX = (f32)(txi + 60);
+                                *(u8*)(state + 2) = 1;
+                                *(s16*)(state + 4) = 200;
                             }
                         }
-                    } else {
-                        if (yi < tyi + 60) {
-                            ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ + timeDelta;
-                            if ((int)((GameObject *)obj)->anim.localPosZ >= tyi + 60) {
-                                ((GameObject *)obj)->anim.localPosZ = (f32)(tyi + 60);
-                                *(u8 *)(state + 2) = 1;
-                                *(s16 *)(state + 4) = 200;
+                    }
+                    else
+                    {
+                        if (yi < tyi + 60)
+                        {
+                            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + timeDelta;
+                            if ((int)((GameObject*)obj)->anim.localPosZ >= tyi + 60)
+                            {
+                                ((GameObject*)obj)->anim.localPosZ = (f32)(tyi + 60);
+                                *(u8*)(state + 2) = 1;
+                                *(s16*)(state + 4) = 200;
                             }
                         }
                     }

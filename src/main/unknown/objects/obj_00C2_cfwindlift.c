@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00C2_CFWindLift_packet_info {
+enum obj_00C2_CFWindLift_packet_info
+{
     CFWINDLIFT_DEF_ID = 0x00C2,
     CFWINDLIFT_DLL_ID = 0x0149,
     CFWINDLIFT_CLASS_ID = 0x0030,

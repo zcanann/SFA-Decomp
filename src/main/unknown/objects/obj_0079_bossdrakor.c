@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0079_BossDrakor_packet_info {
+enum obj_0079_BossDrakor_packet_info
+{
     BOSSDRAKOR_DEF_ID = 0x0079,
     BOSSDRAKOR_DLL_ID = 0x024D,
     BOSSDRAKOR_CLASS_ID = 0x0030,

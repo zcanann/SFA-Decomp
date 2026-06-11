@@ -56,7 +56,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_05A8_AreaFXEmit_packet_info {
+enum obj_05A8_AreaFXEmit_packet_info
+{
     AREAFXEMIT_DEF_ID = 0x05A8,
     AREAFXEMIT_DLL_ID = 0x0130,
     AREAFXEMIT_CLASS_ID = 0x0067,

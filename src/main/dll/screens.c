@@ -92,41 +92,44 @@ extern f32 lbl_803E2068;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct {
+typedef struct
+{
     u32 flags;
     f32 x;
     f32 y;
     f32 z;
-    u8 *tex;
+    u8* tex;
     u16 id;
     u8 state;
 } ScreenFxPart; /* 0x18 */
 
-typedef struct {
-    ScreenFxPart *parts; /* 0x00 */
-    int target;          /* 0x04 */
-    u8 pad0[0x18];       /* 0x08 */
-    f32 ax, ay, az;      /* 0x20 */
-    f32 bx, by, bz;      /* 0x2c */
-    f32 r;               /* 0x38 */
-    u32 c7;              /* 0x3c */
-    u32 c2;              /* 0x40 */
-    s16 b;               /* 0x44 */
-    s16 anim[7];         /* 0x46 */
-    u32 flags;           /* 0x54 */
-    u8 v0, v1, v2, v3;   /* 0x58 */
-    u8 pad1;             /* 0x5c */
-    s8 count;            /* 0x5d */
-    u8 pad2[2];          /* 0x5e */
+typedef struct
+{
+    ScreenFxPart* parts; /* 0x00 */
+    int target; /* 0x04 */
+    u8 pad0[0x18]; /* 0x08 */
+    f32 ax, ay, az; /* 0x20 */
+    f32 bx, by, bz; /* 0x2c */
+    f32 r; /* 0x38 */
+    u32 c7; /* 0x3c */
+    u32 c2; /* 0x40 */
+    s16 b; /* 0x44 */
+    s16 anim[7]; /* 0x46 */
+    u32 flags; /* 0x54 */
+    u8 v0, v1, v2, v3; /* 0x58 */
+    u8 pad1; /* 0x5c */
+    s8 count; /* 0x5d */
+    u8 pad2[2]; /* 0x5e */
 } ScreenFxHdr; /* 0x60 */
 
-typedef struct {
+typedef struct
+{
     u8 pad[0x1f8];
     s16 anims[21];
 } ScreenAnimTable;
 
 extern u8 lbl_80317BD8[];
-extern ModgfxInterface **gModgfxInterface;
+extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E13A0;
 extern f32 lbl_803E13A4;
 extern f32 lbl_803E13A8;
@@ -138,7 +141,8 @@ extern f32 lbl_803E13BC;
 extern f32 lbl_803E13C0;
 extern f32 lbl_803E13C4;
 
-typedef struct {
+typedef struct
+{
     s16 v[7];
 } ScreenSeq;
 
@@ -163,19 +167,20 @@ void dll_9A_func03(int a, int b, int p, uint flags)
     ScreenSeq seq;
     ScreenFxPart parts[32];
     ScreenFxHdr hdr;
-    ScreenFxPart *cur;
-    ScreenFxPart *pp;
+    ScreenFxPart* cur;
+    ScreenFxPart* pp;
     f32 rz;
     f32 ry;
 
-    seq = *(ScreenSeq *)lbl_802C2180;
+    seq = *(ScreenSeq*)lbl_802C2180;
     seq.v[1] += randomGetRange(0, 0x14);
     seq.v[2] += randomGetRange(-0x14, 0x14);
     seq.v[3] += randomGetRange(-0x14, 0x14);
     seq.v[4] += randomGetRange(-0x14, 0x14);
     pp = parts;
     cur = pp;
-    if (b == 0) {
+    if (b == 0)
+    {
         cur->state = 0;
         cur->id = 3;
         cur->tex = &lbl_803DB964;
@@ -184,7 +189,9 @@ void dll_9A_func03(int a, int b, int p, uint flags)
         cur->y = (f32)(s32)(randomGetRange(0, 0x69) + 0x8c);
         cur->z = (f32)(s32)(randomGetRange(0, 0x1e) + 0xe1);
         cur++;
-    } else if (b == 1) {
+    }
+    else if (b == 1)
+    {
         cur->state = 0;
         cur->id = 3;
         cur->tex = &lbl_803DB964;
@@ -194,8 +201,10 @@ void dll_9A_func03(int a, int b, int p, uint flags)
         cur->z = (f32)(s32)(randomGetRange(0, 0x41) + 0x78);
         cur++;
     }
-    rz = (f32)(s32)randomGetRange(-0x36b0, 0x36b0);
-    ry = (f32)(s32)randomGetRange(-0x2ee0, 0x2ee0);
+    rz = (f32)(s32)
+    randomGetRange(-0x36b0, 0x36b0);
+    ry = (f32)(s32)
+    randomGetRange(-0x2ee0, 0x2ee0);
     cur[0].state = 0;
     cur[0].id = 0;
     cur[0].tex = 0;
@@ -215,8 +224,10 @@ void dll_9A_func03(int a, int b, int p, uint flags)
     cur[2].tex = &lbl_803DB964;
     cur[2].flags = 2;
     cur[2].x = lbl_803E1374;
-    cur[2].y = lbl_803E137C * (f32)(s32)randomGetRange(0, 0x32) + lbl_803E1378;
-    cur[2].z = lbl_803E137C * (f32)(s32)randomGetRange(4, 6) + lbl_803E1380;
+    cur[2].y = lbl_803E137C * (f32)(s32)
+    randomGetRange(0, 0x32) + lbl_803E1378;
+    cur[2].z = lbl_803E137C * (f32)(s32)
+    randomGetRange(4, 6) + lbl_803E1380;
     cur[3].state = 1;
     cur[3].id = 1;
     cur[3].tex = &lbl_803DB960;
@@ -242,16 +253,22 @@ void dll_9A_func03(int a, int b, int p, uint flags)
     cur[6].id = 0;
     cur[6].tex = 0;
     cur[6].flags = 0x80;
-    cur[6].x = (f32)(s32)randomGetRange(-32000, 32000);
-    cur[6].y = ry * (f32)(s32)randomGetRange(-1, 1);
-    cur[6].z = rz * (f32)(s32)randomGetRange(-1, 1);
+    cur[6].x = (f32)(s32)
+    randomGetRange(-32000, 32000);
+    cur[6].y = ry * (f32)(s32)
+    randomGetRange(-1, 1);
+    cur[6].z = rz * (f32)(s32)
+    randomGetRange(-1, 1);
     cur[7].state = 2;
     cur[7].id = 0;
     cur[7].tex = 0;
     cur[7].flags = 0x80;
-    cur[7].x = (f32)(s32)randomGetRange(-32000, 32000);
-    cur[7].y = ry * (f32)(s32)randomGetRange(-1, 1);
-    cur[7].z = rz * (f32)(s32)randomGetRange(-1, 1);
+    cur[7].x = (f32)(s32)
+    randomGetRange(-32000, 32000);
+    cur[7].y = ry * (f32)(s32)
+    randomGetRange(-1, 1);
+    cur[7].z = rz * (f32)(s32)
+    randomGetRange(-1, 1);
     cur[8].state = 2;
     cur[8].id = 0;
     cur[8].tex = &lbl_803DB960;
@@ -263,9 +280,12 @@ void dll_9A_func03(int a, int b, int p, uint flags)
     cur[9].id = 0;
     cur[9].tex = 0;
     cur[9].flags = 0x80;
-    cur[9].x = (f32)(s32)randomGetRange(-32000, 32000);
-    cur[9].y = ry * (f32)(s32)randomGetRange(-1, 1);
-    cur[9].z = rz * (f32)(s32)randomGetRange(-1, 1);
+    cur[9].x = (f32)(s32)
+    randomGetRange(-32000, 32000);
+    cur[9].y = ry * (f32)(s32)
+    randomGetRange(-1, 1);
+    cur[9].z = rz * (f32)(s32)
+    randomGetRange(-1, 1);
     cur[10].state = 3;
     cur[10].id = 0;
     cur[10].tex = &lbl_803DB960;
@@ -277,9 +297,12 @@ void dll_9A_func03(int a, int b, int p, uint flags)
     cur[11].id = 0;
     cur[11].tex = 0;
     cur[11].flags = 0x80;
-    cur[11].x = (f32)(s32)randomGetRange(-32000, 32000);
-    cur[11].y = ry * (f32)(s32)randomGetRange(-1, 1);
-    cur[11].z = rz * (f32)(s32)randomGetRange(-1, 1);
+    cur[11].x = (f32)(s32)
+    randomGetRange(-32000, 32000);
+    cur[11].y = ry * (f32)(s32)
+    randomGetRange(-1, 1);
+    cur[11].z = rz * (f32)(s32)
+    randomGetRange(-1, 1);
     cur[12].state = 4;
     cur[12].id = 0;
     cur[12].tex = &lbl_803DB960;
@@ -299,9 +322,12 @@ void dll_9A_func03(int a, int b, int p, uint flags)
     hdr.target = a;
     hdr.b = (s16)b;
     hdr.bx = lbl_803E1370;
-    if (b == 0) {
+    if (b == 0)
+    {
         hdr.by = lbl_803E1370;
-    } else if (b == 1) {
+    }
+    else if (b == 1)
+    {
         hdr.by = lbl_803E1394;
     }
     hdr.bz = lbl_803E1370;
@@ -314,7 +340,7 @@ void dll_9A_func03(int a, int b, int p, uint flags)
     hdr.v1 = 3;
     hdr.v2 = 0;
     hdr.v3 = 0;
-    hdr.count = (s8)(((u8 *)(cur + 14) - (u8 *)pp) / 0x18);
+    hdr.count = (s8)(((u8*)(cur + 14) - (u8*)pp) / 0x18);
     hdr.anim[0] = seq.v[0];
     hdr.anim[1] = seq.v[1];
     hdr.anim[2] = seq.v[2];
@@ -325,19 +351,25 @@ void dll_9A_func03(int a, int b, int p, uint flags)
     hdr.parts = parts;
     hdr.flags = 0x4000400;
     hdr.flags |= flags;
-    if ((hdr.flags & 1) != 0) {
-        if ((void *)hdr.target != NULL && (void *)p != NULL) {
-            hdr.bx = hdr.bx + (*(f32 *)(hdr.target + 0x18) + *(f32 *)(p + 0xc));
-            hdr.by = hdr.by + (*(f32 *)(hdr.target + 0x1c) + *(f32 *)(p + 0x10));
-            hdr.bz = hdr.bz + (*(f32 *)(hdr.target + 0x20) + *(f32 *)(p + 0x14));
-        } else if ((void *)hdr.target != NULL) {
-            hdr.bx = hdr.bx + *(f32 *)(hdr.target + 0x18);
-            hdr.by = hdr.by + *(f32 *)(hdr.target + 0x1c);
-            hdr.bz = hdr.bz + *(f32 *)(hdr.target + 0x20);
-        } else if ((void *)p != NULL) {
-            hdr.bx = hdr.bx + *(f32 *)(p + 0xc);
-            hdr.by = hdr.by + *(f32 *)(p + 0x10);
-            hdr.bz = hdr.bz + *(f32 *)(p + 0x14);
+    if ((hdr.flags & 1) != 0)
+    {
+        if ((void*)hdr.target != NULL && (void*)p != NULL)
+        {
+            hdr.bx = hdr.bx + (*(f32*)(hdr.target + 0x18) + *(f32*)(p + 0xc));
+            hdr.by = hdr.by + (*(f32*)(hdr.target + 0x1c) + *(f32*)(p + 0x10));
+            hdr.bz = hdr.bz + (*(f32*)(hdr.target + 0x20) + *(f32*)(p + 0x14));
+        }
+        else if ((void*)hdr.target != NULL)
+        {
+            hdr.bx = hdr.bx + *(f32*)(hdr.target + 0x18);
+            hdr.by = hdr.by + *(f32*)(hdr.target + 0x1c);
+            hdr.bz = hdr.bz + *(f32*)(hdr.target + 0x20);
+        }
+        else if ((void*)p != NULL)
+        {
+            hdr.bx = hdr.bx + *(f32*)(p + 0xc);
+            hdr.by = hdr.by + *(f32*)(p + 0x10);
+            hdr.bz = hdr.bz + *(f32*)(p + 0x14);
         }
     }
     (*gModgfxInterface)->spawnEffect(&hdr, 0, 3, lbl_80317B98, 1, &lbl_803DB958, 0x31, 0);
@@ -348,8 +380,8 @@ void dll_9B_func03(int a, int b, int p, uint flags)
     ScreenFxHdr hdr;
     u8 buf[440];
     ScreenFxPart parts[14];
-    ScreenFxPart *pp = parts;
-    u8 *base = (u8 *)lbl_80317BD8;
+    ScreenFxPart* pp = parts;
+    u8* base = (u8*)lbl_80317BD8;
 
     parts[0].state = 0;
     parts[0].id = 0x15;
@@ -465,26 +497,30 @@ void dll_9B_func03(int a, int b, int p, uint flags)
     hdr.v1 = 0xe;
     hdr.v2 = 0;
     hdr.v3 = 0x1e;
-    hdr.count = (s8)((buf - (u8 *)pp) / 0x18);
-    hdr.anim[0] = *(s16 *)(base + 0x1f8);
-    hdr.anim[1] = *(s16 *)(base + 0x1fa);
-    hdr.anim[2] = *(s16 *)(base + 0x1fc);
-    hdr.anim[3] = *(s16 *)(base + 0x1fe);
-    hdr.anim[4] = *(s16 *)(base + 0x200);
-    hdr.anim[5] = *(s16 *)(base + 0x202);
-    hdr.anim[6] = *(s16 *)(base + 0x204);
+    hdr.count = (s8)((buf - (u8*)pp) / 0x18);
+    hdr.anim[0] = *(s16*)(base + 0x1f8);
+    hdr.anim[1] = *(s16*)(base + 0x1fa);
+    hdr.anim[2] = *(s16*)(base + 0x1fc);
+    hdr.anim[3] = *(s16*)(base + 0x1fe);
+    hdr.anim[4] = *(s16*)(base + 0x200);
+    hdr.anim[5] = *(s16*)(base + 0x202);
+    hdr.anim[6] = *(s16*)(base + 0x204);
     hdr.parts = pp;
     hdr.flags = 0xc010480;
     hdr.flags |= flags;
-    if ((hdr.flags & 1) != 0) {
-        if ((void *)a != NULL) {
-            hdr.bx = lbl_803E13A0 + *(f32 *)(a + 0x18);
-            hdr.by = lbl_803E13A0 + *(f32 *)(a + 0x1c);
-            hdr.bz = lbl_803E13A0 + *(f32 *)(a + 0x20);
-        } else {
-            hdr.bx = lbl_803E13A0 + *(f32 *)(p + 0xc);
-            hdr.by = lbl_803E13A0 + *(f32 *)(p + 0x10);
-            hdr.bz = lbl_803E13A0 + *(f32 *)(p + 0x14);
+    if ((hdr.flags & 1) != 0)
+    {
+        if ((void*)a != NULL)
+        {
+            hdr.bx = lbl_803E13A0 + *(f32*)(a + 0x18);
+            hdr.by = lbl_803E13A0 + *(f32*)(a + 0x1c);
+            hdr.bz = lbl_803E13A0 + *(f32*)(a + 0x20);
+        }
+        else
+        {
+            hdr.bx = lbl_803E13A0 + *(f32*)(p + 0xc);
+            hdr.by = lbl_803E13A0 + *(f32*)(p + 0x10);
+            hdr.bz = lbl_803E13A0 + *(f32*)(p + 0x14);
         }
     }
     (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, base, 0x18, base + 0xd4, 0x156, 0);
@@ -518,9 +554,9 @@ void dll_9C_func03(int a, int b, int p, uint flags)
 {
     ScreenFxHdr hdr;
     ScreenFxPart parts[32];
-    u8 *base = (u8 *)lbl_80317E00;
-    ScreenFxPart *pp = parts;
-    ScreenFxPart *cur;
+    u8* base = (u8*)lbl_80317E00;
+    ScreenFxPart* pp = parts;
+    ScreenFxPart* cur;
     int idx;
 
     parts[0].state = 0;
@@ -538,7 +574,8 @@ void dll_9C_func03(int a, int b, int p, uint flags)
     parts[1].y = lbl_803E13D0;
     parts[1].z = lbl_803E13CC;
     cur = pp + 2;
-    if (b != 1) {
+    if (b != 1)
+    {
         cur->state = 0;
         cur->id = 0;
         cur->tex = 0;
@@ -548,25 +585,29 @@ void dll_9C_func03(int a, int b, int p, uint flags)
         cur->z = lbl_803E13C8;
         cur++;
     }
-    if (b == 1) {
+    if (b == 1)
+    {
         cur->state = 0;
         cur->id = 0;
         cur->tex = 0;
         cur->flags = 0x80;
-        cur->x = (f32)*(s16 *)(p + 4);
-        cur->y = (f32)*(s16 *)(p + 2);
-        cur->z = (f32)*(s16 *)(p + 0);
+        cur->x = (f32) * (s16*)(p + 4);
+        cur->y = (f32) * (s16*)(p + 2);
+        cur->z = (f32) * (s16*)(p + 0);
         cur++;
     }
-    if (b == 1) {
+    if (b == 1)
+    {
         cur->state = 1;
         cur->id = 0x15;
         cur->tex = base + 0x1b0;
         cur->flags = 2;
         cur->x = lbl_803E13D4;
-        cur->y = *(f32 *)(p + 0x10) / lbl_803E13D4;
+        cur->y = *(f32*)(p + 0x10) / lbl_803E13D4;
         cur->z = lbl_803E13D4;
-    } else {
+    }
+    else
+    {
         cur->state = 1;
         cur->id = 0x15;
         cur->tex = base + 0x1b0;
@@ -590,7 +631,8 @@ void dll_9C_func03(int a, int b, int p, uint flags)
     cur[2].y = lbl_803E13E0;
     cur[2].z = lbl_803E13C8;
     cur += 3;
-    if (b != 1) {
+    if (b != 1)
+    {
         cur->state = 1;
         cur->id = 0;
         cur->tex = 0;
@@ -638,27 +680,31 @@ void dll_9C_func03(int a, int b, int p, uint flags)
     hdr.v1 = 0xe;
     hdr.v2 = 0;
     hdr.v3 = 0x1e;
-    hdr.count = (s8)(((u8 *)(cur + 3) - (u8 *)pp) / 0x18);
+    hdr.count = (s8)(((u8*)(cur + 3) - (u8*)pp) / 0x18);
     idx = b * 7;
-    hdr.anim[0] = *(s16 *)((u8 *)(base + idx * 2) + 0x1f8);
-    hdr.anim[1] = *(s16 *)((u8 *)(base + (idx + 1) * 2) + 0x1f8);
-    hdr.anim[2] = *(s16 *)((u8 *)(base + (idx + 2) * 2) + 0x1f8);
-    hdr.anim[3] = *(s16 *)((u8 *)(base + (idx + 3) * 2) + 0x1f8);
-    hdr.anim[4] = *(s16 *)((u8 *)(base + (idx + 4) * 2) + 0x1f8);
-    hdr.anim[5] = *(s16 *)((u8 *)(base + (idx + 5) * 2) + 0x1f8);
-    hdr.anim[6] = *(s16 *)((u8 *)(base + (idx + 6) * 2) + 0x1f8);
+    hdr.anim[0] = *(s16*)((u8*)(base + idx * 2) + 0x1f8);
+    hdr.anim[1] = *(s16*)((u8*)(base + (idx + 1) * 2) + 0x1f8);
+    hdr.anim[2] = *(s16*)((u8*)(base + (idx + 2) * 2) + 0x1f8);
+    hdr.anim[3] = *(s16*)((u8*)(base + (idx + 3) * 2) + 0x1f8);
+    hdr.anim[4] = *(s16*)((u8*)(base + (idx + 4) * 2) + 0x1f8);
+    hdr.anim[5] = *(s16*)((u8*)(base + (idx + 5) * 2) + 0x1f8);
+    hdr.anim[6] = *(s16*)((u8*)(base + (idx + 6) * 2) + 0x1f8);
     hdr.parts = parts;
     hdr.flags = 0xc010480;
     hdr.flags |= flags;
-    if ((hdr.flags & 1) != 0) {
-        if ((void *)a != NULL) {
-            hdr.bx = lbl_803E13C8 + *(f32 *)(a + 0x18);
-            hdr.by = lbl_803E13C8 + *(f32 *)(a + 0x1c);
-            hdr.bz = lbl_803E13C8 + *(f32 *)(a + 0x20);
-        } else {
-            hdr.bx = lbl_803E13C8 + *(f32 *)(p + 0xc);
-            hdr.by = lbl_803E13C8 + *(f32 *)(p + 0x10);
-            hdr.bz = lbl_803E13C8 + *(f32 *)(p + 0x14);
+    if ((hdr.flags & 1) != 0)
+    {
+        if ((void*)a != NULL)
+        {
+            hdr.bx = lbl_803E13C8 + *(f32*)(a + 0x18);
+            hdr.by = lbl_803E13C8 + *(f32*)(a + 0x1c);
+            hdr.bz = lbl_803E13C8 + *(f32*)(a + 0x20);
+        }
+        else
+        {
+            hdr.bx = lbl_803E13C8 + *(f32*)(p + 0xc);
+            hdr.by = lbl_803E13C8 + *(f32*)(p + 0x10);
+            hdr.bz = lbl_803E13C8 + *(f32*)(p + 0x14);
         }
     }
     (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, base, 0x18, base + 0xd4, 0x154, 0);
@@ -666,9 +712,26 @@ void dll_9C_func03(int a, int b, int p, uint flags)
 
 
 /* Trivial nops */
-void dll_9A_func01_nop(void) {}
-void dll_9A_func00_nop(void) {}
-void dll_9B_func01_nop(void) {}
-void dll_9B_func00_nop(void) {}
-void dll_9C_func01_nop(void) {}
-void dll_9C_func00_nop(void) {}
+void dll_9A_func01_nop(void)
+{
+}
+
+void dll_9A_func00_nop(void)
+{
+}
+
+void dll_9B_func01_nop(void)
+{
+}
+
+void dll_9B_func00_nop(void)
+{
+}
+
+void dll_9C_func01_nop(void)
+{
+}
+
+void dll_9C_func00_nop(void)
+{
+}

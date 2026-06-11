@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0507_SpiritDoorS_packet_info {
+enum obj_0507_SpiritDoorS_packet_info
+{
     SPIRITDOORS_DEF_ID = 0x0507,
     SPIRITDOORS_DLL_ID = 0x0157,
     SPIRITDOORS_CLASS_ID = 0x0030,

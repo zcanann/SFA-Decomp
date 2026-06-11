@@ -26,13 +26,13 @@ extern f32 FLOAT_803e4ad4;
 extern f32 FLOAT_803e4ad8;
 extern f32 FLOAT_803e4ae0;
 
-extern void *lbl_803DBDE8;
-extern ModgfxInterface **gModgfxInterface;
-extern EffectInterface **gPartfxInterface;
+extern void* lbl_803DBDE8;
+extern ModgfxInterface** gModgfxInterface;
+extern EffectInterface** gPartfxInterface;
 extern u8 framesThisStep;
 extern f32 lbl_803E3E48;
 extern char sCFTreasSharpyDebugFormat[];
-extern void fn_80137948(char *fmt, ...);
+extern void fn_80137948(char* fmt, ...);
 
 extern f32 lbl_803E3DD8;
 extern f32 lbl_803E3DEC;
@@ -54,23 +54,24 @@ extern f32 lbl_803E3E40;
  */
 void cfccrate_init(int obj, int aux)
 {
-    ObjAnimComponent *objAnim;
-    CfCcrateState *state;
+    ObjAnimComponent* objAnim;
+    CfCcrateState* state;
     short id;
     f32 zeroF;
 
-    objAnim = (ObjAnimComponent *)obj;
-    id = *(short *)(aux + 0x0);
-    state = ((GameObject *)obj)->extra;
+    objAnim = (ObjAnimComponent*)obj;
+    id = *(short*)(aux + 0x0);
+    state = ((GameObject*)obj)->extra;
     zeroF = lbl_803E3DD8;
     state->unk2C = zeroF;
 
-    switch (id) {
+    switch (id)
+    {
     case 0x2bb:
-        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        ((GameObject *)obj)->anim.rotY = *(short *)(aux + 0x1a);
-        ((GameObject *)obj)->anim.rotZ = *(short *)(aux + 0x1c);
-        ((GameObject *)obj)->anim.rootMotionScale = zeroF;
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotY = *(short*)(aux + 0x1a);
+        ((GameObject*)obj)->anim.rotZ = *(short*)(aux + 0x1c);
+        ((GameObject*)obj)->anim.rootMotionScale = zeroF;
         break;
     case 0x1d0:
     case 0x1d1:
@@ -81,140 +82,152 @@ void cfccrate_init(int obj, int aux)
     case 0x492:
     case 0x78b:
     case 0x78c:
-        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
         break;
     case 0x726:
-        ((GameObject *)obj)->animEventCallback = (void *)CFCrate_SeqFn;
-        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        ((GameObject*)obj)->animEventCallback = (void*)CFCrate_SeqFn;
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
         break;
     case 0x71b:
-        state->lingerTimer = *(short *)(aux + 0x1a);
+        state->lingerTimer = *(short*)(aux + 0x1a);
         break;
     case 0x6be:
-        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
         state->latch3E = 0;
-        state->gameBit2 = *(short *)(aux + 0x20);
+        state->gameBit2 = *(short*)(aux + 0x20);
         break;
     case 0x828:
-        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
         state->latch3E = 0;
-        state->gameBit2 = *(short *)(aux + 0x20);
-        if ((GameBit_Get(state->gameBit2) != 0) && (state->latch3E == 0)) {
-            ((GameObject *)obj)->anim.rotZ = 0x7fff;
+        state->gameBit2 = *(short*)(aux + 0x20);
+        if ((GameBit_Get(state->gameBit2) != 0) && (state->latch3E == 0))
+        {
+            ((GameObject*)obj)->anim.rotZ = 0x7fff;
             state->latch3E = 1;
         }
         break;
     case 0x6bf:
-        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        ((GameObject *)obj)->anim.rotY = *(short *)(aux + 0x1a);
-        state->gameBit2 = *(short *)(aux + 0x20);
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotY = *(short*)(aux + 0x1a);
+        state->gameBit2 = *(short*)(aux + 0x20);
         break;
     case 0x708:
-        objAnim->bankIndex = (s8)*(short *)(aux + 0x1a);
-        state->gameBit = *(short *)(aux + 0x20);
-        if (objAnim->bankIndex >= 3) {
+        objAnim->bankIndex = (s8) * (short*)(aux + 0x1a);
+        state->gameBit = *(short*)(aux + 0x20);
+        if (objAnim->bankIndex >= 3)
+        {
             objAnim->bankIndex = 0;
         }
         Obj_SetActiveModelIndex(obj, objAnim->bankIndex);
         break;
     case 0x6fc:
-        state->gameBit = *(short *)(aux + 0x20);
+        state->gameBit = *(short*)(aux + 0x20);
         break;
     case 0x622:
-        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        state->gameBit = *(short *)(aux + 0x20);
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        state->gameBit = *(short*)(aux + 0x20);
         break;
     case 0x6b4:
-        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        ((GameObject *)obj)->anim.rotY = *(short *)(aux + 0x1a);
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotY = *(short*)(aux + 0x1a);
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E3E30, 0);
         break;
     case 0x66c:
-        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        state->gameBit = *(short *)(aux + 0x20);
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        state->gameBit = *(short*)(aux + 0x20);
         break;
     case 0x216:
-        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        ((GameObject *)obj)->anim.rotY = *(short *)(aux + 0x1a);
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotY = *(short*)(aux + 0x1a);
         break;
     case 0x4bf:
-        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        *(u8 *)&objAnim->bankIndex = *(u8 *)(aux + 0x19);
-        state->gameBit = *(short *)(aux + 0x20);
-        if (GameBit_Get(state->gameBit) != 0) {
-            ((GameObject *)obj)->anim.localPosY = lbl_803E3DFC + *(f32 *)(aux + 0xc);
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        *(u8*)&objAnim->bankIndex = *(u8*)(aux + 0x19);
+        state->gameBit = *(short*)(aux + 0x20);
+        if (GameBit_Get(state->gameBit) != 0)
+        {
+            ((GameObject*)obj)->anim.localPosY = lbl_803E3DFC + *(f32*)(aux + 0xc);
         }
         break;
     case 0x8e:
-        ((GameObject *)obj)->anim.rotX = 0;
-        ((GameObject *)obj)->anim.rotY = 0;
-        if (*(short *)(aux + 0x1c) >= 0x3e8) {
-            ((GameObject *)obj)->anim.rootMotionScale = zeroF / ((f32)(s32)*(short *)(aux + 0x1c) / lbl_803E3DF4);
-        } else {
-            ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3E34;
+        ((GameObject*)obj)->anim.rotX = 0;
+        ((GameObject*)obj)->anim.rotY = 0;
+        if (*(short*)(aux + 0x1c) >= 0x3e8)
+        {
+            ((GameObject*)obj)->anim.rootMotionScale = zeroF / ((f32)(s32) * (short*)(aux + 0x1c) / lbl_803E3DF4);
+        }
+        else
+        {
+            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3E34;
         }
         state->latch3E = 0;
-        state->homeX = *(f32 *)(aux + 0x8);
-        state->homeY = *(f32 *)(aux + 0xc);
-        state->homeZ = *(f32 *)(aux + 0x10);
+        state->homeX = *(f32*)(aux + 0x8);
+        state->homeY = *(f32*)(aux + 0xc);
+        state->homeZ = *(f32*)(aux + 0x10);
         state->oscPosA = state->oscPosB = lbl_803E3E30;
         state->unk28 = lbl_803E3DF4;
         state->unk20 = lbl_803E3E38;
         state->oscVelA = state->oscVelB = lbl_803E3DEC;
-        ((GameObject *)obj)->anim.rotZ = 0;
-        ((GameObject *)obj)->animEventCallback = (void *)CFCrate_SeqFn;
+        ((GameObject*)obj)->anim.rotZ = 0;
+        ((GameObject*)obj)->animEventCallback = (void*)CFCrate_SeqFn;
         break;
     case 0x7de:
-        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        ((GameObject *)obj)->anim.rotY = 0;
-        if (*(short *)(aux + 0x1c) >= 0x3e8) {
-            ((GameObject *)obj)->anim.rootMotionScale = zeroF / ((f32)(s32)*(short *)(aux + 0x1c) / lbl_803E3DF4);
-        } else {
-            ((GameObject *)obj)->anim.rootMotionScale = zeroF;
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotY = 0;
+        if (*(short*)(aux + 0x1c) >= 0x3e8)
+        {
+            ((GameObject*)obj)->anim.rootMotionScale = zeroF / ((f32)(s32) * (short*)(aux + 0x1c) / lbl_803E3DF4);
         }
-        state->oscVelB = (f32)(s32)*(short *)(aux + 0x1a);
-        state->gameBit = *(short *)(aux + 0x20);
-        if (GameBit_Get(state->gameBit) != 0) {
+        else
+        {
+            ((GameObject*)obj)->anim.rootMotionScale = zeroF;
+        }
+        state->oscVelB = (f32)(s32) * (short*)(aux + 0x1a);
+        state->gameBit = *(short*)(aux + 0x20);
+        if (GameBit_Get(state->gameBit) != 0)
+        {
             state->oscVelB = state->oscVelB * lbl_803E3E3C;
         }
         break;
     case 0xd7:
-        ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        ((GameObject *)obj)->anim.rootMotionScale = zeroF;
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rootMotionScale = zeroF;
         state->latch3E = 0;
-        state->homeX = *(f32 *)(aux + 0x8);
-        state->homeY = *(f32 *)(aux + 0xc);
-        state->homeZ = *(f32 *)(aux + 0x10);
+        state->homeX = *(f32*)(aux + 0x8);
+        state->homeY = *(f32*)(aux + 0xc);
+        state->homeZ = *(f32*)(aux + 0x10);
         state->oscVelA = state->oscVelB = state->unk20 = state->unk28 = state->oscPosA = state->oscPosB = lbl_803E3E30;
-        ((GameObject *)obj)->animEventCallback = (void *)CFCrate_SeqFn;
+        ((GameObject*)obj)->animEventCallback = (void*)CFCrate_SeqFn;
         break;
     case 0x125:
-        ((GameObject *)obj)->anim.rotX = 0;
-        ((GameObject *)obj)->anim.rotY = 0;
-        ((GameObject *)obj)->anim.rotZ = 0;
-        ((GameObject *)obj)->anim.rootMotionScale = zeroF;
-        ((GameObject *)obj)->unkF4 = 0;
-        ((GameObject *)obj)->unkF8 = 0;
+        ((GameObject*)obj)->anim.rotX = 0;
+        ((GameObject*)obj)->anim.rotY = 0;
+        ((GameObject*)obj)->anim.rotZ = 0;
+        ((GameObject*)obj)->anim.rootMotionScale = zeroF;
+        ((GameObject*)obj)->unkF4 = 0;
+        ((GameObject*)obj)->unkF8 = 0;
         state->oscVelB = lbl_803E3E40;
         state->oscVelA = lbl_803E3DEC;
         state->unk32 = 0;
         state->unk34 = (short)randomGetRange(0x3e8, 0x1388);
         state->proximityLatch = 1;
-        ((GameObject *)obj)->animEventCallback = (void *)CFCrate_SeqFn;
+        ((GameObject*)obj)->animEventCallback = (void*)CFCrate_SeqFn;
         break;
     case 0x10d:
-        *(int *)&((GameObject *)obj)->anim.hitReactState = 0;
-        if (*(short *)(aux + 0x1a) == 0) {
-            state->sfxTable = (u16 *)&lbl_803DBDE8;
+        *(int*)&((GameObject*)obj)->anim.hitReactState = 0;
+        if (*(short*)(aux + 0x1a) == 0)
+        {
+            state->sfxTable = (u16*)&lbl_803DBDE8;
             state->sfxCount = 1;
         }
-        state->sfxPeriod = (u16)*(short *)(aux + 0x1c);
+        state->sfxPeriod = (u16) * (short*)(aux + 0x1c);
         state->sfxTimer = (short)state->sfxPeriod;
         break;
     }
 }
 
-typedef struct CFTreasSharpyFxSpawnArgs {
+typedef struct CFTreasSharpyFxSpawnArgs
+{
     s16 yaw;
     s16 pitch;
     s16 roll;
@@ -227,60 +240,74 @@ typedef struct CFTreasSharpyFxSpawnArgs {
 #define CFTREAS_PARTFX_SPAWN(obj, id, data, flags, model, arg) \
     (*gPartfxInterface)->spawnObject((void *)(obj), id, data, flags, model, (void *)(arg))
 
-void fxemit_emitEffect(FxEmitObject *obj)
+void fxemit_emitEffect(FxEmitObject* obj)
 {
-    FxEmitState *state;
-    FxEmitPlacement *def;
+    FxEmitState* state;
+    FxEmitPlacement* def;
     int spawnFlags;
     s16 i;
 
     state = obj->state;
-    def = (FxEmitPlacement *)obj->objAnim.placementData;
+    def = (FxEmitPlacement*)obj->objAnim.placementData;
     spawnFlags = 0;
-    if (state->effectId == 0x11) {
+    if (state->effectId == 0x11)
+    {
         fn_80137948(sCFTreasSharpyDebugFormat, (int)obj, obj->objAnim.localPosX, obj->objAnim.localPosZ);
     }
 
-    switch (def->spawnMode) {
-    case FXEMIT_SPAWN_MODE_OBJECT: {
-        s16 mode = state->effectMode;
-        if (mode == 0) {
-            spawnFlags = 2;
+    switch (def->spawnMode)
+    {
+    case FXEMIT_SPAWN_MODE_OBJECT:
+        {
+            s16 mode = state->effectMode;
+            if (mode == 0)
+            {
+                spawnFlags = 2;
+            }
+            if (mode == 1)
+            {
+                spawnFlags = 2;
+            }
+            if (mode == 2)
+            {
+                spawnFlags = 2;
+            }
+            break;
         }
-        if (mode == 1) {
-            spawnFlags = 2;
+    case FXEMIT_SPAWN_MODE_OBJECT_ALT:
+        {
+            s16 mode = state->effectMode;
+            if (mode == 0)
+            {
+                spawnFlags = 4;
+            }
+            if (mode == 1)
+            {
+                spawnFlags = 4;
+            }
+            if (mode == 2)
+            {
+                spawnFlags = 4;
+            }
+            break;
         }
-        if (mode == 2) {
-            spawnFlags = 2;
+    case FXEMIT_SPAWN_MODE_WORLD:
+        {
+            s16 mode = state->effectMode;
+            if (mode == 0)
+            {
+                spawnFlags = 0x200001;
+            }
+            if (mode == 1)
+            {
+                spawnFlags = 1;
+            }
+            if (mode == 2)
+            {
+                spawnFlags = 1;
+            }
+            break;
         }
-        break;
-    }
-    case FXEMIT_SPAWN_MODE_OBJECT_ALT: {
-        s16 mode = state->effectMode;
-        if (mode == 0) {
-            spawnFlags = 4;
-        }
-        if (mode == 1) {
-            spawnFlags = 4;
-        }
-        if (mode == 2) {
-            spawnFlags = 4;
-        }
-        break;
-    }
-    case FXEMIT_SPAWN_MODE_WORLD: {
-        s16 mode = state->effectMode;
-        if (mode == 0) {
-            spawnFlags = 0x200001;
-        }
-        if (mode == 1) {
-            spawnFlags = 1;
-        }
-        if (mode == 2) {
-            spawnFlags = 1;
-        }
-        break;
-    }
     case FXEMIT_SPAWN_MODE_NONE:
         spawnFlags = 0;
         break;
@@ -289,7 +316,8 @@ void fxemit_emitEffect(FxEmitObject *obj)
         break;
     }
 
-    if ((spawnFlags & 1) != 0) {
+    if ((spawnFlags & 1) != 0)
+    {
         CFTreasSharpyFxSpawnArgs args;
 
         args.x = obj->objAnim.localPosX;
@@ -299,44 +327,69 @@ void fxemit_emitEffect(FxEmitObject *obj)
         args.roll = obj->objAnim.rotZ;
         args.pitch = obj->objAnim.rotY;
         args.scale = lbl_803E3E48;
-        if (state->emitCount > 0) {
-            for (i = 0; i < state->emitCount; i++) {
+        if (state->emitCount > 0)
+        {
+            for (i = 0; i < state->emitCount; i++)
+            {
                 CFTREAS_PARTFX_SPAWN(obj, state->effectId, &args, spawnFlags, -1, 0);
             }
-        } else {
+        }
+        else
+        {
             CFTREAS_PARTFX_SPAWN(obj, state->altEffectId, &args, spawnFlags, -1, 0);
         }
-    } else {
-        void *resource;
+    }
+    else
+    {
+        void* resource;
         s16 mode = state->effectMode;
 
-        if (mode == 0) {
-            if (state->emitCount > 0) {
-                for (i = 0; i < state->emitCount; i++) {
+        if (mode == 0)
+        {
+            if (state->emitCount > 0)
+            {
+                for (i = 0; i < state->emitCount; i++)
+                {
                     CFTREAS_PARTFX_SPAWN(obj, state->effectId, NULL, spawnFlags, -1, 0);
                 }
-            } else {
+            }
+            else
+            {
                 CFTREAS_PARTFX_SPAWN(obj, state->effectId, NULL, spawnFlags, -1, 0);
             }
-        } else if (mode == 1) {
+        }
+        else if (mode == 1)
+        {
             resource = Resource_Acquire((u16)(state->effectId + 0x58), 1);
-            if (state->emitCount > 0) {
-                for (i = 0; i < state->emitCount; i++) {
-                    ((void (*)(int, int, int, int, int, int))((void **)*(int *)resource)[1])((int)obj, 0, 0, spawnFlags, -1, 0);
+            if (state->emitCount > 0)
+            {
+                for (i = 0; i < state->emitCount; i++)
+                {
+                    ((void (*)(int, int, int, int, int, int))((void**)*(int*)resource)[1])(
+                        (int)obj, 0, 0, spawnFlags, -1, 0);
                 }
-            } else {
-                ((void (*)(int, int, int, int, int, int))((void **)*(int *)resource)[1])((int)obj, 0, 0, spawnFlags, -1, 0);
+            }
+            else
+            {
+                ((void (*)(int, int, int, int, int, int))((void**)*(int*)resource)[1])(
+                    (int)obj, 0, 0, spawnFlags, -1, 0);
             }
             Resource_Release(resource);
-        } else if (mode == 2) {
+        }
+        else if (mode == 2)
+        {
             resource = Resource_Acquire((u16)(state->effectId + 0xab), 1);
-            if (state->emitCount > 0) {
-                for (i = 0; i < state->emitCount; i++) {
-                    ((void (*)(int, int, int, int, int, int, int))((void **)*(int *)resource)[1])
+            if (state->emitCount > 0)
+            {
+                for (i = 0; i < state->emitCount; i++)
+                {
+                    ((void (*)(int, int, int, int, int, int, int))((void**)*(int*)resource)[1])
                         ((int)obj, 0, 0, spawnFlags, -1, state->effectId & 0xff, 0);
                 }
-            } else {
-                ((void (*)(int, int, int, int, int, int, int))((void **)*(int *)resource)[1])
+            }
+            else
+            {
+                ((void (*)(int, int, int, int, int, int, int))((void**)*(int*)resource)[1])
                     ((int)obj, 0, 0, spawnFlags, -1, state->effectId & 0xff, 0);
             }
             Resource_Release(resource);
@@ -346,46 +399,59 @@ void fxemit_emitEffect(FxEmitObject *obj)
 
 #undef CFTREAS_PARTFX_SPAWN
 
-int fxemit_SeqFn(FxEmitObject *obj, int unused, ObjAnimUpdateState *animUpdate)
+int fxemit_SeqFn(FxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    FxEmitState *state;
-    FxEmitPlacement *def;
+    FxEmitState* state;
+    FxEmitPlacement* def;
     u8 event;
     int i;
     s8 delta;
 
     state = obj->state;
-    def = (FxEmitPlacement *)obj->objAnim.placementData;
-    for (i = 0; i < animUpdate->eventCount; i++) {
+    def = (FxEmitPlacement*)obj->objAnim.placementData;
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
         event = animUpdate->eventIds[i];
-        if (event == 1) {
+        if (event == 1)
+        {
             fxemit_emitEffect(obj);
         }
-        if (animUpdate->eventIds[i] == 2) {
+        if (animUpdate->eventIds[i] == 2)
+        {
             state->seqToggle = (u8)(1 - state->seqToggle);
         }
         animUpdate->eventIds[i] = 0;
     }
 
-    if (state->seqToggle != 0) {
+    if (state->seqToggle != 0)
+    {
         delta = def->yawStep;
-        if (delta == FXEMIT_ROTATION_STEP_AUTO) {
+        if (delta == FXEMIT_ROTATION_STEP_AUTO)
+        {
             obj->objAnim.rotX = obj->objAnim.rotX + framesThisStep * 10;
-        } else {
+        }
+        else
+        {
             obj->objAnim.rotX = obj->objAnim.rotX + delta * framesThisStep * 100;
         }
 
         delta = def->pitchStep;
-        if (delta == FXEMIT_ROTATION_STEP_AUTO) {
+        if (delta == FXEMIT_ROTATION_STEP_AUTO)
+        {
             obj->objAnim.rotY = obj->objAnim.rotY + framesThisStep * 10;
-        } else {
+        }
+        else
+        {
             obj->objAnim.rotY = obj->objAnim.rotY + delta * framesThisStep * 100;
         }
 
         delta = def->rollStep;
-        if (delta == FXEMIT_ROTATION_STEP_AUTO) {
+        if (delta == FXEMIT_ROTATION_STEP_AUTO)
+        {
             obj->objAnim.rotZ = obj->objAnim.rotZ + framesThisStep * 10;
-        } else {
+        }
+        else
+        {
             obj->objAnim.rotZ = obj->objAnim.rotZ + delta * framesThisStep * 100;
         }
         fxemit_emitEffect(obj);
@@ -443,7 +509,7 @@ void cfccrate_initialise(void)
  */
 int fxemit_getExtraSize(void)
 {
-  return 0x20;
+    return 0x20;
 }
 
 /*
@@ -461,10 +527,10 @@ int fxemit_getExtraSize(void)
  */
 int fxemit_getObjectTypeId(void)
 {
-  return 0;
+    return 0;
 }
 
-void fxemit_free(FxEmitObject *obj)
+void fxemit_free(FxEmitObject* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
     (*gModgfxInterface)->freeSourceEffects(obj);
@@ -491,15 +557,15 @@ void fxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (vis
 
 extern f32 timeDelta;
 extern f32 sqrtf(f32);
-extern ObjAnimComponent *Obj_GetPlayerObject(void);
+extern ObjAnimComponent* Obj_GetPlayerObject(void);
 extern int Sfx_PlayFromObject(int obj, int sfx);
 extern f32 lbl_803E3E4C;
 
-void fxemit_update(FxEmitObject *obj)
+void fxemit_update(FxEmitObject* obj)
 {
-    FxEmitState *state;
-    FxEmitPlacement *def;
-    ObjAnimComponent *player;
+    FxEmitState* state;
+    FxEmitPlacement* def;
+    ObjAnimComponent* player;
     s16 e;
     s8 delta;
     f32 dx;
@@ -508,13 +574,17 @@ void fxemit_update(FxEmitObject *obj)
     f32 dist;
 
     state = obj->state;
-    def = (FxEmitPlacement *)obj->objAnim.placementData;
-    if (state->startDelay != 0) {
+    def = (FxEmitPlacement*)obj->objAnim.placementData;
+    if (state->startDelay != 0)
+    {
         state->startDelay -= (s16)timeDelta;
-        if (state->startDelay < 0) {
+        if (state->startDelay < 0)
+        {
             state->startDelay = 0;
         }
-    } else {
+    }
+    else
+    {
         obj->objAnim.localPosX = obj->objAnim.velocityX * timeDelta + obj->objAnim.localPosX;
         obj->objAnim.localPosY = obj->objAnim.velocityY * timeDelta + obj->objAnim.localPosY;
         obj->objAnim.localPosZ = obj->objAnim.velocityZ * timeDelta + obj->objAnim.localPosZ;
@@ -522,74 +592,102 @@ void fxemit_update(FxEmitObject *obj)
         obj->objAnim.worldPosY = obj->objAnim.localPosY;
         obj->objAnim.worldPosZ = obj->objAnim.localPosZ;
         player = Obj_GetPlayerObject();
-        if (player != NULL) {
-            if (def == NULL) {
-            } else {
-            if (def->sfxPeriod != 0 && def->sfxPeriod != FXEMIT_SFX_SUPPRESS) {
-                if (state->sfxTimer <= 0) {
-                    int sfx;
-                    state->suppressed = 0;
-                    state->sfxTimer = def->sfxPeriod * 100;
-                    sfx = def->sfxId;
-                    if (sfx != 0) {
-                        Sfx_PlayFromObject((int)obj, (u16)sfx);
+        if (player != NULL)
+        {
+            if (def == NULL)
+            {
+            }
+            else
+            {
+                if (def->sfxPeriod != 0 && def->sfxPeriod != FXEMIT_SFX_SUPPRESS)
+                {
+                    if (state->sfxTimer <= 0)
+                    {
+                        int sfx;
+                        state->suppressed = 0;
+                        state->sfxTimer = def->sfxPeriod * 100;
+                        sfx = def->sfxId;
+                        if (sfx != 0)
+                        {
+                            Sfx_PlayFromObject((int)obj, (u16)sfx);
+                        }
                     }
-                } else {
-                    state->suppressed = 1;
-                }
-                state->sfxTimer -= framesThisStep;
-            }
-
-            delta = def->yawStep;
-            if (delta == FXEMIT_ROTATION_STEP_AUTO) {
-                obj->objAnim.rotX = obj->objAnim.rotX + framesThisStep * 10;
-            } else {
-                obj->objAnim.rotX = obj->objAnim.rotX + delta * framesThisStep * 100;
-            }
-
-            delta = def->pitchStep;
-            if (delta == FXEMIT_ROTATION_STEP_AUTO) {
-                obj->objAnim.rotY = obj->objAnim.rotY + framesThisStep * 10;
-            } else {
-                obj->objAnim.rotY = obj->objAnim.rotY + delta * framesThisStep * 100;
-            }
-
-            delta = def->rollStep;
-            if (delta == FXEMIT_ROTATION_STEP_AUTO) {
-                obj->objAnim.rotZ = obj->objAnim.rotZ + framesThisStep * 10;
-            } else {
-                obj->objAnim.rotZ = obj->objAnim.rotZ + delta * framesThisStep * 100;
-            }
-
-            if (state->enableBit == -1 || GameBit_Get(state->enableBit) != 0) {
-                switch (state->suppressed) {
-                case 0: {
-                if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0) {
-                    state->suppressed = 1;
-                }
-                if (def->sfxPeriod == FXEMIT_SFX_SUPPRESS) {
-                    state->suppressed = 1;
-                }
-                e = state->emitCount;
-                if (e >= 0 || (e < 0 && obj->emitCooldown <= 0)) {
-                    dx = obj->objAnim.worldPosX - player->worldPosX;
-                    dy = obj->objAnim.worldPosY - player->worldPosY;
-                    dz = obj->objAnim.worldPosZ - player->worldPosZ;
-                    if (e == 0) {
+                    else
+                    {
                         state->suppressed = 1;
                     }
-                    dist = sqrtf(dx * dx + dy * dy + dz * dz);
-                    if (dist <= state->triggerRadius || lbl_803E3E4C == state->triggerRadius) {
-                        fxemit_emitEffect(obj);
+                    state->sfxTimer -= framesThisStep;
+                }
+
+                delta = def->yawStep;
+                if (delta == FXEMIT_ROTATION_STEP_AUTO)
+                {
+                    obj->objAnim.rotX = obj->objAnim.rotX + framesThisStep * 10;
+                }
+                else
+                {
+                    obj->objAnim.rotX = obj->objAnim.rotX + delta * framesThisStep * 100;
+                }
+
+                delta = def->pitchStep;
+                if (delta == FXEMIT_ROTATION_STEP_AUTO)
+                {
+                    obj->objAnim.rotY = obj->objAnim.rotY + framesThisStep * 10;
+                }
+                else
+                {
+                    obj->objAnim.rotY = obj->objAnim.rotY + delta * framesThisStep * 100;
+                }
+
+                delta = def->rollStep;
+                if (delta == FXEMIT_ROTATION_STEP_AUTO)
+                {
+                    obj->objAnim.rotZ = obj->objAnim.rotZ + framesThisStep * 10;
+                }
+                else
+                {
+                    obj->objAnim.rotZ = obj->objAnim.rotZ + delta * framesThisStep * 100;
+                }
+
+                if (state->enableBit == -1 || GameBit_Get(state->enableBit) != 0)
+                {
+                    switch (state->suppressed)
+                    {
+                    case 0:
+                        {
+                            if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0)
+                            {
+                                state->suppressed = 1;
+                            }
+                            if (def->sfxPeriod == FXEMIT_SFX_SUPPRESS)
+                            {
+                                state->suppressed = 1;
+                            }
+                            e = state->emitCount;
+                            if (e >= 0 || (e < 0 && obj->emitCooldown <= 0))
+                            {
+                                dx = obj->objAnim.worldPosX - player->worldPosX;
+                                dy = obj->objAnim.worldPosY - player->worldPosY;
+                                dz = obj->objAnim.worldPosZ - player->worldPosZ;
+                                if (e == 0)
+                                {
+                                    state->suppressed = 1;
+                                }
+                                dist = sqrtf(dx * dx + dy * dy + dz * dz);
+                                if (dist <= state->triggerRadius || lbl_803E3E4C == state->triggerRadius)
+                                {
+                                    fxemit_emitEffect(obj);
+                                }
+                                obj->emitCooldown = -(int)state->emitCount;
+                            }
+                            else if (e < 0 && obj->emitCooldown > 0)
+                            {
+                                obj->emitCooldown -= framesThisStep;
+                            }
+                            break;
+                        }
                     }
-                    obj->emitCooldown = -(int)state->emitCount;
-                } else if (e < 0 && obj->emitCooldown > 0) {
-                    obj->emitCooldown -= framesThisStep;
                 }
-                break;
-                }
-                }
-            }
             }
         }
     }

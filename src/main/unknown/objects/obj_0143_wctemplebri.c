@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0143_WCTempleBri_packet_info {
+enum obj_0143_WCTempleBri_packet_info
+{
     WCTEMPLEBRI_DEF_ID = 0x0143,
     WCTEMPLEBRI_DLL_ID = 0x0297,
     WCTEMPLEBRI_CLASS_ID = 0x0030,

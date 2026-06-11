@@ -40,7 +40,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_025B_MoonSeedPlantingSpot_slot {
+enum dll_025B_MoonSeedPlantingSpot_slot
+{
     MOONSEEDPLANTINGSPOT_INITIALISE = 0,
     MOONSEEDPLANTINGSPOT_RELEASE = 1,
     MOONSEEDPLANTINGSPOT_INIT = 3,

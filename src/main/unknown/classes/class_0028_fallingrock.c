@@ -36,7 +36,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0028_fallingRock_defs {
+enum class_0028_fallingRock_defs
+{
     FALLINGROCK_CRROCKFALL = 0x010F,
     FALLINGROCK_IMICICLE = 0x01BB,
 };

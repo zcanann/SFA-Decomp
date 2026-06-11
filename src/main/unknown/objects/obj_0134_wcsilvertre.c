@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0134_WCSilverTre_packet_info {
+enum obj_0134_WCSilverTre_packet_info
+{
     WCSILVERTRE_DEF_ID = 0x0134,
     WCSILVERTRE_DLL_ID = 0x00ED,
     WCSILVERTRE_CLASS_ID = 0x0006,

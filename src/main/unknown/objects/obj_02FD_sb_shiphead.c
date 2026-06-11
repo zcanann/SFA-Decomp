@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02FD_SB_ShipHead_packet_info {
+enum obj_02FD_SB_ShipHead_packet_info
+{
     SB_SHIPHEAD_DEF_ID = 0x02FD,
     SB_SHIPHEAD_DLL_ID = 0x01EA,
     SB_SHIPHEAD_CLASS_ID = 0x0030,

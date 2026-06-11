@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_053A_ARWArwingRo_packet_info {
+enum obj_053A_ARWArwingRo_packet_info
+{
     ARWARWINGRO_DEF_ID = 0x053A,
     ARWARWINGRO_DLL_ID = 0x029D,
     ARWARWINGRO_CLASS_ID = 0x0061,

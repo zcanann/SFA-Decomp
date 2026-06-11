@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0530_ARWGoldRing_packet_info {
+enum obj_0530_ARWGoldRing_packet_info
+{
     ARWGOLDRING_DEF_ID = 0x0530,
     ARWGOLDRING_DLL_ID = 0x02A0,
     ARWGOLDRING_CLASS_ID = 0x0030,

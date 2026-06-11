@@ -1,6 +1,6 @@
 #include "main/audio/snd3d.h"
 
-extern void dataInit(int p1, void *p2);
+extern void dataInit(int p1, void* p2);
 extern void fn_8026F30C(void);
 extern void synthInit(u32 sampleRate, u32 voiceCount);
 extern void synthInitJobTable(void);
@@ -25,10 +25,10 @@ extern u8 lbl_803BD150[];
 extern u8 gSynthInitialized;
 extern u8 synthIdleWaitActive;
 extern u8 s3dCallCnt;
-extern Snd3DEmitter *s3dEmitterRoot;
-extern SndSpatialListener *s3dListenerRoot;
-extern SndSpatialEntry *s3dRoomRoot;
-extern SndStudioInputLink *s3dDoorRoot;
+extern Snd3DEmitter* s3dEmitterRoot;
+extern SndSpatialListener* s3dListenerRoot;
+extern SndSpatialEntry* s3dRoomRoot;
+extern SndStudioInputLink* s3dDoorRoot;
 extern u32 snd_used_studios;
 extern u8 snd_base_studio;
 extern u8 snd_max_studios;
@@ -42,9 +42,9 @@ extern f32 lbl_803E78C4;
 
 void s3dHandle(void)
 {
-    Snd3DEmitter *emitter;
-    Snd3DEmitter *next;
-    SndSpatialEntry *entry;
+    Snd3DEmitter* emitter;
+    Snd3DEmitter* next;
+    SndSpatialEntry* entry;
     u32 flags;
     f32 ageLimit;
     f32 ageStep;
@@ -55,7 +55,8 @@ void s3dHandle(void)
     f32 frontBack;
     f32 pan;
 
-    if (s3dCallCnt != 0) {
+    if (s3dCallCnt != 0)
+    {
         s3dCallCnt--;
         return;
     }
@@ -69,98 +70,136 @@ void s3dHandle(void)
     ageStep = lbl_803E78C4;
     ageLimit = lbl_803E78A4;
 
-    for (; emitter != (Snd3DEmitter *)0x0; emitter = next) {
+    for (; emitter != (Snd3DEmitter*)0x0; emitter = next)
+    {
         next = emitter->next;
 
-        if ((emitter->flags & S3D_EMITTER_FLAG_REMOVE) != 0) {
+        if ((emitter->flags & S3D_EMITTER_FLAG_REMOVE) != 0)
+        {
             S3D_UNLINK_EMITTER(emitter);
             emitter->flags &= 0xffff;
-            if (emitter->handle != S3D_INVALID_FX_HANDLE) {
+            if (emitter->handle != S3D_INVALID_FX_HANDLE)
+            {
                 synthSendKeyOff(emitter->handle);
             }
             continue;
         }
 
-        if ((emitter->flags & (S3D_EMITTER_FLAG_PLAYING | S3D_EMITTER_FLAG_POSITIONAL)) != 0) {
+        if ((emitter->flags & (S3D_EMITTER_FLAG_PLAYING | S3D_EMITTER_FLAG_POSITIONAL)) != 0)
+        {
             s3dCalcEmitter(emitter, &distance, &pan, &azimuth, &pitch, &frontBack);
         }
 
         flags = emitter->flags;
-        if ((flags & S3D_EMITTER_FLAG_WAITING_FOR_ROOM) == 0) {
-            if ((flags & S3D_EMITTER_FLAG_PLAYING) != 0) {
+        if ((flags & S3D_EMITTER_FLAG_WAITING_FOR_ROOM) == 0)
+        {
+            if ((flags & S3D_EMITTER_FLAG_PLAYING) != 0)
+            {
                 if ((zeroDist == distance) &&
-                    ((flags & S3D_EMITTER_FLAG_STOP_AT_ORIGIN) != 0)) {
+                    ((flags & S3D_EMITTER_FLAG_STOP_AT_ORIGIN) != 0))
+                {
                     emitter->flags |= S3D_EMITTER_FLAG_WAITING_FOR_ROOM;
                     emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
-                } else if ((zeroDist == distance) &&
-                           ((flags & S3D_EMITTER_FLAG_REMOVE_AT_ORIGIN) != 0)) {
+                }
+                else if ((zeroDist == distance) &&
+                    ((flags & S3D_EMITTER_FLAG_REMOVE_AT_ORIGIN) != 0))
+                {
                     S3D_UNLINK_EMITTER(emitter);
                     emitter->flags &= 0xffff;
-                    if (emitter->handle != S3D_INVALID_FX_HANDLE) {
+                    if (emitter->handle != S3D_INVALID_FX_HANDLE)
+                    {
                         synthSendKeyOff(emitter->handle);
                     }
                     continue;
-                } else if ((flags & S3D_EMITTER_FLAG_POSITIONAL) != 0) {
-                    if ((u32)s3dInsertActiveEmitter(emitter, distance, azimuth, pitch, frontBack, pan) != 0) {
+                }
+                else if ((flags & S3D_EMITTER_FLAG_POSITIONAL) != 0)
+                {
+                    if ((u32)s3dInsertActiveEmitter(emitter, distance, azimuth, pitch, frontBack, pan) != 0)
+                    {
                         continue;
                     }
-                } else {
+                }
+                else
+                {
                     entry = emitter->entry;
-                    if ((entry == (SndSpatialEntry *)0x0) || (entry->assignedVoice != 0xff)) {
+                    if ((entry == (SndSpatialEntry*)0x0) || (entry->assignedVoice != 0xff))
+                    {
                         if ((emitter->handle = synthFXStart(emitter->fxId, S3D_DEFAULT_FX_VOLUME,
                                                             S3D_DEFAULT_FX_PAN,
-                                                            entry != (SndSpatialEntry *)0x0 ? entry->assignedVoice
-                                                                                            : emitter->studio,
+                                                            entry != (SndSpatialEntry*)0x0
+                                                                ? entry->assignedVoice
+                                                                : emitter->studio,
                                                             (flags & S3D_EMITTER_FLAG_USE_AUX_STUDIO) != 0)) !=
-                            S3D_INVALID_FX_HANDLE) {
+                            S3D_INVALID_FX_HANDLE)
+                        {
                             goto update_voice;
                         }
                     }
-                    if ((emitter->flags & S3D_EMITTER_FLAG_RESTART_ON_STOP) != 0) {
+                    if ((emitter->flags & S3D_EMITTER_FLAG_RESTART_ON_STOP) != 0)
+                    {
                         continue;
                     }
                     emitter->flags |= S3D_EMITTER_FLAG_REMOVE;
                     emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
                 }
-            } else {
-                if ((emitter->handle = sndFXCheck(emitter->handle)) == S3D_INVALID_FX_HANDLE) {
-                    if ((emitter->flags & S3D_EMITTER_FLAG_RESTART_ON_STOP) != 0) {
+            }
+            else
+            {
+                if ((emitter->handle = sndFXCheck(emitter->handle)) == S3D_INVALID_FX_HANDLE)
+                {
+                    if ((emitter->flags & S3D_EMITTER_FLAG_RESTART_ON_STOP) != 0)
+                    {
                         emitter->flags |= S3D_EMITTER_FLAG_PLAYING;
-                    } else {
+                    }
+                    else
+                    {
                         emitter->flags |= S3D_EMITTER_FLAG_REMOVE;
                     }
                 }
             }
 
-update_voice:
-            if (emitter->handle != S3D_INVALID_FX_HANDLE) {
-                if ((emitter->flags & S3D_EMITTER_FLAG_POSITIONAL) != 0) {
+        update_voice:
+            if (emitter->handle != S3D_INVALID_FX_HANDLE)
+            {
+                if ((emitter->flags & S3D_EMITTER_FLAG_POSITIONAL) != 0)
+                {
                     s3dInsertSortedEmitter(emitter, distance);
                 }
                 if ((zeroDist == distance) &&
-                    ((emitter->flags & S3D_EMITTER_FLAG_STOP_AT_ORIGIN) != 0)) {
+                    ((emitter->flags & S3D_EMITTER_FLAG_STOP_AT_ORIGIN) != 0))
+                {
                     synthSendKeyOff(emitter->handle);
                     emitter->handle = S3D_INVALID_FX_HANDLE;
-                    if ((emitter->flags & S3D_EMITTER_FLAG_RESTART_ON_STOP) != 0) {
+                    if ((emitter->flags & S3D_EMITTER_FLAG_RESTART_ON_STOP) != 0)
+                    {
                         emitter->flags |= S3D_EMITTER_FLAG_WAITING_FOR_ROOM;
-                    } else {
+                    }
+                    else
+                    {
                         emitter->flags |= S3D_EMITTER_FLAG_REMOVE;
                     }
-                } else {
+                }
+                else
+                {
                     s3dApplyEmitterControls(emitter, distance, azimuth, pitch, frontBack, pan);
                 }
             }
-            if ((emitter->flags & S3D_EMITTER_FLAG_AGE_OUT) != 0) {
+            if ((emitter->flags & S3D_EMITTER_FLAG_AGE_OUT) != 0)
+            {
                 emitter->age += ageStep;
-                if (emitter->age >= ageLimit) {
+                if (emitter->age >= ageLimit)
+                {
                     emitter->flags &= ~S3D_EMITTER_FLAG_AGE_OUT;
                 }
             }
-        } else {
+        }
+        else
+        {
             entry = emitter->entry;
-            if (((entry == (SndSpatialEntry *)0x0) ||
-                 ((entry != (SndSpatialEntry *)0x0) && (entry->assignedVoice != 0xff))) &&
-                (zeroDist != distance)) {
+            if (((entry == (SndSpatialEntry*)0x0) ||
+                    ((entry != (SndSpatialEntry*)0x0) && (entry->assignedVoice != 0xff))) &&
+                (zeroDist != distance))
+            {
                 emitter->flags &= ~S3D_EMITTER_FLAG_WAITING_FOR_ROOM;
                 emitter->flags |= S3D_EMITTER_FLAG_PLAYING;
             }
@@ -215,21 +254,27 @@ void s3dExit(void)
  * EN v1.1 Address: 0x80281044
  * EN v1.1 Size: 280b
  */
-int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, u32 flags, void *data)
+int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, u32 flags, void* data)
 {
     u32 sampleRate;
     u32 sampleRatePad[3];
     int result;
 
     gSynthInitialized = 0;
-    if (voiceCount <= SND_MAX_VOICES) {
+    if (voiceCount <= SND_MAX_VOICES)
+    {
         lbl_803BD150[0x210] = voiceCount;
-    } else {
+    }
+    else
+    {
         lbl_803BD150[0x210] = SND_MAX_VOICES;
     }
-    if (stereo <= SND_MAX_STUDIOS) {
+    if (stereo <= SND_MAX_STUDIOS)
+    {
         lbl_803BD150[0x213] = stereo;
-    } else {
+    }
+    else
+    {
         lbl_803BD150[0x213] = SND_MAX_STUDIOS;
     }
     lbl_803BD150[0x211] = streamCount;
@@ -237,7 +282,8 @@ int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, u32 flags, void *
     (void)sampleRatePad;
     sampleRate = SND_DEFAULT_SAMPLE_RATE;
     result = hwInit(&sampleRate, lbl_803BD150[0x210], lbl_803BD150[0x213], flags);
-    if (result == 0) {
+    if (result == 0)
+    {
         u8 voiceCountSnapshot = lbl_803BD150[0x210];
         synthResetLoadedGroupCount();
         dataInit(0, data);

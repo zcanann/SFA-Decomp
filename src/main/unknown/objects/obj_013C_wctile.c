@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_013C_WCTile_packet_info {
+enum obj_013C_WCTile_packet_info
+{
     WCTILE_DEF_ID = 0x013C,
     WCTILE_DLL_ID = 0x0291,
     WCTILE_CLASS_ID = 0x0030,

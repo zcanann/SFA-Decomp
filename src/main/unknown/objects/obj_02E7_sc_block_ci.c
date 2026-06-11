@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02E7_SC_block_ci_packet_info {
+enum obj_02E7_SC_block_ci_packet_info
+{
     SC_BLOCK_CI_DEF_ID = 0x02E7,
     SC_BLOCK_CI_DLL_ID = 0x00ED,
     SC_BLOCK_CI_CLASS_ID = 0x0006,

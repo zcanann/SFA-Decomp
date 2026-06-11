@@ -73,7 +73,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_058F_SulphurCrys_packet_info {
+enum obj_058F_SulphurCrys_packet_info
+{
     SULPHURCRYS_DEF_ID = 0x058F,
     SULPHURCRYS_DLL_ID = 0x011A,
     SULPHURCRYS_CLASS_ID = 0x0061,

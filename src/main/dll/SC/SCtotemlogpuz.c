@@ -4,14 +4,14 @@ extern uint GameBit_Get(int bit);
 extern int GameBit_Set(int bit, int value);
 extern int mapUnload(int id, int flags);
 extern int Music_Trigger(int id, int value);
-extern void SH_LevelControl_setMusic(void *p);
+extern void SH_LevelControl_setMusic(void* p);
 
 #define SCTOTEMLOGPUZ_RESET_GAMEBIT 0xBF8
 #define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET 5
 #define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE 1
 #define SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS 0x20000000
 
-extern MapEventInterface **gMapEventInterface;
+extern MapEventInterface** gMapEventInterface;
 
 /*
  * --INFO--
@@ -20,14 +20,16 @@ extern MapEventInterface **gMapEventInterface;
  * EN v1.0 Address: 0x801D7C14
  * EN v1.0 Size: 128b
  */
-int SH_LevelControl_SeqFn(void *obj, void *unused, SCTotemLogPuzzleUpdateState *updateState)
+int SH_LevelControl_SeqFn(void* obj, void* unused, SCTotemLogPuzzleUpdateState* updateState)
 {
-    SCTotemLogPuzzleObject *puzzleObj;
+    SCTotemLogPuzzleObject* puzzleObj;
     int i;
-    puzzleObj = (SCTotemLogPuzzleObject *)obj;
+    puzzleObj = (SCTotemLogPuzzleObject*)obj;
     i = 0;
-    while (i < (int)updateState->eventCount) {
-        switch (*(u8 *)&updateState->eventHandled[i]) {
+    while (i < (int)updateState->eventCount)
+    {
+        switch (*(u8*)&updateState->eventHandled[i])
+        {
         case 0:
             SH_LevelControl_setMusic(puzzleObj->runtime);
             break;
@@ -45,20 +47,22 @@ int SH_LevelControl_SeqFn(void *obj, void *unused, SCTotemLogPuzzleUpdateState *
  * EN v1.0 Address: 0x801D7C94
  * EN v1.0 Size: 576b
  */
-void mapUnloadFn_801d7c94(void *obj, void *p2)
+void mapUnloadFn_801d7c94(void* obj, void* p2)
 {
-    SCTotemLogPuzzleObject *puzzleObj;
-    SCTotemLogPuzzleRuntime *runtime;
-    puzzleObj = (SCTotemLogPuzzleObject *)obj;
-    runtime = (SCTotemLogPuzzleRuntime *)p2;
+    SCTotemLogPuzzleObject* puzzleObj;
+    SCTotemLogPuzzleRuntime* runtime;
+    puzzleObj = (SCTotemLogPuzzleObject*)obj;
+    runtime = (SCTotemLogPuzzleRuntime*)p2;
 
-    if ((u32)GameBit_Get(SCTOTEMLOGPUZ_RESET_GAMEBIT) != 0) {
+    if ((u32)GameBit_Get(SCTOTEMLOGPUZ_RESET_GAMEBIT) != 0)
+    {
         runtime->eventCountdown = SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET;
         GameBit_Set(SCTOTEMLOGPUZ_RESET_GAMEBIT, 0);
     }
     if (runtime->eventCountdown == 0) return;
 
-    if (runtime->eventCountdown == SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET) {
+    if (runtime->eventCountdown == SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET)
+    {
         (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 1, 0);
         (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 4, 0);
         (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 6, 0);
@@ -70,7 +74,8 @@ void mapUnloadFn_801d7c94(void *obj, void *p2)
         mapUnload(0x43, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
         mapUnload(0x45, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
     }
-    if (runtime->eventCountdown != SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE) {
+    if (runtime->eventCountdown != SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE)
+    {
         goto dec;
     }
     (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 0, 1);
@@ -89,7 +94,7 @@ dec:
  * EN v1.0 Address: 0x801D7ED4
  * EN v1.0 Size: 396b
  */
-void SCGameBitLatch_Update(SCGameBitLatchState *state, int mask, s16 clearIfSetBit,
+void SCGameBitLatch_Update(SCGameBitLatchState* state, int mask, s16 clearIfSetBit,
                            s16 clearIfClearBit, s16 latchBit, int musicId)
 {
     int hasClearIfSetBit = (clearIfSetBit + 1) | (-1 - clearIfSetBit);
@@ -97,33 +102,44 @@ void SCGameBitLatch_Update(SCGameBitLatchState *state, int mask, s16 clearIfSetB
     u8 clearIfSetBitValid = (u8)((u32)hasClearIfSetBit >> 31);
     u8 clearIfClearBitValid = (u8)((u32)hasClearIfClearBit >> 31);
 
-    if ((state->activeMask & mask) != 0) {
-        if (clearIfSetBitValid == 0 || GameBit_Get(clearIfSetBit) == 0) {
+    if ((state->activeMask & mask) != 0)
+    {
+        if (clearIfSetBitValid == 0 || GameBit_Get(clearIfSetBit) == 0)
+        {
             if (GameBit_Get(latchBit) != 0) goto end;
         }
-        if (clearIfSetBitValid != 0) {
+        if (clearIfSetBitValid != 0)
+        {
             GameBit_Set(clearIfSetBit, 0);
         }
-        if (clearIfClearBitValid != 0) {
+        if (clearIfClearBitValid != 0)
+        {
             GameBit_Set(clearIfClearBit, 0);
         }
         GameBit_Set(latchBit, 0);
-        if (musicId != -1) {
+        if (musicId != -1)
+        {
             Music_Trigger(musicId, 0);
         }
         state->activeMask = state->activeMask & ~mask;
-    } else {
-        if (clearIfClearBitValid == 0 || GameBit_Get(clearIfClearBit) == 0) {
+    }
+    else
+    {
+        if (clearIfClearBitValid == 0 || GameBit_Get(clearIfClearBit) == 0)
+        {
             if (GameBit_Get(latchBit) == 0) goto end;
         }
-        if (clearIfSetBitValid != 0) {
+        if (clearIfSetBitValid != 0)
+        {
             GameBit_Set(clearIfSetBit, 0);
         }
-        if (clearIfClearBitValid != 0) {
+        if (clearIfClearBitValid != 0)
+        {
             GameBit_Set(clearIfClearBit, 0);
         }
         GameBit_Set(latchBit, 1);
-        if (musicId != -1) {
+        if (musicId != -1)
+        {
             Music_Trigger(musicId, 1);
         }
         state->activeMask = state->activeMask | mask;

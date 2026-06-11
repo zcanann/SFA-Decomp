@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00A6_CFGCrubble3_packet_info {
+enum obj_00A6_CFGCrubble3_packet_info
+{
     CFGCRUBBLE3_DEF_ID = 0x00A6,
     CFGCRUBBLE3_DLL_ID = 0x012E,
     CFGCRUBBLE3_CLASS_ID = 0x0061,

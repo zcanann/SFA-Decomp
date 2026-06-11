@@ -63,17 +63,17 @@ extern undefined4 FUN_800537a0();
 extern undefined4 FUN_800563e8();
 extern undefined4 FUN_80060650();
 extern undefined4 FUN_8006af50();
-extern void newshadows_getShadowTexture(int *textureOut);
-extern void newshadows_getBlankShadowTexture(int *textureOut);
-extern void newshadows_getSoftShadowTexture(int *textureOut);
-extern void newshadows_getShadowRampTexture(int *textureOut);
-extern void newshadows_getShadowNoiseTexture(int *textureOut);
+extern void newshadows_getShadowTexture(int* textureOut);
+extern void newshadows_getBlankShadowTexture(int* textureOut);
+extern void newshadows_getSoftShadowTexture(int* textureOut);
+extern void newshadows_getShadowRampTexture(int* textureOut);
+extern void newshadows_getShadowNoiseTexture(int* textureOut);
 extern double newshadows_getShadowNoiseScale(void);
 extern void newshadows_bindShadowRenderTexture(int textureSlot);
 extern int newshadows_getInverseShadowRampTexture(void);
 extern int newshadows_getRadialFalloffTexture(void);
 extern void newshadows_bindShadowCaptureTexture(int textureSlot);
-extern void newshadows_getShadowNoiseScroll(float *xOffsetOut,float *yOffsetOut);
+extern void newshadows_getShadowNoiseScroll(float* xOffsetOut, float* yOffsetOut);
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
 extern undefined4 FUN_800723a0();
@@ -522,7 +522,7 @@ extern f32 lbl_803DF7B8;
 extern f32 lbl_803DF7BC;
 extern f32 lbl_803DF7C0;
 extern void* PTR_LAB_802cd0ec;
-extern char *sResourceFileNameTable[];
+extern char* sResourceFileNameTable[];
 extern void* PTR_s_animtest_802cc784;
 extern void* PTR_s_frontend_802cc518;
 extern undefined4 _DAT_00360048;
@@ -565,17 +565,17 @@ extern int lbl_803DCC70;
 extern int lbl_803DCC7C;
 extern int lbl_803DCC80;
 extern int lbl_803DCC8C;
-extern int sprintf(char *buf, const char *fmt, ...);
+extern int sprintf(char* buf, const char* fmt, ...);
 extern int AtomicSList_Pop(int list);
 extern void AtomicSList_Push(int list, int e);
-extern int DVDOpen(char *fileName, void *fileInfo);
-extern int DVDRead(void *fileInfo, void *addr, int length, int offset);
-extern int DVDClose(void *fileInfo);
-extern void *mmAlloc(int size, int align, int zone);
-extern void mm_free(void *p);
-extern void DCInvalidateRange(void *p, u32 n);
-extern int DVDReadAsyncPrio(void *fi, void *addr, int len, int off, void (*cb)(), int prio);
-extern void mergeTableFiles(void *buf, int a, int b, int n);
+extern int DVDOpen(char* fileName, void* fileInfo);
+extern int DVDRead(void* fileInfo, void* addr, int length, int offset);
+extern int DVDClose(void* fileInfo);
+extern void* mmAlloc(int size, int align, int zone);
+extern void mm_free(void* p);
+extern void DCInvalidateRange(void* p, u32 n);
+extern int DVDReadAsyncPrio(void* fi, void* addr, int len, int off, void (*cb)(), int prio);
+extern void mergeTableFiles(void* buf, int a, int b, int n);
 extern void texRestructRefs(int a);
 extern void animCurvReadCb();
 extern void animCurvTabReadCb();
@@ -594,10 +594,11 @@ extern void animTabReadCb();
 extern void modelsReadCb();
 extern void modelsTabReadCb();
 
-struct MldfNames {
+struct MldfNames
+{
     u8 pad0[0x3ac];
-    char *fileNames[0x22e];
-    char *mapNames[0x49];
+    char* fileNames[0x22e];
+    char* mapNames[0x49];
     int remapGroups[0x4b];
     s16 adjacency[0x2be];
     char fmtAnimCurvBin[0x10];
@@ -609,7 +610,8 @@ struct MldfNames {
     char fmtModTab[0x10];
 };
 
-struct MldfTables {
+struct MldfTables
+{
     u8 pad0[0x160];
     int fileInfo[0x58];
     u8 mergeAnimCurv[0x7f40];
@@ -642,951 +644,1281 @@ struct MldfTables {
 
 #pragma scheduling off
 #pragma peephole off
-undefined4 mapLoadDataFile(int param_1,int param_2)
+undefined4 mapLoadDataFile(int param_1, int param_2)
 {
-  struct MldfNames *nm = (struct MldfNames *)sResourceFileNameAudioTab;
-  struct MldfTables *t = (struct MldfTables *)lbl_80345E10;
-  int sync = 0;
-  u32 result;
-  int adj;
-  int slot;
-  int fi;
-  int ok;
-  u32 tmp;
-  char buf[104];
+    struct MldfNames* nm = (struct MldfNames*)sResourceFileNameAudioTab;
+    struct MldfTables* t = (struct MldfTables*)lbl_80345E10;
+    int sync = 0;
+    u32 result;
+    int adj;
+    int slot;
+    int fi;
+    int ok;
+    u32 tmp;
+    char buf[104];
 
-  if (lbl_803DCC92 != 0) {
-    lbl_803DCC92 = 0;
-    sync = 1;
-  }
-  adj = MLDF_ADJ(param_1);
-  if (adj != -1) {
-    int c = 0;
-    s16 o25 = MLDF_OWNER(0x25);
-    s16 o47;
-    if (o25 != -1) {
-      c = 1;
-    }
-    o47 = MLDF_OWNER(0x47);
-    if (o47 != -1) {
-      c = c + 1;
-    }
-    if (c == 0) {
-      lbl_803DCC92 = tmp = 1;
-      if (o25 == adj) {
-        tmp = 0;
-      } else if (o47 == adj) {
-      } else {
-        tmp = -1;
-      }
-      if ((int)tmp == -1) {
-        mapLoadDataFile(adj, param_2);
-      }
-      sync = 1;
-    }
-  }
-  sync = sync | lbl_803DCC70;
-  switch (param_2) {
-  case 0xd:
-  case 0x55:
-    result = MLDF_PTR(0xd);
-    if ((result != 0) && (MLDF_OWNER(0xd) == param_1)) {
-      return result;
-    }
-    result = MLDF_PTR(0x55);
-    if ((result != 0) && (MLDF_OWNER(0x55) == param_1)) {
-      return result;
-    }
+    if (lbl_803DCC92 != 0)
     {
-      if (MLDF_ID(0xd) == param_1) {
-        slot = 0xd;
-        MLDF_ID(0xd) = -1;
-      } else if (MLDF_ID(0x55) == param_1) {
-        slot = 0x55;
-        MLDF_ID(0x55) = -1;
-      } else if (MLDF_OWNER(0xd) == -1) {
-        slot = 0xd;
-      } else if (MLDF_OWNER(0x55) == -1) {
-        slot = 0x55;
-      } else {
-        return 0;
-      }
-      if (MLDF_SP_PTR(x) != 0) {
-        mm_free((void *)MLDF_SP_PTR(x));
-        MLDF_SP_PTR(x) = 0;
-      }
-      sprintf(buf, nm->fmtAnimCurvBin, MLDF_MAP_NAME(param_1));
-      fi = AtomicSList_Pop(lbl_803DCC8C);
-      ok = DVDOpen(buf, (void *)fi);
-      if (ok == 0) {
-        return 0;
-      } else {
-        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
-        if (MLDF_SP_SIZE(x) == 0) {
-          return 0;
-        } else {
-          MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-          DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-          tmp = MLDF_SP_PTR(x);
-          if (tmp == 0) {
-            if (MLDF_ID(param_2) == -1) {
-              texRestructRefs(1);
+        lbl_803DCC92 = 0;
+        sync = 1;
+    }
+    adj = MLDF_ADJ(param_1);
+    if (adj != -1)
+    {
+        int c = 0;
+        s16 o25 = MLDF_OWNER(0x25);
+        s16 o47;
+        if (o25 != -1)
+        {
+            c = 1;
+        }
+        o47 = MLDF_OWNER(0x47);
+        if (o47 != -1)
+        {
+            c = c + 1;
+        }
+        if (c == 0)
+        {
+            lbl_803DCC92 = tmp = 1;
+            if (o25 == adj)
+            {
+                tmp = 0;
             }
-            DVDClose((void *)fi);
-            AtomicSList_Push(lbl_803DCC8C, fi);
-            MLDF_SP_SIZE(x) = 0;
-            MLDF_SP_ID(x) = param_1;
-            return 0;
-          } else {
-            if (sync != 0) {
-              DVDRead((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0);
-              DVDClose((void *)fi);
-              AtomicSList_Push(lbl_803DCC8C, fi);
-              if (((lbl_803DCC80 & 0x20000000) == 0) && ((lbl_803DCC80 & 0x80000000) == 0)) {
-                mergeTableFiles(t->mergeAnimCurv, 0xe, 0x56, 0x1fd0);
-              }
-            } else {
-              if (slot == 0xd) {
-                lbl_803DCC80 = lbl_803DCC80 | 0x10000000;
-              } else {
-                lbl_803DCC80 = lbl_803DCC80 | 0x40000000;
-              }
-              DVDReadAsyncPrio((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0, animCurvReadCb, 2);
-              MLDF_FINFO4(x) = fi;
+            else if (o47 == adj)
+            {
+            }
+            else
+            {
+                tmp = -1;
+            }
+            if ((int)tmp == -1)
+            {
+                mapLoadDataFile(adj, param_2);
+            }
+            sync = 1;
+        }
+    }
+    sync = sync | lbl_803DCC70;
+    switch (param_2)
+    {
+    case 0xd:
+    case 0x55:
+        result = MLDF_PTR(0xd);
+        if ((result != 0) && (MLDF_OWNER(0xd) == param_1))
+        {
+            return result;
+        }
+        result = MLDF_PTR(0x55);
+        if ((result != 0) && (MLDF_OWNER(0x55) == param_1))
+        {
+            return result;
+        }
+        {
+            if (MLDF_ID(0xd) == param_1)
+            {
+                slot = 0xd;
+                MLDF_ID(0xd) = -1;
+            }
+            else if (MLDF_ID(0x55) == param_1)
+            {
+                slot = 0x55;
+                MLDF_ID(0x55) = -1;
+            }
+            else if (MLDF_OWNER(0xd) == -1)
+            {
+                slot = 0xd;
+            }
+            else if (MLDF_OWNER(0x55) == -1)
+            {
+                slot = 0x55;
+            }
+            else
+            {
+                return 0;
+            }
+            if (MLDF_SP_PTR(x) != 0)
+            {
+                mm_free((void*)MLDF_SP_PTR(x));
+                MLDF_SP_PTR(x) = 0;
+            }
+            sprintf(buf, nm->fmtAnimCurvBin, MLDF_MAP_NAME(param_1));
+            fi = AtomicSList_Pop(lbl_803DCC8C);
+            ok = DVDOpen(buf, (void*)fi);
+            if (ok == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                MLDF_SP_SIZE(x) = *(int*)(fi + 0x34);
+                if (MLDF_SP_SIZE(x) == 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+                    DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+                    tmp = MLDF_SP_PTR(x);
+                    if (tmp == 0)
+                    {
+                        if (MLDF_ID(param_2) == -1)
+                        {
+                            texRestructRefs(1);
+                        }
+                        DVDClose((void*)fi);
+                        AtomicSList_Push(lbl_803DCC8C, fi);
+                        MLDF_SP_SIZE(x) = 0;
+                        MLDF_SP_ID(x) = param_1;
+                        return 0;
+                    }
+                    else
+                    {
+                        if (sync != 0)
+                        {
+                            DVDRead((void*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0);
+                            DVDClose((void*)fi);
+                            AtomicSList_Push(lbl_803DCC8C, fi);
+                            if (((lbl_803DCC80 & 0x20000000) == 0) && ((lbl_803DCC80 & 0x80000000) == 0))
+                            {
+                                mergeTableFiles(t->mergeAnimCurv, 0xe, 0x56, 0x1fd0);
+                            }
+                        }
+                        else
+                        {
+                            if (slot == 0xd)
+                            {
+                                lbl_803DCC80 = lbl_803DCC80 | 0x10000000;
+                            }
+                            else
+                            {
+                                lbl_803DCC80 = lbl_803DCC80 | 0x40000000;
+                            }
+                            DVDReadAsyncPrio((void*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0, animCurvReadCb, 2);
+                            MLDF_FINFO4(x) = fi;
+                        }
+                        MLDF_OWNER(slot) = param_1;
+                        return MLDF_SP_PTR(x);
+                    }
+                }
+            }
+        }
+        break;
+    case 0xe:
+    case 0x56:
+        result = MLDF_PTR(0xe);
+        if ((result != 0) && (MLDF_OWNER(0xe) == param_1))
+        {
+            return result;
+        }
+        result = MLDF_PTR(0x56);
+        if ((result != 0) && (MLDF_OWNER(0x56) == param_1))
+        {
+            return result;
+        }
+        {
+            if (MLDF_OWNER(0xe) == -1)
+            {
+                slot = 0xe;
+            }
+            else if (MLDF_OWNER(0x56) == -1)
+            {
+                slot = 0x56;
+            }
+            else
+            {
+                return 0;
+            }
+            if (MLDF_SP_PTR(x) != 0)
+            {
+                mm_free((void*)MLDF_SP_PTR(x));
+                MLDF_SP_PTR(x) = 0;
+            }
+            sprintf(buf, nm->fmtAnimCurvTab, MLDF_MAP_NAME(param_1));
+            fi = AtomicSList_Pop(lbl_803DCC8C);
+            ok = DVDOpen(buf, (void*)fi);
+            if (ok == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                MLDF_SP_SIZE(x) = *(int*)(fi + 0x34);
+                if (MLDF_SP_SIZE(x) == 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+                    DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+                    if (sync != 0)
+                    {
+                        DVDRead((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
+                        DVDClose((void*)fi);
+                        AtomicSList_Push(lbl_803DCC8C, fi);
+                        if (((lbl_803DCC80 & 0x20000000) == 0) && ((lbl_803DCC80 & 0x80000000) == 0))
+                        {
+                            mergeTableFiles(t->mergeAnimCurv, 0xe, 0x56, 0x1fd0);
+                        }
+                    }
+                    else
+                    {
+                        if (slot == 0xe)
+                        {
+                            lbl_803DCC80 = lbl_803DCC80 | 0x20000000;
+                        }
+                        else
+                        {
+                            lbl_803DCC80 = lbl_803DCC80 | 0x80000000;
+                        }
+                        DVDReadAsyncPrio((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animCurvTabReadCb, 2);
+                        MLDF_FINFO4(x) = fi;
+                    }
+                    MLDF_OWNER(slot) = param_1;
+                    return MLDF_SP_PTR(x);
+                }
+            }
+        }
+        break;
+    case 0x1b:
+    case 0x54:
+        result = MLDF_PTR(0x1b);
+        if ((result != 0) && (MLDF_OWNER(0x1b) == param_1))
+        {
+            return result;
+        }
+        result = MLDF_PTR(0x54);
+        if ((result != 0) && (MLDF_OWNER(0x54) == param_1))
+        {
+            return result;
+        }
+        {
+            if (MLDF_OWNER(0x1b) == -1)
+            {
+                slot = 0x1b;
+            }
+            else if (MLDF_OWNER(0x54) == -1)
+            {
+                slot = 0x54;
+            }
+            else
+            {
+                return 0;
+            }
+            if (MLDF_SP_PTR(x) != 0)
+            {
+                mm_free((void*)MLDF_SP_PTR(x));
+                MLDF_SP_PTR(x) = 0;
+            }
+            sprintf(buf, nm->fmtVoxmapBin, MLDF_MAP_NAME(param_1));
+            fi = AtomicSList_Pop(lbl_803DCC8C);
+            ok = DVDOpen(buf, (void*)fi);
+            if (ok == 0)
+            {
+                sprintf(buf, nm->fmtWarlockVoxmap);
+                ok = DVDOpen(buf, (void*)fi);
+                if (ok == 0)
+                {
+                    return 0;
+                    break;
+                }
+            }
+            MLDF_SP_SIZE(x) = *(int*)(fi + 0x34);
+            if (MLDF_SP_SIZE(x) == 0)
+            {
+                sprintf(buf, nm->fmtWarlockVoxmap);
+                ok = DVDOpen(buf, (void*)fi);
+                if (ok == 0)
+                {
+                    return 0;
+                    break;
+                }
+                MLDF_SP_SIZE(x) = *(int*)(fi + 0x34);
+            }
+            MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+            DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+            if (sync != 0)
+            {
+                DVDRead((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
+                DVDClose((void*)fi);
+                AtomicSList_Push(lbl_803DCC8C, fi);
+                if (((lbl_803DCC80 & 0x2000000) == 0) && ((lbl_803DCC80 & 0x8000000) == 0))
+                {
+                    mergeTableFiles(t->mergeVoxMap, 0x1a, 0x53, 0x800);
+                }
+            }
+            else
+            {
+                if (slot == 0x1b)
+                {
+                    lbl_803DCC80 = lbl_803DCC80 | 0x1000000;
+                }
+                else
+                {
+                    lbl_803DCC80 = lbl_803DCC80 | 0x4000000;
+                }
+                MLDF_FINFO4(x) = fi;
+                DVDReadAsyncPrio((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapReadCb, 2);
             }
             MLDF_OWNER(slot) = param_1;
             return MLDF_SP_PTR(x);
-          }
         }
-      }
-    }
-    break;
-  case 0xe:
-  case 0x56:
-    result = MLDF_PTR(0xe);
-    if ((result != 0) && (MLDF_OWNER(0xe) == param_1)) {
-      return result;
-    }
-    result = MLDF_PTR(0x56);
-    if ((result != 0) && (MLDF_OWNER(0x56) == param_1)) {
-      return result;
-    }
-    {
-      if (MLDF_OWNER(0xe) == -1) {
-        slot = 0xe;
-      } else if (MLDF_OWNER(0x56) == -1) {
-        slot = 0x56;
-      } else {
-        return 0;
-      }
-      if (MLDF_SP_PTR(x) != 0) {
-        mm_free((void *)MLDF_SP_PTR(x));
-        MLDF_SP_PTR(x) = 0;
-      }
-      sprintf(buf, nm->fmtAnimCurvTab, MLDF_MAP_NAME(param_1));
-      fi = AtomicSList_Pop(lbl_803DCC8C);
-      ok = DVDOpen(buf, (void *)fi);
-      if (ok == 0) {
-        return 0;
-      } else {
-        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
-        if (MLDF_SP_SIZE(x) == 0) {
-          return 0;
-        } else {
-          MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-          DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-          if (sync != 0) {
-            DVDRead((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
-            DVDClose((void *)fi);
-            AtomicSList_Push(lbl_803DCC8C, fi);
-            if (((lbl_803DCC80 & 0x20000000) == 0) && ((lbl_803DCC80 & 0x80000000) == 0)) {
-              mergeTableFiles(t->mergeAnimCurv, 0xe, 0x56, 0x1fd0);
+        break;
+    case 0x1a:
+    case 0x53:
+        result = MLDF_PTR(0x1a);
+        if ((result != 0) && (MLDF_OWNER(0x1a) == param_1))
+        {
+            return result;
+        }
+        result = MLDF_PTR(0x53);
+        if ((result != 0) && (MLDF_OWNER(0x53) == param_1))
+        {
+            return result;
+        }
+        {
+            if (MLDF_OWNER(0x1a) == -1)
+            {
+                slot = 0x1a;
             }
-          } else {
-            if (slot == 0xe) {
-              lbl_803DCC80 = lbl_803DCC80 | 0x20000000;
-            } else {
-              lbl_803DCC80 = lbl_803DCC80 | 0x80000000;
+            else if (MLDF_OWNER(0x53) == -1)
+            {
+                slot = 0x53;
             }
-            DVDReadAsyncPrio((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animCurvTabReadCb, 2);
-            MLDF_FINFO4(x) = fi;
-          }
-          MLDF_OWNER(slot) = param_1;
-          return MLDF_SP_PTR(x);
-        }
-      }
-    }
-    break;
-  case 0x1b:
-  case 0x54:
-    result = MLDF_PTR(0x1b);
-    if ((result != 0) && (MLDF_OWNER(0x1b) == param_1)) {
-      return result;
-    }
-    result = MLDF_PTR(0x54);
-    if ((result != 0) && (MLDF_OWNER(0x54) == param_1)) {
-      return result;
-    }
-    {
-      if (MLDF_OWNER(0x1b) == -1) {
-        slot = 0x1b;
-      } else if (MLDF_OWNER(0x54) == -1) {
-        slot = 0x54;
-      } else {
-        return 0;
-      }
-      if (MLDF_SP_PTR(x) != 0) {
-        mm_free((void *)MLDF_SP_PTR(x));
-        MLDF_SP_PTR(x) = 0;
-      }
-      sprintf(buf, nm->fmtVoxmapBin, MLDF_MAP_NAME(param_1));
-      fi = AtomicSList_Pop(lbl_803DCC8C);
-      ok = DVDOpen(buf, (void *)fi);
-      if (ok == 0) {
-        sprintf(buf, nm->fmtWarlockVoxmap);
-        ok = DVDOpen(buf, (void *)fi);
-        if (ok == 0) {
-          return 0;
-          break;
-        }
-      }
-      MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
-      if (MLDF_SP_SIZE(x) == 0) {
-        sprintf(buf, nm->fmtWarlockVoxmap);
-        ok = DVDOpen(buf, (void *)fi);
-        if (ok == 0) {
-          return 0;
-          break;
-        }
-        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
-      }
-      MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-      DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-      if (sync != 0) {
-        DVDRead((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
-        DVDClose((void *)fi);
-        AtomicSList_Push(lbl_803DCC8C, fi);
-        if (((lbl_803DCC80 & 0x2000000) == 0) && ((lbl_803DCC80 & 0x8000000) == 0)) {
-          mergeTableFiles(t->mergeVoxMap, 0x1a, 0x53, 0x800);
-        }
-      } else {
-        if (slot == 0x1b) {
-          lbl_803DCC80 = lbl_803DCC80 | 0x1000000;
-        } else {
-          lbl_803DCC80 = lbl_803DCC80 | 0x4000000;
-        }
-        MLDF_FINFO4(x) = fi;
-        DVDReadAsyncPrio((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapReadCb, 2);
-      }
-      MLDF_OWNER(slot) = param_1;
-      return MLDF_SP_PTR(x);
-    }
-    break;
-  case 0x1a:
-  case 0x53:
-    result = MLDF_PTR(0x1a);
-    if ((result != 0) && (MLDF_OWNER(0x1a) == param_1)) {
-      return result;
-    }
-    result = MLDF_PTR(0x53);
-    if ((result != 0) && (MLDF_OWNER(0x53) == param_1)) {
-      return result;
-    }
-    {
-      if (MLDF_OWNER(0x1a) == -1) {
-        slot = 0x1a;
-      } else if (MLDF_OWNER(0x53) == -1) {
-        slot = 0x53;
-      } else {
-        return 0;
-      }
-      if (MLDF_SP_PTR(x) != 0) {
-        mm_free((void *)MLDF_SP_PTR(x));
-        MLDF_SP_PTR(x) = 0;
-      }
-      sprintf(buf, nm->fmtVoxmapTab, MLDF_MAP_NAME(param_1));
-      fi = AtomicSList_Pop(lbl_803DCC8C);
-      ok = DVDOpen(buf, (void *)fi);
-      if (ok == 0) {
-        return 0;
-      } else {
-        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
-        if (MLDF_SP_SIZE(x) == 0) {
-          AtomicSList_Push(lbl_803DCC8C, fi);
-          return 0;
-        } else {
-          MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-          DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-          if (sync != 0) {
-            DVDRead((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
-            DVDClose((void *)fi);
-            AtomicSList_Push(lbl_803DCC8C, fi);
-            if (((lbl_803DCC80 & 0x2000000) == 0) && ((lbl_803DCC80 & 0x8000000) == 0)) {
-              mergeTableFiles(t->mergeVoxMap, 0x1a, 0x53, 0x800);
+            else
+            {
+                return 0;
             }
-          } else {
-            if (slot == 0x1a) {
-              lbl_803DCC80 = lbl_803DCC80 | 0x2000000;
-            } else {
-              lbl_803DCC80 = lbl_803DCC80 | 0x8000000;
+            if (MLDF_SP_PTR(x) != 0)
+            {
+                mm_free((void*)MLDF_SP_PTR(x));
+                MLDF_SP_PTR(x) = 0;
             }
-            MLDF_FINFO4(x) = fi;
-            DVDReadAsyncPrio((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapTabReadCb, 2);
-          }
-          MLDF_OWNER(slot) = param_1;
-          return MLDF_SP_PTR(x);
-        }
-      }
-    }
-    break;
-  case 0x25:
-  case 0x47:
-    result = MLDF_PTR(0x25);
-    if ((result != 0) && (MLDF_OWNER(0x25) == param_1)) {
-      return result;
-    }
-    result = MLDF_PTR(0x47);
-    if ((result != 0) && (MLDF_OWNER(0x47) == param_1)) {
-      return result;
-    }
-    {
-      if (MLDF_ID(0x25) == param_1) {
-        slot = 0x25;
-        MLDF_ID(0x25) = -1;
-      } else if (MLDF_ID(0x47) == param_1) {
-        slot = 0x47;
-        MLDF_ID(0x47) = -1;
-      } else if (MLDF_OWNER(0x25) == -1) {
-        slot = 0x25;
-      } else if (MLDF_OWNER(0x47) == -1) {
-        slot = 0x47;
-      } else {
-        return 0;
-      }
-      if (MLDF_SP_PTR(x) != 0) {
-        mm_free((void *)MLDF_SP_PTR(x));
-        MLDF_SP_PTR(x) = 0;
-      }
-      if (param_1 > 4) {
-        sprintf(buf, nm->fmtModBin, MLDF_MAP_NAME(param_1), param_1 + 1);
-      } else {
-        sprintf(buf, nm->fmtModBin, MLDF_MAP_NAME(param_1), param_1);
-      }
-      fi = AtomicSList_Pop(lbl_803DCC8C);
-      ok = DVDOpen(buf, (void *)fi);
-      if (ok == 0) {
-        return 0;
-      } else {
-        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
-        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-        tmp = MLDF_SP_PTR(x);
-        if (tmp == 0) {
-          if (MLDF_ID(param_2) == -1) {
-            texRestructRefs(1);
-          }
-          DVDClose((void *)fi);
-          AtomicSList_Push(lbl_803DCC8C, fi);
-          MLDF_SP_SIZE(x) = 0;
-          MLDF_SP_ID(x) = param_1;
-          return 0;
-        } else {
-          if (sync != 0) {
-            DVDRead((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0);
-            DVDClose((void *)fi);
-            AtomicSList_Push(lbl_803DCC8C, fi);
-            if (((lbl_803DCC80 & 0x20000) == 0) && ((lbl_803DCC80 & 0x80000) == 0)) {
-              mergeTableFiles(t->mergeBlocks, 0x26, 0x48, 0x800);
+            sprintf(buf, nm->fmtVoxmapTab, MLDF_MAP_NAME(param_1));
+            fi = AtomicSList_Pop(lbl_803DCC8C);
+            ok = DVDOpen(buf, (void*)fi);
+            if (ok == 0)
+            {
+                return 0;
             }
-          } else {
-            if (slot == 0x25) {
-              lbl_803DCC80 = lbl_803DCC80 | 0x10000;
-            } else {
-              lbl_803DCC80 = lbl_803DCC80 | 0x40000;
+            else
+            {
+                MLDF_SP_SIZE(x) = *(int*)(fi + 0x34);
+                if (MLDF_SP_SIZE(x) == 0)
+                {
+                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    return 0;
+                }
+                else
+                {
+                    MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+                    DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+                    if (sync != 0)
+                    {
+                        DVDRead((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
+                        DVDClose((void*)fi);
+                        AtomicSList_Push(lbl_803DCC8C, fi);
+                        if (((lbl_803DCC80 & 0x2000000) == 0) && ((lbl_803DCC80 & 0x8000000) == 0))
+                        {
+                            mergeTableFiles(t->mergeVoxMap, 0x1a, 0x53, 0x800);
+                        }
+                    }
+                    else
+                    {
+                        if (slot == 0x1a)
+                        {
+                            lbl_803DCC80 = lbl_803DCC80 | 0x2000000;
+                        }
+                        else
+                        {
+                            lbl_803DCC80 = lbl_803DCC80 | 0x8000000;
+                        }
+                        MLDF_FINFO4(x) = fi;
+                        DVDReadAsyncPrio((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapTabReadCb, 2);
+                    }
+                    MLDF_OWNER(slot) = param_1;
+                    return MLDF_SP_PTR(x);
+                }
             }
-            MLDF_FINFO4(x) = fi;
-            DVDReadAsyncPrio((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0, blocksReadCb, 2);
-          }
-          MLDF_OWNER(slot) = param_1;
-          return MLDF_SP_PTR(x);
         }
-      }
-    }
-    break;
-  case 0x26:
-  case 0x48: {
-    int idx;
-    int *grp;
-    int n;
-    result = MLDF_PTR(0x26);
-    if ((result != 0) && (MLDF_OWNER(0x26) == param_1)) {
-      return result;
-    }
-    result = MLDF_PTR(0x48);
-    if ((result != 0) && (MLDF_OWNER(0x48) == param_1)) {
-      return result;
-    }
-    {
-      if (MLDF_OWNER(0x26) == -1) {
-        slot = 0x26;
-      } else if (MLDF_OWNER(0x48) == -1) {
-        slot = 0x48;
-      } else {
-        return 0;
-      }
-      if (MLDF_SP_PTR(x) != 0) {
-        mm_free((void *)MLDF_SP_PTR(x));
-        MLDF_SP_PTR(x) = 0;
-      }
-      idx = 0;
-      grp = MLDF_REMAP;
-      for (n = 0xf; n != 0; n--) {
-        if (param_1 == grp[0]) goto remap_found;
-        idx = idx + 1;
-        if (param_1 == grp[1]) goto remap_found;
-        idx = idx + 1;
-        if (param_1 == grp[2]) goto remap_found;
-        idx = idx + 1;
-        if (param_1 == grp[3]) goto remap_found;
-        idx = idx + 1;
-        if (param_1 == grp[4]) goto remap_found;
-        grp = grp + 5;
-        idx = idx + 1;
-      }
-    remap_found:
-      piRomLoadSection(0, idx, 0);
-      if (param_1 > 4) {
-        sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(param_1), param_1 + 1);
-      } else {
-        sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(param_1), param_1);
-      }
-      fi = AtomicSList_Pop(lbl_803DCC8C);
-      ok = DVDOpen(buf, (void *)fi);
-      if (ok == 0) {
-        return 0;
-      } else {
-        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
-        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-        if (sync != 0) {
-          DVDRead((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
-          DVDClose((void *)fi);
-          AtomicSList_Push(lbl_803DCC8C, fi);
-          if (((lbl_803DCC80 & 0x20000) == 0) && ((lbl_803DCC80 & 0x80000) == 0)) {
-            mergeTableFiles(t->mergeBlocks, 0x26, 0x48, 0x800);
-          }
-        } else {
-          if (slot == 0x26) {
-            lbl_803DCC80 = lbl_803DCC80 | 0x20000;
-          } else {
-            lbl_803DCC80 = lbl_803DCC80 | 0x80000;
-          }
-          MLDF_FINFO4(x) = fi;
-          DVDReadAsyncPrio((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, blocksTabReadCb, 2);
+        break;
+    case 0x25:
+    case 0x47:
+        result = MLDF_PTR(0x25);
+        if ((result != 0) && (MLDF_OWNER(0x25) == param_1))
+        {
+            return result;
         }
-        MLDF_OWNER(slot) = param_1;
-        return MLDF_SP_PTR(x);
-      }
-    }
-    break;
-  }
-  case 0x2b:
-  case 0x46:
-    result = MLDF_PTR(0x2b);
-    if ((result != 0) && (MLDF_OWNER(0x2b) == param_1)) {
-      return result;
-    }
-    result = MLDF_PTR(0x46);
-    if ((result != 0) && (MLDF_OWNER(0x46) == param_1)) {
-      return result;
-    }
-    {
-      if (MLDF_ID(0x2b) == param_1) {
-        slot = 0x2b;
-        MLDF_ID(0x2b) = -1;
-      } else if (MLDF_ID(0x46) == param_1) {
-        slot = 0x46;
-        MLDF_ID(0x46) = -1;
-      } else if (MLDF_OWNER(0x2b) == -1) {
-        slot = 0x2b;
-      } else if (MLDF_OWNER(0x46) == -1) {
-        slot = 0x46;
-      } else {
-        return 0;
-      }
-      if (MLDF_SP_PTR(x) != 0) {
-        mm_free((void *)MLDF_SP_PTR(x));
-        MLDF_SP_PTR(x) = 0;
-      }
-      sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
-      fi = AtomicSList_Pop(lbl_803DCC8C);
-      ok = DVDOpen(buf, (void *)fi);
-      if (ok == 0) {
-        return 0;
-      } else {
-        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
-        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-        tmp = MLDF_SP_PTR(x);
-        if (tmp == 0) {
-          if (MLDF_ID(param_2) == -1) {
-            texRestructRefs(1);
-          }
-          DVDClose((void *)fi);
-          AtomicSList_Push(lbl_803DCC8C, fi);
-          MLDF_SP_SIZE(x) = 0;
-          MLDF_SP_ID(x) = param_1;
-          return 0;
-        } else {
-          if (sync != 0) {
-            DVDRead((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0);
-            DVDClose((void *)fi);
-            AtomicSList_Push(lbl_803DCC8C, fi);
-            if (((lbl_803DCC80 & 4) == 0) && ((lbl_803DCC80 & 8) == 0)) {
-              mergeTableFiles(t->mergeModels, 0x2a, 0x45, 0x800);
+        result = MLDF_PTR(0x47);
+        if ((result != 0) && (MLDF_OWNER(0x47) == param_1))
+        {
+            return result;
+        }
+        {
+            if (MLDF_ID(0x25) == param_1)
+            {
+                slot = 0x25;
+                MLDF_ID(0x25) = -1;
             }
-            lbl_803DCC7C = lbl_803DCC7C + 1;
-          } else {
-            lbl_803DCC7C = lbl_803DCC7C + 1;
-            if (slot == 0x2b) {
-              lbl_803DCC80 = lbl_803DCC80 | 1;
-            } else {
-              lbl_803DCC80 = lbl_803DCC80 | 2;
+            else if (MLDF_ID(0x47) == param_1)
+            {
+                slot = 0x47;
+                MLDF_ID(0x47) = -1;
             }
-            MLDF_FINFO4(x) = fi;
-            DVDReadAsyncPrio((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0, modelsReadCb, 2);
-          }
-          MLDF_OWNER(slot) = param_1;
-          return MLDF_SP_PTR(x);
-        }
-      }
-    }
-    break;
-  case 0x2a:
-  case 0x45:
-    result = MLDF_PTR(0x2a);
-    if ((result != 0) && (MLDF_OWNER(0x2a) == param_1)) {
-      return result;
-    }
-    result = MLDF_PTR(0x45);
-    if ((result != 0) && (MLDF_OWNER(0x45) == param_1)) {
-      return result;
-    }
-    {
-      if (MLDF_OWNER(0x2a) == -1) {
-        slot = 0x2a;
-      } else if (MLDF_OWNER(0x45) == -1) {
-        slot = 0x45;
-      } else {
-        return 0;
-      }
-      if (MLDF_SP_PTR(x) != 0) {
-        mm_free((void *)MLDF_SP_PTR(x));
-        MLDF_SP_PTR(x) = 0;
-      }
-      sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
-      fi = AtomicSList_Pop(lbl_803DCC8C);
-      ok = DVDOpen(buf, (void *)fi);
-      if (ok == 0) {
-        return 0;
-      } else {
-        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
-        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-        if (sync != 0) {
-          DVDRead((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
-          DVDClose((void *)fi);
-          AtomicSList_Push(lbl_803DCC8C, fi);
-          if (((lbl_803DCC80 & 4) == 0) && ((lbl_803DCC80 & 8) == 0)) {
-            mergeTableFiles(t->mergeModels, 0x2a, 0x45, 0x800);
-          }
-        } else {
-          if (slot == 0x2a) {
-            lbl_803DCC80 = lbl_803DCC80 | 4;
-          } else {
-            lbl_803DCC80 = lbl_803DCC80 | 8;
-          }
-          MLDF_FINFO4(x) = fi;
-          DVDReadAsyncPrio((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, modelsTabReadCb, 2);
-        }
-        MLDF_OWNER(slot) = param_1;
-        return MLDF_SP_PTR(x);
-      }
-    }
-    break;
-  case 0x30:
-  case 0x4a:
-    result = MLDF_PTR(0x30);
-    if ((result != 0) && (MLDF_OWNER(0x30) == param_1)) {
-      return result;
-    }
-    result = MLDF_PTR(0x4a);
-    if ((result != 0) && (MLDF_OWNER(0x4a) == param_1)) {
-      return result;
-    }
-    {
-      if (MLDF_ID(0x30) == param_1) {
-        slot = 0x30;
-        MLDF_ID(0x30) = -1;
-      } else if (MLDF_ID(0x4a) == param_1) {
-        slot = 0x4a;
-        MLDF_ID(0x4a) = -1;
-      } else if (MLDF_OWNER(0x30) == -1) {
-        slot = 0x30;
-      } else if (MLDF_OWNER(0x4a) == -1) {
-        slot = 0x4a;
-      } else {
-        return 0;
-      }
-      if (MLDF_SP_PTR(x) != 0) {
-        mm_free((void *)MLDF_SP_PTR(x));
-        MLDF_SP_PTR(x) = 0;
-      }
-      sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
-      fi = AtomicSList_Pop(lbl_803DCC8C);
-      ok = DVDOpen(buf, (void *)fi);
-      if (ok == 0) {
-        return 0;
-      } else {
-        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
-        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-        tmp = MLDF_SP_PTR(x);
-        if (tmp == 0) {
-          if (MLDF_ID(param_2) == -1) {
-            texRestructRefs(1);
-          }
-          DVDClose((void *)fi);
-          AtomicSList_Push(lbl_803DCC8C, fi);
-          MLDF_SP_SIZE(x) = 0;
-          MLDF_SP_ID(x) = param_1;
-          return 0;
-        } else {
-          if (sync != 0) {
-            DVDRead((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0);
-            DVDClose((void *)fi);
-            AtomicSList_Push(lbl_803DCC8C, fi);
-            if (((lbl_803DCC80 & 0x40) == 0) && ((lbl_803DCC80 & 0x80) == 0)) {
-              mergeTableFiles(t->mergeAnim, 0x2f, 0x49, 3000);
+            else if (MLDF_OWNER(0x25) == -1)
+            {
+                slot = 0x25;
             }
-          } else {
-            if (slot == 0x30) {
-              lbl_803DCC80 = lbl_803DCC80 | 0x10;
-            } else {
-              lbl_803DCC80 = lbl_803DCC80 | 0x20;
+            else if (MLDF_OWNER(0x47) == -1)
+            {
+                slot = 0x47;
             }
-            MLDF_FINFO4(x) = fi;
-            DVDReadAsyncPrio((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0, animReadCb, 2);
-          }
-          MLDF_OWNER(slot) = param_1;
-          return MLDF_SP_PTR(x);
-        }
-      }
-    }
-    break;
-  case 0x2f:
-  case 0x49:
-    result = MLDF_PTR(0x2f);
-    if ((result != 0) && (MLDF_OWNER(0x2f) == param_1)) {
-      return result;
-    }
-    result = MLDF_PTR(0x49);
-    if ((result != 0) && (MLDF_OWNER(0x49) == param_1)) {
-      return result;
-    }
-    {
-      if (MLDF_OWNER(0x2f) == -1) {
-        slot = 0x2f;
-      } else if (MLDF_OWNER(0x49) == -1) {
-        slot = 0x49;
-      } else {
-        return 0;
-      }
-      if (MLDF_SP_PTR(x) != 0) {
-        mm_free((void *)MLDF_SP_PTR(x));
-        MLDF_SP_PTR(x) = 0;
-      }
-      sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
-      fi = AtomicSList_Pop(lbl_803DCC8C);
-      ok = DVDOpen(buf, (void *)fi);
-      if (ok == 0) {
-        return 0;
-      } else {
-        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
-        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-        if (sync != 0) {
-          DVDRead((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
-          DVDClose((void *)fi);
-          AtomicSList_Push(lbl_803DCC8C, fi);
-          if (((lbl_803DCC80 & 0x40) == 0) && ((lbl_803DCC80 & 0x80) == 0)) {
-            mergeTableFiles(t->mergeAnim, 0x2f, 0x49, 3000);
-          }
-        } else {
-          if (slot == 0x2f) {
-            lbl_803DCC80 = lbl_803DCC80 | 0x40;
-          } else {
-            lbl_803DCC80 = lbl_803DCC80 | 0x80;
-          }
-          MLDF_FINFO4(x) = fi;
-          DVDReadAsyncPrio((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animTabReadCb, 2);
-        }
-        MLDF_OWNER(slot) = param_1;
-        return MLDF_SP_PTR(x);
-      }
-    }
-    break;
-  case 0x23:
-  case 0x4d:
-    result = MLDF_PTR(0x23);
-    if ((result != 0) && (MLDF_OWNER(0x23) == param_1)) {
-      return result;
-    }
-    result = MLDF_PTR(0x4d);
-    if ((result != 0) && (MLDF_OWNER(0x4d) == param_1)) {
-      return result;
-    }
-    {
-      if (MLDF_ID(0x23) == param_1) {
-        slot = 0x23;
-        MLDF_ID(0x23) = -1;
-      } else if (MLDF_ID(0x4d) == param_1) {
-        slot = 0x4d;
-        MLDF_ID(0x4d) = -1;
-      } else if (MLDF_OWNER(0x23) == -1) {
-        slot = 0x23;
-      } else if (MLDF_OWNER(0x4d) == -1) {
-        slot = 0x4d;
-      } else {
-        return 0;
-      }
-      if (MLDF_SP_PTR(x) != 0) {
-        mm_free((void *)MLDF_SP_PTR(x));
-        MLDF_SP_PTR(x) = 0;
-      }
-      sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
-      fi = AtomicSList_Pop(lbl_803DCC8C);
-      ok = DVDOpen(buf, (void *)fi);
-      if (ok == 0) {
-        return 0;
-      } else {
-        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
-        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x) + 0x20, 0x7d7d7d7d, 0);
-        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-        tmp = MLDF_SP_PTR(x);
-        if (tmp == 0) {
-          if (MLDF_ID(param_2) == -1) {
-            texRestructRefs(1);
-          }
-          DVDClose((void *)fi);
-          AtomicSList_Push(lbl_803DCC8C, fi);
-          MLDF_SP_SIZE(x) = 0;
-          MLDF_SP_ID(x) = param_1;
-          return 0;
-        } else {
-          if (sync != 0) {
-            DVDRead((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0);
-            DVDClose((void *)fi);
-            AtomicSList_Push(lbl_803DCC8C, fi);
-            if (((lbl_803DCC80 & 0x400) == 0) && ((lbl_803DCC80 & 0x800) == 0)) {
-              mergeTableFiles(t->mergeTex0, 0x24, 0x4e, 0x1000);
+            else
+            {
+                return 0;
             }
-          } else {
-            if (slot == 0x23) {
-              lbl_803DCC80 = lbl_803DCC80 | 0x100;
-            } else {
-              lbl_803DCC80 = lbl_803DCC80 | 0x200;
+            if (MLDF_SP_PTR(x) != 0)
+            {
+                mm_free((void*)MLDF_SP_PTR(x));
+                MLDF_SP_PTR(x) = 0;
             }
-            MLDF_FINFO4(x) = fi;
-            DVDReadAsyncPrio((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0, tex0readCb, 2);
-          }
-          MLDF_OWNER(slot) = param_1;
-          return MLDF_SP_PTR(x);
-        }
-      }
-    }
-    break;
-  case 0x24:
-  case 0x4e:
-    result = MLDF_PTR(0x24);
-    if ((result != 0) && (MLDF_OWNER(0x24) == param_1)) {
-      return result;
-    }
-    result = MLDF_PTR(0x4e);
-    if ((result != 0) && (MLDF_OWNER(0x4e) == param_1)) {
-      return result;
-    }
-    {
-      if (MLDF_OWNER(0x24) == -1) {
-        slot = 0x24;
-      } else if (MLDF_OWNER(0x4e) == -1) {
-        slot = 0x4e;
-      } else {
-        return 0;
-      }
-      if (MLDF_SP_PTR(x) != 0) {
-        mm_free((void *)MLDF_SP_PTR(x));
-        MLDF_SP_PTR(x) = 0;
-      }
-      sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
-      fi = AtomicSList_Pop(lbl_803DCC8C);
-      ok = DVDOpen(buf, (void *)fi);
-      if (ok == 0) {
-        return 0;
-      } else {
-        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
-        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x) + 0x20, 0x7d7d7d7d, 0);
-        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-        if (sync != 0) {
-          DVDRead((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
-          DVDClose((void *)fi);
-          AtomicSList_Push(lbl_803DCC8C, fi);
-          if (((lbl_803DCC80 & 0x400) == 0) && ((lbl_803DCC80 & 0x800) == 0)) {
-            mergeTableFiles(t->mergeTex0, 0x24, 0x4e, 0x1000);
-          }
-        } else {
-          MLDF_FINFO4(x) = fi;
-          if (slot == 0x24) {
-            lbl_803DCC80 = lbl_803DCC80 | 0x400;
-            DVDReadAsyncPrio((void *)fi, (void *)MLDF_PTR(0x24), MLDF_SIZE(0x24), 0, tex0tab1readCb, 2);
-          } else {
-            lbl_803DCC80 = lbl_803DCC80 | 0x800;
-            DVDReadAsyncPrio((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex0tab2readCb, 2);
-          }
-        }
-        MLDF_OWNER(slot) = param_1;
-        return MLDF_SP_PTR(x);
-      }
-    }
-    break;
-  case 0x20:
-  case 0x4b:
-    result = MLDF_PTR(0x20);
-    if ((result != 0) && (MLDF_OWNER(0x20) == param_1)) {
-      return result;
-    }
-    result = MLDF_PTR(0x4b);
-    if ((result != 0) && (MLDF_OWNER(0x4b) == param_1)) {
-      return result;
-    }
-    {
-      if (MLDF_ID(0x20) == param_1) {
-        slot = 0x20;
-        MLDF_ID(0x20) = -1;
-      } else if (MLDF_ID(0x4b) == param_1) {
-        slot = 0x4b;
-        MLDF_ID(0x4b) = -1;
-      } else if (MLDF_OWNER(0x20) == -1) {
-        slot = 0x20;
-      } else if (MLDF_OWNER(0x4b) == -1) {
-        slot = 0x4b;
-      } else {
-        return 0;
-      }
-      if (MLDF_SP_PTR(x) != 0) {
-        mm_free((void *)MLDF_SP_PTR(x));
-        MLDF_SP_PTR(x) = 0;
-      }
-      sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
-      fi = AtomicSList_Pop(lbl_803DCC8C);
-      ok = DVDOpen(buf, (void *)fi);
-      if (ok == 0) {
-        return 0;
-      } else {
-        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
-        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x) + 0x20, 0x7d7d7d7d, 0);
-        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-        tmp = MLDF_SP_PTR(x);
-        if (tmp == 0) {
-          if (MLDF_ID(param_2) == -1) {
-            texRestructRefs(1);
-          }
-          DVDClose((void *)fi);
-          AtomicSList_Push(lbl_803DCC8C, fi);
-          MLDF_SP_SIZE(x) = 0;
-          MLDF_SP_ID(x) = param_1;
-          return 0;
-        } else {
-          if (sync != 0) {
-            DVDRead((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0);
-            DVDClose((void *)fi);
-            AtomicSList_Push(lbl_803DCC8C, fi);
-            if (((lbl_803DCC80 & 0x4000) == 0) && ((lbl_803DCC80 & 0x8000) == 0)) {
-              mergeTableFiles(t->mergeTex1, 0x21, 0x4c, 0x1000);
+            if (param_1 > 4)
+            {
+                sprintf(buf, nm->fmtModBin, MLDF_MAP_NAME(param_1), param_1 + 1);
             }
-          } else {
-            if (slot == 0x20) {
-              lbl_803DCC80 = lbl_803DCC80 | 0x1000;
-            } else {
-              lbl_803DCC80 = lbl_803DCC80 | 0x2000;
+            else
+            {
+                sprintf(buf, nm->fmtModBin, MLDF_MAP_NAME(param_1), param_1);
             }
-            MLDF_FINFO4(x) = fi;
-            DVDReadAsyncPrio((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0, tex1ReadCb, 2);
-          }
-          MLDF_OWNER(slot) = param_1;
-          return MLDF_SP_PTR(x);
+            fi = AtomicSList_Pop(lbl_803DCC8C);
+            ok = DVDOpen(buf, (void*)fi);
+            if (ok == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                MLDF_SP_SIZE(x) = *(int*)(fi + 0x34);
+                MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+                DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+                tmp = MLDF_SP_PTR(x);
+                if (tmp == 0)
+                {
+                    if (MLDF_ID(param_2) == -1)
+                    {
+                        texRestructRefs(1);
+                    }
+                    DVDClose((void*)fi);
+                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    MLDF_SP_SIZE(x) = 0;
+                    MLDF_SP_ID(x) = param_1;
+                    return 0;
+                }
+                else
+                {
+                    if (sync != 0)
+                    {
+                        DVDRead((void*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0);
+                        DVDClose((void*)fi);
+                        AtomicSList_Push(lbl_803DCC8C, fi);
+                        if (((lbl_803DCC80 & 0x20000) == 0) && ((lbl_803DCC80 & 0x80000) == 0))
+                        {
+                            mergeTableFiles(t->mergeBlocks, 0x26, 0x48, 0x800);
+                        }
+                    }
+                    else
+                    {
+                        if (slot == 0x25)
+                        {
+                            lbl_803DCC80 = lbl_803DCC80 | 0x10000;
+                        }
+                        else
+                        {
+                            lbl_803DCC80 = lbl_803DCC80 | 0x40000;
+                        }
+                        MLDF_FINFO4(x) = fi;
+                        DVDReadAsyncPrio((void*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0, blocksReadCb, 2);
+                    }
+                    MLDF_OWNER(slot) = param_1;
+                    return MLDF_SP_PTR(x);
+                }
+            }
         }
-      }
-    }
-    break;
-  case 0x21:
-  case 0x4c:
-    result = MLDF_PTR(0x21);
-    if ((result != 0) && (MLDF_OWNER(0x21) == param_1)) {
-      return result;
-    }
-    result = MLDF_PTR(0x4c);
-    if ((result != 0) && (MLDF_OWNER(0x4c) == param_1)) {
-      return result;
-    }
-    {
-      if (MLDF_OWNER(0x21) == -1) {
-        slot = 0x21;
-      } else if (MLDF_OWNER(0x4c) == -1) {
-        slot = 0x4c;
-      } else {
-        return 0;
-      }
-      if (MLDF_SP_PTR(x) != 0) {
-        mm_free((void *)MLDF_SP_PTR(x));
-        MLDF_SP_PTR(x) = 0;
-      }
-      sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
-      fi = AtomicSList_Pop(lbl_803DCC8C);
-      ok = DVDOpen(buf, (void *)fi);
-      if (ok == 0) {
-        return 0;
-      } else {
-        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
-        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-        if (sync != 0) {
-          DVDRead((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
-          DVDClose((void *)fi);
-          AtomicSList_Push(lbl_803DCC8C, fi);
-          if (((lbl_803DCC80 & 0x4000) == 0) && ((lbl_803DCC80 & 0x8000) == 0)) {
-            mergeTableFiles(t->mergeTex1, 0x21, 0x4c, 0x1000);
-          }
-        } else {
-          MLDF_FINFO4(x) = fi;
-          if (slot == 0x21) {
-            lbl_803DCC80 = lbl_803DCC80 | 0x4000;
-            DVDReadAsyncPrio((void *)fi, (void *)MLDF_PTR(0x21), MLDF_SIZE(0x21), 0, tex1tab1readCb, 2);
-          } else {
-            lbl_803DCC80 = lbl_803DCC80 | 0x8000;
-            DVDReadAsyncPrio((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex1tab2readCb, 2);
-          }
+        break;
+    case 0x26:
+    case 0x48:
+        {
+            int idx;
+            int* grp;
+            int n;
+            result = MLDF_PTR(0x26);
+            if ((result != 0) && (MLDF_OWNER(0x26) == param_1))
+            {
+                return result;
+            }
+            result = MLDF_PTR(0x48);
+            if ((result != 0) && (MLDF_OWNER(0x48) == param_1))
+            {
+                return result;
+            }
+            {
+                if (MLDF_OWNER(0x26) == -1)
+                {
+                    slot = 0x26;
+                }
+                else if (MLDF_OWNER(0x48) == -1)
+                {
+                    slot = 0x48;
+                }
+                else
+                {
+                    return 0;
+                }
+                if (MLDF_SP_PTR(x) != 0)
+                {
+                    mm_free((void*)MLDF_SP_PTR(x));
+                    MLDF_SP_PTR(x) = 0;
+                }
+                idx = 0;
+                grp = MLDF_REMAP;
+                for (n = 0xf; n != 0; n--)
+                {
+                    if (param_1 == grp[0]) goto remap_found;
+                    idx = idx + 1;
+                    if (param_1 == grp[1]) goto remap_found;
+                    idx = idx + 1;
+                    if (param_1 == grp[2]) goto remap_found;
+                    idx = idx + 1;
+                    if (param_1 == grp[3]) goto remap_found;
+                    idx = idx + 1;
+                    if (param_1 == grp[4]) goto remap_found;
+                    grp = grp + 5;
+                    idx = idx + 1;
+                }
+            remap_found:
+                piRomLoadSection(0, idx, 0);
+                if (param_1 > 4)
+                {
+                    sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(param_1), param_1 + 1);
+                }
+                else
+                {
+                    sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(param_1), param_1);
+                }
+                fi = AtomicSList_Pop(lbl_803DCC8C);
+                ok = DVDOpen(buf, (void*)fi);
+                if (ok == 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    MLDF_SP_SIZE(x) = *(int*)(fi + 0x34);
+                    MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+                    DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+                    if (sync != 0)
+                    {
+                        DVDRead((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
+                        DVDClose((void*)fi);
+                        AtomicSList_Push(lbl_803DCC8C, fi);
+                        if (((lbl_803DCC80 & 0x20000) == 0) && ((lbl_803DCC80 & 0x80000) == 0))
+                        {
+                            mergeTableFiles(t->mergeBlocks, 0x26, 0x48, 0x800);
+                        }
+                    }
+                    else
+                    {
+                        if (slot == 0x26)
+                        {
+                            lbl_803DCC80 = lbl_803DCC80 | 0x20000;
+                        }
+                        else
+                        {
+                            lbl_803DCC80 = lbl_803DCC80 | 0x80000;
+                        }
+                        MLDF_FINFO4(x) = fi;
+                        DVDReadAsyncPrio((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, blocksTabReadCb, 2);
+                    }
+                    MLDF_OWNER(slot) = param_1;
+                    return MLDF_SP_PTR(x);
+                }
+            }
+            break;
         }
-        MLDF_OWNER(slot) = param_1;
-        return MLDF_SP_PTR(x);
-      }
+    case 0x2b:
+    case 0x46:
+        result = MLDF_PTR(0x2b);
+        if ((result != 0) && (MLDF_OWNER(0x2b) == param_1))
+        {
+            return result;
+        }
+        result = MLDF_PTR(0x46);
+        if ((result != 0) && (MLDF_OWNER(0x46) == param_1))
+        {
+            return result;
+        }
+        {
+            if (MLDF_ID(0x2b) == param_1)
+            {
+                slot = 0x2b;
+                MLDF_ID(0x2b) = -1;
+            }
+            else if (MLDF_ID(0x46) == param_1)
+            {
+                slot = 0x46;
+                MLDF_ID(0x46) = -1;
+            }
+            else if (MLDF_OWNER(0x2b) == -1)
+            {
+                slot = 0x2b;
+            }
+            else if (MLDF_OWNER(0x46) == -1)
+            {
+                slot = 0x46;
+            }
+            else
+            {
+                return 0;
+            }
+            if (MLDF_SP_PTR(x) != 0)
+            {
+                mm_free((void*)MLDF_SP_PTR(x));
+                MLDF_SP_PTR(x) = 0;
+            }
+            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+            fi = AtomicSList_Pop(lbl_803DCC8C);
+            ok = DVDOpen(buf, (void*)fi);
+            if (ok == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                MLDF_SP_SIZE(x) = *(int*)(fi + 0x34);
+                MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+                DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+                tmp = MLDF_SP_PTR(x);
+                if (tmp == 0)
+                {
+                    if (MLDF_ID(param_2) == -1)
+                    {
+                        texRestructRefs(1);
+                    }
+                    DVDClose((void*)fi);
+                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    MLDF_SP_SIZE(x) = 0;
+                    MLDF_SP_ID(x) = param_1;
+                    return 0;
+                }
+                else
+                {
+                    if (sync != 0)
+                    {
+                        DVDRead((void*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0);
+                        DVDClose((void*)fi);
+                        AtomicSList_Push(lbl_803DCC8C, fi);
+                        if (((lbl_803DCC80 & 4) == 0) && ((lbl_803DCC80 & 8) == 0))
+                        {
+                            mergeTableFiles(t->mergeModels, 0x2a, 0x45, 0x800);
+                        }
+                        lbl_803DCC7C = lbl_803DCC7C + 1;
+                    }
+                    else
+                    {
+                        lbl_803DCC7C = lbl_803DCC7C + 1;
+                        if (slot == 0x2b)
+                        {
+                            lbl_803DCC80 = lbl_803DCC80 | 1;
+                        }
+                        else
+                        {
+                            lbl_803DCC80 = lbl_803DCC80 | 2;
+                        }
+                        MLDF_FINFO4(x) = fi;
+                        DVDReadAsyncPrio((void*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0, modelsReadCb, 2);
+                    }
+                    MLDF_OWNER(slot) = param_1;
+                    return MLDF_SP_PTR(x);
+                }
+            }
+        }
+        break;
+    case 0x2a:
+    case 0x45:
+        result = MLDF_PTR(0x2a);
+        if ((result != 0) && (MLDF_OWNER(0x2a) == param_1))
+        {
+            return result;
+        }
+        result = MLDF_PTR(0x45);
+        if ((result != 0) && (MLDF_OWNER(0x45) == param_1))
+        {
+            return result;
+        }
+        {
+            if (MLDF_OWNER(0x2a) == -1)
+            {
+                slot = 0x2a;
+            }
+            else if (MLDF_OWNER(0x45) == -1)
+            {
+                slot = 0x45;
+            }
+            else
+            {
+                return 0;
+            }
+            if (MLDF_SP_PTR(x) != 0)
+            {
+                mm_free((void*)MLDF_SP_PTR(x));
+                MLDF_SP_PTR(x) = 0;
+            }
+            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+            fi = AtomicSList_Pop(lbl_803DCC8C);
+            ok = DVDOpen(buf, (void*)fi);
+            if (ok == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                MLDF_SP_SIZE(x) = *(int*)(fi + 0x34);
+                MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+                DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+                if (sync != 0)
+                {
+                    DVDRead((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
+                    DVDClose((void*)fi);
+                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    if (((lbl_803DCC80 & 4) == 0) && ((lbl_803DCC80 & 8) == 0))
+                    {
+                        mergeTableFiles(t->mergeModels, 0x2a, 0x45, 0x800);
+                    }
+                }
+                else
+                {
+                    if (slot == 0x2a)
+                    {
+                        lbl_803DCC80 = lbl_803DCC80 | 4;
+                    }
+                    else
+                    {
+                        lbl_803DCC80 = lbl_803DCC80 | 8;
+                    }
+                    MLDF_FINFO4(x) = fi;
+                    DVDReadAsyncPrio((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, modelsTabReadCb, 2);
+                }
+                MLDF_OWNER(slot) = param_1;
+                return MLDF_SP_PTR(x);
+            }
+        }
+        break;
+    case 0x30:
+    case 0x4a:
+        result = MLDF_PTR(0x30);
+        if ((result != 0) && (MLDF_OWNER(0x30) == param_1))
+        {
+            return result;
+        }
+        result = MLDF_PTR(0x4a);
+        if ((result != 0) && (MLDF_OWNER(0x4a) == param_1))
+        {
+            return result;
+        }
+        {
+            if (MLDF_ID(0x30) == param_1)
+            {
+                slot = 0x30;
+                MLDF_ID(0x30) = -1;
+            }
+            else if (MLDF_ID(0x4a) == param_1)
+            {
+                slot = 0x4a;
+                MLDF_ID(0x4a) = -1;
+            }
+            else if (MLDF_OWNER(0x30) == -1)
+            {
+                slot = 0x30;
+            }
+            else if (MLDF_OWNER(0x4a) == -1)
+            {
+                slot = 0x4a;
+            }
+            else
+            {
+                return 0;
+            }
+            if (MLDF_SP_PTR(x) != 0)
+            {
+                mm_free((void*)MLDF_SP_PTR(x));
+                MLDF_SP_PTR(x) = 0;
+            }
+            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+            fi = AtomicSList_Pop(lbl_803DCC8C);
+            ok = DVDOpen(buf, (void*)fi);
+            if (ok == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                MLDF_SP_SIZE(x) = *(int*)(fi + 0x34);
+                MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+                DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+                tmp = MLDF_SP_PTR(x);
+                if (tmp == 0)
+                {
+                    if (MLDF_ID(param_2) == -1)
+                    {
+                        texRestructRefs(1);
+                    }
+                    DVDClose((void*)fi);
+                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    MLDF_SP_SIZE(x) = 0;
+                    MLDF_SP_ID(x) = param_1;
+                    return 0;
+                }
+                else
+                {
+                    if (sync != 0)
+                    {
+                        DVDRead((void*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0);
+                        DVDClose((void*)fi);
+                        AtomicSList_Push(lbl_803DCC8C, fi);
+                        if (((lbl_803DCC80 & 0x40) == 0) && ((lbl_803DCC80 & 0x80) == 0))
+                        {
+                            mergeTableFiles(t->mergeAnim, 0x2f, 0x49, 3000);
+                        }
+                    }
+                    else
+                    {
+                        if (slot == 0x30)
+                        {
+                            lbl_803DCC80 = lbl_803DCC80 | 0x10;
+                        }
+                        else
+                        {
+                            lbl_803DCC80 = lbl_803DCC80 | 0x20;
+                        }
+                        MLDF_FINFO4(x) = fi;
+                        DVDReadAsyncPrio((void*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0, animReadCb, 2);
+                    }
+                    MLDF_OWNER(slot) = param_1;
+                    return MLDF_SP_PTR(x);
+                }
+            }
+        }
+        break;
+    case 0x2f:
+    case 0x49:
+        result = MLDF_PTR(0x2f);
+        if ((result != 0) && (MLDF_OWNER(0x2f) == param_1))
+        {
+            return result;
+        }
+        result = MLDF_PTR(0x49);
+        if ((result != 0) && (MLDF_OWNER(0x49) == param_1))
+        {
+            return result;
+        }
+        {
+            if (MLDF_OWNER(0x2f) == -1)
+            {
+                slot = 0x2f;
+            }
+            else if (MLDF_OWNER(0x49) == -1)
+            {
+                slot = 0x49;
+            }
+            else
+            {
+                return 0;
+            }
+            if (MLDF_SP_PTR(x) != 0)
+            {
+                mm_free((void*)MLDF_SP_PTR(x));
+                MLDF_SP_PTR(x) = 0;
+            }
+            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+            fi = AtomicSList_Pop(lbl_803DCC8C);
+            ok = DVDOpen(buf, (void*)fi);
+            if (ok == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                MLDF_SP_SIZE(x) = *(int*)(fi + 0x34);
+                MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+                DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+                if (sync != 0)
+                {
+                    DVDRead((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
+                    DVDClose((void*)fi);
+                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    if (((lbl_803DCC80 & 0x40) == 0) && ((lbl_803DCC80 & 0x80) == 0))
+                    {
+                        mergeTableFiles(t->mergeAnim, 0x2f, 0x49, 3000);
+                    }
+                }
+                else
+                {
+                    if (slot == 0x2f)
+                    {
+                        lbl_803DCC80 = lbl_803DCC80 | 0x40;
+                    }
+                    else
+                    {
+                        lbl_803DCC80 = lbl_803DCC80 | 0x80;
+                    }
+                    MLDF_FINFO4(x) = fi;
+                    DVDReadAsyncPrio((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animTabReadCb, 2);
+                }
+                MLDF_OWNER(slot) = param_1;
+                return MLDF_SP_PTR(x);
+            }
+        }
+        break;
+    case 0x23:
+    case 0x4d:
+        result = MLDF_PTR(0x23);
+        if ((result != 0) && (MLDF_OWNER(0x23) == param_1))
+        {
+            return result;
+        }
+        result = MLDF_PTR(0x4d);
+        if ((result != 0) && (MLDF_OWNER(0x4d) == param_1))
+        {
+            return result;
+        }
+        {
+            if (MLDF_ID(0x23) == param_1)
+            {
+                slot = 0x23;
+                MLDF_ID(0x23) = -1;
+            }
+            else if (MLDF_ID(0x4d) == param_1)
+            {
+                slot = 0x4d;
+                MLDF_ID(0x4d) = -1;
+            }
+            else if (MLDF_OWNER(0x23) == -1)
+            {
+                slot = 0x23;
+            }
+            else if (MLDF_OWNER(0x4d) == -1)
+            {
+                slot = 0x4d;
+            }
+            else
+            {
+                return 0;
+            }
+            if (MLDF_SP_PTR(x) != 0)
+            {
+                mm_free((void*)MLDF_SP_PTR(x));
+                MLDF_SP_PTR(x) = 0;
+            }
+            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+            fi = AtomicSList_Pop(lbl_803DCC8C);
+            ok = DVDOpen(buf, (void*)fi);
+            if (ok == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                MLDF_SP_SIZE(x) = *(int*)(fi + 0x34);
+                MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x) + 0x20, 0x7d7d7d7d, 0);
+                DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+                tmp = MLDF_SP_PTR(x);
+                if (tmp == 0)
+                {
+                    if (MLDF_ID(param_2) == -1)
+                    {
+                        texRestructRefs(1);
+                    }
+                    DVDClose((void*)fi);
+                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    MLDF_SP_SIZE(x) = 0;
+                    MLDF_SP_ID(x) = param_1;
+                    return 0;
+                }
+                else
+                {
+                    if (sync != 0)
+                    {
+                        DVDRead((void*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0);
+                        DVDClose((void*)fi);
+                        AtomicSList_Push(lbl_803DCC8C, fi);
+                        if (((lbl_803DCC80 & 0x400) == 0) && ((lbl_803DCC80 & 0x800) == 0))
+                        {
+                            mergeTableFiles(t->mergeTex0, 0x24, 0x4e, 0x1000);
+                        }
+                    }
+                    else
+                    {
+                        if (slot == 0x23)
+                        {
+                            lbl_803DCC80 = lbl_803DCC80 | 0x100;
+                        }
+                        else
+                        {
+                            lbl_803DCC80 = lbl_803DCC80 | 0x200;
+                        }
+                        MLDF_FINFO4(x) = fi;
+                        DVDReadAsyncPrio((void*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0, tex0readCb, 2);
+                    }
+                    MLDF_OWNER(slot) = param_1;
+                    return MLDF_SP_PTR(x);
+                }
+            }
+        }
+        break;
+    case 0x24:
+    case 0x4e:
+        result = MLDF_PTR(0x24);
+        if ((result != 0) && (MLDF_OWNER(0x24) == param_1))
+        {
+            return result;
+        }
+        result = MLDF_PTR(0x4e);
+        if ((result != 0) && (MLDF_OWNER(0x4e) == param_1))
+        {
+            return result;
+        }
+        {
+            if (MLDF_OWNER(0x24) == -1)
+            {
+                slot = 0x24;
+            }
+            else if (MLDF_OWNER(0x4e) == -1)
+            {
+                slot = 0x4e;
+            }
+            else
+            {
+                return 0;
+            }
+            if (MLDF_SP_PTR(x) != 0)
+            {
+                mm_free((void*)MLDF_SP_PTR(x));
+                MLDF_SP_PTR(x) = 0;
+            }
+            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+            fi = AtomicSList_Pop(lbl_803DCC8C);
+            ok = DVDOpen(buf, (void*)fi);
+            if (ok == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                MLDF_SP_SIZE(x) = *(int*)(fi + 0x34);
+                MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x) + 0x20, 0x7d7d7d7d, 0);
+                DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+                if (sync != 0)
+                {
+                    DVDRead((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
+                    DVDClose((void*)fi);
+                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    if (((lbl_803DCC80 & 0x400) == 0) && ((lbl_803DCC80 & 0x800) == 0))
+                    {
+                        mergeTableFiles(t->mergeTex0, 0x24, 0x4e, 0x1000);
+                    }
+                }
+                else
+                {
+                    MLDF_FINFO4(x) = fi;
+                    if (slot == 0x24)
+                    {
+                        lbl_803DCC80 = lbl_803DCC80 | 0x400;
+                        DVDReadAsyncPrio((void*)fi, (void*)MLDF_PTR(0x24), MLDF_SIZE(0x24), 0, tex0tab1readCb, 2);
+                    }
+                    else
+                    {
+                        lbl_803DCC80 = lbl_803DCC80 | 0x800;
+                        DVDReadAsyncPrio((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex0tab2readCb, 2);
+                    }
+                }
+                MLDF_OWNER(slot) = param_1;
+                return MLDF_SP_PTR(x);
+            }
+        }
+        break;
+    case 0x20:
+    case 0x4b:
+        result = MLDF_PTR(0x20);
+        if ((result != 0) && (MLDF_OWNER(0x20) == param_1))
+        {
+            return result;
+        }
+        result = MLDF_PTR(0x4b);
+        if ((result != 0) && (MLDF_OWNER(0x4b) == param_1))
+        {
+            return result;
+        }
+        {
+            if (MLDF_ID(0x20) == param_1)
+            {
+                slot = 0x20;
+                MLDF_ID(0x20) = -1;
+            }
+            else if (MLDF_ID(0x4b) == param_1)
+            {
+                slot = 0x4b;
+                MLDF_ID(0x4b) = -1;
+            }
+            else if (MLDF_OWNER(0x20) == -1)
+            {
+                slot = 0x20;
+            }
+            else if (MLDF_OWNER(0x4b) == -1)
+            {
+                slot = 0x4b;
+            }
+            else
+            {
+                return 0;
+            }
+            if (MLDF_SP_PTR(x) != 0)
+            {
+                mm_free((void*)MLDF_SP_PTR(x));
+                MLDF_SP_PTR(x) = 0;
+            }
+            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+            fi = AtomicSList_Pop(lbl_803DCC8C);
+            ok = DVDOpen(buf, (void*)fi);
+            if (ok == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                MLDF_SP_SIZE(x) = *(int*)(fi + 0x34);
+                MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x) + 0x20, 0x7d7d7d7d, 0);
+                DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+                tmp = MLDF_SP_PTR(x);
+                if (tmp == 0)
+                {
+                    if (MLDF_ID(param_2) == -1)
+                    {
+                        texRestructRefs(1);
+                    }
+                    DVDClose((void*)fi);
+                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    MLDF_SP_SIZE(x) = 0;
+                    MLDF_SP_ID(x) = param_1;
+                    return 0;
+                }
+                else
+                {
+                    if (sync != 0)
+                    {
+                        DVDRead((void*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0);
+                        DVDClose((void*)fi);
+                        AtomicSList_Push(lbl_803DCC8C, fi);
+                        if (((lbl_803DCC80 & 0x4000) == 0) && ((lbl_803DCC80 & 0x8000) == 0))
+                        {
+                            mergeTableFiles(t->mergeTex1, 0x21, 0x4c, 0x1000);
+                        }
+                    }
+                    else
+                    {
+                        if (slot == 0x20)
+                        {
+                            lbl_803DCC80 = lbl_803DCC80 | 0x1000;
+                        }
+                        else
+                        {
+                            lbl_803DCC80 = lbl_803DCC80 | 0x2000;
+                        }
+                        MLDF_FINFO4(x) = fi;
+                        DVDReadAsyncPrio((void*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0, tex1ReadCb, 2);
+                    }
+                    MLDF_OWNER(slot) = param_1;
+                    return MLDF_SP_PTR(x);
+                }
+            }
+        }
+        break;
+    case 0x21:
+    case 0x4c:
+        result = MLDF_PTR(0x21);
+        if ((result != 0) && (MLDF_OWNER(0x21) == param_1))
+        {
+            return result;
+        }
+        result = MLDF_PTR(0x4c);
+        if ((result != 0) && (MLDF_OWNER(0x4c) == param_1))
+        {
+            return result;
+        }
+        {
+            if (MLDF_OWNER(0x21) == -1)
+            {
+                slot = 0x21;
+            }
+            else if (MLDF_OWNER(0x4c) == -1)
+            {
+                slot = 0x4c;
+            }
+            else
+            {
+                return 0;
+            }
+            if (MLDF_SP_PTR(x) != 0)
+            {
+                mm_free((void*)MLDF_SP_PTR(x));
+                MLDF_SP_PTR(x) = 0;
+            }
+            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+            fi = AtomicSList_Pop(lbl_803DCC8C);
+            ok = DVDOpen(buf, (void*)fi);
+            if (ok == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                MLDF_SP_SIZE(x) = *(int*)(fi + 0x34);
+                MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+                DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+                if (sync != 0)
+                {
+                    DVDRead((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
+                    DVDClose((void*)fi);
+                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    if (((lbl_803DCC80 & 0x4000) == 0) && ((lbl_803DCC80 & 0x8000) == 0))
+                    {
+                        mergeTableFiles(t->mergeTex1, 0x21, 0x4c, 0x1000);
+                    }
+                }
+                else
+                {
+                    MLDF_FINFO4(x) = fi;
+                    if (slot == 0x21)
+                    {
+                        lbl_803DCC80 = lbl_803DCC80 | 0x4000;
+                        DVDReadAsyncPrio((void*)fi, (void*)MLDF_PTR(0x21), MLDF_SIZE(0x21), 0, tex1tab1readCb, 2);
+                    }
+                    else
+                    {
+                        lbl_803DCC80 = lbl_803DCC80 | 0x8000;
+                        DVDReadAsyncPrio((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex1tab2readCb, 2);
+                    }
+                }
+                MLDF_OWNER(slot) = param_1;
+                return MLDF_SP_PTR(x);
+            }
+        }
+        break;
+    default:
+        return 0;
+        break;
     }
-    break;
-  default:
-    return 0;
-    break;
-  }
-  return result;
+    return result;
 }
 
 extern void padUpdate(void);
@@ -1604,909 +1936,1230 @@ extern int return0_8002A5B8(int p);
 extern int OSDisableInterrupts(void);
 extern void OSRestoreInterrupts(int s);
 extern char sDirBlockTag;
-extern int strncmp(const char *a, const char *b, u32 n);
-extern void *memcpy(void *dst, const void *src, u32 n);
-extern int zlbDecompress(void *dst, int size, int out, void *src);
-extern void DCStoreRange(void *p, u32 n);
+extern int strncmp(const char* a, const char* b, u32 n);
+extern void* memcpy(void* dst, const void* src, u32 n);
+extern int zlbDecompress(void* dst, int size, int out, void* src);
+extern void DCStoreRange(void* p, u32 n);
 extern u32 ObjModel_GetUnpackedResourceSize(int p, u32 size);
 extern void ObjModel_UnpackResourcePayload(int p, u32 size, int dst, u32 unpacked);
 void loadDataFiles(void);
 int GXFlush_(u8 visible, int unused);
 
 #pragma dont_inline on
-void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u32 *param_5,int param_6,u32 param_7)
+void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_4, u32* param_5, int param_6,
+                               u32 param_7)
 {
-  struct MldfTables *t = (struct MldfTables *)lbl_80345E10;
-  u32 b = 0;
-  u32 a = 0;
-  u8 frame = 0;
-  u32 hi;
-  int flags;
-  u32 off;
-  u32 moff;
-  int s;
-  int i;
-  int j;
-  int k;
-  int r;
-  int ok;
-  u32 asize;
-  int tmp;
-  u32 local_78;
-  char buf[0x3c];
+    struct MldfTables* t = (struct MldfTables*)lbl_80345E10;
+    u32 b = 0;
+    u32 a = 0;
+    u8 frame = 0;
+    u32 hi;
+    int flags;
+    u32 off;
+    u32 moff;
+    int s;
+    int i;
+    int j;
+    int k;
+    int r;
+    int ok;
+    u32 asize;
+    int tmp;
+    u32 local_78;
+    char buf[0x3c];
 
-  switch (param_1) {
-  case 0xd:
-    s = OSDisableInterrupts();
-    flags = lbl_803DCC80;
-    OSRestoreInterrupts(s);
-    if ((flags & 0x20000000) == 0 && (flags & 0x10000000) == 0) {
-      b = MLDF_PTR(0xe);
-    }
-    if ((flags & 0x80000000) == 0 && (flags & 0x40000000) == 0) {
-      a = MLDF_PTR(0x56);
-    }
-    hi = param_3 & 0x80000000;
-    if (hi != 0 && b == 0) {
-      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
-        if ((flags & 0x20000000) == 0 && (flags & 0x10000000) == 0) {
-          b = *(u32 *)((char *)t + 0x800195d8);
-          break;
+    switch (param_1)
+    {
+    case 0xd:
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if ((flags & 0x20000000) == 0 && (flags & 0x10000000) == 0)
+        {
+            b = MLDF_PTR(0xe);
         }
-      padUpdate();
-      checkReset();
-      if (frame != 0) {
-        waitNextFrame();
-      }
-      loadDataFiles();
-      dvdCheckError();
-      if (frame != 0) {
-        mmFreeTick(0);
-        gameTextRun();
-        GXFlush_(1, 0);
-      }
-      if (gDvdErrorPauseActive != 0) {
-        frame = 1;
-      }
-      }
-    }
-    else if ((param_3 & 0x20000000) != 0 && a == 0) {
-      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
-        if ((flags & 0x80000000) == 0 && (flags & 0x40000000) == 0) {
-          a = MLDF_PTR(0);
-          break;
+        if ((flags & 0x80000000) == 0 && (flags & 0x40000000) == 0)
+        {
+            a = MLDF_PTR(0x56);
         }
-      padUpdate();
-      checkReset();
-      if (frame != 0) {
-        waitNextFrame();
-      }
-      loadDataFiles();
-      dvdCheckError();
-      if (frame != 0) {
-        mmFreeTick(0);
-        gameTextRun();
-        GXFlush_(1, 0);
-      }
-      if (gDvdErrorPauseActive != 0) {
-        frame = 1;
-      }
-      }
-    }
-    if ((param_3 & 0x20000000) != 0 && a != 0) {
-      param_1 = 0x55;
-    } else if (hi != 0 && b != 0) {
-      param_1 = 0xd;
-    } else if (b != 0) {
-      param_1 = 0xd;
-    } else if (a != 0) {
-      param_1 = 0x55;
-    }
-    param_3 = param_3 & 0xfffffff;
-    break;
-  case 0x1b:
-    s = OSDisableInterrupts();
-    flags = lbl_803DCC80;
-    OSRestoreInterrupts(s);
-    if ((flags & 0x2000000) == 0 && (flags & 0x1000000) == 0) {
-      b = MLDF_PTR(0x1a);
-    }
-    if ((flags & 0x8000000) == 0 && (flags & 0x4000000) == 0) {
-      a = MLDF_PTR(0x53);
-    }
-    hi = param_3 & 0x80000000;
-    if (hi != 0 && b == 0) {
-      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
-        if ((flags & 0x2000000) == 0 && (flags & 0x1000000) == 0) {
-          b = MLDF_PTR(0x1a);
-          break;
+        hi = param_3 & 0x80000000;
+        if (hi != 0 && b == 0)
+        {
+            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            {
+                if ((flags & 0x20000000) == 0 && (flags & 0x10000000) == 0)
+                {
+                    b = *(u32*)((char*)t + 0x800195d8);
+                    break;
+                }
+                padUpdate();
+                checkReset();
+                if (frame != 0)
+                {
+                    waitNextFrame();
+                }
+                loadDataFiles();
+                dvdCheckError();
+                if (frame != 0)
+                {
+                    mmFreeTick(0);
+                    gameTextRun();
+                    GXFlush_(1, 0);
+                }
+                if (gDvdErrorPauseActive != 0)
+                {
+                    frame = 1;
+                }
+            }
         }
-      padUpdate();
-      checkReset();
-      if (frame != 0) {
-        waitNextFrame();
-      }
-      loadDataFiles();
-      dvdCheckError();
-      if (frame != 0) {
-        mmFreeTick(0);
-        gameTextRun();
-        GXFlush_(1, 0);
-      }
-      if (gDvdErrorPauseActive != 0) {
-        frame = 1;
-      }
-      }
-    }
-    else if ((param_3 & 0x20000000) != 0 && a == 0) {
-      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
-        if ((flags & 0x8000000) == 0 && (flags & 0x4000000) == 0) {
-          a = MLDF_PTR(0x53);
-          break;
+        else if ((param_3 & 0x20000000) != 0 && a == 0)
+        {
+            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            {
+                if ((flags & 0x80000000) == 0 && (flags & 0x40000000) == 0)
+                {
+                    a = MLDF_PTR(0);
+                    break;
+                }
+                padUpdate();
+                checkReset();
+                if (frame != 0)
+                {
+                    waitNextFrame();
+                }
+                loadDataFiles();
+                dvdCheckError();
+                if (frame != 0)
+                {
+                    mmFreeTick(0);
+                    gameTextRun();
+                    GXFlush_(1, 0);
+                }
+                if (gDvdErrorPauseActive != 0)
+                {
+                    frame = 1;
+                }
+            }
         }
-      padUpdate();
-      checkReset();
-      if (frame != 0) {
-        waitNextFrame();
-      }
-      loadDataFiles();
-      dvdCheckError();
-      if (frame != 0) {
-        mmFreeTick(0);
-        gameTextRun();
-        GXFlush_(1, 0);
-      }
-      if (gDvdErrorPauseActive != 0) {
-        frame = 1;
-      }
-      }
-    }
-    if ((param_3 & 0x20000000) != 0 && a != 0) {
-      param_1 = 0x54;
-    } else if (hi != 0 && b != 0) {
-      param_1 = 0x1b;
-    } else if (b != 0) {
-      param_1 = 0x1b;
-    } else if (a != 0) {
-      param_1 = 0x54;
-    }
-    param_3 = param_3 & 0xfffffff;
-    break;
-  case 0x25:
-    s = OSDisableInterrupts();
-    flags = lbl_803DCC80;
-    OSRestoreInterrupts(s);
-    if ((flags & 0x20000) == 0 && (flags & 0x10000) == 0) {
-      b = MLDF_PTR(0x26);
-    }
-    if ((flags & 0x80000) == 0 && (flags & 0x40000) == 0) {
-      a = MLDF_PTR(0x48);
-    }
-    if ((param_3 & 0x20000000) != 0 && a != 0) {
-      param_1 = 0x47;
-    } else if ((param_3 & 0x10000000) != 0 && b != 0) {
-      param_1 = 0x25;
-    } else if (b != 0) {
-      param_1 = 0x25;
-    } else if (a != 0) {
-      param_1 = 0x47;
-    }
-    param_3 = param_3 & 0xfffffff;
-    break;
-  case 0x2b:
-    s = OSDisableInterrupts();
-    flags = lbl_803DCC80;
-    OSRestoreInterrupts(s);
-    if ((flags & 4) == 0 && (flags & 1) == 0) {
-      b = MLDF_PTR(0x2a);
-    }
-    if ((flags & 8) == 0 && (flags & 2) == 0) {
-      a = MLDF_PTR(0x45);
-    }
-    if ((param_3 & 0x10000000) != 0 && b == 0) {
-      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
-        if ((flags & 4) == 0 && (flags & 1) == 0) {
-          b = MLDF_PTR(0x2a);
-          break;
+        if ((param_3 & 0x20000000) != 0 && a != 0)
+        {
+            param_1 = 0x55;
         }
-      padUpdate();
-      checkReset();
-      if (frame != 0) {
-        waitNextFrame();
-      }
-      loadDataFiles();
-      dvdCheckError();
-      if (frame != 0) {
-        mmFreeTick(0);
-        gameTextRun();
-        GXFlush_(1, 0);
-      }
-      if (gDvdErrorPauseActive != 0) {
-        frame = 1;
-      }
-      }
-    }
-    else if ((param_3 & 0x20000000) != 0 && a == 0) {
-      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
-        if ((flags & 8) == 0 && (flags & 2) == 0) {
-          a = MLDF_PTR(0x45);
-          break;
+        else if (hi != 0 && b != 0)
+        {
+            param_1 = 0xd;
         }
-      padUpdate();
-      checkReset();
-      if (frame != 0) {
-        waitNextFrame();
-      }
-      loadDataFiles();
-      dvdCheckError();
-      if (frame != 0) {
-        mmFreeTick(0);
-        gameTextRun();
-        GXFlush_(1, 0);
-      }
-      if (gDvdErrorPauseActive != 0) {
-        frame = 1;
-      }
-      }
-    }
-    if (a != 0 && (param_3 & 0x20000000) != 0) {
-      param_1 = 0x46;
-      if (param_5 != NULL) {
-        moff = *(u32 *)(a + param_6 * 4) & 0xffffff;
-        i = 0;
-        if (moff == 0) {
-          do {
-            j = i + 1;
-            k = i * 4;
-            i = j;
-          } while ((*(u32 *)(a + k) & 0xffffff) == 0);
-          *param_5 = *(u32 *)(a + j * 4 - 4) & 0xffffff;
-        } else if (moff < (*(u32 *)(a + param_6 * 4 - 4) & 0xffffff)) {
-          do {
-            k = i * 4;
-            j = i + 1;
-            i = i + 1;
-          } while (moff != (*(u32 *)(a + k) & 0xffffff));
-          do {
-            i = j + 1;
-            k = j * 4;
-            j = i;
-          } while ((*(u32 *)(a + k) & 0xffffff) <= moff);
-          *param_5 = (*(u32 *)(a + i * 4 - 4) & 0xffffff) - moff;
-        } else {
-          do {
-            j = param_6 + 1;
-            k = param_6 * 4;
-            param_6 = j;
-          } while ((*(u32 *)(a + k) & 0xffffff) <= moff);
-          *param_5 = (*(u32 *)(a + j * 4 - 4) & 0xffffff) - moff;
+        else if (b != 0)
+        {
+            param_1 = 0xd;
         }
-      }
-    } else if (b != 0 && (param_3 & 0x10000000) != 0) {
-      param_1 = 0x2b;
-      if (param_5 != NULL) {
-        moff = *(u32 *)(b + param_6 * 4) & 0xffffff;
-        i = 0;
-        if (moff == 0) {
-          do {
-            j = i + 1;
-            k = i * 4;
-            i = j;
-          } while ((*(u32 *)(b + k) & 0xffffff) == 0);
-          *param_5 = *(u32 *)(b + j * 4 - 4) & 0xffffff;
-        } else if (moff < (*(u32 *)(b + param_6 * 4 - 4) & 0xffffff)) {
-          do {
-            k = i * 4;
-            j = i + 1;
-            i = i + 1;
-          } while (moff != (*(u32 *)(b + k) & 0xffffff));
-          do {
-            i = j + 1;
-            k = j * 4;
-            j = i;
-          } while ((*(u32 *)(b + k) & 0xffffff) <= moff);
-          *param_5 = (*(u32 *)(b + i * 4 - 4) & 0xffffff) - moff;
-        } else {
-          do {
-            j = param_6 + 1;
-            k = param_6 * 4;
-            param_6 = j;
-          } while ((*(u32 *)(b + k) & 0xffffff) <= moff);
-          *param_5 = (*(u32 *)(b + j * 4 - 4) & 0xffffff) - moff;
+        else if (a != 0)
+        {
+            param_1 = 0x55;
         }
-      }
-    } else if (b != 0) {
-      param_1 = 0x2b;
-      if (param_5 != NULL) {
-        moff = *(u32 *)(b + param_6 * 4) & 0xffffff;
-        i = 0;
-        if (moff == 0) {
-          do {
-            j = i + 1;
-            k = i * 4;
-            i = j;
-          } while ((*(u32 *)(b + k) & 0xffffff) == 0);
-          *param_5 = *(u32 *)(b + j * 4 - 4) & 0xffffff;
-        } else if (moff < (*(u32 *)(b + param_6 * 4 - 4) & 0xffffff)) {
-          do {
-            k = i * 4;
-            j = i + 1;
-            i = i + 1;
-          } while (moff != (*(u32 *)(b + k) & 0xffffff));
-          do {
-            i = j + 1;
-            k = j * 4;
-            j = i;
-          } while ((*(u32 *)(b + k) & 0xffffff) <= moff);
-          *param_5 = (*(u32 *)(b + i * 4 - 4) & 0xffffff) - moff;
-        } else {
-          do {
-            j = param_6 + 1;
-            k = param_6 * 4;
-            param_6 = j;
-          } while ((*(u32 *)(b + k) & 0xffffff) <= moff);
-          *param_5 = (*(u32 *)(b + j * 4 - 4) & 0xffffff) - moff;
+        param_3 = param_3 & 0xfffffff;
+        break;
+    case 0x1b:
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if ((flags & 0x2000000) == 0 && (flags & 0x1000000) == 0)
+        {
+            b = MLDF_PTR(0x1a);
         }
-      }
-    } else if (a != 0) {
-      param_1 = 0x46;
-      if (param_5 != NULL) {
-        moff = *(u32 *)(a + param_6 * 4) & 0xffffff;
-        i = 0;
-        if (moff == 0) {
-          do {
-            j = i + 1;
-            k = i * 4;
-            i = j;
-          } while ((*(u32 *)(a + k) & 0xffffff) == 0);
-          *param_5 = *(u32 *)(a + j * 4 - 4) & 0xffffff;
-        } else if (moff < (*(u32 *)(a + param_6 * 4 - 4) & 0xffffff)) {
-          do {
-            k = i * 4;
-            j = i + 1;
-            i = i + 1;
-          } while (moff != (*(u32 *)(a + k) & 0xffffff));
-          do {
-            i = j + 1;
-            k = j * 4;
-            j = i;
-          } while ((*(u32 *)(a + k) & 0xffffff) <= moff);
-          *param_5 = (*(u32 *)(a + i * 4 - 4) & 0xffffff) - moff;
-        } else {
-          do {
-            j = param_6 + 1;
-            k = param_6 * 4;
-            param_6 = j;
-          } while ((*(u32 *)(a + k) & 0xffffff) <= moff);
-          *param_5 = (*(u32 *)(a + j * 4 - 4) & 0xffffff) - moff;
+        if ((flags & 0x8000000) == 0 && (flags & 0x4000000) == 0)
+        {
+            a = MLDF_PTR(0x53);
         }
-      }
-    }
-    param_3 = param_3 & 0xfffffff;
-    break;
-  case 0x30:
-    s = OSDisableInterrupts();
-    flags = lbl_803DCC80;
-    OSRestoreInterrupts(s);
-    if ((flags & 0x40) == 0 && (flags & 0x10) == 0) {
-      b = MLDF_PTR(0x2f);
-    }
-    if ((flags & 0x80) == 0 && (flags & 0x20) == 0) {
-      a = MLDF_PTR(0x49);
-    }
-    if ((param_3 & 0x10000000) != 0 && b == 0) {
-      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
-        if ((flags & 0x40) == 0 && (flags & 0x10) == 0) {
-          b = MLDF_PTR(0x2f);
-          break;
+        hi = param_3 & 0x80000000;
+        if (hi != 0 && b == 0)
+        {
+            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            {
+                if ((flags & 0x2000000) == 0 && (flags & 0x1000000) == 0)
+                {
+                    b = MLDF_PTR(0x1a);
+                    break;
+                }
+                padUpdate();
+                checkReset();
+                if (frame != 0)
+                {
+                    waitNextFrame();
+                }
+                loadDataFiles();
+                dvdCheckError();
+                if (frame != 0)
+                {
+                    mmFreeTick(0);
+                    gameTextRun();
+                    GXFlush_(1, 0);
+                }
+                if (gDvdErrorPauseActive != 0)
+                {
+                    frame = 1;
+                }
+            }
         }
-      padUpdate();
-      checkReset();
-      if (frame != 0) {
-        waitNextFrame();
-      }
-      loadDataFiles();
-      dvdCheckError();
-      if (frame != 0) {
-        mmFreeTick(0);
-        gameTextRun();
-        GXFlush_(1, 0);
-      }
-      if (gDvdErrorPauseActive != 0) {
-        frame = 1;
-      }
-      }
-    }
-    else if ((param_3 & 0x20000000) != 0 && a == 0) {
-      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
-        if ((flags & 0x80) == 0 && (flags & 0x20) == 0) {
-          a = MLDF_PTR(0x49);
-          break;
+        else if ((param_3 & 0x20000000) != 0 && a == 0)
+        {
+            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            {
+                if ((flags & 0x8000000) == 0 && (flags & 0x4000000) == 0)
+                {
+                    a = MLDF_PTR(0x53);
+                    break;
+                }
+                padUpdate();
+                checkReset();
+                if (frame != 0)
+                {
+                    waitNextFrame();
+                }
+                loadDataFiles();
+                dvdCheckError();
+                if (frame != 0)
+                {
+                    mmFreeTick(0);
+                    gameTextRun();
+                    GXFlush_(1, 0);
+                }
+                if (gDvdErrorPauseActive != 0)
+                {
+                    frame = 1;
+                }
+            }
         }
-      padUpdate();
-      checkReset();
-      if (frame != 0) {
-        waitNextFrame();
-      }
-      loadDataFiles();
-      dvdCheckError();
-      if (frame != 0) {
-        mmFreeTick(0);
-        gameTextRun();
-        GXFlush_(1, 0);
-      }
-      if (gDvdErrorPauseActive != 0) {
-        frame = 1;
-      }
-      }
-    }
-    if ((param_3 & 0x20000000) != 0) {
-      param_1 = 0x4a;
-      if (param_5 != NULL) {
-        *param_5 = (*(u32 *)(a + param_6 * 4 + 4) & 0xfffffff) - (*(u32 *)(a + param_6 * 4) & 0xfffffff);
-      }
-    } else if ((param_3 & 0x10000000) != 0) {
-      param_1 = 0x30;
-      if (param_5 != NULL) {
-        *param_5 = (*(u32 *)(b + param_6 * 4 + 4) & 0xfffffff) - (*(u32 *)(b + param_6 * 4) & 0xfffffff);
-      }
-    } else if (b != 0) {
-      param_1 = 0x30;
-      if (param_5 != NULL) {
-        *param_5 = (*(u32 *)(b + param_6 * 4 + 4) & 0xfffffff) - (*(u32 *)(b + param_6 * 4) & 0xfffffff);
-      }
-    } else if (a != 0) {
-      param_1 = 0x4a;
-      if (param_5 != NULL) {
-        *param_5 = (*(u32 *)(a + param_6 * 4 + 4) & 0xfffffff) - (*(u32 *)(a + param_6 * 4) & 0xfffffff);
-      }
-    }
-    param_3 = param_3 & 0xfffffff;
-    if (((u8)param_7 & 1) != 0) {
-      r = MLDF_PTR(param_1);
-      tmp = return0_8002A5B8(r + param_3);
-      if (tmp != 0) {
-        *param_5 = ObjModel_GetUnpackedResourceSize(r + param_3, *param_5);
-      }
-    }
-    break;
-  case 0x51:
-    if (MLDF_PTR(0x52) != 0) {
-      param_1 = 0x51;
-      if (param_5 != NULL) {
-        *param_5 = (*(u32 *)(MLDF_PTR(0x52) + param_6 * 4 + 4) & 0xfffffff) - (*(u32 *)(MLDF_PTR(0x52) + param_6 * 4) & 0xfffffff);
-      }
-    }
-    param_3 = param_3 & 0xfffffff;
-    if (((u8)param_7 & 1) != 0) {
-      r = MLDF_PTR(param_1);
-      tmp = return0_8002A5B8(r + param_3);
-      if (tmp != 0) {
-        *param_5 = ObjModel_GetUnpackedResourceSize(r + param_3, *param_5);
-      }
-    }
-    break;
-  case 0x23:
-    s = OSDisableInterrupts();
-    flags = lbl_803DCC80;
-    OSRestoreInterrupts(s);
-    if ((flags & 0x400) == 0 && (flags & 0x100) == 0) {
-      b = MLDF_PTR(0x24);
-    }
-    if ((flags & 0x800) == 0 && (flags & 0x200) == 0) {
-      a = MLDF_PTR(0x4e);
-    }
-    if ((param_3 & 0x40000000) != 0 && b == 0) {
-      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
-        if ((flags & 0x400) == 0 && (flags & 0x100) == 0) {
-          b = MLDF_PTR(0x24);
-          break;
+        if ((param_3 & 0x20000000) != 0 && a != 0)
+        {
+            param_1 = 0x54;
         }
-      padUpdate();
-      checkReset();
-      if (frame != 0) {
-        waitNextFrame();
-      }
-      loadDataFiles();
-      dvdCheckError();
-      if (frame != 0) {
-        mmFreeTick(0);
-        gameTextRun();
-        GXFlush_(1, 0);
-      }
-      if (gDvdErrorPauseActive != 0) {
-        frame = 1;
-      }
-      }
-    }
-    else if ((param_3 & 0x80000000) != 0 && a == 0) {
-      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
-        if ((flags & 0x800) == 0 && (flags & 0x200) == 0) {
-          a = MLDF_PTR(0x4e);
-          break;
+        else if (hi != 0 && b != 0)
+        {
+            param_1 = 0x1b;
         }
-      padUpdate();
-      checkReset();
-      if (frame != 0) {
-        waitNextFrame();
-      }
-      loadDataFiles();
-      dvdCheckError();
-      if (frame != 0) {
-        mmFreeTick(0);
-        gameTextRun();
-        GXFlush_(1, 0);
-      }
-      if (gDvdErrorPauseActive != 0) {
-        frame = 1;
-      }
-      }
-    }
-    if (a != 0 && (((u32 *)t->mergeTex0)[param_6] & 0x80000000) != 0) {
-      param_1 = 0x4d;
-      if (param_5 != NULL) {
-        off = *(u32 *)(a + param_6 * 4) & 0xffffff;
-        if (off == 0) {
-          i = 0;
-          do {
-            j = i + 1;
-            k = i * 4;
-            i = j;
-          } while ((*(u32 *)(a + k) & 0xffffff) == 0);
-          *param_5 = *(u32 *)(a + j * 4 - 4) & 0xffffff;
-        } else {
-          do {
-            j = param_6 + 1;
-            k = param_6 * 4;
-            param_6 = j;
-          } while ((*(u32 *)(a + k) & 0xffffff) <= off);
-          *param_5 = (*(u32 *)(a + j * 4 - 4) & 0xffffff) - off;
+        else if (b != 0)
+        {
+            param_1 = 0x1b;
         }
-      }
-    } else if (b != 0 && (((u32 *)t->mergeTex0)[param_6] & 0x40000000) != 0) {
-      param_1 = 0x23;
-      if (param_5 != NULL) {
-        off = *(u32 *)(b + param_6 * 4) & 0xffffff;
-        if (off == 0) {
-          i = 0;
-          do {
-            j = i + 1;
-            k = i * 4;
-            i = j;
-          } while ((*(u32 *)(b + k) & 0xffffff) == 0);
-          *param_5 = *(u32 *)(b + j * 4 - 4) & 0xffffff;
-        } else {
-          do {
-            j = param_6 + 1;
-            k = param_6 * 4;
-            param_6 = j;
-          } while ((*(u32 *)(b + k) & 0xffffff) <= off);
-          *param_5 = (*(u32 *)(b + j * 4 - 4) & 0xffffff) - off;
+        else if (a != 0)
+        {
+            param_1 = 0x54;
         }
-      }
-    } else if (b != 0) {
-      param_1 = 0x23;
-      if (param_5 != NULL) {
-        off = *(u32 *)(b + param_6 * 4) & 0xffffff;
-        if (off == 0) {
-          i = 0;
-          do {
-            j = i + 1;
-            k = i * 4;
-            i = j;
-          } while ((*(u32 *)(b + k) & 0xffffff) == 0);
-          *param_5 = *(u32 *)(b + j * 4 - 4) & 0xffffff;
-        } else {
-          do {
-            j = param_6 + 1;
-            k = param_6 * 4;
-            param_6 = j;
-          } while ((*(u32 *)(b + k) & 0xffffff) <= off);
-          *param_5 = (*(u32 *)(b + j * 4 - 4) & 0xffffff) - off;
+        param_3 = param_3 & 0xfffffff;
+        break;
+    case 0x25:
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if ((flags & 0x20000) == 0 && (flags & 0x10000) == 0)
+        {
+            b = MLDF_PTR(0x26);
         }
-      }
-    } else if (a != 0) {
-      param_1 = 0x4d;
-      if (param_5 != NULL) {
-        off = *(u32 *)(a + param_6 * 4) & 0xffffff;
-        if (off == 0) {
-          i = 0;
-          do {
-            j = i + 1;
-            k = i * 4;
-            i = j;
-          } while ((*(u32 *)(a + k) & 0xffffff) == 0);
-          *param_5 = *(u32 *)(a + j * 4 - 4) & 0xffffff;
-        } else {
-          do {
-            j = param_6 + 1;
-            k = param_6 * 4;
-            param_6 = j;
-          } while ((*(u32 *)(a + k) & 0xffffff) <= off);
-          *param_5 = (*(u32 *)(a + j * 4 - 4) & 0xffffff) - off;
+        if ((flags & 0x80000) == 0 && (flags & 0x40000) == 0)
+        {
+            a = MLDF_PTR(0x48);
         }
-      }
-    }
-    param_3 = param_3 & 0xfffffff;
-    break;
-  case 0x20:
-    s = OSDisableInterrupts();
-    flags = lbl_803DCC80;
-    OSRestoreInterrupts(s);
-    if ((flags & 0x4000) == 0 && (flags & 0x1000) == 0) {
-      b = MLDF_PTR(0x21);
-    }
-    if ((flags & 0x8000) == 0 && (flags & 0x2000) == 0) {
-      a = MLDF_PTR(0x4c);
-    }
-    if ((param_3 & 0x40000000) != 0 && b == 0) {
-      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
-        if ((flags & 0x4000) == 0 && (flags & 0x1000) == 0) {
-          b = MLDF_PTR(0x21);
-          break;
+        if ((param_3 & 0x20000000) != 0 && a != 0)
+        {
+            param_1 = 0x47;
         }
-      padUpdate();
-      checkReset();
-      if (frame != 0) {
-        waitNextFrame();
-      }
-      loadDataFiles();
-      dvdCheckError();
-      if (frame != 0) {
-        mmFreeTick(0);
-        gameTextRun();
-        GXFlush_(1, 0);
-      }
-      if (gDvdErrorPauseActive != 0) {
-        frame = 1;
-      }
-      }
-    }
-    else if ((param_3 & 0x80000000) != 0 && a == 0) {
-      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
-        if ((flags & 0x8000) == 0 && (flags & 0x2000) == 0) {
-          a = MLDF_PTR(0x4c);
-          break;
+        else if ((param_3 & 0x10000000) != 0 && b != 0)
+        {
+            param_1 = 0x25;
         }
-      padUpdate();
-      checkReset();
-      if (frame != 0) {
-        waitNextFrame();
-      }
-      loadDataFiles();
-      dvdCheckError();
-      if (frame != 0) {
-        mmFreeTick(0);
-        gameTextRun();
-        GXFlush_(1, 0);
-      }
-      if (gDvdErrorPauseActive != 0) {
-        frame = 1;
-      }
-      }
-    }
-    if (a != 0 && (((u32 *)t->mergeTex1)[param_6] & 0x80000000) != 0) {
-      param_1 = 0x4b;
-      if (param_5 != NULL) {
-        off = *(u32 *)(a + param_6 * 4) & 0xffffff;
-        if (off == 0) {
-          i = 0;
-          do {
-            j = i + 1;
-            k = i * 4;
-            i = j;
-          } while ((*(u32 *)(a + k) & 0xffffff) == 0);
-          *param_5 = *(u32 *)(a + j * 4 - 4) & 0xffffff;
-        } else {
-          do {
-            j = param_6 + 1;
-            k = param_6 * 4;
-            param_6 = j;
-          } while ((*(u32 *)(a + k) & 0xffffff) <= off);
-          *param_5 = (*(u32 *)(a + j * 4 - 4) & 0xffffff) - off;
+        else if (b != 0)
+        {
+            param_1 = 0x25;
         }
-      }
-    } else if (b != 0 && (((u32 *)t->mergeTex1)[param_6] & 0x40000000) != 0) {
-      param_1 = 0x20;
-      if (param_5 != NULL) {
-        off = *(u32 *)(b + param_6 * 4) & 0xffffff;
-        if (off == 0) {
-          i = 0;
-          do {
-            j = i + 1;
-            k = i * 4;
-            i = j;
-          } while ((*(u32 *)(b + k) & 0xffffff) == 0);
-          *param_5 = *(u32 *)(b + j * 4 - 4) & 0xffffff;
-        } else {
-          do {
-            j = param_6 + 1;
-            k = param_6 * 4;
-            param_6 = j;
-          } while ((*(u32 *)(b + k) & 0xffffff) <= off);
-          *param_5 = (*(u32 *)(b + j * 4 - 4) & 0xffffff) - off;
+        else if (a != 0)
+        {
+            param_1 = 0x47;
         }
-      }
-    } else if (b != 0) {
-      param_1 = 0x20;
-      if (param_5 != NULL) {
-        off = *(u32 *)(b + param_6 * 4) & 0xffffff;
-        if (off == 0) {
-          i = 0;
-          do {
-            j = i + 1;
-            k = i * 4;
-            i = j;
-          } while ((*(u32 *)(b + k) & 0xffffff) == 0);
-          *param_5 = *(u32 *)(b + j * 4 - 4) & 0xffffff;
-        } else {
-          do {
-            j = param_6 + 1;
-            k = param_6 * 4;
-            param_6 = j;
-          } while ((*(u32 *)(b + k) & 0xffffff) <= off);
-          *param_5 = (*(u32 *)(b + j * 4 - 4) & 0xffffff) - off;
+        param_3 = param_3 & 0xfffffff;
+        break;
+    case 0x2b:
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if ((flags & 4) == 0 && (flags & 1) == 0)
+        {
+            b = MLDF_PTR(0x2a);
         }
-      }
-    } else if (a != 0) {
-      param_1 = 0x4b;
-      if (param_5 != NULL) {
-        off = *(u32 *)(a + param_6 * 4) & 0xffffff;
-        if (off == 0) {
-          i = 0;
-          do {
-            j = i + 1;
-            k = i * 4;
-            i = j;
-          } while ((*(u32 *)(a + k) & 0xffffff) == 0);
-          *param_5 = *(u32 *)(a + j * 4 - 4) & 0xffffff;
-        } else {
-          do {
-            j = param_6 + 1;
-            k = param_6 * 4;
-            param_6 = j;
-          } while ((*(u32 *)(a + k) & 0xffffff) <= off);
-          *param_5 = (*(u32 *)(a + j * 4 - 4) & 0xffffff) - off;
+        if ((flags & 8) == 0 && (flags & 2) == 0)
+        {
+            a = MLDF_PTR(0x45);
         }
-      }
-    }
-    param_3 = param_3 & 0xfffffff;
-    break;
-  case 0x4f:
-    if (MLDF_PTR(0x50) != 0) {
-      param_1 = 0x4f;
-      if (param_5 != NULL) {
-        off = *(u32 *)(MLDF_PTR(0x50) + param_6 * 4) & 0xffffff;
-        if (off == 0) {
-          i = 0;
-          do {
-            j = i + 1;
-            k = i * 4;
-            i = j;
-          } while ((*(u32 *)(MLDF_PTR(0x50) + k) & 0xffffff) == 0);
-          *param_5 = *(u32 *)(MLDF_PTR(0x50) + j * 4 - 4) & 0xffffff;
-        } else {
-          do {
-            j = param_6 + 1;
-            k = param_6 * 4;
-            param_6 = j;
-          } while ((*(u32 *)(MLDF_PTR(0x50) + k) & 0xffffff) <= off);
-          *param_5 = (*(u32 *)(MLDF_PTR(0x50) + j * 4 - 4) & 0xffffff) - off;
+        if ((param_3 & 0x10000000) != 0 && b == 0)
+        {
+            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            {
+                if ((flags & 4) == 0 && (flags & 1) == 0)
+                {
+                    b = MLDF_PTR(0x2a);
+                    break;
+                }
+                padUpdate();
+                checkReset();
+                if (frame != 0)
+                {
+                    waitNextFrame();
+                }
+                loadDataFiles();
+                dvdCheckError();
+                if (frame != 0)
+                {
+                    mmFreeTick(0);
+                    gameTextRun();
+                    GXFlush_(1, 0);
+                }
+                if (gDvdErrorPauseActive != 0)
+                {
+                    frame = 1;
+                }
+            }
         }
-      }
-    }
-    param_3 = param_3 & 0xfffffff;
-    break;
-  }
-  if (((u8)param_7 & 1) != 0) {
-    return;
-  }
-  r = MLDF_PTR(param_1);
-  if (r == 0) {
-    if (param_1 == 0x20 || param_1 == 0x4b) {
-      DVDOpen(sResourceFileNameTable[param_1], buf);
-      asize = (param_4 + 0x1f) & 0xffffffe0;
-      r = (int)mmAlloc(asize, 0x7f7f7fff, 0);
-      DVDRead(buf, (void *)r, asize, param_3 & 0xffffff);
-      DVDClose(buf);
-      DCStoreRange((void *)r, param_4);
-      if (strncmp(&sDirBlockTag, (char *)r, 3) == 0) {
-        for (;;) {
+        else if ((param_3 & 0x20000000) != 0 && a == 0)
+        {
+            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            {
+                if ((flags & 8) == 0 && (flags & 2) == 0)
+                {
+                    a = MLDF_PTR(0x45);
+                    break;
+                }
+                padUpdate();
+                checkReset();
+                if (frame != 0)
+                {
+                    waitNextFrame();
+                }
+                loadDataFiles();
+                dvdCheckError();
+                if (frame != 0)
+                {
+                    mmFreeTick(0);
+                    gameTextRun();
+                    GXFlush_(1, 0);
+                }
+                if (gDvdErrorPauseActive != 0)
+                {
+                    frame = 1;
+                }
+            }
         }
-      }
-      if (strncmp((char *)r, sZlbBlockTag, 3) == 0) {
-        local_78 = *(u32 *)(r + 8);
-        zlbDecompress((void *)(r + 0x10), *(int *)(r + 0xc), param_2, &local_78);
-      }
-      mm_free((void *)r);
-    } else {
-      DVDOpen(sResourceFileNameTable[param_1], buf);
-      if (((u32)param_2 & 0x1f) == 0 && (param_4 & 0x1f) == 0) {
-        DVDRead(buf, (void *)param_2, param_4, param_3);
-      } else {
-        asize = (param_4 + 0x1f) & 0xffffffe0;
-        tmp = (int)mmAlloc(asize, 0x7f7f7fff, 0);
-        DVDRead(buf, (void *)tmp, asize, param_3);
-        memcpy((void *)param_2, (void *)tmp, param_4);
-        mm_free((void *)tmp);
-      }
-      DCStoreRange((void *)param_2, param_4);
-      DVDClose(buf);
+        if (a != 0 && (param_3 & 0x20000000) != 0)
+        {
+            param_1 = 0x46;
+            if (param_5 != NULL)
+            {
+                moff = *(u32*)(a + param_6 * 4) & 0xffffff;
+                i = 0;
+                if (moff == 0)
+                {
+                    do
+                    {
+                        j = i + 1;
+                        k = i * 4;
+                        i = j;
+                    }
+                    while ((*(u32*)(a + k) & 0xffffff) == 0);
+                    *param_5 = *(u32*)(a + j * 4 - 4) & 0xffffff;
+                }
+                else if (moff < (*(u32*)(a + param_6 * 4 - 4) & 0xffffff))
+                {
+                    do
+                    {
+                        k = i * 4;
+                        j = i + 1;
+                        i = i + 1;
+                    }
+                    while (moff != (*(u32*)(a + k) & 0xffffff));
+                    do
+                    {
+                        i = j + 1;
+                        k = j * 4;
+                        j = i;
+                    }
+                    while ((*(u32*)(a + k) & 0xffffff) <= moff);
+                    *param_5 = (*(u32*)(a + i * 4 - 4) & 0xffffff) - moff;
+                }
+                else
+                {
+                    do
+                    {
+                        j = param_6 + 1;
+                        k = param_6 * 4;
+                        param_6 = j;
+                    }
+                    while ((*(u32*)(a + k) & 0xffffff) <= moff);
+                    *param_5 = (*(u32*)(a + j * 4 - 4) & 0xffffff) - moff;
+                }
+            }
+        }
+        else if (b != 0 && (param_3 & 0x10000000) != 0)
+        {
+            param_1 = 0x2b;
+            if (param_5 != NULL)
+            {
+                moff = *(u32*)(b + param_6 * 4) & 0xffffff;
+                i = 0;
+                if (moff == 0)
+                {
+                    do
+                    {
+                        j = i + 1;
+                        k = i * 4;
+                        i = j;
+                    }
+                    while ((*(u32*)(b + k) & 0xffffff) == 0);
+                    *param_5 = *(u32*)(b + j * 4 - 4) & 0xffffff;
+                }
+                else if (moff < (*(u32*)(b + param_6 * 4 - 4) & 0xffffff))
+                {
+                    do
+                    {
+                        k = i * 4;
+                        j = i + 1;
+                        i = i + 1;
+                    }
+                    while (moff != (*(u32*)(b + k) & 0xffffff));
+                    do
+                    {
+                        i = j + 1;
+                        k = j * 4;
+                        j = i;
+                    }
+                    while ((*(u32*)(b + k) & 0xffffff) <= moff);
+                    *param_5 = (*(u32*)(b + i * 4 - 4) & 0xffffff) - moff;
+                }
+                else
+                {
+                    do
+                    {
+                        j = param_6 + 1;
+                        k = param_6 * 4;
+                        param_6 = j;
+                    }
+                    while ((*(u32*)(b + k) & 0xffffff) <= moff);
+                    *param_5 = (*(u32*)(b + j * 4 - 4) & 0xffffff) - moff;
+                }
+            }
+        }
+        else if (b != 0)
+        {
+            param_1 = 0x2b;
+            if (param_5 != NULL)
+            {
+                moff = *(u32*)(b + param_6 * 4) & 0xffffff;
+                i = 0;
+                if (moff == 0)
+                {
+                    do
+                    {
+                        j = i + 1;
+                        k = i * 4;
+                        i = j;
+                    }
+                    while ((*(u32*)(b + k) & 0xffffff) == 0);
+                    *param_5 = *(u32*)(b + j * 4 - 4) & 0xffffff;
+                }
+                else if (moff < (*(u32*)(b + param_6 * 4 - 4) & 0xffffff))
+                {
+                    do
+                    {
+                        k = i * 4;
+                        j = i + 1;
+                        i = i + 1;
+                    }
+                    while (moff != (*(u32*)(b + k) & 0xffffff));
+                    do
+                    {
+                        i = j + 1;
+                        k = j * 4;
+                        j = i;
+                    }
+                    while ((*(u32*)(b + k) & 0xffffff) <= moff);
+                    *param_5 = (*(u32*)(b + i * 4 - 4) & 0xffffff) - moff;
+                }
+                else
+                {
+                    do
+                    {
+                        j = param_6 + 1;
+                        k = param_6 * 4;
+                        param_6 = j;
+                    }
+                    while ((*(u32*)(b + k) & 0xffffff) <= moff);
+                    *param_5 = (*(u32*)(b + j * 4 - 4) & 0xffffff) - moff;
+                }
+            }
+        }
+        else if (a != 0)
+        {
+            param_1 = 0x46;
+            if (param_5 != NULL)
+            {
+                moff = *(u32*)(a + param_6 * 4) & 0xffffff;
+                i = 0;
+                if (moff == 0)
+                {
+                    do
+                    {
+                        j = i + 1;
+                        k = i * 4;
+                        i = j;
+                    }
+                    while ((*(u32*)(a + k) & 0xffffff) == 0);
+                    *param_5 = *(u32*)(a + j * 4 - 4) & 0xffffff;
+                }
+                else if (moff < (*(u32*)(a + param_6 * 4 - 4) & 0xffffff))
+                {
+                    do
+                    {
+                        k = i * 4;
+                        j = i + 1;
+                        i = i + 1;
+                    }
+                    while (moff != (*(u32*)(a + k) & 0xffffff));
+                    do
+                    {
+                        i = j + 1;
+                        k = j * 4;
+                        j = i;
+                    }
+                    while ((*(u32*)(a + k) & 0xffffff) <= moff);
+                    *param_5 = (*(u32*)(a + i * 4 - 4) & 0xffffff) - moff;
+                }
+                else
+                {
+                    do
+                    {
+                        j = param_6 + 1;
+                        k = param_6 * 4;
+                        param_6 = j;
+                    }
+                    while ((*(u32*)(a + k) & 0xffffff) <= moff);
+                    *param_5 = (*(u32*)(a + j * 4 - 4) & 0xffffff) - moff;
+                }
+            }
+        }
+        param_3 = param_3 & 0xfffffff;
+        break;
+    case 0x30:
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if ((flags & 0x40) == 0 && (flags & 0x10) == 0)
+        {
+            b = MLDF_PTR(0x2f);
+        }
+        if ((flags & 0x80) == 0 && (flags & 0x20) == 0)
+        {
+            a = MLDF_PTR(0x49);
+        }
+        if ((param_3 & 0x10000000) != 0 && b == 0)
+        {
+            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            {
+                if ((flags & 0x40) == 0 && (flags & 0x10) == 0)
+                {
+                    b = MLDF_PTR(0x2f);
+                    break;
+                }
+                padUpdate();
+                checkReset();
+                if (frame != 0)
+                {
+                    waitNextFrame();
+                }
+                loadDataFiles();
+                dvdCheckError();
+                if (frame != 0)
+                {
+                    mmFreeTick(0);
+                    gameTextRun();
+                    GXFlush_(1, 0);
+                }
+                if (gDvdErrorPauseActive != 0)
+                {
+                    frame = 1;
+                }
+            }
+        }
+        else if ((param_3 & 0x20000000) != 0 && a == 0)
+        {
+            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            {
+                if ((flags & 0x80) == 0 && (flags & 0x20) == 0)
+                {
+                    a = MLDF_PTR(0x49);
+                    break;
+                }
+                padUpdate();
+                checkReset();
+                if (frame != 0)
+                {
+                    waitNextFrame();
+                }
+                loadDataFiles();
+                dvdCheckError();
+                if (frame != 0)
+                {
+                    mmFreeTick(0);
+                    gameTextRun();
+                    GXFlush_(1, 0);
+                }
+                if (gDvdErrorPauseActive != 0)
+                {
+                    frame = 1;
+                }
+            }
+        }
+        if ((param_3 & 0x20000000) != 0)
+        {
+            param_1 = 0x4a;
+            if (param_5 != NULL)
+            {
+                *param_5 = (*(u32*)(a + param_6 * 4 + 4) & 0xfffffff) - (*(u32*)(a + param_6 * 4) & 0xfffffff);
+            }
+        }
+        else if ((param_3 & 0x10000000) != 0)
+        {
+            param_1 = 0x30;
+            if (param_5 != NULL)
+            {
+                *param_5 = (*(u32*)(b + param_6 * 4 + 4) & 0xfffffff) - (*(u32*)(b + param_6 * 4) & 0xfffffff);
+            }
+        }
+        else if (b != 0)
+        {
+            param_1 = 0x30;
+            if (param_5 != NULL)
+            {
+                *param_5 = (*(u32*)(b + param_6 * 4 + 4) & 0xfffffff) - (*(u32*)(b + param_6 * 4) & 0xfffffff);
+            }
+        }
+        else if (a != 0)
+        {
+            param_1 = 0x4a;
+            if (param_5 != NULL)
+            {
+                *param_5 = (*(u32*)(a + param_6 * 4 + 4) & 0xfffffff) - (*(u32*)(a + param_6 * 4) & 0xfffffff);
+            }
+        }
+        param_3 = param_3 & 0xfffffff;
+        if (((u8)param_7 & 1) != 0)
+        {
+            r = MLDF_PTR(param_1);
+            tmp = return0_8002A5B8(r + param_3);
+            if (tmp != 0)
+            {
+                *param_5 = ObjModel_GetUnpackedResourceSize(r + param_3, *param_5);
+            }
+        }
+        break;
+    case 0x51:
+        if (MLDF_PTR(0x52) != 0)
+        {
+            param_1 = 0x51;
+            if (param_5 != NULL)
+            {
+                *param_5 = (*(u32*)(MLDF_PTR(0x52) + param_6 * 4 + 4) & 0xfffffff) - (*(u32*)(MLDF_PTR(0x52) + param_6 *
+                    4) & 0xfffffff);
+            }
+        }
+        param_3 = param_3 & 0xfffffff;
+        if (((u8)param_7 & 1) != 0)
+        {
+            r = MLDF_PTR(param_1);
+            tmp = return0_8002A5B8(r + param_3);
+            if (tmp != 0)
+            {
+                *param_5 = ObjModel_GetUnpackedResourceSize(r + param_3, *param_5);
+            }
+        }
+        break;
+    case 0x23:
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if ((flags & 0x400) == 0 && (flags & 0x100) == 0)
+        {
+            b = MLDF_PTR(0x24);
+        }
+        if ((flags & 0x800) == 0 && (flags & 0x200) == 0)
+        {
+            a = MLDF_PTR(0x4e);
+        }
+        if ((param_3 & 0x40000000) != 0 && b == 0)
+        {
+            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            {
+                if ((flags & 0x400) == 0 && (flags & 0x100) == 0)
+                {
+                    b = MLDF_PTR(0x24);
+                    break;
+                }
+                padUpdate();
+                checkReset();
+                if (frame != 0)
+                {
+                    waitNextFrame();
+                }
+                loadDataFiles();
+                dvdCheckError();
+                if (frame != 0)
+                {
+                    mmFreeTick(0);
+                    gameTextRun();
+                    GXFlush_(1, 0);
+                }
+                if (gDvdErrorPauseActive != 0)
+                {
+                    frame = 1;
+                }
+            }
+        }
+        else if ((param_3 & 0x80000000) != 0 && a == 0)
+        {
+            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            {
+                if ((flags & 0x800) == 0 && (flags & 0x200) == 0)
+                {
+                    a = MLDF_PTR(0x4e);
+                    break;
+                }
+                padUpdate();
+                checkReset();
+                if (frame != 0)
+                {
+                    waitNextFrame();
+                }
+                loadDataFiles();
+                dvdCheckError();
+                if (frame != 0)
+                {
+                    mmFreeTick(0);
+                    gameTextRun();
+                    GXFlush_(1, 0);
+                }
+                if (gDvdErrorPauseActive != 0)
+                {
+                    frame = 1;
+                }
+            }
+        }
+        if (a != 0 && (((u32*)t->mergeTex0)[param_6] & 0x80000000) != 0)
+        {
+            param_1 = 0x4d;
+            if (param_5 != NULL)
+            {
+                off = *(u32*)(a + param_6 * 4) & 0xffffff;
+                if (off == 0)
+                {
+                    i = 0;
+                    do
+                    {
+                        j = i + 1;
+                        k = i * 4;
+                        i = j;
+                    }
+                    while ((*(u32*)(a + k) & 0xffffff) == 0);
+                    *param_5 = *(u32*)(a + j * 4 - 4) & 0xffffff;
+                }
+                else
+                {
+                    do
+                    {
+                        j = param_6 + 1;
+                        k = param_6 * 4;
+                        param_6 = j;
+                    }
+                    while ((*(u32*)(a + k) & 0xffffff) <= off);
+                    *param_5 = (*(u32*)(a + j * 4 - 4) & 0xffffff) - off;
+                }
+            }
+        }
+        else if (b != 0 && (((u32*)t->mergeTex0)[param_6] & 0x40000000) != 0)
+        {
+            param_1 = 0x23;
+            if (param_5 != NULL)
+            {
+                off = *(u32*)(b + param_6 * 4) & 0xffffff;
+                if (off == 0)
+                {
+                    i = 0;
+                    do
+                    {
+                        j = i + 1;
+                        k = i * 4;
+                        i = j;
+                    }
+                    while ((*(u32*)(b + k) & 0xffffff) == 0);
+                    *param_5 = *(u32*)(b + j * 4 - 4) & 0xffffff;
+                }
+                else
+                {
+                    do
+                    {
+                        j = param_6 + 1;
+                        k = param_6 * 4;
+                        param_6 = j;
+                    }
+                    while ((*(u32*)(b + k) & 0xffffff) <= off);
+                    *param_5 = (*(u32*)(b + j * 4 - 4) & 0xffffff) - off;
+                }
+            }
+        }
+        else if (b != 0)
+        {
+            param_1 = 0x23;
+            if (param_5 != NULL)
+            {
+                off = *(u32*)(b + param_6 * 4) & 0xffffff;
+                if (off == 0)
+                {
+                    i = 0;
+                    do
+                    {
+                        j = i + 1;
+                        k = i * 4;
+                        i = j;
+                    }
+                    while ((*(u32*)(b + k) & 0xffffff) == 0);
+                    *param_5 = *(u32*)(b + j * 4 - 4) & 0xffffff;
+                }
+                else
+                {
+                    do
+                    {
+                        j = param_6 + 1;
+                        k = param_6 * 4;
+                        param_6 = j;
+                    }
+                    while ((*(u32*)(b + k) & 0xffffff) <= off);
+                    *param_5 = (*(u32*)(b + j * 4 - 4) & 0xffffff) - off;
+                }
+            }
+        }
+        else if (a != 0)
+        {
+            param_1 = 0x4d;
+            if (param_5 != NULL)
+            {
+                off = *(u32*)(a + param_6 * 4) & 0xffffff;
+                if (off == 0)
+                {
+                    i = 0;
+                    do
+                    {
+                        j = i + 1;
+                        k = i * 4;
+                        i = j;
+                    }
+                    while ((*(u32*)(a + k) & 0xffffff) == 0);
+                    *param_5 = *(u32*)(a + j * 4 - 4) & 0xffffff;
+                }
+                else
+                {
+                    do
+                    {
+                        j = param_6 + 1;
+                        k = param_6 * 4;
+                        param_6 = j;
+                    }
+                    while ((*(u32*)(a + k) & 0xffffff) <= off);
+                    *param_5 = (*(u32*)(a + j * 4 - 4) & 0xffffff) - off;
+                }
+            }
+        }
+        param_3 = param_3 & 0xfffffff;
+        break;
+    case 0x20:
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if ((flags & 0x4000) == 0 && (flags & 0x1000) == 0)
+        {
+            b = MLDF_PTR(0x21);
+        }
+        if ((flags & 0x8000) == 0 && (flags & 0x2000) == 0)
+        {
+            a = MLDF_PTR(0x4c);
+        }
+        if ((param_3 & 0x40000000) != 0 && b == 0)
+        {
+            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            {
+                if ((flags & 0x4000) == 0 && (flags & 0x1000) == 0)
+                {
+                    b = MLDF_PTR(0x21);
+                    break;
+                }
+                padUpdate();
+                checkReset();
+                if (frame != 0)
+                {
+                    waitNextFrame();
+                }
+                loadDataFiles();
+                dvdCheckError();
+                if (frame != 0)
+                {
+                    mmFreeTick(0);
+                    gameTextRun();
+                    GXFlush_(1, 0);
+                }
+                if (gDvdErrorPauseActive != 0)
+                {
+                    frame = 1;
+                }
+            }
+        }
+        else if ((param_3 & 0x80000000) != 0 && a == 0)
+        {
+            while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
+            {
+                if ((flags & 0x8000) == 0 && (flags & 0x2000) == 0)
+                {
+                    a = MLDF_PTR(0x4c);
+                    break;
+                }
+                padUpdate();
+                checkReset();
+                if (frame != 0)
+                {
+                    waitNextFrame();
+                }
+                loadDataFiles();
+                dvdCheckError();
+                if (frame != 0)
+                {
+                    mmFreeTick(0);
+                    gameTextRun();
+                    GXFlush_(1, 0);
+                }
+                if (gDvdErrorPauseActive != 0)
+                {
+                    frame = 1;
+                }
+            }
+        }
+        if (a != 0 && (((u32*)t->mergeTex1)[param_6] & 0x80000000) != 0)
+        {
+            param_1 = 0x4b;
+            if (param_5 != NULL)
+            {
+                off = *(u32*)(a + param_6 * 4) & 0xffffff;
+                if (off == 0)
+                {
+                    i = 0;
+                    do
+                    {
+                        j = i + 1;
+                        k = i * 4;
+                        i = j;
+                    }
+                    while ((*(u32*)(a + k) & 0xffffff) == 0);
+                    *param_5 = *(u32*)(a + j * 4 - 4) & 0xffffff;
+                }
+                else
+                {
+                    do
+                    {
+                        j = param_6 + 1;
+                        k = param_6 * 4;
+                        param_6 = j;
+                    }
+                    while ((*(u32*)(a + k) & 0xffffff) <= off);
+                    *param_5 = (*(u32*)(a + j * 4 - 4) & 0xffffff) - off;
+                }
+            }
+        }
+        else if (b != 0 && (((u32*)t->mergeTex1)[param_6] & 0x40000000) != 0)
+        {
+            param_1 = 0x20;
+            if (param_5 != NULL)
+            {
+                off = *(u32*)(b + param_6 * 4) & 0xffffff;
+                if (off == 0)
+                {
+                    i = 0;
+                    do
+                    {
+                        j = i + 1;
+                        k = i * 4;
+                        i = j;
+                    }
+                    while ((*(u32*)(b + k) & 0xffffff) == 0);
+                    *param_5 = *(u32*)(b + j * 4 - 4) & 0xffffff;
+                }
+                else
+                {
+                    do
+                    {
+                        j = param_6 + 1;
+                        k = param_6 * 4;
+                        param_6 = j;
+                    }
+                    while ((*(u32*)(b + k) & 0xffffff) <= off);
+                    *param_5 = (*(u32*)(b + j * 4 - 4) & 0xffffff) - off;
+                }
+            }
+        }
+        else if (b != 0)
+        {
+            param_1 = 0x20;
+            if (param_5 != NULL)
+            {
+                off = *(u32*)(b + param_6 * 4) & 0xffffff;
+                if (off == 0)
+                {
+                    i = 0;
+                    do
+                    {
+                        j = i + 1;
+                        k = i * 4;
+                        i = j;
+                    }
+                    while ((*(u32*)(b + k) & 0xffffff) == 0);
+                    *param_5 = *(u32*)(b + j * 4 - 4) & 0xffffff;
+                }
+                else
+                {
+                    do
+                    {
+                        j = param_6 + 1;
+                        k = param_6 * 4;
+                        param_6 = j;
+                    }
+                    while ((*(u32*)(b + k) & 0xffffff) <= off);
+                    *param_5 = (*(u32*)(b + j * 4 - 4) & 0xffffff) - off;
+                }
+            }
+        }
+        else if (a != 0)
+        {
+            param_1 = 0x4b;
+            if (param_5 != NULL)
+            {
+                off = *(u32*)(a + param_6 * 4) & 0xffffff;
+                if (off == 0)
+                {
+                    i = 0;
+                    do
+                    {
+                        j = i + 1;
+                        k = i * 4;
+                        i = j;
+                    }
+                    while ((*(u32*)(a + k) & 0xffffff) == 0);
+                    *param_5 = *(u32*)(a + j * 4 - 4) & 0xffffff;
+                }
+                else
+                {
+                    do
+                    {
+                        j = param_6 + 1;
+                        k = param_6 * 4;
+                        param_6 = j;
+                    }
+                    while ((*(u32*)(a + k) & 0xffffff) <= off);
+                    *param_5 = (*(u32*)(a + j * 4 - 4) & 0xffffff) - off;
+                }
+            }
+        }
+        param_3 = param_3 & 0xfffffff;
+        break;
+    case 0x4f:
+        if (MLDF_PTR(0x50) != 0)
+        {
+            param_1 = 0x4f;
+            if (param_5 != NULL)
+            {
+                off = *(u32*)(MLDF_PTR(0x50) + param_6 * 4) & 0xffffff;
+                if (off == 0)
+                {
+                    i = 0;
+                    do
+                    {
+                        j = i + 1;
+                        k = i * 4;
+                        i = j;
+                    }
+                    while ((*(u32*)(MLDF_PTR(0x50) + k) & 0xffffff) == 0);
+                    *param_5 = *(u32*)(MLDF_PTR(0x50) + j * 4 - 4) & 0xffffff;
+                }
+                else
+                {
+                    do
+                    {
+                        j = param_6 + 1;
+                        k = param_6 * 4;
+                        param_6 = j;
+                    }
+                    while ((*(u32*)(MLDF_PTR(0x50) + k) & 0xffffff) <= off);
+                    *param_5 = (*(u32*)(MLDF_PTR(0x50) + j * 4 - 4) & 0xffffff) - off;
+                }
+            }
+        }
+        param_3 = param_3 & 0xfffffff;
+        break;
     }
-  } else if (param_1 == 0xd || param_1 == 0x55) {
-    if (r == 0) {
-      return;
+    if (((u8)param_7 & 1) != 0)
+    {
+        return;
     }
-    memcpy((void *)param_2, (void *)(r + param_3), param_4);
-  } else if (param_1 == 0x1b || param_1 == 0x54) {
-    if (r == 0) {
-      return;
+    r = MLDF_PTR(param_1);
+    if (r == 0)
+    {
+        if (param_1 == 0x20 || param_1 == 0x4b)
+        {
+            DVDOpen(sResourceFileNameTable[param_1], buf);
+            asize = (param_4 + 0x1f) & 0xffffffe0;
+            r = (int)mmAlloc(asize, 0x7f7f7fff, 0);
+            DVDRead(buf, (void*)r, asize, param_3 & 0xffffff);
+            DVDClose(buf);
+            DCStoreRange((void*)r, param_4);
+            if (strncmp(&sDirBlockTag, (char*)r, 3) == 0)
+            {
+                for (;;)
+                {
+                }
+            }
+            if (strncmp((char*)r, sZlbBlockTag, 3) == 0)
+            {
+                local_78 = *(u32*)(r + 8);
+                zlbDecompress((void*)(r + 0x10), *(int*)(r + 0xc), param_2, &local_78);
+            }
+            mm_free((void*)r);
+        }
+        else
+        {
+            DVDOpen(sResourceFileNameTable[param_1], buf);
+            if (((u32)param_2 & 0x1f) == 0 && (param_4 & 0x1f) == 0)
+            {
+                DVDRead(buf, (void*)param_2, param_4, param_3);
+            }
+            else
+            {
+                asize = (param_4 + 0x1f) & 0xffffffe0;
+                tmp = (int)mmAlloc(asize, 0x7f7f7fff, 0);
+                DVDRead(buf, (void*)tmp, asize, param_3);
+                memcpy((void*)param_2, (void*)tmp, param_4);
+                mm_free((void*)tmp);
+            }
+            DCStoreRange((void*)param_2, param_4);
+            DVDClose(buf);
+        }
     }
-    r = r + param_3;
-    if (strncmp((char *)r, sZlbBlockTag, 3) != 0) {
-      return;
+    else if (param_1 == 0xd || param_1 == 0x55)
+    {
+        if (r == 0)
+        {
+            return;
+        }
+        memcpy((void*)param_2, (void*)(r + param_3), param_4);
     }
-    local_78 = *(u32 *)(r + 8);
-    zlbDecompress((void *)(MLDF_PTR(param_1) + param_3 + 0x10), *(int *)(r + 0xc), param_2, &local_78);
-    DCStoreRange((void *)param_2, local_78);
-  } else if (param_1 == 0x25 || param_1 == 0x47) {
-    if (r == 0) {
-      return;
+    else if (param_1 == 0x1b || param_1 == 0x54)
+    {
+        if (r == 0)
+        {
+            return;
+        }
+        r = r + param_3;
+        if (strncmp((char*)r, sZlbBlockTag, 3) != 0)
+        {
+            return;
+        }
+        local_78 = *(u32*)(r + 8);
+        zlbDecompress((void*)(MLDF_PTR(param_1) + param_3 + 0x10), *(int*)(r + 0xc), param_2, &local_78);
+        DCStoreRange((void*)param_2, local_78);
     }
-    r = r + param_3;
-    if (strncmp((char *)r, sZlbBlockTag, 3) != 0) {
-      return;
+    else if (param_1 == 0x25 || param_1 == 0x47)
+    {
+        if (r == 0)
+        {
+            return;
+        }
+        r = r + param_3;
+        if (strncmp((char*)r, sZlbBlockTag, 3) != 0)
+        {
+            return;
+        }
+        local_78 = *(u32*)(r + 8);
+        zlbDecompress((void*)(MLDF_PTR(param_1) + param_3 + 0x10), *(int*)(r + 0xc), param_2, &local_78);
+        DCStoreRange((void*)param_2, local_78);
     }
-    local_78 = *(u32 *)(r + 8);
-    zlbDecompress((void *)(MLDF_PTR(param_1) + param_3 + 0x10), *(int *)(r + 0xc), param_2, &local_78);
-    DCStoreRange((void *)param_2, local_78);
-  } else if (param_1 == 0x2b || param_1 == 0x46) {
-    int *p = (int *)(r + param_3);
-    if (*p == 0xe0e0e0e0) {
-      memcpy((void *)param_2, (void *)((int)p + p[2] + 0x18), p[1]);
-    } else if (*p == 0xfacefeed) {
-      zlbDecompress((void *)((int)p + p[2] + 0x28), p[3] - 0x10, param_2, p + 1);
-      DCStoreRange((void *)param_2, p[1]);
+    else if (param_1 == 0x2b || param_1 == 0x46)
+    {
+        int* p = (int*)(r + param_3);
+        if (*p == 0xe0e0e0e0)
+        {
+            memcpy((void*)param_2, (void*)((int)p + p[2] + 0x18), p[1]);
+        }
+        else if (*p == 0xfacefeed)
+        {
+            zlbDecompress((void*)((int)p + p[2] + 0x28), p[3] - 0x10, param_2, p + 1);
+            DCStoreRange((void*)param_2, p[1]);
+        }
     }
-  } else if (param_1 == 0x23 || param_1 == 0x4d) {
-    r = r + (param_3 & 0xffffff);
-    local_78 = *(u32 *)(r + 8);
-    zlbDecompress((void *)(r + 0x10), *(int *)(r + 0xc), param_2, &local_78);
-    DCStoreRange((void *)param_2, local_78);
-  } else if (param_1 == 0x20 || param_1 == 0x4b) {
-    param_3 = param_3 & 0xffffff;
-    r = r + param_3;
-    if (strncmp(&sDirBlockTag, (char *)r, 3) == 0) {
-      return;
+    else if (param_1 == 0x23 || param_1 == 0x4d)
+    {
+        r = r + (param_3 & 0xffffff);
+        local_78 = *(u32*)(r + 8);
+        zlbDecompress((void*)(r + 0x10), *(int*)(r + 0xc), param_2, &local_78);
+        DCStoreRange((void*)param_2, local_78);
     }
-    if (strncmp((char *)r, sZlbBlockTag, 3) == 0) {
-      local_78 = *(u32 *)(r + 8);
-      zlbDecompress((void *)(MLDF_PTR(param_1) + param_3 + 0x10), *(int *)(r + 0xc), param_2, &local_78);
-      DCStoreRange((void *)param_2, local_78);
+    else if (param_1 == 0x20 || param_1 == 0x4b)
+    {
+        param_3 = param_3 & 0xffffff;
+        r = r + param_3;
+        if (strncmp(&sDirBlockTag, (char*)r, 3) == 0)
+        {
+            return;
+        }
+        if (strncmp((char*)r, sZlbBlockTag, 3) == 0)
+        {
+            local_78 = *(u32*)(r + 8);
+            zlbDecompress((void*)(MLDF_PTR(param_1) + param_3 + 0x10), *(int*)(r + 0xc), param_2, &local_78);
+            DCStoreRange((void*)param_2, local_78);
+        }
     }
-  } else if (param_1 == 0x4f) {
-    param_3 = param_3 & 0xffffff;
-    r = r + param_3;
-    if (strncmp(&sDirBlockTag, (char *)r, 3) == 0) {
-      return;
+    else if (param_1 == 0x4f)
+    {
+        param_3 = param_3 & 0xffffff;
+        r = r + param_3;
+        if (strncmp(&sDirBlockTag, (char*)r, 3) == 0)
+        {
+            return;
+        }
+        if (strncmp((char*)r, sZlbBlockTag, 3) == 0)
+        {
+            local_78 = *(u32*)(r + 8);
+            zlbDecompress((void*)(MLDF_PTR(0x4f) + param_3 + 0x10), *(int*)(r + 0xc), param_2, &local_78);
+            DCStoreRange((void*)param_2, local_78);
+        }
     }
-    if (strncmp((char *)r, sZlbBlockTag, 3) == 0) {
-      local_78 = *(u32 *)(r + 8);
-      zlbDecompress((void *)(MLDF_PTR(0x4f) + param_3 + 0x10), *(int *)(r + 0xc), param_2, &local_78);
-      DCStoreRange((void *)param_2, local_78);
+    else if (param_1 == 0x30 || param_1 == 0x51 || param_1 == 0x4a)
+    {
+        r = r + param_3;
+        tmp = return0_8002A5B8(r);
+        if (tmp == 0)
+        {
+            memcpy((void*)param_2, (void*)(MLDF_PTR(param_1) + param_3), param_4);
+        }
+        else
+        {
+            asize = ObjModel_GetUnpackedResourceSize(r, *param_5);
+            ObjModel_UnpackResourcePayload(r, *param_5, param_2, asize);
+        }
     }
-  } else if (param_1 == 0x30 || param_1 == 0x51 || param_1 == 0x4a) {
-    r = r + param_3;
-    tmp = return0_8002A5B8(r);
-    if (tmp == 0) {
-      memcpy((void *)param_2, (void *)(MLDF_PTR(param_1) + param_3), param_4);
-    } else {
-      asize = ObjModel_GetUnpackedResourceSize(r, *param_5);
-      ObjModel_UnpackResourcePayload(r, *param_5, param_2, asize);
+    else
+    {
+        memcpy((void*)param_2, (void*)(r + param_3), param_4);
     }
-  } else {
-    memcpy((void *)param_2, (void *)(r + param_3), param_4);
-  }
 }
 #pragma dont_inline reset
 
@@ -2525,8 +3178,8 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_800443fc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void FUN_800443fc(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
+                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
 {
 }
 
@@ -2543,10 +3196,10 @@ void FUN_800443fc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80044400(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,uint param_11,uint param_12,uint *param_13,
-                 int param_14,uint param_15,undefined4 param_16)
+void FUN_80044400(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
+                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
+                  undefined4 param_9, undefined4 param_10, uint param_11, uint param_12, uint* param_13,
+                  int param_14, uint param_15, undefined4 param_16)
 {
 }
 
@@ -2565,10 +3218,11 @@ void FUN_80044400(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  */
 undefined4 FUN_80044404(int param_1)
 {
-  if (0x4a < param_1) {
-    return 5;
-  }
-  return (&DAT_802cc8a8)[param_1];
+    if (0x4a < param_1)
+    {
+        return 5;
+    }
+    return (&DAT_802cc8a8)[param_1];
 }
 
 /*
@@ -2584,8 +3238,8 @@ undefined4 FUN_80044404(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80044424(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void FUN_80044424(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
+                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
 {
 }
 
@@ -2604,47 +3258,55 @@ void FUN_80044424(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  */
 extern int lbl_8035F208[];
 extern u32 lbl_8035F3E8[];
-extern char *sMapFileNameTable[];
+extern char* sMapFileNameTable[];
 extern int lbl_803DCC74;
 extern void romListReadCb();
 #pragma scheduling off
 #pragma peephole off
-void piRomLoadSection(int param_1,int param_2,int param_3)
+void piRomLoadSection(int param_1, int param_2, int param_3)
 {
-  char buf[1048];
-  int fi;
-  int ok;
-  int *p;
+    char buf[1048];
+    int fi;
+    int ok;
+    int* p;
 
-  if ((param_3 == 0) && (lbl_8035F208[param_2] == 0)) {
-    sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[param_2]);
-    fi = AtomicSList_Pop(lbl_803DCC8C);
-    ok = DVDOpen(buf, (void *)fi);
-    if (ok != 0) {
-      lbl_8035F208[param_2] = (int)mmAlloc(*(int *)(fi + 0x34), 0x7d7d7d7d, 0);
-      lbl_803DCC74 = 1;
-      DVDReadAsyncPrio((void *)fi, (void *)lbl_8035F208[param_2], *(int *)(fi + 0x34), 0, romListReadCb, 2);
+    if ((param_3 == 0) && (lbl_8035F208[param_2] == 0))
+    {
+        sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[param_2]);
+        fi = AtomicSList_Pop(lbl_803DCC8C);
+        ok = DVDOpen(buf, (void*)fi);
+        if (ok != 0)
+        {
+            lbl_8035F208[param_2] = (int)mmAlloc(*(int*)(fi + 0x34), 0x7d7d7d7d, 0);
+            lbl_803DCC74 = 1;
+            DVDReadAsyncPrio((void*)fi, (void*)lbl_8035F208[param_2], *(int*)(fi + 0x34), 0, romListReadCb, 2);
+        }
     }
-  } else {
-    if (lbl_8035F208[param_2] == 0) {
-      sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[param_2]);
-      fi = AtomicSList_Pop(lbl_803DCC8C);
-      ok = DVDOpen(buf, (void *)fi);
-      if (ok == 0) {
-        return;
-      }
-      lbl_8035F208[param_2] = (int)mmAlloc(*(int *)(fi + 0x34), 0x7d7d7d7d, 0);
-      DVDRead((void *)fi, (void *)lbl_8035F208[param_2], *(int *)(fi + 0x34), 0);
-      DVDClose((void *)fi);
-      AtomicSList_Push(lbl_803DCC8C, fi);
+    else
+    {
+        if (lbl_8035F208[param_2] == 0)
+        {
+            sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[param_2]);
+            fi = AtomicSList_Pop(lbl_803DCC8C);
+            ok = DVDOpen(buf, (void*)fi);
+            if (ok == 0)
+            {
+                return;
+            }
+            lbl_8035F208[param_2] = (int)mmAlloc(*(int*)(fi + 0x34), 0x7d7d7d7d, 0);
+            DVDRead((void*)fi, (void*)lbl_8035F208[param_2], *(int*)(fi + 0x34), 0);
+            DVDClose((void*)fi);
+            AtomicSList_Push(lbl_803DCC8C, fi);
+        }
+        p = (int*)(lbl_8035F3E8[0x1d] + param_1);
+        if (*p == 0xfacefeed)
+        {
+            zlbDecompress((void*)(lbl_8035F208[param_2] + 0x10), p[3], param_3, p + 1);
+            DCStoreRange((void*)param_3, p[1]);
+        }
     }
-    p = (int *)(lbl_8035F3E8[0x1d] + param_1);
-    if (*p == 0xfacefeed) {
-      zlbDecompress((void *)(lbl_8035F208[param_2] + 0x10), p[3], param_3, p + 1);
-      DCStoreRange((void *)param_3, p[1]);
-    }
-  }
 }
+
 /*
  * --INFO--
  *
@@ -2675,52 +3337,57 @@ void piRomLoadSection(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80045328(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,uint param_11,uint param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+void FUN_80045328(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
+                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
+                  undefined4 param_9, undefined4 param_10, uint param_11, uint param_12,
+                  undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
-  uint uVar1;
-  int iVar2;
-  uint uVar3;
-  uint uVar4;
-  undefined8 extraout_f1;
-  undefined8 uVar5;
-  ulonglong uVar6;
-  int aiStack_58 [22];
-  
-  uVar6 = FUN_80286840();
-  iVar2 = (int)(uVar6 >> 0x20);
-  uVar4 = (uint)uVar6;
-  if (param_12 != 0) {
-    if ((&DAT_80360048)[iVar2] == 0) {
-      uVar5 = extraout_f1;
-      FUN_80249300(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                   sResourceFileNameTable[iVar2],(int)aiStack_58);
-      if (((uVar6 & 0x1f) == 0) && ((param_12 & 0x1f) == 0)) {
-        FUN_802420b0(uVar4,param_12);
-        FUN_80006c30(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,aiStack_58,uVar4,
-                     param_12,param_11,param_13,param_14,param_15,param_16);
-      }
-      else {
-        uVar1 = param_12 + 0x1f & ~0x1f;
-        uVar3 = FUN_80017830(uVar1,0x7d7d7d7d);
-        FUN_802420b0(uVar3,uVar1);
-        FUN_80006c30(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,aiStack_58,uVar3,
-                     uVar1,param_11,param_13,param_14,param_15,param_16);
-        FUN_80003494(uVar4,uVar3,param_12);
-        FUN_80017814(uVar3);
-      }
-      FUN_802493c8(aiStack_58);
-      FUN_80242114(uVar4,param_12);
+    uint uVar1;
+    int iVar2;
+    uint uVar3;
+    uint uVar4;
+    undefined8 extraout_f1;
+    undefined8 uVar5;
+    ulonglong uVar6;
+    int aiStack_58[22];
+
+    uVar6 = FUN_80286840();
+    iVar2 = (int)(uVar6 >> 0x20);
+    uVar4 = (uint)uVar6;
+    if (param_12 != 0)
+    {
+        if ((&DAT_80360048)[iVar2] == 0)
+        {
+            uVar5 = extraout_f1;
+            FUN_80249300(extraout_f1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+                         sResourceFileNameTable[iVar2], (int)aiStack_58);
+            if (((uVar6 & 0x1f) == 0) && ((param_12 & 0x1f) == 0))
+            {
+                FUN_802420b0(uVar4, param_12);
+                FUN_80006c30(uVar5, param_2, param_3, param_4, param_5, param_6, param_7, param_8, aiStack_58, uVar4,
+                             param_12, param_11, param_13, param_14, param_15, param_16);
+            }
+            else
+            {
+                uVar1 = param_12 + 0x1f & ~0x1f;
+                uVar3 = FUN_80017830(uVar1, 0x7d7d7d7d);
+                FUN_802420b0(uVar3, uVar1);
+                FUN_80006c30(uVar5, param_2, param_3, param_4, param_5, param_6, param_7, param_8, aiStack_58, uVar3,
+                             uVar1, param_11, param_13, param_14, param_15, param_16);
+                FUN_80003494(uVar4, uVar3, param_12);
+                FUN_80017814(uVar3);
+            }
+            FUN_802493c8(aiStack_58);
+            FUN_80242114(uVar4, param_12);
+        }
+        else
+        {
+            FUN_80003494(uVar4, (&DAT_80360048)[iVar2] + param_11, param_12);
+            FUN_80242114(uVar4, param_12);
+        }
     }
-    else {
-      FUN_80003494(uVar4,(&DAT_80360048)[iVar2] + param_11,param_12);
-      FUN_80242114(uVar4,param_12);
-    }
-  }
-  FUN_8028688c();
-  return;
+    FUN_8028688c();
+    return;
 }
 
 
@@ -2739,13 +3406,15 @@ void FUN_80045328(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  */
 void FUN_80045be8(void)
 {
-  if ((DAT_803dd970 == &DAT_8032f2b4) || (DAT_803dd970[0x18] != '\0')) {
-    FUN_80259858(DAT_803dd970[0x19],DAT_803dd970 + 0x1a,'\0',DAT_803dd970 + 0x32);
-  }
-  else {
-    FUN_80259858(DAT_803dd970[0x19],DAT_803dd970 + 0x1a,'\x01',&DAT_803dc234);
-  }
-  return;
+    if ((DAT_803dd970 == &DAT_8032f2b4) || (DAT_803dd970[0x18] != '\0'))
+    {
+        FUN_80259858(DAT_803dd970[0x19], DAT_803dd970 + 0x1a, '\0', DAT_803dd970 + 0x32);
+    }
+    else
+    {
+        FUN_80259858(DAT_803dd970[0x19], DAT_803dd970 + 0x1a, '\x01', &DAT_803dc234);
+    }
+    return;
 }
 
 /*
@@ -2763,47 +3432,50 @@ void FUN_80045be8(void)
  */
 undefined4 FUN_80045c4c(char param_1)
 {
-  bool bVar1;
-  uint uVar2;
-  undefined4 *puVar3;
-  undefined8 uVar4;
-  undefined4 local_28;
-  undefined4 uStack_24;
-  undefined4 local_20;
-  undefined4 local_1c;
-  uint local_18;
-  
-  uVar2 = 1;
-  gxSetZMode_(1,3,1);
-  uVar4 = FUN_8025ce2c(1);
-  FUN_80258a04((int)((ulonglong)uVar4 >> 0x20),(int)uVar4,uVar2);
-  puVar3 = &local_28;
-  FUN_80256b2c(DAT_803dd954,&uStack_24,puVar3);
-  local_20 = local_28;
-  local_1c = 0;
-  local_18 = DAT_803dd950;
-  FUN_80243e74();
-  FUN_80006aa8((short *)&DAT_80360390,(uint)&local_20);
-  if (DAT_803dd927 == '\0') {
-    FUN_80256c08(local_28);
-    DAT_803dd927 = '\x01';
-  }
-  FUN_80243e9c();
-  FUN_80258b60((uint)DAT_803dc22e);
-  uVar4 = FUN_80259a9c(DAT_803dd950,1);
-  FUN_80258a04((int)((ulonglong)uVar4 >> 0x20),(int)uVar4,(uint)puVar3);
-  DAT_803dc22e = DAT_803dc22e + 1;
-  bVar1 = DAT_803dd950 == DAT_803dd96c;
-  DAT_803dd950 = DAT_803dd96c;
-  if (bVar1) {
-    DAT_803dd950 = DAT_803dd968;
-  }
-  if (((param_1 != '\0') && (DAT_803dc22c != '\0')) &&
-     (DAT_803dc22c = DAT_803dc22c + -1, DAT_803dc22c == '\0')) {
-    FUN_8024de40(0);
-    DAT_803dc22c = '\0';
-  }
-  return 0;
+    bool bVar1;
+    uint uVar2;
+    undefined4* puVar3;
+    undefined8 uVar4;
+    undefined4 local_28;
+    undefined4 uStack_24;
+    undefined4 local_20;
+    undefined4 local_1c;
+    uint local_18;
+
+    uVar2 = 1;
+    gxSetZMode_(1, 3, 1);
+    uVar4 = FUN_8025ce2c(1);
+    FUN_80258a04((int)((ulonglong)uVar4 >> 0x20), (int)uVar4, uVar2);
+    puVar3 = &local_28;
+    FUN_80256b2c(DAT_803dd954, &uStack_24, puVar3);
+    local_20 = local_28;
+    local_1c = 0;
+    local_18 = DAT_803dd950;
+    FUN_80243e74();
+    FUN_80006aa8((short*)&DAT_80360390, (uint) & local_20);
+    if (DAT_803dd927 == '\0')
+    {
+        FUN_80256c08(local_28);
+        DAT_803dd927 = '\x01';
+    }
+    FUN_80243e9c();
+    FUN_80258b60((uint)DAT_803dc22e);
+    uVar4 = FUN_80259a9c(DAT_803dd950, 1);
+    FUN_80258a04((int)((ulonglong)uVar4 >> 0x20), (int)uVar4, (uint)puVar3);
+    DAT_803dc22e = DAT_803dc22e + 1;
+    bVar1 = DAT_803dd950 == DAT_803dd96c;
+    DAT_803dd950 = DAT_803dd96c;
+    if (bVar1)
+    {
+        DAT_803dd950 = DAT_803dd968;
+    }
+    if (((param_1 != '\0') && (DAT_803dc22c != '\0')) &&
+        (DAT_803dc22c = DAT_803dc22c + -1, DAT_803dc22c == '\0'))
+    {
+        FUN_8024de40(0);
+        DAT_803dc22c = '\0';
+    }
+    return 0;
 }
 
 
@@ -2822,27 +3494,29 @@ undefined4 FUN_80045c4c(char param_1)
  */
 void fn_8004A8F8(char param_1)
 {
-  if (param_1 == '\0') {
-    *(undefined *)&DAT_cc008000 = 0x61;
-    DAT_cc008000 = 0x24000000;
-    *(undefined *)&DAT_cc008000 = 0x61;
-    DAT_cc008000 = 0x23000000;
-    *(undefined *)&DAT_cc008000 = 0x10;
-    *(undefined2 *)&DAT_cc008000 = 0;
-    *(undefined2 *)&DAT_cc008000 = 0x1006;
-    DAT_cc008000 = 0;
-  }
-  else {
-    FUN_8025dc78(0x23,0x16);
-    *(undefined *)&DAT_cc008000 = 0x61;
-    DAT_cc008000 = 0x2402c004;
-    *(undefined *)&DAT_cc008000 = 0x61;
-    DAT_cc008000 = 0x23000020;
-    *(undefined *)&DAT_cc008000 = 0x10;
-    *(undefined2 *)&DAT_cc008000 = 0;
-    *(undefined2 *)&DAT_cc008000 = 0x1006;
-    DAT_cc008000 = 0x84400;
-  }
+    if (param_1 == '\0')
+    {
+        *(undefined*)&DAT_cc008000 = 0x61;
+        DAT_cc008000 = 0x24000000;
+        *(undefined*)&DAT_cc008000 = 0x61;
+        DAT_cc008000 = 0x23000000;
+        *(undefined*)&DAT_cc008000 = 0x10;
+        *(undefined2*)&DAT_cc008000 = 0;
+        *(undefined2*)&DAT_cc008000 = 0x1006;
+        DAT_cc008000 = 0;
+    }
+    else
+    {
+        FUN_8025dc78(0x23, 0x16);
+        *(undefined*)&DAT_cc008000 = 0x61;
+        DAT_cc008000 = 0x2402c004;
+        *(undefined*)&DAT_cc008000 = 0x61;
+        DAT_cc008000 = 0x23000020;
+        *(undefined*)&DAT_cc008000 = 0x10;
+        *(undefined2*)&DAT_cc008000 = 0;
+        *(undefined2*)&DAT_cc008000 = 0x1006;
+        DAT_cc008000 = 0x84400;
+    }
 }
 
 
@@ -2861,55 +3535,61 @@ void fn_8004A8F8(char param_1)
  */
 void FUN_8004600c(void)
 {
-  uint uVar1;
-  uint uVar2;
-  double dVar3;
-  undefined8 uVar4;
-  
-  FUN_802461cc(-0x7fc9fd20);
-  uVar4 = FUN_80246298(-0x7fc9fd20);
-  dVar3 = FUN_80286cd0((uint)((ulonglong)uVar4 >> 0x20),(uint)uVar4);
-  lbl_803DD940 =
-       (float)(dVar3 / (double)(float)((double)CONCAT44(0x43300000,DAT_800000f8 / 4000) -
-                                      DOUBLE_803df700));
-  FUN_80246308(-0x7fc9fd20);
-  FUN_80246190(-0x7fc9fd20);
-  lbl_803DC074 = lbl_803DF71C * lbl_803DF720 * lbl_803DD940;
-  if (DAT_803dd5d0 != '\0') {
-    lbl_803DC074 = lbl_803DF6F0;
-  }
-  if (lbl_803DF6F4 < lbl_803DC074) {
-    lbl_803DC074 = lbl_803DF6F4;
-  }
-  lbl_803DC078 = lbl_803DF6F8;
-  if (lbl_803DF6FC < lbl_803DC074) {
-    lbl_803DC078 = lbl_803DF6F8 / lbl_803DC074;
-  }
-  uVar2 = (uint)(lbl_803DC074 + lbl_803DD934);
-  uVar1 = uVar2 & 0xff;
-  DAT_803dc071 = (undefined)uVar2;
-  lbl_803DD934 =
-       (lbl_803DC074 + lbl_803DD934) -
-       (float)((double)CONCAT44(0x43300000,uVar1) - DOUBLE_803df700);
-  DAT_803dc070 = DAT_803dc071;
-  if (uVar1 == 0) {
-    DAT_803dc070 = 1;
-  }
-  FUN_80243e74();
-  DAT_803dd95c = FUN_802464ec();
-  if (*(short *)(DAT_803dd95c + 0x2c8) != 2) {
-    FUN_800723a0();
-  }
-  uVar2 = FUN_80006a90((short *)&DAT_80360390);
-  if (1 < uVar2) {
-    DAT_803dd92c = 0;
-    FUN_802471c4((int *)&DAT_803dd944);
-  }
-  FUN_80243e9c();
-  FUN_80006988();
-  FUN_80258664();
-  FUN_8025b210();
-  return;
+    uint uVar1;
+    uint uVar2;
+    double dVar3;
+    undefined8 uVar4;
+
+    FUN_802461cc(-0x7fc9fd20);
+    uVar4 = FUN_80246298(-0x7fc9fd20);
+    dVar3 = FUN_80286cd0((uint)((ulonglong)uVar4 >> 0x20), (uint)uVar4);
+    lbl_803DD940 =
+        (float)(dVar3 / (double)(float)((double)CONCAT44(0x43300000, DAT_800000f8 / 4000) -
+            DOUBLE_803df700));
+    FUN_80246308(-0x7fc9fd20);
+    FUN_80246190(-0x7fc9fd20);
+    lbl_803DC074 = lbl_803DF71C * lbl_803DF720 * lbl_803DD940;
+    if (DAT_803dd5d0 != '\0')
+    {
+        lbl_803DC074 = lbl_803DF6F0;
+    }
+    if (lbl_803DF6F4 < lbl_803DC074)
+    {
+        lbl_803DC074 = lbl_803DF6F4;
+    }
+    lbl_803DC078 = lbl_803DF6F8;
+    if (lbl_803DF6FC < lbl_803DC074)
+    {
+        lbl_803DC078 = lbl_803DF6F8 / lbl_803DC074;
+    }
+    uVar2 = (uint)(lbl_803DC074 + lbl_803DD934);
+    uVar1 = uVar2 & 0xff;
+    DAT_803dc071 = (undefined)uVar2;
+    lbl_803DD934 =
+        (lbl_803DC074 + lbl_803DD934) -
+        (float)((double)CONCAT44(0x43300000, uVar1) - DOUBLE_803df700);
+    DAT_803dc070 = DAT_803dc071;
+    if (uVar1 == 0)
+    {
+        DAT_803dc070 = 1;
+    }
+    FUN_80243e74();
+    DAT_803dd95c = FUN_802464ec();
+    if (*(short*)(DAT_803dd95c + 0x2c8) != 2)
+    {
+        FUN_800723a0();
+    }
+    uVar2 = FUN_80006a90((short*)&DAT_80360390);
+    if (1 < uVar2)
+    {
+        DAT_803dd92c = 0;
+        FUN_802471c4((int*)&DAT_803dd944);
+    }
+    FUN_80243e9c();
+    FUN_80006988();
+    FUN_80258664();
+    FUN_8025b210();
+    return;
 }
 
 /*
@@ -2925,42 +3605,48 @@ void FUN_8004600c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_800461b4(int *param_1,int *param_2)
+uint FUN_800461b4(int* param_1, int* param_2)
 {
-  uint uVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  
-  iVar4 = param_1[4];
-  iVar3 = *param_2;
-  if (*(char *)(iVar3 + 0x19) != '$') {
-    uVar1 = countLeadingZeros(iVar3 - iVar4);
-    return uVar1 >> 5;
-  }
-  if ((*(byte *)(param_2 + 3) & 0x80) == 0) {
-    if (*(byte *)(iVar3 + 3) != 0) {
-      uVar1 = countLeadingZeros((uint)*(byte *)(iVar3 + 3) - iVar4);
-      return uVar1 >> 5;
-    }
-    iVar5 = *(int *)(*param_1 + (uint)*(byte *)(param_2 + 3) * 0x10);
-    iVar6 = 0;
-    iVar7 = 4;
-    iVar2 = iVar5;
-    do {
-      if (*(int *)(iVar3 + 0x14) == *(int *)(iVar2 + 0x1c)) {
-        uVar1 = countLeadingZeros((uint)*(byte *)(iVar6 + iVar5 + 4) - iVar4);
+    uint uVar1;
+    int iVar2;
+    int iVar3;
+    int iVar4;
+    int iVar5;
+    int iVar6;
+    int iVar7;
+
+    iVar4 = param_1[4];
+    iVar3 = *param_2;
+    if (*(char*)(iVar3 + 0x19) != '$')
+    {
+        uVar1 = countLeadingZeros(iVar3 - iVar4);
         return uVar1 >> 5;
-      }
-      iVar2 = iVar2 + 4;
-      iVar6 = iVar6 + 1;
-      iVar7 = iVar7 + -1;
-    } while (iVar7 != 0);
-  }
-  return 0;
+    }
+    if ((*(byte*)(param_2 + 3) & 0x80) == 0)
+    {
+        if (*(byte*)(iVar3 + 3) != 0)
+        {
+            uVar1 = countLeadingZeros((uint) * (byte*)(iVar3 + 3) - iVar4);
+            return uVar1 >> 5;
+        }
+        iVar5 = *(int*)(*param_1 + (uint) * (byte*)(param_2 + 3) * 0x10);
+        iVar6 = 0;
+        iVar7 = 4;
+        iVar2 = iVar5;
+        do
+        {
+            if (*(int*)(iVar3 + 0x14) == *(int*)(iVar2 + 0x1c))
+            {
+                uVar1 = countLeadingZeros((uint) * (byte*)(iVar6 + iVar5 + 4) - iVar4);
+                return uVar1 >> 5;
+            }
+            iVar2 = iVar2 + 4;
+            iVar6 = iVar6 + 1;
+            iVar7 = iVar7 + -1;
+        }
+        while (iVar7 != 0);
+    }
+    return 0;
 }
 
 /*
@@ -2976,33 +3662,35 @@ uint FUN_800461b4(int *param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80046270(int param_1,int param_2,int param_3)
+void FUN_80046270(int param_1, int param_2, int param_3)
 {
-  undefined2 uVar1;
-  uint *puVar2;
-  uint uVar3;
-  uint *puVar4;
-  uint uVar5;
-  int iVar6;
-  
-  uVar5 = *(uint *)(param_1 + param_3 * 8);
-  uVar1 = *(undefined2 *)(param_1 + param_3 * 8 + 4);
-  while (param_3 <= param_2 >> 1) {
-    iVar6 = param_3 * 2;
-    if ((iVar6 < param_2) && (puVar4 = (uint *)(param_1 + param_3 * 0x10), *puVar4 < puVar4[2])) {
-      iVar6 = iVar6 + 1;
+    undefined2 uVar1;
+    uint* puVar2;
+    uint uVar3;
+    uint* puVar4;
+    uint uVar5;
+    int iVar6;
+
+    uVar5 = *(uint*)(param_1 + param_3 * 8);
+    uVar1 = *(undefined2*)(param_1 + param_3 * 8 + 4);
+    while (param_3 <= param_2 >> 1)
+    {
+        iVar6 = param_3 * 2;
+        if ((iVar6 < param_2) && (puVar4 = (uint*)(param_1 + param_3 * 0x10), *puVar4 < puVar4[2]))
+        {
+            iVar6 = iVar6 + 1;
+        }
+        puVar4 = (uint*)(param_1 + iVar6 * 8);
+        uVar3 = *puVar4;
+        if (uVar3 <= uVar5) break;
+        puVar2 = (uint*)(param_1 + param_3 * 8);
+        *puVar2 = uVar3;
+        *(undefined2*)(puVar2 + 1) = *(undefined2*)(puVar4 + 1);
+        param_3 = iVar6;
     }
-    puVar4 = (uint *)(param_1 + iVar6 * 8);
-    uVar3 = *puVar4;
-    if (uVar3 <= uVar5) break;
-    puVar2 = (uint *)(param_1 + param_3 * 8);
-    *puVar2 = uVar3;
-    *(undefined2 *)(puVar2 + 1) = *(undefined2 *)(puVar4 + 1);
-    param_3 = iVar6;
-  }
-  *(uint *)(param_1 + param_3 * 8) = uVar5;
-  *(undefined2 *)(param_1 + param_3 * 8 + 4) = uVar1;
-  return;
+    *(uint*)(param_1 + param_3 * 8) = uVar5;
+    *(undefined2*)(param_1 + param_3 * 8 + 4) = uVar1;
+    return;
 }
 
 
@@ -3019,56 +3707,62 @@ void FUN_80046270(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8004B11C(undefined4 param_1,undefined4 param_2,undefined param_3)
+void fn_8004B11C(undefined4 param_1, undefined4 param_2, undefined param_3)
 {
-  int iVar1;
-  uint uVar2;
-  int iVar3;
-  int iVar4;
-  uint uVar5;
-  int *piVar6;
-  int iVar7;
-  int iVar8;
-  int iVar9;
-  double dVar10;
-  undefined8 uVar11;
-  
-  uVar11 = FUN_80286834();
-  iVar3 = (int)((ulonglong)uVar11 >> 0x20);
-  piVar6 = (int *)uVar11;
-  iVar8 = *piVar6;
-  if (*(char *)(iVar3 + 0x28) == '\0') {
-    uVar2 = ~(int)*(char *)(iVar8 + 0x1b);
-  }
-  else {
-    uVar2 = (uint)*(char *)(iVar8 + 0x1b);
-  }
-  iVar7 = 0;
-  iVar9 = iVar8;
-  do {
-    iVar1 = DAT_803dd988;
-    if ((((-1 < *(int *)(iVar9 + 0x1c)) && ((uVar2 & 0xff & 1 << iVar7) != 0)) &&
-        (iVar4 = (**(code **)(*DAT_803dd71c + 0x1c))(), iVar1 = DAT_803dd988, iVar4 != 0)) &&
-       (iVar1 = iVar4, *(char *)(iVar4 + 0x19) == '$')) {
-      FUN_80017690(0x4e2);
-      if (((((int)*(short *)(iVar4 + 0x30) == -1) ||
-           (uVar5 = FUN_80017690((int)*(short *)(iVar4 + 0x30)), iVar1 = DAT_803dd988, uVar5 != 0))
-          && (((int)*(short *)(iVar4 + 0x32) == -1 ||
-              (uVar5 = FUN_80017690((int)*(short *)(iVar4 + 0x32)), iVar1 = DAT_803dd988,
-              uVar5 == 0)))) &&
-         ((*(char *)(iVar4 + 0x1a) != '\b' || (*(char *)(iVar8 + 0x1a) != '\t')))) {
-        dVar10 = FUN_80017714((float *)(iVar8 + 8),(float *)(iVar4 + 8));
-        uVar5 = FUN_80286718((double)(float)((double)(float)((double)CONCAT44(0x43300000,piVar6[2]) -
-                                                        DOUBLE_803df728) + dVar10));
-        FUN_800462f8((undefined4)iVar3,(undefined4)(u32)piVar6,param_3,uVar5,iVar4);
-        iVar1 = DAT_803dd988;
-      }
+    int iVar1;
+    uint uVar2;
+    int iVar3;
+    int iVar4;
+    uint uVar5;
+    int* piVar6;
+    int iVar7;
+    int iVar8;
+    int iVar9;
+    double dVar10;
+    undefined8 uVar11;
+
+    uVar11 = FUN_80286834();
+    iVar3 = (int)((ulonglong)uVar11 >> 0x20);
+    piVar6 = (int*)uVar11;
+    iVar8 = *piVar6;
+    if (*(char*)(iVar3 + 0x28) == '\0')
+    {
+        uVar2 = ~(int)*(char*)(iVar8 + 0x1b);
     }
-    DAT_803dd988 = iVar1;
-    iVar9 = iVar9 + 4;
-    iVar7 = iVar7 + 1;
-  } while (iVar7 < 4);
-  FUN_80286880();
+    else
+    {
+        uVar2 = (uint) * (char*)(iVar8 + 0x1b);
+    }
+    iVar7 = 0;
+    iVar9 = iVar8;
+    do
+    {
+        iVar1 = DAT_803dd988;
+        if ((((-1 < *(int*)(iVar9 + 0x1c)) && ((uVar2 & 0xff & 1 << iVar7) != 0)) &&
+                (iVar4 = (**(code**)(*DAT_803dd71c + 0x1c))(), iVar1 = DAT_803dd988, iVar4 != 0)) &&
+            (iVar1 = iVar4, *(char*)(iVar4 + 0x19) == '$'))
+        {
+            FUN_80017690(0x4e2);
+            if (((((int)*(short*)(iVar4 + 0x30) == -1) ||
+                        (uVar5 = FUN_80017690((int)*(short*)(iVar4 + 0x30)), iVar1 = DAT_803dd988, uVar5 != 0))
+                    && (((int)*(short*)(iVar4 + 0x32) == -1 ||
+                        (uVar5 = FUN_80017690((int)*(short*)(iVar4 + 0x32)), iVar1 = DAT_803dd988,
+                            uVar5 == 0)))) &&
+                ((*(char*)(iVar4 + 0x1a) != '\b' || (*(char*)(iVar8 + 0x1a) != '\t'))))
+            {
+                dVar10 = FUN_80017714((float*)(iVar8 + 8), (float*)(iVar4 + 8));
+                uVar5 = FUN_80286718((double)(float)((double)(float)((double)CONCAT44(0x43300000, piVar6[2]) -
+                    DOUBLE_803df728) + dVar10));
+                FUN_800462f8((undefined4)iVar3, (undefined4)(u32)piVar6, param_3, uVar5, iVar4);
+                iVar1 = DAT_803dd988;
+            }
+        }
+        DAT_803dd988 = iVar1;
+        iVar9 = iVar9 + 4;
+        iVar7 = iVar7 + 1;
+    }
+    while (iVar7 < 4);
+    FUN_80286880();
 }
 
 /*
@@ -3086,14 +3780,15 @@ void fn_8004B11C(undefined4 param_1,undefined4 param_2,undefined param_3)
  */
 undefined4 FUN_800469d0(int param_1)
 {
-  short sVar1;
-  
-  sVar1 = *(short *)(param_1 + 0x2c);
-  if ((int)sVar1 < (int)*(short *)(param_1 + 0x2a)) {
-    *(short *)(param_1 + 0x2c) = sVar1 + 1;
-    return *(undefined4 *)(*(int *)(param_1 + 8) + sVar1 * 4);
-  }
-  return 0;
+    short sVar1;
+
+    sVar1 = *(short*)(param_1 + 0x2c);
+    if ((int)sVar1 < (int)*(short*)(param_1 + 0x2a))
+    {
+        *(short*)(param_1 + 0x2c) = sVar1 + 1;
+        return *(undefined4*)(*(int*)(param_1 + 8) + sVar1 * 4);
+    }
+    return 0;
 }
 
 
@@ -3112,50 +3807,57 @@ undefined4 FUN_800469d0(int param_1)
  */
 void fn_8004B394(void)
 {
-  short sVar1;
-  bool bVar2;
-  int *piVar3;
-  int iVar4;
-  uint uVar5;
-  int *piVar6;
-  uint uVar7;
-  int iVar8;
-  undefined8 uVar9;
-  
-  uVar9 = FUN_8028683c();
-  piVar3 = (int *)((ulonglong)uVar9 >> 0x20);
-  bVar2 = false;
-  for (iVar8 = (int)uVar9; (!bVar2 && (iVar8 != 0)); iVar8 = iVar8 + -1) {
-    iVar4 = piVar3[1];
-    if (*(short *)((int)piVar3 + 0x22) == 0) {
-      uVar7 = 0xffffffff;
+    short sVar1;
+    bool bVar2;
+    int* piVar3;
+    int iVar4;
+    uint uVar5;
+    int* piVar6;
+    uint uVar7;
+    int iVar8;
+    undefined8 uVar9;
+
+    uVar9 = FUN_8028683c();
+    piVar3 = (int*)((ulonglong)uVar9 >> 0x20);
+    bVar2 = false;
+    for (iVar8 = (int)uVar9; (!bVar2 && (iVar8 != 0)); iVar8 = iVar8 + -1)
+    {
+        iVar4 = piVar3[1];
+        if (*(short*)((int)piVar3 + 0x22) == 0)
+        {
+            uVar7 = 0xffffffff;
+        }
+        else
+        {
+            uVar7 = (uint) * (ushort*)(iVar4 + 0xc);
+            *(undefined4*)(iVar4 + 8) = *(undefined4*)(iVar4 + *(short*)((int)piVar3 + 0x22) * 8);
+            sVar1 = *(short*)((int)piVar3 + 0x22);
+            *(short*)((int)piVar3 + 0x22) = sVar1 + -1;
+            *(undefined2*)(iVar4 + 0xc) = *(undefined2*)(iVar4 + sVar1 * 8 + 4);
+            FUN_80046270(iVar4, (int)*(short*)((int)piVar3 + 0x22), 1);
+        }
+        if ((int)uVar7 < 0)
+        {
+            bVar2 = true;
+        }
+        else
+        {
+            piVar6 = (int*)(*piVar3 + uVar7 * 0x10);
+            piVar3[7] = uVar7;
+            uVar5 = FUN_800461b4(piVar3, piVar6);
+            if (uVar5 == 0)
+            {
+                *(undefined*)((int)piVar6 + 0xe) = 1;
+                fn_8004B11C((undefined4)piVar3, (undefined4)piVar6, (char)uVar7);
+            }
+            else
+            {
+                bVar2 = true;
+            }
+        }
     }
-    else {
-      uVar7 = (uint)*(ushort *)(iVar4 + 0xc);
-      *(undefined4 *)(iVar4 + 8) = *(undefined4 *)(iVar4 + *(short *)((int)piVar3 + 0x22) * 8);
-      sVar1 = *(short *)((int)piVar3 + 0x22);
-      *(short *)((int)piVar3 + 0x22) = sVar1 + -1;
-      *(undefined2 *)(iVar4 + 0xc) = *(undefined2 *)(iVar4 + sVar1 * 8 + 4);
-      FUN_80046270(iVar4,(int)*(short *)((int)piVar3 + 0x22),1);
-    }
-    if ((int)uVar7 < 0) {
-      bVar2 = true;
-    }
-    else {
-      piVar6 = (int *)(*piVar3 + uVar7 * 0x10);
-      piVar3[7] = uVar7;
-      uVar5 = FUN_800461b4(piVar3,piVar6);
-      if (uVar5 == 0) {
-        *(undefined *)((int)piVar6 + 0xe) = 1;
-        fn_8004B11C((undefined4)piVar3,(undefined4)piVar6,(char)uVar7);
-      }
-      else {
-        bVar2 = true;
-      }
-    }
-  }
-  FUN_80286888();
-  return;
+    FUN_80286888();
+    return;
 }
 
 /*
@@ -3171,97 +3873,105 @@ void fn_8004B394(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80046cd0(int *param_1,int param_2,int param_3,int param_4,byte param_5)
+undefined4 FUN_80046cd0(int* param_1, int param_2, int param_3, int param_4, byte param_5)
 {
-  undefined2 uVar1;
-  short sVar2;
-  int iVar3;
-  undefined4 *puVar4;
-  uint uVar5;
-  int iVar6;
-  int iVar7;
-  int *piVar8;
-  int iVar9;
-  double dVar10;
-  
-  iVar3 = 0;
-  *(undefined2 *)((int)param_1 + 0x22) = 0;
-  *(undefined2 *)(param_1 + 8) = 0;
-  iVar6 = 0;
-  iVar7 = 0;
-  iVar9 = 0x1f;
-  do {
-    *(undefined4 *)(param_1[1] + iVar6) = 0;
-    *(undefined *)(*param_1 + iVar7 + 0xe) = 0;
-    *(undefined4 *)(param_1[1] + iVar6 + 8) = 0;
-    *(undefined *)(*param_1 + iVar7 + 0x1e) = 0;
-    *(undefined4 *)(param_1[1] + iVar6 + 0x10) = 0;
-    *(undefined *)(*param_1 + iVar7 + 0x2e) = 0;
-    *(undefined4 *)(param_1[1] + iVar6 + 0x18) = 0;
-    *(undefined *)(*param_1 + iVar7 + 0x3e) = 0;
-    *(undefined4 *)(param_1[1] + iVar6 + 0x20) = 0;
-    *(undefined *)(*param_1 + iVar7 + 0x4e) = 0;
-    *(undefined4 *)(param_1[1] + iVar6 + 0x28) = 0;
-    *(undefined *)(*param_1 + iVar7 + 0x5e) = 0;
-    *(undefined4 *)(param_1[1] + iVar6 + 0x30) = 0;
-    *(undefined *)(*param_1 + iVar7 + 0x6e) = 0;
-    *(undefined4 *)(param_1[1] + iVar6 + 0x38) = 0;
-    *(undefined *)(*param_1 + iVar7 + 0x7e) = 0;
-    iVar6 = iVar6 + 0x40;
-    iVar7 = iVar7 + 0x80;
-    iVar3 = iVar3 + 8;
-    iVar9 = iVar9 + -1;
-  } while (iVar9 != 0);
-  iVar6 = iVar3 * 8;
-  iVar7 = iVar3 * 0x10;
-  iVar9 = 0xfe - iVar3;
-  if (iVar3 < 0xfe) {
-    do {
-      *(undefined4 *)(param_1[1] + iVar6) = 0;
-      *(undefined *)(*param_1 + iVar7 + 0xe) = 0;
-      iVar6 = iVar6 + 8;
-      iVar7 = iVar7 + 0x10;
-      iVar9 = iVar9 + -1;
-    } while (iVar9 != 0);
-  }
-  param_1[6] = param_2;
-  param_1[3] = param_3;
-  param_1[4] = param_4;
-  *(byte *)(param_1 + 10) = param_5 & 1;
-  param_1[9] = 10000;
-  sVar2 = *(short *)(param_1 + 8);
-  if (sVar2 == 0xfe) {
-    piVar8 = (int *)0x0;
-  }
-  else {
-    *(short *)(param_1 + 8) = sVar2 + 1;
-    piVar8 = (int *)(*param_1 + sVar2 * 0x10);
-    *piVar8 = param_2;
-    piVar8[2] = 0;
-    *(undefined *)(piVar8 + 3) = 0xff;
-    dVar10 = FUN_80017714((float *)(*piVar8 + 8),(float *)param_1[3]);
-    iVar3 = FUN_80286718(dVar10);
-    piVar8[1] = iVar3;
-  }
-  iVar6 = piVar8[1];
-  iVar3 = piVar8[2];
-  puVar4 = (undefined4 *)param_1[1];
-  sVar2 = *(short *)((int)param_1 + 0x22) + 1;
-  *(short *)((int)param_1 + 0x22) = sVar2;
-  *(short *)(puVar4 + sVar2 * 2 + 1) = *(short *)(param_1 + 8) + -1;
-  puVar4[*(short *)((int)param_1 + 0x22) * 2] = -1 - (iVar6 + iVar3);
-  iVar3 = (int)*(short *)((int)param_1 + 0x22);
-  uVar5 = puVar4[iVar3 * 2];
-  uVar1 = *(undefined2 *)(puVar4 + iVar3 * 2 + 1);
-  *puVar4 = 0xffffffff;
-  while (iVar6 = iVar3 >> 1, (uint)puVar4[iVar6 * 2] < uVar5) {
-    *(undefined2 *)(puVar4 + iVar3 * 2 + 1) = *(undefined2 *)(puVar4 + iVar6 * 2 + 1);
-    puVar4[iVar3 * 2] = puVar4[iVar6 * 2];
-    iVar3 = iVar6;
-  }
-  puVar4[iVar3 * 2] = uVar5;
-  *(undefined2 *)(puVar4 + iVar3 * 2 + 1) = uVar1;
-  return 0;
+    undefined2 uVar1;
+    short sVar2;
+    int iVar3;
+    undefined4* puVar4;
+    uint uVar5;
+    int iVar6;
+    int iVar7;
+    int* piVar8;
+    int iVar9;
+    double dVar10;
+
+    iVar3 = 0;
+    *(undefined2*)((int)param_1 + 0x22) = 0;
+    *(undefined2*)(param_1 + 8) = 0;
+    iVar6 = 0;
+    iVar7 = 0;
+    iVar9 = 0x1f;
+    do
+    {
+        *(undefined4*)(param_1[1] + iVar6) = 0;
+        *(undefined*)(*param_1 + iVar7 + 0xe) = 0;
+        *(undefined4*)(param_1[1] + iVar6 + 8) = 0;
+        *(undefined*)(*param_1 + iVar7 + 0x1e) = 0;
+        *(undefined4*)(param_1[1] + iVar6 + 0x10) = 0;
+        *(undefined*)(*param_1 + iVar7 + 0x2e) = 0;
+        *(undefined4*)(param_1[1] + iVar6 + 0x18) = 0;
+        *(undefined*)(*param_1 + iVar7 + 0x3e) = 0;
+        *(undefined4*)(param_1[1] + iVar6 + 0x20) = 0;
+        *(undefined*)(*param_1 + iVar7 + 0x4e) = 0;
+        *(undefined4*)(param_1[1] + iVar6 + 0x28) = 0;
+        *(undefined*)(*param_1 + iVar7 + 0x5e) = 0;
+        *(undefined4*)(param_1[1] + iVar6 + 0x30) = 0;
+        *(undefined*)(*param_1 + iVar7 + 0x6e) = 0;
+        *(undefined4*)(param_1[1] + iVar6 + 0x38) = 0;
+        *(undefined*)(*param_1 + iVar7 + 0x7e) = 0;
+        iVar6 = iVar6 + 0x40;
+        iVar7 = iVar7 + 0x80;
+        iVar3 = iVar3 + 8;
+        iVar9 = iVar9 + -1;
+    }
+    while (iVar9 != 0);
+    iVar6 = iVar3 * 8;
+    iVar7 = iVar3 * 0x10;
+    iVar9 = 0xfe - iVar3;
+    if (iVar3 < 0xfe)
+    {
+        do
+        {
+            *(undefined4*)(param_1[1] + iVar6) = 0;
+            *(undefined*)(*param_1 + iVar7 + 0xe) = 0;
+            iVar6 = iVar6 + 8;
+            iVar7 = iVar7 + 0x10;
+            iVar9 = iVar9 + -1;
+        }
+        while (iVar9 != 0);
+    }
+    param_1[6] = param_2;
+    param_1[3] = param_3;
+    param_1[4] = param_4;
+    *(byte*)(param_1 + 10) = param_5 & 1;
+    param_1[9] = 10000;
+    sVar2 = *(short*)(param_1 + 8);
+    if (sVar2 == 0xfe)
+    {
+        piVar8 = (int*)0x0;
+    }
+    else
+    {
+        *(short*)(param_1 + 8) = sVar2 + 1;
+        piVar8 = (int*)(*param_1 + sVar2 * 0x10);
+        *piVar8 = param_2;
+        piVar8[2] = 0;
+        *(undefined*)(piVar8 + 3) = 0xff;
+        dVar10 = FUN_80017714((float*)(*piVar8 + 8), (float*)param_1[3]);
+        iVar3 = FUN_80286718(dVar10);
+        piVar8[1] = iVar3;
+    }
+    iVar6 = piVar8[1];
+    iVar3 = piVar8[2];
+    puVar4 = (undefined4*)param_1[1];
+    sVar2 = *(short*)((int)param_1 + 0x22) + 1;
+    *(short*)((int)param_1 + 0x22) = sVar2;
+    *(short*)(puVar4 + sVar2 * 2 + 1) = *(short*)(param_1 + 8) + -1;
+    puVar4[*(short*)((int)param_1 + 0x22) * 2] = -1 - (iVar6 + iVar3);
+    iVar3 = (int)*(short*)((int)param_1 + 0x22);
+    uVar5 = puVar4[iVar3 * 2];
+    uVar1 = *(undefined2*)(puVar4 + iVar3 * 2 + 1);
+    *puVar4 = 0xffffffff;
+    while (iVar6 = iVar3 >> 1, (uint)puVar4[iVar6 * 2] < uVar5)
+    {
+        *(undefined2*)(puVar4 + iVar3 * 2 + 1) = *(undefined2*)(puVar4 + iVar6 * 2 + 1);
+        puVar4[iVar3 * 2] = puVar4[iVar6 * 2];
+        iVar3 = iVar6;
+    }
+    puVar4[iVar3 * 2] = uVar5;
+    *(undefined2*)(puVar4 + iVar3 * 2 + 1) = uVar1;
+    return 0;
 }
 
 
@@ -3278,107 +3988,131 @@ undefined4 FUN_80046cd0(int *param_1,int param_2,int param_3,int param_4,byte pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80047d88(char *param_1,char param_2,char param_3,undefined4 *param_4,undefined4 *param_5)
+void FUN_80047d88(char* param_1, char param_2, char param_3, undefined4* param_4, undefined4* param_5)
 {
-  char cVar1;
-  bool bVar2;
-  bool bVar3;
-  undefined4 local_8 [2];
-  
-  bVar2 = false;
-  bVar3 = false;
-  if (param_2 == '\0') {
-    bVar2 = true;
-  }
-  else {
-    cVar1 = *param_1;
-    if ((cVar1 == param_1[1]) && (cVar1 == param_1[2])) {
-      if (cVar1 == -1) {
-        *param_4 = 0;
+    char cVar1;
+    bool bVar2;
+    bool bVar3;
+    undefined4 local_8[2];
+
+    bVar2 = false;
+    bVar3 = false;
+    if (param_2 == '\0')
+    {
         bVar2 = true;
-      }
-      else if (cVar1 == -0x20) {
-        *param_4 = 1;
-        bVar2 = true;
-      }
-      else if (cVar1 == -0x40) {
-        *param_4 = 2;
-        bVar2 = true;
-      }
-      else if (cVar1 == -0x60) {
-        *param_4 = 3;
-        bVar2 = true;
-      }
-      else if (cVar1 == -0x80) {
-        *param_4 = 4;
-        bVar2 = true;
-      }
-      else if (cVar1 == '`') {
-        *param_4 = 5;
-        bVar2 = true;
-      }
-      else if (cVar1 == '@') {
-        *param_4 = 6;
-        bVar2 = true;
-      }
-      else if (cVar1 == ' ') {
-        *param_4 = 7;
-        bVar2 = true;
-      }
     }
-    if (!bVar2) {
-      *param_4 = DAT_803dd9f0;
+    else
+    {
+        cVar1 = *param_1;
+        if ((cVar1 == param_1[1]) && (cVar1 == param_1[2]))
+        {
+            if (cVar1 == -1)
+            {
+                *param_4 = 0;
+                bVar2 = true;
+            }
+            else if (cVar1 == -0x20)
+            {
+                *param_4 = 1;
+                bVar2 = true;
+            }
+            else if (cVar1 == -0x40)
+            {
+                *param_4 = 2;
+                bVar2 = true;
+            }
+            else if (cVar1 == -0x60)
+            {
+                *param_4 = 3;
+                bVar2 = true;
+            }
+            else if (cVar1 == -0x80)
+            {
+                *param_4 = 4;
+                bVar2 = true;
+            }
+            else if (cVar1 == '`')
+            {
+                *param_4 = 5;
+                bVar2 = true;
+            }
+            else if (cVar1 == '@')
+            {
+                *param_4 = 6;
+                bVar2 = true;
+            }
+            else if (cVar1 == ' ')
+            {
+                *param_4 = 7;
+                bVar2 = true;
+            }
+        }
+        if (!bVar2)
+        {
+            *param_4 = DAT_803dd9f0;
+        }
     }
-  }
-  if (param_3 == '\0') {
-    bVar3 = true;
-  }
-  else {
-    cVar1 = param_1[3];
-    if (cVar1 == -1) {
-      *param_5 = 0;
-      bVar3 = true;
+    if (param_3 == '\0')
+    {
+        bVar3 = true;
     }
-    else if (cVar1 == -0x20) {
-      *param_5 = 1;
-      bVar3 = true;
+    else
+    {
+        cVar1 = param_1[3];
+        if (cVar1 == -1)
+        {
+            *param_5 = 0;
+            bVar3 = true;
+        }
+        else if (cVar1 == -0x20)
+        {
+            *param_5 = 1;
+            bVar3 = true;
+        }
+        else if (cVar1 == -0x40)
+        {
+            *param_5 = 2;
+            bVar3 = true;
+        }
+        else if (cVar1 == -0x60)
+        {
+            *param_5 = 3;
+            bVar3 = true;
+        }
+        else if (cVar1 == -0x80)
+        {
+            *param_5 = 4;
+            bVar3 = true;
+        }
+        else if (cVar1 == '`')
+        {
+            *param_5 = 5;
+            bVar3 = true;
+        }
+        else if (cVar1 == '@')
+        {
+            *param_5 = 6;
+            bVar3 = true;
+        }
+        else if (cVar1 == ' ')
+        {
+            *param_5 = 7;
+            bVar3 = true;
+        }
+        if (!bVar3)
+        {
+            *param_5 = DAT_803dd9ec;
+        }
     }
-    else if (cVar1 == -0x40) {
-      *param_5 = 2;
-      bVar3 = true;
+    if ((!bVar2) || (!bVar3))
+    {
+        local_8[0] = *(undefined4*)param_1;
+        FUN_8025c510(DAT_803dd9f4, (byte*)local_8);
+        DAT_803dd9f4 = DAT_803dd9f4 + 1;
+        DAT_803dd9f0 = DAT_803dd9f0 + 1;
+        DAT_803dd9ec = DAT_803dd9ec + 1;
     }
-    else if (cVar1 == -0x60) {
-      *param_5 = 3;
-      bVar3 = true;
-    }
-    else if (cVar1 == -0x80) {
-      *param_5 = 4;
-      bVar3 = true;
-    }
-    else if (cVar1 == '`') {
-      *param_5 = 5;
-      bVar3 = true;
-    }
-    else if (cVar1 == '@') {
-      *param_5 = 6;
-      bVar3 = true;
-    }
-    else if (cVar1 == ' ') {
-      *param_5 = 7;
-      bVar3 = true;
-    }
-    if (!bVar3) {
-      *param_5 = DAT_803dd9ec;
-    }
-  }
-  if ((!bVar2) || (!bVar3)) {
-    local_8[0] = *(undefined4 *)param_1;
-    FUN_8025c510(DAT_803dd9f4,(byte *)local_8);
-    DAT_803dd9f4 = DAT_803dd9f4 + 1;
-    DAT_803dd9f0 = DAT_803dd9f0 + 1;
-    DAT_803dd9ec = DAT_803dd9ec + 1;
-  }
-  return;
+    return;
 }
 
 /*
@@ -3394,15 +4128,16 @@ void FUN_80047d88(char *param_1,char param_2,char param_3,undefined4 *param_4,un
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80047fdc(double param_1,undefined param_2)
+void FUN_80047fdc(double param_1, undefined param_2)
 {
-  uRam803dc24f = param_2;
-  lbl_803DC250 = (float)param_1;
-  if (param_1 <= (double)lbl_803DF748) {
+    uRam803dc24f = param_2;
+    lbl_803DC250 = (float)param_1;
+    if (param_1 <= (double)lbl_803DF748)
+    {
+        return;
+    }
+    lbl_803DC250 = lbl_803DF748;
     return;
-  }
-  lbl_803DC250 = lbl_803DF748;
-  return;
 }
 
 /*
@@ -3420,8 +4155,8 @@ void FUN_80047fdc(double param_1,undefined param_2)
  */
 void FUN_80048000(void)
 {
-  DAT_803dd9a8 = 0;
-  return;
+    DAT_803dd9a8 = 0;
+    return;
 }
 
 /*
@@ -3437,17 +4172,17 @@ void FUN_80048000(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8004800c(double param_1,double param_2,double param_3,double param_4,double param_5,
-                 undefined param_6)
+void FUN_8004800c(double param_1, double param_2, double param_3, double param_4, double param_5,
+                  undefined param_6)
 {
-  DAT_803dd9a8 = 1;
-  lbl_803DD9C4 = (float)param_1;
-  lbl_803DD9C0 = (float)param_2;
-  lbl_803DD9BC = (float)param_3;
-  lbl_803DD9B8 = (float)param_4;
-  lbl_803DD9B4 = (float)param_5;
-  DAT_803dd9b1 = param_6;
-  return;
+    DAT_803dd9a8 = 1;
+    lbl_803DD9C4 = (float)param_1;
+    lbl_803DD9C0 = (float)param_2;
+    lbl_803DD9BC = (float)param_3;
+    lbl_803DD9B8 = (float)param_4;
+    lbl_803DD9B4 = (float)param_5;
+    DAT_803dd9b1 = param_6;
+    return;
 }
 
 
@@ -3466,7 +4201,7 @@ void FUN_8004800c(double param_1,double param_2,double param_3,double param_4,do
  */
 undefined FUN_80048094(void)
 {
-  return DAT_803dd9a8;
+    return DAT_803dd9a8;
 }
 
 /*
@@ -3482,9 +4217,9 @@ undefined FUN_80048094(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800480a0(int param_1,int param_2)
+int FUN_800480a0(int param_1, int param_2)
 {
-  return param_1 + param_2 * 8 + 0x24;
+    return param_1 + param_2 * 8 + 0x24;
 }
 
 
@@ -3501,17 +4236,20 @@ int FUN_800480a0(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8004812c(int param_1,int param_2)
+void FUN_8004812c(int param_1, int param_2)
 {
-  if (param_1 != 0) {
-    if (*(char *)(param_1 + 0x48) == '\0') {
-      FUN_8025b054((uint *)(param_1 + 0x20),param_2);
+    if (param_1 != 0)
+    {
+        if (*(char*)(param_1 + 0x48) == '\0')
+        {
+            FUN_8025b054((uint*)(param_1 + 0x20), param_2);
+        }
+        else
+        {
+            FUN_8025aeac((uint*)(param_1 + 0x20), *(uint**)(param_1 + 0x40), param_2);
+        }
     }
-    else {
-      FUN_8025aeac((uint *)(param_1 + 0x20),*(uint **)(param_1 + 0x40),param_2);
-    }
-  }
-  return;
+    return;
 }
 
 
@@ -3528,190 +4266,198 @@ void FUN_8004812c(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80049910(undefined4 *param_1)
+void FUN_80049910(undefined4* param_1)
 {
-  float fVar1;
-  float *pfVar2;
-  undefined4 local_100;
-  float local_fc;
-  float local_f8;
-  int local_f4;
-  int local_f0;
-  float local_ec;
-  undefined4 local_e8;
-  undefined4 local_e4;
-  undefined4 local_e0;
-  undefined4 local_dc;
-  undefined4 local_d8;
-  float afStack_d4 [12];
-  float local_a4;
-  float local_a0;
-  float local_9c;
-  float local_98;
-  float local_94;
-  float local_90;
-  float local_8c;
-  float local_88;
-  float local_84;
-  float local_80;
-  float local_7c;
-  float local_78;
-  float local_74;
-  float local_70;
-  float local_6c;
-  float local_68;
-  float local_64;
-  float local_60;
-  float local_5c;
-  float local_58;
-  float local_54;
-  float local_50;
-  float local_4c;
-  float local_48;
-  float local_44;
-  float local_40;
-  float local_3c;
-  float local_38;
-  float local_34;
-  float local_30;
-  float local_2c;
-  float local_28;
-  float local_24;
-  float local_20;
-  float local_1c;
-  float local_18;
-  
-  local_ec = DAT_802c24e8;
-  local_e8 = DAT_802c24ec;
-  local_e4 = DAT_802c24f0;
-  local_e0 = DAT_802c24f4;
-  local_dc = DAT_802c24f8;
-  local_d8 = DAT_802c24fc;
-  pfVar2 = (float *)FUN_8000697c();
-  local_44 = lbl_803DF74C;
-  local_40 = lbl_803DF74C;
-  local_3c = lbl_803DF744 / lbl_803DD9BC;
-  local_38 = lbl_803DD9B8;
-  fVar1 = lbl_803DF744 / (lbl_803DD9C4 - lbl_803DD9C0);
-  local_34 = fVar1 * pfVar2[4];
-  local_30 = fVar1 * pfVar2[5];
-  local_2c = fVar1 * pfVar2[6];
-  local_28 = fVar1 * pfVar2[7] + -lbl_803DD9C4 * fVar1;
-  local_24 = lbl_803DF74C;
-  local_20 = lbl_803DF74C;
-  local_1c = lbl_803DF74C;
-  local_18 = lbl_803DF748;
-  FUN_8025d8c4(&local_44,DAT_803dda00,0);
-  FUN_80258674(DAT_803dda08,0,0,0,0,DAT_803dda00);
-  local_100 = *param_1;
-  FUN_8025c510(DAT_803dd9f4,(byte *)&local_100);
-  newshadows_getBlankShadowTexture(&local_f0);
-  if (local_f0 != 0) {
-    if (*(char *)(local_f0 + 0x48) == '\0') {
-      FUN_8025b054((uint *)(local_f0 + 0x20),DAT_803dda0c);
+    float fVar1;
+    float* pfVar2;
+    undefined4 local_100;
+    float local_fc;
+    float local_f8;
+    int local_f4;
+    int local_f0;
+    float local_ec;
+    undefined4 local_e8;
+    undefined4 local_e4;
+    undefined4 local_e0;
+    undefined4 local_dc;
+    undefined4 local_d8;
+    float afStack_d4[12];
+    float local_a4;
+    float local_a0;
+    float local_9c;
+    float local_98;
+    float local_94;
+    float local_90;
+    float local_8c;
+    float local_88;
+    float local_84;
+    float local_80;
+    float local_7c;
+    float local_78;
+    float local_74;
+    float local_70;
+    float local_6c;
+    float local_68;
+    float local_64;
+    float local_60;
+    float local_5c;
+    float local_58;
+    float local_54;
+    float local_50;
+    float local_4c;
+    float local_48;
+    float local_44;
+    float local_40;
+    float local_3c;
+    float local_38;
+    float local_34;
+    float local_30;
+    float local_2c;
+    float local_28;
+    float local_24;
+    float local_20;
+    float local_1c;
+    float local_18;
+
+    local_ec = DAT_802c24e8;
+    local_e8 = DAT_802c24ec;
+    local_e4 = DAT_802c24f0;
+    local_e0 = DAT_802c24f4;
+    local_dc = DAT_802c24f8;
+    local_d8 = DAT_802c24fc;
+    pfVar2 = (float*)FUN_8000697c();
+    local_44 = lbl_803DF74C;
+    local_40 = lbl_803DF74C;
+    local_3c = lbl_803DF744 / lbl_803DD9BC;
+    local_38 = lbl_803DD9B8;
+    fVar1 = lbl_803DF744 / (lbl_803DD9C4 - lbl_803DD9C0);
+    local_34 = fVar1 * pfVar2[4];
+    local_30 = fVar1 * pfVar2[5];
+    local_2c = fVar1 * pfVar2[6];
+    local_28 = fVar1 * pfVar2[7] + -lbl_803DD9C4 * fVar1;
+    local_24 = lbl_803DF74C;
+    local_20 = lbl_803DF74C;
+    local_1c = lbl_803DF74C;
+    local_18 = lbl_803DF748;
+    FUN_8025d8c4(&local_44, DAT_803dda00, 0);
+    FUN_80258674(DAT_803dda08, 0, 0, 0, 0, DAT_803dda00);
+    local_100 = *param_1;
+    FUN_8025c510(DAT_803dd9f4, (byte*)&local_100);
+    newshadows_getBlankShadowTexture(&local_f0);
+    if (local_f0 != 0)
+    {
+        if (*(char*)(local_f0 + 0x48) == '\0')
+        {
+            FUN_8025b054((uint*)(local_f0 + 0x20), DAT_803dda0c);
+        }
+        else
+        {
+            FUN_8025aeac((uint*)(local_f0 + 0x20), *(uint**)(local_f0 + 0x40), DAT_803dda0c);
+        }
     }
-    else {
-      FUN_8025aeac((uint *)(local_f0 + 0x20),*(uint **)(local_f0 + 0x40),DAT_803dda0c);
+    if (DAT_803dd9b1 == '\0')
+    {
+        FUN_8025c828(DAT_803dda10, DAT_803dda08, DAT_803dda0c, 0xff);
+        FUN_8025c1a4(DAT_803dda10, 0, 0xe, 9, 0xf);
+        FUN_8025c224(DAT_803dda10, 7, 7, 7, 0);
+        FUN_8025c65c(DAT_803dda10, 0, 0);
+        FUN_8025be80(DAT_803dda10);
+        FUN_8025c2a8(DAT_803dda10, 0, 0, 0, 1, 0);
+        FUN_8025c368(DAT_803dda10, 0, 0, 0, 1, 0);
+        DAT_803dd9b0 = 1;
+        GXSetBlendMode(DAT_803dda10, DAT_803dd9f0);
+        DAT_803dda08 = DAT_803dda08 + 1;
+        DAT_803dda10 = DAT_803dda10 + 1;
+        DAT_803dda0c = DAT_803dda0c + 1;
+        DAT_803dda00 = DAT_803dda00 + 3;
+        DAT_803dd9ea = DAT_803dd9ea + '\x01';
+        DAT_803dd9e9 = DAT_803dd9e9 + '\x01';
     }
-  }
-  if (DAT_803dd9b1 == '\0') {
-    FUN_8025c828(DAT_803dda10,DAT_803dda08,DAT_803dda0c,0xff);
-    FUN_8025c1a4(DAT_803dda10,0,0xe,9,0xf);
-    FUN_8025c224(DAT_803dda10,7,7,7,0);
-    FUN_8025c65c(DAT_803dda10,0,0);
-    FUN_8025be80(DAT_803dda10);
-    FUN_8025c2a8(DAT_803dda10,0,0,0,1,0);
-    FUN_8025c368(DAT_803dda10,0,0,0,1,0);
-    DAT_803dd9b0 = 1;
-    GXSetBlendMode(DAT_803dda10,DAT_803dd9f0);
-    DAT_803dda08 = DAT_803dda08 + 1;
-    DAT_803dda10 = DAT_803dda10 + 1;
-    DAT_803dda0c = DAT_803dda0c + 1;
-    DAT_803dda00 = DAT_803dda00 + 3;
-    DAT_803dd9ea = DAT_803dd9ea + '\x01';
-    DAT_803dd9e9 = DAT_803dd9e9 + '\x01';
-  }
-  else {
-    newshadows_getShadowNoiseScroll(&local_f8,&local_fc);
-    local_fc = local_fc * lbl_803DF760;
-    local_f8 = local_f8 * lbl_803DF788;
-    FUN_8025b9e8(2,&local_ec,-2);
-    FUN_8025bd1c(DAT_803dd9fc,DAT_803dda08 + 1,DAT_803dda0c + 1);
-    local_74 = lbl_803DD9B4;
-    local_70 = lbl_803DF74C;
-    local_6c = lbl_803DF74C;
-    local_68 = lbl_803DDA58 * lbl_803DD9B4 + local_f8;
-    local_64 = lbl_803DF74C;
-    local_60 = lbl_803DD9B4;
-    local_5c = lbl_803DF74C;
-    local_58 = lbl_803DF74C;
-    local_54 = lbl_803DF74C;
-    local_50 = lbl_803DF74C;
-    local_4c = lbl_803DF74C;
-    local_48 = lbl_803DF748;
-    PSVECDotProduct((double)lbl_803DF7A8,afStack_d4,0x7a);
-    FUN_80247618(afStack_d4,&local_74,&local_74);
-    FUN_80247618(&local_74,pfVar2,&local_74);
-    FUN_8025d8c4(&local_74,DAT_803dda00 + 3,0);
-    FUN_80258674(DAT_803dda08 + 1,0,0,0,0,DAT_803dda00 + 3);
-    FUN_8025b94c(DAT_803dda10,DAT_803dd9fc,0,2,2,6,6,0,0,0);
-    FUN_8025bb48(DAT_803dd9fc,0,0);
-    FUN_8025bd1c(DAT_803dd9fc + 1,DAT_803dda08 + 2,DAT_803dda0c + 1);
-    local_a4 = lbl_803DF74C;
-    local_a0 = lbl_803DF74C;
-    local_9c = lbl_803DD9B4;
-    local_98 = lbl_803DDA5C * lbl_803DD9B4 + local_fc;
-    local_94 = lbl_803DF74C;
-    local_90 = lbl_803DD9B4;
-    local_8c = lbl_803DF74C;
-    local_88 = lbl_803DF74C;
-    local_84 = lbl_803DF74C;
-    local_80 = lbl_803DF74C;
-    local_7c = lbl_803DF74C;
-    local_78 = lbl_803DF748;
-    PSVECDotProduct((double)lbl_803DF7AC,afStack_d4,0x78);
-    FUN_80247618(afStack_d4,&local_a4,&local_a4);
-    FUN_80247618(&local_a4,pfVar2,&local_a4);
-    FUN_8025d8c4(&local_a4,DAT_803dda00 + 6,0);
-    FUN_80258674(DAT_803dda08 + 2,0,0,0,0,DAT_803dda00 + 6);
-    FUN_8025b94c(DAT_803dda10 + 1,DAT_803dd9fc + 1,0,2,2,0,0,1,0,0);
-    FUN_8025bb48(DAT_803dd9fc + 1,0,0);
-    FUN_8025c828(DAT_803dda10,0xff,0xff,0xff);
-    FUN_8025c1a4(DAT_803dda10,0xf,0xf,0xf,0);
-    FUN_8025c224(DAT_803dda10,7,7,7,0);
-    FUN_8025c65c(DAT_803dda10,0,0);
-    FUN_8025c2a8(DAT_803dda10,0,0,0,1,0);
-    FUN_8025c368(DAT_803dda10,0,0,0,1,0);
-    DAT_803dd9b0 = 1;
-    FUN_8025c828(DAT_803dda10 + 1,DAT_803dda08,DAT_803dda0c,0xff);
-    FUN_8025c1a4(DAT_803dda10 + 1,0,0xe,9,0xf);
-    FUN_8025c224(DAT_803dda10 + 1,7,7,7,0);
-    FUN_8025c65c(DAT_803dda10 + 1,0,0);
-    FUN_8025c2a8(DAT_803dda10 + 1,0,0,0,1,0);
-    FUN_8025c368(DAT_803dda10 + 1,0,0,0,1,0);
-    newshadows_getShadowNoiseTexture(&local_f4);
-    if (local_f4 != 0) {
-      if (*(char *)(local_f4 + 0x48) == '\0') {
-        FUN_8025b054((uint *)(local_f4 + 0x20),DAT_803dda0c + 1);
-      }
-      else {
-        FUN_8025aeac((uint *)(local_f4 + 0x20),*(uint **)(local_f4 + 0x40),DAT_803dda0c + 1);
-      }
+    else
+    {
+        newshadows_getShadowNoiseScroll(&local_f8, &local_fc);
+        local_fc = local_fc * lbl_803DF760;
+        local_f8 = local_f8 * lbl_803DF788;
+        FUN_8025b9e8(2, &local_ec, -2);
+        FUN_8025bd1c(DAT_803dd9fc, DAT_803dda08 + 1, DAT_803dda0c + 1);
+        local_74 = lbl_803DD9B4;
+        local_70 = lbl_803DF74C;
+        local_6c = lbl_803DF74C;
+        local_68 = lbl_803DDA58 * lbl_803DD9B4 + local_f8;
+        local_64 = lbl_803DF74C;
+        local_60 = lbl_803DD9B4;
+        local_5c = lbl_803DF74C;
+        local_58 = lbl_803DF74C;
+        local_54 = lbl_803DF74C;
+        local_50 = lbl_803DF74C;
+        local_4c = lbl_803DF74C;
+        local_48 = lbl_803DF748;
+        PSVECDotProduct((double)lbl_803DF7A8, afStack_d4, 0x7a);
+        FUN_80247618(afStack_d4, &local_74, &local_74);
+        FUN_80247618(&local_74, pfVar2, &local_74);
+        FUN_8025d8c4(&local_74, DAT_803dda00 + 3, 0);
+        FUN_80258674(DAT_803dda08 + 1, 0, 0, 0, 0, DAT_803dda00 + 3);
+        FUN_8025b94c(DAT_803dda10, DAT_803dd9fc, 0, 2, 2, 6, 6, 0, 0, 0);
+        FUN_8025bb48(DAT_803dd9fc, 0, 0);
+        FUN_8025bd1c(DAT_803dd9fc + 1, DAT_803dda08 + 2, DAT_803dda0c + 1);
+        local_a4 = lbl_803DF74C;
+        local_a0 = lbl_803DF74C;
+        local_9c = lbl_803DD9B4;
+        local_98 = lbl_803DDA5C * lbl_803DD9B4 + local_fc;
+        local_94 = lbl_803DF74C;
+        local_90 = lbl_803DD9B4;
+        local_8c = lbl_803DF74C;
+        local_88 = lbl_803DF74C;
+        local_84 = lbl_803DF74C;
+        local_80 = lbl_803DF74C;
+        local_7c = lbl_803DF74C;
+        local_78 = lbl_803DF748;
+        PSVECDotProduct((double)lbl_803DF7AC, afStack_d4, 0x78);
+        FUN_80247618(afStack_d4, &local_a4, &local_a4);
+        FUN_80247618(&local_a4, pfVar2, &local_a4);
+        FUN_8025d8c4(&local_a4, DAT_803dda00 + 6, 0);
+        FUN_80258674(DAT_803dda08 + 2, 0, 0, 0, 0, DAT_803dda00 + 6);
+        FUN_8025b94c(DAT_803dda10 + 1, DAT_803dd9fc + 1, 0, 2, 2, 0, 0, 1, 0, 0);
+        FUN_8025bb48(DAT_803dd9fc + 1, 0, 0);
+        FUN_8025c828(DAT_803dda10, 0xff, 0xff, 0xff);
+        FUN_8025c1a4(DAT_803dda10, 0xf, 0xf, 0xf, 0);
+        FUN_8025c224(DAT_803dda10, 7, 7, 7, 0);
+        FUN_8025c65c(DAT_803dda10, 0, 0);
+        FUN_8025c2a8(DAT_803dda10, 0, 0, 0, 1, 0);
+        FUN_8025c368(DAT_803dda10, 0, 0, 0, 1, 0);
+        DAT_803dd9b0 = 1;
+        FUN_8025c828(DAT_803dda10 + 1, DAT_803dda08, DAT_803dda0c, 0xff);
+        FUN_8025c1a4(DAT_803dda10 + 1, 0, 0xe, 9, 0xf);
+        FUN_8025c224(DAT_803dda10 + 1, 7, 7, 7, 0);
+        FUN_8025c65c(DAT_803dda10 + 1, 0, 0);
+        FUN_8025c2a8(DAT_803dda10 + 1, 0, 0, 0, 1, 0);
+        FUN_8025c368(DAT_803dda10 + 1, 0, 0, 0, 1, 0);
+        newshadows_getShadowNoiseTexture(&local_f4);
+        if (local_f4 != 0)
+        {
+            if (*(char*)(local_f4 + 0x48) == '\0')
+            {
+                FUN_8025b054((uint*)(local_f4 + 0x20), DAT_803dda0c + 1);
+            }
+            else
+            {
+                FUN_8025aeac((uint*)(local_f4 + 0x20), *(uint**)(local_f4 + 0x40), DAT_803dda0c + 1);
+            }
+        }
+        GXSetBlendMode(DAT_803dda10 + 1, DAT_803dd9f0);
+        DAT_803dda08 = DAT_803dda08 + 3;
+        DAT_803dda10 = DAT_803dda10 + 2;
+        DAT_803dda0c = DAT_803dda0c + 2;
+        DAT_803dda00 = DAT_803dda00 + 9;
+        DAT_803dd9fc = DAT_803dd9fc + 2;
+        DAT_803dd9ea = DAT_803dd9ea + '\x02';
+        DAT_803dd9e9 = DAT_803dd9e9 + '\x03';
+        DAT_803dd9e8 = DAT_803dd9e8 + '\x02';
     }
-    GXSetBlendMode(DAT_803dda10 + 1,DAT_803dd9f0);
-    DAT_803dda08 = DAT_803dda08 + 3;
-    DAT_803dda10 = DAT_803dda10 + 2;
-    DAT_803dda0c = DAT_803dda0c + 2;
-    DAT_803dda00 = DAT_803dda00 + 9;
-    DAT_803dd9fc = DAT_803dd9fc + 2;
-    DAT_803dd9ea = DAT_803dd9ea + '\x02';
-    DAT_803dd9e9 = DAT_803dd9e9 + '\x03';
-    DAT_803dd9e8 = DAT_803dd9e8 + '\x02';
-  }
-  DAT_803dd9f4 = DAT_803dd9f4 + 1;
-  DAT_803dd9f0 = DAT_803dd9f0 + 1;
-  DAT_803dd9ec = DAT_803dd9ec + 1;
-  return;
+    DAT_803dd9f4 = DAT_803dd9f4 + 1;
+    DAT_803dd9f0 = DAT_803dd9f0 + 1;
+    DAT_803dd9ec = DAT_803dd9ec + 1;
+    return;
 }
 
 
@@ -3730,22 +4476,24 @@ void FUN_80049910(undefined4 *param_1)
  */
 void FUN_8004bc68(char param_1)
 {
-  FUN_8025be80(DAT_803dda10);
-  FUN_8025c828(DAT_803dda10,0xff,0xff,4);
-  FUN_8025c65c(DAT_803dda10,0,0);
-  if (param_1 == '\0') {
-    FUN_8025c1a4(DAT_803dda10,0xf,0,10,6);
-  }
-  else {
-    FUN_8025c1a4(DAT_803dda10,0xf,0,4,6);
-  }
-  FUN_8025c224(DAT_803dda10,7,7,7,0);
-  FUN_8025c2a8(DAT_803dda10,0,0,0,1,0);
-  FUN_8025c368(DAT_803dda10,0,0,0,1,0);
-  DAT_803dd9b0 = 1;
-  DAT_803dda10 = DAT_803dda10 + 1;
-  DAT_803dd9ea = DAT_803dd9ea + '\x01';
-  return;
+    FUN_8025be80(DAT_803dda10);
+    FUN_8025c828(DAT_803dda10, 0xff, 0xff, 4);
+    FUN_8025c65c(DAT_803dda10, 0, 0);
+    if (param_1 == '\0')
+    {
+        FUN_8025c1a4(DAT_803dda10, 0xf, 0, 10, 6);
+    }
+    else
+    {
+        FUN_8025c1a4(DAT_803dda10, 0xf, 0, 4, 6);
+    }
+    FUN_8025c224(DAT_803dda10, 7, 7, 7, 0);
+    FUN_8025c2a8(DAT_803dda10, 0, 0, 0, 1, 0);
+    FUN_8025c368(DAT_803dda10, 0, 0, 0, 1, 0);
+    DAT_803dd9b0 = 1;
+    DAT_803dda10 = DAT_803dda10 + 1;
+    DAT_803dd9ea = DAT_803dd9ea + '\x01';
+    return;
 }
 
 
@@ -3759,25 +4507,34 @@ void disableHeavyFog(void) { lbl_803DCD28 = 0x0; }
 /* *p1 = lbl1; *p2 = lbl2; (f32) */
 extern f32 lbl_803DCD44;
 extern f32 lbl_803DCD40;
-void fn_8004C234(f32 *p1, f32 *p2) { *p1 = lbl_803DCD44; *p2 = lbl_803DCD40; }
+
+void fn_8004C234(f32* p1, f32* p2)
+{
+    *p1 = lbl_803DCD44;
+    *p2 = lbl_803DCD40;
+}
 
 extern u32 lbl_803DB5EC;
 extern f32 lbl_803DB5F0;
 extern f32 lbl_803DEAC8;
 #pragma scheduling off
-void fn_8004C1E4(u8 b, f32 scale) {
+void fn_8004C1E4(u8 b, f32 scale)
+{
     ((u8*)&lbl_803DB5EC)[3] = b;
     lbl_803DB5F0 = scale;
-    if (scale > lbl_803DEAC8) {
+    if (scale > lbl_803DEAC8)
+    {
         lbl_803DB5F0 = lbl_803DEAC8;
     }
 }
 
 #pragma peephole off
-void *fn_8004B118(int *p) {
-    void **arr;
+void* fn_8004B118(int* p)
+{
+    void** arr;
     int idx = *(s16*)((char*)p + 0x2c);
-    if (idx < *(s16*)((char*)p + 0x2a)) {
+    if (idx < *(s16*)((char*)p + 0x2a))
+    {
         arr = *(void***)((char*)p + 8);
         (*(s16*)((char*)p + 0x2c))++;
         return arr[idx];
@@ -3785,151 +4542,181 @@ void *fn_8004B118(int *p) {
     return NULL;
 }
 
-int fn_8004B148(int *p) {
+int fn_8004B148(int* p)
+{
     int node;
     u32 cur;
     u32 prev;
     int i;
     int count;
-    int *entry;
+    int* entry;
 
     prev = p[7];
     node = *p + prev * 0x10;
-    *(u8 *)(node + 0xd) = 0xff;
-    while ((cur = *(u8 *)(node + 0xc)) != 0xff) {
+    *(u8*)(node + 0xd) = 0xff;
+    while ((cur = *(u8*)(node + 0xc)) != 0xff)
+    {
         node = *p + cur * 0x10;
-        *(u8 *)(node + 0xd) = (u8)prev;
+        *(u8*)(node + 0xd) = (u8)prev;
         prev = cur;
     }
-    if (*(u8 *)(node + 0xd) == 0xff) {
+    if (*(u8*)(node + 0xd) == 0xff)
+    {
         entry = NULL;
-    } else {
-        entry = (int *)(*p + (u32)*(u8 *)(node + 0xd) * 0x10);
+    }
+    else
+    {
+        entry = (int*)(*p + (u32) * (u8*)(node + 0xd) * 0x10);
     }
     count = 0;
     i = 0;
-    while (entry != NULL) {
-        *(int *)(p[2] + i) = *entry;
+    while (entry != NULL)
+    {
+        *(int*)(p[2] + i) = *entry;
         i += 4;
         count++;
-        if (count >= 100) {
+        if (count >= 100)
+        {
             entry = NULL;
-        } else if (*(u8 *)((int)entry + 0xd) == 0xff) {
+        }
+        else if (*(u8*)((int)entry + 0xd) == 0xff)
+        {
             entry = NULL;
-        } else {
-            entry = (int *)(*p + (u32)*(u8 *)((int)entry + 0xd) * 0x10);
+        }
+        else
+        {
+            entry = (int*)(*p + (u32) * (u8*)((int)entry + 0xd) * 0x10);
         }
     }
-    *(s16 *)((int)p + 0x2a) = (s16)count;
-    *(u16 *)(p + 0xb) = 0;
+    *(s16*)((int)p + 0x2a) = (s16)count;
+    *(u16*)(p + 0xb) = 0;
     return count;
 }
 
-extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
+extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 #pragma ppc_unroll_speculative off
-int fn_8004B31C(int *param_1, int param_2, int param_3, int param_4, u8 param_5) {
+int fn_8004B31C(int* param_1, int param_2, int param_3, int param_4, u8 param_5)
+{
     int i = 0;
     int o4;
     int o8;
-    int *node;
-    u32 *heap;
+    int* node;
+    u32* heap;
     int s;
     u32 pri;
     int parent;
     u16 idx;
-    u16 *hh;
+    u16* hh;
     u16 v;
 
-    *(s16 *)((char *)param_1 + 0x22) = i;
-    *(s16 *)((char *)param_1 + 0x20) = i;
+    *(s16*)((char*)param_1 + 0x22) = i;
+    *(s16*)((char*)param_1 + 0x20) = i;
     o4 = i;
     o8 = i;
-    for (i = 0; i < 0xf8; i += 8) {
-        *(int *)(param_1[1] + o4) = 0;
-        *(u8 *)(*param_1 + o8 + 0xe) = 0;
-        *(int *)(param_1[1] + o4 + 8) = 0;
-        *(u8 *)(*param_1 + o8 + 0x1e) = 0;
-        *(int *)(param_1[1] + o4 + 0x10) = 0;
-        *(u8 *)(*param_1 + o8 + 0x2e) = 0;
-        *(int *)(param_1[1] + o4 + 0x18) = 0;
-        *(u8 *)(*param_1 + o8 + 0x3e) = 0;
-        *(int *)(param_1[1] + o4 + 0x20) = 0;
-        *(u8 *)(*param_1 + o8 + 0x4e) = 0;
-        *(int *)(param_1[1] + o4 + 0x28) = 0;
-        *(u8 *)(*param_1 + o8 + 0x5e) = 0;
-        *(int *)(param_1[1] + o4 + 0x30) = 0;
-        *(u8 *)(*param_1 + o8 + 0x6e) = 0;
-        *(int *)(param_1[1] + o4 + 0x38) = 0;
-        *(u8 *)(*param_1 + o8 + 0x7e) = 0;
+    for (i = 0; i < 0xf8; i += 8)
+    {
+        *(int*)(param_1[1] + o4) = 0;
+        *(u8*)(*param_1 + o8 + 0xe) = 0;
+        *(int*)(param_1[1] + o4 + 8) = 0;
+        *(u8*)(*param_1 + o8 + 0x1e) = 0;
+        *(int*)(param_1[1] + o4 + 0x10) = 0;
+        *(u8*)(*param_1 + o8 + 0x2e) = 0;
+        *(int*)(param_1[1] + o4 + 0x18) = 0;
+        *(u8*)(*param_1 + o8 + 0x3e) = 0;
+        *(int*)(param_1[1] + o4 + 0x20) = 0;
+        *(u8*)(*param_1 + o8 + 0x4e) = 0;
+        *(int*)(param_1[1] + o4 + 0x28) = 0;
+        *(u8*)(*param_1 + o8 + 0x5e) = 0;
+        *(int*)(param_1[1] + o4 + 0x30) = 0;
+        *(u8*)(*param_1 + o8 + 0x6e) = 0;
+        *(int*)(param_1[1] + o4 + 0x38) = 0;
+        *(u8*)(*param_1 + o8 + 0x7e) = 0;
         o4 += 0x40;
         o8 += 0x80;
     }
-    for (; i < 0xfe; i++) {
-        *(int *)(param_1[1] + i * 8) = 0;
-        *(u8 *)(*param_1 + i * 16 + 0xe) = 0;
+    for (; i < 0xfe; i++)
+    {
+        *(int*)(param_1[1] + i * 8) = 0;
+        *(u8*)(*param_1 + i * 16 + 0xe) = 0;
     }
     param_1[6] = param_2;
     param_1[3] = param_3;
     param_1[4] = param_4;
-    *(u8 *)((char *)param_1 + 0x28) = param_5 & 1;
+    *(u8*)((char*)param_1 + 0x28) = param_5 & 1;
     param_1[9] = 10000;
-    s = *(s16 *)((char *)param_1 + 0x20);
-    if (s == 0xfe) {
+    s = *(s16*)((char*)param_1 + 0x20);
+    if (s == 0xfe)
+    {
         node = NULL;
-    } else {
-        node = (int *)(*param_1 + (*(s16 *)((char *)param_1 + 0x20))++ * 0x10);
+    }
+    else
+    {
+        node = (int*)(*param_1 + (*(s16*)((char*)param_1 + 0x20))++ * 0x10);
         *node = param_2;
         node[2] = 0;
-        *(u8 *)(node + 3) = 0xff;
-        node[1] = (u32)vec3f_distanceSquared((f32 *)(*node + 8), (f32 *)param_1[3]);
+        *(u8*)(node + 3) = 0xff;
+        node[1] = (u32)vec3f_distanceSquared((f32*)(*node + 8), (f32*)param_1[3]);
     }
     i = node[1] + node[2];
-    heap = (u32 *)param_1[1];
-    hh = (u16 *)heap;
-    v = *(s16 *)((char *)param_1 + 0x20) - 1;
-    hh[++(*(s16 *)((char *)param_1 + 0x22)) * 4 + 2] = v;
-    *(u32 *)((int)heap + *(s16 *)((char *)param_1 + 0x22) * 8) = -1 - i;
-    i = *(s16 *)((char *)param_1 + 0x22);
-    pri = *(u32 *)((int)heap + i * 8);
+    heap = (u32*)param_1[1];
+    hh = (u16*)heap;
+    v = *(s16*)((char*)param_1 + 0x20) - 1;
+    hh[++(*(s16*)((char*)param_1 + 0x22)) * 4 + 2] = v;
+    *(u32*)((int)heap + *(s16*)((char*)param_1 + 0x22) * 8) = -1 - i;
+    i = *(s16*)((char*)param_1 + 0x22);
+    pri = *(u32*)((int)heap + i * 8);
     idx = hh[i * 4 + 2];
     *heap = -1;
-    while (parent = i >> 1, *(u32 *)(hh + parent * 4) < pri) {
-        *(u16 *)((int)heap + i * 8 + 4) = *(u16 *)((int)heap + (int)((long)parent * 8) + 4);
-        *(u32 *)((int)heap + i * 8) = *(u32 *)((int)heap + (int)((long)parent * 8));
+    while (parent = i >> 1, *(u32*)(hh + parent * 4) < pri)
+    {
+        *(u16*)((int)heap + i * 8 + 4) = *(u16*)((int)heap + (int)((long)parent * 8) + 4);
+        *(u32*)((int)heap + i * 8) = *(u32*)((int)heap + (int)((long)parent * 8));
         i = parent;
     }
-    *(u32 *)((int)heap + i * 8) = pri;
+    *(u32*)((int)heap + i * 8) = pri;
     hh[i * 4 + 2] = idx;
     return 0;
 }
 #pragma ppc_unroll_speculative on
 
-void texPreGetMipmap(u32 param_1, int param_2, int *param_3, int *param_4, int param_5, u8 *param_6, int param_7) {
+void texPreGetMipmap(u32 param_1, int param_2, int* param_3, int* param_4, int param_5, u8* param_6, int param_7)
+{
     u32 base = lbl_8035F3E8[0x4f];
-    if (base != 0) {
-        if (param_7 == 1 && param_6 != 0) {
-            int e = base + (param_1 & 0xffffff) * 2 + *(int *)(param_6 + param_5 * 4) + 4;
-            int v = *(int *)(e + 8);
-            *param_3 = *(int *)(e + 4);
+    if (base != 0)
+    {
+        if (param_7 == 1 && param_6 != 0)
+        {
+            int e = base + (param_1 & 0xffffff) * 2 + *(int*)(param_6 + param_5 * 4) + 4;
+            int v = *(int*)(e + 8);
+            *param_3 = *(int*)(e + 4);
             *param_4 = v;
-        } else if (param_7 == 2 && param_6 != 0) {
-            memcpy(param_6, (void *)(base + (param_1 & 0xffffff) * 2), (param_5 + 1) * 4);
-        } else {
+        }
+        else if (param_7 == 2 && param_6 != 0)
+        {
+            memcpy(param_6, (void*)(base + (param_1 & 0xffffff) * 2), (param_5 + 1) * 4);
+        }
+        else
+        {
             int e = base + (param_1 & 0xffffff) * 2;
-            int v = *(int *)(e + 0xc);
-            *param_3 = *(int *)(e + 8);
-            if (strncmp(&sDirBlockTag, (char *)e, 3) == 0) {
+            int v = *(int*)(e + 0xc);
+            *param_3 = *(int*)(e + 8);
+            if (strncmp(&sDirBlockTag, (char*)e, 3) == 0)
+            {
                 *param_4 = 0xffffffff;
-            } else {
+            }
+            else
+            {
                 *param_4 = v;
             }
         }
     }
 }
 
-void tex0GetFrame(int texId, int unused, int *outA, int *outB, int count, u8 *frameTable, int queryMode) {
+void tex0GetFrame(int texId, int unused, int* outA, int* outB, int count, u8* frameTable, int queryMode)
+{
     int idx = -1;
-    if (lbl_8035F3E8[0x23] != 0 || lbl_8035F3E8[0x4d] != 0) {
+    if (lbl_8035F3E8[0x23] != 0 || lbl_8035F3E8[0x4d] != 0)
+    {
         int s = OSDisableInterrupts();
         int flags = lbl_803DCC80;
         u32 f478;
@@ -3937,35 +4724,49 @@ void tex0GetFrame(int texId, int unused, int *outA, int *outB, int count, u8 *fr
         OSRestoreInterrupts(s);
         f478 = lbl_8035F3E8[0x24];
         f520 = lbl_8035F3E8[0x4e];
-        if ((texId & 0x80000000) != 0 && (flags & 0x200) == 0) {
-            idx = 0x4d;
-        } else if ((texId & 0x40000000) != 0 && (flags & 0x100) == 0) {
-            idx = 0x23;
-        } else if (f478 != 0 && (flags & 0x100) == 0) {
-            idx = 0x23;
-        } else if (f520 != 0 && (flags & 0x200) == 0) {
+        if ((texId & 0x80000000) != 0 && (flags & 0x200) == 0)
+        {
             idx = 0x4d;
         }
-        if (queryMode == 1 && frameTable != 0) {
+        else if ((texId & 0x40000000) != 0 && (flags & 0x100) == 0)
+        {
+            idx = 0x23;
+        }
+        else if (f478 != 0 && (flags & 0x100) == 0)
+        {
+            idx = 0x23;
+        }
+        else if (f520 != 0 && (flags & 0x200) == 0)
+        {
+            idx = 0x4d;
+        }
+        if (queryMode == 1 && frameTable != 0)
+        {
             int base = lbl_8035F3E8[idx];
-            int e = base + (texId & 0xffffff) * 2 + *(int *)(frameTable + count * 4) + 4;
-            int v = *(int *)(e + 8);
-            *outA = *(int *)(e + 4);
+            int e = base + (texId & 0xffffff) * 2 + *(int*)(frameTable + count * 4) + 4;
+            int v = *(int*)(e + 8);
+            *outA = *(int*)(e + 4);
             *outB = v;
-        } else if (queryMode == 2 && frameTable != 0) {
-            memcpy(frameTable, (void *)(lbl_8035F3E8[idx] + (texId & 0xffffff) * 2), (count + 1) * 4);
-        } else {
+        }
+        else if (queryMode == 2 && frameTable != 0)
+        {
+            memcpy(frameTable, (void*)(lbl_8035F3E8[idx] + (texId & 0xffffff) * 2), (count + 1) * 4);
+        }
+        else
+        {
             int e = lbl_8035F3E8[idx] + (texId & 0xffffff) * 2 + 4;
-            int v = *(int *)(e + 8);
-            *outA = *(int *)(e + 4);
+            int v = *(int*)(e + 8);
+            *outA = *(int*)(e + 4);
             *outB = v;
         }
     }
 }
 
-void tex1GetFrame(u32 texId, int unused, int *outA, int *outB, int count, u8 *frameTable, int queryMode) {
+void tex1GetFrame(u32 texId, int unused, int* outA, int* outB, int count, u8* frameTable, int queryMode)
+{
     int idx = -1;
-    if (lbl_8035F3E8[0x20] != 0 || lbl_8035F3E8[0x4b] != 0) {
+    if (lbl_8035F3E8[0x20] != 0 || lbl_8035F3E8[0x4b] != 0)
+    {
         int s = OSDisableInterrupts();
         int flags = lbl_803DCC80;
         u32 f46c;
@@ -3973,60 +4774,86 @@ void tex1GetFrame(u32 texId, int unused, int *outA, int *outB, int count, u8 *fr
         OSRestoreInterrupts(s);
         f46c = lbl_8035F3E8[0x21];
         f518 = lbl_8035F3E8[0x4c];
-        if ((texId & 0x80000000) != 0 && (flags & 0x2000) == 0) {
+        if ((texId & 0x80000000) != 0 && (flags & 0x2000) == 0)
+        {
             idx = 0x4b;
-        } else if ((texId & 0x40000000) != 0 && (flags & 0x1000) == 0) {
+        }
+        else if ((texId & 0x40000000) != 0 && (flags & 0x1000) == 0)
+        {
             idx = 0x20;
-        } else if (f46c != 0 && (flags & 0x1000) == 0 && lbl_8035F3E8[0x20] != 0) {
+        }
+        else if (f46c != 0 && (flags & 0x1000) == 0 && lbl_8035F3E8[0x20] != 0)
+        {
             idx = 0x20;
-        } else if (f518 != 0 && (flags & 0x2000) == 0 && lbl_8035F3E8[0x4b] != 0) {
+        }
+        else if (f518 != 0 && (flags & 0x2000) == 0 && lbl_8035F3E8[0x4b] != 0)
+        {
             idx = 0x4b;
         }
         {
             u32 base = lbl_8035F3E8[idx];
-            if (base != 0) {
-                if (queryMode == 1 && frameTable != 0) {
-                    int e = (texId & 0xffffff) * 2 + *(int *)(frameTable + count * 4) + 4;
+            if (base != 0)
+            {
+                if (queryMode == 1 && frameTable != 0)
+                {
+                    int e = (texId & 0xffffff) * 2 + *(int*)(frameTable + count * 4) + 4;
                     int v;
                     e = base + e;
-                    v = *(int *)(e + 4);
-                    *outB = *(int *)(e + 8);
+                    v = *(int*)(e + 4);
+                    *outB = *(int*)(e + 8);
                     *outA = v;
-                } else if (queryMode == 2 && frameTable != 0) {
-                    memcpy(frameTable, (void *)(base + (texId & 0xffffff) * 2), (count + 1) * 4);
-                } else {
+                }
+                else if (queryMode == 2 && frameTable != 0)
+                {
+                    memcpy(frameTable, (void*)(base + (texId & 0xffffff) * 2), (count + 1) * 4);
+                }
+                else
+                {
                     int e = base + (texId & 0xffffff) * 2;
-                    int v = *(int *)(e + 0xc);
-                    *outA = *(int *)(e + 8);
-                    if (strncmp(&sDirBlockTag, (char *)e, 3) == 0) {
+                    int v = *(int*)(e + 0xc);
+                    *outA = *(int*)(e + 8);
+                    if (strncmp(&sDirBlockTag, (char*)e, 3) == 0)
+                    {
                         *outB = 0xffffffff;
-                    } else {
+                    }
+                    else
+                    {
                         *outB = v;
                     }
                 }
-            } else {
+            }
+            else
+            {
                 char fileInfo[0x3c];
-                char *buf;
+                char* buf;
                 DVDOpen(sResourceFileNameTable[idx], fileInfo);
                 buf = mmAlloc(0x400, 0x7f7f7fff, 0);
                 DVDRead(fileInfo, buf, 0x400, (texId & 0xffffff) * 2);
                 DVDClose(fileInfo);
                 DCStoreRange(buf, 0x400);
-                if (queryMode == 1 && frameTable != 0) {
-                    int e = *(int *)(frameTable + count * 4) + 4;
+                if (queryMode == 1 && frameTable != 0)
+                {
+                    int e = *(int*)(frameTable + count * 4) + 4;
                     int v;
                     e = (int)buf + e;
-                    v = *(int *)(e + 4);
-                    *outB = *(int *)(e + 8);
+                    v = *(int*)(e + 4);
+                    *outB = *(int*)(e + 8);
                     *outA = v;
-                } else if (queryMode == 2 && frameTable != 0) {
+                }
+                else if (queryMode == 2 && frameTable != 0)
+                {
                     memcpy(frameTable, buf, (count + 1) * 4);
-                } else {
-                    int v = *(int *)(buf + 0xc);
-                    *outA = *(int *)(buf + 8);
-                    if (strncmp(&sDirBlockTag, (char *)buf, 3) == 0) {
+                }
+                else
+                {
+                    int v = *(int*)(buf + 0xc);
+                    *outA = *(int*)(buf + 8);
+                    if (strncmp(&sDirBlockTag, (char*)buf, 3) == 0)
+                    {
                         *outB = 0xffffffff;
-                    } else {
+                    }
+                    else
+                    {
                         *outB = v;
                     }
                 }
@@ -4043,18 +4870,21 @@ extern f32 lbl_803DCD34;
 extern f32 lbl_803DCD38;
 extern f32 lbl_803DCD3C;
 
-int mapGetDirIdx(int idx) {
+int mapGetDirIdx(int idx)
+{
     if (idx >= 0x4b) return 5;
     return sMapFileNameIndexRemapTable[idx];
 }
 
-void setColor_803db5d0(u8 r, u8 g, u8 b) {
+void setColor_803db5d0(u8 r, u8 g, u8 b)
+{
     (&lbl_803DB5D0)[0] = r;
     (&lbl_803DB5D0)[1] = g;
     (&lbl_803DB5D0)[2] = b;
 }
 
-void enableHeavyFog(u8 mode, f32 a, f32 b, f32 c, f32 d, f32 e) {
+void enableHeavyFog(u8 mode, f32 a, f32 b, f32 c, f32 d, f32 e)
+{
     lbl_803DCD28 = 1;
     lbl_803DCD44 = a;
     lbl_803DCD40 = b;
@@ -4064,21 +4894,34 @@ void enableHeavyFog(u8 mode, f32 a, f32 b, f32 c, f32 d, f32 e) {
     lbl_803DCD31 = mode;
 }
 
-void *Shader_getLayer(char *base, int idx) { return base + idx * 8 + 0x24; }
+void* Shader_getLayer(char* base, int idx) { return base + idx * 8 + 0x24; }
 
 extern u8 lbl_803DCCB0;
 extern void gxPerfFn_8004a77c(int);
-void gxTransformFn_8004a83c(void) {
+
+void gxTransformFn_8004a83c(void)
+{
     lbl_803DCCB0 = 0;
     gxPerfFn_8004a77c(0);
 }
 
-typedef union { u8 u8; u16 u16; u32 u32; s16 s16; s32 s32; f32 f32; } PiWGPipe;
+typedef union
+{
+    u8 u8;
+    u16 u16;
+    u32 u32;
+    s16 s16;
+    s32 s32;
+    f32 f32;
+} PiWGPipe;
+
 extern volatile PiWGPipe GXWGFifo : (0xCC008000);
 extern void GXSetGPMetric(int perf0, int perf1);
 #pragma dont_inline on
-void gxPerfFn_8004a77c(int param_1) {
-    if ((u8)param_1 != 0) {
+void gxPerfFn_8004a77c(int param_1)
+{
+    if ((u8)param_1 != 0)
+    {
         GXSetGPMetric(0x23, 0x16);
         GXWGFifo.u8 = 0x61;
         GXWGFifo.u32 = 0x2402c004;
@@ -4088,7 +4931,9 @@ void gxPerfFn_8004a77c(int param_1) {
         GXWGFifo.u16 = 0;
         GXWGFifo.u16 = 0x1006;
         GXWGFifo.u32 = 0x84400;
-    } else {
+    }
+    else
+    {
         GXWGFifo.u8 = 0x61;
         GXWGFifo.u32 = 0x24000000;
         GXWGFifo.u8 = 0x61;
@@ -4101,32 +4946,41 @@ void gxPerfFn_8004a77c(int param_1) {
 }
 #pragma dont_inline reset
 
-extern void *lbl_803DCD10;
-void allocSomething32bytes(void) {
+extern void* lbl_803DCD10;
+
+void allocSomething32bytes(void)
+{
     lbl_803DCD10 = mmAlloc(0x20, 0xff, 0);
 }
 
 extern u32 lbl_8035F0A8[];
-u32 getDataFileSize(int idx) {
-    if (lbl_8035F3E8[idx] != 0) {
+
+u32 getDataFileSize(int idx)
+{
+    if (lbl_8035F3E8[idx] != 0)
+    {
         return lbl_8035F0A8[idx];
     }
-    *(u8 *)0 = 0;
+    *(u8*)0 = 0;
     return 0;
 }
 
 extern void VISetBlack(int);
 extern void VIFlush(void);
 extern u8 lbl_803DB5CC;
-void viFn_8004a56c(int val) {
+
+void viFn_8004a56c(int val)
+{
     int v = val;
     VISetBlack(1);
     VIFlush();
     lbl_803DB5CC = (u8)v;
 }
 
-void freeAndNull(void **p) {
-    if (*p != NULL) {
+void freeAndNull(void** p)
+{
+    if (*p != NULL)
+    {
         mm_free(*p);
         *p = NULL;
     }
@@ -4138,9 +4992,11 @@ extern f32 lbl_803DEA88;
 extern f32 lbl_803DEA8C;
 extern f32 lbl_803DEA90;
 extern f32 hudMatrix[];
-extern void C_MTXOrtho(f32 *mtx, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
-void initViewport(void) {
-    C_MTXOrtho(hudMatrix, lbl_803DEA70, lbl_803DEA88, *(f32 *)&lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
+extern void C_MTXOrtho(f32* mtx, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
+
+void initViewport(void)
+{
+    C_MTXOrtho(hudMatrix, lbl_803DEA70, lbl_803DEA88, *(f32*)&lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
 }
 
 extern int lbl_803DCD88;
@@ -4155,7 +5011,8 @@ extern void GXSetTevAlphaIn(int, int, int, int, int);
 extern void GXSetTevColorOp(int, int, int, int, int, int);
 extern void GXSetTevAlphaOp(int, int, int, int, int, int);
 
-void fn_80050F2C(void) {
+void fn_80050F2C(void)
+{
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 255);
     GXSetTevSwapMode(lbl_803DCD90, 0, 0);
@@ -4168,38 +5025,49 @@ void fn_80050F2C(void) {
 }
 
 #pragma dont_inline on
-int fn_8004AA24(int *ctx, int *ref) {
-    int *node;
+int fn_8004AA24(int* ctx, int* ref)
+{
+    int* node;
     int target;
     target = ctx[4];
-    node = (int *)ref[0];
-    switch (((s8 *)node)[0x19]) {
-    case 0x24: {
-        u8 idx = ((u8 *)ref)[0xc];
-        if ((idx & 0x80) == 0) {
-            if (((u8 *)node)[3] != 0) {
-                return target == ((u8 *)node)[3];
-            } else {
-                int *p;
-                int *arr;
-                int i;
-                arr = (int *)*(int *)((char *)ctx[0] + (idx << 4));
-                for (i = 0, p = arr; i < 4; i++) {
-                    if ((u32)node[5] == *(u32 *)((char *)p + 0x1c)) {
-                        return target == ((u8 *)arr)[i + 4];
+    node = (int*)ref[0];
+    switch (((s8*)node)[0x19])
+    {
+    case 0x24:
+        {
+            u8 idx = ((u8*)ref)[0xc];
+            if ((idx & 0x80) == 0)
+            {
+                if (((u8*)node)[3] != 0)
+                {
+                    return target == ((u8*)node)[3];
+                }
+                else
+                {
+                    int* p;
+                    int* arr;
+                    int i;
+                    arr = (int*)*(int*)((char*)ctx[0] + (idx << 4));
+                    for (i = 0, p = arr; i < 4; i++)
+                    {
+                        if ((u32)node[5] == *(u32*)((char*)p + 0x1c))
+                        {
+                            return target == ((u8*)arr)[i + 4];
+                        }
+                        p++;
                     }
-                    p++;
                 }
             }
+            return 0;
         }
-        return 0;
-    }
     default:
         return target == (int)node;
     }
 }
-void fn_8004AAD4(u8* arr, int size, int idx) {
-    u16 *h = (u16 *)arr;
+
+void fn_8004AAD4(u8* arr, int size, int idx)
+{
+    u16* h = (u16*)arr;
     int half;
     u8* childptr;
     u32 key = *(u32*)((int)arr + idx * 8);
@@ -4207,11 +5075,14 @@ void fn_8004AAD4(u8* arr, int size, int idx) {
     int child;
     u8* cp;
     half = size >> 1;
-    while (idx <= half) {
+    while (idx <= half)
+    {
         child = idx + idx;
-        if (child < size) {
+        if (child < size)
+        {
             cp = arr + child * 8;
-            if (*(u32*)cp < *(u32*)(cp + 8)) {
+            if (*(u32*)cp < *(u32*)(cp + 8))
+            {
                 child++;
             }
         }
@@ -4225,39 +5096,51 @@ void fn_8004AAD4(u8* arr, int size, int idx) {
     h[idx * 4 + 2] = val;
 }
 #pragma dont_inline reset
-extern void fn_8004AFA0(int *q, int *elem, int idx);
-int fn_8004B218(void *q_, u32 n_) {
+extern void fn_8004AFA0(int* q, int* elem, int idx);
+
+int fn_8004B218(void* q_, u32 n_)
+{
     int n;
-    int *q = (int *)q_;
+    int* q = (int*)q_;
     int idx;
     int done;
     int result;
-    int *elem;
-    int *heap;
+    int* elem;
+    int* heap;
     n = (int)n_;
     done = 0;
     result = 0;
-    while (done == 0 && n != 0) {
-        heap = *(int **)((char *)q + 0x4);
-        if (*(s16 *)((char *)q + 0x22) == 0) {
+    while (done == 0 && n != 0)
+    {
+        heap = *(int**)((char*)q + 0x4);
+        if (*(s16*)((char*)q + 0x22) == 0)
+        {
             idx = -1;
-        } else {
-            idx = *(u16 *)((char *)heap + 0xc);
-            *(int *)((char *)heap + 0x8) = *(int *)((int)heap + *(s16 *)((char *)q + 0x22) * 8);
-            *(u16 *)((char *)heap + 0xc) = *(u16 *)((char *)heap + (*(s16 *)((char *)q + 0x22))-- * 8 + 4);
-            fn_8004AAD4((u8 *)heap, *(s16 *)((char *)q + 0x22), 1);
         }
-        if (idx >= 0) {
-            elem = (int *)(*(int *)((char *)q + 0) + idx * 16);
-            *(int *)((char *)q + 0x1c) = idx;
-            if (fn_8004AA24(q, elem) != 0) {
+        else
+        {
+            idx = *(u16*)((char*)heap + 0xc);
+            *(int*)((char*)heap + 0x8) = *(int*)((int)heap + *(s16*)((char*)q + 0x22) * 8);
+            *(u16*)((char*)heap + 0xc) = *(u16*)((char*)heap + (*(s16*)((char*)q + 0x22))-- * 8 + 4);
+            fn_8004AAD4((u8*)heap, *(s16*)((char*)q + 0x22), 1);
+        }
+        if (idx >= 0)
+        {
+            elem = (int*)(*(int*)((char*)q + 0) + idx * 16);
+            *(int*)((char*)q + 0x1c) = idx;
+            if (fn_8004AA24(q, elem) != 0)
+            {
                 done = 1;
                 result = 1;
-            } else {
-                *((u8 *)elem + 0xe) = 1;
+            }
+            else
+            {
+                *((u8*)elem + 0xe) = 1;
                 fn_8004AFA0(q, elem, idx);
             }
-        } else {
+        }
+        else
+        {
             done = 1;
             result = -1;
         }
@@ -4265,47 +5148,61 @@ int fn_8004B218(void *q_, u32 n_) {
     }
     return result;
 }
+
 extern u32 GameBit_Get(int eventId);
-extern char *lbl_803DCD08;
-extern void fn_8004AB5C(int *q, int *elem, int idx, u32 d, char *obj);
-void fn_8004AFA0(int *q, int *elem, int idx) {
+extern char* lbl_803DCD08;
+extern void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj);
+
+void fn_8004AFA0(int* q, int* elem, int idx)
+{
     u8 mask;
-    char *p;
-    char *node;
-    char *obj;
+    char* p;
+    char* node;
+    char* obj;
     int bit;
     int t;
-    node = (char *)elem[0];
-    if (*(u8 *)((char *)q + 0x28) != 0) {
-        t = *(s8 *)(node + 0x1b);
-    } else {
-        t = ~*(s8 *)(node + 0x1b);
+    node = (char*)elem[0];
+    if (*(u8*)((char*)q + 0x28) != 0)
+    {
+        t = *(s8*)(node + 0x1b);
+    }
+    else
+    {
+        t = ~*(s8*)(node + 0x1b);
     }
     bit = 0;
     p = node;
     mask = t;
-    for (; bit < 4; bit++) {
-        int nodeId = *(int *)(p + 0x1c);
-        if (nodeId > -1 && (mask & (1 << bit)) != 0) {
-            obj = (char *)(*gRomCurveInterface)->getById(nodeId);
-            if (obj != 0) {
-                switch (*(s8 *)(obj + 0x19)) {
-                case 0x24: {
-                    s16 ev1;
-                    s16 ev2;
-                    GameBit_Get(0x4e2);
-                    ev1 = *(s16 *)(obj + 0x30);
-                    if (ev1 == -1 || GameBit_Get(ev1) != 0) {
-                        ev2 = *(s16 *)(obj + 0x32);
-                        if (ev2 == -1 || GameBit_Get(ev2) == 0) {
-                            if (!(*(s8 *)(obj + 0x1a) == 8 && *(s8 *)(node + 0x1a) == 9)) {
-                                f32 d = vec3f_distanceSquared((f32 *)(node + 8), (f32 *)(obj + 8));
-                                fn_8004AB5C(q, elem, idx, (u32)((f32)(u32)elem[2] + d), obj);
+    for (; bit < 4; bit++)
+    {
+        int nodeId = *(int*)(p + 0x1c);
+        if (nodeId > -1 && (mask & (1 << bit)) != 0)
+        {
+            obj = (char*)(*gRomCurveInterface)->getById(nodeId);
+            if (obj != 0)
+            {
+                switch (*(s8*)(obj + 0x19))
+                {
+                case 0x24:
+                    {
+                        s16 ev1;
+                        s16 ev2;
+                        GameBit_Get(0x4e2);
+                        ev1 = *(s16*)(obj + 0x30);
+                        if (ev1 == -1 || GameBit_Get(ev1) != 0)
+                        {
+                            ev2 = *(s16*)(obj + 0x32);
+                            if (ev2 == -1 || GameBit_Get(ev2) == 0)
+                            {
+                                if (!(*(s8*)(obj + 0x1a) == 8 && *(s8*)(node + 0x1a) == 9))
+                                {
+                                    f32 d = vec3f_distanceSquared((f32*)(node + 8), (f32*)(obj + 8));
+                                    fn_8004AB5C(q, elem, idx, (u32)((f32)(u32)elem[2] + d), obj);
+                                }
                             }
                         }
+                        break;
                     }
-                    break;
-                }
                 default:
                     lbl_803DCD08 = obj;
                     break;
@@ -4315,13 +5212,15 @@ void fn_8004AFA0(int *q, int *elem, int idx) {
         p += 4;
     }
 }
-void fn_8004AB5C(int *q, int *elem, int idx, u32 d, char *obj) {
+
+void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj)
+{
     int pos;
-    u16 *hh;
+    u16* hh;
     u16 v;
     int cnt2;
-    int *node;
-    u32 *heap;
+    int* node;
+    u32* heap;
     u32 pri;
     u16 idx16;
     int parent;
@@ -4329,42 +5228,47 @@ void fn_8004AB5C(int *q, int *elem, int idx, u32 d, char *obj) {
     int idx2;
     int off;
     int n;
-    int *node4;
+    int* node4;
     int visited;
     int cnt;
-    if (fn_8004AA24(q, elem) != 0) {
-        cnt = *(s16 *)((char *)q + 0x20);
-        if (cnt != 0xfe) {
-            node = (int *)(*q + ((*(s16 *)((char *)q + 0x20))++) * 0x10);
+    if (fn_8004AA24(q, elem) != 0)
+    {
+        cnt = *(s16*)((char*)q + 0x20);
+        if (cnt != 0xfe)
+        {
+            node = (int*)(*q + ((*(s16*)((char*)q + 0x20))++) * 0x10);
             *node = (int)obj;
             node[2] = d;
-            *(u8 *)(node + 3) = (u16)idx;
-            node[1] = (u32)vec3f_distanceSquared((f32 *)(*node + 8), (f32 *)q[3]);
+            *(u8*)(node + 3) = (u16)idx;
+            node[1] = (u32)vec3f_distanceSquared((f32*)(*node + 8), (f32*)q[3]);
         }
-        heap = (u32 *)q[1];
-        hh = (u16 *)heap;
+        heap = (u32*)q[1];
+        hh = (u16*)heap;
         v = cnt;
-        hh[++(*(s16 *)((char *)q + 0x22)) * 4 + 2] = v;
-        *(u32 *)((int)heap + *(s16 *)((char *)q + 0x22) * 8) = 0xfffffffe;
-        i = *(s16 *)((char *)q + 0x22);
-        pri = *(u32 *)((int)heap + i * 8);
+        hh[++(*(s16*)((char*)q + 0x22)) * 4 + 2] = v;
+        *(u32*)((int)heap + *(s16*)((char*)q + 0x22) * 8) = 0xfffffffe;
+        i = *(s16*)((char*)q + 0x22);
+        pri = *(u32*)((int)heap + i * 8);
         idx16 = hh[i * 4 + 2];
         *heap = -1;
-        while (parent = i >> 1, *(u32 *)(hh + parent * 4) < pri) {
-            *(u16 *)((int)heap + i * 8 + 4) = *(u16 *)((int)heap + (int)((long)parent * 8) + 4);
-            *(u32 *)((int)heap + i * 8) = *(u32 *)((int)heap + (int)((long)parent * 8));
+        while (parent = i >> 1, *(u32*)(hh + parent * 4) < pri)
+        {
+            *(u16*)((int)heap + i * 8 + 4) = *(u16*)((int)heap + (int)((long)parent * 8) + 4);
+            *(u32*)((int)heap + i * 8) = *(u32*)((int)heap + (int)((long)parent * 8));
             i = parent;
         }
-        *(u32 *)((int)heap + i * 8) = pri;
+        *(u32*)((int)heap + i * 8) = pri;
         hh[i * 4 + 2] = idx16;
     }
     idx2 = 0;
     off = idx2;
-    cnt2 = *(s16 *)((char *)q + 0x20);
-    for (n = cnt2; n > 0; n--) {
-        char **node2 = (char **)(*q + off);
-        if (*node2 == obj) {
-            visited = *(u8 *)((char *)node2 + 0xe);
+    cnt2 = *(s16*)((char*)q + 0x20);
+    for (n = cnt2; n > 0; n--)
+    {
+        char** node2 = (char**)(*q + off);
+        if (*node2 == obj)
+        {
+            visited = *(u8*)((char*)node2 + 0xe);
             goto found;
         }
         off += 0x10;
@@ -4372,25 +5276,29 @@ void fn_8004AB5C(int *q, int *elem, int idx, u32 d, char *obj) {
     }
     idx2 = -1;
 found:
-    if (idx2 >= 0 && visited == 0) {
-        int *node3 = (int *)(*q + idx2 * 0x10);
-        if (d < (u32)node3[2]) {
+    if (idx2 >= 0 && visited == 0)
+    {
+        int* node3 = (int*)(*q + idx2 * 0x10);
+        if (d < (u32)node3[2])
+        {
             u32 newpri;
             int s2;
             int j;
             u16 target;
-            u32 *entry;
+            u32* entry;
             u32 old;
-            *(u8 *)((char *)node3 + 0xc) = idx;
+            *(u8*)((char*)node3 + 0xc) = idx;
             node3[2] = d;
             newpri = node3[1] + node3[2];
-            s2 = *(s16 *)((char *)q + 0x22);
-            heap = (u32 *)q[1];
-            hh = (u16 *)heap;
+            s2 = *(s16*)((char*)q + 0x22);
+            heap = (u32*)q[1];
+            hh = (u16*)heap;
             j = 0;
             target = idx2;
-            for (; j <= s2; j++) {
-                if (target == *(u16 *)(heap + j * 2 + 1)) {
+            for (; j <= s2; j++)
+            {
+                if (target == *(u16*)(heap + j * 2 + 1))
+                {
                     pos = j;
                     j = s2 + 1;
                 }
@@ -4398,71 +5306,87 @@ found:
             entry = heap + pos * 2;
             old = *entry;
             *entry = newpri;
-            if (newpri < old) {
-                fn_8004AAD4((u8 *)heap, s2, pos);
-            } else if (newpri > old) {
+            if (newpri < old)
+            {
+                fn_8004AAD4((u8*)heap, s2, pos);
+            }
+            else if (newpri > old)
+            {
                 pri = *entry;
-                idx16 = ((u16 *)entry)[2];
+                idx16 = ((u16*)entry)[2];
                 *heap = -1;
-                while (parent = pos >> 1, *(u32 *)(hh + parent * 4) < pri) {
-                    *(u16 *)((int)heap + pos * 8 + 4) = *(u16 *)((int)heap + (int)((long)parent * 8) + 4);
-                    *(u32 *)((int)heap + pos * 8) = *(u32 *)((int)heap + (int)((long)parent * 8));
+                while (parent = pos >> 1, *(u32*)(hh + parent * 4) < pri)
+                {
+                    *(u16*)((int)heap + pos * 8 + 4) = *(u16*)((int)heap + (int)((long)parent * 8) + 4);
+                    *(u32*)((int)heap + pos * 8) = *(u32*)((int)heap + (int)((long)parent * 8));
                     pos = parent;
                 }
-                *(u32 *)((int)heap + pos * 8) = pri;
+                *(u32*)((int)heap + pos * 8) = pri;
                 hh[pos * 4 + 2] = idx16;
             }
         }
-    } else if (idx2 < 0) {
-        if (cnt2 == 0xfe) {
+    }
+    else if (idx2 < 0)
+    {
+        if (cnt2 == 0xfe)
+        {
             node4 = NULL;
-        } else {
-            node4 = (int *)(*q + ((*(s16 *)((char *)q + 0x20))++) * 0x10);
+        }
+        else
+        {
+            node4 = (int*)(*q + ((*(s16*)((char*)q + 0x20))++) * 0x10);
             *node4 = (int)obj;
             node4[2] = d;
-            *(u8 *)(node4 + 3) = (u16)idx;
-            node4[1] = (u32)vec3f_distanceSquared((f32 *)(*node4 + 8), (f32 *)q[3]);
+            *(u8*)(node4 + 3) = (u16)idx;
+            node4[1] = (u32)vec3f_distanceSquared((f32*)(*node4 + 8), (f32*)q[3]);
         }
-        if (node4 != NULL) {
-            if ((u32)node4[1] > (u32)q[9]) {
+        if (node4 != NULL)
+        {
+            if ((u32)node4[1] > (u32)q[9])
+            {
                 u32 newpri = node4[1] + node4[2];
-                heap = (u32 *)q[1];
-                hh = (u16 *)heap;
+                heap = (u32*)q[1];
+                hh = (u16*)heap;
                 v = cnt2;
-                hh[++(*(s16 *)((char *)q + 0x22)) * 4 + 2] = v;
-                *(u32 *)((int)heap + *(s16 *)((char *)q + 0x22) * 8) = -1 - newpri;
-                i = *(s16 *)((char *)q + 0x22);
-                pri = *(u32 *)((int)heap + i * 8);
+                hh[++(*(s16*)((char*)q + 0x22)) * 4 + 2] = v;
+                *(u32*)((int)heap + *(s16*)((char*)q + 0x22) * 8) = -1 - newpri;
+                i = *(s16*)((char*)q + 0x22);
+                pri = *(u32*)((int)heap + i * 8);
                 idx16 = hh[i * 4 + 2];
                 *heap = -1;
-                while (parent = i >> 1, *(u32 *)(hh + parent * 4) < pri) {
-                    *(u16 *)((int)heap + i * 8 + 4) = *(u16 *)((int)heap + (int)((long)parent * 8) + 4);
-                    *(u32 *)((int)heap + i * 8) = *(u32 *)((int)heap + (int)((long)parent * 8));
+                while (parent = i >> 1, *(u32*)(hh + parent * 4) < pri)
+                {
+                    *(u16*)((int)heap + i * 8 + 4) = *(u16*)((int)heap + (int)((long)parent * 8) + 4);
+                    *(u32*)((int)heap + i * 8) = *(u32*)((int)heap + (int)((long)parent * 8));
                     i = parent;
                 }
-                *(u32 *)((int)heap + i * 8) = pri;
+                *(u32*)((int)heap + i * 8) = pri;
                 hh[i * 4 + 2] = idx16;
-            } else {
+            }
+            else
+            {
                 u32 newpri;
-                if ((u32)node4[1] < (u32)q[9]) {
+                if ((u32)node4[1] < (u32)q[9])
+                {
                     q[9] = node4[1];
                 }
                 newpri = node4[1] + node4[2];
-                heap = (u32 *)q[1];
-                hh = (u16 *)heap;
+                heap = (u32*)q[1];
+                hh = (u16*)heap;
                 v = cnt2;
-                hh[++(*(s16 *)((char *)q + 0x22)) * 4 + 2] = v;
-                *(u32 *)((int)heap + *(s16 *)((char *)q + 0x22) * 8) = -1 - newpri;
-                i = *(s16 *)((char *)q + 0x22);
-                pri = *(u32 *)((int)heap + i * 8);
+                hh[++(*(s16*)((char*)q + 0x22)) * 4 + 2] = v;
+                *(u32*)((int)heap + *(s16*)((char*)q + 0x22) * 8) = -1 - newpri;
+                i = *(s16*)((char*)q + 0x22);
+                pri = *(u32*)((int)heap + i * 8);
                 idx16 = hh[i * 4 + 2];
                 *heap = -1;
-                while (parent = i >> 1, *(u32 *)(hh + parent * 4) < pri) {
-                    *(u16 *)((int)heap + i * 8 + 4) = *(u16 *)((int)heap + (int)((long)parent * 8) + 4);
-                    *(u32 *)((int)heap + i * 8) = *(u32 *)((int)heap + (int)((long)parent * 8));
+                while (parent = i >> 1, *(u32*)(hh + parent * 4) < pri)
+                {
+                    *(u16*)((int)heap + i * 8 + 4) = *(u16*)((int)heap + (int)((long)parent * 8) + 4);
+                    *(u32*)((int)heap + i * 8) = *(u32*)((int)heap + (int)((long)parent * 8));
                     i = parent;
                 }
-                *(u32 *)((int)heap + i * 8) = pri;
+                *(u32*)((int)heap + i * 8) = pri;
                 hh[i * 4 + 2] = idx16;
             }
         }
@@ -4472,34 +5396,37 @@ found:
 extern void gxSetZMode_(int a, int b, int c);
 extern void GXSetAlphaUpdate(u8 v);
 extern void GXFlush(void);
-extern void GXGetFifoPtrs(void *fifo, void **out_g, void **out_p);
-extern void Queue_Push(void *q, void *item);
-extern void GXEnableBreakPt(void *p);
+extern void GXGetFifoPtrs(void* fifo, void** out_g, void** out_p);
+extern void Queue_Push(void* q, void* item);
+extern void GXEnableBreakPt(void* p);
 extern void GXSetDrawSync(u16 v);
-extern void GXCopyDisp(void *fb, u8 clear);
-extern void *lbl_803DCCD4;
-extern void *lbl_803DCCD0;
-extern void *lbl_803DCCEC;
-extern void *lbl_803DCCE8;
+extern void GXCopyDisp(void* fb, u8 clear);
+extern void* lbl_803DCCD4;
+extern void* lbl_803DCCD0;
+extern void* lbl_803DCCEC;
+extern void* lbl_803DCCE8;
 extern u8 lbl_803DCCA7;
 extern u16 lbl_803DB5CE;
 extern char lbl_8035F730[];
-int GXFlush_(u8 visible, int unused) {
-    void *fifo_get;
-    void *fifo_put;
-    void *item[3];
+
+int GXFlush_(u8 visible, int unused)
+{
+    void* fifo_get;
+    void* fifo_put;
+    void* item[3];
     int s;
-    void *next;
+    void* next;
     gxSetZMode_(1, 3, 1);
     GXSetAlphaUpdate(1);
     GXFlush();
     GXGetFifoPtrs(lbl_803DCCD4, &fifo_get, &fifo_put);
     item[0] = fifo_put;
-    item[1] = (void *)0;
+    item[1] = (void*)0;
     item[2] = lbl_803DCCD0;
     s = OSDisableInterrupts();
     Queue_Push(&lbl_8035F730[0], item);
-    if (lbl_803DCCA7 == 0) {
+    if (lbl_803DCCA7 == 0)
+    {
         GXEnableBreakPt(fifo_put);
         lbl_803DCCA7 = 1;
     }
@@ -4511,9 +5438,11 @@ int GXFlush_(u8 visible, int unused) {
     next = lbl_803DCCEC;
     if (lbl_803DCCD0 == next) next = lbl_803DCCE8;
     lbl_803DCCD0 = next;
-    if (visible != 0 && lbl_803DB5CC != 0) {
+    if (visible != 0 && lbl_803DB5CC != 0)
+    {
         lbl_803DB5CC = lbl_803DB5CC - 1;
-        if (lbl_803DB5CC == 0) {
+        if (lbl_803DB5CC == 0)
+        {
             VISetBlack(0);
             lbl_803DB5CC = 0;
         }
@@ -4524,163 +5453,226 @@ int GXFlush_(u8 visible, int unused) {
 
 extern u8 GXNtsc480Prog[];
 extern u8 lbl_803DB5D4;
-extern u8 *lbl_803DCCF0;
-extern void GXSetCopyFilter(u8 aa, u8 *pat, u8 vf_en, u8 *vfilter);
+extern u8* lbl_803DCCF0;
+extern void GXSetCopyFilter(u8 aa, u8* pat, u8 vf_en, u8* vfilter);
 #pragma peephole on
-void setDisplayCopyFilter(void) {
-    u8 *p = lbl_803DCCF0;
-    if (p == GXNtsc480Prog || p[0x18] != 0) {
+void setDisplayCopyFilter(void)
+{
+    u8* p = lbl_803DCCF0;
+    if (p == GXNtsc480Prog || p[0x18] != 0)
+    {
         GXSetCopyFilter(p[0x19], p + 0x1a, 0, p + 0x32);
-    } else {
+    }
+    else
+    {
         GXSetCopyFilter(p[0x19], p + 0x1a, 1, &lbl_803DB5D4);
     }
 }
 
-extern void GXLoadTexObj(void *obj, int id);
-extern void GXLoadTexObjPreLoaded(void *obj, void *region, int id);
-extern void fn_80053C40(u8 *tex, void *out);
+extern void GXLoadTexObj(void* obj, int id);
+extern void GXLoadTexObjPreLoaded(void* obj, void* region, int id);
+extern void fn_80053C40(u8* tex, void* out);
 extern u8 lbl_803779A0[];
 #pragma peephole off
-void textureFn_8004c264(u8 *tex, int mapId) {
-    void *base;
+void textureFn_8004c264(u8* tex, int mapId)
+{
+    void* base;
     if (tex == NULL) return;
     base = &tex[32];
-    if (tex[72] != 0) {
-        GXLoadTexObjPreLoaded(base, *(void **)(tex + 64), mapId);
-    } else {
+    if (tex[72] != 0)
+    {
+        GXLoadTexObjPreLoaded(base, *(void**)(tex + 64), mapId);
+    }
+    else
+    {
         GXLoadTexObj(base, mapId);
     }
-    if (*(void **)(tex + 80) != NULL) {
+    if (*(void**)(tex + 80) != NULL)
+    {
         fn_80053C40(tex, lbl_803779A0);
         GXLoadTexObj(lbl_803779A0, 1);
     }
 }
 
-void selectTexture(u8 *tex, int mapId) {
-    void *base;
+void selectTexture(u8* tex, int mapId)
+{
+    void* base;
     if (tex == NULL) return;
     base = &tex[0x20];
-    if (tex[0x48] != 0) {
-        GXLoadTexObjPreLoaded(base, *(void **)(tex + 0x40), mapId);
-    } else {
+    if (tex[0x48] != 0)
+    {
+        GXLoadTexObjPreLoaded(base, *(void**)(tex + 0x40), mapId);
+    }
+    else
+    {
         GXLoadTexObj(base, mapId);
     }
 }
-void loadModelsBin(int a, int *p1c, int *p20, int *p18, int *p4) {
+
+void loadModelsBin(int a, int* p1c, int* p20, int* p18, int* p4)
+{
     u32 v31 = 0;
     u32 v30 = 0;
     int idx = -1;
     int flags;
     int saved;
-    char *p;
-    if (lbl_8035F3E8[0x2b] != 0 || lbl_8035F3E8[0x46] != 0) {
+    char* p;
+    if (lbl_8035F3E8[0x2b] != 0 || lbl_8035F3E8[0x46] != 0)
+    {
         saved = OSDisableInterrupts();
         flags = lbl_803DCC80;
         OSRestoreInterrupts(saved);
-        if ((flags & 4) == 0 && (flags & 1) == 0) {
+        if ((flags & 4) == 0 && (flags & 1) == 0)
+        {
             v31 = lbl_8035F3E8[0x2a];
         }
-        if ((flags & 8) == 0 && (flags & 2) == 0) {
+        if ((flags & 8) == 0 && (flags & 2) == 0)
+        {
             v30 = lbl_8035F3E8[0x45];
         }
-        if (v30 != 0 && (a & 0x20000000) != 0) {
-            idx = 0x46;
-        } else if (v31 != 0 && (a & 0x10000000) != 0) {
-            idx = 0x2b;
-        } else if (v31 != 0) {
-            idx = 0x2b;
-        } else if (v30 != 0) {
+        if (v30 != 0 && (a & 0x20000000) != 0)
+        {
             idx = 0x46;
         }
-        p = (char *)lbl_8035F3E8[idx] + (a & 0x0fffffff);
-        *p18 = *(int *)(p + 0x18);
-        *p1c = *(int *)(p + 0x1c);
-        *p20 = *(int *)(p + 0x20);
-        *p4 = *(int *)(p + 0x4);
+        else if (v31 != 0 && (a & 0x10000000) != 0)
+        {
+            idx = 0x2b;
+        }
+        else if (v31 != 0)
+        {
+            idx = 0x2b;
+        }
+        else if (v30 != 0)
+        {
+            idx = 0x46;
+        }
+        p = (char*)lbl_8035F3E8[idx] + (a & 0x0fffffff);
+        *p18 = *(int*)(p + 0x18);
+        *p1c = *(int*)(p + 0x1c);
+        *p20 = *(int*)(p + 0x20);
+        *p4 = *(int*)(p + 0x4);
     }
 }
-void checkLoadBlock(int a, int *pc, int *p8) {
+
+void checkLoadBlock(int a, int* pc, int* p8)
+{
     int idx = -1;
     int flags;
     int saved;
-    char *blk;
+    char* blk;
     u32 t25, t47;
     if ((lbl_8035F3E8[0x26] != 0 && lbl_8035F3E8[0x25] != 0) ||
-        (lbl_8035F3E8[0x48] != 0 && lbl_8035F3E8[0x47] != 0)) {
+        (lbl_8035F3E8[0x48] != 0 && lbl_8035F3E8[0x47] != 0))
+    {
         saved = OSDisableInterrupts();
         flags = lbl_803DCC80;
         OSRestoreInterrupts(saved);
         t25 = lbl_8035F3E8[0x25];
         t47 = lbl_8035F3E8[0x47];
-        if (t25 != 0 && (a & 0x10000000) != 0 && (flags & 0x10000) == 0) {
+        if (t25 != 0 && (a & 0x10000000) != 0 && (flags & 0x10000) == 0)
+        {
             idx = 0x25;
-        } else if (t47 != 0 && (a & 0x20000000) != 0 && (flags & 0x40000) == 0) {
-            idx = 0x47;
-        } else if (t25 != 0 && (flags & 0x10000) == 0) {
-            idx = 0x25;
-        } else if (t47 != 0 && (flags & 0x40000) == 0) {
+        }
+        else if (t47 != 0 && (a & 0x20000000) != 0 && (flags & 0x40000) == 0)
+        {
             idx = 0x47;
         }
-        blk = (char *)lbl_8035F3E8[idx] + (a & 0x00ffffff);
-        if (strncmp(blk, sZlbBlockTag, 3) != 0) {
+        else if (t25 != 0 && (flags & 0x10000) == 0)
+        {
+            idx = 0x25;
+        }
+        else if (t47 != 0 && (flags & 0x40000) == 0)
+        {
+            idx = 0x47;
+        }
+        blk = (char*)lbl_8035F3E8[idx] + (a & 0x00ffffff);
+        if (strncmp(blk, sZlbBlockTag, 3) != 0)
+        {
             *p8 = 0;
             *pc = 0;
-        } else {
-            *p8 = *(int *)(blk + 0x8);
-            *pc = *(int *)(blk + 0xc);
         }
-    } else {
+        else
+        {
+            *p8 = *(int*)(blk + 0x8);
+            *pc = *(int*)(blk + 0xc);
+        }
+    }
+    else
+    {
         *p8 = 0;
         *pc = 0;
     }
 }
-void loadVoxMaps(int a, int *pc, int *p8) {
+
+void loadVoxMaps(int a, int* pc, int* p8)
+{
     int idx = -1;
     int flags;
     int saved;
-    char *blk;
+    char* blk;
     u32 t1b, t54;
     if ((lbl_8035F3E8[0x1a] != 0 && lbl_8035F3E8[0x1b] != 0) ||
-        (lbl_8035F3E8[0x53] != 0 && lbl_8035F3E8[0x54] != 0)) {
+        (lbl_8035F3E8[0x53] != 0 && lbl_8035F3E8[0x54] != 0))
+    {
         saved = OSDisableInterrupts();
         flags = lbl_803DCC80;
         OSRestoreInterrupts(saved);
         t1b = lbl_8035F3E8[0x1b];
         t54 = lbl_8035F3E8[0x54];
-        if (t1b != 0 && (a & 0x80000000) != 0 && (flags & 0x1000000) == 0) {
+        if (t1b != 0 && (a & 0x80000000) != 0 && (flags & 0x1000000) == 0)
+        {
             idx = 0x1b;
-        } else if (t54 != 0 && (a & 0x20000000) != 0 && (flags & 0x4000000) == 0) {
-            idx = 0x54;
-        } else if (t1b != 0 && (flags & 0x1000000) == 0) {
-            idx = 0x1b;
-        } else if (t54 != 0 && (flags & 0x4000000) == 0) {
+        }
+        else if (t54 != 0 && (a & 0x20000000) != 0 && (flags & 0x4000000) == 0)
+        {
             idx = 0x54;
         }
-        if ((a & 0xf0000000) != 0) {
-            blk = (char *)lbl_8035F3E8[idx] + (a & 0x00ffffff);
-            if (strncmp(blk, sZlbBlockTag, 3) != 0) {
+        else if (t1b != 0 && (flags & 0x1000000) == 0)
+        {
+            idx = 0x1b;
+        }
+        else if (t54 != 0 && (flags & 0x4000000) == 0)
+        {
+            idx = 0x54;
+        }
+        if ((a & 0xf0000000) != 0)
+        {
+            blk = (char*)lbl_8035F3E8[idx] + (a & 0x00ffffff);
+            if (strncmp(blk, sZlbBlockTag, 3) != 0)
+            {
                 *p8 = 0;
                 *pc = 0;
-            } else {
-                *p8 = *(int *)(blk + 0x8);
-                *pc = *(int *)(blk + 0xc);
             }
-        } else {
+            else
+            {
+                *p8 = *(int*)(blk + 0x8);
+                *pc = *(int*)(blk + 0xc);
+            }
+        }
+        else
+        {
             *p8 = 0;
             *pc = 0;
         }
-    } else {
+    }
+    else
+    {
         *p8 = 0;
         *pc = 0;
     }
 }
-void fn_80050FF4(u8 mode) {
+
+void fn_80050FF4(u8 mode)
+{
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
     GXSetTevSwapMode(lbl_803DCD90, 0, 0);
-    if (mode != 0) {
+    if (mode != 0)
+    {
         GXSetTevColorIn(lbl_803DCD90, 0xf, 1, 4, 6);
-    } else {
+    }
+    else
+    {
         GXSetTevColorIn(lbl_803DCD90, 0xf, 1, 0xa, 6);
     }
     GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 7);
@@ -4689,14 +5681,20 @@ void fn_80050FF4(u8 mode) {
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A = lbl_803DCD6A + 1;
 }
+
 extern u8 lbl_803DCD30;
-void gxTextureFn_80050e28(u8 mode) {
+
+void gxTextureFn_80050e28(u8 mode)
+{
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
     GXSetTevSwapMode(lbl_803DCD90, 0, 0);
-    if (mode != 0) {
+    if (mode != 0)
+    {
         GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 4, 6);
-    } else {
+    }
+    else
+    {
         GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 0xa, 6);
     }
     GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
@@ -4706,11 +5704,12 @@ void gxTextureFn_80050e28(u8 mode) {
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A = lbl_803DCD6A + 1;
 }
+
 extern void GXSetTevIndRepeat(int stage);
 extern void PSMTXScale(f32 m[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32 m[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 dst[3][4], f32 a[3][4], f32 b[3][4]);
-extern void GXLoadTexMtxImm(void *m, int id, int type);
+extern void GXLoadTexMtxImm(void* m, int id, int type);
 extern void GXSetTexCoordGen2(int dst, int func, int src, int mtx, int normalize, int pttexmtx);
 extern void GXSetTevSwapModeTable(int table, int r, int g, int b, int a);
 extern u8 lbl_803DCD68;
@@ -4719,19 +5718,25 @@ extern u8 lbl_803DCD69;
 extern f32 lbl_803DEACC;
 extern f32 Breaking_803DEB40;
 extern f32 lbl_803DEADC;
-void fn_800510F0(void *p1, u8 flag2, u8 flag3) {
+
+void fn_800510F0(void* p1, u8 flag2, u8 flag3)
+{
     f32 mtxB[3][4];
     f32 mtxA[3][4];
     int texmap;
-    if (lbl_803DCD68 == 0) {
+    if (lbl_803DCD68 == 0)
+    {
         GXSetTevDirect(lbl_803DCD90);
     }
-    if (flag2 != 0) {
+    if (flag2 != 0)
+    {
         GXSetTevIndRepeat(lbl_803DCD90);
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88 - 1, lbl_803DCD8C, 0xff);
-    } else {
-        PSMTXScale(mtxA, Breaking_803DEB40, *(f32 *)&Breaking_803DEB40, lbl_803DEACC);
-        PSMTXTrans(mtxB, lbl_803DEADC, *(f32 *)&lbl_803DEADC, lbl_803DEAC8);
+    }
+    else
+    {
+        PSMTXScale(mtxA, Breaking_803DEB40, *(f32*)&Breaking_803DEB40, lbl_803DEACC);
+        PSMTXTrans(mtxB, lbl_803DEADC, *(f32*)&lbl_803DEADC, lbl_803DEAC8);
         PSMTXConcat(mtxB, mtxA, mtxA);
         GXLoadTexMtxImm(mtxA, lbl_803DCD80, 0);
         GXSetTexCoordGen2(lbl_803DCD88, 1, 1, 0x1e, 0, lbl_803DCD80);
@@ -4741,25 +5746,35 @@ void fn_800510F0(void *p1, u8 flag2, u8 flag3) {
         lbl_803DCD69 += 1;
     }
     GXSetTevAlphaIn(lbl_803DCD90, 7, 4, 3, 7);
-    if (flag2 != 0) {
+    if (flag2 != 0)
+    {
         GXSetTevColorIn(lbl_803DCD90, 0xf, 8, 4, 0xf);
-    } else {
+    }
+    else
+    {
         GXSetTevColorIn(lbl_803DCD90, 0xf, 8, 0xa, 0xf);
     }
     GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
     GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 3);
-    if ((flag3 & 1) != 0) {
+    if ((flag3 & 1) != 0)
+    {
         GXSetTevSwapModeTable(3, 2, 2, 2, 1);
-    } else {
+    }
+    else
+    {
         GXSetTevSwapModeTable(3, 0, 0, 0, 1);
     }
     GXSetTevSwapMode(lbl_803DCD90, 0, 3);
     texmap = lbl_803DCD8C;
-    if (p1 != 0) {
-        char *tex = (char *)p1 + 0x20;
-        if (*(u8 *)((char *)p1 + 0x48) != 0) {
-            GXLoadTexObjPreLoaded(tex, *(void **)((char *)p1 + 0x40), texmap);
-        } else {
+    if (p1 != 0)
+    {
+        char* tex = (char*)p1 + 0x20;
+        if (*(u8*)((char*)p1 + 0x48) != 0)
+        {
+            GXLoadTexObjPreLoaded(tex, *(void**)((char*)p1 + 0x40), texmap);
+        }
+        else
+        {
             GXLoadTexObj(tex, texmap);
         }
     }
@@ -4767,17 +5782,20 @@ void fn_800510F0(void *p1, u8 flag2, u8 flag3) {
     lbl_803DCD8C = lbl_803DCD8C + 1;
     lbl_803DCD6A += 1;
 }
-extern void gxTextureFn_8004bf88(void *buf, u8 a, u8 b, int *out1, int *out2);
+
+extern void gxTextureFn_8004bf88(void* buf, u8 a, u8 b, int* out1, int* out2);
 extern void GXSetTevKColorSel(int stage, int sel);
-void textureFn_80051348(void *p1, u8 p2) {
+
+void textureFn_80051348(void* p1, u8 p2)
+{
     f32 mtxB[3][4];
     f32 mtxA[3][4];
     u8 buf[3];
     int out_c;
     int out_8;
     int texmap;
-    PSMTXScale(mtxA, Breaking_803DEB40, *(f32 *)&Breaking_803DEB40, lbl_803DEACC);
-    PSMTXTrans(mtxB, lbl_803DEADC, *(f32 *)&lbl_803DEADC, lbl_803DEAC8);
+    PSMTXScale(mtxA, Breaking_803DEB40, *(f32*)&Breaking_803DEB40, lbl_803DEACC);
+    PSMTXTrans(mtxB, lbl_803DEADC, *(f32*)&lbl_803DEADC, lbl_803DEAC8);
     PSMTXConcat(mtxB, mtxA, mtxA);
     GXLoadTexMtxImm(mtxA, lbl_803DCD80, 0);
     buf[0] = p2;
@@ -4786,7 +5804,8 @@ void textureFn_80051348(void *p1, u8 p2) {
     gxTextureFn_8004bf88(buf, 1, 0, &out_c, &out_8);
     GXSetTevKColorSel(lbl_803DCD90, out_c);
     GXSetTexCoordGen2(lbl_803DCD88, 1, 1, 0x1e, 0, lbl_803DCD80);
-    if (lbl_803DCD68 == 0) {
+    if (lbl_803DCD68 == 0)
+    {
         GXSetTevDirect(lbl_803DCD90);
     }
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 4);
@@ -4796,11 +5815,15 @@ void textureFn_80051348(void *p1, u8 p2) {
     GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 2);
     GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
     texmap = lbl_803DCD8C;
-    if (p1 != 0) {
-        char *tex = (char *)p1 + 0x20;
-        if (*(u8 *)((char *)p1 + 0x48) != 0) {
-            GXLoadTexObjPreLoaded(tex, *(void **)((char *)p1 + 0x40), texmap);
-        } else {
+    if (p1 != 0)
+    {
+        char* tex = (char*)p1 + 0x20;
+        if (*(u8*)((char*)p1 + 0x48) != 0)
+        {
+            GXLoadTexObjPreLoaded(tex, *(void**)((char*)p1 + 0x40), texmap);
+        }
+        else
+        {
             GXLoadTexObj(tex, texmap);
         }
     }
@@ -4811,18 +5834,24 @@ void textureFn_80051348(void *p1, u8 p2) {
     lbl_803DCD6A += 1;
     lbl_803DCD69 += 1;
 }
-extern void objGetColor(int slot, u8 *red, u8 *green, u8 *blue);
+
+extern void objGetColor(int slot, u8* red, u8* green, u8* blue);
 extern int lbl_803DCD78;
-void fn_80051528(void *p1, void *mtx) {
+
+void fn_80051528(void* p1, void* mtx)
+{
     u8 buf[3];
     int out_c;
     int out_8;
     objGetColor(0, &buf[0], &buf[1], &buf[2]);
-    if (mtx != 0) {
+    if (mtx != 0)
+    {
         GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
         GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, 0, lbl_803DCD80);
         lbl_803DCD80 = lbl_803DCD80 + 3;
-    } else {
+    }
+    else
+    {
         GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, 0, 0x7d);
     }
     gxTextureFn_8004bf88(buf, 1, 0, &out_c, &out_8);
@@ -4851,11 +5880,15 @@ void fn_80051528(void *p1, void *mtx) {
     GXSetTevAlphaOp(lbl_803DCD90 + 2, 0, 0, 0, 1, 0);
     {
         int id = lbl_803DCD8C;
-        if (p1 != 0) {
-            if (*(u8 *)((char *)p1 + 0x48) != 0) {
-                GXLoadTexObjPreLoaded((char *)p1 + 0x20, *(void **)((char *)p1 + 0x40), id);
-            } else {
-                GXLoadTexObj((char *)p1 + 0x20, id);
+        if (p1 != 0)
+        {
+            if (*(u8*)((char*)p1 + 0x48) != 0)
+            {
+                GXLoadTexObjPreLoaded((char*)p1 + 0x20, *(void**)((char*)p1 + 0x40), id);
+            }
+            else
+            {
+                GXLoadTexObj((char*)p1 + 0x20, id);
             }
         }
     }
@@ -4866,23 +5899,31 @@ void fn_80051528(void *p1, void *mtx) {
     lbl_803DCD6A += 3;
     lbl_803DCD69 += 1;
 }
-typedef struct { f32 v[2][3]; } IndTexMtx23;
+
+typedef struct
+{
+    f32 v[2][3];
+} IndTexMtx23;
+
 extern IndTexMtx23 lbl_802C1E28;
-extern u8 *lbl_803DCD2C;
+extern u8* lbl_803DCD2C;
 extern int lbl_803DB5F4;
 extern u8 lbl_803DB5F8;
 extern f32 Prepared_803DEAD8;
 extern f32 lbl_803DEAE0;
 extern int lbl_803DCD7C;
-extern u8 *textureAlloc(int w, int h, int fmt, int a, int b, int c, int d, int e, int f);
+extern u8* textureAlloc(int w, int h, int fmt, int a, int b, int c, int d, int e, int f);
 extern u32 randomGetRange(int min, int max);
-extern void DCFlushRange(void *p, u32 n);
-extern void newshadows_getReflectionScrollOffsets(f32 *x, f32 *y);
+extern void DCFlushRange(void* p, u32 n);
+extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
 extern f32 mathSinf(f32 x);
 extern void GXSetIndTexMtx(int id, f32 offset[2][3], int scale_exp);
 extern void GXSetIndTexOrder(int ind_stage, int tex_coord, int tex_map);
-extern void GXSetTevIndirect(int tev, int ind, int fmt, int bias, int mtx, int ws, int wt, int addprev, int utclod, int alpha);
-void textureFn_8004c330(void *p1, void *mtx) {
+extern void GXSetTevIndirect(int tev, int ind, int fmt, int bias, int mtx, int ws, int wt, int addprev, int utclod,
+                             int alpha);
+
+void textureFn_8004c330(void* p1, void* mtx)
+{
     IndTexMtx23 m;
     f32 sx;
     f32 sy;
@@ -4891,35 +5932,41 @@ void textureFn_8004c330(void *p1, void *mtx) {
     int y;
     int x;
     int v1;
-    u8 *dst;
+    u8* dst;
     int v2;
     int v3;
     m = lbl_802C1E28;
-    if (lbl_803DCD2C == 0) {
+    if (lbl_803DCD2C == 0)
+    {
         lbl_803DCD2C = textureAlloc(0x20, 0x20, 4, 0, 0, 1, 1, 1, 1);
-        for (y = 0; y < 0x20; y++) {
-            for (x = 0; x < 0x20; x++) {
-                u8 *row = lbl_803DCD2C + (y & 3) * 2;
+        for (y = 0; y < 0x20; y++)
+        {
+            for (x = 0; x < 0x20; x++)
+            {
+                u8* row = lbl_803DCD2C + (y & 3) * 2;
                 dst = row + (y >> 2) * 0x20 + (x & 3) * 8 + (x >> 2) * 0x100;
                 v1 = randomGetRange(0x80, 0xff);
                 v2 = v1 - randomGetRange(0, 0x40);
                 v3 = v1 - randomGetRange(0x40, 0x80);
-                *(u16 *)(dst + 0x60) =
+                *(u16*)(dst + 0x60) =
                     ((v1 & 0xf8) >> 3) | ((v2 & 0xf8) << 8 | (v3 & 0xfc) << 3);
             }
         }
-        DCFlushRange(lbl_803DCD2C + 0x60, *(u32 *)(lbl_803DCD2C + 0x44));
+        DCFlushRange(lbl_803DCD2C + 0x60, *(u32*)(lbl_803DCD2C + 0x44));
     }
     newshadows_getReflectionScrollOffsets(&sx, &sy);
     m.v[0][1] = lbl_803DEAE0 * mathSinf(Prepared_803DEAD8 * sx) + lbl_803DEADC;
     m.v[1][2] = lbl_803DEAE0 * mathSinf(Prepared_803DEAD8 * sy) + lbl_803DEADC;
     GXSetTevOrder(lbl_803DCD90, 0, lbl_803DCD8C + 1, 8);
     GXSetTevSwapMode(lbl_803DCD90, 0, 0);
-    if (mtx != 0) {
+    if (mtx != 0)
+    {
         GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
         GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, 0, lbl_803DCD80);
         lbl_803DCD80 = lbl_803DCD80 + 3;
-    } else {
+    }
+    else
+    {
         GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, 0, 0x7d);
     }
     GXSetIndTexMtx(1, m.v, (s8)lbl_803DB5F4);
@@ -4940,23 +5987,31 @@ void textureFn_8004c330(void *p1, void *mtx) {
     lbl_803DCD30 = 1;
     {
         int id = lbl_803DCD8C;
-        if (p1 != 0) {
-            void *obj = (char *)p1 + 0x20;
-            if (*(u8 *)((char *)p1 + 0x48) != 0) {
-                GXLoadTexObjPreLoaded(obj, *(void **)((char *)p1 + 0x40), id);
-            } else {
+        if (p1 != 0)
+        {
+            void* obj = (char*)p1 + 0x20;
+            if (*(u8*)((char*)p1 + 0x48) != 0)
+            {
+                GXLoadTexObjPreLoaded(obj, *(void**)((char*)p1 + 0x40), id);
+            }
+            else
+            {
                 GXLoadTexObj(obj, id);
             }
         }
     }
     {
         int id2 = lbl_803DCD8C + 1;
-        u8 *tex = lbl_803DCD2C;
-        if (tex != 0) {
-            void *obj = tex + 0x20;
-            if (*(u8 *)(tex + 0x48) != 0) {
-                GXLoadTexObjPreLoaded(obj, *(void **)(tex + 0x40), id2);
-            } else {
+        u8* tex = lbl_803DCD2C;
+        if (tex != 0)
+        {
+            void* obj = tex + 0x20;
+            if (*(u8*)(tex + 0x48) != 0)
+            {
+                GXLoadTexObjPreLoaded(obj, *(void**)(tex + 0x40), id2);
+            }
+            else
+            {
                 GXLoadTexObj(obj, id2);
             }
         }
@@ -4969,7 +6024,13 @@ void textureFn_8004c330(void *p1, void *mtx) {
     lbl_803DCD69 += 1;
     lbl_803DCD68 += 1;
 }
-typedef struct { int a; int b; } PiColorS10;
+
+typedef struct
+{
+    int a;
+    int b;
+} PiColorS10;
+
 extern int WidthTable_803DEAB0;
 extern int lbl_803DEAB8;
 extern int lbl_803DEABC;
@@ -4978,11 +6039,14 @@ extern int lbl_803DCD74;
 extern int lbl_803DCD70;
 extern int lbl_803DCD6C;
 extern void GXSetTevKAlphaSel(int tev, int sel);
-extern void GXSetTevColorS10(int id, void *color);
-extern void GXSetTevKColor(int id, void *color);
-extern void GXInitTexObj(void *obj, void *img, u16 w, u16 h, int fmt, int wrap_s, int wrap_t, int mipmap);
-extern void GXInitTexObjLOD(void *obj, int min_filt, int mag_filt, f32 min_lod, f32 max_lod, f32 lod_bias, int bias_clamp, int do_edge_lod, int max_aniso);
-void fn_8004C7AC(void *p1, void *p2, void *p3, int w, int h) {
+extern void GXSetTevColorS10(int id, void* color);
+extern void GXSetTevKColor(int id, void* color);
+extern void GXInitTexObj(void* obj, void* img, u16 w, u16 h, int fmt, int wrap_s, int wrap_t, int mipmap);
+extern void GXInitTexObjLOD(void* obj, int min_filt, int mag_filt, f32 min_lod, f32 max_lod, f32 lod_bias,
+                            int bias_clamp, int do_edge_lod, int max_aniso);
+
+void fn_8004C7AC(void* p1, void* p2, void* p3, int w, int h)
+{
     u8 buf5c[0x20];
     u8 buf3c[0x20];
     u8 buf1c[0x20];
@@ -4992,7 +6056,8 @@ void fn_8004C7AC(void *p1, void *p2, void *p3, int w, int h) {
     int ck3;
     int w2;
     int h2;
-    if (lbl_803DCD6A < 0xc && lbl_803DCD69 < 7 && lbl_803DCD8C < 6 && lbl_803DCD74 < 2) {
+    if (lbl_803DCD6A < 0xc && lbl_803DCD69 < 7 && lbl_803DCD8C < 6 && lbl_803DCD74 < 2)
+    {
         GXSetTexCoordGen2(lbl_803DCD88, 1, 4, 0x3c, 0, 0x7d);
         GXSetTexCoordGen2(lbl_803DCD88 + 1, 1, 4, 0x3c, 0, 0x7d);
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88 + 1, lbl_803DCD8C + 1, 0xff);
@@ -5037,7 +6102,7 @@ void fn_8004C7AC(void *p1, void *p2, void *p3, int w, int h) {
         GXSetTevSwapMode(lbl_803DCD90 + 4, 0, 0);
         GXSetTevKColorSel(lbl_803DCD90 + 4, 6);
         lbl_803DCD30 = 1;
-        cs10 = *(PiColorS10 *)&WidthTable_803DEAB0;
+        cs10 = *(PiColorS10*)&WidthTable_803DEAB0;
         GXSetTevColorS10(1, &cs10);
         ck1 = lbl_803DEAB8;
         GXSetTevKColor(lbl_803DCD74, &ck1);
@@ -5064,13 +6129,14 @@ void fn_8004C7AC(void *p1, void *p2, void *p3, int w, int h) {
         lbl_803DCD69 += 2;
     }
 }
+
 extern IndTexMtx23 lbl_802C1DC8;
 extern IndTexMtx23 lbl_802C1DE0;
 extern f32 mathCosf(f32 x);
-extern void fn_80293C64(f32 angle, f32 *s, f32 *c);
-extern void fn_8006C504(void *out);
-extern void getTextureFn_8006c5e4(void *out);
-extern void mapTextureScrollGetOffset(u8 idx, f32 *x, f32 *y);
+extern void fn_80293C64(f32 angle, f32* s, f32* c);
+extern void fn_8006C504(void* out);
+extern void getTextureFn_8006c5e4(void* out);
+extern void mapTextureScrollGetOffset(u8 idx, f32* x, f32* y);
 extern void PSMTXIdentity(f32 m[3][4]);
 extern void PSMTXRotRad(f32 m[3][4], int axis, f32 rad);
 extern void GXSetIndTexCoordScale(int ind_stage, int scale_s, int scale_t);
@@ -5081,15 +6147,17 @@ extern f32 lbl_803DEB0C;
 extern f32 lbl_803DEB10;
 extern f32 lbl_803DEB14;
 extern f32 lbl_803DEB18;
-void fn_8004DA54(char *p1) {
+
+void fn_8004DA54(char* p1)
+{
     f32 mtxf4[3][4];
     f32 mtxc4[3][4];
     f32 mtx94[3][4];
     f32 mtx64[3][4];
     IndTexMtx23 m1;
     IndTexMtx23 m2;
-    u8 *tex30;
-    u8 *tex2c;
+    u8* tex30;
+    u8* tex2c;
     f32 rx;
     f32 ry;
     f32 cv;
@@ -5101,15 +6169,19 @@ void fn_8004DA54(char *p1) {
     f32 s;
     f32 k;
     f32 t;
-    u8 *tex24;
+    u8* tex24;
     m1 = lbl_802C1DC8;
     m2 = lbl_802C1DE0;
-    tex24 = *(u8 **)(p1 + 0x24);
-    if (tex24 != 0) {
-        void *obj = tex24 + 0x20;
-        if (*(u8 *)(tex24 + 0x48) != 0) {
-            GXLoadTexObjPreLoaded(obj, *(void **)(tex24 + 0x40), 2);
-        } else {
+    tex24 = *(u8**)(p1 + 0x24);
+    if (tex24 != 0)
+    {
+        void* obj = tex24 + 0x20;
+        if (*(u8*)(tex24 + 0x48) != 0)
+        {
+            GXLoadTexObjPreLoaded(obj, *(void**)(tex24 + 0x40), 2);
+        }
+        else
+        {
             GXLoadTexObj(obj, 2);
         }
     }
@@ -5135,31 +6207,42 @@ void fn_8004DA54(char *p1) {
     m2.v[1][0] = -sv;
     m2.v[1][1] = cv;
     fn_8006C504(&tex2c);
-    if (tex2c != 0) {
-        void *obj = tex2c + 0x20;
-        if (*(u8 *)(tex2c + 0x48) != 0) {
-            GXLoadTexObjPreLoaded(obj, *(void **)(tex2c + 0x40), 0);
-        } else {
+    if (tex2c != 0)
+    {
+        void* obj = tex2c + 0x20;
+        if (*(u8*)(tex2c + 0x48) != 0)
+        {
+            GXLoadTexObjPreLoaded(obj, *(void**)(tex2c + 0x40), 0);
+        }
+        else
+        {
             GXLoadTexObj(obj, 0);
         }
     }
     {
-        u8 b = *(u8 *)(p1 + 0x2a);
-        if (b != 0xff) {
+        u8 b = *(u8*)(p1 + 0x2a);
+        if (b != 0xff)
+        {
             mapTextureScrollGetOffset(b, &tsx, &tsy);
             PSMTXTrans(mtx64, tsx, tsy, lbl_803DEACC);
-        } else {
+        }
+        else
+        {
             PSMTXIdentity(mtx64);
         }
     }
     GXLoadTexMtxImm(mtx64, 0x46, 0);
     GXSetTexCoordGen2(0, 0, 4, 0x3c, 0, 0x46);
     getTextureFn_8006c5e4(&tex30);
-    if (tex30 != 0) {
-        void *obj = tex30 + 0x20;
-        if (*(u8 *)(tex30 + 0x48) != 0) {
-            GXLoadTexObjPreLoaded(obj, *(void **)(tex30 + 0x40), 1);
-        } else {
+    if (tex30 != 0)
+    {
+        void* obj = tex30 + 0x20;
+        if (*(u8*)(tex30 + 0x48) != 0)
+        {
+            GXLoadTexObjPreLoaded(obj, *(void**)(tex30 + 0x40), 1);
+        }
+        else
+        {
             GXLoadTexObj(obj, 1);
         }
     }
@@ -5172,7 +6255,7 @@ void fn_8004DA54(char *p1) {
     GXSetIndTexMtx(1, m1.v, -2);
     GXSetIndTexMtx(2, m2.v, -2);
     GXSetTevIndirect(1, 0, 0, 7, 1, 6, 6, 0, 0, 0);
-    PSMTXScale(mtxc4, lbl_803DEB0C, *(f32 *)&lbl_803DEB0C, lbl_803DEAC8);
+    PSMTXScale(mtxc4, lbl_803DEB0C, *(f32*)&lbl_803DEB0C, lbl_803DEAC8);
     PSMTXRotRad(mtx94, 0x7a, lbl_803DEB10);
     PSMTXConcat(mtx94, mtxc4, mtxc4);
     t = lbl_803DEB14 * rx;
@@ -5183,9 +6266,9 @@ void fn_8004DA54(char *p1) {
     GXSetIndTexOrder(1, 2, 1);
     GXSetIndTexCoordScale(1, 0, 0);
     GXSetTevIndirect(2, 1, 0, 7, 2, 0, 0, 1, 0, 0);
-    ((u8 *)&lbl_803DB5EC)[0] = (int)(lbl_803DEB18 * f31v);
-    ((u8 *)&lbl_803DB5EC)[1] = 0;
-    ((u8 *)&lbl_803DB5EC)[2] = 0;
+    ((u8*)&lbl_803DB5EC)[0] = (int)(lbl_803DEB18 * f31v);
+    ((u8*)&lbl_803DB5EC)[1] = 0;
+    ((u8*)&lbl_803DB5EC)[2] = 0;
     kc = lbl_803DB5EC;
     GXSetTevKColor(lbl_803DCD74, &kc);
     GXSetTevKAlphaSel(0, lbl_803DCD6C);
@@ -5223,12 +6306,17 @@ void fn_8004DA54(char *p1) {
     lbl_803DCD70 = 0xd;
     lbl_803DCD6C = 0x1d;
 }
-typedef struct { f32 x, y, z; } PiVec3;
+
+typedef struct
+{
+    f32 x, y, z;
+} PiVec3;
+
 struct piIndMtx;
 extern struct piIndMtx lbl_802C1D50;
-extern void *Camera_GetInverseViewMatrix(void);
-extern void PSMTXRotAxisRad(f32 m[3][4], PiVec3 *axis, f32 rad);
-extern void fn_8006C510(void *out);
+extern void* Camera_GetInverseViewMatrix(void);
+extern void PSMTXRotAxisRad(f32 m[3][4], PiVec3* axis, f32 rad);
+extern void fn_8006C510(void* out);
 extern f32 lbl_803DEB1C;
 extern f32 lbl_803DEB20;
 extern f32 LastLength_803DEB24;
@@ -5236,7 +6324,9 @@ extern f32 lbl_803DEB28;
 extern f32 SaveStart_803DEAD0;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-void fn_8004E0FC(void) {
+
+void fn_8004E0FC(void)
+{
     f32 m1e8[3][4];
     f32 m1b8[3][4];
     f32 m188[3][4];
@@ -5251,16 +6341,16 @@ void fn_8004E0FC(void) {
     PiVec3 vb;
     PiVec3 vc;
     PiVec3 vd;
-    u8 *tex1c;
-    u8 *tex18;
+    u8* tex1c;
+    u8* tex18;
     f32 rx;
     f32 ry;
-    void *invView;
-    va = ((PiVec3 *)&lbl_802C1D50)[4];
-    vb = ((PiVec3 *)&lbl_802C1D50)[5];
-    vc = ((PiVec3 *)&lbl_802C1D50)[6];
-    vd = ((PiVec3 *)&lbl_802C1D50)[7];
-    im = *(IndTexMtx23 *)((PiVec3 *)&lbl_802C1D50 + 8);
+    void* invView;
+    va = ((PiVec3*)&lbl_802C1D50)[4];
+    vb = ((PiVec3*)&lbl_802C1D50)[5];
+    vc = ((PiVec3*)&lbl_802C1D50)[6];
+    vd = ((PiVec3*)&lbl_802C1D50)[7];
+    im = *(IndTexMtx23*)((PiVec3*)&lbl_802C1D50 + 8);
     invView = Camera_GetInverseViewMatrix();
     PSMTXRotAxisRad(mf8, &va, lbl_803DEAC8);
     PSMTXRotAxisRad(mc8, &vb, lbl_803DEAC8);
@@ -5269,7 +6359,7 @@ void fn_8004E0FC(void) {
     m1e8[0][0] = lbl_803DEB1C;
     m1e8[0][1] = lbl_803DEACC;
     m1e8[0][2] = lbl_803DEACC;
-    m1e8[0][3] = SaveStart_803DEAD0 * (*(f32 *)&lbl_803DEB20 * playerMapOffsetX);
+    m1e8[0][3] = SaveStart_803DEAD0 * (*(f32*)&lbl_803DEB20 * playerMapOffsetX);
     m1e8[1][0] = lbl_803DEACC;
     m1e8[1][1] = lbl_803DEB1C;
     m1e8[1][2] = lbl_803DEACC;
@@ -5277,7 +6367,7 @@ void fn_8004E0FC(void) {
     m1e8[2][0] = lbl_803DEACC;
     m1e8[2][1] = lbl_803DEACC;
     m1e8[2][2] = lbl_803DEB1C;
-    m1e8[2][3] = SaveStart_803DEAD0 * (*(f32 *)&lbl_803DEB20 * playerMapOffsetZ);
+    m1e8[2][3] = SaveStart_803DEAD0 * (*(f32*)&lbl_803DEB20 * playerMapOffsetZ);
     m1b8[0][0] = LastLength_803DEB24;
     m1b8[0][1] = lbl_803DEACC;
     m1b8[0][2] = lbl_803DEACC;
@@ -5309,11 +6399,15 @@ void fn_8004E0FC(void) {
     fn_8006C510(&tex1c);
     {
         int id = lbl_803DCD8C;
-        if (tex1c != 0) {
-            void *obj = tex1c + 0x20;
-            if (*(u8 *)(tex1c + 0x48) != 0) {
-                GXLoadTexObjPreLoaded(obj, *(void **)(tex1c + 0x40), id);
-            } else {
+        if (tex1c != 0)
+        {
+            void* obj = tex1c + 0x20;
+            if (*(u8*)(tex1c + 0x48) != 0)
+            {
+                GXLoadTexObjPreLoaded(obj, *(void**)(tex1c + 0x40), id);
+            }
+            else
+            {
                 GXLoadTexObj(obj, id);
             }
         }
@@ -5384,11 +6478,15 @@ void fn_8004E0FC(void) {
     getTextureFn_8006c5e4(&tex18);
     {
         int id2 = lbl_803DCD8C + 1;
-        if (tex18 != 0) {
-            void *obj = tex18 + 0x20;
-            if (*(u8 *)(tex18 + 0x48) != 0) {
-                GXLoadTexObjPreLoaded(obj, *(void **)(tex18 + 0x40), id2);
-            } else {
+        if (tex18 != 0)
+        {
+            void* obj = tex18 + 0x20;
+            if (*(u8*)(tex18 + 0x48) != 0)
+            {
+                GXLoadTexObjPreLoaded(obj, *(void**)(tex18 + 0x40), id2);
+            }
+            else
+            {
                 GXLoadTexObj(obj, id2);
             }
         }
@@ -5402,22 +6500,25 @@ void fn_8004E0FC(void) {
     lbl_803DCD69 += 4;
     lbl_803DCD68 += 2;
 }
+
 extern IndTexMtx23 lbl_802C1D68;
 extern f32 lbl_803DEAC4;
-extern void fn_8006C528(void *out);
+extern void fn_8006C528(void* out);
 extern f32 ResetCoverCallback_803DEB2C;
-void renderHeavyFog(int *param_1) {
+
+void renderHeavyFog(int* param_1)
+{
     f32 mcc[3][4];
     f32 m9c[3][4];
     f32 m6c[3][4];
     f32 mrot[3][4];
     IndTexMtx23 im;
-    u8 *tex20;
-    u8 *tex1c;
+    u8* tex20;
+    u8* tex1c;
     f32 a;
     f32 b;
     int kc;
-    f32 (*iv)[4];
+    f32(*iv)[4];
     f32 k;
     im = lbl_802C1D68;
     iv = Camera_GetInverseViewMatrix();
@@ -5441,16 +6542,21 @@ void renderHeavyFog(int *param_1) {
     fn_8006C528(&tex20);
     {
         int id = lbl_803DCD8C;
-        if (tex20 != 0) {
-            void *obj = tex20 + 0x20;
-            if (*(u8 *)(tex20 + 0x48) != 0) {
-                GXLoadTexObjPreLoaded(obj, *(void **)(tex20 + 0x40), id);
-            } else {
+        if (tex20 != 0)
+        {
+            void* obj = tex20 + 0x20;
+            if (*(u8*)(tex20 + 0x48) != 0)
+            {
+                GXLoadTexObjPreLoaded(obj, *(void**)(tex20 + 0x40), id);
+            }
+            else
+            {
                 GXLoadTexObj(obj, id);
             }
         }
     }
-    if (lbl_803DCD31 != 0) {
+    if (lbl_803DCD31 != 0)
+    {
         newshadows_getReflectionScrollOffsets(&a, &b);
         b = b * lbl_803DEAE0;
         a = a * lbl_803DEB08;
@@ -5511,11 +6617,15 @@ void renderHeavyFog(int *param_1) {
         getTextureFn_8006c5e4(&tex1c);
         {
             int id2 = lbl_803DCD8C + 1;
-            if (tex1c != 0) {
-                void *obj = tex1c + 0x20;
-                if (*(u8 *)(tex1c + 0x48) != 0) {
-                    GXLoadTexObjPreLoaded(obj, *(void **)(tex1c + 0x40), id2);
-                } else {
+            if (tex1c != 0)
+            {
+                void* obj = tex1c + 0x20;
+                if (*(u8*)(tex1c + 0x48) != 0)
+                {
+                    GXLoadTexObjPreLoaded(obj, *(void**)(tex1c + 0x40), id2);
+                }
+                else
+                {
                     GXLoadTexObj(obj, id2);
                 }
             }
@@ -5529,7 +6639,9 @@ void renderHeavyFog(int *param_1) {
         lbl_803DCD6A += 2;
         lbl_803DCD69 += 3;
         lbl_803DCD68 += 2;
-    } else {
+    }
+    else
+    {
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
         GXSetTevColorIn(lbl_803DCD90, 0, 0xe, 9, 0xf);
         GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
@@ -5550,8 +6662,11 @@ void renderHeavyFog(int *param_1) {
     lbl_803DCD70 = lbl_803DCD70 + 1;
     lbl_803DCD6C = lbl_803DCD6C + 1;
 }
-void textureFn_8004ff20(void *p1) {
-    if (p1 != 0) {
+
+void textureFn_8004ff20(void* p1)
+{
+    if (p1 != 0)
+    {
         GXSetTexCoordGen2(lbl_803DCD88, 1, 1, 0x1e, 0, 0x7d);
         GXSetTevDirect(lbl_803DCD90);
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 4);
@@ -5563,11 +6678,15 @@ void textureFn_8004ff20(void *p1) {
         lbl_803DCD30 = 1;
         {
             int id = lbl_803DCD8C;
-            if (p1 != 0) {
-                char *tex = (char *)p1 + 0x20;
-                if (*(u8 *)((char *)p1 + 0x48) != 0) {
-                    GXLoadTexObjPreLoaded(tex, *(void **)((char *)p1 + 0x40), id);
-                } else {
+            if (p1 != 0)
+            {
+                char* tex = (char*)p1 + 0x20;
+                if (*(u8*)((char*)p1 + 0x48) != 0)
+                {
+                    GXLoadTexObjPreLoaded(tex, *(void**)((char*)p1 + 0x40), id);
+                }
+                else
+                {
                     GXLoadTexObj(tex, id);
                 }
             }
@@ -5588,92 +6707,136 @@ void textureFn_8004ff20(void *p1) {
         lbl_803DCD6A += 1;
     }
 }
-void gxTextureFn_8004bf88(void *bufp, u8 flag1, u8 flag2, int *out1, int *out2) {
-    u8 *buf = bufp;
+
+void gxTextureFn_8004bf88(void* bufp, u8 flag1, u8 flag2, int* out1, int* out2)
+{
+    u8* buf = bufp;
     u8 found1 = 0;
     u8 found2 = 0;
-    if (flag1 != 0) {
-        if (buf[0] == buf[1] && buf[0] == buf[2]) {
-            if (buf[0] == 0xff) {
+    if (flag1 != 0)
+    {
+        if (buf[0] == buf[1] && buf[0] == buf[2])
+        {
+            if (buf[0] == 0xff)
+            {
                 *out1 = 0;
                 found1 = 1;
-            } else if (buf[0] == 0xe0) {
+            }
+            else if (buf[0] == 0xe0)
+            {
                 *out1 = 1;
                 found1 = 1;
-            } else if (buf[0] == 0xc0) {
+            }
+            else if (buf[0] == 0xc0)
+            {
                 *out1 = 2;
                 found1 = 1;
-            } else if (buf[0] == 0xa0) {
+            }
+            else if (buf[0] == 0xa0)
+            {
                 *out1 = 3;
                 found1 = 1;
-            } else if (buf[0] == 0x80) {
+            }
+            else if (buf[0] == 0x80)
+            {
                 *out1 = 4;
                 found1 = 1;
-            } else if (buf[0] == 0x60) {
+            }
+            else if (buf[0] == 0x60)
+            {
                 *out1 = 5;
                 found1 = 1;
-            } else if (buf[0] == 0x40) {
+            }
+            else if (buf[0] == 0x40)
+            {
                 *out1 = 6;
                 found1 = 1;
-            } else if (buf[0] == 0x20) {
+            }
+            else if (buf[0] == 0x20)
+            {
                 *out1 = 7;
                 found1 = 1;
             }
         }
-        if (found1 == 0) {
+        if (found1 == 0)
+        {
             *out1 = lbl_803DCD70;
         }
-    } else {
+    }
+    else
+    {
         found1 = 1;
     }
-    if (flag2 != 0) {
-        if (buf[3] == 0xff) {
+    if (flag2 != 0)
+    {
+        if (buf[3] == 0xff)
+        {
             *out2 = 0;
             found2 = 1;
-        } else if (buf[3] == 0xe0) {
+        }
+        else if (buf[3] == 0xe0)
+        {
             *out2 = 1;
             found2 = 1;
-        } else if (buf[3] == 0xc0) {
+        }
+        else if (buf[3] == 0xc0)
+        {
             *out2 = 2;
             found2 = 1;
-        } else if (buf[3] == 0xa0) {
+        }
+        else if (buf[3] == 0xa0)
+        {
             *out2 = 3;
             found2 = 1;
-        } else if (buf[3] == 0x80) {
+        }
+        else if (buf[3] == 0x80)
+        {
             *out2 = 4;
             found2 = 1;
-        } else if (buf[3] == 0x60) {
+        }
+        else if (buf[3] == 0x60)
+        {
             *out2 = 5;
             found2 = 1;
-        } else if (buf[3] == 0x40) {
+        }
+        else if (buf[3] == 0x40)
+        {
             *out2 = 6;
             found2 = 1;
-        } else if (buf[3] == 0x20) {
+        }
+        else if (buf[3] == 0x20)
+        {
             *out2 = 7;
             found2 = 1;
         }
-        if (found2 == 0) {
+        if (found2 == 0)
+        {
             *out2 = lbl_803DCD6C;
         }
-    } else {
+    }
+    else
+    {
         found2 = 1;
     }
-    if (found1 == 0 || found2 == 0) {
-        int color = *(int *)bufp;
+    if (found1 == 0 || found2 == 0)
+    {
+        int color = *(int*)bufp;
         GXSetTevKColor(lbl_803DCD74, &color);
         lbl_803DCD74 = lbl_803DCD74 + 1;
         lbl_803DCD70 = lbl_803DCD70 + 1;
         lbl_803DCD6C = lbl_803DCD6C + 1;
     }
 }
-void gxTextureFn_8004d5b4(void *p1) {
+
+void gxTextureFn_8004d5b4(void* p1)
+{
     u8 buf[3];
     int color;
-    u8 b = *(u8 *)((char *)p1 + 0x43);
+    u8 b = *(u8*)((char*)p1 + 0x43);
     buf[2] = b;
     buf[1] = b;
     buf[0] = b;
-    color = *(int *)buf;
+    color = *(int*)buf;
     GXSetTevKColor(lbl_803DCD74, &color);
     GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
     GXSetTevDirect(lbl_803DCD90);
@@ -5690,14 +6853,21 @@ void gxTextureFn_8004d5b4(void *p1) {
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A = lbl_803DCD6A + 1;
 }
-struct piIndMtx { f32 m[2][3]; };
+
+struct piIndMtx
+{
+    f32 m[2][3];
+};
+
 extern u8 lbl_803DB5E8;
 extern int lbl_8030CEE0[];
 extern f32 lbl_803DEB38;
 extern f32 lbl_803DEB3C;
-extern void *textureIdxToPtr(int idx);
+extern void* textureIdxToPtr(int idx);
 extern void GXSetTevOp(int stage, int mode);
-int textureFn_80050ad8(void *p1, int p2, u8 p3, u32 p4) {
+
+int textureFn_80050ad8(void* p1, int p2, u8 p3, u32 p4)
+{
     struct piIndMtx indmtx;
     f32 mtx[3][4];
     f32 v;
@@ -5707,23 +6877,30 @@ int textureFn_80050ad8(void *p1, int p2, u8 p3, u32 p4) {
     indmtx = lbl_802C1D50;
     t = lbl_803DB5E8 & 1;
     result = 0;
-    if (t == 0) {
+    if (t == 0)
+    {
         return 0;
     }
     GXSetIndTexMtx(1, indmtx.m, 0);
     GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88 + p2, lbl_803DCD8C);
-    if (p4 != 0) {
-        void *texptr;
+    if (p4 != 0)
+    {
+        void* texptr;
         u32 div;
         p2 = (p3 & 0xf) * 4 + 1;
         texptr = textureIdxToPtr(p4);
-        div = (u32)*(u16 *)((char *)texptr + 0xa) / (u32)(*(u16 *)((char *)p1 + 0xa) * p2);
-        if (div != 0) {
+        div = (u32) * (u16*)((char*)texptr + 0xa) / (u32)(*(u16*)((char*)p1 + 0xa) * p2);
+        if (div != 0)
+        {
             GXSetIndTexCoordScale(lbl_803DCD7C, lbl_8030CEE0[div - 1], lbl_8030CEE0[div - 1]);
-        } else {
+        }
+        else
+        {
             result = (u8)p2;
         }
-    } else {
+    }
+    else
+    {
         result = 1;
     }
     v = lbl_803DEADC * (lbl_803DEB38 * ((f32)(s32)((p3 & 0xf0) >> 4) / lbl_803DEB3C - lbl_803DEAC8));
@@ -5740,11 +6917,15 @@ int textureFn_80050ad8(void *p1, int p2, u8 p3, u32 p4) {
     GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, (lbl_803DCD8C + 1) | 0x100, 0xff);
     GXSetTevOp(lbl_803DCD90 + 1, 4);
     texmap = lbl_803DCD8C;
-    if (p1 != 0) {
-        char *tex = (char *)p1 + 0x20;
-        if (*(u8 *)((char *)p1 + 0x48) != 0) {
-            GXLoadTexObjPreLoaded(tex, *(void **)((char *)p1 + 0x40), texmap);
-        } else {
+    if (p1 != 0)
+    {
+        char* tex = (char*)p1 + 0x20;
+        if (*(u8*)((char*)p1 + 0x48) != 0)
+        {
+            GXLoadTexObjPreLoaded(tex, *(void**)((char*)p1 + 0x40), texmap);
+        }
+        else
+        {
             GXLoadTexObj(tex, texmap);
         }
     }
@@ -5758,22 +6939,28 @@ int textureFn_80050ad8(void *p1, int p2, u8 p3, u32 p4) {
     lbl_803DCD69 += 2;
     return result;
 }
+
 extern f32 fn_8006C670(void);
 extern struct piIndMtx lbl_802C1E10;
 extern f32 lbl_80396820[3][4];
 extern void selectReflectionTexture(int id);
-void fn_8004D6D8(void) {
+
+void fn_8004D6D8(void)
+{
     struct piIndMtx indmtx;
-    void *tex;
+    void* tex;
     int id;
     f32 v;
     indmtx = lbl_802C1E10;
     v = lbl_803DEADC * fn_8006C670();
     indmtx.m[0][0] = v;
     indmtx.m[1][2] = v;
-    if (lbl_803DCD88 > 0) {
+    if (lbl_803DCD88 > 0)
+    {
         GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88 - 1, lbl_803DCD8C + 1);
-    } else {
+    }
+    else
+    {
         GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88, lbl_803DCD8C + 1);
     }
     GXSetIndTexCoordScale(lbl_803DCD7C, 0, 0);
@@ -5781,11 +6968,15 @@ void fn_8004D6D8(void) {
     GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 3, 2, 0, 0, 0, 0, 0);
     getTextureFn_8006c5e4(&tex);
     id = lbl_803DCD8C + 1;
-    if (tex != NULL) {
-        void *obj = (char *)tex + 0x20;
-        if (*(u8 *)((char *)tex + 0x48) != 0) {
-            GXLoadTexObjPreLoaded(obj, *(void **)((char *)tex + 0x40), id);
-        } else {
+    if (tex != NULL)
+    {
+        void* obj = (char*)tex + 0x20;
+        if (*(u8*)((char*)tex + 0x48) != 0)
+        {
+            GXLoadTexObjPreLoaded(obj, *(void**)((char*)tex + 0x40), id);
+        }
+        else
+        {
             GXLoadTexObj(obj, id);
         }
     }
@@ -5807,15 +6998,19 @@ void fn_8004D6D8(void) {
     lbl_803DCD69++;
     lbl_803DCD68++;
 }
-extern void fn_8006C540(u8 **out);
-void fn_8004F380(f32 param_1, int *param_2, f32 *param_3) {
+
+extern void fn_8006C540(u8 * *out);
+
+void fn_8004F380(f32 param_1, int* param_2, f32* param_3)
+{
     f32 matA[3][4];
     f32 matB[3][4];
-    u8 *src;
+    u8* src;
     int color;
     int id;
     f32 c8, cc, d1, f;
-    if (lbl_803DCD74 <= 3 && lbl_803DCD6A < 0xc && lbl_803DCD69 < 7) {
+    if (lbl_803DCD74 <= 3 && lbl_803DCD6A < 0xc && lbl_803DCD69 < 7)
+    {
         d1 = lbl_803DEADC;
         f = d1 / param_1;
         cc = lbl_803DEACC;
@@ -5867,11 +7062,15 @@ void fn_8004F380(f32 param_1, int *param_2, f32 *param_3) {
         GXSetTevColorOp(lbl_803DCD90 + 1, 0, 0, 0, 1, 2);
         GXSetTevAlphaOp(lbl_803DCD90 + 1, 0, 0, 0, 1, 0);
         id = lbl_803DCD8C;
-        if (src != NULL) {
-            u8 *obj = src + 0x20;
-            if (src[0x48] != 0) {
-                GXLoadTexObjPreLoaded(obj, *(void **)(src + 0x40), id);
-            } else {
+        if (src != NULL)
+        {
+            u8* obj = src + 0x20;
+            if (src[0x48] != 0)
+            {
+                GXLoadTexObjPreLoaded(obj, *(void**)(src + 0x40), id);
+            }
+            else
+            {
                 GXLoadTexObj(obj, id);
             }
         }
@@ -5886,14 +7085,17 @@ void fn_8004F380(f32 param_1, int *param_2, f32 *param_3) {
         lbl_803DCD6A = lbl_803DCD6A + 2;
     }
 }
-void fn_8004F6D8(f32 param_1, int *param_2, f32 *param_3) {
+
+void fn_8004F6D8(f32 param_1, int* param_2, f32* param_3)
+{
     f32 matA[3][4];
     f32 matB[3][4];
-    u8 *src;
+    u8* src;
     int color;
     int id;
     f32 c8, cc, d1, f;
-    if (lbl_803DCD74 <= 3 && lbl_803DCD6A < 0xc && lbl_803DCD69 < 7) {
+    if (lbl_803DCD74 <= 3 && lbl_803DCD6A < 0xc && lbl_803DCD69 < 7)
+    {
         d1 = lbl_803DEADC;
         f = d1 / param_1;
         cc = lbl_803DEACC;
@@ -5945,11 +7147,15 @@ void fn_8004F6D8(f32 param_1, int *param_2, f32 *param_3) {
         GXSetTevColorOp(lbl_803DCD90 + 1, 0, 0, 0, 1, 2);
         GXSetTevAlphaOp(lbl_803DCD90 + 1, 0, 0, 0, 1, 0);
         id = lbl_803DCD8C;
-        if (src != NULL) {
-            u8 *obj = src + 0x20;
-            if (src[0x48] != 0) {
-                GXLoadTexObjPreLoaded(obj, *(void **)(src + 0x40), id);
-            } else {
+        if (src != NULL)
+        {
+            u8* obj = src + 0x20;
+            if (src[0x48] != 0)
+            {
+                GXLoadTexObjPreLoaded(obj, *(void**)(src + 0x40), id);
+            }
+            else
+            {
                 GXLoadTexObj(obj, id);
             }
         }
@@ -5964,16 +7170,21 @@ void fn_8004F6D8(f32 param_1, int *param_2, f32 *param_3) {
         lbl_803DCD6A = lbl_803DCD6A + 2;
     }
 }
+
 extern f32 lbl_803DEAE4;
-void fn_8004FA30(f32 param_1, int *param_2, f32 *param_3) {
+
+void fn_8004FA30(f32 param_1, int* param_2, f32* param_3)
+{
     f32 matA[3][4];
     f32 matB[3][4];
-    u8 *src;
+    u8* src;
     int color;
     int id;
     f32 c8, cc, d1, f;
-    if (lbl_803DCD74 <= 3 && lbl_803DCD6A < 0x10 && lbl_803DCD69 < 7) {
-        if (param_1 < lbl_803DEAE4) {
+    if (lbl_803DCD74 <= 3 && lbl_803DCD6A < 0x10 && lbl_803DCD69 < 7)
+    {
+        if (param_1 < lbl_803DEAE4)
+        {
             param_1 = lbl_803DEAE4;
         }
         d1 = lbl_803DEADC;
@@ -6028,11 +7239,15 @@ void fn_8004FA30(f32 param_1, int *param_2, f32 *param_3) {
         GXSetTevAlphaOp(lbl_803DCD90 + 1, 0, 0, 0, 1, 0);
         lbl_803DCD30 = 1;
         id = lbl_803DCD8C;
-        if (src != NULL) {
-            u8 *obj = src + 0x20;
-            if (src[0x48] != 0) {
-                GXLoadTexObjPreLoaded(obj, *(void **)(src + 0x40), id);
-            } else {
+        if (src != NULL)
+        {
+            u8* obj = src + 0x20;
+            if (src[0x48] != 0)
+            {
+                GXLoadTexObjPreLoaded(obj, *(void**)(src + 0x40), id);
+            }
+            else
+            {
                 GXLoadTexObj(obj, id);
             }
         }
@@ -6047,11 +7262,14 @@ void fn_8004FA30(f32 param_1, int *param_2, f32 *param_3) {
         lbl_803DCD6A = lbl_803DCD6A + 2;
     }
 }
-extern void fn_8006C5B8(void *out);
-void fn_8005011C(int param_1) {
-    u8 *local_48;
+
+extern void fn_8006C5B8(void* out);
+
+void fn_8005011C(int param_1)
+{
+    u8* local_48;
     f32 mtx[3][4];
-    u8 *obj2;
+    u8* obj2;
     int id;
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevDirect(lbl_803DCD90 + 1);
@@ -6090,21 +7308,29 @@ void fn_8005011C(int param_1) {
     GXSetTevAlphaOp(lbl_803DCD90 + 3, 0, 0, 0, 1, 0);
     fn_8006C5B8(&local_48);
     id = lbl_803DCD8C;
-    if (local_48 != NULL) {
-        void *obj = local_48 + 0x20;
-        if (local_48[0x48] != 0) {
-            GXLoadTexObjPreLoaded(obj, *(void **)(local_48 + 0x40), id);
-        } else {
+    if (local_48 != NULL)
+    {
+        void* obj = local_48 + 0x20;
+        if (local_48[0x48] != 0)
+        {
+            GXLoadTexObjPreLoaded(obj, *(void**)(local_48 + 0x40), id);
+        }
+        else
+        {
             GXLoadTexObj(obj, id);
         }
     }
     id = lbl_803DCD8C + 1;
-    obj2 = *(u8 **)(param_1 + 0x60);
-    if (obj2 != NULL) {
-        void *obj = obj2 + 0x20;
-        if (obj2[0x48] != 0) {
-            GXLoadTexObjPreLoaded(obj, *(void **)(obj2 + 0x40), id);
-        } else {
+    obj2 = *(u8**)(param_1 + 0x60);
+    if (obj2 != NULL)
+    {
+        void* obj = obj2 + 0x20;
+        if (obj2[0x48] != 0)
+        {
+            GXLoadTexObjPreLoaded(obj, *(void**)(obj2 + 0x40), id);
+        }
+        else
+        {
             GXLoadTexObj(obj, id);
         }
     }
@@ -6115,86 +7341,131 @@ void fn_8005011C(int param_1) {
     lbl_803DCD6A += 4;
     lbl_803DCD90 = lbl_803DCD90 + 4;
 }
+
 extern u8 lbl_803DCD6B;
-void fn_80050558(u8 *param_1, void *texMtx, int param_3, int param_4, int param_5) {
+
+void fn_80050558(u8* param_1, void* texMtx, int param_3, int param_4, int param_5)
+{
     int inputSel;
     int texmap;
     GXSetTevDirect(lbl_803DCD90);
     GXLoadTexMtxImm(texMtx, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
-    if (param_5 == 0 || param_5 == 2) {
+    if (param_5 == 0 || param_5 == 2)
+    {
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 4);
-    } else {
+    }
+    else
+    {
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 5);
     }
-    if (*(volatile int *)&lbl_803DCD90 == 0) {
+    if (*(volatile int*)&lbl_803DCD90 == 0)
+    {
         inputSel = 0xc;
-    } else {
+    }
+    else
+    {
         inputSel = 4;
     }
-    if (param_3 == 0) {
-        if (param_4 == 2) {
+    if (param_3 == 0)
+    {
+        if (param_4 == 2)
+        {
             GXSetTevColorIn(lbl_803DCD90, 0xf, inputSel, 8, 0xf);
-        } else if (param_4 == 3) {
+        }
+        else if (param_4 == 3)
+        {
             GXSetTevColorIn(lbl_803DCD90, inputSel, 0xf, 8, 0xf);
-        } else if (param_4 == 1) {
+        }
+        else if (param_4 == 1)
+        {
             GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 8, inputSel);
-        } else if (param_5 == 0 || param_5 == 1) {
+        }
+        else if (param_5 == 0 || param_5 == 1)
+        {
             GXSetTevColorIn(lbl_803DCD90, 0xf, 0xa, 8, inputSel);
-        } else {
+        }
+        else
+        {
             GXSetTevColorIn(lbl_803DCD90, 0xf, 0xb, 8, inputSel);
         }
         GXSetTevSwapMode(lbl_803DCD90, 0, 0);
         GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 7);
-        if (param_4 == 1) {
+        if (param_4 == 1)
+        {
             GXSetTevColorOp(lbl_803DCD90, 1, 0, 0, 1, 2);
             GXSetTevAlphaOp(lbl_803DCD90, 1, 0, 0, 1, 2);
-        } else {
+        }
+        else
+        {
             GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 2);
             GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 2);
         }
-    } else if (param_3 == 1) {
-        if (param_4 == 2) {
+    }
+    else if (param_3 == 1)
+    {
+        if (param_4 == 2)
+        {
             GXSetTevColorIn(lbl_803DCD90, 0xf, 6, 8, 0xf);
-        } else if (param_4 == 3) {
+        }
+        else if (param_4 == 3)
+        {
             GXSetTevColorIn(lbl_803DCD90, 6, 0xf, 8, 0xf);
-        } else if (param_4 == 1) {
+        }
+        else if (param_4 == 1)
+        {
             GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 8, 6);
-        } else if (param_5 == 0 || param_5 == 1) {
+        }
+        else if (param_5 == 0 || param_5 == 1)
+        {
             GXSetTevColorIn(lbl_803DCD90, 0xf, 0xa, 8, 6);
-        } else {
+        }
+        else
+        {
             GXSetTevColorIn(lbl_803DCD90, 0xf, 0xb, 8, 6);
         }
         GXSetTevSwapMode(lbl_803DCD90, 0, 0);
         GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 7);
-        if (param_4 == 1) {
+        if (param_4 == 1)
+        {
             GXSetTevColorOp(lbl_803DCD90, 1, 0, 0, 1, 3);
             GXSetTevAlphaOp(lbl_803DCD90, 1, 0, 0, 1, 3);
-        } else {
+        }
+        else
+        {
             GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 3);
             GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 3);
         }
-    } else {
+    }
+    else
+    {
         lbl_803DCD6B = 1;
         lbl_803DCD30 = 1;
         GXSetTevSwapModeTable(1, 0, 0, 0, 1);
         GXSetTevSwapMode(lbl_803DCD90, 1, 1);
         GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0xc);
-        if (param_4 == 3) {
+        if (param_4 == 3)
+        {
             GXSetTevAlphaIn(lbl_803DCD90, 7, 5, 4, 6);
             GXSetTevAlphaOp(lbl_803DCD90, 1, 0, 0, 1, 0);
-        } else {
+        }
+        else
+        {
             GXSetTevAlphaIn(lbl_803DCD90, 7, 5, 4, 7);
             GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
         }
         GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
     }
     texmap = lbl_803DCD8C;
-    if (param_1 != NULL) {
-        u8 *tex = param_1 + 0x20;
-        if (param_1[0x48] != 0) {
-            GXLoadTexObjPreLoaded(tex, *(void **)(param_1 + 0x40), texmap);
-        } else {
+    if (param_1 != NULL)
+    {
+        u8* tex = param_1 + 0x20;
+        if (param_1[0x48] != 0)
+        {
+            GXLoadTexObjPreLoaded(tex, *(void**)(param_1 + 0x40), texmap);
+        }
+        else
+        {
             GXLoadTexObj(tex, texmap);
         }
     }
@@ -6205,27 +7476,30 @@ void fn_80050558(u8 *param_1, void *texMtx, int param_3, int param_4, int param_
     lbl_803DCD6A++;
     lbl_803DCD69++;
 }
+
 extern void C_MTXLightOrtho(f32 m[3][4], f32 t, f32 b, f32 l, f32 r, f32 sS, f32 sT, f32 tS, f32 tT);
 extern int fn_8006C754(void);
 extern int fn_8006C74C(void);
-extern u8 *Obj_GetPlayerObject(void);
+extern u8* Obj_GetPlayerObject(void);
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 lbl_803DEAF4;
 extern f32 lbl_803DEAF8;
 extern f32 lbl_803DEAFC;
 extern f32 lbl_803DEB00;
-void fn_8004D230(void) {
+
+void fn_8004D230(void)
+{
     f32 mtx1[4][4];
     f32 mtx2[3][4];
-    u8 *obj1;
-    u8 *player;
-    u8 *obj2;
+    u8* obj1;
+    u8* player;
+    u8* obj2;
     int id;
     f32 dist;
     f32 tmp;
     f32 t;
 
-    obj1 = (u8 *)fn_8006C754();
+    obj1 = (u8*)fn_8006C754();
     C_MTXLightOrtho(mtx1, lbl_803DEAF4, lbl_803DEAF8, lbl_803DEAF8, lbl_803DEAF4,
                     lbl_803DEADC, lbl_803DEADC, lbl_803DEADC, lbl_803DEADC);
     GXLoadTexMtxImm(mtx1, lbl_803DCD80, 0);
@@ -6234,9 +7508,12 @@ void fn_8004D230(void) {
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
     GXSetTevSwapModeTable(1, 0, 0, 0, 1);
     GXSetTevSwapMode(lbl_803DCD90, 1, 1);
-    if (lbl_803DCD90 == 0) {
+    if (lbl_803DCD90 == 0)
+    {
         GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xf);
-    } else {
+    }
+    else
+    {
         GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0);
     }
     GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 4);
@@ -6244,11 +7521,15 @@ void fn_8004D230(void) {
     GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 2);
     lbl_803DCD30 = 1;
     id = lbl_803DCD8C;
-    if (obj1 != NULL) {
-        void *obj = obj1 + 0x20;
-        if (obj1[0x48] != 0) {
-            GXLoadTexObjPreLoaded(obj, *(void **)(obj1 + 0x40), id);
-        } else {
+    if (obj1 != NULL)
+    {
+        void* obj = obj1 + 0x20;
+        if (obj1[0x48] != 0)
+        {
+            GXLoadTexObjPreLoaded(obj, *(void**)(obj1 + 0x40), id);
+        }
+        else
+        {
             GXLoadTexObj(obj, id);
         }
     }
@@ -6257,9 +7538,13 @@ void fn_8004D230(void) {
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD8C = lbl_803DCD8C + 1;
     player = Obj_GetPlayerObject();
-    if (player != NULL) {
-        dist = Camera_DistanceToCurrentViewPosition(*(f32 *)(player + 0x18), *(f32 *)(player + 0x1c), *(f32 *)(player + 0x20));
-    } else {
+    if (player != NULL)
+    {
+        dist = Camera_DistanceToCurrentViewPosition(*(f32*)(player + 0x18), *(f32*)(player + 0x1c),
+                                                    *(f32*)(player + 0x20));
+    }
+    else
+    {
         dist = lbl_803DEAFC;
     }
     tmp = dist - lbl_803DEB00;
@@ -6287,13 +7572,17 @@ void fn_8004D230(void) {
     GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(lbl_803DCD90, 1, 0, 0, 1, 0);
     lbl_803DCD30 = 1;
-    obj2 = (u8 *)fn_8006C74C();
+    obj2 = (u8*)fn_8006C74C();
     id = lbl_803DCD8C;
-    if (obj2 != NULL) {
-        void *obj = obj2 + 0x20;
-        if (obj2[0x48] != 0) {
-            GXLoadTexObjPreLoaded(obj, *(void **)(obj2 + 0x40), id);
-        } else {
+    if (obj2 != NULL)
+    {
+        void* obj = obj2 + 0x20;
+        if (obj2[0x48] != 0)
+        {
+            GXLoadTexObjPreLoaded(obj, *(void**)(obj2 + 0x40), id);
+        }
+        else
+        {
             GXLoadTexObj(obj, id);
         }
     }
@@ -6305,17 +7594,20 @@ void fn_8004D230(void) {
     lbl_803DCD6A += 2;
     lbl_803DCD69 += 2;
 }
+
 extern int lbl_803DCD84;
 extern f32 bootThisDol;
 extern f32 lbl_803DEAEC;
 extern f32 lbl_803DEAF0;
-void fn_8004CE0C(void *param_1) {
+
+void fn_8004CE0C(void* param_1)
+{
     f32 mtx40[3][4];
     f32 mtx70[3][4];
     f32 sx;
     f32 sy;
-    u8 *obj7c;
-    u8 *obj80;
+    u8* obj7c;
+    u8* obj80;
 
     GXSetTexCoordGen2(0, 1, 4, 0x3c, 0, 0x7d);
     GXSetTevDirect(0);
@@ -6337,11 +7629,15 @@ void fn_8004CE0C(void *param_1) {
     GXLoadTexMtxImm(mtx40, 0x1e, 1);
     GXSetTexCoordGen2(1, 1, 0, 0x1e, 0, 0x7d);
     getTextureFn_8006c5e4(&obj7c);
-    if (obj7c != NULL) {
-        void *obj = obj7c + 0x20;
-        if (obj7c[0x48] != 0) {
-            GXLoadTexObjPreLoaded(obj, *(void **)(obj7c + 0x40), 2);
-        } else {
+    if (obj7c != NULL)
+    {
+        void* obj = obj7c + 0x20;
+        if (obj7c[0x48] != 0)
+        {
+            GXLoadTexObjPreLoaded(obj, *(void**)(obj7c + 0x40), 2);
+        }
+        else
+        {
             GXLoadTexObj(obj, 2);
         }
     }
@@ -6362,11 +7658,15 @@ void fn_8004CE0C(void *param_1) {
     GXSetTevColorOp(1, 1, 1, 0, 1, 0);
     GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
     fn_8006C5B8(&obj80);
-    if (obj80 != NULL) {
-        void *obj = obj80 + 0x20;
-        if (obj80[0x48] != 0) {
-            GXLoadTexObjPreLoaded(obj, *(void **)(obj80 + 0x40), 3);
-        } else {
+    if (obj80 != NULL)
+    {
+        void* obj = obj80 + 0x20;
+        if (obj80[0x48] != 0)
+        {
+            GXLoadTexObjPreLoaded(obj, *(void**)(obj80 + 0x40), 3);
+        }
+        else
+        {
             GXLoadTexObj(obj, 3);
         }
     }
@@ -6397,120 +7697,149 @@ void fn_8004CE0C(void *param_1) {
     lbl_803DCD69 = 4;
     lbl_803DCD68 = 1;
 }
+
 extern u32 getButtonsJustPressed(int set);
 extern void printHeapStats(int a);
 extern void defragMemory(int a);
 extern void debugPrintSetColor(int r, int g, int b, int a);
-extern void fn_80137948(char *fmt, ...);
+extern void fn_80137948(char* fmt, ...);
 extern char sAssetHaltFormat[];
 extern int lbl_8035EF48[];
 extern s16 lbl_803DCC78;
 extern void loadTableFiles(void);
-void loadDataFiles(void) {
+
+void loadDataFiles(void)
+{
     int i;
-    if (getButtonsJustPressed(2) & 0x100) {
-        for (i = 0x50; i < 0x57; i++) {
+    if (getButtonsJustPressed(2) & 0x100)
+    {
+        for (i = 0x50; i < 0x57; i++)
+        {
         }
         printHeapStats(1);
     }
-    if (getButtonsJustPressed(2) & 0x200) {
+    if (getButtonsJustPressed(2) & 0x200)
+    {
         defragMemory(0);
     }
-    if (lbl_803DCC78 != 0) {
-        if (lbl_803DCC78 == 1) {
+    if (lbl_803DCC78 != 0)
+    {
+        if (lbl_803DCC78 == 1)
+        {
             defragMemory(0);
         }
         lbl_803DCC78--;
     }
     i = 0;
-    do {
-        if (lbl_8035EF48[i] != -1) {
+    do
+    {
+        if (lbl_8035EF48[i] != -1)
+        {
             debugPrintSetColor(0, 0xff, 0, 0xff);
             fn_80137948(sAssetHaltFormat, sResourceFileNameTable[i]);
             debugPrintSetColor(0xff, 0xff, 0xff, 0xff);
             lbl_803DCC70 = 1;
-            if (mapLoadDataFile(lbl_8035EF48[i], i) != 0) {
+            if (mapLoadDataFile(lbl_8035EF48[i], i) != 0)
+            {
                 lbl_8035EF48[i] = -1;
                 printHeapStats(1);
             }
             lbl_803DCC70 = 0;
         }
         i++;
-    } while (i <= 0x57);
+    }
+    while (i <= 0x57);
     loadTableFiles();
 }
-extern void VIConfigure(void *mode);
+
+extern void VIConfigure(void* mode);
 #pragma peephole on
-void tvInit(void) {
-    *(s16 *)((char *)lbl_803DCCF0 + 0xe) = 0x294;
-    *(u16 *)((char *)lbl_803DCCF0 + 0xa) = *(u16 *)((char *)lbl_803DCCF0 + 0xa) - 0xa;
+void tvInit(void)
+{
+    *(s16*)((char*)lbl_803DCCF0 + 0xe) = 0x294;
+    *(u16*)((char*)lbl_803DCCF0 + 0xa) = *(u16*)((char*)lbl_803DCCF0 + 0xa) - 0xa;
     VIConfigure(lbl_803DCCF0);
     VIFlush();
     VIWaitForRetrace();
     VIWaitForRetrace();
 }
-void mapsBinGetRomlistSize(int idx, int *out1, int *out2, int *out3, int p5) {
-    char *base = (char *)lbl_8035F3E8;
-    char *e;
-    if (*(int *)(base + 0x74) == 0) return;
-    if (*(int *)(base + 0x78) == 0) return;
-    e = (char *)*(int *)(base + 0x74) + idx;
-    *out1 = *(s16 *)(e + 0x1c);
-    *out2 = *(s16 *)(e + 0x1e);
-    *out3 = *(int *)((char *)*(int *)(base + 0x74) +
-            *(int *)((char *)*(int *)(base + 0x78) + p5 * 4 + 0x18) + 4);
+
+void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5)
+{
+    char* base = (char*)lbl_8035F3E8;
+    char* e;
+    if (*(int*)(base + 0x74) == 0) return;
+    if (*(int*)(base + 0x78) == 0) return;
+    e = (char*)*(int*)(base + 0x74) + idx;
+    *out1 = *(s16*)(e + 0x1c);
+    *out2 = *(s16*)(e + 0x1e);
+    *out3 = *(int*)((char*)*(int*)(base + 0x74) +
+        *(int*)((char*)*(int*)(base + 0x78) + p5 * 4 + 0x18) + 4);
 }
-void trickyVoxAllocFn_8004b5d4(int *out) {
+
+void trickyVoxAllocFn_8004b5d4(int* out)
+{
     out[0] = (int)mmAlloc(0x1960, 0x10, 0);
     out[1] = out[0] + 0xfe0;
     out[2] = out[1] + 0x7f0;
 }
-void *fileLoad(int id) {
+
+void* fileLoad(int id)
+{
     u8 fileInfo[0x3c];
-    if (lbl_8035F3E8[id] != 0) {
-        return (void *)lbl_8035F3E8[id];
+    if (lbl_8035F3E8[id] != 0)
+    {
+        return (void*)lbl_8035F3E8[id];
     }
     DVDOpen(sResourceFileNameTable[id], fileInfo);
-    lbl_8035F0A8[id] = *(s32 *)(fileInfo + 0x34);
+    lbl_8035F0A8[id] = *(s32*)(fileInfo + 0x34);
     lbl_8035F3E8[id] = (u32)mmAlloc(lbl_8035F0A8[id] + 0x20, 0x7d7d7d7d, 0);
-    DCInvalidateRange((void *)lbl_8035F3E8[id], lbl_8035F0A8[id]);
-    DVDRead(fileInfo, (void *)lbl_8035F3E8[id], lbl_8035F0A8[id], 0);
+    DCInvalidateRange((void*)lbl_8035F3E8[id], lbl_8035F0A8[id]);
+    DVDRead(fileInfo, (void*)lbl_8035F3E8[id], lbl_8035F0A8[id], 0);
     DVDClose(fileInfo);
-    return (void *)lbl_8035F3E8[id];
+    return (void*)lbl_8035F3E8[id];
 }
-int fileLoadToBuffer(int id, void *buffer) {
+
+int fileLoadToBuffer(int id, void* buffer)
+{
     u8 fileInfo[0x3c];
-    if (lbl_8035F3E8[id] != 0) {
-        memcpy(buffer, (void *)lbl_8035F3E8[id], lbl_8035F0A8[id]);
+    if (lbl_8035F3E8[id] != 0)
+    {
+        memcpy(buffer, (void*)lbl_8035F3E8[id], lbl_8035F0A8[id]);
         DCStoreRange(buffer, lbl_8035F0A8[id]);
         return lbl_8035F0A8[id];
     }
     DVDOpen(sResourceFileNameTable[id], fileInfo);
-    DCInvalidateRange(buffer, *(s32 *)(fileInfo + 0x34));
-    DVDRead(fileInfo, buffer, *(s32 *)(fileInfo + 0x34), 0);
+    DCInvalidateRange(buffer, *(s32*)(fileInfo + 0x34));
+    DVDRead(fileInfo, buffer, *(s32*)(fileInfo + 0x34), 0);
     DVDClose(fileInfo);
-    return *(s32 *)(fileInfo + 0x34);
+    return *(s32*)(fileInfo + 0x34);
 }
 #pragma peephole off
-int fileLoadToBufferOffset(int id, void *buffer, int offset, int size) {
+int fileLoadToBufferOffset(int id, void* buffer, int offset, int size)
+{
     u8 fileInfo[0x3c];
-    void *tmp;
+    void* tmp;
     int asize;
     if (size == 0) return 0;
-    if (lbl_8035F3E8[id] != 0) {
-        memcpy(buffer, (void *)(lbl_8035F3E8[id] + offset), size);
+    if (lbl_8035F3E8[id] != 0)
+    {
+        memcpy(buffer, (void*)(lbl_8035F3E8[id] + offset), size);
         DCStoreRange(buffer, size);
         return size;
     }
     DVDOpen(sResourceFileNameTable[id], fileInfo);
-    if (((int)buffer & 0x1f) != 0 || (size & 0x1f) != 0) {
+    if (((int)buffer & 0x1f) != 0 || (size & 0x1f) != 0)
+    {
         asize = (size + 0x1f) & ~0x1f;
         tmp = mmAlloc(asize, 0x7d7d7d7d, 0);
         DCInvalidateRange(tmp, asize);
         DVDRead(fileInfo, tmp, asize, offset);
         memcpy(buffer, tmp, size);
         mm_free(tmp);
-    } else {
+    }
+    else
+    {
         DCInvalidateRange(buffer, size);
         DVDRead(fileInfo, buffer, size, offset);
     }
@@ -6519,7 +7848,8 @@ int fileLoadToBufferOffset(int id, void *buffer, int offset, int size) {
     return size;
 }
 #pragma peephole on
-void fn_8004EECC(void) {
+void fn_8004EECC(void)
+{
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
     GXSetTevColorIn(lbl_803DCD90, 0, 0xf, 0xb, 0xf);
@@ -6531,7 +7861,9 @@ void fn_8004EECC(void) {
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A = lbl_803DCD6A + 1;
 }
-void fn_8004F080(void) {
+
+void fn_8004F080(void)
+{
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 0xff);
     GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 4, 0xf);
@@ -6557,8 +7889,11 @@ void fn_8004F080(void) {
     lbl_803DCD90 = lbl_803DCD90 + 3;
     lbl_803DCD6A = lbl_803DCD6A + 3;
 }
+
 extern void textureFn_8006c75c(int a);
-void fn_8004D928(void) {
+
+void fn_8004D928(void)
+{
     textureFn_8006c75c(lbl_803DCD8C);
     GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0x24, 0, 0x7d);
     GXSetTevDirect(lbl_803DCD90);
@@ -6577,7 +7912,9 @@ void fn_8004D928(void) {
     lbl_803DCD6A++;
     lbl_803DCD69++;
 }
-void fn_8004FDA0(u8 *param_1, void *param_2) {
+
+void fn_8004FDA0(u8* param_1, void* param_2)
+{
     GXSetTevDirect(lbl_803DCD90);
     GXLoadTexMtxImm(param_2, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
@@ -6591,11 +7928,15 @@ void fn_8004FDA0(u8 *param_1, void *param_2) {
     lbl_803DCD30 = 1;
     {
         int id = lbl_803DCD8C;
-        if (param_1 != NULL) {
-            void *obj = param_1 + 0x20;
-            if (param_1[0x48] != 0) {
-                GXLoadTexObjPreLoaded(obj, *(void **)(param_1 + 0x40), id);
-            } else {
+        if (param_1 != NULL)
+        {
+            void* obj = param_1 + 0x20;
+            if (param_1[0x48] != 0)
+            {
+                GXLoadTexObjPreLoaded(obj, *(void**)(param_1 + 0x40), id);
+            }
+            else
+            {
                 GXLoadTexObj(obj, id);
             }
         }
@@ -6607,7 +7948,9 @@ void fn_8004FDA0(u8 *param_1, void *param_2) {
     lbl_803DCD6A++;
     lbl_803DCD69++;
 }
-void fn_80050A28(int param_1) {
+
+void fn_80050A28(int param_1)
+{
     f32 m[3][4];
     PSMTXScale(m, (f32)param_1, (f32)param_1, lbl_803DEACC);
     m[2][3] = lbl_803DEAC8;
@@ -6617,7 +7960,9 @@ void fn_80050A28(int param_1) {
     lbl_803DCD88++;
     lbl_803DCD69++;
 }
-void fn_8004F2B0(void) {
+
+void fn_8004F2B0(void)
+{
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 0xff);
     GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 4, 0xf);
@@ -6629,8 +7974,11 @@ void fn_8004F2B0(void) {
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A = lbl_803DCD6A + 1;
 }
-extern void GXSetTevColor(int id, void *color);
-void fn_8004EF9C(int *param) {
+
+extern void GXSetTevColor(int id, void* color);
+
+void fn_8004EF9C(int* param)
+{
     int color = param[0];
     GXSetTevColor(2, &color);
     GXSetTevDirect(lbl_803DCD90);
@@ -6647,34 +7995,34 @@ void fn_8004EF9C(int *param) {
 
 extern u8 lbl_802CC6A0[];
 extern char lbl_8035F680[];
-extern void OSStopStopwatch(void *sw);
-extern u64 OSCheckStopwatch(void *sw);
-extern void OSResetStopwatch(void *sw);
-extern void OSStartStopwatch(void *sw);
+extern void OSStopStopwatch(void* sw);
+extern u64 OSCheckStopwatch(void* sw);
+extern void OSResetStopwatch(void* sw);
+extern void OSStartStopwatch(void* sw);
 extern int OSGetCurrentThread(void);
-extern int Queue_GetCount(void *q);
-extern void OSSleepThread(void *q);
+extern int Queue_GetCount(void* q);
+extern void OSSleepThread(void* q);
 extern void Camera_ApplyFullViewport(void);
 extern void GXInvalidateVtxCache(void);
 extern void GXInvalidateTexAll(void);
-extern void OSReport(const char *fmt, ...);
+extern void OSReport(const char* fmt, ...);
 extern int GXReadDrawSync(void);
-extern void VISetNextFrameBuffer(void *fb);
-extern void GXReadXfRasMetric(int *a, int *b, int *c, int *d);
-extern void GXGetGPStatus(u8 *a, u8 *b, u8 *c, u8 *d, u8 *e);
+extern void VISetNextFrameBuffer(void* fb);
+extern void GXReadXfRasMetric(int* a, int* b, int* c, int* d);
+extern void GXGetGPStatus(u8 * a, u8 * b, u8 * c, u8 * d, u8 * e);
 extern void gxErrorFn_80060b40(void);
 extern void modelFn_800292e0(void);
 extern void __GXAbortWaitPECopyDone(void);
-extern void GXInitFifoBase(void *fifo, void *base, u32 size);
-extern void GXSetCPUFifo(void *fifo);
-extern void GXSetGPFifo(void *fifo);
-extern int GXInit(void *base, u32 size);
-extern void OSWakeupThread(void *q);
-extern int Queue_Peek(void *q, void *out);
-extern void Queue_Pop(void *q, void *out);
+extern void GXInitFifoBase(void* fifo, void* base, u32 size);
+extern void GXSetCPUFifo(void* fifo);
+extern void GXSetGPFifo(void* fifo);
+extern int GXInit(void* base, u32 size);
+extern void OSWakeupThread(void* q);
+extern int Queue_Peek(void* q, void* out);
+extern void Queue_Pop(void* q, void* out);
 extern void GXDisableBreakPt(void);
 extern void THPPlayerPostDrawDone(void);
-extern void GXPeekZ(int x, int y, void *out);
+extern void GXPeekZ(int x, int y, void* out);
 extern f32 lbl_803DCCC0;
 extern f64 lbl_803DEA80;
 extern f32 lbl_803DEA9C;
@@ -6705,58 +8053,104 @@ extern int lbl_803DCC88;
 extern int lbl_803DCC98;
 extern int lbl_803DCC84;
 #pragma peephole off
-int initLoadFiles(void) {
-    struct MldfTables *t = (struct MldfTables *)lbl_80345E10;
+int initLoadFiles(void)
+{
+    struct MldfTables* t = (struct MldfTables*)lbl_80345E10;
     int i;
-    int *rom;
-    u32 *ptrs;
-    s16 *owners;
-    int *ids;
-    char **names;
-    int *sizes;
-    u8 *flags;
-    u8 *himem;
-    if (lbl_803DCC90 == 0) {
+    int* rom;
+    u32* ptrs;
+    s16* owners;
+    int* ids;
+    char** names;
+    int* sizes;
+    u8* flags;
+    u8* himem;
+    if (lbl_803DCC90 == 0)
+    {
         lbl_803DCC90 = 1;
         lbl_803DCC88 = 0;
         lbl_803DCC8C = stackCreate(0x5e, 0x40);
         rom = t->romList;
-        for (i = 0; i < 0x75; i++) {
+        for (i = 0; i < 0x75; i++)
+        {
             *rom = 0;
-            if (i >= 0x50 || i == 0x49 || ((i == 0x43) | (i == 5))) {
+            if (i >= 0x50 || i == 0x49 || ((i == 0x43) | (i == 5)))
+            {
                 piRomLoadSection(0, i, 0);
             }
             rom++;
         }
         lbl_803DCC98 = 0;
-        himem = (u8 *)t + 0x20000;
-        ptrs = (u32 *)(himem - 27176);
-        owners = (s16 *)(himem - 26824);
-        ids = (int *)(himem - 28360);
+        himem = (u8*)t + 0x20000;
+        ptrs = (u32*)(himem - 27176);
+        owners = (s16*)(himem - 26824);
+        ids = (int*)(himem - 28360);
         names = sResourceFileNameTable;
-        sizes = (int *)(himem - 28008);
+        sizes = (int*)(himem - 28008);
         flags = himem - 28448;
-        for (i = 0; i <= 0x57; i++) {
-            switch (i) {
-            case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
-            case 8: case 9: case 10: case 13: case 14: case 17: case 18:
-            case 24: case 26: case 27: case 32: case 33: case 35: case 36:
-            case 37: case 38: case 42: case 43: case 47: case 48: case 54:
-            case 66: case 67: case 68: case 69: case 70: case 71: case 72:
-            case 73: case 74: case 75: case 76: case 77: case 78: case 83:
-            case 84: case 85: case 86:
+        for (i = 0; i <= 0x57; i++)
+        {
+            switch (i)
+            {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+            case 13:
+            case 14:
+            case 17:
+            case 18:
+            case 24:
+            case 26:
+            case 27:
+            case 32:
+            case 33:
+            case 35:
+            case 36:
+            case 37:
+            case 38:
+            case 42:
+            case 43:
+            case 47:
+            case 48:
+            case 54:
+            case 66:
+            case 67:
+            case 68:
+            case 69:
+            case 70:
+            case 71:
+            case 72:
+            case 73:
+            case 74:
+            case 75:
+            case 76:
+            case 77:
+            case 78:
+            case 83:
+            case 84:
+            case 85:
+            case 86:
                 *ptrs = 0;
                 *owners = -1;
                 *ids = -1;
                 break;
             default:
-                if (*ptrs == 0) {
+                if (*ptrs == 0)
+                {
                     int fi = AtomicSList_Pop(lbl_803DCC8C);
-                    DVDOpen(*names, (void *)fi);
-                    *sizes = *(int *)(fi + 0x34);
+                    DVDOpen(*names, (void*)fi);
+                    *sizes = *(int*)(fi + 0x34);
                     *ptrs = (u32)mmAlloc(*sizes + 0x20, 0x7d7d7d7d, 0);
                     lbl_803DCC88 = lbl_803DCC88 + 1;
-                    DVDReadAsyncPrio((void *)fi, (void *)*ptrs, *sizes, 0, dvdReadCb_80041d30, 2);
+                    DVDReadAsyncPrio((void*)fi, (void*)*ptrs, *sizes, 0, dvdReadCb_80041d30, 2);
                 }
                 *owners = -1;
                 *ids = -1;
@@ -6771,14 +8165,18 @@ int initLoadFiles(void) {
             flags++;
         }
     }
-    if (lbl_803DCC88 == 0) {
+    if (lbl_803DCC88 == 0)
+    {
         if (((lbl_803DCC80 & 0x100) == 0 || (lbl_803DCC80 & 0x400) == 0) &&
-            ((lbl_803DCC84 & 0x100) == 0 || (lbl_803DCC84 & 0x400) == 0)) {
+            ((lbl_803DCC84 & 0x100) == 0 || (lbl_803DCC84 & 0x400) == 0))
+        {
             int saved = testAndSet_onlyUseHeap3(0);
             mapLoadDataFile(5, 0x23);
             mapLoadDataFile(5, 0x24);
             testAndSet_onlyUseHeap3(saved);
-        } else if ((lbl_803DCC84 & 0x100) != 0 && (lbl_803DCC84 & 0x400) != 0) {
+        }
+        else if ((lbl_803DCC84 & 0x100) != 0 && (lbl_803DCC84 & 0x400) != 0)
+        {
             mergeTableFiles(t->mergeModels, 0x2a, 0x45, 0x800);
             mergeTableFiles(t->mergeAnim, 0x2f, 0x49, 3000);
             mergeTableFiles(t->mergeTex0, 0x24, 0x4e, 0x1000);
@@ -6794,6 +8192,7 @@ int initLoadFiles(void) {
 #pragma optimize_for_size reset
 
 extern char sThreadStateAttrSuspendFormat[];
+
 void waitNextFrame(void)
 {
     int lvl;
@@ -6801,35 +8200,44 @@ void waitNextFrame(void)
 
     OSStopStopwatch(lbl_8035F680);
     lbl_803DCCC0 = (f32)OSCheckStopwatch(lbl_8035F680) /
-                   (f32)(u32)((*(u32 *)0x800000f8 >> 2) / 1000);
+        (f32)(u32)((*(u32*)0x800000f8 >> 2) / 1000);
     OSResetStopwatch(lbl_8035F680);
     OSStartStopwatch(lbl_8035F680);
     timeDelta = lbl_803DEA9C * lbl_803DEAA0 * lbl_803DCCC0;
-    if (gDvdErrorPauseActive != 0) {
+    if (gDvdErrorPauseActive != 0)
+    {
         timeDelta = lbl_803DEA70;
     }
-    if (timeDelta > lbl_803DEA74) {
-        timeDelta = *(f32 *)&lbl_803DEA74;
+    if (timeDelta > lbl_803DEA74)
+    {
+        timeDelta = *(f32*)&lbl_803DEA74;
     }
-    if (timeDelta > lbl_803DEA7C) {
+    if (timeDelta > lbl_803DEA7C)
+    {
         oneOverTimeDelta = lbl_803DEA78 / timeDelta;
-    } else {
+    }
+    else
+    {
         oneOverTimeDelta = lbl_803DEA78;
     }
     frames = (int)(timeDelta + lbl_803DCCB4) & 0xff;
     lbl_803DB411 = frames;
-    lbl_803DCCB4 = (timeDelta + lbl_803DCCB4) - (f32)(u32)lbl_803DB411;
+    lbl_803DCCB4 = (timeDelta + lbl_803DCCB4) - (f32)(u32)
+    lbl_803DB411;
     framesThisStep = frames;
-    if (lbl_803DB411 < 1) {
+    if (lbl_803DB411 < 1)
+    {
         framesThisStep = 1;
     }
     lvl = OSDisableInterrupts();
     lbl_803DCCDC = OSGetCurrentThread();
-    if (*(u16 *)(lbl_803DCCDC + 0x2c8) != 2) {
-        OSReport(sThreadStateAttrSuspendFormat, *(u16 *)(lbl_803DCCDC + 0x2c8),
-                 *(u16 *)(lbl_803DCCDC + 0x2ca), *(int *)(lbl_803DCCDC + 0x2cc));
+    if (*(u16*)(lbl_803DCCDC + 0x2c8) != 2)
+    {
+        OSReport(sThreadStateAttrSuspendFormat, *(u16*)(lbl_803DCCDC + 0x2c8),
+                 *(u16*)(lbl_803DCCDC + 0x2ca), *(int*)(lbl_803DCCDC + 0x2cc));
     }
-    if ((u32)Queue_GetCount(lbl_8035F730) > 1) {
+    if ((u32)Queue_GetCount(lbl_8035F730) > 1)
+    {
         lbl_803DCCAC = 0;
         OSSleepThread(&lbl_803DCCC4);
     }
@@ -6840,9 +8248,9 @@ void waitNextFrame(void)
 }
 
 void logGpuHang(void);
-extern void *lbl_803DCCD8;
-extern void *lbl_803DCCE4;
-extern void *lbl_803DCCCC;
+extern void* lbl_803DCCD8;
+extern void* lbl_803DCCE4;
+extern void* lbl_803DCCCC;
 #pragma peephole on
 void videoSwapFrameBuffers(void)
 {
@@ -6852,11 +8260,15 @@ void videoSwapFrameBuffers(void)
 
     lbl_803DCCA0 = lbl_803DCCA0 + 1;
     sync = GXReadDrawSync();
-    if (sync == (u16)(lbl_803DCCAA + 1)) {
+    if (sync == (u16)(lbl_803DCCAA + 1))
+    {
         lbl_803DCCAA = sync;
-        if (lbl_803DCCCC == lbl_803DCCEC) {
+        if (lbl_803DCCCC == lbl_803DCCEC)
+        {
             lbl_803DCCCC = lbl_803DCCE8;
-        } else {
+        }
+        else
+        {
             lbl_803DCCCC = lbl_803DCCEC;
         }
         VISetNextFrameBuffer(lbl_803DCCCC);
@@ -6866,7 +8278,8 @@ void videoSwapFrameBuffers(void)
         lbl_803DCCA0 = 0;
     }
     lbl_803DCCAC = lbl_803DCCAC + 1;
-    if (lbl_803DCCB0 != 0 && (u32)lbl_803DCCAC > 18000) {
+    if (lbl_803DCCB0 != 0 && (u32)lbl_803DCCAC > 18000)
+    {
         logGpuHang();
         gxErrorFn_80060b40();
         modelFn_800292e0();
@@ -6874,17 +8287,21 @@ void videoSwapFrameBuffers(void)
         GXInitFifoBase(fifo, lbl_803DCCD0, 0x10000);
         GXSetCPUFifo(fifo);
         GXSetGPFifo(fifo);
-        lbl_803DCCD4 = (void *)GXInit(lbl_803DCCD8, (u32)lbl_803DCCE4);
-        if (Queue_IsEmpty(lbl_8035F730) == 0) {
+        lbl_803DCCD4 = (void*)GXInit(lbl_803DCCD8, (u32)lbl_803DCCE4);
+        if (Queue_IsEmpty(lbl_8035F730) == 0)
+        {
             Queue_Pop(lbl_8035F730, tok);
         }
         OSWakeupThread(&lbl_803DCCC4);
-        if (Queue_IsEmpty(lbl_8035F730) != 0) {
+        if (Queue_IsEmpty(lbl_8035F730) != 0)
+        {
             GXDisableBreakPt();
             lbl_803DCCA7 = 0;
-        } else {
+        }
+        else
+        {
             Queue_Peek(lbl_8035F730, tok);
-            GXEnableBreakPt((void *)tok[0]);
+            GXEnableBreakPt((void*)tok[0]);
         }
         gxPerfFn_8004a77c(1);
     }
@@ -6895,39 +8312,47 @@ void videoFn_800499e8(void)
     char peek[8];
     int tok[3];
     int i;
-    u16 *src;
-    u16 *dst;
+    u16* src;
+    u16* dst;
 
-    if (lbl_803DD610 == 2 || lbl_803DD610 == 3) {
+    if (lbl_803DD610 == 2 || lbl_803DD610 == 3)
+    {
         THPPlayerPostDrawDone();
     }
     Queue_Peek(lbl_8035F730, &peek);
     i = 0;
-    src = (u16 *)gDepthReadPendingQueue;
-    dst = (u16 *)gDepthReadResults;
-    for (; i < (int)(u32)gDepthReadPendingCount; i++) {
+    src = (u16*)gDepthReadPendingQueue;
+    dst = (u16*)gDepthReadResults;
+    for (; i < (int)(u32)gDepthReadPendingCount; i++)
+    {
         dst[0] = src[0];
         dst[1] = src[1];
-        *(int *)(dst + 4) = *(int *)(src + 4);
+        *(int*)(dst + 4) = *(int*)(src + 4);
         GXPeekZ(dst[0], dst[1], dst + 2);
         src += 6;
         dst += 6;
     }
     gDepthReadResultCount = gDepthReadPendingCount;
     gDepthReadPendingCount = 0;
-    if (*(void **)(peek + 4) == lbl_803DCCCC) {
+    if (*(void**)(peek + 4) == lbl_803DCCCC)
+    {
         lbl_803DCCA8 = 1;
         lbl_803DCCA9 = 0;
-    } else {
+    }
+    else
+    {
         Queue_Pop(lbl_8035F730, tok);
         lbl_803DCCAC = 0;
         OSWakeupThread(&lbl_803DCCC4);
-        if (Queue_IsEmpty(lbl_8035F730) != 0) {
+        if (Queue_IsEmpty(lbl_8035F730) != 0)
+        {
             GXDisableBreakPt();
             lbl_803DCCA7 = 0;
-        } else {
+        }
+        else
+        {
             Queue_Peek(lbl_8035F730, tok);
-            GXEnableBreakPt((void *)tok[0]);
+            GXEnableBreakPt((void*)tok[0]);
             lbl_803DCCA7 = 1;
         }
     }
@@ -6936,7 +8361,7 @@ void videoFn_800499e8(void)
 #pragma peephole off
 void logGpuHang(void)
 {
-    char *strs = (char *)lbl_802CC6A0;
+    char* strs = (char*)lbl_802CC6A0;
     int topClks, topPerf0, topClks2, topPerf1;
     int botClks, botPerf0, botClks2, botPerf1;
     u32 xfStuck;
@@ -6955,21 +8380,30 @@ void logGpuHang(void)
     cmdIdle = (botPerf1 - topPerf1) != 0;
     GXGetGPStatus(&fifoErr, &fifoErr, &cmdRdy, &readIdle, &fifoErr);
     OSReport(strs + 0x4002c, cmdRdy, readIdle, xfStuck, cmdStuck, rdIdle, cmdIdle);
-    if (cmdStuck == 0 && rdIdle != 0) {
+    if (cmdStuck == 0 && rdIdle != 0)
+    {
         OSReport(strs + 0x400fc);
-    } else if (xfStuck == 0 && cmdStuck != 0 && rdIdle != 0) {
+    }
+    else if (xfStuck == 0 && cmdStuck != 0 && rdIdle != 0)
+    {
         OSReport(strs + 0x4011c);
-    } else if (readIdle == 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0) {
+    }
+    else if (readIdle == 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0)
+    {
         OSReport(strs + 0x40144);
-    } else if (cmdRdy != 0 && readIdle != 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0 &&
-               cmdIdle != 0) {
+    }
+    else if (cmdRdy != 0 && readIdle != 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0 &&
+        cmdIdle != 0)
+    {
         OSReport(strs + 0x4016c);
-    } else {
+    }
+    else
+    {
         OSReport(strs + 0x4019c);
     }
 }
 
-extern void debugPrintfxy(int x, int y, const char *fmt, ...);
+extern void debugPrintfxy(int x, int y, const char* fmt, ...);
 extern int OSGetResetButtonState(void);
 extern void setShouldResetNextFrame(int v);
 extern u8 lbl_803DCCA5;
@@ -6977,9 +8411,10 @@ extern u8 lbl_803DCCA6;
 extern u8 lbl_803DCCA4;
 extern u8 lbl_803DDA28;
 extern char lbl_803DB5DC;
+
 void gpuErrorHandler(void)
 {
-    char *strs = (char *)lbl_802CC6A0;
+    char* strs = (char*)lbl_802CC6A0;
     int tok[3];
     u32 botClks;
     int botPerf0;
@@ -6997,16 +8432,20 @@ void gpuErrorHandler(void)
     u32 rdIdle;
     u32 cmdIdle;
 
-    if (lbl_803DCCA8 != 0 && lbl_803DCCA9 != 0) {
+    if (lbl_803DCCA8 != 0 && lbl_803DCCA9 != 0)
+    {
         Queue_Pop(lbl_8035F730, tok);
         lbl_803DCCAC = 0;
         OSWakeupThread(&lbl_803DCCC4);
-        if (Queue_IsEmpty(lbl_8035F730) != 0) {
+        if (Queue_IsEmpty(lbl_8035F730) != 0)
+        {
             GXDisableBreakPt();
             lbl_803DCCA7 = 0;
-        } else {
+        }
+        else
+        {
             Queue_Peek(lbl_8035F730, tok);
-            GXEnableBreakPt((void *)tok[0]);
+            GXEnableBreakPt((void*)tok[0]);
             lbl_803DCCA7 = 1;
         }
         lbl_803DCCA8 = 0;
@@ -7014,54 +8453,67 @@ void gpuErrorHandler(void)
     }
     lbl_803DCCA5 = 1;
     lbl_803DCCA6 = 1;
-    switch (lbl_803DCCA4) {
+    switch (lbl_803DCCA4)
+    {
     case 0:
-        if (OSGetResetButtonState() != 0) {
+        if (OSGetResetButtonState() != 0)
+        {
             lbl_803DCCA4 = lbl_803DCCA4 + 1;
         }
         break;
     case 1:
-        if (OSGetResetButtonState() == 0) {
+        if (OSGetResetButtonState() == 0)
+        {
             lbl_803DCCA4 = lbl_803DCCA4 + 1;
             setShouldResetNextFrame(1);
         }
         break;
     }
-    if (lbl_803DDA28 != 0 && lbl_803DCCDC != 0 && (u32)lbl_803DCCAC > 600) {
+    if (lbl_803DDA28 != 0 && lbl_803DCCDC != 0 && (u32)lbl_803DCCAC > 600)
+    {
         debugPrintfxy(0x32, 100, strs + 0x40000);
-        GXReadXfRasMetric(&botPerf0, (int *)&botClks, &botPerf1, (int *)&botClks2);
-        GXReadXfRasMetric(&topPerf0, (int *)&topClks, &topPerf1, (int *)&topClks2);
+        GXReadXfRasMetric(&botPerf0, (int*)&botClks, &botPerf1, (int*)&botClks2);
+        GXReadXfRasMetric(&topPerf0, (int*)&topClks, &topPerf1, (int*)&topClks2);
         xfStuck = (topClks - botClks) == 0;
         cmdStuck = (topPerf0 - botPerf0) == 0;
         rdIdle = (topClks2 - botClks2) != 0;
         cmdIdle = (topPerf1 - botPerf1) != 0;
         GXGetGPStatus(&fifoErr, &fifoErr, &cmdRdy, &readIdle, &fifoErr);
         debugPrintfxy(0x32, 0x78, strs + 0x4002c, cmdRdy, readIdle, xfStuck, cmdStuck, rdIdle, cmdIdle);
-        if (cmdStuck == 0 && rdIdle != 0) {
+        if (cmdStuck == 0 && rdIdle != 0)
+        {
             debugPrintfxy(0x32, 0x8c, strs + 0x40048);
-        } else if (xfStuck == 0 && cmdStuck != 0 && rdIdle != 0) {
+        }
+        else if (xfStuck == 0 && cmdStuck != 0 && rdIdle != 0)
+        {
             debugPrintfxy(0x32, 0x8c, strs + 0x40068);
-        } else if (readIdle == 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0) {
+        }
+        else if (readIdle == 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0)
+        {
             debugPrintfxy(0x32, 0x8c, strs + 0x40090);
-        } else if (cmdRdy != 0 && readIdle != 0 && xfStuck != 0 && cmdStuck != 0 &&
-                   rdIdle != 0 && cmdIdle != 0) {
+        }
+        else if (cmdRdy != 0 && readIdle != 0 && xfStuck != 0 && cmdStuck != 0 &&
+            rdIdle != 0 && cmdIdle != 0)
+        {
             debugPrintfxy(0x32, 0x8c, strs + 0x400b4);
-        } else {
+        }
+        else
+        {
             debugPrintfxy(0x32, 0x8c, strs + 0x400e4);
         }
-        debugPrintfxy(0x32, 0xa0, &lbl_803DB5DC, *(int *)(lbl_803DCCDC + 0x198));
+        debugPrintfxy(0x32, 0xa0, &lbl_803DB5DC, *(int*)(lbl_803DCCDC + 0x198));
     }
 }
 
-extern void *OSGetArenaLo(void);
-extern void *OSGetArenaHi(void);
-extern void OSSetArenaLo(void *lo);
-extern void *OSInitAlloc(void *lo, void *hi, int numHeaps);
-extern int OSCreateHeap(void *start, void *end);
+extern void* OSGetArenaLo(void);
+extern void* OSGetArenaHi(void);
+extern void OSSetArenaLo(void* lo);
+extern void* OSInitAlloc(void* lo, void* hi, int numHeaps);
+extern int OSCreateHeap(void* start, void* end);
 extern void OSSetCurrentHeap(int heap);
-extern void GXInitFifoLimits(void *fifo, u32 hi, u32 lo);
-extern void Queue_Init(void *q, void *buf, int n, int stride);
-extern void OSInitThreadQueue(char *q);
+extern void GXInitFifoLimits(void* fifo, u32 hi, u32 lo);
+extern void Queue_Init(void* q, void* buf, int n, int stride);
+extern void OSInitThreadQueue(char* q);
 extern void VISetPreRetraceCallback(void (*cb)());
 extern void VISetPostRetraceCallback(void (*cb)());
 extern void GXSetBreakPtCallback(void (*cb)());
@@ -7079,15 +8531,15 @@ extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
 extern void GXSetVtxAttrFmt(int fmt, int attr, int cnt, int type, int frac);
 extern void GXSetCullMode(int mode);
-extern void GXSetCopyClear(void *clear_clr, u32 clear_z);
+extern void GXSetCopyClear(void* clear_clr, u32 clear_z);
 extern void GXSetNumChans(int nChans);
 extern void GXSetChanCtrl(int chan, int enable, int amb_src, int mat_src, int light_mask, int diff_fn, int attn_fn);
 extern void GXEnableTexOffsets(int coord, int line_enable, int point_enable);
-extern void GXLoadPosMtxImm(void *mtx, int id);
+extern void GXLoadPosMtxImm(void* mtx, int id);
 extern void GXSetCurrentMtx(int id);
 extern void GXSetMisc(int token, u32 val);
 extern char lbl_8035F6B8[];
-extern char *lbl_803DCCE0;
+extern char* lbl_803DCCE0;
 extern int lbl_803DCCB8;
 extern int lbl_803DCCF4;
 extern u8 lbl_803DCD00;
@@ -7095,7 +8547,9 @@ extern int lbl_803DCCFC;
 extern u8 lbl_803DCCF8;
 extern f32 lbl_803DEA94;
 extern f32 lbl_803DEA98;
-void videoInit(void) {
+
+void videoInit(void)
+{
     u8 fifo[0x80];
     f32 mtx[3][4];
     int cc;
@@ -7106,22 +8560,22 @@ void videoInit(void) {
     u32 x;
     lo = (u32)OSGetArenaLo();
     hi = (u32)OSGetArenaHi();
-    memcpy((void *)(hi - 0x40000), (char *)lbl_802CC6A0, 0x40000);
-    DCStoreRange((void *)(hi - 0x40000), 0x40000);
-    lbl_803DCCE4 = (void *)0x40000;
-    lbl_803DCCD8 = (void *)lbl_802CC6A0;
-    DCInvalidateRange((char *)lbl_802CC6A0, 0x40000);
-    lbl_803DCCD4 = (void *)GXInit(lbl_803DCCD8, (u32)lbl_803DCCE4);
+    memcpy((void*)(hi - 0x40000), (char*)lbl_802CC6A0, 0x40000);
+    DCStoreRange((void*)(hi - 0x40000), 0x40000);
+    lbl_803DCCE4 = (void*)0x40000;
+    lbl_803DCCD8 = (void*)lbl_802CC6A0;
+    DCInvalidateRange((char*)lbl_802CC6A0, 0x40000);
+    lbl_803DCCD4 = (void*)GXInit(lbl_803DCCD8, (u32)lbl_803DCCE4);
     lbl_803DCCE0 = lbl_803DCCD8;
-    GXSetDispCopySrc(0, 0, *(u16 *)(lbl_803DCCF0 + 4), *(u16 *)(lbl_803DCCF0 + 6));
-    lbl_803DCCB8 = GXSetDispCopyYScale((f32)*(u16 *)(lbl_803DCCF0 + 8) / (f32)*(u16 *)(lbl_803DCCF0 + 6));
-    fbSize = (u16)((*(u16 *)(lbl_803DCCF0 + 4) + 0xf) & ~0xf) * lbl_803DCCB8 * 2 + 0x1f;
-    lbl_803DCCEC = (void *)((lo + 0x1f) & ~0x1f);
-    lbl_803DCCE8 = (void *)(((u32)lbl_803DCCEC + fbSize) & ~0x1f);
+    GXSetDispCopySrc(0, 0, *(u16*)(lbl_803DCCF0 + 4), *(u16*)(lbl_803DCCF0 + 6));
+    lbl_803DCCB8 = GXSetDispCopyYScale((f32) * (u16*)(lbl_803DCCF0 + 8) / (f32) * (u16*)(lbl_803DCCF0 + 6));
+    fbSize = (u16)((*(u16*)(lbl_803DCCF0 + 4) + 0xf) & ~0xf) * lbl_803DCCB8 * 2 + 0x1f;
+    lbl_803DCCEC = (void*)((lo + 0x1f) & ~0x1f);
+    lbl_803DCCE8 = (void*)(((u32)lbl_803DCCEC + fbSize) & ~0x1f);
     next = ((u32)lbl_803DCCE8 + fbSize) & ~0x1f;
-    OSSetArenaLo((void *)next);
-    OSSetArenaLo((void *)(x = (u32)OSInitAlloc((void *)next, (void *)hi, 1)));
-    OSSetCurrentHeap(OSCreateHeap((void *)((x + 0x1f) & ~0x1f), (void *)(hi & ~0x1f)));
+    OSSetArenaLo((void*)next);
+    OSSetArenaLo((void*)(x = (u32)OSInitAlloc((void*)next, (void*)hi, 1)));
+    OSSetCurrentHeap(OSCreateHeap((void*)((x + 0x1f) & ~0x1f), (void*)(hi & ~0x1f)));
     VIConfigure(lbl_803DCCF0);
     GXInitFifoBase(fifo, lbl_803DCCEC, 0x10000);
     GXSetCPUFifo(fifo);
@@ -7134,14 +8588,18 @@ void videoInit(void) {
     VISetPreRetraceCallback(videoSwapFrameBuffers);
     VISetPostRetraceCallback(gpuErrorHandler);
     GXSetBreakPtCallback(videoFn_800499e8);
-    GXSetViewport(lbl_803DEA70, lbl_803DEA70, (f32)*(u16 *)(lbl_803DCCF0 + 4), (f32)*(u16 *)(lbl_803DCCF0 + 8), lbl_803DEA70, lbl_803DEA78);
-    GXSetFieldMode(*(u8 *)(lbl_803DCCF0 + 0x18), (u32)(*(u16 *)(lbl_803DCCF0 + 8) - *(u16 *)(lbl_803DCCF0 + 0x10)) >> 31);
-    GXSetScissor(0, 0, *(u16 *)(lbl_803DCCF0 + 4), *(u16 *)(lbl_803DCCF0 + 6));
-    GXSetDispCopyDst(*(u16 *)(lbl_803DCCF0 + 4), (u16)lbl_803DCCB8);
-    if (*(u8 *)(lbl_803DCCF0 + 0x19) != 0) {
+    GXSetViewport(lbl_803DEA70, lbl_803DEA70, (f32) * (u16*)(lbl_803DCCF0 + 4), (f32) * (u16*)(lbl_803DCCF0 + 8),
+                  lbl_803DEA70, lbl_803DEA78);
+    GXSetFieldMode(*(u8*)(lbl_803DCCF0 + 0x18), (u32)(*(u16*)(lbl_803DCCF0 + 8) - *(u16*)(lbl_803DCCF0 + 0x10)) >> 31);
+    GXSetScissor(0, 0, *(u16*)(lbl_803DCCF0 + 4), *(u16*)(lbl_803DCCF0 + 6));
+    GXSetDispCopyDst(*(u16*)(lbl_803DCCF0 + 4), (u16)lbl_803DCCB8);
+    if (*(u8*)(lbl_803DCCF0 + 0x19) != 0)
+    {
         GXSetPixelFmt(2, 0);
         GXSetDither(1);
-    } else {
+    }
+    else
+    {
         GXSetPixelFmt(0, 0);
         GXSetDither(0);
     }
@@ -7203,7 +8661,7 @@ void videoInit(void) {
     GXSetVtxAttrFmt(7, 0x10, 1, 3, 10);
     lbl_803DCCF4 = 0;
     GXSetCullMode(0);
-    cc = *(int *)&lbl_803DB5D0;
+    cc = *(int*)&lbl_803DB5D0;
     GXSetCopyClear(&cc, 0xffffff);
     GXSetBlendMode(0, 1, 0, 5);
     GXSetNumChans(1);
@@ -7257,16 +8715,17 @@ extern u8 lbl_8036F880[];
 /* NOT MWCC: retail zlbDecompress is a foreign GCC (SN ProDG family) object
    (mflr-first prologue, stmw, andi. masks, mcrxr/addme. loops). 42.5% is the
    MWCC cap; do not recipe-grind. Evidence: task #19 metadata. */
-int zlbDecompress(void *srcv, int size, int dstv, void *outp) {
-    u8 *src;
-    u8 *dst;
+int zlbDecompress(void* srcv, int size, int dstv, void* outp)
+{
+    u8* src;
+    u8* dst;
     int pos;
     int sh;
-    u8 *lenBitsP;
-    u16 *lenTblP;
+    u8* lenBitsP;
+    u16* lenTblP;
     int lenMax;
-    u8 *distBitsP;
-    u8 *distTblP;
+    u8* distBitsP;
+    u8* distTblP;
     int distMax;
     int hlit;
     int hdist;
@@ -7280,75 +8739,91 @@ int zlbDecompress(void *srcv, int size, int dstv, void *outp) {
     int j;
     int k;
     int n;
-    u8 *p8;
-    u16 *p16;
-    u8 *curLens;
-    u16 *curCnt;
-    dst = (u8 *)dstv - 1;
+    u8* p8;
+    u16* p16;
+    u8* curLens;
+    u16* curCnt;
+    dst = (u8*)dstv - 1;
     pos = 0;
     sh = 0x20;
-    src = (u8 *)srcv + 2;
-    do {
+    src = (u8*)srcv + 2;
+    do
+    {
         final = ZROT1(src[0]);
         ZADV(1);
         type = ZGB8() & 3;
         ZADV(2);
-        if (type == 0) {
+        if (type == 0)
+        {
             u32 len;
-            if (pos != 0) {
+            if (pos != 0)
+            {
                 src += 1;
                 pos = 0;
             }
-            len = *(u16 *)src;
+            len = *(u16*)src;
             src += 1;
-            len |= (u32)*(u16 *)src << 8;
+            len |= (u32) * (u16*)src << 8;
             src += 3;
-            do {
+            do
+            {
                 u8 v = *src;
                 src += 1;
                 *++dst = v;
-            } while (len-- != 0);
-        } else {
-            if (type == 1) {
+            }
+            while (len-- != 0);
+        }
+        else
+        {
+            if (type == 1)
+            {
                 lenBitsP = lbl_8030C880;
                 lenTblP = lbl_8030C9A0;
                 lenMax = 9;
                 distBitsP = lbl_8030CDA0;
                 distTblP = lbl_8030CDC0;
                 distMax = 5;
-            } else {
+            }
+            else
+            {
                 lenBitsP = lbl_8035F740;
                 lenTblP = lbl_8035F860;
                 distBitsP = lbl_8036F860;
                 distTblP = lbl_8036F880;
                 val = 0;
                 p8 = lbl_803DCD20;
-                for (i = 8; i != 0; i--) {
+                for (i = 8; i != 0; i--)
+                {
                     *p8 = val;
                     p8++;
                 }
                 p8 = lbl_80377880;
-                for (i = 0x13; i != 0; i--) {
+                for (i = 0x13; i != 0; i--)
+                {
                     *p8 = val;
                     p8++;
                 }
                 p16 = lbl_80377894;
-                for (i = 0x10; i != 0; i--) {
+                for (i = 0x10; i != 0; i--)
+                {
                     *p16 = val;
                     p16++;
                 }
                 p8 = lenBitsP;
-                for (i = 0x120; i != 0; i--) {
+                for (i = 0x120; i != 0; i--)
+                {
                     *p8 = val;
                     p8++;
                 }
                 p16 = lbl_803778B4;
-                for (i = 0x10; i != 0; i--) {
+                for (i = 0x10; i != 0; i--)
+                {
                     *p16 = val;
                     p16++;
                 }
                 p8 = distBitsP;
-                for (i = 0x20; i != 0; i--) {
+                for (i = 0x20; i != 0; i--)
+                {
                     *p8 = val;
                     p8++;
                 }
@@ -7358,27 +8833,34 @@ int zlbDecompress(void *srcv, int size, int dstv, void *outp) {
                 ZADV(5);
                 hclen = (ZGB8() & 0xf) + 4;
                 ZADV(4);
-                for (i = 0; i != hclen; i++) {
+                for (i = 0; i != hclen; i++)
+                {
                     u32 v = ZGB8() & 7;
                     lbl_80377880[lbl_802C1C50[i]] = v;
                     lbl_803DCD20[v] += 1;
                     ZADV(3);
                 }
                 lenMax = 7;
-                while (lbl_803DCD20[lenMax] == 0) {
+                while (lbl_803DCD20[lenMax] == 0)
+                {
                     lenMax--;
                 }
                 code = 0;
-                for (j = 1; j <= lenMax; j++) {
-                    if (lbl_803DCD20[j] != 0) {
+                for (j = 1; j <= lenMax; j++)
+                {
+                    if (lbl_803DCD20[j] != 0)
+                    {
                         lbl_803DCD18[j] = code;
                         code += lbl_803DCD20[j] << (lenMax - j);
                     }
                 }
-                for (i = 0; i < 0x13; i++) {
+                for (i = 0; i < 0x13; i++)
+                {
                     u32 len = lbl_80377880[i];
-                    if (len != 0) {
-                        for (k = 0; k < 1 << (lenMax - len); k++) {
+                    if (len != 0)
+                    {
+                        for (k = 0; k < 1 << (lenMax - len); k++)
+                        {
                             u8 c = lbl_803DCD18[len] + 1;
                             lbl_803DCD18[len] = c;
                             (lbl_803778D4 - 1)[c] = i;
@@ -7388,58 +8870,77 @@ int zlbDecompress(void *srcv, int size, int dstv, void *outp) {
                 curLens = lenBitsP;
                 curCnt = lbl_80377894;
                 n = 0;
-                do {
+                do
+                {
                     u32 extra;
                     u32 v;
                     u32 rep;
                     extra = 0;
-                    if (pos > 8 - lenMax) {
+                    if (pos > 8 - lenMax)
+                    {
                         extra = (u32)src[1] << (8 - pos);
                     }
                     v = (ZROT8(src[0]) | extra) & ((1 << lenMax) - 1);
                     sym = lbl_803778D4[(u32)__rlwnm(lbl_8030CDE0[v], lenMax + 0x18, 24, 31)];
                     ZADV(lbl_80377880[sym]);
-                    if (sym == 0x10) {
+                    if (sym == 0x10)
+                    {
                         rep = (ZGB8() & 3) + 3;
                         ZADV(2);
-                    } else if (sym == 0x11) {
+                    }
+                    else if (sym == 0x11)
+                    {
                         val = 0;
                         rep = (ZGB8() & 7) + 3;
                         ZADV(3);
-                    } else if (sym == 0x12) {
+                    }
+                    else if (sym == 0x12)
+                    {
                         val = 0;
                         rep = (ZGB8() & 0x7f) + 0xb;
                         ZADV(7);
-                    } else {
+                    }
+                    else
+                    {
                         val = sym;
                         rep = 1;
                     }
-                    do {
+                    do
+                    {
                         curLens[n] = val;
                         n += 1;
                         curCnt[val] += 1;
-                        if (curLens == lbl_8035F740 && n == hlit) {
+                        if (curLens == lbl_8035F740 && n == hlit)
+                        {
                             curCnt = lbl_803778B4;
                             n = 0;
                             curLens = distBitsP;
                         }
-                    } while (rep-- != 1);
-                } while (curLens == lbl_8035F740 || n < hdist);
+                    }
+                    while (rep-- != 1);
+                }
+                while (curLens == lbl_8035F740 || n < hdist);
                 lenMax = 0xf;
-                while (lbl_80377894[lenMax] == 0) {
+                while (lbl_80377894[lenMax] == 0)
+                {
                     lenMax--;
                 }
                 code = 0;
-                for (j = 1; j <= lenMax; j++) {
-                    if (lbl_80377894[j] != 0) {
+                for (j = 1; j <= lenMax; j++)
+                {
+                    if (lbl_80377894[j] != 0)
+                    {
                         lbl_80377954[j] = code;
                         code += lbl_80377894[j] << (lenMax - j);
                     }
                 }
-                for (i = 0; i < hlit; i++) {
+                for (i = 0; i < hlit; i++)
+                {
                     u32 len = lenBitsP[i];
-                    if (len != 0) {
-                        for (k = 0; k < 1 << (lenMax - len); k++) {
+                    if (len != 0)
+                    {
+                        for (k = 0; k < 1 << (lenMax - len); k++)
+                        {
                             u16 c = lbl_80377954[len] + 1;
                             lbl_80377954[len] = c;
                             lenTblP[c - 1] = i;
@@ -7447,20 +8948,26 @@ int zlbDecompress(void *srcv, int size, int dstv, void *outp) {
                     }
                 }
                 distMax = 0xf;
-                while (lbl_803778B4[distMax] == 0) {
+                while (lbl_803778B4[distMax] == 0)
+                {
                     distMax--;
                 }
                 code = 0;
-                for (j = 1; j <= distMax; j++) {
-                    if (lbl_803778B4[j] != 0) {
+                for (j = 1; j <= distMax; j++)
+                {
+                    if (lbl_803778B4[j] != 0)
+                    {
                         lbl_80377974[j] = code;
                         code += lbl_803778B4[j] << (distMax - j);
                     }
                 }
-                for (i = 0; i < hdist; i++) {
+                for (i = 0; i < hdist; i++)
+                {
                     u32 len = distBitsP[i];
-                    if (len != 0) {
-                        for (k = 0; k < 1 << (distMax - len); k++) {
+                    if (len != 0)
+                    {
+                        for (k = 0; k < 1 << (distMax - len); k++)
+                        {
                             u16 c = lbl_80377974[len] + 1;
                             lbl_80377974[len] = c;
                             distTblP[c - 1] = i;
@@ -7468,17 +8975,21 @@ int zlbDecompress(void *srcv, int size, int dstv, void *outp) {
                     }
                 }
             }
-            do {
+            do
+            {
                 u32 t;
                 u32 code2;
                 t = ZGB16() & ((1 << lenMax) - 1);
                 code2 = (u32)__rlwnm(lbl_8030CDE0[t & 0xff], lenMax - 8, 16, 31) |
-                        (u32)__rlwnm(lbl_8030CDE0[t >> 8], lenMax + 0x10, 24, 31);
+                    (u32)__rlwnm(lbl_8030CDE0[t >> 8], lenMax + 0x10, 24, 31);
                 sym = lenTblP[code2];
                 ZADV(lenBitsP[sym]);
-                if ((int)sym < 0x100) {
+                if ((int)sym < 0x100)
+                {
                     *++dst = sym;
-                } else if (sym != 0x100) {
+                }
+                else if (sym != 0x100)
+                {
                     u32 len2;
                     u32 eb;
                     u32 dt;
@@ -7486,33 +8997,39 @@ int zlbDecompress(void *srcv, int size, int dstv, void *outp) {
                     u32 dsym;
                     u32 dist;
                     int io = (sym - 0x101) * 4;
-                    len2 = *(u16 *)((char *)lbl_802C1C64 + io);
-                    eb = *(u16 *)((char *)lbl_802C1C64 + 2 + io);
-                    if (eb != 0) {
+                    len2 = *(u16*)((char*)lbl_802C1C64 + io);
+                    eb = *(u16*)((char*)lbl_802C1C64 + 2 + io);
+                    if (eb != 0)
+                    {
                         len2 += ZGB8() & ((1 << eb) - 1);
                         ZADV(eb);
                     }
                     dt = ZGB16() & ((1 << distMax) - 1);
                     dcode = (u32)__rlwnm(lbl_8030CDE0[dt & 0xff], distMax - 8, 16, 31) |
-                            (u32)__rlwnm(lbl_8030CDE0[dt >> 8], distMax + 0x10, 24, 31);
+                        (u32)__rlwnm(lbl_8030CDE0[dt >> 8], distMax + 0x10, 24, 31);
                     dsym = distTblP[dcode];
                     ZADV(distBitsP[dsym]);
-                    dist = *(u16 *)((char *)lbl_802C1CD8 + dsym * 4);
-                    eb = *(u16 *)((char *)lbl_802C1CD8 + 2 + dsym * 4);
-                    if (eb != 0) {
+                    dist = *(u16*)((char*)lbl_802C1CD8 + dsym * 4);
+                    eb = *(u16*)((char*)lbl_802C1CD8 + 2 + dsym * 4);
+                    if (eb != 0)
+                    {
                         dist += ZGB16() & ((1 << eb) - 1);
                         ZADV(eb);
                     }
                     {
-                        u8 *from = dst - dist;
-                        do {
+                        u8* from = dst - dist;
+                        do
+                        {
                             *++dst = *++from;
-                        } while (--len2 != 0);
+                        }
+                        while (--len2 != 0);
                     }
                 }
-            } while (sym != 0x100);
+            }
+            while (sym != 0x100);
         }
-    } while (final == 0);
+    }
+    while (final == 0);
     return 0;
 }
 #pragma optimize_for_size reset

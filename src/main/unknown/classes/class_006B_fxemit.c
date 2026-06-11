@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_006B_FXEmit_defs {
+enum class_006B_FXEmit_defs
+{
     FXEMIT_FXEMIT = 0x05A7,
     FXEMIT_DIMBOSSCRAC = 0x0076,
 };

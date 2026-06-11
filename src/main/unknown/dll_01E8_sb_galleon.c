@@ -41,7 +41,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_01E8_SB_Galleon_slot {
+enum dll_01E8_SB_Galleon_slot
+{
     SB_GALLEON_INITIALISE = 0,
     SB_GALLEON_RELEASE = 1,
     SB_GALLEON_INIT = 3,

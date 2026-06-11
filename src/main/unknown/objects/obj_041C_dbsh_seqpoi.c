@@ -70,7 +70,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_041C_DBSH_seqpoi_packet_info {
+enum obj_041C_DBSH_seqpoi_packet_info
+{
     DBSH_SEQPOI_DEF_ID = 0x041C,
     DBSH_SEQPOI_DLL_ID = 0x0221,
     DBSH_SEQPOI_CLASS_ID = 0x0030,

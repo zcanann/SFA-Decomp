@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03B9_WM_WallTorc_packet_info {
+enum obj_03B9_WM_WallTorc_packet_info
+{
     WM_WALLTORC_DEF_ID = 0x03B9,
     WM_WALLTORC_DLL_ID = 0x0206,
     WM_WALLTORC_CLASS_ID = 0x0030,

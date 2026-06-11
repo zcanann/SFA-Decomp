@@ -4,10 +4,10 @@
 #include "main/dll/fruit.h"
 
 extern undefined4 FUN_80006b4c();
-extern int objBboxFn_800640cc(f32 *from,f32 *to,f32 radius,int mode,void *hit,
-                       DfpTargetBlockObject *obj,int flags,int mask,int arg9,int arg10);
-extern void Sfx_PlayFromObject(DfpTargetBlockObject *obj,u16 sfxId);
-extern void objRenderFn_8003b8f4(int obj,float param_2);
+extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
+                              DfpTargetBlockObject* obj, int flags, int mask, int arg9, int arg10);
+extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
+extern void objRenderFn_8003b8f4(int obj, float param_2);
 extern undefined4 sfxplayer_updateState();
 
 extern undefined4 DAT_803add98;
@@ -40,47 +40,51 @@ extern f32 lbl_803E6490;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
-                                           DfpTargetBlockCollisionPoints *collisionPoints)
+void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj,
+                                           DfpTargetBlockCollisionPoints* collisionPoints)
 {
-  u8 *point;
-  f32 probe[3];
-  u8 hit[0x54];
-  f32 originalX;
-  f32 originalZ;
-  f32 deltaX;
-  f32 deltaZ;
-  int i;
+    u8* point;
+    f32 probe[3];
+    u8 hit[0x54];
+    f32 originalX;
+    f32 originalZ;
+    f32 deltaX;
+    f32 deltaZ;
+    int i;
 
-  i = 0;
-  point = collisionPoints->pointData;
-  while (i < collisionPoints->count) {
-    probe[0] = *(f32 *)(point + DFPTARGETBLOCK_POINT_OFFSET_X) + obj->x;
-    originalX = probe[0];
-    probe[1] = *(f32 *)(point + DFPTARGETBLOCK_POINT_OFFSET_Y) + obj->y;
-    probe[2] = *(f32 *)(point + DFPTARGETBLOCK_POINT_OFFSET_Z) + obj->z;
-    originalZ = probe[2];
-    if (objBboxFn_800640cc(&obj->x,probe,lbl_803E6488,1,hit,obj,8,-1,0,0) != 0) {
-      deltaX = probe[0] - originalX;
-      deltaZ = probe[2] - originalZ;
-      if (lbl_803E648C != obj->velX) {
-        obj->x = obj->x + deltaX;
-      }
-      if (lbl_803E648C != obj->velZ) {
-        obj->z = obj->z + deltaZ;
-      }
-      {
-        f32 zero = lbl_803E648C;
-        obj->velX = zero;
-        obj->velY = zero;
-        obj->velZ = zero;
-      }
-      Sfx_PlayFromObject(obj,SFXfoot_dirt_scuff);
-      return;
+    i = 0;
+    point = collisionPoints->pointData;
+    while (i < collisionPoints->count)
+    {
+        probe[0] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_X) + obj->x;
+        originalX = probe[0];
+        probe[1] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Y) + obj->y;
+        probe[2] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Z) + obj->z;
+        originalZ = probe[2];
+        if (objBboxFn_800640cc(&obj->x, probe, lbl_803E6488, 1, hit, obj, 8, -1, 0, 0) != 0)
+        {
+            deltaX = probe[0] - originalX;
+            deltaZ = probe[2] - originalZ;
+            if (lbl_803E648C != obj->velX)
+            {
+                obj->x = obj->x + deltaX;
+            }
+            if (lbl_803E648C != obj->velZ)
+            {
+                obj->z = obj->z + deltaZ;
+            }
+            {
+                f32 zero = lbl_803E648C;
+                obj->velX = zero;
+                obj->velY = zero;
+                obj->velZ = zero;
+            }
+            Sfx_PlayFromObject(obj, SFXfoot_dirt_scuff);
+            return;
+        }
+        point += DFPTARGETBLOCK_POINT_STRIDE;
+        i++;
     }
-    point += DFPTARGETBLOCK_POINT_STRIDE;
-    i++;
-  }
 }
 
 /*
@@ -98,7 +102,7 @@ void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
  */
 int dfptargetblock_getExtraSize(void)
 {
-  return 0x6c;
+    return 0x6c;
 }
 
 /*
@@ -116,7 +120,7 @@ int dfptargetblock_getExtraSize(void)
  */
 int dfptargetblock_getObjectTypeId(void)
 {
-  return 0;
+    return 0;
 }
 
 /*
@@ -151,14 +155,17 @@ void dfptargetblock_free(void)
  */
 void dfptargetblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-  DfpTargetBlockAudioState *state;
+    DfpTargetBlockAudioState* state;
 
-  state = ((GameObject *)obj)->extra;
-  if (state->completionSfxReady != 0) return;
-  if (state->stateSfxReady == 0) return;
-  if (state->mode != DFPTARGETBLOCK_AUDIO_MODE_SETTLED) {
-    ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E6490);
-  } else {
-    return;
-  }
+    state = ((GameObject*)obj)->extra;
+    if (state->completionSfxReady != 0) return;
+    if (state->stateSfxReady == 0) return;
+    if (state->mode != DFPTARGETBLOCK_AUDIO_MODE_SETTLED)
+    {
+        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E6490);
+    }
+    else
+    {
+        return;
+    }
 }

@@ -70,7 +70,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_032C_VFP_seqpoin_packet_info {
+enum obj_032C_VFP_seqpoin_packet_info
+{
     VFP_SEQPOIN_DEF_ID = 0x032C,
     VFP_SEQPOIN_DLL_ID = 0x0221,
     VFP_SEQPOIN_CLASS_ID = 0x0030,

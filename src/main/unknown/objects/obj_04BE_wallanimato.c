@@ -50,7 +50,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04BE_WallAnimato_packet_info {
+enum obj_04BE_WallAnimato_packet_info
+{
     WALLANIMATO_DEF_ID = 0x04BE,
     WALLANIMATO_DLL_ID = 0x013B,
     WALLANIMATO_CLASS_ID = 0x004C,

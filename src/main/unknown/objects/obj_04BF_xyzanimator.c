@@ -48,7 +48,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04BF_XYZAnimator_packet_info {
+enum obj_04BF_XYZAnimator_packet_info
+{
     XYZANIMATOR_DEF_ID = 0x04BF,
     XYZANIMATOR_DLL_ID = 0x013C,
     XYZANIMATOR_CLASS_ID = 0x004D,

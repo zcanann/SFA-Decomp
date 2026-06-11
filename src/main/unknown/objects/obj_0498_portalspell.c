@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0498_PortalSpell_packet_info {
+enum obj_0498_PortalSpell_packet_info
+{
     PORTALSPELL_DEF_ID = 0x0498,
     PORTALSPELL_DLL_ID = 0x010D,
     PORTALSPELL_CLASS_ID = 0x0030,

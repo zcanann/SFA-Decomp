@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02D5_SC_babyligh_packet_info {
+enum obj_02D5_SC_babyligh_packet_info
+{
     SC_BABYLIGH_DEF_ID = 0x02D5,
     SC_BABYLIGH_DLL_ID = 0x01B5,
     SC_BABYLIGH_CLASS_ID = 0x001C,

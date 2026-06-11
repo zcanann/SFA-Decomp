@@ -58,7 +58,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04A1_MCStaffEffe_packet_info {
+enum obj_04A1_MCStaffEffe_packet_info
+{
     MCSTAFFEFFE_DEF_ID = 0x04A1,
     MCSTAFFEFFE_DLL_ID = 0x02B9,
     MCSTAFFEFFE_CLASS_ID = 0x0061,

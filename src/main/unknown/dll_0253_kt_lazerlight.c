@@ -28,7 +28,8 @@
  */
 
 #if 0
-enum dll_0253_KT_Lazerlight_slot {
+enum dll_0253_KT_Lazerlight_slot
+{
     KTLAZERLIGHT_INITIALISE = 0,
     KTLAZERLIGHT_RELEASE = 1,
     KTLAZERLIGHT_INIT = 3,

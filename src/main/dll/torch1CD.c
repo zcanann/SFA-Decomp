@@ -5,11 +5,11 @@
 
 extern void getEnvfxAct(int obj, int target, int id, int p);
 extern void GameBit_Set(int eventId, int value);
-extern void *return0_8005669C(int);
-extern int *gTitleMenuControlInterface;
+extern void* return0_8005669C(int);
+extern int* gTitleMenuControlInterface;
 
 extern int lbl_803DB610;
-extern void *lbl_803DDBE0;
+extern void* lbl_803DDBE0;
 
 /*
  * --INFO--
@@ -18,56 +18,66 @@ extern void *lbl_803DDBE0;
  * EN v1.0 Address: 0x801CBA98
  * EN v1.0 Size: 636b
  */
-int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
+int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int state;
     int i;
 
-    state = *(int *)&((GameObject *)obj)->extra;
+    state = *(int*)&((GameObject*)obj)->extra;
     animUpdate->hitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
 
-    if (((Torch1CDState *)state)->flameFrameVel != 0) {
-        ((Torch1CDState *)state)->flameFrame += ((Torch1CDState *)state)->flameFrameVel;
-        if (((Torch1CDState *)state)->flameFrame <= 1 && ((Torch1CDState *)state)->flameFrameVel <= 0) {
-            ((Torch1CDState *)state)->flameFrame = 1;
-            ((Torch1CDState *)state)->flameFrameVel = 0;
-        } else if (((Torch1CDState *)state)->flameFrame >= 0x46 && ((Torch1CDState *)state)->flameFrameVel >= 0) {
-            ((Torch1CDState *)state)->flameFrame = 0x46;
-            ((Torch1CDState *)state)->flameFrameVel = 0;
+    if (((Torch1CDState*)state)->flameFrameVel != 0)
+    {
+        ((Torch1CDState*)state)->flameFrame += ((Torch1CDState*)state)->flameFrameVel;
+        if (((Torch1CDState*)state)->flameFrame <= 1 && ((Torch1CDState*)state)->flameFrameVel <= 0)
+        {
+            ((Torch1CDState*)state)->flameFrame = 1;
+            ((Torch1CDState*)state)->flameFrameVel = 0;
         }
-        ((void (**)(int, u8))*gTitleMenuControlInterface)[0x38/4](3, (u8)((Torch1CDState *)state)->flameFrame);
+        else if (((Torch1CDState*)state)->flameFrame >= 0x46 && ((Torch1CDState*)state)->flameFrameVel >= 0)
+        {
+            ((Torch1CDState*)state)->flameFrame = 0x46;
+            ((Torch1CDState*)state)->flameFrameVel = 0;
+        }
+        ((void (**)(int, u8))*gTitleMenuControlInterface)[0x38 / 4](3, (u8)((Torch1CDState*)state)->flameFrame);
     }
 
-    for (i = 0; i < animUpdate->eventCount; i++) {
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
         u8 cmd = animUpdate->eventIds[i];
-        if (cmd != 0) {
-            switch (cmd) {
+        if (cmd != 0)
+        {
+            switch (cmd)
+            {
             case 1:
                 getEnvfxAct(obj, obj, 0xc3, 0);
                 break;
             case 2:
-                if (lbl_803DB610 == -1) {
+                if (lbl_803DB610 == -1)
+                {
                     getEnvfxAct(obj, obj, 0x14, 0);
-                } else {
+                }
+                else
+                {
                     getEnvfxAct(obj, obj, lbl_803DB610 & 0xffff, 0);
                 }
                 break;
             case 3:
-                ((Torch1CDState *)state)->unk14 = 1;
+                ((Torch1CDState*)state)->unk14 = 1;
                 break;
             case 4:
-                ((Torch1CDState *)state)->unk13 = 4;
-                ((Torch1CDState *)state)->unk14 = 2;
+                ((Torch1CDState*)state)->unk13 = 4;
+                ((Torch1CDState*)state)->unk14 = 2;
                 GameBit_Set(0x129, 1);
                 GameBit_Set(0x1d2, 0);
                 GameBit_Set(0x126, 1);
-                ((Torch1CDState *)state)->flameFrameVel = -3;
+                ((Torch1CDState*)state)->flameFrameVel = -3;
                 break;
             case 5:
-                ((Torch1CDState *)state)->unk13 = 6;
-                ((Torch1CDState *)state)->unk14 = 3;
-                ((Torch1CDState *)state)->flameFrameVel = -3;
+                ((Torch1CDState*)state)->unk13 = 6;
+                ((Torch1CDState*)state)->unk14 = 3;
+                ((Torch1CDState*)state)->flameFrameVel = -3;
                 GameBit_Set(0x129, 1);
                 break;
             case 6:
@@ -75,11 +85,12 @@ int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
                 break;
             case 7:
                 GameBit_Set(0x1d2, 0);
-                ((Torch1CDState *)state)->flameFrameVel = -3;
+                ((Torch1CDState*)state)->flameFrameVel = -3;
                 break;
             case 8:
                 GameBit_Set(0x128, 1);
-                if (lbl_803DDBE0 == NULL) {
+                if (lbl_803DDBE0 == NULL)
+                {
                     lbl_803DDBE0 = return0_8005669C(1);
                 }
                 break;
@@ -87,9 +98,9 @@ int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
                 GameBit_Set(0x127, 1);
                 break;
             case 0xb:
-                ((Torch1CDState *)state)->flameFrame = 100;
-                ((void (**)(int, int, int, u8, int))*gTitleMenuControlInterface)[0x18/4]
-                    (3, 0x2d, 0x50, (u8)((Torch1CDState *)state)->flameFrame, 0);
+                ((Torch1CDState*)state)->flameFrame = 100;
+                ((void (**)(int, int, int, u8, int))*gTitleMenuControlInterface)[0x18 / 4]
+                    (3, 0x2d, 0x50, (u8)((Torch1CDState*)state)->flameFrame, 0);
                 break;
             }
         }
@@ -99,7 +110,9 @@ int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 }
 
 /* Trivial 4b 0-arg blr leaves. */
-void dll_19B_hitDetect(void) {}
+void dll_19B_hitDetect(void)
+{
+}
 
 /* 8b "li r3, N; blr" returners. */
 int dll_19B_getExtraSize(void) { return 0x18; }
@@ -108,9 +121,16 @@ int dll_19B_getObjectTypeId(void) { return 0x0; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5188;
 extern void objRenderFn_8003b8f4(f32);
-void dll_19B_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5188); }
 
-extern ModgfxInterface **gModgfxInterface;
-void dll_19B_free(int *obj) {
+void dll_19B_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E5188);
+}
+
+extern ModgfxInterface** gModgfxInterface;
+
+void dll_19B_free(int* obj)
+{
     (*gModgfxInterface)->detachSource(obj);
 }

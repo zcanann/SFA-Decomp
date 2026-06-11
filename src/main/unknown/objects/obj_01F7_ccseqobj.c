@@ -71,7 +71,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01F7_CCseqobj_packet_info {
+enum obj_01F7_CCseqobj_packet_info
+{
     CCSEQOBJ_DEF_ID = 0x01F7,
     CCSEQOBJ_DLL_ID = 0x0113,
     CCSEQOBJ_CLASS_ID = 0x0056,

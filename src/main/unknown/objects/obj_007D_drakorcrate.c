@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_007D_DrakorCrate_packet_info {
+enum obj_007D_DrakorCrate_packet_info
+{
     DRAKORCRATE_DEF_ID = 0x007D,
     DRAKORCRATE_DLL_ID = 0x0105,
     DRAKORCRATE_CLASS_ID = 0x0030,

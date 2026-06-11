@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03BE_SPDrape_packet_info {
+enum obj_03BE_SPDrape_packet_info
+{
     SPDRAPE_DEF_ID = 0x03BE,
     SPDRAPE_DLL_ID = 0x0288,
     SPDRAPE_CLASS_ID = 0x0030,

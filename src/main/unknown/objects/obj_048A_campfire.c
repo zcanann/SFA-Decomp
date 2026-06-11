@@ -49,7 +49,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_048A_CampFire_packet_info {
+enum obj_048A_CampFire_packet_info
+{
     CAMPFIRE_DEF_ID = 0x048A,
     CAMPFIRE_DLL_ID = 0x0129,
     CAMPFIRE_CLASS_ID = 0x0032,

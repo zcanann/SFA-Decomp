@@ -70,7 +70,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0412_GPSH_seqpoi_packet_info {
+enum obj_0412_GPSH_seqpoi_packet_info
+{
     GPSH_SEQPOI_DEF_ID = 0x0412,
     GPSH_SEQPOI_DLL_ID = 0x0221,
     GPSH_SEQPOI_CLASS_ID = 0x0030,

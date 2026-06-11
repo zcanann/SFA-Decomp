@@ -62,7 +62,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04B2_WarpPoint_packet_info {
+enum obj_04B2_WarpPoint_packet_info
+{
     WARPPOINT_DEF_ID = 0x04B2,
     WARPPOINT_DLL_ID = 0x00F0,
     WARPPOINT_CLASS_ID = 0x0025,

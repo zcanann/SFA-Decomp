@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_040A_ECSH_LaserB_packet_info {
+enum obj_040A_ECSH_LaserB_packet_info
+{
     ECSH_LASERB_DEF_ID = 0x040A,
     ECSH_LASERB_DLL_ID = 0x01FC,
     ECSH_LASERB_CLASS_ID = 0x0030,

@@ -80,7 +80,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0039_PinPon_packet_info {
+enum obj_0039_PinPon_packet_info
+{
     PINPON_DEF_ID = 0x0039,
     PINPON_DLL_ID = 0x00C9,
     PINPON_CLASS_ID = 0x001C,

@@ -32,7 +32,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0032_CampFire_defs {
+enum class_0032_CampFire_defs
+{
     CAMPFIRE_CAMPFIRE = 0x048A,
 };
 #endif

@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00A9_CFGCsmallbl_packet_info {
+enum obj_00A9_CFGCsmallbl_packet_info
+{
     CFGCSMALLBL_DEF_ID = 0x00A9,
     CFGCSMALLBL_DLL_ID = 0x012E,
     CFGCSMALLBL_CLASS_ID = 0x0061,

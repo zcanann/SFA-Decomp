@@ -30,7 +30,8 @@
  */
 
 #if 0
-enum dll_0250_KT_Rex_slot {
+enum dll_0250_KT_Rex_slot
+{
     KTREX_INITIALISE = 0,
     KTREX_RELEASE = 1,
     KTREX_INIT = 3,

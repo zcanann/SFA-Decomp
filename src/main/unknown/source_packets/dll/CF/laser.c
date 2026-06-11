@@ -62,7 +62,8 @@
 /*
  * Packet constants only. Promote names and boundaries after EN inspection.
  */
-enum laser_packet_info {
+enum laser_packet_info
+{
     PACKET_DLL_0236 = 0x0236,
     PACKET_CLASS_0030 = 0x0030,
     PACKET_DEF_0355 = 0x0355,

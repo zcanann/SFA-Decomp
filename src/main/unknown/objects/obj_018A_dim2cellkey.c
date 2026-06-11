@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_018A_DIM2CellKey_packet_info {
+enum obj_018A_DIM2CellKey_packet_info
+{
     DIM2CELLKEY_DEF_ID = 0x018A,
     DIM2CELLKEY_DLL_ID = 0x00ED,
     DIM2CELLKEY_CLASS_ID = 0x0006,

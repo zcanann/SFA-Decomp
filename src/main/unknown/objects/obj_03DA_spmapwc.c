@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03DA_SPMapWC_packet_info {
+enum obj_03DA_SPMapWC_packet_info
+{
     SPMAPWC_DEF_ID = 0x03DA,
     SPMAPWC_DLL_ID = 0x0284,
     SPMAPWC_CLASS_ID = 0x0070,

@@ -27,7 +27,8 @@
  */
 
 #if 0
-enum dll_024D_BossDrakor_slot {
+enum dll_024D_BossDrakor_slot
+{
     BOSSDRAKOR_INITIALISE = 0,
     BOSSDRAKOR_RELEASE = 1,
     BOSSDRAKOR_INIT = 3,

@@ -47,8 +47,8 @@ extern undefined4 FUN_8004812c();
 extern uint FUN_80053078();
 extern void newshadows_getShadowTextureTable4x8();
 extern void newshadows_getShadowTextureTable16();
-extern void newshadows_getShadowNoiseTexture(int *textureOut);
-extern void newshadows_getShadowNoiseScroll(float *xOffsetOut,float *yOffsetOut);
+extern void newshadows_getShadowNoiseTexture(int* textureOut);
+extern void newshadows_getShadowNoiseScroll(float* xOffsetOut, float* yOffsetOut);
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
 extern void trackIntersect_drawColorBand(void);
@@ -200,7 +200,7 @@ extern undefined4 _DAT_803dc0f4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void objAnimFn_80038f38(int obj, char *p2)
+void objAnimFn_80038f38(int obj, char* p2)
 {
     extern int Sfx_StopObjectChannel(int obj, int ch);
     extern void ObjModel_SetBlendChannelTargets(int model, int a, int b, int c, f32 ratio, int d);
@@ -210,56 +210,69 @@ void objAnimFn_80038f38(int obj, char *p2)
     extern f32 lbl_803DB464;
     extern u8 framesThisStep;
     int t;
-    s16 *found;
-    void *m;
+    s16* found;
+    void* m;
 
-    t = (s32)*(f32 *)(p2 + 0xc);
+    t = (s32) * (f32*)(p2 + 0xc);
     found = NULL;
     m = OBJPRINT_MODEL_INSTANCE(obj);
-    if (m != NULL) {
+    if (m != NULL)
+    {
         int entryIdx = 0, vecOffset = 0;
         int n = OBJPRINT_JOINT_COUNT(m);
         int j;
-        for (j = 0; j < n; j++) {
-            u8 *entries = *(u8 **)&((ObjDef *)m)->jointData;
+        for (j = 0; j < n; j++)
+        {
+            u8* entries = *(u8**)&((ObjDef*)m)->jointData;
             int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
-            if ((int)entries[idx] != 0xff && (int)entries[entryIdx] == 1) {
-                found = (s16 *)((char *)((GameObject *)obj)->anim.jointPoseData + vecOffset);
+            if ((int)entries[idx] != 0xff && (int)entries[entryIdx] == 1)
+            {
+                found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + vecOffset);
             }
             entryIdx += OBJPRINT_MODEL_COUNT(m) + 1;
             vecOffset += 0x12;
         }
     }
 
-    if (*(s8 *)p2 != 0) {
-        *(s8 *)p2 = 0;
-    } else if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) != 0) {
-        if (t != -1) {
+    if (*(s8*)p2 != 0)
+    {
+        *(s8*)p2 = 0;
+    }
+    else if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) != 0)
+    {
+        if (t != -1)
+        {
             t -= framesThisStep;
-            if (t < 0) {
+            if (t < 0)
+            {
                 Sfx_StopObjectChannel(obj, 0x10);
-                *(f32 *)(p2 + 4) = lbl_803DE9A4;
-                *(s16 *)(p2 + 0x14) = 0;
+                *(f32*)(p2 + 4) = lbl_803DE9A4;
+                *(s16*)(p2 + 0x14) = 0;
             }
-            *(f32 *)(p2 + 0xc) = (f32)t;
+            *(f32*)(p2 + 0xc) = (f32)t;
         }
-    } else {
-        *(f32 *)(p2 + 0xc) = lbl_803DE9C8;
-        *(s16 *)(p2 + 0x14) = 0;
-        if (*(f32 *)(p2 + 4) > lbl_803DE9A4) {
-            int *pi;
-            *(f32 *)(p2 + 4) = *(f32 *)&lbl_803DE9A4;
+    }
+    else
+    {
+        *(f32*)(p2 + 0xc) = lbl_803DE9C8;
+        *(s16*)(p2 + 0x14) = 0;
+        if (*(f32*)(p2 + 4) > lbl_803DE9A4)
+        {
+            int* pi;
+            *(f32*)(p2 + 4) = *(f32*)&lbl_803DE9A4;
             pi = OBJPRINT_ACTIVE_BANK(obj);
-            if (*(u8 *)(*pi + 0xf9) != 0) {
+            if (*(u8*)(*pi + 0xf9) != 0)
+            {
                 ObjModel_SetBlendChannelTargets((int)pi, 2,
-                    *(s8 *)(*(int *)((char *)pi + 0x28) + 0x2d), -1,
-                    lbl_803DE99C / lbl_803DB464, 0);
+                                                *(s8*)(*(int*)((char*)pi + 0x28) + 0x2d), -1,
+                                                lbl_803DE99C / lbl_803DB464, 0);
             }
         }
     }
 
-    if (found != NULL) {
-        found[0] = (s16)((found[0] + *(s16 *)(p2 + 0x14)) >> 1);
+    if (found != NULL)
+    {
+        found[0] = (s16)((found[0] + *(s16*)(p2 + 0x14)) >> 1);
     }
 }
 
@@ -277,27 +290,28 @@ void objAnimFn_80038f38(int obj, char *p2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80039468(undefined4 param_1,undefined4 param_2,ushort param_3,short param_4,uint param_5,
-                 uint param_6)
+void FUN_80039468(undefined4 param_1, undefined4 param_2, ushort param_3, short param_4, uint param_5,
+                  uint param_6)
 {
-  uint uVar1;
-  bool bVar2;
-  undefined *puVar3;
-  undefined8 uVar4;
-  
-  uVar4 = FUN_80286840();
-  uVar1 = (uint)((ulonglong)uVar4 >> 0x20);
-  puVar3 = (undefined *)uVar4;
-  if (((param_6 & 0xff) != 0) || (bVar2 = FUN_800067f0(uVar1,0x10), !bVar2)) {
-    FUN_8000681c(uVar1,0x10,param_3);
-    *(float *)(puVar3 + 0xc) =
-         (f32)(s32)(param_5);
-    *(short *)(puVar3 + 0x14) = -param_4;
-    *puVar3 = 1;
-    *(float *)(puVar3 + 4) = lbl_803DF61C;
-  }
-  FUN_8028688c();
-  return;
+    uint uVar1;
+    bool bVar2;
+    undefined* puVar3;
+    undefined8 uVar4;
+
+    uVar4 = FUN_80286840();
+    uVar1 = (uint)((ulonglong)uVar4 >> 0x20);
+    puVar3 = (undefined*)uVar4;
+    if (((param_6 & 0xff) != 0) || (bVar2 = FUN_800067f0(uVar1, 0x10), !bVar2))
+    {
+        FUN_8000681c(uVar1, 0x10, param_3);
+        *(float*)(puVar3 + 0xc) =
+            (f32)(s32)(param_5);
+        *(short*)(puVar3 + 0x14) = -param_4;
+        *puVar3 = 1;
+        *(float*)(puVar3 + 4) = lbl_803DF61C;
+    }
+    FUN_8028688c();
+    return;
 }
 
 /*
@@ -313,9 +327,9 @@ void FUN_80039468(undefined4 param_1,undefined4 param_2,ushort param_3,short par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 * FUN_80039518(void)
+undefined4* FUN_80039518(void)
 {
-  return &DAT_802cba60;
+    return &DAT_802cba60;
 }
 
 /*
@@ -331,31 +345,35 @@ undefined4 * FUN_80039518(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_80039520(int param_1,uint param_2)
+int FUN_80039520(int param_1, uint param_2)
 {
-  uint uVar1;
-  int iVar2;
-  byte *pbVar3;
-  int iVar4;
-  int iVar5;
-  
-  iVar5 = 0;
-  iVar2 = *(int *)(param_1 + 0x50);
-  if (iVar2 != 0) {
-    pbVar3 = *(byte **)(iVar2 + 0xc);
-    if (pbVar3 == (byte *)0x0) {
-      return 0;
+    uint uVar1;
+    int iVar2;
+    byte* pbVar3;
+    int iVar4;
+    int iVar5;
+
+    iVar5 = 0;
+    iVar2 = *(int*)(param_1 + 0x50);
+    if (iVar2 != 0)
+    {
+        pbVar3 = *(byte**)(iVar2 + 0xc);
+        if (pbVar3 == (byte*)0x0)
+        {
+            return 0;
+        }
+        iVar4 = 0;
+        for (uVar1 = (uint) * (byte*)(iVar2 + 0x59); uVar1 != 0; uVar1 = uVar1 - 1)
+        {
+            if (param_2 == *pbVar3)
+            {
+                iVar5 = *(int*)(param_1 + 0x70) + iVar4;
+            }
+            pbVar3 = pbVar3 + 2;
+            iVar4 = iVar4 + 0x10;
+        }
     }
-    iVar4 = 0;
-    for (uVar1 = (uint)*(byte *)(iVar2 + 0x59); uVar1 != 0; uVar1 = uVar1 - 1) {
-      if (param_2 == *pbVar3) {
-        iVar5 = *(int *)(param_1 + 0x70) + iVar4;
-      }
-      pbVar3 = pbVar3 + 2;
-      iVar4 = iVar4 + 0x10;
-    }
-  }
-  return iVar5;
+    return iVar5;
 }
 
 
@@ -372,29 +390,32 @@ int FUN_80039520(int param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_8003964c(int param_1,uint param_2)
+int FUN_8003964c(int param_1, uint param_2)
 {
-  uint uVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  
-  iVar5 = 0;
-  iVar4 = (int)OBJPRINT_MODEL_INSTANCE(param_1);
-  if (iVar4 != 0) {
-    iVar3 = 0;
-    iVar2 = 0;
-    for (uVar1 = (uint)OBJPRINT_JOINT_COUNT(iVar4); uVar1 != 0; uVar1 = uVar1 - 1) {
-      if ((*(char *)(*(int *)(iVar4 + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(param_1) + iVar3 + 1) != -1) &&
-         (param_2 == *(byte *)(*(int *)(iVar4 + 0x10) + iVar3))) {
-        iVar5 = *(int *)(param_1 + 0x6c) + iVar2;
-      }
-      iVar3 = OBJPRINT_MODEL_COUNT(iVar4) + iVar3 + 1;
-      iVar2 = iVar2 + 0x12;
+    uint uVar1;
+    int iVar2;
+    int iVar3;
+    int iVar4;
+    int iVar5;
+
+    iVar5 = 0;
+    iVar4 = (int)OBJPRINT_MODEL_INSTANCE(param_1);
+    if (iVar4 != 0)
+    {
+        iVar3 = 0;
+        iVar2 = 0;
+        for (uVar1 = (uint)OBJPRINT_JOINT_COUNT(iVar4); uVar1 != 0; uVar1 = uVar1 - 1)
+        {
+            if ((*(char*)(*(int*)(iVar4 + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(param_1) + iVar3 + 1) != -1) &&
+                (param_2 == *(byte*)(*(int*)(iVar4 + 0x10) + iVar3)))
+            {
+                iVar5 = *(int*)(param_1 + 0x6c) + iVar2;
+            }
+            iVar3 = OBJPRINT_MODEL_COUNT(iVar4) + iVar3 + 1;
+            iVar2 = iVar2 + 0x12;
+        }
     }
-  }
-  return iVar5;
+    return iVar5;
 }
 
 
@@ -411,61 +432,76 @@ int FUN_8003964c(int param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8003988c(double param_1,double param_2,int param_3,short *param_4)
+undefined4 FUN_8003988c(double param_1, double param_2, int param_3, short* param_4)
 {
-  undefined4 uVar1;
-  double dVar2;
-  double dVar3;
-  float local_48;
-  float local_44;
-  float local_40;
-  float local_3c;
-  undefined4 local_38;
-  uint uStack_34;
-  undefined4 local_30;
-  uint uStack_2c;
-  undefined8 local_28;
-  undefined4 local_20;
-  uint uStack_1c;
-  
-  local_48 = (float)param_1;
-  local_44 = (float)param_1;
-  local_40 = (float)param_2;
-  local_3c = (float)-param_2;
-  if ((int)*(short *)(param_3 + 0x14) == (int)*(short *)(param_3 + 0x16)) {
-    uVar1 = 1;
-  }
-  else {
-    uStack_34 = (int)*param_4 ^ 0x80000000;
-    local_38 = 0x43300000;
-    uStack_2c = (int)*(short *)(param_3 + 0x16) ^ 0x80000000;
-    local_30 = 0x43300000;
-    local_20 = 0x43300000;
-    dVar3 = (double)(((f32)(s32)uStack_34 -
-                     (f32)(s32)uStack_2c) /
-                    ((f32)(s32)((int)*(short *)(param_3 + 0x14)) -
-                    (f32)(s32)uStack_2c));
-    dVar2 = (double)lbl_803DF61C;
-    if ((dVar3 <= dVar2) && (dVar2 = dVar3, dVar3 < (double)lbl_803DF624)) {
-      dVar2 = (double)lbl_803DF624;
+    undefined4 uVar1;
+    double dVar2;
+    double dVar3;
+    float local_48;
+    float local_44;
+    float local_40;
+    float local_3c;
+    undefined4 local_38;
+    uint uStack_34;
+    undefined4 local_30;
+    uint uStack_2c;
+    undefined8 local_28;
+    undefined4 local_20;
+    uint uStack_1c;
+
+    local_48 = (float)param_1;
+    local_44 = (float)param_1;
+    local_40 = (float)param_2;
+    local_3c = (float)-param_2;
+    if ((int)*(short*)(param_3 + 0x14) == (int)*(short*)(param_3 + 0x16))
+    {
+        uVar1 = 1;
     }
-    uStack_1c = uStack_2c;
-    dVar3 = FUN_80006a30(dVar2,&local_48,(float *)0x0);
-    if (*(short *)(param_3 + 0x14) < *(short *)(param_3 + 0x16)) {
-      dVar3 = -dVar3;
+    else
+    {
+        uStack_34 = (int)*param_4 ^ 0x80000000;
+        local_38 = 0x43300000;
+        uStack_2c = (int)*(short*)(param_3 + 0x16) ^ 0x80000000;
+        local_30 = 0x43300000;
+        local_20 = 0x43300000;
+        dVar3 = (double)
+        (((f32)(s32)
+        uStack_34 -
+            (f32)(s32)
+        uStack_2c
+        )
+        /
+        ((f32)(s32)((int)*(short*)(param_3 + 0x14)) -
+            (f32)(s32)
+        uStack_2c
+        )
+        )
+        ;
+        dVar2 = (double)lbl_803DF61C;
+        if ((dVar3 <= dVar2) && (dVar2 = dVar3, dVar3 < (double)lbl_803DF624))
+        {
+            dVar2 = (double)lbl_803DF624;
+        }
+        uStack_1c = uStack_2c;
+        dVar3 = FUN_80006a30(dVar2, &local_48, (float*)0x0);
+        if (*(short*)(param_3 + 0x14) < *(short*)(param_3 + 0x16))
+        {
+            dVar3 = -dVar3;
+        }
+        *param_4 = (short)(int)(dVar3 * (double)lbl_803DC074 +
+            (double)(float)((double)CONCAT44(0x43300000, (int)*param_4 ^ 0x80000000) -
+                DOUBLE_803df650));
+        if ((((double)lbl_803DF61C == dVar2) || (0x1ffe < *param_4)) || (*param_4 < -0x1ffe))
+        {
+            *param_4 = *(short*)(param_3 + 0x14);
+            uVar1 = 1;
+        }
+        else
+        {
+            uVar1 = 0;
+        }
     }
-    *param_4 = (short)(int)(dVar3 * (double)lbl_803DC074 +
-                           (double)(float)((double)CONCAT44(0x43300000,(int)*param_4 ^ 0x80000000) -
-                                          DOUBLE_803df650));
-    if ((((double)lbl_803DF61C == dVar2) || (0x1ffe < *param_4)) || (*param_4 < -0x1ffe)) {
-      *param_4 = *(short *)(param_3 + 0x14);
-      uVar1 = 1;
-    }
-    else {
-      uVar1 = 0;
-    }
-  }
-  return uVar1;
+    return uVar1;
 }
 
 /*
@@ -481,64 +517,79 @@ undefined4 FUN_8003988c(double param_1,double param_2,int param_3,short *param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80039a28(int param_1,int param_2)
+undefined4 FUN_80039a28(int param_1, int param_2)
 {
-  undefined4 uVar1;
-  double dVar2;
-  double dVar3;
-  float local_48;
-  float local_44;
-  float local_40;
-  float local_3c;
-  undefined4 local_38;
-  uint uStack_34;
-  undefined4 local_30;
-  uint uStack_2c;
-  undefined8 local_28;
-  undefined4 local_20;
-  uint uStack_1c;
-  
-  local_48 = lbl_803DF658;
-  local_44 = lbl_803DF658;
-  local_40 = lbl_803DF65C;
-  local_3c = lbl_803DF660;
-  if ((int)*(short *)(param_1 + 0x14) == (int)*(short *)(param_1 + 0x16)) {
-    uVar1 = 1;
-  }
-  else {
-    uStack_34 = (int)*(short *)(param_2 + 2) ^ 0x80000000;
-    local_38 = 0x43300000;
-    uStack_2c = (int)*(short *)(param_1 + 0x16) ^ 0x80000000;
-    local_30 = 0x43300000;
-    local_20 = 0x43300000;
-    dVar3 = (double)(((f32)(s32)uStack_34 -
-                     (f32)(s32)uStack_2c) /
-                    ((f32)(s32)((int)*(short *)(param_1 + 0x14)) -
-                    (f32)(s32)uStack_2c));
-    dVar2 = (double)lbl_803DF61C;
-    if ((dVar3 <= dVar2) && (dVar2 = dVar3, dVar3 < (double)lbl_803DF624)) {
-      dVar2 = (double)lbl_803DF624;
+    undefined4 uVar1;
+    double dVar2;
+    double dVar3;
+    float local_48;
+    float local_44;
+    float local_40;
+    float local_3c;
+    undefined4 local_38;
+    uint uStack_34;
+    undefined4 local_30;
+    uint uStack_2c;
+    undefined8 local_28;
+    undefined4 local_20;
+    uint uStack_1c;
+
+    local_48 = lbl_803DF658;
+    local_44 = lbl_803DF658;
+    local_40 = lbl_803DF65C;
+    local_3c = lbl_803DF660;
+    if ((int)*(short*)(param_1 + 0x14) == (int)*(short*)(param_1 + 0x16))
+    {
+        uVar1 = 1;
     }
-    uStack_1c = uStack_2c;
-    dVar3 = FUN_80006a30(dVar2,&local_48,(float *)0x0);
-    if (*(short *)(param_1 + 0x14) < *(short *)(param_1 + 0x16)) {
-      dVar3 = -dVar3;
+    else
+    {
+        uStack_34 = (int)*(short*)(param_2 + 2) ^ 0x80000000;
+        local_38 = 0x43300000;
+        uStack_2c = (int)*(short*)(param_1 + 0x16) ^ 0x80000000;
+        local_30 = 0x43300000;
+        local_20 = 0x43300000;
+        dVar3 = (double)
+        (((f32)(s32)
+        uStack_34 -
+            (f32)(s32)
+        uStack_2c
+        )
+        /
+        ((f32)(s32)((int)*(short*)(param_1 + 0x14)) -
+            (f32)(s32)
+        uStack_2c
+        )
+        )
+        ;
+        dVar2 = (double)lbl_803DF61C;
+        if ((dVar3 <= dVar2) && (dVar2 = dVar3, dVar3 < (double)lbl_803DF624))
+        {
+            dVar2 = (double)lbl_803DF624;
+        }
+        uStack_1c = uStack_2c;
+        dVar3 = FUN_80006a30(dVar2, &local_48, (float*)0x0);
+        if (*(short*)(param_1 + 0x14) < *(short*)(param_1 + 0x16))
+        {
+            dVar3 = -dVar3;
+        }
+        *(short*)(param_2 + 2) =
+            (short)(int)(dVar3 * (double)lbl_803DC074 +
+                (double)(float)((double)CONCAT44(0x43300000,
+                                                 (int)*(short*)(param_2 + 2) ^ 0x80000000) -
+                    DOUBLE_803df650));
+        if ((((double)lbl_803DF61C == dVar2) || (0x1ffe < *(short*)(param_2 + 2))) ||
+            (*(short*)(param_2 + 2) < -0x1ffe))
+        {
+            *(undefined2*)(param_2 + 2) = *(undefined2*)(param_1 + 0x14);
+            uVar1 = 1;
+        }
+        else
+        {
+            uVar1 = 0;
+        }
     }
-    *(short *)(param_2 + 2) =
-         (short)(int)(dVar3 * (double)lbl_803DC074 +
-                     (double)(float)((double)CONCAT44(0x43300000,
-                                                      (int)*(short *)(param_2 + 2) ^ 0x80000000) -
-                                    DOUBLE_803df650));
-    if ((((double)lbl_803DF61C == dVar2) || (0x1ffe < *(short *)(param_2 + 2))) ||
-       (*(short *)(param_2 + 2) < -0x1ffe)) {
-      *(undefined2 *)(param_2 + 2) = *(undefined2 *)(param_1 + 0x14);
-      uVar1 = 1;
-    }
-    else {
-      uVar1 = 0;
-    }
-  }
-  return uVar1;
+    return uVar1;
 }
 
 
@@ -555,117 +606,144 @@ undefined4 FUN_80039a28(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80039e6c(double param_1,short *param_2,char *param_3,int param_4)
+void FUN_80039e6c(double param_1, short* param_2, char* param_3, int param_4)
 {
-  float fVar1;
-  ushort uVar2;
-  float fVar3;
-  uint uVar4;
-  int iVar5;
-  bool bVar6;
-  
-  bVar6 = (double)lbl_803DF664 < param_1;
-  if (((uint)(int)*(short *)(param_3 + 0x1a) >> 8 & 0xff) != (uint)bVar6) {
-    *(ushort *)(param_3 + 0x1a) = (ushort)bVar6 << 8;
-  }
-  uVar2 = *(ushort *)(param_3 + 0x1a) & 0xff;
-  if (uVar2 == 2) {
-    if ((*param_3 != '\0') || (iVar5 = FUN_80039a28((int)param_3,param_4), iVar5 != 0)) {
-      *(ushort *)(param_3 + 0x1a) = (ushort)bVar6 << 8;
+    float fVar1;
+    ushort uVar2;
+    float fVar3;
+    uint uVar4;
+    int iVar5;
+    bool bVar6;
+
+    bVar6 = (double)lbl_803DF664 < param_1;
+    if (((uint)(int) * (short*)(param_3 + 0x1a) >> 8 & 0xff) != (uint)bVar6)
+    {
+        *(ushort*)(param_3 + 0x1a) = (ushort)bVar6 << 8;
     }
-  }
-  else if (uVar2 < 2) {
-    if (uVar2 == 0) {
-      if (*param_3 == '\0') {
-        *(ushort *)(param_3 + 0x1a) = (ushort)bVar6 << 8 | 1;
-        uVar4 = randomGetRange(100,400);
-        *(short *)(param_3 + 0x1c) = (short)uVar4;
-        *(undefined2 *)(param_3 + 0x14) = *(undefined2 *)(param_4 + 2);
-      }
-      else {
-        *(ushort *)(param_3 + 0x1a) = (ushort)bVar6 << 8 | 3;
-        *(undefined2 *)(param_3 + 0x16) = *(undefined2 *)(param_4 + 2);
-        *(float *)(param_3 + 0x10) = lbl_803DF61C;
-      }
-    }
-    else {
-      *(ushort *)(param_3 + 0x1c) = *(short *)(param_3 + 0x1c) - (ushort)DAT_803dc070;
-      if (*(short *)(param_3 + 0x1c) < 0) {
-        iVar5 = (int)*(short *)(param_3 + 0x14);
-        uVar4 = randomGetRange(0,0x1fff);
-        *(short *)(param_3 + 0x14) = (short)uVar4;
-        if (iVar5 < 1) {
-          if (*(short *)(param_3 + 0x14) - iVar5 < 0xe38) {
-            *(short *)(param_3 + 0x14) = *(short *)(param_3 + 0x14) + 0xe38;
-          }
-          if (0x1fff < *(short *)(param_3 + 0x14)) {
-            param_3[0x14] = '\x1f';
-            param_3[0x15] = -1;
-          }
+    uVar2 = *(ushort*)(param_3 + 0x1a) & 0xff;
+    if (uVar2 == 2)
+    {
+        if ((*param_3 != '\0') || (iVar5 = FUN_80039a28((int)param_3, param_4), iVar5 != 0))
+        {
+            *(ushort*)(param_3 + 0x1a) = (ushort)bVar6 << 8;
         }
-        else {
-          if (iVar5 - *(short *)(param_3 + 0x14) < 0xe38) {
-            *(short *)(param_3 + 0x14) = *(short *)(param_3 + 0x14) + 0xe38;
-          }
-          if (0x1fff < *(short *)(param_3 + 0x14)) {
-            param_3[0x14] = '\x1f';
-            param_3[0x15] = -1;
-          }
-          *(short *)(param_3 + 0x14) = -*(short *)(param_3 + 0x14);
-        }
-        *(ushort *)(param_3 + 0x1a) = (ushort)bVar6 << 8 | 2;
-        param_3[0x1c] = '\0';
-        param_3[0x1d] = '\0';
-        *(undefined2 *)(param_3 + 0x16) = *(undefined2 *)(param_4 + 2);
-      }
     }
-  }
-  else if (uVar2 < 4) {
-    if (*param_3 == '\0') {
-      *(ushort *)(param_3 + 0x1a) = (ushort)bVar6 << 8;
-    }
-    else {
-      iVar5 = FUN_80017730();
-      *(short *)(param_3 + 0x14) = (short)iVar5 - *param_2;
-      if (0x8000 < *(short *)(param_3 + 0x14)) {
-        *(short *)(param_3 + 0x14) = *(short *)(param_3 + 0x14) + 1;
-      }
-      if (*(short *)(param_3 + 0x14) < -0x8000) {
-        *(short *)(param_3 + 0x14) = *(short *)(param_3 + 0x14) + -1;
-      }
-      fVar3 = lbl_803DF624;
-      uVar4 = (uint)*(short *)(param_3 + 0x14);
-      if (((int)uVar4 < 0x2000) && (-0x2000 < (int)uVar4)) {
-        if (*(float *)(param_3 + 0x10) <= lbl_803DF624) {
-          *(short *)(param_4 + 2) = *(short *)(param_3 + 0x14);
+    else if (uVar2 < 2)
+    {
+        if (uVar2 == 0)
+        {
+            if (*param_3 == '\0')
+            {
+                *(ushort*)(param_3 + 0x1a) = (ushort)bVar6 << 8 | 1;
+                uVar4 = randomGetRange(100, 400);
+                *(short*)(param_3 + 0x1c) = (short)uVar4;
+                *(undefined2*)(param_3 + 0x14) = *(undefined2*)(param_4 + 2);
+            }
+            else
+            {
+                *(ushort*)(param_3 + 0x1a) = (ushort)bVar6 << 8 | 3;
+                *(undefined2*)(param_3 + 0x16) = *(undefined2*)(param_4 + 2);
+                *(float*)(param_3 + 0x10) = lbl_803DF61C;
+            }
         }
-        else {
-          *(short *)(param_4 + 2) =
-               (short)(int)(*(float *)(param_3 + 0x10) *
+        else
+        {
+            *(ushort*)(param_3 + 0x1c) = *(short*)(param_3 + 0x1c) - (ushort)DAT_803dc070;
+            if (*(short*)(param_3 + 0x1c) < 0)
+            {
+                iVar5 = (int)*(short*)(param_3 + 0x14);
+                uVar4 = randomGetRange(0, 0x1fff);
+                *(short*)(param_3 + 0x14) = (short)uVar4;
+                if (iVar5 < 1)
+                {
+                    if (*(short*)(param_3 + 0x14) - iVar5 < 0xe38)
+                    {
+                        *(short*)(param_3 + 0x14) = *(short*)(param_3 + 0x14) + 0xe38;
+                    }
+                    if (0x1fff < *(short*)(param_3 + 0x14))
+                    {
+                        param_3[0x14] = '\x1f';
+                        param_3[0x15] = -1;
+                    }
+                }
+                else
+                {
+                    if (iVar5 - *(short*)(param_3 + 0x14) < 0xe38)
+                    {
+                        *(short*)(param_3 + 0x14) = *(short*)(param_3 + 0x14) + 0xe38;
+                    }
+                    if (0x1fff < *(short*)(param_3 + 0x14))
+                    {
+                        param_3[0x14] = '\x1f';
+                        param_3[0x15] = -1;
+                    }
+                    *(short*)(param_3 + 0x14) = -*(short*)(param_3 + 0x14);
+                }
+                *(ushort*)(param_3 + 0x1a) = (ushort)bVar6 << 8 | 2;
+                param_3[0x1c] = '\0';
+                param_3[0x1d] = '\0';
+                *(undefined2*)(param_3 + 0x16) = *(undefined2*)(param_4 + 2);
+            }
+        }
+    }
+    else if (uVar2 < 4)
+    {
+        if (*param_3 == '\0')
+        {
+            *(ushort*)(param_3 + 0x1a) = (ushort)bVar6 << 8;
+        }
+        else
+        {
+            iVar5 = FUN_80017730();
+            *(short*)(param_3 + 0x14) = (short)iVar5 - *param_2;
+            if (0x8000 < *(short*)(param_3 + 0x14))
+            {
+                *(short*)(param_3 + 0x14) = *(short*)(param_3 + 0x14) + 1;
+            }
+            if (*(short*)(param_3 + 0x14) < -0x8000)
+            {
+                *(short*)(param_3 + 0x14) = *(short*)(param_3 + 0x14) + -1;
+            }
+            fVar3 = lbl_803DF624;
+            uVar4 = (uint) * (short*)(param_3 + 0x14);
+            if (((int)uVar4 < 0x2000) && (-0x2000 < (int)uVar4))
+            {
+                if (*(float*)(param_3 + 0x10) <= lbl_803DF624)
+                {
+                    *(short*)(param_4 + 2) = *(short*)(param_3 + 0x14);
+                }
+                else
+                {
+                    *(short*)(param_4 + 2) =
+                        (short)(int)(*(float*)(param_3 + 0x10) *
                             (float)((double)CONCAT44(0x43300000,
-                                                     (int)*(short *)(param_3 + 0x16) - uVar4 ^
+                                                     (int)*(short*)(param_3 + 0x16) - uVar4 ^
                                                      0x80000000) - DOUBLE_803df650) +
-                           (float)((double)CONCAT44(0x43300000,uVar4 ^ 0x80000000) - DOUBLE_803df650
-                                  ));
-          fVar1 = -(lbl_803DF668 * lbl_803DC074 - *(float *)(param_3 + 0x10));
-          *(float *)(param_3 + 0x10) = fVar1;
-          if (fVar1 < fVar3) {
-            *(float *)(param_3 + 0x10) = fVar3;
-          }
+                            (float)((double)CONCAT44(0x43300000, uVar4 ^ 0x80000000) - DOUBLE_803df650
+                            ));
+                    fVar1 = -(lbl_803DF668 * lbl_803DC074 - *(float*)(param_3 + 0x10));
+                    *(float*)(param_3 + 0x10) = fVar1;
+                    if (fVar1 < fVar3)
+                    {
+                        *(float*)(param_3 + 0x10) = fVar3;
+                    }
+                }
+            }
+            else
+            {
+                *(ushort*)(param_3 + 0x1a) = (ushort)bVar6 << 8;
+            }
         }
-      }
-      else {
-        *(ushort *)(param_3 + 0x1a) = (ushort)bVar6 << 8;
-      }
     }
-  }
-  if (*(short *)(param_4 + 2) < -0x1fff) {
-    *(undefined2 *)(param_4 + 2) = 0xe001;
-  }
-  else if (0x1fff < *(short *)(param_4 + 2)) {
-    *(undefined2 *)(param_4 + 2) = 0x1fff;
-  }
-  return;
+    if (*(short*)(param_4 + 2) < -0x1fff)
+    {
+        *(undefined2*)(param_4 + 2) = 0xe001;
+    }
+    else if (0x1fff < *(short*)(param_4 + 2))
+    {
+        *(undefined2*)(param_4 + 2) = 0x1fff;
+    }
+    return;
 }
 
 /*
@@ -681,41 +759,47 @@ void FUN_80039e6c(double param_1,short *param_2,char *param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003a1c4(int param_1,int param_2)
+void FUN_8003a1c4(int param_1, int param_2)
 {
-  uint uVar1;
-  short *psVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  
-  psVar2 = (short *)0x0;
-  iVar3 = (int)OBJPRINT_MODEL_INSTANCE(param_1);
-  if (iVar3 != 0) {
-    iVar4 = 0;
-    iVar5 = 0;
-    for (uVar1 = (uint)OBJPRINT_JOINT_COUNT(iVar3); uVar1 != 0; uVar1 = uVar1 - 1) {
-      if ((*(char *)(*(int *)(iVar3 + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(param_1) + iVar4 + 1) != -1) &&
-         (*(char *)(*(int *)(iVar3 + 0x10) + iVar4) == '\0')) {
-        psVar2 = (short *)(*(int *)(param_1 + 0x6c) + iVar5);
-      }
-      iVar4 = OBJPRINT_MODEL_COUNT(iVar3) + iVar4 + 1;
-      iVar5 = iVar5 + 0x12;
+    uint uVar1;
+    short* psVar2;
+    int iVar3;
+    int iVar4;
+    int iVar5;
+
+    psVar2 = (short*)0x0;
+    iVar3 = (int)OBJPRINT_MODEL_INSTANCE(param_1);
+    if (iVar3 != 0)
+    {
+        iVar4 = 0;
+        iVar5 = 0;
+        for (uVar1 = (uint)OBJPRINT_JOINT_COUNT(iVar3); uVar1 != 0; uVar1 = uVar1 - 1)
+        {
+            if ((*(char*)(*(int*)(iVar3 + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(param_1) + iVar4 + 1) != -1) &&
+                (*(char*)(*(int*)(iVar3 + 0x10) + iVar4) == '\0'))
+            {
+                psVar2 = (short*)(*(int*)(param_1 + 0x6c) + iVar5);
+            }
+            iVar4 = OBJPRINT_MODEL_COUNT(iVar3) + iVar4 + 1;
+            iVar5 = iVar5 + 0x12;
+        }
     }
-  }
-  if (psVar2 != (short *)0x0) {
-    if (*psVar2 != 0) {
-      uVar1 = *psVar2 * 3;
-      *psVar2 = (short)((int)uVar1 >> 2) + (ushort)((int)uVar1 < 0 && (uVar1 & 3) != 0);
+    if (psVar2 != (short*)0x0)
+    {
+        if (*psVar2 != 0)
+        {
+            uVar1 = *psVar2 * 3;
+            *psVar2 = (short)((int)uVar1 >> 2) + (ushort)((int)uVar1 < 0 && (uVar1 & 3) != 0);
+        }
+        if (psVar2[1] != 0)
+        {
+            uVar1 = psVar2[1] * 3;
+            psVar2[1] = (short)((int)uVar1 >> 2) + (ushort)((int)uVar1 < 0 && (uVar1 & 3) != 0);
+        }
+        *(undefined2*)(param_2 + 0x1a) = 0;
+        return;
     }
-    if (psVar2[1] != 0) {
-      uVar1 = psVar2[1] * 3;
-      psVar2[1] = (short)((int)uVar1 >> 2) + (ushort)((int)uVar1 < 0 && (uVar1 & 3) != 0);
-    }
-    *(undefined2 *)(param_2 + 0x1a) = 0;
     return;
-  }
-  return;
 }
 
 /*
@@ -731,46 +815,54 @@ void FUN_8003a1c4(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8003A328(double param_1,short *param_2,char *param_3)
+void fn_8003A328(double param_1, short* param_2, char* param_3)
 {
-  uint uVar1;
-  short *psVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  
-  psVar2 = (short *)0x0;
-  iVar3 = (int)OBJPRINT_MODEL_INSTANCE(param_2);
-  if (iVar3 != 0) {
-    iVar4 = 0;
-    iVar5 = 0;
-    for (uVar1 = (uint)OBJPRINT_JOINT_COUNT(iVar3); uVar1 != 0; uVar1 = uVar1 - 1) {
-      if ((*(char *)(*(int *)(iVar3 + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(param_2) + iVar4 + 1) != -1) &&
-         (*(char *)(*(int *)(iVar3 + 0x10) + iVar4) == '\0')) {
-        psVar2 = (short *)(*(int *)(param_2 + 0x36) + iVar5);
-      }
-      iVar4 = OBJPRINT_MODEL_COUNT(iVar3) + iVar4 + 1;
-      iVar5 = iVar5 + 0x12;
+    uint uVar1;
+    short* psVar2;
+    int iVar3;
+    int iVar4;
+    int iVar5;
+
+    psVar2 = (short*)0x0;
+    iVar3 = (int)OBJPRINT_MODEL_INSTANCE(param_2);
+    if (iVar3 != 0)
+    {
+        iVar4 = 0;
+        iVar5 = 0;
+        for (uVar1 = (uint)OBJPRINT_JOINT_COUNT(iVar3); uVar1 != 0; uVar1 = uVar1 - 1)
+        {
+            if ((*(char*)(*(int*)(iVar3 + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(param_2) + iVar4 + 1) != -1) &&
+                (*(char*)(*(int*)(iVar3 + 0x10) + iVar4) == '\0'))
+            {
+                psVar2 = (short*)(*(int*)(param_2 + 0x36) + iVar5);
+            }
+            iVar4 = OBJPRINT_MODEL_COUNT(iVar3) + iVar4 + 1;
+            iVar5 = iVar5 + 0x12;
+        }
     }
-  }
-  if (psVar2 != (short *)0x0) {
-    if (*psVar2 != 0) {
-      uVar1 = *psVar2 * 3;
-      *psVar2 = (short)((int)uVar1 >> 2) + (ushort)((int)uVar1 < 0 && (uVar1 & 3) != 0);
+    if (psVar2 != (short*)0x0)
+    {
+        if (*psVar2 != 0)
+        {
+            uVar1 = *psVar2 * 3;
+            *psVar2 = (short)((int)uVar1 >> 2) + (ushort)((int)uVar1 < 0 && (uVar1 & 3) != 0);
+        }
+        if (param_1 < (double)lbl_803DF624)
+        {
+            param_1 = -param_1;
+        }
+        if ((double)lbl_803DF664 < param_1)
+        {
+            FUN_80039bc4(param_1, (undefined4)(u32)param_2, param_3, (int)psVar2);
+        }
+        else
+        {
+            FUN_80039e6c(param_1, param_2, param_3, (int)psVar2);
+        }
+        *(ushort*)(param_3 + 0x1a) = *(ushort*)(param_3 + 0x1a) & 0xff;
+        *(ushort*)(param_3 + 0x1a) =
+            *(ushort*)(param_3 + 0x1a) | (ushort)((double)lbl_803DF664 < param_1) << 8;
     }
-    if (param_1 < (double)lbl_803DF624) {
-      param_1 = -param_1;
-    }
-    if ((double)lbl_803DF664 < param_1) {
-      FUN_80039bc4(param_1,(undefined4)(u32)param_2,param_3,(int)psVar2);
-    }
-    else {
-      FUN_80039e6c(param_1,param_2,param_3,(int)psVar2);
-    }
-    *(ushort *)(param_3 + 0x1a) = *(ushort *)(param_3 + 0x1a) & 0xff;
-    *(ushort *)(param_3 + 0x1a) =
-         *(ushort *)(param_3 + 0x1a) | (ushort)((double)lbl_803DF664 < param_1) << 8;
-  }
 }
 
 
@@ -787,47 +879,54 @@ void fn_8003A328(double param_1,short *param_2,char *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003a9c8(int param_1,uint param_2,undefined2 param_3,undefined2 param_4)
+void FUN_8003a9c8(int param_1, uint param_2, undefined2 param_3, undefined2 param_4)
 {
-  uint uVar1;
-  
-  if ((int)param_2 < 1) {
-    return;
-  }
-  uVar1 = param_2 >> 3;
-  if (uVar1 != 0) {
-    do {
-      *(undefined2 *)(param_1 + 0x14) = param_3;
-      *(undefined2 *)(param_1 + 0x44) = param_4;
-      *(undefined2 *)(param_1 + 0x74) = param_3;
-      *(undefined2 *)(param_1 + 0xa4) = param_4;
-      *(undefined2 *)(param_1 + 0xd4) = param_3;
-      *(undefined2 *)(param_1 + 0x104) = param_4;
-      *(undefined2 *)(param_1 + 0x134) = param_3;
-      *(undefined2 *)(param_1 + 0x164) = param_4;
-      *(undefined2 *)(param_1 + 0x194) = param_3;
-      *(undefined2 *)(param_1 + 0x1c4) = param_4;
-      *(undefined2 *)(param_1 + 500) = param_3;
-      *(undefined2 *)(param_1 + 0x224) = param_4;
-      *(undefined2 *)(param_1 + 0x254) = param_3;
-      *(undefined2 *)(param_1 + 0x284) = param_4;
-      *(undefined2 *)(param_1 + 0x2b4) = param_3;
-      *(undefined2 *)(param_1 + 0x2e4) = param_4;
-      param_1 = param_1 + 0x300;
-      uVar1 = uVar1 - 1;
-    } while (uVar1 != 0);
-    param_2 = param_2 & 7;
-    if (param_2 == 0) {
-      return;
+    uint uVar1;
+
+    if ((int)param_2 < 1)
+    {
+        return;
     }
-  }
-  do {
-    *(undefined2 *)(param_1 + 0x14) = param_3;
-    *(undefined2 *)(param_1 + 0x44) = param_4;
-    param_1 = param_1 + 0x60;
-    param_2 = param_2 - 1;
-  } while (param_2 != 0);
-  return;
+    uVar1 = param_2 >> 3;
+    if (uVar1 != 0)
+    {
+        do
+        {
+            *(undefined2*)(param_1 + 0x14) = param_3;
+            *(undefined2*)(param_1 + 0x44) = param_4;
+            *(undefined2*)(param_1 + 0x74) = param_3;
+            *(undefined2*)(param_1 + 0xa4) = param_4;
+            *(undefined2*)(param_1 + 0xd4) = param_3;
+            *(undefined2*)(param_1 + 0x104) = param_4;
+            *(undefined2*)(param_1 + 0x134) = param_3;
+            *(undefined2*)(param_1 + 0x164) = param_4;
+            *(undefined2*)(param_1 + 0x194) = param_3;
+            *(undefined2*)(param_1 + 0x1c4) = param_4;
+            *(undefined2*)(param_1 + 500) = param_3;
+            *(undefined2*)(param_1 + 0x224) = param_4;
+            *(undefined2*)(param_1 + 0x254) = param_3;
+            *(undefined2*)(param_1 + 0x284) = param_4;
+            *(undefined2*)(param_1 + 0x2b4) = param_3;
+            *(undefined2*)(param_1 + 0x2e4) = param_4;
+            param_1 = param_1 + 0x300;
+            uVar1 = uVar1 - 1;
+        }
+        while (uVar1 != 0);
+        param_2 = param_2 & 7;
+        if (param_2 == 0)
+        {
+            return;
+        }
+    }
+    do
+    {
+        *(undefined2*)(param_1 + 0x14) = param_3;
+        *(undefined2*)(param_1 + 0x44) = param_4;
+        param_1 = param_1 + 0x60;
+        param_2 = param_2 - 1;
+    }
+    while (param_2 != 0);
+    return;
 }
 
 
@@ -844,38 +943,43 @@ void FUN_8003a9c8(int param_1,uint param_2,undefined2 param_3,undefined2 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003ac24(int param_1,uint *param_2,int param_3)
+void FUN_8003ac24(int param_1, uint* param_2, int param_3)
 {
-  uint uVar1;
-  int iVar2;
-  short *psVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  
-  for (iVar2 = 0; iVar2 < param_3; iVar2 = iVar2 + 1) {
-    psVar3 = (short *)0x0;
-    iVar4 = *(int *)(param_1 + 0x50);
-    if (iVar4 != 0) {
-      iVar5 = 0;
-      iVar6 = 0;
-      for (uVar1 = (uint)*(byte *)(iVar4 + 0x5a); uVar1 != 0; uVar1 = uVar1 - 1) {
-        if ((*(char *)(*(int *)(iVar4 + 0x10) + *(char *)(param_1 + 0xad) + iVar5 + 1) != -1) &&
-           (*param_2 == (uint)*(byte *)(*(int *)(iVar4 + 0x10) + iVar5))) {
-          psVar3 = (short *)(*(int *)(param_1 + 0x6c) + iVar6);
+    uint uVar1;
+    int iVar2;
+    short* psVar3;
+    int iVar4;
+    int iVar5;
+    int iVar6;
+
+    for (iVar2 = 0; iVar2 < param_3; iVar2 = iVar2 + 1)
+    {
+        psVar3 = (short*)0x0;
+        iVar4 = *(int*)(param_1 + 0x50);
+        if (iVar4 != 0)
+        {
+            iVar5 = 0;
+            iVar6 = 0;
+            for (uVar1 = (uint) * (byte*)(iVar4 + 0x5a); uVar1 != 0; uVar1 = uVar1 - 1)
+            {
+                if ((*(char*)(*(int*)(iVar4 + 0x10) + *(char*)(param_1 + 0xad) + iVar5 + 1) != -1) &&
+                    (*param_2 == (uint) * (byte*)(*(int*)(iVar4 + 0x10) + iVar5)))
+                {
+                    psVar3 = (short*)(*(int*)(param_1 + 0x6c) + iVar6);
+                }
+                iVar5 = *(char*)(iVar4 + 0x55) + iVar5 + 1;
+                iVar6 = iVar6 + 0x12;
+            }
         }
-        iVar5 = *(char *)(iVar4 + 0x55) + iVar5 + 1;
-        iVar6 = iVar6 + 0x12;
-      }
+        if (psVar3 != (short*)0x0)
+        {
+            psVar3[1] = (short)(psVar3[1] * 3 >> 2);
+            *psVar3 = (short)(*psVar3 * 3 >> 2);
+            psVar3[2] = (short)(psVar3[2] * 3 >> 2);
+        }
+        param_2 = param_2 + 1;
     }
-    if (psVar3 != (short *)0x0) {
-      psVar3[1] = (short)(psVar3[1] * 3 >> 2);
-      *psVar3 = (short)(*psVar3 * 3 >> 2);
-      psVar3[2] = (short)(psVar3[2] * 3 >> 2);
-    }
-    param_2 = param_2 + 1;
-  }
-  return;
+    return;
 }
 
 /*
@@ -891,38 +995,43 @@ void FUN_8003ac24(int param_1,uint *param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003ad08(int param_1,uint *param_2,int param_3,int param_4)
+void FUN_8003ad08(int param_1, uint* param_2, int param_3, int param_4)
 {
-  uint uVar1;
-  undefined2 *puVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  
-  for (iVar6 = 0; iVar6 < param_3; iVar6 = iVar6 + 1) {
-    puVar2 = (undefined2 *)0x0;
-    iVar3 = *(int *)(param_1 + 0x50);
-    if (iVar3 != 0) {
-      iVar4 = 0;
-      iVar5 = 0;
-      for (uVar1 = (uint)*(byte *)(iVar3 + 0x5a); uVar1 != 0; uVar1 = uVar1 - 1) {
-        if ((*(char *)(*(int *)(iVar3 + 0x10) + *(char *)(param_1 + 0xad) + iVar4 + 1) != -1) &&
-           (*param_2 == (uint)*(byte *)(*(int *)(iVar3 + 0x10) + iVar4))) {
-          puVar2 = (undefined2 *)(*(int *)(param_1 + 0x6c) + iVar5);
+    uint uVar1;
+    undefined2* puVar2;
+    int iVar3;
+    int iVar4;
+    int iVar5;
+    int iVar6;
+
+    for (iVar6 = 0; iVar6 < param_3; iVar6 = iVar6 + 1)
+    {
+        puVar2 = (undefined2*)0x0;
+        iVar3 = *(int*)(param_1 + 0x50);
+        if (iVar3 != 0)
+        {
+            iVar4 = 0;
+            iVar5 = 0;
+            for (uVar1 = (uint) * (byte*)(iVar3 + 0x5a); uVar1 != 0; uVar1 = uVar1 - 1)
+            {
+                if ((*(char*)(*(int*)(iVar3 + 0x10) + *(char*)(param_1 + 0xad) + iVar4 + 1) != -1) &&
+                    (*param_2 == (uint) * (byte*)(*(int*)(iVar3 + 0x10) + iVar4)))
+                {
+                    puVar2 = (undefined2*)(*(int*)(param_1 + 0x6c) + iVar5);
+                }
+                iVar4 = *(char*)(iVar3 + 0x55) + iVar4 + 1;
+                iVar5 = iVar5 + 0x12;
+            }
         }
-        iVar4 = *(char *)(iVar3 + 0x55) + iVar4 + 1;
-        iVar5 = iVar5 + 0x12;
-      }
+        if (puVar2 != (undefined2*)0x0)
+        {
+            *(undefined2*)(param_4 + 0x16) = puVar2[1];
+            *(undefined2*)(param_4 + 0x46) = *puVar2;
+        }
+        param_2 = param_2 + 1;
+        param_4 = param_4 + 0x60;
     }
-    if (puVar2 != (undefined2 *)0x0) {
-      *(undefined2 *)(param_4 + 0x16) = puVar2[1];
-      *(undefined2 *)(param_4 + 0x46) = *puVar2;
-    }
-    param_2 = param_2 + 1;
-    param_4 = param_4 + 0x60;
-  }
-  return;
+    return;
 }
 
 /*
@@ -938,138 +1047,154 @@ void FUN_8003ad08(int param_1,uint *param_2,int param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003add8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4,uint param_5,
-                 uint param_6)
+void FUN_8003add8(undefined4 param_1, undefined4 param_2, int param_3, uint param_4, uint param_5,
+                  uint param_6)
 {
-  int iVar1;
-  float fVar2;
-  float fVar3;
-  uint uVar4;
-  short sVar5;
-  short sVar6;
-  int iVar7;
-  int iVar8;
-  short *psVar9;
-  int iVar10;
-  int iVar11;
-  short *psVar12;
-  double in_f28;
-  double in_f29;
-  double in_f30;
-  double in_f31;
-  double in_ps28_1;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  undefined8 uVar13;
-  short local_88 [4];
-  undefined4 local_80;
-  uint uStack_7c;
-  longlong local_78;
-  undefined8 local_70;
-  double local_68;
-  float local_38;
-  float fStack_34;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  local_38 = (float)in_f28;
-  fStack_34 = (float)in_ps28_1;
-  uVar13 = FUN_8028683c();
-  psVar9 = (short *)((ulonglong)uVar13 >> 0x20);
-  iVar7 = (int)uVar13;
-  psVar12 = (short *)0x0;
-  iVar8 = *(int *)(psVar9 + 0x28);
-  if (iVar8 != 0) {
-    iVar10 = 0;
-    iVar11 = 0;
-    for (uVar4 = (uint)*(byte *)(iVar8 + 0x5a); uVar4 != 0; uVar4 = uVar4 - 1) {
-      if ((*(char *)(*(int *)(iVar8 + 0x10) + *(char *)((int)psVar9 + 0xad) + iVar10 + 1) != -1) &&
-         (*(char *)(*(int *)(iVar8 + 0x10) + iVar10) == '\0')) {
-        psVar12 = (short *)(*(int *)(psVar9 + 0x36) + iVar11);
-      }
-      iVar10 = *(char *)(iVar8 + 0x55) + iVar10 + 1;
-      iVar11 = iVar11 + 0x12;
+    int iVar1;
+    float fVar2;
+    float fVar3;
+    uint uVar4;
+    short sVar5;
+    short sVar6;
+    int iVar7;
+    int iVar8;
+    short* psVar9;
+    int iVar10;
+    int iVar11;
+    short* psVar12;
+    double in_f28;
+    double in_f29;
+    double in_f30;
+    double in_f31;
+    double in_ps28_1;
+    double in_ps29_1;
+    double in_ps30_1;
+    double in_ps31_1;
+    undefined8 uVar13;
+    short local_88[4];
+    undefined4 local_80;
+    uint uStack_7c;
+    longlong local_78;
+    undefined8 local_70;
+    double local_68;
+    float local_38;
+    float fStack_34;
+    float local_28;
+    float fStack_24;
+    float local_18;
+    float fStack_14;
+    float local_8;
+    float fStack_4;
+
+    local_8 = (float)in_f31;
+    fStack_4 = (float)in_ps31_1;
+    local_18 = (float)in_f30;
+    fStack_14 = (float)in_ps30_1;
+    local_28 = (float)in_f29;
+    fStack_24 = (float)in_ps29_1;
+    local_38 = (float)in_f28;
+    fStack_34 = (float)in_ps28_1;
+    uVar13 = FUN_8028683c();
+    psVar9 = (short*)((ulonglong)uVar13 >> 0x20);
+    iVar7 = (int)uVar13;
+    psVar12 = (short*)0x0;
+    iVar8 = *(int*)(psVar9 + 0x28);
+    if (iVar8 != 0)
+    {
+        iVar10 = 0;
+        iVar11 = 0;
+        for (uVar4 = (uint) * (byte*)(iVar8 + 0x5a); uVar4 != 0; uVar4 = uVar4 - 1)
+        {
+            if ((*(char*)(*(int*)(iVar8 + 0x10) + *(char*)((int)psVar9 + 0xad) + iVar10 + 1) != -1) &&
+                (*(char*)(*(int*)(iVar8 + 0x10) + iVar10) == '\0'))
+            {
+                psVar12 = (short*)(*(int*)(psVar9 + 0x36) + iVar11);
+            }
+            iVar10 = *(char*)(iVar8 + 0x55) + iVar10 + 1;
+            iVar11 = iVar11 + 0x12;
+        }
     }
-  }
-  if (psVar12 != (short *)0x0) {
-    if (iVar7 == 0) {
-      psVar12[1] = psVar12[1] >> 1;
-      *psVar12 = *psVar12 >> 1;
+    if (psVar12 != (short*)0x0)
+    {
+        if (iVar7 == 0)
+        {
+            psVar12[1] = psVar12[1] >> 1;
+            *psVar12 = *psVar12 >> 1;
+        }
+        else
+        {
+            fVar2 = *(float*)(psVar9 + 6) - *(float*)(iVar7 + 0xc);
+            fVar3 = *(float*)(psVar9 + 10) - *(float*)(iVar7 + 0x14);
+            FUN_80293900((double)(fVar2 * fVar2 + fVar3 * fVar3));
+            iVar7 = FUN_80017730();
+            local_88[0] = (short)iVar7 - *psVar9;
+            if (0x8000 < local_88[0])
+            {
+                local_88[0] = local_88[0] + 1;
+            }
+            if (local_88[0] < -0x8000)
+            {
+                local_88[0] = local_88[0] + -1;
+            }
+            if ((param_5 & 0xff) != 0)
+            {
+                local_88[0] = local_88[0] + -0x8000;
+            }
+            iVar7 = FUN_80017730();
+            local_88[1] = (short)iVar7 + -0x3fff;
+            uStack_7c = param_4 ^ 0x80000000;
+            local_80 = 0x43300000;
+            iVar7 = (int)(lbl_803DF66C *
+                (f32)(s32)(param_4));
+            local_78 = (longlong)iVar7;
+            sVar5 = (short)iVar7;
+            psVar9 = local_88;
+            fVar2 = lbl_803DF66C * (f32)(s32)(param_6);
+            iVar7 = (int)fVar2;
+            local_68 = (double)(longlong)iVar7;
+            iVar8 = -(int)(short)iVar7;
+            iVar10 = -(int)sVar5;
+            iVar11 = 2;
+            iVar7 = param_3;
+            do
+            {
+                *psVar9 = *psVar9 - *(short*)(iVar7 + 0x14);
+                sVar6 = *psVar9;
+                if (sVar6 < iVar8)
+                {
+                    sVar6 = (short)iVar8;
+                }
+                else
+                {
+                    iVar1 = (int)fVar2;
+                    local_68 = (double)(longlong)iVar1;
+                    if ((int)(short)iVar1 < (int)sVar6)
+                    {
+                        local_70 = (double)(longlong)iVar1;
+                        sVar6 = (short)iVar1;
+                    }
+                }
+                *psVar9 = sVar6;
+                *(short*)(iVar7 + 0x14) = *(short*)(iVar7 + 0x14) + *psVar9;
+                if ((int)sVar5 < (int)*(short*)(iVar7 + 0x14))
+                {
+                    *(short*)(iVar7 + 0x14) = sVar5;
+                }
+                if (*(short*)(iVar7 + 0x14) < iVar10)
+                {
+                    *(short*)(iVar7 + 0x14) = (short)iVar10;
+                }
+                iVar7 = iVar7 + 0x30;
+                psVar9 = psVar9 + 1;
+                iVar11 = iVar11 + -1;
+            }
+            while (iVar11 != 0);
+            psVar12[1] = *(short*)(param_3 + 0x14);
+            *psVar12 = *(short*)(param_3 + 0x44);
+        }
     }
-    else {
-      fVar2 = *(float *)(psVar9 + 6) - *(float *)(iVar7 + 0xc);
-      fVar3 = *(float *)(psVar9 + 10) - *(float *)(iVar7 + 0x14);
-      FUN_80293900((double)(fVar2 * fVar2 + fVar3 * fVar3));
-      iVar7 = FUN_80017730();
-      local_88[0] = (short)iVar7 - *psVar9;
-      if (0x8000 < local_88[0]) {
-        local_88[0] = local_88[0] + 1;
-      }
-      if (local_88[0] < -0x8000) {
-        local_88[0] = local_88[0] + -1;
-      }
-      if ((param_5 & 0xff) != 0) {
-        local_88[0] = local_88[0] + -0x8000;
-      }
-      iVar7 = FUN_80017730();
-      local_88[1] = (short)iVar7 + -0x3fff;
-      uStack_7c = param_4 ^ 0x80000000;
-      local_80 = 0x43300000;
-      iVar7 = (int)(lbl_803DF66C *
-                   (f32)(s32)(param_4));
-      local_78 = (longlong)iVar7;
-      sVar5 = (short)iVar7;
-      psVar9 = local_88;
-      fVar2 = lbl_803DF66C * (f32)(s32)(param_6);
-      iVar7 = (int)fVar2;
-      local_68 = (double)(longlong)iVar7;
-      iVar8 = -(int)(short)iVar7;
-      iVar10 = -(int)sVar5;
-      iVar11 = 2;
-      iVar7 = param_3;
-      do {
-        *psVar9 = *psVar9 - *(short *)(iVar7 + 0x14);
-        sVar6 = *psVar9;
-        if (sVar6 < iVar8) {
-          sVar6 = (short)iVar8;
-        }
-        else {
-          iVar1 = (int)fVar2;
-          local_68 = (double)(longlong)iVar1;
-          if ((int)(short)iVar1 < (int)sVar6) {
-            local_70 = (double)(longlong)iVar1;
-            sVar6 = (short)iVar1;
-          }
-        }
-        *psVar9 = sVar6;
-        *(short *)(iVar7 + 0x14) = *(short *)(iVar7 + 0x14) + *psVar9;
-        if ((int)sVar5 < (int)*(short *)(iVar7 + 0x14)) {
-          *(short *)(iVar7 + 0x14) = sVar5;
-        }
-        if (*(short *)(iVar7 + 0x14) < iVar10) {
-          *(short *)(iVar7 + 0x14) = (short)iVar10;
-        }
-        iVar7 = iVar7 + 0x30;
-        psVar9 = psVar9 + 1;
-        iVar11 = iVar11 + -1;
-      } while (iVar11 != 0);
-      psVar12[1] = *(short *)(param_3 + 0x14);
-      *psVar12 = *(short *)(param_3 + 0x44);
-    }
-  }
-  FUN_80286888();
-  return;
+    FUN_80286888();
+    return;
 }
 
 
@@ -1086,52 +1211,61 @@ void FUN_8003add8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003b1a4(int param_1,int param_2)
+void FUN_8003b1a4(int param_1, int param_2)
 {
-  uint uVar1;
-  int *piVar2;
-  char *pcVar3;
-  int *piVar4;
-  int iVar5;
-  int iVar6;
-  
-  piVar2 = (int *)0x0;
-  iVar5 = *(int *)(param_1 + 0x50);
-  if ((iVar5 != 0) && (pcVar3 = *(char **)(iVar5 + 0xc), pcVar3 != (char *)0x0)) {
-    iVar6 = 0;
-    for (uVar1 = (uint)*(byte *)(iVar5 + 0x59); uVar1 != 0; uVar1 = uVar1 - 1) {
-      if (*pcVar3 == '\x05') {
-        piVar2 = (int *)(*(int *)(param_1 + 0x70) + iVar6);
-      }
-      pcVar3 = pcVar3 + 2;
-      iVar6 = iVar6 + 0x10;
+    uint uVar1;
+    int* piVar2;
+    char* pcVar3;
+    int* piVar4;
+    int iVar5;
+    int iVar6;
+
+    piVar2 = (int*)0x0;
+    iVar5 = *(int*)(param_1 + 0x50);
+    if ((iVar5 != 0) && (pcVar3 = *(char**)(iVar5 + 0xc), pcVar3 != (char*)0x0))
+    {
+        iVar6 = 0;
+        for (uVar1 = (uint) * (byte*)(iVar5 + 0x59); uVar1 != 0; uVar1 = uVar1 - 1)
+        {
+            if (*pcVar3 == '\x05')
+            {
+                piVar2 = (int*)(*(int*)(param_1 + 0x70) + iVar6);
+            }
+            pcVar3 = pcVar3 + 2;
+            iVar6 = iVar6 + 0x10;
+        }
     }
-  }
-  piVar4 = (int *)0x0;
-  if ((iVar5 != 0) && (pcVar3 = *(char **)(iVar5 + 0xc), pcVar3 != (char *)0x0)) {
-    iVar6 = 0;
-    for (uVar1 = (uint)*(byte *)(iVar5 + 0x59); uVar1 != 0; uVar1 = uVar1 - 1) {
-      if (*pcVar3 == '\x04') {
-        piVar4 = (int *)(*(int *)(param_1 + 0x70) + iVar6);
-      }
-      pcVar3 = pcVar3 + 2;
-      iVar6 = iVar6 + 0x10;
+    piVar4 = (int*)0x0;
+    if ((iVar5 != 0) && (pcVar3 = *(char**)(iVar5 + 0xc), pcVar3 != (char*)0x0))
+    {
+        iVar6 = 0;
+        for (uVar1 = (uint) * (byte*)(iVar5 + 0x59); uVar1 != 0; uVar1 = uVar1 - 1)
+        {
+            if (*pcVar3 == '\x04')
+            {
+                piVar4 = (int*)(*(int*)(param_1 + 0x70) + iVar6);
+            }
+            pcVar3 = pcVar3 + 2;
+            iVar6 = iVar6 + 0x10;
+        }
     }
-  }
-  if (piVar2 == (int *)0x0) {
+    if (piVar2 == (int*)0x0)
+    {
+        return;
+    }
+    if (piVar4 == (int*)0x0)
+    {
+        return;
+    }
+    iVar5 = *piVar4 + (uint)DAT_803dc070 * 0x30;
+    if (0x1ff < iVar5)
+    {
+        iVar5 = 0x200;
+    }
+    *piVar2 = iVar5;
+    *piVar4 = iVar5;
+    *(undefined*)(param_2 + 0x1e) = 1;
     return;
-  }
-  if (piVar4 == (int *)0x0) {
-    return;
-  }
-  iVar5 = *piVar4 + (uint)DAT_803dc070 * 0x30;
-  if (0x1ff < iVar5) {
-    iVar5 = 0x200;
-  }
-  *piVar2 = iVar5;
-  *piVar4 = iVar5;
-  *(undefined *)(param_2 + 0x1e) = 1;
-  return;
 }
 
 /*
@@ -1147,81 +1281,99 @@ void FUN_8003b1a4(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003b280(int param_1,int param_2)
+void FUN_8003b280(int param_1, int param_2)
 {
-  int *piVar1;
-  uint uVar2;
-  char *pcVar3;
-  int *piVar4;
-  int iVar5;
-  int iVar6;
-  
-  piVar1 = (int *)0x0;
-  iVar5 = *(int *)(param_1 + 0x50);
-  if ((iVar5 != 0) && (pcVar3 = *(char **)(iVar5 + 0xc), pcVar3 != (char *)0x0)) {
-    iVar6 = 0;
-    for (uVar2 = (uint)*(byte *)(iVar5 + 0x59); uVar2 != 0; uVar2 = uVar2 - 1) {
-      if (*pcVar3 == '\x05') {
-        piVar1 = (int *)(*(int *)(param_1 + 0x70) + iVar6);
-      }
-      pcVar3 = pcVar3 + 2;
-      iVar6 = iVar6 + 0x10;
-    }
-  }
-  piVar4 = (int *)0x0;
-  if ((iVar5 != 0) && (pcVar3 = *(char **)(iVar5 + 0xc), pcVar3 != (char *)0x0)) {
-    iVar6 = 0;
-    for (uVar2 = (uint)*(byte *)(iVar5 + 0x59); uVar2 != 0; uVar2 = uVar2 - 1) {
-      if (*pcVar3 == '\x04') {
-        piVar4 = (int *)(*(int *)(param_1 + 0x70) + iVar6);
-      }
-      pcVar3 = pcVar3 + 2;
-      iVar6 = iVar6 + 0x10;
-    }
-  }
-  if ((piVar1 != (int *)0x0) && (piVar4 != (int *)0x0)) {
-    uVar2 = (int)*(char *)(param_2 + 0x1e) & 0xf;
-    if (uVar2 == 1) {
-      if (((int)*(char *)(param_2 + 0x1e) & 0x80U) == 0) {
-        iVar5 = *piVar4 + (uint)DAT_803dc070 * 0x60;
-        if (0x200 < iVar5) {
-          if (iVar5 + -0x200 < 0) {
-            iVar5 = 0;
-            *(undefined *)(param_2 + 0x1e) = 0;
-          }
-          else {
-            iVar5 = 0x2ff;
-            *(undefined *)(param_2 + 0x1e) = 0x81;
-          }
-          *(undefined *)(param_2 + 0x1f) = 0x28;
+    int* piVar1;
+    uint uVar2;
+    char* pcVar3;
+    int* piVar4;
+    int iVar5;
+    int iVar6;
+
+    piVar1 = (int*)0x0;
+    iVar5 = *(int*)(param_1 + 0x50);
+    if ((iVar5 != 0) && (pcVar3 = *(char**)(iVar5 + 0xc), pcVar3 != (char*)0x0))
+    {
+        iVar6 = 0;
+        for (uVar2 = (uint) * (byte*)(iVar5 + 0x59); uVar2 != 0; uVar2 = uVar2 - 1)
+        {
+            if (*pcVar3 == '\x05')
+            {
+                piVar1 = (int*)(*(int*)(param_1 + 0x70) + iVar6);
+            }
+            pcVar3 = pcVar3 + 2;
+            iVar6 = iVar6 + 0x10;
         }
-      }
-      else {
-        iVar5 = *piVar4 + (uint)DAT_803dc070 * -0x60;
-        if (iVar5 < 0) {
-          iVar5 = 0;
-          *(undefined *)(param_2 + 0x1e) = 0;
-          *(undefined *)(param_2 + 0x1f) = 0;
-        }
-      }
-      *piVar1 = iVar5;
-      *piVar4 = iVar5;
     }
-    else if (uVar2 == 0) {
-      if (*(char *)(param_2 + 0x1f) < '\x01') {
-        uVar2 = randomGetRange(0,1000);
-        if (0x3de < (int)uVar2) {
-          *(undefined *)(param_2 + 0x1e) = 1;
-          *(undefined *)(param_2 + 0x1f) = 0;
+    piVar4 = (int*)0x0;
+    if ((iVar5 != 0) && (pcVar3 = *(char**)(iVar5 + 0xc), pcVar3 != (char*)0x0))
+    {
+        iVar6 = 0;
+        for (uVar2 = (uint) * (byte*)(iVar5 + 0x59); uVar2 != 0; uVar2 = uVar2 - 1)
+        {
+            if (*pcVar3 == '\x04')
+            {
+                piVar4 = (int*)(*(int*)(param_1 + 0x70) + iVar6);
+            }
+            pcVar3 = pcVar3 + 2;
+            iVar6 = iVar6 + 0x10;
         }
-      }
-      else {
-        *(byte *)(param_2 + 0x1f) = *(char *)(param_2 + 0x1f) - DAT_803dc070;
-      }
     }
-    FUN_800396cc(param_1,param_2);
-  }
-  return;
+    if ((piVar1 != (int*)0x0) && (piVar4 != (int*)0x0))
+    {
+        uVar2 = (int)*(char*)(param_2 + 0x1e) & 0xf;
+        if (uVar2 == 1)
+        {
+            if (((int)*(char*)(param_2 + 0x1e) & 0x80U) == 0)
+            {
+                iVar5 = *piVar4 + (uint)DAT_803dc070 * 0x60;
+                if (0x200 < iVar5)
+                {
+                    if (iVar5 + -0x200 < 0)
+                    {
+                        iVar5 = 0;
+                        *(undefined*)(param_2 + 0x1e) = 0;
+                    }
+                    else
+                    {
+                        iVar5 = 0x2ff;
+                        *(undefined*)(param_2 + 0x1e) = 0x81;
+                    }
+                    *(undefined*)(param_2 + 0x1f) = 0x28;
+                }
+            }
+            else
+            {
+                iVar5 = *piVar4 + (uint)DAT_803dc070 * -0x60;
+                if (iVar5 < 0)
+                {
+                    iVar5 = 0;
+                    *(undefined*)(param_2 + 0x1e) = 0;
+                    *(undefined*)(param_2 + 0x1f) = 0;
+                }
+            }
+            *piVar1 = iVar5;
+            *piVar4 = iVar5;
+        }
+        else if (uVar2 == 0)
+        {
+            if (*(char*)(param_2 + 0x1f) < '\x01')
+            {
+                uVar2 = randomGetRange(0, 1000);
+                if (0x3de < (int)uVar2)
+                {
+                    *(undefined*)(param_2 + 0x1e) = 1;
+                    *(undefined*)(param_2 + 0x1f) = 0;
+                }
+            }
+            else
+            {
+                *(byte*)(param_2 + 0x1f) = *(char*)(param_2 + 0x1f) - DAT_803dc070;
+            }
+        }
+        FUN_800396cc(param_1, param_2);
+    }
+    return;
 }
 
 /*
@@ -1237,37 +1389,42 @@ void FUN_8003b280(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003b444(short *param_1,char *param_2)
+void FUN_8003b444(short* param_1, char* param_2)
 {
-  uint uVar1;
-  short *psVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  
-  psVar2 = (short *)0x0;
-  iVar3 = *(int *)(param_1 + 0x28);
-  if (iVar3 != 0) {
-    iVar4 = 0;
-    iVar5 = 0;
-    for (uVar1 = (uint)*(byte *)(iVar3 + 0x5a); uVar1 != 0; uVar1 = uVar1 - 1) {
-      if ((*(char *)(*(int *)(iVar3 + 0x10) + *(char *)((int)param_1 + 0xad) + iVar4 + 1) != -1) &&
-         (*(char *)(*(int *)(iVar3 + 0x10) + iVar4) == '\0')) {
-        psVar2 = (short *)(*(int *)(param_1 + 0x36) + iVar5);
-      }
-      iVar4 = *(char *)(iVar3 + 0x55) + iVar4 + 1;
-      iVar5 = iVar5 + 0x12;
+    uint uVar1;
+    short* psVar2;
+    int iVar3;
+    int iVar4;
+    int iVar5;
+
+    psVar2 = (short*)0x0;
+    iVar3 = *(int*)(param_1 + 0x28);
+    if (iVar3 != 0)
+    {
+        iVar4 = 0;
+        iVar5 = 0;
+        for (uVar1 = (uint) * (byte*)(iVar3 + 0x5a); uVar1 != 0; uVar1 = uVar1 - 1)
+        {
+            if ((*(char*)(*(int*)(iVar3 + 0x10) + *(char*)((int)param_1 + 0xad) + iVar4 + 1) != -1) &&
+                (*(char*)(*(int*)(iVar3 + 0x10) + iVar4) == '\0'))
+            {
+                psVar2 = (short*)(*(int*)(param_1 + 0x36) + iVar5);
+            }
+            iVar4 = *(char*)(iVar3 + 0x55) + iVar4 + 1;
+            iVar5 = iVar5 + 0x12;
+        }
     }
-  }
-  if (psVar2 != (short *)0x0) {
-    if (*psVar2 != 0) {
-      uVar1 = *psVar2 * 3;
-      *psVar2 = (short)((int)uVar1 >> 2) + (ushort)((int)uVar1 < 0 && (uVar1 & 3) != 0);
+    if (psVar2 != (short*)0x0)
+    {
+        if (*psVar2 != 0)
+        {
+            uVar1 = *psVar2 * 3;
+            *psVar2 = (short)((int)uVar1 >> 2) + (ushort)((int)uVar1 < 0 && (uVar1 & 3) != 0);
+        }
+        FUN_80039e6c((double)lbl_803DF624, param_1, param_2, (int)psVar2);
+        *(ushort*)(param_2 + 0x1a) = *(ushort*)(param_2 + 0x1a) & 0xff;
     }
-    FUN_80039e6c((double)lbl_803DF624,param_1,param_2,(int)psVar2);
-    *(ushort *)(param_2 + 0x1a) = *(ushort *)(param_2 + 0x1a) & 0xff;
-  }
-  return;
+    return;
 }
 
 /*
@@ -1283,14 +1440,14 @@ void FUN_8003b444(short *param_1,char *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003b540(undefined param_1,undefined param_2,undefined param_3,undefined param_4)
+void FUN_8003b540(undefined param_1, undefined param_2, undefined param_3, undefined param_4)
 {
-  DAT_803dd88d = param_1;
-  DAT_803dd88c = param_2;
-  DAT_803dd88b = param_3;
-  DAT_803dd889 = 1;
-  DAT_803dd88a = param_4;
-  return;
+    DAT_803dd88d = param_1;
+    DAT_803dd88c = param_2;
+    DAT_803dd88b = param_3;
+    DAT_803dd889 = 1;
+    DAT_803dd88a = param_4;
+    return;
 }
 
 /*
@@ -1306,13 +1463,13 @@ void FUN_8003b540(undefined param_1,undefined param_2,undefined param_3,undefine
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003b56c(undefined2 param_1,undefined2 param_2,undefined2 param_3)
+void FUN_8003b56c(undefined2 param_1, undefined2 param_2, undefined2 param_3)
 {
-  DAT_803dd898 = param_1;
-  DAT_803dd896 = param_2;
-  DAT_803dd894 = param_3;
-  DAT_803dd888 = 1;
-  return;
+    DAT_803dd898 = param_1;
+    DAT_803dd896 = param_2;
+    DAT_803dd894 = param_3;
+    DAT_803dd888 = 1;
+    return;
 }
 
 
@@ -1331,11 +1488,12 @@ void FUN_8003b56c(undefined2 param_1,undefined2 param_2,undefined2 param_3)
  */
 void FUN_8003b818(int param_1)
 {
-  if ((OBJPRINT_ACTIVE_BANK(param_1) != 0) &&
-     (FUN_80040a88(param_1), *(int *)(param_1 + 0x74) != 0)) {
-    FUN_800400b0();
-  }
-  return;
+    if ((OBJPRINT_ACTIVE_BANK(param_1) != 0) &&
+        (FUN_80040a88(param_1), *(int*)(param_1 + 0x74) != 0))
+    {
+        FUN_800400b0();
+    }
+    return;
 }
 
 /*
@@ -1353,8 +1511,8 @@ void FUN_8003b818(int param_1)
  */
 void FUN_8003b870(undefined4 param_1)
 {
-  DAT_803dd890 = param_1;
-  return;
+    DAT_803dd890 = param_1;
+    return;
 }
 
 /*
@@ -1370,62 +1528,72 @@ void FUN_8003b870(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003b878(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-                 int param_5,undefined4 param_6)
+void FUN_8003b878(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
+                  int param_5, undefined4 param_6)
 {
-  short sVar1;
-  undefined4 uVar2;
-  int iVar3;
-  code *pcVar4;
-  int iVar5;
-  char cVar7;
-  int iVar6;
-  undefined8 uVar8;
-  
-  uVar8 = FUN_8028683c();
-  uVar2 = (undefined4)((ulonglong)uVar8 >> 0x20);
-  if (((((*(ushort *)(param_5 + 0xb0) & 0x40) == 0) && (*(int *)(param_5 + 0xc4) == 0)) &&
-      ((*(ushort *)(param_5 + 6) & 0x4000) == 0)) &&
-     ((*(int *)(param_5 + 0x30) == 0 || ((*(ushort *)(*(int *)(param_5 + 0x30) + 6) & 0x4000) == 0))
-     )) {
-    FUN_80017a04();
-    *(ushort *)(param_5 + 0xb0) = *(ushort *)(param_5 + 0xb0) | 0x800;
-    cVar7 = (char)param_6;
-    if (*(int **)(param_5 + 0x68) == (int *)0x0) {
-      if (cVar7 != '\0') {
-        sVar1 = *(short *)(param_5 + 0x46);
-        if ((sVar1 == 0x1f) || ((sVar1 < 0x1f && (sVar1 == 0)))) {
-          FUN_802950c8(param_5,uVar2,(int)uVar8,param_3,param_4,cVar7);
+    short sVar1;
+    undefined4 uVar2;
+    int iVar3;
+    code* pcVar4;
+    int iVar5;
+    char cVar7;
+    int iVar6;
+    undefined8 uVar8;
+
+    uVar8 = FUN_8028683c();
+    uVar2 = (undefined4)((ulonglong)uVar8 >> 0x20);
+    if (((((*(ushort*)(param_5 + 0xb0) & 0x40) == 0) && (*(int*)(param_5 + 0xc4) == 0)) &&
+            ((*(ushort*)(param_5 + 6) & 0x4000) == 0)) &&
+        ((*(int*)(param_5 + 0x30) == 0 || ((*(ushort*)(*(int*)(param_5 + 0x30) + 6) & 0x4000) == 0))
+        ))
+    {
+        FUN_80017a04();
+        *(ushort*)(param_5 + 0xb0) = *(ushort*)(param_5 + 0xb0) | 0x800;
+        cVar7 = (char)param_6;
+        if (*(int**)(param_5 + 0x68) == (int*)0x0)
+        {
+            if (cVar7 != '\0')
+            {
+                sVar1 = *(short*)(param_5 + 0x46);
+                if ((sVar1 == 0x1f) || ((sVar1 < 0x1f && (sVar1 == 0))))
+                {
+                    FUN_802950c8(param_5, uVar2, (int)uVar8, param_3, param_4, cVar7);
+                }
+                else if ((OBJPRINT_ACTIVE_BANK(param_5) != 0) &&
+                    (FUN_80040a88(param_5), *(int*)(param_5 + 0x74) != 0))
+                {
+                    FUN_800400b0();
+                }
+            }
         }
-        else if ((OBJPRINT_ACTIVE_BANK(param_5) != 0) &&
-                (FUN_80040a88(param_5), *(int *)(param_5 + 0x74) != 0)) {
-          FUN_800400b0();
+        else if ((*(ushort*)(param_5 + 0xb0) & 0x4000) == 0)
+        {
+            pcVar4 = *(code**)(**(int**)(param_5 + 0x68) + 0x10);
+            if (pcVar4 != (code*)0x0)
+            {
+                (*pcVar4)(param_5, uVar2, (int)uVar8, param_3, param_4, param_6);
+            }
         }
-      }
+        else if (((cVar7 != '\0') &&
+                (OBJPRINT_ACTIVE_BANK(param_5) != 0)) &&
+            (FUN_80040a88(param_5), *(int*)(param_5 + 0x74) != 0))
+        {
+            FUN_800400b0();
+        }
+        FUN_80017a00();
+        iVar5 = param_5;
+        for (iVar6 = 0; iVar6 < (int)(uint) * (byte*)(param_5 + 0xeb); iVar6 = iVar6 + 1)
+        {
+            iVar3 = *(int*)(iVar5 + 200);
+            if (*(short*)(iVar3 + 0x44) == 0x2d)
+            {
+                FUN_8003b590(iVar3, param_5,OBJPRINT_ACTIVE_BANK(iVar3));
+            }
+            iVar5 = iVar5 + 4;
+        }
     }
-    else if ((*(ushort *)(param_5 + 0xb0) & 0x4000) == 0) {
-      pcVar4 = *(code **)(**(int **)(param_5 + 0x68) + 0x10);
-      if (pcVar4 != (code *)0x0) {
-        (*pcVar4)(param_5,uVar2,(int)uVar8,param_3,param_4,param_6);
-      }
-    }
-    else if (((cVar7 != '\0') &&
-             (OBJPRINT_ACTIVE_BANK(param_5) != 0)) &&
-            (FUN_80040a88(param_5), *(int *)(param_5 + 0x74) != 0)) {
-      FUN_800400b0();
-    }
-    FUN_80017a00();
-    iVar5 = param_5;
-    for (iVar6 = 0; iVar6 < (int)(uint)*(byte *)(param_5 + 0xeb); iVar6 = iVar6 + 1) {
-      iVar3 = *(int *)(iVar5 + 200);
-      if (*(short *)(iVar3 + 0x44) == 0x2d) {
-        FUN_8003b590(iVar3,param_5,OBJPRINT_ACTIVE_BANK(iVar3));
-      }
-      iVar5 = iVar5 + 4;
-    }
-  }
-  FUN_80286888();
-  return;
+    FUN_80286888();
+    return;
 }
 
 
@@ -1442,37 +1610,42 @@ void FUN_8003b878(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003c10c(int param_1,int *param_2)
+void FUN_8003c10c(int param_1, int* param_2)
 {
-  uint uVar1;
-  int iVar2;
-  uint uVar3;
-  uint uVar4;
-  uint uVar5;
-  
-  iVar2 = FUN_8001779c();
-  if (*(char *)(param_1 + 0xf4) != '\0') {
-    FUN_8003be6c();
-  }
-  uVar4 = (uint)*(byte *)(param_1 + 0xf3) + (uint)*(byte *)(param_1 + 0xf4);
-  if ((uVar4 < 2) || (100 < uVar4)) {
-    DAT_803dd8c8 = 3;
-  }
-  else {
-    uVar3 = FUN_80017970(param_2,0);
-    FUN_802420e0(uVar3,uVar4 * 0x40);
-    uVar5 = iVar2 + 0x2700;
-    for (uVar4 = uVar4 * 2 & 0xfe; uVar1 = uVar4 & 0xff, 0x7f < uVar1; uVar4 = uVar4 - 0x80) {
-      FUN_80017798(uVar5,uVar3,0);
-      uVar3 = uVar3 + 0x1000;
-      uVar5 = uVar5 + 0x1000;
+    uint uVar1;
+    int iVar2;
+    uint uVar3;
+    uint uVar4;
+    uint uVar5;
+
+    iVar2 = FUN_8001779c();
+    if (*(char*)(param_1 + 0xf4) != '\0')
+    {
+        FUN_8003be6c();
     }
-    if (uVar1 != 0) {
-      FUN_80017798(uVar5,uVar3,uVar1);
+    uVar4 = (uint) * (byte*)(param_1 + 0xf3) + (uint) * (byte*)(param_1 + 0xf4);
+    if ((uVar4 < 2) || (100 < uVar4))
+    {
+        DAT_803dd8c8 = 3;
     }
-    DAT_803dd8c8 = 1;
-  }
-  return;
+    else
+    {
+        uVar3 = FUN_80017970(param_2, 0);
+        FUN_802420e0(uVar3, uVar4 * 0x40);
+        uVar5 = iVar2 + 0x2700;
+        for (uVar4 = uVar4 * 2 & 0xfe; uVar1 = uVar4 & 0xff, 0x7f < uVar1; uVar4 = uVar4 - 0x80)
+        {
+            FUN_80017798(uVar5, uVar3, 0);
+            uVar3 = uVar3 + 0x1000;
+            uVar5 = uVar5 + 0x1000;
+        }
+        if (uVar1 != 0)
+        {
+            FUN_80017798(uVar5, uVar3, uVar1);
+        }
+        DAT_803dd8c8 = 1;
+    }
+    return;
 }
 
 
@@ -1485,7 +1658,9 @@ void fn_8003BB7C(u8 x) { lbl_803DCC3C = x; }
 
 extern s16 lbl_803DCC18, lbl_803DCC16, lbl_803DCC14;
 extern u8 lbl_803DCC08;
-void fn_8003B608(s16 a, s16 b, s16 c) {
+
+void fn_8003B608(s16 a, s16 b, s16 c)
+{
     lbl_803DCC18 = a;
     lbl_803DCC16 = b;
     lbl_803DCC14 = c;
@@ -1493,13 +1668,16 @@ void fn_8003B608(s16 a, s16 b, s16 c) {
 }
 
 /* 12b "*p = -1" */
-void fn_80039264(s32* p) {
+void fn_80039264(s32* p)
+{
     *p = -1;
 }
 
 /* 12b sda accessor return */
 extern int lbl_802CAE88[10];
-void* seqFn_800394a0(void) {
+
+void* seqFn_800394a0(void)
+{
     return lbl_802CAE88;
 }
 
@@ -1509,22 +1687,27 @@ extern u8 lbl_803DCC0A;
 extern u8 lbl_803DCC0B;
 extern u8 lbl_803DCC0C;
 extern u8 lbl_803DCC0D;
-extern void objRenderModel(int *obj, int **table);
-extern void objRenderFn_80041018(int *obj);
+extern void objRenderModel(int* obj, int** table);
+extern void objRenderFn_80041018(int* obj);
 
-void *objModelGetVecFn_800395d8(void *obj, int target) {
-    void *result = NULL;
-    void *m = OBJPRINT_MODEL_INSTANCE(obj);
-    if (m != NULL) {
+void* objModelGetVecFn_800395d8(void* obj, int target)
+{
+    void* result = NULL;
+    void* m = OBJPRINT_MODEL_INSTANCE(obj);
+    if (m != NULL)
+    {
         int entryIdx = 0, vecOffset = 0;
         int count = OBJPRINT_JOINT_COUNT(m);
         int i;
-        if (count > 0) {
-            for (i = 0; i < count; i++) {
-                u8 *entries = *(u8 **)&((ObjDef *)m)->jointData;
+        if (count > 0)
+        {
+            for (i = 0; i < count; i++)
+            {
+                u8* entries = *(u8**)&((ObjDef*)m)->jointData;
                 int adj = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx;
-                if (entries[adj + 1] != 0xff && (s32)entries[entryIdx] == target) {
-                    result = (char *)((GameObject *)obj)->anim.jointPoseData + vecOffset;
+                if (entries[adj + 1] != 0xff && (s32)entries[entryIdx] == target)
+                {
+                    result = (char*)((GameObject*)obj)->anim.jointPoseData + vecOffset;
                 }
                 entryIdx += OBJPRINT_MODEL_COUNT(m) + 1;
                 vecOffset += 0x12;
@@ -1534,39 +1717,50 @@ void *objModelGetVecFn_800395d8(void *obj, int target) {
     return result;
 }
 
-void fn_8003A9C0(char *p, int count, s16 a, s16 b) {
+void fn_8003A9C0(char* p, int count, s16 a, s16 b)
+{
     int i;
     if (count <= 0) return;
-    for (i = 0; i < count; i++) {
-        *(s16 *)(p + 0x14) = a;
-        *(s16 *)(p + 0x44) = b;
+    for (i = 0; i < count; i++)
+    {
+        *(s16*)(p + 0x14) = a;
+        *(s16*)(p + 0x44) = b;
         p += 0x60;
     }
 }
+
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
 extern void Sfx_PlayFromObjectChannel(int obj, int ch, int sfxId);
 extern f32 lbl_803DE9C8;
 extern f32 lbl_803DE99C;
-void objAudioFn_80039270(int obj, void *p, int sfxId) {
-    if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) {
+
+void objAudioFn_80039270(int obj, void* p, int sfxId)
+{
+    if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
+    {
         Sfx_PlayFromObjectChannel(obj, 0x10, sfxId);
-        *(f32 *)((char *)p + 0xc) = lbl_803DE9C8;
-        *(s16 *)((char *)p + 0x14) = -0x500;
-        *(u8 *)p = 1;
-        *(f32 *)((char *)p + 4) = lbl_803DE99C;
+        *(f32*)((char*)p + 0xc) = lbl_803DE9C8;
+        *(s16*)((char*)p + 0x14) = -0x500;
+        *(u8*)p = 1;
+        *(f32*)((char*)p + 4) = lbl_803DE99C;
     }
 }
-void objRenderFn_8003b8f4(int *obj) {
-    int **table = OBJPRINT_BANK_TABLE(obj);
-    if (table[OBJPRINT_ACTIVE_BANK_INDEX(obj)] != NULL) {
+
+void objRenderFn_8003b8f4(int* obj)
+{
+    int** table = OBJPRINT_BANK_TABLE(obj);
+    if (table[OBJPRINT_ACTIVE_BANK_INDEX(obj)] != NULL)
+    {
         objRenderModel(obj, table);
-        if (*(void **)((char *)obj + 0x74) != NULL) {
+        if (*(void**)((char*)obj + 0x74) != NULL)
+        {
             objRenderFn_80041018(obj);
         }
     }
 }
 
-void fn_8003B5E0(int a, int b, int c, u8 d) {
+void fn_8003B5E0(int a, int b, int c, u8 d)
+{
     lbl_803DCC0D = (u8)a;
     lbl_803DCC0C = (u8)b;
     lbl_803DCC0B = (u8)c;
@@ -1575,18 +1769,22 @@ void fn_8003B5E0(int a, int b, int c, u8 d) {
 }
 
 /* 100b texture lookup by byte tag. */
-void* objFindTexture(void* obj, int target) {
+void* objFindTexture(void* obj, int target)
+{
     void* result = NULL;
-    void* p50 = *(void**)&((GameObject *)obj)->anim.modelInstance;
-    if (p50 != NULL) {
+    void* p50 = *(void**)&((GameObject*)obj)->anim.modelInstance;
+    if (p50 != NULL)
+    {
         u8* entries = *(u8**)((char*)p50 + 0xC);
         if (entries == NULL) return NULL;
         {
-            u8 count = ((ObjDef *)p50)->unk59;
+            u8 count = ((ObjDef*)p50)->unk59;
             int offset = 0;
             int i;
-            for (i = 0; i < count; i++) {
-                if (target == entries[0]) {
+            for (i = 0; i < count; i++)
+            {
+                if (target == entries[0])
+                {
                     char* base = *(char**)((char*)obj + 0x70);
                     result = base + offset;
                 }
@@ -1600,61 +1798,82 @@ void* objFindTexture(void* obj, int target) {
 
 /* 60b objRenderShadow guard. */
 extern void objRenderShadow(void* obj);
-void objRenderShadowIfVisible(void* obj) {
-    void** arr = *(void***)&((GameObject *)obj)->anim.banks;
-    s8 idx = ((GameObject *)obj)->anim.bankIndex;
-    if (arr[idx] != NULL) {
+
+void objRenderShadowIfVisible(void* obj)
+{
+    void** arr = *(void***)&((GameObject*)obj)->anim.banks;
+    s8 idx = ((GameObject*)obj)->anim.bankIndex;
+    if (arr[idx] != NULL)
+    {
         objRenderShadow(obj);
     }
 }
 
 #pragma dont_inline on
-int fn_800399C0(s16 *curve, s16 *state)
+int fn_800399C0(s16* curve, s16* state)
 {
-  extern f32 Curve_EvalHermite(int, f32, int);
-  extern f32 timeDelta;
-  extern f32 lbl_803DE99C;
-  extern f32 lbl_803DE9A4;
-  extern f32 lbl_803DE9D8;
-  extern f32 lbl_803DE9DC;
-  extern f32 lbl_803DE9E0;
-  f32 buf[4];
-  f32 ratio;
-  s16 lo;
-  s16 hi;
+    extern f32 Curve_EvalHermite(int, f32, int);
+    extern f32 timeDelta;
+    extern f32 lbl_803DE99C;
+    extern f32 lbl_803DE9A4;
+    extern f32 lbl_803DE9D8;
+    extern f32 lbl_803DE9DC;
+    extern f32 lbl_803DE9E0;
+    f32 buf[4];
+    f32 ratio;
+    s16 lo;
+    s16 hi;
 
-  buf[0] = lbl_803DE9D8;
-  buf[1] = lbl_803DE9D8;
-  buf[2] = lbl_803DE9DC;
-  buf[3] = lbl_803DE9E0;
+    buf[0] = lbl_803DE9D8;
+    buf[1] = lbl_803DE9D8;
+    buf[2] = lbl_803DE9DC;
+    buf[3] = lbl_803DE9E0;
 
-  lo = curve[10];
-  hi = curve[11];
-  if (lo != hi) {
-    ratio = ((f32)(s32)state[1] - (f32)(s32)hi) / ((f32)(s32)lo - (f32)(s32)hi);
-  } else {
-    return 1;
-  }
-
-  if (ratio > lbl_803DE99C) {
-    ratio = lbl_803DE99C;
-  } else if (ratio < lbl_803DE9A4) {
-    ratio = lbl_803DE9A4;
-  }
-
-  {
-    f32 rate = Curve_EvalHermite((int)buf, ratio, 0);
-    if (curve[10] < curve[11]) {
-      rate = -rate;
+    lo = curve[10];
+    hi = curve[11];
+    if (lo != hi)
+    {
+        ratio = ((f32)(s32)
+        state[1] - (f32)(s32)
+        hi
+        )
+        /
+        ((f32)(s32)
+        lo - (f32)(s32)
+        hi
+        )
+        ;
     }
-    state[1] = rate * timeDelta + (f32)(s32)state[1];
-  }
+    else
+    {
+        return 1;
+    }
 
-  if (lbl_803DE99C == ratio || state[1] >= 8191 || state[1] <= -8191) {
-    state[1] = curve[10];
-    return 1;
-  }
-  return 0;
+    if (ratio > lbl_803DE99C)
+    {
+        ratio = lbl_803DE99C;
+    }
+    else if (ratio < lbl_803DE9A4)
+    {
+        ratio = lbl_803DE9A4;
+    }
+
+    {
+        f32 rate = Curve_EvalHermite((int)buf, ratio, 0);
+        if (curve[10] < curve[11])
+        {
+            rate = -rate;
+        }
+        state[1] = rate * timeDelta + (f32)(s32)
+        state[1];
+    }
+
+    if (lbl_803DE99C == ratio || state[1] >= 8191 || state[1] <= -8191)
+    {
+        state[1] = curve[10];
+        return 1;
+    }
+    return 0;
 }
 #pragma dont_inline reset
 
@@ -1668,14 +1887,17 @@ void fn_8003A168(int p1, int p2)
     int j;
 
     table = *(int**)(p1 + 0x50);
-    if (table != NULL) {
+    if (table != NULL)
+    {
         i = 0;
         j = 0;
-        n = (s32)(u32)*(u8*)((char*)table + 0x5a);
-        for (k = 0; k < n; k++) {
+        n = (s32)(u32) * (u8*)((char*)table + 0x5a);
+        for (k = 0; k < n; k++)
+        {
             u8* data = *(u8**)((char*)table + 0x10);
             s32 offset = OBJPRINT_ACTIVE_BANK_INDEX(p1);
-            if (data[(offset + i) + 1] != 0xff && data[i] == 0) {
+            if (data[(offset + i) + 1] != 0xff && data[i] == 0)
+            {
                 found = (s16*)((char*)*(void**)(p1 + 0x6c) + j);
             }
             i = i + *(s8*)((char*)table + 0x55) + 1;
@@ -1683,10 +1905,12 @@ void fn_8003A168(int p1, int p2)
         }
     }
     if (found == NULL) return;
-    if (found[0] != 0) {
+    if (found[0] != 0)
+    {
         found[0] = (s16)((s32)found[0] * 3 / 4);
     }
-    if (found[1] != 0) {
+    if (found[1] != 0)
+    {
         found[1] = (s16)((s32)found[1] * 3 / 4);
     }
     *(s16*)(p2 + 0x1a) = 0;
@@ -1702,24 +1926,29 @@ void objModelClearVecFn_8003aa40(int obj)
     int j;
     int slot;
 
-    for (slot = 0; slot < 0x16; slot++) {
+    for (slot = 0; slot < 0x16; slot++)
+    {
         found = NULL;
-        table = (void *)((GameObject *)obj)->anim.modelInstance;
-        if (table != NULL) {
+        table = (void*)((GameObject*)obj)->anim.modelInstance;
+        if (table != NULL)
+        {
             i = 0;
             j = 0;
-            n = (s32)(u32)((ObjDef *)table)->jointCount;
-            for (k = 0; k < n; k++) {
-                u8* data = *(u8**)&((ObjDef *)table)->jointData;
+            n = (s32)(u32)((ObjDef*)table)->jointCount;
+            for (k = 0; k < n; k++)
+            {
+                u8* data = *(u8**)&((ObjDef*)table)->jointData;
                 s32 offset = OBJPRINT_ACTIVE_BANK_INDEX(obj);
-                if (data[(offset + i) + 1] != 0xff && (int)data[i] == slot) {
-                    found = (s16*)((char*)((GameObject *)obj)->anim.jointPoseData + j);
+                if (data[(offset + i) + 1] != 0xff && (int)data[i] == slot)
+                {
+                    found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
                 }
-                i = i + ((ObjDef *)table)->modelCount + 1;
+                i = i + ((ObjDef*)table)->modelCount + 1;
                 j += 0x12;
             }
         }
-        if (found != NULL) {
+        if (found != NULL)
+        {
             found[0] = 0;
             found[1] = 0;
             found[2] = 0;
@@ -1737,25 +1966,30 @@ void fn_8003AC14(int obj, int* keys, int count)
     int j;
     int idx;
 
-    for (idx = 0; idx < count; idx++) {
+    for (idx = 0; idx < count; idx++)
+    {
         int key = *keys;
         found = NULL;
-        table = (void *)((GameObject *)obj)->anim.modelInstance;
-        if (table != NULL) {
+        table = (void*)((GameObject*)obj)->anim.modelInstance;
+        if (table != NULL)
+        {
             i = 0;
             j = 0;
-            n = (s32)(u32)((ObjDef *)table)->jointCount;
-            for (k = 0; k < n; k++) {
-                u8* data = *(u8**)&((ObjDef *)table)->jointData;
+            n = (s32)(u32)((ObjDef*)table)->jointCount;
+            for (k = 0; k < n; k++)
+            {
+                u8* data = *(u8**)&((ObjDef*)table)->jointData;
                 s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
-                if (data[di] != 0xff && (int)data[i] == key) {
-                    found = (s16*)((char*)((GameObject *)obj)->anim.jointPoseData + j);
+                if (data[di] != 0xff && (int)data[i] == key)
+                {
+                    found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
                 }
-                i = i + ((ObjDef *)table)->modelCount + 1;
+                i = i + ((ObjDef*)table)->modelCount + 1;
                 j += 0x12;
             }
         }
-        if (found != NULL) {
+        if (found != NULL)
+        {
             found[1] = (s16)(found[1] * 3 >> 2);
             found[0] = (s16)(found[0] * 3 >> 2);
             found[2] = (s16)(found[2] * 3 >> 2);
@@ -1774,25 +2008,30 @@ void objFn_8003acfc(int obj, int* keys, int count, int out)
     int j;
     int idx;
 
-    for (idx = 0; idx < count; idx++) {
+    for (idx = 0; idx < count; idx++)
+    {
         int key = *keys;
         found = NULL;
-        table = (void *)((GameObject *)obj)->anim.modelInstance;
-        if (table != NULL) {
+        table = (void*)((GameObject*)obj)->anim.modelInstance;
+        if (table != NULL)
+        {
             i = 0;
             j = 0;
-            n = (s32)(u32)((ObjDef *)table)->jointCount;
-            for (k = 0; k < n; k++) {
-                u8* data = *(u8**)&((ObjDef *)table)->jointData;
+            n = (s32)(u32)((ObjDef*)table)->jointCount;
+            for (k = 0; k < n; k++)
+            {
+                u8* data = *(u8**)&((ObjDef*)table)->jointData;
                 s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
-                if (data[di] != 0xff && (int)data[i] == key) {
-                    found = (s16*)((char*)((GameObject *)obj)->anim.jointPoseData + j);
+                if (data[di] != 0xff && (int)data[i] == key)
+                {
+                    found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
                 }
-                i = i + ((ObjDef *)table)->modelCount + 1;
+                i = i + ((ObjDef*)table)->modelCount + 1;
                 j += 0x12;
             }
         }
-        if (found != NULL) {
+        if (found != NULL)
+        {
             *(s16*)(out + 0x16) = found[1];
             *(s16*)(out + 0x46) = found[0];
         }
@@ -1812,25 +2051,30 @@ void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
     int idx;
     int v;
 
-    for (idx = 0; idx < count; idx++) {
+    for (idx = 0; idx < count; idx++)
+    {
         int key = *keys;
         found = NULL;
-        table = (void *)((GameObject *)obj)->anim.modelInstance;
-        if (table != NULL) {
+        table = (void*)((GameObject*)obj)->anim.modelInstance;
+        if (table != NULL)
+        {
             i = 0;
             j = 0;
-            n = (s32)(u32)((ObjDef *)table)->jointCount;
-            for (k = 0; k < n; k++) {
-                u8* data = *(u8**)&((ObjDef *)table)->jointData;
+            n = (s32)(u32)((ObjDef*)table)->jointCount;
+            for (k = 0; k < n; k++)
+            {
+                u8* data = *(u8**)&((ObjDef*)table)->jointData;
                 s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
-                if (data[di] != 0xff && (int)data[i] == key) {
-                    found = (s16*)((char*)((GameObject *)obj)->anim.jointPoseData + j);
+                if (data[di] != 0xff && (int)data[i] == key)
+                {
+                    found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
                 }
-                i = i + ((ObjDef *)table)->modelCount + 1;
+                i = i + ((ObjDef*)table)->modelCount + 1;
                 j += 0x12;
             }
         }
-        if (found != NULL) {
+        if (found != NULL)
+        {
             v = found[0];
             if (v < lo) v = lo;
             else if (v > hi) v = hi;
@@ -1864,14 +2108,18 @@ void characterDoEyeMovements(int obj, int p4, f32 unused)
     s8 timer;
 
     foundA = NULL;
-    table = (void *)((GameObject *)obj)->anim.modelInstance;
-    if (table != NULL) {
+    table = (void*)((GameObject*)obj)->anim.modelInstance;
+    if (table != NULL)
+    {
         list = *(u8**)((char*)table + 0xc);
-        if (list != NULL) {
+        if (list != NULL)
+        {
             i = 0;
-            n = (s32)(u32)((ObjDef *)table)->unk59;
-            for (k = 0; k < n; k++) {
-                if (list[0] == 1) {
+            n = (s32)(u32)((ObjDef*)table)->unk59;
+            for (k = 0; k < n; k++)
+            {
+                if (list[0] == 1)
+                {
                     foundA = (int*)((char*)*(void**)(obj + 0x70) + i);
                 }
                 list += 2;
@@ -1880,13 +2128,17 @@ void characterDoEyeMovements(int obj, int p4, f32 unused)
         }
     }
     foundB = NULL;
-    if (table != NULL) {
+    if (table != NULL)
+    {
         list = *(u8**)((char*)table + 0xc);
-        if (list != NULL) {
+        if (list != NULL)
+        {
             i = 0;
-            n = (s32)(u32)((ObjDef *)table)->unk59;
-            for (k = 0; k < n; k++) {
-                if (list[0] == 0) {
+            n = (s32)(u32)((ObjDef*)table)->unk59;
+            for (k = 0; k < n; k++)
+            {
+                if (list[0] == 0)
+                {
                     foundB = (int*)((char*)*(void**)(obj + 0x70) + i);
                 }
                 list += 2;
@@ -1899,32 +2151,44 @@ void characterDoEyeMovements(int obj, int p4, f32 unused)
 
     flag = 0;
     t = *(s16*)(p4 + 0x22);
-    if (t == 0) {
+    if (t == 0)
+    {
         flag = 1;
     }
-    if (t > 0) {
-        if (*(s16*)((char*)foundA + 8) >= *(int*)(p4 + 0x24)) {
+    if (t > 0)
+    {
+        if (*(s16*)((char*)foundA + 8) >= *(int*)(p4 + 0x24))
+        {
             flag = 1;
         }
     }
-    if (t < 0) {
-        if (*(s16*)((char*)foundA + 8) <= *(int*)(p4 + 0x24)) {
+    if (t < 0)
+    {
+        if (*(s16*)((char*)foundA + 8) <= *(int*)(p4 + 0x24))
+        {
             flag = 1;
         }
     }
-    if (flag != 0) {
+    if (flag != 0)
+    {
         *(int*)(p4 + 0x24) = randomGetRange(-0x3e8, 0x3e8);
-        if (*(int*)(p4 + 0x24) < *(s16*)((char*)foundA + 8)) {
+        if (*(int*)(p4 + 0x24) < *(s16*)((char*)foundA + 8))
+        {
             *(s16*)(p4 + 0x22) = -0x96;
-        } else {
+        }
+        else
+        {
             *(s16*)(p4 + 0x22) = 0x96;
         }
         *(s8*)(p4 + 0x20) = (s8)randomGetRange(0x1e, 0x64);
     }
     timer = *(s8*)(p4 + 0x20);
-    if (timer > 0) {
+    if (timer > 0)
+    {
         *(s8*)(p4 + 0x20) = timer - framesThisStep;
-    } else {
+    }
+    else
+    {
         *(s16*)((char*)foundA + 8) =
             (s16)(*(s16*)((char*)foundA + 8) + *(s16*)(p4 + 0x22) * framesThisStep);
         *(s16*)((char*)foundA + 0xa) = 0;
@@ -1946,14 +2210,18 @@ void fn_8003B228(int obj, int p2)
     int val;
 
     foundA = NULL;
-    table = (void *)((GameObject *)obj)->anim.modelInstance;
-    if (table != NULL) {
+    table = (void*)((GameObject*)obj)->anim.modelInstance;
+    if (table != NULL)
+    {
         list = *(u8**)((char*)table + 0xc);
-        if (list != NULL) {
+        if (list != NULL)
+        {
             i = 0;
-            n = (s32)(u32)((ObjDef *)table)->unk59;
-            for (k = 0; k < n; k++) {
-                if (list[0] == 5) {
+            n = (s32)(u32)((ObjDef*)table)->unk59;
+            for (k = 0; k < n; k++)
+            {
+                if (list[0] == 5)
+                {
                     foundA = (int*)((char*)*(void**)(obj + 0x70) + i);
                 }
                 list += 2;
@@ -1962,13 +2230,17 @@ void fn_8003B228(int obj, int p2)
         }
     }
     foundB = NULL;
-    if (table != NULL) {
+    if (table != NULL)
+    {
         list = *(u8**)((char*)table + 0xc);
-        if (list != NULL) {
+        if (list != NULL)
+        {
             i = 0;
-            n = (s32)(u32)((ObjDef *)table)->unk59;
-            for (k = 0; k < n; k++) {
-                if (list[0] == 4) {
+            n = (s32)(u32)((ObjDef*)table)->unk59;
+            for (k = 0; k < n; k++)
+            {
+                if (list[0] == 4)
+                {
                     foundB = (int*)((char*)*(void**)(obj + 0x70) + i);
                 }
                 list += 2;
@@ -1979,7 +2251,8 @@ void fn_8003B228(int obj, int p2)
     if (foundA == NULL) return;
     if (foundB == NULL) return;
     val = *foundB + framesThisStep * 0x30;
-    if (val >= 0x200) {
+    if (val >= 0x200)
+    {
         val = 0x200;
     }
     *foundA = val;
@@ -2002,36 +2275,43 @@ void modelInitMtxs(int p1, int p2)
     u8 rem;
 
     cache = (int)getCache();
-    if (*(u8*)(p1 + 0xf4) != 0) {
+    if (*(u8*)(p1 + 0xf4) != 0)
+    {
         modelCalcVtxGroupMtxs(p1, p2);
     }
-    count = (s32)(u32)*(u8*)(p1 + 0xf3) + (s32)(u32)*(u8*)(p1 + 0xf4);
-    if (count >= 2 && count <= 0x64) {
+    count = (s32)(u32) * (u8*)(p1 + 0xf3) + (s32)(u32) * (u8*)(p1 + 0xf4);
+    if (count >= 2 && count <= 0x64)
+    {
         mtx = (int)ObjModel_GetJointMatrix((int*)p2, 0);
         DCFlushRange((void*)mtx, count << 6);
         rem = (u8)(count << 1);
         cache += 0x2700;
-        while (rem >= 0x80) {
+        while (rem >= 0x80)
+        {
             copyToCache((void*)cache, (void*)mtx, 0);
             rem -= 0x80;
             mtx += 0x1000;
             cache += 0x1000;
         }
-        if (rem != 0) {
+        if (rem != 0)
+        {
             copyToCache((void*)cache, (void*)mtx, rem);
         }
         lbl_803DCC48 = 1;
-    } else {
+    }
+    else
+    {
         lbl_803DCC48 = 3;
     }
 }
 
-extern void fn_80039DF8(int obj, s16 *curve, s16 *state, f32 x);
+extern void fn_80039DF8(int obj, s16* curve, s16* state, f32 x);
 extern f32 lbl_803DE9A4;
 
 void objAudioFn_800393f8(int p1, int p2, int p3, int p4, int p5, u8 p6)
 {
-    if (p6 == 0 && Sfx_IsPlayingFromObjectChannel(p1, 0x10) != 0) {
+    if (p6 == 0 && Sfx_IsPlayingFromObjectChannel(p1, 0x10) != 0)
+    {
         return;
     }
     Sfx_PlayFromObjectChannel(p1, 0x10, p3);
@@ -2051,27 +2331,32 @@ void fn_8003B500(int obj, int p4)
     int n;
 
     found = NULL;
-    table = (void *)((GameObject *)obj)->anim.modelInstance;
-    if (table != NULL) {
+    table = (void*)((GameObject*)obj)->anim.modelInstance;
+    if (table != NULL)
+    {
         i = 0;
         j = 0;
-        n = (s32)(u32)((ObjDef *)table)->jointCount;
-        for (k = 0; k < n; k++) {
-            u8* data = *(u8**)&((ObjDef *)table)->jointData;
+        n = (s32)(u32)((ObjDef*)table)->jointCount;
+        for (k = 0; k < n; k++)
+        {
+            u8* data = *(u8**)&((ObjDef*)table)->jointData;
             s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
-            if (data[di] != 0xff && data[i] == 0) {
-                found = (s16*)((char*)((GameObject *)obj)->anim.jointPoseData + j);
+            if (data[di] != 0xff && data[i] == 0)
+            {
+                found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
             }
-            i = i + ((ObjDef *)table)->modelCount + 1;
+            i = i + ((ObjDef*)table)->modelCount + 1;
             j += 0x12;
         }
     }
-    if (found != NULL) {
-        if (found[0] != 0) {
+    if (found != NULL)
+    {
+        if (found[0] != 0)
+        {
             found[0] = (s16)(found[0] * 3 / 4);
         }
         fn_80039DF8(obj, (s16*)p4, found, lbl_803DE9A4);
-        *(s16*)(p4 + 0x1a) = (s16)(u8)*(s16*)(p4 + 0x1a);
+        *(s16*)(p4 + 0x1a) = (s16)(u8) * (s16*)(p4 + 0x1a);
     }
 }
 
@@ -2087,8 +2372,9 @@ void objSoundFn_800392f0(int p1, int p2, int p3, u8 flag6)
     int did;
 
     pitch = *(s16*)((char*)p3 + 2);
-    sfx = (u16)*(s16*)((char*)p3 + 0);
-    if (flag6 != 0 || Sfx_IsPlayingFromObjectChannel(p1, 0x10) == 0) {
+    sfx = (u16) * (s16*)((char*)p3 + 0);
+    if (flag6 != 0 || Sfx_IsPlayingFromObjectChannel(p1, 0x10) == 0)
+    {
         Sfx_PlayFromObjectChannel(p1, 0x10, sfx);
         *(f32*)((char*)p2 + 0xc) = lbl_803DE9C8;
         *(s16*)((char*)p2 + 0x14) = (s16)(-pitch);
@@ -2096,17 +2382,22 @@ void objSoundFn_800392f0(int p1, int p2, int p3, u8 flag6)
         *(f32*)((char*)p2 + 4) = lbl_803DE99C;
     }
     count = *(u8*)((char*)p3 + 4);
-    if (count != 0) {
+    if (count != 0)
+    {
         model = (int)OBJPRINT_ACTIVE_BANK(p1);
-        if (*(u8*)((char*)*(int*)model + 0xf9) != 0) {
+        if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
+        {
             ObjModel_SetBlendChannelTargets(model, 2,
-                *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d),
-                count - 1, lbl_803DE99C / lbl_803DB464, 0);
+                                            *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d),
+                                            count - 1, lbl_803DE99C / lbl_803DB464, 0);
             did = 1;
-        } else {
+        }
+        else
+        {
             did = 0;
         }
-        if (did != 0) {
+        if (did != 0)
+        {
             *(s16*)((char*)p3 + 2) = 0;
         }
     }
@@ -2125,16 +2416,18 @@ void objPosFn_80039510(int obj, int key, int out)
     int joint;
     int model;
 
-    table = (void *)((GameObject *)obj)->anim.modelInstance;
+    table = (void*)((GameObject*)obj)->anim.modelInstance;
     i = 0;
-    n = (s32)(u32)((ObjDef *)table)->jointCount;
-    for (k = 0; k < n; k++) {
-        u8* data = *(u8**)&((ObjDef *)table)->jointData;
-        if (key == (int)data[i]) {
-            joint = *(u8 *)(data + i + OBJPRINT_ACTIVE_BANK_INDEX(obj) + 1);
+    n = (s32)(u32)((ObjDef*)table)->jointCount;
+    for (k = 0; k < n; k++)
+    {
+        u8* data = *(u8**)&((ObjDef*)table)->jointData;
+        if (key == (int)data[i])
+        {
+            joint = *(u8*)(data + i + OBJPRINT_ACTIVE_BANK_INDEX(obj) + 1);
             break;
         }
-        i = i + ((ObjDef *)table)->modelCount + 1;
+        i = i + ((ObjDef*)table)->modelCount + 1;
     }
     model = Obj_GetActiveModel(obj);
     model = (int)ObjModel_GetJointMatrix((int*)model, joint);
@@ -2146,7 +2439,7 @@ void objPosFn_80039510(int obj, int key, int out)
 }
 
 extern void cacheQueueWait(int x);
-extern void PSMTXConcat(void *a, void *b, void *c);
+extern void PSMTXConcat(void* a, void* b, void* c);
 extern f32 lbl_803DEA04;
 
 void modelMtxFn_8003be38(int p1, int p2, int p3, int p4)
@@ -2160,14 +2453,15 @@ void modelMtxFn_8003be38(int p1, int p2, int p3, int p4)
     f32 fill;
 
     cache = (int)getCache();
-    count = (s32)(u32)*(u8*)((char*)p1 + 0xf3) + (s32)(u32)*(u8*)((char*)p1 + 0xf4);
+    count = (s32)(u32) * (u8*)((char*)p1 + 0xf3) + (s32)(u32) * (u8*)((char*)p1 + 0xf4);
     dstA = cache + 0x2700;
     mid = cache;
     dstB = cache + 0x12c0;
     cacheQueueWait(0);
     i = 0;
     fill = lbl_803DEA04;
-    for (; i < count; i++) {
+    for (; i < count; i++)
+    {
         PSMTXConcat((void*)p3, (void*)dstA, (void*)mid);
         PSMTXConcat((void*)mid, (void*)p4, (void*)dstB);
         *(f32*)((char*)dstB + 0xc) = fill;
@@ -2192,40 +2486,54 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
     int walk;
     void (*vfn)(int, int, int, int, int, int);
 
-    if ((((GameObject *)obj)->objectFlags & 0x40) != 0) return;
-    if (((GameObject *)obj)->ownerObj == NULL) {
-    } else {
+    if ((((GameObject*)obj)->objectFlags & 0x40) != 0) return;
+    if (((GameObject*)obj)->ownerObj == NULL)
+    {
+    }
+    else
+    {
         return;
     }
-    if ((((GameObject *)obj)->anim.flags & 0x4000) != 0) return;
-    sub = *(void**)&((GameObject *)obj)->anim.parent;
-    if (sub != NULL && (((GameObject *)sub)->anim.flags & 0x4000) != 0) return;
+    if ((((GameObject*)obj)->anim.flags & 0x4000) != 0) return;
+    sub = *(void**)&((GameObject*)obj)->anim.parent;
+    if (sub != NULL && (((GameObject*)sub)->anim.flags & 0x4000) != 0) return;
 
     doNothing_beforeRenderObject(4);
-    ((GameObject *)obj)->objectFlags |= 0x800;
-    sub = *(void**)&((GameObject *)obj)->anim.dll;
-    if (sub != NULL) {
-        if ((((GameObject *)obj)->objectFlags & 0x4000) == 0) {
+    ((GameObject*)obj)->objectFlags |= 0x800;
+    sub = *(void**)&((GameObject*)obj)->anim.dll;
+    if (sub != NULL)
+    {
+        if ((((GameObject*)obj)->objectFlags & 0x4000) == 0)
+        {
             vfn = *(void(**)(int, int, int, int, int, int))(*(int*)sub + 0x10);
-            if (vfn != NULL) {
+            if (vfn != NULL)
+            {
                 vfn(obj, a, b, c, d, flag);
             }
-        } else if ((s8)flag != 0 && OBJPRINT_ACTIVE_BANK(obj) != NULL) {
+        }
+        else if ((s8)flag != 0 && OBJPRINT_ACTIVE_BANK(obj) != NULL)
+        {
             (*(void(*)(int))objRenderModel)(obj);
-            if (*(void**)((char*)obj + 0x74) != NULL) {
+            if (*(void**)((char*)obj + 0x74) != NULL)
+            {
                 objRenderFn_80041018((int*)obj);
             }
         }
-    } else if ((s8)flag != 0) {
-        switch (((GameObject *)obj)->anim.seqId) {
+    }
+    else if ((s8)flag != 0)
+    {
+        switch (((GameObject*)obj)->anim.seqId)
+        {
         case 0:
         case 0x1f:
             playerRender(obj, a, b, c, d, flag);
             break;
         default:
-            if (OBJPRINT_ACTIVE_BANK(obj) != NULL) {
+            if (OBJPRINT_ACTIVE_BANK(obj) != NULL)
+            {
                 (*(void(*)(int))objRenderModel)(obj);
-                if (*(void**)((char*)obj + 0x74) != NULL) {
+                if (*(void**)((char*)obj + 0x74) != NULL)
+                {
                     objRenderFn_80041018((int*)obj);
                 }
             }
@@ -2233,9 +2541,11 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
         }
     }
     doNothing_afterRenderObject();
-    for (i = 0, walk = obj; i < (s32)(u32)((GameObject *)obj)->childCount; i++) {
-        int staff = *(int *)&((GameObject *)walk)->childObjs[0];
-        if (*(s16*)((char*)staff + 0x44) == 0x2d) {
+    for (i = 0, walk = obj; i < (s32)(u32)((GameObject*)obj)->childCount; i++)
+    {
+        int staff = *(int*)&((GameObject*)walk)->childObjs[0];
+        if (*(s16*)((char*)staff + 0x44) == 0x2d)
+        {
             staffMtxFn_8003b620(staff, obj, (int)OBJPRINT_ACTIVE_BANK(staff), a, b, c);
         }
         walk += 4;
@@ -2258,16 +2568,21 @@ void objModelAndSoundFn_80039118(int obj, int p2)
     *(f32*)((char*)p2 + 8) = t;
     if (t >= lbl_803DE9A4) return;
     frame = *(int*)((char*)p2 + 0);
-    if (frame >= *(int*)((char*)p2 + 4)) {
+    if (frame >= *(int*)((char*)p2 + 4))
+    {
         *(int*)((char*)p2 + 0) = -1;
         model = (int)OBJPRINT_ACTIVE_BANK(obj);
-        if (*(u8*)((char*)*(int*)model + 0xf9) != 0) {
+        if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
+        {
             ObjModel_SetBlendChannelTargets(model, 2,
-                *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d),
-                -1, lbl_803DE99C / lbl_803DB464, 0);
+                                            *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d),
+                                            -1, lbl_803DE99C / lbl_803DB464, 0);
         }
-    } else {
-        if (frame == 1) {
+    }
+    else
+    {
+        if (frame == 1)
+        {
             Sfx_PlayFromObjectChannel(obj, 0x10, *(u16*)((char*)p2 + 0x14));
         }
         kf = *(int**)((char*)p2 + 0x10);
@@ -2275,16 +2590,17 @@ void objModelAndSoundFn_80039118(int obj, int p2)
         *(int*)((char*)p2 + 0) = frame + 1;
         kfval = kf[frame];
         model = (int)OBJPRINT_ACTIVE_BANK(obj);
-        if (*(u8*)((char*)*(int*)model + 0xf9) != 0) {
+        if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
+        {
             ObjModel_SetBlendChannelTargets(model, 2,
-                *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d),
-                kfval - 1, lbl_803DE99C / lbl_803DB464, 0);
+                                            *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d),
+                                            kfval - 1, lbl_803DE99C / lbl_803DB464, 0);
         }
         *(f32*)((char*)p2 + 8) = *(f32*)((char*)p2 + 8) + *(f32*)((char*)p2 + 0xc);
     }
 }
 
-extern void fn_80039B54(int obj, s16 *curve, s16 *state, f32 val);
+extern void fn_80039B54(int obj, s16* curve, s16* state, f32 val);
 extern f32 lbl_803DE9E4;
 
 void fn_8003A230(int obj, int p2, f32 val)
@@ -2298,37 +2614,49 @@ void fn_8003A230(int obj, int p2, f32 val)
     int flag;
 
     found = NULL;
-    table = (void *)((GameObject *)obj)->anim.modelInstance;
-    if (table != NULL) {
+    table = (void*)((GameObject*)obj)->anim.modelInstance;
+    if (table != NULL)
+    {
         i = 0;
         j = 0;
-        n = (s32)(u32)((ObjDef *)table)->jointCount;
-        for (k = 0; k < n; k++) {
-            u8* data = *(u8**)&((ObjDef *)table)->jointData;
+        n = (s32)(u32)((ObjDef*)table)->jointCount;
+        for (k = 0; k < n; k++)
+        {
+            u8* data = *(u8**)&((ObjDef*)table)->jointData;
             s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
-            if (data[di] != 0xff && data[i] == 0) {
-                found = (s16*)((char*)((GameObject *)obj)->anim.jointPoseData + j);
+            if (data[di] != 0xff && data[i] == 0)
+            {
+                found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
             }
-            i = i + ((ObjDef *)table)->modelCount + 1;
+            i = i + ((ObjDef*)table)->modelCount + 1;
             j += 0x12;
         }
     }
-    if (found != NULL) {
-        if (found[0] != 0) {
+    if (found != NULL)
+    {
+        if (found[0] != 0)
+        {
             found[0] = (s16)(found[0] * 3 / 4);
         }
-        if (val < lbl_803DE9A4) {
+        if (val < lbl_803DE9A4)
+        {
             val = -val;
         }
-        if (val <= lbl_803DE9E4) {
+        if (val <= lbl_803DE9E4)
+        {
             fn_80039DF8(obj, (s16*)p2, found, val);
-        } else {
+        }
+        else
+        {
             fn_80039B54(obj, (s16*)p2, found, val);
         }
-        *(s16*)((char*)p2 + 0x1a) = (s16)(u8)*(s16*)((char*)p2 + 0x1a);
-        if (val > lbl_803DE9E4) {
+        *(s16*)((char*)p2 + 0x1a) = (s16)(u8) * (s16*)((char*)p2 + 0x1a);
+        if (val > lbl_803DE9E4)
+        {
             flag = 1;
-        } else {
+        }
+        else
+        {
             flag = 0;
         }
         *(s16*)((char*)p2 + 0x1a) = (s16)(*(s16*)((char*)p2 + 0x1a) | (flag << 8));
@@ -2350,48 +2678,54 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
     s16 limit;
 
     found = NULL;
-    table = (void *)((GameObject *)obj)->anim.modelInstance;
-    if (table != NULL) {
+    table = (void*)((GameObject*)obj)->anim.modelInstance;
+    if (table != NULL)
+    {
         i = 0;
         j = 0;
-        n = (s32)(u32)((ObjDef *)table)->jointCount;
-        for (k = 0; k < n; k++) {
-            u8* data = *(u8**)&((ObjDef *)table)->jointData;
+        n = (s32)(u32)((ObjDef*)table)->jointCount;
+        for (k = 0; k < n; k++)
+        {
+            u8* data = *(u8**)&((ObjDef*)table)->jointData;
             s32 di = OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1;
-            if (data[di] != 0xff && data[i] == 0) {
-                found = (s16*)((char*)((GameObject *)obj)->anim.jointPoseData + j);
+            if (data[di] != 0xff && data[i] == 0)
+            {
+                found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + j);
             }
-            i = i + ((ObjDef *)table)->modelCount + 1;
+            i = i + ((ObjDef*)table)->modelCount + 1;
             j += 0x12;
         }
     }
-    if (found != NULL) {
-        angle = (s16)getAngle(((GameObject *)obj)->anim.localPosX - *(f32*)((char*)p2 + 0xc),
-                              ((GameObject *)obj)->anim.localPosZ - *(f32*)((char*)p2 + 0x14));
-        *(s16*)((char*)p3 + 0x14) = (s16)(angle - ((GameObject *)obj)->anim.rotX);
+    if (found != NULL)
+    {
+        angle = (s16)getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)((char*)p2 + 0xc),
+                              ((GameObject*)obj)->anim.localPosZ - *(f32*)((char*)p2 + 0x14));
+        *(s16*)((char*)p3 + 0x14) = (s16)(angle - ((GameObject*)obj)->anim.rotX);
         limit = (s16)(int)(lbl_803DE9EC * (f32)(s32)p4);
-        if (*(s16*)((char*)p3 + 0x14) > limit) {
+        if (*(s16*)((char*)p3 + 0x14) > limit)
+        {
             *(s16*)((char*)p3 + 0x14) = limit;
         }
-        if (*(s16*)((char*)p3 + 0x14) < -limit) {
+        if (*(s16*)((char*)p3 + 0x14) < -limit)
+        {
             *(s16*)((char*)p3 + 0x14) = -limit;
         }
         found[1] = *(s16*)((char*)p3 + 0x14);
     }
 }
 
-int fn_80039834(s16 *curve, s16 *state, f32 a, f32 b);
+int fn_80039834(s16* curve, s16* state, f32 a, f32 b);
 
-int fn_8003A8B4(int objArg, int *keyList, int countArg, char *p4Arg)
+int fn_8003A8B4(int objArg, int* keyList, int countArg, char* p4Arg)
 {
     extern f32 lbl_803DE9D8;
     extern f32 lbl_803DE9DC;
     int obj;
     int count;
-    char *p4;
+    char* p4;
     int total;
     int i;
-    int *keys;
+    int* keys;
 
     obj = objArg;
     count = countArg;
@@ -2399,31 +2733,35 @@ int fn_8003A8B4(int objArg, int *keyList, int countArg, char *p4Arg)
     total = 0;
     i = 0;
     keys = keyList;
-    while (i < count) {
+    while (i < count)
+    {
         int key;
         int found;
-        void *m;
+        void* m;
 
         key = *keys;
         found = 0;
-        m = (void *)((GameObject *)obj)->anim.modelInstance;
-        if (m != NULL) {
+        m = (void*)((GameObject*)obj)->anim.modelInstance;
+        if (m != NULL)
+        {
             int entryIdx = found;
             int vecOffset = found;
-            int n = ((ObjDef *)m)->jointCount;
+            int n = ((ObjDef*)m)->jointCount;
             int j;
-            for (j = 0; j < n; j++) {
-                u8 *entries = *(u8 **)&((ObjDef *)m)->jointData;
+            for (j = 0; j < n; j++)
+            {
+                u8* entries = *(u8**)&((ObjDef*)m)->jointData;
                 int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
-                if ((int)entries[idx] != 0xff && key == entries[entryIdx]) {
-                    found = *(int *)&((GameObject *)obj)->anim.jointPoseData + vecOffset;
+                if ((int)entries[idx] != 0xff && key == entries[entryIdx])
+                {
+                    found = *(int*)&((GameObject*)obj)->anim.jointPoseData + vecOffset;
                 }
-                entryIdx += (s8)((ObjDef *)m)->modelCount + 1;
+                entryIdx += (s8)((ObjDef*)m)->modelCount + 1;
                 vecOffset += 0x12;
             }
         }
-        total += fn_800399C0((s16 *)p4, (s16 *)found);
-        total += fn_80039834((s16 *)(p4 + 0x30), (s16 *)found, lbl_803DE9D8, lbl_803DE9DC);
+        total += fn_800399C0((s16*)p4, (s16*)found);
+        total += fn_80039834((s16*)(p4 + 0x30), (s16*)found, lbl_803DE9D8, lbl_803DE9DC);
         keys++;
         i++;
         p4 += 0x60;
@@ -2432,7 +2770,7 @@ int fn_8003A8B4(int objArg, int *keyList, int countArg, char *p4Arg)
 }
 
 #pragma dont_inline on
-int fn_80039834(s16 *curve, s16 *state, f32 a, f32 b)
+int fn_80039834(s16* curve, s16* state, f32 a, f32 b)
 {
     extern f32 Curve_EvalHermite(int, int, f32);
     extern f32 timeDelta;
@@ -2450,27 +2788,43 @@ int fn_80039834(s16 *curve, s16 *state, f32 a, f32 b)
 
     lo = curve[10];
     hi = curve[11];
-    if (lo != hi) {
-        ratio = ((f32)(s32)*state - (f32)(s32)hi) / ((f32)(s32)lo - (f32)(s32)hi);
-    } else {
+    if (lo != hi)
+    {
+        ratio = ((f32)(s32) * state - (f32)(s32)
+        hi
+        )
+        /
+        ((f32)(s32)
+        lo - (f32)(s32)
+        hi
+        )
+        ;
+    }
+    else
+    {
         return 1;
     }
 
-    if (ratio > lbl_803DE99C) {
+    if (ratio > lbl_803DE99C)
+    {
         ratio = lbl_803DE99C;
-    } else if (ratio < lbl_803DE9A4) {
+    }
+    else if (ratio < lbl_803DE9A4)
+    {
         ratio = lbl_803DE9A4;
     }
 
     {
         f32 rate = Curve_EvalHermite((int)buf, 0, ratio);
-        if (curve[10] < curve[11]) {
+        if (curve[10] < curve[11])
+        {
             rate = -rate;
         }
-        *state = rate * timeDelta + (f32)(s32)*state;
+        *state = rate * timeDelta + (f32)(s32) * state;
     }
 
-    if (lbl_803DE99C == ratio || *state >= 8191 || *state <= -8191) {
+    if (lbl_803DE99C == ratio || *state >= 8191 || *state <= -8191)
+    {
         *state = curve[10];
         return 1;
     }
@@ -2478,9 +2832,9 @@ int fn_80039834(s16 *curve, s16 *state, f32 a, f32 b)
 }
 #pragma dont_inline reset
 
-int fn_8003BB84(f32 *m, f32 *out);
+int fn_8003BB84(f32 * m, f32 * out);
 
-int objRotateFn_8003bce8(f32 *m, s16 *outA, s16 *outB, s16 *outC)
+int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
 {
     extern f32 __kernel_sin(f32);
     extern f32 __kernel_cos(f32, f32);
@@ -2494,19 +2848,26 @@ int objRotateFn_8003bce8(f32 *m, s16 *outA, s16 *outB, s16 *outC)
     f32 y;
     f32 z;
 
-    if (fn_8003BB84(m, buf) == 0) {
+    if (fn_8003BB84(m, buf) == 0)
+    {
         return 0;
     }
     x = __kernel_sin(-buf[6]);
-    if (x < lbl_803DEA08) {
-        if (x > lbl_803DEA0C) {
+    if (x < lbl_803DEA08)
+    {
+        if (x > lbl_803DEA0C)
+        {
             y = __kernel_cos(buf[2], buf[10]);
             z = __kernel_cos(buf[4], buf[5]);
-        } else {
+        }
+        else
+        {
             y = lbl_803DEA04 - __kernel_cos(buf[1], buf[0]);
             z = lbl_803DEA04;
         }
-    } else {
+    }
+    else
+    {
         y = __kernel_cos(buf[1], buf[0]) - lbl_803DEA04;
         z = lbl_803DEA04;
     }
@@ -2520,9 +2881,9 @@ int objRotateFn_8003bce8(f32 *m, s16 *outA, s16 *outB, s16 *outC)
     return 1;
 }
 
-int fn_8003BB84(f32 *m, f32 *out)
+int fn_8003BB84(f32* m, f32* out)
 {
-    extern void PSVECNormalize(f32 *src, f32 *dst);
+    extern void PSVECNormalize(f32 * src, f32 * dst);
     extern f32 lbl_803DEA04;
     f32 v3[3];
     f32 v1[3];
@@ -2540,8 +2901,9 @@ int fn_8003BB84(f32 *m, f32 *out)
     v3[2] = m[10];
 
     if ((v1[0] == lbl_803DEA04 && v1[1] == lbl_803DEA04 && v1[2] == lbl_803DEA04)
-     || (v2[0] == lbl_803DEA04 && v2[1] == lbl_803DEA04 && v2[2] == lbl_803DEA04)
-     || (v3[0] == lbl_803DEA04 && v3[1] == lbl_803DEA04 && v3[2] == lbl_803DEA04)) {
+        || (v2[0] == lbl_803DEA04 && v2[1] == lbl_803DEA04 && v2[2] == lbl_803DEA04)
+        || (v3[0] == lbl_803DEA04 && v3[1] == lbl_803DEA04 && v3[2] == lbl_803DEA04))
+    {
         return 0;
     }
 
@@ -2565,7 +2927,7 @@ int fn_8003BB84(f32 *m, f32 *out)
     return 1;
 }
 
-void fn_80039B54(int obj, s16 *curve, s16 *state, f32 val)
+void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
 {
     extern f32 lbl_803DE9E4;
     extern u8 framesThisStep;
@@ -2573,38 +2935,51 @@ void fn_80039B54(int obj, s16 *curve, s16 *state, f32 val)
     int flag;
 
     masked = (curve[13] >> 8) & 0xff;
-    if (val > lbl_803DE9E4) {
+    if (val > lbl_803DE9E4)
+    {
         flag = 1;
-    } else {
+    }
+    else
+    {
         flag = 0;
     }
-    if (masked != flag) {
+    if (masked != flag)
+    {
         curve[13] = (s16)(flag << 8 | 4);
         curve[11] = state[1];
         curve[10] = 0;
         curve[14] = 0;
     }
 
-    switch ((u8)curve[13]) {
+    switch ((u8)curve[13])
+    {
     case 0:
         curve[13] = (s16)(flag << 8);
         curve[14] = (s16)randomGetRange(0x32, 0xc8);
         break;
     case 1:
         curve[14] -= framesThisStep;
-        if (curve[14] < 0) {
-            if ((int)randomGetRange(0, 100) > 90) {
+        if (curve[14] < 0)
+        {
+            if ((int)randomGetRange(0, 100) > 90)
+            {
                 curve[13] = (s16)(flag << 8 | 5);
-                if (*(s8 *)curve != 0) {
-                    if ((int)randomGetRange(0, 100) > 0) {
+                if (*(s8*)curve != 0)
+                {
+                    if ((int)randomGetRange(0, 100) > 0)
+                    {
                         curve[10] = 0x1fff;
-                        if ((int)randomGetRange(0, 1) == 0) {
+                        if ((int)randomGetRange(0, 1) == 0)
+                        {
                             curve[10] = -curve[10];
                         }
                     }
-                } else {
+                }
+                else
+                {
                     curve[10] = 0x1fff;
-                    if ((int)randomGetRange(0, 1) == 0) {
+                    if ((int)randomGetRange(0, 1) == 0)
+                    {
                         curve[10] = -curve[10];
                     }
                 }
@@ -2612,27 +2987,36 @@ void fn_80039B54(int obj, s16 *curve, s16 *state, f32 val)
         }
         break;
     case 5:
-        if (curve[14] > 0) {
+        if (curve[14] > 0)
+        {
             curve[14] -= framesThisStep;
-        } else if (fn_800399C0(curve, state)) {
+        }
+        else if (fn_800399C0(curve, state))
+        {
             curve[13] = (s16)(flag << 8 | 6);
             curve[10] = -curve[10];
             curve[14] = (s16)randomGetRange(0x14, 0x64);
         }
         break;
     case 6:
-        if (curve[14] > 0) {
+        if (curve[14] > 0)
+        {
             curve[14] -= framesThisStep;
-        } else if (fn_800399C0(curve, state)) {
+        }
+        else if (fn_800399C0(curve, state))
+        {
             curve[13] = (s16)(flag << 8 | 4);
             curve[10] = 0;
             curve[14] = (s16)randomGetRange(0x14, 0x64);
         }
         break;
     case 4:
-        if (curve[14] > 0) {
+        if (curve[14] > 0)
+        {
             curve[14] -= framesThisStep;
-        } else if (fn_800399C0(curve, state)) {
+        }
+        else if (fn_800399C0(curve, state))
+        {
             curve[13] = (s16)(flag << 8);
             state[1] = 0;
         }
@@ -2640,7 +3024,7 @@ void fn_80039B54(int obj, s16 *curve, s16 *state, f32 val)
     }
 }
 
-void fn_80039DF8(int obj, s16 *curve, s16 *state, f32 val)
+void fn_80039DF8(int obj, s16* curve, s16* state, f32 val)
 {
     extern f32 lbl_803DE9E4;
     extern f32 lbl_803DE9E8;
@@ -2649,22 +3033,30 @@ void fn_80039DF8(int obj, s16 *curve, s16 *state, f32 val)
     int flag;
 
     masked = (curve[13] >> 8) & 0xff;
-    if (val > lbl_803DE9E4) {
+    if (val > lbl_803DE9E4)
+    {
         flag = 1;
-    } else {
+    }
+    else
+    {
         flag = 0;
     }
-    if (masked != flag) {
+    if (masked != flag)
+    {
         curve[13] = (s16)(flag << 8);
     }
 
-    switch ((u8)curve[13]) {
+    switch ((u8)curve[13])
+    {
     case 0:
-        if (*(s8 *)curve != 0) {
+        if (*(s8*)curve != 0)
+        {
             curve[13] = (s16)(flag << 8 | 3);
             curve[11] = state[1];
-            *(f32 *)((char *)curve + 0x10) = lbl_803DE99C;
-        } else {
+            *(f32*)((char*)curve + 0x10) = lbl_803DE99C;
+        }
+        else
+        {
             curve[13] = (s16)(flag << 8 | 1);
             curve[14] = (s16)randomGetRange(100, 400);
             curve[10] = state[1];
@@ -2672,22 +3064,30 @@ void fn_80039DF8(int obj, s16 *curve, s16 *state, f32 val)
         break;
     case 1:
         curve[14] -= framesThisStep;
-        if (curve[14] < 0) {
+        if (curve[14] < 0)
+        {
             int old = curve[10];
             curve[10] = (s16)randomGetRange(0, 0x1fff);
-            if (old > 0) {
-                if (old - curve[10] < 0xe38) {
+            if (old > 0)
+            {
+                if (old - curve[10] < 0xe38)
+                {
                     curve[10] += 0xe38;
                 }
-                if (curve[10] > 0x1fff) {
+                if (curve[10] > 0x1fff)
+                {
                     curve[10] = 0x1fff;
                 }
                 curve[10] = -curve[10];
-            } else {
-                if (curve[10] - old < 0xe38) {
+            }
+            else
+            {
+                if (curve[10] - old < 0xe38)
+                {
                     curve[10] += 0xe38;
                 }
-                if (curve[10] > 0x1fff) {
+                if (curve[10] > 0x1fff)
+                {
                     curve[10] = 0x1fff;
                 }
             }
@@ -2697,40 +3097,53 @@ void fn_80039DF8(int obj, s16 *curve, s16 *state, f32 val)
         }
         break;
     case 2:
-        if (*(s8 *)curve != 0 || fn_800399C0(curve, state) != 0) {
+        if (*(s8*)curve != 0 || fn_800399C0(curve, state) != 0)
+        {
             curve[13] = (s16)(flag << 8);
         }
         break;
     case 3:
-        if (*(s8 *)curve == 0) {
+        if (*(s8*)curve == 0)
+        {
             curve[13] = (s16)(flag << 8);
-        } else {
+        }
+        else
+        {
             int angle;
             int n;
-            angle = getAngle(((GameObject *)obj)->anim.localPosX - *(f32 *)((char *)curve + 4),
-                             ((GameObject *)obj)->anim.localPosZ - *(f32 *)((char *)curve + 0xc));
-            curve[10] = (s16)(angle - (u16)*(s16 *)obj);
-            if (curve[10] > 0x8000) {
+            angle = getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)((char*)curve + 4),
+                             ((GameObject*)obj)->anim.localPosZ - *(f32*)((char*)curve + 0xc));
+            curve[10] = (s16)(angle - (u16) * (s16*)obj);
+            if (curve[10] > 0x8000)
+            {
                 curve[10] = (s16)(curve[10] - 0xffff);
             }
-            if (curve[10] < -0x8000) {
+            if (curve[10] < -0x8000)
+            {
                 curve[10] = (s16)(curve[10] + 0xffff);
             }
             n = curve[10];
-            if (n > 0x1fff || n < -0x1fff) {
+            if (n > 0x1fff || n < -0x1fff)
+            {
                 curve[13] = (s16)(flag << 8);
-            } else {
-                f32 t = *(f32 *)((char *)curve + 0x10);
+            }
+            else
+            {
+                f32 t = *(f32*)((char*)curve + 0x10);
                 f32 lo = lbl_803DE9A4;
-                if (t > lo) {
+                if (t > lo)
+                {
                     f32 nv;
                     state[1] = t * (f32)(curve[11] - n) + (f32)n;
-                    nv = -(lbl_803DE9E8 * timeDelta - *(f32 *)((char *)curve + 0x10));
-                    *(f32 *)((char *)curve + 0x10) = nv;
-                    if (nv < lo) {
-                        *(f32 *)((char *)curve + 0x10) = lo;
+                    nv = -(lbl_803DE9E8 * timeDelta - *(f32*)((char*)curve + 0x10));
+                    *(f32*)((char*)curve + 0x10) = nv;
+                    if (nv < lo)
+                    {
+                        *(f32*)((char*)curve + 0x10) = lo;
                     }
-                } else {
+                }
+                else
+                {
                     state[1] = n;
                 }
             }
@@ -2738,61 +3151,74 @@ void fn_80039DF8(int obj, s16 *curve, s16 *state, f32 val)
         break;
     }
 
-    if (state[1] < -0x1fff) {
+    if (state[1] < -0x1fff)
+    {
         state[1] = -0x1fff;
-    } else if (state[1] > 0x1fff) {
+    }
+    else if (state[1] > 0x1fff)
+    {
         state[1] = 0x1fff;
     }
 }
 
-void fn_8003ADC4(int obj, char *tgt, char *p3, int a, u8 inv, int b)
+void fn_8003ADC4(int obj, char* tgt, char* p3, int a, u8 inv, int b)
 {
     extern f32 sqrtf(f32);
     extern f32 lbl_803DE9EC;
     s16 ang[2];
-    s16 *found;
-    void *m;
+    s16* found;
+    void* m;
 
     found = NULL;
-    m = (void *)((GameObject *)obj)->anim.modelInstance;
-    if (m != NULL) {
+    m = (void*)((GameObject*)obj)->anim.modelInstance;
+    if (m != NULL)
+    {
         int entryIdx = 0, vecOffset = 0;
-        int n = ((ObjDef *)m)->jointCount;
+        int n = ((ObjDef*)m)->jointCount;
         int j;
-        for (j = 0; j < n; j++) {
-            u8 *entries = *(u8 **)&((ObjDef *)m)->jointData;
+        for (j = 0; j < n; j++)
+        {
+            u8* entries = *(u8**)&((ObjDef*)m)->jointData;
             int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
-            if ((int)entries[idx] != 0xff && entries[entryIdx] == 0) {
-                found = (s16 *)((char *)((GameObject *)obj)->anim.jointPoseData + vecOffset);
+            if ((int)entries[idx] != 0xff && entries[entryIdx] == 0)
+            {
+                found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + vecOffset);
             }
-            entryIdx += (s8)((ObjDef *)m)->modelCount + 1;
+            entryIdx += (s8)((ObjDef*)m)->modelCount + 1;
             vecOffset += 0x12;
         }
     }
-    if (found != NULL) {
-        if (tgt == NULL) {
+    if (found != NULL)
+    {
+        if (tgt == NULL)
+        {
             found[1] = found[1] >> 1;
             found[0] = found[0] >> 1;
-        } else {
-            f32 dx = ((GameObject *)obj)->anim.localPosX - *(f32 *)(tgt + 0xc);
-            f32 dy = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(tgt + 0x14);
-            f32 dz = ((GameObject *)obj)->anim.localPosY - *(f32 *)(tgt + 0x10);
+        }
+        else
+        {
+            f32 dx = ((GameObject*)obj)->anim.localPosX - *(f32*)(tgt + 0xc);
+            f32 dy = ((GameObject*)obj)->anim.localPosZ - *(f32*)(tgt + 0x14);
+            f32 dz = ((GameObject*)obj)->anim.localPosY - *(f32*)(tgt + 0x10);
             f32 dist = sqrtf(dx * dx + dy * dy);
             s16 limA;
             int minB;
             int negA;
-            char *p;
-            s16 *ap;
+            char* p;
+            s16* ap;
             int i;
 
-            ang[0] = (s16)getAngle(dx, dy) - (u16)*(s16 *)obj;
-            if (ang[0] > 0x8000) {
+            ang[0] = (s16)getAngle(dx, dy) - (u16) * (s16*)obj;
+            if (ang[0] > 0x8000)
+            {
                 ang[0] = (s16)(ang[0] - 0xffff);
             }
-            if (ang[0] < -0x8000) {
+            if (ang[0] < -0x8000)
+            {
                 ang[0] = (s16)(ang[0] + 0xffff);
             }
-            if (inv != 0) {
+            if (inv != 0)
+            {
                 ang[0] = (s16)(ang[0] + 0x8000);
             }
             ang[1] = (s16)((s16)getAngle(dist, dz) - 0x3fff);
@@ -2802,28 +3228,34 @@ void fn_8003ADC4(int obj, char *tgt, char *p3, int a, u8 inv, int b)
             ap = ang;
             minB = -(s16)(s32)(lbl_803DE9EC * (f32)b);
             negA = -limA;
-            for (i = 0; i < 2; i++) {
+            for (i = 0; i < 2; i++)
+            {
                 s16 v;
-                *ap = *ap - *(s16 *)(p + 0x14);
+                *ap = *ap - *(s16*)(p + 0x14);
                 v = *ap;
-                if (v < minB) {
+                if (v < minB)
+                {
                     v = (s16)minB;
-                } else if ((s16)(s32)(lbl_803DE9EC * (f32)b) < v) {
+                }
+                else if ((s16)(s32)(lbl_803DE9EC * (f32)b) < v)
+                {
                     v = (s16)(s32)(lbl_803DE9EC * (f32)b);
                 }
                 *ap = v;
-                *(s16 *)(p + 0x14) = *(s16 *)(p + 0x14) + *ap;
-                if (*(s16 *)(p + 0x14) > limA) {
-                    *(s16 *)(p + 0x14) = limA;
+                *(s16*)(p + 0x14) = *(s16*)(p + 0x14) + *ap;
+                if (*(s16*)(p + 0x14) > limA)
+                {
+                    *(s16*)(p + 0x14) = limA;
                 }
-                if (*(s16 *)(p + 0x14) < negA) {
-                    *(s16 *)(p + 0x14) = (s16)negA;
+                if (*(s16*)(p + 0x14) < negA)
+                {
+                    *(s16*)(p + 0x14) = (s16)negA;
                 }
                 p += 0x30;
                 ap++;
             }
-            found[1] = *(s16 *)(p3 + 0x14);
-            found[0] = *(s16 *)(p3 + 0x44);
+            found[1] = *(s16*)(p3 + 0x14);
+            found[0] = *(s16*)(p3 + 0x44);
         }
     }
 }
@@ -2836,45 +3268,50 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
     f32 va[3];
     f32 vb[3];
 
-    if (*(u8 *)(*(char **)(staff + 0x50) + 0x58) >= 2 && *(s16 *)(staff + 0x44) == 0x2d) {
-        char *base = *(char **)(staff + 0xb8);
+    if (*(u8*)(*(char**)(staff + 0x50) + 0x58) >= 2 && *(s16*)(staff + 0x44) == 0x2d)
+    {
+        char* base = *(char**)(staff + 0xb8);
         int i = 0;
         int k = 1;
         int off = 0x18;
-        char *q = base;
-        f32 *vp = va;
+        char* q = base;
+        f32* vp = va;
 
-        while (i < *(s16 *)(base + 0xb0)) {
-            if (k < *(u8 *)(*(char **)(staff + 0x50) + 0x58)) {
-                void *jm;
-                char *t;
-                jm = ObjModel_GetJointMatrix((int *)model,
-                    (s8)(*(u8 **)(*(char **)(staff + 0x50) + 0x2c))[off + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x2a]);
-                t = *(char **)(*(char **)(staff + 0x50) + 0x2c);
-                vp[0] = *(f32 *)(t + (off + 0x18));
-                va[1] = *(f32 *)(t + (off + 0x1c));
-                va[2] = *(f32 *)(t + (off + 0x20));
+        while (i < *(s16*)(base + 0xb0))
+        {
+            if (k < *(u8*)(*(char**)(staff + 0x50) + 0x58))
+            {
+                void* jm;
+                char* t;
+                jm = ObjModel_GetJointMatrix((int*)model,
+                                             (s8)(*(u8**)(*(char**)(staff + 0x50) + 0x2c))[off +
+                                                 OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x2a]);
+                t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
+                vp[0] = *(f32*)(t + (off + 0x18));
+                va[1] = *(f32*)(t + (off + 0x1c));
+                va[2] = *(f32*)(t + (off + 0x20));
                 PSMTXMultVec(jm, vp, vp);
                 vp[0] = vp[0] + playerMapOffsetX;
                 va[2] = va[2] + playerMapOffsetZ;
-                *(f32 *)(q + 0x6c) = vp[0];
-                *(f32 *)(q + 0x74) = va[1];
-                *(f32 *)(q + 0x7c) = va[2];
+                *(f32*)(q + 0x6c) = vp[0];
+                *(f32*)(q + 0x74) = va[1];
+                *(f32*)(q + 0x7c) = va[2];
             }
-            if (k < *(u8 *)(*(char **)(staff + 0x50) + 0x58)) {
-                char *t = *(char **)(*(char **)(staff + 0x50) + 0x2c);
-                char *row = t + off;
-                int idx2 = (s8)*(s8 *)(row + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x12);
-                char *mtx2 = *(char **)(model + ((*(u16 *)(model + 0x18) & 1) * 4) + 0xc) + idx2 * 0x40;
-                vb[0] = *(f32 *)row;
-                vb[1] = *(f32 *)(t + (off + 4));
-                vb[2] = *(f32 *)(t + (off + 8));
+            if (k < *(u8*)(*(char**)(staff + 0x50) + 0x58))
+            {
+                char* t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
+                char* row = t + off;
+                int idx2 = (s8) * (s8*)(row + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x12);
+                char* mtx2 = *(char**)(model + ((*(u16*)(model + 0x18) & 1) * 4) + 0xc) + idx2 * 0x40;
+                vb[0] = *(f32*)row;
+                vb[1] = *(f32*)(t + (off + 4));
+                vb[2] = *(f32*)(t + (off + 8));
                 PSMTXMultVec(mtx2, vb, vb);
                 vb[0] = vb[0] + playerMapOffsetX;
                 vb[2] = vb[2] + playerMapOffsetZ;
-                *(f32 *)(q + 0x54) = vb[0];
-                *(f32 *)(q + 0x5c) = vb[1];
-                *(f32 *)(q + 0x64) = vb[2];
+                *(f32*)(q + 0x54) = vb[0];
+                *(f32*)(q + 0x5c) = vb[1];
+                *(f32*)(q + 0x64) = vb[2];
             }
             k += 2;
             off += 0x30;
@@ -2882,22 +3319,23 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
             i++;
         }
 
-        if (*(s16 *)(base + 0xb0) != 0) {
-            char *r = base + *(s16 *)(base + 0xb2) * 4;
-            va[0] = *(f32 *)(r + 0x6c);
-            va[1] = *(f32 *)(r + 0x74);
-            va[2] = *(f32 *)(r + 0x7c);
+        if (*(s16*)(base + 0xb0) != 0)
+        {
+            char* r = base + *(s16*)(base + 0xb2) * 4;
+            va[0] = *(f32*)(r + 0x6c);
+            va[1] = *(f32*)(r + 0x74);
+            va[2] = *(f32*)(r + 0x7c);
             {
-                int *v = *(int **)(staff + 0x68);
-                void (*fn)(int, int, f32 *) = (void (*)(int, int, f32 *))*(int *)(*v + 0x28);
+                int* v = *(int**)(staff + 0x68);
+                void(*fn)(int, int, f32 *) = (void (*)(int, int, f32*))*(int*)(*v + 0x28);
                 fn(staff, obj, vb);
             }
             va[0] = va[0] - vb[0];
             va[1] = va[1] - vb[1];
             va[2] = va[2] - vb[2];
-            *(s16 *)staff = (s16)getAngle(va[0], va[2]);
-            *(s16 *)(staff + 2) = (s16)(-getAngle(va[1], sqrtf(va[0] * va[0] + va[2] * va[2])) + 0x4000);
-            *(s16 *)(staff + 4) = 0;
+            *(s16*)staff = (s16)getAngle(va[0], va[2]);
+            *(s16*)(staff + 2) = (s16)(-getAngle(va[1], sqrtf(va[0] * va[0] + va[2] * va[2])) + 0x4000);
+            *(s16*)(staff + 4) = 0;
         }
     }
 }
@@ -2906,22 +3344,28 @@ void characterDoEyeAnims(int obj, int p2)
 {
     extern f32 lbl_803DE9A4;
     extern u8 framesThisStep;
-    int *a;
-    int *b;
-    void *m;
+    int* a;
+    int* b;
+    void* m;
 
     a = NULL;
-    m = (void *)((GameObject *)obj)->anim.modelInstance;
-    if (m != NULL) {
-        u8 *p = *(u8 **)((char *)m + 0xc);
-        if (p == NULL) {
-        } else {
-            int n = ((ObjDef *)m)->unk59;
+    m = (void*)((GameObject*)obj)->anim.modelInstance;
+    if (m != NULL)
+    {
+        u8* p = *(u8**)((char*)m + 0xc);
+        if (p == NULL)
+        {
+        }
+        else
+        {
+            int n = ((ObjDef*)m)->unk59;
             int off = 0;
             int j;
-            for (j = 0; j < n; j++) {
-                if (*p == 5) {
-                    a = (int *)(*(int *)(obj + 0x70) + off);
+            for (j = 0; j < n; j++)
+            {
+                if (*p == 5)
+                {
+                    a = (int*)(*(int*)(obj + 0x70) + off);
                 }
                 p += 2;
                 off += 0x10;
@@ -2930,16 +3374,22 @@ void characterDoEyeAnims(int obj, int p2)
     }
 
     b = NULL;
-    if (m != NULL) {
-        u8 *p = *(u8 **)((char *)m + 0xc);
-        if (p == NULL) {
-        } else {
-            int n = ((ObjDef *)m)->unk59;
+    if (m != NULL)
+    {
+        u8* p = *(u8**)((char*)m + 0xc);
+        if (p == NULL)
+        {
+        }
+        else
+        {
+            int n = ((ObjDef*)m)->unk59;
             int off = 0;
             int j;
-            for (j = 0; j < n; j++) {
-                if (*p == 4) {
-                    b = (int *)(*(int *)(obj + 0x70) + off);
+            for (j = 0; j < n; j++)
+            {
+                if (*p == 4)
+                {
+                    b = (int*)(*(int*)(obj + 0x70) + off);
                 }
                 p += 2;
                 off += 0x10;
@@ -2947,45 +3397,61 @@ void characterDoEyeAnims(int obj, int p2)
         }
     }
 
-    if (a == NULL) {
+    if (a == NULL)
+    {
         return;
     }
-    if (b == NULL) {
-    } else {
+    if (b == NULL)
+    {
+    }
+    else
+    {
         int v = *b;
-        int st = (s8)*(s8 *)(p2 + 0x1e);
+        int st = (s8) * (s8*)(p2 + 0x1e);
 
-        switch (st & 0xf) {
+        switch (st & 0xf)
+        {
         case 0:
             {
-                s8 t = *(s8 *)(p2 + 0x1f);
-                if (t > 0) {
-                    *(s8 *)(p2 + 0x1f) = t - framesThisStep;
-                } else if ((int)randomGetRange(0, 1000) > 0x3de) {
-                    *(u8 *)(p2 + 0x1e) = 1;
-                    *(u8 *)(p2 + 0x1f) = 0;
+                s8 t = *(s8*)(p2 + 0x1f);
+                if (t > 0)
+                {
+                    *(s8*)(p2 + 0x1f) = t - framesThisStep;
+                }
+                else if ((int)randomGetRange(0, 1000) > 0x3de)
+                {
+                    *(u8*)(p2 + 0x1e) = 1;
+                    *(u8*)(p2 + 0x1f) = 0;
                 }
             }
             break;
         case 1:
-            if ((st & 0x80) != 0) {
+            if ((st & 0x80) != 0)
+            {
                 v = v - framesThisStep * 0x60;
-                if (v < 0) {
+                if (v < 0)
+                {
                     v = 0;
-                    *(u8 *)(p2 + 0x1e) = 0;
-                    *(u8 *)(p2 + 0x1f) = 0;
+                    *(u8*)(p2 + 0x1e) = 0;
+                    *(u8*)(p2 + 0x1f) = 0;
                 }
-            } else {
+            }
+            else
+            {
                 v = v + framesThisStep * 0x60;
-                if (v > 0x200) {
-                    if (v - 0x200 < 0) {
+                if (v > 0x200)
+                {
+                    if (v - 0x200 < 0)
+                    {
                         v = 0;
-                        *(u8 *)(p2 + 0x1e) = 0;
-                    } else {
-                        v = 0x2ff;
-                        *(u8 *)(p2 + 0x1e) = 0x81;
+                        *(u8*)(p2 + 0x1e) = 0;
                     }
-                    *(u8 *)(p2 + 0x1f) = 0x28;
+                    else
+                    {
+                        v = 0x2ff;
+                        *(u8*)(p2 + 0x1e) = 0x81;
+                    }
+                    *(u8*)(p2 + 0x1f) = 0x28;
                 }
             }
             *a = v;
@@ -2998,31 +3464,32 @@ void characterDoEyeAnims(int obj, int p2)
 
 void modelCalcVtxGroupMtxs(int p1, int p2)
 {
-    extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);
+    extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
     f32 ma[12];
     f32 mb[12];
     f32 trans[12];
     int off;
     int i;
 
-    for (i = 0, off = 0; i < *(u8 *)(p1 + 0xf4); i++) {
-        u8 *grp = (u8 *)(*(int *)(p1 + 0x54) + off);
-        f32 *out = (f32 *)ObjModel_GetJointMatrix((int *)p2, i + *(u8 *)(p1 + 0xf3));
-        f32 *m1 = (f32 *)ObjModel_GetJointMatrix((int *)p2, grp[0]);
-        f32 *m2 = (f32 *)ObjModel_GetJointMatrix((int *)p2, grp[1]);
+    for (i = 0, off = 0; i < *(u8*)(p1 + 0xf4); i++)
+    {
+        u8* grp = (u8*)(*(int*)(p1 + 0x54) + off);
+        f32* out = (f32*)ObjModel_GetJointMatrix((int*)p2, i + *(u8*)(p1 + 0xf3));
+        f32* m1 = (f32*)ObjModel_GetJointMatrix((int*)p2, grp[0]);
+        f32* m2 = (f32*)ObjModel_GetJointMatrix((int*)p2, grp[1]);
         f32 w;
         f32 wi;
-        char *jd;
+        char* jd;
 
         w = (f32)grp[2];
         w *= 0.25f;
         wi = 1.0f - w;
 
-        jd = (char *)(*(int *)(p1 + 0x3c) + grp[0] * 0x1c);
-        PSMTXTrans(trans, -*(f32 *)(jd + 0x10), -*(f32 *)(jd + 0x14), -*(f32 *)(jd + 0x18));
+        jd = (char*)(*(int*)(p1 + 0x3c) + grp[0] * 0x1c);
+        PSMTXTrans(trans, -*(f32*)(jd + 0x10), -*(f32*)(jd + 0x14), -*(f32*)(jd + 0x18));
         PSMTXConcat(m1, trans, ma);
-        jd = (char *)(*(int *)(p1 + 0x3c) + grp[1] * 0x1c);
-        PSMTXTrans(trans, -*(f32 *)(jd + 0x10), -*(f32 *)(jd + 0x14), -*(f32 *)(jd + 0x18));
+        jd = (char*)(*(int*)(p1 + 0x3c) + grp[1] * 0x1c);
+        PSMTXTrans(trans, -*(f32*)(jd + 0x10), -*(f32*)(jd + 0x14), -*(f32*)(jd + 0x18));
         PSMTXConcat(m2, trans, mb);
 
         out[0] = ma[0] * w + mb[0] * wi;
@@ -3041,12 +3508,13 @@ void modelCalcVtxGroupMtxs(int p1, int p2)
     }
 }
 
-typedef struct ObjPrintFlipFlag {
+typedef struct ObjPrintFlipFlag
+{
     u8 flip : 1;
     u8 rest : 7;
 } ObjPrintFlipFlag;
 
-int objMathFn_8003a380(int obj, char *tgt, f32 *pos, int p4, s16 *spd, int unk6, int p7, f32 yOff)
+int objMathFn_8003a380(int obj, char* tgt, f32* pos, int p4, s16* spd, int unk6, int p7, f32 yOff)
 {
     extern f32 sqrtf(f32);
     extern f32 lbl_803DE9EC;
@@ -3056,38 +3524,43 @@ int objMathFn_8003a380(int obj, char *tgt, f32 *pos, int p4, s16 *spd, int unk6,
     extern ObjPrintFlipFlag lbl_803DCC00;
     extern u8 framesThisStep;
     s16 ang[4];
-    s16 *sp1;
-    s16 *sp2;
-    char *p;
-    int *keys;
+    s16* sp1;
+    s16* sp2;
+    char* p;
+    int* keys;
     int i;
     int ret;
     f32 dx, dy, dz, dist;
 
-    p = (char *)p4;
+    p = (char*)p4;
     sp2 = spd + 0xf;
-    dx = pos[0] - ((GameObject *)obj)->anim.localPosX;
-    dz = pos[2] - ((GameObject *)obj)->anim.localPosZ;
-    dy = (pos[1] + yOff) - ((GameObject *)obj)->anim.localPosY;
+    dx = pos[0] - ((GameObject*)obj)->anim.localPosX;
+    dz = pos[2] - ((GameObject*)obj)->anim.localPosZ;
+    dy = (pos[1] + yOff) - ((GameObject*)obj)->anim.localPosY;
     dist = sqrtf(dx * dx + dz * dz);
 
-    ang[2] = (s16)getAngle(dx, dz) - (u16)*(s16 *)obj;
-    if (ang[2] > 0x8000) {
+    ang[2] = (s16)getAngle(dx, dz) - (u16) * (s16*)obj;
+    if (ang[2] > 0x8000)
+    {
         ang[2] = (s16)(ang[2] - 0xffff);
     }
-    if (ang[2] < -0x8000) {
+    if (ang[2] < -0x8000)
+    {
         ang[2] = (s16)(ang[2] + 0xffff);
     }
-    ang[3] = p7 - (u16)-getAngle(dist, dy);
-    if (ang[3] > 0x8000) {
+    ang[3] = p7 - (u16) - getAngle(dist, dy);
+    if (ang[3] > 0x8000)
+    {
         ang[3] = (s16)(ang[3] - 0xffff);
     }
-    if (ang[3] < -0x8000) {
+    if (ang[3] < -0x8000)
+    {
         ang[3] = (s16)(ang[3] + 0xffff);
     }
 
     ret = ang[2];
-    if (lbl_803DCC00.flip) {
+    if (lbl_803DCC00.flip)
+    {
         ang[2] = (s16)(ret - 0x8000);
         ang[3] = -ang[3];
         lbl_803DCC00.flip = 0;
@@ -3096,55 +3569,69 @@ int objMathFn_8003a380(int obj, char *tgt, f32 *pos, int p4, s16 *spd, int unk6,
     i = 0;
     keys = lbl_802CAE88;
     sp1 = spd;
-    while (i < 10) {
+    while (i < 10)
+    {
         int key;
-        s16 *found;
-        void *m;
+        s16* found;
+        void* m;
 
         key = *keys;
         found = NULL;
-        m = (void *)((GameObject *)obj)->anim.modelInstance;
-        if (m != NULL) {
+        m = (void*)((GameObject*)obj)->anim.modelInstance;
+        if (m != NULL)
+        {
             int entryIdx = 0, vecOffset = 0;
-            int n = ((ObjDef *)m)->jointCount;
+            int n = ((ObjDef*)m)->jointCount;
             int j;
-            for (j = 0; j < n; j++) {
-                u8 *entries = *(u8 **)&((ObjDef *)m)->jointData;
+            for (j = 0; j < n; j++)
+            {
+                u8* entries = *(u8**)&((ObjDef*)m)->jointData;
                 int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
-                if ((int)entries[idx] != 0xff && key == entries[entryIdx]) {
-                    found = (s16 *)((char *)((GameObject *)obj)->anim.jointPoseData + vecOffset);
+                if ((int)entries[idx] != 0xff && key == entries[entryIdx])
+                {
+                    found = (s16*)((char*)((GameObject*)obj)->anim.jointPoseData + vecOffset);
                 }
-                entryIdx += (s8)((ObjDef *)m)->modelCount + 1;
+                entryIdx += (s8)((ObjDef*)m)->modelCount + 1;
                 vecOffset += 0x12;
             }
         }
-        if (found == NULL) {
+        if (found == NULL)
+        {
             int t = (s16)ret;
             t = (t >= 0) ? t : -t;
             return (s16)(t < 0x100);
         }
 
         {
-            s16 *src = &ang[2];
-            s16 *dst = &ang[0];
+            s16* src = &ang[2];
+            s16* dst = &ang[0];
             int n2;
-            for (n2 = 0; n2 < 2; n2++) {
+            for (n2 = 0; n2 < 2; n2++)
+            {
                 int lim;
                 s16 v;
-                if (n2 % 2 != 0) {
-                    lim = (s32)(lbl_803DE9EC * (f32)*sp2);
-                } else {
-                    lim = (s32)(lbl_803DE9EC * (f32)*sp1);
+                if (n2 % 2 != 0)
+                {
+                    lim = (s32)(lbl_803DE9EC * (f32) * sp2);
+                }
+                else
+                {
+                    lim = (s32)(lbl_803DE9EC * (f32) * sp1);
                 }
                 v = *src;
                 *dst = v;
-                if (v > (s16)lim) {
+                if (v > (s16)lim)
+                {
                     *dst = lim;
                     *src = v - lim;
-                } else if (v < -(s16)lim) {
-                    *dst = (s16)-(s16)lim;
+                }
+                else if (v < -(s16)lim)
+                {
+                    *dst = (s16) - (s16)lim;
                     *src = v + lim;
-                } else {
+                }
+                else
+                {
                     *src = 0;
                 }
                 src++;
@@ -3152,13 +3639,16 @@ int objMathFn_8003a380(int obj, char *tgt, f32 *pos, int p4, s16 *spd, int unk6,
             }
         }
 
-        if (p != NULL) {
-            *(s16 *)(p + 0x14) = ang[0];
-            fn_800399C0((s16 *)p, found);
-            *(s16 *)(p + 0x44) = ang[1];
-            fn_80039834((s16 *)(p + 0x30), found, lbl_803DE9D8, lbl_803DE9DC);
+        if (p != NULL)
+        {
+            *(s16*)(p + 0x14) = ang[0];
+            fn_800399C0((s16*)p, found);
+            *(s16*)(p + 0x44) = ang[1];
+            fn_80039834((s16*)(p + 0x30), found, lbl_803DE9D8, lbl_803DE9DC);
             p += 0x60;
-        } else {
+        }
+        else
+        {
             int d1 = (s16)((s16)((found[1] + ang[0]) >> 1) - found[1]);
             int lim;
             int d2;
@@ -3166,13 +3656,13 @@ int objMathFn_8003a380(int obj, char *tgt, f32 *pos, int p4, s16 *spd, int unk6,
             int div2;
             int lim3;
 
-            lim = (d1 < framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32)-*sp1) / lbl_803DB460))
-                      ? framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32)-*sp1) / lbl_803DB460)
-                      : ((d1 > framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32)*sp1) / lbl_803DB460))
-                             ? framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32)*sp1) / lbl_803DB460)
+            lim = (d1 < framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32) - *sp1) / lbl_803DB460))
+                      ? framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32) - *sp1) / lbl_803DB460)
+                      : ((d1 > framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32) * sp1) / lbl_803DB460))
+                             ? framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32) * sp1) / lbl_803DB460)
                              : d1);
             d2 = (s16)((s16)((found[0] + ang[1]) >> 1) - found[0]);
-            t2 = (s16)(s32)(lbl_803DE9EC * (f32)*sp2);
+            t2 = (s16)(s32)(lbl_803DE9EC * (f32) * sp2);
             div2 = lbl_803DB460 << 1;
             lim3 = (d2 < framesThisStep * (-t2 / div2))
                        ? framesThisStep * (-t2 / div2)
@@ -3181,7 +3671,8 @@ int objMathFn_8003a380(int obj, char *tgt, f32 *pos, int p4, s16 *spd, int unk6,
             found[1] += (s16)lim;
         }
 
-        if (i == 0) {
+        if (i == 0)
+        {
             ret = (s16)(ret - found[1]);
         }
         keys++;
@@ -3192,16 +3683,23 @@ int objMathFn_8003a380(int obj, char *tgt, f32 *pos, int p4, s16 *spd, int unk6,
     return ang[2];
 }
 
-typedef struct ObjPrintGXColor { u8 r, g, b, a; } ObjPrintGXColor;
-typedef struct IndTexMtx23 { f32 m[6]; } IndTexMtx23;
-
-int modelRenderCb_8003c268(int obj, int *p2, int p3)
+typedef struct ObjPrintGXColor
 {
-    extern u8 *ObjModel_GetRenderOp(int m, int p);
-    extern void textureFn_8006c4e0(int *tbl, int *cnt);
-    extern u32 *Shader_getLayer(u8 *shader, int idx);
-    extern void *textureIdxToPtr(int idx);
-    extern void selectTexture(void *tex, int p2);
+    u8 r, g, b, a;
+} ObjPrintGXColor;
+
+typedef struct IndTexMtx23
+{
+    f32 m[6];
+} IndTexMtx23;
+
+int modelRenderCb_8003c268(int obj, int* p2, int p3)
+{
+    extern u8*ObjModel_GetRenderOp(int m, int p);
+    extern void textureFn_8006c4e0(int* tbl, int* cnt);
+    extern u32*Shader_getLayer(u8* shader, int idx);
+    extern void*textureIdxToPtr(int idx);
+    extern void selectTexture(void* tex, int p2);
     extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
     extern void GXSetTevDirect(int stage);
     extern void GXSetTevOrder(int stage, int coord, int map, int color);
@@ -3213,31 +3711,31 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     extern void GXSetTevKColor(int id, ObjPrintGXColor c);
     extern void GXSetTevKAlphaSel(int stage, int sel);
     extern void GXSetTevKColorSel(int stage, int sel);
-    extern void PSMTXScale(f32 *m, f32 x, f32 y, f32 z);
-    extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);
-    extern void GXLoadTexMtxImm(f32 *m, int id, int type);
-    extern void **ObjModel_GetRenderOpTextureRefs(int *p2, int p3);
-    extern void getTextureFn_8006c5e4(int *out);
-    extern void newshadows_getReflectionScrollOffsets(f32 *x, f32 *y);
+    extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
+    extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
+    extern void GXLoadTexMtxImm(f32* m, int id, int type);
+    extern void**ObjModel_GetRenderOpTextureRefs(int* p2, int p3);
+    extern void getTextureFn_8006c5e4(int* out);
+    extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
     extern void GXSetIndTexOrder(int a, int b, int c);
     extern void GXSetIndTexCoordScale(int a, int b, int c);
-    extern void GXSetIndTexMtx(int id, IndTexMtx23 *m, int scale);
+    extern void GXSetIndTexMtx(int id, IndTexMtx23* m, int scale);
     extern void GXSetTevIndirect(int a, int b, int c, int d, int e, int f, int g, int h, int i, int j);
     extern void GXSetNumTevStages(int n);
     extern void GXSetNumIndStages(int n);
     extern void GXSetNumTexGens(int n);
-    extern int *objCreateLight(int obj, int p2);
-    extern void modelLightStruct_setLightKind(int *lt, int v);
-    extern void modelLightStruct_setDirection(int *lt, f32 x, f32 y, f32 z);
-    extern void modelLightStruct_setDiffuseColor(int *lt, int r, int g, int b, int a);
+    extern int*objCreateLight(int obj, int p2);
+    extern void modelLightStruct_setLightKind(int* lt, int v);
+    extern void modelLightStruct_setDirection(int* lt, f32 x, f32 y, f32 z);
+    extern void modelLightStruct_setDiffuseColor(int* lt, int r, int g, int b, int a);
     extern void modelLightChannels_reset(int x);
     extern void modelLightChannel_configure(int a, int b, int c);
     extern void GXSetChanAmbColor(int chan, ObjPrintGXColor c);
     extern void GXSetChanMatColor(int chan, ObjPrintGXColor c);
-    extern void modelLightStruct_loadChannelLight(int chan, int *lt, int obj);
+    extern void modelLightStruct_loadChannelLight(int chan, int* lt, int obj);
     extern void modelLightChannels_applyGXControls(void);
-    extern void ModelLightStruct_free(int *lt);
-    extern void fn_8006C4C0(int *a, int *b, int *c);
+    extern void ModelLightStruct_free(int* lt);
+    extern void fn_8006C4C0(int* a, int* b, int* c);
     extern void GXSetCullMode(int mode);
     extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
     extern void GXSetBlendMode(int a, int b, int c, int d);
@@ -3276,16 +3774,18 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     int a174;
     int b178;
     int stk380;
-    u8 *rop;
+    u8* rop;
     f32 fz;
     u8 v;
 
-    kc = *(ObjPrintGXColor *)&lbl_803DE9FC;
+    kc = *(ObjPrintGXColor*)&lbl_803DE9FC;
     mtxA = lbl_802C1B40;
     mtxB = lbl_802C1B58;
     rop = ObjModel_GetRenderOp(*p2, p3);
-    if ((*(u32 *)(rop + 0x3c) & 0x200) == 0) {
-        if ((lbl_803DCC44 & 3) != 0) {
+    if ((*(u32*)(rop + 0x3c) & 0x200) == 0)
+    {
+        if ((lbl_803DCC44 & 3) != 0)
+        {
             lbl_803DCC3E = 0;
             return 0;
         }
@@ -3307,15 +3807,15 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     GXSetTevSwapMode(0, 0, 0);
     GXSetTevColorOp(0, 0, 0, 0, 0, 0);
     GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
-    v = *(u8 *)(obj + 0xf1);
+    v = *(u8*)(obj + 0xf1);
     kc.b = v;
     kc.g = v;
     kc.r = v;
     GXSetTevKColor(0, kc);
     GXSetTevKAlphaSel(1, 0x1c);
     GXSetTevKColorSel(1, 0xc);
-    PSMTXScale(mtx3, lbl_803DEA2C, *(f32 *)&lbl_803DEA2C, lbl_803DEA04);
-    PSMTXTrans(mtx2, lbl_803DEA28, *(f32 *)&lbl_803DEA28, lbl_803DEA1C);
+    PSMTXScale(mtx3, lbl_803DEA2C, *(f32*)&lbl_803DEA2C, lbl_803DEA04);
+    PSMTXTrans(mtx2, lbl_803DEA28, *(f32*)&lbl_803DEA28, lbl_803DEA1C);
     PSMTXConcat(mtx2, mtx3, mtx3);
     GXLoadTexMtxImm(mtx3, 0x43, 0);
     GXSetTexCoordGen2(0, 1, 1, 0x1e, 0, 0x43);
@@ -3328,9 +3828,9 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     GXSetTevColorOp(1, 0, 0, 0, 1, 2);
     GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
     getTextureFn_8006c5e4(&t164);
-    selectTexture((void *)t164, 4);
+    selectTexture((void*)t164, 4);
     newshadows_getReflectionScrollOffsets(&sx, &sy);
-    PSMTXTrans(mtxR, lbl_803DEA28 * sx, *(f32 *)&lbl_803DEA28 * sy, lbl_803DEA04);
+    PSMTXTrans(mtxR, lbl_803DEA28 * sx, *(f32*)&lbl_803DEA28 * sy, lbl_803DEA04);
     mtxR[0] = lbl_803DEA1C;
     mtxR[5] = lbl_803DEA1C;
     GXLoadTexMtxImm(mtxR, 0x46, 0);
@@ -3347,7 +3847,7 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     GXSetTevAlphaIn(2, 7, 7, 7, 7);
     GXSetTevColorOp(2, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(2, 0, 0, 0, 1, 0);
-    selectTexture(textureIdxToPtr(*(int *)(rop + 0x38)), 2);
+    selectTexture(textureIdxToPtr(*(int*)(rop + 0x38)), 2);
     GXSetTexCoordGen2(3, 1, 4, 0x3c, 0, 0x7d);
     GXSetIndTexOrder(1, 3, 2);
     GXSetIndTexCoordScale(1, 0, 0);
@@ -3355,8 +3855,8 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     mtxB.m[5] = fz;
     GXSetIndTexMtx(2, &mtxB, (s8)lbl_803DB49C);
     GXSetTevIndirect(3, 1, 0, 7, 2, 0, 0, 1, 0, 1);
-    selectTexture(*(void **)(texTbl + lbl_803DCC44 * 4), 3);
-    PSMTXScale(mtx4, lbl_803DEA30, *(f32 *)&lbl_803DEA30, lbl_803DEA1C);
+    selectTexture(*(void**)(texTbl + lbl_803DCC44 * 4), 3);
+    PSMTXScale(mtx4, lbl_803DEA30, *(f32*)&lbl_803DEA30, lbl_803DEA1C);
     GXLoadTexMtxImm(mtx4, 0x40, 0);
     GXSetTexCoordGen2(4, 1, 4, 0x3c, 1, 0x40);
     GXSetTevKColorSel(3, 4);
@@ -3366,22 +3866,26 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     GXSetTevSwapMode(3, 0, 0);
     GXSetTevColorOp(3, 1, 1, 0, 1, 0);
     GXSetTevAlphaOp(3, 0, 0, 0, 1, 0);
-    if (lbl_803DCC44 < 0xc) {
+    if (lbl_803DCC44 < 0xc)
+    {
         GXSetNumTevStages(4);
         GXSetNumIndStages(2);
         GXSetNumTexGens(5);
-    } else {
-        int *lt;
-        kc2 = *(ObjPrintGXColor *)&lbl_803DEA00;
+    }
+    else
+    {
+        int* lt;
+        kc2 = *(ObjPrintGXColor*)&lbl_803DEA00;
         lt = objCreateLight(obj, 0);
-        if (lt != NULL) {
+        if (lt != NULL)
+        {
             modelLightStruct_setLightKind(lt, 4);
-            modelLightStruct_setDirection(lt, lbl_803DEA04, lbl_803DEA34, *(f32 *)&lbl_803DEA04);
+            modelLightStruct_setDirection(lt, lbl_803DEA04, lbl_803DEA34, *(f32*)&lbl_803DEA04);
             modelLightStruct_setDiffuseColor(lt, 0xff, 0xff, 0xff, 0xff);
             modelLightChannels_reset(0);
             modelLightChannel_configure(2, 0, 0);
-            GXSetChanAmbColor(2, *(ObjPrintGXColor *)&lbl_803DB470);
-            GXSetChanMatColor(2, *(ObjPrintGXColor *)&lbl_803DB468);
+            GXSetChanAmbColor(2, *(ObjPrintGXColor*)&lbl_803DB470);
+            GXSetChanMatColor(2, *(ObjPrintGXColor*)&lbl_803DB468);
             modelLightStruct_loadChannelLight(2, lt, obj);
             modelLightChannels_applyGXControls();
             ModelLightStruct_free(lt);
@@ -3390,8 +3894,8 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
         GXSetTevKAlphaSel(5, 0x1c);
         GXSetTevKColorSel(5, 0xc);
         fn_8006C4C0(&a174, &b178, &stk380);
-        selectTexture(*(void **)(a174 + ((lbl_803DCC44 - 0xc) + (u32)lbl_803DCC3D * b178) * 4), 5);
-        PSMTXScale(mtx5, lbl_803DEA38, *(f32 *)&lbl_803DEA38, lbl_803DEA1C);
+        selectTexture(*(void**)(a174 + ((lbl_803DCC44 - 0xc) + (u32)lbl_803DCC3D * b178) * 4), 5);
+        PSMTXScale(mtx5, lbl_803DEA38, *(f32*)&lbl_803DEA38, lbl_803DEA1C);
         GXLoadTexMtxImm(mtx5, 0x49, 0);
         GXSetTexCoordGen2(5, 1, 4, 0x3c, 1, 0x49);
         GXSetTevDirect(4);
@@ -3414,7 +3918,7 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     }
     GXSetCullMode(2);
     {
-        GXSetFog(0, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjPrintGXColor *)&lbl_803DB468);
+        GXSetFog(0, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjPrintGXColor*)&lbl_803DB468);
     }
     gxSetZMode_(1, 3, 0);
     gxSetPeControl_ZCompLoc_(1);
@@ -3422,15 +3926,18 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     return 1;
 }
 
-typedef struct ObjPrintS10Color { s16 r, g, b, a; } ObjPrintS10Color;
-
-int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
+typedef struct ObjPrintS10Color
 {
-    extern u8 *ObjModel_GetRenderOp(int m, int p);
-    extern void textureFn_8006c4e0(int *tbl, int *cnt);
-    extern u32 *Shader_getLayer(u8 *shader, int idx);
-    extern void *textureIdxToPtr(int idx);
-    extern void selectTexture(void *tex, int p2);
+    s16 r, g, b, a;
+} ObjPrintS10Color;
+
+int shaderFuzzFn_8003cc1c(int obj, int* p2, int p3)
+{
+    extern u8*ObjModel_GetRenderOp(int m, int p);
+    extern void textureFn_8006c4e0(int* tbl, int* cnt);
+    extern u32*Shader_getLayer(u8* shader, int idx);
+    extern void*textureIdxToPtr(int idx);
+    extern void selectTexture(void* tex, int p2);
     extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
     extern void GXSetTevDirect(int stage);
     extern void GXSetTevOrder(int stage, int coord, int map, int color);
@@ -3443,15 +3950,15 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     extern void GXSetTevKAlphaSel(int stage, int sel);
     extern void GXSetTevKColorSel(int stage, int sel);
     extern void GXSetTevColorS10(int id, ObjPrintS10Color c);
-    extern void PSMTXScale(f32 *m, f32 x, f32 y, f32 z);
-    extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);
-    extern void GXLoadTexMtxImm(f32 *m, int id, int type);
-    extern void **ObjModel_GetRenderOpTextureRefs(int *p2, int p3);
-    extern void getTextureFn_8006c5e4(int *out);
-    extern void newshadows_getReflectionScrollOffsets(f32 *x, f32 *y);
+    extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
+    extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
+    extern void GXLoadTexMtxImm(f32* m, int id, int type);
+    extern void**ObjModel_GetRenderOpTextureRefs(int* p2, int p3);
+    extern void getTextureFn_8006c5e4(int* out);
+    extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
     extern void GXSetIndTexOrder(int a, int b, int c);
     extern void GXSetIndTexCoordScale(int a, int b, int c);
-    extern void GXSetIndTexMtx(int id, IndTexMtx23 *m, int scale);
+    extern void GXSetIndTexMtx(int id, IndTexMtx23* m, int scale);
     extern void GXSetTevIndirect(int a, int b, int c, int d, int e, int f, int g, int h, int i, int j);
     extern void GXSetNumTevStages(int n);
     extern void GXSetNumIndStages(int n);
@@ -3459,9 +3966,9 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     extern void GXSetCullMode(int mode);
     extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
     extern void GXSetBlendMode(int a, int b, int c, int d);
-    extern void modelLightStruct_getProjectionTevModes(int p, int *a, int *b);
-    extern f32 *modelLightStruct_getProjectionTexMtx(int p);
-    extern void *modelLightStruct_getProjectionTexture(int p);
+    extern void modelLightStruct_getProjectionTevModes(int p, int* a, int* b);
+    extern f32*modelLightStruct_getProjectionTexMtx(int p);
+    extern void*modelLightStruct_getProjectionTexture(int p);
     extern void _gxSetFogParams(void);
     extern IndTexMtx23 lbl_802C1B10;
     extern IndTexMtx23 lbl_802C1B28;
@@ -3496,7 +4003,7 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     f32 sy;
     int stk348;
     int t160;
-    u8 *rop;
+    u8* rop;
     f32 fz;
     int stage;
     int coord;
@@ -3506,33 +4013,46 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     mtxA = lbl_802C1B10;
     mtxB = lbl_802C1B28;
     rop = ObjModel_GetRenderOp(*p2, p3);
-    if ((*(u32 *)(rop + 0x3c) & 0x200) == 0) {
+    if ((*(u32*)(rop + 0x3c) & 0x200) == 0)
+    {
         lbl_803DCC3E = 0;
         return 0;
     }
     lbl_803DCC3E = 1;
     textureFn_8006c4e0(&texTbl, &texCnt);
-    if (lbl_803DCC35 != 0) {
+    if (lbl_803DCC35 != 0)
+    {
         fz = lbl_803DEA04;
-    } else {
+    }
+    else
+    {
         fz = (f32)lbl_803DCC44 / (f32)texCnt;
         fz = fz * lbl_803DEA28;
     }
     selectTexture(textureIdxToPtr(*Shader_getLayer(rop, 0)), 0);
     GXSetTexCoordGen2(2, 1, 4, 0x3c, 0, 0x7d);
-    if (lbl_803DCC36 == 0) {
+    if (lbl_803DCC36 == 0)
+    {
         GXSetTevColorIn(0, 0xf, 0xf, 0xf, 8);
-    } else {
-        if (lbl_803DCC36 == 1) {
+    }
+    else
+    {
+        if (lbl_803DCC36 == 1)
+        {
             u8 v = lbl_803DCC44 << 4;
             lbl_803DB494.b = v;
             lbl_803DB494.g = v;
             lbl_803DB494.r = v;
             GXSetTevColorIn(0, 8, 0xc, 0xe, 0xf);
-        } else {
-            if (lbl_803DCC44 < 8) {
+        }
+        else
+        {
+            if (lbl_803DCC44 < 8)
+            {
                 lbl_803DB494.b = lbl_803DCC44 << 5;
-            } else {
+            }
+            else
+            {
                 lbl_803DB494.b = 0xff;
             }
             lbl_803DB494.g = lbl_803DB494.b;
@@ -3550,15 +4070,15 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     GXSetTevColorOp(0, 0, 0, 0, 0, 0);
     GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
     {
-        u8 v = *(u8 *)(obj + 0xf1);
+        u8 v = *(u8*)(obj + 0xf1);
         s10.b = v;
         s10.g = v;
         s10.r = v;
-        s10.a = *(u8 *)(obj + 0x37) - 0xff;
+        s10.a = *(u8*)(obj + 0x37) - 0xff;
     }
     GXSetTevColorS10(3, s10);
-    PSMTXScale(mtx3, lbl_803DEA2C, *(f32 *)&lbl_803DEA2C, lbl_803DEA04);
-    PSMTXTrans(mtx2, lbl_803DEA28, *(f32 *)&lbl_803DEA28, lbl_803DEA1C);
+    PSMTXScale(mtx3, lbl_803DEA2C, *(f32*)&lbl_803DEA2C, lbl_803DEA04);
+    PSMTXTrans(mtx2, lbl_803DEA28, *(f32*)&lbl_803DEA28, lbl_803DEA1C);
     PSMTXConcat(mtx2, mtx3, mtx3);
     GXLoadTexMtxImm(mtx3, 0x43, 0);
     GXSetTexCoordGen2(0, 1, 1, 0x1e, 0, 0x43);
@@ -3570,58 +4090,80 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     GXSetTevAlphaIn(1, 7, 7, 7, 3);
     GXSetTevColorOp(1, 0, 0, 0, 1, 2);
     GXSetTevAlphaOp(1, 0, 0, 0, 0, 0);
-    if (lbl_803DCC5C != 0) {
+    if (lbl_803DCC5C != 0)
+    {
         int stk364;
         int t170;
         modelLightStruct_getProjectionTevModes(lbl_803DCC64, &t170, &stk364);
-        if (t170 != 0) {
+        if (t170 != 0)
+        {
             goto notfancy;
         }
         fancy = 1;
-    } else {
+    }
+    else
+    {
     notfancy:
         fancy = 0;
     }
-    if (fancy) {
+    if (fancy)
+    {
         GXSetTevDirect(2);
         GXLoadTexMtxImm(modelLightStruct_getProjectionTexMtx(lbl_803DCC64), 0x49, 0);
         GXSetTexCoordGen2(1, 0, 0, 0, 0, 0x49);
-        if (lbl_803DCC60 == 0 || lbl_803DCC60 == 2) {
+        if (lbl_803DCC60 == 0 || lbl_803DCC60 == 2)
+        {
             GXSetTevOrder(2, 1, 5, 4);
-        } else {
+        }
+        else
+        {
             GXSetTevOrder(2, 1, 5, 5);
         }
         selectTexture(modelLightStruct_getProjectionTexture(lbl_803DCC64), 5);
         modelLightStruct_getProjectionTevModes(lbl_803DCC64, &stk348, &t160);
-        if (t160 == 2) {
+        if (t160 == 2)
+        {
             GXSetTevColorIn(2, 0xf, 4, 8, 0xf);
-        } else if (t160 == 3) {
+        }
+        else if (t160 == 3)
+        {
             GXSetTevColorIn(2, 4, 0xf, 8, 0xf);
-        } else if (t160 == 1) {
+        }
+        else if (t160 == 1)
+        {
             GXSetTevColorIn(2, 0xf, 0xf, 8, 4);
-        } else if (lbl_803DCC60 == 0 || lbl_803DCC60 == 1) {
+        }
+        else if (lbl_803DCC60 == 0 || lbl_803DCC60 == 1)
+        {
             GXSetTevColorIn(2, 0xf, 10, 8, 4);
-        } else {
+        }
+        else
+        {
             GXSetTevColorIn(2, 0xf, 0xb, 8, 4);
         }
         GXSetTevSwapMode(2, 0, 0);
-        if (t160 == 1) {
+        if (t160 == 1)
+        {
             GXSetTevColorOp(2, 1, 0, 0, 1, 2);
-        } else {
+        }
+        else
+        {
             GXSetTevColorOp(2, 0, 0, 0, 1, 2);
         }
         GXSetTevAlphaIn(2, 7, 7, 7, 0);
         GXSetTevAlphaOp(2, 0, 0, 0, 1, 0);
         stage = 3;
         coord = 5;
-    } else {
+    }
+    else
+    {
         stage = 2;
         coord = 1;
     }
     getTextureFn_8006c5e4(&t150);
-    selectTexture((void *)t150, 4);
+    selectTexture((void*)t150, 4);
     newshadows_getReflectionScrollOffsets(&sx, &sy);
-    PSMTXTrans(mtxR, lbl_803DEA28 * sx, *(f32 *)&lbl_803DEA28 * sy, lbl_803DEA04);
+    PSMTXTrans(mtxR, lbl_803DEA28 * sx, *(f32*)&lbl_803DEA28 * sy, lbl_803DEA04);
     mtxR[0] = lbl_803DEA1C;
     mtxR[5] = lbl_803DEA1C;
     GXLoadTexMtxImm(mtxR, 0x46, 0);
@@ -3638,8 +4180,9 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     GXSetTevAlphaIn(stage, 7, 7, 7, 0);
     GXSetTevColorOp(stage, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(stage, 0, 0, 0, 0, 0);
-    if (*(void **)(rop + 0x38) != NULL) {
-        selectTexture(textureIdxToPtr(*(int *)(rop + 0x38)), 2);
+    if (*(void**)(rop + 0x38) != NULL)
+    {
+        selectTexture(textureIdxToPtr(*(int*)(rop + 0x38)), 2);
         GXSetTexCoordGen2(3, 1, 4, 0x3c, 0, 0x7d);
         GXSetIndTexOrder(1, 3, 2);
         GXSetIndTexCoordScale(1, 0, 0);
@@ -3647,7 +4190,9 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
         mtxB.m[5] = fz;
         GXSetIndTexMtx(2, &mtxB, (s8)lbl_803DB490);
         GXSetTevIndirect(stage + 1, 1, 0, 7, 2, 0, 0, 1, 0, 1);
-    } else {
+    }
+    else
+    {
         GXSetIndTexOrder(1, 3, 2);
         GXSetIndTexCoordScale(1, 0, 0);
         mtxB.m[1] = lbl_803DEA04;
@@ -3655,15 +4200,18 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
         GXSetIndTexMtx(2, &mtxB, -0xf);
         GXSetTevIndirect(stage + 1, 1, 0, 7, 2, 0, 0, 1, 0, 0);
     }
-    selectTexture(*(void **)(texTbl + lbl_803DCC44 * 4), 3);
-    PSMTXScale(mtx4, lbl_803DEA30, *(f32 *)&lbl_803DEA30, lbl_803DEA1C);
+    selectTexture(*(void**)(texTbl + lbl_803DCC44 * 4), 3);
+    PSMTXScale(mtx4, lbl_803DEA30, *(f32*)&lbl_803DEA30, lbl_803DEA1C);
     GXLoadTexMtxImm(mtx4, 0x40, 0);
     GXSetTexCoordGen2(4, 1, 4, 0x3c, 1, 0x40);
     GXSetTevKColorSel(stage + 1, 4);
-    if (*(void **)(rop + 0x38) != NULL) {
+    if (*(void**)(rop + 0x38) != NULL)
+    {
         GXSetTevOrder(stage + 1, 4, 3, 8);
         GXSetTevAlphaIn(stage + 1, 7, 4, 5, 0);
-    } else {
+    }
+    else
+    {
         GXSetTevOrder(stage + 1, 4, 3, 0xff);
         GXSetTevAlphaIn(stage + 1, 4, 7, 7, 0);
     }
@@ -3671,18 +4219,24 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     GXSetTevSwapMode(stage + 1, 0, 0);
     GXSetTevColorOp(stage + 1, 1, 1, 0, 1, 0);
     GXSetTevAlphaOp(stage + 1, 0, 0, 0, 1, 0);
-    if (fancy) {
+    if (fancy)
+    {
         GXSetNumTevStages(5);
         GXSetNumTexGens(6);
-    } else {
+    }
+    else
+    {
         GXSetNumTevStages(4);
         GXSetNumTexGens(5);
     }
     GXSetNumIndStages(2);
     GXSetCullMode(2);
-    if ((*(u16 *)(*p2 + 2) & 0x100) != 0) {
-        GXSetFog(0, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjPrintGXColor *)&lbl_803DB468);
-    } else {
+    if ((*(u16*)(*p2 + 2) & 0x100) != 0)
+    {
+        GXSetFog(0, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjPrintGXColor*)&lbl_803DB468);
+    }
+    else
+    {
         _gxSetFogParams();
     }
     gxSetZMode_(1, 3, 0);

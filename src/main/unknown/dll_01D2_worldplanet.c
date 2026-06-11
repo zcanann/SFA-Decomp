@@ -28,7 +28,8 @@
  */
 
 #if 0
-enum dll_01D2_WORLDplanet_slot {
+enum dll_01D2_WORLDplanet_slot
+{
     WORLDPLANET_INITIALISE = 0,
     WORLDPLANET_RELEASE = 1,
     WORLDPLANET_INIT = 3,

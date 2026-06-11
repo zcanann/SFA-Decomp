@@ -141,10 +141,11 @@ extern char s_opening_bnr_8030f718[];
  * PAL Size: TODO
  */
 extern int lbl_803DD044;
-extern void *memcpy(void *dst, const void *src, u32 n);
-int saveCb_8007e77c(u8 idx, int unused, void *dst)
+extern void* memcpy(void* dst, const void* src, u32 n);
+
+int saveCb_8007e77c(u8 idx, int unused, void* dst)
 {
-    memcpy(dst, (void *)(lbl_803DD044 + idx * 1772 + 2640), 1772);
+    memcpy(dst, (void*)(lbl_803DD044 + idx * 1772 + 2640), 1772);
     return 0;
 }
 
@@ -164,149 +165,156 @@ int saveCb_8007e77c(u8 idx, int unused, void *dst)
  */
 int FUN_8007eb04(uint param_1)
 {
-  uint uVar1;
-  uint uVar2;
-  uint uVar3;
-  ushort uVar4;
-  uint uVar5;
-  uint uVar6;
-  uint uVar7;
-  uint uVar8;
-  uint uVar9;
-  uint uVar10;
-  uint uVar11;
-  uint uVar12;
-  int iVar13;
-  int iVar14;
-  uint uVar15;
-  uint uVar16;
-  uint uVar17;
-  uint uVar18;
-  uint uVar19;
-  uint uVar20;
-  uint uVar21;
-  uint uVar22;
-  uint *puVar23;
-  uint uVar24;
-  bool bVar25;
-  
-  uVar7 = DAT_803ddcc4;
-  uVar2 = 0;
-  uVar1 = 0;
-  uVar6 = 1;
-  iVar13 = 0;
-  for (uVar4 = 0; uVar4 < 0x3f7; uVar4 = uVar4 + 8) {
-    puVar23 = (uint *)(DAT_803ddcc4 + (uint)uVar4 * 8);
-    uVar12 = puVar23[1];
-    bVar25 = CARRY4(uVar6,uVar12);
-    uVar3 = uVar6 + uVar12;
-    uVar15 = puVar23[3];
-    uVar5 = uVar3 + uVar15;
-    uVar16 = puVar23[5];
-    uVar24 = uVar5 + uVar16;
-    uVar17 = puVar23[7];
-    uVar8 = uVar24 + uVar17;
-    uVar18 = puVar23[9];
-    uVar9 = uVar8 + uVar18;
-    uVar19 = puVar23[0xb];
-    uVar10 = uVar9 + uVar19;
-    uVar20 = puVar23[0xd];
-    uVar11 = uVar10 + uVar20;
-    uVar21 = puVar23[0xf];
-    uVar2 = uVar2 ^ uVar12 ^ uVar15 ^ uVar16 ^ uVar17 ^ uVar18 ^ uVar19 ^ uVar20 ^ uVar21;
-    uVar1 = uVar1 ^ *puVar23 ^ puVar23[2] ^ puVar23[4] ^ puVar23[6] ^ puVar23[8] ^ puVar23[10] ^
+    uint uVar1;
+    uint uVar2;
+    uint uVar3;
+    ushort uVar4;
+    uint uVar5;
+    uint uVar6;
+    uint uVar7;
+    uint uVar8;
+    uint uVar9;
+    uint uVar10;
+    uint uVar11;
+    uint uVar12;
+    int iVar13;
+    int iVar14;
+    uint uVar15;
+    uint uVar16;
+    uint uVar17;
+    uint uVar18;
+    uint uVar19;
+    uint uVar20;
+    uint uVar21;
+    uint uVar22;
+    uint* puVar23;
+    uint uVar24;
+    bool bVar25;
+
+    uVar7 = DAT_803ddcc4;
+    uVar2 = 0;
+    uVar1 = 0;
+    uVar6 = 1;
+    iVar13 = 0;
+    for (uVar4 = 0; uVar4 < 0x3f7; uVar4 = uVar4 + 8)
+    {
+        puVar23 = (uint*)(DAT_803ddcc4 + (uint)uVar4 * 8);
+        uVar12 = puVar23[1];
+        bVar25 = CARRY4(uVar6, uVar12);
+        uVar3 = uVar6 + uVar12;
+        uVar15 = puVar23[3];
+        uVar5 = uVar3 + uVar15;
+        uVar16 = puVar23[5];
+        uVar24 = uVar5 + uVar16;
+        uVar17 = puVar23[7];
+        uVar8 = uVar24 + uVar17;
+        uVar18 = puVar23[9];
+        uVar9 = uVar8 + uVar18;
+        uVar19 = puVar23[0xb];
+        uVar10 = uVar9 + uVar19;
+        uVar20 = puVar23[0xd];
+        uVar11 = uVar10 + uVar20;
+        uVar21 = puVar23[0xf];
+        uVar2 = uVar2 ^ uVar12 ^ uVar15 ^ uVar16 ^ uVar17 ^ uVar18 ^ uVar19 ^ uVar20 ^ uVar21;
+        uVar1 = uVar1 ^ *puVar23 ^ puVar23[2] ^ puVar23[4] ^ puVar23[6] ^ puVar23[8] ^ puVar23[10] ^
             puVar23[0xc] ^ puVar23[0xe];
-    uVar6 = uVar11 + uVar21;
-    iVar13 = iVar13 + *puVar23 + (uint)bVar25 + puVar23[2] + (uint)CARRY4(uVar3,uVar15) +
-             puVar23[4] + (uint)CARRY4(uVar5,uVar16) + puVar23[6] + (uint)CARRY4(uVar24,uVar17) +
-             puVar23[8] + (uint)CARRY4(uVar8,uVar18) + puVar23[10] + (uint)CARRY4(uVar9,uVar19) +
-             puVar23[0xc] + (uint)CARRY4(uVar10,uVar20) + puVar23[0xe] + (uint)CARRY4(uVar11,uVar21)
-    ;
-  }
-  for (; uVar4 < 0x3ff; uVar4 = uVar4 + 1) {
-    puVar23 = (uint *)(DAT_803ddcc4 + (uint)uVar4 * 8);
-    uVar3 = *puVar23;
-    uVar5 = puVar23[1];
-    uVar2 = uVar2 ^ uVar5;
-    uVar1 = uVar1 ^ uVar3;
-    bVar25 = CARRY4(uVar6,uVar5);
-    uVar6 = uVar6 + uVar5;
-    iVar13 = iVar13 + uVar3 + bVar25;
-  }
-  uVar2 = uVar2 ^ uVar6 + 0xd;
-  uVar1 = uVar1 ^ iVar13 + (uint)(0xfffffff2 < uVar6);
-  *(uint *)(DAT_803ddcc4 + 0x1ffc) = uVar2;
-  *(uint *)(uVar7 + 0x1ff8) = uVar1;
-  FUN_802420e0(DAT_803ddcc4,0x2000);
-  uVar7 = (param_1 & 0xff) << 0xd;
-  iVar13 = FUN_80264428((int *)&DAT_80397560,DAT_803ddcc4,0x2000,uVar7);
-  if (iVar13 == -5) {
-    FUN_80264624(0,DAT_803dc364);
-  }
-  uVar6 = DAT_803ddcd0;
-  uVar3 = DAT_803ddcd4;
-  if (iVar13 == 0) {
-    FUN_802420b0(DAT_803ddcc4,0x2000);
-    iVar13 = FUN_802640ac((int *)&DAT_80397560,DAT_803ddcc4,0x2000,uVar7);
+        uVar6 = uVar11 + uVar21;
+        iVar13 = iVar13 + *puVar23 + (uint)bVar25 + puVar23[2] + (uint)CARRY4(uVar3, uVar15) +
+            puVar23[4] + (uint)CARRY4(uVar5, uVar16) + puVar23[6] + (uint)CARRY4(uVar24, uVar17) +
+            puVar23[8] + (uint)CARRY4(uVar8, uVar18) + puVar23[10] + (uint)CARRY4(uVar9, uVar19) +
+            puVar23[0xc] + (uint)CARRY4(uVar10, uVar20) + puVar23[0xe] + (uint)CARRY4(uVar11, uVar21);
+    }
+    for (; uVar4 < 0x3ff; uVar4 = uVar4 + 1)
+    {
+        puVar23 = (uint*)(DAT_803ddcc4 + (uint)uVar4 * 8);
+        uVar3 = *puVar23;
+        uVar5 = puVar23[1];
+        uVar2 = uVar2 ^ uVar5;
+        uVar1 = uVar1 ^ uVar3;
+        bVar25 = CARRY4(uVar6, uVar5);
+        uVar6 = uVar6 + uVar5;
+        iVar13 = iVar13 + uVar3 + bVar25;
+    }
+    uVar2 = uVar2 ^ uVar6 + 0xd;
+    uVar1 = uVar1 ^ iVar13 + (uint)(0xfffffff2 < uVar6);
+    *(uint*)(DAT_803ddcc4 + 0x1ffc) = uVar2;
+    *(uint*)(uVar7 + 0x1ff8) = uVar1;
+    FUN_802420e0(DAT_803ddcc4, 0x2000);
+    uVar7 = (param_1 & 0xff) << 0xd;
+    iVar13 = FUN_80264428((int*)&DAT_80397560, DAT_803ddcc4, 0x2000, uVar7);
+    if (iVar13 == -5)
+    {
+        FUN_80264624(0, DAT_803dc364);
+    }
     uVar6 = DAT_803ddcd0;
     uVar3 = DAT_803ddcd4;
-    if (iVar13 == 0) {
-      uVar3 = 0;
-      uVar6 = 0;
-      uVar7 = 1;
-      iVar14 = 0;
-      for (uVar4 = 0; uVar4 < 0x3f7; uVar4 = uVar4 + 8) {
-        puVar23 = (uint *)(DAT_803ddcc4 + (uint)uVar4 * 8);
-        uVar15 = puVar23[1];
-        bVar25 = CARRY4(uVar7,uVar15);
-        uVar5 = uVar7 + uVar15;
-        uVar16 = puVar23[3];
-        uVar24 = uVar5 + uVar16;
-        uVar17 = puVar23[5];
-        uVar8 = uVar24 + uVar17;
-        uVar18 = puVar23[7];
-        uVar9 = uVar8 + uVar18;
-        uVar19 = puVar23[9];
-        uVar10 = uVar9 + uVar19;
-        uVar20 = puVar23[0xb];
-        uVar11 = uVar10 + uVar20;
-        uVar21 = puVar23[0xd];
-        uVar12 = uVar11 + uVar21;
-        uVar22 = puVar23[0xf];
-        uVar3 = uVar3 ^ uVar15 ^ uVar16 ^ uVar17 ^ uVar18 ^ uVar19 ^ uVar20 ^ uVar21 ^ uVar22;
-        uVar6 = uVar6 ^ *puVar23 ^ puVar23[2] ^ puVar23[4] ^ puVar23[6] ^ puVar23[8] ^ puVar23[10] ^
-                puVar23[0xc] ^ puVar23[0xe];
-        uVar7 = uVar12 + uVar22;
-        iVar14 = iVar14 + *puVar23 + (uint)bVar25 + puVar23[2] + (uint)CARRY4(uVar5,uVar16) +
-                 puVar23[4] + (uint)CARRY4(uVar24,uVar17) + puVar23[6] + (uint)CARRY4(uVar8,uVar18)
-                 + puVar23[8] + (uint)CARRY4(uVar9,uVar19) +
-                 puVar23[10] + (uint)CARRY4(uVar10,uVar20) +
-                 puVar23[0xc] + (uint)CARRY4(uVar11,uVar21) +
-                 puVar23[0xe] + (uint)CARRY4(uVar12,uVar22);
-      }
-      for (; uVar4 < 0x3ff; uVar4 = uVar4 + 1) {
-        puVar23 = (uint *)(DAT_803ddcc4 + (uint)uVar4 * 8);
-        uVar5 = *puVar23;
-        uVar24 = puVar23[1];
-        uVar3 = uVar3 ^ uVar24;
-        uVar6 = uVar6 ^ uVar5;
-        bVar25 = CARRY4(uVar7,uVar24);
-        uVar7 = uVar7 + uVar24;
-        iVar14 = iVar14 + uVar5 + bVar25;
-      }
-      uVar3 = uVar3 ^ uVar7 + 0xd;
-      uVar6 = uVar6 ^ iVar14 + (uint)(0xfffffff2 < uVar7);
-      if (uVar2 != uVar3 || uVar1 != uVar6) {
-        iVar13 = -0x55;
-        DAT_803dc360 = 10;
+    if (iVar13 == 0)
+    {
+        FUN_802420b0(DAT_803ddcc4, 0x2000);
+        iVar13 = FUN_802640ac((int*)&DAT_80397560, DAT_803ddcc4, 0x2000, uVar7);
         uVar6 = DAT_803ddcd0;
         uVar3 = DAT_803ddcd4;
-      }
+        if (iVar13 == 0)
+        {
+            uVar3 = 0;
+            uVar6 = 0;
+            uVar7 = 1;
+            iVar14 = 0;
+            for (uVar4 = 0; uVar4 < 0x3f7; uVar4 = uVar4 + 8)
+            {
+                puVar23 = (uint*)(DAT_803ddcc4 + (uint)uVar4 * 8);
+                uVar15 = puVar23[1];
+                bVar25 = CARRY4(uVar7, uVar15);
+                uVar5 = uVar7 + uVar15;
+                uVar16 = puVar23[3];
+                uVar24 = uVar5 + uVar16;
+                uVar17 = puVar23[5];
+                uVar8 = uVar24 + uVar17;
+                uVar18 = puVar23[7];
+                uVar9 = uVar8 + uVar18;
+                uVar19 = puVar23[9];
+                uVar10 = uVar9 + uVar19;
+                uVar20 = puVar23[0xb];
+                uVar11 = uVar10 + uVar20;
+                uVar21 = puVar23[0xd];
+                uVar12 = uVar11 + uVar21;
+                uVar22 = puVar23[0xf];
+                uVar3 = uVar3 ^ uVar15 ^ uVar16 ^ uVar17 ^ uVar18 ^ uVar19 ^ uVar20 ^ uVar21 ^ uVar22;
+                uVar6 = uVar6 ^ *puVar23 ^ puVar23[2] ^ puVar23[4] ^ puVar23[6] ^ puVar23[8] ^ puVar23[10] ^
+                    puVar23[0xc] ^ puVar23[0xe];
+                uVar7 = uVar12 + uVar22;
+                iVar14 = iVar14 + *puVar23 + (uint)bVar25 + puVar23[2] + (uint)CARRY4(uVar5, uVar16) +
+                    puVar23[4] + (uint)CARRY4(uVar24, uVar17) + puVar23[6] + (uint)CARRY4(uVar8, uVar18)
+                    + puVar23[8] + (uint)CARRY4(uVar9, uVar19) +
+                    puVar23[10] + (uint)CARRY4(uVar10, uVar20) +
+                    puVar23[0xc] + (uint)CARRY4(uVar11, uVar21) +
+                    puVar23[0xe] + (uint)CARRY4(uVar12, uVar22);
+            }
+            for (; uVar4 < 0x3ff; uVar4 = uVar4 + 1)
+            {
+                puVar23 = (uint*)(DAT_803ddcc4 + (uint)uVar4 * 8);
+                uVar5 = *puVar23;
+                uVar24 = puVar23[1];
+                uVar3 = uVar3 ^ uVar24;
+                uVar6 = uVar6 ^ uVar5;
+                bVar25 = CARRY4(uVar7, uVar24);
+                uVar7 = uVar7 + uVar24;
+                iVar14 = iVar14 + uVar5 + bVar25;
+            }
+            uVar3 = uVar3 ^ uVar7 + 0xd;
+            uVar6 = uVar6 ^ iVar14 + (uint)(0xfffffff2 < uVar7);
+            if (uVar2 != uVar3 || uVar1 != uVar6)
+            {
+                iVar13 = -0x55;
+                DAT_803dc360 = 10;
+                uVar6 = DAT_803ddcd0;
+                uVar3 = DAT_803ddcd4;
+            }
+        }
     }
-  }
-  DAT_803ddcd4 = uVar3;
-  DAT_803ddcd0 = uVar6;
-  return iVar13;
+    DAT_803ddcd4 = uVar3;
+    DAT_803ddcd0 = uVar6;
+    return iVar13;
 }
 
 
@@ -324,10 +332,10 @@ int FUN_8007eb04(uint param_1)
  * PAL Size: TODO
  */
 undefined4
-FUN_8007f350(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,char param_9
-            ,undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13,
-            undefined4 param_14,undefined4 param_15,undefined4 param_16)
+FUN_8007f350(undefined8 param_1, double param_2, undefined8 param_3, undefined8 param_4,
+             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, char param_9
+             , undefined4 param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13,
+             undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
     return 0;
 }
@@ -346,24 +354,28 @@ FUN_8007f350(undefined8 param_1,double param_2,undefined8 param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_8007f3c8(int *param_1,int param_2,int param_3)
+int FUN_8007f3c8(int* param_1, int param_2, int param_3)
 {
-  int iVar1;
-  int iVar2;
-  
-  iVar2 = 0;
-  if (0 < param_2) {
-    do {
-      iVar1 = *param_1;
-      param_1 = param_1 + 1;
-      if (iVar1 == param_3) {
-        return iVar2;
-      }
-      iVar2 = iVar2 + 1;
-      param_2 = param_2 + -1;
-    } while (param_2 != 0);
-  }
-  return -1;
+    int iVar1;
+    int iVar2;
+
+    iVar2 = 0;
+    if (0 < param_2)
+    {
+        do
+        {
+            iVar1 = *param_1;
+            param_1 = param_1 + 1;
+            if (iVar1 == param_3)
+            {
+                return iVar2;
+            }
+            iVar2 = iVar2 + 1;
+            param_2 = param_2 + -1;
+        }
+        while (param_2 != 0);
+    }
+    return -1;
 }
 
 
@@ -380,36 +392,44 @@ int FUN_8007f3c8(int *param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_8007f56c(int *param_1,int param_2,int param_3)
+int FUN_8007f56c(int* param_1, int param_2, int param_3)
 {
-  int iVar1;
-  int iVar2;
-  int iVar3;
-  
-  if (0x10 < param_2) {
-    iVar1 = 0;
-    while( true ) {
-      iVar3 = param_2 + iVar1 >> 1;
-      iVar2 = iVar3;
-      if ((param_3 <= param_1[iVar3 * 2]) &&
-         (param_2 = iVar3, iVar2 = iVar1, param_3 == param_1[iVar3 * 2])) break;
-      iVar1 = iVar2;
-      if (iVar2 < param_2) {
-        return 0;
-      }
+    int iVar1;
+    int iVar2;
+    int iVar3;
+
+    if (0x10 < param_2)
+    {
+        iVar1 = 0;
+        while (true)
+        {
+            iVar3 = param_2 + iVar1 >> 1;
+            iVar2 = iVar3;
+            if ((param_3 <= param_1[iVar3 * 2]) &&
+                (param_2 = iVar3, iVar2 = iVar1, param_3 == param_1[iVar3 * 2]))
+                break;
+            iVar1 = iVar2;
+            if (iVar2 < param_2)
+            {
+                return 0;
+            }
+        }
+        return param_1[iVar3 * 2 + 1];
     }
-    return param_1[iVar3 * 2 + 1];
-  }
-  if (param_2 != 0) {
-    do {
-      if (*param_1 == param_3) {
-        return param_1[1];
-      }
-      param_1 = param_1 + 2;
-      param_2 = param_2 + -1;
-    } while (param_2 != 0);
-  }
-  return 0;
+    if (param_2 != 0)
+    {
+        do
+        {
+            if (*param_1 == param_3)
+            {
+                return param_1[1];
+            }
+            param_1 = param_1 + 2;
+            param_2 = param_2 + -1;
+        }
+        while (param_2 != 0);
+    }
+    return 0;
 }
 
 
@@ -426,9 +446,9 @@ int FUN_8007f56c(int *param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_8007f6c8(float *param_1)
+uint FUN_8007f6c8(float* param_1)
 {
-  return ((uint)(byte)((lbl_803DFC20 == *param_1) << 1) << 0x1c) >> 0x1d ^ 1;
+    return ((uint)(byte)((lbl_803DFC20 == *param_1) << 1) << 0x1c) >> 0x1d ^ 1;
 }
 
 /*
@@ -444,10 +464,10 @@ uint FUN_8007f6c8(float *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007f6e4(undefined4 *param_1)
+void FUN_8007f6e4(undefined4* param_1)
 {
-  *param_1 = lbl_803DFC20;
-  return;
+    *param_1 = lbl_803DFC20;
+    return;
 }
 
 /*
@@ -463,10 +483,10 @@ void FUN_8007f6e4(undefined4 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007f718(float *param_1,short param_2)
+void FUN_8007f718(float* param_1, short param_2)
 {
-  *param_1 = (float)((double)CONCAT44(0x43300000,(int)param_2 ^ 0x80000000) - DOUBLE_803dfc28);
-  return;
+    *param_1 = (float)((double)CONCAT44(0x43300000, (int)param_2 ^ 0x80000000) - DOUBLE_803dfc28);
+    return;
 }
 
 /*
@@ -482,19 +502,21 @@ void FUN_8007f718(float *param_1,short param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8007f764(float *param_1)
+undefined4 FUN_8007f764(float* param_1)
 {
-  float fVar1;
-  
-  fVar1 = lbl_803DFC20;
-  if (*param_1 != lbl_803DFC20) {
-    *param_1 = *param_1 - lbl_803DC074;
-    if (*param_1 <= fVar1) {
-      *param_1 = fVar1;
-      return 1;
+    float fVar1;
+
+    fVar1 = lbl_803DFC20;
+    if (*param_1 != lbl_803DFC20)
+    {
+        *param_1 = *param_1 - lbl_803DC074;
+        if (*param_1 <= fVar1)
+        {
+            *param_1 = fVar1;
+            return 1;
+        }
     }
-  }
-  return 0;
+    return 0;
 }
 
 
@@ -513,7 +535,7 @@ undefined4 FUN_8007f764(float *param_1)
  */
 undefined FUN_8007f7c0(void)
 {
-  return DAT_803ddd0c;
+    return DAT_803ddd0c;
 }
 
 
@@ -540,12 +562,18 @@ void cardSetStatusNoCard2(void) { lbl_803DB700 = 0x3; }
 void clearCurSeqNo(void) { curSeqNo = 0x0; }
 
 extern f32 lbl_803DEFA0;
-void storeZeroToFloatParam(f32 *p) { *p = lbl_803DEFA0; }
+void storeZeroToFloatParam(f32* p) { *p = lbl_803DEFA0; }
 
 /* misc 16b 4-insn patterns. */
 extern u32 lbl_803DB714;
 extern u32 lbl_803DB71C;
-void seqClearTaskTexts(void) { u32 v = -0x1; lbl_803DB714 = v; lbl_803DB71C = v; }
+
+void seqClearTaskTexts(void)
+{
+    u32 v = -0x1;
+    lbl_803DB714 = v;
+    lbl_803DB71C = v;
+}
 
 extern u8 lbl_803DD0F8;
 extern f32 lbl_803DD0F4;
@@ -558,7 +586,7 @@ extern f32 lbl_803DD0E0;
 extern s16 lbl_8030ECF8[];
 
 /* fn_80080150 (28b): float-not-equal predicate */
-int fn_80080150(f32 *p) { return lbl_803DEFA0 != *p; }
+int fn_80080150(f32* p) { return lbl_803DEFA0 != *p; }
 
 /* fn_8008020C (40b): record positional + flags */
 void fn_8008020C(s16 a, s16 b, s16 c, f32 x, f32 y, f32 z, f32 w)
@@ -574,22 +602,26 @@ void fn_8008020C(s16 a, s16 b, s16 c, f32 x, f32 y, f32 z, f32 w)
 }
 
 /* fn_8007FE04 (112b): array remove-and-swap by value */
-int fn_8007FE04(int *arr, int *count_ptr, int target)
+int fn_8007FE04(int* arr, int* count_ptr, int target)
 {
     int i;
-    int *p;
+    int* p;
     int n;
     int v;
     int j;
     n = *count_ptr;
     p = arr;
     i = 0;
-    for (j = 0; j < n; j++) {
+    for (j = 0; j < n; j++)
+    {
         v = *p;
         p++;
-        if (v == target) {
+        if (v == target)
+        {
             goto found;
-        } else {
+        }
+        else
+        {
             i++;
         }
     }
@@ -604,17 +636,18 @@ found:
 /* fn_80080360 (36b): write u16 indexed by signed byte * 2 */
 int fn_80080360(int p, int val)
 {
-    lbl_8030ECF8[(s8)*(u8 *)(p + 0x57)] = (s16)val;
+    lbl_8030ECF8[(s8) * (u8*)(p + 0x57)] = (s16)val;
     return 1;
 }
 
 extern s16 lbl_8039A3B0[];
+
 int animatedObjGetSeqId(int obj)
 {
-    return lbl_8039A3B0[(s8)*(u8 *)(obj + 0x57)] - 1;
+    return lbl_8039A3B0[(s8) * (u8*)(obj + 0x57)] - 1;
 }
 
-void ObjSeq_yield(ObjSeqState *seq, int value)
+void ObjSeq_yield(ObjSeqState* seq, int value)
 {
     seq->unk74 = value;
     seq->sequenceControlFlags |= 0x40;
@@ -623,6 +656,7 @@ void ObjSeq_yield(ObjSeqState *seq, int value)
 extern int lbl_803DB72C;
 extern int lbl_803DD07C;
 extern u8 lbl_803DD078;
+
 int ObjSeq_SetObjs(int a, int b, int c)
 {
     u8 v = (u8)c;
@@ -634,6 +668,7 @@ int ObjSeq_SetObjs(int a, int b, int c)
 
 extern u8 lbl_803DD0D9;
 extern f32 lbl_803994EC[];
+
 int ObjSeq_setOverridePos(f32 x, f32 y, f32 z)
 {
     lbl_803DD0D9 = 1;
@@ -643,11 +678,12 @@ int ObjSeq_setOverridePos(f32 x, f32 y, f32 z)
     return 1;
 }
 
-int arrayIndexOf(int *arr, int count, int target)
+int arrayIndexOf(int* arr, int count, int target)
 {
     int idx = 0;
     int i;
-    for (i = 0; i < count; i++) {
+    for (i = 0; i < count; i++)
+    {
         int v = *arr;
         arr++;
         if (v == target) return idx;
@@ -662,13 +698,16 @@ int randFn_80080100(int n)
 }
 
 extern f32 timeDelta;
-int timerCountDown(f32 *p)
+
+int timerCountDown(f32* p)
 {
     f32 v = *p;
     f32 zero = lbl_803DEFA0;
-    if (v != zero) {
+    if (v != zero)
+    {
         *p = v - timeDelta;
-        if (*p <= zero) {
+        if (*p <= zero)
+        {
             *p = zero;
             return 1;
         }
@@ -682,33 +721,41 @@ extern void gameTextLoadTaskText(int);
 extern void subtitleFn_8001b700(void);
 extern void subtitleStart(int);
 extern u32 lbl_803DB718;
+
 void streamCb_80080384(void)
 {
     AudioStream_IsPreparing();
     doNothing_8000CF54(0);
-    if ((s32)lbl_803DB71C != -1) {
+    if ((s32)lbl_803DB71C != -1)
+    {
         gameTextLoadTaskText(lbl_803DB71C);
         lbl_803DB71C = -1;
         lbl_803DB714 = -1;
-    } else if ((s32)lbl_803DB718 != -1) {
+    }
+    else if ((s32)lbl_803DB718 != -1)
+    {
         subtitleFn_8001b700();
         subtitleStart(lbl_803DB718);
         lbl_803DB718 = -1;
     }
 }
 
-void s16toFloat(f32 *p, s16 val)
+void s16toFloat(f32* p, s16 val)
 {
     *p = (f32)val;
 }
 
-typedef struct {
+typedef struct
+{
     u8 useWorldSpace : 1;
 } SeqB4Flags;
+
 extern SeqB4Flags lbl_803DD0B4;
+
 int ObjSeq_func23(int unused, int x)
 {
-    switch (x) {
+    switch (x)
+    {
     case 0:
         lbl_803DD0B4.useWorldSpace = 1;
         break;
@@ -723,32 +770,43 @@ int seqStreamLookupFn_8007fff8(int arr[][2], int count, int key)
 {
     int lo, mid;
     int i;
-    if (count <= 16) {
-        for (i = 0; i != count; i++) {
+    if (count <= 16)
+    {
+        for (i = 0; i != count; i++)
+        {
             if ((*arr)[0] == key) return (*arr)[1];
             arr++;
         }
         return 0;
     }
     lo = 0;
-    do {
+    do
+    {
         mid = (count + lo) >> 1;
-        if (key > arr[mid][0]) {
+        if (key > arr[mid][0])
+        {
             lo = mid;
-        } else if (key == arr[mid][0]) {
+        }
+        else if (key == arr[mid][0])
+        {
             return arr[mid][1];
-        } else {
+        }
+        else
+        {
             count = mid;
         }
-    } while (count <= lo);
+    }
+    while (count <= lo);
     return 0;
 }
 
 extern int objModelGetVecFn_800395d8(int obj, int idx);
+
 void objModelResetVecFn_80080548(int obj)
 {
-    s16 *v = (s16 *)objModelGetVecFn_800395d8(obj, 0);
-    if (v != NULL) {
+    s16* v = (s16*)objModelGetVecFn_800395d8(obj, 0);
+    if (v != NULL)
+    {
         v[1] = 0;
         v[0] = 0;
     }
@@ -756,6 +814,7 @@ void objModelResetVecFn_80080548(int obj)
 
 extern u8 lbl_803DD124;
 extern int lbl_8039A664[][2];
+
 void ObjSeq_preempt(int a, int b)
 {
     u8 c = lbl_803DD124;
@@ -766,19 +825,26 @@ void ObjSeq_preempt(int a, int b)
     lbl_803DD124++;
 }
 
-void cameraFocusNpc(int param1, u8 *obj)
+void cameraFocusNpc(int param1, u8* obj)
 {
-    struct { f32 vec[3]; u8 tag; } buf;
-    f32 *p;
+    struct
+    {
+        f32 vec[3];
+        u8 tag;
+    } buf;
+    f32* p;
 
     if ((*gCameraInterface)->getMode() == 0x4d) return;
     lbl_803DD0FC = (u32)obj;
-    p = *(f32 **)(obj + 0x74);
-    if (p == NULL || param1 == 7 || param1 == 6) {
-        buf.vec[0] = ((GameObject *)obj)->anim.worldPosX;
-        buf.vec[1] = ((GameObject *)obj)->anim.worldPosY;
-        buf.vec[2] = ((GameObject *)obj)->anim.worldPosZ;
-    } else {
+    p = *(f32**)(obj + 0x74);
+    if (p == NULL || param1 == 7 || param1 == 6)
+    {
+        buf.vec[0] = ((GameObject*)obj)->anim.worldPosX;
+        buf.vec[1] = ((GameObject*)obj)->anim.worldPosY;
+        buf.vec[2] = ((GameObject*)obj)->anim.worldPosZ;
+    }
+    else
+    {
         buf.vec[0] = p[0];
         buf.vec[1] = p[1];
         buf.vec[2] = p[2];
@@ -787,7 +853,8 @@ void cameraFocusNpc(int param1, u8 *obj)
     (*gCameraInterface)->setMode(0x4d, 1, 0, 0x10, buf.vec, 0, 0xff);
 }
 
-typedef struct {
+typedef struct
+{
     int key;
     int val;
 } SeqSortPair;
@@ -795,7 +862,7 @@ typedef struct {
 /* EN v1.0 0x8007FEAC  size: 332b  Shell sort over (key, val) pairs,
  * ascending by key. */
 #pragma dont_inline on
-void objSeqInitFn_8007feac(SeqSortPair *arr, int n)
+void objSeqInitFn_8007feac(SeqSortPair* arr, int n)
 {
     int j;
     int i;
@@ -804,15 +871,19 @@ void objSeqInitFn_8007feac(SeqSortPair *arr, int n)
     int h;
 
     h = 1;
-    while (h <= (n - 1) / 9) {
+    while (h <= (n - 1) / 9)
+    {
         h = h * 3 + 1;
     }
-    for (; h > 0; h /= 3) {
-        for (i = h + 1; i < n; i++) {
+    for (; h > 0; h /= 3)
+    {
+        for (i = h + 1; i < n; i++)
+        {
             key = arr[i].key;
             val = arr[i].val;
             j = i;
-            while (j > h && arr[j - h].key > key) {
+            while (j > h && arr[j - h].key > key)
+            {
                 arr[j].key = arr[j - h].key;
                 arr[j].val = arr[j - h].val;
                 j -= h;
@@ -821,47 +892,51 @@ void objSeqInitFn_8007feac(SeqSortPair *arr, int n)
             arr[j].val = val;
         }
     }
-    for (i = 1; i < n; i++) {
+    for (i = 1; i < n; i++)
+    {
     }
 }
 #pragma dont_inline reset
 
 /* EN v1.0 0x80080078  size: 136b  Spin-delay then sort when the pair list
  * is large enough. */
-void objSeqInitFn_80080078(SeqSortPair *arr, int n)
+void objSeqInitFn_80080078(SeqSortPair* arr, int n)
 {
     int i;
     int j;
 
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < n; j++) {
+    for (i = 0; i < n; i++)
+    {
+        for (j = 0; j < n; j++)
+        {
         }
     }
-    if (n > 0x10) {
+    if (n > 0x10)
+    {
         objSeqInitFn_8007feac(arr, n);
     }
 }
 
-extern void debugPrintf(char *fmt, ...);
+extern void debugPrintf(char* fmt, ...);
 extern char sEndObjSequenceMaxFreesError[];
 extern void Pause_ResetMenuFrameCounter(void);
 extern void AudioStream_CancelPrepared(void);
 extern void Obj_FreeObject(int obj);
-extern void *lbl_803DD0B8;
-extern int  lbl_803DB720;
-extern int  lbl_803DD064;
+extern void* lbl_803DD0B8;
+extern int lbl_803DB720;
+extern int lbl_803DD064;
 
 /* EN v1.0 0x80080C18  size: 464b  Tears down an object sequence: unbinds
  * every object still tagged with the sequence id, runs each freed object's
  * completion callback, frees the collected objects, and resets the global
  * sequence/camera state when this was the active sequence. */
-extern s32 CARDWrite(int *fileInfo, void *buf, s32 length, s32 offset);
-extern s32 CARDRead(int *fileInfo, void *buf, s32 length, s32 offset);
-extern s32 CARDDelete(s32 chan, char *fileName);
-extern void DCFlushRange(void *addr, u32 nBytes);
-extern void DCInvalidateRange(void *addr, u32 nBytes);
+extern s32 CARDWrite(int* fileInfo, void* buf, s32 length, s32 offset);
+extern s32 CARDRead(int* fileInfo, void* buf, s32 length, s32 offset);
+extern s32 CARDDelete(s32 chan, char* fileName);
+extern void DCFlushRange(void* addr, u32 nBytes);
+extern void DCInvalidateRange(void* addr, u32 nBytes);
 extern int lbl_80396900[];
-extern char *sMemoryCardFileName;
+extern char* sMemoryCardFileName;
 extern u64 lbl_803DD050;
 
 /* EN v1.0 0x8007E7C0  size: 900b  Checksums the save buffer, writes it to the
@@ -870,46 +945,54 @@ int saveGame_doWrite(int slot)
 {
     u64 x;
     u16 i;
-    u64 *p;
+    u64* p;
     u64 a;
     u64 chk;
     u64 chk2;
     int result;
     int offset;
 
-    p = (u64 *)lbl_803DD044;
+    p = (u64*)lbl_803DD044;
     x = 0;
     a = 1;
-    for (i = 0; (int)i < 0x3ff; i++) {
+    for (i = 0; (int)i < 0x3ff; i++)
+    {
         u64 v = p[i];
         x ^= v;
         a += v;
     }
     chk = x ^ (a + 13);
-    ((u32 *)p)[0x7ff] = (u32)chk;
-    ((u32 *)p)[0x7fe] = (u32)(chk >> 32);
-    DCFlushRange((void *)lbl_803DD044, 0x2000);
-    result = CARDWrite(lbl_80396900, (void *)lbl_803DD044, 0x2000, offset = (u8)slot << 13);
-    if (result == -5) {
+    ((u32*)p)[0x7ff] = (u32)chk;
+    ((u32*)p)[0x7fe] = (u32)(chk >> 32);
+    DCFlushRange((void*)lbl_803DD044, 0x2000);
+    result = CARDWrite(lbl_80396900, (void*)lbl_803DD044, 0x2000, offset = (u8)slot << 13);
+    if (result == -5)
+    {
         CARDDelete(0, sMemoryCardFileName);
     }
-    if (result == 0) {
-        DCInvalidateRange((void *)lbl_803DD044, 0x2000);
-        result = CARDRead(lbl_80396900, (void *)lbl_803DD044, 0x2000, offset);
-        if (result == 0) {
-            p = (u64 *)lbl_803DD044;
+    if (result == 0)
+    {
+        DCInvalidateRange((void*)lbl_803DD044, 0x2000);
+        result = CARDRead(lbl_80396900, (void*)lbl_803DD044, 0x2000, offset);
+        if (result == 0)
+        {
+            p = (u64*)lbl_803DD044;
             x = 0;
             a = 1;
-            for (i = 0; (int)i < 0x3ff; i++) {
+            for (i = 0; (int)i < 0x3ff; i++)
+            {
                 u64 v = p[i];
                 x ^= v;
                 a += v;
             }
             chk2 = x ^ (a + 13);
-            if (chk != chk2) {
+            if (chk != chk2)
+            {
                 result = -0x55;
                 lbl_803DB700 = 10;
-            } else {
+            }
+            else
+            {
                 lbl_803DD050 = chk2;
             }
         }
@@ -917,13 +1000,15 @@ int saveGame_doWrite(int slot)
     return result;
 }
 
-typedef struct {
+typedef struct
+{
     u8 pad[0x3c];
 } DVDFileInfoStub;
-extern int DVDOpen(char *fileName, DVDFileInfoStub *fi);
-extern int DVDClose(DVDFileInfoStub *fi);
-extern s32 DVDRead(DVDFileInfoStub *fi, void *addr, s32 length, s32 offset);
-extern int sprintf(char *s, ...);
+
+extern int DVDOpen(char* fileName, DVDFileInfoStub* fi);
+extern int DVDClose(DVDFileInfoStub* fi);
+extern s32 DVDRead(DVDFileInfoStub* fi, void* addr, s32 length, s32 offset);
+extern int sprintf(char* s, ...);
 extern u8 lbl_803DC968;
 extern int lbl_803DD05C;
 extern char sMemoryCardFileNameString[];
@@ -933,104 +1018,116 @@ extern char sMemoryCardFileNameString[];
  * checksums both halves of the card image buffer. */
 void loadMemCardImages(void)
 {
-    char *names = sMemoryCardFileNameString;
+    char* names = sMemoryCardFileNameString;
     DVDFileInfoStub fi;
     u64 x;
     u16 i;
-    u64 *p;
-    u64 *q;
+    u64* p;
+    u64* q;
     u64 a;
     u64 chk;
 
-    if (lbl_803DC968 != 0) {
-        *(u8 *)(lbl_803DD05C + 0x00) = 0x83;
-        *(u8 *)(lbl_803DD05C + 0x01) = 0x58;
-        *(u8 *)(lbl_803DD05C + 0x02) = 0x83;
-        *(u8 *)(lbl_803DD05C + 0x03) = 0x5e;
-        *(u8 *)(lbl_803DD05C + 0x04) = 0x81;
-        *(u8 *)(lbl_803DD05C + 0x05) = 0x5b;
-        *(u8 *)(lbl_803DD05C + 0x06) = 0x83;
-        *(u8 *)(lbl_803DD05C + 0x07) = 0x74;
-        *(u8 *)(lbl_803DD05C + 0x08) = 0x83;
-        *(u8 *)(lbl_803DD05C + 0x09) = 0x48;
-        *(u8 *)(lbl_803DD05C + 0x0a) = 0x83;
-        *(u8 *)(lbl_803DD05C + 0x0b) = 0x62;
-        *(u8 *)(lbl_803DD05C + 0x0c) = 0x83;
-        *(u8 *)(lbl_803DD05C + 0x0d) = 0x4e;
-        *(u8 *)(lbl_803DD05C + 0x0e) = 0x83;
-        *(u8 *)(lbl_803DD05C + 0x0f) = 0x58;
-        *(u8 *)(lbl_803DD05C + 0x10) = 0x83;
-        *(u8 *)(lbl_803DD05C + 0x11) = 0x41;
-        *(u8 *)(lbl_803DD05C + 0x12) = 0x83;
-        *(u8 *)(lbl_803DD05C + 0x13) = 0x68;
-        *(u8 *)(lbl_803DD05C + 0x14) = 0x83;
-        *(u8 *)(lbl_803DD05C + 0x15) = 0x78;
-        *(u8 *)(lbl_803DD05C + 0x16) = 0x83;
-        *(u8 *)(lbl_803DD05C + 0x17) = 0x93;
-        *(u8 *)(lbl_803DD05C + 0x18) = 0x83;
-        *(u8 *)(lbl_803DD05C + 0x19) = 0x60;
-        *(u8 *)(lbl_803DD05C + 0x1a) = 0x83;
-        *(u8 *)(lbl_803DD05C + 0x1b) = 0x83;
-        *(u8 *)(lbl_803DD05C + 0x1c) = 0x81;
-        *(u8 *)(lbl_803DD05C + 0x1d) = 0x5b;
-        *(u8 *)(lbl_803DD05C + 0x1e) = 0x00;
-        *(u8 *)(lbl_803DD05C + 0x1f) = 0x00;
-        sprintf((char *)(lbl_803DD05C + 0x20), names + 0xa0);
-    } else {
-        sprintf((char *)lbl_803DD05C, names);
-        sprintf((char *)(lbl_803DD05C + 0x20), names + 0xb4);
+    if (lbl_803DC968 != 0)
+    {
+        *(u8*)(lbl_803DD05C + 0x00) = 0x83;
+        *(u8*)(lbl_803DD05C + 0x01) = 0x58;
+        *(u8*)(lbl_803DD05C + 0x02) = 0x83;
+        *(u8*)(lbl_803DD05C + 0x03) = 0x5e;
+        *(u8*)(lbl_803DD05C + 0x04) = 0x81;
+        *(u8*)(lbl_803DD05C + 0x05) = 0x5b;
+        *(u8*)(lbl_803DD05C + 0x06) = 0x83;
+        *(u8*)(lbl_803DD05C + 0x07) = 0x74;
+        *(u8*)(lbl_803DD05C + 0x08) = 0x83;
+        *(u8*)(lbl_803DD05C + 0x09) = 0x48;
+        *(u8*)(lbl_803DD05C + 0x0a) = 0x83;
+        *(u8*)(lbl_803DD05C + 0x0b) = 0x62;
+        *(u8*)(lbl_803DD05C + 0x0c) = 0x83;
+        *(u8*)(lbl_803DD05C + 0x0d) = 0x4e;
+        *(u8*)(lbl_803DD05C + 0x0e) = 0x83;
+        *(u8*)(lbl_803DD05C + 0x0f) = 0x58;
+        *(u8*)(lbl_803DD05C + 0x10) = 0x83;
+        *(u8*)(lbl_803DD05C + 0x11) = 0x41;
+        *(u8*)(lbl_803DD05C + 0x12) = 0x83;
+        *(u8*)(lbl_803DD05C + 0x13) = 0x68;
+        *(u8*)(lbl_803DD05C + 0x14) = 0x83;
+        *(u8*)(lbl_803DD05C + 0x15) = 0x78;
+        *(u8*)(lbl_803DD05C + 0x16) = 0x83;
+        *(u8*)(lbl_803DD05C + 0x17) = 0x93;
+        *(u8*)(lbl_803DD05C + 0x18) = 0x83;
+        *(u8*)(lbl_803DD05C + 0x19) = 0x60;
+        *(u8*)(lbl_803DD05C + 0x1a) = 0x83;
+        *(u8*)(lbl_803DD05C + 0x1b) = 0x83;
+        *(u8*)(lbl_803DD05C + 0x1c) = 0x81;
+        *(u8*)(lbl_803DD05C + 0x1d) = 0x5b;
+        *(u8*)(lbl_803DD05C + 0x1e) = 0x00;
+        *(u8*)(lbl_803DD05C + 0x1f) = 0x00;
+        sprintf((char*)(lbl_803DD05C + 0x20), names + 0xa0);
     }
-    if (DVDOpen(names + 0xc4, &fi)) {
-        DVDRead(&fi, (void *)(lbl_803DD05C + 0x40), 0x1800, 0x20);
+    else
+    {
+        sprintf((char*)lbl_803DD05C, names);
+        sprintf((char*)(lbl_803DD05C + 0x20), names + 0xb4);
+    }
+    if (DVDOpen(names + 0xc4, &fi))
+    {
+        DVDRead(&fi, (void*)(lbl_803DD05C + 0x40), 0x1800, 0x20);
         DVDClose(&fi);
     }
-    if (DVDOpen(names + 0xd0, &fi)) {
-        DVDRead(&fi, (void *)(lbl_803DD05C + 0x1840), 0x400, 0);
+    if (DVDOpen(names + 0xd0, &fi))
+    {
+        DVDRead(&fi, (void*)(lbl_803DD05C + 0x1840), 0x400, 0);
         DVDClose(&fi);
     }
-    if (DVDOpen(names + 0xe8, &fi)) {
-        DVDRead(&fi, (void *)(lbl_803DD05C + 0x1c40), 0x400, 0);
+    if (DVDOpen(names + 0xe8, &fi))
+    {
+        DVDRead(&fi, (void*)(lbl_803DD05C + 0x1c40), 0x400, 0);
         DVDClose(&fi);
     }
-    if (DVDOpen(names + 0x100, &fi)) {
-        DVDRead(&fi, (void *)(lbl_803DD05C + 0x2040), 0x400, 0);
+    if (DVDOpen(names + 0x100, &fi))
+    {
+        DVDRead(&fi, (void*)(lbl_803DD05C + 0x2040), 0x400, 0);
         DVDClose(&fi);
     }
-    if (DVDOpen(names + 0x118, &fi)) {
-        DVDRead(&fi, (void *)(lbl_803DD05C + 0x2440), 0x400, 0);
+    if (DVDOpen(names + 0x118, &fi))
+    {
+        DVDRead(&fi, (void*)(lbl_803DD05C + 0x2440), 0x400, 0);
         DVDClose(&fi);
     }
-    if (DVDOpen(names + 0x130, &fi)) {
-        DVDRead(&fi, (void *)(lbl_803DD05C + 0x2840), 0x200, 0);
+    if (DVDOpen(names + 0x130, &fi))
+    {
+        DVDRead(&fi, (void*)(lbl_803DD05C + 0x2840), 0x200, 0);
         DVDClose(&fi);
     }
-    p = (u64 *)lbl_803DD05C;
+    p = (u64*)lbl_803DD05C;
     x = 0;
     a = 1;
-    for (i = 0; (int)i < 0x400; i++) {
+    for (i = 0; (int)i < 0x400; i++)
+    {
         u64 v = p[i];
         x ^= v;
         a += v;
     }
     chk = x ^ (a + 13);
-    ((u32 *)p)[0xa91] = (u32)chk;
-    ((u32 *)p)[0xa90] = (u32)(chk >> 32);
-    q = (u64 *)lbl_803DD05C;
+    ((u32*)p)[0xa91] = (u32)chk;
+    ((u32*)p)[0xa90] = (u32)(chk >> 32);
+    q = (u64*)lbl_803DD05C;
     p = q + 0x400;
     x = 0;
     a = 1;
-    for (i = 0; (int)i < 0x3ff; i++) {
+    for (i = 0; (int)i < 0x3ff; i++)
+    {
         u64 v = p[i];
         x ^= v;
         a += v;
     }
     chk = x ^ (a + 13);
-    ((u32 *)q)[0xfff] = (u32)chk;
-    ((u32 *)q)[0xffe] = (u32)(chk >> 32);
-    DCFlushRange((void *)lbl_803DD05C, 0x4000);
+    ((u32*)q)[0xfff] = (u32)chk;
+    ((u32*)q)[0xffe] = (u32)(chk >> 32);
+    DCFlushRange((void*)lbl_803DD05C, 0x4000);
 }
 
-typedef struct {
+typedef struct
+{
     char fileName[32];
     u32 length;
     u32 time;
@@ -1044,20 +1141,21 @@ typedef struct {
     u32 commentAddr;
     u8 pad2[0x30];
 } CARDStatStub;
+
 extern int cardProbe(int chan);
-extern void *mmAlloc(u32 size, int tag, int unk);
-extern void mm_free(void *ptr);
-extern void *memset(void *dst, int c, u32 n);
-extern s32 CARDMount(s32 chan, void *workArea, void (*detachCb)(void));
+extern void* mmAlloc(u32 size, int tag, int unk);
+extern void mm_free(void* ptr);
+extern void* memset(void* dst, int c, u32 n);
+extern s32 CARDMount(s32 chan, void* workArea, void (*detachCb)(void));
 extern s32 CARDCheck(s32 chan);
-extern s32 CARDGetSerialNo(s32 chan, u64 *serialNo);
-extern s32 CARDOpen(s32 chan, char *fileName, int *fileInfo);
-extern s32 CARDClose(int *fileInfo);
+extern s32 CARDGetSerialNo(s32 chan, u64* serialNo);
+extern s32 CARDOpen(s32 chan, char* fileName, int* fileInfo);
+extern s32 CARDClose(int* fileInfo);
 extern s32 CARDUnmount(s32 chan);
-extern s32 CARDCreate(s32 chan, char *fileName, u32 size, int *fileInfo);
-extern s32 CARDGetStatus(s32 chan, s32 fileNo, CARDStatStub *stat);
-extern s32 CARDSetStatus(s32 chan, s32 fileNo, CARDStatStub *stat);
-extern void *lbl_803DD040;
+extern s32 CARDCreate(s32 chan, char* fileName, u32 size, int* fileInfo);
+extern s32 CARDGetStatus(s32 chan, s32 fileNo, CARDStatStub* stat);
+extern s32 CARDSetStatus(s32 chan, s32 fileNo, CARDStatStub* stat);
+extern void* lbl_803DD040;
 extern u64 lbl_803DD048;
 extern u8 lbl_803DD059;
 extern u8 lbl_803DD05A;
@@ -1074,78 +1172,110 @@ int saveGame(int writeImages)
     int ret;
     u64 serial;
     CARDStatStub stat;
-    void *m;
+    void* m;
 
     created = 0;
     fresh = 0;
-    if (cardProbe(0) == 0) {
+    if (cardProbe(0) == 0)
+    {
         ok = 0;
-    } else {
-        if ((lbl_803DD040 = mmAlloc(0xa000, -1, 0)) == NULL) {
+    }
+    else
+    {
+        if ((lbl_803DD040 = mmAlloc(0xa000, -1, 0)) == NULL)
+        {
             lbl_803DB700 = 8;
             ok = 0;
-        } else {
+        }
+        else
+        {
             ok = 1;
         }
     }
-    if (ok == 0) {
+    if (ok == 0)
+    {
         return 0;
     }
     lbl_803DB700 = 0;
     result = CARDMount(0, lbl_803DD040, cardSetStatusNoCard2);
-    if (result == -6) {
+    if (result == -6)
+    {
         result = CARDCheck(0);
     }
-    if (result == 0 || result == -13) {
+    if (result == 0 || result == -13)
+    {
         int err;
         result = CARDCheck(0);
         err = CARDGetSerialNo(0, &serial);
-        if (err == 0) {
-            if (lbl_803DD059 != 0) {
-                if (lbl_803DD048 != 0) {
-                    if (serial != lbl_803DD048) {
+        if (err == 0)
+        {
+            if (lbl_803DD059 != 0)
+            {
+                if (lbl_803DD048 != 0)
+                {
+                    if (serial != lbl_803DD048)
+                    {
                         result = -0x55;
                         lbl_803DB700 = 0xb;
                     }
-                } else {
+                }
+                else
+                {
                     lbl_803DD048 = serial;
                 }
-            } else {
+            }
+            else
+            {
                 lbl_803DD048 = serial;
             }
-        } else {
+        }
+        else
+        {
             result = err;
         }
     }
-    if (result == 0) {
+    if (result == 0)
+    {
         result = CARDOpen(0, sMemoryCardFileName, lbl_80396900);
-        if (result == -4 && (u8)writeImages == 0) {
+        if (result == -4 && (u8)writeImages == 0)
+        {
             created = 1;
             fresh = 1;
         }
-        if (result == 0) {
+        if (result == 0)
+        {
             lbl_803DD05A = 1;
         }
     }
-    if (result == 0) {
+    if (result == 0)
+    {
         result = CARDGetStatus(0, lbl_80396900[1], &stat);
-        if (result == 0) {
-            if (stat.iconAddr == 0xffffffff || stat.commentAddr == 0xffffffff) {
-                if ((u8)writeImages != 0) {
+        if (result == 0)
+        {
+            if (stat.iconAddr == 0xffffffff || stat.commentAddr == 0xffffffff)
+            {
+                if ((u8)writeImages != 0)
+                {
                     result = -4;
-                } else {
+                }
+                else
+                {
                     fresh = 1;
                 }
             }
         }
     }
-    if (fresh != 0) {
+    if (fresh != 0)
+    {
         m = mmAlloc(0x4000, -1, 0);
         lbl_803DD05C = (int)m;
-        if (m != NULL) {
+        if (m != NULL)
+        {
             memset(m, 0, 0x4000);
             loadMemCardImages();
-        } else {
+        }
+        else
+        {
             lbl_803DB700 = 8;
             CARDUnmount(0);
             mm_free(lbl_803DD040);
@@ -1153,22 +1283,29 @@ int saveGame(int writeImages)
             return 0;
         }
     }
-    if (created != 0) {
+    if (created != 0)
+    {
         result = CARDCreate(0, sMemoryCardFileName, 0x6000, lbl_80396900);
     }
-    if (fresh != 0) {
-        if (result == 0) {
-            result = CARDWrite(lbl_80396900, (void *)lbl_803DD05C, 0x4000, 0);
-            if (result == 0) {
-                result = CARDWrite(lbl_80396900, (void *)(lbl_803DD05C + 0x2000), 0x2000, 0x4000);
+    if (fresh != 0)
+    {
+        if (result == 0)
+        {
+            result = CARDWrite(lbl_80396900, (void*)lbl_803DD05C, 0x4000, 0);
+            if (result == 0)
+            {
+                result = CARDWrite(lbl_80396900, (void*)(lbl_803DD05C + 0x2000), 0x2000, 0x4000);
             }
-            if (result == -5) {
+            if (result == -5)
+            {
                 CARDDelete(0, sMemoryCardFileName);
             }
-            if (created != 0 && result == 0) {
+            if (created != 0 && result == 0)
+            {
                 result = CARDGetStatus(0, lbl_80396900[1], &stat);
             }
-            if (result == 0) {
+            if (result == 0)
+            {
                 stat.commentAddr = 0;
                 stat.bannerFormat = (stat.bannerFormat & ~0x3) | 2;
                 stat.iconAddr = 0x40;
@@ -1183,16 +1320,19 @@ int saveGame(int writeImages)
                 stat.iconSpeed = (stat.iconSpeed & ~0xc0) | 0xc0;
                 stat.iconSpeed = stat.iconSpeed & ~0x300;
                 result = CARDSetStatus(0, lbl_80396900[1], &stat);
-                if (result == 0) {
-                    lbl_803DD050 = *(u64 *)(lbl_803DD05C + 0x3ff8);
+                if (result == 0)
+                {
+                    lbl_803DD050 = *(u64*)(lbl_803DD05C + 0x3ff8);
                 }
             }
         }
-        mm_free((void *)lbl_803DD05C);
+        mm_free((void*)lbl_803DD05C);
     }
-    switch (result) {
+    switch (result)
+    {
     case 0:
-        if (fresh != 0) {
+        if (fresh != 0)
+        {
             return 1;
         }
         return 2;
@@ -1201,7 +1341,8 @@ int saveGame(int writeImages)
         ret = 0;
         break;
     case -3:
-        if ((int)lbl_803DB700 != 3) {
+        if ((int)lbl_803DB700 != 3)
+        {
             lbl_803DB700 = 2;
         }
         ret = 0;
@@ -1234,7 +1375,8 @@ int saveGame(int writeImages)
         ret = 0;
         break;
     }
-    if (lbl_803DD05A != 0) {
+    if (lbl_803DD05A != 0)
+    {
         lbl_803DD05A = 0;
         CARDClose(lbl_80396900);
     }
@@ -1252,120 +1394,151 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
 {
     u64 x;
     u16 i;
-    u64 *p;
+    u64* p;
     u64 acc;
     u64 chk;
     u64 chk2;
     u64 c;
     u64 t;
     int result;
-    void *m;
+    void* m;
 
     m = mmAlloc(0x2000, -1, 0);
     lbl_803DD044 = (int)m;
-    if (m == NULL) {
+    if (m == NULL)
+    {
         lbl_803DB700 = 8;
         return 0;
     }
-    if (saveGame(writeImages) == 0) {
-        mm_free((void *)lbl_803DD044);
+    if (saveGame(writeImages) == 0)
+    {
+        mm_free((void*)lbl_803DD044);
         lbl_803DD044 = 0;
         return 0;
     }
-    DCInvalidateRange((void *)lbl_803DD044, 0x2000);
-    result = CARDRead(lbl_80396900, (void *)lbl_803DD044, 0x2000, 0x2000);
-    if (result == 0) {
-        p = (u64 *)lbl_803DD044;
+    DCInvalidateRange((void*)lbl_803DD044, 0x2000);
+    result = CARDRead(lbl_80396900, (void*)lbl_803DD044, 0x2000, 0x2000);
+    if (result == 0)
+    {
+        p = (u64*)lbl_803DD044;
         x = 0;
         acc = 1;
-        for (i = 0; (int)i < 0x3ff; i++) {
+        for (i = 0; (int)i < 0x3ff; i++)
+        {
             u64 v = p[i];
             x ^= v;
             acc += v;
         }
         c = x ^ (acc + 13);
         chk = c;
-        if (c != *(u64 *)(lbl_803DD044 + 0x1ff8)) {
-            DCInvalidateRange((void *)lbl_803DD044, 0x2000);
-            result = CARDRead(lbl_80396900, (void *)lbl_803DD044, 0x2000, 0x4000);
-            if (result == 0) {
-                p = (u64 *)lbl_803DD044;
+        if (c != *(u64*)(lbl_803DD044 + 0x1ff8))
+        {
+            DCInvalidateRange((void*)lbl_803DD044, 0x2000);
+            result = CARDRead(lbl_80396900, (void*)lbl_803DD044, 0x2000, 0x4000);
+            if (result == 0)
+            {
+                p = (u64*)lbl_803DD044;
                 x = 0;
                 acc = 1;
-                for (i = 0; (int)i < 0x3ff; i++) {
+                for (i = 0; (int)i < 0x3ff; i++)
+                {
                     u64 v = p[i];
                     x ^= v;
                     acc += v;
                 }
                 c = x ^ (acc + 13);
                 chk = c;
-                if (c == *(u64 *)(lbl_803DD044 + 0x1ff8)) {
+                if (c == *(u64*)(lbl_803DD044 + 0x1ff8))
+                {
                     result = saveGame_doWrite(1);
-                } else {
+                }
+                else
+                {
                     result = -0x55;
                     lbl_803DB700 = 10;
                 }
             }
         }
     }
-    if (result == 0) {
-        if (lbl_803DD059 != 0) {
-            if (lbl_803DD050 != 0) {
-                if (chk != lbl_803DD050) {
+    if (result == 0)
+    {
+        if (lbl_803DD059 != 0)
+        {
+            if (lbl_803DD050 != 0)
+            {
+                if (chk != lbl_803DD050)
+                {
                     result = -0x55;
                     lbl_803DB700 = 0xb;
                 }
-            } else {
+            }
+            else
+            {
                 lbl_803DD050 = chk;
             }
-        } else {
+        }
+        else
+        {
             lbl_803DD050 = chk;
         }
     }
-    if (result == 0) {
+    if (result == 0)
+    {
         lbl_803DD05C = (int)(m = mmAlloc(0x4000, -1, 0));
-        if (m == NULL) {
-            if (lbl_803DD05A != 0) {
+        if (m == NULL)
+        {
+            if (lbl_803DD05A != 0)
+            {
                 lbl_803DD05A = 0;
                 CARDClose(lbl_80396900);
             }
             CARDUnmount(0);
             mm_free(lbl_803DD040);
             lbl_803DD040 = NULL;
-            mm_free((void *)lbl_803DD044);
+            mm_free((void*)lbl_803DD044);
             lbl_803DD044 = 0;
             lbl_803DB700 = 8;
             return 0;
         }
         result = CARDRead(lbl_80396900, m, 0x2000, 0);
-        if (result == 0) {
-            p = (u64 *)lbl_803DD05C;
+        if (result == 0)
+        {
+            p = (u64*)lbl_803DD05C;
             x = 0;
             acc = 1;
-            for (i = 0; (int)i < 0x400; i++) {
+            for (i = 0; (int)i < 0x400; i++)
+            {
                 u64 v = p[i];
                 x ^= v;
                 acc += v;
             }
             chk2 = x ^ (acc + 13);
-            if (chk2 != *(u64 *)(lbl_803DD044 + 0xa40)) {
-                if ((u8)writeImages != 0) {
+            if (chk2 != *(u64*)(lbl_803DD044 + 0xa40))
+            {
+                if ((u8)writeImages != 0)
+                {
                     result = -4;
                     lbl_803DB700 = 0xc;
-                } else {
-                    memset((void *)lbl_803DD05C, 0, 0x4000);
+                }
+                else
+                {
+                    memset((void*)lbl_803DD05C, 0, 0x4000);
                     loadMemCardImages();
-                    result = CARDWrite(lbl_80396900, (void *)lbl_803DD05C, 0x2000, 0);
-                    if (result == -5) {
+                    result = CARDWrite(lbl_80396900, (void*)lbl_803DD05C, 0x2000, 0);
+                    if (result == -5)
+                    {
                         CARDDelete(0, sMemoryCardFileName);
                     }
-                    if (result == 0) {
-                        t = *(u64 *)(lbl_803DD05C + 0x2a40);
-                        if (t != *(u64 *)(lbl_803DD044 + 0xa40)) {
+                    if (result == 0)
+                    {
+                        t = *(u64*)(lbl_803DD05C + 0x2a40);
+                        if (t != *(u64*)(lbl_803DD044 + 0xa40))
+                        {
                             int e;
-                            *(u64 *)(lbl_803DD044 + 0xa40) = t;
+                            *(u64*)(lbl_803DD044 + 0xa40) = t;
                             e = saveGame_doWrite(2);
-                            if (e == 0) {
+                            if (e == 0)
+                            {
                                 e = saveGame_doWrite(1);
                             }
                             result = e;
@@ -1374,21 +1547,24 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
                 }
             }
         }
-        mm_free((void *)lbl_803DD05C);
+        mm_free((void*)lbl_803DD05C);
     }
-    if (result == 0 && cb != NULL) {
+    if (result == 0 && cb != NULL)
+    {
         result = cb(cbA, cbB, cbC, cbD);
     }
-    if (lbl_803DD05A != 0) {
+    if (lbl_803DD05A != 0)
+    {
         lbl_803DD05A = 0;
         CARDClose(lbl_80396900);
     }
     CARDUnmount(0);
     mm_free(lbl_803DD040);
     lbl_803DD040 = NULL;
-    mm_free((void *)lbl_803DD044);
+    mm_free((void*)lbl_803DD044);
     lbl_803DD044 = 0;
-    switch (result) {
+    switch (result)
+    {
     case -5:
         lbl_803DB700 = 4;
         break;
@@ -1412,7 +1588,7 @@ extern u8 framesThisStep;
 int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
 {
     int player;
-    s16 *v;
+    s16* v;
     int yawd;
     s16 turn;
     int mode;
@@ -1426,63 +1602,81 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
     p4 = (s16)(182.04445f * p4);
     p5 = (s16)(182.04445f * p5);
     p3 = (s16)(182.04445f * p3);
-    mode = (s8)*(u8 *)(state + 0x56);
-    if (mode == 4) {
-        *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~2;
-        v = (s16 *)objModelGetVecFn_800395d8(obj, 0);
-        if (v != NULL) {
-            *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~8;
+    mode = (s8) * (u8*)(state + 0x56);
+    if (mode == 4)
+    {
+        *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) & ~2;
+        v = (s16*)objModelGetVecFn_800395d8(obj, 0);
+        if (v != NULL)
+        {
+            *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) & ~8;
         }
         *(void (**)(int))(state + 0xe8) = objModelResetVecFn_80080548;
-        *(f32 *)(state + 0x40) = 0.0f;
-        *(f32 *)(state + 0x44) = 0.0f;
-        *(f32 *)(state + 0x48) = 0.0f;
-        yawd = Obj_GetYawDeltaToObject((ushort *)obj, player, (float *)0);
-        if (((s16)yawd >= 0 ? (s16)yawd : -(s16)yawd) < p4) {
+        *(f32*)(state + 0x40) = 0.0f;
+        *(f32*)(state + 0x44) = 0.0f;
+        *(f32*)(state + 0x48) = 0.0f;
+        yawd = Obj_GetYawDeltaToObject((ushort*)obj, player, (float*)0);
+        if (((s16)yawd >= 0 ? (s16)yawd : -(s16)yawd) < p4)
+        {
             turn = 0;
-        } else {
+        }
+        else
+        {
             turn = (s16)((s16)yawd > 0 ? (s16)yawd - p4 : (s16)yawd + p4);
         }
-        *(s16 *)(state + 0x50) = turn;
+        *(s16*)(state + 0x50) = turn;
         {
-            f32 *dp = d;
-            f32 *ovr = *(f32 **)(obj + 0x74);
-            if (ovr == NULL) {
-                dp[0] = ((GameObject *)player)->anim.localPosX - ((GameObject *)obj)->anim.localPosX;
-                dp[1] = ((GameObject *)player)->anim.localPosY - ((GameObject *)obj)->anim.localPosY;
-                dp[2] = ((GameObject *)player)->anim.localPosZ - ((GameObject *)obj)->anim.localPosZ;
-            } else {
-                dp[0] = ((GameObject *)player)->anim.localPosX - ovr[0];
-                dp[1] = ((GameObject *)player)->anim.localPosY - ovr[1];
-                dp[2] = ((GameObject *)player)->anim.localPosZ - ovr[2];
+            f32* dp = d;
+            f32* ovr = *(f32**)(obj + 0x74);
+            if (ovr == NULL)
+            {
+                dp[0] = ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+                dp[1] = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
+                dp[2] = ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
+            }
+            else
+            {
+                dp[0] = ((GameObject*)player)->anim.localPosX - ovr[0];
+                dp[1] = ((GameObject*)player)->anim.localPosY - ovr[1];
+                dp[2] = ((GameObject*)player)->anim.localPosZ - ovr[2];
             }
             dp[1] += 30.0f;
             dist = sqrtf(dp[0] * dp[0] + dp[2] * dp[2]);
-            *(s16 *)(state + 0x52) = (s16)getAngle(dp[1], dist);
+            *(s16*)(state + 0x52) = (s16)getAngle(dp[1], dist);
         }
-        *(s16 *)(state + 0x54) = 0;
-        *(u8 *)(state + 0x56) = 5;
-        *(f32 *)(state + 0x4c) = 0.0f;
-        if (turn != 0) {
+        *(s16*)(state + 0x54) = 0;
+        *(u8*)(state + 0x56) = 5;
+        *(f32*)(state + 0x4c) = 0.0f;
+        if (turn != 0)
+        {
             rate = (f32)p3 / (f32)turn;
-            *(f32 *)(state + 0x24) = rate >= 0.0f ? rate : -rate;
-        } else {
-            *(f32 *)(state + 0x24) = 1.0f;
+            *(f32*)(state + 0x24) = rate >= 0.0f ? rate : -rate;
+        }
+        else
+        {
+            *(f32*)(state + 0x24) = 1.0f;
         }
         {
-            f32 c = *(f32 *)(state + 0x24);
-            *(f32 *)(state + 0x24) = c < 0.0f ? 0.0f : (c > 0.25f ? 0.25f : c);
+            f32 c = *(f32*)(state + 0x24);
+            *(f32*)(state + 0x24) = c < 0.0f ? 0.0f : (c > 0.25f ? 0.25f : c);
         }
-        if (p6 != -1) {
-            if (p7 != -1) {
-                *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~4;
-                if (*(s16 *)(state + 0x50) < 0) {
-                    if (p7 != -1) {
+        if (p6 != -1)
+        {
+            if (p7 != -1)
+            {
+                *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) & ~4;
+                if (*(s16*)(state + 0x50) < 0)
+                {
+                    if (p7 != -1)
+                    {
                         ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
                             (obj, p7, 0.0f, 0);
                     }
-                } else {
-                    if (p6 != -1) {
+                }
+                else
+                {
+                    if (p6 != -1)
+                    {
                         ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
                             (obj, p6, 0.0f, 0);
                     }
@@ -1491,48 +1685,60 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
         }
         *(void (**)(int))(state + 0xe8) = objModelResetVecFn_80080548;
         return 1;
-    } else if (mode == 5) {
-        *(f32 *)(state + 0x4c) = *(f32 *)(state + 0x4c) + *(f32 *)(state + 0x24);
-        if (*(f32 *)(state + 0x4c) > 1.0f) {
-            *(f32 *)(state + 0x4c) = 1.0001f;
+    }
+    else if (mode == 5)
+    {
+        *(f32*)(state + 0x4c) = *(f32*)(state + 0x4c) + *(f32*)(state + 0x24);
+        if (*(f32*)(state + 0x4c) > 1.0f)
+        {
+            *(f32*)(state + 0x4c) = 1.0001f;
         }
-        ((GameObject *)obj)->anim.rotX += (s16)(*(f32 *)(state + 0x24) * (f32)*(s16 *)(state + 0x50));
-        v = (s16 *)objModelGetVecFn_800395d8(obj, 0);
-        if (v != NULL) {
-            *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~8;
-            yawd = Obj_GetYawDeltaToObject((ushort *)obj, player, (float *)0);
-            g = (f32)(s16)yawd;
+        ((GameObject*)obj)->anim.rotX += (s16)(*(f32*)(state + 0x24) * (f32) * (s16*)(state + 0x50));
+        v = (s16*)objModelGetVecFn_800395d8(obj, 0);
+        if (v != NULL)
+        {
+            *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) & ~8;
+            yawd = Obj_GetYawDeltaToObject((ushort*)obj, player, (float*)0);
+            g = (f32)(s16)
+            yawd;
             {
                 f32 cur = (f32)v[1];
-                g = cur * (1.0f - *(f32 *)(state + 0x4c)) + g * *(f32 *)(state + 0x4c);
+                g = cur * (1.0f - *(f32*)(state + 0x4c)) + g * *(f32*)(state + 0x4c);
             }
-            g = (g < (f32)-p5) ? (f32)-p5 : ((g > (f32)p5) ? (f32)p5 : g);
+            g = (g < (f32) - p5) ? (f32) - p5 : ((g > (f32)p5) ? (f32)p5 : g);
             v[1] = g;
-            v[0] = (f32)*(s16 *)(state + 0x52) * *(f32 *)(state + 0x4c);
+            v[0] = (f32) * (s16*)(state + 0x52) * *(f32*)(state + 0x4c);
         }
-        if (p6 != -1) {
-            if (p7 != -1) {
-                s16 t50 = *(s16 *)(state + 0x50);
+        if (p6 != -1)
+        {
+            if (p7 != -1)
+            {
+                s16 t50 = *(s16*)(state + 0x50);
                 f32 fa = (f32)(t50 >= 0 ? t50 : -t50);
                 fa = fa * 3.142f / 325767.0f;
-                ObjAnim_SampleRootCurvePhase(fa, (ObjAnimComponent *)obj, &out);
+                ObjAnim_SampleRootCurvePhase(fa, (ObjAnimComponent*)obj, &out);
                 ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
                     (obj, out, (f32)framesThisStep, NULL);
             }
         }
-        if (*(f32 *)(state + 0x4c) > 1.0f) {
-            *(u8 *)(state + 0x56) = 0;
-            *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) | 8;
-            v = (s16 *)objModelGetVecFn_800395d8(obj, 0);
-            if (v != NULL) {
-                *(s16 *)(state + 0x114) = v[1];
-                *(s16 *)(state + 0x116) = v[0];
-            } else {
-                *(s16 *)(state + 0x114) = 0;
-                *(s16 *)(state + 0x116) = 0;
+        if (*(f32*)(state + 0x4c) > 1.0f)
+        {
+            *(u8*)(state + 0x56) = 0;
+            *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) | 8;
+            v = (s16*)objModelGetVecFn_800395d8(obj, 0);
+            if (v != NULL)
+            {
+                *(s16*)(state + 0x114) = v[1];
+                *(s16*)(state + 0x116) = v[0];
             }
-            if (*(f32 *)(state + 0x4c) > 1.0f) {
-                *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) | 4;
+            else
+            {
+                *(s16*)(state + 0x114) = 0;
+                *(s16*)(state + 0x116) = 0;
+            }
+            if (*(f32*)(state + 0x4c) > 1.0f)
+            {
+                *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) | 4;
             }
         }
         return 1;
@@ -1555,17 +1761,20 @@ int seqStreamFn_8008023c(int x)
     int seqId = lbl_8039A3B0[x] - 1;
     f32 v;
 
-    if (lbl_803DD094 != 0 || AudioStream_IsPreparing() != 0) {
+    if (lbl_803DD094 != 0 || AudioStream_IsPreparing() != 0)
+    {
         return 0;
     }
     v = lbl_8039A1AC[x] - (f32)lbl_803DB728;
     lbl_803DD074 = v;
-    if (lbl_803DEFB0 != lbl_803DD074) {
+    if (lbl_803DEFB0 != lbl_803DD074)
+    {
         lbl_803DB724 = x;
     }
     lbl_803DB728 = -1;
     if (seqId == 0x54b || seqId == 0x550 || seqId == 0x551 || seqId == 0x574 || seqId == 0x579 ||
-        seqId == 0x57a) {
+        seqId == 0x57a)
+    {
         lbl_803DD074 = 0.0f;
         lbl_803DB724 = -1;
     }
@@ -1580,51 +1789,63 @@ void endObjSequence(int seq)
     int objCount;
     int objIdx;
     int frees[32];
-    int *objs;
+    int* objs;
     int i;
     int nFree;
-    int *ret;
+    int* ret;
 
-    ret = (int *)ObjList_GetObjects(&objIdx, &objCount);
+    ret = (int*)ObjList_GetObjects(&objIdx, &objCount);
     nFree = 0;
     i = 0;
     objs = ret;
-    for (; i < objCount; i++) {
+    for (; i < objCount; i++)
+    {
         int obj = *objs;
-        if (((GameObject *)obj)->seqIndex == seq) {
-            ((GameObject *)obj)->seqIndex = -1;
+        if (((GameObject*)obj)->seqIndex == seq)
+        {
+            ((GameObject*)obj)->seqIndex = -1;
         }
-        if (((GameObject *)obj)->anim.classId == 0x10) {
-            int st = *(int *)&((GameObject *)obj)->extra;
-            if ((s8)*(u8 *)(st + 0x57) == seq) {
-                if ((void *)obj == lbl_803DD0B8) {
+        if (((GameObject*)obj)->anim.classId == 0x10)
+        {
+            int st = *(int*)&((GameObject*)obj)->extra;
+            if ((s8) * (u8*)(st + 0x57) == seq)
+            {
+                if ((void*)obj == lbl_803DD0B8)
+                {
                     lbl_803DD0B8 = 0;
                 }
                 frees[nFree++] = obj;
-                if (*(void **)(st + 0xe8) != NULL) {
-                    (*(void (**)(int, int, int))(st + 0xe8))(*(int *)(st + 0x110), obj, st);
-                    *(int *)(st + 0xe8) = 0;
+                if (*(void**)(st + 0xe8) != NULL)
+                {
+                    (*(void (**)(int, int, int))(st + 0xe8))(*(int*)(st + 0x110), obj, st);
+                    *(int*)(st + 0xe8) = 0;
                 }
-                if (nFree == 0x10) {
+                if (nFree == 0x10)
+                {
                     debugPrintf(sEndObjSequenceMaxFreesError);
                 }
             }
         }
         objs++;
     }
-    if (curSeqNo == seq) {
+    if (curSeqNo == seq)
+    {
         curSeqNo = 0;
         Pause_ResetMenuFrameCounter();
     }
-    if (seq == lbl_803DB720) {
+    if (seq == lbl_803DB720)
+    {
         AudioStream_CancelPrepared();
         lbl_803DB720 = -1;
     }
-    for (j = 0; j < nFree; j++) {
+    for (j = 0; j < nFree; j++)
+    {
         Obj_FreeObject(frees[j]);
     }
-    if (seq == lbl_803DD064) {
-        if ((*gCameraInterface)->getMode() == 0x4d) {
+    if (seq == lbl_803DD064)
+    {
+        if ((*gCameraInterface)->getMode() == 0x4d)
+        {
             (*gCameraInterface)->setMode(0x42, 0, 3, 0, NULL, 0, 0);
             lbl_803DD064 = 0;
             curSeqNo = 0;

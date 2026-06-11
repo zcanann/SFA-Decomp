@@ -18,15 +18,15 @@ extern void Movie_SetVolumeFade(int volume, int fadeFrames);
 extern void setLinkIsRotated(void);
 extern void titleScreenPositionElements(f32 x, f32 y);
 extern void titleScreenFn_801368a4(u8 arg);
-extern void *PopReadedBuffer(void);
-extern void PushReadedBuffer2(void *arg);
+extern void* PopReadedBuffer(void);
+extern void PushReadedBuffer2(void* arg);
 
 extern TitleMenuTextEntry lbl_8031A1D8[1];
 extern TitleMenuTextEntry lbl_8031A214[4];
 extern OSMessageQueue lbl_803A4460;
 extern OSMessageQueue lbl_803A4480;
 extern OSThread lbl_803A54A0;
-extern u8 *lbl_803DD498;
+extern u8* lbl_803DD498;
 extern u8 lbl_803DB424;
 extern s32 lbl_803DD610;
 extern u8 lbl_803DD614;
@@ -44,8 +44,8 @@ extern u8 gTitleMenuPanelOpen;
 extern u8 gAttractMovieLoopCompleted;
 extern s32 lbl_803DD698;
 extern s32 gAttractMovieAudioThreadActive;
-extern TitleMenuControl *gScreenTransitionInterface;
-extern TitleMenuControl *gTitleMenuLinkInterface;
+extern TitleMenuControl* gScreenTransitionInterface;
+extern TitleMenuControl* gTitleMenuLinkInterface;
 extern f32 lbl_803E1D10;
 extern f32 lbl_803E1D18;
 
@@ -64,185 +64,215 @@ extern f32 lbl_803E1D18;
  */
 void TitleMenu_initialise(void)
 {
-  int i;
-  int mode;
+    int i;
+    int mode;
 
-  if ((lbl_803DD498[0x21] & 0x80) != 0) {
-    gAttractMovieAutoplayEnabled = 0;
-  } else {
-    gAttractMovieAutoplayEnabled = 1;
-  }
-  if (lbl_803DB424 >= 0xfe) {
-    saveFn_8007d960(0);
-  }
-  gameTextLoadDir(0x15);
-  gTitleMenuNextDllId = 0;
-  gTitleMenuLoadDelay = 0;
-  mode = getUiDllFn_80014930();
-  if (mode == 3) {
-    ((void (**)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
-        gTitleMenuLinkInterface->vtable)[1](lbl_8031A1D8,1,0,0,0,0,0x14,200,0xff,0xff,0xff,0xff);
-    gTitleMenuPanelOpen = 0;
-  } else {
-    ((void (**)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
-        gTitleMenuLinkInterface->vtable)[1](lbl_8031A214,4,0,0,0,0,0x14,200,0xff,0xff,0xff,0xff);
-    gTitleMenuPanelOpen = 1;
-  }
-  ((void (**)(int))gTitleMenuLinkInterface->vtable)[6](gTitleMenuSelection);
-  titleScreenFn_801368a4(0);
-
-  mode = getUiDllFn_80014930();
-  if ((((mode == 0xd) || (mode = getUiDllFn_80014930(), mode == 7)) ||
-       (mode = getUiDllFn_80014930(), mode == 6)) ||
-      (mode = getUiDllFn_80014930(), mode == 5)) {
-    ((ScreenTransitionInterface *)gScreenTransitionInterface->vtable)->step(0x23,5);
-  } else {
-    audioStopByMask(0xf);
-    ((ScreenTransitionInterface *)gScreenTransitionInterface->vtable)->step(0x3c,1);
-  }
-
-  setLinkIsRotated();
-  for (i = 0; i < 4; i++) {
-    if (i == gTitleMenuSelection) {
-      lbl_8031A214[i].flags &= ~0x4000;
-    } else {
-      lbl_8031A214[i].flags |= 0x4000;
+    if ((lbl_803DD498[0x21] & 0x80) != 0)
+    {
+        gAttractMovieAutoplayEnabled = 0;
     }
-  }
-  ((void (**)(TitleMenuTextEntry *))gTitleMenuLinkInterface->vtable)[11](lbl_8031A214);
-  gAttractMoviePreparePending = 0;
-  gAttractMovieRetraceCountdown = 0;
-  gAttractMovieReplayCountdown = 1;
-  gTitleMenuInputCooldown = 0x3c;
-  gAttractMovieLoopCompleted = 0;
+    else
+    {
+        gAttractMovieAutoplayEnabled = 1;
+    }
+    if (lbl_803DB424 >= 0xfe)
+    {
+        saveFn_8007d960(0);
+    }
+    gameTextLoadDir(0x15);
+    gTitleMenuNextDllId = 0;
+    gTitleMenuLoadDelay = 0;
+    mode = getUiDllFn_80014930();
+    if (mode == 3)
+    {
+        ((void (**)(TitleMenuTextEntry*, int, int, int, int, int, int, int, int, int, int, int))
+            gTitleMenuLinkInterface->vtable)[1](lbl_8031A1D8, 1, 0, 0, 0, 0, 0x14, 200, 0xff, 0xff, 0xff, 0xff);
+        gTitleMenuPanelOpen = 0;
+    }
+    else
+    {
+        ((void (**)(TitleMenuTextEntry*, int, int, int, int, int, int, int, int, int, int, int))
+            gTitleMenuLinkInterface->vtable)[1](lbl_8031A214, 4, 0, 0, 0, 0, 0x14, 200, 0xff, 0xff, 0xff, 0xff);
+        gTitleMenuPanelOpen = 1;
+    }
+    ((void (**)(int))gTitleMenuLinkInterface->vtable)[6](gTitleMenuSelection);
+    titleScreenFn_801368a4(0);
 
-  if ((gAttractMovieAutoplayEnabled != 0) &&
-      ((gAttractMovieState == NATTRACTMODE_MOVIE_READY) ||
-       (gAttractMovieState == NATTRACTMODE_MOVIE_STATE_RELEASED))) {
-    n_attractmode_prepareMovie();
-    titleScreenPositionElements(lbl_803E1D10,lbl_803E1D18);
-    gAttractMoviePlaybackEnabled = 1;
-    Movie_SetVolumeFade(0,0);
-    audioSetVolumes(0,10,1,0,0);
-    gTitleMenuSelectionFade = 0;
-  } else {
-    titleScreenPositionElements(lbl_803E1D10,lbl_803E1D18);
-    gAttractMoviePlaybackEnabled = 0;
-    Movie_SetVolumeFade(0,1);
-  }
-  setIsOvercast(0);
-  setDrawLights(0);
-  gTitleMenuReadyForInput = 0;
-  envFxActFn_800887f8(0);
-  gameTimerStop();
-  audioFn_8000b694(0);
-  gAttractMovieIdleFrameCount = 0;
+    mode = getUiDllFn_80014930();
+    if ((((mode == 0xd) || (mode = getUiDllFn_80014930(), mode == 7)) ||
+            (mode = getUiDllFn_80014930(), mode == 6)) ||
+        (mode = getUiDllFn_80014930(), mode == 5))
+    {
+        ((ScreenTransitionInterface*)gScreenTransitionInterface->vtable)->step(0x23, 5);
+    }
+    else
+    {
+        audioStopByMask(0xf);
+        ((ScreenTransitionInterface*)gScreenTransitionInterface->vtable)->step(0x3c, 1);
+    }
+
+    setLinkIsRotated();
+    for (i = 0; i < 4; i++)
+    {
+        if (i == gTitleMenuSelection)
+        {
+            lbl_8031A214[i].flags &= ~0x4000;
+        }
+        else
+        {
+            lbl_8031A214[i].flags |= 0x4000;
+        }
+    }
+    ((void (**)(TitleMenuTextEntry*))gTitleMenuLinkInterface->vtable)[11](lbl_8031A214);
+    gAttractMoviePreparePending = 0;
+    gAttractMovieRetraceCountdown = 0;
+    gAttractMovieReplayCountdown = 1;
+    gTitleMenuInputCooldown = 0x3c;
+    gAttractMovieLoopCompleted = 0;
+
+    if ((gAttractMovieAutoplayEnabled != 0) &&
+        ((gAttractMovieState == NATTRACTMODE_MOVIE_READY) ||
+            (gAttractMovieState == NATTRACTMODE_MOVIE_STATE_RELEASED)))
+    {
+        n_attractmode_prepareMovie();
+        titleScreenPositionElements(lbl_803E1D10, lbl_803E1D18);
+        gAttractMoviePlaybackEnabled = 1;
+        Movie_SetVolumeFade(0, 0);
+        audioSetVolumes(0, 10, 1, 0, 0);
+        gTitleMenuSelectionFade = 0;
+    }
+    else
+    {
+        titleScreenPositionElements(lbl_803E1D10, lbl_803E1D18);
+        gAttractMoviePlaybackEnabled = 0;
+        Movie_SetVolumeFade(0, 1);
+    }
+    setIsOvercast(0);
+    setDrawLights(0);
+    gTitleMenuReadyForInput = 0;
+    envFxActFn_800887f8(0);
+    gameTimerStop();
+    audioFn_8000b694(0);
+    gAttractMovieIdleFrameCount = 0;
 }
 
-void *PopDecodedAudioBuffer(int flags)
+void* PopDecodedAudioBuffer(int flags)
 {
-  void *message;
+    void* message;
 
-  if (OSReceiveMessage(&lbl_803A4460,&message,flags) == 1) {
-    return message;
-  }
-  return NULL;
+    if (OSReceiveMessage(&lbl_803A4460, &message, flags) == 1)
+    {
+        return message;
+    }
+    return NULL;
 }
 
-void PushFreeAudioBuffer(void *message)
+void PushFreeAudioBuffer(void* message)
 {
-  OSSendMessage(&lbl_803A4480,message,0);
+    OSSendMessage(&lbl_803A4480, message, 0);
 }
 
 #pragma dont_inline on
-void AttractMovieAudio_Decode(void *readBufferArg)
+void AttractMovieAudio_Decode(void* readBufferArg)
 {
-  u32 *audioFrameSizes;
-  AttractMovieReadBuffer *readBuffer;
-  AttractMovieAudioBuffer *audioBuf;
-  u8 *audioFrame;
-  u32 track;
+    u32* audioFrameSizes;
+    AttractMovieReadBuffer* readBuffer;
+    AttractMovieAudioBuffer* audioBuf;
+    u8* audioFrame;
+    u32 track;
 
-  readBuffer = (AttractMovieReadBuffer *)readBufferArg;
-  audioFrameSizes = (u32 *)(readBuffer->ptr + 8);
-  audioFrame = readBuffer->ptr + (lbl_803A5D60.compInfo.mNumComponents * sizeof(u32)) + 8;
-  {
-    AttractMovieAudioBuffer *received;
-    OSReceiveMessage(&lbl_803A4480,&received,1);
-    audioBuf = received;
-  }
-  for (track = 0; track < lbl_803A5D60.compInfo.mNumComponents; track++) {
-    switch (lbl_803A5D60.compInfo.mFrameComp[track]) {
-    case 1:
-      audioBuf->validSample = THPAudioDecode(audioBuf->buffer,audioFrame,0);
-      audioBuf->curPtr = audioBuf->buffer;
-      audioBuf->frameNumber = readBuffer->frameNumber;
-      OSSendMessage(&lbl_803A4460,audioBuf,1);
-      break;
+    readBuffer = (AttractMovieReadBuffer*)readBufferArg;
+    audioFrameSizes = (u32*)(readBuffer->ptr + 8);
+    audioFrame = readBuffer->ptr + (lbl_803A5D60.compInfo.mNumComponents * sizeof(u32)) + 8;
+    {
+        AttractMovieAudioBuffer* received;
+        OSReceiveMessage(&lbl_803A4480, &received, 1);
+        audioBuf = received;
     }
-    audioFrame += *audioFrameSizes;
-    audioFrameSizes++;
-  }
+    for (track = 0; track < lbl_803A5D60.compInfo.mNumComponents; track++)
+    {
+        switch (lbl_803A5D60.compInfo.mFrameComp[track])
+        {
+        case 1:
+            audioBuf->validSample = THPAudioDecode(audioBuf->buffer, audioFrame, 0);
+            audioBuf->curPtr = audioBuf->buffer;
+            audioBuf->frameNumber = readBuffer->frameNumber;
+            OSSendMessage(&lbl_803A4460, audioBuf, 1);
+            break;
+        }
+        audioFrame += *audioFrameSizes;
+        audioFrameSizes++;
+    }
 }
 #pragma dont_inline reset
 
-void *AudioDecoderForOnMemory(void *param)
+void* AudioDecoderForOnMemory(void* param)
 {
-  register int frame;
-  register AttractMoviePlayer *player;
-  int stride;
-  u32 framesPerGroup;
-  u32 frameInGroup;
-  AttractMovieReadBuffer readBuffer;
+    register int frame;
+    register AttractMoviePlayer* player;
+    int stride;
+    u32 framesPerGroup;
+    u32 frameInGroup;
+    AttractMovieReadBuffer readBuffer;
 
-  player = &lbl_803A5D60;
-  stride = player->frameStride;
-  readBuffer.ptr = param;
-  frame = 0;
-  while (true) {
-    readBuffer.frameNumber = frame;
-    AttractMovieAudio_Decode(&readBuffer);
-    framesPerGroup = player->header.mNumFrames;
-    frameInGroup = (frame + player->initReadFrame) % framesPerGroup;
-    if (frameInGroup == (framesPerGroup - 1)) {
-      if ((player->playFlags & 1) != 0) {
-        stride = *(int *)readBuffer.ptr;
-        readBuffer.ptr = player->loopFrame;
-      } else {
-        OSSuspendThread(&lbl_803A54A0);
-      }
-    } else {
-      int newStride = *(int *)readBuffer.ptr;
-      readBuffer.ptr += stride;
-      stride = newStride;
+    player = &lbl_803A5D60;
+    stride = player->frameStride;
+    readBuffer.ptr = param;
+    frame = 0;
+    while (true)
+    {
+        readBuffer.frameNumber = frame;
+        AttractMovieAudio_Decode(&readBuffer);
+        framesPerGroup = player->header.mNumFrames;
+        frameInGroup = (frame + player->initReadFrame) % framesPerGroup;
+        if (frameInGroup == (framesPerGroup - 1))
+        {
+            if ((player->playFlags & 1) != 0)
+            {
+                stride = *(int*)readBuffer.ptr;
+                readBuffer.ptr = player->loopFrame;
+            }
+            else
+            {
+                OSSuspendThread(&lbl_803A54A0);
+            }
+        }
+        else
+        {
+            int newStride = *(int*)readBuffer.ptr;
+            readBuffer.ptr += stride;
+            stride = newStride;
+        }
+        frame++;
     }
-    frame++;
-  }
 }
 
-void *AudioDecoder(void *param)
+void* AudioDecoder(void* param)
 {
-  void *token;
+    void* token;
 
-  (void)param;
-  while (true) {
-    token = PopReadedBuffer();
-    AttractMovieAudio_Decode(token);
-    PushReadedBuffer2(token);
-  }
+    (void)param;
+    while (true)
+    {
+        token = PopReadedBuffer();
+        AttractMovieAudio_Decode(token);
+        PushReadedBuffer2(token);
+    }
 }
 
 void AudioDecodeThreadCancel(void)
 {
-  if (gAttractMovieAudioThreadActive != 0) {
-    OSCancelThread(&lbl_803A54A0);
-    gAttractMovieAudioThreadActive = 0;
-  }
+    if (gAttractMovieAudioThreadActive != 0)
+    {
+        OSCancelThread(&lbl_803A54A0);
+        gAttractMovieAudioThreadActive = 0;
+    }
 }
 
 void AudioDecodeThreadStart(void)
 {
-  if (gAttractMovieAudioThreadActive != 0) {
-    OSResumeThread(&lbl_803A54A0);
-  }
+    if (gAttractMovieAudioThreadActive != 0)
+    {
+        OSResumeThread(&lbl_803A54A0);
+    }
 }

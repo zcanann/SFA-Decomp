@@ -81,7 +81,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00D7_CFPowerCrys_packet_info {
+enum obj_00D7_CFPowerCrys_packet_info
+{
     CFPOWERCRYS_DEF_ID = 0x00D7,
     CFPOWERCRYS_DLL_ID = 0x00ED,
     CFPOWERCRYS_CLASS_ID = 0x0006,

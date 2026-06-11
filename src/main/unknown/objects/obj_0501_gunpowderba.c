@@ -63,7 +63,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0501_GunPowderBa_packet_info {
+enum obj_0501_GunPowderBa_packet_info
+{
     GUNPOWDERBA_DEF_ID = 0x0501,
     GUNPOWDERBA_DLL_ID = 0x0158,
     GUNPOWDERBA_CLASS_ID = 0x0030,

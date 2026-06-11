@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0211_WORLDgreatf_packet_info {
+enum obj_0211_WORLDgreatf_packet_info
+{
     WORLDGREATF_DEF_ID = 0x0211,
     WORLDGREATF_DLL_ID = 0x01D3,
     WORLDGREATF_CLASS_ID = 0x0061,

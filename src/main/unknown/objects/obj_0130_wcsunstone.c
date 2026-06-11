@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0130_WCSunStone_packet_info {
+enum obj_0130_WCSunStone_packet_info
+{
     WCSUNSTONE_DEF_ID = 0x0130,
     WCSUNSTONE_DLL_ID = 0x00ED,
     WCSUNSTONE_CLASS_ID = 0x0006,

@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03F2_DFSH_LaserB_packet_info {
+enum obj_03F2_DFSH_LaserB_packet_info
+{
     DFSH_LASERB_DEF_ID = 0x03F2,
     DFSH_LASERB_DLL_ID = 0x017B,
     DFSH_LASERB_CLASS_ID = 0x0030,

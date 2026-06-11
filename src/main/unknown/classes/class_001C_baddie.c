@@ -275,7 +275,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_001C_baddie_defs {
+enum class_001C_baddie_defs
+{
     BADDIE_SHARPCLAWGR = 0x0060,
     BADDIE_SHARPCLAWSN = 0x005F,
     BADDIE_WB = 0x003A,

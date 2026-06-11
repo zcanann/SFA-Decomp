@@ -9,7 +9,8 @@
 #include "main/game_object.h"
 #include "main/resource.h"
 
-typedef struct EffectboxPlacement {
+typedef struct EffectboxPlacement
+{
     u8 pad0[0x18 - 0x0];
     u8 rotYaw;
     u8 rotPitch;
@@ -29,8 +30,8 @@ extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
 extern void playerAddRemoveMagic(int player, int amount);
-extern void OSReport(const char *fmt, ...);
-extern f32 getXZDistance(void *a, void *b);
+extern void OSReport(const char* fmt, ...);
+extern f32 getXZDistance(void* a, void* b);
 extern int fn_8029622C(int player);
 extern u8 framesThisStep;
 extern char sMagicDustCollectedMessage[];
@@ -47,7 +48,7 @@ extern f32 lbl_803E34F0;
 extern f32 lbl_803E34F4;
 extern f32 lbl_803E34F8;
 extern f32 lbl_803E34FC;
-extern EffectInterface **gPartfxInterface;
+extern EffectInterface** gPartfxInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E34B0;
 extern f32 lbl_803E34B4;
@@ -88,7 +89,7 @@ extern undefined4 FUN_80081118();
 extern undefined4 fn_80174BFC();
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
-extern u8 *Obj_GetPlayerObject(void);
+extern u8* Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32 x);
 extern void objMove(f32 a, f32 b, f32 c, int obj);
@@ -132,7 +133,8 @@ extern f32 lbl_803E41AC;
 extern f32 lbl_803E41C4;
 
 /* magicdust extra block (collectible sparkle state; tail of the pickup record). */
-typedef struct MagicDustState {
+typedef struct MagicDustState
+{
     u8 unk00[0x6C];
     f32 unk6C;
     u8 unk70[0x25B - 0x70];
@@ -154,7 +156,14 @@ typedef struct MagicDustState {
     u16 unk280;
 } MagicDustState;
 
-STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
+STATIC_ASSERT (offsetof
+(MagicDustState
+,
+flags27A
+)
+==
+0x27A
+);
 
 /*
  * --INFO--
@@ -171,202 +180,237 @@ STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
  */
 void magicdust_update(int obj)
 {
-  float fval;
-  short sVar2;
-  byte byteVal;
-  int player;
-  int ref;
-  uint val;
-  int state;
-  double dVar9;
-  char fxArg;
-  char burstArg [3];
-  int msg [9];
-  register int msgId;
-  f32 dist;
-  
-  player = (int)Obj_GetPlayerObject();
-  state = *(int *)&((GameObject *)obj)->extra;
-  msgId = 0x7000b;
-  while (ref = ObjMsg_Pop(obj,(uint *)msg,(uint *)0x0,(uint *)0x0), ref != 0) {
-    if (msg[0] == msgId) {
-      ref = *(int *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x18);
-      (*gExpgfxInterface)->freeSource2((u32)obj);
-      itemPickupDoParticleFx(obj,lbl_803E34B0,((MagicDustState *)state)->mode,0x28);
-      ObjHits_DisableObject(obj);
-      Sfx_PlayFromObject(obj,(u16)((MagicDustState *)state)->sfxId);
-      Sfx_StopFromObject(obj,0x56);
-      playerAddRemoveMagic(player,(int)*(s8 *)(ref + 0xb));
-      ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A & 0xfa;
-      ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 8;
-      ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 0x40;
-      ((MagicDustState *)state)->burstTimer = lbl_803E34B4;
-      OSReport(sMagicDustCollectedMessage);
-      ((GameObject *)obj)->anim.alpha = 1;
-    }
-  }
-  if ((((MagicDustState *)state)->flags27A & 0x10) == 0) {
-    if (((((MagicDustState *)state)->flags27A & 0x40) == 0) &&
-       (getXZDistance(&((GameObject *)obj)->anim.worldPosX,(f32 *)(player + 0x18)) < lbl_803E34B8)) {
-      ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 0x10;
-      fxArg = '\0';
-      (*gPartfxInterface)->spawnObject((void *)obj,
-                ((MagicDustState *)state)->ambientEffectId,NULL,0x10002,-1,&fxArg);
-      fxArg = '\x01';
-      (*gPartfxInterface)->spawnObject((void *)obj,
-                ((MagicDustState *)state)->ambientEffectId,NULL,0x10002,-1,&fxArg);
-      fxArg = '\x02';
-      (*gPartfxInterface)->spawnObject((void *)obj,
-                ((MagicDustState *)state)->ambientEffectId,NULL,0x10002,-1,&fxArg);
-    }
-  }
-  else {
-    if (getXZDistance(&((GameObject *)obj)->anim.worldPosX,(f32 *)(player + 0x18)) >= lbl_803E34B8) {
-      ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A & 0xef;
-      (*gExpgfxInterface)->freeSource2((u32)obj);
-    }
-  }
-  if ((((GameObject *)obj)->anim.flags & 0x2000) != 0) {
-    if ((((MagicDustState *)state)->flags27A & 2) != 0) {
-      *(short *)obj = *(short *)obj + (u16)framesThisStep * 0x100;
-      ((MagicDustState *)state)->ambientTimer -= (u16)framesThisStep;
-      if (((MagicDustState *)state)->ambientTimer < 0) {
-        Sfx_PlayFromObject(obj,SFXen_statue_wave);
-        val = randomGetRange(0xf0,300);
-        ((MagicDustState *)state)->ambientTimer = (short)val;
-      }
-    }
-    if (*(uint *)&((GameObject *)obj)->ownerObj != 0) {
-      player = (int)((GameObject *)obj)->anim.modelState;
-      if ((uint)player != 0) {
-        ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
-      }
-      (*gPathControlInterface)->attachObject((void *)obj, (void *)state);
-      goto LAB_80173f80;
-    }
-    ref = (int)((GameObject *)obj)->anim.modelState;
-    if ((uint)ref != 0) {
-      ((GameObject *)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
-    }
-    *(undefined *)&((MagicDustState *)state)->unk25B = 1;
-    fval = lbl_803E34BC;
-    if ((((MagicDustState *)state)->flags27A & 3) == 0) {
-      ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * fval;
-      ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * fval;
-      ((GameObject *)obj)->anim.velocityY = -(lbl_803E34C0 * timeDelta - ((GameObject *)obj)->anim.velocityY);
-    }
-    ((MagicDustState *)state)->burstTimer = ((MagicDustState *)state)->burstTimer - timeDelta;
-    byteVal = ((MagicDustState *)state)->flags27A;
-    if ((byteVal & 1) == 0) {
-      if ((byteVal & 4) == 0) {
-        if (((MagicDustState *)state)->burstTimer <= lbl_803E34C4) {
-          Obj_FreeObject(obj);
+    float fval;
+    short sVar2;
+    byte byteVal;
+    int player;
+    int ref;
+    uint val;
+    int state;
+    double dVar9;
+    char fxArg;
+    char burstArg[3];
+    int msg[9];
+    register int msgId;
+    f32 dist;
+
+    player = (int)Obj_GetPlayerObject();
+    state = *(int*)&((GameObject*)obj)->extra;
+    msgId = 0x7000b;
+    while (ref = ObjMsg_Pop(obj, (uint*)msg, (uint*)0x0, (uint*)0x0), ref != 0)
+    {
+        if (msg[0] == msgId)
+        {
+            ref = *(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x18);
+            (*gExpgfxInterface)->freeSource2((u32)obj);
+            itemPickupDoParticleFx(obj, lbl_803E34B0, ((MagicDustState*)state)->mode, 0x28);
+            ObjHits_DisableObject(obj);
+            Sfx_PlayFromObject(obj, (u16)((MagicDustState*)state)->sfxId);
+            Sfx_StopFromObject(obj, 0x56);
+            playerAddRemoveMagic(player, (int)*(s8*)(ref + 0xb));
+            ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A & 0xfa;
+            ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 8;
+            ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 0x40;
+            ((MagicDustState*)state)->burstTimer = lbl_803E34B4;
+            OSReport(sMagicDustCollectedMessage);
+            ((GameObject*)obj)->anim.alpha = 1;
         }
-        goto LAB_80173f80;
-      }
-      if (((MagicDustState *)state)->burstTimer <= lbl_803E34C4) {
-        ((MagicDustState *)state)->flags27A = byteVal & 0xfb;
-        ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 8;
-        ((MagicDustState *)state)->burstTimer = lbl_803E34B4;
-        (*gExpgfxInterface)->freeSource2((u32)obj);
-        if (*(int *)&((GameObject *)obj)->anim.parent == 0) {
-          for (burstArg[0] = '\x1e'; burstArg[0] != '\0'; burstArg[0] = burstArg[0] + -1) {
-            (*gPartfxInterface)->spawnObject((void *)obj,
-                ((MagicDustState *)state)->burstEffectId,NULL,1,-1,burstArg);
-          }
-        }
-        ((GameObject *)obj)->anim.alpha = 1;
-        Sfx_PlayFromObject(obj,SFXen_waterblock_wave);
-      }
-      objMove(((GameObject *)obj)->anim.velocityX * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta,
-          ((GameObject *)obj)->anim.velocityZ * timeDelta, obj);
     }
-    else {
-      if (((MagicDustState *)state)->burstTimer <= lbl_803E34C4) {
-        ((MagicDustState *)state)->flags27A = byteVal & 0xfe;
-        ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 4;
-        ((MagicDustState *)state)->burstTimer = lbl_803E34C8;
-        ((GameObject *)obj)->anim.alpha = 0xff;
-      }
-      if (*(int *)&((GameObject *)obj)->anim.parent == 0) {
-        (*gPartfxInterface)->spawnObject((void *)obj,
-            ((MagicDustState *)state)->burstEffectId,NULL,1,-1,NULL);
-        (*gPartfxInterface)->spawnObject((void *)obj,
-            ((MagicDustState *)state)->burstEffectId,NULL,1,-1,NULL);
-      }
+    if ((((MagicDustState*)state)->flags27A & 0x10) == 0)
+    {
+        if (((((MagicDustState*)state)->flags27A & 0x40) == 0) &&
+            (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < lbl_803E34B8))
+        {
+            ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 0x10;
+            fxArg = '\0';
+            (*gPartfxInterface)->spawnObject((void*)obj,
+                                             ((MagicDustState*)state)->ambientEffectId, NULL, 0x10002, -1, &fxArg);
+            fxArg = '\x01';
+            (*gPartfxInterface)->spawnObject((void*)obj,
+                                             ((MagicDustState*)state)->ambientEffectId, NULL, 0x10002, -1, &fxArg);
+            fxArg = '\x02';
+            (*gPartfxInterface)->spawnObject((void*)obj,
+                                             ((MagicDustState*)state)->ambientEffectId, NULL, 0x10002, -1, &fxArg);
+        }
     }
-    if ((((MagicDustState *)state)->flags27A & 3) == 0) {
-      (*gPathControlInterface)->update((void *)obj, (void *)state, timeDelta);
-      (*gPathControlInterface)->apply((void *)obj, (void *)state);
-      (*gPathControlInterface)->advance((void *)obj, (void *)state, timeDelta);
-      if (((MagicDustState *)state)->unk261 != '\0') {
-        float vx = -((GameObject *)obj)->anim.velocityX;
-        float vy = -((GameObject *)obj)->anim.velocityY;
-        float vz = -((GameObject *)obj)->anim.velocityZ;
-        float mag = sqrtf(vx*vx + vy*vy + vz*vz);
-        if (lbl_803E34CC < mag) {
-          Sfx_PlayFromObject(obj,SFXwp_iceywindlp16);
+    else
+    {
+        if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) >= lbl_803E34B8)
+        {
+            ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A & 0xef;
+            (*gExpgfxInterface)->freeSource2((u32)obj);
         }
-        if (((MagicDustState *)state)->unk6C < lbl_803E34D0) {
-          ((GameObject *)obj)->anim.velocityX = -((GameObject *)obj)->anim.velocityX;
-          ((GameObject *)obj)->anim.velocityZ = -((GameObject *)obj)->anim.velocityZ;
-          fval = lbl_803E34D8;
-          ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * lbl_803E34D8;
-          ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * fval;
-        }
-        else {
-          ((GameObject *)obj)->anim.velocityY = -((GameObject *)obj)->anim.velocityY;
-          ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY * lbl_803E34D4;
-        }
-        byteVal = *(char *)&((MagicDustState *)state)->bounceCount + 1;
-        ((MagicDustState *)state)->bounceCount = byteVal;
-        if (5 < byteVal) {
-          ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 2;
-          fval = lbl_803E34C4;
-          ((GameObject *)obj)->anim.velocityX = lbl_803E34C4;
-          ((GameObject *)obj)->anim.velocityY = fval;
-          ((GameObject *)obj)->anim.velocityZ = fval;
-        }
-      }
     }
-  }
-  if (((((MagicDustState *)state)->flags27A & 0x20) == 0) && ((((MagicDustState *)state)->flags27A & 0x40) == 0)) {
-    fval = ((GameObject *)obj)->anim.localPosY - *(float *)(player + 0x10);
-    if (fval < lbl_803E34C4) {
-      fval = -fval;
-    }
-    if (fval < lbl_803E34DC) {
-      dist = getXZDistance(&((GameObject *)obj)->anim.worldPosX,(f32 *)(player + 0x18));
-      fval = lbl_803E34E0 + ((MagicDustState *)state)->unk268;
-      if ((dist < fval * fval) && (fn_8029622C(player) != 0)) {
-        val = GameBit_Get(0x90d);
-        if (val == 0) {
-          *(undefined2 *)&((MagicDustState *)state)->unk280 = 0xffff;
-          ObjMsg_SendToObject(player, 0x7000a, obj, state + 0x280);
-          ObjHits_DisableObject(obj);
-          GameBit_Set(0x90d,1);
-          ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 0x20;
+    if ((((GameObject*)obj)->anim.flags & 0x2000) != 0)
+    {
+        if ((((MagicDustState*)state)->flags27A & 2) != 0)
+        {
+            *(short*)obj = *(short*)obj + (u16)framesThisStep * 0x100;
+            ((MagicDustState*)state)->ambientTimer -= (u16)framesThisStep;
+            if (((MagicDustState*)state)->ambientTimer < 0)
+            {
+                Sfx_PlayFromObject(obj, SFXen_statue_wave);
+                val = randomGetRange(0xf0, 300);
+                ((MagicDustState*)state)->ambientTimer = (short)val;
+            }
         }
-        else {
-          ref = *(int *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x18);
-          (*gExpgfxInterface)->freeSource2((u32)obj);
-          itemPickupDoParticleFx(obj,lbl_803E34B0,((MagicDustState *)state)->mode,0x28);
-          ObjHits_DisableObject(obj);
-          Sfx_PlayFromObject(obj,(u16)((MagicDustState *)state)->sfxId);
-          Sfx_StopFromObject(obj,0x56);
-          playerAddRemoveMagic(player,(int)*(s8 *)(ref + 0xb));
-          ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A & 0xfa;
-          ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 8;
-          ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 0x40;
-          ((MagicDustState *)state)->burstTimer = lbl_803E34B4;
-          OSReport(sMagicDustCollectedMessage);
-          ((GameObject *)obj)->anim.alpha = 1;
+        if (*(uint*)&((GameObject*)obj)->ownerObj != 0)
+        {
+            player = (int)((GameObject*)obj)->anim.modelState;
+            if ((uint)player != 0)
+            {
+                ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
+            }
+            (*gPathControlInterface)->attachObject((void*)obj, (void*)state);
+            goto LAB_80173f80;
         }
-      }
+        ref = (int)((GameObject*)obj)->anim.modelState;
+        if ((uint)ref != 0)
+        {
+            ((GameObject*)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
+        }
+        *(undefined*)&((MagicDustState*)state)->unk25B = 1;
+        fval = lbl_803E34BC;
+        if ((((MagicDustState*)state)->flags27A & 3) == 0)
+        {
+            ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * fval;
+            ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * fval;
+            ((GameObject*)obj)->anim.velocityY = -(lbl_803E34C0 * timeDelta - ((GameObject*)obj)->anim.velocityY);
+        }
+        ((MagicDustState*)state)->burstTimer = ((MagicDustState*)state)->burstTimer - timeDelta;
+        byteVal = ((MagicDustState*)state)->flags27A;
+        if ((byteVal & 1) == 0)
+        {
+            if ((byteVal & 4) == 0)
+            {
+                if (((MagicDustState*)state)->burstTimer <= lbl_803E34C4)
+                {
+                    Obj_FreeObject(obj);
+                }
+                goto LAB_80173f80;
+            }
+            if (((MagicDustState*)state)->burstTimer <= lbl_803E34C4)
+            {
+                ((MagicDustState*)state)->flags27A = byteVal & 0xfb;
+                ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 8;
+                ((MagicDustState*)state)->burstTimer = lbl_803E34B4;
+                (*gExpgfxInterface)->freeSource2((u32)obj);
+                if (*(int*)&((GameObject*)obj)->anim.parent == 0)
+                {
+                    for (burstArg[0] = '\x1e'; burstArg[0] != '\0'; burstArg[0] = burstArg[0] + -1)
+                    {
+                        (*gPartfxInterface)->spawnObject((void*)obj,
+                                                         ((MagicDustState*)state)->burstEffectId, NULL, 1, -1,
+                                                         burstArg);
+                    }
+                }
+                ((GameObject*)obj)->anim.alpha = 1;
+                Sfx_PlayFromObject(obj, SFXen_waterblock_wave);
+            }
+            objMove(((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
+                    ((GameObject*)obj)->anim.velocityZ * timeDelta, obj);
+        }
+        else
+        {
+            if (((MagicDustState*)state)->burstTimer <= lbl_803E34C4)
+            {
+                ((MagicDustState*)state)->flags27A = byteVal & 0xfe;
+                ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 4;
+                ((MagicDustState*)state)->burstTimer = lbl_803E34C8;
+                ((GameObject*)obj)->anim.alpha = 0xff;
+            }
+            if (*(int*)&((GameObject*)obj)->anim.parent == 0)
+            {
+                (*gPartfxInterface)->spawnObject((void*)obj,
+                                                 ((MagicDustState*)state)->burstEffectId, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj,
+                                                 ((MagicDustState*)state)->burstEffectId, NULL, 1, -1, NULL);
+            }
+        }
+        if ((((MagicDustState*)state)->flags27A & 3) == 0)
+        {
+            (*gPathControlInterface)->update((void*)obj, (void*)state, timeDelta);
+            (*gPathControlInterface)->apply((void*)obj, (void*)state);
+            (*gPathControlInterface)->advance((void*)obj, (void*)state, timeDelta);
+            if (((MagicDustState*)state)->unk261 != '\0')
+            {
+                float vx = -((GameObject*)obj)->anim.velocityX;
+                float vy = -((GameObject*)obj)->anim.velocityY;
+                float vz = -((GameObject*)obj)->anim.velocityZ;
+                float mag = sqrtf(vx * vx + vy * vy + vz * vz);
+                if (lbl_803E34CC < mag)
+                {
+                    Sfx_PlayFromObject(obj, SFXwp_iceywindlp16);
+                }
+                if (((MagicDustState*)state)->unk6C < lbl_803E34D0)
+                {
+                    ((GameObject*)obj)->anim.velocityX = -((GameObject*)obj)->anim.velocityX;
+                    ((GameObject*)obj)->anim.velocityZ = -((GameObject*)obj)->anim.velocityZ;
+                    fval = lbl_803E34D8;
+                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * lbl_803E34D8;
+                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * fval;
+                }
+                else
+                {
+                    ((GameObject*)obj)->anim.velocityY = -((GameObject*)obj)->anim.velocityY;
+                    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * lbl_803E34D4;
+                }
+                byteVal = *(char*)&((MagicDustState*)state)->bounceCount + 1;
+                ((MagicDustState*)state)->bounceCount = byteVal;
+                if (5 < byteVal)
+                {
+                    ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 2;
+                    fval = lbl_803E34C4;
+                    ((GameObject*)obj)->anim.velocityX = lbl_803E34C4;
+                    ((GameObject*)obj)->anim.velocityY = fval;
+                    ((GameObject*)obj)->anim.velocityZ = fval;
+                }
+            }
+        }
     }
-  }
+    if (((((MagicDustState*)state)->flags27A & 0x20) == 0) && ((((MagicDustState*)state)->flags27A & 0x40) == 0))
+    {
+        fval = ((GameObject*)obj)->anim.localPosY - *(float*)(player + 0x10);
+        if (fval < lbl_803E34C4)
+        {
+            fval = -fval;
+        }
+        if (fval < lbl_803E34DC)
+        {
+            dist = getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18));
+            fval = lbl_803E34E0 + ((MagicDustState*)state)->unk268;
+            if ((dist < fval * fval) && (fn_8029622C(player) != 0))
+            {
+                val = GameBit_Get(0x90d);
+                if (val == 0)
+                {
+                    *(undefined2*)&((MagicDustState*)state)->unk280 = 0xffff;
+                    ObjMsg_SendToObject(player, 0x7000a, obj, state + 0x280);
+                    ObjHits_DisableObject(obj);
+                    GameBit_Set(0x90d, 1);
+                    ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 0x20;
+                }
+                else
+                {
+                    ref = *(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x18);
+                    (*gExpgfxInterface)->freeSource2((u32)obj);
+                    itemPickupDoParticleFx(obj, lbl_803E34B0, ((MagicDustState*)state)->mode, 0x28);
+                    ObjHits_DisableObject(obj);
+                    Sfx_PlayFromObject(obj, (u16)((MagicDustState*)state)->sfxId);
+                    Sfx_StopFromObject(obj, 0x56);
+                    playerAddRemoveMagic(player, (int)*(s8*)(ref + 0xb));
+                    ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A & 0xfa;
+                    ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 8;
+                    ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 0x40;
+                    ((MagicDustState*)state)->burstTimer = lbl_803E34B4;
+                    OSReport(sMagicDustCollectedMessage);
+                    ((GameObject*)obj)->anim.alpha = 1;
+                }
+            }
+        }
+    }
 LAB_80173f80:
-  return;
+    return;
 }
 
 /*
@@ -382,122 +426,141 @@ LAB_80173f80:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void magicdust_init(int obj,int placement)
+void magicdust_init(int obj, int placement)
 {
-  short mode;
-  float chaseTime;
-  uint randVal;
-  int ref;
-  int state;
-  f32 ang;
-  f32 spd;
-  u16 texPickA [2];
-  u16 texPickB [2];
-  u8 pathArgs [4];
-  undefined4 convHi0;
-  uint convLo0;
-  undefined4 convHi1;
-  uint convLo1;
-  undefined4 convHi2;
-  uint convLo2;
-  
-  state = *(int *)&((GameObject *)obj)->extra;
-  pathArgs[0] = 3;
-  texPickA[0] = lbl_803E34A8;
-  texPickB[0] = lbl_803E34AC;
-  randVal = randomGetRange(0,0xffff);
-  spd = (f32)(int)randomGetRange(0x27,0x2c) / lbl_803E34E4;
-  ang = (lbl_803E34E8 * (f32)(int)randVal) / lbl_803E34EC;
-  ((GameObject *)obj)->anim.velocityX = spd * mathSinf(ang);
-  ((GameObject *)obj)->anim.velocityZ = spd * mathCosf(ang);
-  ((GameObject *)obj)->anim.velocityY = (f32)(int)randomGetRange(0x28,0x32) / lbl_803E34F0;
-  mode = *(short *)(placement + 0x2e);
-  if (mode == 1) {
-    ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 1;
-    ((GameObject *)obj)->anim.alpha = 1;
-  }
-  else if (mode == 2) {
-    ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 1;
-    ((GameObject *)obj)->anim.alpha = 1;
-    if (*(uint *)&((GameObject *)obj)->anim.hitReactState != 0) {
-      ObjHits_DisableObject(obj);
+    short mode;
+    float chaseTime;
+    uint randVal;
+    int ref;
+    int state;
+    f32 ang;
+    f32 spd;
+    u16 texPickA[2];
+    u16 texPickB[2];
+    u8 pathArgs[4];
+    undefined4 convHi0;
+    uint convLo0;
+    undefined4 convHi1;
+    uint convLo1;
+    undefined4 convHi2;
+    uint convLo2;
+
+    state = *(int*)&((GameObject*)obj)->extra;
+    pathArgs[0] = 3;
+    texPickA[0] = lbl_803E34A8;
+    texPickB[0] = lbl_803E34AC;
+    randVal = randomGetRange(0, 0xffff);
+    spd = (f32)(int)
+    randomGetRange(0x27, 0x2c) / lbl_803E34E4;
+    ang = (lbl_803E34E8 * (f32)(int)
+    randVal
+    )
+    /
+    lbl_803E34EC;
+    ((GameObject*)obj)->anim.velocityX = spd * mathSinf(ang);
+    ((GameObject*)obj)->anim.velocityZ = spd * mathCosf(ang);
+    ((GameObject*)obj)->anim.velocityY = (f32)(int)
+    randomGetRange(0x28, 0x32) / lbl_803E34F0;
+    mode = *(short*)(placement + 0x2e);
+    if (mode == 1)
+    {
+        ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 1;
+        ((GameObject*)obj)->anim.alpha = 1;
     }
-    ref = (int)Obj_GetPlayerObject();
-    chaseTime = lbl_803E34F4;
-    ((GameObject *)obj)->anim.velocityX =
-         (*(float *)(ref + 0xc) - ((GameObject *)obj)->anim.localPosX) / lbl_803E34F4;
-    ((GameObject *)obj)->anim.velocityY = (*(float *)(ref + 0x10) - ((GameObject *)obj)->anim.localPosY) / chaseTime;
-    ((GameObject *)obj)->anim.velocityZ = (*(float *)(ref + 0x14) - ((GameObject *)obj)->anim.localPosZ) / chaseTime;
-  }
-  else if (mode == 3) {
-    ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 1;
-    ((GameObject *)obj)->anim.alpha = 1;
-    ((GameObject *)obj)->anim.velocityY =
-         -((f32)(int)randomGetRange(0x8c,0x96) / lbl_803E34F0);
-  }
-  ((ObjAnimComponent *)obj)->bankIndex = *(u8 *)(placement + 0x26);
-  if (((ObjAnimComponent *)obj)->bankIndex >=
-      ((ObjAnimComponent *)obj)->modelInstance->modelCount) {
-    ((ObjAnimComponent *)obj)->bankIndex = 0;
-  }
-  if (((GameObject *)obj)->anim.modelState != NULL) {
-    ((GameObject *)obj)->anim.modelState->shadowTintA = 100;
-    ((GameObject *)obj)->anim.modelState->shadowTintB = 0x96;
-  }
-  ref = Obj_GetActiveModel(obj);
-  mode = ((GameObject *)obj)->anim.seqId;
-  switch (mode) {
-  case 0x2c4:
-    randVal = randomGetRange(0,1);
-    *(undefined *)(*(int *)(ref + 0x34) + 8) = *(u8 *)((int)texPickA + randVal);
-    *(undefined2 *)&((MagicDustState *)state)->ambientEffectId = 0x54f;
-    *(undefined2 *)&((MagicDustState *)state)->burstEffectId = 0x54b;
-    *(undefined2 *)&((MagicDustState *)state)->sfxId = 0x58;
-    *(undefined2 *)&((MagicDustState *)state)->unk276 = 0x5b0;
-    *(undefined *)&((MagicDustState *)state)->mode = 4;
-    break;
-  case 0x2cd:
-    randVal = randomGetRange(0,1);
-    *(undefined *)(*(int *)(ref + 0x34) + 8) = *(u8 *)((int)texPickB + randVal);
-    *(undefined2 *)&((MagicDustState *)state)->ambientEffectId = 0x54e;
-    *(undefined2 *)&((MagicDustState *)state)->burstEffectId = 0x54a;
-    *(undefined2 *)&((MagicDustState *)state)->sfxId = 0x59;
-    *(undefined2 *)&((MagicDustState *)state)->unk276 = 0x5b1;
-    *(undefined *)&((MagicDustState *)state)->mode = 1;
-    break;
-  case 0x2ce:
-    *(undefined *)(*(int *)(ref + 0x34) + 8) = 3;
-    *(undefined2 *)&((MagicDustState *)state)->ambientEffectId = 0x54d;
-    *(undefined2 *)&((MagicDustState *)state)->burstEffectId = 0x549;
-    *(undefined2 *)&((MagicDustState *)state)->sfxId = 0x5a;
-    *(undefined2 *)&((MagicDustState *)state)->unk276 = 0x5b2;
-    *(undefined *)&((MagicDustState *)state)->mode = 2;
-    break;
-  default:
-    *(undefined *)(*(int *)(ref + 0x34) + 8) = 2;
-    *(undefined2 *)&((MagicDustState *)state)->ambientEffectId = 0x550;
-    *(undefined2 *)&((MagicDustState *)state)->burstEffectId = 0x54c;
-    *(undefined2 *)&((MagicDustState *)state)->sfxId = 0x5b;
-    *(undefined2 *)&((MagicDustState *)state)->unk276 = 0x5b3;
-    *(undefined *)&((MagicDustState *)state)->mode = 6;
-    break;
-  }
-  ((MagicDustState *)state)->unk268 = lbl_803E34F8;
-  if ((((GameObject *)obj)->anim.flags & 0x2000) != 0) {
-    (*gPathControlInterface)->init((void *)state, 0, 0x40007, 0);
-    (*gPathControlInterface)->setup((void *)state, 1, lbl_80320CB8, (void *)(state + 0x268), pathArgs);
-    (*gPathControlInterface)->attachObject((void *)obj, (void *)state);
-  }
-  ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x2000;
-  if ((((MagicDustState *)state)->flags27A & 1) != 0) {
-    ((MagicDustState *)state)->burstTimer = lbl_803E34FC;
-  }
-  else {
-    ((MagicDustState *)state)->burstTimer = lbl_803E34C8;
-    ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 4;
-  }
-  ObjMsg_AllocQueue(obj,1);
-  return;
+    else if (mode == 2)
+    {
+        ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 1;
+        ((GameObject*)obj)->anim.alpha = 1;
+        if (*(uint*)&((GameObject*)obj)->anim.hitReactState != 0)
+        {
+            ObjHits_DisableObject(obj);
+        }
+        ref = (int)Obj_GetPlayerObject();
+        chaseTime = lbl_803E34F4;
+        ((GameObject*)obj)->anim.velocityX =
+            (*(float*)(ref + 0xc) - ((GameObject*)obj)->anim.localPosX) / lbl_803E34F4;
+        ((GameObject*)obj)->anim.velocityY = (*(float*)(ref + 0x10) - ((GameObject*)obj)->anim.localPosY) / chaseTime;
+        ((GameObject*)obj)->anim.velocityZ = (*(float*)(ref + 0x14) - ((GameObject*)obj)->anim.localPosZ) / chaseTime;
+    }
+    else if (mode == 3)
+    {
+        ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 1;
+        ((GameObject*)obj)->anim.alpha = 1;
+        ((GameObject*)obj)->anim.velocityY =
+            -((f32)(int)
+        randomGetRange(0x8c, 0x96) / lbl_803E34F0
+        )
+        ;
+    }
+    ((ObjAnimComponent*)obj)->bankIndex = *(u8*)(placement + 0x26);
+    if (((ObjAnimComponent*)obj)->bankIndex >=
+        ((ObjAnimComponent*)obj)->modelInstance->modelCount)
+    {
+        ((ObjAnimComponent*)obj)->bankIndex = 0;
+    }
+    if (((GameObject*)obj)->anim.modelState != NULL)
+    {
+        ((GameObject*)obj)->anim.modelState->shadowTintA = 100;
+        ((GameObject*)obj)->anim.modelState->shadowTintB = 0x96;
+    }
+    ref = Obj_GetActiveModel(obj);
+    mode = ((GameObject*)obj)->anim.seqId;
+    switch (mode)
+    {
+    case 0x2c4:
+        randVal = randomGetRange(0, 1);
+        *(undefined*)(*(int*)(ref + 0x34) + 8) = *(u8*)((int)texPickA + randVal);
+        *(undefined2*)&((MagicDustState*)state)->ambientEffectId = 0x54f;
+        *(undefined2*)&((MagicDustState*)state)->burstEffectId = 0x54b;
+        *(undefined2*)&((MagicDustState*)state)->sfxId = 0x58;
+        *(undefined2*)&((MagicDustState*)state)->unk276 = 0x5b0;
+        *(undefined*)&((MagicDustState*)state)->mode = 4;
+        break;
+    case 0x2cd:
+        randVal = randomGetRange(0, 1);
+        *(undefined*)(*(int*)(ref + 0x34) + 8) = *(u8*)((int)texPickB + randVal);
+        *(undefined2*)&((MagicDustState*)state)->ambientEffectId = 0x54e;
+        *(undefined2*)&((MagicDustState*)state)->burstEffectId = 0x54a;
+        *(undefined2*)&((MagicDustState*)state)->sfxId = 0x59;
+        *(undefined2*)&((MagicDustState*)state)->unk276 = 0x5b1;
+        *(undefined*)&((MagicDustState*)state)->mode = 1;
+        break;
+    case 0x2ce:
+        *(undefined*)(*(int*)(ref + 0x34) + 8) = 3;
+        *(undefined2*)&((MagicDustState*)state)->ambientEffectId = 0x54d;
+        *(undefined2*)&((MagicDustState*)state)->burstEffectId = 0x549;
+        *(undefined2*)&((MagicDustState*)state)->sfxId = 0x5a;
+        *(undefined2*)&((MagicDustState*)state)->unk276 = 0x5b2;
+        *(undefined*)&((MagicDustState*)state)->mode = 2;
+        break;
+    default:
+        *(undefined*)(*(int*)(ref + 0x34) + 8) = 2;
+        *(undefined2*)&((MagicDustState*)state)->ambientEffectId = 0x550;
+        *(undefined2*)&((MagicDustState*)state)->burstEffectId = 0x54c;
+        *(undefined2*)&((MagicDustState*)state)->sfxId = 0x5b;
+        *(undefined2*)&((MagicDustState*)state)->unk276 = 0x5b3;
+        *(undefined*)&((MagicDustState*)state)->mode = 6;
+        break;
+    }
+    ((MagicDustState*)state)->unk268 = lbl_803E34F8;
+    if ((((GameObject*)obj)->anim.flags & 0x2000) != 0)
+    {
+        (*gPathControlInterface)->init((void*)state, 0, 0x40007, 0);
+        (*gPathControlInterface)->setup((void*)state, 1, lbl_80320CB8, (void*)(state + 0x268), pathArgs);
+        (*gPathControlInterface)->attachObject((void*)obj, (void*)state);
+    }
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
+    if ((((MagicDustState*)state)->flags27A & 1) != 0)
+    {
+        ((MagicDustState*)state)->burstTimer = lbl_803E34FC;
+    }
+    else
+    {
+        ((MagicDustState*)state)->burstTimer = lbl_803E34C8;
+        ((MagicDustState*)state)->flags27A = ((MagicDustState*)state)->flags27A | 4;
+    }
+    ObjMsg_AllocQueue(obj, 1);
+    return;
 }
 
 
@@ -518,31 +581,45 @@ extern void fn_8002B758(void);
  */
 void effectbox_free(void)
 {
-  fn_8002B758();
+    fn_8002B758();
 }
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void effectbox_hitDetect(void) {}
-void effectbox_release(void) {}
-void effectbox_initialise(void) {}
+void effectbox_hitDetect(void)
+{
+}
+
+void effectbox_release(void)
+{
+}
+
+void effectbox_initialise(void)
+{
+}
 
 extern void fn_8002B860(int obj);
-void effectbox_init(int obj, int *def) {
+
+void effectbox_init(int obj, int* def)
+{
     s16 bit;
     u32 v;
-    if (((GameObject *)obj)->unkF4 == 0) {
+    if (((GameObject*)obj)->unkF4 == 0)
+    {
         fn_8002B860(obj);
     }
-    ((GameObject *)obj)->unkF4 = 1;
-    bit = *(s16 *)((char *)def + 0x20);
-    if (bit > -1) {
-        ((GameObject *)obj)->unkF8 = (int)bit;
-    } else {
-        ((GameObject *)obj)->unkF8 = -1;
+    ((GameObject*)obj)->unkF4 = 1;
+    bit = *(s16*)((char*)def + 0x20);
+    if (bit > -1)
+    {
+        ((GameObject*)obj)->unkF8 = (int)bit;
     }
-    v = (u32)((GameObject *)obj)->objectFlags | 0x6000;
-    ((GameObject *)obj)->objectFlags = (u16)v;
+    else
+    {
+        ((GameObject*)obj)->unkF8 = -1;
+    }
+    v = (u32)((GameObject*)obj)->objectFlags | 0x6000;
+    ((GameObject*)obj)->objectFlags = (u16)v;
 }
 
 /* 8b "li r3, N; blr" returners. */
@@ -552,43 +629,51 @@ int effectbox_getObjectTypeId(void) { return 0x0; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3508;
 extern void objRenderFn_8003b8f4(f32);
-void effectbox_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3508); }
 
-void fn_80174588(int obj, PushableState *p2)
+void effectbox_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-  extern int *objFindTexture(int, int, int);
-  int data = *(int *)&((GameObject *)obj)->anim.placementData;
-
-  switch (*(int *)(data + 0x14)) {
-    case 0x49B2C:
-      p2->requiredHitId = 10;
-      break;
-    case 0x49B5D:
-      p2->requiredHitId = 11;
-      ((ObjAnimComponent *)obj)->bankIndex = 1;
-      break;
-    case 0x49B5E:
-      p2->requiredHitId = 12;
-      ((ObjAnimComponent *)obj)->bankIndex = 1;
-      break;
-  }
-
-  if (GameBit_Get(*(s16 *)(data + 0x18)) != 0) {
-    int *tex;
-    p2->flags = (u16)(p2->flags | 0x80);
-    tex = objFindTexture(obj, 0, 0);
-    if (tex != NULL) {
-      *tex = 256;
-    }
-  }
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E3508);
 }
 
-extern void *getTrickyObject(void);
+void fn_80174588(int obj, PushableState* p2)
+{
+    extern int*objFindTexture(int, int, int);
+    int data = *(int*)&((GameObject*)obj)->anim.placementData;
+
+    switch (*(int*)(data + 0x14))
+    {
+    case 0x49B2C:
+        p2->requiredHitId = 10;
+        break;
+    case 0x49B5D:
+        p2->requiredHitId = 11;
+        ((ObjAnimComponent*)obj)->bankIndex = 1;
+        break;
+    case 0x49B5E:
+        p2->requiredHitId = 12;
+        ((ObjAnimComponent*)obj)->bankIndex = 1;
+        break;
+    }
+
+    if (GameBit_Get(*(s16*)(data + 0x18)) != 0)
+    {
+        int* tex;
+        p2->flags = (u16)(p2->flags | 0x80);
+        tex = objFindTexture(obj, 0, 0);
+        if (tex != NULL)
+        {
+            *tex = 256;
+        }
+    }
+}
+
+extern void* getTrickyObject(void);
 extern void fn_80295918(f32 amount, int obj, int p3);
 extern void Sfx_StopObjectChannel(int obj, int channel);
-extern int fn_80295A04(void *player, int p2);
-extern int ObjGroup_FindNearestObject(int group, int obj, f32 *dist);
-extern int *objFindTexture(int obj, int a, int b);
+extern int fn_80295A04(void* player, int p2);
+extern int ObjGroup_FindNearestObject(int group, int obj, f32* dist);
+extern int* objFindTexture(int obj, int a, int b);
 extern void fn_80175428(int obj, int p2);
 extern f32 lbl_803E350C;
 extern f32 lbl_803E3510;
@@ -620,91 +705,101 @@ extern f32 lbl_803E3528;
  */
 void effectbox_update(int obj)
 {
-  int def;
-  int count;
-  int single;
-  int *list;
-  int i;
-  int other;
-  f32 sinY;
-  f32 cosY;
-  f32 sinX;
-  f32 cosX;
-  f32 extX;
-  f32 extYNeg;
-  f32 extZ;
-  f32 negExtX;
-  f32 negExtZ;
-  f32 dx;
-  f32 dy;
-  f32 dz;
-  f32 proj;
-  int gb;
+    int def;
+    int count;
+    int single;
+    int* list;
+    int i;
+    int other;
+    f32 sinY;
+    f32 cosY;
+    f32 sinX;
+    f32 cosX;
+    f32 extX;
+    f32 extYNeg;
+    f32 extZ;
+    f32 negExtX;
+    f32 negExtZ;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 proj;
+    int gb;
 
-  def = *(int *)&((GameObject *)obj)->anim.placementData;
-  gb = ((GameObject *)obj)->unkF8;
-  if ((gb <= -1) || (((EffectboxPlacement *)def)->gameBitValue != GameBit_Get(gb))) {
-    sinY = mathCosf((lbl_803E350C * (f32)-(((EffectboxPlacement *)def)->rotYaw << 8)) / lbl_803E3510);
-    cosY = mathSinf((lbl_803E350C * (f32)-(((EffectboxPlacement *)def)->rotYaw << 8)) / lbl_803E3510);
-    sinX = mathCosf((lbl_803E350C * (f32)-(((EffectboxPlacement *)def)->rotPitch << 8)) / lbl_803E3510);
-    cosX = mathSinf((lbl_803E350C * (f32)-(((EffectboxPlacement *)def)->rotPitch << 8)) / lbl_803E3510);
-    extX = (f32)((EffectboxPlacement *)def)->extentX;
-    extYNeg = (f32)-(((EffectboxPlacement *)def)->extentY << 1);
-    extZ = (f32)((EffectboxPlacement *)def)->extentZ;
-    switch (((EffectboxPlacement *)def)->targetMode) {
-    case 1:
-      single = (int)Obj_GetPlayerObject();
-      if (single == 0) {
-        return;
-      }
-      list = &single;
-      count = 1;
-      break;
-    case 0:
-      single = (int)getTrickyObject();
-      if (single == 0) {
-        return;
-      }
-      list = &single;
-      count = 1;
-      break;
-    case 2:
-      list = (int *)ObjGroup_GetObjects(5, &count);
-      if (list == NULL) {
-        return;
-      }
-      break;
-    }
-    negExtX = -extX;
-    negExtZ = -extZ;
-    for (i = 0; i < count; i++) {
-      other = *list;
-      dx = *(f32 *)(other + 0xc) - ((GameObject *)obj)->anim.localPosX;
-      dy = *(f32 *)(other + 0x10) - ((GameObject *)obj)->anim.localPosY;
-      dz = *(f32 *)(other + 0x14) - ((GameObject *)obj)->anim.localPosZ;
-      proj = dx * sinY + dz * cosY;
-      if ((proj > negExtX) && (proj < extX)) {
-        proj = (-dx) * cosY + dz * sinY;
-        proj = (-dy) * cosX + proj * sinX;
-        if ((proj > negExtZ) && (proj < extZ)) {
-          proj = dy * sinX + proj * cosX;
-          if ((proj >= lbl_803E3514) && (proj < extYNeg)) {
-            switch (((EffectboxPlacement *)def)->targetMode) {
-            case 1:
-              break;
-            case 0:
-              fn_80295918((f32)((EffectboxPlacement *)def)->unk1D, other, 1);
-              break;
-            case 2:
-              (*(code *)(*(int *)(*(int *)(other + 0x68)) + 0x28))(other, ((EffectboxPlacement *)def)->unk1D);
-              break;
+    def = *(int*)&((GameObject*)obj)->anim.placementData;
+    gb = ((GameObject*)obj)->unkF8;
+    if ((gb <= -1) || (((EffectboxPlacement*)def)->gameBitValue != GameBit_Get(gb)))
+    {
+        sinY = mathCosf((lbl_803E350C * (f32) - (((EffectboxPlacement*)def)->rotYaw << 8)) / lbl_803E3510);
+        cosY = mathSinf((lbl_803E350C * (f32) - (((EffectboxPlacement*)def)->rotYaw << 8)) / lbl_803E3510);
+        sinX = mathCosf((lbl_803E350C * (f32) - (((EffectboxPlacement*)def)->rotPitch << 8)) / lbl_803E3510);
+        cosX = mathSinf((lbl_803E350C * (f32) - (((EffectboxPlacement*)def)->rotPitch << 8)) / lbl_803E3510);
+        extX = (f32)((EffectboxPlacement*)def)->extentX;
+        extYNeg = (f32) - (((EffectboxPlacement*)def)->extentY << 1);
+        extZ = (f32)((EffectboxPlacement*)def)->extentZ;
+        switch (((EffectboxPlacement*)def)->targetMode)
+        {
+        case 1:
+            single = (int)Obj_GetPlayerObject();
+            if (single == 0)
+            {
+                return;
             }
-          }
+            list = &single;
+            count = 1;
+            break;
+        case 0:
+            single = (int)getTrickyObject();
+            if (single == 0)
+            {
+                return;
+            }
+            list = &single;
+            count = 1;
+            break;
+        case 2:
+            list = (int*)ObjGroup_GetObjects(5, &count);
+            if (list == NULL)
+            {
+                return;
+            }
+            break;
         }
-      }
-      list++;
+        negExtX = -extX;
+        negExtZ = -extZ;
+        for (i = 0; i < count; i++)
+        {
+            other = *list;
+            dx = *(f32*)(other + 0xc) - ((GameObject*)obj)->anim.localPosX;
+            dy = *(f32*)(other + 0x10) - ((GameObject*)obj)->anim.localPosY;
+            dz = *(f32*)(other + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+            proj = dx * sinY + dz * cosY;
+            if ((proj > negExtX) && (proj < extX))
+            {
+                proj = (-dx) * cosY + dz * sinY;
+                proj = (-dy) * cosX + proj * sinX;
+                if ((proj > negExtZ) && (proj < extZ))
+                {
+                    proj = dy * sinX + proj * cosX;
+                    if ((proj >= lbl_803E3514) && (proj < extYNeg))
+                    {
+                        switch (((EffectboxPlacement*)def)->targetMode)
+                        {
+                        case 1:
+                            break;
+                        case 0:
+                            fn_80295918((f32)((EffectboxPlacement*)def)->unk1D, other, 1);
+                            break;
+                        case 2:
+                            (*(code*)(*(int*)(*(int*)(other + 0x68)) + 0x28))(other, ((EffectboxPlacement*)def)->unk1D);
+                            break;
+                        }
+                    }
+                }
+            }
+            list++;
+        }
     }
-  }
 }
 
 /*
@@ -714,36 +809,40 @@ void effectbox_update(int obj)
  * EN v1.0 Address: 0x80174438
  * EN v1.0 Size: 336b
  */
-int fn_80174438(int obj, PushableState *state)
+int fn_80174438(int obj, PushableState* state)
 {
-  int def;
-  void *player;
+    int def;
+    void* player;
 
-  def = *(int *)&((GameObject *)obj)->anim.placementData;
-  player = Obj_GetPlayerObject();
-  if (((state->flags & 0x80) != 0) || (fn_80295A04(player, 10) != 0)) {
-    Sfx_StopObjectChannel(obj, 8);
+    def = *(int*)&((GameObject*)obj)->anim.placementData;
+    player = Obj_GetPlayerObject();
+    if (((state->flags & 0x80) != 0) || (fn_80295A04(player, 10) != 0))
+    {
+        Sfx_StopObjectChannel(obj, 8);
+        return 0;
+    }
+    Sfx_PlayFromObject(obj, 0x66);
+    state->flags |= 2;
+    if ((state->flags & 4) == 0)
+    {
+        fn_80174BFC(obj, state);
+    }
+    if (((GameObject*)obj)->anim.localPosX <= lbl_803E352C + ((ObjPlacement*)def)->posX)
+    {
+        GameBit_Set(state->gameBit, 1);
+        state->flags |= 0x80;
+        ((GameObject*)obj)->anim.localPosX = (f32)(((ObjPlacement*)def)->posX - lbl_803E3530);
+        ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
+        ((GameObject*)obj)->anim.localPosZ = (f32)(lbl_803E3538 + ((ObjPlacement*)def)->posZ);
+        Sfx_PlayFromObject(obj, 0x68);
+    }
+    if (GameBit_Get(0xa1a) != 0)
+    {
+        ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)def)->posX;
+        ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
+        ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)def)->posZ;
+    }
     return 0;
-  }
-  Sfx_PlayFromObject(obj, 0x66);
-  state->flags |= 2;
-  if ((state->flags & 4) == 0) {
-    fn_80174BFC(obj, state);
-  }
-  if (((GameObject *)obj)->anim.localPosX <= lbl_803E352C + ((ObjPlacement *)def)->posX) {
-    GameBit_Set(state->gameBit, 1);
-    state->flags |= 0x80;
-    ((GameObject *)obj)->anim.localPosX = (f32)(((ObjPlacement *)def)->posX - lbl_803E3530);
-    ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY;
-    ((GameObject *)obj)->anim.localPosZ = (f32)(lbl_803E3538 + ((ObjPlacement *)def)->posZ);
-    Sfx_PlayFromObject(obj, 0x68);
-  }
-  if (GameBit_Get(0xa1a) != 0) {
-    ((GameObject *)obj)->anim.localPosX = ((ObjPlacement *)def)->posX;
-    ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY;
-    ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)def)->posZ;
-  }
-  return 0;
 }
 
 /*
@@ -753,103 +852,134 @@ int fn_80174438(int obj, PushableState *state)
  * EN v1.0 Address: 0x80174668
  * EN v1.0 Size: 1048b
  */
-int fn_80174668(int obj, PushableState *state)
+int fn_80174668(int obj, PushableState* state)
 {
-  u8 flag;
-  int *tex;
-  void *effectResource;
-  f32 dy;
-  f32 dx;
-  f32 cur;
-  f32 bound;
-  f32 p1;
-  f32 p2;
-  f32 dist[2];
+    u8 flag;
+    int* tex;
+    void* effectResource;
+    f32 dy;
+    f32 dx;
+    f32 cur;
+    f32 bound;
+    f32 p1;
+    f32 p2;
+    f32 dist[2];
 
-  flag = 0;
-  dist[0] = lbl_803E3540;
-  fn_80175428(obj, 0);
-  if (GameBit_Get(state->gameBit) != 0) {
-    cur = ((GameObject *)obj)->anim.rootMotionScale;
-    bound = lbl_803E3544;
-    if (cur > bound) {
-      ((GameObject *)obj)->anim.rootMotionScale = -(lbl_803E3548 * timeDelta - ((GameObject *)obj)->anim.rootMotionScale);
-      if (((GameObject *)obj)->anim.rootMotionScale <= bound) {
-        ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3528;
-        ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E354C;
-        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
-      }
+    flag = 0;
+    dist[0] = lbl_803E3540;
+    fn_80175428(obj, 0);
+    if (GameBit_Get(state->gameBit) != 0)
+    {
+        cur = ((GameObject*)obj)->anim.rootMotionScale;
+        bound = lbl_803E3544;
+        if (cur > bound)
+        {
+            ((GameObject*)obj)->anim.rootMotionScale = -(lbl_803E3548 * timeDelta - ((GameObject*)obj)->anim.
+                rootMotionScale);
+            if (((GameObject*)obj)->anim.rootMotionScale <= bound)
+            {
+                ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3528;
+                ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E354C;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+            }
+        }
+        return 1;
     }
-    return 1;
-  }
-  if (state->nearestObj == NULL) {
-    state->nearestObj = (void *)ObjGroup_FindNearestObject(0x11, obj, dist);
-  }
-  if (state->nearestObj == NULL) {
-    return 0;
-  }
-  if (state->eyeOpenAmount < lbl_803E3550) {
-    state->eyeOpenAmount = lbl_803E3550;
-  }
-  dy = *(f32 *)((int)state->nearestObj + 0x14) - ((GameObject *)obj)->anim.localPosZ;
-  if (dy < lbl_803E3528) {
-    dy = dy * lbl_803E3554;
-  }
-  cur = state->unk_F0;
-  if (cur < lbl_803E3558 + dy) {
-    return 0;
-  }
-  dx = *(f32 *)((int)state->nearestObj + 0xc) - ((GameObject *)obj)->anim.localPosX;
-  if (dx < lbl_803E3528) {
-    dx = dx * lbl_803E3554;
-  }
-  if (dx > lbl_803E355C) {
-    return 0;
-  }
-  if ((cur >= lbl_803E3558 + dy) && (cur <= lbl_803E3560 + dy)) {
-    flag = 1;
-    GameBit_Set(0x1c9, 1);
-  }
-  tex = (int *)objFindTexture(obj, 0, 0);
-  state->blinkPhase = state->blinkStep * timeDelta + state->blinkPhase;
-  if (state->blinkPhase >= state->blinkInterval) {
-    state->blinkStep = state->blinkStep * lbl_803E3554;
-  } else if (state->blinkPhase < lbl_803E3528) {
-    state->blinkInterval = lbl_803E3564 * (f32)(int)randomGetRange(0x19, 0x4b);
-    state->blinkStep = state->blinkInterval / (f32)(int)randomGetRange(0x28, 0x46);
-    state->blinkPhase = lbl_803E3528;
-  }
-  if (tex != NULL) {
-    state->eyeOpenAmount = state->eyeOpenAmount + state->eyeOpenSpeed;
-    if (state->eyeOpenAmount >= lbl_803E3568) {
-      GameBit_Set(state->gameBit, 1);
-      if (flag) {
-        GameBit_Set(0x1c9, 0);
-      }
-      effectResource = Resource_Acquire(0x5b, 1);
-      (*(code *)(*(int *)(*(int *)effectResource + 4)))(obj, 0x14, 0, 2, -1, 0);
-      (*(code *)(*(int *)(*(int *)effectResource + 4)))(obj, 0x14, 0, 2, -1, 0);
-      Resource_Release(effectResource);
-      Sfx_PlayFromObject(obj, 0x65);
-    } else {
-      state->eyePosX = state->eyePosX + state->eyeDriftSpeedX;
-      if (state->eyePosX > lbl_803E356C) {
-        state->eyePosX = lbl_803E356C;
-      } else if (state->eyePosX < lbl_803E3528) {
-        state->eyePosX = lbl_803E356C;
-      }
-      state->eyePosY = state->eyePosY + state->eyeDriftSpeedY;
-      if (state->eyePosY > lbl_803E356C) {
-        state->eyePosY = lbl_803E356C;
-      } else if (state->eyePosY < lbl_803E3528) {
-        state->eyePosY = lbl_803E356C;
-      }
-      p1 = state->eyePosX * (lbl_803E3570 + state->blinkPhase);
-      p2 = state->eyePosY * (lbl_803E3570 + state->blinkPhase);
-      *(u8 *)((char *)tex + 0xc) = (u8)(int)state->eyeOpenAmount;
-      *(u8 *)((char *)tex + 0xd) = (u8)(int)p1;
-      *(u8 *)((char *)tex + 0xe) = (u8)(int)p2;
+    if (state->nearestObj == NULL)
+    {
+        state->nearestObj = (void*)ObjGroup_FindNearestObject(0x11, obj, dist);
     }
-  }
-  return 0;
+    if (state->nearestObj == NULL)
+    {
+        return 0;
+    }
+    if (state->eyeOpenAmount < lbl_803E3550)
+    {
+        state->eyeOpenAmount = lbl_803E3550;
+    }
+    dy = *(f32*)((int)state->nearestObj + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+    if (dy < lbl_803E3528)
+    {
+        dy = dy * lbl_803E3554;
+    }
+    cur = state->unk_F0;
+    if (cur < lbl_803E3558 + dy)
+    {
+        return 0;
+    }
+    dx = *(f32*)((int)state->nearestObj + 0xc) - ((GameObject*)obj)->anim.localPosX;
+    if (dx < lbl_803E3528)
+    {
+        dx = dx * lbl_803E3554;
+    }
+    if (dx > lbl_803E355C)
+    {
+        return 0;
+    }
+    if ((cur >= lbl_803E3558 + dy) && (cur <= lbl_803E3560 + dy))
+    {
+        flag = 1;
+        GameBit_Set(0x1c9, 1);
+    }
+    tex = (int*)objFindTexture(obj, 0, 0);
+    state->blinkPhase = state->blinkStep * timeDelta + state->blinkPhase;
+    if (state->blinkPhase >= state->blinkInterval)
+    {
+        state->blinkStep = state->blinkStep * lbl_803E3554;
+    }
+    else if (state->blinkPhase < lbl_803E3528)
+    {
+        state->blinkInterval = lbl_803E3564 * (f32)(int)
+        randomGetRange(0x19, 0x4b);
+        state->blinkStep = state->blinkInterval / (f32)(int)
+        randomGetRange(0x28, 0x46);
+        state->blinkPhase = lbl_803E3528;
+    }
+    if (tex != NULL)
+    {
+        state->eyeOpenAmount = state->eyeOpenAmount + state->eyeOpenSpeed;
+        if (state->eyeOpenAmount >= lbl_803E3568)
+        {
+            GameBit_Set(state->gameBit, 1);
+            if (flag)
+            {
+                GameBit_Set(0x1c9, 0);
+            }
+            effectResource = Resource_Acquire(0x5b, 1);
+            (*(code*)(*(int*)(*(int*)effectResource + 4)))(obj, 0x14, 0, 2, -1, 0);
+            (*(code*)(*(int*)(*(int*)effectResource + 4)))(obj, 0x14, 0, 2, -1, 0);
+            Resource_Release(effectResource);
+            Sfx_PlayFromObject(obj, 0x65);
+        }
+        else
+        {
+            state->eyePosX = state->eyePosX + state->eyeDriftSpeedX;
+            if (state->eyePosX > lbl_803E356C)
+            {
+                state->eyePosX = lbl_803E356C;
+            }
+            else if (state->eyePosX < lbl_803E3528)
+            {
+                state->eyePosX = lbl_803E356C;
+            }
+            state->eyePosY = state->eyePosY + state->eyeDriftSpeedY;
+            if (state->eyePosY > lbl_803E356C)
+            {
+                state->eyePosY = lbl_803E356C;
+            }
+            else if (state->eyePosY < lbl_803E3528)
+            {
+                state->eyePosY = lbl_803E356C;
+            }
+            p1 = state->eyePosX * (lbl_803E3570 + state->blinkPhase);
+            p2 = state->eyePosY * (lbl_803E3570 + state->blinkPhase);
+            *(u8*)((char*)tex + 0xc) = (u8)(int)
+            state->eyeOpenAmount;
+            *(u8*)((char*)tex + 0xd) = (u8)(int)
+            p1;
+            *(u8*)((char*)tex + 0xe) = (u8)(int)
+            p2;
+        }
+    }
+    return 0;
 }

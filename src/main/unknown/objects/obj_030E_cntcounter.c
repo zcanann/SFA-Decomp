@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_030E_CNTcounter_packet_info {
+enum obj_030E_CNTcounter_packet_info
+{
     CNTCOUNTER_DEF_ID = 0x030E,
     CNTCOUNTER_DLL_ID = 0x02B4,
     CNTCOUNTER_CLASS_ID = 0x0030,

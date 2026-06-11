@@ -3,10 +3,10 @@
 #include "main/audio/voice_alloc.h"
 #include "main/audio/voice_manage.h"
 
-extern void macMakeInactive(McmdVoiceState *state, int x);
+extern void macMakeInactive(McmdVoiceState* state, int x);
 
 extern VoiceIdSlot voiceFreeListSlots[];
-extern u8 *synthVoice;
+extern u8* synthVoice;
 extern u8 lbl_803BD150[];
 extern u8 synthIdleWaitActive;
 extern u16 voicePrioSortRootListRoot;
@@ -15,18 +15,21 @@ extern u8 voiceFxRunning;
 extern u8 voiceListInsert;
 extern u8 voiceListRoot;
 
-typedef struct SynthRootListNode {
+typedef struct SynthRootListNode
+{
     u16 next;
     u16 prev;
 } SynthRootListNode;
 
-typedef struct SynthVoiceListNode {
+typedef struct SynthVoiceListNode
+{
     u8 prev;
     u8 next;
     u16 user;
 } SynthVoiceListNode;
 
-typedef struct VidListTables {
+typedef struct VidListTables
+{
     u8 vidLists[0x800];
     u8 midiKeySlots[0x80];
     u8 directSlots[0x40];
@@ -38,7 +41,8 @@ typedef struct VidListTables {
 
 extern u8 vidListNodes[];
 
-typedef struct AllocVoice {
+typedef struct AllocVoice
+{
     u8 pad000[0x100];
     u16 allocId;
     u8 pad102[0xA];
@@ -70,21 +74,27 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
     SynthVoiceListNode* sfv;
     VidListTables* vb = (VidListTables*)vidListNodes;
 
-    if (!synthIdleWaitActive) {
-        if (fxFlag) {
+    if (!synthIdleWaitActive)
+    {
+        if (fxFlag)
+        {
             type_alloc = (voiceFxRunning >= lbl_803BD150[0x212] &&
-                          lbl_803BD150[0x210] > lbl_803BD150[0x212]);
+                lbl_803BD150[0x210] > lbl_803BD150[0x212]);
 
-            if (lbl_803BD150[0x212] <= maxVoices) {
+            if (lbl_803BD150[0x212] <= maxVoices)
+            {
                 goto _skip_alloc;
             }
 
             goto _do_alloc;
-        } else {
+        }
+        else
+        {
             type_alloc = (voiceMusicRunning >= lbl_803BD150[0x211] &&
-                          lbl_803BD150[0x210] > lbl_803BD150[0x211]);
+                lbl_803BD150[0x210] > lbl_803BD150[0x211]);
 
-            if (lbl_803BD150[0x211] <= maxVoices) {
+            if (lbl_803BD150[0x211] <= maxVoices)
+            {
                 goto _skip_alloc;
             }
 
@@ -93,22 +103,27 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
             voice = -1;
 
             p = voicePrioSortRootListRoot;
-            while (p != 0xFFFF && priority >= p && voice == -1) {
+            while (p != 0xFFFF && priority >= p && voice == -1)
+            {
                 for (i = vb->priorityGroupHeads[p]; i != 0xff;
-                     i = vb->priorityLinks[i].next) {
+                     i = vb->priorityLinks[i].next)
+                {
                     if (allocId != ALLOC_VOICE[i].allocId)
                         continue;
                     ++num;
                     if (ALLOC_VOICE[i].block)
                         continue;
 
-                    if (!type_alloc || fxFlag == ALLOC_VOICE[i].fxFlag) {
+                    if (!type_alloc || fxFlag == ALLOC_VOICE[i].fxFlag)
+                    {
                         if (VOICE_CFLAGS(i) & 2)
                             continue;
-                        if (voice != -1) {
+                        if (voice != -1)
+                        {
                             if (ALLOC_VOICE[i].age < ALLOC_VOICE[voice].age)
                                 voice = i;
-                        } else
+                        }
+                        else
                             voice = i;
                     }
                 }
@@ -117,11 +132,15 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
             }
         }
 
-        if (num < maxVoices) {
-            while (p != 0xffff && num < maxVoices) {
+        if (num < maxVoices)
+        {
+            while (p != 0xffff && num < maxVoices)
+            {
                 i = vb->priorityGroupHeads[p];
-                while (i != 0xff) {
-                    if (allocId == ALLOC_VOICE[i].allocId) {
+                while (i != 0xff)
+                {
+                    if (allocId == ALLOC_VOICE[i].allocId)
+                    {
                         num++;
                     }
 
@@ -131,82 +150,106 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
                 p = vb->prioritySortLinks[p].next;
             }
 
-            if (num < maxVoices) {
+            if (num < maxVoices)
+            {
             _skip_alloc:
                 voice = -1;
-                if (voiceListRoot != 0xff && type_alloc == 0) {
+                if (voiceListRoot != 0xff && type_alloc == 0)
+                {
                     voice = voiceListRoot;
                     goto _update;
                 }
 
-                if (priority < voicePrioSortRootListRoot) {
+                if (priority < voicePrioSortRootListRoot)
+                {
                     return -1;
                 }
 
                 p = voicePrioSortRootListRoot;
 
-                while (p != 0xFFFF && priority >= p && voice == -1) {
+                while (p != 0xFFFF && priority >= p && voice == -1)
+                {
                     for (i = vb->priorityGroupHeads[p]; i != 0xff;
-                         i = vb->priorityLinks[i].next) {
+                         i = vb->priorityLinks[i].next)
+                    {
                         if (ALLOC_VOICE[i].block != 0)
                             continue;
 
-                        if (!type_alloc || fxFlag == ALLOC_VOICE[i].fxFlag) {
+                        if (!type_alloc || fxFlag == ALLOC_VOICE[i].fxFlag)
+                        {
                             if (VOICE_CFLAGS(i) & 2)
                                 continue;
-                            if (voice != -1) {
+                            if (voice != -1)
+                            {
                                 if (ALLOC_VOICE[voice].age > ALLOC_VOICE[i].age)
                                     voice = i;
-                            } else
+                            }
+                            else
                                 voice = i;
                         }
                     }
                     p = vb->prioritySortLinks[p].next;
                 }
 
-                if (voice == -1) {
+                if (voice == -1)
+                {
                     return 0xffffffff;
                 }
 
             _update:
-                if (ALLOC_VOICE[voice].prio > priority) {
+                if (ALLOC_VOICE[voice].prio > priority)
+                {
                     goto _fail;
                 }
             }
         }
 
-        if (voice == -1) {
+        if (voice == -1)
+        {
             goto _fail;
         }
 
-        if (vb->freeList[voice].user == 1) {
+        if (vb->freeList[voice].user == 1)
+        {
             sfv = vb->freeList + voice;
             i = sfv->prev;
 
-            if (i != 0xff) {
+            if (i != 0xff)
+            {
                 vb->freeList[i].next = sfv->next;
-            } else {
+            }
+            else
+            {
                 voiceListRoot = sfv->next;
             }
 
             i = sfv->next;
-            if (i != 0xff) {
+            if (i != 0xff)
+            {
                 vb->freeList[i].prev = sfv->prev;
             }
 
-            if (voice == voiceListInsert) {
+            if (voice == voiceListInsert)
+            {
                 voiceListInsert = sfv->prev;
             }
 
             sfv->user = 0;
-        } else if (ALLOC_VOICE[voice].fxFlag) {
+        }
+        else if (ALLOC_VOICE[voice].fxFlag)
+        {
             voiceFxRunning--;
-        } else {
+        }
+        else
+        {
             voiceMusicRunning--;
         }
-        if (fxFlag != 0) {
+        if (fxFlag != 0)
+        {
             ++voiceFxRunning;
-        } else {
+        }
+        else
+        {
             ++voiceMusicRunning;
         }
         return voice;
@@ -224,33 +267,40 @@ _fail:
  */
 void voiceFree(int state)
 {
-    McmdVoiceState *vs = (McmdVoiceState *)state;
-    macMakeInactive((McmdVoiceState *)state, 2);
+    McmdVoiceState* vs = (McmdVoiceState*)state;
+    macMakeInactive((McmdVoiceState*)state, 2);
     voiceRemovePriority(state);
-    *(u32 *)&vs->macroBase = 0;
+    *(u32*)&vs->macroBase = 0;
     vs->priorityGroup = 0;
     {
         u32 voice = vs->voiceHandle;
         u32 v = voice & 0xff;
-        VoiceIdSlot *slot = &voiceFreeListSlots[v];
-        if (slot->active == 0) {
+        VoiceIdSlot* slot = &voiceFreeListSlots[v];
+        if (slot->active == 0)
+        {
             slot->active = 1;
-            if (voiceListRoot != 0xff) {
+            if (voiceListRoot != 0xff)
+            {
                 slot->next = 0xff;
                 slot->prev = voiceListInsert;
                 voiceFreeListSlots[voiceListInsert].next = v;
-            } else {
+            }
+            else
+            {
                 slot->next = 0xff;
                 slot->prev = 0xff;
                 voiceListRoot = v;
             }
             voiceListInsert = v;
-            if (vs->streamKind != 0) {
+            if (vs->streamKind != 0)
+            {
                 voiceFxRunning--;
-            } else {
+            }
+            else
+            {
                 voiceMusicRunning--;
             }
         }
     }
-    *(int *)&vs->voiceHandle = -1;
+    *(int*)&vs->voiceHandle = -1;
 }

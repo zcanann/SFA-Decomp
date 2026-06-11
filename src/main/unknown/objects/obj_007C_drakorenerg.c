@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_007C_DrakorEnerg_packet_info {
+enum obj_007C_DrakorEnerg_packet_info
+{
     DRAKORENERG_DEF_ID = 0x007C,
     DRAKORENERG_DLL_ID = 0x0241,
     DRAKORENERG_CLASS_ID = 0x0030,

@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0251_GF_JukeBox_packet_info {
+enum obj_0251_GF_JukeBox_packet_info
+{
     GF_JUKEBOX_DEF_ID = 0x0251,
     GF_JUKEBOX_DLL_ID = 0x012E,
     GF_JUKEBOX_CLASS_ID = 0x0061,

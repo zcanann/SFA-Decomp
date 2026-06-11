@@ -22,7 +22,8 @@
  */
 
 #if 0
-enum object_bin2_packet_info {
+enum object_bin2_packet_info
+{
     SH_KILLERMU_DEF_ID = 0x02B1,
     SH_KILLERMU_LIVE_BYTES = 0xE0,
     SH_KILLERMU_BIN2_BYTES = 0x100,

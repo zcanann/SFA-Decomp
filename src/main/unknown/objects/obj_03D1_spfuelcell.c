@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03D1_SPFuelCell_packet_info {
+enum obj_03D1_SPFuelCell_packet_info
+{
     SPFUELCELL_DEF_ID = 0x03D1,
     SPFUELCELL_DLL_ID = 0x0284,
     SPFUELCELL_CLASS_ID = 0x0070,

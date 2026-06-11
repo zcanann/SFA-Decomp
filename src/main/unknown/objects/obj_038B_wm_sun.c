@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_038B_WM_sun_packet_info {
+enum obj_038B_WM_sun_packet_info
+{
     WM_SUN_DEF_ID = 0x038B,
     WM_SUN_DLL_ID = 0x020E,
     WM_SUN_CLASS_ID = 0x0030,

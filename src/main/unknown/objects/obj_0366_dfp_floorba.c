@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0366_DFP_floorba_packet_info {
+enum obj_0366_DFP_floorba_packet_info
+{
     DFP_FLOORBA_DEF_ID = 0x0366,
     DFP_FLOORBA_DLL_ID = 0x022F,
     DFP_FLOORBA_CLASS_ID = 0x0030,

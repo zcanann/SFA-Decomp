@@ -35,7 +35,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_00E9_setuppoint_slot {
+enum dll_00E9_setuppoint_slot
+{
     SETUPPOINT_INIT = 3,
 };
 #endif

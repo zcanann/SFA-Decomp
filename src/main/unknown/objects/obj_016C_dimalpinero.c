@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_016C_DIMAlpineRo_packet_info {
+enum obj_016C_DIMAlpineRo_packet_info
+{
     DIMALPINERO_DEF_ID = 0x016C,
     DIMALPINERO_DLL_ID = 0x00ED,
     DIMALPINERO_CLASS_ID = 0x0006,

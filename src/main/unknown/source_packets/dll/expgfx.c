@@ -64,6 +64,7 @@
 /*
  * Packet constants only. Promote names and boundaries after EN inspection.
  */
-enum expgfx_packet_info {
+enum expgfx_packet_info
+{
 };
 #endif

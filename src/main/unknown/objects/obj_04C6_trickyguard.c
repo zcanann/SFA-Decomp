@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04C6_TrickyGuard_packet_info {
+enum obj_04C6_TrickyGuard_packet_info
+{
     TRICKYGUARD_DEF_ID = 0x04C6,
     TRICKYGUARD_DLL_ID = 0x0120,
     TRICKYGUARD_CLASS_ID = 0x0030,

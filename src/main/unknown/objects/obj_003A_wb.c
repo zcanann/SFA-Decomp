@@ -80,7 +80,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_003A_WB_packet_info {
+enum obj_003A_WB_packet_info
+{
     WB_DEF_ID = 0x003A,
     WB_DLL_ID = 0x00C9,
     WB_CLASS_ID = 0x001C,

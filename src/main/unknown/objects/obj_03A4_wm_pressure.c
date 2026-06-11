@@ -59,7 +59,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03A4_WM_Pressure_packet_info {
+enum obj_03A4_WM_Pressure_packet_info
+{
     WM_PRESSURE_DEF_ID = 0x03A4,
     WM_PRESSURE_DLL_ID = 0x01FE,
     WM_PRESSURE_CLASS_ID = 0x0033,

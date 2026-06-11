@@ -3,7 +3,8 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/TREX/TREX_Lazerwall.h"
 
-typedef struct TREXLazerwallUpdateTimedChallengeState {
+typedef struct TREXLazerwallUpdateTimedChallengeState
+{
     u8 pad0[0x9B0 - 0x0];
     s32 stack;
     s32 unk9B4;
@@ -22,22 +23,22 @@ typedef struct TREXLazerwallUpdateTimedChallengeState {
 
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern void *Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern void ObjHits_DisableObject(int obj);
 
 extern int Stack_IsEmpty(int stack);
 extern int Stack_IsFull(int stack);
-extern int Stack_Pop(int stack, int *out);
-extern int Stack_Push(int stack, int *in);
+extern int Stack_Pop(int stack, int* out);
+extern int Stack_Push(int stack, int* in);
 
 extern int isGameTimerDisabled(void);
 extern void gameTimerStop(void);
 extern void hudFn_8011f6f0(int x);
 extern void hudFn_8011f38c(int x);
 
-extern undefined4 *gTitleMenuControlInterfaceCopy;
+extern undefined4* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-extern MapEventInterface **gMapEventInterface;
+extern MapEventInterface** gMapEventInterface;
 
 extern f32 lbl_803E59DC;
 extern f32 lbl_803E59E0;
@@ -65,48 +66,59 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
     head[0] = lbl_803E59D0;
     head[1] = lbl_803E59D4;
     playerObj = (int)Obj_GetPlayerObject();
-    state = *(int *)(arg1 + 0xb8);
+    state = *(int*)(arg1 + 0xb8);
 
-    if (*(s8 *)(arg2 + 0x27a) != 0) {
-        if (Stack_IsEmpty(((TREXLazerwallUpdateTimedChallengeState *)state)->stack) != 0) {
-            int found = (*gRomCurveInterface)->find((int *)head, 2, -1,
-                                                    *(f32 *)(playerObj + 0xc),
-                                                    *(f32 *)(playerObj + 0x10),
-                                                    *(f32 *)(playerObj + 0x14));
+    if (*(s8*)(arg2 + 0x27a) != 0)
+    {
+        if (Stack_IsEmpty(((TREXLazerwallUpdateTimedChallengeState*)state)->stack) != 0)
+        {
+            int found = (*gRomCurveInterface)->find((int*)head, 2, -1,
+                                                    *(f32*)(playerObj + 0xc),
+                                                    *(f32*)(playerObj + 0x10),
+                                                    *(f32*)(playerObj + 0x14));
 
-            if (found != -1) {
+            if (found != -1)
+            {
                 hit = (int)(*gRomCurveInterface)->getById(found);
-                *(f32 *)(arg1 + 0xc) = *(f32 *)(hit + 0x8);
-                *(f32 *)(arg1 + 0x10) = lbl_803E59E0 + *(f32 *)(hit + 0xc);
-                *(f32 *)(arg1 + 0x14) = *(f32 *)(hit + 0x10);
-                *(s16 *)arg1 = (s16)((s32)*(s8 *)(hit + 0x2c) << 8);
-                ((TREXLazerwallUpdateTimedChallengeState *)state)->unk9BC = lbl_803E59E0 + *(f32 *)(hit + 0xc);
-                ((TREXLazerwallUpdateTimedChallengeState *)state)->unk9CA = 0;
-                ((TREXLazerwallUpdateTimedChallengeState *)state)->unk9D3 = *(u8 *)(hit + 0x19);
+                *(f32*)(arg1 + 0xc) = *(f32*)(hit + 0x8);
+                *(f32*)(arg1 + 0x10) = lbl_803E59E0 + *(f32*)(hit + 0xc);
+                *(f32*)(arg1 + 0x14) = *(f32*)(hit + 0x10);
+                *(s16*)arg1 = (s16)((s32) * (s8*)(hit + 0x2c) << 8);
+                ((TREXLazerwallUpdateTimedChallengeState*)state)->unk9BC = lbl_803E59E0 + *(f32*)(hit + 0xc);
+                ((TREXLazerwallUpdateTimedChallengeState*)state)->unk9CA = 0;
+                ((TREXLazerwallUpdateTimedChallengeState*)state)->unk9D3 = *(u8*)(hit + 0x19);
             }
 
-            if ((s8)*(u8 *)(hit + 0x19) == 0xc) {
+            if ((s8) * (u8*)(hit + 0x19) == 0xc)
+            {
                 pushKindA = 1;
-                if (Stack_IsFull(((TREXLazerwallUpdateTimedChallengeState *)state)->stack) == 0) {
-                    Stack_Push(((TREXLazerwallUpdateTimedChallengeState *)state)->stack, &pushKindA);
+                if (Stack_IsFull(((TREXLazerwallUpdateTimedChallengeState*)state)->stack) == 0)
+                {
+                    Stack_Push(((TREXLazerwallUpdateTimedChallengeState*)state)->stack, &pushKindA);
                 }
-            } else {
+            }
+            else
+            {
                 pushKindB = 2;
-                if (Stack_IsFull(((TREXLazerwallUpdateTimedChallengeState *)state)->stack) == 0) {
-                    Stack_Push(((TREXLazerwallUpdateTimedChallengeState *)state)->stack, &pushKindB);
+                if (Stack_IsFull(((TREXLazerwallUpdateTimedChallengeState*)state)->stack) == 0)
+                {
+                    Stack_Push(((TREXLazerwallUpdateTimedChallengeState*)state)->stack, &pushKindB);
                 }
             }
 
-            *(f32 *)(arg2 + 0x280) = lbl_803E59DC;
-            ((TREXLazerwallUpdateTimedChallengeState *)state)->unk9D4 = (u8)(((TREXLazerwallUpdateTimedChallengeState *)state)->unk9D4 | 0x20);
+            *(f32*)(arg2 + 0x280) = lbl_803E59DC;
+            ((TREXLazerwallUpdateTimedChallengeState*)state)->unk9D4 = (u8)(
+                ((TREXLazerwallUpdateTimedChallengeState*)state)->unk9D4 | 0x20);
         }
     }
 
-    ((TREXLazerwallUpdateTimedChallengeState *)state)->unk9D6 = 0xff;
-    if (((TREXLazerwallUpdateTimedChallengeState *)state)->unk9D6 == 0xff) {
+    ((TREXLazerwallUpdateTimedChallengeState*)state)->unk9D6 = 0xff;
+    if (((TREXLazerwallUpdateTimedChallengeState*)state)->unk9D6 == 0xff)
+    {
         popOut = 0;
-        if (Stack_IsEmpty(((TREXLazerwallUpdateTimedChallengeState *)state)->stack) == 0) {
-            Stack_Pop(((TREXLazerwallUpdateTimedChallengeState *)state)->stack, &popOut);
+        if (Stack_IsEmpty(((TREXLazerwallUpdateTimedChallengeState*)state)->stack) == 0)
+        {
+            Stack_Pop(((TREXLazerwallUpdateTimedChallengeState*)state)->stack, &popOut);
         }
         return popOut + 1;
     }
@@ -122,7 +134,8 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
  */
 int TREX_Lazerwall_waitForStartBit(void)
 {
-    if (GameBit_Get(0x617) != 0) {
+    if (GameBit_Get(0x617) != 0)
+    {
         return 6;
     }
     return 0;
@@ -142,32 +155,37 @@ int TREX_Lazerwall_updateTimedChallenge(int arg1)
     int localC;
     int local8;
 
-    state = *(int *)&((GameObject *)arg1)->extra;
-    *(u8 *)&((GameObject *)arg1)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)arg1)->anim.resetHitboxMode | 8);
-    ((TREXLazerwallUpdateTimedChallengeState *)state)->unk9D6 = 0;
+    state = *(int*)&((GameObject*)arg1)->extra;
+    *(u8*)&((GameObject*)arg1)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)arg1)->anim.resetHitboxMode | 8);
+    ((TREXLazerwallUpdateTimedChallengeState*)state)->unk9D6 = 0;
     ObjHits_DisableObject(arg1);
 
-    (*(void (**)(int, int *, int *, int *))(*(int *)*(int *)(((TREXLazerwallUpdateTimedChallengeState *)state)->unk9B4 + 0x68) + 0x54))(
-        ((TREXLazerwallUpdateTimedChallengeState *)state)->unk9B4, &local10, &localC, &local8);
+    (*(void (**)(int, int*, int*, int*))(*(int*)*(int*)(((TREXLazerwallUpdateTimedChallengeState*)state)->unk9B4 + 0x68)
+        + 0x54))(
+        ((TREXLazerwallUpdateTimedChallengeState*)state)->unk9B4, &local10, &localC, &local8);
 
     localC = localC - local10;
 
-    if (isGameTimerDisabled() != 0 || localC >= local8 || local10 != 0) {
+    if (isGameTimerDisabled() != 0 || localC >= local8 || local10 != 0)
+    {
         gameTimerStop();
         hudFn_8011f6f0(0);
         GameBit_Set(0x626, 0);
 
-        if (localC >= local8) {
+        if (localC >= local8)
+        {
             GameBit_Set(0x624, 1);
-        } else {
+        }
+        else
+        {
             GameBit_Set(0x625, 1);
         }
 
         hudFn_8011f38c(2);
 
-        (*gMapEventInterface)->setAnimEvent((s32)((GameObject *)arg1)->anim.mapEventSlot, 6, 0);
+        (*gMapEventInterface)->setAnimEvent((s32)((GameObject*)arg1)->anim.mapEventSlot, 6, 0);
 
-        (*(void (**)(int, int, int, int, int))((char *)*gTitleMenuControlInterface + 0x4))(0, 0xf3, 0, 0, 0);
+        (*(void (**)(int, int, int, int, int))((char*)*gTitleMenuControlInterface + 0x4))(0, 0xf3, 0, 0, 0);
     }
 
     return 0;

@@ -32,7 +32,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0065_MagicPlant_defs {
+enum class_0065_MagicPlant_defs
+{
     MAGICPLANT_MAGICPLANT = 0x04FE,
 };
 #endif

@@ -58,7 +58,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_049F_MCUpgrade_packet_info {
+enum obj_049F_MCUpgrade_packet_info
+{
     MCUPGRADE_DEF_ID = 0x049F,
     MCUPGRADE_DLL_ID = 0x02B7,
     MCUPGRADE_CLASS_ID = 0x0030,

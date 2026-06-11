@@ -3,12 +3,12 @@
 
 int textblockObj_getExtraSize(void)
 {
-  return 0;
+    return 0;
 }
 
 int textblockObj_getObjectTypeId(void)
 {
-  return 0;
+    return 0;
 }
 
 /*
@@ -26,8 +26,8 @@ int textblockObj_getObjectTypeId(void)
  */
 void textblockObj_freeUnsupported(void)
 {
-  OSReport(sTextBlockObjInitNoLongerSupported);
-  return;
+    OSReport(sTextBlockObjInitNoLongerSupported);
+    return;
 }
 
 void textblockObj_render(void)
@@ -53,8 +53,8 @@ void textblockObj_hitDetect(void)
  */
 void textblockObj_updateUnsupported(void)
 {
-  OSReport(sTextBlockObjInitNoLongerSupported);
-  return;
+    OSReport(sTextBlockObjInitNoLongerSupported);
+    return;
 }
 
 /*
@@ -72,8 +72,8 @@ void textblockObj_updateUnsupported(void)
  */
 void textblockObj_init(void)
 {
-  OSReport(sTextBlockObjInitNoLongerSupported);
-  return;
+    OSReport(sTextBlockObjInitNoLongerSupported);
+    return;
 }
 
 void textblockObj_release(void)

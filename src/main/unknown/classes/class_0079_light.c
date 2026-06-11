@@ -47,7 +47,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0079_Light_defs {
+enum class_0079_Light_defs
+{
     LIGHT_LGTPOINTLIG = 0x0551,
     LIGHT_LGTDIRECTIO = 0x0552,
     LIGHT_CF_WALLTORC = 0x0106,

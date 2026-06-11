@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0287_NW_animice3_packet_info {
+enum obj_0287_NW_animice3_packet_info
+{
     NW_ANIMICE3_DEF_ID = 0x0287,
     NW_ANIMICE3_DLL_ID = 0x01A3,
     NW_ANIMICE3_CLASS_ID = 0x0061,

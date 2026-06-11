@@ -73,7 +73,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02EF_SC_DummySqu_packet_info {
+enum obj_02EF_SC_DummySqu_packet_info
+{
     SC_DUMMYSQU_DEF_ID = 0x02EF,
     SC_DUMMYSQU_DLL_ID = 0x011A,
     SC_DUMMYSQU_CLASS_ID = 0x0061,

@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0010_fox_shield_packet_info {
+enum obj_0010_fox_shield_packet_info
+{
     FOX_SHIELD_DEF_ID = 0x0010,
     FOX_SHIELD_DLL_ID = 0x00E5,
     FOX_SHIELD_CLASS_ID = 0x0030,

@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0481_DR_EarthCal_packet_info {
+enum obj_0481_DR_EarthCal_packet_info
+{
     DR_EARTHCAL_DEF_ID = 0x0481,
     DR_EARTHCAL_DLL_ID = 0x0281,
     DR_EARTHCAL_CLASS_ID = 0x0030,

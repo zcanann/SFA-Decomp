@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 
-extern void mm_free(void *ptr);
+extern void mm_free(void* ptr);
 
 /*
  * --INFO--
@@ -30,11 +30,11 @@ extern void mm_free(void *ptr);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined2 *
-FUN_80017460(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9
-            ,int param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13,
-            undefined4 param_14,undefined4 param_15,undefined4 param_16)
+undefined2*
+FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
+             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
+             , int param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13,
+             undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
     return 0;
 }
@@ -52,11 +52,11 @@ FUN_80017460(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined2 *
-FUN_80017468(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9
-            ,undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13,
-            undefined4 param_14,undefined4 param_15,undefined4 param_16)
+undefined2*
+FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
+             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
+             , undefined4 param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13,
+             undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
     return 0;
 }
@@ -76,12 +76,6 @@ FUN_80017468(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  */
 
 
-
-
-
-
-
-
 /*
  * --INFO--
  *
@@ -96,8 +90,8 @@ FUN_80017468(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Size: TODO
  */
 undefined4
-FUN_80017500(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9)
+FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
+             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9)
 {
     return 0;
 }
@@ -116,9 +110,9 @@ FUN_80017500(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Size: TODO
  */
 undefined4
-FUN_8001786c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,
-            undefined4 param_10,undefined4 param_11,undefined4 param_12)
+FUN_8001786c(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
+             undefined4 param_10, undefined4 param_11, undefined4 param_12)
 {
     return 0;
 }
@@ -136,10 +130,10 @@ FUN_8001786c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined *
-FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9
-            )
+undefined*
+FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
+             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
+)
 {
     return 0;
 }
@@ -149,46 +143,44 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 /* ObjModel/model-file accessors. */
 
 
-
-
-
-
-
-
 /* Global game-state / text accessors. */
 
 
-
-
-
-
-int roundUpTo4(int x) {
+int roundUpTo4(int x)
+{
     int r = x & 3;
-    if (r > 0) {
+    if (r > 0)
+    {
         x += 4 - r;
     }
     return x;
 }
 
-int roundUpTo8(int x) {
+int roundUpTo8(int x)
+{
     int r = x & 7;
-    if (r > 0) {
+    if (r > 0)
+    {
         x += 8 - r;
     }
     return x;
 }
 
-int roundUpTo16(int x) {
+int roundUpTo16(int x)
+{
     int r = x & 0xf;
-    if (r > 0) {
+    if (r > 0)
+    {
         x += 0x10 - r;
     }
     return x;
 }
 
-int roundUpTo32(int x) {
+int roundUpTo32(int x)
+{
     int r = x & 0x1f;
-    if (r > 0) {
+    if (r > 0)
+    {
         x += 0x20 - r;
     }
     return x;
@@ -198,14 +190,11 @@ int roundUpTo32(int x) {
 extern u8 lbl_803DCB10;
 
 
-
-extern void *mmAlloc(int size, int type, int flag);
-
+extern void* mmAlloc(int size, int type, int flag);
 
 
-
-
-void texFlagFn_80023cbc(int v) {
+void texFlagFn_80023cbc(int v)
+{
     lbl_803DCB10 = (u8)v;
 }
 
@@ -215,17 +204,17 @@ extern int lbl_803DCB08;
 extern int lbl_803DB434;
 
 
-
-
 #pragma dont_inline on
-int mmSetFreeDelay(int v) {
+int mmSetFreeDelay(int v)
+{
     int old = gMmFreeDelay;
     lbl_803DCB14++;
     gMmFreeDelay = v;
     return old;
 }
 
-int testAndSet_onlyUseHeap3(int v) {
+int testAndSet_onlyUseHeap3(int v)
+{
     lbl_803DCB14++;
     {
         int old = lbl_803DCB08;
@@ -234,7 +223,8 @@ int testAndSet_onlyUseHeap3(int v) {
     }
 }
 
-int testAndSet_onlyUseHeaps1and2(int v) {
+int testAndSet_onlyUseHeaps1and2(int v)
+{
     lbl_803DCB14++;
     {
         int old = lbl_803DB434;
@@ -244,9 +234,11 @@ int testAndSet_onlyUseHeaps1and2(int v) {
 }
 
 #pragma dont_inline off
-int alignUp2(int x) {
+int alignUp2(int x)
+{
     int r = x & 1;
-    if (r > 0) {
+    if (r > 0)
+    {
         x += 2 - r;
     }
     return x;
@@ -254,85 +246,81 @@ int alignUp2(int x) {
 
 
 extern int lbl_803DD610;
-extern void *lbl_803DD61C;
+extern void* lbl_803DD61C;
 
 
-void *getCache(void) {
-    if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
+void* getCache(void)
+{
+    if (lbl_803DD610 != 4 && lbl_803DD610 != 0)
+    {
         return lbl_803DD61C;
     }
-    return (void *)0xe0000000;
+    return (void*)0xe0000000;
 }
 
 
-
 extern void LCQueueWait();
-extern void mmFree(void *p);
-extern void mmFreeDeferred(void *p);
+extern void mmFree(void* p);
+extern void mmFreeDeferred(void* p);
 
 
-void cacheQueueWait(int sync) {
-    if (lbl_803DD610 == 4 || lbl_803DD610 == 0) {
+void cacheQueueWait(int sync)
+{
+    if (lbl_803DD610 == 4 || lbl_803DD610 == 0)
+    {
         LCQueueWait();
     }
 }
 
-void mm_free(void *p) {
-    if (gMmFreeDelay == 0) {
+void mm_free(void* p)
+{
+    if (gMmFreeDelay == 0)
+    {
         mmFree(p);
-    } else {
+    }
+    else
+    {
         mmFreeDeferred(p);
     }
 }
-
-
-
-
-
 
 
 extern int OSDisableInterrupts(void);
 extern int OSRestoreInterrupts(int level);
 
 
-void AtomicSList_Push(void **list, void *node) {
+void AtomicSList_Push(void** list, void* node)
+{
     int intr = OSDisableInterrupts();
-    *(void **)node = *list;
+    *(void**)node = *list;
     *list = node;
     OSRestoreInterrupts(intr);
 }
 
 
-
-
-
 typedef f32 Mtx[3][4];
 extern u8 lbl_803DCB42;
 
-typedef struct {
+typedef struct
+{
     int numSlots;
     int f4;
-    u8 *start;
+    u8* start;
     int size;
     int f10;
 } MmRegion;
+
 extern MmRegion gMmRegionTable[];
 
 
-
-
-
-
-
-
-
-
-
-int mmGetRegionForPtr(u8 *ptr) {
+int mmGetRegionForPtr(u8* ptr)
+{
     int i;
-    for (i = 0; i < lbl_803DCB42; i++) {
+    for (i = 0; i < lbl_803DCB42; i++)
+    {
         if (ptr > gMmRegionTable[i].start &&
-            ptr < gMmRegionTable[i].start + gMmRegionTable[i].size) {
+            ptr < gMmRegionTable[i].start + gMmRegionTable[i].size)
+        {
             return i;
         }
     }
@@ -340,11 +328,12 @@ int mmGetRegionForPtr(u8 *ptr) {
 }
 
 #pragma dont_inline on
-void *mmInitRegion(u8 *buf, int size, int numSlots) {
+void* mmInitRegion(u8* buf, int size, int numSlots)
+{
     int regIdx = lbl_803DCB42++;
     int after = size - numSlots * 0x1c;
     int i;
-    u8 *slot;
+    u8* slot;
     int freePtr;
     gMmRegionTable[regIdx].numSlots = numSlots;
     gMmRegionTable[regIdx].f4 = 0;
@@ -352,21 +341,25 @@ void *mmInitRegion(u8 *buf, int size, int numSlots) {
     gMmRegionTable[regIdx].size = size;
     gMmRegionTable[regIdx].f10 = 0;
     slot = gMmRegionTable[regIdx].start;
-    for (i = 0; i < gMmRegionTable[regIdx].numSlots; i++) {
-        *(s16 *)(slot + 0xe) = i;
+    for (i = 0; i < gMmRegionTable[regIdx].numSlots; i++)
+    {
+        *(s16*)(slot + 0xe) = i;
         slot += 0x1c;
     }
     slot = gMmRegionTable[regIdx].start;
     freePtr = (int)buf + numSlots * 0x1c;
-    if (freePtr & 0x1f) {
-        *(int *)(slot + 0) = (freePtr & ~0x1f) + 0x20;
-    } else {
-        *(int *)(slot + 0) = freePtr;
+    if (freePtr & 0x1f)
+    {
+        *(int*)(slot + 0) = (freePtr & ~0x1f) + 0x20;
     }
-    *(int *)(slot + 4) = after;
-    *(s16 *)(slot + 8) = 0;
-    *(s16 *)(slot + 0xa) = -1;
-    *(s16 *)(slot + 0xc) = -1;
+    else
+    {
+        *(int*)(slot + 0) = freePtr;
+    }
+    *(int*)(slot + 4) = after;
+    *(s16*)(slot + 8) = 0;
+    *(s16*)(slot + 0xa) = -1;
+    *(s16*)(slot + 0xc) = -1;
     gMmRegionTable[regIdx].f4++;
     return gMmRegionTable[regIdx].start;
 }
@@ -376,47 +369,54 @@ extern void heapFree(int region, int slotIdx);
 extern char sMmFreeInvalidLocationError[];
 extern char sMmAllocFreeMessageBlock[];
 extern int lbl_803DCB34;
-extern void OSReport(char *fmt, ...);
+extern void OSReport(char* fmt, ...);
 extern void waitNextFrame(void);
 extern void GXFlush_(int a, int b);
 extern char sMmStbfStackTooDeepError[];
 extern s16 gMmDeferredFreeCount;
 
-typedef struct {
-    void *ptr;
+typedef struct
+{
+    void* ptr;
     u8 delay;
     u8 pad[3];
 } DeferredFree;
+
 extern DeferredFree gMmDeferredFreeStack[];
 
 extern char sMmShowInfoFBMemoryStoreMessageBlock[];
 extern char sMmStoreAllocationTag;
 extern int gMmNextStoreHandle;
-extern void *gMmStoreArray[];
+extern void* gMmStoreArray[];
 
-typedef struct {
-    void *buf;
-    void *bufCur;
+typedef struct
+{
+    void* buf;
+    void* bufCur;
     int size;
     int handle;
 } MmStore;
 
 #pragma dont_inline off
-int mmCreateMemoryStore(int size) {
-    char *msg = sMmShowInfoFBMemoryStoreMessageBlock;
-    MmStore *store;
-    void **p;
+int mmCreateMemoryStore(int size)
+{
+    char* msg = sMmShowInfoFBMemoryStoreMessageBlock;
+    MmStore* store;
+    void** p;
     int i = 0;
-    if (size <= 0) {
+    if (size <= 0)
+    {
         OSReport(msg + 0x1e8, size);
         return 0;
     }
-    if (size > 0x4000) {
+    if (size > 0x4000)
+    {
         OSReport(msg + 0x218, size, 0x4000);
         return 0;
     }
-    store = (MmStore *)mmAlloc(0x10, 0, (int)&sMmStoreAllocationTag);
-    if (store == NULL) {
+    store = (MmStore*)mmAlloc(0x10, 0, (int)&sMmStoreAllocationTag);
+    if (store == NULL)
+    {
         OSReport(msg + 0x26c);
         return 0;
     }
@@ -425,35 +425,48 @@ int mmCreateMemoryStore(int size) {
     store->buf = NULL;
     store->bufCur = NULL;
     store->buf = mmAlloc(store->size, 0, (int)(msg + 0x2a8));
-    if (store->buf == NULL) {
+    if (store->buf == NULL)
+    {
         OSReport(msg + 0x2bc);
-        if (gMmFreeDelay == 0) {
+        if (gMmFreeDelay == 0)
+        {
             mmFree(store);
-        } else {
+        }
+        else
+        {
             mmFreeDeferred(store);
         }
         return 0;
     }
     store->bufCur = store->buf;
     p = gMmStoreArray;
-    while (i < 0x20) {
-        if (*p == NULL) {
+    while (i < 0x20)
+    {
+        if (*p == NULL)
+        {
             gMmStoreArray[i] = store;
             break;
         }
         p++;
-        if (++i == 0x20) {
-            void *buf;
+        if (++i == 0x20)
+        {
+            void* buf;
             OSReport(msg + 0x2f8);
             buf = store->buf;
-            if (gMmFreeDelay == 0) {
+            if (gMmFreeDelay == 0)
+            {
                 mmFree(buf);
-            } else {
+            }
+            else
+            {
                 mmFreeDeferred(buf);
             }
-            if (gMmFreeDelay == 0) {
+            if (gMmFreeDelay == 0)
+            {
                 mmFree(store);
-            } else {
+            }
+            else
+            {
                 mmFreeDeferred(store);
             }
             return 0;
@@ -462,16 +475,19 @@ int mmCreateMemoryStore(int size) {
     return store->handle;
 }
 
-void mmFreeDeferred(void *p) {
-    DeferredFree *stack;
-    if (gMmDeferredFreeCount == 0x7d0) {
+void mmFreeDeferred(void* p)
+{
+    DeferredFree* stack;
+    if (gMmDeferredFreeCount == 0x7d0)
+    {
         waitNextFrame();
         GXFlush_(1, 0);
         waitNextFrame();
         GXFlush_(1, 0);
         stack = gMmDeferredFreeStack;
-        while (gMmDeferredFreeCount > 0) {
-            DeferredFree *top;
+        while (gMmDeferredFreeCount > 0)
+        {
+            DeferredFree* top;
             mmFree(stack[0].ptr);
             top = &stack[gMmDeferredFreeCount];
             stack[0].ptr = top[-1].ptr;
@@ -485,8 +501,9 @@ void mmFreeDeferred(void *p) {
     gMmDeferredFreeCount++;
 }
 
-typedef struct {
-    void *key;
+typedef struct
+{
+    void* key;
     int size;
     s16 type;
     s16 prev;
@@ -497,8 +514,9 @@ typedef struct {
     int f18;
 } HeapItem;
 
-typedef struct {
-    void *stores[0x20];
+typedef struct
+{
+    void* stores[0x20];
     DeferredFree deferred[2000];
     MmRegion regions[8];
 } MmGlobal;
@@ -513,35 +531,42 @@ extern int lbl_803DCB28;
 extern int lbl_803DCB2C;
 
 #pragma peephole on
-void mmFreeTick(int arg) {
-    MmGlobal *g = (MmGlobal *)gMmStoreArray;
+void mmFreeTick(int arg)
+{
+    MmGlobal* g = (MmGlobal*)gMmStoreArray;
     int i;
-    DeferredFree *d;
+    DeferredFree* d;
     int k;
-    HeapItem *base;
-    HeapItem *item;
+    HeapItem* base;
+    HeapItem* item;
     s16 next;
 
     lbl_803DCB1C++;
     lbl_803DCB14++;
 
     d = g->deferred;
-    for (i = 0; i < gMmDeferredFreeCount;) {
+    for (i = 0; i < gMmDeferredFreeCount;)
+    {
         d->delay--;
-        if (d->delay == 0) {
+        if (d->delay == 0)
+        {
             mmFree(d->ptr);
             d->ptr = g->deferred[gMmDeferredFreeCount - 1].ptr;
             d->delay = g->deferred[gMmDeferredFreeCount - 1].delay;
             gMmDeferredFreeCount--;
-        } else {
+        }
+        else
+        {
             d++;
             i++;
         }
     }
 
-    for (k = 0; k < 0x20; k++) {
-        MmStore *s = (MmStore *)g->stores[k];
-        if (s != NULL) {
+    for (k = 0; k < 0x20; k++)
+    {
+        MmStore* s = (MmStore*)g->stores[k];
+        if (s != NULL)
+        {
             s->bufCur = s->buf;
         }
     }
@@ -552,81 +577,103 @@ void mmFreeTick(int arg) {
     lbl_803DCB24 = 0;
     lbl_803DCB2C = 0;
 
-    if (lbl_803DCB42 > 1) {
-        base = (HeapItem *)g->regions[1].start;
+    if (lbl_803DCB42 > 1)
+    {
+        base = (HeapItem*)g->regions[1].start;
         item = base;
-        do {
-            if (item->type != 0) {
+        do
+        {
+            if (item->type != 0)
+            {
                 lbl_803DCB24 += item->size;
             }
             next = item->next;
-            if (next != -1) {
+            if (next != -1)
+            {
                 item = &base[next];
             }
-        } while (next != -1);
+        }
+        while (next != -1);
 
-        base = (HeapItem *)g->regions[2].start;
+        base = (HeapItem*)g->regions[2].start;
         item = base;
-        do {
-            if (item->type != 0) {
+        do
+        {
+            if (item->type != 0)
+            {
                 lbl_803DCB28 += item->size;
             }
             next = item->next;
-            if (next != -1) {
+            if (next != -1)
+            {
                 item = &base[next];
             }
-        } while (next != -1);
+        }
+        while (next != -1);
 
-        base = (HeapItem *)g->regions[3].start;
+        base = (HeapItem*)g->regions[3].start;
         item = base;
-        do {
-            if (item->type != 0) {
+        do
+        {
+            if (item->type != 0)
+            {
                 lbl_803DCB2C += item->size;
             }
             next = item->next;
-            if (next != -1) {
+            if (next != -1)
+            {
                 item = &base[next];
             }
-        } while (next != -1);
+        }
+        while (next != -1);
     }
 
-    if (lbl_803DCB30++ % 500 == 0) {
+    if (lbl_803DCB30++ % 500 == 0)
+    {
         OSReport(sMemStatsFormat,
-            0, g->regions[0].size,
-            lbl_803DCB24, g->regions[1].size,
-            lbl_803DCB28, g->regions[2].size,
-            lbl_803DCB2C, g->regions[3].size,
-            g->regions[0].f4, g->regions[0].numSlots,
-            g->regions[1].f4, g->regions[1].numSlots,
-            g->regions[2].f4, g->regions[2].numSlots,
-            g->regions[3].f4, g->regions[3].numSlots);
+                 0, g->regions[0].size,
+                 lbl_803DCB24, g->regions[1].size,
+                 lbl_803DCB28, g->regions[2].size,
+                 lbl_803DCB2C, g->regions[3].size,
+                 g->regions[0].f4, g->regions[0].numSlots,
+                 g->regions[1].f4, g->regions[1].numSlots,
+                 g->regions[2].f4, g->regions[2].numSlots,
+                 g->regions[3].f4, g->regions[3].numSlots);
     }
 }
 
 #pragma peephole off
-void mmFree(void *p) {
+void mmFree(void* p)
+{
     int region;
     int i;
-    u8 *slot;
-    u8 *base;
+    u8* slot;
+    u8* base;
     lbl_803DCB34 = OSGetTick();
     region = mmGetRegionForPtr(p);
-    if (region != -1) {
+    if (region != -1)
+    {
         base = gMmRegionTable[region].start;
         i = 0;
-        do {
+        do
+        {
             slot = base + i * 0x1c;
-            if (*(void **)slot == p) {
-                s16 t = *(s16 *)(slot + 8);
-                if (t == 1 || t == 4) {
+            if (*(void**)slot == p)
+            {
+                s16 t = *(s16*)(slot + 8);
+                if (t == 1 || t == 4)
+                {
                     heapFree(region, i);
-                } else {
+                }
+                else
+                {
                     OSReport(sMmFreeInvalidLocationError, p);
                 }
                 return;
             }
-            i = *(s16 *)(slot + 0xc);
-        } while (i != -1);
+            i = *(s16*)(slot + 0xc);
+        }
+        while (i != -1);
     }
     OSReport(sMmAllocFreeMessageBlock, p);
 }
@@ -634,29 +681,35 @@ void mmFree(void *p) {
 extern char sMmAllocateFromFBMemoryStoreMissingHandleError[];
 extern char sMmMemoryStoreMessageBlock[];
 
-int mmAllocateFromFBMemoryStore(int handle, int size) {
-    void **p;
-    int *found;
+int mmAllocateFromFBMemoryStore(int handle, int size)
+{
+    void** p;
+    int* found;
     int i;
     int avail;
     found = NULL;
     i = 0;
     p = gMmStoreArray;
-    while (i < 0x20) {
-        int *store = (int *)*p;
-        if (store != NULL && handle == store[3]) {
-            found = (int *)gMmStoreArray[i];
+    while (i < 0x20)
+    {
+        int* store = (int*)*p;
+        if (store != NULL && handle == store[3])
+        {
+            found = (int*)gMmStoreArray[i];
             break;
         }
         p++;
-        if (++i == 0x20) {
+        if (++i == 0x20)
+        {
             OSReport(sMmAllocateFromFBMemoryStoreMissingHandleError);
             return 0;
         }
     }
-    if (found != NULL) {
+    if (found != NULL)
+    {
         avail = found[2] - (found[1] - found[0]);
-        if (avail < size) {
+        if (avail < size)
+        {
             OSReport(sMmMemoryStoreMessageBlock);
             return 0;
         }
@@ -666,23 +719,24 @@ int mmAllocateFromFBMemoryStore(int handle, int size) {
     return 0;
 }
 
-extern void *OSGetArenaLo(void);
-extern void *OSGetArenaHi(void);
-extern void *OSAllocFromHeap(int heap, int size);
-extern void DCFlushRange(void *addr, u32 nBytes);
+extern void* OSGetArenaLo(void);
+extern void* OSGetArenaHi(void);
+extern void* OSAllocFromHeap(int heap, int size);
+extern void DCFlushRange(void* addr, u32 nBytes);
 extern int __OSCurrHeap;
 extern int lbl_803DCB18;
-extern void *lbl_803DD498;
-extern void *lbl_803DCAFC;
+extern void* lbl_803DD498;
+extern void* lbl_803DCAFC;
 
-void mmInit(void) {
+void mmInit(void)
+{
     int size;
     int t;
-    void *p;
-    u8 *lo;
+    void* p;
+    u8* lo;
     lbl_803DCB42 = 0;
     lo = OSGetArenaLo();
-    t = (u8 *)OSGetArenaHi() - lo - 0x6c0000;
+    t = (u8*)OSGetArenaHi() - lo - 0x6c0000;
     size = t - 0x720;
     lbl_803DCB18 = size;
     p = OSAllocFromHeap(__OSCurrHeap, size);
@@ -691,7 +745,7 @@ void mmInit(void) {
 
     p = OSAllocFromHeap(__OSCurrHeap, 0x6ed);
     lbl_803DD498 = p;
-    lbl_803DCAFC = (u8 *)p + 0x6ec;
+    lbl_803DCAFC = (u8*)p + 0x6ec;
 
     p = OSAllocFromHeap(__OSCurrHeap, 0x1c0000);
     DCFlushRange(p, 0x1c0000);
@@ -712,16 +766,17 @@ void mmInit(void) {
 
 extern char sMmSpawnedUnalignedSlotWarning[];
 
-int printHeapStats(void) {
+int printHeapStats(void)
+{
     OSReport(sMemStatsFormat,
-        lbl_803DCB20, gMmRegionTable[0].size,
-        lbl_803DCB24, gMmRegionTable[1].size,
-        lbl_803DCB28, gMmRegionTable[2].size,
-        lbl_803DCB2C, gMmRegionTable[3].size,
-        gMmRegionTable[0].f4, gMmRegionTable[0].numSlots,
-        gMmRegionTable[1].f4, gMmRegionTable[1].numSlots,
-        gMmRegionTable[2].f4, gMmRegionTable[2].numSlots,
-        gMmRegionTable[3].f4, gMmRegionTable[3].numSlots);
+             lbl_803DCB20, gMmRegionTable[0].size,
+             lbl_803DCB24, gMmRegionTable[1].size,
+             lbl_803DCB28, gMmRegionTable[2].size,
+             lbl_803DCB2C, gMmRegionTable[3].size,
+             gMmRegionTable[0].f4, gMmRegionTable[0].numSlots,
+             gMmRegionTable[1].f4, gMmRegionTable[1].numSlots,
+             gMmRegionTable[2].f4, gMmRegionTable[2].numSlots,
+             gMmRegionTable[3].f4, gMmRegionTable[3].numSlots);
     return lbl_803DCB20 + (lbl_803DCB24 + lbl_803DCB28 + lbl_803DCB2C);
 }
 
@@ -732,12 +787,13 @@ extern int lbl_803DB430;
 extern int lbl_803DCB0C;
 extern int lbl_803DCC7C;
 
-int mmAllocFromRegion(int region, int size, int type, int tag) {
-    char *msg = sMmShowInfoFBMemoryStoreMessageBlock;
+int mmAllocFromRegion(int region, int size, int type, int tag)
+{
+    char* msg = sMmShowInfoFBMemoryStoreMessageBlock;
     int bestIdx;
-    HeapItem *base;
-    HeapItem *it;
-    HeapItem *res;
+    HeapItem* base;
+    HeapItem* it;
+    HeapItem* res;
     int bestSize;
     int largest;
     int t28;
@@ -748,72 +804,99 @@ int mmAllocFromRegion(int region, int size, int type, int tag) {
     t28 = 0;
     t27 = 0;
 
-    if (gMmRegionTable[region].f4 + 1 == gMmRegionTable[region].numSlots) {
+    if (gMmRegionTable[region].f4 + 1 == gMmRegionTable[region].numSlots)
+    {
         OSReport(msg + 0x4b8, tag, region);
         return 0;
     }
 
-    if (size & 0x1f) {
+    if (size & 0x1f)
+    {
         size = (size & ~0x1f) + 0x20;
     }
 
     bestIdx = -1;
     bestSize = 0x7fffffff;
-    base = (HeapItem *)gMmRegionTable[region].start;
+    base = (HeapItem*)gMmRegionTable[region].start;
     idx = 0;
 
-    if (region == 0 && size < 0x33450) {
+    if (region == 0 && size < 0x33450)
+    {
         it = base;
-        while (it->next != -1) {
+        while (it->next != -1)
+        {
             idx = it->next;
             it = &base[idx];
         }
-        do {
+        do
+        {
             it = &base[idx];
-            if (it->type == 0) {
-                if (it->size >= size) {
-                    if (it->size < bestSize) {
+            if (it->type == 0)
+            {
+                if (it->size >= size)
+                {
+                    if (it->size < bestSize)
+                    {
                         bestSize = it->size;
                         bestIdx = idx;
                     }
-                } else if (it->size > largest) {
+                }
+                else if (it->size > largest)
+                {
                     largest = it->size;
                 }
             }
             idx = it->prev;
-        } while (idx != -1);
-    } else {
-        do {
+        }
+        while (idx != -1);
+    }
+    else
+    {
+        do
+        {
             it = &base[idx];
-            if (it->type == 0) {
-                if (it->size >= size) {
-                    if (it->size < bestSize) {
+            if (it->type == 0)
+            {
+                if (it->size >= size)
+                {
+                    if (it->size < bestSize)
+                    {
                         bestSize = it->size;
                         bestIdx = idx;
-                        if (region == 0) {
+                        if (region == 0)
+                        {
                             break;
                         }
                     }
-                } else if (it->size > largest) {
+                }
+                else if (it->size > largest)
+                {
                     largest = it->size;
                 }
             }
             idx = it->next;
-        } while (idx != -1);
+        }
+        while (idx != -1);
     }
 
-    if (bestIdx != -1) {
+    if (bestIdx != -1)
+    {
         gMmRegionTable[region].f10 += size;
-        if (gMmRegionTable[region].f10 < 0 || gMmRegionTable[region].f10 > gMmRegionTable[region].size) {
+        if (gMmRegionTable[region].f10 < 0 || gMmRegionTable[region].f10 > gMmRegionTable[region].size)
+        {
             OSReport(msg + 0x50c);
         }
-        if (lbl_803DB430 != 0 && region == 0 && size < 0x33450) {
+        if (lbl_803DB430 != 0 && region == 0 && size < 0x33450)
+        {
             bestIdx = heapSpawnSlot(region, bestIdx, size, 1, 0, type, tag);
-        } else {
+        }
+        else
+        {
             changeHeapSlot(region, bestIdx, size, 1, 0, type, tag);
         }
         res = &base[bestIdx];
-        if (lbl_803DCB0C == 0x3ef) {
+        if (lbl_803DCB0C == 0x3ef)
+        {
             OSReport(msg + 0x53c);
         }
         res->f18 = lbl_803DCB0C++;
@@ -821,23 +904,28 @@ int mmAllocFromRegion(int region, int size, int type, int tag) {
         return (int)res->key;
     }
 
-    if ((region == 2 && size > 0x3000) || region == 3 || region == 1) {
-        HeapItem *b0;
-        HeapItem *b1;
+    if ((region == 2 && size > 0x3000) || region == 3 || region == 1)
+    {
+        HeapItem* b0;
+        HeapItem* b1;
         OSReport(msg + 0x54c, tag, region, type, size);
-        b0 = (HeapItem *)gMmRegionTable[0].start;
+        b0 = (HeapItem*)gMmRegionTable[0].start;
         it = b0;
-        while (it->next != -1) {
+        while (it->next != -1)
+        {
             it = &b0[it->next];
-            if (it->size > t28 && it->type == 0) {
+            if (it->size > t28 && it->type == 0)
+            {
                 t28 = it->size;
             }
         }
-        b1 = (HeapItem *)gMmRegionTable[1].start;
+        b1 = (HeapItem*)gMmRegionTable[1].start;
         it = b1;
-        while (it->next != -1) {
+        while (it->next != -1)
+        {
             it = &b1[it->next];
-            if (it->size > t27 && it->type == 0) {
+            if (it->size > t27 && it->type == 0)
+            {
                 t27 = it->size;
             }
         }
@@ -855,30 +943,35 @@ int mmAllocFromRegion(int region, int size, int type, int tag) {
     return 0;
 }
 
-int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10val, int tag) {
-    MmRegion *reg;
-    HeapItem *base;
+int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10val, int tag)
+{
+    MmRegion* reg;
+    HeapItem* base;
     int oldSize;
-    while (size % 32 != 0) {
+    while (size % 32 != 0)
+    {
         size++;
     }
     reg = &gMmRegionTable[region];
-    base = (HeapItem *)reg->start;
+    base = (HeapItem*)reg->start;
     base[idx].type = type;
     oldSize = base[idx].size;
     base[idx].size = size;
     base[idx].f10 = f10val;
-    if (oldSize > size) {
+    if (oldSize > size)
+    {
         s16 oldNext;
         int ni = base[reg->f4++].stack;
         base[idx].type = newType;
-        while ((oldSize - size) % 32 != 0) {
+        while ((oldSize - size) % 32 != 0)
+        {
             size++;
         }
         base[idx].size = oldSize - size;
         base[ni].type = type;
-        base[ni].key = (char *)base[idx].key + oldSize - size;
-        if ((int)base[ni].key % 32 != 0) {
+        base[ni].key = (char*)base[idx].key + oldSize - size;
+        if ((int)base[ni].key % 32 != 0)
+        {
             OSReport(sMmSpawnedUnalignedSlotWarning, base[ni].stack, base[ni].key, base[ni].size);
         }
         base[ni].size = size;
@@ -888,7 +981,8 @@ int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10v
         base[ni].next = oldNext;
         base[ni].prev = idx;
         base[idx].next = ni;
-        if (oldNext != -1) {
+        if (oldNext != -1)
+        {
             base[oldNext].prev = ni;
         }
         return ni;
@@ -896,22 +990,25 @@ int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10v
     return idx;
 }
 
-int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int f10val, int tag) {
-    MmRegion *reg;
+int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int f10val, int tag)
+{
+    MmRegion* reg;
     int oldSize;
     int ni;
-    HeapItem *base;
+    HeapItem* base;
     reg = &gMmRegionTable[region];
-    base = (HeapItem *)reg->start;
+    base = (HeapItem*)reg->start;
     base[idx].type = type;
     oldSize = base[idx].size;
     base[idx].size = newSize;
     base[idx].f10 = f10val;
-    if (oldSize > newSize) {
+    if (oldSize > newSize)
+    {
         s16 oldNext;
         ni = base[reg->f4++].stack;
-        base[ni].key = (char *)base[idx].key + newSize;
-        if ((int)base[ni].key % 32 != 0) {
+        base[ni].key = (char*)base[idx].key + newSize;
+        if ((int)base[ni].key % 32 != 0)
+        {
             OSReport(sMmSpawnedUnalignedSlotWarning, base[ni].stack, base[ni].key, base[ni].size);
         }
         base[ni].size = oldSize - newSize;
@@ -920,7 +1017,8 @@ int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int 
         base[ni].next = oldNext;
         base[ni].prev = idx;
         base[idx].next = ni;
-        if (oldNext != -1) {
+        if (oldNext != -1)
+        {
             base[oldNext].prev = ni;
         }
         base[idx].f14 = lbl_803DCB1C;
@@ -931,251 +1029,238 @@ int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int 
 
 extern char sMmFreeMemoryUsageCorruptedError[];
 
-void heapFree(int region, int idx) {
-    HeapItem *base = (HeapItem *)gMmRegionTable[region].start;
+void heapFree(int region, int idx)
+{
+    HeapItem* base = (HeapItem*)gMmRegionTable[region].start;
     s16 next = base[idx].next;
     s16 prev = base[idx].prev;
     base[idx].type = 0;
     lbl_803DCB14++;
     gMmRegionTable[region].f10 -= base[idx].size;
-    if (gMmRegionTable[region].f10 < 0 || gMmRegionTable[region].f10 > gMmRegionTable[region].size) {
+    if (gMmRegionTable[region].f10 < 0 || gMmRegionTable[region].f10 > gMmRegionTable[region].size)
+    {
         OSReport(sMmFreeMemoryUsageCorruptedError);
     }
-    if (next != -1 && base[next].type == 0) {
+    if (next != -1 && base[next].type == 0)
+    {
         s16 nn;
         base[idx].size += base[next].size;
         nn = base[next].next;
         base[idx].next = nn;
-        if (nn != -1) {
+        if (nn != -1)
+        {
             base[nn].prev = idx;
         }
         base[--gMmRegionTable[region].f4].stack = next;
     }
-    if (prev != -1 && base[prev].type == 0) {
+    if (prev != -1 && base[prev].type == 0)
+    {
         s16 in;
         base[prev].size += base[idx].size;
         in = base[idx].next;
         base[prev].next = in;
-        if (in != -1) {
+        if (in != -1)
+        {
             base[in].prev = prev;
         }
         base[--gMmRegionTable[region].f4].stack = idx;
     }
 }
 
-int getHeapItemSize(void *ptr) {
+int getHeapItemSize(void* ptr)
+{
     int i = mmGetRegionForPtr(ptr);
-    HeapItem *items = (HeapItem *)gMmRegionTable[i].start;
+    HeapItem* items = (HeapItem*)gMmRegionTable[i].start;
     int idx = 0;
-    for (;;) {
-        if (items[idx].key == ptr) {
+    for (;;)
+    {
+        if (items[idx].key == ptr)
+        {
             return items[idx].size;
         }
         idx = items[idx].next;
-        if (idx == -1) {
+        if (idx == -1)
+        {
             return -1;
         }
     }
 }
 
-void *AtomicSList_Pop(void **list) {
+void* AtomicSList_Pop(void** list)
+{
     int intr = OSDisableInterrupts();
-    void *head = *list;
-    if (head == NULL) {
+    void* head = *list;
+    if (head == NULL)
+    {
         OSRestoreInterrupts(intr);
         return NULL;
     }
-    *list = *(void **)head;
+    *list = *(void**)head;
     OSRestoreInterrupts(intr);
     return head;
 }
 
 
-extern void *memcpy(void *dst, const void *src, int n);
-extern void LCLoadBlocks(void *destTag, void *srcAddr, u32 numBlocks);
+extern void* memcpy(void* dst, const void* src, int n);
+extern void LCLoadBlocks(void* destTag, void* srcAddr, u32 numBlocks);
 
 
-void copyToCache(void *dst, void *src, u32 count) {
-    if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
+void copyToCache(void* dst, void* src, u32 count)
+{
+    if (lbl_803DD610 != 4 && lbl_803DD610 != 0)
+    {
         int len;
-        if (count != 0) {
+        if (count != 0)
+        {
             len = count << 5;
-        } else {
+        }
+        else
+        {
             len = 0x1000;
         }
         memcpy(dst, src, len);
-    } else {
+    }
+    else
+    {
         LCLoadBlocks(dst, src, count);
     }
 }
 
 
+extern void LCStoreBlocks(void* destAddr, void* srcTag, u32 numBlocks);
 
 
-
-
-
-
-
-
-
-
-
-
-
-extern void LCStoreBlocks(void *destAddr, void *srcTag, u32 numBlocks);
-
-
-
-
-void memcpyToCache(void *dst, void *src, u32 count) {
-    if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
+void memcpyToCache(void* dst, void* src, u32 count)
+{
+    if (lbl_803DD610 != 4 && lbl_803DD610 != 0)
+    {
         int len;
-        if (count != 0) {
+        if (count != 0)
+        {
             len = count << 5;
-        } else {
+        }
+        else
+        {
             len = 0x1000;
         }
         memcpy(dst, src, len);
         DCFlushRange(dst, len);
-    } else {
+    }
+    else
+    {
         LCStoreBlocks(dst, src, count);
     }
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void *stackCreate(int count, int size)
+void* stackCreate(int count, int size)
 {
-    u8 *s;
+    u8* s;
     int prev;
-    void **first;
-    void **cur;
-    u8 *next;
+    void** first;
+    void** cur;
+    u8* next;
     int n;
 
     prev = testAndSet_onlyUseHeaps1and2(2);
     s = mmAlloc(size * count + 0x20, 0x11, 0);
     testAndSet_onlyUseHeaps1and2(prev);
-    *(s16 *)(s + 0xc) = size;
-    *(s16 *)(s + 0xe) = count;
-    *(u16 *)(s + 0x10) = 0;
-    *(int *)(s + 4) = *(s16 *)(s + 0xe) * *(s16 *)(s + 0xc) + 0x20 + (int)s;
-    first = (void **)(s + 0x20);
+    *(s16*)(s + 0xc) = size;
+    *(s16*)(s + 0xe) = count;
+    *(u16*)(s + 0x10) = 0;
+    *(int*)(s + 4) = *(s16*)(s + 0xe) * *(s16*)(s + 0xc) + 0x20 + (int)s;
+    first = (void**)(s + 0x20);
     cur = first;
-    next = (u8 *)first + size;
+    next = (u8*)first + size;
     n = count - 2;
-    for (; n > 0; n--) {
+    for (; n > 0; n--)
+    {
         *cur = next;
-        cur = (void **)*cur;
+        cur = (void**)*cur;
         next += size;
     }
     *cur = 0;
-    *(void **)s = first;
-    cur = *(void ***)s;
-    while (cur != 0) {
+    *(void**)s = first;
+    cur = *(void***)s;
+    while (cur != 0)
+    {
         int ok = 0;
-        if (cur >= first && cur < *(void ***)(s + 4)) {
+        if (cur >= first && cur < *(void***)(s + 4))
+        {
             ok = 1;
         }
-        if (ok == 0) {
+        if (ok == 0)
+        {
             break;
         }
-        cur = (void **)*cur;
+        cur = (void**)*cur;
     }
     return s;
 }
 
-void *mmAlloc(int size, int type, int flag)
+void* mmAlloc(int size, int type, int flag)
 {
-    void *result;
+    void* result;
     u8 ok;
     u8 i;
 
-    if (size == 0) {
+    if (size == 0)
+    {
         return 0;
     }
     ok = 1;
-    for (i = 0; ok && i < 100; i++) {
-        if (lbl_803DB434 == 1) {
-            result = (void *)mmAllocFromRegion(1, size, type, flag);
-            if (result == 0) {
-                result = (void *)mmAllocFromRegion(2, size, type, flag);
+    for (i = 0; ok && i < 100; i++)
+    {
+        if (lbl_803DB434 == 1)
+        {
+            result = (void*)mmAllocFromRegion(1, size, type, flag);
+            if (result == 0)
+            {
+                result = (void*)mmAllocFromRegion(2, size, type, flag);
             }
-            if (result == 0) {
+            if (result == 0)
+            {
                 return result;
             }
-        } else if (lbl_803DCB08 != 0) {
-            result = (void *)mmAllocFromRegion(3, size, type, flag);
-            if (result == 0) {
+        }
+        else if (lbl_803DCB08 != 0)
+        {
+            result = (void*)mmAllocFromRegion(3, size, type, flag);
+            if (result == 0)
+            {
                 return result;
             }
-        } else if (size >= 0x3000) {
-            result = (void *)mmAllocFromRegion(0, size, type, flag);
-            if (result == 0) {
-                result = (void *)mmAllocFromRegion(1, size, type, flag);
+        }
+        else if (size >= 0x3000)
+        {
+            result = (void*)mmAllocFromRegion(0, size, type, flag);
+            if (result == 0)
+            {
+                result = (void*)mmAllocFromRegion(1, size, type, flag);
             }
-        } else if (size >= 0x400) {
-            result = (void *)mmAllocFromRegion(1, size, type, flag);
-            if (result == 0) {
-                result = (void *)mmAllocFromRegion(2, size, type, flag);
+        }
+        else if (size >= 0x400)
+        {
+            result = (void*)mmAllocFromRegion(1, size, type, flag);
+            if (result == 0)
+            {
+                result = (void*)mmAllocFromRegion(2, size, type, flag);
             }
-            if (result == 0) {
-                result = (void *)mmAllocFromRegion(0, size, type, flag);
+            if (result == 0)
+            {
+                result = (void*)mmAllocFromRegion(0, size, type, flag);
             }
-        } else {
-            result = (void *)mmAllocFromRegion(2, size, type, flag);
-            if (result == 0) {
-                result = (void *)mmAllocFromRegion(1, size, type, flag);
+        }
+        else
+        {
+            result = (void*)mmAllocFromRegion(2, size, type, flag);
+            if (result == 0)
+            {
+                result = (void*)mmAllocFromRegion(1, size, type, flag);
             }
-            if (result == 0) {
-                result = (void *)mmAllocFromRegion(0, size, type, flag);
+            if (result == 0)
+            {
+                result = (void*)mmAllocFromRegion(0, size, type, flag);
             }
         }
         ok = 0;

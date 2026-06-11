@@ -27,7 +27,8 @@
  */
 
 #if 0
-enum dll_025E_SpellStone_slot {
+enum dll_025E_SpellStone_slot
+{
     SPELLSTONE_INITIALISE = 0,
     SPELLSTONE_RELEASE = 1,
     SPELLSTONE_INIT = 3,

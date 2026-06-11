@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_005B_GCRobotLigh_packet_info {
+enum obj_005B_GCRobotLigh_packet_info
+{
     GCROBOTLIGH_DEF_ID = 0x005B,
     GCROBOTLIGH_DLL_ID = 0x0150,
     GCROBOTLIGH_CLASS_ID = 0x0030,

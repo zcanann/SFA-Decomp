@@ -39,14 +39,14 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern int Obj_GetPlayerObject(void);
-extern f32 Vec_distance(void *a, void *b);
+extern f32 Vec_distance(void* a, void* b);
 extern void objUpdateOpacity(int obj);
 
 extern undefined4 DAT_803dc070;
 extern u8 lbl_803DBF68;
-extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern ModgfxInterface **gModgfxInterface;
-extern EffectInterface **gPartfxInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern ModgfxInterface** gModgfxInterface;
+extern EffectInterface** gPartfxInterface;
 extern u8 framesThisStep;
 extern int lbl_802C23C8[];
 extern s8 lbl_803DDBD0;
@@ -72,7 +72,8 @@ extern f32 lbl_803E5DC4;
 extern f32 lbl_803E5DC8;
 extern f32 lbl_803E5DCC;
 
-typedef struct Cup197State {
+typedef struct Cup197State
+{
     s32 gameBit;
     s16 sparkTimer;
     s16 activeTimer;
@@ -118,7 +119,8 @@ extern f32 lbl_803E5100;
 extern f32 lbl_803E5104;
 extern f32 lbl_803E5108;
 
-typedef struct DbshSymbolFlags {
+typedef struct DbshSymbolFlags
+{
     u8 finished : 1;
     u8 active : 1;
 } DbshSymbolFlags;
@@ -127,8 +129,9 @@ typedef struct DbshSymbolFlags {
  * Per-object extra state for the DBSH spin-symbol minigame
  * (dbsh_symbol_getExtraSize == 0x24).
  */
-typedef struct DbshSymbolState {
-    void *partnerObj; /* nearest objType-0x20F symbol, spun in mirror */
+typedef struct DbshSymbolState
+{
+    void* partnerObj; /* nearest objType-0x20F symbol, spun in mirror */
     f32 spinSpeed;
     f32 sfxTimerB; /* object creak sfx 0x4A3 */
     f32 sfxTimerA; /* player grunt sfx 0x13A */
@@ -141,109 +144,149 @@ typedef struct DbshSymbolState {
     u8 pad21[3];
 } DbshSymbolState;
 
-STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
-STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);
-STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
+STATIC_ASSERT (
+sizeof
+(DbshSymbolState)
+==
+0x24
+);
+STATIC_ASSERT (offsetof
+(DbshSymbolState
+,
+phase
+)
+==
+0x1E
+);
+STATIC_ASSERT (offsetof
+(DbshSymbolState
+,
+flags
+)
+==
+0x20
+);
 
-int DBSH_Symbol_SeqFn(int *obj, int *anim, ObjAnimUpdateState *animUpdate)
+int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 {
     f32 maxSpeed;
     f32 spdThresh;
     f32 animDiv;
     int v;
-    int *list;
+    int* list;
     int count;
     int idx;
     int i;
     int player;
-    DbshSymbolState *state;
+    DbshSymbolState* state;
 
-    state = ((GameObject *)obj)->extra;
+    state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     Sfx_SetObjectSfxVolume((int)obj, 0x3af, 10, lbl_803E50E0);
     Sfx_KeepAliveLoopedObjectSound((int)obj, 0x3af);
     animUpdate->sequenceEventActive = 0;
-    for (i = 0; i < animUpdate->eventCount; i++) {
-        if (animUpdate->eventIds[i] == 1) {
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
+        if (animUpdate->eventIds[i] == 1)
+        {
             gameTimerInit(0x1d, 0x3c);
             timerSetToCountUp();
             state->flags.active = 0;
-            ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_VISIBLE;
+            ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_VISIBLE;
         }
     }
-    if (state->flags.active == 0) {
+    if (state->flags.active == 0)
+    {
         return 0;
     }
-    if (state->partnerObj == NULL) {
-        list = (int *)ObjList_GetObjects(&idx, &count);
-        while (idx < count) {
-            *(int *)&state->partnerObj = list[idx];
-            if (*(s16 *)(*(int *)&state->partnerObj + 0x46) == 0x20f) {
+    if (state->partnerObj == NULL)
+    {
+        list = (int*)ObjList_GetObjects(&idx, &count);
+        while (idx < count)
+        {
+            *(int*)&state->partnerObj = list[idx];
+            if (*(s16*)(*(int*)&state->partnerObj + 0x46) == 0x20f)
+            {
                 break;
             }
             idx++;
         }
     }
-    if (state->partnerObj == NULL) {
+    if (state->partnerObj == NULL)
+    {
         return 0;
     }
     maxSpeed = lbl_803E50E8;
     spdThresh = lbl_803E50F8;
     animDiv = lbl_803E5100;
-    for (i = 0; i < framesThisStep; i++) {
-        if (isGameTimerDisabled() != 0) {
+    for (i = 0; i < framesThisStep; i++)
+    {
+        if (isGameTimerDisabled() != 0)
+        {
             Sfx_PlayFromObject((int)obj, 0x1d4);
             state->flags.finished = 0;
             state->flags.active = 1;
-            (*gObjectTriggerInterface)->yield((ObjSeqState *)animUpdate, 0xbd);
+            (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, 0xbd);
         }
-        if ((getButtonsJustPressedIfNotBusy(0) & 0x100) != 0) {
+        if ((getButtonsJustPressedIfNotBusy(0) & 0x100) != 0)
+        {
             state->spinSpeed = state->spinSpeed + lbl_803E50E4;
         }
-        if (state->spinSpeed > maxSpeed) {
+        if (state->spinSpeed > maxSpeed)
+        {
             state->spinSpeed = maxSpeed;
         }
         state->spinProgress = (int)((f32)state->spinProgress + state->spinSpeed);
-        if (state->spinProgress >= 0x7ef4) {
+        if (state->spinProgress >= 0x7ef4)
+        {
             gameTimerStop();
             Sfx_PlayFromObject((int)obj, 0x1d4);
             ObjAnim_SetCurrentMove(player, 0, lbl_803E50EC, 0);
             state->flags.finished = 1;
             state->flags.active = 1;
             state->spinProgress = 0x7ef4;
-            (*gObjectTriggerInterface)->yield((ObjSeqState *)animUpdate, 0xbd);
+            (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, 0xbd);
             return 0;
         }
         (*gObjectTriggerInterface)->setXrot(state->triggerHandle, 0xbd);
-        if (state->spinProgress < 0) {
+        if (state->spinProgress < 0)
+        {
             state->spinProgress = 0;
-            if (state->spinSpeed < lbl_803E50EC) {
+            if (state->spinSpeed < lbl_803E50EC)
+            {
                 state->spinSpeed = lbl_803E50EC;
             }
             state->prevSpinProgress = state->spinProgress;
-            if (state->spinSpeed > lbl_803E50F0) {
+            if (state->spinSpeed > lbl_803E50F0)
+            {
                 state->spinSpeed = state->spinSpeed - lbl_803E50F4;
             }
             return 0;
         }
-        if (state->spinSpeed > spdThresh) {
+        if (state->spinSpeed > spdThresh)
+        {
             state->spinSpeed = state->spinSpeed - lbl_803E50FC;
         }
         if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-                player, ((f32)state->spinProgress - (f32)state->prevSpinProgress) / animDiv,
-                timeDelta, NULL) != 0) {
-            if (((GameObject *)player)->anim.currentMoveProgress < lbl_803E50EC) {
-                ((GameObject *)player)->anim.currentMoveProgress =
-                    lbl_803E5104 + ((GameObject *)player)->anim.currentMoveProgress;
+            player, ((f32)state->spinProgress - (f32)state->prevSpinProgress) / animDiv,
+            timeDelta, NULL) != 0)
+        {
+            if (((GameObject*)player)->anim.currentMoveProgress < lbl_803E50EC)
+            {
+                ((GameObject*)player)->anim.currentMoveProgress =
+                    lbl_803E5104 + ((GameObject*)player)->anim.currentMoveProgress;
             }
         }
-        if (state->partnerObj != NULL) {
+        if (state->partnerObj != NULL)
+        {
             if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
-                    *(int *)&state->partnerObj, -((f32)state->spinProgress - (f32)state->prevSpinProgress) / lbl_803E5100,
-                    timeDelta, NULL) != 0) {
-                f32 h = ((GameObject *)state->partnerObj)->anim.currentMoveProgress;
-                if (h < lbl_803E50EC) {
-                    ((GameObject *)state->partnerObj)->anim.currentMoveProgress =
+                *(int*)&state->partnerObj, -((f32)state->spinProgress - (f32)state->prevSpinProgress) / lbl_803E5100,
+                timeDelta, NULL) != 0)
+            {
+                f32 h = ((GameObject*)state->partnerObj)->anim.currentMoveProgress;
+                if (h < lbl_803E50EC)
+                {
+                    ((GameObject*)state->partnerObj)->anim.currentMoveProgress =
                         lbl_803E5104 + h;
                 }
             }
@@ -251,31 +294,47 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, ObjAnimUpdateState *animUpdate)
         state->prevSpinProgress = state->spinProgress;
     }
     state->sfxTimerA = state->sfxTimerA - timeDelta;
-    if (state->sfxTimerA < lbl_803E50EC) {
-        if (state->spinSpeed < lbl_803E50EC) {
-            state->sfxTimerA = (f32)(int)randomGetRange(0x28, 0x64);
-        } else {
-            state->sfxTimerA = (f32)(int)randomGetRange(0x78, 0xf0);
+    if (state->sfxTimerA < lbl_803E50EC)
+    {
+        if (state->spinSpeed < lbl_803E50EC)
+        {
+            state->sfxTimerA = (f32)(int)
+            randomGetRange(0x28, 0x64);
+        }
+        else
+        {
+            state->sfxTimerA = (f32)(int)
+            randomGetRange(0x78, 0xf0);
         }
         Sfx_PlayFromObject(player, 0x13a);
     }
     state->sfxTimerB = state->sfxTimerB - timeDelta;
-    if (state->sfxTimerB < lbl_803E50EC) {
-        if (state->spinSpeed > lbl_803E50EC) {
-            state->sfxTimerB = (f32)(int)randomGetRange(0x28, 0x64);
-        } else {
-            state->sfxTimerB = (f32)(int)randomGetRange(0x78, 0xf0);
+    if (state->sfxTimerB < lbl_803E50EC)
+    {
+        if (state->spinSpeed > lbl_803E50EC)
+        {
+            state->sfxTimerB = (f32)(int)
+            randomGetRange(0x28, 0x64);
+        }
+        else
+        {
+            state->sfxTimerB = (f32)(int)
+            randomGetRange(0x78, 0xf0);
         }
         Sfx_PlayFromObject((int)obj, 0x4a3);
     }
     {
         f32 vol = lbl_803E5108 * state->spinSpeed;
-        if (vol >= lbl_803E50EC) {
-        } else {
+        if (vol >= lbl_803E50EC)
+        {
+        }
+        else
+        {
             vol = -vol;
         }
         v = (int)vol;
-        if (v > 100) {
+        if (v > 100)
+        {
             v = 100;
         }
         Sfx_SetObjectSfxVolume((int)obj, 0x3af, (u8)v, lbl_803E50E0);
@@ -299,49 +358,58 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, ObjAnimUpdateState *animUpdate)
  */
 void dbsh_symbol_update(int obj)
 {
-  s16 phase;
-  uint puzzleStarted;
-  DbshSymbolState *state;
-  
-  state = ((GameObject *)obj)->extra;
-  puzzleStarted = GameBit_Get(0x16a);
-  if (puzzleStarted == 0) {
-    state->phase = 0;
-    state->partnerObj = NULL;
-    GameBit_Set(0x16c,0);
-  }
-  else {
-    phase = state->phase;
-    if (phase == 0) {
-      ((GameObject *)obj)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
-      state->phase = 1;
+    s16 phase;
+    uint puzzleStarted;
+    DbshSymbolState* state;
+
+    state = ((GameObject*)obj)->extra;
+    puzzleStarted = GameBit_Get(0x16a);
+    if (puzzleStarted == 0)
+    {
+        state->phase = 0;
+        state->partnerObj = NULL;
+        GameBit_Set(0x16c, 0);
     }
-    else if (phase == 2) {
-      state->phase = 3;
-      state->triggerHandle =
-          (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
+    else
+    {
+        phase = state->phase;
+        if (phase == 0)
+        {
+            ((GameObject*)obj)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
+            state->phase = 1;
+        }
+        else if (phase == 2)
+        {
+            state->phase = 3;
+            state->triggerHandle =
+                (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+        }
+        else if (phase == 1)
+        {
+            if (lbl_803DBF68 != '\0')
+            {
+                lbl_803DBF68 = 0;
+                Sfx_PlayFromObject(obj, SFXfoot_stone_scuff);
+            }
+            state->phase = 2;
+            lbl_803DBF68 = '\x01';
+        }
+        else if (phase == 3)
+        {
+            ((GameObject*)obj)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
+            if (state->flags.finished != 0)
+            {
+                GameBit_Set(0x16b, 1);
+            }
+            else
+            {
+                GameBit_Set(0x16c, 1);
+            }
+            Sfx_StopObjectChannel(obj, 0x7f);
+            state->flags.active = 1;
+        }
     }
-    else if (phase == 1) {
-      if (lbl_803DBF68 != '\0') {
-        lbl_803DBF68 = 0;
-        Sfx_PlayFromObject(obj, SFXfoot_stone_scuff);
-      }
-      state->phase = 2;
-      lbl_803DBF68 = '\x01';
-    }
-    else if (phase == 3) {
-      ((GameObject *)obj)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
-      if (state->flags.finished != 0) {
-        GameBit_Set(0x16b,1);
-      }
-      else {
-        GameBit_Set(0x16c,1);
-      }
-      Sfx_StopObjectChannel(obj, 0x7f);
-      state->flags.active = 1;
-    }
-  }
-  return;
+    return;
 }
 
 /*
@@ -359,7 +427,7 @@ void dbsh_symbol_update(int obj)
  */
 int dbsh_symbol_getExtraSize(void)
 {
-  return 0x24;
+    return 0x24;
 }
 
 
@@ -378,7 +446,7 @@ int dbsh_symbol_getExtraSize(void)
  */
 void dbsh_symbol_free(void)
 {
-  gameTimerStop();
+    gameTimerStop();
 }
 
 /*
@@ -395,26 +463,29 @@ void dbsh_symbol_free(void)
  * PAL Size: TODO
  */
 extern void objRenderFn_8003b8f4(f32);
-void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
+
+void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
     objRenderFn_8003b8f4(lbl_803E5104);
 }
 
 
-
 /* Trivial 4b 0-arg blr leaves. */
-void dll_197_hitDetect(void) {}
+void dll_197_hitDetect(void)
+{
+}
 
 void dll_197_update(int obj)
 {
-    Cup197State *state = ((GameObject *)obj)->extra;
+    Cup197State* state = ((GameObject*)obj)->extra;
     int resourceParams[4];
     u8 callbackData[0x14];
     int player;
     f32 distance;
-    void *resource;
+    void* resource;
     int effect;
     int stageEffectBase;
-    int *resourceDefaults;
+    int* resourceDefaults;
 
     resourceDefaults = lbl_802C23C8;
     resourceParams[0] = resourceDefaults[0];
@@ -423,106 +494,132 @@ void dll_197_update(int obj)
     resourceParams[3] = resourceDefaults[3];
 
     player = Obj_GetPlayerObject();
-    distance = Vec_distance((void *)(player + 0x18), (void *)&((GameObject *)obj)->anim.worldPosX);
-    if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) != 0) {
-        if (distance >= lbl_803E5138 && state->active != 0) {
+    distance = Vec_distance((void*)(player + 0x18), (void*)&((GameObject*)obj)->anim.worldPosX);
+    if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) != 0)
+    {
+        if (distance >= lbl_803E5138 && state->active != 0)
+        {
             Sfx_StopObjectChannel(obj, 0x40);
         }
-    } else if (distance < lbl_803E5138 && state->active != 0) {
+    }
+    else if (distance < lbl_803E5138 && state->active != 0)
+    {
         Sfx_PlayFromObject(obj, 0x72);
     }
 
     objUpdateOpacity(obj);
 
-    if (state->hitCooldown > 0) {
+    if (state->hitCooldown > 0)
+    {
         state->hitCooldown -= framesThisStep;
     }
 
-    switch (state->mode) {
+    switch (state->mode)
+    {
     case 1:
         break;
     default:
         return;
     }
 
-    *(f32 *)(callbackData + 0x10) = lbl_803E513C;
+    *(f32*)(callbackData + 0x10) = lbl_803E513C;
     state->previousActive = state->active;
     if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0 ||
-        (state->hitCooldown != 0 && state->hitCooldown <= 0x14)) {
+        (state->hitCooldown != 0 && state->hitCooldown <= 0x14))
+    {
         state->active = 1 - state->active;
-        if (state->active != 0) {
+        if (state->active != 0)
+        {
             state->activeTimer = 1000;
         }
-        if (state->hitCooldown != 0) {
+        if (state->hitCooldown != 0)
+        {
             state->hitCooldown = 0;
             lbl_803DDBD0 = 3;
             state->activeTimer = 300;
-            if (state->stage == 2) {
+            if (state->stage == 2)
+            {
                 GameBit_Set(0x472, 1);
             }
         }
     }
 
-    if (state->active != 0 && state->activeTimer != 0) {
+    if (state->active != 0 && state->activeTimer != 0)
+    {
         state->activeTimer -= framesThisStep;
-        if (state->activeTimer <= 0) {
+        if (state->activeTimer <= 0)
+        {
             state->activeTimer = 0;
             state->active = 0;
         }
     }
 
-    if (state->active != 0 && state->sparkTimer <= 0 && state->sparkArmed != 0) {
+    if (state->active != 0 && state->sparkTimer <= 0 && state->sparkArmed != 0)
+    {
         state->sparkArmed = 0;
         Sfx_PlayFromObject(obj, 0x80);
     }
 
-    if (state->active == state->previousActive) {
+    if (state->active == state->previousActive)
+    {
         return;
     }
 
-    if (state->active != 0) {
+    if (state->active != 0)
+    {
         resource = Resource_Acquire(0x69, 1);
         stageEffectBase = state->stage * 2;
         resourceParams[1] = stageEffectBase + 0x19d;
         resourceParams[2] = stageEffectBase + 0x19e;
-        (*(void (*)(int, int, void *, int, int, void *))(*(int *)(*(int *)resource + 4)))(
+        (*(void (*)(int, int, void*, int, int, void*))(*(int*)(*(int*)resource + 4)))(
             obj, 1, callbackData, 0x10004, -1, resourceParams);
         Resource_Release(resource);
 
-        for (effect = 0; effect < 200; effect++) {
-            (*gPartfxInterface)->spawnObject((void *)obj, 0x1a3, NULL, 0,
-                                                                -1, NULL);
+        for (effect = 0; effect < 200; effect++)
+        {
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x1a3, NULL, 0,
+                                             -1, NULL);
         }
 
-        if (state->gameBit != -1 && GameBit_Get(state->gameBit) == 0) {
+        if (state->gameBit != -1 && GameBit_Get(state->gameBit) == 0)
+        {
             GameBit_Set(state->gameBit, 1);
         }
-        if (lbl_803DDBD0 == 0 && state->stage == 0 && GameBit_Get(state->gameBit) != 0) {
+        if (lbl_803DDBD0 == 0 && state->stage == 0 && GameBit_Get(state->gameBit) != 0)
+        {
             lbl_803DDBD0 = 1;
         }
-        if (lbl_803DDBD0 == 1 && state->stage == 1 && GameBit_Get(state->gameBit) != 0) {
+        if (lbl_803DDBD0 == 1 && state->stage == 1 && GameBit_Get(state->gameBit) != 0)
+        {
             lbl_803DDBD0 = 2;
         }
-        if (lbl_803DDBD0 == 2 && state->stage == 2 && GameBit_Get(state->gameBit) != 0) {
+        if (lbl_803DDBD0 == 2 && state->stage == 2 && GameBit_Get(state->gameBit) != 0)
+        {
             GameBit_Set(0x472, 1);
             lbl_803DDBD0 = 3;
         }
         state->sparkArmed = 1;
         state->sparkTimer = 1;
-    } else {
+    }
+    else
+    {
         Sfx_StopObjectChannel(obj, 0x7f);
-        (*gModgfxInterface)->detachSource((void *)obj);
+        (*gModgfxInterface)->detachSource((void*)obj);
         (*gExpgfxInterface)->freeSource(obj);
-        if (state->gameBit != -1 && GameBit_Get(state->gameBit) != 0) {
+        if (state->gameBit != -1 && GameBit_Get(state->gameBit) != 0)
+        {
             GameBit_Set(state->gameBit, 0);
         }
-        if (lbl_803DDBD0 == 1 && state->stage == 0) {
+        if (lbl_803DDBD0 == 1 && state->stage == 0)
+        {
             lbl_803DDBD0 = 0;
         }
-        if (lbl_803DDBD0 == 2 && state->stage == 1) {
+        if (lbl_803DDBD0 == 2 && state->stage == 1)
+        {
             lbl_803DDBD0 = 0;
         }
-        if (lbl_803DDBD0 == 3 && state->stage == 2 && GameBit_Get(0x474) == 0) {
+        if (lbl_803DDBD0 == 3 && state->stage == 2 && GameBit_Get(0x474) == 0)
+        {
             GameBit_Set(0x472, 0);
             lbl_803DDBD0 = 0;
         }
@@ -540,13 +637,15 @@ extern f32 lbl_803E5128;
 extern f32 lbl_803E512C;
 extern f32 lbl_803E5130;
 extern f32 lbl_803E5134;
-extern void *Camera_GetCurrentViewSlot(void);
+extern void* Camera_GetCurrentViewSlot(void);
 extern f32 sqrtf(f32 x);
-extern void voxmaps_worldToGrid(void *world, void *grid);
-extern int voxmaps_traceLine(void *from, void *to, void *out, int p4, int p5);
+extern void voxmaps_worldToGrid(void* world, void* grid);
+extern int voxmaps_traceLine(void* from, void* to, void* out, int p4, int p5);
+
 void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    struct {
+    struct
+    {
         u8 pad[0xc];
         f32 pos[3];
     } particleParams;
@@ -556,30 +655,33 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     s16 startGrid[4];
     s16 endGrid[4];
     u8 traceOut[8];
-    Cup197State *state = ((GameObject *)obj)->extra;
-    u8 *camera;
+    Cup197State* state = ((GameObject*)obj)->extra;
+    u8* camera;
     f32 dist;
     f32 scale;
-    void *dirAlias = (void *)dir;
+    void* dirAlias = (void*)dir;
 
-    if (visible == 0) {
+    if (visible == 0)
+    {
         state->sparkTimer = 0;
         state->visibleToCamera = 0;
         return;
     }
 
-    if (state->active == 0) {
+    if (state->active == 0)
+    {
         return;
     }
 
     state->visibleToCamera = 1;
     camera = Camera_GetCurrentViewSlot();
-    dir[0] = *(f32 *)(camera + 0xc) - ((GameObject *)obj)->anim.localPosX;
-    dir[1] = *(f32 *)(camera + 0x10) - ((GameObject *)obj)->anim.localPosY;
-    dir[2] = *(f32 *)(camera + 0x14) - ((GameObject *)obj)->anim.localPosZ;
+    dir[0] = *(f32*)(camera + 0xc) - ((GameObject*)obj)->anim.localPosX;
+    dir[1] = *(f32*)(camera + 0x10) - ((GameObject*)obj)->anim.localPosY;
+    dir[2] = *(f32*)(camera + 0x14) - ((GameObject*)obj)->anim.localPosZ;
 
     dist = sqrtf(dir[2] * dir[2] + (dir[0] * dir[0] + dir[1] * dir[1]));
-    if (dist > lbl_803E5120) {
+    if (dist > lbl_803E5120)
+    {
         scale = lbl_803E5124 / dist;
         dir[0] = dir[0] * scale;
         dir[1] = dir[1] * scale;
@@ -588,35 +690,38 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         objTrace[0] = lbl_803E5128 * dir[0];
         objTrace[1] = lbl_803E5128 * dir[1];
         objTrace[2] = lbl_803E5128 * dir[2];
-        objTrace[0] = objTrace[0] + ((GameObject *)obj)->anim.localPosX;
-        objTrace[1] = objTrace[1] + ((GameObject *)obj)->anim.localPosY;
-        objTrace[2] = objTrace[2] + ((GameObject *)obj)->anim.localPosZ;
+        objTrace[0] = objTrace[0] + ((GameObject*)obj)->anim.localPosX;
+        objTrace[1] = objTrace[1] + ((GameObject*)obj)->anim.localPosY;
+        objTrace[2] = objTrace[2] + ((GameObject*)obj)->anim.localPosZ;
         cameraTrace[0] = lbl_803E512C * dir[0];
         cameraTrace[1] = lbl_803E512C * dir[1];
         cameraTrace[2] = lbl_803E512C * dir[2];
-        cameraTrace[0] = cameraTrace[0] + *(f32 *)(camera + 0xc);
-        cameraTrace[1] = cameraTrace[1] + *(f32 *)(camera + 0x10);
-        cameraTrace[2] = cameraTrace[2] + *(f32 *)(camera + 0x14);
+        cameraTrace[0] = cameraTrace[0] + *(f32*)(camera + 0xc);
+        cameraTrace[1] = cameraTrace[1] + *(f32*)(camera + 0x10);
+        cameraTrace[2] = cameraTrace[2] + *(f32*)(camera + 0x14);
 
-        voxmaps_worldToGrid((void *)objTrace, startGrid);
-        voxmaps_worldToGrid((void *)cameraTrace, endGrid);
-        if (voxmaps_traceLine(startGrid, endGrid, traceOut, 0, 0) == 0) {
+        voxmaps_worldToGrid((void*)objTrace, startGrid);
+        voxmaps_worldToGrid((void*)cameraTrace, endGrid);
+        if (voxmaps_traceLine(startGrid, endGrid, traceOut, 0, 0) == 0)
+        {
             state->visibleToCamera = 0;
             (*gExpgfxInterface)->freeSource(obj);
         }
     }
 
-    if (state->sparkTimer > 0) {
+    if (state->sparkTimer > 0)
+    {
         state->sparkTimer -= framesThisStep;
         return;
     }
 
-    if (state->visibleToCamera != 0) {
+    if (state->visibleToCamera != 0)
+    {
         particleParams.pos[0] = lbl_803E5130;
         particleParams.pos[1] = lbl_803E5134;
         particleParams.pos[2] = lbl_803E5130;
-        (*gPartfxInterface)->spawnObject((void *)obj, 0x1f7, &particleParams,
-                                                            0x12, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, 0x1f7, &particleParams,
+                                         0x12, -1, NULL);
     }
 
     state->sparkTimer = randomGetRange(-10, 10) + 0x3c;
@@ -624,7 +729,7 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void dll_197_free(int obj)
 {
-    (*gModgfxInterface)->detachSource((void *)obj);
+    (*gModgfxInterface)->detachSource((void*)obj);
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
@@ -632,7 +737,7 @@ extern f32 lbl_803E5118;
 
 void dbsh_symbol_init(int* obj)
 {
-    DbshSymbolState* state = ((GameObject *)obj)->extra;
+    DbshSymbolState* state = ((GameObject*)obj)->extra;
 
     state->spinSpeed = lbl_803E50EC;
     state->spinProgress = 0;
@@ -642,8 +747,8 @@ void dbsh_symbol_init(int* obj)
     state->flags.finished = 0;
     state->flags.active = 1;
 
-    ((GameObject *)obj)->anim.localPosY -= lbl_803E5118;
-    ((GameObject *)obj)->animEventCallback = (void *)DBSH_Symbol_SeqFn;
+    ((GameObject*)obj)->anim.localPosY -= lbl_803E5118;
+    ((GameObject*)obj)->animEventCallback = (void*)DBSH_Symbol_SeqFn;
 
-    ((GameObject *)obj)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
+    ((GameObject*)obj)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
 }

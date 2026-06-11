@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0357_DFP_TargetB_packet_info {
+enum obj_0357_DFP_TargetB_packet_info
+{
     DFP_TARGETB_DEF_ID = 0x0357,
     DFP_TARGETB_DLL_ID = 0x0235,
     DFP_TARGETB_CLASS_ID = 0x0030,

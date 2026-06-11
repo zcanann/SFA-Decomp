@@ -80,7 +80,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00F4_CAMERAseqob_packet_info {
+enum obj_00F4_CAMERAseqob_packet_info
+{
     CAMERASEQOB_DEF_ID = 0x00F4,
     CAMERASEQOB_DLL_ID = 0x0112,
     CAMERASEQOB_CLASS_ID = 0x0055,

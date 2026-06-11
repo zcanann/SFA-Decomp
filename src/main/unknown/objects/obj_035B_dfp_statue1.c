@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_035B_DFP_Statue1_packet_info {
+enum obj_035B_DFP_Statue1_packet_info
+{
     DFP_STATUE1_DEF_ID = 0x035B,
     DFP_STATUE1_DLL_ID = 0x0233,
     DFP_STATUE1_CLASS_ID = 0x0030,

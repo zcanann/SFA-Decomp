@@ -36,7 +36,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_0222_VFPDragHead_slot {
+enum dll_0222_VFPDragHead_slot
+{
     VFPDRAGHEAD_INITIALISE = 0,
     VFPDRAGHEAD_RELEASE = 1,
     VFPDRAGHEAD_INIT = 3,

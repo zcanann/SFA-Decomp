@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0110_CRSnowClawB_packet_info {
+enum obj_0110_CRSnowClawB_packet_info
+{
     CRSNOWCLAWB_DEF_ID = 0x0110,
     CRSNOWCLAWB_DLL_ID = 0x0255,
     CRSNOWCLAWB_CLASS_ID = 0x002E,

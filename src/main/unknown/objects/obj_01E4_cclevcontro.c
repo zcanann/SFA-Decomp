@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01E4_CClevcontro_packet_info {
+enum obj_01E4_CClevcontro_packet_info
+{
     CCLEVCONTRO_DEF_ID = 0x01E4,
     CCLEVCONTRO_DLL_ID = 0x018B,
     CCLEVCONTRO_CLASS_ID = 0x0061,

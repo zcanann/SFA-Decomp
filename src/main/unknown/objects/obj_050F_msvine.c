@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_050F_MSVine_packet_info {
+enum obj_050F_MSVine_packet_info
+{
     MSVINE_DEF_ID = 0x050F,
     MSVINE_DLL_ID = 0x017F,
     MSVINE_CLASS_ID = 0x0053,

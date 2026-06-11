@@ -27,7 +27,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0004_setuppoint_defs {
+enum class_0004_setuppoint_defs
+{
     SETUPPOINT_SETUPPOINT = 0x0493,
 };
 #endif

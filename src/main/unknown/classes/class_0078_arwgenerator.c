@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0078_ARWGenerator_defs {
+enum class_0078_ARWGenerator_defs
+{
     ARWGENERATOR_ARWGENERATO = 0x0540,
 };
 #endif

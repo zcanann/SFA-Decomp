@@ -3,7 +3,8 @@
 #include "main/dll/mmp_moonrock.h"
 #include "global.h"
 
-typedef struct WaveanimatorState {
+typedef struct WaveanimatorState
+{
     u8 pad0[0x34 - 0x0];
     u8 unk34;
     u8 pad35[0x36 - 0x35];
@@ -16,15 +17,16 @@ typedef struct WaveanimatorState {
 
 extern uint GameBit_Get(int eventId);
 
-void texscroll2_setScale(TexScroll2Object *obj, s8 scale)
+void texscroll2_setScale(TexScroll2Object* obj, s8 scale)
 {
-  TexScroll2State *state = obj->state;
+    TexScroll2State* state = obj->state;
 
-  if (state->stepY == scale) {
-    return;
-  }
-  state->stepY = scale;
-  state->needsApply = 1;
+    if (state->stepY == scale)
+    {
+        return;
+    }
+    state->stepY = scale;
+    state->needsApply = 1;
 }
 
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
@@ -32,17 +34,21 @@ extern void* mapGetBlock(int idx);
 extern int* getTablesBinEntry(int id);
 extern void* getLoadedTexture(int id);
 extern void* fn_8006070C(void* block, int idx);
-extern void mapTextureScrollSetStep(int slot, int xStep, int yStep, int texWidthFixed, int texHeightFixed, int unusedXStep, int unusedYStep, int unusedWidthFixed, int unusedHeightFixed);
-extern int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeightFixed, int unusedXStep, int unusedYStep, int unusedWidthFixed, int unusedHeightFixed);
+extern void mapTextureScrollSetStep(int slot, int xStep, int yStep, int texWidthFixed, int texHeightFixed,
+                                    int unusedXStep, int unusedYStep, int unusedWidthFixed, int unusedHeightFixed);
+extern int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeightFixed, int unusedXStep,
+                                   int unusedYStep, int unusedWidthFixed, int unusedHeightFixed);
 
-typedef struct TexScrollMapBlock {
+typedef struct TexScrollMapBlock
+{
     u8 pad00[0xA2];
     u8 layerCount;
 } TexScrollMapBlock;
 
-typedef struct TexScrollMapLayer {
+typedef struct TexScrollMapLayer
+{
     u8 pad00[0x24];
-    void *texture;
+    void* texture;
     u8 pad28[2];
     u8 scrollSlot;
     u8 pad2B[0x41 - 0x2B];
@@ -63,30 +69,37 @@ void texscroll2_applyMapTextureScroll(int obj, TexScroll2State* state)
 
     placement = *(int**)(obj + 0x4c);
     block = mapGetBlock(objPosToMapBlockIdx(
-        ((GameObject *)obj)->anim.localPosX,
-        ((GameObject *)obj)->anim.localPosY,
-        ((GameObject *)obj)->anim.localPosZ));
-    if (block == NULL) {
+        ((GameObject*)obj)->anim.localPosX,
+        ((GameObject*)obj)->anim.localPosY,
+        ((GameObject*)obj)->anim.localPosZ));
+    if (block == NULL)
+    {
         state->needsApply = 1;
         return;
     }
     tables = (int*)getTablesBinEntry(TEXSCROLL_TABLE_ID);
     if (tables == NULL) return;
-    tex = getLoadedTexture(-tables[(s32)*(s16*)((char*)placement + 0x18)]);
+    tex = getLoadedTexture(-tables[(s32) * (s16*)((char*)placement + 0x18)]);
     if (tex == NULL) return;
 
-    for (i = 0; i < (s32)((MapBlockData *)block)->unkA2; i++) {
+    for (i = 0; i < (s32)((MapBlockData*)block)->unkA2; i++)
+    {
         layer = fn_8006070C(block, i);
-        for (j = 0, material = layer; j < (s32)*(u8*)((char*)layer + 0x41); j++) {
-            if (*(void**)((char*)material + 0x24) == tex) {
-                t1 = (s32)(u32)*(u16*)((char*)tex + 0xa) << 6;
-                t2 = (s32)(u32)*(u16*)((char*)tex + 0xc) << 6;
-                if (*(u8*)((char*)material + 0x2a) != TEXSCROLL_SLOT_UNALLOCATED) {
-                    int v = *(int*)((char*)*(int**)&((GameObject *)obj)->anim.placementData + 0x14);
-                    if (v == TEXSCROLL_GAMEBIT_GATED_MAP_A || v == TEXSCROLL_GAMEBIT_GATED_MAP_B) {
-                        if (GameBit_Get(state->gameBit) != 0) {
+        for (j = 0, material = layer; j < (s32) * (u8*)((char*)layer + 0x41); j++)
+        {
+            if (*(void**)((char*)material + 0x24) == tex)
+            {
+                t1 = (s32)(u32) * (u16*)((char*)tex + 0xa) << 6;
+                t2 = (s32)(u32) * (u16*)((char*)tex + 0xc) << 6;
+                if (*(u8*)((char*)material + 0x2a) != TEXSCROLL_SLOT_UNALLOCATED)
+                {
+                    int v = *(int*)((char*)*(int**)&((GameObject*)obj)->anim.placementData + 0x14);
+                    if (v == TEXSCROLL_GAMEBIT_GATED_MAP_A || v == TEXSCROLL_GAMEBIT_GATED_MAP_B)
+                    {
+                        if (GameBit_Get(state->gameBit) != 0)
+                        {
                             mapTextureScrollSetStep(
-                                (s32)*(u8*)((char*)material + 0x2a),
+                                (s32) * (u8*)((char*)material + 0x2a),
                                 (s32)state->stepX,
                                 (s32)state->stepY,
                                 t1, t2,
@@ -94,9 +107,11 @@ void texscroll2_applyMapTextureScroll(int obj, TexScroll2State* state)
                                 (s32)state->secondaryStepY,
                                 t1, t2);
                         }
-                    } else {
+                    }
+                    else
+                    {
                         mapTextureScrollSetStep(
-                            (s32)*(u8*)((char*)material + 0x2a),
+                            (s32) * (u8*)((char*)material + 0x2a),
                             (s32)state->stepX,
                             (s32)state->stepY,
                             t1, t2,
@@ -104,7 +119,9 @@ void texscroll2_applyMapTextureScroll(int obj, TexScroll2State* state)
                             (s32)state->secondaryStepY,
                             t1, t2);
                     }
-                } else {
+                }
+                else
+                {
                     *(u8*)((char*)material + 0x2a) = (u8)mapTextureScrollAcquire(
                         (s32)state->stepX,
                         (s32)state->stepY,
@@ -119,24 +136,39 @@ void texscroll2_applyMapTextureScroll(int obj, TexScroll2State* state)
     }
 }
 
-void texscroll2_free(void) {}
-void texscroll2_hitDetect(void) {}
-void texscroll2_release(void) {}
-void texscroll2_initialise(void) {}
+void texscroll2_free(void)
+{
+}
+
+void texscroll2_hitDetect(void)
+{
+}
+
+void texscroll2_release(void)
+{
+}
+
+void texscroll2_initialise(void)
+{
+}
 
 
-void texscroll2_update(TexScroll2Object *obj) {
-    TexScroll2State *state;
-    TexScrollMapBlock *block;
+void texscroll2_update(TexScroll2Object* obj)
+{
+    TexScroll2State* state;
+    TexScrollMapBlock* block;
 
     state = obj->state;
     block = mapGetBlock(objPosToMapBlockIdx(obj->objAnim.localPosX, obj->objAnim.localPosY, obj->objAnim.localPosZ));
     {
-        TexScrollPlacement *placement = (TexScrollPlacement *)obj->objAnim.placementData;
+        TexScrollPlacement* placement = (TexScrollPlacement*)obj->objAnim.placementData;
         int mapId = placement->mapId;
-        if (mapId == TEXSCROLL_GAMEBIT_GATED_MAP_A || mapId == TEXSCROLL_GAMEBIT_GATED_MAP_B) {
-            if (block != NULL) {
-                if (GameBit_Get(state->gameBit) != *(uint*)&state->previousGameBitValue && state->needsApply == 0) {
+        if (mapId == TEXSCROLL_GAMEBIT_GATED_MAP_A || mapId == TEXSCROLL_GAMEBIT_GATED_MAP_B)
+        {
+            if (block != NULL)
+            {
+                if (GameBit_Get(state->gameBit) != *(uint*)&state->previousGameBitValue && state->needsApply == 0)
+                {
                     texscroll2_applyMapTextureScroll((int)obj, state);
                     state->needsApply = 0;
                 }
@@ -144,59 +176,85 @@ void texscroll2_update(TexScroll2Object *obj) {
         }
     }
     state->previousGameBitValue = GameBit_Get(state->gameBit);
-    if (block == NULL) {
+    if (block == NULL)
+    {
         state->needsApply = 1;
-    } else {
-        if (state->needsApply != 0) {
+    }
+    else
+    {
+        if (state->needsApply != 0)
+        {
             texscroll2_applyMapTextureScroll((int)obj, state);
             state->needsApply = 0;
         }
     }
 }
-void texscroll_free(void) {}
-void texscroll_hitDetect(void) {}
-void texscroll_update(void) {}
-void texscroll_release(void) {}
-void texscroll_initialise(void) {}
+
+void texscroll_free(void)
+{
+}
+
+void texscroll_hitDetect(void)
+{
+}
+
+void texscroll_update(void)
+{
+}
+
+void texscroll_release(void)
+{
+}
+
+void texscroll_initialise(void)
+{
+}
 
 int texscroll2_getExtraSize(void) { return 0x18; }
 int texscroll2_getObjectTypeId(void) { return 0x0; }
 int texscroll_getExtraSize(void) { return 0x1c; }
 int texscroll_getObjectTypeId(void) { return 0x0; }
 
-void waveanimator_modelMtxFn(int obj, int a, int b, int c) {
-    int *state = ((GameObject *)obj)->extra;
+void waveanimator_modelMtxFn(int obj, int a, int b, int c)
+{
+    int* state = ((GameObject*)obj)->extra;
     u32 v;
-    v = (u32)((WaveanimatorState *)state)->unk34 | 4;
-    ((WaveanimatorState *)state)->unk34 = (u8)v;
-    ((WaveanimatorState *)state)->unk36 = (u8)a;
-    ((WaveanimatorState *)state)->unk37 = (u8)b;
-    ((WaveanimatorState *)state)->unk38 = (u8)c;
+    v = (u32)((WaveanimatorState*)state)->unk34 | 4;
+    ((WaveanimatorState*)state)->unk34 = (u8)v;
+    ((WaveanimatorState*)state)->unk36 = (u8)a;
+    ((WaveanimatorState*)state)->unk37 = (u8)b;
+    ((WaveanimatorState*)state)->unk38 = (u8)c;
 }
 
-void texscroll2_init(TexScroll2Object *obj, TexScrollPlacement *placement, int loadFlags) {
-    TexScroll2State *state = obj->state;
-    *(u8 *)&state->stepX = placement->stepX;
-    *(u8 *)&state->stepY = placement->stepY;
-    *(u8 *)&state->secondaryStepX = placement->secondaryStepX;
-    *(u8 *)&state->secondaryStepY = placement->secondaryStepY;
-    if (loadFlags == 0) {
+void texscroll2_init(TexScroll2Object* obj, TexScrollPlacement* placement, int loadFlags)
+{
+    TexScroll2State* state = obj->state;
+    *(u8*)&state->stepX = placement->stepX;
+    *(u8*)&state->stepY = placement->stepY;
+    *(u8*)&state->secondaryStepX = placement->secondaryStepX;
+    *(u8*)&state->secondaryStepY = placement->secondaryStepY;
+    if (loadFlags == 0)
+    {
         texscroll2_applyMapTextureScroll((int)obj, state);
     }
     state->gameBit = placement->gameBit;
     state->previousGameBitValue = -1;
 }
 
-void texscroll_init(TexScrollObject *obj, TexScrollPlacement *placement, int loadFlags) {
-    TexScrollState *state = obj->state;
+void texscroll_init(TexScrollObject* obj, TexScrollPlacement* placement, int loadFlags)
+{
+    TexScrollState* state = obj->state;
     if (state == NULL) return;
     state->initLock = 1;
-    state->stepX = (s16)(s32)placement->stepX;
-    state->stepY = (s16)(s32)placement->stepY;
+    state->stepX = (s16)(s32)
+    placement->stepX;
+    state->stepY = (s16)(s32)
+    placement->stepY;
     state->scrollSlot = 0;
     state->flags = 0;
     state->gameBit = placement->gameBit;
-    if (loadFlags == 0) {
+    if (loadFlags == 0)
+    {
         state->offsetX = 0;
         state->offsetY = 0;
     }
@@ -206,5 +264,15 @@ void texscroll_init(TexScrollObject *obj, TexScrollPlacement *placement, int loa
 extern f32 lbl_803E3F30;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3F38;
-void texscroll2_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3F30); }
-void texscroll_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3F38); }
+
+void texscroll2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E3F30);
+}
+
+void texscroll_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E3F38);
+}

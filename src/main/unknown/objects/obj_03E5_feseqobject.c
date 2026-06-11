@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03E5_FEseqobject_packet_info {
+enum obj_03E5_FEseqobject_packet_info
+{
     FESEQOBJECT_DEF_ID = 0x03E5,
     FESEQOBJECT_DLL_ID = 0x0143,
     FESEQOBJECT_CLASS_ID = 0x0030,

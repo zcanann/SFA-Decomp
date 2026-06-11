@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03D3_SPDusterHol_packet_info {
+enum obj_03D3_SPDusterHol_packet_info
+{
     SPDUSTERHOL_DEF_ID = 0x03D3,
     SPDUSTERHOL_DLL_ID = 0x0284,
     SPDUSTERHOL_CLASS_ID = 0x0070,

@@ -4,25 +4,26 @@
 #include "main/dll/fruit.h"
 
 
-typedef struct DfpTargetBlockPartfxArgs {
-  s16 rotX;
-  s16 rotY;
-  s16 rotZ;
-  s16 pad06;
-  f32 scale;
-  f32 x;
-  f32 y;
-  f32 z;
+typedef struct DfpTargetBlockPartfxArgs
+{
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    s16 pad06;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
 } DfpTargetBlockPartfxArgs;
 
-extern int ObjHits_GetPriorityHit(DfpTargetBlockObject *obj, DfpTargetBlockObject **hitObj,
-                                  int *priority, int flags);
-extern void Sfx_PlayFromObject(DfpTargetBlockObject *obj, u16 sfxId);
-extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject *obj, u16 sfxId);
+extern int ObjHits_GetPriorityHit(DfpTargetBlockObject* obj, DfpTargetBlockObject** hitObj,
+                                  int* priority, int flags);
+extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
+extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject* obj, u16 sfxId);
 extern f32 sqrtf(f32 value);
 
-extern MapEventInterface **gMapEventInterface;
-extern EffectInterface **gPartfxInterface;
+extern MapEventInterface** gMapEventInterface;
+extern EffectInterface** gPartfxInterface;
 extern f32 timeDelta;
 extern f32 lbl_803DDCF8;
 extern f32 lbl_803DDCFC;
@@ -41,34 +42,37 @@ extern f32 lbl_803E64B8;
 extern f32 lbl_803E64BC;
 extern f32 lbl_803E64C0;
 
-static inline void dfptargetblock_resetToHome(DfpTargetBlockObject *obj, DfpTargetBlockHome *home,
-                                              DfpTargetBlockAudioState *state)
+static inline void dfptargetblock_resetToHome(DfpTargetBlockObject* obj, DfpTargetBlockHome* home,
+                                              DfpTargetBlockAudioState* state)
 {
-  f32 zero;
+    f32 zero;
 
-  obj->x = home->x;
-  obj->z = home->z;
-  zero = lbl_803E648C;
-  obj->velX = zero;
-  obj->velZ = zero;
-  state->mode = DFPTARGETBLOCK_AUDIO_MODE_RESETTING;
-  obj->y = home->y - lbl_803E64AC;
-  Sfx_PlayFromObject(obj, DFPTARGETBLOCK_RESET_SFX);
+    obj->x = home->x;
+    obj->z = home->z;
+    zero = lbl_803E648C;
+    obj->velX = zero;
+    obj->velZ = zero;
+    state->mode = DFPTARGETBLOCK_AUDIO_MODE_RESETTING;
+    obj->y = home->y - lbl_803E64AC;
+    Sfx_PlayFromObject(obj, DFPTARGETBLOCK_RESET_SFX);
 }
 
-static inline void dfptargetblock_checkSettled(DfpTargetBlockObject *obj,
-                                               DfpTargetBlockAudioState *state, f32 threshold)
+static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj,
+                                               DfpTargetBlockAudioState* state, f32 threshold)
 {
-  f32 dx;
-  f32 dz;
+    f32 dx;
+    f32 dz;
 
-  dx = obj->x - lbl_803DDCF8;
-  dz = obj->z - lbl_803DDCFC;
-  if ((lbl_803E648C == dx) && (lbl_803E648C == dz)) {
-    state->mode = DFPTARGETBLOCK_AUDIO_MODE_LOWERING;
-  } else if (sqrtf(dx * dx + dz * dz) < threshold) {
-    state->mode = DFPTARGETBLOCK_AUDIO_MODE_LOWERING;
-  }
+    dx = obj->x - lbl_803DDCF8;
+    dz = obj->z - lbl_803DDCFC;
+    if ((lbl_803E648C == dx) && (lbl_803E648C == dz))
+    {
+        state->mode = DFPTARGETBLOCK_AUDIO_MODE_LOWERING;
+    }
+    else if (sqrtf(dx * dx + dz * dz) < threshold)
+    {
+        state->mode = DFPTARGETBLOCK_AUDIO_MODE_LOWERING;
+    }
 }
 
 /*
@@ -84,121 +88,145 @@ static inline void dfptargetblock_checkSettled(DfpTargetBlockObject *obj,
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfptargetblock_hitDetect(DfpTargetBlockObject *obj)
+void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
 {
-  DfpTargetBlockAudioState *state;
-  DfpTargetBlockHome *home;
-  DfpTargetBlockObject *hitObj;
-  DfpTargetBlockPartfxArgs effect;
-  int priority;
-  int hitType;
-  int mode;
-  f32 velX;
-  f32 velZ;
-  f32 dx;
-  f32 dz;
-  int i;
+    DfpTargetBlockAudioState* state;
+    DfpTargetBlockHome* home;
+    DfpTargetBlockObject* hitObj;
+    DfpTargetBlockPartfxArgs effect;
+    int priority;
+    int hitType;
+    int mode;
+    f32 velX;
+    f32 velZ;
+    f32 dx;
+    f32 dz;
+    int i;
 
-  priority = -1;
-  state = obj->state;
-  home = obj->home;
+    priority = -1;
+    state = obj->state;
+    home = obj->home;
 
-  if (obj->objectType == DFPTARGETBLOCK_HOME_OBJECT_TYPE) {
-    lbl_803DDCF8 = obj->x;
-    lbl_803DDCFC = obj->z;
-    return;
-  }
-
-  if ((state->completionSfxReady != 0) || (state->stateSfxReady == 0) ||
-      (state->mode == DFPTARGETBLOCK_AUDIO_MODE_SETTLED) ||
-      (state->mode == DFPTARGETBLOCK_AUDIO_MODE_LOWERING)) {
-    return;
-  }
-
-  obj->prevX = obj->x;
-  obj->prevY = obj->y;
-  obj->prevZ = obj->z;
-
-  hitObj = NULL;
-  hitType = ObjHits_GetPriorityHit(obj, &hitObj, &priority, 0);
-  if ((hitType != 0) && (hitObj != NULL) && (hitType == DFPTARGETBLOCK_HIT_TYPE_PUSH) &&
-      (hitType == DFPTARGETBLOCK_HIT_TYPE_PUSH)) {
-    Sfx_PlayFromObject(obj, DFPTARGETBLOCK_IMPACT_SFX);
-    velX = hitObj->velX;
-    velZ = hitObj->velZ;
-    if (velX < lbl_803E648C) {
-      velX *= lbl_803E6494;
+    if (obj->objectType == DFPTARGETBLOCK_HOME_OBJECT_TYPE)
+    {
+        lbl_803DDCF8 = obj->x;
+        lbl_803DDCFC = obj->z;
+        return;
     }
-    if (velZ < lbl_803E648C) {
-      velZ *= lbl_803E6494;
+
+    if ((state->completionSfxReady != 0) || (state->stateSfxReady == 0) ||
+        (state->mode == DFPTARGETBLOCK_AUDIO_MODE_SETTLED) ||
+        (state->mode == DFPTARGETBLOCK_AUDIO_MODE_LOWERING))
+    {
+        return;
     }
-    if (velX <= velZ) {
-      hitObj->velX = lbl_803E648C;
-    } else {
-      hitObj->velZ = lbl_803E648C;
+
+    obj->prevX = obj->x;
+    obj->prevY = obj->y;
+    obj->prevZ = obj->z;
+
+    hitObj = NULL;
+    hitType = ObjHits_GetPriorityHit(obj, &hitObj, &priority, 0);
+    if ((hitType != 0) && (hitObj != NULL) && (hitType == DFPTARGETBLOCK_HIT_TYPE_PUSH) &&
+        (hitType == DFPTARGETBLOCK_HIT_TYPE_PUSH))
+    {
+        Sfx_PlayFromObject(obj, DFPTARGETBLOCK_IMPACT_SFX);
+        velX = hitObj->velX;
+        velZ = hitObj->velZ;
+        if (velX < lbl_803E648C)
+        {
+            velX *= lbl_803E6494;
+        }
+        if (velZ < lbl_803E648C)
+        {
+            velZ *= lbl_803E6494;
+        }
+        if (velX <= velZ)
+        {
+            hitObj->velX = lbl_803E648C;
+        }
+        else
+        {
+            hitObj->velZ = lbl_803E648C;
+        }
+        obj->velX = hitObj->velX * lbl_803E6498;
+        obj->velZ = hitObj->velZ * lbl_803E6498;
     }
-    obj->velX = hitObj->velX * lbl_803E6498;
-    obj->velZ = hitObj->velZ * lbl_803E6498;
-  }
 
-  obj->x = obj->velX * timeDelta + obj->x;
-  obj->z = obj->velZ * timeDelta + obj->z;
+    obj->x = obj->velX * timeDelta + obj->x;
+    obj->z = obj->velZ * timeDelta + obj->z;
 
-  if (lbl_803E648C != obj->velX) {
-    Sfx_KeepAliveLoopedObjectSound(obj, DFPTARGETBLOCK_LOOP_SFX);
-    velX = obj->velX;
-    if (velX < lbl_803E648C) {
-      if (velX >= lbl_803E648C) {
-        obj->velX = lbl_803E648C;
-      }
-    } else if ((velX > lbl_803E648C) && (velX <= lbl_803E648C)) {
-      obj->velX = lbl_803E648C;
+    if (lbl_803E648C != obj->velX)
+    {
+        Sfx_KeepAliveLoopedObjectSound(obj, DFPTARGETBLOCK_LOOP_SFX);
+        velX = obj->velX;
+        if (velX < lbl_803E648C)
+        {
+            if (velX >= lbl_803E648C)
+            {
+                obj->velX = lbl_803E648C;
+            }
+        }
+        else if ((velX > lbl_803E648C) && (velX <= lbl_803E648C))
+        {
+            obj->velX = lbl_803E648C;
+        }
     }
-  }
 
-  if (lbl_803E648C != obj->velZ) {
-    Sfx_KeepAliveLoopedObjectSound(obj, DFPTARGETBLOCK_LOOP_SFX);
-    velZ = obj->velZ;
-    if (velZ < lbl_803E648C) {
-      if (velZ >= lbl_803E648C) {
-        obj->velZ = lbl_803E648C;
-      }
-    } else if ((velZ > lbl_803E648C) && (velZ <= lbl_803E648C)) {
-      obj->velZ = lbl_803E648C;
+    if (lbl_803E648C != obj->velZ)
+    {
+        Sfx_KeepAliveLoopedObjectSound(obj, DFPTARGETBLOCK_LOOP_SFX);
+        velZ = obj->velZ;
+        if (velZ < lbl_803E648C)
+        {
+            if (velZ >= lbl_803E648C)
+            {
+                obj->velZ = lbl_803E648C;
+            }
+        }
+        else if ((velZ > lbl_803E648C) && (velZ <= lbl_803E648C))
+        {
+            obj->velZ = lbl_803E648C;
+        }
     }
-  }
 
-  dfptargetblock_resolveCollisionPoints(obj, (DfpTargetBlockCollisionPoints *)state);
+    dfptargetblock_resolveCollisionPoints(obj, (DfpTargetBlockCollisionPoints*)state);
 
-  dx = home->x - obj->x;
-  dz = home->z - obj->z;
-  mode = (*gMapEventInterface)->getMode(obj->mapId);
+    dx = home->x - obj->x;
+    dz = home->z - obj->z;
+    mode = (*gMapEventInterface)->getMode(obj->mapId);
 
-  if (mode == 1) {
-    if ((lbl_803E649C < dx) || (dx < lbl_803E64A0) || (dz < lbl_803E64A4) ||
-        (lbl_803E64A8 < dz)) {
-      dfptargetblock_resetToHome(obj, home, state);
+    if (mode == 1)
+    {
+        if ((lbl_803E649C < dx) || (dx < lbl_803E64A0) || (dz < lbl_803E64A4) ||
+            (lbl_803E64A8 < dz))
+        {
+            dfptargetblock_resetToHome(obj, home, state);
+        }
+        dfptargetblock_checkSettled(obj, state, lbl_803E64B0);
     }
-    dfptargetblock_checkSettled(obj, state, lbl_803E64B0);
-  } else if (mode == 2) {
-    if ((lbl_803E64B4 < dx) || (dx < lbl_803E64B8) || (dz < lbl_803E64A4) ||
-        (lbl_803E64BC < dz)) {
-      dfptargetblock_resetToHome(obj, home, state);
+    else if (mode == 2)
+    {
+        if ((lbl_803E64B4 < dx) || (dx < lbl_803E64B8) || (dz < lbl_803E64A4) ||
+            (lbl_803E64BC < dz))
+        {
+            dfptargetblock_resetToHome(obj, home, state);
 
-      effect.x = obj->x;
-      effect.y = obj->y;
-      effect.z = obj->z;
-      effect.scale = lbl_803E6490;
-      effect.rotZ = 0;
-      effect.rotY = 0;
-      effect.rotX = 0;
+            effect.x = obj->x;
+            effect.y = obj->y;
+            effect.z = obj->z;
+            effect.scale = lbl_803E6490;
+            effect.rotZ = 0;
+            effect.rotY = 0;
+            effect.rotX = 0;
 
-      for (i = 0; i < DFPTARGETBLOCK_RESET_PARTICLE_COUNT; i++) {
-        (*gPartfxInterface)->spawnObject(obj, DFPTARGETBLOCK_RESET_PARTICLE_ID,
-                                                            &effect, DFPTARGETBLOCK_RESET_PARTICLE_MODE, -1, NULL);
-      }
+            for (i = 0; i < DFPTARGETBLOCK_RESET_PARTICLE_COUNT; i++)
+            {
+                (*gPartfxInterface)->spawnObject(obj, DFPTARGETBLOCK_RESET_PARTICLE_ID,
+                                                 &effect, DFPTARGETBLOCK_RESET_PARTICLE_MODE, -1, NULL);
+            }
+        }
+        dfptargetblock_checkSettled(obj, state, lbl_803E64C0);
     }
-    dfptargetblock_checkSettled(obj, state, lbl_803E64C0);
-  }
 }
 

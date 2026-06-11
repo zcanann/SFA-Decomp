@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0504_BarrelPad_packet_info {
+enum obj_0504_BarrelPad_packet_info
+{
     BARRELPAD_DEF_ID = 0x0504,
     BARRELPAD_DLL_ID = 0x012F,
     BARRELPAD_CLASS_ID = 0x0061,

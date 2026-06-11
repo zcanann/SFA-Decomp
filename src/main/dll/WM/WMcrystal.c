@@ -61,22 +61,22 @@ extern f32 lbl_803E5628;
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
-extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
-extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
+extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
+extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_GetPlayerObject(void);
-extern u8 *Obj_AllocObjectSetup(int size, int objectId);
-extern int Obj_SetupObject(u8 *setup, int mode, int mapLayer, int objIndex, int parent);
-extern void ObjHits_DisableObject(ScTotemBondObject *obj);
-extern void ObjHits_EnableObject(ScTotemBondObject *obj);
-extern u8 sc_totempuzzle_checkSolvedSequence(ScTotemPuzzleObject *obj, ScTotemPuzzleState *state);
+extern u8* Obj_AllocObjectSetup(int size, int objectId);
+extern int Obj_SetupObject(u8* setup, int mode, int mapLayer, int objIndex, int parent);
+extern void ObjHits_DisableObject(ScTotemBondObject * obj);
+extern void ObjHits_EnableObject(ScTotemBondObject * obj);
+extern u8 sc_totempuzzle_checkSolvedSequence(ScTotemPuzzleObject * obj, ScTotemPuzzleState * state);
 extern uint GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
 extern f32 mathSinf(f32 angle);
 extern f32 mathCosf(f32 angle);
-extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern ScreenTransitionInterface **gScreenTransitionInterface;
-extern MapEventInterface **gMapEventInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern ScreenTransitionInterface** gScreenTransitionInterface;
+extern MapEventInterface** gMapEventInterface;
 extern u16 lbl_80327A60[];
 extern u16 lbl_80327A70[];
 extern f32 lbl_803E5640;
@@ -88,7 +88,7 @@ extern f32 lbl_803E5658;
 extern f32 lbl_803E565C;
 extern f32 lbl_803E5660;
 extern void hudFn_8011f38c(int visible);
-extern void fn_80296124(int player, void *pos, void *obj, int arg);
+extern void fn_80296124(int player, void* pos, void* obj, int arg);
 
 #define SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE 0x3c1
 #define SC_TOTEMPUZZLE_PEER_OBJECT_TYPE 0x282
@@ -126,102 +126,132 @@ extern void fn_80296124(int player, void *pos, void *obj, int arg);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sc_totempuzzle_update(ScTotemPuzzleObject *obj)
+void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
 {
-  ScTotemPuzzleState *state;
-  int hitKind;
-  int startIndex;
-  int objectCount;
-  int *objects;
-  int other;
-  int *texture;
-  f32 lightArgs[6];
+    ScTotemPuzzleState* state;
+    int hitKind;
+    int startIndex;
+    int objectCount;
+    int* objects;
+    int other;
+    int* texture;
+    f32 lightArgs[6];
 
-  state = obj->state;
-  hitKind = ObjHits_GetPriorityHitWithPosition(obj, &lightArgs[0], &lightArgs[1], &lightArgs[2],
-                                               &lightArgs[3], &lightArgs[4], &lightArgs[5]);
-  if ((obj->puzzleIndex == 5) || (GameBit_Get(0x639) != 0) || (GameBit_Get(0xc10) == 0)) {
-    if ((hitKind != 0) && (hitKind != 0x11)) {
-      Sfx_PlayFromObject((int)obj, SFXtr_gal_prophitbird);
-      lightArgs[3] += playerMapOffsetX;
-      lightArgs[5] += playerMapOffsetZ;
-      objLightFn_8009a1dc((void *)obj, lbl_803E5618, lightArgs, 1, 0);
-    }
-    return;
-  }
-
-  if ((hitKind != 0) && (hitKind != 0x11)) {
-    Sfx_PlayFromObject((int)obj, SFXtr_gal_prophitbird);
-    lightArgs[3] += playerMapOffsetX;
-    lightArgs[5] += playerMapOffsetZ;
-    objLightFn_8009a1dc((void *)obj, lbl_803E5618, lightArgs, 1, 0);
-    state->flags ^= SC_TOTEMPUZZLE_STATE_READY_FLAG;
-    if ((state->flags & SC_TOTEMPUZZLE_STATE_READY_FLAG) != 0) {
-      if (state->pulseTimer != lbl_803E55F4) {
-        GameBit_Set(0x639, sc_totempuzzle_checkSolvedSequence(obj, state));
-      }
-      objects = ObjList_GetObjects(&startIndex, &objectCount);
-      while (startIndex < objectCount) {
-        other = objects[startIndex];
-        if ((((ScTotemPuzzleObject *)other)->objectType == SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE) &&
-            ((ScTotemPuzzleObject *)other != obj)) {
-          ((ScTotemPuzzleObject *)other)->state->peerPhaseOffset += lbl_803E561C;
+    state = obj->state;
+    hitKind = ObjHits_GetPriorityHitWithPosition(obj, &lightArgs[0], &lightArgs[1], &lightArgs[2],
+                                                 &lightArgs[3], &lightArgs[4], &lightArgs[5]);
+    if ((obj->puzzleIndex == 5) || (GameBit_Get(0x639) != 0) || (GameBit_Get(0xc10) == 0))
+    {
+        if ((hitKind != 0) && (hitKind != 0x11))
+        {
+            Sfx_PlayFromObject((int)obj, SFXtr_gal_prophitbird);
+            lightArgs[3] += playerMapOffsetX;
+            lightArgs[5] += playerMapOffsetZ;
+            objLightFn_8009a1dc((void*)obj, lbl_803E5618, lightArgs, 1, 0);
         }
-        startIndex++;
-      }
-    } else {
-      objects = ObjList_GetObjects(&startIndex, &objectCount);
-      while (startIndex < objectCount) {
-        other = objects[startIndex];
-        if ((((ScTotemPuzzleObject *)other)->objectType == SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE) &&
-            ((ScTotemPuzzleObject *)other != obj)) {
-          ((ScTotemPuzzleObject *)other)->state->peerPhaseOffset += lbl_803E5620;
-        }
-        startIndex++;
-      }
-      texture = objFindTexture((int)obj, 0, 0);
-      if (texture != NULL) {
-        *texture = 0;
-      }
+        return;
     }
-  }
 
-  if ((state->flags & SC_TOTEMPUZZLE_STATE_READY_FLAG) != 0) {
-    return;
-  }
-
-  if ((state->flags & 4) != 0) {
-    state->pulseTimer -= timeDelta;
-    if (state->pulseTimer < lbl_803E55F4) {
-      state->flags &= ~4;
-      Sfx_PlayFromObjectLimited((int)obj, SFXtr_jbike_whine2, 2);
-      if ((state->flags & SC_TOTEMPUZZLE_STATE_REVERSED_FLAG) != 0) {
-        state->stepIndex--;
-        if (state->stepIndex < 0) {
-          state->angle += lbl_803E5624;
-          state->stepIndex = 7;
+    if ((hitKind != 0) && (hitKind != 0x11))
+    {
+        Sfx_PlayFromObject((int)obj, SFXtr_gal_prophitbird);
+        lightArgs[3] += playerMapOffsetX;
+        lightArgs[5] += playerMapOffsetZ;
+        objLightFn_8009a1dc((void*)obj, lbl_803E5618, lightArgs, 1, 0);
+        state->flags ^= SC_TOTEMPUZZLE_STATE_READY_FLAG;
+        if ((state->flags & SC_TOTEMPUZZLE_STATE_READY_FLAG) != 0)
+        {
+            if (state->pulseTimer != lbl_803E55F4)
+            {
+                GameBit_Set(0x639, sc_totempuzzle_checkSolvedSequence(obj, state));
+            }
+            objects = ObjList_GetObjects(&startIndex, &objectCount);
+            while (startIndex < objectCount)
+            {
+                other = objects[startIndex];
+                if ((((ScTotemPuzzleObject*)other)->objectType == SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE) &&
+                    ((ScTotemPuzzleObject*)other != obj))
+                {
+                    ((ScTotemPuzzleObject*)other)->state->peerPhaseOffset += lbl_803E561C;
+                }
+                startIndex++;
+            }
         }
-      } else {
-        state->stepIndex++;
-        if (state->stepIndex > 7) {
-          state->angle -= lbl_803E5624;
-          state->stepIndex = 0;
+        else
+        {
+            objects = ObjList_GetObjects(&startIndex, &objectCount);
+            while (startIndex < objectCount)
+            {
+                other = objects[startIndex];
+                if ((((ScTotemPuzzleObject*)other)->objectType == SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE) &&
+                    ((ScTotemPuzzleObject*)other != obj))
+                {
+                    ((ScTotemPuzzleObject*)other)->state->peerPhaseOffset += lbl_803E5620;
+                }
+                startIndex++;
+            }
+            texture = objFindTexture((int)obj, 0, 0);
+            if (texture != NULL)
+            {
+                *texture = 0;
+            }
         }
-      }
     }
-  } else {
-    if (((state->flags & SC_TOTEMPUZZLE_STATE_REVERSED_FLAG) != 0) &&
-        (state->angle > (lbl_803E55F0 * (f32)(s32)(state->stepIndex + 1)))) {
-      state->angle -= lbl_803E5628 * state->peerPhaseOffset * timeDelta;
-    } else if (state->angle < (lbl_803E55F0 * (f32)(s32)state->stepIndex)) {
-      state->angle += lbl_803E5628 * state->peerPhaseOffset * timeDelta;
-    } else {
-      state->pulseTimer = state->pulseTimerReset / state->peerPhaseOffset;
-      state->flags |= 4;
-    }
-  }
 
-  obj->yaw = (s16)(s32)state->angle;
+    if ((state->flags & SC_TOTEMPUZZLE_STATE_READY_FLAG) != 0)
+    {
+        return;
+    }
+
+    if ((state->flags & 4) != 0)
+    {
+        state->pulseTimer -= timeDelta;
+        if (state->pulseTimer < lbl_803E55F4)
+        {
+            state->flags &= ~4;
+            Sfx_PlayFromObjectLimited((int)obj, SFXtr_jbike_whine2, 2);
+            if ((state->flags & SC_TOTEMPUZZLE_STATE_REVERSED_FLAG) != 0)
+            {
+                state->stepIndex--;
+                if (state->stepIndex < 0)
+                {
+                    state->angle += lbl_803E5624;
+                    state->stepIndex = 7;
+                }
+            }
+            else
+            {
+                state->stepIndex++;
+                if (state->stepIndex > 7)
+                {
+                    state->angle -= lbl_803E5624;
+                    state->stepIndex = 0;
+                }
+            }
+        }
+    }
+    else
+    {
+        if (((state->flags & SC_TOTEMPUZZLE_STATE_REVERSED_FLAG) != 0) &&
+            (state->angle > (lbl_803E55F0 * (f32)(s32)(state->stepIndex + 1))))
+        {
+            state->angle -= lbl_803E5628 * state->peerPhaseOffset * timeDelta;
+        }
+        else if (state->angle < (lbl_803E55F0 * (f32)(s32)state->stepIndex
+        )
+        )
+        {
+            state->angle += lbl_803E5628 * state->peerPhaseOffset * timeDelta;
+        }
+        else
+        {
+            state->pulseTimer = state->pulseTimerReset / state->peerPhaseOffset;
+            state->flags |= 4;
+        }
+    }
+
+    obj->yaw = (s16)(s32)
+    state->angle;
 }
 
 /*
@@ -237,45 +267,48 @@ void sc_totempuzzle_update(ScTotemPuzzleObject *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sc_totembond_spawnGameBitOrbs(ScTotemBondObject *obj,ScTotemBondState *state,f32 radius)
+void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* state, f32 radius)
 {
-  u8 *setup;
-  u8 *definition;
-  s32 angleOffset;
-  s8 i;
-  s8 orbIndex;
+    u8* setup;
+    u8* definition;
+    s32 angleOffset;
+    s8 i;
+    s8 orbIndex;
 
-  if (Obj_IsLoadingLocked() != 0) {
-    i = 0;
-    orbIndex = 1;
-    angleOffset = 0;
-    while (i < SC_TOTEMBOND_ORB_COUNT) {
-      definition = obj->definition;
-      setup = Obj_AllocObjectSetup(SC_TOTEMBOND_ORB_SETUP_SIZE,SC_TOTEMBOND_ORB_OBJECT_ID);
-      ((ObjPlacement *)setup)->posX = radius * mathSinf(
-          (3.1415927f * (f32)(s32)(obj->yaw + angleOffset)) / 32768.0f) + obj->x;
-      ((ObjPlacement *)setup)->posY = obj->y;
-      ((ObjPlacement *)setup)->posZ = radius * mathCosf(
-          (3.1415927f * (f32)(s32)(obj->yaw + angleOffset)) / 32768.0f) + obj->z;
-      setup[0x04] = definition[0x04];
-      setup[0x05] = (definition[0x05] & ~1) | 4;
-      setup[0x06] = definition[0x06];
-      setup[0x07] = 0x1e;
-      *(s16 *)(setup + 0x18) = -1;
-      *(s16 *)(setup + 0x1a) = SC_TOTEMBOND_ORB_TRIGGER_EVENT;
-      *(s16 *)(setup + 0x1c) = (s16)lbl_80327A70[(s8)orbIndex];
-      *(s16 *)(setup + 0x30) = (s16)lbl_80327A60[(s8)orbIndex];
-      *(s8 *)(setup + 0x2a) = (s8)(((obj->yaw + 0x8000) + angleOffset) >> 8);
-      setup[0x32] = 1;
-      Obj_SetupObject(setup,5,-1,-1,0);
-      orbIndex++;
-      if (orbIndex > 7) {
-        orbIndex = 0;
-      }
-      angleOffset += SC_TOTEMBOND_ORB_ANGLE_STEP;
-      i++;
+    if (Obj_IsLoadingLocked() != 0)
+    {
+        i = 0;
+        orbIndex = 1;
+        angleOffset = 0;
+        while (i < SC_TOTEMBOND_ORB_COUNT)
+        {
+            definition = obj->definition;
+            setup = Obj_AllocObjectSetup(SC_TOTEMBOND_ORB_SETUP_SIZE,SC_TOTEMBOND_ORB_OBJECT_ID);
+            ((ObjPlacement*)setup)->posX = radius * mathSinf(
+                (3.1415927f * (f32)(s32)(obj->yaw + angleOffset)) / 32768.0f) + obj->x;
+            ((ObjPlacement*)setup)->posY = obj->y;
+            ((ObjPlacement*)setup)->posZ = radius * mathCosf(
+                (3.1415927f * (f32)(s32)(obj->yaw + angleOffset)) / 32768.0f) + obj->z;
+            setup[0x04] = definition[0x04];
+            setup[0x05] = (definition[0x05] & ~1) | 4;
+            setup[0x06] = definition[0x06];
+            setup[0x07] = 0x1e;
+            *(s16*)(setup + 0x18) = -1;
+            *(s16*)(setup + 0x1a) = SC_TOTEMBOND_ORB_TRIGGER_EVENT;
+            *(s16*)(setup + 0x1c) = (s16)lbl_80327A70[(s8)orbIndex];
+            *(s16*)(setup + 0x30) = (s16)lbl_80327A60[(s8)orbIndex];
+            *(s8*)(setup + 0x2a) = (s8)(((obj->yaw + 0x8000) + angleOffset) >> 8);
+            setup[0x32] = 1;
+            Obj_SetupObject(setup, 5, -1, -1, 0);
+            orbIndex++;
+            if (orbIndex > 7)
+            {
+                orbIndex = 0;
+            }
+            angleOffset += SC_TOTEMBOND_ORB_ANGLE_STEP;
+            i++;
+        }
     }
-  }
 }
 
 /*
@@ -291,67 +324,78 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject *obj,ScTotemBondState *stat
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate)
+undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject* obj, undefined4 param_2, ObjAnimUpdateState* animUpdate)
 {
-  ScTotemBondState *state;
-  int startForEvent3;
-  int countForEvent3;
-  int startForEvent2;
-  int countForEvent2;
-  int *objects;
-  int *objectPtr;
-  int peer;
-  int eventIndex;
-  int eventId;
+    ScTotemBondState* state;
+    int startForEvent3;
+    int countForEvent3;
+    int startForEvent2;
+    int countForEvent2;
+    int* objects;
+    int* objectPtr;
+    int peer;
+    int eventIndex;
+    int eventId;
 
-  state = obj->state;
-  animUpdate->sequenceEventActive = 0;
-  for (eventIndex = 0; eventIndex < animUpdate->eventCount; eventIndex++) {
-    eventId = animUpdate->eventIds[eventIndex];
-    switch (eventId) {
-    case 1:
-      state->eventFlags |= 1;
-      (*gObjectTriggerInterface)->setCamVars(0x44, 1, 0, 0);
-      break;
-    case 2:
-      objects = ObjList_GetObjects(&startForEvent2,&countForEvent2);
-      objectPtr = objects + startForEvent2;
-      while (startForEvent2 < countForEvent2) {
-        peer = *objectPtr;
-        if (((ScTotemBondObject *)peer != obj) &&
-            (((ScTotemBondObject *)peer)->objectType == SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)) {
-          peer = objects[startForEvent2];
-          (*(code *)(**(int **)(peer + 0x68) + 0x20))(peer,2);
-          break;
+    state = obj->state;
+    animUpdate->sequenceEventActive = 0;
+    for (eventIndex = 0; eventIndex < animUpdate->eventCount; eventIndex++)
+    {
+        eventId = animUpdate->eventIds[eventIndex];
+        switch (eventId)
+        {
+        case 1:
+            state->eventFlags |= 1;
+            (*gObjectTriggerInterface)->setCamVars(0x44, 1, 0, 0);
+            break;
+        case 2:
+            objects = ObjList_GetObjects(&startForEvent2, &countForEvent2);
+            objectPtr = objects + startForEvent2;
+            while (startForEvent2 < countForEvent2)
+            {
+                peer = *objectPtr;
+                if (((ScTotemBondObject*)peer != obj) &&
+                    (((ScTotemBondObject*)peer)->objectType == SC_TOTEMPUZZLE_PEER_OBJECT_TYPE))
+                {
+                    peer = objects[startForEvent2];
+                    (*(code*)(**(int**)(peer + 0x68) + 0x20))(peer, 2);
+                    break;
+                }
+                objectPtr++;
+                startForEvent2++;
+            }
+            state->eventFlags |= SC_TOTEMBOND_EVENT_SET_MAP_MODE;
+            break;
+        case 3:
+            objects = ObjList_GetObjects(&startForEvent3, &countForEvent3);
+            objectPtr = objects + startForEvent3;
+            while (startForEvent3 < countForEvent3)
+            {
+                peer = *objectPtr;
+                if (((ScTotemBondObject*)peer != obj) &&
+                    (((ScTotemBondObject*)peer)->objectType == SC_TOTEMPUZZLE_PEER_OBJECT_TYPE))
+                {
+                    peer = objects[startForEvent3];
+                    (*(code*)(**(int**)(peer + 0x68) + 0x20))(peer, 1);
+                    break;
+                }
+                objectPtr++;
+                startForEvent3++;
+            }
+            break;
         }
-        objectPtr++;
-        startForEvent2++;
-      }
-      state->eventFlags |= SC_TOTEMBOND_EVENT_SET_MAP_MODE;
-      break;
-    case 3:
-      objects = ObjList_GetObjects(&startForEvent3,&countForEvent3);
-      objectPtr = objects + startForEvent3;
-      while (startForEvent3 < countForEvent3) {
-        peer = *objectPtr;
-        if (((ScTotemBondObject *)peer != obj) &&
-            (((ScTotemBondObject *)peer)->objectType == SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)) {
-          peer = objects[startForEvent3];
-          (*(code *)(**(int **)(peer + 0x68) + 0x20))(peer,1);
-          break;
-        }
-        objectPtr++;
-        startForEvent3++;
-      }
-      break;
     }
-  }
-  return 0;
+    return 0;
 }
 
 /* Trivial 4b 0-arg blr leaves. */
-void sc_totempuzzle_release(void) {}
-void sc_totempuzzle_initialise(void) {}
+void sc_totempuzzle_release(void)
+{
+}
+
+void sc_totempuzzle_initialise(void)
+{
+}
 
 extern s16 lbl_80327A18[];
 extern f32 lbl_803E55FC;
@@ -360,48 +404,68 @@ extern f32 lbl_803E5630;
 extern void fn_801DD170(int obj);
 extern int randomGetRange(int lo, int hi);
 
-void sc_totempuzzle_init(ScTotemPuzzleObject *obj, ScTotemPuzzleMapData *params) {
-    ScTotemPuzzleState *state;
-    int *tex;
+void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
+{
+    ScTotemPuzzleState* state;
+    int* tex;
     int r;
     f32 fz;
 
     state = obj->state;
     obj->puzzleIndex = (s8)params->puzzleIndex;
-    if (obj->puzzleIndex < 0 || obj->puzzleIndex > 5) {
+    if (obj->puzzleIndex < 0 || obj->puzzleIndex > 5)
+    {
         obj->puzzleIndex = 0;
     }
-    if (obj->puzzleIndex == 5) {
+    if (obj->puzzleIndex == 5)
+    {
         tex = (int*)objFindTexture((int)obj, 0, 0);
-        if (tex != NULL) {
+        if (tex != NULL)
+        {
             *tex = 0x100;
         }
     }
     state->stepIndex = (s16)obj->puzzleIndex;
-    if (GameBit_Get(0x639) == 0) {
-        state->angle = (f32)(s32)lbl_80327A18[state->stepIndex];
-    } else {
+    if (GameBit_Get(0x639) == 0)
+    {
+        state->angle = (f32)(s32)
+        lbl_80327A18[state->stepIndex];
+    }
+    else
+    {
         state->angle = lbl_803E562C;
         tex = (int*)objFindTexture((int)obj, 0, 0);
-        if (tex != NULL) {
+        if (tex != NULL)
+        {
             *tex = 0x100;
         }
     }
-    obj->yaw = (s16)(s32)state->angle;
+    obj->yaw = (s16)(s32)
+    state->angle;
     r = randomGetRange(7, 10);
     fz = (f32)r * lbl_803E5630;
     state->pulseTimerReset = fz;
     state->pulseTimer = fz;
-    if (obj->puzzleIndex & 1) {
+    if (obj->puzzleIndex & 1)
+    {
         state->flags = 1;
     }
     state->peerPhaseOffset = lbl_803E55FC;
     obj->animEventCallback = fn_801DD170;
     obj->objectFlags = (u16)(obj->objectFlags | 0x6000);
 }
-void sc_totembond_hitDetect(void) {}
-void sc_totembond_release(void) {}
-void sc_totembond_initialise(void) {}
+
+void sc_totembond_hitDetect(void)
+{
+}
+
+void sc_totembond_release(void)
+{
+}
+
+void sc_totembond_initialise(void)
+{
+}
 
 /* 8b "li r3, N; blr" returners. */
 int sc_totembond_getExtraSize(void) { return 0x28; }
@@ -410,19 +474,26 @@ int sc_totembond_getObjectTypeId(void) { return 0x0; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5650;
 extern void objRenderFn_8003b8f4(f32);
-void sc_totembond_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5650); }
+
+void sc_totembond_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E5650);
+}
 
 extern void Music_Trigger(int track, int param);
 extern void fn_8011F6D4(int p);
-void sc_totembond_free(int obj) {
+
+void sc_totembond_free(int obj)
+{
     Music_Trigger(240, 0);
     fn_8011F6D4(0);
 }
 
 #pragma dont_inline on
-void sc_totembond_update(ScTotemBondObject *obj)
+void sc_totembond_update(ScTotemBondObject* obj)
 {
-    ScTotemBondState *state;
+    ScTotemBondState* state;
     int player;
     u8 availableOrbs[8];
     u8 availableCount;
@@ -432,13 +503,14 @@ void sc_totembond_update(ScTotemBondObject *obj)
 
     state = obj->state;
     player = Obj_GetPlayerObject();
-    if ((state->eventFlags & SC_TOTEMBOND_EVENT_START_ORBS) != 0) {
+    if ((state->eventFlags & SC_TOTEMBOND_EVENT_START_ORBS) != 0)
+    {
         state->active = 1;
         obj->yaw = 0x3fff;
         state->ringIndex = (s16)(u16)((s32)obj->yaw / SC_TOTEMBOND_ORB_ANGLE_STEP);
         ObjHits_DisableObject(obj);
-        sc_totembond_spawnGameBitOrbs(obj,state,lbl_803E5638);
-        GameBit_Set(lbl_80327A60[state->ringIndex],1);
+        sc_totembond_spawnGameBitOrbs(obj, state, lbl_803E5638);
+        GameBit_Set(lbl_80327A60[state->ringIndex], 1);
         obj->mapAlpha = 0;
         state->eventFlags &= ~SC_TOTEMBOND_EVENT_START_ORBS;
         state->eventFlags |= SC_TOTEMBOND_EVENT_ORBS_ACTIVE;
@@ -446,68 +518,98 @@ void sc_totembond_update(ScTotemBondObject *obj)
         hudFn_8011f38c(1);
         (*gScreenTransitionInterface)->step(0x1e, 1);
         state->spawnTimer = lbl_803E563C;
-        Music_Trigger(0xf0,1);
+        Music_Trigger(0xf0, 1);
     }
 
-    if ((state->eventFlags & SC_TOTEMBOND_EVENT_ORBS_ACTIVE) != 0) {
-        if (state->spawnTimer != lbl_803E5654) {
+    if ((state->eventFlags & SC_TOTEMBOND_EVENT_ORBS_ACTIVE) != 0)
+    {
+        if (state->spawnTimer != lbl_803E5654)
+        {
             state->spawnTimer -= timeDelta;
-            if (state->spawnTimer < lbl_803E5654) {
+            if (state->spawnTimer < lbl_803E5654)
+            {
                 state->spawnTimer = lbl_803E5654;
             }
-        } else if (state->completionTimer != lbl_803E5654) {
+        }
+        else if (state->completionTimer != lbl_803E5654)
+        {
             state->completionTimer -= timeDelta;
-            if (state->completionTimer <= lbl_803E5654) {
+            if (state->completionTimer <= lbl_803E5654)
+            {
                 state->completionTimer = lbl_803E5654;
                 player = Obj_GetPlayerObject();
-                (*(code *)((u8 *)*gMapEventInterface + 0x2c))();
-                (*gCameraInterface)->setMode(0x42,0,3,0,NULL,0,0);
+                (*(code*)((u8*)*gMapEventInterface + 0x2c))();
+                (*gCameraInterface)->setMode(0x42, 0, 3, 0, NULL, 0, 0);
                 obj->mapAlpha = 0xff;
-                fn_80296124(player,NULL,NULL,0);
+                fn_80296124(player, NULL, NULL, 0);
                 ObjHits_EnableObject(obj);
                 hudFn_8011f38c(0);
-                GameBit_Set(0x2bc,1);
+                GameBit_Set(0x2bc, 1);
                 state->eventFlags = 0;
-                Music_Trigger(0xf0,0);
+                Music_Trigger(0xf0, 0);
                 return;
             }
-        } else {
-            if (GameBit_Get(SC_TOTEMBOND_ORB_TRIGGER_EVENT) != 0) {
-                GameBit_Set(SC_TOTEMBOND_ORB_TRIGGER_EVENT,0);
+        }
+        else
+        {
+            if (GameBit_Get(SC_TOTEMBOND_ORB_TRIGGER_EVENT) != 0)
+            {
+                GameBit_Set(SC_TOTEMBOND_ORB_TRIGGER_EVENT, 0);
                 availableCount = 0;
-                for (orbIndex = 0; orbIndex < SC_TOTEMBOND_ORB_COUNT; orbIndex++) {
-                    if (GameBit_Get(lbl_80327A70[orbIndex]) == 0) {
+                for (orbIndex = 0; orbIndex < SC_TOTEMBOND_ORB_COUNT; orbIndex++)
+                {
+                    if (GameBit_Get(lbl_80327A70[orbIndex]) == 0)
+                    {
                         availableOrbs[availableCount++] = orbIndex;
                     }
                 }
-                if (availableCount == 0) {
+                if (availableCount == 0)
+                {
                     allOrbsCollected = 1;
-                } else {
-                    nextRing = availableOrbs[randomGetRange(0,availableCount - 1)];
-                    if (state->ringIndex == nextRing) {
-                        GameBit_Set(lbl_80327A60[state->ringIndex],1);
+                }
+                else
+                {
+                    nextRing = availableOrbs[randomGetRange(0, availableCount - 1)];
+                    if (state->ringIndex == nextRing)
+                    {
+                        GameBit_Set(lbl_80327A60[state->ringIndex], 1);
                     }
-                    if (state->ringIndex != nextRing) {
+                    if (state->ringIndex != nextRing)
+                    {
                         state->ringIndex = nextRing;
-                        Sfx_PlayFromObject((int)obj,SFXtr_jbike_whine2);
+                        Sfx_PlayFromObject((int)obj, SFXtr_jbike_whine2);
                     }
                     allOrbsCollected = 0;
                 }
-                if (allOrbsCollected) {
+                if (allOrbsCollected)
+                {
                     state->completionTimer = lbl_803E5658;
                     fn_8011F6D4(0);
                     (*gScreenTransitionInterface)->start(0x1e, 1);
                 }
             }
-            if (((u32)(u16)obj->yaw >> 13) != state->ringIndex) {
-                obj->yaw = (s32)-((lbl_803E565C * timeDelta) - (f32)(s32)obj->yaw);
-                if (((u32)(u16)obj->yaw >> 13) == state->ringIndex) {
-                    GameBit_Set(lbl_80327A60[state->ringIndex],1);
+            if (((u32)(u16)obj->yaw >> 13
+            )
+            !=
+            state->ringIndex
+            )
+            {
+                obj->yaw = (s32) - ((lbl_803E565C * timeDelta) - (f32)(s32)
+                obj->yaw
+                )
+                ;
+                if (((u32)(u16)obj->yaw >> 13
+                )
+                ==
+                state->ringIndex
+                )
+                {
+                    GameBit_Set(lbl_80327A60[state->ringIndex], 1);
                 }
             }
         }
 
-        fn_80296124(player,&obj->x,obj,0);
+        fn_80296124(player, &obj->x, obj, 0);
         state->x = obj->x;
         state->y = lbl_803E563C + obj->y;
         state->z = obj->z;
@@ -518,15 +620,17 @@ void sc_totembond_update(ScTotemBondObject *obj)
         (*gCameraInterface)->releaseAction(state, 0x18);
     }
 
-    if ((state->eventFlags & SC_TOTEMBOND_EVENT_SET_MAP_MODE) != 0) {
+    if ((state->eventFlags & SC_TOTEMBOND_EVENT_SET_MAP_MODE) != 0)
+    {
         (*gMapEventInterface)->setMode(0xe, 6);
         state->eventFlags &= ~SC_TOTEMBOND_EVENT_SET_MAP_MODE;
     }
 }
 #pragma dont_inline reset
 
-void sc_totembond_init(ScTotemBondObject *obj, int params) {
-    ScTotemBondState *state;
+void sc_totembond_init(ScTotemBondObject* obj, int params)
+{
+    ScTotemBondState* state;
     u32 v;
     s16 hi = (s16)(u16)((s32)obj->yaw / 8192);
     state = obj->state;
@@ -536,7 +640,7 @@ void sc_totembond_init(ScTotemBondObject *obj, int params) {
     obj->objectFlags = (u16)v;
 }
 
-int fn_801DE320(u16 *gameBitIds,u16 newValue)
+int fn_801DE320(u16* gameBitIds, u16 newValue)
 {
     u16 values[4];
     int changed;
@@ -548,17 +652,22 @@ int fn_801DE320(u16 *gameBitIds,u16 newValue)
     u16 next;
 
     changed = 0;
-    for (readIndex = 0; readIndex < 3; readIndex++) {
+    for (readIndex = 0; readIndex < 3; readIndex++)
+    {
         values[readIndex] = (u16)GameBit_Get(gameBitIds[readIndex]);
     }
     values[3] = newValue;
 
-    for (pass = 0; pass < 3; pass++) {
-        for (sortIndex = 0; sortIndex < 3; sortIndex++) {
+    for (pass = 0; pass < 3; pass++)
+    {
+        for (sortIndex = 0; sortIndex < 3; sortIndex++)
+        {
             next = values[sortIndex + 1];
-            if (next != 0) {
+            if (next != 0)
+            {
                 current = values[sortIndex];
-                if ((next < current) || (current == 0)) {
+                if ((next < current) || (current == 0))
+                {
                     values[sortIndex] = next;
                     values[sortIndex + 1] = current;
                     changed = 1;
@@ -567,8 +676,9 @@ int fn_801DE320(u16 *gameBitIds,u16 newValue)
         }
     }
 
-    for (writeIndex = 0; writeIndex < 3; writeIndex++) {
-        GameBit_Set(gameBitIds[writeIndex],values[writeIndex]);
+    for (writeIndex = 0; writeIndex < 3; writeIndex++)
+    {
+        GameBit_Set(gameBitIds[writeIndex], values[writeIndex]);
     }
     return changed;
 }

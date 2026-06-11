@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01D5_LINKStaffLe_packet_info {
+enum obj_01D5_LINKStaffLe_packet_info
+{
     LINKSTAFFLE_DEF_ID = 0x01D5,
     LINKSTAFFLE_DLL_ID = 0x011C,
     LINKSTAFFLE_CLASS_ID = 0x007A,

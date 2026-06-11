@@ -55,7 +55,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0551_LGTPointLig_packet_info {
+enum obj_0551_LGTPointLig_packet_info
+{
     LGTPOINTLIG_DEF_ID = 0x0551,
     LGTPOINTLIG_DLL_ID = 0x02A9,
     LGTPOINTLIG_CLASS_ID = 0x0079,

@@ -50,7 +50,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_0258_DR_CloudRunner_slot {
+enum dll_0258_DR_CloudRunner_slot
+{
     DR_CLOUDRUNNER_INITIALISE = 0,
     DR_CLOUDRUNNER_RELEASE = 1,
     DR_CLOUDRUNNER_INIT = 3,

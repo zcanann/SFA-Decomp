@@ -55,7 +55,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_05BB_DFropenode_packet_info {
+enum obj_05BB_DFropenode_packet_info
+{
     DFROPENODE_DEF_ID = 0x05BB,
     DFROPENODE_DLL_ID = 0x0175,
     DFROPENODE_CLASS_ID = 0x0036,

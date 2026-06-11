@@ -1,7 +1,8 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-typedef struct Dll2A3State {
+typedef struct Dll2A3State
+{
     f32 lifetime;
     s16 rotXSpeed;
     s16 rotYSpeed;
@@ -9,18 +10,48 @@ typedef struct Dll2A3State {
     u8 pad0A[2];
 } Dll2A3State;
 
-STATIC_ASSERT(sizeof(Dll2A3State) == 0x0c);
-STATIC_ASSERT(offsetof(Dll2A3State, rotXSpeed) == 0x04);
-STATIC_ASSERT(offsetof(Dll2A3State, rotYSpeed) == 0x06);
-STATIC_ASSERT(offsetof(Dll2A3State, rotZSpeed) == 0x08);
+STATIC_ASSERT (
+sizeof
+(Dll2A3State)
+==
+0x0c
+);
+STATIC_ASSERT (offsetof
+(Dll2A3State
+,
+rotXSpeed
+)
+==
+0x04
+);
+STATIC_ASSERT (offsetof
+(Dll2A3State
+,
+rotYSpeed
+)
+==
+0x06
+);
+STATIC_ASSERT (offsetof
+(Dll2A3State
+,
+rotZSpeed
+)
+==
+0x08
+);
 
 int dll_2A3_getExtraSize_ret_12(void) { return 0xc; }
 
 int dll_2A3_getObjectTypeId(void) { return 0x0; }
 
-void dll_2A3_release_nop(void) {}
+void dll_2A3_release_nop(void)
+{
+}
 
-void dll_2A3_initialise_nop(void) {}
+void dll_2A3_initialise_nop(void)
+{
+}
 
 void dll_2A3_free(void) { lbl_803DDD90 = lbl_803DDD90 - 1; }
 
@@ -36,44 +67,48 @@ void dll_2A3_update(int obj)
     f32 thr;
     f32 a;
     f32 v;
-    Dll2A3State *state = ((GameObject *)obj)->extra;
+    Dll2A3State* state = ((GameObject*)obj)->extra;
 
-    if ((a = state->lifetime) > (thr = lbl_803E711C)) {
+    if ((a = state->lifetime) > (thr = lbl_803E711C))
+    {
         state->lifetime = a - timeDelta;
-        if (state->lifetime <= thr) {
+        if (state->lifetime <= thr)
+        {
             state->lifetime = thr;
             Obj_FreeObject(obj);
             return;
         }
     }
 
-    v = (f32)(u32)((GameObject *)obj)->anim.alpha;
+    v = (f32)(u32)((GameObject*)obj)->anim.alpha;
     v = lbl_803E7120 * timeDelta + v;
-    if (v > lbl_803E7124) {
+    if (v > lbl_803E7124)
+    {
         v = lbl_803E7124;
     }
-    ((GameObject *)obj)->anim.alpha = (u8)v;
+    ((GameObject*)obj)->anim.alpha = (u8)v;
 
-    ((GameObject *)obj)->anim.rotX = (s16)((f32)state->rotXSpeed * timeDelta + (f32) * (s16 *)(obj + 0));
-    ((GameObject *)obj)->anim.rotY = (s16)((f32)state->rotYSpeed * timeDelta + (f32) * (s16 *)(obj + 2));
-    ((GameObject *)obj)->anim.rotZ = (s16)((f32)state->rotZSpeed * timeDelta + (f32) * (s16 *)(obj + 4));
+    ((GameObject*)obj)->anim.rotX = (s16)((f32)state->rotXSpeed * timeDelta + (f32) * (s16*)(obj + 0));
+    ((GameObject*)obj)->anim.rotY = (s16)((f32)state->rotYSpeed * timeDelta + (f32) * (s16*)(obj + 2));
+    ((GameObject*)obj)->anim.rotZ = (s16)((f32)state->rotZSpeed * timeDelta + (f32) * (s16*)(obj + 4));
 
-    objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta,
-            ((GameObject *)obj)->anim.velocityZ * timeDelta);
+    objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
+            ((GameObject*)obj)->anim.velocityZ * timeDelta);
 
-    if (lbl_803DDD94 == 0) {
+    if (lbl_803DDD94 == 0)
+    {
         lbl_803DDD94 = 1;
     }
 }
 
 void dll_2A3_init(int obj)
 {
-    Dll2A3State *state = ((GameObject *)obj)->extra;
+    Dll2A3State* state = ((GameObject*)obj)->extra;
 
-    ((GameObject *)obj)->anim.alpha = 0;
-    ((GameObject *)obj)->anim.rotX = randomGetRange(0, 0xffff);
-    ((GameObject *)obj)->anim.rotY = randomGetRange(0, 0xffff);
-    ((GameObject *)obj)->anim.rotZ = randomGetRange(0, 0xffff);
+    ((GameObject*)obj)->anim.alpha = 0;
+    ((GameObject*)obj)->anim.rotX = randomGetRange(0, 0xffff);
+    ((GameObject*)obj)->anim.rotY = randomGetRange(0, 0xffff);
+    ((GameObject*)obj)->anim.rotZ = randomGetRange(0, 0xffff);
     state->rotXSpeed = randomGetRange(-0x32, 0x32);
     state->rotYSpeed = randomGetRange(-0x32, 0x32);
     state->rotZSpeed = randomGetRange(-0x32, 0x32);
@@ -82,13 +117,13 @@ void dll_2A3_init(int obj)
 
 void fn_8023137C(int obj, int src)
 {
-    ((GameObject *)obj)->anim.velocityX = *(f32 *)(src + 0x0);
-    ((GameObject *)obj)->anim.velocityY = *(f32 *)(src + 0x4);
-    ((GameObject *)obj)->anim.velocityZ = *(f32 *)(src + 0x8);
+    ((GameObject*)obj)->anim.velocityX = *(f32*)(src + 0x0);
+    ((GameObject*)obj)->anim.velocityY = *(f32*)(src + 0x4);
+    ((GameObject*)obj)->anim.velocityZ = *(f32*)(src + 0x8);
 }
 
 void fn_8023134C(int obj, int v)
 {
-    Dll2A3State *state = ((GameObject *)obj)->extra;
+    Dll2A3State* state = ((GameObject*)obj)->extra;
     state->lifetime = (f32)v;
 }

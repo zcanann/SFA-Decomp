@@ -25,7 +25,8 @@
  */
 
 #if 0
-enum dll_01D3_WORLDobj_slot {
+enum dll_01D3_WORLDobj_slot
+{
     WORLDOBJ_INITIALISE = 0,
     WORLDOBJ_RELEASE = 1,
     WORLDOBJ_INIT = 3,

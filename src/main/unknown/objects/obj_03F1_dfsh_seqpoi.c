@@ -70,7 +70,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03F1_DFSH_seqpoi_packet_info {
+enum obj_03F1_DFSH_seqpoi_packet_info
+{
     DFSH_SEQPOI_DEF_ID = 0x03F1,
     DFSH_SEQPOI_DLL_ID = 0x0221,
     DFSH_SEQPOI_CLASS_ID = 0x0030,

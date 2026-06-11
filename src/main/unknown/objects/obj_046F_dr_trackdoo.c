@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_046F_DR_TrackDoo_packet_info {
+enum obj_046F_DR_TrackDoo_packet_info
+{
     DR_TRACKDOO_DEF_ID = 0x046F,
     DR_TRACKDOO_DLL_ID = 0x012E,
     DR_TRACKDOO_CLASS_ID = 0x0061,

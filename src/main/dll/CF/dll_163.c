@@ -34,32 +34,162 @@ extern f32 lbl_803E3BFC;
 #define STAFFACTIVATED_ENABLE_GAMEBIT 0x957
 #define STAFFACTIVATED_PARTICLE_ID 0x7c3
 
-STATIC_ASSERT(sizeof(StaffActivatedState) == 0x24);
-STATIC_ASSERT(offsetof(StaffActivatedState, targetX) == 0x00);
-STATIC_ASSERT(offsetof(StaffActivatedState, targetZ) == 0x04);
-STATIC_ASSERT(offsetof(StaffActivatedState, liftVelocity) == 0x0c);
-STATIC_ASSERT(offsetof(StaffActivatedState, previousLiftHeight) == 0x10);
-STATIC_ASSERT(offsetof(StaffActivatedState, liftHeight) == 0x14);
-STATIC_ASSERT(offsetof(StaffActivatedState, peakLiftHeight) == 0x18);
-STATIC_ASSERT(offsetof(StaffActivatedState, liftReset) == 0x1c);
-STATIC_ASSERT(offsetof(StaffActivatedState, flags) == STAFFACTIVATED_STATE_FLAGS);
-STATIC_ASSERT(offsetof(StaffActivatedState, hitCooldown) == 0x20);
-STATIC_ASSERT(sizeof(StaffActivatedSetup) == 0x28);
-STATIC_ASSERT(offsetof(StaffActivatedSetup, type) == 0x18);
-STATIC_ASSERT(offsetof(StaffActivatedSetup, mode) == 0x1c);
-STATIC_ASSERT(offsetof(StaffActivatedSetup, size) == 0x1d);
-STATIC_ASSERT(offsetof(StaffActivatedSetup, debrisObjectSet) == 0x1e);
-STATIC_ASSERT(offsetof(StaffActivatedSetup, debrisCount) == 0x1f);
-STATIC_ASSERT(offsetof(StaffActivatedSetup, timedEventSeconds) == 0x20);
-STATIC_ASSERT(offsetof(StaffActivatedSetup, activeGameBit) == 0x22);
-STATIC_ASSERT(offsetof(StaffActivatedSetup, lockGameBit) == 0x24);
+STATIC_ASSERT (
+sizeof
+(StaffActivatedState)
+==
+0x24
+);
+STATIC_ASSERT (offsetof
+(StaffActivatedState
+,
+targetX
+)
+==
+0x00
+);
+STATIC_ASSERT (offsetof
+(StaffActivatedState
+,
+targetZ
+)
+==
+0x04
+);
+STATIC_ASSERT (offsetof
+(StaffActivatedState
+,
+liftVelocity
+)
+==
+0x0c
+);
+STATIC_ASSERT (offsetof
+(StaffActivatedState
+,
+previousLiftHeight
+)
+==
+0x10
+);
+STATIC_ASSERT (offsetof
+(StaffActivatedState
+,
+liftHeight
+)
+==
+0x14
+);
+STATIC_ASSERT (offsetof
+(StaffActivatedState
+,
+peakLiftHeight
+)
+==
+0x18
+);
+STATIC_ASSERT (offsetof
+(StaffActivatedState
+,
+liftReset
+)
+==
+0x1c
+);
+STATIC_ASSERT (offsetof
+(StaffActivatedState
+,
+flags
+)
+==
+STAFFACTIVATED_STATE_FLAGS
+);
+STATIC_ASSERT (offsetof
+(StaffActivatedState
+,
+hitCooldown
+)
+==
+0x20
+);
+STATIC_ASSERT (
+sizeof
+(StaffActivatedSetup)
+==
+0x28
+);
+STATIC_ASSERT (offsetof
+(StaffActivatedSetup
+,
+type
+)
+==
+0x18
+);
+STATIC_ASSERT (offsetof
+(StaffActivatedSetup
+,
+mode
+)
+==
+0x1c
+);
+STATIC_ASSERT (offsetof
+(StaffActivatedSetup
+,
+size
+)
+==
+0x1d
+);
+STATIC_ASSERT (offsetof
+(StaffActivatedSetup
+,
+debrisObjectSet
+)
+==
+0x1e
+);
+STATIC_ASSERT (offsetof
+(StaffActivatedSetup
+,
+debrisCount
+)
+==
+0x1f
+);
+STATIC_ASSERT (offsetof
+(StaffActivatedSetup
+,
+timedEventSeconds
+)
+==
+0x20
+);
+STATIC_ASSERT (offsetof
+(StaffActivatedSetup
+,
+activeGameBit
+)
+==
+0x22
+);
+STATIC_ASSERT (offsetof
+(StaffActivatedSetup
+,
+lockGameBit
+)
+==
+0x24
+);
 
-void staffactivated_calcInteractionTargetXZ(int obj, f32 *outX, f32 *outZ) {
+void staffactivated_calcInteractionTargetXZ(int obj, f32* outX, f32* outZ)
+{
     int mode;
-    StaffActivatedState *state;
+    StaffActivatedState * state;
 
-    state = ((GameObject *)obj)->extra;
-    mode = ((StaffActivatedSetup *)((GameObject *)obj)->anim.placementData)->mode;
+    state = ((GameObject*)obj)->extra;
+    mode = ((StaffActivatedSetup*)((GameObject*)obj)->anim.placementData)->mode;
 
     if (mode == 2) goto lbl_case2;
     if (mode >= 2) goto lbl_gt2;
@@ -71,49 +201,54 @@ lbl_gt2:
     goto lbl_case3;
 
 lbl_case2:
-    *outX = -(lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) - state->targetX);
-    *outZ = -(lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) - state->targetZ);
+    *outX = -(lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(*(s16*)obj) / lbl_803E3BF8) - state->targetX);
+    *outZ = -(lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(*(s16*)obj) / lbl_803E3BF8) - state->targetZ);
     goto lbl_done;
 
 lbl_case3:
-    *outX = lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + state->targetX;
-    *outZ = lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + state->targetZ;
+    *outX = lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(*(s16*)obj) / lbl_803E3BF8) + state->targetX;
+    *outZ = lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(*(s16*)obj) / lbl_803E3BF8) + state->targetZ;
     goto lbl_done;
 
 lbl_case0:
-    *outX = lbl_803E3BFC * mathSinf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + ((GameObject *)obj)->anim.localPosX;
-    *outZ = lbl_803E3BFC * mathCosf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + ((GameObject *)obj)->anim.localPosZ;
+    *outX = lbl_803E3BFC * mathSinf(lbl_803E3BF4 * (f32)(*(s16*)obj) / lbl_803E3BF8) + ((GameObject*)obj)->anim.
+        localPosX;
+    *outZ = lbl_803E3BFC * mathCosf(lbl_803E3BF4 * (f32)(*(s16*)obj) / lbl_803E3BF8) + ((GameObject*)obj)->anim.
+        localPosZ;
     goto lbl_done;
 
 lbl_default:
-    *outX = lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + ((GameObject *)obj)->anim.localPosX;
-    *outZ = lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + ((GameObject *)obj)->anim.localPosZ;
+    *outX = lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(*(s16*)obj) / lbl_803E3BF8) + ((GameObject*)obj)->anim.
+        localPosX;
+    *outZ = lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(*(s16*)obj) / lbl_803E3BF8) + ((GameObject*)obj)->anim.
+        localPosZ;
 
 lbl_done:;
 }
 
-u32 cfPrisonGuard_getLiftHeight(int *obj) { return ((StaffActivatedState *)((GameObject *)obj)->extra)->liftHeight; }
+u32 cfPrisonGuard_getLiftHeight(int* obj) { return ((StaffActivatedState*)((GameObject*)obj)->extra)->liftHeight; }
 
-void cfPrisonGuard_setLiftHeight(int *obj, int v) {
-    StaffActivatedState *state = ((GameObject *)obj)->extra;
+void cfPrisonGuard_setLiftHeight(int* obj, int v)
+{
+    StaffActivatedState * state = ((GameObject*)obj)->extra;
     state->liftHeight = v;
     state->liftReset = 1;
 }
 
-u8 objGetByteParam1C(int *obj)
+u8 objGetByteParam1C(int* obj)
 {
-    StaffActivatedSetup *setup = (StaffActivatedSetup *)((GameObject *)obj)->anim.placementData;
+    StaffActivatedSetup * setup = (StaffActivatedSetup*)((GameObject*)obj)->anim.placementData;
     return setup->mode;
 }
 
 int staffactivated_getExtraSize(void)
 {
-  return 0x24;
+    return 0x24;
 }
 
 int staffactivated_getObjectTypeId(void)
 {
-  return 0x40;
+    return 0x40;
 }
 
 void staffactivated_free(int x) { ObjGroup_RemoveObject(x, 0x41); }
@@ -124,16 +259,18 @@ extern void Obj_GetPlayerObject(void);
 extern int fn_80295CE4(void);
 extern int GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern EffectInterface **gPartfxInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E3BDC;
 extern f32 lbl_803E3C00;
 extern f32 lbl_803E3C04;
 extern void landed_arwing_updateHitReaction(int obj, int state);
 extern void landed_arwing_updateDamageTexture(int obj, int state);
 
-void staffactivated_update(int obj) {
-    struct PartfxParams {
+void staffactivated_update(int obj)
+{
+    struct PartfxParams
+    {
         int pad;
         s16 life;
         s16 extra;
@@ -142,82 +279,110 @@ void staffactivated_update(int obj) {
         f32 oz;
         f32 ow;
     } stk;
-    StaffActivatedSetup *param = *(StaffActivatedSetup **)&((GameObject *)obj)->anim.placementData;
-    StaffActivatedState *state = ((GameObject *)obj)->extra;
+    StaffActivatedSetup * param = *(StaffActivatedSetup**)&((GameObject*)obj)->anim.placementData;
+    StaffActivatedState * state = ((GameObject*)obj)->extra;
     int mode;
     int isSet;
     int gb;
 
     Obj_GetPlayerObject();
 
-    if ((state->flags >> 6) & 1) {
-        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | STAFFACTIVATED_OBJ_FLAG_LOCKED);
-    } else {
-        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~STAFFACTIVATED_OBJ_FLAG_LOCKED);
+    if ((state->flags >> 6) & 1)
+    {
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | STAFFACTIVATED_OBJ_FLAG_LOCKED);
+    }
+    else
+    {
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~STAFFACTIVATED_OBJ_FLAG_LOCKED);
     }
 
-    if ((state->flags >> 7) & 1) {
-        if (fn_80295CE4() != 0) {
-            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~STAFFACTIVATED_OBJ_FLAG_DISABLED);
+    if ((state->flags >> 7) & 1)
+    {
+        if (fn_80295CE4() != 0)
+        {
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~STAFFACTIVATED_OBJ_FLAG_DISABLED);
             goto after_bit4;
         }
     }
-    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | STAFFACTIVATED_OBJ_FLAG_DISABLED);
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | STAFFACTIVATED_OBJ_FLAG_DISABLED);
 after_bit4:
 
     mode = param->mode;
-    if (mode == STAFFACTIVATED_MODE_LIFT) {
+    if (mode == STAFFACTIVATED_MODE_LIFT)
+    {
         staffactivated_updateLiftHeight(obj, state);
-    } else if (mode > STAFFACTIVATED_MODE_LIFT) {
-        if (mode >= STAFFACTIVATED_MODE_DEFAULT) {
+    }
+    else if (mode > STAFFACTIVATED_MODE_LIFT)
+    {
+        if (mode >= STAFFACTIVATED_MODE_DEFAULT)
+        {
             goto default_case;
-        } else if (mode >= STAFFACTIVATED_MODE_DAMAGE_FIRST) {
+        }
+        else if (mode >= STAFFACTIVATED_MODE_DAMAGE_FIRST)
+        {
             landed_arwing_updateDamageTexture(obj, (int)state);
-        } else {
+        }
+        else
+        {
             landed_arwing_updateHitReaction(obj, (int)state);
         }
-    } else if (mode == STAFFACTIVATED_MODE_ACTION) {
-        if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & STAFFACTIVATED_OBJ_FLAG_HIT_TRIGGER) {
-            if (GameBit_Get(STAFFACTIVATED_TRIGGER_GAMEBIT) == 0) {
-                (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
+    }
+    else if (mode == STAFFACTIVATED_MODE_ACTION)
+    {
+        if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & STAFFACTIVATED_OBJ_FLAG_HIT_TRIGGER)
+        {
+            if (GameBit_Get(STAFFACTIVATED_TRIGGER_GAMEBIT) == 0)
+            {
+                (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 GameBit_Set(STAFFACTIVATED_TRIGGER_GAMEBIT, 1);
             }
         }
-        if (GameBit_Get(STAFFACTIVATED_ENABLE_GAMEBIT) == 0) {
-            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | STAFFACTIVATED_OBJ_FLAG_DISABLED);
+        if (GameBit_Get(STAFFACTIVATED_ENABLE_GAMEBIT) == 0)
+        {
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | STAFFACTIVATED_OBJ_FLAG_DISABLED);
         }
         isSet = 0;
         gb = param->activeGameBit;
-        if (gb == -1 || GameBit_Get(gb) != 0) {
+        if (gb == -1 || GameBit_Get(gb) != 0)
+        {
             isSet = 1;
         }
         state->flags =
             (u8)(isSet << 7) | (state->flags & 0x7f);
-        if ((state->flags >> 7) & 1) {
+        if ((state->flags >> 7) & 1)
+        {
             stk.ox = lbl_803E3BBC;
             stk.oy = lbl_803E3C00;
             stk.oz = lbl_803E3C04;
             stk.ow = lbl_803E3BDC;
             stk.life = 0x64;
             stk.extra = 0;
-            (*gPartfxInterface)->spawnObject((void *)obj, STAFFACTIVATED_PARTICLE_ID, &stk, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, STAFFACTIVATED_PARTICLE_ID, &stk, 2, -1, NULL);
             stk.ox = lbl_803E3BBC;
             stk.oy = lbl_803E3C00;
             stk.oz = lbl_803E3C04;
             stk.ow = lbl_803E3BDC;
             stk.life = 0xa;
             stk.extra = 5;
-            (*gPartfxInterface)->spawnObject((void *)obj, STAFFACTIVATED_PARTICLE_ID, &stk, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, STAFFACTIVATED_PARTICLE_ID, &stk, 2, -1, NULL);
         }
         return;
-    } else {
+    }
+    else
+    {
         goto default_case;
     }
     return;
 default_case:
     isSet = 0;
     gb = param->activeGameBit;
-    if (gb == -1 || GameBit_Get(gb) != 0) {
+    if (gb == -1 || GameBit_Get(gb) != 0)
+    {
         isSet = 1;
     }
     state->flags =

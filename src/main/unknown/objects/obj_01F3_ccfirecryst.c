@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01F3_CCfireCryst_packet_info {
+enum obj_01F3_CCfireCryst_packet_info
+{
     CCFIRECRYST_DEF_ID = 0x01F3,
     CCFIRECRYST_DLL_ID = 0x00ED,
     CCFIRECRYST_CLASS_ID = 0x0006,

@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0290_SH_BlueWhit_packet_info {
+enum obj_0290_SH_BlueWhit_packet_info
+{
     SH_BLUEWHIT_DEF_ID = 0x0290,
     SH_BLUEWHIT_DLL_ID = 0x02AD,
     SH_BLUEWHIT_CLASS_ID = 0x007F,

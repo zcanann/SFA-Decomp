@@ -53,7 +53,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01BA_IMMultiSeq_packet_info {
+enum obj_01BA_IMMultiSeq_packet_info
+{
     IMMULTISEQ_DEF_ID = 0x01BA,
     IMMULTISEQ_DLL_ID = 0x0114,
     IMMULTISEQ_CLASS_ID = 0x0057,

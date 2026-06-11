@@ -28,7 +28,8 @@
  */
 
 #if 0
-enum dll_0265_DR_Creator_slot {
+enum dll_0265_DR_Creator_slot
+{
     DRCREATOR_INITIALISE = 0,
     DRCREATOR_RELEASE = 1,
     DRCREATOR_INIT = 3,

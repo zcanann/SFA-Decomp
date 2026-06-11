@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_025D_MMP_seqobje_packet_info {
+enum obj_025D_MMP_seqobje_packet_info
+{
     MMP_SEQOBJE_DEF_ID = 0x025D,
     MMP_SEQOBJE_DLL_ID = 0x0112,
     MMP_SEQOBJE_CLASS_ID = 0x0055,

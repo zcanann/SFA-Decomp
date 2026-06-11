@@ -68,7 +68,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_0255_SnowBike_slot {
+enum dll_0255_SnowBike_slot
+{
     SNOWBIKE_INITIALISE = 0,
     SNOWBIKE_RELEASE = 1,
     SNOWBIKE_INIT = 3,

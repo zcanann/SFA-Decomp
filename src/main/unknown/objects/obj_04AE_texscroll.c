@@ -53,7 +53,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04AE_texscroll_packet_info {
+enum obj_04AE_texscroll_packet_info
+{
     TEXSCROLL_DEF_ID = 0x04AE,
     TEXSCROLL_DLL_ID = 0x0135,
     TEXSCROLL_CLASS_ID = 0x0021,

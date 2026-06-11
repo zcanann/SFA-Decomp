@@ -59,7 +59,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00E2_CFCloudBaby_packet_info {
+enum obj_00E2_CFCloudBaby_packet_info
+{
     CFCLOUDBABY_DEF_ID = 0x00E2,
     CFCLOUDBABY_DLL_ID = 0x014C,
     CFCLOUDBABY_CLASS_ID = 0x0040,

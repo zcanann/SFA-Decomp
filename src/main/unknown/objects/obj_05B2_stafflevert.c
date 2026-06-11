@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_05B2_StaffLeverT_packet_info {
+enum obj_05B2_StaffLeverT_packet_info
+{
     STAFFLEVERT_DEF_ID = 0x05B2,
     STAFFLEVERT_DLL_ID = 0x011C,
     STAFFLEVERT_CLASS_ID = 0x007A,

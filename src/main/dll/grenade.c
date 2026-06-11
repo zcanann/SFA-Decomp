@@ -22,13 +22,13 @@ extern undefined4 FUN_80017a6c();
 extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern int randomGetRange(int min,int max);
+extern int randomGetRange(int min, int max);
 extern undefined4 ObjHits_SyncObjectPosition();
 extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjLink_AttachChild();
 extern undefined4 FUN_80039580();
-extern int Sfx_IsPlayingFromObjectChannel(int obj,int channel);
-extern undefined4 objAudioFn_800393f8(int obj,void *audio,int soundId,int volume,int param5,int param6);
+extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
+extern undefined4 objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
 extern int FUN_800da5f0();
 extern undefined4 FUN_800da700();
 extern uint FUN_800db47c();
@@ -39,7 +39,7 @@ extern int FUN_80139a48();
 extern undefined4 FUN_80139a4c();
 extern int trickyFn_8013b368();
 extern undefined4 objAnimFn_8013a3f0(int param_1, int param_2, f32 param_3, int param_4);
-extern void trickyFn_8013d8f0(u8 *arg1, u8 *arg2);
+extern void trickyFn_8013d8f0(u8 * arg1, u8 * arg2);
 extern undefined4 FUN_801778d0();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
@@ -114,12 +114,12 @@ extern void* PTR_FUN_8031dfa4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void trickyDebugPrint(const char *fmt, ...);
-extern void getYButtonItem(s16 *out);
-extern ObjectTriggerInterface **gObjectTriggerInterface;
+extern void trickyDebugPrint(const char* fmt, ...);
+extern void getYButtonItem(s16 * out);
+extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void GameBit_Set(int bit, int val);
 extern void buttonDisable(int a, int b);
-extern void fn_8002B6D8(u8 *obj, int a, int b, int c, int d, int e);
+extern void fn_8002B6D8(u8* obj, int a, int b, int c, int d, int e);
 extern char sInWaterMessage[];
 extern char lbl_8031D478[];
 
@@ -130,24 +130,24 @@ extern f32 lbl_803E2424;
 extern f32 lbl_803E2410;
 extern f32 lbl_803E2414;
 extern f32 lbl_803E243C;
-extern void Sfx_AddLoopedObjectSound(u8 *obj, int soundId);
-extern void Sfx_RemoveLoopedObjectSound(u8 *obj, int soundId);
-extern void *Objfsa_FindNearestCurveType24(void *pos, int a, int b);
-extern int Objfsa_GetWalkGroupIndexAtPoint(void *pos, int a);
-extern void trickyUpdateApproachSpeed(u8 *obj, f32 vel, u8 *state, u8 *pos, int flag);
-extern int trickyMove(u8 *obj, u8 *pos);
+extern void Sfx_AddLoopedObjectSound(u8* obj, int soundId);
+extern void Sfx_RemoveLoopedObjectSound(u8* obj, int soundId);
+extern void* Objfsa_FindNearestCurveType24(void* pos, int a, int b);
+extern int Objfsa_GetWalkGroupIndexAtPoint(void* pos, int a);
+extern void trickyUpdateApproachSpeed(u8* obj, f32 vel, u8* state, u8* pos, int flag);
+extern int trickyMove(u8 * obj, u8 * pos);
 extern int getAngle(f32 x, f32 z);
-extern void trickyTurnTowardYaw(u8 *obj, int yaw);
-extern f32 Vec_xzDistance(void *a, void *b);
+extern void trickyTurnTowardYaw(u8* obj, int yaw);
+extern f32 Vec_xzDistance(void* a, void* b);
 extern u32 lbl_803E23D0;
 
-void trickyDigTunnel(u8 *obj, u8 *state)
+void trickyDigTunnel(u8* obj, u8* state)
 {
     u32 sfxTable;
-    u8 *base;
-    u8 *pc;
-    u8 *pos;
-    u8 *ptr;
+    u8* base;
+    u8* pc;
+    u8* pos;
+    u8* ptr;
     int gidx;
     int k;
     int idx;
@@ -159,114 +159,143 @@ void trickyDigTunnel(u8 *obj, u8 *state)
 
     base = lbl_8031D2E8;
     sfxTable = lbl_803E23D0;
-    switch (state[0xa]) {
+    switch (state[0xa])
+    {
     case 0:
-        pc = Objfsa_FindNearestCurveType24(((TrickyState *)state)->unk28, -1, 2);
-        ((TrickyState *)state)->unk708 = (u8 *)(*gRomCurveInterface)->getById(*(int *)(pc + 0x1c));
-        ((TrickyState *)state)->unk700 = pc;
-        ((TrickyState *)state)->unk704 = (u8 *)(*gRomCurveInterface)->getById(*(int *)(pc + 0x20));
-        if (*(u8 *)(((TrickyState *)state)->unk704 + 3) != 0) {
-            *(u32 *)&((TrickyState *)state)->unk704 = *(u32 *)&((TrickyState *)state)->unk704 ^ *(u32 *)&((TrickyState *)state)->unk708;
-            *(u32 *)&((TrickyState *)state)->unk708 = *(u32 *)&((TrickyState *)state)->unk708 ^ *(u32 *)&((TrickyState *)state)->unk704;
-            *(u32 *)&((TrickyState *)state)->unk704 = *(u32 *)&((TrickyState *)state)->unk704 ^ *(u32 *)&((TrickyState *)state)->unk708;
+        pc = Objfsa_FindNearestCurveType24(((TrickyState*)state)->unk28, -1, 2);
+        ((TrickyState*)state)->unk708 = (u8*)(*gRomCurveInterface)->getById(*(int*)(pc + 0x1c));
+        ((TrickyState*)state)->unk700 = pc;
+        ((TrickyState*)state)->unk704 = (u8*)(*gRomCurveInterface)->getById(*(int*)(pc + 0x20));
+        if (*(u8*)(((TrickyState*)state)->unk704 + 3) != 0)
+        {
+            *(u32*)&((TrickyState*)state)->unk704 = *(u32*)&((TrickyState*)state)->unk704 ^ *(u32*)&((TrickyState*)
+                state)->unk708;
+            *(u32*)&((TrickyState*)state)->unk708 = *(u32*)&((TrickyState*)state)->unk708 ^ *(u32*)&((TrickyState*)
+                state)->unk704;
+            *(u32*)&((TrickyState*)state)->unk704 = *(u32*)&((TrickyState*)state)->unk704 ^ *(u32*)&((TrickyState*)
+                state)->unk708;
         }
-        if (((TrickyState *)state)->unk28 != ((TrickyState *)state)->unk708 + 8) {
-            ((TrickyState *)state)->unk28 = ((TrickyState *)state)->unk708 + 8;
-            ((TrickyState *)state)->stateFlags &= ~0x400;
-            ((TrickyState *)state)->unkD2 = 0;
+        if (((TrickyState*)state)->unk28 != ((TrickyState*)state)->unk708 + 8)
+        {
+            ((TrickyState*)state)->unk28 = ((TrickyState*)state)->unk708 + 8;
+            ((TrickyState*)state)->stateFlags &= ~0x400;
+            ((TrickyState*)state)->unkD2 = 0;
         }
         state[0xa] = 1;
     case 1:
-        trickyDebugPrint((char *)(base + 0x7b8));
+        trickyDebugPrint((char*)(base + 0x7b8));
         trickyFn_8013b368((int)obj, lbl_803E2488, (int)state);
         gidx = Objfsa_GetWalkGroupIndexAtPoint(obj + 0x18, 0);
-        if (*(u8 *)(((TrickyState *)state)->unk708 + 3) == gidx) {
+        if (*(u8*)(((TrickyState*)state)->unk708 + 3) == gidx)
+        {
             state[0x9] = 1;
             state[0xa] = 2;
         }
         break;
     case 2:
-        trickyDebugPrint((char *)(base + 0x7cc));
-        pos = ((TrickyState *)state)->unk700 + 8;
+        trickyDebugPrint((char*)(base + 0x7cc));
+        pos = ((TrickyState*)state)->unk700 + 8;
         trickyUpdateApproachSpeed(obj, lbl_803E2488, state, pos, 1);
-        if (trickyMove(obj, pos) == 0) {
-            ((TrickyState *)state)->stateFlags |= 0x2010;
+        if (trickyMove(obj, pos) == 0)
+        {
+            ((TrickyState*)state)->stateFlags |= 0x2010;
             state[0xa] = 3;
-        } else {
-            if (Objfsa_GetWalkGroupIndexAtPoint(obj + 0x18, 0) == 0) {
-                ((TrickyState *)state)->stateFlags |= 0x2010;
+        }
+        else
+        {
+            if (Objfsa_GetWalkGroupIndexAtPoint(obj + 0x18, 0) == 0)
+            {
+                ((TrickyState*)state)->stateFlags |= 0x2010;
             }
         }
         break;
     case 3:
         objAnimFn_8013a3f0((int)obj, 0xe, lbl_803E2510, 0x4000000);
-        ((TrickyState *)state)->dirX = *(f32 *)(((TrickyState *)state)->unk704 + 8) - *(f32 *)(((TrickyState *)state)->unk700 + 8);
-        ((TrickyState *)state)->dirZ = *(f32 *)(((TrickyState *)state)->unk704 + 0x10) - *(f32 *)(((TrickyState *)state)->unk700 + 0x10);
+        ((TrickyState*)state)->dirX = *(f32*)(((TrickyState*)state)->unk704 + 8) - *(f32*)(((TrickyState*)state)->unk700
+            + 8);
+        ((TrickyState*)state)->dirZ = *(f32*)(((TrickyState*)state)->unk704 + 0x10) - *(f32*)(((TrickyState*)state)->
+            unk700 + 0x10);
         Sfx_AddLoopedObjectSound(obj, 0x13d);
-        *(f32 *)&((TrickyState *)state)->unk70C = (f32)(int)randomGetRange(0x14, 0xb4);
+        *(f32*)&((TrickyState*)state)->unk70C = (f32)(int)
+        randomGetRange(0x14, 0xb4);
         state[0xa] = 4;
     case 4:
-        trickyDebugPrint((char *)(base + 0x7e4));
-        *(f32 *)&((TrickyState *)state)->unk70C -= timeDelta;
-        if (*(f32 *)&((TrickyState *)state)->unk70C <= lbl_803E23DC) {
-            *(f32 *)&((TrickyState *)state)->unk70C = (f32)(int)randomGetRange(0x14, 0xb4);
-            *(f32 *)&((TrickyState *)state)->unk70C *= lbl_803E2424;
-            ptr = ((GameObject *)obj)->extra;
-            if (((u32)((TrickyState *)ptr)->statusFlags >> 6 & 1) == 0
-                && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
-                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+        trickyDebugPrint((char*)(base + 0x7e4));
+        *(f32*)&((TrickyState*)state)->unk70C -= timeDelta;
+        if (*(f32*)&((TrickyState*)state)->unk70C <= lbl_803E23DC)
+        {
+            *(f32*)&((TrickyState*)state)->unk70C = (f32)(int)
+            randomGetRange(0x14, 0xb4);
+            *(f32*)&((TrickyState*)state)->unk70C *= lbl_803E2424;
+            ptr = ((GameObject*)obj)->extra;
+            if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
+                && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
+                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
+            {
                 objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x360, 0x500, -1, 0);
             }
         }
-        spd = ((f32 (**)(u8 *, u8 *))(**(u8 ***)(((TrickyState *)state)->followObj + 0x68)))[8](((TrickyState *)state)->followObj, obj);
-        ((GameObject *)obj)->anim.localPosX = ((TrickyState *)state)->dirX * spd + *(f32 *)(((TrickyState *)state)->unk700 + 8);
-        ((GameObject *)obj)->anim.localPosZ = ((TrickyState *)state)->dirZ * spd + *(f32 *)(((TrickyState *)state)->unk700 + 0x10);
-        vx = *(f32 *)(*(u8 **)&((GameObject *)obj)->extra + 0x2c);
-        vz = *(f32 *)(*(u8 **)&((GameObject *)obj)->extra + 0x30);
-        if (vx * vx + vz * vz > lbl_803E23EC) {
+        spd = ((f32 (**)(u8*, u8*))(**(u8***)(((TrickyState*)state)->followObj + 0x68)))[8](
+            ((TrickyState*)state)->followObj, obj);
+        ((GameObject*)obj)->anim.localPosX = ((TrickyState*)state)->dirX * spd + *(f32*)(((TrickyState*)state)->unk700 +
+            8);
+        ((GameObject*)obj)->anim.localPosZ = ((TrickyState*)state)->dirZ * spd + *(f32*)(((TrickyState*)state)->unk700 +
+            0x10);
+        vx = *(f32*)(*(u8**)&((GameObject*)obj)->extra + 0x2c);
+        vz = *(f32*)(*(u8**)&((GameObject*)obj)->extra + 0x30);
+        if (vx * vx + vz * vz > lbl_803E23EC)
+        {
             trickyTurnTowardYaw(obj, (s16)getAngle(-vx, -vz));
         }
-        if (((u8 (**)(u8 *))(**(u8 ***)(((TrickyState *)state)->followObj + 0x68)))[9](((TrickyState *)state)->followObj) != 0) {
+        if (((u8 (**)(u8*))(**(u8***)(((TrickyState*)state)->followObj + 0x68)))[9](((TrickyState*)state)->followObj) !=
+            0)
+        {
             idx = 0;
             off = 0;
-            for (k = 4; k != 0; k--) {
-                v = *(int *)(((TrickyState *)state)->unk704 + off + 0x1c);
-                if (v > -1 && (u32)v != *(u32 *)(((TrickyState *)state)->unk700 + 0x14)) {
-                    ((TrickyState *)state)->unk700 = ((TrickyState *)state)->unk704;
-                    ((TrickyState *)state)->unk704 =
-                        (u8 *)(*gRomCurveInterface)->getById(
-                            *(int *)(((TrickyState *)state)->unk704 + idx * 4 + 0x1c));
+            for (k = 4; k != 0; k--)
+            {
+                v = *(int*)(((TrickyState*)state)->unk704 + off + 0x1c);
+                if (v > -1 && (u32)v != *(u32*)(((TrickyState*)state)->unk700 + 0x14))
+                {
+                    ((TrickyState*)state)->unk700 = ((TrickyState*)state)->unk704;
+                    ((TrickyState*)state)->unk704 =
+                        (u8*)(*gRomCurveInterface)->getById(
+                            *(int*)(((TrickyState*)state)->unk704 + idx * 4 + 0x1c));
                     break;
                 }
                 off += 4;
                 idx++;
             }
-            **(u8 **)state -= 4;
+            **(u8**)state -= 4;
             Sfx_RemoveLoopedObjectSound(obj, 0x13d);
             state[0xa] = 5;
-            id = *(u16 *)((char *)&sfxTable + randomGetRange(0, 1) * 2);
-            ptr = ((GameObject *)obj)->extra;
-            if (((u32)((TrickyState *)ptr)->statusFlags >> 6 & 1) == 0
-                && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
-                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+            id = *(u16*)((char*)&sfxTable + randomGetRange(0, 1) * 2);
+            ptr = ((GameObject*)obj)->extra;
+            if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
+                && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
+                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
+            {
                 objAudioFn_800393f8((int)obj, ptr + 0x3a8, id, 0x500, -1, 0);
             }
         }
         break;
     case 5:
-        trickyDebugPrint((char *)(base + 0x7f8), (f64)Vec_xzDistance(obj + 0x18, ((TrickyState *)state)->unk704 + 8));
-        pos = ((TrickyState *)state)->unk704 + 8;
+        trickyDebugPrint((char*)(base + 0x7f8), (f64)Vec_xzDistance(obj + 0x18, ((TrickyState*)state)->unk704 + 8));
+        pos = ((TrickyState*)state)->unk704 + 8;
         trickyUpdateApproachSpeed(obj, lbl_803E2488, state, pos, 1);
-        if (trickyMove(obj, pos) == 0) {
+        if (trickyMove(obj, pos) == 0)
+        {
             idx = 0;
             off = idx;
-            for (k = 4; k != 0; k--) {
-                v = *(int *)(((TrickyState *)state)->unk704 + off + 0x1c);
-                if (v > -1 && (u32)v != *(u32 *)(((TrickyState *)state)->unk700 + 0x14)) {
-                    ((TrickyState *)state)->unk700 = ((TrickyState *)state)->unk704;
-                    ((TrickyState *)state)->unk704 =
-                        (u8 *)(*gRomCurveInterface)->getById(
-                            *(int *)(((TrickyState *)state)->unk704 + idx * 4 + 0x1c));
+            for (k = 4; k != 0; k--)
+            {
+                v = *(int*)(((TrickyState*)state)->unk704 + off + 0x1c);
+                if (v > -1 && (u32)v != *(u32*)(((TrickyState*)state)->unk700 + 0x14))
+                {
+                    ((TrickyState*)state)->unk700 = ((TrickyState*)state)->unk704;
+                    ((TrickyState*)state)->unk704 =
+                        (u8*)(*gRomCurveInterface)->getById(
+                            *(int*)(((TrickyState*)state)->unk704 + idx * 4 + 0x1c));
                     break;
                 }
                 off += 4;
@@ -276,46 +305,58 @@ void trickyDigTunnel(u8 *obj, u8 *state)
         }
         break;
     case 6:
-        trickyDebugPrint((char *)(base + 0x810));
-        pos = ((TrickyState *)state)->unk704 + 8;
+        trickyDebugPrint((char*)(base + 0x810));
+        pos = ((TrickyState*)state)->unk704 + 8;
         trickyUpdateApproachSpeed(obj, lbl_803E2488, state, pos, 1);
-        if (trickyMove(obj, pos) == 0) {
-            if (lbl_803E23DC == ((TrickyState *)state)->waterLevel) {
-                inWater = 0;
-            } else if (lbl_803E2410 == ((TrickyState *)state)->unk2B0) {
-                inWater = 1;
-            } else if (((TrickyState *)state)->unk2B4 - ((TrickyState *)state)->unk2B0 > lbl_803E2414) {
-                inWater = 1;
-            } else {
+        if (trickyMove(obj, pos) == 0)
+        {
+            if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
+            {
                 inWater = 0;
             }
-            if (inWater != 0) {
+            else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+            {
+                inWater = 1;
+            }
+            else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+            {
+                inWater = 1;
+            }
+            else
+            {
+                inWater = 0;
+            }
+            if (inWater != 0)
+            {
                 objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
-                ((TrickyState *)state)->unk79C = lbl_803E2440;
-                ((TrickyState *)state)->unk838 = lbl_803E23DC;
-                trickyDebugPrint((char *)(base + 0x184));
-            } else {
-                objAnimFn_8013a3f0((int)obj, 0, lbl_803E2444, 0);
-                trickyDebugPrint((char *)(base + 0x190));
+                ((TrickyState*)state)->unk79C = lbl_803E2440;
+                ((TrickyState*)state)->unk838 = lbl_803E23DC;
+                trickyDebugPrint((char*)(base + 0x184));
             }
-            ((TrickyState *)state)->stateFlags &= ~0x2010;
+            else
+            {
+                objAnimFn_8013a3f0((int)obj, 0, lbl_803E2444, 0);
+                trickyDebugPrint((char*)(base + 0x190));
+            }
+            ((TrickyState*)state)->stateFlags &= ~0x2010;
             state[0xa] = 7;
         }
         break;
     case 7:
-        trickyDebugPrint((char *)(base + 0x824));
-        gidx = Objfsa_GetWalkGroupIndexAtPoint(*(u8 **)&((TrickyState *)state)->playerObj + 0x18, 0);
-        if (Objfsa_GetWalkGroupIndexAtPoint(obj + 0x18, 0) == gidx) {
+        trickyDebugPrint((char*)(base + 0x824));
+        gidx = Objfsa_GetWalkGroupIndexAtPoint(*(u8**)&((TrickyState*)state)->playerObj + 0x18, 0);
+        if (Objfsa_GetWalkGroupIndexAtPoint(obj + 0x18, 0) == gidx)
+        {
             state[0x8] = 1;
             state[0xa] = 0;
             z = lbl_803E23DC;
-            ((TrickyState *)state)->unk71C = z;
-            ((TrickyState *)state)->unk720 = z;
-            ((TrickyState *)state)->stateFlags &= ~0x10;
-            ((TrickyState *)state)->stateFlags &= ~0x10000;
-            ((TrickyState *)state)->stateFlags &= ~0x20000;
-            ((TrickyState *)state)->stateFlags &= ~0x40000;
-            ((TrickyState *)state)->unkD = -1;
+            ((TrickyState*)state)->unk71C = z;
+            ((TrickyState*)state)->unk720 = z;
+            ((TrickyState*)state)->stateFlags &= ~0x10;
+            ((TrickyState*)state)->stateFlags &= ~0x10000;
+            ((TrickyState*)state)->stateFlags &= ~0x20000;
+            ((TrickyState*)state)->stateFlags &= ~0x40000;
+            ((TrickyState*)state)->unkD = -1;
         }
         break;
     }
@@ -334,19 +375,19 @@ void trickyDigTunnel(u8 *obj, u8 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void *Objfsa_FindNearestEnabledCurveType24(void *pos, int a, int b);
-extern float getXZDistance(float *a, float *b);
+extern void* Objfsa_FindNearestEnabledCurveType24(void* pos, int a, int b);
+extern float getXZDistance(float* a, float* b);
 extern float sqrtf(float x);
 extern u32 lbl_803E23CC;
 extern f32 lbl_803E2418;
 extern f32 lbl_803E2514;
 extern f32 lbl_803E24F8;
 
-void trickyFn_80141fec(u8 *obj, u8 *state)
+void trickyFn_80141fec(u8* obj, u8* state)
 {
     u32 sfxTable;
-    u8 *ptr;
-    u8 *pc;
+    u8* ptr;
+    u8* pc;
     int ret;
     f32 spd;
     f32 d;
@@ -354,107 +395,131 @@ void trickyFn_80141fec(u8 *obj, u8 *state)
     u16 id;
 
     sfxTable = lbl_803E23CC;
-    pc = ((TrickyState *)state)->followObj;
-    switch (state[0xa]) {
+    pc = ((TrickyState*)state)->followObj;
+    switch (state[0xa])
+    {
     case 0:
-        ((TrickyState *)state)->unk70C = Objfsa_FindNearestEnabledCurveType24(((TrickyState *)state)->followObj + 0x18, -1, 2);
-        if (((TrickyState *)state)->unk70C != NULL
-            && getXZDistance((float *)(((TrickyState *)state)->followObj + 0x18), (float *)(((TrickyState *)state)->unk70C + 8)) > lbl_803E2514) {
-            ((TrickyState *)state)->unk70C = NULL;
+        ((TrickyState*)state)->unk70C = Objfsa_FindNearestEnabledCurveType24(
+            ((TrickyState*)state)->followObj + 0x18, -1, 2);
+        if (((TrickyState*)state)->unk70C != NULL
+            && getXZDistance((float*)(((TrickyState*)state)->followObj + 0x18),
+                             (float*)(((TrickyState*)state)->unk70C + 8)) > lbl_803E2514)
+        {
+            ((TrickyState*)state)->unk70C = NULL;
         }
         state[0xa] = 1;
     case 1:
         ret = trickyFn_8013b368((int)obj, lbl_803E2488, (int)state);
-        if (ret == 0) {
-            if (((TrickyState *)state)->unk70C != NULL) {
+        if (ret == 0)
+        {
+            if (((TrickyState*)state)->unk70C != NULL)
+            {
                 state[0xa] = 2;
-                if (((TrickyState *)state)->unk28 != ((TrickyState *)state)->unk70C + 8) {
-                    ((TrickyState *)state)->unk28 = ((TrickyState *)state)->unk70C + 8;
-                    ((TrickyState *)state)->stateFlags &= ~0x400;
-                    ((TrickyState *)state)->unkD2 = 0;
+                if (((TrickyState*)state)->unk28 != ((TrickyState*)state)->unk70C + 8)
+                {
+                    ((TrickyState*)state)->unk28 = ((TrickyState*)state)->unk70C + 8;
+                    ((TrickyState*)state)->stateFlags &= ~0x400;
+                    ((TrickyState*)state)->unkD2 = 0;
                 }
-            } else {
-                ((TrickyState *)state)->stateFlags |= 0x10;
+            }
+            else
+            {
+                ((TrickyState*)state)->stateFlags |= 0x10;
                 state[0xa] = 3;
-                *(f32 *)&((TrickyState *)state)->unk700 = lbl_803E23DC;
-                ((TrickyState *)state)->unk710 = (f32)(int)randomGetRange(0x28, 0x50);
+                *(f32*)&((TrickyState*)state)->unk700 = lbl_803E23DC;
+                ((TrickyState*)state)->unk710 = (f32)(int)
+                randomGetRange(0x28, 0x50);
                 Sfx_AddLoopedObjectSound(obj, 0x13d);
                 objAnimFn_8013a3f0((int)obj, 0xe, lbl_803E2510, 0x4000000);
             }
-        } else if (ret == 2) {
+        }
+        else if (ret == 2)
+        {
             state[0x8] = 1;
             state[0xa] = 0;
             z = lbl_803E23DC;
-            ((TrickyState *)state)->unk71C = z;
-            ((TrickyState *)state)->unk720 = z;
-            ((TrickyState *)state)->stateFlags &= ~0x10;
-            ((TrickyState *)state)->stateFlags &= ~0x10000;
-            ((TrickyState *)state)->stateFlags &= ~0x20000;
-            ((TrickyState *)state)->stateFlags &= ~0x40000;
-            ((TrickyState *)state)->unkD = -1;
+            ((TrickyState*)state)->unk71C = z;
+            ((TrickyState*)state)->unk720 = z;
+            ((TrickyState*)state)->stateFlags &= ~0x10;
+            ((TrickyState*)state)->stateFlags &= ~0x10000;
+            ((TrickyState*)state)->stateFlags &= ~0x20000;
+            ((TrickyState*)state)->stateFlags &= ~0x40000;
+            ((TrickyState*)state)->unkD = -1;
         }
         break;
     case 2:
-        if (trickyFn_8013b368((int)obj, lbl_803E2418, (int)state) == 0) {
-            ((TrickyState *)state)->stateFlags |= 0x10;
+        if (trickyFn_8013b368((int)obj, lbl_803E2418, (int)state) == 0)
+        {
+            ((TrickyState*)state)->stateFlags |= 0x10;
             state[0xa] = 3;
-            *(f32 *)&((TrickyState *)state)->unk700 = lbl_803E23DC;
+            *(f32*)&((TrickyState*)state)->unk700 = lbl_803E23DC;
             Sfx_AddLoopedObjectSound(obj, 0x13d);
             objAnimFn_8013a3f0((int)obj, 0xe, lbl_803E2510, 0x4000000);
         }
         break;
     case 3:
-        *(f32 *)&((TrickyState *)state)->unk700 += timeDelta;
-        ((TrickyState *)state)->unk710 -= timeDelta;
-        if (*(f32 *)&((TrickyState *)state)->unk700 >= lbl_803E24F8) {
+        *(f32*)&((TrickyState*)state)->unk700 += timeDelta;
+        ((TrickyState*)state)->unk710 -= timeDelta;
+        if (*(f32*)&((TrickyState*)state)->unk700 >= lbl_803E24F8)
+        {
             state[0xa] = 4;
-            *(f32 *)&((TrickyState *)state)->unk704 = ((GameObject *)obj)->anim.worldPosX;
-            *(f32 *)&((TrickyState *)state)->unk708 = ((GameObject *)obj)->anim.worldPosZ;
-            ptr = ((TrickyState *)state)->unk70C;
-            if (ptr != NULL) {
-                ((TrickyState *)state)->dirX = *(f32 *)(ptr + 8) - *(f32 *)(((TrickyState *)state)->followObj + 0x18);
-                ((TrickyState *)state)->dirZ = ((TrickyState *)ptr)->prevSpeed - *(f32 *)(((TrickyState *)state)->followObj + 0x20);
-                d = sqrtf(((TrickyState *)state)->dirX * ((TrickyState *)state)->dirX + ((TrickyState *)state)->dirZ * ((TrickyState *)state)->dirZ);
-                if (lbl_803E23DC != d) {
-                    ((TrickyState *)state)->dirX = ((TrickyState *)state)->dirX / d;
-                    ((TrickyState *)state)->dirZ = ((TrickyState *)state)->dirZ / d;
+            *(f32*)&((TrickyState*)state)->unk704 = ((GameObject*)obj)->anim.worldPosX;
+            *(f32*)&((TrickyState*)state)->unk708 = ((GameObject*)obj)->anim.worldPosZ;
+            ptr = ((TrickyState*)state)->unk70C;
+            if (ptr != NULL)
+            {
+                ((TrickyState*)state)->dirX = *(f32*)(ptr + 8) - *(f32*)(((TrickyState*)state)->followObj + 0x18);
+                ((TrickyState*)state)->dirZ = ((TrickyState*)ptr)->prevSpeed - *(f32*)(((TrickyState*)state)->followObj
+                    + 0x20);
+                d = sqrtf(
+                    ((TrickyState*)state)->dirX * ((TrickyState*)state)->dirX + ((TrickyState*)state)->dirZ * ((
+                        TrickyState*)state)->dirZ);
+                if (lbl_803E23DC != d)
+                {
+                    ((TrickyState*)state)->dirX = ((TrickyState*)state)->dirX / d;
+                    ((TrickyState*)state)->dirZ = ((TrickyState*)state)->dirZ / d;
                 }
             }
         }
         break;
     case 4:
-        ((TrickyState *)state)->unk710 -= timeDelta;
-        if (((TrickyState *)state)->unk710 <= lbl_803E23DC) {
-            ((TrickyState *)state)->unk710 = (f32)(int)randomGetRange(0x28, 0x50);
-            ((TrickyState *)state)->unk710 *= lbl_803E2424;
-            ptr = ((GameObject *)obj)->extra;
-            if (((u32)((TrickyState *)ptr)->statusFlags >> 6 & 1) == 0
-                && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
-                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+        ((TrickyState*)state)->unk710 -= timeDelta;
+        if (((TrickyState*)state)->unk710 <= lbl_803E23DC)
+        {
+            ((TrickyState*)state)->unk710 = (f32)(int)
+            randomGetRange(0x28, 0x50);
+            ((TrickyState*)state)->unk710 *= lbl_803E2424;
+            ptr = ((GameObject*)obj)->extra;
+            if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
+                && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
+                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
+            {
                 objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x360, 0x500, -1, 0);
             }
         }
-        spd = ((f32 (**)(u8 *, u8 *))(**(u8 ***)(pc + 0x68)))[8](pc, obj);
-        ((GameObject *)obj)->anim.localPosX = *(f32 *)&((TrickyState *)state)->unk704 - ((TrickyState *)state)->dirX * spd;
-        ((GameObject *)obj)->anim.localPosZ = *(f32 *)&((TrickyState *)state)->unk708 - ((TrickyState *)state)->dirZ * spd;
-        if (((u8 (**)(u8 *))(**(u8 ***)(pc + 0x68)))[9](pc) != 0) {
+        spd = ((f32 (**)(u8*, u8*))(**(u8***)(pc + 0x68)))[8](pc, obj);
+        ((GameObject*)obj)->anim.localPosX = *(f32*)&((TrickyState*)state)->unk704 - ((TrickyState*)state)->dirX * spd;
+        ((GameObject*)obj)->anim.localPosZ = *(f32*)&((TrickyState*)state)->unk708 - ((TrickyState*)state)->dirZ * spd;
+        if (((u8 (**)(u8*))(**(u8***)(pc + 0x68)))[9](pc) != 0)
+        {
             Sfx_RemoveLoopedObjectSound(obj, 0x13d);
-            **(u8 **)state -= 4;
+            **(u8**)state -= 4;
             state[0x8] = 1;
             state[0xa] = 0;
             z = lbl_803E23DC;
-            ((TrickyState *)state)->unk71C = z;
-            ((TrickyState *)state)->unk720 = z;
-            ((TrickyState *)state)->stateFlags &= ~0x10;
-            ((TrickyState *)state)->stateFlags &= ~0x10000;
-            ((TrickyState *)state)->stateFlags &= ~0x20000;
-            ((TrickyState *)state)->stateFlags &= ~0x40000;
-            ((TrickyState *)state)->unkD = -1;
-            id = *(u16 *)((char *)&sfxTable + randomGetRange(0, 1) * 2);
-            ptr = ((GameObject *)obj)->extra;
-            if (((u32)((TrickyState *)ptr)->statusFlags >> 6 & 1) == 0
-                && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
-                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+            ((TrickyState*)state)->unk71C = z;
+            ((TrickyState*)state)->unk720 = z;
+            ((TrickyState*)state)->stateFlags &= ~0x10;
+            ((TrickyState*)state)->stateFlags &= ~0x10000;
+            ((TrickyState*)state)->stateFlags &= ~0x20000;
+            ((TrickyState*)state)->stateFlags &= ~0x40000;
+            ((TrickyState*)state)->unkD = -1;
+            id = *(u16*)((char*)&sfxTable + randomGetRange(0, 1) * 2);
+            ptr = ((GameObject*)obj)->extra;
+            if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
+                && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
+                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
+            {
                 objAudioFn_800393f8((int)obj, ptr + 0x3a8, id, 0x500, -1, 0);
             }
         }
@@ -475,72 +540,102 @@ void trickyFn_80141fec(u8 *obj, u8 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void fn_80144B50(u8 *obj, u8 *state);
-typedef struct TrickyFnRow { u8 pad[0x6c]; int (*fn)(u8 *, u8 *); } TrickyFnRow;
+extern void fn_80144B50(u8 * obj, u8 * state);
 
-void trickyFn_80142524(u8 *obj, u8 *state)
+typedef struct TrickyFnRow
 {
-    u8 *base;
-    u8 *found;
-    u8 *other;
-    u8 *target;
-    u8 *ptr;
+    u8 pad[0x6c];
+    int (*fn)(u8*, u8*);
+} TrickyFnRow;
+
+void trickyFn_80142524(u8* obj, u8* state)
+{
+    u8* base;
+    u8* found;
+    u8* other;
+    u8* target;
+    u8* ptr;
     int inWater;
     f32 z;
 
     base = lbl_8031D2E8;
     found = NULL;
-    if ((((TrickyState *)state)->stateFlags & 0x10) == 0) {
-        if (state[0x7d0] != 0) {
-            if ((int)state[0x7d0] == 1) {
-                target = ((TrickyState *)state)->unk7D4;
-                other = ((GameObject *)obj)->extra;
-                if ((((GameObject *)obj)->objectFlags & 0x1000) == 0) {
-                    if ((((TrickyState *)other)->stateFlags & 0x10) == 0) {
-                        ((TrickyState *)other)->followObj = target;
-                        if (((TrickyState *)other)->unk28 != target + 0x18) {
-                            ((TrickyState *)other)->unk28 = target + 0x18;
-                            ((TrickyState *)other)->stateFlags &= ~0x400;
-                            ((TrickyState *)other)->unkD2 = 0;
+    if ((((TrickyState*)state)->stateFlags & 0x10) == 0)
+    {
+        if (state[0x7d0] != 0)
+        {
+            if ((int)state[0x7d0] == 1)
+            {
+                target = ((TrickyState*)state)->unk7D4;
+                other = ((GameObject*)obj)->extra;
+                if ((((GameObject*)obj)->objectFlags & 0x1000) == 0)
+                {
+                    if ((((TrickyState*)other)->stateFlags & 0x10) == 0)
+                    {
+                        ((TrickyState*)other)->followObj = target;
+                        if (((TrickyState*)other)->unk28 != target + 0x18)
+                        {
+                            ((TrickyState*)other)->unk28 = target + 0x18;
+                            ((TrickyState*)other)->stateFlags &= ~0x400;
+                            ((TrickyState*)other)->unkD2 = 0;
                         }
                         other[0xa] = 0;
                         other[0x8] = 10;
-                    } else {
+                    }
+                    else
+                    {
                         other[0x7d0] = 1;
-                        ((TrickyState *)other)->unk7D4 = target;
-                        ((TrickyState *)other)->stateFlags |= 0x10000;
+                        ((TrickyState*)other)->unk7D4 = target;
+                        ((TrickyState*)other)->stateFlags |= 0x10000;
                     }
                 }
-                if (trickyFoodFn_8014460c((int)obj, (int *)state) == 0
-                    && trickyFn_8013b368((int)obj, lbl_803E2488, (int)state) == 0) {
-                    ((TrickyState *)state)->unk740 -= timeDelta;
-                    if (((TrickyState *)state)->unk740 <= lbl_803E23DC) {
-                        ((TrickyState *)state)->unk740 = (f32)(int)randomGetRange(500, 0x2ee);
-                        ptr = ((GameObject *)obj)->extra;
-                        if (((u32)((TrickyState *)ptr)->statusFlags >> 6 & 1) == 0
-                            && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
-                            && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+                if (trickyFoodFn_8014460c((int)obj, (int*)state) == 0
+                    && trickyFn_8013b368((int)obj, lbl_803E2488, (int)state) == 0)
+                {
+                    ((TrickyState*)state)->unk740 -= timeDelta;
+                    if (((TrickyState*)state)->unk740 <= lbl_803E23DC)
+                    {
+                        ((TrickyState*)state)->unk740 = (f32)(int)
+                        randomGetRange(500, 0x2ee);
+                        ptr = ((GameObject*)obj)->extra;
+                        if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
+                            && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove <
+                                0x29)
+                            && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
+                        {
                             objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x360, 0x500, -1, 0);
                         }
                     }
-                    if (lbl_803E23DC == ((TrickyState *)state)->waterLevel) {
-                        inWater = 0;
-                    } else if (lbl_803E2410 == ((TrickyState *)state)->unk2B0) {
-                        inWater = 1;
-                    } else if (((TrickyState *)state)->unk2B4 - ((TrickyState *)state)->unk2B0 > lbl_803E2414) {
-                        inWater = 1;
-                    } else {
+                    if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
+                    {
                         inWater = 0;
                     }
-                    if (inWater != 0) {
+                    else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+                    {
+                        inWater = 1;
+                    }
+                    else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+                    {
+                        inWater = 1;
+                    }
+                    else
+                    {
+                        inWater = 0;
+                    }
+                    if (inWater != 0)
+                    {
                         objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
-                        ((TrickyState *)state)->unk79C = lbl_803E2440;
-                        ((TrickyState *)state)->unk838 = lbl_803E23DC;
-                        trickyDebugPrint((char *)(base + 0x184));
-                    } else {
-                        switch (((GameObject *)obj)->anim.currentMove) {
+                        ((TrickyState*)state)->unk79C = lbl_803E2440;
+                        ((TrickyState*)state)->unk838 = lbl_803E23DC;
+                        trickyDebugPrint((char*)(base + 0x184));
+                    }
+                    else
+                    {
+                        switch (((GameObject*)obj)->anim.currentMove)
+                        {
                         case 0xd:
-                            if (((TrickyState *)state)->stateFlags & 0x8000000) {
+                            if (((TrickyState*)state)->stateFlags & 0x8000000)
+                            {
                                 objAnimFn_8013a3f0((int)obj, 0x31, lbl_803E243C, 0);
                             }
                             break;
@@ -549,66 +644,81 @@ void trickyFn_80142524(u8 *obj, u8 *state)
                         case 0x31:
                             break;
                         }
-                        trickyDebugPrint((char *)(base + 0x190));
+                        trickyDebugPrint((char*)(base + 0x190));
                     }
                 }
             }
             state[0x7d0] = 0;
             return;
         }
-        found = Tricky_findNearestGroup4BObject(obj, (TrickyState *)state);
+        found = Tricky_findNearestGroup4BObject(obj, (TrickyState*)state);
     }
-    if (found != NULL) {
+    if (found != NULL)
+    {
         state[0x374] = 2;
-        (*gPathControlInterface)->attachObject(obj, &((TrickyState *)state)->pathControlFlags);
+        (*gPathControlInterface)->attachObject(obj, &((TrickyState*)state)->pathControlFlags);
         state[8] = 1;
         state[0xa] = 0;
         z = lbl_803E23DC;
-        ((TrickyState *)state)->unk71C = z;
-        ((TrickyState *)state)->unk720 = z;
-        ((TrickyState *)state)->stateFlags &= ~0x10;
-        ((TrickyState *)state)->stateFlags &= ~0x10000;
-        ((TrickyState *)state)->stateFlags &= ~0x20000;
-        ((TrickyState *)state)->stateFlags &= ~0x40000;
-        ((TrickyState *)state)->unkD = -1;
-        ((GameObject *)obj)->anim.localPosX = *(f32 *)(found + 0xc);
-        ((GameObject *)obj)->anim.localPosY = *(f32 *)(found + 0x10);
-        ((GameObject *)obj)->anim.localPosZ = *(f32 *)(found + 0x14);
-        ((GameObject *)obj)->anim.worldPosX = *(f32 *)(found + 0x18);
-        ((GameObject *)obj)->anim.worldPosY = *(f32 *)(found + 0x1c);
-        ((GameObject *)obj)->anim.worldPosZ = *(f32 *)(found + 0x20);
+        ((TrickyState*)state)->unk71C = z;
+        ((TrickyState*)state)->unk720 = z;
+        ((TrickyState*)state)->stateFlags &= ~0x10;
+        ((TrickyState*)state)->stateFlags &= ~0x10000;
+        ((TrickyState*)state)->stateFlags &= ~0x20000;
+        ((TrickyState*)state)->stateFlags &= ~0x40000;
+        ((TrickyState*)state)->unkD = -1;
+        ((GameObject*)obj)->anim.localPosX = *(f32*)(found + 0xc);
+        ((GameObject*)obj)->anim.localPosY = *(f32*)(found + 0x10);
+        ((GameObject*)obj)->anim.localPosZ = *(f32*)(found + 0x14);
+        ((GameObject*)obj)->anim.worldPosX = *(f32*)(found + 0x18);
+        ((GameObject*)obj)->anim.worldPosY = *(f32*)(found + 0x1c);
+        ((GameObject*)obj)->anim.worldPosZ = *(f32*)(found + 0x20);
         ObjHits_SyncObjectPosition((int)obj);
-        *(s16 *)obj = *(s16 *)found;
+        *(s16*)obj = *(s16*)found;
         state[9] = 0;
         z = lbl_803E23DC;
-        ((TrickyState *)state)->prevSpeed = z;
-        ((TrickyState *)state)->speed = z;
-        ((TrickyState *)state)->homePosX = *(f32 *)(found + 0x18);
-        ((TrickyState *)state)->homePosY = *(f32 *)(found + 0x1c);
-        ((TrickyState *)state)->homePosZ = *(f32 *)(found + 0x20);
-        ((TrickyState *)state)->stateFlags |= 0x80000;
-        ((TrickyState *)state)->stateFlags &= ~0x2000;
-    } else {
-        ((TrickyState *)state)->unk71C -= timeDelta;
-        if (((TrickyState *)state)->unk71C < lbl_803E23DC) {
-            ((TrickyState *)state)->unk71C = lbl_803E23DC;
+        ((TrickyState*)state)->prevSpeed = z;
+        ((TrickyState*)state)->speed = z;
+        ((TrickyState*)state)->homePosX = *(f32*)(found + 0x18);
+        ((TrickyState*)state)->homePosY = *(f32*)(found + 0x1c);
+        ((TrickyState*)state)->homePosZ = *(f32*)(found + 0x20);
+        ((TrickyState*)state)->stateFlags |= 0x80000;
+        ((TrickyState*)state)->stateFlags &= ~0x2000;
+    }
+    else
+    {
+        ((TrickyState*)state)->unk71C -= timeDelta;
+        if (((TrickyState*)state)->unk71C < lbl_803E23DC)
+        {
+            ((TrickyState*)state)->unk71C = lbl_803E23DC;
         }
         fn_80144B50(obj, state);
-        if (((TrickyFnRow *)(base + state[0xa] * 4))->fn(obj, state) == 0) {
-            if (lbl_803E23DC == ((TrickyState *)state)->waterLevel) {
-                inWater = 0;
-            } else if (lbl_803E2410 == ((TrickyState *)state)->unk2B0) {
-                inWater = 1;
-            } else if (((TrickyState *)state)->unk2B4 - ((TrickyState *)state)->unk2B0 > lbl_803E2414) {
-                inWater = 1;
-            } else {
+        if (((TrickyFnRow*)(base + state[0xa] * 4))->fn(obj, state) == 0)
+        {
+            if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
+            {
                 inWater = 0;
             }
-            if (inWater != 0) {
+            else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+            {
+                inWater = 1;
+            }
+            else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+            {
+                inWater = 1;
+            }
+            else
+            {
+                inWater = 0;
+            }
+            if (inWater != 0)
+            {
                 objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
-                ((TrickyState *)state)->unk79C = lbl_803E2440;
-                ((TrickyState *)state)->unk838 = lbl_803E23DC;
-            } else {
+                ((TrickyState*)state)->unk79C = lbl_803E2440;
+                ((TrickyState*)state)->unk838 = lbl_803E23DC;
+            }
+            else
+            {
                 objAnimFn_8013a3f0((int)obj, 0x25, lbl_803E2518, 0);
             }
         }
@@ -628,44 +738,51 @@ void trickyFn_80142524(u8 *obj, u8 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void objPosFn_80039510(int obj, int flags, float *out);
+extern void objPosFn_80039510(int obj, int flags, float* out);
 extern f32 lbl_803E24C8;
 
 int trickyFn_80142a14(int obj, int state)
 {
-  int tex;
-  short sVar;
-  u16 sfxId;
-  float pos[3];
+    int tex;
+    short sVar;
+    u16 sfxId;
+    float pos[3];
 
-  objPosFn_80039510(*(int *)&((TrickyState *)state)->followObj, 0, pos);
-  if (getXZDistance(pos, (float *)(state + 0x72c)) > lbl_803E2424) {
-    ((TrickyState *)state)->unk72C = pos[0];
-    *(float *)&((TrickyState *)state)->unk730 = pos[1];
-    ((TrickyState *)state)->unk734 = pos[2];
-  }
-  if (((((TrickyState *)state)->unk728 >> 5) & 1) != 0) {
-    if (Sfx_IsPlayingFromObjectChannel(obj, 16) != 0) {
-      return 0;
+    objPosFn_80039510(*(int*)&((TrickyState*)state)->followObj, 0, pos);
+    if (getXZDistance(pos, (float*)(state + 0x72c)) > lbl_803E2424)
+    {
+        ((TrickyState*)state)->unk72C = pos[0];
+        *(float*)&((TrickyState*)state)->unk730 = pos[1];
+        ((TrickyState*)state)->unk734 = pos[2];
     }
-    tricky_startRandomIdleMove(obj, state);
-    return 1;
-  }
-  if ((u8)trickyFn_8013b368(lbl_803E24C8, obj, state) == 1) {
-    return 1;
-  }
-  ((TrickyState *)state)->unk728 = ((TrickyState *)state)->unk728 | 0x20;
-  sfxId = randomGetRange(862, 863);
-  tex = *(int *)&((GameObject *)obj)->extra;
-  if (((*(u8 *)(tex + 0x58) >> 6) & 1) == 0) {
-    sVar = ((GameObject *)obj)->anim.currentMove;
-    if (sVar >= 48 || sVar < 41) {
-      if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0) {
-        objAudioFn_800393f8(obj, (void *)(tex + 0x3a8), sfxId, 1280, -1, 0);
-      }
+    if (((((TrickyState*)state)->unk728 >> 5) & 1) != 0)
+    {
+        if (Sfx_IsPlayingFromObjectChannel(obj, 16) != 0)
+        {
+            return 0;
+        }
+        tricky_startRandomIdleMove(obj, state);
+        return 1;
     }
-  }
-  return 0;
+    if ((u8)trickyFn_8013b368(lbl_803E24C8, obj, state) == 1)
+    {
+        return 1;
+    }
+    ((TrickyState*)state)->unk728 = ((TrickyState*)state)->unk728 | 0x20;
+    sfxId = randomGetRange(862, 863);
+    tex = *(int*)&((GameObject*)obj)->extra;
+    if (((*(u8*)(tex + 0x58) >> 6) & 1) == 0)
+    {
+        sVar = ((GameObject*)obj)->anim.currentMove;
+        if (sVar >= 48 || sVar < 41)
+        {
+            if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0)
+            {
+                objAudioFn_800393f8(obj, (void*)(tex + 0x3a8), sfxId, 1280, -1, 0);
+            }
+        }
+    }
+    return 0;
 }
 
 /*
@@ -682,50 +799,61 @@ int trickyFn_80142a14(int obj, int state)
  * PAL Size: TODO
  */
 extern u8 Obj_IsLoadingLocked(void);
-extern u8 *Obj_AllocObjectSetup(int size, int id);
-extern u8 *Obj_SetupObject(u8 *e, int a, int b, int c, void *d);
-extern void objSetAnimSpeedTo1(u8 *e);
+extern u8* Obj_AllocObjectSetup(int size, int id);
+extern u8* Obj_SetupObject(u8* e, int a, int b, int c, void* d);
+extern void objSetAnimSpeedTo1(u8 * e);
 extern f32 lbl_803E24AC;
 extern f32 lbl_803E23E4;
 
-int trickyFlameFn_80142b6c(u8 *obj, u8 *state)
+int trickyFlameFn_80142b6c(u8* obj, u8* state)
 {
     int i;
-    u8 *p;
-    u8 *ptr;
-    u8 *e;
+    u8* p;
+    u8* ptr;
+    u8* e;
 
-    switch (((GameObject *)obj)->anim.currentMove) {
+    switch (((GameObject*)obj)->anim.currentMove)
+    {
     case 0x1a:
-        if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E24AC && (((TrickyState *)state)->stateFlags & 0x800) == 0) {
-            if (Obj_IsLoadingLocked() != 0) {
-                ((TrickyState *)state)->stateFlags |= 0x800;
+        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E24AC && (((TrickyState*)state)->stateFlags & 0x800)
+            == 0)
+        {
+            if (Obj_IsLoadingLocked() != 0)
+            {
+                ((TrickyState*)state)->stateFlags |= 0x800;
                 p = state;
-                for (i = 0; i < 7; i++) {
+                for (i = 0; i < 7; i++)
+                {
                     e = Obj_AllocObjectSetup(0x24, 0x4f0);
                     e[4] = 2;
                     e[5] = 1;
-                    *(s16 *)(e + 0x1a) = i;
-                    *(u8 **)(p + 0x700) = Obj_SetupObject(e, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, ((GameObject *)obj)->anim.parent);
+                    *(s16*)(e + 0x1a) = i;
+                    *(u8**)(p + 0x700) = Obj_SetupObject(e, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                                         ((GameObject*)obj)->anim.parent);
                     p += 4;
                 }
                 Sfx_PlayFromObject((int)obj, 0x3db);
                 Sfx_AddLoopedObjectSound(obj, 0x3dc);
             }
-        } else {
-            if (((TrickyState *)state)->stateFlags & 0x8000000) {
-                ((TrickyState *)state)->stateFlags &= ~0x800;
-                ((TrickyState *)state)->stateFlags |= 0x1000;
+        }
+        else
+        {
+            if (((TrickyState*)state)->stateFlags & 0x8000000)
+            {
+                ((TrickyState*)state)->stateFlags &= ~0x800;
+                ((TrickyState*)state)->stateFlags |= 0x1000;
                 p = state;
-                for (i = 0; i < 7; i++) {
-                    objSetAnimSpeedTo1(*(u8 **)(p + 0x700));
+                for (i = 0; i < 7; i++)
+                {
+                    objSetAnimSpeedTo1(*(u8**)(p + 0x700));
                     p += 4;
                 }
                 Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
-                ptr = ((GameObject *)obj)->extra;
-                if (((u32)((TrickyState *)ptr)->statusFlags >> 6 & 1) == 0
-                    && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
-                    && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+                ptr = ((GameObject*)obj)->extra;
+                if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
+                    && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
+                    && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
+                {
                     objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x29d, 0, -1, 0);
                 }
                 state[0xa] = 10;
@@ -755,45 +883,54 @@ extern u32 lbl_802C21DC[];
 
 int trickyFoodFn_80142d2c(int obj, int state)
 {
-  int tex;
-  int result;
-  short sVar;
-  u32 buf[5];
+    int tex;
+    int result;
+    short sVar;
+    u32 buf[5];
 
-  buf[0] = lbl_802C21DC[0];
-  buf[1] = lbl_802C21DC[1];
-  buf[2] = lbl_802C21DC[2];
-  buf[3] = lbl_802C21DC[3];
-  buf[4] = lbl_802C21DC[4];
-  if (trickyFoodFn_8014460c(obj, (int *)state) != 0) {
-    ((TrickyState *)state)->unk720 = lbl_803E23DC;
-    *(int *)&((TrickyState *)state)->stateFlags = *(int *)&((TrickyState *)state)->stateFlags & ~0x10;
-    ((TrickyState *)state)->substate = 0;
-    return 1;
-  }
-  result = (*gGameUIInterface)->isOneOfItemsBeingUsed((s32 *)buf, 5);
-  if (result != 2) {
-    if (result < 2) {
-      if (result < 0) goto skip;
-    } else if (result > 5) {
-      goto skip;
+    buf[0] = lbl_802C21DC[0];
+    buf[1] = lbl_802C21DC[1];
+    buf[2] = lbl_802C21DC[2];
+    buf[3] = lbl_802C21DC[3];
+    buf[4] = lbl_802C21DC[4];
+    if (trickyFoodFn_8014460c(obj, (int*)state) != 0)
+    {
+        ((TrickyState*)state)->unk720 = lbl_803E23DC;
+        *(int*)&((TrickyState*)state)->stateFlags = *(int*)&((TrickyState*)state)->stateFlags & ~0x10;
+        ((TrickyState*)state)->substate = 0;
+        return 1;
     }
-    tex = *(int *)&((GameObject *)obj)->extra;
-    if (((*(u8 *)(tex + 0x58) >> 6) & 1) == 0) {
-      sVar = ((GameObject *)obj)->anim.currentMove;
-      if (sVar >= 48 || sVar < 41) {
-        if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0) {
-          objAudioFn_800393f8(obj, (void *)(tex + 0x3a8), 861, 1280, -1, 0);
+    result = (*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)buf, 5);
+    if (result != 2)
+    {
+        if (result < 2)
+        {
+            if (result < 0) goto skip;
         }
-      }
+        else if (result > 5)
+        {
+            goto skip;
+        }
+        tex = *(int*)&((GameObject*)obj)->extra;
+        if (((*(u8*)(tex + 0x58) >> 6) & 1) == 0)
+        {
+            sVar = ((GameObject*)obj)->anim.currentMove;
+            if (sVar >= 48 || sVar < 41)
+            {
+                if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0)
+                {
+                    objAudioFn_800393f8(obj, (void*)(tex + 0x3a8), 861, 1280, -1, 0);
+                }
+            }
+        }
     }
-  }
 skip:
-  if (lbl_803E23DC == ((TrickyState *)state)->unk720) {
-    *(int *)&((TrickyState *)state)->stateFlags = *(int *)&((TrickyState *)state)->stateFlags & ~0x10;
-    ((TrickyState *)state)->substate = 0;
-  }
-  return (u8)trickyFn_8013b368(lbl_803E2408, obj, state) == 1;
+    if (lbl_803E23DC == ((TrickyState*)state)->unk720)
+    {
+        *(int*)&((TrickyState*)state)->stateFlags = *(int*)&((TrickyState*)state)->stateFlags & ~0x10;
+        ((TrickyState*)state)->substate = 0;
+    }
+    return (u8)trickyFn_8013b368(lbl_803E2408, obj, state) == 1;
 }
 
 /*
@@ -811,63 +948,82 @@ skip:
  */
 extern f32 lbl_803E23F0;
 extern f32 lbl_803E249C;
-extern EffectInterface **gPartfxInterface;
+extern EffectInterface** gPartfxInterface;
 
 int trickyFn_80142eb0(int obj, int state)
 {
-  short sVar;
-  int b;
-  struct {
-    u8 head[8];
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-  } spawnBuf;
+    short sVar;
+    int b;
+    struct
+    {
+        u8 head[8];
+        f32 scale;
+        f32 x;
+        f32 y;
+        f32 z;
+    } spawnBuf;
 
-  if (trickyFoodFn_8014460c(obj, (int *)state) != 0) {
+    if (trickyFoodFn_8014460c(obj, (int*)state) != 0)
+    {
+        return 1;
+    }
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x10;
+    sVar = ((GameObject*)obj)->anim.currentMove;
+    if (sVar == 46)
+    {
+        if (((*(int*)&((TrickyState*)state)->stateFlags & 0x8000000) != 0) &&
+            (((*(int*)&((TrickyState*)state)->stateFlags & 0x10000) != 0 || randomGetRange(0, 2) == 0) ||
+                ((TrickyState*)state)->unk720 > lbl_803E23DC))
+        {
+            objAnimFn_8013a3f0(obj, 47, lbl_803E23EC, 0);
+        }
+        spawnBuf.x = ((GameObject*)obj)->anim.worldPosX;
+        spawnBuf.y = ((GameObject*)obj)->anim.worldPosY;
+        spawnBuf.z = ((GameObject*)obj)->anim.worldPosZ;
+        spawnBuf.scale = lbl_803E23F0;
+        (*gPartfxInterface)->spawnObject((void*)obj, 2022, &spawnBuf, 0x200001, -1, NULL);
+    }
+    else if (sVar < 46)
+    {
+        if (43 < sVar && (*(int*)&((TrickyState*)state)->stateFlags & 0x8000000) != 0)
+        {
+            objAnimFn_8013a3f0(obj, 46, lbl_803E249C, 0);
+        }
+    }
+    else if (sVar < 48 && (*(int*)&((TrickyState*)state)->stateFlags & 0x8000000) != 0)
+    {
+        if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
+        {
+            b = 0;
+        }
+        else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+        {
+            b = 1;
+        }
+        else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+        {
+            b = 1;
+        }
+        else
+        {
+            b = 0;
+        }
+        if (b != 0)
+        {
+            objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
+            ((TrickyState*)state)->unk79C = lbl_803E2440;
+            ((TrickyState*)state)->unk838 = lbl_803E23DC;
+            trickyDebugPrint(sInWaterMessage);
+        }
+        else
+        {
+            objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
+            trickyDebugPrint(lbl_8031D478);
+        }
+        *(int*)&((TrickyState*)state)->stateFlags = *(int*)&((TrickyState*)state)->stateFlags & ~(u64)0x10;
+        ((TrickyState*)state)->substate = 0;
+    }
     return 1;
-  }
-  *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x10;
-  sVar = ((GameObject *)obj)->anim.currentMove;
-  if (sVar == 46) {
-    if (((*(int *)&((TrickyState *)state)->stateFlags & 0x8000000) != 0) &&
-        (((*(int *)&((TrickyState *)state)->stateFlags & 0x10000) != 0 || randomGetRange(0, 2) == 0) ||
-         ((TrickyState *)state)->unk720 > lbl_803E23DC)) {
-      objAnimFn_8013a3f0(obj, 47, lbl_803E23EC, 0);
-    }
-    spawnBuf.x = ((GameObject *)obj)->anim.worldPosX;
-    spawnBuf.y = ((GameObject *)obj)->anim.worldPosY;
-    spawnBuf.z = ((GameObject *)obj)->anim.worldPosZ;
-    spawnBuf.scale = lbl_803E23F0;
-    (*gPartfxInterface)->spawnObject((void *)obj, 2022, &spawnBuf, 0x200001, -1, NULL);
-  } else if (sVar < 46) {
-    if (43 < sVar && (*(int *)&((TrickyState *)state)->stateFlags & 0x8000000) != 0) {
-      objAnimFn_8013a3f0(obj, 46, lbl_803E249C, 0);
-    }
-  } else if (sVar < 48 && (*(int *)&((TrickyState *)state)->stateFlags & 0x8000000) != 0) {
-    if (lbl_803E23DC == ((TrickyState *)state)->waterLevel) {
-      b = 0;
-    } else if (lbl_803E2410 == ((TrickyState *)state)->unk2B0) {
-      b = 1;
-    } else if (((TrickyState *)state)->unk2B4 - ((TrickyState *)state)->unk2B0 > lbl_803E2414) {
-      b = 1;
-    } else {
-      b = 0;
-    }
-    if (b != 0) {
-      objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
-      ((TrickyState *)state)->unk79C = lbl_803E2440;
-      ((TrickyState *)state)->unk838 = lbl_803E23DC;
-      trickyDebugPrint(sInWaterMessage);
-    } else {
-      objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
-      trickyDebugPrint(lbl_8031D478);
-    }
-    *(int *)&((TrickyState *)state)->stateFlags = *(int *)&((TrickyState *)state)->stateFlags & ~(u64)0x10;
-    ((TrickyState *)state)->substate = 0;
-  }
-  return 1;
 }
 
 /*
@@ -884,29 +1040,38 @@ int trickyFn_80142eb0(int obj, int state)
  * PAL Size: TODO
  */
 
-int trickyFn_801430e0(u8 *obj, u8 *state)
+int trickyFn_801430e0(u8* obj, u8* state)
 {
-    u8 *ptr;
+    u8* ptr;
     int ret;
 
-    if (trickyFoodFn_8014460c((int)obj, (int *)state) != 0) {
+    if (trickyFoodFn_8014460c((int)obj, (int*)state) != 0)
+    {
         return 1;
     }
-    if ((u8)trickyFn_8013b368((int)obj, lbl_803E2418, (int)state) != 1) {
-        if (((TrickyState *)state)->unk7B0 != NULL) {
-            ptr = ((GameObject *)obj)->extra;
-            if (((u32)((TrickyState *)ptr)->statusFlags >> 6 & 1) == 0
-                && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
-                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+    if ((u8)trickyFn_8013b368((int)obj, lbl_803E2418, (int)state) != 1)
+    {
+        if (((TrickyState*)state)->unk7B0 != NULL)
+        {
+            ptr = ((GameObject*)obj)->extra;
+            if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
+                && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
+                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
+            {
                 objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x357, 0, -1, 0);
             }
             objAnimFn_8013a3f0((int)obj, 0x26, lbl_803E251C, 0);
             state[0xa] = 5;
-        } else {
+        }
+        else
+        {
             ret = randomGetRange(0, 6);
-            if (ret < 5 && ret >= 0) {
+            if (ret < 5 && ret >= 0)
+            {
                 tricky_startRandomIdleMove((int)obj, (int)state);
-            } else {
+            }
+            else
+            {
                 objAnimFn_801441c0(obj, state);
             }
         }
@@ -927,29 +1092,33 @@ int trickyFn_801430e0(u8 *obj, u8 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 trickyFn_80143210(int param_1,int *param_2)
+undefined4 trickyFn_80143210(int param_1, int* param_2)
 {
-  short sVar1;
-  int iVar2;
-  
-  iVar2 = trickyFoodFn_8014460c(param_1,param_2);
-  if (iVar2 != 0) {
+    short sVar1;
+    int iVar2;
+
+    iVar2 = trickyFoodFn_8014460c(param_1, param_2);
+    if (iVar2 != 0)
+    {
+        return 1;
+    }
+    sVar1 = ((GameObject*)param_1)->anim.currentMove;
+    switch (sVar1)
+    {
+    case 0x23:
+        if ((param_2[0x15] & 0x8000000U) != 0)
+        {
+            objAnimFn_8013a3f0(param_1, 0x24, lbl_803E2478, 0);
+        }
+        break;
+    case 0x24:
+        if (((param_2[0x15] & 0x8000000U) != 0) && ((int)randomGetRange(0, 3) == 0))
+        {
+            *(undefined*)((int)param_2 + 10) = 0;
+        }
+        break;
+    }
     return 1;
-  }
-  sVar1 = ((GameObject *)param_1)->anim.currentMove;
-  switch (sVar1) {
-  case 0x23:
-    if ((param_2[0x15] & 0x8000000U) != 0) {
-      objAnimFn_8013a3f0(param_1,0x24,lbl_803E2478,0);
-    }
-    break;
-  case 0x24:
-    if (((param_2[0x15] & 0x8000000U) != 0) && ((int)randomGetRange(0,3) == 0)) {
-      *(undefined *)((int)param_2 + 10) = 0;
-    }
-    break;
-  }
-  return 1;
 }
 
 /*
@@ -965,29 +1134,33 @@ undefined4 trickyFn_80143210(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 trickyFn_801432cc(int param_1,int *param_2)
+undefined4 trickyFn_801432cc(int param_1, int* param_2)
 {
-  short sVar1;
-  int iVar2;
-  
-  iVar2 = trickyFoodFn_8014460c(param_1,param_2);
-  if (iVar2 != 0) {
+    short sVar1;
+    int iVar2;
+
+    iVar2 = trickyFoodFn_8014460c(param_1, param_2);
+    if (iVar2 != 0)
+    {
+        return 1;
+    }
+    sVar1 = ((GameObject*)param_1)->anim.currentMove;
+    switch (sVar1)
+    {
+    case 0x21:
+        if ((param_2[0x15] & 0x8000000U) != 0)
+        {
+            objAnimFn_8013a3f0(param_1, 0x22, lbl_803E2478, 0);
+        }
+        break;
+    case 0x22:
+        if (((param_2[0x15] & 0x8000000U) != 0) && ((int)randomGetRange(0, 3) == 0))
+        {
+            *(undefined*)((int)param_2 + 10) = 0;
+        }
+        break;
+    }
     return 1;
-  }
-  sVar1 = ((GameObject *)param_1)->anim.currentMove;
-  switch (sVar1) {
-  case 0x21:
-    if ((param_2[0x15] & 0x8000000U) != 0) {
-      objAnimFn_8013a3f0(param_1,0x22,lbl_803E2478,0);
-    }
-    break;
-  case 0x22:
-    if (((param_2[0x15] & 0x8000000U) != 0) && ((int)randomGetRange(0,3) == 0)) {
-      *(undefined *)((int)param_2 + 10) = 0;
-    }
-    break;
-  }
-  return 1;
 }
 
 /*
@@ -1003,36 +1176,43 @@ undefined4 trickyFn_801432cc(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 trickyFn_80143388(int obj,int *trickyState)
+undefined4 trickyFn_80143388(int obj, int* trickyState)
 {
-  int val;
-  int ref;
+    int val;
+    int ref;
 
-  val = trickyFoodFn_8014460c(obj,trickyState);
-  if (val != 0) {
-    return 1;
-  }
-  for (val = 0; val < *(char *)((int)trickyState + 0x827); val = val + 1) {
-    ref = val + 0x81f;
-    if (*(char *)((int)trickyState + ref) != '\0') continue;
-    ref = *(int *)&((GameObject *)obj)->extra;
-    if (((u32)(*(byte *)(ref + 0x58) >> 6 & 1)) != 0U) continue;
-    if (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29) {
-      if (Sfx_IsPlayingFromObjectChannel(obj,0x10) == 0) {
-        objAudioFn_800393f8(obj,(void *)(ref + 0x3a8),0x357,0,0xffffffff,0);
-      }
+    val = trickyFoodFn_8014460c(obj, trickyState);
+    if (val != 0)
+    {
+        return 1;
     }
-  }
-  val = trickyFoodFn_8014460c(obj,trickyState);
-  if (val != 0) {
-    return 1;
-  }
-  if ((trickyState[0x15] & 0x8000000U) != 0) {
-    if (trickyState[8] == (int)((GameObject *)obj)->anim.currentMove) {
-      *(undefined *)((int)trickyState + 10) = 0;
+    for (val = 0; val < *(char*)((int)trickyState + 0x827); val = val + 1)
+    {
+        ref = val + 0x81f;
+        if (*(char*)((int)trickyState + ref) != '\0') continue;
+        ref = *(int*)&((GameObject*)obj)->extra;
+        if (((u32)(*(byte*)(ref + 0x58) >> 6 & 1)) != 0U) continue;
+        if (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
+        {
+            if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
+            {
+                objAudioFn_800393f8(obj, (void*)(ref + 0x3a8), 0x357, 0, 0xffffffff, 0);
+            }
+        }
     }
-  }
-  return 1;
+    val = trickyFoodFn_8014460c(obj, trickyState);
+    if (val != 0)
+    {
+        return 1;
+    }
+    if ((trickyState[0x15] & 0x8000000U) != 0)
+    {
+        if (trickyState[8] == (int)((GameObject*)obj)->anim.currentMove)
+        {
+            *(undefined*)((int)trickyState + 10) = 0;
+        }
+    }
+    return 1;
 }
 
 /*
@@ -1050,85 +1230,113 @@ undefined4 trickyFn_80143388(int obj,int *trickyState)
  */
 extern f32 lbl_803E2520;
 extern f32 lbl_803E23F8;
-extern int *gSHthorntailAnimationInterface;
+extern int* gSHthorntailAnimationInterface;
 
-int trickyFn_801434b0(int param_1, int *param_2)
+int trickyFn_801434b0(int param_1, int* param_2)
 {
-  char cVar1;
-  short sVar2;
-  float fVar3;
-  int b;
-  int iVar5;
-  u8 auStack_28[12];
-  int local_1c;
-  float local_18;
-  int local_14;
+    char cVar1;
+    short sVar2;
+    float fVar3;
+    int b;
+    int iVar5;
+    u8 auStack_28[12];
+    int local_1c;
+    float local_18;
+    int local_14;
 
-  if (trickyFoodFn_8014460c(param_1, param_2) != 0) {
-    return 1;
-  }
-  *(u8 *)&((GameObject *)param_1)->anim.resetHitboxMode = *(u8 *)&((GameObject *)param_1)->anim.resetHitboxMode | 0x10;
-  sVar2 = ((GameObject *)param_1)->anim.currentMove;
-  if (sVar2 == 0x2a) {
-    *(float *)(param_2 + 0x1cf) = *(float *)(param_2 + 0x1cf) - timeDelta;
-    if (*(float *)(param_2 + 0x1cf) <= lbl_803E23DC) {
-      if (((param_2[0x15] & 0x10000) != 0) || (lbl_803E23DC < *(float *)(param_2 + 0x1c8))) {
-        objAnimFn_8013a3f0(param_1, 0x2b, lbl_803E23EC, 0);
-      } else {
-        iVar5 = (**(code **)(*gSHthorntailAnimationInterface + 0x24))(0);
-        if (iVar5 == 0) {
-          objAnimFn_8013a3f0(param_1, 0x2c, lbl_803E251C, 0);
-          *(u8 *)((int)param_2 + 10) = 9;
+    if (trickyFoodFn_8014460c(param_1, param_2) != 0)
+    {
+        return 1;
+    }
+    *(u8*)&((GameObject*)param_1)->anim.resetHitboxMode = *(u8*)&((GameObject*)param_1)->anim.resetHitboxMode | 0x10;
+    sVar2 = ((GameObject*)param_1)->anim.currentMove;
+    if (sVar2 == 0x2a)
+    {
+        *(float*)(param_2 + 0x1cf) = *(float*)(param_2 + 0x1cf) - timeDelta;
+        if (*(float*)(param_2 + 0x1cf) <= lbl_803E23DC)
+        {
+            if (((param_2[0x15] & 0x10000) != 0) || (lbl_803E23DC < *(float*)(param_2 + 0x1c8)))
+            {
+                objAnimFn_8013a3f0(param_1, 0x2b, lbl_803E23EC, 0);
+            }
+            else
+            {
+                iVar5 = (**(code**)(*gSHthorntailAnimationInterface + 0x24))(0);
+                if (iVar5 == 0)
+                {
+                    objAnimFn_8013a3f0(param_1, 0x2c, lbl_803E251C, 0);
+                    *(u8*)((int)param_2 + 10) = 9;
+                }
+            }
         }
-      }
+        for (iVar5 = 0; iVar5 < *(char*)((int)param_2 + 0x827); iVar5 = iVar5 + 1)
+        {
+            cVar1 = *(char*)((int)param_2 + iVar5 + 0x81f);
+            if (cVar1 == '\0')
+            {
+                objAudioFn_800393f8(param_1, (void*)(param_2 + 0xea), 0x390, 0x500, -1, 0);
+            }
+            else if (cVar1 == '\a')
+            {
+                objAudioFn_800393f8(param_1, (void*)(param_2 + 0xea), 0x391, 0x100, -1, 0);
+            }
+        }
+        fVar3 = *(float*)(param_2 + 0x1d1) - timeDelta;
+        *(float*)(param_2 + 0x1d1) = fVar3;
+        if (fVar3 <= lbl_803E23DC)
+        {
+            if ((((GameObject*)param_1)->objectFlags & 0x800) != 0)
+            {
+                local_1c = param_2[0x102];
+                local_18 = lbl_803E23F8 + *(float*)(param_2 + 0x103);
+                local_14 = param_2[0x104];
+                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7f0, auStack_28, 0x200001, -1,
+                                                 NULL);
+            }
+            *(float*)(param_2 + 0x1d1) = lbl_803E24C8;
+        }
     }
-    for (iVar5 = 0; iVar5 < *(char *)((int)param_2 + 0x827); iVar5 = iVar5 + 1) {
-      cVar1 = *(char *)((int)param_2 + iVar5 + 0x81f);
-      if (cVar1 == '\0') {
-        objAudioFn_800393f8(param_1, (void *)(param_2 + 0xea), 0x390, 0x500, -1, 0);
-      } else if (cVar1 == '\a') {
-        objAudioFn_800393f8(param_1, (void *)(param_2 + 0xea), 0x391, 0x100, -1, 0);
-      }
+    else if (sVar2 < 0x2a)
+    {
+        if ((0x28 < sVar2) && ((param_2[0x15] & 0x8000000) != 0))
+        {
+            objAnimFn_8013a3f0(param_1, 0x2a, lbl_803E2520, 0);
+        }
     }
-    fVar3 = *(float *)(param_2 + 0x1d1) - timeDelta;
-    *(float *)(param_2 + 0x1d1) = fVar3;
-    if (fVar3 <= lbl_803E23DC) {
-      if ((((GameObject *)param_1)->objectFlags & 0x800) != 0) {
-        local_1c = param_2[0x102];
-        local_18 = lbl_803E23F8 + *(float *)(param_2 + 0x103);
-        local_14 = param_2[0x104];
-        (*gPartfxInterface)->spawnObject((void *)param_1, 0x7f0, auStack_28, 0x200001, -1,
-                                         NULL);
-      }
-      *(float *)(param_2 + 0x1d1) = lbl_803E24C8;
+    else if ((sVar2 < 0x2c) && ((param_2[0x15] & 0x8000000) != 0))
+    {
+        if (lbl_803E23DC == *(float*)(param_2 + 0xab))
+        {
+            b = 0;
+        }
+        else if (lbl_803E2410 == *(float*)(param_2 + 0xac))
+        {
+            b = 1;
+        }
+        else if (*(float*)(param_2 + 0xad) - *(float*)(param_2 + 0xac) > lbl_803E2414)
+        {
+            b = 1;
+        }
+        else
+        {
+            b = 0;
+        }
+        if (b != 0)
+        {
+            objAnimFn_8013a3f0(param_1, 8, lbl_803E243C, 0);
+            *(float*)(param_2 + 0x1e7) = lbl_803E2440;
+            *(float*)(param_2 + 0x20e) = lbl_803E23DC;
+            trickyDebugPrint(sInWaterMessage);
+        }
+        else
+        {
+            objAnimFn_8013a3f0(param_1, 0, lbl_803E2444, 0);
+            trickyDebugPrint(lbl_8031D478);
+        }
+        param_2[0x15] = param_2[0x15] & ~(u64)0x10;
+        *(u8*)((int)param_2 + 10) = 0;
     }
-  } else if (sVar2 < 0x2a) {
-    if ((0x28 < sVar2) && ((param_2[0x15] & 0x8000000) != 0)) {
-      objAnimFn_8013a3f0(param_1, 0x2a, lbl_803E2520, 0);
-    }
-  } else if ((sVar2 < 0x2c) && ((param_2[0x15] & 0x8000000) != 0)) {
-    if (lbl_803E23DC == *(float *)(param_2 + 0xab)) {
-      b = 0;
-    } else if (lbl_803E2410 == *(float *)(param_2 + 0xac)) {
-      b = 1;
-    } else if (*(float *)(param_2 + 0xad) - *(float *)(param_2 + 0xac) > lbl_803E2414) {
-      b = 1;
-    } else {
-      b = 0;
-    }
-    if (b != 0) {
-      objAnimFn_8013a3f0(param_1, 8, lbl_803E243C, 0);
-      *(float *)(param_2 + 0x1e7) = lbl_803E2440;
-      *(float *)(param_2 + 0x20e) = lbl_803E23DC;
-      trickyDebugPrint(sInWaterMessage);
-    } else {
-      objAnimFn_8013a3f0(param_1, 0, lbl_803E2444, 0);
-      trickyDebugPrint(lbl_8031D478);
-    }
-    param_2[0x15] = param_2[0x15] & ~(u64)0x10;
-    *(u8 *)((int)param_2 + 10) = 0;
-  }
-  return 1;
+    return 1;
 }
 
 /*
@@ -1144,7 +1352,8 @@ int trickyFn_801434b0(int param_1, int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct TrickyPackedSlots {
+typedef struct TrickyPackedSlots
+{
     u8 a : 2;
     u8 b : 2;
     u8 c : 2;
@@ -1154,78 +1363,98 @@ typedef struct TrickyPackedSlots {
 extern int cMenuGetSelectedItem(void);
 extern uint GameBit_Get(int bit);
 
-int trickyFoodFn_801437d4(u8 *obj, u8 *state)
+int trickyFoodFn_801437d4(u8* obj, u8* state)
 {
     s8 slots[4];
-    u8 *ptr;
-    u8 *e;
+    u8* ptr;
+    u8* e;
     int idx;
     f32 z;
 
-    if (trickyFoodFn_8014460c((int)obj, (int *)state) != 0) {
+    if (trickyFoodFn_8014460c((int)obj, (int*)state) != 0)
+    {
         state[0xa] = 0;
         return 1;
     }
-    if (cMenuGetSelectedItem() == 0xc1) {
+    if (cMenuGetSelectedItem() == 0xc1)
+    {
         state[0xa] = 0;
         return 1;
     }
-    ((TrickyState *)state)->unk738 -= timeDelta;
-    if (((TrickyState *)state)->unk738 < lbl_803E23DC) {
-        ptr = ((GameObject *)obj)->extra;
-        if (((u32)((TrickyState *)ptr)->statusFlags >> 6 & 1) == 0
-            && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
-            && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+    ((TrickyState*)state)->unk738 -= timeDelta;
+    if (((TrickyState*)state)->unk738 < lbl_803E23DC)
+    {
+        ptr = ((GameObject*)obj)->extra;
+        if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
+            && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
+            && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
+        {
             objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x29a, 0x100, -1, 0);
         }
-        ((TrickyState *)state)->unk738 = lbl_803E2440;
+        ((TrickyState*)state)->unk738 = lbl_803E2440;
     }
-    if (((TrickyState *)state)->child == NULL && Obj_IsLoadingLocked() != 0) {
+    if (((TrickyState*)state)->child == NULL && Obj_IsLoadingLocked() != 0)
+    {
         e = Obj_AllocObjectSetup(0x20, 0x17b);
         slots[0] = -1;
         slots[1] = -1;
         slots[2] = -1;
-        if (((TrickyState *)state)->unk7A8 != NULL) {
-            slots[((TrickyPackedSlots *)(state + 0x7bc))->a] = 1;
+        if (((TrickyState*)state)->unk7A8 != NULL)
+        {
+            slots[((TrickyPackedSlots*)(state + 0x7bc))->a] = 1;
         }
-        if (((TrickyState *)state)->unk7B0 != NULL) {
-            slots[((TrickyPackedSlots *)(state + 0x7bc))->b] = 1;
+        if (((TrickyState*)state)->unk7B0 != NULL)
+        {
+            slots[((TrickyPackedSlots*)(state + 0x7bc))->b] = 1;
         }
-        if (((TrickyState *)state)->child != NULL) {
-            slots[((TrickyPackedSlots *)(state + 0x7bc))->c] = 1;
+        if (((TrickyState*)state)->child != NULL)
+        {
+            slots[((TrickyPackedSlots*)(state + 0x7bc))->c] = 1;
         }
-        if (slots[0] == -1) {
+        if (slots[0] == -1)
+        {
             idx = 0;
-        } else if (slots[1] == -1) {
+        }
+        else if (slots[1] == -1)
+        {
             idx = 1;
-        } else if (slots[2] == -1) {
+        }
+        else if (slots[2] == -1)
+        {
             idx = 2;
-        } else if (slots[3] == -1) {
+        }
+        else if (slots[3] == -1)
+        {
             idx = 3;
-        } else {
+        }
+        else
+        {
             idx = -1;
         }
-        ((TrickyPackedSlots *)(state + 0x7bc))->c = idx;
-        ((TrickyState *)state)->child = Obj_SetupObject(e, 4, -1, -1, ((GameObject *)obj)->anim.parent);
-        ObjLink_AttachChild(obj, ((TrickyState *)state)->child, ((TrickyPackedSlots *)(state + 0x7bc))->c);
+        ((TrickyPackedSlots*)(state + 0x7bc))->c = idx;
+        ((TrickyState*)state)->child = Obj_SetupObject(e, 4, -1, -1, ((GameObject*)obj)->anim.parent);
+        ObjLink_AttachChild(obj, ((TrickyState*)state)->child, ((TrickyPackedSlots*)(state + 0x7bc))->c);
         z = lbl_803E23DC;
-        ((TrickyState *)state)->unk7C0 = z;
-        ((TrickyState *)state)->unk7C4 = z;
-        ((TrickyState *)state)->unk7C8 = z;
+        ((TrickyState*)state)->unk7C0 = z;
+        ((TrickyState*)state)->unk7C4 = z;
+        ((TrickyState*)state)->unk7C8 = z;
     }
     if (((int (**)(int))*gSHthorntailAnimationInterface)[9](0) != 0
-        && ((TrickyState *)state)->unk71C <= lbl_803E23DC
-        && GameBit_Get(0xdd) != 0) {
+        && ((TrickyState*)state)->unk71C <= lbl_803E23DC
+        && GameBit_Get(0xdd) != 0)
+    {
         objAnimFn_8013a3f0((int)obj, 0x29, lbl_803E2444, 0);
-        ptr = ((GameObject *)obj)->extra;
-        if (((u32)((TrickyState *)ptr)->statusFlags >> 6 & 1) == 0
-            && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
-            && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+        ptr = ((GameObject*)obj)->extra;
+        if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
+            && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
+            && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
+        {
             objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x354, 0x1000, -1, 0);
         }
-        ((TrickyState *)state)->stateFlags |= 0x10;
+        ((TrickyState*)state)->stateFlags |= 0x10;
         state[0xa] = 4;
-        ((TrickyState *)state)->unk73C = (f32)(int)randomGetRange(0x78, 0xf0);
+        ((TrickyState*)state)->unk73C = (f32)(int)
+        randomGetRange(0x78, 0xf0);
     }
     return 1;
 }
@@ -1243,20 +1472,23 @@ int trickyFoodFn_801437d4(u8 *obj, u8 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 trickyFn_80143b04(int param_1,int *param_2)
+undefined4 trickyFn_80143b04(int param_1, int* param_2)
 {
-  int iVar1;
+    int iVar1;
 
-  iVar1 = trickyFoodFn_8014460c(param_1,param_2);
-  if (iVar1 != 0) {
-    return 1;
-  }
-  if ((param_2[0x15] & 0x8000000U) != 0) {
-    if (param_2[8] == (int)((GameObject *)param_1)->anim.currentMove) {
-      *(undefined *)((int)param_2 + 10) = 0;
+    iVar1 = trickyFoodFn_8014460c(param_1, param_2);
+    if (iVar1 != 0)
+    {
+        return 1;
     }
-  }
-  return 1;
+    if ((param_2[0x15] & 0x8000000U) != 0)
+    {
+        if (param_2[8] == (int)((GameObject*)param_1)->anim.currentMove)
+        {
+            *(undefined*)((int)param_2 + 10) = 0;
+        }
+    }
+    return 1;
 }
 
 /*
@@ -1272,23 +1504,26 @@ undefined4 trickyFn_80143b04(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 trickyFn_80143b78(int param_1,int *param_2)
+undefined4 trickyFn_80143b78(int param_1, int* param_2)
 {
-  int iVar1;
+    int iVar1;
 
-  iVar1 = trickyFoodFn_8014460c(param_1,param_2);
-  if (iVar1 != 0) {
-    return 1;
-  }
-  iVar1 = trickyFn_8013b368(param_1,lbl_803E2408,param_2);
-  if (iVar1 == 1) {
-    if (lbl_803E23DC == *(f32*)((int)param_2 + 0x71c)) {
-      *(undefined *)((int)param_2 + 10) = 0;
+    iVar1 = trickyFoodFn_8014460c(param_1, param_2);
+    if (iVar1 != 0)
+    {
+        return 1;
     }
-    return 1;
-  }
-  *(undefined *)((int)param_2 + 10) = 0;
-  return 0;
+    iVar1 = trickyFn_8013b368(param_1, lbl_803E2408, param_2);
+    if (iVar1 == 1)
+    {
+        if (lbl_803E23DC == *(f32*)((int)param_2 + 0x71c))
+        {
+            *(undefined*)((int)param_2 + 10) = 0;
+        }
+        return 1;
+    }
+    *(undefined*)((int)param_2 + 10) = 0;
+    return 0;
 }
 
 /*
@@ -1306,59 +1541,78 @@ undefined4 trickyFn_80143b78(int param_1,int *param_2)
  */
 int trickyFn_80143c04(int obj, int state)
 {
-  int tex;
-  short sVar;
-  int result;
-  int iVar4;
-  float fVar;
+    int tex;
+    short sVar;
+    int result;
+    int iVar4;
+    float fVar;
 
-  *(int *)&((TrickyState *)state)->followObj = ((TrickyState *)state)->playerObj;
-  if (*(int *)&((TrickyState *)state)->unk28 != *(int *)&((TrickyState *)state)->followObj + 0x18) {
-    *(int *)&((TrickyState *)state)->unk28 = *(int *)&((TrickyState *)state)->followObj + 0x18;
-    *(int *)&((TrickyState *)state)->stateFlags = *(int *)&((TrickyState *)state)->stateFlags & ~(u64)0x400;
-    *(short *)&((TrickyState *)state)->unkD2 = 0;
-  }
-  if (lbl_803E23DC == ((TrickyState *)state)->unk71C) {
-    ((TrickyState *)state)->unkD = -1;
-    fVar = lbl_803E24C8;
-  } else {
-    fVar = lbl_803E2408;
-    if ((*(int *)&((TrickyState *)state)->stateFlags & 0x20000) != 0) {
-      ((TrickyState *)state)->unkD = 0;
-      *(int *)&((TrickyState *)state)->stateFlags = *(int *)&((TrickyState *)state)->stateFlags & ~(u64)0x20000;
+    *(int*)&((TrickyState*)state)->followObj = ((TrickyState*)state)->playerObj;
+    if (*(int*)&((TrickyState*)state)->unk28 != *(int*)&((TrickyState*)state)->followObj + 0x18)
+    {
+        *(int*)&((TrickyState*)state)->unk28 = *(int*)&((TrickyState*)state)->followObj + 0x18;
+        *(int*)&((TrickyState*)state)->stateFlags = *(int*)&((TrickyState*)state)->stateFlags & ~(u64)0x400;
+        *(short*)&((TrickyState*)state)->unkD2 = 0;
     }
-  }
-  result = (u8)trickyFn_8013b368(fVar, obj, state);
-  if (result == 1) {
-    ((TrickyState *)state)->unk728 = ((TrickyState *)state)->unk728 | 0x80;
-    return 1;
-  }
-  if (result == 2) {
-    if ((*(int *)&((TrickyState *)state)->stateFlags & 2) != 0) {
-      tex = *(int *)&((GameObject *)obj)->extra;
-      if (((*(u8 *)(tex + 0x58) >> 6) & 1) == 0) {
-        sVar = ((GameObject *)obj)->anim.currentMove;
-        if (sVar >= 48 || sVar < 41) {
-          if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0) {
-            objAudioFn_800393f8(obj, (void *)(tex + 0x3a8), 861, 1280, -1, 0);
-          }
+    if (lbl_803E23DC == ((TrickyState*)state)->unk71C)
+    {
+        ((TrickyState*)state)->unkD = -1;
+        fVar = lbl_803E24C8;
+    }
+    else
+    {
+        fVar = lbl_803E2408;
+        if ((*(int*)&((TrickyState*)state)->stateFlags & 0x20000) != 0)
+        {
+            ((TrickyState*)state)->unkD = 0;
+            *(int*)&((TrickyState*)state)->stateFlags = *(int*)&((TrickyState*)state)->stateFlags & ~(u64)0x20000;
         }
-      }
     }
-  }
-  if (lbl_803E23DC == ((TrickyState *)state)->waterLevel) {
-    iVar4 = 0;
-  } else if (lbl_803E2410 == ((TrickyState *)state)->unk2B0) {
-    iVar4 = 1;
-  } else if (((TrickyState *)state)->unk2B4 - ((TrickyState *)state)->unk2B0 > lbl_803E2414) {
-    iVar4 = 1;
-  } else {
-    iVar4 = 0;
-  }
-  if (iVar4 != 0) {
-    return 0;
-  }
-  return fn_80143DD4(obj, (int *)state);
+    result = (u8)trickyFn_8013b368(fVar, obj, state);
+    if (result == 1)
+    {
+        ((TrickyState*)state)->unk728 = ((TrickyState*)state)->unk728 | 0x80;
+        return 1;
+    }
+    if (result == 2)
+    {
+        if ((*(int*)&((TrickyState*)state)->stateFlags & 2) != 0)
+        {
+            tex = *(int*)&((GameObject*)obj)->extra;
+            if (((*(u8*)(tex + 0x58) >> 6) & 1) == 0)
+            {
+                sVar = ((GameObject*)obj)->anim.currentMove;
+                if (sVar >= 48 || sVar < 41)
+                {
+                    if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0)
+                    {
+                        objAudioFn_800393f8(obj, (void*)(tex + 0x3a8), 861, 1280, -1, 0);
+                    }
+                }
+            }
+        }
+    }
+    if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
+    {
+        iVar4 = 0;
+    }
+    else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+    {
+        iVar4 = 1;
+    }
+    else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+    {
+        iVar4 = 1;
+    }
+    else
+    {
+        iVar4 = 0;
+    }
+    if (iVar4 != 0)
+    {
+        return 0;
+    }
+    return fn_80143DD4(obj, (int*)state);
 }
 
 /*
@@ -1374,101 +1628,126 @@ int trickyFn_80143c04(int obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct { u8 bf7:1; u8 bf6:1; u8 rest:6; } FlagByte728;
-undefined4 fn_80143DD4(int param_1,int *param_2)
+typedef struct
 {
-  int iVar1;
-  uint uVar3;
+    u8 bf7 : 1;
+    u8 bf6 : 1;
+    u8 rest : 6;
+} FlagByte728;
 
-  iVar1 = trickyFoodFn_8014460c(param_1,param_2);
-  if (iVar1 != 0) {
-    return 1;
-  }
-  if (*(f32*)((int)param_2 + 0x79c) > lbl_803E23DC) {
-    objAnimFn_8013a3f0(param_1,0x1b,lbl_803E23EC,0);
-    *(undefined *)((int)param_2 + 10) = 2;
-    *(f32*)((int)param_2 + 0x79c) = lbl_803E23DC;
-    return 1;
-  }
-  if ((*(byte *)(param_2 + 0x1ca) >> 7 & 1) != 0U) {
-    *(f32*)((int)param_2 + 0x724) = lbl_803E2524;
-    ((FlagByte728*)((int)param_2 + 0x728))->bf7 = 0;
-    ((FlagByte728*)((int)param_2 + 0x728))->bf6 = 1;
-  }
-  if ((*(byte *)(param_2 + 0x1ca) >> 6 & 1) != 0U) {
+undefined4 fn_80143DD4(int param_1, int* param_2)
+{
+    int iVar1;
+    uint uVar3;
+
+    iVar1 = trickyFoodFn_8014460c(param_1, param_2);
+    if (iVar1 != 0)
+    {
+        return 1;
+    }
+    if (*(f32*)((int)param_2 + 0x79c) > lbl_803E23DC)
+    {
+        objAnimFn_8013a3f0(param_1, 0x1b, lbl_803E23EC, 0);
+        *(undefined*)((int)param_2 + 10) = 2;
+        *(f32*)((int)param_2 + 0x79c) = lbl_803E23DC;
+        return 1;
+    }
+    if ((*(byte*)(param_2 + 0x1ca) >> 7 & 1) != 0U)
+    {
+        *(f32*)((int)param_2 + 0x724) = lbl_803E2524;
+        ((FlagByte728*)((int)param_2 + 0x728))->bf7 = 0;
+        ((FlagByte728*)((int)param_2 + 0x728))->bf6 = 1;
+    }
+    if ((*(byte*)(param_2 + 0x1ca) >> 6 & 1) != 0U)
+    {
+        *(f32*)((int)param_2 + 0x724) = *(f32*)((int)param_2 + 0x724) - timeDelta;
+        if (*(f32*)((int)param_2 + 0x724) <= lbl_803E23DC)
+        {
+            *(f32*)((int)param_2 + 0x71c) = lbl_803E2438;
+            uVar3 = randomGetRange(200, 500);
+            *(f32*)((int)param_2 + 0x724) =
+                (f32)(s32)(uVar3);
+            ((FlagByte728*)((int)param_2 + 0x728))->bf6 = 0;
+            *(undefined*)((int)param_2 + 10) = 1;
+        }
+        return 0;
+    }
+    if (Sfx_IsPlayingFromObjectChannel(param_1, 0x10))
+    {
+        return 1;
+    }
+    iVar1 = ((int (*)(int))(*(int*)(*DAT_803dd6d8 + 0x24)))(0);
+    if (iVar1 == 0)
+    {
+        param_2[0x15] = param_2[0x15] & 0xdfffffff;
+    }
+    iVar1 = ((int (*)(int))(*(int*)(*DAT_803dd6d8 + 0x24)))(0);
+    if ((iVar1 != 0) && ((param_2[0x15] & 0x20000000U) == 0))
+    {
+        param_2[0x15] = param_2[0x15] | 0x20000000;
+        iVar1 = *(int*)&((GameObject*)param_1)->extra;
+        if (((*(byte*)(iVar1 + 0x58) >> 6 & 1) == 0U) &&
+            ((((GameObject*)param_1)->anim.currentMove >= 0x30 || (((GameObject*)param_1)->anim.currentMove < 0x29)) &&
+                !Sfx_IsPlayingFromObjectChannel(param_1, 0x10)))
+        {
+            objAudioFn_800393f8(param_1, (void*)(iVar1 + 0x3a8), 0x353, 0x500, 0xffffffff, 0);
+        }
+        return 0;
+    }
+    if (*(byte*)*param_2 <= 3)
+    {
+        objAnimFn_8013a3f0(param_1, 0x14, lbl_803E2444, 0);
+        *(undefined*)((int)param_2 + 10) = 3;
+        *(f32*)((int)param_2 + 0x738) = lbl_803E2440;
+        return 1;
+    }
     *(f32*)((int)param_2 + 0x724) = *(f32*)((int)param_2 + 0x724) - timeDelta;
-    if (*(f32*)((int)param_2 + 0x724) <= lbl_803E23DC) {
-      *(f32*)((int)param_2 + 0x71c) = lbl_803E2438;
-      uVar3 = randomGetRange(200,500);
-      *(f32*)((int)param_2 + 0x724) =
-           (f32)(s32)(uVar3);
-      ((FlagByte728*)((int)param_2 + 0x728))->bf6 = 0;
-      *(undefined *)((int)param_2 + 10) = 1;
+    if (*(f32*)((int)param_2 + 0x724) > lbl_803E23DC)
+    {
+        return 0;
     }
-    return 0;
-  }
-  if (Sfx_IsPlayingFromObjectChannel(param_1,0x10)) {
+    uVar3 = randomGetRange(200, 500);
+    *(f32*)((int)param_2 + 0x724) =
+        (f32)(s32)(uVar3);
+    if (*(byte*)*param_2 <= 7)
+    {
+        objAnimFn_8013a3f0(param_1, 0x14, lbl_803E2444, 0);
+        *(undefined*)((int)param_2 + 10) = 3;
+        *(f32*)((int)param_2 + 0x738) = lbl_803E2440;
+        return 1;
+    }
+    if (*(f32*)((int)param_2 + 0x71c) <= lbl_803E23DC)
+    {
+        if (param_2[0x1ec] == 0)
+        {
+            uVar3 = randomGetRange(0, 6);
+            if (((int)uVar3 < 5) && (-1 < (int)uVar3))
+            {
+                tricky_startRandomIdleMove(param_1, (int)param_2);
+            }
+            else
+            {
+                objAnimFn_801441c0((u8*)param_1, (u8*)param_2);
+            }
+        }
+        else
+        {
+            iVar1 = *(int*)&((GameObject*)param_1)->extra;
+            if ((((*(byte*)(iVar1 + 0x58) >> 6 & 1) == 0U) &&
+                (((GameObject*)param_1)->anim.currentMove >= 0x30 || (((GameObject*)param_1)->anim.currentMove < 0x29)
+                ) && !Sfx_IsPlayingFromObjectChannel(param_1, 0x10)))
+            {
+                objAudioFn_800393f8(param_1, (void*)(iVar1 + 0x3a8), 0x357, 0, 0xffffffff, 0);
+            }
+            objAnimFn_8013a3f0(param_1, 0x26, lbl_803E251C, 0);
+            *(undefined*)((int)param_2 + 10) = 5;
+        }
+    }
+    else
+    {
+        tricky_startRandomIdleMove(param_1, (int)param_2);
+    }
     return 1;
-  }
-  iVar1 = ((int (*)(int))(*(int *)(*DAT_803dd6d8 + 0x24)))(0);
-  if (iVar1 == 0) {
-    param_2[0x15] = param_2[0x15] & 0xdfffffff;
-  }
-  iVar1 = ((int (*)(int))(*(int *)(*DAT_803dd6d8 + 0x24)))(0);
-  if ((iVar1 != 0) && ((param_2[0x15] & 0x20000000U) == 0)) {
-    param_2[0x15] = param_2[0x15] | 0x20000000;
-    iVar1 = *(int *)&((GameObject *)param_1)->extra;
-    if (((*(byte *)(iVar1 + 0x58) >> 6 & 1) == 0U) &&
-       ((((GameObject *)param_1)->anim.currentMove >= 0x30 || (((GameObject *)param_1)->anim.currentMove < 0x29)) &&
-         !Sfx_IsPlayingFromObjectChannel(param_1,0x10))) {
-      objAudioFn_800393f8(param_1,(void *)(iVar1 + 0x3a8),0x353,0x500,0xffffffff,0);
-    }
-    return 0;
-  }
-  if (*(byte *)*param_2 <= 3) {
-    objAnimFn_8013a3f0(param_1,0x14,lbl_803E2444,0);
-    *(undefined *)((int)param_2 + 10) = 3;
-    *(f32*)((int)param_2 + 0x738) = lbl_803E2440;
-    return 1;
-  }
-  *(f32*)((int)param_2 + 0x724) = *(f32*)((int)param_2 + 0x724) - timeDelta;
-  if (*(f32*)((int)param_2 + 0x724) > lbl_803E23DC) {
-    return 0;
-  }
-  uVar3 = randomGetRange(200,500);
-  *(f32*)((int)param_2 + 0x724) =
-       (f32)(s32)(uVar3);
-  if (*(byte *)*param_2 <= 7) {
-    objAnimFn_8013a3f0(param_1,0x14,lbl_803E2444,0);
-    *(undefined *)((int)param_2 + 10) = 3;
-    *(f32*)((int)param_2 + 0x738) = lbl_803E2440;
-    return 1;
-  }
-  if (*(f32*)((int)param_2 + 0x71c) <= lbl_803E23DC) {
-    if (param_2[0x1ec] == 0) {
-      uVar3 = randomGetRange(0,6);
-      if (((int)uVar3 < 5) && (-1 < (int)uVar3)) {
-        tricky_startRandomIdleMove(param_1,(int)param_2);
-      }
-      else {
-        objAnimFn_801441c0((u8 *)param_1,(u8 *)param_2);
-      }
-    }
-    else {
-      iVar1 = *(int *)&((GameObject *)param_1)->extra;
-      if ((((*(byte *)(iVar1 + 0x58) >> 6 & 1) == 0U) &&
-          (((GameObject *)param_1)->anim.currentMove >= 0x30 || (((GameObject *)param_1)->anim.currentMove < 0x29)
-           ) && !Sfx_IsPlayingFromObjectChannel(param_1,0x10))) {
-        objAudioFn_800393f8(param_1,(void *)(iVar1 + 0x3a8),0x357,0,0xffffffff,0);
-      }
-      objAnimFn_8013a3f0(param_1,0x26,lbl_803E251C,0);
-      *(undefined *)((int)param_2 + 10) = 5;
-    }
-  }
-  else {
-    tricky_startRandomIdleMove(param_1,(int)param_2);
-  }
-  return 1;
 }
 
 /*
@@ -1492,11 +1771,11 @@ extern f32 lbl_803E2458;
 extern f32 lbl_803E2484;
 extern f32 lbl_803E2530;
 
-void objAnimFn_801441c0(u8 *obj, u8 *state)
+void objAnimFn_801441c0(u8* obj, u8* state)
 {
     f32 arr[2];
-    u8 *found;
-    u8 *ptr;
+    u8* found;
+    u8* ptr;
     u8 lo;
     u8 hi;
     int sv;
@@ -1505,54 +1784,61 @@ void objAnimFn_801441c0(u8 *obj, u8 *state)
     lo = 1;
     hi = 3;
     arr[0] = lbl_803E2524;
-    found = (u8 *)ObjGroup_FindNearestObject(0x4d, obj, arr);
-    if (found != NULL && (*(u16 *)(found + 0xb0) & 0x800) != 0) {
+    found = (u8*)ObjGroup_FindNearestObject(0x4d, obj, arr);
+    if (found != NULL && (*(u16*)(found + 0xb0) & 0x800) != 0)
+    {
         lo = 0;
     }
-    if (((int (**)(int))*gSHthorntailAnimationInterface)[9](0) == 0 || GameBit_Get(0xdd) == 0) {
+    if (((int (**)(int))*gSHthorntailAnimationInterface)[9](0) == 0 || GameBit_Get(0xdd) == 0)
+    {
         hi = 2;
     }
-    switch (randomGetRange(lo, hi)) {
+    switch (randomGetRange(lo, hi))
+    {
     case 0:
-        ((TrickyState *)state)->followObj = found;
-        objPosFn_80039510((int)found, 0, (float *)(state + 0x72c));
-        if (((TrickyState *)state)->unk28 != state + 0x72c) {
-            ((TrickyState *)state)->unk28 = state + 0x72c;
-            ((TrickyState *)state)->stateFlags &= ~0x400;
-            ((TrickyState *)state)->unkD2 = 0;
+        ((TrickyState*)state)->followObj = found;
+        objPosFn_80039510((int)found, 0, (float*)(state + 0x72c));
+        if (((TrickyState*)state)->unk28 != state + 0x72c)
+        {
+            ((TrickyState*)state)->unk28 = state + 0x72c;
+            ((TrickyState*)state)->stateFlags &= ~0x400;
+            ((TrickyState*)state)->unkD2 = 0;
         }
-        ((TrickyState *)state)->unk728 &= ~0x20;
+        ((TrickyState*)state)->unk728 &= ~0x20;
         state[0xa] = 0xc;
         break;
     case 1:
         sv = randomGetRange(0x20, 0xff);
-        ang = lbl_803E2454 * (f32)(s16)((*(s16 *)obj + sv) * 0x100) / lbl_803E2458;
-        ((TrickyState *)state)->unk72C = (f32)(lbl_803E2528 * -mathSinf(ang) + ((GameObject *)obj)->anim.localPosX);
-        ((TrickyState *)state)->unk730 = *(u32 *)&((GameObject *)obj)->anim.localPosY;
-        ((TrickyState *)state)->unk734 = (f32)((f64)lbl_803E2484 * -mathCosf(ang) + ((GameObject *)obj)->anim.localPosZ);
-        if (((TrickyState *)state)->unk28 != state + 0x72c) {
-            ((TrickyState *)state)->unk28 = state + 0x72c;
-            ((TrickyState *)state)->stateFlags &= ~0x400;
-            ((TrickyState *)state)->unkD2 = 0;
+        ang = lbl_803E2454 * (f32)(s16)((*(s16*)obj + sv) * 0x100) / lbl_803E2458;
+        ((TrickyState*)state)->unk72C = (f32)(lbl_803E2528 * -mathSinf(ang) + ((GameObject*)obj)->anim.localPosX);
+        ((TrickyState*)state)->unk730 = *(u32*)&((GameObject*)obj)->anim.localPosY;
+        ((TrickyState*)state)->unk734 = (f32)((f64)lbl_803E2484 * -mathCosf(ang) + ((GameObject*)obj)->anim.localPosZ);
+        if (((TrickyState*)state)->unk28 != state + 0x72c)
+        {
+            ((TrickyState*)state)->unk28 = state + 0x72c;
+            ((TrickyState*)state)->stateFlags &= ~0x400;
+            ((TrickyState*)state)->unkD2 = 0;
         }
         state[0xa] = 8;
         break;
     case 2:
         objAnimFn_8013a3f0((int)obj, 0x2d, lbl_803E2530, 0);
-        ((TrickyState *)state)->stateFlags |= 0x10;
+        ((TrickyState*)state)->stateFlags |= 0x10;
         state[0xa] = 9;
         break;
     case 3:
         objAnimFn_8013a3f0((int)obj, 0x29, lbl_803E2444, 0);
-        ptr = ((GameObject *)obj)->extra;
-        if (((u32)((TrickyState *)ptr)->statusFlags >> 6 & 1) == 0
-            && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
-            && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+        ptr = ((GameObject*)obj)->extra;
+        if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
+            && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
+            && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
+        {
             objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x354, 0x1000, -1, 0);
         }
-        ((TrickyState *)state)->stateFlags |= 0x10;
+        ((TrickyState*)state)->stateFlags |= 0x10;
         state[0xa] = 4;
-        ((TrickyState *)state)->unk73C = (f32)(int)randomGetRange(0x78, 0xf0);
+        ((TrickyState*)state)->unk73C = (f32)(int)
+        randomGetRange(0x78, 0xf0);
         break;
     }
 }
@@ -1570,42 +1856,46 @@ void objAnimFn_801441c0(u8 *obj, u8 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void tricky_startRandomIdleMove(int param_1,int param_2)
+void tricky_startRandomIdleMove(int param_1, int param_2)
 {
-  int iVar1;
-  int iVar3;
+    int iVar1;
+    int iVar3;
 
-  iVar1 = randomGetRange(0,4);
-  switch (iVar1) {
-  case 0:
-    objAnimFn_8013a3f0(param_1,0,lbl_803E2444,0);
-    ((TrickyState *)param_2)->substate = 2;
-    break;
-  case 1:
-    iVar3 = *(int *)&((GameObject *)param_1)->extra;
-    if (((u32)(*(byte *)(iVar3 + 0x58) >> 6 & 1)) == 0U) {
-      if (((GameObject *)param_1)->anim.currentMove >= 0x30 || ((GameObject *)param_1)->anim.currentMove < 0x29) {
-        if (Sfx_IsPlayingFromObjectChannel(param_1,0x10) == 0) {
-          objAudioFn_800393f8(param_1,(void *)(iVar3 + 0x3a8),0x357,0,0xffffffff,0);
+    iVar1 = randomGetRange(0, 4);
+    switch (iVar1)
+    {
+    case 0:
+        objAnimFn_8013a3f0(param_1, 0, lbl_803E2444, 0);
+        ((TrickyState*)param_2)->substate = 2;
+        break;
+    case 1:
+        iVar3 = *(int*)&((GameObject*)param_1)->extra;
+        if (((u32)(*(byte*)(iVar3 + 0x58) >> 6 & 1)) == 0U)
+        {
+            if (((GameObject*)param_1)->anim.currentMove >= 0x30 || ((GameObject*)param_1)->anim.currentMove < 0x29)
+            {
+                if (Sfx_IsPlayingFromObjectChannel(param_1, 0x10) == 0)
+                {
+                    objAudioFn_800393f8(param_1, (void*)(iVar3 + 0x3a8), 0x357, 0, 0xffffffff, 0);
+                }
+            }
         }
-      }
+        objAnimFn_8013a3f0(param_1, 0x26, lbl_803E251C, 0);
+        ((TrickyState*)param_2)->substate = 5;
+        break;
+    case 2:
+        objAnimFn_8013a3f0(param_1, 0x21, lbl_803E2478, 0);
+        ((TrickyState*)param_2)->substate = 6;
+        break;
+    case 3:
+        objAnimFn_8013a3f0(param_1, 0x23, lbl_803E2478, 0);
+        ((TrickyState*)param_2)->substate = 7;
+        break;
+    case 4:
+        objAnimFn_8013a3f0(param_1, 0x25, lbl_803E2518, 0);
+        ((TrickyState*)param_2)->substate = 2;
+        break;
     }
-    objAnimFn_8013a3f0(param_1,0x26,lbl_803E251C,0);
-    ((TrickyState *)param_2)->substate = 5;
-    break;
-  case 2:
-    objAnimFn_8013a3f0(param_1,0x21,lbl_803E2478,0);
-    ((TrickyState *)param_2)->substate = 6;
-    break;
-  case 3:
-    objAnimFn_8013a3f0(param_1,0x23,lbl_803E2478,0);
-    ((TrickyState *)param_2)->substate = 7;
-    break;
-  case 4:
-    objAnimFn_8013a3f0(param_1,0x25,lbl_803E2518,0);
-    ((TrickyState *)param_2)->substate = 2;
-    break;
-  }
 }
 
 /*
@@ -1621,11 +1911,11 @@ void tricky_startRandomIdleMove(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int trickyFoodFn_8014460c(int param_1,int *param_2)
+int trickyFoodFn_8014460c(int param_1, int* param_2)
 {
-    u8 *obj = (u8 *)param_1;
-    u8 *state = (u8 *)param_2;
-    u8 *b;
+    u8* obj = (u8*)param_1;
+    u8* state = (u8*)param_2;
+    u8* b;
     u8 flag;
     u8 a;
     u8 c;
@@ -1637,127 +1927,178 @@ int trickyFoodFn_8014460c(int param_1,int *param_2)
     s16 item[4];
 
     flag = 0;
-    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x10;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
     n = (u8)GameBit_Get(0xc1);
-    if (n != 0) {
+    if (n != 0)
+    {
         getYButtonItem(item);
-        if (item[0] == 0xc1) {
+        if (item[0] == 0xc1)
+        {
             flag = 1;
         }
-        if (cMenuGetSelectedItem() == 0xc1) {
+        if (cMenuGetSelectedItem() == 0xc1)
+        {
             flag = 1;
         }
     }
-    if (flag != 0) {
-        if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
-            if ((*gGameUIInterface)->isEventReady(0xc1) != 0) {
-                a = **(u8 **)state;
-                c = *(*(u8 **)state + 1);
-                if (a == c) {
-                    b = ((GameObject *)obj)->extra;
-                    ((TrickyState *)b)->stateFlags |= 0x4000;
-                    ((TrickyState *)b)->stateFlags |= 1;
-                    if (lbl_803E23DC == ((TrickyState *)b)->waterLevel) {
-                        inWater = 0;
-                    } else if (lbl_803E2410 == ((TrickyState *)b)->unk2B0) {
-                        inWater = 1;
-                    } else if (((TrickyState *)b)->unk2B4 - ((TrickyState *)b)->unk2B0 > lbl_803E2414) {
-                        inWater = 1;
-                    } else {
+    if (flag != 0)
+    {
+        if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1)
+        {
+            if ((*gGameUIInterface)->isEventReady(0xc1) != 0)
+            {
+                a = **(u8**)state;
+                c = *(*(u8**)state + 1);
+                if (a == c)
+                {
+                    b = ((GameObject*)obj)->extra;
+                    ((TrickyState*)b)->stateFlags |= 0x4000;
+                    ((TrickyState*)b)->stateFlags |= 1;
+                    if (lbl_803E23DC == ((TrickyState*)b)->waterLevel)
+                    {
                         inWater = 0;
                     }
-                    if (inWater != 0) {
+                    else if (lbl_803E2410 == ((TrickyState*)b)->unk2B0)
+                    {
+                        inWater = 1;
+                    }
+                    else if (((TrickyState*)b)->unk2B4 - ((TrickyState*)b)->unk2B0 > lbl_803E2414)
+                    {
+                        inWater = 1;
+                    }
+                    else
+                    {
+                        inWater = 0;
+                    }
+                    if (inWater != 0)
+                    {
                         objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
-                        ((TrickyState *)b)->unk79C = lbl_803E2440;
-                        ((TrickyState *)b)->unk838 = lbl_803E23DC;
+                        ((TrickyState*)b)->unk79C = lbl_803E2440;
+                        ((TrickyState*)b)->unk838 = lbl_803E23DC;
                         trickyDebugPrint(sInWaterMessage);
-                    } else {
+                    }
+                    else
+                    {
                         objAnimFn_8013a3f0((int)obj, 0, lbl_803E2444, 0);
                         trickyDebugPrint(lbl_8031D478);
                     }
                     (*gObjectTriggerInterface)->runSequence(3, obj, -1);
-                    ((TrickyState *)b)->unk82E = (((TrickyState *)b)->unk82E & 0xdf) | 0x20;
-                } else {
+                    ((TrickyState*)b)->unk82E = (((TrickyState*)b)->unk82E & 0xdf) | 0x20;
+                }
+                else
+                {
                     d = c - a;
                     cnt = d >> 2;
-                    if (d & 3) {
+                    if (d & 3)
+                    {
                         cnt += 1;
                     }
-                    if (n < cnt) {
-                        ((TrickyState *)state)->unk82D = a + (u8)(n << 2);
+                    if (n < cnt)
+                    {
+                        ((TrickyState*)state)->unk82D = a + (u8)(n << 2);
                         GameBit_Set(0xc1, 0);
-                    } else {
-                        ((TrickyState *)state)->unk82D = a + (u8)(cnt << 2);
+                    }
+                    else
+                    {
+                        ((TrickyState*)state)->unk82D = a + (u8)(cnt << 2);
                         GameBit_Set(0xc1, n - cnt);
                     }
-                    if (*(*(u8 **)state + 1) < ((TrickyState *)state)->unk82D) {
-                        ((TrickyState *)state)->unk82D = *(*(u8 **)state + 1);
+                    if (*(*(u8**)state + 1) < ((TrickyState*)state)->unk82D)
+                    {
+                        ((TrickyState*)state)->unk82D = *(*(u8**)state + 1);
                     }
-                    b = ((GameObject *)obj)->extra;
-                    ((TrickyState *)b)->stateFlags |= 0x4000;
-                    if (lbl_803E23DC == ((TrickyState *)b)->waterLevel) {
-                        inWater = 0;
-                    } else if (lbl_803E2410 == ((TrickyState *)b)->unk2B0) {
-                        inWater = 1;
-                    } else if (((TrickyState *)b)->unk2B4 - ((TrickyState *)b)->unk2B0 > lbl_803E2414) {
-                        inWater = 1;
-                    } else {
+                    b = ((GameObject*)obj)->extra;
+                    ((TrickyState*)b)->stateFlags |= 0x4000;
+                    if (lbl_803E23DC == ((TrickyState*)b)->waterLevel)
+                    {
                         inWater = 0;
                     }
-                    if (inWater != 0) {
+                    else if (lbl_803E2410 == ((TrickyState*)b)->unk2B0)
+                    {
+                        inWater = 1;
+                    }
+                    else if (((TrickyState*)b)->unk2B4 - ((TrickyState*)b)->unk2B0 > lbl_803E2414)
+                    {
+                        inWater = 1;
+                    }
+                    else
+                    {
+                        inWater = 0;
+                    }
+                    if (inWater != 0)
+                    {
                         objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
-                        ((TrickyState *)b)->unk79C = lbl_803E2440;
-                        ((TrickyState *)b)->unk838 = lbl_803E23DC;
+                        ((TrickyState*)b)->unk79C = lbl_803E2440;
+                        ((TrickyState*)b)->unk838 = lbl_803E23DC;
                         trickyDebugPrint(sInWaterMessage);
-                    } else {
+                    }
+                    else
+                    {
                         objAnimFn_8013a3f0((int)obj, 0, lbl_803E2444, 0);
                         trickyDebugPrint(lbl_8031D478);
                     }
                     (*gObjectTriggerInterface)->runSequence(2, obj, -1);
-                    ((TrickyState *)b)->unk82E = (((TrickyState *)b)->unk82E & 0xdf) | 0x20;
-                    ((TrickyState *)state)->stateFlags |= 0x40000000;
+                    ((TrickyState*)b)->unk82E = (((TrickyState*)b)->unk82E & 0xdf) | 0x20;
+                    ((TrickyState*)state)->stateFlags |= 0x40000000;
                 }
                 buttonDisable(0, 0x100);
                 return 1;
             }
-        } else {
-            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
+        }
+        else
+        {
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
             fn_8002B6D8(obj, 0, 0, 0, 0, 4);
         }
-    } else {
+    }
+    else
+    {
         g = GameBit_Get(0x4e3);
-        if (g != -1 && cMenuGetSelectedItem() == -1) {
-            if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
+        if (g != -1 && cMenuGetSelectedItem() == -1)
+        {
+            if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1)
+            {
                 GameBit_Set(0x4e3, 0xff);
-                b = ((GameObject *)obj)->extra;
-                ((TrickyState *)b)->stateFlags |= 0x4000;
-                if (g != 2) {
-                    ((TrickyState *)b)->stateFlags |= 1;
+                b = ((GameObject*)obj)->extra;
+                ((TrickyState*)b)->stateFlags |= 0x4000;
+                if (g != 2)
+                {
+                    ((TrickyState*)b)->stateFlags |= 1;
                 }
-                if (lbl_803E23DC == ((TrickyState *)b)->waterLevel) {
-                    inWater = 0;
-                } else if (lbl_803E2410 == ((TrickyState *)b)->unk2B0) {
-                    inWater = 1;
-                } else if (((TrickyState *)b)->unk2B4 - ((TrickyState *)b)->unk2B0 > lbl_803E2414) {
-                    inWater = 1;
-                } else {
+                if (lbl_803E23DC == ((TrickyState*)b)->waterLevel)
+                {
                     inWater = 0;
                 }
-                if (inWater != 0) {
+                else if (lbl_803E2410 == ((TrickyState*)b)->unk2B0)
+                {
+                    inWater = 1;
+                }
+                else if (((TrickyState*)b)->unk2B4 - ((TrickyState*)b)->unk2B0 > lbl_803E2414)
+                {
+                    inWater = 1;
+                }
+                else
+                {
+                    inWater = 0;
+                }
+                if (inWater != 0)
+                {
                     objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
-                    ((TrickyState *)b)->unk79C = lbl_803E2440;
-                    ((TrickyState *)b)->unk838 = lbl_803E23DC;
+                    ((TrickyState*)b)->unk79C = lbl_803E2440;
+                    ((TrickyState*)b)->unk838 = lbl_803E23DC;
                     trickyDebugPrint(sInWaterMessage);
-                } else {
+                }
+                else
+                {
                     objAnimFn_8013a3f0((int)obj, 0, lbl_803E2444, 0);
                     trickyDebugPrint(lbl_8031D478);
                 }
                 (*gObjectTriggerInterface)->runSequence(g, obj, -1);
-                ((TrickyState *)b)->unk82E = (((TrickyState *)b)->unk82E & 0xdf) | 0x20;
+                ((TrickyState*)b)->unk82E = (((TrickyState*)b)->unk82E & 0xdf) | 0x20;
                 buttonDisable(0, 0x100);
                 return 1;
             }
-            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
             fn_8002B6D8(obj, 0, 0, 0, 0, 2);
         }
     }
@@ -1771,78 +2112,105 @@ int trickyFoodFn_8014460c(int param_1,int *param_2)
  * EN v1.0 Address: 0x80144B50
  * EN v1.0 Size: 752b
  */
-extern int ObjHits_GetPriorityHit(int obj, int *out, int a, int b);
+extern int ObjHits_GetPriorityHit(int obj, int* out, int a, int b);
 extern f32 lbl_803E2534;
 extern f32 lbl_803E24A8;
 extern f32 lbl_803E24EC;
 
-void fn_80144B50(u8 *obj, u8 *state)
+void fn_80144B50(u8* obj, u8* state)
 {
     int hit[3];
-    u8 *ptr;
+    u8* ptr;
     f32 fv;
     int inWater;
 
-    ((TrickyState *)state)->unk720 -= timeDelta;
-    if (((TrickyState *)state)->unk720 < lbl_803E23DC) {
-        ((TrickyState *)state)->unk720 = lbl_803E23DC;
+    ((TrickyState*)state)->unk720 -= timeDelta;
+    if (((TrickyState*)state)->unk720 < lbl_803E23DC)
+    {
+        ((TrickyState*)state)->unk720 = lbl_803E23DC;
     }
     if (ObjHits_GetPriorityHit((int)obj, hit, 0, 0) != 0
-        && *(u8 **)(hit[0] + 0xc4) != NULL
-        && *(s16 *)(*(u8 **)(hit[0] + 0xc4) + 0x44) == 1) {
-        fv = ((TrickyState *)state)->unk720;
-        if (fv <= lbl_803E23DC) {
-            ((TrickyState *)state)->unk720 = fv + lbl_803E24EC;
-            ptr = ((GameObject *)obj)->extra;
-            if (((u32)((TrickyState *)ptr)->statusFlags >> 6 & 1) == 0
-                && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
-                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+        && *(u8**)(hit[0] + 0xc4) != NULL
+        && *(s16*)(*(u8**)(hit[0] + 0xc4) + 0x44) == 1)
+    {
+        fv = ((TrickyState*)state)->unk720;
+        if (fv <= lbl_803E23DC)
+        {
+            ((TrickyState*)state)->unk720 = fv + lbl_803E24EC;
+            ptr = ((GameObject*)obj)->extra;
+            if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
+                && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
+                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
+            {
                 objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x34f, 0x500, -1, 0);
             }
-        } else {
-            ((TrickyState *)state)->unk720 = fv + lbl_803E2440;
-            if (state[0xa] != 0xb) {
-                if (((TrickyState *)state)->stateFlags & 0x10) {
-                    if (((TrickyState *)state)->unk720 > lbl_803E2534) {
-                        ((TrickyState *)state)->unk720 *= lbl_803E24A8;
-                        if (GameBit_Get(0x245) != 0) {
-                            if (lbl_803E23DC == ((TrickyState *)state)->waterLevel) {
-                                inWater = 0;
-                            } else if (lbl_803E2410 == ((TrickyState *)state)->unk2B0) {
-                                inWater = 1;
-                            } else if (((TrickyState *)state)->unk2B4 - ((TrickyState *)state)->unk2B0 > lbl_803E2414) {
-                                inWater = 1;
-                            } else {
+        }
+        else
+        {
+            ((TrickyState*)state)->unk720 = fv + lbl_803E2440;
+            if (state[0xa] != 0xb)
+            {
+                if (((TrickyState*)state)->stateFlags & 0x10)
+                {
+                    if (((TrickyState*)state)->unk720 > lbl_803E2534)
+                    {
+                        ((TrickyState*)state)->unk720 *= lbl_803E24A8;
+                        if (GameBit_Get(0x245) != 0)
+                        {
+                            if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
+                            {
                                 inWater = 0;
                             }
-                            if (inWater == 0) {
+                            else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
+                            {
+                                inWater = 1;
+                            }
+                            else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
+                            {
+                                inWater = 1;
+                            }
+                            else
+                            {
+                                inWater = 0;
+                            }
+                            if (inWater == 0)
+                            {
                                 state[0xa] = 0xb;
                                 return;
                             }
                         }
-                        ptr = ((GameObject *)obj)->extra;
-                        if (((u32)((TrickyState *)ptr)->statusFlags >> 6 & 1) == 0
-                            && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
-                            && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
-                            objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x350, 0x500, -1, 0);
-                        }
-                    } else {
-                        ptr = ((GameObject *)obj)->extra;
-                        if (((u32)((TrickyState *)ptr)->statusFlags >> 6 & 1) == 0
-                            && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
-                            && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+                        ptr = ((GameObject*)obj)->extra;
+                        if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
+                            && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove <
+                                0x29)
+                            && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
+                        {
                             objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x350, 0x500, -1, 0);
                         }
                     }
-                } else {
-                    ptr = ((GameObject *)obj)->extra;
-                    if (((u32)((TrickyState *)ptr)->statusFlags >> 6 & 1) == 0
-                        && (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29)
-                        && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+                    else
+                    {
+                        ptr = ((GameObject*)obj)->extra;
+                        if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
+                            && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove <
+                                0x29)
+                            && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
+                        {
+                            objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x350, 0x500, -1, 0);
+                        }
+                    }
+                }
+                else
+                {
+                    ptr = ((GameObject*)obj)->extra;
+                    if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0
+                        && (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
+                        && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
+                    {
                         objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x350, 0x500, -1, 0);
                     }
                     state[0xa] = 10;
-                    ((TrickyState *)state)->stateFlags |= 0x10;
+                    ((TrickyState*)state)->stateFlags |= 0x10;
                 }
             }
         }

@@ -32,7 +32,8 @@
  */
 
 #if 0
-enum dll_025C_SnowClaw_slot {
+enum dll_025C_SnowClaw_slot
+{
     SNOWCLAW_INITIALISE = 0,
     SNOWCLAW_RELEASE = 1,
     SNOWCLAW_INIT = 3,

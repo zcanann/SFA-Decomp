@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0588_SnowTree1_packet_info {
+enum obj_0588_SnowTree1_packet_info
+{
     SNOWTREE1_DEF_ID = 0x0588,
     SNOWTREE1_DLL_ID = 0x02AF,
     SNOWTREE1_CLASS_ID = 0x007F,

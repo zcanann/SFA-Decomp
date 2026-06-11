@@ -70,7 +70,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_010D_CRSnowBike_packet_info {
+enum obj_010D_CRSnowBike_packet_info
+{
     CRSNOWBIKE_DEF_ID = 0x010D,
     CRSNOWBIKE_DLL_ID = 0x0255,
     CRSNOWBIKE_CLASS_ID = 0x002E,

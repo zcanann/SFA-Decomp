@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_051B_TrigCyl_packet_info {
+enum obj_051B_TrigCyl_packet_info
+{
     TRIGCYL_DEF_ID = 0x051B,
     TRIGCYL_DLL_ID = 0x0126,
     TRIGCYL_CLASS_ID = 0x0016,

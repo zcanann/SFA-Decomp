@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02FE_SB_ShipMast_packet_info {
+enum obj_02FE_SB_ShipMast_packet_info
+{
     SB_SHIPMAST_DEF_ID = 0x02FE,
     SB_SHIPMAST_DLL_ID = 0x01EB,
     SB_SHIPMAST_CLASS_ID = 0x0030,

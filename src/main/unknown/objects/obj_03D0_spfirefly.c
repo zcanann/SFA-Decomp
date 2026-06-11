@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03D0_SPFireFly_packet_info {
+enum obj_03D0_SPFireFly_packet_info
+{
     SPFIREFLY_DEF_ID = 0x03D0,
     SPFIREFLY_DLL_ID = 0x0284,
     SPFIREFLY_CLASS_ID = 0x0070,

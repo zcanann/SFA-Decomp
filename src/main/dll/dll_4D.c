@@ -4,10 +4,10 @@ extern MenuPanelGroup lbl_8031ACB8;
 
 extern u8 lbl_803DBA28;
 extern u8 lbl_803DC968;
-extern TitleMenuControl *gTitleMenuLinkInterface;
-extern TitleMenuControl *gTitleMenuItemInterface;
+extern TitleMenuControl* gTitleMenuLinkInterface;
+extern TitleMenuControl* gTitleMenuItemInterface;
 extern u8 lbl_803DD706;
-extern u8 *lbl_803DD708;
+extern u8* lbl_803DD708;
 extern int lbl_803A87D0[8];
 
 extern int saveFileStruct_isCheatActive(int);
@@ -20,10 +20,12 @@ extern int isCheatUnlocked(int);
  * EN v1.0 Address: 0x8011C5CC
  * EN v1.0 Size: 488b
  */
-void languageMenuInit(void) {
-    MenuPanelGroup *p;
+void languageMenuInit(void)
+{
+    MenuPanelGroup* p;
 
-    if ((s8)lbl_803DBA28 != -1) {
+    if ((s8)lbl_803DBA28 != -1)
+    {
         ((void (**)(void))gTitleMenuLinkInterface->vtable)[2]();
     }
     lbl_803DBA28 = 3;
@@ -32,20 +34,23 @@ void languageMenuInit(void) {
     lbl_803A87D0[0] = ((int (**)(int, int, int, int, s16))gTitleMenuItemInterface->vtable)[3](
         0x36b, 0x22, 0, 1, (s16)(lbl_803DD708[2] == 0));
 
-    if (isCheatUnlocked(3) != 0 && lbl_803DC968 == 0) {
+    if (isCheatUnlocked(3) != 0 && lbl_803DC968 == 0)
+    {
         p->entries[p->count - 2].pad18[3] = p->count - 1;
         p->entries[p->count - 1].flags &= ~0x4000;
 
         lbl_803A87D0[1] = ((int (**)(int, int, int, int, s16))gTitleMenuItemInterface->vtable)[3](
             0x36b, 0x23, 0, 1, (s16)(saveFileStruct_isCheatActive(3) == 0));
-    } else {
+    }
+    else
+    {
         p->entries[p->count - 2].pad18[3] = -1;
         p->entries[p->count - 1].flags |= 0x4000;
     }
 
     ((void (**)(int, int))gTitleMenuLinkInterface->vtable)[8](lbl_803A87D0[0], 1);
 
-    ((void (**)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
+    ((void (**)(TitleMenuTextEntry*, int, int, int, int, int, int, int, int, int, int, int))
         gTitleMenuLinkInterface->vtable)[1](
         p->entries, p->count, 0, 0, 0, 0, 0x14, 0xc8,
         0xff, 0xff, 0xff, 0xff);

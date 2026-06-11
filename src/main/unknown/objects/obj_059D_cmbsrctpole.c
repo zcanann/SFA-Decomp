@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_059D_CmbSrcTPole_packet_info {
+enum obj_059D_CmbSrcTPole_packet_info
+{
     CMBSRCTPOLE_DEF_ID = 0x059D,
     CMBSRCTPOLE_DLL_ID = 0x02B1,
     CMBSRCTPOLE_CLASS_ID = 0x007E,

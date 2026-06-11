@@ -28,7 +28,8 @@
  */
 
 #if 0
-enum dll_025D_CRCloudRace_slot {
+enum dll_025D_CRCloudRace_slot
+{
     CRCLOUDRACE_INITIALISE = 0,
     CRCLOUDRACE_RELEASE = 1,
     CRCLOUDRACE_INIT = 3,

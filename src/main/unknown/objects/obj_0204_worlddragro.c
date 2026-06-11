@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0204_WORLDdragro_packet_info {
+enum obj_0204_WORLDdragro_packet_info
+{
     WORLDDRAGRO_DEF_ID = 0x0204,
     WORLDDRAGRO_DLL_ID = 0x01D3,
     WORLDDRAGRO_CLASS_ID = 0x0061,

@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02F5_SB_Galleon_packet_info {
+enum obj_02F5_SB_Galleon_packet_info
+{
     SB_GALLEON_DEF_ID = 0x02F5,
     SB_GALLEON_DLL_ID = 0x01E8,
     SB_GALLEON_CLASS_ID = 0x0030,

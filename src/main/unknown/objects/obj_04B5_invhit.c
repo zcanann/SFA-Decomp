@@ -52,7 +52,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04B5_InvHit_packet_info {
+enum obj_04B5_InvHit_packet_info
+{
     INVHIT_DEF_ID = 0x04B5,
     INVHIT_DLL_ID = 0x00F1,
     INVHIT_CLASS_ID = 0x0027,

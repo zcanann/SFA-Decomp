@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01C3_IMMagicLigh_packet_info {
+enum obj_01C3_IMMagicLigh_packet_info
+{
     IMMAGICLIGH_DEF_ID = 0x01C3,
     IMMAGICLIGH_DLL_ID = 0x016B,
     IMMAGICLIGH_CLASS_ID = 0x0030,

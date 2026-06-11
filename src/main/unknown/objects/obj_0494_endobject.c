@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0494_EndObject_packet_info {
+enum obj_0494_EndObject_packet_info
+{
     ENDOBJECT_DEF_ID = 0x0494,
     ENDOBJECT_DLL_ID = 0x0108,
     ENDOBJECT_CLASS_ID = 0x0030,

@@ -6,7 +6,7 @@
 
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006824();
-extern undefined8 GameBit_Set(int eventId,int value);
+extern undefined8 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80041ff8();
 extern undefined8 FUN_800427c8();
 extern undefined8 FUN_80042800();
@@ -49,25 +49,28 @@ extern void setDrawCloudsAndLights(int v);
 extern void skyFn_80088c94(int a, int b);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern void timeOfDayFn_80055000(void);
-extern MapEventInterface **gMapEventInterface;
+extern MapEventInterface** gMapEventInterface;
 extern f32 lbl_803E3E98;
 
-int Transporter_SeqFn(int *obj, int p2, ObjAnimUpdateState *animUpdate)
+int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 {
     int i;
-    WarpPadPlacement *setup = (WarpPadPlacement *)((GameObject *)obj)->anim.placementData;
-    WarpPadState *state = ((GameObject *)obj)->extra;
+    WarpPadPlacement* setup = (WarpPadPlacement*)((GameObject*)obj)->anim.placementData;
+    WarpPadState* state = ((GameObject*)obj)->extra;
     int id;
 
-    for (i = 0; i < animUpdate->eventCount; i++) {
-        switch (animUpdate->eventIds[i]) {
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
+        switch (animUpdate->eventIds[i])
+        {
         case 7:
             state->flags = state->flags | 4;
             Sfx_PlayFromObject(obj, 0x420);
             break;
         case 2:
             id = setup->destinationId;
-            switch (id) {
+            switch (id)
+            {
             case 0x49c33:
                 GameBit_Set(0x884, 1);
                 (*gMapEventInterface)->setAnimEvent(7, 0, 1);
@@ -76,7 +79,7 @@ int Transporter_SeqFn(int *obj, int p2, ObjAnimUpdateState *animUpdate)
                 (*gMapEventInterface)->setAnimEvent(7, 7, 1);
                 (*gMapEventInterface)->setAnimEvent(7, 10, 1);
                 (*gMapEventInterface)->setAnimEvent(10, 7, 0);
-                /* fallthrough */
+            /* fallthrough */
             case 0x48506:
             case 0x4977d:
                 loadMapAndParent(7);
@@ -149,28 +152,32 @@ int Transporter_SeqFn(int *obj, int p2, ObjAnimUpdateState *animUpdate)
             }
             break;
         case 3:
-            switch (setup->destinationId) {
+            switch (setup->destinationId)
+            {
             case 0x47064:
                 unlockLevel(0, 0, 1);
                 break;
             }
             break;
         case 5:
-            switch (setup->destinationId) {
+            switch (setup->destinationId)
+            {
             case 0x47064:
                 setLoadedFileFlags_blocks1();
                 break;
             }
             break;
         case 6:
-            switch (setup->destinationId) {
+            switch (setup->destinationId)
+            {
             case 0x47064:
                 clearLoadedFileFlags_blocks1();
                 break;
             }
             break;
         case 1:
-            switch (setup->destinationId) {
+            switch (setup->destinationId)
+            {
             case 0x47064:
                 clearLoadedFileFlags_blocks1();
                 break;
@@ -179,7 +186,8 @@ int Transporter_SeqFn(int *obj, int p2, ObjAnimUpdateState *animUpdate)
             break;
         case 8:
             id = setup->destinationId;
-            switch (id) {
+            switch (id)
+            {
             case 0x43f83:
             case 0x4977d:
                 getEnvfxActImmediately(obj, obj, 0x224, 0);
@@ -226,7 +234,7 @@ int Transporter_SeqFn(int *obj, int p2, ObjAnimUpdateState *animUpdate)
                 getEnvfxActImmediately(obj, obj, 0x239, 0);
                 skyFn_80088c94(1, 1);
                 skyFn_80088e54(0, lbl_803E3E98);
-                /* fallthrough */
+            /* fallthrough */
             case 0x4cb84:
                 GameBit_Set(0xef6, 0);
                 break;
@@ -253,7 +261,7 @@ int Transporter_SeqFn(int *obj, int p2, ObjAnimUpdateState *animUpdate)
  */
 int transporter_getExtraSize(void)
 {
-  return 0x10;
+    return 0x10;
 }
 
 extern void objRenderFn_80041018(int obj);
@@ -270,8 +278,9 @@ extern short lbl_803DCEB8;
 void transporter_update(int obj)
 {
     register int self = obj;
-    register WarpPadPlacement *setup = (WarpPadPlacement *)((GameObject *)self)->anim.placementData;
-    if ((int)setup->warpId != -1) {
+    register WarpPadPlacement* setup = (WarpPadPlacement*)((GameObject*)self)->anim.placementData;
+    if ((int)setup->warpId != -1)
+    {
         warpPadPlayerStandingOn(self);
     }
     warpPadFn_8019042c(self);
@@ -287,44 +296,64 @@ void transporter_update(int obj)
 void transporter_hitDetect(int obj)
 {
     register int self = obj;
-    register WarpPadPlacement *setup = (WarpPadPlacement *)((GameObject *)self)->anim.placementData;
-    register WarpPadState *state = ((GameObject *)self)->extra;
+    register WarpPadPlacement* setup = (WarpPadPlacement*)((GameObject*)self)->anim.placementData;
+    register WarpPadState* state = ((GameObject*)self)->extra;
 
-    if ((int)lbl_803DCEB8 > -1) {
-        *(u8 *)&((GameObject *)self)->anim.resetHitboxMode = (u8)((u32)*(u8 *)&((GameObject *)self)->anim.resetHitboxMode & 0xffffffe7);
+    if ((int)lbl_803DCEB8 > -1)
+    {
+        *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
+            (u32) * (u8*)&((GameObject*)self)->anim.resetHitboxMode & 0xffffffe7);
         state->flags = (u8)((u32)state->flags | 1);
-        if (*(u32 *)(self + 0x74) != 0) {
+        if (*(u32*)(self + 0x74) != 0)
+        {
             objRenderFn_80041018(self);
         }
         return;
     }
 
     if ((int)setup->warpId != -1
-        && (state->flags & 0x20) == 0) {
-        if (state->triggerMode != 0 || state->countdownActive != 0) {
-            *(u8 *)&((GameObject *)self)->anim.resetHitboxMode = (u8)((u32)*(u8 *)&((GameObject *)self)->anim.resetHitboxMode | 0x8);
+        && (state->flags & 0x20) == 0)
+    {
+        if (state->triggerMode != 0 || state->countdownActive != 0)
+        {
+            *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
+                (u32) * (u8*)&((GameObject*)self)->anim.resetHitboxMode | 0x8);
             state->flags = (u8)((u32)state->flags & ~1);
-        } else if ((int)setup->enableGameBit != -1
-                   && GameBit_Get((int)setup->enableGameBit) == 0) {
-            *(u8 *)&((GameObject *)self)->anim.resetHitboxMode = (u8)((u32)*(u8 *)&((GameObject *)self)->anim.resetHitboxMode & 0xfffffff7);
-            *(u8 *)&((GameObject *)self)->anim.resetHitboxMode = (u8)((u32)*(u8 *)&((GameObject *)self)->anim.resetHitboxMode | 0x10);
+        }
+        else if ((int)setup->enableGameBit != -1
+            && GameBit_Get((int)setup->enableGameBit) == 0)
+        {
+            *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
+                (u32) * (u8*)&((GameObject*)self)->anim.resetHitboxMode & 0xfffffff7);
+            *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
+                (u32) * (u8*)&((GameObject*)self)->anim.resetHitboxMode | 0x10);
             state->flags = (u8)((u32)state->flags & ~1);
-        } else {
-            *(u8 *)&((GameObject *)self)->anim.resetHitboxMode = (u8)((u32)*(u8 *)&((GameObject *)self)->anim.resetHitboxMode & 0xffffffe7);
+        }
+        else
+        {
+            *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
+                (u32) * (u8*)&((GameObject*)self)->anim.resetHitboxMode & 0xffffffe7);
             state->flags = (u8)((u32)state->flags | 1);
         }
-        if (*(u32 *)(self + 0x74) != 0) {
+        if (*(u32*)(self + 0x74) != 0)
+        {
             objRenderFn_80041018(self);
         }
         return;
     }
 
     /* Branch C */
-    if ((state->flags & 0x40) != 0) {
-        *(u8 *)&((GameObject *)self)->anim.resetHitboxMode = (u8)((u32)*(u8 *)&((GameObject *)self)->anim.resetHitboxMode | 0x8);
-    } else {
-        *(u8 *)&((GameObject *)self)->anim.resetHitboxMode = (u8)((u32)*(u8 *)&((GameObject *)self)->anim.resetHitboxMode & 0xfffffff7);
-        *(u8 *)&((GameObject *)self)->anim.resetHitboxMode = (u8)((u32)*(u8 *)&((GameObject *)self)->anim.resetHitboxMode | 0x10);
+    if ((state->flags & 0x40) != 0)
+    {
+        *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
+            (u32) * (u8*)&((GameObject*)self)->anim.resetHitboxMode | 0x8);
+    }
+    else
+    {
+        *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
+            (u32) * (u8*)&((GameObject*)self)->anim.resetHitboxMode & 0xfffffff7);
+        *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
+            (u32) * (u8*)&((GameObject*)self)->anim.resetHitboxMode | 0x10);
     }
     state->flags = (u8)((u32)state->flags & ~1);
 }

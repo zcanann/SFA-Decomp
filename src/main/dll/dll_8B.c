@@ -27,7 +27,7 @@ void projdfp1r_initialise(void)
  */
 u8 cameraGetTargetType(void)
 {
-  return CAMCONTROL_CAMERA->targetKind;
+    return CAMCONTROL_CAMERA->targetKind;
 }
 
 /*
@@ -39,5 +39,5 @@ u8 cameraGetTargetType(void)
  */
 s16 Camera_getMinimapInfoText(void)
 {
-  return gCamcontrolTargetHelpTextId;
+    return gCamcontrolTargetHelpTextId;
 }

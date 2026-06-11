@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_035C_DFP_RotateP_packet_info {
+enum obj_035C_DFP_RotateP_packet_info
+{
     DFP_ROTATEP_DEF_ID = 0x035C,
     DFP_ROTATEP_DLL_ID = 0x0232,
     DFP_ROTATEP_CLASS_ID = 0x0030,

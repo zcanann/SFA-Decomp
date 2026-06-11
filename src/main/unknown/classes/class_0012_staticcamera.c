@@ -34,7 +34,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0012_StaticCamera_defs {
+enum class_0012_StaticCamera_defs
+{
     STATICCAMERA_STATICCAMER = 0x04D3,
 };
 #endif

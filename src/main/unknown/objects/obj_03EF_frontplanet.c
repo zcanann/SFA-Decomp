@@ -71,7 +71,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03EF_FrontPlanet_packet_info {
+enum obj_03EF_FrontPlanet_packet_info
+{
     FRONTPLANET_DEF_ID = 0x03EF,
     FRONTPLANET_DLL_ID = 0x02C0,
     FRONTPLANET_CLASS_ID = 0x0030,

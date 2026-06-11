@@ -70,7 +70,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03FC_MMSH_seqpoi_packet_info {
+enum obj_03FC_MMSH_seqpoi_packet_info
+{
     MMSH_SEQPOI_DEF_ID = 0x03FC,
     MMSH_SEQPOI_DLL_ID = 0x0221,
     MMSH_SEQPOI_CLASS_ID = 0x0030,

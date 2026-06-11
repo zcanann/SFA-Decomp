@@ -25,7 +25,8 @@
  */
 
 #if 0
-enum dll_0268_DR_CageControl_slot {
+enum dll_0268_DR_CageControl_slot
+{
     CAGECONTROL_INITIALISE = 0,
     CAGECONTROL_RELEASE = 1,
     CAGECONTROL_INIT = 3,

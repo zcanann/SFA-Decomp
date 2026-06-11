@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_030F_CNTstopwatc_packet_info {
+enum obj_030F_CNTstopwatc_packet_info
+{
     CNTSTOPWATC_DEF_ID = 0x030F,
     CNTSTOPWATC_DLL_ID = 0x02B5,
     CNTSTOPWATC_CLASS_ID = 0x0030,

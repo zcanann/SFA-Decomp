@@ -30,7 +30,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_007D_MagicCaveTop_defs {
+enum class_007D_MagicCaveTop_defs
+{
     MAGICCAVETOP_MAGICCAVETO = 0x049C,
 };
 #endif

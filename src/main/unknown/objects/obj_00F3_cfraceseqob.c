@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00F3_CFRaceSeqob_packet_info {
+enum obj_00F3_CFRaceSeqob_packet_info
+{
     CFRACESEQOB_DEF_ID = 0x00F3,
     CFRACESEQOB_DLL_ID = 0x0112,
     CFRACESEQOB_CLASS_ID = 0x0055,

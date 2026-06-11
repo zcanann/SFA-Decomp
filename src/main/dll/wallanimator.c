@@ -23,9 +23,9 @@ extern undefined4 FUN_8008112c();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern void objRenderFn_8003b8f4(double scale);
-extern void queueGlowRender(void *light);
+extern void queueGlowRender(void* light);
 
-extern EffectInterface **gPartfxInterface;
+extern EffectInterface** gPartfxInterface;
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd738;
 extern undefined4 DAT_803de710;
@@ -50,7 +50,8 @@ extern f32 lbl_803E30E0;
 
 extern int ObjList_FindObjectById(int id);
 
-typedef struct KaldaChompMeState {
+typedef struct KaldaChompMeState
+{
     f32 progress;
     f32 step;
     f32 targetProgress;
@@ -65,15 +66,17 @@ typedef struct KaldaChompMeState {
  * EN v1.0 Address: 0x80169360
  * EN v1.0 Size: 556b
  */
-void kaldachompme_setLinkedMouthMode(u8 *obj, u8 mode)
+void kaldachompme_setLinkedMouthMode(u8* obj, u8 mode)
 {
-    KaldaChompMeState *state;
+    KaldaChompMeState* state;
     int obj2;
 
-    if (obj == NULL) {
+    if (obj == NULL)
+    {
         return;
     }
-    switch (*(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14)) {
+    switch (*(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14))
+    {
     case 0x43d14:
         obj2 = ObjList_FindObjectById(0x4b3b5);
         break;
@@ -116,9 +119,11 @@ void kaldachompme_setLinkedMouthMode(u8 *obj, u8 mode)
     default:
         return;
     }
-    state = *(KaldaChompMeState **)(obj2 + 0xb8);
-    if (state != NULL) {
-        switch (mode) {
+    state = *(KaldaChompMeState**)(obj2 + 0xb8);
+    if (state != NULL)
+    {
+        switch (mode)
+        {
         case 1:
             state->targetProgress = lbl_803E30D0;
             state->progress = lbl_803E30D4;
@@ -137,25 +142,26 @@ void kaldachompme_setLinkedMouthMode(u8 *obj, u8 mode)
 
 int kaldachompme_getExtraSize(void)
 {
-  return 0x10;
+    return 0x10;
 }
 
 int kaldachompme_getObjectTypeId(void)
 {
-  return 0;
+    return 0;
 }
 
 void kaldachompme_free(void)
 {
 }
 
-void kaldachompme_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-                         undefined4 param_5,s8 renderFlag)
+void kaldachompme_render(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
+                         undefined4 param_5, s8 renderFlag)
 {
-  s32 v = renderFlag;
-  if (v != 0) {
-    objRenderFn_8003b8f4(lbl_803E30D0);
-  }
+    s32 v = renderFlag;
+    if (v != 0)
+    {
+        objRenderFn_8003b8f4(lbl_803E30D0);
+    }
 }
 
 void kaldachompme_hitDetect(void)
@@ -164,43 +170,50 @@ void kaldachompme_hitDetect(void)
 
 void kaldachompme_update(int obj)
 {
-  float target;
-  float current;
-  float step;
-  KaldaChompMeState *extra;
+    float target;
+    float current;
+    float step;
+    KaldaChompMeState* extra;
 
-  extra = ((GameObject *)obj)->extra;
-  current = extra->progress;
-  target = extra->targetProgress;
-  if (current != target) {
-    step = extra->step;
-    if (step > lbl_803E30D4) {
-      if (current < target) {
-        extra->progress = current + step * timeDelta;
-      }
-      else {
-        extra->progress = target;
-      }
+    extra = ((GameObject*)obj)->extra;
+    current = extra->progress;
+    target = extra->targetProgress;
+    if (current != target)
+    {
+        step = extra->step;
+        if (step > lbl_803E30D4)
+        {
+            if (current < target)
+            {
+                extra->progress = current + step * timeDelta;
+            }
+            else
+            {
+                extra->progress = target;
+            }
+        }
+        else
+        {
+            if (current > target)
+            {
+                extra->progress = current + step * timeDelta;
+            }
+            else
+            {
+                extra->progress = target;
+            }
+        }
     }
-    else {
-      if (current > target) {
-        extra->progress = current + step * timeDelta;
-      }
-      else {
-        extra->progress = target;
-      }
-    }
-  }
-  ObjAnim_SetCurrentMove(obj,extra->moveId,extra->progress,0);
+    ObjAnim_SetCurrentMove(obj, extra->moveId, extra->progress, 0);
 }
 
-void kaldachompme_init(int obj,int params)
+void kaldachompme_init(int obj, int params)
 {
-  ((GameObject *)obj)->anim.rotZ = (s16)(*(u8 *)(params + 0x18) << 8);
-  ((GameObject *)obj)->anim.rotY = (s16)(*(u8 *)(params + 0x19) << 8);
-  ((GameObject *)obj)->anim.rotX = (s16)(*(u8 *)(params + 0x1a) << 8);
-  ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
-  ObjAnim_SetCurrentMove(obj,0,lbl_803E30D4,0);
+    ((GameObject*)obj)->anim.rotZ = (s16)(*(u8*)(params + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotY = (s16)(*(u8*)(params + 0x19) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(*(u8*)(params + 0x1a) << 8);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
+    ObjAnim_SetCurrentMove(obj, 0, lbl_803E30D4, 0);
 }
 
 void kaldachompme_release(void)
@@ -255,12 +268,13 @@ ObjectDescriptor gKaldaChompMeObjDescriptor = {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016980c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
+void FUN_8016980c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-  if (visible != 0) {
-    FUN_8003b818(param_1);
-  }
-  return;
+    if (visible != 0)
+    {
+        FUN_8003b818(param_1);
+    }
+    return;
 }
 
 
@@ -277,36 +291,40 @@ void FUN_8016980c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80169a44(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9)
+void FUN_80169a44(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
+                  undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
+                  uint param_9)
 {
-  uint uVar1;
-  int *piVar2;
-  int local_18 [2];
-  undefined4 local_10;
-  uint uStack_c;
-  
-  piVar2 = ((GameObject *)param_9)->extra;
-  ((GameObject *)param_9)->anim.alpha = 0;
-  *(undefined4 *)(param_9 + 0xf4) = 0xdc;
-  (*(ObjHitsPriorityState **)&((GameObject *)param_9)->anim.hitReactState)->flags &= ~1;
-  if (*piVar2 != 0) {
-    FUN_800175cc((double)lbl_803E3D78,*piVar2,'\0');
-  }
-  if (((GameObject *)param_9)->anim.seqId == 0x869) {
-    uVar1 = randomGetRange(0,1);
-    uStack_c = randomGetRange(0x32,0x3c);
-    FUN_8008112c((double)(float)((double)CONCAT44(0x43300000,uStack_c) - DOUBLE_803e3d80),param_2,
-                 param_3,param_4,param_5,param_6,param_7,param_8,param_9,1,1,0,uVar1 & 0xff,0,1,0);
-  }
-  else {
-    for (local_18[0] = 0; local_18[0] < 0x19; local_18[0] = local_18[0] + 1) {
-      (*gPartfxInterface)->spawnObject((void *)param_9, 0x715, NULL, 1, -1, local_18);
+    uint uVar1;
+    int* piVar2;
+    int local_18[2];
+    undefined4 local_10;
+    uint uStack_c;
+
+    piVar2 = ((GameObject*)param_9)->extra;
+    ((GameObject*)param_9)->anim.alpha = 0;
+    *(undefined4*)(param_9 + 0xf4) = 0xdc;
+    (*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->flags &= ~1;
+    if (*piVar2 != 0)
+    {
+        FUN_800175cc((double)lbl_803E3D78, *piVar2, '\0');
     }
-    FUN_80006824(param_9,SFXsc_attack03);
-  }
-  return;
+    if (((GameObject*)param_9)->anim.seqId == 0x869)
+    {
+        uVar1 = randomGetRange(0, 1);
+        uStack_c = randomGetRange(0x32, 0x3c);
+        FUN_8008112c((double)(float)((double)CONCAT44(0x43300000, uStack_c) - DOUBLE_803e3d80), param_2,
+                     param_3, param_4, param_5, param_6, param_7, param_8, param_9, 1, 1, 0, uVar1 & 0xff, 0, 1, 0);
+    }
+    else
+    {
+        for (local_18[0] = 0; local_18[0] < 0x19; local_18[0] = local_18[0] + 1)
+        {
+            (*gPartfxInterface)->spawnObject((void*)param_9, 0x715, NULL, 1, -1, local_18);
+        }
+        FUN_80006824(param_9, SFXsc_attack03);
+    }
+    return;
 }
 
 /*
@@ -326,30 +344,36 @@ void FUN_80169a44(undefined8 param_1,double param_2,double param_3,undefined8 pa
 #pragma peephole off
 
 
-
 /* Trivial 4b 0-arg blr leaves. */
-void kaldachompspit_hitDetect(void) {}
+void kaldachompspit_hitDetect(void)
+{
+}
 
 /* 8b "li r3, N; blr" returners. */
 int kaldachompspit_getExtraSize(void) { return 0x4; }
 int kaldachompspit_getObjectTypeId(void) { return 0x0; }
 
-extern void ModelLightStruct_free(void *p);
-void kaldachompspit_free(int *obj) {
-    void *p = *(void **)((GameObject *)obj)->extra;
-    if (p != NULL) {
+extern void ModelLightStruct_free(void* p);
+
+void kaldachompspit_free(int* obj)
+{
+    void* p = *(void**)((GameObject*)obj)->extra;
+    if (p != NULL)
+    {
         ModelLightStruct_free(p);
     }
 }
 
-void kaldachompspit_render(void *obj, int p2, int p3, int p4, int p5, s8 visible)
+void kaldachompspit_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    u8 *light = **(u8 ***)&((GameObject *)obj)->extra;
-    if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0) {
+    u8* light = **(u8***)&((GameObject*)obj)->extra;
+    if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0)
+    {
         queueGlowRender(light);
     }
-    if (visible != 0) {
-        ((void (*)(void *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E30E0);
+    if (visible != 0)
+    {
+        ((void (*)(void*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E30E0);
     }
 }
 
@@ -384,8 +408,8 @@ void kaldachompspit_burst(int obj);
  */
 void kaldachompspit_update(int obj)
 {
-    ObjAnimComponent *objAnim;
-    u32 *state;
+    ObjAnimComponent* objAnim;
+    u32* state;
     f32 vx;
     u32 ptr;
     int rnd;
@@ -394,72 +418,99 @@ void kaldachompspit_update(int obj)
     s16 v;
     f32 t;
 
-    objAnim = &((GameObject *)obj)->anim;
-    state = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->unkF4 = (int)((f32)((GameObject *)obj)->unkF4 - timeDelta);
-    if (((GameObject *)obj)->unkF4 < 0) {
+    objAnim = &((GameObject*)obj)->anim;
+    state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->unkF4 = (int)((f32)((GameObject*)obj)->unkF4 - timeDelta);
+    if (((GameObject*)obj)->unkF4 < 0)
+    {
         Sfx_StopObjectChannel(obj, 0x7f);
         Obj_FreeObject(obj);
-    } else if (objAnim->alpha != 0) {
-        if (((GameObject *)obj)->unkF4 < 0x11b) {
-            ((GameObject *)obj)->anim.velocityY = -(lbl_803E30F0 * timeDelta - ((GameObject *)obj)->anim.velocityY);
-            if ((f32)(u32)objAnim->alpha - (t = lbl_803E30F4 * timeDelta) > lbl_803E30F8) {
-                objAnim->alpha = (f32)(u32)objAnim->alpha - t;
-            } else {
+    }
+    else if (objAnim->alpha != 0)
+    {
+        if (((GameObject*)obj)->unkF4 < 0x11b)
+        {
+            ((GameObject*)obj)->anim.velocityY = -(lbl_803E30F0 * timeDelta - ((GameObject*)obj)->anim.velocityY);
+            if ((f32)(u32)objAnim->alpha - (t = lbl_803E30F4 * timeDelta) > lbl_803E30F8
+            )
+            {
+                objAnim->alpha = (f32)(u32)
+                objAnim->alpha - t;
+            }
+            else
+            {
                 Sfx_StopObjectChannel(obj, 0x7f);
                 objAnim->alpha = 0;
             }
             Sfx_SetObjectChannelVolume(obj, 0x40, (u8)(objAnim->alpha >> 1), lbl_803E30FC);
         }
-        vx = ((GameObject *)obj)->anim.velocityX * timeDelta;
-        vy = ((GameObject *)obj)->anim.velocityY * timeDelta;
-        vz = ((GameObject *)obj)->anim.velocityZ * timeDelta;
+        vx = ((GameObject*)obj)->anim.velocityX * timeDelta;
+        vy = ((GameObject*)obj)->anim.velocityY * timeDelta;
+        vz = ((GameObject*)obj)->anim.velocityZ * timeDelta;
         objMove(obj, vx, vy, vz);
-        if (((GameObject *)obj)->anim.seqId == 0x869) {
+        if (((GameObject*)obj)->anim.seqId == 0x869)
+        {
             ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
-            ((GameObject *)obj)->anim.rotX += 0x100;
-            ((GameObject *)obj)->anim.rotY += 0x800;
-        } else {
+            ((GameObject*)obj)->anim.rotX += 0x100;
+            ((GameObject*)obj)->anim.rotY += 0x800;
+        }
+        else
+        {
             ObjHits_SetHitVolumeSlot(obj, 0xa, 1, 0);
-            ((GameObject *)obj)->anim.rotX = getAngle(vx, vz) - 0x8000;
-            ((GameObject *)obj)->anim.rotY = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
+            ((GameObject*)obj)->anim.rotX = getAngle(vx, vz) - 0x8000;
+            ((GameObject*)obj)->anim.rotY = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
         }
         ObjHits_EnableObject(obj);
-        if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0) {
-            if (((GameObject *)obj)->unkF4 < 0x17c) {
+        if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0)
+        {
+            if (((GameObject*)obj)->unkF4 < 0x17c)
+            {
                 kaldachompspit_burst(obj);
                 return;
             }
-            if (((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == Obj_GetPlayerObject()) ||
-                ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == getTrickyObject())) {
+            if (((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
+                    Obj_GetPlayerObject()) ||
+                ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
+                    getTrickyObject()))
+            {
                 kaldachompspit_burst(obj);
                 return;
             }
         }
-        if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags != 0) {
+        if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
+        {
             kaldachompspit_burst(obj);
-        } else {
-            if (((GameObject *)obj)->anim.seqId == 0x869) {
+        }
+        else
+        {
+            if (((GameObject*)obj)->anim.seqId == 0x869)
+            {
                 fn_80098B18(obj, lbl_803E30E0, 1, 0, 0, 0);
-            } else {
-                (*gPartfxInterface)->spawnObject((void *)obj, 0x714, NULL, 2, -1,
+            }
+            else
+            {
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x714, NULL, 2, -1,
                                                  &objAnim->alpha);
-                (*gPartfxInterface)->spawnObject((void *)obj, 0x715, NULL, 1, -1, NULL);
-                (*gPartfxInterface)->spawnObject((void *)obj, 0x715, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, NULL);
             }
             ptr = *state;
-            if ((ptr != 0) && (*(u8 *)(ptr + 0x2f8) != 0) && (*(u8 *)(ptr + 0x4c) != 0)) {
+            if ((ptr != 0) && (*(u8*)(ptr + 0x2f8) != 0) && (*(u8*)(ptr + 0x4c) != 0))
+            {
                 rnd = randomGetRange(-0x19, 0x19);
                 ptr = *state;
-                v = *(u8 *)(ptr + 0x2f9) + *(s8 *)(ptr + 0x2fa) + rnd;
-                if (v < 0) {
+                v = *(u8*)(ptr + 0x2f9) + *(s8*)(ptr + 0x2fa) + rnd;
+                if (v < 0)
+                {
                     v = 0;
-                    *(u8 *)(ptr + 0x2fa) = 0;
-                } else if (v > 0xff) {
-                    v = 0xff;
-                    *(u8 *)(ptr + 0x2fa) = 0;
+                    *(u8*)(ptr + 0x2fa) = 0;
                 }
-                *(u8 *)(*state + 0x2f9) = v;
+                else if (v > 0xff)
+                {
+                    v = 0xff;
+                    *(u8*)(ptr + 0x2fa) = 0;
+                }
+                *(u8*)(*state + 0x2f9) = v;
             }
         }
     }
@@ -475,22 +526,27 @@ void kaldachompspit_update(int obj)
 void kaldachompspit_burst(int obj)
 {
     int i;
-    u32 *state;
+    u32* state;
     u8 rnd;
 
-    state = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->anim.alpha = 0;
-    ((GameObject *)obj)->unkF4 = 0xdc;
-    (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
-    if (*state != 0) {
+    state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->anim.alpha = 0;
+    ((GameObject*)obj)->unkF4 = 0xdc;
+    (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+    if (*state != 0)
+    {
         modelLightStruct_setEnabled(*state, 0, lbl_803E30E0);
     }
-    if (((GameObject *)obj)->anim.seqId == 0x869) {
+    if (((GameObject*)obj)->anim.seqId == 0x869)
+    {
         rnd = randomGetRange(0, 1);
         spawnExplosion(obj, (f32)(int)randomGetRange(0x32, 0x3c), 1, 1, 0, rnd, 0, 1, 0);
-    } else {
-        for (i = 0; i < 0x19; i++) {
-            (*gPartfxInterface)->spawnObject((void *)obj, 0x715, NULL, 1, -1, &i);
+    }
+    else
+    {
+        for (i = 0; i < 0x19; i++)
+        {
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, &i);
         }
         Sfx_PlayFromObject(obj, 0x279);
     }

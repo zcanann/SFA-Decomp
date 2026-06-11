@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0572_BullRushClu_packet_info {
+enum obj_0572_BullRushClu_packet_info
+{
     BULLRUSHCLU_DEF_ID = 0x0572,
     BULLRUSHCLU_DLL_ID = 0x02AD,
     BULLRUSHCLU_CLASS_ID = 0x007F,

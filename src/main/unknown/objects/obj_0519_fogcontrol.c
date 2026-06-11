@@ -49,7 +49,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0519_fogControl_packet_info {
+enum obj_0519_fogControl_packet_info
+{
     FOGCONTROL_DEF_ID = 0x0519,
     FOGCONTROL_DLL_ID = 0x0140,
     FOGCONTROL_CLASS_ID = 0x0081,

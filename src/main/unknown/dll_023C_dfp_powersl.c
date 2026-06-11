@@ -24,7 +24,8 @@
  */
 
 #if 0
-enum dll_023C_DFP_PowerSl_slot {
+enum dll_023C_DFP_PowerSl_slot
+{
     DFP_POWERSL_INIT = 3,
     DFP_POWERSL_UPDATE = 4,
     DFP_POWERSL_RENDER = 6,

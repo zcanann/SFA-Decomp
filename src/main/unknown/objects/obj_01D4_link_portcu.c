@@ -72,7 +72,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01D4_LINK_Portcu_packet_info {
+enum obj_01D4_LINK_Portcu_packet_info
+{
     LINK_PORTCU_DEF_ID = 0x01D4,
     LINK_PORTCU_DLL_ID = 0x0110,
     LINK_PORTCU_CLASS_ID = 0x0053,

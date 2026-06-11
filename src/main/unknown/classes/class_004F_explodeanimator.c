@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_004F_ExplodeAnimator_defs {
+enum class_004F_ExplodeAnimator_defs
+{
     EXPLODEANIMATOR_EXPLODEANIM = 0x04C0,
 };
 #endif

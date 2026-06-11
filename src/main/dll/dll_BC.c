@@ -16,12 +16,14 @@ extern void setAButtonIcon(int kind);
  */
 void Camera_minimapShowHelpTextForTarget(int arg1, int arg2, int arg3, int arg4)
 {
-  if (gameTextFn_80134be8() == 0) {
-    gCamcontrolTargetHelpTextId = CAMCONTROL_HELP_TEXT_NONE;
-    camcontrol_updateTargetReticle((CamcontrolTargetObject *)CAMCONTROL_CAMERA->targetReticleFocus, lbl_803DD518 == 0x49,
-                                   arg1, arg2, arg3, arg4);
-    CAMCONTROL_CAMERA->targetReticleOverride = 0;
-  }
+    if (gameTextFn_80134be8() == 0)
+    {
+        gCamcontrolTargetHelpTextId = CAMCONTROL_HELP_TEXT_NONE;
+        camcontrol_updateTargetReticle((CamcontrolTargetObject*)CAMCONTROL_CAMERA->targetReticleFocus,
+                                       lbl_803DD518 == 0x49,
+                                       arg1, arg2, arg3, arg4);
+        CAMCONTROL_CAMERA->targetReticleOverride = 0;
+    }
 }
 
 /*
@@ -33,22 +35,30 @@ void Camera_minimapShowHelpTextForTarget(int arg1, int arg2, int arg3, int arg4)
  */
 void camcontrol_playTargetTypeSfx(void)
 {
-  CamcontrolTargetObject *target = (CamcontrolTargetObject *)CAMCONTROL_CAMERA->currentTarget;
-  int kind;
+    CamcontrolTargetObject* target = (CamcontrolTargetObject*)CAMCONTROL_CAMERA->currentTarget;
+    int kind;
 
-  if (gameTextFn_80134be8() != 0) return;
-  if (target == NULL) return;
+    if (gameTextFn_80134be8() != 0) return;
+    if (target == NULL) return;
 
-  kind = target->targetSetup[target->targetSetupIndex].targetKind & CAMCONTROL_TARGET_KIND_MASK;
-  if (kind == CAMCONTROL_TARGET_KIND_TALK_ICON) {
-    if (target->classId == 6) {
-      setAButtonIcon(CAMCONTROL_A_BUTTON_ICON_TALK_NPC);
-    } else {
-      setAButtonIcon(CAMCONTROL_A_BUTTON_ICON_TALK_OBJECT);
+    kind = target->targetSetup[target->targetSetupIndex].targetKind & CAMCONTROL_TARGET_KIND_MASK;
+    if (kind == CAMCONTROL_TARGET_KIND_TALK_ICON)
+    {
+        if (target->classId == 6)
+        {
+            setAButtonIcon(CAMCONTROL_A_BUTTON_ICON_TALK_NPC);
+        }
+        else
+        {
+            setAButtonIcon(CAMCONTROL_A_BUTTON_ICON_TALK_OBJECT);
+        }
     }
-  } else if (kind == CAMCONTROL_TARGET_KIND_A_BUTTON_HINT) {
-    setAButtonIcon(CAMCONTROL_A_BUTTON_ICON_HINT);
-  } else if (kind == CAMCONTROL_TARGET_KIND_CONTEXT_B_ICON) {
-    setAButtonIcon(CAMCONTROL_A_BUTTON_ICON_CONTEXT_B);
-  }
+    else if (kind == CAMCONTROL_TARGET_KIND_A_BUTTON_HINT)
+    {
+        setAButtonIcon(CAMCONTROL_A_BUTTON_ICON_HINT);
+    }
+    else if (kind == CAMCONTROL_TARGET_KIND_CONTEXT_B_ICON)
+    {
+        setAButtonIcon(CAMCONTROL_A_BUTTON_ICON_CONTEXT_B);
+    }
 }

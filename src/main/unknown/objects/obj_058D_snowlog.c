@@ -73,7 +73,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_058D_SnowLog_packet_info {
+enum obj_058D_SnowLog_packet_info
+{
     SNOWLOG_DEF_ID = 0x058D,
     SNOWLOG_DLL_ID = 0x011A,
     SNOWLOG_CLASS_ID = 0x0061,

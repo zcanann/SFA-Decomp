@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01F6_CCdarkness_packet_info {
+enum obj_01F6_CCdarkness_packet_info
+{
     CCDARKNESS_DEF_ID = 0x01F6,
     CCDARKNESS_DLL_ID = 0x012E,
     CCDARKNESS_CLASS_ID = 0x0061,

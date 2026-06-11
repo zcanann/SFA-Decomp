@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0379_WM_krazoast_packet_info {
+enum obj_0379_WM_krazoast_packet_info
+{
     WM_KRAZOAST_DEF_ID = 0x0379,
     WM_KRAZOAST_DLL_ID = 0x012A,
     WM_KRAZOAST_CLASS_ID = 0x0030,

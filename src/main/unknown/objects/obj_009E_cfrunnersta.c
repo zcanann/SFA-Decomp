@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_009E_CFrunnersta_packet_info {
+enum obj_009E_CFrunnersta_packet_info
+{
     CFRUNNERSTA_DEF_ID = 0x009E,
     CFRUNNERSTA_DLL_ID = 0x012E,
     CFRUNNERSTA_CLASS_ID = 0x0061,

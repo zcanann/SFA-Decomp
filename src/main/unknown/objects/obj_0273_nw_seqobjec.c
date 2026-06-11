@@ -71,7 +71,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0273_NW_seqobjec_packet_info {
+enum obj_0273_NW_seqobjec_packet_info
+{
     NW_SEQOBJEC_DEF_ID = 0x0273,
     NW_SEQOBJEC_DLL_ID = 0x0113,
     NW_SEQOBJEC_CLASS_ID = 0x0056,

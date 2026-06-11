@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_043F_DR_LaserCan_packet_info {
+enum obj_043F_DR_LaserCan_packet_info
+{
     DR_LASERCAN_DEF_ID = 0x043F,
     DR_LASERCAN_DLL_ID = 0x0261,
     DR_LASERCAN_CLASS_ID = 0x0030,

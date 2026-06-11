@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_053C_ARWBigAster_packet_info {
+enum obj_053C_ARWBigAster_packet_info
+{
     ARWBIGASTER_DEF_ID = 0x053C,
     ARWBIGASTER_DLL_ID = 0x02A6,
     ARWBIGASTER_CLASS_ID = 0x007C,

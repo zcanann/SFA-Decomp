@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0109_CRFuelTank_packet_info {
+enum obj_0109_CRFuelTank_packet_info
+{
     CRFUELTANK_DEF_ID = 0x0109,
     CRFUELTANK_DLL_ID = 0x025F,
     CRFUELTANK_CLASS_ID = 0x0030,

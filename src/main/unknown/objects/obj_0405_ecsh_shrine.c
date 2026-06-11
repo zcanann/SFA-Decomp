@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0405_ECSH_Shrine_packet_info {
+enum obj_0405_ECSH_Shrine_packet_info
+{
     ECSH_SHRINE_DEF_ID = 0x0405,
     ECSH_SHRINE_DLL_ID = 0x018F,
     ECSH_SHRINE_CLASS_ID = 0x0030,

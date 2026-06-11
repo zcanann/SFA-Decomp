@@ -32,7 +32,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0002_Tricky_defs {
+enum class_0002_Tricky_defs
+{
     TRICKY_TRICKY = 0x0004,
 };
 #endif

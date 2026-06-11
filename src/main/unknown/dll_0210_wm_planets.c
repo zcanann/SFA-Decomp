@@ -37,7 +37,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_0210_WM_Planets_slot {
+enum dll_0210_WM_Planets_slot
+{
     WM_PLANETS_INITIALISE = 0,
     WM_PLANETS_RELEASE = 1,
     WM_PLANETS_INIT = 3,

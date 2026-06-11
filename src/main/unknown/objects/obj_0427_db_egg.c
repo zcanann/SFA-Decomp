@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0427_DB_egg_packet_info {
+enum obj_0427_DB_egg_packet_info
+{
     DB_EGG_DEF_ID = 0x0427,
     DB_EGG_DLL_ID = 0x023F,
     DB_EGG_CLASS_ID = 0x0006,

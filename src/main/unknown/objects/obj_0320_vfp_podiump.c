@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0320_VFP_PodiumP_packet_info {
+enum obj_0320_VFP_PodiumP_packet_info
+{
     VFP_PODIUMP_DEF_ID = 0x0320,
     VFP_PODIUMP_DLL_ID = 0x0111,
     VFP_PODIUMP_CLASS_ID = 0x0054,

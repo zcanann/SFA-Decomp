@@ -59,7 +59,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01F4_CClightfoot_packet_info {
+enum obj_01F4_CClightfoot_packet_info
+{
     CCLIGHTFOOT_DEF_ID = 0x01F4,
     CCLIGHTFOOT_DLL_ID = 0x0188,
     CCLIGHTFOOT_CLASS_ID = 0x0061,

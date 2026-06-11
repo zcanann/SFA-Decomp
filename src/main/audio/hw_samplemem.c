@@ -5,9 +5,9 @@ extern undefined4 DAT_803dd288;
 extern undefined4 DAT_803defc4;
 extern undefined4 DAT_803deff0;
 extern u32 dspHRTFOn;
-extern u8 *dspVoice;
-extern void *(*gSalMallocHook)(u32 size);
-extern void (*gSalFreeHook)(void *ptr);
+extern u8* dspVoice;
+extern void*(*gSalMallocHook)(u32 size);
+extern void (*gSalFreeHook)(void* ptr);
 
 /*
  * --INFO--
@@ -22,33 +22,37 @@ extern void (*gSalFreeHook)(void *ptr);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void hwSaveSample(u32 **sample, void **ptr)
+void hwSaveSample(u32** sample, void** ptr)
 {
-  u32 size;
-  s32 type;
-  u32 adjusted;
-  u32 header;
+    u32 size;
+    s32 type;
+    u32 adjusted;
+    u32 header;
 
-  header = (*sample)[1];
-  type = header >> 24;
-  size = header & 0xffffff;
-  if (type != 3) {
-    if (type < 3) {
-      if (type >= 2) goto size_double;
-      if (type >= 0) goto size_adpcm;
-      goto save;
-    } else if (type >= 6) {
-      goto save;
+    header = (*sample)[1];
+    type = header >> 24;
+    size = header & 0xffffff;
+    if (type != 3)
+    {
+        if (type < 3)
+        {
+            if (type >= 2) goto size_double;
+            if (type >= 0) goto size_adpcm;
+            goto save;
+        }
+        else if (type >= 6)
+        {
+            goto save;
+        }
+    size_adpcm:
+        adjusted = size + 0xd;
+        size = (adjusted / 7 * 4) & ~7;
+        goto save;
+    size_double:
+        size <<= 1;
     }
-  size_adpcm:
-    adjusted = size + 0xd;
-    size = (adjusted / 7 * 4) & ~7;
-    goto save;
-  size_double:
-    size <<= 1;
-  }
 save:
-  *ptr = (void *)aramStoreData(*ptr, size);
+    *ptr = (void*)aramStoreData(*ptr, size);
 }
 
 /*
@@ -64,33 +68,37 @@ save:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void hwRemoveSample(u32 *sample, void *ptr)
+void hwRemoveSample(u32* sample, void* ptr)
 {
-  u32 size;
-  s32 type;
-  u32 adjusted;
-  u32 header;
+    u32 size;
+    s32 type;
+    u32 adjusted;
+    u32 header;
 
-  header = sample[1];
-  type = header >> 24;
-  size = header & 0xffffff;
-  if (type != 3) {
-    if (type < 3) {
-      if (type >= 2) goto size_double;
-      if (type >= 0) goto size_adpcm;
-      goto remove;
-    } else if (type >= 6) {
-      goto remove;
+    header = sample[1];
+    type = header >> 24;
+    size = header & 0xffffff;
+    if (type != 3)
+    {
+        if (type < 3)
+        {
+            if (type >= 2) goto size_double;
+            if (type >= 0) goto size_adpcm;
+            goto remove;
+        }
+        else if (type >= 6)
+        {
+            goto remove;
+        }
+    size_adpcm:
+        adjusted = size + 0xd;
+        size = (adjusted / 7 * 4) & ~7;
+        goto remove;
+    size_double:
+        size <<= 1;
     }
-  size_adpcm:
-    adjusted = size + 0xd;
-    size = (adjusted / 7 * 4) & ~7;
-    goto remove;
-  size_double:
-    size <<= 1;
-  }
 remove:
-  aramRemoveData(ptr, size);
+    aramRemoveData(ptr, size);
 }
 
 /*
@@ -108,41 +116,44 @@ remove:
  */
 void hwSyncSampleMem(void)
 {
-  aramSyncTransferQueue();
+    aramSyncTransferQueue();
 }
 
 /* Pattern wrappers. */
-void hwFrameDone(void) {}
-
-void sndSetHooks(const SalHooks *hooks)
+void hwFrameDone(void)
 {
-  *(SalHooks *)&gSalMallocHook = *hooks;
+}
+
+void sndSetHooks(const SalHooks* hooks)
+{
+    *(SalHooks*)&gSalMallocHook = *hooks;
 }
 
 void hwDisableHRTF(void)
 {
-  dspHRTFOn = 0;
+    dspHRTFOn = 0;
 }
 
 int hwGetVirtualSampleID(int slot)
 {
-  u8 *entry;
+    u8* entry;
 
-  slot *= 0xf4;
-  entry = dspVoice;
-  entry += slot;
-  if (entry[0xec] == 0) {
-    return -1;
-  }
-  return *(int *)(entry + 0xe8);
+    slot *= 0xf4;
+    entry = dspVoice;
+    entry += slot;
+    if (entry[0xec] == 0)
+    {
+        return -1;
+    }
+    return *(int*)(entry + 0xe8);
 }
 
 int hwVoiceInStartup(int slot)
 {
-  u8 *entry;
+    u8* entry;
 
-  slot *= 0xf4;
-  entry = dspVoice;
-  entry += slot;
-  return entry[0xec] == 1;
+    slot *= 0xf4;
+    entry = dspVoice;
+    entry += slot;
+    return entry[0xec] == 1;
 }

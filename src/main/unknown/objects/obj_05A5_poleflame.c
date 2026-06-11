@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_05A5_PoleFlame_packet_info {
+enum obj_05A5_PoleFlame_packet_info
+{
     POLEFLAME_DEF_ID = 0x05A5,
     POLEFLAME_DLL_ID = 0x0206,
     POLEFLAME_CLASS_ID = 0x0030,

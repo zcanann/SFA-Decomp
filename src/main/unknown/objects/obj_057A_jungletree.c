@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_057A_JungleTree_packet_info {
+enum obj_057A_JungleTree_packet_info
+{
     JUNGLETREE_DEF_ID = 0x057A,
     JUNGLETREE_DLL_ID = 0x02AF,
     JUNGLETREE_CLASS_ID = 0x007F,

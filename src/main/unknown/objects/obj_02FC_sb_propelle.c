@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02FC_SB_Propelle_packet_info {
+enum obj_02FC_SB_Propelle_packet_info
+{
     SB_PROPELLE_DEF_ID = 0x02FC,
     SB_PROPELLE_DLL_ID = 0x01E9,
     SB_PROPELLE_CLASS_ID = 0x0030,

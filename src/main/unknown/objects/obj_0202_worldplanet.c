@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0202_WORLDplanet_packet_info {
+enum obj_0202_WORLDplanet_packet_info
+{
     WORLDPLANET_DEF_ID = 0x0202,
     WORLDPLANET_DLL_ID = 0x01D2,
     WORLDPLANET_CLASS_ID = 0x0061,

@@ -42,7 +42,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0025_warp_defs {
+enum class_0025_warp_defs
+{
     WARP_WARPPOINT = 0x04B2,
     WARP_TRANSPORTER = 0x04B1,
     WARP_KP_TRANSPOR = 0x02C3,

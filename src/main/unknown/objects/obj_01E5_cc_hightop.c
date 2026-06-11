@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01E5_CC_HighTop_packet_info {
+enum obj_01E5_CC_HighTop_packet_info
+{
     CC_HIGHTOP_DEF_ID = 0x01E5,
     CC_HIGHTOP_DLL_ID = 0x0272,
     CC_HIGHTOP_CLASS_ID = 0x0030,

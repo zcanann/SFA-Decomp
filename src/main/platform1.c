@@ -3,12 +3,12 @@
 
 int platform1_getExtraSize(void)
 {
-  return 0;
+    return 0;
 }
 
 int platform1_getObjectTypeId(void)
 {
-  return 0;
+    return 0;
 }
 
 void platform1_free(void)
@@ -17,8 +17,8 @@ void platform1_free(void)
 
 void platform1_drawUnsupported(void)
 {
-  OSReport(sPlatform1DrawNoLongerSupported);
-  return;
+    OSReport(sPlatform1DrawNoLongerSupported);
+    return;
 }
 
 void platform1_hitDetect(void)
@@ -27,14 +27,14 @@ void platform1_hitDetect(void)
 
 void platform1_controlUnsupported(void)
 {
-  OSReport(sPlatform1ControlNoLongerSupported);
-  return;
+    OSReport(sPlatform1ControlNoLongerSupported);
+    return;
 }
 
 void platform1_init(void)
 {
-  OSReport(sPlatform1InitNoLongerSupported);
-  return;
+    OSReport(sPlatform1InitNoLongerSupported);
+    return;
 }
 
 void platform1_release(void)
@@ -63,8 +63,8 @@ ObjectDescriptor gPlatform1ObjDescriptor = {
 };
 
 char sPlatform1DrawNoLongerSupported[] = "<platform1 draw>No Longer supported \n";
-static u8 sPlatform1StringPad0[] = { 0, 0 };
+static u8 sPlatform1StringPad0[] = {0, 0};
 char sPlatform1ControlNoLongerSupported[] = "<platform1 control>No Longer supported \n";
-static u8 sPlatform1StringPad1[] = { 0, 0, 0 };
+static u8 sPlatform1StringPad1[] = {0, 0, 0};
 char sPlatform1InitNoLongerSupported[] = "<platform1 Init>No Longer supported \n";
-static u8 sPlatform1StringPad2[] = { 0, 0, 0, 0, 0, 0 };
+static u8 sPlatform1StringPad2[] = {0, 0, 0, 0, 0, 0};

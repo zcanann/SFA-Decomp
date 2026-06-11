@@ -21,8 +21,8 @@ extern undefined4 gameTextShow();
 extern undefined4 checkReset();
 extern undefined8 mmFreeTick();
 extern undefined4 ObjModel_ClearRenderAttachment();
-extern void ObjModel_EnableDefaultRenderCallback(DIMbossObject *obj,undefined4 model,void *mtx,
-                                                 int enabled,double scale);
+extern void ObjModel_EnableDefaultRenderCallback(DIMbossObject* obj, undefined4 model, void* mtx,
+                                                 int enabled, double scale);
 extern int Obj_GetActiveModel();
 extern undefined4 Obj_BuildWorldTransformMatrix();
 extern undefined4 FUN_80017a98();
@@ -47,8 +47,8 @@ extern undefined4 FUN_80053b3c();
 extern undefined4 FUN_8005fe14();
 extern void setDrawCloudsAndLights(int param_1);
 extern void skyFn_800894a8(int layer, f32 x, f32 y, f32 z);
-extern void skyFn_800895e0(int layer,int red,int green,int blue,int alpha,int duration);
-extern void skyFn_80089710(int layer,int enabled,int param_3);
+extern void skyFn_800895e0(int layer, int red, int green, int blue, int alpha, int duration);
+extern void skyFn_80089710(int layer, int enabled, int param_3);
 extern undefined8 dll_2E_func07();
 extern undefined4 FUN_801150a4();
 extern undefined8 FUN_801150ac();
@@ -76,7 +76,7 @@ extern void fn_801BB2B0(void);
 extern undefined4 warpDarkIceMines_801bbb44();
 extern undefined8 fn_801BC7E4();
 extern undefined4 dll_2E_func04();
-extern void OSReport(const char *msg, ...);
+extern void OSReport(const char* msg, ...);
 
 extern undefined4 Camera_DisableViewYOffset();
 extern undefined4 getEnvfxAct();
@@ -84,13 +84,13 @@ extern undefined4 ModelLightStruct_free();
 extern undefined4 Obj_FreeObject();
 extern undefined4 Obj_GetPlayerObject();
 extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
-extern void objRenderFn_8003b8f4(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,
-                                 undefined4 param_4,undefined4 param_5,f32 scale);
+extern void objRenderFn_8003b8f4(DIMbossObject* obj, undefined4 param_2, undefined4 param_3,
+                                 undefined4 param_4, undefined4 param_5, f32 scale);
 extern undefined4 timeOfDayFn_80055000();
-extern void queueGlowRender(void *effect);
-extern void dll_2E_func06(DIMbossObject *obj,void *animController,int param_3);
+extern void queueGlowRender(void* effect);
+extern void dll_2E_func06(DIMbossObject* obj, void* animController, int param_3);
 extern undefined4 dll_2E_func03();
-extern void fn_801BB598(DIMbossObject *obj,DIMbossRuntime *runtime);
+extern void fn_801BB598(DIMbossObject * obj, DIMbossRuntime * runtime);
 
 extern f32 timeDelta;
 extern undefined4 DAT_803ad60c;
@@ -113,7 +113,7 @@ extern void (*gDIMbossHitDetectAnimTable[])(void);
 extern int gPlayerInterface;
 extern undefined4* gObjectTriggerInterface;
 extern undefined4* gBaddieControlInterface;
-extern void *gDIMbossHitEffectResource;
+extern void* gDIMbossHitEffectResource;
 extern u8 lbl_803DDB84;
 extern f32 lbl_803E4BD8;
 extern f32 lbl_803E4C28;
@@ -132,76 +132,85 @@ extern char sDIMBossLoadingAssetsForDIMTop[];
 #define DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES 100
 #define DIMBOSS_SPAWN_OBJECT_TIMER 0x3C
 
-typedef void (*DIMbossAnimSetupFn)(DIMbossObject *obj,undefined4 param_2,DIMbossRuntime *runtime,
-                                   int param_4,int param_5,int param_6,int param_7,float scale);
-typedef void (*DIMbossPlayerHitReactFn)(DIMbossObject *obj,DIMbossRuntime *runtime,f32 x,f32 y,
-                                        void *hitDetectAnimTable,void *animTable);
+typedef void (*DIMbossAnimSetupFn)(DIMbossObject* obj, undefined4 param_2, DIMbossRuntime* runtime,
+                                   int param_4, int param_5, int param_6, int param_7, float scale);
+typedef void (*DIMbossPlayerHitReactFn)(DIMbossObject* obj, DIMbossRuntime* runtime, f32 x, f32 y,
+                                        void* hitDetectAnimTable, void* animTable);
 
-typedef struct DIMbossBoneParticleEffectInterface {
-  u8 pad00[0x0C];
-  void (*spawnEffect)(DIMbossObject *obj,int effectId,void *params,int frames,void *extra);
+typedef struct DIMbossBoneParticleEffectInterface
+{
+    u8 pad00[0x0C];
+    void (*spawnEffect)(DIMbossObject* obj, int effectId, void* params, int frames, void* extra);
 } DIMbossBoneParticleEffectInterface;
 
-typedef struct DIMbossBaddieControlInterface {
-  u8 pad00[0x28];
-  void (*startMove)(DIMbossObject *obj,DIMbossRuntime *runtime,void *moveScratch,int moveId,
-                    u8 *hitReactMode,int param_6,int param_7,int param_8,int param_9);
-  void (*applyHitReact)(DIMbossObject *obj,DIMbossRuntime *runtime,f32 amount);
-  int (*updateState)(DIMbossObject *obj,DIMbossRuntime *runtime,int flags);
-  int (*updateHitDetect)(DIMbossObject *obj,ObjAnimUpdateState *animUpdate,
-                         DIMbossRuntime *runtime,void *hitDetectAnimTable,void *animTable,
-                         int flags);
-  u8 pad38[0x40 - 0x38];
-  void (*releaseState)(DIMbossObject *obj,DIMbossRuntime *runtime,int flags);
-  u8 pad44[0x58 - 0x44];
-  DIMbossAnimSetupFn setupAnim;
+typedef struct DIMbossBaddieControlInterface
+{
+    u8 pad00[0x28];
+    void (*startMove)(DIMbossObject* obj, DIMbossRuntime* runtime, void* moveScratch, int moveId,
+                      u8* hitReactMode, int param_6, int param_7, int param_8, int param_9);
+    void (*applyHitReact)(DIMbossObject* obj, DIMbossRuntime* runtime, f32 amount);
+    int (*updateState)(DIMbossObject* obj, DIMbossRuntime* runtime, int flags);
+    int (*updateHitDetect)(DIMbossObject* obj, ObjAnimUpdateState* animUpdate,
+                           DIMbossRuntime* runtime, void* hitDetectAnimTable, void* animTable,
+                           int flags);
+    u8 pad38[0x40 - 0x38];
+    void (*releaseState)(DIMbossObject* obj, DIMbossRuntime* runtime, int flags);
+    u8 pad44[0x58 - 0x44];
+    DIMbossAnimSetupFn setupAnim;
 } DIMbossBaddieControlInterface;
 
-typedef struct DIMbossPlayerInterface {
-  u8 pad00[0x08];
-  DIMbossPlayerHitReactFn applyHitReact;
-  void (*updateHitDetect)(DIMbossObject *obj,DIMbossRuntime *runtime,void *hitDetectAnimTable);
-  u8 pad10[0x14 - 0x10];
-  void (*init)(DIMbossObject *obj,DIMbossRuntime *runtime,int mode);
+typedef struct DIMbossPlayerInterface
+{
+    u8 pad00[0x08];
+    DIMbossPlayerHitReactFn applyHitReact;
+    void (*updateHitDetect)(DIMbossObject* obj, DIMbossRuntime* runtime, void* hitDetectAnimTable);
+    u8 pad10[0x14 - 0x10];
+    void (*init)(DIMbossObject* obj, DIMbossRuntime* runtime, int mode);
 } DIMbossPlayerInterface;
 
-typedef struct DIMbossMapEventInterface {
-  u8 pad00[0x40];
-  u8 (*getAreaState)(int areaId);
-  void (*setAreaState)(int areaId,int state);
-  u8 pad48[0x4C - 0x48];
-  int (*getAnimEvent)(int mapDir,int areaId);
-  void (*triggerArea)(int mapDir,int areaId,int enabled);
+typedef struct DIMbossMapEventInterface
+{
+    u8 pad00[0x40];
+    u8 (*getAreaState)(int areaId);
+    void (*setAreaState)(int areaId, int state);
+    u8 pad48[0x4C - 0x48];
+    int (*getAnimEvent)(int mapDir, int areaId);
+    void (*triggerArea)(int mapDir, int areaId, int enabled);
 } DIMbossMapEventInterface;
 
-typedef struct DIMbossObjectTriggerInterface {
-  u8 pad00[0x48];
-  void (*spawnAnimObject)(int objectType,DIMbossObject *parent,int timer);
-  u8 pad4C[0x50 - 0x4C];
-  void (*spawnObject)(int objectType,int spawnMode,DIMbossObject *parent,int timer);
-  u8 pad54[0x58 - 0x54];
-  void (*triggerEvent)(ObjAnimUpdateState *animUpdate,int eventId);
+typedef struct DIMbossObjectTriggerInterface
+{
+    u8 pad00[0x48];
+    void (*spawnAnimObject)(int objectType, DIMbossObject* parent, int timer);
+    u8 pad4C[0x50 - 0x4C];
+    void (*spawnObject)(int objectType, int spawnMode, DIMbossObject* parent, int timer);
+    u8 pad54[0x58 - 0x54];
+    void (*triggerEvent)(ObjAnimUpdateState* animUpdate, int eventId);
 } DIMbossObjectTriggerInterface;
 
-extern DIMbossBoneParticleEffectInterface **lbl_803DCAB4;
-extern DIMbossMapEventInterface **gMapEventInterface;
+extern DIMbossBoneParticleEffectInterface** lbl_803DCAB4;
+extern DIMbossMapEventInterface** gMapEventInterface;
 
 #define gBoneParticleEffectInterface lbl_803DCAB4
 
-static inline DIMbossBaddieControlInterface *DIMboss_GetBaddieControlInterface(void) {
-  return (DIMbossBaddieControlInterface *)*gBaddieControlInterface;
+static inline DIMbossBaddieControlInterface* DIMboss_GetBaddieControlInterface(void)
+{
+    return (DIMbossBaddieControlInterface*)*gBaddieControlInterface;
 }
 
-static inline DIMbossBoneParticleEffectInterface *DIMboss_GetBoneParticleEffectInterface(void) {
-  return *gBoneParticleEffectInterface;
+static inline DIMbossBoneParticleEffectInterface* DIMboss_GetBoneParticleEffectInterface(void)
+{
+    return *gBoneParticleEffectInterface;
 }
 
-static inline DIMbossPlayerInterface *DIMboss_GetPlayerInterface(void) {
-  return (DIMbossPlayerInterface *)*(int *)gPlayerInterface;
+static inline DIMbossPlayerInterface* DIMboss_GetPlayerInterface(void)
+{
+    return (DIMbossPlayerInterface*)*(int*)gPlayerInterface;
 }
 
-static inline DIMbossObjectTriggerInterface *DIMboss_GetObjectTriggerInterface(void) {
-  return (DIMbossObjectTriggerInterface *)*gObjectTriggerInterface;
+static inline DIMbossObjectTriggerInterface* DIMboss_GetObjectTriggerInterface(void)
+{
+    return (DIMbossObjectTriggerInterface*)*gObjectTriggerInterface;
 }
 
 /*
@@ -217,222 +226,239 @@ static inline DIMbossObjectTriggerInterface *DIMboss_GetObjectTriggerInterface(v
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate)
+int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateState* animUpdate)
 {
-  DIMbossRuntime *runtime;
-  DIMbossConfig *config;
-  DIMbossTopState *topState;
-  u8 *animScratchBase;
-  byte hitReactMode;
-  u8 loadWaitStarted;
-  int updateResult;
-  int iVar4;
-  int mapDirIndex;
-  uint statusFlags;
-  int eventIndex;
-  int baddieResult;
-  
-  animScratchBase = gDIMbossAnimScratchBase;
-  runtime = obj->runtime;
-  config = obj->config;
-  updateResult = 0;
-  Obj_GetPlayerObject();
-  topState = runtime->topState;
-  runtime->phase = DIMBOSS_PHASE_START;
-  (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,DIMBOSS_MAP_AREA_INTRO_GATE,0);
-  if (obj->renderPause != 0) {
-    return 0;
-  }
+    DIMbossRuntime* runtime;
+    DIMbossConfig* config;
+    DIMbossTopState* topState;
+    u8* animScratchBase;
+    byte hitReactMode;
+    u8 loadWaitStarted;
+    int updateResult;
+    int iVar4;
+    int mapDirIndex;
+    uint statusFlags;
+    int eventIndex;
+    int baddieResult;
 
-  dll_2E_func07(obj,animUpdate,
-                (float *)(animScratchBase + DIMBOSS_ANIM_CONTROLLER_OFFSET),1,1);
-  for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1) {
-    switch(animUpdate->eventIds[eventIndex]) {
-    case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_80000:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags | (u64)DIMBOSS_SEQUENCE_FLAG_80000;
-      break;
-    case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_80000:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~(u64)DIMBOSS_SEQUENCE_FLAG_80000;
-      break;
-    case DIMBOSS_EVENT_CLEAR_RENDER_ATTACHMENT:
-      DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
-          obj,DIMBOSS_BONE_PARTICLE_EFFECT_800,NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES,NULL);
-      DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
-          obj,DIMBOSS_BONE_PARTICLE_EFFECT_800,NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES,NULL);
-      DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
-          obj,DIMBOSS_BONE_PARTICLE_EFFECT_7FF,NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES,NULL);
-      DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
-          obj,DIMBOSS_BONE_PARTICLE_EFFECT_7FF,NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES,NULL);
-      iVar4 = Obj_GetActiveModel((int)obj);
-      ObjModel_ClearRenderAttachment(iVar4);
-      Music_Trigger(DIMBOSS_MUSIC_LIFT_RUMBLE,1);
-      break;
-    case DIMBOSS_EVENT_LAUNCH_LIFT:
-      runtime->phase = DIMBOSS_PHASE_LAUNCH_LIFT;
-      obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_HIDDEN;
-      obj->objectFlags |= DIMBOSS_OBJECT_FLAG_ACTIVE;
-      (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,DIMBOSS_MAP_AREA_LIFT,0);
-      break;
-    case DIMBOSS_EVENT_ENABLE_DIMBOSS_MAP_AREA:
-      (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,DIMBOSS_MAP_AREA_BOSS,1);
-      break;
-    case DIMBOSS_EVENT_DISABLE_DIMBOSS_MAP_AREA:
-      (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,DIMBOSS_MAP_AREA_BOSS,0);
-      break;
-    case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_40004:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags | (u64)DIMBOSS_SEQUENCE_FLAGS_40004;
-      break;
-    case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_0002:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0002;
-      break;
-    case DIMBOSS_EVENT_QUEUE_STEAM_SFX:
-      topState->steamFlags.bits.sfxPending = 1;
-      Music_Trigger(DIMBOSS_MUSIC_STEAM_LOOP,0);
-      break;
-    case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_0040:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0040;
-      break;
-    case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0040:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~(u64)DIMBOSS_SEQUENCE_FLAG_0040;
-      break;
-    case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0080:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~(u64)DIMBOSS_SEQUENCE_FLAG_0080;
-      break;
-    case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_0100:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0100;
-      break;
-    case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0100:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~(u64)DIMBOSS_SEQUENCE_FLAG_0100;
-      break;
-    case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_2001:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_2001;
-      break;
-    case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_8021:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags | (u64)DIMBOSS_SEQUENCE_FLAGS_8021;
-      break;
-    case DIMBOSS_EVENT_TRIGGER_DEFEAT_FLAGS:
-      topState->defeatTimer = DIMBOSS_DEFEAT_TIMER_START;
-      GameBit_Set(DIMBOSS_GAMEBIT_DEFEAT_STATE_A,1);
-      GameBit_Set(DIMBOSS_GAMEBIT_DEFEAT_STATE_B,1);
-      Music_Trigger(DIMBOSS_MUSIC_LIFT_RUMBLE,0);
-      Music_Trigger(DIMBOSS_MUSIC_BOSS_THEME,0);
-      Music_Trigger(DIMBOSS_MUSIC_STEAM_LOOP,0);
-      break;
-    case DIMBOSS_EVENT_SPAWN_DIMBOSS_OBJECT:
-      DIMboss_GetObjectTriggerInterface()->spawnObject(DIMBOSS_OBJECT_TYPE_ID,4,obj,
-                                                       DIMBOSS_SPAWN_OBJECT_TIMER);
-      break;
-    case DIMBOSS_EVENT_FREE_DIMBOSS_ASSETS:
-      OSReport(sDIMBossFreeingAssetsForDIMBoss);
-      setLoadedFileFlags_blocks1();
-      unlockLevel(0,0,1);
-      mapDirIndex = mapGetDirIdx(DIMBOSS_MAP_DIR);
-      mapUnload(mapDirIndex,DIMBOSS_MAP_UNLOAD_MASK);
-      mapDirIndex = mapGetDirIdx(DIMBOSS_GUT_MAP_DIR);
-      mapUnload(mapDirIndex,DIMBOSS_GUT_MAP_UNLOAD_MASK);
-      defragMemory(0);
-      break;
-    case DIMBOSS_EVENT_LOAD_DIMTOP_ASSETS:
-      OSReport(sDIMBossLoadingAssetsForDIMTop);
-      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-      lockLevel(mapDirIndex,0);
-      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-      mapLoadDataFile(mapDirIndex,DIMTOP_BOOT_DATA_FILE);
-      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-      mapLoadDataFile(mapDirIndex,DIMTOP_INTRO_DATA_FILE);
-      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-      mapLoadDataFile(mapDirIndex,DIMTOP_PLATFORM_DATA_FILE);
-      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-      mapLoadDataFile(mapDirIndex,DIMTOP_LIFT_DATA_FILE);
-      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-      mapLoadDataFile(mapDirIndex,DIMTOP_SCENE_DATA_FILE);
-      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-      mapLoadDataFile(mapDirIndex,DIMTOP_STEAM_DATA_FILE);
-      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-      mapLoadDataFile(mapDirIndex,DIMTOP_BOSS_DATA_FILE_A);
-      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-      mapLoadDataFile(mapDirIndex,DIMTOP_BOSS_DATA_FILE_B);
-      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-      mapLoadDataFile(mapDirIndex,DIMTOP_EFFECT_DATA_FILE_A);
-      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-      mapLoadDataFile(mapDirIndex,DIMTOP_EFFECT_DATA_FILE_B);
-      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-      mapLoadDataFile(mapDirIndex,DIMTOP_ROOM_DATA_FILE_A);
-      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-      mapLoadDataFile(mapDirIndex,DIMTOP_ROOM_DATA_FILE_B);
-      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-      mapLoadDataFile(mapDirIndex,DIMTOP_AUDIO_DATA_FILE_A);
-      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-      mapLoadDataFile(mapDirIndex,DIMTOP_AUDIO_DATA_FILE_B);
-      loadWaitStarted = false;
-      while (statusFlags = getLoadedFileFlags(0), (statusFlags & DIMTOP_LOAD_PENDING_FLAGS_MASK) != 0) {
-        padUpdate();
-        checkReset();
-        if (loadWaitStarted) {
-          waitNextFrame();
-        }
-        loadDataFiles();
-        dvdCheckError();
-        if (loadWaitStarted) {
-          mmFreeTick(0);
-          gameTextRun();
-          GXFlush_(1,0);
-        }
-        if (gDvdErrorPauseActive != '\0') {
-          loadWaitStarted = true;
-        }
-      }
-      clearLoadedFileFlags_blocks1();
-      break;
-    }
-  }
-  if (obj->animStateId != -1) {
-    baddieResult = DIMboss_GetBaddieControlInterface()->updateState(obj,runtime,1);
-    if (baddieResult == 0) {
-      updateResult = 1;
-      goto LAB_801bd7dc;
-    }
-    if (obj->childObject != NULL) {
-      *(undefined4 *)((int)obj->childObject + 0x30) = obj->facingAngle;
-    }
-    if ((runtime->eventGameBit != -1) &&
-        (statusFlags = GameBit_Get((int)runtime->eventGameBit), statusFlags != 0)) {
-      DIMboss_GetObjectTriggerInterface()->triggerEvent(animUpdate,(int)config->eventId);
-      runtime->eventGameBit = -1;
-    }
-    hitReactMode = runtime->hitReactMode;
-    if (hitReactMode == 1) {
-      baddieResult = DIMboss_GetBaddieControlInterface()->updateHitDetect(
-          obj,animUpdate,runtime,
-          animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
-          animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET,0);
-      if (baddieResult != 0) {
-        DIMboss_GetBaddieControlInterface()->applyHitReact(obj,runtime,lbl_803E4C70);
-      }
-    }
-    else if ((hitReactMode != 0) && (hitReactMode < 3)) {
-      animUpdate->hitVolumePair = 0;
-      fn_801BC7E4(obj,animUpdate,(int)runtime,(int)runtime);
-      if (runtime->hitReactMode == 1) {
-        runtime->field270 = 0;
-        DIMboss_GetPlayerInterface()->applyHitReact(
-            obj,runtime,lbl_803E4C44,lbl_803E4C44,
-            animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
-            animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET);
-        animUpdate->sequenceEventActive = 0;
-      }
-    }
-  }
-  warpDarkIceMines_801bbb44(obj,runtime);
-  if (obj->animStateId == -1) {
-    runtime->stateFlags |= DIMBOSS_STATE_FLAG_START_MOVE;
+    animScratchBase = gDIMbossAnimScratchBase;
+    runtime = obj->runtime;
+    config = obj->config;
     updateResult = 0;
-  }
-  else {
-    updateResult = -((uint)runtime->hitReactMode) >> 31;
-  }
+    Obj_GetPlayerObject();
+    topState = runtime->topState;
+    runtime->phase = DIMBOSS_PHASE_START;
+    (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR, DIMBOSS_MAP_AREA_INTRO_GATE, 0);
+    if (obj->renderPause != 0)
+    {
+        return 0;
+    }
+
+    dll_2E_func07(obj, animUpdate,
+                  (float*)(animScratchBase + DIMBOSS_ANIM_CONTROLLER_OFFSET), 1, 1);
+    for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1)
+    {
+        switch (animUpdate->eventIds[eventIndex])
+        {
+        case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_80000:
+            gDIMbossSequenceFlags = gDIMbossSequenceFlags | (u64)DIMBOSS_SEQUENCE_FLAG_80000;
+            break;
+        case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_80000:
+            gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~(u64)DIMBOSS_SEQUENCE_FLAG_80000;
+            break;
+        case DIMBOSS_EVENT_CLEAR_RENDER_ATTACHMENT:
+            DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
+                obj,DIMBOSS_BONE_PARTICLE_EFFECT_800, NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES, NULL);
+            DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
+                obj,DIMBOSS_BONE_PARTICLE_EFFECT_800, NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES, NULL);
+            DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
+                obj,DIMBOSS_BONE_PARTICLE_EFFECT_7FF, NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES, NULL);
+            DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
+                obj,DIMBOSS_BONE_PARTICLE_EFFECT_7FF, NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES, NULL);
+            iVar4 = Obj_GetActiveModel((int)obj);
+            ObjModel_ClearRenderAttachment(iVar4);
+            Music_Trigger(DIMBOSS_MUSIC_LIFT_RUMBLE, 1);
+            break;
+        case DIMBOSS_EVENT_LAUNCH_LIFT:
+            runtime->phase = DIMBOSS_PHASE_LAUNCH_LIFT;
+            obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_HIDDEN;
+            obj->objectFlags |= DIMBOSS_OBJECT_FLAG_ACTIVE;
+            (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR, DIMBOSS_MAP_AREA_LIFT, 0);
+            break;
+        case DIMBOSS_EVENT_ENABLE_DIMBOSS_MAP_AREA:
+            (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR, DIMBOSS_MAP_AREA_BOSS, 1);
+            break;
+        case DIMBOSS_EVENT_DISABLE_DIMBOSS_MAP_AREA:
+            (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR, DIMBOSS_MAP_AREA_BOSS, 0);
+            break;
+        case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_40004:
+            gDIMbossSequenceFlags = gDIMbossSequenceFlags | (u64)DIMBOSS_SEQUENCE_FLAGS_40004;
+            break;
+        case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_0002:
+            gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0002;
+            break;
+        case DIMBOSS_EVENT_QUEUE_STEAM_SFX:
+            topState->steamFlags.bits.sfxPending = 1;
+            Music_Trigger(DIMBOSS_MUSIC_STEAM_LOOP, 0);
+            break;
+        case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_0040:
+            gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0040;
+            break;
+        case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0040:
+            gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~(u64)DIMBOSS_SEQUENCE_FLAG_0040;
+            break;
+        case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0080:
+            gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~(u64)DIMBOSS_SEQUENCE_FLAG_0080;
+            break;
+        case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_0100:
+            gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0100;
+            break;
+        case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0100:
+            gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~(u64)DIMBOSS_SEQUENCE_FLAG_0100;
+            break;
+        case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_2001:
+            gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_2001;
+            break;
+        case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_8021:
+            gDIMbossSequenceFlags = gDIMbossSequenceFlags | (u64)DIMBOSS_SEQUENCE_FLAGS_8021;
+            break;
+        case DIMBOSS_EVENT_TRIGGER_DEFEAT_FLAGS:
+            topState->defeatTimer = DIMBOSS_DEFEAT_TIMER_START;
+            GameBit_Set(DIMBOSS_GAMEBIT_DEFEAT_STATE_A, 1);
+            GameBit_Set(DIMBOSS_GAMEBIT_DEFEAT_STATE_B, 1);
+            Music_Trigger(DIMBOSS_MUSIC_LIFT_RUMBLE, 0);
+            Music_Trigger(DIMBOSS_MUSIC_BOSS_THEME, 0);
+            Music_Trigger(DIMBOSS_MUSIC_STEAM_LOOP, 0);
+            break;
+        case DIMBOSS_EVENT_SPAWN_DIMBOSS_OBJECT:
+            DIMboss_GetObjectTriggerInterface()->spawnObject(DIMBOSS_OBJECT_TYPE_ID, 4, obj,
+                                                             DIMBOSS_SPAWN_OBJECT_TIMER);
+            break;
+        case DIMBOSS_EVENT_FREE_DIMBOSS_ASSETS:
+            OSReport(sDIMBossFreeingAssetsForDIMBoss);
+            setLoadedFileFlags_blocks1();
+            unlockLevel(0, 0, 1);
+            mapDirIndex = mapGetDirIdx(DIMBOSS_MAP_DIR);
+            mapUnload(mapDirIndex, DIMBOSS_MAP_UNLOAD_MASK);
+            mapDirIndex = mapGetDirIdx(DIMBOSS_GUT_MAP_DIR);
+            mapUnload(mapDirIndex, DIMBOSS_GUT_MAP_UNLOAD_MASK);
+            defragMemory(0);
+            break;
+        case DIMBOSS_EVENT_LOAD_DIMTOP_ASSETS:
+            OSReport(sDIMBossLoadingAssetsForDIMTop);
+            mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+            lockLevel(mapDirIndex, 0);
+            mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+            mapLoadDataFile(mapDirIndex, DIMTOP_BOOT_DATA_FILE);
+            mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+            mapLoadDataFile(mapDirIndex, DIMTOP_INTRO_DATA_FILE);
+            mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+            mapLoadDataFile(mapDirIndex, DIMTOP_PLATFORM_DATA_FILE);
+            mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+            mapLoadDataFile(mapDirIndex, DIMTOP_LIFT_DATA_FILE);
+            mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+            mapLoadDataFile(mapDirIndex, DIMTOP_SCENE_DATA_FILE);
+            mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+            mapLoadDataFile(mapDirIndex, DIMTOP_STEAM_DATA_FILE);
+            mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+            mapLoadDataFile(mapDirIndex, DIMTOP_BOSS_DATA_FILE_A);
+            mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+            mapLoadDataFile(mapDirIndex, DIMTOP_BOSS_DATA_FILE_B);
+            mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+            mapLoadDataFile(mapDirIndex, DIMTOP_EFFECT_DATA_FILE_A);
+            mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+            mapLoadDataFile(mapDirIndex, DIMTOP_EFFECT_DATA_FILE_B);
+            mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+            mapLoadDataFile(mapDirIndex, DIMTOP_ROOM_DATA_FILE_A);
+            mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+            mapLoadDataFile(mapDirIndex, DIMTOP_ROOM_DATA_FILE_B);
+            mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+            mapLoadDataFile(mapDirIndex, DIMTOP_AUDIO_DATA_FILE_A);
+            mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+            mapLoadDataFile(mapDirIndex, DIMTOP_AUDIO_DATA_FILE_B);
+            loadWaitStarted = false;
+            while (statusFlags = getLoadedFileFlags(0), (statusFlags & DIMTOP_LOAD_PENDING_FLAGS_MASK) != 0)
+            {
+                padUpdate();
+                checkReset();
+                if (loadWaitStarted)
+                {
+                    waitNextFrame();
+                }
+                loadDataFiles();
+                dvdCheckError();
+                if (loadWaitStarted)
+                {
+                    mmFreeTick(0);
+                    gameTextRun();
+                    GXFlush_(1, 0);
+                }
+                if (gDvdErrorPauseActive != '\0')
+                {
+                    loadWaitStarted = true;
+                }
+            }
+            clearLoadedFileFlags_blocks1();
+            break;
+        }
+    }
+    if (obj->animStateId != -1)
+    {
+        baddieResult = DIMboss_GetBaddieControlInterface()->updateState(obj, runtime, 1);
+        if (baddieResult == 0)
+        {
+            updateResult = 1;
+            goto LAB_801bd7dc;
+        }
+        if (obj->childObject != NULL)
+        {
+            *(undefined4*)((int)obj->childObject + 0x30) = obj->facingAngle;
+        }
+        if ((runtime->eventGameBit != -1) &&
+            (statusFlags = GameBit_Get((int)runtime->eventGameBit), statusFlags != 0))
+        {
+            DIMboss_GetObjectTriggerInterface()->triggerEvent(animUpdate, (int)config->eventId);
+            runtime->eventGameBit = -1;
+        }
+        hitReactMode = runtime->hitReactMode;
+        if (hitReactMode == 1)
+        {
+            baddieResult = DIMboss_GetBaddieControlInterface()->updateHitDetect(
+                obj, animUpdate, runtime,
+                animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
+                animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET, 0);
+            if (baddieResult != 0)
+            {
+                DIMboss_GetBaddieControlInterface()->applyHitReact(obj, runtime, lbl_803E4C70);
+            }
+        }
+        else if ((hitReactMode != 0) && (hitReactMode < 3))
+        {
+            animUpdate->hitVolumePair = 0;
+            fn_801BC7E4(obj, animUpdate, (int)runtime, (int)runtime);
+            if (runtime->hitReactMode == 1)
+            {
+                runtime->field270 = 0;
+                DIMboss_GetPlayerInterface()->applyHitReact(
+                    obj, runtime, lbl_803E4C44, lbl_803E4C44,
+                    animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
+                    animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET);
+                animUpdate->sequenceEventActive = 0;
+            }
+        }
+    }
+    warpDarkIceMines_801bbb44(obj, runtime);
+    if (obj->animStateId == -1)
+    {
+        runtime->stateFlags |= DIMBOSS_STATE_FLAG_START_MOVE;
+        updateResult = 0;
+    }
+    else
+    {
+        updateResult = -((uint)runtime->hitReactMode) >> 31;
+    }
 LAB_801bd7dc:
-  return updateResult;
+    return updateResult;
 }
 
 /*
@@ -465,9 +491,9 @@ void DIMboss_func0B(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int DIMboss_setScale(DIMbossObject *obj)
+int DIMboss_setScale(DIMbossObject* obj)
 {
-  return obj->runtime->scale;
+    return obj->runtime->scale;
 }
 
 /*
@@ -485,7 +511,7 @@ int DIMboss_setScale(DIMbossObject *obj)
  */
 int DIMboss_getExtraSize(void)
 {
-  return DIMBOSS_RUNTIME_SIZE;
+    return DIMBOSS_RUNTIME_SIZE;
 }
 
 /*
@@ -503,7 +529,7 @@ int DIMboss_getExtraSize(void)
  */
 int DIMboss_getObjectTypeId(void)
 {
-  return DIMBOSS_OBJECT_TYPE_ID;
+    return DIMBOSS_OBJECT_TYPE_ID;
 }
 
 /*
@@ -519,37 +545,40 @@ int DIMboss_getObjectTypeId(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMboss_free(DIMbossObject *obj)
+void DIMboss_free(DIMbossObject* obj)
 {
-  DIMbossRuntime *runtime;
-  void *childObject;
-  void *effect;
+    DIMbossRuntime* runtime;
+    void* childObject;
+    void* effect;
 
-  runtime = obj->runtime;
-  GameBit_Set(DIMBOSS_GAMEBIT_BOSS_ACTIVE,0);
-  GameBit_Set(0xc1e,1);
-  GameBit_Set(0xc1f,0);
-  GameBit_Set(0xc20,0);
-  GameBit_Set(0xd8f,0);
-  GameBit_Set(0x3e2,0);
-  obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_ACTIVE;
-  Camera_DisableViewYOffset();
-  ObjGroup_RemoveObject(obj,3);
-  childObject = obj->childObject;
-  if (childObject != NULL) {
-    Obj_FreeObject(childObject);
-    obj->childObject = NULL;
-  }
-  DIMboss_GetBaddieControlInterface()->releaseState(obj,runtime,0x20);
-  if (gDIMbossHitEffectResource != 0) {
-    Resource_Release(gDIMbossHitEffectResource);
-  }
-  gDIMbossHitEffectResource = 0;
-  effect = runtime->topState->effect;
-  if (effect != NULL) {
-    ModelLightStruct_free(effect);
-  }
-  timeOfDayFn_80055000();
+    runtime = obj->runtime;
+    GameBit_Set(DIMBOSS_GAMEBIT_BOSS_ACTIVE, 0);
+    GameBit_Set(0xc1e, 1);
+    GameBit_Set(0xc1f, 0);
+    GameBit_Set(0xc20, 0);
+    GameBit_Set(0xd8f, 0);
+    GameBit_Set(0x3e2, 0);
+    obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_ACTIVE;
+    Camera_DisableViewYOffset();
+    ObjGroup_RemoveObject(obj, 3);
+    childObject = obj->childObject;
+    if (childObject != NULL)
+    {
+        Obj_FreeObject(childObject);
+        obj->childObject = NULL;
+    }
+    DIMboss_GetBaddieControlInterface()->releaseState(obj, runtime, 0x20);
+    if (gDIMbossHitEffectResource != 0)
+    {
+        Resource_Release(gDIMbossHitEffectResource);
+    }
+    gDIMbossHitEffectResource = 0;
+    effect = runtime->topState->effect;
+    if (effect != NULL)
+    {
+        ModelLightStruct_free(effect);
+    }
+    timeOfDayFn_80055000();
 }
 
 /*
@@ -565,25 +594,27 @@ void DIMboss_free(DIMbossObject *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-                    undefined4 param_5,char shouldRender)
+void DIMboss_render(DIMbossObject* obj, undefined4 param_2, undefined4 param_3, undefined4 param_4,
+                    undefined4 param_5, char shouldRender)
 {
-  DIMbossRuntime *runtime;
-  DIMbossEffect *effect;
+    DIMbossRuntime* runtime;
+    DIMbossEffect* effect;
 
-  runtime = obj->runtime;
-  if (shouldRender == 0 || obj->renderPause != 0 || runtime->phase == DIMBOSS_PHASE_NO_RENDER) {
-    return;
-  }
+    runtime = obj->runtime;
+    if (shouldRender == 0 || obj->renderPause != 0 || runtime->phase == DIMBOSS_PHASE_NO_RENDER)
+    {
+        return;
+    }
 
-  objRenderFn_8003b8f4(obj,param_2,param_3,param_4,param_5,lbl_803E4C44);
-  fn_801BB598(obj,runtime);
-  dll_2E_func06(obj,gDIMbossAnimController,0);
+    objRenderFn_8003b8f4(obj, param_2, param_3, param_4, param_5, lbl_803E4C44);
+    fn_801BB598(obj, runtime);
+    dll_2E_func06(obj, gDIMbossAnimController, 0);
 
-  effect = runtime->topState->effect;
-  if (effect != NULL && effect->glowType != 0 && effect->enabled != 0) {
-    queueGlowRender(effect);
-  }
+    effect = runtime->topState->effect;
+    if (effect != NULL && effect->glowType != 0 && effect->enabled != 0)
+    {
+        queueGlowRender(effect);
+    }
 }
 
 /*
@@ -599,9 +630,9 @@ void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMboss_hitDetect(DIMbossObject *obj)
+void DIMboss_hitDetect(DIMbossObject* obj)
 {
-  DIMboss_GetPlayerInterface()->updateHitDetect(obj,obj->runtime,gDIMbossHitDetectAnimTable);
+    DIMboss_GetPlayerInterface()->updateHitDetect(obj, obj->runtime, gDIMbossHitDetectAnimTable);
 }
 
 /*
@@ -617,97 +648,113 @@ void DIMboss_hitDetect(DIMbossObject *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMboss_update(DIMbossObject *obj)
+void DIMboss_update(DIMbossObject* obj)
 {
-  uint gameBitCount;
-  undefined4 targetModel;
-  DIMbossTopState *topState;
-  DIMbossRuntime *runtime;
-  DIMbossConfig *config;
-  void *childObject;
+    uint gameBitCount;
+    undefined4 targetModel;
+    DIMbossTopState* topState;
+    DIMbossRuntime* runtime;
+    DIMbossConfig* config;
+    void* childObject;
 
-  runtime = obj->runtime;
-  config = obj->config;
-  Obj_GetPlayerObject();
-  topState = runtime->topState;
-  if (obj->renderPause == 0) {
-    if (topState->introSinkHeight > lbl_803E4BD8) {
-      gameTextShow(0x432);
-      topState->introSinkHeight -= timeDelta;
-      if (topState->introSinkHeight < *(f32 *)&lbl_803E4BD8) {
-        topState->introSinkHeight = lbl_803E4BD8;
-      }
+    runtime = obj->runtime;
+    config = obj->config;
+    Obj_GetPlayerObject();
+    topState = runtime->topState;
+    if (obj->renderPause == 0)
+    {
+        if (topState->introSinkHeight > lbl_803E4BD8)
+        {
+            gameTextShow(0x432);
+            topState->introSinkHeight -= timeDelta;
+            if (topState->introSinkHeight < *(f32*)&lbl_803E4BD8)
+            {
+                topState->introSinkHeight = lbl_803E4BD8;
+            }
+        }
+        ObjHits_RegisterActiveHitVolumeObject(obj);
+        if (obj->updateInitialized == 0)
+        {
+            obj->posX = config->spawnX;
+            obj->posY = config->spawnY;
+            obj->posZ = config->spawnZ;
+            DIMboss_GetObjectTriggerInterface()->spawnAnimObject((int)config->animObjId, obj, -1);
+            obj->updateInitialized = 1;
+        }
+        else
+        {
+            if ((runtime->stateFlags & DIMBOSS_STATE_FLAG_START_MOVE) != 0)
+            {
+                DIMboss_GetBaddieControlInterface()->startMove(
+                    obj, runtime, runtime->moveScratch, (int)runtime->activeMoveId, &runtime->hitReactMode,
+                    0, 0, 0, 1);
+                runtime->stateFlags &= ~DIMBOSS_STATE_FLAG_START_MOVE;
+                obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_HIDDEN;
+                obj->objectFlags |= DIMBOSS_OBJECT_FLAG_ACTIVE;
+                gameBitCount = GameBit_Get(DIMBOSS_GAMEBIT_TONSIL_HIT_COUNT);
+                if (gameBitCount >= 3)
+                {
+                    runtime->phase = DIMBOSS_PHASE_GAMEBIT_COUNT_MET;
+                    runtime->animMode = 3;
+                    obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_HIDDEN;
+                    GameBit_Set(DIMBOSS_GAMEBIT_LIGHTFOOT_SNOWBALL_GATE, 0);
+                }
+                else
+                {
+                    runtime->phase = DIMBOSS_PHASE_LAUNCH_LIFT;
+                    runtime->animMode = 3;
+                    obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_HIDDEN;
+                    topState->launchLift = lbl_803E4C44;
+                    GameBit_Set(DIMBOSS_GAMEBIT_LIGHTFOOT_SNOWBALL_GATE, 1);
+                }
+            }
+            if ((runtime->phase == DIMBOSS_PHASE_START) || (runtime->phase == DIMBOSS_PHASE_NO_RENDER))
+            {
+                if (topState->stompDustDelay != 0)
+                {
+                    topState->stompDustDelay--;
+                    if (topState->stompDustDelay == 0)
+                    {
+                        Obj_BuildWorldTransformMatrix(obj, gDIMbossRenderMtx, 0);
+                        targetModel = Obj_GetActiveModel(obj);
+                        ObjModel_EnableDefaultRenderCallback
+                            (obj, targetModel, gDIMbossRenderMtx, 1, (double)(obj->modelScale * obj->baseScale));
+                    }
+                }
+                if (topState->steamFlags.bits.sfxPending != 0)
+                {
+                    getEnvfxAct(0, 0, 0xdb, 0);
+                    getEnvfxAct(0, 0, 0xdc, 0);
+                    skyFn_80089710(7, 1, 0);
+                    skyFn_800894a8(7, lbl_803E4C4C, lbl_803E4C50, lbl_803E4C54);
+                    skyFn_800895e0(7, 0xa0, 0xa0, 0xff, 0x7f, 0x28);
+                    topState->steamFlags.bits.sfxPending = 0;
+                }
+            }
+            else
+            {
+                if ((runtime->stateFlags & DIMBOSS_STATE_FLAG_TARGET_TRICKY) != 0)
+                {
+                    targetModel = getTrickyObject();
+                    runtime->targetModel = targetModel;
+                }
+                else
+                {
+                    targetModel = Obj_GetPlayerObject();
+                    runtime->targetModel = targetModel;
+                }
+                childObject = obj->childObject;
+                if (childObject != NULL)
+                {
+                    *(undefined4*)((int)childObject + 0x30) = obj->facingAngle;
+                }
+                fn_801BC7E4(obj, 0, runtime, runtime);
+                dll_2E_func04(gDIMbossAnimController, runtime->targetModel);
+                dll_2E_func03(obj, gDIMbossAnimController);
+                warpDarkIceMines_801bbb44(obj, runtime);
+            }
+        }
     }
-    ObjHits_RegisterActiveHitVolumeObject(obj);
-    if (obj->updateInitialized == 0) {
-      obj->posX = config->spawnX;
-      obj->posY = config->spawnY;
-      obj->posZ = config->spawnZ;
-      DIMboss_GetObjectTriggerInterface()->spawnAnimObject((int)config->animObjId,obj,-1);
-      obj->updateInitialized = 1;
-    }
-    else {
-      if ((runtime->stateFlags & DIMBOSS_STATE_FLAG_START_MOVE) != 0) {
-        DIMboss_GetBaddieControlInterface()->startMove(
-            obj,runtime,runtime->moveScratch,(int)runtime->activeMoveId,&runtime->hitReactMode,
-            0,0,0,1);
-        runtime->stateFlags &= ~DIMBOSS_STATE_FLAG_START_MOVE;
-        obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_HIDDEN;
-        obj->objectFlags |= DIMBOSS_OBJECT_FLAG_ACTIVE;
-        gameBitCount = GameBit_Get(DIMBOSS_GAMEBIT_TONSIL_HIT_COUNT);
-        if (gameBitCount >= 3) {
-          runtime->phase = DIMBOSS_PHASE_GAMEBIT_COUNT_MET;
-          runtime->animMode = 3;
-          obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_HIDDEN;
-          GameBit_Set(DIMBOSS_GAMEBIT_LIGHTFOOT_SNOWBALL_GATE,0);
-        }
-        else {
-          runtime->phase = DIMBOSS_PHASE_LAUNCH_LIFT;
-          runtime->animMode = 3;
-          obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_HIDDEN;
-          topState->launchLift = lbl_803E4C44;
-          GameBit_Set(DIMBOSS_GAMEBIT_LIGHTFOOT_SNOWBALL_GATE,1);
-        }
-      }
-      if ((runtime->phase == DIMBOSS_PHASE_START) || (runtime->phase == DIMBOSS_PHASE_NO_RENDER)) {
-        if (topState->stompDustDelay != 0) {
-          topState->stompDustDelay--;
-          if (topState->stompDustDelay == 0) {
-            Obj_BuildWorldTransformMatrix(obj,gDIMbossRenderMtx,0);
-            targetModel = Obj_GetActiveModel(obj);
-            ObjModel_EnableDefaultRenderCallback
-                      (obj,targetModel,gDIMbossRenderMtx,1,(double)(obj->modelScale * obj->baseScale));
-          }
-        }
-        if (topState->steamFlags.bits.sfxPending != 0) {
-          getEnvfxAct(0,0,0xdb,0);
-          getEnvfxAct(0,0,0xdc,0);
-          skyFn_80089710(7,1,0);
-          skyFn_800894a8(7,lbl_803E4C4C,lbl_803E4C50,lbl_803E4C54);
-          skyFn_800895e0(7,0xa0,0xa0,0xff,0x7f,0x28);
-          topState->steamFlags.bits.sfxPending = 0;
-        }
-      }
-      else {
-        if ((runtime->stateFlags & DIMBOSS_STATE_FLAG_TARGET_TRICKY) != 0) {
-          targetModel = getTrickyObject();
-          runtime->targetModel = targetModel;
-        }
-        else {
-          targetModel = Obj_GetPlayerObject();
-          runtime->targetModel = targetModel;
-        }
-        childObject = obj->childObject;
-        if (childObject != NULL) {
-          *(undefined4 *)((int)childObject + 0x30) = obj->facingAngle;
-        }
-        fn_801BC7E4(obj,0,runtime,runtime);
-        dll_2E_func04(gDIMbossAnimController,runtime->targetModel);
-        dll_2E_func03(obj,gDIMbossAnimController);
-        warpDarkIceMines_801bbb44(obj,runtime);
-      }
-    }
-  }
 }
 
 /*
@@ -723,83 +770,89 @@ void DIMboss_update(DIMbossObject *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
+void DIMboss_init(DIMbossObject* obj, undefined4 param_2, int param_3)
 {
-  DIMbossRuntime *runtime;
-  DIMbossTopState *topState;
-  undefined4 localVec[4];
-  u8 *animFlagsByte;
-  undefined4 mapDir;
-  u8 animFlags;
-  f32 liftHeight;
+    DIMbossRuntime* runtime;
+    DIMbossTopState* topState;
+    undefined4 localVec[4];
+    u8* animFlagsByte;
+    undefined4 mapDir;
+    u8 animFlags;
+    f32 liftHeight;
 
-  runtime = obj->runtime;
-  localVec[0] = lbl_802C2338[0];
-  localVec[1] = lbl_802C2338[1];
-  localVec[2] = lbl_802C2338[2];
-  *(undefined2 *)(localVec + 3) = *(undefined2 *)(lbl_802C2338 + 3);
-  setDrawCloudsAndLights(0);
-  obj->updateMode = 2;
-  animFlags = 6;
-  if (param_3 != 0) {
-    animFlags |= 1;
-  }
-  DIMboss_GetBaddieControlInterface()->setupAnim(
-      obj,param_2,runtime,0xc,6,0x102,animFlags,lbl_803E4C28);
-  obj->updateState = DIMboss_updateState;
-  runtime->phase = DIMBOSS_PHASE_START;
-  DIMboss_GetPlayerInterface()->init(obj,runtime,0);
-  runtime->field270 = 0;
-  runtime->animMode = 3;
-  obj->objectFlags = (u8)(obj->objectFlags |
-                          (DIMBOSS_OBJECT_FLAG_HIDDEN | DIMBOSS_OBJECT_FLAG_ACTIVE));
-  if (GameBit_Get(DIMBOSS_GAMEBIT_RENDER_PAUSE) != 0) {
-    runtime->phase = DIMBOSS_PHASE_RENDER_PAUSE;
-    obj->renderPause = 1;
-  }
-  if (GameBit_Get(DIMBOSS_GAMEBIT_SPIT_ACTIVE) != 0) {
-    runtime->phase = DIMBOSS_PHASE_NO_RENDER;
-  }
-  topState = runtime->topState;
-  liftHeight = lbl_803E4BD8;
-  topState->idleLift = liftHeight;
-  topState->launchLift = liftHeight;
-  obj->activeModelId = -1;
-  topState->effect = NULL;
-  lbl_803DDB84 = 0;
-  gDIMbossSequenceFlags = 0;
-  GameBit_Set(DIMBOSS_GAMEBIT_TRICKY_BOSS_MODE,1);
-  dll_2E_func05(obj,gDIMbossAnimController,0xffffd8e4,0x1c71,6);
-  dll_2E_func09(gDIMbossAnimController,&localVec,&localVec,6);
-  animFlagsByte = (u8 *)((int)gDIMbossAnimController + DIMBOSS_ANIM_CONTROLLER_FLAGS_OFFSET);
-  *animFlagsByte |= 8;
-  *animFlagsByte &= 0xfe;
-  topState->steamFlags.bits.sfxPending = 1;
-  gDIMbossHitEffectResource =
-      Resource_Acquire(DIMBOSS_HIT_EFFECT_ID,DIMBOSS_HIT_EFFECT_RESOURCE_COUNT);
-  if (GameBit_Get(DIMBOSS_GAMEBIT_INTRO_SEEN) == 0) {
-    topState->stompDustDelay = 2;
-    topState->introSinkHeight = lbl_803E4C78;
-    (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,DIMBOSS_MAP_AREA_INTRO_GATE,1);
-  }
-  else {
-    (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,DIMBOSS_MAP_AREA_INTRO_GATE,0);
-  }
-  topState->defeatTimer = 0;
-  if ((*gMapEventInterface)->getAreaState(7) == 2) {
-    (*gMapEventInterface)->setAreaState(7,3);
-  }
-  GameBit_Set(DIMBOSS_GAMEBIT_BOSS_ACTIVE,1);
-  unlockLevel(0,0,1);
-  mapDir = mapGetDirIdx(DIMBOSS_MAP_DIR);
-  lockLevel(mapDir,1);
-  mapDir = mapGetDirIdx(DIMBOSS_GUT_MAP_DIR);
-  lockLevel(mapDir,0);
-  GameBit_Set(DIMBOSS_GAMEBIT_SHRINE_MUSIC_LOCK,0);
-  Music_Trigger(DIMBOSS_MUSIC_BOSS_THEME,1);
-  GameBit_Set(DIMBOSS_GAMEBIT_DIM2_PROJECTILE_DONE,0);
-  Music_Trigger(DIMBOSS_MUSIC_DIM2_PROJECTILE,0);
-  Music_Trigger(DIMBOSS_MUSIC_DIM2_PROJECTILE_ALT,0);
+    runtime = obj->runtime;
+    localVec[0] = lbl_802C2338[0];
+    localVec[1] = lbl_802C2338[1];
+    localVec[2] = lbl_802C2338[2];
+    *(undefined2*)(localVec + 3) = *(undefined2*)(lbl_802C2338 + 3);
+    setDrawCloudsAndLights(0);
+    obj->updateMode = 2;
+    animFlags = 6;
+    if (param_3 != 0)
+    {
+        animFlags |= 1;
+    }
+    DIMboss_GetBaddieControlInterface()->setupAnim(
+        obj, param_2, runtime, 0xc, 6, 0x102, animFlags, lbl_803E4C28);
+    obj->updateState = DIMboss_updateState;
+    runtime->phase = DIMBOSS_PHASE_START;
+    DIMboss_GetPlayerInterface()->init(obj, runtime, 0);
+    runtime->field270 = 0;
+    runtime->animMode = 3;
+    obj->objectFlags = (u8)(obj->objectFlags |
+        (DIMBOSS_OBJECT_FLAG_HIDDEN | DIMBOSS_OBJECT_FLAG_ACTIVE));
+    if (GameBit_Get(DIMBOSS_GAMEBIT_RENDER_PAUSE) != 0)
+    {
+        runtime->phase = DIMBOSS_PHASE_RENDER_PAUSE;
+        obj->renderPause = 1;
+    }
+    if (GameBit_Get(DIMBOSS_GAMEBIT_SPIT_ACTIVE) != 0)
+    {
+        runtime->phase = DIMBOSS_PHASE_NO_RENDER;
+    }
+    topState = runtime->topState;
+    liftHeight = lbl_803E4BD8;
+    topState->idleLift = liftHeight;
+    topState->launchLift = liftHeight;
+    obj->activeModelId = -1;
+    topState->effect = NULL;
+    lbl_803DDB84 = 0;
+    gDIMbossSequenceFlags = 0;
+    GameBit_Set(DIMBOSS_GAMEBIT_TRICKY_BOSS_MODE, 1);
+    dll_2E_func05(obj, gDIMbossAnimController, 0xffffd8e4, 0x1c71, 6);
+    dll_2E_func09(gDIMbossAnimController, &localVec, &localVec, 6);
+    animFlagsByte = (u8*)((int)gDIMbossAnimController + DIMBOSS_ANIM_CONTROLLER_FLAGS_OFFSET);
+    *animFlagsByte |= 8;
+    *animFlagsByte &= 0xfe;
+    topState->steamFlags.bits.sfxPending = 1;
+    gDIMbossHitEffectResource =
+        Resource_Acquire(DIMBOSS_HIT_EFFECT_ID, DIMBOSS_HIT_EFFECT_RESOURCE_COUNT);
+    if (GameBit_Get(DIMBOSS_GAMEBIT_INTRO_SEEN) == 0)
+    {
+        topState->stompDustDelay = 2;
+        topState->introSinkHeight = lbl_803E4C78;
+        (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR, DIMBOSS_MAP_AREA_INTRO_GATE, 1);
+    }
+    else
+    {
+        (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR, DIMBOSS_MAP_AREA_INTRO_GATE, 0);
+    }
+    topState->defeatTimer = 0;
+    if ((*gMapEventInterface)->getAreaState(7) == 2)
+    {
+        (*gMapEventInterface)->setAreaState(7, 3);
+    }
+    GameBit_Set(DIMBOSS_GAMEBIT_BOSS_ACTIVE, 1);
+    unlockLevel(0, 0, 1);
+    mapDir = mapGetDirIdx(DIMBOSS_MAP_DIR);
+    lockLevel(mapDir, 1);
+    mapDir = mapGetDirIdx(DIMBOSS_GUT_MAP_DIR);
+    lockLevel(mapDir, 0);
+    GameBit_Set(DIMBOSS_GAMEBIT_SHRINE_MUSIC_LOCK, 0);
+    Music_Trigger(DIMBOSS_MUSIC_BOSS_THEME, 1);
+    GameBit_Set(DIMBOSS_GAMEBIT_DIM2_PROJECTILE_DONE, 0);
+    Music_Trigger(DIMBOSS_MUSIC_DIM2_PROJECTILE, 0);
+    Music_Trigger(DIMBOSS_MUSIC_DIM2_PROJECTILE_ALT, 0);
 }
 
 /*
@@ -815,11 +868,13 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMboss_release(void) {}
+void DIMboss_release(void)
+{
+}
 
 void DIMboss_initialise(void)
 {
-  DIMboss_initialiseAnimTables();
+    DIMboss_initialiseAnimTables();
 }
 
 ObjectDescriptor12 gDIM_BossObjDescriptor = {
@@ -840,27 +895,27 @@ ObjectDescriptor12 gDIM_BossObjDescriptor = {
 
 void DIMboss_initialiseAnimTables(void)
 {
-  void (**table)(void);
+    void (**table)(void);
 
-  table = gDIMbossHitDetectAnimTable;
-  table[0] = fn_801BB2B0;
-  table[1] = fn_801BB1EC;
-  table[2] = fn_801BB0D8;
-  table[3] = fn_801BAF58;
-  table[4] = fn_801BAE00;
-  table[5] = fn_801BACB8;
-  table[6] = fn_801BAB88;
-  table[7] = fn_801BAA84;
-  table[8] = fn_801BA958;
-  table[9] = fn_801BA880;
-  table[10] = fn_801BA780;
-  table[11] = fn_801BA654;
+    table = gDIMbossHitDetectAnimTable;
+    table[0] = fn_801BB2B0;
+    table[1] = fn_801BB1EC;
+    table[2] = fn_801BB0D8;
+    table[3] = fn_801BAF58;
+    table[4] = fn_801BAE00;
+    table[5] = fn_801BACB8;
+    table[6] = fn_801BAB88;
+    table[7] = fn_801BAA84;
+    table[8] = fn_801BA958;
+    table[9] = fn_801BA880;
+    table[10] = fn_801BA780;
+    table[11] = fn_801BA654;
 
-  table = gDIMbossAnimTable;
-  table[0] = fn_801BA5F0;
-  table[1] = fn_801BA5A8;
-  table[2] = fn_801BA590;
-  table[3] = fn_801BA4B8;
-  table[4] = fn_801BA224;
-  table[5] = fn_801B9ECC;
+    table = gDIMbossAnimTable;
+    table[0] = fn_801BA5F0;
+    table[1] = fn_801BA5A8;
+    table[2] = fn_801BA590;
+    table[3] = fn_801BA4B8;
+    table[4] = fn_801BA224;
+    table[5] = fn_801B9ECC;
 }

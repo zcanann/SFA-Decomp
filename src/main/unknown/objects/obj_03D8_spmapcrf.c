@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03D8_SPMapCRF_packet_info {
+enum obj_03D8_SPMapCRF_packet_info
+{
     SPMAPCRF_DEF_ID = 0x03D8,
     SPMAPCRF_DLL_ID = 0x0284,
     SPMAPCRF_CLASS_ID = 0x0070,

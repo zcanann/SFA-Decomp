@@ -71,7 +71,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02A5_SH_newseqob_packet_info {
+enum obj_02A5_SH_newseqob_packet_info
+{
     SH_NEWSEQOB_DEF_ID = 0x02A5,
     SH_NEWSEQOB_DLL_ID = 0x0113,
     SH_NEWSEQOB_CLASS_ID = 0x0056,

@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_029F_SH_LargeSca_packet_info {
+enum obj_029F_SH_LargeSca_packet_info
+{
     SH_LARGESCA_DEF_ID = 0x029F,
     SH_LARGESCA_DLL_ID = 0x00ED,
     SH_LARGESCA_CLASS_ID = 0x0006,

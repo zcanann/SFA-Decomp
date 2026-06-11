@@ -38,7 +38,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_0215_WM_newcrystal_slot {
+enum dll_0215_WM_newcrystal_slot
+{
     WM_NEWCRYSTAL_INITIALISE = 0,
     WM_NEWCRYSTAL_RELEASE = 1,
     WM_NEWCRYSTAL_INIT = 3,

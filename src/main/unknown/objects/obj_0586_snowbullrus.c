@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0586_SnowBullrus_packet_info {
+enum obj_0586_SnowBullrus_packet_info
+{
     SNOWBULLRUS_DEF_ID = 0x0586,
     SNOWBULLRUS_DLL_ID = 0x02AD,
     SNOWBULLRUS_CLASS_ID = 0x007F,

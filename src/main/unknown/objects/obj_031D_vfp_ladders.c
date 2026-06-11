@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_031D_VFP_Ladders_packet_info {
+enum obj_031D_VFP_Ladders_packet_info
+{
     VFP_LADDERS_DEF_ID = 0x031D,
     VFP_LADDERS_DLL_ID = 0x021C,
     VFP_LADDERS_CLASS_ID = 0x0030,

@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03BC_WM_LevelCon_packet_info {
+enum obj_03BC_WM_LevelCon_packet_info
+{
     WM_LEVELCON_DEF_ID = 0x03BC,
     WM_LEVELCON_DLL_ID = 0x0209,
     WM_LEVELCON_CLASS_ID = 0x0039,

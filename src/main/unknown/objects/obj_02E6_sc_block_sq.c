@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02E6_SC_block_sq_packet_info {
+enum obj_02E6_SC_block_sq_packet_info
+{
     SC_BLOCK_SQ_DEF_ID = 0x02E6,
     SC_BLOCK_SQ_DLL_ID = 0x00ED,
     SC_BLOCK_SQ_CLASS_ID = 0x0006,

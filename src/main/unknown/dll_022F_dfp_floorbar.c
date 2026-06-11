@@ -36,7 +36,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_022F_DFP_floorbar_slot {
+enum dll_022F_DFP_floorbar_slot
+{
     DFP_FLOORBAR_INITIALISE = 0,
     DFP_FLOORBAR_RELEASE = 1,
     DFP_FLOORBAR_INIT = 3,

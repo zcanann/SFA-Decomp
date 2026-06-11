@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03CB_SPBlueArtef_packet_info {
+enum obj_03CB_SPBlueArtef_packet_info
+{
     SPBLUEARTEF_DEF_ID = 0x03CB,
     SPBLUEARTEF_DLL_ID = 0x0284,
     SPBLUEARTEF_CLASS_ID = 0x0070,

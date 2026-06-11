@@ -1,14 +1,14 @@
 #include "main/audio/hw_stream.h"
 #include "main/audio/dsp_voice.h"
 
-extern void salRemoveStudioInput(void *p, void *input);
-extern int aramGetStreamBufferAddress(int stream, void *out);
+extern void salRemoveStudioInput(void* p, void* input);
+extern int aramGetStreamBufferAddress(int stream, void* out);
 extern void aramUploadData(int dest, int src, u32 size, int mode, undefined4 callback,
                            undefined4 callbackArg);
-extern void DCStoreRange(void *addr, u32 nBytes);
+extern void DCStoreRange(void* addr, u32 nBytes);
 
 extern u8 lbl_803CC1E0[];
-extern u8 *dspVoice;
+extern u8* dspVoice;
 
 /*
  * --INFO--
@@ -17,7 +17,8 @@ extern u8 *dspVoice;
  * EN v1.0 Address: 0x80283BD4
  * EN v1.0 Size: 52b
  */
-void hwRemoveInput(u32 idx, void *input) {
+void hwRemoveInput(u32 idx, void* input)
+{
     u32 offset = (idx & 0xff) * 0xbc;
     salRemoveStudioInput(lbl_803CC1E0 + offset, input);
 }
@@ -29,40 +30,44 @@ void hwRemoveInput(u32 idx, void *input) {
  * EN v1.0 Address: 0x80283C08
  * EN v1.0 Size: 164b
  */
-int hwChangeStudio(int slot) {
+int hwChangeStudio(int slot)
+{
     int mode;
     u32 pos;
     u32 lowBits;
     int samplePos;
-    u8 *voice;
-    u8 *base;
+    u8* voice;
+    u8* base;
     int offset;
 
     offset = slot * 0xf4;
     base = dspVoice;
     voice = base + offset;
-    if (((DSPvoice *)voice)->state != 2) {
+    if (((DSPvoice*)voice)->state != 2)
+    {
         return 0;
     }
-    mode = ((DSPvoice *)voice)->smp_info.compType;
-    switch (mode) {
+    mode = ((DSPvoice*)voice)->smp_info.compType;
+    switch (mode)
+    {
     case 0:
     case 1:
     case 4:
     case 5:
         voice = base + offset;
-        pos = ((DSPvoice *)voice)->currentAddr;
-        samplePos = ((pos - 2 * *(int *)&((DSPvoice *)voice)->smp_info.addr) >> 4) * 0xe;
+        pos = ((DSPvoice*)voice)->currentAddr;
+        samplePos = ((pos - 2 * *(int*)&((DSPvoice*)voice)->smp_info.addr) >> 4) * 0xe;
         lowBits = pos & 0xf;
-        if (lowBits < 2) {
+        if (lowBits < 2)
+        {
             return samplePos;
         }
         samplePos += lowBits;
         return samplePos - 2;
     case 3:
-        return (int)((DSPvoice *)voice)->currentAddr - *(int *)&((DSPvoice *)voice)->smp_info.addr;
+        return (int)((DSPvoice*)voice)->currentAddr - *(int*)&((DSPvoice*)voice)->smp_info.addr;
     case 2:
-        return (int)((DSPvoice *)voice)->currentAddr - (*(u32 *)&((DSPvoice *)voice)->smp_info.addr >> 1);
+        return (int)((DSPvoice*)voice)->currentAddr - (*(u32*)&((DSPvoice*)voice)->smp_info.addr >> 1);
     default:
         return slot;
     }
@@ -76,7 +81,8 @@ int hwChangeStudio(int slot) {
  * EN v1.0 Size: 136b
  */
 void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, undefined4 callback,
-              undefined4 callbackArg) {
+              undefined4 callbackArg)
+{
     int uploadDest;
     int uploadSize;
     undefined4 uploadCallbackArg;
@@ -94,7 +100,7 @@ void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, undefined4 cal
     streamPos &= 0xffffffe0;
     size = (uploadSize + 0x1f) & ~0x1f;
     uploadDest += streamPos;
-    DCStoreRange((void *)uploadDest, size);
+    DCStoreRange((void*)uploadDest, size);
     aramUploadData(uploadDest, offset + streamPos, size, 1, uploadCallback, uploadCallbackArg);
 }
 
@@ -105,7 +111,8 @@ void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, undefined4 cal
  * EN v1.0 Address: 0x80283D34
  * EN v1.0 Size: 36b
  */
-void hwFlushStream(int stream) {
+void hwFlushStream(int stream)
+{
     aramGetStreamBufferAddress(stream, 0);
 }
 
@@ -116,5 +123,6 @@ void hwFlushStream(int stream) {
  * EN v1.0 Address: 0x80283D58
  * EN v1.0 Size: 4b
  */
-void hwInitStream(void) {
+void hwInitStream(void)
+{
 }

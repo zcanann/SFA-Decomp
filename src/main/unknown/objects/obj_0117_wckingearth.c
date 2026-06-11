@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0117_WCKingEarth_packet_info {
+enum obj_0117_WCKingEarth_packet_info
+{
     WCKINGEARTH_DEF_ID = 0x0117,
     WCKINGEARTH_DLL_ID = 0x028A,
     WCKINGEARTH_CLASS_ID = 0x0030,

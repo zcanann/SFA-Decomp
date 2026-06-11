@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02E9_SC_totempol_packet_info {
+enum obj_02E9_SC_totempol_packet_info
+{
     SC_TOTEMPOL_DEF_ID = 0x02E9,
     SC_TOTEMPOL_DLL_ID = 0x01B8,
     SC_TOTEMPOL_CLASS_ID = 0x0061,

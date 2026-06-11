@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00E1_CFMainCryst_packet_info {
+enum obj_00E1_CFMainCryst_packet_info
+{
     CFMAINCRYST_DEF_ID = 0x00E1,
     CFMAINCRYST_DLL_ID = 0x014B,
     CFMAINCRYST_CLASS_ID = 0x0030,

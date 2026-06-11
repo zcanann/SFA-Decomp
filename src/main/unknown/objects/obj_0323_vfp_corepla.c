@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0323_VFP_corepla_packet_info {
+enum obj_0323_VFP_corepla_packet_info
+{
     VFP_COREPLA_DEF_ID = 0x0323,
     VFP_COREPLA_DLL_ID = 0x0223,
     VFP_COREPLA_CLASS_ID = 0x0030,

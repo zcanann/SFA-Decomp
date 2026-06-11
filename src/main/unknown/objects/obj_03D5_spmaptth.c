@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03D5_SPMapTTH_packet_info {
+enum obj_03D5_SPMapTTH_packet_info
+{
     SPMAPTTH_DEF_ID = 0x03D5,
     SPMAPTTH_DLL_ID = 0x0284,
     SPMAPTTH_CLASS_ID = 0x0070,

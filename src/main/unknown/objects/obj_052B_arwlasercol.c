@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_052B_ARWLaserCol_packet_info {
+enum obj_052B_ARWLaserCol_packet_info
+{
     ARWLASERCOL_DEF_ID = 0x052B,
     ARWLASERCOL_DLL_ID = 0x029F,
     ARWLASERCOL_CLASS_ID = 0x0030,

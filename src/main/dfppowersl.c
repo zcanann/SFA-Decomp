@@ -2,98 +2,105 @@
 #include "main/expgfx.h"
 #include "main/gameplay_runtime.h"
 
-extern void ObjHits_SetHitVolumeSlot(DfpPowerSlObject *obj,int slot,int enabled,int param_4);
+extern void ObjHits_SetHitVolumeSlot(DfpPowerSlObject* obj, int slot, int enabled, int param_4);
 
-extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern EffectInterface **gPartfxInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern EffectInterface** gPartfxInterface;
 
-static inline DfpPowerSlState *dfppowersl_getState(DfpPowerSlObject *obj)
+static inline DfpPowerSlState* dfppowersl_getState(DfpPowerSlObject* obj)
 {
-  return obj->state;
+    return obj->state;
 }
 
 int dfppowersl_getExtraSize(void)
 {
-  return sizeof(DfpPowerSlState);
+    return sizeof(DfpPowerSlState);
 }
 
-void dfppowersl_free(DfpPowerSlObject *obj)
+void dfppowersl_free(DfpPowerSlObject* obj)
 {
-  if (obj != 0) {
-    (*gExpgfxInterface)->freeSource2((u32)obj);
-  }
-  return;
-}
-
-void dfppowersl_render(DfpPowerSlObject *obj)
-{
-  DfpPowerSlObject *powerSl;
-  DfpPowerSlState *state;
-
-  powerSl = obj;
-  if ((u32)powerSl != 0) {
-    state = dfppowersl_getState(powerSl);
-    if (GameBit_Get(state->eventId) == 0) {
-      (*gPartfxInterface)->spawnObject(powerSl,state->spawnObjectId,0,
-                                       DFPPOWERSL_SPAWN_MODE_PRELOAD,0xffffffff,0);
-      (*gPartfxInterface)->spawnObject(powerSl,state->spawnObjectId,0,
-                                       DFPPOWERSL_SPAWN_MODE_ACTIVE,0xffffffff,0);
+    if (obj != 0)
+    {
+        (*gExpgfxInterface)->freeSource2((u32)obj);
     }
-  }
-  return;
+    return;
 }
 
-
-void dfppowersl_update(DfpPowerSlObject *obj)
+void dfppowersl_render(DfpPowerSlObject* obj)
 {
-  DfpPowerSlObject *powerSl;
-  DfpPowerSlState *state;
+    DfpPowerSlObject* powerSl;
+    DfpPowerSlState* state;
 
     powerSl = obj;
-  if ((u32)powerSl != 0) {
-    state = dfppowersl_getState(powerSl);
-    (*gObjectTriggerInterface)->preempt((int)powerSl,state->activateObjectId);
-    (*gObjectTriggerInterface)->runSequence(0,powerSl,0xffffffff);
-  }
-  return;
+    if ((u32)powerSl != 0)
+    {
+        state = dfppowersl_getState(powerSl);
+        if (GameBit_Get(state->eventId) == 0)
+        {
+            (*gPartfxInterface)->spawnObject(powerSl, state->spawnObjectId, 0,
+                                             DFPPOWERSL_SPAWN_MODE_PRELOAD, 0xffffffff, 0);
+            (*gPartfxInterface)->spawnObject(powerSl, state->spawnObjectId, 0,
+                                             DFPPOWERSL_SPAWN_MODE_ACTIVE, 0xffffffff, 0);
+        }
+    }
+    return;
 }
 
 
-void dfppowersl_init(DfpPowerSlObject *obj,DfpPowerSlMapData *mapData)
+void dfppowersl_update(DfpPowerSlObject* obj)
 {
-  DfpPowerSlState *state;
+    DfpPowerSlObject* powerSl;
+    DfpPowerSlState* state;
 
-  if (obj != 0) {
-    state = dfppowersl_getState(obj);
-    if (mapData->activateObjectId <= 0) {
-      mapData->activateObjectId = DFPPOWERSL_DEFAULT_PARAM_OBJECT_ID;
+    powerSl = obj;
+    if ((u32)powerSl != 0)
+    {
+        state = dfppowersl_getState(powerSl);
+        (*gObjectTriggerInterface)->preempt((int)powerSl, state->activateObjectId);
+        (*gObjectTriggerInterface)->runSequence(0, powerSl, 0xffffffff);
     }
-    if (mapData->spawnObjectId <= 0) {
-      mapData->spawnObjectId = DFPPOWERSL_DEFAULT_PARAM_OBJECT_ID;
+    return;
+}
+
+
+void dfppowersl_init(DfpPowerSlObject* obj, DfpPowerSlMapData* mapData)
+{
+    DfpPowerSlState* state;
+
+    if (obj != 0)
+    {
+        state = dfppowersl_getState(obj);
+        if (mapData->activateObjectId <= 0)
+        {
+            mapData->activateObjectId = DFPPOWERSL_DEFAULT_PARAM_OBJECT_ID;
+        }
+        if (mapData->spawnObjectId <= 0)
+        {
+            mapData->spawnObjectId = DFPPOWERSL_DEFAULT_PARAM_OBJECT_ID;
+        }
+        obj->hitCallback = dfppowersl_spawnSeqObjectsOnHit;
+        state->activateObjectId = mapData->activateObjectId;
+        state->spawnObjectId = mapData->spawnObjectId;
+        state->eventId = mapData->eventId;
+        obj->modeWord = mapData->mode << DFPPOWERSL_MODE_WORD_SHIFT;
+        ObjHits_SetHitVolumeSlot(obj, DFPPOWERSL_HIT_VOLUME_SLOT, DFPPOWERSL_HIT_VOLUME_ENABLED, 0);
     }
-    obj->hitCallback = dfppowersl_spawnSeqObjectsOnHit;
-    state->activateObjectId = mapData->activateObjectId;
-    state->spawnObjectId = mapData->spawnObjectId;
-    state->eventId = mapData->eventId;
-    obj->modeWord = mapData->mode << DFPPOWERSL_MODE_WORD_SHIFT;
-    ObjHits_SetHitVolumeSlot(obj,DFPPOWERSL_HIT_VOLUME_SLOT,DFPPOWERSL_HIT_VOLUME_ENABLED,0);
-  }
-  return;
+    return;
 }
 
 ObjectDescriptor gDfppowerslObjDescriptor = {
-  0,
-  0,
-  0,
-  OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-  0,
-  0,
-  0,
-  (ObjectDescriptorCallback)dfppowersl_init,
-  (ObjectDescriptorCallback)dfppowersl_update,
-  0,
-  (ObjectDescriptorCallback)dfppowersl_render,
-  (ObjectDescriptorCallback)dfppowersl_free,
-  0,
-  dfppowersl_getExtraSize,
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)dfppowersl_init,
+    (ObjectDescriptorCallback)dfppowersl_update,
+    0,
+    (ObjectDescriptorCallback)dfppowersl_render,
+    (ObjectDescriptorCallback)dfppowersl_free,
+    0,
+    dfppowersl_getExtraSize,
 };

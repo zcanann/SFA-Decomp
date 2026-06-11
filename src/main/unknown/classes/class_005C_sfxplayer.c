@@ -29,7 +29,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_005C_sfxPlayer_defs {
+enum class_005C_sfxPlayer_defs
+{
     SFXPLAYER_SFXPLAYER = 0x048F,
 };
 #endif

@@ -63,7 +63,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_057D_BoulderOne_packet_info {
+enum obj_057D_BoulderOne_packet_info
+{
     BOULDERONE_DEF_ID = 0x057D,
     BOULDERONE_DLL_ID = 0x02B0,
     BOULDERONE_CLASS_ID = 0x0061,

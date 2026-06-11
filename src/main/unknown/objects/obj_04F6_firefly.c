@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04F6_FireFly_packet_info {
+enum obj_04F6_FireFly_packet_info
+{
     FIREFLY_DEF_ID = 0x04F6,
     FIREFLY_DLL_ID = 0x020B,
     FIREFLY_CLASS_ID = 0x0030,

@@ -15,5 +15,5 @@
  */
 int dfsh_door2speci_getObjectTypeId(void)
 {
-  return 0;
+    return 0;
 }

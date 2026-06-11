@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_05A1_TailLightSo_packet_info {
+enum obj_05A1_TailLightSo_packet_info
+{
     TAILLIGHTSO_DEF_ID = 0x05A1,
     TAILLIGHTSO_DLL_ID = 0x02B2,
     TAILLIGHTSO_CLASS_ID = 0x007E,

@@ -58,7 +58,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02AB_SH_tricky_packet_info {
+enum obj_02AB_SH_tricky_packet_info
+{
     SH_TRICKY_DEF_ID = 0x02AB,
     SH_TRICKY_DLL_ID = 0x01A6,
     SH_TRICKY_CLASS_ID = 0x0061,

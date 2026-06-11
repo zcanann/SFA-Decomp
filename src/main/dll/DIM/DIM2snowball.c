@@ -9,7 +9,8 @@
 #include "main/objanim_internal.h"
 #include "global.h"
 
-typedef struct Dll1D6Placement {
+typedef struct Dll1D6Placement
+{
     u8 pad0[0x1A - 0x0];
     s16 upTimer;
     s16 downTimer;
@@ -17,7 +18,8 @@ typedef struct Dll1D6Placement {
 } Dll1D6Placement;
 
 
-typedef struct DimtruthhorniceObjectDef {
+typedef struct DimtruthhorniceObjectDef
+{
     u8 pad0[0x1A - 0x0];
     s16 hitsLeft;
     s16 unk1C;
@@ -25,7 +27,8 @@ typedef struct DimtruthhorniceObjectDef {
 } DimtruthhorniceObjectDef;
 
 
-typedef struct Dim2snowballObjectDef {
+typedef struct Dim2snowballObjectDef
+{
     u8 pad0[0x14 - 0x0];
     s32 targetId;
     s8 unk18;
@@ -36,7 +39,8 @@ typedef struct Dim2snowballObjectDef {
 } Dim2snowballObjectDef;
 
 
-typedef struct Dll1CFObjectDef {
+typedef struct Dll1CFObjectDef
+{
     u8 pad0[0x14 - 0x0];
     s32 unk14;
     s8 unk18;
@@ -47,7 +51,8 @@ typedef struct Dll1CFObjectDef {
 } Dll1CFObjectDef;
 
 
-typedef struct Dim2pathgeneratorObjectDef {
+typedef struct Dim2pathgeneratorObjectDef
+{
     u8 pad0[0x14 - 0x0];
     s32 unk14;
     s16 spawnPeriod;
@@ -59,7 +64,8 @@ typedef struct Dim2pathgeneratorObjectDef {
 } Dim2pathgeneratorObjectDef;
 
 
-typedef struct Dim2pathgeneratorPlacement {
+typedef struct Dim2pathgeneratorPlacement
+{
     u8 pad0[0x3 - 0x0];
     u8 unk3;
     u8 unk4;
@@ -79,88 +85,124 @@ typedef struct Dim2pathgeneratorPlacement {
 
 
 /* dim2conveyor_getExtraSize == 0x14. */
-typedef struct Dim2ConveyorState {
-    f32 scrollX;    /* 0x00: per-area conveyor scroll vector */
-    f32 scrollY;    /* 0x04 */
+typedef struct Dim2ConveyorState
+{
+    f32 scrollX; /* 0x00: per-area conveyor scroll vector */
+    f32 scrollY; /* 0x04 */
     u8 pad08[4];
-    f32 swapTimer;  /* 0x0c: 0x49b23 direction-swap countdown */
-    int musicHold;  /* 0x10: frames left keeping music track 0xdf alive */
+    f32 swapTimer; /* 0x0c: 0x49b23 direction-swap countdown */
+    int musicHold; /* 0x10: frames left keeping music track 0xdf alive */
 } Dim2ConveyorState;
-STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
+
+STATIC_ASSERT (
+sizeof
+(Dim2ConveyorState)
+==
+0x14
+);
 
 /* dll_1D6_getExtraSize == 0x20 (crusher platform). */
-typedef struct Dll1D6State {
-    void *bufA;     /* 0x00: mmAlloc'd 40B getTabEntry rows */
-    void *bufB;     /* 0x04 */
-    f32 hitRangeSqA;/* 0x08 */
-    f32 hitRangeSqB;/* 0x0c */
-    f32 bobPhase;   /* 0x10 */
-    f32 bobRate;    /* 0x14 */
-    s16 upTimer;    /* 0x18 */
-    s16 downTimer;  /* 0x1a */
-    s8 dizzyTimer;  /* 0x1c */
-    u8 flags1D;     /* 0x1d: 1 = raised, 2 = armed, 4 = bobbing */
-    u8 hitRow;      /* 0x1e */
-    u8 slot;        /* 0x1f: index into the lbl_803DBF20 slot table */
+typedef struct Dll1D6State
+{
+    void* bufA; /* 0x00: mmAlloc'd 40B getTabEntry rows */
+    void* bufB; /* 0x04 */
+    f32 hitRangeSqA; /* 0x08 */
+    f32 hitRangeSqB; /* 0x0c */
+    f32 bobPhase; /* 0x10 */
+    f32 bobRate; /* 0x14 */
+    s16 upTimer; /* 0x18 */
+    s16 downTimer; /* 0x1a */
+    s8 dizzyTimer; /* 0x1c */
+    u8 flags1D; /* 0x1d: 1 = raised, 2 = armed, 4 = bobbing */
+    u8 hitRow; /* 0x1e */
+    u8 slot; /* 0x1f: index into the lbl_803DBF20 slot table */
 } Dll1D6State;
-STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
+
+STATIC_ASSERT (
+sizeof
+(Dll1D6State)
+==
+0x20
+);
 
 /* dimtruthhornice_getExtraSize == 0x8. */
-typedef struct TruthHornIceState {
-    s16 gameBit;    /* 0x00 */
-    s8 hitsLeft;    /* 0x02 */
-    s8 phase;       /* 0x03 */
-    f32 timer;      /* 0x04 */
+typedef struct TruthHornIceState
+{
+    s16 gameBit; /* 0x00 */
+    s8 hitsLeft; /* 0x02 */
+    s8 phase; /* 0x03 */
+    f32 timer; /* 0x04 */
 } TruthHornIceState;
-STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
+
+STATIC_ASSERT (
+sizeof
+(TruthHornIceState)
+==
+0x8
+);
 
 /* dim2snowball_getExtraSize == 0xb0 (curve walker head + roll state). */
-typedef struct Dim2SnowballState {
+typedef struct Dim2SnowballState
+{
     u8 pad00[0x10];
     int curveCursor; /* 0x10 */
     u8 pad14[0x54];
-    f32 curveX;      /* 0x68 */
-    f32 curveY;      /* 0x6c */
-    f32 curveZ;      /* 0x70 */
-    f32 dirX;        /* 0x74 */
+    f32 curveX; /* 0x68 */
+    f32 curveY; /* 0x6c */
+    f32 curveZ; /* 0x70 */
+    f32 dirX; /* 0x74 */
     u8 pad78[4];
-    f32 dirZ;        /* 0x7c */
-    int curveMode;   /* 0x80 */
-    u8 pad84[0xc];   /* 0x84..0x8f: vcall outparams (address-used) */
+    f32 dirZ; /* 0x7c */
+    int curveMode; /* 0x80 */
+    u8 pad84[0xc]; /* 0x84..0x8f: vcall outparams (address-used) */
     int curveResult; /* 0x90 */
-    int evalFn;      /* 0x94 */
-    int coeffsFn;    /* 0x98 */
-    int *targetObj;  /* 0x9c */
-    int targetId;    /* 0xa0 */
-    f32 floorY;      /* 0xa4 */
-    int *curveData;  /* 0xa8 (also address-used as a vcall outparam) */
-    u8 flagsAC;      /* 0xac */
+    int evalFn; /* 0x94 */
+    int coeffsFn; /* 0x98 */
+    int* targetObj; /* 0x9c */
+    int targetId; /* 0xa0 */
+    f32 floorY; /* 0xa4 */
+    int* curveData; /* 0xa8 (also address-used as a vcall outparam) */
+    u8 flagsAC; /* 0xac */
     u8 padAD[3];
 } Dim2SnowballState;
-STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
+
+STATIC_ASSERT (
+sizeof
+(Dim2SnowballState)
+==
+0xb0
+);
 
 /* dim2pathgenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
  * tables filled by the RomCurve interface). */
-typedef struct Dim2PathGeneratorState {
-    f32 originX;     /* 0x000 */
-    f32 originY;     /* 0x004 */
-    f32 originZ;     /* 0x008 */
+typedef struct Dim2PathGeneratorState
+{
+    f32 originX; /* 0x000 */
+    f32 originY; /* 0x004 */
+    f32 originZ; /* 0x008 */
     f32 curveA[200]; /* 0x00c */
     f32 curveB[200]; /* 0x32c */
     f32 curveC[200]; /* 0x64c */
-    f32 curveD[12];  /* 0x96c */
+    f32 curveD[12]; /* 0x96c */
     u8 pad99C[2];
-    s16 spawnTimer;  /* 0x99e */
+    s16 spawnTimer; /* 0x99e */
     s16 spawnPeriod; /* 0x9a0 */
     s16 spawnTypes[2]; /* 0x9a2: object ids, alternated via the toggle bit */
-    u8 curveValid;   /* 0x9a6 */
-    u8 flags;        /* 0x9a7: 1 = toggle, 2 = curve built, 4 = enabled */
+    u8 curveValid; /* 0x9a6 */
+    u8 flags; /* 0x9a7: 1 = toggle, 2 = curve built, 4 = enabled */
 } Dim2PathGeneratorState;
-STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
-static inline int *DIM2snowball_GetActiveModel(void *obj) {
-    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    return (int *)objAnim->banks[objAnim->bankIndex];
+STATIC_ASSERT (
+sizeof
+(Dim2PathGeneratorState)
+==
+0x9a8
+);
+
+static inline int* DIM2snowball_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
 extern undefined8 FUN_80006724();
@@ -212,8 +254,8 @@ extern uint countLeadingZeros();
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dcb80;
 extern undefined4 DAT_803dcb88;
-extern EffectInterface **gPartfxInterface;
-extern MapEventInterface **gMapEventInterface;
+extern EffectInterface** gPartfxInterface;
+extern MapEventInterface** gMapEventInterface;
 extern f64 DOUBLE_803e56e8;
 extern f64 DOUBLE_803e5708;
 extern f64 DOUBLE_803e5730;
@@ -258,7 +300,8 @@ extern f32 lbl_803E5768;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct DimLevelControlState {
+typedef struct DimLevelControlState
+{
     f32 timer;
     int latch;
     u8 saveState;
@@ -279,8 +322,8 @@ extern void getEnvfxAct(int a, int b, int id, int d);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int id);
 extern void Music_Trigger(int id, int value);
-extern void SCGameBitLatch_Update(int *state, int mask, int a, int b, int bit, int value);
-extern int *gSHthorntailAnimationInterface;
+extern void SCGameBitLatch_Update(int* state, int mask, int a, int b, int bit, int value);
+extern int* gSHthorntailAnimationInterface;
 extern f32 lbl_803E4A24;
 extern f32 timeDelta;
 
@@ -290,7 +333,7 @@ void dim_levelcontrol_update(int obj)
     u8 b;
     u8 c;
     u8 d;
-    DimLevelControlState *st;
+    DimLevelControlState* st;
     u32 t;
     u32 t2;
 
@@ -298,84 +341,109 @@ void dim_levelcontrol_update(int obj)
     b = GameBit_Get(0xd0c);
     c = GameBit_Get(0xd0d);
     d = GameBit_Get(0xd0e);
-    st = ((GameObject *)obj)->extra;
-    if ((a && !st->b7) || (b && !st->b6) || (c && !st->b5) || (d && !st->b4)) {
+    st = ((GameObject*)obj)->extra;
+    if ((a && !st->b7) || (b && !st->b6) || (c && !st->b5) || (d && !st->b4))
+    {
         Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
     }
     st->b7 = a;
     st->b6 = b;
     st->b5 = c;
     st->b4 = d;
-    if (!st->b3 && (u32)GameBit_Get(0xa21) != 0) {
+    if (!st->b3 && (u32)GameBit_Get(0xa21) != 0)
+    {
         Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
         st->b3 = 1;
     }
-    if (((GameObject *)obj)->unkF4 != 0) {
+    if (((GameObject*)obj)->unkF4 != 0)
+    {
         if ((u32)GameBit_Get(0xa82) == 0 ||
-            ((u32)GameBit_Get(0x17) != 0 && (u32)GameBit_Get(0xead) == 0)) {
-            if (((GameObject *)obj)->unkF4 == 2) {
+            ((u32)GameBit_Get(0x17) != 0 && (u32)GameBit_Get(0xead) == 0))
+        {
+            if (((GameObject*)obj)->unkF4 == 2)
+            {
                 getEnvfxActImmediately(0, 0, 0x160, 0);
                 getEnvfxActImmediately(0, 0, 0x15a, 0);
                 getEnvfxActImmediately(0, 0, 0x15c, 0);
                 getEnvfxActImmediately(0, 0, 0x15f, 0);
-            } else {
+            }
+            else
+            {
                 getEnvfxAct(0, 0, 0x160, 0);
                 getEnvfxAct(0, 0, 0x15a, 0);
                 getEnvfxAct(0, 0, 0x15c, 0);
                 getEnvfxAct(0, 0, 0x15f, 0);
             }
         }
-        ((GameObject *)obj)->unkF4 = 0;
+        ((GameObject*)obj)->unkF4 = 0;
     }
-    if (st->unkD != 0) {
-        if ((u32)GameBit_Get(0x651) == 0) {
+    if (st->unkD != 0)
+    {
+        if ((u32)GameBit_Get(0x651) == 0)
+        {
             (*gMapEventInterface)->setAnimEvent(0x13, 0xd, 0);
             st->unkD = 0;
         }
-    } else {
-        if ((u32)GameBit_Get(0x651) != 0) {
+    }
+    else
+    {
+        if ((u32)GameBit_Get(0x651) != 0)
+        {
             (*gMapEventInterface)->setAnimEvent(0x13, 0xd, 1);
             st->unkD = 1;
         }
     }
-    if (st->timer > lbl_803E4A24) {
+    if (st->timer > lbl_803E4A24)
+    {
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         gameTextShow(0x430);
         st->timer = st->timer - timeDelta;
-        if (st->timer < *(f32 *)&lbl_803E4A24) {
+        if (st->timer < *(f32*)&lbl_803E4A24)
+        {
             st->timer = lbl_803E4A24;
         }
     }
-    if (st->unkC == 0) {
+    if (st->unkC == 0)
+    {
         t = GameBit_Get(0x3e2);
         t2 = GameBit_Get(0x3e3);
         st->unkC = (u8)(t2 & t);
-        if (st->unkC != 0) {
+        if (st->unkC != 0)
+        {
             (*gGameUIInterface)->showNpcDialogue(0x4ba, 0x14, 0x8c, 1);
         }
     }
     t = GameBit_Get(0x3e2);
     t = !GameBit_Get(0x3e3) & t;
     t2 = t & 0xff;
-    if (t2 != st->saveState) {
+    if (t2 != st->saveState)
+    {
         GameBit_Set(0x3e8, t2);
         st->saveState = t2;
     }
-    if (!(u8)GameBit_Get(0x8a5) && (u32)GameBit_Get(0x89d) != 0) {
+    if (!(u8)GameBit_Get(0x8a5) && (u32)GameBit_Get(0x89d) != 0)
+    {
         GameBit_Set(0x8a4, 1);
     }
-    if ((*(int (**)(int))(*(int *)gSHthorntailAnimationInterface + 0x24))(0) == 0) {
-        if (st->musicTrack != 0xe2) {
+    if ((*(int (**)(int))(*(int*)gSHthorntailAnimationInterface + 0x24))(0) == 0)
+    {
+        if (st->musicTrack != 0xe2)
+        {
             st->musicTrack = 0xe2;
-            if (st->latch & 4) {
+            if (st->latch & 4)
+            {
                 Music_Trigger(0xc5, 0);
                 Music_Trigger(0xe2, 1);
             }
         }
-    } else {
-        if (st->musicTrack != 0xc5) {
+    }
+    else
+    {
+        if (st->musicTrack != 0xc5)
+        {
             st->musicTrack = 0xc5;
-            if (st->latch & 4) {
+            if (st->latch & 4)
+            {
                 Music_Trigger(0xe2, 0);
                 Music_Trigger(0xc5, 1);
             }
@@ -455,47 +523,55 @@ void dim_levelcontrol_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801b7314(int param_1,undefined4 param_2,float *param_3,float *param_4)
+void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_4)
 {
-  uint uVar1;
-  int iVar2;
-  float *pfVar3;
-  
-  pfVar3 = ((GameObject *)param_1)->extra;
-  if (pfVar3[4] == 0.0) {
-    FUN_800067c0((int *)0xdf,1);
-  }
-  pfVar3[4] = 2.8026e-44;
-  iVar2 = *(int *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x14);
-  if (iVar2 == 0x49b23) {
-    uVar1 = GameBit_Get(0xc5c);
-    if ((uVar1 != 0) && (uVar1 = GameBit_Get(0xc5b), uVar1 == 0)) {
-      *param_3 = *pfVar3;
-      *param_4 = pfVar3[1];
+    uint uVar1;
+    int iVar2;
+    float* pfVar3;
+
+    pfVar3 = ((GameObject*)param_1)->extra;
+    if (pfVar3[4] == 0.0)
+    {
+        FUN_800067c0((int*)0xdf, 1);
     }
-    uVar1 = GameBit_Get(0xc5b);
-    if ((uVar1 != 0) && (uVar1 = GameBit_Get(0xc5c), uVar1 == 0)) {
-      *param_3 = -*pfVar3;
-      *param_4 = -pfVar3[1];
+    pfVar3[4] = 2.8026e-44;
+    iVar2 = *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14);
+    if (iVar2 == 0x49b23)
+    {
+        uVar1 = GameBit_Get(0xc5c);
+        if ((uVar1 != 0) && (uVar1 = GameBit_Get(0xc5b), uVar1 == 0))
+        {
+            *param_3 = *pfVar3;
+            *param_4 = pfVar3[1];
+        }
+        uVar1 = GameBit_Get(0xc5b);
+        if ((uVar1 != 0) && (uVar1 = GameBit_Get(0xc5c), uVar1 == 0))
+        {
+            *param_3 = -*pfVar3;
+            *param_4 = -pfVar3[1];
+        }
+        uVar1 = GameBit_Get(0xc5b);
+        if (uVar1 != 0)
+        {
+            GameBit_Set(0xc5c, 0);
+        }
+        uVar1 = GameBit_Get(0xc5b);
+        if (uVar1 == 0)
+        {
+            GameBit_Set(0xc5c, 1);
+        }
     }
-    uVar1 = GameBit_Get(0xc5b);
-    if (uVar1 != 0) {
-      GameBit_Set(0xc5c,0);
+    else if ((iVar2 < 0x49b23) && (iVar2 == 0x1ea9))
+    {
+        *param_3 = *pfVar3;
+        *param_4 = pfVar3[1];
     }
-    uVar1 = GameBit_Get(0xc5b);
-    if (uVar1 == 0) {
-      GameBit_Set(0xc5c,1);
+    else
+    {
+        *param_3 = *pfVar3;
+        *param_4 = pfVar3[1];
     }
-  }
-  else if ((iVar2 < 0x49b23) && (iVar2 == 0x1ea9)) {
-    *param_3 = *pfVar3;
-    *param_4 = pfVar3[1];
-  }
-  else {
-    *param_3 = *pfVar3;
-    *param_4 = pfVar3[1];
-  }
-  return;
+    return;
 }
 
 
@@ -533,33 +609,100 @@ void FUN_801b7314(int param_1,undefined4 param_2,float *param_3,float *param_4)
 #pragma peephole on
 
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void dll_1CF_free(void) {}
-void dll_1CF_hitDetect(void) {}
-void dll_1CF_update(void) {}
-void dll_1CF_release(void) {}
-void dll_1CF_initialise(void) {}
-void dim_tricky_free(void) {}
-void dim_tricky_hitDetect(void) {}
-void dim2conveyor_hitDetect(void) {}
-void dim2conveyor_release(void) {}
-void dim2conveyor_initialise(void) {}
-void dll_1D6_hitDetect(void) {}
-void dll_1D6_release(void) {}
-void dll_1D6_initialise(void) {}
-void dim2snowball_free(void) {}
-void dim2snowball_hitDetect(void) {}
-void dim2snowball_release(void) {}
-void dim2snowball_initialise(void) {}
-void dim2pathgenerator_free(void) {}
-void dim2pathgenerator_render(void) {}
-void dim2pathgenerator_hitDetect(void) {}
-void dim2pathgenerator_release(void) {}
-void dim2pathgenerator_initialise(void) {}
-void dll_1DA_free(void) {}
+void dll_1CF_free(void)
+{
+}
+
+void dll_1CF_hitDetect(void)
+{
+}
+
+void dll_1CF_update(void)
+{
+}
+
+void dll_1CF_release(void)
+{
+}
+
+void dll_1CF_initialise(void)
+{
+}
+
+void dim_tricky_free(void)
+{
+}
+
+void dim_tricky_hitDetect(void)
+{
+}
+
+void dim2conveyor_hitDetect(void)
+{
+}
+
+void dim2conveyor_release(void)
+{
+}
+
+void dim2conveyor_initialise(void)
+{
+}
+
+void dll_1D6_hitDetect(void)
+{
+}
+
+void dll_1D6_release(void)
+{
+}
+
+void dll_1D6_initialise(void)
+{
+}
+
+void dim2snowball_free(void)
+{
+}
+
+void dim2snowball_hitDetect(void)
+{
+}
+
+void dim2snowball_release(void)
+{
+}
+
+void dim2snowball_initialise(void)
+{
+}
+
+void dim2pathgenerator_free(void)
+{
+}
+
+void dim2pathgenerator_render(void)
+{
+}
+
+void dim2pathgenerator_hitDetect(void)
+{
+}
+
+void dim2pathgenerator_release(void)
+{
+}
+
+void dim2pathgenerator_initialise(void)
+{
+}
+
+void dll_1DA_free(void)
+{
+}
 
 /* 8b "li r3, N; blr" returners. */
 int dll_1CF_getExtraSize(void) { return 0x0; }
@@ -579,7 +722,11 @@ int dll_1DA_getExtraSize(void) { return 0x8; }
 int dll_1DA_getObjectTypeId(void) { return 0x0; }
 
 /* 16b chained patterns. */
-void dim_tricky_init(int *obj) { u8 v = 0x0; *((u8*)((int**)obj)[0xb8/4] + 0x0) = v; }
+void dim_tricky_init(int* obj)
+{
+    u8 v = 0x0;
+    *((u8*)((int**)obj)[0xb8 / 4] + 0x0) = v;
+}
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4A30;
@@ -588,11 +735,36 @@ extern f32 lbl_803E4A58;
 extern f32 lbl_803E4A78;
 extern f32 lbl_803E4AA0;
 extern f32 lbl_803E4AD8;
-void dll_1CF_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4A30); }
-void dim2conveyor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4A58); }
-void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4A78); }
-void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4AA0); }
-void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4AD8); }
+
+void dll_1CF_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E4A30);
+}
+
+void dim2conveyor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E4A58);
+}
+
+void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E4A78);
+}
+
+void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E4AA0);
+}
+
+void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E4AD8);
+}
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E4A38;
@@ -603,32 +775,40 @@ void dim2conveyor_free(int x) { ObjGroup_RemoveObject(x, 0x16); }
 
 /* dim2conveyor_setScale: per-area scale/sign + music latch for two specific map ids. */
 extern void Music_Trigger(int trackId, int restart);
-void dim2conveyor_setScale(int *obj, int unused, f32 *outX, f32 *outY) {
-    Dim2ConveyorState *state = ((GameObject *)obj)->extra;
+
+void dim2conveyor_setScale(int* obj, int unused, f32* outX, f32* outY)
+{
+    Dim2ConveyorState* state = ((GameObject*)obj)->extra;
     int id;
-    if (state->musicHold == 0) {
+    if (state->musicHold == 0)
+    {
         Music_Trigger(0xdf, 1);
     }
     state->musicHold = 20;
-    id = *(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14);
-    switch (id) {
+    id = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
+    switch (id)
+    {
     case 7849:
         *outX = state->scrollX;
         *outY = state->scrollY;
         break;
     case 0x49B23:
-        if (GameBit_Get(3164) != 0 && GameBit_Get(3163) == 0) {
+        if (GameBit_Get(3164) != 0 && GameBit_Get(3163) == 0)
+        {
             *outX = state->scrollX;
             *outY = state->scrollY;
         }
-        if (GameBit_Get(3163) != 0 && GameBit_Get(3164) == 0) {
+        if (GameBit_Get(3163) != 0 && GameBit_Get(3164) == 0)
+        {
             *outX = -state->scrollX;
             *outY = -state->scrollY;
         }
-        if (GameBit_Get(3163) != 0) {
+        if (GameBit_Get(3163) != 0)
+        {
             GameBit_Set(3164, 0);
         }
-        if (GameBit_Get(3163) == 0) {
+        if (GameBit_Get(3163) == 0)
+        {
             GameBit_Set(3164, 1);
         }
         break;
@@ -639,23 +819,25 @@ void dim2conveyor_setScale(int *obj, int unused, f32 *outX, f32 *outY) {
     }
 }
 
-extern int ObjHits_GetPriorityHit(int obj, void **outHitObj, int *outSphereIdx, uint *outHitVolume);
-extern float Vec_distance(float *a, float *b);
+extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, uint* outHitVolume);
+extern float Vec_distance(float* a, float* b);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
-extern void *Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803E4ADC;
 
 /* dim2pathgenerator hitDetect: on hit type 0xE, scale velocity by const and SFX. */
-void dll_1DA_hitDetect(int obj) {
-    void *hi;
-    void *player;
+void dll_1DA_hitDetect(int obj)
+{
+    void* hi;
+    void* player;
     f32 k;
     int hit = ObjHits_GetPriorityHit(obj, &hi, NULL, NULL);
-    if (hit == 0xE) {
+    if (hit == 0xE)
+    {
         player = Obj_GetPlayerObject();
-        Vec_distance((float*)&((GameObject *)obj)->anim.worldPosX, (float*)((int)player + 0x18));
-        ((GameObject *)obj)->anim.velocityX = *(f32*)((int)hi + 0x24) * (k = lbl_803E4ADC);
-        ((GameObject *)obj)->anim.velocityZ = *(f32*)((int)hi + 0x2c) * k;
+        Vec_distance((float*)&((GameObject*)obj)->anim.worldPosX, (float*)((int)player + 0x18));
+        ((GameObject*)obj)->anim.velocityX = *(f32*)((int)hi + 0x24) * (k = lbl_803E4ADC);
+        ((GameObject*)obj)->anim.velocityZ = *(f32*)((int)hi + 0x2c) * k;
         Sfx_PlayFromObject(obj, SFXchar_puts_out_fire);
     }
 }
@@ -669,18 +851,19 @@ extern int* getTrickyObject(void);
  * return 1 if the signed result dropped to or below 0. */
 int fn_801B6D40(int* obj, int v)
 {
-    u8* state = ((GameObject *)obj)->extra;
-    *(s8 *)(state + 2) = (s8)(state[2] - v);
-    return *(s8 *)(state + 2) <= 0;
+    u8* state = ((GameObject*)obj)->extra;
+    *(s8*)(state + 2) = (s8)(state[2] - v);
+    return *(s8*)(state + 2) <= 0;
 }
 
 u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** p4)
 {
-    int* state = ((GameObject *)obj)->extra;
+    int* state = ((GameObject*)obj)->extra;
     *p1 = (int*)((char*)state + 12);
     *p2 = (int*)((char*)state + 812);
     *p3 = (int*)((char*)state + 1612);
-    if (p4 != NULL) {
+    if (p4 != NULL)
+    {
         *p4 = (int*)((char*)state + 2412);
     }
     return ((Dim2PathGeneratorState*)state)->curveValid;
@@ -688,8 +871,9 @@ u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** 
 
 void dll_1D6_free(int* obj)
 {
-    Dll1D6State* state = ((GameObject *)obj)->extra;
-    if ((state->flags1D & 4) != 0) {
+    Dll1D6State* state = ((GameObject*)obj)->extra;
+    if ((state->flags1D & 4) != 0)
+    {
         state->flags1D = (u8)(state->flags1D & ~4);
     }
     mm_free(state->bufA);
@@ -700,90 +884,102 @@ void dll_1D6_free(int* obj)
 void dim2pathgenerator_init(int* obj, int* def)
 {
     Dim2PathGeneratorState* state;
-    *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 28) << 8);
-    state = ((GameObject *)obj)->extra;
-    state->spawnPeriod = ((Dim2pathgeneratorObjectDef *)def)->spawnPeriod;
-    state->spawnTimer = (s16)*(u8*)((char*)def + 29);
-    state->spawnTypes[0] = (s16)((Dim2pathgeneratorObjectDef *)def)->unk1E;
+    *(s16*)obj = (s16)((u32) * (u8*)((char*)def + 28) << 8);
+    state = ((GameObject*)obj)->extra;
+    state->spawnPeriod = ((Dim2pathgeneratorObjectDef*)def)->spawnPeriod;
+    state->spawnTimer = (s16) * (u8*)((char*)def + 29);
+    state->spawnTypes[0] = (s16)((Dim2pathgeneratorObjectDef*)def)->unk1E;
     {
-        s16 v = ((Dim2pathgeneratorObjectDef *)def)->unk20;
-        if (v == -1) {
-            state->spawnTypes[1] = (s16)((Dim2pathgeneratorObjectDef *)def)->unk1E;
-        } else {
+        s16 v = ((Dim2pathgeneratorObjectDef*)def)->unk20;
+        if (v == -1)
+        {
+            state->spawnTypes[1] = (s16)((Dim2pathgeneratorObjectDef*)def)->unk1E;
+        }
+        else
+        {
             state->spawnTypes[1] = v;
         }
     }
     state->flags = (u8)(state->flags | 4);
-    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
 }
 
 void dimtruthhornice_init(int* obj, int* def)
 {
-    TruthHornIceState* state = ((GameObject *)obj)->extra;
-    state->hitsLeft = (s8)((DimtruthhorniceObjectDef *)def)->hitsLeft;
-    state->gameBit = ((DimtruthhorniceObjectDef *)def)->gameBit;
-    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
+    TruthHornIceState* state = ((GameObject*)obj)->extra;
+    state->hitsLeft = (s8)((DimtruthhorniceObjectDef*)def)->hitsLeft;
+    state->gameBit = ((DimtruthhorniceObjectDef*)def)->gameBit;
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
     {
         s16 slot = state->gameBit;
-        if (slot != -1 && (u32)GameBit_Get(slot) != 0u) {
+        if (slot != -1 && (u32)GameBit_Get(slot) != 0u)
+        {
             ObjHits_DisableObject(obj);
             state->phase = 2;
-            ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
+            ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         }
     }
 }
 
 void dim2snowball_init(int* obj, int* def)
 {
-    Dim2SnowballState* state = ((GameObject *)obj)->extra;
-    state->targetId = ((Dim2snowballObjectDef *)def)->targetId;
+    Dim2SnowballState* state = ((GameObject*)obj)->extra;
+    state->targetId = ((Dim2snowballObjectDef*)def)->targetId;
     state->flagsAC = (u8)(state->flagsAC | 4);
-    ((Dim2snowballObjectDef *)def)->targetId = -1;
-    *(s16*)obj = (s16)((s32)((Dim2snowballObjectDef *)def)->unk18 << 8);
-    *(s8 *)&((GameObject *)obj)->anim.alpha = 0;
+    ((Dim2snowballObjectDef*)def)->targetId = -1;
+    *(s16*)obj = (s16)((s32)((Dim2snowballObjectDef*)def)->unk18 << 8);
+    *(s8*)&((GameObject*)obj)->anim.alpha = 0;
     {
-        ObjModelState* p = ((GameObject *)obj)->anim.modelState;
-        if (p != NULL) {
+        ObjModelState* p = ((GameObject*)obj)->anim.modelState;
+        if (p != NULL)
+        {
             p->flags |= 0xA10;
         }
     }
     state->targetObj = (int*)ObjList_FindObjectById(state->targetId);
-    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
 }
 
 void dll_1CF_init(int* obj, int* def)
 {
-    if ((u32)GameBit_Get(((Dll1CFObjectDef *)def)->unk1E) != 0u) {
-        ((GameObject *)obj)->anim.rotY = (s16)(((s32)((Dll1CFObjectDef *)def)->unk1A << 13) / 45);
+    if ((u32)GameBit_Get(((Dll1CFObjectDef*)def)->unk1E) != 0u)
+    {
+        ((GameObject*)obj)->anim.rotY = (s16)(((s32)((Dll1CFObjectDef*)def)->unk1A << 13) / 45);
     }
-    *(s16*)obj = (s16)((s32)((Dll1CFObjectDef *)def)->unk18 << 8);
-    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0xe000);
+    *(s16*)obj = (s16)((s32)((Dll1CFObjectDef*)def)->unk18 << 8);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0xe000);
 }
 
 extern f32 lbl_803E4A28;
 extern int getSaveGameLoadStatus(void);
 extern void gameBitFn_800ea2e0(u8 n);
 extern void unlockLevel(int a, int b, int c);
+
 void dim_levelcontrol_init(int obj)
 {
-    DimLevelControlState *st;
+    DimLevelControlState* st;
     u8 i;
 
     randomGetRange(0, 11);
-    st = ((GameObject *)obj)->extra;
+    st = ((GameObject*)obj)->extra;
     st->saveState = 0;
     st->timer = lbl_803E4A28;
-    if (getSaveGameLoadStatus() != 0) {
-        ((GameObject *)obj)->unkF4 = 2;
-    } else {
-        ((GameObject *)obj)->unkF4 = 1;
+    if (getSaveGameLoadStatus() != 0)
+    {
+        ((GameObject*)obj)->unkF4 = 2;
     }
-    for (i = 1; i <= 38; i++) {
+    else
+    {
+        ((GameObject*)obj)->unkF4 = 1;
+    }
+    for (i = 1; i <= 38; i++)
+    {
         gameBitFn_800ea2e0(i);
     }
     st->unkC = (u8)GameBit_Get(0xdc);
     GameBit_Set(0xf0a, 0);
-    if ((u32)GameBit_Get(0x89d) != 0 && (u32)GameBit_Get(0x8a5) == 0) {
+    if ((u32)GameBit_Get(0x89d) != 0 && (u32)GameBit_Get(0x8a5) == 0)
+    {
         GameBit_Set(0x89d, 0);
     }
     st->b7 = (u8)GameBit_Get(0xd0b);
@@ -791,33 +987,35 @@ void dim_levelcontrol_init(int obj)
     st->b5 = (u8)GameBit_Get(0xd0d);
     st->b4 = (u8)GameBit_Get(0xd0e);
     st->b3 = (u8)GameBit_Get(0xa21);
-    (*gMapEventInterface)->setMode(((GameObject *)obj)->anim.mapEventSlot, 1);
-    ((GameObject *)obj)->objectFlags |= 0x6000;
+    (*gMapEventInterface)->setMode(((GameObject*)obj)->anim.mapEventSlot, 1);
+    ((GameObject*)obj)->objectFlags |= 0x6000;
     unlockLevel(0, 0, 1);
 }
 
 void dim_tricky_update(int* obj)
 {
-    int* state = ((GameObject *)obj)->extra;
+    int* state = ((GameObject*)obj)->extra;
     int* trickyObj = getTrickyObject();
     if (trickyObj == NULL) return;
-    switch (*(u8*)state) {
-        case 0:
-            if (GameBit_Get(0xa1b) != 0) {
-                GameBit_Set(0x4e4, 0);
-                GameBit_Set(0x4e5, 0);
-                *(s8*)state = 1;
-            }
-            break;
-        case 1:
-            *(s8*)state = 2;
-            break;
-        case 2:
-            ((void(*)(int*, int*))((void**)*(*(int***)((char*)trickyObj + 104)))[14])(trickyObj, obj);
-            *(s8*)state = 3;
-            break;
-        case 3:
-            break;
+    switch (*(u8*)state)
+    {
+    case 0:
+        if (GameBit_Get(0xa1b) != 0)
+        {
+            GameBit_Set(0x4e4, 0);
+            GameBit_Set(0x4e5, 0);
+            *(s8*)state = 1;
+        }
+        break;
+    case 1:
+        *(s8*)state = 2;
+        break;
+    case 2:
+        ((void(*)(int*, int*))((void**)*(*(int***)((char*)trickyObj + 104)))[14])(trickyObj, obj);
+        *(s8*)state = 3;
+        break;
+    case 3:
+        break;
     }
 }
 
@@ -829,52 +1027,63 @@ extern f32 lbl_803E4A64;
 extern f32 lbl_803E4A68;
 extern f32 lbl_803E4A6C;
 
-void dim2conveyor_init(int *obj, u8 *params)
+void dim2conveyor_init(int* obj, u8* params)
 {
-    f32 scale = (f32)*(s16 *)((char *)params + 0x1a) / lbl_803E4A64;
-    Dim2ConveyorState *extra;
-    *(s16 *)obj = (s16)(*(s8 *)((char *)params + 0x18) << 8);
-    extra = ((GameObject *)obj)->extra;
-    extra->scrollX = scale * mathSinf(lbl_803E4A68 * (f32)*(s16 *)obj / lbl_803E4A6C);
-    extra->scrollY = scale * mathCosf(lbl_803E4A68 * (f32)*(s16 *)obj / lbl_803E4A6C);
+    f32 scale = (f32) * (s16*)((char*)params + 0x1a) / lbl_803E4A64;
+    Dim2ConveyorState* extra;
+    *(s16*)obj = (s16)(*(s8*)((char*)params + 0x18) << 8);
+    extra = ((GameObject*)obj)->extra;
+    extra->scrollX = scale * mathSinf(lbl_803E4A68 * (f32) * (s16*)obj / lbl_803E4A6C);
+    extra->scrollY = scale * mathCosf(lbl_803E4A68 * (f32) * (s16*)obj / lbl_803E4A6C);
     extra->swapTimer = lbl_803E4A60;
     extra->musicHold = 0;
     ObjGroup_AddObject(obj, 22);
-    ((GameObject *)obj)->objectFlags |= 0x2000;
-    if (*(u32 *)((char *)params + 0x14) == 0x49b23) {
+    ((GameObject*)obj)->objectFlags |= 0x2000;
+    if (*(u32*)((char*)params + 0x14) == 0x49b23)
+    {
         GameBit_Set(3164, 1);
     }
 }
 
-void dim2conveyor_update(int *obj)
+void dim2conveyor_update(int* obj)
 {
-    Dim2ConveyorState *extra = ((GameObject *)obj)->extra;
+    Dim2ConveyorState* extra = ((GameObject*)obj)->extra;
     Sfx_PlayFromObject((int)obj, SFXfoot_metal_scuff);
-    if (extra->musicHold != 0) {
+    if (extra->musicHold != 0)
+    {
         extra->musicHold = extra->musicHold - 1;
-        if (extra->musicHold == 0) {
+        if (extra->musicHold == 0)
+        {
             Music_Trigger(223, 0);
         }
     }
-    switch (*(int *)((char *)*(int **)&((GameObject *)obj)->anim.placementData + 0x14)) {
+    switch (*(int*)((char*)*(int**)&((GameObject*)obj)->anim.placementData + 0x14))
+    {
     case 0x49b23:
-        if (GameBit_Get(3169) != 0) {
+        if (GameBit_Get(3169) != 0)
+        {
             extra->swapTimer = extra->swapTimer + timeDelta;
-            if (extra->swapTimer > lbl_803E4A5C) {
-                if (GameBit_Get(3163) != 0) {
+            if (extra->swapTimer > lbl_803E4A5C)
+            {
+                if (GameBit_Get(3163) != 0)
+                {
                     GameBit_Set(3164, 1);
                     GameBit_Set(3163, 0);
-                } else if (GameBit_Get(3164) != 0) {
+                }
+                else if (GameBit_Get(3164) != 0)
+                {
                     GameBit_Set(3164, 0);
                     GameBit_Set(3163, 1);
                 }
                 extra->swapTimer = lbl_803E4A60;
             }
         }
-        if (GameBit_Get(3163) != 0) {
+        if (GameBit_Get(3163) != 0)
+        {
             GameBit_Set(3164, 0);
         }
-        if (GameBit_Get(3163) == 0) {
+        if (GameBit_Get(3163) == 0)
+        {
             GameBit_Set(3164, 1);
         }
         break;
@@ -883,41 +1092,45 @@ void dim2conveyor_update(int *obj)
     }
 }
 
-extern void *mmAlloc(int size, int a, int b);
-extern void ObjModel_SetBlendChannelTargets(int *model, int a, int b, int c, f32 w, int d);
-extern void ObjModel_SetBlendChannelWeight(int *model, int a, f32 w);
+extern void* mmAlloc(int size, int a, int b);
+extern void ObjModel_SetBlendChannelTargets(int* model, int a, int b, int c, f32 w, int d);
+extern void ObjModel_SetBlendChannelWeight(int* model, int a, f32 w);
 extern s16 lbl_803DBF18;
 extern f32 lbl_803E4A88;
 
-void dll_1D6_init(int *obj, u8 *params)
+void dll_1D6_init(int* obj, u8* params)
 {
-    Dll1D6State *extra;
-    int *model;
+    Dll1D6State* extra;
+    int* model;
     int i;
 
-    *(s16 *)obj = (s16)(*(s8 *)((char *)params + 0x18) << 8);
-    extra = ((GameObject *)obj)->extra;
+    *(s16*)obj = (s16)(*(s8*)((char*)params + 0x18) << 8);
+    extra = ((GameObject*)obj)->extra;
     model = DIM2snowball_GetActiveModel(obj);
     ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A88, 0);
     ObjModel_SetBlendChannelWeight(model, 0, lbl_803E4A78);
-    extra->upTimer = *(s16 *)((char *)params + 0x1a);
-    if (extra->upTimer < 15) {
+    extra->upTimer = *(s16*)((char*)params + 0x1a);
+    if (extra->upTimer < 15)
+    {
         extra->upTimer = 15;
     }
-    extra->downTimer = *(s16 *)((char *)params + 0x1c);
-    if (extra->downTimer < 15) {
+    extra->downTimer = *(s16*)((char*)params + 0x1c);
+    if (extra->downTimer < 15)
+    {
         extra->downTimer = 15;
     }
     {
         f32 k = lbl_803E4A88;
-        extra->hitRangeSqA = k * ((GameObject *)obj)->anim.rootMotionScale;
+        extra->hitRangeSqA = k * ((GameObject*)obj)->anim.rootMotionScale;
         extra->hitRangeSqA = extra->hitRangeSqA * extra->hitRangeSqA;
-        extra->hitRangeSqB = k * ((GameObject *)obj)->anim.rootMotionScale;
+        extra->hitRangeSqB = k * ((GameObject*)obj)->anim.rootMotionScale;
         extra->hitRangeSqB = extra->hitRangeSqB * extra->hitRangeSqB;
     }
     extra->flags1D = GameBit_Get(496) ? 2 : 0;
-    for (i = 0; i < 4; i++) {
-        if ((&lbl_803DBF20)[i] == 0) {
+    for (i = 0; i < 4; i++)
+    {
+        if ((&lbl_803DBF20)[i] == 0)
+        {
             (&lbl_803DBF20)[i] = 1;
             extra->slot = i;
             i = 4;
@@ -928,7 +1141,7 @@ void dll_1D6_init(int *obj, u8 *params)
     extra->bufB = mmAlloc(40, 18, 0);
     getTabEntry(extra->bufB, 12,
                 ((&lbl_803DBF18)[extra->slot] + 1) * 40, 40);
-    ((GameObject *)obj)->objectFlags |= 0x2000;
+    ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
 extern f32 lbl_803E4A40;
@@ -936,209 +1149,249 @@ extern f32 lbl_803E4A44;
 extern f32 lbl_803E4A48;
 extern f32 lbl_803E4A4C;
 
-void dimtruthhornice_update(int *obj)
+void dimtruthhornice_update(int* obj)
 {
-    TruthHornIceState *extra = ((GameObject *)obj)->extra;
-    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
-    switch (extra->phase) {
+    TruthHornIceState* extra = ((GameObject*)obj)->extra;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+    switch (extra->phase)
+    {
     case 0:
-        if (extra->hitsLeft <= 0) {
-            if (extra->gameBit != -1) {
+        if (extra->hitsLeft <= 0)
+        {
+            if (extra->gameBit != -1)
+            {
                 GameBit_Set(extra->gameBit, 1);
                 ObjHits_DisableObject(obj);
                 extra->phase = 1;
                 extra->timer = lbl_803E4A40;
             }
-        } else {
-            int *tricky = (int *)getTrickyObject();
-            if (tricky != NULL) {
-                if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) {
-                    (*(void (**)(int *, int *, int, int))(**(int **)((char *)tricky + 0x68) + 0x28))(tricky, obj, 1, 4);
+        }
+        else
+        {
+            int* tricky = (int*)getTrickyObject();
+            if (tricky != NULL)
+            {
+                if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
+                {
+                    (*(void (**)(int*, int*, int, int))(**(int**)((char*)tricky + 0x68) + 0x28))(tricky, obj, 1, 4);
                 }
-                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
+                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
             }
         }
         break;
-    case 1: {
-        f32 desc2[6];
-        extra->timer = extra->timer + timeDelta;
-        if (extra->timer > lbl_803E4A44) {
-            int i;
-            extra->phase = 2;
-            Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
-            Sfx_PlayFromObject((int)obj, 1147);
-            for (i = 30; i != 0; i--) {
-                f32 desc[6];
-                desc[3] = 0.1f * (f32)(int)randomGetRange(-100, 100);
-                desc[4] = 0.1f * (f32)(int)randomGetRange(0, 350);
-                desc[5] = 0.1f * (f32)(int)randomGetRange(-100, 100);
-                desc[2] = 1.0f;
-                (*gPartfxInterface)->spawnObject(obj, 2043, desc, 2, -1, NULL);
-                (*gPartfxInterface)->spawnObject(obj, 2044, desc, 2, -1, NULL);
+    case 1:
+        {
+            f32 desc2[6];
+            extra->timer = extra->timer + timeDelta;
+            if (extra->timer > lbl_803E4A44)
+            {
+                int i;
+                extra->phase = 2;
+                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                Sfx_PlayFromObject((int)obj, 1147);
+                for (i = 30; i != 0; i--)
+                {
+                    f32 desc[6];
+                    desc[3] = 0.1f * (f32)(int)
+                    randomGetRange(-100, 100);
+                    desc[4] = 0.1f * (f32)(int)
+                    randomGetRange(0, 350);
+                    desc[5] = 0.1f * (f32)(int)
+                    randomGetRange(-100, 100);
+                    desc[2] = 1.0f;
+                    (*gPartfxInterface)->spawnObject(obj, 2043, desc, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(obj, 2044, desc, 2, -1, NULL);
+                }
             }
+            desc2[3] = 0.1f * (f32)(int)
+            randomGetRange(-100, 100);
+            desc2[4] = 0.1f * (f32)(int)
+            randomGetRange(0, 350);
+            desc2[5] = 0.1f * (f32)(int)
+            randomGetRange(-100, 100);
+            desc2[2] = 1.0f;
+            (*gPartfxInterface)->spawnObject(obj, 2044, desc2, 2, -1, NULL);
+            break;
         }
-        desc2[3] = 0.1f * (f32)(int)randomGetRange(-100, 100);
-        desc2[4] = 0.1f * (f32)(int)randomGetRange(0, 350);
-        desc2[5] = 0.1f * (f32)(int)randomGetRange(-100, 100);
-        desc2[2] = 1.0f;
-        (*gPartfxInterface)->spawnObject(obj, 2044, desc2, 2, -1, NULL);
-        break;
-    }
     case 2:
-        ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         break;
     }
 }
 
-extern int **ObjGroup_GetObjects(int group, int *countOut);
+extern int** ObjGroup_GetObjects(int group, int* countOut);
 extern int Obj_AllocObjectSetup(int kind, int id);
 extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
 extern u8 Obj_IsLoadingLocked(void);
 extern u8 framesThisStep;
 
-void dim2pathgenerator_update(int *obj)
+void dim2pathgenerator_update(int* obj)
 {
-    int *def;
-    int *extra = ((GameObject *)obj)->extra;
+    int* def;
+    int* extra = ((GameObject*)obj)->extra;
     int toggle;
-    int **objs;
+    int** objs;
     int i;
     int count;
 
-    def = *(int **)&((GameObject *)obj)->anim.placementData;
-    if (GameBit_Get(((Dim2pathgeneratorPlacement *)def)->unk22) == 0) {
+    def = *(int**)&((GameObject*)obj)->anim.placementData;
+    if (GameBit_Get(((Dim2pathgeneratorPlacement*)def)->unk22) == 0)
+    {
         return;
     }
-    if ((((Dim2PathGeneratorState *)extra)->flags & 4) != 0) {
-        if ((((Dim2PathGeneratorState *)extra)->flags & 2) == 0) {
+    if ((((Dim2PathGeneratorState*)extra)->flags & 4) != 0)
+    {
+        if ((((Dim2PathGeneratorState*)extra)->flags & 2) == 0)
+        {
             int n = 21;
-            int found = (*gRomCurveInterface)->find(&n, 1, 10, ((GameObject *)obj)->anim.localPosX,
-                                                    ((GameObject *)obj)->anim.localPosY,
-                                                    ((GameObject *)obj)->anim.localPosZ);
-            if (found != -1) {
-                int *cv = (int *)(*gRomCurveInterface)->getById(found);
+            int found = (*gRomCurveInterface)->find(&n, 1, 10, ((GameObject*)obj)->anim.localPosX,
+                                                    ((GameObject*)obj)->anim.localPosY,
+                                                    ((GameObject*)obj)->anim.localPosZ);
+            if (found != -1)
+            {
+                int* cv = (int*)(*gRomCurveInterface)->getById(found);
                 ((void (*)(int))(*gRomCurveInterface)->slot74)((int)cv);
-                ((Dim2PathGeneratorState *)extra)->curveValid =
-                    ((int (*)(int *, void *, void *, void *, void *))(*gRomCurveInterface)->slot78)(
-                        cv, (char *)extra + 0xc, (char *)extra + 0x32c, (char *)extra + 0x64c,
-                        (char *)extra + 0x96c);
-                ((Dim2PathGeneratorState *)extra)->flags |= 2;
-                ((Dim2PathGeneratorState *)extra)->originX = *(f32 *)((char *)cv + 8);
-                ((Dim2PathGeneratorState *)extra)->originY = *(f32 *)((char *)cv + 0xc);
-                ((Dim2PathGeneratorState *)extra)->originZ = *(f32 *)((char *)cv + 0x10);
+                ((Dim2PathGeneratorState*)extra)->curveValid =
+                    ((int (*)(int*, void*, void*, void*, void*))(*gRomCurveInterface)->slot78)(
+                        cv, (char*)extra + 0xc, (char*)extra + 0x32c, (char*)extra + 0x64c,
+                        (char*)extra + 0x96c);
+                ((Dim2PathGeneratorState*)extra)->flags |= 2;
+                ((Dim2PathGeneratorState*)extra)->originX = *(f32*)((char*)cv + 8);
+                ((Dim2PathGeneratorState*)extra)->originY = *(f32*)((char*)cv + 0xc);
+                ((Dim2PathGeneratorState*)extra)->originZ = *(f32*)((char*)cv + 0x10);
             }
         }
-    } else {
-        ((Dim2PathGeneratorState *)extra)->originX = ((GameObject *)obj)->anim.localPosX;
-        ((Dim2PathGeneratorState *)extra)->originY = ((GameObject *)obj)->anim.localPosY;
-        ((Dim2PathGeneratorState *)extra)->originZ = ((GameObject *)obj)->anim.localPosZ;
+    }
+    else
+    {
+        ((Dim2PathGeneratorState*)extra)->originX = ((GameObject*)obj)->anim.localPosX;
+        ((Dim2PathGeneratorState*)extra)->originY = ((GameObject*)obj)->anim.localPosY;
+        ((Dim2PathGeneratorState*)extra)->originZ = ((GameObject*)obj)->anim.localPosZ;
     }
     {
-        s16 t = ((Dim2PathGeneratorState *)extra)->spawnTimer - framesThisStep;
-        ((Dim2PathGeneratorState *)extra)->spawnTimer = t;
-        if (t > 0) {
+        s16 t = ((Dim2PathGeneratorState*)extra)->spawnTimer - framesThisStep;
+        ((Dim2PathGeneratorState*)extra)->spawnTimer = t;
+        if (t > 0)
+        {
             return;
         }
     }
-    toggle = ((Dim2PathGeneratorState *)extra)->flags & 1;
-    ((Dim2PathGeneratorState *)extra)->spawnTimer = ((Dim2PathGeneratorState *)extra)->spawnPeriod;
-    ((Dim2PathGeneratorState *)extra)->flags &= ~1;
+    toggle = ((Dim2PathGeneratorState*)extra)->flags & 1;
+    ((Dim2PathGeneratorState*)extra)->spawnTimer = ((Dim2PathGeneratorState*)extra)->spawnPeriod;
+    ((Dim2PathGeneratorState*)extra)->flags &= ~1;
     objs = ObjGroup_GetObjects(47, &count);
-    for (i = 0; i < count; i++) {
-        if (((Dim2PathGeneratorState *)extra)->spawnTypes[toggle] == *(s16 *)((char *)objs[i] + 0x46)) {
-            int *p = *(int **)((char *)objs[i] + 0x4c);
+    for (i = 0; i < count; i++)
+    {
+        if (((Dim2PathGeneratorState*)extra)->spawnTypes[toggle] == *(s16*)((char*)objs[i] + 0x46))
+        {
+            int* p = *(int**)((char*)objs[i] + 0x4c);
             int c2;
             int j;
-            int **o2;
-            *(f32 *)((char *)p + 8) = ((Dim2PathGeneratorState *)extra)->originX;
-            *(f32 *)((char *)p + 0xc) = ((Dim2PathGeneratorState *)extra)->originY;
-            *(f32 *)((char *)p + 0x10) = ((Dim2PathGeneratorState *)extra)->originZ;
-            *(int *)((char *)p + 0x14) = ((Dim2pathgeneratorPlacement *)def)->unk14;
-            (*(void (**)(int *, int))(**(int **)((char *)objs[i] + 0x68) + 4))(objs[i], 1);
+            int** o2;
+            *(f32*)((char*)p + 8) = ((Dim2PathGeneratorState*)extra)->originX;
+            *(f32*)((char*)p + 0xc) = ((Dim2PathGeneratorState*)extra)->originY;
+            *(f32*)((char*)p + 0x10) = ((Dim2PathGeneratorState*)extra)->originZ;
+            *(int*)((char*)p + 0x14) = ((Dim2pathgeneratorPlacement*)def)->unk14;
+            (*(void (**)(int*, int))(**(int**)((char*)objs[i] + 0x68) + 4))(objs[i], 1);
             ObjGroup_RemoveObject(objs[i], 47);
             o2 = ObjGroup_GetObjects(47, &c2);
-            for (j = 0; j < c2; j++) {
+            for (j = 0; j < c2; j++)
+            {
             }
-            ((Dim2PathGeneratorState *)extra)->flags |= (toggle ^ 1) & 1;
+            ((Dim2PathGeneratorState*)extra)->flags |= (toggle ^ 1) & 1;
             return;
         }
     }
-    if (Obj_IsLoadingLocked()) {
-        int *np = (int *)Obj_AllocObjectSetup(36, ((Dim2PathGeneratorState *)extra)->spawnTypes[toggle]);
-        *(f32 *)((char *)np + 8) = ((Dim2PathGeneratorState *)extra)->originX;
-        *(f32 *)((char *)np + 0xc) = ((Dim2PathGeneratorState *)extra)->originY;
-        *(f32 *)&((ObjDef *)np)->jointData = ((Dim2PathGeneratorState *)extra)->originZ;
-        *(u8 *)((char *)np + 4) = ((Dim2pathgeneratorPlacement *)def)->unk4;
-        *(u8 *)((char *)np + 6) = ((Dim2pathgeneratorPlacement *)def)->unk6;
-        *(u8 *)((char *)np + 5) = ((Dim2pathgeneratorPlacement *)def)->unk5;
-        *(u8 *)((char *)np + 7) = ((Dim2pathgeneratorPlacement *)def)->unk7;
-        *(u8 *)((char *)np + 7) = 255;
-        *(u8 *)((char *)np + 3) = ((Dim2pathgeneratorPlacement *)def)->unk3;
-        *(s8 *)((char *)np + 0x18) = (s8)*(u8 *)((char *)def + 0x1c);
-        *(s16 *)((char *)np + 0x1a) = *(u8 *)((char *)def + 0x1a);
-        *(s16 *)((char *)np + 0x1c) = *(u8 *)((char *)def + 0x1b);
-        *(int *)((char *)np + 0x14) = ((Dim2pathgeneratorPlacement *)def)->unk14;
-        Obj_SetupObject((int)np, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, 0);
-        ((Dim2PathGeneratorState *)extra)->flags |= (toggle ^ 1) & 1;
+    if (Obj_IsLoadingLocked())
+    {
+        int* np = (int*)Obj_AllocObjectSetup(36, ((Dim2PathGeneratorState*)extra)->spawnTypes[toggle]);
+        *(f32*)((char*)np + 8) = ((Dim2PathGeneratorState*)extra)->originX;
+        *(f32*)((char*)np + 0xc) = ((Dim2PathGeneratorState*)extra)->originY;
+        *(f32*)&((ObjDef*)np)->jointData = ((Dim2PathGeneratorState*)extra)->originZ;
+        *(u8*)((char*)np + 4) = ((Dim2pathgeneratorPlacement*)def)->unk4;
+        *(u8*)((char*)np + 6) = ((Dim2pathgeneratorPlacement*)def)->unk6;
+        *(u8*)((char*)np + 5) = ((Dim2pathgeneratorPlacement*)def)->unk5;
+        *(u8*)((char*)np + 7) = ((Dim2pathgeneratorPlacement*)def)->unk7;
+        *(u8*)((char*)np + 7) = 255;
+        *(u8*)((char*)np + 3) = ((Dim2pathgeneratorPlacement*)def)->unk3;
+        *(s8*)((char*)np + 0x18) = (s8) * (u8*)((char*)def + 0x1c);
+        *(s16*)((char*)np + 0x1a) = *(u8*)((char*)def + 0x1a);
+        *(s16*)((char*)np + 0x1c) = *(u8*)((char*)def + 0x1b);
+        *(int*)((char*)np + 0x14) = ((Dim2pathgeneratorPlacement*)def)->unk14;
+        Obj_SetupObject((int)np, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
+        ((Dim2PathGeneratorState*)extra)->flags |= (toggle ^ 1) & 1;
     }
 }
 
-extern int *objFindTexture(int *obj, int a, int b);
-extern void mtxRotateByVec3s(f32 *mtx, s16 *ang);
-extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+extern int* objFindTexture(int* obj, int a, int b);
+extern void mtxRotateByVec3s(f32 * mtx, s16 * ang);
+extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 lbl_803E4A7C;
 extern f32 lbl_803E4A80;
 extern f32 lbl_803E4A84;
 extern f32 lbl_803E4A8C;
 extern f32 lbl_803E4A90;
 
-void dll_1D6_update(int *obj)
+void dll_1D6_update(int* obj)
 {
-    Dll1D6State *extra;
-    int *def;
-    int *model;
-    int *tex;
-    int *player;
+    Dll1D6State* extra;
+    int* def;
+    int* model;
+    int* tex;
+    int* player;
     f32 mtx[20];
     s16 ang[6];
     f32 lx, ly, lz;
 
-    def = *(int **)&((GameObject *)obj)->anim.placementData;
-    extra = ((GameObject *)obj)->extra;
+    def = *(int**)&((GameObject*)obj)->anim.placementData;
+    extra = ((GameObject*)obj)->extra;
 
-    if ((extra->flags1D & 1) != 0) {
-        if ((extra->flags1D & 4) == 0) {
+    if ((extra->flags1D & 1) != 0)
+    {
+        if ((extra->flags1D & 4) == 0)
+        {
             extra->flags1D |= 4;
-            extra->bobPhase = (f32)(int)randomGetRange(20, 40);
-            extra->bobRate = (f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
+            extra->bobPhase = (f32)(int)
+            randomGetRange(20, 40);
+            extra->bobRate = (f32)(int)
+            randomGetRange(6, 10) / lbl_803E4A7C;
         }
         extra->downTimer -= framesThisStep;
         extra->dizzyTimer = extra->dizzyTimer - framesThisStep;
-        if (extra->dizzyTimer <= 0) {
+        if (extra->dizzyTimer <= 0)
+        {
             Sfx_PlayFromObject((int)obj, SFXmv_mushdizzylp12);
         }
-        if (extra->downTimer <= 0) {
+        if (extra->downTimer <= 0)
+        {
             model = DIM2snowball_GetActiveModel(obj);
             ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A80, 16);
-            extra->upTimer = ((Dll1D6Placement *)def)->upTimer;
-            if (extra->upTimer < 15) {
+            extra->upTimer = ((Dll1D6Placement*)def)->upTimer;
+            if (extra->upTimer < 15)
+            {
                 extra->upTimer = 15;
             }
             extra->flags1D &= ~1;
             Sfx_PlayFromObject((int)obj, SFXfoot_metal_land);
         }
-    } else {
+    }
+    else
+    {
         model = DIM2snowball_GetActiveModel(obj);
-        if (*(int *)((char *)model + 0x28) != 0 && (extra->flags1D & 4) != 0) {
-            if (*(f32 *)*(int **)((char *)model + 0x28) >= lbl_803E4A78) {
+        if (*(int*)((char*)model + 0x28) != 0 && (extra->flags1D & 4) != 0)
+        {
+            if (*(f32*)*(int**)((char*)model + 0x28) >= lbl_803E4A78)
+            {
                 extra->flags1D &= ~4;
             }
         }
         extra->upTimer -= framesThisStep;
-        if (extra->upTimer <= 0) {
+        if (extra->upTimer <= 0)
+        {
             ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A84, 16);
-            extra->downTimer = ((Dll1D6Placement *)def)->downTimer;
-            if (extra->downTimer < 15) {
+            extra->downTimer = ((Dll1D6Placement*)def)->downTimer;
+            if (extra->downTimer < 15)
+            {
                 extra->downTimer = 15;
             }
             extra->flags1D |= 1;
@@ -1148,79 +1401,95 @@ void dll_1D6_update(int *obj)
     }
     tex = objFindTexture(obj, 0, 0);
     {
-        s16 v = -*(s16 *)((char *)tex + 0xa) + 256;
-        if (v > 2048) {
+        s16 v = -*(s16*)((char*)tex + 0xa) + 256;
+        if (v > 2048)
+        {
             v = v - 2048;
         }
-        *(s16 *)((char *)tex + 0xa) = -v;
+        *(s16*)((char*)tex + 0xa) = -v;
     }
     tex = objFindTexture(obj, 1, 0);
     {
-        s16 v = -*(s16 *)((char *)tex + 0xa) + 160;
-        if (v > 2048) {
+        s16 v = -*(s16*)((char*)tex + 0xa) + 160;
+        if (v > 2048)
+        {
             v = v - 2048;
         }
-        *(s16 *)((char *)tex + 0xa) = -v;
+        *(s16*)((char*)tex + 0xa) = -v;
     }
-    player = (int *)Obj_GetPlayerObject();
-    mtx[0] = -((GameObject *)obj)->anim.localPosX;
-    mtx[1] = -((GameObject *)obj)->anim.localPosY;
-    mtx[2] = -((GameObject *)obj)->anim.localPosZ;
-    ang[0] = -*(s16 *)obj;
+    player = (int*)Obj_GetPlayerObject();
+    mtx[0] = -((GameObject*)obj)->anim.localPosX;
+    mtx[1] = -((GameObject*)obj)->anim.localPosY;
+    mtx[2] = -((GameObject*)obj)->anim.localPosZ;
+    ang[0] = -*(s16*)obj;
     ang[1] = 0;
     ang[2] = 0;
     mtxRotateByVec3s(&mtx[3], ang);
-    Matrix_TransformPoint(&mtx[3], ((GameObject *)player)->anim.localPosX, ((GameObject *)player)->anim.localPosY,
-                          ((GameObject *)player)->anim.localPosZ, &lx, &ly, &lz);
-    if ((extra->flags1D & 2) != 0) {
-        ly = ((GameObject *)obj)->anim.localPosY - ((GameObject *)player)->anim.localPosY;
-        if (ly < lbl_803E4A88) {
+    Matrix_TransformPoint(&mtx[3], ((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosY,
+                          ((GameObject*)player)->anim.localPosZ, &lx, &ly, &lz);
+    if ((extra->flags1D & 2) != 0)
+    {
+        ly = ((GameObject*)obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
+        if (ly < lbl_803E4A88)
+        {
             ly = -ly;
         }
-        if (ly < lbl_803E4A8C) {
+        if (ly < lbl_803E4A8C)
+        {
             lz = lz * lz;
-            if (lz <= extra->hitRangeSqA) {
-                int *row;
+            if (lz <= extra->hitRangeSqA)
+            {
+                int* row;
                 f32 lim;
                 model = DIM2snowball_GetActiveModel(obj);
-                row = *(int **)((char *)model + ((*(u16 *)((char *)model + 0x18) >> 1) & 1) * 4 + 4);
-                lim = ((GameObject *)obj)->anim.rootMotionScale *
-                      (f32)(int)*(s16 *)((char *)row + extra->hitRow * 16);
-                if (lx <= lim) {
+                row = *(int**)((char*)model + ((*(u16*)((char*)model + 0x18) >> 1) & 1) * 4 + 4);
+                lim = ((GameObject*)obj)->anim.rootMotionScale *
+                    (f32)(int) * (s16*)((char*)row + extra->hitRow * 16);
+                if (lx <= lim)
+                {
                     ObjHits_RecordObjectHit(player, obj, 11, 4, 0);
                 }
             }
         }
     }
-    if ((extra->flags1D & 4) != 0) {
+    if ((extra->flags1D & 4) != 0)
+    {
         extra->bobPhase =
             extra->bobRate * timeDelta + extra->bobPhase;
-        if (extra->bobPhase > lbl_803E4A90) {
-            extra->bobRate = -(f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
+        if (extra->bobPhase > lbl_803E4A90)
+        {
+            extra->bobRate = -(f32)(int)
+            randomGetRange(6, 10) / lbl_803E4A7C;
             extra->bobPhase = lbl_803E4A90;
-        } else if (extra->bobPhase < lbl_803E4A7C) {
-            extra->bobRate = (f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
+        }
+        else if (extra->bobPhase < lbl_803E4A7C)
+        {
+            extra->bobRate = (f32)(int)
+            randomGetRange(6, 10) / lbl_803E4A7C;
             extra->bobPhase = lbl_803E4A7C;
         }
     }
-    if (GameBit_Get(496) != 0) {
+    if (GameBit_Get(496) != 0)
+    {
         extra->flags1D |= 2;
-    } else {
+    }
+    else
+    {
         extra->flags1D &= ~2;
     }
 }
 
-extern int Curve_AdvanceAlongPath(int *extra, f32 t);
+extern int Curve_AdvanceAlongPath(int* extra, f32 t);
 extern void Curve_BuildHermiteCoeffs(void);
 extern void Curve_EvalHermite(void);
-extern void curvesMove(int *extra);
-extern int **ObjList_GetObjects(int *startOut, int *countOut);
-extern void objMove(int *obj, f32 dx, f32 dy, f32 dz);
-extern int objBboxFn_800640cc(void *a, void *b, f32 c, int d, int e, int *f, int g, int h, int i, int j);
+extern void curvesMove(int* extra);
+extern int** ObjList_GetObjects(int* startOut, int* countOut);
+extern void objMove(int* obj, f32 dx, f32 dy, f32 dz);
+extern int objBboxFn_800640cc(void* a, void* b, f32 c, int d, int e, int* f, int g, int h, int i, int j);
 extern int getAngle(f32 a, f32 b);
-extern int hitDetectFn_80065e50(int *obj, f32 x, f32 y, f32 z, int ***listOut, int p3, int p4);
-extern void Sfx_KeepAliveLoopedObjectSound(int *obj, int sfx);
-extern void Obj_FreeObject(int *obj);
+extern int hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, int*** listOut, int p3, int p4);
+extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int sfx);
+extern void Obj_FreeObject(int* obj);
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803E4AA4;
 extern f32 lbl_803E4AA8;
@@ -1233,149 +1502,176 @@ extern f32 lbl_803E4AC0;
 extern f64 lbl_803E4AC8;
 extern f32 lbl_803E4AD0;
 
-void dim2snowball_update(int *obj)
+void dim2snowball_update(int* obj)
 {
-    int *extra = ((GameObject *)obj)->extra;
-    int **p;
-    int **results;
+    int* extra = ((GameObject*)obj)->extra;
+    int** p;
+    int** results;
     int count;
     int start;
     f32 evt[6];
     f32 k;
 
-    if ((((Dim2SnowballState *)extra)->flagsAC & 4) != 0) {
-        int v = ((GameObject *)obj)->anim.alpha + framesThisStep * 2;
-        if (v > 255) {
+    if ((((Dim2SnowballState*)extra)->flagsAC & 4) != 0)
+    {
+        int v = ((GameObject*)obj)->anim.alpha + framesThisStep * 2;
+        if (v > 255)
+        {
             v = 255;
-            ((Dim2SnowballState *)extra)->flagsAC &= ~4;
+            ((Dim2SnowballState*)extra)->flagsAC &= ~4;
         }
-        ((GameObject *)obj)->anim.alpha = v;
-    } else if ((((Dim2SnowballState *)extra)->flagsAC & 8) != 0) {
-        int v = ((GameObject *)obj)->anim.alpha - framesThisStep * 2;
-        if (v < 0) {
+        ((GameObject*)obj)->anim.alpha = v;
+    }
+    else if ((((Dim2SnowballState*)extra)->flagsAC & 8) != 0)
+    {
+        int v = ((GameObject*)obj)->anim.alpha - framesThisStep * 2;
+        if (v < 0)
+        {
             v = 0;
-            ((Dim2SnowballState *)extra)->flagsAC &= ~8;
+            ((Dim2SnowballState*)extra)->flagsAC &= ~8;
         }
-        ((GameObject *)obj)->anim.alpha = v;
+        ((GameObject*)obj)->anim.alpha = v;
     }
 
-    if ((((Dim2SnowballState *)extra)->flagsAC & 1) == 0) {
-        int *cobj = ((Dim2SnowballState *)extra)->targetObj;
-        ((Dim2SnowballState *)extra)->curveResult =
-            (*(int (**)(int *, void *, void *, void *, void *))(**(int **)((char *)cobj + 0x68) + 0x20))(
-                cobj, (char *)extra + 0x84, (char *)extra + 0x88, (char *)extra + 0x8c, (char *)extra + 0xa8);
-        ((Dim2SnowballState *)extra)->curveMode = 0;
-        ((Dim2SnowballState *)extra)->evalFn = (int)Curve_EvalHermite;
-        ((Dim2SnowballState *)extra)->coeffsFn = (int)Curve_BuildHermiteCoeffs;
+    if ((((Dim2SnowballState*)extra)->flagsAC & 1) == 0)
+    {
+        int* cobj = ((Dim2SnowballState*)extra)->targetObj;
+        ((Dim2SnowballState*)extra)->curveResult =
+            (*(int (**)(int*, void*, void*, void*, void*))(**(int**)((char*)cobj + 0x68) + 0x20))(
+                cobj, (char*)extra + 0x84, (char*)extra + 0x88, (char*)extra + 0x8c, (char*)extra + 0xa8);
+        ((Dim2SnowballState*)extra)->curveMode = 0;
+        ((Dim2SnowballState*)extra)->evalFn = (int)Curve_EvalHermite;
+        ((Dim2SnowballState*)extra)->coeffsFn = (int)Curve_BuildHermiteCoeffs;
         curvesMove(extra);
-        ((Dim2SnowballState *)extra)->flagsAC |= 1;
+        ((Dim2SnowballState*)extra)->flagsAC |= 1;
     }
 
-    if ((((Dim2SnowballState *)extra)->flagsAC & 2) != 0) {
-        if (((GameObject *)obj)->anim.localPosY < ((Dim2SnowballState *)extra)->floorY) {
-            ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (k = lbl_803E4AA4);
-            ((GameObject *)obj)->anim.velocityY = lbl_803E4AA8;
-            ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * k;
-            if ((((Dim2SnowballState *)extra)->flagsAC & 0x10) == 0) {
-                int **list;
-                int *hit;
-                ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (k = lbl_803E4AAC);
-                ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * k;
-                ((Dim2SnowballState *)extra)->flagsAC |= 0x18;
+    if ((((Dim2SnowballState*)extra)->flagsAC & 2) != 0)
+    {
+        if (((GameObject*)obj)->anim.localPosY < ((Dim2SnowballState*)extra)->floorY)
+        {
+            ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (k = lbl_803E4AA4);
+            ((GameObject*)obj)->anim.velocityY = lbl_803E4AA8;
+            ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * k;
+            if ((((Dim2SnowballState*)extra)->flagsAC & 0x10) == 0)
+            {
+                int** list;
+                int* hit;
+                ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (k = lbl_803E4AAC);
+                ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * k;
+                ((Dim2SnowballState*)extra)->flagsAC |= 0x18;
                 list = ObjList_GetObjects(&start, &count);
-                for (p = &list[start]; start < count; start++) {
-                    if (*(s16 *)((char *)*p + 0x46) == 214) {
+                for (p = &list[start]; start < count; start++)
+                {
+                    if (*(s16*)((char*)*p + 0x46) == 214)
+                    {
                         hit = list[start];
                         goto checkHit;
                     }
                     p++;
                 }
                 hit = NULL;
-checkHit:
-                if (hit != NULL) {
-                    (*(void (**)(int *))(**(int **)&((GameObject *)hit)->anim.dll + 0x20))(hit);
+            checkHit:
+                if (hit != NULL)
+                {
+                    (*(void (**)(int*))(**(int**)&((GameObject*)hit)->anim.dll + 0x20))(hit);
                 }
                 Sfx_PlayFromObject((int)obj, SFXfoot_run_jingle1);
             }
-            evt[3] = ((GameObject *)obj)->anim.localPosX;
-            evt[4] = ((GameObject *)obj)->anim.localPosY;
-            evt[5] = ((GameObject *)obj)->anim.localPosZ;
+            evt[3] = ((GameObject*)obj)->anim.localPosX;
+            evt[4] = ((GameObject*)obj)->anim.localPosY;
+            evt[5] = ((GameObject*)obj)->anim.localPosZ;
             (*gPartfxInterface)->spawnObject(obj, 518, evt, 4, -1, NULL);
-            if (((GameObject *)obj)->anim.alpha == 0) {
+            if (((GameObject*)obj)->anim.alpha == 0)
+            {
                 Obj_FreeObject(obj);
                 return;
             }
-            objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta,
-                    ((GameObject *)obj)->anim.velocityY * timeDelta,
-                    ((GameObject *)obj)->anim.velocityZ * timeDelta);
-        } else {
+            objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
+                    ((GameObject*)obj)->anim.velocityY * timeDelta,
+                    ((GameObject*)obj)->anim.velocityZ * timeDelta);
+        }
+        else
+        {
             int bbox;
-            ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (k = lbl_803E4AB0);
-            ((GameObject *)obj)->anim.velocityY =
-                ((GameObject *)obj)->anim.velocityY - lbl_803E4AB4 * timeDelta;
-            ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * k;
-            objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta,
-                    ((GameObject *)obj)->anim.velocityY * timeDelta,
-                    ((GameObject *)obj)->anim.velocityZ * timeDelta);
-            bbox = objBboxFn_800640cc((char *)obj + 0x80, (char *)obj + 0xc, lbl_803E4AB8, 0, 0,
+            ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (k = lbl_803E4AB0);
+            ((GameObject*)obj)->anim.velocityY =
+                ((GameObject*)obj)->anim.velocityY - lbl_803E4AB4 * timeDelta;
+            ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * k;
+            objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
+                    ((GameObject*)obj)->anim.velocityY * timeDelta,
+                    ((GameObject*)obj)->anim.velocityZ * timeDelta);
+            bbox = objBboxFn_800640cc((char*)obj + 0x80, (char*)obj + 0xc, lbl_803E4AB8, 0, 0,
                                       obj, 8, -1, 0, 0);
-            if (bbox != 0) {
-                ((GameObject *)obj)->anim.velocityX = -((GameObject *)obj)->anim.velocityX;
-                ((GameObject *)obj)->anim.velocityZ = -((GameObject *)obj)->anim.velocityZ;
-                ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (k = lbl_803E4ABC);
-                ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * k;
+            if (bbox != 0)
+            {
+                ((GameObject*)obj)->anim.velocityX = -((GameObject*)obj)->anim.velocityX;
+                ((GameObject*)obj)->anim.velocityZ = -((GameObject*)obj)->anim.velocityZ;
+                ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (k = lbl_803E4ABC);
+                ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * k;
             }
         }
-    } else {
+    }
+    else
+    {
         int done = Curve_AdvanceAlongPath(extra, lbl_803E4AC0);
-        ((GameObject *)obj)->anim.localPosX = ((Dim2SnowballState *)extra)->curveX;
-        ((GameObject *)obj)->anim.localPosY = (f32)(lbl_803E4AC8 + ((Dim2SnowballState *)extra)->curveY);
-        ((GameObject *)obj)->anim.localPosZ = ((Dim2SnowballState *)extra)->curveZ;
-        *(s16 *)obj = getAngle(((Dim2SnowballState *)extra)->dirX, ((Dim2SnowballState *)extra)->dirZ);
-        ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + framesThisStep * 800;
-        ((GameObject *)obj)->anim.velocityX =
-            oneOverTimeDelta * (((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX);
-        ((GameObject *)obj)->anim.velocityY = lbl_803E4AD0;
-        ((GameObject *)obj)->anim.velocityZ =
-            oneOverTimeDelta * (((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ);
-        if (done != 0) {
+        ((GameObject*)obj)->anim.localPosX = ((Dim2SnowballState*)extra)->curveX;
+        ((GameObject*)obj)->anim.localPosY = (f32)(lbl_803E4AC8 + ((Dim2SnowballState*)extra)->curveY);
+        ((GameObject*)obj)->anim.localPosZ = ((Dim2SnowballState*)extra)->curveZ;
+        *(s16*)obj = getAngle(((Dim2SnowballState*)extra)->dirX, ((Dim2SnowballState*)extra)->dirZ);
+        ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + framesThisStep * 800;
+        ((GameObject*)obj)->anim.velocityX =
+            oneOverTimeDelta * (((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX);
+        ((GameObject*)obj)->anim.velocityY = lbl_803E4AD0;
+        ((GameObject*)obj)->anim.velocityZ =
+            oneOverTimeDelta * (((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ);
+        if (done != 0)
+        {
             Obj_FreeObject(obj);
             return;
         }
-        if (*(u8 *)((char *)*(int **)&((Dim2SnowballState *)extra)->curveData + (((Dim2SnowballState *)extra)->curveCursor >> 2)) == 32) {
-            if (GameBit_Get(648) != 0) {
+        if (*(u8*)((char*)*(int**)&((Dim2SnowballState*)extra)->curveData + (((Dim2SnowballState*)extra)->curveCursor >>
+            2)) == 32)
+        {
+            if (GameBit_Get(648) != 0)
+            {
                 int n;
-                ((Dim2SnowballState *)extra)->flagsAC |= 2;
-                n = hitDetectFn_80065e50(obj, ((GameObject *)obj)->anim.localPosX,
-                                         ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ,
+                ((Dim2SnowballState*)extra)->flagsAC |= 2;
+                n = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX,
+                                         ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
                                          &results, 0, 0);
-                ((Dim2SnowballState *)extra)->floorY = ((GameObject *)obj)->anim.localPosY;
-                while (n > 0) {
-                    int *r;
+                ((Dim2SnowballState*)extra)->floorY = ((GameObject*)obj)->anim.localPosY;
+                while (n > 0)
+                {
+                    int* r;
                     n--;
                     r = results[n];
-                    if (*(f32 *)r < ((GameObject *)obj)->anim.localPosY) {
-                        s8 t = *(s8 *)((char *)r + 0x14);
-                        if (t == 26 || t == 8) {
-                            ((Dim2SnowballState *)extra)->floorY = *(f32 *)r;
+                    if (*(f32*)r < ((GameObject*)obj)->anim.localPosY)
+                    {
+                        s8 t = *(s8*)((char*)r + 0x14);
+                        if (t == 26 || t == 8)
+                        {
+                            ((Dim2SnowballState*)extra)->floorY = *(f32*)r;
                             n = 0;
                         }
                     }
                 }
-                ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (k = lbl_803E4ABC);
-                ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * k;
+                ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (k = lbl_803E4ABC);
+                ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * k;
             }
         }
     }
 
-    if (((GameObject *)obj)->anim.alpha == 255) {
-        int *m = *(int **)&((GameObject *)obj)->anim.hitReactState;
-        if (m != NULL) {
-            ((ObjHitsPriorityState *)m)->flags |= 1;
-            *(u8 *)&((ObjHitsPriorityState *)m)->hitVolumePriority = 4;
-            *(u8 *)&((ObjHitsPriorityState *)m)->hitVolumeId = 2;
-            *(int *)&((ObjHitsPriorityState *)m)->objectHitMask = 16;
-            *(int *)&((ObjHitsPriorityState *)m)->skeletonHitMask = 16;
+    if (((GameObject*)obj)->anim.alpha == 255)
+    {
+        int* m = *(int**)&((GameObject*)obj)->anim.hitReactState;
+        if (m != NULL)
+        {
+            ((ObjHitsPriorityState*)m)->flags |= 1;
+            *(u8*)&((ObjHitsPriorityState*)m)->hitVolumePriority = 4;
+            *(u8*)&((ObjHitsPriorityState*)m)->hitVolumeId = 2;
+            *(int*)&((ObjHitsPriorityState*)m)->objectHitMask = 16;
+            *(int*)&((ObjHitsPriorityState*)m)->skeletonHitMask = 16;
         }
     }
     Sfx_KeepAliveLoopedObjectSound(obj, 1171);

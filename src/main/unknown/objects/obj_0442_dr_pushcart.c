@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0442_DR_PushCart_packet_info {
+enum obj_0442_DR_PushCart_packet_info
+{
     DR_PUSHCART_DEF_ID = 0x0442,
     DR_PUSHCART_DLL_ID = 0x0271,
     DR_PUSHCART_CLASS_ID = 0x0030,

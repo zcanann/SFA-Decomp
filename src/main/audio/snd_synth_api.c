@@ -11,12 +11,12 @@ extern int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u8 studioAux);
 extern void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle);
 extern int vidGetInternalId(u32 id);
 extern void synthRefreshJobVolumes(void);
-extern void hwAddInput(u8 idx, void *input);
-extern void hwRemoveInput(u8 idx, void *input);
+extern void hwAddInput(u8 idx, void* input);
+extern void hwRemoveInput(u8 idx, void* input);
 extern void hwActivateStudio(u8 slot, int a, int b);
 extern void hwDeactivateStudio(u8 slot);
-extern void hwSetAUXProcessingCallbacks(u32 studio, void *auxACallback, void *auxAUser,
-                                        void *auxBCallback, void *auxBUser);
+extern void hwSetAUXProcessingCallbacks(u32 studio, void* auxACallback, void* auxAUser,
+                                        void* auxBCallback, void* auxBUser);
 extern u32 hwIsActive(u32 slot);
 extern void hwOff(u32 slot);
 extern void hwDisableHRTF(void);
@@ -25,17 +25,17 @@ extern void voiceKillById(u32 value);
 
 extern u8 lbl_803BCC90[];
 extern u8 lbl_803BD150[];
-extern void *lbl_803BD9A4[8];
-extern void *lbl_803BD9C4[8];
-extern void *lbl_803BD9E4[8];
-extern void *lbl_803BDA04[8];
+extern void* lbl_803BD9A4[8];
+extern void* lbl_803BD9C4[8];
+extern void* lbl_803BD9E4[8];
+extern void* lbl_803BDA04[8];
 extern u8 lbl_803BDA24[8][2];
 extern u8 synthAuxBMIDI[8];
 extern u8 synthAuxBIndex[8];
 extern u8 synthAuxAMIDI[8];
 extern u8 synthAuxAIndex[8];
 extern u32 synthFlags;
-extern u8 *synthVoice;
+extern u8* synthVoice;
 
 #define SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET 0x210
 #define SYNTH_VOICE_STRIDE 0x404
@@ -61,7 +61,7 @@ void sndSeqVolume(int seqId, int volume, int time, int mode)
  */
 u16 seqGetMIDIPriority(u8 slot, u8 event)
 {
-    return *(u16 *)(lbl_803BCC90 + slot * 32 + event * 2);
+    return *(u16*)(lbl_803BCC90 + slot * 32 + event * 2);
 }
 
 /*
@@ -133,7 +133,8 @@ int sndFXCheck(u32 id)
 {
     u32 slot;
     slot = vidGetInternalId(id);
-    if (slot != 0xffffffff) {
+    if (slot != 0xffffffff)
+    {
         return (int)id;
     }
     return -1;
@@ -160,10 +161,12 @@ void sndVolume(u8 volume, u16 time, u8 group)
 void sndMasterVolume(u8 volume, u16 time, u8 musicFlag, u8 fxFlag)
 {
     sndBegin();
-    if (musicFlag != 0) {
+    if (musicFlag != 0)
+    {
         synthVolume(volume, time, 0x15, 0, -1);
     }
-    if (fxFlag != 0) {
+    if (fxFlag != 0)
+    {
         synthVolume(volume, time, 0x16, 0, -1);
     }
     sndEnd();
@@ -178,7 +181,8 @@ void sndMasterVolume(u8 volume, u16 time, u8 musicFlag, u8 fxFlag)
 void sndOutputMode(int mode)
 {
     u32 oldFlags = synthFlags;
-    switch (mode) {
+    switch (mode)
+    {
     case 0:
         synthFlags = synthFlags | 0x1;
         synthFlags = synthFlags & ~0x2;
@@ -195,10 +199,12 @@ void sndOutputMode(int mode)
         hwDisableHRTF();
         break;
     }
-    if (oldFlags != synthFlags) {
+    if (oldFlags != synthFlags)
+    {
         u32 i;
-        for (i = 0; i < lbl_803BD150[SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET]; ++i) {
-            *(u64 *)(synthVoice + i * SYNTH_VOICE_STRIDE + SYNTH_VOICE_DIRTY_FLAGS_OFFSET) |= 0x0000200000000000ULL;
+        for (i = 0; i < lbl_803BD150[SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET]; ++i)
+        {
+            *(u64*)(synthVoice + i * SYNTH_VOICE_STRIDE + SYNTH_VOICE_DIRTY_FLAGS_OFFSET) |= 0x0000200000000000ULL;
         }
         synthRefreshJobVolumes();
     }
@@ -210,30 +216,38 @@ void sndOutputMode(int mode)
  *
  * EN v1.1 Address: 0x80272B5C, size 360b
  */
-void sndSetAuxProcessingCallbacks(u32 studio, void *auxACallback, void *auxAUser, u8 auxAIndex,
-                                  void *auxAData, void *auxBCallback, void *auxBUser,
-                                  u8 auxBIndex, void *auxBData)
+void sndSetAuxProcessingCallbacks(u32 studio, void* auxACallback, void* auxAUser, u8 auxAIndex,
+                                  void* auxAData, void* auxBCallback, void* auxBUser,
+                                  u8 auxBIndex, void* auxBData)
 {
     sndBegin();
-    if (auxACallback != 0) {
+    if (auxACallback != 0)
+    {
         synthAuxAIndex[studio & 0xff] = auxAIndex;
-        if (auxAIndex != 0xff) {
+        if (auxAIndex != 0xff)
+        {
             synthAuxAMIDI[studio & 0xff] = synthResolveHandle((u32)auxAData);
             lbl_803BD9C4[studio & 0xff] = auxACallback;
             lbl_803BD9A4[studio & 0xff] = auxAUser;
         }
-    } else {
+    }
+    else
+    {
         lbl_803BD9C4[studio & 0xff] = 0;
         synthAuxAIndex[studio & 0xff] = 0xff;
     }
-    if (auxBCallback != 0) {
+    if (auxBCallback != 0)
+    {
         synthAuxBIndex[studio & 0xff] = auxBIndex;
-        if (auxBIndex != 0xff) {
+        if (auxBIndex != 0xff)
+        {
             synthAuxBMIDI[studio & 0xff] = synthResolveHandle((u32)auxBData);
             lbl_803BDA04[studio & 0xff] = auxBCallback;
             lbl_803BD9E4[studio & 0xff] = auxBUser;
         }
-    } else {
+    }
+    else
+    {
         lbl_803BDA04[studio & 0xff] = 0;
         synthAuxBIndex[studio & 0xff] = 0xff;
     }
@@ -270,17 +284,23 @@ void synthDeactivateStudio(u8 slot)
 {
     u32 offset;
     u32 i;
-    u8 *voice;
+    u8* voice;
 
     i = 0;
     offset = 0;
-    for (; i < lbl_803BD150[SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET]; i++) {
+    for (; i < lbl_803BD150[SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET]; i++)
+    {
         voice = synthVoice + offset;
-        if (slot == ((McmdVoiceState *)voice)->studio) {
-            if (((McmdVoiceState *)voice)->voiceHandle != 0xffffffff) {
-                voiceKillById(((McmdVoiceState *)voice)->vidListNode->id);
-            } else {
-                if (hwIsActive(i) != 0) {
+        if (slot == ((McmdVoiceState*)voice)->studio)
+        {
+            if (((McmdVoiceState*)voice)->voiceHandle != 0xffffffff)
+            {
+                voiceKillById(((McmdVoiceState*)voice)->vidListNode->id);
+            }
+            else
+            {
+                if (hwIsActive(i) != 0)
+                {
                     hwOff(i);
                 }
             }
@@ -301,7 +321,7 @@ void synthDeactivateStudio(u8 slot)
  *
  * EN v1.1 Address: 0x80272E64, size 32b
  */
-void synthAddStudioInput(u8 idx, void *input)
+void synthAddStudioInput(u8 idx, void* input)
 {
     hwAddInput(idx, input);
 }
@@ -311,7 +331,7 @@ void synthAddStudioInput(u8 idx, void *input)
  *
  * EN v1.1 Address: 0x80272E84, size 32b
  */
-void synthRemoveStudioInput(u8 idx, void *input)
+void synthRemoveStudioInput(u8 idx, void* input)
 {
     hwRemoveInput(idx, input);
 }

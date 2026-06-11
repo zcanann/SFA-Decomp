@@ -30,7 +30,8 @@
 /*
  * Packet constants only. Promote names and boundaries after EN inspection.
  */
-enum constructor_packet_info {
+enum constructor_packet_info
+{
     PACKET_TABLE_ADDR = 0x8031E614,
     PACKET_TABLE_LOADED_ADDR = 0x8031E614,
     PACKET_CONSTRUCTOR_ADDR = 0x80140340,

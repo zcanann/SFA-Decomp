@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01FB_CCgasventCo_packet_info {
+enum obj_01FB_CCgasventCo_packet_info
+{
     CCGASVENTCO_DEF_ID = 0x01FB,
     CCGASVENTCO_DLL_ID = 0x0186,
     CCGASVENTCO_CLASS_ID = 0x0061,

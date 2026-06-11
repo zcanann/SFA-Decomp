@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02EA_SC_totempuz_packet_info {
+enum obj_02EA_SC_totempuz_packet_info
+{
     SC_TOTEMPUZ_DEF_ID = 0x02EA,
     SC_TOTEMPUZ_DLL_ID = 0x01BA,
     SC_TOTEMPUZ_CLASS_ID = 0x0061,

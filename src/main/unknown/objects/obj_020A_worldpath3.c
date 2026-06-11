@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_020A_WORLDpath3_packet_info {
+enum obj_020A_WORLDpath3_packet_info
+{
     WORLDPATH3_DEF_ID = 0x020A,
     WORLDPATH3_DLL_ID = 0x01D3,
     WORLDPATH3_CLASS_ID = 0x0061,

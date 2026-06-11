@@ -12,22 +12,23 @@ extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void ObjHits_DisableObject(int obj);
 extern void ObjHits_EnableObject(int obj);
 extern void GameBit_Set(int eventId, int value);
-extern void objAudioFn_8006ef38(int obj, void *events, int pointCount, void *points,
-                                void *scratch, f32 scaleX, f32 scaleZ);
+extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points,
+                                void* scratch, f32 scaleX, f32 scaleZ);
 
-extern ObjectTriggerInterface **gObjectTriggerInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E520C;
 extern f32 lbl_803E5210;
 
 void fn_801CDF94(int obj, int state, int flag);
 
-typedef struct TreeBirdState {
-  s16 gameBit;
-  s16 triggerId;
-  s16 immediateTrigger;
-  u8 triggerLatched;
-  u8 searchDelay;
-  void *targetObj;
+typedef struct TreeBirdState
+{
+    s16 gameBit;
+    s16 triggerId;
+    s16 immediateTrigger;
+    u8 triggerLatched;
+    u8 searchDelay;
+    void* targetObj;
 } TreeBirdState;
 
 /*
@@ -43,21 +44,22 @@ typedef struct TreeBirdState {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void treebird_init(int obj,int setup)
+void treebird_init(int obj, int setup)
 {
-  TreeBirdState *state;
+    TreeBirdState* state;
 
-  state = ((GameObject *)obj)->extra;
-  ((GameObject *)obj)->animEventCallback = (void *)TreeBird_SeqFn;
-  *(s16 *)obj = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
-  ((GameObject *)obj)->anim.rotY = *(s16 *)(setup + 0x1a);
-  ((GameObject *)obj)->anim.rotZ = *(s16 *)(setup + 0x1c);
-  state->triggerId = (s16)(s8)*(u8 *)(setup + 0x19);
-  state->gameBit = *(s16 *)(setup + 0x1e);
-  if (GameBit_Get((int)state->gameBit) != 0) {
-    state->immediateTrigger = 0x154;
-  }
-  state->searchDelay = 4;
+    state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->animEventCallback = (void*)TreeBird_SeqFn;
+    *(s16*)obj = (s16)((s8) * (u8*)(setup + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotY = *(s16*)(setup + 0x1a);
+    ((GameObject*)obj)->anim.rotZ = *(s16*)(setup + 0x1c);
+    state->triggerId = (s16)(s8) * (u8*)(setup + 0x19);
+    state->gameBit = *(s16*)(setup + 0x1e);
+    if (GameBit_Get((int)state->gameBit) != 0)
+    {
+        state->immediateTrigger = 0x154;
+    }
+    state->searchDelay = 4;
 }
 
 /*
@@ -75,73 +77,83 @@ void treebird_init(int obj,int setup)
  */
 void nw_geyser_init(int obj)
 {
-  ((GameObject *)obj)->objectFlags = (ushort)(((GameObject *)obj)->objectFlags | 0x6000);
-  ((GameObject *)obj)->animEventCallback = (void *)NW_geyser_SeqFn;
+    ((GameObject*)obj)->objectFlags = (ushort)(((GameObject*)obj)->objectFlags | 0x6000);
+    ((GameObject*)obj)->animEventCallback = (void*)NW_geyser_SeqFn;
 }
 
-char *fn_801CDE70(int *obj) { return *(char **)&((GameObject *)obj)->extra + 0xc; }
+char* fn_801CDE70(int* obj) { return *(char**)&((GameObject*)obj)->extra + 0xc; }
 
-extern MapEventInterface **gMapEventInterface;
-void nw_geyser_free(int *obj) {
-    (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 0x1f, 0);
+extern MapEventInterface** gMapEventInterface;
+
+void nw_geyser_free(int* obj)
+{
+    (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x1f, 0);
 }
 
 void nw_geyser_update(int obj)
 {
-    if (GameBit_Get(0xa) != 0) {
-        ((GameObject *)obj)->anim.flags = OBJANIM_FLAG_HIDDEN;
-        ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
+    if (GameBit_Get(0xa) != 0)
+    {
+        ((GameObject*)obj)->anim.flags = OBJANIM_FLAG_HIDDEN;
+        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
         Sfx_RemoveLoopedObjectSound(obj, 0x372);
         Sfx_RemoveLoopedObjectSound(obj, 0x373);
         ObjHits_DisableObject(obj);
         GameBit_Set(0x398, 1);
-    } else {
+    }
+    else
+    {
         Sfx_AddLoopedObjectSound(obj, 0x372);
         Sfx_AddLoopedObjectSound(obj, 0x373);
-        (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
+        (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         ObjHits_EnableObject(obj);
     }
 }
 
-extern int objFindTexture(int *obj, int idx, int p3);
+extern int objFindTexture(int* obj, int idx, int p3);
 extern f32 lbl_803E5200;
 extern f32 timeDelta;
 
-int NW_geyser_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
-    int *tex0;
-    u8 *animUpdateBytes;
+int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    int* tex0;
+    u8* animUpdateBytes;
 
-    animUpdateBytes = (u8 *)animUpdate;
-    if (GameBit_Get(0xa) != 0) {
+    animUpdateBytes = (u8*)animUpdate;
+    if (GameBit_Get(0xa) != 0)
+    {
         animUpdateBytes[0x90] = (u8)(animUpdateBytes[0x90] | 4);
     }
-    tex0 = (int *)objFindTexture(obj, 0, 0);
+    tex0 = (int*)objFindTexture(obj, 0, 0);
     objFindTexture(obj, 1, 0);
-    *(s16 *)((char *)tex0 + 0xa) = (s16)(*(s16 *)((char *)tex0 + 0xa) + (s32)(lbl_803E5200 * timeDelta));
-    if (*(s16 *)((char *)tex0 + 0xa) > 0x4e80) {
-        *(s16 *)((char *)tex0 + 0xa) -= 0x4e80;
+    *(s16*)((char*)tex0 + 0xa) = (s16)(*(s16*)((char*)tex0 + 0xa) + (s32)(lbl_803E5200 * timeDelta));
+    if (*(s16*)((char*)tex0 + 0xa) > 0x4e80)
+    {
+        *(s16*)((char*)tex0 + 0xa) -= 0x4e80;
     }
     animUpdate->hitVolumePair = (s16)(animUpdate->activeHitVolumePair & ~0x40);
     animUpdate->sequenceEventActive = 0;
     return 0;
 }
 
-int fn_801CDE7C(int obj, int unused, ObjAnimUpdateState *animUpdate)
+int fn_801CDE7C(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    u8 *state;
-    void *audioEvents;
-    void *audioPoints;
-    void *audioScratch;
+    u8* state;
+    void* audioEvents;
+    void* audioPoints;
+    void* audioScratch;
 
-    state = ((GameObject *)obj)->extra;
-    if ((state[0x43c] & 0x20) == 0) {
+    state = ((GameObject*)obj)->extra;
+    if ((state[0x43c] & 0x20) == 0)
+    {
         Sfx_StopObjectChannel(obj, 0x7f);
-        *(f32 *)(state + 0x54) = lbl_803E520C;
+        *(f32*)(state + 0x54) = lbl_803E520C;
         state[0x43c] = (u8)(state[0x43c] & ~0x10);
         state[0x43c] = (u8)(state[0x43c] | 0x20);
     }
-    if ((state[0x43c] & 4) != 0) {
-        *(f32 *)(state + 0x18) = lbl_803E520C;
+    if ((state[0x43c] & 4) != 0)
+    {
+        *(f32*)(state + 0x18) = lbl_803E520C;
         animUpdate->hitVolumePair = (s16)(animUpdate->hitVolumePair & ~8);
         animUpdate->hitVolumePair = (s16)(animUpdate->hitVolumePair & ~0x40);
         fn_801CDF94(obj, (int)state, 1);
@@ -150,10 +162,11 @@ int fn_801CDE7C(int obj, int unused, ObjAnimUpdateState *animUpdate)
     audioPoints = state + 0x45c;
     audioScratch = state + 0x16c;
     objAudioFn_8006ef38(obj, audioEvents, 8, audioPoints, audioScratch,
-                        lbl_803E5210, *(f32 *)&lbl_803E5210);
-    if (animUpdate->eventCount != 0) {
-        ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags & ~0x400);
-        ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_VISIBLE;
+                        lbl_803E5210, *(f32*)&lbl_803E5210);
+    if (animUpdate->eventCount != 0)
+    {
+        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags & ~0x400);
+        ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_VISIBLE;
     }
     return 0;
 }
@@ -167,18 +180,24 @@ extern f32 lbl_803E5214;
 
 void fn_801CDF94(int obj, int state, int flag)
 {
-    if (flag != 0 && *(void**)(state + 0x28) != NULL && *(f32*)(state + 0x18) < lbl_803E5214) {
+    if (flag != 0 && *(void**)(state + 0x28) != NULL && *(f32*)(state + 0x18) < lbl_803E5214)
+    {
         *(u8*)(state + 0x40c) = 1;
         *(f32*)(state + 0x410) = *(f32*)(*(int*)(state + 0x28) + 0xc);
         *(f32*)(state + 0x414) = *(f32*)(*(int*)(state + 0x28) + 0x10);
         *(f32*)(state + 0x418) = *(f32*)(*(int*)(state + 0x28) + 0x14);
-    } else {
+    }
+    else
+    {
         *(u8*)(state + 0x40c) = 0;
     }
-    if ((lbl_803268B4[*(u8*)(state + 0x408)] & 0x2) != 0) {
+    if ((lbl_803268B4[*(u8*)(state + 0x408)] & 0x2) != 0)
+    {
         fn_8003A168(obj, (void*)(state + 0x40c));
         fn_8003B228(obj, (void*)(state + 0x40c));
-    } else {
+    }
+    else
+    {
         fn_8003A230(obj, (void*)(state + 0x40c), lbl_803E520C);
         characterDoEyeAnims(obj, (void*)(state + 0x40c));
     }

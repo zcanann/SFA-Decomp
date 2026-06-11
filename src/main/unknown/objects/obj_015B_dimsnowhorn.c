@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_015B_DIMSnowHorn_packet_info {
+enum obj_015B_DIMSnowHorn_packet_info
+{
     DIMSNOWHORN_DEF_ID = 0x015B,
     DIMSNOWHORN_DLL_ID = 0x0256,
     DIMSNOWHORN_CLASS_ID = 0x0030,

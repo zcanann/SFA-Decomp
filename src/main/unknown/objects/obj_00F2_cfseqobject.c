@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00F2_CFseqobject_packet_info {
+enum obj_00F2_CFseqobject_packet_info
+{
     CFSEQOBJECT_DEF_ID = 0x00F2,
     CFSEQOBJECT_DLL_ID = 0x0112,
     CFSEQOBJECT_CLASS_ID = 0x0055,

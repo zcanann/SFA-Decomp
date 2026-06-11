@@ -36,7 +36,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_01F2_SB_CageKyte_slot {
+enum dll_01F2_SB_CageKyte_slot
+{
     SB_CAGEKYTE_INITIALISE = 0,
     SB_CAGEKYTE_RELEASE = 1,
     SB_CAGEKYTE_INIT = 3,

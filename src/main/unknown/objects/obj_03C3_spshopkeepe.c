@@ -53,7 +53,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03C3_SPShopKeepe_packet_info {
+enum obj_03C3_SPShopKeepe_packet_info
+{
     SPSHOPKEEPE_DEF_ID = 0x03C3,
     SPSHOPKEEPE_DLL_ID = 0x0286,
     SPSHOPKEEPE_CLASS_ID = 0x006F,

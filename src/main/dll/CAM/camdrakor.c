@@ -14,7 +14,7 @@ extern void* FUN_800069a8();
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern undefined4 FUN_80053bb0();
-extern void camcontrol_traceMove(f32 radius, f32 *from, void *to, f32 *out, void *work, int a,
+extern void camcontrol_traceMove(f32 radius, f32* from, void* to, f32* out, void* work, int a,
                                  int b, int c);
 extern uint FUN_801ef1a4();
 extern undefined4 FUN_80247e94();
@@ -95,7 +95,8 @@ extern f32 lbl_803E1980;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct {
+typedef struct
+{
     f32 pad0;
     f32 pad4;
     f32 pad8;
@@ -104,7 +105,8 @@ typedef struct {
     f32 z;
 } CombatPathPoint;
 
-typedef struct {
+typedef struct
+{
     u8 b80 : 1;
     u8 rest : 7;
 } CombatCamFlags;
@@ -112,15 +114,15 @@ typedef struct {
 extern int getAngle(f32 dx, f32 dz);
 extern f32 interpolate(f32 cur, f32 target, f32 t);
 extern f32 powfBitEstimate(f32 a, f32 b);
-extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
-extern f32 PSVECMag(f32 *v);
-extern void PSVECNormalize(f32 *v, f32 *out);
-extern void PSVECScale(f32 *v, f32 *out, f32 s);
-extern void PSVECAdd(f32 *a, f32 *b, f32 *out);
+extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
+extern f32 PSVECMag(f32 * v);
+extern void PSVECNormalize(f32 * v, f32 * out);
+extern void PSVECScale(f32* v, f32* out, f32 s);
+extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
 extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
-extern void fn_8010BF08(int cam, f32 *dx, f32 *dy, f32 *dz, f32 *ty);
+extern void fn_8010BF08(int cam, f32* dx, f32* dy, f32* dz, f32* ty);
 
-void CameraModeCombat_update(short *cam)
+void CameraModeCombat_update(short* cam)
 {
     f32 nz;
     f32 ny;
@@ -135,9 +137,9 @@ void CameraModeCombat_update(short *cam)
     f32 vec[3];
     u8 trace[116];
     int view = (int)Camera_GetCurrentViewSlot();
-    char *tgt;
+    char* tgt;
     int focus;
-    CombatPathPoint *path;
+    CombatPathPoint* path;
     f32 range;
     f32 dist;
     f32 px;
@@ -159,129 +161,185 @@ void CameraModeCombat_update(short *cam)
     uint ad;
     short sVar2;
 
-    if (lbl_803DD568->invalidTarget != 0) {
-        if (((CameraObject *)cam)->targetObj != NULL) {
-            if ((*(u8 *)(*(int *)&((CameraObject *)cam)->targetObj + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
+    if (lbl_803DD568->invalidTarget != 0)
+    {
+        if (((CameraObject*)cam)->targetObj != NULL)
+        {
+            if ((*(u8*)(*(int*)&((CameraObject*)cam)->targetObj + 0xaf) & 0x40) || (((CameraObject*)cam)->unk141 & 2))
+            {
                 return;
             }
             (*gCameraInterface)->setTarget(0);
         }
         (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
-    } else {
-        focus = *(int *)&((CameraObject *)cam)->anim.targetObj;
-        if (((GameObject *)focus)->anim.classId == 1 && objAnimFn_80296328(focus) == 0) {
-            if (((CameraObject *)cam)->targetObj != NULL) {
-                if ((*(u8 *)(*(int *)&((CameraObject *)cam)->targetObj + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
+    }
+    else
+    {
+        focus = *(int*)&((CameraObject*)cam)->anim.targetObj;
+        if (((GameObject*)focus)->anim.classId == 1 && objAnimFn_80296328(focus) == 0)
+        {
+            if (((CameraObject*)cam)->targetObj != NULL)
+            {
+                if ((*(u8*)(*(int*)&((CameraObject*)cam)->targetObj + 0xaf) & 0x40) || (((CameraObject*)cam)->unk141 &
+                    2))
+                {
                     return;
                 }
                 (*gCameraInterface)->setTarget(0);
             }
             (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
-        } else {
-            tgt = *(char **)&((CameraObject *)cam)->targetObj;
-            if (tgt == NULL || (((GameObject *)tgt)->objectFlags & 0x40) || (*(u8 *)&((GameObject *)tgt)->anim.resetHitboxMode & 0x28)) {
-                if (tgt != NULL) {
-                    if ((*(u8 *)&((GameObject *)tgt)->anim.resetHitboxMode & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
+        }
+        else
+        {
+            tgt = *(char**)&((CameraObject*)cam)->targetObj;
+            if (tgt == NULL || (((GameObject*)tgt)->objectFlags & 0x40) || (*(u8*)&((GameObject*)tgt)->anim.
+                resetHitboxMode & 0x28))
+            {
+                if (tgt != NULL)
+                {
+                    if ((*(u8*)&((GameObject*)tgt)->anim.resetHitboxMode & 0x40) || (((CameraObject*)cam)->unk141 & 2))
+                    {
                         return;
                     }
                     (*gCameraInterface)->setTarget(0);
                 }
                 (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
-            } else {
-                path = *(CombatPathPoint **)(tgt + 0x74);
-                if (path != NULL) {
-                    range = (f32)(s32)((u32)*(u8 *)(*(int *)(*(int *)&((GameObject *)tgt)->anim.modelInstance + 0x40) + 0xd) << 2);
-                    if (((u16)getButtonsJustPressed(0) & 0x200) && (int)fn_8029630C(focus) != 0) {
-                        if (((CameraObject *)cam)->targetObj != NULL) {
-                            if ((*(u8 *)(*(int *)&((CameraObject *)cam)->targetObj + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
+            }
+            else
+            {
+                path = *(CombatPathPoint**)(tgt + 0x74);
+                if (path != NULL)
+                {
+                    range = (f32)(s32)(
+                        (u32) * (u8*)(*(int*)(*(int*)&((GameObject*)tgt)->anim.modelInstance + 0x40) + 0xd) << 2);
+                    if (((u16)getButtonsJustPressed(0) & 0x200) && (int)fn_8029630C(focus) != 0)
+                    {
+                        if (((CameraObject*)cam)->targetObj != NULL)
+                        {
+                            if ((*(u8*)(*(int*)&((CameraObject*)cam)->targetObj + 0xaf) & 0x40) || (((CameraObject*)cam)
+                                ->unk141 & 2))
+                            {
                                 return;
                             }
                             (*gCameraInterface)->setTarget(0);
                         }
                         (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
-                    } else {
-                        ty = lbl_803E18D0 + ((GameObject *)focus)->anim.worldPosY;
-                        sVar2 = ((GameObject *)tgt)->anim.classId;
-                        if (sVar2 == 0x1c || sVar2 == 0x6d || sVar2 == 0x2a) {
-                            if (((GameObject *)tgt)->anim.seqId == 0x200) {
+                    }
+                    else
+                    {
+                        ty = lbl_803E18D0 + ((GameObject*)focus)->anim.worldPosY;
+                        sVar2 = ((GameObject*)tgt)->anim.classId;
+                        if (sVar2 == 0x1c || sVar2 == 0x6d || sVar2 == 0x2a)
+                        {
+                            if (((GameObject*)tgt)->anim.seqId == 0x200)
+                            {
                                 ty = ty + lbl_803E18D0;
                             }
-                            if (*(u8 *)(*(int *)&((GameObject *)tgt)->anim.modelInstance + 0x72) <= 1) {
-                                dx = path[((GameObject *)tgt)->unkE4].x - ((GameObject *)focus)->anim.worldPosX;
-                                dy = path[((GameObject *)tgt)->unkE4].y - ty;
-                                dz = path[((GameObject *)tgt)->unkE4].z - ((GameObject *)focus)->anim.worldPosZ;
-                            } else {
+                            if (*(u8*)(*(int*)&((GameObject*)tgt)->anim.modelInstance + 0x72) <= 1)
+                            {
+                                dx = path[((GameObject*)tgt)->unkE4].x - ((GameObject*)focus)->anim.worldPosX;
+                                dy = path[((GameObject*)tgt)->unkE4].y - ty;
+                                dz = path[((GameObject*)tgt)->unkE4].z - ((GameObject*)focus)->anim.worldPosZ;
+                            }
+                            else
+                            {
                                 fn_8010BF08((int)cam, &dx, &dy, &dz, &ty);
                             }
-                        } else {
-                            ty = lbl_803E18D0 + ((GameObject *)focus)->anim.worldPosY;
-                            dx = path[((GameObject *)tgt)->unkE4].x - ((GameObject *)focus)->anim.worldPosX;
-                            dy = path[((GameObject *)tgt)->unkE4].y - ty;
-                            dz = path[((GameObject *)tgt)->unkE4].z - ((GameObject *)focus)->anim.worldPosZ;
+                        }
+                        else
+                        {
+                            ty = lbl_803E18D0 + ((GameObject*)focus)->anim.worldPosY;
+                            dx = path[((GameObject*)tgt)->unkE4].x - ((GameObject*)focus)->anim.worldPosX;
+                            dy = path[((GameObject*)tgt)->unkE4].y - ty;
+                            dz = path[((GameObject*)tgt)->unkE4].z - ((GameObject*)focus)->anim.worldPosZ;
                         }
                         dist = sqrtf(dx * dx + dz * dz);
-                        ((CameraObject *)cam)->unk13B = 0x30;
-                        ((CameraObject *)cam)->unk13C = 1;
-                        if (dist > range) {
-                            if (((CameraObject *)cam)->targetObj != NULL) {
-                                if ((*(u8 *)(*(int *)&((CameraObject *)cam)->targetObj + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
+                        ((CameraObject*)cam)->unk13B = 0x30;
+                        ((CameraObject*)cam)->unk13C = 1;
+                        if (dist > range)
+                        {
+                            if (((CameraObject*)cam)->targetObj != NULL)
+                            {
+                                if ((*(u8*)(*(int*)&((CameraObject*)cam)->targetObj + 0xaf) & 0x40) || (((CameraObject*)
+                                    cam)->unk141 & 2))
+                                {
                                     return;
                                 }
                                 (*gCameraInterface)->setTarget(0);
                             }
                             (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
-                        } else {
+                        }
+                        else
+                        {
                             cameraGetPrevPos2(focus, &prevX, &prevY, &prevZ);
-                            px = lbl_803E18D4 * dx + ((GameObject *)focus)->anim.worldPosX;
+                            px = lbl_803E18D4 * dx + ((GameObject*)focus)->anim.worldPosX;
                             py = lbl_803E18D8 + ty;
-                            pz = lbl_803E18D4 * dz + ((GameObject *)focus)->anim.worldPosZ;
+                            pz = lbl_803E18D4 * dz + ((GameObject*)focus)->anim.worldPosZ;
                             ang = getAngle(dx, dz);
                             diff = (int)*cam - (0x8000 - ((ang & 0xffff) + 0x8000) & 0xffff);
-                            if (diff > 0x8000) {
+                            if (diff > 0x8000)
+                            {
                                 diff = diff - 0xffff;
                             }
-                            if (diff < -0x8000) {
+                            if (diff < -0x8000)
+                            {
                                 diff = diff + 0xffff;
                             }
-                            if (diff > 9000) {
+                            if (diff > 9000)
+                            {
                                 step = interpolate((f32)(s32)(diff - 9000), lbl_803E18DC, timeDelta);
-                                *cam = (int)((f32)(s32)*cam - step);
-                            } else if (diff < -9000) {
-                                step = interpolate((f32)(s32)(diff + 9000), lbl_803E18DC, timeDelta);
-                                *cam = (int)((f32)(s32)*cam - step);
+                                *cam = (int)((f32)(s32) * cam - step);
                             }
-                            if (diff < 3000 && diff > 0) {
-                                if (lbl_803DD56C < 3000 && diff < 1000 && diff < lbl_803DD56C) {
+                            else if (diff < -9000)
+                            {
+                                step = interpolate((f32)(s32)(diff + 9000), lbl_803E18DC, timeDelta);
+                                *cam = (int)((f32)(s32) * cam - step);
+                            }
+                            if (diff < 3000 && diff > 0)
+                            {
+                                if (lbl_803DD56C < 3000 && diff < 1000 && diff < lbl_803DD56C)
+                                {
                                     step = interpolate((f32)(s32)(-diff - 3000), lbl_803E18E0, timeDelta);
-                                    *cam = (int)((f32)(s32)*cam + step);
-                                } else {
-                                    step = interpolate((f32)(s32)(3000 - diff), lbl_803E18E0, timeDelta);
-                                    *cam = (int)((f32)(s32)*cam + step);
+                                    *cam = (int)((f32)(s32) * cam + step);
                                 }
-                            } else if (diff > -3000 && diff < 0) {
-                                if (lbl_803DD56C < -2999 || diff < -999 || diff <= lbl_803DD56C) {
-                                    step = interpolate((f32)(s32)(-diff - 3000), lbl_803E18E0, timeDelta);
-                                    *cam = (int)((f32)(s32)*cam + step);
-                                } else {
+                                else
+                                {
                                     step = interpolate((f32)(s32)(3000 - diff), lbl_803E18E0, timeDelta);
-                                    *cam = (int)((f32)(s32)*cam + step);
+                                    *cam = (int)((f32)(s32) * cam + step);
+                                }
+                            }
+                            else if (diff > -3000 && diff < 0)
+                            {
+                                if (lbl_803DD56C < -2999 || diff < -999 || diff <= lbl_803DD56C)
+                                {
+                                    step = interpolate((f32)(s32)(-diff - 3000), lbl_803E18E0, timeDelta);
+                                    *cam = (int)((f32)(s32) * cam + step);
+                                }
+                                else
+                                {
+                                    step = interpolate((f32)(s32)(3000 - diff), lbl_803E18E0, timeDelta);
+                                    *cam = (int)((f32)(s32) * cam + step);
                                 }
                             }
                             abs2 = diff;
-                            if (diff < 0) {
+                            if (diff < 0)
+                            {
                                 abs2 = -diff;
                             }
-                            if (abs2 > 9000) {
+                            if (abs2 > 9000)
+                            {
                                 abs2 = 9000;
                             }
                             zoom = (f32)(s32)(9000 - abs2) / lbl_803E18E4;
                             lbl_803DD56C = diff;
                             step = interpolate(lbl_803E18E8 - lbl_803DD568->heightOffset, lbl_803E18EC, timeDelta);
                             lbl_803DD568->heightOffset = lbl_803DD568->heightOffset + step;
-                            step = interpolate((lbl_803E18F0 + (lbl_803E18C0 - zoom)) / lbl_803E18F4 - lbl_803DD568->zoomOffset, lbl_803E18F8, timeDelta);
+                            step = interpolate(
+                                (lbl_803E18F0 + (lbl_803E18C0 - zoom)) / lbl_803E18F4 - lbl_803DD568->zoomOffset,
+                                lbl_803E18F8, timeDelta);
                             lbl_803DD568->zoomOffset = lbl_803DD568->zoomOffset + step;
-                            c = mathSinf((lbl_803E18FC * (f32)(s32)*cam) / lbl_803E1900);
-                            sn = mathCosf((lbl_803E18FC * (f32)(s32)*cam) / lbl_803E1900);
+                            c = mathSinf((lbl_803E18FC * (f32)(s32) * cam) / lbl_803E1900);
+                            sn = mathCosf((lbl_803E18FC * (f32)(s32) * cam) / lbl_803E1900);
                             t = lbl_803DD568->followDistance * c;
                             nx = px + t;
                             t = lbl_803DD568->followDistance * sn;
@@ -289,74 +347,103 @@ void CameraModeCombat_update(short *cam)
                             dy = dy * lbl_803E1904;
                             dy = ty - dy;
                             dy = dy + lbl_803DD568->heightOffset;
-                            step = interpolate(((CameraObject *)cam)->anim.worldPosY - dy, lbl_803E1908, timeDelta);
-                            ny = ((CameraObject *)cam)->anim.worldPosY - step;
-                            PSVECSubtract(&nx, (f32 *)((char *)cam + 0x18), vec);
+                            step = interpolate(((CameraObject*)cam)->anim.worldPosY - dy, lbl_803E1908, timeDelta);
+                            ny = ((CameraObject*)cam)->anim.worldPosY - step;
+                            PSVECSubtract(&nx, (f32*)((char*)cam + 0x18), vec);
                             mag = PSVECMag(vec);
-                            if (lbl_803E18C4 < mag) {
+                            if (lbl_803E18C4 < mag)
+                            {
                                 PSVECNormalize(vec, vec);
                             }
                             speed = mag;
-                            if (((CameraObject *)cam)->unkF4 <= lbl_803E18C4) {
-                                fVar1 = ((GameObject *)focus)->anim.previousWorldPosX - ((GameObject *)focus)->anim.worldPosX;
-                                fVar3 = ((GameObject *)focus)->anim.previousWorldPosZ - ((GameObject *)focus)->anim.worldPosZ;
+                            if (((CameraObject*)cam)->unkF4 <= lbl_803E18C4)
+                            {
+                                fVar1 = ((GameObject*)focus)->anim.previousWorldPosX - ((GameObject*)focus)->anim.
+                                    worldPosX;
+                                fVar3 = ((GameObject*)focus)->anim.previousWorldPosZ - ((GameObject*)focus)->anim.
+                                    worldPosZ;
                                 speed = sqrtf(fVar1 * fVar1 + fVar3 * fVar3);
                                 lim = speed * (lbl_803E190C * timeDelta);
-                                if ((f64)lim < lbl_803E1918) {
+                                if ((f64)lim < lbl_803E1918)
+                                {
                                     lim = lbl_803E1910;
                                 }
                                 speed = mag;
-                                if (mag < lbl_803E18C4) {
+                                if (mag < lbl_803E18C4)
+                                {
                                     speed = lbl_803E18C4;
-                                } else if (mag > lim) {
+                                }
+                                else if (mag > lim)
+                                {
                                     speed = lim;
                                 }
                             }
-                            if (speed < lbl_803E18C4) {
+                            if (speed < lbl_803E18C4)
+                            {
                                 speed = lbl_803E18C4;
-                            } else if (speed > lbl_803E18D0) {
+                            }
+                            else if (speed > lbl_803E18D0)
+                            {
                                 speed = lbl_803E18D0;
                             }
                             PSVECScale(vec, vec, speed);
-                            PSVECAdd((f32 *)((char *)cam + 0x18), vec, (f32 *)((char *)cam + 0x18));
-                            camcontrol_traceMove(lbl_803E18CC, &prevX, (f32 *)((char *)cam + 0x18), (f32 *)((char *)cam + 0x18), trace, 3, 1, 1);
-                            fVar3 = *(f32 *)(view + 0xc) - (lbl_803E18F8 * dx + ((GameObject *)focus)->anim.worldPosX);
-                            dy = *(f32 *)(view + 0x10) - py;
-                            fVar1 = *(f32 *)(view + 0x14) - (lbl_803E18F8 * dz + ((GameObject *)focus)->anim.worldPosZ);
+                            PSVECAdd((f32*)((char*)cam + 0x18), vec, (f32*)((char*)cam + 0x18));
+                            camcontrol_traceMove(lbl_803E18CC, &prevX, (f32*)((char*)cam + 0x18),
+                                                 (f32*)((char*)cam + 0x18), trace, 3, 1, 1);
+                            fVar3 = *(f32*)(view + 0xc) - (lbl_803E18F8 * dx + ((GameObject*)focus)->anim.worldPosX);
+                            dy = *(f32*)(view + 0x10) - py;
+                            fVar1 = *(f32*)(view + 0x14) - (lbl_803E18F8 * dz + ((GameObject*)focus)->anim.worldPosZ);
                             t = sqrtf(fVar3 * fVar3 + fVar1 * fVar1);
                             ad = getAngle(dy, t);
                             ad = (ad & 0xffff) - ((int)cam[1] & 0xffffU);
-                            if ((int)ad > 0x8000) {
+                            if ((int)ad > 0x8000)
+                            {
                                 ad = ad - 0xffff;
                             }
-                            if ((int)ad < -0x8000) {
+                            if ((int)ad < -0x8000)
+                            {
                                 ad = ad + 0xffff;
                             }
                             step = interpolate((f32)(s32)ad, lbl_803E1920, timeDelta);
-                            cam[1] = (int)((f32)(s32)cam[1] + step);
+                            cam[1] = (int)
+                            ((f32)(s32)
+                            cam[1] + step
+                            )
+                            ;
                             fVar1 = lbl_803E1924 + dist;
-                            if (lbl_803E1924 + dist < lbl_803E1928) {
+                            if (lbl_803E1924 + dist < lbl_803E1928)
+                            {
                                 fVar1 = lbl_803E1928;
                             }
-                            if (lbl_803E192C < fVar1) {
+                            if (lbl_803E192C < fVar1)
+                            {
                                 fVar1 = lbl_803E192C;
                             }
                             t = fVar1 - lbl_803DD568->followDistance;
                             step = powfBitEstimate(lbl_803E18EC, timeDelta);
                             fVar1 = t * step;
-                            if (fVar1 > lbl_803E18D8 * timeDelta) {
+                            if (fVar1 > lbl_803E18D8 * timeDelta)
+                            {
                                 fVar1 = lbl_803E18D8 * timeDelta;
-                            } else if (fVar1 < lbl_803E1930 * timeDelta) {
+                            }
+                            else if (fVar1 < lbl_803E1930 * timeDelta)
+                            {
                                 fVar1 = lbl_803E1930 * timeDelta;
                             }
                             lbl_803DD568->followDistance = lbl_803DD568->followDistance + fVar1;
-                            turnOnBlurFilter(((GameObject *)tgt)->anim.worldPosX, ((GameObject *)tgt)->anim.worldPosY, ((GameObject *)tgt)->anim.worldPosZ, 1, 0);
-                            if (lbl_803E18C4 == ((CameraObject *)cam)->unkF4) {
-                                ((CombatCamFlags *)((char *)cam + 0x143))->b80 = 1;
+                            turnOnBlurFilter(((GameObject*)tgt)->anim.worldPosX, ((GameObject*)tgt)->anim.worldPosY,
+                                             ((GameObject*)tgt)->anim.worldPosZ, 1, 0);
+                            if (lbl_803E18C4 == ((CameraObject*)cam)->unkF4)
+                            {
+                                ((CombatCamFlags*)((char*)cam + 0x143))->b80 = 1;
                             }
-                            Obj_TransformWorldPointToLocal(*(f32 *)((char *)cam + 0x18), ((CameraObject *)cam)->anim.worldPosY, ((CameraObject *)cam)->anim.worldPosZ,
-                                                           &((CameraObject *)cam)->anim.localPosX, &((CameraObject *)cam)->anim.localPosY, &((CameraObject *)cam)->anim.localPosZ,
-                                                           *(int *)&((CameraObject *)cam)->anim.parent);
+                            Obj_TransformWorldPointToLocal(*(f32*)((char*)cam + 0x18),
+                                                           ((CameraObject*)cam)->anim.worldPosY,
+                                                           ((CameraObject*)cam)->anim.worldPosZ,
+                                                           &((CameraObject*)cam)->anim.localPosX,
+                                                           &((CameraObject*)cam)->anim.localPosY,
+                                                           &((CameraObject*)cam)->anim.localPosZ,
+                                                           *(int*)&((CameraObject*)cam)->anim.parent);
                         }
                     }
                 }
@@ -378,56 +465,65 @@ void CameraModeCombat_update(short *cam)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeCombat_init(int camObj,undefined4 param_2,undefined4 *args)
+void CameraModeCombat_init(int camObj, undefined4 param_2, undefined4* args)
 {
-  float dx;
-  float dz;
-  int posEntry;
-  int targetObj;
-  int playerObj;
-  double dVar6;
+    float dx;
+    float dz;
+    int posEntry;
+    int targetObj;
+    int playerObj;
+    double dVar6;
 
-  *(undefined4 *)(camObj + 0x11c) = *args;
-  playerObj = *(int *)(camObj + 0xa4);
-  if (lbl_803DD568 == (CameraModeCombatState *)0x0) {
-    lbl_803DD568 = (CameraModeCombatState *)mmAlloc(0x1c,0xf,0);
-  }
-  dx = lbl_803E18C4;
-  lbl_803DD568->heightOffset = lbl_803E18C4;
-  lbl_803DD568->zoomOffset = lbl_803E18C0;
-  lbl_803DD568->invalidTarget = 0;
-  lbl_803DD568->unk11 = 0;
-  lbl_803DD568->pathBlendStartIndex = 1;
-  lbl_803DD568->pathBlendTargetIndex = 1;
-  lbl_803DD568->pathBlendWeight = dx;
-  if (*(short *)(playerObj + 0x44) != 1) {
-    lbl_803DD568->invalidTarget = 1;
-  }
-  else {
-    targetObj = *(int *)(camObj + 0x11c);
-    if ((void *)targetObj == NULL) {
-      lbl_803DD568->invalidTarget = 1;
+    *(undefined4*)(camObj + 0x11c) = *args;
+    playerObj = *(int*)(camObj + 0xa4);
+    if (lbl_803DD568 == (CameraModeCombatState*)0x0)
+    {
+        lbl_803DD568 = (CameraModeCombatState*)mmAlloc(0x1c, 0xf, 0);
     }
-    else {
-      if (*(void **)(targetObj + 0x74) == NULL) {
-        dx = *(float *)(playerObj + 0x18) - *(float *)(targetObj + 0x18);
-        dz = *(float *)(playerObj + 0x20) - *(float *)(targetObj + 0x20);
-      }
-      else {
-        posEntry = *(int *)(targetObj + 0x74) + (uint)*(byte *)(targetObj + 0xe4) * 0x18;
-        dx = *(float *)(posEntry + 0xc) - *(float *)(playerObj + 0x18);
-        dz = *(float *)(posEntry + 0x14) - *(float *)(playerObj + 0x20);
-      }
-      if (*(short *)(targetObj + 0x44) != 0x6d) {
-        lbl_803DD568->followDistance = sqrtf(dx * dx + dz * dz);
-      }
-      else {
-        lbl_803DD568->followDistance = lbl_803E1940;
-      }
-      lbl_803DD568->unk10 = 0;
+    dx = lbl_803E18C4;
+    lbl_803DD568->heightOffset = lbl_803E18C4;
+    lbl_803DD568->zoomOffset = lbl_803E18C0;
+    lbl_803DD568->invalidTarget = 0;
+    lbl_803DD568->unk11 = 0;
+    lbl_803DD568->pathBlendStartIndex = 1;
+    lbl_803DD568->pathBlendTargetIndex = 1;
+    lbl_803DD568->pathBlendWeight = dx;
+    if (*(short*)(playerObj + 0x44) != 1)
+    {
+        lbl_803DD568->invalidTarget = 1;
     }
-  }
-  return;
+    else
+    {
+        targetObj = *(int*)(camObj + 0x11c);
+        if ((void*)targetObj == NULL)
+        {
+            lbl_803DD568->invalidTarget = 1;
+        }
+        else
+        {
+            if (*(void**)(targetObj + 0x74) == NULL)
+            {
+                dx = *(float*)(playerObj + 0x18) - *(float*)(targetObj + 0x18);
+                dz = *(float*)(playerObj + 0x20) - *(float*)(targetObj + 0x20);
+            }
+            else
+            {
+                posEntry = *(int*)(targetObj + 0x74) + (uint) * (byte*)(targetObj + 0xe4) * 0x18;
+                dx = *(float*)(posEntry + 0xc) - *(float*)(playerObj + 0x18);
+                dz = *(float*)(posEntry + 0x14) - *(float*)(playerObj + 0x20);
+            }
+            if (*(short*)(targetObj + 0x44) != 0x6d)
+            {
+                lbl_803DD568->followDistance = sqrtf(dx * dx + dz * dz);
+            }
+            else
+            {
+                lbl_803DD568->followDistance = lbl_803E1940;
+            }
+            lbl_803DD568->unk10 = 0;
+        }
+    }
+    return;
 }
 
 
@@ -446,27 +542,35 @@ void CameraModeCombat_init(int camObj,undefined4 param_2,undefined4 *args)
  */
 extern int shipBattleFn_801eed24(int focus);
 
-void CameraModeShipBattle_update(short *cam)
+void CameraModeShipBattle_update(short* cam)
 {
     f32 fa;
     f32 fb;
     f32 fc;
     f32 r;
     int m = 0;
-    GameObject *focus = (GameObject *)((CameraObject *)cam)->anim.targetObj;
-    if (focus != NULL) {
+    GameObject* focus = (GameObject*)((CameraObject*)cam)->anim.targetObj;
+    if (focus != NULL)
+    {
         m = shipBattleFn_801eed24((int)focus);
     }
-    if (m != lbl_803DD570->mode) {
-        if (m == 2) {
+    if (m != lbl_803DD570->mode)
+    {
+        if (m == 2)
+        {
             fa = lbl_803E1948;
-        } else {
+        }
+        else
+        {
             fa = lbl_803E194C;
         }
-        if (m != 2 && m != 5) {
+        if (m != 2 && m != 5)
+        {
             fb = lbl_803E1950;
             fc = lbl_803E1954;
-        } else {
+        }
+        else
+        {
             fb = lbl_803E1958;
             fc = lbl_803DD570->smoothedYOffset;
         }
@@ -478,50 +582,68 @@ void CameraModeShipBattle_update(short *cam)
         lbl_803DD570->blendTimer = lbl_803E1954;
     }
     fa = lbl_803E195C;
-    if (lbl_803DD570->blendTimer < lbl_803E195C) {
+    if (lbl_803DD570->blendTimer < lbl_803E195C)
+    {
         lbl_803DD570->blendTimer = lbl_803E1960 * timeDelta + lbl_803DD570->blendTimer;
-        if (lbl_803DD570->blendTimer > fa) {
+        if (lbl_803DD570->blendTimer > fa)
+        {
             lbl_803DD570->blendTimer = fa;
         }
-        lbl_803DD570->targetLateralOffset = lbl_803DD570->blendTimer * lbl_803DD570->lateralDelta + lbl_803DD570->startLateralOffset;
-        lbl_803DD570->verticalOffset = lbl_803DD570->blendTimer * lbl_803DD570->verticalDelta + lbl_803DD570->startVerticalOffset;
+        lbl_803DD570->targetLateralOffset = lbl_803DD570->blendTimer * lbl_803DD570->lateralDelta + lbl_803DD570->
+            startLateralOffset;
+        lbl_803DD570->verticalOffset = lbl_803DD570->blendTimer * lbl_803DD570->verticalDelta + lbl_803DD570->
+            startVerticalOffset;
     }
-    if (m != 2 && m != 5) {
-        lbl_803DD570->smoothedZOffset = -(((f32)focus->anim.rotZ / lbl_803E1964) * timeDelta - lbl_803DD570->smoothedZOffset);
-        lbl_803DD570->smoothedYOffset = -(((f32)focus->anim.rotY / lbl_803E1968) * timeDelta - lbl_803DD570->smoothedYOffset);
+    if (m != 2 && m != 5)
+    {
+        lbl_803DD570->smoothedZOffset = -(((f32)focus->anim.rotZ / lbl_803E1964) * timeDelta - lbl_803DD570->
+            smoothedZOffset);
+        lbl_803DD570->smoothedYOffset = -(((f32)focus->anim.rotY / lbl_803E1968) * timeDelta - lbl_803DD570->
+            smoothedYOffset);
         fc = lbl_803E196C;
         fa = lbl_803E196C * lbl_803DD570->smoothedZOffset;
         lbl_803DD570->smoothedZOffset = -(fa * timeDelta - lbl_803DD570->smoothedZOffset);
         fa = fc * lbl_803DD570->smoothedYOffset;
         lbl_803DD570->smoothedYOffset = -(fa * timeDelta - lbl_803DD570->smoothedYOffset);
-        ((CameraObject *)cam)->anim.worldPosY = lbl_803DD570->smoothedYOffset + (focus->anim.worldPosY + lbl_803DD570->verticalOffset);
-    } else {
-        lbl_803DD570->smoothedZOffset = -(((f32)focus->anim.rotZ / lbl_803E1964) * timeDelta - lbl_803DD570->smoothedZOffset);
-        lbl_803DD570->smoothedYOffset = -(((f32)focus->anim.rotY / lbl_803E1968) * timeDelta - lbl_803DD570->smoothedYOffset);
+        ((CameraObject*)cam)->anim.worldPosY = lbl_803DD570->smoothedYOffset + (focus->anim.worldPosY + lbl_803DD570->
+            verticalOffset);
+    }
+    else
+    {
+        lbl_803DD570->smoothedZOffset = -(((f32)focus->anim.rotZ / lbl_803E1964) * timeDelta - lbl_803DD570->
+            smoothedZOffset);
+        lbl_803DD570->smoothedYOffset = -(((f32)focus->anim.rotY / lbl_803E1968) * timeDelta - lbl_803DD570->
+            smoothedYOffset);
         fc = lbl_803E196C;
         fa = lbl_803E196C * lbl_803DD570->smoothedZOffset;
         lbl_803DD570->smoothedZOffset = -(fa * timeDelta - lbl_803DD570->smoothedZOffset);
         fa = fc * lbl_803DD570->smoothedYOffset;
         lbl_803DD570->smoothedYOffset = -(fa * timeDelta - lbl_803DD570->smoothedYOffset);
-        ((CameraObject *)cam)->anim.worldPosY = lbl_803DD570->smoothedYOffset + (focus->anim.worldPosY + lbl_803DD570->verticalOffset);
+        ((CameraObject*)cam)->anim.worldPosY = lbl_803DD570->smoothedYOffset + (focus->anim.worldPosY + lbl_803DD570->
+            verticalOffset);
     }
-    ((CameraObject *)cam)->anim.worldPosX = (lbl_803E1970 + focus->anim.worldPosX) + lbl_803DD570->lateralOffset;
-    ((CameraObject *)cam)->anim.worldPosZ = focus->anim.worldPosZ + lbl_803DD570->smoothedZOffset;
+    ((CameraObject*)cam)->anim.worldPosX = (lbl_803E1970 + focus->anim.worldPosX) + lbl_803DD570->lateralOffset;
+    ((CameraObject*)cam)->anim.worldPosZ = focus->anim.worldPosZ + lbl_803DD570->smoothedZOffset;
     cam[1] = 0x708;
     cam[0] = 0x4000;
     cam[2] = (s16)(-focus->anim.rotZ >> 3);
-    ((CameraObject *)cam)->fov = lbl_803E1974;
+    ((CameraObject*)cam)->fov = lbl_803E1974;
     r = (lbl_803DD570->targetLateralOffset - lbl_803DD570->lateralOffset) / lbl_803E1978;
-    if (r > lbl_803E197C) {
+    if (r > lbl_803E197C)
+    {
         r = lbl_803E197C;
-    } else if (r < lbl_803E1980) {
+    }
+    else if (r < lbl_803E1980)
+    {
         r = lbl_803E1980;
     }
     r = r * timeDelta;
     lbl_803DD570->lateralOffset = lbl_803DD570->lateralOffset + r;
-    Obj_TransformWorldPointToLocal(((CameraObject *)cam)->anim.worldPosX, ((CameraObject *)cam)->anim.worldPosY, ((CameraObject *)cam)->anim.worldPosZ,
-                                   &((CameraObject *)cam)->anim.localPosX, &((CameraObject *)cam)->anim.localPosY, &((CameraObject *)cam)->anim.localPosZ,
-                                   *(int *)&((CameraObject *)cam)->anim.parent);
+    Obj_TransformWorldPointToLocal(((CameraObject*)cam)->anim.worldPosX, ((CameraObject*)cam)->anim.worldPosY,
+                                   ((CameraObject*)cam)->anim.worldPosZ,
+                                   &((CameraObject*)cam)->anim.localPosX, &((CameraObject*)cam)->anim.localPosY,
+                                   &((CameraObject*)cam)->anim.localPosZ,
+                                   *(int*)&((CameraObject*)cam)->anim.parent);
 }
 
 /*
@@ -539,38 +661,64 @@ void CameraModeShipBattle_update(short *cam)
  */
 void CameraModeShipBattle_init(void)
 {
-  float fVar1;
-  u8 zero;
+    float fVar1;
+    u8 zero;
 
-  if (lbl_803DD570 == (CameraModeShipBattleState *)0x0) {
-    lbl_803DD570 = (CameraModeShipBattleState *)mmAlloc(sizeof(CameraModeShipBattleState),0xf,0);
-  }
-  fVar1 = lbl_803E1954;
-  lbl_803DD570->smoothedZOffset = lbl_803E1954;
-  lbl_803DD570->smoothedYOffset = fVar1;
-  lbl_803DD570->lateralOffset = lbl_803E1978;
-  fVar1 = lbl_803E194C;
-  lbl_803DD570->startLateralOffset = lbl_803E194C;
-  lbl_803DD570->targetLateralOffset = fVar1;
-  lbl_803DD570->blendTimer = lbl_803E195C;
-  zero = 0;
-  lbl_803DD570->mode = zero;
-  fVar1 = lbl_803E1950;
-  lbl_803DD570->startVerticalOffset = lbl_803E1950;
-  lbl_803DD570->verticalOffset = fVar1;
-  return;
+    if (lbl_803DD570 == (CameraModeShipBattleState*)0x0)
+    {
+        lbl_803DD570 = (CameraModeShipBattleState*)mmAlloc(sizeof(CameraModeShipBattleState), 0xf, 0);
+    }
+    fVar1 = lbl_803E1954;
+    lbl_803DD570->smoothedZOffset = lbl_803E1954;
+    lbl_803DD570->smoothedYOffset = fVar1;
+    lbl_803DD570->lateralOffset = lbl_803E1978;
+    fVar1 = lbl_803E194C;
+    lbl_803DD570->startLateralOffset = lbl_803E194C;
+    lbl_803DD570->targetLateralOffset = fVar1;
+    lbl_803DD570->blendTimer = lbl_803E195C;
+    zero = 0;
+    lbl_803DD570->mode = zero;
+    fVar1 = lbl_803E1950;
+    lbl_803DD570->startVerticalOffset = lbl_803E1950;
+    lbl_803DD570->verticalOffset = fVar1;
+    return;
 }
 
 
-
 /* Trivial 4b 0-arg blr leaves. */
-void CameraModeCombat_release(void) {}
-void CameraModeCombat_initialise(void) {}
-void CameraModeShipBattle_copyToCurrent_nop(void) {}
-void CameraModeShipBattle_release(void) {}
-void CameraModeShipBattle_initialise(void) {}
-void CameraModeClimb_copyToCurrent_nop(void) {}
+void CameraModeCombat_release(void)
+{
+}
+
+void CameraModeCombat_initialise(void)
+{
+}
+
+void CameraModeShipBattle_copyToCurrent_nop(void)
+{
+}
+
+void CameraModeShipBattle_release(void)
+{
+}
+
+void CameraModeShipBattle_initialise(void)
+{
+}
+
+void CameraModeClimb_copyToCurrent_nop(void)
+{
+}
 
 /* fn_X(lbl); lbl = 0; */
-void CameraModeShipBattle_free(void) { mm_free(lbl_803DD570); lbl_803DD570 = 0; }
-void CameraModeClimb_free(void) { mm_free(lbl_803DD578); lbl_803DD578 = 0; }
+void CameraModeShipBattle_free(void)
+{
+    mm_free(lbl_803DD570);
+    lbl_803DD570 = 0;
+}
+
+void CameraModeClimb_free(void)
+{
+    mm_free(lbl_803DD578);
+    lbl_803DD578 = 0;
+}

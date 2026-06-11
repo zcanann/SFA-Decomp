@@ -38,6 +38,7 @@
 /*
  * Packet constants only. Promote names and boundaries after EN inspection.
  */
-enum dvdfs_packet_info {
+enum dvdfs_packet_info
+{
 };
 #endif

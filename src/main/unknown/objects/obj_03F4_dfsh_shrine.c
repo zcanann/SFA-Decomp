@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03F4_DFSH_Shrine_packet_info {
+enum obj_03F4_DFSH_Shrine_packet_info
+{
     DFSH_SHRINE_DEF_ID = 0x03F4,
     DFSH_SHRINE_DLL_ID = 0x0178,
     DFSH_SHRINE_CLASS_ID = 0x0030,

@@ -50,7 +50,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_0257_DR_EarthWarrior_slot {
+enum dll_0257_DR_EarthWarrior_slot
+{
     DR_EARTHWARRIOR_INITIALISE = 0,
     DR_EARTHWARRIOR_RELEASE = 1,
     DR_EARTHWARRIOR_INIT = 3,

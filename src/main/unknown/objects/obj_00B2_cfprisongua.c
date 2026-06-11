@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00B2_CFPrisonGua_packet_info {
+enum obj_00B2_CFPrisonGua_packet_info
+{
     CFPRISONGUA_DEF_ID = 0x00B2,
     CFPRISONGUA_DLL_ID = 0x014E,
     CFPRISONGUA_CLASS_ID = 0x0030,

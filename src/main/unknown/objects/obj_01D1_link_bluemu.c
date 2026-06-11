@@ -53,7 +53,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01D1_LINK_BlueMu_packet_info {
+enum obj_01D1_LINK_BlueMu_packet_info
+{
     LINK_BLUEMU_DEF_ID = 0x01D1,
     LINK_BLUEMU_DLL_ID = 0x01A7,
     LINK_BLUEMU_CLASS_ID = 0x0029,

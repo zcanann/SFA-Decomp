@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03D6_SPMapMMP_packet_info {
+enum obj_03D6_SPMapMMP_packet_info
+{
     SPMAPMMP_DEF_ID = 0x03D6,
     SPMAPMMP_DLL_ID = 0x0284,
     SPMAPMMP_CLASS_ID = 0x0070,

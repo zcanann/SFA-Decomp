@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_029E_SH_MediumSc_packet_info {
+enum obj_029E_SH_MediumSc_packet_info
+{
     SH_MEDIUMSC_DEF_ID = 0x029E,
     SH_MEDIUMSC_DLL_ID = 0x00ED,
     SH_MEDIUMSC_CLASS_ID = 0x0006,

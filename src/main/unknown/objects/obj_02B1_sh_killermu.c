@@ -52,7 +52,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02B1_SH_killermu_packet_info {
+enum obj_02B1_SH_killermu_packet_info
+{
     SH_KILLERMU_DEF_ID = 0x02B1,
     SH_KILLERMU_DLL_ID = 0x01A8,
     SH_KILLERMU_CLASS_ID = 0x002A,

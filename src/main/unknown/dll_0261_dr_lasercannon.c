@@ -28,7 +28,8 @@
  */
 
 #if 0
-enum dll_0261_DR_LaserCannon_slot {
+enum dll_0261_DR_LaserCannon_slot
+{
     DRLASERCANNON_INITIALISE = 0,
     DRLASERCANNON_RELEASE = 1,
     DRLASERCANNON_INIT = 3,

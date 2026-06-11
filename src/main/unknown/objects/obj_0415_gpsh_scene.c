@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0415_GPSH_Scene_packet_info {
+enum obj_0415_GPSH_Scene_packet_info
+{
     GPSH_SCENE_DEF_ID = 0x0415,
     GPSH_SCENE_DLL_ID = 0x0194,
     GPSH_SCENE_CLASS_ID = 0x0030,

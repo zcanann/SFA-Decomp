@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0371_DFP_Textblo_packet_info {
+enum obj_0371_DFP_Textblo_packet_info
+{
     DFP_TEXTBLO_DEF_ID = 0x0371,
     DFP_TEXTBLO_DLL_ID = 0x0239,
     DFP_TEXTBLO_CLASS_ID = 0x0030,

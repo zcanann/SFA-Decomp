@@ -58,7 +58,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_016F_DIMIceWall_packet_info {
+enum obj_016F_DIMIceWall_packet_info
+{
     DIMICEWALL_DEF_ID = 0x016F,
     DIMICEWALL_DLL_ID = 0x01C4,
     DIMICEWALL_CLASS_ID = 0x0030,

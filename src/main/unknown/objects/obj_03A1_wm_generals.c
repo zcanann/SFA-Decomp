@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03A1_WM_GeneralS_packet_info {
+enum obj_03A1_WM_GeneralS_packet_info
+{
     WM_GENERALS_DEF_ID = 0x03A1,
     WM_GENERALS_DLL_ID = 0x020A,
     WM_GENERALS_CLASS_ID = 0x0030,

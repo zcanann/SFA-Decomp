@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_020E_WORLDpath7_packet_info {
+enum obj_020E_WORLDpath7_packet_info
+{
     WORLDPATH7_DEF_ID = 0x020E,
     WORLDPATH7_DLL_ID = 0x01D3,
     WORLDPATH7_CLASS_ID = 0x0061,

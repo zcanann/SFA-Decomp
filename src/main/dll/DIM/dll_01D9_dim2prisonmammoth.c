@@ -5,14 +5,16 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
-typedef struct Dim2prisonmammothPlacement {
+typedef struct Dim2prisonmammothPlacement
+{
     u8 pad0[0x19 - 0x0];
     s8 unk19;
     u8 pad1A[0x20 - 0x1A];
 } Dim2prisonmammothPlacement;
 
 
-typedef struct Dim2prisonmammothState {
+typedef struct Dim2prisonmammothState
+{
     s32 unk0;
     u8 pad4[0x25F - 0x4];
     u8 unk25F;
@@ -38,7 +40,8 @@ typedef struct Dim2prisonmammothState {
 
 /* DLL 0x76 (DIMSnowHorn1 / dim2prisonmammoth) fragment: head/vtable live in placeholder_802BACC0 + placeholder_802BB4B0; consolidate when those adjacent units are graduated. */
 
-typedef struct {
+typedef struct
+{
     u8 b80 : 1;
     u8 b40 : 1;
     u8 b20 : 1;
@@ -382,7 +385,8 @@ extern undefined4 _DAT_803df140;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct {
+typedef struct
+{
     f32 f0;
     f32 f4;
     f32 f8;
@@ -397,12 +401,13 @@ typedef struct {
     u8 pad_22[2];
 } SnowHornEntry;
 
-typedef struct {
+typedef struct
+{
     u8 pad[0x94];
     u8 flag;
 } SnowHornFlags;
 
-extern void *Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern u8 lbl_80335030[];
 extern void fn_8003A168(int obj, int q);
 extern void characterDoEyeAnims(int obj, int q);
@@ -414,10 +419,10 @@ extern int getCurMapLayer(void);
 extern int GameBit_Set(int bit, int val);
 extern f32 Vec_distance(int a, int b);
 extern f32 getXZDistance(int a, int b);
-extern char *ObjGroup_FindNearestObject(int group, int obj, f32 *distInOut);
-extern void setMatrixFromObjectPos(f32 *out, void *vec);
-extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
-extern int *gNewCloudsInterface;
+extern char* ObjGroup_FindNearestObject(int group, int obj, f32* distInOut);
+extern void setMatrixFromObjectPos(f32* out, void* vec);
+extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern int* gNewCloudsInterface;
 extern u8 framesThisStep;
 extern f32 lbl_803E8234;
 extern f32 lbl_803E8240;
@@ -434,11 +439,11 @@ extern f32 lbl_803E83E8;
 extern f32 lbl_803E83A4;
 extern void fn_8003B950(int mtx);
 
-extern void playerTailFn_80026b3c(int *p1, int p2, int p3, void *p4);
-extern void *lbl_803DE4D0;
+extern void playerTailFn_80026b3c(int* p1, int p2, int p3, void* p4);
+extern void* lbl_803DE4D0;
 
 extern int gDRCloudRunnerStateHandlers[];
-extern void *gDRCloudRunnerDefaultStateHandler;
+extern void* gDRCloudRunnerDefaultStateHandler;
 extern int DR_CloudRunner_stateHandler00(int obj);
 extern int DR_CloudRunner_stateHandler01(int obj, int p2);
 extern int DR_CloudRunner_stateHandler02(int obj, int p2);
@@ -449,8 +454,8 @@ extern void DR_CloudRunner_stateHandler06();
 
 extern int gDim2PrisonMammothStateHandlers[];
 extern int gDREarthWarriorStateHandlers[];
-extern void *gDim2PrisonMammothDefaultStateHandler;
-extern void *gDREarthWarriorDefaultStateHandler;
+extern void* gDim2PrisonMammothDefaultStateHandler;
+extern void* gDREarthWarriorDefaultStateHandler;
 extern int dim2prisonmammoth_stateHandler01(int obj, int p2);
 extern int dim2prisonmammoth_stateHandler02(int obj, int p2);
 extern int dim2prisonmammoth_stateHandler03(int obj, int p2);
@@ -466,7 +471,7 @@ extern f32 lbl_803DC758;
 extern s16 lbl_803DC754;
 extern int randomGetRange(int lo, int hi);
 extern int RandomTimer_UpdateRangeTrigger(int p, f32 a, f32 b);
-extern ObjectTriggerInterface **gObjectTriggerInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void Sfx_PlayFromObject(int obj, int id);
 
 extern f32 lbl_803E83F4;
@@ -493,23 +498,23 @@ extern f32 lbl_803E8364;
 extern void fn_80026C88(int p);
 extern int Obj_FreeObject(int obj);
 
-extern int objAudioFn_800393f8(int obj, void *audio, int soundId, int volume, int p5, int p6);
+extern int objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int p5, int p6);
 extern void textureFree(int handle);
 extern f32 lbl_803E82E8;
 extern int lbl_8033527C[];
-extern void *gDIMSnowHorn1Texture;
+extern void* gDIMSnowHorn1Texture;
 
 
 extern f32 lbl_803E8410;
 
-extern int *gPlayerInterface;
-int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate);
+extern int* gPlayerInterface;
+int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState* animUpdate);
 
 
 extern f32 lbl_803DC78C;
 extern f32 lbl_803DC790;
 
-extern void mtx44_mult(void *lhs, void *rhs, void *out);
+extern void mtx44_mult(void* lhs, void* rhs, void* out);
 extern f32 lbl_803DB170[];
 
 extern void DIMSnowHorn1_stateHandler00();
@@ -526,19 +531,19 @@ extern void DIMSnowHorn1_stateHandler0A();
 extern void DIMSnowHorn1_stateHandler0B();
 extern void DIMSnowHorn1_defaultStateHandler();
 extern int gDIMSnowHorn1StateHandlers[];
-extern void *gDIMSnowHorn1DefaultStateHandler;
+extern void* gDIMSnowHorn1DefaultStateHandler;
 extern s16 gDIMSnowHorn1TextureId;
 extern int textureLoad(int id, int p2);
 
-extern int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
+extern int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate);
 extern int lbl_803E8230;
 extern int lbl_803DC734;
 extern f32 lbl_803E82B8;
 extern void dll_2E_func05(int obj, int q, int a, int b, int c);
 
-extern int dll_2E_func07(int obj, int p3, void *q, int a, int b);
+extern int dll_2E_func07(int obj, int p3, void* q, int a, int b);
 
-extern int dll_2E_func0A(int a, void *out);
+extern int dll_2E_func0A(int a, void* out);
 extern void dll_2E_func08(int q, int a, int b);
 extern f32 lbl_803E8414;
 extern f32 lbl_803E8424;
@@ -558,7 +563,7 @@ extern int lbl_803DC77C;
 extern int lbl_803DC780;
 extern int lbl_803DC784;
 
-extern void *Camera_GetCurrentViewSlot(void);
+extern void* Camera_GetCurrentViewSlot(void);
 extern int padGetStickX(int p);
 extern int padGetStickY(int p);
 extern int getButtonsJustPressed(int p);
@@ -572,7 +577,7 @@ extern void fn_802B0EA4(int obj, int q, int inner);
 extern void fn_802B1BF8(int obj, int q, int inner, f32 t);
 extern void fn_802B1B28(int obj, f32 t);
 
-extern void fn_80137948(const char *fmt, ...);
+extern void fn_80137948(const char* fmt, ...);
 extern char sOnCloudFormat[];
 extern f32 lbl_803E8418;
 extern f32 lbl_803E841C;
@@ -581,10 +586,10 @@ extern f32 lbl_803E8420;
 extern u8 Obj_IsLoadingLocked(int obj);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int s, int b, int c, int d, int e);
-extern void vecRotateZXY(void *a, void *b);
-extern void voxmaps_worldToGrid(void *src, void *grid);
-extern int voxmaps_traceLine(void *a, void *b, void *c, int d, int e);
-extern void voxmaps_gridToWorld(void *grid, void *out);
+extern void vecRotateZXY(void* a, void* b);
+extern void voxmaps_worldToGrid(void* src, void* grid);
+extern int voxmaps_traceLine(void* a, void* b, void* c, int d, int e);
+extern void voxmaps_gridToWorld(void* grid, void* out);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E83AC;
 extern f32 lbl_803E83B0;
@@ -609,67 +614,78 @@ int dim2prisonmammoth_getExtraSize(void) { return 0x604; }
 
 int dim2prisonmammoth_getObjectTypeId(void) { return 0; }
 
-void dim2prisonmammoth_free(void) {}
+void dim2prisonmammoth_free(void)
+{
+}
 
 void dim2prisonmammoth_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible != 0) {
+    if (visible != 0)
+    {
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E82D0);
     }
 }
 
-void dim2prisonmammoth_hitDetect(void) {}
+void dim2prisonmammoth_hitDetect(void)
+{
+}
 
 #pragma peephole off
-int dim2prisonmammoth_stateHandler00(int* obj) {
-    int* sub = *(int**)&((GameObject *)obj)->anim.placementData;
-    switch ((s8)((Dim2prisonmammothPlacement *)sub)->unk19) {
-        case 0:
-            if ((u32)GameBit_Get(548) != 0) return 3;
-            return 2;
-        case 1:
-            if ((u32)GameBit_Get(707) != 0) return 3;
-            return 3;
-        default:
-            return 0;
+int dim2prisonmammoth_stateHandler00(int* obj)
+{
+    int* sub = *(int**)&((GameObject*)obj)->anim.placementData;
+    switch ((s8)((Dim2prisonmammothPlacement*)sub)->unk19)
+    {
+    case 0:
+        if ((u32)GameBit_Get(548) != 0) return 3;
+        return 2;
+    case 1:
+        if ((u32)GameBit_Get(707) != 0) return 3;
+        return 3;
+    default:
+        return 0;
     }
 }
 
 #pragma peephole on
-void dim2prisonmammoth_release(void) {}
+void dim2prisonmammoth_release(void)
+{
+}
 
 #pragma scheduling off
 void fn_802BC788(int a, int b)
 {
-    playerTailFn_80026b3c((int *)b, *(int *)b, *(int *)(*(int *)((char *)a + 0xb8) + 0x14f8), 0);
+    playerTailFn_80026b3c((int*)b, *(int*)b, *(int*)(*(int*)((char*)a + 0xb8) + 0x14f8), 0);
 }
 
 void dim2prisonmammoth_initialise(void)
 {
-    ((void **)gDim2PrisonMammothStateHandlers)[0] = (void *)dim2prisonmammoth_stateHandler00;
-    ((void **)gDim2PrisonMammothStateHandlers)[1] = (void *)dim2prisonmammoth_stateHandler01;
-    ((void **)gDim2PrisonMammothStateHandlers)[2] = (void *)dim2prisonmammoth_stateHandler02;
-    ((void **)gDim2PrisonMammothStateHandlers)[3] = (void *)dim2prisonmammoth_stateHandler03;
-    gDim2PrisonMammothDefaultStateHandler = (void *)dim2prisonmammoth_defaultStateHandler;
+    ((void**)gDim2PrisonMammothStateHandlers)[0] = (void*)dim2prisonmammoth_stateHandler00;
+    ((void**)gDim2PrisonMammothStateHandlers)[1] = (void*)dim2prisonmammoth_stateHandler01;
+    ((void**)gDim2PrisonMammothStateHandlers)[2] = (void*)dim2prisonmammoth_stateHandler02;
+    ((void**)gDim2PrisonMammothStateHandlers)[3] = (void*)dim2prisonmammoth_stateHandler03;
+    gDim2PrisonMammothDefaultStateHandler = (void*)dim2prisonmammoth_defaultStateHandler;
 }
 
 #pragma peephole off
 int dim2prisonmammoth_stateHandler03(int obj, int p2)
 {
     f32 fz = lbl_803E82C0;
-    ((BaddieState *)p2)->animSpeedC = fz;
-    ((BaddieState *)p2)->animSpeedB = fz;
-    ((BaddieState *)p2)->animSpeedA = fz;
-    ((GameObject *)obj)->anim.velocityX = fz;
-    ((GameObject *)obj)->anim.velocityY = fz;
-    ((GameObject *)obj)->anim.velocityZ = fz;
-    *(int *)((char *)p2 + 0) |= 0x200000;
-    if (*(s8 *)&((BaddieState *)p2)->moveJustStartedA != 0) {
+    ((BaddieState*)p2)->animSpeedC = fz;
+    ((BaddieState*)p2)->animSpeedB = fz;
+    ((BaddieState*)p2)->animSpeedA = fz;
+    ((GameObject*)obj)->anim.velocityX = fz;
+    ((GameObject*)obj)->anim.velocityY = fz;
+    ((GameObject*)obj)->anim.velocityZ = fz;
+    *(int*)((char*)p2 + 0) |= 0x200000;
+    if (*(s8*)&((BaddieState*)p2)->moveJustStartedA != 0)
+    {
         int k = randomGetRange(0, 1);
-        ((BaddieState *)p2)->moveSpeed = (&lbl_803DC758)[k];
+        ((BaddieState*)p2)->moveSpeed = (&lbl_803DC758)[k];
         ObjAnim_SetCurrentMove(obj, (&lbl_803DC754)[k], lbl_803E82C0, 0);
     }
-    if (*(s8 *)&((BaddieState *)p2)->moveDone != 0) {
+    if (*(s8*)&((BaddieState*)p2)->moveDone != 0)
+    {
         return -1;
     }
     return 0;
@@ -677,23 +693,25 @@ int dim2prisonmammoth_stateHandler03(int obj, int p2)
 
 int dim2prisonmammoth_stateHandler02(int obj, int p2)
 {
-    int inner = *(int *)&((GameObject *)obj)->extra;
+    int inner = *(int*)&((GameObject*)obj)->extra;
     f32 fz = lbl_803E82C0;
-    ((BaddieState *)p2)->animSpeedC = fz;
-    ((BaddieState *)p2)->animSpeedB = fz;
-    ((BaddieState *)p2)->animSpeedA = fz;
-    ((GameObject *)obj)->anim.velocityX = fz;
-    ((GameObject *)obj)->anim.velocityY = fz;
-    ((GameObject *)obj)->anim.velocityZ = fz;
-    *(int *)((char *)p2 + 0) |= 0x200000;
-    ((BaddieState *)p2)->moveSpeed = lbl_803E82C4;
-    if (((GameObject *)obj)->anim.currentMove != 0) {
+    ((BaddieState*)p2)->animSpeedC = fz;
+    ((BaddieState*)p2)->animSpeedB = fz;
+    ((BaddieState*)p2)->animSpeedA = fz;
+    ((GameObject*)obj)->anim.velocityX = fz;
+    ((GameObject*)obj)->anim.velocityY = fz;
+    ((GameObject*)obj)->anim.velocityZ = fz;
+    *(int*)((char*)p2 + 0) |= 0x200000;
+    ((BaddieState*)p2)->moveSpeed = lbl_803E82C4;
+    if (((GameObject*)obj)->anim.currentMove != 0)
+    {
         ObjAnim_SetCurrentMove(obj, 0, fz, 0);
     }
-    ((Dim2prisonmammothState *)inner)->unk38C = randomGetRange(0x4b0, 0x960);
-    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
-    if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
-        (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
+    ((Dim2prisonmammothState*)inner)->unk38C = randomGetRange(0x4b0, 0x960);
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+    if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1)
+    {
+        (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         buttonDisable(0, 0x100);
     }
     return 0;
@@ -701,27 +719,31 @@ int dim2prisonmammoth_stateHandler02(int obj, int p2)
 
 int dim2prisonmammoth_stateHandler01(int obj, int p2)
 {
-    int inner = *(int *)&((GameObject *)obj)->extra;
+    int inner = *(int*)&((GameObject*)obj)->extra;
     f32 fz = lbl_803E82C0;
-    ((BaddieState *)p2)->animSpeedC = fz;
-    ((BaddieState *)p2)->animSpeedB = fz;
-    ((BaddieState *)p2)->animSpeedA = fz;
-    ((GameObject *)obj)->anim.velocityX = fz;
-    ((GameObject *)obj)->anim.velocityY = fz;
-    ((GameObject *)obj)->anim.velocityZ = fz;
-    *(int *)((char *)p2 + 0) |= 0x200000;
-    if (*(s8 *)&((BaddieState *)p2)->moveJustStartedA != 0) {
-        ((BaddieState *)p2)->moveSpeed = lbl_803E82C4;
-        if (((GameObject *)obj)->anim.currentMove != 5) {
+    ((BaddieState*)p2)->animSpeedC = fz;
+    ((BaddieState*)p2)->animSpeedB = fz;
+    ((BaddieState*)p2)->animSpeedA = fz;
+    ((GameObject*)obj)->anim.velocityX = fz;
+    ((GameObject*)obj)->anim.velocityY = fz;
+    ((GameObject*)obj)->anim.velocityZ = fz;
+    *(int*)((char*)p2 + 0) |= 0x200000;
+    if (*(s8*)&((BaddieState*)p2)->moveJustStartedA != 0)
+    {
+        ((BaddieState*)p2)->moveSpeed = lbl_803E82C4;
+        if (((GameObject*)obj)->anim.currentMove != 5)
+        {
             ObjAnim_SetCurrentMove(obj, 5, fz, 0);
         }
-        ((Dim2prisonmammothState *)inner)->unk38C = randomGetRange(0x4b0, 0x960);
+        ((Dim2prisonmammothState*)inner)->unk38C = randomGetRange(0x4b0, 0x960);
     }
-    if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
+    if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1)
+    {
         GameBit_Set(0x223, 1);
         buttonDisable(0, 0x100);
     }
-    if (RandomTimer_UpdateRangeTrigger(inner + 0x600, lbl_803E82C8, lbl_803E82CC)) {
+    if (RandomTimer_UpdateRangeTrigger(inner + 0x600, lbl_803E82C8, lbl_803E82CC))
+    {
         Sfx_PlayFromObject(obj, 0x43a);
     }
     return 0;
@@ -730,21 +752,23 @@ int dim2prisonmammoth_stateHandler01(int obj, int p2)
 void dim2prisonmammoth_init(int obj, int p2)
 {
     int inner;
-    ((GameObject *)obj)->anim.rotX = (s16)((s8)*(s8 *)((char *)p2 + 0x18) << 8);
-    ((GameObject *)obj)->animEventCallback = (void *)fn_802BC3F0;
-    inner = *(int *)&((GameObject *)obj)->extra;
-    if (((GameObject *)obj)->anim.modelState != NULL) {
-        ((GameObject *)obj)->anim.modelState->flags |= 0xa10;
-        ((GameObject *)obj)->anim.modelState->flags |= 0x8020;
+    ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)p2 + 0x18) << 8);
+    ((GameObject*)obj)->animEventCallback = (void*)fn_802BC3F0;
+    inner = *(int*)&((GameObject*)obj)->extra;
+    if (((GameObject*)obj)->anim.modelState != NULL)
+    {
+        ((GameObject*)obj)->anim.modelState->flags |= 0xa10;
+        ((GameObject*)obj)->anim.modelState->flags |= 0x8020;
     }
-    (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
-    ((Dim2prisonmammothState *)inner)->unk25F = 0;
-    ((GameObject *)obj)->objectFlags |= 0x2000;
+    (*(void (*)(int, int, int, int))(*(int*)(*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
+    ((Dim2prisonmammothState*)inner)->unk25F = 0;
+    ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
-int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate)
+int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {
-    struct {
+    struct
+    {
         s16 angles[4];
         f32 mat[4];
     } v;
@@ -753,63 +777,68 @@ int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate)
 
     animUpdate->sequenceEventActive = 0;
     animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
-    inner = *(int *)&((GameObject *)obj)->extra;
-    (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, inner, 2);
+    inner = *(int*)&((GameObject*)obj)->extra;
+    (*(void (*)(int, int, int))(*(int*)(*gPlayerInterface + 0x14)))(obj, inner, 2);
 
-    v.mat[1] = ((GameObject *)obj)->anim.localPosX;
-    v.mat[2] = ((GameObject *)obj)->anim.localPosY;
-    v.mat[3] = ((GameObject *)obj)->anim.localPosZ;
-    v.angles[0] = ((GameObject *)obj)->anim.rotX;
-    v.angles[1] = ((GameObject *)obj)->anim.rotY;
-    v.angles[2] = ((GameObject *)obj)->anim.rotZ;
-    v.mat[0] = ((GameObject *)obj)->anim.rootMotionScale;
+    v.mat[1] = ((GameObject*)obj)->anim.localPosX;
+    v.mat[2] = ((GameObject*)obj)->anim.localPosY;
+    v.mat[3] = ((GameObject*)obj)->anim.localPosZ;
+    v.angles[0] = ((GameObject*)obj)->anim.rotX;
+    v.angles[1] = ((GameObject*)obj)->anim.rotY;
+    v.angles[2] = ((GameObject*)obj)->anim.rotZ;
+    v.mat[0] = ((GameObject*)obj)->anim.rootMotionScale;
     setMatrixFromObjectPos(matrix, v.angles);
 
     Matrix_TransformPoint(matrix, lbl_803E82C0, lbl_803E82C0, lbl_803E82C0,
-                          &((GameObject *)obj)->anim.modelState->overrideWorldPosX,
-                          &((GameObject *)obj)->anim.modelState->overrideWorldPosY,
-                          &((GameObject *)obj)->anim.modelState->overrideWorldPosZ);
+                          &((GameObject*)obj)->anim.modelState->overrideWorldPosX,
+                          &((GameObject*)obj)->anim.modelState->overrideWorldPosY,
+                          &((GameObject*)obj)->anim.modelState->overrideWorldPosZ);
     return 0;
 }
 
 void dim2prisonmammoth_update(int obj)
 {
-    struct {
+    struct
+    {
         s16 angles[4];
         f32 mat[4];
     } v;
     f32 matrix[16];
-    int inner = *(int *)&((GameObject *)obj)->extra;
-    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
-    if (((&lbl_803DC750)[((Dim2prisonmammothState *)inner)->unk274] & 8) == 0) {
-        ((Dim2prisonmammothState *)inner)->unk5FC = ((u8 (*)(int, ObjHitReactEntry *, u32, u32, f32 *))ObjHitReact_Update)(obj, lbl_803351A8, 1, ((Dim2prisonmammothState *)inner)->unk5FC, (f32 *)(inner + 0x390));
-        if (((Dim2prisonmammothState *)inner)->unk5FC != 0) {
+    int inner = *(int*)&((GameObject*)obj)->extra;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+    if (((&lbl_803DC750)[((Dim2prisonmammothState*)inner)->unk274] & 8) == 0)
+    {
+        ((Dim2prisonmammothState*)inner)->unk5FC = ((u8 (*)(int, ObjHitReactEntry*, u32, u32, f32*))ObjHitReact_Update)(
+            obj, lbl_803351A8, 1, ((Dim2prisonmammothState*)inner)->unk5FC, (f32*)(inner + 0x390));
+        if (((Dim2prisonmammothState*)inner)->unk5FC != 0)
+        {
             fn_8003A168(obj, inner + 0x35c);
             characterDoEyeAnims(obj, inner + 0x35c);
             return;
         }
     }
     characterDoEyeAnims(obj, inner + 0x35c);
-    v.mat[1] = ((GameObject *)obj)->anim.localPosX;
-    v.mat[2] = ((GameObject *)obj)->anim.localPosY;
-    v.mat[3] = ((GameObject *)obj)->anim.localPosZ;
-    v.angles[0] = ((GameObject *)obj)->anim.rotX;
-    v.angles[1] = ((GameObject *)obj)->anim.rotY;
-    v.angles[2] = ((GameObject *)obj)->anim.rotZ;
-    v.mat[0] = ((GameObject *)obj)->anim.rootMotionScale;
+    v.mat[1] = ((GameObject*)obj)->anim.localPosX;
+    v.mat[2] = ((GameObject*)obj)->anim.localPosY;
+    v.mat[3] = ((GameObject*)obj)->anim.localPosZ;
+    v.angles[0] = ((GameObject*)obj)->anim.rotX;
+    v.angles[1] = ((GameObject*)obj)->anim.rotY;
+    v.angles[2] = ((GameObject*)obj)->anim.rotZ;
+    v.mat[0] = ((GameObject*)obj)->anim.rootMotionScale;
     setMatrixFromObjectPos(matrix, v.angles);
     Matrix_TransformPoint(matrix, lbl_803E82C0, lbl_803E82C0, lbl_803E82C0,
-                          &((GameObject *)obj)->anim.modelState->overrideWorldPosX,
-                          &((GameObject *)obj)->anim.modelState->overrideWorldPosY,
-                          &((GameObject *)obj)->anim.modelState->overrideWorldPosZ);
-    ((Dim2prisonmammothState *)inner)->unk354 = 0;
-    ((Dim2prisonmammothState *)inner)->unk0 &= ~0x8000;
-    ((Dim2prisonmammothState *)inner)->unk290 = lbl_803E82C0;
-    ((Dim2prisonmammothState *)inner)->unk28C = lbl_803E82C0;
-    ((Dim2prisonmammothState *)inner)->unk31C = 0;
-    ((Dim2prisonmammothState *)inner)->unk318 = 0;
-    ((Dim2prisonmammothState *)inner)->unk330 = 0;
-    ((Dim2prisonmammothState *)inner)->unk0 |= 0x400000;
-    (*(void (*)(int, int, f32, f32, int, void *))(*(int *)(*gPlayerInterface + 0x8)))(obj, inner, timeDelta, timeDelta, (int)gDim2PrisonMammothStateHandlers, &gDim2PrisonMammothDefaultStateHandler);
+                          &((GameObject*)obj)->anim.modelState->overrideWorldPosX,
+                          &((GameObject*)obj)->anim.modelState->overrideWorldPosY,
+                          &((GameObject*)obj)->anim.modelState->overrideWorldPosZ);
+    ((Dim2prisonmammothState*)inner)->unk354 = 0;
+    ((Dim2prisonmammothState*)inner)->unk0 &= ~0x8000;
+    ((Dim2prisonmammothState*)inner)->unk290 = lbl_803E82C0;
+    ((Dim2prisonmammothState*)inner)->unk28C = lbl_803E82C0;
+    ((Dim2prisonmammothState*)inner)->unk31C = 0;
+    ((Dim2prisonmammothState*)inner)->unk318 = 0;
+    ((Dim2prisonmammothState*)inner)->unk330 = 0;
+    ((Dim2prisonmammothState*)inner)->unk0 |= 0x400000;
+    (*(void (*)(int, int, f32, f32, int, void*))(*(int*)(*gPlayerInterface + 0x8)))(
+        obj, inner, timeDelta, timeDelta, (int)gDim2PrisonMammothStateHandlers, &gDim2PrisonMammothDefaultStateHandler);
     saveGame_saveObjectPos(obj);
 }

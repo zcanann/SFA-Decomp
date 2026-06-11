@@ -2420,7 +2420,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0030_various0030_defs {
+enum class_0030_various0030_defs
+{
     VARIOUS0030_LARGECRATE = 0x04F9,
     VARIOUS0030_BADDIEINTER = 0x0068,
     VARIOUS0030_VFP_LAVAPOO = 0x0318,

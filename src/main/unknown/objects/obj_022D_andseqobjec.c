@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_022D_ANDSeqObjec_packet_info {
+enum obj_022D_ANDSeqObjec_packet_info
+{
     ANDSEQOBJEC_DEF_ID = 0x022D,
     ANDSEQOBJEC_DLL_ID = 0x0112,
     ANDSEQOBJEC_CLASS_ID = 0x0055,

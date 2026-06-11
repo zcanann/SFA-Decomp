@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0319_VFP_flamepo_packet_info {
+enum obj_0319_VFP_flamepo_packet_info
+{
     VFP_FLAMEPO_DEF_ID = 0x0319,
     VFP_FLAMEPO_DLL_ID = 0x0225,
     VFP_FLAMEPO_CLASS_ID = 0x0030,

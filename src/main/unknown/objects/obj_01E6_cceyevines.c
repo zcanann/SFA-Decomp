@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01E6_CCeyeVines_packet_info {
+enum obj_01E6_CCeyeVines_packet_info
+{
     CCEYEVINES_DEF_ID = 0x01E6,
     CCEYEVINES_DLL_ID = 0x00E7,
     CCEYEVINES_CLASS_ID = 0x0030,

@@ -168,7 +168,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0039_LevelControl_defs {
+enum class_0039_LevelControl_defs
+{
     LEVELCONTROL_ARWLEVELCON = 0x0536,
     LEVELCONTROL_SH_LEVELCON = 0x02A8,
     LEVELCONTROL_KT_REXLEVEL = 0x0089,

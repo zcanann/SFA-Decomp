@@ -73,7 +73,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02EE_SC_DummyTri_packet_info {
+enum obj_02EE_SC_DummyTri_packet_info
+{
     SC_DUMMYTRI_DEF_ID = 0x02EE,
     SC_DUMMYTRI_DLL_ID = 0x011A,
     SC_DUMMYTRI_CLASS_ID = 0x0061,

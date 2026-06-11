@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0230_Andross_packet_info {
+enum obj_0230_Andross_packet_info
+{
     ANDROSS_DEF_ID = 0x0230,
     ANDROSS_DLL_ID = 0x02BC,
     ANDROSS_CLASS_ID = 0x0061,

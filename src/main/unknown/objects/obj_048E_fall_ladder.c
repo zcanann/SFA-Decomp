@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_048E_Fall_Ladder_packet_info {
+enum obj_048E_Fall_Ladder_packet_info
+{
     FALL_LADDER_DEF_ID = 0x048E,
     FALL_LADDER_DLL_ID = 0x010A,
     FALL_LADDER_CLASS_ID = 0x0030,

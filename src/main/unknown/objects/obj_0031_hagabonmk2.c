@@ -80,7 +80,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0031_HagabonMK2_packet_info {
+enum obj_0031_HagabonMK2_packet_info
+{
     HAGABONMK2_DEF_ID = 0x0031,
     HAGABONMK2_DLL_ID = 0x00C9,
     HAGABONMK2_CLASS_ID = 0x001C,

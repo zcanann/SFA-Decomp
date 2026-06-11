@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0262_MMP_asteroi_packet_info {
+enum obj_0262_MMP_asteroi_packet_info
+{
     MMP_ASTEROI_DEF_ID = 0x0262,
     MMP_ASTEROI_DLL_ID = 0x0180,
     MMP_ASTEROI_CLASS_ID = 0x0030,

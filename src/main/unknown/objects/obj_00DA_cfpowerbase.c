@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00DA_CFPowerBase_packet_info {
+enum obj_00DA_CFPowerBase_packet_info
+{
     CFPOWERBASE_DEF_ID = 0x00DA,
     CFPOWERBASE_DLL_ID = 0x014A,
     CFPOWERBASE_CLASS_ID = 0x0030,

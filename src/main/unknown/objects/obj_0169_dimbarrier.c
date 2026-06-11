@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0169_DIMBarrier_packet_info {
+enum obj_0169_DIMBarrier_packet_info
+{
     DIMBARRIER_DEF_ID = 0x0169,
     DIMBARRIER_DLL_ID = 0x01C5,
     DIMBARRIER_CLASS_ID = 0x0030,

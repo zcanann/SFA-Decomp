@@ -53,7 +53,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0492_checkpoint4_packet_info {
+enum obj_0492_checkpoint4_packet_info
+{
     CHECKPOINT4_DEF_ID = 0x0492,
     CHECKPOINT4_DLL_ID = 0x00E8,
     CHECKPOINT4_CLASS_ID = 0x0005,

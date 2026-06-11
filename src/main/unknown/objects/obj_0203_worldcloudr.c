@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0203_WORLDcloudr_packet_info {
+enum obj_0203_WORLDcloudr_packet_info
+{
     WORLDCLOUDR_DEF_ID = 0x0203,
     WORLDCLOUDR_DLL_ID = 0x01D3,
     WORLDCLOUDR_CLASS_ID = 0x0061,

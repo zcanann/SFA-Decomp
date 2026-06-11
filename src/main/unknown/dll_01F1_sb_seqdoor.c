@@ -38,7 +38,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_01F1_SB_SeqDoor_slot {
+enum dll_01F1_SB_SeqDoor_slot
+{
     SB_SEQDOOR_INITIALISE = 0,
     SB_SEQDOOR_RELEASE = 1,
     SB_SEQDOOR_INIT = 3,

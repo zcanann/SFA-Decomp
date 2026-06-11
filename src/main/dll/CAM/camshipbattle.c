@@ -24,52 +24,61 @@ extern int objFn_80296700(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void camcontrol_updatePathTargetAction(CameraObject *camera,GameObject *target)
+void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
 {
-  short sVar1;
-  u16 buttons;
-  GameObject *targetObj;
-  struct {
-    f32 x;
-    f32 z;
-    s16 y;
-  } local_28;
-  
-  if (*(u32 *)&target->pendingParentObj == 0) {
-    buttons = getButtonsJustPressed(0);
-    targetObj = (GameObject *)camera->secondaryTargetObj;
-    if (targetObj != NULL) {
-      sVar1 = targetObj->anim.classId;
-      if (sVar1 == 0x1c) {
-        goto checkActiveTarget;
-      }
-      if (sVar1 != 0x2a) {
-        goto checkOverrideFlag;
-      }
-checkActiveTarget:
-      if (target->anim.classId != 1) {
-        goto checkOverrideFlag;
-      }
-      if (objFn_80296700((int)target) != 0) {
-        goto sendFollowAction;
-      }
+    short sVar1;
+    u16 buttons;
+    GameObject* targetObj;
+    struct
+    {
+        f32 x;
+        f32 z;
+        s16 y;
+    } local_28;
+
+    if (*(u32*)&target->pendingParentObj == 0)
+    {
+        buttons = getButtonsJustPressed(0);
+        targetObj = (GameObject*)camera->secondaryTargetObj;
+        if (targetObj != NULL)
+        {
+            sVar1 = targetObj->anim.classId;
+            if (sVar1 == 0x1c)
+            {
+                goto checkActiveTarget;
+            }
+            if (sVar1 != 0x2a)
+            {
+                goto checkOverrideFlag;
+            }
+        checkActiveTarget:
+            if (target->anim.classId != 1)
+            {
+                goto checkOverrideFlag;
+            }
+            if (objFn_80296700((int)target) != 0)
+            {
+                goto sendFollowAction;
+            }
+        }
+    checkOverrideFlag:
+        if ((camera->unk141 & 2) != 0)
+        {
+        sendFollowAction:
+            (*gCameraInterface)->setMode(0x49, 1, 0, 4, &camera->secondaryTargetObj, 0x3c, 0xff);
+            goto done;
+        }
+        if ((((buttons & 0x10) != 0) && (target->anim.classId == 1)) &&
+            (objFn_802962b4((int)target) != 0))
+        {
+            local_28.x = gCamcontrolPathState->actionParamX;
+            local_28.z = gCamcontrolPathState->actionParamZ;
+            local_28.y = (s16)gCamcontrolPathState->actionParamY;
+            (*gCameraInterface)->setMode(0x44, 1, 0, 0xc, &local_28, 0, 0xff);
+        }
     }
-checkOverrideFlag:
-    if ((camera->unk141 & 2) != 0) {
-sendFollowAction:
-      (*gCameraInterface)->setMode(0x49,1,0,4,&camera->secondaryTargetObj,0x3c,0xff);
-      goto done;
-    }
-    if ((((buttons & 0x10) != 0) && (target->anim.classId == 1)) &&
-        (objFn_802962b4((int)target) != 0)) {
-      local_28.x = gCamcontrolPathState->actionParamX;
-      local_28.z = gCamcontrolPathState->actionParamZ;
-      local_28.y = (s16)gCamcontrolPathState->actionParamY;
-      (*gCameraInterface)->setMode(0x44,1,0,0xc,&local_28,0,0xff);
-    }
-  }
 done:
-  return;
+    return;
 }
 
 /*
@@ -87,11 +96,13 @@ done:
  */
 void camcontrol_releasePathState(void)
 {
-  FUN_80017814(gCamcontrolPathState);
-  gCamcontrolPathState = 0;
-  return;
+    FUN_80017814(gCamcontrolPathState);
+    gCamcontrolPathState = 0;
+    return;
 }
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void CameraModeStaffAnim_copyToCurrent_nop(void) {}
+void CameraModeStaffAnim_copyToCurrent_nop(void)
+{
+}

@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0197_DIM2PrisonM_packet_info {
+enum obj_0197_DIM2PrisonM_packet_info
+{
     DIM2PRISONM_DEF_ID = 0x0197,
     DIM2PRISONM_DLL_ID = 0x01D9,
     DIM2PRISONM_CLASS_ID = 0x0030,

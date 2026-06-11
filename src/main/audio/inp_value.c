@@ -9,7 +9,7 @@ extern u32 synthRealTimeLo;
 /*
  * Evaluate a controller expression list and cache its 14-bit result.
  */
-u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u32 midiSlot, u32 midiKey)
+u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u32 midiSlot, u32 midiKey)
 {
     u32 sign;
     u32 i;
@@ -18,22 +18,29 @@ u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u32 midiSlo
     s32 tmp;
     s32 vtmp;
 
-    for (value = 0, i = 0; i < slotPtr->entryCount; ++i) {
-        if (slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_USE_VAR_FLAG) {
+    for (value = 0, i = 0; i < slotPtr->entryCount; ++i)
+    {
+        if (slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_USE_VAR_FLAG)
+        {
             tmp = (statePtr != NULL ? (s16)varGet((int)statePtr, 0, slotPtr->entries[i].controller) : 0);
             goto block_18;
         }
         ctrl = slotPtr->entries[i].controller;
         if (ctrl == MCMD_CTRL_PITCH_BEND || ctrl == MCMD_CTRL_MODULATION ||
             ctrl == MCMD_CTRL_PANNING || ctrl == MCMD_CTRL_EX_A0 ||
-            ctrl == MCMD_CTRL_EX_A1 || ctrl == MCMD_CTRL_SUR_PANNING) {
-            switch (ctrl) {
+            ctrl == MCMD_CTRL_EX_A1 || ctrl == MCMD_CTRL_SUR_PANNING)
+        {
+            switch (ctrl)
+            {
             case MCMD_CTRL_EX_A0:
             case MCMD_CTRL_EX_A1:
-                if (statePtr != NULL) {
+                if (statePtr != NULL)
+                {
                     tmp = statePtr->exCtrls[ctrl - MCMD_CTRL_EX_A0].value << 1;
                     statePtr->exCtrlDirty[ctrl - MCMD_CTRL_EX_A0] = 1;
-                } else {
+                }
+                else
+                {
                     tmp = 0;
                 }
                 break;
@@ -43,66 +50,94 @@ u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u32 midiSlo
             }
         block_18:
             tmp = (tmp * (slotPtr->entries[i].scale >> 1)) >> 15;
-            if (tmp < -0x2000) {
+            if (tmp < -0x2000)
+            {
                 tmp = -0x2000;
-            } else if (tmp > 0x1FFF) {
+            }
+            else if (tmp > 0x1FFF)
+            {
                 tmp = 0x1FFF;
             }
-            switch (slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_COMBINE_MASK) {
+            switch (slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_COMBINE_MASK)
+            {
             case MCMD_INPUT_COMBINE_SET:
                 value = tmp + 0x2000;
                 sign = 1;
                 break;
             case MCMD_INPUT_COMBINE_ADD:
-                if (sign != 0) {
+                if (sign != 0)
+                {
                     vtmp = (value + tmp);
                     vtmp -= 0x2000;
-                    if (vtmp < -0x2000) {
+                    if (vtmp < -0x2000)
+                    {
                         vtmp = -0x2000;
-                    } else if (vtmp > 0x1FFF) {
+                    }
+                    else if (vtmp > 0x1FFF)
+                    {
                         vtmp = 0x1FFF;
                     }
                     value = vtmp + 0x2000;
-                } else {
+                }
+                else
+                {
                     vtmp = value + tmp;
                     value = (vtmp > 0x3FFF) ? 0x3FFF : (vtmp < 0) ? 0 : vtmp;
                 }
                 break;
             case MCMD_INPUT_COMBINE_MUL:
-                if (sign != 0) {
+                if (sign != 0)
+                {
                     vtmp = (s32)((value - 0x2000) * tmp) >> 13;
-                } else {
+                }
+                else
+                {
                     vtmp = (tmp * value) >> 13;
                     sign = 1;
                 }
-                if (vtmp < -0x2000) {
+                if (vtmp < -0x2000)
+                {
                     vtmp = -0x2000;
-                } else if (vtmp > 0x1FFF) {
+                }
+                else if (vtmp > 0x1FFF)
+                {
                     vtmp = 0x1FFF;
                 }
                 value = vtmp + 0x2000;
                 break;
             case MCMD_INPUT_COMBINE_SUB:
-                if (sign != 0) {
+                if (sign != 0)
+                {
                     vtmp = (value - 0x2000) - tmp;
-                    if (vtmp < -0x2000) {
+                    if (vtmp < -0x2000)
+                    {
                         vtmp = -0x2000;
-                    } else if (vtmp > 0x1FFF) {
+                    }
+                    else if (vtmp > 0x1FFF)
+                    {
                         vtmp = 0x1FFF;
                     }
                     value = vtmp + 0x2000;
-                } else {
+                }
+                else
+                {
                     vtmp = value - tmp;
                     value = (vtmp > 0x3FFF) ? 0x3FFF : (vtmp < 0) ? 0 : vtmp;
                 }
                 break;
             }
-        } else {
-            switch (ctrl) {
+        }
+        else
+        {
+            switch (ctrl)
+            {
             case MCMD_CTRL_MIDI_LAYER:
-                if (statePtr != NULL) {
+                if (statePtr != NULL)
+                {
                     tmp = statePtr->keyBase << 7;
-                } else {
+                }
+                else
+                {
                     tmp = 0;
                 }
                 break;
@@ -110,13 +145,17 @@ u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u32 midiSlo
                 tmp = statePtr != NULL ? statePtr->volumeBase >> 9 : 0;
                 break;
             case 0xA4:
-                if (statePtr != NULL) {
-                    tmp = ((*(u64 *)&synthRealTimeHi) - (*(u64 *)&statePtr->startTimeHi)) >> 8;
-                    if (tmp > 0x3fff) {
+                if (statePtr != NULL)
+                {
+                    tmp = ((*(u64*)&synthRealTimeHi) - (*(u64*)&statePtr->startTimeHi)) >> 8;
+                    if (tmp > 0x3fff)
+                    {
                         tmp = 0x3fff;
                     }
                     statePtr->unkA8[0] = 1;
-                } else {
+                }
+                else
+                {
                     tmp = 0;
                 }
                 break;
@@ -125,53 +164,73 @@ u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u32 midiSlo
                 break;
             }
             tmp = (tmp * (slotPtr->entries[i].scale >> 1)) >> 15;
-            if (tmp > 0x3FFF) {
+            if (tmp > 0x3FFF)
+            {
                 tmp = 0x3FFF;
             }
-            switch (slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_COMBINE_MASK) {
+            switch (slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_COMBINE_MASK)
+            {
             case MCMD_INPUT_COMBINE_SET:
                 value = tmp;
                 sign = 0;
                 break;
             case MCMD_INPUT_COMBINE_ADD:
-                if (sign != 0) {
+                if (sign != 0)
+                {
                     vtmp = (value + tmp);
                     vtmp -= 0x2000;
-                    if (vtmp < -0x2000) {
+                    if (vtmp < -0x2000)
+                    {
                         vtmp = -0x2000;
-                    } else if (vtmp > 0x1FFF) {
+                    }
+                    else if (vtmp > 0x1FFF)
+                    {
                         vtmp = 0x1FFF;
                     }
                     value = vtmp + 0x2000;
-                } else {
+                }
+                else
+                {
                     value += tmp;
                     value = (value > 0x3FFF) ? 0x3FFF : value;
                 }
                 break;
             case MCMD_INPUT_COMBINE_MUL:
-                if (sign != 0) {
+                if (sign != 0)
+                {
                     vtmp = (s32)(tmp * (value - 0x2000)) >> 14;
-                    if (vtmp < -0x2000) {
+                    if (vtmp < -0x2000)
+                    {
                         vtmp = -0x2000;
-                    } else if (vtmp > 0x1FFF) {
+                    }
+                    else if (vtmp > 0x1FFF)
+                    {
                         vtmp = 0x1FFF;
                     }
                     value = vtmp + 0x2000;
-                } else {
+                }
+                else
+                {
                     value = ((value * tmp) >> 0xE);
                     value = (value > 0x3FFF) ? 0x3FFF : value;
                 }
                 break;
             case MCMD_INPUT_COMBINE_SUB:
-                if (sign != 0) {
+                if (sign != 0)
+                {
                     vtmp = (value - 0x2000) - tmp;
-                    if (vtmp < -0x2000) {
+                    if (vtmp < -0x2000)
+                    {
                         vtmp = -0x2000;
-                    } else if (vtmp > 0x1FFF) {
+                    }
+                    else if (vtmp > 0x1FFF)
+                    {
                         vtmp = 0x1FFF;
                     }
                     value = vtmp + 0x2000;
-                } else {
+                }
+                else
+                {
                     vtmp = value - tmp;
                     value = (vtmp > 0x3FFF) ? 0x3FFF : (vtmp < 0) ? 0 : vtmp;
                 }
@@ -180,7 +239,7 @@ u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u32 midiSlo
         }
     }
 
-    *(u16 *)&slotPtr->cachedValue = value;
+    *(u16*)&slotPtr->cachedValue = value;
     return value;
 }
 
@@ -192,10 +251,11 @@ u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u32 midiSlo
  * EN v1.1 Address: 0x802824F8
  * EN v1.1 Size: 72b
  */
-u16 inpGetVolume(McmdVoiceState *state)
+u16 inpGetVolume(McmdVoiceState* state)
 {
     u32 flags = state->inputDirtyFlags;
-    if ((flags & MCMD_INPUT_DIRTY_VOLUME) == 0) {
+    if ((flags & MCMD_INPUT_DIRTY_VOLUME) == 0)
+    {
         return state->volumeInput.cachedValue;
     }
     state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_VOLUME;
@@ -208,10 +268,11 @@ u16 inpGetVolume(McmdVoiceState *state)
  * EN v1.1 Address: 0x80282540
  * EN v1.1 Size: 72b
  */
-u16 inpGetPanning(McmdVoiceState *state)
+u16 inpGetPanning(McmdVoiceState* state)
 {
     u32 flags = state->inputDirtyFlags;
-    if ((flags & MCMD_INPUT_DIRTY_PANNING) == 0) {
+    if ((flags & MCMD_INPUT_DIRTY_PANNING) == 0)
+    {
         return state->panningInput.cachedValue;
     }
     state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_PANNING;

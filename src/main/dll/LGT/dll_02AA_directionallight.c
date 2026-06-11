@@ -2,7 +2,8 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 
-typedef struct DirectionalLightSetup {
+typedef struct DirectionalLightSetup
+{
     ObjPlacement base;
     u8 rotX;
     u8 rotY;
@@ -27,7 +28,8 @@ typedef struct DirectionalLightSetup {
     s16 rotYSpeed;
 } DirectionalLightSetup;
 
-typedef struct DirectionalLightState {
+typedef struct DirectionalLightState
+{
     u8 diffuseR;
     u8 diffuseG;
     u8 diffuseB;
@@ -36,7 +38,7 @@ typedef struct DirectionalLightState {
     u8 targetG;
     u8 targetB;
     u8 pad07;
-    ModelLight *light;
+    ModelLight* light;
     u8 debugEditing;
     s8 debugField;
     u8 enabled;
@@ -46,23 +48,138 @@ typedef struct DirectionalLightState {
 #define DIRECTIONALLIGHT_FLAG_USE_AMBIENT_COLOR 0x01
 #define DIRECTIONALLIGHT_DEBUG_FIELD_COUNT 8
 
-STATIC_ASSERT(sizeof(DirectionalLightState) == 0x10);
-STATIC_ASSERT(offsetof(DirectionalLightState, light) == 0x08);
-STATIC_ASSERT(offsetof(DirectionalLightState, debugEditing) == 0x0C);
-STATIC_ASSERT(offsetof(DirectionalLightState, debugField) == 0x0D);
-STATIC_ASSERT(offsetof(DirectionalLightState, enabled) == 0x0E);
-STATIC_ASSERT(offsetof(DirectionalLightSetup, rotX) == 0x18);
-STATIC_ASSERT(offsetof(DirectionalLightSetup, rotY) == 0x19);
-STATIC_ASSERT(offsetof(DirectionalLightSetup, diffuseR) == 0x1A);
-STATIC_ASSERT(offsetof(DirectionalLightSetup, eventName) == 0x1D);
-STATIC_ASSERT(offsetof(DirectionalLightSetup, enableBit) == 0x1E);
-STATIC_ASSERT(offsetof(DirectionalLightSetup, flags) == 0x2A);
-STATIC_ASSERT(offsetof(DirectionalLightSetup, selectionPriority) == 0x2C);
-STATIC_ASSERT(offsetof(DirectionalLightSetup, colorFadeFrames) == 0x2E);
-STATIC_ASSERT(offsetof(DirectionalLightSetup, enabled) == 0x30);
-STATIC_ASSERT(offsetof(DirectionalLightSetup, rotXSpeed) == 0x32);
-STATIC_ASSERT(offsetof(DirectionalLightSetup, rotYSpeed) == 0x34);
-STATIC_ASSERT(sizeof(DirectionalLightSetup) == 0x38);
+STATIC_ASSERT (
+sizeof
+(DirectionalLightState)
+==
+0x10
+);
+STATIC_ASSERT (offsetof
+(DirectionalLightState
+,
+light
+)
+==
+0x08
+);
+STATIC_ASSERT (offsetof
+(DirectionalLightState
+,
+debugEditing
+)
+==
+0x0C
+);
+STATIC_ASSERT (offsetof
+(DirectionalLightState
+,
+debugField
+)
+==
+0x0D
+);
+STATIC_ASSERT (offsetof
+(DirectionalLightState
+,
+enabled
+)
+==
+0x0E
+);
+STATIC_ASSERT (offsetof
+(DirectionalLightSetup
+,
+rotX
+)
+==
+0x18
+);
+STATIC_ASSERT (offsetof
+(DirectionalLightSetup
+,
+rotY
+)
+==
+0x19
+);
+STATIC_ASSERT (offsetof
+(DirectionalLightSetup
+,
+diffuseR
+)
+==
+0x1A
+);
+STATIC_ASSERT (offsetof
+(DirectionalLightSetup
+,
+eventName
+)
+==
+0x1D
+);
+STATIC_ASSERT (offsetof
+(DirectionalLightSetup
+,
+enableBit
+)
+==
+0x1E
+);
+STATIC_ASSERT (offsetof
+(DirectionalLightSetup
+,
+flags
+)
+==
+0x2A
+);
+STATIC_ASSERT (offsetof
+(DirectionalLightSetup
+,
+selectionPriority
+)
+==
+0x2C
+);
+STATIC_ASSERT (offsetof
+(DirectionalLightSetup
+,
+colorFadeFrames
+)
+==
+0x2E
+);
+STATIC_ASSERT (offsetof
+(DirectionalLightSetup
+,
+enabled
+)
+==
+0x30
+);
+STATIC_ASSERT (offsetof
+(DirectionalLightSetup
+,
+rotXSpeed
+)
+==
+0x32
+);
+STATIC_ASSERT (offsetof
+(DirectionalLightSetup
+,
+rotYSpeed
+)
+==
+0x34
+);
+STATIC_ASSERT (
+sizeof
+(DirectionalLightSetup)
+==
+0x38
+);
 
 int directionallight_getExtraSize(void) { return 0x10; }
 
@@ -70,13 +187,16 @@ int directionallight_getObjectTypeId(void) { return 0; }
 
 void directionallight_free(int obj)
 {
-    DirectionalLightState *state = ((GameObject *)obj)->extra;
-    if (state->light != NULL) {
+    DirectionalLightState* state = ((GameObject*)obj)->extra;
+    if (state->light != NULL)
+    {
         ModelLightStruct_free(state->light);
     }
 }
 
-void directionallight_hitDetect(void) {}
+void directionallight_hitDetect(void)
+{
+}
 
 void directionallight_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
@@ -85,105 +205,128 @@ void directionallight_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 
 void directionallight_debugEdit(int obj, int statePtr)
 {
-    DirectionalLightState *state = (DirectionalLightState *)statePtr;
-    u8 *desc = gDirectionalLightObjDescriptor;
+    DirectionalLightState* state = (DirectionalLightState*)statePtr;
+    u8* desc = gDirectionalLightObjDescriptor;
     u16 buttons = (u16)getButtonsJustPressed(0);
 
-    if ((buttons & 0x10) != 0) {
+    if ((buttons & 0x10) != 0)
+    {
         state->debugEditing ^= 1;
     }
-    if (state->debugEditing == 0) {
+    if (state->debugEditing == 0)
+    {
         return;
     }
-    if ((buttons & 8) != 0) {
+    if ((buttons & 8) != 0)
+    {
         state->debugField += 1;
     }
-    if ((buttons & 4) != 0) {
+    if ((buttons & 4) != 0)
+    {
         state->debugField -= 1;
     }
-    if (state->debugField >= DIRECTIONALLIGHT_DEBUG_FIELD_COUNT) {
+    if (state->debugField >= DIRECTIONALLIGHT_DEBUG_FIELD_COUNT)
+    {
         state->debugField = 0;
     }
-    if (state->debugField < 0) {
+    if (state->debugField < 0)
+    {
         state->debugField = DIRECTIONALLIGHT_DEBUG_FIELD_COUNT - 1;
     }
 
-    switch (state->debugField) {
+    switch (state->debugField)
+    {
     case 0:
-        if ((buttons & 1) != 0) {
-            ((GameObject *)obj)->anim.rotX -= 0x3e8;
+        if ((buttons & 1) != 0)
+        {
+            ((GameObject*)obj)->anim.rotX -= 0x3e8;
         }
-        if ((buttons & 2) != 0) {
-            ((GameObject *)obj)->anim.rotX += 0x3e8;
+        if ((buttons & 2) != 0)
+        {
+            ((GameObject*)obj)->anim.rotX += 0x3e8;
         }
         fn_80137948(desc + 0x38);
-        fn_80137948(desc + 0x44, ((GameObject *)obj)->anim.rotX);
+        fn_80137948(desc + 0x44, ((GameObject*)obj)->anim.rotX);
         break;
     case 1:
-        if ((buttons & 1) != 0) {
-            ((GameObject *)obj)->anim.rotY -= 0x3e8;
+        if ((buttons & 1) != 0)
+        {
+            ((GameObject*)obj)->anim.rotY -= 0x3e8;
         }
-        if ((buttons & 2) != 0) {
-            ((GameObject *)obj)->anim.rotY += 0x3e8;
+        if ((buttons & 2) != 0)
+        {
+            ((GameObject*)obj)->anim.rotY += 0x3e8;
         }
         fn_80137948(desc + 0x50);
-        fn_80137948(desc + 0x44, ((GameObject *)obj)->anim.rotY);
+        fn_80137948(desc + 0x44, ((GameObject*)obj)->anim.rotY);
         break;
     case 2:
-        if ((buttons & 1) != 0) {
+        if ((buttons & 1) != 0)
+        {
             state->diffuseR -= 5;
         }
-        if ((buttons & 2) != 0) {
+        if ((buttons & 2) != 0)
+        {
             state->diffuseR += 5;
         }
         fn_80137948(desc + 0x60);
         fn_80137948(desc + 0x7c, state->diffuseR);
         break;
     case 3:
-        if ((buttons & 1) != 0) {
+        if ((buttons & 1) != 0)
+        {
             state->diffuseG -= 5;
         }
-        if ((buttons & 2) != 0) {
+        if ((buttons & 2) != 0)
+        {
             state->diffuseG += 5;
         }
         fn_80137948(desc + 0x88);
         fn_80137948(desc + 0x7c, state->diffuseG);
         break;
     case 4:
-        if ((buttons & 1) != 0) {
+        if ((buttons & 1) != 0)
+        {
             state->diffuseB -= 5;
         }
-        if ((buttons & 2) != 0) {
+        if ((buttons & 2) != 0)
+        {
             state->diffuseB += 5;
         }
         fn_80137948(desc + 0xa4);
         fn_80137948(desc + 0x7c, state->diffuseB);
         break;
     case 5:
-        if ((buttons & 1) != 0) {
+        if ((buttons & 1) != 0)
+        {
             state->targetR -= 5;
         }
-        if ((buttons & 2) != 0) {
+        if ((buttons & 2) != 0)
+        {
             state->targetR += 5;
         }
         fn_80137948(desc + 0xc0);
         fn_80137948(desc + 0x7c, state->targetR);
         break;
     case 6:
-        if ((buttons & 1) != 0) {
+        if ((buttons & 1) != 0)
+        {
             state->targetG -= 5;
         }
-        if ((buttons & 2) != 0) {
+        if ((buttons & 2) != 0)
+        {
             state->targetG += 5;
         }
         fn_80137948(desc + 0xdc);
         fn_80137948(desc + 0x7c, state->targetG);
         break;
     case 7:
-        if ((buttons & 1) != 0) {
+        if ((buttons & 1) != 0)
+        {
             state->targetB -= 5;
         }
-        if ((buttons & 2) != 0) {
+        if ((buttons & 2) != 0)
+        {
             state->targetB += 5;
         }
         fn_80137948(desc + 0xfc);
@@ -196,39 +339,45 @@ void directionallight_init(int obj, int setup)
 {
     u8 colorR, colorG, colorB;
     PointLightVec vec;
-    DirectionalLightSetup *setupData = (DirectionalLightSetup *)setup;
-    DirectionalLightState *state = ((GameObject *)obj)->extra;
+    DirectionalLightSetup* setupData = (DirectionalLightSetup*)setup;
+    DirectionalLightState* state = ((GameObject*)obj)->extra;
 
-    vec = *(PointLightVec *)lbl_802C2608;
+    vec = *(PointLightVec*)lbl_802C2608;
 
-    ((GameObject *)obj)->anim.rotX = (s16)(setupData->rotX << 8);
-    ((GameObject *)obj)->anim.rotY = (s16)(setupData->rotY << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(setupData->rotX << 8);
+    ((GameObject*)obj)->anim.rotY = (s16)(setupData->rotY << 8);
 
-    if (state->light == NULL) {
+    if (state->light == NULL)
+    {
         state->light = objCreateLight(obj, 1);
     }
 
-    if (state->light != NULL) {
+    if (state->light != NULL)
+    {
         modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_DIRECTIONAL);
         objSetEventName(state->light, setupData->eventName);
         modelLightStruct_setDirection(state->light, vec.x, vec.y, vec.z);
 
-        if ((setupData->flags & DIRECTIONALLIGHT_FLAG_USE_AMBIENT_COLOR) != 0) {
+        if ((setupData->flags & DIRECTIONALLIGHT_FLAG_USE_AMBIENT_COLOR) != 0)
+        {
             getAmbientColor(0, &colorR, &colorG, &colorB);
             modelLightStruct_setDiffuseColor(state->light, colorR, colorG, colorB, 0xff);
             modelLightStruct_setDiffuseTargetColor(state->light, colorR, colorG, colorB, 0xff);
-        } else {
+        }
+        else
+        {
             modelLightStruct_setDiffuseColor(state->light, setupData->diffuseR,
-                setupData->diffuseG, setupData->diffuseB, 0xff);
+                                             setupData->diffuseG, setupData->diffuseB, 0xff);
             modelLightStruct_setDiffuseTargetColor(state->light, setupData->targetR,
-                setupData->targetG, setupData->targetB, 0xff);
+                                                   setupData->targetG, setupData->targetB, 0xff);
         }
 
         modelLightStruct_setEnabled(state->light, setupData->enabled, lbl_803E7250);
         state->enabled = setupData->enabled;
         modelLightStruct_startColorFade(state->light, setupData->colorFadeSpeed, setupData->colorFadeFrames);
 
-        if (setupData->selectionPriority != 0) {
+        if (setupData->selectionPriority != 0)
+        {
             modelLightStruct_setSelectionPriority(state->light, setupData->selectionPriority);
         }
     }
@@ -237,29 +386,36 @@ void directionallight_init(int obj, int setup)
 void directionallight_update(int obj)
 {
     u8 colorR, colorG, colorB;
-    DirectionalLightState *state = ((GameObject *)obj)->extra;
-    DirectionalLightSetup *setup = (DirectionalLightSetup *)((GameObject *)obj)->anim.placementData;
+    DirectionalLightState* state = ((GameObject*)obj)->extra;
+    DirectionalLightSetup* setup = (DirectionalLightSetup*)((GameObject*)obj)->anim.placementData;
 
-    if (state->light == NULL) {
+    if (state->light == NULL)
+    {
         return;
     }
 
-    ((GameObject *)obj)->anim.rotX =
-        (s16)((f32)setup->rotXSpeed * timeDelta + (f32)((GameObject *)obj)->anim.rotX);
-    ((GameObject *)obj)->anim.rotY =
-        (s16)((f32)setup->rotYSpeed * timeDelta + (f32)((GameObject *)obj)->anim.rotY);
+    ((GameObject*)obj)->anim.rotX =
+        (s16)((f32)setup->rotXSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotX);
+    ((GameObject*)obj)->anim.rotY =
+        (s16)((f32)setup->rotYSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotY);
 
-    if (state->enabled != 0) {
-        if ((u32)GameBit_Get(setup->enableBit) == 0) {
+    if (state->enabled != 0)
+    {
+        if ((u32)GameBit_Get(setup->enableBit) == 0)
+        {
             state->enabled = 0;
             modelLightStruct_setEnabled(state->light, 0, lbl_803E7254);
         }
-        if ((setup->flags & DIRECTIONALLIGHT_FLAG_USE_AMBIENT_COLOR) != 0) {
+        if ((setup->flags & DIRECTIONALLIGHT_FLAG_USE_AMBIENT_COLOR) != 0)
+        {
             getAmbientColor(0, &colorR, &colorG, &colorB);
             modelLightStruct_setDiffuseColor(state->light, colorR, colorG, colorB, 0xff);
         }
-    } else {
-        if ((u32)GameBit_Get(setup->enableBit) != 0) {
+    }
+    else
+    {
+        if ((u32)GameBit_Get(setup->enableBit) != 0)
+        {
             state->enabled = 1;
             modelLightStruct_setEnabled(state->light, 1, lbl_803E7254);
         }
@@ -268,6 +424,10 @@ void directionallight_update(int obj)
     directionallight_debugEdit(obj, (int)state);
 }
 
-void directionallight_release(void) {}
+void directionallight_release(void)
+{
+}
 
-void directionallight_initialise(void) {}
+void directionallight_initialise(void)
+{
+}

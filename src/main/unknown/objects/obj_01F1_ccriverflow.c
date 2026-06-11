@@ -48,7 +48,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01F1_CCriverflow_packet_info {
+enum obj_01F1_CCriverflow_packet_info
+{
     CCRIVERFLOW_DEF_ID = 0x01F1,
     CCRIVERFLOW_DLL_ID = 0x0174,
     CCRIVERFLOW_CLASS_ID = 0x0035,

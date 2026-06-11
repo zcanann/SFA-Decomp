@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0549_ARWSeqObjec_packet_info {
+enum obj_0549_ARWSeqObjec_packet_info
+{
     ARWSEQOBJEC_DEF_ID = 0x0549,
     ARWSEQOBJEC_DLL_ID = 0x0112,
     ARWSEQOBJEC_CLASS_ID = 0x0055,

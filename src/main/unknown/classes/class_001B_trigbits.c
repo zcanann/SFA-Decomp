@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_001B_TrigBits_defs {
+enum class_001B_TrigBits_defs
+{
     TRIGBITS_TRIGBITS = 0x0521,
 };
 #endif

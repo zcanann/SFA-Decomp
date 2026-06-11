@@ -37,7 +37,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_0243_DBHoleControl1_slot {
+enum dll_0243_DBHoleControl1_slot
+{
     DBHOLECONTROL1_INITIALISE = 0,
     DBHOLECONTROL1_RELEASE = 1,
     DBHOLECONTROL1_INIT = 3,

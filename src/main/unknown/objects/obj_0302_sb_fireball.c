@@ -58,7 +58,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0302_SB_FireBall_packet_info {
+enum obj_0302_SB_FireBall_packet_info
+{
     SB_FIREBALL_DEF_ID = 0x0302,
     SB_FIREBALL_DLL_ID = 0x01ED,
     SB_FIREBALL_CLASS_ID = 0x0024,

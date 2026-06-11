@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0333_VFP_Block1_packet_info {
+enum obj_0333_VFP_Block1_packet_info
+{
     VFP_BLOCK1_DEF_ID = 0x0333,
     VFP_BLOCK1_DLL_ID = 0x021E,
     VFP_BLOCK1_CLASS_ID = 0x0030,

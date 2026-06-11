@@ -138,7 +138,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0053_Door53_defs {
+enum class_0053_Door53_defs
+{
     DOOR53_SC_SHRINE_D = 0x02DD,
     DOOR53_SC_SETTELME = 0x02DF,
     DOOR53_SH_PORTCULL = 0x0296,

@@ -46,7 +46,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04BC_HitAnimator_packet_info {
+enum obj_04BC_HitAnimator_packet_info
+{
     HITANIMATOR_DEF_ID = 0x04BC,
     HITANIMATOR_DLL_ID = 0x0139,
     HITANIMATOR_CLASS_ID = 0x004B,

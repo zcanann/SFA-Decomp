@@ -28,7 +28,8 @@
  */
 
 #if 0
-enum dll_024F_KT_RexLevel_slot {
+enum dll_024F_KT_RexLevel_slot
+{
     KTREXLEVEL_INITIALISE = 0,
     KTREXLEVEL_RELEASE = 1,
     KTREXLEVEL_INIT = 3,

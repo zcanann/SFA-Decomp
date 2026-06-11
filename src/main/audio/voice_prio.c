@@ -6,22 +6,25 @@ extern void hwSetPriority(u8 voiceId, u32 priority);
 extern u8 vidListNodes[];
 extern u16 voicePrioSortRootListRoot;
 
-typedef struct VoicePrioVoice {
+typedef struct VoicePrioVoice
+{
     u8 prev;
     u8 next;
     u16 user;
 } VoicePrioVoice;
 
-typedef struct VoicePrioRoot {
+typedef struct VoicePrioRoot
+{
     u16 next;
     u16 prev;
 } VoicePrioRoot;
 
 /* Voice priority bookkeeping lives directly behind the vid node pool. */
-typedef struct VoicePrioBlock {
+typedef struct VoicePrioBlock
+{
     u8 vidNodes[0x8C0];
-    VoicePrioVoice prioVoices[64];   /* 0x8C0 */
-    u8 prioVoicesRoot[256];          /* 0x9C0 */
+    VoicePrioVoice prioVoices[64]; /* 0x8C0 */
+    u8 prioVoicesRoot[256]; /* 0x9C0 */
     VoicePrioRoot prioRootList[256]; /* 0xAC0 */
 } VoicePrioBlock;
 
@@ -29,7 +32,8 @@ typedef struct VoicePrioBlock {
  * Insert the voice into the new priority group's list and keep the global
  * group list sorted by priority.
  */
-typedef struct VoicePrioPrev {
+typedef struct VoicePrioPrev
+{
     u16 prev;
     u16 pad;
 } VoicePrioPrev;
@@ -37,20 +41,22 @@ typedef struct VoicePrioPrev {
 /* prev links viewed as their own table at +0xAC2 (matches target addressing) */
 #define ROOT_PREV(idx) (((VoicePrioPrev *)((u8 *)vb + 0xAC2))[idx].prev)
 
-void voiceSetPriority(McmdVoiceState *svoice, u8 prio)
+void voiceSetPriority(McmdVoiceState* svoice, u8 prio)
 {
     u32 v;
-    VoicePrioBlock *vb;
+    VoicePrioBlock* vb;
     u16 li;
-    VoicePrioVoice *vps;
+    VoicePrioVoice* vps;
     u16 root;
     u16 i;
 
     v = (u8)svoice->voiceHandle;
-    vb = (VoicePrioBlock *)vidListNodes;
-    vps = (VoicePrioVoice *)&((u8 *)vb)[(v << 2) + 2240];
-    if (vps->user == 1) {
-        if (svoice->priorityGroup == prio) {
+    vb = (VoicePrioBlock*)vidListNodes;
+    vps = (VoicePrioVoice*)&((u8*)vb)[(v << 2) + 2240];
+    if (vps->user == 1)
+    {
+        if (svoice->priorityGroup == prio)
+        {
             return;
         }
 
@@ -59,12 +65,18 @@ void voiceSetPriority(McmdVoiceState *svoice, u8 prio)
 
     vps->user = 1;
     vps->prev = 0xff;
-    if ((vps->next = vb->prioVoicesRoot[prio]) != 0xFF) {
+    if ((vps->next = vb->prioVoicesRoot[prio]) != 0xFF)
+    {
         vb->prioVoices[vb->prioVoicesRoot[prio]].prev = v;
-    } else if ((root = voicePrioSortRootListRoot) != 0xFFFF) {
-        if (prio >= root) {
-            for (i = root; i != 0xFFFF; i = vb->prioRootList[i].next) {
-                if ((u16)i > prio) {
+    }
+    else if ((root = voicePrioSortRootListRoot) != 0xFFFF)
+    {
+        if (prio >= root)
+        {
+            for (i = root; i != 0xFFFF; i = vb->prioRootList[i].next)
+            {
+                if ((u16)i > prio)
+                {
                     break;
                 }
                 li = i;
@@ -73,16 +85,21 @@ void voiceSetPriority(McmdVoiceState *svoice, u8 prio)
             vb->prioRootList[li].next = (u16)prio;
             ROOT_PREV(prio) = li;
             vb->prioRootList[prio].next = i;
-            if (i != 0xFFFF) {
+            if (i != 0xFFFF)
+            {
                 ROOT_PREV(i) = prio;
             }
-        } else {
+        }
+        else
+        {
             vb->prioRootList[prio].next = root;
             ROOT_PREV(prio) = 0xFFFF;
             ROOT_PREV(root) = prio;
             voicePrioSortRootListRoot = prio;
         }
-    } else {
+    }
+    else
+    {
         vb->prioRootList[prio].next = 0xFFFF;
         ROOT_PREV(prio) = 0xFFFF;
         voicePrioSortRootListRoot = prio;

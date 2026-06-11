@@ -73,7 +73,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_056B_AlienTreePa_packet_info {
+enum obj_056B_AlienTreePa_packet_info
+{
     ALIENTREEPA_DEF_ID = 0x056B,
     ALIENTREEPA_DLL_ID = 0x011A,
     ALIENTREEPA_CLASS_ID = 0x0061,

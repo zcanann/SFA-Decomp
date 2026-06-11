@@ -45,7 +45,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0495_sideload_packet_info {
+enum obj_0495_sideload_packet_info
+{
     SIDELOAD_DEF_ID = 0x0495,
     SIDELOAD_DLL_ID = 0x00EA,
     SIDELOAD_CLASS_ID = 0x001E,

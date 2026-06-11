@@ -569,7 +569,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0061_various0061_defs {
+enum class_0061_various0061_defs
+{
     VARIOUS0061_TRICKYWARP = 0x04C4,
     VARIOUS0061_DRDEBRISGIR = 0x007F,
     VARIOUS0061_SNOWLOG = 0x058D,

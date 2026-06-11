@@ -6,7 +6,8 @@
 
 typedef signed char s8;
 
-typedef struct LAYER {
+typedef struct LAYER
+{
     u16 id;
     u8 keyLow;
     u8 keyHigh;
@@ -17,7 +18,8 @@ typedef struct LAYER {
     u8 reserved[3];
 } LAYER;
 
-typedef struct LayerVoice {
+typedef struct LayerVoice
+{
     u8 pad0[0xEC];
     u32 child;
     u32 parent;
@@ -32,16 +34,17 @@ extern void* dataGetLayer(u16 cid, u16* n);
 extern u16 inpGetMidiCtrl(u8 ctrl, u8 midi, u8 midiSet);
 extern u32 audioFn_8026f630(u8 key, u8 midi, u8 midiSet, u32 newVID, u32* rejected);
 extern u32 macStart(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol,
-                            u8 panning, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
-                            u32 vidFlag, u8 vGroup, u8 studio, u32 itd);
+                    u8 panning, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
+                    u32 vidFlag, u8 vGroup, u8 studio, u32 itd);
 extern u32 StartKeymap(u16 keymapID, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol,
-                                  u8 panning, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
-                                  u32 vidFlag, u8 vGroup, u8 studio, u32 itd);
+                       u8 panning, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
+                       u32 vidFlag, u8 vGroup, u8 studio, u32 itd);
 extern u32 vidMakeRoot(LayerVoice* voice);
 
 u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol,
                           u8 panning, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
-                          u32 vidFlag, u8 vGroup, u8 studio, u32 itd) {
+                          u32 vidFlag, u8 vGroup, u8 studio, u32 itd)
+{
     u16 n;
     u32 vid;
     u32 new_id;
@@ -53,42 +56,54 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
     u8 mKey;
 
     vid = 0xFFFFFFFF;
-    if ((l = dataGetLayer(layerID, &n)) == NULL) {
+    if ((l = dataGetLayer(layerID, &n)) == NULL)
+    {
         goto end;
     }
 
     mKey = key & 0x7f;
-    for (; n != 0; --n, l++) {
-        if (l->id == 0xffff || l->keyLow > mKey || l->keyHigh < mKey) {
+    for (; n != 0; --n, l++)
+    {
+        if (l->id == 0xffff || l->keyLow > mKey || l->keyHigh < mKey)
+        {
             continue;
         }
 
         k = mKey + l->transpose;
         k = k > 127 ? 127 : k < 0 ? 0 : k;
 
-        if ((l->id & 0xC000) == 0) {
+        if ((l->id & 0xC000) == 0)
+        {
             u32 rejected;
             u32 ok;
-            if (inpGetMidiCtrl(65, midi, midiSet) > 8064) {
+            if (inpGetMidiCtrl(65, midi, midiSet) > 8064)
+            {
                 new_id = audioFn_8026f630(k & 0x7f, midi, midiSet, 0, &rejected);
                 ok = !rejected;
-            } else {
+            }
+            else
+            {
                 new_id = 0xFFFFFFFF;
                 ok = 1;
             }
-            if (!ok) {
+            if (!ok)
+            {
                 continue;
             }
-            if (new_id != 0xFFFFFFFF) {
+            if (new_id != 0xFFFFFFFF)
+            {
                 goto apply_new_id;
             }
         }
 
-        if ((l->panning & 0x80) == 0) {
+        if ((l->panning & 0x80) == 0)
+        {
             p = l->panning - 0x40;
             p += panning;
             p = p < 0 ? 0 : p > 0x7f ? 0x7f : p;
-        } else {
+        }
+        else
+        {
             p = 0x80;
         }
 
@@ -96,15 +111,16 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
         prio += l->prioOffset;
         prio = prio > 0xff ? 0xff : prio < 0 ? 0 : prio;
 
-        switch (l->id & 0xC000) {
+        switch (l->id & 0xC000)
+        {
         case 0:
             new_id = macStart(l->id, prio, maxVoices, allocId, k | (key & 0x80), v, p, midi,
-                                      midiSet, section, step, trackid, 0, vGroup, studio, itd);
+                              midiSet, section, step, trackid, 0, vGroup, studio, itd);
             break;
         case 0x4000:
             new_id = StartKeymap(l->id, prio, maxVoices, allocId, k | (key & 0x80), v, p,
-                                            midi, midiSet, section, step, trackid, 0, vGroup, studio,
-                                            itd);
+                                 midi, midiSet, section, step, trackid, 0, vGroup, studio,
+                                 itd);
             break;
         case 0x8000:
             new_id = audioLayerFn_8026f8b8(l->id, prio, maxVoices, allocId, k | (key & 0x80), v, p,
@@ -113,20 +129,28 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
             break;
         }
 
-        if (new_id != 0xFFFFFFFF) {
+        if (new_id != 0xFFFFFFFF)
+        {
         apply_new_id:
-            if (vid == 0xFFFFFFFF) {
-                if (vidFlag != 0) {
+            if (vid == 0xFFFFFFFF)
+            {
+                if (vidFlag != 0)
+                {
                     vid = vidMakeRoot(&synthVoice[new_id & 0xff]);
-                } else {
+                }
+                else
+                {
                     vid = new_id;
                 }
-            } else {
+            }
+            else
+            {
                 synthVoice[id & 0xff].child = new_id;
                 synthVoice[new_id & 0xff].parent = id;
             }
             id = new_id;
-            while (synthVoice[id & 0xff].child != 0xFFFFFFFF) {
+            while (synthVoice[id & 0xff].child != 0xFFFFFFFF)
+            {
                 synthVoice[id & 0xff].block = 1;
                 id = synthVoice[id & 0xff].child;
             }

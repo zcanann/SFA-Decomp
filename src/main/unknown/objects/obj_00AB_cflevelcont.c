@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00AB_CFLevelCont_packet_info {
+enum obj_00AB_CFLevelCont_packet_info
+{
     CFLEVELCONT_DEF_ID = 0x00AB,
     CFLEVELCONT_DLL_ID = 0x0164,
     CFLEVELCONT_CLASS_ID = 0x0030,

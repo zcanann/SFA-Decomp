@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_043A_DR_TowerSwi_packet_info {
+enum obj_043A_DR_TowerSwi_packet_info
+{
     DR_TOWERSWI_DEF_ID = 0x043A,
     DR_TOWERSWI_DLL_ID = 0x02B6,
     DR_TOWERSWI_CLASS_ID = 0x0030,

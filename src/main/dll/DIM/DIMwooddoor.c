@@ -4,7 +4,8 @@
 #include "main/dll/DIM/DIMwooddoor.h"
 #include "main/objanim.h"
 
-typedef struct DIMWoodDoorConfig {
+typedef struct DIMWoodDoorConfig
+{
     u8 pad00[0x4];
     u8 setup04;
     u8 setup05;
@@ -17,7 +18,8 @@ typedef struct DIMWoodDoorConfig {
     u8 targetRadius;
 } DIMWoodDoorConfig;
 
-typedef struct DIMWoodDoorState {
+typedef struct DIMWoodDoorState
+{
     u8 pad00[0x4];
     f32 posX;
     f32 posY;
@@ -35,7 +37,8 @@ typedef struct DIMWoodDoorState {
     u8 shouldSpawnShard;
 } DIMWoodDoorState;
 
-typedef struct DIMWoodDoorShardState {
+typedef struct DIMWoodDoorShardState
+{
     int parent;
     u8 variant;
     u8 lifetime;
@@ -43,9 +46,9 @@ typedef struct DIMWoodDoorShardState {
 } DIMWoodDoorShardState;
 
 extern u8 Obj_IsLoadingLocked(void);
-extern s16 *objModelGetVecFn_800395d8(int obj, int target);
-extern u8 *Obj_AllocObjectSetup(int size, int type);
-extern int Obj_SetupObject(u8 *setup, int group, int mapLayer, int param4, int param5);
+extern s16* objModelGetVecFn_800395d8(int obj, int target);
+extern u8* Obj_AllocObjectSetup(int size, int type);
+extern int Obj_SetupObject(u8* setup, int group, int mapLayer, int param4, int param5);
 extern int Obj_GetPlayerObject(void);
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 value);
@@ -72,60 +75,71 @@ extern f32 lbl_803E48D8;
 
 void DIMwooddoor_spawnShard(int obj, u8 variant)
 {
-    DIMWoodDoorConfig *config;
-    DIMWoodDoorState *state;
-    DIMWoodDoorShardState *shardState;
-    s16 *modelVec;
-    u8 *setup;
+    DIMWoodDoorConfig* config;
+    DIMWoodDoorState* state;
+    DIMWoodDoorShardState* shardState;
+    s16* modelVec;
+    u8* setup;
     int shard;
     f32 launchSpeed;
     f32 launchScale;
     f32 angle;
 
-    config = *(DIMWoodDoorConfig **)&((GameObject *)obj)->anim.placementData;
-    if (Obj_IsLoadingLocked() != 0) {
-        state = ((GameObject *)obj)->extra;
-        if ((state->shouldSpawnShard != 0) && (state->launchDelay <= 0)) {
+    config = *(DIMWoodDoorConfig**)&((GameObject*)obj)->anim.placementData;
+    if (Obj_IsLoadingLocked() != 0)
+    {
+        state = ((GameObject*)obj)->extra;
+        if ((state->shouldSpawnShard != 0) && (state->launchDelay <= 0))
+        {
             modelVec = objModelGetVecFn_800395d8(obj, 0);
             setup = Obj_AllocObjectSetup(0x24, 0x1d6);
             setup[4] = config->setup04;
             setup[6] = config->setup06;
             setup[5] = config->setup05;
             setup[7] = config->setup07;
-            ((ObjPlacement *)setup)->posX = state->targetX;
-            ((ObjPlacement *)setup)->posY = state->targetY;
-            ((ObjPlacement *)setup)->posZ = state->targetZ;
+            ((ObjPlacement*)setup)->posX = state->targetX;
+            ((ObjPlacement*)setup)->posY = state->targetY;
+            ((ObjPlacement*)setup)->posZ = state->targetZ;
 
-            shard = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, 0);
-            shardState = *(DIMWoodDoorShardState **)(shard + 0xb8);
+            shard = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
+            shardState = *(DIMWoodDoorShardState**)(shard + 0xb8);
             shardState->parent = obj;
             shardState->variant = variant;
-            if (variant != 0) {
-                if (((GameObject *)obj)->anim.mapEventSlot == 0x1b) {
+            if (variant != 0)
+            {
+                if (((GameObject*)obj)->anim.mapEventSlot == 0x1b)
+                {
                     shardState->lifetime = 100;
-                } else {
+                }
+                else
+                {
                     shardState->lifetime = 60;
                 }
                 shardState->hitRadius = 100;
-            } else {
+            }
+            else
+            {
                 shardState->lifetime = 20;
                 shardState->hitRadius = 1;
             }
 
             launchSpeed = state->launchSpeed;
             launchScale = lbl_803E48AC * launchSpeed;
-            *(s16 *)shard = *(s16 *)obj + modelVec[1];
-            angle = (lbl_803E48B0 * (f32)(s32)*(s16 *)shard) / lbl_803E48B4;
-            *(f32 *)(shard + 0x24) = launchScale * -mathSinf(angle);
-            *(f32 *)(shard + 0x28) = launchSpeed;
-            angle = (lbl_803E48B0 * (f32)(s32)*(s16 *)shard) / lbl_803E48B4;
-            *(f32 *)(shard + 0x2c) = launchScale * -mathCosf(angle);
+            *(s16*)shard = *(s16*)obj + modelVec[1];
+            angle = (lbl_803E48B0 * (f32)(s32) * (s16*)shard) / lbl_803E48B4;
+            *(f32*)(shard + 0x24) = launchScale * -mathSinf(angle);
+            *(f32*)(shard + 0x28) = launchSpeed;
+            angle = (lbl_803E48B0 * (f32)(s32) * (s16*)shard) / lbl_803E48B4;
+            *(f32*)(shard + 0x2c) = launchScale * -mathCosf(angle);
 
             state->shouldSpawnShard = 0;
             state->cooldown = 50;
-            if (state->setupId == 3) {
+            if (state->setupId == 3)
+            {
                 state->launchDelay = 50;
-            } else {
+            }
+            else
+            {
                 state->launchDelay = (s16)(randomGetRange(config->delayMin, config->delayMax) << 2);
             }
 
@@ -137,9 +151,9 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
 
 void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
 {
-    DIMWoodDoorState *state;
-    DIMWoodDoorConfig *config;
-    s16 *modelVec;
+    DIMWoodDoorState* state;
+    DIMWoodDoorConfig* config;
+    s16* modelVec;
     int player;
     f32 dx;
     f32 dz;
@@ -157,54 +171,76 @@ void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
     int turnSign;
     int pitchSign;
 
-    config = *(DIMWoodDoorConfig **)&((GameObject *)obj)->anim.placementData;
+    config = *(DIMWoodDoorConfig**)&((GameObject*)obj)->anim.placementData;
     player = Obj_GetPlayerObject();
-    state = ((GameObject *)obj)->extra;
-    if (state->cooldown <= 0) {
+    state = ((GameObject*)obj)->extra;
+    if (state->cooldown <= 0)
+    {
         modelVec = objModelGetVecFn_800395d8(obj, 0);
         facingAngle = modelVec[1] + ((s32)config->angleBias << 8);
-        targetX -= ((GameObject *)obj)->anim.localPosX;
-        targetZ -= ((GameObject *)obj)->anim.localPosZ;
+        targetX -= ((GameObject*)obj)->anim.localPosX;
+        targetZ -= ((GameObject*)obj)->anim.localPosZ;
         angleDelta = (((u16)getAngle(targetX, targetZ) + 0x8000) - (u16)facingAngle);
-        if (angleDelta > 0x8000) {
+        if (angleDelta > 0x8000)
+        {
             angleDelta -= 0xffff;
         }
-        if (angleDelta < -0x8000) {
+        if (angleDelta < -0x8000)
+        {
             angleDelta += 0xffff;
         }
-        if ((angleDelta < 0x1200) && (angleDelta > -0x1200)) {
+        if ((angleDelta < 0x1200) && (angleDelta > -0x1200))
+        {
             state->shouldSpawnShard = 1;
         }
-        if (angleDelta > 0x800) {
+        if (angleDelta > 0x800)
+        {
             angleDelta = 0x800;
         }
-        if (angleDelta < -0x800) {
+        if (angleDelta < -0x800)
+        {
             angleDelta = -0x800;
         }
         turnStep = angleDelta >> 3;
-        if (turnStep != 0) {
+        if (turnStep != 0)
+        {
             pitch = modelVec[1];
-            if (pitch < 0) {
+            if (pitch < 0)
+            {
                 absPitch = -pitch;
-            } else {
+            }
+            else
+            {
                 absPitch = pitch;
             }
-            if ((s32)lbl_803DBF02 - (s32)lbl_803DBF04 < (s32)absPitch) {
-                if (turnStep < 0) {
+            if ((s32)lbl_803DBF02 - (s32)lbl_803DBF04 < (s32)absPitch)
+            {
+                if (turnStep < 0)
+                {
                     turnSign = -1;
-                } else if (turnStep > 0) {
+                }
+                else if (turnStep > 0)
+                {
                     turnSign = 1;
-                } else {
+                }
+                else
+                {
                     turnSign = 0;
                 }
-                if (pitch < 0) {
+                if (pitch < 0)
+                {
                     pitchSign = -1;
-                } else if (pitch > 0) {
+                }
+                else if (pitch > 0)
+                {
                     pitchSign = 1;
-                } else {
+                }
+                else
+                {
                     pitchSign = 0;
                 }
-                if (pitchSign == turnSign) {
+                if (pitchSign == turnSign)
+                {
                     turnStep = (turnStep * ((s32)lbl_803DBF02 - (s32)absPitch)) / (s32)lbl_803DBF04;
                 }
             }
@@ -219,14 +255,16 @@ void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
         distSq = (distSq > lbl_803E48C8) ? distSq : lbl_803E48C8;
         radiusSq = (f32)((s32)(config->targetRadius * 2) * (s32)(config->targetRadius * 2));
         if ((distSq < radiusSq) || (heightDelta < lbl_803DBF14) ||
-            ((((GameObject *)player)->objectFlags & 0x1000) != 0)) {
+            ((((GameObject*)player)->objectFlags & 0x1000) != 0))
+        {
             state->shouldSpawnShard = 0;
         }
         distSq = (distSq > radiusSq) ? distSq : radiusSq;
 
         accel = (lbl_803E48A4 * -lbl_803DBEF0) * distSq;
         accelDenom = lbl_803E48CC * heightDelta - lbl_803E48D0 * dist;
-        if (accelDenom > lbl_803E48D4) {
+        if (accelDenom > lbl_803E48D4)
+        {
             accelDenom = lbl_803E48D4;
         }
         accel = accel / accelDenom;

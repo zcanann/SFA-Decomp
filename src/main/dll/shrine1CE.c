@@ -9,7 +9,8 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
-typedef struct Dll19CPlacement {
+typedef struct Dll19CPlacement
+{
     u8 pad0[0x8 - 0x0];
     f32 posX;
     f32 unkC;
@@ -20,14 +21,16 @@ typedef struct Dll19CPlacement {
 } Dll19CPlacement;
 
 
-typedef struct Dll19DPlacement {
+typedef struct Dll19DPlacement
+{
     u8 pad0[0x19 - 0x0];
     u8 unk19;
     u8 pad1A[0x20 - 0x1A];
 } Dll19DPlacement;
 
 
-typedef struct Dll19DState {
+typedef struct Dll19DState
+{
     u8 pad0[0x8 - 0x0];
     f32 unk8;
     f32 unkC;
@@ -43,7 +46,8 @@ typedef struct Dll19DState {
 } Dll19DState;
 
 
-typedef struct Dll19CState {
+typedef struct Dll19CState
+{
     u8 pad0[0x2 - 0x0];
     s16 unk2;
     s16 unk4;
@@ -62,7 +66,8 @@ typedef struct Dll19CState {
 } Dll19CState;
 
 
-typedef struct Dll19BState {
+typedef struct Dll19BState
+{
     u8 pad0[0x12 - 0x0];
     u8 unk12;
     u8 unk13;
@@ -71,8 +76,6 @@ typedef struct Dll19BState {
     u8 unk16;
     u8 pad17[0x18 - 0x17];
 } Dll19BState;
-
-
 
 
 #pragma peephole off
@@ -121,17 +124,17 @@ extern f32 lbl_803E5E4C;
  * PAL Size: TODO
  */
 extern int Obj_GetPlayerObject(void);
-extern int ObjGroup_FindNearestObject(int group, int obj, f32 *outDist);
-extern int ObjMsg_Pop(int obj, int *msg, int *a, int *b);
+extern int ObjGroup_FindNearestObject(int group, int obj, f32* outDist);
+extern int ObjMsg_Pop(int obj, int* msg, int* a, int* b);
 extern uint GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
-extern f32 Vec_distance(f32 *a, f32 *b);
+extern f32 Vec_distance(f32 * a, f32 * b);
 extern void fn_80296B78(int obj, int a);
-extern void fn_80137948(char *fmt, ...);
+extern void fn_80137948(char* fmt, ...);
 extern char sShrineTimeFormat[];
-extern void *gTitleMenuControlInterface;
-extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern ModgfxInterface **gModgfxInterface;
+extern void* gTitleMenuControlInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E518C;
 extern f32 lbl_803E5190;
 extern f32 lbl_803E5194;
@@ -144,10 +147,10 @@ extern u8 framesThisStep;
 #pragma peephole on
 void dll_19B_update(int obj)
 {
-    s16 *st;
+    s16* st;
     int player;
     int near;
-    s16 *st2;
+    s16* st2;
     int v;
     f32 dy;
     f32 dist;
@@ -155,13 +158,15 @@ void dll_19B_update(int obj)
     int msg;
     int unk8;
 
-    st = ((GameObject *)obj)->extra;
+    st = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     dist = lbl_803E518C;
-    st2 = ((GameObject *)obj)->extra;
+    st2 = ((GameObject*)obj)->extra;
     unk16 = 0;
-    while (ObjMsg_Pop(obj, &msg, &unk8, &unk16) != 0) {
-        switch (msg) {
+    while (ObjMsg_Pop(obj, &msg, &unk8, &unk16) != 0)
+    {
+        switch (msg)
+        {
         case 0x30005:
             st2[3] = -3;
             break;
@@ -171,75 +176,96 @@ void dll_19B_update(int obj)
         }
     }
     GameBit_Set(0x127, 1);
-    if ((v = st[3]) != 0) {
+    if ((v = st[3]) != 0)
+    {
         st[2] = st[2] + v;
-        if (st[2] <= 12) {
+        if (st[2] <= 12)
+        {
             st[2] = 12;
             st[3] = 0;
-        } else if (st[2] >= 70) {
+        }
+        else if (st[2] >= 70)
+        {
             st[2] = 70;
             st[3] = 0;
         }
-        (*(void (**)(int, int))(*(int *)gTitleMenuControlInterface + 0x38))(2, st[2] & 0xff);
+        (*(void (**)(int, int))(*(int*)gTitleMenuControlInterface + 0x38))(2, st[2] & 0xff);
     }
-    if ((v = st[5]) != 0) {
+    if ((v = st[5]) != 0)
+    {
         st[4] = st[4] + v;
-        if (st[4] <= 1 && st[5] <= 0) {
+        if (st[4] <= 1 && st[5] <= 0)
+        {
             st[4] = 1;
             st[5] = 0;
-        } else if (st[4] >= 70 && st[5] >= 0) {
+        }
+        else if (st[4] >= 70 && st[5] >= 0)
+        {
             st[4] = 70;
             st[5] = 0;
         }
-        (*(void (**)(int, int))(*(int *)gTitleMenuControlInterface + 0x38))(3, st[4] & 0xff);
+        (*(void (**)(int, int))(*(int*)gTitleMenuControlInterface + 0x38))(3, st[4] & 0xff);
     }
-    if (st[1] > 0) {
+    if (st[1] > 0)
+    {
         st[1] -= framesThisStep;
-        if (st[1] <= 0) {
+        if (st[1] <= 0)
+        {
             st[1] = 0;
-            if (((Dll19BState *)st)->unk16 == 0) {
-                (*(void (**)(int, int, int, int, int))(*(int *)gTitleMenuControlInterface + 0x18))(
+            if (((Dll19BState*)st)->unk16 == 0)
+            {
+                (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
                     3, 0x2c, 0x50, st[4], 0);
-                ((Dll19BState *)st)->unk16 = 1;
+                ((Dll19BState*)st)->unk16 = 1;
             }
         }
-    } else {
+    }
+    else
+    {
         near = ObjGroup_FindNearestObject(0xe, player, &dist);
-        if ((u32)near != 0 && dist < lbl_803E5190 && dist > lbl_803E5194) {
-            dy = *(f32 *)(near + 0x14) - *(f32 *)(player + 0x14);
-            if (dy <= lbl_803E5198) {
-                if (dy < lbl_803E5198) {
+        if ((u32)near != 0 && dist < lbl_803E5190 && dist > lbl_803E5194)
+        {
+            dy = *(f32*)(near + 0x14) - *(f32*)(player + 0x14);
+            if (dy <= lbl_803E5198)
+            {
+                if (dy < lbl_803E5198)
+                {
                     dy = dy * lbl_803E519C;
                 }
-                if (st[4] != 30) {
+                if (st[4] != 30)
+                {
                     st[4] = 30;
                 }
                 v = (int)((f32)st[4] * ((dy - lbl_803E5194) / lbl_803E51A0));
-                if ((s16)v < 1) {
+                if ((s16)v < 1)
+                {
                     v = 1;
                 }
-                (*(void (**)(int, int))(*(int *)gTitleMenuControlInterface + 0x38))(3, v & 0xff);
-                v = (int)((f32)st[2] * ((lbl_803E51A0 - (dy - lbl_803E5194)) / *(f32 *)&lbl_803E51A0));
-                if ((s16)v < 1) {
+                (*(void (**)(int, int))(*(int*)gTitleMenuControlInterface + 0x38))(3, v & 0xff);
+                v = (int)((f32)st[2] * ((lbl_803E51A0 - (dy - lbl_803E5194)) / *(f32*)&lbl_803E51A0));
+                if ((s16)v < 1)
+                {
                     v = 1;
                 }
-                (*(void (**)(int, int))(*(int *)gTitleMenuControlInterface + 0x38))(2, v & 0xff);
+                (*(void (**)(int, int))(*(int*)gTitleMenuControlInterface + 0x38))(2, v & 0xff);
             }
         }
-        switch (((Dll19BState *)st)->unk13) {
+        switch (((Dll19BState*)st)->unk13)
+        {
         case 0:
-            if (Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) < (f32)st[0]) {
-                ((Dll19BState *)st)->unk13 = 1;
+            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < (f32)st[0])
+            {
+                ((Dll19BState*)st)->unk13 = 1;
                 GameBit_Set(0x129, 0);
-                (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
+                (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 {
-                    void *handle = Resource_Acquire(0x83, 1);
-                    (*(s16 (**)(int, int, int, int, int, int))(*(int *)handle + 4))(obj, 1, 0, 1, -1, 0);
+                    void* handle = Resource_Acquire(0x83, 1);
+                    (*(s16 (**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 1, 0, 1, -1, 0);
                     Resource_Release(handle);
                 }
                 {
-                    void *handle = Resource_Acquire(0x84, 1);
-                    (*(s16 (**)(int, int, int, int, int, int))(*(int *)handle + 4))(obj, 0, 0, 1, -1, 0);
+                    void* handle = Resource_Acquire(0x84, 1);
+                    (*(s16 (**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 0, 0, 1, -1, 0);
                     Resource_Release(handle);
                 }
                 GameBit_Set(0x126, 0);
@@ -247,78 +273,88 @@ void dll_19B_update(int obj)
             }
             break;
         case 1:
-            if (((Dll19BState *)st)->unk14 == 1) {
-                ((Dll19BState *)st)->unk13 = 2;
+            if (((Dll19BState*)st)->unk14 == 1)
+            {
+                ((Dll19BState*)st)->unk13 = 2;
                 st[1] = 160;
             }
             break;
         case 2:
-            if (((Dll19BState *)st)->unk12 == 0 && (u32)GameBit_Get(0x1d3) == 0) {
+            if (((Dll19BState*)st)->unk12 == 0 && (u32)GameBit_Get(0x1d3) == 0)
+            {
                 GameBit_Set(0x1d3, 1);
             }
-            if ((u32)GameBit_Get(0x1d8) != 0) {
-                ((Dll19BState *)st)->unk12 += 1;
+            if ((u32)GameBit_Get(0x1d8) != 0)
+            {
+                ((Dll19BState*)st)->unk12 += 1;
                 GameBit_Set(0x1d8, 0);
             }
             st[7] -= (int)timeDelta;
             fn_80137948(sShrineTimeFormat, st[7]);
-            if (st[7] <= 0) {
+            if (st[7] <= 0)
+            {
                 GameBit_Set(0x1d4, 1);
-                (*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
+                (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
                 st[1] = 10;
-                ((Dll19BState *)st)->unk13 = 6;
-                (*(void (**)(int, int, int, int, int))(*(int *)gTitleMenuControlInterface + 0x18))(
+                ((Dll19BState*)st)->unk13 = 6;
+                (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
                     3, 0x35, 0x50, st[4] & 0xff, 0);
                 st[5] = 1;
                 GameBit_Set(0x1d3, 0);
-            } else if (((Dll19BState *)st)->unk12 == 1) {
-                ((Dll19BState *)st)->unk13 = 3;
+            }
+            else if (((Dll19BState*)st)->unk12 == 1)
+            {
+                ((Dll19BState*)st)->unk13 = 3;
                 st[1] = 200;
                 st[5] = -3;
             }
             break;
         case 3:
-            if ((u32)GameBit_Get(0x1d1) != 0) {
+            if ((u32)GameBit_Get(0x1d1) != 0)
+            {
                 st[4] = 1;
-                (*(void (**)(int, int, int, int, int))(*(int *)gTitleMenuControlInterface + 0x18))(
+                (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
                     3, 0x2c, 0x50, st[4] & 0xff, 0);
                 st[5] = 1;
                 GameBit_Set(0x129, 1);
-                ((Dll19BState *)st)->unk13 = 5;
-            } else {
+                ((Dll19BState*)st)->unk13 = 5;
+            }
+            else
+            {
                 fn_80296B78(player, -1);
                 GameBit_Set(0x126, 0);
-                (*(void (**)(int, int, int, int, int))(*(int *)gTitleMenuControlInterface + 0x18))(
+                (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
                     3, 0x2a, 0x50, st[4] & 0xff, 0);
                 st[5] = 1;
-                (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
-                ((Dll19BState *)st)->unk13 = 4;
+                (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
+                ((Dll19BState*)st)->unk13 = 4;
             }
             break;
         case 4:
-            if ((u32)GameBit_Get(0xfd) == 0) {
+            if ((u32)GameBit_Get(0xfd) == 0)
+            {
                 GameBit_Set(0xfd, 1);
             }
             GameBit_Set(0x1d2, 0);
             GameBit_Set(0x127, 0);
-            ((Dll19BState *)st)->unk13 = 5;
-            (*(void (**)(int, int, int, int, int))(*(int *)gTitleMenuControlInterface + 0x18))(
+            ((Dll19BState*)st)->unk13 = 5;
+            (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
                 3, 0x2c, 0x50, st[4] & 0xff, 0);
             break;
         case 6:
-            ((Dll19BState *)st)->unk13 = 0;
-            ((Dll19BState *)st)->unk14 = 0;
+            ((Dll19BState*)st)->unk13 = 0;
+            ((Dll19BState*)st)->unk14 = 0;
             st[1] = 400;
             GameBit_Set(0x129, 1);
             GameBit_Set(0x126, 1);
             GameBit_Set(0x127, 1);
             {
-                void *handle = Resource_Acquire(0x6a, 1);
-                st[6] = (*(s16 (**)(int, int, int, int, int, int))(*(int *)handle + 4))(obj, 2, 0, 0x402, -1, 0);
+                void* handle = Resource_Acquire(0x6a, 1);
+                st[6] = (*(s16 (**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 2, 0, 0x402, -1, 0);
                 Resource_Release(handle);
             }
             GameBit_Set(0x1d8, 0);
-            ((Dll19BState *)st)->unk12 = 0;
+            ((Dll19BState*)st)->unk12 = 0;
             st[7] = 4000;
             GameBit_Set(0x1d4, 0);
             break;
@@ -328,15 +364,41 @@ void dll_19B_update(int obj)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void dll_19B_release(void) {}
-void dll_19B_initialise(void) {}
-void dll_19C_free(void) {}
-void dll_19C_hitDetect(void) {}
-void dll_19C_release(void) {}
-void dll_19C_initialise(void) {}
-void dll_19D_render(void) {}
-void dll_19D_release(void) {}
-void dll_19D_initialise(void) {}
+void dll_19B_release(void)
+{
+}
+
+void dll_19B_initialise(void)
+{
+}
+
+void dll_19C_free(void)
+{
+}
+
+void dll_19C_hitDetect(void)
+{
+}
+
+void dll_19C_release(void)
+{
+}
+
+void dll_19C_initialise(void)
+{
+}
+
+void dll_19D_render(void)
+{
+}
+
+void dll_19D_release(void)
+{
+}
+
+void dll_19D_initialise(void)
+{
+}
 
 /* 8b "li r3, N; blr" returners. */
 int dll_19C_getExtraSize(void) { return 0x8; }
@@ -350,7 +412,11 @@ int dll_19E_getObjectTypeId(void) { return 0x1; }
 extern f32 lbl_803E51B0;
 extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
-void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E51B0); }
+void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E51B0);
+}
 #pragma peephole reset
 
 /* Stubs to align function set with v1.0 asm. */
@@ -363,68 +429,77 @@ extern void Sfx_PlayFromObject(int obj, int sfx);
 extern f32 lbl_803E51B4;
 
 #pragma peephole off
-void dll_19C_update(int *obj) {
+void dll_19C_update(int* obj)
+{
     extern uint GameBit_Get(int);
-    u8 *def;
-    u8 *sub;
-    void *res;
-    void *setup;
+    u8* def;
+    u8* sub;
+    void* res;
+    void* setup;
 
-    def = *(u8**)&((GameObject *)obj)->anim.placementData;
-    sub = ((GameObject *)obj)->extra;
-    if (((GameObject *)obj)->unkF8 != 0) {
-        if (GameBit_Get(0x1d4) != 0) {
-            ((GameObject *)obj)->unkF8 = 0;
+    def = *(u8**)&((GameObject*)obj)->anim.placementData;
+    sub = ((GameObject*)obj)->extra;
+    if (((GameObject*)obj)->unkF8 != 0)
+    {
+        if (GameBit_Get(0x1d4) != 0)
+        {
+            ((GameObject*)obj)->unkF8 = 0;
         }
     }
-    if (((GameObject *)obj)->unkF8 == 0) {
-        if (GameBit_Get(0x1d3) != 0) {
+    if (((GameObject*)obj)->unkF8 == 0)
+    {
+        if (GameBit_Get(0x1d3) != 0)
+        {
             res = Resource_Acquire(0x82, 1);
             ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 0, 0, 1, -1, 0);
             ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 1, -1, 0);
             Sfx_PlayFromObject(0, SFXsc_gemrun1022);
             Resource_Release(res);
-            ((Dll19CState *)sub)->unk6 = 1;
-            ((GameObject *)obj)->unkF8 = 1;
+            ((Dll19CState*)sub)->unk6 = 1;
+            ((GameObject*)obj)->unkF8 = 1;
         }
     }
-    if (((Dll19CState *)sub)->unk6 != 0) {
-        ((Dll19CState *)sub)->unk4 = (s16)(((Dll19CState *)sub)->unk4 - ((Dll19CState *)sub)->unk6 * framesThisStep);
+    if (((Dll19CState*)sub)->unk6 != 0)
+    {
+        ((Dll19CState*)sub)->unk4 = (s16)(((Dll19CState*)sub)->unk4 - ((Dll19CState*)sub)->unk6 * framesThisStep);
     }
-    if (((Dll19CState *)sub)->unk4 <= 0 && (s8)def[0x1f] == 0 && (u8)Obj_IsLoadingLocked() != 0) {
+    if (((Dll19CState*)sub)->unk4 <= 0 && (s8)def[0x1f] == 0 && (u8)Obj_IsLoadingLocked() != 0)
+    {
         setup = Obj_AllocObjectSetup(0x18, 0x248);
-        ((ObjPlacement *)setup)->posX = ((Dll19CPlacement *)def)->posX;
-        ((ObjPlacement *)setup)->posY = lbl_803E51B4 + ((Dll19CPlacement *)def)->unkC;
-        ((ObjPlacement *)setup)->posZ = ((Dll19CPlacement *)def)->posZ;
+        ((ObjPlacement*)setup)->posX = ((Dll19CPlacement*)def)->posX;
+        ((ObjPlacement*)setup)->posY = lbl_803E51B4 + ((Dll19CPlacement*)def)->unkC;
+        ((ObjPlacement*)setup)->posZ = ((Dll19CPlacement*)def)->posZ;
         *(s16*)setup = 0x248;
-        ((ObjPlacement *)setup)->mapId = -1;
+        ((ObjPlacement*)setup)->mapId = -1;
         *(u8*)((char*)setup + 4) = def[4];
         *(u8*)((char*)setup + 5) = def[5];
         *(u8*)((char*)setup + 6) = def[6];
         *(u8*)((char*)setup + 7) = def[7];
-        Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(void**)&((GameObject *)obj)->anim.parent);
-        ((Dll19CState *)sub)->unk4 = 0x64;
-        ((Dll19CState *)sub)->unk6 = 0;
+        Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, *(void**)&((GameObject*)obj)->anim.parent);
+        ((Dll19CState*)sub)->unk4 = 0x64;
+        ((Dll19CState*)sub)->unk6 = 0;
     }
 }
 #pragma peephole reset
 
 #pragma peephole off
-void dll_19B_init(u8 *obj, u8 *params) {
-    register u8 *sub;
-    void *res;
+void dll_19B_init(u8* obj, u8* params)
+{
+    register u8* sub;
+    void* res;
 
-    sub = ((GameObject *)obj)->extra;
+    sub = ((GameObject*)obj)->extra;
     *(s16*)obj = 0;
     *(s16*)sub = 0xa;
-    if (*(s16*)(params + 0x1a) > 0) {
+    if (*(s16*)(params + 0x1a) > 0)
+    {
         *(s16*)sub = (s16)(*(s16*)(params + 0x1a) >> 8);
     }
     sub[0x13] = 0;
     sub[0x14] = 0;
-    ((Dll19CState *)sub)->unk2 = 0;
+    ((Dll19CState*)sub)->unk2 = 0;
     sub[0x12] = 0;
-    ((GameObject *)obj)->animEventCallback = (void *)dll_19B_SeqFn;
+    ((GameObject*)obj)->animEventCallback = (void*)dll_19B_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0x129, 1);
     GameBit_Set(0x1d2, 0);
@@ -434,11 +509,11 @@ void dll_19B_init(u8 *obj, u8 *params) {
     GameBit_Set(0x40, 1);
     GameBit_Set(0x1d7, 1);
     GameBit_Set(0x1d8, 0);
-    ((Dll19CState *)sub)->unk4 = 0xc;
+    ((Dll19CState*)sub)->unk4 = 0xc;
     *(s16*)(sub + 8) = 0x1e;
-    ((Dll19CState *)sub)->unk2 = 0xc8;
+    ((Dll19CState*)sub)->unk2 = 0xc8;
     ((void(*)(int, int, int, int, int))((void**)*(void**)gTitleMenuControlInterface)[6])(2, 0x2b, 0x50, 1, 0);
-    ((Dll19CState *)sub)->unk6 = 0;
+    ((Dll19CState*)sub)->unk6 = 0;
     *(s16*)(sub + 0xa) = 0;
     sub[0x16] = 0;
     *(s16*)(sub + 0x10) = 0xc8;
@@ -446,9 +521,9 @@ void dll_19B_init(u8 *obj, u8 *params) {
     res = Resource_Acquire(0x6a, 1);
     *(s16*)(sub + 0xc) = ((s16(*)(u8*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 0x402, -1, 0);
     Resource_Release(res);
-    ((GameObject *)obj)->anim.worldPosX = ((GameObject *)obj)->anim.localPosX;
-    ((GameObject *)obj)->anim.worldPosY = ((GameObject *)obj)->anim.localPosY;
-    ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;
+    ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
+    ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
+    ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
 }
 #pragma peephole reset
 
@@ -458,17 +533,17 @@ void dll_19B_init(u8 *obj, u8 *params) {
  * EN v1.0 Size: 64b
  */
 #pragma peephole off
-void dll_19C_init(int obj, u8 *initData)
+void dll_19C_init(int obj, u8* initData)
 {
     register int self = obj;
-    register int state = *(int *)&((GameObject *)self)->extra;
-    *(short *)self = (short)((int)(signed char)initData[0x1e] << 8);
-    ((GameObject *)self)->unkF8 = 0;
-    ((Dll19CState *)state)->unk4 = 0x64;
-    ((Dll19CState *)state)->unk6 = 0;
-    *(int *)state = 0;
-    *(u8 *)(self + 0x37) = 0xff;
-    ((GameObject *)self)->anim.alpha = 0xff;
+    register int state = *(int*)&((GameObject*)self)->extra;
+    *(short*)self = (short)((int)(signed char)initData[0x1e] << 8);
+    ((GameObject*)self)->unkF8 = 0;
+    ((Dll19CState*)state)->unk4 = 0x64;
+    ((Dll19CState*)state)->unk6 = 0;
+    *(int*)state = 0;
+    *(u8*)(self + 0x37) = 0xff;
+    ((GameObject*)self)->anim.alpha = 0xff;
 }
 #pragma peephole reset
 
@@ -481,10 +556,11 @@ void dll_19C_init(int obj, u8 *initData)
 void dll_19D_free(int obj)
 {
     register int self = obj;
-    register int state = *(int *)&((GameObject *)self)->extra;
-    if ((((Dll19DState *)state)->unk36 & 2) == 0) {
+    register int state = *(int*)&((GameObject*)self)->extra;
+    if ((((Dll19DState*)state)->unk36 & 2) == 0)
+    {
         getLActions(self, self, 1, 0, 0, 0);
-        ((Dll19DState *)state)->unk36 = (u8)((u32)((Dll19DState *)state)->unk36 | 0x2);
+        ((Dll19DState*)state)->unk36 = (u8)((u32)((Dll19DState*)state)->unk36 | 0x2);
     }
     (*gExpgfxInterface)->freeSource2((u32)self);
 }
@@ -501,27 +577,35 @@ extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int ext
 void dll_19D_init(int obj)
 {
     register int self = obj;
-    register int state2 = *(int *)&((GameObject *)self)->anim.placementData;
+    register int state2 = *(int*)&((GameObject*)self)->anim.placementData;
     int slot;
 
-    if ((int)(signed char)*(u8 *)(state2 + 0x19) != 0) {
+    if ((int)(signed char)*(u8*)(state2 + 0x19) != 0)
+    {
         slot = 3;
-    } else {
+    }
+    else
+    {
         slot = 1;
     }
     ObjHits_SetHitVolumeSlot(self, 0xe, slot, 0);
 
-    if ((int)(signed char)((Dll19DPlacement *)state2)->unk19 == 1) {
+    if ((int)(signed char)((Dll19DPlacement*)state2)->unk19 == 1)
+    {
         getLActions(self, self, 0x203, 0, 0, 0);
-    } else if ((int)(signed char)((Dll19DPlacement *)state2)->unk19 == 2) {
+    }
+    else if ((int)(signed char)((Dll19DPlacement*)state2)->unk19 == 2)
+    {
         getLActions(self, self, 0x204, 0, 0, 0);
-    } else {
+    }
+    else
+    {
         getLActions(self, self, 0x201, 0, 0, 0);
     }
 }
 #pragma peephole reset
 
-extern EffectInterface **gPartfxInterface;
+extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E51B8;
 extern f64 lbl_803E51C0;
 
@@ -534,26 +618,26 @@ extern f64 lbl_803E51C0;
 void dll_19D_hitDetect(int obj)
 {
     register int self = obj;
-    register int state = *(int *)&((GameObject *)self)->extra;
-    int state2 = *(int *)&((GameObject *)self)->anim.placementData;
+    register int state = *(int*)&((GameObject*)self)->extra;
+    int state2 = *(int*)&((GameObject*)self)->anim.placementData;
     float vec[6];
     int linkObj;
-    void *linkSubObj;
+    void* linkSubObj;
 
     vec[3] = lbl_803E51B8;
     vec[4] = lbl_803E51B8;
     vec[5] = lbl_803E51B8;
-    vec[2] = (float)(int)(s8)((Dll19DPlacement *)state2)->unk19;
+    vec[2] = (float)(int)(s8)((Dll19DPlacement*)state2)->unk19;
 
-    linkObj = *(int *)&((GameObject *)self)->anim.hitReactState;
-    linkSubObj = *(void **)&((ObjHitsPriorityState *)linkObj)->lastHitObject;
+    linkObj = *(int*)&((GameObject*)self)->anim.hitReactState;
+    linkSubObj = *(void**)&((ObjHitsPriorityState*)linkObj)->lastHitObject;
     if (linkSubObj == 0) return;
-    if (*(short *)((u8 *)linkSubObj + 0x46) == 0x248) return;
+    if (*(short*)((u8*)linkSubObj + 0x46) == 0x248) return;
 
-    (*gPartfxInterface)->spawnObject((void *)self, 0x2a0, vec, 1, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void *)self, 0x2a0, vec, 1, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void *)self, 0x2a0, vec, 1, -1, NULL);
-    ((Dll19DState *)state)->unk32 = 0x32;
+    (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
+    ((Dll19DState*)state)->unk32 = 0x32;
 }
 #pragma peephole reset
 
@@ -566,8 +650,8 @@ void dll_19D_hitDetect(int obj)
 void dll_19D_update(int obj)
 {
     register int self = obj;
-    register int state = *(int *)(self + 0xb8);
-    int def = *(int *)(self + 0x4c);
+    register int state = *(int*)(self + 0xb8);
+    int def = *(int*)(self + 0x4c);
     int linkObj;
     float vec[6];
     int lifetime;
@@ -578,66 +662,75 @@ void dll_19D_update(int obj)
     vec[3] = lbl_803E51B8;
     vec[4] = lbl_803E51B8;
     vec[5] = lbl_803E51B8;
-    vec[2] = (float)(int)(s8)*(u8 *)(def + 0x19);
+    vec[2] = (float)(int)(s8) * (u8*)(def + 0x19);
 
-    if ((*(u8 *)(state + 0x36) & 1) == 0) {
-        *(f32 *)(state + 0x8) = *(f32 *)(self + 0xc);
-        *(f32 *)(state + 0xc) = *(f32 *)(self + 0x10);
-        *(f32 *)(state + 0x10) = *(f32 *)(self + 0x14);
-        *(u8 *)(state + 0x36) = (u8)((u32)*(u8 *)(state + 0x36) | 1);
+    if ((*(u8*)(state + 0x36) & 1) == 0)
+    {
+        *(f32*)(state + 0x8) = *(f32*)(self + 0xc);
+        *(f32*)(state + 0xc) = *(f32*)(self + 0x10);
+        *(f32*)(state + 0x10) = *(f32*)(self + 0x14);
+        *(u8*)(state + 0x36) = (u8)((u32) * (u8*)(state + 0x36) | 1);
     }
 
-    linkObj = *(int *)(self + 0x54);
-    if (*(s8 *)(linkObj + 0xad) != 0) {
+    linkObj = *(int*)(self + 0x54);
+    if (*(s8*)(linkObj + 0xad) != 0)
+    {
         Sfx_PlayFromObject(self, SFXsc_mpick1_b);
-        (*gPartfxInterface)->spawnObject((void *)self, 0x2a0, vec, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void *)self, 0x2a0, vec, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void *)self, 0x2a0, vec, 1, -1, NULL);
-        *(s16 *)(state + 0x32) = 0x32;
+        (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
+        *(s16*)(state + 0x32) = 0x32;
     }
 
-    if (*(s16 *)(state + 0x32) != 0) {
-        if ((*(u8 *)(state + 0x36) & 2) == 0) {
+    if (*(s16*)(state + 0x32) != 0)
+    {
+        if ((*(u8*)(state + 0x36) & 2) == 0)
+        {
             getLActions(self, self, 1, 0, 0, 0);
-            *(u8 *)(state + 0x36) = (u8)((u32)*(u8 *)(state + 0x36) | 2);
+            *(u8*)(state + 0x36) = (u8)((u32) * (u8*)(state + 0x36) | 2);
         }
         zero = lbl_803E51B8;
-        *(f32 *)(self + 0x24) = zero;
-        *(f32 *)(self + 0x28) = zero;
-        *(f32 *)(self + 0x2c) = zero;
+        *(f32*)(self + 0x24) = zero;
+        *(f32*)(self + 0x28) = zero;
+        *(f32*)(self + 0x2c) = zero;
         ObjHits_ClearHitVolumes(self);
-        *(s16 *)(state + 0x32) -= 1;
-        if (*(s16 *)(state + 0x32) <= 0) {
+        *(s16*)(state + 0x32) -= 1;
+        if (*(s16*)(state + 0x32) <= 0)
+        {
             Obj_FreeObject(self);
         }
-    } else {
-        *(f32 *)(self + 0x80) = *(f32 *)(self + 0xc);
-        *(f32 *)(self + 0x84) = *(f32 *)(self + 0x10);
-        *(f32 *)(self + 0x88) = *(f32 *)(self + 0x14);
+    }
+    else
+    {
+        *(f32*)(self + 0x80) = *(f32*)(self + 0xc);
+        *(f32*)(self + 0x84) = *(f32*)(self + 0x10);
+        *(f32*)(self + 0x88) = *(f32*)(self + 0x14);
 
-        *(s16 *)(self + 0x0) = (s16)(*(s16 *)(self + 0x0) + *(s16 *)(state + 0x2e) * (u16)framesThisStep);
-        *(s16 *)(self + 0x4) = (s16)(*(s16 *)(self + 0x4) + *(s16 *)(state + 0x2c) * (u16)framesThisStep);
-        (*gPartfxInterface)->spawnObject((void *)self, 0x29d, vec, 4, -1, NULL);
+        *(s16*)(self + 0x0) = (s16)(*(s16*)(self + 0x0) + *(s16*)(state + 0x2e) * (u16)framesThisStep);
+        *(s16*)(self + 0x4) = (s16)(*(s16*)(self + 0x4) + *(s16*)(state + 0x2c) * (u16)framesThisStep);
+        (*gPartfxInterface)->spawnObject((void*)self, 0x29d, vec, 4, -1, NULL);
 
-        if ((*(s16 *)(state + 0x30) -= framesThisStep) <= 0) {
-            (*gPartfxInterface)->spawnObject((void *)self, 0x29e, vec, 4, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void *)self, 0x29f, vec, 4, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void *)self, 0x2a1, vec, 4, -1, NULL);
-            *(s16 *)(state + 0x30) = 0x32;
+        if ((*(s16*)(state + 0x30) -= framesThisStep) <= 0)
+        {
+            (*gPartfxInterface)->spawnObject((void*)self, 0x29e, vec, 4, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)self, 0x29f, vec, 4, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)self, 0x2a1, vec, 4, -1, NULL);
+            *(s16*)(state + 0x30) = 0x32;
         }
 
-        *(f32 *)(state + 0x8) = *(f32 *)(self + 0x24) * timeDelta + *(f32 *)(state + 0x8);
-        *(f32 *)(state + 0xc) = *(f32 *)(self + 0x28) * timeDelta + *(f32 *)(state + 0xc);
-        *(f32 *)(state + 0x10) = *(f32 *)(self + 0x2c) * timeDelta + *(f32 *)(state + 0x10);
-        *(u16 *)(state + 0x34) = *(u16 *)(state + 0x34) + (u16)framesThisStep * 0x5dc;
-        *(f32 *)(self + 0xc) = *(f32 *)(state + 0x8);
-        *(f32 *)(self + 0x10) = *(f32 *)(state + 0xc);
-        *(f32 *)(self + 0x14) = *(f32 *)(state + 0x10);
+        *(f32*)(state + 0x8) = *(f32*)(self + 0x24) * timeDelta + *(f32*)(state + 0x8);
+        *(f32*)(state + 0xc) = *(f32*)(self + 0x28) * timeDelta + *(f32*)(state + 0xc);
+        *(f32*)(state + 0x10) = *(f32*)(self + 0x2c) * timeDelta + *(f32*)(state + 0x10);
+        *(u16*)(state + 0x34) = *(u16*)(state + 0x34) + (u16)framesThisStep * 0x5dc;
+        *(f32*)(self + 0xc) = *(f32*)(state + 0x8);
+        *(f32*)(self + 0x10) = *(f32*)(state + 0xc);
+        *(f32*)(self + 0x14) = *(f32*)(state + 0x10);
 
         frames = framesThisStep;
-        lifetime = *(int *)(self + 0xf4);
-        *(int *)(self + 0xf4) = lifetime - frames;
-        if ((int)(lifetime - frames) < 0) {
+        lifetime = *(int*)(self + 0xf4);
+        *(int*)(self + 0xf4) = lifetime - frames;
+        if ((int)(lifetime - frames) < 0)
+        {
             Obj_FreeObject(self);
         }
     }

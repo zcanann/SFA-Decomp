@@ -28,7 +28,8 @@
  */
 
 #if 0
-enum dll_0254_KT_Fallingrocks_slot {
+enum dll_0254_KT_Fallingrocks_slot
+{
     KTFALLINGROCKS_INITIALISE = 0,
     KTFALLINGROCKS_RELEASE = 1,
     KTFALLINGROCKS_INIT = 3,

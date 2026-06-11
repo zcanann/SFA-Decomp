@@ -28,7 +28,8 @@
  */
 
 #if 0
-enum dll_0269_ExplodePlan_slot {
+enum dll_0269_ExplodePlan_slot
+{
     EXPLODEPLAN_INITIALISE = 0,
     EXPLODEPLAN_RELEASE = 1,
     EXPLODEPLAN_INIT = 3,

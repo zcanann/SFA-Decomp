@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00AC_CFCloudCalP_packet_info {
+enum obj_00AC_CFCloudCalP_packet_info
+{
     CFCLOUDCALP_DEF_ID = 0x00AC,
     CFCLOUDCALP_DLL_ID = 0x00ED,
     CFCLOUDCALP_CLASS_ID = 0x0006,

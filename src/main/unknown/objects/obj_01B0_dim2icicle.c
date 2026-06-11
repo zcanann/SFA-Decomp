@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01B0_DIM2Icicle_packet_info {
+enum obj_01B0_DIM2Icicle_packet_info
+{
     DIM2ICICLE_DEF_ID = 0x01B0,
     DIM2ICICLE_DLL_ID = 0x01DD,
     DIM2ICICLE_CLASS_ID = 0x0030,

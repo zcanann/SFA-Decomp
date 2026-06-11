@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_05AD_StaffBoostP_packet_info {
+enum obj_05AD_StaffBoostP_packet_info
+{
     STAFFBOOSTP_DEF_ID = 0x05AD,
     STAFFBOOSTP_DLL_ID = 0x011C,
     STAFFBOOSTP_CLASS_ID = 0x007A,

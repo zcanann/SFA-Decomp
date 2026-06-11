@@ -21,9 +21,12 @@
  */
 
 
-
-extern void OSReport(const char *fmt, ...);
+extern void OSReport(const char* fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_FALSE_RETURN 0
 
-int projwallpower_doUnsupported(void) { OSReport(sProjwallpowerDoNoLongerSupported); return PROJECTILE_UNSUPPORTED_FALSE_RETURN; }
+int projwallpower_doUnsupported(void)
+{
+    OSReport(sProjwallpowerDoNoLongerSupported);
+    return PROJECTILE_UNSUPPORTED_FALSE_RETURN;
+}

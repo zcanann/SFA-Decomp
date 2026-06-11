@@ -10,10 +10,11 @@ extern s16 lbl_80330028[];
  *
  * EN v1.1 Address: 0x802827C8, size 72b
  */
-u16 inpGetPostAuxB(McmdVoiceState *state)
+u16 inpGetPostAuxB(McmdVoiceState* state)
 {
     u32 flags = state->inputDirtyFlags;
-    if ((flags & MCMD_INPUT_DIRTY_POST_AUX_B) == 0) {
+    if ((flags & MCMD_INPUT_DIRTY_POST_AUX_B) == 0)
+    {
         return state->postAuxBInput.cachedValue;
     }
     state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_POST_AUX_B;
@@ -25,10 +26,11 @@ u16 inpGetPostAuxB(McmdVoiceState *state)
  *
  * EN v1.1 Address: 0x80282810, size 72b
  */
-u16 inpGetTremolo(McmdVoiceState *state)
+u16 inpGetTremolo(McmdVoiceState* state)
 {
     u32 flags = state->inputDirtyFlags;
-    if ((flags & MCMD_INPUT_DIRTY_TREMOLO) == 0) {
+    if ((flags & MCMD_INPUT_DIRTY_TREMOLO) == 0)
+    {
         return state->tremoloInput.cachedValue;
     }
     state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_TREMOLO;
@@ -52,22 +54,24 @@ u16 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
     u32 mask;
     u32 maskedFlags;
     u32 isDirty;
-    u32 *dirtyWord;
+    u32* dirtyWord;
 
     mask = lbl_8032FFE0[channel & 0xff];
-    dirtyWord = (u32 *)((u8 *)lbl_803D3CA0 + ((handleIndex & 0xff) << 6) + ((auxIndex & 0xff) << 2));
+    dirtyWord = (u32*)((u8*)lbl_803D3CA0 + ((handleIndex & 0xff) << 6) + ((auxIndex & 0xff) << 2));
     flags = *dirtyWord;
     maskedFlags = mask & flags;
     isDirty = maskedFlags != 0;
-    if (isDirty != 0) {
+    if (isDirty != 0)
+    {
         *dirtyWord = flags & ~mask;
     }
-    if (isDirty == 0) {
-        return *(u16 *)(lbl_803BDEF4 + (studio & 0xff) * 0x90 + (channel & 0xff) * 0x24 + 0x20);
+    if (isDirty == 0)
+    {
+        return *(u16*)(lbl_803BDEF4 + (studio & 0xff) * 0x90 + (channel & 0xff) * 0x24 + 0x20);
     }
     return _GetInputValue(0,
-                          (McmdInputSlot *)(lbl_803BDEF4 + (channel & 0xff) * 0x24 +
-                                             (studio & 0xff) * 0x90),
+                          (McmdInputSlot*)(lbl_803BDEF4 + (channel & 0xff) * 0x24 +
+                              (studio & 0xff) * 0x90),
                           auxIndex, handleIndex);
 }
 
@@ -80,22 +84,24 @@ u16 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
     u32 mask;
     u32 maskedFlags;
     u32 isDirty;
-    u32 *dirtyWord;
+    u32* dirtyWord;
 
     mask = lbl_8032FFF0[channel & 0xff];
-    dirtyWord = (u32 *)((u8 *)lbl_803D3CA0 + ((handleIndex & 0xff) << 6) + ((auxIndex & 0xff) << 2));
+    dirtyWord = (u32*)((u8*)lbl_803D3CA0 + ((handleIndex & 0xff) << 6) + ((auxIndex & 0xff) << 2));
     flags = *dirtyWord;
     maskedFlags = mask & flags;
     isDirty = maskedFlags != 0;
-    if (isDirty != 0) {
+    if (isDirty != 0)
+    {
         *dirtyWord = flags & ~mask;
     }
-    if (isDirty == 0) {
-        return *(u16 *)(lbl_803BDA74 + (studio & 0xff) * 0x90 + (channel & 0xff) * 0x24 + 0x20);
+    if (isDirty == 0)
+    {
+        return *(u16*)(lbl_803BDA74 + (studio & 0xff) * 0x90 + (channel & 0xff) * 0x24 + 0x20);
     }
     return _GetInputValue(0,
-                          (McmdInputSlot *)(lbl_803BDA74 + (channel & 0xff) * 0x24 +
-                                             (studio & 0xff) * 0x90),
+                          (McmdInputSlot*)(lbl_803BDA74 + (channel & 0xff) * 0x24 +
+                              (studio & 0xff) * 0x90),
                           auxIndex, handleIndex);
 }
 
@@ -107,9 +113,10 @@ u16 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
  */
 void inpInit(u32 state)
 {
-    McmdVoiceState *vs = (McmdVoiceState *)state;
+    McmdVoiceState* vs = (McmdVoiceState*)state;
 
-    if (state != 0) {
+    if (state != 0)
+    {
         vs->volumeInput.entries[0].controller = MCMD_CTRL_VOLUME;
         vs->volumeInput.entries[0].combineModeFlags = 0;
         vs->volumeInput.entries[0].scale = 0x10000;
@@ -160,55 +167,114 @@ void inpInit(u32 state)
         vs->exCtrlDirty[0] = 0;
         vs->exCtrlDirty[1] = 0;
         vs->unkA8[0] = 0;
-    } else {
+    }
+    else
+    {
         int i;
-        u8 *b = lbl_803BDA74;
-        u8 *a = lbl_803BDEF4;
-        u32 *p = lbl_803D3CA0;
+        u8* b = lbl_803BDA74;
+        u8* a = lbl_803BDEF4;
+        u32* p = lbl_803D3CA0;
 
-        a[0x22] = 0;  b[0x22] = 0;
-        a[0x46] = 0;  b[0x46] = 0;
-        a[0x6a] = 0;  b[0x6a] = 0;
-        a[0x8e] = 0;  b[0x8e] = 0;
-        a[0xb2] = 0;  b[0xb2] = 0;
-        a[0xd6] = 0;  b[0xd6] = 0;
-        a[0xfa] = 0;  b[0xfa] = 0;
-        a[0x11e] = 0; b[0x11e] = 0;
-        a[0x142] = 0; b[0x142] = 0;
-        a[0x166] = 0; b[0x166] = 0;
-        a[0x18a] = 0; b[0x18a] = 0;
-        a[0x1ae] = 0; b[0x1ae] = 0;
-        a[0x1d2] = 0; b[0x1d2] = 0;
-        a[0x1f6] = 0; b[0x1f6] = 0;
-        a[0x21a] = 0; b[0x21a] = 0;
-        a[0x23e] = 0; b[0x23e] = 0;
-        a[0x262] = 0; b[0x262] = 0;
-        a[0x286] = 0; b[0x286] = 0;
-        a[0x2aa] = 0; b[0x2aa] = 0;
-        a[0x2ce] = 0; b[0x2ce] = 0;
-        a[0x2f2] = 0; b[0x2f2] = 0;
-        a[0x316] = 0; b[0x316] = 0;
-        a[0x33a] = 0; b[0x33a] = 0;
-        a[0x35e] = 0; b[0x35e] = 0;
-        a[0x382] = 0; b[0x382] = 0;
-        a[0x3a6] = 0; b[0x3a6] = 0;
-        a[0x3ca] = 0; b[0x3ca] = 0;
-        a[0x3ee] = 0; b[0x3ee] = 0;
-        a[0x412] = 0; b[0x412] = 0;
-        a[0x436] = 0; b[0x436] = 0;
-        a[0x45a] = 0; b[0x45a] = 0;
-        a[0x47e] = 0; b[0x47e] = 0;
+        a[0x22] = 0;
+        b[0x22] = 0;
+        a[0x46] = 0;
+        b[0x46] = 0;
+        a[0x6a] = 0;
+        b[0x6a] = 0;
+        a[0x8e] = 0;
+        b[0x8e] = 0;
+        a[0xb2] = 0;
+        b[0xb2] = 0;
+        a[0xd6] = 0;
+        b[0xd6] = 0;
+        a[0xfa] = 0;
+        b[0xfa] = 0;
+        a[0x11e] = 0;
+        b[0x11e] = 0;
+        a[0x142] = 0;
+        b[0x142] = 0;
+        a[0x166] = 0;
+        b[0x166] = 0;
+        a[0x18a] = 0;
+        b[0x18a] = 0;
+        a[0x1ae] = 0;
+        b[0x1ae] = 0;
+        a[0x1d2] = 0;
+        b[0x1d2] = 0;
+        a[0x1f6] = 0;
+        b[0x1f6] = 0;
+        a[0x21a] = 0;
+        b[0x21a] = 0;
+        a[0x23e] = 0;
+        b[0x23e] = 0;
+        a[0x262] = 0;
+        b[0x262] = 0;
+        a[0x286] = 0;
+        b[0x286] = 0;
+        a[0x2aa] = 0;
+        b[0x2aa] = 0;
+        a[0x2ce] = 0;
+        b[0x2ce] = 0;
+        a[0x2f2] = 0;
+        b[0x2f2] = 0;
+        a[0x316] = 0;
+        b[0x316] = 0;
+        a[0x33a] = 0;
+        b[0x33a] = 0;
+        a[0x35e] = 0;
+        b[0x35e] = 0;
+        a[0x382] = 0;
+        b[0x382] = 0;
+        a[0x3a6] = 0;
+        b[0x3a6] = 0;
+        a[0x3ca] = 0;
+        b[0x3ca] = 0;
+        a[0x3ee] = 0;
+        b[0x3ee] = 0;
+        a[0x412] = 0;
+        b[0x412] = 0;
+        a[0x436] = 0;
+        b[0x436] = 0;
+        a[0x45a] = 0;
+        b[0x45a] = 0;
+        a[0x47e] = 0;
+        b[0x47e] = 0;
 
-        for (i = 0; i < 4; i++) {
-            p[0] = 0xff;  p[1] = 0xff;  p[2] = 0xff;  p[3] = 0xff;
-            p[4] = 0xff;  p[5] = 0xff;  p[6] = 0xff;  p[7] = 0xff;
-            p[8] = 0xff;  p[9] = 0xff;  p[10] = 0xff; p[11] = 0xff;
-            p[12] = 0xff; p[13] = 0xff; p[14] = 0xff; p[15] = 0xff;
+        for (i = 0; i < 4; i++)
+        {
+            p[0] = 0xff;
+            p[1] = 0xff;
+            p[2] = 0xff;
+            p[3] = 0xff;
+            p[4] = 0xff;
+            p[5] = 0xff;
+            p[6] = 0xff;
+            p[7] = 0xff;
+            p[8] = 0xff;
+            p[9] = 0xff;
+            p[10] = 0xff;
+            p[11] = 0xff;
+            p[12] = 0xff;
+            p[13] = 0xff;
+            p[14] = 0xff;
+            p[15] = 0xff;
             p += 16;
-            p[0] = 0xff;  p[1] = 0xff;  p[2] = 0xff;  p[3] = 0xff;
-            p[4] = 0xff;  p[5] = 0xff;  p[6] = 0xff;  p[7] = 0xff;
-            p[8] = 0xff;  p[9] = 0xff;  p[10] = 0xff; p[11] = 0xff;
-            p[12] = 0xff; p[13] = 0xff; p[14] = 0xff; p[15] = 0xff;
+            p[0] = 0xff;
+            p[1] = 0xff;
+            p[2] = 0xff;
+            p[3] = 0xff;
+            p[4] = 0xff;
+            p[5] = 0xff;
+            p[6] = 0xff;
+            p[7] = 0xff;
+            p[8] = 0xff;
+            p[9] = 0xff;
+            p[10] = 0xff;
+            p[11] = 0xff;
+            p[12] = 0xff;
+            p[13] = 0xff;
+            p[14] = 0xff;
+            p[15] = 0xff;
             p += 16;
         }
     }
@@ -225,7 +291,8 @@ u32 inpTranslateExCtrl(u32 input)
 {
     u32 value = input & 0xff;
     u32 idx = value - 0x80;
-    switch (idx) {
+    switch (idx)
+    {
     case 0: return MCMD_CTRL_PITCH_BEND;
     case 1: return 0x82;
     case 2: return MCMD_CTRL_EX_A0;
@@ -244,19 +311,24 @@ u32 inpTranslateExCtrl(u32 input)
  * Read an extended controller value, with local state-backed overrides for
  * translated controller 0xA0/0xA1.
  */
-u32 inpGetExCtrl(McmdVoiceState *state, u32 ctrl)
+u32 inpGetExCtrl(McmdVoiceState* state, u32 ctrl)
 {
     int translated;
     u32 value;
 
     translated = inpTranslateExCtrl(ctrl) & 0xff;
-    if (translated != MCMD_CTRL_EX_A1) {
-        if (translated < MCMD_CTRL_EX_A1 && translated >= MCMD_CTRL_EX_A0) {
+    if (translated != MCMD_CTRL_EX_A1)
+    {
+        if (translated < MCMD_CTRL_EX_A1 && translated >= MCMD_CTRL_EX_A0)
+        {
             return state->exCtrlA0Value * 2 + 0x2000;
         }
-        if (state->midiSlot == 0xff) {
+        if (state->midiSlot == 0xff)
+        {
             value = 0;
-        } else {
+        }
+        else
+        {
             value = inpGetMidiCtrl(ctrl, state->midiSlot, state->midiEvent);
             value &= 0xffff;
         }
@@ -268,18 +340,22 @@ u32 inpGetExCtrl(McmdVoiceState *state, u32 ctrl)
 /*
  * Clamp and write an extended controller through MIDI for non-local controls.
  */
-void inpSetExCtrl(McmdVoiceState *state, u32 ctrl, s16 value)
+void inpSetExCtrl(McmdVoiceState* state, u32 ctrl, s16 value)
 {
     int translated;
 
-    if (value < 0) {
+    if (value < 0)
+    {
         value = 0;
-    } else if (value > 0x3fff) {
+    }
+    else if (value > 0x3fff)
+    {
         value = 0x3fff;
     }
     translated = inpTranslateExCtrl(ctrl) & 0xff;
     if ((translated >= MCMD_CTRL_MIDI_LAYER || translated < MCMD_CTRL_EX_A0) &&
-        state->midiSlot != 0xff) {
+        state->midiSlot != 0xff)
+    {
         inpSetMidiCtrl14(ctrl, state->midiSlot, state->midiEvent, value);
     }
 }
@@ -303,16 +379,19 @@ u16 sndRand(void)
  */
 s16 sndSin(u32 packed)
 {
-    s16 *table = lbl_80330028;
+    s16* table = lbl_80330028;
     u32 zone = packed & 0xfff;
-    if (zone < 0x400) {
+    if (zone < 0x400)
+    {
         return table[zone];
     }
-    if (zone < 0x800) {
+    if (zone < 0x800)
+    {
         u32 idx = 0x3ff - (zone & 0x3ff);
         return table[idx];
     }
-    if (zone < 0xc00) {
+    if (zone < 0xc00)
+    {
         u32 idx = (zone & 0x3ff);
         return -table[idx];
     }
@@ -325,30 +404,37 @@ s16 sndSin(u32 packed)
 /*
  * Binary search over fixed-stride sorted table entries.
  */
-void *sndBSearch(void *key, void *base, int count, u32 stride, int (*cmp)(void *, void *))
+void* sndBSearch(void* key, void* base, int count, u32 stride, int (*cmp)(void*, void*))
 {
     int high;
     int low;
     int mid;
-    void *entry;
+    void* entry;
     int result;
 
-    if (count != 0) {
+    if (count != 0)
+    {
         low = 1;
         high = count;
-        do {
+        do
+        {
             mid = (low + high) >> 1;
-            entry = (u8 *)base + stride * (mid - 1);
+            entry = (u8*)base + stride * (mid - 1);
             result = cmp(key, entry);
-            if (result == 0) {
+            if (result == 0)
+            {
                 return entry;
             }
-            if (result < 0) {
+            if (result < 0)
+            {
                 high = mid - 1;
-            } else {
+            }
+            else
+            {
                 low = mid + 1;
             }
-        } while (low <= high);
+        }
+        while (low <= high);
     }
     return 0;
 }
@@ -358,7 +444,7 @@ void *sndBSearch(void *key, void *base, int count, u32 stride, int (*cmp)(void *
  *
  * EN v1.1 Address: 0x80282F80, size 16b
  */
-void sndConvertMs(u32 *p)
+void sndConvertMs(u32* p)
 {
     *p = *p << 8;
 }
@@ -369,7 +455,7 @@ void sndConvertMs(u32 *p)
  *
  * EN v1.1 Address: 0x80282F90, size 72b
  */
-void sndConvertTicks(u32 *p, int x)
+void sndConvertTicks(u32* p, int x)
 {
     int div = synthGetVoiceSlotChannelScale(x);
     *p = (((*p << 16) / div) * 0x3e8) >> 5;

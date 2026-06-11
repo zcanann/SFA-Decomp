@@ -36,7 +36,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_01F7_SB_ShipGunBroke_slot {
+enum dll_01F7_SB_ShipGunBroke_slot
+{
     SB_SHIPGUNBROKE_INITIALISE = 0,
     SB_SHIPGUNBROKE_RELEASE = 1,
     SB_SHIPGUNBROKE_INIT = 3,

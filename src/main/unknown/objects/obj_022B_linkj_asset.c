@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_022B_LINKJ_Asset_packet_info {
+enum obj_022B_LINKJ_Asset_packet_info
+{
     LINKJ_ASSET_DEF_ID = 0x022B,
     LINKJ_ASSET_DLL_ID = 0x012E,
     LINKJ_ASSET_CLASS_ID = 0x0061,

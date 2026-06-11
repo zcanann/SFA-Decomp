@@ -33,7 +33,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_01F4_Lamp_slot {
+enum dll_01F4_Lamp_slot
+{
     LAMP_INIT = 3,
     LAMP_UPDATE = 4,
     LAMP_RENDER = 6,

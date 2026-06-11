@@ -36,7 +36,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_022A_DFP_ObjCreator_slot {
+enum dll_022A_DFP_ObjCreator_slot
+{
     DFP_OBJCREATOR_INITIALISE = 0,
     DFP_OBJCREATOR_RELEASE = 1,
     DFP_OBJCREATOR_INIT = 3,

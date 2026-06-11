@@ -72,7 +72,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02DD_SC_Shrine_d_packet_info {
+enum obj_02DD_SC_Shrine_d_packet_info
+{
     SC_SHRINE_D_DEF_ID = 0x02DD,
     SC_SHRINE_D_DLL_ID = 0x0110,
     SC_SHRINE_D_CLASS_ID = 0x0053,

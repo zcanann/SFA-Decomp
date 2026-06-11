@@ -58,7 +58,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0031_InfoText_defs {
+enum class_0031_InfoText_defs
+{
     INFOTEXT_CCSHARPCLAW = 0x01F2,
     INFOTEXT_SH_INFOPOIN = 0x0291,
     INFOTEXT_MCUPGRADEMA = 0x04A0,

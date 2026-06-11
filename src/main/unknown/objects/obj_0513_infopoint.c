@@ -53,7 +53,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0513_InfoPoint_packet_info {
+enum obj_0513_InfoPoint_packet_info
+{
     INFOPOINT_DEF_ID = 0x0513,
     INFOPOINT_DLL_ID = 0x00EC,
     INFOPOINT_CLASS_ID = 0x0008,

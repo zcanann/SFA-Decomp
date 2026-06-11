@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0401_MMSH_WaterS_packet_info {
+enum obj_0401_MMSH_WaterS_packet_info
+{
     MMSH_WATERS_DEF_ID = 0x0401,
     MMSH_WATERS_DLL_ID = 0x018E,
     MMSH_WATERS_CLASS_ID = 0x0030,

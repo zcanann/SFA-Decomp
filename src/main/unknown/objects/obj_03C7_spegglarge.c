@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03C7_SPEggLarge_packet_info {
+enum obj_03C7_SPEggLarge_packet_info
+{
     SPEGGLARGE_DEF_ID = 0x03C7,
     SPEGGLARGE_DLL_ID = 0x0284,
     SPEGGLARGE_CLASS_ID = 0x0070,

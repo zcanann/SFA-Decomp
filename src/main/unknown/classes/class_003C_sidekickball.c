@@ -31,7 +31,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_003C_SidekickBall_defs {
+enum class_003C_SidekickBall_defs
+{
     SIDEKICKBALL_SIDEKICKBAL = 0x04D9,
 };
 #endif

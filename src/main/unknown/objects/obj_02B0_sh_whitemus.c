@@ -53,7 +53,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02B0_SH_whitemus_packet_info {
+enum obj_02B0_SH_whitemus_packet_info
+{
     SH_WHITEMUS_DEF_ID = 0x02B0,
     SH_WHITEMUS_DLL_ID = 0x01A7,
     SH_WHITEMUS_CLASS_ID = 0x0029,

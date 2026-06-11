@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_036A_DFPSplstne_packet_info {
+enum obj_036A_DFPSplstne_packet_info
+{
     DFPSPLSTNE_DEF_ID = 0x036A,
     DFPSPLSTNE_DLL_ID = 0x012E,
     DFPSPLSTNE_CLASS_ID = 0x0061,

@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01C9_IMSpaceRing_packet_info {
+enum obj_01C9_IMSpaceRing_packet_info
+{
     IMSPACERING_DEF_ID = 0x01C9,
     IMSPACERING_DLL_ID = 0x0171,
     IMSPACERING_CLASS_ID = 0x0030,

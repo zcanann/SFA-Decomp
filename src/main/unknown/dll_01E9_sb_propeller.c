@@ -33,7 +33,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_01E9_SB_Propeller_slot {
+enum dll_01E9_SB_Propeller_slot
+{
     SB_PROPELLER_INIT = 3,
     SB_PROPELLER_UPDATE = 4,
     SB_PROPELLER_HITDETECT = 5,

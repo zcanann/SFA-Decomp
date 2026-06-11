@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03AF_WM_LaserTar_packet_info {
+enum obj_03AF_WM_LaserTar_packet_info
+{
     WM_LASERTAR_DEF_ID = 0x03AF,
     WM_LASERTAR_DLL_ID = 0x01FD,
     WM_LASERTAR_CLASS_ID = 0x0030,

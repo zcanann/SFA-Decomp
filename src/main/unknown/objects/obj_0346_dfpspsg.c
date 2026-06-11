@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0346_DFPSpSG_packet_info {
+enum obj_0346_DFPSpSG_packet_info
+{
     DFPSPSG_DEF_ID = 0x0346,
     DFPSPSG_DLL_ID = 0x012A,
     DFPSPSG_CLASS_ID = 0x0030,

@@ -36,7 +36,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_003F_CFPrisonCage_defs {
+enum class_003F_CFPrisonCage_defs
+{
     CFPRISONCAGE_CFPRISONCAG = 0x00B9,
     CFPRISONCAGE_CFCAGESWITC = 0x00C5,
 };

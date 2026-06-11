@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02E5_SC_block_tr_packet_info {
+enum obj_02E5_SC_block_tr_packet_info
+{
     SC_BLOCK_TR_DEF_ID = 0x02E5,
     SC_BLOCK_TR_DLL_ID = 0x00ED,
     SC_BLOCK_TR_CLASS_ID = 0x0006,

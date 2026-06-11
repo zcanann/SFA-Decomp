@@ -56,7 +56,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_05AA_TAreaFXEmit_packet_info {
+enum obj_05AA_TAreaFXEmit_packet_info
+{
     TAREAFXEMIT_DEF_ID = 0x05AA,
     TAREAFXEMIT_DLL_ID = 0x0130,
     TAREAFXEMIT_CLASS_ID = 0x0067,

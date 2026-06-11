@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03B2_WM_colrise_packet_info {
+enum obj_03B2_WM_colrise_packet_info
+{
     WM_COLRISE_DEF_ID = 0x03B2,
     WM_COLRISE_DLL_ID = 0x0201,
     WM_COLRISE_CLASS_ID = 0x0030,

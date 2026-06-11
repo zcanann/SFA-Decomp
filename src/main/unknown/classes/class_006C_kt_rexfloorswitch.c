@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_006C_KT_RexFloorSwitch_defs {
+enum class_006C_KT_RexFloorSwitch_defs
+{
     KT_REXFLOORSWITCH_KT_REXFLOOR = 0x008E,
 };
 #endif

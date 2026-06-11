@@ -70,7 +70,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0404_ECSH_seqpoi_packet_info {
+enum obj_0404_ECSH_seqpoi_packet_info
+{
     ECSH_SEQPOI_DEF_ID = 0x0404,
     ECSH_SEQPOI_DLL_ID = 0x0221,
     ECSH_SEQPOI_CLASS_ID = 0x0030,

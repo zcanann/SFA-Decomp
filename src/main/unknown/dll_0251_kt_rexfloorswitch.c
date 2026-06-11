@@ -28,7 +28,8 @@
  */
 
 #if 0
-enum dll_0251_KT_RexFloorSwitch_slot {
+enum dll_0251_KT_RexFloorSwitch_slot
+{
     KTREXFLOORSWITCH_INITIALISE = 0,
     KTREXFLOORSWITCH_RELEASE = 1,
     KTREXFLOORSWITCH_INIT = 3,

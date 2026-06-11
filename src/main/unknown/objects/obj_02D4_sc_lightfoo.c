@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02D4_SC_lightfoo_packet_info {
+enum obj_02D4_SC_lightfoo_packet_info
+{
     SC_LIGHTFOO_DEF_ID = 0x02D4,
     SC_LIGHTFOO_DLL_ID = 0x01B5,
     SC_LIGHTFOO_CLASS_ID = 0x001C,

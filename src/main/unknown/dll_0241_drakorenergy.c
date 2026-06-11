@@ -39,7 +39,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_0241_DrakorEnergy_slot {
+enum dll_0241_DrakorEnergy_slot
+{
     DRAKORENERGY_INITIALISE = 0,
     DRAKORENERGY_RELEASE = 1,
     DRAKORENERGY_INIT = 3,

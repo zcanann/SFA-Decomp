@@ -59,7 +59,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_040B_ECSH_Pressu_packet_info {
+enum obj_040B_ECSH_Pressu_packet_info
+{
     ECSH_PRESSU_DEF_ID = 0x040B,
     ECSH_PRESSU_DLL_ID = 0x01FE,
     ECSH_PRESSU_CLASS_ID = 0x0033,

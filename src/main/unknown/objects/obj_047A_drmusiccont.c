@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_047A_DRMusicCont_packet_info {
+enum obj_047A_DRMusicCont_packet_info
+{
     DRMUSICCONT_DEF_ID = 0x047A,
     DRMUSICCONT_DLL_ID = 0x027E,
     DRMUSICCONT_CLASS_ID = 0x0030,

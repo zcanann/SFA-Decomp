@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00A8_CFGCpillbre_packet_info {
+enum obj_00A8_CFGCpillbre_packet_info
+{
     CFGCPILLBRE_DEF_ID = 0x00A8,
     CFGCPILLBRE_DLL_ID = 0x012E,
     CFGCPILLBRE_CLASS_ID = 0x0061,

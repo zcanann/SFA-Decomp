@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00D4_CF_DoorLigh_packet_info {
+enum obj_00D4_CF_DoorLigh_packet_info
+{
     CF_DOORLIGH_DEF_ID = 0x00D4,
     CF_DOORLIGH_DLL_ID = 0x0131,
     CF_DOORLIGH_CLASS_ID = 0x0030,

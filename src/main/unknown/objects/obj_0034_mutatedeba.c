@@ -80,7 +80,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0034_MutatedEba_packet_info {
+enum obj_0034_MutatedEba_packet_info
+{
     MUTATEDEBA_DEF_ID = 0x0034,
     MUTATEDEBA_DLL_ID = 0x00C9,
     MUTATEDEBA_CLASS_ID = 0x001C,

@@ -75,7 +75,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_048B_ExplodeWall_packet_info {
+enum obj_048B_ExplodeWall_packet_info
+{
     EXPLODEWALL_DEF_ID = 0x048B,
     EXPLODEWALL_DLL_ID = 0x015A,
     EXPLODEWALL_CLASS_ID = 0x0063,

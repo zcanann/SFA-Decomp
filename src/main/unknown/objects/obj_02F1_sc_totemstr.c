@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02F1_SC_totemstr_packet_info {
+enum obj_02F1_SC_totemstr_packet_info
+{
     SC_TOTEMSTR_DEF_ID = 0x02F1,
     SC_TOTEMSTR_DLL_ID = 0x01BC,
     SC_TOTEMSTR_CLASS_ID = 0x0030,

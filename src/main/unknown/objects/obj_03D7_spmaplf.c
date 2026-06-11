@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03D7_SPMapLF_packet_info {
+enum obj_03D7_SPMapLF_packet_info
+{
     SPMAPLF_DEF_ID = 0x03D7,
     SPMAPLF_DLL_ID = 0x0284,
     SPMAPLF_CLASS_ID = 0x0070,

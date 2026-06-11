@@ -36,7 +36,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_0204_WM_Torch_slot {
+enum dll_0204_WM_Torch_slot
+{
     WM_TORCH_INITIALISE = 0,
     WM_TORCH_RELEASE = 1,
     WM_TORCH_INIT = 3,

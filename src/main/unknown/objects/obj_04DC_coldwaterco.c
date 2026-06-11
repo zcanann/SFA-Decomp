@@ -62,7 +62,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04DC_coldWaterCo_packet_info {
+enum obj_04DC_coldWaterCo_packet_info
+{
     COLDWATERCO_DEF_ID = 0x04DC,
     COLDWATERCO_DLL_ID = 0x0119,
     COLDWATERCO_CLASS_ID = 0x0061,

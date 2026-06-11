@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0094_generalscal_packet_info {
+enum obj_0094_generalscal_packet_info
+{
     GENERALSCAL_DEF_ID = 0x0094,
     GENERALSCAL_DLL_ID = 0x01F5,
     GENERALSCAL_CLASS_ID = 0x0010,

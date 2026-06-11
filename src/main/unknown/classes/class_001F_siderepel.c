@@ -30,7 +30,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_001F_siderepel_defs {
+enum class_001F_siderepel_defs
+{
     SIDEREPEL_SIDEREPEL = 0x0496,
     SIDEREPEL_SIDEREPELWI = 0x0497,
 };

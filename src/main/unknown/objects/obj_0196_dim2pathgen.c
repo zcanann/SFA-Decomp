@@ -53,7 +53,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0196_DIM2PathGen_packet_info {
+enum obj_0196_DIM2PathGen_packet_info
+{
     DIM2PATHGEN_DEF_ID = 0x0196,
     DIM2PATHGEN_DLL_ID = 0x01D8,
     DIM2PATHGEN_CLASS_ID = 0x0047,

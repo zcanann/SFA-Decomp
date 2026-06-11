@@ -1,17 +1,17 @@
 #include "main/proximitymine.h"
 
-extern void *Obj_GetPlayerObject(void);
-extern void Sfx_StopFromObject(void *obj, u16 sfxId);
-extern void Sfx_PlayFromObject(void *obj, u16 sfxId);
-extern void ObjHits_EnableObject(void *obj);
-extern void ObjHits_MarkObjectPositionDirty(void *obj);
-extern void ObjHitbox_SetCapsuleBounds(void *obj, int height, int param3, int param4);
-extern void ObjHits_SetHitVolumeSlot(void *obj, int param2, int param3, int param4);
-extern void storeZeroToFloatParam(void *timer);
-extern void s16toFloat(void *timer, int duration);
-extern void fn_8009A8C8(void *obj, f32 param2);
-extern void spawnExplosion(void *obj, f32 param2, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-extern void modelLightStruct_freeSlot(void *handle);
+extern void* Obj_GetPlayerObject(void);
+extern void Sfx_StopFromObject(void* obj, u16 sfxId);
+extern void Sfx_PlayFromObject(void* obj, u16 sfxId);
+extern void ObjHits_EnableObject(void* obj);
+extern void ObjHits_MarkObjectPositionDirty(void* obj);
+extern void ObjHitbox_SetCapsuleBounds(void* obj, int height, int param3, int param4);
+extern void ObjHits_SetHitVolumeSlot(void* obj, int param2, int param3, int param4);
+extern void storeZeroToFloatParam(void* timer);
+extern void s16toFloat(void* timer, int duration);
+extern void fn_8009A8C8(void* obj, f32 param2);
+extern void spawnExplosion(void* obj, f32 param2, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+extern void modelLightStruct_freeSlot(void* handle);
 
 extern f32 lbl_803E6768;
 extern f32 lbl_803E676C;
@@ -19,9 +19,9 @@ extern f32 lbl_803E6770;
 extern f32 lbl_803E6774;
 extern f32 lbl_803DC24C;
 
-void proximitymine_resetToIdle(ProximityMineObject *obj)
+void proximitymine_resetToIdle(ProximityMineObject* obj)
 {
-    ProximityMineState *state;
+    ProximityMineState* state;
     f32 zero;
 
     state = obj->state;
@@ -46,7 +46,8 @@ void proximitymine_resetToIdle(ProximityMineObject *obj)
     ObjHitbox_SetCapsuleBounds(obj, (s32)state->triggerDistance, -5, 10);
     ObjHits_SetHitVolumeSlot(obj, 13, 1, 0);
     ObjHits_EnableObject(obj);
-    if (state->effectHandle != NULL) {
+    if (state->effectHandle != NULL)
+    {
         modelLightStruct_freeSlot(&state->effectHandle);
     }
 }

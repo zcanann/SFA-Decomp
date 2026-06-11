@@ -73,7 +73,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02F0_SC_DummyCir_packet_info {
+enum obj_02F0_SC_DummyCir_packet_info
+{
     SC_DUMMYCIR_DEF_ID = 0x02F0,
     SC_DUMMYCIR_DLL_ID = 0x011A,
     SC_DUMMYCIR_CLASS_ID = 0x0061,

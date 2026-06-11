@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_05A4_PoleLight_packet_info {
+enum obj_05A4_PoleLight_packet_info
+{
     POLELIGHT_DEF_ID = 0x05A4,
     POLELIGHT_DLL_ID = 0x0206,
     POLELIGHT_CLASS_ID = 0x0030,

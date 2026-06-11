@@ -36,7 +36,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_01EF_SB_CloudBall_slot {
+enum dll_01EF_SB_CloudBall_slot
+{
     SB_CLOUDBALL_INITIALISE = 0,
     SB_CLOUDBALL_RELEASE = 1,
     SB_CLOUDBALL_INIT = 3,

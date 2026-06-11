@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0271_NWCallOFEld_packet_info {
+enum obj_0271_NWCallOFEld_packet_info
+{
     NWCALLOFELD_DEF_ID = 0x0271,
     NWCALLOFELD_DLL_ID = 0x012F,
     NWCALLOFELD_CLASS_ID = 0x0061,

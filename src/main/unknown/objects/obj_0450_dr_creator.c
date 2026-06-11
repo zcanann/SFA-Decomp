@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0450_DR_Creator_packet_info {
+enum obj_0450_DR_Creator_packet_info
+{
     DR_CREATOR_DEF_ID = 0x0450,
     DR_CREATOR_DLL_ID = 0x0265,
     DR_CREATOR_CLASS_ID = 0x0037,

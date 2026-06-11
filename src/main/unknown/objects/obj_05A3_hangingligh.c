@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_05A3_HangingLigh_packet_info {
+enum obj_05A3_HangingLigh_packet_info
+{
     HANGINGLIGH_DEF_ID = 0x05A3,
     HANGINGLIGH_DLL_ID = 0x0206,
     HANGINGLIGH_CLASS_ID = 0x0030,

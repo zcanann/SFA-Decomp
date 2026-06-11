@@ -45,7 +45,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0056_SeqObj2_defs {
+enum class_0056_SeqObj2_defs
+{
     SEQOBJ2_CAMERANEWSE = 0x00F5,
     SEQOBJ2_CCSEQOBJ = 0x01F7,
     SEQOBJ2_SH_NEWSEQOB = 0x02A5,

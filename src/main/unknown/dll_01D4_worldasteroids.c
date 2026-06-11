@@ -25,7 +25,8 @@
  */
 
 #if 0
-enum dll_01D4_WORLDAsteroids_slot {
+enum dll_01D4_WORLDAsteroids_slot
+{
     WORLDASTEROIDS_INITIALISE = 0,
     WORLDASTEROIDS_RELEASE = 1,
     WORLDASTEROIDS_INIT = 3,

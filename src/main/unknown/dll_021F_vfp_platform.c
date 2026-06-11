@@ -39,7 +39,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_021F_VFP_Platform_slot {
+enum dll_021F_VFP_Platform_slot
+{
     VFP_PLATFORM_INITIALISE = 0,
     VFP_PLATFORM_RELEASE = 1,
     VFP_PLATFORM_INIT = 3,

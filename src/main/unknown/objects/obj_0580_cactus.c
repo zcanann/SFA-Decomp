@@ -63,7 +63,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0580_Cactus_packet_info {
+enum obj_0580_Cactus_packet_info
+{
     CACTUS_DEF_ID = 0x0580,
     CACTUS_DLL_ID = 0x02B0,
     CACTUS_CLASS_ID = 0x0061,

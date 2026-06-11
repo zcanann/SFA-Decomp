@@ -28,7 +28,8 @@
  */
 
 #if 0
-enum dll_025F_CRFuelTank_slot {
+enum dll_025F_CRFuelTank_slot
+{
     CRFUELTANK_INITIALISE = 0,
     CRFUELTANK_RELEASE = 1,
     CRFUELTANK_INIT = 3,

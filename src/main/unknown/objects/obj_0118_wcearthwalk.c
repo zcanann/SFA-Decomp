@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0118_WCEarthWalk_packet_info {
+enum obj_0118_WCEarthWalk_packet_info
+{
     WCEARTHWALK_DEF_ID = 0x0118,
     WCEARTHWALK_DLL_ID = 0x028A,
     WCEARTHWALK_CLASS_ID = 0x0030,

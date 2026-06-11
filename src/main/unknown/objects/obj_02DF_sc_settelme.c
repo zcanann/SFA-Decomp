@@ -72,7 +72,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02DF_SC_settelme_packet_info {
+enum obj_02DF_SC_settelme_packet_info
+{
     SC_SETTELME_DEF_ID = 0x02DF,
     SC_SETTELME_DLL_ID = 0x0110,
     SC_SETTELME_CLASS_ID = 0x0053,

@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0266_MMP_moonroc_packet_info {
+enum obj_0266_MMP_moonroc_packet_info
+{
     MMP_MOONROC_DEF_ID = 0x0266,
     MMP_MOONROC_DLL_ID = 0x0182,
     MMP_MOONROC_CLASS_ID = 0x0030,

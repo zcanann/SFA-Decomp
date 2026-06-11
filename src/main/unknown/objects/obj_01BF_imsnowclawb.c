@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01BF_IMSnowClawB_packet_info {
+enum obj_01BF_IMSnowClawB_packet_info
+{
     IMSNOWCLAWB_DEF_ID = 0x01BF,
     IMSNOWCLAWB_DLL_ID = 0x0255,
     IMSNOWCLAWB_CLASS_ID = 0x002E,

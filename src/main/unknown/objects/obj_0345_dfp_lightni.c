@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0345_DFP_Lightni_packet_info {
+enum obj_0345_DFP_Lightni_packet_info
+{
     DFP_LIGHTNI_DEF_ID = 0x0345,
     DFP_LIGHTNI_DLL_ID = 0x023B,
     DFP_LIGHTNI_CLASS_ID = 0x0030,

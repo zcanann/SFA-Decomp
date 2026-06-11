@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0537_ARWSpeedStr_packet_info {
+enum obj_0537_ARWSpeedStr_packet_info
+{
     ARWSPEEDSTR_DEF_ID = 0x0537,
     ARWSPEEDSTR_DLL_ID = 0x02A2,
     ARWSPEEDSTR_CLASS_ID = 0x0061,

@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_006E_SPShop_defs {
+enum class_006E_SPShop_defs
+{
     SPSHOP_SPSHOP = 0x03C2,
 };
 #endif

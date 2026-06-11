@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0563_WndLiftS_packet_info {
+enum obj_0563_WndLiftS_packet_info
+{
     WNDLIFTS_DEF_ID = 0x0563,
     WNDLIFTS_DLL_ID = 0x02B3,
     WNDLIFTS_CLASS_ID = 0x0030,

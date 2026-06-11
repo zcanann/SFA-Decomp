@@ -20,85 +20,96 @@ extern f32 playerMapOffsetZ;
  * EN v1.0 Address: 0x800353A4
  * EN v1.0 Size: 652b
  */
-int ObjHitReact_Update(int obj,ObjHitReactEntry *reactionEntryTable,u32 reactionEntryCount,
-                       u32 reactionState,float *reactionStepScale)
+int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount,
+                       u32 reactionState, float* reactionStepScale)
 {
-  ObjAnimDef *animDef;
-  ObjAnimComponent *objAnim;
-  int moveEnded;
-  int hitType;
-  ObjHitReactEntry *reactionEntry;
-  ObjHitReactEffectHandle *effectHandle;
-  bool sfxActive;
-  f32 hitPos[3];
-  ObjHitReactEffectPos effectPos;
-  ObjHitReactEffectColorArgs effectColorArgs;
-  int hitSphereIndex;
+    ObjAnimDef* animDef;
+    ObjAnimComponent* objAnim;
+    int moveEnded;
+    int hitType;
+    ObjHitReactEntry* reactionEntry;
+    ObjHitReactEffectHandle* effectHandle;
+    bool sfxActive;
+    f32 hitPos[3];
+    ObjHitReactEffectPos effectPos;
+    ObjHitReactEffectColorArgs effectColorArgs;
+    int hitSphereIndex;
 
-  objAnim = (ObjAnimComponent *)obj;
-  effectColorArgs = gObjHitReactEffectColorArgs;
-  if ((reactionState & OBJHITREACT_REACTION_STATE_MASK) != OBJHITREACT_REACTION_STATE_INACTIVE) {
-    OSReport(sObjHitReactHitstateFrameString,objAnim->currentMoveProgress);
-    moveEnded = ((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)
-        (obj,(double)*reactionStepScale,(double)timeDelta,(ObjAnimEventList *)0x0);
-    if (moveEnded != 0) {
-      OSReport(sObjHitReactResetString);
-      reactionState = OBJHITREACT_REACTION_STATE_INACTIVE;
-    }
-  }
-  hitType = ObjHits_GetPriorityHitWithPosition(obj,0,&hitSphereIndex,0,&hitPos[0],&hitPos[1],
-                                               &hitPos[2]);
-  if (hitType != 0) {
-    ObjAnimBank *bank = ObjAnim_GetActiveBank(objAnim);
-    hitPos[0] = hitPos[0] + playerMapOffsetX;
-    hitPos[2] = hitPos[2] + playerMapOffsetZ;
-    effectPos.scale = gObjHitsScalarOne;
-    effectPos.z = 0;
-    effectPos.y = 0;
-    effectPos.x = 0;
-    animDef = bank->animDef;
-    hitSphereIndex = ObjAnim_GetHitReactEntryIndex(animDef,hitSphereIndex);
-    if (hitSphereIndex >= (int)(reactionEntryCount & OBJHITREACT_ENTRY_COUNT_MASK)) {
-      OSReport(sObjHitReactSphereOverflowString,hitSphereIndex);
-      hitSphereIndex = 0;
-    }
-    reactionEntry = &reactionEntryTable[hitSphereIndex];
-    if (hitType != OBJHITREACT_COLLISION_SKIP_REACTION) {
-      if ((reactionEntry->primaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
-          (sfxActive = Sfx_IsPlayingFromObject(obj,(u16)reactionEntry->primaryHitSfxId),
-          !sfxActive)) {
-        Sfx_PlayFromObject(obj,(u16)reactionEntry->primaryHitSfxId);
-      }
-      if ((reactionEntry->secondaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
-          (sfxActive = Sfx_IsPlayingFromObject(obj,(u16)reactionEntry->secondaryHitSfxId),
-          !sfxActive)) {
-        Sfx_PlayFromObject(obj,(u16)reactionEntry->secondaryHitSfxId);
-      }
-      if (reactionEntry->hitEffectMode == OBJHITREACT_HIT_FX_MODE_EFFECT) {
-        effectHandle = (ObjHitReactEffectHandle *)
-            Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
-        effectHandle->vtable->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE,OBJHITREACT_HIT_EFFECT_MODE,
-                                    &effectPos,OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,
-                                    OBJHITREACT_HIT_EFFECT_NO_SOURCE,
-                                    &effectColorArgs);
-        if (effectHandle != (ObjHitReactEffectHandle *)0x0) {
-          Resource_Release(effectHandle);
+    objAnim = (ObjAnimComponent*)obj;
+    effectColorArgs = gObjHitReactEffectColorArgs;
+    if ((reactionState & OBJHITREACT_REACTION_STATE_MASK) != OBJHITREACT_REACTION_STATE_INACTIVE)
+    {
+        OSReport(sObjHitReactHitstateFrameString, objAnim->currentMoveProgress);
+        moveEnded = ((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)
+            (obj, (double)*reactionStepScale, (double)timeDelta, (ObjAnimEventList*)0x0);
+        if (moveEnded != 0)
+        {
+            OSReport(sObjHitReactResetString);
+            reactionState = OBJHITREACT_REACTION_STATE_INACTIVE;
         }
-      }
-      else {
-        objLightFn_8009a1dc((void *)obj,gObjHitReactAltEffectScale,&effectPos,
-                            OBJHITREACT_ALT_EFFECT_COUNT,NULL);
-      }
     }
-    if (((reactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
-        (reactionEntry->reactionMoveId > OBJHITREACT_NO_REACTION_ANIM)) {
-      ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
-          (obj,(int)reactionEntry->reactionMoveId,gObjHitsScalarZero,0);
-      *reactionStepScale = reactionEntry->reactionStepScale;
-      reactionState = OBJHITREACT_REACTION_STATE_ACTIVE;
+    hitType = ObjHits_GetPriorityHitWithPosition(obj, 0, &hitSphereIndex, 0, &hitPos[0], &hitPos[1],
+                                                 &hitPos[2]);
+    if (hitType != 0)
+    {
+        ObjAnimBank* bank = ObjAnim_GetActiveBank(objAnim);
+        hitPos[0] = hitPos[0] + playerMapOffsetX;
+        hitPos[2] = hitPos[2] + playerMapOffsetZ;
+        effectPos.scale = gObjHitsScalarOne;
+        effectPos.z = 0;
+        effectPos.y = 0;
+        effectPos.x = 0;
+        animDef = bank->animDef;
+        hitSphereIndex = ObjAnim_GetHitReactEntryIndex(animDef, hitSphereIndex);
+        if (hitSphereIndex >= (int)(reactionEntryCount & OBJHITREACT_ENTRY_COUNT_MASK))
+        {
+            OSReport(sObjHitReactSphereOverflowString, hitSphereIndex);
+            hitSphereIndex = 0;
+        }
+        reactionEntry = &reactionEntryTable[hitSphereIndex];
+        if (hitType != OBJHITREACT_COLLISION_SKIP_REACTION)
+        {
+            if ((reactionEntry->primaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
+                (sfxActive = Sfx_IsPlayingFromObject(obj, (u16)reactionEntry->primaryHitSfxId),
+                    !sfxActive))
+            {
+                Sfx_PlayFromObject(obj, (u16)reactionEntry->primaryHitSfxId);
+            }
+            if ((reactionEntry->secondaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
+                (sfxActive = Sfx_IsPlayingFromObject(obj, (u16)reactionEntry->secondaryHitSfxId),
+                    !sfxActive))
+            {
+                Sfx_PlayFromObject(obj, (u16)reactionEntry->secondaryHitSfxId);
+            }
+            if (reactionEntry->hitEffectMode == OBJHITREACT_HIT_FX_MODE_EFFECT)
+            {
+                effectHandle = (ObjHitReactEffectHandle*)
+                    Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID, OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
+                effectHandle->vtable->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE,
+                                            &effectPos, OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,
+                                            OBJHITREACT_HIT_EFFECT_NO_SOURCE,
+                                            &effectColorArgs);
+                if (effectHandle != (ObjHitReactEffectHandle*)0x0)
+                {
+                    Resource_Release(effectHandle);
+                }
+            }
+            else
+            {
+                objLightFn_8009a1dc((void*)obj, gObjHitReactAltEffectScale, &effectPos,
+                                    OBJHITREACT_ALT_EFFECT_COUNT, NULL);
+            }
+        }
+        if (((reactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
+            (reactionEntry->reactionMoveId > OBJHITREACT_NO_REACTION_ANIM))
+        {
+            ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
+                (obj, (int)reactionEntry->reactionMoveId, gObjHitsScalarZero, 0);
+            *reactionStepScale = reactionEntry->reactionStepScale;
+            reactionState = OBJHITREACT_REACTION_STATE_ACTIVE;
+        }
     }
-  }
-  return reactionState;
+    return reactionState;
 }
 
 /*
@@ -110,36 +121,41 @@ int ObjHitReact_Update(int obj,ObjHitReactEntry *reactionEntryTable,u32 reaction
  */
 void ObjHitReact_ResetActiveObjects(int objectCount)
 {
-  ObjHitReactState *hitState;
-  int obj;
-  int *objectListCursor;
-  int stateActive;
-  int resetPending;
-  int objectListCount;
-  int startIndex;
+    ObjHitReactState* hitState;
+    int obj;
+    int* objectListCursor;
+    int stateActive;
+    int resetPending;
+    int objectListCount;
+    int startIndex;
 
-  objectListCursor = (int *)ObjList_GetObjects(&startIndex,&objectListCount);
-  gObjHitReactResetObjectCount = 0;
-  while (objectCount > 0) {
-    obj = *objectListCursor;
-    hitState = ((ObjAnimComponent *)obj)->hitReactState;
-    if (hitState != (ObjHitReactState *)0x0) {
-      stateActive = hitState->flags & OBJHITS_PRIORITY_STATE_ENABLED;
-      if (stateActive != 0) {
-        resetPending = hitState->shapeFlags & OBJHITREACT_SHAPE_RESET_UPDATE;
-        if (resetPending != 0) {
-          if (gObjHitReactResetObjectCount < OBJHITREACT_MAX_RESET_OBJECTS) {
-            gObjHitReactResetObjects[gObjHitReactResetObjectCount++] = (ObjAnimComponent *)obj;
-          }
-          hitState->activeHit = 0;
-          hitState->flags = (s16)(hitState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED);
-          hitState->resetFrameCount = OBJHITREACT_RESET_FRAME_COUNT;
+    objectListCursor = (int*)ObjList_GetObjects(&startIndex, &objectListCount);
+    gObjHitReactResetObjectCount = 0;
+    while (objectCount > 0)
+    {
+        obj = *objectListCursor;
+        hitState = ((ObjAnimComponent*)obj)->hitReactState;
+        if (hitState != (ObjHitReactState*)0x0)
+        {
+            stateActive = hitState->flags & OBJHITS_PRIORITY_STATE_ENABLED;
+            if (stateActive != 0)
+            {
+                resetPending = hitState->shapeFlags & OBJHITREACT_SHAPE_RESET_UPDATE;
+                if (resetPending != 0)
+                {
+                    if (gObjHitReactResetObjectCount < OBJHITREACT_MAX_RESET_OBJECTS)
+                    {
+                        gObjHitReactResetObjects[gObjHitReactResetObjectCount++] = (ObjAnimComponent*)obj;
+                    }
+                    hitState->activeHit = 0;
+                    hitState->flags = (s16)(hitState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED);
+                    hitState->resetFrameCount = OBJHITREACT_RESET_FRAME_COUNT;
+                }
+            }
         }
-      }
+        objectListCursor = objectListCursor + 1;
+        objectCount = objectCount + -1;
     }
-    objectListCursor = objectListCursor + 1;
-    objectCount = objectCount + -1;
-  }
 }
 
 /*
@@ -155,20 +171,21 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int ObjHitbox_AllocRotatedBounds(ObjHitbox *hitbox,u32 arena)
+int ObjHitbox_AllocRotatedBounds(ObjHitbox* hitbox, u32 arena)
 {
-  ObjHitboxTransformState *transformState;
+    ObjHitboxTransformState* transformState;
 
-  transformState = (ObjHitboxTransformState *)roundUpTo4(arena);
-  hitbox->transformState = transformState;
-  if (hitbox->transformState != (ObjHitboxTransformState *)0x0) {
-    hitbox->transformState->activeMatrixIndex = 0;
-    hitbox->transformState->resetFrames = 10;
-    hitbox->transformState->contactObjectCount = 0;
-    ObjHitbox_UpdateRotatedBounds(hitbox,1);
-    ObjHitbox_UpdateRotatedBounds(hitbox,1);
-  }
-  return (u32)transformState + sizeof(ObjHitboxTransformState);
+    transformState = (ObjHitboxTransformState*)roundUpTo4(arena);
+    hitbox->transformState = transformState;
+    if (hitbox->transformState != (ObjHitboxTransformState*)0x0)
+    {
+        hitbox->transformState->activeMatrixIndex = 0;
+        hitbox->transformState->resetFrames = 10;
+        hitbox->transformState->contactObjectCount = 0;
+        ObjHitbox_UpdateRotatedBounds(hitbox, 1);
+        ObjHitbox_UpdateRotatedBounds(hitbox, 1);
+    }
+    return (u32)transformState + sizeof(ObjHitboxTransformState);
 }
 
 /*
@@ -185,40 +202,45 @@ int ObjHitbox_AllocRotatedBounds(ObjHitbox *hitbox,u32 arena)
  * PAL Size: TODO
  */
 #pragma dont_inline on
-void ObjHitReact_LoadMoveEntries(ObjAnimComponent *objAnim,ObjAnimBank *bank,int objType,
-                                 ObjHitReactState *hitState,int moveId,int async)
+void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, int objType,
+                                 ObjHitReactState* hitState, int moveId, int async)
 {
-  ObjHitReactMoveEntry *moveEntry;
-  int moveEntryShortOffset;
-  s16 entryByteOffset;
-  ObjHitReactMoveEntry *moveEntryTable;
+    ObjHitReactMoveEntry* moveEntry;
+    int moveEntryShortOffset;
+    s16 entryByteOffset;
+    ObjHitReactMoveEntry* moveEntryTable;
 
-  moveEntryTable = objAnim->modelInstance->hitReactMoveTable;
-  hitState->activeEntryBytes = 0;
-  if (moveEntryTable != (ObjHitReactMoveEntry *)0x0) {
-    moveEntryShortOffset = 0;
-    for (moveEntry = moveEntryTable; moveEntry->moveId != -1;) {
-      if (moveId == moveEntry->moveId) {
-        moveEntry = (ObjHitReactMoveEntry *)((s16 *)moveEntryTable + moveEntryShortOffset);
-        entryByteOffset = moveEntry->firstEntryByteOffset;
-        hitState->activeEntryBytes = moveEntry->entryByteCount;
-        if (hitState->activeEntryBytes > hitState->entryByteCapacity) {
-          hitState->activeEntryBytes = hitState->entryByteCapacity;
+    moveEntryTable = objAnim->modelInstance->hitReactMoveTable;
+    hitState->activeEntryBytes = 0;
+    if (moveEntryTable != (ObjHitReactMoveEntry*)0x0)
+    {
+        moveEntryShortOffset = 0;
+        for (moveEntry = moveEntryTable; moveEntry->moveId != -1;)
+        {
+            if (moveId == moveEntry->moveId)
+            {
+                moveEntry = (ObjHitReactMoveEntry*)((s16*)moveEntryTable + moveEntryShortOffset);
+                entryByteOffset = moveEntry->firstEntryByteOffset;
+                hitState->activeEntryBytes = moveEntry->entryByteCount;
+                if (hitState->activeEntryBytes > hitState->entryByteCapacity)
+                {
+                    hitState->activeEntryBytes = hitState->entryByteCapacity;
+                }
+                if (async == 0)
+                {
+                    getTabEntry(hitState->entries, OBJHITREACT_ENTRY_TAB_FILE_ID, (int)entryByteOffset,
+                                (int)hitState->activeEntryBytes);
+                    return;
+                }
+                fileLoadToBufferOffset(OBJHITREACT_ENTRY_TAB_FILE_ID, hitState->entries,
+                                       (int)entryByteOffset, (int)hitState->activeEntryBytes);
+                return;
+            }
+            moveEntry++;
+            moveEntryShortOffset += OBJHITREACT_MOVE_ENTRY_SHORT_STRIDE;
         }
-        if (async == 0) {
-          getTabEntry(hitState->entries,OBJHITREACT_ENTRY_TAB_FILE_ID,(int)entryByteOffset,
-                      (int)hitState->activeEntryBytes);
-          return;
-        }
-        fileLoadToBufferOffset(OBJHITREACT_ENTRY_TAB_FILE_ID,hitState->entries,
-                               (int)entryByteOffset,(int)hitState->activeEntryBytes);
-        return;
-      }
-      moveEntry++;
-      moveEntryShortOffset += OBJHITREACT_MOVE_ENTRY_SHORT_STRIDE;
     }
-  }
-  return;
+    return;
 }
 #pragma dont_inline reset
 
@@ -235,22 +257,24 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent *objAnim,ObjAnimBank *bank,int
  * PAL Address: TODO
  * PAL Size: TODO
  */
-u32 ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,
-                          u32 entryArena,ObjAnimComponent *objAnim)
+u32 ObjHitReact_InitState(int objType, ObjAnimBank* bank, ObjHitReactState* hitState,
+                          u32 entryArena, ObjAnimComponent* objAnim)
 {
-  ObjHitReactEntry *entries;
+    ObjHitReactEntry* entries;
 
-  if (bank == (ObjAnimBank *)0x0) {
+    if (bank == (ObjAnimBank*)0x0)
+    {
+        return entryArena;
+    }
+    hitState->entryByteCapacity = OBJHITREACT_ENTRY_ARENA_BYTES;
+    entries = (ObjHitReactEntry*)roundUpTo8(entryArena);
+    hitState->entries = entries;
+    entryArena = (u32)entries + hitState->entryByteCapacity;
+    hitState->activeHitboxMode = OBJHITREACT_ACTIVE_HITBOX_MODE;
+    if ((hitState->shapeFlags & OBJHITS_SHAPE_RESET_MODE_MASK) != 0)
+    {
+        hitState->resetHitboxMode = OBJHITREACT_RESET_HITBOX_MODE;
+    }
+    ObjHitReact_LoadMoveEntries(objAnim, bank, objType, hitState, 0, 1);
     return entryArena;
-  }
-  hitState->entryByteCapacity = OBJHITREACT_ENTRY_ARENA_BYTES;
-  entries = (ObjHitReactEntry *)roundUpTo8(entryArena);
-  hitState->entries = entries;
-  entryArena = (u32)entries + hitState->entryByteCapacity;
-  hitState->activeHitboxMode = OBJHITREACT_ACTIVE_HITBOX_MODE;
-  if ((hitState->shapeFlags & OBJHITS_SHAPE_RESET_MODE_MASK) != 0) {
-    hitState->resetHitboxMode = OBJHITREACT_RESET_HITBOX_MODE;
-  }
-  ObjHitReact_LoadMoveEntries(objAnim,bank,objType,hitState,0,1);
-  return entryArena;
 }

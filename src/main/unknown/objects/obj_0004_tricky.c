@@ -55,7 +55,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0004_Tricky_packet_info {
+enum obj_0004_Tricky_packet_info
+{
     TRICKY_DEF_ID = 0x0004,
     TRICKY_DLL_ID = 0x00C4,
     TRICKY_CLASS_ID = 0x0002,

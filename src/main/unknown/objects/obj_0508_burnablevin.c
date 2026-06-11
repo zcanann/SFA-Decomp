@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0508_BurnableVin_packet_info {
+enum obj_0508_BurnableVin_packet_info
+{
     BURNABLEVIN_DEF_ID = 0x0508,
     BURNABLEVIN_DLL_ID = 0x00E7,
     BURNABLEVIN_CLASS_ID = 0x0030,

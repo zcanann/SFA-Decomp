@@ -71,7 +71,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00F5_CAMERAnewse_packet_info {
+enum obj_00F5_CAMERAnewse_packet_info
+{
     CAMERANEWSE_DEF_ID = 0x00F5,
     CAMERANEWSE_DLL_ID = 0x0113,
     CAMERANEWSE_CLASS_ID = 0x0056,

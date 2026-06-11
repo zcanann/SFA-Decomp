@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_006D_KT_Rex_defs {
+enum class_006D_KT_Rex_defs
+{
     KT_REX_KT_REX = 0x008A,
 };
 #endif

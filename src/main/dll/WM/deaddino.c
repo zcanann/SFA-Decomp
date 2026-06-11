@@ -12,22 +12,25 @@
 #define SC_TOTEMPUZZLE_COMPLETE_SFX 0x7e
 #define SC_TOTEMPUZZLE_PROGRESS_SFX 0x409
 
-typedef struct SCTotemPuzzleState {
+typedef struct SCTotemPuzzleState
+{
     u8 pad00[0xc];
     f32 angleTarget;
     s16 step;
     s16 flags;
 } SCTotemPuzzleState;
 
-typedef struct SCTotemPuzzleObject {
+typedef struct SCTotemPuzzleObject
+{
     s16 angle;
     u8 pad02[0x44];
     s16 objectType;
     u8 pad48[0x70];
-    SCTotemPuzzleState *state;
+    SCTotemPuzzleState* state;
 } SCTotemPuzzleObject;
 
-typedef struct SCTotemPuzzleParticleBox {
+typedef struct SCTotemPuzzleParticleBox
+{
     u8 pad00[8];
     f32 alpha;
     f32 x;
@@ -37,9 +40,9 @@ typedef struct SCTotemPuzzleParticleBox {
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
-                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
-                                   f32 scaleZ, void *args, int arg9);
-extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
+                                  int particleId, int lifetime, f32 scaleX, f32 scaleY,
+                                  f32 scaleZ, void* args, int arg9);
+extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
 extern void objRenderFn_8003b8f4(f32);
 
 extern f32 lbl_803E55F0;
@@ -50,12 +53,12 @@ extern f32 lbl_803E5600;
 extern f32 lbl_803E5604;
 extern f32 lbl_803E5608;
 
-int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject *obj, SCTotemPuzzleState *state)
+int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleState* state)
 {
     SCTotemPuzzleParticleBox particleBox;
     int objectIndex;
     int objectCount;
-    int *objects;
+    int* objects;
     int solvedCount;
     u8 solvedThisObject;
 
@@ -63,35 +66,50 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject *obj, SCTotemPuzzleSt
     solvedCount = 0;
     objects = ObjList_GetObjects(&objectIndex, &objectCount);
 
-    while (objectIndex < objectCount) {
-        SCTotemPuzzleObject *peer;
-        SCTotemPuzzleState *peerState;
+    while (objectIndex < objectCount)
+    {
+        SCTotemPuzzleObject* peer;
+        SCTotemPuzzleState* peerState;
         s16 flags;
 
-        peer = (SCTotemPuzzleObject *)objects[objectIndex];
-        if (peer->objectType == SC_TOTEMPUZZLE_OBJECT_TYPE) {
+        peer = (SCTotemPuzzleObject*)objects[objectIndex];
+        if (peer->objectType == SC_TOTEMPUZZLE_OBJECT_TYPE)
+        {
             peerState = peer->state;
             flags = peerState->flags;
-            if ((flags & SC_TOTEMPUZZLE_READY_FLAG) != 0) {
-                if ((flags & SC_TOTEMPUZZLE_REVERSED_FLAG) != 0) {
-                    if (peerState->step + 1 == SC_TOTEMPUZZLE_FORWARD_STEP) {
+            if ((flags & SC_TOTEMPUZZLE_READY_FLAG) != 0)
+            {
+                if ((flags & SC_TOTEMPUZZLE_REVERSED_FLAG) != 0)
+                {
+                    if (peerState->step + 1 == SC_TOTEMPUZZLE_FORWARD_STEP)
+                    {
                         solvedCount++;
-                        if (peer == obj) {
+                        if (peer == obj)
+                        {
                             state->angleTarget = lbl_803E55F0 * (f32)(state->step + 1);
-                            obj->angle = (s16)(s32)state->angleTarget;
+                            obj->angle = (s16)(s32)
+                            state->angleTarget;
                             solvedThisObject = 1;
                         }
-                    } else if (peer == obj) {
+                    }
+                    else if (peer == obj)
+                    {
                         Sfx_PlayFromObject(0, SC_TOTEMPUZZLE_WRONG_SFX);
                     }
-                } else if (peerState->step == SC_TOTEMPUZZLE_FORWARD_STEP) {
+                }
+                else if (peerState->step == SC_TOTEMPUZZLE_FORWARD_STEP)
+                {
                     solvedCount++;
-                    if (peer == obj) {
+                    if (peer == obj)
+                    {
                         state->angleTarget = lbl_803E55F0 * (f32)state->step;
-                        obj->angle = (s16)(s32)state->angleTarget;
+                        obj->angle = (s16)(s32)
+                        state->angleTarget;
                         solvedThisObject = 1;
                     }
-                } else if (peer == obj) {
+                }
+                else if (peer == obj)
+                {
                     Sfx_PlayFromObject(0, SC_TOTEMPUZZLE_WRONG_SFX);
                 }
             }
@@ -99,35 +117,41 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject *obj, SCTotemPuzzleSt
         objectIndex++;
     }
 
-    if (solvedThisObject != 0) {
-        extern void objfx_spawnArcedBurst(SCTotemPuzzleObject *obj, int enabled, f32 radius, int particleKind,
+    if (solvedThisObject != 0)
+    {
+        extern void objfx_spawnArcedBurst(SCTotemPuzzleObject* obj, int enabled, f32 radius, int particleKind,
                                           int particleCount, int lifetime, f32 speedA, f32 speedB, f32 scale,
-                                          SCTotemPuzzleParticleBox *box, int flags);
-        extern int *objFindTexture(SCTotemPuzzleObject *obj, int textureIndex, int materialIndex);
+                                          SCTotemPuzzleParticleBox* box, int flags);
+        extern int*objFindTexture(SCTotemPuzzleObject* obj, int textureIndex, int materialIndex);
         particleBox.x = lbl_803E55F4;
         particleBox.y = lbl_803E55F8;
         particleBox.z = lbl_803E55F4;
         particleBox.alpha = lbl_803E55FC;
 
-        for (objectIndex = 20; objectIndex != 0; objectIndex--) {
+        for (objectIndex = 20; objectIndex != 0; objectIndex--)
+        {
             objfx_spawnArcedBurst(obj, 7, lbl_803E5600, 5, 7, 100, lbl_803E5604,
-                                   *(f32 *)&lbl_803E5604, lbl_803E5608, &particleBox, 0);
+                                  *(f32*)&lbl_803E5604, lbl_803E5608, &particleBox, 0);
         }
 
         objects = objFindTexture(obj, 0, 0);
-        if (objects != NULL) {
+        if (objects != NULL)
+        {
             *objects = 0x100;
         }
     }
 
-    if (solvedCount == SC_TOTEMPUZZLE_SOLVED_COUNT) {
-        if (solvedThisObject != 0) {
+    if (solvedCount == SC_TOTEMPUZZLE_SOLVED_COUNT)
+    {
+        if (solvedThisObject != 0)
+        {
             Sfx_PlayFromObject(0, SC_TOTEMPUZZLE_COMPLETE_SFX);
         }
         return 1;
     }
 
-    if (solvedThisObject != 0) {
+    if (solvedThisObject != 0)
+    {
         Sfx_PlayFromObject(0, SC_TOTEMPUZZLE_PROGRESS_SFX);
     }
     return 0;
@@ -151,7 +175,8 @@ void sc_totempuzzle_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
 
-    if (v != 0) {
+    if (v != 0)
+    {
         objRenderFn_8003b8f4(lbl_803E55FC);
     }
 }

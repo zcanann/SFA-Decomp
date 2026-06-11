@@ -62,7 +62,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0233_AndrossBrai_packet_info {
+enum obj_0233_AndrossBrai_packet_info
+{
     ANDROSSBRAI_DEF_ID = 0x0233,
     ANDROSSBRAI_DLL_ID = 0x02BE,
     ANDROSSBRAI_CLASS_ID = 0x0061,

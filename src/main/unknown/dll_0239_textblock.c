@@ -40,7 +40,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_0239_TextBlock_slot {
+enum dll_0239_TextBlock_slot
+{
     TEXTBLOCK_INITIALISE = 0,
     TEXTBLOCK_RELEASE = 1,
     TEXTBLOCK_INIT = 3,

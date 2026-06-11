@@ -59,7 +59,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02F3_SC_BirchTre_packet_info {
+enum obj_02F3_SC_BirchTre_packet_info
+{
     SC_BIRCHTRE_DEF_ID = 0x02F3,
     SC_BIRCHTRE_DLL_ID = 0x01B7,
     SC_BIRCHTRE_CLASS_ID = 0x006A,

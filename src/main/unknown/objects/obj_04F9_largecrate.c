@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04F9_LargeCrate_packet_info {
+enum obj_04F9_LargeCrate_packet_info
+{
     LARGECRATE_DEF_ID = 0x04F9,
     LARGECRATE_DLL_ID = 0x0105,
     LARGECRATE_CLASS_ID = 0x0030,

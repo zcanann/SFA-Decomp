@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02F6_SB_Key_packet_info {
+enum obj_02F6_SB_Key_packet_info
+{
     SB_KEY_DEF_ID = 0x02F6,
     SB_KEY_DLL_ID = 0x00ED,
     SB_KEY_CLASS_ID = 0x0006,

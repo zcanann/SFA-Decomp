@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_013A_WCPushBlock_packet_info {
+enum obj_013A_WCPushBlock_packet_info
+{
     WCPUSHBLOCK_DEF_ID = 0x013A,
     WCPUSHBLOCK_DLL_ID = 0x0290,
     WCPUSHBLOCK_CLASS_ID = 0x0030,

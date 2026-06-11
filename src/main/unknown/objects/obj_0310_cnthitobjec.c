@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0310_CNThitObjec_packet_info {
+enum obj_0310_CNThitObjec_packet_info
+{
     CNTHITOBJEC_DEF_ID = 0x0310,
     CNTHITOBJEC_DLL_ID = 0x02B6,
     CNTHITOBJEC_CLASS_ID = 0x0030,

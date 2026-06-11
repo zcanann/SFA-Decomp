@@ -62,7 +62,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_031F_VFP_PuzzleP_packet_info {
+enum obj_031F_VFP_PuzzleP_packet_info
+{
     VFP_PUZZLEP_DEF_ID = 0x031F,
     VFP_PUZZLEP_DLL_ID = 0x00FB,
     VFP_PUZZLEP_CLASS_ID = 0x0052,

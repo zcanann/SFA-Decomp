@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0214_WORLDpepper_packet_info {
+enum obj_0214_WORLDpepper_packet_info
+{
     WORLDPEPPER_DEF_ID = 0x0214,
     WORLDPEPPER_DLL_ID = 0x01D3,
     WORLDPEPPER_CLASS_ID = 0x0061,

@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0049_AlphaAnimator_defs {
+enum class_0049_AlphaAnimator_defs
+{
     ALPHAANIMATOR_ALPHAANIMAT = 0x04BA,
 };
 #endif

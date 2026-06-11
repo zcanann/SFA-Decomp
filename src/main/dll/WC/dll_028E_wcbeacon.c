@@ -37,7 +37,8 @@
 #define WCBEACON_TRIGGER_NO_ARG -1
 #define WCBEACON_FINAL_TRIGGER_ID 105
 
-typedef struct WCBeaconSetup {
+typedef struct WCBeaconSetup
+{
     ObjPlacement base;
     s8 type;
     s8 modelIndex;
@@ -47,29 +48,90 @@ typedef struct WCBeaconSetup {
     u8 pad22[0x24 - 0x22];
 } WCBeaconSetup;
 
-typedef struct WCBeaconState {
+typedef struct WCBeaconState
+{
     f32 timer;
     u8 phase;
     u8 acceptedInteraction;
     u8 pad06[WCBEACON_EXTRA_SIZE - 0x06];
 } WCBeaconState;
 
-STATIC_ASSERT(sizeof(WCBeaconState) == WCBEACON_EXTRA_SIZE);
-STATIC_ASSERT(sizeof(WCBeaconSetup) == 0x24);
-STATIC_ASSERT(offsetof(WCBeaconState, timer) == WCBEACON_STATE_TIMER);
-STATIC_ASSERT(offsetof(WCBeaconState, phase) == WCBEACON_STATE_PHASE);
-STATIC_ASSERT(offsetof(WCBeaconState, acceptedInteraction) == WCBEACON_STATE_ACCEPTED_INTERACTION);
-STATIC_ASSERT(offsetof(WCBeaconSetup, type) == WCBEACON_SETUP_TYPE_OFFSET);
-STATIC_ASSERT(offsetof(WCBeaconSetup, modelIndex) == WCBEACON_SETUP_MODEL_INDEX_OFFSET);
-STATIC_ASSERT(offsetof(WCBeaconSetup, solvedBit) == WCBEACON_SETUP_SOLVED_BIT_OFFSET);
-STATIC_ASSERT(offsetof(WCBeaconSetup, armBit) == WCBEACON_SETUP_ARM_BIT_OFFSET);
+STATIC_ASSERT (
+sizeof
+(WCBeaconState)
+==
+WCBEACON_EXTRA_SIZE
+);
+STATIC_ASSERT (
+sizeof
+(WCBeaconSetup)
+==
+0x24
+);
+STATIC_ASSERT (offsetof
+(WCBeaconState
+,
+timer
+)
+==
+WCBEACON_STATE_TIMER
+);
+STATIC_ASSERT (offsetof
+(WCBeaconState
+,
+phase
+)
+==
+WCBEACON_STATE_PHASE
+);
+STATIC_ASSERT (offsetof
+(WCBeaconState
+,
+acceptedInteraction
+)
+==
+WCBEACON_STATE_ACCEPTED_INTERACTION
+);
+STATIC_ASSERT (offsetof
+(WCBeaconSetup
+,
+type
+)
+==
+WCBEACON_SETUP_TYPE_OFFSET
+);
+STATIC_ASSERT (offsetof
+(WCBeaconSetup
+,
+modelIndex
+)
+==
+WCBEACON_SETUP_MODEL_INDEX_OFFSET
+);
+STATIC_ASSERT (offsetof
+(WCBeaconSetup
+,
+solvedBit
+)
+==
+WCBEACON_SETUP_SOLVED_BIT_OFFSET
+);
+STATIC_ASSERT (offsetof
+(WCBeaconSetup
+,
+armBit
+)
+==
+WCBEACON_SETUP_ARM_BIT_OFFSET
+);
 
 int wcbeacon_aButtonCallback(int obj)
 {
-    WCBeaconState *state = ((GameObject *)obj)->extra;
-    WCBeaconSetup *setup = (WCBeaconSetup *)((GameObject *)obj)->anim.placementData;
+    WCBeaconState* state = ((GameObject*)obj)->extra;
+    WCBeaconSetup* setup = (WCBeaconSetup*)((GameObject*)obj)->anim.placementData;
 
-    if (isGameTimerDisabled() == 0) {
+    if (isGameTimerDisabled() == 0)
+    {
         state->acceptedInteraction = 1;
         GameBit_Set(setup->solvedBit, 1);
     }
@@ -80,11 +142,12 @@ int wcbeacon_getExtraSize(void) { return WCBEACON_EXTRA_SIZE; }
 
 int wcbeacon_getObjectTypeId(int obj)
 {
-    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int modelIndex = ((WCBeaconSetup *)((GameObject *)obj)->anim.placementData)->modelIndex;
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    int modelIndex = ((WCBeaconSetup*)((GameObject*)obj)->anim.placementData)->modelIndex;
     int modelCount = objAnim->modelInstance->modelCount;
 
-    if (modelIndex >= modelCount) {
+    if (modelIndex >= modelCount)
+    {
         modelIndex = 0;
     }
     return (modelIndex << WCBEACON_RENDER_TYPE_SHIFT) | WCBEACON_RENDER_TYPE_BASE;
@@ -92,86 +155,109 @@ int wcbeacon_getObjectTypeId(int obj)
 
 void wcbeacon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible != 0) {
+    if (visible != 0)
+    {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6DE0);
     }
 }
 
 void wcbeacon_update(int obj)
 {
-    WCBeaconSetup *setup = (WCBeaconSetup *)((GameObject *)obj)->anim.placementData;
-    WCBeaconState *state = ((GameObject *)obj)->extra;
+    WCBeaconSetup* setup = (WCBeaconSetup*)((GameObject*)obj)->anim.placementData;
+    WCBeaconState* state = ((GameObject*)obj)->extra;
     u32 phase;
 
-    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= WCBEACON_BLOCK_PLAYER_FLAG;
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= WCBEACON_BLOCK_PLAYER_FLAG;
     phase = state->phase;
-    if (phase == WCBEACON_PHASE_WAITING_FOR_TRICKY) {
+    if (phase == WCBEACON_PHASE_WAITING_FOR_TRICKY)
+    {
         int tricky = getTrickyObject();
-        if ((u32)GameBit_Get(setup->armBit) == 0) {
+        if ((u32)GameBit_Get(setup->armBit) == 0)
+        {
             u32 owner = (u32)fn_80138F84(tricky);
-            if (owner != (u32)obj || trickyFn_80138f14(tricky) != 0) {
+            if (owner != (u32)obj || trickyFn_80138f14(tricky) != 0)
+            {
                 (*gObjectTriggerInterface)
-                    ->runSequence(WCBEACON_TRIGGER_RELEASE_SLOT, (void *)obj, WCBEACON_TRIGGER_NO_ARG);
+                    ->runSequence(WCBEACON_TRIGGER_RELEASE_SLOT, (void*)obj, WCBEACON_TRIGGER_NO_ARG);
                 state->phase = WCBEACON_PHASE_IDLE;
             }
-        } else {
-            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~WCBEACON_BLOCK_PLAYER_FLAG;
-            if ((u32)tricky != 0 && (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & WCBEACON_TRICKY_PROMPT_FLAG)) {
-                (*(void (**)(int, int, int, int, int))(*(int *)(*(int *)((int)tricky + 0x68)) + 0x28))(
+        }
+        else
+        {
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~WCBEACON_BLOCK_PLAYER_FLAG;
+            if ((u32)tricky != 0 && (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & WCBEACON_TRICKY_PROMPT_FLAG))
+            {
+                (*(void (**)(int, int, int, int, int))(*(int*)(*(int*)((int)tricky + 0x68)) + 0x28))(
                     tricky, obj, WCBEACON_TRIGGER_ACCEPT_ARG, WCBEACON_TRICKY_PROMPT_FLAG,
-                    *(int *)(*(int *)(tricky + 0x68)));
+                    *(int*)(*(int*)(tricky + 0x68)));
             }
         }
-        if (state->acceptedInteraction != 0) {
+        if (state->acceptedInteraction != 0)
+        {
             Sfx_PlayFromObject(obj, SFXmv_mushdizzylp12);
             Sfx_PlayFromObject(obj, SFXmv_liftloop);
             state->phase = WCBEACON_PHASE_ACTIVATING;
             state->timer = lbl_803E6DE4;
         }
-    } else if (phase == WCBEACON_PHASE_IDLE) {
-        if ((u32)GameBit_Get(setup->armBit) != 0) {
+    }
+    else if (phase == WCBEACON_PHASE_IDLE)
+    {
+        if ((u32)GameBit_Get(setup->armBit) != 0)
+        {
             (*gObjectTriggerInterface)
-                ->runSequence(WCBEACON_TRIGGER_ARM_SLOT, (void *)obj, WCBEACON_TRIGGER_NO_ARG);
+                ->runSequence(WCBEACON_TRIGGER_ARM_SLOT, (void*)obj, WCBEACON_TRIGGER_NO_ARG);
             state->phase = WCBEACON_PHASE_WAITING_FOR_TRICKY;
         }
-    } else if (phase == WCBEACON_PHASE_ACTIVATING) {
+    }
+    else if (phase == WCBEACON_PHASE_ACTIVATING)
+    {
         f32 v = state->timer + timeDelta;
         state->timer = v;
-        if (v >= lbl_803E6DE8) {
+        if (v >= lbl_803E6DE8)
+        {
             state->phase = WCBEACON_PHASE_ACTIVE;
         }
-    } else if (phase == WCBEACON_PHASE_ACTIVE) {
-        if (((GameObject *)obj)->objectFlags & WCBEACON_VISIBLE_PARTFX_FLAG) {
-            (*gPartfxInterface)->spawnObject((void *)obj, WCBEACON_PARTFX_ACTIVE, NULL,
+    }
+    else if (phase == WCBEACON_PHASE_ACTIVE)
+    {
+        if (((GameObject*)obj)->objectFlags & WCBEACON_VISIBLE_PARTFX_FLAG)
+        {
+            (*gPartfxInterface)->spawnObject((void*)obj, WCBEACON_PARTFX_ACTIVE, NULL,
                                              WCBEACON_PARTFX_KIND, WCBEACON_TRIGGER_NO_ARG, NULL);
         }
-        if (((GameObject *)obj)->unkF4 == 0) {
+        if (((GameObject*)obj)->unkF4 == 0)
+        {
             (*gObjectTriggerInterface)->preempt(obj, WCBEACON_FINAL_TRIGGER_ID);
             (*gObjectTriggerInterface)
-                ->runSequence(WCBEACON_TRIGGER_ARM_SLOT, (void *)obj, WCBEACON_TRIGGER_ACCEPT_ARG);
+                ->runSequence(WCBEACON_TRIGGER_ARM_SLOT, (void*)obj, WCBEACON_TRIGGER_ACCEPT_ARG);
         }
     }
-    ((GameObject *)obj)->unkF4 = 1;
+    ((GameObject*)obj)->unkF4 = 1;
 }
 
-void wcbeacon_init(u8 *obj, u8 *setup)
+void wcbeacon_init(u8* obj, u8* setup)
 {
-    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    WCBeaconState *state = ((GameObject *)obj)->extra;
-    WCBeaconSetup *setupData = (WCBeaconSetup *)setup;
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    WCBeaconState* state = ((GameObject*)obj)->extra;
+    WCBeaconSetup* setupData = (WCBeaconSetup*)setup;
     s16 objType;
 
-    (*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot);
+    (*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot);
     objType = (s16)(setupData->type << 8);
-    *(s16 *)obj = objType;
+    *(s16*)obj = objType;
     objAnim->bankIndex = setupData->modelIndex;
-    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
+    {
         objAnim->bankIndex = 0;
     }
-    if ((u32)GameBit_Get(setupData->armBit) != 0) {
-        if ((u32)GameBit_Get(setupData->solvedBit) != 0) {
+    if ((u32)GameBit_Get(setupData->armBit) != 0)
+    {
+        if ((u32)GameBit_Get(setupData->solvedBit) != 0)
+        {
             state->phase = WCBEACON_PHASE_ACTIVE;
-        } else {
+        }
+        else
+        {
             state->phase = WCBEACON_PHASE_WAITING_FOR_TRICKY;
         }
     }

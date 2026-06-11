@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_037E_WM_Explosiv_packet_info {
+enum obj_037E_WM_Explosiv_packet_info
+{
     WM_EXPLOSIV_DEF_ID = 0x037E,
     WM_EXPLOSIV_DLL_ID = 0x012E,
     WM_EXPLOSIV_CLASS_ID = 0x0061,

@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_044E_DR_BigSkeet_packet_info {
+enum obj_044E_DR_BigSkeet_packet_info
+{
     DR_BIGSKEET_DEF_ID = 0x044E,
     DR_BIGSKEET_DLL_ID = 0x0211,
     DR_BIGSKEET_CLASS_ID = 0x0030,

@@ -21,7 +21,8 @@
  */
 
 #if 0
-enum object_bin2_packet_info {
+enum object_bin2_packet_info
+{
     WC_LANDINGP_DEF_ID = 0x04A9,
     WC_LANDINGP_LIVE_BYTES = 0xC0,
 };

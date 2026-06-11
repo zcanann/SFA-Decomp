@@ -73,7 +73,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01D8_LINKSnowLog_packet_info {
+enum obj_01D8_LINKSnowLog_packet_info
+{
     LINKSNOWLOG_DEF_ID = 0x01D8,
     LINKSNOWLOG_DLL_ID = 0x011A,
     LINKSNOWLOG_CLASS_ID = 0x0061,

@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02F7_SB_Wheel_packet_info {
+enum obj_02F7_SB_Wheel_packet_info
+{
     SB_WHEEL_DEF_ID = 0x02F7,
     SB_WHEEL_DLL_ID = 0x01F6,
     SB_WHEEL_CLASS_ID = 0x0061,

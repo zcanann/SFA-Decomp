@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03BA_WM_Worm_packet_info {
+enum obj_03BA_WM_Worm_packet_info
+{
     WM_WORM_DEF_ID = 0x03BA,
     WM_WORM_DLL_ID = 0x0207,
     WM_WORM_CLASS_ID = 0x0030,

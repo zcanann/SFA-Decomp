@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_044F_DR_SmallSke_packet_info {
+enum obj_044F_DR_SmallSke_packet_info
+{
     DR_SMALLSKE_DEF_ID = 0x044F,
     DR_SMALLSKE_DLL_ID = 0x0211,
     DR_SMALLSKE_CLASS_ID = 0x0030,

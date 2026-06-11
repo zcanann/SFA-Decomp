@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_030C_SB_ShipFlag_packet_info {
+enum obj_030C_SB_ShipFlag_packet_info
+{
     SB_SHIPFLAG_DEF_ID = 0x030C,
     SB_SHIPFLAG_DLL_ID = 0x01F6,
     SB_SHIPFLAG_CLASS_ID = 0x0030,

@@ -32,7 +32,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_023B_DFP_Lightni_slot {
+enum dll_023B_DFP_Lightni_slot
+{
     DFP_LIGHTNI_INIT = 3,
     DFP_LIGHTNI_UPDATE = 4,
     DFP_LIGHTNI_RENDER = 6,

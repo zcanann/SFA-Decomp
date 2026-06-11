@@ -70,7 +70,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0054_Lock_defs {
+enum class_0054_Lock_defs
+{
     LOCK_VFP_PODIUMP = 0x0320,
     LOCK_LANDED_ARWI = 0x04AC,
     LOCK_WCINVUSEOBJ = 0x0132,

@@ -63,7 +63,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0541_ARWProximit_packet_info {
+enum obj_0541_ARWProximit_packet_info
+{
     ARWPROXIMIT_DEF_ID = 0x0541,
     ARWPROXIMIT_DLL_ID = 0x02A7,
     ARWPROXIMIT_CLASS_ID = 0x007C,

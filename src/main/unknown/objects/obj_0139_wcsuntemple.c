@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0139_WCSunTemple_packet_info {
+enum obj_0139_WCSunTemple_packet_info
+{
     WCSUNTEMPLE_DEF_ID = 0x0139,
     WCSUNTEMPLE_DLL_ID = 0x0294,
     WCSUNTEMPLE_CLASS_ID = 0x0030,

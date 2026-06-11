@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0548_ARWShipAnge_packet_info {
+enum obj_0548_ARWShipAnge_packet_info
+{
     ARWSHIPANGE_DEF_ID = 0x0548,
     ARWSHIPANGE_DLL_ID = 0x02A6,
     ARWSHIPANGE_CLASS_ID = 0x007C,

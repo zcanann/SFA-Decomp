@@ -4,7 +4,7 @@ extern s32 vidGetInternalId(u32 handle);
 extern void inpSetMidiCtrl(u8 controller, u8 slot, u8 key, u8 value);
 extern void inpSetMidiCtrl14(u8 controller, u8 slot, u8 key, u16 value);
 extern void inpFXCopyCtrl(u8 controller, u32 dstHandle, u32 srcHandle);
-extern void macSetExternalKeyoff(McmdVoiceState* slot);
+extern void macSetExternalKeyoff(McmdVoiceState * slot);
 
 extern u8* synthVoice;
 
@@ -14,25 +14,33 @@ extern u8* synthVoice;
  *
  * EN v1.0 Address: 0x8027186C, size 0xE8
  */
-u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value) {
+u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value)
+{
     u32 found;
     u8 idx;
     McmdVoiceState* slot;
 
     found = 0;
     handle = vidGetInternalId(handle);
-    while (handle != 0xFFFFFFFFu) {
+    while (handle != 0xFFFFFFFFu)
+    {
         idx = (u8)handle;
-        if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4)) {
+        if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4))
+        {
             slot = (McmdVoiceState*)(synthVoice + idx * 0x404);
-            if ((SYNTH_VOICE_SLOT_FLAGS64(slot) & 2) != 0) {
+            if ((SYNTH_VOICE_SLOT_FLAGS64(slot) & 2) != 0)
+            {
                 inpSetMidiCtrl(controller, idx, slot->startupMidiEvent, value);
-            } else {
+            }
+            else
+            {
                 inpSetMidiCtrl(controller, idx, slot->midiEvent, value);
             }
             found = 1;
             handle = *(u32*)(synthVoice + idx * 0x404 + 0xEC);
-        } else {
+        }
+        else
+        {
             return found;
         }
     }
@@ -44,25 +52,33 @@ u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value) {
  *
  * EN v1.0 Address: 0x80271954, size 0xE8
  */
-u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value) {
+u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value)
+{
     u32 found;
     u8 idx;
     McmdVoiceState* slot;
 
     found = 0;
     handle = vidGetInternalId(handle);
-    while (handle != 0xFFFFFFFFu) {
+    while (handle != 0xFFFFFFFFu)
+    {
         idx = (u8)handle;
-        if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4)) {
+        if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4))
+        {
             slot = (McmdVoiceState*)(synthVoice + idx * 0x404);
-            if ((SYNTH_VOICE_SLOT_FLAGS64(slot) & 2) != 0) {
+            if ((SYNTH_VOICE_SLOT_FLAGS64(slot) & 2) != 0)
+            {
                 inpSetMidiCtrl14(controller, idx, slot->startupMidiEvent, value);
-            } else {
+            }
+            else
+            {
                 inpSetMidiCtrl14(controller, idx, slot->midiEvent, value);
             }
             found = 1;
             handle = *(u32*)(synthVoice + idx * 0x404 + 0xEC);
-        } else {
+        }
+        else
+        {
             return found;
         }
     }
@@ -75,7 +91,8 @@ u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value) {
  *
  * EN v1.0 Address: 0x80271A3C, size 0x84
  */
-void synthFXCloneMidiSetup(u32 dstHandle, u32 srcHandle) {
+void synthFXCloneMidiSetup(u32 dstHandle, u32 srcHandle)
+{
     inpFXCopyCtrl(0x07, dstHandle, srcHandle);
     inpFXCopyCtrl(0x0A, dstHandle, srcHandle);
     inpFXCopyCtrl(0x5B, dstHandle, srcHandle);
@@ -89,16 +106,20 @@ void synthFXCloneMidiSetup(u32 dstHandle, u32 srcHandle) {
  *
  * EN v1.0 Address: 0x80271AC0, size 0x8C
  */
-u32 synthSendKeyOff(u32 handle) {
+u32 synthSendKeyOff(u32 handle)
+{
     u32 found;
     u32 idx;
 
     found = 0;
-    if (gSynthInitialized != 0) {
+    if (gSynthInitialized != 0)
+    {
         handle = vidGetInternalId(handle);
-        while (handle != 0xFFFFFFFFu) {
+        while (handle != 0xFFFFFFFFu)
+        {
             idx = (u8)handle;
-            if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4)) {
+            if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4))
+            {
                 macSetExternalKeyoff((McmdVoiceState*)(synthVoice + idx * 0x404));
                 found = 1;
             }
@@ -109,6 +130,7 @@ u32 synthSendKeyOff(u32 handle) {
 }
 
 /* Stub kept so synth_control.c can link; not in v1.0 binary at this address. */
-void synthDispatchDelayedAction(SynthFade* fade) {
+void synthDispatchDelayedAction(SynthFade* fade)
+{
     (void)fade;
 }

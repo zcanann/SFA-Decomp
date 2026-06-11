@@ -66,7 +66,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0063_Explodable_defs {
+enum class_0063_Explodable_defs
+{
     EXPLODABLE_EXPLODEWALL = 0x048B,
     EXPLODABLE_SH_BOMBWALL = 0x029A,
     EXPLODABLE_EXPLODEPLAN = 0x048C,

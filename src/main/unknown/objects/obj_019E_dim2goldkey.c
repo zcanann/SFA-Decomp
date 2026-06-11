@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_019E_DIM2GoldKey_packet_info {
+enum obj_019E_DIM2GoldKey_packet_info
+{
     DIM2GOLDKEY_DEF_ID = 0x019E,
     DIM2GOLDKEY_DLL_ID = 0x00ED,
     DIM2GOLDKEY_CLASS_ID = 0x0006,

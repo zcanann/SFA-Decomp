@@ -27,24 +27,25 @@
 #define DBSH_SHRINE_ENVFX_C 0x222
 #define DBSH_SHRINE_IDLE_SFX 0x343
 
-typedef union SceneIntToDouble {
+typedef union SceneIntToDouble
+{
     u64 bits;
     f64 value;
 } SceneIntToDouble;
 
 extern void skyFn_80088c94(int skyId, int enabled);
-extern void getEnvfxAct(DbshShrineObject *obj, int target, int effectId, int flags);
-extern void fn_801C8B68(DbshShrineObject *obj);
+extern void getEnvfxAct(DbshShrineObject* obj, int target, int effectId, int flags);
+extern void fn_801C8B68(DbshShrineObject * obj);
 extern u32 GameBit_Get(u32 id);
 extern void GameBit_Set(u32 id, u32 value);
 extern int Obj_GetPlayerObject(void);
 extern int randomGetRange(int min, int max);
-extern void Sfx_PlayFromObject(DbshShrineObject *obj, int sfxId);
+extern void Sfx_PlayFromObject(DbshShrineObject* obj, int sfxId);
 extern void Music_Trigger(int musicId, int value);
 extern void audioStopByMask(int mask);
 
-extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern MapEventInterface **gMapEventInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern MapEventInterface** gMapEventInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E50DC;
 extern f64 lbl_803E50D0;
@@ -69,23 +70,26 @@ extern f64 lbl_803E50D0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dbsh_shrine_update(DbshShrineObject *obj)
+void dbsh_shrine_update(DbshShrineObject* obj)
 {
     int player;
     int rand;
     u8 active;
     SceneIntToDouble randAsDouble;
-    DbshShrineRuntime *runtime;
+    DbshShrineRuntime* runtime;
 
     runtime = obj->runtime;
     player = Obj_GetPlayerObject();
-    if ((void *)player == NULL) {
+    if ((void*)player == NULL)
+    {
         return;
     }
 
-    if (obj->introDelay != 0) {
+    if (obj->introDelay != 0)
+    {
         obj->introDelay--;
-        if (obj->introDelay == 0) {
+        if (obj->introDelay == 0)
+        {
             skyFn_80088c94(7, 1);
             getEnvfxAct(obj, player, DBSH_SHRINE_ENVFX_A, 0);
             getEnvfxAct(obj, player, DBSH_SHRINE_ENVFX_B, 0);
@@ -98,20 +102,25 @@ void dbsh_shrine_update(DbshShrineObject *obj)
     SCGameBitLatch_UpdateInverted(&runtime->latch, 1, -1, -1, DBSH_SHRINE_GB_SCENE_BLOCK, 8);
     SCGameBitLatch_Update(&runtime->latch, 4, -1, -1, DBSH_SHRINE_GB_SCENE_BLOCK, 0xc4);
 
-    switch (runtime->state) {
+    switch (runtime->state)
+    {
     case DBSH_SHRINE_STATE_WAITING:
         obj->flags &= ~DBSH_SHRINE_OBJ_FLAG_ACTIVE;
         {
             f32 t = runtime->idleSfxTimer - timeDelta;
             runtime->idleSfxTimer = t;
-            if (t <= lbl_803E50DC) {
-            Sfx_PlayFromObject(obj, DBSH_SHRINE_IDLE_SFX);
-            runtime->idleSfxTimer = (f32)(int)randomGetRange(500, 1000);
+            if (t <= lbl_803E50DC)
+            {
+                Sfx_PlayFromObject(obj, DBSH_SHRINE_IDLE_SFX);
+                runtime->idleSfxTimer = (f32)(int)
+                randomGetRange(500, 1000);
             }
         }
-        if ((obj->mapFlags & DBSH_SHRINE_MAP_FLAG_TRIGGERED) != 0) {
+        if ((obj->mapFlags & DBSH_SHRINE_MAP_FLAG_TRIGGERED) != 0)
+        {
             active = MAP_EVENT_GET_ANIM(obj->mapId, 1);
-            if (active != 0) {
+            if (active != 0)
+            {
                 MAP_EVENT_SET_ANIM(obj->mapId, 1, 0);
             }
             runtime->state = DBSH_SHRINE_STATE_RISING;
@@ -123,16 +132,20 @@ void dbsh_shrine_update(DbshShrineObject *obj)
         break;
     case DBSH_SHRINE_STATE_RISING:
         obj->flags |= DBSH_SHRINE_OBJ_FLAG_ACTIVE;
-        if (runtime->flags.latchStarted != 0) {
+        if (runtime->flags.latchStarted != 0)
+        {
             runtime->state = DBSH_SHRINE_STATE_ACTIVE;
             GameBit_Set(DBSH_SHRINE_GB_RISE_DONE, 1);
         }
         break;
     case DBSH_SHRINE_STATE_ACTIVE:
-        if (GameBit_Get(DBSH_SHRINE_GB_CLOSE_A) != 0) {
+        if (GameBit_Get(DBSH_SHRINE_GB_CLOSE_A) != 0)
+        {
             runtime->state = DBSH_SHRINE_STATE_CLOSING;
             runtime->resetTimer = 0;
-        } else if (GameBit_Get(DBSH_SHRINE_GB_CLOSE_B) != 0) {
+        }
+        else if (GameBit_Get(DBSH_SHRINE_GB_CLOSE_B) != 0)
+        {
             runtime->state = DBSH_SHRINE_STATE_RESET;
             GameBit_Set(DBSH_SHRINE_GB_RESET_A, 1);
             runtime->resetTimer = 10;

@@ -23,7 +23,8 @@
  */
 
 #if 0
-enum object_bin2_packet_info {
+enum object_bin2_packet_info
+{
     CFBLASTEDTU_DEF_ID = 0x00F0,
     CFBLASTEDTU_LIVE_BYTES = 0xA0,
     CFBLASTEDTU_BIN2_BYTES = 0x160,

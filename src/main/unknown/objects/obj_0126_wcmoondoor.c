@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0126_WCMoonDoor_packet_info {
+enum obj_0126_WCMoonDoor_packet_info
+{
     WCMOONDOOR_DEF_ID = 0x0126,
     WCMOONDOOR_DLL_ID = 0x012E,
     WCMOONDOOR_CLASS_ID = 0x0061,

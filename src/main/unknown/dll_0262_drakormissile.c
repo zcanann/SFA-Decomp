@@ -32,7 +32,8 @@
  */
 
 #if 0
-enum dll_0262_DrakorMissile_slot {
+enum dll_0262_DrakorMissile_slot
+{
     DRAKORMISSILE_INITIALISE = 0,
     DRAKORMISSILE_RELEASE = 1,
     DRAKORMISSILE_INIT = 3,

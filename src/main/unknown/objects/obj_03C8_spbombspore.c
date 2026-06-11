@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03C8_SPBombSpore_packet_info {
+enum obj_03C8_SPBombSpore_packet_info
+{
     SPBOMBSPORE_DEF_ID = 0x03C8,
     SPBOMBSPORE_DLL_ID = 0x0284,
     SPBOMBSPORE_CLASS_ID = 0x0070,

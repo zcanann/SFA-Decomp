@@ -62,7 +62,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_027C_NW_treebrid_packet_info {
+enum obj_027C_NW_treebrid_packet_info
+{
     NW_TREEBRID_DEF_ID = 0x027C,
     NW_TREEBRID_DLL_ID = 0x019F,
     NW_TREEBRID_CLASS_ID = 0x0030,

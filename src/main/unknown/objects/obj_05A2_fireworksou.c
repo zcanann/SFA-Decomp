@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_05A2_FireWorkSou_packet_info {
+enum obj_05A2_FireWorkSou_packet_info
+{
     FIREWORKSOU_DEF_ID = 0x05A2,
     FIREWORKSOU_DLL_ID = 0x02B2,
     FIREWORKSOU_CLASS_ID = 0x007E,

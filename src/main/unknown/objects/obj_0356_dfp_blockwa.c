@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0356_DFP_blockwa_packet_info {
+enum obj_0356_DFP_blockwa_packet_info
+{
     DFP_BLOCKWA_DEF_ID = 0x0356,
     DFP_BLOCKWA_DLL_ID = 0x012A,
     DFP_BLOCKWA_CLASS_ID = 0x0030,

@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0578_smallfern_packet_info {
+enum obj_0578_smallfern_packet_info
+{
     SMALLFERN_DEF_ID = 0x0578,
     SMALLFERN_DLL_ID = 0x02AF,
     SMALLFERN_CLASS_ID = 0x007F,

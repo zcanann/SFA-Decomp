@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0228_LINKH_Asset_packet_info {
+enum obj_0228_LINKH_Asset_packet_info
+{
     LINKH_ASSET_DEF_ID = 0x0228,
     LINKH_ASSET_DLL_ID = 0x012E,
     LINKH_ASSET_CLASS_ID = 0x0061,

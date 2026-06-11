@@ -29,10 +29,11 @@ extern f64 lbl_803E7840;
  */
 void voiceInitRegistrationTables(void)
 {
-    u8 *p = &voiceMidiKeySlots[0][0];
+    u8* p = &voiceMidiKeySlots[0][0];
     int i;
 
-    for (i = 0; i < SYNTH_VOICE_REGISTRATION_CLEAR_BLOCKS; i++) {
+    for (i = 0; i < SYNTH_VOICE_REGISTRATION_CLEAR_BLOCKS; i++)
+    {
         p[0] = SYNTH_VOICE_REGISTRATION_FREE;
         p[1] = SYNTH_VOICE_REGISTRATION_FREE;
         p[2] = SYNTH_VOICE_REGISTRATION_FREE;
@@ -144,8 +145,13 @@ void voiceInitRegistrationTables(void)
  */
 int voiceScaleSampleRate(u16 x)
 {
-    union {
-        struct { u32 hi, lo; } w;
+    union
+    {
+        struct
+        {
+            u32 hi, lo;
+        } w;
+
         f64 d;
     } conv;
 
@@ -170,36 +176,48 @@ u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
     u8 baseNote;
     u8 inputNote;
     f32 freq;
-    union {
-        struct { u32 hi, lo; } w;
+    union
+    {
+        struct
+        {
+            u32 hi, lo;
+        } w;
+
         f64 d;
     } conv;
 
-    if (packed == 0xffffffffU) {
+    if (packed == 0xffffffffU)
+    {
         packed = 0x40005622;
     }
     baseNote = (u8)(packed >> 24);
     inputNote = noteIn;
-    if (inputNote != baseNote) {
-        if (baseNote < inputNote) {
+    if (inputNote != baseNote)
+    {
+        if (baseNote < inputNote)
+        {
             u32 d = inputNote - baseNote;
             freq = voicePitchUpTable[d];
-        } else {
+        }
+        else
+        {
             u32 d = baseNote - inputNote;
             freq = voicePitchDownTable[d];
         }
         conv.w.lo = packed & 0xffffff;
         conv.w.hi = 0x43300000;
         freq = (conv.d - lbl_803E7820) * freq;
-    } else {
+    }
+    else
+    {
         conv.w.lo = packed & 0xffffff;
         conv.w.hi = 0x43300000;
         freq = conv.d - lbl_803E7820;
     }
-    conv.w.lo = *(u32 *)lbl_803BD150;
+    conv.w.lo = *(u32*)lbl_803BD150;
     conv.w.hi = 0x43300000;
     return __cvt_fp2unsigned((freq * lbl_803E7828) /
-                             (f32)(conv.d - lbl_803E7820));
+        (f32)(conv.d - lbl_803E7820));
 }
 
 /*
@@ -212,8 +230,13 @@ u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
  */
 u32 voiceConvertDbToLinear(u32 dbCents)
 {
-    union {
-        struct { u32 hi, lo; } w;
+    union
+    {
+        struct
+        {
+            u32 hi, lo;
+        } w;
+
         f64 d;
     } conv;
     f32 scaledDb;

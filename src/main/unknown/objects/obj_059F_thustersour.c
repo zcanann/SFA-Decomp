@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_059F_ThusterSour_packet_info {
+enum obj_059F_ThusterSour_packet_info
+{
     THUSTERSOUR_DEF_ID = 0x059F,
     THUSTERSOUR_DLL_ID = 0x02B1,
     THUSTERSOUR_CLASS_ID = 0x007E,

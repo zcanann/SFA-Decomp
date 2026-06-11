@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04F8_LargeBasket_packet_info {
+enum obj_04F8_LargeBasket_packet_info
+{
     LARGEBASKET_DEF_ID = 0x04F8,
     LARGEBASKET_DLL_ID = 0x0105,
     LARGEBASKET_CLASS_ID = 0x0030,

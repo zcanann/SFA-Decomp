@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0554_LGTControlL_packet_info {
+enum obj_0554_LGTControlL_packet_info
+{
     LGTCONTROLL_DEF_ID = 0x0554,
     LGTCONTROLL_DLL_ID = 0x02AC,
     LGTCONTROLL_CLASS_ID = 0x0030,

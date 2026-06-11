@@ -13,10 +13,15 @@ int vfpblock1_getExtraSize(void) { return 0x2; }
 
 int vfpblock1_getObjectTypeId(void) { return 0x0; }
 
-void vfpblock1_render(void) {}
+void vfpblock1_render(void)
+{
+}
 
-void vfpblock1_hitDetect(void) {}
+void vfpblock1_hitDetect(void)
+{
+}
 
-void vfpblock1_free(int obj) {
+void vfpblock1_free(int obj)
+{
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }

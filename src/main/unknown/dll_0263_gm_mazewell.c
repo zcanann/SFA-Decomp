@@ -24,7 +24,8 @@
  */
 
 #if 0
-enum dll_0263_GM_MazeWell_slot {
+enum dll_0263_GM_MazeWell_slot
+{
     GMMAZEWELL_INIT = 3,
     GMMAZEWELL_UPDATE = 4,
     GMMAZEWELL_RENDER = 6,

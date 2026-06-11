@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0503_BarrelGener_packet_info {
+enum obj_0503_BarrelGener_packet_info
+{
     BARRELGENER_DEF_ID = 0x0503,
     BARRELGENER_DLL_ID = 0x0282,
     BARRELGENER_CLASS_ID = 0x0030,

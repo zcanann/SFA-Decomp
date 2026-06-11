@@ -38,7 +38,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_0211_WM_WallCrawler_slot {
+enum dll_0211_WM_WallCrawler_slot
+{
     WM_WALLCRAWLER_INITIALISE = 0,
     WM_WALLCRAWLER_RELEASE = 1,
     WM_WALLCRAWLER_INIT = 3,

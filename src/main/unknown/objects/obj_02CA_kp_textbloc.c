@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02CA_KP_textbloc_packet_info {
+enum obj_02CA_KP_textbloc_packet_info
+{
     KP_TEXTBLOC_DEF_ID = 0x02CA,
     KP_TEXTBLOC_DLL_ID = 0x0239,
     KP_TEXTBLOC_CLASS_ID = 0x0030,

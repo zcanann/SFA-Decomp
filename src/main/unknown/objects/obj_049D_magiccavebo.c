@@ -62,7 +62,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_049D_MagicCaveBo_packet_info {
+enum obj_049D_MagicCaveBo_packet_info
+{
     MAGICCAVEBO_DEF_ID = 0x049D,
     MAGICCAVEBO_DLL_ID = 0x011E,
     MAGICCAVEBO_CLASS_ID = 0x0061,

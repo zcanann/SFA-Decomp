@@ -48,7 +48,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0497_siderepelWi_packet_info {
+enum obj_0497_siderepelWi_packet_info
+{
     SIDEREPELWI_DEF_ID = 0x0497,
     SIDEREPELWI_DLL_ID = 0x00EB,
     SIDEREPELWI_CLASS_ID = 0x001F,

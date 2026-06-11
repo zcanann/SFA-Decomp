@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0474_DR_EnergyDi_packet_info {
+enum obj_0474_DR_EnergyDi_packet_info
+{
     DR_ENERGYDI_DEF_ID = 0x0474,
     DR_ENERGYDI_DLL_ID = 0x0279,
     DR_ENERGYDI_CLASS_ID = 0x0030,

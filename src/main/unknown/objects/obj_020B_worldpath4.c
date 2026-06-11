@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_020B_WORLDpath4_packet_info {
+enum obj_020B_WORLDpath4_packet_info
+{
     WORLDPATH4_DEF_ID = 0x020B,
     WORLDPATH4_DLL_ID = 0x01D3,
     WORLDPATH4_CLASS_ID = 0x0061,

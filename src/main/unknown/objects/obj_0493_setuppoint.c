@@ -47,7 +47,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0493_setuppoint_packet_info {
+enum obj_0493_setuppoint_packet_info
+{
     SETUPPOINT_DEF_ID = 0x0493,
     SETUPPOINT_DLL_ID = 0x00E9,
     SETUPPOINT_CLASS_ID = 0x0004,

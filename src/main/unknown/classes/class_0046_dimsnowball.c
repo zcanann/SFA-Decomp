@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0046_DIMSnowBall_defs {
+enum class_0046_DIMSnowBall_defs
+{
     DIMSNOWBALL_DIMSNOWBALL = 0x015A,
 };
 #endif

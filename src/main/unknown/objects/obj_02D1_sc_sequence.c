@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02D1_SC_sequence_packet_info {
+enum obj_02D1_SC_sequence_packet_info
+{
     SC_SEQUENCE_DEF_ID = 0x02D1,
     SC_SEQUENCE_DLL_ID = 0x0112,
     SC_SEQUENCE_CLASS_ID = 0x0055,

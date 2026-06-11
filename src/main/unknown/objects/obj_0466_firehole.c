@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0466_FireHole_packet_info {
+enum obj_0466_FireHole_packet_info
+{
     FIREHOLE_DEF_ID = 0x0466,
     FIREHOLE_DLL_ID = 0x0273,
     FIREHOLE_CLASS_ID = 0x0030,

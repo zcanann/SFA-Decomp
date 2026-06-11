@@ -29,6 +29,7 @@
 /*
  * Packet constants only. Promote names and boundaries after EN inspection.
  */
-enum nattractmode_packet_info {
+enum nattractmode_packet_info
+{
 };
 #endif

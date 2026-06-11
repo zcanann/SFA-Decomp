@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0546_ARWShipFly_packet_info {
+enum obj_0546_ARWShipFly_packet_info
+{
     ARWSHIPFLY_DEF_ID = 0x0546,
     ARWSHIPFLY_DLL_ID = 0x02A6,
     ARWSHIPFLY_CLASS_ID = 0x007C,

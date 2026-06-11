@@ -9,10 +9,11 @@
  * EN v1.1 Address: 0x80282630
  * EN v1.1 Size: 72b
  */
-u16 inpGetDoppler(McmdVoiceState *state)
+u16 inpGetDoppler(McmdVoiceState* state)
 {
     u32 flags = state->inputDirtyFlags;
-    if ((flags & MCMD_INPUT_DIRTY_DOPPLER) == 0) {
+    if ((flags & MCMD_INPUT_DIRTY_DOPPLER) == 0)
+    {
         return state->dopplerInput.cachedValue;
     }
     state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_DOPPLER;
@@ -22,10 +23,11 @@ u16 inpGetDoppler(McmdVoiceState *state)
 /*
  * Function: inpGetModulation
  */
-u16 inpGetModulation(McmdVoiceState *state)
+u16 inpGetModulation(McmdVoiceState* state)
 {
     u32 flags = state->inputDirtyFlags;
-    if ((flags & MCMD_INPUT_DIRTY_MODULATION) == 0) {
+    if ((flags & MCMD_INPUT_DIRTY_MODULATION) == 0)
+    {
         return state->modulationInput.cachedValue;
     }
     state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_MODULATION;
@@ -35,10 +37,11 @@ u16 inpGetModulation(McmdVoiceState *state)
 /*
  * Function: inpGetPedal
  */
-u16 inpGetPedal(McmdVoiceState *state)
+u16 inpGetPedal(McmdVoiceState* state)
 {
     u32 flags = state->inputDirtyFlags;
-    if ((flags & MCMD_INPUT_DIRTY_PEDAL) == 0) {
+    if ((flags & MCMD_INPUT_DIRTY_PEDAL) == 0)
+    {
         return state->pedalInput.cachedValue;
     }
     state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_PEDAL;
@@ -48,10 +51,11 @@ u16 inpGetPedal(McmdVoiceState *state)
 /*
  * Function: inpGetPreAuxA
  */
-u16 inpGetPreAuxA(McmdVoiceState *state)
+u16 inpGetPreAuxA(McmdVoiceState* state)
 {
     u32 flags = state->inputDirtyFlags;
-    if ((flags & MCMD_INPUT_DIRTY_PRE_AUX_A) == 0) {
+    if ((flags & MCMD_INPUT_DIRTY_PRE_AUX_A) == 0)
+    {
         return state->preAuxAInput.cachedValue;
     }
     state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_PRE_AUX_A;
@@ -61,10 +65,11 @@ u16 inpGetPreAuxA(McmdVoiceState *state)
 /*
  * Function: inpGetReverb
  */
-u16 inpGetReverb(McmdVoiceState *state)
+u16 inpGetReverb(McmdVoiceState* state)
 {
     u32 flags = state->inputDirtyFlags;
-    if ((flags & MCMD_INPUT_DIRTY_REVERB) == 0) {
+    if ((flags & MCMD_INPUT_DIRTY_REVERB) == 0)
+    {
         return state->reverbInput.cachedValue;
     }
     state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_REVERB;
@@ -74,10 +79,11 @@ u16 inpGetReverb(McmdVoiceState *state)
 /*
  * Function: inpGetPreAuxB
  */
-u16 inpGetPreAuxB(McmdVoiceState *state)
+u16 inpGetPreAuxB(McmdVoiceState* state)
 {
     u32 flags = state->inputDirtyFlags;
-    if ((flags & MCMD_INPUT_DIRTY_PRE_AUX_B) == 0) {
+    if ((flags & MCMD_INPUT_DIRTY_PRE_AUX_B) == 0)
+    {
         return state->preAuxBInput.cachedValue;
     }
     state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_PRE_AUX_B;

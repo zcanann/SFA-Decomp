@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0391_WM_WallCraw_packet_info {
+enum obj_0391_WM_WallCraw_packet_info
+{
     WM_WALLCRAW_DEF_ID = 0x0391,
     WM_WALLCRAW_DLL_ID = 0x0211,
     WM_WALLCRAW_CLASS_ID = 0x0030,

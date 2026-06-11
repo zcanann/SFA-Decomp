@@ -1,11 +1,12 @@
 #include "ghidra_import.h"
 
-extern void ARQPostRequest(void *req, u32 owner, u32 type, u32 prio, u32 src, u32 dst, u32 size, void (*cb)(void *));
+extern void ARQPostRequest(void* req, u32 owner, u32 type, u32 prio, u32 src, u32 dst, u32 size, void (*cb)(void*));
 
 extern u8 lbl_803D3F60[];
 extern u8 lbl_803D41E4[];
 
-typedef struct AramQueueSlot {
+typedef struct AramQueueSlot
+{
     u32 request;
     u32 owner;
     u32 type;
@@ -13,12 +14,13 @@ typedef struct AramQueueSlot {
     u32 src;
     u32 dst;
     u32 size;
-    void (*arqCallback)(void *);
-    void (*callback)(void *);
-    void *callbackArg;
+    void (*arqCallback)(void*);
+    void (*callback)(void*);
+    void* callbackArg;
 } AramQueueSlot;
 
-typedef struct AramTransferQueue {
+typedef struct AramTransferQueue
+{
     AramQueueSlot slots[16];
     volatile u8 head;
     volatile u8 count;
@@ -36,14 +38,16 @@ typedef struct AramTransferQueue {
  * EN v1.1 Size: 152b
  */
 #pragma scheduling off
-void aramQueueCallback(void *req)
+void aramQueueCallback(void* req)
 {
-    AramTransferQueue *queue;
+    AramTransferQueue* queue;
     u32 i;
 
-    queue = (*(u32 *)((u8 *)req + 0xc) == 1) ? (AramTransferQueue *)lbl_803D41E4 : (AramTransferQueue *)lbl_803D3F60;
-    for (i = 0; i < 0x10; i++) {
-        if (req == &queue->slots[i] && queue->slots[i].callback != NULL) {
+    queue = (*(u32*)((u8*)req + 0xc) == 1) ? (AramTransferQueue*)lbl_803D41E4 : (AramTransferQueue*)lbl_803D3F60;
+    for (i = 0; i < 0x10; i++)
+    {
+        if (req == &queue->slots[i] && queue->slots[i].callback != NULL)
+        {
             queue->slots[i].callback(queue->slots[i].callbackArg);
         }
     }
@@ -64,14 +68,16 @@ void aramQueueCallback(void *req)
 #pragma scheduling on
 void aramUploadData(u32 src, u32 dst, u32 size, u32 mode, u32 callback, u32 callbackArg)
 {
-    AramTransferQueue *queue;
+    AramTransferQueue* queue;
     BOOL irq;
 
-    queue = (mode != 0) ? (AramTransferQueue *)lbl_803D41E4 : (AramTransferQueue *)lbl_803D3F60;
+    queue = (mode != 0) ? (AramTransferQueue*)lbl_803D41E4 : (AramTransferQueue*)lbl_803D3F60;
 
-    while (1) {
+    while (1)
+    {
         irq = OSDisableInterrupts();
-        if (queue->count < 0x10) {
+        if (queue->count < 0x10)
+        {
             queue->slots[queue->head].owner = 0x2a;
             queue->slots[queue->head].type = 0;
             queue->slots[queue->head].priority = (mode != 0) ? 1 : 0;
@@ -79,8 +85,8 @@ void aramUploadData(u32 src, u32 dst, u32 size, u32 mode, u32 callback, u32 call
             queue->slots[queue->head].dst = dst;
             queue->slots[queue->head].size = size;
             queue->slots[queue->head].arqCallback = aramQueueCallback;
-            queue->slots[queue->head].callback = (void (*)(void *))callback;
-            queue->slots[queue->head].callbackArg = (void *)callbackArg;
+            queue->slots[queue->head].callback = (void (*)(void*))callback;
+            queue->slots[queue->head].callbackArg = (void*)callbackArg;
             ARQPostRequest(&queue->slots[queue->head],
                            queue->slots[queue->head].owner,
                            queue->slots[queue->head].type,
@@ -106,6 +112,7 @@ void aramUploadData(u32 src, u32 dst, u32 size, u32 mode, u32 callback, u32 call
  */
 void aramSyncTransferQueue(void)
 {
-    while (((volatile u8 *)lbl_803D3F60)[0x281] != 0) {
+    while (((volatile u8*)lbl_803D3F60)[0x281] != 0)
+    {
     }
 }

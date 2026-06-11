@@ -52,7 +52,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04FE_MagicPlant_packet_info {
+enum obj_04FE_MagicPlant_packet_info
+{
     MAGICPLANT_DEF_ID = 0x04FE,
     MAGICPLANT_DLL_ID = 0x00FE,
     MAGICPLANT_CLASS_ID = 0x0065,

@@ -31,7 +31,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_005D_AppleOnTree_defs {
+enum class_005D_AppleOnTree_defs
+{
     APPLEONTREE_APPLEONTREE = 0x04E6,
 };
 #endif

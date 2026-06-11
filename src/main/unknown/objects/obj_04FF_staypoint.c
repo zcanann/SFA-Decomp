@@ -57,7 +57,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04FF_StayPoint_packet_info {
+enum obj_04FF_StayPoint_packet_info
+{
     STAYPOINT_DEF_ID = 0x04FF,
     STAYPOINT_DLL_ID = 0x0102,
     STAYPOINT_CLASS_ID = 0x0030,

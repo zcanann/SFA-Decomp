@@ -53,7 +53,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0024_SkeetlaWall_packet_info {
+enum obj_0024_SkeetlaWall_packet_info
+{
     SKEETLAWALL_DEF_ID = 0x0024,
     SKEETLAWALL_DLL_ID = 0x00D4,
     SKEETLAWALL_CLASS_ID = 0x0072,

@@ -48,7 +48,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0052_PressureSwitch52_defs {
+enum class_0052_PressureSwitch52_defs
+{
     PRESSURESWITCH52_VFP_PUZZLEP = 0x031F,
     PRESSURESWITCH52_GROUNDQUAKE = 0x0514,
     PRESSURESWITCH52_SH_PRESSURE = 0x02B5,

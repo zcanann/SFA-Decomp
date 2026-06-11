@@ -59,7 +59,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0274_NW_geyser_packet_info {
+enum obj_0274_NW_geyser_packet_info
+{
     NW_GEYSER_DEF_ID = 0x0274,
     NW_GEYSER_DLL_ID = 0x01A0,
     NW_GEYSER_CLASS_ID = 0x0030,

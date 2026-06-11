@@ -47,7 +47,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_048F_sfxPlayer_packet_info {
+enum obj_048F_sfxPlayer_packet_info
+{
     SFXPLAYER_DEF_ID = 0x048F,
     SFXPLAYER_DLL_ID = 0x0133,
     SFXPLAYER_CLASS_ID = 0x005C,

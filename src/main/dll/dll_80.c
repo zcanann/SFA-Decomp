@@ -21,9 +21,12 @@
  */
 
 
-
-extern void OSReport(const char *fmt, ...);
+extern void OSReport(const char* fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
-int projcore1_doUnsupported(void) { OSReport(sProjcore1DoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
+int projcore1_doUnsupported(void)
+{
+    OSReport(sProjcore1DoNoLongerSupported);
+    return PROJECTILE_UNSUPPORTED_RETURN;
+}

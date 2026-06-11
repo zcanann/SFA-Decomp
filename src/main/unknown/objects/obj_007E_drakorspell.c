@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_007E_DrakorSpell_packet_info {
+enum obj_007E_DrakorSpell_packet_info
+{
     DRAKORSPELL_DEF_ID = 0x007E,
     DRAKORSPELL_DLL_ID = 0x025E,
     DRAKORSPELL_CLASS_ID = 0x0030,

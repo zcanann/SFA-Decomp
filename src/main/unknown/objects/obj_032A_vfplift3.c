@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_032A_VFPLift3_packet_info {
+enum obj_032A_VFPLift3_packet_info
+{
     VFPLIFT3_DEF_ID = 0x032A,
     VFPLIFT3_DLL_ID = 0x021D,
     VFPLIFT3_CLASS_ID = 0x0030,

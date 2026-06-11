@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_003D_CFPerch_defs {
+enum class_003D_CFPerch_defs
+{
     CFPERCH_CFPERCH = 0x00B8,
 };
 #endif

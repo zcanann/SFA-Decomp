@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0327_VFPLavaBloc_packet_info {
+enum obj_0327_VFPLavaBloc_packet_info
+{
     VFPLAVABLOC_DEF_ID = 0x0327,
     VFPLAVABLOC_DLL_ID = 0x021F,
     VFPLAVABLOC_CLASS_ID = 0x0030,

@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03C6_SPFruitLarg_packet_info {
+enum obj_03C6_SPFruitLarg_packet_info
+{
     SPFRUITLARG_DEF_ID = 0x03C6,
     SPFRUITLARG_DLL_ID = 0x0284,
     SPFRUITLARG_CLASS_ID = 0x0070,

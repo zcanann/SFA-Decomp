@@ -29,7 +29,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_004B_HitAnimator_defs {
+enum class_004B_HitAnimator_defs
+{
     HITANIMATOR_HITANIMATOR = 0x04BC,
 };
 #endif

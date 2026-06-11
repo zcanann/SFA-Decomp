@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0458_DR_CageNoRo_packet_info {
+enum obj_0458_DR_CageNoRo_packet_info
+{
     DR_CAGENORO_DEF_ID = 0x0458,
     DR_CAGENORO_DLL_ID = 0x026C,
     DR_CAGENORO_CLASS_ID = 0x0030,

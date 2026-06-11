@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0008_InfoPoint_defs {
+enum class_0008_InfoPoint_defs
+{
     INFOPOINT_INFOPOINT = 0x0513,
 };
 #endif

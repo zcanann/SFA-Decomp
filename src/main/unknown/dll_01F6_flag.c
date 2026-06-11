@@ -39,7 +39,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_01F6_Flag_slot {
+enum dll_01F6_Flag_slot
+{
     FLAG_INITIALISE = 0,
     FLAG_RELEASE = 1,
     FLAG_INIT = 3,

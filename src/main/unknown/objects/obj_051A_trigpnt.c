@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_051A_TrigPnt_packet_info {
+enum obj_051A_TrigPnt_packet_info
+{
     TRIGPNT_DEF_ID = 0x051A,
     TRIGPNT_DLL_ID = 0x0126,
     TRIGPNT_CLASS_ID = 0x0014,

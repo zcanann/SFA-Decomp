@@ -1,25 +1,28 @@
 #include "main/audio/snd3d_calc.h"
 
-typedef struct S3DActiveNode {
-    struct S3DActiveNode *next;
+typedef struct S3DActiveNode
+{
+    struct S3DActiveNode* next;
     f32 distance;
     f32 arg1;
     f32 arg2;
     f32 arg3;
     f32 arg4;
-    Snd3DEmitter *emitter;
+    Snd3DEmitter* emitter;
 } S3DActiveNode;
 
-typedef struct S3DSortedNode {
-    struct S3DSortedNode *next;
+typedef struct S3DSortedNode
+{
+    struct S3DSortedNode* next;
     f32 distance;
-    Snd3DEmitter *emitter;
+    Snd3DEmitter* emitter;
 } S3DSortedNode;
 
-typedef struct S3DMixGroup {
+typedef struct S3DMixGroup
+{
     u32 key;
-    S3DActiveNode *activeHead;
-    S3DSortedNode *sortedHead;
+    S3DActiveNode* activeHead;
+    S3DSortedNode* sortedHead;
     u16 sortedCount;
     u8 pad0e[2];
 } S3DMixGroup;
@@ -30,7 +33,7 @@ extern u8 lbl_803DE36B;
 extern u8 lbl_803DE36C;
 extern u8 lbl_803DE36D;
 extern u8 lbl_803DE36A;
-extern SndSpatialListener *s3dListenerRoot;
+extern SndSpatialListener* s3dListenerRoot;
 extern f32 lbl_803E7880;
 extern f64 lbl_803E7888;
 extern f32 lbl_803E7890;
@@ -71,10 +74,10 @@ extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
 #define S3D_CLAMP_7BIT(value) (((value) & 0xff) > 0x7f ? 0x7f : (value))
 
 #pragma fp_contract off
-void s3dCalcEmitter(Snd3DEmitter *emitter, f32 *distanceOut, f32 *panOut, f32 *azimuthOut,
-                    f32 *pitchOut, f32 *frontBackOut)
+void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* azimuthOut,
+                    f32* pitchOut, f32* frontBackOut)
 {
-    SndSpatialListener *listener;
+    SndSpatialListener* listener;
     f32 azimuthSum;
     f32 pitchSum;
     f32 frontBackSum;
@@ -110,114 +113,139 @@ void s3dCalcEmitter(Snd3DEmitter *emitter, f32 *distanceOut, f32 *panOut, f32 *a
     k3 = lbl_803E7898;
     k1 = lbl_803E78A8;
 
-    for (listener = s3dListenerRoot; listener != (SndSpatialListener *)0x0;
-         listener = listener->next) {
+    for (listener = s3dListenerRoot; listener != (SndSpatialListener*)0x0;
+         listener = listener->next)
+    {
         dx = emitter->posX - (listener->posX + listener->velX * listener->time);
         dy = emitter->posY - (listener->posY + listener->velY * listener->time);
         dz = emitter->posZ - (listener->posZ + listener->velZ * listener->time);
         listenerDistance = dx * dx + dy * dy + dz * dz;
-        if (listenerDistance > zero) {
+        if (listenerDistance > zero)
+        {
             invSqrt = __frsqrte((f64)listenerDistance);
             invSqrt = k3 * invSqrt *
-                      (k1 - (f64)listenerDistance * (invSqrt * invSqrt));
+                (k1 - (f64)listenerDistance * (invSqrt * invSqrt));
             invSqrt = k3 * invSqrt *
-                      (k1 - (f64)listenerDistance * (invSqrt * invSqrt));
+                (k1 - (f64)listenerDistance * (invSqrt * invSqrt));
             invSqrt = k3 * invSqrt *
-                      (k1 - (f64)listenerDistance * (invSqrt * invSqrt));
+                (k1 - (f64)listenerDistance * (invSqrt * invSqrt));
             tmp1 = (f32)((f64)listenerDistance * invSqrt);
             listenerDistance = tmp1;
         }
 
-        if (emitter->maxDistance >= listenerDistance) {
+        if (emitter->maxDistance >= listenerDistance)
+        {
             ratio = listenerDistance / emitter->maxDistance;
             curveParam = emitter->distanceCurve;
-            if (curveParam >= zero) {
+            if (curveParam >= zero)
+            {
                 *distanceOut += listener->volumeScale *
-                                (emitter->minVolume +
-                                 (emitter->maxVolume - emitter->minVolume) *
-                                 (one - ((one - curveParam) * ratio +
-                                         ratio * (curveParam * ratio))));
-            } else {
+                (emitter->minVolume +
+                    (emitter->maxVolume - emitter->minVolume) *
+                    (one - ((one - curveParam) * ratio +
+                        ratio * (curveParam * ratio))));
+            }
+            else
+            {
                 *distanceOut += listener->volumeScale *
-                                (emitter->minVolume +
-                                 (emitter->maxVolume - emitter->minVolume) *
-                                 (one - ((one + curveParam) * ratio -
-                                         curveParam *
-                                         (one - (one - ratio) * (one - ratio)))));
+                (emitter->minVolume +
+                    (emitter->maxVolume - emitter->minVolume) *
+                    (one - ((one + curveParam) * ratio -
+                        curveParam *
+                        (one - (one - ratio) * (one - ratio)))));
             }
 
-            if ((emitter->flags & 0x00080000) == 0) {
-                if (((emitter->flags & 0x00000008) != 0) || ((listener->flags & 1) != 0)) {
+            if ((emitter->flags & 0x00080000) == 0)
+            {
+                if (((emitter->flags & 0x00000008) != 0) || ((listener->flags & 1) != 0))
+                {
                     dx = listener->refX - emitter->refX;
                     dy = listener->refY - emitter->refY;
                     dz = listener->refZ - emitter->refZ;
                     listenerVelocityDistance = dx * dx + dy * dy + dz * dz;
-                    if (listenerVelocityDistance > zero) {
+                    if (listenerVelocityDistance > zero)
+                    {
                         invSqrt = __frsqrte((f64)listenerVelocityDistance);
                         invSqrt = k3 * invSqrt *
-                                  (k1 -
-                                   (f64)listenerVelocityDistance * (invSqrt * invSqrt));
+                        (k1 -
+                            (f64)listenerVelocityDistance * (invSqrt * invSqrt));
                         invSqrt = k3 * invSqrt *
-                                  (k1 -
-                                   (f64)listenerVelocityDistance * (invSqrt * invSqrt));
+                        (k1 -
+                            (f64)listenerVelocityDistance * (invSqrt * invSqrt));
                         invSqrt = k3 * invSqrt *
-                                  (k1 -
-                                   (f64)listenerVelocityDistance * (invSqrt * invSqrt));
+                        (k1 -
+                            (f64)listenerVelocityDistance * (invSqrt * invSqrt));
                         tmp2 = (f32)((f64)listenerVelocityDistance * invSqrt);
                         listenerVelocityDistance = tmp2;
                     }
 
-                    if (listenerVelocityDistance > zero) {
+                    if (listenerVelocityDistance > zero)
+                    {
                         dx = (emitter->posX + emitter->refX * half) -
-                             (listener->posX + listener->refX * half);
+                            (listener->posX + listener->refX * half);
                         dy = (emitter->posY + emitter->refY * half) -
-                             (listener->posY + listener->refY * half);
+                            (listener->posY + listener->refY * half);
                         dz = (emitter->posZ + emitter->refZ * half) -
-                             (listener->posZ + listener->refZ * half);
+                            (listener->posZ + listener->refZ * half);
                         projectedDistance = dx * dx + dy * dy + dz * dz;
-                        if (projectedDistance > zero) {
+                        if (projectedDistance > zero)
+                        {
                             invSqrt = __frsqrte((f64)projectedDistance);
                             invSqrt = k3 * invSqrt *
-                                      (k1 -
-                                       (f64)projectedDistance * (invSqrt * invSqrt));
+                            (k1 -
+                                (f64)projectedDistance * (invSqrt * invSqrt));
                             invSqrt = k3 * invSqrt *
-                                      (k1 -
-                                       (f64)projectedDistance * (invSqrt * invSqrt));
+                            (k1 -
+                                (f64)projectedDistance * (invSqrt * invSqrt));
                             invSqrt = k3 * invSqrt *
-                                      (k1 -
-                                       (f64)projectedDistance * (invSqrt * invSqrt));
+                            (k1 -
+                                (f64)projectedDistance * (invSqrt * invSqrt));
                             tmp3 = (f32)((f64)projectedDistance * invSqrt);
                             projectedDistance = tmp3;
                         }
-                        if (projectedDistance < listenerDistance) {
+                        if (projectedDistance < listenerDistance)
+                        {
                             *panOut = listener->panScale /
-                                      (listener->panScale - listenerVelocityDistance);
-                        } else {
+                                (listener->panScale - listenerVelocityDistance);
+                        }
+                        else
+                        {
                             *panOut = listener->panScale /
-                                      (listener->panScale + listenerVelocityDistance);
+                                (listener->panScale + listenerVelocityDistance);
                         }
                     }
                 }
 
-                if (zero != listenerDistance) {
+                if (zero != listenerDistance)
+                {
                     salApplyMatrix(listener->matrix, &emitter->posX, transformed);
-                    if (transformed[2] <= zero) {
-                        if (-listener->rearRange < transformed[2]) {
+                    if (transformed[2] <= zero)
+                    {
+                        if (-listener->rearRange < transformed[2])
+                        {
                             frontBackSum += -transformed[2] / listener->rearRange;
-                        } else {
+                        }
+                        else
+                        {
                             frontBackSum += lbl_803E78A4;
                         }
-                    } else {
-                        if (listener->frontRange > transformed[2]) {
+                    }
+                    else
+                    {
+                        if (listener->frontRange > transformed[2])
+                        {
                             frontBackSum += -transformed[2] / listener->frontRange;
-                        } else {
+                        }
+                        else
+                        {
                             frontBackSum += lbl_803E7890;
                         }
                     }
 
                     if (((zero != transformed[0]) ||
-                         (zero != transformed[1])) ||
-                        (zero != transformed[2])) {
+                            (zero != transformed[1])) ||
+                        (zero != transformed[2]))
+                    {
                         salNormalizeVector(transformed);
                     }
                     azimuthSum += transformed[0];
@@ -228,7 +256,8 @@ void s3dCalcEmitter(Snd3DEmitter *emitter, f32 *distanceOut, f32 *panOut, f32 *a
         listenerCount++;
     }
 
-    if (listenerCount != 0) {
+    if (listenerCount != 0)
+    {
         *azimuthOut = azimuthSum / (f32)listenerCount;
         *pitchOut = pitchSum / (f32)listenerCount;
         *frontBackOut = frontBackSum / (f32)listenerCount;
@@ -236,21 +265,24 @@ void s3dCalcEmitter(Snd3DEmitter *emitter, f32 *distanceOut, f32 *panOut, f32 *a
 }
 #pragma fp_contract reset
 
-void s3dApplyEmitterControls(Snd3DEmitter *emitter, f32 distance, f32 pan, f32 unused,
+void s3dApplyEmitterControls(Snd3DEmitter* emitter, f32 distance, f32 pan, f32 unused,
                              f32 azimuth, f32 pitch)
 {
     u32 handle;
     u16 value14;
     u8 i;
-    S3DEmitterCtrl *ctrl;
+    S3DEmitterCtrl* ctrl;
     u8 controller;
 
     (void)unused;
     handle = emitter->handle;
-    if ((emitter->flags & S3D_EMITTER_FLAG_AGE_OUT) != 0) {
+    if ((emitter->flags & S3D_EMITTER_FLAG_AGE_OUT) != 0)
+    {
         synthFXSetCtrl(handle, S3D_CTRL_VOLUME,
                        S3D_CLAMP_7BIT((u32)(int)(lbl_803E78A0 * (emitter->age * distance))));
-    } else {
+    }
+    else
+    {
         synthFXSetCtrl(handle, S3D_CTRL_VOLUME,
                        S3D_CLAMP_7BIT((u32)(int)(lbl_803E78A0 * distance)));
     }
@@ -262,22 +294,31 @@ void s3dApplyEmitterControls(Snd3DEmitter *emitter, f32 distance, f32 pan, f32 u
                    S3D_CLAMP_7BIT((u32)(int)(lbl_803E78B4 * (lbl_803E78A4 - azimuth))));
 
     pitch = lbl_803E78B8 * pitch;
-    if ((u32)pitch > S3D_CTRL_14BIT_LIMIT) {
+    if ((u32)pitch > S3D_CTRL_14BIT_LIMIT)
+    {
         value14 = S3D_CTRL_14BIT_LIMIT;
-    } else {
-        value14 = (u16)(u32)pitch;
+    }
+    else
+    {
+        value14 = (u16)(u32)
+        pitch;
     }
     synthFXSetCtrl14(handle, S3D_CTRL_SPATIAL_PITCH, value14);
 
-    if (emitter->ctrlList != (S3DEmitterCtrlList *)0x0) {
+    if (emitter->ctrlList != (S3DEmitterCtrlList*)0x0)
+    {
         ctrl = emitter->ctrlList->entries;
-        for (i = 0; i < emitter->ctrlList->count; i++) {
+        for (i = 0; i < emitter->ctrlList->count; i++)
+        {
             controller = ctrl->controller;
             if (((controller < 0x40) || (controller == 0x80)) ||
-                (controller == S3D_CTRL_SPATIAL_PITCH)) {
+                (controller == S3D_CTRL_SPATIAL_PITCH))
+            {
                 synthFXSetCtrl14(handle, controller, ctrl->value);
-            } else {
-                synthFXSetCtrl(handle, controller, *(u8 *)&ctrl->value);
+            }
+            else
+            {
+                synthFXSetCtrl(handle, controller, *(u8*)&ctrl->value);
             }
             ctrl++;
         }
@@ -287,134 +328,152 @@ void s3dApplyEmitterControls(Snd3DEmitter *emitter, f32 distance, f32 pan, f32 u
 /*
  * s3dInsertSortedEmitter - distance-sorted voice node insert.
  */
-void s3dInsertSortedEmitter(Snd3DEmitter *emitter, f32 distance)
+void s3dInsertSortedEmitter(Snd3DEmitter* emitter, f32 distance)
 {
-    S3DMixGroup *group;
-    S3DSortedNode *node;
-    S3DSortedNode *prev;
-    u8 *base;
+    S3DMixGroup* group;
+    S3DSortedNode* node;
+    S3DSortedNode* prev;
+    u8* base;
     int groupCount;
     int groupIndex;
 
     base = lbl_803CC8C0;
-    group = (S3DMixGroup *)(base + 0x50);
+    group = (S3DMixGroup*)(base + 0x50);
     groupCount = lbl_803DE36B;
-    for (groupIndex = 0; groupIndex < groupCount; groupIndex++) {
-        if (emitter->groupKey == group->key) {
+    for (groupIndex = 0; groupIndex < groupCount; groupIndex++)
+    {
+        if (emitter->groupKey == group->key)
+        {
             break;
         }
         group++;
     }
 
-    if (groupIndex == groupCount) {
-        ((S3DMixGroup *)(base + 0x50))[groupIndex].activeHead = (S3DActiveNode *)0x0;
-        ((S3DMixGroup *)(base + 0x50))[groupIndex].sortedHead = (S3DSortedNode *)0x0;
-        ((S3DMixGroup *)(base + 0x50))[groupIndex].sortedCount = 0;
-        ((S3DMixGroup *)(base + 0x50))[groupIndex].key = emitter->groupKey;
+    if (groupIndex == groupCount)
+    {
+        ((S3DMixGroup*)(base + 0x50))[groupIndex].activeHead = (S3DActiveNode*)0x0;
+        ((S3DMixGroup*)(base + 0x50))[groupIndex].sortedHead = (S3DSortedNode*)0x0;
+        ((S3DMixGroup*)(base + 0x50))[groupIndex].sortedCount = 0;
+        ((S3DMixGroup*)(base + 0x50))[groupIndex].key = emitter->groupKey;
         lbl_803DE36B++;
     }
 
-    ((S3DMixGroup *)(base + 0x50))[groupIndex].sortedCount++;
-    node = ((S3DMixGroup *)(base + 0x50))[groupIndex].sortedHead;
-    prev = (S3DSortedNode *)0x0;
-    while (node != (S3DSortedNode *)0x0) {
-        if (node->distance > distance) {
+    ((S3DMixGroup*)(base + 0x50))[groupIndex].sortedCount++;
+    node = ((S3DMixGroup*)(base + 0x50))[groupIndex].sortedHead;
+    prev = (S3DSortedNode*)0x0;
+    while (node != (S3DSortedNode*)0x0)
+    {
+        if (node->distance > distance)
+        {
             break;
         }
         prev = node;
         node = node->next;
     }
 
-    if (prev == (S3DSortedNode *)0x0) {
-        ((S3DMixGroup *)(base + 0x50))[groupIndex].sortedHead = &((S3DSortedNode *)(base + 0xb50))[lbl_803DE36D];
-    } else {
-        prev->next = &((S3DSortedNode *)(base + 0xb50))[lbl_803DE36D];
+    if (prev == (S3DSortedNode*)0x0)
+    {
+        ((S3DMixGroup*)(base + 0x50))[groupIndex].sortedHead = &((S3DSortedNode*)(base + 0xb50))[lbl_803DE36D];
+    }
+    else
+    {
+        prev->next = &((S3DSortedNode*)(base + 0xb50))[lbl_803DE36D];
     }
     {
-        S3DSortedNode *newNode = &((S3DSortedNode *)(base + 0xb50))[lbl_803DE36D];
+        S3DSortedNode* newNode = &((S3DSortedNode*)(base + 0xb50))[lbl_803DE36D];
         newNode->next = node;
         newNode->emitter = emitter;
     }
-    ((S3DSortedNode *)(base + 0xb50))[lbl_803DE36D++].distance = distance;
+    ((S3DSortedNode*)(base + 0xb50))[lbl_803DE36D++].distance = distance;
 }
 
 /*
  * s3dInsertActiveEmitter - active spatial voice node insert.
  */
-int s3dInsertActiveEmitter(Snd3DEmitter *emitter, f32 distance, f32 arg1, f32 arg2, f32 arg3,
+int s3dInsertActiveEmitter(Snd3DEmitter* emitter, f32 distance, f32 arg1, f32 arg2, f32 arg3,
                            f32 arg4)
 {
-    S3DMixGroup *group;
-    S3DActiveNode *scan;
-    S3DActiveNode *next;
-    u8 *base;
-    S3DActiveNode **pp;
+    S3DMixGroup* group;
+    S3DActiveNode* scan;
+    S3DActiveNode* next;
+    u8* base;
+    S3DActiveNode** pp;
     int groupCount;
     int groupIndex;
     u32 activeIndex;
 
     base = lbl_803CC8C0;
-    group = (S3DMixGroup *)(base + 0x50);
+    group = (S3DMixGroup*)(base + 0x50);
     groupCount = lbl_803DE36B;
-    for (groupIndex = 0; groupIndex < groupCount; groupIndex++) {
-        if (emitter->groupKey == group->key) {
+    for (groupIndex = 0; groupIndex < groupCount; groupIndex++)
+    {
+        if (emitter->groupKey == group->key)
+        {
             break;
         }
         group++;
     }
 
-    if (groupIndex == groupCount) {
-        if ((u32)groupCount == S3D_MAX_GROUPS) {
+    if (groupIndex == groupCount)
+    {
+        if ((u32)groupCount == S3D_MAX_GROUPS)
+        {
             return 0;
         }
-        ((S3DMixGroup *)(base + 0x50))[groupIndex].activeHead = (S3DActiveNode *)0x0;
-        ((S3DMixGroup *)(base + 0x50))[groupIndex].sortedHead = (S3DSortedNode *)0x0;
-        ((S3DMixGroup *)(base + 0x50))[groupIndex].sortedCount = 0;
-        ((S3DMixGroup *)(base + 0x50))[groupIndex].key = emitter->groupKey;
+        ((S3DMixGroup*)(base + 0x50))[groupIndex].activeHead = (S3DActiveNode*)0x0;
+        ((S3DMixGroup*)(base + 0x50))[groupIndex].sortedHead = (S3DSortedNode*)0x0;
+        ((S3DMixGroup*)(base + 0x50))[groupIndex].sortedCount = 0;
+        ((S3DMixGroup*)(base + 0x50))[groupIndex].key = emitter->groupKey;
         lbl_803DE36B++;
     }
 
     activeIndex = lbl_803DE36C;
-    if (activeIndex == S3D_MAX_ACTIVE_NODES) {
+    if (activeIndex == S3D_MAX_ACTIVE_NODES)
+    {
         return 0;
     }
 
-    next = ((S3DMixGroup *)(base + 0x50))[groupIndex].activeHead;
-    pp = &((S3DMixGroup *)(base + 0x50))[groupIndex].activeHead;
-    if ((scan = next) != (S3DActiveNode *)0x0) {
-        while ((next = scan->next) != (S3DActiveNode *)0x0) {
-            if (scan->distance < distance) {
+    next = ((S3DMixGroup*)(base + 0x50))[groupIndex].activeHead;
+    pp = &((S3DMixGroup*)(base + 0x50))[groupIndex].activeHead;
+    if ((scan = next) != (S3DActiveNode*)0x0)
+    {
+        while ((next = scan->next) != (S3DActiveNode*)0x0)
+        {
+            if (scan->distance < distance)
+            {
                 break;
             }
             scan = next;
         }
-        ((S3DActiveNode *)(base + 0x450))[activeIndex].next = next;
-        scan->next = &((S3DActiveNode *)(base + 0x450))[activeIndex];
-    } else {
-        ((S3DActiveNode *)(base + 0x450))[activeIndex].next = next;
-        *pp = &((S3DActiveNode *)(base + 0x450))[activeIndex];
+        ((S3DActiveNode*)(base + 0x450))[activeIndex].next = next;
+        scan->next = &((S3DActiveNode*)(base + 0x450))[activeIndex];
+    }
+    else
+    {
+        ((S3DActiveNode*)(base + 0x450))[activeIndex].next = next;
+        *pp = &((S3DActiveNode*)(base + 0x450))[activeIndex];
     }
 
     {
-        S3DActiveNode *newNode = &((S3DActiveNode *)(base + 0x450))[lbl_803DE36C];
+        S3DActiveNode* newNode = &((S3DActiveNode*)(base + 0x450))[lbl_803DE36C];
         newNode->emitter = emitter;
         newNode->arg4 = arg4;
         newNode->arg1 = arg1;
         newNode->arg2 = arg2;
         newNode->arg3 = arg3;
     }
-    ((S3DActiveNode *)(base + 0x450))[lbl_803DE36C++].distance = distance;
+    ((S3DActiveNode*)(base + 0x450))[lbl_803DE36C++].distance = distance;
     return 1;
 }
 
 
 void s3dStartQueuedEmitters(void)
 {
-    S3DMixGroup *group;
+    S3DMixGroup* group;
     int groupIndex;
-    S3DActiveNode *node;
-    Snd3DEmitter *emitter;
-    SndSpatialEntry *entry;
+    S3DActiveNode* node;
+    Snd3DEmitter* emitter;
+    SndSpatialEntry* entry;
     u32 handle;
     u8 studio;
     f32 one;
@@ -424,79 +483,98 @@ void s3dStartQueuedEmitters(void)
     f32 distanceDelta;
 
     groupIndex = 0;
-    group = (S3DMixGroup *)lbl_803CC910;
+    group = (S3DMixGroup*)lbl_803CC910;
     zero = lbl_803E7880;
     one = lbl_803E78A4;
     upperWindow = lbl_803E78C0;
     lowerWindow = lbl_803E78BC;
 
-    while (groupIndex < lbl_803DE36B) {
+    while (groupIndex < lbl_803DE36B)
+    {
         node = group->activeHead;
-        while (node != (S3DActiveNode *)0x0) {
-            if (group->sortedHead == (S3DSortedNode *)0x0) {
+        while (node != (S3DActiveNode*)0x0)
+        {
+            if (group->sortedHead == (S3DSortedNode*)0x0)
+            {
                 goto start_voice;
             }
             if ((lbl_803DE36A != 0) && ((group->key & S3D_GROUP_KEY_STEREO_LIMIT) != 0) &&
-                (group->sortedCount < group->activeHead->emitter->maxVoices)) {
+                (group->sortedCount < group->activeHead->emitter->maxVoices))
+            {
                 goto start_voice;
             }
 
             distanceDelta = node->distance - group->sortedHead->distance;
-            if (distanceDelta <= lowerWindow) {
+            if (distanceDelta <= lowerWindow)
+            {
                 goto next_node;
             }
-            if (distanceDelta <= upperWindow) {
+            if (distanceDelta <= upperWindow)
+            {
                 emitter = node->emitter;
-                if (++emitter->retryCounter < 0x14) {
+                if (++emitter->retryCounter < 0x14)
+                {
                     goto next_node;
                 }
-            } else {
+            }
+            else
+            {
                 node->emitter->retryCounter = 0;
             }
 
-start_voice:
+        start_voice:
             emitter = node->emitter;
             entry = emitter->entry;
-            if ((entry != (SndSpatialEntry *)0x0) && (entry->assignedVoice == 0xff)) {
+            if ((entry != (SndSpatialEntry*)0x0) && (entry->assignedVoice == 0xff))
+            {
                 goto stop_voice;
             }
 
-            if (emitter->entry != (SndSpatialEntry *)0x0) {
+            if (emitter->entry != (SndSpatialEntry*)0x0)
+            {
                 studio = emitter->entry->assignedVoice;
-            } else {
+            }
+            else
+            {
                 studio = emitter->studio;
             }
 
             handle = synthFXStart(emitter->fxId, 0x7f, 0x40, studio,
                                   (emitter->flags & S3D_EMITTER_FLAG_USE_AUX_STUDIO) != 0);
             emitter->handle = handle;
-            if (handle != S3D_INVALID_FX_HANDLE) {
+            if (handle != S3D_INVALID_FX_HANDLE)
+            {
                 goto started;
             }
 
-stop_voice:
-            if ((emitter->flags & S3D_EMITTER_FLAG_RESTART_ON_STOP) == 0) {
+        stop_voice:
+            if ((emitter->flags & S3D_EMITTER_FLAG_RESTART_ON_STOP) == 0)
+            {
                 emitter->flags |= S3D_EMITTER_FLAG_REMOVE;
                 emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
             }
             goto next_node;
 
-started:
-            if ((emitter->flags & S3D_EMITTER_FLAG_SKIP_FADE_IN) == 0) {
+        started:
+            if ((emitter->flags & S3D_EMITTER_FLAG_SKIP_FADE_IN) == 0)
+            {
                 emitter->flags |= S3D_EMITTER_FLAG_AGE_OUT;
                 emitter->age = zero;
-            } else {
+            }
+            else
+            {
                 emitter->age = one;
             }
             s3dApplyEmitterControls(emitter, node->distance, node->arg1,
                                     node->arg2, node->arg3, node->arg4);
             emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
             group->sortedCount++;
-            if (group->sortedHead != (S3DSortedNode *)0x0) {
+            if (group->sortedHead != (S3DSortedNode*)0x0)
+            {
                 group->sortedHead = group->sortedHead->next;
             }
 
-next_node:
+        next_node:
             node = node->next;
         }
         group++;

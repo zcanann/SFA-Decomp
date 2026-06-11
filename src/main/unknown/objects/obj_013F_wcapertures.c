@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_013F_WCApertureS_packet_info {
+enum obj_013F_WCApertureS_packet_info
+{
     WCAPERTURES_DEF_ID = 0x013F,
     WCAPERTURES_DLL_ID = 0x0295,
     WCAPERTURES_CLASS_ID = 0x0030,

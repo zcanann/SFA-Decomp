@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0565_DIM_PitVort_packet_info {
+enum obj_0565_DIM_PitVort_packet_info
+{
     DIM_PITVORT_DEF_ID = 0x0565,
     DIM_PITVORT_DLL_ID = 0x02B3,
     DIM_PITVORT_CLASS_ID = 0x0030,

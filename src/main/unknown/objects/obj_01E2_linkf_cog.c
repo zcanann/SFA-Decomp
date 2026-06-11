@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01E2_LinkF_cog_packet_info {
+enum obj_01E2_LinkF_cog_packet_info
+{
     LINKF_COG_DEF_ID = 0x01E2,
     LINKF_COG_DLL_ID = 0x012A,
     LINKF_COG_CLASS_ID = 0x0030,

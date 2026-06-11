@@ -59,7 +59,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04C4_TrickyWarp_packet_info {
+enum obj_04C4_TrickyWarp_packet_info
+{
     TRICKYWARP_DEF_ID = 0x04C4,
     TRICKYWARP_DLL_ID = 0x0100,
     TRICKYWARP_CLASS_ID = 0x0061,

@@ -34,7 +34,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_002A_enemyMushroom_defs {
+enum class_002A_enemyMushroom_defs
+{
     ENEMYMUSHROOM_SH_KILLERMU = 0x02B1,
 };
 #endif

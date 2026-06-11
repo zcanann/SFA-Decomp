@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0408_ECSH_Cup_packet_info {
+enum obj_0408_ECSH_Cup_packet_info
+{
     ECSH_CUP_DEF_ID = 0x0408,
     ECSH_CUP_DLL_ID = 0x0190,
     ECSH_CUP_CLASS_ID = 0x0030,

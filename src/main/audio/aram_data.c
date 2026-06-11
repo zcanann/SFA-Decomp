@@ -1,7 +1,8 @@
 #include "ghidra_import.h"
 
-typedef struct AramStreamBufferEntry {
-    struct AramStreamBufferEntry *next;
+typedef struct AramStreamBufferEntry
+{
+    struct AramStreamBufferEntry* next;
     u32 address;
     u32 position;
     u32 state;
@@ -11,11 +12,11 @@ extern u8 lbl_803D3F60[];
 extern u32 aramTop;
 extern u32 aramWrite;
 extern u32 aramStream;
-extern void *(*aramChunkCallback)(void *src, u32 chunk);
+extern void*(*aramChunkCallback)(void* src, u32 chunk);
 extern u32 aramChunkSize;
 extern u32 aramQueueWrite;
 extern u32 aramQueueValid;
-extern AramStreamBufferEntry *aramStreamFreeList;
+extern AramStreamBufferEntry* aramStreamFreeList;
 extern AramStreamBufferEntry lbl_803D4468[];
 
 /*
@@ -28,30 +29,32 @@ extern AramStreamBufferEntry lbl_803D4468[];
  * EN v1.1 Address: 0x802844C0
  * EN v1.1 Size: 240b
  */
-u32 aramStoreData(void *src, u32 size)
+u32 aramStoreData(void* src, u32 size)
 {
     u32 chunk;
     u32 startPos;
-    void *piece;
+    void* piece;
     u32 alignedSize;
 
     alignedSize = (size + 0x1f) & ~0x1f;
     startPos = aramWrite;
 
-    if (aramChunkCallback == NULL) {
+    if (aramChunkCallback == NULL)
+    {
         DCFlushRange(src, alignedSize);
         aramUploadData((u32)src, aramWrite, alignedSize, 0, 0, 0);
         aramWrite += alignedSize;
         return startPos;
     }
 
-    while (alignedSize != 0) {
+    while (alignedSize != 0)
+    {
         chunk = (alignedSize < aramChunkSize) ? alignedSize : aramChunkSize;
         piece = aramChunkCallback(src, chunk);
         DCFlushRange(piece, chunk);
         aramUploadData((u32)piece, aramWrite, chunk, 0, 0, 0);
         alignedSize -= chunk;
-        src = (u8 *)src + chunk;
+        src = (u8*)src + chunk;
         aramWrite += chunk;
     }
     return startPos;
@@ -63,7 +66,7 @@ u32 aramStoreData(void *src, u32 size)
  * EN v1.1 Address: 0x80284558
  * EN v1.1 Size: 24b
  */
-void aramRemoveData(void *unused, u32 size)
+void aramRemoveData(void* unused, u32 size)
 {
     u32 aligned = (size + 0x1f) & ~0x1f;
     aramWrite -= aligned;
@@ -79,9 +82,9 @@ void aramRemoveData(void *unused, u32 size)
  */
 void aramInitStreamBuffers(void)
 {
-    u8 *base = lbl_803D3F60;
-    AramStreamBufferEntry *buffers = (AramStreamBufferEntry *)(base + 0x508);
-    AramStreamBufferEntry *node;
+    u8* base = lbl_803D3F60;
+    AramStreamBufferEntry* buffers = (AramStreamBufferEntry*)(base + 0x508);
+    AramStreamBufferEntry* node;
     int batchCount;
     int i;
 
@@ -91,7 +94,8 @@ void aramInitStreamBuffers(void)
 
     node = &buffers[1];
     i = 1;
-    for (batchCount = 7; batchCount != 0; batchCount--) {
+    for (batchCount = 7; batchCount != 0; batchCount--)
+    {
         node[-1].next = node;
         node[0].next = node + 1;
         node[1].next = node + 2;
@@ -105,7 +109,8 @@ void aramInitStreamBuffers(void)
     }
 
 tail_loop:
-    if (i < 64) {
+    if (i < 64)
+    {
         node[-1].next = node;
         node++;
         i++;
@@ -126,9 +131,10 @@ void fn_80284634(void)
  * EN v1.1 Address: 0x80284638
  * EN v1.1 Size: 56b
  */
-u32 aramGetStreamBufferAddress(u8 idx, u32 *outPos)
+u32 aramGetStreamBufferAddress(u8 idx, u32* outPos)
 {
-    if (outPos != NULL) {
+    if (outPos != NULL)
+    {
         *outPos = lbl_803D4468[idx].position;
     }
     return lbl_803D4468[idx].address;

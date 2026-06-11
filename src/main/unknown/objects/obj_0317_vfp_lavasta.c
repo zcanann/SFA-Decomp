@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0317_VFP_lavasta_packet_info {
+enum obj_0317_VFP_lavasta_packet_info
+{
     VFP_LAVASTA_DEF_ID = 0x0317,
     VFP_LAVASTA_DLL_ID = 0x0227,
     VFP_LAVASTA_CLASS_ID = 0x0030,

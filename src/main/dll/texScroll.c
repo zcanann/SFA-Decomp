@@ -1,7 +1,7 @@
 #include "main/dll/texScroll.h"
 #include "main/game_object.h"
 
-extern void GameBit_Set(int eventId,int value);
+extern void GameBit_Set(int eventId, int value);
 extern undefined8 ObjGroup_RemoveObject();
 
 #define PRESSURESWITCHFB_STATE_IDLE 0
@@ -41,59 +41,65 @@ extern undefined8 ObjGroup_RemoveObject();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 pressureswitchfb_updateStateMode(int obj,undefined4 param_2,int stateParam)
+undefined4 pressureswitchfb_updateStateMode(int obj, undefined4 param_2, int stateParam)
 {
-  s16 objType;
-  int config;
-  u32 handle;
-  u32 offset;
-  int runtime;
-  int trackedObjectSlot;
-  u8 i;
+    s16 objType;
+    int config;
+    u32 handle;
+    u32 offset;
+    int runtime;
+    int trackedObjectSlot;
+    u8 i;
 
-  runtime = *(int *)&((GameObject *)obj)->extra;
-  config = *(int *)&((GameObject *)obj)->anim.placementData;
-  if (*(u8 *)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) ==
-      PRESSURESWITCHFB_STATE_CAPTURE_POSITIONS) {
-    for (i = 0; i < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT; i++) {
-      offset = (u32)i * 4 + PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET;
-      handle = *(u32 *)(runtime + offset);
-      if (handle != 0) {
-        *(f32 *)(runtime + (u32)i * 8 + PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET) =
-            *(f32 *)(handle + 0xc);
-        *(f32 *)(runtime + (u32)i * 8 + (PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET + 4)) =
-            *(f32 *)(*(int *)(runtime + offset) + 0x14);
-      }
+    runtime = *(int*)&((GameObject*)obj)->extra;
+    config = *(int*)&((GameObject*)obj)->anim.placementData;
+    if (*(u8*)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) ==
+        PRESSURESWITCHFB_STATE_CAPTURE_POSITIONS)
+    {
+        for (i = 0; i < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT; i++)
+        {
+            offset = (u32)i * 4 + PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET;
+            handle = *(u32*)(runtime + offset);
+            if (handle != 0)
+            {
+                *(f32*)(runtime + (u32)i * 8 + PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET) =
+                    *(f32*)(handle + 0xc);
+                *(f32*)(runtime + (u32)i * 8 + (PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET + 4)) =
+                    *(f32*)(*(int*)(runtime + offset) + 0x14);
+            }
+        }
+        *(u8*)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) =
+            PRESSURESWITCHFB_STATE_IDLE;
     }
-    *(u8 *)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) =
-        PRESSURESWITCHFB_STATE_IDLE;
-  }
-  else if (*(u8 *)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) ==
-           PRESSURESWITCHFB_STATE_RESET) {
-    for (i = 0; i < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT;
-         i += PRESSURESWITCHFB_TRACKED_OBJECT_BATCH) {
-      trackedObjectSlot = runtime + (u32)i * 4 + PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET;
-      *(undefined4 *)(trackedObjectSlot + 0x0) = 0;
-      *(undefined4 *)(trackedObjectSlot + 0x4) = 0;
-      *(undefined4 *)(trackedObjectSlot + 0x8) = 0;
-      *(undefined4 *)(trackedObjectSlot + 0xc) = 0;
-      *(undefined4 *)(trackedObjectSlot + 0x10) = 0;
+    else if (*(u8*)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) ==
+        PRESSURESWITCHFB_STATE_RESET)
+    {
+        for (i = 0; i < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT;
+             i += PRESSURESWITCHFB_TRACKED_OBJECT_BATCH)
+        {
+            trackedObjectSlot = runtime + (u32)i * 4 + PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET;
+            *(undefined4*)(trackedObjectSlot + 0x0) = 0;
+            *(undefined4*)(trackedObjectSlot + 0x4) = 0;
+            *(undefined4*)(trackedObjectSlot + 0x8) = 0;
+            *(undefined4*)(trackedObjectSlot + 0xc) = 0;
+            *(undefined4*)(trackedObjectSlot + 0x10) = 0;
+        }
+        ((GameObject*)obj)->anim.localPosZ = *(f32*)(config + PRESSURESWITCHFB_CONFIG_BASE_COORD_OFFSET);
+        ((GameObject*)obj)->anim.localPosY = *(f32*)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET);
+        ((GameObject*)obj)->anim.localPosZ = *(f32*)(config + PRESSURESWITCHFB_CONFIG_RESET_COORD_OFFSET);
+        GameBit_Set(*(s16*)(config + PRESSURESWITCHFB_CONFIG_RAISED_GAMEBIT_OFFSET), 0);
+        *(u8*)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) =
+            PRESSURESWITCHFB_STATE_IDLE;
     }
-    ((GameObject *)obj)->anim.localPosZ = *(f32 *)(config + PRESSURESWITCHFB_CONFIG_BASE_COORD_OFFSET);
-    ((GameObject *)obj)->anim.localPosY = *(f32 *)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET);
-    ((GameObject *)obj)->anim.localPosZ = *(f32 *)(config + PRESSURESWITCHFB_CONFIG_RESET_COORD_OFFSET);
-    GameBit_Set(*(s16 *)(config + PRESSURESWITCHFB_CONFIG_RAISED_GAMEBIT_OFFSET),0);
-    *(u8 *)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) =
-        PRESSURESWITCHFB_STATE_IDLE;
-  }
-  objType = ((GameObject *)obj)->anim.seqId;
-  if ((((objType != PRESSURESWITCHFB_OBJ_LINK_SNOWPR) &&
-        (objType != PRESSURESWITCHFB_OBJ_SH_PRESSURE)) &&
-       (objType != PRESSURESWITCHFB_OBJ_LINK_UNDERW)) &&
-      (objType != PRESSURESWITCHFB_OBJ_CC_PRESSURE)) {
-    *(f32 *)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET) = ((GameObject *)obj)->anim.localPosY;
-  }
-  return 0;
+    objType = ((GameObject*)obj)->anim.seqId;
+    if ((((objType != PRESSURESWITCHFB_OBJ_LINK_SNOWPR) &&
+                (objType != PRESSURESWITCHFB_OBJ_SH_PRESSURE)) &&
+            (objType != PRESSURESWITCHFB_OBJ_LINK_UNDERW)) &&
+        (objType != PRESSURESWITCHFB_OBJ_CC_PRESSURE))
+    {
+        *(f32*)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET) = ((GameObject*)obj)->anim.localPosY;
+    }
+    return 0;
 }
 
 /*
@@ -111,7 +117,7 @@ undefined4 pressureswitchfb_updateStateMode(int obj,undefined4 param_2,int state
  */
 int pressureswitchfb_getExtraSize(void)
 {
-  return PRESSURESWITCHFB_EXTRA_SIZE;
+    return PRESSURESWITCHFB_EXTRA_SIZE;
 }
 
 /*
@@ -129,5 +135,5 @@ int pressureswitchfb_getExtraSize(void)
  */
 void pressureswitchfb_free(int obj)
 {
-  ObjGroup_RemoveObject(obj,PRESSURESWITCHFB_REMOVE_GROUP_ID);
+    ObjGroup_RemoveObject(obj,PRESSURESWITCHFB_REMOVE_GROUP_ID);
 }

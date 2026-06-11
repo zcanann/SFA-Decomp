@@ -59,7 +59,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02AD_SH_queenear_packet_info {
+enum obj_02AD_SH_queenear_packet_info
+{
     SH_QUEENEAR_DEF_ID = 0x02AD,
     SH_QUEENEAR_DLL_ID = 0x01AC,
     SH_QUEENEAR_CLASS_ID = 0x0030,

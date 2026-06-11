@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_003E_CFPrisonUncle_defs {
+enum class_003E_CFPrisonUncle_defs
+{
     CFPRISONUNCLE_CFPRISONUNC = 0x00B7,
 };
 #endif

@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0043_LevelName_defs {
+enum class_0043_LevelName_defs
+{
     LEVELNAME_LEVELNAME = 0x030D,
 };
 #endif

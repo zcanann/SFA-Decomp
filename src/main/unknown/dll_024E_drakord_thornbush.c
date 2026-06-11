@@ -28,7 +28,8 @@
  */
 
 #if 0
-enum dll_024E_DrakorD_ThornBush_slot {
+enum dll_024E_DrakorD_ThornBush_slot
+{
     DRAKORD_THORNBUSH_INITIALISE = 0,
     DRAKORD_THORNBUSH_RELEASE = 1,
     DRAKORD_THORNBUSH_INIT = 3,

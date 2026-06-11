@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0305_SB_Sail_packet_info {
+enum obj_0305_SB_Sail_packet_info
+{
     SB_SAIL_DEF_ID = 0x0305,
     SB_SAIL_DLL_ID = 0x01F6,
     SB_SAIL_CLASS_ID = 0x0030,

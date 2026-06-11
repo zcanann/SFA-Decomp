@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0138_WCMoonTempl_packet_info {
+enum obj_0138_WCMoonTempl_packet_info
+{
     WCMOONTEMPL_DEF_ID = 0x0138,
     WCMOONTEMPL_DLL_ID = 0x0294,
     WCMOONTEMPL_CLASS_ID = 0x0030,

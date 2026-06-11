@@ -51,7 +51,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_007E_CmbSrc_defs {
+enum class_007E_CmbSrc_defs
+{
     CMBSRC_CMBSRC = 0x059C,
     CMBSRC_CMBSRCTPOLE = 0x059D,
     CMBSRC_DUSTMOTESOU = 0x05A0,

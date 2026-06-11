@@ -58,7 +58,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04C9_DepthOfFiel_packet_info {
+enum obj_04C9_DepthOfFiel_packet_info
+{
     DEPTHOFFIEL_DEF_ID = 0x04C9,
     DEPTHOFFIEL_DLL_ID = 0x00C8,
     DEPTHOFFIEL_CLASS_ID = 0x0030,

@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_033F_VFP_locksym_packet_info {
+enum obj_033F_VFP_locksym_packet_info
+{
     VFP_LOCKSYM_DEF_ID = 0x033F,
     VFP_LOCKSYM_DLL_ID = 0x012A,
     VFP_LOCKSYM_CLASS_ID = 0x0030,

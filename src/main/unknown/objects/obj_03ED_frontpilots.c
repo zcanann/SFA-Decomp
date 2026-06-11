@@ -71,7 +71,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03ED_FrontPilots_packet_info {
+enum obj_03ED_FrontPilots_packet_info
+{
     FRONTPILOTS_DEF_ID = 0x03ED,
     FRONTPILOTS_DLL_ID = 0x02C0,
     FRONTPILOTS_CLASS_ID = 0x0030,

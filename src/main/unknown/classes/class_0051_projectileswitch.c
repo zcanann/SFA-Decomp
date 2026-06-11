@@ -40,7 +40,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0051_ProjectileSwitch_defs {
+enum class_0051_ProjectileSwitch_defs
+{
     PROJECTILESWITCH_PROJECTILES = 0x0500,
     PROJECTILESWITCH_INVISIBLEHI = 0x0490,
     PROJECTILESWITCH_DRPROJECTIL = 0x042C,

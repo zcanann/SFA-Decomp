@@ -21,9 +21,12 @@
  */
 
 
-
-extern void OSReport(const char *fmt, ...);
+extern void OSReport(const char* fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
-int projrobotfire_doUnsupported(void) { OSReport(sProjrobotfireDoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
+int projrobotfire_doUnsupported(void)
+{
+    OSReport(sProjrobotfireDoNoLongerSupported);
+    return PROJECTILE_UNSUPPORTED_RETURN;
+}

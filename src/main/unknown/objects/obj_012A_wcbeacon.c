@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_012A_WCBeacon_packet_info {
+enum obj_012A_WCBeacon_packet_info
+{
     WCBEACON_DEF_ID = 0x012A,
     WCBEACON_DLL_ID = 0x028E,
     WCBEACON_CLASS_ID = 0x0030,

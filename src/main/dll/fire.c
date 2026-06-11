@@ -1,7 +1,7 @@
 #include "main/dll/fire.h"
 #include "main/gameplay_runtime.h"
 
-extern FireObjectInterface **gObjectTriggerInterface;
+extern FireObjectInterface** gObjectTriggerInterface;
 extern f32 lbl_803E64D8;
 
 #define LINKA_LEVCONTROL_LOOP_SFX_ID 0x48B
@@ -48,104 +48,114 @@ extern f32 lbl_803E64D8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int fire_updateState(FireObject *obj,int unused,ObjAnimUpdateState *animUpdate)
+int fire_updateState(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-  int stateIndex;
-  u8 mode;
-  u8 eventId;
-  int mapDir;
+    int stateIndex;
+    u8 mode;
+    u8 eventId;
+    int mapDir;
 
-  mode = (u8)(*gMapEventInterface)->getMode((int)obj->mapEventMapId);
-  Sfx_KeepAliveLoopedObjectSound(0,LINKA_LEVCONTROL_LOOP_SFX_ID);
-  for (stateIndex = 0; stateIndex < (int)(uint)animUpdate->eventCount; stateIndex++) {
-    eventId = animUpdate->eventIds[stateIndex];
-    if (eventId == LINKA_LEVCONTROL_ANIM_EVENT_OPEN_PATH) {
-      defragMemory(0);
-      switch (mode) {
-      case LINKA_LEVCONTROL_MODE_0:
-      case LINKA_LEVCONTROL_MODE_1:
-        (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7,0,0);
-        (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7,2,0);
-        (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7,3,0);
-        (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7,7,0);
-        (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7,10,0);
-        (*gMapEventInterface)->setAnimEvent(10,7,0);
-        GameBit_Set(LINKA_LEVCONTROL_LIGHTFOOT_UNLOCK_GAMEBIT,1);
-        loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_17);
-        mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_17);
-        lockLevel(mapDir,0);
-        break;
-      case LINKA_LEVCONTROL_MODE_2:
-        loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_0B);
-        mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_0B);
-        lockLevel(mapDir,0);
-        break;
-      case LINKA_LEVCONTROL_MODE_3:
-        loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_7);
-        mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_7);
-        lockLevel(mapDir,0);
-        break;
-      }
-    }
-    else if (eventId == LINKA_LEVCONTROL_ANIM_EVENT_WARP) {
-      switch (mode) {
-      case LINKA_LEVCONTROL_MODE_0:
-      case LINKA_LEVCONTROL_MODE_1:
-        warpToMap(LINKA_LEVCONTROL_WARP_ID_SHRINE,0);
-        break;
-      case LINKA_LEVCONTROL_MODE_2:
-        GameBit_Set(LINKA_LEVCONTROL_MODE2_RESET_GAMEBIT,0);
-        if (GameBit_Get(LINKA_LEVCONTROL_MODE2_ROUTE_B_GAMEBIT) != 0) {
-          (*gMapEventInterface)->setMode(LINKA_LEVCONTROL_MAP_ID_0B,3);
-          (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B,8,1);
-          (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B,9,1);
-          warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_B,0);
+    mode = (u8)(*gMapEventInterface)->getMode((int)obj->mapEventMapId);
+    Sfx_KeepAliveLoopedObjectSound(0,LINKA_LEVCONTROL_LOOP_SFX_ID);
+    for (stateIndex = 0; stateIndex < (int)(uint)animUpdate->eventCount; stateIndex++)
+    {
+        eventId = animUpdate->eventIds[stateIndex];
+        if (eventId == LINKA_LEVCONTROL_ANIM_EVENT_OPEN_PATH)
+        {
+            defragMemory(0);
+            switch (mode)
+            {
+            case LINKA_LEVCONTROL_MODE_0:
+            case LINKA_LEVCONTROL_MODE_1:
+                (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7, 0, 0);
+                (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7, 2, 0);
+                (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7, 3, 0);
+                (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7, 7, 0);
+                (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_7, 10, 0);
+                (*gMapEventInterface)->setAnimEvent(10, 7, 0);
+                GameBit_Set(LINKA_LEVCONTROL_LIGHTFOOT_UNLOCK_GAMEBIT, 1);
+                loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_17);
+                mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_17);
+                lockLevel(mapDir, 0);
+                break;
+            case LINKA_LEVCONTROL_MODE_2:
+                loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_0B);
+                mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_0B);
+                lockLevel(mapDir, 0);
+                break;
+            case LINKA_LEVCONTROL_MODE_3:
+                loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_7);
+                mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_7);
+                lockLevel(mapDir, 0);
+                break;
+            }
         }
-        else if (GameBit_Get(LINKA_LEVCONTROL_MODE2_ROUTE_A_GAMEBIT) != 0) {
-          (*gMapEventInterface)->setMode(LINKA_LEVCONTROL_MAP_ID_0B,2);
-          (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B,5,1);
-          (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B,6,1);
-          warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_A,0);
+        else if (eventId == LINKA_LEVCONTROL_ANIM_EVENT_WARP)
+        {
+            switch (mode)
+            {
+            case LINKA_LEVCONTROL_MODE_0:
+            case LINKA_LEVCONTROL_MODE_1:
+                warpToMap(LINKA_LEVCONTROL_WARP_ID_SHRINE, 0);
+                break;
+            case LINKA_LEVCONTROL_MODE_2:
+                GameBit_Set(LINKA_LEVCONTROL_MODE2_RESET_GAMEBIT, 0);
+                if (GameBit_Get(LINKA_LEVCONTROL_MODE2_ROUTE_B_GAMEBIT) != 0)
+                {
+                    (*gMapEventInterface)->setMode(LINKA_LEVCONTROL_MAP_ID_0B, 3);
+                    (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B, 8, 1);
+                    (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B, 9, 1);
+                    warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_B, 0);
+                }
+                else if (GameBit_Get(LINKA_LEVCONTROL_MODE2_ROUTE_A_GAMEBIT) != 0)
+                {
+                    (*gMapEventInterface)->setMode(LINKA_LEVCONTROL_MAP_ID_0B, 2);
+                    (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B, 5, 1);
+                    (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B, 6, 1);
+                    warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_A, 0);
+                }
+                else if (GameBit_Get(LINKA_LEVCONTROL_MODE2_ROUTE_C_GAMEBIT) != 0)
+                {
+                    (*gMapEventInterface)->setMode(LINKA_LEVCONTROL_MAP_ID_0B, 4);
+                    (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B, 8, 1);
+                    (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B, 9, 1);
+                    warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_B, 0);
+                }
+                break;
+            case LINKA_LEVCONTROL_MODE_3:
+                warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE3, 0);
+                break;
+            }
+            loadUiDll(1);
         }
-        else if (GameBit_Get(LINKA_LEVCONTROL_MODE2_ROUTE_C_GAMEBIT) != 0) {
-          (*gMapEventInterface)->setMode(LINKA_LEVCONTROL_MAP_ID_0B,4);
-          (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B,8,1);
-          (*gMapEventInterface)->setAnimEvent(LINKA_LEVCONTROL_MAP_ID_0B,9,1);
-          warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE2_ROUTE_B,0);
+        else if (eventId == LINKA_LEVCONTROL_ANIM_EVENT_UNLOAD_NEIGHBOR_MAP)
+        {
+            switch (mode)
+            {
+            case LINKA_LEVCONTROL_MODE_0:
+            case LINKA_LEVCONTROL_MODE_1:
+            case LINKA_LEVCONTROL_MODE_2:
+                mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_7);
+                mapUnload(mapDir, 0x20000000);
+                break;
+            case LINKA_LEVCONTROL_MODE_3:
+                mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_0B);
+                mapUnload(mapDir, 0x20000000);
+                break;
+            }
         }
-        break;
-      case LINKA_LEVCONTROL_MODE_3:
-        warpToMap(LINKA_LEVCONTROL_WARP_ID_MODE3,0);
-        break;
-      }
-      loadUiDll(1);
     }
-    else if (eventId == LINKA_LEVCONTROL_ANIM_EVENT_UNLOAD_NEIGHBOR_MAP) {
-      switch (mode) {
-      case LINKA_LEVCONTROL_MODE_0:
-      case LINKA_LEVCONTROL_MODE_1:
-      case LINKA_LEVCONTROL_MODE_2:
-        mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_7);
-        mapUnload(mapDir,0x20000000);
-        break;
-      case LINKA_LEVCONTROL_MODE_3:
-        mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_0B);
-        mapUnload(mapDir,0x20000000);
-        break;
-      }
-    }
-  }
-  return 0;
+    return 0;
 }
 
 int fireObj_getExtraSize(void)
 {
-  return 4;
+    return 4;
 }
 
 int fireObj_getObjectTypeId(void)
 {
-  return 0;
+    return 0;
 }
 
 void fireObj_free(void)
@@ -154,34 +164,34 @@ void fireObj_free(void)
 
 void fireObj_render(void)
 {
-  extern void objRenderFn_8003b8f4(double scale);
-  objRenderFn_8003b8f4((double)lbl_803E64D8);
-  return;
+    extern void objRenderFn_8003b8f4(double scale);
+    objRenderFn_8003b8f4((double)lbl_803E64D8);
+    return;
 }
 
 void fireObj_hitDetect(void)
 {
 }
 
-void fireObj_update(FireObject *obj)
+void fireObj_update(FireObject* obj)
 {
-  (*gObjectTriggerInterface)->refresh(0,obj,0xffffffff);
-  return;
+    (*gObjectTriggerInterface)->refresh(0, obj, 0xffffffff);
+    return;
 }
 
-void fireObj_init(FireObject *obj)
+void fireObj_init(FireObject* obj)
 {
-  u32 v;
-  obj->animEventCallback = fire_updateState;
-  unlockLevel(0,0,1);
-  v = obj->flags | LINKA_LEVCONTROL_SEQUENCE_OBJECT_FLAGS;
-  obj->flags = (u16)v;
-  envFxActFn_800887f8(0);
-  GameBit_Set(LINKA_LEVCONTROL_INIT_GAMEBIT_0,1);
-  GameBit_Set(LINKA_LEVCONTROL_INIT_GAMEBIT_1,1);
-  GameBit_Set(LINKA_LEVCONTROL_INIT_GAMEBIT_2,1);
-  streamFn_8000a380(3,2,LINKA_LEVCONTROL_INIT_COLLECTABLE_ID);
-  return;
+    u32 v;
+    obj->animEventCallback = fire_updateState;
+    unlockLevel(0, 0, 1);
+    v = obj->flags | LINKA_LEVCONTROL_SEQUENCE_OBJECT_FLAGS;
+    obj->flags = (u16)v;
+    envFxActFn_800887f8(0);
+    GameBit_Set(LINKA_LEVCONTROL_INIT_GAMEBIT_0, 1);
+    GameBit_Set(LINKA_LEVCONTROL_INIT_GAMEBIT_1, 1);
+    GameBit_Set(LINKA_LEVCONTROL_INIT_GAMEBIT_2, 1);
+    streamFn_8000a380(3, 2,LINKA_LEVCONTROL_INIT_COLLECTABLE_ID);
+    return;
 }
 
 void fireObj_release(void)

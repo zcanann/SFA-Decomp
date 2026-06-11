@@ -36,7 +36,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_0207_WM_Worm_slot {
+enum dll_0207_WM_Worm_slot
+{
     WM_WORM_INITIALISE = 0,
     WM_WORM_RELEASE = 1,
     WM_WORM_INIT = 3,

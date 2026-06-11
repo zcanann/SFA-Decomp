@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01FF_CCFoundGold_packet_info {
+enum obj_01FF_CCFoundGold_packet_info
+{
     CCFOUNDGOLD_DEF_ID = 0x01FF,
     CCFOUNDGOLD_DLL_ID = 0x0269,
     CCFOUNDGOLD_CLASS_ID = 0x0030,

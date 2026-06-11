@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0469_SteamHoleNo_packet_info {
+enum obj_0469_SteamHoleNo_packet_info
+{
     STEAMHOLENO_DEF_ID = 0x0469,
     STEAMHOLENO_DLL_ID = 0x0273,
     STEAMHOLENO_CLASS_ID = 0x0030,

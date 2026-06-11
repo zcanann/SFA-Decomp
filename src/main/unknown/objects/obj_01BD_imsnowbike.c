@@ -70,7 +70,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01BD_IMSnowBike_packet_info {
+enum obj_01BD_IMSnowBike_packet_info
+{
     IMSNOWBIKE_DEF_ID = 0x01BD,
     IMSNOWBIKE_DLL_ID = 0x0255,
     IMSNOWBIKE_CLASS_ID = 0x002E,

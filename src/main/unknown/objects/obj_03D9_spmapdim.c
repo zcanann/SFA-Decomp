@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03D9_SPMapDIM_packet_info {
+enum obj_03D9_SPMapDIM_packet_info
+{
     SPMAPDIM_DEF_ID = 0x03D9,
     SPMAPDIM_DLL_ID = 0x0284,
     SPMAPDIM_CLASS_ID = 0x0070,

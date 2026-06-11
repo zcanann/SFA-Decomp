@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_051C_TrigPln_packet_info {
+enum obj_051C_TrigPln_packet_info
+{
     TRIGPLN_DEF_ID = 0x051C,
     TRIGPLN_DLL_ID = 0x0126,
     TRIGPLN_CLASS_ID = 0x0015,

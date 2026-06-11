@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01DC_VFP_Platfor_packet_info {
+enum obj_01DC_VFP_Platfor_packet_info
+{
     VFP_PLATFOR_DEF_ID = 0x01DC,
     VFP_PLATFOR_DLL_ID = 0x021F,
     VFP_PLATFOR_CLASS_ID = 0x0030,

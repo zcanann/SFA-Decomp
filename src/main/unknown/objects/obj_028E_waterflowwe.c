@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_028E_WaterFlowWe_packet_info {
+enum obj_028E_WaterFlowWe_packet_info
+{
     WATERFLOWWE_DEF_ID = 0x028E,
     WATERFLOWWE_DLL_ID = 0x02AE,
     WATERFLOWWE_CLASS_ID = 0x007F,

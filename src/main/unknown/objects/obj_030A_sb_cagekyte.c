@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_030A_SB_CageKyte_packet_info {
+enum obj_030A_SB_CageKyte_packet_info
+{
     SB_CAGEKYTE_DEF_ID = 0x030A,
     SB_CAGEKYTE_DLL_ID = 0x01F2,
     SB_CAGEKYTE_CLASS_ID = 0x0030,

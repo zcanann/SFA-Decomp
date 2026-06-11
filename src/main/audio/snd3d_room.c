@@ -1,9 +1,9 @@
 #include "main/audio/snd3d_room.h"
 
-extern Snd3DEmitter *s3dEmitterRoot;
-extern SndSpatialListener *s3dListenerRoot;
-extern SndSpatialEntry *s3dRoomRoot;
-extern SndStudioInputLink *s3dDoorRoot;
+extern Snd3DEmitter* s3dEmitterRoot;
+extern SndSpatialListener* s3dListenerRoot;
+extern SndSpatialEntry* s3dRoomRoot;
+extern SndStudioInputLink* s3dDoorRoot;
 extern u32 snd_used_studios;
 extern u8 snd_base_studio;
 extern u8 snd_max_studios;
@@ -16,10 +16,11 @@ extern f32 lbl_803E78A0;
 extern void synthSendKeyOff(u32 handle);
 extern void synthActivateStudio(u8 studio, int active, int unk);
 extern void synthDeactivateStudio(u8 studio);
-extern void synthAddStudioInput(u8 studio, u8 *input);
-extern void synthRemoveStudioInput(u8 studio, u8 *input);
+extern void synthAddStudioInput(u8 studio, u8* input);
+extern void synthRemoveStudioInput(u8 studio, u8* input);
 
-typedef struct {
+typedef struct
+{
     f32 vol[129];
     f32 pan[4];
     f32 pan_dpl2[4];
@@ -50,11 +51,11 @@ extern f32 lbl_803E787C;
  * EN v1.0 Address: 0x8027F2AC
  * EN v1.0 Size: 1944b
  */
-void salCalcVolumeMatrix(u8 voltab_index, f32 *out, u32 pan, u32 span, u32 itd, u32 dpl2,
+void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, u32 dpl2,
                          f32 vol, f32 auxa, f32 auxb)
 {
-    SalVolTab *tabs;
-    f32 *vol_tab;
+    SalVolTab* tabs;
+    f32* vol_tab;
     f32 p, sp, t;
     f32 pan_f, pan_fm, span_f, span_fm;
     u32 pan_i, pan_im, span_i, span_im;
@@ -64,38 +65,46 @@ void salCalcVolumeMatrix(u8 voltab_index, f32 *out, u32 pan, u32 span, u32 itd, 
     u32 i;
     f32 v, f, vs, ftmp, one_;
     f32 om_span_f, om_span_fm, om_pan_f, om_pan_fm;
-    f32 *pan1;
+    f32* pan1;
 
     tabs = &lbl_8032FDB8;
-    if (voltab_index == 0) {
+    if (voltab_index == 0)
+    {
         vol_tab = tabs->vol;
     }
-    else {
+    else
+    {
         vol_tab = voiceAdsrSustainTable;
     }
 
-    if (pan == 0x800000) {
+    if (pan == 0x800000)
+    {
         pan = 0;
         span = 0x7f0000;
     }
 
-    if (pan <= 0x10000) {
+    if (pan <= 0x10000)
+    {
         pan2 = 0;
     }
-    else {
+    else
+    {
         pan2 = pan - 0x10000;
     }
-    if (span <= 0x10000) {
+    if (span <= 0x10000)
+    {
         span2 = 0;
     }
-    else {
+    else
+    {
         span2 = span - 0x10000;
     }
 
     p = lbl_803E7870 * (f32)pan2;
     sp = lbl_803E7870 * (f32)span2;
 
-    if (dpl2 != 0) {
+    if (dpl2 != 0)
+    {
         SAL_FMOD1(rpan_f, p);
         rpan_i = (u32)p;
         t = lbl_803E7874 - p;
@@ -103,7 +112,8 @@ void salCalcVolumeMatrix(u8 voltab_index, f32 *out, u32 pan, u32 span, u32 itd, 
         rpan_im = (u32)t;
     }
 
-    if (itd != 0) {
+    if (itd != 0)
+    {
         p = lbl_803E785C + lbl_803E7878 * (p - lbl_803E785C);
     }
 
@@ -118,7 +128,8 @@ void salCalcVolumeMatrix(u8 voltab_index, f32 *out, u32 pan, u32 span, u32 itd, 
     SAL_FMOD1(span_fm, sp);
     span_im = (u32)sp;
 
-    if (dpl2 == 0) {
+    if (dpl2 == 0)
+    {
         ftmp = lbl_803E7858 * vol;
         i = (u32)ftmp;
         one_ = lbl_803E785C;
@@ -152,7 +163,8 @@ void salCalcVolumeMatrix(u8 voltab_index, f32 *out, u32 pan, u32 span, u32 itd, 
         out[7] = v * (om_pan_f * tabs->pan[pan_i] + pan_f * pan1[pan_i]);
         out[6] = v * (om_pan_fm * tabs->pan[pan_im] + pan_fm * pan1[pan_im]);
     }
-    else {
+    else
+    {
         ftmp = lbl_803E7858 * vol;
         i = (u32)ftmp;
         one_ = lbl_803E785C;
@@ -192,23 +204,31 @@ void salCalcVolumeMatrix(u8 voltab_index, f32 *out, u32 pan, u32 span, u32 itd, 
 #pragma fp_contract off
 void s3dUpdateRoomDistances(void)
 {
-    SndSpatialListener *listener;
-    SndSpatialEntry *entry;
+    SndSpatialListener* listener;
+    SndSpatialEntry* entry;
     u32 listenerCount;
 
     listenerCount = 0;
-    for (listener = s3dListenerRoot; listener != NULL; listener = listener->next) {
+    for (listener = s3dListenerRoot; listener != NULL; listener = listener->next)
+    {
         listenerCount++;
     }
 
-    if (listenerCount != 0) {
-        for (entry = s3dRoomRoot; entry != NULL; entry = entry->next) {
+    if (listenerCount != 0)
+    {
+        for (entry = s3dRoomRoot; entry != NULL; entry = entry->next)
+        {
             f32 distanceSq;
-            struct { f32 x, y, z; } d;
+            struct
+            {
+                f32 x, y, z;
+            } d;
 
-            if (entry->assignedVoice != 0xff) {
+            if (entry->assignedVoice != 0xff)
+            {
                 distanceSq = lbl_803E7880;
-                for (listener = s3dListenerRoot; listener != NULL; listener = listener->next) {
+                for (listener = s3dListenerRoot; listener != NULL; listener = listener->next)
+                {
                     d.x = entry->posX - listener->posX;
                     d.y = entry->posY - listener->posY;
                     d.z = entry->posZ - listener->posZ;
@@ -227,28 +247,36 @@ void s3dUpdateRoomDistances(void)
  */
 void s3dAllocateRoomStudios(void)
 {
-    SndSpatialEntry *entry;
-    SndSpatialListener *listener;
+    SndSpatialEntry* entry;
+    SndSpatialListener* listener;
     u32 listenerCount;
 
     s3dUpdateRoomDistances();
 
     listenerCount = 0;
-    for (listener = s3dListenerRoot; listener != NULL; listener = listener->next) {
+    for (listener = s3dListenerRoot; listener != NULL; listener = listener->next)
+    {
         listenerCount++;
     }
 
-    if (listenerCount != 0) {
-        for (entry = s3dRoomRoot; entry != NULL; entry = entry->next) {
-            if (entry->assignedVoice == 0xff) {
-                SndSpatialEntry *evictedEntry;
+    if (listenerCount != 0)
+    {
+        for (entry = s3dRoomRoot; entry != NULL; entry = entry->next)
+        {
+            if (entry->assignedVoice == 0xff)
+            {
+                SndSpatialEntry* evictedEntry;
                 u32 studioCount;
                 f32 distanceSq;
                 int listenerOwned;
-                struct { f32 x, y, z; } d;
+                struct
+                {
+                    f32 x, y, z;
+                } d;
 
                 distanceSq = lbl_803E7880;
-                for (listener = s3dListenerRoot; listener != NULL; listener = listener->next) {
+                for (listener = s3dListenerRoot; listener != NULL; listener = listener->next)
+                {
                     d.x = entry->posX - listener->posX;
                     d.y = entry->posY - listener->posY;
                     d.z = entry->posZ - listener->posZ;
@@ -257,47 +285,60 @@ void s3dAllocateRoomStudios(void)
                 }
                 listenerOwned = false;
                 distanceSq = distanceSq / (f32)listenerCount;
-                for (listener = s3dListenerRoot; listener != NULL; listener = listener->next) {
-                    if (listener->entry == entry) {
+                for (listener = s3dListenerRoot; listener != NULL; listener = listener->next)
+                {
+                    if (listener->entry == entry)
+                    {
                         listenerOwned = true;
                         break;
                     }
                 }
 
                 studioCount = snd_max_studios;
-                if (~(-1 << studioCount) != (~(-1 << studioCount) & snd_used_studios)) {
+                if (~(-1 << studioCount) != (~(-1 << studioCount) & snd_used_studios))
+                {
                     int i;
 
-                    for (i = 0; i < studioCount; i++) {
-                        if ((snd_used_studios & (1 << i)) == 0) {
+                    for (i = 0; i < studioCount; i++)
+                    {
+                        if ((snd_used_studios & (1 << i)) == 0)
+                        {
                             break;
                         }
                     }
                     snd_used_studios |= 1 << i;
                     entry->assignedVoice = (u8)(i + snd_base_studio);
-                } else {
+                }
+                else
+                {
                     f32 worstDistance = lbl_803E7890;
-                    Snd3DEmitter *voice;
-                    SndSpatialEntry *scanEntry;
+                    Snd3DEmitter* voice;
+                    SndSpatialEntry* scanEntry;
 
-                    for (scanEntry = s3dRoomRoot; scanEntry != NULL; scanEntry = scanEntry->next) {
+                    for (scanEntry = s3dRoomRoot; scanEntry != NULL; scanEntry = scanEntry->next)
+                    {
                         if (scanEntry->assignedVoice != 0xff &&
-                            worstDistance < scanEntry->averageDistanceSq) {
+                            worstDistance < scanEntry->averageDistanceSq)
+                        {
                             evictedEntry = scanEntry;
                             worstDistance = scanEntry->averageDistanceSq;
                         }
                     }
-                    if (!listenerOwned && worstDistance <= distanceSq) {
+                    if (!listenerOwned && worstDistance <= distanceSq)
+                    {
                         continue;
                     }
-                    for (voice = s3dEmitterRoot; voice != NULL; voice = voice->next) {
-                        if (voice->entry == evictedEntry) {
+                    for (voice = s3dEmitterRoot; voice != NULL; voice = voice->next)
+                    {
+                        if (voice->entry == evictedEntry)
+                        {
                             synthSendKeyOff(voice->handle);
                             voice->flags |= 0x80000;
                             voice->handle = 0xffffffff;
                         }
                     }
-                    if (evictedEntry->evictCallback != NULL) {
+                    if (evictedEntry->evictCallback != NULL)
+                    {
                         evictedEntry->evictCallback(evictedEntry->assignedVoice);
                     }
                     synthDeactivateStudio(evictedEntry->assignedVoice);
@@ -307,41 +348,60 @@ void s3dAllocateRoomStudios(void)
                 }
 
                 entry->averageDistanceSq = distanceSq;
-                if (listenerOwned) {
+                if (listenerOwned)
+                {
                     entry->fade = 0x7f0000;
-                } else {
+                }
+                else
+                {
                     entry->fade = 0;
                 }
-                if ((f32)(lbl_803E7894 * (f32)entry->fade) >= lbl_803E7898) {
+                if ((f32)(lbl_803E7894 * (f32)entry->fade) >= lbl_803E7898)
+                {
                     synthActivateStudio(entry->assignedVoice, 1, 0);
-                } else {
+                }
+                else
+                {
                     synthActivateStudio(entry->assignedVoice, 0, 0);
                 }
-                if (entry->activateCallback != NULL) {
+                if (entry->activateCallback != NULL)
+                {
                     entry->activateCallback(entry->assignedVoice, entry->callbackUser);
                 }
-            } else {
-                if ((entry->flags & 0x80000000) != 0) {
+            }
+            else
+            {
+                if ((entry->flags & 0x80000000) != 0)
+                {
                     entry->fade += 0x40000;
-                    if (entry->fade >= 0x7f0000) {
+                    if (entry->fade >= 0x7f0000)
+                    {
                         entry->fade = 0x7f0000;
                         entry->flags &= 0x7fffffff;
                     }
-                    if ((f32)(lbl_803E7894 * (f32)entry->fade) >= lbl_803E7898) {
+                    if ((f32)(lbl_803E7894 * (f32)entry->fade) >= lbl_803E7898)
+                    {
                         synthActivateStudio(entry->assignedVoice, 1, 0);
-                    } else {
+                    }
+                    else
+                    {
                         synthActivateStudio(entry->assignedVoice, 0, 0);
                     }
                 }
-                if ((entry->flags & 0x40000000) != 0) {
+                if ((entry->flags & 0x40000000) != 0)
+                {
                     entry->fade -= 0x40000;
-                    if ((s32)entry->fade >= 0) {
+                    if ((s32)entry->fade >= 0)
+                    {
                         entry->fade = 0;
                         entry->flags &= 0xbfffffff;
                     }
-                    if ((f32)(lbl_803E7894 * (f32)entry->fade) >= lbl_803E7898) {
+                    if ((f32)(lbl_803E7894 * (f32)entry->fade) >= lbl_803E7898)
+                    {
                         synthActivateStudio(entry->assignedVoice, 1, 0);
-                    } else {
+                    }
+                    else
+                    {
                         synthActivateStudio(entry->assignedVoice, 0, 0);
                     }
                 }
@@ -356,41 +416,54 @@ void s3dAllocateRoomStudios(void)
  */
 void s3dUpdateDoorStudioInputs(void)
 {
-    SndStudioInputLink *link;
+    SndStudioInputLink* link;
     f32 scale;
     s32 v0, v1;
 
     scale = lbl_803E78A0;
-    for (link = s3dDoorRoot; link != NULL; link = link->next) {
-        if ((link->flags & 0x80000000) == 0) {
-            if (link->source->assignedVoice != 0xff) {
-                if (link->target->assignedVoice != 0xff) {
+    for (link = s3dDoorRoot; link != NULL; link = link->next)
+    {
+        if ((link->flags & 0x80000000) == 0)
+        {
+            if (link->source->assignedVoice != 0xff)
+            {
+                if (link->target->assignedVoice != 0xff)
+                {
                     v0 = (s32)(scale * link->inputScale);
                     v1 = (s32)((f32)link->sendLevel * link->inputScale);
                     link->studioInput[1] = v1;
                     link->studioInput[2] = 0;
                     link->studioInput[0] = v0;
-                    if ((link->flags & 1) != 0) {
+                    if ((link->flags & 1) != 0)
+                    {
                         link->studioInput[3] = link->target->assignedVoice;
                         synthAddStudioInput(link->source->assignedVoice, link->studioInput);
-                    } else {
+                    }
+                    else
+                    {
                         link->studioInput[3] = link->source->assignedVoice;
                         synthAddStudioInput(link->target->assignedVoice, link->studioInput);
                     }
                     link->flags |= 0x80000000;
                 }
             }
-        } else {
+        }
+        else
+        {
             u8 sourceVoice = link->source->assignedVoice;
 
-            if (sourceVoice == 0xff || link->target->assignedVoice == 0xff) {
+            if (sourceVoice == 0xff || link->target->assignedVoice == 0xff)
+            {
                 if ((sourceVoice != 0xff && sourceVoice == link->activeInput) ||
                     (link->target->assignedVoice != 0xff &&
-                     link->target->assignedVoice == link->activeInput)) {
+                        link->target->assignedVoice == link->activeInput))
+                {
                     synthRemoveStudioInput(link->activeInput, link->studioInput);
                 }
                 link->flags &= 0x7fffffff;
-            } else {
+            }
+            else
+            {
                 v0 = (s32)(scale * link->inputScale);
                 v1 = (s32)((f32)link->sendLevel * link->inputScale);
                 link->studioInput[1] = v1;

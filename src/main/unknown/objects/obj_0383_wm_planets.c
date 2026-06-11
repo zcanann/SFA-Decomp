@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0383_WM_Planets_packet_info {
+enum obj_0383_WM_Planets_packet_info
+{
     WM_PLANETS_DEF_ID = 0x0383,
     WM_PLANETS_DLL_ID = 0x0210,
     WM_PLANETS_CLASS_ID = 0x0030,

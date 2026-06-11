@@ -53,7 +53,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0491_curve_packet_info {
+enum obj_0491_curve_packet_info
+{
     CURVE_DEF_ID = 0x0491,
     CURVE_DLL_ID = 0x0125,
     CURVE_CLASS_ID = 0x002C,

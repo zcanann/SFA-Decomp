@@ -1,10 +1,10 @@
 #include "main/audio/hw_volume.h"
 #include "main/audio/dsp_voice.h"
 
-extern void salDeactivateVoice(void *entry);
+extern void salDeactivateVoice(void* entry);
 extern void salActivateStudio(void);
 extern void salDeactivateStudio(void);
-extern u8 *dspVoice;
+extern u8* dspVoice;
 extern u8 lbl_803CC1E0[];
 extern u8 lbl_802C2820[];
 
@@ -21,24 +21,25 @@ extern f32 lbl_803E78E4;
  */
 void hwSetVolume(int slot, undefined4 p2, f32 a, f32 b, f32 c, u32 aux, undefined4 p7)
 {
-    DSPvoice *voice;
-    DSPstudioinfo *aux_entry;
+    DSPvoice* voice;
+    DSPstudioinfo* aux_entry;
     f32 out[9];
     int v0, v1, v2;
 
-    voice = (DSPvoice *)(dspVoice + slot * 0xf4);
+    voice = (DSPvoice*)(dspVoice + slot * 0xf4);
 
     if (a >= 1.0f) a = 1.0f;
     if (b >= 1.0f) b = 1.0f;
     if (c >= 1.0f) c = 1.0f;
 
-    aux_entry = (DSPstudioinfo *)(lbl_803CC1E0 + voice->studio * 0xbc);
+    aux_entry = (DSPstudioinfo*)(lbl_803CC1E0 + voice->studio * 0xbc);
 
     {
-        extern void salCalcVolumeMatrix(int voltab_index, f32 *out, u32 pan, u32 span, u32 itd, u32 dpl2, f32 a, f32 b, f32 c);
+        extern void salCalcVolumeMatrix(int voltab_index, f32* out, u32 pan, u32 span, u32 itd, u32 dpl2, f32 a, f32 b,
+                                        f32 c);
         u32 f0w = voice->flags;
         salCalcVolumeMatrix(p2, out, aux, p7, (f0w & 0x80000000u) != 0,
-                        aux_entry->type == 1, a, b, c);
+                            aux_entry->type == 1, a, b, c);
     }
 
     v0 = (s32)(lbl_803E78E4 * out[0]);
@@ -47,7 +48,8 @@ void hwSetVolume(int slot, undefined4 p2, f32 a, f32 b, f32 c, u32 aux, undefine
     if (voice->lastUpdate.vol == 0xff
         || voice->volL != (u16)v0
         || voice->volR != (u16)v1
-        || voice->volS != (u16)v2) {
+        || voice->volS != (u16)v2)
+    {
         voice->volL = v0;
         voice->volR = v1;
         voice->volS = v2;
@@ -61,7 +63,8 @@ void hwSetVolume(int slot, undefined4 p2, f32 a, f32 b, f32 c, u32 aux, undefine
     if (voice->lastUpdate.volA == 0xff
         || voice->volLa != (u16)v0
         || voice->volRa != (u16)v1
-        || voice->volSa != (u16)v2) {
+        || voice->volSa != (u16)v2)
+    {
         voice->volLa = v0;
         voice->volRa = v1;
         voice->volSa = v2;
@@ -75,7 +78,8 @@ void hwSetVolume(int slot, undefined4 p2, f32 a, f32 b, f32 c, u32 aux, undefine
     if (voice->lastUpdate.volB == 0xff
         || voice->volLb != (u16)v0
         || voice->volRb != (u16)v1
-        || voice->volSb != (u16)v2) {
+        || voice->volSb != (u16)v2)
+    {
         voice->volLb = v0;
         voice->volRb = v1;
         voice->volSb = v2;
@@ -83,10 +87,11 @@ void hwSetVolume(int slot, undefined4 p2, f32 a, f32 b, f32 c, u32 aux, undefine
         voice->lastUpdate.volB = 0;
     }
 
-    if (voice->flags & 0x80000000) {
-        u8 *p = lbl_802C2820 + (((aux >> 16) & 0xff) << 1);
-        voice->itdShiftL = *(u16 *)p;
-        voice->itdShiftR = 0x20 - *(u16 *)p;
+    if (voice->flags & 0x80000000)
+    {
+        u8* p = lbl_802C2820 + (((aux >> 16) & 0xff) << 1);
+        voice->itdShiftL = *(u16*)p;
+        voice->itdShiftR = 0x20 - *(u16*)p;
         voice->changed[0] |= 0x200;
     }
 }
@@ -112,9 +117,9 @@ void hwOff(int slot)
  * EN v1.1 Address: 0x80283B38
  * EN v1.1 Size: 40b
  */
-void hwSetAUXProcessingCallbacks(u8 idx, void *cb0, void *cb1, void *cb2, void *cb3)
+void hwSetAUXProcessingCallbacks(u8 idx, void* cb0, void* cb1, void* cb2, void* cb3)
 {
-    DSPstudioinfo *entry = (DSPstudioinfo *)(lbl_803CC1E0 + idx * 0xbc);
+    DSPstudioinfo* entry = (DSPstudioinfo*)(lbl_803CC1E0 + idx * 0xbc);
     entry->auxAHandler = cb0;
     entry->auxAUser = cb1;
     entry->auxBHandler = cb2;

@@ -21,7 +21,8 @@
  */
 
 #if 0
-enum object_bin2_packet_info {
+enum object_bin2_packet_info
+{
     WARPCIGAR_DEF_ID = 0x05C3,
     WARPCIGAR_LIVE_BYTES = 0xA0,
 };

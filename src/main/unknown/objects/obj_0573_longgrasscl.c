@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0573_LongGrassCl_packet_info {
+enum obj_0573_LongGrassCl_packet_info
+{
     LONGGRASSCL_DEF_ID = 0x0573,
     LONGGRASSCL_DLL_ID = 0x02AD,
     LONGGRASSCL_CLASS_ID = 0x007F,

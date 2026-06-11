@@ -49,7 +49,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02AE_SH_thorntai_packet_info {
+enum obj_02AE_SH_thorntai_packet_info
+{
     SH_THORNTAI_DEF_ID = 0x02AE,
     SH_THORNTAI_DLL_ID = 0x01AD,
     SH_THORNTAI_CLASS_ID = 0x0044,

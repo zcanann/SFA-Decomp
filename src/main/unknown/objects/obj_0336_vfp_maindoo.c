@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0336_VFP_Maindoo_packet_info {
+enum obj_0336_VFP_Maindoo_packet_info
+{
     VFP_MAINDOO_DEF_ID = 0x0336,
     VFP_MAINDOO_DLL_ID = 0x012E,
     VFP_MAINDOO_CLASS_ID = 0x0061,

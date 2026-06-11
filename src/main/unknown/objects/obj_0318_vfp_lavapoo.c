@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0318_VFP_lavapoo_packet_info {
+enum obj_0318_VFP_lavapoo_packet_info
+{
     VFP_LAVAPOO_DEF_ID = 0x0318,
     VFP_LAVAPOO_DLL_ID = 0x0226,
     VFP_LAVAPOO_CLASS_ID = 0x0030,

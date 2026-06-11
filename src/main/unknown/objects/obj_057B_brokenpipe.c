@@ -63,7 +63,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_057B_BrokenPipe_packet_info {
+enum obj_057B_BrokenPipe_packet_info
+{
     BROKENPIPE_DEF_ID = 0x057B,
     BROKENPIPE_DLL_ID = 0x02B0,
     BROKENPIPE_CLASS_ID = 0x0061,

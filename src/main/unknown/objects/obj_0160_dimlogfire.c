@@ -63,7 +63,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0160_DIMLogFire_packet_info {
+enum obj_0160_DIMLogFire_packet_info
+{
     DIMLOGFIRE_DEF_ID = 0x0160,
     DIMLOGFIRE_DLL_ID = 0x01C0,
     DIMLOGFIRE_CLASS_ID = 0x0030,

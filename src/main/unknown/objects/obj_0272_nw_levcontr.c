@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0272_NW_levcontr_packet_info {
+enum obj_0272_NW_levcontr_packet_info
+{
     NW_LEVCONTR_DEF_ID = 0x0272,
     NW_LEVCONTR_DLL_ID = 0x01A5,
     NW_LEVCONTR_CLASS_ID = 0x0061,

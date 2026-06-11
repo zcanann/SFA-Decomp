@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04DE_Duster_packet_info {
+enum obj_04DE_Duster_packet_info
+{
     DUSTER_DEF_ID = 0x04DE,
     DUSTER_DLL_ID = 0x0118,
     DUSTER_CLASS_ID = 0x0006,

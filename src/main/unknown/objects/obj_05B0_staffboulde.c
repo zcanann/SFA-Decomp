@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_05B0_StaffBoulde_packet_info {
+enum obj_05B0_StaffBoulde_packet_info
+{
     STAFFBOULDE_DEF_ID = 0x05B0,
     STAFFBOULDE_DLL_ID = 0x011C,
     STAFFBOULDE_CLASS_ID = 0x007A,

@@ -48,7 +48,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_05A9_WaterFallSp_packet_info {
+enum obj_05A9_WaterFallSp_packet_info
+{
     WATERFALLSP_DEF_ID = 0x05A9,
     WATERFALLSP_DLL_ID = 0x0132,
     WATERFALLSP_CLASS_ID = 0x0073,

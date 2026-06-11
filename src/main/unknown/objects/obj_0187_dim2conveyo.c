@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0187_DIM2Conveyo_packet_info {
+enum obj_0187_DIM2Conveyo_packet_info
+{
     DIM2CONVEYO_DEF_ID = 0x0187,
     DIM2CONVEYO_DLL_ID = 0x01D5,
     DIM2CONVEYO_CLASS_ID = 0x0030,

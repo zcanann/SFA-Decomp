@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_053B_ARWSquadron_packet_info {
+enum obj_053B_ARWSquadron_packet_info
+{
     ARWSQUADRON_DEF_ID = 0x053B,
     ARWSQUADRON_DLL_ID = 0x02A6,
     ARWSQUADRON_CLASS_ID = 0x007C,

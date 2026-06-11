@@ -73,7 +73,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_059B_WaterLillyF_packet_info {
+enum obj_059B_WaterLillyF_packet_info
+{
     WATERLILLYF_DEF_ID = 0x059B,
     WATERLILLYF_DLL_ID = 0x011A,
     WATERLILLYF_CLASS_ID = 0x0061,

@@ -72,7 +72,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02E0_BossTRexPor_packet_info {
+enum obj_02E0_BossTRexPor_packet_info
+{
     BOSSTREXPOR_DEF_ID = 0x02E0,
     BOSSTREXPOR_DLL_ID = 0x0110,
     BOSSTREXPOR_CLASS_ID = 0x0053,

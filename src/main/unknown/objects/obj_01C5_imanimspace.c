@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01C5_IMAnimSpace_packet_info {
+enum obj_01C5_IMAnimSpace_packet_info
+{
     IMANIMSPACE_DEF_ID = 0x01C5,
     IMANIMSPACE_DLL_ID = 0x016E,
     IMANIMSPACE_CLASS_ID = 0x0030,

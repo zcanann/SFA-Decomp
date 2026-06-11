@@ -4,24 +4,24 @@
 
 int laser_getExtraSize(void)
 {
-  return 0;
+    return 0;
 }
 
 int laser_getObjectTypeId(void)
 {
-  return 0;
+    return 0;
 }
 
 void laser_freeUnsupported(void)
 {
-  OSReport(sTextBlockInitNoLongerSupported);
-  return;
+    OSReport(sTextBlockInitNoLongerSupported);
+    return;
 }
 
 void laser_renderUnsupported(void)
 {
-  OSReport(sTextBlockInitNoLongerSupported);
-  return;
+    OSReport(sTextBlockInitNoLongerSupported);
+    return;
 }
 
 void laser_hitDetectUnsupported(void)
@@ -30,14 +30,14 @@ void laser_hitDetectUnsupported(void)
 
 void laser_updateUnsupported(void)
 {
-  OSReport(sTextBlockInitNoLongerSupported);
-  return;
+    OSReport(sTextBlockInitNoLongerSupported);
+    return;
 }
 
 void laser_init(void)
 {
-  OSReport(sLaserInitNoLongerSupported);
-  return;
+    OSReport(sLaserInitNoLongerSupported);
+    return;
 }
 
 void laser_releaseUnsupported(void)

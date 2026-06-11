@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_032E_VFP_DoorSwi_packet_info {
+enum obj_032E_VFP_DoorSwi_packet_info
+{
     VFP_DOORSWI_DEF_ID = 0x032E,
     VFP_DOORSWI_DLL_ID = 0x0220,
     VFP_DOORSWI_CLASS_ID = 0x0030,

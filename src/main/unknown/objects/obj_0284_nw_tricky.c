@@ -59,7 +59,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0284_NW_tricky_packet_info {
+enum obj_0284_NW_tricky_packet_info
+{
     NW_TRICKY_DEF_ID = 0x0284,
     NW_TRICKY_DLL_ID = 0x01A2,
     NW_TRICKY_CLASS_ID = 0x0061,

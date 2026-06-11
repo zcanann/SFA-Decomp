@@ -10,7 +10,8 @@
 #include "main/track_dolphin.h"
 #include "dolphin/os/OSFastCast.h"
 
-typedef struct TrackP6Entry {
+typedef struct TrackP6Entry
+{
     f32 relX0;
     f32 relY0;
     f32 relZ0;
@@ -365,16 +366,16 @@ extern f32 lbl_803DF8D8;
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 __AR_Callback;
 extern f32 __AR_Size;
-extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, int f);
-extern void vecRotateZXY(void *xf, f32 *out);
+extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
+extern void vecRotateZXY(void* xf, f32* out);
 extern f32 lbl_8038D7DC[];
 extern s16 lbl_803DCEF2;
-extern f32 PSVECDotProduct(f32 *a, f32 *b);
-extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
-extern void PSVECScale(f32 *src, f32 *dst, f32 s);
+extern f32 PSVECDotProduct(f32 * a, f32 * b);
+extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * out);
+extern void PSVECScale(f32* src, f32* dst, f32 s);
 extern f32 lbl_803DEC6C;
 extern f32 lbl_803DEC70;
-extern void PSVECNormalize(f32 *src, f32 *dst);
+extern void PSVECNormalize(f32 * src, f32 * dst);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803879B0[];
 extern s16 lbl_803DB65A;
@@ -445,68 +446,77 @@ extern char s_trackIntersect__FUNC_OVERFLOW__d_8030f43c[];
  */
 void mapBlockRender_setVtxDcrs(flag, param_2, sh, bs)
 u8 flag;
-int *param_2;
+int* param_2;
 int sh;
-int *bs;
+
+int* bs;
 {
     extern void GXClearVtxDesc(void);
     extern void GXSetVtxDesc(int attr, int type);
     u32 val;
     int pos;
     int off;
-    u8 *p;
+    u8* p;
     int bit;
     u32 val2;
     int pos2;
     int off2;
-    u8 *q;
+    u8* q;
     int bit2;
     u32 val3;
     int pos3;
     int off3;
-    u8 *r;
+    u8* r;
     int bit3;
     int i;
 
-    if (flag != 0) {
+    if (flag != 0)
+    {
         GXClearVtxDesc();
     }
     pos = bs[4];
     off = pos >> 3;
-    val = *(u8 *)(bs[0] + off);
-    p = (u8 *)bs[0] + off;
+    val = *(u8*)(bs[0] + off);
+    p = (u8*)bs[0] + off;
     val |= p[1] << 8;
     val |= p[2] << 16;
     bs[4] = pos + 1;
     bit = (val >> (pos & 7)) & 1;
-    if (flag != 0) {
+    if (flag != 0)
+    {
         GXSetVtxDesc(9, bit ? 3 : 2);
     }
     pos2 = bs[4];
     off2 = pos2 >> 3;
-    val2 = *(u8 *)(bs[0] + off2);
-    q = (u8 *)bs[0] + off2;
+    val2 = *(u8*)(bs[0] + off2);
+    q = (u8*)bs[0] + off2;
     val2 |= q[1] << 8;
     val2 |= q[2] << 16;
     bs[4] = pos2 + 1;
     bit2 = (val2 >> (pos2 & 7)) & 1;
-    if (flag != 0) {
+    if (flag != 0)
+    {
         GXSetVtxDesc(11, bit2 ? 3 : 2);
     }
     pos3 = bs[4];
     off3 = pos3 >> 3;
-    val3 = *(u8 *)(bs[0] + off3);
-    r = (u8 *)bs[0] + off3;
+    val3 = *(u8*)(bs[0] + off3);
+    r = (u8*)bs[0] + off3;
     val3 |= r[1] << 8;
     val3 |= r[2] << 16;
     bs[4] = pos3 + 1;
     bit3 = (val3 >> (pos3 & 7)) & 1;
-    if (flag != 0) {
-        if ((u32)sh != 0 && (*(u32 *)(sh + 0x3c) & 0x80000000) == 0) {
-            for (i = 0; i < *(u8 *)(sh + 0x41); i++) {
+    if (flag != 0)
+    {
+        if ((u32)sh != 0 && (*(u32*)(sh + 0x3c) & 0x80000000) == 0)
+        {
+            for (i = 0; i < *(u8*)(sh + 0x41); i++)
+            {
                 GXSetVtxDesc(i + 13, bit3 ? 3 : 2);
             }
-        } else {
+        }
+        else
+        {
             GXSetVtxDesc(13, bit3 ? 3 : 2);
         }
     }
@@ -525,41 +535,42 @@ int *bs;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8005fab0(int param_1,float *param_2)
+void FUN_8005fab0(int param_1, float* param_2)
 {
-  float afStack_68 [3];
-  float local_5c;
-  float local_4c;
-  float local_3c;
-  float afStack_38 [12];
-  
-  FUN_8025d80c(param_2,0);
-  FUN_802475e4(param_2,afStack_68);
-  local_5c = lbl_803DF84C;
-  local_4c = lbl_803DF84C;
-  local_3c = lbl_803DF84C;
-  FUN_8025d848(afStack_68,0);
-  FUN_80247618((float *)&DAT_80397450,param_2,afStack_38);
-  FUN_8025d8c4(afStack_38,0x24,0);
-  FUN_802585d8(9,*(uint *)(param_1 + 0x58),6);
-  FUN_802585d8(0xb,*(uint *)(param_1 + 0x5c),2);
-  FUN_802585d8(0xd,*(uint *)(param_1 + 0x60),4);
-  FUN_802585d8(0xe,*(uint *)(param_1 + 0x60),4);
-  return;
+    float afStack_68[3];
+    float local_5c;
+    float local_4c;
+    float local_3c;
+    float afStack_38[12];
+
+    FUN_8025d80c(param_2, 0);
+    FUN_802475e4(param_2, afStack_68);
+    local_5c = lbl_803DF84C;
+    local_4c = lbl_803DF84C;
+    local_3c = lbl_803DF84C;
+    FUN_8025d848(afStack_68, 0);
+    FUN_80247618((float*)&DAT_80397450, param_2, afStack_38);
+    FUN_8025d8c4(afStack_38, 0x24, 0);
+    FUN_802585d8(9, *(uint*)(param_1 + 0x58), 6);
+    FUN_802585d8(0xb, *(uint*)(param_1 + 0x5c), 2);
+    FUN_802585d8(0xd, *(uint*)(param_1 + 0x60), 4);
+    FUN_802585d8(0xe, *(uint*)(param_1 + 0x60), 4);
+    return;
 }
 
 
-extern void GXLoadPosMtxImm(void *mtx, int slot);
-extern void PSMTXCopy(void *src, void *dst);
-extern void GXLoadNrmMtxImm(void *mtx, int slot);
-extern void PSMTXConcat(void *a, void *b, void *out);
-extern void GXLoadTexMtxImm(void *mtx, int slot, int type);
-extern void GXSetArray(int attr, void *base, int stride);
+extern void GXLoadPosMtxImm(void* mtx, int slot);
+extern void PSMTXCopy(void* src, void* dst);
+extern void GXLoadNrmMtxImm(void* mtx, int slot);
+extern void PSMTXConcat(void* a, void* b, void* out);
+extern void GXLoadTexMtxImm(void* mtx, int slot, int type);
+extern void GXSetArray(int attr, void* base, int stride);
 extern f32 lbl_803DEBCC;
 extern u8 lbl_803967F0[];
 
 #pragma dont_inline on
-void setupToRenderMapBlock(int *block, void *posMtx) {
+void setupToRenderMapBlock(int* block, void* posMtx)
+{
     f32 out[12];
     f32 tmp[12];
     f32 fc;
@@ -573,23 +584,23 @@ void setupToRenderMapBlock(int *block, void *posMtx) {
     GXLoadNrmMtxImm(tmp, 0);
     PSMTXConcat(lbl_803967F0, posMtx, out);
     GXLoadTexMtxImm(out, 0x24, 0);
-    GXSetArray(9, *(void **)((char *)block + 0x58), 6);
-    GXSetArray(11, *(void **)((char *)block + 0x5C), 2);
-    GXSetArray(13, *(void **)((char *)block + 0x60), 4);
-    GXSetArray(14, *(void **)((char *)block + 0x60), 4);
+    GXSetArray(9, *(void**)((char*)block + 0x58), 6);
+    GXSetArray(11, *(void**)((char*)block + 0x5C), 2);
+    GXSetArray(13, *(void**)((char*)block + 0x60), 4);
+    GXSetArray(14, *(void**)((char*)block + 0x60), 4);
 }
 #pragma dont_inline reset
 
-extern void *Camera_GetViewMatrix(void);
-extern void modelRenderInstrsState_init(int *state, int ptr, int a, int b);
-extern int mapBlockRender_setShader(int a, int *obj, int *state);
-extern void mapBlockRender_callList(int a, int b, int *obj, int shader, int *state, f32 *m);
+extern void* Camera_GetViewMatrix(void);
+extern void modelRenderInstrsState_init(int* state, int ptr, int a, int b);
+extern int mapBlockRender_setShader(int a, int* obj, int* state);
+extern void mapBlockRender_callList(int a, int b, int* obj, int shader, int* state, f32* m);
 
 #pragma push
 #pragma scheduling off
-void renderMapBlock(void *objp, u8 type)
+void renderMapBlock(void* objp, u8 type)
 {
-    int *o = (int *)objp;
+    int* o = (int*)objp;
     int state[5];
     f32 m[16];
     int ptr;
@@ -597,39 +608,47 @@ void renderMapBlock(void *objp, u8 type)
     int shader;
     int flag;
     int done;
-    void *viewMtx;
+    void* viewMtx;
 
     shader = 0;
     flag = 0;
-    if (type == 1) {
-        ptr = *(int *)&((GameObject *)o)->anim.banks;
-        count = *(u16 *)((char *)o + 0x86);
-    } else if (type == 2) {
-        ptr = *(int *)&((GameObject *)o)->anim.previousLocalPosX;
-        count = *(u16 *)((char *)o + 0x88);
-    } else {
-        ptr = *(int *)((char *)o + 0x78);
-        count = *(u16 *)((char *)o + 0x84);
+    if (type == 1)
+    {
+        ptr = *(int*)&((GameObject*)o)->anim.banks;
+        count = *(u16*)((char*)o + 0x86);
+    }
+    else if (type == 2)
+    {
+        ptr = *(int*)&((GameObject*)o)->anim.previousLocalPosX;
+        count = *(u16*)((char*)o + 0x88);
+    }
+    else
+    {
+        ptr = *(int*)((char*)o + 0x78);
+        count = *(u16*)((char*)o + 0x84);
         flag = 1;
     }
     if ((u16)count == 0) return;
     viewMtx = Camera_GetViewMatrix();
-    PSMTXConcat(viewMtx, (char *)o + 0xc, m);
-    if ((u32)(u8)flag != 0)
-        setupToRenderMapBlock(o, m);
+    PSMTXConcat(viewMtx, (char*)o + 0xc, m);
+    if ((u32)(u8)flag != 0
+    )
+    setupToRenderMapBlock(o, m);
     modelRenderInstrsState_init(state, ptr, (u16)count << 3, (u16)count << 3);
     done = 0;
-    while (!done) {
+    while (!done)
+    {
         u32 word;
         int op;
         int pos = state[4];
-        u8 *bp = (u8 *)(state[0] + (pos >> 3));
+        u8* bp = (u8*)(state[0] + (pos >> 3));
         word = bp[0];
         word |= bp[1] << 8;
         word |= bp[2] << 16;
         state[4] = pos + 4;
         op = (word >> (pos & 7)) & 0xf;
-        switch (op) {
+        switch (op)
+        {
         case 3:
             mapBlockRender_setVtxDcrs(flag, o, shader, state);
             break;
@@ -639,22 +658,23 @@ void renderMapBlock(void *objp, u8 type)
         case 2:
             mapBlockRender_callList(flag, 0, o, shader, state, m);
             break;
-        case 4: {
-            u32 word2;
-            int cnt;
-            int j;
-            u8 *bp2;
-            int pos2 = pos + 4;
-            bp2 = (u8 *)(state[0] + (pos2 >> 3));
-            word2 = bp2[0];
-            word2 |= bp2[1] << 8;
-            word2 |= bp2[2] << 16;
-            state[4] = pos2 + 4;
-            cnt = (word2 >> (pos2 & 7)) & 0xf;
-            for (j = 0; j < cnt; j++)
-                ((int volatile *)state)[4] = state[4] + 8;
-            break;
-        }
+        case 4:
+            {
+                u32 word2;
+                int cnt;
+                int j;
+                u8* bp2;
+                int pos2 = pos + 4;
+                bp2 = (u8*)(state[0] + (pos2 >> 3));
+                word2 = bp2[0];
+                word2 |= bp2[1] << 8;
+                word2 |= bp2[2] << 16;
+                state[4] = pos2 + 4;
+                cnt = (word2 >> (pos2 & 7)) & 0xf;
+                for (j = 0; j < cnt; j++)
+                    ((int volatile*)state)[4] = state[4] + 8;
+                break;
+            }
         case 5:
             done = 1;
             break;
@@ -679,41 +699,48 @@ void renderMapBlock(void *objp, u8 type)
  */
 void FUN_8005fe14(int param_1)
 {
-  bool bVar1;
-  uint uVar2;
-  byte bVar3;
-  
-  if (99 < DAT_803dda86) {
-    return;
-  }
-  bVar3 = 0;
-  do {
-    if (4 < bVar3) {
-      bVar1 = true;
-LAB_800606c0:
-      if ((!bVar1) && (*(char *)(param_1 + 0x2f9) == '\0')) {
+    bool bVar1;
+    uint uVar2;
+    byte bVar3;
+
+    if (99 < DAT_803dda86)
+    {
         return;
-      }
-      if (!bVar1) {
-        *(undefined *)(param_1 + 0x2fa) = 0xf0;
-      }
-      uVar2 = (uint)DAT_803dda86;
-      DAT_803dda86 = DAT_803dda86 + 1;
-      (&DAT_80382c98)[uVar2] = param_1;
-      return;
     }
-    uVar2 = (uint)bVar3;
-    if (lbl_803DF84C +
-        (float)(&DAT_803885a8)[uVar2 * 5] +
-        (float)(&DAT_803885a4)[uVar2 * 5] * (*(float *)(param_1 + 0x18) - lbl_803DDA5C) +
-        *(float *)(param_1 + 0x14) * (float)(&DAT_803885a0)[uVar2 * 5] +
-        (float)(&DAT_8038859c)[uVar2 * 5] * (*(float *)(param_1 + 0x10) - lbl_803DDA58) <
-        lbl_803DF84C) {
-      bVar1 = false;
-      goto LAB_800606c0;
+    bVar3 = 0;
+    do
+    {
+        if (4 < bVar3)
+        {
+            bVar1 = true;
+        LAB_800606c0:
+            if ((!bVar1) && (*(char*)(param_1 + 0x2f9) == '\0'))
+            {
+                return;
+            }
+            if (!bVar1)
+            {
+                *(undefined*)(param_1 + 0x2fa) = 0xf0;
+            }
+            uVar2 = (uint)DAT_803dda86;
+            DAT_803dda86 = DAT_803dda86 + 1;
+            (&DAT_80382c98)[uVar2] = param_1;
+            return;
+        }
+        uVar2 = (uint)bVar3;
+        if (lbl_803DF84C +
+            (float)(&DAT_803885a8)[uVar2 * 5] +
+            (float)(&DAT_803885a4)[uVar2 * 5] * (*(float*)(param_1 + 0x18) - lbl_803DDA5C) +
+            *(float*)(param_1 + 0x14) * (float)(&DAT_803885a0)[uVar2 * 5] +
+            (float)(&DAT_8038859c)[uVar2 * 5] * (*(float*)(param_1 + 0x10) - lbl_803DDA58) <
+            lbl_803DF84C)
+        {
+            bVar1 = false;
+            goto LAB_800606c0;
+        }
+        bVar3 = bVar3 + 1;
     }
-    bVar3 = bVar3 + 1;
-  } while( true );
+    while (true);
 }
 
 
@@ -730,18 +757,18 @@ LAB_800606c0:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8005ff90(short *param_1,float *param_2)
+void FUN_8005ff90(short* param_1, float* param_2)
 {
-  double dVar1;
-  float fVar2;
-  
-  fVar2 = lbl_803DF8A0;
-  dVar1 = DOUBLE_803df840;
-  *param_2 = (float)((double)CONCAT44(0x43300000,(int)*param_1 ^ 0x80000000) - DOUBLE_803df840) *
-             lbl_803DF8A0;
-  param_2[1] = (float)((double)CONCAT44(0x43300000,(int)param_1[1] ^ 0x80000000) - dVar1) * fVar2;
-  param_2[2] = (float)((double)CONCAT44(0x43300000,(int)param_1[2] ^ 0x80000000) - dVar1) * fVar2;
-  return;
+    double dVar1;
+    float fVar2;
+
+    fVar2 = lbl_803DF8A0;
+    dVar1 = DOUBLE_803df840;
+    *param_2 = (float)((double)CONCAT44(0x43300000, (int)*param_1 ^ 0x80000000) - DOUBLE_803df840) *
+        lbl_803DF8A0;
+    param_2[1] = (float)((double)CONCAT44(0x43300000, (int)param_1[1] ^ 0x80000000) - dVar1) * fVar2;
+    param_2[2] = (float)((double)CONCAT44(0x43300000, (int)param_1[2] ^ 0x80000000) - dVar1) * fVar2;
+    return;
 }
 
 
@@ -760,7 +787,7 @@ void FUN_8005ff90(short *param_1,float *param_2)
  */
 uint FUN_80060058(int param_1)
 {
-  return *(uint *)(param_1 + 0x10) >> 0x18;
+    return *(uint*)(param_1 + 0x10) >> 0x18;
 }
 
 
@@ -777,9 +804,9 @@ uint FUN_80060058(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800600b4(int param_1,int param_2)
+int FUN_800600b4(int param_1, int param_2)
 {
-  return *(int *)(param_1 + 0x4c) + param_2 * 8;
+    return *(int*)(param_1 + 0x4c) + param_2 * 8;
 }
 
 /*
@@ -795,9 +822,9 @@ int FUN_800600b4(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800600c4(int param_1,int param_2)
+int FUN_800600c4(int param_1, int param_2)
 {
-  return *(int *)(param_1 + 0x50) + param_2 * 0x14;
+    return *(int*)(param_1 + 0x50) + param_2 * 0x14;
 }
 
 /*
@@ -813,9 +840,9 @@ int FUN_800600c4(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800600d4(int param_1,int param_2)
+int FUN_800600d4(int param_1, int param_2)
 {
-  return *(int *)(param_1 + 0x68) + param_2 * 0x1c;
+    return *(int*)(param_1 + 0x68) + param_2 * 0x1c;
 }
 
 /*
@@ -831,9 +858,9 @@ int FUN_800600d4(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800600e4(int param_1,int param_2)
+int FUN_800600e4(int param_1, int param_2)
 {
-  return *(int *)(param_1 + 100) + param_2 * 0x44;
+    return *(int*)(param_1 + 100) + param_2 * 0x44;
 }
 
 
@@ -852,7 +879,7 @@ int FUN_800600e4(int param_1,int param_2)
  */
 undefined4 FUN_8006069c(void)
 {
-  return 0;
+    return 0;
 }
 
 
@@ -869,8 +896,8 @@ undefined4 FUN_8006069c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006070c(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
-                 int param_5,float *param_6,undefined4 param_7,undefined4 param_8,int param_9)
+void FUN_8006070c(undefined8 param_1, double param_2, undefined4 param_3, undefined4 param_4,
+                  int param_5, float* param_6, undefined4 param_7, undefined4 param_8, int param_9)
 {
 }
 
@@ -888,7 +915,7 @@ void FUN_8006070c(undefined8 param_1,double param_2,undefined4 param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80060a64(ushort *param_1,int param_2)
+void FUN_80060a64(ushort* param_1, int param_2)
 {
 }
 
@@ -926,8 +953,8 @@ void FUN_80061194(void)
  */
 void FUN_800614d0(undefined param_1)
 {
-  DAT_803dc2b8 = param_1;
-  return;
+    DAT_803dc2b8 = param_1;
+    return;
 }
 
 
@@ -944,89 +971,101 @@ void FUN_800614d0(undefined param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80061a80(short *param_1,short *param_2,int param_3)
+void FUN_80061a80(short* param_1, short* param_2, int param_3)
 {
-  int iVar1;
-  short *psVar2;
-  int iVar3;
-  float local_28;
-  float local_24;
-  float afStack_20 [4];
-  
-  psVar2 = *(short **)(param_1 + 0x18);
-  if (psVar2 != param_2) {
-    if (psVar2 != (short *)0x0) {
-      FUN_80006904();
-    }
-    if (param_2 != (short *)0x0) {
-      FUN_80006904();
-    }
-    if (param_1[0x22] == 1) {
-      FUN_80294da4();
-    }
-    else {
-      *(short **)(param_1 + 0x18) = param_2;
-      iVar1 = *(int *)(param_1 + 0x2a);
-      if (psVar2 == (short *)0x0) {
-        local_24 = *(float *)(param_1 + 0x12);
-        local_28 = *(float *)(param_1 + 0x16);
-        iVar3 = (int)*param_1;
-      }
-      else {
-        FUN_800068f8((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8),
-                     (double)*(float *)(param_1 + 10),(float *)(param_1 + 0xc),
-                     (float *)(param_1 + 0xe),(float *)(param_1 + 0x10),(int)psVar2);
-        FUN_800068f8((double)*(float *)(param_1 + 0x40),(double)*(float *)(param_1 + 0x42),
-                     (double)*(float *)(param_1 + 0x44),(float *)(param_1 + 0x46),
-                     (float *)(param_1 + 0x48),(float *)(param_1 + 0x4a),(int)psVar2);
-        FUN_800068ec((double)*(float *)(param_1 + 0x12),(double)lbl_803DF934,
-                     (double)*(float *)(param_1 + 0x16),&local_24,afStack_20,&local_28,(int)psVar2);
-        iVar3 = (int)*psVar2 + (int)*param_1;
-      }
-      if (param_3 != 0) {
-        if (*(int *)(param_1 + 0x18) == 0) {
-          *(undefined4 *)(param_1 + 6) = *(undefined4 *)(param_1 + 0xc);
-          *(undefined4 *)(param_1 + 8) = *(undefined4 *)(param_1 + 0xe);
-          *(undefined4 *)(param_1 + 10) = *(undefined4 *)(param_1 + 0x10);
-          *(undefined4 *)(param_1 + 0x40) = *(undefined4 *)(param_1 + 0x46);
-          *(undefined4 *)(param_1 + 0x42) = *(undefined4 *)(param_1 + 0x48);
-          *(undefined4 *)(param_1 + 0x44) = *(undefined4 *)(param_1 + 0x4a);
-          *(float *)(param_1 + 0x12) = local_24;
-          *(float *)(param_1 + 0x16) = local_28;
-          *param_1 = (short)iVar3;
+    int iVar1;
+    short* psVar2;
+    int iVar3;
+    float local_28;
+    float local_24;
+    float afStack_20[4];
+
+    psVar2 = *(short**)(param_1 + 0x18);
+    if (psVar2 != param_2)
+    {
+        if (psVar2 != (short*)0x0)
+        {
+            FUN_80006904();
         }
-        else {
-          FUN_800068f4((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
-                       (double)*(float *)(param_1 + 0x10),(float *)(param_1 + 6),
-                       (float *)(param_1 + 8),(float *)(param_1 + 10),*(int *)(param_1 + 0x18));
-          FUN_800068f4((double)*(float *)(param_1 + 0x46),(double)*(float *)(param_1 + 0x48),
-                       (double)*(float *)(param_1 + 0x4a),(float *)(param_1 + 0x40),
-                       (float *)(param_1 + 0x42),(float *)(param_1 + 0x44),*(int *)(param_1 + 0x18))
-          ;
-          FUN_800068f0((double)local_24,(double)lbl_803DF934,(double)local_28,
-                       (float *)(param_1 + 0x12),afStack_20,(float *)(param_1 + 0x16),
-                       *(int *)(param_1 + 0x18));
-          iVar3 = iVar3 - **(short **)(param_1 + 0x18);
-          if (0x8000 < iVar3) {
-            iVar3 = iVar3 + -0xffff;
-          }
-          if (iVar3 < -0x8000) {
-            iVar3 = iVar3 + 0xffff;
-          }
-          *param_1 = (short)iVar3;
+        if (param_2 != (short*)0x0)
+        {
+            FUN_80006904();
         }
-      }
-      if (iVar1 != 0) {
-        *(undefined4 *)(iVar1 + 0x10) = *(undefined4 *)(param_1 + 6);
-        *(undefined4 *)(iVar1 + 0x14) = *(undefined4 *)(param_1 + 8);
-        *(undefined4 *)(iVar1 + 0x18) = *(undefined4 *)(param_1 + 10);
-        *(undefined4 *)(iVar1 + 0x1c) = *(undefined4 *)(param_1 + 0xc);
-        *(undefined4 *)(iVar1 + 0x20) = *(undefined4 *)(param_1 + 0xe);
-        *(undefined4 *)(iVar1 + 0x24) = *(undefined4 *)(param_1 + 0x10);
-      }
+        if (param_1[0x22] == 1)
+        {
+            FUN_80294da4();
+        }
+        else
+        {
+            *(short**)(param_1 + 0x18) = param_2;
+            iVar1 = *(int*)(param_1 + 0x2a);
+            if (psVar2 == (short*)0x0)
+            {
+                local_24 = *(float*)(param_1 + 0x12);
+                local_28 = *(float*)(param_1 + 0x16);
+                iVar3 = (int)*param_1;
+            }
+            else
+            {
+                FUN_800068f8((double)*(float*)(param_1 + 6), (double)*(float*)(param_1 + 8),
+                             (double)*(float*)(param_1 + 10), (float*)(param_1 + 0xc),
+                             (float*)(param_1 + 0xe), (float*)(param_1 + 0x10), (int)psVar2);
+                FUN_800068f8((double)*(float*)(param_1 + 0x40), (double)*(float*)(param_1 + 0x42),
+                             (double)*(float*)(param_1 + 0x44), (float*)(param_1 + 0x46),
+                             (float*)(param_1 + 0x48), (float*)(param_1 + 0x4a), (int)psVar2);
+                FUN_800068ec((double)*(float*)(param_1 + 0x12), (double)lbl_803DF934,
+                             (double)*(float*)(param_1 + 0x16), &local_24, afStack_20, &local_28, (int)psVar2);
+                iVar3 = (int)*psVar2 + (int)*param_1;
+            }
+            if (param_3 != 0)
+            {
+                if (*(int*)(param_1 + 0x18) == 0)
+                {
+                    *(undefined4*)(param_1 + 6) = *(undefined4*)(param_1 + 0xc);
+                    *(undefined4*)(param_1 + 8) = *(undefined4*)(param_1 + 0xe);
+                    *(undefined4*)(param_1 + 10) = *(undefined4*)(param_1 + 0x10);
+                    *(undefined4*)(param_1 + 0x40) = *(undefined4*)(param_1 + 0x46);
+                    *(undefined4*)(param_1 + 0x42) = *(undefined4*)(param_1 + 0x48);
+                    *(undefined4*)(param_1 + 0x44) = *(undefined4*)(param_1 + 0x4a);
+                    *(float*)(param_1 + 0x12) = local_24;
+                    *(float*)(param_1 + 0x16) = local_28;
+                    *param_1 = (short)iVar3;
+                }
+                else
+                {
+                    FUN_800068f4((double)*(float*)(param_1 + 0xc), (double)*(float*)(param_1 + 0xe),
+                                 (double)*(float*)(param_1 + 0x10), (float*)(param_1 + 6),
+                                 (float*)(param_1 + 8), (float*)(param_1 + 10), *(int*)(param_1 + 0x18));
+                    FUN_800068f4((double)*(float*)(param_1 + 0x46), (double)*(float*)(param_1 + 0x48),
+                                 (double)*(float*)(param_1 + 0x4a), (float*)(param_1 + 0x40),
+                                 (float*)(param_1 + 0x42), (float*)(param_1 + 0x44), *(int*)(param_1 + 0x18));
+                    FUN_800068f0((double)local_24, (double)lbl_803DF934, (double)local_28,
+                                 (float*)(param_1 + 0x12), afStack_20, (float*)(param_1 + 0x16),
+                                 *(int*)(param_1 + 0x18));
+                    iVar3 = iVar3 - **(short**)(param_1 + 0x18);
+                    if (0x8000 < iVar3)
+                    {
+                        iVar3 = iVar3 + -0xffff;
+                    }
+                    if (iVar3 < -0x8000)
+                    {
+                        iVar3 = iVar3 + 0xffff;
+                    }
+                    *param_1 = (short)iVar3;
+                }
+            }
+            if (iVar1 != 0)
+            {
+                *(undefined4*)(iVar1 + 0x10) = *(undefined4*)(param_1 + 6);
+                *(undefined4*)(iVar1 + 0x14) = *(undefined4*)(param_1 + 8);
+                *(undefined4*)(iVar1 + 0x18) = *(undefined4*)(param_1 + 10);
+                *(undefined4*)(iVar1 + 0x1c) = *(undefined4*)(param_1 + 0xc);
+                *(undefined4*)(iVar1 + 0x20) = *(undefined4*)(param_1 + 0xe);
+                *(undefined4*)(iVar1 + 0x24) = *(undefined4*)(param_1 + 0x10);
+            }
+        }
     }
-  }
-  return;
+    return;
 }
 
 /*
@@ -1043,78 +1082,88 @@ void FUN_80061a80(short *param_1,short *param_2,int param_3)
  * PAL Size: TODO
  */
 undefined4
-FUN_80061cbc(double param_1,double param_2,double param_3,float *param_4,float *param_5,char param_6
-            )
+FUN_80061cbc(double param_1, double param_2, double param_3, float* param_4, float* param_5, char param_6
+)
 {
-  float fVar1;
-  double dVar2;
-  double dVar3;
-  double dVar4;
-  double dVar5;
-  double dVar6;
-  double dVar7;
-  double dVar8;
-  
-  dVar2 = (double)lbl_803DF934;
-  if (dVar2 != param_3) {
-    dVar5 = (double)*param_4;
-    dVar4 = (double)(float)(dVar5 - param_1);
-    dVar3 = (double)(float)((double)*param_5 - param_2);
-    dVar6 = -(double)(float)(param_3 * param_3 -
-                            (double)((float)(dVar4 * dVar4) + (float)(dVar3 * dVar3)));
-    if (dVar2 <= dVar6) {
-      dVar8 = (double)(float)((double)param_4[1] - dVar5);
-      dVar7 = (double)(float)((double)param_5[1] - (double)*param_5);
-      dVar5 = (double)(float)(dVar8 * dVar8 + (double)(float)(dVar7 * dVar7));
-      if (dVar2 < dVar5) {
-        dVar4 = (double)(lbl_803DF938 * (float)(dVar8 * dVar4 + (double)(float)(dVar7 * dVar3)));
-        dVar3 = (double)(float)(dVar4 * dVar4 -
-                               (double)(float)((double)(float)((double)lbl_803DF93C * dVar5) *
-                                              dVar6));
-        if (dVar2 <= dVar3) {
-          dVar3 = FUN_80293900(dVar3);
-          dVar2 = (double)((float)(-dVar4 + dVar3) / (float)((double)lbl_803DF938 * dVar5));
-          dVar3 = (double)((float)(-dVar4 - dVar3) / (float)((double)lbl_803DF938 * dVar5));
-          if (dVar2 < (double)lbl_803DF934) {
-            dVar2 = (double)lbl_803DF940;
-          }
-          if (dVar3 < (double)lbl_803DF934) {
-            dVar3 = (double)lbl_803DF940;
-          }
-          if (dVar3 < dVar2) {
-            dVar2 = dVar3;
-          }
-          if (((double)lbl_803DF934 <= dVar2) && (dVar2 <= (double)lbl_803DF944)) {
-            lbl_803DDBD8 = (float)dVar2;
-            if (param_6 != '\0') {
-              dVar3 = (double)(float)(dVar2 * dVar8 + (double)*param_4);
-              dVar2 = (double)(float)(dVar2 * dVar7 + (double)*param_5);
-              dVar4 = (double)(float)((double)(float)(dVar3 - param_1) / param_3);
-              dVar5 = (double)(float)((double)(float)(dVar2 - param_2) / param_3);
-              fVar1 = -(float)(dVar3 * dVar4 + (double)(float)(dVar2 * dVar5));
-              dVar2 = (double)(fVar1 + (float)(dVar4 * (double)param_4[1] +
-                                              (double)(float)(dVar5 * (double)param_5[1])));
-              param_4[1] = -(float)(dVar2 * dVar4 - (double)param_4[1]);
-              param_5[1] = -(float)(dVar2 * dVar5 - (double)param_5[1]);
-              dVar2 = (double)lbl_803DF948;
-              while ((double)(fVar1 + (float)((double)param_4[1] * dVar4 +
-                                             (double)(float)((double)param_5[1] * dVar5))) < dVar2)
-              {
-                param_4[1] = param_4[1] + (float)(dVar2 * dVar4);
-                param_5[1] = param_5[1] + (float)(dVar2 * dVar5);
-              }
+    float fVar1;
+    double dVar2;
+    double dVar3;
+    double dVar4;
+    double dVar5;
+    double dVar6;
+    double dVar7;
+    double dVar8;
+
+    dVar2 = (double)lbl_803DF934;
+    if (dVar2 != param_3)
+    {
+        dVar5 = (double)*param_4;
+        dVar4 = (double)(float)(dVar5 - param_1);
+        dVar3 = (double)(float)((double)*param_5 - param_2);
+        dVar6 = -(double)(float)(param_3 * param_3 -
+            (double)((float)(dVar4 * dVar4) + (float)(dVar3 * dVar3)));
+        if (dVar2 <= dVar6)
+        {
+            dVar8 = (double)(float)((double)param_4[1] - dVar5);
+            dVar7 = (double)(float)((double)param_5[1] - (double)*param_5);
+            dVar5 = (double)(float)(dVar8 * dVar8 + (double)(float)(dVar7 * dVar7));
+            if (dVar2 < dVar5)
+            {
+                dVar4 = (double)(lbl_803DF938 * (float)(dVar8 * dVar4 + (double)(float)(dVar7 * dVar3)));
+                dVar3 = (double)(float)(dVar4 * dVar4 -
+                    (double)(float)((double)(float)((double)lbl_803DF93C * dVar5) *
+                        dVar6));
+                if (dVar2 <= dVar3)
+                {
+                    dVar3 = FUN_80293900(dVar3);
+                    dVar2 = (double)((float)(-dVar4 + dVar3) / (float)((double)lbl_803DF938 * dVar5));
+                    dVar3 = (double)((float)(-dVar4 - dVar3) / (float)((double)lbl_803DF938 * dVar5));
+                    if (dVar2 < (double)lbl_803DF934)
+                    {
+                        dVar2 = (double)lbl_803DF940;
+                    }
+                    if (dVar3 < (double)lbl_803DF934)
+                    {
+                        dVar3 = (double)lbl_803DF940;
+                    }
+                    if (dVar3 < dVar2)
+                    {
+                        dVar2 = dVar3;
+                    }
+                    if (((double)lbl_803DF934 <= dVar2) && (dVar2 <= (double)lbl_803DF944))
+                    {
+                        lbl_803DDBD8 = (float)dVar2;
+                        if (param_6 != '\0')
+                        {
+                            dVar3 = (double)(float)(dVar2 * dVar8 + (double)*param_4);
+                            dVar2 = (double)(float)(dVar2 * dVar7 + (double)*param_5);
+                            dVar4 = (double)(float)((double)(float)(dVar3 - param_1) / param_3);
+                            dVar5 = (double)(float)((double)(float)(dVar2 - param_2) / param_3);
+                            fVar1 = -(float)(dVar3 * dVar4 + (double)(float)(dVar2 * dVar5));
+                            dVar2 = (double)(fVar1 + (float)(dVar4 * (double)param_4[1] +
+                                (double)(float)(dVar5 * (double)param_5[1])));
+                            param_4[1] = -(float)(dVar2 * dVar4 - (double)param_4[1]);
+                            param_5[1] = -(float)(dVar2 * dVar5 - (double)param_5[1]);
+                            dVar2 = (double)lbl_803DF948;
+                            while ((double)(fVar1 + (float)((double)param_4[1] * dVar4 +
+                                (double)(float)((double)param_5[1] * dVar5))) < dVar2)
+                            {
+                                param_4[1] = param_4[1] + (float)(dVar2 * dVar4);
+                                param_5[1] = param_5[1] + (float)(dVar2 * dVar5);
+                            }
+                        }
+                        return 1;
+                    }
+                }
             }
-            return 1;
-          }
         }
-      }
+        else if (param_6 != '\0')
+        {
+            param_4[1] = (float)(dVar5 + (double)lbl_803DDBD4);
+            param_5[1] = *param_5 + lbl_803DDBD0;
+        }
     }
-    else if (param_6 != '\0') {
-      param_4[1] = (float)(dVar5 + (double)lbl_803DDBD4);
-      param_5[1] = *param_5 + lbl_803DDBD0;
-    }
-  }
-  return 0;
+    return 0;
 }
 
 
@@ -1131,36 +1180,40 @@ FUN_80061cbc(double param_1,double param_2,double param_3,float *param_4,float *
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_80062010(double param_1,double param_2,double param_3,undefined2 param_4,int param_5)
+int FUN_80062010(double param_1, double param_2, double param_3, undefined2 param_4, int param_5)
 {
-  int iVar1;
-  float *pfVar2;
-  int iVar3;
-  int iVar4;
-  
-  iVar3 = 0;
-  iVar1 = (int)DAT_803ddbdc;
-  pfVar2 = DAT_803ddbb8;
-  iVar4 = iVar1;
-  if (0 < iVar1) {
-    do {
-      if (((param_1 == (double)*pfVar2) && (param_2 == (double)pfVar2[1])) &&
-         (param_3 == (double)pfVar2[2])) {
-        *(undefined2 *)(param_5 + iVar3 * 4 + 2) = param_4;
-        return iVar3;
-      }
-      pfVar2 = pfVar2 + 3;
-      iVar3 = iVar3 + 1;
-      iVar4 = iVar4 + -1;
-    } while (iVar4 != 0);
-  }
-  DAT_803ddbb8[iVar1 * 3] = (float)param_1;
-  DAT_803ddbb8[DAT_803ddbdc * 3 + 1] = (float)param_2;
-  DAT_803ddbb8[DAT_803ddbdc * 3 + 2] = (float)param_3;
-  *(undefined2 *)(param_5 + DAT_803ddbdc * 4) = param_4;
-  *(undefined2 *)(param_5 + DAT_803ddbdc * 4 + 2) = 0xffff;
-  DAT_803ddbdc = DAT_803ddbdc + 1;
-  return DAT_803ddbdc + -1;
+    int iVar1;
+    float* pfVar2;
+    int iVar3;
+    int iVar4;
+
+    iVar3 = 0;
+    iVar1 = (int)DAT_803ddbdc;
+    pfVar2 = DAT_803ddbb8;
+    iVar4 = iVar1;
+    if (0 < iVar1)
+    {
+        do
+        {
+            if (((param_1 == (double)*pfVar2) && (param_2 == (double)pfVar2[1])) &&
+                (param_3 == (double)pfVar2[2]))
+            {
+                *(undefined2*)(param_5 + iVar3 * 4 + 2) = param_4;
+                return iVar3;
+            }
+            pfVar2 = pfVar2 + 3;
+            iVar3 = iVar3 + 1;
+            iVar4 = iVar4 + -1;
+        }
+        while (iVar4 != 0);
+    }
+    DAT_803ddbb8[iVar1 * 3] = (float)param_1;
+    DAT_803ddbb8[DAT_803ddbdc * 3 + 1] = (float)param_2;
+    DAT_803ddbb8[DAT_803ddbdc * 3 + 2] = (float)param_3;
+    *(undefined2*)(param_5 + DAT_803ddbdc * 4) = param_4;
+    *(undefined2*)(param_5 + DAT_803ddbdc * 4 + 2) = 0xffff;
+    DAT_803ddbdc = DAT_803ddbdc + 1;
+    return DAT_803ddbdc + -1;
 }
 
 /*
@@ -1176,8 +1229,8 @@ int FUN_80062010(double param_1,double param_2,double param_3,undefined2 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800620e8(undefined4 param_1,undefined4 param_2,float *param_3,int *param_4,int *param_5,
-                 undefined4 param_6,undefined4 param_7,uint param_8,byte param_9)
+void FUN_800620e8(undefined4 param_1, undefined4 param_2, float* param_3, int* param_4, int* param_5,
+                  undefined4 param_6, undefined4 param_7, uint param_8, byte param_9)
 {
 }
 
@@ -1195,43 +1248,54 @@ void FUN_800620e8(undefined4 param_1,undefined4 param_2,float *param_3,int *para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800631d4(int param_1,int param_2,int param_3)
+void FUN_800631d4(int param_1, int param_2, int param_3)
 {
-  uint uVar1;
-  int iVar2;
-  
-  if (param_2 == 0) {
-    uVar1 = (uint)DAT_803ddbde;
-    iVar2 = DAT_803ddbb4;
-  }
-  else {
-    uVar1 = (uint)*(byte *)(*(int *)(param_2 + 0x50) + 0x5c);
-    iVar2 = *(int *)(*(int *)(param_2 + 0x50) + 0x34);
-  }
-  if (param_3 != 0) {
-    if ((int)uVar1 < 1) {
-      return;
+    uint uVar1;
+    int iVar2;
+
+    if (param_2 == 0)
+    {
+        uVar1 = (uint)DAT_803ddbde;
+        iVar2 = DAT_803ddbb4;
     }
-    do {
-      if (*(short *)(iVar2 + 0xc) == param_1) {
-        *(byte *)(iVar2 + 3) = *(byte *)(iVar2 + 3) & 0xbf;
-      }
-      iVar2 = iVar2 + 0x10;
-      uVar1 = uVar1 - 1;
-    } while (uVar1 != 0);
-    return;
-  }
-  if ((int)uVar1 < 1) {
-    return;
-  }
-  do {
-    if (*(short *)(iVar2 + 0xc) == param_1) {
-      *(byte *)(iVar2 + 3) = *(byte *)(iVar2 + 3) | 0x40;
+    else
+    {
+        uVar1 = (uint) * (byte*)(*(int*)(param_2 + 0x50) + 0x5c);
+        iVar2 = *(int*)(*(int*)(param_2 + 0x50) + 0x34);
     }
-    iVar2 = iVar2 + 0x10;
-    uVar1 = uVar1 - 1;
-  } while (uVar1 != 0);
-  return;
+    if (param_3 != 0)
+    {
+        if ((int)uVar1 < 1)
+        {
+            return;
+        }
+        do
+        {
+            if (*(short*)(iVar2 + 0xc) == param_1)
+            {
+                *(byte*)(iVar2 + 3) = *(byte*)(iVar2 + 3) & 0xbf;
+            }
+            iVar2 = iVar2 + 0x10;
+            uVar1 = uVar1 - 1;
+        }
+        while (uVar1 != 0);
+        return;
+    }
+    if ((int)uVar1 < 1)
+    {
+        return;
+    }
+    do
+    {
+        if (*(short*)(iVar2 + 0xc) == param_1)
+        {
+            *(byte*)(iVar2 + 3) = *(byte*)(iVar2 + 3) | 0x40;
+        }
+        iVar2 = iVar2 + 0x10;
+        uVar1 = uVar1 - 1;
+    }
+    while (uVar1 != 0);
+    return;
 }
 
 
@@ -1250,10 +1314,11 @@ void FUN_800631d4(int param_1,int param_2,int param_3)
  */
 undefined4 FUN_80063298(void)
 {
-  if (((DAT_803ddbce == '\0') && (DAT_803ddbcf == '\0')) && (DAT_803ddbcd == '\0')) {
-    return 0;
-  }
-  return 1;
+    if (((DAT_803ddbce == '\0') && (DAT_803ddbcf == '\0')) && (DAT_803ddbcd == '\0'))
+    {
+        return 0;
+    }
+    return 1;
 }
 
 
@@ -1271,8 +1336,8 @@ undefined4 FUN_80063298(void)
  * PAL Size: TODO
  */
 undefined4
-FUN_800632d8(undefined8 param_1,double param_2,double param_3,undefined4 param_4,float *param_5,
-            uint param_6)
+FUN_800632d8(undefined8 param_1, double param_2, double param_3, undefined4 param_4, float* param_5,
+             uint param_6)
 {
     return 0;
 }
@@ -1291,8 +1356,8 @@ FUN_800632d8(undefined8 param_1,double param_2,double param_3,undefined4 param_4
  * PAL Size: TODO
  */
 undefined4
-FUN_800632e0(undefined8 param_1,double param_2,double param_3,undefined4 param_4,float *param_5,
-            undefined4 *param_6,uint param_7)
+FUN_800632e0(undefined8 param_1, double param_2, double param_3, undefined4 param_4, float* param_5,
+             undefined4* param_6, uint param_7)
 {
     return 0;
 }
@@ -1311,8 +1376,8 @@ FUN_800632e0(undefined8 param_1,double param_2,double param_3,undefined4 param_4
  * PAL Size: TODO
  */
 undefined4
-FUN_800632e8(undefined8 param_1,double param_2,double param_3,undefined4 param_4,float *param_5,
-            uint param_6)
+FUN_800632e8(undefined8 param_1, double param_2, double param_3, undefined4 param_4, float* param_5,
+             uint param_6)
 {
     return 0;
 }
@@ -1331,8 +1396,8 @@ FUN_800632e8(undefined8 param_1,double param_2,double param_3,undefined4 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800632f4(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
-                 undefined4 param_5,int param_6,uint param_7)
+void FUN_800632f4(undefined8 param_1, double param_2, double param_3, undefined4 param_4,
+                  undefined4 param_5, int param_6, uint param_7)
 {
 }
 
@@ -1350,118 +1415,125 @@ void FUN_800632f4(undefined8 param_1,double param_2,double param_3,undefined4 pa
  * PAL Size: TODO
  */
 undefined4
-FUN_800632f8(double param_1,double param_2,float *param_3,float *param_4,float *param_5,
-            float *param_6,byte param_7)
+FUN_800632f8(double param_1, double param_2, float* param_3, float* param_4, float* param_5,
+             float* param_6, byte param_7)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  double dVar4;
-  double dVar5;
-  float local_38;
-  float local_34;
-  float local_30;
-  float local_2c;
-  float local_28;
-  float local_24;
-  
-  if (param_7 == 3) {
-    *param_4 = *param_5;
-    param_4[1] = param_5[1];
-    param_4[2] = param_5[2];
-    local_2c = *param_4 - *param_3;
-    local_28 = param_4[1] - param_3[1];
-    local_24 = param_4[2] - param_3[2];
-    FUN_80017784(&local_2c);
-    fVar1 = (float)((double)(param_6[3] +
-                            param_4[2] * param_6[2] + *param_4 * *param_6 + param_4[1] * param_6[1])
-                   - param_2);
-    fVar2 = (float)((double)(param_6[3] +
-                            param_3[2] * param_6[2] + *param_3 * *param_6 + param_3[1] * param_6[1])
-                   - param_2);
-    fVar3 = lbl_803DF934;
-    if (fVar2 != fVar1) {
-      fVar3 = fVar2 / (fVar2 - fVar1);
-    }
-    fVar1 = param_3[1];
-    fVar2 = param_3[2];
-    *param_4 = (*param_4 - *param_3) * fVar3;
-    param_4[1] = (param_4[1] - fVar1) * fVar3;
-    param_4[2] = (param_4[2] - fVar2) * fVar3;
-    *param_4 = *param_4 + *param_3;
-    param_4[1] = param_4[1] + param_3[1];
-    param_4[2] = param_4[2] + param_3[2];
-    return 1;
-  }
-  if ((lbl_803DF930 <= param_6[1]) || (param_6[1] <= lbl_803DF96C)) {
-    if ((param_7 != 8) && ((7 < param_7 || (param_7 != 5)))) {
-      fVar1 = param_6[2];
-      fVar2 = *param_6;
-      dVar5 = (double)(float)(param_2 -
-                             (double)(param_6[3] +
-                                     param_4[2] * fVar1 + *param_4 * fVar2 + param_4[1] * param_6[1]
-                                     ));
-      if (dVar5 <= (double)lbl_803DF934) {
+    float fVar1;
+    float fVar2;
+    float fVar3;
+    double dVar4;
+    double dVar5;
+    float local_38;
+    float local_34;
+    float local_30;
+    float local_2c;
+    float local_28;
+    float local_24;
+
+    if (param_7 == 3)
+    {
+        *param_4 = *param_5;
+        param_4[1] = param_5[1];
+        param_4[2] = param_5[2];
+        local_2c = *param_4 - *param_3;
+        local_28 = param_4[1] - param_3[1];
+        local_24 = param_4[2] - param_3[2];
+        FUN_80017784(&local_2c);
+        fVar1 = (float)((double)(param_6[3] +
+                param_4[2] * param_6[2] + *param_4 * *param_6 + param_4[1] * param_6[1])
+            - param_2);
+        fVar2 = (float)((double)(param_6[3] +
+                param_3[2] * param_6[2] + *param_3 * *param_6 + param_3[1] * param_6[1])
+            - param_2);
+        fVar3 = lbl_803DF934;
+        if (fVar2 != fVar1)
+        {
+            fVar3 = fVar2 / (fVar2 - fVar1);
+        }
+        fVar1 = param_3[1];
+        fVar2 = param_3[2];
+        *param_4 = (*param_4 - *param_3) * fVar3;
+        param_4[1] = (param_4[1] - fVar1) * fVar3;
+        param_4[2] = (param_4[2] - fVar2) * fVar3;
+        *param_4 = *param_4 + *param_3;
+        param_4[1] = param_4[1] + param_3[1];
+        param_4[2] = param_4[2] + param_3[2];
         return 1;
-      }
-      FUN_80293900((double)(fVar2 * fVar2 + fVar1 * fVar1));
-      FUN_80292b48();
-      dVar4 = (double)FUN_802947f8();
-      param_4[1] = param_4[1] + (float)(dVar5 / dVar4);
-      return 1;
     }
-    *param_4 = -(float)(param_1 * (double)*param_6 - (double)*param_4);
-    param_4[1] = -(float)(param_1 * (double)param_6[1] - (double)param_4[1]);
-    param_4[2] = -(float)(param_1 * (double)param_6[2] - (double)param_4[2]);
-    fVar1 = (float)(param_2 -
-                   (double)(param_6[3] +
-                           param_4[2] * param_6[2] + *param_4 * *param_6 + param_4[1] * param_6[1]))
-    ;
-    *param_4 = fVar1 * *param_6 + *param_4;
-    param_4[1] = fVar1 * param_6[1] + param_4[1];
-    param_4[2] = fVar1 * param_6[2] + param_4[2];
+    if ((lbl_803DF930 <= param_6[1]) || (param_6[1] <= lbl_803DF96C))
+    {
+        if ((param_7 != 8) && ((7 < param_7 || (param_7 != 5))))
+        {
+            fVar1 = param_6[2];
+            fVar2 = *param_6;
+            dVar5 = (double)(float)(param_2 -
+                (double)(param_6[3] +
+                    param_4[2] * fVar1 + *param_4 * fVar2 + param_4[1] * param_6[1]
+                ));
+            if (dVar5 <= (double)lbl_803DF934)
+            {
+                return 1;
+            }
+            FUN_80293900((double)(fVar2 * fVar2 + fVar1 * fVar1));
+            FUN_80292b48();
+            dVar4 = (double)FUN_802947f8();
+            param_4[1] = param_4[1] + (float)(dVar5 / dVar4);
+            return 1;
+        }
+        *param_4 = -(float)(param_1 * (double)*param_6 - (double)*param_4);
+        param_4[1] = -(float)(param_1 * (double)param_6[1] - (double)param_4[1]);
+        param_4[2] = -(float)(param_1 * (double)param_6[2] - (double)param_4[2]);
+        fVar1 = (float)(param_2 -
+            (double)(param_6[3] +
+                param_4[2] * param_6[2] + *param_4 * *param_6 + param_4[1] * param_6[1]));
+        *param_4 = fVar1 * *param_6 + *param_4;
+        param_4[1] = fVar1 * param_6[1] + param_4[1];
+        param_4[2] = fVar1 * param_6[2] + param_4[2];
+        return 1;
+    }
+    if (param_7 == 8)
+    {
+    LAB_800663f8:
+        fVar1 = param_6[2];
+        fVar2 = *param_6;
+        dVar5 = (double)(float)(param_2 -
+            (double)(param_6[3] +
+                param_4[2] * fVar1 + *param_4 * fVar2 + param_4[1] * param_6[1]));
+        if ((double)lbl_803DF934 < dVar5)
+        {
+            FUN_80293900((double)(fVar2 * fVar2 + fVar1 * fVar1));
+            FUN_80292b48();
+            dVar4 = (double)FUN_802949e8();
+            if ((double)lbl_803DF934 != dVar4)
+            {
+                dVar5 = (double)(float)(dVar5 / dVar4);
+            }
+            local_38 = *param_6;
+            local_34 = lbl_803DF934;
+            local_30 = param_6[2];
+            FUN_80017784(&local_38);
+            *param_4 = (float)(dVar5 * (double)local_38 + (double)*param_4);
+            param_4[2] = (float)(dVar5 * (double)local_30 + (double)param_4[2]);
+        }
+    }
+    else
+    {
+        if (param_7 < 8)
+        {
+            if (param_7 == 1) goto LAB_800663f8;
+        }
+        else if (param_7 == 10) goto LAB_800663f8;
+        *param_4 = -(float)(param_1 * (double)*param_6 - (double)*param_4);
+        param_4[1] = -(float)(param_1 * (double)param_6[1] - (double)param_4[1]);
+        param_4[2] = -(float)(param_1 * (double)param_6[2] - (double)param_4[2]);
+        fVar1 = (float)(param_2 -
+            (double)(param_6[3] +
+                param_4[2] * param_6[2] + *param_4 * *param_6 + param_4[1] * param_6[1]));
+        *param_4 = fVar1 * *param_6 + *param_4;
+        param_4[1] = fVar1 * param_6[1] + param_4[1];
+        param_4[2] = fVar1 * param_6[2] + param_4[2];
+    }
     return 1;
-  }
-  if (param_7 == 8) {
-LAB_800663f8:
-    fVar1 = param_6[2];
-    fVar2 = *param_6;
-    dVar5 = (double)(float)(param_2 -
-                           (double)(param_6[3] +
-                                   param_4[2] * fVar1 + *param_4 * fVar2 + param_4[1] * param_6[1]))
-    ;
-    if ((double)lbl_803DF934 < dVar5) {
-      FUN_80293900((double)(fVar2 * fVar2 + fVar1 * fVar1));
-      FUN_80292b48();
-      dVar4 = (double)FUN_802949e8();
-      if ((double)lbl_803DF934 != dVar4) {
-        dVar5 = (double)(float)(dVar5 / dVar4);
-      }
-      local_38 = *param_6;
-      local_34 = lbl_803DF934;
-      local_30 = param_6[2];
-      FUN_80017784(&local_38);
-      *param_4 = (float)(dVar5 * (double)local_38 + (double)*param_4);
-      param_4[2] = (float)(dVar5 * (double)local_30 + (double)param_4[2]);
-    }
-  }
-  else {
-    if (param_7 < 8) {
-      if (param_7 == 1) goto LAB_800663f8;
-    }
-    else if (param_7 == 10) goto LAB_800663f8;
-    *param_4 = -(float)(param_1 * (double)*param_6 - (double)*param_4);
-    param_4[1] = -(float)(param_1 * (double)param_6[1] - (double)param_4[1]);
-    param_4[2] = -(float)(param_1 * (double)param_6[2] - (double)param_4[2]);
-    fVar1 = (float)(param_2 -
-                   (double)(param_6[3] +
-                           param_4[2] * param_6[2] + *param_4 * *param_6 + param_4[1] * param_6[1]))
-    ;
-    *param_4 = fVar1 * *param_6 + *param_4;
-    param_4[1] = fVar1 * param_6[1] + param_4[1];
-    param_4[2] = fVar1 * param_6[2] + param_4[2];
-  }
-  return 1;
 }
 
 
@@ -1496,7 +1568,7 @@ void FUN_80063a68(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80063a74(undefined4 param_1,undefined4 param_2,uint param_3,char param_4)
+void FUN_80063a74(undefined4 param_1, undefined4 param_2, uint param_3, char param_4)
 {
 }
 
@@ -1513,76 +1585,91 @@ void FUN_80063a74(undefined4 param_1,undefined4 param_2,uint param_3,char param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,float *endPoints,
-                                   float *radii,int pointCount)
+void trackDolphin_buildSweptBounds(uint* boundsOut, float* startPoints, float* endPoints,
+                                   float* radii, int pointCount)
 {
-  double dVar1;
-  undefined8 local_8;
-  
-  *boundsOut = 1000000;
-  boundsOut[3] = 0xfff0bdc0;
-  boundsOut[1] = 1000000;
-  boundsOut[4] = 0xfff0bdc0;
-  boundsOut[2] = 1000000;
-  boundsOut[5] = 0xfff0bdc0;
-  dVar1 = DOUBLE_803df958;
-  if (pointCount != 0) {
-    do {
-      local_8 = (double)CONCAT44(0x43300000,*boundsOut ^ 0x80000000);
-      if (*startPoints - *radii < (float)(local_8 - dVar1)) {
-        *boundsOut = (int)(*startPoints - *radii);
-      }
-      local_8 = (double)CONCAT44(0x43300000,boundsOut[3] ^ 0x80000000);
-      if ((float)(local_8 - dVar1) < *startPoints + *radii) {
-        boundsOut[3] = (int)(*startPoints + *radii);
-      }
-      local_8 = (double)CONCAT44(0x43300000,boundsOut[1] ^ 0x80000000);
-      if (startPoints[1] - *radii < (float)(local_8 - dVar1)) {
-        boundsOut[1] = (int)(startPoints[1] - *radii);
-      }
-      local_8 = (double)CONCAT44(0x43300000,boundsOut[4] ^ 0x80000000);
-      if ((float)(local_8 - dVar1) < startPoints[1] + *radii) {
-        boundsOut[4] = (int)(startPoints[1] + *radii);
-      }
-      local_8 = (double)CONCAT44(0x43300000,boundsOut[2] ^ 0x80000000);
-      if (startPoints[2] - *radii < (float)(local_8 - dVar1)) {
-        boundsOut[2] = (int)(startPoints[2] - *radii);
-      }
-      local_8 = (double)CONCAT44(0x43300000,boundsOut[5] ^ 0x80000000);
-      if ((float)(local_8 - dVar1) < startPoints[2] + *radii) {
-        boundsOut[5] = (int)(startPoints[2] + *radii);
-      }
-      local_8 = (double)CONCAT44(0x43300000,*boundsOut ^ 0x80000000);
-      if (*endPoints - *radii < (float)(local_8 - dVar1)) {
-        *boundsOut = (int)(*endPoints - *radii);
-      }
-      local_8 = (double)CONCAT44(0x43300000,boundsOut[3] ^ 0x80000000);
-      if ((float)(local_8 - dVar1) < *endPoints + *radii) {
-        boundsOut[3] = (int)(*endPoints + *radii);
-      }
-      local_8 = (double)CONCAT44(0x43300000,boundsOut[1] ^ 0x80000000);
-      if (endPoints[1] - *radii < (float)(local_8 - dVar1)) {
-        boundsOut[1] = (int)(endPoints[1] - *radii);
-      }
-      local_8 = (double)CONCAT44(0x43300000,boundsOut[4] ^ 0x80000000);
-      if ((float)(local_8 - dVar1) < endPoints[1] + *radii) {
-        boundsOut[4] = (int)(endPoints[1] + *radii);
-      }
-      local_8 = (double)CONCAT44(0x43300000,boundsOut[2] ^ 0x80000000);
-      if (endPoints[2] - *radii < (float)(local_8 - dVar1)) {
-        boundsOut[2] = (int)(endPoints[2] - *radii);
-      }
-      local_8 = (double)CONCAT44(0x43300000,boundsOut[5] ^ 0x80000000);
-      if ((float)(local_8 - dVar1) < endPoints[2] + *radii) {
-        boundsOut[5] = (int)(endPoints[2] + *radii);
-      }
-      startPoints = startPoints + 3;
-      endPoints = endPoints + 3;
-      radii = radii + 1;
-      pointCount = pointCount + -1;
-    } while (pointCount != 0);
-  }
-  return;
+    double dVar1;
+    undefined8 local_8;
+
+    *boundsOut = 1000000;
+    boundsOut[3] = 0xfff0bdc0;
+    boundsOut[1] = 1000000;
+    boundsOut[4] = 0xfff0bdc0;
+    boundsOut[2] = 1000000;
+    boundsOut[5] = 0xfff0bdc0;
+    dVar1 = DOUBLE_803df958;
+    if (pointCount != 0)
+    {
+        do
+        {
+            local_8 = (double)CONCAT44(0x43300000, *boundsOut ^ 0x80000000);
+            if (*startPoints - *radii < (float)(local_8 - dVar1))
+            {
+                *boundsOut = (int)(*startPoints - *radii);
+            }
+            local_8 = (double)CONCAT44(0x43300000, boundsOut[3] ^ 0x80000000);
+            if ((float)(local_8 - dVar1) < *startPoints + *radii)
+            {
+                boundsOut[3] = (int)(*startPoints + *radii);
+            }
+            local_8 = (double)CONCAT44(0x43300000, boundsOut[1] ^ 0x80000000);
+            if (startPoints[1] - *radii < (float)(local_8 - dVar1))
+            {
+                boundsOut[1] = (int)(startPoints[1] - *radii);
+            }
+            local_8 = (double)CONCAT44(0x43300000, boundsOut[4] ^ 0x80000000);
+            if ((float)(local_8 - dVar1) < startPoints[1] + *radii)
+            {
+                boundsOut[4] = (int)(startPoints[1] + *radii);
+            }
+            local_8 = (double)CONCAT44(0x43300000, boundsOut[2] ^ 0x80000000);
+            if (startPoints[2] - *radii < (float)(local_8 - dVar1))
+            {
+                boundsOut[2] = (int)(startPoints[2] - *radii);
+            }
+            local_8 = (double)CONCAT44(0x43300000, boundsOut[5] ^ 0x80000000);
+            if ((float)(local_8 - dVar1) < startPoints[2] + *radii)
+            {
+                boundsOut[5] = (int)(startPoints[2] + *radii);
+            }
+            local_8 = (double)CONCAT44(0x43300000, *boundsOut ^ 0x80000000);
+            if (*endPoints - *radii < (float)(local_8 - dVar1))
+            {
+                *boundsOut = (int)(*endPoints - *radii);
+            }
+            local_8 = (double)CONCAT44(0x43300000, boundsOut[3] ^ 0x80000000);
+            if ((float)(local_8 - dVar1) < *endPoints + *radii)
+            {
+                boundsOut[3] = (int)(*endPoints + *radii);
+            }
+            local_8 = (double)CONCAT44(0x43300000, boundsOut[1] ^ 0x80000000);
+            if (endPoints[1] - *radii < (float)(local_8 - dVar1))
+            {
+                boundsOut[1] = (int)(endPoints[1] - *radii);
+            }
+            local_8 = (double)CONCAT44(0x43300000, boundsOut[4] ^ 0x80000000);
+            if ((float)(local_8 - dVar1) < endPoints[1] + *radii)
+            {
+                boundsOut[4] = (int)(endPoints[1] + *radii);
+            }
+            local_8 = (double)CONCAT44(0x43300000, boundsOut[2] ^ 0x80000000);
+            if (endPoints[2] - *radii < (float)(local_8 - dVar1))
+            {
+                boundsOut[2] = (int)(endPoints[2] - *radii);
+            }
+            local_8 = (double)CONCAT44(0x43300000, boundsOut[5] ^ 0x80000000);
+            if ((float)(local_8 - dVar1) < endPoints[2] + *radii)
+            {
+                boundsOut[5] = (int)(endPoints[2] + *radii);
+            }
+            startPoints = startPoints + 3;
+            endPoints = endPoints + 3;
+            radii = radii + 1;
+            pointCount = pointCount + -1;
+        }
+        while (pointCount != 0);
+    }
+    return;
 }
 
 /*
@@ -1598,10 +1685,10 @@ void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,float *end
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 * trackDolphin_getIntersectionDescriptorTable(uint *currentIndexOut)
+undefined4* trackDolphin_getIntersectionDescriptorTable(uint* currentIndexOut)
 {
-  *currentIndexOut = (uint)DAT_803ddbec;
-  return (undefined4 *)&DAT_8038e8c4;
+    *currentIndexOut = (uint)DAT_803ddbec;
+    return (undefined4*)&DAT_8038e8c4;
 }
 
 /*
@@ -1617,10 +1704,10 @@ undefined4 * trackDolphin_getIntersectionDescriptorTable(uint *currentIndexOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void trackDolphin_getCurrentTrackPoint(uint **param_1)
+void trackDolphin_getCurrentTrackPoint(uint** param_1)
 {
-  *param_1 = (uint *)&DAT_8038eaa4;
-  return;
+    *param_1 = (uint*)&DAT_8038eaa4;
+    return;
 }
 
 /*
@@ -1636,11 +1723,11 @@ void trackDolphin_getCurrentTrackPoint(uint **param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void trackDolphin_getCurrentIntersectionList(int *entryCountOut,undefined4 *entryListOut)
+void trackDolphin_getCurrentIntersectionList(int* entryCountOut, undefined4* entryListOut)
 {
-  *entryCountOut = (int)(short)(&DAT_8038e8c8)[(uint)DAT_803ddbec * 0xc];
-  *entryListOut = DAT_803ddbb0;
-  return;
+    *entryCountOut = (int)(short)(&DAT_8038e8c8)[(uint)DAT_803ddbec * 0xc];
+    *entryListOut = DAT_803ddbb0;
+    return;
 }
 
 /*
@@ -1658,43 +1745,46 @@ void trackDolphin_getCurrentIntersectionList(int *entryCountOut,undefined4 *entr
  */
 void trackDolphin_initIntersectionBuffers(void)
 {
-  int iVar1;
-  int iVar2;
-  
-  if (DAT_803ddbb0 == 0) {
-    DAT_803ddbb0 = FUN_80017830(0x16440,-0xff01);
-    DAT_803ddbb4 = FUN_80017830(24000,-0xff01);
-    DAT_803ddbb8 = (float *)FUN_80017830(0x4fb0,-0xff01);
-    DAT_803ddbbc = FUN_80017830(3000,-0xff01);
-    DAT_803ddbc8 = (int *)FUN_80017830(0x600,-0xff01);
-  }
-  iVar1 = 0;
-  iVar2 = 4;
-  do {
-    *(undefined *)((int)DAT_803ddbc8 + iVar1 + 0x14) = 0;
-    *(undefined *)((int)DAT_803ddbc8 + iVar1 + 0x2c) = 0;
-    *(undefined *)((int)DAT_803ddbc8 + iVar1 + 0x44) = 0;
-    *(undefined *)((int)DAT_803ddbc8 + iVar1 + 0x5c) = 0;
-    *(undefined *)((int)DAT_803ddbc8 + iVar1 + 0x74) = 0;
-    *(undefined *)((int)DAT_803ddbc8 + iVar1 + 0x8c) = 0;
-    *(undefined *)((int)DAT_803ddbc8 + iVar1 + 0xa4) = 0;
-    *(undefined *)((int)DAT_803ddbc8 + iVar1 + 0xbc) = 0;
-    *(undefined *)((int)DAT_803ddbc8 + iVar1 + 0xd4) = 0;
-    *(undefined *)((int)DAT_803ddbc8 + iVar1 + 0xec) = 0;
-    *(undefined *)((int)DAT_803ddbc8 + iVar1 + 0x104) = 0;
-    *(undefined *)((int)DAT_803ddbc8 + iVar1 + 0x11c) = 0;
-    *(undefined *)((int)DAT_803ddbc8 + iVar1 + 0x134) = 0;
-    *(undefined *)((int)DAT_803ddbc8 + iVar1 + 0x14c) = 0;
-    *(undefined *)((int)DAT_803ddbc8 + iVar1 + 0x164) = 0;
-    *(undefined *)((int)DAT_803ddbc8 + iVar1 + 0x17c) = 0;
-    iVar1 = iVar1 + 0x180;
-    iVar2 = iVar2 + -1;
-  } while (iVar2 != 0);
-  DAT_803ddbde = 0;
-  DAT_803ddbdc = 0;
-  DAT_803ddbce = 0;
-  DAT_803ddbcf = 0;
-  return;
+    int iVar1;
+    int iVar2;
+
+    if (DAT_803ddbb0 == 0)
+    {
+        DAT_803ddbb0 = FUN_80017830(0x16440, -0xff01);
+        DAT_803ddbb4 = FUN_80017830(24000, -0xff01);
+        DAT_803ddbb8 = (float*)FUN_80017830(0x4fb0, -0xff01);
+        DAT_803ddbbc = FUN_80017830(3000, -0xff01);
+        DAT_803ddbc8 = (int*)FUN_80017830(0x600, -0xff01);
+    }
+    iVar1 = 0;
+    iVar2 = 4;
+    do
+    {
+        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x14) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x2c) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x44) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x5c) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x74) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x8c) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0xa4) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0xbc) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0xd4) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0xec) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x104) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x11c) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x134) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x14c) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x164) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x17c) = 0;
+        iVar1 = iVar1 + 0x180;
+        iVar2 = iVar2 + -1;
+    }
+    while (iVar2 != 0);
+    DAT_803ddbde = 0;
+    DAT_803ddbdc = 0;
+    DAT_803ddbce = 0;
+    DAT_803ddbcf = 0;
+    return;
 }
 
 
@@ -1713,65 +1803,75 @@ void trackDolphin_initIntersectionBuffers(void)
  */
 void FUN_80064384(int param_1)
 {
-  int iVar1;
-  int iVar2;
-  uint uVar3;
-  uint uVar4;
-  uint uVar5;
-  uint uVar6;
-  uint uVar7;
-  uint uVar8;
-  int iVar9;
-  
-  uVar4 = FUN_8001779c();
-  uVar8 = 0;
-  do {
-    uVar6 = 0;
-    iVar1 = (uVar8 >> 2) * 0x100;
-    iVar2 = (uVar8 & 3) * 8;
-    uVar5 = (uVar8 + param_1) * 0xff;
-    iVar9 = 0x10;
-    do {
-      uVar3 = uVar5;
-      if (0x3fc0 < uVar5) {
-        uVar3 = 0x3fc0;
-      }
-      *(char *)(uVar4 + (uVar6 & 7) + (uVar6 >> 3) * 0x20 + iVar2 + iVar1) =
-           (char)(uVar3 * uVar6 >> 0xc);
-      uVar7 = uVar6 + 1;
-      uVar3 = uVar5;
-      if (0x3fc0 < uVar5) {
-        uVar3 = 0x3fc0;
-      }
-      *(char *)(uVar4 + (uVar7 & 7) + (uVar7 >> 3) * 0x20 + iVar2 + iVar1) =
-           (char)(uVar3 * uVar7 >> 0xc);
-      uVar7 = uVar6 + 2;
-      uVar3 = uVar5;
-      if (0x3fc0 < uVar5) {
-        uVar3 = 0x3fc0;
-      }
-      *(char *)(uVar4 + (uVar7 & 7) + (uVar7 >> 3) * 0x20 + iVar2 + iVar1) =
-           (char)(uVar3 * uVar7 >> 0xc);
-      uVar7 = uVar6 + 3;
-      uVar3 = uVar5;
-      if (0x3fc0 < uVar5) {
-        uVar3 = 0x3fc0;
-      }
-      *(char *)(uVar4 + (uVar7 & 7) + (uVar7 >> 3) * 0x20 + iVar2 + iVar1) =
-           (char)(uVar3 * uVar7 >> 0xc);
-      uVar6 = uVar6 + 4;
-      iVar9 = iVar9 + -1;
-    } while (iVar9 != 0);
-    uVar8 = uVar8 + 1;
-  } while (uVar8 < 0x40);
-  FUN_80017790(DAT_803ddc38 + 0x60,uVar4,0);
-  DAT_803ddc00 = (char)param_1;
-  return;
+    int iVar1;
+    int iVar2;
+    uint uVar3;
+    uint uVar4;
+    uint uVar5;
+    uint uVar6;
+    uint uVar7;
+    uint uVar8;
+    int iVar9;
+
+    uVar4 = FUN_8001779c();
+    uVar8 = 0;
+    do
+    {
+        uVar6 = 0;
+        iVar1 = (uVar8 >> 2) * 0x100;
+        iVar2 = (uVar8 & 3) * 8;
+        uVar5 = (uVar8 + param_1) * 0xff;
+        iVar9 = 0x10;
+        do
+        {
+            uVar3 = uVar5;
+            if (0x3fc0 < uVar5)
+            {
+                uVar3 = 0x3fc0;
+            }
+            *(char*)(uVar4 + (uVar6 & 7) + (uVar6 >> 3) * 0x20 + iVar2 + iVar1) =
+                (char)(uVar3 * uVar6 >> 0xc);
+            uVar7 = uVar6 + 1;
+            uVar3 = uVar5;
+            if (0x3fc0 < uVar5)
+            {
+                uVar3 = 0x3fc0;
+            }
+            *(char*)(uVar4 + (uVar7 & 7) + (uVar7 >> 3) * 0x20 + iVar2 + iVar1) =
+                (char)(uVar3 * uVar7 >> 0xc);
+            uVar7 = uVar6 + 2;
+            uVar3 = uVar5;
+            if (0x3fc0 < uVar5)
+            {
+                uVar3 = 0x3fc0;
+            }
+            *(char*)(uVar4 + (uVar7 & 7) + (uVar7 >> 3) * 0x20 + iVar2 + iVar1) =
+                (char)(uVar3 * uVar7 >> 0xc);
+            uVar7 = uVar6 + 3;
+            uVar3 = uVar5;
+            if (0x3fc0 < uVar5)
+            {
+                uVar3 = 0x3fc0;
+            }
+            *(char*)(uVar4 + (uVar7 & 7) + (uVar7 >> 3) * 0x20 + iVar2 + iVar1) =
+                (char)(uVar3 * uVar7 >> 0xc);
+            uVar6 = uVar6 + 4;
+            iVar9 = iVar9 + -1;
+        }
+        while (iVar9 != 0);
+        uVar8 = uVar8 + 1;
+    }
+    while (uVar8 < 0x40);
+    FUN_80017790(DAT_803ddc38 + 0x60, uVar4, 0);
+    DAT_803ddc00 = (char)param_1;
+    return;
 }
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void doNothing_80062A50(void) {}
+void doNothing_80062A50(void)
+{
+}
 
 /* 8b "li r3, N; blr" returners. */
 int return0_80060B90(void) { return 0x0; }
@@ -1783,13 +1883,13 @@ void fn_800628CC(void) { lbl_803DB658 = 0x1; }
 void setMapBlockFlag(void) { lbl_803DCF4E = 0x1; }
 
 /* arr indexing: obj->arr + idx*size */
-void* mapBlockFn_800606ec(int *obj, int idx) { return (char*)((int**)obj)[0x50/4] + idx * 0x14; }
-void* fn_800606FC(int *obj, int idx) { return (char*)((int**)obj)[0x68/4] + idx * 0x1c; }
-void* fn_8006070C(int *obj, int idx) { return (char*)((int**)obj)[0x64/4] + idx * 0x44; }
+void* mapBlockFn_800606ec(int* obj, int idx) { return (char*)((int**)obj)[0x50 / 4] + idx * 0x14; }
+void* fn_800606FC(int* obj, int idx) { return (char*)((int**)obj)[0x68 / 4] + idx * 0x1c; }
+void* fn_8006070C(int* obj, int idx) { return (char*)((int**)obj)[0x64 / 4] + idx * 0x44; }
 
 /* arr indexing pow2. */
 #pragma dont_inline on
-void* fn_800606DC(int *obj, int idx) { return (char*)((int**)obj)[0x4c/4] + idx * 8; }
+void* fn_800606DC(int* obj, int idx) { return (char*)((int**)obj)[0x4c / 4] + idx * 8; }
 #pragma dont_inline reset
 
 /* 4-way sda21 to indirect-pointer broadcast. */
@@ -1797,7 +1897,9 @@ extern u32 lbl_803DCE08;
 extern u32 lbl_803DCE0C;
 extern u32 lbl_803DCE10;
 extern u32 lbl_803DCE14;
-void fn_80060490(u32 *a, u32 *b, u32 *c, u32 *d) {
+
+void fn_80060490(u32* a, u32* b, u32* c, u32* d)
+{
     *a = lbl_803DCE08;
     *b = lbl_803DCE0C;
     *c = lbl_803DCE10;
@@ -1805,7 +1907,8 @@ void fn_80060490(u32 *a, u32 *b, u32 *c, u32 *d) {
 }
 
 /* extsb-then-stb (asm to preserve the extsb MWCC strips). */
-void setShadowFlag_803db658(s32 v) {
+void setShadowFlag_803db658(s32 v)
+{
     lbl_803DB658 = (s8)v;
 }
 
@@ -1813,21 +1916,25 @@ void setShadowFlag_803db658(s32 v) {
 extern u8 lbl_803DCF6C;
 extern u32 lbl_803DCF30;
 extern u8 lbl_8038DE44[];
-typedef struct TrackBlockDescriptor {
-    void *object;
+
+typedef struct TrackBlockDescriptor
+{
+    void* object;
     s16 firstTriangle;
     u8 pad06[2];
-    void *currentMatrix;
-    void *currentCollisionMatrix;
-    void *alternateMatrix;
-    void *alternateCollisionMatrix;
+    void* currentMatrix;
+    void* currentCollisionMatrix;
+    void* alternateMatrix;
+    void* alternateCollisionMatrix;
 } TrackBlockDescriptor;
+
 extern TrackBlockDescriptor lbl_8038DC64[];
 #define gTrackBlockDescriptors lbl_8038DC64
 
 /* fn_80069944 -- store sbss byte into *p1 and return a fixed table base. */
 #pragma dont_inline on
-void *fn_80069944(u32 *outVal) {
+void* fn_80069944(u32* outVal)
+{
     *outVal = lbl_803DCF6C;
     return gTrackBlockDescriptors;
 }
@@ -1835,23 +1942,25 @@ void *fn_80069944(u32 *outVal) {
 
 /* fn_80069958 -- write a fixed table base address into *out. */
 #pragma dont_inline on
-void fn_80069958(void **out) {
+void fn_80069958(void** out)
+{
     *out = lbl_8038DE44;
 }
 #pragma dont_inline reset
 
 /* mapBlockFn_80060678 -- return top byte of obj[0x10]
  * (clrrwi 24 + srwi 24). */
-u32 mapBlockFn_80060678(int *obj)
+u32 mapBlockFn_80060678(int* obj)
 {
-    return (*(u32 *)&((GameObject *)obj)->anim.localPosY & 0xff000000) >> 24;
+    return (*(u32*)&((GameObject*)obj)->anim.localPosY & 0xff000000) >> 24;
 }
 
 /* mapGetBlocks: write a fixed table base and an sbss u32 into two
  * out-pointers. */
 extern u8 gMapBlockLayerTables[];
 extern u32 lbl_803DCE9C;
-void mapGetBlocks(void **outPtr, u32 *outVal)
+
+void mapGetBlocks(void** outPtr, u32* outVal)
 {
     *outPtr = gMapBlockLayerTables;
     *outVal = lbl_803DCE9C;
@@ -1859,9 +1968,9 @@ void mapGetBlocks(void **outPtr, u32 *outVal)
 
 /* playerShadowFn_80062a30 -- if obj[0x64] non-NULL, clear bits 0x2020 in
  * its u32 at +0x30. */
-void playerShadowFn_80062a30(int *obj)
+void playerShadowFn_80062a30(int* obj)
 {
-    int *p = *(int**)((char*)obj + 0x64);
+    int* p = *(int**)((char*)obj + 0x64);
     if (p == NULL) return;
     *(u32*)((char*)p + 0x30) &= ~0x2020;
 }
@@ -1869,7 +1978,7 @@ void playerShadowFn_80062a30(int *obj)
 /* fn_80060668 -- extract bits 8-15 of obj[0x10] as a byte
  * (target uses rlwinm 8,15 + srwi 16). */
 #pragma dont_inline on
-u32 fn_80060668(int *obj)
+u32 fn_80060668(int* obj)
 {
     u32 v = (u32)obj[4];
     v &= 0x00FF0000;
@@ -1885,7 +1994,9 @@ extern s8 lbl_803DCEEA;
 extern s8 lbl_803DCEEB;
 extern u8 lbl_803DCEE9;
 extern u8 lbl_803DCEE8;
-void fn_80062894(void) {
+
+void fn_80062894(void)
+{
     lbl_803DCEF6 = 0;
     lbl_803DCEFA = 0;
     lbl_803DCEEA = (s8)(1 - lbl_803DCEEA);
@@ -1898,8 +2009,9 @@ void fn_80062894(void) {
  * the sbss u32 lbl_803DCF30 into *out2. Asm form locks the lis/addi
  * pair so MWCC doesn't route the table base through r0. */
 #pragma dont_inline on
-void fn_80069968(s32 *out1, u32 *out2) {
-    TrackBlockDescriptor *descriptors = gTrackBlockDescriptors;
+void fn_80069968(s32* out1, u32* out2)
+{
+    TrackBlockDescriptor* descriptors = gTrackBlockDescriptors;
     *out1 = descriptors[lbl_803DCF6C].firstTriangle;
     *out2 = lbl_803DCF30;
 }
@@ -1907,7 +2019,9 @@ void fn_80069968(s32 *out1, u32 *out2) {
 
 extern u8 lbl_803DCF4F;
 extern u8 lbl_803DCF4D;
-int fn_80065640(void) {
+
+int fn_80065640(void)
+{
     int r = 0;
     if ((s8)lbl_803DCF4E != 0 || (s8)lbl_803DCF4F != 0 || lbl_803DCF4D != 0) r = 1;
     return r;
@@ -1917,40 +2031,47 @@ extern int lbl_803DCF48;
 
 #define MAP_DYNAMIC_SLOT_COUNT 64
 
-typedef struct MapDynamicSlot {
+typedef struct MapDynamicSlot
+{
     u32 object;
     u8 pad04[0x10];
     u8 cooldown;
     u8 pad15[3];
 } MapDynamicSlot;
 
-void objFn_80065604(void) {
+void objFn_80065604(void)
+{
     u32 cur;
     int idx;
     s16 i;
     i = 0;
     idx = 0;
-    do {
-        u8 *p = (u8 *)(lbl_803DCF48 + idx);
+    do
+    {
+        u8* p = (u8*)(lbl_803DCF48 + idx);
         cur = p[20];
         if (cur != 0) p[20]--;
         idx += sizeof(MapDynamicSlot);
         i++;
-    } while (i < MAP_DYNAMIC_SLOT_COUNT);
+    }
+    while (i < MAP_DYNAMIC_SLOT_COUNT);
 }
 
 #pragma peephole on
 #pragma optimization_level 1
-void fn_80063368(int target) {
+void fn_80063368(int target)
+{
     int zero, idx;
     s16 i;
     i = 0;
     idx = 0;
     zero = idx;
-    for ( ; i < MAP_DYNAMIC_SLOT_COUNT; i++) {
-        u32 *p = (u32 *)(lbl_803DCF48 + idx);
-        if (*p == (u32)target) {
-            ((MapDynamicSlot *)p)->cooldown = (u8)zero;
+    for (; i < MAP_DYNAMIC_SLOT_COUNT; i++)
+    {
+        u32* p = (u32*)(lbl_803DCF48 + idx);
+        if (*p == (u32)target)
+        {
+            ((MapDynamicSlot*)p)->cooldown = (u8)zero;
         }
         idx += sizeof(MapDynamicSlot);
     }
@@ -1972,13 +2093,15 @@ void queueGlowRender(ModelLightStruct* light)
 
     if (lbl_803DCE06 >= 100) return;
 
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < 5; i++)
+    {
         FrustumPlane* plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
         f32 dot = plane->normalX * (light->worldX - playerMapOffsetX)
-                + light->worldY * plane->normalY
-                + plane->normalZ * (light->worldZ - playerMapOffsetZ)
-                + plane->distance;
-        if (lbl_803DEBCC + dot < lbl_803DEBCC) {
+            + light->worldY * plane->normalY
+            + plane->normalZ * (light->worldZ - playerMapOffsetZ)
+            + plane->distance;
+        if (lbl_803DEBCC + dot < lbl_803DEBCC)
+        {
             visible = 0;
             goto check;
         }
@@ -1986,7 +2109,8 @@ void queueGlowRender(ModelLightStruct* light)
     visible = 1;
 check:
     if (visible == 0 && light->glowAlpha == 0) return;
-    if (visible == 0) {
+    if (visible == 0)
+    {
         light->glowAlphaStep = -0x10;
     }
     idx = lbl_803DCE06;
@@ -2000,25 +2124,28 @@ extern u8 lbl_803DCE98;
 #pragma optimization_level 1
 void fn_80060BB0(void)
 {
-    char *arr;
+    char* arr;
     int zero;
     int innerOff;
     int byteOff;
     int i;
     int j;
-    int *blk;
+    int* blk;
 
     i = 0;
     byteOff = 0;
     zero = byteOff;
-    for (; i < (int)lbl_803DCE98; i++) {
-        blk = *(int **)((char *)lbl_803DCE9C + byteOff);
-        if (blk != NULL) {
+    for (; i < (int)lbl_803DCE98; i++)
+    {
+        blk = *(int**)((char*)lbl_803DCE9C + byteOff);
+        if (blk != NULL)
+        {
             j = 0;
             innerOff = 0;
-            for (; j < (int)*(u8 *)((char *)blk + 0xa1); j++) {
+            for (; j < (int)*(u8*)((char*)blk + 0xa1); j++)
+            {
                 int o;
-                arr = *(char **)((char *)blk + 0x68);
+                arr = *(char**)((char*)blk + 0x68);
                 o = innerOff + 0x12;
                 arr[o] = zero;
                 innerOff += 0x1c;
@@ -2030,23 +2157,25 @@ void fn_80060BB0(void)
 #pragma optimization_level reset
 #pragma peephole reset
 
-extern f32 *lbl_803DCF38;
+extern f32* lbl_803DCF38;
 extern s16 lbl_803DCF5C;
 
 #pragma dont_inline on
-int insertPoint(int val, s16 *arr, f32 x, f32 y, f32 z)
+int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
 {
-    f32 *p;
-    f32 *base;
+    f32* p;
+    f32* base;
     int i;
     int n;
 
     i = 0;
     p = base = lbl_803DCF38;
     n = lbl_803DCF5C;
-    for (; i < n; i++) {
-        if (x == p[0] && y == p[1] && z == p[2]) {
-            s16 *q = arr + 1;
+    for (; i < n; i++)
+    {
+        if (x == p[0] && y == p[1] && z == p[2])
+        {
+            s16* q = arr + 1;
             q[i << 1] = val;
             return i;
         }
@@ -2063,140 +2192,154 @@ int insertPoint(int val, s16 *arr, f32 x, f32 y, f32 z)
 #pragma dont_inline reset
 
 extern char sTrackIntersectFuncOverflowFormat[];
-extern void debugPrintf(char *fmt, ...);
+extern void debugPrintf(char* fmt, ...);
 extern s16 lbl_803DCF5E;
 extern int lbl_803DCF34;
-extern void memcpy(void *dst, void *src, int n);
+extern void memcpy(void* dst, void* src, int n);
 
-void intersectModLineBuild(int *obj)
+void intersectModLineBuild(int* obj)
 {
     s16 link[0xd48];
     s16 segCount;
     int seg;
-    u8 *sp;
+    u8* sp;
     int li;
     int prev;
 
     lbl_803DCF4E = 1;
     lbl_803DCF5E = 0;
     lbl_803DCF5C = 0;
-    segCount = *(u8 *)((char *)obj + 0x5c);
-    sp = *(u8 **)&((GameObject *)obj)->anim.parent;
-    for (seg = 0; seg < segCount; seg++, sp += 0x14) {
-        u8 *line;
+    segCount = *(u8*)((char*)obj + 0x5c);
+    sp = *(u8**)&((GameObject*)obj)->anim.parent;
+    for (seg = 0; seg < segCount; seg++, sp += 0x14)
+    {
+        u8* line;
         int i;
         if (lbl_803DCF5E >= 0x5dc) break;
-        line = (u8 *)lbl_803DCF34 + lbl_803DCF5E * 0x10;
+        line = (u8*)lbl_803DCF34 + lbl_803DCF5E * 0x10;
         line[0] = sp[0xc];
         line[1] = sp[0xd];
         line[3] = sp[0xf];
-        if (((s8)line[3] & 0x3f) == 0x11) {
+        if (((s8)line[3] & 0x3f) == 0x11)
+        {
             line[3] = (s8)line[3] & ~0x3f;
             line[3] = (s8)line[3] | 2;
         }
         line[2] = sp[0xe];
         line[2] = (s8)line[2] ^ 0x10;
-        *(s16 *)(line + 0xc) = *(s16 *)(sp + 0x10);
-        for (i = 0; i < 3; i++) {
-            f32 x = (f32)(s16)*(s16 *)(sp + i * 2 + 0);
-            f32 y = (f32)(s16)*(s16 *)(sp + i * 2 + 4);
-            f32 z = (f32)(s16)*(s16 *)(sp + i * 2 + 8);
+        *(s16*)(line + 0xc) = *(s16*)(sp + 0x10);
+        for (i = 0; i < 3; i++)
+        {
+            f32 x = (f32)(s16) * (s16*)(sp + i * 2 + 0);
+            f32 y = (f32)(s16) * (s16*)(sp + i * 2 + 4);
+            f32 z = (f32)(s16) * (s16*)(sp + i * 2 + 8);
             if (lbl_803DCF5C < 0x6a4)
-                *(s16 *)(line + 4 + i * 2) = (s16)insertPoint(lbl_803DCF5E, link, x, y, z);
+                *(s16*)(line + 4 + i * 2) = (s16)insertPoint(lbl_803DCF5E, link, x, y, z);
         }
         lbl_803DCF5E++;
     }
-    for (li = 0; li < lbl_803DCF5E; li++) {
-        u8 *L = (u8 *)lbl_803DCF34 + li * 0x10;
-        s16 *e0 = &link[*(s16 *)(L + 4) * 2];
-        s16 *e1;
+    for (li = 0; li < lbl_803DCF5E; li++)
+    {
+        u8* L = (u8*)lbl_803DCF34 + li * 0x10;
+        s16* e0 = &link[*(s16*)(L + 4) * 2];
+        s16* e1;
         if (e0[0] > -1 && e0[0] != li)
-            *(s16 *)(L + 8) = e0[0];
+            *(s16*)(L + 8) = e0[0];
         else if (e0[1] > -1 && e0[1] != li)
-            *(s16 *)(L + 8) = e0[1];
+            *(s16*)(L + 8) = e0[1];
         else
-            *(s16 *)(L + 8) = -1;
-        e1 = &link[*(s16 *)(L + 6) * 2];
+            *(s16*)(L + 8) = -1;
+        e1 = &link[*(s16*)(L + 6) * 2];
         if (e1[0] > -1 && e1[0] != li)
-            *(s16 *)(L + 0xa) = e1[0];
+            *(s16*)(L + 0xa) = e1[0];
         else if (e1[1] > -1 && e1[1] != li)
-            *(s16 *)(L + 0xa) = e1[1];
+            *(s16*)(L + 0xa) = e1[1];
         else
-            *(s16 *)(L + 0xa) = -1;
+            *(s16*)(L + 0xa) = -1;
     }
     if (lbl_803DCF5E * 0x10 + lbl_803DCF5C * 0xc + 0x28 == 0)
         return;
     obj[0x34 / 4] = (int)mmAlloc(lbl_803DCF5E * 0x10 + lbl_803DCF5C * 0xc + 0x28, 0xffff00ff, 0);
-    *(int *)((char *)obj + 0x3c) = *(int *)((char *)obj + 0x34) + lbl_803DCF5E * 0x10;
-    *(int *)((char *)obj + 0x38) = *(int *)((char *)obj + 0x3c) + lbl_803DCF5C * 0xc;
+    *(int*)((char*)obj + 0x3c) = *(int*)((char*)obj + 0x34) + lbl_803DCF5E * 0x10;
+    *(int*)((char*)obj + 0x38) = *(int*)((char*)obj + 0x3c) + lbl_803DCF5C * 0xc;
     {
         int k;
         for (k = 0; k < 40; k++)
-            *(u8 *)(*(int *)((char *)obj + 0x38) + k) = 0xff;
+            *(u8*)(*(int*)((char*)obj + 0x38) + k) = 0xff;
     }
     prev = -1;
-    for (li = 0; li < lbl_803DCF5E; li++) {
-        u8 *base = (u8 *)lbl_803DCF34;
+    for (li = 0; li < lbl_803DCF5E; li++)
+    {
+        u8* base = (u8*)lbl_803DCF34;
         int best = 0;
         int j;
         int grp;
-        for (j = 0; j < lbl_803DCF5E; j++) {
+        for (j = 0; j < lbl_803DCF5E; j++)
+        {
             if (((s8)base[j * 0x10 + 3] & 0x3f) < ((s8)base[best * 0x10 + 3] & 0x3f))
                 best = (s16)j;
         }
         grp = (s16)((s8)base[best * 0x10 + 3] & 0x3f);
-        if (grp >= 0x14) {
+        if (grp >= 0x14)
+        {
             grp = 1;
             debugPrintf(sTrackIntersectFuncOverflowFormat, 1);
         }
-        if ((s16)grp != (s16)prev) {
-            *(u8 *)(*(int *)((char *)obj + 0x38) + grp * 2) = (u8)li;
+        if ((s16)grp != (s16)prev)
+        {
+            *(u8*)(*(int*)((char*)obj + 0x38) + grp * 2) = (u8)li;
             if (prev != -1)
-                *(u8 *)(*(int *)((char *)obj + 0x38) + prev * 2 + 1) = (u8)li;
+                *(u8*)(*(int*)((char*)obj + 0x38) + prev * 2 + 1) = (u8)li;
             prev = grp;
         }
         {
             int m;
-            u8 *so = (u8 *)*(int *)((char *)obj + 0x34);
-            for (m = 0; m < li; m++) {
-                if (*(s16 *)(so + m * 0x10 + 8) == (s16)best)
-                    *(s16 *)(so + m * 0x10 + 8) = (s16)li;
-                if (*(s16 *)(so + m * 0x10 + 0xa) == (s16)best)
-                    *(s16 *)(so + m * 0x10 + 0xa) = (s16)li;
+            u8* so = (u8*)*(int*)((char*)obj + 0x34);
+            for (m = 0; m < li; m++)
+            {
+                if (*(s16*)(so + m * 0x10 + 8) == (s16)best)
+                    *(s16*)(so + m * 0x10 + 8) = (s16)li;
+                if (*(s16*)(so + m * 0x10 + 0xa) == (s16)best)
+                    *(s16*)(so + m * 0x10 + 0xa) = (s16)li;
             }
         }
         {
             int n;
-            for (n = 0; n < lbl_803DCF5E; n++) {
-                u8 *Ln = (u8 *)lbl_803DCF34 + n * 0x10;
-                if ((s8)Ln[3] != 0x14) {
-                    if ((s16)best == *(s16 *)(Ln + 8))
-                        *(s16 *)(Ln + 8) = (s16)li;
-                    if ((s16)best == *(s16 *)(Ln + 0xa))
-                        *(s16 *)(Ln + 0xa) = (s16)li;
+            for (n = 0; n < lbl_803DCF5E; n++)
+            {
+                u8* Ln = (u8*)lbl_803DCF34 + n * 0x10;
+                if ((s8)Ln[3] != 0x14)
+                {
+                    if ((s16)best == *(s16*)(Ln + 8))
+                        *(s16*)(Ln + 8) = (s16)li;
+                    if ((s16)best == *(s16*)(Ln + 0xa))
+                        *(s16*)(Ln + 0xa) = (s16)li;
                 }
             }
         }
-        memcpy((char *)*(int *)((char *)obj + 0x34) + li * 0x10,
-               (char *)lbl_803DCF34 + best * 0x10, 0x10);
-        *(u8 *)(lbl_803DCF34 + best * 0x10 + 3) = 0x14;
+        memcpy((char*)*(int*)((char*)obj + 0x34) + li * 0x10,
+               (char*)lbl_803DCF34 + best * 0x10, 0x10);
+        *(u8*)(lbl_803DCF34 + best * 0x10 + 3) = 0x14;
     }
     if ((s16)prev != -1)
-        *(u8 *)(*(int *)((char *)obj + 0x38) + prev * 2 + 1) = (u8)lbl_803DCF5E;
-    memcpy((void *)*(int *)((char *)obj + 0x3c), lbl_803DCF38, lbl_803DCF5C * 0xc);
+        *(u8*)(*(int*)((char*)obj + 0x38) + prev * 2 + 1) = (u8)lbl_803DCF5E;
+    memcpy((void*)*(int*)((char*)obj + 0x3c), lbl_803DCF38, lbl_803DCF5C * 0xc);
     lbl_803DCF5E = 0;
     lbl_803DCF5C = 0;
 }
 
 extern f32 CurrTiming_803DEC20;
 
-void fn_800605F0(s16 *in, f32 *out)
+void fn_800605F0(s16* in, f32* out)
 {
     f32 t;
 
-    out[0] = (f32)(s32)in[0] * (t = CurrTiming_803DEC20);
-    out[1] = (f32)(s32)in[1] * t;
-    out[2] = (f32)(s32)in[2] * t;
+    out[0] = (f32)(s32)
+    in[0] * (t = CurrTiming_803DEC20);
+    out[1] = (f32)(s32)
+    in[1] * t;
+    out[2] = (f32)(s32)
+    in[2] * t;
 }
 
 int fn_80060688(int obj, int type)
@@ -2208,11 +2351,13 @@ int fn_80060688(int obj, int type)
     int count;
     total = 0;
     offset = 0;
-    count = *(u16 *)(obj + 0x9a);
-    for (i = 0; i < count; i++) {
-        entry = *(int *)&((GameObject *)obj)->anim.modelInstance + offset;
-        if (type == (int)((*(u32 *)(entry + 0x10) & 0xff000000) >> 24)) {
-            total += *(u16 *)(entry + 0x14) - *(u16 *)entry;
+    count = *(u16*)(obj + 0x9a);
+    for (i = 0; i < count; i++)
+    {
+        entry = *(int*)&((GameObject*)obj)->anim.modelInstance + offset;
+        if (type == (int)((*(u32*)(entry + 0x10) & 0xff000000) >> 24))
+        {
+            total += *(u16*)(entry + 0x14) - *(u16*)entry;
         }
         offset += 0x14;
     }
@@ -2238,7 +2383,8 @@ extern int lbl_803DCF24;
 void fn_80062808(void)
 {
     int v;
-    if ((s8)lbl_803DB658 == 0) {
+    if ((s8)lbl_803DB658 == 0)
+    {
         return;
     }
     lbl_803DCEF8 = 0;
@@ -2263,26 +2409,36 @@ void fn_80065574(int matchVal, int obj, int flag)
     int count;
     int i;
     int base;
-    char *e;
-    if ((u32)obj != 0) {
-        base = *(int *)&((GameObject *)obj)->anim.modelInstance;
-        e = *(char **)(base + 0x34);
-        count = *(u8 *)(base + 0x5c);
-    } else {
-        e = (char *)lbl_803DCF34;
+    char* e;
+    if ((u32)obj != 0)
+    {
+        base = *(int*)&((GameObject*)obj)->anim.modelInstance;
+        e = *(char**)(base + 0x34);
+        count = *(u8*)(base + 0x5c);
+    }
+    else
+    {
+        e = (char*)lbl_803DCF34;
         count = lbl_803DCF5E;
     }
-    if (flag != 0) {
-        for (i = 0; i < count; i++) {
-            if (*(s16 *)(e + 0xc) == matchVal) {
-                *(s8 *)(e + 3) = (s8)(*(u8 *)(e + 3) & ~0x40);
+    if (flag != 0)
+    {
+        for (i = 0; i < count; i++)
+        {
+            if (*(s16*)(e + 0xc) == matchVal)
+            {
+                *(s8*)(e + 3) = (s8)(*(u8*)(e + 3) & ~0x40);
             }
             e += 0x10;
         }
-    } else {
-        for (i = 0; i < count; i++) {
-            if (*(s16 *)(e + 0xc) == matchVal) {
-                *(s8 *)(e + 3) = (s8)(*(u8 *)(e + 3) | 0x40);
+    }
+    else
+    {
+        for (i = 0; i < count; i++)
+        {
+            if (*(s16*)(e + 0xc) == matchVal)
+            {
+                *(s8*)(e + 3) = (s8)(*(u8*)(e + 3) | 0x40);
             }
             e += 0x10;
         }
@@ -2293,19 +2449,26 @@ void MapBlock_init(int obj)
 {
     int off;
     int i;
-    if (*(u32 *)&((GameObject *)obj)->anim.hitReactState != 0) *(int *)&((GameObject *)obj)->anim.hitReactState = obj + *(int *)&((GameObject *)obj)->anim.hitReactState;
-    if (*(u32 *)&((GameObject *)obj)->anim.placementData != 0) *(int *)&((GameObject *)obj)->anim.placementData = obj + *(int *)&((GameObject *)obj)->anim.placementData;
-    if (*(u32 *)&((GameObject *)obj)->anim.modelInstance != 0) *(int *)&((GameObject *)obj)->anim.modelInstance = obj + *(int *)&((GameObject *)obj)->anim.modelInstance;
-    *(int *)(obj + 0x58) = obj + *(int *)(obj + 0x58);
-    *(int *)&((GameObject *)obj)->anim.weaponDaTable = obj + *(int *)&((GameObject *)obj)->anim.weaponDaTable;
-    *(int *)&((GameObject *)obj)->anim.eventTable = obj + *(int *)&((GameObject *)obj)->anim.eventTable;
-    if (*(u32 *)(obj + 0x78) != 0) *(int *)(obj + 0x78) = obj + *(int *)(obj + 0x78);
-    if (*(u32 *)&((GameObject *)obj)->anim.banks != 0) *(int *)&((GameObject *)obj)->anim.banks = obj + *(int *)&((GameObject *)obj)->anim.banks;
-    if (*(u32 *)&((GameObject *)obj)->anim.previousLocalPosX != 0) *(int *)&((GameObject *)obj)->anim.previousLocalPosX = obj + *(int *)&((GameObject *)obj)->anim.previousLocalPosX;
-    *(int *)&((GameObject *)obj)->anim.dll = obj + *(int *)&((GameObject *)obj)->anim.dll;
-    if (*(u32 *)&((GameObject *)obj)->anim.modelState != 0) *(int *)&((GameObject *)obj)->anim.modelState = obj + *(int *)&((GameObject *)obj)->anim.modelState;
-    for (i = 0, off = 0; i < *(u8 *)(obj + 0xa1); i++) {
-        *(int *)(*(int *)&((GameObject *)obj)->anim.dll + off) = obj + *(int *)(*(int *)&((GameObject *)obj)->anim.dll + off);
+    if (*(u32*)&((GameObject*)obj)->anim.hitReactState != 0) *(int*)&((GameObject*)obj)->anim.hitReactState = obj + *(
+        int*)&((GameObject*)obj)->anim.hitReactState;
+    if (*(u32*)&((GameObject*)obj)->anim.placementData != 0) *(int*)&((GameObject*)obj)->anim.placementData = obj + *(
+        int*)&((GameObject*)obj)->anim.placementData;
+    if (*(u32*)&((GameObject*)obj)->anim.modelInstance != 0) *(int*)&((GameObject*)obj)->anim.modelInstance = obj + *(
+        int*)&((GameObject*)obj)->anim.modelInstance;
+    *(int*)(obj + 0x58) = obj + *(int*)(obj + 0x58);
+    *(int*)&((GameObject*)obj)->anim.weaponDaTable = obj + *(int*)&((GameObject*)obj)->anim.weaponDaTable;
+    *(int*)&((GameObject*)obj)->anim.eventTable = obj + *(int*)&((GameObject*)obj)->anim.eventTable;
+    if (*(u32*)(obj + 0x78) != 0) *(int*)(obj + 0x78) = obj + *(int*)(obj + 0x78);
+    if (*(u32*)&((GameObject*)obj)->anim.banks != 0) *(int*)&((GameObject*)obj)->anim.banks = obj + *(int*)&((GameObject
+        *)obj)->anim.banks;
+    if (*(u32*)&((GameObject*)obj)->anim.previousLocalPosX != 0) *(int*)&((GameObject*)obj)->anim.previousLocalPosX =
+        obj + *(int*)&((GameObject*)obj)->anim.previousLocalPosX;
+    *(int*)&((GameObject*)obj)->anim.dll = obj + *(int*)&((GameObject*)obj)->anim.dll;
+    if (*(u32*)&((GameObject*)obj)->anim.modelState != 0) *(int*)&((GameObject*)obj)->anim.modelState = obj + *(int*)&((
+        GameObject*)obj)->anim.modelState;
+    for (i = 0, off = 0; i < *(u8*)(obj + 0xa1); i++)
+    {
+        *(int*)(*(int*)&((GameObject*)obj)->anim.dll + off) = obj + *(int*)(*(int*)&((GameObject*)obj)->anim.dll + off);
         off += 0x1c;
     }
 }
@@ -2316,54 +2479,62 @@ void MapBlock_initHits(int obj, int index)
 {
     int off;
     int i;
-    int *table = (int *)lbl_803DCE80;
+    int* table = (int*)lbl_803DCE80;
     int fileOff = table[index];
     int size = table[index + 1] - fileOff;
     int entry;
-    if (size > 0) {
-        *(void **)(obj + 0x70) = mmAlloc(size, 5, 0);
-        fileLoadToBufferOffset(0x28, *(void **)(obj + 0x70), fileOff, size);
+    if (size > 0)
+    {
+        *(void**)(obj + 0x70) = mmAlloc(size, 5, 0);
+        fileLoadToBufferOffset(0x28, *(void**)(obj + 0x70), fileOff, size);
     }
-    *(u16 *)(obj + 0x9c) = (u32)size / 20;
-    for (i = 0, off = 0; i < *(u16 *)(obj + 0x9c); i++) {
-        entry = *(int *)(obj + 0x70) + off;
-        if (*(s16 *)(entry + 0) < 0 || *(s16 *)(entry + 2) < 0 ||
-            *(s16 *)(entry + 0) > 0x280 || *(s16 *)(entry + 2) > 0x280) {
-            *(u8 *)(entry + 0xf) = 0x40;
+    *(u16*)(obj + 0x9c) = (u32)size / 20;
+    for (i = 0, off = 0; i < *(u16*)(obj + 0x9c); i++)
+    {
+        entry = *(int*)(obj + 0x70) + off;
+        if (*(s16*)(entry + 0) < 0 || *(s16*)(entry + 2) < 0 ||
+            *(s16*)(entry + 0) > 0x280 || *(s16*)(entry + 2) > 0x280)
+        {
+            *(u8*)(entry + 0xf) = 0x40;
         }
-        entry = *(int *)(obj + 0x70) + off;
-        if (*(s16 *)(entry + 8) < 0 || *(s16 *)(entry + 0xa) < 0 ||
-            *(s16 *)(entry + 8) > 0x280 || *(s16 *)(entry + 0xa) > 0x280) {
-            *(u8 *)(entry + 0xf) = 0x40;
+        entry = *(int*)(obj + 0x70) + off;
+        if (*(s16*)(entry + 8) < 0 || *(s16*)(entry + 0xa) < 0 ||
+            *(s16*)(entry + 8) > 0x280 || *(s16*)(entry + 0xa) > 0x280)
+        {
+            *(u8*)(entry + 0xf) = 0x40;
         }
         off += 0x14;
     }
-    *(int *)(obj + 0x74) = 0;
-    *(u16 *)(obj + 0x9e) = 0;
-    *(u16 *)&((GameObject *)obj)->anim.rotZ = *(u16 *)&((GameObject *)obj)->anim.rotZ & ~0x40;
+    *(int*)(obj + 0x74) = 0;
+    *(u16*)(obj + 0x9e) = 0;
+    *(u16*)&((GameObject*)obj)->anim.rotZ = *(u16*)&((GameObject*)obj)->anim.rotZ & ~0x40;
 }
 
 extern int lbl_803DCEB0;
 extern int lbl_803DCDE4;
-extern void checkLoadBlock(int v, int *outA, int *outB);
-extern int loadAndDecompressDataFile(int id, void *buf, int blockOff, int len, int a, int b, int c);
+extern void checkLoadBlock(int v, int* outA, int* outB);
+extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
 
-void *MapBlock_loadFromFile(int blockId)
+void* MapBlock_loadFromFile(int blockId)
 {
     int local_c;
     int local_8;
-    void *buf;
+    void* buf;
     int blockOff = 0;
-    int *table;
+    int* table;
     int v;
-    if (blockId > lbl_803DCEB0) {
+    if (blockId > lbl_803DCEB0)
+    {
         goto ret0a;
     }
-    table = (int *)lbl_803DCDE4;
-    if (table != 0) {
+    table = (int*)lbl_803DCDE4;
+    if (table != 0)
+    {
         v = table[blockId];
-        if (v != -1) {
-            if (v == 0 && table[blockId + 1] == 0) {
+        if (v != -1)
+        {
+            if (v == 0 && table[blockId + 1] == 0)
+            {
                 goto ret0b;
             }
             blockOff = v;
@@ -2376,14 +2547,17 @@ ret0a:
 ret0b:
     return 0;
 cont:
-    if (local_c <= 0) {
+    if (local_c <= 0)
+    {
         return 0;
     }
-    if (local_8 > 0x32000) {
+    if (local_8 > 0x32000)
+    {
         return 0;
     }
     buf = mmAlloc(local_8, 5, 0);
-    if (buf == 0) {
+    if (buf == 0)
+    {
         return 0;
     }
     loadAndDecompressDataFile(0x25, buf, blockOff, local_c, 0, 0, 0);
@@ -2398,30 +2572,39 @@ void MapBlock_initShaders(int obj)
     int j;
     int outerOff;
     int block;
-    char *p;
+    char* p;
     int v;
-    for (i = 0, outerOff = 0; i < *(u8 *)(obj + 0xa2); i++) {
-        block = *(int *)&((GameObject *)obj)->anim.modelState + outerOff;
-        p = (char *)block;
-        for (j = 0; j < *(u8 *)(block + 0x41); j++) {
-            v = *(int *)(p + 0x24);
-            if (v != -1) {
-                *(int *)(p + 0x24) = ((int *)*(int *)&((GameObject *)obj)->anim.hitReactState)[v];
-                v = *(u8 *)(p + 0x29);
-                if (v != 0) {
-                    mapTextureOverrideAcquire(*(int *)(p + 0x24), 0, v);
+    for (i = 0, outerOff = 0; i < *(u8*)(obj + 0xa2); i++)
+    {
+        block = *(int*)&((GameObject*)obj)->anim.modelState + outerOff;
+        p = (char*)block;
+        for (j = 0; j < *(u8*)(block + 0x41); j++)
+        {
+            v = *(int*)(p + 0x24);
+            if (v != -1)
+            {
+                *(int*)(p + 0x24) = ((int*)*(int*)&((GameObject*)obj)->anim.hitReactState)[v];
+                v = *(u8*)(p + 0x29);
+                if (v != 0)
+                {
+                    mapTextureOverrideAcquire(*(int*)(p + 0x24), 0, v);
                 }
-            } else {
-                *(int *)(p + 0x24) = 0;
             }
-            *(u8 *)(p + 0x2a) = 0xff;
+            else
+            {
+                *(int*)(p + 0x24) = 0;
+            }
+            *(u8*)(p + 0x2a) = 0xff;
             p += 8;
         }
-        v = *(int *)(block + 0x34);
-        if (v != -1) {
-            *(int *)(block + 0x34) = ((int *)*(int *)&((GameObject *)obj)->anim.hitReactState)[v];
-        } else {
-            *(int *)(block + 0x34) = 0;
+        v = *(int*)(block + 0x34);
+        if (v != -1)
+        {
+            *(int*)(block + 0x34) = ((int*)*(int*)&((GameObject*)obj)->anim.hitReactState)[v];
+        }
+        else
+        {
+            *(int*)(block + 0x34) = 0;
         }
         outerOff += 0x44;
     }
@@ -2433,18 +2616,21 @@ void mapInitFn_80069990(void)
 {
     int i;
     int off;
-    if (lbl_803DCF30 == 0) {
+    if (lbl_803DCF30 == 0)
+    {
         lbl_803DCF30 = (u32)mmAlloc(0x16440, 0xffff00ff, 0);
         lbl_803DCF34 = (int)mmAlloc(0x5dc0, 0xffff00ff, 0);
-        lbl_803DCF38 = (f32 *)mmAlloc(0x4fb0, 0xffff00ff, 0);
+        lbl_803DCF38 = (f32*)mmAlloc(0x4fb0, 0xffff00ff, 0);
         lbl_803DCF3C = (int)mmAlloc(0xbb8, 0xffff00ff, 0);
         lbl_803DCF48 = (int)mmAlloc(0x600, 0xffff00ff, 0);
     }
     off = 0;
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < 4; i++)
+    {
         int j;
-        for (j = 0; j < 16; j++) {
-            ((MapDynamicSlot *)(lbl_803DCF48 + off + j * sizeof(MapDynamicSlot)))->cooldown = 0;
+        for (j = 0; j < 16; j++)
+        {
+            ((MapDynamicSlot*)(lbl_803DCF48 + off + j * sizeof(MapDynamicSlot)))->cooldown = 0;
         }
         off += sizeof(MapDynamicSlot) * 16;
     }
@@ -2454,539 +2640,610 @@ void mapInitFn_80069990(void)
     lbl_803DCF4F = 0;
 }
 
-void fn_8006058C(short *param_1, float *param_2)
+void fn_8006058C(short* param_1, float* param_2)
 {
-  int iVar1;
-  int iVar2;
+    int iVar1;
+    int iVar2;
 
-  iVar1 = (int)(lbl_803DEC50 * param_2[1]);
-  iVar2 = (int)(lbl_803DEC50 * param_2[2]);
-  *param_1 = (short)(int)(lbl_803DEC50 * *param_2);
-  param_1[1] = (short)iVar1;
-  param_1[2] = (short)iVar2;
+    iVar1 = (int)(lbl_803DEC50 * param_2[1]);
+    iVar2 = (int)(lbl_803DEC50 * param_2[2]);
+    *param_1 = (short)(int)(lbl_803DEC50 * *param_2);
+    param_1[1] = (short)iVar1;
+    param_1[2] = (short)iVar2;
 }
 
 #pragma dont_inline on
-void vecGetRanges(f32 *pts, f32 *base, int *out, f32 scale)
+void vecGetRanges(f32* pts, f32* base, int* out, f32 scale)
 {
-  int i;
+    int i;
 
-  out[0] = 0x7fffffff;
-  out[3] = 0x80000000;
-  out[1] = 0x7fffffff;
-  out[4] = 0x80000000;
-  out[2] = 0x7fffffff;
-  out[5] = 0x80000000;
-  for (i = 0; i < 8; i++) {
-    f32 x = scale * pts[0] + base[0];
-    f32 y = scale * pts[1] + base[1];
-    f32 z = scale * pts[2] + base[2];
-    if (x < (f32)out[0]) out[0] = (int)x;
-    if (x > (f32)out[3]) out[3] = (int)x;
-    if (y < (f32)out[1]) out[1] = (int)y;
-    if (y > (f32)out[4]) out[4] = (int)y;
-    if (z < (f32)out[2]) out[2] = (int)z;
-    if (z > (f32)out[5]) out[5] = (int)z;
-    pts += 3;
-  }
-}
-#pragma dont_inline reset
-
-#pragma dont_inline on
-int objShadowFn_80062378(void *obj, u8 param)
-{
-  int lo;
-  int hi;
-  f32 t;
-  void *p;
-
-  p = ((GameObject *)obj)->anim.modelInstance;
-  if (((ObjDef *)p)->renderFlags & 0x4) {
-    lo = 1000;
-    hi = 2000;
-  } else {
-    lo = 400;
-    hi = 500;
-  }
-  t = (Camera_DistanceToCurrentViewPosition(((GameObject *)obj)->anim.worldPosX,
-                                            ((GameObject *)obj)->anim.worldPosY,
-                                            ((GameObject *)obj)->anim.worldPosZ) -
-       (f32)lo) /
-      (f32)(hi - lo);
-  if (t < 0.0f) {
-    t = 0.0f;
-  } else if (t > 1.0f) {
-    t = 1.0f;
-  }
-  {
-    f32 inv = 1.0f - t;
-    int n = (int)((f32)param * inv);
-    return (n * (*(u8 *)((char *)obj + 0x37) + 1)) >> 8;
-  }
-}
-#pragma dont_inline reset
-
-int fn_80065684(int a, f32 b, f32 val, f32 d, f32 *out, int e)
-{
-  void **arr;
-  int n;
-  int i;
-  f32 best;
-  f32 cur;
-
-  n = hitDetectFn_80065e50(a, b, val, d, &arr, 0, e);
-  if (n != 0) {
-    best = val - *(f32 *)arr[0];
-    for (i = 1; i < n; i++) {
-      cur = val - *(f32 *)arr[i];
-      if (cur >= __AR_Callback) {
-        if (best < __AR_Callback || cur < best) {
-          best = cur;
-        }
-      }
+    out[0] = 0x7fffffff;
+    out[3] = 0x80000000;
+    out[1] = 0x7fffffff;
+    out[4] = 0x80000000;
+    out[2] = 0x7fffffff;
+    out[5] = 0x80000000;
+    for (i = 0; i < 8; i++)
+    {
+        f32 x = scale * pts[0] + base[0];
+        f32 y = scale * pts[1] + base[1];
+        f32 z = scale * pts[2] + base[2];
+        if (x < (f32)out[0]) out[0] = (int)x;
+        if (x > (f32)out[3]) out[3] = (int)x;
+        if (y < (f32)out[1]) out[1] = (int)y;
+        if (y > (f32)out[4]) out[4] = (int)y;
+        if (z < (f32)out[2]) out[2] = (int)z;
+        if (z > (f32)out[5]) out[5] = (int)z;
+        pts += 3;
     }
-    if (best >= __AR_Callback) {
-      *out = best;
-      return 1;
+}
+#pragma dont_inline reset
+
+#pragma dont_inline on
+int objShadowFn_80062378(void* obj, u8 param)
+{
+    int lo;
+    int hi;
+    f32 t;
+    void* p;
+
+    p = ((GameObject*)obj)->anim.modelInstance;
+    if (((ObjDef*)p)->renderFlags & 0x4)
+    {
+        lo = 1000;
+        hi = 2000;
+    }
+    else
+    {
+        lo = 400;
+        hi = 500;
+    }
+    t = (Camera_DistanceToCurrentViewPosition(((GameObject*)obj)->anim.worldPosX,
+                                              ((GameObject*)obj)->anim.worldPosY,
+                                              ((GameObject*)obj)->anim.worldPosZ) -
+            (f32)lo) /
+        (f32)(hi - lo);
+    if (t < 0.0f)
+    {
+        t = 0.0f;
+    }
+    else if (t > 1.0f)
+    {
+        t = 1.0f;
+    }
+    {
+        f32 inv = 1.0f - t;
+        int n = (int)((f32)param * inv);
+        return (n * (*(u8*)((char*)obj + 0x37) + 1)) >> 8;
+    }
+}
+#pragma dont_inline reset
+
+int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e)
+{
+    void** arr;
+    int n;
+    int i;
+    f32 best;
+    f32 cur;
+
+    n = hitDetectFn_80065e50(a, b, val, d, &arr, 0, e);
+    if (n != 0)
+    {
+        best = val - *(f32*)arr[0];
+        for (i = 1; i < n; i++)
+        {
+            cur = val - *(f32*)arr[i];
+            if (cur >= __AR_Callback)
+            {
+                if (best < __AR_Callback || cur < best)
+                {
+                    best = cur;
+                }
+            }
+        }
+        if (best >= __AR_Callback)
+        {
+            *out = best;
+            return 1;
+        }
+        *out = __AR_Callback;
+        return 0;
     }
     *out = __AR_Callback;
     return 0;
-  }
-  *out = __AR_Callback;
-  return 0;
 }
 
-int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32 *out, int e)
+int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e)
 {
-  void **arr;
-  int n;
-  int i;
-  int bestIdx;
-  f32 best;
-  f32 cur;
+    void** arr;
+    int n;
+    int i;
+    int bestIdx;
+    f32 best;
+    f32 cur;
 
-  n = hitDetectFn_80065e50(a, b, val, d, &arr, 0, e);
-  if (n != 0) {
-    best = val - *(f32 *)arr[0];
-    best = best >= __AR_Callback ? best : -best;
-    bestIdx = 0;
-    for (i = 1; i < n; i++) {
-      cur = val - *(f32 *)arr[i];
-      cur = cur >= __AR_Callback ? cur : -cur;
-      if (cur < best) {
-        best = cur;
-        bestIdx = i;
-      }
+    n = hitDetectFn_80065e50(a, b, val, d, &arr, 0, e);
+    if (n != 0)
+    {
+        best = val - *(f32*)arr[0];
+        best = best >= __AR_Callback ? best : -best;
+        bestIdx = 0;
+        for (i = 1; i < n; i++)
+        {
+            cur = val - *(f32*)arr[i];
+            cur = cur >= __AR_Callback ? cur : -cur;
+            if (cur < best)
+            {
+                best = cur;
+                bestIdx = i;
+            }
+        }
+        *out = val - *(f32*)arr[bestIdx];
+        return 0;
     }
-    *out = val - *(f32 *)arr[bestIdx];
-    return 0;
-  }
-  *out = __AR_Callback;
-  return 1;
+    *out = __AR_Callback;
+    return 1;
 }
 
 #pragma dont_inline on
-int fn_80065768(int a, f32 b, f32 val, f32 d, f32 *out1, f32 *out2, int f)
+int fn_80065768(int a, f32 b, f32 val, f32 d, f32* out1, f32* out2, int f)
 {
-  void **arr;
-  int n;
-  int i;
-  int bestIdx;
-  f32 best;
-  f32 cur;
+    void** arr;
+    int n;
+    int i;
+    int bestIdx;
+    f32 best;
+    f32 cur;
 
-  n = hitDetectFn_80065e50(a, b, val, d, &arr, 0, f);
-  if (n != 0) {
-    best = val - *(f32 *)arr[0];
-    best = best >= __AR_Callback ? best : -best;
-    bestIdx = 0;
-    for (i = 1; i < n; i++) {
-      cur = val - *(f32 *)arr[i];
-      cur = cur >= __AR_Callback ? cur : -cur;
-      if (cur < best) {
-        best = cur;
-        bestIdx = i;
-      }
+    n = hitDetectFn_80065e50(a, b, val, d, &arr, 0, f);
+    if (n != 0)
+    {
+        best = val - *(f32*)arr[0];
+        best = best >= __AR_Callback ? best : -best;
+        bestIdx = 0;
+        for (i = 1; i < n; i++)
+        {
+            cur = val - *(f32*)arr[i];
+            cur = cur >= __AR_Callback ? cur : -cur;
+            if (cur < best)
+            {
+                best = cur;
+                bestIdx = i;
+            }
+        }
+        *out1 = val - *(f32*)arr[bestIdx];
+        out2[0] = ((f32*)arr[bestIdx])[1];
+        out2[1] = ((f32*)arr[bestIdx])[2];
+        out2[2] = ((f32*)arr[bestIdx])[3];
+        return 0;
     }
-    *out1 = val - *(f32 *)arr[bestIdx];
-    out2[0] = ((f32 *)arr[bestIdx])[1];
-    out2[1] = ((f32 *)arr[bestIdx])[2];
-    out2[2] = ((f32 *)arr[bestIdx])[3];
-    return 0;
-  }
-  *out1 = __AR_Callback;
-  return 1;
+    *out1 = __AR_Callback;
+    return 1;
 }
 #pragma dont_inline reset
 
-int fn_80062D60(int a, f32 b, f32 lo, f32 d, f32 hi, f32 *out1, int *out2)
+int fn_80062D60(int a, f32 b, f32 lo, f32 d, f32 hi, f32* out1, int* out2)
 {
-  void **arr;
-  int n;
-  int i;
+    void** arr;
+    int n;
+    int i;
 
-  if (lo > hi) {
-    f32 t = hi;
-    hi = lo;
-    lo = t;
-  }
-  n = hitDetectFn_80065e50(a, b, lo, d, &arr, 0, 1);
-  *out1 = lo;
-  *out2 = 0;
-  for (i = 0; i < n; i++) {
-    void *elem = arr[i];
-    if (*(s8 *)((char *)elem + 0x14) == 14) {
-      continue;
+    if (lo > hi)
+    {
+        f32 t = hi;
+        hi = lo;
+        lo = t;
     }
-    if (lo < *(f32 *)elem && hi > *(f32 *)elem) {
-      *out2 = *(int *)((char *)arr[i] + 0x10);
-      *out1 = *(f32 *)arr[i];
-      return (((f32 *)arr[i])[2] < __AR_Size) + 1;
+    n = hitDetectFn_80065e50(a, b, lo, d, &arr, 0, 1);
+    *out1 = lo;
+    *out2 = 0;
+    for (i = 0; i < n; i++)
+    {
+        void* elem = arr[i];
+        if (*(s8*)((char*)elem + 0x14) == 14)
+        {
+            continue;
+        }
+        if (lo < *(f32*)elem && hi > *(f32*)elem)
+        {
+            *out2 = *(int*)((char*)arr[i] + 0x10);
+            *out1 = *(f32*)arr[i];
+            return (((f32*)arr[i])[2] < __AR_Size) + 1;
+        }
     }
-  }
-  return 0;
+    return 0;
 }
 
-void *shadowInit(int *obj, int size)
+void* shadowInit(int* obj, int size)
 {
-  int rounded;
-  ObjModelState *modelState;
-  ObjModelInstance *modelDef;
-  s16 texId;
+    int rounded;
+    ObjModelState* modelState;
+    ObjModelInstance* modelDef;
+    s16 texId;
 
-  rounded = roundUpTo4(size);
-  *(int *)&((ObjAnimComponent *)obj)->modelState = rounded;
-  modelState = ((ObjAnimComponent *)obj)->modelState;
-  modelDef = ((ObjAnimComponent *)obj)->modelInstance;
-  texId = modelDef->shadowTextureId;
-  if (texId != -1 && modelDef->shadowType != 2) {
-    modelState->shadowTexture = (void *)textureLoad(-texId, 0);
-  } else if (modelDef->renderFlags & 0x4) {
-    modelState->shadowTexture = (void *)textureAlloc512();
-  } else if (modelDef->renderFlags & 0x2) {
-    modelState->shadowTexture = NULL;
-    modelState->shadowWorkBuffer = NULL;
-  } else {
-    modelState->shadowTexture = (void *)textureFn_8006c5c4();
-  }
-  if (modelDef->shadowType == 1) {
-    modelState->shadowRenderResource = NULL;
-  } else {
-    modelState->shadowRenderResource = (void *)-1;
-  }
-  modelState->shadowScale = *(f32 *)modelDef;
-  modelState->shadowModelScale = *(f32 *)((char *)modelDef + 0x88);
-  modelState->shadowOffsetX = lbl_803DCED8;
-  modelState->shadowOffsetY = lbl_803DB650;
-  modelState->shadowOffsetZ = lbl_803DCEDC;
-  modelState->shadowAlphaStep = 0x4000;
-  modelState->flags = OBJ_MODEL_STATE_SHADOW_VISIBLE;
-  modelState->pad38[0] = 0x19;
-  modelState->pad38[1] = 0x4b;
-  modelState->shadowTintA = 0x96;
-  modelState->shadowTintB = 0x64;
-  lbl_803DB658 = 1;
-  return (char *)rounded + 0x44;
+    rounded = roundUpTo4(size);
+    *(int*)&((ObjAnimComponent*)obj)->modelState = rounded;
+    modelState = ((ObjAnimComponent*)obj)->modelState;
+    modelDef = ((ObjAnimComponent*)obj)->modelInstance;
+    texId = modelDef->shadowTextureId;
+    if (texId != -1 && modelDef->shadowType != 2)
+    {
+        modelState->shadowTexture = (void*)textureLoad(-texId, 0);
+    }
+    else if (modelDef->renderFlags & 0x4)
+    {
+        modelState->shadowTexture = (void*)textureAlloc512();
+    }
+    else if (modelDef->renderFlags & 0x2)
+    {
+        modelState->shadowTexture = NULL;
+        modelState->shadowWorkBuffer = NULL;
+    }
+    else
+    {
+        modelState->shadowTexture = (void*)textureFn_8006c5c4();
+    }
+    if (modelDef->shadowType == 1)
+    {
+        modelState->shadowRenderResource = NULL;
+    }
+    else
+    {
+        modelState->shadowRenderResource = (void*)-1;
+    }
+    modelState->shadowScale = *(f32*)modelDef;
+    modelState->shadowModelScale = *(f32*)((char*)modelDef + 0x88);
+    modelState->shadowOffsetX = lbl_803DCED8;
+    modelState->shadowOffsetY = lbl_803DB650;
+    modelState->shadowOffsetZ = lbl_803DCEDC;
+    modelState->shadowAlphaStep = 0x4000;
+    modelState->flags = OBJ_MODEL_STATE_SHADOW_VISIBLE;
+    modelState->pad38[0] = 0x19;
+    modelState->pad38[1] = 0x4b;
+    modelState->shadowTintA = 0x96;
+    modelState->shadowTintB = 0x64;
+    lbl_803DB658 = 1;
+    return (char*)rounded + 0x44;
 }
 
-int fn_800626C8(int *obj, int delta)
+int fn_800626C8(int* obj, int delta)
 {
-  ObjModelState *modelState;
-  s16 *alphaStep;
-  f32 f31;
-  int v;
+    ObjModelState* modelState;
+    s16* alphaStep;
+    f32 f31;
+    int v;
 
-  modelState = ((ObjAnimComponent *)obj)->modelState;
-  alphaStep = &modelState->shadowAlphaStep;
-  if (modelState->flags & OBJ_MODEL_STATE_SHADOW_FADE_OUT) {
-    *alphaStep = *alphaStep - (delta << 9);
-    if (*alphaStep <= 0) {
-      *alphaStep = 0;
+    modelState = ((ObjAnimComponent*)obj)->modelState;
+    alphaStep = &modelState->shadowAlphaStep;
+    if (modelState->flags & OBJ_MODEL_STATE_SHADOW_FADE_OUT)
+    {
+        *alphaStep = *alphaStep - (delta << 9);
+        if (*alphaStep <= 0)
+        {
+            *alphaStep = 0;
+        }
+        if (*alphaStep == 0)
+        {
+            modelState->shadowCastSlot = NULL;
+            return 0;
+        }
     }
-    if (*alphaStep == 0) {
-      modelState->shadowCastSlot = NULL;
-      return 0;
+    else if (!(modelState->flags & OBJ_MODEL_STATE_SHADOW_ALPHA_HOLD))
+    {
+        *alphaStep = *alphaStep + (delta << 9);
+        if (*alphaStep >= 0x4000)
+        {
+            *alphaStep = 0x4000;
+        }
     }
-  } else if (!(modelState->flags & OBJ_MODEL_STATE_SHADOW_ALPHA_HOLD)) {
-    *alphaStep = *alphaStep + (delta << 9);
-    if (*alphaStep >= 0x4000) {
-      *alphaStep = 0x4000;
+    f31 = lbl_803DB654 * (lbl_803DEC90 * (f32) * alphaStep);
+    v = (int)((f32)objShadowFn_80062378(obj, modelState->shadowTintA) * f31);
+    if (v > 0xff)
+    {
+        v = 0xff;
     }
-  }
-  f31 = lbl_803DB654 * (lbl_803DEC90 * (f32)*alphaStep);
-  v = (int)((f32)objShadowFn_80062378(obj, modelState->shadowTintA) * f31);
-  if (v > 0xff) {
-    v = 0xff;
-  } else if (v < 0) {
-    v = 0;
-  }
-  return v & 0xff;
+    else if (v < 0)
+    {
+        v = 0;
+    }
+    return v & 0xff;
 }
 
 void fn_80069EB8(int param)
 {
-  u8 *cache;
-  int blk;
-  u32 j;
+    u8* cache;
+    int blk;
+    u32 j;
 
-  cache = getCache();
-  for (blk = 0; blk < 0x40; blk++) {
-    int hi, mid;
-    u32 scaled;
-    j = 0;
-    hi = ((u32)blk >> 2) << 8;
-    mid = (blk & 3) << 3;
-    scaled = (blk + param) * 0xff;
-    for (; j < 0x40; j++) {
-      int idx = (j & 7) + ((j >> 3) << 5) + mid + hi;
-      u32 s = scaled;
-      if (s > 0x3fc0) {
-        s = 0x3fc0;
-      }
-      cache[idx] = (s * j) >> 12;
+    cache = getCache();
+    for (blk = 0; blk < 0x40; blk++)
+    {
+        int hi, mid;
+        u32 scaled;
+        j = 0;
+        hi = ((u32)blk >> 2) << 8;
+        mid = (blk & 3) << 3;
+        scaled = (blk + param) * 0xff;
+        for (; j < 0x40; j++)
+        {
+            int idx = (j & 7) + ((j >> 3) << 5) + mid + hi;
+            u32 s = scaled;
+            if (s > 0x3fc0)
+            {
+                s = 0x3fc0;
+            }
+            cache[idx] = (s * j) >> 12;
+        }
     }
-  }
-  memcpyToCache((void *)(lbl_803DCFB8 + 0x60), cache, 0);
-  lbl_803DCF80 = param;
+    memcpyToCache((void*)(lbl_803DCFB8 + 0x60), cache, 0);
+    lbl_803DCF80 = param;
 }
 
-typedef struct AngleXf {
-  s16 rotX;
-  s16 rotY;
-  s16 rotZ;
-  s16 pad6;
-  f32 scale;
-  f32 tx;
-  f32 ty;
-  f32 tz;
+typedef struct AngleXf
+{
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    s16 pad6;
+    f32 scale;
+    f32 tx;
+    f32 ty;
+    f32 tz;
 } AngleXf;
 
 #pragma dont_inline on
-void fn_80061094(f32 *vec, f32 *out, f32 scale)
+void fn_80061094(f32* vec, f32* out, f32 scale)
 {
-  AngleXf xf;
-  f32 ax;
-  f32 az;
-  int i;
+    AngleXf xf;
+    f32 ax;
+    f32 az;
+    int i;
 
-  xf.tx = 0.0f;
-  xf.ty = 0.0f;
-  xf.tz = 0.0f;
-  xf.scale = 1.0f;
-  xf.rotZ = 0;
-  ax = (f32)__fabs(vec[0]);
-  az = (f32)__fabs(vec[2]);
-  if (ax > az) {
-    xf.rotY = (u16)getAngle(ax, vec[1]);
-  } else {
-    xf.rotY = (u16)getAngle(az, vec[1]);
-  }
-  if (xf.rotY > 0x2000) {
-    xf.rotY = 0x2000;
-  }
-  xf.rotX = getAngle(vec[0], vec[2]);
-  for (i = 0; i < 8; i++) {
-    out[0] = lbl_8038D7DC[i * 3 + 0];
-    if (lbl_8038D7DC[i * 3 + 1] > 0.0f) {
-      out[1] = lbl_8038D7DC[i * 3 + 1];
-    } else {
-      out[1] = scale * lbl_8038D7DC[i * 3 + 1];
+    xf.tx = 0.0f;
+    xf.ty = 0.0f;
+    xf.tz = 0.0f;
+    xf.scale = 1.0f;
+    xf.rotZ = 0;
+    ax = (f32)__fabs(vec[0]);
+    az = (f32)__fabs(vec[2]);
+    if (ax > az)
+    {
+        xf.rotY = (u16)getAngle(ax, vec[1]);
     }
-    out[2] = lbl_8038D7DC[i * 3 + 2];
-    vecRotateZXY(&xf, out);
-    out += 3;
-  }
+    else
+    {
+        xf.rotY = (u16)getAngle(az, vec[1]);
+    }
+    if (xf.rotY > 0x2000)
+    {
+        xf.rotY = 0x2000;
+    }
+    xf.rotX = getAngle(vec[0], vec[2]);
+    for (i = 0; i < 8; i++)
+    {
+        out[0] = lbl_8038D7DC[i * 3 + 0];
+        if (lbl_8038D7DC[i * 3 + 1] > 0.0f)
+        {
+            out[1] = lbl_8038D7DC[i * 3 + 1];
+        }
+        else
+        {
+            out[1] = scale * lbl_8038D7DC[i * 3 + 1];
+        }
+        out[2] = lbl_8038D7DC[i * 3 + 2];
+        vecRotateZXY(&xf, out);
+        out += 3;
+    }
 }
 #pragma dont_inline reset
 
 void skyFn_80062a54(int param, f32 a, f32 b, f32 c)
 {
-  f32 vec[3];
-  f32 dot;
-  f32 mag;
+    f32 vec[3];
+    f32 dot;
+    f32 mag;
 
-  vec[0] = a;
-  vec[1] = b;
-  vec[2] = c;
-  PSVECNormalize(vec, vec);
-  lbl_803DB65A = param;
-  lbl_803DCED8 = a * (f32)(s16)param;
-  lbl_803DB650 = b * (f32)(s16)param;
-  lbl_803DB654 = lbl_803DEC68;
-  if (lbl_803DB650 < (&lbl_803DEC90)[1]) {
-    lbl_803DB650 = (&lbl_803DEC90)[1];
-  }
-  lbl_803DCEDC = c * (f32)(s16)param;
-  dot = vec[0] * lbl_803879B0[0] + vec[1] * lbl_803879B0[1] + vec[2] * lbl_803879B0[2];
-  mag = (vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]) *
-        (lbl_803879B0[0] * lbl_803879B0[0] + lbl_803879B0[1] * lbl_803879B0[1] +
-         lbl_803879B0[2] * lbl_803879B0[2]);
-  if (mag != 0.0f) {
-    mag = sqrtf(mag);
-  }
-  if (mag != 0.0f) {
-    lbl_803DCF00 = dot / mag;
-    if (lbl_803DCF00 < 0.0f) {
-      lbl_803DCF00 = lbl_803DCF00 * __AR_init_flag;
+    vec[0] = a;
+    vec[1] = b;
+    vec[2] = c;
+    PSVECNormalize(vec, vec);
+    lbl_803DB65A = param;
+    lbl_803DCED8 = a * (f32)(s16)
+    param;
+    lbl_803DB650 = b * (f32)(s16)
+    param;
+    lbl_803DB654 = lbl_803DEC68;
+    if (lbl_803DB650 < (&lbl_803DEC90)[1])
+    {
+        lbl_803DB650 = (&lbl_803DEC90)[1];
     }
-    if (lbl_803DCF00 <= __AR_BlockLength) {
-      lbl_803DB65C = 1;
+    lbl_803DCEDC = c * (f32)(s16)
+    param;
+    dot = vec[0] * lbl_803879B0[0] + vec[1] * lbl_803879B0[1] + vec[2] * lbl_803879B0[2];
+    mag = (vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]) *
+    (lbl_803879B0[0] * lbl_803879B0[0] + lbl_803879B0[1] * lbl_803879B0[1] +
+        lbl_803879B0[2] * lbl_803879B0[2]);
+    if (mag != 0.0f)
+    {
+        mag = sqrtf(mag);
     }
-  }
-  if (lbl_803DB65C != 0) {
-    lbl_803879B0[0] = vec[0];
-    lbl_803879B0[1] = vec[1];
-    lbl_803879B0[2] = vec[2];
-    lbl_803DB65C = 0;
-  }
-  lbl_803DB658 = 1;
+    if (mag != 0.0f)
+    {
+        lbl_803DCF00 = dot / mag;
+        if (lbl_803DCF00 < 0.0f)
+        {
+            lbl_803DCF00 = lbl_803DCF00 * __AR_init_flag;
+        }
+        if (lbl_803DCF00 <= __AR_BlockLength)
+        {
+            lbl_803DB65C = 1;
+        }
+    }
+    if (lbl_803DB65C != 0)
+    {
+        lbl_803879B0[0] = vec[0];
+        lbl_803879B0[1] = vec[1];
+        lbl_803879B0[2] = vec[2];
+        lbl_803DB65C = 0;
+    }
+    lbl_803DB658 = 1;
 }
 
-int fn_80061DD8(void *obj, void *u1, void *u2, int count, f32 *outBase, f32 *outPtr, f32 *input, int limit)
+int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* outPtr, f32* input, int limit)
 {
-  ObjModelState *modelState = ((ObjAnimComponent *)obj)->modelState;
-  int i = 0;
-  int outCount = 0;
-  int n;
+    ObjModelState* modelState = ((ObjAnimComponent*)obj)->modelState;
+    int i = 0;
+    int outCount = 0;
+    int n;
 
-  lbl_803DCEF2 = 0;
-  for (n = 0; n < count; n++) {
-    int vis = 1;
-    f32 dot = modelState->shadowOffsetY * input[1] +
-              modelState->shadowOffsetX * input[0] +
-              modelState->shadowOffsetZ * input[2];
-    if (dot < 0.0f) {
-      vis = -1;
+    lbl_803DCEF2 = 0;
+    for (n = 0; n < count; n++)
+    {
+        int vis = 1;
+        f32 dot = modelState->shadowOffsetY * input[1] +
+            modelState->shadowOffsetX * input[0] +
+            modelState->shadowOffsetZ * input[2];
+        if (dot < 0.0f)
+        {
+            vis = -1;
+        }
+        if (vis == 1)
+        {
+            lbl_803DCEF2++;
+            outPtr[0] = *(f32*)((char*)outBase + i * 0xc + 0);
+            outPtr[1] = *(f32*)((char*)outBase + i * 0xc + 4);
+            outPtr[2] = *(f32*)((char*)outBase + i * 0xc + 8);
+            if (++outCount >= limit)
+            {
+                return 0;
+            }
+            outPtr[3] = *(f32*)((char*)outBase + (i + 1) * 0xc + 0);
+            outPtr[4] = *(f32*)((char*)outBase + (i + 1) * 0xc + 4);
+            outPtr[5] = *(f32*)((char*)outBase + (i + 1) * 0xc + 8);
+            if (++outCount >= limit)
+            {
+                return 0;
+            }
+            outPtr[6] = *(f32*)((char*)outBase + (i + 2) * 0xc + 0);
+            outPtr[7] = *(f32*)((char*)outBase + (i + 2) * 0xc + 4);
+            outPtr[8] = *(f32*)((char*)outBase + (i + 2) * 0xc + 8);
+            outPtr += 9;
+            if (++outCount >= limit)
+            {
+                return 0;
+            }
+        }
+        i += 3;
+        input += 5;
     }
-    if (vis == 1) {
-      lbl_803DCEF2++;
-      outPtr[0] = *(f32 *)((char *)outBase + i * 0xc + 0);
-      outPtr[1] = *(f32 *)((char *)outBase + i * 0xc + 4);
-      outPtr[2] = *(f32 *)((char *)outBase + i * 0xc + 8);
-      if (++outCount >= limit) {
-        return 0;
-      }
-      outPtr[3] = *(f32 *)((char *)outBase + (i + 1) * 0xc + 0);
-      outPtr[4] = *(f32 *)((char *)outBase + (i + 1) * 0xc + 4);
-      outPtr[5] = *(f32 *)((char *)outBase + (i + 1) * 0xc + 8);
-      if (++outCount >= limit) {
-        return 0;
-      }
-      outPtr[6] = *(f32 *)((char *)outBase + (i + 2) * 0xc + 0);
-      outPtr[7] = *(f32 *)((char *)outBase + (i + 2) * 0xc + 4);
-      outPtr[8] = *(f32 *)((char *)outBase + (i + 2) * 0xc + 8);
-      outPtr += 9;
-      if (++outCount >= limit) {
-        return 0;
-      }
-    }
-    i += 3;
-    input += 5;
-  }
-  return lbl_803DCEF2 != 0;
+    return lbl_803DCEF2 != 0;
 }
 
-void fn_8006135C(s16 *out, void *obj)
+void fn_8006135C(s16* out, void* obj)
 {
-  f32 dist;
-  f32 b[3];
-  f32 c[3];
-  f32 a[3];
-  f64 d;
-  f32 scale;
-  f32 nd;
-  f32 z;
-  f32 s;
+    f32 dist;
+    f32 b[3];
+    f32 c[3];
+    f32 a[3];
+    f64 d;
+    f32 scale;
+    f32 nd;
+    f32 z;
+    f32 s;
 
-  if (fn_80065768((int)obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
-                  ((GameObject *)obj)->anim.localPosZ, &dist, a, 0) != 0) {
-    goto fail;
-  }
-  PSVECNormalize(a, a);
-  b[0] = lbl_803DEC68;
-  b[1] = lbl_803DEC58;
-  b[2] = lbl_803DEC58;
-  d = __fabs(PSVECDotProduct(a, b));
-  if (d >= lbl_803DEC6C) {
-    b[0] = lbl_803DEC58;
-    b[2] = lbl_803DEC68;
-  }
-  PSVECCrossProduct(a, b, c);
-  PSVECCrossProduct(c, a, b);
-  PSVECNormalize(b, b);
-  PSVECNormalize(c, c);
-  scale = lbl_803DEC70 * ((ObjAnimComponent *)obj)->modelState->shadowScale;
-  PSVECScale(b, b, scale);
-  PSVECScale(c, c, scale);
-  nd = -dist;
-  z = lbl_803DEC58;
-  s = (&lbl_803DEC70)[1];
-  out[0] = (s * ((z - b[0]) - c[0]));
-  out[1] = (s * ((nd - b[1]) - c[1]));
-  out[2] = (s * ((z - b[2]) - c[2]));
-  out[3] = (s * ((z + b[0]) - c[0]));
-  out[4] = (s * ((nd + b[1]) - c[1]));
-  out[5] = (s * ((z + b[2]) - c[2]));
-  out[6] = (s * (c[0] + (z + b[0])));
-  out[7] = (s * (c[1] + (nd + b[1])));
-  out[8] = (s * (c[2] + (z + b[2])));
-  out[9] = (s * (c[0] + (z - b[0])));
-  out[10] = (s * (c[1] + (nd - b[1])));
-  out[11] = (s * (c[2] + (z - b[2])));
-  *(u8 *)((char *)out + 0x18) = 1;
-  return;
+    if (fn_80065768((int)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                    ((GameObject*)obj)->anim.localPosZ, &dist, a, 0) != 0)
+    {
+        goto fail;
+    }
+    PSVECNormalize(a, a);
+    b[0] = lbl_803DEC68;
+    b[1] = lbl_803DEC58;
+    b[2] = lbl_803DEC58;
+    d = __fabs(PSVECDotProduct(a, b));
+    if (d >= lbl_803DEC6C)
+    {
+        b[0] = lbl_803DEC58;
+        b[2] = lbl_803DEC68;
+    }
+    PSVECCrossProduct(a, b, c);
+    PSVECCrossProduct(c, a, b);
+    PSVECNormalize(b, b);
+    PSVECNormalize(c, c);
+    scale = lbl_803DEC70 * ((ObjAnimComponent*)obj)->modelState->shadowScale;
+    PSVECScale(b, b, scale);
+    PSVECScale(c, c, scale);
+    nd = -dist;
+    z = lbl_803DEC58;
+    s = (&lbl_803DEC70)[1];
+    out[0] = (s * ((z - b[0]) - c[0]));
+    out[1] = (s * ((nd - b[1]) - c[1]));
+    out[2] = (s * ((z - b[2]) - c[2]));
+    out[3] = (s * ((z + b[0]) - c[0]));
+    out[4] = (s * ((nd + b[1]) - c[1]));
+    out[5] = (s * ((z + b[2]) - c[2]));
+    out[6] = (s * (c[0] + (z + b[0])));
+    out[7] = (s * (c[1] + (nd + b[1])));
+    out[8] = (s * (c[2] + (z + b[2])));
+    out[9] = (s * (c[0] + (z - b[0])));
+    out[10] = (s * (c[1] + (nd - b[1])));
+    out[11] = (s * (c[2] + (z - b[2])));
+    *(u8*)((char*)out + 0x18) = 1;
+    return;
 fail:
-  *(u8 *)((char *)out + 0x18) = 0xff;
+    *(u8*)((char*)out + 0x18) = 0xff;
 }
 
-void hitDetect_calcSweptSphereBounds(int *boundsOut, f32 *startPoints, f32 *endPoints, f32 *radii, int pointCount)
+void hitDetect_calcSweptSphereBounds(int* boundsOut, f32* startPoints, f32* endPoints, f32* radii, int pointCount)
 {
-  int i;
+    int i;
 
-  boundsOut[0] = 1000000;
-  boundsOut[3] = -1000000;
-  boundsOut[1] = 1000000;
-  boundsOut[4] = -1000000;
-  boundsOut[2] = 1000000;
-  boundsOut[5] = -1000000;
-  for (i = pointCount; i != 0; i--) {
-    if (startPoints[0] - radii[0] < (f32)boundsOut[0]) boundsOut[0] = (int)(startPoints[0] - radii[0]);
-    if (startPoints[0] + radii[0] > (f32)boundsOut[3]) boundsOut[3] = (int)(startPoints[0] + radii[0]);
-    if (startPoints[1] - radii[0] < (f32)boundsOut[1]) boundsOut[1] = (int)(startPoints[1] - radii[0]);
-    if (startPoints[1] + radii[0] > (f32)boundsOut[4]) boundsOut[4] = (int)(startPoints[1] + radii[0]);
-    if (startPoints[2] - radii[0] < (f32)boundsOut[2]) boundsOut[2] = (int)(startPoints[2] - radii[0]);
-    if (startPoints[2] + radii[0] > (f32)boundsOut[5]) boundsOut[5] = (int)(startPoints[2] + radii[0]);
-    if (endPoints[0] - radii[0] < (f32)boundsOut[0]) boundsOut[0] = (int)(endPoints[0] - radii[0]);
-    if (endPoints[0] + radii[0] > (f32)boundsOut[3]) boundsOut[3] = (int)(endPoints[0] + radii[0]);
-    if (endPoints[1] - radii[0] < (f32)boundsOut[1]) boundsOut[1] = (int)(endPoints[1] - radii[0]);
-    if (endPoints[1] + radii[0] > (f32)boundsOut[4]) boundsOut[4] = (int)(endPoints[1] + radii[0]);
-    if (endPoints[2] - radii[0] < (f32)boundsOut[2]) boundsOut[2] = (int)(endPoints[2] - radii[0]);
-    if (endPoints[2] + radii[0] > (f32)boundsOut[5]) boundsOut[5] = (int)(endPoints[2] + radii[0]);
-    startPoints += 3;
-    endPoints += 3;
-    radii += 1;
-  }
+    boundsOut[0] = 1000000;
+    boundsOut[3] = -1000000;
+    boundsOut[1] = 1000000;
+    boundsOut[4] = -1000000;
+    boundsOut[2] = 1000000;
+    boundsOut[5] = -1000000;
+    for (i = pointCount; i != 0; i--)
+    {
+        if (startPoints[0] - radii[0] < (f32)boundsOut[0]) boundsOut[0] = (int)(startPoints[0] - radii[0]);
+        if (startPoints[0] + radii[0] > (f32)boundsOut[3]) boundsOut[3] = (int)(startPoints[0] + radii[0]);
+        if (startPoints[1] - radii[0] < (f32)boundsOut[1]) boundsOut[1] = (int)(startPoints[1] - radii[0]);
+        if (startPoints[1] + radii[0] > (f32)boundsOut[4]) boundsOut[4] = (int)(startPoints[1] + radii[0]);
+        if (startPoints[2] - radii[0] < (f32)boundsOut[2]) boundsOut[2] = (int)(startPoints[2] - radii[0]);
+        if (startPoints[2] + radii[0] > (f32)boundsOut[5]) boundsOut[5] = (int)(startPoints[2] + radii[0]);
+        if (endPoints[0] - radii[0] < (f32)boundsOut[0]) boundsOut[0] = (int)(endPoints[0] - radii[0]);
+        if (endPoints[0] + radii[0] > (f32)boundsOut[3]) boundsOut[3] = (int)(endPoints[0] + radii[0]);
+        if (endPoints[1] - radii[0] < (f32)boundsOut[1]) boundsOut[1] = (int)(endPoints[1] - radii[0]);
+        if (endPoints[1] + radii[0] > (f32)boundsOut[4]) boundsOut[4] = (int)(endPoints[1] + radii[0]);
+        if (endPoints[2] - radii[0] < (f32)boundsOut[2]) boundsOut[2] = (int)(endPoints[2] - radii[0]);
+        if (endPoints[2] + radii[0] > (f32)boundsOut[5]) boundsOut[5] = (int)(endPoints[2] + radii[0]);
+        startPoints += 3;
+        endPoints += 3;
+        radii += 1;
+    }
 }
 
 extern int shouldDrawShadows(void);
-extern void hitDetectFn_800691c0(int *obj, int *ranges, int a, int b);
-extern int fn_80060C14(f32 a, f32 b, int *obj, int p4, void *p5, int p6, int p7, int p8, int p9);
-void trackDolphin_buildShadowVolumePlanes(int *obj, void *buf48, void *bufA8);
-extern void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *p7, void *buf48, f32 f);
+extern void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b);
+extern int fn_80060C14(f32 a, f32 b, int* obj, int p4, void* p5, int p6, int p7, int p8, int p9);
+void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8);
+extern void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* p7, void* buf48, f32 f);
 extern u8 lbl_803879BC[];
 extern int lbl_803DCF2C;
 extern int lbl_803DCEE0;
 extern int lbl_803DCEE4;
 extern s16 lbl_803DCEF0;
 
-int objShadowFn_80062498(int *obj, int param2)
+int objShadowFn_80062498(int* obj, int param2)
 {
-    ObjModelState *modelState;
-    u8 *cache;
+    ObjModelState* modelState;
+    u8* cache;
     f32 yOff;
     int idxOut = 0;
     int drawScratch;
-    u32 *vtx;
+    u32* vtx;
     int alphaOut = 0;
     int alpha;
     u32 handle;
@@ -2997,36 +3254,41 @@ int objShadowFn_80062498(int *obj, int param2)
     u8 bufA8[304];
 
     cache = getCache();
-    modelState = ((ObjAnimComponent *)obj)->modelState;
-    if (shouldDrawShadows() == 0) {
+    modelState = ((ObjAnimComponent*)obj)->modelState;
+    if (shouldDrawShadows() == 0)
+    {
         modelState->shadowCastSlot = NULL;
         return 0;
     }
 
     handle = (u32)modelState->shadowRenderResource;
-    if (handle == 0 || handle == 0xFFFFFFFF) {
+    if (handle == 0 || handle == 0xFFFFFFFF)
+    {
         vec[0] = modelState->shadowOffsetX;
         vec[1] = modelState->shadowOffsetY;
         vec[2] = modelState->shadowOffsetZ;
-        fn_80061094(vec, (f32 *)buf48, modelState->shadowModelScale);
+        fn_80061094(vec, (f32*)buf48, modelState->shadowModelScale);
 
         {
-            void *p54 = ((GameObject *)obj)->anim.hitReactState;
-            if (p54 != NULL) {
-                yOff = (f32)((int)((ObjHitsPriorityState *)p54)->primaryCapsuleOffsetB / 2);
-            } else {
+            void* p54 = ((GameObject*)obj)->anim.hitReactState;
+            if (p54 != NULL)
+            {
+                yOff = (f32)((int)((ObjHitsPriorityState*)p54)->primaryCapsuleOffsetB / 2);
+            }
+            else
+            {
                 yOff = lbl_803DEC58;
             }
         }
 
-        base[0] = ((GameObject *)obj)->anim.worldPosX;
-        base[1] = ((GameObject *)obj)->anim.worldPosY + yOff;
-        base[2] = ((GameObject *)obj)->anim.worldPosZ;
-        vecGetRanges((f32 *)buf48, base, ranges, modelState->shadowScale);
+        base[0] = ((GameObject*)obj)->anim.worldPosX;
+        base[1] = ((GameObject*)obj)->anim.worldPosY + yOff;
+        base[2] = ((GameObject*)obj)->anim.worldPosZ;
+        vecGetRanges((f32*)buf48, base, ranges, modelState->shadowScale);
 
         hitDetectFn_800691c0(obj, ranges, 0x81, 0);
-        fn_80069958((void **)&vtx);
-        fn_80069968((s32 *)&idxOut, (u32 *)&alphaOut);
+        fn_80069958((void**)&vtx);
+        fn_80069968((s32*)&idxOut, (u32*)&alphaOut);
 
         alpha = alphaOut;
         idxOut = fn_80060C14((f32)(int)vtx[0], (f32)(int)vtx[2], obj, alpha,
@@ -3036,21 +3298,22 @@ int objShadowFn_80062498(int *obj, int param2)
         lbl_803DCEF0 = (s16)idxOut;
         lbl_803DCEE4 = (int)vtx;
         trackDolphin_buildShadowVolumePlanes(obj, buf48, bufA8);
-        fn_80061DD8(obj, buf48, bufA8, idxOut, (f32 *)lbl_803DCF2C, (f32 *)cache,
-                    (f32 *)lbl_803879BC, 0x555);
+        fn_80061DD8(obj, buf48, bufA8, idxOut, (f32*)lbl_803DCF2C, (f32*)cache,
+                    (f32*)lbl_803879BC, 0x555);
     }
     objDrawFn_80061f0c(cache, modelState, obj, (int)lbl_803DCEF2, &drawScratch, buf48, yOff);
     return 0;
 }
 
 extern int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);
-extern int fn_80067B84(int cur, TrackBlockDescriptor *desc, int model, int flags, f32 c, f32 x0, f64 y0, f32 z0, f32 x1, f64 y1, f32 z1);
-extern int modelFileHeaderGetCullDistance(void *hdr);
+extern int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, int flags, f32 c, f32 x0, f64 y0, f32 z0, f32 x1,
+                       f64 y1, f32 z1);
+extern int modelFileHeaderGetCullDistance(void* hdr);
 extern u32 lbl_803DCF70;
 extern s16 lbl_803DCF6E;
 extern f32 lbl_803DECC4;
 
-void hitDetectFn_800691c0(int *obj, int *ranges, int a, int b)
+void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b)
 {
     f32 f31 = (f32)(ranges[0] - 5);
     f32 f30 = (f32)(ranges[3] + 5);
@@ -3058,8 +3321,8 @@ void hitDetectFn_800691c0(int *obj, int *ranges, int a, int b)
     f32 f28 = (f32)(ranges[4] + 5);
     f32 f27 = (f32)(ranges[2] - 5);
     f32 f26 = (f32)(ranges[5] + 5);
-    TrackBlockDescriptor *desc;
-    TrackBlockDescriptor *descEnd;
+    TrackBlockDescriptor* desc;
+    TrackBlockDescriptor* descEnd;
     int cur;
     int masked;
 
@@ -3069,38 +3332,44 @@ void hitDetectFn_800691c0(int *obj, int *ranges, int a, int b)
     descEnd = &gTrackBlockDescriptors[20];
     lbl_803DCF70 = lbl_803DCF30 + 0x16440;
     masked = a & 0xffff;
-    if ((masked & 0x10) == 0) {
+    if ((masked & 0x10) == 0)
+    {
         cur = mapLoadBlocksFn_800685cc(lbl_803DCF30, (int)f31, (int)f29, (int)f27,
                                        (int)f30, (int)f28, (int)f26, a, b);
-    } else {
+    }
+    else
+    {
         cur = lbl_803DCF30;
     }
-    if ((u32)cur < lbl_803DCF70 && (masked & 1) && obj != NULL) {
+    if ((u32)cur < lbl_803DCF70 && (masked & 1) && obj != NULL)
+    {
         int count;
         s16 i;
         int flag80 = masked & 0x80;
-        ObjAnimComponent **resetObjects = ObjHitReact_GetResetObjects(&count);
-        for (i = 0; i < count; i++, resetObjects++) {
-            ObjAnimComponent *resetObj = *resetObjects;
-            ObjHitsPriorityState *hitState;
-            ObjHitboxTransformState *transformState;
+        ObjAnimComponent** resetObjects = ObjHitReact_GetResetObjects(&count);
+        for (i = 0; i < count; i++, resetObjects++)
+        {
+            ObjAnimComponent* resetObj = *resetObjects;
+            ObjHitsPriorityState* hitState;
+            ObjHitboxTransformState* transformState;
             int n;
-            int *model;
+            int* model;
             int hdr;
             f32 r, c;
 
             if (flag80 && (resetObj->modelInstance->flags & 0x01000000)) continue;
-            hitState = (ObjHitsPriorityState *)resetObj->hitReactState;
+            hitState = (ObjHitsPriorityState*)resetObj->hitReactState;
             if (hitState == NULL) continue;
-            transformState = ((ObjHitbox *)resetObj)->transformState;
+            transformState = ((ObjHitbox*)resetObj)->transformState;
             if (transformState == NULL) continue;
             if (transformState->resetFrames != 0) continue;
             if (transformState->pad10E != 0) continue;
-            model = (int *)resetObj->banks[hitState->stateIndex];
+            model = (int*)resetObj->banks[hitState->stateIndex];
             if (model == NULL) continue;
-            hdr = *(int *)model;
-            if (*(u16 *)(hdr + 0xf0) == 0) continue;
-            r = (f32)(u32)(u16)modelFileHeaderGetCullDistance((void *)hdr);
+            hdr = *(int*)model;
+            if (*(u16*)(hdr + 0xf0) == 0) continue;
+            r = (f32)(u32)(u16)
+            modelFileHeaderGetCullDistance((void*)hdr);
             c = resetObj->worldPosX;
             if (f30 < c - r) continue;
             if (f31 > c + r) continue;
@@ -3132,14 +3401,14 @@ void hitDetectFn_800691c0(int *obj, int *ranges, int a, int b)
     desc->firstTriangle = lbl_803DCF6E;
 }
 
-extern void PSMTXMultVecArray(void *m, void *src, void *dst, u32 count);
+extern void PSMTXMultVecArray(void* m, void* src, void* dst, u32 count);
 
-int fn_80060C14(f32 a, f32 b, int *obj, int p4, void *p5, int p6, int p7, int p8, int p9)
+int fn_80060C14(f32 a, f32 b, int* obj, int p4, void* p5, int p6, int p7, int p8, int p9)
 {
     int j;
     f32 lm[12];
-    u8 *d = (u8 *)fn_80069944((u32 *)&j);
-    u8 *end = d + j * 0x18;
+    u8* d = (u8*)fn_80069944((u32*)&j);
+    u8* end = d + j * 0x18;
     int grp = 0;
     int outOff = 0;
     int total;
@@ -3148,86 +3417,99 @@ int fn_80060C14(f32 a, f32 b, int *obj, int p4, void *p5, int p6, int p7, int p8
     j = 0;
     total = 0;
     mask = p9 ? 4 : 8;
-    for (; d < end; d += 0x18) {
-        int id = *(int *)d;
-        if (id == 0 || id == *(int *)&((GameObject *)obj)->anim.parent) {
-            f32 fx = ((GameObject *)obj)->anim.localPosX;
-            f32 fz = ((GameObject *)obj)->anim.localPosZ;
-            f32 *outA;
+    for (; d < end; d += 0x18)
+    {
+        int id = *(int*)d;
+        if (id == 0 || id == *(int*)&((GameObject*)obj)->anim.parent)
+        {
+            f32 fx = ((GameObject*)obj)->anim.localPosX;
+            f32 fz = ((GameObject*)obj)->anim.localPosZ;
+            f32* outA;
 
-            if (id == 0) {
+            if (id == 0)
+            {
                 fx -= a;
                 fz -= b;
             }
-            j = (s16)*(s16 *)((char *)d + 4);
-            outA = (f32 *)((char *)p5 + outOff);
-            while (j < (s16)*(s16 *)((char *)d + 0x1c) && grp < 0x4b0 && total < 0xe10) {
-                if (mask & (s8)*(u8 *)((char *)p4 + j * 0x4c + 0x49)) {
-                    ((TrackP6Entry *)p6)->relX0 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x10)) - fx;
-                    ((TrackP6Entry *)p6)->relY0 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x16)) - ((GameObject *)obj)->anim.localPosY;
-                    ((TrackP6Entry *)p6)->relZ0 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1c)) - fz;
-                    ((TrackP6Entry *)p6)->relX1 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x12)) - fx;
-                    ((TrackP6Entry *)p6)->relY1 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x18)) - ((GameObject *)obj)->anim.localPosY;
-                    ((TrackP6Entry *)p6)->relZ1 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1e)) - fz;
-                    ((TrackP6Entry *)p6)->relX2 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x14)) - fx;
-                    ((TrackP6Entry *)p6)->relY2 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1a)) - ((GameObject *)obj)->anim.localPosY;
-                    ((TrackP6Entry *)p6)->relZ2 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x20)) - fz;
-                    outA[0] = *(f32 *)((char *)p4 + j * 0x4c + 0x4);
-                    outA[1] = *(f32 *)((char *)p4 + j * 0x4c + 0x8);
-                    outA[2] = *(f32 *)((char *)p4 + j * 0x4c + 0xc);
-                    *(u8 *)((char *)outA + 0x10) = *(u8 *)((char *)p4 + j * 0x4c + 0x49);
+            j = (s16) * (s16*)((char*)d + 4);
+            outA = (f32*)((char*)p5 + outOff);
+            while (j < (s16) * (s16*)((char*)d + 0x1c) && grp < 0x4b0 && total < 0xe10)
+            {
+                if (mask & (s8) * (u8*)((char*)p4 + j * 0x4c + 0x49))
+                {
+                    ((TrackP6Entry*)p6)->relX0 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x10)) - fx;
+                    ((TrackP6Entry*)p6)->relY0 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x16)) - ((GameObject*)obj)
+                        ->anim.localPosY;
+                    ((TrackP6Entry*)p6)->relZ0 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x1c)) - fz;
+                    ((TrackP6Entry*)p6)->relX1 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x12)) - fx;
+                    ((TrackP6Entry*)p6)->relY1 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x18)) - ((GameObject*)obj)
+                        ->anim.localPosY;
+                    ((TrackP6Entry*)p6)->relZ1 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x1e)) - fz;
+                    ((TrackP6Entry*)p6)->relX2 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x14)) - fx;
+                    ((TrackP6Entry*)p6)->relY2 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x1a)) - ((GameObject*)obj)
+                        ->anim.localPosY;
+                    ((TrackP6Entry*)p6)->relZ2 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x20)) - fz;
+                    outA[0] = *(f32*)((char*)p4 + j * 0x4c + 0x4);
+                    outA[1] = *(f32*)((char*)p4 + j * 0x4c + 0x8);
+                    outA[2] = *(f32*)((char*)p4 + j * 0x4c + 0xc);
+                    *(u8*)((char*)outA + 0x10) = *(u8*)((char*)p4 + j * 0x4c + 0x49);
                     p6 += 0x24;
                     total += 3;
-                    outA = (f32 *)((char *)outA + 0x14);
+                    outA = (f32*)((char*)outA + 0x14);
                     grp += 1;
                     outOff += 0x14;
                 }
                 j++;
             }
-        } else {
-            f32 *m = *(f32 **)((char *)d + 0xc);
-            f32 *p6start = (f32 *)p6;
+        }
+        else
+        {
+            f32* m = *(f32**)((char*)d + 0xc);
+            f32* p6start = (f32*)p6;
             int totalStart = total;
-            f32 *outA;
+            f32* outA;
 
             lm[0] = m[0];
             lm[1] = m[4];
             lm[2] = m[8];
-            lm[3] = m[12] - ((GameObject *)obj)->anim.localPosX;
+            lm[3] = m[12] - ((GameObject*)obj)->anim.localPosX;
             lm[4] = m[1];
             lm[5] = m[5];
             lm[6] = m[9];
-            lm[7] = m[13] - ((GameObject *)obj)->anim.localPosY;
+            lm[7] = m[13] - ((GameObject*)obj)->anim.localPosY;
             lm[8] = m[2];
             lm[9] = m[6];
             lm[10] = m[10];
-            lm[11] = m[14] - ((GameObject *)obj)->anim.localPosZ;
-            j = (s16)*(s16 *)((char *)d + 4);
-            outA = (f32 *)((char *)p5 + outOff);
-            while (j < (s16)*(s16 *)((char *)d + 0x1c) && grp < 0x4b0 && total < 0xe10) {
-                if (mask & (s8)*(u8 *)((char *)p4 + j * 0x4c + 0x49)) {
-                    ((TrackP6Entry *)p6)->relX0 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x10));
-                    ((TrackP6Entry *)p6)->relY0 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x16));
-                    ((TrackP6Entry *)p6)->relZ0 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1c));
-                    ((TrackP6Entry *)p6)->relX1 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x12));
-                    ((TrackP6Entry *)p6)->relY1 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x18));
-                    ((TrackP6Entry *)p6)->relZ1 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1e));
-                    ((TrackP6Entry *)p6)->relX2 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x14));
-                    ((TrackP6Entry *)p6)->relY2 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1a));
-                    ((TrackP6Entry *)p6)->relZ2 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x20));
-                    outA[0] = *(f32 *)((char *)p4 + j * 0x4c + 0x4);
-                    outA[1] = *(f32 *)((char *)p4 + j * 0x4c + 0x8);
-                    outA[2] = *(f32 *)((char *)p4 + j * 0x4c + 0xc);
-                    *(u8 *)((char *)outA + 0x10) = *(u8 *)((char *)p4 + j * 0x4c + 0x49);
+            lm[11] = m[14] - ((GameObject*)obj)->anim.localPosZ;
+            j = (s16) * (s16*)((char*)d + 4);
+            outA = (f32*)((char*)p5 + outOff);
+            while (j < (s16) * (s16*)((char*)d + 0x1c) && grp < 0x4b0 && total < 0xe10)
+            {
+                if (mask & (s8) * (u8*)((char*)p4 + j * 0x4c + 0x49))
+                {
+                    ((TrackP6Entry*)p6)->relX0 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x10));
+                    ((TrackP6Entry*)p6)->relY0 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x16));
+                    ((TrackP6Entry*)p6)->relZ0 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x1c));
+                    ((TrackP6Entry*)p6)->relX1 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x12));
+                    ((TrackP6Entry*)p6)->relY1 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x18));
+                    ((TrackP6Entry*)p6)->relZ1 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x1e));
+                    ((TrackP6Entry*)p6)->relX2 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x14));
+                    ((TrackP6Entry*)p6)->relY2 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x1a));
+                    ((TrackP6Entry*)p6)->relZ2 = __OSs16tof32((s16*)((char*)p4 + j * 0x4c + 0x20));
+                    outA[0] = *(f32*)((char*)p4 + j * 0x4c + 0x4);
+                    outA[1] = *(f32*)((char*)p4 + j * 0x4c + 0x8);
+                    outA[2] = *(f32*)((char*)p4 + j * 0x4c + 0xc);
+                    *(u8*)((char*)outA + 0x10) = *(u8*)((char*)p4 + j * 0x4c + 0x49);
                     p6 += 0x24;
                     total += 3;
-                    outA = (f32 *)((char *)outA + 0x14);
+                    outA = (f32*)((char*)outA + 0x14);
                     grp += 1;
                     outOff += 0x14;
                 }
                 j++;
             }
-            if (totalStart < total) {
+            if (totalStart < total)
+            {
                 PSMTXMultVecArray(lm, p6start, p6start, total - totalStart);
             }
         }
@@ -3243,7 +3525,7 @@ extern f32 lbl_803DCF54;
 extern f32 lbl_803DCF50;
 extern f32 lbl_803DCF58;
 
-int fn_800630D8(f32 cx, f32 cy, f32 r, f32 *p4, f32 *p5, s8 flag)
+int fn_800630D8(f32 cx, f32 cy, f32 r, f32* p4, f32* p5, s8 flag)
 {
     f32 px;
     f32 dx, dy, sum, cc;
@@ -3262,8 +3544,10 @@ int fn_800630D8(f32 cx, f32 cy, f32 r, f32 *p4, f32 *p5, s8 flag)
     dy = p5[0] - cy;
     sum = dx * dx + dy * dy;
     cc = sum - r * r;
-    if (cc < __AR_Callback) {
-        if (flag != 0) {
+    if (cc < __AR_Callback)
+    {
+        if (flag != 0)
+        {
             p4[1] = px + lbl_803DCF54;
             p5[1] = p5[0] + lbl_803DCF50;
         }
@@ -3273,10 +3557,12 @@ int fn_800630D8(f32 cx, f32 cy, f32 r, f32 *p4, f32 *p5, s8 flag)
     dx2 = p4[1] - px;
     dy2 = p5[1] - p5[0];
     len2 = dx2 * dx2 + dy2 * dy2;
-    if (len2 > __AR_Callback) {
+    if (len2 > __AR_Callback)
+    {
         B = lbl_803DECB8 * (dx2 * dx + dy2 * dy);
         disc = B * B - lbl_803DECBC * len2 * cc;
-        if (disc >= __AR_Callback) {
+        if (disc >= __AR_Callback)
+        {
             root = sqrtf(disc);
             nB = -B;
             denom = lbl_803DECB8 * len2;
@@ -3286,9 +3572,11 @@ int fn_800630D8(f32 cx, f32 cy, f32 r, f32 *p4, f32 *p5, s8 flag)
             if (t2 < __AR_Callback) t2 = lbl_803DECC0;
             if (t2 < t1) t1 = t2;
             t = t1;
-            if (t >= __AR_Callback && t <= lbl_803DECC4) {
+            if (t >= __AR_Callback && t <= lbl_803DECC4)
+            {
                 lbl_803DCF58 = t;
-                if (flag != 0) {
+                if (flag != 0)
+                {
                     hitX = t * dx2 + p4[0];
                     hitY = t * dy2 + p5[0];
                     nx = (hitX - cx) / r;
@@ -3302,7 +3590,8 @@ int fn_800630D8(f32 cx, f32 cy, f32 r, f32 *p4, f32 *p5, s8 flag)
                     step8 = lbl_803DECC8;
                     step_x = step8 * nx;
                     step_y = step8 * ny;
-                    while (dot + (nx * p4[1] + ny * p5[1]) < step8) {
+                    while (dot + (nx * p4[1] + ny * p5[1]) < step8)
+                    {
                         p4[1] += step_x;
                         p5[1] += step_y;
                     }
@@ -3315,9 +3604,9 @@ int fn_800630D8(f32 cx, f32 cy, f32 r, f32 *p4, f32 *p5, s8 flag)
 }
 
 extern f32 __PADFixBits;
-extern void DCStoreRange(void *addr, int nBytes);
+extern void DCStoreRange(void* addr, int nBytes);
 
-void fn_80069B1C(u8 *a, u8 *b, u8 *c, f32 t)
+void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
 {
     u8 fmt;
     u32 w, h;
@@ -3330,150 +3619,167 @@ void fn_80069B1C(u8 *a, u8 *b, u8 *c, f32 t)
     if (a == NULL) return;
     if (b == NULL) return;
     if (c == NULL) return;
-    fmt = *(u8 *)(a + 0x16);
+    fmt = *(u8*)(a + 0x16);
     if (fmt != 4 && fmt != 6) return;
-    if (*(u8 *)(b + 0x16) != fmt) return;
-    if (*(u8 *)(c + 0x16) != fmt) return;
-    w = *(u16 *)(a + 0xa);
-    if (w != *(u16 *)(b + 0xa)) return;
-    h = *(u16 *)(a + 0xc);
-    if (h != *(u16 *)(b + 0xc)) return;
-    if (w != *(u16 *)(c + 0xa)) return;
-    if (h == *(u16 *)(c + 0xc)) {
+    if (*(u8*)(b + 0x16) != fmt) return;
+    if (*(u8*)(c + 0x16) != fmt) return;
+    w = *(u16*)(a + 0xa);
+    if (w != *(u16*)(b + 0xa)) return;
+    h = *(u16*)(a + 0xc);
+    if (h != *(u16*)(b + 0xc)) return;
+    if (w != *(u16*)(c + 0xa)) return;
+    if (h == *(u16*)(c + 0xc))
+    {
         uVar7 = (int)(__PADFixBits * t) & 0xff;
         uVar8 = (0xff - uVar7) & 0xff;
-        if (fmt == 4) {
-            for (i = 0; i < (int)*(u16 *)(a + 0xc); i++) {
+        if (fmt == 4)
+        {
+            for (i = 0; i < (int)*(u16*)(a + 0xc); i++)
+            {
                 int im, i5;
                 j = 0;
                 im = i & 0xfffffffc;
                 i5 = (i & 3) * 8;
-                for (; j < (int)*(u16 *)(a + 0xa); j++) {
+                for (; j < (int)*(u16*)(a + 0xa); j++)
+                {
                     int i6 = (j & 3) * 2;
                     int i4 = (j >> 2) * 0x20;
-                    int i12 = (int)*(u16 *)(a + 0xa) * im * 2;
-                    v2 = *(u16 *)(a + i6 + i4 + i5 + i12 + 0x60);
+                    int i12 = (int)*(u16*)(a + 0xa) * im * 2;
+                    v2 = *(u16*)(a + i6 + i4 + i5 + i12 + 0x60);
                     r2 = ((int)(v2 & 0xf800) >> 8) | ((int)(v2 & 0xe000) >> 13);
-                    v3 = *(u16 *)(b + i6 + i4 + i5 + i12 + 0x60);
+                    v3 = *(u16*)(b + i6 + i4 + i5 + i12 + 0x60);
                     r3v = ((int)(v3 & 0xf800) >> 8) | ((int)(v3 & 0xe000) >> 13);
                     bf = ((u8)(((int)(uVar7 * (u8)(((v2 & 0x1f) << 3) | ((int)(v2 & 0x1c) >> 2))) >> 8)
-                             + ((int)(uVar8 * (u8)(((v3 & 0x1f) << 3) | ((int)(v3 & 0x1c) >> 2))) >> 8)) & 0xf8) >> 3;
+                        + ((int)(uVar8 * (u8)(((v3 & 0x1f) << 3) | ((int)(v3 & 0x1c) >> 2))) >> 8)) & 0xf8) >> 3;
                     rf = ((u8)(((int)(r2 * uVar7) >> 8) + ((int)(r3v * uVar8) >> 8)) & 0xf8) << 8;
                     gf = ((u8)(((int)(uVar7 * (u8)(((int)(v2 & 0x7e0) >> 3) | ((int)(v2 & 0x600) >> 9))) >> 8)
-                             + ((int)(uVar8 * (u8)(((int)(v3 & 0x7e0) >> 3) | ((int)(v3 & 0x600) >> 9))) >> 8)) & 0xfc) << 3;
-                    *(u16 *)(c + i6 + i4 + i5 + i12 + 0x60) = bf | (rf | gf);
+                        + ((int)(uVar8 * (u8)(((int)(v3 & 0x7e0) >> 3) | ((int)(v3 & 0x600) >> 9))) >> 8)) & 0xfc) << 3;
+                    *(u16*)(c + i6 + i4 + i5 + i12 + 0x60) = bf | (rf | gf);
                 }
             }
-        } else {
-            for (i = 0; i < (int)*(u16 *)(a + 0xc); i++) {
+        }
+        else
+        {
+            for (i = 0; i < (int)*(u16*)(a + 0xc); i++)
+            {
                 int i5, i4;
                 j = 0;
                 i5 = (i >> 2) * 8;
                 i4 = (i & 3) * 8;
-                for (; j < (int)*(u16 *)(a + 0xa); j++) {
+                for (; j < (int)*(u16*)(a + 0xa); j++)
+                {
                     int i9 = (j & 3) * 2;
                     int i12 = (j >> 2) * 0x40;
-                    int i6 = (int)*(u16 *)(a + 0xa) * i5 * 2;
-                    u8 *ad = a + i9 + i12 + i4 + i6;
-                    u8 *bd = b + i9 + i12 + i4 + i6;
-                    u8 *cd;
+                    int i6 = (int)*(u16*)(a + 0xa) * i5 * 2;
+                    u8* ad = a + i9 + i12 + i4 + i6;
+                    u8* bd = b + i9 + i12 + i4 + i6;
+                    u8* cd;
                     u8 aLo, bLo, aHi, bHi;
-                    aLo = *(u16 *)(ad + 0x60);
-                    bLo = *(u16 *)(bd + 0x60);
-                    v2 = *(u16 *)(ad + 0x80);
+                    aLo = *(u16*)(ad + 0x60);
+                    bLo = *(u16*)(bd + 0x60);
+                    v2 = *(u16*)(ad + 0x80);
                     aHi = (int)(v2 & 0xff00) >> 8;
-                    v3 = *(u16 *)(bd + 0x80);
+                    v3 = *(u16*)(bd + 0x80);
                     bHi = (int)(v3 & 0xff00) >> 8;
                     cd = c + i9 + i12 + i4 + 0x60;
-                    *(u16 *)(cd + i6) = (u8)(((int)(aLo * uVar7) >> 8) + ((int)(bLo * uVar8) >> 8));
-                    *(u16 *)(cd + (int)*(u16 *)(a + 0xa) * i5 * 2 + 0x20) =
+                    *(u16*)(cd + i6) = (u8)(((int)(aLo * uVar7) >> 8) + ((int)(bLo * uVar8) >> 8));
+                    *(u16*)(cd + (int)*(u16*)(a + 0xa) * i5 * 2 + 0x20) =
                         ((u8)(((int)(aHi * uVar7) >> 8) + ((int)(bHi * uVar8) >> 8)) << 8)
                         | (u8)(((int)(uVar7 * (u8)v2) >> 8) + ((int)(uVar8 * (u8)v3) >> 8));
                 }
             }
         }
-        DCStoreRange(c + 0x60, *(int *)(c + 0x44));
+        DCStoreRange(c + 0x60, *(int*)(c + 0x44));
     }
 }
 
-extern void Obj_BuildTransformMatrices(void *obj);
-extern void fn_80296EB4(u8 *p1, u8 *p2);
-extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz, void *obj);
-extern void Obj_TransformLocalVectorToWorld(f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz, void *obj);
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz, void *obj);
-extern void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz, void *obj);
+extern void Obj_BuildTransformMatrices(void* obj);
+extern void fn_80296EB4(u8 * p1, u8 * p2);
+extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, void* obj);
+extern void Obj_TransformLocalVectorToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, void* obj);
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, void* obj);
+extern void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, void* obj);
 
-void objHitDetectFn_80062e84(u8 *obj, u8 *newParent, int mode)
+void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode)
 {
-    u8 *oldParent;
-    u8 *hitReact;
+    u8* oldParent;
+    u8* hitReact;
     int yawSum;
     f32 dirX;
     f32 dirZ;
     u8 dirBuf[16];
 
-    oldParent = *(u8 **)(obj + 0x30);
+    oldParent = *(u8**)(obj + 0x30);
     if (oldParent == newParent) return;
 
     if (oldParent != NULL) Obj_BuildTransformMatrices(oldParent);
     if (newParent != NULL) Obj_BuildTransformMatrices(newParent);
 
-    if (*(s16 *)(obj + 0x44) == 1) {
+    if (*(s16*)(obj + 0x44) == 1)
+    {
         fn_80296EB4(obj, newParent);
         return;
     }
 
-    *(u8 **)(obj + 0x30) = newParent;
-    hitReact = *(u8 **)(obj + 0x54);
-    if (oldParent != NULL) {
-        Obj_TransformLocalPointToWorld(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14),
-                                       (f32 *)(obj + 0x18), (f32 *)(obj + 0x1c), (f32 *)(obj + 0x20), oldParent);
-        Obj_TransformLocalPointToWorld(*(f32 *)(obj + 0x80), *(f32 *)(obj + 0x84), *(f32 *)(obj + 0x88),
-                                       (f32 *)(obj + 0x8c), (f32 *)(obj + 0x90), (f32 *)(obj + 0x94), oldParent);
-        Obj_TransformLocalVectorToWorld(*(f32 *)(obj + 0x24), __AR_Callback, *(f32 *)(obj + 0x2c),
-                                        &dirX, (f32 *)dirBuf, &dirZ, oldParent);
-        yawSum = *(s16 *)oldParent + *(s16 *)obj;
-    } else {
-        dirX = *(f32 *)(obj + 0x24);
-        dirZ = *(f32 *)(obj + 0x2c);
-        yawSum = *(s16 *)obj;
+    *(u8**)(obj + 0x30) = newParent;
+    hitReact = *(u8**)(obj + 0x54);
+    if (oldParent != NULL)
+    {
+        Obj_TransformLocalPointToWorld(*(f32*)(obj + 0xc), *(f32*)(obj + 0x10), *(f32*)(obj + 0x14),
+                                       (f32*)(obj + 0x18), (f32*)(obj + 0x1c), (f32*)(obj + 0x20), oldParent);
+        Obj_TransformLocalPointToWorld(*(f32*)(obj + 0x80), *(f32*)(obj + 0x84), *(f32*)(obj + 0x88),
+                                       (f32*)(obj + 0x8c), (f32*)(obj + 0x90), (f32*)(obj + 0x94), oldParent);
+        Obj_TransformLocalVectorToWorld(*(f32*)(obj + 0x24), __AR_Callback, *(f32*)(obj + 0x2c),
+                                        &dirX, (f32*)dirBuf, &dirZ, oldParent);
+        yawSum = *(s16*)oldParent + *(s16*)obj;
+    }
+    else
+    {
+        dirX = *(f32*)(obj + 0x24);
+        dirZ = *(f32*)(obj + 0x2c);
+        yawSum = *(s16*)obj;
     }
 
-    if (mode != 0) {
-        if (*(u8 **)(obj + 0x30) != NULL) {
-            Obj_TransformWorldPointToLocal(*(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20),
-                                           (f32 *)(obj + 0xc), (f32 *)(obj + 0x10), (f32 *)(obj + 0x14),
-                                           *(u8 **)(obj + 0x30));
-            Obj_TransformWorldPointToLocal(*(f32 *)(obj + 0x8c), *(f32 *)(obj + 0x90), *(f32 *)(obj + 0x94),
-                                           (f32 *)(obj + 0x80), (f32 *)(obj + 0x84), (f32 *)(obj + 0x88),
-                                           *(u8 **)(obj + 0x30));
+    if (mode != 0)
+    {
+        if (*(u8**)(obj + 0x30) != NULL)
+        {
+            Obj_TransformWorldPointToLocal(*(f32*)(obj + 0x18), *(f32*)(obj + 0x1c), *(f32*)(obj + 0x20),
+                                           (f32*)(obj + 0xc), (f32*)(obj + 0x10), (f32*)(obj + 0x14),
+                                           *(u8**)(obj + 0x30));
+            Obj_TransformWorldPointToLocal(*(f32*)(obj + 0x8c), *(f32*)(obj + 0x90), *(f32*)(obj + 0x94),
+                                           (f32*)(obj + 0x80), (f32*)(obj + 0x84), (f32*)(obj + 0x88),
+                                           *(u8**)(obj + 0x30));
             Obj_TransformWorldVectorToLocal(dirX, __AR_Callback, dirZ,
-                                            (f32 *)(obj + 0x24), (f32 *)dirBuf, (f32 *)(obj + 0x2c),
-                                            *(u8 **)(obj + 0x30));
-            yawSum = yawSum - *(s16 *)(*(u8 **)(obj + 0x30));
+                                            (f32*)(obj + 0x24), (f32*)dirBuf, (f32*)(obj + 0x2c),
+                                            *(u8**)(obj + 0x30));
+            yawSum = yawSum - *(s16*)(*(u8**)(obj + 0x30));
             if (yawSum > 0x8000) yawSum -= 0xffff;
             if (yawSum < -0x8000) yawSum += 0xffff;
-            *(s16 *)obj = (s16)yawSum;
-        } else {
-            *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0x18);
-            *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x1c);
-            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x20);
-            *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0x8c);
-            *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x90);
-            *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x94);
-            *(f32 *)(obj + 0x24) = dirX;
-            *(f32 *)(obj + 0x2c) = dirZ;
-            *(s16 *)obj = (s16)yawSum;
+            *(s16*)obj = (s16)yawSum;
+        }
+        else
+        {
+            *(f32*)(obj + 0xc) = *(f32*)(obj + 0x18);
+            *(f32*)(obj + 0x10) = *(f32*)(obj + 0x1c);
+            *(f32*)(obj + 0x14) = *(f32*)(obj + 0x20);
+            *(f32*)(obj + 0x80) = *(f32*)(obj + 0x8c);
+            *(f32*)(obj + 0x84) = *(f32*)(obj + 0x90);
+            *(f32*)(obj + 0x88) = *(f32*)(obj + 0x94);
+            *(f32*)(obj + 0x24) = dirX;
+            *(f32*)(obj + 0x2c) = dirZ;
+            *(s16*)obj = (s16)yawSum;
         }
     }
 
-    if (hitReact != NULL) {
-        *(f32 *)(hitReact + 0x10) = *(f32 *)(obj + 0xc);
-        *(f32 *)(hitReact + 0x14) = *(f32 *)(obj + 0x10);
-        *(f32 *)(hitReact + 0x18) = *(f32 *)(obj + 0x14);
-        *(f32 *)(hitReact + 0x1c) = *(f32 *)(obj + 0x18);
-        *(f32 *)(hitReact + 0x20) = *(f32 *)(obj + 0x1c);
-        *(f32 *)(hitReact + 0x24) = *(f32 *)(obj + 0x20);
+    if (hitReact != NULL)
+    {
+        *(f32*)(hitReact + 0x10) = *(f32*)(obj + 0xc);
+        *(f32*)(hitReact + 0x14) = *(f32*)(obj + 0x10);
+        *(f32*)(hitReact + 0x18) = *(f32*)(obj + 0x14);
+        *(f32*)(hitReact + 0x1c) = *(f32*)(obj + 0x18);
+        *(f32*)(hitReact + 0x20) = *(f32*)(obj + 0x1c);
+        *(f32*)(hitReact + 0x24) = *(f32*)(obj + 0x20);
     }
 }
 
@@ -3482,27 +3788,30 @@ extern int lbl_803DCF64;
 extern int lbl_803DCF68;
 extern s8 lbl_803DCF60;
 extern f32 lbl_803DECE8;
-extern void Matrix_TransformPoint(void *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
-extern void fn_800659A8(f32 a, f32 b, void *p3, void *p4, void *desc, int e);
+extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern void fn_800659A8(f32 a, f32 b, void* p3, void* p4, void* desc, int e);
 
-int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, int f)
+int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
 {
-    u8 *base = lbl_8038D840;
-    TrackBlockDescriptor *desc;
-    TrackBlockDescriptor *end;
-    u8 *ptr;
+    u8* base = lbl_8038D840;
+    TrackBlockDescriptor* desc;
+    TrackBlockDescriptor* end;
+    u8* ptr;
     int i, j;
     int bVar7;
     int conv[6];
     f32 tx, ty, tz;
 
-    if (e >= 0) {
+    if (e >= 0)
+    {
         conv[0] = conv[3] = (int)b;
         conv[1] = (int)(c - lbl_803DECE8);
         conv[4] = (int)(lbl_803DECE8 + c);
         conv[2] = conv[5] = (int)d;
-        hitDetectFn_800691c0((int *)a, conv, f, 1);
-    } else {
+        hitDetectFn_800691c0((int*)a, conv, f, 1);
+    }
+    else
+    {
         if (e == -1) e = 0;
         else e = 1;
     }
@@ -3510,57 +3819,65 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, int f)
     lbl_803DCF68 = (int)(base + 0xdc);
     lbl_803DCF64 = (int)(base + 0x50);
     lbl_803DCF60 = 0;
-    end = (TrackBlockDescriptor *)(base + 0x424) + (u32)lbl_803DCF6C;
-    for (desc = (TrackBlockDescriptor *)(base + 0x424); desc < end; desc++) {
+    end = (TrackBlockDescriptor*)(base + 0x424) + (u32)lbl_803DCF6C;
+    for (desc = (TrackBlockDescriptor*)(base + 0x424); desc < end; desc++)
+    {
         if (lbl_803DCF60 >= 0x23) break;
-        if (desc->object != NULL) {
+        if (desc->object != NULL)
+        {
             Matrix_TransformPoint(desc->currentMatrix, b, __AR_Callback, d, &tx, &ty, &tz);
             fn_800659A8(tx, tz,
-                        (void *)(lbl_803DCF30 + desc->firstTriangle * 0x4c),
-                        (void *)(lbl_803DCF30 + desc[1].firstTriangle * 0x4c),
+                        (void*)(lbl_803DCF30 + desc->firstTriangle * 0x4c),
+                        (void*)(lbl_803DCF30 + desc[1].firstTriangle * 0x4c),
                         desc, e);
-        } else {
+        }
+        else
+        {
             fn_800659A8(b, d,
-                        (void *)(lbl_803DCF30 + desc->firstTriangle * 0x4c),
-                        (void *)(lbl_803DCF30 + desc[1].firstTriangle * 0x4c),
+                        (void*)(lbl_803DCF30 + desc->firstTriangle * 0x4c),
+                        (void*)(lbl_803DCF30 + desc[1].firstTriangle * 0x4c),
                         desc, e);
         }
     }
 
     ptr = base + 0xdc;
     i = 0;
-    for (j = 0; j < lbl_803DCF60; j++) {
-        *(u8 **)(lbl_803DCF64 + i) = ptr;
+    for (j = 0; j < lbl_803DCF60; j++)
+    {
+        *(u8**)(lbl_803DCF64 + i) = ptr;
         ptr += 0x18;
         i += 4;
     }
 
     bVar7 = 0;
-    while (!bVar7) {
+    while (!bVar7)
+    {
         bVar7 = 1;
         i = 0;
-        for (j = 0; j < lbl_803DCF60 - 1; j++) {
-            f32 **pp = (f32 **)(lbl_803DCF64 + i);
-            f32 *p5 = pp[0];
-            if (*p5 < *pp[1]) {
+        for (j = 0; j < lbl_803DCF60 - 1; j++)
+        {
+            f32** pp = (f32**)(lbl_803DCF64 + i);
+            f32* p5 = pp[0];
+            if (*p5 < *pp[1])
+            {
                 bVar7 = 0;
                 pp[0] = pp[1];
-                *(f32 **)(lbl_803DCF64 + i + 4) = p5;
+                *(f32**)(lbl_803DCF64 + i + 4) = p5;
             }
             i += 4;
         }
     }
 
-    *(u8 **)out = base + 0x50;
+    *(u8**)out = base + 0x50;
     return lbl_803DCF60;
 }
 
-extern void Matrix_TransformVector(void *mtx, f32 *in, f32 *out);
+extern void Matrix_TransformVector(void* mtx, f32* in, f32* out);
 extern f32 lbl_803DECE0[2];
 
-void fn_800659A8(f32 a, f32 b, void *p3, void *p4, void *desc, int e)
+void fn_800659A8(f32 a, f32 b, void* p3, void* p4, void* desc, int e)
 {
-    u8 *v;
+    u8* v;
     f32 oz;
     f32 planeC;
     f32 ox;
@@ -3569,41 +3886,46 @@ void fn_800659A8(f32 a, f32 b, void *p3, void *p4, void *desc, int e)
     f32 arrB[4];
     f32 arrA[4];
 
-    if (*(int *)desc == 0) {
-        a -= (f32)((int *)lbl_8038DE44)[0];
-        b -= (f32)((int *)lbl_8038DE44)[2];
+    if (*(int*)desc == 0)
+    {
+        a -= (f32)((int*)lbl_8038DE44)[0];
+        b -= (f32)((int*)lbl_8038DE44)[2];
     }
-    for (v = (u8 *)p3; v < (u8 *)p4; v += 0x4c) {
-        s8 fl = *(s8 *)(v + 0x49);
+    for (v = (u8*)p3; v < (u8*)p4; v += 0x4c)
+    {
+        s8 fl = *(s8*)(v + 0x49);
         int i;
         int inside;
 
-        if (fl & 0x10) {
+        if (fl & 0x10)
+        {
             if (!(fl & 0x4)) continue;
         }
-        vec[0] = *(f32 *)(v + 0x4);
-        vec[1] = *(f32 *)(v + 0x8);
-        vec[2] = *(f32 *)(v + 0xc);
-        if (!(vec[1] > __AR_Callback)) {
+        vec[0] = *(f32*)(v + 0x4);
+        vec[1] = *(f32*)(v + 0x8);
+        vec[2] = *(f32*)(v + 0xc);
+        if (!(vec[1] > __AR_Callback))
+        {
             if (e == 0) continue;
             if (__AR_Callback == vec[1]) continue;
         }
-        planeC = -(vec[0] * a + vec[2] * b + *(f32 *)v) / vec[1];
-        arrA[0] = (f32)(s16)*(s16 *)(v + 0x10);
-        arrB[0] = (f32)(s16)*(s16 *)(v + 0x16);
-        arrC[0] = (f32)(s16)*(s16 *)(v + 0x1c);
-        arrA[1] = (f32)(s16)*(s16 *)(v + 0x12);
-        arrB[1] = (f32)(s16)*(s16 *)(v + 0x18);
-        arrC[1] = (f32)(s16)*(s16 *)(v + 0x1e);
-        arrA[2] = (f32)(s16)*(s16 *)(v + 0x14);
-        arrB[2] = (f32)(s16)*(s16 *)(v + 0x1a);
-        arrC[2] = (f32)(s16)*(s16 *)(v + 0x20);
+        planeC = -(vec[0] * a + vec[2] * b + *(f32*)v) / vec[1];
+        arrA[0] = (f32)(s16) * (s16*)(v + 0x10);
+        arrB[0] = (f32)(s16) * (s16*)(v + 0x16);
+        arrC[0] = (f32)(s16) * (s16*)(v + 0x1c);
+        arrA[1] = (f32)(s16) * (s16*)(v + 0x12);
+        arrB[1] = (f32)(s16) * (s16*)(v + 0x18);
+        arrC[1] = (f32)(s16) * (s16*)(v + 0x1e);
+        arrA[2] = (f32)(s16) * (s16*)(v + 0x14);
+        arrB[2] = (f32)(s16) * (s16*)(v + 0x1a);
+        arrC[2] = (f32)(s16) * (s16*)(v + 0x20);
         inside = 1;
         {
             f32 c30 = lbl_803DECC0;
             f32 c31 = __AR_Callback;
             f32 c24 = lbl_803DECE0[1];
-            for (i = 0; i < 3; i++) {
+            for (i = 0; i < 3; i++)
+            {
                 int nxt = i + 1;
                 f32 nx, ny, nz, mag;
 
@@ -3611,18 +3933,23 @@ void fn_800659A8(f32 a, f32 b, void *p3, void *p4, void *desc, int e)
                 arrA[3] = c30 * vec[0] + arrA[i];
                 arrB[3] = c30 * vec[1] + arrB[i];
                 arrC[3] = c30 * vec[2] + arrC[i];
-                nx = arrB[3] * (arrC[i] - arrC[nxt]) + (arrB[i] * (arrC[nxt] - arrC[3]) + arrB[nxt] * (arrC[3] - arrC[i]));
-                ny = arrC[3] * (arrA[i] - arrA[nxt]) + (arrC[i] * (arrA[nxt] - arrA[3]) + arrC[nxt] * (arrA[3] - arrA[i]));
-                nz = arrA[3] * (arrB[i] - arrB[nxt]) + (arrA[i] * (arrB[nxt] - arrB[3]) + arrA[nxt] * (arrB[3] - arrB[i]));
+                nx = arrB[3] * (arrC[i] - arrC[nxt]) + (arrB[i] * (arrC[nxt] - arrC[3]) + arrB[nxt] * (arrC[3] - arrC[
+                    i]));
+                ny = arrC[3] * (arrA[i] - arrA[nxt]) + (arrC[i] * (arrA[nxt] - arrA[3]) + arrC[nxt] * (arrA[3] - arrA[
+                    i]));
+                nz = arrA[3] * (arrB[i] - arrB[nxt]) + (arrA[i] * (arrB[nxt] - arrB[3]) + arrA[nxt] * (arrB[3] - arrB[
+                    i]));
                 mag = sqrtf(nx * nx + ny * ny + nz * nz);
-                if (mag > c31) {
+                if (mag > c31)
+                {
                     f32 s = lbl_803DECC4 / mag;
                     nx *= s;
                     ny *= s;
                     nz *= s;
                 }
                 if ((nx * arrA[i] + ny * arrB[i] - nz * arrC[i]) +
-                    (nx * a + ny * planeC + nz * b) > c24) {
+                    (nx * a + ny * planeC + nz * b) > c24)
+                {
                     inside = 0;
                     break;
                 }
@@ -3630,34 +3957,36 @@ void fn_800659A8(f32 a, f32 b, void *p3, void *p4, void *desc, int e)
         }
         if (inside == 0) continue;
         if ((s8)lbl_803DCF60 >= 0x23) break;
-        if (*(int *)desc != 0) {
-            Matrix_TransformPoint(*(void **)((char *)desc + 0xc), a, planeC, b, &ox, &planeC, &oz);
-            Matrix_TransformVector(*(void **)((char *)desc + 0xc), vec, vec);
+        if (*(int*)desc != 0)
+        {
+            Matrix_TransformPoint(*(void**)((char*)desc + 0xc), a, planeC, b, &ox, &planeC, &oz);
+            Matrix_TransformVector(*(void**)((char*)desc + 0xc), vec, vec);
         }
-        *(f32 *)(lbl_803DCF68 + 0) = planeC;
-        *(u8 *)(lbl_803DCF68 + 0x14) = *(u8 *)(v + 0x48);
-        *(f32 *)(lbl_803DCF68 + 0x4) = vec[0];
-        *(f32 *)(lbl_803DCF68 + 0x8) = vec[1];
-        *(f32 *)(lbl_803DCF68 + 0xc) = vec[2];
-        *(int *)(lbl_803DCF68 + 0x10) = *(int *)desc;
+        *(f32*)(lbl_803DCF68 + 0) = planeC;
+        *(u8*)(lbl_803DCF68 + 0x14) = *(u8*)(v + 0x48);
+        *(f32*)(lbl_803DCF68 + 0x4) = vec[0];
+        *(f32*)(lbl_803DCF68 + 0x8) = vec[1];
+        *(f32*)(lbl_803DCF68 + 0xc) = vec[2];
+        *(int*)(lbl_803DCF68 + 0x10) = *(int*)desc;
         lbl_803DCF68 = lbl_803DCF68 + 0x18;
         lbl_803DCF60 = lbl_803DCF60 + 1;
     }
 }
 
-extern f32 Vec3_Normalize(f32 *v);
-extern void Vec3_Cross(f32 *a, f32 *b, f32 *out);
+extern f32 Vec3_Normalize(f32 * v);
+extern void Vec3_Cross(f32 * a, f32 * b, f32 * out);
 extern f32 fn_802925C4(f32 x, f32 y);
 extern f32 fn_802943F4(f32 x);
 extern f32 floor(f32 x);
 extern f32 lbl_803DECEC;
 
-int fn_800660C8(f32 *a, f32 *b, f32 *c, f32 *p, int type, f32 f1p, f32 y)
+int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
 {
     f32 d0[3];
     f32 d1[3];
 
-    if ((u8)type == 3) {
+    if ((u8)type == 3)
+    {
         f32 fa, fb, scale;
         b[0] = c[0];
         b[1] = c[1];
@@ -3683,76 +4012,88 @@ int fn_800660C8(f32 *a, f32 *b, f32 *c, f32 *p, int type, f32 f1p, f32 y)
         b[2] = b[2] + a[2];
         return 1;
     }
-    if (p[1] < __AR_Size && p[1] > lbl_803DECEC) {
-        switch ((u8)type) {
+    if (p[1] < __AR_Size && p[1] > lbl_803DECEC)
+    {
+        switch ((u8)type)
+        {
         case 1:
         case 8:
-        case 0xa: {
-            f32 dot = b[1] * p[1] + b[0] * p[0] + b[2] * p[2] + p[3];
-            y = y - dot;
-            if (y > __AR_Callback) {
-                f32 d = fn_802943F4(fn_802925C4(p[1], sqrtf(p[0] * p[0] + p[2] * p[2])));
-                if (__AR_Callback != d)
-                    y = y / d;
-                d1[0] = p[0];
-                d1[1] = __AR_Callback;
-                d1[2] = p[2];
-                Vec3_Normalize(d1);
-                b[0] = y * d1[0] + b[0];
-                b[2] = y * d1[2] + b[2];
+        case 0xa:
+            {
+                f32 dot = b[1] * p[1] + b[0] * p[0] + b[2] * p[2] + p[3];
+                y = y - dot;
+                if (y > __AR_Callback)
+                {
+                    f32 d = fn_802943F4(fn_802925C4(p[1], sqrtf(p[0] * p[0] + p[2] * p[2])));
+                    if (__AR_Callback != d)
+                        y = y / d;
+                    d1[0] = p[0];
+                    d1[1] = __AR_Callback;
+                    d1[2] = p[2];
+                    Vec3_Normalize(d1);
+                    b[0] = y * d1[0] + b[0];
+                    b[2] = y * d1[2] + b[2];
+                }
+                break;
             }
-            break;
+        default:
+            {
+                f32 dot, t;
+                b[0] = b[0] - f1p * p[0];
+                b[1] = b[1] - f1p * p[1];
+                b[2] = b[2] - f1p * p[2];
+                dot = b[1] * p[1] + b[0] * p[0] + b[2] * p[2] + p[3];
+                t = y - dot;
+                b[0] = t * p[0] + b[0];
+                b[1] = t * p[1] + b[1];
+                b[2] = t * p[2] + b[2];
+                break;
+            }
         }
-        default: {
-            f32 dot, t;
-            b[0] = b[0] - f1p * p[0];
-            b[1] = b[1] - f1p * p[1];
-            b[2] = b[2] - f1p * p[2];
-            dot = b[1] * p[1] + b[0] * p[0] + b[2] * p[2] + p[3];
-            t = y - dot;
-            b[0] = t * p[0] + b[0];
-            b[1] = t * p[1] + b[1];
-            b[2] = t * p[2] + b[2];
-            break;
-        }
-        }
-    } else {
-        switch ((u8)type) {
+    }
+    else
+    {
+        switch ((u8)type)
+        {
         case 5:
-        case 8: {
-            f32 dot, t;
-            b[0] = b[0] - f1p * p[0];
-            b[1] = b[1] - f1p * p[1];
-            b[2] = b[2] - f1p * p[2];
-            dot = b[1] * p[1] + b[0] * p[0] + b[2] * p[2] + p[3];
-            t = y - dot;
-            b[0] = t * p[0] + b[0];
-            b[1] = t * p[1] + b[1];
-            b[2] = t * p[2] + b[2];
-            break;
-        }
-        default: {
-            f32 dot = b[1] * p[1] + b[0] * p[0] + b[2] * p[2] + p[3];
-            y = y - dot;
-            if (y > __AR_Callback) {
-                f32 d = floor(fn_802925C4(p[1], sqrtf(p[0] * p[0] + p[2] * p[2])));
-                b[1] = b[1] + y / d;
+        case 8:
+            {
+                f32 dot, t;
+                b[0] = b[0] - f1p * p[0];
+                b[1] = b[1] - f1p * p[1];
+                b[2] = b[2] - f1p * p[2];
+                dot = b[1] * p[1] + b[0] * p[0] + b[2] * p[2] + p[3];
+                t = y - dot;
+                b[0] = t * p[0] + b[0];
+                b[1] = t * p[1] + b[1];
+                b[2] = t * p[2] + b[2];
+                break;
             }
-            break;
-        }
+        default:
+            {
+                f32 dot = b[1] * p[1] + b[0] * p[0] + b[2] * p[2] + p[3];
+                y = y - dot;
+                if (y > __AR_Callback)
+                {
+                    f32 d = floor(fn_802925C4(p[1], sqrtf(p[0] * p[0] + p[2] * p[2])));
+                    b[1] = b[1] + y / d;
+                }
+                break;
+            }
         }
     }
     return 1;
 }
 
-int hitDetectFn_800664fc(void *tri, f32 *rayOrig, f32 *rayDir, f32 maxd, f32 maxStep, f32 epsArg, f32 *out29, f32 *outNrm, f32 *outDist)
+int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 maxStep, f32 epsArg, f32* out29,
+                         f32* outNrm, f32* outDist)
 {
     f32 hit[3];
     f32 tmp14[3];
     f32 e[3];
     f32 nrm[3];
     f32 len, f29, f12;
-    f32 *T = (f32 *)tri;
+    f32* T = (f32*)tri;
 
     Vec3_Cross(rayDir, T + 6, nrm);
     len = Vec3_Normalize(nrm);
@@ -3762,7 +4103,8 @@ int hitDetectFn_800664fc(void *tri, f32 *rayOrig, f32 *rayDir, f32 maxd, f32 max
     e[2] = rayOrig[2] - T[2];
     f29 = nrm[1] * e[1] + nrm[0] * e[0] + nrm[2] * e[2];
     f29 = f29 * f29;
-    if (f29 <= T[10]) {
+    if (f29 <= T[10])
+    {
         Vec3_Cross(e, T + 6, tmp14);
         len = (tmp14[1] * nrm[1] + tmp14[0] * nrm[0] - tmp14[2] * nrm[2]) / len;
         Vec3_Cross(nrm, T + 6, tmp14);
@@ -3774,8 +4116,10 @@ int hitDetectFn_800664fc(void *tri, f32 *rayOrig, f32 *rayDir, f32 maxd, f32 max
             if (r < __AR_Callback) r = -r;
             len = len - r;
         }
-        if (len >= __AR_Callback) {
-            if (len <= maxd) {
+        if (len >= __AR_Callback)
+        {
+            if (len <= maxd)
+            {
                 hit[0] = rayDir[0] * len;
                 hit[1] = rayDir[1] * len;
                 hit[2] = rayDir[2] * len;
@@ -3783,9 +4127,11 @@ int hitDetectFn_800664fc(void *tri, f32 *rayOrig, f32 *rayDir, f32 maxd, f32 max
                 hit[1] = rayOrig[1] + hit[1];
                 hit[2] = rayOrig[2] + hit[2];
                 f12 = (hit[1] * T[7] + hit[0] * T[6] + hit[2] * T[8]) -
-                      (T[7] * T[1] + T[6] * T[0] + T[8] * T[2]);
-                if (f12 >= __AR_Callback) {
-                    if (f12 <= T[11]) {
+                    (T[7] * T[1] + T[6] * T[0] + T[8] * T[2]);
+                if (f12 >= __AR_Callback)
+                {
+                    if (f12 <= T[11])
+                    {
                         tmp14[0] = T[6] * f12;
                         tmp14[1] = T[7] * f12;
                         tmp14[2] = T[8] * f12;
@@ -3810,26 +4156,27 @@ int hitDetectFn_800664fc(void *tri, f32 *rayOrig, f32 *rayDir, f32 maxd, f32 max
     return 0;
 }
 
-extern u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p5, int z);
-extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32 *a, f32 *b);
+extern u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p5, int z);
+extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32* a, f32* b);
 
-u8 hitDetectFn_80067958(void *param_1, int param_2, int param_3, int param_4, void *param_5)
+u8 hitDetectFn_80067958(void* param_1, int param_2, int param_3, int param_4, void* param_5)
 {
     f32 fVar2, fVar1;
-    f32 *pfVar5;
-    void **pfVar6;
+    f32* pfVar5;
+    void** pfVar6;
     s16 sVar7;
     u8 uVar4;
-    u8 *tbl = (u8 *)gTrackBlockDescriptors;
+    u8* tbl = (u8*)gTrackBlockDescriptors;
 
     if (param_4 > 4) param_4 = 4;
-    *(u16 *)((u8 *)param_5 + 0x6c) = 0;
+    *(u16*)((u8*)param_5 + 0x6c) = 0;
 
     fVar1 = __AR_Callback;
     fVar2 = lbl_803DECC4;
-    pfVar5 = (f32 *)param_5;
-    pfVar6 = (void **)param_5;
-    for (sVar7 = 0; sVar7 < param_4; sVar7++) {
+    pfVar5 = (f32*)param_5;
+    pfVar6 = (void**)param_5;
+    for (sVar7 = 0; sVar7 < param_4; sVar7++)
+    {
         pfVar5[0] = fVar1;
         pfVar5[1] = fVar2;
         pfVar5[2] = fVar1;
@@ -3840,16 +4187,19 @@ u8 hitDetectFn_80067958(void *param_1, int param_2, int param_3, int param_4, vo
     }
 
     uVar4 = hitDetect_800667ec(0,
-                (void *)(lbl_803DCF30 + *(s16 *)(tbl + 4) * 0x4c),
-                (void *)(lbl_803DCF30 + *(s16 *)(tbl + 0x1c) * 0x4c),
-                param_2, param_3, param_4, param_5, 0);
+                               (void*)(lbl_803DCF30 + *(s16*)(tbl + 4) * 0x4c),
+                               (void*)(lbl_803DCF30 + *(s16*)(tbl + 0x1c) * 0x4c),
+                               param_2, param_3, param_4, param_5, 0);
 
-    pfVar5 = (f32 *)param_5;
-    pfVar6 = (void **)param_5;
-    for (sVar7 = 0; sVar7 < param_4; sVar7++) {
-        if (pfVar6[0x17] != NULL) {
+    pfVar5 = (f32*)param_5;
+    pfVar6 = (void**)param_5;
+    for (sVar7 = 0; sVar7 < param_4; sVar7++)
+    {
+        if (pfVar6[0x17] != NULL)
+        {
             Obj_TransformLocalVectorByWorldMatrix((int)pfVar6[0x17], pfVar5, pfVar5);
-            if (param_1 != NULL) {
+            if (param_1 != NULL)
+            {
                 ObjHits_AddContactObject(pfVar6[0x17], param_1);
             }
         }
@@ -3857,19 +4207,28 @@ u8 hitDetectFn_80067958(void *param_1, int param_2, int param_3, int param_4, vo
         pfVar5 += 4;
     }
 
-    *(u8 *)((u8 *)param_5 + 0x6e) = uVar4;
+    *(u8*)((u8*)param_5 + 0x6e) = uVar4;
     return uVar4;
 }
 
-typedef union { u8 u8; u16 u16; u32 u32; s16 s16; s32 s32; f32 f32; } GolfWGPipe;
+typedef union
+{
+    u8 u8;
+    u16 u16;
+    u32 u32;
+    s16 s16;
+    s32 s32;
+    f32 f32;
+} GolfWGPipe;
+
 extern volatile GolfWGPipe GXWGFifo : (0xCC008000);
 
-extern void Obj_BuildWorldTransformMatrix(int obj, f32 *out, int flag);
+extern void Obj_BuildWorldTransformMatrix(int obj, f32* out, int flag);
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
 extern void GXSetNumTexGens(int n);
 extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
-extern void GXSetTevKColor(int id, void *color);
+extern void GXSetTevKColor(int id, void* color);
 extern void GXSetTevKAlphaSel(int stage, int sel);
 extern void GXSetNumTevStages(int n);
 extern void GXSetNumIndStages(int n);
@@ -3890,22 +4249,25 @@ extern void GXBegin(int type, int fmt, int count);
 
 void objDrawFn_80061654(int param_1, int param_2)
 {
-    s16 *p;
+    s16* p;
     u8 alpha;
-    void *viewMtx;
+    void* viewMtx;
     int local_94;
     int local_98;
     f32 mtx[16];
     f32 outMtx[16];
 
-    p = *(s16 **)(param_2 + 0x54);
-    if (*(u8 *)((u8 *)p + 0x18) == 0) {
-        fn_8006135C(p, (void *)param_1);
+    p = *(s16**)(param_2 + 0x54);
+    if (*(u8*)((u8*)p + 0x18) == 0)
+    {
+        fn_8006135C(p, (void*)param_1);
     }
-    if (*(u8 *)((u8 *)p + 0x18) != 0xff) {
-        alpha = (u8)objShadowFn_80062378((void *)param_1, 0x96);
-        *((u8 *)&local_94 + 3) = alpha;
-        if (alpha != 0) {
+    if (*(u8*)((u8*)p + 0x18) != 0xff)
+    {
+        alpha = (u8)objShadowFn_80062378((void*)param_1, 0x96);
+        *((u8*)&local_94 + 3) = alpha;
+        if (alpha != 0)
+        {
             viewMtx = Camera_GetViewMatrix();
             Obj_BuildWorldTransformMatrix(param_1, mtx, 0);
             mtx[0] = lbl_803DEC68;
@@ -3942,7 +4304,7 @@ void objDrawFn_80061654(int param_1, int param_2)
             GXSetCullMode(0);
             GXSetCurrentMtx(0x1b);
             GXSetBlendMode(1, 4, 5, 5);
-            selectTexture((int)((ObjAnimComponent *)param_1)->modelState->shadowTexture, 0);
+            selectTexture((int)((ObjAnimComponent*)param_1)->modelState->shadowTexture, 0);
             GXBegin(0x80, 6, 4);
             GXWGFifo.s16 = p[0];
             GXWGFifo.s16 = p[1];
@@ -3969,10 +4331,10 @@ void objDrawFn_80061654(int param_1, int param_2)
     }
 }
 
-void trackDolphin_buildShadowVolumePlanes(int *obj, void *buf48, void *bufA8)
+void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
 {
-    f32 *verts = (f32 *)buf48;
-    f32 *planes = (f32 *)bufA8;
+    f32* verts = (f32*)buf48;
+    f32* planes = (f32*)bufA8;
     f32 e1x, e2x, e1y, e2y, e1z, e2z;
     f32 nrm[3];
 
@@ -4067,17 +4429,17 @@ void trackDolphin_buildShadowVolumePlanes(int *obj, void *buf48, void *bufA8)
     planes[0x1c] = -(planes[0x1b] * verts[2] + planes[0x19] * verts[0] + planes[0x1a] * verts[1]);
 }
 
-extern void *Obj_GetPlayerObject(void);
-extern void objectShadow_setupSwappedProjectedTexture(int hdr, void *col, void *mtx);
-extern void objectShadow_setupProjectedTexture(int hdr, void *col, void *mtx);
-extern void fn_80077AD8(int hdr, void *col, void *mtx, f32 f);
-extern void fn_80077EF8(int hdr, void *col, void *mtx, f32 f);
+extern void* Obj_GetPlayerObject(void);
+extern void objectShadow_setupSwappedProjectedTexture(int hdr, void* col, void* mtx);
+extern void objectShadow_setupProjectedTexture(int hdr, void* col, void* mtx);
+extern void fn_80077AD8(int hdr, void* col, void* mtx, f32 f);
+extern void fn_80077EF8(int hdr, void* col, void* mtx, f32 f);
 extern f32 lbl_803DEC78;
 extern f32 lbl_803DEC80;
 
 #pragma ppc_unroll_speculative off
 #pragma opt_strength_reduction off
-void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *p7, void *buf48, f32 f)
+void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* p7, void* buf48, f32 f)
 {
     u8 col[4];
     u8 save_18[12];
@@ -4089,104 +4451,116 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
     s16 s31, s30, s29;
     u32 handle;
     int hdr;
-    void *viewMtx;
+    void* viewMtx;
 
     GXClearVtxDesc();
     GXSetVtxDesc(9, 1);
     col[0] = 0;
     col[1] = 0;
     col[2] = 0;
-    col[3] = *(u8 *)(((MapBlockData *)blockData)->unkC + 0x64);
-    f31 = ((GameObject *)obj)->anim.rootMotionScale;
-    s31 = ((GameObject *)obj)->anim.rotX;
-    s30 = ((GameObject *)obj)->anim.rotZ;
-    s29 = ((GameObject *)obj)->anim.rotY;
-    handle = *(u32 *)&((MapBlockData *)blockData)->allocHandle;
+    col[3] = *(u8*)(((MapBlockData*)blockData)->unkC + 0x64);
+    f31 = ((GameObject*)obj)->anim.rootMotionScale;
+    s31 = ((GameObject*)obj)->anim.rotX;
+    s30 = ((GameObject*)obj)->anim.rotZ;
+    s29 = ((GameObject*)obj)->anim.rotY;
+    handle = *(u32*)&((MapBlockData*)blockData)->allocHandle;
     if (handle == 0 || handle != 0xFFFFFFFF)
-        ((GameObject *)obj)->anim.rootMotionScale = lbl_803DEC78;
+        ((GameObject*)obj)->anim.rootMotionScale = lbl_803DEC78;
     else
-        ((GameObject *)obj)->anim.rootMotionScale = lbl_803DEC68;
-    ((GameObject *)obj)->anim.rotX = 0;
-    ((GameObject *)obj)->anim.rotY = 0;
-    if ((*(u32 *)&((MapBlockData *)blockData)->flags & 0x2000) == 0)
-        ((GameObject *)obj)->anim.rotZ = 0;
-    if (*(u32 *)&((MapBlockData *)blockData)->flags & 0x20) {
-        memcpy(save_c, (char *)obj + 0xc, 0xc);
-        memcpy(save_18, (char *)obj + 0x18, 0xc);
-        memcpy((char *)((int)obj + 0x18), (char *)blockData + 0x20, 0xc);
-        memcpy((char *)((int)obj + 0xc), (char *)((int)blockData + 0x20), 0xc);
+        ((GameObject*)obj)->anim.rootMotionScale = lbl_803DEC68;
+    ((GameObject*)obj)->anim.rotX = 0;
+    ((GameObject*)obj)->anim.rotY = 0;
+    if ((*(u32*)&((MapBlockData*)blockData)->flags & 0x2000) == 0)
+        ((GameObject*)obj)->anim.rotZ = 0;
+    if (*(u32*)&((MapBlockData*)blockData)->flags & 0x20)
+    {
+        memcpy(save_c, (char*)obj + 0xc, 0xc);
+        memcpy(save_18, (char*)obj + 0x18, 0xc);
+        memcpy((char*)((int)obj + 0x18), (char*)blockData + 0x20, 0xc);
+        memcpy((char*)((int)obj + 0xc), (char*)((int)blockData + 0x20), 0xc);
     }
     Obj_BuildWorldTransformMatrix((int)obj, mtx, 0);
     viewMtx = Camera_GetViewMatrix();
     PSMTXConcat(viewMtx, mtx, outMtx);
     GXLoadPosMtxImm(outMtx, 0);
-    if (((ObjAnimComponent *)obj)->modelInstance->renderFlags & 0x4) {
-        int c = *(int *)col;
-        objectShadow_setupSwappedProjectedTexture(((MapBlockData *)blockData)->unkC, &c, mtx);
-    } else {
+    if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & 0x4)
+    {
+        int c = *(int*)col;
+        objectShadow_setupSwappedProjectedTexture(((MapBlockData*)blockData)->unkC, &c, mtx);
+    }
+    else
+    {
         if (obj == Obj_GetPlayerObject())
             f30 = 10.0f;
         else
-            f30 = ((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale;
-        handle = *(u32 *)&((MapBlockData *)blockData)->allocHandle;
-        if (handle == 0xFFFFFFFF) {
+            f30 = ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale;
+        handle = *(u32*)&((MapBlockData*)blockData)->allocHandle;
+        if (handle == 0xFFFFFFFF)
+        {
             u32 h2 = textureFn_8006c5c4();
-            hdr = ((MapBlockData *)blockData)->unkC;
-            if (*(u32 *)(hdr + 0x60) != h2)
+            hdr = ((MapBlockData*)blockData)->unkC;
+            if (*(u32*)(hdr + 0x60) != h2)
                 goto drawSpecial;
         }
         {
-            int c = *(int *)col;
-            objectShadow_setupProjectedTexture(((MapBlockData *)blockData)->unkC, &c, mtx);
+            int c = *(int*)col;
+            objectShadow_setupProjectedTexture(((MapBlockData*)blockData)->unkC, &c, mtx);
         }
         goto afterDraw;
     drawSpecial:
-        if (*(u8 *)(hdr + 0x65) == 0xff) {
-            int c = *(int *)col;
-            fn_80077AD8(((MapBlockData *)blockData)->unkC, &c, mtx, f30);
-        } else {
-            int c = *(int *)col;
-            fn_80077EF8(((MapBlockData *)blockData)->unkC, &c, mtx, f30);
+        if (*(u8*)(hdr + 0x65) == 0xff)
+        {
+            int c = *(int*)col;
+            fn_80077AD8(((MapBlockData*)blockData)->unkC, &c, mtx, f30);
+        }
+        else
+        {
+            int c = *(int*)col;
+            fn_80077EF8(((MapBlockData*)blockData)->unkC, &c, mtx, f30);
         }
     afterDraw:;
     }
     GXSetCullMode(1);
     GXSetCurrentMtx(0);
-    ((GameObject *)obj)->anim.rootMotionScale = f31;
-    ((GameObject *)obj)->anim.rotX = s31;
-    ((GameObject *)obj)->anim.rotY = s29;
-    ((GameObject *)obj)->anim.rotZ = s30;
-    if (*(u32 *)&((MapBlockData *)blockData)->allocHandle == 0) {
-        f32 *cv;
+    ((GameObject*)obj)->anim.rootMotionScale = f31;
+    ((GameObject*)obj)->anim.rotX = s31;
+    ((GameObject*)obj)->anim.rotY = s29;
+    ((GameObject*)obj)->anim.rotZ = s30;
+    if (*(u32*)&((MapBlockData*)blockData)->allocHandle == 0)
+    {
+        f32* cv;
         int off;
         int i;
-        int *vbuf;
-        ((MapBlockData *)blockData)->allocHandle = (int)mmAlloc(slot * 0x12 + 8, 0x18, 0);
-        vbuf = *(int **)&((MapBlockData *)blockData)->allocHandle;
+        int* vbuf;
+        ((MapBlockData*)blockData)->allocHandle = (int)mmAlloc(slot * 0x12 + 8, 0x18, 0);
+        vbuf = *(int**)&((MapBlockData*)blockData)->allocHandle;
         if (vbuf == NULL) return;
         vbuf[0] = (int)vbuf + 8;
-        *(int *)(((MapBlockData *)blockData)->allocHandle + 4) = slot * 3;
+        *(int*)(((MapBlockData*)blockData)->allocHandle + 4) = slot * 3;
         i = 0;
-        cv = (f32 *)cache;
+        cv = (f32*)cache;
         off = 0;
         kf = lbl_803DEC80;
-        for (; (u32)i < *(u32 *)(((MapBlockData *)blockData)->allocHandle + 4); off += 6) {
-            *(s16 *)(*(int *)(((MapBlockData *)blockData)->allocHandle) + off + 0) = kf * cv[0];
-            *(s16 *)(*(int *)(((MapBlockData *)blockData)->allocHandle) + off + 2) = kf * cv[1];
-            *(s16 *)(*(int *)(((MapBlockData *)blockData)->allocHandle) + off + 4) = kf * cv[2];
+        for (; (u32)i < *(u32*)(((MapBlockData*)blockData)->allocHandle + 4); off += 6)
+        {
+            *(s16*)(*(int*)(((MapBlockData*)blockData)->allocHandle) + off + 0) = kf * cv[0];
+            *(s16*)(*(int*)(((MapBlockData*)blockData)->allocHandle) + off + 2) = kf * cv[1];
+            *(s16*)(*(int*)(((MapBlockData*)blockData)->allocHandle) + off + 4) = kf * cv[2];
             cv += 3;
             i++;
         }
     }
-    handle = *(u32 *)&((MapBlockData *)blockData)->allocHandle;
-    if (handle != 0xFFFFFFFF) {
+    handle = *(u32*)&((MapBlockData*)blockData)->allocHandle;
+    if (handle != 0xFFFFFFFF)
+    {
         int k;
         int off;
-        GXBegin(0x90, 0, *(int *)(((MapBlockData *)blockData)->allocHandle + 4) & 0xffff);
+        GXBegin(0x90, 0, *(int*)(((MapBlockData*)blockData)->allocHandle + 4) & 0xffff);
         k = 0;
         off = k;
-        for (; (u32)k < *(u32 *)(((MapBlockData *)blockData)->allocHandle + 4); off += 6) {
-            s16 *ep = (s16 *)(*(int *)(((MapBlockData *)blockData)->allocHandle) + off);
+        for (; (u32)k < *(u32*)(((MapBlockData*)blockData)->allocHandle + 4); off += 6)
+        {
+            s16* ep = (s16*)(*(int*)(((MapBlockData*)blockData)->allocHandle) + off);
             s16 e2 = ep[2];
             s16 e1 = ep[1];
             s16 e0 = ep[0];
@@ -4195,15 +4569,18 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
             GXWGFifo.s16 = e2;
             k++;
         }
-    } else {
+    }
+    else
+    {
         int i;
         int vi;
         int off;
         GXBegin(0x90, 2, (slot * 3) & 0xffff);
         vi = 0;
         off = vi;
-        for (i = 0; i < slot; i++) {
-            f32 *v0 = (f32 *)((char *)cache + off);
+        for (i = 0; i < slot; i++)
+        {
+            f32* v0 = (f32*)((char*)cache + off);
             f32 a2 = v0[2];
             f32 a1 = v0[1];
             f32 a0 = v0[0];
@@ -4211,7 +4588,7 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
             GXWGFifo.f32 = a1;
             GXWGFifo.f32 = a2;
             {
-                f32 *v1 = (f32 *)((char *)cache + (vi + 1) * 0xc);
+                f32* v1 = (f32*)((char*)cache + (vi + 1) * 0xc);
                 f32 b2 = v1[2];
                 f32 b1 = v1[1];
                 f32 b0 = v1[0];
@@ -4220,7 +4597,7 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
                 GXWGFifo.f32 = b2;
             }
             {
-                f32 *v2 = (f32 *)((char *)cache + (vi + 2) * 0xc);
+                f32* v2 = (f32*)((char*)cache + (vi + 2) * 0xc);
                 f32 c2 = v2[2];
                 f32 c1 = v2[1];
                 f32 c0 = v2[0];
@@ -4232,15 +4609,20 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
             off += 0x24;
         }
     }
-    if (*(u32 *)&((MapBlockData *)blockData)->flags & 0x20) {
-        memcpy((char *)((int)obj + 0xc), save_c, 0xc);
-        memcpy((char *)((int)obj + 0x18), save_18, 0xc);
+    if (*(u32*)&((MapBlockData*)blockData)->flags & 0x20)
+    {
+        memcpy((char*)((int)obj + 0xc), save_c, 0xc);
+        memcpy((char*)((int)obj + 0x18), save_18, 0xc);
     }
 }
 #pragma opt_strength_reduction reset
 #pragma ppc_unroll_speculative on
 
-typedef struct { u8 r, g, b, a; } GlowGXColor;
+typedef struct
+{
+    u8 r, g, b, a;
+} GlowGXColor;
+
 extern void Camera_RebuildProjectionMatrix(void);
 extern void textureSetupFn_800799c0(void);
 extern void textRenderSetupFn_80079804(void);
@@ -4248,14 +4630,14 @@ extern void gxTextureFn_800794e0(void);
 extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
 extern void gxBlendFn_800789ac(void);
 extern u8 skyFn_8008919c(int);
-extern void fn_800897D4(int a, f32 *x, f32 *y, f32 *z);
-extern void skyBuildSunModelMatrix(f32 *out);
-extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 w, f32 *ox, f32 *oy, f32 *oz);
-extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int *ox, int *oy, int *oz);
-extern int depthReadRequestPoll(int x, int y, void *p);
+extern void fn_800897D4(int a, f32* x, f32* y, f32* z);
+extern void skyBuildSunModelMatrix(f32 * out);
+extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 w, f32* ox, f32* oy, f32* oz);
+extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int* ox, int* oy, int* oz);
+extern int depthReadRequestPoll(int x, int y, void* p);
 extern int pauseMenuGetState(void);
 extern void fn_8008912C(void);
-extern void getAmbientColor(int a, u8 *r, u8 *g, u8 *b);
+extern void getAmbientColor(int a, u8* r, u8* g, u8* b);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 extern int lbl_803E8440;
 extern int renderFlags;
@@ -4279,7 +4661,7 @@ void renderGlows(void)
     u8 sky;
     f32 sunDot;
 
-    fogCol = *(GlowGXColor *)&lbl_803E8440;
+    fogCol = *(GlowGXColor*)&lbl_803E8440;
     GXSetCullMode(0);
     Camera_RebuildProjectionMatrix();
     GXClearVtxDesc();
@@ -4293,14 +4675,16 @@ void renderGlows(void)
     lbl_803DCE10 = 0;
     lbl_803DCE14 = 0;
     sky = skyFn_8008919c(2);
-    if (sky != 0 && (renderFlags & 0x40)) {
-        void *viewMtx = Camera_GetViewMatrix();
+    if (sky != 0 && (renderFlags & 0x40))
+    {
+        void* viewMtx = Camera_GetViewMatrix();
         fn_800897D4(0, &dir[0], &dir[1], &dir[2]);
-        cam[0] = *(f32 *)((char *)viewMtx + 0x20);
-        cam[1] = *(f32 *)((char *)viewMtx + 0x24);
-        cam[2] = *(f32 *)((char *)viewMtx + 0x28);
+        cam[0] = *(f32*)((char*)viewMtx + 0x20);
+        cam[1] = *(f32*)((char*)viewMtx + 0x24);
+        cam[2] = *(f32*)((char*)viewMtx + 0x28);
         sunDot = PSVECDotProduct(dir, cam);
-        if (sunDot > lbl_803DEBCC) {
+        if (sunDot > lbl_803DEBCC)
+        {
             int occ;
             int i;
             f32 fade;
@@ -4324,19 +4708,22 @@ void renderGlows(void)
             if ((int)lbl_803DCE0C + 0x20 > 0x1e0)
                 lbl_803DCE14 = 0x1e0 - lbl_803DCE0C;
             occ = 0;
-            for (i = 0; i < 5; i++) {
-                int d = depthReadRequestPoll(sx + lbl_8030E634[i * 2], sy + lbl_8030E634[i * 2 + 1], (void *)i);
+            for (i = 0; i < 5; i++)
+            {
+                int d = depthReadRequestPoll(sx + lbl_8030E634[i * 2], sy + lbl_8030E634[i * 2 + 1], (void*)i);
                 if (sz <= d && pauseMenuGetState() == 0)
                     occ++;
             }
-            fade = (f32)(u32)occ / flushFlag_803DEBE4 - lbl_803DCE18;
+            fade = (f32)(u32)
+            occ / flushFlag_803DEBE4 - lbl_803DCE18;
             if (fade > Initialized_803DEC30)
                 fade = Initialized_803DEC30;
             else if (fade < EnabledBits_803DEC34)
                 fade = EnabledBits_803DEC34;
             lbl_803DCE18 = lbl_803DCE18 + fade;
             sunDot = sunDot * lbl_803DCE18;
-            if (sunDot > lbl_803DEBCC) {
+            if (sunDot > lbl_803DEBCC)
+            {
                 u8 ar, ag, ab;
                 PSMTXConcat(viewMtx, sunMtx, sunMtx);
                 GXLoadPosMtxImm(sunMtx, 0);
@@ -4344,7 +4731,8 @@ void renderGlows(void)
                 fn_8008912C();
                 selectTexture(0, 0);
                 getAmbientColor(0, &ar, &ag, &ab);
-                sunDot = (f32)(u32)sky * sunDot;
+                sunDot = (f32)(u32)
+                sky * sunDot;
                 _gxSetTevColor2(ar, ag, ab, (int)(displayOffsetH_803DEBFC * sunDot));
                 alpha = (int)(lbl_803DEBD8 - ResettingBits_803DEC38 * sunDot);
                 sunDot = RecalibrateBits_803DEC3C * sunDot * WaitingBits_803DEC40;
@@ -4373,10 +4761,12 @@ void renderGlows(void)
         }
     }
     colorScale = (u8)alpha;
-    if (lbl_803DCE06 != 0) {
+    if (lbl_803DCE06 != 0)
+    {
         int i;
-        for (i = 0; i < lbl_803DCE06; i++) {
-            ModelLightStruct *e = (ModelLightStruct *)lbl_80382038[i];
+        for (i = 0; i < lbl_803DCE06; i++)
+        {
+            ModelLightStruct* e = (ModelLightStruct*)lbl_80382038[i];
             int d;
             Camera_ProjectWorldPointWithOffset(e->worldX - playerMapOffsetX, e->worldY,
                                                e->worldZ - playerMapOffsetZ,
@@ -4391,16 +4781,28 @@ void renderGlows(void)
         GXSetCurrentMtx(0x3c);
         gxTextureFn_800794e0();
         gxBlendFn_800789ac();
-        for (i = 0; i < lbl_803DCE06; i++) {
-            ModelLightStruct *e = (ModelLightStruct *)lbl_80382038[i];
-            if (e->glowAlpha != 0) {
+        for (i = 0; i < lbl_803DCE06; i++)
+        {
+            ModelLightStruct* e = (ModelLightStruct*)lbl_80382038[i];
+            if (e->glowAlpha != 0)
+            {
                 f32 f = e->activeIntensity;
                 f32 cx, cy, cz, hs;
                 selectTexture((int)e->glowTexture, 0);
                 _gxSetTevColor2((int)((f32)(u32)e->glowColor[0] * f),
-                                (int)((f32)(u32)e->glowColor[1] * f),
-                                (int)((f32)(u32)e->glowColor[2] * f),
-                                (e->glowColor[3] * e->glowAlpha) >> 8 & 0xff);
+                    (int)
+                ((f32)(u32)
+                e->glowColor[1] * f
+                )
+                ,
+                (int)
+                ((f32)(u32)
+                e->glowColor[2] * f
+                )
+                ,
+                (e->glowColor[3] * e->glowAlpha) >> 8 & 0xff
+                )
+                ;
                 GXBegin(0x80, 2, 4);
                 cx = e->viewX;
                 cy = e->viewY;
@@ -4439,7 +4841,8 @@ void gxErrorFn_80060b40(void)
 
     i = 0;
     n = lbl_803DCE98;
-    for (; i < n; i++) {
+    for (; i < n; i++)
+    {
     }
 }
 
@@ -4452,8 +4855,8 @@ extern void fn_8006D5E8(void);
 
 void initTextures(void)
 {
-    f32 *a = lbl_8038D77C;
-    f32 *b = lbl_8038D7DC;
+    f32* a = lbl_8038D77C;
+    f32* b = lbl_8038D7DC;
 
     lbl_803DB658 = 10;
     lbl_803DCF2C = (int)mmAlloc(0xa8c0, 0x18, 0);
@@ -4508,170 +4911,193 @@ void initTextures(void)
     fn_8006D5E8();
 }
 
-extern int doLotsOfMath(void *a, void *b, int c, void *d, int *e, int g, int h, int i, int self, f32 f);
+extern int doLotsOfMath(void* a, void* b, int c, void* d, int* e, int g, int h, int i, int self, f32 f);
 extern char sTrackNoFreeLastLineError[];
 extern u8 lbl_803DCF4C;
 
-void objBboxFn_800640cc(f32 *p0, f32 *p1, int p5, int *out, int *self, int p8, int p9, int slot, f32 f, u8 arg8)
+void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, int p9, int slot, f32 f, u8 arg8)
 {
     f32 w0[3];
     f32 w1[3];
     f32 t20[3];
     f32 t14[3];
-    int *objs;
+    int* objs;
     int count;
     int i;
     int mtx;
 
     lbl_803DCF4C = 0;
-    if (out != NULL) {
-        *(s8 *)((char *)out + 0x50) = -1;
-        *(s8 *)((char *)out + 0x51) = -1;
+    if (out != NULL)
+    {
+        *(s8*)((char*)out + 0x50) = -1;
+        *(s8*)((char*)out + 0x51) = -1;
     }
-    mtx = (self != NULL) ? *(int *)((char *)self + 0x30) : 0;
-    if ((u32)mtx != 0) {
-        Obj_TransformLocalPointToWorld(p0[0], p0[1], p0[2], &w0[0], &w0[1], &w0[2], (void *)mtx);
-        Obj_TransformLocalPointToWorld(p1[0], p1[1], p1[2], &w1[0], &w1[1], &w1[2], (void *)mtx);
-    } else {
+    mtx = (self != NULL) ? *(int*)((char*)self + 0x30) : 0;
+    if ((u32)mtx != 0)
+    {
+        Obj_TransformLocalPointToWorld(p0[0], p0[1], p0[2], &w0[0], &w0[1], &w0[2], (void*)mtx);
+        Obj_TransformLocalPointToWorld(p1[0], p1[1], p1[2], &w1[0], &w1[1], &w1[2], (void*)mtx);
+    }
+    else
+    {
         memcpy(w0, p0, 0xc);
         memcpy(w1, p1, 0xc);
     }
-    objs = (int *)ObjGroup_GetObjects(6, &count);
-    for (i = 0; i < count; i++, objs++) {
-        int *o = (int *)*objs;
-        int *p54;
+    objs = (int*)ObjGroup_GetObjects(6, &count);
+    for (i = 0; i < count; i++, objs++)
+    {
+        int* o = (int*)*objs;
+        int* p54;
         int hdr;
         f32 rad;
         f32 dx, dy, dz;
         s8 hit;
-        int *e;
+        int* e;
         s16 k;
 
         if (o == self) continue;
-        if ((s8)*(u8 *)((char *)o + 0x35) <= -1) continue;
-        if (*(u32 *)(*(int *)&((GameObject *)o)->anim.modelInstance + 0x34) == 0) continue;
-        p54 = *(int **)&((GameObject *)o)->anim.hitReactState;
-        if (p54 != NULL && (((ObjHitsPriorityState *)p54)->flags & 1) == 0) continue;
-        dx = ((GameObject *)o)->anim.localPosX - w0[0];
-        dy = ((GameObject *)o)->anim.localPosY - w0[1];
-        dz = ((GameObject *)o)->anim.localPosZ - w0[2];
-        hdr = *(int *)(*(int *)(*(int *)&((GameObject *)o)->anim.banks
-                       + (s8)((ObjHitsPriorityState *)p54)->stateIndex * 4));
-        rad = (f32)((u16)modelFileHeaderGetCullDistance((void *)hdr) + 0x32);
+        if ((s8) * (u8*)((char*)o + 0x35) <= -1) continue;
+        if (*(u32*)(*(int*)&((GameObject*)o)->anim.modelInstance + 0x34) == 0) continue;
+        p54 = *(int**)&((GameObject*)o)->anim.hitReactState;
+        if (p54 != NULL && (((ObjHitsPriorityState*)p54)->flags & 1) == 0) continue;
+        dx = ((GameObject*)o)->anim.localPosX - w0[0];
+        dy = ((GameObject*)o)->anim.localPosY - w0[1];
+        dz = ((GameObject*)o)->anim.localPosZ - w0[2];
+        hdr = *(int*)(*(int*)(*(int*)&((GameObject*)o)->anim.banks
+            + (s8)((ObjHitsPriorityState*)p54)->stateIndex * 4));
+        rad = (f32)((u16)modelFileHeaderGetCullDistance((void*)hdr) + 0x32);
         rad = rad * rad;
         hit = 0;
         if (dy * dy + dx * dx + dz * dz < rad) hit = 1;
-        if (hit == 0) {
-            f32 ex = ((GameObject *)o)->anim.localPosX - w1[0];
-            f32 ey = ((GameObject *)o)->anim.localPosY - w1[1];
-            f32 ez = ((GameObject *)o)->anim.localPosZ - w1[2];
+        if (hit == 0)
+        {
+            f32 ex = ((GameObject*)o)->anim.localPosX - w1[0];
+            f32 ey = ((GameObject*)o)->anim.localPosY - w1[1];
+            f32 ez = ((GameObject*)o)->anim.localPosZ - w1[2];
             if (ey * ey + ex * ex + ez * ez < rad) hit = 1;
         }
         if (hit == 0) continue;
-        if ((u8)slot != 0xff) {
-            char *fl;
+        if ((u8)slot != 0xff)
+        {
+            char* fl;
             k = 0;
-            fl = (char *)lbl_803DCF48;
-            do {
-                if (*(u8 *)(fl + 0x14) != 0 && *(int *)fl == (int)self &&
-                    *(int *)(fl + 4) == (int)o && *(u8 *)(fl + 0x15) == (u8)slot) {
-                    *(u8 *)(fl + 0x14) = 0;
-                    e = (int *)fl;
+            fl = (char*)lbl_803DCF48;
+            do
+            {
+                if (*(u8*)(fl + 0x14) != 0 && *(int*)fl == (int)self &&
+                    *(int*)(fl + 4) == (int)o && *(u8*)(fl + 0x15) == (u8)slot)
+                {
+                    *(u8*)(fl + 0x14) = 0;
+                    e = (int*)fl;
                     goto haveEntry;
                 }
                 fl += 0x18;
                 k++;
-            } while (k < 0x40);
+            }
+            while (k < 0x40);
         }
         e = NULL;
     haveEntry:
-        if (e != NULL) {
-            t20[0] = *(f32 *)((char *)e + 8);
-            t20[1] = *(f32 *)((char *)e + 0xc);
-            t20[2] = *(f32 *)((char *)e + 0x10);
-        } else {
+        if (e != NULL)
+        {
+            t20[0] = *(f32*)((char*)e + 8);
+            t20[1] = *(f32*)((char*)e + 0xc);
+            t20[2] = *(f32*)((char*)e + 0x10);
+        }
+        else
+        {
             Obj_TransformWorldPointToLocal(w0[0], w0[1], w0[2], &t20[0], &t20[1], &t20[2], o);
         }
         Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &t14[0], &t14[1], &t14[2], o);
         if (doLotsOfMath(t20, t14, p5, out, o, p8, p9, arg8, (int)self, f) != 0)
             Obj_TransformLocalPointToWorld(t14[0], t14[1], t14[2], &w1[0], &w1[1], &w1[2], o);
-        if ((u8)slot != 0xff) {
-            char *fl;
+        if ((u8)slot != 0xff)
+        {
+            char* fl;
             k = 0;
-            fl = (char *)lbl_803DCF48;
-            do {
-                if (*(u8 *)(fl + 0x14) == 0) {
-                    *(int *)fl = (int)self;
-                    *(int *)(fl + 4) = (int)o;
-                    *(u8 *)(fl + 0x15) = slot;
-                    *(u8 *)(fl + 0x14) = 2;
-                    e = (int *)fl;
+            fl = (char*)lbl_803DCF48;
+            do
+            {
+                if (*(u8*)(fl + 0x14) == 0)
+                {
+                    *(int*)fl = (int)self;
+                    *(int*)(fl + 4) = (int)o;
+                    *(u8*)(fl + 0x15) = slot;
+                    *(u8*)(fl + 0x14) = 2;
+                    e = (int*)fl;
                     goto stored;
                 }
                 fl += 0x18;
                 k++;
-            } while (k < 0x40);
+            }
+            while (k < 0x40);
             e = NULL;
         stored:
-            if (e == NULL) {
+            if (e == NULL)
+            {
                 debugPrintf(sTrackNoFreeLastLineError);
             }
-            if (e != NULL) {
-                *(f32 *)((char *)e + 8) = t14[0];
-                *(f32 *)((char *)e + 0xc) = t14[1];
-                *(f32 *)((char *)e + 0x10) = t14[2];
+            if (e != NULL)
+            {
+                *(f32*)((char*)e + 8) = t14[0];
+                *(f32*)((char*)e + 0xc) = t14[1];
+                *(f32*)((char*)e + 0x10) = t14[2];
             }
         }
     }
     doLotsOfMath(w0, w1, p5, out, NULL, p8, p9, arg8, (int)self, f);
-    if (lbl_803DCF4C != 0 && out != NULL) {
-        f32 hx = *(f32 *)((char *)out + 0x3c) - *(f32 *)((char *)out + 0xc);
-        f32 hy = *(f32 *)((char *)out + 0x40) - *(f32 *)((char *)out + 0x10);
+    if (lbl_803DCF4C != 0 && out != NULL)
+    {
+        f32 hx = *(f32*)((char*)out + 0x3c) - *(f32*)((char*)out + 0xc);
+        f32 hy = *(f32*)((char*)out + 0x40) - *(f32*)((char*)out + 0x10);
         f32 len;
-        *(f32 *)((char *)out + 0x2c) = *(f32 *)((char *)out + 0x18) - *(f32 *)((char *)out + 0x14);
-        *(f32 *)((char *)out + 0x30) = __AR_Callback;
-        *(f32 *)((char *)out + 0x34) = *(f32 *)((char *)out + 0x4) - *(f32 *)((char *)out + 0x8);
-        len = lbl_803DECC4 / sqrtf(*(f32 *)((char *)out + 0x2c) * *(f32 *)((char *)out + 0x2c) +
-                                   *(f32 *)((char *)out + 0x34) * *(f32 *)((char *)out + 0x34));
-        *(f32 *)((char *)out + 0x2c) = *(f32 *)((char *)out + 0x2c) * len;
-        *(f32 *)((char *)out + 0x34) = *(f32 *)((char *)out + 0x34) * len;
-        *(f32 *)((char *)out + 0x38) = *(f32 *)((char *)out + 0x34) * *(f32 *)((char *)out + 0x14) -
-                                       *(f32 *)((char *)out + 0x2c) * *(f32 *)((char *)out + 0x4);
-        if (*(int *)out != 0) {
-            Obj_TransformLocalPointToWorld(*(f32 *)((char *)out + 4), *(f32 *)((char *)out + 0xc),
-                                           *(f32 *)((char *)out + 0x14), (f32 *)((int)out + 4),
-                                           (f32 *)((int)out + 0xc), (f32 *)((int)out + 0x14),
-                                           (void *)*(int *)out);
-            Obj_TransformLocalPointToWorld(*(f32 *)((char *)out + 8), *(f32 *)((char *)out + 0x10),
-                                           *(f32 *)((char *)out + 0x18), (f32 *)((int)out + 8),
-                                           (f32 *)((int)out + 0x10), (f32 *)((int)out + 0x18),
-                                           (void *)*(int *)out);
+        *(f32*)((char*)out + 0x2c) = *(f32*)((char*)out + 0x18) - *(f32*)((char*)out + 0x14);
+        *(f32*)((char*)out + 0x30) = __AR_Callback;
+        *(f32*)((char*)out + 0x34) = *(f32*)((char*)out + 0x4) - *(f32*)((char*)out + 0x8);
+        len = lbl_803DECC4 / sqrtf(*(f32*)((char*)out + 0x2c) * *(f32*)((char*)out + 0x2c) +
+            *(f32*)((char*)out + 0x34) * *(f32*)((char*)out + 0x34));
+        *(f32*)((char*)out + 0x2c) = *(f32*)((char*)out + 0x2c) * len;
+        *(f32*)((char*)out + 0x34) = *(f32*)((char*)out + 0x34) * len;
+        *(f32*)((char*)out + 0x38) = *(f32*)((char*)out + 0x34) * *(f32*)((char*)out + 0x14) -
+            *(f32*)((char*)out + 0x2c) * *(f32*)((char*)out + 0x4);
+        if (*(int*)out != 0)
+        {
+            Obj_TransformLocalPointToWorld(*(f32*)((char*)out + 4), *(f32*)((char*)out + 0xc),
+                                           *(f32*)((char*)out + 0x14), (f32*)((int)out + 4),
+                                           (f32*)((int)out + 0xc), (f32*)((int)out + 0x14),
+                                           (void*)*(int*)out);
+            Obj_TransformLocalPointToWorld(*(f32*)((char*)out + 8), *(f32*)((char*)out + 0x10),
+                                           *(f32*)((char*)out + 0x18), (f32*)((int)out + 8),
+                                           (f32*)((int)out + 0x10), (f32*)((int)out + 0x18),
+                                           (void*)*(int*)out);
         }
-        if ((u32)mtx != 0) {
-            Obj_TransformWorldPointToLocal(*(f32 *)((char *)out + 4), *(f32 *)((char *)out + 0xc),
-                                           *(f32 *)((char *)out + 0x14), (f32 *)((int)out + 4),
-                                           (f32 *)((int)out + 0xc), (f32 *)((int)out + 0x14),
-                                           (void *)mtx);
-            Obj_TransformWorldPointToLocal(*(f32 *)((char *)out + 8), *(f32 *)((char *)out + 0x10),
-                                           *(f32 *)((char *)out + 0x18), (f32 *)((int)out + 8),
-                                           (f32 *)((int)out + 0x10), (f32 *)((int)out + 0x18),
-                                           (void *)mtx);
-        }
-        *(f32 *)((char *)out + 0x1c) = *(f32 *)((char *)out + 0x18) - *(f32 *)((char *)out + 0x14);
-        *(f32 *)((char *)out + 0x20) = __AR_Callback;
-        *(f32 *)((char *)out + 0x24) = *(f32 *)((char *)out + 0x4) - *(f32 *)((char *)out + 0x8);
-        len = lbl_803DECC4 / sqrtf(*(f32 *)((char *)out + 0x1c) * *(f32 *)((char *)out + 0x1c) +
-                                   *(f32 *)((char *)out + 0x24) * *(f32 *)((char *)out + 0x24));
-        *(f32 *)((char *)out + 0x1c) = *(f32 *)((char *)out + 0x1c) * len;
-        *(f32 *)((char *)out + 0x24) = *(f32 *)((char *)out + 0x24) * len;
-        *(f32 *)((char *)out + 0x3c) = *(f32 *)((char *)out + 0xc) + hx;
-        *(f32 *)((char *)out + 0x40) = *(f32 *)((char *)out + 0x10) + hy;
-        *(f32 *)((char *)out + 0x28) = *(f32 *)((char *)out + 0x24) * *(f32 *)((char *)out + 0x14) -
-                                       *(f32 *)((char *)out + 0x1c) * *(f32 *)((char *)out + 0x4);
-    }
-    if (lbl_803DCF4C != 0) {
         if ((u32)mtx != 0)
-            Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &p1[0], &p1[1], &p1[2], (void *)mtx);
+        {
+            Obj_TransformWorldPointToLocal(*(f32*)((char*)out + 4), *(f32*)((char*)out + 0xc),
+                                           *(f32*)((char*)out + 0x14), (f32*)((int)out + 4),
+                                           (f32*)((int)out + 0xc), (f32*)((int)out + 0x14),
+                                           (void*)mtx);
+            Obj_TransformWorldPointToLocal(*(f32*)((char*)out + 8), *(f32*)((char*)out + 0x10),
+                                           *(f32*)((char*)out + 0x18), (f32*)((int)out + 8),
+                                           (f32*)((int)out + 0x10), (f32*)((int)out + 0x18),
+                                           (void*)mtx);
+        }
+        *(f32*)((char*)out + 0x1c) = *(f32*)((char*)out + 0x18) - *(f32*)((char*)out + 0x14);
+        *(f32*)((char*)out + 0x20) = __AR_Callback;
+        *(f32*)((char*)out + 0x24) = *(f32*)((char*)out + 0x4) - *(f32*)((char*)out + 0x8);
+        len = lbl_803DECC4 / sqrtf(*(f32*)((char*)out + 0x1c) * *(f32*)((char*)out + 0x1c) +
+            *(f32*)((char*)out + 0x24) * *(f32*)((char*)out + 0x24));
+        *(f32*)((char*)out + 0x1c) = *(f32*)((char*)out + 0x1c) * len;
+        *(f32*)((char*)out + 0x24) = *(f32*)((char*)out + 0x24) * len;
+        *(f32*)((char*)out + 0x3c) = *(f32*)((char*)out + 0xc) + hx;
+        *(f32*)((char*)out + 0x40) = *(f32*)((char*)out + 0x10) + hy;
+        *(f32*)((char*)out + 0x28) = *(f32*)((char*)out + 0x24) * *(f32*)((char*)out + 0x14) -
+            *(f32*)((char*)out + 0x1c) * *(f32*)((char*)out + 0x4);
+    }
+    if (lbl_803DCF4C != 0)
+    {
+        if ((u32)mtx != 0)
+            Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &p1[0], &p1[1], &p1[2], (void*)mtx);
         else
             memcpy(p1, w1, 0xc);
     }
@@ -4680,14 +5106,14 @@ void objBboxFn_800640cc(f32 *p0, f32 *p1, int p5, int *out, int *self, int p8, i
 /* fn_80067B84 -- gather model triangles overlapping a swept bbox into the
  * hit-detect triangle buffer at cur (0x4c-byte records); returns advanced
  * cursor. */
-extern u8 *fn_80028364(int hdr, int i);
-extern u16 *fn_80028354(int hdr, int tri);
-extern s16 *ObjModel_GetBaseVertexCoords(int hdr, u32 idx);
+extern u8* fn_80028364(int hdr, int i);
+extern u16* fn_80028354(int hdr, int tri);
+extern s16* ObjModel_GetBaseVertexCoords(int hdr, u32 idx);
 extern f32 lbl_803DECF0;
 extern f32 lbl_803DECF4;
 extern f32 lbl_803DECF8;
 
-int fn_80067B84(int cur, TrackBlockDescriptor *desc, int model, int flags, f32 scale,
+int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, int flags, f32 scale,
                 f32 x0, f64 y0d, f32 z0, f32 x1, f64 y1d, f32 z1)
 {
     f32 xd, xc, xb, xa;
@@ -4702,7 +5128,7 @@ int fn_80067B84(int cur, TrackBlockDescriptor *desc, int model, int flags, f32 s
 
     y0 = y0d;
     y1 = y1d;
-    hdr = *(int *)model;
+    hdr = *(int*)model;
 
     Matrix_TransformPoint(desc->currentMatrix, x0, y0d, z0, &xa, &ytmp, &za);
     Matrix_TransformPoint(desc->currentMatrix, x0, y0, z1, &xb, &y0, &zb);
@@ -4726,16 +5152,17 @@ int fn_80067B84(int cur, TrackBlockDescriptor *desc, int model, int flags, f32 s
     if (zd < z0) z0 = zd;
     if (zd > z1) z1 = zd;
 
-    count = *(u16 *)(hdr + 0xf0);
+    count = *(u16*)(hdr + 0xf0);
     i = 0;
     flag20 = (u8)flags & 0x20;
     flag8 = (u8)flags & 8;
     flag4 = (u8)flags & 4;
 
-    for (; i < count; i++) {
-        u8 *blk = fn_80028364(hdr, i);
-        s16 *bs = (s16 *)blk;
-        u32 bf = *(u32 *)(blk + 0x10);
+    for (; i < count; i++)
+    {
+        u8* blk = fn_80028364(hdr, i);
+        s16* bs = (s16*)blk;
+        u32 bf = *(u32*)(blk + 0x10);
         int tEnd, t;
 
         if (bf & 0x100000) continue;
@@ -4747,13 +5174,14 @@ int fn_80067B84(int cur, TrackBlockDescriptor *desc, int model, int flags, f32 s
         if (z0 > (f32)bs[6] * scale) continue;
         if (z1 < (f32)bs[5] * scale) continue;
 
-        tEnd = *(u16 *)(blk + 0x14);
-        t = *(u16 *)blk;
-        for (; t < tEnd; t++) {
-            u16 *tw = fn_80028354(hdr, t);
+        tEnd = *(u16*)(blk + 0x14);
+        t = *(u16*)blk;
+        for (; t < tEnd; t++)
+        {
+            u16* tw = fn_80028354(hdr, t);
             f32 tMinX, tMaxX, tMinY, tMaxY, tMinZ, tMaxZ;
             int j;
-            u8 *vout;
+            u8* vout;
             s16 *xs, *ys, *zs;
             int nxi, nyi, nzi;
             f32 fnx, fny, fnz;
@@ -4766,28 +5194,40 @@ int fn_80067B84(int cur, TrackBlockDescriptor *desc, int model, int flags, f32 s
             tMinZ = tMinX;
             tMaxZ = tMaxX;
             j = 0;
-            vout = (u8 *)cur;
-            for (; j < 3; j++) {
-                s16 *v = ObjModel_GetBaseVertexCoords(hdr, *tw);
+            vout = (u8*)cur;
+            for (; j < 3; j++)
+            {
+                s16* v = ObjModel_GetBaseVertexCoords(hdr, *tw);
                 f32 fx, fy, fz;
-                if (*(u16 *)(hdr + 2) & 0x800) {
+                if (*(u16*)(hdr + 2) & 0x800)
+                {
                     fx = (f32)v[0] * scale;
                     fy = (f32)v[1] * scale;
                     fz = (f32)v[2] * scale;
-                } else {
+                }
+                else
+                {
                     fx = (f32)v[0] * scale * lbl_803DECF8;
                     fy = (f32)v[1] * scale * lbl_803DECF8;
                     fz = (f32)v[2] * scale * lbl_803DECF8;
                 }
                 if (fx > tMaxX) tMaxX = fx;
                 if (fx < tMinX) tMinX = fx;
-                if (fy > tMaxY) { tMaxY = fy; maxYi = j; }
-                if (fy < tMinY) { tMinY = fy; minYi = j; }
+                if (fy > tMaxY)
+                {
+                    tMaxY = fy;
+                    maxYi = j;
+                }
+                if (fy < tMinY)
+                {
+                    tMinY = fy;
+                    minYi = j;
+                }
                 if (fz > tMaxZ) tMaxZ = fz;
                 if (fz < tMinZ) tMinZ = fz;
-                *(s16 *)(vout + 0x10) = (s16)fx;
-                *(s16 *)(vout + 0x16) = (s16)fy;
-                *(s16 *)(vout + 0x1c) = (s16)fz;
+                *(s16*)(vout + 0x10) = (s16)fx;
+                *(s16*)(vout + 0x16) = (s16)fy;
+                *(s16*)(vout + 0x1c) = (s16)fz;
                 tw++;
                 vout += 2;
             }
@@ -4798,9 +5238,9 @@ int fn_80067B84(int cur, TrackBlockDescriptor *desc, int model, int flags, f32 s
             if (tMinZ > z1) continue;
             if (tMaxZ < z0) continue;
 
-            xs = (s16 *)(cur + 0x10);
-            ys = (s16 *)(cur + 0x16);
-            zs = (s16 *)(cur + 0x1c);
+            xs = (s16*)(cur + 0x10);
+            ys = (s16*)(cur + 0x16);
+            zs = (s16*)(cur + 0x1c);
 
             nxi = ys[0] * (zs[1] - zs[2]) + (ys[1] * (zs[2] - zs[0]) + ys[2] * (zs[0] - zs[1]));
             fnx = (f32)nxi;
@@ -4811,54 +5251,60 @@ int fn_80067B84(int cur, TrackBlockDescriptor *desc, int model, int flags, f32 s
             len = sqrtf(fnz * fnz + (fnx * fnx + fny * fny));
             if (len <= __AR_Callback) continue;
             inv = lbl_803DECC4 / len;
-            *(f32 *)(cur + 4) = fnx * inv;
-            *(f32 *)(cur + 8) = fny * inv;
-            *(f32 *)(cur + 0xc) = fnz * inv;
+            *(f32*)(cur + 4) = fnx * inv;
+            *(f32*)(cur + 8) = fny * inv;
+            *(f32*)(cur + 0xc) = fnz * inv;
 
-            if (flag8) {
-                if (*(f32 *)(cur + 8) >= __AR_Size) continue;
-                if (*(f32 *)(cur + 8) <= lbl_803DECEC) continue;
+            if (flag8)
+            {
+                if (*(f32*)(cur + 8) >= __AR_Size) continue;
+                if (*(f32*)(cur + 8) <= lbl_803DECEC) continue;
             }
-            if (flag4) {
-                if (*(f32 *)(cur + 8) < __AR_Size && *(f32 *)(cur + 8) > lbl_803DECEC) continue;
+            if (flag4)
+            {
+                if (*(f32*)(cur + 8) < __AR_Size && *(f32*)(cur + 8) > lbl_803DECEC) continue;
             }
 
-            *(f32 *)(cur + 0) = -(*(f32 *)(cur + 0xc) * (f32)zs[0]
-                               + (*(f32 *)(cur + 4) * (f32)xs[0] + *(f32 *)(cur + 8) * (f32)ys[0]));
+            *(f32*)(cur + 0) = -(*(f32*)(cur + 0xc) * (f32)zs[0]
+                + (*(f32*)(cur + 4) * (f32)xs[0] + *(f32*)(cur + 8) * (f32)ys[0]));
 
             {
                 int k22 = 0;
                 int deg = 0;
                 int j2 = 0;
-                s16 *xw = xs;
-                s16 *yw = ys;
-                s16 *zw = zs;
+                s16* xw = xs;
+                s16* yw = ys;
+                s16* zw = zs;
                 f32 eps = __AR_Callback;
-                for (; j2 < 3; j2++) {
+                for (; j2 < 3; j2++)
+                {
                     int k = j2 + 1;
                     f32 px, py, pz;
                     f32 ex, ey, ez;
                     if (k > 2) k = 0;
-                    px = *(f32 *)(cur + 4) + (f32)xw[0];
-                    py = *(f32 *)(cur + 8) + (f32)yw[0];
-                    pz = *(f32 *)(cur + 0xc) + (f32)zw[0];
+                    px = *(f32*)(cur + 4) + (f32)xw[0];
+                    py = *(f32*)(cur + 8) + (f32)yw[0];
+                    pz = *(f32*)(cur + 0xc) + (f32)zw[0];
                     ex = py * (f32)(zw[0] - zs[k]) + ((f32)yw[0] * ((f32)zs[k] - pz) + (f32)ys[k] * (pz - (f32)zw[0]));
                     ey = pz * (f32)(xw[0] - xs[k]) + ((f32)zw[0] * ((f32)xs[k] - px) + (f32)zs[k] * (px - (f32)xw[0]));
                     ez = px * (f32)(yw[0] - ys[k]) + ((f32)xw[0] * ((f32)ys[k] - py) + (f32)xs[k] * (py - (f32)yw[0]));
                     len = sqrtf(ez * ez + (ex * ex + ey * ey));
-                    if (len <= eps) {
+                    if (len <= eps)
+                    {
                         deg = 1;
-                    } else {
+                    }
+                    else
+                    {
                         f32 inv2 = lbl_803DECC4 / len;
                         ex *= inv2;
                         ey *= inv2;
                         ez *= inv2;
                     }
-                    *(f32 *)(cur + k22 * 4 + 0x24) = ex;
+                    *(f32*)(cur + k22 * 4 + 0x24) = ex;
                     k22++;
-                    *(f32 *)(cur + k22 * 4 + 0x24) = ey;
+                    *(f32*)(cur + k22 * 4 + 0x24) = ey;
                     k22++;
-                    *(f32 *)(cur + k22 * 4 + 0x24) = ez;
+                    *(f32*)(cur + k22 * 4 + 0x24) = ez;
                     k22++;
                     xw++;
                     yw++;
@@ -4867,12 +5313,13 @@ int fn_80067B84(int cur, TrackBlockDescriptor *desc, int model, int flags, f32 s
                 if (deg) continue;
             }
 
-            *(s8 *)(cur + 0x48) = (u8)fn_80060668((int *)blk);
-            *(u8 *)(cur + 0x4a) = (u8)((maxYi << 4) | minYi);
-            *(s8 *)(cur + 0x49) = 10;
-            *(s8 *)(cur + 0x49) |= 8;
+            *(s8*)(cur + 0x48) = (u8)fn_80060668((int*)blk);
+            *(u8*)(cur + 0x4a) = (u8)((maxYi << 4) | minYi);
+            *(s8*)(cur + 0x49) = 10;
+            *(s8*)(cur + 0x49) |= 8;
             cur += 0x4c;
-            if ((u32)cur >= lbl_803DCF70) {
+            if ((u32)cur >= lbl_803DCF70)
+            {
                 return cur;
             }
         }
@@ -4882,11 +5329,11 @@ int fn_80067B84(int cur, TrackBlockDescriptor *desc, int model, int flags, f32 s
 
 /* mapLoadBlocksFn_800685cc -- gather map-block collision triangles overlapping
  * the query box into the buffer at cur; returns advanced cursor. */
-extern u8 *mapGetBlockAtPos(int x, int z, int layer);
-extern int cacheAllocAndCopy(void *p, int size, int *offIn, int *offOut, int base);
+extern u8* mapGetBlockAtPos(int x, int z, int layer);
+extern int cacheAllocAndCopy(void* p, int size, int* offIn, int* offOut, int base);
 extern f32 fastFloorf(f32 x);
-extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
-extern f32 PSVECMag(f32 *v);
+extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
+extern f32 PSVECMag(f32 * v);
 extern int lbl_803DCDC8;
 extern int lbl_803DCDCC;
 
@@ -4899,6 +5346,7 @@ int x1;
 int y1;
 int z1;
 int flags;
+
 u8 doEdges;
 {
     int cells[16];
@@ -4915,7 +5363,7 @@ u8 doEdges;
     int count, layer;
     int *cellp, *cw;
     int *descp, *dw;
-    int *firstp;
+    int* firstp;
     int f40, f80, f200, f120, f20, f8, f100, f4;
     int last, i;
     int dmaflip;
@@ -4925,12 +5373,14 @@ u8 doEdges;
     z0 = z0 - lbl_803DCDCC;
     x1 = x1 - lbl_803DCDC8;
     z1 = z1 - lbl_803DCDCC;
-    if (x0 > x1) {
+    if (x0 > x1)
+    {
         x0 ^= x1;
         x1 ^= x0;
         x0 ^= x1;
     }
-    if (z0 > z1) {
+    if (z0 > z1)
+    {
         z0 ^= z1;
         z1 ^= z0;
         z0 ^= z1;
@@ -4944,19 +5394,23 @@ u8 doEdges;
     layer = 0;
     cellp = cells;
     cw = cellp;
-    descp = (int *)lbl_8038DE44;
+    descp = (int*)lbl_8038DE44;
     dw = descp;
-    do {
+    do
+    {
         int gx, gz;
         int *p1, *q1, *p2, *q2;
         p1 = cw;
         q1 = dw;
-        for (gx = gx0; gx <= gx1 && count < 16; gx++) {
+        for (gx = gx0; gx <= gx1 && count < 16; gx++)
+        {
             p2 = p1;
             q2 = q1;
-            for (gz = gz0; gz <= gz1 && count < 16; gz++) {
-                u8 *blk = mapGetBlockAtPos(gx, gz, layer);
-                if (blk != NULL) {
+            for (gz = gz0; gz <= gz1 && count < 16; gz++)
+            {
+                u8* blk = mapGetBlockAtPos(gx, gz, layer);
+                if (blk != NULL)
+                {
                     *p2 = (int)blk;
                     q2[0] = gx * 0x280;
                     q2[2] = gz * 0x280;
@@ -4971,22 +5425,24 @@ u8 doEdges;
             }
         }
         layer++;
-    } while (layer < 5);
+    }
+    while (layer < 5);
 
-    if (count == 0) {
+    if (count == 0)
+    {
         return cur;
     }
 
     {
         int c0 = cells[0];
-        void *p = fn_800606DC((int *)c0, 0);
+        void* p = fn_800606DC((int*)c0, 0);
         dmaflip = 0;
         offA = 0;
-        cacheAllocAndCopy(p, *(u16 *)(c0 + 0x98) << 3, &offA, &offB, 0x2000);
-        cacheAllocAndCopy(*(void **)(c0 + 0x58), *(u16 *)(c0 + 0x90) * 6, &offB, &offC, 0x2000);
+        cacheAllocAndCopy(p, *(u16*)(c0 + 0x98) << 3, &offA, &offB, 0x2000);
+        cacheAllocAndCopy(*(void**)(c0 + 0x58), *(u16*)(c0 + 0x90) * 6, &offB, &offC, 0x2000);
     }
     i = 0;
-    firstp = (int *)lbl_8038DE44;
+    firstp = (int*)lbl_8038DE44;
     f40 = (u16)flags & 0x40;
     f80 = (u16)flags & 0x80;
     f200 = (u16)flags & 0x200;
@@ -4996,7 +5452,8 @@ u8 doEdges;
     f100 = (u16)flags & 0x100;
     f4 = (u16)flags & 4;
     last = count - 1;
-    for (; i < count; i++) {
+    for (; i < count; i++)
+    {
         int bb;
         int vb;
         int blk;
@@ -5006,24 +5463,27 @@ u8 doEdges;
         u32 bit;
         int pos, k;
         int mask16;
-        u8 *tri;
+        u8* tri;
         u32 triEnd;
 
         bb = offA;
         vb = offB;
-        if (i < last) {
+        if (i < last)
+        {
             int next = cellp[1];
             int nextBase;
-            void *p;
+            void* p;
             int c13, c14;
             dmaflip ^= 0x2000;
             nextBase = dmaflip + 0x2000;
-            p = fn_800606DC((int *)next, 0);
+            p = fn_800606DC((int*)next, 0);
             offA = dmaflip;
-            c13 = cacheAllocAndCopy(p, *(u16 *)(next + 0x98) << 3, &offA, &offB, nextBase);
-            c14 = cacheAllocAndCopy(*(void **)(next + 0x58), *(u16 *)(next + 0x90) * 6, &offB, &offC, nextBase);
+            c13 = cacheAllocAndCopy(p, *(u16*)(next + 0x98) << 3, &offA, &offB, nextBase);
+            c14 = cacheAllocAndCopy(*(void**)(next + 0x58), *(u16*)(next + 0x90) * 6, &offB, &offC, nextBase);
             cacheQueueWait((u8)(c13 + c14));
-        } else {
+        }
+        else
+        {
             cacheQueueWait(0);
         }
 
@@ -5044,7 +5504,8 @@ u8 doEdges;
         mask = 0;
         bit = 1;
         pos = 0;
-        for (k = 2; k != 0; k--) {
+        for (k = 2; k != 0; k--)
+        {
             if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
             bit = (s16)(bit << 1);
             pos += 0x50;
@@ -5059,7 +5520,8 @@ u8 doEdges;
             pos += 0x50;
         }
         pos = 0;
-        for (k = 2; k != 0; k--) {
+        for (k = 2; k != 0; k--)
+        {
             if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
             bit = (s16)(bit << 1);
             pos += 0x50;
@@ -5073,92 +5535,101 @@ u8 doEdges;
             bit = (s16)(bit << 1);
             pos += 0x50;
         }
-        tri = *(u8 **)(blk + 0x50);
-        triEnd = (u32)tri + *(u16 *)(blk + 0x9a) * 0x14;
+        tri = *(u8**)(blk + 0x50);
+        triEnd = (u32)tri + *(u16*)(blk + 0x9a) * 0x14;
         mask16 = (s16)mask;
-        for (; (u32)tri < triEnd; tri += 0x14) {
-            u32 tf = *(u32 *)(tri + 0x10);
+        for (; (u32)tri < triEnd; tri += 0x14)
+        {
+            u32 tf = *(u32*)(tri + 0x10);
             u8 type;
             int yoff;
             int t0, vEnd;
-            u8 *vq;
+            u8* vq;
 
             if ((tf & 0x10) && f40) continue;
             if (!(tf & 4) && f80) continue;
-            if (tf & 8) {
+            if (tf & 8)
+            {
                 if (tf & 1) continue;
                 if (f200) continue;
                 type = 4;
                 if (f120 == 0) type |= 0x10;
-            } else {
+            }
+            else
+            {
                 if ((tf & 2) && f20 == 0) continue;
                 type = 2;
             }
-            yoff = *(s16 *)(blk + 0x8e);
-            if (*(s16 *)(tri + 6) + yoff > y1) continue;
-            if (*(s16 *)(tri + 8) + yoff < y0) continue;
-            if (*(s16 *)(tri + 2) > relx1) continue;
-            if (*(s16 *)(tri + 4) < relx0) continue;
-            if (*(s16 *)(tri + 0xa) > relz1) continue;
-            if (*(s16 *)(tri + 0xc) < relz0) continue;
+            yoff = *(s16*)(blk + 0x8e);
+            if (*(s16*)(tri + 6) + yoff > y1) continue;
+            if (*(s16*)(tri + 8) + yoff < y0) continue;
+            if (*(s16*)(tri + 2) > relx1) continue;
+            if (*(s16*)(tri + 4) < relx0) continue;
+            if (*(s16*)(tri + 0xa) > relz1) continue;
+            if (*(s16*)(tri + 0xc) < relz0) continue;
             if (tf & 4) type |= 8;
-            typeb = (u8)fn_80060668((int *)tri);
-            t0 = *(u16 *)tri;
-            vq = (u8 *)(bb + t0 * 8);
-            vEnd = *(u16 *)(tri + 0x14);
-            for (; t0 < vEnd; t0++, vq += 8) {
-                s16 *vp;
+            typeb = (u8)fn_80060668((int*)tri);
+            t0 = *(u16*)tri;
+            vq = (u8*)(bb + t0 * 8);
+            vEnd = *(u16*)(tri + 0x14);
+            for (; t0 < vEnd; t0++, vq += 8)
+            {
+                s16* vp;
                 int minX, maxX, minY, maxY, minZ, maxZ;
                 u8 maxYi, minYi;
-                u16 *tw;
-                u8 *vo;
-                f32 *vf;
+                u16* tw;
+                u8* vo;
+                f32* vf;
                 int j;
                 f32 mag;
 
-                if ((mask16 & *(u16 *)(vq + 6) & 0xff) == 0) continue;
-                if ((mask16 & *(u16 *)(vq + 6) & 0xff00) == 0) continue;
-                vp = (s16 *)(vb + *(u16 *)vq * 6);
+                if ((mask16 & *(u16*)(vq + 6) & 0xff) == 0) continue;
+                if ((mask16 & *(u16*)(vq + 6) & 0xff00) == 0) continue;
+                vp = (s16*)(vb + *(u16*)vq * 6);
                 minX = vp[0] >> 3;
                 maxX = minX;
-                minY = (vp[1] >> 3) + *(s16 *)(blk + 0x8e);
+                minY = (vp[1] >> 3) + *(s16*)(blk + 0x8e);
                 maxY = minY;
                 minZ = vp[2] >> 3;
                 maxZ = minZ;
-                *(s16 *)(cur + 0x10) = minX + dxoff;
-                *(s16 *)(cur + 0x16) = minY;
-                *(s16 *)(cur + 0x1c) = minZ + dzoff;
-                v0[0] = __OSs16tof32((s16 *)(cur + 0x10));
-                v0[1] = __OSs16tof32((s16 *)(cur + 0x16));
-                v0[2] = __OSs16tof32((s16 *)(cur + 0x1c));
+                *(s16*)(cur + 0x10) = minX + dxoff;
+                *(s16*)(cur + 0x16) = minY;
+                *(s16*)(cur + 0x1c) = minZ + dzoff;
+                v0[0] = __OSs16tof32((s16*)(cur + 0x10));
+                v0[1] = __OSs16tof32((s16*)(cur + 0x16));
+                v0[2] = __OSs16tof32((s16*)(cur + 0x1c));
                 maxYi = 0;
                 minYi = 0;
-                tw = (u16 *)(vq + 2);
-                vo = (u8 *)(cur + 2);
+                tw = (u16*)(vq + 2);
+                vo = (u8*)(cur + 2);
                 vf = verts;
-                for (j = 1; j < 3; j++) {
+                for (j = 1; j < 3; j++)
+                {
                     int x, yy, z;
-                    vp = (s16 *)(vb + *tw * 6);
+                    vp = (s16*)(vb + *tw * 6);
                     x = vp[0] >> 3;
-                    yy = (vp[1] >> 3) + *(s16 *)(blk + 0x8e);
+                    yy = (vp[1] >> 3) + *(s16*)(blk + 0x8e);
                     z = vp[2] >> 3;
                     if (x > maxX) maxX = x;
                     else if (x < minX) minX = x;
-                    if (yy > maxY) {
+                    if (yy > maxY)
+                    {
                         maxY = yy;
                         maxYi = j;
-                    } else if (yy < minY) {
+                    }
+                    else if (yy < minY)
+                    {
                         minY = yy;
                         minYi = j;
                     }
                     if (z > maxZ) maxZ = z;
                     else if (z < minZ) minZ = z;
-                    *(s16 *)(vo + 0x10) = x + dxoff;
-                    *(s16 *)(vo + 0x16) = yy;
-                    *(s16 *)(vo + 0x1c) = z + dzoff;
-                    vf[0] = __OSs16tof32((s16 *)(vo + 0x10));
-                    vf[1] = __OSs16tof32((s16 *)(vo + 0x16));
-                    vf[2] = __OSs16tof32((s16 *)(vo + 0x1c));
+                    *(s16*)(vo + 0x10) = x + dxoff;
+                    *(s16*)(vo + 0x16) = yy;
+                    *(s16*)(vo + 0x1c) = z + dzoff;
+                    vf[0] = __OSs16tof32((s16*)(vo + 0x10));
+                    vf[1] = __OSs16tof32((s16*)(vo + 0x16));
+                    vf[2] = __OSs16tof32((s16*)(vo + 0x1c));
                     tw++;
                     vo += 2;
                     vf += 3;
@@ -5172,26 +5643,30 @@ u8 doEdges;
 
                 PSVECSubtract(v0, verts, e0);
                 PSVECSubtract(verts, verts + 3, e1);
-                PSVECCrossProduct(e0, e1, (f32 *)(cur + 4));
-                mag = PSVECMag((f32 *)(cur + 4));
+                PSVECCrossProduct(e0, e1, (f32*)(cur + 4));
+                mag = PSVECMag((f32*)(cur + 4));
                 if (!(mag > __AR_Callback)) continue;
                 {
                     f32 inv = lbl_803DECC4 / mag;
-                    PSVECScale((f32 *)(cur + 4), (f32 *)(cur + 4), inv);
+                    PSVECScale((f32*)(cur + 4), (f32*)(cur + 4), inv);
                 }
-                if (f8) {
-                    if (*(f32 *)(cur + 8) >= __AR_Size || *(f32 *)(cur + 8) <= lbl_803DECEC) {
+                if (f8)
+                {
+                    if (*(f32*)(cur + 8) >= __AR_Size || *(f32*)(cur + 8) <= lbl_803DECEC)
+                    {
                         if (type != 4) continue;
                         if (f100 == 0) continue;
                     }
                 }
-                if (f4) {
-                    if (*(f32 *)(cur + 8) < __AR_Size && *(f32 *)(cur + 8) > lbl_803DECEC) continue;
+                if (f4)
+                {
+                    if (*(f32*)(cur + 8) < __AR_Size && *(f32*)(cur + 8) > lbl_803DECEC) continue;
                 }
-                *(f32 *)cur = -PSVECDotProduct((f32 *)(cur + 4), v0);
-                if (doEdges) {
+                *(f32*)cur = -PSVECDotProduct((f32*)(cur + 4), v0);
+                if (doEdges)
+                {
                     int k22, deg, j2;
-                    f32 *ep;
+                    f32* ep;
                     f32 eps = __AR_Callback;
                     f32 one = lbl_803DECC4;
                     PSVECSubtract(verts + 3, v0, e2);
@@ -5199,39 +5674,48 @@ u8 doEdges;
                     deg = 0;
                     j2 = 0;
                     ep = e0;
-                    do {
+                    do
+                    {
                         f32 m;
-                        PSVECCrossProduct((f32 *)(cur + 4), ep, en);
+                        PSVECCrossProduct((f32*)(cur + 4), ep, en);
                         m = PSVECMag(en);
-                        if (m > eps) {
+                        if (m > eps)
+                        {
                             f32 inv = one / m;
                             PSVECScale(en, en, inv);
-                            *(f32 *)(cur + (k22++) * 4 + 0x24) = en[0];
-                            *(f32 *)(cur + (k22++) * 4 + 0x24) = en[1];
-                            *(f32 *)(cur + (k22++) * 4 + 0x24) = en[2];
-                        } else {
+                            *(f32*)(cur + (k22++) * 4 + 0x24) = en[0];
+                            *(f32*)(cur + (k22++) * 4 + 0x24) = en[1];
+                            *(f32*)(cur + (k22++) * 4 + 0x24) = en[2];
+                        }
+                        else
+                        {
                             deg = 1;
                             break;
                         }
                         ep += 3;
                         j2++;
-                    } while (j2 < 3);
+                    }
+                    while (j2 < 3);
                     if (deg) continue;
                 }
                 {
-                    u32 tf2 = *(u32 *)(tri + 0x10);
+                    u32 tf2 = *(u32*)(tri + 0x10);
                     u8 t2;
-                    if (tf2 & 8) {
+                    if (tf2 & 8)
+                    {
                         t2 = 0xe;
-                    } else {
+                    }
+                    else
+                    {
                         t2 = typeb;
                     }
                     if (tf2 & 0x20) type |= 0x40;
-                    *(s8 *)(cur + 0x48) = t2;
-                    *(u8 *)(cur + 0x4a) = (u8)((maxYi << 4) | minYi);
-                    *(s8 *)(cur + 0x49) = type;
+                    *(s8*)(cur + 0x48) = t2;
+                    *(u8*)(cur + 0x4a) = (u8)((maxYi << 4) | minYi);
+                    *(s8*)(cur + 0x49) = type;
                     cur += 0x4c;
-                    if ((u32)cur >= lbl_803DCF70) {
+                    if ((u32)cur >= lbl_803DCF70)
+                    {
                         return cur;
                     }
                 }
@@ -5245,8 +5729,8 @@ u8 doEdges;
 
 /* trackIntersect -- rebuild the intersection line table from map blocks when
  * a refresh has been requested. */
-extern u8 *mapGetBlockIdx(int layer);
-extern u8 *mapGetBlock(int idx);
+extern u8* mapGetBlockIdx(int layer);
+extern u8* mapGetBlock(int idx);
 extern int getHudHiddenFrameCount(void);
 extern u8 lbl_803DCF44;
 extern int lbl_803DCF40;
@@ -5260,69 +5744,83 @@ void trackIntersect(void)
     s16 prev, t;
 
     lbl_803DCF44 = 0;
-    if (lbl_803DCF4D != 0 && getHudHiddenFrameCount() == 0) {
+    if (lbl_803DCF4D != 0 && getHudHiddenFrameCount() == 0)
+    {
         lbl_803DCF4D = lbl_803DCF4D - 1;
     }
-    if ((s8)lbl_803DCF4E == 1) {
+    if ((s8)lbl_803DCF4E == 1)
+    {
         lbl_803DCF4F = 1;
         lbl_803DCF4E = 0;
         return;
     }
-    if ((s8)lbl_803DCF4F == 0) {
+    if ((s8)lbl_803DCF4F == 0)
+    {
         return;
     }
     lbl_803DCF4F = 0;
-    if (getHudHiddenFrameCount() != 0) {
+    if (getHudHiddenFrameCount() != 0)
+    {
         lbl_803DCF4D = 2;
     }
 
-    for (i = 0; i < 0x47; i++) {
+    for (i = 0; i < 0x47; i++)
+    {
         counts[i] = 0;
     }
     lbl_803DCF5E = 0;
     lbl_803DCF5C = 0;
 
-    for (layer = 0; layer < 5; layer++) {
-        u8 *idx = mapGetBlockIdx(layer);
+    for (layer = 0; layer < 5; layer++)
+    {
+        u8* idx = mapGetBlockIdx(layer);
         int gz, gx, base;
-        for (gz = 0, base = 0; gz < 0x10; gz++, base += 0x10) {
+        for (gz = 0, base = 0; gz < 0x10; gz++, base += 0x10)
+        {
             f32 fz0 = lbl_803DECE0[0] * (f32)gz;
-            u8 *p = idx + base;
-            for (gx = 0; gx < 0x10; gx++, p++) {
-                if ((s8)*p >= 0) {
-                    u8 *blk = mapGetBlock((s8)*p);
+            u8* p = idx + base;
+            for (gx = 0; gx < 0x10; gx++, p++)
+            {
+                if ((s8) * p >= 0)
+                {
+                    u8* blk = mapGetBlock((s8) * p);
                     int tn, toff;
                     f32 fx0;
                     tn = 0;
                     toff = 0;
                     fx0 = lbl_803DECE0[0] * (f32)gx;
-                    for (; tn < *(u16 *)(blk + 0x9c); tn++, toff += 0x14) {
-                        if (lbl_803DCF5E < 0x5dc) {
-                            s16 *tp = (s16 *)(*(int *)(blk + 0x70) + toff);
-                            u8 *rec = (u8 *)(lbl_803DCF34 + lbl_803DCF5E * 0x10);
+                    for (; tn < *(u16*)(blk + 0x9c); tn++, toff += 0x14)
+                    {
+                        if (lbl_803DCF5E < 0x5dc)
+                        {
+                            s16* tp = (s16*)(*(int*)(blk + 0x70) + toff);
+                            u8* rec = (u8*)(lbl_803DCF34 + lbl_803DCF5E * 0x10);
                             f32 fx, fz;
-                            u8 *rp;
+                            u8* rp;
                             int k;
-                            rec[0] = *((u8 *)tp + 0xc);
-                            rec[1] = *((u8 *)tp + 0xd);
-                            rec[3] = *((u8 *)tp + 0xf);
-                            if (((s8)rec[3] & 0x3f) == 0x11) {
-                                *(s8 *)(rec + 3) = rec[3] & ~0x3f;
-                                *(s8 *)(rec + 3) = rec[3] | 2;
+                            rec[0] = *((u8*)tp + 0xc);
+                            rec[1] = *((u8*)tp + 0xd);
+                            rec[3] = *((u8*)tp + 0xf);
+                            if (((s8)rec[3] & 0x3f) == 0x11)
+                            {
+                                *(s8*)(rec + 3) = rec[3] & ~0x3f;
+                                *(s8*)(rec + 3) = rec[3] | 2;
                             }
-                            rec[2] = *((u8 *)tp + 0xe);
-                            *(s8 *)(rec + 2) = rec[2] ^ 0x10;
-                            *(s16 *)(rec + 0xc) = tp[8];
+                            rec[2] = *((u8*)tp + 0xe);
+                            *(s8*)(rec + 2) = rec[2] ^ 0x10;
+                            *(s16*)(rec + 0xc) = tp[8];
                             fx = fx0 + playerMapOffsetX;
                             fz = fz0 + playerMapOffsetZ;
                             k = 0;
                             rp = rec;
-                            for (; k < 2; k++, tp++, rp += 2) {
+                            for (; k < 2; k++, tp++, rp += 2)
+                            {
                                 f32 x = fx + (f32)tp[0];
                                 f32 y = (f32)tp[2];
                                 f32 z = (f32)tp[4] + fz;
-                                if (lbl_803DCF5C < 0x6a4) {
-                                    *(s16 *)(rp + 4) = (s16)insertPoint(lbl_803DCF5E, edges, x, y, z);
+                                if (lbl_803DCF5C < 0x6a4)
+                                {
+                                    *(s16*)(rp + 4) = (s16)insertPoint(lbl_803DCF5E, edges, x, y, z);
                                 }
                             }
                             counts[(s8)rec[3] & 0x3f]++;
@@ -5334,99 +5832,126 @@ void trackIntersect(void)
         }
     }
 
-    for (i = 0, off = 0; i < lbl_803DCF5E; i++, off += 0x10) {
-        u8 *rec = (u8 *)(lbl_803DCF34 + off);
-        int idx = *(s16 *)(rec + 4) * 2;
-        s16 *e0 = &edges[idx];
-        s16 *e1;
+    for (i = 0, off = 0; i < lbl_803DCF5E; i++, off += 0x10)
+    {
+        u8* rec = (u8*)(lbl_803DCF34 + off);
+        int idx = *(s16*)(rec + 4) * 2;
+        s16* e0 = &edges[idx];
+        s16* e1;
         s16 v = e0[0];
-        if (v > -1 && v != i) {
-            *(s16 *)(rec + 8) = v;
-        } else {
+        if (v > -1 && v != i)
+        {
+            *(s16*)(rec + 8) = v;
+        }
+        else
+        {
             v = e0[1];
-            if (v > -1 && v != i) {
-                *(s16 *)(rec + 8) = v;
-            } else {
-                *(s16 *)(rec + 8) = -1;
+            if (v > -1 && v != i)
+            {
+                *(s16*)(rec + 8) = v;
+            }
+            else
+            {
+                *(s16*)(rec + 8) = -1;
             }
         }
-        idx = *(s16 *)(rec + 6) * 2;
+        idx = *(s16*)(rec + 6) * 2;
         e1 = &edges[idx];
         v = e1[0];
-        if (v > -1 && v != i) {
-            *(s16 *)(rec + 0xa) = v;
-        } else {
+        if (v > -1 && v != i)
+        {
+            *(s16*)(rec + 0xa) = v;
+        }
+        else
+        {
             v = e1[1];
-            if (v > -1 && v != i) {
-                *(s16 *)(rec + 0xa) = v;
-            } else {
-                *(s16 *)(rec + 0xa) = -1;
+            if (v > -1 && v != i)
+            {
+                *(s16*)(rec + 0xa) = v;
+            }
+            else
+            {
+                *(s16*)(rec + 0xa) = -1;
             }
         }
     }
 
-    if (lbl_803DCF40 != 0) {
+    if (lbl_803DCF40 != 0)
+    {
         int done;
-        for (i = 0, off = 0; i < lbl_803DCF5E; i++, off += 2) {
-            *(s16 *)(lbl_803DCF40 + off) = (s16)i;
+        for (i = 0, off = 0; i < lbl_803DCF5E; i++, off += 2)
+        {
+            *(s16*)(lbl_803DCF40 + off) = (s16)i;
         }
         done = 0;
-        while (done == 0) {
+        while (done == 0)
+        {
             done = 1;
-            for (j = 0, off = 0; j < lbl_803DCF5E - 1; j++, off += 2) {
-                s16 *p = (s16 *)(lbl_803DCF40 + off);
+            for (j = 0, off = 0; j < lbl_803DCF5E - 1; j++, off += 2)
+            {
+                s16* p = (s16*)(lbl_803DCF40 + off);
                 s16 a = p[0];
                 s16 b;
-                int ta = (s8)*(u8 *)(lbl_803DCF34 + a * 0x10 + 3) & 0x3f;
+                int ta = (s8) * (u8*)(lbl_803DCF34 + a * 0x10 + 3) & 0x3f;
                 b = p[1];
-                if (ta < ((s8)*(u8 *)(lbl_803DCF34 + b * 0x10 + 3) & 0x3f)) {
+                if (ta < ((s8) * (u8*)(lbl_803DCF34 + b * 0x10 + 3) & 0x3f))
+                {
                     p[0] = b;
-                    *(s16 *)(lbl_803DCF40 + off + 2) = a;
+                    *(s16*)(lbl_803DCF40 + off + 2) = a;
                     done = 0;
                 }
             }
         }
     }
 
-    for (i = 0x46; i != 0; i--) {
+    for (i = 0x46; i != 0; i--)
+    {
         counts[i - 1] = counts[i - 1] + counts[i];
     }
 
-    for (i = 0, off = 0; i < lbl_803DCF5E; i++, off += 0x10) {
-        int tt = ((s8)*(u8 *)(lbl_803DCF34 + off + 3) & 0x3f) + 1;
+    for (i = 0, off = 0; i < lbl_803DCF5E; i++, off += 0x10)
+    {
+        int tt = ((s8) * (u8*)(lbl_803DCF34 + off + 3) & 0x3f) + 1;
         s16 c = counts[tt];
         counts[tt] = c + 1;
-        *(s16 *)(lbl_803DCF3C + c * 2) = (s16)i;
+        *(s16*)(lbl_803DCF3C + c * 2) = (s16)i;
     }
 
-    for (i = 0; i < lbl_803DCF5E - 1; i++) {
+    for (i = 0; i < lbl_803DCF5E - 1; i++)
+    {
     }
 
-    for (i = 0; i < 40; i++) {
-        ((u16 *)lbl_8038D840)[i] = 0xffff;
+    for (i = 0; i < 40; i++)
+    {
+        ((u16*)lbl_8038D840)[i] = 0xffff;
     }
 
     prev = -1;
-    for (i = 0, off = 0; i < lbl_803DCF5E; i++, off += 2) {
-        t = (s16)((s8)*(u8 *)(lbl_803DCF34 + *(s16 *)(lbl_803DCF3C + off) * 0x10 + 3) & 0x3f);
-        if (t >= 0x14) {
+    for (i = 0, off = 0; i < lbl_803DCF5E; i++, off += 2)
+    {
+        t = (s16)((s8) * (u8*)(lbl_803DCF34 + *(s16*)(lbl_803DCF3C + off) * 0x10 + 3) & 0x3f);
+        if (t >= 0x14)
+        {
             t = 1;
             debugPrintf(sTrackIntersectFuncOverflowFormat, 1);
         }
-        if (prev != t) {
+        if (prev != t)
+        {
             u16 v = (u16)i;
             int ti = t * 2;
-            ((u16 *)lbl_8038D840)[ti] = v;
-            if (prev != -1) {
+            ((u16*)lbl_8038D840)[ti] = v;
+            if (prev != -1)
+            {
                 int pi = prev * 2;
-                ((u16 *)lbl_8038D840)[pi + 1] = v;
+                ((u16*)lbl_8038D840)[pi + 1] = v;
             }
             prev = t;
         }
     }
-    if (prev != -1) {
+    if (prev != -1)
+    {
         int pi = prev * 2;
-        ((u16 *)lbl_8038D840)[pi + 1] = (u16)lbl_803DCF5E;
+        ((u16*)lbl_8038D840)[pi + 1] = (u16)lbl_803DCF5E;
     }
     lbl_803DCF44 = 1;
 }
@@ -5438,10 +5963,10 @@ extern f32 lbl_803DECD0;
 extern f32 lbl_803DECD4;
 extern f32 lbl_803DB660;
 
-int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
+int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
                  int pmask, int seg, int ytol, int self, f32 radius)
 {
-    f32 *A = (f32 *)ptA;
+    f32* A = (f32*)ptA;
     s16 hits[6];
     f32 dists[5];
     f32 fracs[5];
@@ -5454,7 +5979,7 @@ int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
     u8 flag4;
     f32 minX, maxX, minZ, maxZ;
     int count, found;
-    s16 *hitp;
+    s16* hitp;
     f32 *fracp, *distp;
     int mask;
     int si2, si16;
@@ -5462,26 +5987,36 @@ int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
     f32 dist;
     s8 lineType;
 
-    if (obj != NULL) {
-        if ((s8)seg != -1) {
-            u8 *tbl = *(u8 **)(*(int *)((int)obj + 0x50) + 0x38);
+    if (obj != NULL)
+    {
+        if ((s8)seg != -1)
+        {
+            u8* tbl = *(u8**)(*(int*)((int)obj + 0x50) + 0x38);
             start = tbl[(s8)seg * 2];
-            end = *(u8 *)(tbl + (s8)seg * 2 + 1);
-        } else {
+            end = *(u8*)(tbl + (s8)seg * 2 + 1);
+        }
+        else
+        {
             start = 0;
-            end = *(u8 *)(*(int *)((int)obj + 0x50) + 0x5c);
+            end = *(u8*)(*(int*)((int)obj + 0x50) + 0x5c);
         }
         lineIdx = 0;
-        vt = *(int *)(*(int *)((int)obj + 0x50) + 0x34);
-        vp = *(int *)(*(int *)((int)obj + 0x50) + 0x3c);
-        if (*(u16 *)((int)obj + 0xb0) & 0x100) {
+        vt = *(int*)(*(int*)((int)obj + 0x50) + 0x34);
+        vp = *(int*)(*(int*)((int)obj + 0x50) + 0x3c);
+        if (*(u16*)((int)obj + 0xb0) & 0x100)
+        {
             end = 0;
         }
-    } else {
-        if ((s8)seg != -1) {
-            start = ((u16 *)lbl_8038D840)[(s8)seg * 2];
-            end = ((u16 *)lbl_8038D840)[(s8)seg * 2 + 1];
-        } else {
+    }
+    else
+    {
+        if ((s8)seg != -1)
+        {
+            start = ((u16*)lbl_8038D840)[(s8)seg * 2];
+            end = ((u16*)lbl_8038D840)[(s8)seg * 2 + 1];
+        }
+        else
+        {
             start = 0;
             end = lbl_803DCF5E;
         }
@@ -5496,19 +6031,25 @@ int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
 
     pos[2] = A[0];
     pos[0] = A[2];
-    pos[3] = ((f32 *)ptB)[0];
-    pos[1] = ((f32 *)ptB)[2];
-    if (pos[2] < pos[3]) {
+    pos[3] = ((f32*)ptB)[0];
+    pos[1] = ((f32*)ptB)[2];
+    if (pos[2] < pos[3])
+    {
         minX = pos[2];
         maxX = pos[3];
-    } else {
+    }
+    else
+    {
         minX = pos[3];
         maxX = pos[2];
     }
-    if (pos[0] < pos[1]) {
+    if (pos[0] < pos[1])
+    {
         minZ = pos[0];
         maxZ = pos[1];
-    } else {
+    }
+    else
+    {
         minZ = pos[1];
         maxZ = pos[0];
     }
@@ -5530,14 +6071,16 @@ int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
     si2 = start << 1;
     si16 = start << 4;
 
-    while (found) {
-        s16 *ep;
-        u8 *rp;
+    while (found)
+    {
+        s16* ep;
+        u8* rp;
         found = 0;
-        ep = (s16 *)(lineIdx + si2);
-        rp = (u8 *)(vt + si16);
-        for (i = start; i < end; i++, ep++, rp += 0x10) {
-            u8 *rec;
+        ep = (s16*)(lineIdx + si2);
+        rp = (u8*)(vt + si16);
+        for (i = start; i < end; i++, ep++, rp += 0x10)
+        {
+            u8* rec;
             s16 i0, i1;
             f32 *va, *vb;
             f32 ax2, ay2, az2, bx2, by2, bz2;
@@ -5546,29 +6089,36 @@ int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
             int mi;
 
             dist = lbl_803DECD0;
-            if (lineIdx != 0) {
-                rec = (u8 *)(vt + ep[0] * 0x10);
-            } else {
+            if (lineIdx != 0)
+            {
+                rec = (u8*)(vt + ep[0] * 0x10);
+            }
+            else
+            {
                 rec = rp;
             }
             if ((mask & ~(s8)rec[2]) == 0) continue;
             if ((s8)rec[3] & 0x40) continue;
-            i0 = *(s16 *)(rec + 4);
-            i1 = *(s16 *)(rec + 6);
-            if ((s8)rec[3] & 0x80) {
+            i0 = *(s16*)(rec + 4);
+            i1 = *(s16*)(rec + 6);
+            if ((s8)rec[3] & 0x80)
+            {
                 if (flag4 != 0) continue;
                 lineType = 0;
-            } else {
+            }
+            else
+            {
                 lineType = 1;
             }
-            if (flag2 != 0) {
+            if (flag2 != 0)
+            {
                 lineType = 1;
             }
-            va = (f32 *)(vp + i0 * 0xc);
+            va = (f32*)(vp + i0 * 0xc);
             ax2 = va[0];
             ay2 = va[1];
             az2 = va[2];
-            vb = (f32 *)(vp + i1 * 0xc);
+            vb = (f32*)(vp + i1 * 0xc);
             bx2 = vb[0];
             by2 = vb[1];
             bz2 = vb[2];
@@ -5579,17 +6129,24 @@ int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
 
             ylo = ay2;
             if (by2 < ay2) ylo = by2;
-            ylo = ylo - (f32)(s8)ytol;
-            if ((s8)rec[2] & 0x80) {
-                ha = (f32)*(s16 *)rec;
+            ylo = ylo - (f32)(s8)
+            ytol;
+            if ((s8)rec[2] & 0x80)
+            {
+                ha = (f32) * (s16*)rec;
                 hb = ha;
-            } else {
-                ha = (f32)(s8)rec[0];
-                hb = (f32)(s8)rec[1];
+            }
+            else
+            {
+                ha = (f32)(s8)
+                rec[0];
+                hb = (f32)(s8)
+                rec[1];
             }
             yhi = ay2 + ha;
             if (by2 + hb > ay2 + ha) yhi = by2 + hb;
-            yhi = yhi + (f32)(s8)ytol;
+            yhi = yhi + (f32)(s8)
+            ytol;
             if (A[1] < ylo) continue;
             if (A[1] > yhi) continue;
 
@@ -5623,10 +6180,11 @@ int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
             lbl_803DCF50 = lbl_803DECD4 * (-dx * radius);
 
             {
-                s16 *mp = m;
-                f32 *zp = &pos[0];
-                f32 *xp = &pos[2];
-                for (mi = 0; mi < 2; mi++) {
+                s16* mp = m;
+                f32* zp = &pos[0];
+                f32* xp = &pos[2];
+                for (mi = 0; mi < 2; mi++)
+                {
                     s16 mb = 1;
                     f32 pz, px;
                     f32 *ap, *bp, *dp;
@@ -5638,7 +6196,8 @@ int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
                     bp = lb;
                     dp = ld;
                     n = 2;
-                    do {
+                    do
+                    {
                         if (dp[0] + (px * bp[0] + pz * ap[0]) < __AR_Callback) *mp |= mb;
                         mb = (s16)(mb << 1);
                         if (dp[1] + (px * bp[1] + pz * ap[1]) < __AR_Callback) *mp |= mb;
@@ -5647,7 +6206,8 @@ int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
                         bp += 2;
                         dp += 2;
                         n--;
-                    } while (n != 0);
+                    }
+                    while (n != 0);
                     xp[0] = px;
                     zp[0] = pz;
                     mp++;
@@ -5659,78 +6219,105 @@ int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
                 s16 mx = m[0] ^ m[1];
                 s16 ma = m[0] & m[1];
                 dist = lbl_803DECC4;
-                if ((m[0] & 0xc) == 0xc) {
-                    if (m[0] & 1) {
+                if ((m[0] & 0xc) == 0xc)
+                {
+                    if (m[0] & 1)
+                    {
                         found = fn_800630D8(ax2, az2, radius, &pos[2], &pos[0], lineType);
                         dist = __AR_Callback;
-                    } else if (m[0] & 2) {
+                    }
+                    else if (m[0] & 2)
+                    {
                         found = fn_800630D8(bx2, bz2, radius, &pos[2], &pos[0], lineType);
                         dist = lbl_803DECC4;
-                    } else if (lineType != 0) {
+                    }
+                    else if (lineType != 0)
+                    {
                         pos[3] = pos[3] + lbl_803DCF54;
                         pos[1] = pos[1] + lbl_803DCF50;
                     }
-                } else if (mx & 0xc) {
-                    if (ma & 1) {
+                }
+                else if (mx & 0xc)
+                {
+                    if (ma & 1)
+                    {
                         found = fn_800630D8(ax2, az2, radius, &pos[2], &pos[0], lineType);
                         dist = __AR_Callback;
-                    } else if (ma & 2) {
+                    }
+                    else if (ma & 2)
+                    {
                         found = fn_800630D8(bx2, bz2, radius, &pos[2], &pos[0], lineType);
                         dist = lbl_803DECC4;
-                    } else if (m[0] & 4) {
+                    }
+                    else if (m[0] & 4)
+                    {
                         f32 sx = pos[3] - pos[2];
                         f32 sz = pos[1] - pos[0];
                         f32 t0 = ld[3] + (pos[2] * lb[3] + pos[0] * la[3]);
                         f32 t1 = ld[3] + (pos[3] * lb[3] + pos[1] * la[3]);
                         f32 fr, cx, cz;
                         s16 ok;
-                        if (t0 != t1) {
+                        if (t0 != t1)
+                        {
                             fr = t0 / (t0 - t1);
-                        } else {
+                        }
+                        else
+                        {
                             fr = __AR_Callback;
                         }
                         cx = sx * fr + pos[2];
                         cz = sz * fr + pos[0];
                         lbl_803DCF58 = fr;
                         ok = 1;
-                        if (ld[0] + (cx * lb[0] + cz * la[0]) < __AR_Callback) {
+                        if (ld[0] + (cx * lb[0] + cz * la[0]) < __AR_Callback)
+                        {
                             found = fn_800630D8(ax2, az2, radius, &pos[2], &pos[0], lineType);
                             ok = 0;
                             dist = __AR_Callback;
                         }
-                        if (ld[1] + (cx * lb[1] + cz * la[1]) < __AR_Callback) {
+                        if (ld[1] + (cx * lb[1] + cz * la[1]) < __AR_Callback)
+                        {
                             found = fn_800630D8(bx2, bz2, radius, &pos[2], &pos[0], lineType);
                             ok = 0;
                             dist = lbl_803DECC4;
                         }
-                        if (ok != 0) {
+                        if (ok != 0)
+                        {
                             found = 1;
-                            if (lineType != 0) {
+                            if (lineType != 0)
+                            {
                                 int j;
-                                if (flag1 != 0) {
+                                if (flag1 != 0)
+                                {
                                     f32 t3 = ld[3] + (pos[3] * lb[3] + pos[1] * la[3]);
                                     pos[3] = -(t3 * lb[3] - pos[3]);
                                     pos[1] = -(t3 * la[3] - pos[1]);
                                     j = 0;
-                                    while (ld[3] + (pos[3] * lb[3] + pos[1] * la[3]) < lbl_803DB660) {
+                                    while (ld[3] + (pos[3] * lb[3] + pos[1] * la[3]) < lbl_803DB660)
+                                    {
                                         pos[3] = pos[3] + lbl_803DB660 * lb[3];
                                         pos[1] = pos[1] + lbl_803DB660 * la[3];
                                         j++;
-                                        if (j > 0xa) {
+                                        if (j > 0xa)
+                                        {
                                             pos[3] = pos[2];
                                             pos[1] = pos[0];
                                             break;
                                         }
                                     }
-                                } else {
+                                }
+                                else
+                                {
                                     pos[3] = cx;
                                     pos[1] = cz;
                                     j = 0;
-                                    while (ld[3] + (pos[3] * lb[3] + pos[1] * la[3]) < lbl_803DB660) {
+                                    while (ld[3] + (pos[3] * lb[3] + pos[1] * la[3]) < lbl_803DB660)
+                                    {
                                         pos[3] = pos[3] + lbl_803DB660 * lb[3];
                                         pos[1] = pos[1] + lbl_803DB660 * la[3];
                                         j++;
-                                        if (j > 0xa) {
+                                        if (j > 0xa)
+                                        {
                                             pos[3] = pos[2];
                                             pos[1] = pos[0];
                                             break;
@@ -5745,7 +6332,8 @@ int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
             }
             if (found) break;
         }
-        if (found) {
+        if (found)
+        {
             *hitp = (s16)i;
             *fracp = lbl_803DCF58;
             *distp = dist;
@@ -5753,9 +6341,11 @@ int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
             fracp++;
             distp++;
             count++;
-            if (count > 4) {
+            if (count > 4)
+            {
                 found = 0;
-                if (lineType != 0) {
+                if (lineType != 0)
+                {
                     pos[3] = pos[2];
                     pos[1] = pos[0];
                 }
@@ -5763,58 +6353,67 @@ int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
         }
     }
 
-    if (count != 0 && out != NULL) {
-        f32 *outf = (f32 *)out;
+    if (count != 0 && out != NULL)
+    {
+        f32* outf = (f32*)out;
         int pick = count - 1;
         int hi;
-        s16 *rec2;
+        s16* rec2;
         f32 fa, fb;
         f32 *va2, *vb2;
-        if (flag1 == 0) {
+        if (flag1 == 0)
+        {
             pick = 0;
         }
-        outf[0x11] = fracs[0] * sqrtf((((f32 *)ptB)[0] - pos[2]) * (((f32 *)ptB)[0] - pos[2])
-                                       + (((f32 *)ptB)[2] - pos[0]) * (((f32 *)ptB)[2] - pos[0]));
+        outf[0x11] = fracs[0] * sqrtf((((f32*)ptB)[0] - pos[2]) * (((f32*)ptB)[0] - pos[2])
+            + (((f32*)ptB)[2] - pos[0]) * (((f32*)ptB)[2] - pos[0]));
         outf[0x12] = dists[pick];
         hi = hits[pick];
-        if (lineIdx != 0) {
-            rec2 = (s16 *)(vt + *(s16 *)(lineIdx + hi * 2) * 0x10);
-        } else {
-            rec2 = (s16 *)(vt + hi * 0x10);
+        if (lineIdx != 0)
+        {
+            rec2 = (s16*)(vt + *(s16*)(lineIdx + hi * 2) * 0x10);
+        }
+        else
+        {
+            rec2 = (s16*)(vt + hi * 0x10);
         }
         {
             s16 j0 = rec2[2];
             s16 j1 = rec2[3];
-            if ((s8)*(u8 *)((u8 *)rec2 + 2) & 0x80) {
+            if ((s8) * (u8*)((u8*)rec2 + 2) & 0x80)
+            {
                 fa = (f32)rec2[0];
                 fb = fa;
-            } else {
-                fa = (f32)(s8)*(u8 *)rec2;
-                fb = (f32)(s8)*((u8 *)rec2 + 1);
             }
-            outf[1] = *(f32 *)(vp + j0 * 0xc);
-            va2 = (f32 *)(vp + j0 * 0xc);
+            else
+            {
+                fa = (f32)(s8) * (u8*)rec2;
+                fb = (f32)(s8) * ((u8*)rec2 + 1);
+            }
+            outf[1] = *(f32*)(vp + j0 * 0xc);
+            va2 = (f32*)(vp + j0 * 0xc);
             outf[3] = va2[1];
             outf[0xf] = outf[3] + fa;
             outf[5] = va2[2];
-            outf[2] = *(f32 *)(vp + j1 * 0xc);
-            vb2 = (f32 *)(vp + j1 * 0xc);
+            outf[2] = *(f32*)(vp + j1 * 0xc);
+            vb2 = (f32*)(vp + j1 * 0xc);
             outf[4] = vb2[1];
             outf[0x10] = outf[4] + fb;
             outf[6] = vb2[2];
-            *(s8 *)((u8 *)out + 0x50) = (s8)(*((u8 *)rec2 + 3) & 0x3f);
-            *((u8 *)out + 0x52) = *((u8 *)rec2 + 2);
-            *(s8 *)((u8 *)out + 0x51) = (s8)rec2[6];
-            *(int **)out = obj;
-            *(s16 *)((u8 *)out + 0x4c) = rec2[4];
-            *(s16 *)((u8 *)out + 0x4e) = rec2[5];
+            *(s8*)((u8*)out + 0x50) = (s8)(*((u8*)rec2 + 3) & 0x3f);
+            *((u8*)out + 0x52) = *((u8*)rec2 + 2);
+            *(s8*)((u8*)out + 0x51) = (s8)rec2[6];
+            *(int**)out = obj;
+            *(s16*)((u8*)out + 0x4c) = rec2[4];
+            *(s16*)((u8*)out + 0x4e) = rec2[5];
         }
     }
-    if (count != 0) {
+    if (count != 0)
+    {
         lbl_803DCF4C = lbl_803DCF4C + 1;
         count = 1;
-        ((f32 *)ptB)[0] = pos[3];
-        ((f32 *)ptB)[2] = pos[1];
+        ((f32*)ptB)[0] = pos[3];
+        ((f32*)ptB)[2] = pos[1];
     }
     return count;
 }
@@ -5823,14 +6422,14 @@ int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
 /* hitDetect_800667ec -- sweep each input sphere against the gathered triangle
  * lists, bouncing/sliding up to 10 times per slot; returns hit mask. */
 extern char sTrackHitOverflowError[];
-extern void fn_80137948(char *fmt, ...);
+extern void fn_80137948(char* fmt, ...);
 
-u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p5, int z)
+u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p5, int z)
 {
-    TrackBlockDescriptor *descBase;
+    TrackBlockDescriptor* descBase;
     f32 *ep1, *ep2;
     f32 *sp1, *sp2;
-    u8 *slotp;
+    u8* slotp;
     int slotByte;
     s16 i;
     u8 retLo;
@@ -5838,7 +6437,7 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
     u8 retHi;
     u8 typeb;
     u8 typeb2;
-    TrackBlockDescriptor *descSave;
+    TrackBlockDescriptor* descSave;
     u8 type;
     f32 edge2[4];
     f32 edge1[4];
@@ -5859,13 +6458,13 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
     f32 tmp1[3];
     f32 tmp2[3];
     f32 frac;
-    TrackBlockDescriptor *descEnd;
+    TrackBlockDescriptor* descEnd;
     f32 offX, offZ;
     f32 radius, maxStep, negStep;
     f32 mag;
     f32 eps;
-    TrackBlockDescriptor *desc;
-    u8 *tri;
+    TrackBlockDescriptor* desc;
+    u8* tri;
     int objmtx;
     u8 bounces;
     u8 found;
@@ -5873,46 +6472,52 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
 
     descEnd = &gTrackBlockDescriptors[lbl_803DCF6C];
     descBase = gTrackBlockDescriptors;
-    offX = (f32)*(int *)lbl_8038DE44;
-    offZ = (f32)*(int *)(lbl_8038DE44 + 8);
+    offX = (f32) * (int*)lbl_8038DE44;
+    offZ = (f32) * (int*)(lbl_8038DE44 + 8);
     i = 0;
     retLo = 0;
     retHi = 0;
     curBit = 1;
-    ep1 = (f32 *)p3;
-    ep2 = (f32 *)p3;
-    sp1 = (f32 *)p2;
-    sp2 = (f32 *)p2;
-    slotp = (u8 *)p5;
+    ep1 = (f32*)p3;
+    ep2 = (f32*)p3;
+    sp1 = (f32*)p2;
+    sp2 = (f32*)p2;
+    slotp = (u8*)p5;
     eps = __AR_Callback;
-    for (; i < p4; i++) {
+    for (; i < p4; i++)
+    {
         cur[0] = ep1[0];
         cur[1] = ep2[1];
         cur[2] = ep2[2];
         sv[6] = sp1[0];
         sv[7] = sp2[1];
         sv[8] = sp2[2];
-        radius = *(f32 *)(slotp + 0x40);
+        radius = *(f32*)(slotp + 0x40);
         slotByte = (int)p5 + i;
-        type = *(u8 *)(slotByte + 0x54);
+        type = *(u8*)(slotByte + 0x54);
         maxStep = radius + lbl_803DB660;
         rdata[0] = radius;
         rdata[1] = radius * radius;
         bounces = 0;
         negStep = -maxStep;
-        do {
+        do
+        {
             we[0] = cur[0];
             we[1] = cur[1];
             we[2] = cur[2];
             found = 0;
             hit = 0;
-            for (desc = descBase; (u32)desc < (u32)descEnd; desc++) {
-                if (desc->object != NULL) {
+            for (desc = descBase; (u32)desc < (u32)descEnd; desc++)
+            {
+                if (desc->object != NULL)
+                {
                     Matrix_TransformPoint(desc->alternateMatrix, sv[6], sv[7], sv[8],
                                           &ws[0], &ws[1], &ws[2]);
                     Matrix_TransformPoint(desc->currentMatrix, cur[0], cur[1], cur[2],
                                           &we[0], &we[1], &we[2]);
-                } else {
+                }
+                else
+                {
                     ws[0] = sv[6] - offX;
                     ws[1] = sv[7];
                     ws[2] = sv[8] - offZ;
@@ -5922,78 +6527,88 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
                 }
                 PSVECSubtract(we, ws, delta);
                 mag = PSVECMag(delta);
-                if (mag > eps) {
+                if (mag > eps)
+                {
                     PSVECNormalize(delta, dir);
                 }
-                for (tri = (u8 *)(lbl_803DCF30 + desc->firstTriangle * 0x4c);
-                     (u32)tri < (u32)(lbl_803DCF30 + desc[1].firstTriangle * 0x4c); tri += 0x4c) {
-                    s16 *ts = (s16 *)tri;
+                for (tri = (u8*)(lbl_803DCF30 + desc->firstTriangle * 0x4c);
+                     (u32)tri < (u32)(lbl_803DCF30 + desc[1].firstTriangle * 0x4c); tri += 0x4c)
+                {
+                    s16* ts = (s16*)tri;
                     f32 dE, dS;
                     u8 b;
                     tri[0x4b] = 0;
                     if ((s8)tri[0x49] & 0x10) continue;
-                    plane[0] = *(f32 *)(tri + 4);
-                    plane[1] = *(f32 *)(tri + 8);
-                    plane[2] = *(f32 *)(tri + 0xc);
-                    plane[3] = *(f32 *)tri;
+                    plane[0] = *(f32*)(tri + 4);
+                    plane[1] = *(f32*)(tri + 8);
+                    plane[2] = *(f32*)(tri + 0xc);
+                    plane[3] = *(f32*)tri;
                     dE = (plane[3] + PSVECDotProduct(plane, we)) - radius;
                     if (!(dE <= eps)) continue;
                     dS = (plane[3] + PSVECDotProduct(plane, ws)) - radius;
-                    if ((dS <= eps && eps <= dE) || (eps <= dS && dE <= eps)) {
+                    if ((dS <= eps && eps <= dE) || (eps <= dS && dE <= eps))
+                    {
                         f32 lo, hi;
-                        if (dS != dE) {
+                        if (dS != dE)
+                        {
                             frac = dS / (dS - dE);
-                        } else {
+                        }
+                        else
+                        {
                             frac = eps;
                         }
                         PSVECScale(delta, hitpt, frac);
                         PSVECAdd(hitpt, ws, hitpt);
-                        lo = (f32)ts[(*(u8 *)(tri + 0x4a) & 0xf) + 0xb] - maxStep;
+                        lo = (f32)ts[(*(u8*)(tri + 0x4a) & 0xf) + 0xb] - maxStep;
                         if (hitpt[1] < lo) continue;
-                        hi = (f32)ts[(*(u8 *)(tri + 0x4a) >> 4) + 0xb] + maxStep;
+                        hi = (f32)ts[(*(u8*)(tri + 0x4a) >> 4) + 0xb] + maxStep;
                         if (hitpt[1] > hi) continue;
-                        edge0[0] = *(f32 *)(tri + 0x24);
-                        edge0[1] = *(f32 *)(tri + 0x28);
-                        edge0[2] = *(f32 *)(tri + 0x2c);
+                        edge0[0] = *(f32*)(tri + 0x24);
+                        edge0[1] = *(f32*)(tri + 0x28);
+                        edge0[2] = *(f32*)(tri + 0x2c);
                         edge0[3] = -((f32)ts[0xe] * edge0[2] + ((f32)ts[8] * edge0[0] + (f32)ts[0xb] * edge0[1]))
-                                   + PSVECDotProduct(edge0, hitpt);
-                        edge1[0] = *(f32 *)(tri + 0x30);
-                        edge1[1] = *(f32 *)(tri + 0x34);
-                        edge1[2] = *(f32 *)(tri + 0x38);
+                            + PSVECDotProduct(edge0, hitpt);
+                        edge1[0] = *(f32*)(tri + 0x30);
+                        edge1[1] = *(f32*)(tri + 0x34);
+                        edge1[2] = *(f32*)(tri + 0x38);
                         edge1[3] = -((f32)ts[0xf] * edge1[2] + ((f32)ts[9] * edge1[0] + (f32)ts[0xc] * edge1[1]))
-                                   + PSVECDotProduct(edge1, hitpt);
-                        edge2[0] = *(f32 *)(tri + 0x3c);
-                        edge2[1] = *(f32 *)(tri + 0x40);
-                        edge2[2] = *(f32 *)(tri + 0x44);
+                            + PSVECDotProduct(edge1, hitpt);
+                        edge2[0] = *(f32*)(tri + 0x3c);
+                        edge2[1] = *(f32*)(tri + 0x40);
+                        edge2[2] = *(f32*)(tri + 0x44);
                         edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + (f32)ts[0xd] * edge2[1]))
-                                   + PSVECDotProduct(edge2, hitpt);
+                            + PSVECDotProduct(edge2, hitpt);
                         b = 0;
-                        if (radius > eps) {
+                        if (radius > eps)
+                        {
                             if (edge0[3] > eps) b |= 1;
                             if (edge1[3] > eps) b |= 2;
                             if (edge2[3] > eps) b |= 4;
                         }
-                        if (b == 0) {
+                        if (b == 0)
+                        {
                             hit = 1;
                             goto found_hit;
                         }
                         tri[0x4b] = b;
-                    } else if (dE >= negStep && radius > eps) {
-                        edge0[0] = *(f32 *)(tri + 0x24);
-                        edge0[1] = *(f32 *)(tri + 0x28);
-                        edge0[2] = *(f32 *)(tri + 0x2c);
+                    }
+                    else if (dE >= negStep && radius > eps)
+                    {
+                        edge0[0] = *(f32*)(tri + 0x24);
+                        edge0[1] = *(f32*)(tri + 0x28);
+                        edge0[2] = *(f32*)(tri + 0x2c);
                         edge0[3] = -((f32)ts[0xe] * edge0[2] + ((f32)ts[8] * edge0[0] + (f32)ts[0xb] * edge0[1]))
-                                   + PSVECDotProduct(edge0, ws);
-                        edge1[0] = *(f32 *)(tri + 0x30);
-                        edge1[1] = *(f32 *)(tri + 0x34);
-                        edge1[2] = *(f32 *)(tri + 0x38);
+                            + PSVECDotProduct(edge0, ws);
+                        edge1[0] = *(f32*)(tri + 0x30);
+                        edge1[1] = *(f32*)(tri + 0x34);
+                        edge1[2] = *(f32*)(tri + 0x38);
                         edge1[3] = -((f32)ts[0xf] * edge1[2] + ((f32)ts[9] * edge1[0] + (f32)ts[0xc] * edge1[1]))
-                                   + PSVECDotProduct(edge1, ws);
-                        edge2[0] = *(f32 *)(tri + 0x3c);
-                        edge2[1] = *(f32 *)(tri + 0x40);
-                        edge2[2] = *(f32 *)(tri + 0x44);
+                            + PSVECDotProduct(edge1, ws);
+                        edge2[0] = *(f32*)(tri + 0x3c);
+                        edge2[1] = *(f32*)(tri + 0x40);
+                        edge2[2] = *(f32*)(tri + 0x44);
                         edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + (f32)ts[0xd] * edge2[1]))
-                                   + PSVECDotProduct(edge2, ws);
+                            + PSVECDotProduct(edge2, ws);
                         b = 0;
                         if (edge0[3] > eps) b |= 1;
                         if (edge1[3] > eps) b |= 2;
@@ -6002,45 +6617,50 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
                     }
                 }
                 if (eps == mag) goto found_hit;
-                for (tri = (u8 *)(lbl_803DCF30 + desc->firstTriangle * 0x4c);
-                     (u32)tri < (u32)(lbl_803DCF30 + desc[1].firstTriangle * 0x4c); tri += 0x4c) {
+                for (tri = (u8*)(lbl_803DCF30 + desc->firstTriangle * 0x4c);
+                     (u32)tri < (u32)(lbl_803DCF30 + desc[1].firstTriangle * 0x4c); tri += 0x4c)
+                {
                     u8 bit;
                     if (tri[0x4b] == 0) continue;
-                    for (bit = 0; bit < 3; bit++) {
-                        s16 *vs;
+                    for (bit = 0; bit < 3; bit++)
+                    {
+                        s16* vs;
                         u8 k;
                         if ((tri[0x4b] & (1 << bit)) == 0) continue;
                         k = bit + 1;
                         if (k > 2) k = 0;
-                        vs = (s16 *)(tri + bit * 2);
+                        vs = (s16*)(tri + bit * 2);
                         va[0] = (f32)vs[8];
                         va[1] = (f32)vs[0xb];
                         va[2] = (f32)vs[0xe];
-                        vs = (s16 *)(tri + k * 2);
+                        vs = (s16*)(tri + k * 2);
                         vb[0] = (f32)vs[8];
                         vb[1] = (f32)vs[0xb];
                         vb[2] = (f32)vs[0xe];
                         PSVECSubtract(vb, va, evec);
                         rdata[2] = Vec3_Normalize(evec);
-                        if (hitDetectFn_800664fc(va, ws, dir, mag, maxStep, eps, hitpt, plane, &frac)) {
+                        if (hitDetectFn_800664fc(va, ws, dir, mag, maxStep, eps, hitpt, plane, &frac))
+                        {
                             hit = 1;
                             goto found_hit;
                         }
                     }
                 }
-                for (tri = (u8 *)(lbl_803DCF30 + desc->firstTriangle * 0x4c);
-                     (u32)tri < (u32)(lbl_803DCF30 + desc[1].firstTriangle * 0x4c); tri += 0x4c) {
+                for (tri = (u8*)(lbl_803DCF30 + desc->firstTriangle * 0x4c);
+                     (u32)tri < (u32)(lbl_803DCF30 + desc[1].firstTriangle * 0x4c); tri += 0x4c)
+                {
                     u8 bit;
                     if (tri[0x4b] == 0) continue;
-                    for (bit = 0; bit < 3; bit++) {
-                        s16 *vs;
+                    for (bit = 0; bit < 3; bit++)
+                    {
+                        s16* vs;
                         u8 k;
                         int ok;
                         f32 dotv, sq, disc, root, tt, rr;
                         if ((tri[0x4b] & (1 << bit)) == 0) continue;
                         k = bit + 1;
                         if (k > 2) k = 0;
-                        vs = (s16 *)(tri + bit * 2);
+                        vs = (s16*)(tri + bit * 2);
                         va[0] = (f32)vs[8];
                         va[1] = (f32)vs[0xb];
                         va[2] = (f32)vs[0xe];
@@ -6048,20 +6668,30 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
                         PSVECSubtract(va, ws, tmp1);
                         dotv = PSVECDotProduct(tmp1, dir);
                         sq = PSVECSquareMag(tmp1);
-                        if (dotv < eps && sq > rr) {
+                        if (dotv < eps && sq > rr)
+                        {
                             ok = 0;
-                        } else {
+                        }
+                        else
+                        {
                             disc = -(dotv * dotv - sq);
-                            if (disc > rr) {
+                            if (disc > rr)
+                            {
                                 ok = 0;
-                            } else {
+                            }
+                            else
+                            {
                                 root = sqrtf(rr - disc);
-                                if (sq > rr) {
+                                if (sq > rr)
+                                {
                                     dotv = dotv - root;
-                                } else {
+                                }
+                                else
+                                {
                                     dotv = dotv + root;
                                 }
-                                if (dotv >= eps && dotv <= mag) {
+                                if (dotv >= eps && dotv <= mag)
+                                {
                                     PSVECScale(dir, hitpt, dotv);
                                     PSVECAdd(ws, hitpt, hitpt);
                                     PSVECSubtract(hitpt, va, plane);
@@ -6070,16 +6700,19 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
                                     plane[3] = -PSVECDotProduct(hitpt, plane) + root;
                                     frac = dotv;
                                     ok = 1;
-                                } else {
+                                }
+                                else
+                                {
                                     ok = 0;
                                 }
                             }
                         }
-                        if (ok) {
+                        if (ok)
+                        {
                             hit = 1;
                             goto found_hit;
                         }
-                        vs = (s16 *)(tri + k * 2);
+                        vs = (s16*)(tri + k * 2);
                         vb[0] = (f32)vs[8];
                         vb[1] = (f32)vs[0xb];
                         vb[2] = (f32)vs[0xe];
@@ -6087,20 +6720,30 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
                         PSVECSubtract(vb, ws, tmp2);
                         sq = PSVECDotProduct(tmp2, dir);
                         dotv = PSVECSquareMag(tmp2);
-                        if (sq < eps && dotv > rr) {
+                        if (sq < eps && dotv > rr)
+                        {
                             ok = 0;
-                        } else {
+                        }
+                        else
+                        {
                             disc = -(sq * sq - dotv);
-                            if (disc > rr) {
+                            if (disc > rr)
+                            {
                                 ok = 0;
-                            } else {
+                            }
+                            else
+                            {
                                 root = sqrtf(rr - disc);
-                                if (dotv > rr) {
+                                if (dotv > rr)
+                                {
                                     sq = sq - root;
-                                } else {
+                                }
+                                else
+                                {
                                     sq = sq + root;
                                 }
-                                if (sq >= eps && sq <= mag) {
+                                if (sq >= eps && sq <= mag)
+                                {
                                     PSVECScale(dir, hitpt, sq);
                                     PSVECAdd(ws, hitpt, hitpt);
                                     PSVECSubtract(hitpt, vb, plane);
@@ -6109,19 +6752,23 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
                                     plane[3] = -PSVECDotProduct(hitpt, plane) + root;
                                     frac = sq;
                                     ok = 1;
-                                } else {
+                                }
+                                else
+                                {
                                     ok = 0;
                                 }
                             }
                         }
-                        if (ok) {
+                        if (ok)
+                        {
                             hit = 1;
                             goto found_hit;
                         }
                     }
                 }
             found_hit:
-                if (hit != 0) {
+                if (hit != 0)
+                {
                     we[0] = hitpt[0];
                     we[1] = hitpt[1];
                     we[2] = hitpt[2];
@@ -6131,7 +6778,7 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
                     norm4[3] = plane[3];
                     typeb = tri[0x48];
                     typeb2 = tri[0x49];
-                    objmtx = *(int *)desc;
+                    objmtx = *(int*)desc;
                     sv[0] = ws[0];
                     sv[1] = ws[1];
                     sv[2] = ws[2];
@@ -6140,68 +6787,82 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
                     sv[5] = hitpt[2];
                     descSave = desc;
                     found = 1;
-                    if (type == 7) {
-                        f32 *out4 = (f32 *)((u8 *)p5 + i * 0x10);
+                    if (type == 7)
+                    {
+                        f32* out4 = (f32*)((u8*)p5 + i * 0x10);
                         out4[0] = norm4[0];
                         out4[1] = norm4[1];
                         out4[2] = norm4[2];
                         out4[3] = norm4[3];
-                        *(u8 *)(slotByte + 0x50) = typeb;
-                        *(u8 *)(slotByte + 0x58) = typeb2;
-                        *(int *)(slotp + 0x5c) = objmtx;
+                        *(u8*)(slotByte + 0x50) = typeb;
+                        *(u8*)(slotByte + 0x58) = typeb2;
+                        *(int*)(slotp + 0x5c) = objmtx;
                         bounces++;
                         goto slot_done;
                     }
                     break;
                 }
             }
-            if (found != 0) {
+            if (found != 0)
+            {
                 bounces++;
-                if (bounces > 10) {
+                if (bounces > 10)
+                {
                     fn_80137948(sTrackHitOverflowError);
                     cur[0] = sv[6];
                     cur[1] = sv[7];
                     cur[2] = sv[8];
                     found = 0;
-                } else {
-                    f32 *out4;
+                }
+                else
+                {
+                    f32* out4;
                     f32 pen;
-                    if (objmtx != 0) {
+                    if (objmtx != 0)
+                    {
                         Matrix_TransformPoint(descSave->currentMatrix, cur[0], cur[1], cur[2],
                                               &cur[0], &cur[1], &cur[2]);
-                    } else {
+                    }
+                    else
+                    {
                         cur[0] = cur[0] - offX;
                         cur[2] = cur[2] - offZ;
                     }
                     pen = (norm4[3] + (cur[2] * norm4[2] + (cur[0] * norm4[0] + cur[1] * norm4[1]))) - radius;
                     fn_800660C8(sv, cur, &sv[3], norm4, type, pen, maxStep);
-                    if (objmtx != 0) {
+                    if (objmtx != 0)
+                    {
                         Matrix_TransformPoint(descSave->currentCollisionMatrix, cur[0], cur[1], cur[2],
                                               &cur[0], &cur[1], &cur[2]);
-                    } else {
+                    }
+                    else
+                    {
                         cur[0] = cur[0] + offX;
                         cur[2] = cur[2] + offZ;
                     }
-                    out4 = (f32 *)((u8 *)p5 + i * 0x10);
+                    out4 = (f32*)((u8*)p5 + i * 0x10);
                     out4[0] = norm4[0];
                     out4[1] = norm4[1];
                     out4[2] = norm4[2];
                     out4[3] = norm4[3];
-                    *(u8 *)(slotByte + 0x50) = typeb;
-                    *(u8 *)(slotByte + 0x58) = typeb2;
-                    *(int *)(slotp + 0x5c) = objmtx;
+                    *(u8*)(slotByte + 0x50) = typeb;
+                    *(u8*)(slotByte + 0x58) = typeb2;
+                    *(int*)(slotp + 0x5c) = objmtx;
                 }
             }
-        } while (found != 0);
+        }
+        while (found != 0);
     slot_done:
-        if (bounces != 0) {
-            if (norm4[1] >= __AR_Size || norm4[1] <= lbl_803DECEC) {
+        if (bounces != 0)
+        {
+            if (norm4[1] >= __AR_Size || norm4[1] <= lbl_803DECEC)
+            {
                 retHi = retHi | curBit;
             }
             ep1[0] = cur[0];
             ep2[1] = cur[1];
             ep2[2] = cur[2];
-            *(s16 *)((u8 *)p5 + 0x6c) = *(s16 *)((u8 *)p5 + 0x6c) + 1;
+            *(s16*)((u8*)p5 + 0x6c) = *(s16*)((u8*)p5 + 0x6c) + 1;
             retLo = retLo | curBit;
         }
         curBit = (u8)(curBit << 1);

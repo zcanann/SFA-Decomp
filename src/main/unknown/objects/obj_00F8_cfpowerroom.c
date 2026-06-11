@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00F8_CFPowerRoom_packet_info {
+enum obj_00F8_CFPowerRoom_packet_info
+{
     CFPOWERROOM_DEF_ID = 0x00F8,
     CFPOWERROOM_DLL_ID = 0x00ED,
     CFPOWERROOM_CLASS_ID = 0x0006,

@@ -178,7 +178,8 @@ extern f32 lbl_803E0D14;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct EffectSrcParams {
+typedef struct EffectSrcParams
+{
   s16 rot0;
   s16 rot1;
   s16 rot2;
@@ -188,8 +189,9 @@ typedef struct EffectSrcParams {
   f32 z;
 } EffectSrcParams;
 
-typedef struct EffectSpawnParams {
-  s16 *model;
+typedef struct EffectSpawnParams
+{
+  s16* model;
   int unk04;
   uint count;
   s16 rot0;
@@ -224,7 +226,7 @@ typedef struct EffectSpawnParams {
 } EffectSpawnParams;
 
 extern EffectSrcParams lbl_8039C3F8;
-extern void vecRotateZXY(void *params, f32 *vec);
+extern void vecRotateZXY(void* params, f32* vec);
 
 extern f32 lbl_803DFEB8;
 extern f32 lbl_803DFEBC;
@@ -258,25 +260,30 @@ extern f32 lbl_803DFF1C;
 extern f32 lbl_803DFF20;
 extern f32 lbl_803DFF24;
 
-int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcByte, f32 *p6)
+int Effect10_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte, f32* p6)
 {
   EffectSpawnParams p;
   uint hasOffset;
 
   lbl_803DB830 = lbl_803DB830 + lbl_803DFEB8;
-  if (lbl_803DB830 > 1.0f) {
+  if (lbl_803DB830 > 1.0f)
+  {
     lbl_803DB830 = lbl_803DFEBC;
   }
   lbl_803DB834 = lbl_803DB834 + lbl_803DFEC4;
-  if (lbl_803DB834 > 1.0f) {
+  if (lbl_803DB834 > 1.0f)
+  {
     lbl_803DB834 = lbl_803DFEC8;
   }
-  if (obj == NULL) {
+  if (obj == NULL)
+  {
     return -1;
   }
   hasOffset = flags & 0x200000;
-  if (hasOffset != 0) {
-    if (src == NULL) {
+  if (hasOffset != 0)
+  {
+    if (src == NULL)
+    {
       return -1;
     }
     p.srcX = src->x;
@@ -311,7 +318,8 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
   p.colB = 0xffff;
   p.colC = 0xffff;
   p.unk40 = 0;
-  if (src == NULL) {
+  if (src == NULL)
+  {
     lbl_8039C3B0.x = lbl_803DFECC;
     lbl_8039C3B0.y = lbl_803DFECC;
     lbl_8039C3B0.z = lbl_803DFECC;
@@ -321,7 +329,8 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     lbl_8039C3B0.rot2 = 0;
     src = &lbl_8039C3B0;
   }
-  switch (id) {
+  switch (id)
+  {
   case 0x32a:
     p.count = (int)(lbl_803DFED4 * src->w + lbl_803DFED0);
     p.scale = lbl_803DFED8 * (f32)(int)p.count;
@@ -372,30 +381,31 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.kind = 0x60;
     p.alpha = 0xff;
     break;
-  case 0x32e: {
-    u16 c;
+  case 0x32e:
+    {
+      u16 c;
 
-    p.velX = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
-    p.velY = lbl_803DFEEC * (f32)(int)randomGetRange(0xa, 0x50);
-    p.velZ = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
-    p.scale = lbl_803DFEF0 * (f32)(int)randomGetRange(5, 0x19);
-    p.count = randomGetRange(0x64, 0x78);
-    p.rot0 = randomGetRange(0, 0xffff);
-    p.rot1 = randomGetRange(0, 0xffff);
-    p.rot0 = randomGetRange(0, 0xffff);
-    p.srcX = (f32)(int)randomGetRange(0xe6, 0x320);
-    p.srcY = (f32)(int)randomGetRange(0xe6, 0x320);
-    p.srcZ = (f32)(int)randomGetRange(0xe6, 0x320);
-    p.flagsB = 0x1000020;
-    p.flagsA = 0x86000008;
-    c = randomGetRange(0x8000, 0xffff);
-    p.colD = c;
-    p.colA = c;
-    p.colB = p.colE = 0xffff;
-    p.colC = p.colF = 0xffff;
-    p.kind = 0x3a3;
-    break;
-  }
+      p.velX = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
+      p.velY = lbl_803DFEEC * (f32)(int)randomGetRange(0xa, 0x50);
+      p.velZ = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
+      p.scale = lbl_803DFEF0 * (f32)(int)randomGetRange(5, 0x19);
+      p.count = randomGetRange(0x64, 0x78);
+      p.rot0 = randomGetRange(0, 0xffff);
+      p.rot1 = randomGetRange(0, 0xffff);
+      p.rot0 = randomGetRange(0, 0xffff);
+      p.srcX = (f32)(int)randomGetRange(0xe6, 0x320);
+      p.srcY = (f32)(int)randomGetRange(0xe6, 0x320);
+      p.srcZ = (f32)(int)randomGetRange(0xe6, 0x320);
+      p.flagsB = 0x1000020;
+      p.flagsA = 0x86000008;
+      c = randomGetRange(0x8000, 0xffff);
+      p.colD = c;
+      p.colA = c;
+      p.colB = p.colE = 0xffff;
+      p.colC = p.colF = 0xffff;
+      p.kind = 0x3a3;
+      break;
+    }
   case 0x32f:
     p.posX = src->x;
     p.posY = src->y;
@@ -433,131 +443,161 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.flagsA = 0xa100100;
     p.kind = 0x62;
     break;
-  case 0x336: {
-    f32 w;
+  case 0x336:
+    {
+      f32 w;
 
-    if (p6 != NULL) {
-      w = *p6;
-    } else {
-      w = 1.0f;
-    }
-    p.posX = w * (f32)(int)randomGetRange(-10, 10);
-    p.posY = w * (f32)(int)randomGetRange(-10, 10);
-    p.posZ = w * (f32)(int)randomGetRange(-10, 10);
-    p.velX = w * (lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf));
-    p.velY = w * (lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf));
-    p.velZ = w * (lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf));
-    p.scale = lbl_803DFF08 * (f32)(int)randomGetRange(8, 10);
-    p.count = 0x50;
-    p.flagsA = 0x80480404;
-    p.flagsB = 0x20;
-    p.colF = 0;
-    p.colE = 0;
-    p.colD = 0;
-    p.colC = 0;
-    p.colB = 0;
-    p.colA = 0;
-    p.kind = 0xc9d;
-    break;
-  }
-  case 0x337: {
-    int mode;
-
-    if (p6 != NULL) {
-      mode = *(int *)p6;
-    } else {
-      mode = 0;
-    }
-    if (mode == 0) {
-      p.scale = lbl_803DFEE0;
-      p.count = 1;
-      p.flagsA = 0x480000;
-    } else if (mode == 1) {
-      p.scale = lbl_803DFF0C;
-      p.count = 1;
-      p.flagsA = 0x480000;
-      p.alpha = 0x32;
-    } else if (mode == 2) {
-      p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-      p.velY = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-      p.velZ = lbl_803DFEE0 * (f32)(int)randomGetRange(-10, 10);
-      p.scale = lbl_803DFEFC;
-      p.count = randomGetRange(0x1e, 0x28);
-      p.flagsA = 0x3000000;
-      p.flagsB = 0x600000;
-    } else if (mode == 3) {
-      p.posX = (f32)(int)randomGetRange(-10, 10);
-      p.posY = (f32)(int)randomGetRange(-10, 10);
-      p.posZ = (f32)(int)randomGetRange(-10, 10);
-      p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-      p.velY = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-      p.velZ = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
+      if (p6 != NULL)
+      {
+        w = *p6;
+      }
+      else
+      {
+        w = 1.0f;
+      }
+      p.posX = w * (f32)(int)randomGetRange(-10, 10);
+      p.posY = w * (f32)(int)randomGetRange(-10, 10);
+      p.posZ = w * (f32)(int)randomGetRange(-10, 10);
+      p.velX = w * (lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf));
+      p.velY = w * (lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf));
+      p.velZ = w * (lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf));
       p.scale = lbl_803DFF08 * (f32)(int)randomGetRange(8, 10);
-      p.count = 0x1e;
-      p.alpha = 0xb4;
+      p.count = 0x50;
       p.flagsA = 0x80480404;
-    } else {
-      p.posX = (f32)(int)randomGetRange(-3, 3);
-      p.posY = (f32)(int)randomGetRange(-3, 3);
-      p.posZ = (f32)(int)randomGetRange(-3, 3);
-      p.scale = lbl_803DFF10;
-      p.count = 100;
-      p.flagsA = 0x80480000;
-      p.flagsB = 0x400000;
-      p.alpha = 0x7f;
+      p.flagsB = 0x20;
+      p.colF = 0;
+      p.colE = 0;
+      p.colD = 0;
+      p.colC = 0;
+      p.colB = 0;
+      p.colA = 0;
+      p.kind = 0xc9d;
+      break;
     }
-    p.kind = 0xc7e;
-    break;
-  }
-  case 0x338: {
-    int mode;
+  case 0x337:
+    {
+      int mode;
 
-    if (p6 != NULL) {
-      mode = *(int *)p6;
-    } else {
-      mode = 0;
+      if (p6 != NULL)
+      {
+        mode = *(int*)p6;
+      }
+      else
+      {
+        mode = 0;
+      }
+      if (mode == 0)
+      {
+        p.scale = lbl_803DFEE0;
+        p.count = 1;
+        p.flagsA = 0x480000;
+      }
+      else if (mode == 1)
+      {
+        p.scale = lbl_803DFF0C;
+        p.count = 1;
+        p.flagsA = 0x480000;
+        p.alpha = 0x32;
+      }
+      else if (mode == 2)
+      {
+        p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
+        p.velY = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
+        p.velZ = lbl_803DFEE0 * (f32)(int)randomGetRange(-10, 10);
+        p.scale = lbl_803DFEFC;
+        p.count = randomGetRange(0x1e, 0x28);
+        p.flagsA = 0x3000000;
+        p.flagsB = 0x600000;
+      }
+      else if (mode == 3)
+      {
+        p.posX = (f32)(int)randomGetRange(-10, 10);
+        p.posY = (f32)(int)randomGetRange(-10, 10);
+        p.posZ = (f32)(int)randomGetRange(-10, 10);
+        p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
+        p.velY = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
+        p.velZ = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
+        p.scale = lbl_803DFF08 * (f32)(int)randomGetRange(8, 10);
+        p.count = 0x1e;
+        p.alpha = 0xb4;
+        p.flagsA = 0x80480404;
+      }
+      else
+      {
+        p.posX = (f32)(int)randomGetRange(-3, 3);
+        p.posY = (f32)(int)randomGetRange(-3, 3);
+        p.posZ = (f32)(int)randomGetRange(-3, 3);
+        p.scale = lbl_803DFF10;
+        p.count = 100;
+        p.flagsA = 0x80480000;
+        p.flagsB = 0x400000;
+        p.alpha = 0x7f;
+      }
+      p.kind = 0xc7e;
+      break;
     }
-    if (mode == 0) {
-      p.scale = lbl_803DFEE0;
-      p.count = 1;
-      p.flagsA = 0x480000;
-    } else if (mode == 1) {
-      p.scale = lbl_803DFF0C;
-      p.count = 1;
-      p.flagsA = 0x480000;
-      p.alpha = 0x32;
-    } else if (mode == 2) {
-      p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-      p.velY = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-      p.velZ = lbl_803DFEE0 * (f32)(int)randomGetRange(-10, 10);
-      p.scale = lbl_803DFEFC;
-      p.count = randomGetRange(0x1e, 0x28);
-      p.flagsA = 0x3000000;
-      p.flagsB = 0x600000;
-    } else if (mode == 3) {
-      p.posX = (f32)(int)randomGetRange(-10, 10);
-      p.posY = (f32)(int)randomGetRange(-10, 10);
-      p.posZ = (f32)(int)randomGetRange(-10, 10);
-      p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-      p.velY = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-      p.velZ = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-      p.scale = lbl_803DFF08 * (f32)(int)randomGetRange(8, 10);
-      p.count = 0x1e;
-      p.alpha = 0xb4;
-      p.flagsA = 0x80480404;
-    } else {
-      p.posX = (f32)(int)randomGetRange(-3, 3);
-      p.posY = (f32)(int)randomGetRange(-3, 3);
-      p.posZ = (f32)(int)randomGetRange(-3, 3);
-      p.scale = lbl_803DFF10;
-      p.count = 100;
-      p.flagsA = 0x80480000;
-      p.flagsB = 0x400000;
-      p.alpha = 0x7f;
+  case 0x338:
+    {
+      int mode;
+
+      if (p6 != NULL)
+      {
+        mode = *(int*)p6;
+      }
+      else
+      {
+        mode = 0;
+      }
+      if (mode == 0)
+      {
+        p.scale = lbl_803DFEE0;
+        p.count = 1;
+        p.flagsA = 0x480000;
+      }
+      else if (mode == 1)
+      {
+        p.scale = lbl_803DFF0C;
+        p.count = 1;
+        p.flagsA = 0x480000;
+        p.alpha = 0x32;
+      }
+      else if (mode == 2)
+      {
+        p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
+        p.velY = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
+        p.velZ = lbl_803DFEE0 * (f32)(int)randomGetRange(-10, 10);
+        p.scale = lbl_803DFEFC;
+        p.count = randomGetRange(0x1e, 0x28);
+        p.flagsA = 0x3000000;
+        p.flagsB = 0x600000;
+      }
+      else if (mode == 3)
+      {
+        p.posX = (f32)(int)randomGetRange(-10, 10);
+        p.posY = (f32)(int)randomGetRange(-10, 10);
+        p.posZ = (f32)(int)randomGetRange(-10, 10);
+        p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
+        p.velY = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
+        p.velZ = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
+        p.scale = lbl_803DFF08 * (f32)(int)randomGetRange(8, 10);
+        p.count = 0x1e;
+        p.alpha = 0xb4;
+        p.flagsA = 0x80480404;
+      }
+      else
+      {
+        p.posX = (f32)(int)randomGetRange(-3, 3);
+        p.posY = (f32)(int)randomGetRange(-3, 3);
+        p.posZ = (f32)(int)randomGetRange(-3, 3);
+        p.scale = lbl_803DFF10;
+        p.count = 100;
+        p.flagsA = 0x80480000;
+        p.flagsB = 0x400000;
+        p.alpha = 0x7f;
+      }
+      p.kind = 0x4f9;
+      break;
     }
-    p.kind = 0x4f9;
-    break;
-  }
   case 0x340:
     p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-100, 100);
     p.velY = lbl_803DFEE0 * (f32)(int)randomGetRange(10, 200);
@@ -649,62 +689,64 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.kind = 0x2b;
     p.alpha = 0x9d;
     break;
-  case 0x34d: {
-    u16 c;
+  case 0x34d:
+    {
+      u16 c;
 
-    p.velX = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
-    p.velY = lbl_803DFEEC * (f32)(int)randomGetRange(10, 0x50);
-    p.velZ = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
-    p.scale = lbl_803DFEF0 * (f32)(int)randomGetRange(5, 0x19);
-    p.count = randomGetRange(0x64, 0x78);
-    p.rot0 = randomGetRange(0, 0xffff);
-    p.rot1 = randomGetRange(0, 0xffff);
-    p.rot0 = randomGetRange(0, 0xffff);
-    p.srcX = (f32)(int)randomGetRange(0xe6, 0x320);
-    p.srcY = (f32)(int)randomGetRange(0xe6, 0x320);
-    p.srcZ = (f32)(int)randomGetRange(0xe6, 0x320);
-    p.flagsB = 0x1000020;
-    p.flagsA = 0x86000008;
-    c = randomGetRange(0, 0x2ee0) + 0x3caf;
-    p.colD = c;
-    p.colA = c;
-    c = p.colA - randomGetRange(0, 0x2710);
-    p.colE = c;
-    p.colB = c;
-    c = p.colA - randomGetRange(0x2710, 0x3caf);
-    p.colF = c;
-    p.colC = c;
-    p.kind = 0x3a3;
-    break;
-  }
-  case 0x34e: {
-    u16 c;
+      p.velX = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
+      p.velY = lbl_803DFEEC * (f32)(int)randomGetRange(10, 0x50);
+      p.velZ = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
+      p.scale = lbl_803DFEF0 * (f32)(int)randomGetRange(5, 0x19);
+      p.count = randomGetRange(0x64, 0x78);
+      p.rot0 = randomGetRange(0, 0xffff);
+      p.rot1 = randomGetRange(0, 0xffff);
+      p.rot0 = randomGetRange(0, 0xffff);
+      p.srcX = (f32)(int)randomGetRange(0xe6, 0x320);
+      p.srcY = (f32)(int)randomGetRange(0xe6, 0x320);
+      p.srcZ = (f32)(int)randomGetRange(0xe6, 0x320);
+      p.flagsB = 0x1000020;
+      p.flagsA = 0x86000008;
+      c = randomGetRange(0, 0x2ee0) + 0x3caf;
+      p.colD = c;
+      p.colA = c;
+      c = p.colA - randomGetRange(0, 0x2710);
+      p.colE = c;
+      p.colB = c;
+      c = p.colA - randomGetRange(0x2710, 0x3caf);
+      p.colF = c;
+      p.colC = c;
+      p.kind = 0x3a3;
+      break;
+    }
+  case 0x34e:
+    {
+      u16 c;
 
-    p.velX = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
-    p.velY = lbl_803DFEEC * (f32)(int)randomGetRange(10, 0x50);
-    p.velZ = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
-    p.posY = (f32)(int)randomGetRange(5, 0x1e);
-    p.scale = lbl_803DFEF0 * (f32)(int)randomGetRange(5, 0x19);
-    p.count = randomGetRange(0x64, 0x78);
-    p.rot0 = randomGetRange(0, 0xffff);
-    p.rot1 = randomGetRange(0, 0xffff);
-    p.rot0 = randomGetRange(0, 0xffff);
-    p.srcX = (f32)(int)randomGetRange(0xe6, 0x320);
-    p.srcY = (f32)(int)randomGetRange(0xe6, 0x320);
-    p.srcZ = (f32)(int)randomGetRange(0xe6, 0x320);
-    p.flagsB = 0x1000020;
-    p.flagsA = 0x86000008;
-    c = randomGetRange(0, 0x2ee0) + 0x3caf;
-    p.colD = c;
-    p.colA = c;
-    p.colE = 0x7530;
-    p.colB = 0x7530;
-    c = p.colA - randomGetRange(0x2710, 0x3caf);
-    p.colF = c;
-    p.colC = c;
-    p.kind = 0x3a3;
-    break;
-  }
+      p.velX = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
+      p.velY = lbl_803DFEEC * (f32)(int)randomGetRange(10, 0x50);
+      p.velZ = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
+      p.posY = (f32)(int)randomGetRange(5, 0x1e);
+      p.scale = lbl_803DFEF0 * (f32)(int)randomGetRange(5, 0x19);
+      p.count = randomGetRange(0x64, 0x78);
+      p.rot0 = randomGetRange(0, 0xffff);
+      p.rot1 = randomGetRange(0, 0xffff);
+      p.rot0 = randomGetRange(0, 0xffff);
+      p.srcX = (f32)(int)randomGetRange(0xe6, 0x320);
+      p.srcY = (f32)(int)randomGetRange(0xe6, 0x320);
+      p.srcZ = (f32)(int)randomGetRange(0xe6, 0x320);
+      p.flagsB = 0x1000020;
+      p.flagsA = 0x86000008;
+      c = randomGetRange(0, 0x2ee0) + 0x3caf;
+      p.colD = c;
+      p.colA = c;
+      p.colE = 0x7530;
+      p.colB = 0x7530;
+      c = p.colA - randomGetRange(0x2710, 0x3caf);
+      p.colF = c;
+      p.colC = c;
+      p.kind = 0x3a3;
+      break;
+    }
   case 0x331:
   case 0x333:
   case 0x334:
@@ -715,18 +757,23 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     return -1;
   }
   p.flagsA = p.flagsA | flags;
-  if (((p.flagsA & 1) != 0) && ((p.flagsA & 2) != 0)) {
+  if (((p.flagsA & 1) != 0) && ((p.flagsA & 2) != 0))
+  {
     p.flagsA ^= 2LL;
   }
-  if ((p.flagsA & 1) != 0) {
-    if (hasOffset != 0) {
+  if ((p.flagsA & 1) != 0)
+  {
+    if (hasOffset != 0)
+    {
       p.posX = p.posX + p.srcX;
       p.posY = p.posY + p.srcY;
       p.posZ = p.posZ + p.srcZ;
-    } else if (p.model != NULL) {
-      p.posX = p.posX + *(f32 *)((char *)p.model + 0x18);
-      p.posY = p.posY + *(f32 *)((char *)p.model + 0x1c);
-      p.posZ = p.posZ + *(f32 *)((char *)p.model + 0x20);
+    }
+    else if (p.model != NULL)
+    {
+      p.posX = p.posX + *(f32*)((char*)p.model + 0x18);
+      p.posY = p.posY + *(f32*)((char*)p.model + 0x1c);
+      p.posZ = p.posZ + *(f32*)((char*)p.model + 0x20);
     }
   }
   return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
@@ -747,7 +794,6 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 
 extern EffectSrcParams lbl_8039C3C8;
@@ -780,17 +826,20 @@ extern f32 lbl_803DFF9C;
 
 #pragma scheduling off
 #pragma peephole off
-int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcByte)
+int Effect11_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte)
 {
   EffectSpawnParams p;
   uint hasOffset;
 
-  if (obj == NULL) {
+  if (obj == NULL)
+  {
     return -1;
   }
   hasOffset = flags & 0x200000;
-  if (hasOffset != 0) {
-    if (src == NULL) {
+  if (hasOffset != 0)
+  {
+    if (src == NULL)
+    {
       return -1;
     }
     p.srcX = src->x;
@@ -825,7 +874,8 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
   p.colB = 0xffff;
   p.colC = 0xffff;
   p.unk40 = 0;
-  switch (id) {
+  switch (id)
+  {
   case 0x12c:
     p.scale = lbl_803DFF3C;
     p.count = 0xa;
@@ -834,7 +884,8 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.kind = 0xdb;
     break;
   case 0x12d:
-    if (src == NULL) {
+    if (src == NULL)
+    {
       lbl_8039C3C8.x = 0.0f;
       lbl_8039C3C8.y = 0.0f;
       lbl_8039C3C8.z = 0.0f;
@@ -851,7 +902,8 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.kind = src->w > 0.0f ? 0x7b : 0xdb;
     break;
   case 0x12e:
-    if (src == NULL) {
+    if (src == NULL)
+    {
       lbl_8039C3C8.x = 0.0f;
       lbl_8039C3C8.y = 0.0f;
       lbl_8039C3C8.z = 0.0f;
@@ -874,7 +926,8 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.kind = 0x5f;
     break;
   case 0x12f:
-    if (src == NULL) {
+    if (src == NULL)
+    {
       lbl_8039C3C8.x = 0.0f;
       lbl_8039C3C8.y = 0.0f;
       lbl_8039C3C8.z = 0.0f;
@@ -897,7 +950,8 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.kind = 0x5f;
     break;
   case 0x130:
-    if (src == NULL) {
+    if (src == NULL)
+    {
       lbl_8039C3C8.x = 0.0f;
       lbl_8039C3C8.y = 0.0f;
       lbl_8039C3C8.z = 0.0f;
@@ -942,7 +996,8 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.kind = 0x5f;
     break;
   case 0x133:
-    if (src == NULL) {
+    if (src == NULL)
+    {
       lbl_8039C3C8.x = 0.0f;
       lbl_8039C3C8.y = 0.0f;
       lbl_8039C3C8.z = 0.0f;
@@ -962,7 +1017,8 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.kind = 0x26d;
     break;
   case 0x134:
-    if (src == NULL) {
+    if (src == NULL)
+    {
       lbl_8039C3C8.x = 0.0f;
       lbl_8039C3C8.y = 0.0f;
       lbl_8039C3C8.z = 0.0f;
@@ -982,7 +1038,8 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.kind = 0xe0;
     break;
   case 0x135:
-    if (src == NULL) {
+    if (src == NULL)
+    {
       lbl_8039C3C8.x = 0.0f;
       lbl_8039C3C8.y = 0.0f;
       lbl_8039C3C8.z = 0.0f;
@@ -1005,7 +1062,8 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.kind = src->rot2;
     break;
   case 0x136:
-    if (src == NULL) {
+    if (src == NULL)
+    {
       lbl_8039C3C8.x = 0.0f;
       lbl_8039C3C8.y = 0.0f;
       lbl_8039C3C8.z = 0.0f;
@@ -1024,7 +1082,8 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.kind = src->rot2;
     break;
   case 0x137:
-    if (src == NULL) {
+    if (src == NULL)
+    {
       lbl_8039C3C8.x = 0.0f;
       lbl_8039C3C8.y = 0.0f;
       lbl_8039C3C8.z = 0.0f;
@@ -1034,7 +1093,8 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
       lbl_8039C3C8.rot2 = 0;
       src = &lbl_8039C3C8;
     }
-    if (src == NULL) {
+    if (src == NULL)
+    {
       return -1;
     }
     p.velX = lbl_803DFF94 * (f32)(int)randomGetRange(0, 100) + lbl_803DFF90;
@@ -1063,18 +1123,23 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     return -1;
   }
   p.flagsA = p.flagsA | flags;
-  if (((p.flagsA & 1) != 0) && ((p.flagsA & 2) != 0)) {
+  if (((p.flagsA & 1) != 0) && ((p.flagsA & 2) != 0))
+  {
     p.flagsA ^= 2LL;
   }
-  if ((p.flagsA & 1) != 0) {
-    if (hasOffset != 0) {
+  if ((p.flagsA & 1) != 0)
+  {
+    if (hasOffset != 0)
+    {
       p.posX = p.posX + p.srcX;
       p.posY = p.posY + p.srcY;
       p.posZ = p.posZ + p.srcZ;
-    } else if (p.model != NULL) {
-      p.posX = p.posX + *(f32 *)((char *)p.model + 0x18);
-      p.posY = p.posY + *(f32 *)((char *)p.model + 0x1c);
-      p.posZ = p.posZ + *(f32 *)((char *)p.model + 0x20);
+    }
+    else if (p.model != NULL)
+    {
+      p.posX = p.posX + *(f32*)((char*)p.model + 0x18);
+      p.posY = p.posY + *(f32*)((char*)p.model + 0x1c);
+      p.posZ = p.posZ + *(f32*)((char*)p.model + 0x20);
     }
   }
   return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
@@ -1102,18 +1167,21 @@ extern f32 lbl_803DFFE8;
 extern f32 lbl_803DFFEC;
 extern f32 lbl_803DFFF0;
 
-int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcByte, f32 *p6)
+int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte, f32* p6)
 {
   EffectSrcParams local;
   EffectSpawnParams p;
   uint hasOffset;
 
-  if (obj == NULL) {
+  if (obj == NULL)
+  {
     return -1;
   }
   hasOffset = flags & 0x200000;
-  if (hasOffset != 0) {
-    if (src == NULL) {
+  if (hasOffset != 0)
+  {
+    if (src == NULL)
+    {
       return -1;
     }
     p.srcX = src->x;
@@ -1147,7 +1215,8 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
   p.colA = 0xffff;
   p.colB = 0xffff;
   p.colC = 0xffff;
-  switch (id) {
+  switch (id)
+  {
   case 0x47e:
     p.scale = lbl_803DFFAC;
     p.count = randomGetRange(0x32, 0x3c);
@@ -1157,7 +1226,8 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.kind = 0x159;
     break;
   case 0x483:
-    if (src == NULL) {
+    if (src == NULL)
+    {
       lbl_8039C3E0.x = lbl_803DFFA8;
       lbl_8039C3E0.y = lbl_803DFFA8;
       lbl_8039C3E0.z = lbl_803DFFA8;
@@ -1180,7 +1250,8 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.alpha = 0x3c;
     break;
   case 0x484:
-    if (src == NULL) {
+    if (src == NULL)
+    {
       lbl_8039C3E0.x = lbl_803DFFA8;
       lbl_8039C3E0.y = lbl_803DFFA8;
       lbl_8039C3E0.z = lbl_803DFFA8;
@@ -1201,7 +1272,8 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.alpha = 0x7f;
     break;
   case 0x485:
-    if (src == NULL) {
+    if (src == NULL)
+    {
       lbl_8039C3E0.x = lbl_803DFFA8;
       lbl_8039C3E0.y = lbl_803DFFA8;
       lbl_8039C3E0.z = lbl_803DFFA8;
@@ -1238,7 +1310,8 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.flagsB = 0x908;
     break;
   case 0x487:
-    if (p6 == NULL) {
+    if (p6 == NULL)
+    {
       return 0;
     }
     p.velX = *p6;
@@ -1305,7 +1378,8 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.alpha = 0xd2;
     break;
   case 0x48c:
-    if (src == NULL) {
+    if (src == NULL)
+    {
       lbl_8039C3E0.x = lbl_803DFFA8;
       lbl_8039C3E0.y = lbl_803DFFA8;
       lbl_8039C3E0.z = lbl_803DFFA8;
@@ -1314,16 +1388,20 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
       lbl_8039C3E0.rot1 = 0;
       lbl_8039C3E0.rot2 = 0;
     }
-    if (p6 == NULL) {
+    if (p6 == NULL)
+    {
       return -1;
     }
-    if (*(int *)p6 == 0) {
+    if (*(int*)p6 == 0)
+    {
       p.scale = lbl_803DFFEC * (f32)(int)randomGetRange(8, 0x11);
       p.count = randomGetRange(5, 10);
       p.alpha = 0x64;
       p.flagsA = 0x80110;
       p.flagsB = 0x4000800;
-    } else if (*(int *)p6 == 1) {
+    }
+    else if (*(int*)p6 == 1)
+    {
       p.velX = lbl_803DFFB4 * (f32)(int)randomGetRange(-0x32, 0x32);
       p.velY = lbl_803DFFB4 * (f32)(int)randomGetRange(-0x32, 0x32);
       p.velZ = lbl_803DFFB4 * (f32)(int)randomGetRange(0, 0x32);
@@ -1332,7 +1410,9 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
       p.alpha = 0;
       p.flagsA = 0x880014;
       p.flagsB = 0x4010808;
-    } else {
+    }
+    else
+    {
       p.velX = lbl_803DFFB4 * (f32)(int)randomGetRange(-0x28, 0x28);
       p.velY = lbl_803DFFD8 * (f32)(int)randomGetRange(-10, 0x1e);
       p.velZ = lbl_803DFFD8 * (f32)(int)randomGetRange(0, 0x28);
@@ -1342,7 +1422,7 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
       local.w = lbl_803DFFB0;
       local.rot2 = 0;
       local.rot1 = 0;
-      local.rot0 = ((GameObject *)obj)->anim.rotX;
+      local.rot0 = ((GameObject*)obj)->anim.rotX;
       vecRotateZXY(&local, &p.velX);
       p.scale = lbl_803DFFB4;
       p.count = 100;
@@ -1356,18 +1436,23 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     return -1;
   }
   p.flagsA = p.flagsA | flags;
-  if (((p.flagsA & 1) != 0) && ((p.flagsA & 2) != 0)) {
+  if (((p.flagsA & 1) != 0) && ((p.flagsA & 2) != 0))
+  {
     p.flagsA ^= 2LL;
   }
-  if ((p.flagsA & 1) != 0) {
-    if (hasOffset != 0) {
+  if ((p.flagsA & 1) != 0)
+  {
+    if (hasOffset != 0)
+    {
       p.posX = p.posX + p.srcX;
       p.posY = p.posY + p.srcY;
       p.posZ = p.posZ + p.srcZ;
-    } else if (p.model != NULL) {
-      p.posX = p.posX + *(f32 *)((char *)p.model + 0x18);
-      p.posY = p.posY + *(f32 *)((char *)p.model + 0x1c);
-      p.posZ = p.posZ + *(f32 *)((char *)p.model + 0x20);
+    }
+    else if (p.model != NULL)
+    {
+      p.posX = p.posX + *(f32*)((char*)p.model + 0x18);
+      p.posY = p.posY + *(f32*)((char*)p.model + 0x1c);
+      p.posZ = p.posZ + *(f32*)((char*)p.model + 0x20);
     }
   }
   return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
@@ -1425,18 +1510,21 @@ extern f64 lbl_803E0088;
 extern f32 lbl_803E0090;
 extern f32 lbl_803E0094;
 
-int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcByte, u16 *p6)
+int Effect14_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte, u16* p6)
 {
   EffectSrcParams local;
   EffectSpawnParams p;
   uint hasOffset;
 
-  if (obj == NULL) {
+  if (obj == NULL)
+  {
     return -1;
   }
   hasOffset = flags & 0x200000;
-  if (hasOffset != 0) {
-    if (src == NULL) {
+  if (hasOffset != 0)
+  {
+    if (src == NULL)
+    {
       return -1;
     }
     p.srcX = src->x;
@@ -1470,9 +1558,11 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
   p.colA = 0xffff;
   p.colB = 0xffff;
   p.colC = 0xffff;
-  switch (id) {
+  switch (id)
+  {
   case 0x4b0:
-    if (p6 == NULL) {
+    if (p6 == NULL)
+    {
       return 0;
     }
     p.alpha = *p6 >> 1;
@@ -1542,10 +1632,11 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.colC = randomGetRange(0, 0xffff);
     break;
   case 0x4b5:
-    if (p6 != NULL) {
-      p.velX = *(f32 *)p6;
-      p.velY = *((f32 *)p6 + 1);
-      p.velZ = *((f32 *)p6 + 2);
+    if (p6 != NULL)
+    {
+      p.velX = *(f32*)p6;
+      p.velY = *((f32*)p6 + 1);
+      p.velZ = *((f32*)p6 + 2);
     }
     p.scale = lbl_803E0020;
     p.count = 0x5f;
@@ -1560,10 +1651,11 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.colC = 0;
     break;
   case 0x4b6:
-    if (p6 != NULL) {
-      p.velX = *(f32 *)p6;
-      p.velY = *((f32 *)p6 + 1);
-      p.velZ = *((f32 *)p6 + 2);
+    if (p6 != NULL)
+    {
+      p.velX = *(f32*)p6;
+      p.velY = *((f32*)p6 + 1);
+      p.velZ = *((f32*)p6 + 2);
     }
     p.alpha = 0x40;
     p.scale = lbl_803E0024;
@@ -1586,18 +1678,22 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.alpha = 0x3f;
     break;
   case 0x4b8:
-    if (p6 != NULL) {
-      p.velX = *(f32 *)p6;
-      p.velY = *((f32 *)p6 + 1);
-      p.velZ = *((f32 *)p6 + 2);
+    if (p6 != NULL)
+    {
+      p.velX = *(f32*)p6;
+      p.velY = *((f32*)p6 + 1);
+      p.velZ = *((f32*)p6 + 2);
     }
     p.count = 0x25;
     p.scale = lbl_803E002C;
     p.flagsA = 0x80200;
     p.flagsB = 0x4000800;
-    if ((int)randomGetRange(0, 2) == 0) {
+    if ((int)randomGetRange(0, 2) == 0)
+    {
       p.kind = 0xc0e;
-    } else {
+    }
+    else
+    {
       p.kind = randomGetRange(0x156, 0x157);
     }
     break;
@@ -1635,13 +1731,14 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.flagsB = 0x4000820;
     break;
   case 0x4bc:
-    if (p6 == NULL) {
+    if (p6 == NULL)
+    {
       return 0;
     }
     p.posX = lbl_803E0034 * ((f32)p.alpha * (f32)(int)randomGetRange(-10, 10));
     p.posY = lbl_803E0034 * ((f32)p.alpha * (f32)(int)randomGetRange(0, 10));
     p.posZ = lbl_803E0034 * ((f32)p.alpha * (f32)(int)randomGetRange(-10, 10));
-    p.alpha = *(u32 *)p6;
+    p.alpha = *(u32*)p6;
     p.scale = lbl_803E0038 * (f32)p.alpha + lbl_803E0038;
     p.count = randomGetRange(0xf, 0x1e);
     p.flagsA = 0xc1080100;
@@ -1757,7 +1854,8 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.kind = 0x62;
     break;
   case 0x4c5:
-    if (src == NULL) {
+    if (src == NULL)
+    {
       lbl_8039C3F8.x = lbl_803E0000;
       lbl_8039C3F8.y = lbl_803E0000;
       lbl_8039C3F8.z = lbl_803E0000;
@@ -1773,9 +1871,9 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     local.y = lbl_803E0000;
     local.z = lbl_803E0000;
     local.w = lbl_803E006C;
-    local.rot2 = ((GameObject *)obj)->anim.rotZ;
-    local.rot1 = ((GameObject *)obj)->anim.rotY;
-    local.rot0 = ((GameObject *)obj)->anim.rotX;
+    local.rot2 = ((GameObject*)obj)->anim.rotZ;
+    local.rot1 = ((GameObject*)obj)->anim.rotY;
+    local.rot0 = ((GameObject*)obj)->anim.rotX;
     vecRotateZXY(&local, &p.velX);
     p.flagsA = 0x3000000;
     p.flagsB = 0x200000;
@@ -1794,9 +1892,9 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.srcY = lbl_803E0000;
     p.srcZ = lbl_803E0000;
     p.srcW = lbl_803E006C;
-    p.rot2 = ((GameObject *)obj)->anim.rotZ;
-    p.rot1 = ((GameObject *)obj)->anim.rotY;
-    p.rot0 = ((GameObject *)obj)->anim.rotX;
+    p.rot2 = ((GameObject*)obj)->anim.rotZ;
+    p.rot1 = ((GameObject*)obj)->anim.rotY;
+    p.rot0 = ((GameObject*)obj)->anim.rotX;
     break;
   case 0x4c7:
     p.alpha = 0x40;
@@ -1808,9 +1906,9 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.srcY = lbl_803E0000;
     p.srcZ = lbl_803E0000;
     p.srcW = lbl_803E006C;
-    p.rot2 = ((GameObject *)obj)->anim.rotZ;
-    p.rot1 = ((GameObject *)obj)->anim.rotY;
-    p.rot0 = ((GameObject *)obj)->anim.rotX;
+    p.rot2 = ((GameObject*)obj)->anim.rotZ;
+    p.rot1 = ((GameObject*)obj)->anim.rotY;
+    p.rot0 = ((GameObject*)obj)->anim.rotX;
     break;
   case 0x4c8:
     p.posX = lbl_803E0078 * (f32)(int)randomGetRange(-10, 10);
@@ -1901,18 +1999,23 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     return -1;
   }
   p.flagsA = p.flagsA | flags;
-  if (((p.flagsA & 1) != 0) && ((p.flagsA & 2) != 0)) {
+  if (((p.flagsA & 1) != 0) && ((p.flagsA & 2) != 0))
+  {
     p.flagsA ^= 2LL;
   }
-  if ((p.flagsA & 1) != 0) {
-    if (hasOffset != 0) {
+  if ((p.flagsA & 1) != 0)
+  {
+    if (hasOffset != 0)
+    {
       p.posX = p.posX + p.srcX;
       p.posY = p.posY + p.srcY;
       p.posZ = p.posZ + p.srcZ;
-    } else if (p.model != NULL) {
-      p.posX = p.posX + *(f32 *)((char *)p.model + 0x18);
-      p.posY = p.posY + *(f32 *)((char *)p.model + 0x1c);
-      p.posZ = p.posZ + *(f32 *)((char *)p.model + 0x20);
+    }
+    else if (p.model != NULL)
+    {
+      p.posX = p.posX + *(f32*)((char*)p.model + 0x18);
+      p.posY = p.posY + *(f32*)((char*)p.model + 0x1c);
+      p.posZ = p.posZ + *(f32*)((char*)p.model + 0x20);
     }
   }
   return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
@@ -1935,43 +2038,91 @@ extern f32 mathSinf(f32 x);
 /* Advance two periodic counters; compute sin of phase. */
 void Effect10_func05(void)
 {
-    f32 sum;
-    f32 step;
-    sum = lbl_803DB838 + (step = lbl_803DFEB8 * timeDelta);
-    lbl_803DB838 = sum;
-    if (sum > 1.0f) {
-        lbl_803DB838 = lbl_803DFEBC;
-    }
-    sum = lbl_803DB83C + step;
-    lbl_803DB83C = sum;
-    if (sum > 1.0f) {
-        lbl_803DB83C = lbl_803DFEC8;
-    }
-    lbl_803DD3B0 = lbl_803DD3B0 + (s32)framesThisStep * 0x64;
-    if (lbl_803DD3B0 > 0x7fff) {
-        lbl_803DD3B0 = 0;
-    }
-    lbl_803DD3BC = mathSinf(lbl_803DFF30 * (f32)(s16)lbl_803DD3B0 / lbl_803DFF34);
-    lbl_803DD3B4 = lbl_803DD3B4 + (s32)framesThisStep * 0x32;
-    if (lbl_803DD3B4 > 0x7fff) {
-        lbl_803DD3B4 = 0;
-    }
-    lbl_803DD3B8 = mathSinf(lbl_803DFF30 * (f32)(s16)lbl_803DD3B4 / lbl_803DFF34);
+  f32 sum;
+  f32 step;
+  sum = lbl_803DB838 + (step = lbl_803DFEB8 * timeDelta);
+  lbl_803DB838 = sum;
+  if (sum > 1.0f)
+  {
+    lbl_803DB838 = lbl_803DFEBC;
+  }
+  sum = lbl_803DB83C + step;
+  lbl_803DB83C = sum;
+  if (sum > 1.0f)
+  {
+    lbl_803DB83C = lbl_803DFEC8;
+  }
+  lbl_803DD3B0 = lbl_803DD3B0 + (s32)framesThisStep * 0x64;
+  if (lbl_803DD3B0 > 0x7fff)
+  {
+    lbl_803DD3B0 = 0;
+  }
+  lbl_803DD3BC = mathSinf(lbl_803DFF30 * (f32)(s16)lbl_803DD3B0 / lbl_803DFF34);
+  lbl_803DD3B4 = lbl_803DD3B4 + (s32)framesThisStep * 0x32;
+  if (lbl_803DD3B4 > 0x7fff)
+  {
+    lbl_803DD3B4 = 0;
+  }
+  lbl_803DD3B8 = mathSinf(lbl_803DFF30 * (f32)(s16)lbl_803DD3B4 / lbl_803DFF34);
 }
 
 /* Trivial 4b 0-arg blr leaves. */
-void Effect10_func03_nop(void) {}
-void Effect10_release(void) {}
-void Effect10_initialise(void) {}
-void Effect11_func05_nop(void) {}
-void Effect11_func03_nop(void) {}
-void Effect11_release(void) {}
-void Effect11_initialise(void) {}
-void Effect12_func05_nop(void) {}
-void Effect12_func03_nop(void) {}
-void Effect12_release(void) {}
-void Effect12_initialise(void) {}
-void Effect14_func05_nop(void) {}
-void Effect14_func03_nop(void) {}
-void Effect14_release(void) {}
-void Effect14_initialise(void) {}
+void Effect10_func03_nop(void)
+{
+}
+
+void Effect10_release(void)
+{
+}
+
+void Effect10_initialise(void)
+{
+}
+
+void Effect11_func05_nop(void)
+{
+}
+
+void Effect11_func03_nop(void)
+{
+}
+
+void Effect11_release(void)
+{
+}
+
+void Effect11_initialise(void)
+{
+}
+
+void Effect12_func05_nop(void)
+{
+}
+
+void Effect12_func03_nop(void)
+{
+}
+
+void Effect12_release(void)
+{
+}
+
+void Effect12_initialise(void)
+{
+}
+
+void Effect14_func05_nop(void)
+{
+}
+
+void Effect14_func03_nop(void)
+{
+}
+
+void Effect14_release(void)
+{
+}
+
+void Effect14_initialise(void)
+{
+}

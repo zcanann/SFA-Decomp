@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04A2_MCLightning_packet_info {
+enum obj_04A2_MCLightning_packet_info
+{
     MCLIGHTNING_DEF_ID = 0x04A2,
     MCLIGHTNING_DLL_ID = 0x02BA,
     MCLIGHTNING_CLASS_ID = 0x0061,

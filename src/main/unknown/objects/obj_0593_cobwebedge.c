@@ -73,7 +73,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0593_CobwebEdge_packet_info {
+enum obj_0593_CobwebEdge_packet_info
+{
     COBWEBEDGE_DEF_ID = 0x0593,
     COBWEBEDGE_DLL_ID = 0x011A,
     COBWEBEDGE_CLASS_ID = 0x0061,

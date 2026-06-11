@@ -80,7 +80,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0035_snowworm_packet_info {
+enum obj_0035_snowworm_packet_info
+{
     SNOWWORM_DEF_ID = 0x0035,
     SNOWWORM_DLL_ID = 0x00C9,
     SNOWWORM_CLASS_ID = 0x001C,

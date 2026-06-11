@@ -52,7 +52,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04C0_ExplodeAnim_packet_info {
+enum obj_04C0_ExplodeAnim_packet_info
+{
     EXPLODEANIM_DEF_ID = 0x04C0,
     EXPLODEANIM_DLL_ID = 0x013D,
     EXPLODEANIM_CLASS_ID = 0x004F,

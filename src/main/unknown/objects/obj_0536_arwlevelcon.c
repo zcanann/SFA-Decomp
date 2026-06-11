@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0536_ARWLevelCon_packet_info {
+enum obj_0536_ARWLevelCon_packet_info
+{
     ARWLEVELCON_DEF_ID = 0x0536,
     ARWLEVELCON_DLL_ID = 0x02A1,
     ARWLEVELCON_CLASS_ID = 0x0039,

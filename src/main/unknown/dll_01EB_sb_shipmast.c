@@ -36,7 +36,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_01EB_SB_ShipMast_slot {
+enum dll_01EB_SB_ShipMast_slot
+{
     SB_SHIPMAST_INITIALISE = 0,
     SB_SHIPMAST_RELEASE = 1,
     SB_SHIPMAST_INIT = 3,

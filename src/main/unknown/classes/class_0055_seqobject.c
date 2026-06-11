@@ -87,7 +87,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0055_SeqObject_defs {
+enum class_0055_SeqObject_defs
+{
     SEQOBJECT_DIMSEQOBJEC = 0x0162,
     SEQOBJECT_CFSEQOBJECT = 0x00F2,
     SEQOBJECT_CAMERASEQOB = 0x00F4,

@@ -5,7 +5,8 @@
 
 #define TRACK_CMD(cursor) ((SynthTrackCommand*)(cursor)->current)
 
-typedef struct SynthVoiceKeyGroups {
+typedef struct SynthVoiceKeyGroups
+{
     u8 pad[0x14E8];
     SynthKeyGroupState keyGroupStates[SYNTH_VOICE_NOTE_COUNT];
 } SynthVoiceKeyGroups;
@@ -13,7 +14,8 @@ typedef struct SynthVoiceKeyGroups {
 #define KEYGROUP_STATE(voice, index) \
     (((SynthVoiceKeyGroups*)(voice))->keyGroupStates[index])
 
-SynthSequenceEvent* synthGetNextChannelEvent(u8 channel) {
+SynthSequenceEvent* synthGetNextChannelEvent(u8 channel)
+{
     u32 trackId;
     SynthTrackCursor* track;
     SynthSequenceEvent* ev;
@@ -26,26 +28,34 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel) {
     track = SYNTH_TRACK_CURSOR(gSynthCurrentVoice, trackId);
     pattern = SYNTH_SEQUENCE_STATE(gSynthCurrentVoice, trackId);
 
-    if (track->current != 0) {
+    if (track->current != 0)
+    {
         ev = SYNTH_CHANNEL_EVENT(gSynthCurrentVoice, trackId);
         ev->channel = channel;
         ev->state = pattern;
 
-        if (pattern->stream == 0) {
+        if (pattern->stream == 0)
+        {
         null_pattern_addr:
-            if (TRACK_CMD(track)->command == SYNTH_TRACK_COMMAND_END) {
+            if (TRACK_CMD(track)->command == SYNTH_TRACK_COMMAND_END)
+            {
                 track->current = 0;
                 return 0;
             }
 
-            if (TRACK_CMD(track)->command == SYNTH_TRACK_COMMAND_JUMP) {
-                if (SYNTH_KEYGROUP_MAP(gSynthCurrentVoice) == 0) {
-                    if (KEYGROUP_STATE(gSynthCurrentVoice, 0).active) {
+            if (TRACK_CMD(track)->command == SYNTH_TRACK_COMMAND_JUMP)
+            {
+                if (SYNTH_KEYGROUP_MAP(gSynthCurrentVoice) == 0)
+                {
+                    if (KEYGROUP_STATE(gSynthCurrentVoice, 0).active)
+                    {
                         track->current = 0;
                         return 0;
                     }
-                } else if (KEYGROUP_STATE(gSynthCurrentVoice,
-                               SYNTH_KEYGROUP_MAP(gSynthCurrentVoice)[trackId]).active) {
+                }
+                else if (KEYGROUP_STATE(gSynthCurrentVoice,
+                                        SYNTH_KEYGROUP_MAP(gSynthCurrentVoice)[trackId]).active)
+                {
                     track->current = 0;
                     return 0;
                 }
@@ -68,13 +78,16 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel) {
 
     loop:
         patternTime = *(u16*)pattern->stream + pattern->currentValue;
-        if (patternTime >= pitchTime) {
+        if (patternTime >= pitchTime)
+        {
             goto use_pitch_time;
         }
-        if (patternTime >= modTime) {
+        if (patternTime >= modTime)
+        {
             goto use_mod_time;
         }
-        if (pattern->stream[2] == 0xFF && pattern->stream[3] == 0xFF) {
+        if (pattern->stream[2] == 0xFF && pattern->stream[3] == 0xFF)
+        {
             pattern->stream = 0;
             goto null_pattern_addr;
         }
@@ -82,11 +95,13 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel) {
         ev->eventData = pattern->stream;
         pattern->currentValue = patternTime;
 
-        if ((pattern->stream[2] & 0x80) != 0) {
+        if ((pattern->stream[2] & 0x80) != 0)
+        {
             pattern->stream += 4;
             goto use_pattern_time;
         }
-        if ((pattern->stream[2] | pattern->stream[3]) == 0) {
+        if ((pattern->stream[2] | pattern->stream[3]) == 0)
+        {
             pattern->stream += 4;
             goto loop;
         }
@@ -98,7 +113,8 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel) {
         goto end;
 
     use_pitch_time:
-        if (pitchTime < modTime) {
+        if (pitchTime < modTime)
+        {
             ev->value = pitchTime + pattern->valueOffset;
             ev->type = 2;
             goto end;
@@ -121,19 +137,25 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel) {
  * EN v1.0 Address: 0x8026E070
  * EN v1.0 Size: 116b
  */
-void synthInsertChannelEvent(SynthSequenceQueue* queue, SynthSequenceEvent* event) {
+void synthInsertChannelEvent(SynthSequenceQueue* queue, SynthSequenceEvent* event)
+{
     SynthSequenceEvent* current;
     SynthSequenceEvent* prev;
 
     prev = 0;
     current = queue->eventList;
-    while (current != 0) {
-        if (current->value > event->value) {
+    while (current != 0)
+    {
+        if (current->value > event->value)
+        {
             event->next = current;
             event->prev = prev;
-            if (prev != 0) {
+            if (prev != 0)
+            {
                 prev->next = event;
-            } else {
+            }
+            else
+            {
                 queue->eventList = event;
             }
             current->prev = event;
@@ -145,9 +167,12 @@ void synthInsertChannelEvent(SynthSequenceQueue* queue, SynthSequenceEvent* even
     }
 
     event->prev = prev;
-    if (prev != 0) {
+    if (prev != 0)
+    {
         prev->next = event;
-    } else {
+    }
+    else
+    {
         queue->eventList = event;
     }
     event->next = 0;

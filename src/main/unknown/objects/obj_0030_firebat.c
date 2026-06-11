@@ -80,7 +80,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0030_Firebat_packet_info {
+enum obj_0030_Firebat_packet_info
+{
     FIREBAT_DEF_ID = 0x0030,
     FIREBAT_DLL_ID = 0x00C9,
     FIREBAT_CLASS_ID = 0x001C,

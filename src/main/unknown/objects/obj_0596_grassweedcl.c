@@ -73,7 +73,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0596_GrassWeedCl_packet_info {
+enum obj_0596_GrassWeedCl_packet_info
+{
     GRASSWEEDCL_DEF_ID = 0x0596,
     GRASSWEEDCL_DLL_ID = 0x011A,
     GRASSWEEDCL_CLASS_ID = 0x0061,

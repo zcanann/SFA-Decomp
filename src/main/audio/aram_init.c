@@ -1,15 +1,15 @@
 #include "ghidra_import.h"
 
-extern void *salMalloc(u32 size);
-extern void salFree(void *p);
-extern void DCFlushRange(void *src, u32 size);
+extern void* salMalloc(u32 size);
+extern void salFree(void* p);
+extern void DCFlushRange(void* src, u32 size);
 extern u32 ARGetBaseAddress(void);
 extern u32 ARGetSize(void);
 
 extern u8 lbl_803D3F60[];
 extern u32 aramTop;
 extern u32 aramWrite;
-extern void *aramChunkCallback;
+extern void* aramChunkCallback;
 
 /*
  * Initializes the AR-side audio data buffer: allocates a 0x500-byte
@@ -25,17 +25,18 @@ extern void *aramChunkCallback;
 void aramInit(u32 extraSize)
 {
     u32 arBase;
-    u8 *buf;
-    u8 *status;
-    u8 *flag;
+    u8* buf;
+    u8* status;
+    u8* flag;
     int i;
-    u16 *clear;
+    u16* clear;
 
     status = lbl_803D3F60;
     arBase = ARGetBaseAddress();
     buf = salMalloc(0x500);
-    clear = (u16 *)buf;
-    for (i = 0; i < 8; i++) {
+    clear = (u16*)buf;
+    for (i = 0; i < 8; i++)
+    {
         clear[0] = 0;
         clear[1] = 0;
         clear[2] = 0;
@@ -125,11 +126,13 @@ void aramInit(u32 extraSize)
     status[0x505] = 0;
     status[0x504] = 0;
     aramUploadData((u32)buf, arBase, 0x500, 0, 0, 0);
-    while (*flag != 0) {
+    while (*flag != 0)
+    {
     }
     salFree(buf);
     aramTop = arBase + extraSize;
-    if (aramTop > ARGetSize()) {
+    if (aramTop > ARGetSize())
+    {
         aramTop = ARGetSize();
     }
     aramWrite = arBase + 0x500;

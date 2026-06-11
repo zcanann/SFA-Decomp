@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0163_DIMGate_packet_info {
+enum obj_0163_DIMGate_packet_info
+{
     DIMGATE_DEF_ID = 0x0163,
     DIMGATE_DLL_ID = 0x01C3,
     DIMGATE_CLASS_ID = 0x0030,

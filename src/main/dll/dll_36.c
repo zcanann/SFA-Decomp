@@ -2,14 +2,14 @@
 
 extern f32 timeDelta;
 
-extern void gameTextSetDrawFunc(void *callback);
+extern void gameTextSetDrawFunc(void* callback);
 extern void titleScreenPositionElements(f32 x, f32 y);
 extern void fn_80135814(int p1, int p2);
 extern void gameTextBoxFn_80134d40(int p1, int p2, int p3);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int id);
-extern void gameTextShowStr(void *str, int id, int x, int y);
-extern void *gameTextGetStr(int id);
+extern void gameTextShowStr(void* str, int id, int x, int y);
+extern void* gameTextGetStr(int id);
 extern f32 mathSinf(f32 x);
 extern void nameEntryTextDrawFunc(void);
 extern void titleScreenTextDrawFunc(void);
@@ -48,41 +48,44 @@ extern f32 lbl_803E1D9C;
  */
 void EnterSaveNameScreen_render(void)
 {
-  u8 buf[2];
-  int i;
+    u8 buf[2];
+    int i;
 
-  buf[1] = 0;
-  gameTextSetDrawFunc(nameEntryTextDrawFunc);
-  titleScreenPositionElements(lbl_803E1D80, lbl_803E1D84);
-  fn_80135814((int)(lbl_803DD6E0 + (f32)lbl_803DD6DC - lbl_803E1D88), 0);
-  gameTextBoxFn_80134d40(0xff, 1, 1);
-  gameTextSetColor(0xc0, 0xc0, 0xc0, 0xff);
-  gameTextShow(0x3ae);
-  gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-  gameTextSetDrawFunc(titleScreenTextDrawFunc);
-  gameTextShow(0xed);
+    buf[1] = 0;
+    gameTextSetDrawFunc(nameEntryTextDrawFunc);
+    titleScreenPositionElements(lbl_803E1D80, lbl_803E1D84);
+    fn_80135814((int)(lbl_803DD6E0 + (f32)lbl_803DD6DC - lbl_803E1D88), 0);
+    gameTextBoxFn_80134d40(0xff, 1, 1);
+    gameTextSetColor(0xc0, 0xc0, 0xc0, 0xff);
+    gameTextShow(0x3ae);
+    gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+    gameTextSetDrawFunc(titleScreenTextDrawFunc);
+    gameTextShow(0xed);
 
-  for (i = 0; i < lbl_803DD6F4; i++) {
-    buf[0] = (&lbl_803DD6F0)[i];
-    gameTextShowStr(buf, i + 0x2a, 0, 0);
-  }
+    for (i = 0; i < lbl_803DD6F4; i++)
+    {
+        buf[0] = (&lbl_803DD6F0)[i];
+        gameTextShowStr(buf, i + 0x2a, 0, 0);
+    }
 
-  lbl_803DD6D8 = (f32)lbl_803DD6D8 + timeDelta;
+    lbl_803DD6D8 = (f32)lbl_803DD6D8 + timeDelta;
 
-  gameTextSetColor(
-      (int)(mathSinf(lbl_803E1D94 * (f32)lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
-      (int)(mathSinf(lbl_803E1D98 * (f32)lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
-      (int)(mathSinf(lbl_803E1D9C * (f32)lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
-      0xff);
+    gameTextSetColor(
+        (int)(mathSinf(lbl_803E1D94 * (f32)lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
+        (int)(mathSinf(lbl_803E1D98 * (f32)lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
+        (int)(mathSinf(lbl_803E1D9C * (f32)lbl_803DD6D8) * lbl_803E1D90 + lbl_803E1D8C),
+        0xff);
 
-  i = lbl_803DD6E4;
-  gameTextShowStr(gameTextGetStr(lbl_8031A880[i]), 0x56,
-                  (int)((f32)(lbl_803A8690[i] + 0x8a) - lbl_803DD6E0), 0);
+    i = lbl_803DD6E4;
+    gameTextShowStr(gameTextGetStr(lbl_8031A880[i]), 0x56,
+                    (int)((f32)(lbl_803A8690[i] + 0x8a) - lbl_803DD6E0), 0);
 
-  gameTextSetDrawFunc(NULL);
-  titleScreenShowCopyright(0);
+    gameTextSetDrawFunc(NULL);
+    titleScreenShowCopyright(0);
 }
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void EnterSaveNameScreen_frameEnd(void) {}
+void EnterSaveNameScreen_frameEnd(void)
+{
+}

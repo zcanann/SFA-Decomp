@@ -158,7 +158,7 @@ extern s16 lbl_803DD854;
 extern u16 lbl_803DD77C;
 extern int lbl_803DD7E0;
 extern f32 lbl_803DBAA4;
-extern u8 *lbl_803DCCF0;
+extern u8* lbl_803DCCF0;
 extern u8 framesThisStep;
 extern u8 lbl_8031AF34[];
 extern int lbl_803A93F8[];
@@ -198,43 +198,55 @@ void drawFn_80125424(void)
     f32 base1;
     f32 base2;
 
-    if (lbl_803DD85A != 0) {
-        if ((s8)lbl_803DD7A8 == 0) {
+    if (lbl_803DD85A != 0)
+    {
+        if ((s8)lbl_803DD7A8 == 0)
+        {
             lbl_803DD858 = lbl_803DD858 + framesThisStep * 5;
-            if (lbl_803DD858 > 0x152) {
+            if (lbl_803DD858 > 0x152)
+            {
                 lbl_803DD858 = 0x152;
                 lbl_803DD85A = 0;
-                if (*(int *)(lbl_8031AF34 + lbl_803DD85B * 0xc) != -1) {
+                if (*(int*)(lbl_8031AF34 + lbl_803DD85B * 0xc) != -1)
+                {
                     AudioStream_StopCurrent();
                     doNothing_8000CF54(0);
                 }
             }
             lbl_803DD856 = lbl_803DD856 - framesThisStep * 10;
             lbl_803DD854 = lbl_803DD854 - framesThisStep * 0x17;
-        } else {
+        }
+        else
+        {
             lbl_803DD858 = lbl_803DD858 - framesThisStep * 5;
-            if (lbl_803DD858 < 0x122) {
+            if (lbl_803DD858 < 0x122)
+            {
                 lbl_803DD858 = 0x122;
             }
             lbl_803DD856 = lbl_803DD856 + framesThisStep * 10;
             lbl_803DD854 = lbl_803DD854 + framesThisStep * 0x17;
         }
         a1 = lbl_803DD854;
-        if (a1 < 0) {
+        if (a1 < 0)
+        {
             a1 = 0;
-        } else if (a1 > 0xff) {
+        }
+        else if (a1 > 0xff)
+        {
             a1 = 0xff;
         }
         alpha = a1;
         lbl_803DD854 = alpha;
         height = lbl_803DD856;
-        if (height > 0x6e) {
+        if (height > 0x6e)
+        {
             height = 0x6e;
         }
         lbl_803DD856 = height;
         width = lbl_803DD858;
-        type = *(u8 *)(lbl_8031AF34 + lbl_803DD85B * 0xc + 6);
-        switch (type) {
+        type = *(u8*)(lbl_8031AF34 + lbl_803DD85B * 0xc + 6);
+        switch (type)
+        {
         default:
         case 1:
             ypos = 0x19a;
@@ -259,19 +271,22 @@ void drawFn_80125424(void)
         Camera_UpdateViewMatrices();
         Camera_RebuildProjectionMatrix();
         GXSetViewport(lbl_803E2048, (f32)ypos - lbl_803E2024,
-                      (f32)(u32)*(u16 *)(lbl_803DCCF0 + 4), (f32)(u32)*(u16 *)(lbl_803DCCF0 + 8),
+                      (f32)(u32) * (u16*)(lbl_803DCCF0 + 4), (f32)(u32) * (u16*)(lbl_803DCCF0 + 8),
                       lbl_803E1E3C, lbl_803E1E68);
-        if (*(u8 **)&lbl_803A93F8[type] != NULL) {
+        if (*(u8**)&lbl_803A93F8[type] != NULL)
+        {
             ObjAnim_AdvanceCurrentMove(lbl_8031BFA8[type], timeDelta, lbl_803A93F8[type], NULL);
-            if (*(u32 *)(lbl_803A93F8[type] + 0x4c) > 0x90000000u) {
-                *(u32 *)(lbl_803A93F8[type] + 0x4c) = 0;
+            if (*(u32*)(lbl_803A93F8[type] + 0x4c) > 0x90000000u)
+            {
+                *(u32*)(lbl_803A93F8[type] + 0x4c) = 0;
             }
-            *(u8 *)(lbl_803A93F8[type] + 0x37) = 0xff;
+            *(u8*)(lbl_803A93F8[type] + 0x37) = 0xff;
             objRender(0, 0, 0, 0, lbl_803A93F8[type], 1);
-            *(u16 *)(Obj_GetActiveModel(lbl_803A93F8[type]) + 0x18) &= ~8;
+            *(u16*)(Obj_GetActiveModel(lbl_803A93F8[type]) + 0x18) &= ~8;
         }
         Camera_SetCurrentViewIndex(0);
-        if (lbl_803DD7E0 != 0) {
+        if (lbl_803DD7E0 != 0)
+        {
             Camera_EnableViewYOffset();
         }
         Camera_UpdateViewMatrices();
@@ -283,29 +298,35 @@ void drawFn_80125424(void)
         k = lbl_803E204C;
         base1 = lbl_803E2050;
         base2 = lbl_803E2010;
-        for (i = 0; i < (int)height; i += 4) {
+        for (i = 0; i < (int)height; i += 4)
+        {
             wave = k * fsin16Approx((u16)(i * 0xd48 + lbl_803DD77C * 0x1838));
             wave = k * fsin16Approx((u16)(i * 0x7d0 + lbl_803DD77C * 0xfa0)) + wave;
             a1 = (int)((f32)alpha * (base1 + wave));
-            if (a1 < 0) {
+            if (a1 < 0)
+            {
                 a1 = 0;
             }
             rx = (int)randomGetRange(0, 0x1e) << 1;
             ry = (int)randomGetRange(0, 0x1e) << 1;
-            if (a1 > 0xff) {
+            if (a1 > 0xff)
+            {
                 a1 = 0xff;
             }
             drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i), a1 & 0xff, 0x100, 0x78, 2, ry, rx);
             a1 = (int)((f32)alpha * (base2 + wave));
-            if (a1 < 0) {
+            if (a1 < 0)
+            {
                 a1 = 0;
             }
             rx = (int)randomGetRange(0, 0x1e) << 1;
             ry = (int)randomGetRange(0, 0x1e) << 1;
-            if (a1 > 0xff) {
+            if (a1 > 0xff)
+            {
                 a1 = 0xff;
             }
-            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i + 2), a1 & 0xff, 0x100, 0x78, 2, ry, rx);
+            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i + 2), a1 & 0xff, 0x100, 0x78, 2, ry,
+                               rx);
         }
         sw = (s16)width;
         x5 = sw - 5;
@@ -325,15 +346,19 @@ void drawFn_80125424(void)
 
 extern void Obj_FreeObject(int* obj);
 
-void fn_80125D04(void) {
+void fn_80125D04(void)
+{
     int* ptr;
     int i = 0;
     ptr = lbl_803A93F8;
-    for (; i < 6; i++) {
+    for (; i < 6; i++)
+    {
         int* obj = (int*)ptr[0];
-        if (obj != NULL) {
-            if ((u32)*(int *)&((GameObject *)obj)->anim.placementData > 0x90000000u) {
-                *(int *)&((GameObject *)obj)->anim.placementData = 0;
+        if (obj != NULL)
+        {
+            if ((u32) * (int*)&((GameObject*)obj)->anim.placementData > 0x90000000u)
+            {
+                *(int*)&((GameObject*)obj)->anim.placementData = 0;
             }
             Obj_FreeObject((int*)ptr[0]);
             ptr[0] = 0;
@@ -353,41 +378,50 @@ extern u8 AudioStream_IsPreparing(void);
 extern void AudioStream_StartPrepared(void);
 extern void AudioStream_Play(int stream, void (*cb)(void));
 extern void gameTextGetBox(int box);
-extern void gameTextFreePhrase(u8 *phrase);
+extern void gameTextFreePhrase(u8 * phrase);
 
 #pragma opt_common_subs off
-void gameTextFn_80125ba4(int idx) {
+void gameTextFn_80125ba4(int idx)
+{
     int a;
     int b;
 
-    if (lbl_803DD85A == 0) {
-        if (idx < 0 || idx >= 0x15) {
+    if (lbl_803DD85A == 0)
+    {
+        if (idx < 0 || idx >= 0x15)
+        {
             idx = 0x14;
         }
         lbl_803DD85A = 1;
         lbl_803DD85B = idx;
         idx = idx * 0xc;
-        if (*(int *)(lbl_8031AF34 + idx) != -1 && AudioStream_IsPreparing() == 0) {
-            AudioStream_Play(*(int *)(lbl_8031AF34 + idx), AudioStream_StartPrepared);
+        if (*(int*)(lbl_8031AF34 + idx) != -1 && AudioStream_IsPreparing() == 0)
+        {
+            AudioStream_Play(*(int*)(lbl_8031AF34 + idx), AudioStream_StartPrepared);
         }
         {
-            u8 *e = &lbl_8031AF34[idx];
-            if (e[7] != 0) {
-                (*gGameUIInterface)->showNpcDialogue(*(u16 *)(e + 4), 0, 0, 0);
-            } else {
-                b = *(u16 *)(e + 8);
-                a = *(u16 *)(e + 4);
-            if (a != -1 && curGameText == 0xffff) {
-                gameTextGetBox(0x7c);
-                lbl_803DD7A8 = 1;
-                lbl_803DD8D0 = 0;
-                curGameText = a;
-                lbl_803DD8C8 = 0;
-                lbl_803DD8CA = (s16)b;
-                lbl_803DD8CC = (f32)(s16)b;
-                gameTextFreePhrase(lbl_803A9440);
-                lbl_803DD7A9 = 0;
+            u8* e = &lbl_8031AF34[idx];
+            if (e[7] != 0)
+            {
+                (*gGameUIInterface)->showNpcDialogue(*(u16*)(e + 4), 0, 0, 0);
             }
+            else
+            {
+                b = *(u16*)(e + 8);
+                a = *(u16*)(e + 4);
+                if (a != -1 && curGameText == 0xffff)
+                {
+                    gameTextGetBox(0x7c);
+                    lbl_803DD7A8 = 1;
+                    lbl_803DD8D0 = 0;
+                    curGameText = a;
+                    lbl_803DD8C8 = 0;
+                    lbl_803DD8CA = (s16)b;
+                    lbl_803DD8CC = (f32)(s16)
+                    b;
+                    gameTextFreePhrase(lbl_803A9440);
+                    lbl_803DD7A9 = 0;
+                }
             }
         }
         lbl_803DD858 = 0x159;
@@ -398,34 +432,41 @@ void gameTextFn_80125ba4(int idx) {
 #pragma opt_common_subs reset
 
 extern int lbl_8031BF90[];
-extern u8 *Obj_AllocObjectSetup(int size, int def);
-extern int Obj_SetupObject(u8 *def, int a, int b, int c, int d);
+extern u8* Obj_AllocObjectSetup(int size, int def);
+extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
 extern f32 lbl_803E1E5C;
 extern f32 lbl_803E205C;
 
-void pauseMenuCreateHeads(void) {
+void pauseMenuCreateHeads(void)
+{
     int i;
-    int *slots;
-    int *defs;
+    int* slots;
+    int* defs;
     f32 f;
 
     i = 0;
     slots = lbl_803A93F8;
     defs = lbl_8031BF90;
-    for (; i < 6; i++) {
-        if (i != 3 && i != 2 && i != 1) {
+    for (; i < 6; i++)
+    {
+        if (i != 3 && i != 2 && i != 1)
+        {
             *slots = 0;
-        } else {
-            if (*(void **)slots == NULL) {
+        }
+        else
+        {
+            if (*(void**)slots == NULL)
+            {
                 *slots = Obj_SetupObject(Obj_AllocObjectSetup(0x20, *defs), 4, -1, -1, 0);
                 f = lbl_803E1E3C;
-                *(f32 *)(*slots + 0xc) = f;
-                *(f32 *)(*slots + 0x10) = f;
-                *(f32 *)(*slots + 0x14) = lbl_803E1E5C;
-                *(s16 *)*slots = 0x7447;
-                *(f32 *)(*slots + 8) = lbl_803E205C;
-                if (*(u32 *)(*slots + 0x4c) > 0x90000000u) {
-                    *(u32 *)(*slots + 0x4c) = 0;
+                *(f32*)(*slots + 0xc) = f;
+                *(f32*)(*slots + 0x10) = f;
+                *(f32*)(*slots + 0x14) = lbl_803E1E5C;
+                *(s16*)*slots = 0x7447;
+                *(f32*)(*slots + 8) = lbl_803E205C;
+                if (*(u32*)(*slots + 0x4c) > 0x90000000u)
+                {
+                    *(u32*)(*slots + 0x4c) = 0;
                 }
                 ObjAnim_SetCurrentMove(*slots, 1, lbl_803E1E3C, 0);
             }
@@ -435,16 +476,16 @@ void pauseMenuCreateHeads(void) {
     }
 }
 
-extern int *getArwing(void);
-extern int arwarwing_getShield(int *arwing);
-extern int arwarwing_getMaxShield(int *arwing);
-extern int arwarwing_getBombCount(int *arwing);
-extern int arwarwing_getCollectedRingCount(int *arwing);
-extern int arwarwing_getRequiredRingCount(int *arwing);
-extern int arwarwing_getScore(int *arwing);
+extern int* getArwing(void);
+extern int arwarwing_getShield(int* arwing);
+extern int arwarwing_getMaxShield(int* arwing);
+extern int arwarwing_getBombCount(int* arwing);
+extern int arwarwing_getCollectedRingCount(int* arwing);
+extern int arwarwing_getRequiredRingCount(int* arwing);
+extern int arwarwing_getScore(int* arwing);
 extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShowStr(char *str, int x, int y, int z);
-extern void sprintf(char *buf, char *fmt, ...);
+extern void gameTextShowStr(char* str, int x, int y, int z);
+extern void sprintf(char* buf, char* fmt, ...);
 extern u8 arwingHudVisible;
 extern s16 arwingHudAlpha;
 extern char lbl_803DBB60;
@@ -457,9 +498,10 @@ extern f32 lbl_803E2060;
 extern f32 lbl_803E2064;
 extern f32 lbl_803E2068;
 
-void drawArwingHud(void) {
+void drawArwingHud(void)
+{
     char buf[8];
-    int *arwing;
+    int* arwing;
     int shield;
     int maxShield;
     int bombs;
@@ -475,17 +517,30 @@ void drawArwingHud(void) {
     int pos;
 
     arwing = getArwing();
-    *(int *)buf = lbl_803E1E08;
+    *(int*)buf = lbl_803E1E08;
     buf[4] = lbl_803E1E0C;
-    if (arwing != NULL) {
-        if (arwingHudVisible != 0) {
-            arwingHudAlpha = (int)(lbl_803E1FA0 * (f32)(u32)framesThisStep + (f32)arwingHudAlpha);
-            if (arwingHudAlpha > 0xff) {
+    if (arwing != NULL)
+    {
+        if (arwingHudVisible != 0)
+        {
+            arwingHudAlpha = (int)
+            (lbl_803E1FA0 * (f32)(u32)
+            framesThisStep + (f32)arwingHudAlpha
+            )
+            ;
+            if (arwingHudAlpha > 0xff)
+            {
                 arwingHudAlpha = 0xff;
             }
-        } else {
-            arwingHudAlpha = (int)-(lbl_803E1FA0 * (f32)(u32)framesThisStep - (f32)arwingHudAlpha);
-            if (arwingHudAlpha < 0) {
+        }
+        else
+        {
+            arwingHudAlpha = (int) - (lbl_803E1FA0 * (f32)(u32)
+            framesThisStep - (f32)arwingHudAlpha
+            )
+            ;
+            if (arwingHudAlpha < 0)
+            {
                 arwingHudAlpha = 0;
             }
         }
@@ -494,37 +549,49 @@ void drawArwingHud(void) {
         bombs = arwarwing_getBombCount(arwing);
         rings = arwarwing_getCollectedRingCount(arwing);
         req = arwarwing_getRequiredRingCount(arwing);
-        if (rings > req) {
+        if (rings > req)
+        {
             rings = req;
         }
         t30 = shield >> 2;
         t23 = (shield & 3) + 0x12;
         t22 = maxShield >> 2;
-        for (i = 0; (int)(v = i & 0xff) < t22; i++) {
-            if ((int)v < t30) {
+        for (i = 0; (int)(v = i & 0xff) < t22; i++)
+        {
+            if ((int)v < t30)
+            {
                 t = 0x16;
-            } else if (t30 < (int)v) {
+            }
+            else if (t30 < (int)v)
+            {
                 t = 0x12;
-            } else {
+            }
+            else
+            {
                 t = (u8)t23;
             }
             drawTexture(hudTextures[(u8)t], (f32)(int)(v * 0x21 + 0x1e), lbl_803E1FAC,
                         arwingHudAlpha & 0xff, 0x100);
         }
-        for (b = 0; b < 3; b++) {
+        for (b = 0; b < 3; b++)
+        {
             pos = b * 0x1c;
             drawTexture(hudTextures[56], (f32)(pos + 0x1e), lbl_803E2060, arwingHudAlpha & 0xff, 0x100);
-            if ((int)b < bombs) {
+            if ((int)b < bombs)
+            {
                 drawTexture(hudTextures[57], (f32)(pos + 0x23), lbl_803E2064, arwingHudAlpha & 0xff, 0x100);
             }
         }
-        if (((GameObject *)arwing)->anim.mapEventSlot != 0x26) {
+        if (((GameObject*)arwing)->anim.mapEventSlot != 0x26)
+        {
             drawTexture(hudTextures[61], lbl_803E2068, lbl_803E1FAC, arwingHudAlpha & 0xff, 0x100);
-            for (i = 0; (int)(i & 0xff) < rings; i++) {
+            for (i = 0; (int)(i & 0xff) < rings; i++)
+            {
                 drawTexture(hudTextures[60], (f32)(int)(0x244 - (i & 0xff) * 0x14), lbl_803E1F9C,
                             arwingHudAlpha & 0xff, 0x100);
             }
-            for (; (int)(v = i & 0xff) < req; i++) {
+            for (; (int)(v = i & 0xff) < req; i++)
+            {
                 drawTexture(hudTextures[59], (f32)(int)(0x244 - v * 0x14), lbl_803E1F9C,
                             arwingHudAlpha & 0xff, 0x100);
             }

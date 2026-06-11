@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03CF_SPBinocular_packet_info {
+enum obj_03CF_SPBinocular_packet_info
+{
     SPBINOCULAR_DEF_ID = 0x03CF,
     SPBINOCULAR_DLL_ID = 0x0284,
     SPBINOCULAR_CLASS_ID = 0x0070,

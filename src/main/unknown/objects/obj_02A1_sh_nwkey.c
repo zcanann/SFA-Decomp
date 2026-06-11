@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02A1_SH_NWkey_packet_info {
+enum obj_02A1_SH_NWkey_packet_info
+{
     SH_NWKEY_DEF_ID = 0x02A1,
     SH_NWKEY_DLL_ID = 0x00ED,
     SH_NWKEY_CLASS_ID = 0x0006,

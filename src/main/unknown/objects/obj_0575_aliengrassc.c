@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0575_AlienGrassC_packet_info {
+enum obj_0575_AlienGrassC_packet_info
+{
     ALIENGRASSC_DEF_ID = 0x0575,
     ALIENGRASSC_DLL_ID = 0x02AD,
     ALIENGRASSC_CLASS_ID = 0x007F,

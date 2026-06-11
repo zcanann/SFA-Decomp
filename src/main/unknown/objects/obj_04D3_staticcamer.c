@@ -52,7 +52,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04D3_StaticCamer_packet_info {
+enum obj_04D3_StaticCamer_packet_info
+{
     STATICCAMER_DEF_ID = 0x04D3,
     STATICCAMER_DLL_ID = 0x025A,
     STATICCAMER_CLASS_ID = 0x0012,

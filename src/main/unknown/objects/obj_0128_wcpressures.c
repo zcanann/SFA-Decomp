@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0128_WCPressureS_packet_info {
+enum obj_0128_WCPressureS_packet_info
+{
     WCPRESSURES_DEF_ID = 0x0128,
     WCPRESSURES_DLL_ID = 0x028F,
     WCPRESSURES_CLASS_ID = 0x0052,

@@ -9,7 +9,8 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
-typedef struct WarpPadPlayerStandingOnPlacement {
+typedef struct WarpPadPlayerStandingOnPlacement
+{
     u8 pad0[0x20 - 0x0];
     s16 unk20;
     u8 pad22[0x28 - 0x22];
@@ -22,11 +23,11 @@ extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
 extern undefined4 FUN_80017640();
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId,int value);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017710();
 extern double FUN_80017714();
 extern undefined4 FUN_80017748();
-extern void vecRotateZXY(s16* in, f32* out);
+extern void vecRotateZXY(s16 * in, f32 * out);
 extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
@@ -36,11 +37,11 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern void Obj_FreeObject(int obj);
 extern int ObjTrigger_IsSet();
-extern f32 Vec_xzDistance(f32* posA, f32* posB);
-extern f32 vec3f_distanceSquared(f32* posA, f32* posB);
+extern f32 Vec_xzDistance(f32 * posA, f32 * posB);
+extern f32 vec3f_distanceSquared(f32 * posA, f32 * posB);
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
-                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
-                                   f32 scaleZ, void* args, int arg9);
+                                  int particleId, int lifetime, f32 scaleX, f32 scaleY,
+                                  f32 scaleZ, void* args, int arg9);
 extern undefined4 FUN_800810f8();
 extern undefined4 FUN_8011e868();
 extern int Obj_GetPlayerObject(void);
@@ -56,10 +57,10 @@ extern f32 sqrtf(f32 value);
 extern undefined4 DAT_803ad410;
 extern undefined4 DAT_803ad41e;
 extern undefined4 DAT_803dc070;
-extern ModgfxInterface **gModgfxInterface;
+extern ModgfxInterface** gModgfxInterface;
 extern undefined4* DAT_803dd71c;
-extern EffectInterface **gPartfxInterface;
-extern ObjectTriggerInterface **gObjectTriggerInterface;
+extern EffectInterface** gPartfxInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern undefined4 DAT_803dda60;
 extern undefined4 DAT_803ddb38;
 extern u8 lbl_803DCDE0;
@@ -138,83 +139,96 @@ extern void setAButtonIcon(int iconId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fxemit_init(FxEmitObject *obj, FxEmitPlacement *setup)
+void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
 {
-  FxEmitState *state;
-  s16 emitCount;
+    FxEmitState* state;
+    s16 emitCount;
 
-  obj->objAnim.rotX = 0;
-  obj->seqCallback = fxemit_SeqFn;
-  state = obj->state;
+    obj->objAnim.rotX = 0;
+    obj->seqCallback = fxemit_SeqFn;
+    state = obj->state;
 
-  state->triggerRadius = (f32)((s32)setup->triggerRadius << 2);
-  state->effectMode = setup->effectMode;
-  state->effectId = setup->effectId;
-  emitCount = setup->emitCount;
-  state->emitCount = emitCount;
-  obj->objAnim.rootMotionScale = lbl_803E3E50;
-  state->enableBit = setup->enableBit;
-  state->stopBit = setup->stopBit;
-  state->suppressed = 0;
+    state->triggerRadius = (f32)((s32)setup->triggerRadius << 2);
+    state->effectMode = setup->effectMode;
+    state->effectId = setup->effectId;
+    emitCount = setup->emitCount;
+    state->emitCount = emitCount;
+    obj->objAnim.rootMotionScale = lbl_803E3E50;
+    state->enableBit = setup->enableBit;
+    state->stopBit = setup->stopBit;
+    state->suppressed = 0;
 
-  if (emitCount < 1) {
-    obj->emitCooldown = emitCount;
-  } else {
-    obj->emitCooldown = 0;
-  }
+    if (emitCount < 1)
+    {
+        obj->emitCooldown = emitCount;
+    }
+    else
+    {
+        obj->emitCooldown = 0;
+    }
 
-  if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0) {
-    state->suppressed = 1;
-  }
+    if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0)
+    {
+        state->suppressed = 1;
+    }
 
-  obj->objAnim.rotX = (s16)(setup->initialYaw << 8);
-  obj->objAnim.rotY = (s16)(setup->initialPitch << 8);
-  obj->objAnim.rotZ = (s16)(setup->initialRoll << 8);
-  state->sfxTimer = (s16)(setup->sfxPeriod * 100);
-  state->initialX = obj->objAnim.localPosX;
-  state->startDelay = (s16)randomGetRange(0, 10);
-  state->altEffectId = 0;
+    obj->objAnim.rotX = (s16)(setup->initialYaw << 8);
+    obj->objAnim.rotY = (s16)(setup->initialPitch << 8);
+    obj->objAnim.rotZ = (s16)(setup->initialRoll << 8);
+    state->sfxTimer = (s16)(setup->sfxPeriod * 100);
+    state->initialX = obj->objAnim.localPosX;
+    state->startDelay = (s16)randomGetRange(0, 10);
+    state->altEffectId = 0;
 }
 
 #pragma dont_inline on
-void areafxemit_emitBurst(AreaFxEmitObject *obj, int count)
+void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
 {
-  AreaFxEmitState *state;
-  s16 i;
-  struct {
-    s16 hw[6];
-    f32 vec[3];
-  } args;
+    AreaFxEmitState* state;
+    s16 i;
+    struct
+    {
+        s16 hw[6];
+        f32 vec[3];
+    } args;
 
-  state = obj->state;
-  if (count > 0) {
-    for (i = 0; i < count; i++) {
-      {
-        u16 sx = state->extentX;
-        args.vec[0] = (f32)(s32)randomGetRange(-sx, sx);
-      }
-      {
-        u16 sy = state->extentY;
-        args.vec[1] = (f32)(s32)randomGetRange(-sy, sy);
-      }
-      {
-        u16 sz = state->extentZ;
-        args.vec[2] = (f32)(s32)randomGetRange(-sz, sz);
-      }
-      vecRotateZXY(state->emitAngles, args.vec);
-      {
-        u8 type = state->emitType;
-        if (type == 4 || type == 6) {
-          args.vec[0] += obj->objAnim.localPosX;
-          args.vec[1] += obj->objAnim.localPosY;
-          args.vec[2] += obj->objAnim.localPosZ;
-          (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, 0x200001, -1, NULL);
-        } else {
-          (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, 2, -1, NULL);
+    state = obj->state;
+    if (count > 0)
+    {
+        for (i = 0; i < count; i++)
+        {
+            {
+                u16 sx = state->extentX;
+                args.vec[0] = (f32)(s32)
+                randomGetRange(-sx, sx);
+            }
+            {
+                u16 sy = state->extentY;
+                args.vec[1] = (f32)(s32)
+                randomGetRange(-sy, sy);
+            }
+            {
+                u16 sz = state->extentZ;
+                args.vec[2] = (f32)(s32)
+                randomGetRange(-sz, sz);
+            }
+            vecRotateZXY(state->emitAngles, args.vec);
+            {
+                u8 type = state->emitType;
+                if (type == 4 || type == 6)
+                {
+                    args.vec[0] += obj->objAnim.localPosX;
+                    args.vec[1] += obj->objAnim.localPosY;
+                    args.vec[2] += obj->objAnim.localPosZ;
+                    (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, 0x200001, -1, NULL);
+                }
+                else
+                {
+                    (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, 2, -1, NULL);
+                }
+            }
         }
-      }
     }
-  }
 }
 #pragma dont_inline reset
 
@@ -284,192 +298,229 @@ void areafxemit_emitBurst(AreaFxEmitObject *obj, int count)
  */
 void FUN_8018f650(void)
 {
-  byte bVar1;
-  int iVar2;
-  int *piVar3;
-  short sVar4;
-  int iVar5;
-  double in_f31;
-  double dVar6;
-  double in_ps31_1;
-  ushort local_68;
-  undefined2 local_66;
-  short local_64;
-  undefined auStack_60 [8];
-  float local_58;
-  float local_54;
-  float local_50;
-  float local_4c;
-  undefined4 local_48;
-  uint uStack_44;
-  undefined4 local_40;
-  uint uStack_3c;
-  undefined4 local_38;
-  uint uStack_34;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  iVar2 = FUN_8028683c();
-  iVar5 = *(int *)(iVar2 + 0xb8);
-  local_58 = FLOAT_803e4b00;
-  bVar1 = *(byte *)(iVar5 + 8);
-  if (bVar1 == 0) {
-    if (*(short *)(iVar5 + 0xc) < 1) {
-      uStack_34 = randomGetRange(-(uint)*(ushort *)(iVar5 + 0x14),(uint)*(ushort *)(iVar5 + 0x14));
-      local_54 = (f32)(s32)uStack_34;
-      uStack_3c = randomGetRange(-(uint)*(ushort *)(iVar5 + 0x18),(uint)*(ushort *)(iVar5 + 0x18));
-      local_50 = (f32)(s32)uStack_3c;
-      uStack_44 = randomGetRange(-(uint)*(ushort *)(iVar5 + 0x16),(uint)*(ushort *)(iVar5 + 0x16));
-      local_4c = (f32)(s32)uStack_44;
-      local_68 = *(ushort *)(iVar5 + 0x1a);
-      local_66 = *(undefined2 *)(iVar5 + 0x1c);
-      local_64 = *(short *)(iVar5 + 0x1e);
-      if (*(int *)(iVar2 + 0x30) != 0) {
-        local_64 = local_64 + *(short *)(*(int *)(iVar2 + 0x30) + 4);
-      }
-      FUN_80017748(&local_68,&local_54);
-      local_54 = local_54 + *(float *)(iVar2 + 0xc);
-      local_50 = local_50 + *(float *)(iVar2 + 0x10);
-      local_4c = local_4c + *(float *)(iVar2 + 0x14);
-      (*gPartfxInterface)->spawnObject((void *)iVar2, *(undefined2 *)(iVar5 + 10),
-                                       auStack_60, 0x200001, -1, NULL);
-    }
-    else {
-      dVar6 = DOUBLE_803e4af8;
-      for (sVar4 = 0; sVar4 < *(short *)(iVar5 + 0xc); sVar4 = sVar4 + 1) {
-        uStack_44 = randomGetRange(-(uint)*(ushort *)(iVar5 + 0x14),(uint)*(ushort *)(iVar5 + 0x14));
-        local_54 = (float)((double)CONCAT44(0x43300000,uStack_44) - dVar6);
-        uStack_3c = randomGetRange(-(uint)*(ushort *)(iVar5 + 0x18),(uint)*(ushort *)(iVar5 + 0x18));
-        local_50 = (float)((double)CONCAT44(0x43300000,uStack_3c) - dVar6);
-        uStack_34 = randomGetRange(-(uint)*(ushort *)(iVar5 + 0x16),(uint)*(ushort *)(iVar5 + 0x16));
-        local_4c = (float)((double)CONCAT44(0x43300000,uStack_34) - dVar6);
-        local_68 = *(ushort *)(iVar5 + 0x1a);
-        local_66 = *(undefined2 *)(iVar5 + 0x1c);
-        local_64 = *(short *)(iVar5 + 0x1e);
-        if (*(int *)(iVar2 + 0x30) != 0) {
-          local_64 = local_64 + *(short *)(*(int *)(iVar2 + 0x30) + 4);
+    byte bVar1;
+    int iVar2;
+    int* piVar3;
+    short sVar4;
+    int iVar5;
+    double in_f31;
+    double dVar6;
+    double in_ps31_1;
+    ushort local_68;
+    undefined2 local_66;
+    short local_64;
+    undefined auStack_60[8];
+    float local_58;
+    float local_54;
+    float local_50;
+    float local_4c;
+    undefined4 local_48;
+    uint uStack_44;
+    undefined4 local_40;
+    uint uStack_3c;
+    undefined4 local_38;
+    uint uStack_34;
+    float local_8;
+    float fStack_4;
+
+    local_8 = (float)in_f31;
+    fStack_4 = (float)in_ps31_1;
+    iVar2 = FUN_8028683c();
+    iVar5 = *(int*)(iVar2 + 0xb8);
+    local_58 = FLOAT_803e4b00;
+    bVar1 = *(byte*)(iVar5 + 8);
+    if (bVar1 == 0)
+    {
+        if (*(short*)(iVar5 + 0xc) < 1)
+        {
+            uStack_34 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x14), (uint) * (ushort*)(iVar5 + 0x14));
+            local_54 = (f32)(s32)
+            uStack_34;
+            uStack_3c = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x18), (uint) * (ushort*)(iVar5 + 0x18));
+            local_50 = (f32)(s32)
+            uStack_3c;
+            uStack_44 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x16), (uint) * (ushort*)(iVar5 + 0x16));
+            local_4c = (f32)(s32)
+            uStack_44;
+            local_68 = *(ushort*)(iVar5 + 0x1a);
+            local_66 = *(undefined2*)(iVar5 + 0x1c);
+            local_64 = *(short*)(iVar5 + 0x1e);
+            if (*(int*)(iVar2 + 0x30) != 0)
+            {
+                local_64 = local_64 + *(short*)(*(int*)(iVar2 + 0x30) + 4);
+            }
+            FUN_80017748(&local_68, &local_54);
+            local_54 = local_54 + *(float*)(iVar2 + 0xc);
+            local_50 = local_50 + *(float*)(iVar2 + 0x10);
+            local_4c = local_4c + *(float*)(iVar2 + 0x14);
+            (*gPartfxInterface)->spawnObject((void*)iVar2, *(undefined2*)(iVar5 + 10),
+                                             auStack_60, 0x200001, -1, NULL);
         }
-        FUN_80017748(&local_68,&local_54);
-        local_54 = local_54 + *(float *)(iVar2 + 0xc);
-        local_50 = local_50 + *(float *)(iVar2 + 0x10);
-        local_4c = local_4c + *(float *)(iVar2 + 0x14);
-        (*gPartfxInterface)->spawnObject((void *)iVar2, *(undefined2 *)(iVar5 + 10),
-                                         auStack_60, 0x200001, -1, NULL);
-      }
-    }
-  }
-  else if (bVar1 == 1) {
-    piVar3 = (int *)FUN_80006b14(*(ushort *)(iVar5 + 10) + 0x58 & 0xffff);
-    if (*(short *)(iVar5 + 0xc) < 1) {
-      (**(code **)(*piVar3 + 4))(iVar2,0,0,1,0xffffffff,0);
-    }
-    else {
-      for (sVar4 = 0; sVar4 < *(short *)(iVar5 + 0xc); sVar4 = sVar4 + 1) {
-        (**(code **)(*piVar3 + 4))(iVar2,0,0,1,0xffffffff,0);
-      }
-    }
-    FUN_80006b0c((undefined *)piVar3);
-  }
-  else if (bVar1 == 2) {
-    piVar3 = (int *)FUN_80006b14(*(ushort *)(iVar5 + 10) + 0xab & 0xffff);
-    if (*(short *)(iVar5 + 0xc) < 1) {
-      (**(code **)(*piVar3 + 4))(iVar2,0,0,1,0xffffffff,*(ushort *)(iVar5 + 10) & 0xff,0);
-    }
-    else {
-      for (sVar4 = 0; sVar4 < *(short *)(iVar5 + 0xc); sVar4 = sVar4 + 1) {
-        (**(code **)(*piVar3 + 4))(iVar2,0,0,1,0xffffffff,*(ushort *)(iVar5 + 10) & 0xff,0);
-      }
-    }
-    FUN_80006b0c((undefined *)piVar3);
-  }
-  else if (bVar1 == 3) {
-    if (*(short *)(iVar5 + 0xc) < 1) {
-      uStack_34 = randomGetRange(-(uint)*(ushort *)(iVar5 + 0x14),(uint)*(ushort *)(iVar5 + 0x14));
-      local_54 = (f32)(s32)uStack_34;
-      uStack_3c = randomGetRange(-(uint)*(ushort *)(iVar5 + 0x18),(uint)*(ushort *)(iVar5 + 0x18));
-      local_50 = (f32)(s32)uStack_3c;
-      uStack_44 = randomGetRange(-(uint)*(ushort *)(iVar5 + 0x16),(uint)*(ushort *)(iVar5 + 0x16));
-      local_4c = (f32)(s32)uStack_44;
-      local_68 = *(ushort *)(iVar5 + 0x1a);
-      local_66 = *(undefined2 *)(iVar5 + 0x1c);
-      local_64 = *(short *)(iVar5 + 0x1e);
-      if (*(int *)(iVar2 + 0x30) != 0) {
-        local_64 = local_64 + *(short *)(*(int *)(iVar2 + 0x30) + 4);
-      }
-      FUN_80017748(&local_68,&local_54);
-      (*gPartfxInterface)->spawnObject((void *)iVar2, *(undefined2 *)(iVar5 + 10),
-                                       auStack_60, 2, -1, NULL);
-    }
-    else {
-      dVar6 = DOUBLE_803e4af8;
-      for (sVar4 = 0; sVar4 < *(short *)(iVar5 + 0xc); sVar4 = sVar4 + 1) {
-        uStack_34 = randomGetRange(-(uint)*(ushort *)(iVar5 + 0x14),(uint)*(ushort *)(iVar5 + 0x14));
-        local_54 = (float)((double)CONCAT44(0x43300000,uStack_34) - dVar6);
-        uStack_3c = randomGetRange(-(uint)*(ushort *)(iVar5 + 0x18),(uint)*(ushort *)(iVar5 + 0x18));
-        local_50 = (float)((double)CONCAT44(0x43300000,uStack_3c) - dVar6);
-        uStack_44 = randomGetRange(-(uint)*(ushort *)(iVar5 + 0x16),(uint)*(ushort *)(iVar5 + 0x16));
-        local_4c = (float)((double)CONCAT44(0x43300000,uStack_44) - dVar6);
-        local_68 = *(ushort *)(iVar5 + 0x1a);
-        local_66 = *(undefined2 *)(iVar5 + 0x1c);
-        local_64 = *(short *)(iVar5 + 0x1e);
-        if (*(int *)(iVar2 + 0x30) != 0) {
-          local_64 = local_64 + *(short *)(*(int *)(iVar2 + 0x30) + 4);
+        else
+        {
+            dVar6 = DOUBLE_803e4af8;
+            for (sVar4 = 0; sVar4 < *(short*)(iVar5 + 0xc); sVar4 = sVar4 + 1)
+            {
+                uStack_44 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x14), (uint) * (ushort*)(iVar5 + 0x14));
+                local_54 = (float)((double)CONCAT44(0x43300000, uStack_44) - dVar6);
+                uStack_3c = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x18), (uint) * (ushort*)(iVar5 + 0x18));
+                local_50 = (float)((double)CONCAT44(0x43300000, uStack_3c) - dVar6);
+                uStack_34 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x16), (uint) * (ushort*)(iVar5 + 0x16));
+                local_4c = (float)((double)CONCAT44(0x43300000, uStack_34) - dVar6);
+                local_68 = *(ushort*)(iVar5 + 0x1a);
+                local_66 = *(undefined2*)(iVar5 + 0x1c);
+                local_64 = *(short*)(iVar5 + 0x1e);
+                if (*(int*)(iVar2 + 0x30) != 0)
+                {
+                    local_64 = local_64 + *(short*)(*(int*)(iVar2 + 0x30) + 4);
+                }
+                FUN_80017748(&local_68, &local_54);
+                local_54 = local_54 + *(float*)(iVar2 + 0xc);
+                local_50 = local_50 + *(float*)(iVar2 + 0x10);
+                local_4c = local_4c + *(float*)(iVar2 + 0x14);
+                (*gPartfxInterface)->spawnObject((void*)iVar2, *(undefined2*)(iVar5 + 10),
+                                                 auStack_60, 0x200001, -1, NULL);
+            }
         }
-        FUN_80017748(&local_68,&local_54);
-        (*gPartfxInterface)->spawnObject((void *)iVar2, *(undefined2 *)(iVar5 + 10),
-                                         auStack_60, 2, -1, NULL);
-      }
     }
-  }
-  else if (5 < bVar1) {
-    if (*(short *)(iVar5 + 0xc) < 1) {
-      uStack_34 = randomGetRange(-(uint)*(ushort *)(iVar5 + 0x14),(uint)*(ushort *)(iVar5 + 0x14));
-      local_54 = (f32)(s32)uStack_34;
-      uStack_3c = randomGetRange(-(uint)*(ushort *)(iVar5 + 0x18),(uint)*(ushort *)(iVar5 + 0x18));
-      local_50 = (f32)(s32)uStack_3c;
-      uStack_44 = randomGetRange(-(uint)*(ushort *)(iVar5 + 0x16),(uint)*(ushort *)(iVar5 + 0x16));
-      local_4c = (f32)(s32)uStack_44;
-      FUN_80017748((ushort *)(iVar5 + 0x1a),&local_54);
-      if (*(char *)(iVar5 + 8) == '\x06') {
-        local_54 = local_54 + *(float *)(iVar2 + 0xc);
-        local_50 = local_50 + *(float *)(iVar2 + 0x10);
-        local_4c = local_4c + *(float *)(iVar2 + 0x14);
-        (*gPartfxInterface)->spawnObject((void *)iVar2, *(undefined2 *)(iVar5 + 10),
-                                         auStack_60, 0x200001, -1, NULL);
-      }
-      else {
-        (*gPartfxInterface)->spawnObject((void *)iVar2, *(undefined2 *)(iVar5 + 10),
-                                         auStack_60, 2, -1, NULL);
-      }
-    }
-    else {
-      dVar6 = DOUBLE_803e4af8;
-      for (sVar4 = 0; sVar4 < *(short *)(iVar5 + 0xc); sVar4 = sVar4 + 1) {
-        uStack_34 = randomGetRange(-(uint)*(ushort *)(iVar5 + 0x14),(uint)*(ushort *)(iVar5 + 0x14));
-        local_54 = (float)((double)CONCAT44(0x43300000,uStack_34) - dVar6);
-        uStack_3c = randomGetRange(-(uint)*(ushort *)(iVar5 + 0x18),(uint)*(ushort *)(iVar5 + 0x18));
-        local_50 = (float)((double)CONCAT44(0x43300000,uStack_3c) - dVar6);
-        uStack_44 = randomGetRange(-(uint)*(ushort *)(iVar5 + 0x16),(uint)*(ushort *)(iVar5 + 0x16));
-        local_4c = (float)((double)CONCAT44(0x43300000,uStack_44) - dVar6);
-        FUN_80017748((ushort *)(iVar5 + 0x1a),&local_54);
-        if (*(char *)(iVar5 + 8) == '\x06') {
-          local_54 = local_54 + *(float *)(iVar2 + 0xc);
-          local_50 = local_50 + *(float *)(iVar2 + 0x10);
-          local_4c = local_4c + *(float *)(iVar2 + 0x14);
-          (*gPartfxInterface)->spawnObject((void *)iVar2, *(undefined2 *)(iVar5 + 10),
-                                           auStack_60, 0x200001, -1, NULL);
+    else if (bVar1 == 1)
+    {
+        piVar3 = (int*)FUN_80006b14(*(ushort*)(iVar5 + 10) + 0x58 & 0xffff);
+        if (*(short*)(iVar5 + 0xc) < 1)
+        {
+            (**(code**)(*piVar3 + 4))(iVar2, 0, 0, 1, 0xffffffff, 0);
         }
-        else {
-          (*gPartfxInterface)->spawnObject((void *)iVar2, *(undefined2 *)(iVar5 + 10),
-                                           auStack_60, 2, -1, NULL);
+        else
+        {
+            for (sVar4 = 0; sVar4 < *(short*)(iVar5 + 0xc); sVar4 = sVar4 + 1)
+            {
+                (**(code**)(*piVar3 + 4))(iVar2, 0, 0, 1, 0xffffffff, 0);
+            }
         }
-      }
+        FUN_80006b0c((undefined*)piVar3);
     }
-  }
-  FUN_80286888();
-  return;
+    else if (bVar1 == 2)
+    {
+        piVar3 = (int*)FUN_80006b14(*(ushort*)(iVar5 + 10) + 0xab & 0xffff);
+        if (*(short*)(iVar5 + 0xc) < 1)
+        {
+            (**(code**)(*piVar3 + 4))(iVar2, 0, 0, 1, 0xffffffff, *(ushort*)(iVar5 + 10) & 0xff, 0);
+        }
+        else
+        {
+            for (sVar4 = 0; sVar4 < *(short*)(iVar5 + 0xc); sVar4 = sVar4 + 1)
+            {
+                (**(code**)(*piVar3 + 4))(iVar2, 0, 0, 1, 0xffffffff, *(ushort*)(iVar5 + 10) & 0xff, 0);
+            }
+        }
+        FUN_80006b0c((undefined*)piVar3);
+    }
+    else if (bVar1 == 3)
+    {
+        if (*(short*)(iVar5 + 0xc) < 1)
+        {
+            uStack_34 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x14), (uint) * (ushort*)(iVar5 + 0x14));
+            local_54 = (f32)(s32)
+            uStack_34;
+            uStack_3c = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x18), (uint) * (ushort*)(iVar5 + 0x18));
+            local_50 = (f32)(s32)
+            uStack_3c;
+            uStack_44 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x16), (uint) * (ushort*)(iVar5 + 0x16));
+            local_4c = (f32)(s32)
+            uStack_44;
+            local_68 = *(ushort*)(iVar5 + 0x1a);
+            local_66 = *(undefined2*)(iVar5 + 0x1c);
+            local_64 = *(short*)(iVar5 + 0x1e);
+            if (*(int*)(iVar2 + 0x30) != 0)
+            {
+                local_64 = local_64 + *(short*)(*(int*)(iVar2 + 0x30) + 4);
+            }
+            FUN_80017748(&local_68, &local_54);
+            (*gPartfxInterface)->spawnObject((void*)iVar2, *(undefined2*)(iVar5 + 10),
+                                             auStack_60, 2, -1, NULL);
+        }
+        else
+        {
+            dVar6 = DOUBLE_803e4af8;
+            for (sVar4 = 0; sVar4 < *(short*)(iVar5 + 0xc); sVar4 = sVar4 + 1)
+            {
+                uStack_34 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x14), (uint) * (ushort*)(iVar5 + 0x14));
+                local_54 = (float)((double)CONCAT44(0x43300000, uStack_34) - dVar6);
+                uStack_3c = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x18), (uint) * (ushort*)(iVar5 + 0x18));
+                local_50 = (float)((double)CONCAT44(0x43300000, uStack_3c) - dVar6);
+                uStack_44 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x16), (uint) * (ushort*)(iVar5 + 0x16));
+                local_4c = (float)((double)CONCAT44(0x43300000, uStack_44) - dVar6);
+                local_68 = *(ushort*)(iVar5 + 0x1a);
+                local_66 = *(undefined2*)(iVar5 + 0x1c);
+                local_64 = *(short*)(iVar5 + 0x1e);
+                if (*(int*)(iVar2 + 0x30) != 0)
+                {
+                    local_64 = local_64 + *(short*)(*(int*)(iVar2 + 0x30) + 4);
+                }
+                FUN_80017748(&local_68, &local_54);
+                (*gPartfxInterface)->spawnObject((void*)iVar2, *(undefined2*)(iVar5 + 10),
+                                                 auStack_60, 2, -1, NULL);
+            }
+        }
+    }
+    else if (5 < bVar1)
+    {
+        if (*(short*)(iVar5 + 0xc) < 1)
+        {
+            uStack_34 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x14), (uint) * (ushort*)(iVar5 + 0x14));
+            local_54 = (f32)(s32)
+            uStack_34;
+            uStack_3c = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x18), (uint) * (ushort*)(iVar5 + 0x18));
+            local_50 = (f32)(s32)
+            uStack_3c;
+            uStack_44 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x16), (uint) * (ushort*)(iVar5 + 0x16));
+            local_4c = (f32)(s32)
+            uStack_44;
+            FUN_80017748((ushort*)(iVar5 + 0x1a), &local_54);
+            if (*(char*)(iVar5 + 8) == '\x06')
+            {
+                local_54 = local_54 + *(float*)(iVar2 + 0xc);
+                local_50 = local_50 + *(float*)(iVar2 + 0x10);
+                local_4c = local_4c + *(float*)(iVar2 + 0x14);
+                (*gPartfxInterface)->spawnObject((void*)iVar2, *(undefined2*)(iVar5 + 10),
+                                                 auStack_60, 0x200001, -1, NULL);
+            }
+            else
+            {
+                (*gPartfxInterface)->spawnObject((void*)iVar2, *(undefined2*)(iVar5 + 10),
+                                                 auStack_60, 2, -1, NULL);
+            }
+        }
+        else
+        {
+            dVar6 = DOUBLE_803e4af8;
+            for (sVar4 = 0; sVar4 < *(short*)(iVar5 + 0xc); sVar4 = sVar4 + 1)
+            {
+                uStack_34 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x14), (uint) * (ushort*)(iVar5 + 0x14));
+                local_54 = (float)((double)CONCAT44(0x43300000, uStack_34) - dVar6);
+                uStack_3c = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x18), (uint) * (ushort*)(iVar5 + 0x18));
+                local_50 = (float)((double)CONCAT44(0x43300000, uStack_3c) - dVar6);
+                uStack_44 = randomGetRange(-(uint) * (ushort*)(iVar5 + 0x16), (uint) * (ushort*)(iVar5 + 0x16));
+                local_4c = (float)((double)CONCAT44(0x43300000, uStack_44) - dVar6);
+                FUN_80017748((ushort*)(iVar5 + 0x1a), &local_54);
+                if (*(char*)(iVar5 + 8) == '\x06')
+                {
+                    local_54 = local_54 + *(float*)(iVar2 + 0xc);
+                    local_50 = local_50 + *(float*)(iVar2 + 0x10);
+                    local_4c = local_4c + *(float*)(iVar2 + 0x14);
+                    (*gPartfxInterface)->spawnObject((void*)iVar2, *(undefined2*)(iVar5 + 10),
+                                                     auStack_60, 0x200001, -1, NULL);
+                }
+                else
+                {
+                    (*gPartfxInterface)->spawnObject((void*)iVar2, *(undefined2*)(iVar5 + 10),
+                                                     auStack_60, 2, -1, NULL);
+                }
+            }
+        }
+    }
+    FUN_80286888();
+    return;
 }
 
 
@@ -592,11 +643,12 @@ void FUN_8018f650(void)
 #pragma peephole off
 void warpPadFn_8019042c(int param_1)
 {
-    WarpPadState *state;
+    WarpPadState* state;
     int player;
     u8 flags;
     u8 i;
-    struct {
+    struct
+    {
         s16 unk0;
         s16 mode;
         s16 effectId;
@@ -605,89 +657,129 @@ void warpPadFn_8019042c(int param_1)
         f32 pos[3];
     } fx;
 
-    state = ((GameObject *)param_1)->extra;
+    state = ((GameObject*)param_1)->extra;
     player = Obj_GetPlayerObject();
     fx.pos[0] = lbl_803E3E98;
     fx.pos[1] = lbl_803E3E9C;
     fx.pos[2] = lbl_803E3E98;
     flags = state->flags;
 
-    if ((flags & 0x40) != 0) {
-        if ((flags & 8) != 0) {
+    if ((flags & 0x40) != 0)
+    {
+        if ((flags & 8) != 0)
+        {
             fx.effectId = 0xc0e;
             fx.mode = 1;
-        } else if ((flags & 0x10) != 0) {
+        }
+        else if ((flags & 0x10) != 0)
+        {
             fx.effectId = 0xc7e;
             fx.mode = 2;
-        } else {
+        }
+        else
+        {
             fx.effectId = 0xc13;
             fx.mode = 0;
         }
-    } else if ((flags & 8) != 0) {
-        if (vec3f_distanceSquared(&((GameObject *)param_1)->anim.worldPosX, (f32 *)(player + 0x18)) < lbl_803E3EA0) {
-            if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0)) {
+    }
+    else if ((flags & 8) != 0)
+    {
+        if (vec3f_distanceSquared(&((GameObject*)param_1)->anim.worldPosX, (f32*)(player + 0x18)) < lbl_803E3EA0)
+        {
+            if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0))
+            {
                 objfx_spawnArcedBurst(param_1, 1, lbl_803E3EA4, 2, 7, 100,
-                                       lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
-            } else {
+                                      lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
+            }
+            else
+            {
                 objfx_spawnArcedBurst(param_1, 1, lbl_803E3EB0, 1, 6, 100,
-                                       lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
+                                      lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
             }
         }
         fx.effectId = 0xc0e;
         fx.mode = 1;
-    } else if ((flags & 0x10) != 0) {
-        if (vec3f_distanceSquared(&((GameObject *)param_1)->anim.worldPosX, (f32 *)(player + 0x18)) < lbl_803E3EA0) {
-            if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0)) {
+    }
+    else if ((flags & 0x10) != 0)
+    {
+        if (vec3f_distanceSquared(&((GameObject*)param_1)->anim.worldPosX, (f32*)(player + 0x18)) < lbl_803E3EA0)
+        {
+            if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0))
+            {
                 objfx_spawnArcedBurst(param_1, 1, lbl_803E3EA4, 2, 7, 100,
-                                       lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
-            } else {
+                                      lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
+            }
+            else
+            {
                 objfx_spawnArcedBurst(param_1, 1, lbl_803E3EB0, 5, 6, 100,
-                                       lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
+                                      lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
             }
         }
         fx.effectId = 0xc7e;
         fx.mode = 2;
-    } else {
-        if (vec3f_distanceSquared(&((GameObject *)param_1)->anim.worldPosX, (f32 *)(player + 0x18)) < lbl_803E3EA0) {
-            if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0)) {
+    }
+    else
+    {
+        if (vec3f_distanceSquared(&((GameObject*)param_1)->anim.worldPosX, (f32*)(player + 0x18)) < lbl_803E3EA0)
+        {
+            if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0))
+            {
                 objfx_spawnArcedBurst(param_1, 1, lbl_803E3EA4, 2, 7, 100,
-                                       lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
-            } else {
+                                      lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
+            }
+            else
+            {
                 objfx_spawnArcedBurst(param_1, 1, lbl_803E3EB0, 3, 6, 100,
-                                       lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
+                                      lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
             }
         }
         fx.effectId = 0xc13;
         fx.mode = 0;
     }
 
-    if ((state->flags & 4) != 0) {
-        if (state->pulseTimer < lbl_803E3EB4) {
-            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0) {
-                (*gPartfxInterface)->spawnObject((void *)param_1, 0x7ca, &fx, 2, -1, NULL);
+    if ((state->flags & 4) != 0)
+    {
+        if (state->pulseTimer < lbl_803E3EB4)
+        {
+            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0
+            )
+            {
+                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7ca, &fx, 2, -1, NULL);
             }
-        } else if (state->pulseTimer < lbl_803E3EB8) {
-            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer / lbl_803E3EBC) {
-                (*gPartfxInterface)->spawnObject((void *)param_1, 0x7ca, &fx, 2, -1, NULL);
+        }
+        else if (state->pulseTimer < lbl_803E3EB8)
+        {
+            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer / lbl_803E3EBC
+            )
+            {
+                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7ca, &fx, 2, -1, NULL);
             }
             fx.count = 0x28;
             fx.unk0 = 0;
             fx.scale = lbl_803E3EC0 * ((state->pulseTimer - lbl_803E3EB4) / lbl_803E3EC4);
-            (*gPartfxInterface)->spawnObject((void *)param_1, 0x7d2, &fx, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7d2, &fx, 2, -1, NULL);
             state->flags = state->flags | 2;
-        } else if (state->pulseTimer < lbl_803E3EC8) {
-            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0) {
-                (*gPartfxInterface)->spawnObject((void *)param_1, 0x7ca, &fx, 2, -1, NULL);
+        }
+        else if (state->pulseTimer < lbl_803E3EC8)
+        {
+            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0
+            )
+            {
+                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7ca, &fx, 2, -1, NULL);
             }
-            if ((state->flags & 2) != 0) {
+            if ((state->flags & 2) != 0)
+            {
                 state->flags = state->flags & ~2;
                 fx.count = 0x46;
                 fx.scale = lbl_803E3ECC;
-                for (i = 0xf; i != 0; i--) {
-                    (*gPartfxInterface)->spawnObject((void *)param_1, 0x7d2, &fx, 2, -1, NULL);
+                for (i = 0xf; i != 0; i--)
+                {
+                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7d2, &fx, 2, -1, NULL);
                 }
             }
-        } else if (state->pulseTimer >= lbl_803E3ED0) {
+        }
+        else if (state->pulseTimer >= lbl_803E3ED0)
+        {
             state->pulseTimer = lbl_803E3E98;
             state->flags = state->flags & ~4;
         }
@@ -700,8 +792,8 @@ extern u8 lbl_803AC7B0[];
 extern void mm_free(void* p);
 
 
-
-typedef struct CFEmitterFxArgs {
+typedef struct CFEmitterFxArgs
+{
     u32 unk0;
     u32 unk4;
     f32 scale;
@@ -742,9 +834,9 @@ typedef struct CFEmitterFxArgs {
         (args)->pos[2] += (obj)->objAnim.localPosZ;               \
     } while (0)
 
-void areafxemit_emitEffect(AreaFxEmitObject *obj)
+void areafxemit_emitEffect(AreaFxEmitObject* obj)
 {
-    AreaFxEmitState *state;
+    AreaFxEmitState* state;
     int count;
     s16 i;
     u8 type;
@@ -756,84 +848,121 @@ void areafxemit_emitEffect(AreaFxEmitObject *obj)
     type = state->emitType;
     count = state->emitCount;
 
-    if (type == 0) {
-        if (count > 0) {
-            for (i = 0; i < count; i++) {
+    if (type == 0)
+    {
+        if (count > 0)
+        {
+            for (i = 0; i < count; i++)
+            {
                 CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
                 CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args);
                 CF_EMITTER_ADD_OBJECT_POSITION(obj, &args);
                 CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 0x200001, -1, 0);
             }
-        } else {
+        }
+        else
+        {
             CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
             CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args);
             CF_EMITTER_ADD_OBJECT_POSITION(obj, &args);
             CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 0x200001, -1, 0);
         }
-    } else if (type == 1) {
+    }
+    else if (type == 1)
+    {
         resource = Resource_Acquire((u16)(state->effectId + 0x58), 1);
-        if (count > 0) {
-            for (i = 0; i < count; i++) {
+        if (count > 0)
+        {
+            for (i = 0; i < count; i++)
+            {
                 (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))((int)obj, 0, 0, 1, -1, 0);
             }
-        } else {
+        }
+        else
+        {
             (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))((int)obj, 0, 0, 1, -1, 0);
         }
         Resource_Release(resource);
-    } else if (type == 2) {
+    }
+    else if (type == 2)
+    {
         resource = Resource_Acquire((u16)(state->effectId + 0xab), 1);
-        if (count > 0) {
-            for (i = 0; i < count; i++) {
+        if (count > 0)
+        {
+            for (i = 0; i < count; i++)
+            {
                 (*(void (**)(int, int, int, int, int, int, int))(*(int*)resource + 4))(
                     (int)obj, 0, 0, 1, -1, state->effectId & 0xff, 0);
             }
-        } else {
+        }
+        else
+        {
             (*(void (**)(int, int, int, int, int, int, int))(*(int*)resource + 4))(
                 (int)obj, 0, 0, 1, -1, state->effectId & 0xff, 0);
         }
         Resource_Release(resource);
-    } else if (type == 3) {
-        if (count > 0) {
-            for (i = 0; i < count; i++) {
+    }
+    else if (type == 3)
+    {
+        if (count > 0)
+        {
+            for (i = 0; i < count; i++)
+            {
                 CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
                 CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args);
                 CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 2, -1, 0);
             }
-        } else {
+        }
+        else
+        {
             CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
             CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args);
             CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 2, -1, 0);
         }
-    } else if (type > 5) {
-        if (count > 0) {
-            for (i = 0; i < count; i++) {
+    }
+    else if (type > 5)
+    {
+        if (count > 0)
+        {
+            for (i = 0; i < count; i++)
+            {
                 CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
                 vecRotateZXY(state->emitAngles, args.pos);
-                if (state->emitType == 6) {
+                if (state->emitType == 6)
+                {
                     CF_EMITTER_ADD_OBJECT_POSITION(obj, &args);
                     CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 0x200001, -1, 0);
-                } else {
+                }
+                else
+                {
                     CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 2, -1, 0);
                 }
             }
-        } else {
+        }
+        else
+        {
             CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
             vecRotateZXY(state->emitAngles, args.pos);
-            if (state->emitType == 6) {
+            if (state->emitType == 6)
+            {
                 CF_EMITTER_ADD_OBJECT_POSITION(obj, &args);
                 CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 0x200001, -1, 0);
-            } else {
+            }
+            else
+            {
                 CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 2, -1, 0);
             }
         }
     }
 }
 
-int areafxemit_SeqFn(AreaFxEmitObject *obj, int unused, ObjAnimUpdateState *animUpdate)
+int areafxemit_SeqFn(AreaFxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     u8 i;
-    for (i = 0; i < animUpdate->eventCount; i++) {
-        switch ((s32)animUpdate->eventIds[i]) {
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
+        switch ((s32)animUpdate->eventIds[i])
+        {
         case 1:
             areafxemit_emitEffect(obj);
             break;
@@ -842,10 +971,10 @@ int areafxemit_SeqFn(AreaFxEmitObject *obj, int unused, ObjAnimUpdateState *anim
     return 0;
 }
 
-void areafxemit_update(AreaFxEmitObject *obj)
+void areafxemit_update(AreaFxEmitObject* obj)
 {
-    AreaFxEmitState *state;
-    ObjAnimComponent *player;
+    AreaFxEmitState* state;
+    ObjAnimComponent* player;
     s16 period;
     f32 xDelta;
     f32 yDelta;
@@ -854,41 +983,49 @@ void areafxemit_update(AreaFxEmitObject *obj)
     f32 radius;
 
     state = obj->state;
-    player = (ObjAnimComponent *)Obj_GetPlayerObject();
+    player = (ObjAnimComponent*)Obj_GetPlayerObject();
     if ((player != NULL) &&
         (((state->enableBit == -1) || (GameBit_Get(state->enableBit) != 0)) &&
-         (state->suppressed == 0))) {
-        if (GameBit_Get(state->stopBit) != 0) {
+            (state->suppressed == 0)))
+    {
+        if (GameBit_Get(state->stopBit) != 0)
+        {
             state->suppressed = 1;
         }
         period = state->emitCount;
-        if ((-1 < period) || ((-1 >= period && (obj->emitCooldown < 1)))) {
+        if ((-1 < period) || ((-1 >= period && (obj->emitCooldown < 1))))
+        {
             xDelta = obj->objAnim.worldPosX - player->worldPosX;
             yDelta = obj->objAnim.worldPosY - player->worldPosY;
             zDelta = obj->objAnim.worldPosZ - player->worldPosZ;
-            if (period == 0) {
+            if (period == 0)
+            {
                 state->suppressed = 1;
             }
             distance = sqrtf(zDelta * zDelta + xDelta * xDelta + yDelta * yDelta);
             radius = state->triggerRadius;
-            if (distance <= radius || radius == lbl_803E3E6C) {
+            if (distance <= radius || radius == lbl_803E3E6C)
+            {
                 if ((3 < state->emitType) &&
-                    ((state->lastDistance > radius && (radius != lbl_803E3E6C)))) {
+                    ((state->lastDistance > radius && (radius != lbl_803E3E6C))))
+                {
                     areafxemit_emitBurst(obj, AREAFXEMIT_APPROACH_BURST_COUNT);
                 }
                 areafxemit_emitEffect(obj);
             }
             obj->emitCooldown = -period;
             state->lastDistance = distance;
-        } else if ((period < 0) && (0 < obj->emitCooldown)) {
+        }
+        else if ((period < 0) && (0 < obj->emitCooldown))
+        {
             obj->emitCooldown = obj->emitCooldown - (u32)framesThisStep;
         }
     }
 }
 
-void areafxemit_init(AreaFxEmitObject *obj, AreaFxEmitPlacement *setup)
+void areafxemit_init(AreaFxEmitObject* obj, AreaFxEmitPlacement* setup)
 {
-    AreaFxEmitState *state;
+    AreaFxEmitState* state;
     s16 period;
     s16 angle;
 
@@ -918,20 +1055,24 @@ void areafxemit_init(AreaFxEmitObject *obj, AreaFxEmitPlacement *setup)
     obj->objAnim.rotX = angle;
     obj->objAnim.rootMotionScale = lbl_803E3E70;
 
-    if (period < 1) {
+    if (period < 1)
+    {
         obj->emitCooldown = period;
-    } else {
+    }
+    else
+    {
         obj->emitCooldown = 0;
     }
 
-    if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0) {
+    if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0)
+    {
         state->suppressed = 1;
     }
 }
 
-void lfxemitter_init(LfxEmitterObject *obj, LfxEmitterPlacement *setup)
+void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup)
 {
-    LfxEmitterState *state;
+    LfxEmitterState* state;
     int curveFlags;
 
     state = obj->state;
@@ -949,13 +1090,17 @@ void lfxemitter_init(LfxEmitterObject *obj, LfxEmitterPlacement *setup)
     obj->objAnim.localPosY = setup->initialY;
     obj->objAnim.localPosZ = setup->initialZ;
 
-    if (state->lifeTimer != 0) {
+    if (state->lifeTimer != 0)
+    {
         state->hasLifeTimer = 1;
-    } else {
+    }
+    else
+    {
         state->hasLifeTimer = 0;
     }
 
-    if (setup->followCurve != 0) {
+    if (setup->followCurve != 0)
+    {
         state->flags = state->flags | LFXEMITTER_FLAG_FOLLOW_CURVE;
         state->curveSpeed = (f32)setup->curveSpeed / lbl_803E3E84;
         (*gRomCurveInterface)->initCurve(state, obj, lbl_803E3E88, &curveFlags, -1);
@@ -972,7 +1117,7 @@ void lfxemitter_initialise(void)
     *(s16*)(lbl_803AC7B0 + 14) = 10000;
 }
 
-int lfxemitter_func0B(LfxEmitterObject *obj)
+int lfxemitter_func0B(LfxEmitterObject* obj)
 {
     LfxEmitterState* state = obj->state;
     int v = (int)state->config;
@@ -983,11 +1128,11 @@ void fn_8018FF48(undefined2* src, undefined2* dst)
 {
     *dst = *src;
     dst[1] = src[1];
-    ((s16 *)dst)[2] = ((s16 *)src)[2];
-    ((s16 *)dst)[3] = ((s16 *)src)[3];
-    ((s16 *)dst)[4] = ((s16 *)src)[4];
-    ((s16 *)dst)[5] = ((s16 *)src)[5];
-    ((s16 *)dst)[6] = ((s16 *)src)[6];
+    ((s16*)dst)[2] = ((s16*)src)[2];
+    ((s16*)dst)[3] = ((s16*)src)[3];
+    ((s16*)dst)[4] = ((s16*)src)[4];
+    ((s16*)dst)[5] = ((s16*)src)[5];
+    ((s16*)dst)[6] = ((s16*)src)[6];
     dst[7] = src[7];
     *(undefined*)(dst + 9) = *(undefined*)(src + 9);
     *(undefined*)((int)dst + 0x13) = *(undefined*)((int)src + 0x13);
@@ -1013,57 +1158,71 @@ void fn_8018FF48(undefined2* src, undefined2* dst)
     *(undefined*)(dst + 0x14) = *(undefined*)(src + 0x14);
 }
 
-void lfxemitter_update(LfxEmitterObject *obj)
+void lfxemitter_update(LfxEmitterObject* obj)
 {
-    LfxEmitterState *state;
-    ObjAnimComponent *player;
+    LfxEmitterState* state;
+    ObjAnimComponent* player;
     void* config;
 
     state = obj->state;
-    player = (ObjAnimComponent *)Obj_GetPlayerObject();
+    player = (ObjAnimComponent*)Obj_GetPlayerObject();
 
     obj->objAnim.rotX = obj->objAnim.rotX + state->spinYaw;
     obj->objAnim.rotZ = obj->objAnim.rotZ + state->spinRoll;
     obj->objAnim.rotY = obj->objAnim.rotY + state->spinPitch;
 
-    if ((state->flags & LFXEMITTER_FLAG_FOLLOW_CURVE) != 0) {
+    if ((state->flags & LFXEMITTER_FLAG_FOLLOW_CURVE) != 0)
+    {
         if ((Curve_AdvanceAlongPath((int)state, state->curveSpeed) != 0) ||
-            (state->curveIdx != 0)) {
+            (state->curveIdx != 0))
+        {
             (*gRomCurveInterface)->goNextPoint(state);
         }
         obj->objAnim.localPosX = state->curveSample[0];
         obj->objAnim.localPosY = state->curveSample[1];
         obj->objAnim.localPosZ = state->curveSample[2];
-    } else {
+    }
+    else
+    {
         obj->objAnim.localPosX = obj->objAnim.velocityX * timeDelta + obj->objAnim.localPosX;
         obj->objAnim.localPosY = obj->objAnim.velocityY * timeDelta + obj->objAnim.localPosY;
         obj->objAnim.localPosZ = obj->objAnim.velocityZ * timeDelta + obj->objAnim.localPosZ;
-        if (((state->flags & LFXEMITTER_FLAG_DAMP_Y_VELOCITY) != 0) && (obj->objAnim.velocityY > lbl_803E3E78)) {
+        if (((state->flags & LFXEMITTER_FLAG_DAMP_Y_VELOCITY) != 0) && (obj->objAnim.velocityY > lbl_803E3E78))
+        {
             obj->objAnim.velocityY = lbl_803E3E7C * timeDelta + obj->objAnim.velocityY;
         }
     }
 
     if ((player != NULL) &&
-        ((state->enableBit == -1) || (GameBit_Get(state->enableBit) != 0))) {
-        if (state->hasLifeTimer != 0) {
+        ((state->enableBit == -1) || (GameBit_Get(state->enableBit) != 0)))
+    {
+        if (state->hasLifeTimer != 0)
+        {
             state->lifeTimer = state->lifeTimer - framesThisStep;
-            if (state->lifeTimer <= 0) {
+            if (state->lifeTimer <= 0)
+            {
                 Obj_FreeObject((int)obj);
             }
         }
-        if (state->configLoaded == 0) {
-            if (((int)state != 0) && (state->configIndex == (*(u16*)(lbl_803AC7B0 + 0xe) - 1))) {
+        if (state->configLoaded == 0)
+        {
+            if (((int)state != 0) && (state->configIndex == (*(u16*)(lbl_803AC7B0 + 0xe) - 1)))
+            {
                 config = mmAlloc(LFXEMITTER_CONFIG_BYTES, 0x12, 0);
                 state->config = config;
-                if (config != NULL) {
+                if (config != NULL)
+                {
                     fn_8018FF48((undefined2*)lbl_803AC7B0, (undefined2*)config);
                 }
-            } else {
+            }
+            else
+            {
                 config = mmAlloc(LFXEMITTER_CONFIG_BYTES, 0x12, 0);
                 state->config = config;
                 getTabEntry(config, 0xc, state->configIndex * LFXEMITTER_CONFIG_BYTES, LFXEMITTER_CONFIG_BYTES);
                 config = state->config;
-                if (config != NULL) {
+                if (config != NULL)
+                {
                     fn_8018FF48((undefined2*)config, (undefined2*)lbl_803AC7B0);
                 }
             }
@@ -1075,85 +1234,102 @@ void lfxemitter_update(LfxEmitterObject *obj)
 void warpPadPlayerStandingOn(int obj)
 {
     int def;
-    WarpPadState *state;
+    WarpPadState* state;
     int player;
     s16 gameBit;
 
-    def = *(int *)&((GameObject *)obj)->anim.placementData;
-    state = ((GameObject *)obj)->extra;
+    def = *(int*)&((GameObject*)obj)->anim.placementData;
+    state = ((GameObject*)obj)->extra;
     gameBit = *(s16*)(def + 0x20);
-    if (gameBit != -1) {
-        if (GameBit_Get(gameBit) != 0) {
+    if (gameBit != -1)
+    {
+        if (GameBit_Get(gameBit) != 0)
+        {
             state->flags = state->flags & 0x7f;
-        } else {
+        }
+        else
+        {
             state->flags = state->flags | 0x80;
         }
     }
 
-    if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) {
+    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
+    {
         setAButtonIcon(0x1b);
-        if (GameBit_Get(0x912) == 0) {
-            (*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
+        if (GameBit_Get(0x912) == 0)
+        {
+            (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
             GameBit_Set(0x912, 1);
             return;
         }
     }
 
     player = Obj_GetPlayerObject();
-    if (player == 0) {
+    if (player == 0)
+    {
         return;
     }
 
     if ((state->triggerMode == 0) && (state->countdownActive == 0) &&
-        ((((GameObject *)obj)->objectFlags & 0x1000) == 0)) {
-        if (lbl_803DCEB8 > -1) {
+        ((((GameObject*)obj)->objectFlags & 0x1000) == 0))
+    {
+        if (lbl_803DCEB8 > -1)
+        {
             player = Obj_GetPlayerObject();
-            if (Vec_xzDistance((f32*)(obj + 0x18), (f32*)(player + 0x18)) < lbl_803E3EE0) {
-                (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
-                ((GameObject *)obj)->unkF4 = state->activateDelay;
+            if (Vec_xzDistance((f32*)(obj + 0x18), (f32*)(player + 0x18)) < lbl_803E3EE0)
+            {
+                (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
+                ((GameObject*)obj)->unkF4 = state->activateDelay;
                 state->triggerMode = 0;
                 state->countdownActive = 1;
                 lbl_803DCDE0 = 2;
                 goto updateTimer;
             }
         }
-        gameBit = ((WarpPadPlayerStandingOnPlacement *)def)->unk20;
+        gameBit = ((WarpPadPlayerStandingOnPlacement*)def)->unk20;
         if (((gameBit == -1) ||
-             ((GameBit_Get(gameBit) != 0) && ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0))) &&
-            (ObjTrigger_IsSet(obj) != 0)) {
-            (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
-            ((GameObject *)obj)->unkF4 = state->activateDelay;
+                ((GameBit_Get(gameBit) != 0) && ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0))) &&
+            (ObjTrigger_IsSet(obj) != 0))
+        {
+            (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+            ((GameObject*)obj)->unkF4 = state->activateDelay;
             state->triggerMode = 1;
             state->countdownActive = 1;
         }
     }
 
 updateTimer:
-    if (state->countdownActive != 0) {
-        if (((GameObject *)obj)->unkF4 > 0) {
-            ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - framesThisStep;
-        } else {
-            ((GameObject *)obj)->unkF4 = 0;
+    if (state->countdownActive != 0)
+    {
+        if (((GameObject*)obj)->unkF4 > 0)
+        {
+            ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 - framesThisStep;
+        }
+        else
+        {
+            ((GameObject*)obj)->unkF4 = 0;
             state->countdownActive = 0;
         }
     }
     state->cooldownTimer = state->cooldownTimer - timeDelta;
-    if (state->cooldownTimer <= *(f32 *)&lbl_803E3E98) {
+    if (state->cooldownTimer <= *(f32*)&lbl_803E3E98)
+    {
         state->cooldownTimer = lbl_803E3E98;
         state->unk0A = -1;
     }
 }
 
-void areafxemit_free(AreaFxEmitObject *obj)
+void areafxemit_free(AreaFxEmitObject* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void lfxemitter_free(LfxEmitterObject *obj)
+void lfxemitter_free(LfxEmitterObject* obj)
 {
     LfxEmitterState* state = obj->state;
     int* ptr = (int*)state->config;
-    if (ptr != NULL) {
+    if (ptr != NULL)
+    {
         mm_free(ptr);
     }
     ObjGroup_RemoveObject((int)obj, LFXEMITTER_OBJ_GROUP);
@@ -1161,14 +1337,37 @@ void lfxemitter_free(LfxEmitterObject *obj)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fxemit_release(void) {}
-void fxemit_initialise(void) {}
-void areafxemit_hitDetect(void) {}
-void areafxemit_release(void) {}
-void areafxemit_initialise(void) {}
-void lfxemitter_render(void) {}
-void lfxemitter_hitDetect(void) {}
-void lfxemitter_release(void) {}
+void fxemit_release(void)
+{
+}
+
+void fxemit_initialise(void)
+{
+}
+
+void areafxemit_hitDetect(void)
+{
+}
+
+void areafxemit_release(void)
+{
+}
+
+void areafxemit_initialise(void)
+{
+}
+
+void lfxemitter_render(void)
+{
+}
+
+void lfxemitter_hitDetect(void)
+{
+}
+
+void lfxemitter_release(void)
+{
+}
 
 /* 8b "li r3, N; blr" returners. */
 int areafxemit_getExtraSize(void) { return 0x20; }

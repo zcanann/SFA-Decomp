@@ -1,8 +1,8 @@
 #include "main/audio/snd_reverb.h"
 
 extern u32 gSalMallocHook[2];
-extern void ReverbSTDCallback(int a, int b, int c, void *state);
-extern int ReverbSTDCreate(void *state, f32 a, f32 b, f32 c, f32 d, f32 e);
+extern void ReverbSTDCallback(int a, int b, int c, void* state);
+extern int ReverbSTDCreate(void* state, f32 a, f32 b, f32 c, f32 d, f32 e);
 
 /*
  * --INFO--
@@ -17,9 +17,9 @@ extern int ReverbSTDCreate(void *state, f32 a, f32 b, f32 c, f32 d, f32 e);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void salFree(void *ptr)
+void salFree(void* ptr)
 {
-    ((void (*)(void *))gSalMallocHook[1])(ptr);
+    ((void (*)(void*))gSalMallocHook[1])(ptr);
 }
 
 /*
@@ -31,11 +31,13 @@ void salFree(void *ptr)
  * EN v1.1 Address: 0x80284BC0
  * EN v1.1 Size: 92b
  */
-void sndAuxCallbackReverbSTD(u8 mode, ReverbParams *params, ReverbState *state)
+void sndAuxCallbackReverbSTD(u8 mode, ReverbParams* params, ReverbState* state)
 {
-    switch ((int)mode) {
+    switch ((int)mode)
+    {
     case 0:
-        if (state->enabled == 0) {
+        if (state->enabled == 0)
+        {
             ReverbSTDCallback(params->p0, params->p4, params->p8, state);
         }
         break;
@@ -53,7 +55,7 @@ void sndAuxCallbackReverbSTD(u8 mode, ReverbParams *params, ReverbState *state)
  * EN v1.1 Address: 0x80284C1C
  * EN v1.1 Size: 60b
  */
-void sndAuxCallbackUpdateSettingsReverbSTD(ReverbState *state)
+void sndAuxCallbackUpdateSettingsReverbSTD(ReverbState* state)
 {
     state->enabled = 0;
     ReverbSTDCreate(state, state->a, state->b, state->c, state->d, state->e);

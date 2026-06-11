@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00A0_CFLightPill_packet_info {
+enum obj_00A0_CFLightPill_packet_info
+{
     CFLIGHTPILL_DEF_ID = 0x00A0,
     CFLIGHTPILL_DLL_ID = 0x012E,
     CFLIGHTPILL_CLASS_ID = 0x0061,

@@ -37,7 +37,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_01FC_LaserBeam_slot {
+enum dll_01FC_LaserBeam_slot
+{
     LASERBEAM_INITIALISE = 0,
     LASERBEAM_RELEASE = 1,
     LASERBEAM_INIT = 3,

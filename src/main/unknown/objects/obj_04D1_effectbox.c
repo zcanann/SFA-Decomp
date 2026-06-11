@@ -52,7 +52,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04D1_EffectBox_packet_info {
+enum obj_04D1_EffectBox_packet_info
+{
     EFFECTBOX_DEF_ID = 0x04D1,
     EFFECTBOX_DLL_ID = 0x00EE,
     EFFECTBOX_CLASS_ID = 0x0009,

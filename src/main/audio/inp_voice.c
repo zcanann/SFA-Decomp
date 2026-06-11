@@ -14,15 +14,16 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int inpGetSurPanning(McmdVoiceState *state)
+int inpGetSurPanning(McmdVoiceState* state)
 {
     /* recipe #57: int return - the inp_ctrl.h u16 prototype adds clrlwi */
-    extern int _GetInputValue(McmdVoiceState *state, McmdInputSlot *slot, u8 midiSlot, u8 midiEvent);
+    extern int _GetInputValue(McmdVoiceState* state, McmdInputSlot* slot, u8 midiSlot, u8 midiEvent);
     int flags;
 
     flags = state->inputDirtyFlags;
-    if ((flags & MCMD_INPUT_DIRTY_SUR_PANNING) == 0) {
-        return *(u16 *)&state->surPanningInput.cachedValue;
+    if ((flags & MCMD_INPUT_DIRTY_SUR_PANNING) == 0)
+    {
+        return *(u16*)&state->surPanningInput.cachedValue;
     }
     state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_SUR_PANNING;
     return _GetInputValue(state, &state->surPanningInput, state->midiSlot, state->midiEvent);
@@ -35,14 +36,15 @@ int inpGetSurPanning(McmdVoiceState *state)
  * EN v1.0 Address: 0x802825D0
  * EN v1.0 Size: 72b
  */
-int inpGetPitchBend(McmdVoiceState *state)
+int inpGetPitchBend(McmdVoiceState* state)
 {
-    extern int _GetInputValue(McmdVoiceState *state, McmdInputSlot *slot, u8 midiSlot, u8 midiEvent);
+    extern int _GetInputValue(McmdVoiceState* state, McmdInputSlot* slot, u8 midiSlot, u8 midiEvent);
     int flags;
 
     flags = state->inputDirtyFlags;
-    if ((flags & MCMD_INPUT_DIRTY_PITCH_BEND) == 0) {
-        return *(u16 *)&state->pitchBendInput.cachedValue;
+    if ((flags & MCMD_INPUT_DIRTY_PITCH_BEND) == 0)
+    {
+        return *(u16*)&state->pitchBendInput.cachedValue;
     }
     state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_PITCH_BEND;
     return _GetInputValue(state, &state->pitchBendInput, state->midiSlot, state->midiEvent);

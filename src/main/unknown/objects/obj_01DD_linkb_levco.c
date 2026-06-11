@@ -59,7 +59,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01DD_LINKB_levco_packet_info {
+enum obj_01DD_LINKB_levco_packet_info
+{
     LINKB_LEVCO_DEF_ID = 0x01DD,
     LINKB_LEVCO_DLL_ID = 0x0172,
     LINKB_LEVCO_CLASS_ID = 0x0061,

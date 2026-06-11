@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0016_TrigCyl_defs {
+enum class_0016_TrigCyl_defs
+{
     TRIGCYL_TRIGCYL = 0x051B,
 };
 #endif

@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_056E_BlueWhiteFl_packet_info {
+enum obj_056E_BlueWhiteFl_packet_info
+{
     BLUEWHITEFL_DEF_ID = 0x056E,
     BLUEWHITEFL_DLL_ID = 0x02AD,
     BLUEWHITEFL_CLASS_ID = 0x007F,

@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0436_GM_MazeWell_packet_info {
+enum obj_0436_GM_MazeWell_packet_info
+{
     GM_MAZEWELL_DEF_ID = 0x0436,
     GM_MAZEWELL_DLL_ID = 0x0263,
     GM_MAZEWELL_CLASS_ID = 0x0030,

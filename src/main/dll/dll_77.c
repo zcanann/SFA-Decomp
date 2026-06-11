@@ -21,9 +21,12 @@
  */
 
 
-
-extern void OSReport(const char *fmt, ...);
+extern void OSReport(const char* fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
-int projquakeshock_doUnsupported(void) { OSReport(sProjquakeshockDoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
+int projquakeshock_doUnsupported(void)
+{
+    OSReport(sProjquakeshockDoNoLongerSupported);
+    return PROJECTILE_UNSUPPORTED_RETURN;
+}

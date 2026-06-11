@@ -36,7 +36,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0068_MoonSeedPlantingSpot_defs {
+enum class_0068_MoonSeedPlantingSpot_defs
+{
     MOONSEEDPLANTINGSPOT_MSPLANTINGS = 0x0512,
     MOONSEEDPLANTINGSPOT_PERCHOBJECT = 0x04A4,
 };

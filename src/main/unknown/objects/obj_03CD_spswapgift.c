@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03CD_SPSwapGift_packet_info {
+enum obj_03CD_SPSwapGift_packet_info
+{
     SPSWAPGIFT_DEF_ID = 0x03CD,
     SPSWAPGIFT_DLL_ID = 0x0284,
     SPSWAPGIFT_CLASS_ID = 0x0070,

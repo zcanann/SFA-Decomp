@@ -63,7 +63,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0232_Androssrigh_packet_info {
+enum obj_0232_Androssrigh_packet_info
+{
     ANDROSSRIGH_DEF_ID = 0x0232,
     ANDROSSRIGH_DLL_ID = 0x02BD,
     ANDROSSRIGH_CLASS_ID = 0x0061,

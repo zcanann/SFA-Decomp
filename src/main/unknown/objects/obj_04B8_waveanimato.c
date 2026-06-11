@@ -54,7 +54,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04B8_WaveAnimato_packet_info {
+enum obj_04B8_WaveAnimato_packet_info
+{
     WAVEANIMATO_DEF_ID = 0x04B8,
     WAVEANIMATO_DLL_ID = 0x0136,
     WAVEANIMATO_CLASS_ID = 0x0048,

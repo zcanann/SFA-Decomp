@@ -6,7 +6,7 @@
 extern int ObjList_FindObjectById(int objectId);
 extern int ObjTrigger_IsSetById();
 
-extern ObjectTriggerInterface **gObjectTriggerInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern s32 lbl_803269F8[];
 
 /*
@@ -16,35 +16,38 @@ extern s32 lbl_803269F8[];
  * EN v1.0 Address: 0x801CFD68
  * EN v1.0 Size: 348b
  */
-int fn_801CFD68(u8 *state)
+int fn_801CFD68(u8* state)
 {
-  s32 *table;
-  int obj;
+    s32* table;
+    int obj;
 
-  table = lbl_803269F8;
-  obj = ObjList_FindObjectById(table[state[0xe]]);
-  if (ObjTrigger_IsSetById(obj,0x1ee) != 0) {
-    (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
-    state[4] = 9;
-    state[0xc] = table[state[0xe] + 7];
-    state[0xd] = table[state[0xe] + 0xe];
-    state[0xe]++;
-    state[5] = 0x1e;
-    return 1;
-  }
-
-  if (state[0xe] != 0) {
-    obj = ObjList_FindObjectById(table[state[0xe] - 1]);
-    if (ObjTrigger_IsSetById(obj,0x1ee) != 0) {
-      (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
-      state[4] = 9;
-      state[0xc] = table[state[0xe] + 6];
-      state[5] = 0;
-      return 2;
+    table = lbl_803269F8;
+    obj = ObjList_FindObjectById(table[state[0xe]]);
+    if (ObjTrigger_IsSetById(obj, 0x1ee) != 0)
+    {
+        (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+        state[4] = 9;
+        state[0xc] = table[state[0xe] + 7];
+        state[0xd] = table[state[0xe] + 0xe];
+        state[0xe]++;
+        state[5] = 0x1e;
+        return 1;
     }
-  }
 
-  return 0;
+    if (state[0xe] != 0)
+    {
+        obj = ObjList_FindObjectById(table[state[0xe] - 1]);
+        if (ObjTrigger_IsSetById(obj, 0x1ee) != 0)
+        {
+            (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+            state[4] = 9;
+            state[0xc] = table[state[0xe] + 6];
+            state[5] = 0;
+            return 2;
+        }
+    }
+
+    return 0;
 }
 
 /*
@@ -62,21 +65,22 @@ int fn_801CFD68(u8 *state)
  */
 int nw_levcontrol_getExtraSize(void)
 {
-  return 0x14;
+    return 0x14;
 }
 
-extern MapEventInterface **gMapEventInterface;
-extern void   envFxActFn_800887f8(s32);
-extern void   gameTimerStop(void);
+extern MapEventInterface** gMapEventInterface;
+extern void envFxActFn_800887f8(s32);
+extern void gameTimerStop(void);
 
 /* EN v1.0 0x801CFECC  size: 84b  nw_levcontrol_free: dispatches the object's
  * map event slot through gMapEventInterface; when the call returns 0 also fires
  * envFxActFn_800887f8(0); always tails into gameTimerStop. */
-void nw_levcontrol_free(GameObject *obj)
+void nw_levcontrol_free(GameObject* obj)
 {
     s8 v = obj->anim.mapEventSlot;
     int ret = (*gMapEventInterface)->getAnimEvent((s32)v, 0);
-    if ((u8)ret == 0) {
+    if ((u8)ret == 0)
+    {
         envFxActFn_800887f8(0);
     }
     gameTimerStop();

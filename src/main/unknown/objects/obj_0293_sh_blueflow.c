@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0293_SH_BlueFlow_packet_info {
+enum obj_0293_SH_BlueFlow_packet_info
+{
     SH_BLUEFLOW_DEF_ID = 0x0293,
     SH_BLUEFLOW_DLL_ID = 0x02AD,
     SH_BLUEFLOW_CLASS_ID = 0x007F,

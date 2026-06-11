@@ -12,16 +12,18 @@
 #define TRICKY_CURVE_SFX_BURST 0x1c9
 #define TRICKY_CURVE_SFX_COOLDOWN 0x1ca
 
-typedef struct TrickyCurveObject {
+typedef struct TrickyCurveObject
+{
     u8 unk0[0xc];
     f32 x;
     f32 y;
     f32 z;
     u8 unk18[0xa0];
-    struct TrickyCurveTriggerState *state;
+    struct TrickyCurveTriggerState* state;
 } TrickyCurveObject;
 
-typedef struct TrickyCurveTriggerState {
+typedef struct TrickyCurveTriggerState
+{
     s16 xExtent;
     s16 zExtent;
     s16 yExtent;
@@ -32,7 +34,8 @@ typedef struct TrickyCurveTriggerState {
     u8 zSide;
 } TrickyCurveTriggerState;
 
-typedef struct TrickyCurveBurstPartfxArgs {
+typedef struct TrickyCurveBurstPartfxArgs
+{
     s16 xRot;
     s16 yRot;
     s16 zRot;
@@ -49,7 +52,7 @@ extern void ObjMsg_SendToObject(int obj, int message, int sender, int param);
 extern int objGetAnimState80A(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-extern EffectInterface **gPartfxInterface;
+extern EffectInterface** gPartfxInterface;
 extern u8 gTrickyCurveBurstCounter;
 extern f32 timeDelta;
 extern f64 lbl_803E6440;
@@ -71,10 +74,10 @@ extern f32 lbl_803E6448;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80206968(TrickyCurveObject *obj)
+void fn_80206968(TrickyCurveObject* obj)
 {
     u8 insideAxes;
-    TrickyCurveTriggerState *state;
+    TrickyCurveTriggerState* state;
     int player;
     u8 xSide;
     u8 ySide;
@@ -90,55 +93,72 @@ void fn_80206968(TrickyCurveObject *obj)
     ySide = 0;
     zSide = 0;
 
-    xDelta = *(f32 *)(player + 0xc) - obj->x;
-    yDelta = *(f32 *)(player + 0x10) - obj->y;
-    zDelta = *(f32 *)(player + 0x14) - obj->z;
+    xDelta = *(f32*)(player + 0xc) - obj->x;
+    yDelta = *(f32*)(player + 0x10) - obj->y;
+    zDelta = *(f32*)(player + 0x14) - obj->z;
 
-    if (xDelta <= 0.0f) {
-        if (xDelta > -(f32)state->xExtent) {
+    if (xDelta <= 0.0f)
+    {
+        if (xDelta > -(f32)state->xExtent)
+        {
             insideAxes = 1;
             xSide = 1;
         }
     }
-    if (xDelta > 0.0f) {
-        if (xDelta < (f32)state->xExtent) {
+    if (xDelta > 0.0f)
+    {
+        if (xDelta < (f32)state->xExtent)
+        {
             insideAxes++;
             xSide--;
         }
     }
-    if (zDelta <= 0.0f) {
-        if (zDelta > -(f32)state->zExtent) {
+    if (zDelta <= 0.0f)
+    {
+        if (zDelta > -(f32)state->zExtent)
+        {
             insideAxes++;
             zSide = 1;
         }
     }
-    if (zDelta > 0.0f) {
-        if (zDelta < (f32)state->zExtent) {
+    if (zDelta > 0.0f)
+    {
+        if (zDelta < (f32)state->zExtent)
+        {
             insideAxes++;
             zSide--;
         }
     }
-    if (yDelta <= 0.0f) {
-        if (yDelta > -(f32)state->yExtent) {
+    if (yDelta <= 0.0f)
+    {
+        if (yDelta > -(f32)state->yExtent)
+        {
             insideAxes++;
             ySide = 1;
         }
     }
-    if (yDelta > 0.0f) {
-        if (yDelta < (f32)state->yExtent) {
+    if (yDelta > 0.0f)
+    {
+        if (yDelta < (f32)state->yExtent)
+        {
             insideAxes++;
             ySide--;
         }
     }
 
-    if (state->cooldown >= 0) {
+    if (state->cooldown >= 0)
+    {
         state->cooldown -= (s16)timeDelta;
     }
-    if (insideAxes == 3 && state->cooldown <= 0) {
-        if (objGetAnimState80A(player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE) {
+    if (insideAxes == 3 && state->cooldown <= 0)
+    {
+        if (objGetAnimState80A(player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE)
+        {
             GameBit_Set(TRICKY_CURVE_GAMEBIT_HIT, 1);
             PARTFX_SPAWN(player, TRICKY_CURVE_PARTFX_COOLDOWN, 0, 2, -1, 0);
-        } else {
+        }
+        else
+        {
             ObjHits_RecordObjectHit(player, 0, TRICKY_CURVE_HIT_PRIORITY, 2, 0);
         }
         Sfx_PlayFromObject(player, TRICKY_CURVE_SFX_COOLDOWN);
@@ -163,10 +183,10 @@ void fn_80206968(TrickyCurveObject *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80206C18(TrickyCurveObject *obj)
+void fn_80206C18(TrickyCurveObject* obj)
 {
     u8 insideAxes;
-    TrickyCurveTriggerState *state;
+    TrickyCurveTriggerState* state;
     int player;
     u8 xSide;
     u8 ySide;
@@ -183,49 +203,62 @@ void fn_80206C18(TrickyCurveObject *obj)
     ySide = 0;
     zSide = 0;
 
-    xDelta = *(f32 *)(player + 0xc) - obj->x;
-    yDelta = *(f32 *)(player + 0x10) - obj->y;
-    zDelta = *(f32 *)(player + 0x14) - obj->z;
+    xDelta = *(f32*)(player + 0xc) - obj->x;
+    yDelta = *(f32*)(player + 0x10) - obj->y;
+    zDelta = *(f32*)(player + 0x14) - obj->z;
     gTrickyCurveBurstCounter++;
 
-    if (xDelta <= 0.0f) {
-        if (xDelta > -(f32)state->xExtent) {
+    if (xDelta <= 0.0f)
+    {
+        if (xDelta > -(f32)state->xExtent)
+        {
             insideAxes = 1;
             xSide = 1;
         }
     }
-    if (xDelta > 0.0f) {
-        if (xDelta < (f32)state->xExtent) {
+    if (xDelta > 0.0f)
+    {
+        if (xDelta < (f32)state->xExtent)
+        {
             insideAxes++;
             xSide--;
         }
     }
-    if (zDelta <= 0.0f) {
-        if (zDelta > -(f32)state->zExtent) {
+    if (zDelta <= 0.0f)
+    {
+        if (zDelta > -(f32)state->zExtent)
+        {
             insideAxes++;
             zSide = 1;
         }
     }
-    if (zDelta > 0.0f) {
-        if (zDelta < (f32)state->zExtent) {
+    if (zDelta > 0.0f)
+    {
+        if (zDelta < (f32)state->zExtent)
+        {
             insideAxes++;
             zSide--;
         }
     }
-    if (yDelta <= 0.0f) {
-        if (yDelta > -(f32)state->yExtent) {
+    if (yDelta <= 0.0f)
+    {
+        if (yDelta > -(f32)state->yExtent)
+        {
             insideAxes++;
             ySide = 1;
         }
     }
-    if (yDelta > 0.0f) {
-        if (yDelta < (f32)state->yExtent) {
+    if (yDelta > 0.0f)
+    {
+        if (yDelta < (f32)state->yExtent)
+        {
             insideAxes++;
             ySide--;
         }
     }
 
-    if (insideAxes == 3) {
+    if (insideAxes == 3)
+    {
         partfxArgs.xDelta = xDelta;
         partfxArgs.yDelta = yDelta;
         partfxArgs.zDelta = zDelta;
@@ -233,18 +266,23 @@ void fn_80206C18(TrickyCurveObject *obj)
         partfxArgs.zRot = 0;
         partfxArgs.yRot = 0;
         partfxArgs.xRot = 0;
-        if (xSide != state->xSide) {
+        if (xSide != state->xSide)
+        {
             partfxArgs.xRot = 0x3fff;
         }
 
-        if (objGetAnimState80A(player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE) {
-            if (gTrickyCurveBurstCounter > TRICKY_CURVE_BURST_LIMIT) {
+        if (objGetAnimState80A(player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE)
+        {
+            if (gTrickyCurveBurstCounter > TRICKY_CURVE_BURST_LIMIT)
+            {
                 gTrickyCurveBurstCounter = 0;
                 GameBit_Set(TRICKY_CURVE_GAMEBIT_HIT, 1);
                 Sfx_PlayFromObject((int)obj, TRICKY_CURVE_SFX_BURST);
             }
             PARTFX_SPAWN(player, TRICKY_CURVE_PARTFX_COOLDOWN, 0, 2, -1, 0);
-        } else {
+        }
+        else
+        {
             GameBit_Set(TRICKY_CURVE_GAMEBIT_HIT, 1);
             ObjMsg_SendToObject(player, TRICKY_CURVE_MESSAGE_BURST, (int)obj, 2);
             PARTFX_SPAWN((int)obj, TRICKY_CURVE_PARTFX_BURST, &partfxArgs, 2, -1, 0);

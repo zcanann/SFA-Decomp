@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02E2_SC_paypoint_packet_info {
+enum obj_02E2_SC_paypoint_packet_info
+{
     SC_PAYPOINT_DEF_ID = 0x02E2,
     SC_PAYPOINT_DLL_ID = 0x01BD,
     SC_PAYPOINT_CLASS_ID = 0x0030,

@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0456_DR_CageCont_packet_info {
+enum obj_0456_DR_CageCont_packet_info
+{
     DR_CAGECONT_DEF_ID = 0x0456,
     DR_CAGECONT_DLL_ID = 0x0268,
     DR_CAGECONT_CLASS_ID = 0x0030,

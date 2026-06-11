@@ -46,21 +46,29 @@ int drakormissile_getExtraSize(void) { return DRAKORMISSILE_EXTRA_SIZE; }
 
 int drakormissile_getObjectTypeId(void) { return DRAKORMISSILE_OBJECT_TYPE_ID; }
 
-void drakormissile_hitDetect(void) {}
+void drakormissile_hitDetect(void)
+{
+}
 
-void drakormissile_initialise(void) {}
+void drakormissile_initialise(void)
+{
+}
 
-void drakormissile_release(void) {}
+void drakormissile_release(void)
+{
+}
 
-void drakormissile_startActiveLaunch(int obj) {
-    void *light;
-    u8 *p = ((GameObject *)obj)->extra;
+void drakormissile_startActiveLaunch(int obj)
+{
+    void* light;
+    u8* p = ((GameObject*)obj)->extra;
 
     ObjHits_EnableObject(obj);
-    *(u8 *)(p + DRAKORMISSILE_FIELD_STATE) = DRAKORMISSILE_STATE_HOMING;
-    ((GameObject *)obj)->anim.rotZ = 0;
+    *(u8*)(p + DRAKORMISSILE_FIELD_STATE) = DRAKORMISSILE_STATE_HOMING;
+    ((GameObject*)obj)->anim.rotZ = 0;
     light = objCreateLight(obj, 1);
-    if (light != NULL) {
+    if (light != NULL)
+    {
         modelLightStruct_setLightKind(light, 2);
         modelLightStruct_setDiffuseColor(light, 255, 128, 0, 0);
         lightSetFieldBC_8001db14(light, 1);
@@ -68,23 +76,26 @@ void drakormissile_startActiveLaunch(int obj) {
         modelLightStruct_setupGlow(light, 0, 0, 255, 255, 128, lbl_803E6948);
         modelLightStruct_setGlowProjectionRadius(light, lbl_803E694C);
     }
-    *(void **)(p + DRAKORMISSILE_FIELD_LIGHT) = light;
-    if (*(void **)(p + DRAKORMISSILE_FIELD_LIGHT) != NULL) {
-        modelLightStruct_setDistanceAttenuation(*(void **)(p + DRAKORMISSILE_FIELD_LIGHT), lbl_803E6950,
-            lbl_803E6954);
+    *(void**)(p + DRAKORMISSILE_FIELD_LIGHT) = light;
+    if (*(void**)(p + DRAKORMISSILE_FIELD_LIGHT) != NULL)
+    {
+        modelLightStruct_setDistanceAttenuation(*(void**)(p + DRAKORMISSILE_FIELD_LIGHT), lbl_803E6950,
+                                                lbl_803E6954);
     }
-    ((GameObject *)obj)->anim.alpha = 255;
-    ((GameObject *)obj)->anim.rootMotionScale = lbl_803E6958 * *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
-    *(int *)(p + DRAKORMISSILE_FIELD_TIMER) = DRAKORMISSILE_ACTIVE_TIMER;
+    ((GameObject*)obj)->anim.alpha = 255;
+    ((GameObject*)obj)->anim.rootMotionScale = lbl_803E6958 * *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance +
+        4);
+    *(int*)(p + DRAKORMISSILE_FIELD_TIMER) = DRAKORMISSILE_ACTIVE_TIMER;
     ObjHits_SetTargetMask(obj, DRAKORMISSILE_TARGET_MASK);
     ObjHits_SetHitVolumeSlot(obj, DRAKORMISSILE_HIT_VOLUME_SLOT, 1, 0);
     Sfx_PlayFromObject(obj, DRAKORMISSILE_ACTIVE_SFX_A);
     Sfx_PlayFromObject(obj, DRAKORMISSILE_ACTIVE_SFX_B);
 }
 
-void drakormissile_func0B(int obj, int from, int target, f32 speed) {
-    u8 *p = ((GameObject *)obj)->extra;
-    void *light;
+void drakormissile_func0B(int obj, int from, int target, f32 speed)
+{
+    u8* p = ((GameObject*)obj)->extra;
+    void* light;
     f32 dir[3];
     f32 hitDir[3];
     f32 endPos[3];
@@ -94,52 +105,58 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed) {
     f32 mag;
     f32 horizDist;
 
-    dir[0] = *(f32 *)((char *)target + 0xc) - *(f32 *)((char *)from + 0xc);
-    dir[1] = *(f32 *)((char *)target + 0x10) - *(f32 *)((char *)from + 0x10);
-    dir[2] = *(f32 *)((char *)target + 0x14) - *(f32 *)((char *)from + 0x14);
+    dir[0] = *(f32*)((char*)target + 0xc) - *(f32*)((char*)from + 0xc);
+    dir[1] = *(f32*)((char*)target + 0x10) - *(f32*)((char*)from + 0x10);
+    dir[2] = *(f32*)((char*)target + 0x14) - *(f32*)((char*)from + 0x14);
     mag = sqrtf(dir[0] * dir[0] + dir[1] * dir[1] + dir[2] * dir[2]) / speed;
-    if (mag != lbl_803E695C) {
+    if (mag != lbl_803E695C)
+    {
         dir[0] = dir[0] / mag;
         dir[1] = dir[1] / mag;
         dir[2] = dir[2] / mag;
     }
-    *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)from + 0xc);
-    ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)from + 0x10);
-    ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)from + 0x14);
-    ((GameObject *)obj)->anim.velocityX = dir[0];
-    ((GameObject *)obj)->anim.velocityY = dir[1];
-    ((GameObject *)obj)->anim.velocityZ = dir[2];
-    horizDist = sqrtf(((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX +
-                      ((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ);
-    *(s16 *)obj = getAngle(((GameObject *)obj)->anim.velocityX, ((GameObject *)obj)->anim.velocityZ);
-    ((GameObject *)obj)->anim.rotY = -getAngle(((GameObject *)obj)->anim.velocityY, horizDist);
-    ((GameObject *)obj)->anim.rotZ = 0;
+    *(f32*)((char*)obj + 0xc) = *(f32*)((char*)from + 0xc);
+    ((GameObject*)obj)->anim.localPosY = *(f32*)((char*)from + 0x10);
+    ((GameObject*)obj)->anim.localPosZ = *(f32*)((char*)from + 0x14);
+    ((GameObject*)obj)->anim.velocityX = dir[0];
+    ((GameObject*)obj)->anim.velocityY = dir[1];
+    ((GameObject*)obj)->anim.velocityZ = dir[2];
+    horizDist = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+        ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
+    *(s16*)obj = getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ);
+    ((GameObject*)obj)->anim.rotY = -getAngle(((GameObject*)obj)->anim.velocityY, horizDist);
+    ((GameObject*)obj)->anim.rotZ = 0;
     ObjHits_EnableObject(obj);
-    *(u8 *)(p + DRAKORMISSILE_FIELD_STATE) = DRAKORMISSILE_STATE_STRAIGHT;
-    endPos[0] = lbl_803E6960 * ((GameObject *)obj)->anim.velocityX;
-    endPos[1] = lbl_803E6960 * ((GameObject *)obj)->anim.velocityY;
-    endPos[2] = lbl_803E6960 * ((GameObject *)obj)->anim.velocityZ;
-    endPos[0] = *(f32 *)((char *)obj + 0xc) + endPos[0];
-    endPos[1] = ((GameObject *)obj)->anim.localPosY + endPos[1];
-    endPos[2] = ((GameObject *)obj)->anim.localPosZ + endPos[2];
-    voxmaps_worldToGrid((f32 *)((char *)obj + 0xc), startGrid);
+    *(u8*)(p + DRAKORMISSILE_FIELD_STATE) = DRAKORMISSILE_STATE_STRAIGHT;
+    endPos[0] = lbl_803E6960 * ((GameObject*)obj)->anim.velocityX;
+    endPos[1] = lbl_803E6960 * ((GameObject*)obj)->anim.velocityY;
+    endPos[2] = lbl_803E6960 * ((GameObject*)obj)->anim.velocityZ;
+    endPos[0] = *(f32*)((char*)obj + 0xc) + endPos[0];
+    endPos[1] = ((GameObject*)obj)->anim.localPosY + endPos[1];
+    endPos[2] = ((GameObject*)obj)->anim.localPosZ + endPos[2];
+    voxmaps_worldToGrid((f32*)((char*)obj + 0xc), startGrid);
     voxmaps_worldToGrid(endPos, endGrid);
-    if (voxmaps_traceLine(startGrid, endGrid, hitGrid, 0, 0) == 0) {
+    if (voxmaps_traceLine(startGrid, endGrid, hitGrid, 0, 0) == 0)
+    {
         voxmaps_gridToWorld(endPos, hitGrid);
-        hitDir[0] = endPos[0] - *(f32 *)((char *)obj + 0xc);
-        hitDir[1] = endPos[1] - ((GameObject *)obj)->anim.localPosY;
-        hitDir[2] = endPos[2] - ((GameObject *)obj)->anim.localPosZ;
-        *(int *)(p + DRAKORMISSILE_FIELD_TIMER) =
+        hitDir[0] = endPos[0] - *(f32*)((char*)obj + 0xc);
+        hitDir[1] = endPos[1] - ((GameObject*)obj)->anim.localPosY;
+        hitDir[2] = endPos[2] - ((GameObject*)obj)->anim.localPosZ;
+        *(int*)(p + DRAKORMISSILE_FIELD_TIMER) =
             (int)(sqrtf(hitDir[0] * hitDir[0] + hitDir[1] * hitDir[1] + hitDir[2] * hitDir[2]) / speed);
-    } else {
-        *(int *)(p + DRAKORMISSILE_FIELD_TIMER) = DRAKORMISSILE_TRACE_MISS_TIMER;
     }
-    if (*(void **)(p + DRAKORMISSILE_FIELD_LIGHT) != NULL) {
-        ModelLightStruct_free(*(void **)(p + DRAKORMISSILE_FIELD_LIGHT));
-        *(void **)(p + DRAKORMISSILE_FIELD_LIGHT) = NULL;
+    else
+    {
+        *(int*)(p + DRAKORMISSILE_FIELD_TIMER) = DRAKORMISSILE_TRACE_MISS_TIMER;
+    }
+    if (*(void**)(p + DRAKORMISSILE_FIELD_LIGHT) != NULL)
+    {
+        ModelLightStruct_free(*(void**)(p + DRAKORMISSILE_FIELD_LIGHT));
+        *(void**)(p + DRAKORMISSILE_FIELD_LIGHT) = NULL;
     }
     light = objCreateLight(obj, 1);
-    if (light != NULL) {
+    if (light != NULL)
+    {
         modelLightStruct_setLightKind(light, 2);
         modelLightStruct_setDiffuseColor(light, 0, 255, 255, 0);
         lightSetFieldBC_8001db14(light, 1);
@@ -147,20 +164,22 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed) {
         modelLightStruct_setupGlow(light, 0, 0, 255, 255, 128, lbl_803E6948);
         modelLightStruct_setGlowProjectionRadius(light, lbl_803E694C);
     }
-    *(void **)(p + DRAKORMISSILE_FIELD_LIGHT) = light;
-    ((GameObject *)obj)->anim.alpha = 255;
-    ((GameObject *)obj)->anim.rootMotionScale = lbl_803E6958 * *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
+    *(void**)(p + DRAKORMISSILE_FIELD_LIGHT) = light;
+    ((GameObject*)obj)->anim.alpha = 255;
+    ((GameObject*)obj)->anim.rootMotionScale = lbl_803E6958 * *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance +
+        4);
     Sfx_PlayFromObject(obj, SFXwp_barrel_bounce2);
 }
 
-void drakormissile_update(int obj) {
-    u8 *p = ((GameObject *)obj)->extra;
+void drakormissile_update(int obj)
+{
+    u8* p = ((GameObject*)obj)->extra;
     int moving;
     f32 toTarget[3];
     f32 dir[3];
-    int *hitObj;
+    int* hitObj;
     int hit;
-    int *near;
+    int* near;
     int result;
     int player;
     f32 mag;
@@ -169,210 +188,247 @@ void drakormissile_update(int obj) {
     int rem;
 
     moving = 0;
-    switch (*(u8 *)(p + DRAKORMISSILE_FIELD_STATE)) {
+    switch (*(u8*)(p + DRAKORMISSILE_FIELD_STATE))
+    {
     case DRAKORMISSILE_STATE_STRAIGHT:
         moving = 1;
-        objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta,
-                ((GameObject *)obj)->anim.velocityY * timeDelta,
-                ((GameObject *)obj)->anim.velocityZ * timeDelta);
+        objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
+                ((GameObject*)obj)->anim.velocityY * timeDelta,
+                ((GameObject*)obj)->anim.velocityZ * timeDelta);
         break;
     case DRAKORMISSILE_STATE_EXPLODING:
-        ((GameObject *)obj)->anim.alpha = 0;
-        if (*(int *)(p + DRAKORMISSILE_FIELD_TIMER) == 0) {
+        ((GameObject*)obj)->anim.alpha = 0;
+        if (*(int*)(p + DRAKORMISSILE_FIELD_TIMER) == 0)
+        {
             ObjHits_DisableObject(obj);
         }
-        *(int *)(p + DRAKORMISSILE_FIELD_TIMER) += framesThisStep;
-        if (*(int *)(p + DRAKORMISSILE_FIELD_TIMER) > DRAKORMISSILE_CLEAR_TIMER) {
+        *(int*)(p + DRAKORMISSILE_FIELD_TIMER) += framesThisStep;
+        if (*(int*)(p + DRAKORMISSILE_FIELD_TIMER) > DRAKORMISSILE_CLEAR_TIMER)
+        {
             ObjHits_DisableObject(obj);
             Sfx_StopFromObject(obj, SFXwp_barrel_bounce2);
             Sfx_StopFromObject(obj, DRAKORMISSILE_ACTIVE_SFX_A);
-            *(u8 *)(p + DRAKORMISSILE_FIELD_STATE) = DRAKORMISSILE_STATE_FADEOUT;
+            *(u8*)(p + DRAKORMISSILE_FIELD_STATE) = DRAKORMISSILE_STATE_FADEOUT;
         }
         break;
     case DRAKORMISSILE_STATE_HOMING:
         player = (int)Obj_GetPlayerObject();
-        if (((GameObject *)player)->anim.velocityX != (mag = lbl_803E695C) || ((GameObject *)player)->anim.velocityY != mag ||
-            ((GameObject *)player)->anim.velocityZ != mag) {
-            mag = PSVECMag((f32 *)((int)player + 0x24));
+        if (((GameObject*)player)->anim.velocityX != (mag = lbl_803E695C) || ((GameObject*)player)->anim.velocityY !=
+            mag ||
+            ((GameObject*)player)->anim.velocityZ != mag)
+        {
+            mag = PSVECMag((f32*)((int)player + 0x24));
         }
         mag = lbl_803DC2B8 + mag;
-        fn_80221C18(player, mag, &((GameObject *)obj)->anim.localPosX, toTarget);
-        PSVECSubtract(toTarget, (f32 *)((int)obj + 0xc), dir);
+        fn_80221C18(player, mag, &((GameObject*)obj)->anim.localPosX, toTarget);
+        PSVECSubtract(toTarget, (f32*)((int)obj + 0xc), dir);
         PSVECNormalize(dir, dir);
         PSVECScale(dir, dir, mag * lbl_803DC2B4);
-        PSVECScale((f32 *)((char *)obj + 0x24), (f32 *)((char *)obj + 0x24), lbl_803DC2B0);
-        PSVECAdd((f32 *)((char *)obj + 0x24), dir, (f32 *)((char *)obj + 0x24));
-        mag = sqrtf(*(f32 *)((char *)obj + 0x24) * *(f32 *)((char *)obj + 0x24) +
-                    ((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ);
+        PSVECScale((f32*)((char*)obj + 0x24), (f32*)((char*)obj + 0x24), lbl_803DC2B0);
+        PSVECAdd((f32*)((char*)obj + 0x24), dir, (f32*)((char*)obj + 0x24));
+        mag = sqrtf(*(f32*)((char*)obj + 0x24) * *(f32*)((char*)obj + 0x24) +
+            ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
         {
-            int tmpAng = getAngle(*(f32 *)((char *)obj + 0x24), *(f32 *)((char *)obj + 0x2c));
-            *(s16 *)obj = tmpAng;
-            tmpAng = getAngle(((GameObject *)obj)->anim.velocityY, mag);
-            ((GameObject *)obj)->anim.rotY = tmpAng;
+            int tmpAng = getAngle(*(f32*)((char*)obj + 0x24), *(f32*)((char*)obj + 0x2c));
+            *(s16*)obj = tmpAng;
+            tmpAng = getAngle(((GameObject*)obj)->anim.velocityY, mag);
+            ((GameObject*)obj)->anim.rotY = tmpAng;
         }
-        objMove(obj, *(f32 *)((char *)obj + 0x24) * timeDelta,
-                ((GameObject *)obj)->anim.velocityY * timeDelta,
-                ((GameObject *)obj)->anim.velocityZ * timeDelta);
+        objMove(obj, *(f32*)((char*)obj + 0x24) * timeDelta,
+                ((GameObject*)obj)->anim.velocityY * timeDelta,
+                ((GameObject*)obj)->anim.velocityZ * timeDelta);
         moving = 1;
         break;
-    case DRAKORMISSILE_STATE_FADEOUT: {
-        f32 life = *(f32 *)(p + DRAKORMISSILE_FIELD_FADE_TIME) + timeDelta;
-        *(f32 *)(p + DRAKORMISSILE_FIELD_FADE_TIME) = life;
-        if (life > lbl_803E6968) {
-            Obj_FreeObject(obj);
-            return;
+    case DRAKORMISSILE_STATE_FADEOUT:
+        {
+            f32 life = *(f32*)(p + DRAKORMISSILE_FIELD_FADE_TIME) + timeDelta;
+            *(f32*)(p + DRAKORMISSILE_FIELD_FADE_TIME) = life;
+            if (life > lbl_803E6968)
+            {
+                Obj_FreeObject(obj);
+                return;
+            }
+            break;
         }
-        break;
-    }
     case DRAKORMISSILE_STATE_IDLE:
         break;
     }
-    if (moving) {
-        near = (int *)(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject;
+    if (moving)
+    {
+        near = (int*)(*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject;
         hitObj = NULL;
         hit = ObjHits_GetPriorityHit(obj, &hitObj, 0, 0);
         f5 = 0;
-        rem = *(int *)(p + DRAKORMISSILE_FIELD_TIMER) - framesThisStep;
-        *(int *)(p + DRAKORMISSILE_FIELD_TIMER) = rem;
-        if (rem < 0 || hit != 0) {
+        rem = *(int*)(p + DRAKORMISSILE_FIELD_TIMER) - framesThisStep;
+        *(int*)(p + DRAKORMISSILE_FIELD_TIMER) = rem;
+        if (rem < 0 || hit != 0)
+        {
             f5 = 1;
         }
         f3 = 0;
-        if (near != NULL && *(s16 *)((char *)near + 0x46) != DRAKORMISSILE_IGNORE_OBJECT_TYPE) {
+        if (near != NULL && *(s16*)((char*)near + 0x46) != DRAKORMISSILE_IGNORE_OBJECT_TYPE)
+        {
             f3 = 1;
         }
         result = f5 | f3;
-        result |= (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags;
-        if (*(u8 *)(p + DRAKORMISSILE_FIELD_STATE) == DRAKORMISSILE_STATE_HOMING) {
+        result |= (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags;
+        if (*(u8*)(p + DRAKORMISSILE_FIELD_STATE) == DRAKORMISSILE_STATE_HOMING)
+        {
             player = (int)Obj_GetPlayerObject();
-            if (Vec_distance(&((GameObject *)obj)->anim.worldPosX, &((GameObject *)player)->anim.worldPosX) <
-                lbl_803DC2BC) {
+            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+                lbl_803DC2BC)
+            {
                 result |= 1;
             }
         }
-        if (hitObj != NULL && *(s16 *)((char *)hitObj + 0x46) == DRAKORMISSILE_IGNORE_OBJECT_TYPE) {
+        if (hitObj != NULL && *(s16*)((char*)hitObj + 0x46) == DRAKORMISSILE_IGNORE_OBJECT_TYPE)
+        {
             result = 0;
         }
-        if (result != 0) {
-            *(u8 *)(p + DRAKORMISSILE_FIELD_STATE) = DRAKORMISSILE_STATE_EXPLODING;
-            *(int *)(p + DRAKORMISSILE_FIELD_TIMER) = 0;
-            if (((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags & 8) != 0) {
+        if (result != 0)
+        {
+            *(u8*)(p + DRAKORMISSILE_FIELD_STATE) = DRAKORMISSILE_STATE_EXPLODING;
+            *(int*)(p + DRAKORMISSILE_FIELD_TIMER) = 0;
+            if (((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags & 8) != 0)
+            {
                 Sfx_PlayFromObject(obj, SFXwp_barrel_bounce1);
             }
-            if (((GameObject *)obj)->anim.mapEventSlot == 2) {
+            if (((GameObject*)obj)->anim.mapEventSlot == 2)
+            {
                 spawnExplosion(obj, lbl_803E6940, 3, 0, 0, 0, 0, 0, 3);
-            } else {
+            }
+            else
+            {
                 spawnExplosion(obj, lbl_803E6940, 1, 0, 0, 0, 0, 0, 3);
             }
-            if (*(void **)(p + DRAKORMISSILE_FIELD_LIGHT) != NULL) {
-                ModelLightStruct_free(*(void **)(p + DRAKORMISSILE_FIELD_LIGHT));
-                *(void **)(p + DRAKORMISSILE_FIELD_LIGHT) = NULL;
+            if (*(void**)(p + DRAKORMISSILE_FIELD_LIGHT) != NULL)
+            {
+                ModelLightStruct_free(*(void**)(p + DRAKORMISSILE_FIELD_LIGHT));
+                *(void**)(p + DRAKORMISSILE_FIELD_LIGHT) = NULL;
             }
         }
-        ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->skeletonHitMask = 0x10;
-        ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->objectHitMask = 0x10;
+        ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->skeletonHitMask = 0x10;
+        ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->objectHitMask = 0x10;
     }
-    if (*(void **)(p + DRAKORMISSILE_FIELD_LIGHT) != NULL && modelLightStruct_getActiveState()) {
-        modelLightStruct_updateGlowAlpha(*(void **)((int)p + DRAKORMISSILE_FIELD_LIGHT));
+    if (*(void**)(p + DRAKORMISSILE_FIELD_LIGHT) != NULL && modelLightStruct_getActiveState())
+    {
+        modelLightStruct_updateGlowAlpha(*(void**)((int)p + DRAKORMISSILE_FIELD_LIGHT));
     }
 }
 
-int drakormissile_setScale(int obj) {
-    u8 *p = ((GameObject *)obj)->extra;
+int drakormissile_setScale(int obj)
+{
+    u8* p = ((GameObject*)obj)->extra;
     return p[DRAKORMISSILE_FIELD_STATE] == DRAKORMISSILE_STATE_FADEOUT;
 }
 
-void drakormissile_render2(int obj) {
-    u8 *p = ((GameObject *)obj)->extra;
-    if (p[DRAKORMISSILE_FIELD_STATE] == DRAKORMISSILE_STATE_STRAIGHT) {
+void drakormissile_render2(int obj)
+{
+    u8* p = ((GameObject*)obj)->extra;
+    if (p[DRAKORMISSILE_FIELD_STATE] == DRAKORMISSILE_STATE_STRAIGHT)
+    {
         p[DRAKORMISSILE_FIELD_STATE] = DRAKORMISSILE_STATE_EXPLODING;
     }
 }
 
-void drakormissile_modelMtxFn(int obj) {
-    u8 *p = ((GameObject *)obj)->extra;
+void drakormissile_modelMtxFn(int obj)
+{
+    u8* p = ((GameObject*)obj)->extra;
     p[DRAKORMISSILE_FIELD_FLAGS] |= 1;
-    if (p[DRAKORMISSILE_FIELD_STATE] == DRAKORMISSILE_STATE_FADEOUT) {
+    if (p[DRAKORMISSILE_FIELD_STATE] == DRAKORMISSILE_STATE_FADEOUT)
+    {
         Obj_FreeObject(obj);
     }
 }
 
-void drakormissile_free(int obj) {
-    char *p = ((GameObject *)obj)->extra;
-    void *m = *(void **)(p + DRAKORMISSILE_FIELD_LIGHT);
-    if (m != 0) {
+void drakormissile_free(int obj)
+{
+    char* p = ((GameObject*)obj)->extra;
+    void* m = *(void**)(p + DRAKORMISSILE_FIELD_LIGHT);
+    if (m != 0)
+    {
         ModelLightStruct_free(m);
-        *(void **)(p + DRAKORMISSILE_FIELD_LIGHT) = 0;
+        *(void**)(p + DRAKORMISSILE_FIELD_LIGHT) = 0;
     }
     ObjGroup_RemoveObject(obj, DRAKORMISSILE_GROUP_ID);
 }
 
-void drakormissile_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
-    char *p = ((GameObject *)obj)->extra;
-    ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    if (visible != 0 && *(u8 *)(p + DRAKORMISSILE_FIELD_STATE) != DRAKORMISSILE_STATE_FADEOUT) {
-        s16 sv4 = ((GameObject *)obj)->anim.rotZ;
-        s16 sv2 = ((GameObject *)obj)->anim.rotY;
-        f32 sv8 = ((GameObject *)obj)->anim.rootMotionScale;
-        int *model;
-        char *m;
+void drakormissile_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
+{
+    char* p = ((GameObject*)obj)->extra;
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    if (visible != 0 && *(u8*)(p + DRAKORMISSILE_FIELD_STATE) != DRAKORMISSILE_STATE_FADEOUT)
+    {
+        s16 sv4 = ((GameObject*)obj)->anim.rotZ;
+        s16 sv2 = ((GameObject*)obj)->anim.rotY;
+        f32 sv8 = ((GameObject*)obj)->anim.rootMotionScale;
+        int* model;
+        char* m;
         int i;
         objAnim->bankIndex = 1;
         model = Obj_GetActiveModel();
         m = p;
-        for (i = 0; i < DRAKORMISSILE_RENDER_TRAIL_COUNT; i++) {
-            *(u16 *)(m + DRAKORMISSILE_FIELD_TRAIL_YAW) =
-                *(u16 *)(m + DRAKORMISSILE_FIELD_TRAIL_YAW) + *(u16 *)(m + DRAKORMISSILE_FIELD_TRAIL_YAW_STEP);
-            *(u16 *)(m + DRAKORMISSILE_FIELD_TRAIL_PITCH) =
-                *(u16 *)(m + DRAKORMISSILE_FIELD_TRAIL_PITCH) + *(u16 *)(m + DRAKORMISSILE_FIELD_TRAIL_PITCH_STEP);
-            ((GameObject *)obj)->anim.rotZ = *(u16 *)(m + DRAKORMISSILE_FIELD_TRAIL_YAW);
-            ((GameObject *)obj)->anim.rotY = *(u16 *)(m + DRAKORMISSILE_FIELD_TRAIL_PITCH);
-            *(u16 *)((char *)model + 0x18) &= ~8;
+        for (i = 0; i < DRAKORMISSILE_RENDER_TRAIL_COUNT; i++)
+        {
+            *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_YAW) =
+                *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_YAW) + *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_YAW_STEP);
+            *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_PITCH) =
+                *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_PITCH) + *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_PITCH_STEP);
+            ((GameObject*)obj)->anim.rotZ = *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_YAW);
+            ((GameObject*)obj)->anim.rotY = *(u16*)(m + DRAKORMISSILE_FIELD_TRAIL_PITCH);
+            *(u16*)((char*)model + 0x18) &= ~8;
             objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6964);
             m += 2;
         }
-        ((GameObject *)obj)->anim.rotZ = sv4;
-        ((GameObject *)obj)->anim.rotY = sv2;
-        ((GameObject *)obj)->anim.rootMotionScale = sv8;
+        ((GameObject*)obj)->anim.rotZ = sv4;
+        ((GameObject*)obj)->anim.rotY = sv2;
+        ((GameObject*)obj)->anim.rootMotionScale = sv8;
         objAnim->bankIndex = 0;
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6964);
-        if (*(void **)(p + DRAKORMISSILE_FIELD_LIGHT) != 0 && modelLightStruct_getActiveState() != 0) {
-            queueGlowRender(*(void **)(p + DRAKORMISSILE_FIELD_LIGHT));
+        if (*(void**)(p + DRAKORMISSILE_FIELD_LIGHT) != 0 && modelLightStruct_getActiveState() != 0)
+        {
+            queueGlowRender(*(void**)(p + DRAKORMISSILE_FIELD_LIGHT));
         }
     }
 }
 
-void drakormissile_init(int obj, char *arg) {
-    char *p = ((GameObject *)obj)->extra;
+void drakormissile_init(int obj, char* arg)
+{
+    char* p = ((GameObject*)obj)->extra;
     int s;
     int i;
-    ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = 0x13;
-    ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = 1;
-    s = *(int *)&((GameObject *)obj)->anim.hitReactState;
-    ((ObjHitsPriorityState *)s)->flags = ((ObjHitsPriorityState *)s)->flags & ~1;
-    ((GameObject *)obj)->anim.localPosX = *(f32 *)(arg + DRAKORMISSILE_SETUP_POS_X);
-    ((GameObject *)obj)->anim.localPosY = *(f32 *)(arg + DRAKORMISSILE_SETUP_POS_Y);
-    ((GameObject *)obj)->anim.localPosZ = *(f32 *)(arg + DRAKORMISSILE_SETUP_POS_Z);
-    ((GameObject *)obj)->anim.velocityX = (f32)(u32)(u8)arg[DRAKORMISSILE_SETUP_VEL_X];
-    ((GameObject *)obj)->anim.velocityY = (f32)(u32)(u8)arg[DRAKORMISSILE_SETUP_VEL_Y];
-    ((GameObject *)obj)->anim.velocityZ = (f32)(u32)(u8)arg[DRAKORMISSILE_SETUP_VEL_Z];
+    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 0x13;
+    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
+    s = *(int*)&((GameObject*)obj)->anim.hitReactState;
+    ((ObjHitsPriorityState*)s)->flags = ((ObjHitsPriorityState*)s)->flags & ~1;
+    ((GameObject*)obj)->anim.localPosX = *(f32*)(arg + DRAKORMISSILE_SETUP_POS_X);
+    ((GameObject*)obj)->anim.localPosY = *(f32*)(arg + DRAKORMISSILE_SETUP_POS_Y);
+    ((GameObject*)obj)->anim.localPosZ = *(f32*)(arg + DRAKORMISSILE_SETUP_POS_Z);
+    ((GameObject*)obj)->anim.velocityX = (f32)(u32)(u8)
+    arg[DRAKORMISSILE_SETUP_VEL_X];
+    ((GameObject*)obj)->anim.velocityY = (f32)(u32)(u8)
+    arg[DRAKORMISSILE_SETUP_VEL_Y];
+    ((GameObject*)obj)->anim.velocityZ = (f32)(u32)(u8)
+    arg[DRAKORMISSILE_SETUP_VEL_Z];
     {
-        int *r = *(int **)&((GameObject *)obj)->anim.hitReactState;
-        if (r != 0) {
-            *(s16 *)&((ObjHitsPriorityState *)r)->trackContactMask = 1;
+        int* r = *(int**)&((GameObject*)obj)->anim.hitReactState;
+        if (r != 0)
+        {
+            *(s16*)&((ObjHitsPriorityState*)r)->trackContactMask = 1;
         }
     }
     ObjGroup_AddObject(obj, DRAKORMISSILE_GROUP_ID);
-    *(u8 *)(p + DRAKORMISSILE_FIELD_STATE) = DRAKORMISSILE_STATE_IDLE;
-    *(u8 *)(p + DRAKORMISSILE_FIELD_FLAGS) = 0;
-    *(int *)(p + DRAKORMISSILE_FIELD_TIMER) = 0;
-    *(int *)(p + DRAKORMISSILE_FIELD_LIGHT) = 0;
-    *(f32 *)(p + DRAKORMISSILE_FIELD_FADE_TIME) = lbl_803E695C;
-    for (i = 0; i < DRAKORMISSILE_RENDER_TRAIL_COUNT; i++) {
-        *(u16 *)(p + DRAKORMISSILE_FIELD_TRAIL_YAW) = (u16)randomGetRange(-0x7fff, 0x7fff);
-        *(u16 *)(p + DRAKORMISSILE_FIELD_TRAIL_YAW_STEP) = (u16)randomGetRange(-0x400, 0x400);
-        *(u16 *)(p + DRAKORMISSILE_FIELD_TRAIL_PITCH) = (u16)randomGetRange(-0x7fff, 0x7fff);
-        *(u16 *)(p + DRAKORMISSILE_FIELD_TRAIL_PITCH_STEP) = (u16)randomGetRange(-0x400, 0x400);
+    *(u8*)(p + DRAKORMISSILE_FIELD_STATE) = DRAKORMISSILE_STATE_IDLE;
+    *(u8*)(p + DRAKORMISSILE_FIELD_FLAGS) = 0;
+    *(int*)(p + DRAKORMISSILE_FIELD_TIMER) = 0;
+    *(int*)(p + DRAKORMISSILE_FIELD_LIGHT) = 0;
+    *(f32*)(p + DRAKORMISSILE_FIELD_FADE_TIME) = lbl_803E695C;
+    for (i = 0; i < DRAKORMISSILE_RENDER_TRAIL_COUNT; i++)
+    {
+        *(u16*)(p + DRAKORMISSILE_FIELD_TRAIL_YAW) = (u16)randomGetRange(-0x7fff, 0x7fff);
+        *(u16*)(p + DRAKORMISSILE_FIELD_TRAIL_YAW_STEP) = (u16)randomGetRange(-0x400, 0x400);
+        *(u16*)(p + DRAKORMISSILE_FIELD_TRAIL_PITCH) = (u16)randomGetRange(-0x7fff, 0x7fff);
+        *(u16*)(p + DRAKORMISSILE_FIELD_TRAIL_PITCH_STEP) = (u16)randomGetRange(-0x400, 0x400);
         p += 2;
     }
 }

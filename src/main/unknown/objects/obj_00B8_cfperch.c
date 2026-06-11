@@ -53,7 +53,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00B8_CFPerch_packet_info {
+enum obj_00B8_CFPerch_packet_info
+{
     CFPERCH_DEF_ID = 0x00B8,
     CFPERCH_DLL_ID = 0x0153,
     CFPERCH_CLASS_ID = 0x003D,

@@ -19,25 +19,28 @@ extern u8 voiceDirectSlots[];
  */
 void voiceUnregister(int obj)
 {
-    SynthVoiceState *voice;
+    SynthVoiceState* voice;
     u32 voiceId;
     u32 midiSlot;
     u32 midiChannel;
     u32 vid8;
-    u8 *slot;
+    u8* slot;
 
-    voice = (SynthVoiceState *)obj;
+    voice = (SynthVoiceState*)obj;
     voiceId = voice->handle;
     if (voiceId == SYNTH_INVALID_VOICE) return;
     midiSlot = voice->midiSlot;
     if (midiSlot == SYNTH_INVALID_VOICE_U8) return;
     midiChannel = voice->midiChannel;
     vid8 = (u8)voiceId;
-    if (midiChannel == SYNTH_INVALID_VOICE_U8) {
+    if (midiChannel == SYNTH_INVALID_VOICE_U8)
+    {
         slot = &voiceDirectSlots[vid8];
         if (*slot != vid8) return;
         *slot = SYNTH_INVALID_VOICE_U8;
-    } else {
+    }
+    else
+    {
         slot = &voiceMidiKeySlots[midiChannel][midiSlot];
         if (voiceId != *slot) return;
         *slot = SYNTH_INVALID_VOICE_U8;

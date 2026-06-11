@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_042F_DR_BarrelGr_packet_info {
+enum obj_042F_DR_BarrelGr_packet_info
+{
     DR_BARRELGR_DEF_ID = 0x042F,
     DR_BARRELGR_DLL_ID = 0x0283,
     DR_BARRELGR_CLASS_ID = 0x0030,

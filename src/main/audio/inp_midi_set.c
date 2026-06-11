@@ -1,19 +1,20 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 
-typedef struct InpMidiState {
+typedef struct InpMidiState
+{
     u8 pad0[0xC0];
-    u8 midiCtrl[8][16][134];  /* 0x00C0 */
-    u8 fxCtrl[16][134];       /* 0x43C0 */
-    u8 pad1[0x1920];          /* 0x4C20 */
-    u32 globalDirty[8][16];   /* 0x6540 */
-    u8 pbRange[8][16];        /* 0x6740 */
+    u8 midiCtrl[8][16][134]; /* 0x00C0 */
+    u8 fxCtrl[16][134]; /* 0x43C0 */
+    u8 pad1[0x1920]; /* 0x4C20 */
+    u32 globalDirty[8][16]; /* 0x6540 */
+    u8 pbRange[8][16]; /* 0x6740 */
 } InpMidiState;
 
 extern u8 lbl_803CD760[];
 extern u8 lbl_803BD150[];
-extern McmdVoiceState *synthVoice;
-extern void synthQueueVoiceInputUpdate(McmdVoiceState *voice);
+extern McmdVoiceState* synthVoice;
+extern void synthQueueVoiceInputUpdate(McmdVoiceState * voice);
 
 /*
  * inpSetMidiCtrl - combined RPN/MIDI controller setter.
@@ -23,25 +24,31 @@ extern void synthQueueVoiceInputUpdate(McmdVoiceState *voice);
  */
 void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
 {
-    InpMidiState *st = (InpMidiState *)lbl_803CD760;
+    InpMidiState* st = (InpMidiState*)lbl_803CD760;
     u32 i;
     u16 rpn;
     u8 range;
 
-    if (channel == 0xFF) {
+    if (channel == 0xFF)
+    {
         return;
     }
 
-    if (set != 0xFF) {
-        switch (ctrl) {
+    if (set != 0xFF)
+    {
+        switch (ctrl)
+        {
         case 6:
             rpn = (st->midiCtrl[set][channel][100]) | (st->midiCtrl[set][channel][101] << 8);
-            switch (rpn) {
+            switch (rpn)
+            {
             case 0:
                 range = value > 24 ? 24 : value;
                 st->pbRange[set][channel] = range;
-                for (i = 0; i < lbl_803BD150[0x210]; i++) {
-                    if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot) {
+                for (i = 0; i < lbl_803BD150[0x210]; i++)
+                {
+                    if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
+                    {
                         synthVoice[i].pitchBendRangeDown = range;
                         synthVoice[i].pitchBendRangeUp = range;
                     }
@@ -53,15 +60,19 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
             break;
         case 96:
             rpn = (st->midiCtrl[set][channel][100]) | (st->midiCtrl[set][channel][101] << 8);
-            switch (rpn) {
+            switch (rpn)
+            {
             case 0:
                 range = st->pbRange[set][channel];
-                if (range != 0) {
+                if (range != 0)
+                {
                     --range;
                 }
                 st->pbRange[set][channel] = range;
-                for (i = 0; i < lbl_803BD150[0x210]; i++) {
-                    if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot) {
+                for (i = 0; i < lbl_803BD150[0x210]; i++)
+                {
+                    if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
+                    {
                         synthVoice[i].pitchBendRangeDown = range;
                         synthVoice[i].pitchBendRangeUp = range;
                     }
@@ -71,15 +82,19 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
             break;
         case 97:
             rpn = (st->midiCtrl[set][channel][100]) | (st->midiCtrl[set][channel][101] << 8);
-            switch (rpn) {
+            switch (rpn)
+            {
             case 0:
                 range = st->pbRange[set][channel];
-                if (range < 24) {
+                if (range < 24)
+                {
                     ++range;
                 }
                 st->pbRange[set][channel] = range;
-                for (i = 0; i < lbl_803BD150[0x210]; i++) {
-                    if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot) {
+                for (i = 0; i < lbl_803BD150[0x210]; i++)
+                {
+                    if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
+                    {
                         synthVoice[i].pitchBendRangeDown = range;
                         synthVoice[i].pitchBendRangeUp = range;
                     }
@@ -90,23 +105,31 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
         }
 
         st->midiCtrl[set][channel][ctrl] = value & 0x7f;
-        for (i = 0; i < lbl_803BD150[0x210]; i++) {
-            if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot) {
+        for (i = 0; i < lbl_803BD150[0x210]; i++)
+        {
+            if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
+            {
                 synthVoice[i].inputDirtyFlags = MCMD_INPUT_DIRTY_ALL;
                 synthQueueVoiceInputUpdate(&synthVoice[i]);
             }
         }
         st->globalDirty[set][channel] = 0xFF;
-    } else {
-        switch (ctrl) {
+    }
+    else
+    {
+        switch (ctrl)
+        {
         case 6:
             rpn = (st->midiCtrl[set][channel][100]) | (st->midiCtrl[set][channel][101] << 8);
-            switch (rpn) {
+            switch (rpn)
+            {
             case 0:
                 range = value > 24 ? 24 : value;
                 st->pbRange[set][channel] = range;
-                for (i = 0; i < lbl_803BD150[0x210]; i++) {
-                    if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot) {
+                for (i = 0; i < lbl_803BD150[0x210]; i++)
+                {
+                    if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
+                    {
                         synthVoice[i].pitchBendRangeDown = range;
                         synthVoice[i].pitchBendRangeUp = range;
                     }
@@ -118,15 +141,19 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
             break;
         case 96:
             rpn = (st->midiCtrl[set][channel][100]) | (st->midiCtrl[set][channel][101] << 8);
-            switch (rpn) {
+            switch (rpn)
+            {
             case 0:
                 range = st->pbRange[set][channel];
-                if (range != 0) {
+                if (range != 0)
+                {
                     --range;
                 }
                 st->pbRange[set][channel] = range;
-                for (i = 0; i < lbl_803BD150[0x210]; i++) {
-                    if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot) {
+                for (i = 0; i < lbl_803BD150[0x210]; i++)
+                {
+                    if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
+                    {
                         synthVoice[i].pitchBendRangeDown = range;
                         synthVoice[i].pitchBendRangeUp = range;
                     }
@@ -136,15 +163,19 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
             break;
         case 97:
             rpn = (st->midiCtrl[set][channel][100]) | (st->midiCtrl[set][channel][101] << 8);
-            switch (rpn) {
+            switch (rpn)
+            {
             case 0:
                 range = st->pbRange[set][channel];
-                if (range < 24) {
+                if (range < 24)
+                {
                     ++range;
                 }
                 st->pbRange[set][channel] = range;
-                for (i = 0; i < lbl_803BD150[0x210]; i++) {
-                    if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot) {
+                for (i = 0; i < lbl_803BD150[0x210]; i++)
+                {
+                    if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
+                    {
                         synthVoice[i].pitchBendRangeDown = range;
                         synthVoice[i].pitchBendRangeUp = range;
                     }
@@ -155,8 +186,10 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
         }
 
         st->fxCtrl[channel][ctrl] = value & 0x7f;
-        for (i = 0; i < lbl_803BD150[0x210]; i++) {
-            if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot) {
+        for (i = 0; i < lbl_803BD150[0x210]; i++)
+        {
+            if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
+            {
                 synthVoice[i].inputDirtyFlags = MCMD_INPUT_DIRTY_ALL;
                 synthQueueVoiceInputUpdate(&synthVoice[i]);
             }
@@ -168,22 +201,30 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
  * inpSetMidiCtrl14 - wrapper that splits a 16-bit data word into two
  * 7-bit MIDI controller bytes and dispatches to the MIDI-control setter.
  */
-void inpSetMidiCtrl14(u8 ctrl, u8 channel, u8 set, u16 value) {
+void inpSetMidiCtrl14(u8 ctrl, u8 channel, u8 set, u16 value)
+{
+    if (channel == 0xFF)
+    {
+        return;
+    }
 
-  if (channel == 0xFF) {
-    return;
-  }
-
-  if (ctrl < 64) {
-    inpSetMidiCtrl(ctrl & 31, channel, set, value >> 7);
-    inpSetMidiCtrl((ctrl & 31) + 32, channel, set, value & 0x7f);
-  } else if (ctrl == 128 || ctrl == 129) {
-    inpSetMidiCtrl(ctrl & 254, channel, set, value >> 7);
-    inpSetMidiCtrl((ctrl & 254) + 1, channel, set, value & 0x7f);
-  } else if (ctrl == 132 || ctrl == 133) {
-    inpSetMidiCtrl(ctrl & 254, channel, set, value >> 7);
-    inpSetMidiCtrl((ctrl & 254) + 1, channel, set, value & 0x7f);
-  } else {
-    inpSetMidiCtrl(ctrl, channel, set, value >> 7);
-  }
+    if (ctrl < 64)
+    {
+        inpSetMidiCtrl(ctrl & 31, channel, set, value >> 7);
+        inpSetMidiCtrl((ctrl & 31) + 32, channel, set, value & 0x7f);
+    }
+    else if (ctrl == 128 || ctrl == 129)
+    {
+        inpSetMidiCtrl(ctrl & 254, channel, set, value >> 7);
+        inpSetMidiCtrl((ctrl & 254) + 1, channel, set, value & 0x7f);
+    }
+    else if (ctrl == 132 || ctrl == 133)
+    {
+        inpSetMidiCtrl(ctrl & 254, channel, set, value >> 7);
+        inpSetMidiCtrl((ctrl & 254) + 1, channel, set, value & 0x7f);
+    }
+    else
+    {
+        inpSetMidiCtrl(ctrl, channel, set, value >> 7);
+    }
 }

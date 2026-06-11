@@ -52,7 +52,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0553_LGTProjecte_packet_info {
+enum obj_0553_LGTProjecte_packet_info
+{
     LGTPROJECTE_DEF_ID = 0x0553,
     LGTPROJECTE_DLL_ID = 0x02AB,
     LGTPROJECTE_CLASS_ID = 0x007B,

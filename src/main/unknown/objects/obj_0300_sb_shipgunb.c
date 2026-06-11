@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0300_SB_ShipGunB_packet_info {
+enum obj_0300_SB_ShipGunB_packet_info
+{
     SB_SHIPGUNB_DEF_ID = 0x0300,
     SB_SHIPGUNB_DLL_ID = 0x01F7,
     SB_SHIPGUNB_CLASS_ID = 0x0030,

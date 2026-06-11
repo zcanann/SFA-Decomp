@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0522_TrigCrve_packet_info {
+enum obj_0522_TrigCrve_packet_info
+{
     TRIGCRVE_DEF_ID = 0x0522,
     TRIGCRVE_DLL_ID = 0x0126,
     TRIGCRVE_CLASS_ID = 0x003B,

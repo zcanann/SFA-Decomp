@@ -36,7 +36,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_0236_Laser_slot {
+enum dll_0236_Laser_slot
+{
     LASER_INITIALISE = 0,
     LASER_RELEASE = 1,
     LASER_INIT = 3,

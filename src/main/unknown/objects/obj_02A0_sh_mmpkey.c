@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02A0_SH_MMPkey_packet_info {
+enum obj_02A0_SH_MMPkey_packet_info
+{
     SH_MMPKEY_DEF_ID = 0x02A0,
     SH_MMPKEY_DLL_ID = 0x00ED,
     SH_MMPKEY_CLASS_ID = 0x0006,

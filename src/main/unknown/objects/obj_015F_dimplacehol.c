@@ -62,7 +62,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_015F_DIMplacehol_packet_info {
+enum obj_015F_DIMplacehol_packet_info
+{
     DIMPLACEHOL_DEF_ID = 0x015F,
     DIMPLACEHOL_DLL_ID = 0xFFFF,
     DIMPLACEHOL_CLASS_ID = 0x0030,

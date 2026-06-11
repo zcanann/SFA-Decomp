@@ -56,7 +56,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04B1_Transporter_packet_info {
+enum obj_04B1_Transporter_packet_info
+{
     TRANSPORTER_DEF_ID = 0x04B1,
     TRANSPORTER_DLL_ID = 0x012C,
     TRANSPORTER_CLASS_ID = 0x0025,

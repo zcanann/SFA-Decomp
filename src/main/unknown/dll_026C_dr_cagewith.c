@@ -31,7 +31,8 @@
  */
 
 #if 0
-enum dll_026C_DR_CageWith_slot {
+enum dll_026C_DR_CageWith_slot
+{
     DRCAGEWITH_INITIALISE = 0,
     DRCAGEWITH_RELEASE = 1,
     DRCAGEWITH_INIT = 3,

@@ -5,117 +5,197 @@
 #include "main/objseq.h"
 
 extern void objRenderFn_80041018(void);
-extern u32  GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern u32  randomGetRange(int min, int max);
+extern u32 randomGetRange(int min, int max);
 
 extern f32 lbl_803E384C;
-extern ObjectTriggerInterface **gObjectTriggerInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-typedef struct BabyCloudRunnerPlacement {
-  ObjPlacement base;
-  s16 gateGameBit;
-  s16 rememberedGameBit;
-  u8 targetGroup;
-  u8 triggerIdMin;
-  u8 triggerIdMax;
-  u8 flags;
-  u8 pad20[0x24 - 0x20];
+typedef struct BabyCloudRunnerPlacement
+{
+    ObjPlacement base;
+    s16 gateGameBit;
+    s16 rememberedGameBit;
+    u8 targetGroup;
+    u8 triggerIdMin;
+    u8 triggerIdMax;
+    u8 flags;
+    u8 pad20[0x24 - 0x20];
 } BabyCloudRunnerPlacement;
 
-typedef struct BabyCloudRunnerState {
-  u8 mode;
-  u8 triggerId;
-  u8 rememberedGameBitValue;
-  u8 pad03;
-  GameObject *target;
+typedef struct BabyCloudRunnerState
+{
+    u8 mode;
+    u8 triggerId;
+    u8 rememberedGameBitValue;
+    u8 pad03;
+    GameObject* target;
 } BabyCloudRunnerState;
 
-STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x8);
-STATIC_ASSERT(sizeof(BabyCloudRunnerPlacement) == 0x24);
-STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, gateGameBit) == 0x18);
-STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, rememberedGameBit) == 0x1A);
-STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, targetGroup) == 0x1C);
-STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, triggerIdMin) == 0x1D);
-STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, triggerIdMax) == 0x1E);
-STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, flags) == 0x1F);
-STATIC_ASSERT(offsetof(BabyCloudRunnerState, target) == 0x4);
+STATIC_ASSERT (
+sizeof
+(BabyCloudRunnerState)
+==
+0x8
+);
+STATIC_ASSERT (
+sizeof
+(BabyCloudRunnerPlacement)
+==
+0x24
+);
+STATIC_ASSERT (offsetof
+(BabyCloudRunnerPlacement
+,
+gateGameBit
+)
+==
+0x18
+);
+STATIC_ASSERT (offsetof
+(BabyCloudRunnerPlacement
+,
+rememberedGameBit
+)
+==
+0x1A
+);
+STATIC_ASSERT (offsetof
+(BabyCloudRunnerPlacement
+,
+targetGroup
+)
+==
+0x1C
+);
+STATIC_ASSERT (offsetof
+(BabyCloudRunnerPlacement
+,
+triggerIdMin
+)
+==
+0x1D
+);
+STATIC_ASSERT (offsetof
+(BabyCloudRunnerPlacement
+,
+triggerIdMax
+)
+==
+0x1E
+);
+STATIC_ASSERT (offsetof
+(BabyCloudRunnerPlacement
+,
+flags
+)
+==
+0x1F
+);
+STATIC_ASSERT (offsetof
+(BabyCloudRunnerState
+,
+target
+)
+==
+0x4
+);
 
 void dll_FC_update(int obj)
 {
-  BabyCloudRunnerPlacement *placement;
-  BabyCloudRunnerState *state;
-  uint uVar3;
-  float local8;
+    BabyCloudRunnerPlacement* placement;
+    BabyCloudRunnerState* state;
+    uint uVar3;
+    float local8;
 
-  local8 = lbl_803E384C;
-  placement = (BabyCloudRunnerPlacement *)((GameObject *)obj)->anim.placementData;
-  state = ((GameObject *)obj)->extra;
+    local8 = lbl_803E384C;
+    placement = (BabyCloudRunnerPlacement*)((GameObject*)obj)->anim.placementData;
+    state = ((GameObject*)obj)->extra;
 
-  if ((u32)state->target == 0) {
-    state->target = (GameObject *)ObjGroup_FindNearestObject(placement->targetGroup, obj, &local8);
-    if ((u32)state->target == 0) goto end;
-    if ((int)placement->rememberedGameBit == -1) {
-      state->rememberedGameBitValue = 0;
-    } else {
-      uVar3 = GameBit_Get((int)placement->rememberedGameBit);
-      state->rememberedGameBitValue = (byte)uVar3;
-    }
-    state->mode = 1;
-  }
-
-  ((GameObject *)obj)->anim.localPosX = state->target->anim.localPosX;
-  ((GameObject *)obj)->anim.localPosY = state->target->anim.localPosY;
-  ((GameObject *)obj)->anim.localPosZ = state->target->anim.localPosZ;
-  ((GameObject *)obj)->anim.rotX = state->target->anim.rotX;
-  ((GameObject *)obj)->anim.rotZ = state->target->anim.rotZ;
-  ((GameObject *)obj)->anim.rotY = state->target->anim.rotY;
-
-  switch (state->mode) {
-  case 3:
-    break;
-  case 1:
-    if ((state->rememberedGameBitValue != 0) && ((placement->flags & 1) == 0)) {
-      *(u8 *)&state->target->anim.resetHitboxMode &= ~0x20;
-      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x08;
-      state->mode = 3;
-    } else if (((int)placement->gateGameBit != -1) &&
-               (GameBit_Get((int)placement->gateGameBit) == 0)) {
-      *(u8 *)&state->target->anim.resetHitboxMode &= ~0x20;
-      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x08;
-      state->mode = 2;
-    } else if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
-      if ((placement->flags & 2) != 0) {
-        GameBit_Set((int)placement->gateGameBit, 0);
-      }
-      if ((int)placement->rememberedGameBit != -1) {
-        GameBit_Set((int)placement->rememberedGameBit, 1);
-      }
-      if ((placement->flags & 4) != 0) {
-        uVar3 = randomGetRange((int)placement->triggerIdMin, (int)placement->triggerIdMax);
-        state->triggerId = (byte)uVar3;
-      } else {
-        state->triggerId += 1;
-        if (state->triggerId > placement->triggerIdMax) {
-          state->triggerId = placement->triggerIdMin;
+    if ((u32)state->target == 0)
+    {
+        state->target = (GameObject*)ObjGroup_FindNearestObject(placement->targetGroup, obj, &local8);
+        if ((u32)state->target == 0) goto end;
+        if ((int)placement->rememberedGameBit == -1)
+        {
+            state->rememberedGameBitValue = 0;
         }
-      }
-      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x08;
-      state->rememberedGameBitValue = 1;
-      (*gObjectTriggerInterface)->runSequence(state->triggerId, (void *)obj, -1);
-    } else {
-      *(u8 *)&state->target->anim.resetHitboxMode |= 0x20;
-      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x08;
+        else
+        {
+            uVar3 = GameBit_Get((int)placement->rememberedGameBit);
+            state->rememberedGameBitValue = (byte)uVar3;
+        }
+        state->mode = 1;
     }
-    break;
-  case 2:
-    if (GameBit_Get((int)placement->gateGameBit) != 0) {
-      state->mode = 1;
+
+    ((GameObject*)obj)->anim.localPosX = state->target->anim.localPosX;
+    ((GameObject*)obj)->anim.localPosY = state->target->anim.localPosY;
+    ((GameObject*)obj)->anim.localPosZ = state->target->anim.localPosZ;
+    ((GameObject*)obj)->anim.rotX = state->target->anim.rotX;
+    ((GameObject*)obj)->anim.rotZ = state->target->anim.rotZ;
+    ((GameObject*)obj)->anim.rotY = state->target->anim.rotY;
+
+    switch (state->mode)
+    {
+    case 3:
+        break;
+    case 1:
+        if ((state->rememberedGameBitValue != 0) && ((placement->flags & 1) == 0))
+        {
+            *(u8*)&state->target->anim.resetHitboxMode &= ~0x20;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x08;
+            state->mode = 3;
+        }
+        else if (((int)placement->gateGameBit != -1) &&
+            (GameBit_Get((int)placement->gateGameBit) == 0))
+        {
+            *(u8*)&state->target->anim.resetHitboxMode &= ~0x20;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x08;
+            state->mode = 2;
+        }
+        else if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
+        {
+            if ((placement->flags & 2) != 0)
+            {
+                GameBit_Set((int)placement->gateGameBit, 0);
+            }
+            if ((int)placement->rememberedGameBit != -1)
+            {
+                GameBit_Set((int)placement->rememberedGameBit, 1);
+            }
+            if ((placement->flags & 4) != 0)
+            {
+                uVar3 = randomGetRange((int)placement->triggerIdMin, (int)placement->triggerIdMax);
+                state->triggerId = (byte)uVar3;
+            }
+            else
+            {
+                state->triggerId += 1;
+                if (state->triggerId > placement->triggerIdMax)
+                {
+                    state->triggerId = placement->triggerIdMin;
+                }
+            }
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x08;
+            state->rememberedGameBitValue = 1;
+            (*gObjectTriggerInterface)->runSequence(state->triggerId, (void*)obj, -1);
+        }
+        else
+        {
+            *(u8*)&state->target->anim.resetHitboxMode |= 0x20;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x08;
+        }
+        break;
+    case 2:
+        if (GameBit_Get((int)placement->gateGameBit) != 0)
+        {
+            state->mode = 1;
+        }
+        break;
     }
-    break;
-  }
 end:
-  return;
+    return;
 }
 
 /*
@@ -133,15 +213,15 @@ end:
  */
 void dll_FC_init(int obj, int objDef)
 {
-  BabyCloudRunnerState *state;
-  BabyCloudRunnerPlacement *placement;
+    BabyCloudRunnerState* state;
+    BabyCloudRunnerPlacement* placement;
 
-  state = ((GameObject *)obj)->extra;
-  placement = (BabyCloudRunnerPlacement *)objDef;
-  state->mode = 0;
-  state->triggerId = placement->triggerIdMax;
-  ((GameObject *)obj)->objectFlags |= 0x4000;
-  return;
+    state = ((GameObject*)obj)->extra;
+    placement = (BabyCloudRunnerPlacement*)objDef;
+    state->mode = 0;
+    state->triggerId = placement->triggerIdMax;
+    ((GameObject*)obj)->objectFlags |= 0x4000;
+    return;
 }
 
 /*
@@ -159,17 +239,26 @@ void dll_FC_init(int obj, int objDef)
  */
 void dll_14D_hitDetect(int param_1)
 {
-  if (((((ObjAnimComponent *)param_1)->modelInstance->flags & 1) != 0) && (*(uint *)(param_1 + 0x74) != 0)) {
-    objRenderFn_80041018();
-  }
-  return;
+    if (((((ObjAnimComponent*)param_1)->modelInstance->flags & 1) != 0) && (*(uint*)(param_1 + 0x74) != 0))
+    {
+        objRenderFn_80041018();
+    }
+    return;
 }
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void dll_FC_release_nop(void) {}
-void dll_FC_initialise_nop(void) {}
-void dll_14D_free_nop(void) {}
+void dll_FC_release_nop(void)
+{
+}
+
+void dll_FC_initialise_nop(void)
+{
+}
+
+void dll_14D_free_nop(void)
+{
+}
 
 /* 8b "li r3, N; blr" returners. */
 int dll_14D_getExtraSize_ret_8(void) { return 0x8; }
@@ -178,4 +267,9 @@ int dll_14D_getObjectTypeId(void) { return 0x0; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3850;
 extern void objRenderFn_8003b8f4(f32);
-void dll_14D_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3850); }
+
+void dll_14D_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E3850);
+}

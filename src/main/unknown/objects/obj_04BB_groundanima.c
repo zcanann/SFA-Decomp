@@ -50,7 +50,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04BB_GroundAnima_packet_info {
+enum obj_04BB_GroundAnima_packet_info
+{
     GROUNDANIMA_DEF_ID = 0x04BB,
     GROUNDANIMA_DLL_ID = 0x0138,
     GROUNDANIMA_CLASS_ID = 0x004A,

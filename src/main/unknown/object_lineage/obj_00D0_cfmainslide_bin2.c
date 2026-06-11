@@ -22,7 +22,8 @@
  */
 
 #if 0
-enum object_bin2_packet_info {
+enum object_bin2_packet_info
+{
     CFMAINSLIDE_DEF_ID = 0x00D0,
     CFMAINSLIDE_LIVE_BYTES = 0xC0,
     CFMAINSLIDE_BIN2_BYTES = 0x2C0,

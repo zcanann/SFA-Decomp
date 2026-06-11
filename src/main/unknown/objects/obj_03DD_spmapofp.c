@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03DD_SPMapOFP_packet_info {
+enum obj_03DD_SPMapOFP_packet_info
+{
     SPMAPOFP_DEF_ID = 0x03DD,
     SPMAPOFP_DLL_ID = 0x0284,
     SPMAPOFP_CLASS_ID = 0x0070,

@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00C3_CFTreasWind_packet_info {
+enum obj_00C3_CFTreasWind_packet_info
+{
     CFTREASWIND_DEF_ID = 0x00C3,
     CFTREASWIND_DLL_ID = 0x0149,
     CFTREASWIND_CLASS_ID = 0x0030,

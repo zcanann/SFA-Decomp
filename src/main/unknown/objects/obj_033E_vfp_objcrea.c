@@ -59,7 +59,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_033E_VFP_ObjCrea_packet_info {
+enum obj_033E_VFP_ObjCrea_packet_info
+{
     VFP_OBJCREA_DEF_ID = 0x033E,
     VFP_OBJCREA_DLL_ID = 0x0217,
     VFP_OBJCREA_CLASS_ID = 0x0037,

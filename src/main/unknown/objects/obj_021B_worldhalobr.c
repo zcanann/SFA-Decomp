@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_021B_WORLDhalobr_packet_info {
+enum obj_021B_WORLDhalobr_packet_info
+{
     WORLDHALOBR_DEF_ID = 0x021B,
     WORLDHALOBR_DLL_ID = 0x01D3,
     WORLDHALOBR_CLASS_ID = 0x0061,

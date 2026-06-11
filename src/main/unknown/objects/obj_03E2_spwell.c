@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03E2_SPWell_packet_info {
+enum obj_03E2_SPWell_packet_info
+{
     SPWELL_DEF_ID = 0x03E2,
     SPWELL_DLL_ID = 0x01BD,
     SPWELL_CLASS_ID = 0x0030,

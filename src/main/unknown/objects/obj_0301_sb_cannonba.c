@@ -58,7 +58,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0301_SB_CannonBa_packet_info {
+enum obj_0301_SB_CannonBa_packet_info
+{
     SB_CANNONBA_DEF_ID = 0x0301,
     SB_CANNONBA_DLL_ID = 0x01EE,
     SB_CANNONBA_CLASS_ID = 0x0024,

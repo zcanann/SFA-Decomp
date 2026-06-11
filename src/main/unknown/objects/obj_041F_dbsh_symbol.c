@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_041F_DBSH_Symbol_packet_info {
+enum obj_041F_DBSH_Symbol_packet_info
+{
     DBSH_SYMBOL_DEF_ID = 0x041F,
     DBSH_SYMBOL_DLL_ID = 0x0196,
     DBSH_SYMBOL_CLASS_ID = 0x0030,

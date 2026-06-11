@@ -54,7 +54,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01BB_IMIcicle_packet_info {
+enum obj_01BB_IMIcicle_packet_info
+{
     IMICICLE_DEF_ID = 0x01BB,
     IMICICLE_DLL_ID = 0x016A,
     IMICICLE_CLASS_ID = 0x0028,

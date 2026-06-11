@@ -28,7 +28,8 @@
  */
 
 #if 0
-enum dll_0252_KT_Lazerwall_slot {
+enum dll_0252_KT_Lazerwall_slot
+{
     KTLAZERWALL_INITIALISE = 0,
     KTLAZERWALL_RELEASE = 1,
     KTLAZERWALL_INIT = 3,

@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0538_ARWArwingGu_packet_info {
+enum obj_0538_ARWArwingGu_packet_info
+{
     ARWARWINGGU_DEF_ID = 0x0538,
     ARWARWINGGU_DLL_ID = 0x029D,
     ARWARWINGGU_CLASS_ID = 0x0061,

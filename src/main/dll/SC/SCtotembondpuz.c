@@ -9,7 +9,7 @@ extern void GameBit_Set(int eventId, int value);
  * Function: SCGameBitLatch_UpdateInverted
  * EN v1.0 Address: 0x801D8060
  */
-void SCGameBitLatch_UpdateInverted(SCGameBitLatchState *state, int mask, s16 clearIfSetBit,
+void SCGameBitLatch_UpdateInverted(SCGameBitLatchState* state, int mask, s16 clearIfSetBit,
                                    s16 clearIfClearBit, s16 latchBit, int musicId)
 {
     GameBit_Set(latchBit, !GameBit_Get(latchBit));

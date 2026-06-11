@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_05AC_StaffAction_packet_info {
+enum obj_05AC_StaffAction_packet_info
+{
     STAFFACTION_DEF_ID = 0x05AC,
     STAFFACTION_DLL_ID = 0x011C,
     STAFFACTION_CLASS_ID = 0x007A,

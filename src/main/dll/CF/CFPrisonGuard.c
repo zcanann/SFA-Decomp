@@ -8,7 +8,7 @@
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b94();
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId,int value);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
@@ -29,7 +29,7 @@ extern int Obj_AllocObjectSetup(int size, int objectId);
 extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
 extern void trickyImpress(int obj);
 extern f32 sqrtf(f32 value);
-extern void vecRotateZXY(void *rotation, void *vec);
+extern void vecRotateZXY(void* rotation, void* vec);
 extern u16 getAngle(f32 x, f32 z);
 
 extern f64 DOUBLE_803e4868;
@@ -51,7 +51,7 @@ extern const f32 lbl_803E3BDC;
 extern const f32 lbl_803E3BE0;
 extern f64 lbl_803E3BE8;
 extern s16 lbl_803DBDE0[4];
-extern MapEventInterface **gMapEventInterface;
+extern MapEventInterface** gMapEventInterface;
 
 #define STAFFACTIVATED_ACTIVE 0x80
 #define STAFFACTIVATED_LOCKED 0x40
@@ -63,58 +63,72 @@ extern MapEventInterface **gMapEventInterface;
  * EN v1.0 Address: 0x801899B4
  * EN v1.0 Size: 560b
  */
-void staffactivated_updateLiftHeight(int obj, StaffActivatedState *state)
+void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
 {
-  u32 flags;
-  s32 prevHeight;
-  s32 rumbleStrength;
+    u32 flags;
+    s32 prevHeight;
+    s32 rumbleStrength;
 
-  flags = state->flags;
-  if ((flags >> 7 & 1) != 0) {
-    if ((flags >> 6 & 1) == 0) {
-      if (state->liftReset == 0) {
-        state->liftVelocity = (s32)-(lbl_803E3BC8 * timeDelta - (f32)state->liftVelocity);
-        state->liftHeight =
-            (s32)((f32)state->liftVelocity * timeDelta + (f32)state->liftHeight);
-        if (state->liftHeight > state->peakLiftHeight) {
-          state->peakLiftHeight = state->liftHeight;
-        }
-        if (state->previousLiftHeight == 0x800 && state->liftHeight < 0x800) {
-          Sfx_PlayFromObject(obj, 0x374);
-        }
-        if (state->liftHeight < 0) {
-          if (state->previousLiftHeight > 0) {
-            Sfx_PlayFromObject(obj, SFXmn_dimraw36);
-            rumbleStrength = state->peakLiftHeight / 200;
-            if (rumbleStrength > 0) {
-              doRumble((f32)rumbleStrength);
+    flags = state->flags;
+    if ((flags >> 7 & 1) != 0)
+    {
+        if ((flags >> 6 & 1) == 0)
+        {
+            if (state->liftReset == 0)
+            {
+                state->liftVelocity = (s32) - (lbl_803E3BC8 * timeDelta - (f32)state->liftVelocity);
+                state->liftHeight =
+                    (s32)((f32)state->liftVelocity * timeDelta + (f32)state->liftHeight);
+                if (state->liftHeight > state->peakLiftHeight)
+                {
+                    state->peakLiftHeight = state->liftHeight;
+                }
+                if (state->previousLiftHeight == 0x800 && state->liftHeight < 0x800)
+                {
+                    Sfx_PlayFromObject(obj, 0x374);
+                }
+                if (state->liftHeight < 0)
+                {
+                    if (state->previousLiftHeight > 0)
+                    {
+                        Sfx_PlayFromObject(obj, SFXmn_dimraw36);
+                        rumbleStrength = state->peakLiftHeight / 200;
+                        if (rumbleStrength > 0)
+                        {
+                            doRumble((f32)rumbleStrength);
+                        }
+                    }
+                    state->liftVelocity = 0;
+                    state->liftHeight = 0;
+                }
             }
-          }
-          state->liftVelocity = 0;
-          state->liftHeight = 0;
-        }
-      } else {
-        state->liftReset = 0;
-        state->peakLiftHeight = 0;
-      }
+            else
+            {
+                state->liftReset = 0;
+                state->peakLiftHeight = 0;
+            }
 
-      prevHeight = state->previousLiftHeight;
-      if ((prevHeight < 0x40 && state->liftHeight >= 0x40) ||
-          (prevHeight >= 0x40 && state->liftHeight < 0x40)) {
-        Sfx_PlayFromObject(obj, 0x374);
-      }
-      ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
-                                                &state->hitCooldown);
-      state->previousLiftHeight = state->liftHeight;
-      ObjAnim_SetMoveProgress((f32)state->liftHeight / lbl_803E3BCC, (ObjAnimComponent *)obj);
-    } else {
-      goto done;
+            prevHeight = state->previousLiftHeight;
+            if ((prevHeight < 0x40 && state->liftHeight >= 0x40) ||
+                (prevHeight >= 0x40 && state->liftHeight < 0x40))
+            {
+                Sfx_PlayFromObject(obj, 0x374);
+            }
+            ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
+                                                      &state->hitCooldown);
+            state->previousLiftHeight = state->liftHeight;
+            ObjAnim_SetMoveProgress((f32)state->liftHeight / lbl_803E3BCC, (ObjAnimComponent*)obj);
+        }
+        else
+        {
+            goto done;
+        }
     }
-  }
 done:;
 }
 
-typedef struct PrisonGuardStateFlags {
+typedef struct PrisonGuardStateFlags
+{
     u8 pad[0x1d];
     u8 active : 1;
     u8 locked : 1;
@@ -130,28 +144,35 @@ typedef struct PrisonGuardStateFlags {
  */
 void cfPrisonGuard_setGameBitMirror(int obj, u8 flag)
 {
-    register StaffActivatedSetup *setup = (StaffActivatedSetup *)((GameObject *)obj)->anim.placementData;
-    register StaffActivatedState *state = ((GameObject *)obj)->extra;
-    if (flag != 0) {
+    register StaffActivatedSetup* setup = (StaffActivatedSetup*)((GameObject*)obj)->anim.placementData;
+    register StaffActivatedState* state = ((GameObject*)obj)->extra;
+    if (flag != 0)
+    {
         GameBit_Set(setup->lockGameBit, 1);
-        ((PrisonGuardStateFlags *)state)->mirror = 1;
-    } else {
+        ((PrisonGuardStateFlags*)state)->mirror = 1;
+    }
+    else
+    {
         GameBit_Set(setup->lockGameBit, 0);
-        ((PrisonGuardStateFlags *)state)->mirror = 0;
+        ((PrisonGuardStateFlags*)state)->mirror = 0;
     }
 }
 
-u32 cfPrisonGuard_isGameBitMirrorSet(int *obj) { return (((StaffActivatedState *)((GameObject *)obj)->extra)->flags >> 5) & 1; }
+u32 cfPrisonGuard_isGameBitMirrorSet(int* obj)
+{
+    return (((StaffActivatedState*)((GameObject*)obj)->extra)->flags >> 5) & 1;
+}
 
-typedef struct PrisonGuardRotationWork {
-  s16 y;
-  s16 x;
-  s16 z;
-  s16 pad;
-  f32 scale;
-  f32 tx;
-  f32 ty;
-  f32 tz;
+typedef struct PrisonGuardRotationWork
+{
+    s16 y;
+    s16 x;
+    s16 z;
+    s16 pad;
+    f32 scale;
+    f32 tx;
+    f32 ty;
+    f32 tz;
 } PrisonGuardRotationWork;
 
 /*
@@ -163,82 +184,97 @@ typedef struct PrisonGuardRotationWork {
  */
 void staffactivated_spawnMapEventDebris(int obj)
 {
-  int i;
-  StaffActivatedSetup *setup;
-  int player;
-  u32 tricky;
-  StaffActivatedState *state;
-  int spawnedSetup;
-  int spawnedObj;
-  ObjPlacement *spawnedPlacement;
-  f32 lenSq;
-  f32 len;
-  s32 yawDelta;
-  PrisonGuardRotationWork rotate;
+    int i;
+    StaffActivatedSetup* setup;
+    int player;
+    u32 tricky;
+    StaffActivatedState* state;
+    int spawnedSetup;
+    int spawnedObj;
+    ObjPlacement* spawnedPlacement;
+    f32 lenSq;
+    f32 len;
+    s32 yawDelta;
+    PrisonGuardRotationWork rotate;
 
-  setup = (StaffActivatedSetup *)((GameObject *)obj)->anim.placementData;
-  player = Obj_GetPlayerObject();
-  tricky = getTrickyObject();
-  state = ((GameObject *)obj)->extra;
+    setup = (StaffActivatedSetup*)((GameObject*)obj)->anim.placementData;
+    player = Obj_GetPlayerObject();
+    tricky = getTrickyObject();
+    state = ((GameObject*)obj)->extra;
 
-  if ((*gMapEventInterface)->isTimedEventActive(setup->base.mapId) != 0 &&
-      Obj_IsLoadingLocked() != 0) {
-    (*gMapEventInterface)->startTimedEvent(setup->base.mapId,
-                                           lbl_803E3BD8 * (f32)setup->timedEventSeconds);
-    if (tricky != 0) {
-      trickyImpress(tricky);
+    if ((*gMapEventInterface)->isTimedEventActive(setup->base.mapId) != 0 &&
+        Obj_IsLoadingLocked() != 0)
+    {
+        (*gMapEventInterface)->startTimedEvent(setup->base.mapId,
+                                               lbl_803E3BD8 * (f32)setup->timedEventSeconds);
+        if (tricky != 0)
+        {
+            trickyImpress(tricky);
+        }
+
+        i = 0;
+        while (i < setup->debrisCount)
+        {
+            spawnedSetup = Obj_AllocObjectSetup(0x24, lbl_803DBDE0[setup->debrisObjectSet]);
+            spawnedPlacement = (ObjPlacement*)spawnedSetup;
+            spawnedPlacement->posX = state->targetX;
+            spawnedPlacement->posY = ((GameObject*)obj)->anim.localPosY;
+            spawnedPlacement->posZ = state->targetZ;
+            *(s16*)(spawnedSetup + 0x1a) = 0x190;
+
+            spawnedObj = Obj_SetupObject(spawnedSetup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                         *(int*)&((GameObject*)obj)->anim.parent);
+            ((GameObject*)spawnedObj)->anim.velocityX = ((GameObject*)obj)->anim.localPosX - *(f32*)(player + 0xc);
+            ((GameObject*)spawnedObj)->anim.velocityZ = ((GameObject*)obj)->anim.localPosZ - *(f32*)(player + 0x14);
+
+            lenSq = (((GameObject*)spawnedObj)->anim.velocityX * ((GameObject*)spawnedObj)->anim.velocityX) +
+                (((GameObject*)spawnedObj)->anim.velocityZ * ((GameObject*)spawnedObj)->anim.velocityZ);
+            if (lenSq != lbl_803E3BDC)
+            {
+                len = sqrtf(lenSq);
+                ((GameObject*)spawnedObj)->anim.velocityX = ((GameObject*)spawnedObj)->anim.velocityX / len;
+                ((GameObject*)spawnedObj)->anim.velocityZ = ((GameObject*)spawnedObj)->anim.velocityZ / len;
+            }
+
+            ((GameObject*)spawnedObj)->anim.velocityX =
+                ((GameObject*)spawnedObj)->anim.velocityX *
+                (lbl_803E3BBC - (lbl_803E3BC4 * (f32)(int)
+            randomGetRange(0, 0x19)
+            )
+            )
+            ;
+            ((GameObject*)spawnedObj)->anim.velocityZ =
+                ((GameObject*)spawnedObj)->anim.velocityZ *
+                (lbl_803E3BBC - (lbl_803E3BC4 * (f32)(int)
+            randomGetRange(0, 0x19)
+            )
+            )
+            ;
+            ((GameObject*)spawnedObj)->anim.velocityY = lbl_803E3BE0;
+
+            rotate.tx = lbl_803E3BDC;
+            rotate.ty = lbl_803E3BDC;
+            rotate.tz = lbl_803E3BDC;
+            rotate.scale = lbl_803E3BBC;
+            rotate.z = 0;
+            rotate.x = 0;
+            rotate.y = (s16)randomGetRange(-10000, 10000);
+            vecRotateZXY(&rotate, (void*)(spawnedObj + 0x24));
+
+            yawDelta = *(s16*)spawnedObj -
+                (u16)getAngle(((GameObject*)spawnedObj)->anim.velocityX, -((GameObject*)spawnedObj)->anim.velocityZ);
+            if (yawDelta > 0x8000)
+            {
+                yawDelta -= 0xffff;
+            }
+            if (yawDelta < -0x8000)
+            {
+                yawDelta += 0xffff;
+            }
+            *(s16*)spawnedObj = (s16)yawDelta;
+            i++;
+        }
     }
-
-    i = 0;
-    while (i < setup->debrisCount) {
-      spawnedSetup = Obj_AllocObjectSetup(0x24, lbl_803DBDE0[setup->debrisObjectSet]);
-      spawnedPlacement = (ObjPlacement *)spawnedSetup;
-      spawnedPlacement->posX = state->targetX;
-      spawnedPlacement->posY = ((GameObject *)obj)->anim.localPosY;
-      spawnedPlacement->posZ = state->targetZ;
-      *(s16 *)(spawnedSetup + 0x1a) = 0x190;
-
-      spawnedObj = Obj_SetupObject(spawnedSetup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
-      ((GameObject *)spawnedObj)->anim.velocityX = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
-      ((GameObject *)spawnedObj)->anim.velocityZ = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
-
-      lenSq = (((GameObject *)spawnedObj)->anim.velocityX * ((GameObject *)spawnedObj)->anim.velocityX) +
-              (((GameObject *)spawnedObj)->anim.velocityZ * ((GameObject *)spawnedObj)->anim.velocityZ);
-      if (lenSq != lbl_803E3BDC) {
-        len = sqrtf(lenSq);
-        ((GameObject *)spawnedObj)->anim.velocityX = ((GameObject *)spawnedObj)->anim.velocityX / len;
-        ((GameObject *)spawnedObj)->anim.velocityZ = ((GameObject *)spawnedObj)->anim.velocityZ / len;
-      }
-
-      ((GameObject *)spawnedObj)->anim.velocityX =
-          ((GameObject *)spawnedObj)->anim.velocityX *
-          (lbl_803E3BBC - (lbl_803E3BC4 * (f32)(int)randomGetRange(0, 0x19)));
-      ((GameObject *)spawnedObj)->anim.velocityZ =
-          ((GameObject *)spawnedObj)->anim.velocityZ *
-          (lbl_803E3BBC - (lbl_803E3BC4 * (f32)(int)randomGetRange(0, 0x19)));
-      ((GameObject *)spawnedObj)->anim.velocityY = lbl_803E3BE0;
-
-      rotate.tx = lbl_803E3BDC;
-      rotate.ty = lbl_803E3BDC;
-      rotate.tz = lbl_803E3BDC;
-      rotate.scale = lbl_803E3BBC;
-      rotate.z = 0;
-      rotate.x = 0;
-      rotate.y = (s16)randomGetRange(-10000, 10000);
-      vecRotateZXY(&rotate, (void *)(spawnedObj + 0x24));
-
-      yawDelta = *(s16 *)spawnedObj -
-                 (u16)getAngle(((GameObject *)spawnedObj)->anim.velocityX, -((GameObject *)spawnedObj)->anim.velocityZ);
-      if (yawDelta > 0x8000) {
-        yawDelta -= 0xffff;
-      }
-      if (yawDelta < -0x8000) {
-        yawDelta += 0xffff;
-      }
-      *(s16 *)spawnedObj = (s16)yawDelta;
-      i++;
-    }
-  }
 }
 
 /*
@@ -282,9 +318,10 @@ void staffactivated_spawnMapEventDebris(int obj)
  * EN v1.0 Address: 0x80189F44
  * EN v1.0 Size: 24b
  */
-u32 cfPrisonGuard_getPullRateMode(int obj) {
+u32 cfPrisonGuard_getPullRateMode(int obj)
+{
     u32 v;
-    v = ((StaffActivatedSetup *)((GameObject *)obj)->anim.placementData)->size;
+    v = ((StaffActivatedSetup*)((GameObject*)obj)->anim.placementData)->size;
     if (v > 2) v = 2;
     return v;
 }

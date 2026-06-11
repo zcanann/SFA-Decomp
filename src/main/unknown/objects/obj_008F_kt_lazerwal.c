@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_008F_KT_Lazerwal_packet_info {
+enum obj_008F_KT_Lazerwal_packet_info
+{
     KT_LAZERWAL_DEF_ID = 0x008F,
     KT_LAZERWAL_DLL_ID = 0x0252,
     KT_LAZERWAL_CLASS_ID = 0x0030,

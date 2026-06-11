@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_048D_ExplodePlan_packet_info {
+enum obj_048D_ExplodePlan_packet_info
+{
     EXPLODEPLAN_DEF_ID = 0x048D,
     EXPLODEPLAN_DLL_ID = 0x0269,
     EXPLODEPLAN_CLASS_ID = 0x0030,

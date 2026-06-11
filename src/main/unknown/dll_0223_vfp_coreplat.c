@@ -37,7 +37,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_0223_VFP_coreplat_slot {
+enum dll_0223_VFP_coreplat_slot
+{
     VFP_COREPLAT_INITIALISE = 0,
     VFP_COREPLAT_RELEASE = 1,
     VFP_COREPLAT_INIT = 3,

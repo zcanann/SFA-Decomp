@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0036_DFropenode_defs {
+enum class_0036_DFropenode_defs
+{
     DFROPENODE_DFROPENODE = 0x05BB,
 };
 #endif

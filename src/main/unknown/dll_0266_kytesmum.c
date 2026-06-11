@@ -28,7 +28,8 @@
  */
 
 #if 0
-enum dll_0266_KytesMum_slot {
+enum dll_0266_KytesMum_slot
+{
     KYTESMUM_INITIALISE = 0,
     KYTESMUM_RELEASE = 1,
     KYTESMUM_INIT = 3,

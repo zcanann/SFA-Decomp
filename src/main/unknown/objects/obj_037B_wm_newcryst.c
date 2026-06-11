@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_037B_WM_newcryst_packet_info {
+enum obj_037B_WM_newcryst_packet_info
+{
     WM_NEWCRYST_DEF_ID = 0x037B,
     WM_NEWCRYST_DLL_ID = 0x0215,
     WM_NEWCRYST_CLASS_ID = 0x0061,

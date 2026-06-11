@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0178_DIMLavaSmas_packet_info {
+enum obj_0178_DIMLavaSmas_packet_info
+{
     DIMLAVASMAS_DEF_ID = 0x0178,
     DIMLAVASMAS_DLL_ID = 0x01C7,
     DIMLAVASMAS_CLASS_ID = 0x0030,

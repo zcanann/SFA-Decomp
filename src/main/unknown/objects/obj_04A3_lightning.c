@@ -48,7 +48,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04A3_Lightning_packet_info {
+enum obj_04A3_Lightning_packet_info
+{
     LIGHTNING_DEF_ID = 0x04A3,
     LIGHTNING_DLL_ID = 0x0141,
     LIGHTNING_CLASS_ID = 0x0083,

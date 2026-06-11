@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0292_SH_RedYello_packet_info {
+enum obj_0292_SH_RedYello_packet_info
+{
     SH_REDYELLO_DEF_ID = 0x0292,
     SH_REDYELLO_DLL_ID = 0x02AD,
     SH_REDYELLO_CLASS_ID = 0x007F,

@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0075_DIMSpellsto_packet_info {
+enum obj_0075_DIMSpellsto_packet_info
+{
     DIMSPELLSTO_DEF_ID = 0x0075,
     DIMSPELLSTO_DLL_ID = 0x012E,
     DIMSPELLSTO_CLASS_ID = 0x0061,

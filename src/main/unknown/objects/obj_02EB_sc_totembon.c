@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02EB_SC_totembon_packet_info {
+enum obj_02EB_SC_totembon_packet_info
+{
     SC_TOTEMBON_DEF_ID = 0x02EB,
     SC_TOTEMBON_DLL_ID = 0x01BB,
     SC_TOTEMBON_CLASS_ID = 0x0030,

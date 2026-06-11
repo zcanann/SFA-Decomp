@@ -23,7 +23,8 @@
  */
 
 #if 0
-enum object_bin2_packet_info {
+enum object_bin2_packet_info
+{
     CFANIMPOWER_DEF_ID = 0x00F9,
     CFANIMPOWER_LIVE_BYTES = 0xA0,
     CFANIMPOWER_BIN2_BYTES = 0x1A0,

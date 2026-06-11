@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0084_Timer_packet_info {
+enum obj_0084_Timer_packet_info
+{
     TIMER_DEF_ID = 0x0084,
     TIMER_DLL_ID = 0x02B5,
     TIMER_CLASS_ID = 0x0030,

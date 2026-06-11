@@ -32,7 +32,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_01EC_SB_ShipGun_slot {
+enum dll_01EC_SB_ShipGun_slot
+{
     SB_SHIPGUN_INIT = 3,
     SB_SHIPGUN_UPDATE = 4,
     SB_SHIPGUN_RENDER = 6,

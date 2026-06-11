@@ -31,7 +31,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_004C_WallAnimator_defs {
+enum class_004C_WallAnimator_defs
+{
     WALLANIMATOR_WALLANIMATO = 0x04BE,
 };
 #endif

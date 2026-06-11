@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0005_checkpoint4_defs {
+enum class_0005_checkpoint4_defs
+{
     CHECKPOINT4_CHECKPOINT4 = 0x0492,
 };
 #endif

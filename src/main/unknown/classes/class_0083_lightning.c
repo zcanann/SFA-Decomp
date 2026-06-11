@@ -31,7 +31,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0083_Lightning_defs {
+enum class_0083_Lightning_defs
+{
     LIGHTNING_LIGHTNING = 0x04A3,
 };
 #endif

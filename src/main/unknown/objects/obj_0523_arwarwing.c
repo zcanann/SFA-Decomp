@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0523_ARWArwing_packet_info {
+enum obj_0523_ARWArwing_packet_info
+{
     ARWARWING_DEF_ID = 0x0523,
     ARWARWING_DLL_ID = 0x029A,
     ARWARWING_CLASS_ID = 0x0030,

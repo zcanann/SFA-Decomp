@@ -5,7 +5,8 @@
 #include "main/dll/TREX/TREX_levelcontrol.h"
 #include "main/objhits_types.h"
 
-typedef struct SBShipGunPlacement {
+typedef struct SBShipGunPlacement
+{
     u8 pad0[0x8 - 0x0];
     f32 unk8;
     f32 unkC;
@@ -18,7 +19,8 @@ typedef struct SBShipGunPlacement {
 } SBShipGunPlacement;
 
 
-typedef struct SBShipGunState {
+typedef struct SBShipGunState
+{
     u8 pad0[0x3 - 0x0];
     s8 unk3;
     u8 pad4[0xC - 0x4];
@@ -29,7 +31,8 @@ typedef struct SBShipGunState {
 } SBShipGunState;
 
 
-typedef struct SBCannonBallState {
+typedef struct SBCannonBallState
+{
     u8 pad0[0x4 - 0x0];
     f32 velocityY;
     f32 velocityZ;
@@ -40,10 +43,9 @@ typedef struct SBCannonBallState {
     s8 flags;
     u8 pad1B[0x1C - 0x1B];
     f32 impactCooldown;
-    void *modelLight;
+    void* modelLight;
     u8 pad24[0x28 - 0x24];
 } SBCannonBallState;
-
 
 
 extern undefined4 FUN_8000680c();
@@ -61,7 +63,7 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern int FUN_80017b00();
-extern void ModelLightStruct_free(void *effect);
+extern void ModelLightStruct_free(void* effect);
 extern int ObjHits_GetPriorityHit();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8008112c();
@@ -94,24 +96,24 @@ extern f32 lbl_803E6544;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern u8 *Obj_GetPlayerObject(void);
-extern int ObjList_GetObjects(int *outIndex,int *outCount);
-extern void spawnExplosion(double scale,int obj,int p3,int p4,int p5,int p6,int p7,int p8,int p9);
-extern void Obj_SetModelColorFadeRecursive(int obj,int p2,int p3,int p4,int p5,int p6);
+extern u8* Obj_GetPlayerObject(void);
+extern int ObjList_GetObjects(int* outIndex, int* outCount);
+extern void spawnExplosion(double scale, int obj, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+extern void Obj_SetModelColorFadeRecursive(int obj, int p2, int p3, int p4, int p5, int p6);
 extern int Sfx_PlayFromObject();
 extern void Sfx_StopObjectChannel();
-extern s16 getAngle(f32 dx,f32 dz);
+extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32);
 extern u8 Obj_IsLoadingLocked(void);
-extern void Obj_GetWorldPosition(int obj,float *x,float *y,float *z);
-extern void vecRotateZXY(void *a,void *b);
-extern void *Obj_AllocObjectSetup(int size,int objType);
-extern u16 *Obj_SetupObject(void *setup,int p2,int p3,int p4,int p5);
+extern void Obj_GetWorldPosition(int obj, float* x, float* y, float* z);
+extern void vecRotateZXY(void* a, void* b);
+extern void* Obj_AllocObjectSetup(int size, int objType);
+extern u16* Obj_SetupObject(void* setup, int p2, int p3, int p4, int p5);
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
-extern f32 Vec_distance(float *a,float *b);
+extern f32 Vec_distance(float* a, float* b);
 extern u8 framesThisStep;
-extern EffectInterface **gPartfxInterface;
+extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E5888;
 extern f32 lbl_803E588C;
 extern f32 lbl_803E5890;
@@ -125,264 +127,313 @@ extern f32 lbl_803E58AC;
 
 void SB_ShipGun_update(int obj)
 {
-  char cVar1;
-  float fVar2;
-  u8 *player;
-  int iVar5;
-  int *piVar10;
-  int iVar6;
-  int iVar7;
-  uint uVar8;
-  u16 *puVar9;
-  int iVar11;
-  float local_54 [3];
-  float local_58;
-  float local_5c;
-  float local_60;
-  ushort local_68 [4];
-  float local_6c;
-  float local_70;
-  float local_74;
-  float local_78;
-  float local_7c;
-  float local_80;
-  int local_84;
-  int local_88;
-  f32 fdx;
-  f32 fdy;
-  f32 fdz;
-  f32 dist;
-  int i;
+    char cVar1;
+    float fVar2;
+    u8* player;
+    int iVar5;
+    int* piVar10;
+    int iVar6;
+    int iVar7;
+    uint uVar8;
+    u16* puVar9;
+    int iVar11;
+    float local_54[3];
+    float local_58;
+    float local_5c;
+    float local_60;
+    ushort local_68[4];
+    float local_6c;
+    float local_70;
+    float local_74;
+    float local_78;
+    float local_7c;
+    float local_80;
+    int local_84;
+    int local_88;
+    f32 fdx;
+    f32 fdy;
+    f32 fdz;
+    f32 dist;
+    int i;
 
-  player = Obj_GetPlayerObject();
-  piVar10 = ((GameObject *)obj)->extra;
-  iVar11 = *(int *)&((GameObject *)obj)->anim.placementData;
-  if (*(short *)(*(int *)&((GameObject *)obj)->anim.parent + 0x46) == SB_SHIPGUN_WM_GALLEON_ALIAS_OBJECT_TYPE) {
-    (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
-    *(undefined *)((int)piVar10 + 0xd) = 0;
-  }
-  else {
-    if (*(uint *)piVar10 == 0) {
-      iVar5 = ObjList_GetObjects(&local_84,&local_88);
-      for (i = local_84; i < local_88; i = i + 1) {
-        iVar6 = *(int *)(iVar5 + i * 4);
-        if (*(short *)(iVar6 + 0x46) == SB_SHIPGUN_CLOUDRUNNER_ALIAS_OBJECT_TYPE) {
-          *piVar10 = iVar6;
-          i = local_88;
-        }
-      }
+    player = Obj_GetPlayerObject();
+    piVar10 = ((GameObject*)obj)->extra;
+    iVar11 = *(int*)&((GameObject*)obj)->anim.placementData;
+    if (*(short*)(*(int*)&((GameObject*)obj)->anim.parent + 0x46) == SB_SHIPGUN_WM_GALLEON_ALIAS_OBJECT_TYPE)
+    {
+        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+        *(undefined*)((int)piVar10 + 0xd) = 0;
     }
-    iVar5 = *(int *)&((GameObject *)obj)->anim.parent;
-    if (((void *)iVar5 != NULL) &&
-        (((GameObject *)iVar5)->anim.seqId == SB_SHIPGUN_GALLEON_ALIAS_OBJECT_TYPE)) {
-      iVar6 = (*(code *)(**(int **)&((GameObject *)iVar5)->anim.dll + 0x24))(iVar5);
-    }
-    else {
-      iVar6 = 0;
-      *(undefined *)((int)piVar10 + 10) = 4;
-    }
-    *(undefined *)((int)piVar10 + 0xd) = 1;
-    cVar1 = *(char *)((int)piVar10 + 10);
-    switch (cVar1) {
-    case 0:
-      if (((void *)iVar5 != NULL) &&
-         (iVar5 = (*(code *)(**(int **)&((GameObject *)iVar5)->anim.dll + 0x28))(iVar5), iVar5 == 0)) {
-        if (*(char *)(iVar11 + 0x19) == '\0') {
-          *(undefined *)((int)piVar10 + 10) = 2;
-          *(undefined2 *)(piVar10 + 2) = SB_SHIPGUN_WAKE_DELAY;
+    else
+    {
+        if (*(uint*)piVar10 == 0)
+        {
+            iVar5 = ObjList_GetObjects(&local_84, &local_88);
+            for (i = local_84; i < local_88; i = i + 1)
+            {
+                iVar6 = *(int*)(iVar5 + i * 4);
+                if (*(short*)(iVar6 + 0x46) == SB_SHIPGUN_CLOUDRUNNER_ALIAS_OBJECT_TYPE)
+                {
+                    *piVar10 = iVar6;
+                    i = local_88;
+                }
+            }
         }
-        else {
-          *(undefined *)((int)piVar10 + 10) = 2;
-          *(undefined2 *)(piVar10 + 2) = 0;
+        iVar5 = *(int*)&((GameObject*)obj)->anim.parent;
+        if (((void*)iVar5 != NULL) &&
+            (((GameObject*)iVar5)->anim.seqId == SB_SHIPGUN_GALLEON_ALIAS_OBJECT_TYPE))
+        {
+            iVar6 = (*(code*)(**(int**)&((GameObject*)iVar5)->anim.dll + 0x24))(iVar5);
         }
-      }
-      (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
-      break;
-    case 2:
-      {
-          (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 1;
-          iVar11 = (*(code *)(**(int **)&((GameObject *)iVar5)->anim.dll + 0x28))(iVar5);
-          if ((iVar11 == 0) &&
-             (iVar7 = ObjHits_GetPriorityHit(obj,0,0,0), iVar7 != 0)) {
-            Obj_SetModelColorFadeRecursive(obj,SB_SHIPGUN_HIT_REACT_TYPE,SB_SHIPGUN_HIT_REACT_POWER,0,0,1);
-            Sfx_PlayFromObject(obj,SB_SHIPGUN_HIT_ANIM_A);
-            *(s8 *)((int)piVar10 + 0xb) += 1;
-            if (*(char *)((int)piVar10 + 0xb) == SB_SHIPGUN_FIRST_DAMAGE_HIT_COUNT) {
-              *(s8 *)(piVar10 + 3) -= 1;
-              *(undefined *)((int)piVar10 + 10) = 3;
-              if ((void *)iVar5 != NULL) {
-                (*(code *)(**(int **)&((GameObject *)iVar5)->anim.dll + 0x20))(iVar5);
-              }
-            }
-            else if (*(char *)((int)piVar10 + 0xb) == SB_SHIPGUN_SECOND_DAMAGE_HIT_COUNT) {
-              Sfx_PlayFromObject(obj,SB_SHIPGUN_HIT_ANIM_B);
-              *(s8 *)(piVar10 + 3) -= 1;
-              *(undefined *)((int)piVar10 + 10) = 3;
-              if ((void *)iVar5 != NULL) {
-                (*(code *)(**(int **)&((GameObject *)iVar5)->anim.dll + 0x20))(iVar5);
-              }
-            }
-          }
-          if (((void *)iVar5 != NULL) && (iVar11 != 0)) {
-            *(undefined *)((int)piVar10 + 10) = 3;
-          }
-          fdx = *(float *)(player + 0x18) - ((GameObject *)obj)->anim.worldPosX;
-          fdz = *(float *)(player + 0x20) - ((GameObject *)obj)->anim.worldPosZ;
-          *(short *)(piVar10 + 1) = (short)(((uint)(u16)getAngle(-fdz,fdx) & 0xffff) << 1);
-          fdy = *(float *)(player + 0x1c) - ((GameObject *)obj)->anim.worldPosY;
-          dist = sqrtf(fdx * fdx + fdz * fdz);
-          {
-            extern int getAngle(f32 dx, f32 dz);
-            *(short *)((int)piVar10 + 6) = (s16)getAngle(-fdy,dist);
-          }
-          if (*(short *)((int)piVar10 + 6) > 8000) {
-            *(short *)((int)piVar10 + 6) = 8000;
-          }
-          else if (*(short *)((int)piVar10 + 6) < -8000) {
-            *(short *)((int)piVar10 + 6) = -8000;
-          }
-          *(ushort *)(piVar10 + 2) = *(short *)(piVar10 + 2) - (ushort)framesThisStep;
-          if ((*(short *)(piVar10 + 2) < 0) && (Obj_IsLoadingLocked() != 0)) {
-            Obj_GetWorldPosition(obj,&local_78,&local_7c,&local_80);
-            local_5c = lbl_803E588C;
-            local_58 = lbl_803E588C;
-            local_54[0] = lbl_803E588C;
-            local_60 = lbl_803E5888;
-            local_68[0] = *(ushort *)(piVar10 + 1);
-            local_68[1] = 0;
-            local_68[2] = 0;
-            local_74 = lbl_803E5890;
-            local_70 = lbl_803E5894;
-            local_6c = lbl_803E588C;
-            vecRotateZXY(local_68,&local_74);
-            iVar11 = (int)Obj_AllocObjectSetup(SB_SHIPGUN_CANNONBALL_ALLOC_SIZE,SB_CANNONBALL_ALIAS_OBJECT_TYPE);
-            ((SBShipGunPlacement *)iVar11)->unk8 = local_78;
-            ((SBShipGunPlacement *)iVar11)->unkC = local_7c;
-            ((SBShipGunPlacement *)iVar11)->unk10 = local_80;
-            *(undefined *)(iVar11 + 4) = SB_SHIPGUN_CANNONBALL_MODEL_FIELD;
-            *(undefined *)(iVar11 + 5) = SB_SHIPGUN_CANNONBALL_FLAGS_FIELD;
-            *(undefined *)(iVar11 + 6) = SB_SHIPGUN_CANNONBALL_BYTE_FF;
-            *(undefined *)(iVar11 + 7) = SB_SHIPGUN_CANNONBALL_BYTE_FF;
-            puVar9 = Obj_SetupObject((void *)iVar11,5,0xffffffff,0xffffffff,0);
-            iVar11 = *piVar10;
-            fdx = ((SBShipGunPlacement *)iVar11)->unk18 - ((GameObject *)obj)->anim.worldPosX;
-            fdy = ((SBShipGunPlacement *)iVar11)->unk1C - (((GameObject *)obj)->anim.worldPosY - lbl_803E5898);
-            fdz = ((SBShipGunPlacement *)iVar11)->unk20 - ((GameObject *)obj)->anim.worldPosZ;
-            dist = sqrtf(fdz * fdz + (fdx * fdx + fdy * fdy));
-            local_78 = lbl_803E589C / dist;
-            *(float *)(puVar9 + 0x12) = fdx * local_78;
-            *(float *)(puVar9 + 0x14) = fdy * local_78;
-            *(float *)(puVar9 + 0x16) = fdz * local_78;
-            fVar2 = lbl_803E58A0;
-            *(float *)(puVar9 + 6) = fVar2 * *(float *)(puVar9 + 0x12) + *(float *)(puVar9 + 6);
-            *(float *)(puVar9 + 8) = fVar2 * *(float *)(puVar9 + 0x14) + *(float *)(puVar9 + 8);
-            *(float *)(puVar9 + 10) = fVar2 * *(float *)(puVar9 + 0x16) + *(float *)(puVar9 + 10);
-            *puVar9 = getAngle(*(float *)(puVar9 + 0x12),*(float *)(puVar9 + 0x16));
-            *(undefined4 *)(puVar9 + 0x7a) = SB_SHIPGUN_CANNONBALL_LIFETIME;
-            *(int *)(puVar9 + 0x7c) = *piVar10;
-            Camera_EnableViewYOffset();
-            CameraShake_SetAllMagnitudes(lbl_803E58A4);
-            Sfx_PlayFromObject(obj,SB_SHIPGUN_FIRE_ANIM);
-            *(u8 *)((int)piVar10 + 0xe) += 1;
-            if (*(u8 *)((int)piVar10 + 0xe) == SB_SHIPGUN_VOLLEY_SIZE) {
-              if (iVar6 >= SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE) {
-                uVar8 = randomGetRange(0,SB_SHIPGUN_FIRE_DELAY_VARIANCE);
-                *(short *)(piVar10 + 2) = (short)uVar8 + SB_SHIPGUN_FAST_FIRE_DELAY;
-              }
-              else {
-                uVar8 = randomGetRange(0,SB_SHIPGUN_FIRE_DELAY_VARIANCE);
-                *(short *)(piVar10 + 2) = (short)uVar8 + SB_SHIPGUN_SLOW_FIRE_DELAY;
-              }
-              *(undefined *)((int)piVar10 + 0xe) = 0;
-            }
-            else if (iVar6 >= SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE) {
-              *(undefined2 *)(piVar10 + 2) = SB_SHIPGUN_FAST_FIRE_DELAY;
-            }
-            else {
-              *(undefined2 *)(piVar10 + 2) = SB_SHIPGUN_SLOW_FIRE_DELAY;
-            }
-          }
-      }
-      break;
-    case 3:
-      (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
-      if (*(char *)(piVar10 + 3) == '\0') {
-        spawnExplosion((double)lbl_803E5890,obj,1,1,1,0,1,1,0);
-        *(undefined *)((int)piVar10 + 10) = 4;
-      }
-      else {
-        *(undefined *)((int)piVar10 + 10) = 5;
-      }
-      break;
-    case 4:
-      {
-      local_60 = lbl_803E58A8;
-      local_68[3] = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
-      ObjPath_GetPointWorldPosition(obj,0,&local_5c,&local_58,local_54,0);
-      local_5c = local_5c - ((GameObject *)obj)->anim.worldPosX;
-      local_58 = local_58 - ((GameObject *)obj)->anim.worldPosY;
-      local_54[0] = local_54[0] - ((GameObject *)obj)->anim.worldPosZ;
-      for (iVar11 = 0; iVar11 < (int)(uint)framesThisStep; iVar11 = iVar11 + 1) {
-        (*gPartfxInterface)->spawnObject(
-            (void *)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, local_68,
-            SB_SHIPGUN_SMOKE_PARTICLE_PARAM, -1, NULL);
-      }
-      }
-      break;
-    case 5:
-      (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
-      if (((void *)iVar5 != NULL) &&
-         (iVar5 = (*(code *)(**(int **)&((GameObject *)iVar5)->anim.dll + 0x28))(iVar5), iVar5 == 0)) {
-        if (*(char *)(iVar11 + 0x19) == '\0') {
-          if (SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE <= iVar6) {
-            *(undefined *)((int)piVar10 + 10) = 2;
-            *(undefined2 *)(piVar10 + 2) = SB_SHIPGUN_WAKE_DELAY;
-          }
+        else
+        {
+            iVar6 = 0;
+            *(undefined*)((int)piVar10 + 10) = 4;
         }
-        else if (SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE <= iVar6) {
-          *(undefined *)((int)piVar10 + 10) = 2;
-          *(undefined2 *)(piVar10 + 2) = 0;
+        *(undefined*)((int)piVar10 + 0xd) = 1;
+        cVar1 = *(char*)((int)piVar10 + 10);
+        switch (cVar1)
+        {
+        case 0:
+            if (((void*)iVar5 != NULL) &&
+                (iVar5 = (*(code*)(**(int**)&((GameObject*)iVar5)->anim.dll + 0x28))(iVar5), iVar5 == 0))
+            {
+                if (*(char*)(iVar11 + 0x19) == '\0')
+                {
+                    *(undefined*)((int)piVar10 + 10) = 2;
+                    *(undefined2*)(piVar10 + 2) = SB_SHIPGUN_WAKE_DELAY;
+                }
+                else
+                {
+                    *(undefined*)((int)piVar10 + 10) = 2;
+                    *(undefined2*)(piVar10 + 2) = 0;
+                }
+            }
+            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+            break;
+        case 2:
+            {
+                (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags |= 1;
+                iVar11 = (*(code*)(**(int**)&((GameObject*)iVar5)->anim.dll + 0x28))(iVar5);
+                if ((iVar11 == 0) &&
+                    (iVar7 = ObjHits_GetPriorityHit(obj, 0, 0, 0), iVar7 != 0))
+                {
+                    Obj_SetModelColorFadeRecursive(obj, SB_SHIPGUN_HIT_REACT_TYPE, SB_SHIPGUN_HIT_REACT_POWER, 0, 0, 1);
+                    Sfx_PlayFromObject(obj, SB_SHIPGUN_HIT_ANIM_A);
+                    *(s8*)((int)piVar10 + 0xb) += 1;
+                    if (*(char*)((int)piVar10 + 0xb) == SB_SHIPGUN_FIRST_DAMAGE_HIT_COUNT)
+                    {
+                        *(s8*)(piVar10 + 3) -= 1;
+                        *(undefined*)((int)piVar10 + 10) = 3;
+                        if ((void*)iVar5 != NULL)
+                        {
+                            (*(code*)(**(int**)&((GameObject*)iVar5)->anim.dll + 0x20))(iVar5);
+                        }
+                    }
+                    else if (*(char*)((int)piVar10 + 0xb) == SB_SHIPGUN_SECOND_DAMAGE_HIT_COUNT)
+                    {
+                        Sfx_PlayFromObject(obj, SB_SHIPGUN_HIT_ANIM_B);
+                        *(s8*)(piVar10 + 3) -= 1;
+                        *(undefined*)((int)piVar10 + 10) = 3;
+                        if ((void*)iVar5 != NULL)
+                        {
+                            (*(code*)(**(int**)&((GameObject*)iVar5)->anim.dll + 0x20))(iVar5);
+                        }
+                    }
+                }
+                if (((void*)iVar5 != NULL) && (iVar11 != 0))
+                {
+                    *(undefined*)((int)piVar10 + 10) = 3;
+                }
+                fdx = *(float*)(player + 0x18) - ((GameObject*)obj)->anim.worldPosX;
+                fdz = *(float*)(player + 0x20) - ((GameObject*)obj)->anim.worldPosZ;
+                *(short*)(piVar10 + 1) = (short)
+                (((uint)(u16)
+                getAngle(-fdz, fdx) & 0xffff
+                )
+                <<
+                1
+                )
+                ;
+                fdy = *(float*)(player + 0x1c) - ((GameObject*)obj)->anim.worldPosY;
+                dist = sqrtf(fdx * fdx + fdz * fdz);
+                {
+                    extern int getAngle(f32 dx, f32 dz);
+                    *(short*)((int)piVar10 + 6) = (s16)getAngle(-fdy, dist);
+                }
+                if (*(short*)((int)piVar10 + 6) > 8000)
+                {
+                    *(short*)((int)piVar10 + 6) = 8000;
+                }
+                else if (*(short*)((int)piVar10 + 6) < -8000)
+                {
+                    *(short*)((int)piVar10 + 6) = -8000;
+                }
+                *(ushort*)(piVar10 + 2) = *(short*)(piVar10 + 2) - (ushort)framesThisStep;
+                if ((*(short*)(piVar10 + 2) < 0) && (Obj_IsLoadingLocked() != 0))
+                {
+                    Obj_GetWorldPosition(obj, &local_78, &local_7c, &local_80);
+                    local_5c = lbl_803E588C;
+                    local_58 = lbl_803E588C;
+                    local_54[0] = lbl_803E588C;
+                    local_60 = lbl_803E5888;
+                    local_68[0] = *(ushort*)(piVar10 + 1);
+                    local_68[1] = 0;
+                    local_68[2] = 0;
+                    local_74 = lbl_803E5890;
+                    local_70 = lbl_803E5894;
+                    local_6c = lbl_803E588C;
+                    vecRotateZXY(local_68, &local_74);
+                    iVar11 = (int)Obj_AllocObjectSetup(SB_SHIPGUN_CANNONBALL_ALLOC_SIZE,
+                                                       SB_CANNONBALL_ALIAS_OBJECT_TYPE);
+                    ((SBShipGunPlacement*)iVar11)->unk8 = local_78;
+                    ((SBShipGunPlacement*)iVar11)->unkC = local_7c;
+                    ((SBShipGunPlacement*)iVar11)->unk10 = local_80;
+                    *(undefined*)(iVar11 + 4) = SB_SHIPGUN_CANNONBALL_MODEL_FIELD;
+                    *(undefined*)(iVar11 + 5) = SB_SHIPGUN_CANNONBALL_FLAGS_FIELD;
+                    *(undefined*)(iVar11 + 6) = SB_SHIPGUN_CANNONBALL_BYTE_FF;
+                    *(undefined*)(iVar11 + 7) = SB_SHIPGUN_CANNONBALL_BYTE_FF;
+                    puVar9 = Obj_SetupObject((void*)iVar11, 5, 0xffffffff, 0xffffffff, 0);
+                    iVar11 = *piVar10;
+                    fdx = ((SBShipGunPlacement*)iVar11)->unk18 - ((GameObject*)obj)->anim.worldPosX;
+                    fdy = ((SBShipGunPlacement*)iVar11)->unk1C - (((GameObject*)obj)->anim.worldPosY - lbl_803E5898);
+                    fdz = ((SBShipGunPlacement*)iVar11)->unk20 - ((GameObject*)obj)->anim.worldPosZ;
+                    dist = sqrtf(fdz * fdz + (fdx * fdx + fdy * fdy));
+                    local_78 = lbl_803E589C / dist;
+                    *(float*)(puVar9 + 0x12) = fdx * local_78;
+                    *(float*)(puVar9 + 0x14) = fdy * local_78;
+                    *(float*)(puVar9 + 0x16) = fdz * local_78;
+                    fVar2 = lbl_803E58A0;
+                    *(float*)(puVar9 + 6) = fVar2 * *(float*)(puVar9 + 0x12) + *(float*)(puVar9 + 6);
+                    *(float*)(puVar9 + 8) = fVar2 * *(float*)(puVar9 + 0x14) + *(float*)(puVar9 + 8);
+                    *(float*)(puVar9 + 10) = fVar2 * *(float*)(puVar9 + 0x16) + *(float*)(puVar9 + 10);
+                    *puVar9 = getAngle(*(float*)(puVar9 + 0x12), *(float*)(puVar9 + 0x16));
+                    *(undefined4*)(puVar9 + 0x7a) = SB_SHIPGUN_CANNONBALL_LIFETIME;
+                    *(int*)(puVar9 + 0x7c) = *piVar10;
+                    Camera_EnableViewYOffset();
+                    CameraShake_SetAllMagnitudes(lbl_803E58A4);
+                    Sfx_PlayFromObject(obj, SB_SHIPGUN_FIRE_ANIM);
+                    *(u8*)((int)piVar10 + 0xe) += 1;
+                    if (*(u8*)((int)piVar10 + 0xe) == SB_SHIPGUN_VOLLEY_SIZE)
+                    {
+                        if (iVar6 >= SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE)
+                        {
+                            uVar8 = randomGetRange(0, SB_SHIPGUN_FIRE_DELAY_VARIANCE);
+                            *(short*)(piVar10 + 2) = (short)uVar8 + SB_SHIPGUN_FAST_FIRE_DELAY;
+                        }
+                        else
+                        {
+                            uVar8 = randomGetRange(0, SB_SHIPGUN_FIRE_DELAY_VARIANCE);
+                            *(short*)(piVar10 + 2) = (short)uVar8 + SB_SHIPGUN_SLOW_FIRE_DELAY;
+                        }
+                        *(undefined*)((int)piVar10 + 0xe) = 0;
+                    }
+                    else if (iVar6 >= SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE)
+                    {
+                        *(undefined2*)(piVar10 + 2) = SB_SHIPGUN_FAST_FIRE_DELAY;
+                    }
+                    else
+                    {
+                        *(undefined2*)(piVar10 + 2) = SB_SHIPGUN_SLOW_FIRE_DELAY;
+                    }
+                }
+            }
+            break;
+        case 3:
+            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+            if (*(char*)(piVar10 + 3) == '\0')
+            {
+                spawnExplosion((double)lbl_803E5890, obj, 1, 1, 1, 0, 1, 1, 0);
+                *(undefined*)((int)piVar10 + 10) = 4;
+            }
+            else
+            {
+                *(undefined*)((int)piVar10 + 10) = 5;
+            }
+            break;
+        case 4:
+            {
+                local_60 = lbl_803E58A8;
+                local_68[3] = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
+                ObjPath_GetPointWorldPosition(obj, 0, &local_5c, &local_58, local_54, 0);
+                local_5c = local_5c - ((GameObject*)obj)->anim.worldPosX;
+                local_58 = local_58 - ((GameObject*)obj)->anim.worldPosY;
+                local_54[0] = local_54[0] - ((GameObject*)obj)->anim.worldPosZ;
+                for (iVar11 = 0; iVar11 < (int)(uint)framesThisStep; iVar11 = iVar11 + 1)
+                {
+                    (*gPartfxInterface)->spawnObject(
+                        (void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, local_68,
+                        SB_SHIPGUN_SMOKE_PARTICLE_PARAM, -1, NULL);
+                }
+            }
+            break;
+        case 5:
+            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+            if (((void*)iVar5 != NULL) &&
+                (iVar5 = (*(code*)(**(int**)&((GameObject*)iVar5)->anim.dll + 0x28))(iVar5), iVar5 == 0))
+            {
+                if (*(char*)(iVar11 + 0x19) == '\0')
+                {
+                    if (SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE <= iVar6)
+                    {
+                        *(undefined*)((int)piVar10 + 10) = 2;
+                        *(undefined2*)(piVar10 + 2) = SB_SHIPGUN_WAKE_DELAY;
+                    }
+                }
+                else if (SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE <= iVar6)
+                {
+                    *(undefined*)((int)piVar10 + 10) = 2;
+                    *(undefined2*)(piVar10 + 2) = 0;
+                }
+            }
+            local_60 = lbl_803E58A8;
+            local_68[3] = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
+            ObjPath_GetPointWorldPosition(obj, 0, &local_5c, &local_58, local_54, 0);
+            local_5c = local_5c - ((GameObject*)obj)->anim.worldPosX;
+            local_58 = local_58 - ((GameObject*)obj)->anim.worldPosY;
+            local_54[0] = local_54[0] - ((GameObject*)obj)->anim.worldPosZ;
+            for (iVar11 = 0; iVar11 < (int)(uint)framesThisStep; iVar11 = iVar11 + 1)
+            {
+                (*gPartfxInterface)->spawnObject(
+                    (void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, local_68,
+                    SB_SHIPGUN_SMOKE_PARTICLE_PARAM, -1, NULL);
+            }
+            break;
         }
-      }
-      local_60 = lbl_803E58A8;
-      local_68[3] = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
-      ObjPath_GetPointWorldPosition(obj,0,&local_5c,&local_58,local_54,0);
-      local_5c = local_5c - ((GameObject *)obj)->anim.worldPosX;
-      local_58 = local_58 - ((GameObject *)obj)->anim.worldPosY;
-      local_54[0] = local_54[0] - ((GameObject *)obj)->anim.worldPosZ;
-      for (iVar11 = 0; iVar11 < (int)(uint)framesThisStep; iVar11 = iVar11 + 1) {
-        (*gPartfxInterface)->spawnObject(
-            (void *)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, local_68,
-            SB_SHIPGUN_SMOKE_PARTICLE_PARAM, -1, NULL);
-      }
-      break;
+        if (*(char*)(piVar10 + 3) == '\0')
+        {
+            dist = Vec_distance((float*)(player + 0x18), (float*)(obj + 0x18));
+            if (lbl_803E58AC <= dist)
+            {
+                Sfx_StopObjectChannel(obj, SB_SHIPGUN_RANGE_FAR_ANIM);
+            }
+            else
+            {
+                Sfx_PlayFromObject(obj, SB_SHIPGUN_RANGE_NEAR_ANIM);
+            }
+        }
     }
-    if (*(char *)(piVar10 + 3) == '\0') {
-      dist = Vec_distance((float *)(player + 0x18),(float *)(obj + 0x18));
-      if (lbl_803E58AC <= dist) {
-        Sfx_StopObjectChannel(obj,SB_SHIPGUN_RANGE_FAR_ANIM);
-      }
-      else {
-        Sfx_PlayFromObject(obj,SB_SHIPGUN_RANGE_NEAR_ANIM);
-      }
-    }
-  }
-  return;
+    return;
 }
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void SB_CannonBall_release(void) {}
-void SB_CannonBall_initialise(void) {}
+void SB_CannonBall_release(void)
+{
+}
+
+void SB_CannonBall_initialise(void)
+{
+}
 
 void SB_ShipGun_init(int obj)
 {
-  int state;
+    int state;
 
-  state = *(int *)&((GameObject *)obj)->extra;
-  ((SBShipGunState *)state)->unkD = 0;
-  ((SBShipGunState *)state)->unkC = SB_SHIPGUN_START_HEALTH;
-  ((SBShipGunState *)state)->unkE = 0;
+    state = *(int*)&((GameObject*)obj)->extra;
+    ((SBShipGunState*)state)->unkD = 0;
+    ((SBShipGunState*)state)->unkC = SB_SHIPGUN_START_HEALTH;
+    ((SBShipGunState*)state)->unkE = 0;
 }
 
 /* 8b "li r3, N; blr" returners. */
@@ -391,14 +442,15 @@ int SB_CannonBall_getObjectTypeId(void) { return 0x0; }
 
 void SB_CannonBall_free(int obj)
 {
-  int state;
+    int state;
 
-  state = *(int *)&((GameObject *)obj)->extra;
-  (*gExpgfxInterface)->freeSource2((u32)obj);
-  if (((SBCannonBallState *)state)->modelLight != 0) {
-    ModelLightStruct_free(((SBCannonBallState *)state)->modelLight);
-    *(undefined4 *)&((SBCannonBallState *)state)->modelLight = 0;
-  }
+    state = *(int*)&((GameObject*)obj)->extra;
+    (*gExpgfxInterface)->freeSource2((u32)obj);
+    if (((SBCannonBallState*)state)->modelLight != 0)
+    {
+        ModelLightStruct_free(((SBCannonBallState*)state)->modelLight);
+        *(undefined4*)&((SBCannonBallState*)state)->modelLight = 0;
+    }
 }
 
 int SB_FireBall_getExtraSize(void) { return SB_FIREBALL_EXTRA_SIZE; }
@@ -406,92 +458,125 @@ int SB_FireBall_getObjectTypeId(void) { return 0x0; }
 
 void SB_FireBall_free(int obj)
 {
-  (*gExpgfxInterface)->freeSource2((u32)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E58B0;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E58D8;
-void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E58B0); }
-void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E58D8); }
+
+void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E58B0);
+}
+
+void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E58D8);
+}
 
 extern f32 timeDelta;
 extern f32 lbl_803E58BC;
 extern f64 lbl_803E58C0;
-extern void Obj_FreeObject(int *obj);
-extern void objfx_spawnFlaggedTrailBurst(int *obj, f32 f, int a, int b, int c, int d);
-void SB_CannonBall_update(int *obj) {
-    int *state = ((GameObject *)obj)->extra;
-    if ((((SBCannonBallState *)state)->flags & SB_CANNONBALL_INITIAL_BURST_FLAG) != 0) {
+extern void Obj_FreeObject(int* obj);
+extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, int d);
+
+void SB_CannonBall_update(int* obj)
+{
+    int* state = ((GameObject*)obj)->extra;
+    if ((((SBCannonBallState*)state)->flags & SB_CANNONBALL_INITIAL_BURST_FLAG) != 0)
+    {
         (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID,
-                                                            NULL, 1, -1, NULL);
+                                         NULL, 1, -1, NULL);
         (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID,
-                                                            NULL, 1, -1, NULL);
+                                         NULL, 1, -1, NULL);
         (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_BURST_PARTICLE_ID,
-                                                            NULL, 1, -1, NULL);
-        ((SBCannonBallState *)state)->flags = (s8)(((SBCannonBallState *)state)->flags & ~SB_CANNONBALL_INITIAL_BURST_FLAG);
-    } else {
-        objfx_spawnFlaggedTrailBurst(obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID, SB_CANNONBALL_SETUP_PARAM, 0);
-        objfx_spawnFlaggedTrailBurst(obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID, SB_CANNONBALL_SETUP_PARAM, 0);
+                                         NULL, 1, -1, NULL);
+        ((SBCannonBallState*)state)->flags = (s8)(
+            ((SBCannonBallState*)state)->flags & ~SB_CANNONBALL_INITIAL_BURST_FLAG);
+    }
+    else
+    {
+        objfx_spawnFlaggedTrailBurst(obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID,
+                                     SB_CANNONBALL_SETUP_PARAM, 0);
+        objfx_spawnFlaggedTrailBurst(obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID,
+                                     SB_CANNONBALL_SETUP_PARAM, 0);
     }
     (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_TRAIL_PARTICLE_ID,
-                                                        NULL, 1, -1, NULL);
-    ((GameObject *)obj)->anim.rotY += SB_CANNONBALL_ROTATION_STEP;
-    if ((((SBCannonBallState *)state)->flags & SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG) == 0) {
-        *(f32 *)state = ((GameObject *)obj)->anim.velocityX;
-        ((SBCannonBallState *)state)->velocityY = ((GameObject *)obj)->anim.velocityY;
-        ((SBCannonBallState *)state)->velocityZ = ((GameObject *)obj)->anim.velocityZ;
-        ((SBCannonBallState *)state)->flags = (s8)(((SBCannonBallState *)state)->flags | SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG);
-        ((SBCannonBallState *)state)->posX = ((GameObject *)obj)->anim.localPosX;
-        ((SBCannonBallState *)state)->posY = ((GameObject *)obj)->anim.localPosY;
-        ((SBCannonBallState *)state)->posZ = ((GameObject *)obj)->anim.localPosZ;
+                                     NULL, 1, -1, NULL);
+    ((GameObject*)obj)->anim.rotY += SB_CANNONBALL_ROTATION_STEP;
+    if ((((SBCannonBallState*)state)->flags & SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG) == 0)
+    {
+        *(f32*)state = ((GameObject*)obj)->anim.velocityX;
+        ((SBCannonBallState*)state)->velocityY = ((GameObject*)obj)->anim.velocityY;
+        ((SBCannonBallState*)state)->velocityZ = ((GameObject*)obj)->anim.velocityZ;
+        ((SBCannonBallState*)state)->flags = (s8)(
+            ((SBCannonBallState*)state)->flags | SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG);
+        ((SBCannonBallState*)state)->posX = ((GameObject*)obj)->anim.localPosX;
+        ((SBCannonBallState*)state)->posY = ((GameObject*)obj)->anim.localPosY;
+        ((SBCannonBallState*)state)->posZ = ((GameObject*)obj)->anim.localPosZ;
     }
     {
         f64 scale = lbl_803E58C0;
-        ((SBCannonBallState *)state)->posX = (f32)(scale * (f64)(*(f32 *)state * timeDelta) + (f64)((SBCannonBallState *)state)->posX);
-        ((SBCannonBallState *)state)->posY = (f32)(scale * (f64)(((SBCannonBallState *)state)->velocityY * timeDelta) + (f64)((SBCannonBallState *)state)->posY);
-        ((SBCannonBallState *)state)->posZ = (f32)(scale * (f64)(((SBCannonBallState *)state)->velocityZ * timeDelta) + (f64)((SBCannonBallState *)state)->posZ);
+        ((SBCannonBallState*)state)->posX = (f32)(
+            scale * (f64)(*(f32*)state * timeDelta) + (f64)((SBCannonBallState*)state)->posX);
+        ((SBCannonBallState*)state)->posY = (f32)(
+            scale * (f64)(((SBCannonBallState*)state)->velocityY * timeDelta) + (f64)((SBCannonBallState*)state)->posY);
+        ((SBCannonBallState*)state)->posZ = (f32)(
+            scale * (f64)(((SBCannonBallState*)state)->velocityZ * timeDelta) + (f64)((SBCannonBallState*)state)->posZ);
     }
-    ((GameObject *)obj)->anim.localPosX = ((SBCannonBallState *)state)->posX;
-    ((GameObject *)obj)->anim.localPosY = ((SBCannonBallState *)state)->posY;
-    ((GameObject *)obj)->anim.localPosZ = ((SBCannonBallState *)state)->posZ;
-    ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - (int)framesThisStep;
-    if (((GameObject *)obj)->unkF4 < 0) {
+    ((GameObject*)obj)->anim.localPosX = ((SBCannonBallState*)state)->posX;
+    ((GameObject*)obj)->anim.localPosY = ((SBCannonBallState*)state)->posY;
+    ((GameObject*)obj)->anim.localPosZ = ((SBCannonBallState*)state)->posZ;
+    ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 - (int)framesThisStep;
+    if (((GameObject*)obj)->unkF4 < 0)
+    {
         Obj_FreeObject(obj);
     }
-    if (((SBCannonBallState *)state)->unk18 > SB_CANNONBALL_HITBOX_ENABLE_DELAY) {
-        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = SB_CANNONBALL_HITBOX_TYPE;
-        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = SB_CANNONBALL_HITBOX_PRIORITY;
-        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->objectHitMask = SB_CANNONBALL_HITBOX_SIZE;
-        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->skeletonHitMask = SB_CANNONBALL_HITBOX_SIZE;
-        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= SB_CANNONBALL_SOLID_HITBOX_FLAG;
-    } else {
-        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~SB_CANNONBALL_SOLID_HITBOX_FLAG;
+    if (((SBCannonBallState*)state)->unk18 > SB_CANNONBALL_HITBOX_ENABLE_DELAY)
+    {
+        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority =
+            SB_CANNONBALL_HITBOX_TYPE;
+        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = SB_CANNONBALL_HITBOX_PRIORITY;
+        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->objectHitMask = SB_CANNONBALL_HITBOX_SIZE;
+        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->skeletonHitMask = SB_CANNONBALL_HITBOX_SIZE;
+        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags |= SB_CANNONBALL_SOLID_HITBOX_FLAG;
     }
-    ((SBCannonBallState *)state)->unk18 += framesThisStep;
+    else
+    {
+        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~SB_CANNONBALL_SOLID_HITBOX_FLAG;
+    }
+    ((SBCannonBallState*)state)->unk18 += framesThisStep;
 }
+
 extern f32 lbl_803E58B4;
 extern f32 lbl_803E58B8;
-void SB_CannonBall_hitDetect(int *obj) {
-    int *state = ((GameObject *)obj)->extra;
-    f32 t = ((SBCannonBallState *)state)->impactCooldown;
+
+void SB_CannonBall_hitDetect(int* obj)
+{
+    int* state = ((GameObject*)obj)->extra;
+    f32 t = ((SBCannonBallState*)state)->impactCooldown;
     f32 zero = lbl_803E58B4;
 
-    if (t > zero) {
-        ((SBCannonBallState *)state)->impactCooldown = t - timeDelta;
-        if (((SBCannonBallState *)state)->impactCooldown <= zero) {
+    if (t > zero)
+    {
+        ((SBCannonBallState*)state)->impactCooldown = t - timeDelta;
+        if (((SBCannonBallState*)state)->impactCooldown <= zero)
+        {
             Obj_FreeObject(obj);
         }
         return;
     }
 
     {
-        int *side = *(int **)&((GameObject *)obj)->anim.hitReactState;
-        int *target = *(int **)&((ObjHitsPriorityState *)side)->lastHitObject;
+        int* side = *(int**)&((GameObject*)obj)->anim.hitReactState;
+        int* target = *(int**)&((ObjHitsPriorityState*)side)->lastHitObject;
         s16 type;
         if (target == NULL) return;
-        type = *(s16 *)((char *)target + 0x46);
+        type = *(s16*)((char*)target + 0x46);
         if (type == SB_CLOUDBALL_ALIAS_OBJECT_TYPE) return;
         if (type == SB_CANNONBALL_ALIAS_OBJECT_TYPE) return;
     }
@@ -500,53 +585,62 @@ void SB_CannonBall_hitDetect(int *obj) {
 
     Sfx_PlayFromObject(obj, SB_CANNONBALL_IMPACT_SFX);
     {
-        int *p = *(int **)&((GameObject *)obj)->anim.hitReactState;
-        ((ObjHitsPriorityState *)p)->flags = (s16)(((ObjHitsPriorityState *)p)->flags & ~SB_CANNONBALL_SOLID_HITBOX_FLAG);
+        int* p = *(int**)&((GameObject*)obj)->anim.hitReactState;
+        ((ObjHitsPriorityState*)p)->flags = (s16)(((ObjHitsPriorityState*)p)->flags & ~SB_CANNONBALL_SOLID_HITBOX_FLAG);
     }
-    ((SBCannonBallState *)state)->impactCooldown = lbl_803E58B8;
-    ((GameObject *)obj)->anim.alpha = SB_CANNONBALL_IMPACT_VISUAL_TIMER;
+    ((SBCannonBallState*)state)->impactCooldown = lbl_803E58B8;
+    ((GameObject*)obj)->anim.alpha = SB_CANNONBALL_IMPACT_VISUAL_TIMER;
 
     {
         int i;
-        for (i = SB_CANNONBALL_SMOKE_PARTICLE_COUNT; i != 0; i--) {
+        for (i = SB_CANNONBALL_SMOKE_PARTICLE_COUNT; i != 0; i--)
+        {
             (*gPartfxInterface)->spawnObject(
                 obj, SB_CANNONBALL_IMPACT_SMOKE_PARTICLE_ID, NULL, 1, -1, NULL);
         }
     }
     {
         int i;
-        for (i = SB_CANNONBALL_SPARK_PARTICLE_COUNT; i != 0; i--) {
+        for (i = SB_CANNONBALL_SPARK_PARTICLE_COUNT; i != 0; i--)
+        {
             (*gPartfxInterface)->spawnObject(
                 obj, SB_CANNONBALL_IMPACT_SPARK_PARTICLE_ID, NULL, 1, -1, NULL);
         }
     }
 }
 
-extern u8 *objCreateLight(int *obj, int v);
-extern void modelLightStruct_setLightKind(u8 *p, int v);
-extern void modelLightStruct_setDiffuseColor(u8 *p, int a, int b, int c, int d);
-extern void lightSetFieldBC_8001db14(u8 *p, int v);
-extern void modelLightStruct_setDistanceAttenuation(u8 *p, f32 a, f32 b);
+extern u8* objCreateLight(int* obj, int v);
+extern void modelLightStruct_setLightKind(u8* p, int v);
+extern void modelLightStruct_setDiffuseColor(u8* p, int a, int b, int c, int d);
+extern void lightSetFieldBC_8001db14(u8* p, int v);
+extern void modelLightStruct_setDistanceAttenuation(u8* p, f32 a, f32 b);
 extern f32 lbl_803E58C8;
 extern f32 lbl_803E58CC;
 extern f32 lbl_803E58D0;
-void SB_CannonBall_init(int *obj) {
-    int *state = ((GameObject *)obj)->extra;
-    if (*(u8 **)&((SBCannonBallState *)state)->modelLight == NULL) {
-        *(u8 **)&((SBCannonBallState *)state)->modelLight = objCreateLight(obj, SB_CANNONBALL_LIGHT_KIND);
-        if (*(u8 **)&((SBCannonBallState *)state)->modelLight != NULL) {
-            modelLightStruct_setLightKind(*(u8 **)&((SBCannonBallState *)state)->modelLight, SB_CANNONBALL_LIGHT_FIELD50);
-            modelLightStruct_setDiffuseColor(*(u8 **)&((SBCannonBallState *)state)->modelLight, SB_CANNONBALL_LIGHT_RED, SB_CANNONBALL_LIGHT_GREEN, SB_CANNONBALL_LIGHT_BLUE, SB_CANNONBALL_LIGHT_ALPHA);
-            lightSetFieldBC_8001db14(*(u8 **)&((SBCannonBallState *)state)->modelLight, SB_CANNONBALL_LIGHT_FIELD_BC);
-            modelLightStruct_setDistanceAttenuation(*(u8 **)&((SBCannonBallState *)state)->modelLight, lbl_803E58C8, lbl_803E58CC);
+
+void SB_CannonBall_init(int* obj)
+{
+    int* state = ((GameObject*)obj)->extra;
+    if (*(u8**)&((SBCannonBallState*)state)->modelLight == NULL)
+    {
+        *(u8**)&((SBCannonBallState*)state)->modelLight = objCreateLight(obj, SB_CANNONBALL_LIGHT_KIND);
+        if (*(u8**)&((SBCannonBallState*)state)->modelLight != NULL)
+        {
+            modelLightStruct_setLightKind(*(u8**)&((SBCannonBallState*)state)->modelLight, SB_CANNONBALL_LIGHT_FIELD50);
+            modelLightStruct_setDiffuseColor(*(u8**)&((SBCannonBallState*)state)->modelLight, SB_CANNONBALL_LIGHT_RED,
+                                             SB_CANNONBALL_LIGHT_GREEN, SB_CANNONBALL_LIGHT_BLUE,
+                                             SB_CANNONBALL_LIGHT_ALPHA);
+            lightSetFieldBC_8001db14(*(u8**)&((SBCannonBallState*)state)->modelLight, SB_CANNONBALL_LIGHT_FIELD_BC);
+            modelLightStruct_setDistanceAttenuation(*(u8**)&((SBCannonBallState*)state)->modelLight, lbl_803E58C8,
+                                                    lbl_803E58CC);
         }
     }
     {
-        int *p = *(int **)&((GameObject *)obj)->anim.hitReactState;
-        ((ObjHitsPriorityState *)p)->flags = (s16)(((ObjHitsPriorityState *)p)->flags & ~SB_CANNONBALL_SOLID_HITBOX_FLAG);
+        int* p = *(int**)&((GameObject*)obj)->anim.hitReactState;
+        ((ObjHitsPriorityState*)p)->flags = (s16)(((ObjHitsPriorityState*)p)->flags & ~SB_CANNONBALL_SOLID_HITBOX_FLAG);
     }
-    ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * lbl_803E58D0;
-    ((SBCannonBallState *)state)->flags = (s8)(((SBCannonBallState *)state)->flags | SB_CANNONBALL_INITIAL_BURST_FLAG);
+    ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E58D0;
+    ((SBCannonBallState*)state)->flags = (s8)(((SBCannonBallState*)state)->flags | SB_CANNONBALL_INITIAL_BURST_FLAG);
     Sfx_PlayFromObject(obj, SB_CANNONBALL_LAUNCH_SFX);
     Sfx_PlayFromObject(obj, SB_CANNONBALL_LOOP_SFX);
 }

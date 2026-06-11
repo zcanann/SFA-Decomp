@@ -3,9 +3,10 @@
 #include "main/dll/DF/DFbarrelanim.h"
 #include "main/dll/DF/dfropenode.h"
 
-typedef struct DfropenodeState {
+typedef struct DfropenodeState
+{
     u8 pad0[0x2C - 0x0];
-    void *unk2C;
+    void* unk2C;
 } DfropenodeState;
 
 
@@ -17,14 +18,16 @@ extern f32 lbl_803E4E18;
 extern f32 lbl_803E4E1C;
 
 
-static inline f32 DFRope_S32AsFloat(s32 value) {
-  u64 bits = CONCAT44(0x43300000, (u32)value ^ 0x80000000);
-  return (f32)(*(f64 *)&bits - lbl_803E4DF0);
+static inline f32 DFRope_S32AsFloat(s32 value)
+{
+    u64 bits = CONCAT44(0x43300000, (u32)value ^ 0x80000000);
+    return (f32)(*(f64*)&bits - lbl_803E4DF0);
 }
 
-static inline f32 DFRope_S32AsFloat_SubAsFloat(s32 value) {
-  u64 bits = CONCAT44(0x43300000, (u32)value ^ 0x80000000);
-  return (f32)*(f64 *)&bits - (f32)lbl_803E4DF0;
+static inline f32 DFRope_S32AsFloat_SubAsFloat(s32 value)
+{
+    u64 bits = CONCAT44(0x43300000, (u32)value ^ 0x80000000);
+    return (f32) * (f64*)&bits - (f32)lbl_803E4DF0;
 }
 
 /*
@@ -40,78 +43,88 @@ static inline f32 DFRope_S32AsFloat_SubAsFloat(s32 value) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float *distanceOut,
-                      float *phaseOut, u8 *sideOut)
+int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float* distanceOut,
+                      float* phaseOut, u8* sideOut)
 {
-  DFropenodeExtra *extra;
-  int result;
-  int offset;
-  int i;
-  f32 localZ;
-  f32 localY;
-  f32 localX;
-  f32 best;
-  f32 phase;
-  f32 x;
-  f32 y;
-  f32 z;
-  f32 dx;
-  f32 dy;
-  f32 dz;
-  f32 distance;
+    DFropenodeExtra* extra;
+    int result;
+    int offset;
+    int i;
+    f32 localZ;
+    f32 localY;
+    f32 localX;
+    f32 best;
+    f32 phase;
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 distance;
 
-  extra = ((GameObject *)obj)->extra;
-  if ((*(u8 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x18) & 1) == 0) {
-    return 0;
-  }
-  if (extra->linkedObj == NULL) {
-    return 0;
-  }
-  if (worldX < extra->minX || worldX > extra->maxX || worldZ < extra->minZ ||
-      worldZ > extra->maxZ) {
-    return 0;
-  }
-  *distanceOut = lbl_803E4E1C;
-  localX = worldX - ((GameObject *)obj)->anim.localPosX;
-  localY = worldY - ((GameObject *)obj)->anim.localPosY;
-  localZ = worldZ - ((GameObject *)obj)->anim.localPosZ;
-  {
-    i = 0;
-    result = 0;
-    offset = 0;
-    best = lbl_803E4DFC;
-    for (; i < extra->rope->count - 1; i++) {
-      int node;
+    extra = ((GameObject*)obj)->extra;
+    if ((*(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x18) & 1) == 0)
+    {
+        return 0;
+    }
+    if (extra->linkedObj == NULL)
+    {
+        return 0;
+    }
+    if (worldX < extra->minX || worldX > extra->maxX || worldZ < extra->minZ ||
+        worldZ > extra->maxZ)
+    {
+        return 0;
+    }
+    *distanceOut = lbl_803E4E1C;
+    localX = worldX - ((GameObject*)obj)->anim.localPosX;
+    localY = worldY - ((GameObject*)obj)->anim.localPosY;
+    localZ = worldZ - ((GameObject*)obj)->anim.localPosZ;
+    {
+        i = 0;
+        result = 0;
+        offset = 0;
+        best = lbl_803E4DFC;
+        for (; i < extra->rope->count - 1; i++)
+        {
+            int node;
 
-      x = localX;
-      y = localY;
-      z = localZ;
-      node = (int)extra->rope->nodes + offset;
-      phase = fn_801C1698(*(f32 *)(node + 0), *(f32 *)(node + 4), *(f32 *)(node + 8),
-                          *(f32 *)(node + 0x34), *(f32 *)(node + 0x38), *(f32 *)(node + 0x3c),
-                          &x, &y, &z);
-      if (phase >= best && phase < lbl_803E4E18) {
-        dx = x - localX;
-        dy = y - localY;
-        dz = z - localZ;
-        distance = sqrtf(dx * dx + dy * dy + dz * dz);
-        if (distance < *distanceOut) {
-          result = i + 1;
-          *distanceOut = distance;
-          *phaseOut = (f32)i + phase;
+            x = localX;
+            y = localY;
+            z = localZ;
+            node = (int)extra->rope->nodes + offset;
+            phase = fn_801C1698(*(f32*)(node + 0), *(f32*)(node + 4), *(f32*)(node + 8),
+                                *(f32*)(node + 0x34), *(f32*)(node + 0x38), *(f32*)(node + 0x3c),
+                                &x, &y, &z);
+            if (phase >= best && phase < lbl_803E4E18)
+            {
+                dx = x - localX;
+                dy = y - localY;
+                dz = z - localZ;
+                distance = sqrtf(dx * dx + dy * dy + dz * dz);
+                if (distance < *distanceOut)
+                {
+                    result = i + 1;
+                    *distanceOut = distance;
+                    *phaseOut = (f32)i + phase;
+                }
+            }
+            offset += 0x34;
         }
-      }
-      offset += 0x34;
     }
-  }
-  if (result != 0) {
-    if (result - 1 <= ((int)extra->rope->count >> 1)) {
-      *sideOut = 0;
-    } else {
-      *sideOut = 1;
+    if (result != 0)
+    {
+        if (result - 1 <= ((int)extra->rope->count >> 1))
+        {
+            *sideOut = 0;
+        }
+        else
+        {
+            *sideOut = 1;
+        }
     }
-  }
-  return result;
+    return result;
 }
 
 /*
@@ -129,20 +142,21 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float *distan
  */
 void dfropenode_render2(f32 phase, f32 force, int obj)
 {
-  int extra;
-  s8 idx;
-  f32 fraction;
-  int node;
+    int extra;
+    s8 idx;
+    f32 fraction;
+    int node;
 
-  extra = *(int *)&((GameObject *)obj)->extra;
-  phase = phase - (f32)(s8)phase;
-  idx = (s8)phase;
-  fraction = phase - (f32)idx;
-  node = **(int **)(extra + 0x2c) + idx * 0x34;
-  *(f32 *)(node + 0x1c) = force * fraction + *(f32 *)(node + 0x1c);
-  fraction = lbl_803E4E18 - fraction;
-  node = **(int **)&((DFropenodeExtra *)extra)->rope + idx * 0x34;
-  *(f32 *)(node + 0x1c) = force * fraction + *(f32 *)(node + 0x1c);
+    extra = *(int*)&((GameObject*)obj)->extra;
+    phase = phase - (f32)(s8)
+    phase;
+    idx = (s8)phase;
+    fraction = phase - (f32)idx;
+    node = **(int**)(extra + 0x2c) + idx * 0x34;
+    *(f32*)(node + 0x1c) = force * fraction + *(f32*)(node + 0x1c);
+    fraction = lbl_803E4E18 - fraction;
+    node = **(int**)&((DFropenodeExtra*)extra)->rope + idx * 0x34;
+    *(f32*)(node + 0x1c) = force * fraction + *(f32*)(node + 0x1c);
 }
 
 /*
@@ -158,31 +172,32 @@ void dfropenode_render2(f32 phase, f32 force, int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfropenode_modelMtxFn(f32 distance, int obj, float *phase)
+void dfropenode_modelMtxFn(f32 distance, int obj, float* phase)
 {
-  int extra;
-  s32 raw;
-  s8 idx;
-  int node;
-  f32 ph;
-  f32 x0;
-  f32 dx;
-  f32 dz;
-  f32 len;
+    int extra;
+    s32 raw;
+    s8 idx;
+    int node;
+    f32 ph;
+    f32 x0;
+    f32 dx;
+    f32 dz;
+    f32 len;
 
-  extra = *(int *)&((GameObject *)obj)->extra;
-  ph = *phase;
-  raw = (s32)ph;
-  idx = (s8)raw;
-  *phase = ph - (f32)idx;
-  x0 = *((f32 *)**(int **)&((DFropenodeExtra *)extra)->rope + idx * 13);
-  node = **(int **)&((DFropenodeExtra *)extra)->rope + idx * 0x34;
-  dx = x0 - *(f32 *)(node + 0x34);
-  dz = *(f32 *)(node + 8) - *(f32 *)(node + 0x3c);
-  len = sqrtf(dx * dx + dz * dz);
-  distance = distance / len;
-  *phase = *phase + distance;
-  *phase = *phase + (f32)(s8)raw;
+    extra = *(int*)&((GameObject*)obj)->extra;
+    ph = *phase;
+    raw = (s32)ph;
+    idx = (s8)raw;
+    *phase = ph - (f32)idx;
+    x0 = *((f32*)**(int**)&((DFropenodeExtra*)extra)->rope + idx * 13);
+    node = **(int**)&((DFropenodeExtra*)extra)->rope + idx * 0x34;
+    dx = x0 - *(f32*)(node + 0x34);
+    dz = *(f32*)(node + 8) - *(f32*)(node + 0x3c);
+    len = sqrtf(dx * dx + dz * dz);
+    distance = distance / len;
+    *phase = *phase + distance;
+    *phase = *phase + (f32)(s8)
+    raw;
 }
 
 /*
@@ -198,26 +213,26 @@ void dfropenode_modelMtxFn(f32 distance, int obj, float *phase)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfropenode_func0B(f32 phase, int obj, float *xOut, float *yOut, float *zOut)
+void dfropenode_func0B(f32 phase, int obj, float* xOut, float* yOut, float* zOut)
 {
-  DFropenodeExtra *extra;
-  s8 idx;
-  f32 x0;
-  f32 dy;
-  f32 dz;
-  f32 fraction;
-  DFRopeNode *node;
-  int nodes;
+    DFropenodeExtra* extra;
+    s8 idx;
+    f32 x0;
+    f32 dy;
+    f32 dz;
+    f32 fraction;
+    DFRopeNode* node;
+    int nodes;
 
-  extra = ((GameObject *)obj)->extra;
-  idx = (s8)phase;
-  fraction = phase - (f32)idx;
-  nodes = (int)extra->rope->nodes;
-  node = (DFRopeNode *)(nodes + idx * 0x34);
-  dy = node[1].pos[1] - node->pos[1];
-  dz = node[1].pos[2] - node->pos[2];
-  x0 = *(f32 *)(nodes + idx * 0x34);
-  *xOut = (node[1].pos[0] - x0) * fraction + (((GameObject *)obj)->anim.localPosX + x0);
-  *yOut = dy * fraction + (((GameObject *)obj)->anim.localPosY + extra->rope->nodes[idx].pos[1]);
-  *zOut = dz * fraction + (((GameObject *)obj)->anim.localPosZ + extra->rope->nodes[idx].pos[2]);
+    extra = ((GameObject*)obj)->extra;
+    idx = (s8)phase;
+    fraction = phase - (f32)idx;
+    nodes = (int)extra->rope->nodes;
+    node = (DFRopeNode*)(nodes + idx * 0x34);
+    dy = node[1].pos[1] - node->pos[1];
+    dz = node[1].pos[2] - node->pos[2];
+    x0 = *(f32*)(nodes + idx * 0x34);
+    *xOut = (node[1].pos[0] - x0) * fraction + (((GameObject*)obj)->anim.localPosX + x0);
+    *yOut = dy * fraction + (((GameObject*)obj)->anim.localPosY + extra->rope->nodes[idx].pos[1]);
+    *zOut = dz * fraction + (((GameObject*)obj)->anim.localPosZ + extra->rope->nodes[idx].pos[2]);
 }

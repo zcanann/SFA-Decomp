@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0478_DR_LightBea_packet_info {
+enum obj_0478_DR_LightBea_packet_info
+{
     DR_LIGHTBEA_DEF_ID = 0x0478,
     DR_LIGHTBEA_DLL_ID = 0x027C,
     DR_LIGHTBEA_CLASS_ID = 0x0030,

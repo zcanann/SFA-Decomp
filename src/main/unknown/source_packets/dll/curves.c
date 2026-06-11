@@ -60,7 +60,8 @@
 /*
  * Packet constants only. Promote names and boundaries after EN inspection.
  */
-enum curves_packet_info {
+enum curves_packet_info
+{
     PACKET_DLL_0125 = 0x0125,
     PACKET_CLASS_002C = 0x002C,
     PACKET_DEF_0491 = 0x0491,

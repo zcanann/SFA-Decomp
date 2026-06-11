@@ -16,7 +16,7 @@ extern undefined4 FUN_8028688c();
 
 extern f32 timeDelta;
 
-extern ObjectTriggerInterface **gObjectTriggerInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 /*
  * --INFO--
@@ -32,45 +32,50 @@ extern ObjectTriggerInterface **gObjectTriggerInterface;
  * PAL Size: TODO
  */
 #pragma dont_inline on
-void dfpstatue1_updateState(DfpStatue1Object *obj)
+void dfpstatue1_updateState(DfpStatue1Object* obj)
 {
-  DfpStatue1State *state;
-  s16 loopBit;
+    DfpStatue1State* state;
+    s16 loopBit;
 
-  state = obj->state;
-  loopBit = (s16)GameBit_Get(state->loopSfxId);
-  if ((state->loopActive == 0) && (loopBit != 0) &&
-      (GameBit_Get(0xedf) != 0)) {
-    (*gObjectTriggerInterface)->runSequence(0,obj,0xffffffff);
-    state->loopActive = 1;
-  }
-  if ((state->stateFlags != 0) && (state->loopActive != 0) && (GameBit_Get(0xedf) != 0)) {
-    GameBit_Set(state->loopSfxId,0);
-    (*gObjectTriggerInterface)->runSequence(1,obj,0xffffffff);
-    state->loopActive = 0;
-    state->stateFlags = 0;
-  }
-  if (state->loopSfxStopTimer != 0) {
-    state->loopSfxStopTimer = (s16)((float)state->loopSfxStopTimer - timeDelta);
-    Sfx_KeepAliveLoopedObjectSound((int)obj,0x458);
-    if (state->loopSfxStopTimer <= 0) {
-      state->loopSfxStopTimer = 0;
-      switch (state->loopSfxId) {
-      case 0x672:
-        GameBit_Set(0x66e,0);
-        break;
-      case 0x673:
-        GameBit_Set(0x66f,0);
-        break;
-      case 0x674:
-        GameBit_Set(0x670,0);
-        break;
-      case 0x675:
-        GameBit_Set(0x9f5,0);
-        break;
-      }
+    state = obj->state;
+    loopBit = (s16)GameBit_Get(state->loopSfxId);
+    if ((state->loopActive == 0) && (loopBit != 0) &&
+        (GameBit_Get(0xedf) != 0))
+    {
+        (*gObjectTriggerInterface)->runSequence(0, obj, 0xffffffff);
+        state->loopActive = 1;
     }
-  }
+    if ((state->stateFlags != 0) && (state->loopActive != 0) && (GameBit_Get(0xedf) != 0))
+    {
+        GameBit_Set(state->loopSfxId, 0);
+        (*gObjectTriggerInterface)->runSequence(1, obj, 0xffffffff);
+        state->loopActive = 0;
+        state->stateFlags = 0;
+    }
+    if (state->loopSfxStopTimer != 0)
+    {
+        state->loopSfxStopTimer = (s16)((float)state->loopSfxStopTimer - timeDelta);
+        Sfx_KeepAliveLoopedObjectSound((int)obj, 0x458);
+        if (state->loopSfxStopTimer <= 0)
+        {
+            state->loopSfxStopTimer = 0;
+            switch (state->loopSfxId)
+            {
+            case 0x672:
+                GameBit_Set(0x66e, 0);
+                break;
+            case 0x673:
+                GameBit_Set(0x66f, 0);
+                break;
+            case 0x674:
+                GameBit_Set(0x670, 0);
+                break;
+            case 0x675:
+                GameBit_Set(0x9f5, 0);
+                break;
+            }
+        }
+    }
 }
 #pragma dont_inline reset
 
@@ -79,46 +84,74 @@ int dfpstatue1_getExtraSize(void) { return 0xa; }
 int dfpstatue1_getObjectTypeId(void) { return 0x0; }
 
 /* Trivial 4b 0-arg blr leaves. */
-void dfpstatue1_free(void) {}
-void dfpstatue1_render(void) {}
-void dfpstatue1_hitDetect(void) {}
-
-void dfpstatue1_update(DfpStatue1Object *obj) { dfpstatue1_updateState(obj); }
-
-void dfpstatue1_init(DfpStatue1Object *obj, DfpStatue1MapData *mapData)
+void dfpstatue1_free(void)
 {
-  DfpStatue1State *state = obj->state;
-  s16 yaw = (s16)(mapData->yawByte << 8);
-
-  obj->yaw = yaw;
-  obj->updateState = sfxplayer_updateState;
-  state->effectPairCount = mapData->effectPairCount;
-  state->triggerSfxId = mapData->triggerSfxId;
-  state->loopSfxId = mapData->loopSfxId;
-  if (GameBit_Get((int)state->loopSfxId) != 0) {
-    state->loopActive = 1;
-  }
-  state->loopSfxStopTimer = 0;
-  state->stateFlags = 0;
-  obj->objectFlags |= 0x4000;
 }
 
-void dfpstatue1_release(void) {}
-void dfpstatue1_initialise(void) {}
+void dfpstatue1_render(void)
+{
+}
+
+void dfpstatue1_hitDetect(void)
+{
+}
+
+void dfpstatue1_update(DfpStatue1Object* obj) { dfpstatue1_updateState(obj); }
+
+void dfpstatue1_init(DfpStatue1Object* obj, DfpStatue1MapData* mapData)
+{
+    DfpStatue1State* state = obj->state;
+    s16 yaw = (s16)(mapData->yawByte << 8);
+
+    obj->yaw = yaw;
+    obj->updateState = sfxplayer_updateState;
+    state->effectPairCount = mapData->effectPairCount;
+    state->triggerSfxId = mapData->triggerSfxId;
+    state->loopSfxId = mapData->loopSfxId;
+    if (GameBit_Get((int)state->loopSfxId) != 0)
+    {
+        state->loopActive = 1;
+    }
+    state->loopSfxStopTimer = 0;
+    state->stateFlags = 0;
+    obj->objectFlags |= 0x4000;
+}
+
+void dfpstatue1_release(void)
+{
+}
+
+void dfpstatue1_initialise(void)
+{
+}
 
 int dfperchwitch_getExtraSize(void) { return 0x0; }
 int dfperchwitch_getObjectTypeId(void) { return 0x0; }
-void dfperchwitch_free(void) {}
-void dfperchwitch_render(void) {}
-void dfperchwitch_hitDetect(void) {}
+
+void dfperchwitch_free(void)
+{
+}
+
+void dfperchwitch_render(void)
+{
+}
+
+void dfperchwitch_hitDetect(void)
+{
+}
 
 /* OSReport(string) wrappers. */
-extern void OSReport(const char *fmt, ...);
+extern void OSReport(const char* fmt, ...);
 void dfperchwitch_update(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
 void dfperchwitch_init(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
 
-void dfperchwitch_release(void) {}
-void dfperchwitch_initialise(void) {}
+void dfperchwitch_release(void)
+{
+}
+
+void dfperchwitch_initialise(void)
+{
+}
 
 ObjectDescriptor gDfpstatue1ObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

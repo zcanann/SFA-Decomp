@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0229_LINKC_Asset_packet_info {
+enum obj_0229_LINKC_Asset_packet_info
+{
     LINKC_ASSET_DEF_ID = 0x0229,
     LINKC_ASSET_DLL_ID = 0x012E,
     LINKC_ASSET_CLASS_ID = 0x0061,

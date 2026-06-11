@@ -17,52 +17,52 @@
 #include "main/dll/baddie/wispBaddie.h"
 #include "main/mapEventTypes.h"
 
-extern f32   mathSinf(f32 x);
-extern void  pauseMenuDrawElement(void* tex, f32 a, f32 b, s16 x, u8 alpha, s32 mode, s32 flag);
+extern f32 mathSinf(f32 x);
+extern void pauseMenuDrawElement(void* tex, f32 a, f32 b, s16 x, u8 alpha, s32 mode, s32 flag);
 
 extern u8 hudTextures[0x198];
 
 /* callees */
-extern void *Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern void drawRect(int w, int h, f32 a, f32 b);
-extern void boxDrawFn_8012975c(void *a, void *b, void *c);
+extern void boxDrawFn_8012975c(void* a, void* b, void* c);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextLoadDir(int dirId);
 extern void gameTextFn_80016810(int textId, int arg1, int arg2);
 extern void pauseMenuDoSave(void);
-extern f32  mathCosf(f32 x);
-extern f32  fn_802943F4(f32 x);
+extern f32 mathCosf(f32 x);
+extern f32 fn_802943F4(f32 x);
 extern void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4);
-extern int *Obj_GetActiveModel(void *obj);
-extern void objRender(int a, int b, int c, int d, void *obj, int e);
-extern int  randomGetRange(int lo, int hi);
-extern void drawFn_8011e8d8(void *tex, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);
-extern void drawFn_8011eb3c(void *tex, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);
-extern f32  gameTextFn_80019c00(void);
+extern int* Obj_GetActiveModel(void* obj);
+extern void objRender(int a, int b, int c, int d, void* obj, int e);
+extern int randomGetRange(int lo, int hi);
+extern void drawFn_8011e8d8(void* tex, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);
+extern void drawFn_8011eb3c(void* tex, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);
+extern f32 gameTextFn_80019c00(void);
 extern void Camera_SetCurrentViewIndex(s32 idx);
 extern void Camera_UpdateViewMatrices(void);
 extern void Camera_SetFovY(f32 fovy);
 extern void Camera_RebuildProjectionMatrix(void);
 extern void Camera_ApplyFullViewport(void);
-extern void *textureLoadAsset(int id);
-extern void gameTextShowStr(void *text, int boxId, int x, int y);
-extern void gameTextMeasureFn_800163c4(void *text, s32 a, s32 b, s32 c, s32 *o1, s32 *o2, s32 *o3, s32 *o4);
-extern int  getCurLanguage(void);
-extern void gameTextSetDrawFunc(void *callback);
-extern void *gameTextGetBox(int boxId);
-extern void gameTextFn_8001628c(int id, int a, int b, s32 *o1, s32 *o2, s32 *o3, s32 *o4);
-extern int  sprintf(char *dst, const char *fmt, ...);
-extern u32  GameBit_Get(int eventId);
-extern u16  getNextTaskHintText(void);
-extern f32  SaveGame_getPlayTime(void);
-extern void fn_80128120(void *obj, int v);
+extern void* textureLoadAsset(int id);
+extern void gameTextShowStr(void* text, int boxId, int x, int y);
+extern void gameTextMeasureFn_800163c4(void* text, s32 a, s32 b, s32 c, s32* o1, s32* o2, s32* o3, s32* o4);
+extern int getCurLanguage(void);
+extern void gameTextSetDrawFunc(void* callback);
+extern void* gameTextGetBox(int boxId);
+extern void gameTextFn_8001628c(int id, int a, int b, s32* o1, s32* o2, s32* o3, s32* o4);
+extern int sprintf(char* dst, const char* fmt, ...);
+extern u32 GameBit_Get(int eventId);
+extern u16 getNextTaskHintText(void);
+extern f32 SaveGame_getPlayTime(void);
+extern void fn_80128120(void* obj, int v);
 extern void fn_80128470(int v);
 extern void hudDrawMagicBar(int a, int b, int c);
-extern f32  hudElementOpacity;
-extern f32  timeDelta;
-extern u8   pauseMenuState;
-extern MapEventInterface **gMapEventInterface;
+extern f32 hudElementOpacity;
+extern f32 timeDelta;
+extern u8 pauseMenuState;
+extern MapEventInterface** gMapEventInterface;
 
 extern u8 pauseMenuTextDrawFn[];
 extern u8 lbl_8031AE20[];
@@ -79,21 +79,21 @@ extern s16 lbl_803DD750;
 extern s16 lbl_803DD752;
 extern s16 lbl_803DD754;
 extern s16 lbl_803DD756;
-extern u8  lbl_803DD758;
+extern u8 lbl_803DD758;
 extern s16 lbl_803DD75C;
 extern f32 lbl_803DD760;
 extern f32 lbl_803DD7BC;
-extern u8  lbl_803DD7C4;
-extern void *lbl_803DD7C8;
-extern u8  lbl_803DD7D6;
+extern u8 lbl_803DD7C4;
+extern void* lbl_803DD7C8;
+extern u8 lbl_803DD7D6;
 extern int lbl_803DD7D8;
 extern f32 lbl_803DD7FC;
-extern void *lbl_803DD824;
-extern u8  lbl_803DD734;
-extern void *lbl_803DD7A4;
+extern void* lbl_803DD824;
+extern u8 lbl_803DD734;
+extern void* lbl_803DD7A4;
 extern int lbl_803DD8E0;
 extern f32 lbl_803DD850;
-extern void *lbl_803DD860[2];
+extern void* lbl_803DD860[2];
 
 extern f32 lbl_803DBA34;
 extern f32 lbl_803DBA38;
@@ -117,36 +117,36 @@ extern char lbl_803DBB88;
 extern char lbl_803DBB90;
 extern char lbl_803DBB98;
 
-extern int    lbl_803E1E04;
-extern f32    lbl_803E1E3C;
-extern f32    lbl_803E1E64;
+extern int lbl_803E1E04;
+extern f32 lbl_803E1E3C;
+extern f32 lbl_803E1E64;
 extern double lbl_803E1E78;
 extern double lbl_803E1E88;
-extern f32    lbl_803E1E94;
-extern f32    lbl_803E1E80;
-extern f32    lbl_803E1EC8;
-extern f32    lbl_803E1ECC;
-extern f32    lbl_803E1F30;
-extern f32    lbl_803E1F34;
+extern f32 lbl_803E1E94;
+extern f32 lbl_803E1E80;
+extern f32 lbl_803E1EC8;
+extern f32 lbl_803E1ECC;
+extern f32 lbl_803E1F30;
+extern f32 lbl_803E1F34;
 extern double lbl_803E1F60;
-extern f32    lbl_803E1FAC;
-extern f32    lbl_803E2018;
-extern f32    lbl_803E2020;
+extern f32 lbl_803E1FAC;
+extern f32 lbl_803E2018;
+extern f32 lbl_803E2020;
 extern double lbl_803E2070;
 extern double lbl_803E2078;
 extern double lbl_803E2080;
 extern double lbl_803E2088;
-extern f32    lbl_803E2090;
-extern f32    lbl_803E2094;
-extern f32    lbl_803E2098;
-extern f32    lbl_803E209C;
-extern f32    lbl_803E20A0;
-extern f32    lbl_803E20A4;
-extern f32    lbl_803E20A8;
-extern f32    lbl_803E20AC;
-extern f32    lbl_803E20B0;
-extern f32    lbl_803E20B4;
-extern f32    lbl_803E20B8;
+extern f32 lbl_803E2090;
+extern f32 lbl_803E2094;
+extern f32 lbl_803E2098;
+extern f32 lbl_803E209C;
+extern f32 lbl_803E20A0;
+extern f32 lbl_803E20A4;
+extern f32 lbl_803E20A8;
+extern f32 lbl_803E20AC;
+extern f32 lbl_803E20B0;
+extern f32 lbl_803E20B4;
+extern f32 lbl_803E20B8;
 
 extern f32 lbl_803E1E6C;
 extern f32 lbl_803E1EE4;
@@ -159,12 +159,13 @@ extern f32 lbl_803E20C8;
 extern f32 lbl_803E20CC;
 extern f32 lbl_803E20D0;
 
-void pauseMenuDrawStatus_801274a0(int *arg1);
+void pauseMenuDrawStatus_801274a0(int* arg1);
 void fn_80127F24(s32 param_1);
 
-void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
-    int *player;
-    int *model;
+void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
+{
+    int* player;
+    int* model;
     s32 alpha;
     s32 x;
     s32 y;
@@ -176,13 +177,15 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
     s32 val;
     s32 h;
 
-    player = (int *)Obj_GetPlayerObject();
+    player = (int*)Obj_GetPlayerObject();
     GXSetScissor(0, 0, 0x280, 0x1e0);
-    if (pauseMenuState != 0) {
+    if (pauseMenuState != 0)
+    {
         drawRect(0x280, 0x1e0, lbl_803E1E3C, lbl_803E1E3C);
     }
 
-    switch (pauseMenuState) {
+    switch (pauseMenuState)
+    {
     case 0:
         boxDrawFn_8012975c(arg1, arg2, arg3);
         break;
@@ -190,7 +193,7 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         gameTextLoadDir(0xb);
         gameTextFn_80016810(0x3dd, 0xc8, 0x12c);
-        /* fall through */
+    /* fall through */
     case 2:
         pauseMenuDoSave();
         break;
@@ -204,41 +207,48 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
         lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(*(u16 *)&lbl_803DD750, *(u16 *)&lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, 0);
+        fn_8011EF50(*(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38,
+                    0);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
-        *(u16 *)((u8 *)model + 0x18) &= ~0x8;
+        *(u16*)((u8*)model + 0x18) &= ~0x8;
         y = (s32)((f32)(s16)alpha * lbl_803DD850);
         x = (s32)((double)(s16)y * (lbl_803E2080 - (double)lbl_803DD75C) * lbl_803E2088);
-        if (gameTextFn_80019c00() != lbl_803E1E3C) {
+        if (gameTextFn_80019c00() != lbl_803E1E3C)
+        {
             rnd1 = randomGetRange(0, 0x1e) * 2;
             rnd2 = randomGetRange(0, 0x1e) * 2;
-            drawFn_8011e8d8(*(void **)((u8 *)hudTextures + 0x150), lbl_803E2090, lbl_803E2094,
+            drawFn_8011e8d8(*(void**)((u8*)hudTextures + 0x150), lbl_803E2090, lbl_803E2094,
                             0xff, (u8)((s16)y / 2), 0x230, 0x190, rnd2, rnd1);
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
-            *(u16 *)((u8 *)model + 0x18) &= ~0x8;
+            *(u16*)((u8*)model + 0x18) &= ~0x8;
             Camera_SetCurrentViewIndex(0);
             Camera_UpdateViewMatrices();
             Camera_SetFovY(lbl_803DD7FC);
             Camera_RebuildProjectionMatrix();
             Camera_ApplyFullViewport();
-        } else {
-            if (lbl_803DD7C4 == 0) {
-                if (lbl_803DD7C8 == 0) {
+        }
+        else
+        {
+            if (lbl_803DD7C4 == 0)
+            {
+                if (lbl_803DD7C8 == 0)
+                {
                     lbl_803DD7C8 = textureLoadAsset(0xbe7);
                 }
-                if (lbl_803DD7C8 != 0) {
+                if (lbl_803DD7C8 != 0)
+                {
                     pauseMenuDrawElement(lbl_803DD7C8, lbl_803E1E80, lbl_803E2098, (s16)(0x96 - lbl_803DD75C), (u8)x,
                                          (s32)lbl_803E209C, 0);
                 }
             }
             fn_80127F24(x);
-            lbl_803DD824 = lbl_803DD7C4 ? (void *)(lbl_8031AE20 + 0xbd0) : (void *)(lbl_8031AE20 + 0x9f8);
+            lbl_803DD824 = lbl_803DD7C4 ? (void*)(lbl_8031AE20 + 0xbd0) : (void*)(lbl_8031AE20 + 0x9f8);
             fn_80128470(y);
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
-            *(u16 *)((u8 *)model + 0x18) &= ~0x8;
+            *(u16*)((u8*)model + 0x18) &= ~0x8;
             Camera_SetCurrentViewIndex(0);
             Camera_UpdateViewMatrices();
             Camera_SetFovY(lbl_803DD7FC);
@@ -260,54 +270,72 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
         lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(*(u16 *)&lbl_803DD750, *(u16 *)&lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, 0);
+        fn_8011EF50(*(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38,
+                    0);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
-        *(u16 *)((u8 *)model + 0x18) &= ~0x8;
-        if (gameTextFn_80019c00() != lbl_803E1E3C) {
+        *(u16*)((u8*)model + 0x18) &= ~0x8;
+        if (gameTextFn_80019c00() != lbl_803E1E3C)
+        {
             rnd1 = randomGetRange(0, 0x1e) * 2;
             rnd2 = randomGetRange(0, 0x1e) * 2;
-            drawFn_8011e8d8(*(void **)((u8 *)hudTextures + 0x150), lbl_803E2090, lbl_803E2094,
+            drawFn_8011e8d8(*(void**)((u8*)hudTextures + 0x150), lbl_803E2090, lbl_803E2094,
                             0xff, (u8)((s16)alpha / 2), 0x230, 0x190, rnd2, rnd1);
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
-            *(u16 *)((u8 *)model + 0x18) &= ~0x8;
+            *(u16*)((u8*)model + 0x18) &= ~0x8;
             Camera_SetCurrentViewIndex(0);
             Camera_UpdateViewMatrices();
             Camera_SetFovY(lbl_803DD7FC);
             Camera_RebuildProjectionMatrix();
             Camera_ApplyFullViewport();
-        } else {
+        }
+        else
+        {
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
-            *(u16 *)((u8 *)model + 0x18) &= ~0x8;
+            *(u16*)((u8*)model + 0x18) &= ~0x8;
             gameTextSetDrawFunc(pauseMenuTextDrawFn);
             lbl_803DBA8A = 0xc0;
             lbl_803DBA8C = lbl_803E20A0;
             gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-            if (lbl_803DD8E0 == lbl_803DD7D6) {
-                if (lbl_803DD7A4 != 0 && *(u16 *)((u8 *)lbl_803DD7A4 + 2) >= 2) {
+            if (lbl_803DD8E0 == lbl_803DD7D6)
+            {
+                if (lbl_803DD7A4 != 0 && *(u16*)((u8*)lbl_803DD7A4 + 2) >= 2)
+                {
                     acc = 0x96;
                     i = 1;
                     idx = 4;
-                    while (i < *(u16 *)((u8 *)lbl_803DD7A4 + 2)) {
+                    while (i < *(u16*)((u8*)lbl_803DD7A4 + 2))
+                    {
                         s32 sp28, sp24, sp20, sp1c;
-                        gameTextShowStr(*(void **)((u8 *)*(void **)((u8 *)lbl_803DD7A4 + 8) + idx),
+                        gameTextShowStr(*(void**)((u8*)*(void**)((u8*)lbl_803DD7A4 + 8) + idx),
                                         0x79, 0xf0, acc);
-                        gameTextMeasureFn_800163c4(*(void **)((u8 *)*(void **)((u8 *)lbl_803DD7A4 + 8) + idx),
+                        gameTextMeasureFn_800163c4(*(void**)((u8*)*(void**)((u8*)lbl_803DD7A4 + 8) + idx),
                                                    0x79, 0, 0, &sp28, &sp24, &sp20, &sp1c);
-                        h = *(u16 *)(lbl_802C8680 + (u32)(u8)sLanguageNameTable[getCurLanguage() * 8 + 4] * 16 + 0xa);
+                        h = *(u16*)(lbl_802C8680 + (u32)(u8)
+                        sLanguageNameTable[getCurLanguage() * 8 + 4] * 16 + 0xa
+                        )
+                        ;
                         val = sp20 - sp1c;
-                        if (val > h) {
+                        if (val > h)
+                        {
                             acc += val;
-                        } else {
-                            acc += *(u16 *)(lbl_802C8680 + (u32)(u8)sLanguageNameTable[getCurLanguage() * 8 + 4] * 16 + 0xa);
+                        }
+                        else
+                        {
+                            acc += *(u16*)(lbl_802C8680 + (u32)(u8)
+                            sLanguageNameTable[getCurLanguage() * 8 + 4] * 16 + 0xa
+                            )
+                            ;
                         }
                         idx += 4;
                         i++;
                     }
                 }
-            } else {
+            }
+            else
+            {
                 gameTextFn_80016810(0x515, 0xc8, 0x96);
             }
             gameTextFn_80016810(0x3de, 0xc8, 0x154);
@@ -334,45 +362,52 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
         lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(*(u16 *)&lbl_803DD750, *(u16 *)&lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, 0);
+        fn_8011EF50(*(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38,
+                    0);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
-        *(u16 *)((u8 *)model + 0x18) &= ~0x8;
-        if (gameTextFn_80019c00() != lbl_803E1E3C) {
+        *(u16*)((u8*)model + 0x18) &= ~0x8;
+        if (gameTextFn_80019c00() != lbl_803E1E3C)
+        {
             rnd1 = randomGetRange(0, 0x1e) * 2;
             rnd2 = randomGetRange(0, 0x1e) * 2;
-            drawFn_8011e8d8(*(void **)((u8 *)hudTextures + 0x150), lbl_803E2090, lbl_803E2094,
+            drawFn_8011e8d8(*(void**)((u8*)hudTextures + 0x150), lbl_803E2090, lbl_803E2094,
                             0xff, (u8)((s16)alpha / 2), 0x230, 0x190, rnd2, rnd1);
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
-            *(u16 *)((u8 *)model + 0x18) &= ~0x8;
+            *(u16*)((u8*)model + 0x18) &= ~0x8;
             Camera_SetCurrentViewIndex(0);
             Camera_UpdateViewMatrices();
             Camera_SetFovY(lbl_803DD7FC);
             Camera_RebuildProjectionMatrix();
             Camera_ApplyFullViewport();
-        } else {
-            lbl_803DD824 = (void *)(lbl_8031AE20 + 0xf10);
+        }
+        else
+        {
+            lbl_803DD824 = (void*)(lbl_8031AE20 + 0xf10);
             fn_80128470(alpha);
             gameTextSetDrawFunc(pauseMenuTextDrawFn);
             gameTextSetColor(0xff, 0xff, 0xff, 0xff);
             lbl_803DBA8A = 0x100;
             lbl_803DBA8C = lbl_803E20A0;
-            switch (pauseMenuState) {
-            case 8: {
-                MapEventInterface *mapEvents = *gMapEventInterface;
-                int *info = (int *)mapEvents->getState(mapEvents);
-                char buf[0x10];
-                *(int *)buf = lbl_803E1E04;
-                gameTextFn_80016810(0x3e0, 0xc8, 0x118);
-                sprintf(buf, &lbl_803DBB68, *(u8 *)((u8 *)info + 9));
-                lbl_803DBA8C = lbl_803E1E64;
-                gameTextShowStr(buf, 0x93, 0x14a, 0xdc);
-                lbl_803DBA8C = lbl_803E20A0;
-                pauseMenuDrawElement(*(void **)((u8 *)hudTextures + 0x134), lbl_803E1ECC, lbl_803E2018, (s16)0x258, (u8)alpha,
-                                     0x100, 0);
-                break;
-            }
+            switch (pauseMenuState)
+            {
+            case 8:
+                {
+                    MapEventInterface* mapEvents = *gMapEventInterface;
+                    int* info = (int*)mapEvents->getState(mapEvents);
+                    char buf[0x10];
+                    *(int*)buf = lbl_803E1E04;
+                    gameTextFn_80016810(0x3e0, 0xc8, 0x118);
+                    sprintf(buf, &lbl_803DBB68, *(u8*)((u8*)info + 9));
+                    lbl_803DBA8C = lbl_803E1E64;
+                    gameTextShowStr(buf, 0x93, 0x14a, 0xdc);
+                    lbl_803DBA8C = lbl_803E20A0;
+                    pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x134), lbl_803E1ECC, lbl_803E2018, (s16)0x258,
+                                         (u8)alpha,
+                                         0x100, 0);
+                    break;
+                }
             case 6:
             case 10:
                 gameTextFn_80016810(0x3ce, 0xc8, 0x96);
@@ -384,38 +419,44 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
             }
             {
                 s32 b38, b34, b30, b2c;
-                int *box;
+                int* box;
                 lbl_803DBA8C = lbl_803E1E64;
-                box = (int *)gameTextGetBox(0x7f);
+                box = (int*)gameTextGetBox(0x7f);
                 gameTextFn_8001628c(0x3cd, 0, 0, &b38, &b34, &b30, &b2c);
                 val = b38 - b34;
-                *(u8 *)((u8 *)lbl_803DD824 + 8) = (u8)val;
-                x = *(s16 *)((u8 *)box + 0x14) + *(u16 *)((u8 *)box + 8) - (val >> 1) - 0x140;
-                *(s16 *)((u8 *)lbl_803DD824 + 2) = (s16)(s32)(lbl_803DBA8C * (f32)(s32)x + lbl_803E1F34);
+                *(u8*)((u8*)lbl_803DD824 + 8) = (u8)val;
+                x = *(s16*)((u8*)box + 0x14) + *(u16*)((u8*)box + 8) - (val >> 1) - 0x140;
+                *(s16*)((u8*)lbl_803DD824 + 2) = (s16)(s32)(lbl_803DBA8C * (f32)(s32)x + lbl_803E1F34);
 
-                box = (int *)gameTextGetBox(0x80);
+                box = (int*)gameTextGetBox(0x80);
                 gameTextFn_8001628c(0x3cc, 0, 0, &b38, &b34, &b30, &b2c);
                 val = b38 - b34;
-                *(u8 *)((u8 *)lbl_803DD824 + 0x28) = (u8)val;
-                x = *(s16 *)((u8 *)box + 0x14) + ((val >> 1) - 0x140);
-                *(s16 *)((u8 *)lbl_803DD824 + 0x22) = (s16)(s32)(lbl_803DBA8C * (f32)(s32)x + lbl_803E1F34);
+                *(u8*)((u8*)lbl_803DD824 + 0x28) = (u8)val;
+                x = *(s16*)((u8*)box + 0x14) + ((val >> 1) - 0x140);
+                *(s16*)((u8*)lbl_803DD824 + 0x22) = (s16)(s32)(lbl_803DBA8C * (f32)(s32)x + lbl_803E1F34);
 
-                if (lbl_803DD7D8 != 0) {
+                if (lbl_803DD7D8 != 0)
+                {
                     gameTextSetColor(0x96, 0x96, 0x96, 0xff);
-                } else {
+                }
+                else
+                {
                     gameTextSetColor(0xff, 0xff, 0xff, 0xff);
                 }
                 gameTextFn_80016810(0x3cd, 0, 0xc8);
-                if (lbl_803DD7D8 != 0) {
+                if (lbl_803DD7D8 != 0)
+                {
                     gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-                } else {
+                }
+                else
+                {
                     gameTextSetColor(0x96, 0x96, 0x96, 0xff);
                 }
                 gameTextFn_80016810(0x3cc, 0, 0xc8);
                 gameTextSetDrawFunc(0);
                 model = Obj_GetActiveModel(lbl_803DD860[1]);
                 objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
-                *(u16 *)((u8 *)model + 0x18) &= ~0x8;
+                *(u16*)((u8*)model + 0x18) &= ~0x8;
                 Camera_SetCurrentViewIndex(0);
                 Camera_UpdateViewMatrices();
                 Camera_SetFovY(lbl_803DD7FC);
@@ -432,56 +473,60 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
         lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(*(u16 *)&lbl_803DD750, *(u16 *)&lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, 0);
+        fn_8011EF50(*(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38,
+                    0);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
-        *(u16 *)((u8 *)model + 0x18) &= ~0x8;
+        *(u16*)((u8*)model + 0x18) &= ~0x8;
         gameTextSetDrawFunc(pauseMenuTextDrawFn);
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         lbl_803DBA8A = 0x100;
         lbl_803DBA8C = lbl_803E20A0;
-        switch (lbl_803DD758) {
+        switch (lbl_803DD758)
+        {
         case 0:
             gameTextFn_80016810(0x43a, 0, 0xb4);
             break;
-        case 1: {
-            s32 b14, b10, bc, b8;
-            char buf[0x10];
-            gameTextFn_80016810(0x440, 0, 0x78);
-            gameTextFn_8001628c(0x440, 0, 0, &b14, &b10, &bc, &b8);
-            acc = (bc - b8) + 5;
-            sprintf(buf, &lbl_803DBB58, (u8)*(u8 *)(lbl_8031AE20 + lbl_803DD756 * 8 + 0x214));
-            gameTextShowStr(buf, 0x79, 0, acc + 0x78);
-            gameTextMeasureFn_800163c4(buf, 0x79, 0, 0, &b14, &b10, &bc, &b8);
-            acc = ((bc - b8) + acc) + 5;
-            gameTextFn_80016810(0x441, 0, acc + 0x78);
-            gameTextFn_8001628c(0x441, 0, 0, &b14, &b10, &bc, &b8);
-            acc += bc - b8;
-            gameTextFn_80016810(*(s16 *)(lbl_8031AE20 + lbl_803DD756 * 8 + 0x216), 0, acc + 0x78);
-            gameTextFn_8001628c(*(s16 *)(lbl_8031AE20 + lbl_803DD756 * 8 + 0x216), 0, 0, &b14, &b10, &bc, &b8);
-            acc = (bc - b8) + acc + 0xa;
-            gameTextFn_80016810(0x442, 0, acc + 0x78);
-            gameTextFn_8001628c(0x442, 0, 0, &b14, &b10, &bc, &b8);
-            acc += bc - b8;
-            gameTextFn_80016810(0x43a, 0, acc + 0x82);
-            break;
-        }
-        case 2: {
-            s32 b14, b10, bc, b8;
-            gameTextFn_80016810(0x443, 0, 0xa0);
-            gameTextFn_8001628c(0x443, 0, 0, &b14, &b10, &bc, &b8);
-            x = (bc - b8) + 5;
-            gameTextFn_80016810(*(s16 *)(lbl_8031AE20 + lbl_803DD756 * 8 + 0x216), 0, x + 0xa0);
-            gameTextFn_8001628c(*(s16 *)(lbl_8031AE20 + lbl_803DD756 * 8 + 0x216), 0, 0, &b14, &b10, &bc, &b8);
-            x += bc - b8;
-            gameTextFn_80016810(0x444, 0, x + 0xaa);
-            break;
-        }
+        case 1:
+            {
+                s32 b14, b10, bc, b8;
+                char buf[0x10];
+                gameTextFn_80016810(0x440, 0, 0x78);
+                gameTextFn_8001628c(0x440, 0, 0, &b14, &b10, &bc, &b8);
+                acc = (bc - b8) + 5;
+                sprintf(buf, &lbl_803DBB58, (u8) * (u8*)(lbl_8031AE20 + lbl_803DD756 * 8 + 0x214));
+                gameTextShowStr(buf, 0x79, 0, acc + 0x78);
+                gameTextMeasureFn_800163c4(buf, 0x79, 0, 0, &b14, &b10, &bc, &b8);
+                acc = ((bc - b8) + acc) + 5;
+                gameTextFn_80016810(0x441, 0, acc + 0x78);
+                gameTextFn_8001628c(0x441, 0, 0, &b14, &b10, &bc, &b8);
+                acc += bc - b8;
+                gameTextFn_80016810(*(s16*)(lbl_8031AE20 + lbl_803DD756 * 8 + 0x216), 0, acc + 0x78);
+                gameTextFn_8001628c(*(s16*)(lbl_8031AE20 + lbl_803DD756 * 8 + 0x216), 0, 0, &b14, &b10, &bc, &b8);
+                acc = (bc - b8) + acc + 0xa;
+                gameTextFn_80016810(0x442, 0, acc + 0x78);
+                gameTextFn_8001628c(0x442, 0, 0, &b14, &b10, &bc, &b8);
+                acc += bc - b8;
+                gameTextFn_80016810(0x43a, 0, acc + 0x82);
+                break;
+            }
+        case 2:
+            {
+                s32 b14, b10, bc, b8;
+                gameTextFn_80016810(0x443, 0, 0xa0);
+                gameTextFn_8001628c(0x443, 0, 0, &b14, &b10, &bc, &b8);
+                x = (bc - b8) + 5;
+                gameTextFn_80016810(*(s16*)(lbl_8031AE20 + lbl_803DD756 * 8 + 0x216), 0, x + 0xa0);
+                gameTextFn_8001628c(*(s16*)(lbl_8031AE20 + lbl_803DD756 * 8 + 0x216), 0, 0, &b14, &b10, &bc, &b8);
+                x += bc - b8;
+                gameTextFn_80016810(0x444, 0, x + 0xaa);
+                break;
+            }
         }
         gameTextSetDrawFunc(0);
         model = Obj_GetActiveModel(lbl_803DD860[1]);
         objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
-        *(u16 *)((u8 *)model + 0x18) &= ~0x8;
+        *(u16*)((u8*)model + 0x18) &= ~0x8;
         Camera_SetCurrentViewIndex(0);
         Camera_UpdateViewMatrices();
         Camera_SetFovY(lbl_803DD7FC);
@@ -491,14 +536,15 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
     }
 }
 
-void pauseMenuDrawStatus_801274a0(int *arg1) {
-    int *model;
+void pauseMenuDrawStatus_801274a0(int* arg1)
+{
+    int* model;
     s32 alpha;
     s32 ty;
     s32 ty1;
     s32 i;
     s32 j;
-    int *info;
+    int* info;
 
     pauseMenuDoSave();
     alpha = (s32)(hudElementOpacity * lbl_803DD760);
@@ -509,19 +555,20 @@ void pauseMenuDrawStatus_801274a0(int *arg1) {
     lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
     lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
     lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-    fn_8011EF50(*(u16 *)&lbl_803DD750, *(u16 *)&lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, 0);
+    fn_8011EF50(*(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, 0);
     model = Obj_GetActiveModel(lbl_803DD860[0]);
     objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
-    *(u16 *)((u8 *)model + 0x18) &= ~0x8;
+    *(u16*)((u8*)model + 0x18) &= ~0x8;
 
-    if (gameTextFn_80019c00() != lbl_803E1E3C) {
+    if (gameTextFn_80019c00() != lbl_803E1E3C)
+    {
         s32 rnd1 = randomGetRange(0, 0x1e) * 2;
         s32 rnd2 = randomGetRange(0, 0x1e) * 2;
-        drawFn_8011e8d8(*(void **)((u8 *)hudTextures + 0x150), lbl_803E2090, lbl_803E2094,
+        drawFn_8011e8d8(*(void**)((u8*)hudTextures + 0x150), lbl_803E2090, lbl_803E2094,
                         0xff, (u8)((s16)alpha / 2), 0x230, 0x190, rnd2, rnd1);
         model = Obj_GetActiveModel(lbl_803DD860[1]);
         objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
-        *(u16 *)((u8 *)model + 0x18) &= ~0x8;
+        *(u16*)((u8*)model + 0x18) &= ~0x8;
         Camera_SetCurrentViewIndex(0);
         Camera_UpdateViewMatrices();
         Camera_SetFovY(lbl_803DD7FC);
@@ -533,27 +580,31 @@ void pauseMenuDrawStatus_801274a0(int *arg1) {
     ty1 = (s32)((f32)(s16)alpha * lbl_803DD850);
     ty = (s32)((double)(s16)ty1 * (lbl_803E2080 - (double)lbl_803DD75C) * lbl_803E2088);
     fn_80127F24(ty);
-    if (lbl_803DD7C4 != 0) {
-        for (i = 0x14; (s8)i >= 0; i -= 4) {
+    if (lbl_803DD7C4 != 0)
+    {
+        for (i = 0x14; (s8)i >= 0; i -= 4)
+        {
             s16 px = (s16)((s16)(0xf0 - (s8)i) - lbl_803DD75C);
-            drawFn_8011eb3c(*(void **)((u8 *)hudTextures + 0x170), lbl_803E2094, lbl_803E20A4,
+            drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0x170), lbl_803E2094, lbl_803E20A4,
                             px, (u8)ty, 0x100, 0x190, 4, 0);
-            drawFn_8011eb3c(*(void **)((u8 *)hudTextures + 0x170), lbl_803E1ECC, lbl_803E20A8,
+            drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0x170), lbl_803E1ECC, lbl_803E20A8,
                             px, (u8)ty, 0x100, 0xf0, 4, 0);
-            drawFn_8011eb3c(*(void **)((u8 *)hudTextures + 0x170), lbl_803E1ECC, lbl_803E20AC,
+            drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0x170), lbl_803E1ECC, lbl_803E20AC,
                             px, (u8)ty, 0x100, 0xf0, 4, 0);
         }
-        lbl_803DD824 = (void *)lbl_8031BD90;
+        lbl_803DD824 = (void*)lbl_8031BD90;
         fn_80128470(ty1);
-    } else {
-        MapEventInterface *mapEvents = *gMapEventInterface;
+    }
+    else
+    {
+        MapEventInterface* mapEvents = *gMapEventInterface;
         char buf[0x80];
         s32 hintCount;
         s32 gbCount;
         s32 h24;
         s32 mins25;
         f32 playRatio;
-        info = (int *)mapEvents->getState(mapEvents);
+        info = (int*)mapEvents->getState(mapEvents);
         hintCount = (u8)((u32)(u16)getNextTaskHintText() * 0x64 / 0x32);
         playRatio = SaveGame_getPlayTime() / lbl_803E2020;
         ty1 = (s32)((f32)(s16)alpha * lbl_803DD850);
@@ -565,38 +616,50 @@ void pauseMenuDrawStatus_801274a0(int *arg1) {
         i += GameBit_Get(0x5f4);
         gbCount = (u8)(j + i);
         {
-            u8 *p = lbl_8031BB90;
-            for (i = 0; (s8)i < 4; i++) {
-                *(s16 *)(p + 0xc0) = (s8)i < gbCount ? 0x22 + ((s8)i & 1) : 0x24;
+            u8* p = lbl_8031BB90;
+            for (i = 0; (s8)i < 4; i++)
+            {
+                *(s16*)(p + 0xc0) = (s8)i < gbCount ? 0x22 + ((s8)i & 1) : 0x24;
                 p += 0x20;
             }
         }
-        if (GameBit_Get(0x91b) != 0) {
+        if (GameBit_Get(0x91b) != 0)
+        {
             lbl_803DD734 = 0xc8;
-        } else if (GameBit_Get(0x91a) != 0) {
+        }
+        else if (GameBit_Get(0x91a) != 0)
+        {
             lbl_803DD734 = 0x64;
-        } else if (GameBit_Get(0x919) != 0) {
+        }
+        else if (GameBit_Get(0x919) != 0)
+        {
             lbl_803DD734 = 0x32;
-        } else {
+        }
+        else
+        {
             lbl_803DD734 = 0xa;
         }
-        *(s16 *)(lbl_8031BB90 + 0x160) = lbl_803DD734 != 0 ? 0x4e : 0x25;
+        *(s16*)(lbl_8031BB90 + 0x160) = lbl_803DD734 != 0 ? 0x4e : 0x25;
         gameTextSetDrawFunc(pauseMenuTextDrawFn);
         gameTextSetColor(0xff, 0xff, 0xff, (u8)ty);
         lbl_803DBA8A = (s16)(0xff - lbl_803DD75C);
         lbl_803DBA8C = lbl_803E20A0;
-        sprintf(buf, &lbl_803DBB70, *(u8 *)((u8 *)info + 9), *(u8 *)((u8 *)info + 0xa));
+        sprintf(buf, &lbl_803DBB70, *(u8*)((u8*)info + 9), *(u8*)((u8*)info + 0xa));
         gameTextShowStr(buf, 0x93, 0x14a, 0xdc);
-        if (lbl_803DD734 != 0) {
+        if (lbl_803DD734 != 0)
+        {
             sprintf(buf, &lbl_803DBB78, lbl_803A9364[3]);
             gameTextShowStr(buf, 0x93, 0x140, 0x10e);
         }
         sprintf(buf, &lbl_803DBB80, hintCount);
         gameTextShowStr(buf, 0x93, 0x130, 0x12c);
         h24 = (s32)(playRatio / lbl_803E20B0);
-        if (h24 > 0x63) {
+        if (h24 > 0x63)
+        {
             sprintf(buf, &lbl_803DBB88, h24);
-        } else {
+        }
+        else
+        {
             sprintf(buf, &lbl_803DBB88, h24);
         }
         mins25 = (s32)(playRatio / lbl_803E2020) - h24 * 0x3c;
@@ -608,44 +671,59 @@ void pauseMenuDrawStatus_801274a0(int *arg1) {
 
         {
             s16 px = (s16)(0xe6 - lbl_803DD75C);
-            for (i = 0; (u16)i < 7; i++) {
-                f32 fy = lbl_803E1FAC * (f32)(u32)(u16)i + lbl_803E1F30;
-                pauseMenuDrawElement(*(int **)&((HudTextures *)hudTextures)->unk5C, fy, lbl_803E20B4, px, (u8)ty,
+            for (i = 0; (u16)i < 7; i++)
+            {
+                f32 fy = lbl_803E1FAC * (f32)(u32)(u16)i
+                +lbl_803E1F30;
+                pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unk5C, fy, lbl_803E20B4, px, (u8)ty,
                                      (s32)lbl_803E20B8, 0);
             }
         }
-        for (j = 0; (u16)j < (*(int *)((u8 *)lbl_803A9364 + 0x1c) >> 2); j++) {
-            s32 v = *(int *)lbl_803A9364;
+        for (j = 0; (u16)j < (*(int*)((u8*)lbl_803A9364 + 0x1c) >> 2); j++)
+        {
+            s32 v = *(int*)lbl_803A9364;
             s32 tex;
             f32 fyj;
-            if ((s32)(u16)j < (v >> 2)) {
+            if ((s32)(u16)j < (v >> 2)
+            )
+            {
                 tex = 0x16;
-            } else if ((s32)(u16)j > (v >> 2)) {
+            }
+            else
+            if ((s32)(u16)j > (v >> 2)
+            )
+            {
                 tex = 0x12;
-            } else {
+            }
+            else
+            {
                 tex = (v & 3) + 0x12;
             }
-            fyj = lbl_803E1FAC * (f32)(u32)(u16)j + lbl_803E1F30;
-            for (i = 0x14; (s8)i >= 0; i -= 4) {
+            fyj = lbl_803E1FAC * (f32)(u32)(u16)
+            j + lbl_803E1F30;
+            for (i = 0x14; (s8)i >= 0; i -= 4)
+            {
                 s16 px = (s16)((s16)(0xff - (s8)i) - lbl_803DD75C);
-                pauseMenuDrawElement(*(int **)(lbl_8031BB90 + (u8)tex * 4), fyj, lbl_803E20B4, px, (u8)ty,
+                pauseMenuDrawElement(*(int**)(lbl_8031BB90 + (u8)tex * 4), fyj, lbl_803E20B4, px, (u8)ty,
                                      (s32)lbl_803E20B8, 0);
             }
         }
-        pauseMenuDrawElement(*(int **)&((HudTextures *)hudTextures)->unkBC, (f32)lbl_803DBAD0, (f32)lbl_803DBAD4, (s16)(0x100 - lbl_803DD75C), (u8)ty,
+        pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unkBC, (f32)lbl_803DBAD0, (f32)lbl_803DBAD4,
+                             (s16)(0x100 - lbl_803DD75C), (u8)ty,
                              0x100, 0);
-        drawFn_8011eb3c(*(void **)((u8 *)hudTextures + 0xb8), (f32)(lbl_803DBAD0 + 0x18), (f32)lbl_803DBAD4,
+        drawFn_8011eb3c(*(void**)((u8*)hudTextures + 0xb8), (f32)(lbl_803DBAD0 + 0x18), (f32)lbl_803DBAD4,
                         (s16)(0x100 - lbl_803DD75C), (u8)ty, 0x100, 0x66, 0x12, 0);
-        pauseMenuDrawElement(*(int **)&((HudTextures *)hudTextures)->unkC0, (f32)(lbl_803DBAD0 + 0x7e), (f32)lbl_803DBAD4, (s16)(0x100 - lbl_803DD75C), (u8)ty,
+        pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->unkC0, (f32)(lbl_803DBAD0 + 0x7e), (f32)lbl_803DBAD4,
+                             (s16)(0x100 - lbl_803DD75C), (u8)ty,
                              0x100, 0);
         hudDrawMagicBar((u8)ty, 0x100 - lbl_803DD75C, 1);
-        lbl_803DD824 = (void *)lbl_8031BB90;
+        lbl_803DD824 = (void*)lbl_8031BB90;
         fn_80128470(ty1);
     }
 
     model = Obj_GetActiveModel(lbl_803DD860[1]);
     objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
-    *(u16 *)((u8 *)model + 0x18) &= ~0x8;
+    *(u16*)((u8*)model + 0x18) &= ~0x8;
     Camera_SetCurrentViewIndex(0);
     Camera_UpdateViewMatrices();
     Camera_SetFovY(lbl_803DD7FC);
@@ -653,7 +731,8 @@ void pauseMenuDrawStatus_801274a0(int *arg1) {
     Camera_ApplyFullViewport();
 }
 
-void fn_80127F24(s32 param_1) {
+void fn_80127F24(s32 param_1)
+{
     f32 baseSub;
     f32 baseAdd;
     f32 denom;
@@ -661,34 +740,40 @@ void fn_80127F24(s32 param_1) {
     s32 i;
 
     phase = lbl_803E1F18 *
-            mathSinf(lbl_803E1EC8 * (lbl_803DD748 * lbl_803E201C) /
-                        lbl_803E1E94);
+        mathSinf(lbl_803E1EC8 * (lbl_803DD748 * lbl_803E201C) /
+            lbl_803E1E94);
 
-    for (i = 10; (s8)i >= 0; i -= 2) {
+    for (i = 10; (s8)i >= 0; i -= 2)
+    {
         s16 x;
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x11c),
-                    lbl_803E20BC, lbl_803E1EE4,
-                    x = (s16)((0xf5 - (s8)i) - lbl_803DD75C),
-                    (u8)param_1, 0x200, 0);
+                             lbl_803E20BC, lbl_803E1EE4,
+                             x = (s16)((0xf5 - (s8)i) - lbl_803DD75C),
+                             (u8)param_1, 0x200, 0);
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x11c),
-                    lbl_803E20C0, lbl_803E1EE4,
-                    x,
-                    (u8)param_1, 0x200, 0);
+                             lbl_803E20C0, lbl_803E1EE4,
+                             x,
+                             (u8)param_1, 0x200, 0);
     }
 
     denom = lbl_803E2090;
     baseAdd = lbl_803E20C8;
     baseSub = lbl_803E20D0;
-    for (i = 10; (s8)i >= 0; i -= 10) {
-        f32 off = phase * (denom - (f32)(s32)(s8)i) / denom;
+    for (i = 10; (s8)i >= 0; i -= 10)
+    {
+        f32 off = phase * (denom - (f32)(s32)(s8)
+        i
+        )
+        /
+        denom;
         s16 x;
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
-                    baseAdd + off, lbl_803E20CC,
-                    x = (s16)((0xff - (s8)i) - lbl_803DD75C),
-                    (u8)param_1, (s32)(lbl_803E20C4 - phase * lbl_803E1E6C), 0);
+                             baseAdd + off, lbl_803E20CC,
+                             x = (s16)((0xff - (s8)i) - lbl_803DD75C),
+                             (u8)param_1, (s32)(lbl_803E20C4 - phase * lbl_803E1E6C), 0);
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
-                    baseSub - off, lbl_803E20CC,
-                    x,
-                    (u8)param_1, (s32)(lbl_803E20C4 - phase * lbl_803E1E6C), 0);
+                             baseSub - off, lbl_803E20CC,
+                             x,
+                             (u8)param_1, (s32)(lbl_803E20C4 - phase * lbl_803E1E6C), 0);
     }
 }

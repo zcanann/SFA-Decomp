@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_021A_WORLDshield_packet_info {
+enum obj_021A_WORLDshield_packet_info
+{
     WORLDSHIELD_DEF_ID = 0x021A,
     WORLDSHIELD_DLL_ID = 0x012E,
     WORLDSHIELD_CLASS_ID = 0x0061,

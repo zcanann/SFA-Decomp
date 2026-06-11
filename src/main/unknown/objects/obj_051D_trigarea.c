@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_051D_TrigArea_packet_info {
+enum obj_051D_TrigArea_packet_info
+{
     TRIGAREA_DEF_ID = 0x051D,
     TRIGAREA_DLL_ID = 0x0126,
     TRIGAREA_CLASS_ID = 0x0017,

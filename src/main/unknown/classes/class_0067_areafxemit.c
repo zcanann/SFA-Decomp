@@ -37,7 +37,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0067_AreaFXEmit_defs {
+enum class_0067_AreaFXEmit_defs
+{
     AREAFXEMIT_AREAFXEMIT = 0x05A8,
     AREAFXEMIT_TAREAFXEMIT = 0x05AA,
     AREAFXEMIT_KT_FALLINGR = 0x0092,

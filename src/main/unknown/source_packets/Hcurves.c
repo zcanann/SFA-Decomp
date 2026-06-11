@@ -27,6 +27,7 @@
 /*
  * Packet constants only. Promote names and boundaries after EN inspection.
  */
-enum hcurves_packet_info {
+enum hcurves_packet_info
+{
 };
 #endif

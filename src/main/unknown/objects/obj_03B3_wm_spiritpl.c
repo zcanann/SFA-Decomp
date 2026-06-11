@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03B3_WM_spiritpl_packet_info {
+enum obj_03B3_WM_spiritpl_packet_info
+{
     WM_SPIRITPL_DEF_ID = 0x03B3,
     WM_SPIRITPL_DLL_ID = 0x020C,
     WM_SPIRITPL_CLASS_ID = 0x0030,

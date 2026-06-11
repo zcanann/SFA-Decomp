@@ -46,7 +46,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_0125_curve_slot {
+enum dll_0125_curve_slot
+{
     CURVE_INIT = 3,
     CURVE_RENDER = 6,
     CURVE_FREE = 7,

@@ -3,12 +3,14 @@
 #include "main/objseq.h"
 
 
-typedef struct ARWLevelConSetup {
+typedef struct ARWLevelConSetup
+{
     u8 pad00[0x14];
     int routeSignature;
 } ARWLevelConSetup;
 
-typedef struct ARWLevelConState {
+typedef struct ARWLevelConState
+{
     f32 sequenceParam0;
     f32 sequenceParam1;
     f32 sequenceParam2;
@@ -25,24 +27,95 @@ typedef struct ARWLevelConState {
     u8 pad22[2];
 } ARWLevelConState;
 
-STATIC_ASSERT(sizeof(ARWLevelConState) == 0x24);
-STATIC_ASSERT(offsetof(ARWLevelConState, sequenceSlot) == 0x14);
-STATIC_ASSERT(offsetof(ARWLevelConState, sequenceCameraId) == 0x16);
-STATIC_ASSERT(offsetof(ARWLevelConState, skyConfigured) == 0x18);
-STATIC_ASSERT(offsetof(ARWLevelConState, sequenceStarted) == 0x19);
-STATIC_ASSERT(offsetof(ARWLevelConState, ringChoiceTriggered) == 0x1a);
-STATIC_ASSERT(offsetof(ARWLevelConState, alternateRoute) == 0x1b);
-STATIC_ASSERT(offsetof(ARWLevelConState, streamId) == 0x1c);
-STATIC_ASSERT(offsetof(ARWLevelConState, ringChoiceTriggerId) == 0x20);
-STATIC_ASSERT(offsetof(ARWLevelConSetup, routeSignature) == 0x14);
+STATIC_ASSERT (
+sizeof
+(ARWLevelConState)
+==
+0x24
+);
+STATIC_ASSERT (offsetof
+(ARWLevelConState
+,
+sequenceSlot
+)
+==
+0x14
+);
+STATIC_ASSERT (offsetof
+(ARWLevelConState
+,
+sequenceCameraId
+)
+==
+0x16
+);
+STATIC_ASSERT (offsetof
+(ARWLevelConState
+,
+skyConfigured
+)
+==
+0x18
+);
+STATIC_ASSERT (offsetof
+(ARWLevelConState
+,
+sequenceStarted
+)
+==
+0x19
+);
+STATIC_ASSERT (offsetof
+(ARWLevelConState
+,
+ringChoiceTriggered
+)
+==
+0x1a
+);
+STATIC_ASSERT (offsetof
+(ARWLevelConState
+,
+alternateRoute
+)
+==
+0x1b
+);
+STATIC_ASSERT (offsetof
+(ARWLevelConState
+,
+streamId
+)
+==
+0x1c
+);
+STATIC_ASSERT (offsetof
+(ARWLevelConState
+,
+ringChoiceTriggerId
+)
+==
+0x20
+);
+STATIC_ASSERT (offsetof
+(ARWLevelConSetup
+,
+routeSignature
+)
+==
+0x14
+);
 
 void arwlevelcon_commitRingChoice(int obj)
 {
-    ARWLevelConState *state = ((GameObject *)obj)->extra;
+    ARWLevelConState* state = ((GameObject*)obj)->extra;
 
-    if (state->alternateRoute != 0) {
+    if (state->alternateRoute != 0)
+    {
         Music_Trigger(0xf3, 1);
-    } else {
+    }
+    else
+    {
         Music_Trigger(2, 1);
     }
     arwingHudSetVisible(1);
@@ -52,15 +125,20 @@ int arwlevelcon_ringEventCallback(int obj, int p2, int data)
 {
     int i;
     int textId;
-    ObjSeqState *seq = (ObjSeqState *)data;
+    ObjSeqState* seq = (ObjSeqState*)data;
 
     seq->freeCallback = (ObjAnimSequenceFreeCallback)arwlevelcon_commitRingChoice;
-    for (i = 0; i < seq->eventCount; i++) {
+    for (i = 0; i < seq->eventCount; i++)
+    {
         u8 v = seq->eventIds[i];
-        if (v == 1) {
+        if (v == 1)
+        {
             (*gObjectTriggerInterface)->setCamVars(0x56, 0, 0, 0);
-        } else if (v == 4) {
-            switch (((GameObject *)obj)->anim.mapEventSlot) {
+        }
+        else if (v == 4)
+        {
+            switch (((GameObject*)obj)->anim.mapEventSlot)
+            {
             case 0x3a:
                 textId = 0;
                 break;
@@ -99,56 +177,72 @@ void arwlevelcon_render(int obj, int p2, int p3, int p4, int p5)
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E70E0);
 }
 
-void arwlevelcon_hitDetect(void) {}
+void arwlevelcon_hitDetect(void)
+{
+}
 
 void arwlevelcon_update(int obj)
 {
     extern u8 AudioStream_IsPreparing(void);
-    ARWLevelConState *state = ((GameObject *)obj)->extra;
+    ARWLevelConState* state = ((GameObject*)obj)->extra;
     int arwing = getArwing();
 
-    if (state->skyConfigured == 0) {
+    if (state->skyConfigured == 0)
+    {
         skyFn_80089710(7, 1, 0);
-        if (state->alternateRoute != 0) {
+        if (state->alternateRoute != 0)
+        {
             skyFn_800895e0(7, 0xaa, 0x78, 0xff, 0x69, 0x40);
-        } else {
+        }
+        else
+        {
             skyFn_800895e0(7, 0x96, 0x64, 0xf0, 0, 0);
         }
-        skyFn_800894a8(7, lbl_803E70E4, *(f32 *)&lbl_803E70E4, lbl_803E70E0);
+        skyFn_800894a8(7, lbl_803E70E4, *(f32*)&lbl_803E70E4, lbl_803E70E0);
         getEnvfxAct(0, 0, 0x21f, 0);
         getEnvfxAct(0, 0, 0x22b, 0);
         setIsOvercast(0);
         state->skyConfigured = 1;
         setDrawLights(0);
     }
-    if (state->sequenceStarted == 0) {
+    if (state->sequenceStarted == 0)
+    {
         int mode;
-        if (state->alternateRoute != 0) {
+        if (state->alternateRoute != 0)
+        {
             mode = 3;
-        } else {
-            if (AudioStream_IsPreparing() == 0) {
+        }
+        else
+        {
+            if (AudioStream_IsPreparing() == 0)
+            {
                 AudioStream_Play(state->streamId, AudioStream_StartPrepared);
             }
             mode = 0;
         }
-        (*gObjectTriggerInterface)->runSequence(mode, (void *)obj, -1);
+        (*gObjectTriggerInterface)->runSequence(mode, (void*)obj, -1);
         state->sequenceStarted = 1;
         GameBit_Set(0x9d6, 0);
         GameBit_Set(0x9d8, 0);
         GameBit_Set(0x9d7, 0);
     }
-    if (state->ringChoiceTriggered == 0) {
+    if (state->ringChoiceTriggered == 0)
+    {
         int mb = mapBlockFn_800592e4();
-        if (*(f32 *)(arwing + 0x14) - *(f32 *)(mb + 0x28) > lbl_803E70E8 &&
-            arwarwing_isDead(arwing) == 0 && arwarwing_isExplodingOrWarping(arwing) == 0) {
+        if (*(f32*)(arwing + 0x14) - *(f32*)(mb + 0x28) > lbl_803E70E8 &&
+            arwarwing_isDead(arwing) == 0 && arwarwing_isExplodingOrWarping(arwing) == 0)
+        {
             int a, b;
             arwingHudSetVisible(2);
             (*gObjectTriggerInterface)->setObjects(state->ringChoiceTriggerId, 0, 0);
             a = arwarwing_getRequiredRingCount(arwing);
             b = arwarwing_getCollectedRingCount(arwing);
-            if (b >= a) {
+            if (b >= a)
+            {
                 GameBit_Set(0x9d8, 1);
-            } else {
+            }
+            else
+            {
                 GameBit_Set(0x9d7, 1);
             }
             state->ringChoiceTriggered = 1;
@@ -158,12 +252,12 @@ void arwlevelcon_update(int obj)
     }
 }
 
-void arwlevelcon_init(int obj, u8 *setup)
+void arwlevelcon_init(int obj, u8* setup)
 {
-    ARWLevelConState *state = ((GameObject *)obj)->extra;
-    ARWLevelConSetup *mapData = (ARWLevelConSetup *)setup;
+    ARWLevelConState* state = ((GameObject*)obj)->extra;
+    ARWLevelConSetup* mapData = (ARWLevelConSetup*)setup;
 
-    ((GameObject *)obj)->animEventCallback = (void *)arwlevelcon_ringEventCallback;
+    ((GameObject*)obj)->animEventCallback = (void*)arwlevelcon_ringEventCallback;
     state->sequenceSlot = 1;
     state->sequenceCameraId = 0x50;
     {
@@ -173,10 +267,12 @@ void arwlevelcon_init(int obj, u8 *setup)
     }
     state->sequenceParam2 = lbl_803E70F0;
     state->sequenceParam3 = lbl_803E70F4;
-    if (mapData->routeSignature == 0x48f7e) {
+    if (mapData->routeSignature == 0x48f7e)
+    {
         state->alternateRoute = 1;
     }
-    if (state->sequenceStarted == 0) {
+    if (state->sequenceStarted == 0)
+    {
         GameBit_Set(0x9d6, 0);
         GameBit_Set(0x9d8, 0);
         GameBit_Set(0x9d7, 0);
@@ -184,7 +280,8 @@ void arwlevelcon_init(int obj, u8 *setup)
     }
     arwingHudSetVisible(2);
     pauseMenuCreateHeads();
-    switch (((GameObject *)obj)->anim.mapEventSlot) {
+    switch (((GameObject*)obj)->anim.mapEventSlot)
+    {
     case 0x3a:
         state->streamId = 0x51bc;
         state->ringChoiceTriggerId = 0x6e3;
@@ -209,6 +306,10 @@ void arwlevelcon_init(int obj, u8 *setup)
     }
 }
 
-void arwlevelcon_release(void) {}
+void arwlevelcon_release(void)
+{
+}
 
-void arwlevelcon_initialise(void) {}
+void arwlevelcon_initialise(void)
+{
+}

@@ -31,7 +31,8 @@
  */
 
 #if 0
-enum dll_026E_DR_Shackle_slot {
+enum dll_026E_DR_Shackle_slot
+{
     DRSHACKLE_INITIALISE = 0,
     DRSHACKLE_RELEASE = 1,
     DRSHACKLE_INIT = 3,

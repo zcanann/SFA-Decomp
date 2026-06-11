@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0547_ARWShipTwin_packet_info {
+enum obj_0547_ARWShipTwin_packet_info
+{
     ARWSHIPTWIN_DEF_ID = 0x0547,
     ARWSHIPTWIN_DLL_ID = 0x02A6,
     ARWSHIPTWIN_CLASS_ID = 0x007C,

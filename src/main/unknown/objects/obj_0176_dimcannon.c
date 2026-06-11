@@ -56,7 +56,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0176_DIMCannon_packet_info {
+enum obj_0176_DIMCannon_packet_info
+{
     DIMCANNON_DEF_ID = 0x0176,
     DIMCANNON_DLL_ID = 0x01C6,
     DIMCANNON_CLASS_ID = 0x0071,

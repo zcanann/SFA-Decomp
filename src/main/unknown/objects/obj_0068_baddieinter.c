@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0068_baddieInter_packet_info {
+enum obj_0068_baddieInter_packet_info
+{
     BADDIEINTER_DEF_ID = 0x0068,
     BADDIEINTER_DLL_ID = 0x00DE,
     BADDIEINTER_CLASS_ID = 0x0030,

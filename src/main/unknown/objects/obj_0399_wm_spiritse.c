@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0399_WM_SpiritSe_packet_info {
+enum obj_0399_WM_SpiritSe_packet_info
+{
     WM_SPIRITSE_DEF_ID = 0x0399,
     WM_SPIRITSE_DLL_ID = 0x020F,
     WM_SPIRITSE_CLASS_ID = 0x0030,

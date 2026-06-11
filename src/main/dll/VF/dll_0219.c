@@ -12,79 +12,103 @@ extern f32 lbl_803E60B0;
 #define DLL_219_OBJECT_ID_GATE 0x3ad
 #define DLL_219_UNUSED_OBJECT_ID 0x3af
 
-typedef struct Dll219State {
+typedef struct Dll219State
+{
     s16 gameBit;
 } Dll219State;
 
-typedef struct Dll219Object {
+typedef struct Dll219Object
+{
     u8 pad00[0xc];
     f32 x;
     u8 pad10[0x46 - 0x10];
     s16 objectId;
     u8 pad48[0x4c - 0x48];
-    u8 *setup;
+    u8* setup;
     u8 pad50[0xb8 - 0x50];
-    Dll219State *state;
+    Dll219State* state;
 } Dll219Object;
 
 int dll_219_getExtraSize_ret_4(void) { return 0x4; }
 
 int dll_219_getObjectTypeId(void) { return 0x0; }
 
-void dll_219_render_nop(void) {}
+void dll_219_render_nop(void)
+{
+}
 
-void dll_219_hitDetect_nop(void) {}
+void dll_219_hitDetect_nop(void)
+{
+}
 
-void dll_219_release_nop(void) {}
+void dll_219_release_nop(void)
+{
+}
 
-void dll_219_initialise_nop(void) {}
+void dll_219_initialise_nop(void)
+{
+}
 
-void dll_219_free(int obj) {
+void dll_219_free(int obj)
+{
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void dll_219_update(Dll219Object *obj) {
-    u8 *setup = obj->setup;
-    Dll219State *state = obj->state;
+void dll_219_update(Dll219Object* obj)
+{
+    u8* setup = obj->setup;
+    Dll219State* state = obj->state;
     s16 objectId = obj->objectId;
     f32 targetX;
     f32 loweredTargetX;
 
-    if (objectId < DLL_219_OBJECT_ID_GATE) {
-        if (objectId != DLL_219_MOVING_OBJECT_ID) {
+    if (objectId < DLL_219_OBJECT_ID_GATE)
+    {
+        if (objectId != DLL_219_MOVING_OBJECT_ID)
+        {
             return;
         }
-    } else {
-        if (objectId == DLL_219_UNUSED_OBJECT_ID) {
+    }
+    else
+    {
+        if (objectId == DLL_219_UNUSED_OBJECT_ID)
+        {
         }
         return;
     }
 
-    if ((u32)GameBit_Get(state->gameBit) != 0) {
-        loweredTargetX = ((ObjPlacement *)setup)->posX - lbl_803E60A8;
-        if (obj->x > loweredTargetX) {
+    if ((u32)GameBit_Get(state->gameBit) != 0)
+    {
+        loweredTargetX = ((ObjPlacement*)setup)->posX - lbl_803E60A8;
+        if (obj->x > loweredTargetX)
+        {
             obj->x -= lbl_803E60AC;
-            targetX = ((ObjPlacement *)setup)->posX - lbl_803E60A8;
-            if (obj->x < targetX) {
+            targetX = ((ObjPlacement*)setup)->posX - lbl_803E60A8;
+            if (obj->x < targetX)
+            {
                 obj->x = targetX;
             }
             return;
         }
     }
-    if ((u32)GameBit_Get(state->gameBit) == 0) {
-        targetX = ((ObjPlacement *)setup)->posX;
-        if (obj->x < targetX) {
+    if ((u32)GameBit_Get(state->gameBit) == 0)
+    {
+        targetX = ((ObjPlacement*)setup)->posX;
+        if (obj->x < targetX)
+        {
             obj->x += lbl_803E60B0;
-            if (obj->x > targetX) {
+            if (obj->x > targetX)
+            {
                 obj->x = targetX;
             }
         }
     }
 }
 
-void dll_219_init(int *obj, u8 *init) {
-    int *inner = ((GameObject *)obj)->extra;
-    *(s16 *)obj = (s16)((s8)init[0x18] << 8);
-    *(s16 *)inner = *(s16 *)((char *)init + 0x1e);
-    ((GameObject *)obj)->objectFlags |= 0x6000;
+void dll_219_init(int* obj, u8* init)
+{
+    int* inner = ((GameObject*)obj)->extra;
+    *(s16*)obj = (s16)((s8)init[0x18] << 8);
+    *(s16*)inner = *(s16*)((char*)init + 0x1e);
+    ((GameObject*)obj)->objectFlags |= 0x6000;
 }

@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_039A_WM_Crystal_packet_info {
+enum obj_039A_WM_Crystal_packet_info
+{
     WM_CRYSTAL_DEF_ID = 0x039A,
     WM_CRYSTAL_DLL_ID = 0x020E,
     WM_CRYSTAL_CLASS_ID = 0x0030,

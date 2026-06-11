@@ -48,7 +48,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0496_siderepel_packet_info {
+enum obj_0496_siderepel_packet_info
+{
     SIDEREPEL_DEF_ID = 0x0496,
     SIDEREPEL_DLL_ID = 0x00EB,
     SIDEREPEL_CLASS_ID = 0x001F,

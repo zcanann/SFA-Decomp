@@ -81,7 +81,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_005F_sharpclawSn_packet_info {
+enum obj_005F_sharpclawSn_packet_info
+{
     SHARPCLAWSN_DEF_ID = 0x005F,
     SHARPCLAWSN_DLL_ID = 0x00C9,
     SHARPCLAWSN_CLASS_ID = 0x001C,

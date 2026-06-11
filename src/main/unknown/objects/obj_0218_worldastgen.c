@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0218_WORLDastGen_packet_info {
+enum obj_0218_WORLDastGen_packet_info
+{
     WORLDASTGEN_DEF_ID = 0x0218,
     WORLDASTGEN_DLL_ID = 0x01D3,
     WORLDASTGEN_CLASS_ID = 0x0061,

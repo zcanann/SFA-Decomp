@@ -54,7 +54,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_010F_CRrockfall_packet_info {
+enum obj_010F_CRrockfall_packet_info
+{
     CRROCKFALL_DEF_ID = 0x010F,
     CRROCKFALL_DLL_ID = 0x016A,
     CRROCKFALL_CLASS_ID = 0x0028,

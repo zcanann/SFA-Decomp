@@ -47,7 +47,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0021_texscroll_defs {
+enum class_0021_texscroll_defs
+{
     TEXSCROLL_TEXSCROLL2 = 0x04AF,
     TEXSCROLL_TEXSCROLL = 0x04AE,
 };

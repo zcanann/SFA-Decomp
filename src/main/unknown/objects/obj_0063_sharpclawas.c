@@ -81,7 +81,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0063_sharpclawAs_packet_info {
+enum obj_0063_sharpclawAs_packet_info
+{
     SHARPCLAWAS_DEF_ID = 0x0063,
     SHARPCLAWAS_DLL_ID = 0x00C9,
     SHARPCLAWAS_CLASS_ID = 0x001C,

@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0048_WaveAnimator_defs {
+enum class_0048_WaveAnimator_defs
+{
     WAVEANIMATOR_WAVEANIMATO = 0x04B8,
 };
 #endif

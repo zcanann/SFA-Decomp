@@ -59,7 +59,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0414_GPSH_ObjCre_packet_info {
+enum obj_0414_GPSH_ObjCre_packet_info
+{
     GPSH_OBJCRE_DEF_ID = 0x0414,
     GPSH_OBJCRE_DLL_ID = 0x0193,
     GPSH_OBJCRE_CLASS_ID = 0x0037,

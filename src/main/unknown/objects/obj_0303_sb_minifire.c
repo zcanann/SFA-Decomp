@@ -58,7 +58,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0303_SB_MiniFire_packet_info {
+enum obj_0303_SB_MiniFire_packet_info
+{
     SB_MINIFIRE_DEF_ID = 0x0303,
     SB_MINIFIRE_DLL_ID = 0x01F3,
     SB_MINIFIRE_CLASS_ID = 0x0024,

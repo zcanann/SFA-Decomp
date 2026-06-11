@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03DB_SPMapDR_packet_info {
+enum obj_03DB_SPMapDR_packet_info
+{
     SPMAPDR_DEF_ID = 0x03DB,
     SPMAPDR_DLL_ID = 0x0284,
     SPMAPDR_CLASS_ID = 0x0070,

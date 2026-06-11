@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0162_DIMSeqObjec_packet_info {
+enum obj_0162_DIMSeqObjec_packet_info
+{
     DIMSEQOBJEC_DEF_ID = 0x0162,
     DIMSEQOBJEC_DLL_ID = 0x0112,
     DIMSEQOBJEC_CLASS_ID = 0x0055,

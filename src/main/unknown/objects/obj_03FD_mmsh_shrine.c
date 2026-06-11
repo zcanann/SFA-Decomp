@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03FD_MMSH_Shrine_packet_info {
+enum obj_03FD_MMSH_Shrine_packet_info
+{
     MMSH_SHRINE_DEF_ID = 0x03FD,
     MMSH_SHRINE_DLL_ID = 0x018C,
     MMSH_SHRINE_CLASS_ID = 0x0030,

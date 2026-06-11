@@ -6,7 +6,7 @@
 #include "main/objlib.h"
 #include "main/objhits_types.h"
 
-extern void *Obj_GetPlayerObject(void);
+extern void* Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern f32 fsin16Precise(u16 angle);
@@ -44,7 +44,8 @@ extern f32 lbl_803E3010;
 #define LANDED_ARWING_WANDER_TIME_MIN 0x12c
 #define LANDED_ARWING_WANDER_TIME_MAX 0x258
 
-typedef struct {
+typedef struct
+{
     u8 high7 : 7;
     u8 bit0 : 1;
 } LandedArwingFlags;
@@ -62,8 +63,8 @@ undefined4 LandedArwing_UpdateFlightChase(int obj, int state)
     int objLocal;
     int stateWord;
     int playerObj;
-    ObjHitsPriorityState *hitState;
-    LandedArwingState *sub;
+    ObjHitsPriorityState* hitState;
+    LandedArwingState* sub;
     int targetMode;
     f32 targetX;
     f32 targetY;
@@ -73,73 +74,96 @@ undefined4 LandedArwing_UpdateFlightChase(int obj, int state)
 
     objLocal = obj;
     stateWord = state;
-    sub = (LandedArwingState *)((GroundBaddieState *)*(int *)&((GameObject *)objLocal)->extra)->control;
+    sub = (LandedArwingState*)((GroundBaddieState*)*(int*)&((GameObject*)objLocal)->extra)->control;
     playerObj = (int)Obj_GetPlayerObject();
-    *(u8 *)(stateWord + 0x34d) = 1;
+    *(u8*)(stateWord + 0x34d) = 1;
 
-    if (*(s8 *)(stateWord + 0x27a) != 0) {
+    if (*(s8*)(stateWord + 0x27a) != 0)
+    {
         sub->speed = lbl_803E3004;
         ObjHits_EnableObject(objLocal);
-        ((GameObject *)objLocal)->anim.velocityX =
-            -sub->speed * fsin16Precise(((GameObject *)objLocal)->anim.rotX);
-        ((GameObject *)objLocal)->anim.velocityY = lbl_803E2FDC;
-        ((GameObject *)objLocal)->anim.velocityZ =
-            -sub->speed * fcos16Precise(((GameObject *)objLocal)->anim.rotX);
-        *(u32 *)stateWord |= LANDED_ARWING_FLAG_LAUNCHING;
+        ((GameObject*)objLocal)->anim.velocityX =
+            -sub->speed * fsin16Precise(((GameObject*)objLocal)->anim.rotX);
+        ((GameObject*)objLocal)->anim.velocityY = lbl_803E2FDC;
+        ((GameObject*)objLocal)->anim.velocityZ =
+            -sub->speed * fcos16Precise(((GameObject*)objLocal)->anim.rotX);
+        *(u32*)stateWord |= LANDED_ARWING_FLAG_LAUNCHING;
         ObjAnim_SetCurrentMove(objLocal, 0, lbl_803E2FDC, 0);
         sub->animSpeed = lbl_803E3008;
     }
 
     ObjHits_SetHitVolumeSlot(objLocal, LANDED_ARWING_OBJECT_PAIR_PRIORITY, LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME, -1);
-    (*(ObjHitsPriorityState **)&((GameObject *)objLocal)->anim.hitReactState)->objectPairPriority = LANDED_ARWING_OBJECT_PAIR_PRIORITY;
-    (*(ObjHitsPriorityState **)&((GameObject *)objLocal)->anim.hitReactState)->objectPairHitVolume = LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME;
+    (*(ObjHitsPriorityState**)&((GameObject*)objLocal)->anim.hitReactState)->objectPairPriority =
+        LANDED_ARWING_OBJECT_PAIR_PRIORITY;
+    (*(ObjHitsPriorityState**)&((GameObject*)objLocal)->anim.hitReactState)->objectPairHitVolume =
+        LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME;
     ObjHits_RegisterActiveHitVolumeObject(objLocal);
 
-    (*gPathControlInterface)->advance((void *)objLocal, (void *)(stateWord + 4), timeDelta);
+    (*gPathControlInterface)->advance((void*)objLocal, (void*)(stateWord + 4), timeDelta);
 
-    if (sub->surfaceMode != LANDED_ARWING_SCRIPT_MODE) {
+    if (sub->surfaceMode != LANDED_ARWING_SCRIPT_MODE)
+    {
         if ((u32)playerObj != 0 &&
-            ((GameObject *)playerObj)->anim.worldPosX >= sub->boundsMinX &&
-            ((GameObject *)playerObj)->anim.worldPosX <= sub->boundsMaxX &&
-            ((GameObject *)playerObj)->anim.worldPosY >= sub->boundsMinY &&
-            ((GameObject *)playerObj)->anim.worldPosY <= sub->boundsMaxY &&
-            ((GameObject *)playerObj)->anim.worldPosZ >= sub->boundsMinZ &&
-            ((GameObject *)playerObj)->anim.worldPosZ <= sub->boundsMaxZ) {
+            ((GameObject*)playerObj)->anim.worldPosX >= sub->boundsMinX &&
+            ((GameObject*)playerObj)->anim.worldPosX <= sub->boundsMaxX &&
+            ((GameObject*)playerObj)->anim.worldPosY >= sub->boundsMinY &&
+            ((GameObject*)playerObj)->anim.worldPosY <= sub->boundsMaxY &&
+            ((GameObject*)playerObj)->anim.worldPosZ >= sub->boundsMinZ &&
+            ((GameObject*)playerObj)->anim.worldPosZ <= sub->boundsMaxZ)
+        {
             targetMode = LANDED_ARWING_TARGET_PLAYER;
-        } else {
+        }
+        else
+        {
             targetMode = LANDED_ARWING_TARGET_WANDER;
         }
-    } else {
+    }
+    else
+    {
         scriptFlags = sub->flags92;
-        if ((scriptFlags & LANDED_ARWING_FLAG_SCRIPT_TARGET) != 0) {
+        if ((scriptFlags & LANDED_ARWING_FLAG_SCRIPT_TARGET) != 0)
+        {
             targetMode = LANDED_ARWING_TARGET_SCRIPT;
-            if ((s32)sub->scriptTimer <= (s32)framesThisStep) {
-                ((LandedArwingFlags *)&sub->flags92)->bit0 = 0;
-            } else {
+            if ((s32)sub->scriptTimer <= (s32)framesThisStep)
+            {
+                ((LandedArwingFlags*)&sub->flags92)->bit0 = 0;
+            }
+            else
+            {
                 sub->scriptTimer -= framesThisStep;
             }
-        } else {
+        }
+        else
+        {
             targetMode = LANDED_ARWING_TARGET_PLAYER;
         }
     }
 
-    switch (targetMode) {
+    switch (targetMode)
+    {
     case LANDED_ARWING_TARGET_PLAYER:
-        targetX = ((GameObject *)playerObj)->anim.localPosX;
-        targetY = ((GameObject *)playerObj)->anim.localPosY - lbl_803E2FD8;
-        targetZ = ((GameObject *)playerObj)->anim.localPosZ;
+        targetX = ((GameObject*)playerObj)->anim.localPosX;
+        targetY = ((GameObject*)playerObj)->anim.localPosY - lbl_803E2FD8;
+        targetZ = ((GameObject*)playerObj)->anim.localPosZ;
         chaseScale = lbl_803E300C;
-        if (GameBit_Get(LANDED_ARWING_REVERSE_CHASE_GAMEBIT) != 0) {
+        if (GameBit_Get(LANDED_ARWING_REVERSE_CHASE_GAMEBIT) != 0)
+        {
             chaseScale = -lbl_803E300C;
         }
         break;
     case LANDED_ARWING_TARGET_WANDER:
-        if ((s32)sub->wanderTimer <= (s32)framesThisStep) {
-            sub->wanderTargetX = (f32)(s32)randomGetRange((s32)sub->boundsMinX, (s32)sub->boundsMaxX);
-            sub->wanderTargetY = (f32)(s32)randomGetRange((s32)sub->boundsMinY, (s32)sub->boundsMaxY);
-            sub->wanderTargetZ = (f32)(s32)randomGetRange((s32)sub->boundsMinZ, (s32)sub->boundsMaxZ);
+        if ((s32)sub->wanderTimer <= (s32)framesThisStep)
+        {
+            sub->wanderTargetX = (f32)(s32)
+            randomGetRange((s32)sub->boundsMinX, (s32)sub->boundsMaxX);
+            sub->wanderTargetY = (f32)(s32)
+            randomGetRange((s32)sub->boundsMinY, (s32)sub->boundsMaxY);
+            sub->wanderTargetZ = (f32)(s32)
+            randomGetRange((s32)sub->boundsMinZ, (s32)sub->boundsMaxZ);
             sub->wanderTimer = (u16)randomGetRange(LANDED_ARWING_WANDER_TIME_MIN, LANDED_ARWING_WANDER_TIME_MAX);
-        } else {
+        }
+        else
+        {
             sub->wanderTimer -= framesThisStep;
         }
         targetX = sub->wanderTargetX;
@@ -157,13 +181,19 @@ undefined4 LandedArwing_UpdateFlightChase(int obj, int state)
 
     updateConstrainedChaseVelocity(objLocal, targetX, targetY, targetZ, chaseScale);
 
-    if (sub->surfaceMode == LANDED_ARWING_SCRIPT_MODE) {
-        if ((u32)((sub->flags92 >> 2) & 1) != 0) {
+    if (sub->surfaceMode == LANDED_ARWING_SCRIPT_MODE)
+    {
+        if ((u32)((sub->flags92 >> 2) & 1) != 0)
+        {
             fn_80165B3C(objLocal, (int)sub);
-        } else {
+        }
+        else
+        {
             fn_80166444(objLocal, (int)sub);
         }
-    } else {
+    }
+    else
+    {
         landedarwing_moveSurfaceCrawler(objLocal, (int)sub);
     }
 

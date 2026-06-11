@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0528_ARWArwingBo_packet_info {
+enum obj_0528_ARWArwingBo_packet_info
+{
     ARWARWINGBO_DEF_ID = 0x0528,
     ARWARWINGBO_DLL_ID = 0x029D,
     ARWARWINGBO_CLASS_ID = 0x0030,

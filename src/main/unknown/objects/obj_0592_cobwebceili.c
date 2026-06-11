@@ -73,7 +73,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0592_CobwebCeili_packet_info {
+enum obj_0592_CobwebCeili_packet_info
+{
     COBWEBCEILI_DEF_ID = 0x0592,
     COBWEBCEILI_DLL_ID = 0x011A,
     COBWEBCEILI_CLASS_ID = 0x0061,

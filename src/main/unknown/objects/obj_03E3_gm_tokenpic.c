@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03E3_GM_TokenPic_packet_info {
+enum obj_03E3_GM_TokenPic_packet_info
+{
     GM_TOKENPIC_DEF_ID = 0x03E3,
     GM_TOKENPIC_DLL_ID = 0x00ED,
     GM_TOKENPIC_CLASS_ID = 0x0006,

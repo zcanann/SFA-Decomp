@@ -72,7 +72,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0372_DFP_RoundDo_packet_info {
+enum obj_0372_DFP_RoundDo_packet_info
+{
     DFP_ROUNDDO_DEF_ID = 0x0372,
     DFP_ROUNDDO_DLL_ID = 0x0110,
     DFP_ROUNDDO_CLASS_ID = 0x0053,

@@ -4,14 +4,14 @@
 #include "main/objlib.h"
 
 
-extern void *fn_80296118(void *p);
-extern f32 Vec_xzDistance(void *a, void *b);
+extern void* fn_80296118(void* p);
+extern f32 Vec_xzDistance(void* a, void* b);
 extern int atan2_8002178c(f32 dx, f32 dz);
 extern int randomGetRange(int lo, int hi);
 extern f32 fsin16Precise(int angle);
 extern f32 fcos16Precise(int angle);
-extern int trickyFn_8013b368(void *p1, f32 radius, void *p2);
-extern void trickyReportError(const char *fmt, ...);
+extern int trickyFn_8013b368(void* p1, f32 radius, void* p2);
+extern void trickyReportError(const char* fmt, ...);
 
 extern f32 lbl_803E23F8;
 extern f32 lbl_803E24D4;
@@ -20,31 +20,36 @@ extern const char sTrickyShouldNeverStopCirclingError[];
 
 #pragma dont_inline on
 #pragma opt_common_subs off
-void *trickyFindCirclingTarget(void *obj, void *arg2) {
-    void *target;
-    void **list;
+void* trickyFindCirclingTarget(void* obj, void* arg2)
+{
+    void* target;
+    void** list;
     int count;
     int i;
     f32 d1, d2, d3;
 
-    target = *(void **)((u8 *)arg2 + 0x24);
-    if (((GameObject *)target)->anim.seqId == 0x6a3) {
+    target = *(void**)((u8*)arg2 + 0x24);
+    if (((GameObject*)target)->anim.seqId == 0x6a3)
+    {
         return target;
     }
 
-    target = fn_80296118(*(void **)((u8 *)arg2 + 0x4));
+    target = fn_80296118(*(void**)((u8*)arg2 + 0x4));
     if (target == NULL) goto fail;
 
-    list = (void **)ObjGroup_GetObjects(3, &count);
-    for (i = 0; i < count; i++) {
-        if (list[i] == target) {
-            d1 = Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX,
-                                &((GameObject *)target)->anim.worldPosX);
-            d2 = Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX,
-                                &((GameObject *)*(void **)((u8 *)arg2 + 0x4))->anim.worldPosX);
-            d3 = Vec_xzDistance(&((GameObject *)target)->anim.worldPosX,
-                                &((GameObject *)*(void **)((u8 *)arg2 + 0x4))->anim.worldPosX);
-            if ((d1 + d2) < lbl_803E23F8 * d3) {
+    list = (void**)ObjGroup_GetObjects(3, &count);
+    for (i = 0; i < count; i++)
+    {
+        if (list[i] == target)
+        {
+            d1 = Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX,
+                                &((GameObject*)target)->anim.worldPosX);
+            d2 = Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX,
+                                &((GameObject*)*(void**)((u8*)arg2 + 0x4))->anim.worldPosX);
+            d3 = Vec_xzDistance(&((GameObject*)target)->anim.worldPosX,
+                                &((GameObject*)*(void**)((u8*)arg2 + 0x4))->anim.worldPosX);
+            if ((d1 + d2) < lbl_803E23F8 * d3)
+            {
                 return target;
             }
             goto fail;
@@ -56,65 +61,73 @@ fail:
 #pragma opt_common_subs reset
 #pragma dont_inline reset
 
-void trickyUpdateCirclingTargetPosition(void *p1, void *p2) {
-    GameObject *obj = (GameObject *)p1;
-    GameObject *target = *(GameObject **)&((TrickyState *)p2)->followObj;
+void trickyUpdateCirclingTargetPosition(void* p1, void* p2)
+{
+    GameObject* obj = (GameObject*)p1;
+    GameObject* target = *(GameObject**)&((TrickyState*)p2)->followObj;
     f32 dx = target->anim.worldPosX - obj->anim.worldPosX;
     f32 dz = target->anim.worldPosZ - obj->anim.worldPosZ;
     int angle = atan2_8002178c(dx, dz);
     s32 delta;
     s32 absDelta;
 
-    if (((TrickyState *)p2)->substate == 0) {
-        *(s32 *)&((TrickyState *)p2)->unk700 = randomGetRange(0, 1);
-        if (*(s32 *)&((TrickyState *)p2)->unk700 == 0) {
-            *(s32 *)&((TrickyState *)p2)->unk700 = -1;
+    if (((TrickyState*)p2)->substate == 0)
+    {
+        *(s32*)&((TrickyState*)p2)->unk700 = randomGetRange(0, 1);
+        if (*(s32*)&((TrickyState*)p2)->unk700 == 0)
+        {
+            *(s32*)&((TrickyState*)p2)->unk700 = -1;
         }
-        *(s32 *)&((TrickyState *)p2)->unk704 = angle;
-        ((TrickyState *)p2)->substate = 1;
+        *(s32*)&((TrickyState*)p2)->unk704 = angle;
+        ((TrickyState*)p2)->substate = 1;
     }
 
-    delta = angle - (s32)(u16)*(volatile s32 *)((u8 *)p2 + 0x704);
+    delta = angle - (s32)(u16) * (volatile s32*)((u8*)p2 + 0x704);
     if (delta > 0x8000) delta -= 0xFFFF;
     if (delta < -0x8000) delta += 0xFFFF;
 
-    if (delta >= 0) {
+    if (delta >= 0)
+    {
         absDelta = delta;
-    } else {
+    }
+    else
+    {
         absDelta = -delta;
     }
-    if (absDelta < 0x2000) {
-        *(s32 *)&((TrickyState *)p2)->unk704 =
-            *(volatile s32 *)((u8 *)p2 + 0x704) + (*(s32 *)&((TrickyState *)p2)->unk700 << 11);
+    if (absDelta < 0x2000)
+    {
+        *(s32*)&((TrickyState*)p2)->unk704 =
+            *(volatile s32*)((u8*)p2 + 0x704) + (*(s32*)&((TrickyState*)p2)->unk700 << 11);
     }
 
-    *(f32 *)&((TrickyState *)p2)->unk708 =
-        (*(GameObject **)&((TrickyState *)p2)->followObj)->anim.worldPosX -
-        lbl_803E24D4 * fsin16Precise((u16)*(s32 *)&((TrickyState *)p2)->unk704);
-    *(f32 *)&((TrickyState *)p2)->unk70C =
-        (*(GameObject **)&((TrickyState *)p2)->followObj)->anim.worldPosY;
-    ((TrickyState *)p2)->unk710 =
-        (*(GameObject **)&((TrickyState *)p2)->followObj)->anim.worldPosZ -
-        lbl_803E24D4 * fcos16Precise((u16)*(s32 *)&((TrickyState *)p2)->unk704);
+    *(f32*)&((TrickyState*)p2)->unk708 =
+        (*(GameObject**)&((TrickyState*)p2)->followObj)->anim.worldPosX -
+        lbl_803E24D4 * fsin16Precise((u16) * (s32*)&((TrickyState*)p2)->unk704);
+    *(f32*)&((TrickyState*)p2)->unk70C =
+        (*(GameObject**)&((TrickyState*)p2)->followObj)->anim.worldPosY;
+    ((TrickyState*)p2)->unk710 =
+        (*(GameObject**)&((TrickyState*)p2)->followObj)->anim.worldPosZ -
+        lbl_803E24D4 * fcos16Precise((u16) * (s32*)&((TrickyState*)p2)->unk704);
 
-    if (trickyFn_8013b368(p1, lbl_803E2488, p2) == 0) {
+    if (trickyFn_8013b368(p1, lbl_803E2488, p2) == 0)
+    {
         trickyReportError(sTrickyShouldNeverStopCirclingError);
     }
 }
 
-extern void trickyDebugPrint(char *fmt, ...);
-extern void *trickyFindNearestUsableBaddie(void *p, f32 r, int p3);
-extern void objAnimFn_8013a3f0(int *obj, int anim, f32 p3, int p4);
+extern void trickyDebugPrint(char* fmt, ...);
+extern void* trickyFindNearestUsableBaddie(void* p, f32 r, int p3);
+extern void objAnimFn_8013a3f0(int* obj, int anim, f32 p3, int p4);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int id);
 extern int Obj_SetupObject(int o, int p2, int p3, int p4, int p5);
-extern void Sfx_PlayFromObject(int *obj, int sfx);
-extern void Sfx_AddLoopedObjectSound(int *obj, int sfx);
-extern void Sfx_RemoveLoopedObjectSound(int *obj, int sfx);
+extern void Sfx_PlayFromObject(int* obj, int sfx);
+extern void Sfx_AddLoopedObjectSound(int* obj, int sfx);
+extern void Sfx_RemoveLoopedObjectSound(int* obj, int sfx);
 extern void objSetAnimSpeedTo1(int o);
-extern int Sfx_IsPlayingFromObjectChannel(int *obj, int ch);
-extern void objAudioFn_800393f8(int *obj, void *p2, int sfx, int p4, int p5, int p6);
-extern f32 getXZDistance(void *a, void *b);
+extern int Sfx_IsPlayingFromObjectChannel(int* obj, int ch);
+extern void objAudioFn_800393f8(int* obj, void* p2, int sfx, int p4, int p5, int p6);
+extern f32 getXZDistance(void* a, void* b);
 extern char lbl_8031D2E8[];
 extern f32 timeDelta;
 extern f32 lbl_803E23DC;
@@ -130,13 +143,17 @@ extern f32 lbl_803E24DC;
 extern f32 lbl_803E24E0;
 extern f32 lbl_803E24E4;
 extern f32 lbl_803E24E8;
-typedef struct {
+
+typedef struct
+{
     u8 a : 2;
     u8 b : 2;
     u8 c : 2;
     u8 d : 2;
 } TrickyPack;
-typedef struct {
+
+typedef struct
+{
     u8 a : 1;
     u8 b : 1;
     u8 c : 6;
@@ -190,302 +207,376 @@ typedef struct {
 
 #pragma opt_loop_invariants off
 #pragma opt_common_subs off
-void fn_8013E0D0(int *obj, register u8 *st) {
-    char *str = lbl_8031D2E8;
-    int *best = NULL;
+void fn_8013E0D0(int* obj, register u8* st)
+{
+    char* str = lbl_8031D2E8;
+    int* best = NULL;
     f32 bestd = lbl_803E23DC;
 
-    switch (st[0xa]) {
+    switch (st[0xa])
+    {
     case 0:
-    {
-        u8 ok;
-        int go;
-        trickyDebugPrint(str + 0x5a0);
-        ok = trickyFn_8013b368(obj, lbl_803E24D4, st);
-        *(void **)(st + 0x24) = trickyFindNearestUsableBaddie(*(void **)(st + 4), lbl_803E24D8, 0);
-        if (*(void **)(st + 0x24) != NULL) {
-            TRICKY_RETARGET(st, *(int *)(st + 0x24));
-            go = 1;
-        } else {
-            *(u8 *)(st + 8) = 1;
-            go = 0;
-            st[0xa] = go;
-            TRICKY_RESET_TAIL(st)
-        }
-        if (go != 0) {
-            if (*(int *)(st + 0x728) == 0) {
+        {
+            u8 ok;
+            int go;
+            trickyDebugPrint(str + 0x5a0);
+            ok = trickyFn_8013b368(obj, lbl_803E24D4, st);
+            *(void**)(st + 0x24) = trickyFindNearestUsableBaddie(*(void**)(st + 4), lbl_803E24D8, 0);
+            if (*(void**)(st + 0x24) != NULL)
+            {
+                TRICKY_RETARGET(st, *(int *)(st + 0x24));
+                go = 1;
+            }
+            else
+            {
+                *(u8*)(st + 8) = 1;
+                go = 0;
+                st[0xa] = go;
+                TRICKY_RESET_TAIL(st)
+            }
+            if (go != 0)
+            {
+                if (*(int*)(st + 0x728) == 0)
                 {
-                    void *ct = trickyFindCirclingTarget(obj, st);
-                    *(void **)(st + 0x720) = ct;
-                    if (ct != NULL) {
-                        *(int *)(st + 0x24) = *(int *)(st + 0x720);
-                        *(int *)(st + 0x724) = 0;
-                        st[0xa] = 5;
-                        break;
-                    }
-                }
-            }
-            if (ok == 2) {
-                TRICKY_RESET(st);
-                break;
-            }
-            if (getXZDistance((char *)obj + 0x18, (char *)*(int *)(st + 0x24) + 0x18) < lbl_803E24DC) {
-                int b;
-                st[0xa] = 1;
-                *(f32 *)(st + 0x71c) = lbl_803E23DC;
-                b = lbl_803E23DC != *(f32 *)(st + 0x2ac)
-                    && (lbl_803E2410 == *(f32 *)(st + 0x2b0)
-                        || *(f32 *)(st + 0x2b4) - *(f32 *)(st + 0x2b0) > lbl_803E2414);
-                if (b != 0) {
-                    objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
-                    *(f32 *)(st + 0x79c) = lbl_803E2440;
-                    *(f32 *)(st + 0x838) = lbl_803E23DC;
-                    trickyDebugPrint(str + 0x184);
-                } else {
-                    objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
-                    trickyDebugPrint(str + 0x190);
-                }
-            }
-        }
-        break;
-    }
-    case 1:
-    {
-        u8 ok;
-        int go;
-        trickyDebugPrint(str + 0x5b4, **(u8 **)(st + 0), *(int *)(st + 0x728));
-        ok = trickyFn_8013b368(obj, lbl_803E24D4, st);
-        *(void **)(st + 0x24) = trickyFindNearestUsableBaddie(*(void **)(st + 4), lbl_803E24D8, 0);
-        if (*(void **)(st + 0x24) != NULL) {
-            TRICKY_RETARGET(st, *(int *)(st + 0x24));
-            go = 1;
-        } else {
-            *(u8 *)(st + 8) = 1;
-            go = 0;
-            st[0xa] = go;
-            TRICKY_RESET_TAIL(st)
-        }
-        if (go != 0) {
-            if (*(int *)(st + 0x728) == 0) {
-                {
-                    void *ct = trickyFindCirclingTarget(obj, st);
-                    *(void **)(st + 0x720) = ct;
-                    if (ct != NULL) {
-                        *(int *)(st + 0x24) = *(int *)(st + 0x720);
-                        *(int *)(st + 0x724) = 0;
-                        st[0xa] = 5;
-                        break;
-                    }
-                }
-            }
-            if (ok == 2) {
-                TRICKY_RESET(st);
-                break;
-            }
-            if (ok == 0) {
-                objAnimFn_8013a3f0(obj, 0x33, lbl_803E243C, 0);
-            }
-            if (*(int *)(st + 0x728) != 0) {
-                if (**(u8 **)(st + 0) < 2) {
-                    *(int *)(st + 0x728) = 0;
-                    if (Obj_IsLoadingLocked() != 0) {
-                        *(u32 *)(st + 0x54) |= 4;
-                        TRICKY_RESET(st);
-                        if (*(int *)(st + 0x7b8) == 0) {
-                            int o = Obj_AllocObjectSetup(0x20, 0x17b);
-                            s8 slots[4];
-                            int free_;
-                            slots[0] = -1;
-                            slots[1] = -1;
-                            slots[2] = -1;
-                            if (*(int *)(st + 0x7a8) != 0) {
-                                slots[((TrickyPack *)(st + 0x7bc))->a] = 1;
-                            }
-                            if (*(int *)(st + 0x7b0) != 0) {
-                                slots[((TrickyPack *)(st + 0x7bc))->b] = 1;
-                            }
-                            if (*(int *)(st + 0x7b8) != 0) {
-                                slots[((TrickyPack *)(st + 0x7bc))->c] = 1;
-                            }
-                            if (slots[0] == -1) {
-                                free_ = 0;
-                            } else if (slots[1] == -1) {
-                                free_ = 1;
-                            } else if (slots[2] == -1) {
-                                free_ = 2;
-                            } else if (slots[3] == -1) {
-                                free_ = 3;
-                            } else {
-                                free_ = -1;
-                            }
-                            ((TrickyPack *)(st + 0x7bc))->c = free_;
-                            *(int *)(st + 0x7b8) = Obj_SetupObject(o, 4, -1, -1, *(int *)&((GameObject *)obj)->anim.parent);
-                            ObjLink_AttachChild((int)obj, *(int *)(st + 0x7b8), ((TrickyPack *)(st + 0x7bc))->c);
-                            *(f32 *)(st + 0x7c0) = lbl_803E23DC;
-                            *(f32 *)(st + 0x7c4) = lbl_803E23DC;
-                            *(f32 *)(st + 0x7c8) = lbl_803E23DC;
+                    {
+                        void* ct = trickyFindCirclingTarget(obj, st);
+                        *(void**)(st + 0x720) = ct;
+                        if (ct != NULL)
+                        {
+                            *(int*)(st + 0x24) = *(int*)(st + 0x720);
+                            *(int*)(st + 0x724) = 0;
+                            st[0xa] = 5;
+                            break;
                         }
                     }
-                } else {
-                    st[0xa] = 2;
+                }
+                if (ok == 2)
+                {
+                    TRICKY_RESET(st);
                     break;
                 }
+                if (getXZDistance((char*)obj + 0x18, (char*)*(int*)(st + 0x24) + 0x18) < lbl_803E24DC)
+                {
+                    int b;
+                    st[0xa] = 1;
+                    *(f32*)(st + 0x71c) = lbl_803E23DC;
+                    b = lbl_803E23DC != *(f32*)(st + 0x2ac)
+                        && (lbl_803E2410 == *(f32*)(st + 0x2b0)
+                            || *(f32*)(st + 0x2b4) - *(f32*)(st + 0x2b0) > lbl_803E2414);
+                    if (b != 0)
+                    {
+                        objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
+                        *(f32*)(st + 0x79c) = lbl_803E2440;
+                        *(f32*)(st + 0x838) = lbl_803E23DC;
+                        trickyDebugPrint(str + 0x184);
+                    }
+                    else
+                    {
+                        objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
+                        trickyDebugPrint(str + 0x190);
+                    }
+                }
             }
-            if (getXZDistance((char *)obj + 0x18, (char *)*(int *)(st + 0x24) + 0x18) > lbl_803E24E0) {
-                st[0xa] = 0;
-                break;
-            }
-            *(f32 *)(st + 0x71c) -= timeDelta;
-            if (*(f32 *)(st + 0x71c) < lbl_803E23DC) {
-                *(f32 *)(st + 0x71c) = (f32)(s32)randomGetRange(0xc8, 0x258) * lbl_803E24A8;
-                TRICKY_BARK(obj, 0x29b, 0x1000);
-            }
-        }
-        break;
-    }
-    case 2:
-    {
-        u8 ok;
-        int go;
-        trickyDebugPrint(str + 0x5cc);
-        ok = trickyFn_8013b368(obj, lbl_803E24E4, st);
-        *(void **)(st + 0x24) = trickyFindNearestUsableBaddie(*(void **)(st + 4), lbl_803E24D8, 0);
-        if (*(void **)(st + 0x24) != NULL) {
-            TRICKY_RETARGET(st, *(int *)(st + 0x24));
-            go = 1;
-        } else {
-            *(u8 *)(st + 8) = 1;
-            go = 0;
-            st[0xa] = go;
-            TRICKY_RESET_TAIL(st)
-        }
-        if (go != 0 && ok != 1) {
-            objAnimFn_8013a3f0(obj, 0x34, lbl_803E2444, 0x4000000);
-            *(u32 *)(st + 0x54) |= 0x10;
-            st[0xa] = 3;
-            *(int *)(st + 0x728) = 0;
-        }
-        break;
-    }
-    case 3:
-        if (((GameObject *)obj)->anim.currentMove != 0x34) {
             break;
         }
-        if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E24E8) {
-            if (Obj_IsLoadingLocked() != 0) {
-                *(u32 *)(st + 0x54) |= 0x800;
+    case 1:
+        {
+            u8 ok;
+            int go;
+            trickyDebugPrint(str + 0x5b4, **(u8**)(st + 0), *(int*)(st + 0x728));
+            ok = trickyFn_8013b368(obj, lbl_803E24D4, st);
+            *(void**)(st + 0x24) = trickyFindNearestUsableBaddie(*(void**)(st + 4), lbl_803E24D8, 0);
+            if (*(void**)(st + 0x24) != NULL)
+            {
+                TRICKY_RETARGET(st, *(int *)(st + 0x24));
+                go = 1;
+            }
+            else
+            {
+                *(u8*)(st + 8) = 1;
+                go = 0;
+                st[0xa] = go;
+                TRICKY_RESET_TAIL(st)
+            }
+            if (go != 0)
+            {
+                if (*(int*)(st + 0x728) == 0)
+                {
+                    {
+                        void* ct = trickyFindCirclingTarget(obj, st);
+                        *(void**)(st + 0x720) = ct;
+                        if (ct != NULL)
+                        {
+                            *(int*)(st + 0x24) = *(int*)(st + 0x720);
+                            *(int*)(st + 0x724) = 0;
+                            st[0xa] = 5;
+                            break;
+                        }
+                    }
+                }
+                if (ok == 2)
+                {
+                    TRICKY_RESET(st);
+                    break;
+                }
+                if (ok == 0)
+                {
+                    objAnimFn_8013a3f0(obj, 0x33, lbl_803E243C, 0);
+                }
+                if (*(int*)(st + 0x728) != 0)
+                {
+                    if (**(u8**)(st + 0) < 2)
+                    {
+                        *(int*)(st + 0x728) = 0;
+                        if (Obj_IsLoadingLocked() != 0)
+                        {
+                            *(u32*)(st + 0x54) |= 4;
+                            TRICKY_RESET(st);
+                            if (*(int*)(st + 0x7b8) == 0)
+                            {
+                                int o = Obj_AllocObjectSetup(0x20, 0x17b);
+                                s8 slots[4];
+                                int free_;
+                                slots[0] = -1;
+                                slots[1] = -1;
+                                slots[2] = -1;
+                                if (*(int*)(st + 0x7a8) != 0)
+                                {
+                                    slots[((TrickyPack*)(st + 0x7bc))->a] = 1;
+                                }
+                                if (*(int*)(st + 0x7b0) != 0)
+                                {
+                                    slots[((TrickyPack*)(st + 0x7bc))->b] = 1;
+                                }
+                                if (*(int*)(st + 0x7b8) != 0)
+                                {
+                                    slots[((TrickyPack*)(st + 0x7bc))->c] = 1;
+                                }
+                                if (slots[0] == -1)
+                                {
+                                    free_ = 0;
+                                }
+                                else if (slots[1] == -1)
+                                {
+                                    free_ = 1;
+                                }
+                                else if (slots[2] == -1)
+                                {
+                                    free_ = 2;
+                                }
+                                else if (slots[3] == -1)
+                                {
+                                    free_ = 3;
+                                }
+                                else
+                                {
+                                    free_ = -1;
+                                }
+                                ((TrickyPack*)(st + 0x7bc))->c = free_;
+                                *(int*)(st + 0x7b8) = Obj_SetupObject(o, 4, -1, -1,
+                                                                      *(int*)&((GameObject*)obj)->anim.parent);
+                                ObjLink_AttachChild((int)obj, *(int*)(st + 0x7b8), ((TrickyPack*)(st + 0x7bc))->c);
+                                *(f32*)(st + 0x7c0) = lbl_803E23DC;
+                                *(f32*)(st + 0x7c4) = lbl_803E23DC;
+                                *(f32*)(st + 0x7c8) = lbl_803E23DC;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        st[0xa] = 2;
+                        break;
+                    }
+                }
+                if (getXZDistance((char*)obj + 0x18, (char*)*(int*)(st + 0x24) + 0x18) > lbl_803E24E0)
+                {
+                    st[0xa] = 0;
+                    break;
+                }
+                *(f32*)(st + 0x71c) -= timeDelta;
+                if (*(f32*)(st + 0x71c) < lbl_803E23DC)
+                {
+                    *(f32*)(st + 0x71c) = (f32)(s32)
+                    randomGetRange(0xc8, 0x258) * lbl_803E24A8;
+                    TRICKY_BARK(obj, 0x29b, 0x1000);
+                }
+            }
+            break;
+        }
+    case 2:
+        {
+            u8 ok;
+            int go;
+            trickyDebugPrint(str + 0x5cc);
+            ok = trickyFn_8013b368(obj, lbl_803E24E4, st);
+            *(void**)(st + 0x24) = trickyFindNearestUsableBaddie(*(void**)(st + 4), lbl_803E24D8, 0);
+            if (*(void**)(st + 0x24) != NULL)
+            {
+                TRICKY_RETARGET(st, *(int *)(st + 0x24));
+                go = 1;
+            }
+            else
+            {
+                *(u8*)(st + 8) = 1;
+                go = 0;
+                st[0xa] = go;
+                TRICKY_RESET_TAIL(st)
+            }
+            if (go != 0 && ok != 1)
+            {
+                objAnimFn_8013a3f0(obj, 0x34, lbl_803E2444, 0x4000000);
+                *(u32*)(st + 0x54) |= 0x10;
+                st[0xa] = 3;
+                *(int*)(st + 0x728) = 0;
+            }
+            break;
+        }
+    case 3:
+        if (((GameObject*)obj)->anim.currentMove != 0x34)
+        {
+            break;
+        }
+        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E24E8)
+        {
+            if (Obj_IsLoadingLocked() != 0)
+            {
+                *(u32*)(st + 0x54) |= 0x800;
                 {
                     int i = 0;
-                    u8 *p = st;
-                    for (; i < 7; i++) {
+                    u8* p = st;
+                    for (; i < 7; i++)
+                    {
                         int o = Obj_AllocObjectSetup(0x24, 0x4f0);
-                        *(u8 *)(o + 4) = 2;
-                        *(u8 *)(o + 5) = 1;
-                        *(s16 *)(o + 0x1a) = i;
-                        *(int *)(p + 0x700) = Obj_SetupObject(o, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
+                        *(u8*)(o + 4) = 2;
+                        *(u8*)(o + 5) = 1;
+                        *(s16*)(o + 0x1a) = i;
+                        *(int*)(p + 0x700) = Obj_SetupObject(o, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                                             *(int*)&((GameObject*)obj)->anim.parent);
                         p += 4;
                     }
                 }
                 Sfx_PlayFromObject(obj, 0x3db);
                 Sfx_AddLoopedObjectSound(obj, 0x3dc);
             }
-            **(u8 **)(st + 0) -= 2;
+            **(u8**)(st + 0) -= 2;
             st[0xa] = 4;
         }
         break;
     case 4:
-    {
-        u32 fl;
-        trickyDebugPrint(str + 0x5e4);
-        fl = *(u32 *)(st + 0x54);
-        if (fl & 0x8000000) {
-            *(u32 *)(st + 0x54) = fl & ~0x800;
-            *(u32 *)(st + 0x54) |= 0x1000;
+        {
+            u32 fl;
+            trickyDebugPrint(str + 0x5e4);
+            fl = *(u32*)(st + 0x54);
+            if (fl & 0x8000000)
             {
-                int i = 0;
-                u8 *p = st;
-                for (; i < 7; i++) {
-                    objSetAnimSpeedTo1(*(int *)(p + 0x700));
-                    p += 4;
-                }
-            }
-            Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
-            TRICKY_BARK(obj, 0x29d, 0);
-            *(u32 *)(st + 0x54) &= ~0x10;
-            st[0xa] = 0;
-        }
-        break;
-    }
-    case 5:
-    {
-        int *t;
-        void *found = trickyFindNearestUsableBaddie(*(void **)(st + 4), lbl_803E24D8, 0);
-        if (found != NULL && ((GameObject *)found)->anim.seqId == 0x6a3) {
-            t = (int *)found;
-        } else {
-            t = (int *)fn_80296118(*(void **)(st + 4));
-        }
-        if ((u32)t != *(u32 *)(st + 0x720) || *(int *)(st + 0x728) != 0) {
-            TRICKY_RETARGET(st, *(int *)(st + 0x24));
-            st[0xa] = 0;
-        } else {
-            int count;
-            int i = 0;
-            void **list = (void **)ObjGroup_GetObjects(0x4b, &count);
-            f32 ratio = lbl_803E23F8;
-            for (; i < count; i++) {
-                f32 d1 = Vec_xzDistance((u8 *)list[0] + 0x18, (u8 *)t + 0x18);
-                f32 d2 = Vec_xzDistance((u8 *)list[0] + 0x18, *(u8 **)(st + 4) + 0x18);
-                f32 d3 = Vec_xzDistance((u8 *)t + 0x18, *(u8 **)(st + 4) + 0x18);
-                if (d1 + d2 > ratio * d3) {
-                    f32 d4 = Vec_xzDistance((u8 *)list[0] + 0x18, (u8 *)obj + 0x18);
-                    if (d2 - d4 > bestd) {
-                        bestd = d2 - d4;
-                        best = (int *)list[0];
+                *(u32*)(st + 0x54) = fl & ~0x800;
+                *(u32*)(st + 0x54) |= 0x1000;
+                {
+                    int i = 0;
+                    u8* p = st;
+                    for (; i < 7; i++)
+                    {
+                        objSetAnimSpeedTo1(*(int*)(p + 0x700));
+                        p += 4;
                     }
                 }
-                list++;
+                Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
+                TRICKY_BARK(obj, 0x29d, 0);
+                *(u32*)(st + 0x54) &= ~0x10;
+                st[0xa] = 0;
+            }
+            break;
+        }
+    case 5:
+        {
+            int* t;
+            void* found = trickyFindNearestUsableBaddie(*(void**)(st + 4), lbl_803E24D8, 0);
+            if (found != NULL && ((GameObject*)found)->anim.seqId == 0x6a3)
+            {
+                t = (int*)found;
+            }
+            else
+            {
+                t = (int*)fn_80296118(*(void**)(st + 4));
+            }
+            if ((u32)t != *(u32*)(st + 0x720) || *(int*)(st + 0x728) != 0)
+            {
+                TRICKY_RETARGET(st, *(int *)(st + 0x24));
+                st[0xa] = 0;
+            }
+            else
+            {
+                int count;
+                int i = 0;
+                void** list = (void**)ObjGroup_GetObjects(0x4b, &count);
+                f32 ratio = lbl_803E23F8;
+                for (; i < count; i++)
+                {
+                    f32 d1 = Vec_xzDistance((u8*)list[0] + 0x18, (u8*)t + 0x18);
+                    f32 d2 = Vec_xzDistance((u8*)list[0] + 0x18, *(u8**)(st + 4) + 0x18);
+                    f32 d3 = Vec_xzDistance((u8*)t + 0x18, *(u8**)(st + 4) + 0x18);
+                    if (d1 + d2 > ratio * d3)
+                    {
+                        f32 d4 = Vec_xzDistance((u8*)list[0] + 0x18, (u8*)obj + 0x18);
+                        if (d2 - d4 > bestd)
+                        {
+                            bestd = d2 - d4;
+                            best = (int*)list[0];
+                        }
+                    }
+                    list++;
+                }
+                {
+                    int* c = *(int**)(st + 0x724);
+                    if (c != NULL && (*(u16*)((char*)c + 0xb0) & 0x40))
+                    {
+                        *(int*)(st + 0x724) = 0;
+                        TRICKY_RETARGET(st, *(int *)(st + 4));
+                    }
+                }
+                if (best != NULL)
+                {
+                    if (*(void**)(st + 0x724) == NULL)
+                    {
+                        TRICKY_BARK(obj, 0x35b, 0x500);
+                    }
+                    if (*(void**)(st + 0x724) == NULL || *(int**)(st + 0x724) != best)
+                    {
+                        *(int**)(st + 0x724) = best;
+                        TRICKY_RETARGET(st, *(int *)(st + 0x724));
+                    }
+                }
             }
             {
-                int *c = *(int **)(st + 0x724);
-                if (c != NULL && (*(u16 *)((char *)c + 0xb0) & 0x40)) {
-                    *(int *)(st + 0x724) = 0;
-                    TRICKY_RETARGET(st, *(int *)(st + 4));
+                u8 r;
+                if (*(void**)(st + 0x724) != NULL)
+                {
+                    r = trickyFn_8013b368(obj, lbl_803E2488, st);
+                }
+                else
+                {
+                    r = trickyFn_8013b368(obj, lbl_803E2418, st);
+                }
+                if (r != 1)
+                {
+                    int b = lbl_803E23DC != *(f32*)(st + 0x2ac)
+                        && (lbl_803E2410 == *(f32*)(st + 0x2b0)
+                            || *(f32*)(st + 0x2b4) - *(f32*)(st + 0x2b0) > lbl_803E2414);
+                    if (b != 0)
+                    {
+                        objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
+                        *(f32*)(st + 0x79c) = lbl_803E2440;
+                        *(f32*)(st + 0x838) = lbl_803E23DC;
+                        trickyDebugPrint(str + 0x184);
+                    }
+                    else
+                    {
+                        objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
+                        trickyDebugPrint(str + 0x190);
+                    }
                 }
             }
-            if (best != NULL) {
-                if (*(void **)(st + 0x724) == NULL) {
-                    TRICKY_BARK(obj, 0x35b, 0x500);
-                }
-                if (*(void **)(st + 0x724) == NULL || *(int **)(st + 0x724) != best) {
-                    *(int **)(st + 0x724) = best;
-                    TRICKY_RETARGET(st, *(int *)(st + 0x724));
-                }
-            }
+            break;
         }
-        {
-            u8 r;
-            if (*(void **)(st + 0x724) != NULL) {
-                r = trickyFn_8013b368(obj, lbl_803E2488, st);
-            } else {
-                r = trickyFn_8013b368(obj, lbl_803E2418, st);
-            }
-            if (r != 1) {
-                int b = lbl_803E23DC != *(f32 *)(st + 0x2ac)
-                    && (lbl_803E2410 == *(f32 *)(st + 0x2b0)
-                        || *(f32 *)(st + 0x2b4) - *(f32 *)(st + 0x2b0) > lbl_803E2414);
-                if (b != 0) {
-                    objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
-                    *(f32 *)(st + 0x79c) = lbl_803E2440;
-                    *(f32 *)(st + 0x838) = lbl_803E23DC;
-                    trickyDebugPrint(str + 0x184);
-                } else {
-                    objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
-                    trickyDebugPrint(str + 0x190);
-                }
-            }
-        }
-        break;
-    }
     }
 }

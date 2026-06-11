@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_05A0_DustMoteSou_packet_info {
+enum obj_05A0_DustMoteSou_packet_info
+{
     DUSTMOTESOU_DEF_ID = 0x05A0,
     DUSTMOTESOU_DLL_ID = 0x02B2,
     DUSTMOTESOU_CLASS_ID = 0x007E,

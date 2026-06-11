@@ -37,7 +37,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_020E_WM_sun_slot {
+enum dll_020E_WM_sun_slot
+{
     WM_SUN_INITIALISE = 0,
     WM_SUN_RELEASE = 1,
     WM_SUN_INIT = 3,

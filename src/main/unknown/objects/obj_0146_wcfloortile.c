@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0146_WCFloorTile_packet_info {
+enum obj_0146_WCFloorTile_packet_info
+{
     WCFLOORTILE_DEF_ID = 0x0146,
     WCFLOORTILE_DLL_ID = 0x0298,
     WCFLOORTILE_CLASS_ID = 0x0030,

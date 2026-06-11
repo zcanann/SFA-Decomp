@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_028F_SH_YellowWh_packet_info {
+enum obj_028F_SH_YellowWh_packet_info
+{
     SH_YELLOWWH_DEF_ID = 0x028F,
     SH_YELLOWWH_DLL_ID = 0x02AD,
     SH_YELLOWWH_CLASS_ID = 0x007F,

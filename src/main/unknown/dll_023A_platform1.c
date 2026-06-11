@@ -36,7 +36,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_023A_Platform1_slot {
+enum dll_023A_Platform1_slot
+{
     PLATFORM1_INITIALISE = 0,
     PLATFORM1_RELEASE = 1,
     PLATFORM1_INIT = 3,

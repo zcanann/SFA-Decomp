@@ -59,7 +59,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0365_DFP_PuzzleP_packet_info {
+enum obj_0365_DFP_PuzzleP_packet_info
+{
     DFP_PUZZLEP_DEF_ID = 0x0365,
     DFP_PUZZLEP_DLL_ID = 0x01FE,
     DFP_PUZZLEP_CLASS_ID = 0x0033,

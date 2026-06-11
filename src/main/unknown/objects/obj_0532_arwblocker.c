@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0532_ARWBlocker_packet_info {
+enum obj_0532_ARWBlocker_packet_info
+{
     ARWBLOCKER_DEF_ID = 0x0532,
     ARWBLOCKER_DLL_ID = 0x02A8,
     ARWBLOCKER_CLASS_ID = 0x0030,

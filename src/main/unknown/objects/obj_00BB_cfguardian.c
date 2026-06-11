@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00BB_CFGuardian_packet_info {
+enum obj_00BB_CFGuardian_packet_info
+{
     CFGUARDIAN_DEF_ID = 0x00BB,
     CFGUARDIAN_DLL_ID = 0x0148,
     CFGUARDIAN_CLASS_ID = 0x0030,

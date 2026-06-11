@@ -9,7 +9,8 @@
 #define SHOPKEEPER_OBJFLAG_EARLY_SCENE_STARTED 0x80
 #define SHOPKEEPER_LOADING_FLAG 0x1000
 
-typedef struct ShopkeeperObject {
+typedef struct ShopkeeperObject
+{
     u8 unk0[0xac];
     s8 mapId;
     u8 unkAD[3];
@@ -26,9 +27,9 @@ extern void padClearAnalogInputY(int controller);
 extern void buttonDisable(int controller, int flags);
 extern int playerHasSpell(int obj, int spell);
 
-extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern ScreenTransitionInterface **gScreenTransitionInterface;
-extern MapEventInterface **gMapEventInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern ScreenTransitionInterface** gScreenTransitionInterface;
+extern MapEventInterface** gMapEventInterface;
 
 #define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg) \
     (*gObjectTriggerInterface)->runSequence((triggerId), (void *)(obj), (arg))
@@ -66,27 +67,33 @@ extern MapEventInterface **gMapEventInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState *state)
+void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState* state)
 {
-    ShopkeeperObject *thornTailObj;
-    ShopkeeperObject *playerObj;
+    ShopkeeperObject* thornTailObj;
+    ShopkeeperObject* playerObj;
 
     SHOPKEEPER_APPLY_MAP_OVERRIDE(state, 0x193);
 
-    switch (state->thornTailState) {
+    switch (state->thornTailState)
+    {
     case 0:
-        if (GameBit_Get(0xd39) != 0) {
+        if (GameBit_Get(0xd39) != 0)
+        {
             state->thornTailState = 7;
-        } else {
+        }
+        else
+        {
             OBJECT_TRIGGER_REFRESH(5, obj, -1);
             state->thornTailState = 1;
         }
         break;
     case 1:
-        thornTailObj = (ShopkeeperObject *)ObjList_FindObjectById(SHOPKEEPER_THORNTAIL_OBJECT_ID);
-        if ((thornTailObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0) {
-            playerObj = (ShopkeeperObject *)Obj_GetPlayerObject();
-            if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0) {
+        thornTailObj = (ShopkeeperObject*)ObjList_FindObjectById(SHOPKEEPER_THORNTAIL_OBJECT_ID);
+        if ((thornTailObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0)
+        {
+            playerObj = (ShopkeeperObject*)Obj_GetPlayerObject();
+            if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0)
+            {
                 OBJECT_TRIGGER_REFRESH(6, obj, -1);
                 state->thornTailState = 7;
                 GameBit_Set(0xd39, 1);
@@ -100,27 +107,38 @@ void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState *sta
     if ((state->flags & SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED) == 0 &&
         GameBit_Get(0x190) != 0 &&
         GameBit_Get(0x191) != 0 &&
-        GameBit_Get(0x192) != 0) {
-        if (GameBit_Get(0x193) == 0) {
-            thornTailObj = (ShopkeeperObject *)ObjList_FindObjectById(SHOPKEEPER_THORNTAIL_OBJECT_ID);
-            if (thornTailObj != 0) {
-                playerObj = (ShopkeeperObject *)Obj_GetPlayerObject();
-                if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0) {
-                    if (isScreenTransitionActive() != 0) {
+        GameBit_Get(0x192) != 0)
+    {
+        if (GameBit_Get(0x193) == 0)
+        {
+            thornTailObj = (ShopkeeperObject*)ObjList_FindObjectById(SHOPKEEPER_THORNTAIL_OBJECT_ID);
+            if (thornTailObj != 0)
+            {
+                playerObj = (ShopkeeperObject*)Obj_GetPlayerObject();
+                if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0)
+                {
+                    if (isScreenTransitionActive() != 0)
+                    {
                         GameBit_Set(0x193, 1);
                         OBJECT_TRIGGER_REFRESH(1, obj, -1);
                         state->flags |= SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED;
-                    } else {
+                    }
+                    else
+                    {
                         GameBit_Set(0x193, 1);
                         SCREEN_TRANSITION_START(0x14, 1);
                     }
                 }
             }
-        } else if (SCREEN_TRANSITION_FINISHED() != 0) {
-            thornTailObj = (ShopkeeperObject *)ObjList_FindObjectById(SHOPKEEPER_THORNTAIL_OBJECT_ID);
-            if (thornTailObj != 0) {
-                playerObj = (ShopkeeperObject *)Obj_GetPlayerObject();
-                if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0) {
+        }
+        else if (SCREEN_TRANSITION_FINISHED() != 0)
+        {
+            thornTailObj = (ShopkeeperObject*)ObjList_FindObjectById(SHOPKEEPER_THORNTAIL_OBJECT_ID);
+            if (thornTailObj != 0)
+            {
+                playerObj = (ShopkeeperObject*)Obj_GetPlayerObject();
+                if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0)
+                {
                     OBJECT_TRIGGER_REFRESH(1, obj, -1);
                     state->flags |= SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED;
                 }
@@ -128,7 +146,8 @@ void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState *sta
         }
     }
 
-    if (GameBit_Get(0xea9) == 0 && GameBit_Get(0x611) != 0) {
+    if (GameBit_Get(0xea9) == 0 && GameBit_Get(0x611) != 0)
+    {
         GameBit_Set(0xea9, 1);
         MAP_EVENT_TRIGGER(0, 0, 1, 0);
     }
@@ -147,31 +166,37 @@ void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState *sta
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState *state)
+void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
 {
-    ShopkeeperObject *playerObj;
+    ShopkeeperObject* playerObj;
 
     SHOPKEEPER_APPLY_MAP_OVERRIDE(state, 0x1ab);
 
-    if (state->earlySceneDelay >= 2) {
-        if (GameBit_Get(0xb) == 0) {
+    if (state->earlySceneDelay >= 2)
+    {
+        if (GameBit_Get(0xb) == 0)
+        {
             padClearAnalogInputX(0);
             padClearAnalogInputY(0);
             buttonDisable(0, 0x100);
             buttonDisable(0, 0x200);
             buttonDisable(0, 0x1000);
-            playerObj = (ShopkeeperObject *)Obj_GetPlayerObject();
-            if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0) {
+            playerObj = (ShopkeeperObject*)Obj_GetPlayerObject();
+            if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0)
+            {
                 OBJECT_TRIGGER_REFRESH(0, obj, -1);
                 GameBit_Set(0xb, 1);
             }
         }
 
-        if ((state->flags & SHOPKEEPER_OBJFLAG_EARLY_SCENE_STARTED) == 0) {
+        if ((state->flags & SHOPKEEPER_OBJFLAG_EARLY_SCENE_STARTED) == 0)
+        {
             GameBit_Set(0x2ba, 0);
             state->flags |= SHOPKEEPER_OBJFLAG_EARLY_SCENE_STARTED;
         }
-    } else {
+    }
+    else
+    {
         state->earlySceneDelay++;
     }
 
@@ -179,16 +204,20 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState *state)
         GameBit_Get(0x34a) != 0 &&
         GameBit_Get(0x36f) != 0 &&
         GameBit_Get(0x166) != 0 &&
-        GameBit_Get(0x167) != 0) {
-        playerObj = (ShopkeeperObject *)Obj_GetPlayerObject();
-        if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0) {
+        GameBit_Get(0x167) != 0)
+    {
+        playerObj = (ShopkeeperObject*)Obj_GetPlayerObject();
+        if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0)
+        {
             GameBit_Set(0x2da, 1);
         }
     }
 
-    if (MAP_EVENT_GET_ANIM(((ShopkeeperObject *)obj)->mapId, 6) == 0) {
-        playerObj = (ShopkeeperObject *)Obj_GetPlayerObject();
-        if (playerHasSpell((int)playerObj, 0) != 0) {
+    if (MAP_EVENT_GET_ANIM(((ShopkeeperObject *)obj)->mapId, 6) == 0)
+    {
+        playerObj = (ShopkeeperObject*)Obj_GetPlayerObject();
+        if (playerHasSpell((int)playerObj, 0) != 0)
+        {
             MAP_EVENT_SET_ANIM(((ShopkeeperObject *)obj)->mapId, 6, 1);
         }
     }

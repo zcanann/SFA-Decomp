@@ -53,7 +53,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00B7_CFPrisonUnc_packet_info {
+enum obj_00B7_CFPrisonUnc_packet_info
+{
     CFPRISONUNC_DEF_ID = 0x00B7,
     CFPRISONUNC_DLL_ID = 0x014F,
     CFPRISONUNC_CLASS_ID = 0x003E,

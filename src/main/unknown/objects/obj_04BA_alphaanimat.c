@@ -52,7 +52,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04BA_AlphaAnimat_packet_info {
+enum obj_04BA_AlphaAnimat_packet_info
+{
     ALPHAANIMAT_DEF_ID = 0x04BA,
     ALPHAANIMAT_DLL_ID = 0x0137,
     ALPHAANIMAT_CLASS_ID = 0x0049,

@@ -36,7 +36,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_01F0_SB_KyteCage_slot {
+enum dll_01F0_SB_KyteCage_slot
+{
     SB_KYTECAGE_INITIALISE = 0,
     SB_KYTECAGE_RELEASE = 1,
     SB_KYTECAGE_INIT = 3,

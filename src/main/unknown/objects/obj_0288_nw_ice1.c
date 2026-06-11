@@ -63,7 +63,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0288_NW_ice1_packet_info {
+enum obj_0288_NW_ice1_packet_info
+{
     NW_ICE1_DEF_ID = 0x0288,
     NW_ICE1_DLL_ID = 0x01A4,
     NW_ICE1_CLASS_ID = 0x0061,

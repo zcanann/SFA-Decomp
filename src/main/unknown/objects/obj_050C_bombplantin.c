@@ -58,7 +58,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_050C_BombPlantin_packet_info {
+enum obj_050C_BombPlantin_packet_info
+{
     BOMBPLANTIN_DEF_ID = 0x050C,
     BOMBPLANTIN_DLL_ID = 0x01AB,
     BOMBPLANTIN_CLASS_ID = 0x0030,

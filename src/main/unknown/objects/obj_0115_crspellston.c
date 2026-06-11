@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0115_CRSpellston_packet_info {
+enum obj_0115_CRSpellston_packet_info
+{
     CRSPELLSTON_DEF_ID = 0x0115,
     CRSPELLSTON_DLL_ID = 0x025E,
     CRSPELLSTON_CLASS_ID = 0x0030,

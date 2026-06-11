@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_046A_SteamHoleFi_packet_info {
+enum obj_046A_SteamHoleFi_packet_info
+{
     STEAMHOLEFI_DEF_ID = 0x046A,
     STEAMHOLEFI_DLL_ID = 0x0273,
     STEAMHOLEFI_CLASS_ID = 0x0030,

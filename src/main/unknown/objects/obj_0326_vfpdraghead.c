@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0326_VFPDragHead_packet_info {
+enum obj_0326_VFPDragHead_packet_info
+{
     VFPDRAGHEAD_DEF_ID = 0x0326,
     VFPDRAGHEAD_DLL_ID = 0x0222,
     VFPDRAGHEAD_CLASS_ID = 0x0030,

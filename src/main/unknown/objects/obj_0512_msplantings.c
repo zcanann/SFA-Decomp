@@ -56,7 +56,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0512_MSPlantingS_packet_info {
+enum obj_0512_MSPlantingS_packet_info
+{
     MSPLANTINGS_DEF_ID = 0x0512,
     MSPLANTINGS_DLL_ID = 0x025B,
     MSPLANTINGS_CLASS_ID = 0x0068,

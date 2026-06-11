@@ -62,99 +62,113 @@ extern f32 lbl_803E34A0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void collectible_init(int obj,int setup)
+void collectible_init(int obj, int setup)
 {
-  ObjAnimComponent *objAnim;
-  u8 *state;
-  int setupObj;
-  int setupModelIndex;
-  u8 *data;
-  u32 pathWord;
-  u8 pathByte;
+    ObjAnimComponent* objAnim;
+    u8* state;
+    int setupObj;
+    int setupModelIndex;
+    u8* data;
+    u32 pathWord;
+    u8 pathByte;
 
-  objAnim = (ObjAnimComponent *)obj;
-  state = ((GameObject *)obj)->extra;
-  pathWord = lbl_803E3440;
-  pathByte = lbl_803E3444;
-  ObjGroup_AddObject(obj,4);
-  ObjMsg_AllocQueue(obj,2);
-  ((GameObject *)obj)->anim.rotX = (s16)((u8)*(u8 *)(setup + 0x1b) << 8);
-  ((GameObject *)obj)->anim.rotY = (s16)((u8)*(u8 *)(setup + 0x22) << 8);
-  ((GameObject *)obj)->anim.rotZ = (s16)((u8)*(u8 *)(setup + 0x23) << 8);
-  setupObj = (int)objAnim->modelInstance;
-  ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(setupObj + 4);
-  ((GameObject *)obj)->animEventCallback = (void *)collectible_SeqFn;
-  setupModelIndex = *(s8 *)(setup + 0x26);
-  objAnim->bankIndex = (s8)setupModelIndex;
-  if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
-    objAnim->bankIndex = 0;
-  }
-  ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x2000;
-  ((CollectibleState *)state)->unkC = *(u8 *)(setup + 0x19);
-  ((CollectibleState *)state)->unkD = *(u8 *)(setup + 0x1a);
-  ((CollectibleState *)state)->unkF = 0;
-  ((CollectibleState *)state)->unk18 = -2;
-  ((CollectibleState *)state)->unk1D = 0;
-  ((CollectibleState *)state)->visibilityGameBit = *(s16 *)(setup + 0x24);
-  ((CollectibleState *)state)->mapId = ((ObjPlacement *)setup)->mapId;
-  ((CollectibleState *)state)->basePosX = ((GameObject *)obj)->anim.localPosX;
-  ((CollectibleState *)state)->basePosY = ((GameObject *)obj)->anim.localPosY;
-  ((CollectibleState *)state)->basePosZ = ((GameObject *)obj)->anim.localPosZ;
-  ((CollectibleState *)state)->unk36 = *(u8 *)(setup + 0x27);
-  ((CollectibleState *)state)->unk3E = 0;
-  if (((CollectibleState *)state)->visibilityGameBit != -1) {
-    ((CollectibleState *)state)->gameBitValue = (u8)((u32)__cntlzw(GameBit_Get(((CollectibleState *)state)->visibilityGameBit)) >> 5);
-  }
-  ((CollectibleState *)state)->hideGameBit = *(s16 *)(setup + 0x1c);
-  if (((CollectibleState *)state)->hideGameBit != -1) {
-    *(u32 *)&((GameObject *)obj)->unkF4 = GameBit_Get(((CollectibleState *)state)->hideGameBit);
-  } else {
-    *(u32 *)&((GameObject *)obj)->unkF4 = 0;
-  }
-  if (((GameObject *)obj)->unkF4 == 0) {
-    data = *(u8 **)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x18);
-    if (data != 0) {
-      ((CollectibleState *)state)->scale = (f32)*(s8 *)(data + 8);
-    } else {
-      ((CollectibleState *)state)->scale = lbl_803E3494;
+    objAnim = (ObjAnimComponent*)obj;
+    state = ((GameObject*)obj)->extra;
+    pathWord = lbl_803E3440;
+    pathByte = lbl_803E3444;
+    ObjGroup_AddObject(obj, 4);
+    ObjMsg_AllocQueue(obj, 2);
+    ((GameObject*)obj)->anim.rotX = (s16)((u8) * (u8*)(setup + 0x1b) << 8);
+    ((GameObject*)obj)->anim.rotY = (s16)((u8) * (u8*)(setup + 0x22) << 8);
+    ((GameObject*)obj)->anim.rotZ = (s16)((u8) * (u8*)(setup + 0x23) << 8);
+    setupObj = (int)objAnim->modelInstance;
+    ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(setupObj + 4);
+    ((GameObject*)obj)->animEventCallback = (void*)collectible_SeqFn;
+    setupModelIndex = *(s8*)(setup + 0x26);
+    objAnim->bankIndex = (s8)setupModelIndex;
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
+    {
+        objAnim->bankIndex = 0;
     }
-    data = *(u8 **)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x40);
-    if (data != 0) {
-      ((CollectibleState *)state)->scale = (f32)(s32)(*(u8 *)(data + 0xc) << 2);
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
+    ((CollectibleState*)state)->unkC = *(u8*)(setup + 0x19);
+    ((CollectibleState*)state)->unkD = *(u8*)(setup + 0x1a);
+    ((CollectibleState*)state)->unkF = 0;
+    ((CollectibleState*)state)->unk18 = -2;
+    ((CollectibleState*)state)->unk1D = 0;
+    ((CollectibleState*)state)->visibilityGameBit = *(s16*)(setup + 0x24);
+    ((CollectibleState*)state)->mapId = ((ObjPlacement*)setup)->mapId;
+    ((CollectibleState*)state)->basePosX = ((GameObject*)obj)->anim.localPosX;
+    ((CollectibleState*)state)->basePosY = ((GameObject*)obj)->anim.localPosY;
+    ((CollectibleState*)state)->basePosZ = ((GameObject*)obj)->anim.localPosZ;
+    ((CollectibleState*)state)->unk36 = *(u8*)(setup + 0x27);
+    ((CollectibleState*)state)->unk3E = 0;
+    if (((CollectibleState*)state)->visibilityGameBit != -1)
+    {
+        ((CollectibleState*)state)->gameBitValue = (u8)(
+            (u32)__cntlzw(GameBit_Get(((CollectibleState*)state)->visibilityGameBit)) >> 5);
     }
-    if (((((ObjAnimComponent *)obj)->modelInstance->flags & 0x10000) != 0) &&
-        (((CollectibleState *)state)->unk36 != 0)) {
-      ((CollectibleState *)state)->unk38 = *(u8 *)(setup + 0x28);
-      ((CollectibleState *)state)->unk39 = *(u8 *)(setup + 0x29);
-      ((CollectibleState *)state)->unk3A = *(u8 *)(setup + 0x2a);
+    ((CollectibleState*)state)->hideGameBit = *(s16*)(setup + 0x1c);
+    if (((CollectibleState*)state)->hideGameBit != -1)
+    {
+        *(u32*)&((GameObject*)obj)->unkF4 = GameBit_Get(((CollectibleState*)state)->hideGameBit);
     }
-    switch (((GameObject *)obj)->anim.seqId) {
-      case 0xb:
-        ((CollectibleState *)state)->unk40 = lbl_803E345C;
-        ((CollectibleState *)state)->unk44 = lbl_803E3498;
-        break;
-      case 0x3cd:
-        ((CollectibleState *)state)->unk40 = lbl_803E349C;
-        ((CollectibleState *)state)->unk44 = lbl_803E3498;
-        break;
-      default:
-        ((CollectibleState *)state)->unk40 = lbl_803E34A0;
-        break;
+    else
+    {
+        *(u32*)&((GameObject*)obj)->unkF4 = 0;
     }
-    (*gPathControlInterface)->init(state + 0x50, 0, 0x40006, 1);
-    (*gPathControlInterface)->setup(state + 0x50, 1, lbl_80320C58, &pathWord, &pathByte);
-    (*gPathControlInterface)->attachObject((void *)obj, state + 0x50);
-  }
+    if (((GameObject*)obj)->unkF4 == 0)
+    {
+        data = *(u8**)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x18);
+        if (data != 0)
+        {
+            ((CollectibleState*)state)->scale = (f32) * (s8*)(data + 8);
+        }
+        else
+        {
+            ((CollectibleState*)state)->scale = lbl_803E3494;
+        }
+        data = *(u8**)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x40);
+        if (data != 0)
+        {
+            ((CollectibleState*)state)->scale = (f32)(s32)(*(u8*)(data + 0xc) << 2);
+        }
+        if (((((ObjAnimComponent*)obj)->modelInstance->flags & 0x10000) != 0) &&
+            (((CollectibleState*)state)->unk36 != 0))
+        {
+            ((CollectibleState*)state)->unk38 = *(u8*)(setup + 0x28);
+            ((CollectibleState*)state)->unk39 = *(u8*)(setup + 0x29);
+            ((CollectibleState*)state)->unk3A = *(u8*)(setup + 0x2a);
+        }
+        switch (((GameObject*)obj)->anim.seqId)
+        {
+        case 0xb:
+            ((CollectibleState*)state)->unk40 = lbl_803E345C;
+            ((CollectibleState*)state)->unk44 = lbl_803E3498;
+            break;
+        case 0x3cd:
+            ((CollectibleState*)state)->unk40 = lbl_803E349C;
+            ((CollectibleState*)state)->unk44 = lbl_803E3498;
+            break;
+        default:
+            ((CollectibleState*)state)->unk40 = lbl_803E34A0;
+            break;
+        }
+        (*gPathControlInterface)->init(state + 0x50, 0, 0x40006, 1);
+        (*gPathControlInterface)->setup(state + 0x50, 1, lbl_80320C58, &pathWord, &pathByte);
+        (*gPathControlInterface)->attachObject((void*)obj, state + 0x50);
+    }
 }
 
 
 void magicdust_free(int param_1)
 {
-  if (*(uint *)(param_1 + 0xc4) != 0) {
-    ObjLink_DetachChild(*(int *)(param_1 + 0xc4), param_1);
-  }
-  (*gExpgfxInterface)->freeSource2((u32)param_1);
-  return;
+    if (*(uint*)(param_1 + 0xc4) != 0)
+    {
+        ObjLink_DetachChild(*(int*)(param_1 + 0xc4), param_1);
+    }
+    (*gExpgfxInterface)->freeSource2((u32)param_1);
+    return;
 }
 
 

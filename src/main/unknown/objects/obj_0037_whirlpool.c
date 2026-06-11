@@ -80,7 +80,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0037_Whirlpool_packet_info {
+enum obj_0037_Whirlpool_packet_info
+{
     WHIRLPOOL_DEF_ID = 0x0037,
     WHIRLPOOL_DLL_ID = 0x00C9,
     WHIRLPOOL_CLASS_ID = 0x001C,

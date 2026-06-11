@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0185_DIM2SeqObje_packet_info {
+enum obj_0185_DIM2SeqObje_packet_info
+{
     DIM2SEQOBJE_DEF_ID = 0x0185,
     DIM2SEQOBJE_DLL_ID = 0x0112,
     DIM2SEQOBJE_CLASS_ID = 0x0055,

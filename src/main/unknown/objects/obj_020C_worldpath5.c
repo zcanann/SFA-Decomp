@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_020C_WORLDpath5_packet_info {
+enum obj_020C_WORLDpath5_packet_info
+{
     WORLDPATH5_DEF_ID = 0x020C,
     WORLDPATH5_DLL_ID = 0x01D3,
     WORLDPATH5_CLASS_ID = 0x0061,

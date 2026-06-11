@@ -2,7 +2,8 @@
 #include "main/game_object.h"
 
 
-typedef struct ARWSpeedStrState {
+typedef struct ARWSpeedStrState
+{
     f32 speed;
     f32 lifeTimer;
     f32 alpha;
@@ -13,22 +14,26 @@ typedef struct ARWSpeedStrState {
     u8 pad19[3];
 } ARWSpeedStrState;
 
-STATIC_ASSERT(sizeof(ARWSpeedStrState) == 0x1c);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, speed) == 0x00);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, lifeTimer) == 0x04);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, alpha) == 0x08);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, spreadX) == 0x0c);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, spreadY) == 0x10);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, viewZ) == 0x14);
-STATIC_ASSERT(offsetof(ARWSpeedStrState, flags) == 0x18);
+STATIC_ASSERT(sizeof(ARWSpeedStrState)== 0x1c);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, speed)== 0x00);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, lifeTimer)== 0x04);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, alpha)== 0x08);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, spreadX)== 0x0c);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, spreadY)== 0x10);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, viewZ)== 0x14);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, flags)== 0x18);
 
 int arwspeedstr_getExtraSize(void) { return 0x1c; }
 
 int arwspeedstr_getObjectTypeId(void) { return 0; }
 
-void arwspeedstr_free(void) {}
+void arwspeedstr_free(void)
+{
+}
 
-void arwspeedstr_hitDetect(void) {}
+void arwspeedstr_hitDetect(void)
+{
+}
 
 void arwspeedstr_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
@@ -37,41 +42,53 @@ void arwspeedstr_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 
 void arwspeedstr_init(int obj, int setup)
 {
-    ((GameObject *)obj)->anim.alpha = 0;
+    ((GameObject*)obj)->anim.alpha = 0;
 }
 
-void arwspeedstr_release(void) {}
+void arwspeedstr_release(void)
+{
+}
 
-void arwspeedstr_initialise(void) {}
+void arwspeedstr_initialise(void)
+{
+}
 
-void arwspeedstr_update(int obj) {
-    ARWSpeedStrState *state = ((GameObject *)obj)->extra;
-    if (state->flags == 0) {
+void arwspeedstr_update(int obj)
+{
+    ARWSpeedStrState* state = ((GameObject*)obj)->extra;
+    if (state->flags == 0)
+    {
         f32 local[3];
-        local[0] = (f32)(int)randomGetRange((int)-state->spreadX, (int)state->spreadX);
+        local[0] = (f32)(int)
+        randomGetRange((int)-state->spreadX, (int)state->spreadX);
         local[1] =
-            (f32)(int)randomGetRange((int)-state->spreadY, (int)state->spreadY);
+            (f32)(int)
+        randomGetRange((int)-state->spreadY, (int)state->spreadY);
         local[2] = state->viewZ;
-        PSMTXMultVec(Camera_GetInverseViewMatrix(), &local[0], (f32 *)(obj + 0xc));
-        ((GameObject *)obj)->anim.localPosX += playerMapOffsetX;
-        ((GameObject *)obj)->anim.localPosZ += playerMapOffsetZ;
+        PSMTXMultVec(Camera_GetInverseViewMatrix(), &local[0], (f32*)(obj + 0xc));
+        ((GameObject*)obj)->anim.localPosX += playerMapOffsetX;
+        ((GameObject*)obj)->anim.localPosZ += playerMapOffsetZ;
         state->flags = (state->flags | 1) & 0xff;
         state->alpha = lbl_803E7104;
     }
     {
         f32 t = state->lifeTimer;
         f32 zero = lbl_803E7104;
-        if (t > zero) {
+        if (t > zero)
+        {
             state->lifeTimer = t - timeDelta;
-            if (state->lifeTimer <= zero) {
+            if (state->lifeTimer <= zero)
+            {
                 state->lifeTimer = zero;
                 Obj_FreeObject(obj);
-            } else {
+            }
+            else
+            {
                 objMove(obj, lbl_803E7104, lbl_803E7104, state->speed * timeDelta);
                 state->alpha = lbl_803E7108 * timeDelta + state->alpha;
-                if (state->alpha > *(f32 *)&lbl_803E710C)
+                if (state->alpha > *(f32*)&lbl_803E710C)
                     state->alpha = lbl_803E710C;
-                ((GameObject *)obj)->anim.alpha = state->alpha;
+                ((GameObject*)obj)->anim.alpha = state->alpha;
             }
         }
     }
@@ -79,13 +96,13 @@ void arwspeedstr_update(int obj) {
 
 void fn_80231058(int obj, int src)
 {
-    ((GameObject *)obj)->anim.velocityX = *(f32 *)(src + 0x0);
-    ((GameObject *)obj)->anim.velocityY = *(f32 *)(src + 0x4);
-    ((GameObject *)obj)->anim.velocityZ = *(f32 *)(src + 0x8);
+    ((GameObject*)obj)->anim.velocityX = *(f32*)(src + 0x0);
+    ((GameObject*)obj)->anim.velocityY = *(f32*)(src + 0x4);
+    ((GameObject*)obj)->anim.velocityZ = *(f32*)(src + 0x8);
 }
 
 void fn_80231028(int obj, int v)
 {
-    ARWSpeedStrState *state = ((GameObject *)obj)->extra;
+    ARWSpeedStrState* state = ((GameObject*)obj)->extra;
     state->speed = (f32)v;
 }

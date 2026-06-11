@@ -3,12 +3,14 @@
 
 #include "src/main/audio/synth_internal.h"
 
-typedef struct SynthVoiceProgramState {
+typedef struct SynthVoiceProgramState
+{
     u8 unk00[0x108];
     u8* programData;
 } SynthVoiceProgramState;
 
-typedef struct SynthVoiceTrackRuntime {
+typedef struct SynthVoiceTrackRuntime
+{
     SynthTrackCursor trackCursors[SYNTH_SEQUENCE_TRACK_COUNT];
     u8 studioMap[SYNTH_SEQUENCE_TRACK_COUNT];
     SynthSequenceState sequenceStates[SYNTH_SEQUENCE_TRACK_COUNT];

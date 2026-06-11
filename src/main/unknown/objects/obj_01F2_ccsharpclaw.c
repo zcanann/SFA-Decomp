@@ -58,7 +58,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01F2_CCSharpclaw_packet_info {
+enum obj_01F2_CCSharpclaw_packet_info
+{
     CCSHARPCLAW_DEF_ID = 0x01F2,
     CCSHARPCLAW_DLL_ID = 0x0189,
     CCSHARPCLAW_CLASS_ID = 0x0031,

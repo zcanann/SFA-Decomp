@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_031A_VFPSpPl_packet_info {
+enum obj_031A_VFPSpPl_packet_info
+{
     VFPSPPL_DEF_ID = 0x031A,
     VFPSPPL_DLL_ID = 0x0228,
     VFPSPPL_CLASS_ID = 0x0030,

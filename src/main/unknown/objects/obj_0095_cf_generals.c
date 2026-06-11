@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0095_CF_generals_packet_info {
+enum obj_0095_CF_generals_packet_info
+{
     CF_GENERALS_DEF_ID = 0x0095,
     CF_GENERALS_DLL_ID = 0x01F5,
     CF_GENERALS_CLASS_ID = 0x0010,

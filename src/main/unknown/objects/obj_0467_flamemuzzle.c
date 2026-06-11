@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0467_FlameMuzzle_packet_info {
+enum obj_0467_FlameMuzzle_packet_info
+{
     FLAMEMUZZLE_DEF_ID = 0x0467,
     FLAMEMUZZLE_DLL_ID = 0x0273,
     FLAMEMUZZLE_CLASS_ID = 0x0030,

@@ -55,7 +55,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_030D_LevelName_packet_info {
+enum obj_030D_LevelName_packet_info
+{
     LEVELNAME_DEF_ID = 0x030D,
     LEVELNAME_DLL_ID = 0x00F8,
     LEVELNAME_CLASS_ID = 0x0043,

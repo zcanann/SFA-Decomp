@@ -52,7 +52,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0540_ARWGenerato_packet_info {
+enum obj_0540_ARWGenerato_packet_info
+{
     ARWGENERATO_DEF_ID = 0x0540,
     ARWGENERATO_DLL_ID = 0x02A5,
     ARWGENERATO_CLASS_ID = 0x0078,

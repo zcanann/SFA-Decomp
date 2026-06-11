@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_036C_VFPSplstne_packet_info {
+enum obj_036C_VFPSplstne_packet_info
+{
     VFPSPLSTNE_DEF_ID = 0x036C,
     VFPSPLSTNE_DLL_ID = 0x012E,
     VFPSPLSTNE_CLASS_ID = 0x0061,

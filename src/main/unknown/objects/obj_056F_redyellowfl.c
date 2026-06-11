@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_056F_RedYellowFl_packet_info {
+enum obj_056F_RedYellowFl_packet_info
+{
     REDYELLOWFL_DEF_ID = 0x056F,
     REDYELLOWFL_DLL_ID = 0x02AD,
     REDYELLOWFL_CLASS_ID = 0x007F,

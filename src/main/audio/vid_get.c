@@ -2,7 +2,7 @@
 
 extern undefined4 FUN_80271a90();
 
-extern u32 *vidRoot;
+extern u32* vidRoot;
 extern undefined4 DAT_803def58;
 extern undefined4 DAT_803def60;
 extern undefined4 DAT_803def64;
@@ -20,22 +20,25 @@ extern undefined4 DAT_803def64;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-u32 *get_vidlist(u32 key)
+u32* get_vidlist(u32 key)
 {
-  u32 *node;
-  u32 value;
+    u32* node;
+    u32 value;
 
-  node = vidRoot;
-  while (node != NULL) {
-    value = node[2];
-    if (value == key) {
-      return node;
+    node = vidRoot;
+    while (node != NULL)
+    {
+        value = node[2];
+        if (value == key)
+        {
+            return node;
+        }
+        if (value > key)
+        {
+            break;
+        }
+        node = (u32*)node[0];
     }
-    if (value > key) {
-      break;
-    }
-    node = (u32 *)node[0];
-  }
-  return NULL;
+    return NULL;
 }
 

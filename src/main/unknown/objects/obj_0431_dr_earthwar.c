@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0431_DR_EarthWar_packet_info {
+enum obj_0431_DR_EarthWar_packet_info
+{
     DR_EARTHWAR_DEF_ID = 0x0431,
     DR_EARTHWAR_DLL_ID = 0x0257,
     DR_EARTHWAR_CLASS_ID = 0x0030,

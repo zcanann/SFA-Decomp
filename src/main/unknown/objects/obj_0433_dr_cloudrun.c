@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0433_DR_CloudRun_packet_info {
+enum obj_0433_DR_CloudRun_packet_info
+{
     DR_CLOUDRUN_DEF_ID = 0x0433,
     DR_CLOUDRUN_DLL_ID = 0x0258,
     DR_CLOUDRUN_CLASS_ID = 0x0030,

@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0515_fuelCell_packet_info {
+enum obj_0515_fuelCell_packet_info
+{
     FUELCELL_DEF_ID = 0x0515,
     FUELCELL_DLL_ID = 0x0123,
     FUELCELL_CLASS_ID = 0x0030,

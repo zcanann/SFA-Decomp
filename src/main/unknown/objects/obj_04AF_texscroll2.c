@@ -54,7 +54,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04AF_texscroll2_packet_info {
+enum obj_04AF_texscroll2_packet_info
+{
     TEXSCROLL2_DEF_ID = 0x04AF,
     TEXSCROLL2_DLL_ID = 0x0134,
     TEXSCROLL2_CLASS_ID = 0x0021,

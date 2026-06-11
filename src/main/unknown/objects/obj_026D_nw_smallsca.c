@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_026D_NW_SmallSca_packet_info {
+enum obj_026D_NW_SmallSca_packet_info
+{
     NW_SMALLSCA_DEF_ID = 0x026D,
     NW_SMALLSCA_DLL_ID = 0x00ED,
     NW_SMALLSCA_CLASS_ID = 0x0006,

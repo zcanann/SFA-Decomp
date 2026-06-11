@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03A3_WM_LaserBea_packet_info {
+enum obj_03A3_WM_LaserBea_packet_info
+{
     WM_LASERBEA_DEF_ID = 0x03A3,
     WM_LASERBEA_DLL_ID = 0x01FC,
     WM_LASERBEA_CLASS_ID = 0x0030,

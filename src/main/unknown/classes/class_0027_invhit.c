@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0027_InvHit_defs {
+enum class_0027_InvHit_defs
+{
     INVHIT_INVHIT = 0x04B5,
 };
 #endif

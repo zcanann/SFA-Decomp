@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_056D_BlueFlowerP_packet_info {
+enum obj_056D_BlueFlowerP_packet_info
+{
     BLUEFLOWERP_DEF_ID = 0x056D,
     BLUEFLOWERP_DLL_ID = 0x02AD,
     BLUEFLOWERP_CLASS_ID = 0x007F,

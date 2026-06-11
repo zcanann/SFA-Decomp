@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0168_DIMWoodDoor_packet_info {
+enum obj_0168_DIMWoodDoor_packet_info
+{
     DIMWOODDOOR_DEF_ID = 0x0168,
     DIMWOODDOOR_DLL_ID = 0x01CB,
     DIMWOODDOOR_CLASS_ID = 0x0030,

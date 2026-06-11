@@ -66,7 +66,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_050E_MSBush_packet_info {
+enum obj_050E_MSBush_packet_info
+{
     MSBUSH_DEF_ID = 0x050E,
     MSBUSH_DLL_ID = 0x017F,
     MSBUSH_CLASS_ID = 0x0053,

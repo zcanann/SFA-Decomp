@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0521_TrigBits_packet_info {
+enum obj_0521_TrigBits_packet_info
+{
     TRIGBITS_DEF_ID = 0x0521,
     TRIGBITS_DLL_ID = 0x0126,
     TRIGBITS_CLASS_ID = 0x001B,

@@ -78,7 +78,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04A6_CF_BobbingC_packet_info {
+enum obj_04A6_CF_BobbingC_packet_info
+{
     CF_BOBBINGC_DEF_ID = 0x04A6,
     CF_BOBBINGC_DLL_ID = 0x0112,
     CF_BOBBINGC_CLASS_ID = 0x0055,

@@ -34,7 +34,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0009_EffectBox_defs {
+enum class_0009_EffectBox_defs
+{
     EFFECTBOX_EFFECTBOX = 0x04D1,
 };
 #endif

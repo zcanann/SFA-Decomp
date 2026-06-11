@@ -70,8 +70,9 @@
 #define FIREFLY_FLAGS(state) (*(u8 *)((u8 *)(state) + FIREFLY_STATE_FLAGS))
 #define FIREFLY_MESSAGE_PARAM(state) (*(s16 *)((u8 *)(state) + FIREFLY_STATE_MESSAGE_PARAM))
 
-typedef struct FireFlyState {
-    void *light;
+typedef struct FireFlyState
+{
+    void* light;
     f32 splineX[4];
     f32 splineY[4];
     f32 splineZ[4];
@@ -97,47 +98,146 @@ typedef struct FireFlyState {
     u8 pad82[FIREFLY_EXTRA_SIZE - 0x82];
 } FireFlyState;
 
-typedef struct FireFlyActiveBits {
+typedef struct FireFlyActiveBits
+{
     u8 active : 1;
 } FireFlyActiveBits;
 
-typedef struct FireFlyMapData {
+typedef struct FireFlyMapData
+{
     u8 pad00[0x1A];
     s16 startDelayKind;
     u8 pad1C[0x20 - 0x1C];
     s16 requiredGameBit;
 } FireFlyMapData;
 
-STATIC_ASSERT(sizeof(FireFlyState) == FIREFLY_EXTRA_SIZE);
-STATIC_ASSERT(offsetof(FireFlyState, light) == FIREFLY_STATE_LIGHT);
-STATIC_ASSERT(offsetof(FireFlyState, splineX) == FIREFLY_STATE_SPLINE_X0);
-STATIC_ASSERT(offsetof(FireFlyState, splineY) == FIREFLY_STATE_SPLINE_Y0);
-STATIC_ASSERT(offsetof(FireFlyState, splineZ) == FIREFLY_STATE_SPLINE_Z0);
-STATIC_ASSERT(offsetof(FireFlyState, targetX) == FIREFLY_STATE_TARGET_X);
-STATIC_ASSERT(offsetof(FireFlyState, splineT) == FIREFLY_STATE_SPLINE_T);
-STATIC_ASSERT(offsetof(FireFlyState, kind) == FIREFLY_STATE_KIND);
-STATIC_ASSERT(offsetof(FireFlyState, activeFlags) == FIREFLY_STATE_ACTIVE_FLAGS);
-STATIC_ASSERT(offsetof(FireFlyState, despawnTimer) == FIREFLY_STATE_DESPAWN_TIMER);
-STATIC_ASSERT(offsetof(FireFlyState, activateDelay) == FIREFLY_STATE_ACTIVATE_DELAY);
-STATIC_ASSERT(offsetof(FireFlyState, flags) == FIREFLY_STATE_FLAGS);
-STATIC_ASSERT(offsetof(FireFlyState, messageParam) == FIREFLY_STATE_MESSAGE_PARAM);
+STATIC_ASSERT (
+sizeof
+(FireFlyState)
+==
+FIREFLY_EXTRA_SIZE
+);
+STATIC_ASSERT (offsetof
+(FireFlyState
+,
+light
+)
+==
+FIREFLY_STATE_LIGHT
+);
+STATIC_ASSERT (offsetof
+(FireFlyState
+,
+splineX
+)
+==
+FIREFLY_STATE_SPLINE_X0
+);
+STATIC_ASSERT (offsetof
+(FireFlyState
+,
+splineY
+)
+==
+FIREFLY_STATE_SPLINE_Y0
+);
+STATIC_ASSERT (offsetof
+(FireFlyState
+,
+splineZ
+)
+==
+FIREFLY_STATE_SPLINE_Z0
+);
+STATIC_ASSERT (offsetof
+(FireFlyState
+,
+targetX
+)
+==
+FIREFLY_STATE_TARGET_X
+);
+STATIC_ASSERT (offsetof
+(FireFlyState
+,
+splineT
+)
+==
+FIREFLY_STATE_SPLINE_T
+);
+STATIC_ASSERT (offsetof
+(FireFlyState
+,
+kind
+)
+==
+FIREFLY_STATE_KIND
+);
+STATIC_ASSERT (offsetof
+(FireFlyState
+,
+activeFlags
+)
+==
+FIREFLY_STATE_ACTIVE_FLAGS
+);
+STATIC_ASSERT (offsetof
+(FireFlyState
+,
+despawnTimer
+)
+==
+FIREFLY_STATE_DESPAWN_TIMER
+);
+STATIC_ASSERT (offsetof
+(FireFlyState
+,
+activateDelay
+)
+==
+FIREFLY_STATE_ACTIVATE_DELAY
+);
+STATIC_ASSERT (offsetof
+(FireFlyState
+,
+flags
+)
+==
+FIREFLY_STATE_FLAGS
+);
+STATIC_ASSERT (offsetof
+(FireFlyState
+,
+messageParam
+)
+==
+FIREFLY_STATE_MESSAGE_PARAM
+);
 
 
 void FireFlyFn_801f4f88(int obj)
 {
-    FireFlyState *state = ((GameObject *)obj)->extra;
-    ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
+    FireFlyState* state = ((GameObject*)obj)->extra;
+    ObjAnimComponent* objAnim = &((GameObject*)obj)->anim;
     int player = (int)Obj_GetPlayerObject();
-    if ((int)objAnim->alpha < FIREFLY_ALPHA_OPAQUE) {
-        int v = (int)(lbl_803E5EDC * timeDelta + (f32)(int)objAnim->alpha);
+    if ((int)objAnim->alpha < FIREFLY_ALPHA_OPAQUE)
+    {
+        int v = (int)(lbl_803E5EDC * timeDelta + (f32)(int)
+        objAnim->alpha
+        )
+        ;
         if (v > FIREFLY_ALPHA_OPAQUE) v = FIREFLY_ALPHA_OPAQUE;
         objAnim->alpha = v;
     }
-    if (FIREFLY_SPLINE_T(state) > lbl_803E5EB4) {
+    if (FIREFLY_SPLINE_T(state) > lbl_803E5EB4)
+    {
         FIREFLY_SPLINE_T(state) = FIREFLY_SPLINE_T(state) - lbl_803E5EB4;
-        if (FIREFLY_PATH_AGE(state) >= 4) {
+        if (FIREFLY_PATH_AGE(state) >= 4)
+        {
             FIREFLY_PATH_AGE(state) += 1;
-        } else {
+        }
+        else
+        {
             fn_801F4D54(obj, (int)state);
         }
         state->splineX[0] = state->splineX[1];
@@ -149,82 +249,107 @@ void FireFlyFn_801f4f88(int obj)
         state->splineX[2] = state->splineX[3];
         state->splineY[2] = state->splineY[3];
         state->splineZ[2] = state->splineZ[3];
-        FIREFLY_SPLINE_SPEED(state) = lbl_803E5ED8 * (f32)(int)randomGetRange(0xa0, 0xb4);
+        FIREFLY_SPLINE_SPEED(state) = lbl_803E5ED8 * (f32)(int)
+        randomGetRange(0xa0, 0xb4);
         state->splineX[3] = state->targetX;
         state->splineY[3] = state->targetY;
         state->splineZ[3] = state->targetZ;
     }
-    ((GameObject *)obj)->anim.localPosX = ((f32 (*)(f32 *, f32, int))Curve_EvalBSpline)(state->splineX, FIREFLY_SPLINE_T(state), 0);
-    ((GameObject *)obj)->anim.localPosY = ((f32 (*)(f32 *, f32, int))Curve_EvalBSpline)(state->splineY, FIREFLY_SPLINE_T(state), 0);
-    ((GameObject *)obj)->anim.localPosZ = ((f32 (*)(f32 *, f32, int))Curve_EvalBSpline)(state->splineZ, FIREFLY_SPLINE_T(state), 0);
+    ((GameObject*)obj)->anim.localPosX = ((f32 (*)(f32*, f32, int))Curve_EvalBSpline)(
+        state->splineX, FIREFLY_SPLINE_T(state), 0);
+    ((GameObject*)obj)->anim.localPosY = ((f32 (*)(f32*, f32, int))Curve_EvalBSpline)(
+        state->splineY, FIREFLY_SPLINE_T(state), 0);
+    ((GameObject*)obj)->anim.localPosZ = ((f32 (*)(f32*, f32, int))Curve_EvalBSpline)(
+        state->splineZ, FIREFLY_SPLINE_T(state), 0);
     FIREFLY_SPLINE_T(state) = FIREFLY_SPLINE_SPEED(state) * timeDelta + FIREFLY_SPLINE_T(state);
-    *(s16 *)obj = (s16)getAngle(((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX,
-                                 ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ);
-    if (FIREFLY_KIND(state) == FIREFLY_KIND_BLUE_MAIN || FIREFLY_KIND(state) == FIREFLY_KIND_BLUE_NEAR) {
-        (*gPartfxInterface)->spawnObject((void *)obj, FIREFLY_PARTFX_BLUE_TRAIL, NULL,
-                                                            FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, NULL);
-    } else {
-        (*gPartfxInterface)->spawnObject((void *)obj, FIREFLY_PARTFX_ORANGE_TRAIL, NULL,
-                                                            FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, NULL);
+    *(s16*)obj = (s16)getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX,
+                               ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ);
+    if (FIREFLY_KIND(state) == FIREFLY_KIND_BLUE_MAIN || FIREFLY_KIND(state) == FIREFLY_KIND_BLUE_NEAR)
+    {
+        (*gPartfxInterface)->spawnObject((void*)obj, FIREFLY_PARTFX_BLUE_TRAIL, NULL,
+                                         FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, NULL);
     }
-    if (Vec_xzDistance((f32 *)(player + 0x18), (f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x8)) <
-        FIREFLY_PLAYER_RADIUS(state)) {
+    else
+    {
+        (*gPartfxInterface)->spawnObject((void*)obj, FIREFLY_PARTFX_ORANGE_TRAIL, NULL,
+                                         FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, NULL);
+    }
+    if (Vec_xzDistance((f32*)(player + 0x18), (f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x8)) <
+        FIREFLY_PLAYER_RADIUS(state))
+    {
         f32 lim;
         f32 a;
-        if (FIREFLY_KIND(state) == FIREFLY_KIND_BLUE_NEAR) {
-            (*gPartfxInterface)->spawnObject((void *)obj, FIREFLY_PARTFX_BLUE_NEAR, NULL,
-                                                                FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, NULL);
-        } else if (FIREFLY_KIND(state) == FIREFLY_KIND_ORANGE_NEAR) {
-            (*gPartfxInterface)->spawnObject((void *)obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL,
-                                                                FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, NULL);
-        } else if (FIREFLY_KIND(state) == FIREFLY_KIND_ORANGE_ALT_NEAR) {
-            (*gPartfxInterface)->spawnObject((void *)obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL,
-                                                                FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, NULL);
+        if (FIREFLY_KIND(state) == FIREFLY_KIND_BLUE_NEAR)
+        {
+            (*gPartfxInterface)->spawnObject((void*)obj, FIREFLY_PARTFX_BLUE_NEAR, NULL,
+                                             FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, NULL);
         }
-        if ((a = FIREFLY_PROXIMITY_ALPHA(state)) < (lim = lbl_803E5EE0)) {
+        else if (FIREFLY_KIND(state) == FIREFLY_KIND_ORANGE_NEAR)
+        {
+            (*gPartfxInterface)->spawnObject((void*)obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL,
+                                             FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, NULL);
+        }
+        else if (FIREFLY_KIND(state) == FIREFLY_KIND_ORANGE_ALT_NEAR)
+        {
+            (*gPartfxInterface)->spawnObject((void*)obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL,
+                                             FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, NULL);
+        }
+        if ((a = FIREFLY_PROXIMITY_ALPHA(state)) < (lim = lbl_803E5EE0))
+        {
             FIREFLY_PROXIMITY_ALPHA(state) = a + lbl_803E5EE4;
-            if (FIREFLY_PROXIMITY_ALPHA(state) > lim) {
+            if (FIREFLY_PROXIMITY_ALPHA(state) > lim)
+            {
                 FIREFLY_PROXIMITY_ALPHA(state) = lim;
             }
         }
-    } else {
+    }
+    else
+    {
         f32 lim;
         f32 a;
 
-        if ((a = FIREFLY_PROXIMITY_ALPHA(state)) > (lim = lbl_803E5EE8)) {
+        if ((a = FIREFLY_PROXIMITY_ALPHA(state)) > (lim = lbl_803E5EE8))
+        {
             FIREFLY_PROXIMITY_ALPHA(state) = a - lbl_803E5EE4;
-            if (FIREFLY_PROXIMITY_ALPHA(state) < lim) {
+            if (FIREFLY_PROXIMITY_ALPHA(state) < lim)
+            {
                 FIREFLY_PROXIMITY_ALPHA(state) = lim;
             }
         }
     }
     {
-        f32 dy = ((GameObject *)obj)->anim.localPosY - *(f32 *)(player + 0x10);
-        if ((FIREFLY_FLAGS(state) & FIREFLY_FLAG_PLAYER_TOUCHED) == 0) {
-        if (dy < lbl_803E5EEC && dy > lbl_803E5EC4) {
-            if (getXZDistance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) < lbl_803E5EF0) {
-                FIREFLY_FLAGS(state) = (u8)(FIREFLY_FLAGS(state) | FIREFLY_FLAG_PLAYER_TOUCHED);
-                if (GameBit_Get(FIREFLY_FIRST_TOUCH_BIT) == 0) {
-                    FIREFLY_MESSAGE_PARAM(state) = -1;
-                    ObjMsg_SendToObject(player, FIREFLY_MESSAGE_TALK, obj, &state->messageParam);
-                    GameBit_Set(FIREFLY_FIRST_TOUCH_BIT, 1);
-                } else {
-                    FireFlyState *st = ((GameObject *)obj)->extra;
-                    ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | FIREFLY_OBJFLAG_HIDDEN);
-                    FIREFLY_DESPAWN_TIMER(st) = lbl_803E5EA8;
-                    gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_A);
-                    gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_B);
-                    Sfx_PlayFromObject(obj, SFXen_treadlpc);
+        f32 dy = ((GameObject*)obj)->anim.localPosY - *(f32*)(player + 0x10);
+        if ((FIREFLY_FLAGS(state) & FIREFLY_FLAG_PLAYER_TOUCHED) == 0)
+        {
+            if (dy < lbl_803E5EEC && dy > lbl_803E5EC4)
+            {
+                if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < lbl_803E5EF0)
+                {
+                    FIREFLY_FLAGS(state) = (u8)(FIREFLY_FLAGS(state) | FIREFLY_FLAG_PLAYER_TOUCHED);
+                    if (GameBit_Get(FIREFLY_FIRST_TOUCH_BIT) == 0)
+                    {
+                        FIREFLY_MESSAGE_PARAM(state) = -1;
+                        ObjMsg_SendToObject(player, FIREFLY_MESSAGE_TALK, obj, &state->messageParam);
+                        GameBit_Set(FIREFLY_FIRST_TOUCH_BIT, 1);
+                    }
+                    else
+                    {
+                        FireFlyState* st = ((GameObject*)obj)->extra;
+                        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | FIREFLY_OBJFLAG_HIDDEN);
+                        FIREFLY_DESPAWN_TIMER(st) = lbl_803E5EA8;
+                        gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_A);
+                        gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_B);
+                        Sfx_PlayFromObject(obj, SFXen_treadlpc);
+                    }
                 }
             }
         }
-    }
     }
 }
 
 void firefly_free(int obj)
 {
-    FireFlyState *state = ((GameObject *)obj)->extra;
+    FireFlyState* state = ((GameObject*)obj)->extra;
 
     modelLightStruct_freeSlot(state);
     (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -232,49 +357,63 @@ void firefly_free(int obj)
 
 void firefly_update(int obj)
 {
-    FireFlyState *state;
-    FireFlyMapData *def;
+    FireFlyState* state;
+    FireFlyMapData* def;
     int msg[2];
     int isActive;
 
-    state = ((GameObject *)obj)->extra;
-    def = *(FireFlyMapData **)&((GameObject *)obj)->anim.placementData;
-    while (ObjMsg_Pop(obj, msg, 0, 0) != 0) {
-        switch (msg[0]) {
-        case FIREFLY_MESSAGE_DESPAWN: {
-            FireFlyState *st = ((GameObject *)obj)->extra;
-            ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | FIREFLY_OBJFLAG_HIDDEN);
-            st->despawnTimer = 180.0f;
-            gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_A);
-            gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_B);
-            Sfx_PlayFromObject(obj, SFXen_treadlpc);
-            break;
-        }
+    state = ((GameObject*)obj)->extra;
+    def = *(FireFlyMapData**)&((GameObject*)obj)->anim.placementData;
+    while (ObjMsg_Pop(obj, msg, 0, 0) != 0)
+    {
+        switch (msg[0])
+        {
+        case FIREFLY_MESSAGE_DESPAWN:
+            {
+                FireFlyState* st = ((GameObject*)obj)->extra;
+                ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | FIREFLY_OBJFLAG_HIDDEN);
+                st->despawnTimer = 180.0f;
+                gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_A);
+                gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_B);
+                Sfx_PlayFromObject(obj, SFXen_treadlpc);
+                break;
+            }
         }
     }
 
-    if (((FireFlyActiveBits *)&state->activeFlags)->active == 0) {
+    if (((FireFlyActiveBits*)&state->activeFlags)->active == 0)
+    {
         isActive = 0;
-        if ((def->requiredGameBit == -1) || ((u32)GameBit_Get(def->requiredGameBit) != 0)) {
+        if ((def->requiredGameBit == -1) || ((u32)GameBit_Get(def->requiredGameBit) != 0))
+        {
             isActive = 1;
         }
-        ((FireFlyActiveBits *)&state->activeFlags)->active = isActive;
-        if (((FireFlyActiveBits *)&state->activeFlags)->active != 0) {
-            state->light = (void *)modelLightStruct_createPointLight(obj, 100, 0xFF, 100, 0);
+        ((FireFlyActiveBits*)&state->activeFlags)->active = isActive;
+        if (((FireFlyActiveBits*)&state->activeFlags)->active != 0)
+        {
+            state->light = (void*)modelLightStruct_createPointLight(obj, 100, 0xFF, 100, 0);
         }
-    } else {
-        if (timerCountDown(state->activateDelay) != 0) {
+    }
+    else
+    {
+        if (timerCountDown(state->activateDelay) != 0)
+        {
             state->despawnTimer = 180.0f;
         }
-        if (state->despawnTimer > lbl_803E5EC4) {
+        if (state->despawnTimer > lbl_803E5EC4)
+        {
             state->despawnTimer -= timeDelta;
-            if (state->despawnTimer > (f32)lbl_803DC128) {
+            if (state->despawnTimer > (f32)lbl_803DC128)
+            {
                 itemPickupDoParticleFx(obj, lbl_803E5EDC, 4, 5);
             }
-            if (state->despawnTimer <= lbl_803E5EC4) {
+            if (state->despawnTimer <= lbl_803E5EC4)
+            {
                 Obj_FreeObject(obj);
             }
-        } else {
+        }
+        else
+        {
             FireFlyFn_801f4f88(obj);
         }
     }
@@ -282,17 +421,18 @@ void firefly_update(int obj)
 
 void firefly_init(int obj, int def)
 {
-    FireFlyState *state;
-    FireFlyMapData *mapData;
+    FireFlyState* state;
+    FireFlyMapData* mapData;
 
-    state = ((GameObject *)obj)->extra;
-    mapData = (FireFlyMapData *)def;
+    state = ((GameObject*)obj)->extra;
+    mapData = (FireFlyMapData*)def;
     fn_801F4C28(obj, state);
-    ((GameObject *)obj)->anim.alpha = 0;
-    ((GameObject *)obj)->animEventCallback = fn_801F4C04;
+    ((GameObject*)obj)->anim.alpha = 0;
+    ((GameObject*)obj)->animEventCallback = fn_801F4C04;
     ObjMsg_AllocQueue(obj, 1);
     storeZeroToFloatParam(state->activateDelay);
-    if (mapData->startDelayKind == 0x7f) {
+    if (mapData->startDelayKind == 0x7f)
+    {
         s16toFloat(state->activateDelay, 0xe10);
     }
 }
@@ -300,7 +440,19 @@ void firefly_init(int obj, int def)
 /* Pattern wrappers. */
 int firefly_getExtraSize(void) { return FIREFLY_EXTRA_SIZE; }
 int firefly_getObjectTypeId(void) { return 0x0; }
-void firefly_render(void) {}
-void firefly_hitDetect(void) {}
-void firefly_release(void) {}
-void firefly_initialise(void) {}
+
+void firefly_render(void)
+{
+}
+
+void firefly_hitDetect(void)
+{
+}
+
+void firefly_release(void)
+{
+}
+
+void firefly_initialise(void)
+{
+}

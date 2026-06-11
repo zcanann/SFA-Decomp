@@ -58,7 +58,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0304_SB_CloudBal_packet_info {
+enum obj_0304_SB_CloudBal_packet_info
+{
     SB_CLOUDBAL_DEF_ID = 0x0304,
     SB_CLOUDBAL_DLL_ID = 0x01EF,
     SB_CLOUDBAL_CLASS_ID = 0x0024,

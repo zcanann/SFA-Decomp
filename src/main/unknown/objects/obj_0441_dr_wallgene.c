@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0441_DR_WallGene_packet_info {
+enum obj_0441_DR_WallGene_packet_info
+{
     DR_WALLGENE_DEF_ID = 0x0441,
     DR_WALLGENE_DLL_ID = 0x026F,
     DR_WALLGENE_CLASS_ID = 0x0030,

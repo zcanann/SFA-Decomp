@@ -25,7 +25,8 @@
  */
 
 #if 0
-enum dll_0260_ProximityMine_slot {
+enum dll_0260_ProximityMine_slot
+{
     PROXIMITYMINE_INITIALISE = 0,
     PROXIMITYMINE_RELEASE = 1,
     PROXIMITYMINE_INIT = 3,

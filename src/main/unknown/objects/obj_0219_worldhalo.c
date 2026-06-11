@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0219_WORLDhalo_packet_info {
+enum obj_0219_WORLDhalo_packet_info
+{
     WORLDHALO_DEF_ID = 0x0219,
     WORLDHALO_DLL_ID = 0x01D3,
     WORLDHALO_CLASS_ID = 0x0061,

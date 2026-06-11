@@ -59,7 +59,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0455_DR_Chimmey_packet_info {
+enum obj_0455_DR_Chimmey_packet_info
+{
     DR_CHIMMEY_DEF_ID = 0x0455,
     DR_CHIMMEY_DLL_ID = 0x026B,
     DR_CHIMMEY_CLASS_ID = 0x0030,

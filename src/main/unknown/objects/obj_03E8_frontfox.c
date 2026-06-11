@@ -71,7 +71,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03E8_FrontFox_packet_info {
+enum obj_03E8_FrontFox_packet_info
+{
     FRONTFOX_DEF_ID = 0x03E8,
     FRONTFOX_DLL_ID = 0x02C0,
     FRONTFOX_CLASS_ID = 0x0030,

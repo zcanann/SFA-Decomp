@@ -72,7 +72,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0296_SH_Portcull_packet_info {
+enum obj_0296_SH_Portcull_packet_info
+{
     SH_PORTCULL_DEF_ID = 0x0296,
     SH_PORTCULL_DLL_ID = 0x0110,
     SH_PORTCULL_CLASS_ID = 0x0053,

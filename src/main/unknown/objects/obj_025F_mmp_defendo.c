@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_025F_MMP_defenDo_packet_info {
+enum obj_025F_MMP_defenDo_packet_info
+{
     MMP_DEFENDO_DEF_ID = 0x025F,
     MMP_DEFENDO_DLL_ID = 0x012E,
     MMP_DEFENDO_CLASS_ID = 0x0061,

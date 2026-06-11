@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0020_AnimProjBal_packet_info {
+enum obj_0020_AnimProjBal_packet_info
+{
     ANIMPROJBAL_DEF_ID = 0x0020,
     ANIMPROJBAL_DLL_ID = 0x00E3,
     ANIMPROJBAL_CLASS_ID = 0x0030,

@@ -71,7 +71,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03EA_FrontSlippy_packet_info {
+enum obj_03EA_FrontSlippy_packet_info
+{
     FRONTSLIPPY_DEF_ID = 0x03EA,
     FRONTSLIPPY_DLL_ID = 0x02C0,
     FRONTSLIPPY_CLASS_ID = 0x0030,

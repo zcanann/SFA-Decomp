@@ -55,7 +55,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03C2_SPShop_packet_info {
+enum obj_03C2_SPShop_packet_info
+{
     SPSHOP_DEF_ID = 0x03C2,
     SPSHOP_DLL_ID = 0x0285,
     SPSHOP_CLASS_ID = 0x006E,

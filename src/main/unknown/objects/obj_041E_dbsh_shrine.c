@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_041E_DBSH_Shrine_packet_info {
+enum obj_041E_DBSH_Shrine_packet_info
+{
     DBSH_SHRINE_DEF_ID = 0x041E,
     DBSH_SHRINE_DLL_ID = 0x0195,
     DBSH_SHRINE_CLASS_ID = 0x0030,

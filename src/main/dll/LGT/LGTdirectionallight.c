@@ -35,11 +35,13 @@ extern void ObjGroup_RemoveObject(int obj, int group);
 extern void Music_Trigger(int musicId, int param);
 extern void GameBit_Set(int eventId, int value);
 
-typedef struct {
+typedef struct
+{
     f32 x, y, z;
 } LightVec3;
 
-typedef struct {
+typedef struct
+{
     LightVec3 light;
     LightVec3 color;
     LightVec3 fog;
@@ -47,9 +49,9 @@ typedef struct {
 
 extern f64 lbl_803E5E88;
 
-extern void *Obj_GetPlayerObject(void);
-extern f32 Vec_xzDistance(f32 *a, f32 *b);
-extern EffectInterface **gPartfxInterface;
+extern void* Obj_GetPlayerObject(void);
+extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern EffectInterface** gPartfxInterface;
 extern byte framesThisStep;
 extern f32 lbl_803E5E58;
 extern f32 lbl_803E5E5C;
@@ -70,7 +72,7 @@ extern undefined4 DAT_802c2c34;
 extern undefined4 DAT_803dc070;
 extern f64 DOUBLE_803e6ae0;
 extern f64 DOUBLE_803e6ae8;
-extern MapEventInterface **gMapEventInterface;
+extern MapEventInterface** gMapEventInterface;
 extern f32 timeDelta;
 extern f32 lbl_803DC074;
 extern u8 lbl_803DC110;
@@ -121,70 +123,82 @@ extern f32 lbl_803E6AF8;
  * PAL Size: TODO
  */
 #pragma peephole on
-void wmworm_update(GameObject *obj)
+void wmworm_update(GameObject* obj)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  GameObject *player;
-  WmWormState *state;
-  ObjPlacement *placement;
-  short burstCount;
-  f32 dist;
+    float fVar1;
+    float fVar2;
+    float fVar3;
+    GameObject* player;
+    WmWormState* state;
+    ObjPlacement* placement;
+    short burstCount;
+    f32 dist;
 
-  player = Obj_GetPlayerObject();
-  state = obj->extra;
-  placement = (ObjPlacement *)obj->anim.placementData;
-  if (player != NULL) {
-    dist = Vec_xzDistance(&player->anim.worldPosX, &placement->posX);
-    if (dist > lbl_803E5E58) {
-      obj->anim.localPosX = state->homeX;
-      obj->anim.localPosY = state->homeY;
-      obj->anim.localPosZ = state->homeZ;
+    player = Obj_GetPlayerObject();
+    state = obj->extra;
+    placement = (ObjPlacement*)obj->anim.placementData;
+    if (player != NULL)
+    {
+        dist = Vec_xzDistance(&player->anim.worldPosX, &placement->posX);
+        if (dist > lbl_803E5E58)
+        {
+            obj->anim.localPosX = state->homeX;
+            obj->anim.localPosY = state->homeY;
+            obj->anim.localPosZ = state->homeZ;
+        }
+        else
+        {
+            fVar1 = player->anim.worldPosX - obj->anim.localPosX;
+            fVar2 = player->anim.worldPosY - obj->anim.localPosY;
+            fVar3 = player->anim.worldPosZ - obj->anim.localPosZ;
+            if ((fVar1 > lbl_803E5E5C) || (fVar1 < lbl_803E5E5C))
+            {
+                obj->anim.localPosX = lbl_803E5E60 * fVar1 * timeDelta + obj->anim.localPosX;
+            }
+            if ((fVar2 > lbl_803E5E5C) || (fVar2 < lbl_803E5E5C))
+            {
+                obj->anim.localPosY = lbl_803E5E60 * fVar2 * timeDelta + obj->anim.localPosY;
+            }
+            if ((fVar3 > lbl_803E5E5C) || (fVar3 < lbl_803E5E5C))
+            {
+                obj->anim.localPosZ = lbl_803E5E60 * fVar3 * timeDelta + obj->anim.localPosZ;
+            }
+            burstCount = state->burstCount;
+            if ((-1 < burstCount) || ((-1 >= burstCount && (obj->unkF4 < 1))))
+            {
+                if (burstCount == 0)
+                {
+                    state->unk0C = 1;
+                }
+                obj->anim.rotY += 300;
+                if (0 < state->burstCount)
+                {
+                    for (burstCount = 0; burstCount < state->burstCount; burstCount = burstCount + 1)
+                    {
+                        (*gPartfxInterface)->spawnObject(obj, state->particleEffectId, NULL, 4,
+                                                         -1, NULL);
+                    }
+                }
+                else
+                {
+                    (*gPartfxInterface)->spawnObject(obj, state->particleEffectId, NULL, 4,
+                                                     -1, NULL);
+                }
+                obj->unkF4 = -state->burstCount;
+            }
+            else if ((burstCount < 0) && (0 < obj->unkF4))
+            {
+                obj->unkF4 = obj->unkF4 - (u32)framesThisStep;
+            }
+        }
     }
-    else {
-      fVar1 = player->anim.worldPosX - obj->anim.localPosX;
-      fVar2 = player->anim.worldPosY - obj->anim.localPosY;
-      fVar3 = player->anim.worldPosZ - obj->anim.localPosZ;
-      if ((fVar1 > lbl_803E5E5C) || (fVar1 < lbl_803E5E5C)) {
-        obj->anim.localPosX = lbl_803E5E60 * fVar1 * timeDelta + obj->anim.localPosX;
-      }
-      if ((fVar2 > lbl_803E5E5C) || (fVar2 < lbl_803E5E5C)) {
-        obj->anim.localPosY = lbl_803E5E60 * fVar2 * timeDelta + obj->anim.localPosY;
-      }
-      if ((fVar3 > lbl_803E5E5C) || (fVar3 < lbl_803E5E5C)) {
-        obj->anim.localPosZ = lbl_803E5E60 * fVar3 * timeDelta + obj->anim.localPosZ;
-      }
-      burstCount = state->burstCount;
-      if ((-1 < burstCount) || ((-1 >= burstCount && (obj->unkF4 < 1)))) {
-        if (burstCount == 0) {
-          state->unk0C = 1;
-        }
-        obj->anim.rotY += 300;
-        if (0 < state->burstCount) {
-          for (burstCount = 0; burstCount < state->burstCount; burstCount = burstCount + 1) {
-            (*gPartfxInterface)->spawnObject(obj, state->particleEffectId, NULL, 4,
-                                             -1, NULL);
-          }
-        }
-        else {
-          (*gPartfxInterface)->spawnObject(obj, state->particleEffectId, NULL, 4,
-                                           -1, NULL);
-        }
-        obj->unkF4 = -state->burstCount;
-      }
-      else if ((burstCount < 0) && (0 < obj->unkF4)) {
-        obj->unkF4 = obj->unkF4 - (u32)framesThisStep;
-      }
-    }
-  }
-  return;
+    return;
 }
 
 #pragma peephole off
-void wmworm_init(GameObject *obj, WmWormSetup *setup)
+void wmworm_init(GameObject* obj, WmWormSetup* setup)
 {
-    WmWormState *state;
+    WmWormState* state;
 
     obj->anim.rotX = 0;
     state = obj->extra;
@@ -192,9 +206,12 @@ void wmworm_init(GameObject *obj, WmWormSetup *setup)
     state->particleEffectId = setup->particleEffectId;
     state->burstCount = setup->burstCount;
     state->unk0C = 0;
-    if (state->burstCount < 1) {
+    if (state->burstCount < 1)
+    {
         obj->unkF4 = state->burstCount;
-    } else {
+    }
+    else
+    {
         obj->unkF4 = 0;
     }
     state->homeX = obj->anim.localPosX;
@@ -204,32 +221,39 @@ void wmworm_init(GameObject *obj, WmWormSetup *setup)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void wmworm_release(void) {}
-void wmworm_initialise(void) {}
+void wmworm_release(void)
+{
+}
+
+void wmworm_initialise(void)
+{
+}
 
 #pragma peephole on
 void fn_801F3F18(int obj)
 {
     LightVecSet L;
-    LightVec3 *vecs;
-    u8 *fromColor;
-    u8 *toColor;
-    u8 *outColor;
+    LightVec3* vecs;
+    u8* fromColor;
+    u8* toColor;
+    u8* outColor;
     u32 red;
     u32 green;
     u32 blue;
 
-    vecs = (LightVec3 *)lbl_802C24B8;
+    vecs = (LightVec3*)lbl_802C24B8;
     L.fog = vecs[1];
     L.color = vecs[2];
     L.light = vecs[3];
 
-    if ((u8)(*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot) == 7) {
+    if ((u8)(*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot) == 7)
+    {
         return;
     }
 
     setDrawLights(0);
-    if ((u8)getSkyColorFn_80088e08(0) != 0) {
+    if ((u8)getSkyColorFn_80088e08(0) != 0)
+    {
         skySetOverrideLightColorEnabled(0);
         skySetOverrideLightDirectionEnabled(0);
         skyFn_80089710(7, 0, 1);
@@ -238,19 +262,24 @@ void fn_801F3F18(int obj)
 
     skySetOverrideLightColorEnabled(1);
     skySetOverrideLightColor(0x88, 0xb7, 0xba);
-    if ((((GameObject *)obj)->unkF4 & 4) == 0) {
+    if ((((GameObject*)obj)->unkF4 & 4) == 0)
+    {
         skyFn_80089710(1, 1, 0);
-        ((GameObject *)obj)->unkF4 |= 4;
-    } else {
+        ((GameObject*)obj)->unkF4 |= 4;
+    }
+    else
+    {
         skyFn_80089710(1, 1, 1);
     }
 
-    if (fn_8008ED88() > lbl_803E5E70) {
+    if (fn_8008ED88() > lbl_803E5E70)
+    {
         lbl_803DDC88 = lbl_803E5E74;
         lbl_803DDC8C = lbl_803E5E74;
     }
     lbl_803DDC8C = -(lbl_803E5E78 * timeDelta - lbl_803DDC8C);
-    if (lbl_803DDC8C < lbl_803E5E70) {
+    if (lbl_803DDC8C < lbl_803E5E70)
+    {
         lbl_803DDC8C = lbl_803E5E70;
     }
 
@@ -258,13 +287,13 @@ void fn_801F3F18(int obj)
     toColor = &lbl_803DC11C;
     outColor = &lbl_803DDC9C;
     red = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
-                (f32)(s32)fromColor[0]);
+                     (f32)(s32)fromColor[0]);
     outColor[0] = red;
     green = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
-                  (f32)(s32)fromColor[1]);
+                       (f32)(s32)fromColor[1]);
     outColor[1] = green;
     blue = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
-                 (f32)(s32)fromColor[2]);
+                      (f32)(s32)fromColor[2]);
     outColor[2] = blue;
     skyFn_800895e0(1, outColor[0], outColor[1], outColor[2], 0x40, 0x40);
 
@@ -272,13 +301,13 @@ void fn_801F3F18(int obj)
     toColor = &lbl_803DC114;
     outColor = &lbl_803DDC98;
     red = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
-                (f32)(s32)fromColor[0]);
+                     (f32)(s32)fromColor[0]);
     outColor[0] = red;
     green = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
-                  (f32)(s32)fromColor[1]);
+                       (f32)(s32)fromColor[1]);
     outColor[1] = green;
     blue = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
-                 (f32)(s32)fromColor[2]);
+                      (f32)(s32)fromColor[2]);
     outColor[2] = blue;
     fn_80089510(1, outColor[0], outColor[1], outColor[2]);
 
@@ -286,13 +315,13 @@ void fn_801F3F18(int obj)
     toColor = &lbl_803DC124;
     outColor = &lbl_803DDC94;
     red = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
-                (f32)(s32)fromColor[0]);
+                     (f32)(s32)fromColor[0]);
     outColor[0] = red;
     green = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
-                  (f32)(s32)fromColor[1]);
+                       (f32)(s32)fromColor[1]);
     outColor[1] = green;
     blue = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
-                 (f32)(s32)fromColor[2]);
+                      (f32)(s32)fromColor[2]);
     outColor[2] = blue;
     fn_80089578(1, outColor[0], outColor[1], outColor[2]);
 
@@ -322,6 +351,13 @@ void wmlevelcontrol_free(int obj)
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-void wmlevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5E74); }
 
-void wmlevelcontrol_hitDetect(void) {}
+void wmlevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E5E74);
+}
+
+void wmlevelcontrol_hitDetect(void)
+{
+}

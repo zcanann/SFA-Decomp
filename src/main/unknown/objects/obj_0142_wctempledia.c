@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0142_WCTempleDia_packet_info {
+enum obj_0142_WCTempleDia_packet_info
+{
     WCTEMPLEDIA_DEF_ID = 0x0142,
     WCTEMPLEDIA_DLL_ID = 0x0296,
     WCTEMPLEDIA_CLASS_ID = 0x0030,

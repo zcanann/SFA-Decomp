@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0096_KytesMum_packet_info {
+enum obj_0096_KytesMum_packet_info
+{
     KYTESMUM_DEF_ID = 0x0096,
     KYTESMUM_DLL_ID = 0x0266,
     KYTESMUM_CLASS_ID = 0x0030,

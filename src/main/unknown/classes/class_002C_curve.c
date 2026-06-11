@@ -31,7 +31,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_002C_curve_defs {
+enum class_002C_curve_defs
+{
     CURVE_CURVE = 0x0491,
 };
 #endif

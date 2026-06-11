@@ -71,7 +71,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_03EB_FrontRob_packet_info {
+enum obj_03EB_FrontRob_packet_info
+{
     FRONTROB_DEF_ID = 0x03EB,
     FRONTROB_DLL_ID = 0x02C0,
     FRONTROB_CLASS_ID = 0x0030,

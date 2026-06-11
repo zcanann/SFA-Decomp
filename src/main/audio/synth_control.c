@@ -49,7 +49,8 @@ extern f32 lbl_803E77A8;
         gSynthFadeMask |= 1 << (fadeIndex);                \
     } while (0)
 
-void synthInit(u32 sampleRate, u32 voiceCount) {
+void synthInit(u32 sampleRate, u32 voiceCount)
+{
     u8* state;
     u32 voiceIndex;
     u32 voiceOffset;
@@ -68,7 +69,8 @@ void synthInit(u32 sampleRate, u32 voiceCount) {
     synthVoice = salMalloc(voiceCount * 0x404);
     memset(synthVoice, 0, voiceCount * 0x404);
 
-    for (voiceIndex = 0, voiceOffset = 0; voiceIndex < voiceCount; voiceIndex++, voiceOffset += 0x404) {
+    for (voiceIndex = 0, voiceOffset = 0; voiceIndex < voiceCount; voiceIndex++, voiceOffset += 0x404)
+    {
         u8 lowIndex;
 
         lowIndex = (u8)voiceIndex;
@@ -117,7 +119,8 @@ void synthInit(u32 sampleRate, u32 voiceCount) {
         f32 auxCurrent = lbl_803E77A8;
         u32 pass;
 
-        for (pass = 0; pass < 2; pass++) {
+        for (pass = 0; pass < 2; pass++)
+        {
             fade[0].current = fadeCurrent;
             fade[0].auxCurrent = auxCurrent;
             fade[0].type = SYNTH_FADE_ACTION_DISABLED;
@@ -173,7 +176,8 @@ void synthInit(u32 sampleRate, u32 voiceCount) {
     synthMasterFaderActiveFlags = 0;
     synthMasterFaderPauseActiveFlags = 0;
     *(u8*)(state + 0xBD1) = 1;
-    for (fadeIndex = 0; fadeIndex < 8; fadeIndex++) {
+    for (fadeIndex = 0; fadeIndex < 8; fadeIndex++)
+    {
         *(u8*)(state + 0xA51 + fadeIndex * sizeof(SynthFade)) = 0;
     }
     {
@@ -185,7 +189,8 @@ void synthInit(u32 sampleRate, u32 voiceCount) {
 
     inpInit();
 
-    for (auxIndex = 0; auxIndex < 8; auxIndex++) {
+    for (auxIndex = 0; auxIndex < 8; auxIndex++)
+    {
         *(u32*)(state + 0xC34 + auxIndex * 4) = 0;
         synthAuxAIndex[auxIndex] = 0xFF;
         *(u32*)(state + 0xC74 + auxIndex * 4) = 0;
@@ -198,14 +203,16 @@ void synthInit(u32 sampleRate, u32 voiceCount) {
     vidInit();
     voiceInitPriorityTables();
 
-    for (auxIndex = 0; auxIndex < 16; auxIndex++) {
+    for (auxIndex = 0; auxIndex < 16; auxIndex++)
+    {
         *(u32*)(state + 0xCA4 + auxIndex * 4) = 0;
     }
 
     voiceInitRegistrationTables();
 
     delayBucket = (u32*)(state + 0x240);
-    for (auxIndex = 0; (u8)auxIndex < 0x20; auxIndex += 8) {
+    for (auxIndex = 0; (u8)auxIndex < 0x20; auxIndex += 8)
+    {
         delayBucket[0] = 0;
         delayBucket[1] = 0;
         delayBucket[2] = 0;
@@ -237,7 +244,8 @@ void synthInit(u32 sampleRate, u32 voiceCount) {
     hwSetMesgCallback(synthHWMessageHandler);
 }
 
-void synthCopyVoiceSlotMixState(McmdVoiceState* dst, McmdVoiceState* src) {
+void synthCopyVoiceSlotMixState(McmdVoiceState* dst, McmdVoiceState* src)
+{
     synthCopyControllerValue(7, dst, src);
     synthCopyControllerValue(10, dst, src);
     synthCopyControllerValue(0x5B, dst, src);
@@ -245,18 +253,22 @@ void synthCopyVoiceSlotMixState(McmdVoiceState* dst, McmdVoiceState* src) {
     synthCopyControllerValue(0x84, dst, src);
 }
 
-s32 synthTriggerCallback(u32 callbackId) {
+s32 synthTriggerCallback(u32 callbackId)
+{
     u32 linkId;
     s32 handled;
 
     handled = 0;
-    if (gSynthInitialized != 0) {
+    if (gSynthInitialized != 0)
+    {
         for (linkId = synthLookupCallbackLinkId(callbackId); linkId != SYNTH_INVALID_LINK_ID;
-             linkId = lbl_803DEEE8[linkId & 0xFF].callbackNext) {
+             linkId = lbl_803DEEE8[linkId & 0xFF].callbackNext)
+        {
             McmdVoiceState* slot;
 
             slot = &lbl_803DEEE8[linkId & 0xFF];
-            if (linkId == slot->callbackLinkId) {
+            if (linkId == slot->callbackLinkId)
+            {
                 synthReleaseVoiceSlot(slot);
                 handled = 1;
             }
@@ -266,7 +278,8 @@ s32 synthTriggerCallback(u32 callbackId) {
     return handled;
 }
 
-void synthSetFade(u8 value, u16 time, u8 selector, u8 action, u32 handle) {
+void synthSetFade(u8 value, u16 time, u8 selector, u8 action, u32 handle)
+{
     SynthFade* fadeTable;
     u32 fadeIndex;
     u32 fadeTime;
@@ -275,76 +288,103 @@ void synthSetFade(u8 value, u16 time, u8 selector, u8 action, u32 handle) {
     f32 target;
 
     fadeTime = time;
-    if (fadeTime != 0) {
+    if (fadeTime != 0)
+    {
         synthScaleFadeTime((s32*)&fadeTime);
     }
 
     fadeTable = gSynthFades;
     target = (f32)value * SYNTH_FADE_SCALE;
 
-    if (selector == SYNTH_FADE_SELECTOR_ACTION_0_OR_1) {
-apply_actions_0_or_1:
+    if (selector == SYNTH_FADE_SELECTOR_ACTION_0_OR_1)
+    {
+    apply_actions_0_or_1:
         fade = fadeTable;
-        for (fadeIndex = 0; fadeIndex < SYNTH_FADE_COUNT; fadeIndex++, fade++) {
-            if (fade->type == 0 || fade->type == 1) {
+        for (fadeIndex = 0; fadeIndex < SYNTH_FADE_COUNT; fadeIndex++, fade++)
+        {
+            if (fade->type == 0 || fade->type == 1)
+            {
                 SYNTH_APPLY_FADE(fade, fadeIndex, SYNTH_INVALID_LINK_ID);
             }
         }
         return;
     }
 
-    if (selector == SYNTH_FADE_SELECTOR_ACTION_2_OR_3) {
-apply_actions_2_or_3:
+    if (selector == SYNTH_FADE_SELECTOR_ACTION_2_OR_3)
+    {
+    apply_actions_2_or_3:
         fade = fadeTable;
-        for (fadeIndex = 0; fadeIndex < SYNTH_FADE_COUNT; fadeIndex++, fade++) {
-            if (fade->type == 2 || fade->type == 3) {
+        for (fadeIndex = 0; fadeIndex < SYNTH_FADE_COUNT; fadeIndex++, fade++)
+        {
+            if (fade->type == 2 || fade->type == 3)
+            {
                 SYNTH_APPLY_FADE(fade, fadeIndex, SYNTH_INVALID_LINK_ID);
             }
         }
         return;
     }
 
-    if (selector == SYNTH_FADE_SELECTOR_ACTION_0) {
+    if (selector == SYNTH_FADE_SELECTOR_ACTION_0)
+    {
         actionFilter = 0;
-    } else if (selector < SYNTH_FADE_SELECTOR_ACTION_0) {
-        if (selector == SYNTH_FADE_SELECTOR_ACTION_3) {
+    }
+    else if (selector < SYNTH_FADE_SELECTOR_ACTION_0)
+    {
+        if (selector == SYNTH_FADE_SELECTOR_ACTION_3)
+        {
             actionFilter = 3;
-        } else if (selector >= SYNTH_FADE_SELECTOR_ACTION_2_OR_3) {
+        }
+        else if (selector >= SYNTH_FADE_SELECTOR_ACTION_2_OR_3)
+        {
             goto apply_actions_2_or_3;
-        } else if (selector >= SYNTH_FADE_SELECTOR_ACTION_2) {
+        }
+        else if (selector >= SYNTH_FADE_SELECTOR_ACTION_2)
+        {
             actionFilter = 2;
-        } else {
+        }
+        else
+        {
             fade = &fadeTable[selector];
             SYNTH_APPLY_FADE(fade, selector, handle);
             return;
         }
-    } else if (selector < SYNTH_FADE_SELECTOR_ACTION_0_OR_1) {
+    }
+    else if (selector < SYNTH_FADE_SELECTOR_ACTION_0_OR_1)
+    {
         actionFilter = 1;
-    } else {
+    }
+    else
+    {
         fade = &fadeTable[selector];
         SYNTH_APPLY_FADE(fade, selector, handle);
         return;
     }
 
     fade = fadeTable;
-    for (fadeIndex = 0; fadeIndex < SYNTH_FADE_COUNT; fadeIndex++, fade++) {
-        if (fade->type == actionFilter) {
+    for (fadeIndex = 0; fadeIndex < SYNTH_FADE_COUNT; fadeIndex++, fade++)
+    {
+        if (fade->type == actionFilter)
+        {
             SYNTH_APPLY_FADE(fade, fadeIndex, handle);
         }
     }
     return;
 }
 
-u32 synthIsFadeActive(u32 fadeIndex) {
+u32 synthIsFadeActive(u32 fadeIndex)
+{
     SynthFade* fade;
     u8 maskedFadeIndex;
 
     maskedFadeIndex = fadeIndex;
     fade = &gSynthFades[maskedFadeIndex];
 
-    if (fade->type != SYNTH_FADE_ACTION_DISABLED) {
-        if ((gSynthFadeMask & (1 << maskedFadeIndex)) != 0) {
-            if (fade->target > fade->start) {
+    if (fade->type != SYNTH_FADE_ACTION_DISABLED)
+    {
+        if ((gSynthFadeMask & (1 << maskedFadeIndex)) != 0)
+        {
+            if (fade->target > fade->start)
+            {
                 return 1;
             }
         }
@@ -353,8 +393,10 @@ u32 synthIsFadeActive(u32 fadeIndex) {
     return 0;
 }
 
-void synthSetFadeAction(u32 fadeIndex, u8 action) {
-    if (gSynthInitialized == 0) {
+void synthSetFadeAction(u32 fadeIndex, u8 action)
+{
+    if (gSynthInitialized == 0)
+    {
         return;
     }
 
@@ -367,29 +409,34 @@ extern void sndBegin(void);
 extern void sndEnd(void);
 extern void salFree(void* ptr);
 
-void synthExit(void) {
+void synthExit(void)
+{
     salFree(synthVoice);
 }
 
-void sndSeqStop(u32 handle) {
+void sndSeqStop(u32 handle)
+{
     sndBegin();
     synthFreeHandle(handle);
     sndEnd();
 }
 
-void sndSeqSpeed(u32 handle, u32 speed) {
+void sndSeqSpeed(u32 handle, u32 speed)
+{
     sndBegin();
     synthSetHandleValue16(handle, speed);
     sndEnd();
 }
 
-void sndSeqContinue(u32 handle) {
+void sndSeqContinue(u32 handle)
+{
     sndBegin();
     synthRestoreQueuedHandle(handle);
     sndEnd();
 }
 
-void sndSeqMute(u32 handle, u32 mute, u32 time) {
+void sndSeqMute(u32 handle, u32 mute, u32 time)
+{
     sndBegin();
     synthSetHandleMixData(handle, mute, time);
     sndEnd();

@@ -39,7 +39,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_01F5_ShipBattle_slot {
+enum dll_01F5_ShipBattle_slot
+{
     SHIPBATTLE_INITIALISE = 0,
     SHIPBATTLE_RELEASE = 1,
     SHIPBATTLE_INIT = 3,

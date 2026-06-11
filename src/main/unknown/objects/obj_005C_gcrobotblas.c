@@ -52,7 +52,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_005C_GCRobotBlas_packet_info {
+enum obj_005C_GCRobotBlas_packet_info
+{
     GCROBOTBLAS_DEF_ID = 0x005C,
     GCROBOTBLAS_DLL_ID = 0x0240,
     GCROBOTBLAS_CLASS_ID = 0x0030,

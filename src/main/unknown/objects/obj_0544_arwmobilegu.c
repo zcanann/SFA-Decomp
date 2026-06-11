@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0544_ARWMobileGu_packet_info {
+enum obj_0544_ARWMobileGu_packet_info
+{
     ARWMOBILEGU_DEF_ID = 0x0544,
     ARWMOBILEGU_DLL_ID = 0x02A6,
     ARWMOBILEGU_CLASS_ID = 0x007C,

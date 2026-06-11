@@ -63,7 +63,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0502_MetalBarrel_packet_info {
+enum obj_0502_MetalBarrel_packet_info
+{
     METALBARREL_DEF_ID = 0x0502,
     METALBARREL_DLL_ID = 0x0158,
     METALBARREL_CLASS_ID = 0x0030,

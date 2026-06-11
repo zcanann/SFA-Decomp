@@ -48,7 +48,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0490_InvisibleHi_packet_info {
+enum obj_0490_InvisibleHi_packet_info
+{
     INVISIBLEHI_DEF_ID = 0x0490,
     INVISIBLEHI_DLL_ID = 0x00FA,
     INVISIBLEHI_CLASS_ID = 0x0051,

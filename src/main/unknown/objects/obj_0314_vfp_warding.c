@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0314_VFP_Warding_packet_info {
+enum obj_0314_VFP_Warding_packet_info
+{
     VFP_WARDING_DEF_ID = 0x0314,
     VFP_WARDING_DLL_ID = 0x012E,
     VFP_WARDING_CLASS_ID = 0x0061,

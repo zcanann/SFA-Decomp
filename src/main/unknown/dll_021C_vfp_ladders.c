@@ -37,7 +37,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_021C_VFP_Ladders_slot {
+enum dll_021C_VFP_Ladders_slot
+{
     VFP_LADDERS_INITIALISE = 0,
     VFP_LADDERS_RELEASE = 1,
     VFP_LADDERS_INIT = 3,

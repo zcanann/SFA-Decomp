@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0297_SH_FernTree_packet_info {
+enum obj_0297_SH_FernTree_packet_info
+{
     SH_FERNTREE_DEF_ID = 0x0297,
     SH_FERNTREE_DLL_ID = 0x02AF,
     SH_FERNTREE_CLASS_ID = 0x007F,

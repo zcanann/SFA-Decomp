@@ -69,7 +69,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_052A_ARWBombColl_packet_info {
+enum obj_052A_ARWBombColl_packet_info
+{
     ARWBOMBCOLL_DEF_ID = 0x052A,
     ARWBOMBCOLL_DLL_ID = 0x029F,
     ARWBOMBCOLL_CLASS_ID = 0x0030,

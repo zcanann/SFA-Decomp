@@ -73,7 +73,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02F2_SC_throne_packet_info {
+enum obj_02F2_SC_throne_packet_info
+{
     SC_THRONE_DEF_ID = 0x02F2,
     SC_THRONE_DLL_ID = 0x011A,
     SC_THRONE_CLASS_ID = 0x0061,

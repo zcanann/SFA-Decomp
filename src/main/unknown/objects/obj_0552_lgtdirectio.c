@@ -54,7 +54,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0552_LGTDirectio_packet_info {
+enum obj_0552_LGTDirectio_packet_info
+{
     LGTDIRECTIO_DEF_ID = 0x0552,
     LGTDIRECTIO_DLL_ID = 0x02AA,
     LGTDIRECTIO_CLASS_ID = 0x0079,

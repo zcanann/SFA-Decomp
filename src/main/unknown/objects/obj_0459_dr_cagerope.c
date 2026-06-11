@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0459_DR_CageRope_packet_info {
+enum obj_0459_DR_CageRope_packet_info
+{
     DR_CAGEROPE_DEF_ID = 0x0459,
     DR_CAGEROPE_DLL_ID = 0x026C,
     DR_CAGEROPE_CLASS_ID = 0x0030,

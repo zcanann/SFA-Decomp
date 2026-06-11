@@ -4,20 +4,23 @@
 
 void mcstaffeffe_render(int obj)
 {
-    McStaffEffectObject *staffEffect = (McStaffEffectObject *)obj;
+    McStaffEffectObject* staffEffect = (McStaffEffectObject*)obj;
 
     fn_80098B18(obj, staffEffect->anim.rootMotionScale, (u8)staffEffect->particleType, 0, 0, 0);
 }
 
-void mcstaffeffe_update(void) {}
+void mcstaffeffe_update(void)
+{
+}
 
 void mcstaffeffe_init(int obj, int setup)
 {
-    McStaffEffectObject *staffEffect = (McStaffEffectObject *)obj;
-    McStaffEffectSetup *placement = (McStaffEffectSetup *)setup;
+    McStaffEffectObject* staffEffect = (McStaffEffectObject*)obj;
+    McStaffEffectSetup* placement = (McStaffEffectSetup*)setup;
 
-    ((GameObject *)staffEffect)->animEventCallback = (void *)mcstaffeffe_SeqFn;
-    switch (placement->effectProfile) {
+    ((GameObject*)staffEffect)->animEventCallback = (void*)mcstaffeffe_SeqFn;
+    switch (placement->effectProfile)
+    {
     case 0:
         staffEffect->particleType = 4;
         staffEffect->staffGlowLevel = 1;

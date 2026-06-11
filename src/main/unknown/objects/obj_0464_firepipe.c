@@ -68,7 +68,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0464_FirePipe_packet_info {
+enum obj_0464_FirePipe_packet_info
+{
     FIREPIPE_DEF_ID = 0x0464,
     FIREPIPE_DLL_ID = 0x0273,
     FIREPIPE_CLASS_ID = 0x0030,

@@ -60,7 +60,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0520_TriggSetp_packet_info {
+enum obj_0520_TriggSetp_packet_info
+{
     TRIGGSETP_DEF_ID = 0x0520,
     TRIGGSETP_DLL_ID = 0x0126,
     TRIGGSETP_CLASS_ID = 0x001A,

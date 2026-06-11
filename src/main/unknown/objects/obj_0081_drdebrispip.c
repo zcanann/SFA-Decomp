@@ -73,7 +73,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0081_DRDebrisPip_packet_info {
+enum obj_0081_DRDebrisPip_packet_info
+{
     DRDEBRISPIP_DEF_ID = 0x0081,
     DRDEBRISPIP_DLL_ID = 0x011A,
     DRDEBRISPIP_CLASS_ID = 0x0061,

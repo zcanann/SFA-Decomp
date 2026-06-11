@@ -48,7 +48,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04D9_SidekickBal_packet_info {
+enum obj_04D9_SidekickBal_packet_info
+{
     SIDEKICKBAL_DEF_ID = 0x04D9,
     SIDEKICKBAL_DLL_ID = 0x00F5,
     SIDEKICKBAL_CLASS_ID = 0x003C,

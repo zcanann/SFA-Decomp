@@ -52,7 +52,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04D5_Area_packet_info {
+enum obj_04D5_Area_packet_info
+{
     AREA_DEF_ID = 0x04D5,
     AREA_DLL_ID = 0x00F6,
     AREA_CLASS_ID = 0x0041,

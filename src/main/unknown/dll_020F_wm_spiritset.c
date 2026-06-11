@@ -36,7 +36,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_020F_WM_SpiritSet_slot {
+enum dll_020F_WM_SpiritSet_slot
+{
     WM_SPIRITSET_INITIALISE = 0,
     WM_SPIRITSET_RELEASE = 1,
     WM_SPIRITSET_INIT = 3,

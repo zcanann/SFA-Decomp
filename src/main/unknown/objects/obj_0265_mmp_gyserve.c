@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0265_MMP_gyserve_packet_info {
+enum obj_0265_MMP_gyserve_packet_info
+{
     MMP_GYSERVE_DEF_ID = 0x0265,
     MMP_GYSERVE_DLL_ID = 0x0183,
     MMP_GYSERVE_CLASS_ID = 0x0030,

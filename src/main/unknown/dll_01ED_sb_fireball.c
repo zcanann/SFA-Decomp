@@ -36,7 +36,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_01ED_SB_FireBall_slot {
+enum dll_01ED_SB_FireBall_slot
+{
     SB_FIREBALL_INITIALISE = 0,
     SB_FIREBALL_RELEASE = 1,
     SB_FIREBALL_INIT = 3,

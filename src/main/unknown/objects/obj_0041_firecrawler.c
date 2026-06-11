@@ -80,7 +80,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0041_FireCrawler_packet_info {
+enum obj_0041_FireCrawler_packet_info
+{
     FIRECRAWLER_DEF_ID = 0x0041,
     FIRECRAWLER_DLL_ID = 0x00C9,
     FIRECRAWLER_CLASS_ID = 0x001C,

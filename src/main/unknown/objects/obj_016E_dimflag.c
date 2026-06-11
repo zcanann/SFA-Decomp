@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_016E_DIMFlag_packet_info {
+enum obj_016E_DIMFlag_packet_info
+{
     DIMFLAG_DEF_ID = 0x016E,
     DIMFLAG_DLL_ID = 0x01F6,
     DIMFLAG_CLASS_ID = 0x0030,

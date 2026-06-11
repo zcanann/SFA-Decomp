@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0423_DBprotectZo_packet_info {
+enum obj_0423_DBprotectZo_packet_info
+{
     DBPROTECTZO_DEF_ID = 0x0423,
     DBPROTECTZO_DLL_ID = 0x012E,
     DBPROTECTZO_CLASS_ID = 0x0030,

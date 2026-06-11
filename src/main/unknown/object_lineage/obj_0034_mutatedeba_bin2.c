@@ -22,7 +22,8 @@
  */
 
 #if 0
-enum object_bin2_packet_info {
+enum object_bin2_packet_info
+{
     MUTATEDEBA_DEF_ID = 0x0034,
     MUTATEDEBA_LIVE_BYTES = 0xE0,
     MUTATEDEBA_BIN2_BYTES = 0xC0,

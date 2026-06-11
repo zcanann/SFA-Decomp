@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0413_GPSH_Shrine_packet_info {
+enum obj_0413_GPSH_Shrine_packet_info
+{
     GPSH_SHRINE_DEF_ID = 0x0413,
     GPSH_SHRINE_DLL_ID = 0x0192,
     GPSH_SHRINE_CLASS_ID = 0x0030,

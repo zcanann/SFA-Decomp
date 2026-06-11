@@ -53,7 +53,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_05A7_FXEmit_packet_info {
+enum obj_05A7_FXEmit_packet_info
+{
     FXEMIT_DEF_ID = 0x05A7,
     FXEMIT_DLL_ID = 0x012B,
     FXEMIT_CLASS_ID = 0x006B,

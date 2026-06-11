@@ -1,6 +1,8 @@
 #include "main/engine_shared.h"
 
-void doNothing_endOfFrame(void) {}
+void doNothing_endOfFrame(void)
+{
+}
 
 void setJoypadDisabled(void)
 {
@@ -34,7 +36,8 @@ void padClearAnalogInputX(int port)
 
 void stopRumble2(void)
 {
-    if (lbl_803DC909 != 0) {
+    if (lbl_803DC909 != 0)
+    {
         PADControlMotor(0, 2);
         lbl_803DC90C = lbl_803DE6E8;
     }
@@ -42,7 +45,8 @@ void stopRumble2(void)
 
 void stopRumble(void)
 {
-    if (lbl_803DC909 != 0) {
+    if (lbl_803DC909 != 0)
+    {
         PADControlMotor(0, 0);
         lbl_803DC90C = lbl_803DE6E8;
     }
@@ -50,12 +54,14 @@ void stopRumble(void)
 
 void doRumble(f32 duration)
 {
-    if (lbl_803DC909 != 0 && getGameState() == 1) {
+    if (lbl_803DC909 != 0 && getGameState() == 1)
+    {
         f32 rumbleTimer;
 
         PADControlMotor(0, 1);
         rumbleTimer = lbl_803DC90C;
-        if (rumbleTimer <= duration) {
+        if (rumbleTimer <= duration)
+        {
             rumbleTimer = duration;
         }
         lbl_803DC90C = rumbleTimer;
@@ -69,7 +75,8 @@ void setRumbleEnabled(u8 enabled)
 
 void padGetAnalogInput(int port, u8* x, u8* y)
 {
-    if (lbl_803DC908 != 0 || port > 0 || gDvdErrorPauseActive != 0) {
+    if (lbl_803DC908 != 0 || port > 0 || gDvdErrorPauseActive != 0)
+    {
         *x = 0;
         *y = 0;
         return;
@@ -82,10 +89,12 @@ u8 padGetCY(int port)
 {
     PadStatusLite* statuses;
 
-    if (port > 0) {
+    if (port > 0)
+    {
         return 0;
     }
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    {
         return 0;
     }
     statuses = (PadStatusLite*)lbl_803398F0;
@@ -96,10 +105,12 @@ u8 padGetCX(int port)
 {
     PadStatusLite* statuses;
 
-    if (port > 0) {
+    if (port > 0)
+    {
         return 0;
     }
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    {
         return 0;
     }
     statuses = (PadStatusLite*)lbl_803398F0;
@@ -110,10 +121,12 @@ u8 padGetStickY(int port)
 {
     PadStatusLite* statuses;
 
-    if (port > 0) {
+    if (port > 0)
+    {
         return 0;
     }
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    {
         return 0;
     }
     statuses = (PadStatusLite*)lbl_803398F0;
@@ -124,10 +137,12 @@ u8 padGetStickX(int port)
 {
     PadStatusLite* statuses;
 
-    if (port > 0) {
+    if (port > 0)
+    {
         return 0;
     }
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    {
         return 0;
     }
     statuses = (PadStatusLite*)lbl_803398F0;
@@ -138,7 +153,8 @@ u8 padGetLTrigger(int port)
 {
     PadStatusLite* statuses;
 
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    {
         return 0;
     }
     statuses = (PadStatusLite*)lbl_803398F0;
@@ -149,7 +165,8 @@ u8 padGetRTrigger(int port)
 {
     PadStatusLite* statuses;
 
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    {
         return 0;
     }
     statuses = (PadStatusLite*)lbl_803398F0;
@@ -158,10 +175,12 @@ u8 padGetRTrigger(int port)
 
 u16 getPadFn_80014d9c(int port)
 {
-    if (port > 0) {
+    if (port > 0)
+    {
         port = 0;
     }
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    {
         return 0;
     }
     return (&lbl_803DC92C)[port];
@@ -169,10 +188,12 @@ u16 getPadFn_80014d9c(int port)
 
 u16 getButtons_80014dd8(int port)
 {
-    if (port > 0) {
+    if (port > 0)
+    {
         port = 0;
     }
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    {
         return 0;
     }
     return (&lbl_803DC91C)[port];
@@ -180,13 +201,16 @@ u16 getButtons_80014dd8(int port)
 
 u32 getButtonsJustPressedIfNotBusy(int port)
 {
-    if (port > 0) {
+    if (port > 0)
+    {
         return 0;
     }
-    if (gDvdErrorPauseActive != 0) {
+    if (gDvdErrorPauseActive != 0)
+    {
         return 0;
     }
-    if (lbl_803DC908 != 0) {
+    if (lbl_803DC908 != 0)
+    {
         return -1;
     }
     return lbl_803398D0[port] & lbl_802C6E50[port];
@@ -194,10 +218,12 @@ u32 getButtonsJustPressedIfNotBusy(int port)
 
 u32 getButtonsJustPressed(int port)
 {
-    if (port > 0) {
+    if (port > 0)
+    {
         return 0;
     }
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    {
         return 0;
     }
     return lbl_803398E0[port] & lbl_802C6E50[port];
@@ -205,7 +231,8 @@ u32 getButtonsJustPressed(int port)
 
 u32 getNewInputs(int port)
 {
-    if (port > 0) {
+    if (port > 0)
+    {
         return 0;
     }
     return lbl_803398C0[port];
@@ -213,10 +240,12 @@ u32 getNewInputs(int port)
 
 u32 getButtonsHeld(int port)
 {
-    if (port > 0) {
+    if (port > 0)
+    {
         return 0;
     }
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    {
         return 0;
     }
     return lbl_803398C0[port] & lbl_802C6E50[port];
@@ -246,7 +275,8 @@ int initControllers(void)
     lbl_803DC910 = 0xF0000000;
     PADInit();
     PADRecalibrate(lbl_803DC910);
-    if (PADReset(lbl_803DC910) != 0) {
+    if (PADReset(lbl_803DC910) != 0)
+    {
         lbl_803DC910 = 0;
     }
 
@@ -264,7 +294,8 @@ int initControllers(void)
     triggersReleased = &lbl_803DC924;
     triggersPressed = &lbl_803DC92C;
 
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < 4; i++)
+    {
         *prevStickY = 0;
         *prevStickX = 0;
         *repeatY = 0;
@@ -308,25 +339,25 @@ int initControllers(void)
 
 void padUpdate(void)
 {
-    u32 *padStateBlock;
-    PadStatusLite *readPad;
-    PadStatusLite *statuses;
-    PadStatusLite *prevPad;
-    s8 *prevStickY;
-    s8 *prevStickX;
-    s8 *repeatY;
-    s8 *repeatX;
-    s8 *analogY;
-    s8 *analogX;
-    u32 *heldRaw;
-    u32 *curBtn;
-    u32 *released;
-    u32 *pressed;
-    u16 *prevTriggers;
-    u16 *triggers;
-    u16 *triggersReleased;
-    u16 *triggersPressed;
-    u32 *buttonMask;
+    u32* padStateBlock;
+    PadStatusLite* readPad;
+    PadStatusLite* statuses;
+    PadStatusLite* prevPad;
+    s8* prevStickY;
+    s8* prevStickX;
+    s8* repeatY;
+    s8* repeatX;
+    s8* analogY;
+    s8* analogX;
+    u32* heldRaw;
+    u32* curBtn;
+    u32* released;
+    u32* pressed;
+    u16* prevTriggers;
+    u16* triggers;
+    u16* triggersReleased;
+    u16* triggersPressed;
+    u32* buttonMask;
     int sx;
     int sy;
     u8 toggle;
@@ -336,19 +367,24 @@ void padUpdate(void)
 
     padStateBlock = lbl_803398B0;
     toggle = lbl_803DC94C;
-    prevPad = (PadStatusLite *)((u8 *)padStateBlock + toggle * 0x30 + 0x40);
+    prevPad = (PadStatusLite*)((u8*)padStateBlock + toggle * 0x30 + 0x40);
     other = toggle ^ 1;
     lbl_803DC94C = other;
-    readPad = (PadStatusLite *)((u8 *)padStateBlock + other * 0x30 + 0x40);
-    if (PADRead(readPad) == -3) {
+    readPad = (PadStatusLite*)((u8*)padStateBlock + other * 0x30 + 0x40);
+    if (PADRead(readPad) == -3)
+    {
         return;
     }
     PADClamp(readPad);
-    if (lbl_803DC909 != 0) {
-        if (lbl_803DC90C > lbl_803DE6E8) {
+    if (lbl_803DC909 != 0)
+    {
+        if (lbl_803DC90C > lbl_803DE6E8)
+        {
             lbl_803DC90C = lbl_803DC90C - timeDelta;
-            if (lbl_803DC90C <= lbl_803DE6E8) {
-                if (lbl_803DC909 != 0) {
+            if (lbl_803DC90C <= lbl_803DE6E8)
+            {
+                if (lbl_803DC909 != 0)
+                {
                     PADControlMotor(0, 0);
                     lbl_803DC90C = lbl_803DE6E8;
                 }
@@ -358,12 +394,12 @@ void padUpdate(void)
     useprev = 0;
     lbl_803DC908 = 0;
 
-    prevStickY = (s8 *)&lbl_803DC944;
-    prevStickX = (s8 *)&lbl_803DC948;
-    repeatY = (s8 *)&lbl_803DC93C;
-    repeatX = (s8 *)&lbl_803DC940;
-    analogY = (s8 *)&lbl_803DC934;
-    analogX = (s8 *)&lbl_803DC938;
+    prevStickY = (s8*)&lbl_803DC944;
+    prevStickX = (s8*)&lbl_803DC948;
+    repeatY = (s8*)&lbl_803DC93C;
+    repeatX = (s8*)&lbl_803DC940;
+    analogY = (s8*)&lbl_803DC934;
+    analogX = (s8*)&lbl_803DC938;
     heldRaw = padStateBlock;
     curBtn = padStateBlock + 4;
     released = padStateBlock + 8;
@@ -372,11 +408,13 @@ void padUpdate(void)
     triggers = &lbl_803DC91C;
     triggersReleased = &lbl_803DC924;
     triggersPressed = &lbl_803DC92C;
-    statuses = (PadStatusLite *)((u8 *)padStateBlock + 0x40);
+    statuses = (PadStatusLite*)((u8*)padStateBlock + 0x40);
     buttonMask = lbl_802C6E50;
 
-    for (i = 0; i < 4; i++) {
-        if (readPad->error == -1) {
+    for (i = 0; i < 4; i++)
+    {
+        if (readPad->error == -1)
+        {
             *prevStickY = 0;
             *prevStickX = 0;
             *repeatY = 0;
@@ -392,24 +430,32 @@ void padUpdate(void)
             *triggersReleased = 0;
             *triggersPressed = 0;
             memset(statuses, 0, sizeof(PadStatusLite));
-            memset((u8 *)padStateBlock + (i + 4) * 0xc + 0x40, 0, sizeof(PadStatusLite));
+            memset((u8*)padStateBlock + (i + 4) * 0xc + 0x40, 0, sizeof(PadStatusLite));
             lbl_803DC910 |= 0x80000000U >> i;
             readPad->error = -1;
-        } else if ((u8)(readPad->error + 3) <= 1 || lbl_803DCCA5 == 0) {
+        }
+        else if ((u8)(readPad->error + 3) <= 1 || lbl_803DCCA5 == 0)
+        {
             memcpy(readPad, prevPad, sizeof(PadStatusLite));
             useprev = 1;
-        } else {
+        }
+        else
+        {
             *curBtn = readPad->buttons;
-            if (readPad->substickY < -40) {
+            if (readPad->substickY < -40)
+            {
                 *curBtn |= 0x20000;
             }
-            if (readPad->substickY > 40) {
+            if (readPad->substickY > 40)
+            {
                 *curBtn |= 0x10000;
             }
-            if (readPad->substickX < -40) {
+            if (readPad->substickX < -40)
+            {
                 *curBtn |= 0x40000;
             }
-            if (readPad->substickX > 40) {
+            if (readPad->substickX > 40)
+            {
                 *curBtn |= 0x80000;
             }
             *pressed = *curBtn & (*curBtn ^ *heldRaw);
@@ -417,10 +463,12 @@ void padUpdate(void)
             *heldRaw = *curBtn;
 
             *triggers = 0;
-            if (readPad->triggerRight > 10) {
+            if (readPad->triggerRight > 10)
+            {
                 *triggers |= 0x20;
             }
-            if (readPad->triggerLeft > 10) {
+            if (readPad->triggerLeft > 10)
+            {
                 *triggers |= 0x40;
             }
             *triggersPressed = *triggers & (*triggers ^ *prevTriggers);
@@ -431,43 +479,59 @@ void padUpdate(void)
             sy = readPad->stickY;
             *analogX = 0;
             *analogY = 0;
-            if (sx < -35 && *prevStickX >= -35) {
+            if (sx < -35 && *prevStickX >= -35)
+            {
                 *analogX = -1;
                 *repeatX = 0;
             }
-            if (sx > 35 && *prevStickX <= 35) {
+            if (sx > 35 && *prevStickX <= 35)
+            {
                 *analogX = 1;
                 *repeatX = 0;
             }
-            if (sy < -35 && *prevStickY >= -35) {
+            if (sy < -35 && *prevStickY >= -35)
+            {
                 *analogY = -1;
                 *repeatY = 0;
             }
-            if (sy > 35 && *prevStickY <= 35) {
+            if (sy > 35 && *prevStickY <= 35)
+            {
                 *analogY = 1;
                 *repeatY = 0;
             }
             *prevStickY = sy;
-            if (*prevStickY < -35) {
+            if (*prevStickY < -35)
+            {
                 (*repeatY)++;
-            } else if (*prevStickY > 35) {
+            }
+            else if (*prevStickY > 35)
+            {
                 (*repeatY)++;
-            } else {
+            }
+            else
+            {
                 *repeatY = 0;
             }
-            if (*repeatY > lbl_803DB2A8) {
+            if (*repeatY > lbl_803DB2A8)
+            {
                 *prevStickY = 0;
                 *repeatY = 0;
             }
             *prevStickX = sx;
-            if (*prevStickX < -35) {
+            if (*prevStickX < -35)
+            {
                 (*repeatX)++;
-            } else if (*prevStickX > 35) {
+            }
+            else if (*prevStickX > 35)
+            {
                 (*repeatX)++;
-            } else {
+            }
+            else
+            {
                 *repeatX = 0;
             }
-            if (*repeatX > lbl_803DB2A8) {
+            if (*repeatX > lbl_803DB2A8)
+            {
                 *prevStickX = 0;
                 *repeatX = 0;
             }
@@ -494,12 +558,15 @@ void padUpdate(void)
         buttonMask++;
     }
 
-    if (lbl_803DC910 != 0) {
-        if (PADReset(lbl_803DC910) != 0) {
+    if (lbl_803DC910 != 0)
+    {
+        if (PADReset(lbl_803DC910) != 0)
+        {
             lbl_803DC910 = 0;
         }
     }
-    if (useprev != 0) {
+    if (useprev != 0)
+    {
         lbl_803DC94C ^= 1;
     }
     lbl_803DCCA5 = 0;

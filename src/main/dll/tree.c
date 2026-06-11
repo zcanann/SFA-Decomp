@@ -14,7 +14,8 @@
 #define TREE_FLAG_AMBIENT_EFFECTS 0x80
 #define TREE_FLAG_DISABLE_PLAYER_PROXIMITY 0x100
 
-typedef struct TreeSetup {
+typedef struct TreeSetup
+{
     ObjPlacement base;
     u8 rotZ;
     u8 rotY;
@@ -29,7 +30,8 @@ typedef struct TreeSetup {
     u8 colorB;
 } TreeSetup;
 
-typedef struct TreeAmbientEffectSetup {
+typedef struct TreeAmbientEffectSetup
+{
     ObjPlacement base;
     int sourceObject;
     u16 animFrame;
@@ -40,7 +42,8 @@ typedef struct TreeAmbientEffectSetup {
     s16 modelId;
 } TreeAmbientEffectSetup;
 
-typedef struct TreeState {
+typedef struct TreeState
+{
     int ambientEffectHandles[TREE_AMBIENT_EFFECT_COUNT];
     f32 ambientEffectPos[TREE_AMBIENT_EFFECT_COUNT][3];
     f32 ambientSpawnTimers[TREE_AMBIENT_EFFECT_COUNT];
@@ -56,40 +59,177 @@ typedef struct TreeState {
     u16 effectProfileIndex;
 } TreeState;
 
-STATIC_ASSERT(offsetof(TreeSetup, rotZ) == 0x18);
-STATIC_ASSERT(offsetof(TreeSetup, scale) == 0x1b);
-STATIC_ASSERT(offsetof(TreeSetup, flagsLo) == 0x1c);
-STATIC_ASSERT(offsetof(TreeSetup, proximityRadiusHalf) == 0x1d);
-STATIC_ASSERT(offsetof(TreeSetup, flagsHi) == 0x1e);
-STATIC_ASSERT(offsetof(TreeSetup, colorR) == 0x20);
-STATIC_ASSERT(offsetof(TreeSetup, colorB) == 0x22);
-STATIC_ASSERT(offsetof(TreeAmbientEffectSetup, sourceObject) == 0x18);
-STATIC_ASSERT(offsetof(TreeAmbientEffectSetup, animFrame) == 0x1c);
-STATIC_ASSERT(offsetof(TreeAmbientEffectSetup, colorA) == 0x20);
-STATIC_ASSERT(sizeof(TreeAmbientEffectSetup) == TREE_AMBIENT_EFFECT_SETUP_SIZE);
-STATIC_ASSERT(offsetof(TreeState, ambientEffectPos) == 0xc);
-STATIC_ASSERT(offsetof(TreeState, ambientSpawnTimers) == 0x30);
-STATIC_ASSERT(offsetof(TreeState, playerBurstCooldown) == 0x3c);
-STATIC_ASSERT(offsetof(TreeState, scale) == 0x48);
-STATIC_ASSERT(offsetof(TreeState, hitEffectCooldown) == 0x50);
-STATIC_ASSERT(offsetof(TreeState, proximityRadius) == 0x54);
-STATIC_ASSERT(offsetof(TreeState, lastPlayerDistance) == 0x56);
-STATIC_ASSERT(offsetof(TreeState, flags) == 0x58);
-STATIC_ASSERT(sizeof(TreeState) == 0x5c);
+STATIC_ASSERT (offsetof
+(TreeSetup
+,
+rotZ
+)
+==
+0x18
+);
+STATIC_ASSERT (offsetof
+(TreeSetup
+,
+scale
+)
+==
+0x1b
+);
+STATIC_ASSERT (offsetof
+(TreeSetup
+,
+flagsLo
+)
+==
+0x1c
+);
+STATIC_ASSERT (offsetof
+(TreeSetup
+,
+proximityRadiusHalf
+)
+==
+0x1d
+);
+STATIC_ASSERT (offsetof
+(TreeSetup
+,
+flagsHi
+)
+==
+0x1e
+);
+STATIC_ASSERT (offsetof
+(TreeSetup
+,
+colorR
+)
+==
+0x20
+);
+STATIC_ASSERT (offsetof
+(TreeSetup
+,
+colorB
+)
+==
+0x22
+);
+STATIC_ASSERT (offsetof
+(TreeAmbientEffectSetup
+,
+sourceObject
+)
+==
+0x18
+);
+STATIC_ASSERT (offsetof
+(TreeAmbientEffectSetup
+,
+animFrame
+)
+==
+0x1c
+);
+STATIC_ASSERT (offsetof
+(TreeAmbientEffectSetup
+,
+colorA
+)
+==
+0x20
+);
+STATIC_ASSERT (
+sizeof
+(TreeAmbientEffectSetup)
+==
+TREE_AMBIENT_EFFECT_SETUP_SIZE
+);
+STATIC_ASSERT (offsetof
+(TreeState
+,
+ambientEffectPos
+)
+==
+0xc
+);
+STATIC_ASSERT (offsetof
+(TreeState
+,
+ambientSpawnTimers
+)
+==
+0x30
+);
+STATIC_ASSERT (offsetof
+(TreeState
+,
+playerBurstCooldown
+)
+==
+0x3c
+);
+STATIC_ASSERT (offsetof
+(TreeState
+,
+scale
+)
+==
+0x48
+);
+STATIC_ASSERT (offsetof
+(TreeState
+,
+hitEffectCooldown
+)
+==
+0x50
+);
+STATIC_ASSERT (offsetof
+(TreeState
+,
+proximityRadius
+)
+==
+0x54
+);
+STATIC_ASSERT (offsetof
+(TreeState
+,
+lastPlayerDistance
+)
+==
+0x56
+);
+STATIC_ASSERT (offsetof
+(TreeState
+,
+flags
+)
+==
+0x58
+);
+STATIC_ASSERT (
+sizeof
+(TreeState)
+==
+0x5c
+);
 
 int tree_getExtraSize(void) { return 0x5c; }
 
 void tree_spawnAmbientEffect(int obj, int p2, s8 index)
 {
-    TreeSetup *setup = (TreeSetup *)((GameObject *)obj)->anim.placementData;
-    TreeState *state = (TreeState *)p2;
-    TreeAmbientEffectSetup *effectSetup;
+    TreeSetup* setup = (TreeSetup*)((GameObject*)obj)->anim.placementData;
+    TreeState* state = (TreeState*)p2;
+    TreeAmbientEffectSetup* effectSetup;
     int idx;
     int newObj;
 
-    if (Obj_IsLoadingLocked()) {
+    if (Obj_IsLoadingLocked())
+    {
         newObj = Obj_AllocObjectSetup(TREE_AMBIENT_EFFECT_SETUP_SIZE, TREE_AMBIENT_EFFECT_OBJECT_ID);
-        effectSetup = (TreeAmbientEffectSetup *)newObj;
+        effectSetup = (TreeAmbientEffectSetup*)newObj;
         effectSetup->base.unk04[0] = setup->base.unk04[0];
         effectSetup->base.unk04[2] = setup->base.unk04[2];
         effectSetup->base.unk04[1] = setup->base.unk04[1];
@@ -109,31 +249,41 @@ void tree_spawnAmbientEffect(int obj, int p2, s8 index)
         effectSetup->modelId = -1;
         effectSetup->sourceObject = 0;
         state->ambientEffectHandles[idx] =
-            Obj_SetupObject(newObj, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
+            Obj_SetupObject(newObj, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                            *(int*)&((GameObject*)obj)->anim.parent);
     }
 }
 
 void tree_updateAmbientEffects(int obj, int p2)
 {
-    TreeState *state = (TreeState *)p2;
+    TreeState* state = (TreeState*)p2;
     int i;
     int ambientObject;
 
-    if (((GameObject *)obj)->unkF8 != 0) {
-        for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++) {
+    if (((GameObject*)obj)->unkF8 != 0)
+    {
+        for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++)
+        {
             ambientObject = state->ambientEffectHandles[i];
-            if (ambientObject == 0) {
+            if (ambientObject == 0)
+            {
                 state->ambientSpawnTimers[i] -= timeDelta;
-                if (state->ambientSpawnTimers[i] <= lbl_803E72F8) {
+                if (state->ambientSpawnTimers[i] <= lbl_803E72F8)
+                {
                     state->ambientSpawnTimers[i] = (f32)randomGetRange(0x3c, 0x12c);
                     tree_spawnAmbientEffect(obj, p2, i);
                 }
-            } else {
-                if ((*(int (**)(int))(*(int *)(ambientObject + 0x68) + 0x28))(
-                        ambientObject) > 3) {
+            }
+            else
+            {
+                if ((*(int (**)(int))(*(int*)(ambientObject + 0x68) + 0x28))(
+                    ambientObject) > 3)
+                {
                     state->ambientEffectHandles[i] = 0;
-                } else {
-                    (*(void (**)(int, int))(*(int *)(ambientObject + 0x68) + 0x24))(
+                }
+                else
+                {
+                    (*(void (**)(int, int))(*(int*)(ambientObject + 0x68) + 0x24))(
                         ambientObject, (int)&state->ambientEffectPos[i][0]);
                 }
             }
@@ -143,28 +293,31 @@ void tree_updateAmbientEffects(int obj, int p2)
 
 void tree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    TreeSetup *setup = (TreeSetup *)((GameObject *)obj)->anim.placementData;
-    TreeState *state = ((GameObject *)obj)->extra;
+    TreeSetup* setup = (TreeSetup*)((GameObject*)obj)->anim.placementData;
+    TreeState* state = ((GameObject*)obj)->extra;
     int i;
 
-    if (visible != 0) {
+    if (visible != 0)
+    {
         fn_8003B608(setup->colorR, setup->colorG, setup->colorB);
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7308);
-        if (state->flags & TREE_FLAG_AMBIENT_EFFECTS) {
-            for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++) {
+        if (state->flags & TREE_FLAG_AMBIENT_EFFECTS)
+        {
+            for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++)
+            {
                 ObjPath_GetPointWorldPosition(obj, i, &state->ambientEffectPos[i][0],
-                    &state->ambientEffectPos[i][1], &state->ambientEffectPos[i][2], 0);
+                                              &state->ambientEffectPos[i][1], &state->ambientEffectPos[i][2], 0);
             }
         }
-        ((GameObject *)obj)->unkF8 = 1;
+        ((GameObject*)obj)->unkF8 = 1;
     }
 }
 
-void tree_init(int obj, u8 *setup)
+void tree_init(int obj, u8* setup)
 {
-    GameObject *object = (GameObject *)obj;
-    TreeSetup *setupData = (TreeSetup *)setup;
-    TreeState *state = object->extra;
+    GameObject* object = (GameObject*)obj;
+    TreeSetup* setupData = (TreeSetup*)setup;
+    TreeState* state = object->extra;
     ObjAnimEventList animOut;
 
     state->swayTimer = lbl_803E730C;
@@ -177,25 +330,32 @@ void tree_init(int obj, u8 *setup)
     object->anim.rotZ = (s16)(setupData->rotZ << 8);
     object->anim.rotY = (s16)(setupData->rotY << 8);
     object->anim.rotX = (s16)(setupData->rotX << 8);
-    *(u8 *)&object->anim.resetHitboxMode |= TREE_RESET_HITBOX_FLAG;
+    *(u8*)&object->anim.resetHitboxMode |= TREE_RESET_HITBOX_FLAG;
     object->objectFlags |= TREE_OBJECT_FLAGS_INIT;
     object->unkF8 = 0;
-    if (setupData->scale != 0) {
-        state->scale = (f32)(u32)setupData->scale / lbl_803E7328;
+    if (setupData->scale != 0)
+    {
+        state->scale = (f32)(u32)
+        setupData->scale / lbl_803E7328;
         object->anim.rootMotionScale = state->scale;
-        if (object->anim.rootMotionScale == lbl_803E72F8) {
+        if (object->anim.rootMotionScale == lbl_803E72F8)
+        {
             object->anim.rootMotionScale = lbl_803E7308;
         }
         object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
-    } else {
+    }
+    else
+    {
         state->scale = lbl_803E7308;
     }
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E72F8, 0);
-    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E7308, *(f32 *)&lbl_803E7308, &animOut);
-    if (state->flags & TREE_FLAG_AMBIENT_EFFECTS) {
+    ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E7308, *(f32*)&lbl_803E7308, &animOut);
+    if (state->flags & TREE_FLAG_AMBIENT_EFFECTS)
+    {
         state->flags |= TREE_FLAG_HIT_ENABLED;
     }
-    switch (object->anim.seqId) {
+    switch (object->anim.seqId)
+    {
     case 0x798:
         state->effectProfileIndex = 0xa;
         break;
@@ -231,15 +391,16 @@ void tree_init(int obj, u8 *setup)
         state->effectProfileIndex = 0x0;
         break;
     }
-    if (!(state->flags & TREE_FLAG_HIT_ENABLED)) {
+    if (!(state->flags & TREE_FLAG_HIT_ENABLED))
+    {
         ObjHits_DisableObject(obj);
     }
 }
 
 void tree_update(int obj)
 {
-    GameObject *object = (GameObject *)obj;
-    TreeState *state = object->extra;
+    GameObject* object = (GameObject*)obj;
+    TreeState* state = object->extra;
     int hit;
     int player;
     int i;
@@ -248,39 +409,51 @@ void tree_update(int obj)
     f32 vec14[3];
     f32 colorVec[3];
     f32 intensity;
-    f32 *ctbl;
+    f32* ctbl;
     ObjAnimEventList animOut;
 
     ObjAnim_AdvanceCurrentMove(state->swayTimer, timeDelta, obj, &animOut);
-    if (state->flags != 0) {
-        if (state->playerBurstCooldown > lbl_803E72F8) {
+    if (state->flags != 0)
+    {
+        if (state->playerBurstCooldown > lbl_803E72F8)
+        {
             state->playerBurstCooldown -= timeDelta;
         }
-        if (state->swayTimer > lbl_803E730C) {
+        if (state->swayTimer > lbl_803E730C)
+        {
             state->swayTimer -= lbl_803E7310;
         }
-        if (state->flags & TREE_FLAG_AMBIENT_EFFECTS) {
+        if (state->flags & TREE_FLAG_AMBIENT_EFFECTS)
+        {
             tree_updateAmbientEffects(obj, (int)state);
         }
-        if (state->flags & TREE_FLAG_HIT_ENABLED) {
-            if (state->flags & TREE_FLAG_HIT_WITH_POSITION) {
+        if (state->flags & TREE_FLAG_HIT_ENABLED)
+        {
+            if (state->flags & TREE_FLAG_HIT_WITH_POSITION)
+            {
                 hit = ObjHits_GetPriorityHitWithPosition(obj, &out10, &outc, &out8,
                                                          &colorVec[0], &colorVec[1], &colorVec[2]);
-            } else {
+            }
+            else
+            {
                 hit = ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129,
                                                                 (int)&state->hitEffectCooldown);
             }
-            if (state->hitCooldownTimer >= lbl_803E72F8) {
+            if (state->hitCooldownTimer >= lbl_803E72F8)
+            {
                 state->hitCooldownTimer -= timeDelta;
             }
-            if (hit != 0 && hit != 0x11 && state->hitCooldownTimer <= lbl_803E72F8) {
-                if (state->flags & TREE_FLAG_HIT_WITH_POSITION) {
+            if (hit != 0 && hit != 0x11 && state->hitCooldownTimer <= lbl_803E72F8)
+            {
+                if (state->flags & TREE_FLAG_HIT_WITH_POSITION)
+                {
                     colorVec[0] += playerMapOffsetX;
                     colorVec[2] += playerMapOffsetZ;
-                    objLightFn_8009a1dc((void *)obj, lbl_803E7314, vec14, 1, 0);
+                    objLightFn_8009a1dc((void*)obj, lbl_803E7314, vec14, 1, 0);
                     Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
                 }
-                if (state->flags & TREE_FLAG_BURST_MODE_MASK) {
+                if (state->flags & TREE_FLAG_BURST_MODE_MASK)
+                {
                     intensity = state->scale;
                     ctbl = &lbl_8032BBE0[state->effectProfileIndex * 4];
                     colorVec[0] = intensity * ctbl[0];
@@ -292,12 +465,17 @@ void tree_update(int obj)
                 }
                 state->swayTimer = lbl_803E7318;
                 state->hitCooldownTimer = lbl_803E731C;
-                if (state->flags & TREE_FLAG_AMBIENT_EFFECTS) {
-                    if (hit != 0) {
-                        for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++) {
-                            if (state->ambientEffectHandles[i] != 0) {
-                                if ((*(int (**)(int))(*(int *)(state->ambientEffectHandles[i] + 0x68) + 0x28))(
-                                        state->ambientEffectHandles[i]) > 1) {
+                if (state->flags & TREE_FLAG_AMBIENT_EFFECTS)
+                {
+                    if (hit != 0)
+                    {
+                        for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++)
+                        {
+                            if (state->ambientEffectHandles[i] != 0)
+                            {
+                                if ((*(int (**)(int))(*(int*)(state->ambientEffectHandles[i] + 0x68) + 0x28))(
+                                    state->ambientEffectHandles[i]) > 1)
+                                {
                                     ObjHits_RecordObjectHit(state->ambientEffectHandles[i], obj, 0xe, 1, 0);
                                     break;
                                 }
@@ -309,15 +487,18 @@ void tree_update(int obj)
         }
         player = Obj_GetPlayerObject();
         if (player != 0 && !(state->flags & TREE_FLAG_DISABLE_PLAYER_PROXIMITY) &&
-            (state->flags & TREE_FLAG_BURST_MODE_MASK)) {
-            dx = object->anim.localPosX - ((GameObject *)player)->anim.localPosX;
-            dz = object->anim.localPosZ - ((GameObject *)player)->anim.localPosZ;
+            (state->flags & TREE_FLAG_BURST_MODE_MASK))
+        {
+            dx = object->anim.localPosX - ((GameObject*)player)->anim.localPosX;
+            dz = object->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
             dist = sqrtf(dx * dx + dz * dz);
             hit = (int)dist;
-            if ((u16)hit < state->proximityRadius) {
+            if ((u16)hit < state->proximityRadius)
+            {
                 if ((state->flags & TREE_FLAG_PLAYER_PROXIMITY_BURST) &&
                     state->lastPlayerDistance >= state->proximityRadius &&
-                    state->playerBurstCooldown <= lbl_803E72F8) {
+                    state->playerBurstCooldown <= lbl_803E72F8)
+                {
                     intensity = state->scale;
                     ctbl = &lbl_8032BBE0[state->effectProfileIndex * 4];
                     colorVec[0] = intensity * ctbl[0];
@@ -329,7 +510,8 @@ void tree_update(int obj)
                     state->playerBurstCooldown = lbl_803E7320;
                 }
                 state->ambientBurstTimer -= timeDelta;
-                if (state->ambientBurstTimer <= lbl_803E72F8) {
+                if (state->ambientBurstTimer <= lbl_803E72F8)
+                {
                     intensity = state->scale;
                     ctbl = &lbl_8032BBE0[state->effectProfileIndex * 4];
                     colorVec[0] = intensity * ctbl[0];

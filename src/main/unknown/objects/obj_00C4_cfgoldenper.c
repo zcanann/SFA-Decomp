@@ -77,7 +77,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_00C4_CFGoldenPer_packet_info {
+enum obj_00C4_CFGoldenPer_packet_info
+{
     CFGOLDENPER_DEF_ID = 0x00C4,
     CFGOLDENPER_DLL_ID = 0x0112,
     CFGOLDENPER_CLASS_ID = 0x0055,

@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0212_WORLDsun_packet_info {
+enum obj_0212_WORLDsun_packet_info
+{
     WORLDSUN_DEF_ID = 0x0212,
     WORLDSUN_DLL_ID = 0x01D3,
     WORLDSUN_CLASS_ID = 0x0061,

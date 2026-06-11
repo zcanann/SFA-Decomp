@@ -82,7 +82,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_017D_DIMTruthHor_packet_info {
+enum obj_017D_DIMTruthHor_packet_info
+{
     DIMTRUTHHOR_DEF_ID = 0x017D,
     DIMTRUTHHOR_DLL_ID = 0x00ED,
     DIMTRUTHHOR_CLASS_ID = 0x0006,

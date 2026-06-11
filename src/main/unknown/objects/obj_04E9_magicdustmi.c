@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04E9_MagicDustMi_packet_info {
+enum obj_04E9_MagicDustMi_packet_info
+{
     MAGICDUSTMI_DEF_ID = 0x04E9,
     MAGICDUSTMI_DLL_ID = 0x00FF,
     MAGICDUSTMI_CLASS_ID = 0x0006,

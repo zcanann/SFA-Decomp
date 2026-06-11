@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0107_CF_Lamp_packet_info {
+enum obj_0107_CF_Lamp_packet_info
+{
     CF_LAMP_DEF_ID = 0x0107,
     CF_LAMP_DLL_ID = 0x01F4,
     CF_LAMP_CLASS_ID = 0x0061,

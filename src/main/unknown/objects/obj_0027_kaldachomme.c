@@ -64,7 +64,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0027_KaldachomMe_packet_info {
+enum obj_0027_KaldachomMe_packet_info
+{
     KALDACHOMME_DEF_ID = 0x0027,
     KALDACHOMME_DLL_ID = 0x00D6,
     KALDACHOMME_CLASS_ID = 0x0061,

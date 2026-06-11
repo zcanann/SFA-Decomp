@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0209_WORLDpath2_packet_info {
+enum obj_0209_WORLDpath2_packet_info
+{
     WORLDPATH2_DEF_ID = 0x0209,
     WORLDPATH2_DLL_ID = 0x01D3,
     WORLDPATH2_CLASS_ID = 0x0061,

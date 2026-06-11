@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_04F7_SmallBasket_packet_info {
+enum obj_04F7_SmallBasket_packet_info
+{
     SMALLBASKET_DEF_ID = 0x04F7,
     SMALLBASKET_DLL_ID = 0x0104,
     SMALLBASKET_CLASS_ID = 0x0030,

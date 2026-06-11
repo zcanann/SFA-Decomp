@@ -1,6 +1,7 @@
 #include "src/main/audio/synth_internal.h"
 
-void synthInitChannelEventQueues(void) {
+void synthInitChannelEventQueues(void)
+{
     SynthSequenceEvent* event;
     SynthSequenceQueue* queue;
     SynthVoice* voice;
@@ -9,26 +10,32 @@ void synthInitChannelEventQueues(void) {
 
     voice = gSynthCurrentVoice;
     keyGroupMap = SYNTH_KEYGROUP_MAP(voice);
-    if (keyGroupMap == 0) {
+    if (keyGroupMap == 0)
+    {
         queue = SYNTH_SEQUENCE_QUEUE(voice, 0);
-        for (channel = 0; channel < SYNTH_SEQUENCE_TRACK_COUNT; channel++) {
+        for (channel = 0; channel < SYNTH_SEQUENCE_TRACK_COUNT; channel++)
+        {
             event = synthGetNextChannelEvent(channel);
-            if (event != 0) {
+            if (event != 0)
+            {
                 synthInsertChannelEvent(queue, event);
             }
         }
         return;
     }
 
-    for (channel = 0; channel < SYNTH_SEQUENCE_TRACK_COUNT; channel++) {
+    for (channel = 0; channel < SYNTH_SEQUENCE_TRACK_COUNT; channel++)
+    {
         event = synthGetNextChannelEvent(channel);
-        if (event != 0) {
+        if (event != 0)
+        {
             synthInsertChannelEvent(SYNTH_SEQUENCE_QUEUE(voice, keyGroupMap[channel]), event);
         }
     }
 }
 
-void synthRefreshChannelEventQueue(u8 groupIndex) {
+void synthRefreshChannelEventQueue(u8 groupIndex)
+{
     SynthSequenceEvent* event;
     SynthSequenceQueue* queue;
     SynthVoice* voice;
@@ -37,11 +44,14 @@ void synthRefreshChannelEventQueue(u8 groupIndex) {
 
     voice = gSynthCurrentVoice;
     keyGroupMap = SYNTH_KEYGROUP_MAP(voice);
-    if (keyGroupMap == 0) {
+    if (keyGroupMap == 0)
+    {
         queue = SYNTH_SEQUENCE_QUEUE(voice, 0);
-        for (channel = 0; channel < SYNTH_SEQUENCE_TRACK_COUNT; channel++) {
+        for (channel = 0; channel < SYNTH_SEQUENCE_TRACK_COUNT; channel++)
+        {
             event = synthGetNextChannelEvent(channel);
-            if (event != 0) {
+            if (event != 0)
+            {
                 synthInsertChannelEvent(queue, event);
             }
         }
@@ -49,10 +59,13 @@ void synthRefreshChannelEventQueue(u8 groupIndex) {
     }
 
     queue = SYNTH_SEQUENCE_QUEUE(voice, groupIndex);
-    for (channel = 0; channel < SYNTH_SEQUENCE_TRACK_COUNT; channel++) {
-        if (keyGroupMap[channel] == groupIndex) {
+    for (channel = 0; channel < SYNTH_SEQUENCE_TRACK_COUNT; channel++)
+    {
+        if (keyGroupMap[channel] == groupIndex)
+        {
             event = synthGetNextChannelEvent(channel);
-            if (event != 0) {
+            if (event != 0)
+            {
                 synthInsertChannelEvent(queue, event);
             }
         }

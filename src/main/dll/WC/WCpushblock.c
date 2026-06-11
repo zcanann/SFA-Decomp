@@ -16,7 +16,8 @@
 #define WCPUSHBLOCK_MAX_ROLL 0x32c8
 #define WCPUSHBLOCK_RIDE_MOVE_ID 0xf
 
-typedef struct WCPushBlockObjectSetup {
+typedef struct WCPushBlockObjectSetup
+{
     u8 pad0[4];
     u8 placementMode;
     u8 group;
@@ -27,7 +28,8 @@ typedef struct WCPushBlockObjectSetup {
     f32 z;
 } WCPushBlockObjectSetup;
 
-typedef struct WCPushBlockRotationWork {
+typedef struct WCPushBlockRotationWork
+{
     s16 yaw;
     s16 pitch;
     s16 roll;
@@ -38,7 +40,8 @@ typedef struct WCPushBlockRotationWork {
     f32 zeroZ;
 } WCPushBlockRotationWork;
 
-typedef struct WCPushBlockObject {
+typedef struct WCPushBlockObject
+{
     s16 yaw;
     s16 pitch;
     s16 roll;
@@ -50,12 +53,13 @@ typedef struct WCPushBlockObject {
     s16 currentMove;
     u8 padA2[0x52];
     int actionState;
-    void *spawnPath;
+    void* spawnPath;
 } WCPushBlockObject;
 
-typedef struct WCPushBlockState {
+typedef struct WCPushBlockState
+{
     u8 pad0[0x10];
-    void *linkedPushBlock;
+    void* linkedPushBlock;
     u8 pad14[0x18];
     s16 cloudYawDrift;
     s16 pushRoll;
@@ -72,7 +76,8 @@ typedef struct WCPushBlockState {
     f32 liftBase;
 } WCPushBlockState;
 
-typedef struct WCPushBlockCloudActionInterface {
+typedef struct WCPushBlockCloudActionInterface
+{
     u8 pad0[0x20];
     void (*setRotorAngle)(s16 angle);
     void (*pad24)(void);
@@ -81,16 +86,16 @@ typedef struct WCPushBlockCloudActionInterface {
 
 extern u8 Obj_IsLoadingLocked(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void vecRotateZXY(void *angles, void *out);
-extern WCPushBlockObjectSetup *Obj_AllocObjectSetup(int size, int objectId);
-extern WCPushBlockObject *Obj_SetupObject(WCPushBlockObjectSetup *setup, int mode, int mapLayer,
-                                          int linkId, void *parent);
-extern void ObjPath_GetPointWorldPosition(s16 *path, int pointIndex, f32 *outX, f32 *outY,
-                                          f32 *outZ, int useInputPosition);
+extern void vecRotateZXY(void* angles, void* out);
+extern WCPushBlockObjectSetup* Obj_AllocObjectSetup(int size, int objectId);
+extern WCPushBlockObject* Obj_SetupObject(WCPushBlockObjectSetup* setup, int mode, int mapLayer,
+                                          int linkId, void* parent);
+extern void ObjPath_GetPointWorldPosition(s16* path, int pointIndex, f32* outX, f32* outY,
+                                          f32* outZ, int useInputPosition);
 extern f32 mathCosf(f32 x);
 extern f32 mathSinf(f32 x);
 
-extern WCPushBlockCloudActionInterface **gCloudActionInterface;
+extern WCPushBlockCloudActionInterface** gCloudActionInterface;
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 lbl_803E5C70;
@@ -107,14 +112,15 @@ extern f32 lbl_803E5C98;
 extern f32 lbl_803E5CA8;
 extern f32 lbl_803E5CAC;
 
-void WCPushBlock_SpawnFromPath(s16 *path)
+void WCPushBlock_SpawnFromPath(s16* path)
 {
-    WCPushBlockObjectSetup *setup;
-    WCPushBlockObject *block;
+    WCPushBlockObjectSetup* setup;
+    WCPushBlockObject* block;
     f32 outVec[3];
     WCPushBlockRotationWork rotation;
 
-    if (Obj_IsLoadingLocked() == 0) {
+    if (Obj_IsLoadingLocked() == 0)
+    {
         return;
     }
 
@@ -141,7 +147,8 @@ void WCPushBlock_SpawnFromPath(s16 *path)
                                   &setup->z, 0);
 
     block = Obj_SetupObject(setup, 5, -1, -1, NULL);
-    if (block == NULL) {
+    if (block == NULL)
+    {
         return;
     }
 
@@ -167,7 +174,7 @@ void WCPushBlock_SpawnFromPath(s16 *path)
     block->yaw = 0;
 }
 
-void WCPushBlock_UpdateCloudAction(int obj, WCPushBlockState *state)
+void WCPushBlock_UpdateCloudAction(int obj, WCPushBlockState* state)
 {
     f32 angle;
     f32 angleSin;
@@ -186,9 +193,12 @@ void WCPushBlock_UpdateCloudAction(int obj, WCPushBlockState *state)
     angle = (lbl_803E5C84 * (f32)state->rotorAngle) / lbl_803E5C88;
     angleCos = mathSinf(angle);
 
-    if (state->linkedPushBlock != NULL) {
+    if (state->linkedPushBlock != NULL)
+    {
         targetLift = (f32)state->pushRoll / lbl_803E5C8C;
-    } else {
+    }
+    else
+    {
         targetLift = lbl_803E5C70;
     }
     state->liftAmount += (targetLift - state->liftAmount) * timeDelta * lbl_803E5C90;
@@ -209,7 +219,7 @@ void WCPushBlock_UpdateCloudAction(int obj, WCPushBlockState *state)
     (*gCloudActionInterface)->moveRelative(moveZ, moveX);
 }
 
-void WCPushBlock_UpdateRideTilt(WCPushBlockObject *obj, WCPushBlockState *state)
+void WCPushBlock_UpdateRideTilt(WCPushBlockObject* obj, WCPushBlockState* state)
 {
     int targetPitch;
     int targetRoll;
@@ -227,41 +237,51 @@ void WCPushBlock_UpdateRideTilt(WCPushBlockObject *obj, WCPushBlockState *state)
     }
     state->cloudYawDrift =
         (s16)(state->cloudYawDrift -
-              ((state->cloudYawDrift * framesThisStep) >> WCPUSHBLOCK_ANGLE_DAMP_SHIFT));
+            ((state->cloudYawDrift * framesThisStep) >> WCPUSHBLOCK_ANGLE_DAMP_SHIFT));
 
     pitchDelta = targetPitch - (u16)obj->pitch;
-    if (pitchDelta > 0x8000) {
+    if (pitchDelta > 0x8000)
+    {
         pitchDelta -= 0xffff;
     }
-    if (pitchDelta < -0x8000) {
+    if (pitchDelta < -0x8000)
+    {
         pitchDelta += 0xffff;
     }
 
-    obj->pitch = (s16)(lbl_803E5CA8 * ((f32)pitchDelta * timeDelta) + (f32)*(s16 *)(int)&obj->pitch);
+    obj->pitch = (s16)(lbl_803E5CA8 * ((f32)pitchDelta * timeDelta) + (f32) * (s16*)(int)&obj->pitch);
 
     rollDelta = targetRoll - (u16)state->pushRoll;
-    if (rollDelta > 0x8000) {
+    if (rollDelta > 0x8000)
+    {
         rollDelta -= 0xffff;
     }
-    if (rollDelta < -0x8000) {
+    if (rollDelta < -0x8000)
+    {
         rollDelta += 0xffff;
     }
 
     state->pushRoll =
-        (s16)(lbl_803E5CA8 * ((f32)rollDelta * timeDelta) + (f32)*(s16 *)(int)&state->pushRoll);
+        (s16)(lbl_803E5CA8 * ((f32)rollDelta * timeDelta) + (f32) * (s16*)(int)&state->pushRoll);
 
     pitch = obj->pitch;
-    if (pitch < -WCPUSHBLOCK_MAX_PITCH) {
+    if (pitch < -WCPUSHBLOCK_MAX_PITCH)
+    {
         pitch = -WCPUSHBLOCK_MAX_PITCH;
-    } else if (pitch > WCPUSHBLOCK_MAX_PITCH) {
+    }
+    else if (pitch > WCPUSHBLOCK_MAX_PITCH)
+    {
         pitch = WCPUSHBLOCK_MAX_PITCH;
     }
     obj->pitch = (s16)pitch;
 
     roll = state->pushRoll;
-    if (roll < -WCPUSHBLOCK_MAX_ROLL) {
+    if (roll < -WCPUSHBLOCK_MAX_ROLL)
+    {
         roll = -WCPUSHBLOCK_MAX_ROLL;
-    } else if (roll > WCPUSHBLOCK_MAX_ROLL) {
+    }
+    else if (roll > WCPUSHBLOCK_MAX_ROLL)
+    {
         roll = WCPUSHBLOCK_MAX_ROLL;
     }
     state->pushRoll = (s16)roll;
@@ -269,12 +289,14 @@ void WCPushBlock_UpdateRideTilt(WCPushBlockObject *obj, WCPushBlockState *state)
     obj->yaw = (s16)(state->cloudYawDrift + 0x4000);
     obj->roll = state->pushRoll;
 
-    if (obj->currentMove != WCPUSHBLOCK_RIDE_MOVE_ID) {
+    if (obj->currentMove != WCPUSHBLOCK_RIDE_MOVE_ID)
+    {
         ObjAnim_SetCurrentMove((int)obj, WCPUSHBLOCK_RIDE_MOVE_ID, lbl_803E5C70, 0);
     }
 
     if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E5CAC,
-                                                                  timeDelta, NULL) != 0) {
+                                                                     timeDelta, NULL) != 0)
+    {
         state->rideState = 0;
     }
 

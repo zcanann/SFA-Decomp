@@ -67,7 +67,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_045E_DR_BigShack_packet_info {
+enum obj_045E_DR_BigShack_packet_info
+{
     DR_BIGSHACK_DEF_ID = 0x045E,
     DR_BIGSHACK_DLL_ID = 0x026E,
     DR_BIGSHACK_CLASS_ID = 0x0030,

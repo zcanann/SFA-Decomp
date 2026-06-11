@@ -61,7 +61,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_059E_CmbSrcTWall_packet_info {
+enum obj_059E_CmbSrcTWall_packet_info
+{
     CMBSRCTWALL_DEF_ID = 0x059E,
     CMBSRCTWALL_DLL_ID = 0x02B1,
     CMBSRCTWALL_CLASS_ID = 0x007E,

@@ -65,7 +65,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_036D_DFP_seqpoin_packet_info {
+enum obj_036D_DFP_seqpoin_packet_info
+{
     DFP_SEQPOIN_DEF_ID = 0x036D,
     DFP_SEQPOIN_DLL_ID = 0x022D,
     DFP_SEQPOIN_CLASS_ID = 0x0030,

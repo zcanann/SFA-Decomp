@@ -41,7 +41,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_002E_bike_defs {
+enum class_002E_bike_defs
+{
     BIKE_IMSNOWBIKE = 0x01BD,
     BIKE_CRSNOWBIKE = 0x010D,
     BIKE_CRSNOWCLAWB = 0x0110,

@@ -3,20 +3,20 @@
 /* MusyX runtime DSP control (hw_dspctrl.c, MUSY_VERSION <= 2.0.0 paths),
  * recovered against the public MusyX runtime source. */
 
-extern void *memset(void *dst, int val, u32 n);
-extern void DCFlushRange(void *p, u32 n);
-extern void DCFlushRangeNoSync(void *p, u32 n);
-extern void DCInvalidateRange(void *p, u32 n);
-extern void DCStoreRangeNoSync(void *p, u32 n);
-extern void *salMalloc(u32 size);
-extern void salFree(void *p);
+extern void* memset(void* dst, int val, u32 n);
+extern void DCFlushRange(void* p, u32 n);
+extern void DCFlushRangeNoSync(void* p, u32 n);
+extern void DCInvalidateRange(void* p, u32 n);
+extern void DCStoreRangeNoSync(void* p, u32 n);
+extern void* salMalloc(u32 size);
+extern void salFree(void* p);
 extern u32 aramGetBaseAddress(void);
 
-extern void *dspCmdBuffer;  /* dspHrtfHistoryBuffer */
-extern DSPvoice *dspVoice;
-extern void *dspITDBuffer;
-extern s32 *dspSurround;
-extern void *dspCmdList;
+extern void* dspCmdBuffer; /* dspHrtfHistoryBuffer */
+extern DSPvoice* dspVoice;
+extern void* dspITDBuffer;
+extern s32* dspSurround;
+extern void* dspCmdList;
 extern u32 lbl_803DE310; /* dspARAMZeroBuffer */
 extern DSPstudioinfo lbl_803CC1E0[];
 extern u8 salMaxStudioNum;
@@ -25,7 +25,7 @@ extern u8 salNumVoices;
 #define dspARAMZeroBuffer lbl_803DE310
 #define dspStudio lbl_803CC1E0
 
-void salInitHRTFBuffer(void);                   /* salInitHRTFBuffer */
+void salInitHRTFBuffer(void); /* salInitHRTFBuffer */
 void salActivateStudio(u8 studio, u32 isMaster, u32 type); /* salActivateStudio */
 
 /*
@@ -43,15 +43,20 @@ u32 salInitDspCtrl(u8 numVoices, u8 numStudios, u32 defaultStudioDPL2)
     salMaxStudioNum = numStudios;
 
     dspARAMZeroBuffer = aramGetBaseAddress();
-    if ((dspCmdList = salMalloc(1024 * sizeof(u16)))) {
-        if ((dspSurround = salMalloc(160 * sizeof(s32)))) {
+    if ((dspCmdList = salMalloc(1024 * sizeof(u16))))
+    {
+        if ((dspSurround = salMalloc(160 * sizeof(s32))))
+        {
             memset(dspSurround, 0, 160 * sizeof(s32));
             DCFlushRange(dspSurround, 160 * sizeof(s32));
-            if ((dspVoice = salMalloc(salNumVoices * sizeof(DSPvoice)))) {
-                if ((dspITDBuffer = salMalloc(salNumVoices * 64))) {
+            if ((dspVoice = salMalloc(salNumVoices * sizeof(DSPvoice))))
+            {
+                if ((dspITDBuffer = salMalloc(salNumVoices * 64)))
+                {
                     DCInvalidateRange(dspITDBuffer, salNumVoices * 64);
                     itdPtr = (u32)dspITDBuffer;
-                    for (i = 0; i < salNumVoices; ++i) {
+                    for (i = 0; i < salNumVoices; ++i)
+                    {
                         dspVoice[i].state = 0;
                         dspVoice[i].postBreak = 0;
                         dspVoice[i].startupBreak = 0;
@@ -63,26 +68,32 @@ u32 salInitDspCtrl(u8 numVoices, u8 numStudios, u32 defaultStudioDPL2)
                         memset(dspVoice[i].pb, 0, sizeof(_PB));
                         dspVoice[i].patchData = salMalloc(0x80);
                         dspVoice[i].pb->currHi = ((u32)dspVoice[i].pb >> 16);
-                        dspVoice[i].pb->currLo = (u16)(u32)dspVoice[i].pb;
+                        dspVoice[i].pb->currLo = (u16)(u32)
+                        dspVoice[i].pb;
                         dspVoice[i].pb->update.dataHi = ((u32)dspVoice[i].patchData >> 16);
-                        dspVoice[i].pb->update.dataLo = (u16)(u32)dspVoice[i].patchData;
+                        dspVoice[i].pb->update.dataLo = (u16)(u32)
+                        dspVoice[i].patchData;
                         dspVoice[i].pb->itd.bufferHi = (itdPtr >> 16);
                         dspVoice[i].pb->itd.bufferLo = (u16)itdPtr;
-                        dspVoice[i].itdBuffer = (void *)itdPtr;
+                        dspVoice[i].itdBuffer = (void*)itdPtr;
                         itdPtr += 0x40;
                         dspVoice[i].virtualSampleID = 0xFFFFFFFF;
                         DCStoreRangeNoSync(dspVoice[i].pb, sizeof(_PB));
-                        for (j = 0; j < 5; ++j) {
+                        for (j = 0; j < 5; ++j)
+                        {
                             dspVoice[i].changed[j] = 0;
                         }
                     }
 
-                    for (i = 0; i < salMaxStudioNum; ++i) {
+                    for (i = 0; i < salMaxStudioNum; ++i)
+                    {
                         dspStudio[i].state = 0;
-                        if (!(dspStudio[i].spb = salMalloc(sizeof(_SPB)))) {
+                        if (!(dspStudio[i].spb = salMalloc(sizeof(_SPB))))
+                        {
                             return 0;
                         }
-                        if (!(dspStudio[i].main[0] = salMalloc(0x3c00))) {
+                        if (!(dspStudio[i].main[0] = salMalloc(0x3c00)))
+                        {
                             return 0;
                         }
                         memset(dspStudio[i].main[0], 0, 0x3c00);
@@ -105,7 +116,8 @@ u32 salInitDspCtrl(u8 numVoices, u8 numStudios, u32 defaultStudioDPL2)
                     }
 
                     salActivateStudio(0, 1, defaultStudioDPL2 != 0 ? 1 : 0);
-                    if (!(dspCmdBuffer = salMalloc(0x100))) {
+                    if (!(dspCmdBuffer = salMalloc(0x100)))
+                    {
                         return 0;
                     }
                     salInitHRTFBuffer();
@@ -139,11 +151,13 @@ int salExitDspCtrl(void)
     u8 i;
 
     salFree(dspCmdBuffer);
-    for (i = 0; i < salNumVoices; ++i) {
+    for (i = 0; i < salNumVoices; ++i)
+    {
         salFree(dspVoice[i].pb);
         salFree(dspVoice[i].patchData);
     }
-    for (i = 0; i < salMaxStudioNum; ++i) {
+    for (i = 0; i < salMaxStudioNum; ++i)
+    {
         salFree(dspStudio[i].spb);
         salFree(dspStudio[i].main[0]);
     }
@@ -199,34 +213,40 @@ void salDeactivateStudio(u8 studio)
  *
  * EN v1.0 Address: 0x8027BFE4, size 244b
  */
-int salCheckVolErrorAndResetDelta(u16 *dsp_vol, u16 *dsp_delta, u16 *last_vol, u16 targetVol, u16 *resetFlags,
-                u16 resetMask)
+int salCheckVolErrorAndResetDelta(u16* dsp_vol, u16* dsp_delta, u16* last_vol, u16 targetVol, u16* resetFlags,
+                                  u16 resetMask)
 {
     int delta;
     int step;
 
-    if (targetVol != *last_vol) {
-        delta = (s16)targetVol - (s16)*last_vol;
+    if (targetVol != *last_vol)
+    {
+        delta = (s16)targetVol - (s16) * last_vol;
         delta = (s16)delta;
-        if ((delta >= 0x20) && (delta < 0xa0)) {
+        if ((delta >= 0x20) && (delta < 0xa0))
+        {
             step = (s16)(delta >> 5);
-            if (step < 5) {
+            if (step < 5)
+            {
                 resetFlags[step] |= resetMask;
             }
             *dsp_delta = 1;
             *last_vol += step << 5;
             return 1;
         }
-        if ((delta <= -0x20) && (delta > -0xa0)) {
+        if ((delta <= -0x20) && (delta > -0xa0))
+        {
             step = (s16)(-delta >> 5);
-            if (step < 5) {
+            if (step < 5)
+            {
                 resetFlags[step] |= resetMask;
             }
             *dsp_delta = 0xffff;
             *last_vol -= step << 5;
             return 1;
         }
-        if ((targetVol == 0) && (delta > -0x20)) {
+        if ((targetVol == 0) && (delta > -0x20))
+        {
             *last_vol = 0;
             *dsp_vol = 0;
         }
@@ -235,7 +255,7 @@ int salCheckVolErrorAndResetDelta(u16 *dsp_vol, u16 *dsp_delta, u16 *last_vol, u
     return 0;
 }
 
-static void AddDpop(s32 *sum, s16 delta)
+static void AddDpop(s32* sum, s16 delta)
 {
     *sum += (int)delta;
     *sum = (*sum > 0x7fffff) ? 0x7fffff : (*sum < -0x7fffff ? -0x7fffff : *sum);
@@ -246,9 +266,9 @@ static void AddDpop(s32 *sum, s16 delta)
  *
  * EN v1.0 Address: 0x8027C0D8, size 696b
  */
-void HandleDepopVoice(DSPstudioinfo *stp, DSPvoice *dsp_vptr)
+void HandleDepopVoice(DSPstudioinfo* stp, DSPvoice* dsp_vptr)
 {
-    _PB *pb;
+    _PB* pb;
 
     dsp_vptr->postBreak = 0;
     dsp_vptr->pb->state = 0;
@@ -257,24 +277,29 @@ void HandleDepopVoice(DSPstudioinfo *stp, DSPvoice *dsp_vptr)
     AddDpop(&stp->hostDPopSum.l, pb->dpop.aL);
     AddDpop(&stp->hostDPopSum.r, pb->dpop.aR);
 
-    if ((pb->mixerCtrl & 0x04) != 0) {
+    if ((pb->mixerCtrl & 0x04) != 0)
+    {
         AddDpop(&stp->hostDPopSum.s, pb->dpop.aS);
     }
 
-    if ((pb->mixerCtrl & 0x01) != 0) {
+    if ((pb->mixerCtrl & 0x01) != 0)
+    {
         AddDpop(&stp->hostDPopSum.lA, pb->dpop.aAuxAL);
         AddDpop(&stp->hostDPopSum.rA, pb->dpop.aAuxAR);
 
-        if ((pb->mixerCtrl & 0x14) != 0) {
+        if ((pb->mixerCtrl & 0x14) != 0)
+        {
             AddDpop(&stp->hostDPopSum.sA, pb->dpop.aAuxAS);
         }
     }
 
-    if ((pb->mixerCtrl & 0x12) != 0) {
+    if ((pb->mixerCtrl & 0x12) != 0)
+    {
         AddDpop(&stp->hostDPopSum.lB, pb->dpop.aAuxBL);
         AddDpop(&stp->hostDPopSum.rB, pb->dpop.aAuxBR);
 
-        if ((pb->mixerCtrl & 0x4) != 0) {
+        if ((pb->mixerCtrl & 0x4) != 0)
+        {
             AddDpop(&stp->hostDPopSum.sB, pb->dpop.aAuxBS);
         }
     }
@@ -285,13 +310,14 @@ void HandleDepopVoice(DSPstudioinfo *stp, DSPvoice *dsp_vptr)
  *
  * EN v1.0 Address: 0x8027C390, size 252b
  */
-void SortVoices(DSPvoice **voices, int l, int r)
+void SortVoices(DSPvoice** voices, int l, int r)
 {
     int i;
     int last;
-    DSPvoice *tmp;
+    DSPvoice* tmp;
 
-    if (l >= r) {
+    if (l >= r)
+    {
         return;
     }
 
@@ -301,8 +327,10 @@ void SortVoices(DSPvoice **voices, int l, int r)
     last = l;
     i = l + 1;
 
-    for (; i <= r; ++i) {
-        if (voices[i]->prio < voices[l]->prio) {
+    for (; i <= r; ++i)
+    {
+        if (voices[i]->prio < voices[l]->prio)
+        {
             last += 1;
             tmp = voices[last];
             voices[last] = voices[i];

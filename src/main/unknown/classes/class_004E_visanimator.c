@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_004E_VisAnimator_defs {
+enum class_004E_VisAnimator_defs
+{
     VISANIMATOR_VISANIMATOR = 0x04BD,
 };
 #endif

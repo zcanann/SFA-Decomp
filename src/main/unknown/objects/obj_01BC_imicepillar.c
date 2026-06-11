@@ -52,7 +52,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_01BC_IMIcePillar_packet_info {
+enum obj_01BC_IMIcePillar_packet_info
+{
     IMICEPILLAR_DEF_ID = 0x01BC,
     IMICEPILLAR_DLL_ID = 0x016D,
     IMICEPILLAR_CLASS_ID = 0x0066,

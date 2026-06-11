@@ -62,7 +62,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_030B_SB_Lamp_packet_info {
+enum obj_030B_SB_Lamp_packet_info
+{
     SB_LAMP_DEF_ID = 0x030B,
     SB_LAMP_DLL_ID = 0x01F4,
     SB_LAMP_CLASS_ID = 0x0030,

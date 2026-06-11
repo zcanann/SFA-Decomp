@@ -37,7 +37,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0040_CloudRunner_defs {
+enum class_0040_CloudRunner_defs
+{
     CLOUDRUNNER_CFAMBIENTCL = 0x00E3,
     CLOUDRUNNER_CFCLOUDBABY = 0x00E2,
     CLOUDRUNNER_SHCLOUDBABY = 0x02BA,

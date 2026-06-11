@@ -76,7 +76,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0210_WORLDarwing_packet_info {
+enum obj_0210_WORLDarwing_packet_info
+{
     WORLDARWING_DEF_ID = 0x0210,
     WORLDARWING_DLL_ID = 0x01D3,
     WORLDARWING_CLASS_ID = 0x0061,

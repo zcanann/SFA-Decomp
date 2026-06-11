@@ -62,7 +62,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_02A9_SH_staff_packet_info {
+enum obj_02A9_SH_staff_packet_info
+{
     SH_STAFF_DEF_ID = 0x02A9,
     SH_STAFF_DLL_ID = 0x01B1,
     SH_STAFF_CLASS_ID = 0x0061,

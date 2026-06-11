@@ -36,7 +36,8 @@
 /*
  * Reference-only slot names. Verify against EN before promoting any of these into live code.
  */
-enum dll_01F3_SB_MiniFire_slot {
+enum dll_01F3_SB_MiniFire_slot
+{
     SB_MINIFIRE_INITIALISE = 0,
     SB_MINIFIRE_RELEASE = 1,
     SB_MINIFIRE_INIT = 3,

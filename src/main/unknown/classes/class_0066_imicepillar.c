@@ -35,7 +35,8 @@
 /*
  * Reference-only class packet enums. Verify against EN before promoting names into live code.
  */
-enum class_0066_IMIcePillar_defs {
+enum class_0066_IMIcePillar_defs
+{
     IMICEPILLAR_IMICEPILLAR = 0x01BC,
 };
 #endif

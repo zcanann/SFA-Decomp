@@ -5,22 +5,22 @@
 extern u32 getButtonsHeld(int port);
 extern u32 getButtonsJustPressed(int port);
 extern void Sfx_PlayFromObject(int sfx, int id);
-extern void drawTexture(void *tex, f32 x, f32 y, int p2, int alpha);
+extern void drawTexture(void* tex, f32 x, f32 y, int p2, int alpha);
 extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShowStr(void *str, int id, int p3, int p4);
-extern int sprintf(char *buf, const char *fmt, ...);
+extern void gameTextShowStr(void* str, int id, int p3, int p4);
+extern int sprintf(char* buf, const char* fmt, ...);
 
 extern u8 saveFileSelect_debugCheatProgress;
 extern u8 saveFileSelect_saveCheatProgress;
 extern u8 saveFileSelect_cheatInputTimer;
 extern s8 saveFileSelect_currentSlotIndex;
 extern u8 saveFileSelect_saveDirty;
-extern FrontendSaveSlot *saveFileSelect_saveSlotsBase;
-extern FrontendSaveSlot *saveFileSelect_saveSlots;
+extern FrontendSaveSlot* saveFileSelect_saveSlotsBase;
+extern FrontendSaveSlot* saveFileSelect_saveSlots;
 extern u8 enableDebugText;
 extern u16 saveFileSelect_debugCheatSequence[6];
 extern u16 saveFileSelect_slotCheatSequence[6];
-extern void *lbl_803A8680[4];
+extern void* lbl_803A8680[4];
 extern f32 lbl_803E1D58;
 extern f32 lbl_803E1D5C;
 extern f32 lbl_803E1D60;
@@ -45,9 +45,11 @@ void saveFileSelect_checkCheatCodes(void)
     u32 low;
     u32 midLow;
 
-    if (saveFileSelect_debugCheatProgress != 0 || saveFileSelect_saveCheatProgress != 0) {
+    if (saveFileSelect_debugCheatProgress != 0 || saveFileSelect_saveCheatProgress != 0)
+    {
         saveFileSelect_cheatInputTimer++;
-        if (saveFileSelect_cheatInputTimer > 0xF) {
+        if (saveFileSelect_cheatInputTimer > 0xF)
+        {
             saveFileSelect_debugCheatProgress = 0;
             saveFileSelect_saveCheatProgress = 0;
             saveFileSelect_cheatInputTimer = 0;
@@ -56,18 +58,21 @@ void saveFileSelect_checkCheatCodes(void)
     held = getButtonsHeld(0);
     if ((held & 0x10) == 0) return;
 
-    if (saveFileSelect_saveCheatProgress == 0) {
+    if (saveFileSelect_saveCheatProgress == 0)
+    {
         pressed = (u16)getButtonsJustPressed(0);
         hi = (int)(pressed & 0xF000) >> 8;
         midHi = (pressed & 0xF00) << 4;
         low = (pressed & 0xF) << 8;
         midLow = (int)(pressed & 0xF0) >> 4;
         nibbles = hi | (midHi | (low | midLow));
-        if ((int)(nibbles & saveFileSelect_debugCheatSequence[saveFileSelect_debugCheatProgress]) != 0) {
+        if ((int)(nibbles & saveFileSelect_debugCheatSequence[saveFileSelect_debugCheatProgress]) != 0)
+        {
             saveFileSelect_debugCheatProgress++;
             saveFileSelect_cheatInputTimer = 0;
         }
-        if (saveFileSelect_debugCheatProgress == 5) {
+        if (saveFileSelect_debugCheatProgress == 5)
+        {
             enableDebugText = 1;
             Sfx_PlayFromObject(0, SFXen_waterblock_stop);
         }
@@ -81,11 +86,13 @@ void saveFileSelect_checkCheatCodes(void)
         low = (pressed & 0xF) << 8;
         midLow = (int)(pressed & 0xF0) >> 4;
         nibbles = hi | (midHi | (low | midLow));
-        if ((int)(nibbles & saveFileSelect_slotCheatSequence[saveFileSelect_saveCheatProgress]) != 0) {
+        if ((int)(nibbles & saveFileSelect_slotCheatSequence[saveFileSelect_saveCheatProgress]) != 0)
+        {
             saveFileSelect_saveCheatProgress++;
             saveFileSelect_cheatInputTimer = 0;
         }
-        if (saveFileSelect_saveCheatProgress == 5) {
+        if (saveFileSelect_saveCheatProgress == 5)
+        {
             saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex].cheatFlag = 5;
             saveFileSelect_saveDirty = 1;
             Sfx_PlayFromObject(0, SFXen_waterblock_stop);
@@ -127,9 +134,11 @@ void saveSelect_drawText(int unused, int alpha)
         gameTextShowStr(buf, 0x43, 0, 0);
     }
 
-    sprintf(buf, sFrontendSingleDigitFormat, (u32)saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex].lifeCount);
+    sprintf(buf, sFrontendSingleDigitFormat,
+            (u32)saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex].lifeCount);
     gameTextShowStr(buf, 0x44, 0, 0);
 
-    sprintf(buf, sFrontendSingleDigitFormat, (u32)saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex].magicCount);
+    sprintf(buf, sFrontendSingleDigitFormat,
+            (u32)saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex].magicCount);
     gameTextShowStr(buf, 0x45, 0, 0);
 }

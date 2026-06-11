@@ -30,11 +30,11 @@ extern f32 powfBitEstimate(f32 x, f32 y);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined2 *
-FUN_80017460(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9
-            ,int param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13,
-            undefined4 param_14,undefined4 param_15,undefined4 param_16)
+undefined2*
+FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
+             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
+             , int param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13,
+             undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
     return 0;
 }
@@ -52,11 +52,11 @@ FUN_80017460(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined2 *
-FUN_80017468(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9
-            ,undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13,
-            undefined4 param_14,undefined4 param_15,undefined4 param_16)
+undefined2*
+FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
+             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
+             , undefined4 param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13,
+             undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
     return 0;
 }
@@ -76,12 +76,7 @@ FUN_80017468(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  */
 
 
-
-
-
 extern f32 timeDelta;
-
-
 
 
 /*
@@ -98,8 +93,8 @@ extern f32 timeDelta;
  * PAL Size: TODO
  */
 undefined4
-FUN_80017500(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9)
+FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
+             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9)
 {
     return 0;
 }
@@ -118,9 +113,9 @@ FUN_80017500(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Size: TODO
  */
 undefined4
-FUN_8001786c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,
-            undefined4 param_10,undefined4 param_11,undefined4 param_12)
+FUN_8001786c(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
+             undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined4 param_9,
+             undefined4 param_10, undefined4 param_11, undefined4 param_12)
 {
     return 0;
 }
@@ -138,10 +133,10 @@ FUN_8001786c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined *
-FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9
-            )
+undefined*
+FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
+             undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
+)
 {
     return 0;
 }
@@ -151,112 +146,94 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 /* ObjModel/model-file accessors. */
 
 
-
-
-
-
-
-
 /* Global game-state / text accessors. */
-
-
-
-
-
-
-
 
 
 /* Simple field/global accessors. */
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 extern int randomGetRange(int lo, int hi);
-
 
 
 #pragma scheduling off
 #pragma peephole off
-f32 getXZDistance(f32 *a, f32 *b) {
+f32 getXZDistance(f32* a, f32* b)
+{
     f32 dx = a[0] - b[0];
     f32 dz = a[2] - b[2];
     return dx * dx + dz * dz;
 }
 
-f32 vec3f_distanceSquared(f32 *a, f32 *b) {
+f32 vec3f_distanceSquared(f32* a, f32* b)
+{
     f32 dx = a[0] - b[0];
     f32 dy = a[1] - b[1];
     f32 dz = a[2] - b[2];
     return dx * dx + dy * dy + dz * dz;
 }
 
-void Vec3_ScaleAdd(f32 *a, f32 s, f32 *b, f32 *out) {
+void Vec3_ScaleAdd(f32* a, f32 s, f32* b, f32* out)
+{
     out[0] = s * b[0] + a[0];
     out[1] = s * b[1] + a[1];
     out[2] = s * b[2] + a[2];
 }
 
 
-
 extern float fn_802924B4(float y, float x);
 extern double lbl_803DE7D8;
 
 
-int getAngle(float y, float x) {
+int getAngle(float y, float x)
+{
     return (int)(lbl_803DE7D8 * fn_802924B4(y, x));
 }
 
-int atan2_8002178c(float y, float x) {
+int atan2_8002178c(float y, float x)
+{
     return (int)(lbl_803DE7D8 * fn_802924B4(y, x));
 }
-
-
 
 
 extern f32 fcos16(int angle);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803DE7D0;
 
-void mtx44ScaleRow1(u8 *p, f32 s) {
-    *(f32 *)(p + 0x10) *= s;
-    *(f32 *)(p + 0x14) *= s;
-    *(f32 *)(p + 0x18) *= s;
+void mtx44ScaleRow1(u8* p, f32 s)
+{
+    *(f32*)(p + 0x10) *= s;
+    *(f32*)(p + 0x14) *= s;
+    *(f32*)(p + 0x18) *= s;
 }
 
-int cos16(u16 angle) {
+int cos16(u16 angle)
+{
     return (int)(lbl_803DE7D0 * fcos16(angle));
 }
 
 
-f32 Vec3_Length(f32 *v) {
+f32 Vec3_Length(f32* v)
+{
     return sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
 }
 
-f32 Vec_xzDistance(f32 *a, f32 *b) {
+f32 Vec_xzDistance(f32* a, f32* b)
+{
     f32 dx = a[0] - b[0];
     f32 dz = a[2] - b[2];
     return sqrtf(dx * dx + dz * dz);
 }
 
-f32 Vec_distance(f32 *a, f32 *b) {
+f32 Vec_distance(f32* a, f32* b)
+{
     f32 dx = a[0] - b[0];
     f32 dy = a[1] - b[1];
     f32 dz = a[2] - b[2];
     return sqrtf(dx * dx + dy * dy + dz * dz);
 }
 
-void Vec3_Cross(f32 *a, f32 *b, f32 *out) {
+void Vec3_Cross(f32* a, f32* b, f32* out)
+{
     out[0] = a[1] * b[2] - a[2] * b[1];
     out[1] = a[2] * b[0] - a[0] * b[2];
     out[2] = a[0] * b[1] - a[1] * b[0];
@@ -265,14 +242,18 @@ void Vec3_Cross(f32 *a, f32 *b, f32 *out) {
 extern f32 lbl_803DE808;
 extern f32 lbl_803DE80C;
 
-void Vec3_ReflectAgainstNormal(f32 *a, f32 *n, f32 *out) {
+void Vec3_ReflectAgainstNormal(f32* a, f32* n, f32* out)
+{
     f32 yy = a[1] * n[1];
     f32 dot = yy + a[0] * n[0] + a[2] * n[2];
-    if (dot > lbl_803DE808) {
+    if (dot > lbl_803DE808)
+    {
         out[0] = n[0];
         out[1] = n[1];
         out[2] = n[2];
-    } else {
+    }
+    else
+    {
         f32 s = dot * lbl_803DE80C;
         out[0] = a[0];
         out[1] = a[1];
@@ -287,30 +268,17 @@ void Vec3_ReflectAgainstNormal(f32 *a, f32 *n, f32 *out) {
 }
 
 
-
-
-
-
-
-
-
 typedef f32 Mtx[3][4];
 extern f32 lbl_803DE7C0;
 extern f32 lbl_803DE7C4;
 
 
+extern void mtxRotateByVec3s(f32* mtx, void* transform);
+extern void mtx44Transpose(f32* src, f32* dst);
 
 
-
-
-extern void mtxRotateByVec3s(f32 *mtx, void *transform);
-extern void mtx44Transpose(f32 *src, f32 *dst);
-
-
-
-
-
-void initRotationMtx(f32 *m, f32 a, f32 b, f32 c) {
+void initRotationMtx(f32* m, f32 a, f32 b, f32 c)
+{
     f32 z = lbl_803DE7C0;
     m[0] = z;
     m[1] = z;
@@ -334,27 +302,23 @@ void initRotationMtx(f32 *m, f32 a, f32 b, f32 c) {
 }
 
 
-
-f32 interpolate(f32 a, f32 t, f32 exp) {
-    if (t <= lbl_803DE7C4) {
+f32 interpolate(f32 a, f32 t, f32 exp)
+{
+    if (t <= lbl_803DE7C4)
+    {
         return a * (lbl_803DE7C4 - powfBitEstimate(lbl_803DE7C4 - t, exp));
     }
     return lbl_803DE7C0;
 }
 
-int atan2i(int y, int x) {
+int atan2i(int y, int x)
+{
     return (int)(lbl_803DE7D8 * fn_802924B4((f32)y, (f32)x));
 }
 
 
-
-
-
-
-
-
-
-void mtx44Transpose(f32 *src, f32 *dst) {
+void mtx44Transpose(f32* src, f32* dst)
+{
     dst[0] = src[0];
     dst[1] = src[4];
     dst[2] = src[8];
@@ -369,11 +333,12 @@ void mtx44Transpose(f32 *src, f32 *dst) {
     dst[11] = src[14];
 }
 
-extern void setMatrixFromObjectPos(f32 *mtx, u8 *obj);
+extern void setMatrixFromObjectPos(f32* mtx, u8* obj);
 
-void setMatrixFromObjectTransposed(void *obj, f32 *out) {
+void setMatrixFromObjectTransposed(void* obj, f32* out)
+{
     f32 m[16];
-    setMatrixFromObjectPos(m, (u8 *)obj);
+    setMatrixFromObjectPos(m, (u8*)obj);
     out[0] = m[0];
     out[1] = m[4];
     out[2] = m[8];
@@ -388,21 +353,18 @@ void setMatrixFromObjectTransposed(void *obj, f32 *out) {
     out[11] = m[14];
 }
 
-void Matrix_TransformPoint(f32 *m, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz) {
+void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz)
+{
     *ox = m[12] + (m[0] * x + m[4] * y + m[8] * z);
     *oy = m[13] + (m[1] * x + m[5] * y + m[9] * z);
     *oz = m[14] + (m[2] * x + m[6] * y + m[10] * z);
 }
 
 
-
-
-
-
-
 extern f32 lbl_803DE810;
 
-void Matrix_TransformVector(f32 *m, f32 *v, f32 *out) {
+void Matrix_TransformVector(f32* m, f32* v, f32* out)
+{
     f32 vx, vy, vz;
     f32 m0, m1, m2;
     f32 t;
@@ -441,19 +403,23 @@ void Matrix_TransformVector(f32 *m, f32 *v, f32 *out) {
 extern int rand(void);
 extern f32 lbl_803DE7F8;
 
-int randomGetRange(int lo, int hi) {
+int randomGetRange(int lo, int hi)
+{
     f32 v;
-    if (lo == hi) {
+    if (lo == hi)
+    {
         return lo;
     }
-    v = (f32)(u32)rand();
+    v = (f32)(u32)
+    rand();
     v = v / lbl_803DE7F8;
     v = v * (lbl_803DE7C4 + (f32)hi - (f32)lo);
     v = v + (f32)lo;
     return (int)v;
 }
 
-void copyMatrix44(f32 *src, f32 *dst) {
+void copyMatrix44(f32* src, f32* dst)
+{
     dst[0] = src[0];
     dst[1] = src[1];
     dst[2] = src[2];
@@ -472,12 +438,14 @@ void copyMatrix44(f32 *src, f32 *dst) {
     dst[15] = src[15];
 }
 
-void Vec3_Normalize(f32 *v) {
+void Vec3_Normalize(f32* v)
+{
     f32 len;
     f32 s;
 
     len = sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-    if (lbl_803DE808 != len) {
+    if (lbl_803DE808 != len)
+    {
         s = lbl_803DE810 / len;
         v[0] *= s;
         v[1] *= s;
@@ -486,35 +454,12 @@ void Vec3_Normalize(f32 *v) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extern f32 fsin16(int angle);
 extern f32 lbl_803DE7F0;
 
 #pragma fp_contract off
-void mtxRotateByVec3s(f32 *mtx, void *transform) {
+void mtxRotateByVec3s(f32* mtx, void* transform)
+{
     f32 cx;
     f32 sx;
     f32 cy;
@@ -529,17 +474,17 @@ void mtxRotateByVec3s(f32 *mtx, void *transform) {
     f32 z;
     f32 zero;
 
-    c = (f32)(int)(lbl_803DE7D0 * fcos16((u16)*(s16 *)transform));
+    c = (f32)(int)(lbl_803DE7D0 * fcos16((u16) * (s16*)transform));
     cx = c * lbl_803DE7F0;
-    c = (f32)(int)(lbl_803DE7D0 * fsin16((u16)*(s16 *)transform));
+    c = (f32)(int)(lbl_803DE7D0 * fsin16((u16) * (s16*)transform));
     sx = c * lbl_803DE7F0;
-    c = (f32)(int)(lbl_803DE7D0 * fcos16((u16)*(s16 *)((u8 *)transform + 2)));
+    c = (f32)(int)(lbl_803DE7D0 * fcos16((u16) * (s16*)((u8*)transform + 2)));
     cy = c * lbl_803DE7F0;
-    c = (f32)(int)(lbl_803DE7D0 * fsin16((u16)*(s16 *)((u8 *)transform + 2)));
+    c = (f32)(int)(lbl_803DE7D0 * fsin16((u16) * (s16*)((u8*)transform + 2)));
     sy = c * lbl_803DE7F0;
-    cz = (f32)(int)(lbl_803DE7D0 * fcos16((u16)*(s16 *)((u8 *)transform + 4)));
+    cz = (f32)(int)(lbl_803DE7D0 * fcos16((u16) * (s16*)((u8*)transform + 4)));
     cz = cz * lbl_803DE7F0;
-    sz = (f32)(int)(lbl_803DE7D0 * fsin16((u16)*(s16 *)((u8 *)transform + 4)));
+    sz = (f32)(int)(lbl_803DE7D0 * fsin16((u16) * (s16*)((u8*)transform + 4)));
     sz = sz * lbl_803DE7F0;
 
     t1 = cy * cz;
@@ -562,9 +507,9 @@ void mtxRotateByVec3s(f32 *mtx, void *transform) {
     mtx[9] = cx * cz - t2;
     mtx[10] = sx * sy;
     mtx[11] = zero;
-    x = *(f32 *)((u8 *)transform + 0xc);
-    y = *(f32 *)((u8 *)transform + 0x10);
-    z = *(f32 *)((u8 *)transform + 0x14);
+    x = *(f32*)((u8*)transform + 0xc);
+    y = *(f32*)((u8*)transform + 0x10);
+    z = *(f32*)((u8*)transform + 0x14);
     s = mtx[0] * x;
     t = mtx[4] * y;
     t = t + s;
@@ -587,44 +532,22 @@ void mtxRotateByVec3s(f32 *mtx, void *transform) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 extern f32 mathSinf(f32);
 extern f32 mathCosf(f32);
-
-
-
-
-
-
-
-
-
-
 
 
 /* Tail residual: a1/a2/b0 FP volatile rotation (f1/f2/f3) resists decl-order
    and fresh-web restructures -- recipe #82 named-local cap. */
 #pragma fp_contract on
-void mtx44_mult(f32 *a, f32 *b, f32 *out)
+void mtx44_mult(f32* a, f32* b, f32* out)
 {
-    f32 *end = a + 12;
+    f32* end = a + 12;
     f32 a1, a0, a2;
     f32 b0, b1, b2, b3;
     f32 s, t;
 
-    do {
+    do
+    {
         a0 = a[0];
         a1 = a[1];
         a2 = a[2];
@@ -655,7 +578,8 @@ void mtx44_mult(f32 *a, f32 *b, f32 *out)
         out[2] = b2 + (b0 + b1);
         out += 4;
         a += 4;
-    } while (end != a);
+    }
+    while (end != a);
 
     a0 = a[0];
     a1 = a[1];
@@ -696,13 +620,13 @@ void mtx44_mult(f32 *a, f32 *b, f32 *out)
 }
 
 #pragma opt_strength_reduction off
-void mtx44_multSafe(int a, int b, f32 *out)
+void mtx44_multSafe(int a, int b, f32* out)
 {
     f32 tmp[16];
     int o3, o2, o1;
     int t;
     int row;
-    f32 *tp;
+    f32* tp;
     int i;
     int j;
     f32 zero;
@@ -711,27 +635,30 @@ void mtx44_multSafe(int a, int b, f32 *out)
     row = 0;
     zero = lbl_803DE7C0;
     tp = tmp;
-    for (; i < 4; i++) {
+    for (; i < 4; i++)
+    {
         j = 0;
         t = row;
         o1 = (row + 1) * 4;
         o2 = (row + 2) * 4;
         o3 = (row + 3) * 4;
-        for (; j < 4; j++) {
+        for (; j < 4; j++)
+        {
             tp[t] = zero;
-            tp[t] += ((f32 *)a)[row] * ((f32 *)b)[j];
-            tp[t] += *(f32 *)(a + o1) * *(f32 *)(b + (j + 4) * 4);
-            tp[t] += *(f32 *)(a + o2) * *(f32 *)(b + (j + 8) * 4);
-            tp[t] += *(f32 *)(a + o3) * *(f32 *)(b + (j + 12) * 4);
+            tp[t] += ((f32*)a)[row] * ((f32*)b)[j];
+            tp[t] += *(f32*)(a + o1) * *(f32*)(b + (j + 4) * 4);
+            tp[t] += *(f32*)(a + o2) * *(f32*)(b + (j + 8) * 4);
+            tp[t] += *(f32*)(a + o3) * *(f32*)(b + (j + 12) * 4);
             t++;
         }
         row += 4;
     }
-    for (i = 0; i < 16; i += 4) {
-        *(f32 *)((int)out + (i << 2)) = *(f32 *)((int)tmp + (i << 2));
-        *(f32 *)((int)out + ((i + 1) << 2)) = *(f32 *)((int)tmp + ((i + 1) << 2));
-        *(f32 *)((int)out + ((i + 2) << 2)) = *(f32 *)((int)tmp + ((i + 2) << 2));
-        *(f32 *)((int)out + ((i + 3) << 2)) = *(f32 *)((int)tmp + ((i + 3) << 2));
+    for (i = 0; i < 16; i += 4)
+    {
+        *(f32*)((int)out + (i << 2)) = *(f32*)((int)tmp + (i << 2));
+        *(f32*)((int)out + ((i + 1) << 2)) = *(f32*)((int)tmp + ((i + 1) << 2));
+        *(f32*)((int)out + ((i + 2) << 2)) = *(f32*)((int)tmp + ((i + 2) << 2));
+        *(f32*)((int)out + ((i + 3) << 2)) = *(f32*)((int)tmp + ((i + 3) << 2));
     }
 }
 
@@ -739,7 +666,7 @@ extern f32 lbl_803DE7E8;
 extern f32 lbl_803DE7EC;
 
 #pragma opt_strength_reduction on
-void vecRotateYXZ(s16 *a, f32 *v)
+void vecRotateYXZ(s16* a, f32* v)
 {
     f32 x, y, z;
     f32 s1, s2;
@@ -782,19 +709,10 @@ void vecRotateYXZ(s16 *a, f32 *v)
 }
 
 
-
-
-
-
-
-
-
-
-
-extern void angleToVec2(int angle, f32 *cosOut, f32 *sinOut);
+extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
 
 #pragma peephole on
-void setMatrixFromObjectPos(f32 *m, u8 *p)
+void setMatrixFromObjectPos(f32* m, u8* p)
 {
     f32 scale;
     f32 zero;
@@ -805,10 +723,10 @@ void setMatrixFromObjectPos(f32 *m, u8 *p)
     f32 s2;
     f32 c2;
 
-    angleToVec2((u16)*(s16 *)(p + 0x0), &s0, &c0);
-    angleToVec2((u16)*(s16 *)(p + 0x2), &s1, &c1);
-    angleToVec2((u16)*(s16 *)(p + 0x4), &s2, &c2);
-    scale = *(f32 *)(p + 0x8);
+    angleToVec2((u16) * (s16*)(p + 0x0), &s0, &c0);
+    angleToVec2((u16) * (s16*)(p + 0x2), &s1, &c1);
+    angleToVec2((u16) * (s16*)(p + 0x4), &s2, &c2);
+    scale = *(f32*)(p + 0x8);
     m[0] = scale * (s2 * (s1 * s0) + c2 * c0);
     m[1] = scale * (s2 * c1);
     m[2] = scale * (s2 * (s1 * c0) - c2 * s0);
@@ -822,17 +740,17 @@ void setMatrixFromObjectPos(f32 *m, u8 *p)
     m[9] = -s1 * scale;
     m[10] = scale * (c1 * c0);
     m[11] = zero;
-    m[12] = *(f32 *)(p + 0xc);
-    m[13] = *(f32 *)(p + 0x10);
-    m[14] = *(f32 *)(p + 0x14);
+    m[12] = *(f32*)(p + 0xc);
+    m[13] = *(f32*)(p + 0x10);
+    m[14] = *(f32*)(p + 0x14);
     m[15] = lbl_803DE7C4;
 }
 
-extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
+extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 
 #pragma peephole off
 #pragma dont_inline on
-void fn_800213D0(f32 *a, f32 *b, s16 *out0, s16 *out1, s16 *out2)
+void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
 {
     extern f32 __kernel_sin(f32);
     extern f32 __kernel_cos(f32, f32);
@@ -858,15 +776,21 @@ void fn_800213D0(f32 *a, f32 *b, s16 *out0, s16 *out1, s16 *out2)
     b1 = b[1];
     a2 = a[2];
     sinp = __kernel_sin(-b[2]);
-    if (sinp < lbl_803DE7C8) {
-        if (sinp > lbl_803DE7CC) {
+    if (sinp < lbl_803DE7C8)
+    {
+        if (sinp > lbl_803DE7CC)
+        {
             roll = __kernel_cos(c2, a2);
             yaw = __kernel_cos(b0, b1);
-        } else {
+        }
+        else
+        {
             roll = lbl_803DE7C0 - __kernel_cos(c1, c0);
             yaw = lbl_803DE7C0;
         }
-    } else {
+    }
+    else
+    {
         roll = __kernel_cos(c1, c0) - lbl_803DE7C0;
         yaw = lbl_803DE7C0;
     }
@@ -880,19 +804,13 @@ void fn_800213D0(f32 *a, f32 *b, s16 *out0, s16 *out1, s16 *out2)
 }
 
 
-
-
-
-
-
-
-
 #pragma fp_contract off
 #pragma dont_inline off
-int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, void *timerp) {
+int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, void* timerp)
+{
     extern f32 oneOverTimeDelta;
     extern f32 lbl_803DE7F4;
-    f32 *timer = (f32 *)timerp;
+    f32* timer = (f32*)timerp;
     int trig;
     int range;
     int val;
@@ -901,14 +819,21 @@ int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, void *timerp) {
     f32 t;
 
     *timer += timeDelta / (freq = lbl_803DE7F4);
-    if (*timer > lo) {
-        if (*timer > hi) {
+    if (*timer > lo)
+    {
+        if (*timer > hi)
+        {
             trig = 1;
-        } else {
+        }
+        else
+        {
             range = (int)(oneOverTimeDelta * (freq * (hi - lo)));
-            if (range == 0) {
+            if (range == 0)
+            {
                 val = 0;
-            } else {
+            }
+            else
+            {
                 rv = rand();
                 {
                     f32 acc = (f32)rv;
@@ -920,7 +845,8 @@ int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, void *timerp) {
             }
             trig = !val;
         }
-        if (trig != 0) {
+        if (trig != 0)
+        {
             *timer = lbl_803DE7C0;
         }
         return trig;
@@ -931,7 +857,8 @@ int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, void *timerp) {
 
 #pragma peephole on
 #pragma fp_contract on
-void vecRotateZXY(u8 *p, f32 *v) {
+void vecRotateZXY(u8* p, f32* v)
+{
     f32 s2;
     f32 c2;
     f32 s1;
@@ -942,9 +869,9 @@ void vecRotateZXY(u8 *p, f32 *v) {
     f32 t3;
     f32 t2;
 
-    angleToVec2(*(u16 *)(p + 0x0), &s0, &c0);
-    angleToVec2(*(u16 *)(p + 0x2), &s1, &c1);
-    angleToVec2(*(u16 *)(p + 0x4), &s2, &c2);
+    angleToVec2(*(u16*)(p + 0x0), &s0, &c0);
+    angleToVec2(*(u16*)(p + 0x2), &s1, &c1);
+    angleToVec2(*(u16*)(p + 0x4), &s2, &c2);
     t5 = v[0] * c2 - v[1] * s2;
     t3 = v[1] * c2 + v[0] * s2;
     v[1] = t3 * c1 - v[2] * s1;

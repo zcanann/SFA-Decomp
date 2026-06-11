@@ -73,7 +73,8 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_007F_DRDebrisGir_packet_info {
+enum obj_007F_DRDebrisGir_packet_info
+{
     DRDEBRISGIR_DEF_ID = 0x007F,
     DRDEBRISGIR_DLL_ID = 0x011A,
     DRDEBRISGIR_CLASS_ID = 0x0061,
