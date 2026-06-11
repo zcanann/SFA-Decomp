@@ -4413,6 +4413,22 @@ transposition is the current price of the pragma — bank it (wmseqpoint_update
 99.0, musicInitMidiWad) and keep it open. If the fn does NOT otherwise need
 sched-off, try sched-on + source-ordered increments first, which removes the
 transposition entirely.
+**HARDENED (wmseqpoint_update deep battery, ~25 builds): the sched-off
+pin is COMPILER-FUNDAMENTAL — versions GC/1.3-2.7 all place it identically,
+and `opt_strength_reduction off`, `optimization_level 1/2/3`, scheduler
+MODELS (`#pragma scheduling 601/603/604/750` — these parse and 601 differs
+elsewhere), do-while/empty-header/dual-index/named-walker forms, #114
+conversion-sandwiched bumps (`p = (int*)((int)p + 8)`), and mid-fn
+`#pragma scheduling on` (parses but scheduling state is per-FUNCTION,
+captured at fn start) are ALL inert on the placement.** Read off retail
+asm: target's bump sits at the if-join LABEL (first instr after a beq
+target) = the SCHEDULER's hoist. So a bump-first latch is a tell the fn
+compiled scheduling-ON. Full sched-on reconstruction of such a fn is its
+own problem: ours diverged in 9 other windows (6x `lha;mr;li` call-arg
+setups the scheduler reorders to `mr;lha;li`, counter init/inc placement,
+2 lwz moves) and cast/launder respellings are invisible to the scheduler
+(no instruction change = same DAG = same schedule). wmseqpoint_update
+stays banked at 99.0 under sched-off with exactly the 1-instr residual.
 
 **Passing a small by-value struct (e.g. `GXColor`, 4 bytes) goes BY ADDRESS in
 this ABI — load the global STRAIGHT into the outgoing-arg slot.** Write
