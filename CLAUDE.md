@@ -3939,6 +3939,38 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     semantically identical, but MWCC does not canonicalize the two branch
     forms to the same compare immediate.
 
+126. **Param-TYPE pool classing: a POINTER-typed param colors into the COPY
+    pool (top, r31-ward) while an INTEGRAL param colors into the PARAM pool
+    (bottom) — independent of how its uses are spelled. Read target's
+    prologue coloring to RECOVER the original parameter type.**
+    (wmspiritplace_SeqFn, 10-variant battery, byte-proven both directions.)
+    A `GameObject *obj` param stole r31 from the loop counter under EVERY
+    use spelling — including ZERO direct refs (every site laundered
+    `(GameObject*)(int)obj`), void*/copy-local forms, register/const/K&R
+    defs, #61b decl shuffles, and #114 (int)(long) sandwiches on
+    neighboring webs — while `int obj` + per-use `(GameObject*)obj` casts
+    landed the canonical bottom-up order (params r28/r29 in decl order,
+    copy r30, multi-def counter r31). So the pool selector is the param's
+    DECLARED TYPE CLASS, not its use binding (sharpens #77/#108/#114).
+    SIGNATURE-RECOVERY READ: when target keeps the obj param in the BOTTOM
+    param pool (obj=r28 under state/counter), the original took a WORD
+    (`int obj`); when it colors copy-class with/under the state copy
+    (wmspiritplace_update: obj=r30 under state=r31), the original took a
+    typed pointer. Both forms in the SAME TU is normal — read each fn's
+    prologue and type the param accordingly; per-fn cast noise on an int
+    obj is then FAITHFUL reconstruction, not import damage.
+    ADDENDUM — per-fn `#pragma optimization_level 2` CAN land the
+    typed-pointer form byte-exact even in call-bearing fns (corrects
+    #110's blanket "O1/O2 wrecks fns with calls": O2's ALLOCATION was
+    target-exact here, switching to decl/creation-order coloring), but
+    O2's weaker isel needs unnatural respellings to match O4 output:
+    u8 locals keep a redundant clrlwi (retype the local `int`), and
+    member-array reads emit add+lbz-disp where O4 folds onto the index
+    (`actor->eventIds[i]` only matches via the raw int-domain sum
+    `*(u8*)((int)actor + i + 0x81)` under O2). When the typed-O2 route
+    demands unnatural spellings for lines that match naturally at O4, the
+    integral-param O4 reading is the faithful one — prefer it.
+
 **Object-DLL lane recipe-effectiveness map (terrain note, saves trial-and-error).**
 Field-tested across the object DLL near-100 tier (src/main/dll/{baddie,DIM,DR,CF,
 WC,ARW,MMP,WM,DB,SH,...}). RELIABLE here — reach for these first:

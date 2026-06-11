@@ -121,9 +121,12 @@ void wmspiritplace_onSeqFree(void)
 {
 }
 
-/* obj stays int-typed with per-use casts: the int->pointer conversion at
-   each deref keeps the param's register web light, which MWCC's allocator
-   needs for the matching r28-r31 assignment (CLAUDE.md recipes #77/#114). */
+/* obj is a word here, not a pointer: MWCC pools integral params at the
+   bottom of the saved regs (obj=r28 under actor/state/i = the retail
+   coloring), where a pointer-typed param colors copy-class and steals r31
+   under every use spelling. The original signature really was untyped -
+   contrast update/init, whose retail coloring proves typed pointers
+   (CLAUDE.md recipe #126). */
 int wmspiritplace_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
 {
     int i;
