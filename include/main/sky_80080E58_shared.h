@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
+#include "main/gamebits.h"
 #include "main/mapEventTypes.h"
 #include "main/newclouds.h"
 #include "main/resource.h"
@@ -32,8 +33,6 @@ extern CloudActionInterface **gCloudActionInterface;
 
 extern void *mmAlloc(int size, int heap, int flags);
 extern void mm_free(void *ptr);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
 extern void *Obj_GetPlayerObject(void);
 extern void *getTrickyObject(void);
 extern void *ObjList_FindObjectById(int id);
