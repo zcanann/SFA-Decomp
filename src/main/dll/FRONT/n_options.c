@@ -98,11 +98,11 @@ extern OSMessageQueue lbl_803A5CCC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void THPPlayerDrawCurrentFrame(void* param_1, void* param_2, void* param_3, uint param_4, uint param_5)
+void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, uint width, uint height)
 {
-    uint uVar1;
-    uint uVar2;
-    double dVar3;
+    uint halfWidth;
+    uint halfHeight;
+    double lod;
     undefined4 kColor0;
     undefined4 kColor1;
     undefined4 kColor2;
@@ -166,20 +166,20 @@ void THPPlayerDrawCurrentFrame(void* param_1, void* param_2, void* param_3, uint
     kColor2 = lbl_803E1D40;
     GXSetTevKColor(2, (byte*)&kColor2);
     GXSetTevSwapModeTable(0, 0, 1, 2, 3);
-    GXInitTexObj(yTexObj, param_1, param_4 & 0xffff, param_5 & 0xffff, 1, 0, 0,
+    GXInitTexObj(yTexObj, yBuf, width & 0xffff, height & 0xffff, 1, 0, 0,
                  '\0');
-    dVar3 = (double)lbl_803E1D44;
-    GXInitTexObjLOD(yTexObj, 0, 0, dVar3, dVar3, dVar3, 0, '\0', 0);
+    lod = (double)lbl_803E1D44;
+    GXInitTexObjLOD(yTexObj, 0, 0, lod, lod, lod, 0, '\0', 0);
     GXLoadTexObj(yTexObj, 0);
-    uVar1 = (int)(short)param_4 >> 1;
-    uVar2 = (int)(short)param_5 >> 1;
-    GXInitTexObj(uTexObj, param_2, uVar1 & 0xffff, uVar2 & 0xffff, 1, 0, 0, '\0');
-    dVar3 = (double)lbl_803E1D44;
-    GXInitTexObjLOD(uTexObj, 0, 0, dVar3, dVar3, dVar3, 0, '\0', 0);
+    halfWidth = (int)(short)width >> 1;
+    halfHeight = (int)(short)height >> 1;
+    GXInitTexObj(uTexObj, uBuf, halfWidth & 0xffff, halfHeight & 0xffff, 1, 0, 0, '\0');
+    lod = (double)lbl_803E1D44;
+    GXInitTexObjLOD(uTexObj, 0, 0, lod, lod, lod, 0, '\0', 0);
     GXLoadTexObj(uTexObj, 1);
-    GXInitTexObj(vTexObj, param_3, uVar1 & 0xffff, uVar2 & 0xffff, 1, 0, 0, '\0');
-    dVar3 = (double)lbl_803E1D44;
-    GXInitTexObjLOD(vTexObj, 0, 0, dVar3, dVar3, dVar3, 0, '\0', 0);
+    GXInitTexObj(vTexObj, vBuf, halfWidth & 0xffff, halfHeight & 0xffff, 1, 0, 0, '\0');
+    lod = (double)lbl_803E1D44;
+    GXInitTexObjLOD(vTexObj, 0, 0, lod, lod, lod, 0, '\0', 0);
     GXLoadTexObj(vTexObj, 2);
     return;
 }
@@ -255,20 +255,20 @@ BOOL Movie_SetVolumeFade(int volume, int fadeFrames)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void AttractMovieAudio_Mix(s16* param_1, s16* param_2, uint param_3)
+void AttractMovieAudio_Mix(s16* destination, s16* source, uint sampleCount)
 {
-    ushort uVar1;
-    float fVar2;
-    uint uVar3;
-    int iVar4;
-    short* psVar5;
-    uint uVar6;
+    ushort volumeScale;
+    float volume;
+    uint validSamples;
+    int mixed;
+    short* audioPtr;
+    uint remain;
 
-    if (param_2 != (short*)0x0)
+    if (source != (short*)0x0)
     {
         if (((lbl_803A5D60.isOpen == 0) || (lbl_803A5D60.internalState != 2)) || (lbl_803A5D60.audioExists == 0))
         {
-            memcpy(param_1, param_2, param_3 << 2);
+            memcpy(destination, source, sampleCount << 2);
         }
         else
         {
@@ -281,68 +281,68 @@ void AttractMovieAudio_Mix(s16* param_1, s16* param_2, uint param_3)
                         lbl_803A5D60.curAudioBuffer = (AttractMovieAudioBuffer*)PopDecodedAudioBuffer(0);
                         if (lbl_803A5D60.curAudioBuffer == NULL)
                         {
-                            memcpy(param_1, param_2, param_3 << 2);
+                            memcpy(destination, source, sampleCount << 2);
                             return;
                         }
                         lbl_803A5D60.curAudioFrameNumber = lbl_803A5D60.curAudioBuffer->frameNumber;
                     }
-                    uVar3 = lbl_803A5D60.curAudioBuffer->validSample;
+                    validSamples = lbl_803A5D60.curAudioBuffer->validSample;
                 }
-                while (uVar3 == 0);
-                if (param_3 <= uVar3)
+                while (validSamples == 0);
+                if (sampleCount <= validSamples)
                 {
-                    uVar3 = param_3;
+                    validSamples = sampleCount;
                 }
-                psVar5 = lbl_803A5D60.curAudioBuffer->curPtr;
-                for (uVar6 = uVar3; uVar6 != 0; uVar6 = uVar6 - 1)
+                audioPtr = lbl_803A5D60.curAudioBuffer->curPtr;
+                for (remain = validSamples; remain != 0; remain = remain - 1)
                 {
-                    fVar2 = lbl_803A5D60.targetVolume;
+                    volume = lbl_803A5D60.targetVolume;
                     if (lbl_803A5D60.rampCount != 0)
                     {
                         lbl_803A5D60.rampCount = lbl_803A5D60.rampCount + -1;
-                        fVar2 = lbl_803A5D60.curVolume + lbl_803A5D60.deltaVolume;
+                        volume = lbl_803A5D60.curVolume + lbl_803A5D60.deltaVolume;
                     }
-                    lbl_803A5D60.curVolume = fVar2;
-                    uVar1 = lbl_8031A3B0[(int)lbl_803A5D60.curVolume];
-                    iVar4 = (int)*param_2 + ((int)((uint)uVar1 * (int)*psVar5) >> 0xf);
-                    if (iVar4 < -0x8000)
+                    lbl_803A5D60.curVolume = volume;
+                    volumeScale = lbl_8031A3B0[(int)lbl_803A5D60.curVolume];
+                    mixed = (int)*source + ((int)((uint)volumeScale * (int)*audioPtr) >> 0xf);
+                    if (mixed < -0x8000)
                     {
-                        iVar4 = -0x8000;
+                        mixed = -0x8000;
                     }
-                    if (0x7fff < iVar4)
+                    if (0x7fff < mixed)
                     {
-                        iVar4 = 0x7fff;
+                        mixed = 0x7fff;
                     }
-                    *param_1 = (short)iVar4;
-                    iVar4 = (int)param_2[1] + ((int)((uint)uVar1 * (int)psVar5[1]) >> 0xf);
-                    if (iVar4 < -0x8000)
+                    *destination = (short)mixed;
+                    mixed = (int)source[1] + ((int)((uint)volumeScale * (int)audioPtr[1]) >> 0xf);
+                    if (mixed < -0x8000)
                     {
-                        iVar4 = -0x8000;
+                        mixed = -0x8000;
                     }
-                    if (0x7fff < iVar4)
+                    if (0x7fff < mixed)
                     {
-                        iVar4 = 0x7fff;
+                        mixed = 0x7fff;
                     }
-                    param_1[1] = (short)iVar4;
-                    param_1 = param_1 + 2;
-                    param_2 = param_2 + 2;
-                    psVar5 = psVar5 + 2;
+                    destination[1] = (short)mixed;
+                    destination = destination + 2;
+                    source = source + 2;
+                    audioPtr = audioPtr + 2;
                 }
-                param_3 = param_3 - uVar3;
-                lbl_803A5D60.curAudioBuffer->validSample = lbl_803A5D60.curAudioBuffer->validSample - uVar3;
-                lbl_803A5D60.curAudioBuffer->curPtr = psVar5;
+                sampleCount = sampleCount - validSamples;
+                lbl_803A5D60.curAudioBuffer->validSample = lbl_803A5D60.curAudioBuffer->validSample - validSamples;
+                lbl_803A5D60.curAudioBuffer->curPtr = audioPtr;
                 if (lbl_803A5D60.curAudioBuffer->validSample == 0)
                 {
                     PushFreeAudioBuffer(lbl_803A5D60.curAudioBuffer);
                     lbl_803A5D60.curAudioBuffer = NULL;
                 }
             }
-            while (param_3 != 0);
+            while (sampleCount != 0);
         }
     }
     else if (((lbl_803A5D60.isOpen == 0) || (lbl_803A5D60.internalState != 2)) || (lbl_803A5D60.audioExists == 0))
     {
-        memset(param_1, 0, param_3 << 2);
+        memset(destination, 0, sampleCount << 2);
     }
     else
     {
@@ -355,62 +355,62 @@ void AttractMovieAudio_Mix(s16* param_1, s16* param_2, uint param_3)
                     lbl_803A5D60.curAudioBuffer = (AttractMovieAudioBuffer*)PopDecodedAudioBuffer(0);
                     if (lbl_803A5D60.curAudioBuffer == NULL)
                     {
-                        memset(param_1, 0, param_3 << 2);
+                        memset(destination, 0, sampleCount << 2);
                         return;
                     }
                     lbl_803A5D60.curAudioFrameNumber = lbl_803A5D60.curAudioBuffer->frameNumber;
                 }
-                uVar3 = lbl_803A5D60.curAudioBuffer->validSample;
+                validSamples = lbl_803A5D60.curAudioBuffer->validSample;
             }
-            while (uVar3 == 0);
-            if (param_3 <= uVar3)
+            while (validSamples == 0);
+            if (sampleCount <= validSamples)
             {
-                uVar3 = param_3;
+                validSamples = sampleCount;
             }
-            psVar5 = lbl_803A5D60.curAudioBuffer->curPtr;
-            for (uVar6 = uVar3; uVar6 != 0; uVar6 = uVar6 - 1)
+            audioPtr = lbl_803A5D60.curAudioBuffer->curPtr;
+            for (remain = validSamples; remain != 0; remain = remain - 1)
             {
-                fVar2 = lbl_803A5D60.targetVolume;
+                volume = lbl_803A5D60.targetVolume;
                 if (lbl_803A5D60.rampCount != 0)
                 {
                     lbl_803A5D60.rampCount = lbl_803A5D60.rampCount + -1;
-                    fVar2 = lbl_803A5D60.curVolume + lbl_803A5D60.deltaVolume;
+                    volume = lbl_803A5D60.curVolume + lbl_803A5D60.deltaVolume;
                 }
-                lbl_803A5D60.curVolume = fVar2;
-                uVar1 = lbl_8031A3B0[(int)lbl_803A5D60.curVolume];
-                iVar4 = (int)((uint)uVar1 * (int)*psVar5) >> 0xf;
-                if (iVar4 < -0x8000)
+                lbl_803A5D60.curVolume = volume;
+                volumeScale = lbl_8031A3B0[(int)lbl_803A5D60.curVolume];
+                mixed = (int)((uint)volumeScale * (int)*audioPtr) >> 0xf;
+                if (mixed < -0x8000)
                 {
-                    iVar4 = -0x8000;
+                    mixed = -0x8000;
                 }
-                if (0x7fff < iVar4)
+                if (0x7fff < mixed)
                 {
-                    iVar4 = 0x7fff;
+                    mixed = 0x7fff;
                 }
-                *param_1 = (short)iVar4;
-                iVar4 = (int)((uint)uVar1 * (int)psVar5[1]) >> 0xf;
-                if (iVar4 < -0x8000)
+                *destination = (short)mixed;
+                mixed = (int)((uint)volumeScale * (int)audioPtr[1]) >> 0xf;
+                if (mixed < -0x8000)
                 {
-                    iVar4 = -0x8000;
+                    mixed = -0x8000;
                 }
-                if (0x7fff < iVar4)
+                if (0x7fff < mixed)
                 {
-                    iVar4 = 0x7fff;
+                    mixed = 0x7fff;
                 }
-                param_1[1] = (short)iVar4;
-                param_1 = param_1 + 2;
-                psVar5 = psVar5 + 2;
+                destination[1] = (short)mixed;
+                destination = destination + 2;
+                audioPtr = audioPtr + 2;
             }
-            param_3 = param_3 - uVar3;
-            lbl_803A5D60.curAudioBuffer->validSample = lbl_803A5D60.curAudioBuffer->validSample - uVar3;
-            lbl_803A5D60.curAudioBuffer->curPtr = psVar5;
+            sampleCount = sampleCount - validSamples;
+            lbl_803A5D60.curAudioBuffer->validSample = lbl_803A5D60.curAudioBuffer->validSample - validSamples;
+            lbl_803A5D60.curAudioBuffer->curPtr = audioPtr;
             if (lbl_803A5D60.curAudioBuffer->validSample == 0)
             {
                 PushFreeAudioBuffer(lbl_803A5D60.curAudioBuffer);
                 lbl_803A5D60.curAudioBuffer = NULL;
             }
         }
-        while (param_3 != 0);
+        while (sampleCount != 0);
     }
     return;
 }

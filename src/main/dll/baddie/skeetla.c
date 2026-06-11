@@ -1753,65 +1753,65 @@ undefined4 FUN_80139a4c(double param_1, int param_2, int param_3, uint param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int fn_8013A874(undefined4 param_1, undefined4 param_2, uint param_3, uint param_4)
+int fn_8013A874(undefined4 param_1, undefined4 param_2, uint filterKind, uint maskBit)
 {
-    int iVar1;
-    int iVar2;
-    uint uVar3;
-    int iVar4_00;
-    int iVar4;
-    ushort uVar5;
-    ushort uVar6;
-    uint uVar7;
-    double dVar8;
-    double dVar9;
-    undefined8 uVar10;
-    int local_38[14];
+    int ctxHi;
+    int found;
+    uint idx;
+    int count;
+    int ent;
+    ushort outCount;
+    ushort i;
+    uint bit;
+    double fa;
+    double fb;
+    undefined8 pairWord;
+    int foundList[14];
 
-    iVar4_00 = 0;
-    uVar10 = FUN_80286834();
-    iVar1 = (int)((ulonglong)uVar10 >> 0x20);
-    iVar4 = (int)uVar10;
-    uVar5 = 0;
-    uVar7 = 1;
-    for (uVar6 = 0; uVar6 < 4; uVar6 = uVar6 + 1)
+    count = 0;
+    pairWord = FUN_80286834();
+    ctxHi = (int)((ulonglong)pairWord >> 0x20);
+    ent = (int)pairWord;
+    outCount = 0;
+    bit = 1;
+    for (i = 0; i < 4; i = i + 1)
     {
-        if ((-1 < *(int*)(iVar4 + (uint)uVar6 * 4 + 0x1c)) &&
-            (param_4 == ((int)*(char*)(iVar4 + 0x1b) & uVar7)))
+        if ((-1 < *(int*)(ent + (uint)i * 4 + 0x1c)) &&
+            (maskBit == ((int)*(char*)(ent + 0x1b) & bit)))
         {
-            iVar2 = (**(code**)(*DAT_803dd71c + 0x1c))();
-            uVar3 = (uint)uVar5;
-            local_38[uVar3] = iVar2;
-            iVar2 = local_38[uVar3];
-            if ((((iVar2 != 0) && ((param_3 == 0 || (*(byte*)(iVar4 + uVar3 + 4) == param_3)))) &&
-                    (((int)*(short*)(iVar2 + 0x30) == 0xffffffff ||
-                        (uVar3 = FUN_80017690((int)*(short*)(iVar2 + 0x30)), uVar3 != 0)))) &&
-                ((((int)*(short*)(iVar2 + 0x32) == 0xffffffff ||
-                        (uVar3 = FUN_80017690((int)*(short*)(iVar2 + 0x32)), uVar3 == 0)) &&
-                    ((*(char*)(iVar4 + 0x1a) != '\t' || (*(char*)(iVar2 + 0x1a) != '\b'))))))
+            found = (**(code**)(*DAT_803dd71c + 0x1c))();
+            idx = (uint)outCount;
+            foundList[idx] = found;
+            found = foundList[idx];
+            if ((((found != 0) && ((filterKind == 0 || (*(byte*)(ent + idx + 4) == filterKind)))) &&
+                    (((int)*(short*)(found + 0x30) == 0xffffffff ||
+                        (idx = FUN_80017690((int)*(short*)(found + 0x30)), idx != 0)))) &&
+                ((((int)*(short*)(found + 0x32) == 0xffffffff ||
+                        (idx = FUN_80017690((int)*(short*)(found + 0x32)), idx == 0)) &&
+                    ((*(char*)(ent + 0x1a) != '\t' || (*(char*)(found + 0x1a) != '\b'))))))
             {
-                uVar5 = uVar5 + 1;
+                outCount = outCount + 1;
             }
         }
-        uVar7 = (uVar7 & 0x7fff) << 1;
-        param_4 = param_4 << 1;
+        bit = (bit & 0x7fff) << 1;
+        maskBit = maskBit << 1;
     }
-    if (uVar5 != 0)
+    if (outCount != 0)
     {
-        iVar4_00 = local_38[0];
-        dVar8 = FUN_80017708((float*)(*(int*)(iVar1 + 4) + 0x18), (float*)(local_38[0] + 8));
-        for (uVar6 = 1; uVar6 < uVar5; uVar6 = uVar6 + 1)
+        count = foundList[0];
+        fa = FUN_80017708((float*)(*(int*)(ctxHi + 4) + 0x18), (float*)(foundList[0] + 8));
+        for (i = 1; i < outCount; i = i + 1)
         {
-            dVar9 = FUN_80017708((float*)(*(int*)(iVar1 + 4) + 0x18), (float*)(local_38[uVar6] + 8));
-            if (dVar9 < dVar8)
+            fb = FUN_80017708((float*)(*(int*)(ctxHi + 4) + 0x18), (float*)(foundList[i] + 8));
+            if (fb < fa)
             {
-                dVar8 = dVar9;
-                iVar4_00 = local_38[uVar6];
+                fa = fb;
+                count = foundList[i];
             }
         }
     }
     FUN_80286880();
-    return iVar4_00;
+    return count;
 }
 
 /*
@@ -1898,68 +1898,68 @@ int FUN_80139ce8(int param_1, int param_2, int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8013AD50(int param_1, int param_2, byte param_3)
+void fn_8013AD50(int state, int key, byte variant)
 {
-    int iVar1;
-    uint uVar2;
+    int cached;
+    uint bitVal;
 
-    iVar1 = 0;
-    if (((*(int*)(param_1 + 0x528) == param_2) &&
-            (*(short*)(param_1 + 0x530) == *(short*)(param_1 + 0x532))) &&
-        (*(byte*)(param_1 + 0x536) == param_3))
+    cached = 0;
+    if (((*(int*)(state + 0x528) == key) &&
+            (*(short*)(state + 0x530) == *(short*)(state + 0x532))) &&
+        (*(byte*)(state + 0x536) == variant))
     {
-        iVar1 = *(int*)(param_1 + 0x52c);
-        if (iVar1 == 0)
+        cached = *(int*)(state + 0x52c);
+        if (cached == 0)
         {
-            iVar1 = 0;
+            cached = 0;
         }
         else
         {
-            if (((int)*(short*)(iVar1 + 0x30) != 0xffffffff) &&
-                (uVar2 = FUN_80017690((int)*(short*)(iVar1 + 0x30)), uVar2 == 0))
+            if (((int)*(short*)(cached + 0x30) != 0xffffffff) &&
+                (bitVal = FUN_80017690((int)*(short*)(cached + 0x30)), bitVal == 0))
             {
-                iVar1 = 0;
+                cached = 0;
             }
-            else if (((int)*(short*)(iVar1 + 0x32) != 0xffffffff) &&
-                (uVar2 = FUN_80017690((int)*(short*)(iVar1 + 0x32)), uVar2 != 0))
+            else if (((int)*(short*)(cached + 0x32) != 0xffffffff) &&
+                (bitVal = FUN_80017690((int)*(short*)(cached + 0x32)), bitVal != 0))
             {
-                iVar1 = 0;
+                cached = 0;
             }
         }
     }
-    if (iVar1 == 0)
+    if (cached == 0)
     {
-        uVar2 = (uint)param_3;
-        iVar1 = fn_8013A874(param_1, param_2, (uint) * (ushort*)(param_1 + 0x532), uVar2);
-        if (iVar1 == 0)
+        bitVal = (uint)variant;
+        cached = fn_8013A874(state, key, (uint) * (ushort*)(state + 0x532), bitVal);
+        if (cached == 0)
         {
-            iVar1 = FUN_80139ce8(param_1, param_2, (uint) * (ushort*)(param_1 + 0x532));
+            cached = FUN_80139ce8(state, key, (uint) * (ushort*)(state + 0x532));
         }
-        if (iVar1 == 0)
+        if (cached == 0)
         {
-            if (*(ushort*)(param_1 + 0x534) != 0)
+            if (*(ushort*)(state + 0x534) != 0)
             {
-                iVar1 = fn_8013A874(param_1, param_2, (uint) * (ushort*)(param_1 + 0x534), uVar2);
-                if (iVar1 == 0)
+                cached = fn_8013A874(state, key, (uint) * (ushort*)(state + 0x534), bitVal);
+                if (cached == 0)
                 {
-                    iVar1 = FUN_80139ce8(param_1, param_2, (uint) * (ushort*)(param_1 + 0x534));
+                    cached = FUN_80139ce8(state, key, (uint) * (ushort*)(state + 0x534));
                 }
-                if (iVar1 != 0)
+                if (cached != 0)
                 {
-                    *(undefined2*)(param_1 + 0x532) = *(undefined2*)(param_1 + 0x534);
+                    *(undefined2*)(state + 0x532) = *(undefined2*)(state + 0x534);
                 }
             }
-            if (iVar1 == 0)
+            if (cached == 0)
             {
-                iVar1 = fn_8013A874(param_1, param_2, 0, uVar2);
-                *(undefined2*)(param_1 + 0x532) = 0;
+                cached = fn_8013A874(state, key, 0, bitVal);
+                *(undefined2*)(state + 0x532) = 0;
             }
         }
     }
-    *(int*)(param_1 + 0x528) = param_2;
-    *(int*)(param_1 + 0x52c) = iVar1;
-    *(undefined2*)(param_1 + 0x530) = *(undefined2*)(param_1 + 0x532);
-    *(byte*)(param_1 + 0x536) = param_3;
+    *(int*)(state + 0x528) = key;
+    *(int*)(state + 0x52c) = cached;
+    *(undefined2*)(state + 0x530) = *(undefined2*)(state + 0x532);
+    *(byte*)(state + 0x536) = variant;
     return;
 }
 
