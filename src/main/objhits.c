@@ -1105,25 +1105,25 @@ void ObjHits_SortSweepEntries(ObjHitsSweepEntry** sweepPtrs, int entryCount)
  */
 void ObjHits_TickPriorityHitCooldowns(void)
 {
-    int val;
-    short sval;
+    int iVar1;
+    short sVar2;
     u8* base;
     ObjHitsPriorityWorkSlot* workSlot;
 
-    sval = 0;
-    val = 0;
+    sVar2 = 0;
+    iVar1 = 0;
     do
     {
         base = gObjHitsPriorityHitStates;
-        workSlot = (ObjHitsPriorityWorkSlot*)(base + val);
+        workSlot = (ObjHitsPriorityWorkSlot*)(base + iVar1);
         if (workSlot->active != 0)
         {
             workSlot->active--;
         }
-        val = val + OBJHITS_PRIORITY_WORK_SLOT_SIZE;
-        sval++;
+        iVar1 = iVar1 + OBJHITS_PRIORITY_WORK_SLOT_SIZE;
+        sVar2++;
     }
-    while (sval < OBJHITS_PRIORITY_WORK_SLOT_COUNT);
+    while (sVar2 < OBJHITS_PRIORITY_WORK_SLOT_COUNT);
     gObjHitsPriorityHitTickDelta = timeDelta;
     return;
 }
@@ -1156,7 +1156,7 @@ void ObjHitbox_UpdateRotatedBounds(ObjHitbox* hitbox, int advanceMatrix)
     ObjHitboxTransformState* transformState;
     int matrixBase;
     int matrixFloatOffset;
-    HitboxTransform tmp;
+    HitboxTransform local_28;
 
     transformState = hitbox->transformState;
     if (transformState != 0)
@@ -1167,51 +1167,51 @@ void ObjHitbox_UpdateRotatedBounds(ObjHitbox* hitbox, int advanceMatrix)
         }
         matrixFloatOffset = transformState->activeMatrixIndex * OBJHITBOX_STATE_MATRIX_FLOAT_COUNT;
         matrixBase = (int)((float*)transformState->matrices + matrixFloatOffset);
-        tmp.x = -hitbox->rotationX;
+        local_28.x = -hitbox->rotationX;
         if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Y) != 0)
         {
-            tmp.y = 0;
+            local_28.y = 0;
         }
         else
         {
-            tmp.y = -hitbox->rotationY;
+            local_28.y = -hitbox->rotationY;
         }
         if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Z) != 0)
         {
-            tmp.z = 0;
+            local_28.z = 0;
         }
         else
         {
-            tmp.z = -hitbox->rotationZ;
+            local_28.z = -hitbox->rotationZ;
         }
-        tmp.scale = gObjHitsScalarOne;
-        tmp.radiusX = -hitbox->radiusX;
-        tmp.radiusY = -hitbox->radiusY;
-        tmp.radiusZ = -hitbox->radiusZ;
-        mtxRotateByVec3s((float*)matrixBase, &tmp);
-        tmp.x = hitbox->rotationX;
+        local_28.scale = gObjHitsScalarOne;
+        local_28.radiusX = -hitbox->radiusX;
+        local_28.radiusY = -hitbox->radiusY;
+        local_28.radiusZ = -hitbox->radiusZ;
+        mtxRotateByVec3s((float*)matrixBase, &local_28);
+        local_28.x = hitbox->rotationX;
         if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Y) != 0)
         {
-            tmp.y = 0;
+            local_28.y = 0;
         }
         else
         {
-            tmp.y = hitbox->rotationY;
+            local_28.y = hitbox->rotationY;
         }
         if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Z) != 0)
         {
-            tmp.z = 0;
+            local_28.z = 0;
         }
         else
         {
-            tmp.z = hitbox->rotationZ;
+            local_28.z = hitbox->rotationZ;
         }
-        tmp.scale = gObjHitsScalarOne;
-        tmp.radiusX = hitbox->radiusX;
-        tmp.radiusY = hitbox->radiusY;
-        tmp.radiusZ = hitbox->radiusZ;
+        local_28.scale = gObjHitsScalarOne;
+        local_28.radiusX = hitbox->radiusX;
+        local_28.radiusY = hitbox->radiusY;
+        local_28.radiusZ = hitbox->radiusZ;
         matrixFloatOffset = (transformState->activeMatrixIndex + 2) * OBJHITBOX_STATE_MATRIX_FLOAT_COUNT;
-        setMatrixFromObjectPos((float*)transformState->matrices + matrixFloatOffset, &tmp);
+        setMatrixFromObjectPos((float*)transformState->matrices + matrixFloatOffset, &local_28);
         if (transformState->resetFrames != 0)
         {
             transformState->resetFrames--;
@@ -2374,9 +2374,9 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
     u8 shapeFlags;
     int hitCount;
     f32 ratio;
-    f32 fb;
-    f32 fc;
-    f32 fa;
+    f32 fVar2;
+    f32 fVar3;
+    f32 fVar4;
     f32 outAxial;
     ObjHitsSkeletonHit* bestHit;
     ObjHitsVec3 point;
@@ -2419,19 +2419,19 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
                                                            : ((ratio > gObjHitsScalarOne) ? gObjHitsScalarOne : ratio),
                                                        outAxial, response);
                     }
-                    fb = (response[0] < lbl_803DE958)
+                    fVar2 = (response[0] < lbl_803DE958)
                                 ? lbl_803DE958
                                 : ((response[0] > lbl_803DE95C) ? lbl_803DE95C : response[0]);
-                    response[0] = fb;
-                    fc = (response[1] < lbl_803DE958)
+                    response[0] = fVar2;
+                    fVar3 = (response[1] < lbl_803DE958)
                                 ? lbl_803DE958
                                 : ((response[1] > lbl_803DE95C) ? lbl_803DE95C : response[1]);
-                    response[1] = fc;
-                    fa = (response[2] < lbl_803DE958)
+                    response[1] = fVar3;
+                    fVar4 = (response[2] < lbl_803DE958)
                                 ? lbl_803DE958
                                 : ((response[2] > lbl_803DE95C) ? lbl_803DE95C : response[2]);
-                    response[2] = fa;
-                    ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], (f32)(f64)fa, 0);
+                    response[2] = fVar4;
+                    ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], (f32)(f64)fVar4, 0);
                 }
             }
             else if ((shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0)
@@ -2462,19 +2462,19 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
                                                            : ((ratio > gObjHitsScalarOne) ? gObjHitsScalarOne : ratio),
                                                        outAxial, response);
                     }
-                    fb = (response[0] < lbl_803DE958)
+                    fVar2 = (response[0] < lbl_803DE958)
                                 ? lbl_803DE958
                                 : ((response[0] > lbl_803DE95C) ? lbl_803DE95C : response[0]);
-                    response[0] = fb;
-                    fc = (response[1] < lbl_803DE958)
+                    response[0] = fVar2;
+                    fVar3 = (response[1] < lbl_803DE958)
                                 ? lbl_803DE958
                                 : ((response[1] > lbl_803DE95C) ? lbl_803DE95C : response[1]);
-                    response[1] = fc;
-                    fa = (response[2] < lbl_803DE958)
+                    response[1] = fVar3;
+                    fVar4 = (response[2] < lbl_803DE958)
                                 ? lbl_803DE958
                                 : ((response[2] > lbl_803DE95C) ? lbl_803DE95C : response[2]);
-                    response[2] = fa;
-                    ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], (f32)(f64)fa, 0);
+                    response[2] = fVar4;
+                    ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], (f32)(f64)fVar4, 0);
                 }
             }
             else if (((shapeFlags & OBJHITS_SHAPE_SKELETON) != 0) && (depth < 1))

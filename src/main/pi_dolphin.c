@@ -1965,7 +1965,7 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
     int ok;
     u32 asize;
     int tmp;
-    u32 tmp2;
+    u32 local_78;
     char buf[0x3c];
 
     switch (fileId)
@@ -3030,8 +3030,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
             }
             if (strncmp((char*)r, sZlbBlockTag, 3) == 0)
             {
-                tmp2 = *(u32*)(r + 8);
-                zlbDecompress((void*)(r + 0x10), *(int*)(r + 0xc), destBuf, &tmp2);
+                local_78 = *(u32*)(r + 8);
+                zlbDecompress((void*)(r + 0x10), *(int*)(r + 0xc), destBuf, &local_78);
             }
             mm_free((void*)r);
         }
@@ -3073,9 +3073,9 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
         {
             return;
         }
-        tmp2 = *(u32*)(r + 8);
-        zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(r + 0xc), destBuf, &tmp2);
-        DCStoreRange((void*)destBuf, tmp2);
+        local_78 = *(u32*)(r + 8);
+        zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(r + 0xc), destBuf, &local_78);
+        DCStoreRange((void*)destBuf, local_78);
     }
     else if (fileId == 0x25 || fileId == 0x47)
     {
@@ -3088,9 +3088,9 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
         {
             return;
         }
-        tmp2 = *(u32*)(r + 8);
-        zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(r + 0xc), destBuf, &tmp2);
-        DCStoreRange((void*)destBuf, tmp2);
+        local_78 = *(u32*)(r + 8);
+        zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(r + 0xc), destBuf, &local_78);
+        DCStoreRange((void*)destBuf, local_78);
     }
     else if (fileId == 0x2b || fileId == 0x46)
     {
@@ -3108,9 +3108,9 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
     else if (fileId == 0x23 || fileId == 0x4d)
     {
         r = r + (offsetFlags & 0xffffff);
-        tmp2 = *(u32*)(r + 8);
-        zlbDecompress((void*)(r + 0x10), *(int*)(r + 0xc), destBuf, &tmp2);
-        DCStoreRange((void*)destBuf, tmp2);
+        local_78 = *(u32*)(r + 8);
+        zlbDecompress((void*)(r + 0x10), *(int*)(r + 0xc), destBuf, &local_78);
+        DCStoreRange((void*)destBuf, local_78);
     }
     else if (fileId == 0x20 || fileId == 0x4b)
     {
@@ -3122,9 +3122,9 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
         }
         if (strncmp((char*)r, sZlbBlockTag, 3) == 0)
         {
-            tmp2 = *(u32*)(r + 8);
-            zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(r + 0xc), destBuf, &tmp2);
-            DCStoreRange((void*)destBuf, tmp2);
+            local_78 = *(u32*)(r + 8);
+            zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(r + 0xc), destBuf, &local_78);
+            DCStoreRange((void*)destBuf, local_78);
         }
     }
     else if (fileId == 0x4f)
@@ -3137,9 +3137,9 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
         }
         if (strncmp((char*)r, sZlbBlockTag, 3) == 0)
         {
-            tmp2 = *(u32*)(r + 8);
-            zlbDecompress((void*)(MLDF_PTR(0x4f) + offsetFlags + 0x10), *(int*)(r + 0xc), destBuf, &tmp2);
-            DCStoreRange((void*)destBuf, tmp2);
+            local_78 = *(u32*)(r + 8);
+            zlbDecompress((void*)(MLDF_PTR(0x4f) + offsetFlags + 0x10), *(int*)(r + 0xc), destBuf, &local_78);
+            DCStoreRange((void*)destBuf, local_78);
         }
     }
     else if (fileId == 0x30 || fileId == 0x51 || fileId == 0x4a)
@@ -3263,46 +3263,46 @@ extern int lbl_803DCC74;
 extern void romListReadCb();
 #pragma scheduling off
 #pragma peephole off
-void piRomLoadSection(int arg1, int arg2, int arg3)
+void piRomLoadSection(int param_1, int param_2, int param_3)
 {
     char buf[1048];
     int fi;
     int ok;
     int* p;
 
-    if ((arg3 == 0) && (lbl_8035F208[arg2] == 0))
+    if ((param_3 == 0) && (lbl_8035F208[param_2] == 0))
     {
-        sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[arg2]);
+        sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[param_2]);
         fi = AtomicSList_Pop(lbl_803DCC8C);
         ok = DVDOpen(buf, (void*)fi);
         if (ok != 0)
         {
-            lbl_8035F208[arg2] = (int)mmAlloc(*(int*)(fi + 0x34), 0x7d7d7d7d, 0);
+            lbl_8035F208[param_2] = (int)mmAlloc(*(int*)(fi + 0x34), 0x7d7d7d7d, 0);
             lbl_803DCC74 = 1;
-            DVDReadAsyncPrio((void*)fi, (void*)lbl_8035F208[arg2], *(int*)(fi + 0x34), 0, romListReadCb, 2);
+            DVDReadAsyncPrio((void*)fi, (void*)lbl_8035F208[param_2], *(int*)(fi + 0x34), 0, romListReadCb, 2);
         }
     }
     else
     {
-        if (lbl_8035F208[arg2] == 0)
+        if (lbl_8035F208[param_2] == 0)
         {
-            sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[arg2]);
+            sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[param_2]);
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (void*)fi);
             if (ok == 0)
             {
                 return;
             }
-            lbl_8035F208[arg2] = (int)mmAlloc(*(int*)(fi + 0x34), 0x7d7d7d7d, 0);
-            DVDRead((void*)fi, (void*)lbl_8035F208[arg2], *(int*)(fi + 0x34), 0);
+            lbl_8035F208[param_2] = (int)mmAlloc(*(int*)(fi + 0x34), 0x7d7d7d7d, 0);
+            DVDRead((void*)fi, (void*)lbl_8035F208[param_2], *(int*)(fi + 0x34), 0);
             DVDClose((void*)fi);
             AtomicSList_Push(lbl_803DCC8C, fi);
         }
-        p = (int*)(lbl_8035F3E8[0x1d] + arg1);
+        p = (int*)(lbl_8035F3E8[0x1d] + param_1);
         if (*p == 0xfacefeed)
         {
-            zlbDecompress((void*)(lbl_8035F208[arg2] + 0x10), p[3], arg3, p + 1);
-            DCStoreRange((void*)arg3, p[1]);
+            zlbDecompress((void*)(lbl_8035F208[param_2] + 0x10), p[3], param_3, p + 1);
+            DCStoreRange((void*)param_3, p[1]);
         }
     }
 }
@@ -3492,9 +3492,9 @@ undefined4 FUN_80045c4c(char param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8004A8F8(char arg1)
+void fn_8004A8F8(char param_1)
 {
-    if (arg1 == '\0')
+    if (param_1 == '\0')
     {
         *(undefined*)&DAT_cc008000 = 0x61;
         DAT_cc008000 = 0x24000000;
@@ -3707,7 +3707,7 @@ void FUN_80046270(int param_1, int param_2, int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8004B11C(undefined4 arg1, undefined4 arg2, undefined arg3)
+void fn_8004B11C(undefined4 param_1, undefined4 param_2, undefined param_3)
 {
     int sel;
     uint mask;
@@ -3753,7 +3753,7 @@ void fn_8004B11C(undefined4 arg1, undefined4 arg2, undefined arg3)
                 fval = FUN_80017714((float*)(ent + 8), (float*)(found + 8));
                 uval = FUN_80286718((double)(float)((double)(float)((double)CONCAT44(0x43300000, ctx[2]) -
                     DOUBLE_803df728) + fval));
-                FUN_800462f8((undefined4)ctxHi, (undefined4)(u32)ctx, arg3, uval, found);
+                FUN_800462f8((undefined4)ctxHi, (undefined4)(u32)ctx, param_3, uval, found);
                 sel = DAT_803dd988;
             }
         }
@@ -3815,12 +3815,12 @@ void fn_8004B394(void)
     int* entry;
     uint poppedKey;
     int remaining;
-    undefined8 uval2;
+    undefined8 uVar9;
 
-    uval2 = FUN_8028683c();
-    heapCtx = (int*)((ulonglong)uval2 >> 0x20);
+    uVar9 = FUN_8028683c();
+    heapCtx = (int*)((ulonglong)uVar9 >> 0x20);
     done = false;
-    for (remaining = (int)uval2; (!done && (remaining != 0)); remaining = remaining + -1)
+    for (remaining = (int)uVar9; (!done && (remaining != 0)); remaining = remaining + -1)
     {
         heapArr = heapCtx[1];
         if (*(short*)((int)heapCtx + 0x22) == 0)
@@ -4595,7 +4595,7 @@ int fn_8004B148(int* p)
 
 extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 #pragma ppc_unroll_speculative off
-int fn_8004B31C(int* arg1, int arg2, int arg3, int arg4, u8 arg5)
+int fn_8004B31C(int* param_1, int param_2, int param_3, int param_4, u8 param_5)
 {
     int i = 0;
     int o4;
@@ -4609,61 +4609,61 @@ int fn_8004B31C(int* arg1, int arg2, int arg3, int arg4, u8 arg5)
     u16* hh;
     u16 v;
 
-    *(s16*)((char*)arg1 + 0x22) = i;
-    *(s16*)((char*)arg1 + 0x20) = i;
+    *(s16*)((char*)param_1 + 0x22) = i;
+    *(s16*)((char*)param_1 + 0x20) = i;
     o4 = i;
     o8 = i;
     for (i = 0; i < 0xf8; i += 8)
     {
-        *(int*)(arg1[1] + o4) = 0;
-        *(u8*)(*arg1 + o8 + 0xe) = 0;
-        *(int*)(arg1[1] + o4 + 8) = 0;
-        *(u8*)(*arg1 + o8 + 0x1e) = 0;
-        *(int*)(arg1[1] + o4 + 0x10) = 0;
-        *(u8*)(*arg1 + o8 + 0x2e) = 0;
-        *(int*)(arg1[1] + o4 + 0x18) = 0;
-        *(u8*)(*arg1 + o8 + 0x3e) = 0;
-        *(int*)(arg1[1] + o4 + 0x20) = 0;
-        *(u8*)(*arg1 + o8 + 0x4e) = 0;
-        *(int*)(arg1[1] + o4 + 0x28) = 0;
-        *(u8*)(*arg1 + o8 + 0x5e) = 0;
-        *(int*)(arg1[1] + o4 + 0x30) = 0;
-        *(u8*)(*arg1 + o8 + 0x6e) = 0;
-        *(int*)(arg1[1] + o4 + 0x38) = 0;
-        *(u8*)(*arg1 + o8 + 0x7e) = 0;
+        *(int*)(param_1[1] + o4) = 0;
+        *(u8*)(*param_1 + o8 + 0xe) = 0;
+        *(int*)(param_1[1] + o4 + 8) = 0;
+        *(u8*)(*param_1 + o8 + 0x1e) = 0;
+        *(int*)(param_1[1] + o4 + 0x10) = 0;
+        *(u8*)(*param_1 + o8 + 0x2e) = 0;
+        *(int*)(param_1[1] + o4 + 0x18) = 0;
+        *(u8*)(*param_1 + o8 + 0x3e) = 0;
+        *(int*)(param_1[1] + o4 + 0x20) = 0;
+        *(u8*)(*param_1 + o8 + 0x4e) = 0;
+        *(int*)(param_1[1] + o4 + 0x28) = 0;
+        *(u8*)(*param_1 + o8 + 0x5e) = 0;
+        *(int*)(param_1[1] + o4 + 0x30) = 0;
+        *(u8*)(*param_1 + o8 + 0x6e) = 0;
+        *(int*)(param_1[1] + o4 + 0x38) = 0;
+        *(u8*)(*param_1 + o8 + 0x7e) = 0;
         o4 += 0x40;
         o8 += 0x80;
     }
     for (; i < 0xfe; i++)
     {
-        *(int*)(arg1[1] + i * 8) = 0;
-        *(u8*)(*arg1 + i * 16 + 0xe) = 0;
+        *(int*)(param_1[1] + i * 8) = 0;
+        *(u8*)(*param_1 + i * 16 + 0xe) = 0;
     }
-    arg1[6] = arg2;
-    arg1[3] = arg3;
-    arg1[4] = arg4;
-    *(u8*)((char*)arg1 + 0x28) = arg5 & 1;
-    arg1[9] = 10000;
-    s = *(s16*)((char*)arg1 + 0x20);
+    param_1[6] = param_2;
+    param_1[3] = param_3;
+    param_1[4] = param_4;
+    *(u8*)((char*)param_1 + 0x28) = param_5 & 1;
+    param_1[9] = 10000;
+    s = *(s16*)((char*)param_1 + 0x20);
     if (s == 0xfe)
     {
         node = NULL;
     }
     else
     {
-        node = (int*)(*arg1 + (*(s16*)((char*)arg1 + 0x20))++ * 0x10);
-        *node = arg2;
+        node = (int*)(*param_1 + (*(s16*)((char*)param_1 + 0x20))++ * 0x10);
+        *node = param_2;
         node[2] = 0;
         *(u8*)(node + 3) = 0xff;
-        node[1] = (u32)vec3f_distanceSquared((f32*)(*node + 8), (f32*)arg1[3]);
+        node[1] = (u32)vec3f_distanceSquared((f32*)(*node + 8), (f32*)param_1[3]);
     }
     i = node[1] + node[2];
-    heap = (u32*)arg1[1];
+    heap = (u32*)param_1[1];
     hh = (u16*)heap;
-    v = *(s16*)((char*)arg1 + 0x20) - 1;
-    hh[++(*(s16*)((char*)arg1 + 0x22)) * 4 + 2] = v;
-    *(u32*)((int)heap + *(s16*)((char*)arg1 + 0x22) * 8) = -1 - i;
-    i = *(s16*)((char*)arg1 + 0x22);
+    v = *(s16*)((char*)param_1 + 0x20) - 1;
+    hh[++(*(s16*)((char*)param_1 + 0x22)) * 4 + 2] = v;
+    *(u32*)((int)heap + *(s16*)((char*)param_1 + 0x22) * 8) = -1 - i;
+    i = *(s16*)((char*)param_1 + 0x22);
     pri = *(u32*)((int)heap + i * 8);
     idx = hh[i * 4 + 2];
     *heap = -1;
@@ -4679,34 +4679,34 @@ int fn_8004B31C(int* arg1, int arg2, int arg3, int arg4, u8 arg5)
 }
 #pragma ppc_unroll_speculative on
 
-void texPreGetMipmap(u32 arg1, int arg2, int* arg3, int* arg4, int arg5, u8* arg6, int arg7)
+void texPreGetMipmap(u32 param_1, int param_2, int* param_3, int* param_4, int param_5, u8* param_6, int param_7)
 {
     u32 base = lbl_8035F3E8[0x4f];
     if (base != 0)
     {
-        if (arg7 == 1 && arg6 != 0)
+        if (param_7 == 1 && param_6 != 0)
         {
-            int e = base + (arg1 & 0xffffff) * 2 + *(int*)(arg6 + arg5 * 4) + 4;
+            int e = base + (param_1 & 0xffffff) * 2 + *(int*)(param_6 + param_5 * 4) + 4;
             int v = *(int*)(e + 8);
-            *arg3 = *(int*)(e + 4);
-            *arg4 = v;
+            *param_3 = *(int*)(e + 4);
+            *param_4 = v;
         }
-        else if (arg7 == 2 && arg6 != 0)
+        else if (param_7 == 2 && param_6 != 0)
         {
-            memcpy(arg6, (void*)(base + (arg1 & 0xffffff) * 2), (arg5 + 1) * 4);
+            memcpy(param_6, (void*)(base + (param_1 & 0xffffff) * 2), (param_5 + 1) * 4);
         }
         else
         {
-            int e = base + (arg1 & 0xffffff) * 2;
+            int e = base + (param_1 & 0xffffff) * 2;
             int v = *(int*)(e + 0xc);
-            *arg3 = *(int*)(e + 8);
+            *param_3 = *(int*)(e + 8);
             if (strncmp(&sDirBlockTag, (char*)e, 3) == 0)
             {
-                *arg4 = 0xffffffff;
+                *param_4 = 0xffffffff;
             }
             else
             {
-                *arg4 = v;
+                *param_4 = v;
             }
         }
     }
@@ -4918,9 +4918,9 @@ typedef union
 extern volatile PiWGPipe GXWGFifo : (0xCC008000);
 extern void GXSetGPMetric(int perf0, int perf1);
 #pragma dont_inline on
-void gxPerfFn_8004a77c(int arg1)
+void gxPerfFn_8004a77c(int param_1)
 {
-    if ((u8)arg1 != 0)
+    if ((u8)param_1 != 0)
     {
         GXSetGPMetric(0x23, 0x16);
         GXWGFifo.u8 = 0x61;
@@ -6506,7 +6506,7 @@ extern f32 lbl_803DEAC4;
 extern void fn_8006C528(void* out);
 extern f32 ResetCoverCallback_803DEB2C;
 
-void renderHeavyFog(int* arg1)
+void renderHeavyFog(int* param_1)
 {
     f32 mcc[3][4];
     f32 m9c[3][4];
@@ -6537,7 +6537,7 @@ void renderHeavyFog(int* arg1)
     mcc[2][3] = lbl_803DEAC8;
     GXLoadTexMtxImm(mcc, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
-    kc = *arg1;
+    kc = *param_1;
     GXSetTevKColor(lbl_803DCD74, &kc);
     fn_8006C528(&tex20);
     {
@@ -7001,7 +7001,7 @@ void fn_8004D6D8(void)
 
 extern void fn_8006C540(u8 * *out);
 
-void fn_8004F380(f32 arg1, int* arg2, f32* arg3)
+void fn_8004F380(f32 param_1, int* param_2, f32* param_3)
 {
     f32 matA[3][4];
     f32 matB[3][4];
@@ -7012,17 +7012,17 @@ void fn_8004F380(f32 arg1, int* arg2, f32* arg3)
     if (lbl_803DCD74 <= 3 && lbl_803DCD6A < 0xc && lbl_803DCD69 < 7)
     {
         d1 = lbl_803DEADC;
-        f = d1 / arg1;
+        f = d1 / param_1;
         cc = lbl_803DEACC;
         c8 = lbl_803DEAC8;
         matA[0][0] = f;
         matA[0][1] = cc;
         matA[0][2] = cc;
-        matA[0][3] = -arg3[0] * f + d1;
+        matA[0][3] = -param_3[0] * f + d1;
         matA[1][0] = cc;
         matA[1][1] = cc;
         matA[1][2] = f;
-        matA[1][3] = -arg3[2] * f + d1;
+        matA[1][3] = -param_3[2] * f + d1;
         matA[2][0] = cc;
         matA[2][1] = cc;
         matA[2][2] = cc;
@@ -7030,7 +7030,7 @@ void fn_8004F380(f32 arg1, int* arg2, f32* arg3)
         matB[0][0] = cc;
         matB[0][1] = f;
         matB[0][2] = cc;
-        matB[0][3] = -arg3[1] * f + d1;
+        matB[0][3] = -param_3[1] * f + d1;
         matB[1][0] = cc;
         matB[1][1] = cc;
         matB[1][2] = cc;
@@ -7046,7 +7046,7 @@ void fn_8004F380(f32 arg1, int* arg2, f32* arg3)
         GXSetTexCoordGen2(lbl_803DCD88 + 1, 0, 0, 0, 0, lbl_803DCD80 + 3);
         GXSetTevDirect(lbl_803DCD90);
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
-        color = *arg2;
+        color = *param_2;
         GXSetTevKColor(lbl_803DCD74, &color);
         GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
         GXSetTevColorIn(lbl_803DCD90, 0xf, 0xe, 8, 0xf);
@@ -7086,7 +7086,7 @@ void fn_8004F380(f32 arg1, int* arg2, f32* arg3)
     }
 }
 
-void fn_8004F6D8(f32 arg1, int* arg2, f32* arg3)
+void fn_8004F6D8(f32 param_1, int* param_2, f32* param_3)
 {
     f32 matA[3][4];
     f32 matB[3][4];
@@ -7097,17 +7097,17 @@ void fn_8004F6D8(f32 arg1, int* arg2, f32* arg3)
     if (lbl_803DCD74 <= 3 && lbl_803DCD6A < 0xc && lbl_803DCD69 < 7)
     {
         d1 = lbl_803DEADC;
-        f = d1 / arg1;
+        f = d1 / param_1;
         cc = lbl_803DEACC;
         c8 = lbl_803DEAC8;
         matA[0][0] = f;
         matA[0][1] = cc;
         matA[0][2] = cc;
-        matA[0][3] = -arg3[0] * f + d1;
+        matA[0][3] = -param_3[0] * f + d1;
         matA[1][0] = cc;
         matA[1][1] = cc;
         matA[1][2] = f;
-        matA[1][3] = -arg3[2] * f + d1;
+        matA[1][3] = -param_3[2] * f + d1;
         matA[2][0] = cc;
         matA[2][1] = cc;
         matA[2][2] = cc;
@@ -7115,7 +7115,7 @@ void fn_8004F6D8(f32 arg1, int* arg2, f32* arg3)
         matB[0][0] = cc;
         matB[0][1] = f;
         matB[0][2] = cc;
-        matB[0][3] = -arg3[1] * f + d1;
+        matB[0][3] = -param_3[1] * f + d1;
         matB[1][0] = cc;
         matB[1][1] = cc;
         matB[1][2] = cc;
@@ -7131,7 +7131,7 @@ void fn_8004F6D8(f32 arg1, int* arg2, f32* arg3)
         GXSetTexCoordGen2(lbl_803DCD88 + 1, 0, 0, 0, 0, lbl_803DCD80 + 3);
         GXSetTevDirect(lbl_803DCD90);
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
-        color = *arg2;
+        color = *param_2;
         GXSetTevKColor(lbl_803DCD74, &color);
         GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
         GXSetTevColorIn(lbl_803DCD90, 0xf, 0xe, 8, 0xf);
@@ -7173,7 +7173,7 @@ void fn_8004F6D8(f32 arg1, int* arg2, f32* arg3)
 
 extern f32 lbl_803DEAE4;
 
-void fn_8004FA30(f32 arg1, int* arg2, f32* arg3)
+void fn_8004FA30(f32 param_1, int* param_2, f32* param_3)
 {
     f32 matA[3][4];
     f32 matB[3][4];
@@ -7183,22 +7183,22 @@ void fn_8004FA30(f32 arg1, int* arg2, f32* arg3)
     f32 c8, cc, d1, f;
     if (lbl_803DCD74 <= 3 && lbl_803DCD6A < 0x10 && lbl_803DCD69 < 7)
     {
-        if (arg1 < lbl_803DEAE4)
+        if (param_1 < lbl_803DEAE4)
         {
-            arg1 = lbl_803DEAE4;
+            param_1 = lbl_803DEAE4;
         }
         d1 = lbl_803DEADC;
-        f = d1 / arg1;
+        f = d1 / param_1;
         cc = lbl_803DEACC;
         c8 = lbl_803DEAC8;
         matA[0][0] = f;
         matA[0][1] = cc;
         matA[0][2] = cc;
-        matA[0][3] = -arg3[0] * f + d1;
+        matA[0][3] = -param_3[0] * f + d1;
         matA[1][0] = cc;
         matA[1][1] = cc;
         matA[1][2] = f;
-        matA[1][3] = -arg3[2] * f + d1;
+        matA[1][3] = -param_3[2] * f + d1;
         matA[2][0] = cc;
         matA[2][1] = cc;
         matA[2][2] = cc;
@@ -7206,7 +7206,7 @@ void fn_8004FA30(f32 arg1, int* arg2, f32* arg3)
         matB[0][0] = cc;
         matB[0][1] = f;
         matB[0][2] = cc;
-        matB[0][3] = -arg3[1] * f + d1;
+        matB[0][3] = -param_3[1] * f + d1;
         matB[1][0] = cc;
         matB[1][1] = cc;
         matB[1][2] = cc;
@@ -7222,7 +7222,7 @@ void fn_8004FA30(f32 arg1, int* arg2, f32* arg3)
         GXSetTexCoordGen2(lbl_803DCD88 + 1, 0, 0, 0, 0, lbl_803DCD80 + 3);
         GXSetTevDirect(lbl_803DCD90);
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
-        color = *arg2;
+        color = *param_2;
         GXSetTevKColor(lbl_803DCD74, &color);
         GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
         GXSetTevColorIn(lbl_803DCD90, 0xf, 0xe, 8, 0xf);
@@ -7265,9 +7265,9 @@ void fn_8004FA30(f32 arg1, int* arg2, f32* arg3)
 
 extern void fn_8006C5B8(void* out);
 
-void fn_8005011C(int arg1)
+void fn_8005011C(int param_1)
 {
-    u8* tmp;
+    u8* local_48;
     f32 mtx[3][4];
     u8* obj2;
     int id;
@@ -7275,10 +7275,10 @@ void fn_8005011C(int arg1)
     GXSetTevDirect(lbl_803DCD90 + 1);
     GXSetTevDirect(lbl_803DCD90 + 2);
     GXSetTevDirect(lbl_803DCD90 + 3);
-    PSMTXConcat((f32 (*)[4])(arg1 + 0x30), Camera_GetInverseViewMatrix(), mtx);
+    PSMTXConcat((f32 (*)[4])(param_1 + 0x30), Camera_GetInverseViewMatrix(), mtx);
     GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0x3c, 0, lbl_803DCD80);
-    PSMTXConcat((f32 (*)[4])arg1, Camera_GetInverseViewMatrix(), mtx);
+    PSMTXConcat((f32 (*)[4])param_1, Camera_GetInverseViewMatrix(), mtx);
     GXLoadTexMtxImm(mtx, lbl_803DCD80 + 3, 0);
     GXSetTexCoordGen2(lbl_803DCD88 + 1, 0, 0, 0x3c, 0, lbl_803DCD80 + 3);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
@@ -7306,14 +7306,14 @@ void fn_8005011C(int arg1)
     GXSetTevSwapMode(lbl_803DCD90 + 3, 0, 0);
     GXSetTevColorOp(lbl_803DCD90 + 3, 0, 0, 0, 1, 3);
     GXSetTevAlphaOp(lbl_803DCD90 + 3, 0, 0, 0, 1, 0);
-    fn_8006C5B8(&tmp);
+    fn_8006C5B8(&local_48);
     id = lbl_803DCD8C;
-    if (tmp != NULL)
+    if (local_48 != NULL)
     {
-        void* obj = tmp + 0x20;
-        if (tmp[0x48] != 0)
+        void* obj = local_48 + 0x20;
+        if (local_48[0x48] != 0)
         {
-            GXLoadTexObjPreLoaded(obj, *(void**)(tmp + 0x40), id);
+            GXLoadTexObjPreLoaded(obj, *(void**)(local_48 + 0x40), id);
         }
         else
         {
@@ -7321,7 +7321,7 @@ void fn_8005011C(int arg1)
         }
     }
     id = lbl_803DCD8C + 1;
-    obj2 = *(u8**)(arg1 + 0x60);
+    obj2 = *(u8**)(param_1 + 0x60);
     if (obj2 != NULL)
     {
         void* obj = obj2 + 0x20;
@@ -7344,14 +7344,14 @@ void fn_8005011C(int arg1)
 
 extern u8 lbl_803DCD6B;
 
-void fn_80050558(u8* arg1, void* texMtx, int arg3, int arg4, int arg5)
+void fn_80050558(u8* param_1, void* texMtx, int param_3, int param_4, int param_5)
 {
     int inputSel;
     int texmap;
     GXSetTevDirect(lbl_803DCD90);
     GXLoadTexMtxImm(texMtx, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
-    if (arg5 == 0 || arg5 == 2)
+    if (param_5 == 0 || param_5 == 2)
     {
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 4);
     }
@@ -7367,21 +7367,21 @@ void fn_80050558(u8* arg1, void* texMtx, int arg3, int arg4, int arg5)
     {
         inputSel = 4;
     }
-    if (arg3 == 0)
+    if (param_3 == 0)
     {
-        if (arg4 == 2)
+        if (param_4 == 2)
         {
             GXSetTevColorIn(lbl_803DCD90, 0xf, inputSel, 8, 0xf);
         }
-        else if (arg4 == 3)
+        else if (param_4 == 3)
         {
             GXSetTevColorIn(lbl_803DCD90, inputSel, 0xf, 8, 0xf);
         }
-        else if (arg4 == 1)
+        else if (param_4 == 1)
         {
             GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 8, inputSel);
         }
-        else if (arg5 == 0 || arg5 == 1)
+        else if (param_5 == 0 || param_5 == 1)
         {
             GXSetTevColorIn(lbl_803DCD90, 0xf, 0xa, 8, inputSel);
         }
@@ -7391,7 +7391,7 @@ void fn_80050558(u8* arg1, void* texMtx, int arg3, int arg4, int arg5)
         }
         GXSetTevSwapMode(lbl_803DCD90, 0, 0);
         GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 7);
-        if (arg4 == 1)
+        if (param_4 == 1)
         {
             GXSetTevColorOp(lbl_803DCD90, 1, 0, 0, 1, 2);
             GXSetTevAlphaOp(lbl_803DCD90, 1, 0, 0, 1, 2);
@@ -7402,21 +7402,21 @@ void fn_80050558(u8* arg1, void* texMtx, int arg3, int arg4, int arg5)
             GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 2);
         }
     }
-    else if (arg3 == 1)
+    else if (param_3 == 1)
     {
-        if (arg4 == 2)
+        if (param_4 == 2)
         {
             GXSetTevColorIn(lbl_803DCD90, 0xf, 6, 8, 0xf);
         }
-        else if (arg4 == 3)
+        else if (param_4 == 3)
         {
             GXSetTevColorIn(lbl_803DCD90, 6, 0xf, 8, 0xf);
         }
-        else if (arg4 == 1)
+        else if (param_4 == 1)
         {
             GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 8, 6);
         }
-        else if (arg5 == 0 || arg5 == 1)
+        else if (param_5 == 0 || param_5 == 1)
         {
             GXSetTevColorIn(lbl_803DCD90, 0xf, 0xa, 8, 6);
         }
@@ -7426,7 +7426,7 @@ void fn_80050558(u8* arg1, void* texMtx, int arg3, int arg4, int arg5)
         }
         GXSetTevSwapMode(lbl_803DCD90, 0, 0);
         GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 7);
-        if (arg4 == 1)
+        if (param_4 == 1)
         {
             GXSetTevColorOp(lbl_803DCD90, 1, 0, 0, 1, 3);
             GXSetTevAlphaOp(lbl_803DCD90, 1, 0, 0, 1, 3);
@@ -7444,7 +7444,7 @@ void fn_80050558(u8* arg1, void* texMtx, int arg3, int arg4, int arg5)
         GXSetTevSwapModeTable(1, 0, 0, 0, 1);
         GXSetTevSwapMode(lbl_803DCD90, 1, 1);
         GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0xc);
-        if (arg4 == 3)
+        if (param_4 == 3)
         {
             GXSetTevAlphaIn(lbl_803DCD90, 7, 5, 4, 6);
             GXSetTevAlphaOp(lbl_803DCD90, 1, 0, 0, 1, 0);
@@ -7457,12 +7457,12 @@ void fn_80050558(u8* arg1, void* texMtx, int arg3, int arg4, int arg5)
         GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
     }
     texmap = lbl_803DCD8C;
-    if (arg1 != NULL)
+    if (param_1 != NULL)
     {
-        u8* tex = arg1 + 0x20;
-        if (arg1[0x48] != 0)
+        u8* tex = param_1 + 0x20;
+        if (param_1[0x48] != 0)
         {
-            GXLoadTexObjPreLoaded(tex, *(void**)(arg1 + 0x40), texmap);
+            GXLoadTexObjPreLoaded(tex, *(void**)(param_1 + 0x40), texmap);
         }
         else
         {
@@ -7600,7 +7600,7 @@ extern f32 bootThisDol;
 extern f32 lbl_803DEAEC;
 extern f32 lbl_803DEAF0;
 
-void fn_8004CE0C(void* arg1)
+void fn_8004CE0C(void* param_1)
 {
     f32 mtx40[3][4];
     f32 mtx70[3][4];
@@ -7678,7 +7678,7 @@ void fn_8004CE0C(void* arg1)
     mtx40[1][1] = lbl_803DEACC;
     mtx40[1][2] = lbl_803DEACC;
     mtx40[1][3] = lbl_803DEACC;
-    PSMTXConcat(mtx40, arg1, mtx40);
+    PSMTXConcat(mtx40, param_1, mtx40);
     GXLoadTexMtxImm(mtx40, 0x24, 1);
     GXSetTexCoordGen2(3, 1, 0, 0x24, 0, 0x7d);
     GXSetTevDirect(2);
@@ -7913,10 +7913,10 @@ void fn_8004D928(void)
     lbl_803DCD69++;
 }
 
-void fn_8004FDA0(u8* arg1, void* arg2)
+void fn_8004FDA0(u8* param_1, void* param_2)
 {
     GXSetTevDirect(lbl_803DCD90);
-    GXLoadTexMtxImm(arg2, lbl_803DCD80, 0);
+    GXLoadTexMtxImm(param_2, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
     GXSetTevKColorSel(lbl_803DCD90, 4);
@@ -7928,12 +7928,12 @@ void fn_8004FDA0(u8* arg1, void* arg2)
     lbl_803DCD30 = 1;
     {
         int id = lbl_803DCD8C;
-        if (arg1 != NULL)
+        if (param_1 != NULL)
         {
-            void* obj = arg1 + 0x20;
-            if (arg1[0x48] != 0)
+            void* obj = param_1 + 0x20;
+            if (param_1[0x48] != 0)
             {
-                GXLoadTexObjPreLoaded(obj, *(void**)(arg1 + 0x40), id);
+                GXLoadTexObjPreLoaded(obj, *(void**)(param_1 + 0x40), id);
             }
             else
             {
@@ -7949,10 +7949,10 @@ void fn_8004FDA0(u8* arg1, void* arg2)
     lbl_803DCD69++;
 }
 
-void fn_80050A28(int arg1)
+void fn_80050A28(int param_1)
 {
     f32 m[3][4];
-    PSMTXScale(m, (f32)arg1, (f32)arg1, lbl_803DEACC);
+    PSMTXScale(m, (f32)param_1, (f32)param_1, lbl_803DEACC);
     m[2][3] = lbl_803DEAC8;
     GXLoadTexMtxImm(m, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, 1, 4, 0x3c, 0, lbl_803DCD80);

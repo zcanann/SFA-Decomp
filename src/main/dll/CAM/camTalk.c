@@ -89,25 +89,25 @@ void CameraModeBike_update(CameraObject* camera)
     float posZ;
     CamTalkTransformInput xformIn;
     float mtxBuf[17];
-    longlong tmp;
-    undefined4 tmp3;
-    uint convLo;
-    longlong tmp4;
-    longlong tmp5;
-    undefined4 tmp6;
-    uint convLo2;
-    undefined4 tmp7;
-    uint convLo3;
-    undefined4 tmp8;
-    uint convLo4;
-    undefined4 tmp9;
-    uint convLo5;
-    longlong tmp2;
-    undefined4 tmp10;
-    uint convLo6;
-    undefined4 tmp11;
-    uint convLo7;
-    longlong tmp12;
+    longlong local_a0;
+    undefined4 local_98;
+    uint uStack_94;
+    longlong local_90;
+    longlong local_88;
+    undefined4 local_80;
+    uint uStack_7c;
+    undefined4 local_78;
+    uint uStack_74;
+    undefined4 local_70;
+    uint uStack_6c;
+    undefined4 local_68;
+    uint uStack_64;
+    longlong local_60;
+    undefined4 local_58;
+    uint uStack_54;
+    undefined4 local_50;
+    uint uStack_4c;
+    longlong local_48;
 
     (*gCameraInterface)->getDefaultHandlerEntry();
     target = (GameObject*)camera->anim.targetObj;
@@ -119,7 +119,7 @@ void CameraModeBike_update(CameraObject* camera)
         xformIn.z = target->anim.worldPosZ;
         xformIn.scale = lbl_803E1788;
         xformIn.yaw = target->anim.rotX;
-        tmp = (longlong)(int)
+        local_a0 = (longlong)(int)
         lbl_803DD540->pitchTarget;
         xformIn.pitch = (undefined2)(int)
         lbl_803DD540->pitchTarget;
@@ -165,7 +165,7 @@ void CameraModeBike_update(CameraObject* camera)
         camera->anim.worldPosY = posY + fa * ff;
         camera->anim.worldPosZ = posX + fe * fc;
         ref = (int)(lbl_803E17A8 * lbl_803DD540->rollInput);
-        tmp2 = (longlong)ref;
+        local_60 = (longlong)ref;
         angle = (short)ref - camera->anim.rotZ;
         if (0x8000 < angle)
         {
@@ -233,23 +233,23 @@ void firstPersonPlaceCamera(GameObject* focus, int resetClamp)
 {
     register GameObject* self = focus;
     GameObject* galleon;
-    int val;
-    float tmp2;
-    float tmp3;
-    float tmp4;
-    float tmp[3];
+    int iVar2;
+    float local_20;
+    float local_24;
+    float local_28;
+    float local_1c[3];
 
     if (self->anim.classId == 1)
     {
-        cameraGetPrevPos2((int)self, &tmp4, &tmp3, &tmp2);
-        if (((resetClamp != 0) || (lbl_803DD548->camPosX != tmp4)) ||
-            (lbl_803DD548->camPosZ != tmp2))
+        cameraGetPrevPos2((int)self, &local_28, &local_24, &local_20);
+        if (((resetClamp != 0) || (lbl_803DD548->camPosX != local_28)) ||
+            (lbl_803DD548->camPosZ != local_20))
         {
-            lbl_803DD548->clampedPosY = tmp3;
+            lbl_803DD548->clampedPosY = local_24;
         }
-        lbl_803DD548->camPosX = tmp4;
-        lbl_803DD548->camPosY = tmp3;
-        lbl_803DD548->camPosZ = tmp2;
+        lbl_803DD548->camPosX = local_28;
+        lbl_803DD548->camPosY = local_24;
+        lbl_803DD548->camPosZ = local_20;
     }
     else
     {
@@ -261,16 +261,16 @@ void firstPersonPlaceCamera(GameObject* focus, int resetClamp)
     galleon = getSbGalleon();
     if (galleon != NULL)
     {
-        val = DBprotection_getCameraState(galleon);
-        if (val == 2)
+        iVar2 = DBprotection_getCameraState(galleon);
+        if (iVar2 == 2)
         {
-            tmp[0] = self->anim.worldPosX - galleon->anim.worldPosX;
-            tmp[1] = (lbl_803E17C0 + self->anim.worldPosY) - galleon->anim.worldPosY;
-            tmp[2] = self->anim.worldPosZ - galleon->anim.worldPosZ;
-            vecRotateZXY(galleon, tmp);
-            lbl_803DD548->camPosX = galleon->anim.worldPosX + tmp[0];
-            lbl_803DD548->camPosY = galleon->anim.worldPosY + tmp[1];
-            lbl_803DD548->camPosZ = galleon->anim.worldPosZ + tmp[2];
+            local_1c[0] = self->anim.worldPosX - galleon->anim.worldPosX;
+            local_1c[1] = (lbl_803E17C0 + self->anim.worldPosY) - galleon->anim.worldPosY;
+            local_1c[2] = self->anim.worldPosZ - galleon->anim.worldPosZ;
+            vecRotateZXY(galleon, local_1c);
+            lbl_803DD548->camPosX = galleon->anim.worldPosX + local_1c[0];
+            lbl_803DD548->camPosY = galleon->anim.worldPosY + local_1c[1];
+            lbl_803DD548->camPosZ = galleon->anim.worldPosZ + local_1c[2];
         }
     }
     return;
@@ -293,30 +293,30 @@ void firstPersonExit(CameraObject* camera)
 {
     register CameraObject* self = camera;
     GameObject* target;
-    float fa;
-    float fb;
-    int sval;
-    float tmp[3];
-    undefined buf[4];
+    float fVar1;
+    float fVar2;
+    int sVar3;
+    float local_24[3];
+    undefined auStack_28[4];
 
     target = (GameObject*)self->anim.targetObj;
     lbl_803DD548->posXCurve.start = self->anim.worldPosX;
-    fa = lbl_803E17C4;
+    fVar1 = lbl_803E17C4;
     lbl_803DD548->posXCurve.startTangent = lbl_803E17C4;
-    lbl_803DD548->posXCurve.endTangent = fa;
+    lbl_803DD548->posXCurve.endTangent = fVar1;
     lbl_803DD548->posYCurve.start = self->anim.worldPosY;
-    lbl_803DD548->posYCurve.startTangent = fa;
-    lbl_803DD548->posYCurve.endTangent = fa;
+    lbl_803DD548->posYCurve.startTangent = fVar1;
+    lbl_803DD548->posYCurve.endTangent = fVar1;
     lbl_803DD548->posZCurve.start = self->anim.worldPosZ;
-    lbl_803DD548->posZCurve.startTangent = fa;
-    lbl_803DD548->posZCurve.endTangent = fa;
-    camcontrol_getTargetPosition((int)self, (int)target, tmp, buf);
-    lbl_803DD548->posXCurve.end = tmp[0];
-    lbl_803DD548->posYCurve.end = tmp[1];
-    lbl_803DD548->posZCurve.end = tmp[2];
-    fa = lbl_803DD548->posXCurve.end - lbl_803DD548->posXCurve.start;
-    fb = lbl_803DD548->posZCurve.end - lbl_803DD548->posZCurve.start;
-    lbl_803DD548->exitDistance = sqrtf(fa * fa + fb * fb);
+    lbl_803DD548->posZCurve.startTangent = fVar1;
+    lbl_803DD548->posZCurve.endTangent = fVar1;
+    camcontrol_getTargetPosition((int)self, (int)target, local_24, auStack_28);
+    lbl_803DD548->posXCurve.end = local_24[0];
+    lbl_803DD548->posYCurve.end = local_24[1];
+    lbl_803DD548->posZCurve.end = local_24[2];
+    fVar1 = lbl_803DD548->posXCurve.end - lbl_803DD548->posXCurve.start;
+    fVar2 = lbl_803DD548->posZCurve.end - lbl_803DD548->posZCurve.start;
+    lbl_803DD548->exitDistance = sqrtf(fVar1 * fVar1 + fVar2 * fVar2);
     lbl_803DD548->viewCurve.px = &lbl_803DD548->yawCurve.start;
     lbl_803DD548->viewCurve.py = &lbl_803DD548->pitchCurve.start;
     lbl_803DD548->viewCurve.pz = NULL;
@@ -325,14 +325,14 @@ void firstPersonExit(CameraObject* camera)
     lbl_803DD548->viewCurve.eval = Curve_EvalHermite;
     lbl_803DD548->viewCurve.coeffFn = Curve_BuildHermiteCoeffs;
     lbl_803DD548->yawCurve.start = (float)(int)self->anim.rotX;
-    sval = getAngle((double)(lbl_803DD548->posXCurve.end - target->anim.worldPosX),
+    sVar3 = getAngle((double)(lbl_803DD548->posXCurve.end - target->anim.worldPosX),
                      (double)(lbl_803DD548->posZCurve.end - target->anim.worldPosZ));
-    lbl_803DD548->yawCurve.end = (float)(int)(short)(0x8000 - sval);
-    fa = lbl_803E17C4;
+    lbl_803DD548->yawCurve.end = (float)(int)(short)(0x8000 - sVar3);
+    fVar1 = lbl_803E17C4;
     lbl_803DD548->yawCurve.startTangent = lbl_803E17C4;
-    lbl_803DD548->yawCurve.endTangent = fa;
-    fa = lbl_803DD548->yawCurve.start - lbl_803DD548->yawCurve.end;
-    if ((fa > lbl_803E17C8) || (fa < lbl_803E17CC))
+    lbl_803DD548->yawCurve.endTangent = fVar1;
+    fVar1 = lbl_803DD548->yawCurve.start - lbl_803DD548->yawCurve.end;
+    if ((fVar1 > lbl_803E17C8) || (fVar1 < lbl_803E17CC))
     {
         if (lbl_803E17C4 <= lbl_803DD548->yawCurve.start)
         {
@@ -347,12 +347,12 @@ void firstPersonExit(CameraObject* camera)
         }
     }
     lbl_803DD548->pitchCurve.start = (float)(int)self->anim.rotY;
-    fa = lbl_803E17C4;
+    fVar1 = lbl_803E17C4;
     lbl_803DD548->pitchCurve.end = lbl_803E17C4;
-    lbl_803DD548->pitchCurve.startTangent = fa;
-    lbl_803DD548->pitchCurve.endTangent = fa;
-    fa = lbl_803DD548->pitchCurve.start - lbl_803DD548->pitchCurve.end;
-    if ((fa > lbl_803E17C8) || (fa < lbl_803E17CC))
+    lbl_803DD548->pitchCurve.startTangent = fVar1;
+    lbl_803DD548->pitchCurve.endTangent = fVar1;
+    fVar1 = lbl_803DD548->pitchCurve.start - lbl_803DD548->pitchCurve.end;
+    if ((fVar1 > lbl_803E17C8) || (fVar1 < lbl_803E17CC))
     {
         if (lbl_803E17C4 <= lbl_803DD548->pitchCurve.start)
         {

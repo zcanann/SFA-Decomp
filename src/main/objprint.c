@@ -815,53 +815,53 @@ void FUN_8003a1c4(int param_1, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8003A328(double arg1, short* arg2, char* arg3)
+void fn_8003A328(double param_1, short* param_2, char* param_3)
 {
-    uint uval;
-    short* ptr;
-    int val;
-    int val2;
-    int val3;
+    uint uVar1;
+    short* psVar2;
+    int iVar3;
+    int iVar4;
+    int iVar5;
 
-    ptr = (short*)0x0;
-    val = (int)OBJPRINT_MODEL_INSTANCE(arg2);
-    if (val != 0)
+    psVar2 = (short*)0x0;
+    iVar3 = (int)OBJPRINT_MODEL_INSTANCE(param_2);
+    if (iVar3 != 0)
     {
-        val2 = 0;
-        val3 = 0;
-        for (uval = (uint)OBJPRINT_JOINT_COUNT(val); uval != 0; uval = uval - 1)
+        iVar4 = 0;
+        iVar5 = 0;
+        for (uVar1 = (uint)OBJPRINT_JOINT_COUNT(iVar3); uVar1 != 0; uVar1 = uVar1 - 1)
         {
-            if ((*(char*)(*(int*)(val + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(arg2) + val2 + 1) != -1) &&
-                (*(char*)(*(int*)(val + 0x10) + val2) == '\0'))
+            if ((*(char*)(*(int*)(iVar3 + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(param_2) + iVar4 + 1) != -1) &&
+                (*(char*)(*(int*)(iVar3 + 0x10) + iVar4) == '\0'))
             {
-                ptr = (short*)(*(int*)(arg2 + 0x36) + val3);
+                psVar2 = (short*)(*(int*)(param_2 + 0x36) + iVar5);
             }
-            val2 = OBJPRINT_MODEL_COUNT(val) + val2 + 1;
-            val3 = val3 + 0x12;
+            iVar4 = OBJPRINT_MODEL_COUNT(iVar3) + iVar4 + 1;
+            iVar5 = iVar5 + 0x12;
         }
     }
-    if (ptr != (short*)0x0)
+    if (psVar2 != (short*)0x0)
     {
-        if (*ptr != 0)
+        if (*psVar2 != 0)
         {
-            uval = *ptr * 3;
-            *ptr = (short)((int)uval >> 2) + (ushort)((int)uval < 0 && (uval & 3) != 0);
+            uVar1 = *psVar2 * 3;
+            *psVar2 = (short)((int)uVar1 >> 2) + (ushort)((int)uVar1 < 0 && (uVar1 & 3) != 0);
         }
-        if (arg1 < (double)lbl_803DF624)
+        if (param_1 < (double)lbl_803DF624)
         {
-            arg1 = -arg1;
+            param_1 = -param_1;
         }
-        if ((double)lbl_803DF664 < arg1)
+        if ((double)lbl_803DF664 < param_1)
         {
-            FUN_80039bc4(arg1, (undefined4)(u32)arg2, arg3, (int)ptr);
+            FUN_80039bc4(param_1, (undefined4)(u32)param_2, param_3, (int)psVar2);
         }
         else
         {
-            FUN_80039e6c(arg1, arg2, arg3, (int)ptr);
+            FUN_80039e6c(param_1, param_2, param_3, (int)psVar2);
         }
-        *(ushort*)(arg3 + 0x1a) = *(ushort*)(arg3 + 0x1a) & 0xff;
-        *(ushort*)(arg3 + 0x1a) =
-            *(ushort*)(arg3 + 0x1a) | (ushort)((double)lbl_803DF664 < arg1) << 8;
+        *(ushort*)(param_3 + 0x1a) = *(ushort*)(param_3 + 0x1a) & 0xff;
+        *(ushort*)(param_3 + 0x1a) =
+            *(ushort*)(param_3 + 0x1a) | (ushort)((double)lbl_803DF664 < param_1) << 8;
     }
 }
 
