@@ -1701,7 +1701,7 @@ int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         case 2: inner[0xb] = 0;
             break;
-        case 3: break;
+        case 5: break;
         }
     }
     return 0;
