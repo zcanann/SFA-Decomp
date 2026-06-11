@@ -331,7 +331,8 @@ int mmGetRegionForPtr(u8* ptr)
 void* mmInitRegion(u8* buf, int size, int numSlots)
 {
     int regIdx = lbl_803DCB42++;
-    int after = size - numSlots * 0x1c;
+    int slotsBytes = numSlots * 0x1c;
+    int after = size - slotsBytes;
     int i;
     u8* slot;
     int freePtr;
@@ -347,7 +348,7 @@ void* mmInitRegion(u8* buf, int size, int numSlots)
         slot += 0x1c;
     }
     slot = gMmRegionTable[regIdx].start;
-    freePtr = (int)buf + numSlots * 0x1c;
+    freePtr = (int)buf + slotsBytes;
     if (freePtr & 0x1f)
     {
         *(int*)(slot + 0) = (freePtr & ~0x1f) + 0x20;
