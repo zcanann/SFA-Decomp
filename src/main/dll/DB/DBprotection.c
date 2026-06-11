@@ -318,13 +318,13 @@ void fn_801DFA28(u8 *obj)
   }
   c = ((SBGalleonState *)state)->stage;
   if (c == 7) {
-    ((SBGalleonState *)state)->unk79 = 3;
+    ((SBGalleonState *)state)->spiritPhase = 3;
   }
   else if (c == 8) {
-    ((SBGalleonState *)state)->unk79 = 4;
+    ((SBGalleonState *)state)->spiritPhase = 4;
   }
   else if (c == 9) {
-    ((SBGalleonState *)state)->unk79 = 5;
+    ((SBGalleonState *)state)->spiritPhase = 5;
   }
   if (((SBGalleonState *)state)->phase < 2) {
     ((SBGalleonState *)state)->wanderTimerA -= timeDelta;
@@ -426,7 +426,7 @@ void fn_801DFA28(u8 *obj)
         ((SBGalleonState *)state)->phaseTimer = 0;
         ((SBGalleonState *)state)->phase = 1;
         ((SBGalleonState *)state)->cycleKind = 1;
-        ((SBGalleonState *)state)->unk7C = 0;
+        ((SBGalleonState *)state)->phaseCounter = 0;
         *(s8 *)&((SBGalleonState *)state)->flightPattern = 0;
         ((SBGalleonState *)state)->headingLatch = 200;
         GameBit_Set(0xF1E, 1);
@@ -464,7 +464,7 @@ void fn_801DFA28(u8 *obj)
       tz = ((SBGalleonState *)state)->homeZ;
       ty = lbl_803E56EC + *(f32 *)(tricky + 0x10);
       if ((((SBGalleonState *)state)->headingLatch <= 0) &&
-          ((((SBGalleonState *)state)->unk7C == 0) || (((SBGalleonState *)state)->unk7C == 5))) {
+          ((((SBGalleonState *)state)->phaseCounter == 0) || (((SBGalleonState *)state)->phaseCounter == 5))) {
         ((SBGalleonState *)state)->headingLatch = 200;
       }
       Sfx_IsPlayingFromObjectChannel((int)obj, 2);
@@ -592,18 +592,18 @@ void fn_801DFA28(u8 *obj)
       break;
     }
     ((SBGalleonState *)state)->timer26 = 300;
-    if ((((SBGalleonState *)state)->unk7C >= 4) && (((SBGalleonState *)state)->stage < 3)) {
+    if ((((SBGalleonState *)state)->phaseCounter >= 4) && (((SBGalleonState *)state)->stage < 3)) {
       ((SBGalleonState *)state)->phase = 0;
       ((SBGalleonState *)state)->cycleKind = 1;
       ((SBGalleonState *)state)->stage = 3;
-      ((SBGalleonState *)state)->unk7C = 5;
+      ((SBGalleonState *)state)->phaseCounter = 5;
       ((SBGalleonState *)state)->headingLatch = 200;
       sfxObj = fn_801E2570();
       Sfx_StopFromObject(sfxObj, 0x2C6);
       Sfx_PlayFromObject(sfxObj, SFXwp_dsmk2_c);
       GameBit_Set(0xF1E, 0);
     }
-    else if (((SBGalleonState *)state)->unk7C >= 4) {
+    else if (((SBGalleonState *)state)->phaseCounter >= 4) {
       ((SBGalleonState *)state)->phase = 2;
       ((SBGalleonState *)state)->cycleKind = 3;
       ((SBGalleonState *)state)->stage = 6;

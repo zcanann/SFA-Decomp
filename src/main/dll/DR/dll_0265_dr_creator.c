@@ -28,16 +28,16 @@ typedef struct DrcreatorSpawnProjectileCallbackState {
 typedef struct DrcreatorState {
     u8 pad0[0x2 - 0x0];
     s16 unk2;
-    s16 unk4;
+    s16 gameBitId;
     s16 unk6;
-    s16 unk8;
-    s16 unkA;
+    s16 spawnTimer;
+    s16 timerVariance;
     u8 padC[0x24 - 0xC];
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
+    f32 velocityX;
+    f32 velocityY;
+    f32 velocityZ;
     u8 pad30[0xC4 - 0x30];
-    s32 unkC4;
+    s32 creatorObj;
 } DrcreatorState;
 
 
@@ -58,10 +58,10 @@ void drcreator_render(void) {}
 void drcreator_init(int obj, char *arg) {
     char *p = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s8)arg[0x1e] << 8);
-    ((DrcreatorState *)p)->unk4 = *(s16 *)(arg + 0x18);
+    ((DrcreatorState *)p)->gameBitId = *(s16 *)(arg + 0x18);
     ((DrcreatorState *)p)->unk6 = *(s16 *)(arg + 0x1c);
-    ((DrcreatorState *)p)->unk8 = (s16)randomGetRange(0, ((DrcreatorState *)p)->unk6);
-    ((DrcreatorState *)p)->unkA = (s8)arg[0x1f];
+    ((DrcreatorState *)p)->spawnTimer = (s16)randomGetRange(0, ((DrcreatorState *)p)->unk6);
+    ((DrcreatorState *)p)->timerVariance = (s8)arg[0x1f];
     *(int *)p = (u8)arg[0x20];
     ((BitFlags8 *)(p + 0x18))->b0 = 1;
     GameBit_Set(0x5dd, 0);
@@ -77,15 +77,15 @@ void drcreator_update(int obj) {
         switch (((DrcreatorPlacement *)q)->unk1A) {
         case 3:
         case 9:
-            if (GameBit_Get(((DrcreatorState *)runtime)->unk4) != 0) {
+            if (GameBit_Get(((DrcreatorState *)runtime)->gameBitId) != 0) {
                 (*gObjectTriggerInterface)
                     ->runSequence((((DrcreatorPlacement *)q)->unk1A == 3) ? 0 : 4, (void *)obj, -1);
             }
             break;
         case 4:
-            if (GameBit_Get(((DrcreatorState *)runtime)->unk4) != 0) {
-                ((DrcreatorState *)runtime)->unk8 -= framesThisStep;
-                if (((DrcreatorState *)runtime)->unk8 <= 0) {
+            if (GameBit_Get(((DrcreatorState *)runtime)->gameBitId) != 0) {
+                ((DrcreatorState *)runtime)->spawnTimer -= framesThisStep;
+                if (((DrcreatorState *)runtime)->spawnTimer <= 0) {
                     o = Obj_AllocObjectSetup(36, 1725);
                     *(f32 *)(o + 8) = ((GameObject *)obj)->anim.localPosX;
                     *(f32 *)(o + 0xc) = ((GameObject *)obj)->anim.localPosY;
@@ -103,12 +103,12 @@ void drcreator_update(int obj) {
                     if (p != NULL) {
                         ((DrcreatorState *)p)->unk2 = 0;
                         *(s16 *)p = (s16)randomGetRange(0, 65535);
-                        ((DrcreatorState *)p)->unk24 = lbl_803E69B8 * (lbl_803E69BC * ((f32)*(int *)runtime * -mathSinf((lbl_803E69C0 * (f32)*(s16 *)obj) / lbl_803E69C4)));
-                        ((DrcreatorState *)p)->unk28 = lbl_803E69B8 * ((f32)*(int *)runtime * (lbl_803E69C8 * (f32)(int)randomGetRange(0, 1000)));
-                        ((DrcreatorState *)p)->unk2C = lbl_803E69B8 * (lbl_803E69BC * ((f32)*(int *)runtime * -mathCosf((lbl_803E69C0 * (f32)*(s16 *)obj) / lbl_803E69C4)));
-                        ((DrcreatorState *)p)->unkC4 = obj;
+                        ((DrcreatorState *)p)->velocityX = lbl_803E69B8 * (lbl_803E69BC * ((f32)*(int *)runtime * -mathSinf((lbl_803E69C0 * (f32)*(s16 *)obj) / lbl_803E69C4)));
+                        ((DrcreatorState *)p)->velocityY = lbl_803E69B8 * ((f32)*(int *)runtime * (lbl_803E69C8 * (f32)(int)randomGetRange(0, 1000)));
+                        ((DrcreatorState *)p)->velocityZ = lbl_803E69B8 * (lbl_803E69BC * ((f32)*(int *)runtime * -mathCosf((lbl_803E69C0 * (f32)*(s16 *)obj) / lbl_803E69C4)));
+                        ((DrcreatorState *)p)->creatorObj = obj;
                     }
-                    ((DrcreatorState *)runtime)->unk8 = ((DrcreatorState *)runtime)->unk6 + randomGetRange(0, ((DrcreatorState *)runtime)->unkA);
+                    ((DrcreatorState *)runtime)->spawnTimer = ((DrcreatorState *)runtime)->unk6 + randomGetRange(0, ((DrcreatorState *)runtime)->timerVariance);
                 }
             }
             break;

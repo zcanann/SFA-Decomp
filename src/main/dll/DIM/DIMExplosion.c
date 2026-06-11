@@ -75,13 +75,13 @@ typedef struct DIMwooddoorUpdateFallingDebrisState {
     u8 unk1;
     s16 unk2;
     u8 pad4[0x5 - 0x4];
-    s8 unk5;
-    s8 unk6;
+    s8 hitboxRadius;
+    s8 hitVolumeSlot;
     u8 unk7;
-    u8 unk8;
-    s8 unk9;
-    s8 unkA;
-    s8 unkB;
+    u8 state;
+    s8 rotZRate;
+    s8 rotYRate;
+    s8 rotXRate;
     u8 padC[0x10 - 0xC];
 } DIMwooddoorUpdateFallingDebrisState;
 
@@ -360,7 +360,7 @@ extern f32 lbl_803DBEF0;
 void DIMwooddoor_updateFallingDebris(int *obj)
 {
     int *extra = ((GameObject *)obj)->extra;
-    switch (((DIMwooddoorUpdateFallingDebrisState *)extra)->unk8) {
+    switch (((DIMwooddoorUpdateFallingDebrisState *)extra)->state) {
     case 0: {
         f32 oldvy = ((GameObject *)obj)->anim.velocityY;
         ObjHitsPriorityState *hitState;
@@ -368,19 +368,19 @@ void DIMwooddoor_updateFallingDebris(int *obj)
         objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta,
                 lbl_803E48A8 * (oldvy + ((GameObject *)obj)->anim.velocityY) * timeDelta,
                 ((GameObject *)obj)->anim.velocityZ * timeDelta);
-        ((GameObject *)obj)->anim.rotZ = ((GameObject *)obj)->anim.rotZ + ((DIMwooddoorUpdateFallingDebrisState *)extra)->unk9 * 10;
-        ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + ((DIMwooddoorUpdateFallingDebrisState *)extra)->unkA * 10;
-        *(s16 *)obj = *(s16 *)obj + ((DIMwooddoorUpdateFallingDebrisState *)extra)->unkB * 10;
+        ((GameObject *)obj)->anim.rotZ = ((GameObject *)obj)->anim.rotZ + ((DIMwooddoorUpdateFallingDebrisState *)extra)->rotZRate * 10;
+        ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + ((DIMwooddoorUpdateFallingDebrisState *)extra)->rotYRate * 10;
+        *(s16 *)obj = *(s16 *)obj + ((DIMwooddoorUpdateFallingDebrisState *)extra)->rotXRate * 10;
         hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
         if (hitState != NULL) {
             int *vol;
-            ObjHits_SetHitVolumeSlot(obj, 5, ((DIMwooddoorUpdateFallingDebrisState *)extra)->unk6, 0);
+            ObjHits_SetHitVolumeSlot(obj, 5, ((DIMwooddoorUpdateFallingDebrisState *)extra)->hitVolumeSlot, 0);
             vol = (int *)hitState->lastHitObject;
             if (vol != NULL && vol != *(int **)extra) {
-                ObjHitbox_SetSphereRadius(obj, ((DIMwooddoorUpdateFallingDebrisState *)extra)->unk5);
+                ObjHitbox_SetSphereRadius(obj, ((DIMwooddoorUpdateFallingDebrisState *)extra)->hitboxRadius);
                 spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
                 ((GameObject *)obj)->unkF4 = 1180;
-                *(s8 *)&((DIMwooddoorUpdateFallingDebrisState *)extra)->unk8 = 1;
+                *(s8 *)&((DIMwooddoorUpdateFallingDebrisState *)extra)->state = 1;
                 ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
         }
@@ -389,10 +389,10 @@ void DIMwooddoor_updateFallingDebris(int *obj)
             ((GameObject *)obj)->unkF4 = 1200;
         }
         if (hitState->contactFlags != 0) {
-            ObjHitbox_SetSphereRadius(obj, ((DIMwooddoorUpdateFallingDebrisState *)extra)->unk5);
+            ObjHitbox_SetSphereRadius(obj, ((DIMwooddoorUpdateFallingDebrisState *)extra)->hitboxRadius);
             spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
             ((GameObject *)obj)->unkF4 = 1180;
-            *(s8 *)&((DIMwooddoorUpdateFallingDebrisState *)extra)->unk8 = 1;
+            *(s8 *)&((DIMwooddoorUpdateFallingDebrisState *)extra)->state = 1;
             ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         break;

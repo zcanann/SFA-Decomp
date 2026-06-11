@@ -222,11 +222,11 @@ int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUp
     for (i = 0; i < animUpdate->eventCount; i++) {
         switch (animUpdate->eventIds[i]) {
         case 2:
-            if (((SBGalleonState *)state)->unk79 == 1) {
-                ((SBGalleonState *)state)->unk79 = 0;
+            if (((SBGalleonState *)state)->spiritPhase == 1) {
+                ((SBGalleonState *)state)->spiritPhase = 0;
             }
             else {
-                ((SBGalleonState *)state)->unk79 = 1;
+                ((SBGalleonState *)state)->spiritPhase = 1;
             }
             break;
         case 3: {
@@ -246,11 +246,11 @@ int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUp
             ((SBGalleonState *)state)->sprayActive = 0;
             break;
         case 5:
-            if (((SBGalleonState *)state)->unk79 == 2) {
-                ((SBGalleonState *)state)->unk79 = 0;
+            if (((SBGalleonState *)state)->spiritPhase == 2) {
+                ((SBGalleonState *)state)->spiritPhase = 0;
             }
             else {
-                ((SBGalleonState *)state)->unk79 = 2;
+                ((SBGalleonState *)state)->spiritPhase = 2;
             }
             break;
         case 6:
@@ -260,11 +260,11 @@ int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUp
             Sfx_StopFromObject(obj, 0x143);
             break;
         case 8:
-            if (((SBGalleonState *)state)->unk79 == 8) {
-                ((SBGalleonState *)state)->unk79 = 1;
+            if (((SBGalleonState *)state)->spiritPhase == 8) {
+                ((SBGalleonState *)state)->spiritPhase = 1;
             }
             else {
-                ((SBGalleonState *)state)->unk79 = 8;
+                ((SBGalleonState *)state)->spiritPhase = 8;
             }
             break;
         case 9:
@@ -947,7 +947,7 @@ int SB_Galleon_setScale(int obj) {
     {
         int t = *(s8 *)&((SBGalleonState *)p)->flightPattern;
         if (t == 0 || t == 1 || t == 2) {
-            ((SBGalleonState *)p)->unk7C = ((SBGalleonState *)p)->unk7C + 1;
+            ((SBGalleonState *)p)->phaseCounter = ((SBGalleonState *)p)->phaseCounter + 1;
             return 1;
         }
     }
@@ -1091,7 +1091,7 @@ void SB_Galleon_init(int obj) {
     *(u8 *)&((SBGalleonState *)p)->sweepDir = 1;
     ((SBGalleonState *)p)->timer26 = 0xf0;
     ((SBGalleonState *)p)->phaseTimer = 0xf0;
-    ((SBGalleonState *)p)->unk79 = 0;
+    ((SBGalleonState *)p)->spiritPhase = 0;
     ((SBGalleonState *)p)->headingLatch = 200;
     ((SBGalleonState *)p)->envfxActs[2] = 0x89;
     ((SBGalleonState *)p)->envfxActs[3] = 0x95;
@@ -1190,7 +1190,7 @@ int SB_Galleon_func0E(int *obj) {
     s8 phase;
     int wrappedPhase;
     if (((SBGalleonState *)p)->phase == 1) {
-        phase = ((SBGalleonState *)p)->unk7C;
+        phase = ((SBGalleonState *)p)->phaseCounter;
         if (phase >= 5) {
             wrappedPhase = phase - 5;
         } else {

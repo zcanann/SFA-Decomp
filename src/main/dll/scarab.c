@@ -36,7 +36,7 @@ typedef struct DllCBState {
     void *unk3DC;
     s32 unk3E0;
     u8 pad3E4[0x3F6 - 0x3E4];
-    s16 unk3F6;
+    s16 gameBitId;
     u8 pad3F8[0x3FE - 0x3F8];
     u16 unk3FE;
     u16 unk400;
@@ -1855,9 +1855,9 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
       return 1;
     }
     fn_8016083C((int *)obj, (GroundBaddieState *)sub, (GroundBaddieState *)sub);
-    if (((DllCBState *)sub)->unk3F6 != -1 && GameBit_Get(((DllCBState *)sub)->unk3F6) != 0) {
+    if (((DllCBState *)sub)->gameBitId != -1 && GameBit_Get(((DllCBState *)sub)->gameBitId) != 0) {
       (*gObjectTriggerInterface)->yield((ObjSeqState *)e, ((DllCBPlacement *)setup)->unk2C);
-      ((DllCBState *)sub)->unk3F6 = -1;
+      ((DllCBState *)sub)->gameBitId = -1;
     }
     switch (*(u8 *)&((DllCBState *)sub)->unk405) {
     case 2:

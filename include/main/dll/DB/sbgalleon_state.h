@@ -49,10 +49,10 @@ typedef struct SBGalleonState {
     s16 mapLayer;    /* 0x72: latched from obj+0xac at init */
     f32 textAlpha;   /* 0x74: gameText 0x4b1 fade */
     u8 textRising;   /* 0x78 */
-    u8 unk79;        /* 0x79 */
+    u8 spiritPhase;  /* 0x79 protection-spirit phase 0-8 */
     u8 flightPattern;/* 0x7a */
     u8 unk7B;        /* 0x7b */
-    s8 unk7C;        /* 0x7c */
+    s8 phaseCounter;        /* 0x7c */
     u8 pad7D[3];
     u8 unk80;        /* 0x80 */
     u8 shieldSfxLatch;/* 0x81 */
