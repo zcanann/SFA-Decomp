@@ -1,10 +1,11 @@
 #include "main/dll/CF/dll_012C_transporter.h"
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/dll/CF/warp_pad.h"
+#include "main/audio/sfx.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
-extern void Sfx_PlayFromObject(int* obj, int soundId);
 extern void unlockLevel(int a, int b, int c);
 extern void lockLevel(int dirIdx, int v);
 extern int mapGetDirIdx(int mapId);
@@ -20,13 +21,11 @@ extern void timeOfDayFn_80055000(void);
 extern f32 lbl_803E3E98;
 
 extern void objRenderFn_80041018(int obj);
-extern uint GameBit_Get(int eventId);
 extern short lbl_803DCEB8;
 extern f32 lbl_803E3EE8;
 
 int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 {
-    extern undefined8 GameBit_Set(int eventId, int value);
     int i;
     WarpPadPlacement* setup = (WarpPadPlacement*)((GameObject*)obj)->anim.placementData;
     WarpPadState* state = ((GameObject*)obj)->extra;
@@ -38,7 +37,7 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
         {
         case 7:
             state->flags = state->flags | 4;
-            Sfx_PlayFromObject(obj, 0x420);
+            Sfx_PlayFromObject((u32)obj, 0x420);
             break;
         case 2:
             id = setup->destinationId;
