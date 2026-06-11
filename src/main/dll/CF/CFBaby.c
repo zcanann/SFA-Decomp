@@ -1853,10 +1853,12 @@ void decoration11a_hitDetect(int obj)
     int* objects;
     f32 radius;
     f32 localPos[3];
+    f32 sum;
+    f32 bMin;
+    f32 bMax;
+    f32 p;
     f32 delta;
-    f32 xSq;
-    f32 ySq;
-    f32 zSq;
+    f32 term;
 
     modelId = ((GameObject*)obj)->anim.seqId;
     if (modelId == 0x7a1)
@@ -1884,52 +1886,66 @@ check_decor_objects:
                 radius = (f32) * (s16*)(*(int*)(*objects + 0x54) + 0x5a);
                 objWorldToLocalPos(localPos, obj, (f32*)(*objects + 0xc));
 
-                if (localPos[0] < state[3])
+                sum = lbl_803E3B7C;
+
+                bMin = state[3];
+                bMax = state[0];
+                p = localPos[0];
+                if (p < bMin)
                 {
-                    delta = localPos[0] - state[3];
-                    xSq = delta * delta;
+                    delta = p - bMin;
+                    term = delta * delta;
                 }
-                else if (localPos[0] > state[0])
+                else if (p > bMax)
                 {
-                    delta = localPos[0] - state[0];
-                    xSq = delta * delta;
+                    delta = p - bMax;
+                    term = delta * delta;
                 }
                 else
                 {
-                    xSq = lbl_803E3B7C;
+                    term = lbl_803E3B7C;
                 }
+                sum += term;
 
-                if (localPos[1] < state[4])
+                bMin = state[4];
+                bMax = state[1];
+                p = localPos[1];
+                if (p < bMin)
                 {
-                    delta = localPos[1] - state[4];
-                    ySq = delta * delta;
+                    delta = p - bMin;
+                    term = delta * delta;
                 }
-                else if (localPos[1] > state[1])
+                else if (p > bMax)
                 {
-                    delta = localPos[1] - state[1];
-                    ySq = delta * delta;
+                    delta = p - bMax;
+                    term = delta * delta;
                 }
                 else
                 {
-                    ySq = lbl_803E3B7C;
+                    term = *(f32*)&lbl_803E3B7C;
                 }
+                sum += term;
 
-                if (localPos[2] < state[5])
+                bMin = state[5];
+                bMax = state[2];
+                p = localPos[2];
+                if (p < bMin)
                 {
-                    delta = localPos[2] - state[5];
-                    zSq = delta * delta;
+                    delta = p - bMin;
+                    term = delta * delta;
                 }
-                else if (localPos[2] > state[2])
+                else if (p > bMax)
                 {
-                    delta = localPos[2] - state[2];
-                    zSq = delta * delta;
+                    delta = p - bMax;
+                    term = delta * delta;
                 }
                 else
                 {
-                    zSq = lbl_803E3B7C;
+                    term = *(f32*)&lbl_803E3B7C;
                 }
+                sum += term;
 
-                if (lbl_803E3B7C + xSq + ySq + zSq < radius * radius)
+                if (sum < radius * radius)
                 {
                     (*(ObjHitsPriorityState**)(*objects + 0x54))->lastHitObject = obj;
                     (*(ObjHitsPriorityState**)(*objects + 0x54))->contactFlags = 1;
