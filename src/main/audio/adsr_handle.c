@@ -10,27 +10,20 @@ extern f32 lbl_803E7848;
 int adsrStartRelease(int state, u32 divisor)
 {
     ADSR_VARS* adsr = (ADSR_VARS*)state;
-    int m = adsr->mode;
-    if (m != 1)
+    switch (adsr->mode)
     {
-        if (m < 1)
+    case 0:
+        adsr->state = 4;
+        adsr->cnt = divisor;
+        if (divisor == 0)
         {
-            if (m >= 0)
-            {
-                adsr->state = 4;
-                adsr->cnt = divisor;
-                if (divisor == 0)
-                {
-                    adsr->cnt = 1;
-                    adsr->currentDelta = 0;
-                    return 1;
-                }
-                adsr->currentDelta = -(adsr->currentVolume / divisor);
-            }
+            adsr->cnt = 1;
+            adsr->currentDelta = 0;
+            return 1;
         }
-    }
-    else
-    {
+        adsr->currentDelta = -(adsr->currentVolume / divisor);
+        break;
+    case 1:
         if (adsr->aMode == 0 && adsr->state == 1)
         {
             adsr->currentIndex = (u32)(193 - voiceAdsrDecayTable[*(int*)&adsr->currentVolume >> 21]) << 16;
@@ -46,6 +39,7 @@ int adsrStartRelease(int state, u32 divisor)
             return 1;
         }
         adsr->currentDelta = -(adsr->currentIndex / adsr->cnt);
+        break;
     }
     return 0;
 }
