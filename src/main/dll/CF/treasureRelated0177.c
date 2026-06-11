@@ -14,46 +14,16 @@ typedef struct KtTorchPlacement
 } KtTorchPlacement;
 
 
-extern undefined8 FUN_80006894();
-extern undefined4 FUN_800068a0();
-extern undefined4 FUN_800068cc();
-extern undefined4 FUN_800068d0();
-extern void* FUN_800069a8();
-extern undefined4 FUN_80006a00();
-extern undefined4 FUN_800175cc();
-extern undefined4 FUN_80017620();
-extern undefined4 FUN_80017664();
-extern undefined4 FUN_800176c8();
-extern double FUN_800176f4();
 extern u32 randomGetRange(int min, int max);
-extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
 extern void ModelLightStruct_free(void* effect);
 extern u32 GameBit_Get(int bit);
-extern undefined4 FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_80039520();
-extern undefined4 FUN_8003b818();
 extern void objRenderFn_8003b8f4(f32);
-extern undefined4 FUN_80053bf0();
-extern undefined8 FUN_8005d1e8();
-extern undefined4 FUN_8005fe14();
 extern void queueGlowRender(void* effect);
-extern undefined4 FUN_80081110();
-extern undefined4 FUN_800d7780();
-extern undefined4 FUN_8011daf8();
-extern int FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
-extern byte FUN_80294d90();
-extern undefined4 FUN_80294d98();
 extern void* SUB42();
 
 extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern undefined4* DAT_803dd6d8;
 extern u8 framesThisStep;
 extern f64 DOUBLE_803e4a08;
 extern f32 FLOAT_803dc074;
