@@ -2,7 +2,9 @@
 #define MAIN_DLL_DR_DLL_80209FE0_SHARED_H_
 
 #include "ghidra_import.h"
+#include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
+#include "main/gamebits.h"
 #include "main/game_ui_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/mapEventTypes.h"
@@ -158,7 +160,6 @@ extern int timerCountDown(f32 *p);
 extern int arrayIndexOf();
 extern int Obj_FreeObject(int obj);
 extern int fn_80080150(int p);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern void *fn_802972A8(int obj);
 extern f32 Vec_distance(int *from, int *to);
 extern int *Obj_GetPlayerObject(void);
@@ -170,7 +171,6 @@ extern f32 lbl_803E65B0;
 extern f32 lbl_803E65B8;
 extern void modelLightStruct_setEnabled(void *light, int onoff, f32 intensity);
 extern void drakorhoverpad_resetPendingMotion(int obj);
-extern int GameBit_Get(int bit);
 extern f32 lbl_803E6540;
 extern f32 lbl_803E6544;
 extern f32 lbl_803E6548;
@@ -179,8 +179,6 @@ extern int lbl_80329F90[];
 extern void spawnExplosion(int *obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern int Obj_RemoveFromUpdateList(int *obj);
 extern void Obj_SpawnHitLightAndFade(int obj, f32 *pos, f32 v);
-extern int GameBit_Set(int bit, int val);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern MapEventInterface **gMapEventInterface;
 extern f32 timeDelta;
 extern void gameTextShow(int id);

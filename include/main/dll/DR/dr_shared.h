@@ -2,9 +2,11 @@
 #define DR_SHARED_H
 
 #include "ghidra_import.h"
+#include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/camera_interface.h"
+#include "main/gamebits.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
@@ -94,17 +96,14 @@ extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefi
 extern void ObjGroup_RemoveObject(int obj, int group);
 extern void *Obj_GetPlayerObject(void);
 extern void ModelLightStruct_free(void *p);
-extern void GameBit_Set(int eventId, int value);
 extern void Music_Trigger(int trackId, int restart);
 extern void Obj_FreeObject(int obj);
 extern void mm_free(void *ptr);
 extern void storeZeroToFloatParam(void *timer);
 extern GameUIInterface **gGameUIInterface;
 extern int gmmazewell_clearPendingTriggerCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
-extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern int cagecontrol_updateTriggerCallback(int obj);
-extern void Sfx_StopObjectChannel(int obj, int ch);
 extern void firepipe_clearLinkedUpdateFlag(int handle);
 extern void ObjLink_DetachChild(int obj, int child);
 extern void ObjHits_EnableObject(int obj);
@@ -190,7 +189,6 @@ extern f32 lbl_803E6A2C;
 extern f32 lbl_803E6B30;
 extern s16 lbl_803DC310;
 extern void seqFn_800394a0(int obj);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void fn_8009A8C8(int obj, f32 v);
 extern f32 lbl_803E683C;
 extern f32 lbl_803E6840;
@@ -266,7 +264,6 @@ extern f32 lbl_803E67E8;
 extern int modelLightStruct_getActiveState(void);
 extern void queueGlowRender(void *p);
 extern f32 lbl_803E6A30;
-extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
 extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
 extern f32 PSVECMag(f32 *v);
 extern f32 sqrtf(f32 v);
@@ -276,7 +273,6 @@ extern void voxmaps_gridToWorld(void *world, void *grid);
 extern int voxmaps_traceWorldLine(void *p1, void *p2);
 extern f32 lbl_803E6960;
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern void Sfx_StopFromObject(int obj, int id);
 extern int fn_80221C18(int player, f32 v, f32 *objPos, f32 *out);
 extern void PSVECNormalize(f32 *out, f32 *in);
 extern void PSVECScale(f32 *out, f32 *in, f32 scale);

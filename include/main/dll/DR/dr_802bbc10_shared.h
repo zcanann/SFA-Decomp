@@ -2,7 +2,9 @@
 #define MAIN_DLL_DR_DR_802BBC10_SHARED_H
 
 #include "ghidra_import.h"
+#include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
+#include "main/gamebits.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objHitReact.h"
@@ -57,14 +59,12 @@ extern undefined4 ObjPath_GetPointModelMtx();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 objAnimFn_80038f38();
 extern undefined4 dll_2E_func03();
-extern int GameBit_Get(int id);
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E83E8;
 extern f32 lbl_803E83A4;
 extern void fn_8003B950(int mtx);
 extern u8 framesThisStep;
 extern void *lbl_803DE4D0;
-extern int GameBit_Set(int id, int value);
 extern GameUIInterface **gGameUIInterface;
 extern int gDRCloudRunnerStateHandlers[];
 extern void *gDRCloudRunnerDefaultStateHandler;
@@ -85,7 +85,6 @@ extern int randomGetRange(int lo, int hi);
 extern int RandomTimer_UpdateRangeTrigger(int p, f32 a, f32 b);
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void buttonDisable(int a, int b);
-extern void Sfx_PlayFromObject(int obj, int id);
 extern f32 lbl_803E83F4;
 extern f32 lbl_803E83F8;
 extern f32 lbl_803E83BC;
@@ -183,7 +182,6 @@ extern f32 lbl_803E8418;
 extern f32 lbl_803E841C;
 extern f32 lbl_803E8420;
 extern u8 Obj_IsLoadingLocked();
-extern void Sfx_PlayFromObject(int obj, int id);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int s, int b, int c, int d, int e);
 extern void vecRotateZXY(void *a, void *b);
