@@ -10,6 +10,8 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
+#include "main/gamebits.h"
 
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
@@ -17,8 +19,6 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined8 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
@@ -57,7 +57,6 @@ extern u32 lbl_802C22A4[3];
 
 extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
-extern void Sfx_KeepAliveLoopedObjectSoundLimited(int obj, int sfx, int limit);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
 extern u32 randomGetRange(int min, int max);
@@ -73,7 +72,6 @@ extern int hitDetectFn_800691c0(int obj, void* p2, int p3, int p4);
 extern int hitDetectFn_80067958(int obj, void* p2, void* p3, int p4, void* p5, int p6);
 void scarab_update(int obj)
 {
-    extern void Sfx_PlayFromObject(int obj, int sfx);
     extern f32 Vec_xzDistance(f32 * a, f32 * b);
     extern void PSVECSubtract(void* a, void* b, void* out);
     extern void itemPickupDoParticleFx(int obj, f32 scale, int a, int b);
@@ -161,7 +159,7 @@ void scarab_update(int obj)
             return;
         }
     }
-    Sfx_KeepAliveLoopedObjectSoundLimited(obj, 0x406, 3);
+    Sfx_KeepAliveLoopedObjectSoundLimited((u32)obj, 0x406, 3);
     mode = *(s16*)(state + 0x14);
     if (mode == 0)
     {
