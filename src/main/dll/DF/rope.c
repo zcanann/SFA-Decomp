@@ -318,18 +318,18 @@ void dimbossgut2_updateTracking(int obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossgut2_free(int param_9)
+void dimbossgut2_free(int arg9)
 {
-    int obj = param_9;
-    uint uVar1;
-    int iVar2;
+    int obj = arg9;
+    uint handle;
+    int state;
     void* childObj;
 
-    iVar2 = *(int*)&((GameObject*)obj)->extra;
-    uVar1 = *(uint*)(((Dimbossgut2State*)iVar2)->unk40C + 0x18);
-    if (uVar1 != 0)
+    state = *(int*)&((GameObject*)obj)->extra;
+    handle = *(uint*)(((Dimbossgut2State*)state)->unk40C + 0x18);
+    if (handle != 0)
     {
-        ModelLightStruct_free((void*)uVar1);
+        ModelLightStruct_free((void*)handle);
     }
     ObjGroup_RemoveObject(obj, 3);
     childObj = ((GameObject*)obj)->childObjs[0];
@@ -338,7 +338,7 @@ void dimbossgut2_free(int param_9)
         Obj_FreeObject((int)childObj);
         *(undefined4*)(obj + 200) = 0;
     }
-    (*(void (*)(int, int, int))(*(int*)(*gBaddieControlInterface + 0x40)))(obj, iVar2, 0);
+    (*(void (*)(int, int, int))(*(int*)(*gBaddieControlInterface + 0x40)))(obj, state, 0);
     return;
 }
 
@@ -355,14 +355,14 @@ void dimbossgut2_free(int param_9)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossgut2_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void dimbossgut2_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     u8* light;
 
-    light = ((GameObject*)param_1)->extra;
+    light = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(param_1, param_2, param_3, param_4, param_5,
+        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, param_2, param_3, param_4, param_5,
                                                                       lbl_803E4CF0);
         light = *(u8**)(((Dimbossgut2State*)light)->unk40C + 0x18);
         if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0))
@@ -390,10 +390,10 @@ void dimbossgut2_update(int obj)
 {
     int state;
     int iVar;
-    uint uVar2;
+    uint uval;
     uint n;
     float* pfVar4;
-    int iVar1;
+    int val;
     f32 fdiff;
     f32 fscale;
     u8* p;
@@ -431,8 +431,8 @@ void dimbossgut2_update(int obj)
                 fdiff = -fdiff;
             }
             if ((fdiff < lbl_803E4CDC) &&
-                (stk.f4c = pfVar4[3], uVar2 = randomGetRange(0x1e, 0x3c),
-                    (int)(uint) * (u16*)((int)pfVar4 + 0x16) > (int)uVar2))
+                (stk.f4c = pfVar4[3], uval = randomGetRange(0x1e, 0x3c),
+                    (int)(uint) * (u16*)((int)pfVar4 + 0x16) > (int)uval))
             {
                 fscale = lbl_803E4CE0 * pfVar4[4];
                 stk.f50 = ((GameObject*)obj)->anim.localPosX -
@@ -452,8 +452,8 @@ void dimbossgut2_update(int obj)
         ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 9;
         ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
         ObjHits_RegisterActiveHitVolumeObject(obj);
-        iVar1 = ((Dimbossgut2State*)state)->unk40C;
-        p = *(u8**)(iVar1 + 0x18);
+        val = ((Dimbossgut2State*)state)->unk40C;
+        p = *(u8**)(val + 0x18);
         if ((p != NULL) && (p[0x2f8] != 0) && (p[0x4c] != 0))
         {
             n = (p[0x2f9] + *(s8*)(p + 0x2fa)) & 0xffff;
@@ -463,10 +463,10 @@ void dimbossgut2_update(int obj)
                 if (0xff < n)
                 {
                     n = 0xff;
-                    *(u8*)(*(int*)(iVar1 + 0x18) + 0x2fa) = 0;
+                    *(u8*)(*(int*)(val + 0x18) + 0x2fa) = 0;
                 }
             }
-            *(u8*)(*(int*)(iVar1 + 0x18) + 0x2f9) = (u8)n;
+            *(u8*)(*(int*)(val + 0x18) + 0x2f9) = (u8)n;
         }
     }
     return;

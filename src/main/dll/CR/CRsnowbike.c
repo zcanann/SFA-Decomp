@@ -190,52 +190,52 @@ void sh_emptytumblew_init(s16* p1, int p2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 sc_levelcontrol_processAnimEvents(int param_1, undefined4 param_2, ObjAnimUpdateState* animUpdate)
+undefined4 sc_levelcontrol_processAnimEvents(int obj, undefined4 arg2, ObjAnimUpdateState* animUpdate)
 {
-    byte bVar2;
+    byte bval;
     byte eventId;
-    uint uVar1;
-    int iVar3;
-    int iVar4;
+    uint bitVal;
+    int i;
+    int state;
 
-    iVar4 = *(int*)&((GameObject*)param_1)->extra;
+    state = *(int*)&((GameObject*)obj)->extra;
     animUpdate->sequenceEventActive = 0;
-    for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1)
+    for (i = 0; i < (int)(uint)animUpdate->eventCount; i = i + 1)
     {
-        eventId = animUpdate->eventIds[iVar3];
+        eventId = animUpdate->eventIds[i];
         if (eventId == 2)
         {
-            sc_levelcontrol_setAnimEventState(param_1, 5);
+            sc_levelcontrol_setAnimEventState(obj, 5);
         }
         else if (eventId < 2)
         {
             if (eventId != 0)
             {
-                sc_levelcontrol_setAnimEventState(param_1, 7);
+                sc_levelcontrol_setAnimEventState(obj, 7);
             }
         }
         else if (eventId < 4)
         {
-            ((ScLevelControlState*)iVar4)->flags1F = ((ScLevelControlState*)iVar4)->flags1F | 2;
+            ((ScLevelControlState*)state)->flags1F = ((ScLevelControlState*)state)->flags1F | 2;
         }
     }
-    ((ScLevelControlState*)iVar4)->flags1F = ((ScLevelControlState*)iVar4)->flags1F | 1;
+    ((ScLevelControlState*)state)->flags1F = ((ScLevelControlState*)state)->flags1F | 1;
     FUN_80017698(0x60f, 0);
-    iVar3 = *(int*)&((GameObject*)param_1)->extra;
+    i = *(int*)&((GameObject*)obj)->extra;
     FUN_80017a98();
-    if (((ScLevelcontrolProcessAnimEventsState*)iVar3)->unk1D == '\x05')
+    if (((ScLevelcontrolProcessAnimEventsState*)i)->unk1D == '\x05')
     {
         FUN_80017698(0x60f, 1);
-        bVar2 = FUN_80006b44();
-        if (bVar2 != 0)
+        bval = FUN_80006b44();
+        if (bval != 0)
         {
-            uVar1 = FUN_80017690(0x7a);
-            if (uVar1 != 0)
+            bitVal = FUN_80017690(0x7a);
+            if (bitVal != 0)
             {
                 FUN_80017698(0x85, 1);
             }
-            ((ScLevelControlState*)iVar3)->timer10 = lbl_803E61E8;
-            ((ScLevelControlState*)iVar3)->mode = 0;
+            ((ScLevelControlState*)i)->timer10 = lbl_803E61E8;
+            ((ScLevelControlState*)i)->mode = 0;
             FUN_80006824(0, SFXsp_skeep_mumb1);
             FUN_800067c0((int*)0xef, 0);
         }
@@ -256,19 +256,19 @@ undefined4 sc_levelcontrol_processAnimEvents(int param_1, undefined4 param_2, Ob
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sc_levelcontrol_setAnimEventState(int param_1, undefined param_2)
+void sc_levelcontrol_setAnimEventState(int obj, undefined value)
 {
-    char cVar1;
-    int iVar2;
+    char mode;
+    int state;
 
-    iVar2 = *(int*)&((GameObject*)param_1)->extra;
-    ((ScLevelControlState*)iVar2)->mode = param_2;
-    cVar1 = *(char*)&((ScLevelControlState*)iVar2)->mode;
-    if (cVar1 == '\x02')
+    state = *(int*)&((GameObject*)obj)->extra;
+    ((ScLevelControlState*)state)->mode = value;
+    mode = *(char*)&((ScLevelControlState*)state)->mode;
+    if (mode == '\x02')
     {
-        ((ScLevelControlState*)iVar2)->mode = 0;
+        ((ScLevelControlState*)state)->mode = 0;
     }
-    else if (cVar1 == '\x05')
+    else if (mode == '\x05')
     {
         FUN_80017698(0x2b8, 1);
         FUN_80017698(0x4bd, 0);
@@ -277,23 +277,23 @@ void sc_levelcontrol_setAnimEventState(int param_1, undefined param_2)
         FUN_800067c0((int*)0xef, 1);
         FUN_80006b50();
     }
-    else if (cVar1 == '\x03')
+    else if (mode == '\x03')
     {
         FUN_80006b54(0x1d, 0x3c);
-        ((ScLevelControlState*)iVar2)->mode = 0;
+        ((ScLevelControlState*)state)->mode = 0;
         FUN_800067c0((int*)0xc7, 1);
         FUN_80006b50();
     }
-    else if (cVar1 == '\x06')
+    else if (mode == '\x06')
     {
         FUN_800067c0((int*)0xef, 0);
-        ((ScLevelControlState*)iVar2)->mode = 0;
-        ((ScLevelControlState*)iVar2)->fadeTimer = lbl_803E61E8;
+        ((ScLevelControlState*)state)->mode = 0;
+        ((ScLevelControlState*)state)->fadeTimer = lbl_803E61E8;
         FUN_80006b4c();
     }
-    else if (cVar1 == '\x04')
+    else if (mode == '\x04')
     {
-        ((ScLevelControlState*)iVar2)->mode = 0;
+        ((ScLevelControlState*)state)->mode = 0;
         FUN_800067c0((int*)0xc7, 0);
         FUN_80006b4c();
     }

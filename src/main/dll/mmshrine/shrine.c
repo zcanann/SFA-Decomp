@@ -94,27 +94,27 @@ extern f32 lbl_803E5BE8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void mmsh_shrine_init(undefined2* param_1, int param_2)
+void mmsh_shrine_init(undefined2* obj, int arg2)
 {
-    int iVar1;
-    int* piVar2;
+    int light;
+    int* state;
 
-    piVar2 = ((GameObject*)param_1)->extra;
-    *param_1 = 0;
-    ((GameObject*)param_1)->animEventCallback = (void*)MMSH_Shrine_SeqFn;
-    *(undefined2*)(piVar2 + 7) = 10;
-    *(undefined*)(piVar2 + 9) = 0;
-    if (0 < *(short*)(param_2 + 0x1a))
+    state = ((GameObject*)obj)->extra;
+    *obj = 0;
+    ((GameObject*)obj)->animEventCallback = (void*)MMSH_Shrine_SeqFn;
+    *(undefined2*)(state + 7) = 10;
+    *(undefined*)(state + 9) = 0;
+    if (0 < *(short*)(arg2 + 0x1a))
     {
-        *(short*)(piVar2 + 7) = *(short*)(param_2 + 0x1a) >> 8;
+        *(short*)(state + 7) = *(short*)(arg2 + 0x1a) >> 8;
     }
     GameBit_Set(299, 0);
     GameBit_Set(0x12d, 0);
-    *(undefined4*)(param_1 + 0x7a) = 1;
-    if (*(void**)piVar2 == NULL)
+    *(undefined4*)(obj + 0x7a) = 1;
+    if (*(void**)state == NULL)
     {
-        iVar1 = objCreateLight(0, 1);
-        *piVar2 = iVar1;
+        light = objCreateLight(0, 1);
+        *state = light;
     }
     GameBit_Set(0xf07, 1);
     GameBit_Set(0xefa, 1);
@@ -134,13 +134,13 @@ void mmsh_shrine_init(undefined2* param_1, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void mmsh_scales_free(int param_1, int param_2)
+void mmsh_scales_free(int obj, int arg2)
 {
     void* child;
-    (*gObjectTriggerInterface)->freeState(((GameObject*)param_1)->extra);
-    (*(code*)(*gTitleMenuControlInterface + 8))(param_1, 0xffff, 0, 0, 0);
-    child = ((GameObject*)param_1)->childObjs[0];
-    if ((child != NULL) && (param_2 == 0))
+    (*gObjectTriggerInterface)->freeState(((GameObject*)obj)->extra);
+    (*(code*)(*gTitleMenuControlInterface + 8))(obj, 0xffff, 0, 0, 0);
+    child = ((GameObject*)obj)->childObjs[0];
+    if ((child != NULL) && (arg2 == 0))
     {
         Obj_FreeObject(child);
     }
@@ -156,7 +156,7 @@ void mmsh_scales_free(int param_1, int param_2)
  */
 extern u8 lbl_803DB411;
 
-void mmsh_scales_update(int param_1)
+void mmsh_scales_update(int objArg)
 {
     int typeId;
     int* list;
@@ -167,13 +167,13 @@ void mmsh_scales_update(int param_1)
     int i;
     int count;
 
-    if ((((GameObject*)param_1)->anim.placementData != NULL) && (*(short*)(*(int*)&((GameObject*)param_1)->anim.
+    if ((((GameObject*)objArg)->anim.placementData != NULL) && (*(short*)(*(int*)&((GameObject*)objArg)->anim.
         placementData + 0x18) != -1))
     {
-        i = (*gObjectTriggerInterface)->update((u8*)param_1, (f32)(u32)lbl_803DB411);
-        if ((i != 0) && (((GameObject*)param_1)->seqIndex == -2))
+        i = (*gObjectTriggerInterface)->update((u8*)objArg, (f32)(u32)lbl_803DB411);
+        if ((i != 0) && (((GameObject*)objArg)->seqIndex == -2))
         {
-            typeId = *(s8*)(*(int*)&((GameObject*)param_1)->extra + 0x57);
+            typeId = *(s8*)(*(int*)&((GameObject*)objArg)->extra + 0x57);
             found = 0;
             list = (int*)ObjList_GetObjects(&i, &count);
             n = 0;
@@ -196,8 +196,8 @@ void mmsh_scales_update(int param_1)
                 *(s16*)(found + 0xb4) = -1;
                 (*gObjectTriggerInterface)->endSequence(id);
             }
-            ((GameObject*)param_1)->seqIndex = -1;
-            Obj_FreeObject((void*)param_1);
+            ((GameObject*)objArg)->seqIndex = -1;
+            Obj_FreeObject((void*)objArg);
         }
     }
     return;
