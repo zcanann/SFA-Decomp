@@ -86,142 +86,142 @@ extern f32 lbl_803E3818;
  */
 void appleontree_update(int param_1)
 {
-    float fVar1;
-    undefined2* puVar2;
-    int iVar3;
-    undefined4* puVar4;
-    uint uVar5;
-    int* piVar6;
-    int iVar7;
-    int iVar8;
-    f32 fVar10;
-    f32 fVar11;
-    f32 fVar12;
-    f32 fVar13;
-    int local_78;
-    undefined auStack_74[4];
+    float fa;
+    undefined2* obj;
+    int val;
+    undefined4* wordPtr2;
+    uint bitVal;
+    int* wordPtr;
+    int placement;
+    int state;
+    f32 fc;
+    f32 fb;
+    f32 fd;
+    f32 frac;
+    int msg;
+    undefined msgExtra[4];
 
-    puVar2 = (undefined2*)param_1;
-    iVar8 = *(int*)(puVar2 + 0x5c);
-    iVar7 = *(int*)(puVar2 + 0x26);
-    local_78 = 0;
-    if ((*(byte*)(iVar8 + 0x5a) & 4) != 0)
+    obj = (undefined2*)param_1;
+    state = *(int*)(obj + 0x5c);
+    placement = *(int*)(obj + 0x26);
+    msg = 0;
+    if ((*(byte*)(state + 0x5a) & 4) != 0)
     {
-        while (iVar3 = ObjMsg_Pop((int)puVar2, &local_78, (uint*)0x0, (uint*)0x0), iVar3 != 0)
+        while (val = ObjMsg_Pop((int)obj, &msg, (uint*)0x0, (uint*)0x0), val != 0)
         {
-            switch (local_78)
+            switch (msg)
             {
             case 0x7000b:
                 {
-                    playerAddHealth(Obj_GetPlayerObject(), (int)*(u16*)(iVar8 + 0x38));
-                    itemPickupDoParticleFx((int)puVar2, lbl_803E37C8, 0xff, 0x28);
-                    Sfx_PlayFromObject((int)puVar2, SFXen_waterblock_stop);
-                    iVar3 = *(int*)(puVar2 + 0x5c);
-                    if (((GameObject*)puVar2)->anim.flags & 0x2000)
+                    playerAddHealth(Obj_GetPlayerObject(), (int)*(u16*)(state + 0x38));
+                    itemPickupDoParticleFx((int)obj, lbl_803E37C8, 0xff, 0x28);
+                    Sfx_PlayFromObject((int)obj, SFXen_waterblock_stop);
+                    val = *(int*)(obj + 0x5c);
+                    if (((GameObject*)obj)->anim.flags & 0x2000)
                     {
-                        Obj_FreeObject((int)puVar2);
+                        Obj_FreeObject((int)obj);
                     }
                     else
                     {
-                        if (*(void**)(puVar2 + 0x2a) != 0)
+                        if (*(void**)(obj + 0x2a) != 0)
                         {
-                            ObjHits_DisableObject((int)puVar2);
+                            ObjHits_DisableObject((int)obj);
                         }
-                        *(byte*)(iVar3 + 0x5a) = *(byte*)(iVar3 + 0x5a) | 2;
+                        *(byte*)(val + 0x5a) = *(byte*)(val + 0x5a) | 2;
                     }
-                    *(byte*)(iVar8 + 0x5a) = *(byte*)(iVar8 + 0x5a) & ~4;
+                    *(byte*)(state + 0x5a) = *(byte*)(state + 0x5a) & ~4;
                 }
             }
         }
-        if ((*(byte*)(iVar8 + 0x5a) & 4) != 0) goto switchD_8017e864_caseD_7;
+        if ((*(byte*)(state + 0x5a) & 4) != 0) goto switchD_8017e864_caseD_7;
     }
-    if ((*(byte*)(iVar8 + 0x5a) & 2) == 0)
+    if ((*(byte*)(state + 0x5a) & 2) == 0)
     {
-        *(float*)(iVar8 + 8) = *(float*)(iVar8 + 8) + timeDelta;
-        fVar1 = *(float*)(iVar8 + 0xc);
-        *(float*)(iVar8 + 0xc) = fVar1 + timeDelta;
-        fVar11 = *(float*)(iVar8 + 8);
-        fVar13 = fVar11 / *(float*)(iVar8 + 4);
-        switch (*(undefined*)(iVar8 + 0x3a))
+        *(float*)(state + 8) = *(float*)(state + 8) + timeDelta;
+        fa = *(float*)(state + 0xc);
+        *(float*)(state + 0xc) = fa + timeDelta;
+        fb = *(float*)(state + 8);
+        frac = fb / *(float*)(state + 4);
+        switch (*(undefined*)(state + 0x3a))
         {
         case 0:
-            iVar3 = ObjHits_GetPriorityHit((int)puVar2, (undefined4*)0x0, (int*)0x0, (uint*)0x0);
-            if ((iVar3 != 0) ||
-                ((*(short*)(iVar7 + 0x26) != -1 &&
-                    (uVar5 = GameBit_Get((int)*(short*)(iVar7 + 0x26)), uVar5 != 0))))
+            val = ObjHits_GetPriorityHit((int)obj, (undefined4*)0x0, (int*)0x0, (uint*)0x0);
+            if ((val != 0) ||
+                ((*(short*)(placement + 0x26) != -1 &&
+                    (bitVal = GameBit_Get((int)*(short*)(placement + 0x26)), bitVal != 0))))
             {
-                iVar8 = *(int*)(puVar2 + 0x5c);
-                iVar7 = 0;
+                state = *(int*)(obj + 0x5c);
+                placement = 0;
                 do
                 {
-                    (*gPartfxInterface)->spawnObject(puVar2, 0x55a, NULL, 2, -1, NULL);
-                    iVar7 = iVar7 + 1;
+                    (*gPartfxInterface)->spawnObject(obj, 0x55a, NULL, 2, -1, NULL);
+                    placement = placement + 1;
                 }
-                while (iVar7 < 8);
-                if (*(void**)(puVar2 + 0x2a) != 0)
+                while (placement < 8);
+                if (*(void**)(obj + 0x2a) != 0)
                 {
-                    ObjHits_DisableObject((int)puVar2);
+                    ObjHits_DisableObject((int)obj);
                 }
-                *(byte*)(iVar8 + 0x5a) = *(byte*)(iVar8 + 0x5a) | 2;
-                *(float*)(iVar8 + 8) = timeDelta;
-                *(undefined*)(iVar8 + 0x3a) = 5;
+                *(byte*)(state + 0x5a) = *(byte*)(state + 0x5a) | 2;
+                *(float*)(state + 8) = timeDelta;
+                *(undefined*)(state + 0x3a) = 5;
             }
             else
             {
-                if (fVar13 > *(float*)(iVar8 + 0x10))
+                if (frac > *(float*)(state + 0x10))
                 {
-                    *(float*)(puVar2 + 4) = *(float*)(*(int*)(puVar2 + 0x28) + 4);
-                    *(undefined*)(iVar8 + 0x3a) = 1;
+                    *(float*)(obj + 4) = *(float*)(*(int*)(obj + 0x28) + 4);
+                    *(undefined*)(state + 0x3a) = 1;
                 }
                 else
                 {
-                    iVar7 = *(int*)(puVar2 + 0x5c);
-                    *(float*)(puVar2 + 4) =
-                        (*(float*)(iVar7 + 8) / *(float*)(iVar7 + 4)) *
-                        (lbl_803E37C8 / *(float*)(iVar7 + 0x10)) *
-                        *(float*)(*(int*)(puVar2 + 0x28) + 4);
+                    placement = *(int*)(obj + 0x5c);
+                    *(float*)(obj + 4) =
+                        (*(float*)(placement + 8) / *(float*)(placement + 4)) *
+                        (lbl_803E37C8 / *(float*)(placement + 0x10)) *
+                        *(float*)(*(int*)(obj + 0x28) + 4);
                 }
             }
             break;
         case 1:
-            iVar3 = ObjHits_GetPriorityHit((int)puVar2, (undefined4*)0x0, (int*)0x0, (uint*)0x0);
-            if ((iVar3 != 0) ||
-                ((*(short*)(iVar7 + 0x26) != -1 &&
-                    (uVar5 = GameBit_Get((int)*(short*)(iVar7 + 0x26)), uVar5 != 0))))
+            val = ObjHits_GetPriorityHit((int)obj, (undefined4*)0x0, (int*)0x0, (uint*)0x0);
+            if ((val != 0) ||
+                ((*(short*)(placement + 0x26) != -1 &&
+                    (bitVal = GameBit_Get((int)*(short*)(placement + 0x26)), bitVal != 0))))
             {
-                iVar8 = *(int*)(puVar2 + 0x5c);
-                iVar7 = 0;
+                state = *(int*)(obj + 0x5c);
+                placement = 0;
                 do
                 {
-                    (*gPartfxInterface)->spawnObject(puVar2, 0x55a, NULL, 2, -1, NULL);
-                    iVar7 = iVar7 + 1;
+                    (*gPartfxInterface)->spawnObject(obj, 0x55a, NULL, 2, -1, NULL);
+                    placement = placement + 1;
                 }
-                while (iVar7 < 8);
-                if (*(void**)(puVar2 + 0x2a) != 0)
+                while (placement < 8);
+                if (*(void**)(obj + 0x2a) != 0)
                 {
-                    ObjHits_DisableObject((int)puVar2);
+                    ObjHits_DisableObject((int)obj);
                 }
-                *(byte*)(iVar8 + 0x5a) = *(byte*)(iVar8 + 0x5a) | 2;
-                *(float*)(iVar8 + 8) = timeDelta;
-                *(undefined*)(iVar8 + 0x3a) = 5;
+                *(byte*)(state + 0x5a) = *(byte*)(state + 0x5a) | 2;
+                *(float*)(state + 8) = timeDelta;
+                *(undefined*)(state + 0x3a) = 5;
             }
             else
             {
-                if (fVar13 > ((GroundBaddieState*)iVar8)->baddie.posX)
+                if (frac > ((GroundBaddieState*)state)->baddie.posX)
                 {
-                    iVar7 = 0;
+                    placement = 0;
                     do
                     {
-                        (*gPartfxInterface)->spawnObject(puVar2, 0x55a, NULL, 2, -1, NULL);
-                        iVar7 = iVar7 + 1;
+                        (*gPartfxInterface)->spawnObject(obj, 0x55a, NULL, 2, -1, NULL);
+                        placement = placement + 1;
                     }
-                    while (iVar7 < 8);
-                    *(undefined*)(iVar8 + 0x3a) = 2;
+                    while (placement < 8);
+                    *(undefined*)(state + 0x3a) = 2;
                 }
                 else
                 {
-                    iVar7 = (*(int (**)(void*))(*gSHthorntailAnimationInterface + 0x24))(auStack_74);
-                    if (iVar7 != 0)
+                    placement = (*(int (**)(void*))(*gSHthorntailAnimationInterface + 0x24))(msgExtra);
+                    if (placement != 0)
                     {
                         FUN_8002fc3c(lbl_803E3804, timeDelta);
                     }
@@ -233,137 +233,137 @@ void appleontree_update(int param_1)
             }
             break;
         case 2:
-            if (fVar13 > ((GroundBaddieState*)iVar8)->baddie.posY)
+            if (frac > ((GroundBaddieState*)state)->baddie.posY)
             {
-                iVar3 = *(int*)(puVar2 + 0x5c);
-                puVar4 = (undefined4*)FUN_80039520((int)puVar2, 0);
-                *puVar4 = 0;
-                *(float*)(iVar3 + 0x24) = lbl_803E37C8;
-                *(float*)(puVar2 + 4) = *(float*)(*(int*)(puVar2 + 0x28) + 4);
-                FUN_80017a78((int)puVar2, 1);
-                *(undefined*)(iVar8 + 0x3a) = 3;
+                val = *(int*)(obj + 0x5c);
+                wordPtr2 = (undefined4*)FUN_80039520((int)obj, 0);
+                *wordPtr2 = 0;
+                *(float*)(val + 0x24) = lbl_803E37C8;
+                *(float*)(obj + 4) = *(float*)(*(int*)(obj + 0x28) + 4);
+                FUN_80017a78((int)obj, 1);
+                *(undefined*)(state + 0x3a) = 3;
             }
             else
             {
-                iVar3 = *(int*)(puVar2 + 0x5c);
-                fVar1 = *(float*)(iVar3 + 8);
-                fVar11 = -(*(float*)(iVar3 + 4) * *(float*)(iVar3 + 0x14) - fVar1) /
-                (*(float*)(iVar3 + 4) *
-                    (*(float*)(iVar3 + 0x18) - *(float*)(iVar3 + 0x14)));
-                fVar1 = fVar1 * fVar1 * fVar1 * fVar1;
-                iVar8 = (int)((fVar1 * fVar1) / *(float*)(iVar3 + 0x54));
-                piVar6 = (int*)FUN_80039520((int)puVar2, 0);
-                *piVar6 = 0x100 - iVar8;
-                *(float*)(iVar3 + 0x24) = lbl_803E37D0 * fVar11 + lbl_803E37CC;
-                *(float*)(puVar2 + 4) = *(float*)(*(int*)(puVar2 + 0x28) + 4) * *(float*)(iVar3 + 0x24);
-                FUN_80017a78((int)puVar2, 1);
+                val = *(int*)(obj + 0x5c);
+                fa = *(float*)(val + 8);
+                fb = -(*(float*)(val + 4) * *(float*)(val + 0x14) - fa) /
+                (*(float*)(val + 4) *
+                    (*(float*)(val + 0x18) - *(float*)(val + 0x14)));
+                fa = fa * fa * fa * fa;
+                state = (int)((fa * fa) / *(float*)(val + 0x54));
+                wordPtr = (int*)FUN_80039520((int)obj, 0);
+                *wordPtr = 0x100 - state;
+                *(float*)(val + 0x24) = lbl_803E37D0 * fb + lbl_803E37CC;
+                *(float*)(obj + 4) = *(float*)(*(int*)(obj + 0x28) + 4) * *(float*)(val + 0x24);
+                FUN_80017a78((int)obj, 1);
             }
-            iVar8 = ObjHits_GetPriorityHit((int)puVar2, (undefined4*)0x0, (int*)0x0, (uint*)0x0);
-            if ((iVar8 != 0) ||
-                ((*(short*)(iVar7 + 0x26) != -1 &&
-                    (uVar5 = GameBit_Get((int)*(short*)(iVar7 + 0x26)), uVar5 != 0))))
+            state = ObjHits_GetPriorityHit((int)obj, (undefined4*)0x0, (int*)0x0, (uint*)0x0);
+            if ((state != 0) ||
+                ((*(short*)(placement + 0x26) != -1 &&
+                    (bitVal = GameBit_Get((int)*(short*)(placement + 0x26)), bitVal != 0))))
             {
-                FUN_8017db40((uint)puVar2, 1);
+                FUN_8017db40((uint)obj, 1);
             }
             break;
         case 3:
-            *(float*)(iVar8 + 8) = fVar11 - timeDelta;
-            if (fVar13 > ((GroundBaddieState*)iVar8)->baddie.posZ)
+            *(float*)(state + 8) = fb - timeDelta;
+            if (frac > ((GroundBaddieState*)state)->baddie.posZ)
             {
-                FUN_8017db40((uint)puVar2, 0);
+                FUN_8017db40((uint)obj, 0);
             }
             else
             {
-                iVar8 = ObjHits_GetPriorityHit((int)puVar2, (undefined4*)0x0, (int*)0x0, (uint*)0x0);
-                if ((iVar8 != 0) ||
-                    ((*(short*)(iVar7 + 0x26) != -1 &&
-                        (uVar5 = GameBit_Get((int)*(short*)(iVar7 + 0x26)), uVar5 != 0))))
+                state = ObjHits_GetPriorityHit((int)obj, (undefined4*)0x0, (int*)0x0, (uint*)0x0);
+                if ((state != 0) ||
+                    ((*(short*)(placement + 0x26) != -1 &&
+                        (bitVal = GameBit_Get((int)*(short*)(placement + 0x26)), bitVal != 0))))
                 {
-                    FUN_8017db40((uint)puVar2, 2);
+                    FUN_8017db40((uint)obj, 2);
                 }
             }
             break;
         case 4:
-            if (fVar13 > *(float*)(iVar8 + 0x20))
+            if (frac > *(float*)(state + 0x20))
             {
-                *(undefined*)(iVar8 + 0x3a) = 6;
-                *(float*)(iVar8 + 8) = timeDelta;
+                *(undefined*)(state + 0x3a) = 6;
+                *(float*)(state + 8) = timeDelta;
             }
             else
             {
-                iVar7 = 0;
-                iVar3 = 0;
-                fVar12 = lbl_803E37D4;
+                placement = 0;
+                val = 0;
+                fd = lbl_803E37D4;
                 do
                 {
-                    f32 t = *(float*)(iVar8 + 0xc);
-                    if (iVar7 != 0) break;
-                    fVar11 = t * (((GroundBaddieState*)iVar8)->baddie.velZ + ((GroundBaddieState*)iVar8)->baddie.velY);
-                    fVar10 = t * fVar11 + (*(float*)(iVar8 + 0x44) * t + *(float*)(iVar8 + 0x2c));
-                    if (*(float*)(iVar8 + 0x28) <= fVar12)
+                    f32 t = *(float*)(state + 0xc);
+                    if (placement != 0) break;
+                    fb = t * (((GroundBaddieState*)state)->baddie.velZ + ((GroundBaddieState*)state)->baddie.velY);
+                    fc = t * fb + (*(float*)(state + 0x44) * t + *(float*)(state + 0x2c));
+                    if (*(float*)(state + 0x28) <= fd)
                     {
-                        iVar7 = FUN_8017e15c(fVar10, puVar2, iVar8);
+                        placement = FUN_8017e15c(fc, obj, state);
                     }
                     else
                     {
-                        iVar7 = FUN_8017e3c0(fVar10, puVar2, iVar8);
+                        placement = FUN_8017e3c0(fc, obj, state);
                     }
-                    iVar3 = iVar3 + 1;
+                    val = val + 1;
                 }
-                while ((iVar3 == 100) || (iVar3 != 0x66));
-                if (lbl_803E37D4 != *(float*)(iVar8 + 0x30))
+                while ((val == 100) || (val != 0x66));
+                if (lbl_803E37D4 != *(float*)(state + 0x30))
                 {
-                    fVar11 = *(float*)(iVar8 + 0xc) / *(float*)(iVar8 + 0x50);
-                    *puVar2 = (f32) * (s16*)(iVar8 + 0x48) * fVar11;
-                    puVar2[1] = (f32) * (s16*)(iVar8 + 0x4a) * fVar11;
-                    puVar2[2] = (f32) * (s16*)(iVar8 + 0x4c) * fVar11;
+                    fb = *(float*)(state + 0xc) / *(float*)(state + 0x50);
+                    *obj = (f32) * (s16*)(state + 0x48) * fb;
+                    obj[1] = (f32) * (s16*)(state + 0x4a) * fb;
+                    obj[2] = (f32) * (s16*)(state + 0x4c) * fb;
                 }
-                piVar6 = (int*)FUN_80039520((int)puVar2, 0);
-                *piVar6 = (int)(lbl_803E380C * fVar13);
-                FUN_8017de58((uint)puVar2);
+                wordPtr = (int*)FUN_80039520((int)obj, 0);
+                *wordPtr = (int)(lbl_803E380C * frac);
+                FUN_8017de58((uint)obj);
             }
             break;
         case 5:
-            if (lbl_803E3810 < fVar11)
+            if (lbl_803E3810 < fb)
             {
-                iVar7 = *(int*)(puVar2 + 0x5c);
-                if (((GameObject*)puVar2)->anim.flags & 0x2000)
+                placement = *(int*)(obj + 0x5c);
+                if (((GameObject*)obj)->anim.flags & 0x2000)
                 {
-                    Obj_FreeObject((int)puVar2);
+                    Obj_FreeObject((int)obj);
                 }
                 else
                 {
-                    if (*(void**)(puVar2 + 0x2a) != 0)
+                    if (*(void**)(obj + 0x2a) != 0)
                     {
-                        ObjHits_DisableObject((int)puVar2);
+                        ObjHits_DisableObject((int)obj);
                     }
-                    *(byte*)(iVar7 + 0x5a) = *(byte*)(iVar7 + 0x5a) | 2;
+                    *(byte*)(placement + 0x5a) = *(byte*)(placement + 0x5a) | 2;
                 }
             }
             break;
         case 6:
-            fVar13 = lbl_803E3814;
-            if (fVar11 > fVar13)
+            frac = lbl_803E3814;
+            if (fb > frac)
             {
-                iVar7 = *(int*)(puVar2 + 0x5c);
-                if (((GameObject*)puVar2)->anim.flags & 0x2000)
+                placement = *(int*)(obj + 0x5c);
+                if (((GameObject*)obj)->anim.flags & 0x2000)
                 {
-                    Obj_FreeObject((int)puVar2);
+                    Obj_FreeObject((int)obj);
                 }
                 else
                 {
-                    if (*(void**)(puVar2 + 0x2a) != 0)
+                    if (*(void**)(obj + 0x2a) != 0)
                     {
-                        ObjHits_DisableObject((int)puVar2);
+                        ObjHits_DisableObject((int)obj);
                     }
-                    *(byte*)(iVar7 + 0x5a) = *(byte*)(iVar7 + 0x5a) | 2;
+                    *(byte*)(placement + 0x5a) = *(byte*)(placement + 0x5a) | 2;
                 }
             }
             else
             {
-                iVar7 = (int)(lbl_803E3818 * fVar11 / fVar13);
-                *(char*)(puVar2 + 0x1b) = -1 - (char)iVar7;
-                FUN_8017de58((uint)puVar2);
+                placement = (int)(lbl_803E3818 * fb / frac);
+                *(char*)(obj + 0x1b) = -1 - (char)placement;
+                FUN_8017de58((uint)obj);
             }
         }
     }
