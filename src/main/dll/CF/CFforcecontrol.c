@@ -493,12 +493,12 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
     u8* slot;
     u8 mode;
     u8 i;
-    u8 spawned;
     u8 j;
     u8 pickCount;
+    u8 spawned;
     f32 angle;
     f32 scale;
-    int* candidates[8];
+    int* candidates[9];
     f32 pos[3];
     int objCount;
 
@@ -548,7 +548,7 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
                     list = (int**)ObjGroup_GetObjects(0x4f, &objCount);
                     for (j = 0; (int)j < objCount; j++)
                     {
-                        int ofs = j * 4;
+                        int ofs = (int)(u16)j * 4;
                         int* other = *(int**)((char*)list + ofs);
                         u8 ok;
                         if (other != obj)
