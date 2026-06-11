@@ -3,12 +3,12 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/dll/CF/CFBaby.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 ObjHits_RecordObjectHit();
 extern undefined4 FUN_80041ff8();
 extern undefined4 FUN_800427c8();
 extern undefined4 FUN_80042800();

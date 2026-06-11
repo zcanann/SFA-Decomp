@@ -93,6 +93,7 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIM2snowball.h"
 #include "main/objanim_internal.h"
+#include "main/objhits.h"
 
 typedef struct Dll1D6Placement
 {
@@ -116,7 +117,6 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern undefined4 FUN_800067c0();
-extern undefined4 ObjHits_RecordObjectHit();
 extern f32 lbl_803E4A78;
 extern void mm_free(void* p);
 extern u8 lbl_803DBF20;
@@ -405,7 +405,7 @@ void dll_1D6_update(int* obj)
                     (f32)(int) * (s16*)((char*)row + extra->hitRow * 16);
                 if (lx <= lim)
                 {
-                    ObjHits_RecordObjectHit(player, obj, 11, 4, 0);
+                    ObjHits_RecordObjectHit((int)player, (int)obj, 11, 4, 0);
                 }
             }
         }
