@@ -1,5 +1,7 @@
 #include "main/dll/DIM/DIM2icicle.h"
+#include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/model_light.h"
 #include "main/objanim_internal.h"
@@ -33,7 +35,6 @@ extern undefined4 FUN_800175d0();
 extern undefined4 FUN_800175d8();
 extern undefined4 FUN_800175ec();
 extern void* FUN_80017624();
-extern undefined8 GameBit_Set(int eventId, int value);
 extern int randomGetRange(int min, int max);
 extern int FUN_80017a90();
 extern int FUN_80017a98();
@@ -309,7 +310,6 @@ extern void getEnvfxAct(int a, int b, int c, int d);
 extern void skyFn_80089710(int id, int enabled, int arg);
 extern void skyFn_800894a8(int id, f32 x, f32 y, f32 z);
 extern void skyFn_800895e0(int id, int red, int green, int blue, int alpha, int arg);
-extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern void doRumble(f32 v);
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_Start(f32 a, f32 b, f32 c);

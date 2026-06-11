@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMwooddoor.h"
@@ -54,7 +55,6 @@ extern f32 sqrtf(f32 value);
 extern f32 mathCosf(f32 value);
 extern f32 mathSinf(f32 value);
 extern u32 randomGetRange(int min, int max);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 extern s16 lbl_803DBF02;
 extern s16 lbl_803DBF04;

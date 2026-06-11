@@ -1,4 +1,6 @@
 #include "main/dll/DIM/DIMbossspit.h"
+#include "main/audio/sfx.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
 
 extern f32 timeDelta;
@@ -17,8 +19,6 @@ extern f32 lbl_803E4CB8;
 extern f32 lbl_803E4CBC;
 extern f32 lbl_803E4CC0;
 
-extern void GameBit_Set(int bit, int value);
-extern void Sfx_PlayFromObject(u8* obj, int sfxId);
 extern void doRumble(f32 val);
 extern void DIMbosstonsil_checkHit(void* obj, DIMbosstonsilState* state);
 
@@ -83,7 +83,7 @@ void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate
 
     if (lbl_803DDBA0 >= lbl_803DDB9C)
     {
-        Sfx_PlayFromObject(obj, DIMBOSSSPIT_RUMBLE_SFX);
+        Sfx_PlayFromObject((u32)obj, DIMBOSSSPIT_RUMBLE_SFX);
         if (timer > lbl_803E4CBC) timer = lbl_803E4CBC;
         if (timer < lbl_803E4C9C) timer = lbl_803E4C9C;
         lbl_803DDB9C = lbl_803DDB9C + timer;

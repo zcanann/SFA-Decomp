@@ -1,4 +1,6 @@
 #include "main/dll/baddie_state.h"
+#include "main/audio/sfx.h"
+#include "main/gamebits.h"
 #include "main/objHitReact.h"
 #include "main/game_object.h"
 #include "main/objanim_update.h"
@@ -40,10 +42,8 @@ typedef struct Dim2prisonmammothState
 extern void fn_8003A168(int obj, int q);
 extern void characterDoEyeAnims(int obj, int q);
 extern void buttonDisable(int a, int b);
-extern int GameBit_Set(int bit, int val);
 extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 
-extern int GameBit_Get(int id);
 extern f32 lbl_803E82D0;
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
@@ -64,8 +64,6 @@ extern s16 lbl_803DC754;
 extern int randomGetRange(int lo, int hi);
 extern int RandomTimer_UpdateRangeTrigger(int p, f32 a, f32 b);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern void Sfx_PlayFromObject(int obj, int id);
-
 extern int* gPlayerInterface;
 int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState* animUpdate);
 
