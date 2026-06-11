@@ -9,7 +9,6 @@
 #pragma dont_inline on
 
 extern int Sfx_PlayFromObject(u32 obj, int sfxId);
-extern int FUN_80006a10();
 extern int getAngle(f32 dx, f32 dz);
 extern uint randomGetRange();
 extern undefined4 fn_80017A88();
@@ -40,10 +39,7 @@ extern uint fn_80295CBC();
 
 extern undefined4 lbl_8031F2F8;
 extern u8 lbl_8031F318[];
-extern undefined4 lbl_8031F320;
-extern undefined4 lbl_803DC940;
 extern undefined4* gSHthorntailAnimationInterface;
-extern undefined4* lbl_803DD71C;
 extern f64 DOUBLE_803e36a8;
 extern f64 DOUBLE_803e36b0;
 extern f64 DOUBLE_803e3700;
