@@ -1,3 +1,32 @@
+/*
+ * wmsun (DLL 0x20E) - the sky objects over Krazoa Palace (map 'warlock'
+ * = Dinosaur Planet's Warlock Mountain, hence the WM dll prefix). One
+ * DLL serves two retail object defs, neither placed by any romlist on
+ * the 124 retail maps - instances are spawned at runtime:
+ *  - def 922 'WM_Crystal' (romlist type 0x262): Krystal's crystal
+ *    prison above the palace. Each returned Krazoa spirit (game bits
+ *    0x21B/0x21C/0x21D/0x21F/0x221/0x222) raises its rise threshold
+ *    (100..6400); while below it the crystal grows, climbs and spins
+ *    faster, rumbling the camera (bit 0x370) past 0x960. Once the
+ *    last spirit is in it sets bit 0x38D, clears 0x370 and frees
+ *    itself.
+ *  - def 907 'WM_sun' (romlist type 0x2BD): the palace sun layers
+ *    (three alpha tiers by placement bank). They spin idly until the
+ *    crystal sets bit 0x38D, then bank 0 runs the finale countdowns in
+ *    lbl_803DDCA8..B0 (armed to 800 at init): quakes, envfx 0x30/0x34,
+ *    and finally bit 0x38F, after which every bank fades in and bank 0
+ *    flickers the view-dependent glare (wmsun_updateGlare, intensity/damping
+ *    state in lbl_803DDCA0/A4).
+ * A third variant (type 0x2C2, mapped to no def by the retail
+ * OBJINDEX, so unreachable in retail) allocates the WmSunGlareParams
+ * flicker table and scroll-fades a texture once bit 0x38F is set.
+ *
+ * MATCHED-SPELLING WARNING: this TU is a hand-reconstruction full of
+ * load-bearing forms - *(f32*)&lbl launders (#81), per-site
+ * literal-vs-extern 0.0f choices (#71), s16-typed locals, #119
+ * variable reuse and decl-order-tuned saved-FP coloring (see commit
+ * 9397d81b0). Do not reorder declarations, inline, hoist or re-cast.
+ */
 #include "main/dll/WM/wm_shared.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
@@ -7,137 +36,55 @@
 
 #define WM_SUN_GLARE_COUNT 20
 
+/* per-glare-sprite flicker table; filled at init by the unreachable
+   0x2C2 variant and never read back by this TU */
 typedef struct WmSunGlareParams
 {
-    s16 unk00[WM_SUN_GLARE_COUNT];
-    s16 angleOffsets[WM_SUN_GLARE_COUNT];
-    s16 flickerTimers[WM_SUN_GLARE_COUNT];
-    s16 alphaValues[WM_SUN_GLARE_COUNT];
+    s16 unk00[WM_SUN_GLARE_COUNT];         /* 0x00: never written */
+    s16 angleOffsets[WM_SUN_GLARE_COUNT];  /* 0x28: cleared at init */
+    s16 flickerTimers[WM_SUN_GLARE_COUNT]; /* 0x50: random 10..20 */
+    s16 alphaValues[WM_SUN_GLARE_COUNT];   /* 0x78: random 0x50..0xFF */
 } WmSunGlareParams;
 
 typedef struct WmSunMapData
 {
     ObjPlacement base;
-    s8 rotXByte;
-    u8 bankIndex;
+    s8 rotXByte;              /* 0x18: rotX in 1/256 turns */
+    u8 bankIndex;             /* 0x19: sun layer / model bank (0..2) */
     s16 unused1A;
-    s16 rootMotionScaleParam;
+    s16 rootMotionScaleParam; /* 0x1C: model scale * 1000 */
     u8 pad1E[2];
 } WmSunMapData;
 
 typedef struct WmSunState
 {
     s16 pad00;
-    s16 riseStep;
-    s16 spinStep;
+    s16 riseStep;                  /* 0x02: rotX advance per frame; the crystal's rise progress */
+    s16 spinStep;                  /* 0x04: sun rotZ advance per frame */
     u8 pad06[2];
-    WmSunGlareParams* glareParams;
+    WmSunGlareParams* glareParams; /* 0x08: 0x2C2 variant only, else NULL */
     u8 pad0C;
-    u8 renderEnabled;
+    u8 renderEnabled;              /* 0x0D: cleared to hide + free the crystal */
     u8 pad0E[2];
 } WmSunState;
 
-STATIC_ASSERT (
-sizeof
-(WmSunGlareParams)
-==
-0xA0
-);
-STATIC_ASSERT (offsetof
-(WmSunGlareParams
-,
-angleOffsets
-)
-==
-0x28
-);
-STATIC_ASSERT (offsetof
-(WmSunGlareParams
-,
-flickerTimers
-)
-==
-0x50
-);
-STATIC_ASSERT (offsetof
-(WmSunGlareParams
-,
-alphaValues
-)
-==
-0x78
-);
-STATIC_ASSERT (offsetof
-(WmSunMapData
-,
-rotXByte
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(WmSunMapData
-,
-bankIndex
-)
-==
-0x19
-);
-STATIC_ASSERT (offsetof
-(WmSunMapData
-,
-rootMotionScaleParam
-)
-==
-0x1C
-);
-STATIC_ASSERT (
-sizeof
-(WmSunMapData)
-==
-0x20
-);
-STATIC_ASSERT (
-sizeof
-(WmSunState)
-==
-0x10
-);
-STATIC_ASSERT (offsetof
-(WmSunState
-,
-riseStep
-)
-==
-0x02
-);
-STATIC_ASSERT (offsetof
-(WmSunState
-,
-spinStep
-)
-==
-0x04
-);
-STATIC_ASSERT (offsetof
-(WmSunState
-,
-glareParams
-)
-==
-0x08
-);
-STATIC_ASSERT (offsetof
-(WmSunState
-,
-renderEnabled
-)
-==
-0x0D
-);
+STATIC_ASSERT(offsetof(WmSunGlareParams, angleOffsets) == 0x28);
+STATIC_ASSERT(offsetof(WmSunGlareParams, flickerTimers) == 0x50);
+STATIC_ASSERT(offsetof(WmSunGlareParams, alphaValues) == 0x78);
+STATIC_ASSERT(sizeof(WmSunGlareParams) == 0xA0);
+STATIC_ASSERT(offsetof(WmSunMapData, rotXByte) == 0x18);
+STATIC_ASSERT(offsetof(WmSunMapData, bankIndex) == 0x19);
+STATIC_ASSERT(offsetof(WmSunMapData, rootMotionScaleParam) == 0x1C);
+STATIC_ASSERT(sizeof(WmSunMapData) == 0x20);
+STATIC_ASSERT(offsetof(WmSunState, riseStep) == 0x02);
+STATIC_ASSERT(offsetof(WmSunState, spinStep) == 0x04);
+STATIC_ASSERT(offsetof(WmSunState, glareParams) == 0x08);
+STATIC_ASSERT(offsetof(WmSunState, renderEnabled) == 0x0D);
+STATIC_ASSERT(sizeof(WmSunState) == 0x10);
 
+/* the anim-event callback (all variants) */
 #pragma scheduling off
-int fn_801F6E8C(int p1, int p2, ObjAnimUpdateState* actor)
+int wmsun_SeqFn(int p1, int p2, ObjAnimUpdateState* actor)
 {
     actor->hitVolumePair = -1;
     actor->sequenceEventActive = 0;
@@ -179,14 +126,14 @@ void wmsun_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
     if (vis != 0 && state->renderEnabled != 0)
     {
         doNothing_8005D148(p2, 0x10000);
-        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E5F24);
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E5F24); /* 1.0f */
         doNothing_8005D14C(p2, 0x10000);
     }
 }
 
 extern int mmAlloc(int size, int tag, int p3);
-extern f32 lbl_803E5F8C;
-extern s16 lbl_803DDCA8;
+extern f32 lbl_803E5F8C;  /* 1000.0f */
+extern s16 lbl_803DDCA8;  /* finale countdowns, see file-top comment */
 extern s16 lbl_803DDCAA;
 extern s16 lbl_803DDCAC;
 extern s16 lbl_803DDCAE;
@@ -205,7 +152,7 @@ void wmsun_init(int obj, int params)
 
     objAnim = (ObjAnimComponent*)obj;
     mapData = (WmSunMapData*)params;
-    ((GameObject*)obj)->animEventCallback = (void*)fn_801F6E8C;
+    ((GameObject*)obj)->animEventCallback = (void*)wmsun_SeqFn;
     c = (*gMapEventInterface)->getMode((int)((GameObject*)obj)->anim.mapEventSlot);
     if (c == 3 && (u32)GameBit_Get(0x21b) == 0)
     {
@@ -214,9 +161,9 @@ void wmsun_init(int obj, int params)
     state->glareParams = NULL;
     state->renderEnabled = 1;
     mode = ((GameObject*)obj)->anim.seqId;
-    if (mode == 0x262)
+    if (mode == 0x262) /* WM_Crystal */
     {
-        *(s16*)obj = (s16)(mapData->rotXByte << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
         state->riseStep = 100;
         if (mapData->rootMotionScaleParam >= 1000)
         {
@@ -224,17 +171,17 @@ void wmsun_init(int obj, int params)
         }
         else
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5F24;
+            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5F24; /* 1.0f */
         }
     }
-    else if (mode == 0x2bd)
+    else if (mode == 0x2bd) /* WM_sun */
     {
         lbl_803DDCB0 = 800;
         lbl_803DDCAE = 800;
         lbl_803DDCAC = 800;
         lbl_803DDCAA = 800;
         lbl_803DDCA8 = 800;
-        *(s16*)obj = (s16)(mapData->rotXByte << 8);
+        ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
         if (mapData->rootMotionScaleParam >= 0)
         {
             ((GameObject*)obj)->anim.rootMotionScale = (f32)mapData->rootMotionScaleParam / lbl_803E5F8C;
@@ -262,7 +209,7 @@ void wmsun_init(int obj, int params)
         }
         objAnim->alpha = 0;
     }
-    else if (mode == 0x2c2)
+    else if (mode == 0x2c2) /* unreachable in retail (no OBJINDEX entry) */
     {
         state->glareParams = (WmSunGlareParams*)mmAlloc(sizeof(WmSunGlareParams), 0xe, 0);
         i = 0x14;
@@ -286,13 +233,13 @@ void wmsun_init(int obj, int params)
 
 extern int objFindTexture(int obj, int idx, int p3);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
-extern void fn_801F6EA4(int obj);
-extern f32 lbl_803E5F20;
-extern f32 lbl_803E5F78;
-extern f32 lbl_803E5F7C;
-extern f32 lbl_803E5F80;
-extern f32 lbl_803E5F84;
-extern f32 lbl_803E5F88;
+extern void wmsun_updateGlare(int obj);
+extern f32 lbl_803E5F20; /* 0.0f */
+extern f32 lbl_803E5F78; /* 0.00375f */
+extern f32 lbl_803E5F7C; /* 50.0f */
+extern f32 lbl_803E5F80; /* 0.8f */
+extern f32 lbl_803E5F84; /* 2400.0f */
+extern f32 lbl_803E5F88; /* 2.8f */
 
 void wmsun_update(int obj)
 {
@@ -310,7 +257,7 @@ void wmsun_update(int obj)
     thresh = 0;
     mult = 1;
     spd = lbl_803E5F20;
-    if (((GameObject*)obj)->anim.seqId == 0x262)
+    if (((GameObject*)obj)->anim.seqId == 0x262) /* WM_Crystal */
     {
         if (GameBit_Get(0x38f) != 0)
         {
@@ -372,7 +319,7 @@ void wmsun_update(int obj)
                 CameraShake_SetAllMagnitudes(lbl_803E5F80 * ((f32)(state->riseStep - 0x960) / lbl_803E5F84));
                 GameBit_Set(0x370, 1);
             }
-            *(s16*)obj += state->riseStep;
+            ((GameObject*)obj)->anim.rotX += state->riseStep;
             if (state->renderEnabled == 0)
             {
                 Obj_FreeObject(obj);
@@ -380,7 +327,7 @@ void wmsun_update(int obj)
         }
         return;
     }
-    if (((GameObject*)obj)->anim.seqId == 0x2c2)
+    if (((GameObject*)obj)->anim.seqId == 0x2c2) /* unreachable in retail */
     {
         if (GameBit_Get(0x38f) != 0)
         {
@@ -406,6 +353,7 @@ void wmsun_update(int obj)
         }
         return;
     }
+    /* WM_sun (0x2BD) */
     if (GameBit_Get(0x38f) != 0)
     {
         c = objAnim->bankIndex;
@@ -454,20 +402,20 @@ void wmsun_update(int obj)
                 randomGetRange(0, 0xffff);
                 Sfx_PlayFromObject(obj, 0x81);
             }
-            fn_801F6EA4(obj);
+            wmsun_updateGlare(obj);
         }
     }
     else
     {
         ((GameObject*)obj)->anim.rotZ += state->spinStep;
-        *(s16*)obj += state->riseStep;
+        ((GameObject*)obj)->anim.rotX += state->riseStep;
         if (GameBit_Get(0x38d) != 0 && objAnim->bankIndex == 0)
         {
             if (lbl_803DDCAA == 0)
             {
                 if (lbl_803DDCA8 > 600 && (int)randomGetRange(0, 10) == 0)
                 {
-                    CameraShake_SetAllMagnitudes(lbl_803E5F88);
+                    CameraShake_SetAllMagnitudes(lbl_803E5F88); /* 2.8f */
                 }
                 if (lbl_803DDCA8 > 0)
                 {
@@ -517,6 +465,10 @@ typedef struct
     f32 x, y, z;
 } WmSunVec3;
 
+/* glare work record; only ang feeds vecRotateZXY - the intensity/v*
+   results are computed and discarded (the struct's address escapes
+   through the g.ang call arg, which keeps the stores live; likely a
+   remnant of the Dinosaur Planet-era glare renderer) */
 typedef struct
 {
     s16 ang[3];
@@ -526,34 +478,38 @@ typedef struct
     f32 vz;
 } WmSunGlare;
 
-extern WmSunVec3 lbl_802C24E8;
-extern WmSunVec3 lbl_802C24F4;
-extern f32 lbl_803DDCA0;
-extern f32 lbl_803DDCA4;
+extern WmSunVec3 lbl_802C24E8; /* (0, 0, -1) */
+extern WmSunVec3 lbl_802C24F4; /* (0, 0, -1) */
+extern f32 lbl_803DDCA0;       /* glare intensity */
+extern f32 lbl_803DDCA4;       /* glare damping accumulator */
 extern f32 oneOverTimeDelta;
-extern f32 lbl_803E5F28;
-extern f32 lbl_803E5F2C;
-extern f32 lbl_803E5F30;
-extern f32 lbl_803E5F34;
-extern f32 lbl_803E5F38;
-extern f32 lbl_803E5F3C;
-extern f32 lbl_803E5F40;
-extern f32 lbl_803E5F44;
-extern f32 lbl_803E5F48;
-extern f32 lbl_803E5F4C;
-extern f32 lbl_803E5F50;
-extern f32 lbl_803E5F54;
-extern f32 lbl_803E5F58;
-extern f32 lbl_803E5F5C;
-extern f32 lbl_803E5F60;
-extern f32 lbl_803E5F64;
-extern f32 lbl_803E5F68;
+extern f32 lbl_803E5F28; /* 0.5f */
+extern f32 lbl_803E5F2C; /* 20.0f */
+extern f32 lbl_803E5F30; /* 3.1415927f */
+extern f32 lbl_803E5F34; /* 32767.0f */
+extern f32 lbl_803E5F38; /* 32768.0f */
+extern f32 lbl_803E5F3C; /* 0.1f */
+extern f32 lbl_803E5F40; /* -0.1f */
+extern f32 lbl_803E5F44; /* 0.2f */
+extern f32 lbl_803E5F48; /* 100.0f */
+extern f32 lbl_803E5F4C; /* 4.0f */
+extern f32 lbl_803E5F50; /* 0.0005f */
+extern f32 lbl_803E5F54; /* 0.0002f */
+extern f32 lbl_803E5F58; /* 0.05f */
+extern f32 lbl_803E5F5C; /* 65535.0f */
+extern f32 lbl_803E5F60; /* 0.001f */
+extern f32 lbl_803E5F64; /* -0.001f */
+extern f32 lbl_803E5F68; /* 0.01f */
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern int Camera_GetCurrentViewSlot(void);
 extern void vecRotateZXY(s16 * ang, WmSunVec3 * vec);
 
-void fn_801F6EA4(int obj)
+/* The sun-glare flicker: measures the angle between the camera->sun
+   ray and the camera facing; staring near the sun (cos > 0.5) ramps
+   the flicker intensity (sin curve + random jitter, damped through
+   lbl_803DDCA4), looking away decays it. */
+void wmsun_updateGlare(int obj)
 {
     WmSunVec3 dir;
     WmSunVec3 sun;
@@ -567,14 +523,14 @@ void fn_801F6EA4(int obj)
 
     dir = lbl_802C24E8;
     sun = lbl_802C24F4;
-    *(s16*)obj += 400;
+    ((GameObject*)obj)->anim.rotX += 400;
     g.vx = lbl_803E5F20;
     g.vy = lbl_803E5F20;
     g.vz = lbl_803E5F20;
     g.intensity = lbl_803E5F24;
     g.ang[2] = 0;
     g.ang[1] = 0;
-    g.ang[0] = *(s16*)obj;
+    g.ang[0] = ((GameObject*)obj)->anim.rotX;
     cam = Camera_GetCurrentViewSlot();
     if ((void*)cam != NULL)
     {
