@@ -6,8 +6,6 @@ extern void vecRotateZXY(s16 * rot, f32 * vec);
 
 extern f64 lbl_803E1750;
 
-#define gCamcontrolPathState lbl_803DD538
-
 /*
  * --INFO--
  *

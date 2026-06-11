@@ -63,7 +63,7 @@ extern f32 lbl_803E4C3C;
 extern f32 lbl_803E4C40;
 extern f32 lbl_803E4C48;
 extern u8 lbl_803AC97C[];
-extern f32 lbl_803AC970[];
+extern f32 gDIMbossAnimScratchBase[];
 
 typedef struct IcicleFxPos
 {
@@ -203,14 +203,14 @@ void fn_801BB598(DIMbossObject* obj, DIMbossRuntime* runtime)
             ((IcicleFxPos*)&lbl_803AC97C)->y = (f32)(int)
             randomGetRange(-0x19, 0x19);
             ((IcicleFxPos*)&lbl_803AC97C)->z = lbl_803E4C34;
-            lbl_803AC970[0] = ((IcicleFxPos*)&lbl_803AC97C)->x / (lbl_803E4C34 * lbl_803E4C38);
-            lbl_803AC970[1] = ((IcicleFxPos*)&lbl_803AC97C)->y / (lbl_803E4C34 * lbl_803E4C38);
-            lbl_803AC970[2] = lbl_803E4BCC;
-            PSMTXMultVec(m, lbl_803AC970, lbl_803AC970);
+            gDIMbossAnimScratchBase[0] = ((IcicleFxPos*)&lbl_803AC97C)->x / (lbl_803E4C34 * lbl_803E4C38);
+            gDIMbossAnimScratchBase[1] = ((IcicleFxPos*)&lbl_803AC97C)->y / (lbl_803E4C34 * lbl_803E4C38);
+            gDIMbossAnimScratchBase[2] = lbl_803E4BCC;
+            PSMTXMultVec(m, gDIMbossAnimScratchBase, gDIMbossAnimScratchBase);
             ObjPath_GetPointWorldPosition(objIndex, 0xb, &((IcicleFxPos*)&lbl_803AC97C)->x,
                                           &((IcicleFxPos*)&lbl_803AC97C)->y, &((IcicleFxPos*)&lbl_803AC97C)->z, 1);
             (*gPartfxInterface)->spawnObject(
-                (void*)objIndex, 0x4b8, &lbl_803AC97C, 0x200001, -1, lbl_803AC970);
+                (void*)objIndex, 0x4b8, &lbl_803AC97C, 0x200001, -1, gDIMbossAnimScratchBase);
             i = i + 1;
         }
         while (i < 5);
@@ -252,7 +252,7 @@ extern void doRumble(f32 v);
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_Start(f32 a, f32 b, f32 c);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
-extern void* lbl_803DCAB4;
+extern void* gBoneParticleEffectInterface;
 extern int lbl_80325AB8[];
 extern f32 lbl_803E4BC4;
 extern f32 lbl_803E4BF4;
@@ -357,7 +357,7 @@ void warpDarkIceMines_801bbb44(int obj, int stateRaw)
     }
     if (gDIMbossSequenceFlags & 0x80000)
     {
-        ((void (*)(int, int, int, int, int))*(code**)(*(int*)lbl_803DCAB4 + 0xc))(obj, 0x800, 0, 1, 0);
+        ((void (*)(int, int, int, int, int))*(code**)(*(int*)gBoneParticleEffectInterface + 0xc))(obj, 0x800, 0, 1, 0);
     }
     if ((gDIMbossSequenceFlags & 0x8020) || *(s8*)(stateRaw + 0x354) < 2)
     {

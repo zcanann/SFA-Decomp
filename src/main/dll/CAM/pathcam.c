@@ -27,8 +27,6 @@ extern f32 lbl_803E1744;
 extern f32 lbl_803E1748;
 
 #define gCamcontrolModeSettings cameraMtxVar57
-#define gCamcontrolPathState lbl_803DD538
-
 /*
  * --INFO--
  *

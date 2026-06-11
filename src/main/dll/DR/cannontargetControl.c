@@ -317,7 +317,7 @@ void blasted_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole on
 
 
-extern int* lbl_803DCAC0; /* carryable-object interface singleton */
+extern int* gCarryableInterface; /* carryable-object interface singleton */
 extern void ObjMsg_AllocQueue(int obj, int capacity);
 extern void storeZeroToFloatParam(void* p);
 
@@ -344,7 +344,7 @@ void gunpowderbarrel_init(int obj, u8* def)
     GunpowderBarrelState* state = ((GameObject*)obj)->extra;
 
     state->unk07 |= 2;
-    (*(void (**)(int, GunpowderBarrelState*, int))((char*)*lbl_803DCAC0 + 0x4))(obj, state, 5);
+    (*(void (**)(int, GunpowderBarrelState*, int))((char*)*gCarryableInterface + 0x4))(obj, state, 5);
     ObjGroup_AddObject(obj, 0x19);
     ObjGroup_AddObject(obj, 0x16);
     ObjMsg_AllocQueue(obj, 8);
@@ -395,7 +395,7 @@ void gunpowderbarrel_init(int obj, u8* def)
     ((BarrelBits*)&state->heldFlags)->b5 = 0;
     state->unk38 = lbl_803E42C0;
     state->linkedTimerObject = 0;
-    (*(void (**)(GunpowderBarrelState*, int))((char*)*lbl_803DCAC0 + 0x2c))(state, 1);
+    (*(void (**)(GunpowderBarrelState*, int))((char*)*gCarryableInterface + 0x2c))(state, 1);
     if (((GameObject*)obj)->anim.seqId == 0x754)
     {
         ((BarrelBits*)&state->heldFlags)->b1 = 1;
@@ -841,7 +841,7 @@ void gunpowderbarrel_update(int obj)
         }
     }
     if ((state->motionFlags & 2) != 0 || ((BarrelBits*)&state->heldFlags)->b5 != 0 ||
-        (*(int (**)(int, GunpowderBarrelState*))((char*)*lbl_803DCAC0 + 0x8))(obj, state) == 0 ||
+        (*(int (**)(int, GunpowderBarrelState*))((char*)*gCarryableInterface + 0x8))(obj, state) == 0 ||
         (((BarrelBits*)&state->heldFlags)->b1 != 0 && playerIsDisguised(player) == 0))
     {
         ObjHits_EnableObject(obj);

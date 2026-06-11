@@ -109,8 +109,7 @@ extern uint countLeadingZeros();
 
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern MapEventInterface** gMapEventInterface;
-extern undefined4* lbl_803DCAB4;
-#define gBoneParticleEffectInterface lbl_803DCAB4
+extern undefined4* gBoneParticleEffectInterface;
 extern f64 DOUBLE_803e6698;
 extern f64 DOUBLE_803e66f0;
 extern f32 lbl_803DC074;
@@ -989,7 +988,7 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
             break;
         case 2:
             (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, state2, 3);
-            (*(void (**)(int, int, f32*, int, int))(*(int*)lbl_803DCAB4 + 0xC))(obj, 0x7EF, &range, 0x50, 0);
+            (*(void (**)(int, int, f32*, int, int))(*(int*)gBoneParticleEffectInterface + 0xC))(obj, 0x7EF, &range, 0x50, 0);
             ((ShopkeeperState*)state)->opacity = 0;
             break;
         case 3:
@@ -1035,7 +1034,7 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
             playerAddMoney(player, -(int)((ShopkeeperState*)state)->amount);
             break;
         case 0xB:
-            (*(void (**)(int, int, f32*, int, int))(*(int*)lbl_803DCAB4 + 0xC))(obj, 0x7EF, &range, 0x50, 0);
+            (*(void (**)(int, int, f32*, int, int))(*(int*)gBoneParticleEffectInterface + 0xC))(obj, 0x7EF, &range, 0x50, 0);
             break;
         case 0xC:
             ((ShopkeeperState*)state)->amount = 1;

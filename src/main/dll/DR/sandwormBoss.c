@@ -65,8 +65,8 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern EffectInterface** gPartfxInterface;
 extern f64 DOUBLE_803e4db0;
 extern f32 lbl_803DC074;
-extern f32 lbl_803DCAB4;
-extern f32 lbl_803DCAC0;
+extern f32 gBoneParticleEffectInterface;
+extern f32 gCarryableInterface;
 extern f32 lbl_803E4228;
 extern f32 lbl_803E4DA8;
 extern f32 lbl_803E4DBC;
@@ -450,7 +450,7 @@ FUN_8019d238(undefined8 param_1, double param_2, double param_3, undefined8 para
                      param_6, param_7,
                      param_8, param_9, 5, 0, param_12, param_13, param_14, param_15, param_16);
     }
-    dVar2 = (double)((((GameObject*)param_9)->anim.velocityY * lbl_803DCAB4 + lbl_803E4EC8) * lbl_803E4ECC);
+    dVar2 = (double)((((GameObject*)param_9)->anim.velocityY * gBoneParticleEffectInterface + lbl_803E4EC8) * lbl_803E4ECC);
     if (dVar2 < (double)lbl_803E4EB0)
     {
         dVar2 = (double)lbl_803E4EB0;
@@ -2252,7 +2252,7 @@ int gunpowderbarrel_canBeGrabbed(int* obj)
     int result = 0;
     if (state->heldByCarryInterface == 0 &&
         state->respawnTimer == lbl_803E42C0 &&
-        ((int(*)(GunpowderBarrelState*))(*(*(void****)&lbl_803DCAC0))[5])(state) == 0)
+        ((int(*)(GunpowderBarrelState*))(*(*(void****)&gCarryableInterface))[5])(state) == 0)
     {
         result = 1;
     }

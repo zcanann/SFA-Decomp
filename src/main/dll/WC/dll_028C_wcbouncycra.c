@@ -11,8 +11,6 @@
 
 #define WCBLOCK_GRID_IFACE(state) (*(int *)(*(int *)(*(int *)((state) + WCBLOCK_GRID_OBJECT_OFFSET) + 0x68)))
 
-#define WCBLOCK_PLAYER_CELL_MARGIN lbl_803E6D50
-
 typedef struct WCBlockGridInterface
 {
     char pad0[0x20];

@@ -79,7 +79,7 @@ extern u8 gDvdErrorPauseActive;
 extern u32 gDIMbossSequenceFlags;
 extern f32 lbl_803E4C70;
 extern undefined4 gDIMbossRenderMtx[];
-extern u8 lbl_803AC970[];
+extern u8 gDIMbossAnimScratchBase[];
 extern undefined4 gDIMbossAnimController[];
 extern undefined4 lbl_802C2338[];
 extern void (*gDIMbossAnimTable[])(void);
@@ -98,8 +98,6 @@ extern f32 lbl_803E4C54;
 extern f32 lbl_803E4C78;
 extern char sDIMBossFreeingAssetsForDIMBoss[];
 extern char sDIMBossLoadingAssetsForDIMTop[];
-
-#define gDIMbossAnimScratchBase lbl_803AC970
 
 #define DIMBOSS_BONE_PARTICLE_EFFECT_800 0x800
 #define DIMBOSS_BONE_PARTICLE_EFFECT_7FF 0x7FF
@@ -162,10 +160,8 @@ typedef struct DIMbossObjectTriggerInterface
     void (*triggerEvent)(ObjAnimUpdateState* animUpdate, int eventId);
 } DIMbossObjectTriggerInterface;
 
-extern DIMbossBoneParticleEffectInterface** lbl_803DCAB4;
+extern DIMbossBoneParticleEffectInterface** gBoneParticleEffectInterface;
 extern DIMbossMapEventInterface** gMapEventInterface;
-
-#define gBoneParticleEffectInterface lbl_803DCAB4
 
 static inline DIMbossBaddieControlInterface* DIMboss_GetBaddieControlInterface(void)
 {

@@ -1000,8 +1000,7 @@ void mmp_trenchfx_init(int obj, int data)
 #pragma peephole reset
 
 /* ObjGroup_RemoveObject + vtable[4] tail-call. */
-extern int* lbl_803DCAC0;
-#define gCarryableInterface lbl_803DCAC0
+extern int* gCarryableInterface;
 #pragma scheduling off
 void mmp_moonrock_free(int obj)
 {
@@ -1145,19 +1144,19 @@ void mmp_moonrock_init(int obj, int param2)
         {
             state->flags = state->flags | 0x400;
         }
-        (*(int (**)(int, int))(*(int*)lbl_803DCAC0 + 0x20))((int)state, 0);
+        (*(int (**)(int, int))(*(int*)gCarryableInterface + 0x20))((int)state, 0);
     }
     else
     {
-        (*(int (**)(int, int))(*(int*)lbl_803DCAC0 + 0x20))((int)state, 1);
+        (*(int (**)(int, int))(*(int*)gCarryableInterface + 0x20))((int)state, 1);
     }
     {
         f32 z = ((GameObject*)obj)->anim.localPosY;
         state->baseY = z;
         state->baseY2 = z;
     }
-    (*(int (**)(int, int, int))(*(int*)lbl_803DCAC0 + 0x4))(obj, *(int*)&((GameObject*)obj)->extra, 0x32);
-    (*(int (**)(int, int))(*(int*)lbl_803DCAC0 + 0x2c))((int)state, 1);
+    (*(int (**)(int, int, int))(*(int*)gCarryableInterface + 0x4))(obj, *(int*)&((GameObject*)obj)->extra, 0x32);
+    (*(int (**)(int, int))(*(int*)gCarryableInterface + 0x2c))((int)state, 1);
     ObjGroup_AddObject(obj, 4);
     state->homeX = ((GameObject*)obj)->anim.localPosX;
     state->homeY = ((GameObject*)obj)->anim.localPosY;
@@ -1202,7 +1201,7 @@ void fn_801A7D74(int obj, u8 a, u8 b)
             g2 = GameBit_Get(0x894);
             if (a == 0)
             {
-                (*(int (**)(int, int))(*(int*)lbl_803DCAC0 + 0x20))((int)state, 1);
+                (*(int (**)(int, int))(*(int*)gCarryableInterface + 0x20))((int)state, 1);
                 if (*(s16*)(odef + 0x1E) != -1)
                 {
                     GameBit_Set(*(s16*)(odef + 0x1E), 0);
@@ -1237,7 +1236,7 @@ void fn_801A7D74(int obj, u8 a, u8 b)
             }
             else
             {
-                (*(int (**)(int, int))(*(int*)lbl_803DCAC0 + 0x20))((int)state, 0);
+                (*(int (**)(int, int))(*(int*)gCarryableInterface + 0x20))((int)state, 0);
                 if (*(s16*)(odef + 0x1E) != -1)
                 {
                     GameBit_Set(*(s16*)(odef + 0x1E), 1);
@@ -1597,7 +1596,7 @@ void mmp_moonrock_update(int obj)
         {
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
         }
-        else if ((*(int (**)(int, int))(*(int*)lbl_803DCAC0 + 0x8))(obj, *(int*)&((GameObject*)obj)->extra) != 0)
+        else if ((*(int (**)(int, int))(*(int*)gCarryableInterface + 0x8))(obj, *(int*)&((GameObject*)obj)->extra) != 0)
         {
             grabbed = 1;
         }
@@ -1626,7 +1625,7 @@ void mmp_moonrock_update(int obj)
             state->flags &= ~0x10;
         }
         stateCopy = *(int*)&((GameObject*)obj)->extra;
-        (*(int (**)(int, int))(*(int*)lbl_803DCAC0 + 0x24))(stateCopy, 0);
+        (*(int (**)(int, int))(*(int*)gCarryableInterface + 0x24))(stateCopy, 0);
         list = (int*)ObjGroup_GetObjects(0x10, &count);
         {
             f32 k = lbl_803E4580;
@@ -1636,7 +1635,7 @@ void mmp_moonrock_update(int obj)
                 if (o != (u32)obj && *(s16*)(o + 0x46) == 0x519 &&
                     Vec_xzDistance((f32*)(obj + 0x18), (f32*)(o + 0x18)) < k)
                 {
-                    (*(int (**)(int, int))(*(int*)lbl_803DCAC0 + 0x24))(stateCopy, 1);
+                    (*(int (**)(int, int))(*(int*)gCarryableInterface + 0x24))(stateCopy, 1);
                     found = 0;
                     goto checked;
                 }

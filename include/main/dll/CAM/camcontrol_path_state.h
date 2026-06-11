@@ -35,6 +35,6 @@ STATIC_ASSERT(offsetof(CamcontrolPathState, pathCurve.eval) == 0x1B4);
 STATIC_ASSERT(offsetof(CamcontrolPathState, pathCurve.coeffFn) == 0x1B8);
 STATIC_ASSERT(offsetof(CamcontrolPathState, active) == 0x1BC);
 
-extern CamcontrolPathState *lbl_803DD538;
+extern CamcontrolPathState *gCamcontrolPathState;
 
 #endif /* MAIN_DLL_CAM_CAMCONTROL_PATH_STATE_H_ */

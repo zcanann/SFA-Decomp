@@ -294,8 +294,7 @@ int gunpowderbarrel_getExtraSize(void)
     return 0x58;
 }
 
-extern undefined4* lbl_803DCAC0;
-#define gCarryableInterface lbl_803DCAC0
+extern undefined4* gCarryableInterface;
 extern int Obj_IsObjectAlive(void* obj);
 extern void ObjLink_DetachChild(int obj, void* child);
 

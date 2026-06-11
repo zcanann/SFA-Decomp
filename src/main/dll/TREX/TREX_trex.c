@@ -590,8 +590,7 @@ extern f32 lbl_803E59DC;
 extern f32 timeDelta;
 extern u8 lbl_803DB411;
 extern f32 lbl_803DDC50;
-extern int* lbl_803DCAB4;
-#define gBoneParticleEffectInterface lbl_803DCAB4
+extern int* gBoneParticleEffectInterface;
 extern int Stack_IsEmpty(int stack);
 extern int Stack_Pop(int stack, int* out);
 int SB_SeqDoor_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);

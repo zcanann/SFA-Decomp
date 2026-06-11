@@ -66,8 +66,7 @@ extern void setAButtonIcon(int param_1);
 extern void dll_115_seqFn(void);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern undefined4* lbl_803DCAC0;
-#define gCarryableInterface lbl_803DCAC0
+extern undefined4* gCarryableInterface;
 extern undefined4* DAT_803dd718;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E37B8;

@@ -1496,7 +1496,7 @@ extern f32 lbl_803DC4C4;
 extern u8 lbl_803DC4C8;
 
 
-extern f32 lbl_803E6D50;
+extern f32 WCBLOCK_PLAYER_CELL_MARGIN;
 
 
 extern f32 lbl_803E6ECC;

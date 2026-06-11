@@ -85,7 +85,7 @@ extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 extern void* gPlayerInterface;
 extern void* gBaddieControlInterface;
 extern MapEventInterface** gMapEventInterface;
-extern int* lbl_803DCAB4;
+extern int* gBoneParticleEffectInterface;
 extern int lbl_803200E0[];
 extern int lbl_80320158[];
 extern void objRenderFn_8003b8f4(f32);
@@ -428,7 +428,7 @@ void grimble_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                                                                    lbl_803E2EBC);
     if (((GrimbleControl*)sub)->unk50 > lbl_803E2EB8)
     {
-        (*(void (**)(int, int, int, int, int))(*(int*)lbl_803DCAB4 + 0xc))(obj, 0x52a, 0, 0x64,
+        (*(void (**)(int, int, int, int, int))(*(int*)gBoneParticleEffectInterface + 0xc))(obj, 0x52a, 0, 0x64,
                                                                            0);
     }
     if ((((GrimbleState*)state)->unk400 & 0x60) != 0)

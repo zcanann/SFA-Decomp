@@ -664,7 +664,7 @@ typedef struct CarryableBreakRespawnState
     f32 timer;
 } CarryableBreakRespawnState;
 
-extern int* lbl_803DCAC0;
+extern int* gCarryableInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E3B44;
 extern f32 lbl_803E3B48;
@@ -689,10 +689,10 @@ void carryable_break_respawn_update(int obj)
     switch (state->state)
     {
     case 0:
-        (*(void (*)(int, CarryableBreakRespawnState*))(*(int*)(*lbl_803DCAC0 + 8)))(obj, state);
+        (*(void (*)(int, CarryableBreakRespawnState*))(*(int*)(*gCarryableInterface + 8)))(obj, state);
         if (ObjHits_GetPriorityHit(obj, 0, 0, &hitVolume) != 0)
         {
-            (*(void (*)(int, CarryableBreakRespawnState*))(*(int*)(*lbl_803DCAC0 + 0x30)))(obj, state);
+            (*(void (*)(int, CarryableBreakRespawnState*))(*(int*)(*gCarryableInterface + 0x30)))(obj, state);
             Sfx_PlayFromObject(obj, SFXen_rfall5_c);
             ObjHitbox_SetSphereRadius(obj, 0x28);
             ObjHits_SetHitVolumeSlot(obj, 5, 4, 0);
@@ -1696,8 +1696,6 @@ void landed_arwing_updateDamageTexture(int obj, CFLandedArwingState* state)
         }
     }
 }
-
-#define gCarryableInterface lbl_803DCAC0
 
 void dll_109_init(int obj, u8* p)
 {

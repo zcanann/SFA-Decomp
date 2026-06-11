@@ -45,29 +45,29 @@ void camclimb_update(CameraObject* cam)
     float relZ;
     float relDistXZ;
 
-    if (lbl_803DD538->active != 0)
+    if (gCamcontrolPathState->active != 0)
     {
         (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
     }
     else
     {
-        if (lbl_803DD538->localFrameObj != *(int*)&cam->anim.parent)
+        if (gCamcontrolPathState->localFrameObj != *(int*)&cam->anim.parent)
         {
-            for (pointIndex = 0; pointIndex < lbl_803DD538->pathCurve.count; pointIndex = pointIndex + 1)
+            for (pointIndex = 0; pointIndex < gCamcontrolPathState->pathCurve.count; pointIndex = pointIndex + 1)
             {
-                Obj_TransformLocalPointToWorld(lbl_803DD538->pointsX[pointIndex],
-                                               lbl_803DD538->pointsY[pointIndex], lbl_803DD538->pointsZ[pointIndex],
-                                               &lbl_803DD538->pointsX[pointIndex], &lbl_803DD538->pointsY[pointIndex],
-                                               &lbl_803DD538->pointsZ[pointIndex], lbl_803DD538->localFrameObj);
+                Obj_TransformLocalPointToWorld(gCamcontrolPathState->pointsX[pointIndex],
+                                               gCamcontrolPathState->pointsY[pointIndex], gCamcontrolPathState->pointsZ[pointIndex],
+                                               &gCamcontrolPathState->pointsX[pointIndex], &gCamcontrolPathState->pointsY[pointIndex],
+                                               &gCamcontrolPathState->pointsZ[pointIndex], gCamcontrolPathState->localFrameObj);
             }
-            for (pointIndex = 0; pointIndex < lbl_803DD538->pathCurve.count; pointIndex = pointIndex + 1)
+            for (pointIndex = 0; pointIndex < gCamcontrolPathState->pathCurve.count; pointIndex = pointIndex + 1)
             {
-                Obj_TransformWorldPointToLocal(lbl_803DD538->pointsX[pointIndex],
-                                               lbl_803DD538->pointsY[pointIndex], lbl_803DD538->pointsZ[pointIndex],
-                                               &lbl_803DD538->pointsX[pointIndex], &lbl_803DD538->pointsY[pointIndex],
-                                               &lbl_803DD538->pointsZ[pointIndex], *(int*)&cam->anim.parent);
+                Obj_TransformWorldPointToLocal(gCamcontrolPathState->pointsX[pointIndex],
+                                               gCamcontrolPathState->pointsY[pointIndex], gCamcontrolPathState->pointsZ[pointIndex],
+                                               &gCamcontrolPathState->pointsX[pointIndex], &gCamcontrolPathState->pointsY[pointIndex],
+                                               &gCamcontrolPathState->pointsZ[pointIndex], *(int*)&cam->anim.parent);
             }
-            lbl_803DD538->localFrameObj = *(int*)&cam->anim.parent;
+            gCamcontrolPathState->localFrameObj = *(int*)&cam->anim.parent;
         }
         target = (GameObject*)cam->anim.targetObj;
         localPosY = cam->anim.localPosY;
@@ -81,13 +81,13 @@ void camclimb_update(CameraObject* cam)
         (*(code*)(**(int**)(defaultHandler + 4) + 0x1c))
             ((double)lbl_803E1758, (double)lbl_803E175C, cam, target);
         (*(code*)(**(int**)(defaultHandler + 4) + 0x24))(cam, 1, 3,
-                                                         &lbl_803DD538->curveMin,
-                                                         &lbl_803DD538->curveMax);
+                                                         &gCamcontrolPathState->curveMin,
+                                                         &gCamcontrolPathState->curveMax);
         if ((cam->anim.currentMove != 0) || (cam->unk142 != 0))
         {
-            lbl_803DD538->initialiseCurve[4] = lbl_803DD538->initialiseCurve[4] + timeDelta;
+            gCamcontrolPathState->initialiseCurve[4] = gCamcontrolPathState->initialiseCurve[4] + timeDelta;
         }
-        if (lbl_803DD538->initialiseCurve[4] > lbl_803E1740)
+        if (gCamcontrolPathState->initialiseCurve[4] > lbl_803E1740)
         {
             needsReset = camcontrol_getTargetPosition(cam, target, &cam->anim.worldPosX, &cam->anim.rotY);
             if (needsReset == 1)

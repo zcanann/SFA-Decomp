@@ -9,8 +9,6 @@ extern undefined4 FUN_80017814();
 extern int objFn_802962b4(int obj);
 extern int objFn_80296700(int obj);
 
-#define gCamcontrolPathState lbl_803DD538
-
 /*
  * --INFO--
  *

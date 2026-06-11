@@ -34,8 +34,6 @@ extern f32 lbl_803E1770;
 extern f32 lbl_803E1774;
 extern f32 lbl_803E1778;
 
-#define gCamcontrolPathState lbl_803DD538
-
 #pragma scheduling on
 #pragma peephole on
 static f32 CameraModeStaffAnim_angleToRadians(int angle)

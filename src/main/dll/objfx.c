@@ -931,34 +931,34 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 fextra, void* li
         (*gPartfxInterface)->spawnObject(obj, 0x330, &params, 2, -1, &p8);
         break;
     case 3:
-        (*(void (*)(void*, int, void*, int, int))(*(int*)(*lbl_803DCAB4 + 0xc)))(
+        (*(void (*)(void*, int, void*, int, int))(*(int*)(*gBoneParticleEffectInterface + 0xc)))(
             obj, 0x32f, &p8, 0x19, 0);
         break;
     case 4:
-        (*(void (*)(void*, int, void*, int, int))(*(int*)(*lbl_803DCAB4 + 0xc)))(
+        (*(void (*)(void*, int, void*, int, int))(*(int*)(*gBoneParticleEffectInterface + 0xc)))(
             obj, 0x330, &p8, 0x19, 0);
         break;
     case 5:
         params.f6 = 0xc0a;
-        (*(void (*)(void*, int, void*, int, void*))(*(int*)(*lbl_803DCAB4 + 0xc)))(
+        (*(void (*)(void*, int, void*, int, void*))(*(int*)(*gBoneParticleEffectInterface + 0xc)))(
             obj, 0x7cd, &p8, 0x32, &params);
         break;
     case 6:
         params.f6 = 0xc0d;
-        (*(void (*)(void*, int, void*, int, void*))(*(int*)(*lbl_803DCAB4 + 0xc)))(
+        (*(void (*)(void*, int, void*, int, void*))(*(int*)(*gBoneParticleEffectInterface + 0xc)))(
             obj, 0x7ce, &p8, 0x50, &params);
         break;
     case 7:
         params.f6 = 0x605;
         params.pad[2] = 1;
-        (*(void (*)(void*, int, void*, int, void*))(*(int*)(*lbl_803DCAB4 + 0xc)))(
+        (*(void (*)(void*, int, void*, int, void*))(*(int*)(*gBoneParticleEffectInterface + 0xc)))(
             obj, 0x7cf, &p8, 0x19, &params);
         zoff = lbl_803DF35C;
         break;
     case 8:
         params.f6 = 0x605;
         params.pad[2] = 0;
-        (*(void (*)(void*, int, void*, int, void*))(*(int*)(*lbl_803DCAB4 + 0xc)))(
+        (*(void (*)(void*, int, void*, int, void*))(*(int*)(*gBoneParticleEffectInterface + 0xc)))(
             obj, 0x7cf, &p8, 0x19, &params);
         zoff = lbl_803DF35C;
         break;

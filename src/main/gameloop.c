@@ -175,7 +175,7 @@ int return0_8002969C(void);
 /* ObjModel/model-file accessors. */
 
 
-extern void* lbl_803DCAB4;
+extern void* gBoneParticleEffectInterface;
 extern u8 framesThisStep;
 
 
@@ -856,7 +856,7 @@ extern void* gPathControlInterface;
 extern MapEventInterface** gMapEventInterface;
 extern void* gBaddieControlInterface;
 extern void* gMinimapInterface;
-extern void* lbl_803DCAC0;
+extern void* gCarryableInterface;
 extern void* gTitleMenuItemInterface;
 extern u8 lbl_803DCA3F;
 
@@ -1007,10 +1007,10 @@ void init(void)
     gTitleMenuLinkInterface = Resource_Acquire(0x3c, 7);
     gPathControlInterface = Resource_Acquire(0x15, 9);
     gMapEventInterface = Resource_Acquire(0x17, 0x24);
-    lbl_803DCAB4 = Resource_Acquire(0x18, 6);
+    gBoneParticleEffectInterface = Resource_Acquire(0x18, 6);
     gBaddieControlInterface = Resource_Acquire(0x19, 0x16);
     gMinimapInterface = Resource_Acquire(0x31, 2);
-    lbl_803DCAC0 = Resource_Acquire(0x2f, 0xc);
+    gCarryableInterface = Resource_Acquire(0x2f, 0xc);
     gTitleMenuItemInterface = Resource_Acquire(0x3d, 0xa);
     initFn_800534f8();
     titleScreenDrawFn_80093db4();

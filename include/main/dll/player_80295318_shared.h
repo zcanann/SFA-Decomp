@@ -733,7 +733,7 @@ extern void trickyImpress(void *trickyObj);
 extern int Obj_GetActiveModel(int obj);
 extern int Obj_SetActiveModelIndex(int obj, int idx);
 extern void *memcpy(void *dst, const void *src, u32 size);
-extern int *lbl_803DCAB4;
+extern int *gBoneParticleEffectInterface;
 extern f32 lbl_803E800C;
 extern f32 lbl_803E8138;
 extern f32 lbl_803E8050;

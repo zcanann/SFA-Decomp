@@ -12934,7 +12934,7 @@ void fn_80295E90(int obj, int mode)
         }
         GameBit_Set(0xc30, 1);
         Sfx_PlayFromObject(obj, SFXmn_dimbos36);
-        (*(void (*)(int, int, int, int, int))(*(int*)(*lbl_803DCAB4 + 0xc)))(obj, 0x801, 0, 0x50, 0);
+        (*(void (*)(int, int, int, int, int))(*(int*)(*gBoneParticleEffectInterface + 0xc)))(obj, 0x801, 0, 0x50, 0);
         oldModel = Obj_GetActiveModel(obj);
         Obj_SetActiveModelIndex(obj, 2);
         newModel = Obj_GetActiveModel(obj);
@@ -12950,7 +12950,7 @@ void fn_80295E90(int obj, int mode)
         fn_80295CF4(obj, 1);
         ((ByteFlags*)((char*)inner + 0x3f3))->b08 = 0;
         ((ByteFlags*)((char*)inner + 0x3f4))->b80 = 0;
-        (*(void (*)(int, int, int, int, int))(*(int*)(*lbl_803DCAB4 + 0xc)))(obj, 0x801, 0, 0x50, 0);
+        (*(void (*)(int, int, int, int, int))(*(int*)(*gBoneParticleEffectInterface + 0xc)))(obj, 0x801, 0, 0x50, 0);
         oldModel = Obj_GetActiveModel(obj);
         Obj_SetActiveModelIndex(obj, 1);
         newModel = Obj_GetActiveModel(obj);
@@ -15814,7 +15814,7 @@ void fn_802AAF80(int obj, int inner, int a, int b, int c)
     }
     if (((PlayerState*)inner)->unk81C != 0)
     {
-        (*(void (*)(int, int, int, int, int))(*(int*)(*lbl_803DCAB4 + 0xc)))(
+        (*(void (*)(int, int, int, int, int))(*(int*)(*gBoneParticleEffectInterface + 0xc)))(
             obj, ((PlayerState*)inner)->unk81C, 0, 0x64, 0);
     }
     ((PlayerState*)inner)->unk81C = 0;
