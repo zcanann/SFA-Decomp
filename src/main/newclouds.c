@@ -1,5 +1,6 @@
 #include "main/newclouds_state.h"
 #include "main/newclouds.h"
+#include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/object_transform.h"
 #include "main/resource.h"
@@ -1382,7 +1383,6 @@ void titleScreenDrawFn_80093db4(void)
     GXSetMisc(1, 8);
 }
 
-extern void Sfx_PlayAtPositionFromObject(int obj, int sfx, f32 x, f32 y, f32 z);
 extern char lbl_8030F670[];
 extern f32 lbl_803DF228;
 extern f32 lbl_803DF22C;
@@ -1515,7 +1515,7 @@ void snowReposSnowCloud(int cloudId)
         -
             lbl_803DF22C * fwd[2];
         lbl_803DD19C = (u8*)lightningCreate(from, to, lbl_803DF230, lbl_803DF1BC, 0xf, 0xc0, 0);
-        Sfx_PlayAtPositionFromObject(0, 0x2c9, from[0], from[1], from[2]);
+        Sfx_PlayAtPositionFromObject(from[0], from[1], from[2], 0, 0x2c9);
         fl = ((u8*)lbl_8039A828[cloudId])[0x144b];
         if (fl & 8)
         {

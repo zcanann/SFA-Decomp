@@ -7,6 +7,7 @@ s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
 s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 u32 Sfx_PlayFromObjectLimited(u32 obj, u16 sfxId, int limit);
+void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u16 sfxId);
 void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId);
 void Sfx_StopFromObject(u32 obj, u32 sfxId);
 void Sfx_StopObjectChannel(u32 obj, u32 channel);
