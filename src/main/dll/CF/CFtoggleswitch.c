@@ -413,10 +413,10 @@ void magiccavebottom_update(int* obj)
 extern f32 lbl_803E3C80;
 extern f32 lbl_803E3C84;
 
-void infotext_update(int* obj)
+void infotext_update(int obj)
 {
     f32* sub = ((GameObject*)obj)->extra;
-    if (ObjTrigger_IsSet((int)obj) != 0 && fn_801334E0() == 0)
+    if (ObjTrigger_IsSet(obj) != 0 && fn_801334E0() == 0)
     {
         *sub = lbl_803E3C80;
     }
@@ -436,7 +436,7 @@ void infotext_update(int* obj)
     }
     if ((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0)
     {
-        objRenderFn_80041018((int)obj);
+        objRenderFn_80041018(obj);
     }
 }
 
@@ -687,14 +687,14 @@ void magiccavetop_update(int* obj)
             objfx_spawnArcedBurst(obj, 1, lbl_803E3C58, 5, 2, 0x32, lbl_803E3C5C, lbl_803E3C60, lbl_803E3C64, fx.pad,
                                   0);
             fx.y = lbl_803E3C68;
-            objfx_spawnArcedBurst(obj, 5, lbl_803E3C58, 5, 2, 0x14, t = lbl_803E3C6C, t, t, fx.pad, 0);
+            objfx_spawnArcedBurst(obj, 5, lbl_803E3C58, 5, 2, 0x14, 10.0f, 10.0f, 10.0f, fx.pad, 0);
         }
         else
         {
             objfx_spawnArcedBurst(obj, 1, lbl_803E3C58, 2, 2, 0x32, lbl_803E3C5C, lbl_803E3C60, lbl_803E3C64, fx.pad,
                                   0);
             fx.y = lbl_803E3C68;
-            objfx_spawnArcedBurst(obj, 5, lbl_803E3C58, 2, 2, 0x14, t = lbl_803E3C6C, t, t, fx.pad, 0);
+            objfx_spawnArcedBurst(obj, 5, lbl_803E3C58, 2, 2, 0x14, 10.0f, 10.0f, 10.0f, fx.pad, 0);
         }
     }
 }
