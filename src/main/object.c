@@ -2868,6 +2868,7 @@ void fn_800213D0(f32 * a, f32 * b, s16 * out0, s16 * out1, s16 * out2);
 extern void PSMTXRotAxisRad(f32* m, f32* axis, f32 angle);
 
 #pragma peephole on
+#pragma peephole off
 void fn_8002A5DC(u8* obj)
 {
     extern f32 lbl_803DCECC;
@@ -2918,6 +2919,7 @@ void fn_8002A5DC(u8* obj)
         fn_800213D0(vecA, vecB, &((GameObject*)obj)->anim.rotZ, &((GameObject*)obj)->anim.rotY, (s16*)obj);
     }
 }
+#pragma peephole reset
 
 
 #pragma peephole off
