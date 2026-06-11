@@ -2180,7 +2180,7 @@ void fn_80158494(s16* obj, u8* state)
                 *(f32*)(state + 0x310) = scale * (((lbl_803E2BA0 - dist) / lbl_803E2BA0) * *(f32*)(state + 0x2fc));
                 if (*(f32*)(state + 0x310) < lbl_803E2BBC)
                 {
-                    *(f32*)(state + 0x310) = lbl_803E2BBC;
+                    *(f32*)(state + 0x310) = *(f32 *)&lbl_803E2BBC;
                 }
             }
             if ((Curve_AdvanceAlongPath(base, *(f32*)(state + 0x310)) != 0 || *(int*)(base + 0x10) != 0)
