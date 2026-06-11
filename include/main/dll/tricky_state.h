@@ -45,9 +45,9 @@ typedef struct TrickyState {
     u32 heightTrackObjId;
     f32 trackedHeight;
     u8 pad64[0x8C - 0x64];
-    f32 unk8C;
-    f32 unk90;
-    f32 unk94;
+    f32 prevLocalPosX;
+    f32 prevLocalPosY;
+    f32 prevLocalPosZ;
     u16 patch[4]; /* curve-walk patch values (dll_DF trickyFn_8013b368); the
                      indexed s16 copy loop stays raw */
     u8 padA0[0xD0 - 0xA0]; /* 0xA0: f32 triples at stride 0xC (walker, raw) */
@@ -103,7 +103,7 @@ typedef struct TrickyState {
     f32 unk300;
     f32 unk304;
     f32 animPlaySpeed;
-    f32 unk30C;
+    f32 currentMoveProgress;
     f32 unk310;
     f32 unk314;
     f32 unk318;

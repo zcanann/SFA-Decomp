@@ -11,7 +11,7 @@ typedef struct SBCloudRunnerState {
     s32 unk10;
     u8 pad14[0x2C - 0x14];
     s16 unk2C;
-    s16 unk2E;
+    s16 rotZ;
     u8 pad30[0x4C - 0x30];
     f32 unk4C;
     f32 unk50;
@@ -517,7 +517,7 @@ int SB_CloudRunner_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     ((SBCloudRunnerState *)state)->unk50 = ((GameObject *)obj)->anim.localPosY;
     ((SBCloudRunnerState *)state)->unk54 = ((GameObject *)obj)->anim.localPosZ;
     ((SBCloudRunnerState *)state)->unk2C = (s16)(*(s16 *)obj - 0x4000);
-    ((SBCloudRunnerState *)state)->unk2E = ((GameObject *)obj)->anim.rotZ;
+    ((SBCloudRunnerState *)state)->rotZ = ((GameObject *)obj)->anim.rotZ;
     for (i = 0; i < animUpdate->eventCount; i++) {
         if (animUpdate->eventIds[i] == 1) {
             objHitDetectFn_80062e84(player, ((SBCloudRunnerState *)state)->unk10, 0);

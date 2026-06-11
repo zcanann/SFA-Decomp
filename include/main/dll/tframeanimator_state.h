@@ -20,7 +20,7 @@ typedef struct TFrameAnimatorState {
     s16 unk12;
     u8 phase;
     u8 unk15[0x268 - 0x15];
-    f32 unk268;
+    f32 primaryRadius;
     f32 unk26C;
     u8 unk270[0x274 - 0x270];
 } TFrameAnimatorState;

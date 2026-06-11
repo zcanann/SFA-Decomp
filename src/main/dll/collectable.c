@@ -1559,9 +1559,9 @@ void Tricky_update(int obj)
       Sfx_PlayFromObject(obj,(u16)sfx2);
     }
   }
-  ((TrickyState *)state)->unk8C = ((GameObject *)obj)->anim.previousLocalPosX;
-  ((TrickyState *)state)->unk90 = ((GameObject *)obj)->anim.previousLocalPosY;
-  ((TrickyState *)state)->unk94 = ((GameObject *)obj)->anim.previousLocalPosZ;
+  ((TrickyState *)state)->prevLocalPosX = ((GameObject *)obj)->anim.previousLocalPosX;
+  ((TrickyState *)state)->prevLocalPosY = ((GameObject *)obj)->anim.previousLocalPosY;
+  ((TrickyState *)state)->prevLocalPosZ = ((GameObject *)obj)->anim.previousLocalPosZ;
   if (*(int *)&((TrickyState *)state)->unk7B8 != 0) {
     ((TrickyState *)state)->unk7C0 += timeDelta;
     ((TrickyState *)state)->unk7C4 += timeDelta;
@@ -1680,12 +1680,12 @@ void Tricky_resumeAfterCommand(int obj,int state)
     }
     ((TrickyState *)state)->flags2DC = ((TrickyState *)state)->flags2DC & 0xffffef7f;
     ((TrickyState *)state)->unk2E8 = ((TrickyState *)state)->unk2E8 & 0xfffffffb;
-    ((TrickyState *)state)->unk30C = lbl_803E2574;
+    ((TrickyState *)state)->currentMoveProgress = lbl_803E2574;
     ((GameObject *)obj)->anim.alpha = 0xff;
   }
   else {
     ((GameObject *)obj)->anim.alpha = (int)(lbl_803E257C * ((GameObject *)obj)->anim.currentMoveProgress);
-    ((TrickyState *)state)->unk30C = ((GameObject *)obj)->anim.currentMoveProgress;
+    ((TrickyState *)state)->currentMoveProgress = ((GameObject *)obj)->anim.currentMoveProgress;
   }
 }
 
@@ -1754,7 +1754,7 @@ void trickyFn_80148d8c(int obj,int state)
     alpha = 0xff;
   }
   ((GameObject *)obj)->anim.alpha = alpha;
-  ((TrickyState *)state)->unk30C =
+  ((TrickyState *)state)->currentMoveProgress =
       lbl_803E256C + (f32)(0xff - ((GameObject *)obj)->anim.alpha) / lbl_803E257C;
   if (((GameObject *)obj)->anim.alpha < 5) {
     if ((((TrickyState *)state)->controlFlags & 0x40000000) != 0) {
@@ -1765,7 +1765,7 @@ void trickyFn_80148d8c(int obj,int state)
         GameBit_Set(*(s16 *)(setup + 0x1a),0);
       }
     }
-    ((TrickyState *)state)->unk30C = lbl_803E2574;
+    ((TrickyState *)state)->currentMoveProgress = lbl_803E2574;
     ((TrickyState *)state)->flags2DC = 0;
     ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
     ((GameObject *)obj)->anim.alpha = 0;

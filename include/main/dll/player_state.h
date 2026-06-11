@@ -95,7 +95,7 @@ typedef struct PlayerState {
     u8 pad4B6[0x4B8 - 0x4B6];
     void *unk4B8;
     u8 pad4BC[0x4C0 - 0x4BC];
-    int unk4C0;
+    int lastHitObject;
     int unk4C4;
     f32 unk4C8;
     f32 unk4CC;

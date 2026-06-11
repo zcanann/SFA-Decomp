@@ -4634,7 +4634,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             f32 z = lbl_803E7EA4;
             inner->unk828 = z;
             inner->unk8AB = 0;
-            inner->unk4C0 = 0;
+            inner->lastHitObject = 0;
             inner->unk8CD = -1;
             ((PlayerState *)state)->baddie.animSpeedC = z;
             ((PlayerState *)state)->baddie.animSpeedB = z;
@@ -4713,7 +4713,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             inner->unk7D8 = z;
             inner->unk828 = z;
             inner->unk8AB = 0;
-            inner->unk4C0 = 0;
+            inner->lastHitObject = 0;
         }
     }
     ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = 0xb;
@@ -4740,18 +4740,18 @@ int fn_8029BDB4(int obj, int state, f32 fv)
     }
     if ((((u8 *)(inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0))[0x88] &
          2) != 0 &&
-        inner->unk4C0 != 0) {
+        inner->lastHitObject != 0) {
         if (inner->unk8AB < inner->unk8AC) {
             f32 t = inner->unk828 - lbl_803E7EE0;
             inner->unk828 = t;
             if (t <= lbl_803E7EA4) {
                 ((void (*)(int, int, int, int, int))ObjHits_RecordObjectHit)(
-                    inner->unk4C0, obj, 0xb, 1, 0);
+                    inner->lastHitObject, obj, 0xb, 1, 0);
                 *(s8 *)((char *)inner + 0x8ab) = *(s8 *)((char *)inner + 0x8ab) + 1;
                 inner->unk828 = (f32)(u8)inner->unk8AD;
             }
         } else {
-            inner->unk4C0 = 0;
+            inner->lastHitObject = 0;
         }
     }
     {
@@ -4799,7 +4799,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
                     inner->unk8CD = (s8)i;
                     inner->unk8AB = 0;
                     inner->unk828 = lbl_803E7EA4;
-                    inner->unk4C0 = 0;
+                    inner->lastHitObject = 0;
                 }
                 break;
             }
@@ -6879,7 +6879,7 @@ void playerDoHitDetection(int obj)
                     ((PlayerState *)inner)->unk828 =
                         (f32)(u32)((PlayerState *)inner)->unk8AD;
                     ((PlayerState *)inner)->unk8AB += 1;
-                    ((PlayerState *)inner)->unk4C0 = *(int *)(sub + 0x50);
+                    ((PlayerState *)inner)->lastHitObject = *(int *)(sub + 0x50);
                 }
                 }
                 {
@@ -6933,7 +6933,7 @@ void playerDoHitDetection(int obj)
                     ((PlayerState *)inner)->unk828 =
                         (f32)(u32)((PlayerState *)inner)->unk8AD;
                     ((PlayerState *)inner)->unk8AB += 1;
-                    ((PlayerState *)inner)->unk4C0 =
+                    ((PlayerState *)inner)->lastHitObject =
                         Player_GetObjHitsState(obj)->lastHitObject;
                 }
                 }

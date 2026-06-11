@@ -55,7 +55,7 @@ undefined4 sidekickball_init(int obj)
   ((TFrameAnimatorState *)state)->unk26C = lbl_803E369C;
   ((GameObject *)obj)->objectFlags |= 0x2000;
   objDef = *(int *)&((GameObject *)obj)->anim.hitReactState;
-  ((TFrameAnimatorState *)state)->unk268 = (f32)((ObjHitsPriorityState *)objDef)->primaryRadius;
+  ((TFrameAnimatorState *)state)->primaryRadius = (f32)((ObjHitsPriorityState *)objDef)->primaryRadius;
   (*gPathControlInterface)->init(state, 0, 0x40007, 1);
   (*gPathControlInterface)->setLocalPointCollision(state, 1, lbl_80320F30, state + 0x268, 1);
   (*gPathControlInterface)->setup(state, 1, lbl_80320F30, state + 0x268, &pathFlag);

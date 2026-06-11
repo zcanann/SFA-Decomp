@@ -492,10 +492,10 @@ state_selected:
                 } else {
                     fn_800DA980(state + 0x420, prevNode, node);
                     RomCurve_stepClamped(state + 0x420, lbl_803E2484);
-                    yawA = getAngle(((TrickyState *)state)->unk8C - ((GameObject *)obj)->anim.localPosX,
-                                    ((TrickyState *)state)->unk94 - ((GameObject *)obj)->anim.localPosZ);
-                    yawB = getAngle(((TrickyState *)state)->unk8C - *(f32 *)(state + 0x488),
-                                    ((TrickyState *)state)->unk94 - *(f32 *)(state + 0x490));
+                    yawA = getAngle(((TrickyState *)state)->prevLocalPosX - ((GameObject *)obj)->anim.localPosX,
+                                    ((TrickyState *)state)->prevLocalPosZ - ((GameObject *)obj)->anim.localPosZ);
+                    yawB = getAngle(((TrickyState *)state)->prevLocalPosX - *(f32 *)(state + 0x488),
+                                    ((TrickyState *)state)->prevLocalPosZ - *(f32 *)(state + 0x490));
                     diff = yawA - yawB;
                     if (0x8000 < diff) {
                         diff = diff - 0xffff;
@@ -717,10 +717,10 @@ state_selected:
                 }
             walk_nodes_common:
                 if ((((TrickyState *)state)->unk534 == 0) || (wg != ((TrickyState *)state)->unk534)) {
-                    yawA = getAngle(((TrickyState *)state)->unk8C - ((GameObject *)obj)->anim.localPosX,
-                                    ((TrickyState *)state)->unk94 - ((GameObject *)obj)->anim.localPosZ);
-                    yawB = getAngle(((TrickyState *)state)->unk8C - *(f32 *)(state + 0x488),
-                                    ((TrickyState *)state)->unk94 - *(f32 *)(state + 0x490));
+                    yawA = getAngle(((TrickyState *)state)->prevLocalPosX - ((GameObject *)obj)->anim.localPosX,
+                                    ((TrickyState *)state)->prevLocalPosZ - ((GameObject *)obj)->anim.localPosZ);
+                    yawB = getAngle(((TrickyState *)state)->prevLocalPosX - *(f32 *)(state + 0x488),
+                                    ((TrickyState *)state)->prevLocalPosZ - *(f32 *)(state + 0x490));
                     diff = yawA - yawB;
                     if (0x8000 < diff) {
                         diff = diff - 0xffff;
@@ -762,10 +762,10 @@ state_selected:
             v = lbl_803E241C * timeDelta + velBefore;
             ((TrickyState *)state)->speed = (v < lbl_803E23DC) ? lbl_803E23DC : v;
         }
-        yawA = getAngle(((TrickyState *)state)->unk8C - ((GameObject *)obj)->anim.localPosX,
-                        ((TrickyState *)state)->unk94 - ((GameObject *)obj)->anim.localPosZ);
-        yawB = getAngle(((TrickyState *)state)->unk8C - *(f32 *)(state + 0x488),
-                        ((TrickyState *)state)->unk94 - *(f32 *)(state + 0x490));
+        yawA = getAngle(((TrickyState *)state)->prevLocalPosX - ((GameObject *)obj)->anim.localPosX,
+                        ((TrickyState *)state)->prevLocalPosZ - ((GameObject *)obj)->anim.localPosZ);
+        yawB = getAngle(((TrickyState *)state)->prevLocalPosX - *(f32 *)(state + 0x488),
+                        ((TrickyState *)state)->prevLocalPosZ - *(f32 *)(state + 0x490));
         diff = yawA - yawB;
         if (0x8000 < diff) {
             diff = diff - 0xffff;
@@ -931,10 +931,10 @@ state_selected:
             v = lbl_803E241C * timeDelta + velBefore;
             ((TrickyState *)state)->speed = (v < lbl_803E23DC) ? lbl_803E23DC : v;
         }
-        yawA = getAngle(((TrickyState *)state)->unk8C - ((GameObject *)obj)->anim.localPosX,
-                        ((TrickyState *)state)->unk94 - ((GameObject *)obj)->anim.localPosZ);
-        yawB = getAngle(((TrickyState *)state)->unk8C - *(f32 *)(state + 0x488),
-                        ((TrickyState *)state)->unk94 - *(f32 *)(state + 0x490));
+        yawA = getAngle(((TrickyState *)state)->prevLocalPosX - ((GameObject *)obj)->anim.localPosX,
+                        ((TrickyState *)state)->prevLocalPosZ - ((GameObject *)obj)->anim.localPosZ);
+        yawB = getAngle(((TrickyState *)state)->prevLocalPosX - *(f32 *)(state + 0x488),
+                        ((TrickyState *)state)->prevLocalPosZ - *(f32 *)(state + 0x490));
         diff = yawA - yawB;
         if (0x8000 < diff) {
             diff = diff - 0xffff;
@@ -1021,10 +1021,10 @@ state_selected:
             v = lbl_803E241C * timeDelta + velBefore;
             ((TrickyState *)state)->speed = (v < lbl_803E23DC) ? lbl_803E23DC : v;
         }
-        yawA = getAngle(((TrickyState *)state)->unk8C - ((GameObject *)obj)->anim.localPosX,
-                        ((TrickyState *)state)->unk94 - ((GameObject *)obj)->anim.localPosZ);
-        yawB = getAngle(((TrickyState *)state)->unk8C - *(f32 *)(state + 0x488),
-                        ((TrickyState *)state)->unk94 - *(f32 *)(state + 0x490));
+        yawA = getAngle(((TrickyState *)state)->prevLocalPosX - ((GameObject *)obj)->anim.localPosX,
+                        ((TrickyState *)state)->prevLocalPosZ - ((GameObject *)obj)->anim.localPosZ);
+        yawB = getAngle(((TrickyState *)state)->prevLocalPosX - *(f32 *)(state + 0x488),
+                        ((TrickyState *)state)->prevLocalPosZ - *(f32 *)(state + 0x490));
         diff = yawA - yawB;
         if (0x8000 < diff) {
             diff = diff - 0xffff;
