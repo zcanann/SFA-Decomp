@@ -2,9 +2,11 @@
 #define MAIN_DLL_DLL_80220608_SHARED_H
 
 #include "ghidra_import.h"
+#include "main/audio/sfx.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/gamebits.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/obj_placement.h"
@@ -24,10 +26,8 @@
 extern byte framesThisStep;
 extern int lbl_803DC380;
 extern f32 lbl_803E6BB0;
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
 extern void mm_free(void *ptr);
-extern int GameBit_Get(int id);
 extern void Obj_FreeObject(int obj);
 extern f32 lbl_803E6BC8;
 extern void cloudClearOverridePosition(int obj);
@@ -60,7 +60,6 @@ extern MapEventInterface **gMapEventInterface;
 extern EffectInterface **gPartfxInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int isGameTimerDisabled(void);
-extern void GameBit_Set(int id, int value);
 extern int randomGetRange(int min, int max);
 extern void ObjHitbox_SetStateIndex(int obj, int hitbox, int stateIndex);
 extern int Obj_GetActiveModel(int obj);
@@ -170,7 +169,6 @@ typedef struct {
 } PushBlockFlags;
 
 extern u8 fn_80296414(int player, int obj, int dir);
-extern void Sfx_SetObjectSfxVolume(int obj, int sound, int vol, f32 v);
 extern int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player);
 extern int Obj_GetPlayerObject(void);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32 *out);
@@ -179,7 +177,6 @@ extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern void objfx_spawnBoxBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
                                 int flags, f32 f8val, f32 mulX, f32 mulY, f32 mulZ);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sound);
 extern void ObjHits_DisableObject(int obj);
 extern void ObjHits_EnableObject(int obj);
 extern int gameBitIncrement(int id);
@@ -787,7 +784,6 @@ extern void Music_Trigger(int id, int p2);
 extern int getArwing(void);
 extern int ObjHits_GetPriorityHit(int obj, int *outHit, int *outIdx, int *outVol);
 extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
-extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int limit);
 extern int getAngle(f32 dx, f32 dz);
 extern f32 mathCosf(f32 x);
 extern void doRumble(f32 v);
@@ -855,7 +851,6 @@ extern f32 lbl_803DC3D0;
 extern f32 lbl_803DC3D4;
 extern f32 lbl_803DC3D8;
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int limit);
 extern void ObjHits_SetHitVolumeSlot(int obj, int p2, int p3, int p4);
 extern void projectileParticleFxFn_80099660(int obj, f32 p2, int p3);
 extern int ObjModel_GetTexture(int p1, int p2);
@@ -1036,13 +1031,11 @@ extern f32 lbl_803E7454;
 extern f32 lbl_803E7458;
 
 
-extern void Sfx_StopObjectChannel(int obj, int channel);
 extern f32 lbl_803E738C;
 extern int cmbsrc_update(int obj);
 
 
 extern void modelLightStruct_setSpecularColor(void *light, u8 r, u8 g, u8 b, int a);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sound);
 extern int *gSHthorntailAnimationInterface;
 extern f32 lbl_803E7360;
 extern f32 lbl_803E7364;
@@ -1345,7 +1338,6 @@ extern f32 lbl_803E6BF8;
 
 extern int objModelGetVecFn_800395d8(int model, int idx);
 extern f32 fn_802945E0(f32 ratio);
-extern void Sfx_SetObjectChannelVolume(int obj, int channel, int p3, f32 vol);
 extern double lbl_803E6F48;
 extern double lbl_803E6F50;
 extern f32 lbl_803E6F58;
