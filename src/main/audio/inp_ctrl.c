@@ -2,7 +2,7 @@
 #include "main/audio/inp_midi.h"
 extern int synthGetVoiceSlotChannelScale(int x);
 
-extern u32 lbl_803DC610;
+extern u32 sndRandSeed;
 extern s16 sndSintab[];
 
 /*
@@ -367,8 +367,8 @@ void inpSetExCtrl(McmdVoiceState* state, u32 ctrl, s16 value)
  */
 u16 sndRand(void)
 {
-    lbl_803DC610 = lbl_803DC610 * 0xA8351D63U;
-    return (u16)((lbl_803DC610 >> 6) & 0xffff);
+    sndRandSeed = sndRandSeed * 0xA8351D63U;
+    return (u16)((sndRandSeed >> 6) & 0xffff);
 }
 
 /*

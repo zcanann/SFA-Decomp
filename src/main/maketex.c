@@ -550,28 +550,28 @@ void ObjSeq_yield(ObjSeqState* seq, int value)
     seq->sequenceControlFlags |= 0x40;
 }
 
-extern int lbl_803DB72C;
+extern int objSeqObjs;
 extern int lbl_803DD07C;
 extern u8 lbl_803DD078;
 
 int ObjSeq_SetObjs(int a, int b, int c)
 {
     u8 v = (u8)c;
-    lbl_803DB72C = a;
+    objSeqObjs = a;
     lbl_803DD07C = b;
     lbl_803DD078 = v;
     return 1;
 }
 
 extern u8 lbl_803DD0D9;
-extern f32 lbl_803994EC[];
+extern f32 objSeqOverridePos[];
 
 int ObjSeq_setOverridePos(f32 x, f32 y, f32 z)
 {
     lbl_803DD0D9 = 1;
-    lbl_803994EC[0] = x;
-    lbl_803994EC[1] = y;
-    lbl_803994EC[2] = z;
+    objSeqOverridePos[0] = x;
+    objSeqOverridePos[1] = y;
+    objSeqOverridePos[2] = z;
     return 1;
 }
 

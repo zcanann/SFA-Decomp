@@ -95,7 +95,7 @@ extern int Sfx_IsPlayingFromObject(void* obj, int sfxId);
 extern void Sfx_SetObjectSfxVolume(void* obj, int sfxId, int volume, f32 p4);
 extern int* seqFn_800394a0(void);
 extern u8 lbl_803DB411;
-extern int lbl_803DB72C;
+extern int objSeqObjs;
 extern int lbl_803DB714;
 extern int lbl_803DB71C;
 extern u8 lbl_803DD0D9;
@@ -4024,9 +4024,9 @@ checked:
             {
                 *(s16*)setup = 6;
                 *(s16*)(setup + 0x1c) = ((GameObject*)obj)->anim.seqId + 4;
-                if (((GameObject*)obj)->anim.seqId == 0x443 && lbl_803DB72C != -1)
+                if (((GameObject*)obj)->anim.seqId == 0x443 && objSeqObjs != -1)
                 {
-                    *(s16*)(setup + 0x1c) = lbl_803DB72C + 4;
+                    *(s16*)(setup + 0x1c) = objSeqObjs + 4;
                 }
                 *(u16*)(walk2 + 4) |= 0x8000;
             }
@@ -4043,9 +4043,9 @@ checked:
                     *(s16*)setup = 6;
                     if (objId == 0x443)
                     {
-                        if (lbl_803DB72C != -1)
+                        if (objSeqObjs != -1)
                         {
-                            *(s16*)(setup + 0x1c) = lbl_803DB72C + 4;
+                            *(s16*)(setup + 0x1c) = objSeqObjs + 4;
                         }
                         else
                         {
@@ -4114,9 +4114,9 @@ checked:
             {
                 setup[4] = 1;
             }
-            if (*(s16*)setup == 0x443 && lbl_803DB72C != -1)
+            if (*(s16*)setup == 0x443 && objSeqObjs != -1)
             {
-                *(s16*)setup = lbl_803DB72C;
+                *(s16*)setup = objSeqObjs;
             }
             newObj = Obj_SetupObject(setup, 5, -1, -1, parent);
             ((GameObject*)newObj)->seqIndex = -2;
