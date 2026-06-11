@@ -152,11 +152,7 @@ int fn_8023A6A4(int p1, f32 a, f32 b, f32 c)
     yaw = (s16)getAngle(dx, dy);
     if ((s16)getAngle(dist, dz) > 0x2ee0 && dz > lbl_803DC4C0)
         result = 1;
-    val = dist / b;
-    if (val < -a)
-        val = -a;
-    else if (val > a)
-        val = a;
+    val = (dist / b < -a) ? -a : ((dist / b > a) ? a : dist / b);
     ang = lbl_803E74A0 * (f32)yaw / lbl_803E74A4;
     *(f32*)(p1 + 0xd8) = val * mathSinf(ang);
     *(f32*)(p1 + 0xdc) = val * mathCosf(ang);
