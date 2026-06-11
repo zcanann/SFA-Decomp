@@ -1,5 +1,6 @@
 /* proximitymine_update - ProximityMine object update/render handlers [8021122C-802113F8) */
 #include "main/proximitymine.h"
+#include "main/audio/sfx.h"
 #include "main/objlib.h"
 #include "main/effect_interfaces.h"
 
@@ -19,8 +20,6 @@ extern void modelLightStruct_updateGlowAlpha(void* light);
 extern int timerCountDown(void* timer);
 extern int objUpdateOpacity(void* obj);
 extern int hitDetectFn_800658a4(void* obj, f32 x, f32 y, f32 z, f32* out, int flag);
-extern void Sfx_PlayFromObject(void* obj, u16 sfxId);
-extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern ProximityMineEffect* modelLightStruct_createPointLight(void* obj, int r, int g, int b, int a);
 extern int* objFindTexture(void* obj, int a, int b);
 extern void modelLightStruct_setupGlow(void* light, int a, int b, int c, int d, u8 e, f32 f);
@@ -180,13 +179,13 @@ void proximitymine_update(ProximityMineObject* obj)
             {
                 hitDetectFn_800658a4(obj, obj->posX, obj->posY, obj->posZ, &groundY, 0);
                 obj->posY -= groundY;
-                Sfx_PlayFromObject(obj, 0x2e6);
-                Sfx_PlayFromObject(obj, 0x2e8);
+                Sfx_PlayFromObject((u32)obj, 0x2e6);
+                Sfx_PlayFromObject((u32)obj, 0x2e8);
             }
             else
             {
-                Sfx_PlayFromObject(obj, 0x2e7);
-                Sfx_PlayFromObject(obj, 0x2e9);
+                Sfx_PlayFromObject((u32)obj, 0x2e7);
+                Sfx_PlayFromObject((u32)obj, 0x2e9);
             }
         }
         if (state->effectHandle == NULL)
@@ -220,7 +219,7 @@ void proximitymine_update(ProximityMineObject* obj)
     {
         if (fn_80080150(state->resetTimer) != 0)
         {
-            Sfx_PlayFromObject(obj, 0xef);
+            Sfx_PlayFromObject((u32)obj, 0xef);
             if (state->effectHandle == NULL)
             {
                 state->effectHandle = modelLightStruct_createPointLight(obj, 0xff, 0, 0, 0);
@@ -256,7 +255,7 @@ void proximitymine_update(ProximityMineObject* obj)
                 break;
             }
         case 0:
-            Sfx_StopObjectChannel(obj, 0x40);
+            Sfx_StopObjectChannel((u32)obj, 0x40);
             if (timerCountDown(state->renderTimer) != 0)
             {
                 Obj_FreeObject(obj);
@@ -284,7 +283,7 @@ void proximitymine_update(ProximityMineObject* obj)
                 params.unk2 = 0;
                 params.angle = obj->angle;
                 vecRotateZXY(&params, &obj->velocityX);
-                Sfx_PlayFromObject(obj, 0xf0);
+                Sfx_PlayFromObject((u32)obj, 0xf0);
             }
         case 1:
             if (timerCountDown(state->launchTimer) != 0)
@@ -325,7 +324,7 @@ void proximitymine_update(ProximityMineObject* obj)
             {
                 if ((state->effectHandle->visible != 0) && (state->effectVisible == 0))
                 {
-                    Sfx_PlayFromObject(obj, 0x42e);
+                    Sfx_PlayFromObject((u32)obj, 0x42e);
                 }
                 state->effectVisible = state->effectHandle->visible;
             }

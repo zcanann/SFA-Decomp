@@ -1,8 +1,7 @@
 #include "main/proximitymine.h"
+#include "main/audio/sfx.h"
 
 extern void* Obj_GetPlayerObject(void);
-extern void Sfx_StopFromObject(void* obj, u16 sfxId);
-extern void Sfx_PlayFromObject(void* obj, u16 sfxId);
 extern void ObjHits_EnableObject(void* obj);
 extern void ObjHits_MarkObjectPositionDirty(void* obj);
 extern void ObjHitbox_SetCapsuleBounds(void* obj, int height, int param3, int param4);
@@ -26,9 +25,9 @@ void proximitymine_resetToIdle(ProximityMineObject* obj)
 
     state = obj->state;
     Obj_GetPlayerObject();
-    Sfx_StopFromObject(obj, 0x2e9);
-    Sfx_StopFromObject(obj, 0x2e8);
-    Sfx_PlayFromObject(obj, 0xf1);
+    Sfx_StopFromObject((u32)obj, 0x2e9);
+    Sfx_StopFromObject((u32)obj, 0x2e8);
+    Sfx_PlayFromObject((u32)obj, 0xf1);
     zero = lbl_803E6768;
     obj->velocityX = zero;
     obj->velocityZ = zero;
