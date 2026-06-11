@@ -1,7 +1,18 @@
+/*
+ * wmnewcrystal (DLL 0x212) - the blue/green power crystals on the world
+ * map. While the active game bit is set, the blue crystal runs its two
+ * glow effects every sequence tick (plus an ambient particle pair until
+ * the ambient bit is granted) and the green crystal sprays directional
+ * bursts from its two path points. Sequence event 1 yanks the crystal
+ * toward the camera, detonates it and hides the model; event 2 retires
+ * the green crystal's bursts.
+ */
 #include "main/dll/WM/wm_shared.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
+#include "main/objanim_update.h"
+#include "main/object_descriptor.h"
 
 #define WMNEWCRYSTAL_GAMEBIT_ACTIVE 0xd27
 #define WMNEWCRYSTAL_GAMEBIT_AMBIENT_FX 0xe49
@@ -11,27 +22,30 @@
 
 typedef struct WmNewCrystalState
 {
-    u8 pad0[0x34];
-    u8 altFxParams[0x34];
-    u8 active;
+    u8 fxState[0x34];    /* 0x00: primary glow-effect block (WM_newcrystalFn_800969b0) */
+    u8 altFxState[0x34]; /* 0x34: secondary glow-effect block */
+    u8 active;           /* 0x68: green crystal still bursting */
+    u8 pad69[3];
 } WmNewCrystalState;
 
-typedef struct WmNewCrystalEventData
-{
-    u8 pad0[0x81];
-    u8 events[10];
-    u8 eventCount;
-} WmNewCrystalEventData;
+STATIC_ASSERT(offsetof(WmNewCrystalState, altFxState) == 0x34);
+STATIC_ASSERT(offsetof(WmNewCrystalState, active) == 0x68);
+STATIC_ASSERT(sizeof(WmNewCrystalState) == 0x6C);
 
+/* layout-compatible with the PartFxSpawnParams head (effect_interfaces.h) */
 typedef struct WmNewCrystalParticleParams
 {
     u8 pad0[6];
-    s16 pathPoint;
+    s16 pathPoint; /* 0x06 */
     u8 pad8[4];
-    f32 x;
-    f32 y;
-    f32 z;
+    f32 x; /* 0x0C */
+    f32 y; /* 0x10 */
+    f32 z; /* 0x14 */
 } WmNewCrystalParticleParams;
+
+STATIC_ASSERT(offsetof(WmNewCrystalParticleParams, pathPoint) == 0x06);
+STATIC_ASSERT(offsetof(WmNewCrystalParticleParams, x) == 0x0C);
+STATIC_ASSERT(sizeof(WmNewCrystalParticleParams) == 0x18);
 
 extern void* Camera_GetCurrentViewSlot(void);
 extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
@@ -39,68 +53,63 @@ extern void PSVECNormalize(f32 * src, f32 * dst);
 extern void PSVECScale(f32* src, f32* dst, f32 scale);
 extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
 extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
-extern void WM_newcrystalFn_800969b0(int* obj, void* params, int enabled, f32 a, f32 b, f32 c,
-                                     f32 d, f32 e);
-extern void objfx_spawnDirectionalBurst(int* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin,
-                                        int flags, f32 f8val, f32 mult);
-extern f32 lbl_803E6038;
-extern f32 lbl_803E603C;
-extern f32 lbl_803E6040;
-extern f32 lbl_803E6044;
-extern f32 lbl_803E6048;
-extern f32 lbl_803E604C;
-extern f32 lbl_803E6050;
-extern f32 lbl_803E6054;
-extern f32 lbl_803E6058;
+extern void WM_newcrystalFn_800969b0(int* obj, void* params, f32 a, f32 b, f32 c, f32 d, f32 e,
+                                     int enabled);
+extern void objfx_spawnDirectionalBurst(int* obj, int idx, f32 scale, int kind, int mode, int chance,
+                                        f32 speed, void* origin, int flags);
 
-int wmnewcrystal_getExtraSize(void) { return 0x6c; }
+int wmnewcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor);
+int wmnewcrystal_getExtraSize(void);
+int wmnewcrystal_getObjectTypeId(void);
+void wmnewcrystal_free(void);
+void wmnewcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis);
+void wmnewcrystal_hitDetect(void);
+void wmnewcrystal_update(void);
+void wmnewcrystal_init(GameObject* obj, void* setup);
+void wmnewcrystal_release(void);
+void wmnewcrystal_initialise(void);
 
-int wmnewcrystal_getObjectTypeId(void) { return 0x0; }
+ObjectDescriptor gWM_newcrystalObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    wmnewcrystal_initialise,
+    wmnewcrystal_release,
+    0,
+    (ObjectDescriptorCallback)wmnewcrystal_init,
+    wmnewcrystal_update,
+    wmnewcrystal_hitDetect,
+    (ObjectDescriptorCallback)wmnewcrystal_render,
+    wmnewcrystal_free,
+    (ObjectDescriptorCallback)wmnewcrystal_getObjectTypeId,
+    wmnewcrystal_getExtraSize,
+};
 
-void wmnewcrystal_free(void)
-{
-}
-
-void wmnewcrystal_hitDetect(void)
-{
-}
-
-void wmnewcrystal_update(void)
-{
-}
-
-void wmnewcrystal_release(void)
-{
-}
-
-void wmnewcrystal_initialise(void)
-{
-}
-
-int wmnewcrystal_SeqFn(int* obj, int unused, WmNewCrystalEventData* eventData)
+int wmnewcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
 {
     WmNewCrystalState* state;
     WmNewCrystalParticleParams params;
     f32 cameraDelta[3];
     int i;
 
-    state = ((GameObject*)obj)->extra;
-    for (i = 0; i < eventData->eventCount; i++)
+    state = obj->extra;
+    for (i = 0; i < actor->eventCount; i++)
     {
-        switch (eventData->events[i])
+        switch (actor->eventIds[i])
         {
         case 1:
             PSVECSubtract((f32*)((char*)Camera_GetCurrentViewSlot() + 0xc),
-                          &((GameObject*)obj)->anim.localPosX, cameraDelta);
+                          &obj->anim.localPosX, cameraDelta);
             PSVECNormalize(cameraDelta, cameraDelta);
-            PSVECScale(cameraDelta, cameraDelta, lbl_803E6038);
-            PSVECAdd(&((GameObject*)obj)->anim.localPosX, cameraDelta, &((GameObject*)obj)->anim.localPosX);
-            ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
-            ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
-            ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
-            spawnExplosion(obj, lbl_803E6038, 1, 1, 0, 0, 0, 0, 0);
-            ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
-            if (((GameObject*)obj)->anim.seqId == WMNEWCRYSTAL_OBJECT_BLUE)
+            PSVECScale(cameraDelta, cameraDelta, 100.0f);
+            PSVECAdd(&obj->anim.localPosX, cameraDelta, &obj->anim.localPosX);
+            obj->anim.worldPosX = obj->anim.localPosX;
+            obj->anim.worldPosY = obj->anim.localPosY;
+            obj->anim.worldPosZ = obj->anim.localPosZ;
+            spawnExplosion((int*)obj, 100.0f, 1, 1, 0, 0, 0, 0, 0);
+            obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
+            if (obj->anim.seqId == WMNEWCRYSTAL_OBJECT_BLUE)
             {
                 GameBit_Set(WMNEWCRYSTAL_GAMEBIT_ACTIVE, 0);
             }
@@ -116,51 +125,71 @@ int wmnewcrystal_SeqFn(int* obj, int unused, WmNewCrystalEventData* eventData)
         return 0;
     }
 
-    if (((GameObject*)obj)->anim.seqId == WMNEWCRYSTAL_OBJECT_BLUE)
+    if (obj->anim.seqId == WMNEWCRYSTAL_OBJECT_BLUE)
     {
         if (GameBit_Get(WMNEWCRYSTAL_GAMEBIT_AMBIENT_FX) == 0)
         {
             (*gPartfxInterface)->spawnObject(obj, WMNEWCRYSTAL_PARTICLE_ID, NULL, 2, -1, NULL);
             (*gPartfxInterface)->spawnObject(obj, WMNEWCRYSTAL_PARTICLE_ID, &params, 2, -1, NULL);
         }
-        WM_newcrystalFn_800969b0(obj, state, 1, lbl_803E603C, lbl_803E6040, lbl_803E6044,
-                                 lbl_803E6048, lbl_803E6038);
-        WM_newcrystalFn_800969b0(obj, state->altFxParams, 1, lbl_803E603C, lbl_803E6040,
-                                 lbl_803E604C, lbl_803E6048, lbl_803E6050);
-        return 0;
+        WM_newcrystalFn_800969b0((int*)obj, state, 640.0f, 36.0f, -60.0f, 5.0f, 100.0f, 1);
+        WM_newcrystalFn_800969b0((int*)obj, state->altFxState, 640.0f, 36.0f, 60.0f, 5.0f, 0.0f, 1);
     }
-
-    if (((GameObject*)obj)->anim.seqId == WMNEWCRYSTAL_OBJECT_GREEN && state->active != 0)
+    else if (obj->anim.seqId == WMNEWCRYSTAL_OBJECT_GREEN && state->active != 0)
     {
         ObjPath_GetPointLocalPosition((int)obj, 0, &params.x, &params.y, &params.z);
-        params.x *= ((GameObject*)obj)->anim.rootMotionScale;
-        params.y *= ((GameObject*)obj)->anim.rootMotionScale;
-        params.z *= ((GameObject*)obj)->anim.rootMotionScale;
+        params.x *= obj->anim.rootMotionScale;
+        params.y *= obj->anim.rootMotionScale;
+        params.z *= obj->anim.rootMotionScale;
         params.pathPoint = 1;
-        objfx_spawnDirectionalBurst(obj, 5, 1, 1, 10, &params, 0, lbl_803E6054, lbl_803E6058);
+        objfx_spawnDirectionalBurst((int*)obj, 5, 2.0f, 1, 1, 10, 4.0f, &params, 0);
 
         ObjPath_GetPointLocalPosition((int)obj, 1, &params.x, &params.y, &params.z);
-        params.x *= ((GameObject*)obj)->anim.rootMotionScale;
-        params.y *= ((GameObject*)obj)->anim.rootMotionScale;
-        params.z *= ((GameObject*)obj)->anim.rootMotionScale;
+        params.x *= obj->anim.rootMotionScale;
+        params.y *= obj->anim.rootMotionScale;
+        params.z *= obj->anim.rootMotionScale;
         params.pathPoint = 0;
-        objfx_spawnDirectionalBurst(obj, 5, 1, 1, 10, &params, 0, lbl_803E6054, lbl_803E6058);
+        objfx_spawnDirectionalBurst((int*)obj, 5, 2.0f, 1, 1, 10, 4.0f, &params, 0);
     }
     return 0;
 }
 
-void wmnewcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
+int wmnewcrystal_getExtraSize(void) { return sizeof(WmNewCrystalState); }
+
+int wmnewcrystal_getObjectTypeId(void) { return 0x0; }
+
+void wmnewcrystal_free(void)
 {
-    objRenderFn_8003b8f4(lbl_803E605C);
 }
 
-void wmnewcrystal_init(int* obj, u8* init)
+void wmnewcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
-    WmNewCrystalState* inner = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)wmnewcrystal_SeqFn;
-    if ((*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot) > 1)
+    objRenderFn_8003b8f4(1.0f);
+}
+
+void wmnewcrystal_hitDetect(void)
+{
+}
+
+void wmnewcrystal_update(void)
+{
+}
+
+void wmnewcrystal_init(GameObject* obj, void* setup)
+{
+    WmNewCrystalState* state = obj->extra;
+    obj->animEventCallback = (void*)wmnewcrystal_SeqFn;
+    if ((*gMapEventInterface)->getMode(obj->anim.mapEventSlot) > 1)
     {
         GameBit_Set(WMNEWCRYSTAL_GAMEBIT_ACTIVE, 1);
-        inner->active = 1;
+        state->active = 1;
     }
+}
+
+void wmnewcrystal_release(void)
+{
+}
+
+void wmnewcrystal_initialise(void)
+{
 }

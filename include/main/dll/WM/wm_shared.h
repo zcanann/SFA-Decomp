@@ -301,7 +301,6 @@ extern void Music_Trigger(int id, int a);
 extern void timeOfDayFn_80055000(void);
 extern int lbl_803DC148;
 extern f32 lbl_803E60F0;
-extern f32 lbl_803E605C;
 extern f32 lbl_803E5F94;
 extern void vfplift1_updateState(int obj);
 extern void vfplift23_updateState(int obj);
