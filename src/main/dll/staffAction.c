@@ -1174,7 +1174,7 @@ void updateConstrainedChaseVelocity(int obj, f32 targetX, f32 targetY, f32 targe
         case 1:
             vx = 0.0f;
             len = sqrtf(vy * vy + vz * vz);
-            if (len != 0.0f)
+            if (len != lbl_803E2FDC)
             {
                 scale = state->speed / len;
                 vy *= scale;
@@ -1185,7 +1185,7 @@ void updateConstrainedChaseVelocity(int obj, f32 targetX, f32 targetY, f32 targe
         case 3:
             vz = 0.0f;
             len = sqrtf(vx * vx + vy * vy);
-            if (len != 0.0f)
+            if (len != lbl_803E2FDC)
             {
                 scale = state->speed / len;
                 vx *= scale;
@@ -1196,7 +1196,7 @@ void updateConstrainedChaseVelocity(int obj, f32 targetX, f32 targetY, f32 targe
         case 5:
             vy = 0.0f;
             len = sqrtf(vx * vx + vz * vz);
-            if (len != 0.0f)
+            if (len != lbl_803E2FDC)
             {
                 scale = state->speed / len;
                 vx *= scale;
@@ -1210,7 +1210,7 @@ void updateConstrainedChaseVelocity(int obj, f32 targetX, f32 targetY, f32 targe
             vy = -(dot * state->surfaceNormalY - vy);
             vz = -(dot * state->surfaceNormalZ - vz);
             len = sqrtf(vz * vz + (vx * vx + vy * vy));
-            if (len != 0.0f)
+            if (len != lbl_803E2FDC)
             {
                 scale = state->speed / len;
                 vx *= scale;
