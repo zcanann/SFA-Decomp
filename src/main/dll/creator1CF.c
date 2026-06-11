@@ -32,10 +32,10 @@ extern f32 lbl_803E51DC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_19E_free(int arg1)
+void dll_19E_free(int param_1)
 {
-    (*gModgfxInterface)->detachSource((void*)arg1);
-    (*gExpgfxInterface)->freeSource2((u32)arg1);
+    (*gModgfxInterface)->detachSource((void*)param_1);
+    (*gExpgfxInterface)->freeSource2((u32)param_1);
 }
 
 /*
@@ -51,8 +51,8 @@ void dll_19E_free(int arg1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_19E_render(int obj, int arg2, int arg3, int arg4,
-                    int arg5, s8 visible)
+void dll_19E_render(int param_1, int param_2, int param_3, int param_4,
+                    int param_5, s8 visible)
 {
     int state;
     u8* camera;
@@ -77,7 +77,7 @@ void dll_19E_render(int obj, int arg2, int arg3, int arg4,
     f32 gridB[2];
     int traceOut[2];
 
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&((GameObject*)param_1)->extra;
     if (visible == 0)
     {
         *(s16*)(state + 4) = 0;
@@ -87,9 +87,9 @@ void dll_19E_render(int obj, int arg2, int arg3, int arg4,
     {
         *(u8*)(state + 0xa) = 1;
         camera = (u8*)Camera_GetCurrentViewSlot();
-        stk.delta[0] = *(f32*)(camera + 0xc) - ((GameObject*)obj)->anim.localPosX;
-        stk.delta[1] = *(f32*)(camera + 0x10) - ((GameObject*)obj)->anim.localPosY;
-        stk.delta[2] = *(f32*)(camera + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+        stk.delta[0] = *(f32*)(camera + 0xc) - ((GameObject*)param_1)->anim.localPosX;
+        stk.delta[1] = *(f32*)(camera + 0x10) - ((GameObject*)param_1)->anim.localPosY;
+        stk.delta[2] = *(f32*)(camera + 0x14) - ((GameObject*)param_1)->anim.localPosZ;
         dist = sqrtf(stk.delta[2] * stk.delta[2] + (stk.delta[0] * stk.delta[0] + stk.delta[1] * stk.delta[1]));
         if (dist > lbl_803E51C8)
         {
@@ -106,9 +106,9 @@ void dll_19E_render(int obj, int arg2, int arg3, int arg4,
             midA[1] = facy;
             facz = lbl_803E51D0 * nz;
             midA[2] = facz;
-            midA[0] = facx + ((GameObject*)obj)->anim.localPosX;
-            midA[1] = facy + ((GameObject*)obj)->anim.localPosY;
-            midA[2] = facz + ((GameObject*)obj)->anim.localPosZ;
+            midA[0] = facx + ((GameObject*)param_1)->anim.localPosX;
+            midA[1] = facy + ((GameObject*)param_1)->anim.localPosY;
+            midA[2] = facz + ((GameObject*)param_1)->anim.localPosZ;
             facx2 = lbl_803E51D4 * nx;
             midB[0] = facx2;
             facy2 = lbl_803E51D4 * ny;
@@ -123,7 +123,7 @@ void dll_19E_render(int obj, int arg2, int arg3, int arg4,
             if (voxmaps_traceLine(gridA, gridB, traceOut, 0, 0) == 0)
             {
                 *(u8*)(state + 0xa) = 0;
-                (*gExpgfxInterface)->freeSource(obj);
+                (*gExpgfxInterface)->freeSource(param_1);
             }
         }
         if (*(s16*)(state + 4) > 0)
@@ -137,7 +137,7 @@ void dll_19E_render(int obj, int arg2, int arg3, int arg4,
                 stk.args.x = lbl_803E51D8;
                 stk.args.y = lbl_803E51DC;
                 stk.args.z = lbl_803E51D8;
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x1f7, &stk.args, 0x12, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)param_1, 0x1f7, &stk.args, 0x12, -1, NULL);
             }
             *(s16*)(state + 4) = (s16)(randomGetRange(-10, 10) + 0x3c);
         }

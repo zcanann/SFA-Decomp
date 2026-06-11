@@ -132,38 +132,38 @@ void dll_127_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_127_init(short* arg1, int arg2)
+void dll_127_init(short* param_1, int param_2)
 {
     ObjAnimComponent* objAnim;
-    float fa;
-    uint uval;
+    float fVar1;
+    uint uVar2;
     u8 b;
 
-    objAnim = (ObjAnimComponent*)arg1;
-    arg1[3] = arg1[3] | 2;
-    b = *(u8*)(arg2 + 0x19);
-    fa = (f32)(int)
+    objAnim = (ObjAnimComponent*)param_1;
+    param_1[3] = param_1[3] | 2;
+    b = *(u8*)(param_2 + 0x19);
+    fVar1 = (f32)(int)
     b;
     if ((f32)(int)b < lbl_803E3D64
     )
     {
-        fa = *(f32*)&lbl_803E3D64;
+        fVar1 = *(f32*)&lbl_803E3D64;
     }
-    fa = fa * lbl_803E3D68;
-    *(float*)(arg1 + 4) = *(float*)(*(int*)(arg1 + 0x28) + 4) * fa;
-    if (*(float**)(arg1 + 0x32) != (float*)0x0)
+    fVar1 = fVar1 * lbl_803E3D68;
+    *(float*)(param_1 + 4) = *(float*)(*(int*)(param_1 + 0x28) + 4) * fVar1;
+    if (*(float**)(param_1 + 0x32) != (float*)0x0)
     {
-        **(float**)(arg1 + 0x32) = **(float**)(arg1 + 0x28) * fa;
+        **(float**)(param_1 + 0x32) = **(float**)(param_1 + 0x28) * fVar1;
     }
-    objAnim->bankIndex = (s8) * (u8*)(arg2 + 0x18);
-    uval = *(byte*)(arg2 + 0x1a) & 0x3f;
-    *arg1 = (short)(uval << 10);
+    objAnim->bankIndex = (s8) * (u8*)(param_2 + 0x18);
+    uVar2 = *(byte*)(param_2 + 0x1a) & 0x3f;
+    *param_1 = (short)(uVar2 << 10);
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
     }
-    *(undefined4*)(arg1 + 0x7a) = 0;
-    *(undefined4*)(arg1 + 0x7c) = 0;
+    *(undefined4*)(param_1 + 0x7a) = 0;
+    *(undefined4*)(param_1 + 0x7c) = 0;
     return;
 }
 
@@ -443,7 +443,7 @@ void campfire_free(int obj)
     }
 }
 
-void campfire_render(int obj, int arg2, int arg3, int arg4, int arg5, s8 visible)
+void campfire_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     void** state;
     void* effect;

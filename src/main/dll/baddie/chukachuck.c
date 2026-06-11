@@ -49,10 +49,10 @@ extern f32 lbl_803E642C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfpfloorbar_update(int obj)
+void dfpfloorbar_update(int param_1)
 {
-    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
-    DfpFloorbarState* state = ((GameObject*)obj)->extra;
+    int iVar6 = *(int*)&((GameObject*)param_1)->anim.placementData;
+    DfpFloorbarState* state = ((GameObject*)param_1)->extra;
     s16 score = -1;
     int mode;
     u8 active;
@@ -62,7 +62,7 @@ void dfpfloorbar_update(int obj)
     f32 xMid;
     f32 zDelta;
 
-    mode = ((GameObject*)obj)->anim.mapEventSlot;
+    mode = ((GameObject*)param_1)->anim.mapEventSlot;
     mode = (*gMapEventInterface)->getMode(mode);
 
     switch ((u8)mode)
@@ -71,14 +71,14 @@ void dfpfloorbar_update(int obj)
         if (state->modeIndex > 5) return;
         if (GameBit_Get(0xe57) != 0)
         {
-            ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->unkC - lbl_803E640C;
+            ((GameObject*)param_1)->anim.localPosY = ((DfpfloorbarPlacement*)iVar6)->unkC - lbl_803E640C;
             return;
         }
         break;
     case 2:
         if (GameBit_Get(0xe58) != 0)
         {
-            ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->unkC - lbl_803E640C;
+            ((GameObject*)param_1)->anim.localPosY = ((DfpfloorbarPlacement*)iVar6)->unkC - lbl_803E640C;
             return;
         }
         break;
@@ -121,13 +121,13 @@ void dfpfloorbar_update(int obj)
     active = state->active;
     if (active != 0)
     {
-        if (((GameObject*)obj)->anim.localPosY > ((DfpfloorbarPlacement*)placement)->unkC - lbl_803E640C)
+        if (((GameObject*)param_1)->anim.localPosY > ((DfpfloorbarPlacement*)iVar6)->unkC - lbl_803E640C)
         {
-            Sfx_KeepAliveLoopedObjectSound(obj, SFXfoot_water_walk_2);
-            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - timeDelta / lbl_803E6410;
-            if (((GameObject*)obj)->anim.localPosY <= ((DfpfloorbarPlacement*)placement)->unkC - lbl_803E640C)
+            Sfx_KeepAliveLoopedObjectSound(param_1, SFXfoot_water_walk_2);
+            ((GameObject*)param_1)->anim.localPosY = ((GameObject*)param_1)->anim.localPosY - timeDelta / lbl_803E6410;
+            if (((GameObject*)param_1)->anim.localPosY <= ((DfpfloorbarPlacement*)iVar6)->unkC - lbl_803E640C)
             {
-                ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->unkC - lbl_803E640C;
+                ((GameObject*)param_1)->anim.localPosY = ((DfpfloorbarPlacement*)iVar6)->unkC - lbl_803E640C;
             }
         }
         return;
@@ -136,19 +136,19 @@ void dfpfloorbar_update(int obj)
     if (state->requiredScore == 0) return;
     if (active == 0)
     {
-        ((GameObject*)obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->unkC;
+        ((GameObject*)param_1)->anim.localPosY = ((DfpfloorbarPlacement*)iVar6)->unkC;
     }
     if (state->active != 0) return;
 
     playerObj = Obj_GetPlayerObject();
     if (playerObj == NULL) return;
 
-    yDelta = ((GameObject*)obj)->anim.localPosY - *(f32*)(playerObj + 0x10);
+    yDelta = ((GameObject*)param_1)->anim.localPosY - *(f32*)(playerObj + 0x10);
     if (yDelta < 0.0f) yDelta = yDelta * lbl_803E6414;
     if (yDelta < 100.0f)
     {
-        xMid = *(f32*)(playerObj + 0xc) - (((GameObject*)obj)->anim.localPosX - 100.0f);
-        zDelta = ((GameObject*)obj)->anim.localPosZ - *(f32*)(playerObj + 0x14);
+        xMid = *(f32*)(playerObj + 0xc) - (((GameObject*)param_1)->anim.localPosX - 100.0f);
+        zDelta = ((GameObject*)param_1)->anim.localPosZ - *(f32*)(playerObj + 0x14);
         if (zDelta < 0.0f) zDelta = zDelta * lbl_803E6414;
         if (zDelta < 18.0f)
         {

@@ -268,8 +268,8 @@ void camcontrol_updateTargetAction(int camState, int targetObj)
     short classId;
     int buttons;
     int cond;
-    CamcontrolAction43Payload tmp;
-    CamcontrolAction44Payload tmp2;
+    CamcontrolAction43Payload local_28;
+    CamcontrolAction44Payload local_24;
     longlong convHeight;
 
     if (*(void**)(targetObj + 0xc0) == NULL)
@@ -300,13 +300,13 @@ void camcontrol_updateTargetAction(int camState, int targetObj)
         if ((((buttons & 0x10) != 0) && (*(short*)(targetObj + 0x44) == 1)) &&
             (cond = objFn_802962b4(targetObj), cond != 0))
         {
-            tmp2.distance = cameraMtxVar57->minDistance;
-            tmp2.yOffset = cameraMtxVar57->lowerHeightOffset;
+            local_24.distance = cameraMtxVar57->minDistance;
+            local_24.yOffset = cameraMtxVar57->lowerHeightOffset;
             convHeight = (longlong)(int)
             cameraMtxVar57->targetHeight;
-            tmp2.height = (int)cameraMtxVar57->targetHeight;
+            local_24.height = (int)cameraMtxVar57->targetHeight;
             cameraSetInterpMode(0);
-            (*gCameraInterface)->setMode(0x44, 1, 0, 0xc, &tmp2, 0xf, 0xfe);
+            (*gCameraInterface)->setMode(0x44, 1, 0, 0xc, &local_24, 0xf, 0xfe);
         }
         else
         {
@@ -314,10 +314,10 @@ void camcontrol_updateTargetAction(int camState, int targetObj)
             if (((cond == 0) && (buttons = getPadFn_80014d9c(0), (buttons & 0x40) != 0)) &&
                 ((*(short*)(camState + 6) & 4) == 0))
             {
-                tmp.action = 5;
-                tmp.enabled = 1;
-                tmp.immediate = 1;
-                (*gCameraInterface)->setMode(0x43, 1, 0, 4, &tmp, 0, 0xff);
+                local_28.action = 5;
+                local_28.enabled = 1;
+                local_28.immediate = 1;
+                (*gCameraInterface)->setMode(0x43, 1, 0, 4, &local_28, 0, 0xff);
             }
         }
         goto done;

@@ -244,13 +244,13 @@ void SpiritDoorLock_update(int obj)
     SpiritDoorLockState* state;
     SpiritDoorLockMapData* descriptor;
     int player;
-    int tmp2;
-    f32 tmp[3];
-    f32 tmp3[3];
+    int local_68;
+    f32 local_58[3];
+    f32 local_5c[3];
 
-    ((int*)tmp)[0] = lbl_802C22F8[0];
-    ((int*)tmp)[1] = lbl_802C22F8[1];
-    ((int*)tmp)[2] = lbl_802C22F8[2];
+    ((int*)local_58)[0] = lbl_802C22F8[0];
+    ((int*)local_58)[1] = lbl_802C22F8[1];
+    ((int*)local_58)[2] = lbl_802C22F8[2];
 
     state = ((GameObject*)obj)->extra;
     descriptor = *(SpiritDoorLockMapData**)&((GameObject*)obj)->anim.placementData;
@@ -329,18 +329,18 @@ void SpiritDoorLock_update(int obj)
         {
             Sfx_KeepAliveLoopedObjectSound(obj, SPIRITDOORLOCK_LOOP_SFX);
         }
-        list_ptr = ObjGroup_GetObjects(SPIRITDOORLOCK_ORBIT_OBJECT_GROUP, &tmp2);
+        list_ptr = ObjGroup_GetObjects(SPIRITDOORLOCK_ORBIT_OBJECT_GROUP, &local_68);
         stride = (s16)(0x10000 / state->orbitCount);
         angle = (s16)state->spinAngle;
-        tmp[1] = lbl_803E4454;
+        local_58[1] = lbl_803E4454;
         max_dist = lbl_803E4458;
-        for (i = 0; i < tmp2; i++)
+        for (i = 0; i < local_68; i++)
         {
             if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)((char*)list_ptr[i] + 0x18)) <= max_dist)
             {
                 ((GameObject*)obj)->anim.rotZ = angle;
-                Obj_TransformLocalVectorByWorldMatrix(obj, tmp, tmp3);
-                PSVECAdd(&((GameObject*)obj)->anim.localPosX, tmp3, (f32*)((char*)list_ptr[i] + 0xc));
+                Obj_TransformLocalVectorByWorldMatrix(obj, local_58, local_5c);
+                PSVECAdd(&((GameObject*)obj)->anim.localPosX, local_5c, (f32*)((char*)list_ptr[i] + 0xc));
                 *(s16*)list_ptr[i] = *(s16*)obj;
                 *(s16*)((char*)list_ptr[i] + 4) = (s16)(angle + 0x8000);
                 *(f32*)((char*)list_ptr[i] + 8) = ((GameObject*)obj)->anim.rootMotionScale;
@@ -349,7 +349,7 @@ void SpiritDoorLock_update(int obj)
         }
         state->spinAngle += (int)lbl_803DBED0;
         ((GameObject*)obj)->anim.rotZ = 0;
-        if (tmp2 == 0)
+        if (local_68 == 0)
         {
             state->active = 0;
             GameBit_Set(descriptor->doneGameBit, 1);
@@ -389,16 +389,16 @@ void RollingBarrel_update(int obj)
     u32 hitC;
     int hitResult;
     u32 r;
-    u8 bval;
+    u8 bVar1;
 
     state = ((GameObject*)obj)->extra;
     hitInfo = 0;
     descriptor = *(RollingBarrelMapData**)&((GameObject*)obj)->anim.placementData;
     blocked = 0;
     dist_sq = lbl_803E4468;
-    bval = state->state;
+    bVar1 = state->state;
 
-    if (bval == ROLLINGBARREL_STATE_RESPAWN_WAIT)
+    if (bVar1 == ROLLINGBARREL_STATE_RESPAWN_WAIT)
     {
         state->timer += timeDelta;
         if (state->timer >= lbl_803E44B0)
@@ -410,9 +410,9 @@ void RollingBarrel_update(int obj)
             lbl_803DDB20 -= 1;
         }
     }
-    else if (bval < ROLLINGBARREL_STATE_RESPAWN_WAIT)
+    else if (bVar1 < ROLLINGBARREL_STATE_RESPAWN_WAIT)
     {
-        if (bval == ROLLINGBARREL_STATE_ROLLING)
+        if (bVar1 == ROLLINGBARREL_STATE_ROLLING)
         {
             if (descriptor->objectDefId == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE)
             {
@@ -524,7 +524,7 @@ void RollingBarrel_update(int obj)
             }
         }
     }
-    else if (bval < 4)
+    else if (bVar1 < 4)
     {
         state->timer += timeDelta;
         if (state->timer >= lbl_803E44B4)

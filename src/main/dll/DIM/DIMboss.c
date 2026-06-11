@@ -226,7 +226,7 @@ static inline DIMbossObjectTriggerInterface* DIMboss_GetObjectTriggerInterface(v
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int DIMboss_updateState(DIMbossObject* obj, undefined4 arg2, ObjAnimUpdateState* animUpdate)
+int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateState* animUpdate)
 {
     DIMbossRuntime* runtime;
     DIMbossConfig* config;
@@ -235,7 +235,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 arg2, ObjAnimUpdateState*
     byte hitReactMode;
     u8 loadWaitStarted;
     int updateResult;
-    int model;
+    int iVar4;
     int mapDirIndex;
     uint statusFlags;
     int eventIndex;
@@ -275,8 +275,8 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 arg2, ObjAnimUpdateState*
                 obj,DIMBOSS_BONE_PARTICLE_EFFECT_7FF, NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES, NULL);
             DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
                 obj,DIMBOSS_BONE_PARTICLE_EFFECT_7FF, NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES, NULL);
-            model = Obj_GetActiveModel((int)obj);
-            ObjModel_ClearRenderAttachment(model);
+            iVar4 = Obj_GetActiveModel((int)obj);
+            ObjModel_ClearRenderAttachment(iVar4);
             Music_Trigger(DIMBOSS_MUSIC_LIFT_RUMBLE, 1);
             break;
         case DIMBOSS_EVENT_LAUNCH_LIFT:
@@ -594,8 +594,8 @@ void DIMboss_free(DIMbossObject* obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMboss_render(DIMbossObject* obj, undefined4 arg2, undefined4 arg3, undefined4 arg4,
-                    undefined4 arg5, char shouldRender)
+void DIMboss_render(DIMbossObject* obj, undefined4 param_2, undefined4 param_3, undefined4 param_4,
+                    undefined4 param_5, char shouldRender)
 {
     DIMbossRuntime* runtime;
     DIMbossEffect* effect;
@@ -606,7 +606,7 @@ void DIMboss_render(DIMbossObject* obj, undefined4 arg2, undefined4 arg3, undefi
         return;
     }
 
-    objRenderFn_8003b8f4(obj, arg2, arg3, arg4, arg5, lbl_803E4C44);
+    objRenderFn_8003b8f4(obj, param_2, param_3, param_4, param_5, lbl_803E4C44);
     fn_801BB598(obj, runtime);
     dll_2E_func06(obj, gDIMbossAnimController, 0);
 
@@ -770,7 +770,7 @@ void DIMboss_update(DIMbossObject* obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMboss_init(DIMbossObject* obj, undefined4 arg2, int arg3)
+void DIMboss_init(DIMbossObject* obj, undefined4 param_2, int param_3)
 {
     DIMbossRuntime* runtime;
     DIMbossTopState* topState;
@@ -788,12 +788,12 @@ void DIMboss_init(DIMbossObject* obj, undefined4 arg2, int arg3)
     setDrawCloudsAndLights(0);
     obj->updateMode = 2;
     animFlags = 6;
-    if (arg3 != 0)
+    if (param_3 != 0)
     {
         animFlags |= 1;
     }
     DIMboss_GetBaddieControlInterface()->setupAnim(
-        obj, arg2, runtime, 0xc, 6, 0x102, animFlags, lbl_803E4C28);
+        obj, param_2, runtime, 0xc, 6, 0x102, animFlags, lbl_803E4C28);
     obj->updateState = DIMboss_updateState;
     runtime->phase = DIMBOSS_PHASE_START;
     DIMboss_GetPlayerInterface()->init(obj, runtime, 0);

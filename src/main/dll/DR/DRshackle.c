@@ -53,8 +53,8 @@ extern f32 lbl_803E5B78; /* 2.0f */
  */
 int drshackle_updateSwingBlend(int obj, int state)
 {
-    f32 fa;
-    f32 fb;
+    f32 fVar1;
+    f32 fVar2;
     int yawDelta;
     int hitResult;
     f32 fade;
@@ -107,27 +107,27 @@ int drshackle_updateSwingBlend(int obj, int state)
         yawDelta = yawDelta + 0xffff;
     }
     {
-        s32 val = yawDelta / DRSHACKLE_ANGLE_STEP;
-        if (val < -DRSHACKLE_SWING_BLEND_LIMIT)
+        s32 iVar2 = yawDelta / DRSHACKLE_ANGLE_STEP;
+        if (iVar2 < -DRSHACKLE_SWING_BLEND_LIMIT)
         {
-            val = -DRSHACKLE_SWING_BLEND_LIMIT;
+            iVar2 = -DRSHACKLE_SWING_BLEND_LIMIT;
         }
-        else if (val > DRSHACKLE_SWING_BLEND_LIMIT)
+        else if (iVar2 > DRSHACKLE_SWING_BLEND_LIMIT)
         {
-            val = DRSHACKLE_SWING_BLEND_LIMIT;
+            iVar2 = DRSHACKLE_SWING_BLEND_LIMIT;
         }
-        *(f32*)(state + DRSHACKLE_SWING_BLEND_OFFSET) = (f32)(-val);
+        *(f32*)(state + DRSHACKLE_SWING_BLEND_OFFSET) = (f32)(-iVar2);
     }
     *(s16*)(state + DRSHACKLE_SWING_COMMAND_OFFSET) = 0;
     *(f32*)(state + DRSHACKLE_SWING_BLEND_OFFSET) =
         *(f32*)(state + DRSHACKLE_SWING_BLEND_OFFSET) / lbl_803E5B6C;
 
     {
-        f32 fa = *(f32*)(state + DRSHACKLE_SWING_BLEND_OFFSET);
+        f32 fVar1 = *(f32*)(state + DRSHACKLE_SWING_BLEND_OFFSET);
         *(f32*)(state + DRSHACKLE_SWING_BLEND_OFFSET) =
-            (fa < lbl_803E5B70)
+            (fVar1 < lbl_803E5B70)
                 ? lbl_803E5B70
-                : ((fa > lbl_803E5AEC) ? lbl_803E5AEC : fa);
+                : ((fVar1 > lbl_803E5AEC) ? lbl_803E5AEC : fVar1);
     }
 
     {
@@ -156,19 +156,19 @@ int drshackle_updateSwingBlend(int obj, int state)
 int drshackle_updateAttachedPosition(int obj, int state)
 {
     ShackleFlags* flags;
-    int val2;
-    int val;
+    int iVar3;
+    int iVar4;
     s16 angle;
-    f32 tmp;
+    f32 local_8;
 
     flags = (ShackleFlags*)(state + DRSHACKLE_FLAGS_OFFSET);
     if (flags->active == 0)
     {
         return 0;
     }
-    val2 = objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+    iVar3 = objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                 ((GameObject*)obj)->anim.localPosZ);
-    if (val2 > -1)
+    if (iVar3 > -1)
     {
         if (flags->positionAnchored == 0)
         {
@@ -178,13 +178,13 @@ int drshackle_updateAttachedPosition(int obj, int state)
                 *(f32*)(state + 0x498) = zero;
             }
             *(f32*)(state + DRSHACKLE_LAST_PITCH_OFFSET) = -fn_801EA678(obj, state);
-            val = (*(int (**)(int, int, f32, u8, int, int))(*gCheckpointInterface + 0x18))(
+            iVar4 = (*(int (**)(int, int, f32, u8, int, int))(*gCheckpointInterface + 0x18))(
                 state, state + DRSHACKLE_COLLIDER_OFFSET,
                 -*(f32*)(state + DRSHACKLE_LAST_PITCH_OFFSET) * timeDelta,
                 *(u8*)(state + DRSHACKLE_COLLIDER_MODE_OFFSET), 1, 0);
             (*(void (**)(int, int))(*gCheckpointInterface + 0x14))(obj, state + DRSHACKLE_COLLIDER_OFFSET);
             (*(void (**)(int))(*gCheckpointInterface + 0x2c))(state + DRSHACKLE_COLLIDER_OFFSET);
-            if (val != 0)
+            if (iVar4 != 0)
             {
                 return 0;
             }
@@ -211,8 +211,8 @@ int drshackle_updateAttachedPosition(int obj, int state)
             {
                 hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX,
                                      ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
-                                     &tmp, 0);
-                ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - tmp;
+                                     &local_8, 0);
+                ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - local_8;
                 ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + lbl_803E5B78;
             }
             flags->positionAnchored = 1;
@@ -221,13 +221,13 @@ int drshackle_updateAttachedPosition(int obj, int state)
         return drshackle_updateSwingBlend(obj, state) != 0;
     }
 
-    /* val2 <= -1 path */
-    val = (*(int (**)(int, int, f32, u8, int, int))(*gCheckpointInterface + 0x18))(
+    /* iVar3 <= -1 path */
+    iVar4 = (*(int (**)(int, int, f32, u8, int, int))(*gCheckpointInterface + 0x18))(
         state, state + DRSHACKLE_COLLIDER_OFFSET, timeDelta * fn_801EA678(obj, state),
         *(u8*)(state + DRSHACKLE_COLLIDER_MODE_OFFSET), 1, 0);
     (*(void (**)(int, int))(*gCheckpointInterface + 0x14))(obj, state + DRSHACKLE_COLLIDER_OFFSET);
     (*(void (**)(int))(*gCheckpointInterface + 0x2c))(state + DRSHACKLE_COLLIDER_OFFSET);
-    if (val != 0)
+    if (iVar4 != 0)
     {
         return 0;
     }

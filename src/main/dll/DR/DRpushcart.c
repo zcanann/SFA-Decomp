@@ -352,9 +352,9 @@ extern void Stack_Free();
 
 #pragma scheduling off
 #pragma peephole off
-void shopkeeper_free(int obj)
+void shopkeeper_free(int param_1)
 {
-    Stack_Free(*(undefined4*)(*(int*)&((GameObject*)obj)->extra + 0x9b0));
+    Stack_Free(*(undefined4*)(*(int*)&((GameObject*)param_1)->extra + 0x9b0));
     return;
 }
 
@@ -371,21 +371,21 @@ void shopkeeper_free(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void shopkeeper_render(int obj, int arg2, int arg3, int arg4, int arg5, s8 visible)
+void shopkeeper_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
-    float tmp[4];
-    tmp[0] = lbl_803E59D8;
-    if (*(s16*)(state + 0x274) != 7 && visible != 0)
+    int iVar1 = *(int*)&((GameObject*)param_1)->extra;
+    float local_18[4];
+    local_18[0] = lbl_803E59D8;
+    if (*(s16*)(iVar1 + 0x274) != 7 && visible != 0)
     {
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
-            (obj, arg2, arg3, arg4, arg5, lbl_803E59D8);
-        dll_2E_func06(obj, state + 0x35c, 0);
+            (param_1, param_2, param_3, param_4, param_5, lbl_803E59D8);
+        dll_2E_func06(param_1, iVar1 + 0x35c, 0);
     }
-    if ((*(u8*)(state + 0x9d4) & 0x20) != 0)
+    if ((*(u8*)(iVar1 + 0x9d4) & 0x20) != 0)
     {
         (*(void (*)(int, int, float*, int, int))(*(int*)(*gBoneParticleEffectInterface + 0xc)))(
-            obj, 0x7ef, tmp, 0x50, 0);
+            param_1, 0x7ef, local_18, 0x50, 0);
     }
 }
 

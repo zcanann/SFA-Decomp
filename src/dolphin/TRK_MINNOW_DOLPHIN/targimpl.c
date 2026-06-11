@@ -190,7 +190,7 @@ DSError TRKValidMemory32(const void* addr, size_t length, ValidMemoryOptions rea
  * @note Size: TODO
  */
 #ifdef __MWERKS__ // clang-format off
-static asm void TRK_ppc_memcpy(register void* dest, register const void* src, register int n, register u32 arg4, register u32 arg5){
+static asm void TRK_ppc_memcpy(register void* dest, register const void* src, register int n, register u32 param_4, register u32 param_5){
 	#define msr		r8
 	#define byte	r9
 	#define count	r10
@@ -203,12 +203,12 @@ static asm void TRK_ppc_memcpy(register void* dest, register const void* src, re
 		cmpw count, n
 		beq out_loop
 
-		mtmsr arg5
+		mtmsr param_5
 		sync
 
 		lbzx byte, count, src
 
-		mtmsr arg4
+		mtmsr param_4
 		sync
 
 		stbx byte, count, dest
@@ -230,7 +230,7 @@ static asm void TRK_ppc_memcpy(register void* dest, register const void* src, re
 DSError TRKTargetAccessMemory(void* data, u32 start, size_t* length, MemoryAccessOptions accessOptions, BOOL read)
 {
 	DSError error;
-	u32 uval;
+	u32 uVar5;
 	void* addr;
 	u32 param4;
 	TRKExceptionStatus tempExceptionStatus = gTRKExceptionStatus;
@@ -242,13 +242,13 @@ DSError TRKTargetAccessMemory(void* data, u32 start, size_t* length, MemoryAcces
 	if (error != DS_NoError) {
 		*length = 0;
 	} else {
-		uval  = __TRK_get_MSR();
-		param4 = uval | gTRKCPUState.Extended1.MSR & 0x10;
+		uVar5  = __TRK_get_MSR();
+		param4 = uVar5 | gTRKCPUState.Extended1.MSR & 0x10;
 
 		if (read) {
-			TRK_ppc_memcpy(data, addr, *length, uval, param4);
+			TRK_ppc_memcpy(data, addr, *length, uVar5, param4);
 		} else {
-			TRK_ppc_memcpy(addr, data, *length, param4, uval);
+			TRK_ppc_memcpy(addr, data, *length, param4, uVar5);
 			TRK_flush_cache((u32)addr, *length);
 			if ((void*)start != addr) {
 				TRK_flush_cache(start, *length);
@@ -714,7 +714,7 @@ LAB_00010bb0:
 void TRKPostInterruptEvent(void)
 {
 	int eventType;
-	int tmp;
+	int local_14;
 	size_t registerSize;
 	TRKEvent event;
 
@@ -725,9 +725,9 @@ void TRKPostInterruptEvent(void)
 		case 0xd00:
 		case 0x700:
 			registerSize = 4;
-			TRKTargetReadInstruction(&tmp, gTRKCPUState.Default.PC);
+			TRKTargetReadInstruction(&local_14, gTRKCPUState.Default.PC);
 
-			if (tmp == 0xfe00000) {
+			if (local_14 == 0xfe00000) {
 				eventType = NUBEVENT_Support;
 			} else {
 				eventType = NUBEVENT_Breakpoint;

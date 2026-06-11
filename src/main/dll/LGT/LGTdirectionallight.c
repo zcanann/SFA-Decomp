@@ -125,9 +125,9 @@ extern f32 lbl_803E6AF8;
 #pragma peephole on
 void wmworm_update(GameObject* obj)
 {
-    float fa;
-    float fb;
-    float fc;
+    float fVar1;
+    float fVar2;
+    float fVar3;
     GameObject* player;
     WmWormState* state;
     ObjPlacement* placement;
@@ -148,20 +148,20 @@ void wmworm_update(GameObject* obj)
         }
         else
         {
-            fa = player->anim.worldPosX - obj->anim.localPosX;
-            fb = player->anim.worldPosY - obj->anim.localPosY;
-            fc = player->anim.worldPosZ - obj->anim.localPosZ;
-            if ((fa > lbl_803E5E5C) || (fa < lbl_803E5E5C))
+            fVar1 = player->anim.worldPosX - obj->anim.localPosX;
+            fVar2 = player->anim.worldPosY - obj->anim.localPosY;
+            fVar3 = player->anim.worldPosZ - obj->anim.localPosZ;
+            if ((fVar1 > lbl_803E5E5C) || (fVar1 < lbl_803E5E5C))
             {
-                obj->anim.localPosX = lbl_803E5E60 * fa * timeDelta + obj->anim.localPosX;
+                obj->anim.localPosX = lbl_803E5E60 * fVar1 * timeDelta + obj->anim.localPosX;
             }
-            if ((fb > lbl_803E5E5C) || (fb < lbl_803E5E5C))
+            if ((fVar2 > lbl_803E5E5C) || (fVar2 < lbl_803E5E5C))
             {
-                obj->anim.localPosY = lbl_803E5E60 * fb * timeDelta + obj->anim.localPosY;
+                obj->anim.localPosY = lbl_803E5E60 * fVar2 * timeDelta + obj->anim.localPosY;
             }
-            if ((fc > lbl_803E5E5C) || (fc < lbl_803E5E5C))
+            if ((fVar3 > lbl_803E5E5C) || (fVar3 < lbl_803E5E5C))
             {
-                obj->anim.localPosZ = lbl_803E5E60 * fc * timeDelta + obj->anim.localPosZ;
+                obj->anim.localPosZ = lbl_803E5E60 * fVar3 * timeDelta + obj->anim.localPosZ;
             }
             burstCount = state->burstCount;
             if ((-1 < burstCount) || ((-1 >= burstCount && (obj->unkF4 < 1))))

@@ -306,26 +306,26 @@ extern void ObjLink_DetachChild(int obj, void* child);
  * EN v1.0 Address: 0x801A189C
  * EN v1.0 Size: 196b
  */
-void gunpowderbarrel_free(int obj, int arg2)
+void gunpowderbarrel_free(int param_1, int param_2)
 {
     int extra;
     void* child;
-    extra = *(int*)&((GameObject*)obj)->extra;
-    (*(code*)(*(int*)gCarryableInterface + 0x10))(obj);
+    extra = *(int*)&((GameObject*)param_1)->extra;
+    (*(code*)(*(int*)gCarryableInterface + 0x10))(param_1);
     child = *(void**)&((GunpowderbarrelState*)extra)->unk10;
-    if (child != 0 && arg2 == 0)
+    if (child != 0 && param_2 == 0)
     {
         if (Obj_IsObjectAlive(child) != 0)
         {
-            ObjLink_DetachChild(obj, *(void**)&((GunpowderbarrelState*)extra)->unk10);
+            ObjLink_DetachChild(param_1, *(void**)&((GunpowderbarrelState*)extra)->unk10);
             ((GunpowderbarrelState*)extra)->unk10 = 0;
         }
     }
-    ObjGroup_RemoveObject(obj, 0x19);
-    ObjGroup_RemoveObject(obj, 0x16);
+    ObjGroup_RemoveObject(param_1, 0x19);
+    ObjGroup_RemoveObject(param_1, 0x16);
     if (*(unsigned char*)(extra + 0x17) != 0)
     {
-        (*gExpgfxInterface)->freeSource2((u32)obj);
+        (*gExpgfxInterface)->freeSource2((u32)param_1);
     }
 }
 
@@ -348,7 +348,7 @@ typedef struct
 
 extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 e);
 
-void gunpowderbarrel_render(int* obj, int arg2, int arg3, int arg4, int arg5,
+void gunpowderbarrel_render(int* obj, int param_2, int param_3, int param_4, int param_5,
                             s8 visFlag)
 {
     u8* sub;
@@ -368,13 +368,13 @@ void gunpowderbarrel_render(int* obj, int arg2, int arg3, int arg4, int arg5,
     result = (*(int (**)(int*, int))(*(int*)gCarryableInterface + 0xc))(obj, visFlag);
     if (result != 0 || visFlag == -1)
     {
-        objRenderFn_8003b8f4(obj, arg2, arg3, arg4, arg5, lbl_803E42DC);
+        objRenderFn_8003b8f4(obj, param_2, param_3, param_4, param_5, lbl_803E42DC);
     }
     child = *(int**)&((GunpowderbarrelState*)sub)->unk10;
     if (child != 0)
     {
         (*(void (**)(int*, int, int, int, int, s8))(*(int*)(*(int*)((char*)child + 0x68)) + 0x10))(
-            child, arg2, arg3, arg4, arg5, visFlag);
+            child, param_2, param_3, param_4, param_5, visFlag);
     }
 }
 

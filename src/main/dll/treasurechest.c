@@ -70,28 +70,28 @@ void dll_D3_update(int* obj)
     int* state;
     LandedArwingState* extra;
     int* player;
-    int val;
+    int iVar3;
     int rc;
     int hits;
-    f32 tmp4;
-    f32 tmp;
-    f32 tmp2;
-    f32 tmp3;
+    f32 local_90;
+    f32 local_8c;
+    f32 local_88;
+    f32 local_84;
     int aiStack_80[24];
-    char tmp5;
+    char local_30;
 
     trans = *(int*)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
     extra = *(LandedArwingState**)((char*)state + 0x40c);
     player = (int*)Obj_GetPlayerObject();
-    tmp4 = lbl_803E3034;
+    local_90 = lbl_803E3034;
 
     if (extra->boundsObj == NULL)
     {
         extra->surfaceMode = 6;
         if (((u32)extra->flags92 >> 4 & 0xF) != 0u)
         {
-            *(int*)&extra->boundsObj = ObjList_FindNearestObjectByDefNo(obj, 0x4ad, &tmp4);
+            *(int*)&extra->boundsObj = ObjList_FindNearestObjectByDefNo(obj, 0x4ad, &local_90);
             if (extra->boundsObj != NULL)
             {
                 (*(void (**)(int, int, int))(*(int**)(*(int*)&extra->boundsObj + 0x68) + 0x20 / 4))(
@@ -164,14 +164,14 @@ void dll_D3_update(int* obj)
 
     if (((TreasureChestState*)state)->targetObj != 0u)
     {
-        tmp = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x18) -
+        local_8c = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x18) -
             ((GameObject*)obj)->anim.worldPosX;
-        tmp2 = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x1c) -
+        local_88 = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x1c) -
             ((GameObject*)obj)->anim.worldPosY;
-        tmp3 = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x20) -
+        local_84 = *(f32*)((char*)(((TreasureChestState*)state)->targetObj) + 0x20) -
             ((GameObject*)obj)->anim.worldPosZ;
         ((TreasureChestState*)state)->targetDistance =
-            sqrtf(tmp * tmp + tmp2 * tmp2 + tmp3 * tmp3);
+            sqrtf(local_8c * local_8c + local_88 * local_88 + local_84 * local_84);
     }
 
     ((void (*)(int*, int*, int, int, int, int, int, int))((void**)*(int*)gBaddieControlInterface)[0x54 / 4])(
@@ -212,12 +212,12 @@ void dll_D3_update(int* obj)
     if ((extra->flags92 & 1) == 0 &&
         extra->surfaceMode == 6)
     {
-        val = objBboxFn_800640cc(
+        iVar3 = objBboxFn_800640cc(
             (int)((char*)obj + 0x80),
             &((GameObject*)obj)->anim.localPosX,
             lbl_803E3030, 0,
             aiStack_80, obj, -0x7c, -1, 0xff, 0);
-        if (val != 0 && tmp5 == 13)
+        if (iVar3 != 0 && local_30 == 13)
         {
             extra->flags92 =
                 (u8)((extra->flags92 & 0xfe) | 1);

@@ -117,28 +117,28 @@ extern undefined2 uRam803de91a;
  */
 #pragma scheduling on
 #pragma peephole on
-void wmlevelcontrol_readParams(undefined2* arg1, int arg2)
+void wmlevelcontrol_readParams(undefined2* param_1, int param_2)
 {
-    float* ptr;
+    float* pfVar1;
 
-    *arg1 = 0;
-    ptr = *(float**)(arg1 + 0x5c);
-    *ptr = (float)((double)CONCAT44(0x43300000, (int)*(char*)(arg2 + 0x18) << 2 ^ 0x80000000) -
+    *param_1 = 0;
+    pfVar1 = *(float**)(param_1 + 0x5c);
+    *pfVar1 = (float)((double)CONCAT44(0x43300000, (int)*(char*)(param_2 + 0x18) << 2 ^ 0x80000000) -
         DOUBLE_803e6b00);
-    *(undefined2*)(ptr + 1) = *(undefined2*)(arg2 + 0x1a);
-    *(undefined2*)(ptr + 2) = *(undefined2*)(arg2 + 0x1c);
-    *(undefined2*)(ptr + 3) = 0;
-    if (*(short*)(ptr + 2) < 1)
+    *(undefined2*)(pfVar1 + 1) = *(undefined2*)(param_2 + 0x1a);
+    *(undefined2*)(pfVar1 + 2) = *(undefined2*)(param_2 + 0x1c);
+    *(undefined2*)(pfVar1 + 3) = 0;
+    if (*(short*)(pfVar1 + 2) < 1)
     {
-        *(int*)(arg1 + 0x7a) = (int)*(short*)(ptr + 2);
+        *(int*)(param_1 + 0x7a) = (int)*(short*)(pfVar1 + 2);
     }
     else
     {
-        *(undefined4*)(arg1 + 0x7a) = 0;
+        *(undefined4*)(param_1 + 0x7a) = 0;
     }
-    ptr[4] = *(float*)(arg1 + 6);
-    ptr[5] = *(float*)(arg1 + 8);
-    ptr[6] = *(float*)(arg1 + 10);
+    pfVar1[4] = *(float*)(param_1 + 6);
+    pfVar1[5] = *(float*)(param_1 + 8);
+    pfVar1[6] = *(float*)(param_1 + 10);
     return;
 }
 

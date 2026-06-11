@@ -11081,13 +11081,13 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
     f32 velMag;
     f32 damp;
     f32 r;
-    f32 tmp4;
-    f32 tmp5;
+    f32 local_78;
+    f32 local_74;
     int** nearList;
-    f32 tmp6[4];
-    f32 tmp;
-    f32 tmp2;
-    f32 tmp3;
+    f32 local_6c[4];
+    f32 local_5c;
+    f32 local_58;
+    f32 local_54;
 
     fv2 = lbl_803E7EE0;
     found = 0;
@@ -11111,8 +11111,8 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
     }
     ((ByteFlags*)((char*)state + 0x3f1))->b01 = 0;
     clamp = lbl_803E7EA4;
-    tmp5 = lbl_803E7EA4;
-    tmp4 = lbl_803E7EA4;
+    local_74 = lbl_803E7EA4;
+    local_78 = lbl_803E7EA4;
     if ((*(s8*)((char*)cfg + 0x264) & 0x10) != 0)
     {
         ((ByteFlags*)((char*)state + 0x3f1))->b01 = 1;
@@ -11141,12 +11141,12 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             }
             break;
         case 29:
-            tmp6[0] = lbl_803E8150;
-            found = (void*)ObjGroup_FindNearestObject(0x16, obj, tmp6);
+            local_6c[0] = lbl_803E8150;
+            found = (void*)ObjGroup_FindNearestObject(0x16, obj, local_6c);
             if (found != 0)
             {
                 (*(void (*)(f32, int, int, f32*, f32*))(*(int*)(*(int*)(*(int*)((char*)found + 0x68)) + 0x20)))(
-                    lbl_803E7EE0, (int)found, obj, &tmp5, &tmp4);
+                    lbl_803E7EE0, (int)found, obj, &local_74, &local_78);
             }
             break;
         case 26:
@@ -11156,8 +11156,8 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             if (sv <= 0)
             {
                 *(s16*)((char*)state + 0x808) = 0x3c;
-                ObjPath_GetPointWorldPosition(obj, 0xb, &tmp, &tmp2, &tmp3, 0);
-                ObjHits_RecordPositionHit(tmp, tmp2, tmp3, obj, 0, 0x14, 2, 0xffffffff);
+                ObjPath_GetPointWorldPosition(obj, 0xb, &local_5c, &local_58, &local_54, 0);
+                ObjHits_RecordPositionHit(local_5c, local_58, local_54, obj, 0, 0x14, 2, 0xffffffff);
             }
             break;
         case 8:
@@ -11171,8 +11171,8 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 if (0x78 < *(u16*)((char*)state + 0x8a0))
                 {
                     *(u16*)((char*)state + 0x8a0) = *(u16*)((char*)state + 0x8a0) - 0x78;
-                    ObjPath_GetPointWorldPosition(obj, 0xb, &tmp, &tmp2, &tmp3, 0);
-                    ObjHits_RecordPositionHit(tmp, tmp2, tmp3, obj, 0, 0x16, 2,
+                    ObjPath_GetPointWorldPosition(obj, 0xb, &local_5c, &local_58, &local_54, 0);
+                    ObjHits_RecordPositionHit(local_5c, local_58, local_54, obj, 0, 0x16, 2,
                                               0xffffffff);
                 }
             }
@@ -11247,9 +11247,9 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 ((GameObject*)obj)->anim.velocityZ * powfBitEstimate(damp, dt);
         }
     }
-    r = interpolate(tmp5 - ((PlayerState*)state)->unk890, lbl_803E7FCC, timeDelta);
+    r = interpolate(local_74 - ((PlayerState*)state)->unk890, lbl_803E7FCC, timeDelta);
     ((PlayerState*)state)->unk890 = ((PlayerState*)state)->unk890 + r;
-    r = interpolate(tmp4 - ((PlayerState*)state)->unk894, lbl_803E7FCC, timeDelta);
+    r = interpolate(local_78 - ((PlayerState*)state)->unk894, lbl_803E7FCC, timeDelta);
     ((PlayerState*)state)->unk894 = ((PlayerState*)state)->unk894 + r;
     if (found == 0)
     {
@@ -12604,9 +12604,9 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     u8 j;
     f32 f31v;
     f32 z;
-    f32 tmp;
-    f32 tmp2;
-    f32 tmp3;
+    f32 local_58;
+    f32 local_54;
+    f32 local_50;
     f32 arr[6];
 
     t = *(int*)((char*)inner + 0x40c);
@@ -12650,11 +12650,11 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 mode = 3;
                 *(f32*)((char*)t + 0xc) = *(f32*)((char*)t + 0xc) + lbl_803E81C0;
             }
-            tmp = lbl_803E8180;
-            tmp2 = lbl_803E81C4;
-            tmp3 = lbl_803E8180;
+            local_58 = lbl_803E8180;
+            local_54 = lbl_803E81C4;
+            local_50 = lbl_803E8180;
             Sfx_KeepAliveLoopedObjectSound(obj, 0x455);
-            fn_80098B18(lbl_803E81C8 * ((GameObject*)obj)->anim.rootMotionScale, obj, 3, mode, 0, &tmp);
+            fn_80098B18(lbl_803E81C8 * ((GameObject*)obj)->anim.rootMotionScale, obj, 3, mode, 0, &local_58);
         }
     }
     *(u16*)((char*)inner + 0x400) = *(u16*)((char*)inner + 0x400) | 2;

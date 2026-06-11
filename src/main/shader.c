@@ -284,7 +284,7 @@ extern f32 fastFloorf(f32 v);
 extern int* Obj_GetPlayerObject(void);
 extern void OSReport(const char* fmt, ...);
 
-int objShouldLoad(int obj, int arg2, int arg3)
+int objShouldLoad(int param_1, int param_2, int param_3)
 {
     char* strs;
     int verbose;
@@ -308,7 +308,7 @@ int objShouldLoad(int obj, int arg2, int arg3)
     f32 range;
 
     strs = (char*)lbl_8030E4B0;
-    if (*(u32*)&((GameObject*)obj)->anim.localPosZ == 0x49054)
+    if (*(u32*)&((GameObject*)param_1)->anim.localPosZ == 0x49054)
     {
         verbose = 1;
     }
@@ -316,7 +316,7 @@ int objShouldLoad(int obj, int arg2, int arg3)
     {
         verbose = 0;
     }
-    t = (*gMapEventInterface)->getMode(arg3);
+    t = (*gMapEventInterface)->getMode(param_3);
     if (t == -1)
     {
         ok = 0;
@@ -326,7 +326,7 @@ int objShouldLoad(int obj, int arg2, int arg3)
     {
         if (t < 9)
         {
-            if ((*(u8*)(obj + 3) >> (t - 1)) & 1)
+            if ((*(u8*)(param_1 + 3) >> (t - 1)) & 1)
             {
                 ok = 0;
                 goto test;
@@ -334,7 +334,7 @@ int objShouldLoad(int obj, int arg2, int arg3)
         }
         else
         {
-            if ((*(u8*)(obj + 5) >> (16 - t)) & 1)
+            if ((*(u8*)(param_1 + 5) >> (16 - t)) & 1)
             {
                 ok = 0;
                 goto test;
@@ -347,7 +347,7 @@ test:
     {
         return 0;
     }
-    if (*(u8*)(obj + 4) & 1)
+    if (*(u8*)(param_1 + 4) & 1)
     {
         if (verbose)
         {
@@ -355,7 +355,7 @@ test:
         }
         return 1;
     }
-    if (*(u8*)(obj + 4) & 2)
+    if (*(u8*)(param_1 + 4) & 2)
     {
         if (verbose)
         {
@@ -363,15 +363,15 @@ test:
         }
         return 0;
     }
-    if ((s8)arg2 == 0)
+    if ((s8)param_2 == 0)
     {
-        bx = (int)fastFloorf((((GameObject*)obj)->anim.rootMotionScale - playerMapOffsetX) / gMapBlockWorldSize);
-        bz = (int)fastFloorf((((GameObject*)obj)->anim.localPosY - playerMapOffsetZ) / gMapBlockWorldSize);
+        bx = (int)fastFloorf((((GameObject*)param_1)->anim.rootMotionScale - playerMapOffsetX) / gMapBlockWorldSize);
+        bz = (int)fastFloorf((((GameObject*)param_1)->anim.localPosY - playerMapOffsetZ) / gMapBlockWorldSize);
         if (bx < 0 || bz < 0 || bx >= 16 || bz >= 16)
         {
             if (verbose)
             {
-                OSReport(strs + 0x200, obj + 8, obj + 0xc, obj + 0x10);
+                OSReport(strs + 0x200, param_1 + 8, param_1 + 0xc, param_1 + 0x10);
             }
             return 0;
         }
@@ -393,7 +393,7 @@ test:
             return 0;
         }
     }
-    if (*(u8*)(obj + 4) & 0x20)
+    if (*(u8*)(param_1 + 4) & 0x20)
     {
         if (verbose)
         {
@@ -402,7 +402,7 @@ test:
         return 1;
     }
     useObj = 0;
-    if ((*(u8*)(obj + 4) & 4) && (s8)arg2 == 0)
+    if ((*(u8*)(param_1 + 4) & 4) && (s8)param_2 == 0)
     {
         player = Obj_GetPlayerObject();
         if (player != NULL)
@@ -422,16 +422,16 @@ test:
     }
     if (useObj != 0)
     {
-        off = (s8)arg2 << 4;
+        off = (s8)param_2 << 4;
         x = *(f32*)(lbl_80386648 + off);
         p = (f32*)(lbl_80386648 + off);
         y = p[1];
         z = p[2];
     }
-    range = (f32)(*(u8*)(obj + 6) << 3);
-    d = x - ((GameObject*)obj)->anim.rootMotionScale;
-    dy = y - ((GameObject*)obj)->anim.localPosX;
-    dz = z - ((GameObject*)obj)->anim.localPosY;
+    range = (f32)(*(u8*)(param_1 + 6) << 3);
+    d = x - ((GameObject*)param_1)->anim.rootMotionScale;
+    dy = y - ((GameObject*)param_1)->anim.localPosX;
+    dz = z - ((GameObject*)param_1)->anim.localPosY;
     d = d * d + dy * dy + dz * dz;
     if (d < range * range)
     {
@@ -462,9 +462,9 @@ test:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int fn_80056800(int arg1)
+int fn_80056800(int param_1)
 {
-    return (int)(DAT_803ddaec + arg1 * 4);
+    return (int)(DAT_803ddaec + param_1 * 4);
 }
 
 
@@ -1053,9 +1053,9 @@ extern void* gLoadedRomListPages[];
 extern void defStartFn_8005972c(char* p1, u32* p2, int idx, int flag);
 extern void mm_free(void* p);
 
-void fn_80059A50(int arg1)
+void fn_80059A50(int param_1)
 {
-    int idx = arg1;
+    int idx = param_1;
     void* p = gLoadedRomListPages[idx];
     if (p != 0)
     {

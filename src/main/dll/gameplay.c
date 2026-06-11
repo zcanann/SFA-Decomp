@@ -1580,13 +1580,13 @@ int saveSelect_getInfo(void* outPtr)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 saveFileStruct_isCheatActive(uint arg1)
+undefined4 saveFileStruct_isCheatActive(uint param_1)
 {
-    uint uval;
+    uint uVar1;
 
-    uval = 1 << (arg1 & 0xff);
-    if (((gGameplayRegisteredDebugOptions & uval) != 0) &&
-        ((gGameplayEnabledDebugOptions & uval) != 0))
+    uVar1 = 1 << (param_1 & 0xff);
+    if (((gGameplayRegisteredDebugOptions & uVar1) != 0) &&
+        ((gGameplayEnabledDebugOptions & uVar1) != 0))
     {
         return 1;
     }
@@ -1606,9 +1606,9 @@ undefined4 saveFileStruct_isCheatActive(uint arg1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void saveFileStruct_unlockCheat(uint arg1)
+void saveFileStruct_unlockCheat(uint param_1)
 {
-    gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (arg1 & 0xff);
+    gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (param_1 & 0xff);
     return;
 }
 
@@ -1625,9 +1625,9 @@ void saveFileStruct_unlockCheat(uint arg1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint isCheatUnlocked(uint arg1)
+uint isCheatUnlocked(uint param_1)
 {
-    return gGameplayRegisteredDebugOptions & 1 << (arg1 & 0xff);
+    return gGameplayRegisteredDebugOptions & 1 << (param_1 & 0xff);
 }
 
 /*
@@ -1682,12 +1682,12 @@ u8* getSaveFileStruct(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void loadSaveSettings(undefined8 arg1, undefined8 arg2, undefined8 arg3, undefined8 arg4,
-                      undefined8 arg5, undefined8 arg6, undefined8 arg7,
-                      undefined8 arg8)
+void loadSaveSettings(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
+                      undefined8 param_5, undefined8 param_6, undefined8 param_7,
+                      undefined8 param_8)
 {
     FUN_8005d018(DAT_803a3e2a);
-    FUN_80017500(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, (uint)DAT_803a3e26);
+    FUN_80017500(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (uint)DAT_803a3e26);
     FUN_80006c20(DAT_803a3e2c);
     FUN_80006768(DAT_803a3e2d, '\0');
     (**(code**)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
@@ -1823,10 +1823,10 @@ extern int maybeTryLoadSave(int a);
 
 int saveFn_800e8508(void)
 {
-    int val;
+    int iVar1;
 
-    val = maybeTryLoadSave((int)saveData);
-    if ((val == 0) || (saveData[0] == '\0'))
+    iVar1 = maybeTryLoadSave((int)saveData);
+    if ((iVar1 == 0) || (saveData[0] == '\0'))
     {
         memset(saveData, 0, 0xE4);
         saveData[6] = 0;
@@ -1837,7 +1837,7 @@ int saveFn_800e8508(void)
         saveData[11] = 0x7F;
         saveData[12] = 0x7F;
     }
-    return val;
+    return iVar1;
 }
 
 
@@ -5801,7 +5801,7 @@ void dll_68_func03(int sourceObj, int variant, int posSource, uint flags)
 
 extern f32 lbl_803E0A00, lbl_803E0A04, lbl_803E0A08, lbl_803E0A0C, lbl_803E0A10, lbl_803E0A14, lbl_803E0A18;
 
-void dll_69_func03(u8* sourceObj, int variant, u8* posSource, uint flags, int arg5, int* arg6)
+void dll_69_func03(u8* sourceObj, int variant, u8* posSource, uint flags, int param_5, int* param_6)
 {
     struct
     {
@@ -5828,12 +5828,12 @@ void dll_69_func03(u8* sourceObj, int variant, u8* posSource, uint flags, int ar
     int b = 0x30;
     int c = 0x31;
     int d = 0x50;
-    if (arg6 != (int*)0)
+    if (param_6 != (int*)0)
     {
-        a = arg6[0];
-        b = arg6[1];
-        c = arg6[2];
-        d = arg6[3];
+        a = param_6[0];
+        b = param_6[1];
+        c = param_6[2];
+        d = param_6[3];
     }
     entries = buf.entries;
     entries[0].layer = 0;

@@ -1089,7 +1089,7 @@ void fn_80165B3C(int obj, int state)
 
 void fn_80166840(int obj, int state, f32* hit, f32* end)
 {
-    f32 fa;
+    f32 fVar1;
     f32 planeX;
     f32 planeY;
     f32 planeZ;
@@ -1136,10 +1136,10 @@ void fn_80166840(int obj, int state, f32* hit, f32* end)
     plane[3] = planeW;
     Vec3_Cross(plane, hit, response);
     Vec3_Normalize(response);
-    fa = lbl_803E3004;
+    fVar1 = lbl_803E3004;
     ((GameObject*)obj)->anim.velocityX = lbl_803E3004 * response[0];
-    ((GameObject*)obj)->anim.velocityY = fa * response[1];
-    ((GameObject*)obj)->anim.velocityZ = fa * response[2];
+    ((GameObject*)obj)->anim.velocityY = fVar1 * response[1];
+    ((GameObject*)obj)->anim.velocityZ = fVar1 * response[2];
     ((LandedArwingState*)state)->surfaceNormalX = hit[0];
     ((LandedArwingState*)state)->surfaceNormalY = hit[1];
     ((LandedArwingState*)state)->surfaceNormalZ = hit[2];
@@ -1258,7 +1258,7 @@ void fn_80166444(int obj, int state)
         undefined pad[0x10];
         undefined hitType;
     } hitScratch;
-    f32 fa;
+    f32 fVar1;
 
     distanceRemaining = sqrtf(((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ +
         (((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
@@ -1350,10 +1350,10 @@ void fn_80166444(int obj, int state)
         }
         else
         {
-            fa = lbl_803E3030;
-            ((GameObject*)obj)->anim.velocityX = fa * ((LandedArwingState*)state)->surfaceNormalX;
-            ((GameObject*)obj)->anim.velocityY = fa * ((LandedArwingState*)state)->surfaceNormalY;
-            ((GameObject*)obj)->anim.velocityZ = fa * ((LandedArwingState*)state)->surfaceNormalZ;
+            fVar1 = lbl_803E3030;
+            ((GameObject*)obj)->anim.velocityX = fVar1 * ((LandedArwingState*)state)->surfaceNormalX;
+            ((GameObject*)obj)->anim.velocityY = fVar1 * ((LandedArwingState*)state)->surfaceNormalY;
+            ((GameObject*)obj)->anim.velocityZ = fVar1 * ((LandedArwingState*)state)->surfaceNormalZ;
             ((StaffBits*)&((LandedArwingState*)state)->flags92)->b2 = 1;
         }
     }
