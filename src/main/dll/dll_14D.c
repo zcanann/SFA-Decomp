@@ -60,91 +60,91 @@ typedef struct MagicPlantBridgeState {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_14D_update(undefined2 *param_1)
+void dll_14D_update(undefined2 *obj)
 {
-  byte bVar1;
-  undefined4 uVar2;
-  uint uVar3;
-  int iVar2;
-  int iVar5;
-  byte *pbVar4;
-  float local_18;
+  byte mode;
+  undefined4 found;
+  uint bitVal;
+  int eventReady;
+  int placement;
+  byte *state;
+  float dist;
 
-  local_18 = lbl_803E3854;
-  iVar5 = *(int *)(param_1 + 0x26);
-  pbVar4 = *(byte **)(param_1 + 0x5c);
-  if (*(void **)(pbVar4 + 4) == NULL) {
-    uVar2 = ObjGroup_FindNearestObject((uint)*(byte *)(iVar5 + 0x21),param_1,&local_18);
-    *(undefined4 *)(pbVar4 + 4) = uVar2;
-    if (*(void **)(pbVar4 + 4) == NULL) {
+  dist = lbl_803E3854;
+  placement = *(int *)(obj + 0x26);
+  state = *(byte **)(obj + 0x5c);
+  if (*(void **)(state + 4) == NULL) {
+    found = ObjGroup_FindNearestObject((uint)*(byte *)(placement + 0x21),obj,&dist);
+    *(undefined4 *)(state + 4) = found;
+    if (*(void **)(state + 4) == NULL) {
       return;
     }
-    if (*(s16 *)(iVar5 + 0x1a) == -1) {
-      pbVar4[1] = 0;
+    if (*(s16 *)(placement + 0x1a) == -1) {
+      state[1] = 0;
     }
     else {
-      uVar3 = GameBit_Get(*(s16 *)(iVar5 + 0x1a));
-      pbVar4[1] = (byte)uVar3;
+      bitVal = GameBit_Get(*(s16 *)(placement + 0x1a));
+      state[1] = (byte)bitVal;
     }
-    if ((pbVar4[1] != 0) && (*(s16 *)(iVar5 + 0x1e) != -1)) {
-      *pbVar4 = 1;
+    if ((state[1] != 0) && (*(s16 *)(placement + 0x1e) != -1)) {
+      *state = 1;
     }
     else {
-      *pbVar4 = 2;
+      *state = 2;
     }
   }
-  *(f32 *)(param_1 + 6) = *(f32 *)(*(int *)(pbVar4 + 4) + 0xc);
-  *(f32 *)(param_1 + 8) = *(f32 *)(*(int *)(pbVar4 + 4) + 0x10);
-  *(f32 *)(param_1 + 10) = *(f32 *)(*(int *)(pbVar4 + 4) + 0x14);
-  *(s16 *)param_1 = **(s16 **)(pbVar4 + 4);
-  *(s16 *)(param_1 + 2) = *(s16 *)(*(int *)(pbVar4 + 4) + 4);
-  *(s16 *)(param_1 + 1) = *(s16 *)(*(int *)(pbVar4 + 4) + 2);
-  bVar1 = *pbVar4;
-  switch (bVar1) {
+  *(f32 *)(obj + 6) = *(f32 *)(*(int *)(state + 4) + 0xc);
+  *(f32 *)(obj + 8) = *(f32 *)(*(int *)(state + 4) + 0x10);
+  *(f32 *)(obj + 10) = *(f32 *)(*(int *)(state + 4) + 0x14);
+  *(s16 *)obj = **(s16 **)(state + 4);
+  *(s16 *)(obj + 2) = *(s16 *)(*(int *)(state + 4) + 4);
+  *(s16 *)(obj + 1) = *(s16 *)(*(int *)(state + 4) + 2);
+  mode = *state;
+  switch (mode) {
   case 1:
-    *(byte *)(*(int *)(pbVar4 + 4) + 0xaf) &= ~0x20;
-    *(byte *)((int)param_1 + 0xaf) |= 8;
-    (*gObjectTriggerInterface)->preempt((int)param_1, *(s16 *)(iVar5 + 0x1e));
-    (*gObjectTriggerInterface)->runSequence(*(byte *)(iVar5 + 0x22), param_1,
-                                            *(byte *)(iVar5 + 0x20));
-    *pbVar4 = 4;
+    *(byte *)(*(int *)(state + 4) + 0xaf) &= ~0x20;
+    *(byte *)((int)obj + 0xaf) |= 8;
+    (*gObjectTriggerInterface)->preempt((int)obj, *(s16 *)(placement + 0x1e));
+    (*gObjectTriggerInterface)->runSequence(*(byte *)(placement + 0x22), obj,
+                                            *(byte *)(placement + 0x20));
+    *state = 4;
     break;
   case 2:
-    if ((pbVar4[1] != 0) && ((*(byte *)(iVar5 + 0x23) & 1) == 0)) {
-      *(byte *)(*(int *)(pbVar4 + 4) + 0xaf) &= ~0x20;
-      *(byte *)((int)param_1 + 0xaf) |= 8;
-      *pbVar4 = 4;
+    if ((state[1] != 0) && ((*(byte *)(placement + 0x23) & 1) == 0)) {
+      *(byte *)(*(int *)(state + 4) + 0xaf) &= ~0x20;
+      *(byte *)((int)obj + 0xaf) |= 8;
+      *state = 4;
     }
-    else if ((*(s16 *)(iVar5 + 0x18) != -1) &&
-             (uVar3 = GameBit_Get(*(s16 *)(iVar5 + 0x18)), uVar3 == 0)) {
-      *(byte *)(*(int *)(pbVar4 + 4) + 0xaf) &= ~0x20;
-      *(byte *)((int)param_1 + 0xaf) |= 8;
-      *pbVar4 = 3;
+    else if ((*(s16 *)(placement + 0x18) != -1) &&
+             (bitVal = GameBit_Get(*(s16 *)(placement + 0x18)), bitVal == 0)) {
+      *(byte *)(*(int *)(state + 4) + 0xaf) &= ~0x20;
+      *(byte *)((int)obj + 0xaf) |= 8;
+      *state = 3;
     }
-    else if (((*(byte *)((int)param_1 + 0xaf) & 1) != 0) &&
-             ((*(s16 *)(iVar5 + 0x1c) == -1) ||
-              (iVar2 = (*gGameUIInterface)->isEventReady(*(s16 *)(iVar5 + 0x1c)),
-               iVar2 != 0))) {
-      if ((*(byte *)(iVar5 + 0x23) & 2) != 0) {
-        GameBit_Set(*(s16 *)(iVar5 + 0x18),0);
+    else if (((*(byte *)((int)obj + 0xaf) & 1) != 0) &&
+             ((*(s16 *)(placement + 0x1c) == -1) ||
+              (eventReady = (*gGameUIInterface)->isEventReady(*(s16 *)(placement + 0x1c)),
+               eventReady != 0))) {
+      if ((*(byte *)(placement + 0x23) & 2) != 0) {
+        GameBit_Set(*(s16 *)(placement + 0x18),0);
       }
-      if (*(s16 *)(iVar5 + 0x1a) != -1) {
-        GameBit_Set(*(s16 *)(iVar5 + 0x1a),1);
+      if (*(s16 *)(placement + 0x1a) != -1) {
+        GameBit_Set(*(s16 *)(placement + 0x1a),1);
       }
-      *(byte *)((int)param_1 + 0xaf) |= 8;
-      pbVar4[1] = 1;
-      (*gObjectTriggerInterface)->runSequence(*(byte *)(iVar5 + 0x22), param_1,
+      *(byte *)((int)obj + 0xaf) |= 8;
+      state[1] = 1;
+      (*gObjectTriggerInterface)->runSequence(*(byte *)(placement + 0x22), obj,
                                               0xffffffff);
     }
     else {
-      *(byte *)(*(int *)(pbVar4 + 4) + 0xaf) |= 0x20;
-      *(byte *)((int)param_1 + 0xaf) &= ~8;
+      *(byte *)(*(int *)(state + 4) + 0xaf) |= 0x20;
+      *(byte *)((int)obj + 0xaf) &= ~8;
     }
     break;
   case 3:
-    uVar3 = GameBit_Get(*(s16 *)(iVar5 + 0x18));
-    if (uVar3 != 0) {
-      *pbVar4 = 2;
+    bitVal = GameBit_Get(*(s16 *)(placement + 0x18));
+    if (bitVal != 0) {
+      *state = 2;
     }
     break;
   case 4:

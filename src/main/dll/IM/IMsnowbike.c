@@ -55,207 +55,207 @@ extern u8 lbl_80327618[0x104];
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sh_levelcontrol_update(int param_1)
+void sh_levelcontrol_update(int obj)
 {
-  uint *puVar5;
-  uint iVar1;
-  uint iVar3;
-  uint uVar2;
-  u8 cVar4;
+  uint *state;
+  uint val;
+  uint val2;
+  uint val3;
+  u8 animEvt;
   u8 *base = lbl_80327618;
 
-  puVar5 = ((GameObject *)param_1)->extra;
-  if (*(f32 *)((int)puVar5 + 0xc) > lbl_803E54B4) {
+  state = ((GameObject *)obj)->extra;
+  if (*(f32 *)((int)state + 0xc) > lbl_803E54B4) {
     gameTextShow(0x3f6);
-    *(f32 *)((int)puVar5 + 0xc) = *(f32 *)((int)puVar5 + 0xc) - timeDelta;
-    if (*(f32 *)((int)puVar5 + 0xc) < *(f32 *)&lbl_803E54B4) {
-      *(f32 *)((int)puVar5 + 0xc) = lbl_803E54B4;
+    *(f32 *)((int)state + 0xc) = *(f32 *)((int)state + 0xc) - timeDelta;
+    if (*(f32 *)((int)state + 0xc) < *(f32 *)&lbl_803E54B4) {
+      *(f32 *)((int)state + 0xc) = lbl_803E54B4;
     }
   }
-  SH_LevelControl_setMusic(puVar5);
-  iVar1 = GameBit_Get(0x3aa);
-  if (iVar1 != 0) {
-    if (((GameObject *)param_1)->anim.mapEventSlot == 8) {
-      cVar4 = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)param_1)->anim.mapEventSlot, 0x1d);
-      if (cVar4 == '\0') {
-        (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_1)->anim.mapEventSlot, 0x1d, 1);
+  SH_LevelControl_setMusic(state);
+  val = GameBit_Get(0x3aa);
+  if (val != 0) {
+    if (((GameObject *)obj)->anim.mapEventSlot == 8) {
+      animEvt = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)obj)->anim.mapEventSlot, 0x1d);
+      if (animEvt == '\0') {
+        (*gMapEventInterface)->setAnimEvent((int)((GameObject *)obj)->anim.mapEventSlot, 0x1d, 1);
       }
     }
     else {
-      cVar4 = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)param_1)->anim.mapEventSlot, 0x1d);
-      if (cVar4 != '\0') {
-        (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_1)->anim.mapEventSlot, 0x1d, 0);
+      animEvt = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)obj)->anim.mapEventSlot, 0x1d);
+      if (animEvt != '\0') {
+        (*gMapEventInterface)->setAnimEvent((int)((GameObject *)obj)->anim.mapEventSlot, 0x1d, 0);
       }
     }
   }
-  iVar1 = GameBit_Get(0x3b8);
-  if (iVar1 != 0) {
-    cVar4 = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)param_1)->anim.mapEventSlot, 0x1c);
-    if (cVar4 == '\0') {
-      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_1)->anim.mapEventSlot, 0x1c, 1);
+  val = GameBit_Get(0x3b8);
+  if (val != 0) {
+    animEvt = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)obj)->anim.mapEventSlot, 0x1c);
+    if (animEvt == '\0') {
+      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)obj)->anim.mapEventSlot, 0x1c, 1);
     }
   }
   else {
-    cVar4 = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)param_1)->anim.mapEventSlot, 0x1c);
-    if (cVar4 != '\0') {
-      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_1)->anim.mapEventSlot, 0x1c, 0);
+    animEvt = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)obj)->anim.mapEventSlot, 0x1c);
+    if (animEvt != '\0') {
+      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)obj)->anim.mapEventSlot, 0x1c, 0);
     }
   }
-  iVar1 = GameBit_Get(999);
-  if ((iVar1 != 0) &&
-     (cVar4 = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)param_1)->anim.mapEventSlot, 0x1b),
-     cVar4 == '\0')) {
-    (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_1)->anim.mapEventSlot, 0x1b, 1);
+  val = GameBit_Get(999);
+  if ((val != 0) &&
+     (animEvt = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)obj)->anim.mapEventSlot, 0x1b),
+     animEvt == '\0')) {
+    (*gMapEventInterface)->setAnimEvent((int)((GameObject *)obj)->anim.mapEventSlot, 0x1b, 1);
   }
-  iVar1 = GameBit_Get(0x11);
-  if (iVar1 != 0) {
-    cVar4 = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)param_1)->anim.mapEventSlot, 0x1a);
-    if (cVar4 == '\0') {
-      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_1)->anim.mapEventSlot, 0x1a, 1);
+  val = GameBit_Get(0x11);
+  if (val != 0) {
+    animEvt = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)obj)->anim.mapEventSlot, 0x1a);
+    if (animEvt == '\0') {
+      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)obj)->anim.mapEventSlot, 0x1a, 1);
     }
   }
   else {
-    cVar4 = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)param_1)->anim.mapEventSlot, 0x1a);
-    if (cVar4 != '\0') {
-      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_1)->anim.mapEventSlot, 0x1a, 0);
+    animEvt = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)obj)->anim.mapEventSlot, 0x1a);
+    if (animEvt != '\0') {
+      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)obj)->anim.mapEventSlot, 0x1a, 0);
     }
   }
-  switch (*(undefined *)((int)puVar5 + 5)) {
+  switch (*(undefined *)((int)state + 5)) {
   case 1:
-    SH_LevelControl_doEarlyScenes(param_1, puVar5);
+    SH_LevelControl_doEarlyScenes(obj, state);
     break;
   case 2:
-    iVar1 = GameBit_Get(0xbf);
-    if ((iVar1 != 0) && (uVar2 = GameBit_Get(0xc2), uVar2 < 6)) {
-      if (*(short *)((int)puVar5 + 0x12) != 0xdb) {
-        *(undefined2 *)((int)puVar5 + 0x12) = 0xdb;
+    val = GameBit_Get(0xbf);
+    if ((val != 0) && (val3 = GameBit_Get(0xc2), val3 < 6)) {
+      if (*(short *)((int)state + 0x12) != 0xdb) {
+        *(undefined2 *)((int)state + 0x12) = 0xdb;
         GameBit_Set(0xc0, 1);
-        *puVar5 = *puVar5 & 0xfffffffd;
+        *state = *state & 0xfffffffd;
       }
     }
     else {
-      iVar1 = GameBit_Get(0xc2);
-      if ((iVar1 == 6) && (*(short *)((int)puVar5 + 0x12) != 0xcc)) {
-        *(undefined2 *)((int)puVar5 + 0x12) = 0xcc;
+      val = GameBit_Get(0xc2);
+      if ((val == 6) && (*(short *)((int)state + 0x12) != 0xcc)) {
+        *(undefined2 *)((int)state + 0x12) = 0xcc;
         GameBit_Set(0xc0, 1);
-        *puVar5 = *puVar5 & 0xfffffffd;
+        *state = *state & 0xfffffffd;
       }
     }
-    iVar1 = GameBit_Get(0xc2);
-    iVar3 = GameBit_Get(0x66d);
-    if ((iVar3 + iVar1 == 6) && (iVar1 = GameBit_Get(0xe5b), iVar1 == 0)) {
-      Sfx_PlayFromObject(param_1, SFXmn_sml_trex_fstep);
+    val = GameBit_Get(0xc2);
+    val2 = GameBit_Get(0x66d);
+    if ((val2 + val == 6) && (val = GameBit_Get(0xe5b), val == 0)) {
+      Sfx_PlayFromObject(obj, SFXmn_sml_trex_fstep);
       GameBit_Set(0xe5b, 1);
     }
     break;
   case 3:
-    SH_LevelControl_doThornTailEvents(param_1, puVar5);
+    SH_LevelControl_doThornTailEvents(obj, state);
     break;
   case 4:
-    if (*(short *)((int)puVar5 + 0x12) != 0xcc) {
-      *(undefined2 *)((int)puVar5 + 0x12) = 0xcc;
+    if (*(short *)((int)state + 0x12) != 0xcc) {
+      *(undefined2 *)((int)state + 0x12) = 0xcc;
       GameBit_Set(0xc0, 1);
-      *puVar5 = *puVar5 & 0xfffffffd;
+      *state = *state & 0xfffffffd;
     }
-    if (*(byte *)(puVar5 + 1) >= 2) {
-      iVar1 = GameBit_Get(0xdff);
-      if (iVar1 == 0) {
+    if (*(byte *)(state + 1) >= 2) {
+      val = GameBit_Get(0xdff);
+      if (val == 0) {
         padClearAnalogInputX(0);
         padClearAnalogInputY(0);
         buttonDisable(0, 0x100);
         buttonDisable(0, 0x200);
         buttonDisable(0, 0x1000);
-        iVar1 = Obj_GetPlayerObject();
-        if ((*(ushort *)(iVar1 + 0xb0) & 0x1000) == 0) {
-          (*gObjectTriggerInterface)->runSequence(7, (void *)param_1, 0xffffffff);
+        val = Obj_GetPlayerObject();
+        if ((*(ushort *)(val + 0xb0) & 0x1000) == 0) {
+          (*gObjectTriggerInterface)->runSequence(7, (void *)obj, 0xffffffff);
           GameBit_Set(0xdff, 1);
         }
       }
       else {
-        iVar1 = GameBit_Get(0xede);
-        if (iVar1 == 0) {
+        val = GameBit_Get(0xede);
+        if (val == 0) {
           GameBit_Set(0xede, 1);
           GameBit_Set(0x9d5, 1);
         }
       }
     }
     else {
-      *(byte *)(puVar5 + 1) += 1;
+      *(byte *)(state + 1) += 1;
     }
     break;
   case 5:
-    iVar1 = GameBit_Get(0x23c);
-    if (iVar1 != 0) {
-      if (*(short *)((int)puVar5 + 0x12) != 0xcc) {
-        *(undefined2 *)((int)puVar5 + 0x12) = 0xcc;
+    val = GameBit_Get(0x23c);
+    if (val != 0) {
+      if (*(short *)((int)state + 0x12) != 0xcc) {
+        *(undefined2 *)((int)state + 0x12) = 0xcc;
         GameBit_Set(0xc0, 1);
-        *puVar5 = *puVar5 & 0xfffffffd;
+        *state = *state & 0xfffffffd;
       }
     }
-    else if (*(short *)((int)puVar5 + 0x12) == 0xcc) {
-      *(s16 *)((int)puVar5 + 0x12) = -1;
+    else if (*(short *)((int)state + 0x12) == 0xcc) {
+      *(s16 *)((int)state + 0x12) = -1;
     }
-    iVar1 = GameBit_Get(0x90);
-    if (((iVar1 != 0) && (iVar1 = GameBit_Get(0xeb3), iVar1 == 0)) &&
-       (iVar1 = Obj_GetPlayerObject(), (*(ushort *)(iVar1 + 0xb0) & 0x1000) == 0)) {
+    val = GameBit_Get(0x90);
+    if (((val != 0) && (val = GameBit_Get(0xeb3), val == 0)) &&
+       (val = Obj_GetPlayerObject(), (*(ushort *)(val + 0xb0) & 0x1000) == 0)) {
       GameBit_Set(0xeb3, 1);
     }
     break;
   case 6:
-    SH_LevelControl_runBloopEvent(param_1, puVar5);
+    SH_LevelControl_runBloopEvent(obj, state);
     break;
   case 7:
-    iVar1 = GameBit_Get(0x1a0);
-    if (iVar1 != 0) {
-      if (*(short *)((int)puVar5 + 0x12) != 0xcc) {
-        *(undefined2 *)((int)puVar5 + 0x12) = 0xcc;
+    val = GameBit_Get(0x1a0);
+    if (val != 0) {
+      if (*(short *)((int)state + 0x12) != 0xcc) {
+        *(undefined2 *)((int)state + 0x12) = 0xcc;
         GameBit_Set(0xc0, 1);
-        *puVar5 = *puVar5 & 0xfffffffd;
+        *state = *state & 0xfffffffd;
       }
     }
-    else if (*(short *)((int)puVar5 + 0x12) == 0xcc) {
-      *(s16 *)((int)puVar5 + 0x12) = -1;
+    else if (*(short *)((int)state + 0x12) == 0xcc) {
+      *(s16 *)((int)state + 0x12) = -1;
     }
-    if (*(byte *)(puVar5 + 1) >= 2) {
-      iVar1 = GameBit_Get(0x177);
-      if (iVar1 == 0) {
+    if (*(byte *)(state + 1) >= 2) {
+      val = GameBit_Get(0x177);
+      if (val == 0) {
         padClearAnalogInputX(0);
         padClearAnalogInputY(0);
         buttonDisable(0, 0x100);
         buttonDisable(0, 0x200);
         buttonDisable(0, 0x1000);
-        iVar1 = Obj_GetPlayerObject();
-        if ((*(ushort *)(iVar1 + 0xb0) & 0x1000) == 0) {
-          (*gObjectTriggerInterface)->runSequence(4, (void *)param_1, 0xffffffff);
+        val = Obj_GetPlayerObject();
+        if ((*(ushort *)(val + 0xb0) & 0x1000) == 0) {
+          (*gObjectTriggerInterface)->runSequence(4, (void *)obj, 0xffffffff);
           GameBit_Set(0x177, 1);
         }
       }
     }
     else {
-      *(byte *)(puVar5 + 1) += 1;
+      *(byte *)(state + 1) += 1;
     }
     break;
   case 8:
-    if (*(short *)((int)puVar5 + 0x12) != 0xcc) {
-      *(undefined2 *)((int)puVar5 + 0x12) = 0xcc;
+    if (*(short *)((int)state + 0x12) != 0xcc) {
+      *(undefined2 *)((int)state + 0x12) = 0xcc;
       GameBit_Set(0xc0, 1);
-      *puVar5 = *puVar5 & 0xfffffffd;
+      *state = *state & 0xfffffffd;
     }
-    iVar1 = GameBit_Get(0x19c);
-    if ((iVar1 != 0) && (iVar1 = GameBit_Get(0xf3e), iVar1 == 0)) {
+    val = GameBit_Get(0x19c);
+    if ((val != 0) && (val = GameBit_Get(0xf3e), val == 0)) {
       GameBit_Set(0xf3e, 1);
-      iVar1 = GameBit_Get(0xc64);
-      if (iVar1 == 0) {
+      val = GameBit_Get(0xc64);
+      if (val == 0) {
         GameBit_Set(0x9d5, 1);
       }
     }
   }
-  iVar1 = GameBit_Get(0xd36);
-  if (iVar1 != 0) {
-    if (((GameObject *)param_1)->unkF8 != 2) {
-      ((GameObject *)param_1)->unkF8 = 2;
+  val = GameBit_Get(0xd36);
+  if (val != 0) {
+    if (((GameObject *)obj)->unkF8 != 2) {
+      ((GameObject *)obj)->unkF8 = 2;
       envFxActFn_800887f8(0);
-      if (((GameObject *)param_1)->unkF4 == 2) {
+      if (((GameObject *)obj)->unkF4 == 2) {
         getEnvfxActImmediately(0, 0, 0x1bf, 0);
         getEnvfxActImmediately(0, 0, 0x231, 0);
         getEnvfxActImmediately(0, 0, 0x232, 0);
@@ -270,11 +270,11 @@ void sh_levelcontrol_update(int param_1)
     }
   }
   else {
-    iVar1 = GameBit_Get(0xd35);
-    if (iVar1 != 0) {
-      if (((GameObject *)param_1)->unkF8 != 1) {
-        ((GameObject *)param_1)->unkF8 = 1;
-        if (((GameObject *)param_1)->unkF4 == 2) {
+    val = GameBit_Get(0xd35);
+    if (val != 0) {
+      if (((GameObject *)obj)->unkF8 != 1) {
+        ((GameObject *)obj)->unkF8 = 1;
+        if (((GameObject *)obj)->unkF4 == 2) {
           envFxActFn_800887f8(0);
           getEnvfxActImmediately(0, 0, 0x1bf, 0);
           getEnvfxActImmediately(0, 0, 0x1be, 0);
@@ -290,9 +290,9 @@ void sh_levelcontrol_update(int param_1)
         }
       }
     }
-    else if (((GameObject *)param_1)->unkF8 != 0) {
-      ((GameObject *)param_1)->unkF8 = 0;
-      if (((GameObject *)param_1)->unkF4 == 2) {
+    else if (((GameObject *)obj)->unkF8 != 0) {
+      ((GameObject *)obj)->unkF8 = 0;
+      if (((GameObject *)obj)->unkF4 == 2) {
         fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
         envFxActFn_800887f8(0x3f);
         getEnvfxActImmediately(0, 0, 0x244, 0);
@@ -305,7 +305,7 @@ void sh_levelcontrol_update(int param_1)
       }
     }
   }
-  mapUnloadFn_801d7c94((void *)param_1, puVar5);
+  mapUnloadFn_801d7c94((void *)obj, state);
   return;
 }
 
