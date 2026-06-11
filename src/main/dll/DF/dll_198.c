@@ -283,8 +283,6 @@ int DFSH_Door2Speci_SeqFn(int obj)
     int alpha;
     u32 phaseStep;
     f32 phase;
-    f64 phaseBits;
-    u64 phaseBitsRaw;
 
     extra = ((GameObject*)obj)->extra;
     objDef = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -316,9 +314,7 @@ int DFSH_Door2Speci_SeqFn(int obj)
         {
             phaseStep = (extra->phase + framesThisStep * 800) & 0xffff;
             extra->phase = phaseStep;
-            phaseBitsRaw = CONCAT44(0x43300000, (u32)extra->phase);
-            phaseBits = *(f64*)&phaseBitsRaw;
-            phase = (lbl_803E4E3C * ((f32)phaseBits - (f32)lbl_803E4E48)) / lbl_803E4E40;
+            phase = (lbl_803E4E3C * (f32)(u32)extra->phase) / lbl_803E4E40;
             *texture = (s32) - (lbl_803E4E34 * (lbl_803E4E38 - mathCosf(phase)) - lbl_803E4E30);
         }
         break;
