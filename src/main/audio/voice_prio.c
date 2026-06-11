@@ -48,7 +48,7 @@ void voiceSetPriority(McmdVoiceState *svoice, u8 prio)
 
     v = (u8)svoice->voiceHandle;
     vb = (VoicePrioBlock *)vidListNodes;
-    vps = &vb->prioVoices[v];
+    vps = (VoicePrioVoice *)&((u8 *)vb)[(v << 2) + 2240];
     if (vps->user == 1) {
         if (svoice->priorityGroup == prio) {
             return;
