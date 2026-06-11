@@ -895,7 +895,7 @@ int fn_80174668(int obj, PushableState* state)
     }
     if (state->eyeOpenAmount < lbl_803E3550)
     {
-        state->eyeOpenAmount = lbl_803E3550;
+        state->eyeOpenAmount = *(f32 *)&lbl_803E3550;
     }
     dy = *(f32*)((int)state->nearestObj + 0x14) - ((GameObject*)obj)->anim.localPosZ;
     if (dy < lbl_803E3528)
