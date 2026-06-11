@@ -8,78 +8,17 @@
 #include "main/objlib.h"
 #include "main/resource.h"
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern undefined4 FUN_80017688();
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern undefined4 FUN_8001771c();
-extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017a78();
-extern int FUN_80017a90();
-extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80017ad0();
-extern int FUN_80039520();
-extern undefined4 FUN_8003b56c();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_800400b0();
-extern int FUN_800632f4();
-extern int FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
 
 extern ModgfxInterface** gModgfxInterface;
 extern EffectInterface** gPartfxInterface;
 extern MapEventInterface** gMapEventInterface;
-extern undefined4 DAT_803de940;
 extern undefined4 DAT_803de944;
 extern undefined4 DAT_803de946;
-extern undefined4 DAT_803de948;
-extern undefined4* DAT_803de958;
-extern f64 DOUBLE_803e6e38;
-extern f64 DOUBLE_803e6e40;
-extern f64 DOUBLE_803e6e50;
-extern f64 DOUBLE_803e6e70;
-extern f64 DOUBLE_803e6ea8;
 extern f32 lbl_803DC074;
-extern f32 lbl_803DE950;
-extern f32 lbl_803E6DD0;
-extern f32 lbl_803E6DDC;
-extern f32 lbl_803E6DE0;
-extern f32 lbl_803E6DE8;
-extern f32 lbl_803E6DF0;
-extern f32 lbl_803E6DF8;
-extern f32 lbl_803E6DFC;
-extern f32 lbl_803E6E00;
-extern f32 lbl_803E6E04;
-extern f32 lbl_803E6E08;
-extern f32 lbl_803E6E14;
-extern f32 lbl_803E6E18;
-extern f32 lbl_803E6E1C;
-extern f32 lbl_803E6E20;
-extern f32 lbl_803E6E24;
-extern f32 lbl_803E6E28;
-extern f32 lbl_803E6E2C;
-extern f32 lbl_803E6E30;
-extern f32 lbl_803E6E48;
-extern f32 lbl_803E6E4C;
-extern f32 lbl_803E6E60;
-extern f32 lbl_803E6E64;
-extern f32 lbl_803E6E68;
-extern f32 lbl_803E6E78;
-extern f32 lbl_803E6E7C;
-extern f32 lbl_803E6E80;
-extern f32 lbl_803E6E84;
-extern f32 lbl_803E6E88;
-extern f32 lbl_803E6E8C;
-extern f32 lbl_803E6E98;
-extern f32 lbl_803E6E9C;
-extern f32 lbl_803E6EA0;
 
 /*
  * --INFO--
@@ -411,7 +350,6 @@ int dbegg_setScale(int obj)
 /* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
 extern f32 lbl_803E61C8;
 extern f32 lbl_803E61D0;
-extern f64 lbl_803E61D8;
 extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
 extern int Obj_SetActiveModelIndex(int obj, int idx);
 #pragma scheduling off
@@ -628,11 +566,8 @@ extern f32 lbl_803E618C;
 extern f32 lbl_803E6190;
 extern f32 lbl_803E6194;
 extern f32 lbl_803E6198;
-extern f64 lbl_803E61A0;
-extern f64 lbl_803E61A8;
 extern f32 lbl_803E61B0;
 extern f32 lbl_803E61B4;
-extern f64 lbl_803E61B8;
 extern f32 lbl_803E61E0;
 extern f32 lbl_803E61E4;
 extern f32 lbl_803E61E8;
@@ -644,7 +579,6 @@ extern f32 lbl_803E61FC;
 extern f32 lbl_803E6200;
 extern f32 lbl_803E6204;
 extern f32 lbl_803E6208;
-extern f64 lbl_803E6210;
 extern void* getTrickyObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int* objFindTexture(int obj, int idx, int p3);
