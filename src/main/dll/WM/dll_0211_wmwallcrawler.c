@@ -1,3 +1,15 @@
+/*
+ * wmwallcrawler (DLL 0x211) - the crawling baddies on the world map.
+ * Each crawler perches at its spawn point until the player (or, for the
+ * WMWALLCRAWLER_FLAG_TARGET_NEAREST variant, the nearest group-10
+ * object) comes within triggerRadius, then dives to its home height and
+ * chases along the surface, lunging (anim move 2) and striking on
+ * contact. When its life timer expires it flees and either re-perches,
+ * despawns, or plays its death anim (WMWALLCRAWLER_FLAG_DEATH_ANIM).
+ * Per-placement behaviour comes from the variant flag table
+ * lbl_80328DD0. All crawlers despawn for good once the six progress
+ * game bits 0x2AA-0x2AF are set.
+ */
 #include "main/dll/WM/wm_shared.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -7,12 +19,63 @@
 
 typedef struct WmwallcrawlerState
 {
-    u8 pad0[0x28C - 0x0];
-    s16 unk28C;
-    u8 pad28E[0x294 - 0x28E];
-    u16 unk294;
-    u8 pad296[0x29C - 0x296];
+    u8 pathState[0x268]; /* 0x000: PathControlInterface state block */
+    f32 triggerRadius;   /* 0x268: aggro radius, from placement; rescaled after each dive */
+    f32 unk26C;          /* 0x26C: threshold vs lbl_803E5FD0, set once at init */
+    f32 homeX;           /* 0x270: home position, from placement */
+    f32 homeY;           /* 0x274 */
+    f32 homeZ;           /* 0x278 */
+    u8 pad27C[0x284 - 0x27C];
+    f32 animSpeed;       /* 0x284: ObjAnim_AdvanceCurrentMove rate */
+    s16 attackTimer;     /* 0x288: strike cooldown (float-param, timerCountDown) */
+    s16 explodeTimer;    /* 0x28A: TIMED_EXPLODE countdown to the particle burst */
+    s16 despawnTimer;    /* 0x28C: post-burst countdown; render gates on 0 */
+    s16 heightOffset;    /* 0x28E: from placement, added to homeY for the perch */
+    s16 lifeTimer;       /* 0x290: frames until the crawler retreats/expires */
+    s16 counterGameBit;  /* 0x292: incremented when the death anim completes (0/-1 = none) */
+    u16 flags;           /* 0x294: WMWALLCRAWLER_FLAG_*, from lbl_80328DD0[variant] */
+    s8 mode;             /* 0x296: WMWALLCRAWLER_MODE_* */
+    u8 pad297;
+    u8 variant;          /* 0x298: placement byte indexing the flag table */
+    u8 hitBits;          /* 0x299: bit 0 = hit recorded, consumed by hitDetect (WcHitBits) */
+    u8 pad29A[0x29C - 0x29A];
 } WmwallcrawlerState;
+
+STATIC_ASSERT(offsetof(WmwallcrawlerState, triggerRadius) == 0x268);
+STATIC_ASSERT(offsetof(WmwallcrawlerState, homeX) == 0x270);
+STATIC_ASSERT(offsetof(WmwallcrawlerState, animSpeed) == 0x284);
+STATIC_ASSERT(offsetof(WmwallcrawlerState, attackTimer) == 0x288);
+STATIC_ASSERT(offsetof(WmwallcrawlerState, despawnTimer) == 0x28C);
+STATIC_ASSERT(offsetof(WmwallcrawlerState, lifeTimer) == 0x290);
+STATIC_ASSERT(offsetof(WmwallcrawlerState, counterGameBit) == 0x292);
+STATIC_ASSERT(offsetof(WmwallcrawlerState, flags) == 0x294);
+STATIC_ASSERT(offsetof(WmwallcrawlerState, mode) == 0x296);
+STATIC_ASSERT(offsetof(WmwallcrawlerState, variant) == 0x298);
+STATIC_ASSERT(offsetof(WmwallcrawlerState, hitBits) == 0x299);
+STATIC_ASSERT(sizeof(WmwallcrawlerState) == 0x29C);
+
+/* state->flags, from the per-variant table lbl_80328DD0 */
+#define WMWALLCRAWLER_FLAG_START_ACTIVE 0x1    /* spawn already diving (rotZ 0) */
+#define WMWALLCRAWLER_FLAG_PATH_CONTROL 0x2    /* drive movement through gPathControlInterface */
+#define WMWALLCRAWLER_FLAG_FLOOR_SNAP 0x4      /* snap Y to the nearest floor (hitDetectFn_80065e50) */
+#define WMWALLCRAWLER_FLAG_TIMED_EXPLODE 0x8   /* burst into particles when explodeTimer expires */
+#define WMWALLCRAWLER_FLAG_TARGET_NEAREST 0x10 /* chase the nearest group-10 object, not the player */
+#define WMWALLCRAWLER_FLAG_CLAMP_SPEED 0x20    /* cap velocity at lbl_803DC130 */
+#define WMWALLCRAWLER_FLAG_FADE_IN 0x40        /* spawn at alpha 0, fade in during render */
+#define WMWALLCRAWLER_FLAG_NO_RETREAT 0x80     /* ignore lifeTimer (never re-perch/expire) */
+#define WMWALLCRAWLER_FLAG_DEATH_ANIM 0x100    /* play the death anim instead of despawning */
+#define WMWALLCRAWLER_FLAG_TRICKY_FLEE 0x200   /* flee when Tricky closes in; random re-dive */
+#define WMWALLCRAWLER_FLAG_ATTACK_MOVE 0x400   /* lunge (anim move 2) when close */
+
+/* state->mode */
+enum
+{
+    WMWALLCRAWLER_MODE_IDLE = 0,    /* perched at spawn height */
+    WMWALLCRAWLER_MODE_DESCEND = 1, /* dropping to home height */
+    WMWALLCRAWLER_MODE_CHASE = 3,   /* tracking the target along the surface */
+    WMWALLCRAWLER_MODE_FLEE = 5,    /* reversed away from the target, life timer running */
+    WMWALLCRAWLER_MODE_DIE = 6      /* death anim, then free/hide */
+};
 
 
 int wmwallcrawler_getExtraSize(void) { return 0x29c; }
@@ -65,6 +128,7 @@ extern f32 lbl_803E6014;
 extern f32 lbl_803E6018;
 extern void fn_801F8008(int a, f32* b);
 
+/* overlay of state->hitBits; the bitfield assign emits the rlwimi form (#12) */
 typedef struct
 {
     u8 hit : 1;
@@ -100,7 +164,7 @@ void wmwallcrawler_update(int obj)
     sum = 0;
     list = 0;
     best = lbl_803E5FBC;
-    if ((((WmwallcrawlerState*)st)->unk294 & 0x10) == 0)
+    if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) == 0)
     {
         player = (u32)Obj_GetPlayerObject();
     }
@@ -112,7 +176,7 @@ void wmwallcrawler_update(int obj)
     {
         sq = (f32)GameBit_Get(0x789);
         lbl_803DC130 = lbl_803E5FC0 * sq + lbl_803E5FC0;
-        if (*(s8*)(st + 0x296) == 6)
+        if (*(s8*)(st + 0x296) == WMWALLCRAWLER_MODE_DIE)
         {
             *(u8*)(obj + 0xaf) |= 8;
             if (((GameObject*)obj)->anim.currentMove != 1)
@@ -147,7 +211,7 @@ void wmwallcrawler_update(int obj)
         }
         else
         {
-            if ((((WmwallcrawlerState*)st)->unk294 & 8) != 0)
+            if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TIMED_EXPLODE) != 0)
             {
                 if (timerCountDown(st + 0x28a) != 0)
                 {
@@ -176,6 +240,7 @@ void wmwallcrawler_update(int obj)
                     return;
                 }
             }
+            /* all six progress bits 0x2AA-0x2AF set -> crawlers gone for good */
             for (k = 0; k < 6; k++)
             {
                 sum += GameBit_Get(k + 0x2aa);
@@ -204,13 +269,13 @@ void wmwallcrawler_update(int obj)
                 else
                 {
                     mode = *(s8*)(st + 0x296);
-                    if ((mode == 3 || mode == 1 || mode == 5) && (((WmwallcrawlerState*)st)->unk294 & 0x80) == 0)
+                    if ((mode == WMWALLCRAWLER_MODE_CHASE || mode == WMWALLCRAWLER_MODE_DESCEND || mode == WMWALLCRAWLER_MODE_FLEE) && (((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_NO_RETREAT) == 0)
                     {
-                        if (mode == 5)
+                        if (mode == WMWALLCRAWLER_MODE_FLEE)
                         {
                             if (lbl_803E5FD0 > lbl_803E5FD4 + *(f32*)(st + 0x26c))
                             {
-                                *(u8*)(st + 0x296) = 3;
+                                *(u8*)(st + 0x296) = WMWALLCRAWLER_MODE_CHASE;
                                 *(s16*)(st + 0x288) = 0x14;
                             }
                         }
@@ -223,9 +288,9 @@ void wmwallcrawler_update(int obj)
                             }
                             if (*(s16*)(st + 0x290) <= 0)
                             {
-                                if ((((WmwallcrawlerState*)st)->unk294 & 0x100) != 0)
+                                if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_DEATH_ANIM) != 0)
                                 {
-                                    *(u8*)(st + 0x296) = 6;
+                                    *(u8*)(st + 0x296) = WMWALLCRAWLER_MODE_DIE;
                                 }
                                 else if (*(void**)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14) == 0)
                                 {
@@ -241,26 +306,26 @@ void wmwallcrawler_update(int obj)
                                 }
                                 return;
                             }
-                            if (*(s8*)(st + 0x296) != 5)
+                            if (*(s8*)(st + 0x296) != WMWALLCRAWLER_MODE_FLEE)
                             {
                                 Sfx_StopObjectChannel(obj, 0x10);
-                                *(u8*)(st + 0x296) = 5;
+                                *(u8*)(st + 0x296) = WMWALLCRAWLER_MODE_FLEE;
                                 *(f32*)(obj + 0x24) = -*(f32*)(obj + 0x24) * (d = lbl_803E5FD8);
                                 *(f32*)(obj + 0x2c) = -*(f32*)(obj + 0x2c) * d;
                             }
                         }
                     }
-                    if ((((WmwallcrawlerState*)st)->unk294 & 0x200) != 0 && *(s8*)(st + 0x296) != 5 &&
+                    if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TRICKY_FLEE) != 0 && *(s8*)(st + 0x296) != WMWALLCRAWLER_MODE_FLEE &&
                         (tricky = getTrickyObject()) != 0 &&
                         Vec_distance((void*)(obj + 0x18), (void*)(tricky + 0x18)) < lbl_803E5FD4 &&
                         (**(u8 (**)(int))(*(int*)(*(int*)(tricky + 0x68)) + 0x44))(tricky) != 0)
                     {
-                        *(u8*)(st + 0x296) = 5;
+                        *(u8*)(st + 0x296) = WMWALLCRAWLER_MODE_FLEE;
                         Sfx_PlayFromObject(obj, 0x74);
                     }
-                    if (*(s8*)(st + 0x296) == 5)
+                    if (*(s8*)(st + 0x296) == WMWALLCRAWLER_MODE_FLEE)
                     {
-                        if ((((WmwallcrawlerState*)st)->unk294 & 2) != 0)
+                        if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_PATH_CONTROL) != 0)
                         {
                             (*gPathControlInterface)->update((void*)obj, st, timeDelta);
                             (*gPathControlInterface)->apply((void*)obj, st);
@@ -278,7 +343,7 @@ void wmwallcrawler_update(int obj)
                         *(f32*)(obj + 0xc) = *(f32*)(obj + 0x24) * timeDelta + *(f32*)(obj + 0xc);
                         *(f32*)(obj + 0x14) = *(f32*)(obj + 0x2c) * timeDelta + *(f32*)(obj + 0x14);
                         *(s16*)(st + 0x290) -= framesThisStep;
-                        if ((((WmwallcrawlerState*)st)->unk294 & 4) != 0)
+                        if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_FLOOR_SNAP) != 0)
                         {
                             best = lbl_803E5FBC;
                             n = hitDetectFn_80065e50(obj, *(f32*)(obj + 0xc), *(f32*)(obj + 0x10), *(f32*)(obj + 0x14),
@@ -312,24 +377,24 @@ void wmwallcrawler_update(int obj)
                         {
                             *(f32*)(obj + 0x10) = *(f32*)(st + 0x274);
                         }
-                        if ((((WmwallcrawlerState*)st)->unk294 & 0x80) == 0 && *(s16*)(st + 0x290) <= 0)
+                        if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_NO_RETREAT) == 0 && *(s16*)(st + 0x290) <= 0)
                         {
-                            if ((((WmwallcrawlerState*)st)->unk294 & 0x100) != 0)
+                            if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_DEATH_ANIM) != 0)
                             {
-                                *(u8*)(st + 0x296) = 6;
+                                *(u8*)(st + 0x296) = WMWALLCRAWLER_MODE_DIE;
                             }
                             else
                             {
-                                *(u8*)(st + 0x296) = 0;
+                                *(u8*)(st + 0x296) = WMWALLCRAWLER_MODE_IDLE;
                                 Sfx_StopObjectChannel(obj, 0x18);
                                 *(f32*)(obj + 0xc) = *(f32*)(st + 0x270);
                                 *(f32*)(obj + 0x10) = *(f32*)(st + 0x274) + (f32) * (s16*)(st + 0x28e);
                                 *(f32*)(obj + 0x14) = *(f32*)(st + 0x278);
                             }
                         }
-                        else if ((((WmwallcrawlerState*)st)->unk294 & 0x200) != 0 && (int)randomGetRange(0, 0x14) == 0)
+                        else if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TRICKY_FLEE) != 0 && (int)randomGetRange(0, 0x14) == 0)
                         {
-                            *(u8*)(st + 0x296) = 3;
+                            *(u8*)(st + 0x296) = WMWALLCRAWLER_MODE_CHASE;
                             s16toFloat(st + 0x288, (s16)(randomGetRange(0, 0x14) + 0x32));
                         }
                     }
@@ -339,13 +404,13 @@ void wmwallcrawler_update(int obj)
                         if (dist < *(f32*)(st + 0x268) || GameBit_Get(0x1d9) != 0)
                         {
                             mode = *(s8*)(st + 0x296);
-                            if (mode == 0)
+                            if (mode == WMWALLCRAWLER_MODE_IDLE)
                             {
-                                *(u8*)(st + 0x296) = 1;
+                                *(u8*)(st + 0x296) = WMWALLCRAWLER_MODE_DESCEND;
                                 s16toFloat(st + 0x288, 2);
                                 ((GameObject*)obj)->anim.rotZ = 0;
                             }
-                            else if (mode == 1)
+                            else if (mode == WMWALLCRAWLER_MODE_DESCEND)
                             {
                                 if (*(f32*)(obj + 0x28) > lbl_803E5FE4)
                                 {
@@ -355,22 +420,22 @@ void wmwallcrawler_update(int obj)
                                 {
                                     *(f32*)(obj + 0x10) = *(f32*)(st + 0x274);
                                     *(f32*)(obj + 0x28) = lbl_803E5FB0;
-                                    *(u8*)(st + 0x296) = 3;
+                                    *(u8*)(st + 0x296) = WMWALLCRAWLER_MODE_CHASE;
                                     s16toFloat(st + 0x288, (s16)(randomGetRange(0, 0x14) + 0x32));
                                     *(f32*)(st + 0x268) = *(f32*)(st + 0x268) * lbl_803E5FEC;
                                     ObjAnim_SetCurrentMove(obj, 0, lbl_803E5FB0, 0);
                                 }
                             }
-                            else if (mode == 3)
+                            else if (mode == WMWALLCRAWLER_MODE_CHASE)
                             {
                                 Sfx_PlayFromObject(obj, 0x47);
-                                if ((((WmwallcrawlerState*)st)->unk294 & 2) != 0)
+                                if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_PATH_CONTROL) != 0)
                                 {
                                     (*gPathControlInterface)->update((void*)obj, st, timeDelta);
                                     (*gPathControlInterface)->apply((void*)obj, st);
                                     (*gPathControlInterface)->advance((void*)obj, st, timeDelta);
                                 }
-                                if ((((WmwallcrawlerState*)st)->unk294 & 4) != 0)
+                                if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_FLOOR_SNAP) != 0)
                                 {
                                     best = lbl_803E5FBC;
                                     n = hitDetectFn_80065e50(obj, *(f32*)(obj + 0xc), *(f32*)(obj + 0x10),
@@ -412,7 +477,7 @@ void wmwallcrawler_update(int obj)
                                 *(f32*)(obj + 0x28) = sq * timeDelta;
                                 sq = dz / d;
                                 *(f32*)(obj + 0x2c) = sq * timeDelta;
-                                if ((((WmwallcrawlerState*)st)->unk294 & 0x20) != 0 &&
+                                if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_CLAMP_SPEED) != 0 &&
                                     sqrtf(*(f32*)(obj + 0x2c) * *(f32*)(obj + 0x2c) +
                                         (*(f32*)(obj + 0x24) * *(f32*)(obj + 0x24) +
                                         *(f32*)(obj + 0x28) * *(f32*)(obj + 0x28))) > lbl_803DC130)
@@ -422,13 +487,13 @@ void wmwallcrawler_update(int obj)
                                     *(f32*)(obj + 0x28) = *(f32*)(obj + 0x28) * (timeDelta * lbl_803DC130);
                                     *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) * (timeDelta * lbl_803DC130);
                                 }
-                                if (((GameObject*)obj)->anim.currentMove == 0 && (((WmwallcrawlerState*)st)->unk294 &
-                                    0x400) != 0 && dist < lbl_803E5FF4)
+                                if (((GameObject*)obj)->anim.currentMove == 0 && (((WmwallcrawlerState*)st)->flags &
+                                    WMWALLCRAWLER_FLAG_ATTACK_MOVE) != 0 && dist < lbl_803E5FF4)
                                 {
                                     ObjAnim_SetCurrentMove(obj, 2, lbl_803E5FB0, 0);
                                 }
                                 if (dist < lbl_803E5FF8 ||
-                                    ((((WmwallcrawlerState*)st)->unk294 & 0x10) != 0 &&
+                                    ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) != 0 &&
                                         (*(s16*)&(*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->
                                             flags & 8) != 0 &&
                                         dist < lbl_803E5FFC))
@@ -444,11 +509,11 @@ void wmwallcrawler_update(int obj)
                                     {
                                         lbl_803DDCB8 = 0;
                                     }
-                                    else if (lbl_803DDCB8 >= 3 || ((((WmwallcrawlerState*)st)->unk294 & 0x10) != 0 &&
+                                    else if (lbl_803DDCB8 >= 3 || ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) != 0 &&
                                         lbl_803DDCB8 >= 3))
                                     {
                                         Sfx_PlayFromObject(obj, 0x75);
-                                        if ((((WmwallcrawlerState*)st)->unk294 & 0x10) == 0)
+                                        if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) == 0)
                                         {
                                             ObjMsg_SendToObject(player, 0x60004, obj, 1);
                                         }
@@ -458,7 +523,7 @@ void wmwallcrawler_update(int obj)
                                         }
                                         lbl_803DDCB8 = 0;
                                     }
-                                    if ((((WmwallcrawlerState*)st)->unk294 & 0x10) == 0)
+                                    if ((((WmwallcrawlerState*)st)->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) == 0)
                                     {
                                         d = lbl_803E6008;
                                         *(f32*)(obj + 0xc) = d * -*(f32*)(obj + 0x24) + *(f32*)(obj + 0xc);
@@ -502,7 +567,7 @@ void wmwallcrawler_update(int obj)
                                 *(f32*)(obj + 0x14) = *(f32*)(obj + 0x2c) * timeDelta + *(f32*)(obj + 0x14);
                             }
                         }
-                        else if (*(s8*)(st + 0x296) == 1)
+                        else if (*(s8*)(st + 0x296) == WMWALLCRAWLER_MODE_DESCEND)
                         {
                             if (*(f32*)(obj + 0x28) > lbl_803E5FE0)
                             {
@@ -512,14 +577,14 @@ void wmwallcrawler_update(int obj)
                             {
                                 *(f32*)(obj + 0x10) = *(f32*)(st + 0x274);
                                 *(f32*)(obj + 0x28) = lbl_803E5FB0;
-                                *(u8*)(st + 0x296) = 3;
+                                *(u8*)(st + 0x296) = WMWALLCRAWLER_MODE_CHASE;
                                 s16toFloat(st + 0x288, (s16)(randomGetRange(0, 0x14) + 0x32));
                                 *(f32*)(st + 0x268) = *(f32*)(st + 0x268) * lbl_803E5FEC;
                                 ObjAnim_SetCurrentMove(obj, 0, lbl_803E5FB0, 0);
                             }
                             *(f32*)(obj + 0x10) = *(f32*)(obj + 0x28) * timeDelta + *(f32*)(obj + 0x10);
                         }
-                        if (*(s8*)(st + 0x296) == 0)
+                        if (*(s8*)(st + 0x296) == WMWALLCRAWLER_MODE_IDLE)
                         {
                             *(f32*)(obj + 0x10) = *(f32*)(obj + 0x28) * timeDelta + *(f32*)(obj + 0x10);
                         }
@@ -536,7 +601,7 @@ void wmwallcrawler_update(int obj)
 
 int wmwallcrawler_animEventCallback(int obj)
 {
-    *(u8*)(*(int*)&((GameObject*)obj)->extra + 0x296) = 1;
+    *(u8*)(*(int*)&((GameObject*)obj)->extra + 0x296) = WMWALLCRAWLER_MODE_DESCEND;
     return 0;
 }
 
@@ -549,19 +614,19 @@ void wmwallcrawler_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
     ObjAnimComponent* objAnim = &((GameObject*)p1)->anim;
     int* inner = ((GameObject*)p1)->extra;
-    if ((((WmwallcrawlerState*)inner)->unk294 & 0x40) != 0 && (u8)objAnim->alpha < 0xff)
+    if ((((WmwallcrawlerState*)inner)->flags & WMWALLCRAWLER_FLAG_FADE_IN) != 0 && (u8)objAnim->alpha < 0xff)
     {
         if (objAnim->alpha > 0xff - framesThisStep)
         {
             objAnim->alpha = 0xff;
-            ((WmwallcrawlerState*)inner)->unk294 &= ~0x40;
+            ((WmwallcrawlerState*)inner)->flags &= ~WMWALLCRAWLER_FLAG_FADE_IN;
         }
         else
         {
             objAnim->alpha += framesThisStep;
         }
     }
-    if (vis != 0 && ((WmwallcrawlerState*)inner)->unk28C == 0)
+    if (vis != 0 && ((WmwallcrawlerState*)inner)->despawnTimer == 0)
     {
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E5FB4);
     }
@@ -605,9 +670,9 @@ void wmwallcrawler_hitDetect(int obj)
     f32 stk = lbl_803E5FB8;
     if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0)
     {
-        if ((((WmwallcrawlerState*)inner)->unk294 & 0x100) != 0)
+        if ((((WmwallcrawlerState*)inner)->flags & WMWALLCRAWLER_FLAG_DEATH_ANIM) != 0)
         {
-            *(u8*)(inner + 0x296) = 6;
+            *(u8*)(inner + 0x296) = WMWALLCRAWLER_MODE_DIE;
         }
         else if (*(void**)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14) == NULL)
         {
@@ -625,7 +690,7 @@ void wmwallcrawler_hitDetect(int obj)
     else if (((WcHitBits*)(inner + 0x299))->hit != 0)
     {
         int target;
-        if ((((WmwallcrawlerState*)inner)->unk294 & 0x10) == 0)
+        if ((((WmwallcrawlerState*)inner)->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) == 0)
         {
             target = (int)Obj_GetPlayerObject();
         }
@@ -634,7 +699,7 @@ void wmwallcrawler_hitDetect(int obj)
             target = ObjGroup_FindNearestObject(0xa, obj, &stk);
         }
         ObjHits_RecordObjectHit(target, obj, 0xb, 1, 0);
-        *(u8*)(inner + 0x296) = 6;
+        *(u8*)(inner + 0x296) = WMWALLCRAWLER_MODE_DIE;
         ((WcHitBits*)(inner + 0x299))->hit = 0;
     }
 }
@@ -658,30 +723,30 @@ void wmwallcrawler_init(int obj, int spawn)
     *(f32*)(inner + 0x278) = *(f32*)(spawn + 0x10);
     *(f32*)(inner + 0x268) = (f32)(int) * (s16*)(spawn + 0x1a);
     *(u8*)(inner + 0x298) = *(u8*)(spawn + 0x19);
-    ((WmwallcrawlerState*)inner)->unk294 = lbl_80328DD0[*(u8*)(inner + 0x298)];
+    ((WmwallcrawlerState*)inner)->flags = lbl_80328DD0[*(u8*)(inner + 0x298)];
     storeZeroToFloatParam((void*)(inner + 0x28a));
     storeZeroToFloatParam((void*)(inner + 0x28c));
     storeZeroToFloatParam((void*)(inner + 0x288));
-    flags = ((WmwallcrawlerState*)inner)->unk294;
-    if ((flags & 1) != 0)
+    flags = ((WmwallcrawlerState*)inner)->flags;
+    if ((flags & WMWALLCRAWLER_FLAG_START_ACTIVE) != 0)
     {
         ((GameObject*)obj)->anim.rotZ = 0;
-        *(u8*)(inner + 0x296) = 1;
+        *(u8*)(inner + 0x296) = WMWALLCRAWLER_MODE_DESCEND;
     }
-    else if ((flags & 8) != 0)
+    else if ((flags & WMWALLCRAWLER_FLAG_TIMED_EXPLODE) != 0)
     {
         s16toFloat((void*)(inner + 0x28a), 0x4b0);
         *(f32*)(inner + 0x268) = lbl_803E6030;
         ((GameObject*)obj)->anim.rotZ = 0;
-        *(u8*)(inner + 0x296) = 1;
+        *(u8*)(inner + 0x296) = WMWALLCRAWLER_MODE_DESCEND;
     }
     else
     {
         s16toFloat((void*)(inner + 0x288), 0x190);
         ((GameObject*)obj)->anim.rotZ = -0x7fff;
-        *(u8*)(inner + 0x296) = 0;
+        *(u8*)(inner + 0x296) = WMWALLCRAWLER_MODE_IDLE;
     }
-    if ((((WmwallcrawlerState*)inner)->unk294 & 0x40) != 0)
+    if ((((WmwallcrawlerState*)inner)->flags & WMWALLCRAWLER_FLAG_FADE_IN) != 0)
     {
         objAnim->alpha = 0;
     }
@@ -691,7 +756,7 @@ void wmwallcrawler_init(int obj, int spawn)
     *(s16*)(inner + 0x290) = (s16)(randomGetRange(0, 0x50) + 0x190);
     *(f32*)(inner + 0x26c) = lbl_803E6034;
     *(s16*)(inner + 0x292) = *(s16*)(spawn + 0x1e);
-    if ((((WmwallcrawlerState*)inner)->unk294 & 2) != 0)
+    if ((((WmwallcrawlerState*)inner)->flags & WMWALLCRAWLER_FLAG_PATH_CONTROL) != 0)
     {
         *(u8*)(inner + 0x25b) = 1;
         (*gPathControlInterface)->init((void*)inner, 0, 0, 1);
