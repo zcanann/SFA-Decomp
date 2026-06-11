@@ -693,7 +693,7 @@ extern u8 lbl_803399A0[];
 extern u8 lbl_803399C0[];
 extern int lbl_803DC970;
 extern u8* lbl_803DC974;
-extern int lbl_803DC978;
+extern int gCurTextBuffer;
 extern int lbl_803DC97C;
 extern f32 timeDelta;
 extern f32 lbl_803DE71C;
@@ -719,22 +719,22 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         }
         entry = (u16*)(lbl_803399C0 + lbl_803DC97C * 0xc);
         lbl_803DC974 = (u8*)entry;
-        lbl_803DC978 = *(int*)*(int**)((u8*)entry + 8);
+        gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
         lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
         switch (*(int*)(gameTextFonts + 0x1c))
         {
         case 0:
-            sprintf((char*)lbl_803DC978, strings + 0xec4);
+            sprintf((char*)gCurTextBuffer, strings + 0xec4);
             break;
         case 1:
-            sprintf((char*)lbl_803DC978, strings + 0xed4);
+            sprintf((char*)gCurTextBuffer, strings + 0xed4);
             break;
         case 3:
-            sprintf((char*)lbl_803DC978, strings + 0xee0);
+            sprintf((char*)gCurTextBuffer, strings + 0xee0);
             break;
         case 4:
-            sprintf((char*)lbl_803DC978, strings + 0xef0);
+            sprintf((char*)gCurTextBuffer, strings + 0xef0);
             break;
         }
         return lbl_803DC974;
@@ -750,10 +750,10 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         }
         entry = (u16*)(lbl_803399C0 + lbl_803DC97C * 0xc);
         lbl_803DC974 = (u8*)entry;
-        lbl_803DC978 = *(int*)*(int**)((u8*)entry + 8);
+        gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
         lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
-        sprintf((char*)lbl_803DC978, strings + 0xefc, textId,
+        sprintf((char*)gCurTextBuffer, strings + 0xefc, textId,
                 sMapDirectoryNameTable[(int)curGameTextDir]);
         return lbl_803DC974;
     }
@@ -767,10 +767,10 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         }
         entry = (u16*)(lbl_803399C0 + lbl_803DC97C * 0xc);
         lbl_803DC974 = (u8*)entry;
-        lbl_803DC978 = *(int*)*(int**)((u8*)entry + 8);
+        gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
         lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
-        sprintf((char*)lbl_803DC978, strings + 0xf10, textId, phraseIndex);
+        sprintf((char*)gCurTextBuffer, strings + 0xf10, textId, phraseIndex);
         return lbl_803DC974;
     }
 
@@ -793,22 +793,22 @@ void* gameTextGetStr(int textId)
         }
         entry = lbl_803399C0 + lbl_803DC97C * 0xc;
         lbl_803DC974 = entry;
-        lbl_803DC978 = *(int*)*(int**)(entry + 8);
+        gCurTextBuffer = *(int*)*(int**)(entry + 8);
         *(u16*)entry = 0xffff;
         lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
         switch (*(int*)(gameTextFonts + 0x1c))
         {
         case 0:
-            sprintf((char*)lbl_803DC978, strings + 0xec4);
+            sprintf((char*)gCurTextBuffer, strings + 0xec4);
             break;
         case 1:
-            sprintf((char*)lbl_803DC978, strings + 0xed4);
+            sprintf((char*)gCurTextBuffer, strings + 0xed4);
             break;
         case 3:
-            sprintf((char*)lbl_803DC978, strings + 0xee0);
+            sprintf((char*)gCurTextBuffer, strings + 0xee0);
             break;
         case 4:
-            sprintf((char*)lbl_803DC978, strings + 0xef0);
+            sprintf((char*)gCurTextBuffer, strings + 0xef0);
             break;
         }
         return lbl_803DC974;
@@ -844,23 +844,23 @@ void* gameTextGet(int textId)
         }
         entry = (u16*)(gameTextBase + 0x40 + lbl_803DC97C * 0xc);
         lbl_803DC974 = (u8*)entry;
-        lbl_803DC978 = *(int*)*(int**)((u8*)entry + 8);
+        gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
         lbl_803DC970 = (int)(gameTextBase + 0x20 + lbl_803DC97C * 4);
 
         switch (*(int*)(gameTextFonts + 0x1c))
         {
         case 0:
-            sprintf((char*)lbl_803DC978, (char*)strings + 0xec4);
+            sprintf((char*)gCurTextBuffer, (char*)strings + 0xec4);
             break;
         case 1:
-            sprintf((char*)lbl_803DC978, (char*)strings + 0xed4);
+            sprintf((char*)gCurTextBuffer, (char*)strings + 0xed4);
             break;
         case 3:
-            sprintf((char*)lbl_803DC978, (char*)strings + 0xee0);
+            sprintf((char*)gCurTextBuffer, (char*)strings + 0xee0);
             break;
         case 4:
-            sprintf((char*)lbl_803DC978, (char*)strings + 0xef0);
+            sprintf((char*)gCurTextBuffer, (char*)strings + 0xef0);
             break;
         }
         return lbl_803DC974;
@@ -915,10 +915,10 @@ void* gameTextGet(int textId)
     }
     entry = (u16*)(gameTextBase + 0x40 + lbl_803DC97C * 0xc);
     lbl_803DC974 = (u8*)entry;
-    lbl_803DC978 = *(int*)*(int**)((u8*)entry + 8);
+    gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
     *entry = 0xffff;
     lbl_803DC970 = (int)(gameTextBase + 0x20 + lbl_803DC97C * 4);
-    sprintf((char*)lbl_803DC978, lbl_803DB3D4, textId,
+    sprintf((char*)gCurTextBuffer, lbl_803DB3D4, textId,
             sMapDirectoryNameTable[(int)curGameTextDir]);
     *(u16*)lbl_803DC974 = (u16)textId;
     *(f32*)lbl_803DC970 = lbl_803DE704;
@@ -1781,7 +1781,7 @@ void gameTextInitFn_8001a234(void)
     lbl_803DC97C = 0;
     textWindow = gameTextBase + 0x40;
     lbl_803DC974 = textWindow;
-    lbl_803DC978 = *(int*)*(void**)(textWindow + 8);
+    gCurTextBuffer = *(int*)*(void**)(textWindow + 8);
     lbl_803DC992 = 0;
     lbl_803DC991 = 0;
     lbl_803DC990 = 0;
