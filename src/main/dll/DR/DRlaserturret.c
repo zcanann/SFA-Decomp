@@ -332,7 +332,7 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         {
             state->countValue = (s16)(state->countScale << 1);
         }
-        else if (state->countValue<state->countScale> > 1)
+        else if (state->countValue < state->countScale >> 1)
         {
             state->countValue = (s16)(state->countScale >> 1);
         }
