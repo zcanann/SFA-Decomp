@@ -1119,35 +1119,27 @@ typedef struct LandedArwingHitFlagBits
 extern LandedArwingFxPoint lbl_80321A28[];
 extern f32 lbl_803E3B98;
 extern f32 lbl_803E3B9C;
-extern void objfx_spawnMaskedHitEffect(int obj, int arg4, int arg5, int arg6, void* pos, f32 scale);
-extern void objfx_spawnLightPulse(int obj, int arg4, int arg5, int arg6, void* pos, f32 scale, f32 value);
+extern void objfx_spawnMaskedHitEffect(int obj, f32 scale, int arg4, int arg5, int arg6, void* pos);
+extern void objfx_spawnLightPulse(int obj, f32 scale, int arg4, int arg5, int arg6, f32 value, void* pos);
 
 void landed_arwing_renderPathEffects(int obj)
 {
     CFLandedArwingState* state;
     u8 i;
-    LandedArwingFxPoint* entry;
     LandedArwingFxScratch scratch;
-    f32* xPtr;
-    f32* yPtr;
-    f32* zPtr;
 
     state = ((GameObject*)obj)->extra;
     if (state->enablePathFx != 0)
     {
         i = 0;
-        zPtr = &scratch.z;
-        yPtr = &scratch.y;
-        xPtr = &scratch.x;
         while (i < 5)
         {
-            entry = &lbl_80321A28[i];
-            ObjPath_GetPointWorldPosition(obj, entry->pathPoint, xPtr, yPtr, zPtr, 0);
-            *xPtr -= ((GameObject*)obj)->anim.localPosX;
-            *yPtr -= ((GameObject*)obj)->anim.localPosY;
-            *zPtr -= ((GameObject*)obj)->anim.localPosZ;
-            objfx_spawnMaskedHitEffect(obj, 4, entry->arg5, entry->arg6, scratch.effectPos,
-                                       ((GameObject*)obj)->anim.rootMotionScale * entry->scale);
+            ObjPath_GetPointWorldPosition(obj, lbl_80321A28[i].pathPoint, &scratch.x, &scratch.y, &scratch.z, 0);
+            scratch.x -= ((GameObject*)obj)->anim.localPosX;
+            scratch.y -= ((GameObject*)obj)->anim.localPosY;
+            scratch.z -= ((GameObject*)obj)->anim.localPosZ;
+            objfx_spawnMaskedHitEffect(obj, ((GameObject*)obj)->anim.rootMotionScale * lbl_80321A28[i].scale, 4,
+                                       lbl_80321A28[i].arg5, lbl_80321A28[i].arg6, scratch.effectPos);
             i++;
         }
     }
@@ -1158,7 +1150,7 @@ void landed_arwing_renderPathEffects(int obj)
         scratch.x -= ((GameObject*)obj)->anim.localPosX;
         scratch.y -= ((GameObject*)obj)->anim.localPosY;
         scratch.z -= ((GameObject*)obj)->anim.localPosZ;
-        objfx_spawnLightPulse(obj, 4, 0, 0, scratch.effectPos, lbl_803E3B9C, state->path6Fx);
+        objfx_spawnLightPulse(obj, lbl_803E3B9C, 4, 0, 0, state->path6Fx, scratch.effectPos);
     }
 
     if (state->path8Fx != lbl_803E3B98)
@@ -1167,7 +1159,7 @@ void landed_arwing_renderPathEffects(int obj)
         scratch.x -= ((GameObject*)obj)->anim.localPosX;
         scratch.y -= ((GameObject*)obj)->anim.localPosY;
         scratch.z -= ((GameObject*)obj)->anim.localPosZ;
-        objfx_spawnLightPulse(obj, 4, 0, 0, scratch.effectPos, lbl_803E3B9C, state->path8Fx);
+        objfx_spawnLightPulse(obj, lbl_803E3B9C, 4, 0, 0, state->path8Fx, scratch.effectPos);
     }
 
     if (state->path7Fx != lbl_803E3B98)
@@ -1176,7 +1168,7 @@ void landed_arwing_renderPathEffects(int obj)
         scratch.x -= ((GameObject*)obj)->anim.localPosX;
         scratch.y -= ((GameObject*)obj)->anim.localPosY;
         scratch.z -= ((GameObject*)obj)->anim.localPosZ;
-        objfx_spawnLightPulse(obj, 4, 0, 0, scratch.effectPos, lbl_803E3B9C, state->path7Fx);
+        objfx_spawnLightPulse(obj, lbl_803E3B9C, 4, 0, 0, state->path7Fx, scratch.effectPos);
     }
 }
 
