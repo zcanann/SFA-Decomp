@@ -702,7 +702,7 @@ void fn_80156010(uint obj, int state)
     if (*(float*)(state + 0x324) <= lbl_803E2A60)
     {
         timerExpired = true;
-        *(float*)(state + 0x324) = lbl_803E2A60;
+        *(float*)(state + 0x324) = *(f32 *)&lbl_803E2A60;
     }
     if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
