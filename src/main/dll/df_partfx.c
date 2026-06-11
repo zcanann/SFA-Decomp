@@ -932,7 +932,7 @@ void fn_800D8414(int* obj, int* ctx)
             ((BaddieState*)ctx)->moveInputZ * ((BaddieState*)ctx)->moveInputZ);
     if (((BaddieState*)ctx)->inputMagnitude > lbl_803E0578)
     {
-        ((BaddieState*)ctx)->inputMagnitude = lbl_803E0578;
+        ((BaddieState*)ctx)->inputMagnitude = *(f32 *)&lbl_803E0578;
     }
     ((BaddieState*)ctx)->inputMagnitude = ((BaddieState*)ctx)->inputMagnitude / lbl_803E0578;
     lbl_803DD44C = (s16)getAngle(((BaddieState*)ctx)->moveInputX, -((BaddieState*)ctx)->moveInputZ);
