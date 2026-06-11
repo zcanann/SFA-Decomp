@@ -489,76 +489,76 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
 #pragma peephole on
 void newshadows_captureProjectedShadow(ushort* object)
 {
-    float fVar1;
-    int iVar2;
-    float* pfVar3;
-    double dVar4;
-    double dVar5;
-    double dVar6;
-    double dVar7;
-    double dVar8;
-    float fStack_a8;
-    float local_a4;
-    float local_a0;
-    float local_9c;
-    float local_98;
-    float local_94;
-    float afStack_90[15];
+    float fb;
+    int val;
+    float* ptr;
+    double fa;
+    double ff;
+    double fc;
+    double fd;
+    double fe;
+    float fg;
+    float tmp;
+    float tmp2;
+    float tmp3;
+    float tmp4;
+    float tmp5;
+    float fbuf[15];
 
-    FUN_80017a50(object, afStack_90, '\0');
+    FUN_80017a50(object, fbuf, '\0');
     FUN_8000693c((double)(*(float*)(object + 6) - lbl_803DDA58), (double)*(float*)(object + 8),
                  (double)(*(float*)(object + 10) - lbl_803DDA5C),
                  (double)(lbl_803DF98C * *(float*)(object + 0x54) * *(float*)(object + 4)),
-                 &local_94, &local_98, &local_9c, &local_a0, &local_a4, &fStack_a8);
-    local_a0 = lbl_803DF994 * local_a0 + lbl_803DF990;
-    local_a4 = lbl_803DF998 * local_a4 + lbl_803DF990;
-    fVar1 = local_a4;
-    if (local_a4 < local_a0)
+                 &tmp5, &tmp4, &tmp3, &tmp2, &tmp, &fg);
+    tmp2 = lbl_803DF994 * tmp2 + lbl_803DF990;
+    tmp = lbl_803DF998 * tmp + lbl_803DF990;
+    fb = tmp;
+    if (tmp < tmp2)
     {
-        fVar1 = local_a0;
+        fb = tmp2;
     }
-    dVar7 = (double)(lbl_803DF99C / fVar1);
-    dVar6 = (double)(float)((double)*(float*)(object + 4) * dVar7);
-    dVar4 = -(double)local_94;
-    dVar8 = (double)local_98;
-    FUN_8025da64((double)(float)((double)lbl_803DF994 * dVar4),
-                 (double)(float)((double)lbl_803DF998 * dVar8), (double)lbl_803DF9A0,
+    fd = (double)(lbl_803DF99C / fb);
+    fc = (double)(float)((double)*(float*)(object + 4) * fd);
+    fa = -(double)tmp5;
+    fe = (double)tmp4;
+    FUN_8025da64((double)(float)((double)lbl_803DF994 * fa),
+                 (double)(float)((double)lbl_803DF998 * fe), (double)lbl_803DF9A0,
                  (double)lbl_803DF9A4, (double)lbl_803DF9A8, (double)lbl_803DF9AC);
-    if (lbl_803DF9A8 <= local_9c)
+    if (lbl_803DF9A8 <= tmp3)
     {
         **(float**)(object + 0x32) = lbl_803DF9A8;
     }
     else
     {
-        dVar5 = (double)*(float*)(object + 4);
-        *(float*)(object + 4) = (float)dVar6;
+        ff = (double)*(float*)(object + 4);
+        *(float*)(object + 4) = (float)fc;
         FUN_80040cd0(1);
         FUN_8003b878(0, 0, 0, 0, (int)object, 1);
         FUN_80040cd0(0);
-        *(float*)(object + 4) = (float)dVar5;
-        iVar2 = FUN_80017a54((int)object);
-        *(ushort*)(iVar2 + 0x18) = *(ushort*)(iVar2 + 0x18) & ~0x8;
+        *(float*)(object + 4) = (float)ff;
+        val = FUN_80017a54((int)object);
+        *(ushort*)(val + 0x18) = *(ushort*)(val + 0x18) & ~0x8;
         gxSetZMode_(1, 3, 1);
         FUN_80259400(0x100, 0xb0, 0x80, 0x80);
         FUN_80259504(0x80, 0x80, 0x2a, 0);
         FUN_80259c0c((&DAT_8038ee3c)[DAT_803ddc0c] + 0x60, 1);
         fn_8006A028((u8*)(&DAT_8038ee3c)[(DAT_803ddc0c + 1) % 3], 0x80, 0x10, 0);
-        **(float**)(object + 0x32) = (float)((double)lbl_803DF9AC / dVar7);
+        **(float**)(object + 0x32) = (float)((double)lbl_803DF9AC / fd);
     }
     FUN_80006988();
-    dVar6 = (double)lbl_803DF994;
-    *(float*)(*(int*)(object + 0x32) + 0x14) = (float)(dVar6 * -dVar4);
-    dVar4 = (double)lbl_803DF998;
-    *(float*)(*(int*)(object + 0x32) + 0x18) = (float)(dVar4 * -dVar8);
+    fc = (double)lbl_803DF994;
+    *(float*)(*(int*)(object + 0x32) + 0x14) = (float)(fc * -fa);
+    fa = (double)lbl_803DF998;
+    *(float*)(*(int*)(object + 0x32) + 0x18) = (float)(fa * -fe);
     *(float*)(*(int*)(object + 0x32) + 0x14) =
-        (float)((double)*(float*)(*(int*)(object + 0x32) + 0x14) + dVar6);
+        (float)((double)*(float*)(*(int*)(object + 0x32) + 0x14) + fc);
     *(float*)(*(int*)(object + 0x32) + 0x18) =
-        (float)((double)*(float*)(*(int*)(object + 0x32) + 0x18) + dVar4);
-    fVar1 = lbl_803DF99C;
-    pfVar3 = *(float**)(object + 0x32);
-    pfVar3[5] = -(lbl_803DF99C * *pfVar3 - pfVar3[5]);
-    pfVar3 = *(float**)(object + 0x32);
-    pfVar3[6] = -(fVar1 * *pfVar3 - pfVar3[6]);
+        (float)((double)*(float*)(*(int*)(object + 0x32) + 0x18) + fa);
+    fb = lbl_803DF99C;
+    ptr = *(float**)(object + 0x32);
+    ptr[5] = -(lbl_803DF99C * *ptr - ptr[5]);
+    ptr = *(float**)(object + 0x32);
+    ptr[6] = -(fb * *ptr - ptr[6]);
     return;
 }
 
@@ -577,59 +577,59 @@ void newshadows_captureProjectedShadow(ushort* object)
  */
 void newshadows_sortQueuedShadowCasters(int queueBase, int casterCount)
 {
-    int iVar1;
-    float fVar2;
-    undefined4 uVar3;
-    undefined4 uVar4;
-    int iVar5;
-    undefined4 uVar6;
-    int iVar7;
-    undefined4* puVar8;
-    int iVar9;
-    int iVar10;
-    int iVar11;
-    int iVar12;
-    int iVar13;
+    int val2;
+    float fa;
+    undefined4 uval;
+    undefined4 uval2;
+    int val;
+    undefined4 uval3;
+    int val4;
+    undefined4* ptr;
+    int val7;
+    int val5;
+    int val8;
+    int val6;
+    int val3;
 
-    iVar1 = (casterCount + -1) / 9 + (casterCount + -1 >> 0x1f);
-    for (iVar5 = 1; iVar5 <= iVar1 - (iVar1 >> 0x1f); iVar5 = iVar5 * 3 + 1)
+    val2 = (casterCount + -1) / 9 + (casterCount + -1 >> 0x1f);
+    for (val = 1; val <= val2 - (val2 >> 0x1f); val = val * 3 + 1)
     {
     }
-    for (; 0 < iVar5; iVar5 = iVar5 / 3)
+    for (; 0 < val; val = val / 3)
     {
-        iVar13 = iVar5 + 1;
-        iVar9 = iVar13 * 0xc;
-        iVar10 = queueBase + iVar9;
-        iVar1 = (casterCount + 1) - iVar13;
-        if (iVar13 <= casterCount)
+        val3 = val + 1;
+        val7 = val3 * 0xc;
+        val5 = queueBase + val7;
+        val2 = (casterCount + 1) - val3;
+        if (val3 <= casterCount)
         {
             do
             {
-                uVar6 = *(undefined4*)(iVar10 + -0xc);
-                fVar2 = *(float*)(iVar10 + -8);
-                uVar3 = *(undefined4*)(iVar10 + -4);
-                iVar7 = queueBase + iVar9;
-                iVar12 = iVar13;
-                while ((iVar5 < iVar12 &&
-                    (iVar11 = queueBase + (iVar12 - iVar5) * 0xc, *(float*)(iVar11 + -8) < fVar2)))
+                uval3 = *(undefined4*)(val5 + -0xc);
+                fa = *(float*)(val5 + -8);
+                uval = *(undefined4*)(val5 + -4);
+                val4 = queueBase + val7;
+                val6 = val3;
+                while ((val < val6 &&
+                    (val8 = queueBase + (val6 - val) * 0xc, *(float*)(val8 + -8) < fa)))
                 {
-                    uVar4 = *(undefined4*)(iVar11 + -8);
-                    *(undefined4*)(iVar7 + -0xc) = *(undefined4*)(iVar11 + -0xc);
-                    *(undefined4*)(iVar7 + -8) = uVar4;
-                    *(undefined4*)(iVar7 + -4) = *(undefined4*)(iVar11 + -4);
-                    iVar7 = iVar7 + iVar5 * -0xc;
-                    iVar12 = iVar12 - iVar5;
+                    uval2 = *(undefined4*)(val8 + -8);
+                    *(undefined4*)(val4 + -0xc) = *(undefined4*)(val8 + -0xc);
+                    *(undefined4*)(val4 + -8) = uval2;
+                    *(undefined4*)(val4 + -4) = *(undefined4*)(val8 + -4);
+                    val4 = val4 + val * -0xc;
+                    val6 = val6 - val;
                 }
-                puVar8 = (undefined4*)(queueBase + iVar12 * 0xc + -0xc);
-                *puVar8 = uVar6;
-                puVar8[1] = fVar2;
-                puVar8[2] = uVar3;
-                iVar10 = iVar10 + 0xc;
-                iVar13 = iVar13 + 1;
-                iVar9 = iVar9 + 0xc;
-                iVar1 = iVar1 + -1;
+                ptr = (undefined4*)(queueBase + val6 * 0xc + -0xc);
+                *ptr = uval3;
+                ptr[1] = fa;
+                ptr[2] = uval;
+                val5 = val5 + 0xc;
+                val3 = val3 + 1;
+                val7 = val7 + 0xc;
+                val2 = val2 + -1;
             }
-            while (iVar1 != 0);
+            while (val2 != 0);
         }
     }
     return;
@@ -650,46 +650,46 @@ void newshadows_sortQueuedShadowCasters(int queueBase, int casterCount)
  */
 void newshadows_renderQueuedShadowCasters(void)
 {
-    undefined2 uVar1;
-    undefined2 uVar2;
-    uint uVar3;
-    int iVar4;
-    undefined2* puVar5;
-    ushort uVar10;
-    uint uVar6;
-    int* piVar7;
-    int iVar8;
-    float* pfVar9;
-    float* pfVar11;
-    float* pfVar12;
-    int iVar13;
-    uint uVar14;
-    uint uVar15;
-    char cVar16;
-    byte bVar17;
-    uint uVar18;
-    int* piVar19;
-    double dVar20;
-    double dVar21;
-    double dVar22;
+    undefined2 uval7;
+    undefined2 uval8;
+    uint uval3;
+    int val2;
+    undefined2* ptr;
+    ushort uval6;
+    uint uval5;
+    int* ptr5;
+    int val3;
+    float* ptr6;
+    float* ptr3;
+    float* ptr2;
+    int val;
+    uint uval4;
+    uint uval;
+    char bval2;
+    byte bval;
+    uint uval2;
+    int* ptr4;
+    double fc;
+    double fg;
+    double fa;
     double savedF21;
     double savedF22;
     double savedF23;
-    double dVar23;
+    double fb;
     double savedF24;
     double savedF25;
-    double dVar24;
+    double fh;
     double savedF26;
-    double dVar25;
+    double fa2;
     double savedF27;
-    double dVar26;
+    double fb2;
     double savedF28;
-    double dVar27;
+    double fd;
     double savedF29;
     double savedF30;
-    double dVar28;
+    double fe;
     double savedF31;
-    double dVar29;
+    double ff;
     double savedPs21;
     double savedPs22;
     double savedPs23;
@@ -701,322 +701,322 @@ void newshadows_renderQueuedShadowCasters(void)
     double savedPs29;
     double savedPs30;
     double savedPs31;
-    undefined4 uStack_260;
-    undefined4 uStack_25c;
-    float local_258;
-    float local_254;
-    float local_250;
-    float local_24c;
-    float local_248;
-    float local_244;
-    float local_240;
-    float local_23c;
-    float local_238;
-    float local_234;
-    float local_230;
-    float local_22c;
-    undefined auStack_228[12];
-    undefined auStack_21c[12];
-    float afStack_210[16];
-    float local_1d0;
-    float local_1cc;
-    float local_1c8;
-    float local_1c4;
-    float local_1c0;
-    float local_1bc;
-    float local_1b8;
-    float local_1b4;
-    float local_1b0;
-    float local_1ac;
-    float local_1a8;
-    float local_1a4;
-    float afStack_1a0[12];
-    float afStack_170[24];
-    undefined4 local_110;
-    uint uStack_10c;
-    undefined4 local_108;
-    uint uStack_104;
-    int local_100;
-    float local_a8;
-    float fStack_a4;
-    float local_98;
-    float fStack_94;
+    undefined4 convLo;
+    undefined4 convLo2;
+    float tmp4;
+    float tmp13;
+    float tmp14;
+    float tmp5;
+    float tmp8;
+    float tmp9;
+    float tmp6;
+    float tmp10;
+    float tmp11;
+    float tmp;
+    float tmp2;
+    float tmp3;
+    undefined buf[12];
+    undefined buf2[12];
+    float fbuf[16];
+    float tmp7;
+    float tmp15;
+    float tmp16;
+    float tmp17;
+    float tmp18;
+    float tmp19;
+    float tmp20;
+    float tmp21;
+    float tmp22;
+    float tmp23;
+    float tmp24;
+    float tmp25;
+    float fbuf2[12];
+    float fbuf3[24];
+    undefined4 tmp26;
+    uint convLo3;
+    undefined4 tmp27;
+    uint convLo4;
+    int tmp12;
+    float tmp28;
+    float fc2;
+    float tmp29;
+    float fd2;
     float local_88;
-    float fStack_84;
+    float fe2;
     float local_78;
-    float fStack_74;
+    float ff2;
     float local_68;
-    float fStack_64;
+    float fg2;
     float local_58;
-    float fStack_54;
+    float fh2;
     float local_48;
-    float fStack_44;
+    float fa3;
     float local_38;
-    float fStack_34;
+    float fb3;
     float local_28;
-    float fStack_24;
+    float fc3;
     float local_18;
-    float fStack_14;
+    float fd3;
     float local_8;
-    float fStack_4;
+    float fe3;
 
     local_8 = (float)savedF31;
-    fStack_4 = (float)savedPs31;
+    fe3 = (float)savedPs31;
     local_18 = (float)savedF30;
-    fStack_14 = (float)savedPs30;
+    fd3 = (float)savedPs30;
     local_28 = (float)savedF29;
-    fStack_24 = (float)savedPs29;
+    fc3 = (float)savedPs29;
     local_38 = (float)savedF28;
-    fStack_34 = (float)savedPs28;
+    fb3 = (float)savedPs28;
     local_48 = (float)savedF27;
-    fStack_44 = (float)savedPs27;
+    fa3 = (float)savedPs27;
     local_58 = (float)savedF26;
-    fStack_54 = (float)savedPs26;
+    fh2 = (float)savedPs26;
     local_68 = (float)savedF25;
-    fStack_64 = (float)savedPs25;
+    fg2 = (float)savedPs25;
     local_78 = (float)savedF24;
-    fStack_74 = (float)savedPs24;
+    ff2 = (float)savedPs24;
     local_88 = (float)savedF23;
-    fStack_84 = (float)savedPs23;
-    local_98 = (float)savedF22;
-    fStack_94 = (float)savedPs22;
-    local_a8 = (float)savedF21;
-    fStack_a4 = (float)savedPs21;
+    fe2 = (float)savedPs23;
+    tmp29 = (float)savedF22;
+    fd2 = (float)savedPs22;
+    tmp28 = (float)savedF21;
+    fc2 = (float)savedPs21;
     FUN_8028680c();
     if (DAT_803ddbf8 != 0)
     {
         FUN_800069b8();
         newshadows_sortQueuedShadowCasters(-0x7fc710f8, (uint)DAT_803ddbf8);
         FUN_80006954(1);
-        puVar5 = FUN_800069a8();
-        dVar21 = FUN_800069f8();
+        ptr = FUN_800069a8();
+        fg = FUN_800069f8();
         FUN_80006a00((double)lbl_803DF9B0);
         FUN_800069f4((double)lbl_803DF9AC);
-        dVar26 = (double)*(float*)(puVar5 + 6);
-        dVar25 = (double)*(float*)(puVar5 + 8);
-        dVar24 = (double)*(float*)(puVar5 + 10);
-        local_100 = (int)(short)puVar5[1];
-        uVar1 = *puVar5;
-        uVar2 = puVar5[2];
-        puVar5[1] = 0;
-        local_240 = lbl_803DF9A8;
-        local_23c = lbl_803DF9AC;
-        local_238 = lbl_803DF9A8;
-        FUN_80060710((double)lbl_803DF9B4, &local_240, afStack_170);
-        FUN_800606a4(&uStack_25c, &uStack_260);
-        bVar17 = 0;
-        uVar18 = 0;
-        piVar19 = &DAT_8038ef08;
-        for (cVar16 = '\0'; ((int)cVar16 < (int)(uint)DAT_803ddbf8 && (cVar16 < 100));
-             cVar16 = cVar16 + '\x01')
+        fb2 = (double)*(float*)(ptr + 6);
+        fa2 = (double)*(float*)(ptr + 8);
+        fh = (double)*(float*)(ptr + 10);
+        tmp12 = (int)(short)ptr[1];
+        uval7 = *ptr;
+        uval8 = ptr[2];
+        ptr[1] = 0;
+        tmp6 = lbl_803DF9A8;
+        tmp10 = lbl_803DF9AC;
+        tmp11 = lbl_803DF9A8;
+        FUN_80060710((double)lbl_803DF9B4, &tmp6, fbuf3);
+        FUN_800606a4(&convLo2, &convLo);
+        bval = 0;
+        uval2 = 0;
+        ptr4 = &DAT_8038ef08;
+        for (bval2 = '\0'; ((int)bval2 < (int)(uint)DAT_803ddbf8 && (bval2 < 100));
+             bval2 = bval2 + '\x01')
         {
-            iVar13 = *piVar19;
-            pfVar12 = (float*)((GameObject*)iVar13)->anim.modelState;
+            val = *ptr4;
+            ptr2 = (float*)((GameObject*)val)->anim.modelState;
             FUN_80006954(0);
-            uVar10 = FUN_80061198(iVar13, (uint)DAT_803dc070);
+            uval6 = FUN_80061198(val, (uint)DAT_803dc070);
             FUN_80006954(1);
-            if (4 < (uVar10 & 0xff))
+            if (4 < (uval6 & 0xff))
             {
-                if ((((ObjModelState*)pfVar12)->flags & 0x20) != 0)
+                if ((((ObjModelState*)ptr2)->flags & 0x20) != 0)
                 {
-                    FUN_80003494((uint)auStack_228, iVar13 + 0xc, 0xc);
-                    FUN_80003494((uint)auStack_21c, iVar13 + 0x18, 0xc);
-                    FUN_80003494(iVar13 + 0xc, (uint)(pfVar12 + 8), 0xc);
-                    FUN_80003494(iVar13 + 0x18, (uint)(pfVar12 + 8), 0xc);
+                    FUN_80003494((uint)buf, val + 0xc, 0xc);
+                    FUN_80003494((uint)buf2, val + 0x18, 0xc);
+                    FUN_80003494(val + 0xc, (uint)(ptr2 + 8), 0xc);
+                    FUN_80003494(val + 0x18, (uint)(ptr2 + 8), 0xc);
                 }
-                uVar3 = uVar18 & 0xff;
-                iVar4 = uVar3 * 0x68;
-                pfVar11 = (float*)(&DAT_8038fd18 + iVar4);
-                (&DAT_8038fd7c)[iVar4] = (char)uVar10;
-                if ((bVar17 < 8) && (*(char*)(piVar19 + 2) != '\0'))
+                uval3 = uval2 & 0xff;
+                val2 = uval3 * 0x68;
+                ptr3 = (float*)(&DAT_8038fd18 + val2);
+                (&DAT_8038fd7c)[val2] = (char)uval6;
+                if ((bval < 8) && (*(char*)(ptr4 + 2) != '\0'))
                 {
-                    if (bVar17 < 3)
+                    if (bval < 3)
                     {
-                        uVar14 = 0x100;
-                        dVar23 = (double)lbl_803DF9B8;
+                        uval4 = 0x100;
+                        fb = (double)lbl_803DF9B8;
                     }
-                    else if (bVar17 < 5)
+                    else if (bval < 5)
                     {
-                        uVar14 = 0x80;
-                        dVar23 = (double)lbl_803DF9BC;
+                        uval4 = 0x80;
+                        fb = (double)lbl_803DF9BC;
                     }
                     else
                     {
-                        uVar14 = 0x40;
-                        dVar23 = (double)lbl_803DF9C0;
+                        uval4 = 0x40;
+                        fb = (double)lbl_803DF9C0;
                     }
-                    uVar15 = uVar14;
-                    if (bVar17 == 0)
+                    uval = uval4;
+                    if (bval == 0)
                     {
-                        uVar15 = uVar14 << 1;
+                        uval = uval4 << 1;
                     }
-                    if (*(char*)(piVar19 + 2) == '\x02')
+                    if (*(char*)(ptr4 + 2) == '\x02')
                     {
-                        uVar15 = (uint) * (ushort*)(*(int*)(*(int*)&((GameObject*)iVar13)->anim.modelState + 4) + 10);
-                        uVar14 = uVar15;
+                        uval = (uint) * (ushort*)(*(int*)(*(int*)&((GameObject*)val)->anim.modelState + 4) + 10);
+                        uval4 = uval;
                     }
-                    FUN_80080f6c(iVar13, &local_234, &local_230, &local_22c);
-                    local_24c = -pfVar12[5];
-                    local_248 = -pfVar12[6];
-                    local_244 = -pfVar12[7];
-                    dVar22 = FUN_80247f90(&local_24c, &local_234);
-                    if ((dVar22 < (double)lbl_803DF9AC) && ((double)lbl_803DF9C4 < dVar22))
+                    FUN_80080f6c(val, &tmp, &tmp2, &tmp3);
+                    tmp5 = -ptr2[5];
+                    tmp8 = -ptr2[6];
+                    tmp9 = -ptr2[7];
+                    fa = FUN_80247f90(&tmp5, &tmp);
+                    if ((fa < (double)lbl_803DF9AC) && ((double)lbl_803DF9C4 < fa))
                     {
-                        local_258 = lbl_803DF9C8 * local_24c + lbl_803DF9CC * local_234;
-                        local_254 = lbl_803DF9C8 * local_248 + lbl_803DF9CC * local_230;
-                        local_250 = lbl_803DF9C8 * local_244 + lbl_803DF9CC * local_22c;
-                        dVar22 = SeekTwiceBeforeRead(&local_258);
-                        if ((double)lbl_803DF9A8 < dVar22)
+                        tmp4 = lbl_803DF9C8 * tmp5 + lbl_803DF9CC * tmp;
+                        tmp13 = lbl_803DF9C8 * tmp8 + lbl_803DF9CC * tmp2;
+                        tmp14 = lbl_803DF9C8 * tmp9 + lbl_803DF9CC * tmp3;
+                        fa = SeekTwiceBeforeRead(&tmp4);
+                        if ((double)lbl_803DF9A8 < fa)
                         {
-                            FUN_80247edc((double)(float)((double)lbl_803DF9AC / dVar22), &local_258, &local_234);
+                            FUN_80247edc((double)(float)((double)lbl_803DF9AC / fa), &tmp4, &tmp);
                         }
                     }
-                    if (lbl_803DF9D0 < local_230)
+                    if (lbl_803DF9D0 < tmp2)
                     {
-                        local_230 = lbl_803DF9D0;
-                        FUN_80247ef8(&local_234, &local_234);
+                        tmp2 = lbl_803DF9D0;
+                        FUN_80247ef8(&tmp, &tmp);
                     }
-                    dVar27 = -(double)local_234;
-                    dVar29 = -(double)local_230;
-                    dVar28 = -(double)local_22c;
-                    uVar6 = FUN_80017730();
-                    DAT_803ddc04 = uVar6 & 0xffff;
-                    uVar6 = FUN_80017730();
-                    DAT_803ddc08 = (uVar6 & 0xffff) - 0x3fc8;
-                    puVar5[1] = (short)DAT_803ddc08;
-                    *puVar5 = (short)DAT_803ddc04;
-                    dVar22 = (double)(float)(dVar28 * dVar28 +
-                        (double)(float)(dVar27 * dVar27 + (double)(float)(dVar29 * dVar29)
+                    fd = -(double)tmp;
+                    ff = -(double)tmp2;
+                    fe = -(double)tmp3;
+                    uval5 = FUN_80017730();
+                    DAT_803ddc04 = uval5 & 0xffff;
+                    uval5 = FUN_80017730();
+                    DAT_803ddc08 = (uval5 & 0xffff) - 0x3fc8;
+                    ptr[1] = (short)DAT_803ddc08;
+                    *ptr = (short)DAT_803ddc04;
+                    fa = (double)(float)(fe * fe +
+                        (double)(float)(fd * fd + (double)(float)(ff * ff)
                         ));
-                    if ((double)lbl_803DF9A8 < dVar22)
+                    if ((double)lbl_803DF9A8 < fa)
                     {
-                        dVar20 = 1.0 / SQRT(dVar22);
-                        dVar20 = DOUBLE_803df9d8 * dVar20 * -(dVar22 * dVar20 * dVar20 - DOUBLE_803df9e0);
-                        dVar20 = DOUBLE_803df9d8 * dVar20 * -(dVar22 * dVar20 * dVar20 - DOUBLE_803df9e0);
-                        dVar22 = (double)(float)(dVar22 * DOUBLE_803df9d8 * dVar20 *
-                            -(dVar22 * dVar20 * dVar20 - DOUBLE_803df9e0));
+                        fc = 1.0 / SQRT(fa);
+                        fc = DOUBLE_803df9d8 * fc * -(fa * fc * fc - DOUBLE_803df9e0);
+                        fc = DOUBLE_803df9d8 * fc * -(fa * fc * fc - DOUBLE_803df9e0);
+                        fa = (double)(float)(fa * DOUBLE_803df9d8 * fc *
+                            -(fa * fc * fc - DOUBLE_803df9e0));
                     }
-                    if ((double)lbl_803DF9A8 < dVar22)
+                    if ((double)lbl_803DF9A8 < fa)
                     {
-                        dVar22 = (double)(float)((double)lbl_803DF9E8 / dVar22);
-                        dVar27 = (double)(float)(dVar27 * dVar22);
-                        dVar29 = (double)(float)(dVar29 * dVar22);
-                        dVar28 = (double)(float)(dVar28 * dVar22);
+                        fa = (double)(float)((double)lbl_803DF9E8 / fa);
+                        fd = (double)(float)(fd * fa);
+                        ff = (double)(float)(ff * fa);
+                        fe = (double)(float)(fe * fa);
                     }
-                    *(undefined4*)(puVar5 + 0x20) = 0;
-                    pfVar12[5] = -local_234;
-                    pfVar12[6] = -local_230;
-                    pfVar12[7] = -local_22c;
-                    FUN_8006f788(uVar15);
-                    piVar7 = (int*)FUN_80017a54(iVar13);
-                    iVar8 = FUN_80017970(piVar7, 0);
-                    *(float*)(puVar5 + 6) = (float)(dVar27 + (double)*(float*)(iVar8 + 0xc));
-                    *(float*)(puVar5 + 8) = (float)(dVar29 + (double)*(float*)(iVar8 + 0x1c));
-                    *(float*)(puVar5 + 10) = (float)(dVar28 + (double)*(float*)(iVar8 + 0x2c));
-                    if (*(int*)&((GameObject*)iVar13)->anim.parent == 0)
+                    *(undefined4*)(ptr + 0x20) = 0;
+                    ptr2[5] = -tmp;
+                    ptr2[6] = -tmp2;
+                    ptr2[7] = -tmp3;
+                    FUN_8006f788(uval);
+                    ptr5 = (int*)FUN_80017a54(val);
+                    val3 = FUN_80017970(ptr5, 0);
+                    *(float*)(ptr + 6) = (float)(fd + (double)*(float*)(val3 + 0xc));
+                    *(float*)(ptr + 8) = (float)(ff + (double)*(float*)(val3 + 0x1c));
+                    *(float*)(ptr + 10) = (float)(fe + (double)*(float*)(val3 + 0x2c));
+                    if (*(int*)&((GameObject*)val)->anim.parent == 0)
                     {
-                        *(float*)(puVar5 + 6) = *(float*)(puVar5 + 6) + lbl_803DDB50;
-                        *(float*)(puVar5 + 10) = *(float*)(puVar5 + 10) + lbl_803DDB4C;
+                        *(float*)(ptr + 6) = *(float*)(ptr + 6) + lbl_803DDB50;
+                        *(float*)(ptr + 10) = *(float*)(ptr + 10) + lbl_803DDB4C;
                     }
-                    dVar22 = (double)*pfVar12;
-                    dVar27 = -dVar22;
-                    if (*(int*)&((GameObject*)iVar13)->anim.parent != 0)
+                    fa = (double)*ptr2;
+                    fd = -fa;
+                    if (*(int*)&((GameObject*)val)->anim.parent != 0)
                     {
-                        *(float*)(puVar5 + 6) = *(float*)(puVar5 + 6) + lbl_803DDA58;
-                        *(float*)(puVar5 + 10) = *(float*)(puVar5 + 10) + lbl_803DDA5C;
+                        *(float*)(ptr + 6) = *(float*)(ptr + 6) + lbl_803DDA58;
+                        *(float*)(ptr + 10) = *(float*)(ptr + 10) + lbl_803DDA5C;
                     }
-                    FUN_8025da88(2, 2, uVar15 - 4, uVar15 - 4);
-                    dVar28 = (double)lbl_803DF9A8;
-                    local_110 = 0x43300000;
-                    local_108 = 0x43300000;
-                    uStack_10c = uVar15;
-                    uStack_104 = uVar15;
-                    FUN_8025da64(dVar28, dVar28,
-                                 (double)(float)((double)CONCAT44(0x43300000, uVar15) - DOUBLE_803dfa08),
-                                 (double)(float)((double)CONCAT44(0x43300000, uVar15) - DOUBLE_803dfa08), dVar28
+                    FUN_8025da88(2, 2, uval - 4, uval - 4);
+                    fe = (double)lbl_803DF9A8;
+                    tmp26 = 0x43300000;
+                    tmp27 = 0x43300000;
+                    convLo3 = uval;
+                    convLo4 = uval;
+                    FUN_8025da64(fe, fe,
+                                 (double)(float)((double)CONCAT44(0x43300000, uval) - DOUBLE_803dfa08),
+                                 (double)(float)((double)CONCAT44(0x43300000, uval) - DOUBLE_803dfa08), fe
                                  , (double)lbl_803DF9AC);
-                    FUN_80247dfc(dVar27, dVar22, dVar27, dVar22, (double)lbl_803DF9AC, (double)lbl_803DF9EC,
-                                 afStack_210);
-                    FUN_8025d6ac(afStack_210, 1);
+                    FUN_80247dfc(fd, fa, fd, fa, (double)lbl_803DF9AC, (double)lbl_803DF9EC,
+                                 fbuf);
+                    FUN_8025d6ac(fbuf, 1);
                     FUN_80006984();
-                    FUN_80247b70(dVar22, dVar27, dVar27, dVar22, dVar23, dVar23, dVar23, dVar23, pfVar11);
-                    pfVar9 = (float*)FUN_80006974();
-                    FUN_802475e4(pfVar9, (float*)(&DAT_8038fd48 + iVar4));
-                    FUN_80247618(pfVar11, pfVar9, pfVar11);
-                    ((ObjModelState*)pfVar12)->shadowCastSlot = pfVar11;
-                    piVar7 = &DAT_803925b8 + bVar17;
-                    (&DAT_8038fd78)[uVar3 * 0x1a] = *piVar7;
-                    (&DAT_8038fd7d)[iVar4] = (&DAT_803dc2c8)[bVar17];
-                    FUN_8003b7dc(iVar13);
-                    if (*(char*)(piVar19 + 2) == '\x02')
+                    FUN_80247b70(fa, fd, fd, fa, fb, fb, fb, fb, ptr3);
+                    ptr6 = (float*)FUN_80006974();
+                    FUN_802475e4(ptr6, (float*)(&DAT_8038fd48 + val2));
+                    FUN_80247618(ptr3, ptr6, ptr3);
+                    ((ObjModelState*)ptr2)->shadowCastSlot = ptr3;
+                    ptr5 = &DAT_803925b8 + bval;
+                    (&DAT_8038fd78)[uval3 * 0x1a] = *ptr5;
+                    (&DAT_8038fd7d)[val2] = (&DAT_803dc2c8)[bval];
+                    FUN_8003b7dc(val);
+                    if (*(char*)(ptr4 + 2) == '\x02')
                     {
                         gxSetZMode_(1, 3, 1);
-                        dVar23 = (double)lbl_803DF9A8;
-                        FUN_80247a7c(dVar23, dVar23, dVar23, (float*)(&DAT_8038fd48 + iVar4));
-                        (&DAT_8038fd50)[uVar3 * 0x1a] = lbl_803DF9F0;
-                        (&DAT_8038fd54)[uVar3 * 0x1a] = lbl_803DF9F4;
-                        (&DAT_8038fd74)[uVar3 * 0x1a] = lbl_803DF9AC;
-                        FUN_80247618((float*)(&DAT_8038fd48 + iVar4), pfVar9, (float*)(&DAT_8038fd48 + iVar4));
-                        FUN_80259400(0, 0, uVar15, uVar15);
-                        FUN_80259504((ushort)uVar15, (ushort)uVar15, 0x11, 0);
+                        fb = (double)lbl_803DF9A8;
+                        FUN_80247a7c(fb, fb, fb, (float*)(&DAT_8038fd48 + val2));
+                        (&DAT_8038fd50)[uval3 * 0x1a] = lbl_803DF9F0;
+                        (&DAT_8038fd54)[uval3 * 0x1a] = lbl_803DF9F4;
+                        (&DAT_8038fd74)[uval3 * 0x1a] = lbl_803DF9AC;
+                        FUN_80247618((float*)(&DAT_8038fd48 + val2), ptr6, (float*)(&DAT_8038fd48 + val2));
+                        FUN_80259400(0, 0, uval, uval);
+                        FUN_80259504((ushort)uval, (ushort)uval, 0x11, 0);
                         FUN_80259858('\0', (byte*)(DAT_803dd970 + 0x1a), '\0', (byte*)(DAT_803dd970 + 0x32));
-                        FUN_80259c0c(*(int*)(*(int*)&((GameObject*)iVar13)->anim.modelState + 4) + 0x60, 1);
+                        FUN_80259c0c(*(int*)(*(int*)&((GameObject*)val)->anim.modelState + 4) + 0x60, 1);
                         FUN_80045be8();
-                        (&DAT_8038fd78)[uVar3 * 0x1a] = *(undefined4*)(*(int*)&((GameObject*)iVar13)->anim.modelState +
+                        (&DAT_8038fd78)[uval3 * 0x1a] = *(undefined4*)(*(int*)&((GameObject*)val)->anim.modelState +
                             4);
                     }
                     else
                     {
-                        if (bVar17 == 0)
+                        if (bval == 0)
                         {
                             gxSetZMode_(1, 3, 1);
-                            FUN_80259400(0, 0, uVar15, uVar15);
-                            FUN_80259504((ushort)uVar14, (ushort)uVar14, 0x20, 1);
-                            FUN_80259c0c(*piVar7 + 0x60, 1);
-                            (&DAT_8038fd78)[uVar3 * 0x1a] = *piVar7;
+                            FUN_80259400(0, 0, uval, uval);
+                            FUN_80259504((ushort)uval4, (ushort)uval4, 0x20, 1);
+                            FUN_80259c0c(*ptr5 + 0x60, 1);
+                            (&DAT_8038fd78)[uval3 * 0x1a] = *ptr5;
                         }
-                        bVar17 = bVar17 + 1;
+                        bval = bval + 1;
                     }
                 }
                 else
                 {
-                    (&DAT_8038fd78)[uVar3 * 0x1a] = *(undefined4*)(*(int*)&((GameObject*)iVar13)->anim.modelState + 4);
-                    dVar23 = (double)((GameObject*)iVar13)->anim.localPosX;
-                    dVar22 = (double)((GameObject*)iVar13)->anim.localPosZ;
-                    if (*(int*)&((GameObject*)iVar13)->anim.parent == 0)
+                    (&DAT_8038fd78)[uval3 * 0x1a] = *(undefined4*)(*(int*)&((GameObject*)val)->anim.modelState + 4);
+                    fb = (double)((GameObject*)val)->anim.localPosX;
+                    fa = (double)((GameObject*)val)->anim.localPosZ;
+                    if (*(int*)&((GameObject*)val)->anim.parent == 0)
                     {
-                        dVar23 = (double)(float)(dVar23 - (double)lbl_803DDA58);
-                        dVar22 = (double)(float)(dVar22 - (double)lbl_803DDA5C);
+                        fb = (double)(float)(fb - (double)lbl_803DDA58);
+                        fa = (double)(float)(fa - (double)lbl_803DDA5C);
                     }
-                    FUN_80247a48(-dVar23, -(double)((GameObject*)iVar13)->anim.localPosY, -dVar22, afStack_1a0);
-                    local_1d0 = lbl_803DF9B8 / *pfVar12;
-                    local_1cc = lbl_803DF9A8;
-                    local_1c8 = lbl_803DF9A8;
-                    local_1c4 = lbl_803DF9B8;
-                    local_1c0 = lbl_803DF9A8;
-                    local_1bc = lbl_803DF9A8;
-                    local_1b4 = lbl_803DF9B8;
-                    local_1b0 = lbl_803DF9A8;
-                    local_1ac = lbl_803DF9A8;
-                    local_1a8 = lbl_803DF9A8;
-                    local_1a4 = lbl_803DF9AC;
-                    local_1b8 = local_1d0;
-                    FUN_80247618(&local_1d0, afStack_1a0, pfVar11);
-                    pfVar12[5] = local_240;
-                    pfVar12[6] = local_23c;
-                    pfVar12[7] = local_238;
-                    ((ObjModelState*)pfVar12)->shadowCastSlot = pfVar11;
+                    FUN_80247a48(-fb, -(double)((GameObject*)val)->anim.localPosY, -fa, fbuf2);
+                    tmp7 = lbl_803DF9B8 / *ptr2;
+                    tmp15 = lbl_803DF9A8;
+                    tmp16 = lbl_803DF9A8;
+                    tmp17 = lbl_803DF9B8;
+                    tmp18 = lbl_803DF9A8;
+                    tmp19 = lbl_803DF9A8;
+                    tmp21 = lbl_803DF9B8;
+                    tmp22 = lbl_803DF9A8;
+                    tmp23 = lbl_803DF9A8;
+                    tmp24 = lbl_803DF9A8;
+                    tmp25 = lbl_803DF9AC;
+                    tmp20 = tmp7;
+                    FUN_80247618(&tmp7, fbuf2, ptr3);
+                    ptr2[5] = tmp6;
+                    ptr2[6] = tmp10;
+                    ptr2[7] = tmp11;
+                    ((ObjModelState*)ptr2)->shadowCastSlot = ptr3;
                 }
-                uVar18 = uVar18 + 1;
-                if ((((ObjModelState*)pfVar12)->flags & 0x20) != 0)
+                uval2 = uval2 + 1;
+                if ((((ObjModelState*)ptr2)->flags & 0x20) != 0)
                 {
-                    FUN_80003494(iVar13 + 0xc, (uint)auStack_228, 0xc);
-                    FUN_80003494(iVar13 + 0x18, (uint)auStack_21c, 0xc);
+                    FUN_80003494(val + 0xc, (uint)buf, 0xc);
+                    FUN_80003494(val + 0x18, (uint)buf2, 0xc);
                 }
             }
-            piVar19 = piVar19 + 3;
+            ptr4 = ptr4 + 3;
         }
-        if (1 < bVar17)
+        if (1 < bval)
         {
             gxSetZMode_(1, 3, 1);
             FUN_80259858('\0', (byte*)(DAT_803dd970 + 0x1a), '\0', (byte*)(DAT_803dd970 + 0x32));
@@ -1027,27 +1027,27 @@ void newshadows_renderQueuedShadowCasters(void)
             FUN_80045be8();
         }
         FUN_8006f790();
-        *(float*)(puVar5 + 6) = (float)dVar26;
-        *(float*)(puVar5 + 8) = (float)dVar25;
-        *(float*)(puVar5 + 10) = (float)dVar24;
-        puVar5[1] = (short)local_100;
-        *puVar5 = uVar1;
-        puVar5[2] = uVar2;
-        uVar18 = FUN_8005d00c();
-        if (uVar18 == 0)
+        *(float*)(ptr + 6) = (float)fb2;
+        *(float*)(ptr + 8) = (float)fa2;
+        *(float*)(ptr + 10) = (float)fh;
+        ptr[1] = (short)tmp12;
+        *ptr = uval7;
+        ptr[2] = uval8;
+        uval2 = FUN_8005d00c();
+        if (uval2 == 0)
         {
-            uVar18 = FUN_8005d06c();
-            if (uVar18 == 0)
+            uval2 = FUN_8005d06c();
+            if (uval2 == 0)
             {
                 FUN_80006954(0);
-                FUN_80006a00(dVar21);
+                FUN_80006a00(fg);
                 FUN_800069f4((double)lbl_803DC2D0);
                 FUN_8000694c();
             }
             else
             {
                 FUN_80006954(0);
-                FUN_80006a00(dVar21);
+                FUN_80006a00(fg);
                 FUN_800069f4((double)lbl_803DFA00);
                 FUN_8000694c();
             }
@@ -1055,9 +1055,9 @@ void newshadows_renderQueuedShadowCasters(void)
         else
         {
             FUN_80006954(0);
-            FUN_80006a00(dVar21);
-            uVar18 = FUN_8005d06c();
-            if (uVar18 == 0)
+            FUN_80006a00(fg);
+            uval2 = FUN_8005d06c();
+            if (uval2 == 0)
             {
                 FUN_800069f4((double)lbl_803DF9FC);
             }
@@ -1093,44 +1093,44 @@ void newshadows_queueShadowCaster(int object)
 {
     ObjAnimComponent* objAnim;
     ObjModelInstance* modelDef;
-    float fVar1;
-    float fVar2;
-    float fVar3;
-    int iVar4;
-    double dVar5;
-    double dVar6;
+    float fc;
+    float fd;
+    float fe;
+    int val;
+    double fa;
+    double fb;
 
     if (DAT_803ddbf8 < 300)
     {
         objAnim = (ObjAnimComponent*)object;
         modelDef = objAnim->modelInstance;
         (&DAT_8038ef08)[(uint)DAT_803ddbf8 * 3] = object;
-        fVar1 = ((GameObject*)object)->anim.worldPosX - *(float*)(DAT_803ddc68 + 0xc);
-        fVar2 = ((GameObject*)object)->anim.worldPosY - *(float*)(DAT_803ddc68 + 0x10);
-        fVar3 = ((GameObject*)object)->anim.worldPosZ - *(float*)(DAT_803ddc68 + 0x14);
-        dVar6 = (double)(fVar3 * fVar3 + fVar1 * fVar1 + fVar2 * fVar2);
-        if ((double)lbl_803DF9A8 < dVar6)
+        fc = ((GameObject*)object)->anim.worldPosX - *(float*)(DAT_803ddc68 + 0xc);
+        fd = ((GameObject*)object)->anim.worldPosY - *(float*)(DAT_803ddc68 + 0x10);
+        fe = ((GameObject*)object)->anim.worldPosZ - *(float*)(DAT_803ddc68 + 0x14);
+        fb = (double)(fe * fe + fc * fc + fd * fd);
+        if ((double)lbl_803DF9A8 < fb)
         {
-            dVar5 = 1.0 / SQRT(dVar6);
-            dVar5 = DOUBLE_803df9d8 * dVar5 * -(dVar6 * dVar5 * dVar5 - DOUBLE_803df9e0);
-            dVar5 = DOUBLE_803df9d8 * dVar5 * -(dVar6 * dVar5 * dVar5 - DOUBLE_803df9e0);
-            dVar6 = (double)(float)(dVar6 * DOUBLE_803df9d8 * dVar5 *
-                -(dVar6 * dVar5 * dVar5 - DOUBLE_803df9e0));
+            fa = 1.0 / SQRT(fb);
+            fa = DOUBLE_803df9d8 * fa * -(fb * fa * fa - DOUBLE_803df9e0);
+            fa = DOUBLE_803df9d8 * fa * -(fb * fa * fa - DOUBLE_803df9e0);
+            fb = (double)(float)(fb * DOUBLE_803df9d8 * fa *
+                -(fb * fa * fa - DOUBLE_803df9e0));
         }
-        iVar4 = (uint)DAT_803ddbf8 * 0xc;
-        *(float*)(&DAT_8038ef0c + iVar4) = (float)((double)((GameObject*)object)->anim.modelState->shadowScale / dVar6);
+        val = (uint)DAT_803ddbf8 * 0xc;
+        *(float*)(&DAT_8038ef0c + val) = (float)((double)((GameObject*)object)->anim.modelState->shadowScale / fb);
         if (modelDef->shadowType == 2)
         {
-            (&DAT_8038ef10)[iVar4] = 1;
+            (&DAT_8038ef10)[val] = 1;
             if ((modelDef->renderFlags & 4) != 0)
             {
-                (&DAT_8038ef10)[iVar4] = 2;
-                *(float*)(&DAT_8038ef0c + iVar4) = lbl_803DFA10;
+                (&DAT_8038ef10)[val] = 2;
+                *(float*)(&DAT_8038ef0c + val) = lbl_803DFA10;
             }
         }
         else
         {
-            (&DAT_8038ef10)[iVar4] = 0;
+            (&DAT_8038ef10)[val] = 0;
         }
         DAT_803ddbf8 = DAT_803ddbf8 + 1;
     }
@@ -1618,24 +1618,24 @@ void newshadows_flushShadowRenderTargets(void)
  */
 void newshadows_updateFrameState(void)
 {
-    uint uVar1;
-    int iVar2;
-    char cVar3;
-    undefined* puVar4;
-    double dVar5;
+    uint uval;
+    int val;
+    char bval;
+    undefined* ptr;
+    double fa;
     double savedF31;
-    double dVar6;
+    double fb;
     double savedPs31;
-    float local_28;
-    float local_24;
-    undefined8 local_20;
-    float local_8;
-    float fStack_4;
+    float tmp;
+    float tmp2;
+    undefined8 tmp3;
+    float tmp4;
+    float fc;
 
-    local_8 = (float)savedF31;
-    fStack_4 = (float)savedPs31;
-    iVar2 = FUN_800176d0();
-    if (iVar2 == 0)
+    tmp4 = (float)savedF31;
+    fc = (float)savedPs31;
+    val = FUN_800176d0();
+    if (val == 0)
     {
         lbl_803DDC2C = lbl_803DFA14 * lbl_803DC074 + lbl_803DDC2C;
         lbl_803DDC28 = lbl_803DFA18 * lbl_803DC074 + lbl_803DDC28;
@@ -1651,38 +1651,38 @@ void newshadows_updateFrameState(void)
     DAT_803ddbf8 = 0;
     DAT_803ddc68 = (int)FUN_800069a8();
     DAT_803ddc20 = DAT_803ddc20 + (ushort)DAT_803dc070 * 0x28a;
-    local_20 = CONCAT44(0x43300000, (uint)DAT_803ddc20);
-    dVar5 = (double)FUN_802947f8();
-    lbl_803DDC24 = (float)((double)lbl_803DFA20 * dVar5);
+    tmp3 = CONCAT44(0x43300000, (uint)DAT_803ddc20);
+    fa = (double)FUN_802947f8();
+    lbl_803DDC24 = (float)((double)lbl_803DFA20 * fa);
     FUN_800606a8();
     DAT_803ddc0c = (char)(DAT_803ddc0c + 1) + (char)((DAT_803ddc0c + 1) / 3) * -3;
-    cVar3 = FUN_80048094();
-    if (cVar3 != '\0')
+    bval = FUN_80048094();
+    if (bval != '\0')
     {
-        puVar4 = FUN_8000697c();
-        dVar6 = (double)*(float*)(puVar4 + 0x1c);
-        FUN_80048048(&local_24, &local_28);
-        dVar5 = (double)local_24;
-        if (dVar6 < dVar5)
+        ptr = FUN_8000697c();
+        fb = (double)*(float*)(ptr + 0x1c);
+        FUN_80048048(&tmp2, &tmp);
+        fa = (double)tmp2;
+        if (fb < fa)
         {
-            if ((double)local_28 < dVar6)
+            if ((double)tmp < fb)
             {
-                uVar1 = (uint)((lbl_803DF99C * (float)(dVar5 - dVar6)) / (float)(dVar5 - (double)local_28));
-                local_20 = (longlong)(int)
-                uVar1;
+                uval = (uint)((lbl_803DF99C * (float)(fa - fb)) / (float)(fa - (double)tmp));
+                tmp3 = (longlong)(int)
+                uval;
             }
             else
             {
-                uVar1 = 0x40;
+                uval = 0x40;
             }
         }
         else
         {
-            uVar1 = 0;
+            uval = 0;
         }
-        if ((uVar1 & 0xff) != (uint)DAT_803ddc00)
+        if ((uval & 0xff) != (uint)DAT_803ddc00)
         {
-            FUN_80064384(uVar1 & 0xff);
+            FUN_80064384(uval & 0xff);
         }
     }
     return;
@@ -1766,67 +1766,67 @@ void newshadows_freeShadowDirectionTexture(void)
 #pragma peephole on
 void newshadows_buildShadowDirectionTexture(void)
 {
-    float fVar1;
-    float fVar2;
-    float fVar3;
-    float fVar4;
-    double dVar5;
-    uint uVar6;
-    uint uVar7;
-    int iVar8;
-    double dVar9;
-    double dVar10;
-    double dVar11;
-    double dVar12;
-    double dVar13;
-    double dVar14;
-    undefined8 local_18;
+    float fc;
+    float ff;
+    float fg;
+    float fh;
+    double fa2;
+    uint uval;
+    uint uval2;
+    int val;
+    double fd;
+    double fe;
+    double fa;
+    double fb2;
+    double fc2;
+    double fb;
+    undefined8 tmp;
 
     DAT_803ddc3c = FUN_800537a0(0x100, 0x100, 3, '\0', 0, 0, 0, 1, 1);
-    dVar5 = DOUBLE_803dfa48;
-    fVar4 = lbl_803DFA40;
-    fVar3 = lbl_803DFA3C;
-    fVar2 = lbl_803DFA2C;
-    uVar6 = 0;
-    dVar13 = (double)lbl_803DF9A8;
-    dVar12 = (double)lbl_803DFA38;
+    fa2 = DOUBLE_803dfa48;
+    fh = lbl_803DFA40;
+    fg = lbl_803DFA3C;
+    ff = lbl_803DFA2C;
+    uval = 0;
+    fc2 = (double)lbl_803DF9A8;
+    fb2 = (double)lbl_803DFA38;
     do
     {
-        uVar7 = 0;
-        local_18 = (double)CONCAT44(0x43300000, uVar6 ^ 0x80000000);
-        dVar9 = (double)((float)(local_18 - dVar5) - fVar2);
-        iVar8 = 0x100;
+        uval2 = 0;
+        tmp = (double)CONCAT44(0x43300000, uval ^ 0x80000000);
+        fd = (double)((float)(tmp - fa2) - ff);
+        val = 0x100;
         do
         {
-            local_18 = (double)CONCAT44(0x43300000, uVar7 ^ 0x80000000);
-            dVar10 = (double)((float)(local_18 - dVar5) - fVar2);
-            dVar14 = (double)(float)(dVar9 * dVar9 + (double)(float)(dVar10 * dVar10));
-            if (dVar13 < dVar14)
+            tmp = (double)CONCAT44(0x43300000, uval2 ^ 0x80000000);
+            fe = (double)((float)(tmp - fa2) - ff);
+            fb = (double)(float)(fd * fd + (double)(float)(fe * fe));
+            if (fc2 < fb)
             {
-                dVar11 = 1.0 / SQRT(dVar14);
-                dVar11 = DOUBLE_803df9d8 * dVar11 * -(dVar14 * dVar11 * dVar11 - DOUBLE_803df9e0);
-                dVar11 = DOUBLE_803df9d8 * dVar11 * -(dVar14 * dVar11 * dVar11 - DOUBLE_803df9e0);
-                dVar14 = (double)(float)(dVar14 * DOUBLE_803df9d8 * dVar11 *
-                    -(dVar14 * dVar11 * dVar11 - DOUBLE_803df9e0));
+                fa = 1.0 / SQRT(fb);
+                fa = DOUBLE_803df9d8 * fa * -(fb * fa * fa - DOUBLE_803df9e0);
+                fa = DOUBLE_803df9d8 * fa * -(fb * fa * fa - DOUBLE_803df9e0);
+                fb = (double)(float)(fb * DOUBLE_803df9d8 * fa *
+                    -(fb * fa * fa - DOUBLE_803df9e0));
             }
-            fVar1 = lbl_803DF9A8;
-            if (dVar14 <= dVar12)
+            fc = lbl_803DF9A8;
+            if (fb <= fb2)
             {
-                fVar1 = lbl_803DF9B4 * -(float)((double)lbl_803DF9C8 * dVar14 - (double)lbl_803DFA30)
+                fc = lbl_803DF9B4 * -(float)((double)lbl_803DF9C8 * fb - (double)lbl_803DFA30)
                     * lbl_803DFA34;
             }
             *(ushort*)
-                (DAT_803ddc3c + (uVar6 & 3) * 2 + ((int)uVar6 >> 2) * 0x20 + (uVar7 & 3) * 8 +
-                    ((int)uVar7 >> 2) * 0x800 + 0x60) =
-                (ushort)(int)(fVar4 * (float)(dVar10 / dVar14) * fVar1 + fVar3) |
-                (ushort)(((int)(fVar4 * (float)(dVar9 / dVar14) * fVar1 + fVar3) & 0xffffU) << 8);
-            uVar7 = uVar7 + 1;
-            iVar8 = iVar8 + -1;
+                (DAT_803ddc3c + (uval & 3) * 2 + ((int)uval >> 2) * 0x20 + (uval2 & 3) * 8 +
+                    ((int)uval2 >> 2) * 0x800 + 0x60) =
+                (ushort)(int)(fh * (float)(fe / fb) * fc + fg) |
+                (ushort)(((int)(fh * (float)(fd / fb) * fc + fg) & 0xffffU) << 8);
+            uval2 = uval2 + 1;
+            val = val + -1;
         }
-        while (iVar8 != 0);
-        uVar6 = uVar6 + 1;
+        while (val != 0);
+        uval = uval + 1;
     }
-    while ((int)uVar6 < 0x100);
+    while ((int)uval < 0x100);
     FUN_802420e0(DAT_803ddc3c + 0x60, *(int*)(DAT_803ddc3c + 0x44));
     return;
 }
