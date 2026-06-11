@@ -1169,8 +1169,7 @@ int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32* out1, int* out2)
     *out2 = 0;
     for (i = 0; i < count; i++)
     {
-        e = results[i];
-        if (*(s8*)((u8*)e + 0x14) != 0xE && y < e[0] && (y2 > e[0] || i == count - 1))
+        if (*(s8*)((u8*)results[i] + 0x14) != 0xE && y < results[i][0] && (y2 > results[i][0] || i == count - 1))
         {
             *out2 = *(int*)((u8*)results[i] + 0x10);
             *out1 = results[i][0];
