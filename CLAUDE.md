@@ -403,6 +403,9 @@ probes on the bundled compilers):
     empty case whose position lets it merge with default at the EDGE of
     the value range (worldobj_render's 0x61e re-canonicalized both
     directions) — works only when the case value sits INSIDE the range.
+    CONTIGUOUS-RUN EXTENSION (fn_801DFA28): a `bge`-over-`b` at a switch
+    range check = contiguous case RUNS (`case K: case K+1:` sharing a body,
+    + default) — the range-check lowering emits the island naturally.
     TREE-BUILDER FACTS (dll_179, 160-variant brute-force sweep): empty-case
     blocks fully unify (block splits inert); SINGLE value holes absorb into
     runs (`cmpwi K-1; beq/bge`); 2+ value gaps keep exact bounds; run
@@ -2603,12 +2606,36 @@ still fold under helper/bool-helper/ternary/empty-then spellings — the
 DCE'd materialization removes the join. The objseq 15-copy ternary IS
 value-producing (prime retry candidate; unit has 27 blockers so it's a
 fuzzy win not a unit win). SECOND GATE: check the TARGET .o's symbol list
-for the helper — a fully-inlined static still gets EMITTED as a dead fn,
-and if target lacks that symbol the extra bytes cost more than the shape
-gains (dll_B7: helper form 96.8 vs 97.6 baseline despite fixing the
+for the helper — a fully-inlined PLAIN static still gets EMITTED as a dead
+fn, and if target lacks that symbol the extra bytes cost more than the
+shape gains (dll_B7: helper form 96.8 vs 97.6 baseline despite fixing the
 b-over-b; snd_groups worked because target HAS the GetXAddr symbols).
+⚠️ GATE-CLEARER (fell-swoop sweep): `static inline` emits NO dead fn —
+the second gate vanishes, and the helper lever opened the whole audio
+85-93 loop-break band (Music_LoadChannelForTrigger x17 86.96→100,
+Music_Trigger→100, Music_PlayTrackByIndex→100, Sfx_AllocObjectChannel x8
+90.35→98.0) plus the objprint eye-joint scans (x2 →100) and ObjSeq island
+families. The helper fixes THREE classes at once: per-copy bne+b islands,
+the #160 via-r0 walker init (direct addi), and the GVN zero-share mr.
+CAVEATS: (a) per-fn A/B is MANDATORY — the identical helper improved
+ObjSeq_update +0.84 and regressed ApplyFrameCurves −0.84 (coloring
+cascade); (b) converting shrinks the caller, which can flip the
+auto-inliner on the caller's OWN callers — fix by SOURCE-ORDER move,
+never dont_inline (it would block the helper's expansion). Signature-scan
+seeds remaining (~210 of 236 candidates unconsumed): andross_update,
+ObjAnim_AdvanceCurrentMove, trickyFn_8013b368, objInterpretSeq,
+Minimap_update, ObjHits_CheckSkeletonPair, trickyFindPathRouteEntry, the
+pauseMenu family, hudDrawMagicBar, trickyBallMove, groundanimator_update.
 
-92. **OPEN — the INT-compare `bge +8; b far` two-branch guard with
+92. **LARGELY CRACKED (fell-swoop sweep) — the loop-break instances are
+    inlined `static inline` helper return-joins (see the gate-clearer note
+    above) and plain-statement guards are #17 pinned-`||` merges or
+    #109(d) switches; the residual OPEN form is the GUARDED ASSIGNMENT
+    (`if(flag) if(v>=K) v=K;` — Music_Update: pinned-|| empty-then, #63
+    ternary, AND a 2-return clamp helper all fold to blt; a small helper
+    gets simplified away, so the join must come from a loop-bearing
+    multi-return helper that the construct doesn't plausibly contain).**
+    Original entry (historical): the INT-compare `bge +8; b far` guard with
     STATEMENT-BLOCK arms (branch-to-NEXT over an unconditional b) has resisted
     every source spelling tried so far.** ⚠️ **SCOPE: this OPEN case is INTEGER
     compares whose arms are statement blocks ONLY, in LOOP-BREAK position. Two
@@ -2821,6 +2848,9 @@ the addi exists in the .o after the sweep.
     MWCC's extra x5 re-unroll of the already-5-wide body (ctr=2 -> ctr=10).
     Body-statement count = target's per-body group count (read it off the
     ctr value x body groups). Other s64-class tells from the same dig:
+    u64 PAIR-construction order picks the hi/lo register-pair coloring:
+    `lo | ((u64)hi << 32)` vs `((u64)hi << 32) | lo` (Sfx_AllocObjectChannel;
+    the addic/addze-vs-li;addc;adde isel is the open #108-GVN class).
     u64 vars passed to byte-copy helpers (render_copyPackedU64Head/Tail)
     must be SEPARATE address-taken locals, not a u64 array (`&buf[2]` call
     args get hoisted into saved regs; separate `&bufA`/`&bufB` re-derive
@@ -2970,11 +3000,11 @@ the matched corpus are ALL switch-lowering compare-chains (multi-case), ZERO
 from if-in-loop — which says the original construct that produces this is not
 yet identified, not that it's impossible. Cost model: ~1 instr x unroll factor
 on every unrolled scan loop -- this was the presumed score FLOOR of the audio
-85-93 band (Sfx_AllocObjectChannel x8, Music_LoadChannelForTrigger x17
-copies). ⚠️ NOW RE-ATTACKABLE: the unsigned plain-statement instances fell to
-the #17 pinned-`||` crack (see #109(d)) — apply the far-is-an-earlier-branch-
-target triage to every instance before banking; per-fn O1 / older-version
-probes also still untried here. Recognize and bank it — BUT first check the PLAIN-STATEMENT
+85-93 band — ⚠️ AND IT FELL (fell-swoop sweep): the loop-break instances were
+`static inline` helper return-joins (#92 gate-clearer) — Music_LoadChannel-
+ForTrigger x17 → 100, Music_Trigger → 100, Sfx_AllocObjectChannel 90.35→98.
+Plain-statement guards take the #17 pinned-`||` triage instead (far-is-an-
+earlier-branch-target). Recognize and bank it — BUT first check the PLAIN-STATEMENT
 case: a single compare + `beq next; b far` outside loop-break position IS
 reproducible as a single-case `switch` with `default: break;` (recipe #109(d),
 synthAdvanceVirtualSampleEntry x3 -> 100).
