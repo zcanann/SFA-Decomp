@@ -129,17 +129,13 @@ void worldplanet_init(int obj)
 
     state = ((GameObject*)obj)->extra;
     lbl_803DDD04 = 0;
-    GameBit_Set(0xa63, 1);
+    GameBit_Set(WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN, 1);
     mask = 0;
-    for (i = 0; i < 5; i++)
-    {
-        if (GameBit_Get(lbl_8032A1B4[i]) != 0)
-        {
+    for (i = 0; i < WORLDPLANET_PLANET_COUNT; i++) {
+        if (GameBit_Get(lbl_8032A1B4[i]) != 0) {
             flag = 1;
-            if (lbl_803DC1B8[i] != 0)
-            {
-                if ((s32)getNextTaskHintText() > 0xad)
-                {
+            if (lbl_803DC1B8[i] != 0) {
+                if ((s32)getNextTaskHintText() > WORLDPLANET_HINT_UNLOCK_THRESHOLD) {
                     flag = 0;
                 }
             }
@@ -153,13 +149,9 @@ void worldplanet_init(int obj)
     if (lbl_803DC1F0 != -1)
     {
         state->selectedPlanet = (s8)lbl_803DC1F0;
-    }
-    else
-    {
-        for (j = 0; j < 5; j++)
-        {
-            if (GameBit_Get(lbl_8032A1B4[lbl_803DC1C0[j]]) != 0)
-            {
+    } else {
+        for (j = 0; j < WORLDPLANET_PLANET_COUNT; j++) {
+            if (GameBit_Get(lbl_8032A1B4[lbl_803DC1C0[j]]) != 0) {
                 state->selectedPlanet = (s8)lbl_803DC1C0[j];
                 break;
             }
@@ -168,18 +160,18 @@ void worldplanet_init(int obj)
     lbl_803DDD08 = 0;
     setDrawLights(0);
     audioStopByMask(0xf);
-    Music_Trigger(0x8f, 1);
+    Music_Trigger(WORLDPLANET_BOOT_MUSIC_TRIGGER, 1);
     lbl_803DDD2C = lbl_803E65F8;
     setShowWorldMapHud(1);
     lbl_803DDD28 = -1;
     unlockLevel(0, 0, 1);
-    mapUnload(0x2d, 0x10000000);
+    mapUnload(WORLDPLANET_MAIN_MAP_ID, WORLDPLANET_MAP_PRELOAD_FLAG);
     layer = getCurMapLayer();
     (*gMapEventInterface)->triggerEvent(obj + 0xc, 0, 0, layer);
     (*gScreenTransitionInterface)->step(0x1e, 1);
-    lbl_803DDD0A = 0xa;
+    lbl_803DDD0A = WORLDPLANET_COUNTDOWN_FRAMES;
     GameBit_Set(lbl_8032A1B4[2], 1);
-    state->foxSpawnTimer = 0x78;
+    state->foxSpawnTimer = WORLDPLANET_FOX_SPAWN_INITIAL_FRAMES;
     envFxActFn_800887f8(0);
 }
 
@@ -195,61 +187,52 @@ void worldplanet_readMapInput(int obj, u8* outX, u8* outY)
     stickY = padGetStickY(0);
     resX = 0;
     resY = 0;
-    if (getLoadedFileFlags(0) == 0)
-    {
-        if ((s8)stickX < -0x23 && state->prevStickX >= -0x23)
-        {
+    if (getLoadedFileFlags(WORLDPLANET_SAVE_FILE_SLOT) == 0) {
+        if ((s8)stickX < -WORLDPLANET_INPUT_STICK_THRESHOLD &&
+            state->prevStickX >= -WORLDPLANET_INPUT_STICK_THRESHOLD) {
             resX = -1;
             state->stickXRepeatFrames = 0;
         }
-        if ((s8)stickX > 0x23 && state->prevStickX <= 0x23)
-        {
+        if ((s8)stickX > WORLDPLANET_INPUT_STICK_THRESHOLD &&
+            state->prevStickX <= WORLDPLANET_INPUT_STICK_THRESHOLD) {
             resX = 1;
             state->stickXRepeatFrames = 0;
         }
-        if ((s8)stickY < -0x23 && state->prevStickY >= -0x23)
-        {
+        if ((s8)stickY < -WORLDPLANET_INPUT_STICK_THRESHOLD &&
+            state->prevStickY >= -WORLDPLANET_INPUT_STICK_THRESHOLD) {
             resY = -1;
             state->stickYRepeatFrames = 0;
         }
-        if ((s8)stickY > 0x23 && state->prevStickY <= 0x23)
-        {
+        if ((s8)stickY > WORLDPLANET_INPUT_STICK_THRESHOLD &&
+            state->prevStickY <= WORLDPLANET_INPUT_STICK_THRESHOLD) {
             resY = 1;
             state->stickYRepeatFrames = 0;
         }
         state->prevStickY = stickY;
-        if (state->prevStickY < -0x23)
-        {
+        if (state->prevStickY < -WORLDPLANET_INPUT_STICK_THRESHOLD) {
             state->stickYRepeatFrames++;
-        }
-        else if (state->prevStickY > 0x23)
-        {
+        } else if (state->prevStickY > WORLDPLANET_INPUT_STICK_THRESHOLD) {
             state->stickYRepeatFrames++;
         }
         else
         {
             state->stickYRepeatFrames = 0;
         }
-        if (state->stickYRepeatFrames > 0x32)
-        {
+        if (state->stickYRepeatFrames > WORLDPLANET_INPUT_REPEAT_FRAMES) {
             state->prevStickY = 0;
             state->stickYRepeatFrames = 0;
         }
         state->prevStickX = stickX;
-        if (state->prevStickX < -0x23)
-        {
+        if (state->prevStickX < -WORLDPLANET_INPUT_STICK_THRESHOLD) {
             state->stickXRepeatFrames++;
-        }
-        else if (state->prevStickX > 0x23)
-        {
+        } else if (state->prevStickX > WORLDPLANET_INPUT_STICK_THRESHOLD) {
             state->stickXRepeatFrames++;
         }
         else
         {
             state->stickXRepeatFrames = 0;
         }
-        if (state->stickXRepeatFrames > 0x32)
-        {
+        if (state->stickXRepeatFrames > WORLDPLANET_INPUT_REPEAT_FRAMES) {
             state->prevStickX = 0;
             state->stickXRepeatFrames = 0;
         }
