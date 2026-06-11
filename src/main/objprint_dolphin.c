@@ -3739,10 +3739,11 @@ extern void GXLoadTexMtxImm(f32* m, int id, int type);
 extern void GXLoadNrmMtxImm(f32* m, int id);
 extern void OSReport(char* fmt, ...);
 
-void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8 nrm, u8 tex, u8 skip)
+void renderOpMatrix(void* hdrArg, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8 nrm, u8 tex, u8 skip)
 {
     u8* tbl = lbl_802CAED0;
     char* cache = getCache();
+    u8* hdr = (u8*)hdrArg;
     if (lbl_803DCC48 == 1)
     {
         if (skip == 0)
