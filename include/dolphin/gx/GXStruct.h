@@ -23,8 +23,8 @@ typedef struct _GXRenderModeObj {
     /* 0x14 */ VIXFBMode xFBmode;
     /* 0x18 */ u8 field_rendering;
     /* 0x19 */ u8 aa;
-    /* 0x20 */ u8 sample_pattern[12][2];
-    /* 0x38 */ u8 vfilter[7];
+    /* 0x1A */ u8 sample_pattern[12][2];
+    /* 0x32 */ u8 vfilter[7];
 } GXRenderModeObj;
 
 typedef struct _GXColor {
