@@ -11081,13 +11081,13 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
     f32 velMag;
     f32 damp;
     f32 r;
-    f32 local_78;
-    f32 local_74;
+    f32 pushZ;
+    f32 pushX;
     int** nearList;
-    f32 local_6c[4];
-    f32 local_5c;
-    f32 local_58;
-    f32 local_54;
+    f32 queryParams[4];
+    f32 posX;
+    f32 posY;
+    f32 posZ;
 
     fv2 = lbl_803E7EE0;
     found = 0;
@@ -11111,8 +11111,8 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
     }
     ((ByteFlags*)((char*)state + 0x3f1))->b01 = 0;
     clamp = lbl_803E7EA4;
-    local_74 = lbl_803E7EA4;
-    local_78 = lbl_803E7EA4;
+    pushX = lbl_803E7EA4;
+    pushZ = lbl_803E7EA4;
     if ((*(s8*)((char*)cfg + 0x264) & 0x10) != 0)
     {
         ((ByteFlags*)((char*)state + 0x3f1))->b01 = 1;
@@ -11141,12 +11141,12 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             }
             break;
         case 29:
-            local_6c[0] = lbl_803E8150;
-            found = (void*)ObjGroup_FindNearestObject(0x16, obj, local_6c);
+            queryParams[0] = lbl_803E8150;
+            found = (void*)ObjGroup_FindNearestObject(0x16, obj, queryParams);
             if (found != 0)
             {
                 (*(void (*)(f32, int, int, f32*, f32*))(*(int*)(*(int*)(*(int*)((char*)found + 0x68)) + 0x20)))(
-                    lbl_803E7EE0, (int)found, obj, &local_74, &local_78);
+                    lbl_803E7EE0, (int)found, obj, &pushX, &pushZ);
             }
             break;
         case 26:
@@ -11156,8 +11156,8 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
             if (sv <= 0)
             {
                 *(s16*)((char*)state + 0x808) = 0x3c;
-                ObjPath_GetPointWorldPosition(obj, 0xb, &local_5c, &local_58, &local_54, 0);
-                ObjHits_RecordPositionHit(local_5c, local_58, local_54, obj, 0, 0x14, 2, 0xffffffff);
+                ObjPath_GetPointWorldPosition(obj, 0xb, &posX, &posY, &posZ, 0);
+                ObjHits_RecordPositionHit(posX, posY, posZ, obj, 0, 0x14, 2, 0xffffffff);
             }
             break;
         case 8:
@@ -11171,8 +11171,8 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 if (0x78 < *(u16*)((char*)state + 0x8a0))
                 {
                     *(u16*)((char*)state + 0x8a0) = *(u16*)((char*)state + 0x8a0) - 0x78;
-                    ObjPath_GetPointWorldPosition(obj, 0xb, &local_5c, &local_58, &local_54, 0);
-                    ObjHits_RecordPositionHit(local_5c, local_58, local_54, obj, 0, 0x16, 2,
+                    ObjPath_GetPointWorldPosition(obj, 0xb, &posX, &posY, &posZ, 0);
+                    ObjHits_RecordPositionHit(posX, posY, posZ, obj, 0, 0x16, 2,
                                               0xffffffff);
                 }
             }
@@ -11247,9 +11247,9 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 ((GameObject*)obj)->anim.velocityZ * powfBitEstimate(damp, dt);
         }
     }
-    r = interpolate(local_74 - ((PlayerState*)state)->unk890, lbl_803E7FCC, timeDelta);
+    r = interpolate(pushX - ((PlayerState*)state)->unk890, lbl_803E7FCC, timeDelta);
     ((PlayerState*)state)->unk890 = ((PlayerState*)state)->unk890 + r;
-    r = interpolate(local_78 - ((PlayerState*)state)->unk894, lbl_803E7FCC, timeDelta);
+    r = interpolate(pushZ - ((PlayerState*)state)->unk894, lbl_803E7FCC, timeDelta);
     ((PlayerState*)state)->unk894 = ((PlayerState*)state)->unk894 + r;
     if (found == 0)
     {
@@ -12597,23 +12597,23 @@ void fn_802AC32C(int p1, int p2, int p3)
 int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
-    int iv6 = *(int*)&((GameObject*)obj)->anim.placementData;
-    int t;
+    int placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    int timerRec;
     int mode;
     u8 i;
     u8 j;
-    f32 f31v;
-    f32 z;
-    f32 local_58;
-    f32 local_54;
-    f32 local_50;
+    f32 scale;
+    f32 zero;
+    f32 snd0;
+    f32 snd1;
+    f32 snd2;
     f32 arr[6];
 
-    t = *(int*)((char*)inner + 0x40c);
-    z = lbl_803E8180;
-    if (*(f32*)((char*)t + 0x10) != z &&
-        (*(f32*)((char*)t + 0x10) = *(f32*)((char*)t + 0x10) - timeDelta,
-            *(f32*)((char*)t + 0x10) <= z))
+    timerRec = *(int*)((char*)inner + 0x40c);
+    zero = lbl_803E8180;
+    if (*(f32*)((char*)timerRec + 0x10) != zero &&
+        (*(f32*)((char*)timerRec + 0x10) = *(f32*)((char*)timerRec + 0x10) - timeDelta,
+            *(f32*)((char*)timerRec + 0x10) <= zero))
     {
         Obj_FreeObject(obj);
     }
@@ -12622,39 +12622,39 @@ int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         if (animUpdate->eventIds[i] == 1)
         {
             *(u8*)((char*)inner + 0x404) = *(u8*)((char*)inner + 0x404) | 1;
-            GameBit_Set(*(s16*)((char*)iv6 + 0x1c), 1);
+            GameBit_Set(*(s16*)((char*)placement + 0x1c), 1);
             arr[3] = lbl_803E8180;
             arr[4] = lbl_803E81C4;
             arr[5] = lbl_803E8180;
-            f31v = lbl_803E8210;
+            scale = lbl_803E8210;
             for (j = 0x19; j != 0; j--)
             {
-                fn_80098B18(f31v * ((GameObject*)obj)->anim.rootMotionScale, obj, 3, 0, 0, arr);
+                fn_80098B18(scale * ((GameObject*)obj)->anim.rootMotionScale, obj, 3, 0, 0, arr);
             }
         }
     }
-    if (*(s16*)((char*)iv6 + 0x1a) == 0x64c)
+    if (*(s16*)((char*)placement + 0x1a) == 0x64c)
     {
         Lightfoot_UpdatePlayerInteraction(obj, inner, inner);
         if ((*(u8*)((char*)inner + 0x404) & 1) != 0 &&
             (((GameObject*)obj)->objectFlags & 0x800) != 0)
         {
-            t = *(int*)((char*)inner + 0x40c);
-            *(f32*)((char*)t + 0xc) = *(f32*)((char*)t + 0xc) - timeDelta;
-            if (lbl_803E8180 < *(f32*)((char*)t + 0xc))
+            timerRec = *(int*)((char*)inner + 0x40c);
+            *(f32*)((char*)timerRec + 0xc) = *(f32*)((char*)timerRec + 0xc) - timeDelta;
+            if (lbl_803E8180 < *(f32*)((char*)timerRec + 0xc))
             {
                 mode = 0;
             }
             else
             {
                 mode = 3;
-                *(f32*)((char*)t + 0xc) = *(f32*)((char*)t + 0xc) + lbl_803E81C0;
+                *(f32*)((char*)timerRec + 0xc) = *(f32*)((char*)timerRec + 0xc) + lbl_803E81C0;
             }
-            local_58 = lbl_803E8180;
-            local_54 = lbl_803E81C4;
-            local_50 = lbl_803E8180;
+            snd0 = lbl_803E8180;
+            snd1 = lbl_803E81C4;
+            snd2 = lbl_803E8180;
             Sfx_KeepAliveLoopedObjectSound(obj, 0x455);
-            fn_80098B18(lbl_803E81C8 * ((GameObject*)obj)->anim.rootMotionScale, obj, 3, mode, 0, &local_58);
+            fn_80098B18(lbl_803E81C8 * ((GameObject*)obj)->anim.rootMotionScale, obj, 3, mode, 0, &snd0);
         }
     }
     *(u16*)((char*)inner + 0x400) = *(u16*)((char*)inner + 0x400) | 2;

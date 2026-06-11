@@ -811,7 +811,7 @@ void playerEarthWalkerAudioFn_8006f950(u8 *obj, f32 *pos, u8 flip, u8 type)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8006FC00(int param_1)
+void fn_8006FC00(int enable)
 {
     int i;
     u8* a;
@@ -820,8 +820,8 @@ void fn_8006FC00(int param_1)
     extern u8 lbl_80391DE0[];
     extern u8 lbl_803DCFFA;
 
-    lbl_803DCFFA = (u8)param_1;
-    if (param_1 != 0) {
+    lbl_803DCFFA = (u8)enable;
+    if (enable != 0) {
         return;
     }
     a = lbl_80392DE0;
@@ -991,9 +991,9 @@ uint getScreenResolution(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void setScreenWidth(u32 param_1)
+void setScreenWidth(u32 width)
 {
-    lbl_803DD004 = param_1;
+    lbl_803DD004 = width;
 }
 
 /*
@@ -1126,7 +1126,7 @@ extern f32 lbl_803DEE9C;
  * 132 byte discrepancy. Not crackable without materializing the
  * comparison indices via a global/volatile, which would break other
  * matches. */
-void fn_80070234(f32* param_1)
+void fn_80070234(f32* mat)
 {
     int i = 0, j;
     f32 zero, one;
@@ -1134,9 +1134,9 @@ void fn_80070234(f32* param_1)
     zero = lbl_803DEE9C;
     for (; i < 4; i++) {
         for (j = 0; j < 4; j++) {
-            if (i == j) param_1[j] = one; else param_1[j] = zero;
+            if (i == j) mat[j] = one; else mat[j] = zero;
         }
-        param_1 += 4;
+        mat += 4;
     }
 }
 
@@ -1154,12 +1154,12 @@ void fn_80070234(f32* param_1)
  * PAL Size: TODO
  */
 #pragma peephole on
-void gxSetPeControl_ZCompLoc_(u32 param_1)
+void gxSetPeControl_ZCompLoc_(u32 zCompLoc)
 {
     extern void GXSetZCompLoc();
-    if ((u32)lbl_803DD011 != (param_1 & 0xff) || lbl_803DD019 == 0) {
-        GXSetZCompLoc(param_1);
-        lbl_803DD011 = (u8)param_1;
+    if ((u32)lbl_803DD011 != (zCompLoc & 0xff) || lbl_803DD019 == 0) {
+        GXSetZCompLoc(zCompLoc);
+        lbl_803DD011 = (u8)zCompLoc;
         lbl_803DD019 = 1;
     }
 }
@@ -1177,7 +1177,7 @@ void gxSetPeControl_ZCompLoc_(u32 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void gxSetZMode_(u32 param_1, int param_2, u32 param_3)
+void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable)
 {
     extern void GXSetZMode();
     extern u8 lbl_803DD012;
@@ -1185,14 +1185,14 @@ void gxSetZMode_(u32 param_1, int param_2, u32 param_3)
     extern u8 lbl_803DD018;
     extern u8 lbl_803DD01A;
 
-    if ((u32)lbl_803DD018 != (param_1 & 0xff) ||
-        lbl_803DD014 != param_2 ||
-        (u32)lbl_803DD012 != (param_3 & 0xff) ||
+    if ((u32)lbl_803DD018 != (compareEnable & 0xff) ||
+        lbl_803DD014 != compareFunc ||
+        (u32)lbl_803DD012 != (updateEnable & 0xff) ||
         lbl_803DD01A == 0) {
-        GXSetZMode(param_1, param_2, param_3);
-        lbl_803DD018 = (u8)param_1;
-        lbl_803DD014 = param_2;
-        lbl_803DD012 = (u8)param_3;
+        GXSetZMode(compareEnable, compareFunc, updateEnable);
+        lbl_803DD018 = (u8)compareEnable;
+        lbl_803DD014 = compareFunc;
+        lbl_803DD012 = (u8)updateEnable;
         lbl_803DD01A = 1;
     }
 }
@@ -1230,9 +1230,9 @@ void resetSomeGxFlags(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void setHudOpacity(u8 param_1)
+void setHudOpacity(u8 opacity)
 {
-    lbl_803DC2D9 = param_1;
+    lbl_803DC2D9 = opacity;
 }
 
 /*
@@ -1307,11 +1307,11 @@ void fogFn_80070404(f32 a, f32 b)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void getColor803dd01c(u8* param_1)
+void getColor803dd01c(u8* rgbOut)
 {
-    param_1[0] = lbl_803DD01C.r;
-    param_1[1] = lbl_803DD01C.g;
-    param_1[2] = lbl_803DD01C.b;
+    rgbOut[0] = lbl_803DD01C.r;
+    rgbOut[1] = lbl_803DD01C.g;
+    rgbOut[2] = lbl_803DD01C.b;
 }
 
 /*
@@ -1327,12 +1327,12 @@ void getColor803dd01c(u8* param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_800704FC(u8 param_1, u8 param_2, u8 param_3)
+void fn_800704FC(u8 red, u8 green, u8 blue)
 {
     extern GXColor lbl_803DD01C;
-    lbl_803DD01C.r = param_1;
-    lbl_803DD01C.g = param_2;
-    lbl_803DD01C.b = param_3;
+    lbl_803DD01C.r = red;
+    lbl_803DD01C.g = green;
+    lbl_803DD01C.b = blue;
 }
 
 /*
@@ -1348,7 +1348,7 @@ void fn_800704FC(u8 param_1, u8 param_2, u8 param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
+void renderWhirlpool(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEE4;
     extern u32 lbl_803DB6F4, lbl_803DB6F8;
@@ -1385,7 +1385,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
     void (*pcb)(void*, void**, int);
 
     model = obj_b[0];
-    renderOp = (void*)ObjModel_GetRenderOp(model, param_3);
+    renderOp = (void*)ObjModel_GetRenderOp(model, slot);
     handle1 = *Shader_getLayer(renderOp, 0);
     selectTexture(textureIdxToPtr(handle1), 0);
     selectReflectionTexture(1);
@@ -1466,7 +1466,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
 
     pcb = (void(*)(void*, void**, int))ObjModel_GetPostRenderCallback(obj_b);
     if (pcb != 0) {
-        pcb(obj_a, obj_b, param_3);
+        pcb(obj_a, obj_b, slot);
     } else {
         u8 zCompLoc = 1;
         u32 flags2;
@@ -2342,7 +2342,7 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3)
+void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern f32 lbl_803DB6B8, lbl_803DB6C0;
@@ -2371,7 +2371,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3)
     int alpha_byte;
 
     model = obj_b[0];
-    renderOp = (void*)ObjModel_GetRenderOp(model, param_3);
+    renderOp = (void*)ObjModel_GetRenderOp(model, slot);
     tex = getTextureFn_8006c744();
     selectReflectionTexture(0);
     selectTexture(tex, 1);
@@ -2441,7 +2441,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3)
 
     pcb = (void(*)(void*, void**, int))ObjModel_GetPostRenderCallback(obj_b);
     if (pcb != 0) {
-        pcb(obj_a, obj_b, param_3);
+        pcb(obj_a, obj_b, slot);
     } else {
         u8 zCompLoc = 1;
         u32 modelFlags;
@@ -2906,7 +2906,7 @@ int moonFxCb_80074110(u8 *obj, int *objB, int slot)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modelCb_80074518(void* obj_a, void** obj_b, int param_3)
+void modelCb_80074518(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern f32 lbl_803DB6B0, lbl_803DB6B4;
@@ -2942,7 +2942,7 @@ void modelCb_80074518(void* obj_a, void** obj_b, int param_3)
     indMtx[5] = lbl_802C1F68[5];
 
     model = obj_b[0];
-    renderOp = (void*)ObjModel_GetRenderOp(model, param_3);
+    renderOp = (void*)ObjModel_GetRenderOp(model, slot);
     tex = textureIdxToPtr(*Shader_getLayer(renderOp, 0));
 
     PSMTXScale(mtx_60, lbl_803DB6B4, lbl_803DB6B4, lbl_803DEEDC);
@@ -2990,7 +2990,7 @@ void modelCb_80074518(void* obj_a, void** obj_b, int param_3)
 
     pcb = (void(*)(void*, void**, int))ObjModel_GetPostRenderCallback(obj_b);
     if (pcb != 0) {
-        pcb(obj_a, obj_b, param_3);
+        pcb(obj_a, obj_b, slot);
     } else {
         u8 zCompLoc = 1;
         u32 modelFlags;
@@ -7058,9 +7058,9 @@ int cardLoadFn_8007d72c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void saveFn_8007d960(u32 param_1)
+void saveFn_8007d960(u32 enable)
 {
-    u8 v = (u8)param_1;
+    u8 v = (u8)enable;
     lbl_803DD059 = v;
     if (v != 0) {
         return;
