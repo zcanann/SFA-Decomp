@@ -98,39 +98,39 @@ extern f32 lbl_803E234C;
  */
 #pragma dont_inline on
 int
-camcontrol_traceMove(float *param_2,float *param_3,float *param_4,u8 *param_5,
-                     char param_6,u8 param_7,u8 param_8,float param_1)
+camcontrol_traceMove(float *startPos,float *targetPos,float *endPosOut,u8 *trace,
+                     char channel,u8 doSweep,u8 doBboxTest,float radius)
 {
-  u8 cVar2;
-  undefined4 uVar1;
-  float local_40 [3];
-  uint auStack_34 [9];
+  u8 blocked;
+  undefined4 clear;
+  float endTmp [3];
+  uint sweptBounds [9];
 
-  if (param_4 == (float *)0x0) {
-    param_4 = local_40;
+  if (endPosOut == (float *)0x0) {
+    endPosOut = endTmp;
   }
-  *param_4 = *param_3;
-  param_4[1] = param_3[1];
-  param_4[2] = param_3[2];
-  *(float *)(param_5 + 0x40) = param_1;
-  *(s8 *)(param_5 + 0x50) = -1;
-  *(s8 *)(param_5 + 0x54) = param_6;
-  cVar2 = '\0';
-  *(undefined2 *)(param_5 + 0x6c) = 0;
-  if (param_8 != '\0') {
-    cVar2 = objBboxFn_800640cc(param_2,param_4,(float *)0x1,(int *)0x0,(int *)0x0,0x10,0xffffffff,0xff,0);
+  *endPosOut = *targetPos;
+  endPosOut[1] = targetPos[1];
+  endPosOut[2] = targetPos[2];
+  *(float *)(trace + 0x40) = radius;
+  *(s8 *)(trace + 0x50) = -1;
+  *(s8 *)(trace + 0x54) = channel;
+  blocked = '\0';
+  *(undefined2 *)(trace + 0x6c) = 0;
+  if (doBboxTest != '\0') {
+    blocked = objBboxFn_800640cc(startPos,endPosOut,(float *)0x1,(int *)0x0,(int *)0x0,0x10,0xffffffff,0xff,0);
   }
-  lbl_803DD528 = cVar2;
-  if (param_7 != '\0') {
-    hitDetect_calcSweptSphereBounds(auStack_34,param_2,param_4,(float *)(param_5 + 0x40),1);
-    hitDetectFn_800691c0(0,auStack_34,0x240,'\x01');
+  lbl_803DD528 = blocked;
+  if (doSweep != '\0') {
+    hitDetect_calcSweptSphereBounds(sweptBounds,startPos,endPosOut,(float *)(trace + 0x40),1);
+    hitDetectFn_800691c0(0,sweptBounds,0x240,'\x01');
   }
-  hitDetectFn_80067958(0, param_2, param_4, 1, (int)param_5, 0);
-  uVar1 = 0;
-  if ((lbl_803DD528 == '\0') && (*(short *)(param_5 + 0x6c) == 0)) {
-    uVar1 = 1;
+  hitDetectFn_80067958(0, startPos, endPosOut, 1, (int)trace, 0);
+  clear = 0;
+  if ((lbl_803DD528 == '\0') && (*(short *)(trace + 0x6c) == 0)) {
+    clear = 1;
   }
-  return uVar1;
+  return clear;
 }
 #pragma dont_inline reset
 
@@ -251,48 +251,48 @@ undefined camcontrol_getTargetPosition(int arg0,void *arg1,void *arg2,void *arg3
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void camcontrol_updateTargetAction(int param_1,int param_2)
+void camcontrol_updateTargetAction(int camState,int targetObj)
 {
-  short sVar1;
-  int uVar2;
-  int iVar3;
+  short classId;
+  int buttons;
+  int cond;
   CamcontrolAction43Payload local_28;
   CamcontrolAction44Payload local_24;
-  longlong local_18;
+  longlong convHeight;
   
-  if (*(void **)(param_2 + 0xc0) == NULL) {
-    uVar2 = getButtonsJustPressed(0);
-    if (*(void **)(param_1 + 0x124) != NULL) {
-      sVar1 = *(short *)(*(int *)(param_1 + 0x124) + 0x44);
-      if (((sVar1 == 0x1c) || (sVar1 == 0x2a)) && (*(short *)(param_2 + 0x44) == 1)) {
-        iVar3 = objFn_80296700(param_2);
-        if ((iVar3 != 0) && (iVar3 = fn_80295C0C(param_2), iVar3 != 0)) {
+  if (*(void **)(targetObj + 0xc0) == NULL) {
+    buttons = getButtonsJustPressed(0);
+    if (*(void **)(camState + 0x124) != NULL) {
+      classId = *(short *)(*(int *)(camState + 0x124) + 0x44);
+      if (((classId == 0x1c) || (classId == 0x2a)) && (*(short *)(targetObj + 0x44) == 1)) {
+        cond = objFn_80296700(targetObj);
+        if ((cond != 0) && (cond = fn_80295C0C(targetObj), cond != 0)) {
           goto action_49;
         }
       }
     }
-    if ((*(byte *)(param_1 + 0x141) & 2) != 0) {
+    if ((*(byte *)(camState + 0x141) & 2) != 0) {
       goto action_49;
     }
     goto check_action_44;
 action_49:
     cameraSetInterpMode(1);
-    (*gCameraInterface)->setMode(0x49,1,0,4,(void *)(param_1 + 0x124),0x3c,0xff);
+    (*gCameraInterface)->setMode(0x49,1,0,4,(void *)(camState + 0x124),0x3c,0xff);
     goto done;
 check_action_44:
-    if ((((uVar2 & 0x10) != 0) && (*(short *)(param_2 + 0x44) == 1)) &&
-       (iVar3 = objFn_802962b4(param_2), iVar3 != 0)) {
+    if ((((buttons & 0x10) != 0) && (*(short *)(targetObj + 0x44) == 1)) &&
+       (cond = objFn_802962b4(targetObj), cond != 0)) {
       local_24.distance = cameraMtxVar57->minDistance;
       local_24.yOffset = cameraMtxVar57->lowerHeightOffset;
-      local_18 = (longlong)(int)cameraMtxVar57->targetHeight;
+      convHeight = (longlong)(int)cameraMtxVar57->targetHeight;
       local_24.height = (int)cameraMtxVar57->targetHeight;
       cameraSetInterpMode(0);
       (*gCameraInterface)->setMode(0x44,1,0,0xc,&local_24,0xf,0xfe);
     }
     else {
-      iVar3 = getCurSeqNo();
-      if (((iVar3 == 0) && (uVar2 = getPadFn_80014d9c(0), (uVar2 & 0x40) != 0)) &&
-         ((*(short *)(param_1 + 6) & 4) == 0)) {
+      cond = getCurSeqNo();
+      if (((cond == 0) && (buttons = getPadFn_80014d9c(0), (buttons & 0x40) != 0)) &&
+         ((*(short *)(camState + 6) & 4) == 0)) {
         local_28.action = 5;
         local_28.enabled = 1;
         local_28.immediate = 1;

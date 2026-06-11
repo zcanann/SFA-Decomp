@@ -378,48 +378,48 @@ void CameraModeCombat_update(short *cam)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeCombat_init(int param_1,undefined4 param_2,undefined4 *param_3)
+void CameraModeCombat_init(int camObj,undefined4 param_2,undefined4 *args)
 {
-  float fVar1;
-  float fVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
+  float dx;
+  float dz;
+  int posEntry;
+  int targetObj;
+  int playerObj;
   double dVar6;
 
-  *(undefined4 *)(param_1 + 0x11c) = *param_3;
-  iVar5 = *(int *)(param_1 + 0xa4);
+  *(undefined4 *)(camObj + 0x11c) = *args;
+  playerObj = *(int *)(camObj + 0xa4);
   if (lbl_803DD568 == (CameraModeCombatState *)0x0) {
     lbl_803DD568 = (CameraModeCombatState *)mmAlloc(0x1c,0xf,0);
   }
-  fVar1 = lbl_803E18C4;
+  dx = lbl_803E18C4;
   lbl_803DD568->heightOffset = lbl_803E18C4;
   lbl_803DD568->zoomOffset = lbl_803E18C0;
   lbl_803DD568->invalidTarget = 0;
   lbl_803DD568->unk11 = 0;
   lbl_803DD568->pathBlendStartIndex = 1;
   lbl_803DD568->pathBlendTargetIndex = 1;
-  lbl_803DD568->pathBlendWeight = fVar1;
-  if (*(short *)(iVar5 + 0x44) != 1) {
+  lbl_803DD568->pathBlendWeight = dx;
+  if (*(short *)(playerObj + 0x44) != 1) {
     lbl_803DD568->invalidTarget = 1;
   }
   else {
-    iVar4 = *(int *)(param_1 + 0x11c);
-    if ((void *)iVar4 == NULL) {
+    targetObj = *(int *)(camObj + 0x11c);
+    if ((void *)targetObj == NULL) {
       lbl_803DD568->invalidTarget = 1;
     }
     else {
-      if (*(void **)(iVar4 + 0x74) == NULL) {
-        fVar1 = *(float *)(iVar5 + 0x18) - *(float *)(iVar4 + 0x18);
-        fVar2 = *(float *)(iVar5 + 0x20) - *(float *)(iVar4 + 0x20);
+      if (*(void **)(targetObj + 0x74) == NULL) {
+        dx = *(float *)(playerObj + 0x18) - *(float *)(targetObj + 0x18);
+        dz = *(float *)(playerObj + 0x20) - *(float *)(targetObj + 0x20);
       }
       else {
-        iVar3 = *(int *)(iVar4 + 0x74) + (uint)*(byte *)(iVar4 + 0xe4) * 0x18;
-        fVar1 = *(float *)(iVar3 + 0xc) - *(float *)(iVar5 + 0x18);
-        fVar2 = *(float *)(iVar3 + 0x14) - *(float *)(iVar5 + 0x20);
+        posEntry = *(int *)(targetObj + 0x74) + (uint)*(byte *)(targetObj + 0xe4) * 0x18;
+        dx = *(float *)(posEntry + 0xc) - *(float *)(playerObj + 0x18);
+        dz = *(float *)(posEntry + 0x14) - *(float *)(playerObj + 0x20);
       }
-      if (*(short *)(iVar4 + 0x44) != 0x6d) {
-        lbl_803DD568->followDistance = sqrtf(fVar1 * fVar1 + fVar2 * fVar2);
+      if (*(short *)(targetObj + 0x44) != 0x6d) {
+        lbl_803DD568->followDistance = sqrtf(dx * dx + dz * dz);
       }
       else {
         lbl_803DD568->followDistance = lbl_803E1940;
