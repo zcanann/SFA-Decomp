@@ -76,45 +76,19 @@ typedef struct TrickyStatusFlags58
     u8 bit0 : 1;
 } TrickyStatusFlags58;
 
-extern undefined4 FUN_800067e8();
 extern bool FUN_800067f0();
-extern undefined4 FUN_8000680c();
-extern undefined8 FUN_80006824();
-extern undefined8 FUN_800068cc();
-extern undefined8 FUN_800068d0();
 extern char FUN_80006a64();
 extern undefined4 FUN_80006a68();
-extern void* FUN_80017624();
-extern undefined4 FUN_80017688();
 extern uint FUN_80017690();
-extern undefined8 FUN_80017698();
-extern double FUN_80017708();
-extern uint FUN_80017730();
-extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
 extern void Sfx_RemoveLoopedObjectSound(int param_1, int param_2);
 extern int Sfx_IsPlayingFromObjectChannel(int param_1, int param_2);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
-extern undefined8 FUN_800178ec();
-extern undefined4 FUN_80017a28();
-extern undefined4 FUN_80017a30();
-extern undefined4 FUN_80017a3c();
-extern int FUN_80017a54();
-extern int FUN_80017a90();
-extern void* FUN_80017aa4();
-extern undefined8 FUN_80017ac8();
-extern int FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern int FUN_80017af8();
 extern int voxmaps_traceLine(void* from, void* to, int param_3, u8* hit, int param_5);
 extern void voxmaps_worldToGrid(Vec* world, void* grid);
 extern void* ObjList_FindObjectById(int objId);
-extern undefined4 FUN_8002f6ac();
-extern int FUN_8002fc3c();
 extern int getTrickyObject(void);
-extern undefined4 FUN_800305c4();
-extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjHits_SyncObjectPosition();
@@ -138,94 +112,39 @@ extern undefined4 objAnimFn_80038f38();
 extern undefined8 FUN_80039468();
 extern void objAudioFn_800393f8(int param_1, void* param_2, int param_3, int param_4, int param_5,
                                 int param_6);
-extern int FUN_8003964c();
 extern f32 getXZDistance(f32 * a, f32 * b);
-extern undefined4 FUN_8003a1c4();
-extern undefined4 fn_8003A328();
-extern undefined4 FUN_8003b1a4();
-extern undefined4 FUN_8003b280();
-extern undefined4 FUN_8003b818();
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int objModelGetVecFn_800395d8(int obj, int param_2);
-extern undefined4 FUN_80046f44();
-extern undefined4 FUN_80046f84();
 extern void freeAndNull(void* param_1);
 extern void trickyVoxAllocFn_8004b5d4(void* param_1);
 extern int ViewFrustum_IsSphereVisible(f32* pos, f32 radius);
-extern undefined8 FUN_800571f8();
-extern int FUN_800575b4();
 extern int FUN_800620e8();
 extern u16 hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hits, int param_6, int param_7);
-extern undefined4 FUN_8006dca8();
 extern void objAudioFn_8006edcc(f32 param_1, f32 param_2, int obj, u16 param_4, int param_5, float* points, void* aux);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
-extern undefined4 FUN_8008111c();
-extern undefined4 FUN_80081120();
-extern undefined4 FUN_800da700();
-extern undefined8 FUN_800da850();
-extern undefined4 FUN_800db47c();
-extern ushort FUN_800db690();
-extern undefined4 FUN_800dbc68();
-extern undefined8 FUN_800dd3dc();
-extern undefined4 FUN_800dd3e0();
 extern void doNothing_onTrickyFree(void);
 extern void doNothing_onTrickyInit(void);
 extern void walkgroupFindExitPointFn_800dc398(void);
 extern void gameBitIncrement(int eventId);
 extern u32 GameBit_Get(int bit);
 extern void GameBit_Set(int eventId, int value);
-extern undefined8 FUN_80135d54();
 extern void objAnimFreeChildren(int param_1, int param_2, int* param_3);
 extern void trickyImpress(int obj);
 extern int trickyFoodFn_8014460c(int obj, int state);
 extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
-extern undefined4 FUN_80135f38();
-extern undefined4 FUN_80136310();
-extern undefined4 FUN_8013651c();
 extern int trickyFindNearestUsableBaddie(int obj, int param_2, f32 maxRadius);
-extern undefined4 FUN_801367b4();
-extern int FUN_80136870();
 extern void fn_8013ADFC(int obj);
 extern void Tricky_emitQueuedPathParticles(int obj, int state);
 extern int trickyFn_8013b368();
-extern int trickyGrowl();
-extern int FUN_801451dc();
-extern undefined4 FUN_8014fef8();
-extern byte FUN_80150620();
-extern undefined4 FUN_801523bc();
-extern undefined4 FUN_80152b8c();
-extern undefined4 FUN_80152f54();
-extern undefined4 FUN_80153440();
-extern undefined4 FUN_80153db4();
-extern undefined4 FUN_80154108();
-extern undefined4 FUN_80154cc8();
-extern undefined4 FUN_80157168();
-extern undefined4 FUN_80158540();
-extern undefined4 FUN_80159c60();
-extern undefined4 FUN_8015a4c4();
-extern undefined4 FUN_8015b2cc();
-extern undefined4 FUN_801778d0();
 extern void objSetAnimSpeedTo1(int param_1);
 extern f32 objFn_801948c0(int obj, int param_2);
-extern double FUN_80194a70();
-extern undefined4 FUN_8020a568();
 extern undefined4 FUN_80247eb8();
 extern double SeekTwiceBeforeRead();
-extern undefined4 FUN_80286830();
-extern uint FUN_80286834();
 extern undefined8 FUN_8028683c();
-extern undefined4 FUN_8028687c();
-extern undefined4 FUN_80286880();
 extern undefined4 FUN_80286888();
-extern undefined4 FUN_8028fa2c();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
-extern undefined4 FUN_80294c68();
 extern int fn_80296240(int obj);
 extern int fn_80296448(int obj);
-extern undefined4 FUN_80294dc4();
 extern void trickyReportError(const char* fmt, ...);
 extern void objParticleFn_80099d84(int obj, f32 param_1, int param_4, f32 param_2, int param_5);
 extern int objBboxFn_800640cc(Vec* from, Vec* to, f32 radius, int mode, void* hit, int obj, int param_7,
@@ -233,52 +152,19 @@ extern int objBboxFn_800640cc(Vec* from, Vec* to, f32 radius, int mode, void* hi
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 
-extern undefined4 DAT_802c2948;
-extern undefined4 DAT_802c294c;
-extern undefined4 DAT_802c2950;
-extern undefined4 DAT_802c2954;
-extern undefined4 DAT_802c2958;
-extern undefined4 DAT_802c2970;
-extern undefined4 DAT_802c2974;
-extern undefined4 DAT_802c2978;
-extern undefined4 DAT_802c297c;
-extern undefined4 DAT_802c2980;
-extern undefined4 DAT_802c2984;
-extern undefined4 DAT_802c2988;
-extern undefined4 DAT_802c298c;
 extern u32 lbl_802C21F0[4];
-extern undefined4 DAT_8031df38;
-extern undefined4 DAT_8031df50;
 extern char lbl_8031D2E8[];
 extern char lbl_8031D300[];
 extern char sInWaterMessage[];
 extern char lbl_8031D478[];
-extern undefined4 DAT_803dc8a8;
-extern undefined4 DAT_803dc8b0;
-extern undefined4* DAT_803dd734;
-extern undefined4 DAT_803de6c8;
-extern undefined4* DAT_803de6d0;
-extern undefined4 DAT_803de6d4;
-extern undefined4 DAT_803e3050;
-extern undefined4 DAT_803e3054;
 extern undefined4 DAT_803e3058;
-extern undefined4 DAT_803e31e8;
-extern undefined4 DAT_803e31ec;
-extern undefined4 DAT_803e31f0;
-extern undefined4 DAT_803e31f4;
-extern undefined4 DAT_803e31f8;
 extern char sSidekickCommandDebugTextBlock[];
 extern undefined4 lbl_803DDA48;
 extern int lbl_803DDA54;
 extern MapEventInterface** gMapEventInterface;
 extern undefined4 lbl_803DBC40;
 extern undefined4 lbl_803DBC48;
-extern f64 DOUBLE_803e30f0;
-extern f64 DOUBLE_803e3218;
 extern f32 lbl_803DC074;
-extern f32 lbl_803DC078;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern u16 lbl_803E23C0;
@@ -292,7 +178,6 @@ extern f32 lbl_803E2444;
 extern f32 lbl_803E24B8;
 extern f32 lbl_803E2454;
 extern f32 lbl_803E2458;
-extern f64 lbl_803E2460;
 extern f32 lbl_803E247C;
 extern f32 lbl_803E2524;
 extern f32 lbl_803E253C;
@@ -319,49 +204,15 @@ extern f32 lbl_803E25C0;
 extern f32 lbl_803E25C4;
 extern f32 lbl_803E25C8;
 extern f32 lbl_803E306C;
-extern f32 lbl_803E3078;
-extern f32 lbl_803E307C;
-extern f32 lbl_803E3098;
 extern f32 lbl_803E30A0;
 extern f32 lbl_803E30A4;
-extern f32 lbl_803E30A8;
-extern f32 lbl_803E30CC;
 extern f32 lbl_803E30D0;
-extern f32 lbl_803E30D4;
-extern f32 lbl_803E30E4;
-extern f32 lbl_803E310C;
 extern f32 lbl_803E3138;
-extern f32 lbl_803E3148;
-extern f32 lbl_803E3158;
-extern f32 lbl_803E3168;
 extern f32 lbl_803E317C;
 extern f32 lbl_803E3188;
-extern f32 lbl_803E3190;
 extern f32 lbl_803E31C4;
-extern f32 lbl_803E31C8;
-extern f32 lbl_803E31CC;
-extern f32 lbl_803E31D0;
-extern f32 lbl_803E31D4;
-extern f32 lbl_803E31D8;
-extern f32 lbl_803E31DC;
-extern f32 lbl_803E31E0;
-extern f32 lbl_803E31FC;
-extern f32 lbl_803E3200;
-extern f32 lbl_803E3204;
-extern f32 lbl_803E3208;
-extern f32 lbl_803E320C;
-extern f32 lbl_803E3210;
-extern f32 lbl_803E3220;
-extern f32 lbl_803E3224;
-extern f32 lbl_803E3228;
-extern f32 lbl_803E322C;
 extern f32 lbl_803E3234;
-extern f32 lbl_803E3238;
-extern f32 lbl_803E323C;
-extern f32 lbl_803E3240;
 extern f32 lbl_803E3244;
-extern f32 lbl_803E3250;
-extern f32 lbl_803E3254;
 
 /*
  * --INFO--
@@ -409,7 +260,7 @@ void FUN_80144e40(int param_1, int param_2)
                     {
                         FUN_80039468(param_1, iVar2 + 0x3a8, 0x350, 0x500, 0xffffffff, 0);
                     }
-                    *(undefined*)(param_2 + 10) = 10;
+                    *(u8*)(param_2 + 10) = 10;
                     *(uint*)(param_2 + 0x54) = *(uint*)(param_2 + 0x54) | 0x10;
                 }
                 else if (*(float*)(param_2 + 0x720) <= lbl_803E31C4)
@@ -447,7 +298,7 @@ void FUN_80144e40(int param_1, int param_2)
                         }
                         if (!bVar4)
                         {
-                            *(undefined*)(param_2 + 10) = 0xb;
+                            *(u8*)(param_2 + 10) = 0xb;
                             return;
                         }
                     }
@@ -682,7 +533,7 @@ void sideCommandEnable(int obj, int targetObj, int commandKind, int commandType)
         if (*(uint*)(commandEntry + 0x748) == (uint)targetObj)
         {
             commandEntry = state + commandIndex * 8;
-            *(undefined*)(commandEntry + 0x74e) = 3;
+            *(u8*)(commandEntry + 0x74e) = 3;
             return;
         }
         commandEntry = commandEntry + 8;
@@ -697,7 +548,7 @@ void sideCommandEnable(int obj, int targetObj, int commandKind, int commandType)
     commandEntry = state + (uint)((TrickyState*)state)->unk798 * 8;
     *(char*)(commandEntry + 0x74d) = (char)commandType;
     commandEntry = state + (uint)((TrickyState*)state)->unk798 * 8;
-    *(undefined*)(commandEntry + 0x74e) = 3;
+    *(u8*)(commandEntry + 0x74e) = 3;
     *(char*)&((TrickyState*)state)->unk798 = *(char*)&((TrickyState*)state)->unk798 + '\x01';
     return;
 }
@@ -748,7 +599,7 @@ int Tricky_updateSideCommandPrompts(int obj)
         commandMask = *(byte*)(state + 0xb) | 9;
         if ((*(uint*)(state + 0x54) & 0x10) != 0)
         {
-            *(undefined*)(state + 0xb) = 0;
+            *(u8*)(state + 0xb) = 0;
         }
         if (((*(byte*)(state + 8) == 8) || (*(byte*)(state + 8) == 0xd)) ||
             ((*(byte*)(state + 8) == 0xe && (*(byte*)(state + 10) == 1))))
@@ -809,7 +660,7 @@ int Tricky_updateSideCommandPrompts(int obj)
         {
             commandMask &= ~0x10;
         }
-        *(undefined*)(state + 0xb) = 0;
+        *(u8*)(state + 0xb) = 0;
         if ((cond) && ((*(uint*)(state + 0x54) & 0x200) == 0))
         {
             *(float*)(state + 0x7b4) = lbl_803E3188;
