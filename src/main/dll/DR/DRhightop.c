@@ -168,12 +168,12 @@ typedef struct HightopFlags3
 void fn_801EAE4C(short* obj, int stateRaw)
 {
     float tickDir;
-    float fVar2;
+    float fb;
     uint bitVal;
     SnowBikeState* st = (SnowBikeState*)stateRaw;
     short angDelta;
     uint absDelta;
-    int iVar7;
+    int val;
     ushort uRet;
     s8 ch;
 
@@ -753,7 +753,7 @@ void fn_801EB940(short* obj, int stateRaw)
  */
 extern f32 sqrtf(f32);
 
-void fn_801EBD60(int param_1, int param_2)
+void fn_801EBD60(int obj, int stateRaw)
 {
     typedef struct HightopPartfxTransform
     {
@@ -767,11 +767,11 @@ void fn_801EBD60(int param_1, int param_2)
         f32 z;
     } HightopPartfxTransform;
 
-    SnowBikeState* st = (SnowBikeState*)param_2;
+    SnowBikeState* st = (SnowBikeState*)stateRaw;
     u8 flags;
     s16 motionFrame;
-    f32 fVar1;
-    f32 fVar2;
+    f32 fa;
+    f32 fb;
     f32 speed;
     f32 target558;
     f32 target530;
@@ -787,11 +787,11 @@ void fn_801EBD60(int param_1, int param_2)
         (st->unk494 * st->unk494 +
             st->unk498 * st->unk498));
     st->unk43C -= timeDelta;
-    fVar1 = st->unk43C;
+    fa = st->unk43C;
     st->unk43C =
-        (fVar1 < lbl_803E5AE8)
+        (fa < lbl_803E5AE8)
             ? lbl_803E5AE8
-            : ((fVar1 > lbl_803E5B1C) ? lbl_803E5B1C : fVar1);
+            : ((fa > lbl_803E5B1C) ? lbl_803E5B1C : fa);
 
     flags = st->flags428;
     if ((u32)(flags >> 7 & 1) == 0)
@@ -811,14 +811,14 @@ void fn_801EBD60(int param_1, int param_2)
             {
                 st->unk43C = (f32)(s32)
                 randomGetRange(5, 10);
-                if (PSVECMag((void*)(param_1 + 0x24)) > lbl_803E5BC4)
+                if (PSVECMag((void*)(obj + 0x24)) > lbl_803E5BC4)
                 {
                     doRumble((f32)(s32)randomGetRange(1, 3));
                 }
             }
             if (speed > lbl_803E5BEC)
             {
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x80b, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x80b, NULL, 2, -1, NULL);
             }
             break;
         case 3:
@@ -845,10 +845,10 @@ void fn_801EBD60(int param_1, int param_2)
                 effect.rotZ = 0;
                 effect.rotY = 0;
                 effect.rotX = 0;
-                effect.x = *(f32*)(param_1 + 0xc);
-                effect.y = lbl_803E5C10 + *(f32*)(param_1 + 0x10);
-                effect.z = *(f32*)(param_1 + 0x14);
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x80a, &effect, 1, -1, NULL);
+                effect.x = *(f32*)(obj + 0xc);
+                effect.y = lbl_803E5C10 + *(f32*)(obj + 0x10);
+                effect.z = *(f32*)(obj + 0x14);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x80a, &effect, 1, -1, NULL);
             }
             break;
         }
