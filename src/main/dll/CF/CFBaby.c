@@ -147,27 +147,9 @@ typedef struct FlammablevineState
 } FlammablevineState;
 
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068c4();
-extern undefined4 FUN_80006ba8();
-extern void* FUN_80017470();
-extern undefined4 FUN_80017680();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 FUN_8001771c();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_800178b8();
-extern undefined4 FUN_80017a48();
-extern int FUN_80017a5c();
-extern undefined4 FUN_80017a78();
-extern int FUN_80017a90();
-extern int FUN_80017a98();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80017ad0();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined4 FUN_800305c4();
 extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern undefined4 ObjHits_ClearHitVolumes();
@@ -186,7 +168,6 @@ extern undefined4 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
 extern int ObjTrigger_IsSet();
 extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80041ff8();
 extern undefined4 FUN_800427c8();
 extern undefined4 FUN_80042800();
@@ -194,79 +175,13 @@ extern undefined4 FUN_80042b9c();
 extern undefined4 FUN_80042bec();
 extern undefined4 FUN_80043030();
 extern undefined4 FUN_80044404();
-extern undefined4 FUN_8005398c();
 extern undefined4 FUN_80053c98();
-extern int FUN_800575b4();
-extern undefined4 FUN_800810f0();
-extern undefined4 FUN_80081108();
-extern undefined4 FUN_80081110();
-extern undefined4 FUN_8011d9b4();
-extern char FUN_8012e0e0();
-extern int FUN_8012efc4();
-extern undefined4 FUN_8013651c();
-extern undefined4 FUN_8020a758();
-extern undefined4 FUN_8020a75c();
-extern undefined4 FUN_80247edc();
-extern double SeekTwiceBeforeRead();
-extern int FUN_80286834();
-extern int FUN_80286840();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_8028688c();
-extern uint FUN_80294c04();
-extern int FUN_80294dbc();
 extern void* Obj_GetPlayerObject(void);
 
-extern undefined4 DAT_803225e0;
-extern undefined4 DAT_803225f0;
-extern undefined4 DAT_80322678;
-extern undefined4 DAT_8032267c;
-extern undefined4 DAT_8032267d;
-extern undefined4 DAT_8032267e;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern EffectInterface** gPartfxInterface;
 extern MapEventInterface** gMapEventInterface;
-extern undefined4* DAT_803dd740;
-extern f64 DOUBLE_803e47d0;
-extern f64 DOUBLE_803e47f8;
-extern f64 DOUBLE_803e4818;
-extern f64 DOUBLE_803e4828;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e4738;
-extern f32 FLOAT_803e4750;
-extern f32 FLOAT_803e4770;
-extern f32 FLOAT_803e4774;
-extern f32 FLOAT_803e4778;
-extern f32 FLOAT_803e4780;
-extern f32 FLOAT_803e4784;
-extern f32 FLOAT_803e4790;
-extern f32 FLOAT_803e4794;
-extern f32 FLOAT_803e4798;
-extern f32 FLOAT_803e479c;
-extern f32 FLOAT_803e47a0;
-extern f32 FLOAT_803e47a4;
-extern f32 FLOAT_803e47a8;
-extern f32 FLOAT_803e47ac;
-extern f32 FLOAT_803e47b0;
-extern f32 FLOAT_803e47b8;
-extern f32 FLOAT_803e47bc;
-extern f32 FLOAT_803e47c0;
-extern f32 FLOAT_803e47c4;
-extern f32 FLOAT_803e47c8;
-extern f32 FLOAT_803e47cc;
-extern f32 FLOAT_803e47dc;
-extern f32 FLOAT_803e47e0;
-extern f32 FLOAT_803e47e8;
-extern f32 FLOAT_803e47ec;
-extern f32 FLOAT_803e47f0;
-extern f32 FLOAT_803e47f4;
-extern f32 FLOAT_803e4800;
-extern f32 FLOAT_803e4804;
-extern f32 FLOAT_803e4810;
-extern f32 FLOAT_803e4814;
-extern f32 FLOAT_803e4820;
 extern f32 FLOAT_803e4830;
-extern f32 FLOAT_803e4834;
-extern f32 FLOAT_803e4838;
 extern f32 FLOAT_803e4840;
 extern f32 FLOAT_803e4844;
 extern f32 FLOAT_803e4848;
@@ -416,7 +331,7 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
         {
             return 0;
         }
-        switch (*(undefined*)(param_11 + iVar7 + 0x81))
+        switch (*(u8*)(param_11 + iVar7 + 0x81))
         {
         case 2:
         case 0x65:
@@ -599,10 +514,10 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
             }
             break;
         case 10:
-            *(undefined*)(iVar5 + 0x1a) = 1;
+            *(u8*)(iVar5 + 0x1a) = 1;
             break;
         case 0xb:
-            *(undefined*)(iVar5 + 0x1a) = 0;
+            *(u8*)(iVar5 + 0x1a) = 0;
             break;
         case 0xc:
             *(float*)(iVar5 + 4) = FLOAT_803e4830;
@@ -1849,7 +1764,6 @@ void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 }
 
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
-extern f64 lbl_803E3B60;
 extern f32 lbl_803E3B50;
 extern f32 lbl_803E3B54;
 extern f32 lbl_803E3B58;
@@ -1962,9 +1876,7 @@ void infopoint_init(int* obj, u8* def)
 }
 
 extern f32 lbl_803E3B7C;
-extern f64 lbl_803E3B80;
 extern f32 lbl_803E3B88;
-extern f64 lbl_803E3B90;
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern void objWorldToLocalPos(f32* out, int obj, f32* pos);
 extern void Model_GetVertexPosition(int* model, int idx, f32* out);
