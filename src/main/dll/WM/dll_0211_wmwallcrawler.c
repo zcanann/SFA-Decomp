@@ -103,7 +103,6 @@ enum
 
 extern int getTrickyObject(void);
 extern void Obj_RemoveFromUpdateList(int obj);
-extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int fn_80080150(void* timer);
 extern int randFn_80080100(int max);
 extern f32 sqrtf(f32 x);
