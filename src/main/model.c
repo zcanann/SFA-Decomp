@@ -1280,11 +1280,11 @@ extern s16* lbl_803DCB64;
 void* ObjModel_Load(int id, int arg2, int* outSize)
 {
     int sizes[7];
+    int realId;
     u8* header;
     int off;
     u8* h;
     int i;
-    int realId;
     int tex;
     int idc;
     idc = id;
