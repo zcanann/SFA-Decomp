@@ -23,40 +23,11 @@ typedef struct Dll197State
 } Dll197State;
 
 
-extern undefined8 FUN_80006728();
-extern undefined4 FUN_800067c0();
-extern bool FUN_800067f0();
-extern undefined4 FUN_8000680c();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern uint FUN_80006c10();
-extern uint FUN_80017690();
-extern undefined8 FUN_80017698();
-extern undefined4 FUN_8001771c();
-extern int FUN_80017a98();
 extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80042b9c();
-extern int FUN_80044404();
-extern undefined4 FUN_80055ef0();
-extern undefined4 FUN_80057690();
-extern undefined8 FUN_80080f28();
-extern int FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern undefined4 FUN_80294ccc();
 
-extern undefined4 DAT_802c2b48;
-extern undefined4 DAT_802c2b4c;
-extern undefined4 DAT_802c2b50;
-extern undefined4 DAT_802c2b54;
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803dc270;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern undefined4* DAT_803dd6f0;
 extern MapEventInterface** gMapEventInterface;
-extern undefined4 DAT_803de850;
-extern undefined4 DAT_803de858;
 extern f64 DOUBLE_803e5de0;
 extern f32 lbl_803E5DD0;
 extern f32 lbl_803E5DD4;
