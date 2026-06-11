@@ -143,11 +143,11 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
         }
         if (velX <= velZ)
         {
-            hitObj->velX = lbl_803E648C;
+            hitObj->velX = *(f32 *)&lbl_803E648C;
         }
         else
         {
-            hitObj->velZ = lbl_803E648C;
+            hitObj->velZ = *(f32 *)&lbl_803E648C;
         }
         obj->velX = hitObj->velX * lbl_803E6498;
         obj->velZ = hitObj->velZ * lbl_803E6498;
