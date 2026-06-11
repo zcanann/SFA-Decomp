@@ -995,8 +995,7 @@ void hagabon_update(int obj)
     {
         if ((state->flags & 0x10) != 0)
         {
-            fadeAsDouble.bits = CONCAT44(0x43300000, (u32)((GameObject*)obj)->anim.alpha);
-            fade = (int)((f32)(fadeAsDouble.value - lbl_803E2640) - timeDelta);
+            fade = (int)((f32)(u32)((GameObject*)obj)->anim.alpha - timeDelta);
             ((GameObject*)obj)->anim.alpha = (u8)fade;
             if (((GameObject*)obj)->anim.alpha < 7)
             {
@@ -1009,8 +1008,7 @@ void hagabon_update(int obj)
         }
         if ((state->flags & 8) != 0)
         {
-            fadeAsDouble.bits = CONCAT44(0x43300000, (u32)((GameObject*)obj)->anim.alpha);
-            fade = (int)((f32)(fadeAsDouble.value - lbl_803E2640) + timeDelta);
+            fade = (int)((f32)(u32)((GameObject*)obj)->anim.alpha + timeDelta);
             ((GameObject*)obj)->anim.alpha = (u8)fade;
             if (((GameObject*)obj)->anim.alpha > 0xf8)
             {
@@ -1035,10 +1033,8 @@ void hagabon_update(int obj)
             lightPos[0] = hitX;
             lightPos[2] = hitZ;
             objLightFn_8009a1dc((void*)obj, lbl_803E2660, lightPos, 3, 0);
-            eventAsDouble.bits = CONCAT44(0x43300000,
-                                          (s32)(((HagabonPlacement*)data)->unk1C * 0x3c) ^ 0x80000000);
             (*gMapEventInterface)->startTimedEvent(((HagabonPlacement*)data)->unk14,
-                                                   (f32)(eventAsDouble.value - lbl_803E2648));
+                                                   (f32)(s32)(((HagabonPlacement*)data)->unk1C * 0x3c));
             if (((HagabonPlacement*)data)->unk20 != -1)
             {
                 GameBit_Set(((HagabonPlacement*)data)->unk20, 1);
