@@ -290,79 +290,79 @@ void fn_80174BFC(int obj, int ext)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
+undefined4 fn_8017510C(short *obj,short *refObj,int attach)
 {
-  uint uVar1;
-  int iVar2;
-  PushableState *iVar3;
+  uint bitVal;
+  int player;
+  PushableState *state;
   f32 dx;
   f32 dz;
   f32 len;
   f32 k;
   
-  iVar3 = *(PushableState **)(param_1 + 0x5c);
-  iVar3->savePosDelay = 0x3c;
-  if (param_1[0x5a] != -1) {
-    (*gCameraInterface)->setTargetReticleOverride((int)param_1);
+  state = *(PushableState **)(obj + 0x5c);
+  state->savePosDelay = 0x3c;
+  if (obj[0x5a] != -1) {
+    (*gCameraInterface)->setTargetReticleOverride((int)obj);
   }
-  *(short *)(param_3 + 0x70) = -1;
-  if (*(char *)(param_3 + 0x56) != '\0') {
-    if (*(char *)(param_3 + 0x56) != '\x02') {
-      *(float *)(param_3 + 0x4c) = lbl_803E3588;
-      *(float *)(param_3 + 0x40) = *(float *)(param_1 + 6) - *(float *)(param_2 + 6);
-      *(float *)(param_3 + 0x44) = *(float *)(param_1 + 8) - *(float *)(param_2 + 8);
-      *(float *)(param_3 + 0x48) = *(float *)(param_1 + 10) - *(float *)(param_2 + 10);
-      *(short *)(param_3 + 0x50) = *param_1 - (u16)*param_2;
-      if (0x8000 < *(short *)(param_3 + 0x50)) {
-        *(short *)(param_3 + 0x50) = *(short *)(param_3 + 0x50) - 0xffff;
+  *(short *)(attach + 0x70) = -1;
+  if (*(char *)(attach + 0x56) != '\0') {
+    if (*(char *)(attach + 0x56) != '\x02') {
+      *(float *)(attach + 0x4c) = lbl_803E3588;
+      *(float *)(attach + 0x40) = *(float *)(obj + 6) - *(float *)(refObj + 6);
+      *(float *)(attach + 0x44) = *(float *)(obj + 8) - *(float *)(refObj + 8);
+      *(float *)(attach + 0x48) = *(float *)(obj + 10) - *(float *)(refObj + 10);
+      *(short *)(attach + 0x50) = *obj - (u16)*refObj;
+      if (0x8000 < *(short *)(attach + 0x50)) {
+        *(short *)(attach + 0x50) = *(short *)(attach + 0x50) - 0xffff;
       }
-      if (*(short *)(param_3 + 0x50) < -0x8000) {
-        *(short *)(param_3 + 0x50) = *(short *)(param_3 + 0x50) + 0xffff;
+      if (*(short *)(attach + 0x50) < -0x8000) {
+        *(short *)(attach + 0x50) = *(short *)(attach + 0x50) + 0xffff;
       }
-      *(short *)(param_3 + 0x52) = param_1[1] - (u16)param_2[1];
-      if (0x8000 < *(short *)(param_3 + 0x52)) {
-        *(short *)(param_3 + 0x52) = *(short *)(param_3 + 0x52) - 0xffff;
+      *(short *)(attach + 0x52) = obj[1] - (u16)refObj[1];
+      if (0x8000 < *(short *)(attach + 0x52)) {
+        *(short *)(attach + 0x52) = *(short *)(attach + 0x52) - 0xffff;
       }
-      if (*(short *)(param_3 + 0x52) < -0x8000) {
-        *(short *)(param_3 + 0x52) = *(short *)(param_3 + 0x52) + 0xffff;
+      if (*(short *)(attach + 0x52) < -0x8000) {
+        *(short *)(attach + 0x52) = *(short *)(attach + 0x52) + 0xffff;
       }
-      *(short *)(param_3 + 0x54) = (u16)param_2[2] - (u16)param_1[2];
-      if (0x8000 < *(short *)(param_3 + 0x54)) {
-        *(short *)(param_3 + 0x54) = *(short *)(param_3 + 0x54) - 0xffff;
+      *(short *)(attach + 0x54) = (u16)refObj[2] - (u16)obj[2];
+      if (0x8000 < *(short *)(attach + 0x54)) {
+        *(short *)(attach + 0x54) = *(short *)(attach + 0x54) - 0xffff;
       }
-      if (*(short *)(param_3 + 0x54) < -0x8000) {
-        *(short *)(param_3 + 0x54) = *(short *)(param_3 + 0x54) + 0xffff;
+      if (*(short *)(attach + 0x54) < -0x8000) {
+        *(short *)(attach + 0x54) = *(short *)(attach + 0x54) + 0xffff;
       }
-      *(undefined *)(param_3 + 0x56) = 2;
+      *(undefined *)(attach + 0x56) = 2;
     }
-    *(float *)(param_3 + 0x4c) =
-         -(*(float *)(param_3 + 0x24) * timeDelta - *(float *)(param_3 + 0x4c));
-    if (*(float *)(param_3 + 0x4c) <= lbl_803E3528) {
-      *(undefined *)(param_3 + 0x56) = 0;
+    *(float *)(attach + 0x4c) =
+         -(*(float *)(attach + 0x24) * timeDelta - *(float *)(attach + 0x4c));
+    if (*(float *)(attach + 0x4c) <= lbl_803E3528) {
+      *(undefined *)(attach + 0x56) = 0;
     }
   }
-  if (*(int *)(param_1 + 0x7c) == 0) {
-    *(int *)(param_1 + 0x7c) = 2;
+  if (*(int *)(obj + 0x7c) == 0) {
+    *(int *)(obj + 0x7c) = 2;
   }
-  if ((param_1[0x23] == 0x21e) || (param_1[0x23] == 0x411)) {
-    *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
-    if (('\0' < *(char *)(*(int *)(param_1 + 0x2c) + 0x10f)) &&
-       ((*(short *)(*(int *)(*(int *)(param_1 + 0x2c) + 0x100) + 0x44) == 0x24 &&
-        (uVar1 = GameBit_Get(0x103), uVar1 == 0)))) {
+  if ((obj[0x23] == 0x21e) || (obj[0x23] == 0x411)) {
+    *(byte *)((int)obj + 0xaf) = *(byte *)((int)obj + 0xaf) | 8;
+    if (('\0' < *(char *)(*(int *)(obj + 0x2c) + 0x10f)) &&
+       ((*(short *)(*(int *)(*(int *)(obj + 0x2c) + 0x100) + 0x44) == 0x24 &&
+        (bitVal = GameBit_Get(0x103), bitVal == 0)))) {
       GameBit_Set(0x103,1);
-      *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) & ~8;
-      iVar2 = Obj_GetPlayerObject();
-      dx = *(float *)(param_1 + 6) - *(float *)(iVar2 + 0xc);
-      dz = *(float *)(param_1 + 10) - *(float *)(iVar2 + 0x14);
+      *(byte *)((int)obj + 0xaf) = *(byte *)((int)obj + 0xaf) & ~8;
+      player = Obj_GetPlayerObject();
+      dx = *(float *)(obj + 6) - *(float *)(player + 0xc);
+      dz = *(float *)(obj + 10) - *(float *)(player + 0x14);
       len = sqrtf(dx * dx + dz * dz);
       if (len != lbl_803E3528) {
         dx = dx / len;
         dz = dz / len;
       }
       k = lbl_803E3598;
-      iVar3->unk_C0 = k * dx;
-      iVar3->unk_C4 = lbl_803E3528;
-      iVar3->unk_C8 = k * dz;
+      state->unk_C0 = k * dx;
+      state->unk_C4 = lbl_803E3528;
+      state->unk_C8 = k * dz;
       return 4;
     }
   }

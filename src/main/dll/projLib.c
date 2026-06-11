@@ -47,123 +47,123 @@ typedef struct ProjNearSearch {
   f32 dz;
 } ProjNearSearch;
 
-static uint projGetLockTarget(int iVar10, ushort *puVar5, ProjNearSearch *sv)
+static uint projGetLockTarget(int state, ushort *obj, ProjNearSearch *sv)
 {
-    uint t = *(uint *)(iVar10 + 0x608);
+    uint t = *(uint *)(state + 0x608);
     if (t != 0) return t;
-    return ObjGroup_FindNearestObject(8, puVar5, sv);
+    return ObjGroup_FindNearestObject(8, obj, sv);
 }
 
-void dll_2E_func03(ushort *puVar5,int iVar10,undefined4 unused)
+void dll_2E_func03(ushort *obj,int state,undefined4 unused)
 {
-  register int sVar11;
-  register int puVar6;
-  register uint iVar9;
+  register int yawDelta;
+  register int seqHandle;
+  register uint target;
   int bit1;
-  int iVar4;
-  uint uVar3;
+  int ival;
+  uint hitReact;
   float dist;
-  float fVar1;
-  float fVar2;
-  float fVar3;
+  float blendA;
+  float blendB;
+  float blendMax;
   float targetYaw;
   ProjNearSearch sv;
 
   (void)unused;
   sv.range = lbl_803E1C8C;
   targetYaw = lbl_803E1CD0;
-  sVar11 = 0;
-  puVar6 = (int)seqFn_800394a0();
+  yawDelta = 0;
+  seqHandle = (int)seqFn_800394a0();
   Obj_GetPlayerObject();
-  if (*(u8 *)(iVar10 + 0x601) == 0) {
-    bit1 = *(u8 *)(iVar10 + 0x611) & 1;
-    if (bit1 != 0 && *(u8 *)(iVar10 + 0x600) != 8) {
-      *(u8 *)(iVar10 + 0x600) = 8;
-      if ((*(byte *)(iVar10 + 0x611) & 8) == 0) {
-        objFn_8003acfc((int)puVar5,puVar6,(uint)*(byte *)(iVar10 + 0x610),iVar10 + 0x1c);
-        *(undefined4 *)(iVar10 + 0x5f8) = 0x50;
-        fn_8003A9C0(iVar10 + 0x1c,(uint)*(byte *)(iVar10 + 0x610),0,0);
+  if (*(u8 *)(state + 0x601) == 0) {
+    bit1 = *(u8 *)(state + 0x611) & 1;
+    if (bit1 != 0 && *(u8 *)(state + 0x600) != 8) {
+      *(u8 *)(state + 0x600) = 8;
+      if ((*(byte *)(state + 0x611) & 8) == 0) {
+        objFn_8003acfc((int)obj,seqHandle,(uint)*(byte *)(state + 0x610),state + 0x1c);
+        *(undefined4 *)(state + 0x5f8) = 0x50;
+        fn_8003A9C0(state + 0x1c,(uint)*(byte *)(state + 0x610),0,0);
       }
       else {
-        fn_8003AC14((int)puVar5,seqFn_800394a0(),(uint)*(byte *)(iVar10 + 0x610));
+        fn_8003AC14((int)obj,seqFn_800394a0(),(uint)*(byte *)(state + 0x610));
       }
     }
-    else if (bit1 == 0 && *(u8 *)(iVar10 + 0x600) == 8) {
-      *(u8 *)(iVar10 + 0x600) = 0;
-      if ((*(byte *)(iVar10 + 0x611) & 8) == 0) {
-        objFn_8003acfc((int)puVar5,puVar6,(uint)*(byte *)(iVar10 + 0x610),iVar10 + 0x1c);
-        *(undefined4 *)(iVar10 + 0x5f8) = 0x50;
+    else if (bit1 == 0 && *(u8 *)(state + 0x600) == 8) {
+      *(u8 *)(state + 0x600) = 0;
+      if ((*(byte *)(state + 0x611) & 8) == 0) {
+        objFn_8003acfc((int)obj,seqHandle,(uint)*(byte *)(state + 0x610),state + 0x1c);
+        *(undefined4 *)(state + 0x5f8) = 0x50;
       }
     }
-    if (*(u8 *)(iVar10 + 0x600) > 1) {
-      if (*(int *)(iVar10 + 0x5f8) != 0 && (*(byte *)(iVar10 + 0x611) & 8) == 0) {
-        *(uint *)(iVar10 + 0x5f8) =
-            !fn_8003A8B4(puVar5,puVar6,(uint)*(byte *)(iVar10 + 0x610),iVar10 + 0x1c);
+    if (*(u8 *)(state + 0x600) > 1) {
+      if (*(int *)(state + 0x5f8) != 0 && (*(byte *)(state + 0x611) & 8) == 0) {
+        *(uint *)(state + 0x5f8) =
+            !fn_8003A8B4(obj,seqHandle,(uint)*(byte *)(state + 0x610),state + 0x1c);
       }
       else {
-        fn_8003AC14((int)puVar5,seqFn_800394a0(),(uint)*(byte *)(iVar10 + 0x610));
+        fn_8003AC14((int)obj,seqFn_800394a0(),(uint)*(byte *)(state + 0x610));
       }
     }
     else {
-      if ((iVar9 = projGetLockTarget(iVar10, puVar5, &sv)) != 0) {
-        if ((*(byte *)(iVar10 + 0x611) & 0x20) != 0) {
-          sv.dx = *(float *)(iVar10 + 0x10) - *(float *)(iVar9 + 0xc);
-          sv.dy = *(float *)(iVar10 + 0x14) - *(float *)(iVar9 + 0x10);
-          sv.dz = *(float *)(iVar10 + 0x18) - *(float *)(iVar9 + 0x14);
-          fVar1 = sv.dx * sv.dx;
-          fVar2 = sv.dz * sv.dz;
-          dist = sqrtf(fVar1 + fVar2);
+      if ((target = projGetLockTarget(state, obj, &sv)) != 0) {
+        if ((*(byte *)(state + 0x611) & 0x20) != 0) {
+          sv.dx = *(float *)(state + 0x10) - *(float *)(target + 0xc);
+          sv.dy = *(float *)(state + 0x14) - *(float *)(target + 0x10);
+          sv.dz = *(float *)(state + 0x18) - *(float *)(target + 0x14);
+          blendA = sv.dx * sv.dx;
+          blendB = sv.dz * sv.dz;
+          dist = sqrtf(blendA + blendB);
           if (dist <= lbl_803E1CD4) {
-            fVar1 = (dist - lbl_803E1CD8) / lbl_803E1CD0;
-            fVar3 = lbl_803E1CA4;
-            fVar2 = lbl_803E1C90;
-            if (fVar1 < fVar2) {
+            blendA = (dist - lbl_803E1CD8) / lbl_803E1CD0;
+            blendMax = lbl_803E1CA4;
+            blendB = lbl_803E1C90;
+            if (blendA < blendB) {
             }
-            else if (fVar1 > fVar3) {
-              fVar2 = fVar3;
+            else if (blendA > blendMax) {
+              blendB = blendMax;
             }
             else {
-              fVar2 = fVar1;
+              blendB = blendA;
             }
-            fVar2 = lbl_803E1CA4 - fVar2;
-            fVar1 = lbl_803E1CA4 - fVar2;
-            *(float *)(iVar10 + 0x10) =
-                 *(float *)(iVar10 + 0x10) * fVar1 + *(float *)(puVar5 + 6) * fVar2;
-            *(float *)(iVar10 + 0x18) =
-                 *(float *)(iVar10 + 0x18) * fVar1 + *(float *)(puVar5 + 10) * fVar2;
+            blendB = lbl_803E1CA4 - blendB;
+            blendA = lbl_803E1CA4 - blendB;
+            *(float *)(state + 0x10) =
+                 *(float *)(state + 0x10) * blendA + *(float *)(obj + 6) * blendB;
+            *(float *)(state + 0x18) =
+                 *(float *)(state + 0x18) * blendA + *(float *)(obj + 10) * blendB;
           }
         }
-        if ((*(int *)(iVar10 + 0x618) != -1) && (iVar9 == *(uint *)(iVar10 + 0x604))) {
-          iVar4 = -(uint)framesThisStep + *(int *)(iVar10 + 0x620);
-          *(int *)(iVar10 + 0x620) = iVar4;
-          if ((iVar4 <= 0) && (0 < (int)(*(int *)(iVar10 + 0x620) + (uint)framesThisStep))) {
-            objFn_8003acfc((int)puVar5,puVar6,(uint)*(byte *)(iVar10 + 0x610),iVar10 + 0x1c);
-            *(undefined4 *)(iVar10 + 0x5f8) = 0x50;
-            fn_8003A9C0(iVar10 + 0x1c,(uint)*(byte *)(iVar10 + 0x610),0,0);
-            *(undefined *)(iVar10 + 0x600) = 0;
+        if ((*(int *)(state + 0x618) != -1) && (target == *(uint *)(state + 0x604))) {
+          ival = -(uint)framesThisStep + *(int *)(state + 0x620);
+          *(int *)(state + 0x620) = ival;
+          if ((ival <= 0) && (0 < (int)(*(int *)(state + 0x620) + (uint)framesThisStep))) {
+            objFn_8003acfc((int)obj,seqHandle,(uint)*(byte *)(state + 0x610),state + 0x1c);
+            *(undefined4 *)(state + 0x5f8) = 0x50;
+            fn_8003A9C0(state + 0x1c,(uint)*(byte *)(state + 0x610),0,0);
+            *(undefined *)(state + 0x600) = 0;
             goto LAB_801158cc;
           }
-          if (*(int *)(iVar10 + 0x5f8) != 0) {
-            *(uint *)(iVar10 + 0x5f8) =
-                !fn_8003A8B4(puVar5,puVar6,(uint)*(byte *)(iVar10 + 0x610),iVar10 + 0x1c);
+          if (*(int *)(state + 0x5f8) != 0) {
+            *(uint *)(state + 0x5f8) =
+                !fn_8003A8B4(obj,seqHandle,(uint)*(byte *)(state + 0x610),state + 0x1c);
           }
-          if (*(int *)(iVar10 + 0x620) < -*(int *)(iVar10 + 0x61c)) {
-            *(uint *)(iVar10 + 0x620) =
-                randomGetRange(*(int *)(iVar10 + 0x61c),*(int *)(iVar10 + 0x618));
+          if (*(int *)(state + 0x620) < -*(int *)(state + 0x61c)) {
+            *(uint *)(state + 0x620) =
+                randomGetRange(*(int *)(state + 0x61c),*(int *)(state + 0x618));
           }
-          if (*(int *)(iVar10 + 0x620) < 0) goto LAB_801158cc;
+          if (*(int *)(state + 0x620) < 0) goto LAB_801158cc;
         }
         else {
-          *(int *)(iVar10 + 0x620) = *(int *)(iVar10 + 0x618);
+          *(int *)(state + 0x620) = *(int *)(state + 0x618);
         }
-        if ((iVar9 != *(uint *)(iVar10 + 0x604)) && (iVar9 != 0)) {
-          uVar3 = *(uint *)(iVar9 + 0x54);
-          if (uVar3 != 0) {
-            if ((*(byte *)(uVar3 + 0x62) & 2) != 0) {
-              targetYaw = lbl_803E1CDC * (float)(int)*(short *)(uVar3 + 0x5e);
+        if ((target != *(uint *)(state + 0x604)) && (target != 0)) {
+          hitReact = *(uint *)(target + 0x54);
+          if (hitReact != 0) {
+            if ((*(byte *)(hitReact + 0x62) & 2) != 0) {
+              targetYaw = lbl_803E1CDC * (float)(int)*(short *)(hitReact + 0x5e);
             }
-            else if ((*(byte *)(uVar3 + 0x62) & 1) != 0) {
-              targetYaw = (float)(int)*(short *)(uVar3 + 0x5a);
+            else if ((*(byte *)(hitReact + 0x62) & 1) != 0) {
+              targetYaw = (float)(int)*(short *)(hitReact + 0x5a);
             }
             else {
               targetYaw = lbl_803E1CD0;
@@ -173,46 +173,46 @@ void dll_2E_func03(ushort *puVar5,int iVar10,undefined4 unused)
             targetYaw = lbl_803E1CD0;
           }
         }
-        if (iVar9 != 0) {
-          sVar11 = Obj_GetYawDeltaToObject(puVar5,iVar9,(float *)0x0);
+        if (target != 0) {
+          yawDelta = Obj_GetYawDeltaToObject(obj,target,(float *)0x0);
         }
-        if ((*(byte *)(iVar10 + 0x611) & 0x10) != 0) {
+        if ((*(byte *)(state + 0x611) & 0x10) != 0) {
           fn_80038F1C(0,1);
-          sVar11 = sVar11 + -0x8000;
+          yawDelta = yawDelta + -0x8000;
         }
-        iVar4 = (short)sVar11;
-        iVar4 = (iVar4 >= 0) ? iVar4 : -iVar4;
-        if (((0x5555 < iVar4) || (iVar9 == 0)) ||
-           (Vec_distance((float *)(puVar5 + 0xc),(float *)(iVar9 + 0x18)) > *(float *)(iVar10 + 0x614))) {
-          if ((*(u8 *)(iVar10 + 0x600) != 0) ||
-             ((iVar9 == 0 && (*(uint *)(iVar10 + 0x604) != 0)))) {
-            objFn_8003acfc((int)puVar5,puVar6,(uint)*(byte *)(iVar10 + 0x610),iVar10 + 0x1c);
-            *(undefined4 *)(iVar10 + 0x5f8) = 10;
-            fn_8003A9C0(iVar10 + 0x1c,(uint)*(byte *)(iVar10 + 0x610),0,0);
-            *(undefined *)(iVar10 + 0x600) = 0;
+        ival = (short)yawDelta;
+        ival = (ival >= 0) ? ival : -ival;
+        if (((0x5555 < ival) || (target == 0)) ||
+           (Vec_distance((float *)(obj + 0xc),(float *)(target + 0x18)) > *(float *)(state + 0x614))) {
+          if ((*(u8 *)(state + 0x600) != 0) ||
+             ((target == 0 && (*(uint *)(state + 0x604) != 0)))) {
+            objFn_8003acfc((int)obj,seqHandle,(uint)*(byte *)(state + 0x610),state + 0x1c);
+            *(undefined4 *)(state + 0x5f8) = 10;
+            fn_8003A9C0(state + 0x1c,(uint)*(byte *)(state + 0x610),0,0);
+            *(undefined *)(state + 0x600) = 0;
           }
         }
         else {
-          if ((iVar9 != *(uint *)(iVar10 + 0x604)) || (*(u8 *)(iVar10 + 0x600) == 0)) {
-            objFn_8003acfc((int)puVar5,puVar6,(uint)*(byte *)(iVar10 + 0x610),iVar10 + 0x1c);
-            *(undefined4 *)(iVar10 + 0x5f8) = 1;
+          if ((target != *(uint *)(state + 0x604)) || (*(u8 *)(state + 0x600) == 0)) {
+            objFn_8003acfc((int)obj,seqHandle,(uint)*(byte *)(state + 0x610),state + 0x1c);
+            *(undefined4 *)(state + 0x5f8) = 1;
           }
-          if ((*(byte *)(iVar10 + 0x611) & 8) != 0) {
-            *(undefined4 *)(iVar10 + 0x5f8) = 0;
+          if ((*(byte *)(state + 0x611) & 8) != 0) {
+            *(undefined4 *)(state + 0x5f8) = 0;
           }
-          objMathFn_8003a380(puVar5,iVar9,(float *)(iVar10 + 0x10),
-                             (*(int *)(iVar10 + 0x5f8) != 0) ? iVar10 + 0x1c : 0,
-                             (short *)(iVar10 + 0x5bc),targetYaw,8,
-                             *(short *)(iVar10 + 0x60c));
-          *(undefined *)(iVar10 + 0x600) = 1;
+          objMathFn_8003a380(obj,target,(float *)(state + 0x10),
+                             (*(int *)(state + 0x5f8) != 0) ? state + 0x1c : 0,
+                             (short *)(state + 0x5bc),targetYaw,8,
+                             *(short *)(state + 0x60c));
+          *(undefined *)(state + 0x600) = 1;
         }
-        *(uint *)(iVar10 + 0x604) = iVar9;
-        if (*(int *)(iVar10 + 0x5f8) == 0) {
-          *(undefined4 *)(iVar10 + 0x608) = 0;
+        *(uint *)(state + 0x604) = target;
+        if (*(int *)(state + 0x5f8) == 0) {
+          *(undefined4 *)(state + 0x608) = 0;
         }
-        if (((*(byte *)(iVar10 + 0x611) & 8) == 0) && (*(int *)(iVar10 + 0x5f8) != 0)) {
-          *(uint *)(iVar10 + 0x5f8) =
-              !fn_8003A8B4(puVar5,puVar6,(uint)*(byte *)(iVar10 + 0x610),iVar10 + 0x1c);
+        if (((*(byte *)(state + 0x611) & 8) == 0) && (*(int *)(state + 0x5f8) != 0)) {
+          *(uint *)(state + 0x5f8) =
+              !fn_8003A8B4(obj,seqHandle,(uint)*(byte *)(state + 0x610),state + 0x1c);
         }
       }
     }
