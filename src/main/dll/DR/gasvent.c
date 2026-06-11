@@ -53,7 +53,6 @@ typedef struct GunpowderbarrelUpdatePhysicsState
 
 extern undefined4 FUN_80006824();
 extern int FUN_80017a90();
-extern int FUN_80017a98();
 extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern void ObjHits_ClearSourceMask(int obj, int sourceMask);
@@ -73,9 +72,7 @@ extern undefined4 FUN_8013651c();
 extern int FUN_8020a468();
 extern undefined4 FUN_8020a90c();
 extern uint FUN_80286838();
-extern uint FUN_80286840();
 extern undefined4 FUN_80286884();
-extern undefined4 FUN_8028688c();
 
 extern undefined4* DAT_803dd740;
 extern f64 DOUBLE_803e4f90;
