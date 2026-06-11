@@ -1,6 +1,11 @@
 /*
- * wmwallcrawler (DLL 0x211) - the crawling baddies at Krazoa Palace
- * (map 'warlock').
+ * wmwallcrawler (DLL 0x211) - the crawling baddies authored for Krazoa
+ * Palace (map 'warlock'). UNUSED IN RETAIL: the object def exists
+ * (OBJECTS.bin 913 'WM_WallCraw', type 0x275) but no romlist on any of
+ * the 124 maps places one - the palace's shipped enemies are HagabonMK2
+ * and sharpclaw groups. Likely a Dinosaur Planet-era Warlock Mountain
+ * enemy (the Tricky-flee variant flag predates the retail rule that the
+ * sidekick never enters the palace).
  * Each crawler perches at its spawn point until the player (or, for the
  * WMWALLCRAWLER_FLAG_TARGET_NEAREST variant, the nearest group-10
  * object) comes within triggerRadius, then dives to its home height and
