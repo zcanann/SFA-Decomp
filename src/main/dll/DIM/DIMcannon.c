@@ -127,129 +127,22 @@ static inline int* DIMcannon_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-extern undefined4 FUN_80006724();
-extern undefined8 FUN_80006728();
-extern undefined4 FUN_800067c0();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80017540();
-extern undefined4 FUN_80017544();
-extern undefined4 FUN_8001754c();
-extern undefined4 FUN_8001759c();
-extern undefined4 FUN_800175b0();
-extern int FUN_800175c4();
-extern undefined4 FUN_800175d0();
-extern undefined4 FUN_80017620();
-extern void* FUN_80017624();
-extern undefined8 FUN_80017640();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 FUN_8001771c();
-extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017814();
-extern int FUN_80017830();
-extern undefined8 FUN_800178e4();
-extern undefined4 FUN_800178e8();
-extern undefined4 FUN_80017a88();
-extern int FUN_80017a90();
-extern int FUN_80017a98();
-extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
-extern undefined8 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern int FUN_80017af8();
-extern int FUN_80017b00();
-extern undefined4 FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern void* ObjGroup_GetObjects();
 extern undefined4 ObjPath_GetPointWorldPosition();
-extern int FUN_80039520();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
-extern int FUN_8005b024();
-extern undefined4 FUN_8005fe14();
-extern undefined8 FUN_80080f14();
-extern undefined8 FUN_80080f18();
-extern undefined8 FUN_80080f28();
-extern undefined4 FUN_8008112c();
-extern int FUN_800e8b98();
-extern undefined4 FUN_80135c84();
 extern undefined4 FUN_801adca0();
-extern undefined4 SH_LevelControl_runBloopEvent();
 extern undefined8 FUN_80286830();
-extern int FUN_8028683c();
-extern int FUN_80286840();
 extern undefined4 FUN_8028687c();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_8028688c();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
 
-extern undefined4 DAT_802c2a88;
-extern undefined4 DAT_802c2a8c;
-extern undefined4 DAT_802c2a90;
-extern undefined4 DAT_802c2a98;
-extern undefined4 DAT_802c2a9c;
-extern undefined4 DAT_802c2aa0;
-extern undefined4 DAT_80324458;
-extern undefined4 DAT_80324464;
-extern undefined4 DAT_80324518;
-extern undefined4 DAT_80324550;
-extern undefined4 DAT_80324588;
-extern undefined4 DAT_803245c0;
-extern undefined4 DAT_80324630;
-extern undefined4 DAT_80324668;
-extern undefined4 DAT_803246a0;
-extern undefined4 DAT_803246d8;
-extern undefined4 DAT_803ad5a8;
-extern undefined4 DAT_803ad5b4;
-extern undefined4 DAT_803ad5b8;
-extern undefined4 DAT_803ad5bc;
-extern undefined4 DAT_803dc070;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern undefined4* DAT_803dd6d8;
 extern EffectInterface** gPartfxInterface;
 extern MapEventInterface** gMapEventInterface;
-extern undefined4 DAT_803de7c8;
-extern f64 DOUBLE_803e53e8;
-extern f64 DOUBLE_803e5438;
-extern f64 DOUBLE_803e5480;
-extern f64 DOUBLE_803e54b0;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E53E0;
-extern f32 lbl_803E53E4;
-extern f32 lbl_803E53F0;
-extern f32 lbl_803E53F4;
-extern f32 lbl_803E53F8;
-extern f32 lbl_803E53FC;
-extern f32 lbl_803E5408;
-extern f32 lbl_803E540C;
-extern f32 lbl_803E5410;
-extern f32 lbl_803E5414;
-extern f32 lbl_803E541C;
-extern f32 lbl_803E5420;
-extern f32 lbl_803E5424;
-extern f32 lbl_803E5428;
-extern f32 lbl_803E542C;
-extern f32 lbl_803E5430;
-extern f32 lbl_803E5440;
-extern f32 lbl_803E5444;
-extern f32 lbl_803E5448;
-extern f32 lbl_803E544C;
-extern f32 lbl_803E545C;
-extern f32 lbl_803E5460;
-extern f32 lbl_803E5468;
-extern f32 lbl_803E546C;
-extern f32 lbl_803E5470;
-extern f32 lbl_803E548C;
-extern f32 lbl_803E5490;
-extern f32 lbl_803E5494;
-extern f32 lbl_803E5498;
-extern f32 lbl_803E549C;
-extern f32 lbl_803E54A0;
-extern f32 lbl_803E54AC;
 
 extern void imicepillar_free(void);
 extern int imicepillar_getObjectTypeId(void);
@@ -300,7 +193,7 @@ void FUN_801ae0_dropped_old_imicepillar_render(undefined8 param_1, undefined8 pa
 void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
                   undefined4 param_5, char param_6)
 {
-    undefined uVar1;
+    u8 uVar1;
     bool bVar2;
     undefined2* puVar3;
     uint uVar4;
@@ -343,14 +236,14 @@ void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
             }
             if ((param_6 != '\0') && (*(char*)(puVar8 + 8) != '\0'))
             {
-                uVar1 = *(undefined*)((int)puVar3 + 0x37);
+                uVar1 = *(u8*)((int)puVar3 + 0x37);
                 if (bVar2)
                 {
                     *(char*)((int)puVar3 + 0x37) = *(char*)(puVar8 + 8);
                 }
                 FUN_8003b818((int)puVar3);
                 ObjPath_GetPointWorldPosition(puVar3, 1, (float*)(puVar8 + 5), puVar8 + 6, (float*)(puVar8 + 7), 0);
-                *(undefined*)((int)puVar3 + 0x37) = uVar1;
+                *(u8*)((int)puVar3 + 0x37) = uVar1;
             }
         }
     }
