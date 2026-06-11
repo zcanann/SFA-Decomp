@@ -1,5 +1,6 @@
 #include "main/mapEvent.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/TREX/TREX_Lazerwall.h"
 
@@ -20,8 +21,6 @@ typedef struct TREXLazerwallUpdateTimedChallengeState
     u8 pad9D7[0x9D8 - 0x9D7];
 } TREXLazerwallUpdateTimedChallengeState;
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
 extern void* Obj_GetPlayerObject(void);
 extern void ObjHits_DisableObject(int obj);
 

@@ -1,6 +1,7 @@
 #include "main/dll/tricky.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
 #include "main/camera_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/texture.h"
@@ -26,7 +27,6 @@ typedef struct TrickyAirMeter
 
 extern undefined4 FUN_80017488();
 extern undefined4 FUN_80017498();
-extern uint GameBit_Get(int eventId);
 extern int ObjGroup_FindNearestObject();
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
