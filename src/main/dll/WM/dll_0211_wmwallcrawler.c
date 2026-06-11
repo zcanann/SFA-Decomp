@@ -77,11 +77,11 @@ void wmwallcrawler_update(int obj)
     u8* st;
     int bestIdx;
     f32 speed;
-    u8 sum;
     int k;
     int n;
     int idx;
     u32 tricky;
+    u8 sum;
     int ang;
     f32 dist;
     f32 sq;
