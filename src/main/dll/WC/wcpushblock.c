@@ -1,3 +1,4 @@
+#include "main/audio/sfx.h"
 #include "main/dll/WC/WCpushblock.h"
 #include "main/objanim.h"
 
@@ -84,7 +85,6 @@ typedef struct WCPushBlockCloudActionInterface
 } WCPushBlockCloudActionInterface;
 
 extern u8 Obj_IsLoadingLocked(void);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void vecRotateZXY(void* angles, void* out);
 extern WCPushBlockObjectSetup* Obj_AllocObjectSetup(int size, int objectId);
 extern WCPushBlockObject* Obj_SetupObject(WCPushBlockObjectSetup* setup, int mode, int mapLayer,
