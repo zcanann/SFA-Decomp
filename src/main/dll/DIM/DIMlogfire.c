@@ -76,42 +76,28 @@ typedef struct MoonSeedPlantingSpotState
 } MoonSeedPlantingSpotState;
 
 
-extern undefined4 FUN_8000680c();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068c4();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern double FUN_80017708();
 extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017a7c();
-extern int FUN_80017a90();
-extern int FUN_80017a98();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
 extern int FUN_80017ae4();
-extern undefined4 FUN_80017b00();
 extern int ObjHits_GetPriorityHit();
 extern undefined4 ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
-extern undefined4 FUN_8003b56c();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_800810f4();
 extern undefined4 ccqueen_render();
 extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
-extern undefined4 FUN_80293f90();
 
 extern undefined4 DAT_803ad590;
 extern undefined4 DAT_803ad598;
 extern undefined4 DAT_803ad59c;
 extern undefined4 DAT_803ad5a0;
 extern undefined4 DAT_803ad5a4;
-extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6e8;
 extern EffectInterface** gPartfxInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern int* gTitleMenuControlInterfaceCopy;
