@@ -12,13 +12,6 @@ extern char sProjgfxSetzscaleDoNoLongerSupported[];
 
 void modgfx_releaseExpgfxPools(void);
 void modgfx_allocExpgfxPools(void);
-void FUN_800a024c(double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5
-                 ,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
-                 undefined2 *param_10,int param_11,undefined2 *param_12,int param_13,uint param_14,
-                 int param_15);
-void FUN_800a0250(uint param_1);
-void modgfx_initExpgfxSpawnConfig(undefined4 param_1,undefined4 param_2,undefined param_3,
-                                  undefined4 param_4,undefined4 param_5);
 void modgfx_scrollVertexTexcoords(int param_1,int param_2);
 void modgfx_resetBaseVertexState(int param_1);
 void modgfx_updateVertexRgb(int param_1,int param_2,int param_3);

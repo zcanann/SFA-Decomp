@@ -730,7 +730,7 @@ foundFirst:
     pool = next;
     if (pool != -1)
     {
-        copyToCache(cache, (void*)runtime->slotPoolBases[pool], 0x7e);
+        copyToCache(cache, (void*)runtime->slotPoolBases[pool], EXPGFX_POOL_CACHE_LINE_COUNT);
         parity = 1;
         curCache = cache;
         Camera_GetCurrentViewSlot();
@@ -784,7 +784,7 @@ foundFirst:
             if (next > -1)
             {
                 nextBuf = (u8*)cache + (u32)parity * 0x1000;
-                copyToCache(nextBuf, (void*)runtime->slotPoolBases[next], 0x7e);
+                copyToCache(nextBuf, (void*)runtime->slotPoolBases[next], EXPGFX_POOL_CACHE_LINE_COUNT);
                 curCache = nextBuf;
                 prefetched = 1;
             }
@@ -1849,7 +1849,7 @@ foundFirst:
                     }
                 }
             }
-            memcpyToCache((void*)runtime->slotPoolBases[pool], curPoolBuf, 0x7e);
+            memcpyToCache((void*)runtime->slotPoolBases[pool], curPoolBuf, EXPGFX_POOL_CACHE_LINE_COUNT);
             prefetched = 1;
             pool = next;
         }
@@ -2076,7 +2076,7 @@ void drawGlow(uint slotPoolBase, int poolIndex)
     trackedFlags = 0;
     dummy = getHudHiddenFrameCount();
     Camera_GetProjectionMatrix();
-    copyToCache(dstBuf, (void*)slotPoolBase, 0x7e);
+    copyToCache(dstBuf, (void*)slotPoolBase, EXPGFX_POOL_CACHE_LINE_COUNT);
 
     GXClearVtxDesc();
     GXSetVtxDesc(9, 1);
