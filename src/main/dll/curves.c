@@ -7,14 +7,9 @@
 #include "main/game_object.h"
 
 
-extern undefined4 FUN_80003494();
-extern undefined4 FUN_800068f4();
-extern undefined4 FUN_800068f8();
 extern uint GameBit_Get(int eventId);
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
-extern double FUN_80017714();
 extern f32 vec3f_distanceSquared(f32 * posA, f32 * posB);
-extern int FUN_80017730();
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern void mtxRotateByVec3s(float* outMtx, short* angles);
 extern void Matrix_TransformPoint(float* mtx, double x, double y, double z, float* ox, float* oy, float* oz);
@@ -23,50 +18,22 @@ extern u8 framesThisStep;
 extern f32 lbl_803E0668;
 extern f32 lbl_803E066C;
 extern f32 lbl_803E068C;
-extern undefined4 FUN_8001774c();
-extern undefined4 FUN_80017754();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017778();
-extern undefined4 FUN_80061fc8();
-extern int FUN_800620e8();
 extern int objBboxFn_800640cc(void* hitOut, void* pos, f32 radius, int mode, void* bbox, int obj,
                               int p7, int p8, int p9, int p10);
-extern int FUN_800632f4();
 extern void fn_80063368(short* obj);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int p5, int p6);
-extern undefined FUN_80063a68();
-extern undefined4 FUN_80063a74();
 extern int hitDetectFn_80067958(int obj, void* startPoints, void* endPoints, int pointCount,
                                 void* hitResults, int arg6);
-extern undefined4 FUN_800723a0();
 extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
 extern f32 PSVECMag(f32 * v);
-extern undefined4 FUN_80247eb8();
 extern double SeekTwiceBeforeRead();
-extern undefined8 FUN_8028680c();
-extern undefined8 FUN_80286810();
-extern undefined8 FUN_80286828();
-extern undefined8 FUN_8028682c();
-extern undefined8 FUN_80286830();
-extern undefined8 FUN_80286834();
-extern undefined8 FUN_80286838();
-extern longlong FUN_8028683c();
-extern undefined4 FUN_80286858();
 extern undefined4 TRKNubMainLoop();
-extern undefined4 FUN_80286874();
-extern undefined4 FUN_8028687c();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_80286884();
-extern undefined4 FUN_80286888();
-extern double FUN_80293900();
 extern f32 sqrtf(f32 x);
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
 extern uint countLeadingZeros();
 extern int __cntlzw(unsigned int value);
 
 /* Hcurves keeps the ROM curve definitions sorted by id for binary searches. */
-extern undefined4 DAT_803dc070;
 extern u32 sCurvesCachedHitCount;
 extern u32 sCurvesCachedHitObj;
 extern f64 DOUBLE_803e12a8;
