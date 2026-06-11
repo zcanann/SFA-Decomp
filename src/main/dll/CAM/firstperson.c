@@ -84,7 +84,7 @@ void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
     {
         dist = sqrtf(dist);
     }
-    if (dist < lbl_803E1694)
+    if (dist < *(f32 *)&lbl_803E1694)
     {
         dist = lbl_803E1694;
     }
