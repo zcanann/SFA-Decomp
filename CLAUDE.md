@@ -403,6 +403,11 @@ probes on the bundled compilers):
     empty case whose position lets it merge with default at the EDGE of
     the value range (worldobj_render's 0x61e re-canonicalized both
     directions) — works only when the case value sits INSIDE the range.
+    SHARPENED (CFBaby InfoPoint): when ALL real cases sit BELOW the empty
+    case, the empty case is ALWAYS edge-eliminated and target's
+    dead-`cmpwi K+1`-no-beq shape is unreachable from C — bank it, and
+    pick the EXTRA-beq spelling over a missing-instruction spelling (see
+    the banking-score rule at the report.json note).
 
 14. **`int` parameter (not `u32`) for `(arg & bit)` flag tests → `cmpwi`.** A
     `u32` param makes a masked-flag compare emit `cmplwi`; an `int` param emits
@@ -1510,6 +1515,10 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   penalizes TRANSPOSED instructions far more than same-position byte diffs —
   a "2-instr swap" can score WORSE than a "3-instr same-slot" diff
   (ObjModel_LoadModelData 99.75→96.6 on a 2-instr transposition "fix").
+  BANKING-SCORE RULE (CFBaby): objdiff punishes MISSING-instruction
+  misalignment more than extra same-position instructions — when choosing
+  between two non-matching spellings for a banked residual, keep the
+  LONGER one (InfoPoint: extra-beq form 95.83 vs missing-beq 95.63).
 - **TRACTABLE — int compare/`+`-operand swaps respond to recipe #66** (a
   block-local for one operand) where the bare source flip does NOT — MWCC
   canonicalizes `cmplw`/`add` operand order regardless of source order
@@ -2004,6 +2013,12 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       rank rotated; `base+K` args stay spelled via `base`. (3) check the
       import-guessed stack-array size (recipe #67(b)) — dll_87/89/8F
       needed entries[33]->[32] (frame -912 vs -896 was the tell).
+      NEW SUB-CAUSE (CFBaby): an import-guessed `u8 buf[N]` address-taken
+      scratch array + a second `&local` call-arg can carry a 16B PHANTOM
+      temp reservation that a STRUCT-TYPED local of the TRUE type
+      eliminates (`ObjAnimEventList ev;` for the guessed `u8
+      animScratch[0x34]`) — check for a real struct behind u8 scratch
+      buffers BEFORE size-probing.
     - NEGATIVES (these spellings are exhausted — try a different axis, not
       these): `#pragma optimization_level 3`/`2` are
       byte-identical to 4 (only <=1 changes codegen — and destroys all
@@ -3130,6 +3145,10 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
     - Const-init'd SINGLE-def locals take no saved reg across calls
       (rematerialized at use, E5/E7) — only multi-def or address-anchored
       const webs survive.
+    **BLOCK-SCOPE extension (CFBaby landed_arwing_update): DUPLICATED
+    case bodies colored OPPOSITELY in target = per-case block-scope locals
+    with INDEPENDENT per-block decl order (case 0: nearest-first, case 2:
+    def-first → both directions from one source shape → 100).**
     **BLOCK-SCOPE lever on the within-class order (shrine1CE dll_19B_update
     99.93→99.99): a call-result local declared BLOCK-SCOPE PER ARM (3
     separate `void *handle;` inside each case block) makes each acquire/
