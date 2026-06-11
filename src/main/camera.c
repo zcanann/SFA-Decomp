@@ -602,7 +602,7 @@ void viewportEffectFn_8000e380(void)
     f32 sinePhase;
     s32 i;
 
-    lbl_803DC884 = lbl_803DC886;
+    lbl_803DC884 = cameraViewportYOffset;
     if (lbl_803DC880 != 0)
     {
         lbl_803DC880 -= framesThisStep;
@@ -873,7 +873,7 @@ void Camera_UpdateViewMatrices(void)
     transform.scale = lbl_803DE5F0;
     if (pauseMenuGetState() == 0)
     {
-        if (lbl_803DC88C != 0)
+        if (cameraViewYOffsetEnabled != 0)
         {
             transform.y -= slot->shakeMagnitude;
         }
@@ -894,7 +894,7 @@ void Camera_UpdateViewMatrices(void)
     transform.scale = lbl_803DE5F0;
     if (pauseMenuGetState() == 0)
     {
-        if (lbl_803DC88C != 0)
+        if (cameraViewYOffsetEnabled != 0)
         {
             transform.y += slot->shakeMagnitude;
         }
@@ -995,27 +995,27 @@ u16 fn_8000FA90(void)
 
 u8 Camera_IsViewYOffsetEnabled(void)
 {
-    return lbl_803DC88C;
+    return cameraViewYOffsetEnabled;
 }
 
 void Camera_DisableViewYOffset(void)
 {
-    lbl_803DC88C = 0;
+    cameraViewYOffsetEnabled = 0;
 }
 
 void Camera_EnableViewYOffset(void)
 {
-    lbl_803DC88C = 1;
+    cameraViewYOffsetEnabled = 1;
 }
 
 s16 Camera_GetViewportYOffset(void)
 {
-    return lbl_803DC886;
+    return cameraViewportYOffset;
 }
 
 void Camera_SetViewportYOffset(s16 yOffset)
 {
-    lbl_803DC886 = yOffset;
+    cameraViewportYOffset = yOffset;
 }
 
 f32* Camera_GetProjectionMatrix(void)
@@ -1121,10 +1121,10 @@ void Camera_InitState(void)
     }
 
     gCameraCurrentViewIndex = 0;
-    lbl_803DC88C = 0;
+    cameraViewYOffsetEnabled = 0;
     gObjTransformMatrixSlot = 0;
     lbl_803DC884 = 0;
-    lbl_803DC886 = 0;
+    cameraViewportYOffset = 0;
     gCameraFarPlane = lbl_803DE64C;
     lbl_803DC880 = 0;
     gCameraFovY = lbl_803DE610;
