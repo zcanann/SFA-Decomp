@@ -284,9 +284,9 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
         eventState->baddie.eventFlags &= ~0x40;
         kaldaChomFn_80168374(obj, p2, 0);
     }
-    if (((s32)eventState->baddie.eventFlags & 0x20) != 0)
+    if (((s32)eventState->baddie.eventFlags & 0x800) != 0)
     {
-        eventState->baddie.eventFlags &= ~0x20;
+        eventState->baddie.eventFlags &= ~0x800;
         kaldaChomFn_80168374(obj, p2, 1);
     }
     if (((s32)eventState->baddie.eventFlags & 0x200) != 0)
