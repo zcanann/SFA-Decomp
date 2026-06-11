@@ -9,13 +9,13 @@
 typedef struct SaveGameData
 {
     u8 pad0[0x20 - 0x0];
-    u8 unk20;
+    u8 currentCharacter;
     u8 pad21[0x55E - 0x21];
     u8 unk55E;
     u8 pad55F[0x560 - 0x55F];
-    f32 unk560;
+    f32 playTime;
     u8 pad564[0x6A4 - 0x564];
-    s16 unk6A4;
+    s16 camActionNo;
     u8 pad6A6[0xF70 - 0x6A6];
 } SaveGameData;
 
@@ -1544,7 +1544,7 @@ int saveSelect_getInfo(void* outPtr)
                 info->rankB = 0;
             }
 
-            info->playTime = (u32)(*(f32*)(save + 0x560) / lbl_803E06CC);
+            info->playTime = (u32)(((SaveGameData*)save)->playTime / lbl_803E06CC);
             info->taskTexts[0] = NULL;
             info->taskTexts[1] = NULL;
             info->taskTexts[2] = NULL;
@@ -2967,7 +2967,7 @@ void loadMapForCurrentSaveGame(void)
     audioStopByMask(7);
     stopRumble2();
     resetYbutton();
-    base = (char*)lbl_803A32A8 + *(u8*)((char*)lbl_803A32A8 + 0x20) * 16;
+    base = (char*)lbl_803A32A8 + ((SaveGameData*)lbl_803A32A8)->currentCharacter * 16;
     mapLoadByCoords(*(f32*)(base + 0x684), *(f32*)(base + 0x688), *(f32*)(base + 0x68c), *(s8*)(base + 0x691));
     if (getCurUiDll() != 4)
     {
@@ -3209,11 +3209,11 @@ int Carryable_updateRenderState(int* obj, int flag)
 }
 
 
-void SaveGame_setCamActionNo(s16 actionNo) { *(s16*)((char*)lbl_803A32A8 + 0x6a4) = actionNo; }
+void SaveGame_setCamActionNo(s16 actionNo) { ((SaveGameData*)lbl_803A32A8)->camActionNo = actionNo; }
 void* SaveGame_getLast(void) { return lbl_803A32A8; }
-s32 SaveGame_getCamActionNo(void) { return ((SaveGameData*)lbl_803A32A8)->unk6A4; }
+s32 SaveGame_getCamActionNo(void) { return ((SaveGameData*)lbl_803A32A8)->camActionNo; }
 void* saveGameGetEnvState(void) { return (char*)lbl_803A32A8 + 0x6a8; }
-f32 SaveGame_getPlayTime(void) { return *(f32*)((char*)lbl_803A32A8 + 0x560); }
+f32 SaveGame_getPlayTime(void) { return ((SaveGameData*)lbl_803A32A8)->playTime; }
 extern f32 lbl_803E06D0;
 extern f32 lbl_803E06D4;
 
@@ -3225,11 +3225,11 @@ void SaveGame_updateTimes(void)
     s16 cnt;
     i = 0;
     base = lbl_803A32A8;
-    *(f32*)(base + 0x560) = *(f32*)(base + 0x560) + timeDelta;
+    ((SaveGameData*)base)->playTime = ((SaveGameData*)base)->playTime + timeDelta;
     p = base;
     while (i < *(s16*)(base + 0x6ec))
     {
-        if (*(f32*)(base + 0x560) > *(f32*)(p + 0x6f4))
+        if (((SaveGameData*)base)->playTime > *(f32*)(p + 0x6f4))
         {
             cnt = *(s16*)(base + 0x6ec) - 1;
             *(s16*)(base + 0x6ec) = cnt;
@@ -3242,8 +3242,8 @@ void SaveGame_updateTimes(void)
             i++;
         }
     }
-    if (*(u8*)(lbl_803A32A8 + 0x55e) > 5) *(u8*)0 = 0;
-    if (*(u8*)(lbl_803DD498 + 0x55e) > 5) *(u8*)0 = 0;
+    if (((SaveGameData*)lbl_803A32A8)->unk55E > 5) *(u8*)0 = 0;
+    if (((SaveGameData*)lbl_803DD498)->unk55E > 5) *(u8*)0 = 0;
 }
 
 f32 SaveGame_gplayGetTime(int id)
@@ -3260,7 +3260,7 @@ f32 SaveGame_gplayGetTime(int id)
         if (*(int*)(p + 0x6f0) == id)
         {
             p = lbl_803A32A8;
-            return *(f32*)(p + i * 8 + 0x6f4) - *(f32*)(p + 0x560);
+            return *(f32*)(p + i * 8 + 0x6f4) - ((SaveGameData*)p)->playTime;
         }
         p += 8;
     }
@@ -3295,7 +3295,7 @@ void SaveGame_gplayAddTime(int id, f32 time)
     count = *(s16*)(base + 0x6ec);
     if (count == 0x100) return;
     total = lbl_803E06D4 * time;
-    total += *(f32*)(base + 0x560);
+    total += ((SaveGameData*)base)->playTime;
     i = 0;
     p = base;
     for (; i < count; i++)
@@ -3314,19 +3314,19 @@ void SaveGame_gplayAddTime(int id, f32 time)
 }
 
 void* SaveGame_getTrickyEnergy(void) { return (char*)lbl_803A32A8 + 0x18; }
-void SaveGame_setCharacter(u8 c) { *(u8*)((char*)lbl_803A32A8 + 0x20) = c; }
-u8 SaveGame_getCurChar(void) { return ((SaveGameData*)lbl_803A32A8)->unk20; }
+void SaveGame_setCharacter(u8 c) { ((SaveGameData*)lbl_803A32A8)->currentCharacter = c; }
+u8 SaveGame_getCurChar(void) { return ((SaveGameData*)lbl_803A32A8)->currentCharacter; }
 char* getSaveFileName(void) { return (char*)lbl_803A32A8 + 0x1c; }
 
 void* SaveGame_getCurCharPos(void)
 {
-    int idx = *(u8*)((char*)lbl_803A32A8 + 0x20);
+    int idx = ((SaveGameData*)lbl_803A32A8)->currentCharacter;
     return (char*)lbl_803A32A8 + idx * 16 + 0x684;
 }
 
 void* SaveGame_getCurCharacterState(void)
 {
-    int idx = *(u8*)((char*)lbl_803A32A8 + 0x20);
+    int idx = ((SaveGameData*)lbl_803A32A8)->currentCharacter;
     return (char*)lbl_803A32A8 + idx * 12;
 }
 
@@ -3353,7 +3353,7 @@ void screens_initialise(void)
 
 void updateSavedHealth(void)
 {
-    int idx = *(u8*)((char*)lbl_803A32A8 + 0x20) * 12;
+    int idx = ((SaveGameData*)lbl_803A32A8)->currentCharacter * 12;
     *((u8*)lbl_803A32A8 + idx) = lbl_803DD498[idx];
 }
 
