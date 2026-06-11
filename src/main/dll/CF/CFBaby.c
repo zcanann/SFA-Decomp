@@ -6,6 +6,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 #include "main/objseq.h"
 #include "main/dll/CF/CFBaby.h"
@@ -1518,24 +1519,21 @@ extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
 /* landed arwing hit/animation step: handles impact reactions and spawned debris. */
 void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state)
 {
-    int def;
     int i;
+    CFLandedArwingState* otherState;
+    int def;
     int setup;
     int other;
-    CFLandedArwingState* otherState;
     f32 range;
     f32 yOffset;
-    u8 animScratch[0x20];
+    ObjAnimEventList events;
 
     def = *(int*)&((GameObject*)obj)->anim.placementData;
     if (((LandedArwingHitFlagBits*)&state->hitFlags)->damaged)
     {
         if (((LandedArwingHitFlagBits*)&state->hitFlags)->impactHandled)
         {
-            if (state->hitStarted != 0u)
-            {
-            }
-            else
+            if (state->hitStarted == 0u)
             {
                 return;
             }
@@ -1604,7 +1602,7 @@ void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state)
                                                       state->hitCooldown);
         }
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, state->path8Fx, timeDelta,
-                                                                      (ObjAnimEventList*)animScratch);
+                                                                      &events);
     }
 }
 
