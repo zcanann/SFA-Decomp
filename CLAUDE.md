@@ -403,11 +403,16 @@ probes on the bundled compilers):
     empty case whose position lets it merge with default at the EDGE of
     the value range (worldobj_render's 0x61e re-canonicalized both
     directions) — works only when the case value sits INSIDE the range.
-    SHARPENED (CFBaby InfoPoint): when ALL real cases sit BELOW the empty
-    case, the empty case is ALWAYS edge-eliminated and target's
-    dead-`cmpwi K+1`-no-beq shape is unreachable from C — bank it, and
-    pick the EXTRA-beq spelling over a missing-instruction spelling (see
-    the banking-score rule at the report.json note).
+    ⚠️ OVERTURNED SAME-DAY (CFBaby maverick): the dead-`cmpwi K+1`-no-beq
+    island is PEEPHOLE-STATE-BOUND — switch lowering EMITS it for empty
+    cases whose block == default, and the PEEPHOLE pass is what deletes
+    the dead compare and retargets the bge (verified bidirectionally).
+    Fix: the empty-case pair (`case 3: break; case 4: break;` → cmpwi
+    last+1) + a local `#pragma peephole off/reset` wrap (InfoPoint_SeqFn
+    → 100). RETRY every banked "empty-case island unreachable" partial
+    under peephole OFF. (The same-day "always edge-eliminated" verdict was
+    an artifact of probing under peephole ON — a model case for
+    re-attacking fresh banks.)
 
 14. **`int` parameter (not `u32`) for `(arg & bit)` flag tests → `cmpwi`.** A
     `u32` param makes a masked-flag compare emit `cmplwi`; an `int` param emits
@@ -2950,10 +2955,12 @@ plain cmpwi). MP4 cross-check: 377 int-compare instances of the shape across
 the matched corpus are ALL switch-lowering compare-chains (multi-case), ZERO
 from if-in-loop — which says the original construct that produces this is not
 yet identified, not that it's impossible. Cost model: ~1 instr x unroll factor
-on every unrolled scan loop -- this is the current score FLOOR of the audio
+on every unrolled scan loop -- this was the presumed score FLOOR of the audio
 85-93 band (Sfx_AllocObjectChannel x8, Music_LoadChannelForTrigger x17
-copies), an open target for the next lever (per-fn O1 / older-version probe
-are untried here). Recognize and bank it — BUT first check the PLAIN-STATEMENT
+copies). ⚠️ NOW RE-ATTACKABLE: the unsigned plain-statement instances fell to
+the #17 pinned-`||` crack (see #109(d)) — apply the far-is-an-earlier-branch-
+target triage to every instance before banking; per-fn O1 / older-version
+probes also still untried here. Recognize and bank it — BUT first check the PLAIN-STATEMENT
 case: a single compare + `beq next; b far` outside loop-break position IS
 reproducible as a single-case `switch` with `default: break;` (recipe #109(d),
 synthAdvanceVirtualSampleEntry x3 -> 100).
@@ -3557,6 +3564,19 @@ still #92-open. Pairs with #21 (snd ternary invert), #58 (u32 clamp cmplwi),
   { case 0: break; default: <body> }` both DEGRADES the width (cmpwi)
   AND still folds to a single beq — don't convert pointer-guard
   empty-then sites at all (fxemit_update's def==NULL site, banked).
+  ⚠️ THE UNSIGNED WALL IS CRACKED — it was never a switch: the unsigned
+  `cmplwi; bne next; b far` plain-statement b-over-b is recipe #17's
+  MERGED-`||` GUARD whose then-block (`b far`) is PINNED by an EARLIER
+  `||` term's conditional branch targeting it, so the front-end cannot
+  invert the final term (`if (!damaged || (impactHandled && hitStarted ==
+  0u)) return;` + the body UN-nested — the import had nested it;
+  landed_arwing_updateHitReaction → 100, MP4 oracle SetTeamResultTarget).
+  TRIAGE RULE for any bne/beq-next-b-far: check whether `far` is ALSO the
+  target of an EARLIER guard branch — if yes, merge the guards into one
+  `||` chain; the b-over-b is its final term. This is the unifying
+  PINNING principle: a branch-over-branch survives folding iff its
+  then-block is a join target of another branch (#17 merges, #91/#118
+  value joins, #92's inlined-helper returns).
   The s16-field variant DOES work (fxemit_update suppressed-flag → fixed).
 
 110. **GVN chained-constant residual CRACKED — `li rY,K; mr rX,rY` (target
