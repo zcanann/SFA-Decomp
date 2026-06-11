@@ -19,7 +19,10 @@
 #include "main/dll/WM/wm_shared.h"
 #include "main/game_object.h"
 #include "main/dll/path_control_interface.h"
+#include "main/objanim.h"
+#include "main/objhits_types.h"
 #include "main/obj_placement.h"
+#include "main/vecmath.h"
 
 typedef struct WmwallcrawlerState
 {
@@ -103,7 +106,6 @@ extern void Obj_RemoveFromUpdateList(int obj);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int fn_80080150(void* timer);
 extern int randFn_80080100(int max);
-extern void Vec3_Normalize(f32 * v);
 extern f32 sqrtf(f32 x);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, f32*** out, int a, int b);
 extern f32 lbl_803DC130;

@@ -6,6 +6,7 @@
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
 #include "main/object_transform.h"
+#include "main/vecmath.h"
 
 extern uint getAngle(f32 a, f32 b);
 extern void mtxRotateByVec3s(f32* mtx, void* transform);
@@ -47,11 +48,16 @@ typedef struct ObjHitsVec3
 extern f32 gObjHitsPriorityHitTickDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern void Vec3_Normalize();
-extern void Vec3_ScaleAdd();
-extern void Vec3_Cross();
-extern f32 Vec3_Length();
-extern void Vec3_ReflectAgainstNormal();
+extern f32 lbl_803DF590;
+extern f32 lbl_803DF598;
+extern f32 lbl_803DF59C;
+extern f32 lbl_803DF5A0;
+extern f32 lbl_803DF5B0;
+extern f32 lbl_803DF5B4;
+extern f32 lbl_803DF5B8;
+extern f32 lbl_803DF5D8;
+extern f32 lbl_803DF5DC;
+extern f32 lbl_803DF5E0;
 
 static inline ObjHitsModelBank* ObjHits_GetActiveModel(int obj)
 {
@@ -671,7 +677,7 @@ float* ObjHits_ProjectPointToTaperedCapsuleXZ(float* point, float pointRadius, f
     axisDir[0] = axisDir[0] * invLength;
     axisDir[1] = axisDir[1] * invLength;
     axisDir[2] = axisDir[2] * invLength;
-    Vec3_ScaleAdd(base, axisDir, axial, surfacePoint);
+    Vec3_ScaleAdd(base, axial, axisDir, surfacePoint);
     out[0] = point[0] - surfacePoint[0];
     out[1] = gObjHitsScalarZero;
     out[2] = point[2] - surfacePoint[2];
@@ -732,7 +738,7 @@ float* ObjHits_ProjectPointToTaperedCapsule3D(float* point, float pointRadius, f
     axisDir[0] = axisDir[0] * invLength;
     axisDir[1] = axisDir[1] * invLength;
     axisDir[2] = axisDir[2] * invLength;
-    Vec3_ScaleAdd(base, axisDir, axial, surfacePoint);
+    Vec3_ScaleAdd(base, axial, axisDir, surfacePoint);
     out[0] = point[0] - surfacePoint[0];
     out[1] = point[1] - surfacePoint[1];
     out[2] = point[2] - surfacePoint[2];
@@ -769,7 +775,7 @@ float* ObjHits_CalcTaperedCapsuleNormal(float* point, float axial, float* base, 
         Vec3_Normalize(out);
         return out;
     }
-    else if (axial >= length)
+    if (axial >= length)
     {
         *out = *point - *tip;
         out[1] = point[1] - tip[1];
@@ -785,7 +791,7 @@ float* ObjHits_CalcTaperedCapsuleNormal(float* point, float axial, float* base, 
         axisDir[1] = tip[1] - base[1];
         axisDir[2] = tip[2] - base[2];
         Vec3_Normalize(axisDir);
-        Vec3_ScaleAdd(base, axisDir, axial, surface);
+        Vec3_ScaleAdd(base, axial, axisDir, surface);
         normal[0] = point[0] - surface[0];
         normal[1] = point[1] - surface[1];
         normal[2] = point[2] - surface[2];
@@ -802,7 +808,7 @@ float* ObjHits_CalcTaperedCapsuleNormal(float* point, float axial, float* base, 
             axisDir[0] = axisDir[0] * axial;
             axisDir[1] = axisDir[1] * axial;
             axisDir[2] = axisDir[2] * axial;
-            Vec3_ScaleAdd(axisDir, normal, radiusOffset, blended);
+            Vec3_ScaleAdd(axisDir, radiusOffset, normal, blended);
             Vec3_Normalize(blended);
             axisDir[0] = axisDir[0] * (gObjHitsScalarOne / axial);
             invAxial = gObjHitsScalarOne / axial;
