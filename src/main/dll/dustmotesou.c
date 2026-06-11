@@ -46,11 +46,7 @@ void dustmotesou_update(int obj)
     }
     if (source->objAnim.seqId == DUSTMOTESOU_SEQ_TAIL_LIGHT)
     {
-        if (mapData->effectId == 0)
-        {
-            return;
-        }
-        if (mapData->effectParamA == 0)
+        if (mapData->effectId == 0 || mapData->effectParamA == 0)
         {
             return;
         }
@@ -60,11 +56,7 @@ void dustmotesou_update(int obj)
     }
     if (source->objAnim.seqId == DUSTMOTESOU_SEQ_FIREWORK)
     {
-        if (mapData->effectId == 0)
-        {
-            return;
-        }
-        if (mapData->effectParamA == 0)
+        if (mapData->effectId == 0 || mapData->effectParamA == 0)
         {
             return;
         }
@@ -72,15 +64,7 @@ void dustmotesou_update(int obj)
                              mapData->scale, mapData->effectParamB, 0);
         return;
     }
-    if (mapData->effectId == 0)
-    {
-        return;
-    }
-    if (mapData->effectParamA == 0)
-    {
-        return;
-    }
-    if (mapData->effectParamB == 0)
+    if (mapData->effectId == 0 || mapData->effectParamA == 0 || mapData->effectParamB == 0)
     {
         return;
     }
