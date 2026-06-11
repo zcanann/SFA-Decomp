@@ -155,9 +155,7 @@ int voiceScaleSampleRate(u16 x)
         f64 d;
     } conv;
 
-    conv.w.lo = (u32)x;
-    conv.w.hi = 0x43300000;
-    return (int)(lbl_803E7818 * (conv.d - lbl_803E7820));
+    return (int)(lbl_803E7818 * (f64)(u32)x);
 }
 
 /*
