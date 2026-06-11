@@ -82,7 +82,6 @@ extern f32 lbl_803E5174;
  * EN v1.0 Address: 0x801CAD80
  * EN v1.0 Size: 2228b
  */
-#pragma peephole on
 void dll_199_update(int obj)
 {
     short* state;
@@ -121,7 +120,7 @@ void dll_199_update(int obj)
     delta = state[3];
     if (delta != 0)
     {
-        state[2] += delta;
+        state[2] += (s16)delta;
         if (state[2] <= 0xc)
         {
             state[2] = 0xc;
@@ -137,7 +136,7 @@ void dll_199_update(int obj)
     delta = state[5];
     if (delta != 0)
     {
-        state[4] += delta;
+        state[4] += (s16)delta;
         if ((state[4] <= 1) && (state[5] <= 0))
         {
             state[4] = 1;
@@ -333,7 +332,6 @@ extern void ObjMsg_AllocQueue(int obj, int n);
  * EN v1.0 Address: 0x801CB634
  * EN v1.0 Size: 364b
  */
-#pragma peephole off
 void dll_199_init(int obj, int def)
 {
     short* state;
