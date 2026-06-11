@@ -201,7 +201,7 @@ void staffactivated_init(int obj, int setup)
             switch (setupData->mode)
             {
             case 3:
-                ObjAnim_SetMoveProgress(lbl_803E3BBC, (ObjAnimComponent*)obj);
+                ((void(*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, lbl_803E3BBC);
                 break;
             case 4:
                 flags->b6 = 0;
