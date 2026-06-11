@@ -3414,7 +3414,7 @@ void fn_8013351C(void)
 #pragma peephole reset
 
 extern u8 enableDebugText;
-extern u16* lbl_803DDA30;
+extern u16* debugDrawFrameBuffer;
 extern void DCStoreRange(void* p, u32 nBytes);
 
 #pragma peephole off
@@ -3449,18 +3449,18 @@ void fn_80137A00(int p1, int p2, u8* grid, int p4)
             {
                 if (((1 << bit) & *grid) != 0)
                 {
-                    lbl_803DDA30[a0] = 0xC080;
-                    lbl_803DDA30[a1] = 0xC080;
-                    lbl_803DDA30[a2] = 0xC080;
-                    lbl_803DDA30[a3] = 0xC080;
+                    debugDrawFrameBuffer[a0] = 0xC080;
+                    debugDrawFrameBuffer[a1] = 0xC080;
+                    debugDrawFrameBuffer[a2] = 0xC080;
+                    debugDrawFrameBuffer[a3] = 0xC080;
                 }
                 a0++;
                 a1++;
                 a2++;
                 a3++;
             }
-            DCStoreRange((char*)lbl_803DDA30 + c0 * 2, 0x10);
-            DCStoreRange((char*)lbl_803DDA30 + c1 * 2, 0x10);
+            DCStoreRange((char*)debugDrawFrameBuffer + c0 * 2, 0x10);
+            DCStoreRange((char*)debugDrawFrameBuffer + c1 * 2, 0x10);
             row0 += 0x500;
             row1 += 0x500;
             grid++;
@@ -3469,8 +3469,8 @@ void fn_80137A00(int p1, int p2, u8* grid, int p4)
 }
 #pragma peephole reset
 
-extern u16* lbl_803DCCE8;
-extern u16* lbl_803DCCEC;
+extern u16* externalFrameBuffer1;
+extern u16* externalFrameBuffer0;
 extern u8 lbl_8031D060[];
 
 void debugPrintfxy(int x, int y, char* fmt, ...)
@@ -3490,7 +3490,7 @@ void debugPrintfxy(int x, int y, char* fmt, ...)
         yy = y;
         va_start(args, fmt);
         vsprintf(buf, fmt, args);
-        saved = lbl_803DDA30;
+        saved = debugDrawFrameBuffer;
         p1 = (u8*)buf - 1;
         p2 = (u8*)buf - 1;
         while (p1++, *++p2 != 0)
@@ -3514,16 +3514,16 @@ void debugPrintfxy(int x, int y, char* fmt, ...)
                 }
                 if (*p1 >= 0x21 && *p1 <= 0x5a)
                 {
-                    lbl_803DDA30 = lbl_803DCCEC;
+                    debugDrawFrameBuffer = externalFrameBuffer0;
                     fn_80137A00(xx, yy, lbl_8031D060 + (*p1 - 0x21) * 5, -1);
-                    lbl_803DDA30 = lbl_803DCCE8;
+                    debugDrawFrameBuffer = externalFrameBuffer1;
                     fn_80137A00(xx, yy, lbl_8031D060 + (*p1 - 0x21) * 5, -1);
                     xx += 0xf;
                 }
                 break;
             }
         }
-        lbl_803DDA30 = saved;
+        debugDrawFrameBuffer = saved;
     }
 }
 
@@ -4287,8 +4287,8 @@ void fn_80137DF8(void)
     hold = 0xb4;
     if (enableDebugText != 0)
     {
-        lbl_803DDA30 = lbl_803DCCEC;
-        debugFrameBuffer = lbl_803DCCE8;
+        debugDrawFrameBuffer = externalFrameBuffer0;
+        debugFrameBuffer = externalFrameBuffer1;
         lvl = (u8)OSDisableInterrupts();
         VISetPreRetraceCallback(NULL);
         VISetPostRetraceCallback(NULL);
@@ -4305,7 +4305,7 @@ void fn_80137DF8(void)
                 {
                     for (row = 0; row < 0x96000; row += 0x500)
                     {
-                        *(u16*)(col + (char*)lbl_803DDA30 + row) = 0x1080;
+                        *(u16*)(col + (char*)debugDrawFrameBuffer + row) = 0x1080;
                     }
                     col += 2;
                 }
@@ -4348,8 +4348,8 @@ void fn_80137DF8(void)
                 h2 = 0x8e80;
                 for (n = 0x280; n != 0; n--)
                 {
-                    lbl_803DDA30[h] = 0xc080;
-                    lbl_803DDA30[h2] = 0xc080;
+                    debugDrawFrameBuffer[h] = 0xc080;
+                    debugDrawFrameBuffer[h2] = 0xc080;
                     h++;
                     h2++;
                 }
@@ -4362,8 +4362,8 @@ void fn_80137DF8(void)
                 h2 = 0xe100;
                 for (n = 0xf0; n != 0; n--)
                 {
-                    lbl_803DDA30[h] = 0xc080;
-                    lbl_803DDA30[h2] = 0xc080;
+                    debugDrawFrameBuffer[h] = 0xc080;
+                    debugDrawFrameBuffer[h2] = 0xc080;
                     h++;
                     h2++;
                 }
@@ -4388,8 +4388,8 @@ void fn_80137DF8(void)
                 {
                     for (n = 0x280; n != 0; n--)
                     {
-                        lbl_803DDA30[h] = 0xc080;
-                        lbl_803DDA30[h2] = 0xc080;
+                        debugDrawFrameBuffer[h] = 0xc080;
+                        debugDrawFrameBuffer[h2] = 0xc080;
                         h++;
                         h2++;
                     }
@@ -4398,7 +4398,7 @@ void fn_80137DF8(void)
                 {
                     for (n = 0x280; n != 0; n--)
                     {
-                        lbl_803DDA30[h] = 0xc080;
+                        debugDrawFrameBuffer[h] = 0xc080;
                         h++;
                     }
                 }
@@ -4412,7 +4412,7 @@ void fn_80137DF8(void)
                 {
                     do
                     {
-                        *(u16*)((char*)lbl_803DDA30 + b + 0x1e0) = 0xc080;
+                        *(u16*)((char*)debugDrawFrameBuffer + b + 0x1e0) = 0xc080;
                         b += 0x500;
                     }
                     while (--cnt != 0);
@@ -4468,9 +4468,9 @@ void fn_80137DF8(void)
             }
             if (enableDebugText != 0)
             {
-                DCStoreRange(lbl_803DDA30, 0x96000);
-                lbl_803DDA30 = (lbl_803DDA30 == lbl_803DCCEC) ? lbl_803DCCE8 : lbl_803DCCEC;
-                debugFrameBuffer = (debugFrameBuffer == lbl_803DCCEC) ? lbl_803DCCE8 : lbl_803DCCEC;
+                DCStoreRange(debugDrawFrameBuffer, 0x96000);
+                debugDrawFrameBuffer = (debugDrawFrameBuffer == externalFrameBuffer0) ? externalFrameBuffer1 : externalFrameBuffer0;
+                debugFrameBuffer = (debugFrameBuffer == externalFrameBuffer0) ? externalFrameBuffer1 : externalFrameBuffer0;
                 VISetNextFrameBuffer(debugFrameBuffer);
                 VIFlush();
                 VIWaitForRetrace();
@@ -4487,16 +4487,16 @@ void fn_80137DF8(void)
             {
                 for (row = 0; row < 0x96000; row += 0x500)
                 {
-                    *(u16*)(col + (char*)lbl_803DDA30 + row) = 0x1080;
+                    *(u16*)(col + (char*)debugDrawFrameBuffer + row) = 0x1080;
                 }
                 col += 2;
             }
         }
         if (enableDebugText != 0)
         {
-            DCStoreRange(lbl_803DDA30, 0x96000);
-            lbl_803DDA30 = (lbl_803DDA30 == lbl_803DCCEC) ? lbl_803DCCE8 : lbl_803DCCEC;
-            debugFrameBuffer = (debugFrameBuffer == lbl_803DCCEC) ? lbl_803DCCE8 : lbl_803DCCEC;
+            DCStoreRange(debugDrawFrameBuffer, 0x96000);
+            debugDrawFrameBuffer = (debugDrawFrameBuffer == externalFrameBuffer0) ? externalFrameBuffer1 : externalFrameBuffer0;
+            debugFrameBuffer = (debugFrameBuffer == externalFrameBuffer0) ? externalFrameBuffer1 : externalFrameBuffer0;
             VISetNextFrameBuffer(debugFrameBuffer);
             VIFlush();
             VIWaitForRetrace();

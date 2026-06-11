@@ -5004,9 +5004,9 @@ extern void GXEnableBreakPt(void* p);
 extern void GXSetDrawSync(u16 v);
 extern void GXCopyDisp(void* fb, u8 clear);
 extern void* lbl_803DCCD4;
-extern void* lbl_803DCCD0;
-extern void* lbl_803DCCEC;
-extern void* lbl_803DCCE8;
+extern void* renderFrameBuffer;
+extern void* externalFrameBuffer0;
+extern void* externalFrameBuffer1;
 extern u8 lbl_803DCCA7;
 extern u16 lbl_803DB5CE;
 extern char lbl_8035F730[];
@@ -5024,7 +5024,7 @@ int GXFlush_(u8 visible, int unused)
     GXGetFifoPtrs(lbl_803DCCD4, &fifo_get, &fifo_put);
     item[0] = fifo_put;
     item[1] = (void*)0;
-    item[2] = lbl_803DCCD0;
+    item[2] = renderFrameBuffer;
     s = OSDisableInterrupts();
     Queue_Push(&lbl_8035F730[0], item);
     if (lbl_803DCCA7 == 0)
@@ -5034,12 +5034,12 @@ int GXFlush_(u8 visible, int unused)
     }
     OSRestoreInterrupts(s);
     GXSetDrawSync(lbl_803DB5CE);
-    GXCopyDisp(lbl_803DCCD0, 1);
+    GXCopyDisp(renderFrameBuffer, 1);
     GXFlush();
     lbl_803DB5CE = (u16)(lbl_803DB5CE + 1);
-    next = lbl_803DCCEC;
-    if (lbl_803DCCD0 == next) next = lbl_803DCCE8;
-    lbl_803DCCD0 = next;
+    next = externalFrameBuffer0;
+    if (renderFrameBuffer == next) next = externalFrameBuffer1;
+    renderFrameBuffer = next;
     if (visible != 0 && lbl_803DB5CC != 0)
     {
         lbl_803DB5CC = lbl_803DB5CC - 1;
@@ -7860,7 +7860,7 @@ void waitNextFrame(void)
 void logGpuHang(void);
 extern void* lbl_803DCCD8;
 extern void* lbl_803DCCE4;
-extern void* lbl_803DCCCC;
+extern void* displayFrameBuffer;
 #pragma peephole on
 void videoSwapFrameBuffers(void)
 {
@@ -7873,15 +7873,15 @@ void videoSwapFrameBuffers(void)
     if (sync == (u16)(lbl_803DCCAA + 1))
     {
         lbl_803DCCAA = sync;
-        if (lbl_803DCCCC == lbl_803DCCEC)
+        if (displayFrameBuffer == externalFrameBuffer0)
         {
-            lbl_803DCCCC = lbl_803DCCE8;
+            displayFrameBuffer = externalFrameBuffer1;
         }
         else
         {
-            lbl_803DCCCC = lbl_803DCCEC;
+            displayFrameBuffer = externalFrameBuffer0;
         }
-        VISetNextFrameBuffer(lbl_803DCCCC);
+        VISetNextFrameBuffer(displayFrameBuffer);
         VIFlush();
         lbl_803DCCA9 = 1;
         lbl_803DB5C8 = lbl_803DCCA0;
@@ -7894,7 +7894,7 @@ void videoSwapFrameBuffers(void)
         gxErrorFn_80060b40();
         modelFn_800292e0();
         __GXAbortWaitPECopyDone();
-        GXInitFifoBase(fifo, lbl_803DCCD0, 0x10000);
+        GXInitFifoBase(fifo, renderFrameBuffer, 0x10000);
         GXSetCPUFifo(fifo);
         GXSetGPFifo(fifo);
         lbl_803DCCD4 = (void*)GXInit(lbl_803DCCD8, (u32)lbl_803DCCE4);
@@ -7944,7 +7944,7 @@ void videoFn_800499e8(void)
     }
     gDepthReadResultCount = gDepthReadPendingCount;
     gDepthReadPendingCount = 0;
-    if (*(void**)(peek + 4) == lbl_803DCCCC)
+    if (*(void**)(peek + 4) == displayFrameBuffer)
     {
         lbl_803DCCA8 = 1;
         lbl_803DCCA9 = 0;
@@ -8180,14 +8180,14 @@ void videoInit(void)
     GXSetDispCopySrc(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
     lbl_803DCCB8 = GXSetDispCopyYScale((f32) gRenderModeObj->xfbHeight / (f32) gRenderModeObj->efbHeight);
     fbSize = (u16)((gRenderModeObj->fbWidth + 0xf) & ~0xf) * lbl_803DCCB8 * 2 + 0x1f;
-    lbl_803DCCEC = (void*)((lo + 0x1f) & ~0x1f);
-    lbl_803DCCE8 = (void*)(((u32)lbl_803DCCEC + fbSize) & ~0x1f);
-    next = ((u32)lbl_803DCCE8 + fbSize) & ~0x1f;
+    externalFrameBuffer0 = (void*)((lo + 0x1f) & ~0x1f);
+    externalFrameBuffer1 = (void*)(((u32)externalFrameBuffer0 + fbSize) & ~0x1f);
+    next = ((u32)externalFrameBuffer1 + fbSize) & ~0x1f;
     OSSetArenaLo((void*)next);
     OSSetArenaLo((void*)(x = (u32)OSInitAlloc((void*)next, (void*)hi, 1)));
     OSSetCurrentHeap(OSCreateHeap((void*)((x + 0x1f) & ~0x1f), (void*)(hi & ~0x1f)));
     VIConfigure(gRenderModeObj);
-    GXInitFifoBase(fifo, lbl_803DCCEC, 0x10000);
+    GXInitFifoBase(fifo, externalFrameBuffer0, 0x10000);
     GXSetCPUFifo(fifo);
     GXSetGPFifo(fifo);
     GXInitFifoLimits(lbl_803DCCD4, (u32)lbl_803DCCE4 - 0x4000, (u32)((u32)lbl_803DCCE4 * 3) >> 2);
@@ -8213,9 +8213,9 @@ void videoInit(void)
         GXSetPixelFmt(0, 0);
         GXSetDither(0);
     }
-    lbl_803DCCCC = lbl_803DCCEC;
-    lbl_803DCCD0 = lbl_803DCCE8;
-    VISetNextFrameBuffer(lbl_803DCCCC);
+    displayFrameBuffer = externalFrameBuffer0;
+    renderFrameBuffer = externalFrameBuffer1;
+    VISetNextFrameBuffer(displayFrameBuffer);
     GXSetDispCopyGamma(0);
     VISetBlack(1);
     VIFlush();
