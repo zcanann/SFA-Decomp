@@ -1037,10 +1037,6 @@ void ObjHitbox_UpdateRotatedBounds(ObjHitbox* hitbox, int advanceMatrix)
 u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char checkB, uint mask,
                            uint volMask)
 {
-    extern int ObjHits_RecordPositionHit(f32 hitPosX, int obj, int hitObj, u8 priority,
-                                         u8 hitVolume, char sphereIndex, f32 hitPosY, f32 hitPosZ);
-    extern int ObjHits_RecordObjectHit(int obj, int hitObj, u8 priority, u8 hitVolume,
-                                       char sphereIndex);
     int result;
     ObjHitsPriorityState* stateA;
     ObjHitsPriorityState* stateB;
@@ -1471,12 +1467,12 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
                 if (checkA != 0)
                 {
                     pb2 = &spheresB[hit * 4];
-                    ObjHits_RecordPositionHit(pb2[1] + cr[2], objB, objA,
-                                              stateSrc->hitVolumePriority, stateSrc->hitVolumeId, hit,
+                    ObjHits_RecordPositionHit(pb2[1] + cr[2],
                                               (modeB != 0)
                                                   ? spheresA[idxA * 4 + 2]
                                                   : pb2[2] + cr[3],
-                                              pb2[3] + cr[4]);
+                                              pb2[3] + cr[4], objB, objA,
+                                              stateSrc->hitVolumePriority, stateSrc->hitVolumeId, hit);
                     result = 1;
                 }
                 else if (checkB != 0)
@@ -1911,8 +1907,6 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
 
 void ObjHits_DetectObjectPair(int objA, int objB)
 {
-    extern int ObjHits_RecordObjectHit(int obj, int hitObj, u8 priority, u8 hitVolume,
-                                       char sphereIndex);
     ObjHitsPriorityState* stateA;
     ObjHitsPriorityState* stateB;
     char vertical;
