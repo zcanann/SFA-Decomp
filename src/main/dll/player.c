@@ -11242,50 +11242,50 @@ void fn_802AABE4(int obj)
                            OBJANIM_STATE_WORD_EVENT_COUNTDOWN, 0);
 }
 
-void fn_802B4A9C(int obj, int sA, int sB)
+void fn_802B4A9C(int obj, int inner, int inner2)
 {
     int *target = (int *)(*gCameraInterface)->getOverrideTarget();
-    u32 v = (*(u8 *)((char *)sA + 0x3f4) >> 6) & 1;
+    u32 v = (*(u8 *)((char *)inner + 0x3f4) >> 6) & 1;
 
     if (v != 0) {
-        if ((*(u32 *)((char *)sA + 0x360) & 0x10) != 0) {
+        if ((*(u32 *)((char *)inner + 0x360) & 0x10) != 0) {
             if (lbl_803DE44C != NULL && v != 0) {
-                ((PlayerState *)sA)->unk8B4 = 2;
-                ((ByteFlags *)((char *)sA + 0x3f4))->b08 = 0;
+                ((PlayerState *)inner)->unk8B4 = 2;
+                ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 0;
             }
-            ((PlayerState *)sB)->baddie.hasTarget = 1;
+            ((PlayerState *)inner2)->baddie.hasTarget = 1;
             if (target != NULL) {
-                *(int **)&((PlayerState *)sB)->baddie.targetObj = target;
+                *(int **)&((PlayerState *)inner2)->baddie.targetObj = target;
             } else {
                 f32 dist = lbl_803E8150;
-                *(int *)&((PlayerState *)sB)->baddie.targetObj = ObjGroup_FindNearestObject(3, obj, &dist);
+                *(int *)&((PlayerState *)inner2)->baddie.targetObj = ObjGroup_FindNearestObject(3, obj, &dist);
             }
         } else {
             if (target != NULL) {
-                if (*(int **)&((PlayerState *)sB)->baddie.targetObj != target) {
-                    ((PlayerState *)sB)->baddie.hasTarget = 0;
+                if (*(int **)&((PlayerState *)inner2)->baddie.targetObj != target) {
+                    ((PlayerState *)inner2)->baddie.hasTarget = 0;
                     if ((*(u8 *)((char *)*(int *)((char *)target + 0x78) + 4) & 0xf) == 1) {
                         if (lbl_803DE44C != NULL) {
-                            u32 targetFlag = (*(u8 *)((char *)sA + 0x3f4) >> 6) & 1;
+                            u32 targetFlag = (*(u8 *)((char *)inner + 0x3f4) >> 6) & 1;
                             if (targetFlag != 0) {
-                                ((PlayerState *)sA)->unk8B4 = 2;
-                                ((ByteFlags *)((char *)sA + 0x3f4))->b08 = 0;
+                                ((PlayerState *)inner)->unk8B4 = 2;
+                                ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 0;
                             }
                         }
-                        ((PlayerState *)sB)->baddie.hasTarget = 1;
+                        ((PlayerState *)inner2)->baddie.hasTarget = 1;
                     }
                 }
-                *(int **)&((PlayerState *)sB)->baddie.targetObj = target;
+                *(int **)&((PlayerState *)inner2)->baddie.targetObj = target;
             } else {
-                *(int *)&((PlayerState *)sB)->baddie.targetObj = 0;
-                ((PlayerState *)sB)->baddie.hasTarget = 0;
+                *(int *)&((PlayerState *)inner2)->baddie.targetObj = 0;
+                ((PlayerState *)inner2)->baddie.hasTarget = 0;
             }
         }
-        if (*(int **)&((PlayerState *)sB)->baddie.targetObj != NULL) {
-            fn_8014C540(*(int *)&((PlayerState *)sB)->baddie.targetObj, (char *)sA + 0x884, (char *)sA + 0x888,
-                        (char *)sA + 0x88c);
+        if (*(int **)&((PlayerState *)inner2)->baddie.targetObj != NULL) {
+            fn_8014C540(*(int *)&((PlayerState *)inner2)->baddie.targetObj, (char *)inner + 0x884, (char *)inner + 0x888,
+                        (char *)inner + 0x88c);
         } else {
-            ((PlayerState *)sA)->unk80E = -1;
+            ((PlayerState *)inner)->unk80E = -1;
         }
     }
 }

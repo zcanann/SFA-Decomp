@@ -1594,7 +1594,7 @@ void fn_802B1B28(int obj, f32 fv);
 void fn_802B1BF8(EmitObj *a, int b, int state);
 void fn_802B1E5C(int obj, int state, int cfg, f32 dt);
 void fn_802B2DA4(void);
-void fn_802B4A9C(int obj, int sA, int sB);
+void fn_802B4A9C(int obj, int inner, int inner2);
 void fn_802B4C18(int obj, int state, f32 fv);
 void fn_802B4DE0(int obj);
 void fn_802B4ED8(int obj, int p2, int mode);
