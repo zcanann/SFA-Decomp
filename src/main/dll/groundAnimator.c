@@ -339,11 +339,11 @@ void wm_column_free(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void wm_column_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void wm_column_render(int arg1, int arg2, int arg3, int arg4, int arg5, s8 visible)
 {
-    if ((*(GroundAnimatorVisibleFn*)(*gCarryableInterface + 0xc))(param_1, visible) != 0)
+    if ((*(GroundAnimatorVisibleFn*)(*gCarryableInterface + 0xc))(arg1, visible) != 0)
     {
-        objRenderFn_8003b8f4(param_1, param_2, param_3, param_4, param_5, lbl_803E37B8);
+        objRenderFn_8003b8f4(arg1, arg2, arg3, arg4, arg5, lbl_803E37B8);
     }
 }
 

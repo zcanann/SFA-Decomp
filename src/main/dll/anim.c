@@ -2568,7 +2568,7 @@ void DFP_Torch_init(int obj, int param2)
 {
     DfpTorchState* state = ((GameObject*)obj)->extra;
     void* res;
-    f32 local_18;
+    f32 tmp;
     int v;
     *(s16*)obj = (s16)((*(s8*)(param2 + 0x18) & 0x3f) << 10);
     v = *(s16*)(param2 + 0x1a);
@@ -2582,14 +2582,14 @@ void DFP_Torch_init(int obj, int param2)
     }
     state->mode = *(u8*)(param2 + 0x19);
     state->gameBit = *(s16*)(param2 + 0x1e);
-    local_18 = lbl_803E63E0;
+    tmp = lbl_803E63E0;
     if (state->mode == 0)
     {
         state->lit = 1;
         res = Resource_Acquire(0x69, 1);
         if (*(s16*)(param2 + 0x1c) == 0)
         {
-            (*(void (*)(int, int, void*, int, int, int))(*(int*)(*(int*)res + 4)))(obj, 0, &local_18, 0x10004, -1, 0);
+            (*(void (*)(int, int, void*, int, int, int))(*(int*)(*(int*)res + 4)))(obj, 0, &tmp, 0x10004, -1, 0);
         }
     }
     state->colorIdx = (u8) * (s16*)(param2 + 0x1c);

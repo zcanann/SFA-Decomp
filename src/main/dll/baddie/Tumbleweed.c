@@ -3215,7 +3215,7 @@ extern WarpstoneEntry lbl_8031CC38[];
 extern int lbl_803A9F38[];
 extern int* gTitleMenuLinkInterface;
 
-void WarpstoneUI_showUI(int param_1)
+void WarpstoneUI_showUI(int arg1)
 {
     int sel;
     int idx;
@@ -3255,7 +3255,7 @@ void WarpstoneUI_showUI(int param_1)
         {
             (*gMapEventInterface)->setMode(0x42, lbl_8031CC38[lbl_803A9F38[idx]].b2);
         }
-        (**(void (**)(int))((char*)(*gTitleMenuLinkInterface) + 0x10))(param_1);
+        (**(void (**)(int))((char*)(*gTitleMenuLinkInterface) + 0x10))(arg1);
         break;
     }
     if (lbl_803DD978 != 0 && lbl_803DD988 != 4)

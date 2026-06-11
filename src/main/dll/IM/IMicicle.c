@@ -361,7 +361,7 @@ void FUN_801a45cc(short* param_1, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void cflevelcontrol_free(int param_1)
+void cflevelcontrol_free(int arg1)
 {
 }
 

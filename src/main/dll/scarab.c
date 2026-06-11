@@ -1834,11 +1834,11 @@ extern f32 lbl_803E2E58;
  */
 #pragma scheduling off
 #pragma peephole off
-void iceball_update(undefined2* param_1, int param_2)
+void iceball_update(undefined2* arg1, int arg2)
 {
     int p;
 
-    p = (int)param_1;
+    p = (int)arg1;
     *(int*)(p + 0xf4) = (s32)((f32)(s32) * (int*)(p + 0xf4) - timeDelta);
     if (*(int*)(p + 0xf4) < 0)
     {

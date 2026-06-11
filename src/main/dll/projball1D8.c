@@ -45,7 +45,7 @@ extern f32 lbl_803E5F14;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void nw_levcontrol_update(int param_1)
+void nw_levcontrol_update(int arg1)
 {
     int obj;
     short* player;
@@ -58,7 +58,7 @@ void nw_levcontrol_update(int param_1)
     uint bitVal4;
     float* state;
 
-    obj = param_1;
+    obj = arg1;
     state = *(float**)(obj + 0xb8);
     player = (short*)Obj_GetPlayerObject();
     if (*state > lbl_803E5F10)

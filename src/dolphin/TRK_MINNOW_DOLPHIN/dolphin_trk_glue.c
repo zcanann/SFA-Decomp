@@ -103,7 +103,7 @@ inline UARTError TRKWriteUARTN(const void* bytes, u32 length)
     return writeErr == 0 ? 0 : -1;
 }
 
-void TRKEXICallBack(__OSInterrupt param_0, OSContext* ctx)
+void TRKEXICallBack(__OSInterrupt arg0, OSContext* ctx)
 {
     OSEnableScheduler();
     TRKLoadContext(ctx, 0x500);
@@ -138,9 +138,9 @@ int InitMetroTRKCommTable(int hwId)
     return result;
 }
 
-DSError TRKInitializeIntDrivenUART(u32 param_0, u32 param_1, u32 param_2, void* param_3)
+DSError TRKInitializeIntDrivenUART(u32 arg0, u32 arg1, u32 arg2, void* arg3)
 {
-    gDBCommTable.initialize_func(param_3, TRKEXICallBack);
+    gDBCommTable.initialize_func(arg3, TRKEXICallBack);
     return DS_NoError;
 }
 

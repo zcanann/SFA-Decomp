@@ -11,7 +11,7 @@ extern f32 lbl_803E4C80;
 extern f32 lbl_803E4C84;
 extern f32 lbl_803E4C88;
 
-int DIMbossgut_updateState(int obj, int param_2, ObjAnimUpdateState* animUpdate)
+int DIMbossgut_updateState(int obj, int arg2, ObjAnimUpdateState* animUpdate)
 {
     animUpdate->hitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
@@ -25,8 +25,8 @@ void DIMbossgut_free(void)
 {
 }
 
-void DIMbossgut_render(int obj, undefined4 param_2, undefined4 param_3, undefined4 param_4,
-                       undefined4 param_5, char shouldRender)
+void DIMbossgut_render(int obj, undefined4 arg2, undefined4 arg3, undefined4 arg4,
+                       undefined4 arg5, char shouldRender)
 {
     int visible;
 
@@ -34,7 +34,7 @@ void DIMbossgut_render(int obj, undefined4 param_2, undefined4 param_3, undefine
     if (visible != 0)
     {
         ObjAnim_AdvanceCurrentMove(lbl_803E4C80, timeDelta, obj, NULL);
-        objRenderFn_8003b8f4(obj, param_2, param_3, param_4, param_5, (double)lbl_803E4C84);
+        objRenderFn_8003b8f4(obj, arg2, arg3, arg4, arg5, (double)lbl_803E4C84);
     }
 }
 

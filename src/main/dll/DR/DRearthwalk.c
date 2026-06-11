@@ -436,11 +436,11 @@ int fn_801DA9CC(int obj)
 }
 
 /* 112b: vtable cleanup then maybe Obj_FreeObject. */
-void sh_beacon_free(int obj, int param_2)
+void sh_beacon_free(int obj, int arg2)
 {
     int extra = *(int*)&((GameObject*)obj)->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);
-    if (param_2 == 0)
+    if (arg2 == 0)
     {
         void* p = *(void**)&((ShBeaconState*)extra)->childObj;
         if (p != NULL && (*(unsigned short*)((char*)p + 0xb0) & 0x40) == 0)

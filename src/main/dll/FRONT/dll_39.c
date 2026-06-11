@@ -436,11 +436,11 @@ void n_attractmode_prepareMovie(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void TitleMenu_render(u8* param_1)
+void TitleMenu_render(u8* arg1)
 {
     int menuAction;
 
-    if (shouldShowCredits(param_1) != 0)
+    if (shouldShowCredits(arg1) != 0)
     {
         creditsStart_();
         return;
@@ -455,7 +455,7 @@ void TitleMenu_render(u8* param_1)
         gameTextBoxFn_80134d40(0, 0, 0);
         (*gScreenTransitionInterface)->getProgress();
         (*(code*)(*gTitleMenuLinkInterface + 0x30))(0xff);
-        (*(code*)(*gTitleMenuLinkInterface + 0x10))(param_1);
+        (*(code*)(*gTitleMenuLinkInterface + 0x10))(arg1);
         gameTextSetDrawFunc(0);
         titleScreenShowCopyright(gAttractMoviePlaybackEnabled);
     }

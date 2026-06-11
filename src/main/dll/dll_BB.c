@@ -256,9 +256,9 @@ void camcontrol_applyQueuedAction(void)
     return;
 }
 
-void Camera_func1D(int param_1)
+void Camera_func1D(int arg1)
 {
-    pCamera[0x141] = (u8)(pCamera[0x141] | ((param_1 << 3) & 0x18));
+    pCamera[0x141] = (u8)(pCamera[0x141] | ((arg1 << 3) & 0x18));
 }
 
 void Camera_func13(int enable)

@@ -116,7 +116,7 @@ enum NwMammothRuntimeFlag
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void nw_mammoth_update(NwMammothObject* obj, int param_2)
+void nw_mammoth_update(NwMammothObject* obj, int arg2)
 {
     NwMammothTables* table = (NwMammothTables*)lbl_803267C0;
     NwMammothState* state;
@@ -128,7 +128,7 @@ void nw_mammoth_update(NwMammothObject* obj, int param_2)
     f32 stepScale;
     int triggerIndex;
 
-    (void)param_2;
+    (void)arg2;
     state = obj->state;
     mapData = obj->mapData;
     if ((state->runtimeFlags & NW_MAMMOTH_RUNTIME_RESET_PATH) != 0)

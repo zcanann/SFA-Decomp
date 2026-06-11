@@ -619,15 +619,15 @@ void VideoDecodeThreadStart(void)
 /* CreateVideoDecodeThread (200 bytes)                                 */
 /* ------------------------------------------------------------------ */
 #pragma peephole on
-BOOL CreateVideoDecodeThread(OSPriority param_1, u32 param_2)
+BOOL CreateVideoDecodeThread(OSPriority arg1, u32 arg2)
 {
     char* db = lbl_803A72F0;
 
-    if (param_2 != 0)
+    if (arg2 != 0)
     {
         if (!OSCreateThread((OSThread*)(db + 0x1058), (void*(*)(void*))AttractMovieVideo_DecoderForOnMemory,
-                            (void*)param_2,
-                            (void*)(db + 0x1058), 0x1000, param_1, 1))
+                            (void*)arg2,
+                            (void*)(db + 0x1058), 0x1000, arg1, 1))
         {
             return 0;
         }
@@ -635,7 +635,7 @@ BOOL CreateVideoDecodeThread(OSPriority param_1, u32 param_2)
     else
     {
         if (!OSCreateThread((OSThread*)(db + 0x1058), (void*(*)(void*))AttractMovieVideo_Decoder, NULL,
-                            (void*)(db + 0x1058), 0x1000, param_1, 1))
+                            (void*)(db + 0x1058), 0x1000, arg1, 1))
         {
             return 0;
         }

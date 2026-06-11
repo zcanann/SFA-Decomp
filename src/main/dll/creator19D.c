@@ -187,7 +187,7 @@ typedef struct DFSHLaserBeamObject
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DFSH_LaserBeam_update(uint param_1)
+void DFSH_LaserBeam_update(uint arg1)
 {
     DFSHLaserBeamObject* obj;
     DFSHLaserBeamConfig* config;
@@ -205,7 +205,7 @@ void DFSH_LaserBeam_update(uint param_1)
     f32 damageDistance;
     f32 pushDistance;
 
-    obj = (DFSHLaserBeamObject*)param_1;
+    obj = (DFSHLaserBeamObject*)arg1;
     config = obj->config;
     runtime = obj->runtime;
 

@@ -2202,7 +2202,7 @@ uint isPointWithinPatchGroup(float* point, uint patchGroupIndex, int groupId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-u16 getPatchGroup(float* point, int patchGroupIndex, undefined4 param_3, undefined4 param_4,
+u16 getPatchGroup(float* point, int patchGroupIndex, undefined4 arg3, undefined4 arg4,
                   u8 startPatchIndex)
 {
     char* base;

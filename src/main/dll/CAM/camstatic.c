@@ -60,7 +60,7 @@ void camstatic_update(CameraObject* camera)
     float dx;
     float dy;
     float dz;
-    undefined auStack_13c[4];
+    undefined buf[4];
     float dx2;
     float aimX;
     float aimY;
@@ -68,8 +68,8 @@ void camstatic_update(CameraObject* camera)
     float aimX2;
     float aimY2;
     float aimZ2;
-    undefined auStack_11c[112];
-    undefined auStack_ac[116];
+    undefined buf2[112];
+    undefined buf3[116];
 
     target = (GameObject*)camera->anim.targetObj;
     if (target == NULL)
@@ -182,7 +182,7 @@ void camstatic_update(CameraObject* camera)
                 aimZ2 = target->anim.worldPosZ;
             }
             camcontrol_traceMove(lbl_803E1688, &aimX2, &camera->anim.worldPosX,
-                                 &camera->anim.worldPosX, auStack_ac, 3, 1, 1);
+                                 &camera->anim.worldPosX, buf3, 3, 1, 1);
             camera->probePosX = camera->anim.worldPosX;
             camera->probePosY = camera->anim.worldPosY;
             camera->probePosZ = camera->anim.worldPosZ;
@@ -212,7 +212,7 @@ void camstatic_update(CameraObject* camera)
                 aimZ = target->anim.worldPosZ;
             }
             camcontrol_traceMove(lbl_803E1688, &aimX, &camera->anim.worldPosX,
-                                 &camera->anim.worldPosX, auStack_11c, 3, 1, 1);
+                                 &camera->anim.worldPosX, buf2, 3, 1, 1);
             camera->probePosX = camera->anim.worldPosX;
             camera->probePosY = camera->anim.worldPosY;
             camera->probePosZ = camera->anim.worldPosZ;
@@ -220,7 +220,7 @@ void camstatic_update(CameraObject* camera)
         }
     }
     ((void (*)(int, f32*, f32*, f32*, f32*, int, f32))(*gCameraInterface)->getRelativePosition)(
-        (int)camera, &dx2, (f32*)auStack_13c, &dz, &dy, 0, gCamcontrolModeSettings->targetHeight);
+        (int)camera, &dx2, (f32*)buf, &dz, &dy, 0, gCamcontrolModeSettings->targetHeight);
     yaw = getAngle(dx2, dz);
     gCamcontrolModeSettings->pitchOffset = 0;
     camera->anim.rotX = (-0x8000 - yaw) - gCamcontrolModeSettings->pitchOffset;
