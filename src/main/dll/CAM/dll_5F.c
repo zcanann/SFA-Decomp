@@ -415,8 +415,8 @@ void fn_8010BF08(int control, float* outX, float* outY, float* outZ, void* inFlo
     lim = lbl_803E18C4;
     if (t > lim)
     {
-        t = -(lbl_803E18C8 * timeDelta) + t;
-        lbl_803DD568->pathBlendWeight = t;
+        lbl_803DD568->pathBlendWeight = t - lbl_803E18C8 * timeDelta;
+        t = lbl_803DD568->pathBlendWeight;
         if (lbl_803DD568->pathBlendWeight < lim)
         {
             lbl_803DD568->pathBlendWeight = lim;
