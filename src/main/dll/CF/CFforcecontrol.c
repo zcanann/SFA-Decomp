@@ -7,27 +7,9 @@
 #include "main/screen_transition.h"
 
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068cc();
-extern undefined4 FUN_800068d0();
-extern undefined4 FUN_80017660();
-extern undefined4 FUN_80017688();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern int FUN_800176d0();
-extern double FUN_80017708();
-extern undefined4 FUN_80017710();
-extern double FUN_80017714();
-extern undefined4 FUN_8001771c();
 extern u32 randomGetRange(int min, int max);
-extern int FUN_8001792c();
-extern undefined4 FUN_80017958();
-extern int FUN_80017978();
-extern int FUN_80017a54();
-extern undefined4 FUN_80017a64();
-extern undefined4 FUN_80017a78();
-extern int FUN_80017a90();
-extern int FUN_80017a98();
 extern undefined4 ObjHits_RecordObjectHit();
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
@@ -36,30 +18,11 @@ extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
 extern int ObjTrigger_IsSet();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_800400b0();
-extern undefined4 FUN_80048000();
-extern undefined4 FUN_8004800c();
-extern undefined4 FUN_8005d1e8();
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
-extern undefined4 FUN_80081028();
-extern undefined4 FUN_80081030();
-extern undefined4 FUN_80081038();
-extern undefined4 FUN_800810f4();
-extern undefined4 FUN_800d7780();
-extern undefined4 FUN_8012f744();
-extern char FUN_80132034();
-extern undefined4 FUN_8025c754();
-extern undefined4 FUN_8025cce8();
-extern int FUN_80286830();
-extern undefined4 FUN_8028687c();
-extern byte FUN_80294c20();
 
-extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6e8;
 extern f64 DOUBLE_803e4910;
 extern f64 DOUBLE_803e4950;
 extern f64 DOUBLE_803e4998;
