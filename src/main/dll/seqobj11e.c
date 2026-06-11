@@ -3,6 +3,7 @@
 #include "main/gamebits.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/seqObj11E.h"
@@ -19,7 +20,6 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern undefined4 ObjHits_RecordObjectHit();
 extern undefined4 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
 extern int FUN_80039520();
@@ -316,7 +316,7 @@ void fn_80152514(int* obj, u8* state)
         if (*(s8*)((char*)def + 0x2e) != -1 &&
             (child2 = ((GameObject*)obj)->childObjs[0]) != 0 && fn_801A0174(child2) != 0)
         {
-            ObjHits_RecordObjectHit(Obj_GetPlayerObject(), obj, 0x16, 2, 0);
+            ObjHits_RecordObjectHit((int)Obj_GetPlayerObject(), (int)obj, 0x16, 2, 0);
             fn_80152370((int)obj, 0x3b2);
             Sfx_PlayFromObject((u32)obj, SFXsp_literun116);
             *(f32*)(state + 0x32c) = lbl_803DBCB4;
@@ -856,7 +856,7 @@ void FUN_80152cf0(undefined8 param_1, double param_2, double param_3, undefined8
             (bVar9 = FUN_8019e768(*(int*)(psVar1 + 100)), bVar9 != 0))
         {
             iVar2 = FUN_80017a98();
-            ObjHits_RecordObjectHit(iVar2, (int)psVar1, '\x16', 2, 0);
+            ObjHits_RecordObjectHit(iVar2, (int)psVar1, 0x16, 2, 0);
             FUN_80152a30(dVar13, param_2, param_3, param_4, param_5, param_6, param_7, param_8, (int)psVar1, 0x3b2);
             FUN_80006824((uint)psVar1, SFXsp_literun116);
             puVar10[0xcb] = lbl_803DC91C;
