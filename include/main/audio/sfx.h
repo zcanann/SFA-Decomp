@@ -17,5 +17,6 @@ void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);
 void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId);
 void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
+void Sfx_RemoveLoopedObjectSoundForObject(u32 obj);
 
 #endif /* MAIN_AUDIO_SFX_H_ */
