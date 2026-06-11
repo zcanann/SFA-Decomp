@@ -336,7 +336,6 @@ LAB_8005E718:
 void mapBlockRender_drawDimmedAabbLights(undefined4 bounds, undefined4 blockXform, int i)
 {
     int* lightPtr;
-    SfaIntDouble iD1;
     f32 posZ;
     f32 posY;
     f32 posX;
