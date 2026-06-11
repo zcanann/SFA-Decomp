@@ -864,7 +864,7 @@ int trickyFn_80142eb0(int obj, int state)
       objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
       trickyDebugPrint(lbl_8031D478);
     }
-    *(int *)&((TrickyState *)state)->stateFlags = *(int *)&((TrickyState *)state)->stateFlags & 0xffffffef;
+    *(int *)&((TrickyState *)state)->stateFlags = *(int *)&((TrickyState *)state)->stateFlags & ~(u64)0x10;
     ((TrickyState *)state)->substate = 0;
   }
   return 1;
@@ -1125,7 +1125,7 @@ int trickyFn_801434b0(int param_1, int *param_2)
       objAnimFn_8013a3f0(param_1, 0, lbl_803E2444, 0);
       trickyDebugPrint(lbl_8031D478);
     }
-    param_2[0x15] = param_2[0x15] & 0xffffffef;
+    param_2[0x15] = param_2[0x15] & ~(u64)0x10;
     *(u8 *)((int)param_2 + 10) = 0;
   }
   return 1;
@@ -1315,7 +1315,7 @@ int trickyFn_80143c04(int obj, int state)
   *(int *)&((TrickyState *)state)->followObj = ((TrickyState *)state)->playerObj;
   if (*(int *)&((TrickyState *)state)->unk28 != *(int *)&((TrickyState *)state)->followObj + 0x18) {
     *(int *)&((TrickyState *)state)->unk28 = *(int *)&((TrickyState *)state)->followObj + 0x18;
-    *(int *)&((TrickyState *)state)->stateFlags = *(int *)&((TrickyState *)state)->stateFlags & 0xfffffbff;
+    *(int *)&((TrickyState *)state)->stateFlags = *(int *)&((TrickyState *)state)->stateFlags & ~(u64)0x400;
     *(short *)&((TrickyState *)state)->unkD2 = 0;
   }
   if (lbl_803E23DC == ((TrickyState *)state)->unk71C) {
@@ -1325,7 +1325,7 @@ int trickyFn_80143c04(int obj, int state)
     fVar = lbl_803E2408;
     if ((*(int *)&((TrickyState *)state)->stateFlags & 0x20000) != 0) {
       ((TrickyState *)state)->unkD = 0;
-      *(int *)&((TrickyState *)state)->stateFlags = *(int *)&((TrickyState *)state)->stateFlags & 0xfffdffff;
+      *(int *)&((TrickyState *)state)->stateFlags = *(int *)&((TrickyState *)state)->stateFlags & ~(u64)0x20000;
     }
   }
   result = (u8)trickyFn_8013b368(fVar, obj, state);
