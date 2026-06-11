@@ -1,5 +1,6 @@
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/audio/sfx_ids.h"
@@ -8,7 +9,6 @@
 
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006824();
-extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_SetHitVolumeMasks();
 extern undefined4 ObjHits_SetHitVolumeSlot();
