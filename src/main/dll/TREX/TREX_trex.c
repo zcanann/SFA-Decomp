@@ -163,43 +163,10 @@ sizeof
 
 
 extern undefined4 getLActions();
-extern bool FUN_800067f0();
-extern undefined4 FUN_8000680c();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern undefined4 FUN_80006ba8();
-extern undefined4 FUN_8001759c();
-extern undefined4 FUN_800175a0();
-extern undefined4 FUN_800175b0();
-extern undefined4 FUN_800175d0();
-extern undefined4 FUN_80017620();
-extern void* FUN_80017624();
-extern undefined4 FUN_80017688();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
-extern undefined4 FUN_8001771c();
-extern int FUN_80017730();
 extern u32 randomGetRange(int min, int max);
-extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
-extern int FUN_80017b00();
-extern int FUN_8002fc3c();
-extern undefined4 FUN_800305c4();
-extern undefined4 FUN_800305f8();
 extern undefined4 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
 extern undefined4 ObjPath_GetPointWorldPosition();
-extern int FUN_8003964c();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_8005335c();
-extern undefined4 FUN_8005336c();
-extern undefined4 FUN_8008110c();
-extern undefined4 FUN_80081114();
-extern int FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern undefined8 FUN_80294d28();
-extern undefined4 FUN_80294d60();
 extern MapEventInterface** gMapEventInterface;
 extern void playerAddMoney(int player, int amount);
 extern void playerAddHealth(int player, int amount);
@@ -211,10 +178,6 @@ extern void skyFn_80088c94(int skyId, int enable);
 extern void envFxActFn_800887f8(int id);
 extern void getEnvfxAct(int obj, int target, int effectId, int flags);
 
-extern undefined4 DAT_80328c18;
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803dc071;
-extern undefined4 DAT_803dcd00;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ModgfxInterface** gModgfxInterface;
 extern int* gTitleMenuControlInterfaceCopy;
@@ -270,7 +233,6 @@ extern f32 lbl_803E6630;
 extern f32 lbl_803E6634;
 extern f32 lbl_803E6644;
 extern f32 lbl_803E6648;
-extern undefined4 uRam803de8d4;
 
 /*
  * --INFO--
