@@ -291,13 +291,13 @@ void wmseqpoint_hitDetect(void)
 {
 }
 
-#pragma peephole on
 void wmseqpoint_update(int obj)
 {
     WmSeqPointState* state;
     int player;
     int target;
     int i;
+    extern u8 getSkyColorFn_80088e08(int skyId);
 
     player = (int)Obj_GetPlayerObject();
     state = ((GameObject*)obj)->extra;
@@ -353,7 +353,7 @@ void wmseqpoint_update(int obj)
             }
             else if (state->sequenceId == 1)
             {
-                state->skyEnabledLatch = (u8)getSkyColorFn_80088e08(0);
+                state->skyEnabledLatch = getSkyColorFn_80088e08(0);
             }
             (*gObjectTriggerInterface)->runSequence(state->sequenceId, (void*)obj, -1);
             state->doneLatch = 1;
@@ -405,7 +405,6 @@ void wmseqpoint_update(int obj)
     }
 }
 
-#pragma peephole off
 void wmseqpoint_init(int obj, int setup)
 {
     WmSeqPointState* state;
