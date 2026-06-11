@@ -5967,7 +5967,7 @@ extern u32 lbl_803E0730;
 extern const f32 lbl_803E0734, lbl_803E0738, lbl_803E073C, lbl_803E0740, lbl_803E0744;
 extern const f32 lbl_803E0748, lbl_803E074C, lbl_803E0750, lbl_803E0754;
 
-int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param_5, s16 *param_6)
+int modgfx_func03(u8 *sourceObj, int effectId, u8 *spawnParams, uint spawnFlags, int modelId, s16 *countRange)
 {
   struct { s16 lo, hi; } r;
   struct { s16 h0, h1, h2; f32 fx; f32 v[3]; } m;
@@ -5983,13 +5983,13 @@ int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param
   void *tex;
   int n;
   int cnt;
-  spr = Gameplay_GetActiveModel(param_1);
+  spr = Gameplay_GetActiveModel(sourceObj);
   *(u32 *)&r = lbl_803E0730;
-  if (param_6 != (s16 *)0) {
-    r.lo = param_6[0];
-    r.hi = param_6[1];
+  if (countRange != (s16 *)0) {
+    r.lo = countRange[0];
+    r.hi = countRange[1];
   }
-  if (param_1 == 0) {
+  if (sourceObj == 0) {
     debugPrintf((char *)&base[0x70]);
     return -1;
   }
@@ -6002,9 +6002,9 @@ int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param
   if (*(u8 *)(obj + 0xf2) == 0) {
     return -1;
   }
-  buf.v58 = param_2;
-  buf.ctx = param_1;
-  buf.v44 = param_2;
+  buf.v58 = effectId;
+  buf.ctx = sourceObj;
+  buf.v44 = effectId;
   buf.pos[0] = lbl_803E0734; buf.pos[1] = lbl_803E0734; buf.pos[2] = lbl_803E0734;
   buf.col[0] = lbl_803E0734; buf.col[1] = lbl_803E0734; buf.col[2] = lbl_803E0734;
   buf.scale = lbl_803E0738;
@@ -6016,11 +6016,11 @@ int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param
   buf.hw[0] = *(s16 *)&base[0x40]; buf.hw[1] = *(s16 *)&base[0x42]; buf.hw[2] = *(s16 *)&base[0x44]; buf.hw[3] = *(s16 *)&base[0x46];
   buf.hw[4] = *(s16 *)&base[0x48]; buf.hw[5] = *(s16 *)&base[0x4a]; buf.hw[6] = *(s16 *)&base[0x4c];
   n = randomGetRange(r.lo, r.hi);
-  if (param_2 == 0xc) {
+  if (effectId == 0xc) {
     n = randomGetRange(2, 6);
-  } else if (param_2 == 0xd) {
+  } else if (effectId == 0xd) {
     n = randomGetRange(2, 6);
-  } else if (param_2 == 0x11) {
+  } else if (effectId == 0x11) {
     n = 5;
   }
   entries = buf.entries;
@@ -6028,31 +6028,31 @@ int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param
     tex = textureIdxToPtr(**(int **)&((GameObject *)obj)->anim.worldPosZ);
     entries[0].layer = 0; entries[0].flags = 1; entries[0].tex = &lbl_803DB8B0; entries[0].mode = 8;
     entries[0].x = lbl_803E0734; entries[0].y = lbl_803E0734; entries[0].z = lbl_803E0734;
-    if (param_2 == 0xc || param_2 == 5) {
+    if (effectId == 0xc || effectId == 5) {
       entries[1].layer = 0; entries[1].flags = 4; entries[1].tex = &lbl_803DB8B4; entries[1].mode = 2;
       entries[1].x = lbl_803E073C * (f32)(int)randomGetRange(1, 6);
       entries[1].y = lbl_803E073C * (f32)(int)randomGetRange(1, 6);
       entries[1].z = lbl_803E073C * (f32)(int)randomGetRange(1, 6);
       e = &entries[2];
-    } else if (param_2 == 0xd) {
+    } else if (effectId == 0xd) {
       entries[1].layer = 0; entries[1].flags = 4; entries[1].tex = &lbl_803DB8B4; entries[1].mode = 2;
       entries[1].x = lbl_803E073C * (f32)(int)randomGetRange(1, 6);
       entries[1].y = lbl_803E073C * (f32)(int)randomGetRange(1, 6);
       entries[1].z = lbl_803E073C * (f32)(int)randomGetRange(1, 6);
       e = &entries[2];
-    } else if (param_2 == 0x14) {
+    } else if (effectId == 0x14) {
       entries[1].layer = 0; entries[1].flags = 4; entries[1].tex = &lbl_803DB8B4; entries[1].mode = 2;
       entries[1].x = lbl_803E0740 * (f32)(int)randomGetRange(3, 6);
       entries[1].y = lbl_803E0740 * (f32)(int)randomGetRange(3, 6);
       entries[1].z = lbl_803E0740 * (f32)(int)randomGetRange(3, 6);
       e = &entries[2];
-    } else if (param_2 == 0x11) {
+    } else if (effectId == 0x11) {
       entries[1].layer = 0; entries[1].flags = 4; entries[1].tex = &lbl_803DB8B4; entries[1].mode = 2;
       entries[1].x = lbl_803E0740 * (f32)(int)randomGetRange(3, 6);
       entries[1].y = lbl_803E0740 * (f32)(int)randomGetRange(3, 6);
       entries[1].z = lbl_803E0740 * (f32)(int)randomGetRange(3, 6);
       e = &entries[2];
-    } else if (param_2 == 0x10) {
+    } else if (effectId == 0x10) {
       entries[1].layer = 0; entries[1].flags = 4; entries[1].tex = &lbl_803DB8B4; entries[1].mode = 8;
       entries[1].x = lbl_803E0744; entries[1].y = lbl_803E0734; entries[1].z = lbl_803E0744;
       entries[2].layer = 0; entries[2].flags = 4; entries[2].tex = &lbl_803DB8B4; entries[2].mode = 2;
@@ -6073,7 +6073,7 @@ int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param
     e[1].x = lbl_803E0734;
     e[1].y = lbl_803E0750 * (f32)(int)randomGetRange(-10, 10);
     e[1].z = lbl_803E0750 * (f32)(int)randomGetRange(-10, 10);
-    if (param_2 == 0x10) {
+    if (effectId == 0x10) {
       e[2].layer = 1; e[2].flags = 0; e[2].tex = (void *)0; e[2].mode = 0x400000;
       e[2].x = lbl_803E0734; e[2].y = lbl_803E0734;
       e[2].z = lbl_803E0750 + (f32)(int)randomGetRange(0, 300);
@@ -6081,7 +6081,7 @@ int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param
       m.h0 = randomGetRange(0, 0xffff);
       vecRotateZXY(&m, &e[2].x);
       e += 3;
-    } else if (param_2 == 0x11) {
+    } else if (effectId == 0x11) {
       e[2].layer = 1; e[2].flags = 0; e[2].tex = (void *)0; e[2].mode = 0x400000;
       e[2].x = lbl_803E0734; e[2].y = lbl_803E0734;
       e[2].z = lbl_803E0750 + (f32)(int)randomGetRange(0, 300);
@@ -6103,141 +6103,141 @@ int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param
     buf.cmds = entries;
     buf.count = (e + 1) - entries;
     buf.flags = 0x4000000;
-    buf.flags |= param_4;
+    buf.flags |= spawnFlags;
     ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 4, base, 4, &base[0x28], 0, tex);
   }
   cnt = randomGetRange(2, 6);
-  if (param_2 == 7) {
-    param_2 = randomGetRange(4, 6);
+  if (effectId == 7) {
+    effectId = randomGetRange(4, 6);
   }
-  if (param_2 == 0xb) {
-    param_2 = randomGetRange(8, 10);
+  if (effectId == 0xb) {
+    effectId = randomGetRange(8, 10);
   }
-  if (param_2 == 0xc) {
+  if (effectId == 0xc) {
     cnt = randomGetRange(1, 3);
   }
-  switch (param_2) {
+  switch (effectId) {
   case 0:
   case 0x14:
     m.h2 = 0x2a;
     for (; cnt != 0; cnt--) {
-      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)sourceObj, 5, &m, 1, -1, NULL);
     }
     break;
   case 1:
     m.h2 = 0x2b;
-    (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)sourceObj, 5, &m, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)sourceObj, 5, &m, 1, -1, NULL);
     break;
   case 2:
     m.h2 = 0x184;
     for (; cnt != 0; cnt--) {
-      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)sourceObj, 5, &m, 1, -1, NULL);
     }
     break;
   case 3:
     m.h2 = 0x1a1;
     for (; cnt != 0; cnt--) {
-      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)sourceObj, 5, &m, 1, -1, NULL);
     }
     break;
   case 4:
     m.h2 = 0x60;
     for (; cnt != 0; cnt--) {
-      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)sourceObj, 5, &m, 1, -1, NULL);
     }
     m.h2 = 0x159;
-    (*gPartfxInterface)->spawnObject((void *)param_1, 3, &m, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)sourceObj, 3, &m, 1, -1, NULL);
     break;
   case 5:
     m.h2 = 0x60;
     for (; cnt != 0; cnt--) {
-      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)sourceObj, 5, &m, 1, -1, NULL);
     }
     m.h2 = 0x91;
-    (*gPartfxInterface)->spawnObject((void *)param_1, 3, &m, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)sourceObj, 3, &m, 1, -1, NULL);
     break;
   case 6:
     m.h2 = 0x60;
     for (; cnt != 0; cnt--) {
-      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)sourceObj, 5, &m, 1, -1, NULL);
     }
     m.h2 = 0x74;
-    (*gPartfxInterface)->spawnObject((void *)param_1, 3, &m, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)sourceObj, 3, &m, 1, -1, NULL);
     break;
   case 8:
     m.h2 = 0x60;
     for (; cnt != 0; cnt--) {
-      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)sourceObj, 5, &m, 1, -1, NULL);
     }
     n = 0x14;
     m.h2 = 0xdf;
     do {
-      (*gPartfxInterface)->spawnObject((void *)param_1, 7, &m, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)sourceObj, 7, &m, 1, -1, NULL);
       n--;
     } while (n != 0);
     m.h2 = 0x159;
-    (*gPartfxInterface)->spawnObject((void *)param_1, 3, &m, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)sourceObj, 3, &m, 1, -1, NULL);
     break;
   case 9:
     m.h2 = 0x60;
     for (; cnt != 0; cnt--) {
-      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)sourceObj, 5, &m, 1, -1, NULL);
     }
     n = 0x14;
     m.h2 = 0xde;
     do {
-      (*gPartfxInterface)->spawnObject((void *)param_1, 7, &m, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)sourceObj, 7, &m, 1, -1, NULL);
       n--;
     } while (n != 0);
     m.h2 = 0x91;
-    (*gPartfxInterface)->spawnObject((void *)param_1, 3, &m, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)sourceObj, 3, &m, 1, -1, NULL);
     break;
   case 10:
     m.h2 = 0x60;
     for (; cnt != 0; cnt--) {
-      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)sourceObj, 5, &m, 1, -1, NULL);
     }
     n = 0x14;
     m.h2 = 0x160;
     do {
-      (*gPartfxInterface)->spawnObject((void *)param_1, 7, &m, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)sourceObj, 7, &m, 1, -1, NULL);
       n--;
     } while (n != 0);
     m.h2 = 0x74;
-    (*gPartfxInterface)->spawnObject((void *)param_1, 3, &m, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)sourceObj, 3, &m, 1, -1, NULL);
     break;
   case 0xc:
     m.h2 = 0x2a;
     break;
   case 0xd:
     m.h2 = 0x4c;
-    (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)sourceObj, 5, &m, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)sourceObj, 5, &m, 1, -1, NULL);
     break;
   case 0xe:
     m.h2 = 0x60;
     for (; cnt != 0; cnt--) {
-      (*gPartfxInterface)->spawnObject((void *)param_1, 0x135, &m, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)sourceObj, 0x135, &m, 1, -1, NULL);
     }
     break;
   case 0xf:
-    (*gPartfxInterface)->spawnObject((void *)param_1, 0x51b, NULL, 2, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void *)param_1, 0x51b, NULL, 2, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void *)param_1, 0x51b, NULL, 2, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void *)param_1, 0x51b, NULL, 2, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)sourceObj, 0x51b, NULL, 2, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)sourceObj, 0x51b, NULL, 2, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)sourceObj, 0x51b, NULL, 2, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)sourceObj, 0x51b, NULL, 2, -1, NULL);
     break;
   case 0x10:
   case 0x11:
     m.h2 = 0x4c;
-    (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)sourceObj, 5, &m, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)sourceObj, 5, &m, 1, -1, NULL);
     break;
   default:
     m.h2 = 0x2a;
     n = 5;
     do {
-      (*gPartfxInterface)->spawnObject((void *)param_1, 5, &m, 1, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)sourceObj, 5, &m, 1, -1, NULL);
       n--;
     } while (n != 0);
     break;

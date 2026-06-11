@@ -3963,7 +3963,7 @@ void tex0GetFrame(int param_1, int param_2, int *param_3, int *param_4, int para
     }
 }
 
-void tex1GetFrame(u32 param_1, int param_2, int *param_3, int *param_4, int param_5, u8 *param_6, int param_7) {
+void tex1GetFrame(u32 texId, int unused, int *outA, int *outB, int count, u8 *frameTable, int queryMode) {
     int idx = -1;
     if (lbl_8035F3E8[0x20] != 0 || lbl_8035F3E8[0x4b] != 0) {
         int s = OSDisableInterrupts();
@@ -3973,9 +3973,9 @@ void tex1GetFrame(u32 param_1, int param_2, int *param_3, int *param_4, int para
         OSRestoreInterrupts(s);
         f46c = lbl_8035F3E8[0x21];
         f518 = lbl_8035F3E8[0x4c];
-        if ((param_1 & 0x80000000) != 0 && (flags & 0x2000) == 0) {
+        if ((texId & 0x80000000) != 0 && (flags & 0x2000) == 0) {
             idx = 0x4b;
-        } else if ((param_1 & 0x40000000) != 0 && (flags & 0x1000) == 0) {
+        } else if ((texId & 0x40000000) != 0 && (flags & 0x1000) == 0) {
             idx = 0x20;
         } else if (f46c != 0 && (flags & 0x1000) == 0 && lbl_8035F3E8[0x20] != 0) {
             idx = 0x20;
@@ -3985,23 +3985,23 @@ void tex1GetFrame(u32 param_1, int param_2, int *param_3, int *param_4, int para
         {
             u32 base = lbl_8035F3E8[idx];
             if (base != 0) {
-                if (param_7 == 1 && param_6 != 0) {
-                    int e = (param_1 & 0xffffff) * 2 + *(int *)(param_6 + param_5 * 4) + 4;
+                if (queryMode == 1 && frameTable != 0) {
+                    int e = (texId & 0xffffff) * 2 + *(int *)(frameTable + count * 4) + 4;
                     int v;
                     e = base + e;
                     v = *(int *)(e + 4);
-                    *param_4 = *(int *)(e + 8);
-                    *param_3 = v;
-                } else if (param_7 == 2 && param_6 != 0) {
-                    memcpy(param_6, (void *)(base + (param_1 & 0xffffff) * 2), (param_5 + 1) * 4);
+                    *outB = *(int *)(e + 8);
+                    *outA = v;
+                } else if (queryMode == 2 && frameTable != 0) {
+                    memcpy(frameTable, (void *)(base + (texId & 0xffffff) * 2), (count + 1) * 4);
                 } else {
-                    int e = base + (param_1 & 0xffffff) * 2;
+                    int e = base + (texId & 0xffffff) * 2;
                     int v = *(int *)(e + 0xc);
-                    *param_3 = *(int *)(e + 8);
+                    *outA = *(int *)(e + 8);
                     if (strncmp(&sDirBlockTag, (char *)e, 3) == 0) {
-                        *param_4 = 0xffffffff;
+                        *outB = 0xffffffff;
                     } else {
-                        *param_4 = v;
+                        *outB = v;
                     }
                 }
             } else {
@@ -4009,25 +4009,25 @@ void tex1GetFrame(u32 param_1, int param_2, int *param_3, int *param_4, int para
                 char *buf;
                 DVDOpen(sResourceFileNameTable[idx], fileInfo);
                 buf = mmAlloc(0x400, 0x7f7f7fff, 0);
-                DVDRead(fileInfo, buf, 0x400, (param_1 & 0xffffff) * 2);
+                DVDRead(fileInfo, buf, 0x400, (texId & 0xffffff) * 2);
                 DVDClose(fileInfo);
                 DCStoreRange(buf, 0x400);
-                if (param_7 == 1 && param_6 != 0) {
-                    int e = *(int *)(param_6 + param_5 * 4) + 4;
+                if (queryMode == 1 && frameTable != 0) {
+                    int e = *(int *)(frameTable + count * 4) + 4;
                     int v;
                     e = (int)buf + e;
                     v = *(int *)(e + 4);
-                    *param_4 = *(int *)(e + 8);
-                    *param_3 = v;
-                } else if (param_7 == 2 && param_6 != 0) {
-                    memcpy(param_6, buf, (param_5 + 1) * 4);
+                    *outB = *(int *)(e + 8);
+                    *outA = v;
+                } else if (queryMode == 2 && frameTable != 0) {
+                    memcpy(frameTable, buf, (count + 1) * 4);
                 } else {
                     int v = *(int *)(buf + 0xc);
-                    *param_3 = *(int *)(buf + 8);
+                    *outA = *(int *)(buf + 8);
                     if (strncmp(&sDirBlockTag, (char *)buf, 3) == 0) {
-                        *param_4 = 0xffffffff;
+                        *outB = 0xffffffff;
                     } else {
-                        *param_4 = v;
+                        *outB = v;
                     }
                 }
                 mm_free(buf);
@@ -6116,11 +6116,11 @@ void fn_8005011C(int param_1) {
     lbl_803DCD90 = lbl_803DCD90 + 4;
 }
 extern u8 lbl_803DCD6B;
-void fn_80050558(u8 *param_1, void *param_2, int param_3, int param_4, int param_5) {
-    int uVar2;
+void fn_80050558(u8 *param_1, void *texMtx, int param_3, int param_4, int param_5) {
+    int inputSel;
     int texmap;
     GXSetTevDirect(lbl_803DCD90);
-    GXLoadTexMtxImm(param_2, lbl_803DCD80, 0);
+    GXLoadTexMtxImm(texMtx, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
     if (param_5 == 0 || param_5 == 2) {
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 4);
@@ -6128,21 +6128,21 @@ void fn_80050558(u8 *param_1, void *param_2, int param_3, int param_4, int param
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 5);
     }
     if (*(volatile int *)&lbl_803DCD90 == 0) {
-        uVar2 = 0xc;
+        inputSel = 0xc;
     } else {
-        uVar2 = 4;
+        inputSel = 4;
     }
     if (param_3 == 0) {
         if (param_4 == 2) {
-            GXSetTevColorIn(lbl_803DCD90, 0xf, uVar2, 8, 0xf);
+            GXSetTevColorIn(lbl_803DCD90, 0xf, inputSel, 8, 0xf);
         } else if (param_4 == 3) {
-            GXSetTevColorIn(lbl_803DCD90, uVar2, 0xf, 8, 0xf);
+            GXSetTevColorIn(lbl_803DCD90, inputSel, 0xf, 8, 0xf);
         } else if (param_4 == 1) {
-            GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 8, uVar2);
+            GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 8, inputSel);
         } else if (param_5 == 0 || param_5 == 1) {
-            GXSetTevColorIn(lbl_803DCD90, 0xf, 0xa, 8, uVar2);
+            GXSetTevColorIn(lbl_803DCD90, 0xf, 0xa, 8, inputSel);
         } else {
-            GXSetTevColorIn(lbl_803DCD90, 0xf, 0xb, 8, uVar2);
+            GXSetTevColorIn(lbl_803DCD90, 0xf, 0xb, 8, inputSel);
         }
         GXSetTevSwapMode(lbl_803DCD90, 0, 0);
         GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 7);
