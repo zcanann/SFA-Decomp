@@ -5,6 +5,7 @@
 #include "main/game_object.h"
 #include "main/model_light.h"
 #include "main/objanim_internal.h"
+#include "main/objhits.h"
 #include "main/objhits_types.h"
 
 static inline int *DIM2Icicle_GetActiveModel(void *obj) {
@@ -492,7 +493,6 @@ void warpDarkIceMines_801bbb44(int obj, int runtime)
 extern int Obj_GetPlayerObject(void);
 extern int fn_80295A04(int player, int p2);
 extern void ObjHits_EnableObject(int obj);
-extern int ObjHits_GetPriorityHit(int obj, int *outId, int *outType, int *outUnk);
 extern void ObjMsg_SendToObject(int to, int msg, int obj, int data);
 extern int *gTitleMenuControlInterfaceCopy;
 extern int *gDIMbossHitEffectResource;
@@ -548,7 +548,7 @@ void fn_801BC2D8(int obj, int param_2)
   int player;
   IcicleHitEntry *base;
   int hitType;
-  int hitUnk;
+  uint hitVolume;
   int hitId;
   IcicleHitDesc desc;
 
@@ -559,7 +559,7 @@ void fn_801BC2D8(int obj, int param_2)
   if (lbl_803DDB8C != 0) {
     lbl_803DDB8C = lbl_803DDB8C - 1;
   }
-  hitResult = ObjHits_GetPriorityHit(obj, &hitId, &hitType, &hitUnk);
+  hitResult = ObjHits_GetPriorityHit(obj, &hitId, &hitType, &hitVolume);
   if (hitResult != 0) {
     gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_0040;
     if (*(s16 *)((int)state + 0x402) == 1) {

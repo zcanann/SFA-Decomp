@@ -1,12 +1,12 @@
 #include "main/game_object.h"
 #include "main/dll/DIM/dll_223.h"
 #include "main/effect_interfaces.h"
+#include "main/objhits.h"
 #include "main/objfx.h"
 
 extern undefined4 GameBit_Set(int eventId, int value);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern void* Obj_GetPlayerObject(void);
-extern int ObjHits_GetPriorityHit(void* obj, void** hitObj, int* outModelPart, int* outIndex);
 extern void Sfx_PlayFromObject(void* obj, int sfxId);
 extern void doRumble(f32 val);
 extern void ObjMsg_SendToObject(void* obj, int msg, void* sender, int param_4);
@@ -118,14 +118,14 @@ int DIMbosstonsil_startIdleHitReaction(void* obj, DIMbosstonsilState* state)
 
 void DIMbosstonsil_checkHit(void* obj, DIMbosstonsilState* state)
 {
-    void* hitObj;
+    int hitObj;
     int modelPart;
-    int unused;
+    uint hitVolume;
     undefined4 effect[7];
     f32* pos;
     int hit;
 
-    hit = ObjHits_GetPriorityHit(obj, &hitObj, &modelPart, &unused);
+    hit = ObjHits_GetPriorityHit((int)obj, &hitObj, &modelPart, &hitVolume);
     if (hit != 0)
     {
         pos = (f32*)((char*)effect + 0xc);
@@ -168,7 +168,7 @@ void DIMbosstonsil_checkHit(void* obj, DIMbosstonsilState* state)
             }
             (*(void (***)(void*, DIMbosstonsilState*, int))gPlayerInterface)[5](obj, state, 1);
             state->field270 = 1;
-            ObjMsg_SendToObject(hitObj,DIMBOSSTONSIL_ADVANCE_MSG, obj, 0);
+            ObjMsg_SendToObject((void*)hitObj,DIMBOSSTONSIL_ADVANCE_MSG, obj, 0);
         }
     }
 }
