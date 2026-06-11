@@ -1,6 +1,8 @@
 #include "main/game_object.h"
 #include "main/dll/cfguardian_state.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
+#include "main/gamebits.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/cfguardian.h"
 #include "main/objseq.h"
@@ -40,22 +42,16 @@ extern void* Obj_GetPlayerObject(void);
 extern int fn_80295C5C(void* player);
 extern void* getTrickyObject(void);
 extern f32 Vec_distance(f32 * a, f32 * b);
-extern void Sfx_StopObjectChannel(int obj, int channel);
 extern EffectInterface** gPartfxInterface;
 extern int* objFindTexture(int* obj, int a, int b);
-extern u32 GameBit_Get(int eventId);
-extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 lbl_803E3758;
 extern f32 lbl_803E375C;
 extern f32 lbl_803E3760;
 extern f32 lbl_803E3764;
 extern f32 lbl_803E3768;
 extern f32 lbl_803E3778;
-extern uint GameBit_Get(int eventId);
-
 undefined4 pressureswitchfb_updateStateMode(int obj, undefined4 param_2, int stateParam)
 {
-    extern void GameBit_Set(int eventId, int value); /* #57 */
     s16 objType;
     int config;
     u32 handle;
@@ -168,7 +164,6 @@ typedef struct
 
 void pressureswitchfb_update(int obj)
 {
-    extern int GameBit_Set(int eventId, int value); /* #57 */
     uint nearest;
     int off;
     uint other;

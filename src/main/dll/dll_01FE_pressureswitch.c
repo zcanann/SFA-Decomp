@@ -1,4 +1,6 @@
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
+#include "main/gamebits.h"
 #include "main/dll/laserbeamstate_struct.h"
 #include "main/dll/dll200state_struct.h"
 #include "main/effect_interfaces.h"
@@ -84,15 +86,11 @@ extern f32 lbl_803E6A24;
 extern f32 lbl_803E6A80;
 
 extern f32 lbl_803E5D78;
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void Sfx_StopObjectChannel(int obj, int channel);
 extern f32 timeDelta;
 extern f32 lbl_803E5D58;
 extern void objRenderFn_8003b8f4(f32);
-extern int GameBit_Get(int id);
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
-extern void GameBit_Set(int slot, int val);
 
 void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
@@ -258,7 +256,6 @@ typedef struct PressureSwitchFlags
 
 void pressureswitch_init(int* obj, u8* init)
 {
-    extern uint GameBit_Get(int id);
     PressureSwitchState* sub;
     uint mapId;
 
@@ -351,10 +348,6 @@ void pressureswitch_update(int obj)
     extern void*Obj_GetPlayerObject(void);
     extern void*getTrickyObject(void);
     extern f32 Vec_distance(void* a, void* b);
-    extern uint GameBit_Get(int id);
-    extern void GameBit_Set(int slot, int val);
-    extern void Sfx_PlayFromObject(int obj, int sfx);
-    extern void Sfx_StopObjectChannel(int obj, int ch);
     extern u8 framesThisStep;
     extern f32 timeDelta;
     extern f32 lbl_803E5D5C;
