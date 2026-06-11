@@ -1853,6 +1853,7 @@ void decoration11a_hitDetect(int obj)
     int* objects;
     f32 radius;
     f32 localPos[3];
+    f32 bMax;
     f32 sum;
     f32 delta;
     f32 term;
@@ -1886,23 +1887,13 @@ check_decor_objects:
                 sum = lbl_803E3B7C;
 
                 {
-                f32 bMin = state[3];
-                f32 bMax = state[0];
-                if (localPos[0] < bMin)
-                {
-                    delta = localPos[0] - bMin;
-                    term = delta * delta;
-                }
-                else if (localPos[0] > bMax)
-                {
-                    delta = localPos[0] - bMax;
-                    term = delta * delta;
-                }
-                else
-                {
-                    term = lbl_803E3B7C;
-                }
-                sum += term;
+                f32 bMin;
+                f32 px;
+                bMin = state[3];
+                bMax = state[0];
+                sum += ((px = localPos[0]) < bMin) ? (px - bMin) * (px - bMin)
+                     : (px > bMax) ? (px - bMax) * (px - bMax)
+                     : lbl_803E3B7C;
                 }
 
                 {
