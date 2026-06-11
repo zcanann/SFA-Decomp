@@ -103,7 +103,7 @@ extern int lbl_803DC998;
 extern int lbl_803DC98C;
 extern int lbl_803DC988;
 extern int lbl_803DC99C;
-extern int lbl_803DC9E8;
+extern int gameTextCharset;
 extern int lbl_803DB3CC;
 
 typedef struct
@@ -173,7 +173,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
 
     byteOff = 0;
     spaceExtra = lbl_803DE704;
-    if (lbl_803DC9E8 == 2)
+    if (gameTextCharset == 2)
     {
         glyphLang = 6;
     }
@@ -551,7 +551,7 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
     }
     if (glyphLang == -1)
     {
-        if (lbl_803DC9E8 == 2)
+        if (gameTextCharset == 2)
         {
             glyphLang = 6;
         }
@@ -1019,7 +1019,7 @@ void* getCurGameText(void)
 
 int gameTextGetCharset(void)
 {
-    return lbl_803DC9E8;
+    return gameTextCharset;
 }
 
 #pragma dont_inline off
@@ -1147,7 +1147,7 @@ void gameTextSetCharset(int charset, int flags)
     if (gameTextDrawFunc != NULL || (flags & 1))
     {
         gameTextFonts = (u8*)&lbl_8033AF40[charset];
-        lbl_803DC9E8 = charset;
+        gameTextCharset = charset;
         if (charset == 2)
         {
             int color = lbl_803DB3C8;
@@ -1182,7 +1182,7 @@ void gameTextLoadDir(int dirId)
     if (dirId == 3)
     {
         gameTextFonts = (u8*)&lbl_8033AF40[2];
-        lbl_803DC9E8 = 2;
+        gameTextCharset = 2;
         color = lbl_803DB3C8;
         hudDrawRect(0, 0, 0xa00, 0x780, &color);
         lbl_803DC99C = 0;
@@ -1199,7 +1199,7 @@ void gameTextLoadDir(int dirId)
     {
         curGameTextDir = (void*)dirId;
         gameTextFonts = (u8*)&lbl_8033AF40[3];
-        lbl_803DC9E8 = 3;
+        gameTextCharset = 3;
         if (gameTextDrawFunc == NULL)
         {
             slotIndex = lbl_803DC9C8;
@@ -1213,7 +1213,7 @@ void gameTextLoadDir(int dirId)
     else
     {
         gameTextFonts = (u8*)&lbl_8033AF40[0];
-        lbl_803DC9E8 = 0;
+        gameTextCharset = 0;
         if (gameTextDrawFunc == NULL)
         {
             slotIndex = lbl_803DC9C8;
@@ -1246,7 +1246,7 @@ void gameTextResetCursor(int flags)
     }
 }
 
-extern void* lbl_803DC9CC;
+extern void* gCurTextBox;
 
 void gameTextSetWindow(u8* param_1)
 {
@@ -1259,7 +1259,7 @@ void gameTextSetWindow(u8* param_1)
         i = lbl_803DC9C8;
         lbl_803DC9C8 = i + 1;
         s = &lbl_8033A540[i];
-        lbl_803DC9CC = NULL;
+        gCurTextBox = NULL;
         s->v = 8;
         s->f4 = 0xff;
     }
@@ -1271,11 +1271,11 @@ void gameTextSetWindow(u8* param_1)
         idx = (param_1 - gTextBoxes) / 0x20;
         if (idx == 0xff)
         {
-            lbl_803DC9CC = NULL;
+            gCurTextBox = NULL;
         }
         else
         {
-            lbl_803DC9CC = gTextBoxes + idx * 0x20;
+            gCurTextBox = gTextBoxes + idx * 0x20;
         }
         s->v = 8;
         s->f4 = idx;
@@ -1765,10 +1765,10 @@ void gameTextInitFn_8001a234(void)
     }
 
     gameTextFonts = gameTextBase + GAMETEXT_FONT_SLOT_OFFSET;
-    lbl_803DC9E8 = 2;
+    gameTextCharset = 2;
     curLanguage = -1;
     curGameTextDir = (void*)-1;
-    lbl_803DC9CC = NULL;
+    gCurTextBox = NULL;
     lbl_803DC9E0 = -1;
     lbl_803DC9D8 = -1;
     lbl_803DC9BC = 0;
@@ -1963,9 +1963,9 @@ void gameTextRun(void)
             gameTextFn_8001658c(cmd->f4, cmd->f8, cmd->fc);
             break;
         case 5:
-            if (lbl_803DC9CC != NULL)
+            if (gCurTextBox != NULL)
             {
-                gameTextRenderStrs(cmd->f4, ((u8*)lbl_803DC9CC - gTextBoxes) / 0x20);
+                gameTextRenderStrs(cmd->f4, ((u8*)gCurTextBox - gTextBoxes) / 0x20);
             }
             break;
         case 6:
@@ -1985,11 +1985,11 @@ void gameTextRun(void)
         case 8:
             if (cmd->f4 == 0xff)
             {
-                lbl_803DC9CC = NULL;
+                gCurTextBox = NULL;
             }
             else
             {
-                lbl_803DC9CC = gTextBoxes + cmd->f4 * 0x20;
+                gCurTextBox = gTextBoxes + cmd->f4 * 0x20;
             }
             break;
         case 9:
@@ -2017,7 +2017,7 @@ void gameTextRun(void)
             break;
         case 15:
             gameTextFonts = gameTextBase + GAMETEXT_PENDING_REQUEST_SCAN_OFFSET + cmd->f4 * 0x28;
-            lbl_803DC9E8 = cmd->f4;
+            gameTextCharset = cmd->f4;
             if (cmd->f4 == 2)
             {
                 color = lbl_803DB3C8;
@@ -2043,7 +2043,7 @@ void gameTextRun(void)
         *(s16*)(textWindow + 0x18) = 0;
         *(s16*)(textWindow + 0x1a) = 0;
     }
-    lbl_803DC9CC = NULL;
+    gCurTextBox = NULL;
 }
 
 void loadGameTextSequence(int sequenceSlotDir, int sequenceId)

@@ -18,7 +18,7 @@ void* gameTextGetBox(int box)
 
 void* gameTextGetCurBox(void)
 {
-    return lbl_803DC9CC;
+    return gCurTextBox;
 }
 
 void gameTextFn_80016c18(int a, int b)
@@ -373,7 +373,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     int lineIdx;
     int charPos;
 
-    if (lbl_803DC9E8 == 2)
+    if (gameTextCharset == 2)
     {
         langIdx = 6;
     }
@@ -799,9 +799,9 @@ void gameTextFn_8001658c(int a, int b, int c)
     int i;
 
     lbl_803DC9C0 = 1;
-    if (lbl_803DC9CC != NULL)
+    if (gCurTextBox != NULL)
     {
-        slot = lbl_803DC9CC;
+        slot = gCurTextBox;
     }
     else if (def->slotHint == 255)
     {

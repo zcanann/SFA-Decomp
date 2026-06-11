@@ -3,7 +3,7 @@
 extern char gTextBoxes[];
 extern volatile u32 lbl_8033A540[][5];
 extern volatile u32 lbl_803DC9C8;
-extern void* lbl_803DC9CC;
+extern void* gCurTextBox;
 
 void MWTRACE(level, format)
 int level;
@@ -24,7 +24,7 @@ char* format;
     } else {
         trace_message = &gTextBoxes[level * 0x20];
     }
-    lbl_803DC9CC = trace_message;
+    gCurTextBox = trace_message;
 
     trace_entry[0] = 8;
     trace_entry[1] = level;

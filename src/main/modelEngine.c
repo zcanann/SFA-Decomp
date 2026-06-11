@@ -374,7 +374,7 @@ void uiDll_runFrameEndAndLoadNext(void)
     if (lbl_803DC8EC != 0)
     {
         lbl_803DC8EC--;
-        lbl_803DC8F4 = lbl_803DC8F0;
+        lbl_803DC8F4 = curUiDll;
         if (lbl_803DC8E8 != NULL)
         {
             Resource_Release(lbl_803DC8E8);
@@ -391,7 +391,7 @@ void uiDll_runFrameEndAndLoadNext(void)
             lbl_803DC8E8 = NULL;
             lbl_803DC8EC = 0;
         }
-        lbl_803DC8F0 = lbl_803DC8EC;
+        curUiDll = lbl_803DC8EC;
         lbl_803DC8EC = 0;
     }
 }
@@ -412,7 +412,7 @@ int uiDll_runFrameStartAndLoadNext(void)
     if (lbl_803DC8EC != 0)
     {
         lbl_803DC8EC--;
-        lbl_803DC8F4 = lbl_803DC8F0;
+        lbl_803DC8F4 = curUiDll;
         if (lbl_803DC8E8 != NULL)
         {
             Resource_Release(lbl_803DC8E8);
@@ -429,7 +429,7 @@ int uiDll_runFrameStartAndLoadNext(void)
             lbl_803DC8E8 = NULL;
             lbl_803DC8EC = 0;
         }
-        lbl_803DC8F0 = lbl_803DC8EC;
+        curUiDll = lbl_803DC8EC;
         lbl_803DC8EC = 0;
     }
     return result;
@@ -437,7 +437,7 @@ int uiDll_runFrameStartAndLoadNext(void)
 
 void set_uiDllIdx_803dc8f0(int idx)
 {
-    lbl_803DC8F0 = idx;
+    curUiDll = idx;
 }
 
 int getUiDllFn_80014930(void)
@@ -447,7 +447,7 @@ int getUiDllFn_80014930(void)
 
 int getCurUiDll(void)
 {
-    return lbl_803DC8F0;
+    return curUiDll;
 }
 
 void* getDLL16(void)
@@ -461,7 +461,7 @@ void loadUiDll(int index)
     s32 next;
     s32 resourceId;
 
-    current = lbl_803DC8F0;
+    current = curUiDll;
     if (index != current)
     {
         next = index + 1;
@@ -486,7 +486,7 @@ void loadUiDll(int index)
                 lbl_803DC8E8 = NULL;
                 lbl_803DC8EC = 0;
             }
-            lbl_803DC8F0 = lbl_803DC8EC;
+            curUiDll = lbl_803DC8EC;
             lbl_803DC8EC = 0;
         }
     }
@@ -497,7 +497,7 @@ void initGameTimer(void)
     lbl_803DC8E8 = NULL;
     lbl_803DC8EC = 0;
     lbl_803DC8F4 = 0;
-    lbl_803DC8F0 = 0;
+    curUiDll = 0;
     lbl_803DC8F8 = 2;
     lbl_803DC8F9 = 0;
     lbl_803DC900 = 0.0f;
