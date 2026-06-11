@@ -159,7 +159,7 @@ extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjHits_RecordObjectHit();
 extern int ObjHits_GetPriorityHit();
-extern int ObjGroup_FindNearestObject();
+extern int ObjGroup_FindNearestObject(int group, uint obj, float* maxDistance);
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
@@ -1525,20 +1525,26 @@ void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state)
     CFLandedArwingState* otherState;
     f32 range;
     f32 yOffset;
-    u8 animScratch[0x34];
+    u8 animScratch[0x20];
 
     def = *(int*)&((GameObject*)obj)->anim.placementData;
-    if (((state->hitFlags >> 7) & 1) != 0)
+    if (((LandedArwingHitFlagBits*)&state->hitFlags)->damaged)
     {
-        if (((state->hitFlags >> 6) & 1) != 0 && state->hitStarted == 0)
+        if (((LandedArwingHitFlagBits*)&state->hitFlags)->impactHandled)
         {
-            return;
+            if (state->hitStarted != 0u)
+            {
+            }
+            else
+            {
+                return;
+            }
         }
         if (state->hitStarted != 0)
         {
             ((GameObject*)obj)->anim.rotY = 0;
             ((GameObject*)obj)->anim.rotZ = 0;
-            if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3BBC && ((state->hitFlags >> 4) & 1) == 0)
+            if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3BBC && !((LandedArwingHitFlagBits*)&state->hitFlags)->reactionDone)
             {
                 if (((LandedArwingUpdateHitReactionPlacement*)def)->unk24 > 0)
                 {
@@ -1550,37 +1556,41 @@ void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state)
                 case 0:
                     if (Obj_IsLoadingLocked() != 0)
                     {
+                        i = 0;
                         yOffset = lbl_803E3BB8;
-                        for (i = 0; i < *(u8*)(def + 0x1f); i++)
+                        while (i < *(u8*)(def + 0x1f))
                         {
                             setup = Obj_AllocObjectSetup(0x24, 0x259);
                             ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-                            ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY + yOffset;
+                            ((ObjPlacement*)setup)->posY = yOffset + ((GameObject*)obj)->anim.localPosY;
                             ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
                             *(u8*)(setup + 4) = 1;
                             Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                             *(int*)&((GameObject*)obj)->anim.parent);
+                            i++;
                         }
                     }
                     break;
                 case 1:
                     range = lbl_803E3BC0;
                     other = ObjGroup_FindNearestObject(0x41, obj, &range);
-                    if (other != 0)
+                    if ((void*)other != NULL)
                     {
                         otherState = ((GameObject*)other)->extra;
                         if (*(s16*)(*(int*)&((GameObject*)other)->anim.placementData + 0x22) > 0)
                         {
                             GameBit_Set(*(s16*)(*(int*)&((GameObject*)other)->anim.placementData + 0x22), 1);
                         }
-                        otherState->hitFlags &= 0x7f | 0x80;
+                        ((LandedArwingHitFlagBits*)&otherState->hitFlags)->damaged = 1;
                     }
+                    break;
+                case 2:
                     break;
                 }
                 state->hitStarted = 0;
-                state->hitFlags &= 0xef | 0x10;
+                ((LandedArwingHitFlagBits*)&state->hitFlags)->reactionDone = 1;
             }
-            state->hitFlags &= 0xbf | 0x40;
+            ((LandedArwingHitFlagBits*)&state->hitFlags)->impactHandled = 1;
             state->path8Fx = lbl_803E3BC4;
         }
         else
@@ -1593,8 +1603,8 @@ void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state)
             ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
                                                       state->hitCooldown);
         }
-        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->path8Fx, timeDelta,
-                                                                    (ObjAnimEventList*)animScratch);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, state->path8Fx, timeDelta,
+                                                                      (ObjAnimEventList*)animScratch);
     }
 }
 
