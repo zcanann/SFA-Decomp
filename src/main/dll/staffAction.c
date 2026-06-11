@@ -1109,12 +1109,12 @@ void fn_80166840(int obj, int state, f32* hit, f32* end)
     f32 len;
 
     scale = lbl_803E3020;
+    stateX = scale * ((LandedArwingState*)state)->surfaceNormalX + ((GameObject*)obj)->anim.localPosX;
     objX = ((GameObject*)obj)->anim.localPosX;
-    stateX = scale * ((LandedArwingState*)state)->surfaceNormalX + objX;
+    stateY = scale * ((LandedArwingState*)state)->surfaceNormalY + ((GameObject*)obj)->anim.localPosY;
     objY = ((GameObject*)obj)->anim.localPosY;
-    stateY = scale * ((LandedArwingState*)state)->surfaceNormalY + objY;
+    stateZ = scale * ((LandedArwingState*)state)->surfaceNormalZ + ((GameObject*)obj)->anim.localPosZ;
     objZ = ((GameObject*)obj)->anim.localPosZ;
-    stateZ = scale * ((LandedArwingState*)state)->surfaceNormalZ + objZ;
     velX = scale * ((GameObject*)obj)->anim.velocityX + objX;
     velY = scale * ((GameObject*)obj)->anim.velocityY + objY;
     velZ = scale * ((GameObject*)obj)->anim.velocityZ + objZ;
