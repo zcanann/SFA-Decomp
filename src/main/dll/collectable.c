@@ -717,81 +717,81 @@ void sideCommandEnable(int obj, int targetObj, int commandKind, int commandType)
  */
 int Tricky_updateSideCommandPrompts(int obj)
 {
-    char cVar1;
-    ushort uVar2;
-    bool bVar3;
-    bool bVar4;
-    bool bVar5;
-    int iVar6;
-    uint uVar7;
+    char cmdByte;
+    ushort promptId;
+    bool promptA;
+    bool promptB;
+    bool promptC;
+    int objVal;
+    uint bitVal;
     uint commandMask;
-    int iVar8;
-    bool bVar11;
-    undefined2* puVar9;
-    undefined4 uVar10;
-    byte bVar12;
-    int iVar13;
-    char local_38[4];
-    char local_34[4];
-    undefined4 local_30[12];
+    int ref;
+    bool cond;
+    undefined2* setup;
+    undefined4 spawnedObj;
+    byte i;
+    int state;
+    char flagsA[4];
+    char flagsB[4];
+    undefined4 promptTable[12];
 
-    iVar6 = obj;
-    iVar13 = *(int*)(iVar6 + 0xb8);
-    bVar11 = false;
-    bVar3 = false;
-    bVar4 = false;
-    bVar5 = false;
-    local_30[0] = DAT_803e3058;
-    uVar7 = GameBit_Get(0x4e4);
-    if (uVar7 != 0)
+    objVal = obj;
+    state = *(int*)(objVal + 0xb8);
+    cond = false;
+    promptA = false;
+    promptB = false;
+    promptC = false;
+    promptTable[0] = DAT_803e3058;
+    bitVal = GameBit_Get(0x4e4);
+    if (bitVal != 0)
     {
-        commandMask = *(byte*)(iVar13 + 0xb) | 9;
-        if ((*(uint*)(iVar13 + 0x54) & 0x10) != 0)
+        commandMask = *(byte*)(state + 0xb) | 9;
+        if ((*(uint*)(state + 0x54) & 0x10) != 0)
         {
-            *(undefined*)(iVar13 + 0xb) = 0;
+            *(undefined*)(state + 0xb) = 0;
         }
-        if (((*(byte*)(iVar13 + 8) == 8) || (*(byte*)(iVar13 + 8) == 0xd)) ||
-            ((*(byte*)(iVar13 + 8) == 0xe && (*(byte*)(iVar13 + 10) == 1))))
+        if (((*(byte*)(state + 8) == 8) || (*(byte*)(state + 8) == 0xd)) ||
+            ((*(byte*)(state + 8) == 0xe && (*(byte*)(state + 10) == 1))))
         {
-            bVar3 = true;
+            promptA = true;
             commandMask |= 0x10;
         }
         else
         {
-            iVar8 = trickyFindNearestUsableBaddie(*(int*)(iVar13 + 4), 1, lbl_803E2524);
-            if (iVar8 != 0)
+            ref = trickyFindNearestUsableBaddie(*(int*)(state + 4), 1, lbl_803E2524);
+            if (ref != 0)
             {
-                bVar3 = true;
-                bVar5 = true;
+                promptA = true;
+                promptC = true;
             }
         }
-        if (*(char*)(iVar13 + 0xb) != '\0')
+        if (*(char*)(state + 0xb) != '\0')
         {
-            for (bVar12 = 0; bVar12 < *(byte*)(iVar13 + 0x798); bVar12 = bVar12 + 1)
+            for (i = 0; i < *(byte*)(state + 0x798); i = i + 1)
             {
-                iVar8 = iVar13 + (uint)bVar12 * 8;
-                cVar1 = *(char*)(iVar8 + 0x74c);
-                if (cVar1 == '\0')
+                ref = state + (uint)i * 8;
+                cmdByte = *(char*)(ref + 0x74c);
+                if (cmdByte == '\0')
                 {
-                    if (*(short*)(*(int*)(iVar8 + 0x748) + 0x46) == 0x6a)
+                    if (*(short*)(*(int*)(ref + 0x748) + 0x46) == 0x6a)
                     {
-                        bVar4 = true;
+                        promptB = true;
                     }
-                    bVar3 = true;
+                    promptA = true;
                 }
-                else if (cVar1 == '\x01')
+                else if (cmdByte == '\x01')
                 {
-                    bVar11 = true;
+                    cond = true;
                 }
             }
         }
-        if (((*(uint*)(iVar13 + 0x54) & 0x10) == 0) && (uVar7 = GameBit_Get(0x3f8), uVar7 != 0))
+        if (((*(uint*)(state + 0x54) & 0x10) == 0) && (bitVal = GameBit_Get(0x3f8), bitVal != 0))
         {
-            iVar8 = Obj_GetPlayerObject();
-            iVar8 = fn_80296240(iVar8);
-            if ((iVar8 != 0) && (uVar7 = GameBit_Get(0xd00), uVar7 == 0))
+            ref = Obj_GetPlayerObject();
+            ref = fn_80296240(ref);
+            if ((ref != 0) && (bitVal = GameBit_Get(0xd00), bitVal == 0))
             {
-                if (fn_80296448(*(int*)(iVar13 + 4)) == 0)
+                if (fn_80296448(*(int*)(state + 4)) == 0)
                 {
                     commandMask |= 0x20;
                 }
@@ -809,146 +809,146 @@ int Tricky_updateSideCommandPrompts(int obj)
         {
             commandMask &= ~0x10;
         }
-        *(undefined*)(iVar13 + 0xb) = 0;
-        if ((bVar11) && ((*(uint*)(iVar13 + 0x54) & 0x200) == 0))
+        *(undefined*)(state + 0xb) = 0;
+        if ((cond) && ((*(uint*)(state + 0x54) & 0x200) == 0))
         {
-            *(float*)(iVar13 + 0x7b4) = lbl_803E3188;
-            if ((*(int*)(iVar13 + 0x7b0) == 0) && (Obj_IsLoadingLocked() != 0))
+            *(float*)(state + 0x7b4) = lbl_803E3188;
+            if ((*(int*)(state + 0x7b0) == 0) && (Obj_IsLoadingLocked() != 0))
             {
-                uVar7 = randomGetRange(0, 1);
-                uVar2 = *(ushort*)((int)local_30 + uVar7 * 2);
-                iVar8 = *(int*)(iVar6 + 0xb8);
-                if (((*(byte*)(iVar8 + 0x58) >> 6 & 1) == 0) &&
-                    (((0x2f < *(short*)(iVar6 + 0xa0) || (*(short*)(iVar6 + 0xa0) < 0x29)) &&
-                        (bVar11 = FUN_800067f0(iVar6, 0x10), !bVar11))))
+                bitVal = randomGetRange(0, 1);
+                promptId = *(ushort*)((int)promptTable + bitVal * 2);
+                ref = *(int*)(objVal + 0xb8);
+                if (((*(byte*)(ref + 0x58) >> 6 & 1) == 0) &&
+                    (((0x2f < *(short*)(objVal + 0xa0) || (*(short*)(objVal + 0xa0) < 0x29)) &&
+                        (cond = FUN_800067f0(objVal, 0x10), !cond))))
                 {
-                    objAudioFn_800393f8(iVar6, (void*)(iVar8 + 0x3a8), uVar2, 0x500, 0xffffffff, 0);
+                    objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), promptId, 0x500, 0xffffffff, 0);
                 }
-                puVar9 = (undefined2*)Obj_AllocObjectSetup(0x20, 0x17c);
-                local_34[0] = -1;
-                local_34[1] = -1;
-                local_34[2] = -1;
-                if (*(int*)(iVar13 + 0x7a8) != 0)
+                setup = (undefined2*)Obj_AllocObjectSetup(0x20, 0x17c);
+                flagsB[0] = -1;
+                flagsB[1] = -1;
+                flagsB[2] = -1;
+                if (*(int*)(state + 0x7a8) != 0)
                 {
-                    local_34[*(byte*)(iVar13 + 0x7bc) >> 6] = '\x01';
+                    flagsB[*(byte*)(state + 0x7bc) >> 6] = '\x01';
                 }
-                if (*(int*)(iVar13 + 0x7b0) != 0)
+                if (*(int*)(state + 0x7b0) != 0)
                 {
-                    local_34[*(byte*)(iVar13 + 0x7bc) >> 4 & 3] = '\x01';
+                    flagsB[*(byte*)(state + 0x7bc) >> 4 & 3] = '\x01';
                 }
-                if (*(int*)(iVar13 + 0x7b8) != 0)
+                if (*(int*)(state + 0x7b8) != 0)
                 {
-                    local_34[*(byte*)(iVar13 + 0x7bc) >> 2 & 3] = '\x01';
+                    flagsB[*(byte*)(state + 0x7bc) >> 2 & 3] = '\x01';
                 }
-                if (local_34[0] == -1)
+                if (flagsB[0] == -1)
                 {
-                    uVar7 = 0;
+                    bitVal = 0;
                 }
-                else if (local_34[1] == -1)
+                else if (flagsB[1] == -1)
                 {
-                    uVar7 = 1;
+                    bitVal = 1;
                 }
-                else if (local_34[2] == -1)
+                else if (flagsB[2] == -1)
                 {
-                    uVar7 = 2;
+                    bitVal = 2;
                 }
-                else if (local_34[3] == -1)
+                else if (flagsB[3] == -1)
                 {
-                    uVar7 = 3;
+                    bitVal = 3;
                 }
                 else
                 {
-                    uVar7 = 0xffffffff;
+                    bitVal = 0xffffffff;
                 }
-                *(byte*)(iVar13 + 0x7bc) =
-                    (byte)((uVar7 & 0xff) << 4) & 0x30 | *(byte*)(iVar13 + 0x7bc) & 0xcf;
-                uVar10 = Obj_SetupObject((int)puVar9, 4, 0xff, 0xffffffff, *(int*)(iVar6 + 0x30));
-                *(undefined4*)(iVar13 + 0x7b0) = uVar10;
-                ObjLink_AttachChild(iVar6, *(int*)(iVar13 + 0x7b0), *(byte*)(iVar13 + 0x7bc) >> 4 & 3);
+                *(byte*)(state + 0x7bc) =
+                    (byte)((bitVal & 0xff) << 4) & 0x30 | *(byte*)(state + 0x7bc) & 0xcf;
+                spawnedObj = Obj_SetupObject((int)setup, 4, 0xff, 0xffffffff, *(int*)(objVal + 0x30));
+                *(undefined4*)(state + 0x7b0) = spawnedObj;
+                ObjLink_AttachChild(objVal, *(int*)(state + 0x7b0), *(byte*)(state + 0x7bc) >> 4 & 3);
             }
         }
-        else if (*(int*)(iVar13 + 0x7b0) != 0)
+        else if (*(int*)(state + 0x7b0) != 0)
         {
-            *(float*)(iVar13 + 0x7b4) = *(float*)(iVar13 + 0x7b4) - lbl_803DC074;
-            if ((double)*(float*)(iVar13 + 0x7b4) <= (double)lbl_803E306C)
+            *(float*)(state + 0x7b4) = *(float*)(state + 0x7b4) - lbl_803DC074;
+            if ((double)*(float*)(state + 0x7b4) <= (double)lbl_803E306C)
             {
-                objAnimFreeChildren(iVar6, iVar13, (int*)(iVar13 + 0x7b0));
+                objAnimFreeChildren(objVal, state, (int*)(state + 0x7b0));
             }
         }
-        if ((bVar3) && ((*(uint*)(iVar13 + 0x54) & 0x200) == 0))
+        if ((promptA) && ((*(uint*)(state + 0x54) & 0x200) == 0))
         {
-            *(float*)(iVar13 + 0x7ac) = lbl_803E3188;
-            if ((*(int*)(iVar13 + 0x7a8) == 0) && (Obj_IsLoadingLocked() != 0))
+            *(float*)(state + 0x7ac) = lbl_803E3188;
+            if ((*(int*)(state + 0x7a8) == 0) && (Obj_IsLoadingLocked() != 0))
             {
-                uVar7 = randomGetRange(0, 3);
-                if (uVar7 == 0)
+                bitVal = randomGetRange(0, 3);
+                if (bitVal == 0)
                 {
-                    if (bVar4)
+                    if (promptB)
                     {
-                        iVar8 = *(int*)(iVar6 + 0xb8);
-                        if (((*(byte*)(iVar8 + 0x58) >> 6 & 1) == 0) &&
-                            (((0x2f < *(short*)(iVar6 + 0xa0) || (*(short*)(iVar6 + 0xa0) < 0x29)) &&
-                                (bVar11 = FUN_800067f0(iVar6, 0x10), !bVar11))))
+                        ref = *(int*)(objVal + 0xb8);
+                        if (((*(byte*)(ref + 0x58) >> 6 & 1) == 0) &&
+                            (((0x2f < *(short*)(objVal + 0xa0) || (*(short*)(objVal + 0xa0) < 0x29)) &&
+                                (cond = FUN_800067f0(objVal, 0x10), !cond))))
                         {
-                            objAudioFn_800393f8(iVar6, (void*)(iVar8 + 0x3a8), 0x359, 0x500, 0xffffffff, 0);
+                            objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), 0x359, 0x500, 0xffffffff, 0);
                         }
                     }
-                    else if ((((bVar5) &&
-                                (iVar8 = *(int*)(iVar6 + 0xb8), (*(byte*)(iVar8 + 0x58) >> 6 & 1) == 0)) &&
-                            ((0x2f < *(short*)(iVar6 + 0xa0) || (*(short*)(iVar6 + 0xa0) < 0x29)))) &&
-                        (bVar11 = FUN_800067f0(iVar6, 0x10), !bVar11))
+                    else if ((((promptC) &&
+                                (ref = *(int*)(objVal + 0xb8), (*(byte*)(ref + 0x58) >> 6 & 1) == 0)) &&
+                            ((0x2f < *(short*)(objVal + 0xa0) || (*(short*)(objVal + 0xa0) < 0x29)))) &&
+                        (cond = FUN_800067f0(objVal, 0x10), !cond))
                     {
-                        objAudioFn_800393f8(iVar6, (void*)(iVar8 + 0x3a8), 0x358, 0x500, 0xffffffff, 0);
+                        objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), 0x358, 0x500, 0xffffffff, 0);
                     }
                 }
-                puVar9 = (undefined2*)Obj_AllocObjectSetup(0x20, 0x175);
-                local_38[0] = -1;
-                local_38[1] = -1;
-                local_38[2] = -1;
-                if (*(int*)(iVar13 + 0x7a8) != 0)
+                setup = (undefined2*)Obj_AllocObjectSetup(0x20, 0x175);
+                flagsA[0] = -1;
+                flagsA[1] = -1;
+                flagsA[2] = -1;
+                if (*(int*)(state + 0x7a8) != 0)
                 {
-                    local_38[*(byte*)(iVar13 + 0x7bc) >> 6] = '\x01';
+                    flagsA[*(byte*)(state + 0x7bc) >> 6] = '\x01';
                 }
-                if (*(int*)(iVar13 + 0x7b0) != 0)
+                if (*(int*)(state + 0x7b0) != 0)
                 {
-                    local_38[*(byte*)(iVar13 + 0x7bc) >> 4 & 3] = '\x01';
+                    flagsA[*(byte*)(state + 0x7bc) >> 4 & 3] = '\x01';
                 }
-                if (*(int*)(iVar13 + 0x7b8) != 0)
+                if (*(int*)(state + 0x7b8) != 0)
                 {
-                    local_38[*(byte*)(iVar13 + 0x7bc) >> 2 & 3] = '\x01';
+                    flagsA[*(byte*)(state + 0x7bc) >> 2 & 3] = '\x01';
                 }
-                if (local_38[0] == -1)
+                if (flagsA[0] == -1)
                 {
-                    uVar7 = 0;
+                    bitVal = 0;
                 }
-                else if (local_38[1] == -1)
+                else if (flagsA[1] == -1)
                 {
-                    uVar7 = 1;
+                    bitVal = 1;
                 }
-                else if (local_38[2] == -1)
+                else if (flagsA[2] == -1)
                 {
-                    uVar7 = 2;
+                    bitVal = 2;
                 }
-                else if (local_38[3] == -1)
+                else if (flagsA[3] == -1)
                 {
-                    uVar7 = 3;
+                    bitVal = 3;
                 }
                 else
                 {
-                    uVar7 = 0xffffffff;
+                    bitVal = 0xffffffff;
                 }
-                *(byte*)(iVar13 + 0x7bc) = (byte)((uVar7 & 0xff) << 6) | *(byte*)(iVar13 + 0x7bc) & 0x3f;
-                uVar10 = Obj_SetupObject((int)puVar9, 4, 0xff, 0xffffffff, *(int*)(iVar6 + 0x30));
-                *(undefined4*)(iVar13 + 0x7a8) = uVar10;
-                ObjLink_AttachChild(iVar6, *(int*)(iVar13 + 0x7a8), (ushort)(*(byte*)(iVar13 + 0x7bc) >> 6));
+                *(byte*)(state + 0x7bc) = (byte)((bitVal & 0xff) << 6) | *(byte*)(state + 0x7bc) & 0x3f;
+                spawnedObj = Obj_SetupObject((int)setup, 4, 0xff, 0xffffffff, *(int*)(objVal + 0x30));
+                *(undefined4*)(state + 0x7a8) = spawnedObj;
+                ObjLink_AttachChild(objVal, *(int*)(state + 0x7a8), (ushort)(*(byte*)(state + 0x7bc) >> 6));
             }
         }
-        else if (*(int*)(iVar13 + 0x7a8) != 0)
+        else if (*(int*)(state + 0x7a8) != 0)
         {
-            *(float*)(iVar13 + 0x7ac) = *(float*)(iVar13 + 0x7ac) - lbl_803DC074;
-            if ((double)*(float*)(iVar13 + 0x7ac) <= (double)lbl_803E306C)
+            *(float*)(state + 0x7ac) = *(float*)(state + 0x7ac) - lbl_803DC074;
+            if ((double)*(float*)(state + 0x7ac) <= (double)lbl_803E306C)
             {
-                objAnimFreeChildren(iVar6, iVar13, (int*)(iVar13 + 0x7a8));
+                objAnimFreeChildren(objVal, state, (int*)(state + 0x7a8));
             }
         }
         return commandMask;

@@ -2503,27 +2503,27 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
  */
 void ObjHits_CheckTrackContact(int objA, int objB)
 {
-    uint uVar1;
+    uint sphereIdx;
     int mask2;
-    byte bVar4;
+    byte contact;
     ObjHitsPriorityState* stateA;
     ObjHitsPriorityState* stateB;
-    uint uVar7;
-    float* puVar8;
+    uint bits;
+    float* curWalk;
     ObjHitsModelBank* modelBank;
-    int iVar3;
-    int iVar10;
-    int iVar11;
+    int volOff;
+    int prevWalk;
+    int i;
     ObjHitsModelFileHeader* modelFile;
-    float* puVar13;
-    int iVar14;
-    int iVar15;
-    int iVar16;
-    float* puVar17;
-    int iVar18;
-    int iVar23;
+    float* curSpheres;
+    int prevSpheres;
+    int rOff;
+    int ptOff;
+    float* curEntry;
+    int prevEntry;
+    int pointCount;
     ObjHitsModelHitVolume* hitVolume;
-    uint auStack_148[6];
+    uint bounds[6];
     struct
     {
         u8 out[64];
@@ -2533,8 +2533,8 @@ void ObjHits_CheckTrackContact(int objA, int objB)
         u8 pad58[4];
         int kinds[5];
     } hb;
-    float local_e8[18];
-    float local_130[18];
+    float endPoints[18];
+    float startPoints[18];
     f32 fConv;
 
     stateA = (ObjHitsPriorityState*)((GameObject*)objA)->anim.hitReactState;
@@ -2548,86 +2548,86 @@ void ObjHits_CheckTrackContact(int objA, int objB)
         {
             modelBank = ObjHits_GetActiveModel(objB);
             modelFile = modelBank->modelFile;
-            uVar7 = modelBank->hitBufferFlags >> 2 & 1;
-            puVar13 = modelBank->hitVolumeSphereBuffers[uVar7];
-            iVar14 = (int)modelBank->hitVolumeSphereBuffers[uVar7 ^ 1];
-            iVar23 = 0;
-            iVar15 = 0;
-            iVar16 = 0;
-            iVar3 = 0;
-            puVar8 = puVar13;
-            iVar10 = iVar14;
-            for (iVar11 = 0; iVar11 < (int)(uint)modelFile->hitVolumeCount; iVar11 = iVar11 + 1)
+            bits = modelBank->hitBufferFlags >> 2 & 1;
+            curSpheres = modelBank->hitVolumeSphereBuffers[bits];
+            prevSpheres = (int)modelBank->hitVolumeSphereBuffers[bits ^ 1];
+            pointCount = 0;
+            rOff = 0;
+            ptOff = 0;
+            volOff = 0;
+            curWalk = curSpheres;
+            prevWalk = prevSpheres;
+            for (i = 0; i < (int)(uint)modelFile->hitVolumeCount; i = i + 1)
             {
-                hitVolume = (ObjHitsModelHitVolume*)((u8*)modelFile->hitVolumes + iVar3);
-                if ((iVar11 == hitVolume->sphereIndex) &&
+                hitVolume = (ObjHitsModelHitVolume*)((u8*)modelFile->hitVolumes + volOff);
+                if ((i == hitVolume->sphereIndex) &&
                     ((mask2 & 1 << (int)hitVolume->maskBit) != 0))
                 {
-                    uVar7 = (uint)hitVolume->linkedSpheres;
-                    if (uVar7 != 0)
+                    bits = (uint)hitVolume->linkedSpheres;
+                    if (bits != 0)
                     {
-                        float* pfVar22 = (float*)((int)local_e8 + iVar16);
-                        float* pfVar21 = (float*)((int)local_130 + iVar16);
-                        u8* puVar20 = (u8*)&hb + iVar15;
-                        u8* puVar19 = (u8*)&hb + iVar23;
-                        for (; (u16)uVar7 != 0; uVar7 = (u16)((u16)uVar7 << 4))
+                        float* endPtr = (float*)((int)endPoints + ptOff);
+                        float* startPtr = (float*)((int)startPoints + ptOff);
+                        u8* radPtr = (u8*)&hb + rOff;
+                        u8* idPtr = (u8*)&hb + pointCount;
+                        for (; (u16)bits != 0; bits = (u16)((u16)bits << 4))
                         {
-                            uVar1 = (((u16)uVar7 & 0xf000) >> 0xc) + iVar11 & 0xffff;
-                            if (iVar23 < 4)
+                            sphereIdx = (((u16)bits & 0xf000) >> 0xc) + i & 0xffff;
+                            if (pointCount < 4)
                             {
-                                puVar17 = puVar13 + uVar1 * 4;
-                                *pfVar22 = playerMapOffsetX + puVar17[1];
-                                pfVar22[1] = puVar17[2];
-                                pfVar22[2] = playerMapOffsetZ + puVar17[3];
-                                iVar18 = iVar14 + uVar1 * 0x10;
-                                *pfVar21 = playerMapOffsetX + *(float*)(iVar18 + 4);
-                                pfVar21[1] = *(float*)(iVar18 + 8);
-                                pfVar21[2] = playerMapOffsetZ + *(float*)(iVar18 + 0xc);
-                                *(float*)(puVar20 + 0x40) = *puVar17;
-                                *(s8*)(puVar19 + 0x50) = -1;
-                                *(puVar19 + 0x54) = 7;
-                                pfVar22 = pfVar22 + 3;
-                                pfVar21 = pfVar21 + 3;
-                                puVar20 = puVar20 + 4;
-                                puVar19 = puVar19 + 1;
-                                iVar23 = iVar23 + 1;
-                                iVar15 = iVar15 + 4;
-                                iVar16 = iVar16 + 0xc;
+                                curEntry = curSpheres + sphereIdx * 4;
+                                *endPtr = playerMapOffsetX + curEntry[1];
+                                endPtr[1] = curEntry[2];
+                                endPtr[2] = playerMapOffsetZ + curEntry[3];
+                                prevEntry = prevSpheres + sphereIdx * 0x10;
+                                *startPtr = playerMapOffsetX + *(float*)(prevEntry + 4);
+                                startPtr[1] = *(float*)(prevEntry + 8);
+                                startPtr[2] = playerMapOffsetZ + *(float*)(prevEntry + 0xc);
+                                *(float*)(radPtr + 0x40) = *curEntry;
+                                *(s8*)(idPtr + 0x50) = -1;
+                                *(idPtr + 0x54) = 7;
+                                endPtr = endPtr + 3;
+                                startPtr = startPtr + 3;
+                                radPtr = radPtr + 4;
+                                idPtr = idPtr + 1;
+                                pointCount = pointCount + 1;
+                                rOff = rOff + 4;
+                                ptOff = ptOff + 0xc;
                             }
                         }
                     }
                     else
                     {
-                        if (iVar23 < 4)
+                        if (pointCount < 4)
                         {
-                            *(float*)((int)local_e8 + iVar16) = playerMapOffsetX + puVar8[1];
-                            *(float*)((int)local_e8 + iVar16 + 4) = puVar8[2];
-                            *(float*)((int)local_e8 + iVar16 + 8) = playerMapOffsetZ + puVar8[3];
-                            *(float*)((int)local_130 + iVar16) = playerMapOffsetX + *(float*)(iVar10 + 4);
-                            *(undefined4*)((int)local_130 + iVar16 + 4) = *(undefined4*)(iVar10 + 8);
-                            *(float*)((int)local_130 + iVar16 + 8) = playerMapOffsetZ + *(float*)(iVar10 + 0xc);
-                            *(float*)(((u8*)&hb + iVar15) + 0x40) = *puVar8;
-                            *(s8*)(((u8*)&hb + 0x50) + iVar23) = -1;
-                            *(((u8*)&hb + 0x54) + iVar23) = 7;
-                            iVar23 = iVar23 + 1;
-                            iVar15 = iVar15 + 4;
-                            iVar16 = iVar16 + 0xc;
+                            *(float*)((int)endPoints + ptOff) = playerMapOffsetX + curWalk[1];
+                            *(float*)((int)endPoints + ptOff + 4) = curWalk[2];
+                            *(float*)((int)endPoints + ptOff + 8) = playerMapOffsetZ + curWalk[3];
+                            *(float*)((int)startPoints + ptOff) = playerMapOffsetX + *(float*)(prevWalk + 4);
+                            *(undefined4*)((int)startPoints + ptOff + 4) = *(undefined4*)(prevWalk + 8);
+                            *(float*)((int)startPoints + ptOff + 8) = playerMapOffsetZ + *(float*)(prevWalk + 0xc);
+                            *(float*)(((u8*)&hb + rOff) + 0x40) = *curWalk;
+                            *(s8*)(((u8*)&hb + 0x50) + pointCount) = -1;
+                            *(((u8*)&hb + 0x54) + pointCount) = 7;
+                            pointCount = pointCount + 1;
+                            rOff = rOff + 4;
+                            ptOff = ptOff + 0xc;
                         }
                     }
                 }
-                iVar3 = iVar3 + OBJHITS_MODEL_HIT_VOLUME_SIZE;
-                puVar8 = puVar8 + 4;
-                iVar10 = iVar10 + 0x10;
+                volOff = volOff + OBJHITS_MODEL_HIT_VOLUME_SIZE;
+                curWalk = curWalk + 4;
+                prevWalk = prevWalk + 0x10;
             }
         }
         else
         {
-            local_e8[0] = ((GameObject*)objA)->anim.worldPosX;
-            local_e8[1] = ((GameObject*)objA)->anim.worldPosY;
-            local_e8[2] = ((GameObject*)objA)->anim.worldPosZ;
-            local_130[0] = ((GameObject*)objA)->anim.previousWorldPosX;
-            local_130[1] = ((GameObject*)objA)->anim.previousWorldPosY;
-            local_130[2] = ((GameObject*)objA)->anim.previousWorldPosZ;
+            endPoints[0] = ((GameObject*)objA)->anim.worldPosX;
+            endPoints[1] = ((GameObject*)objA)->anim.worldPosY;
+            endPoints[2] = ((GameObject*)objA)->anim.worldPosZ;
+            startPoints[0] = ((GameObject*)objA)->anim.previousWorldPosX;
+            startPoints[1] = ((GameObject*)objA)->anim.previousWorldPosY;
+            startPoints[2] = ((GameObject*)objA)->anim.previousWorldPosZ;
             fConv = (f32)(u32) * (u8*)(*(int*)&((GameObject*)objA)->anim.modelInstance + 0x8f);
             if (fConv < lbl_803DE91C)
             {
@@ -2636,36 +2636,36 @@ void ObjHits_CheckTrackContact(int objA, int objB)
             hb.radii[0] = fConv;
             *(s8*)&hb.ids[0] = -1;
             hb.sevens[0] = 7;
-            iVar23 = 1;
+            pointCount = 1;
         }
-        if (iVar23 != 0)
+        if (pointCount != 0)
         {
-            hitDetect_calcSweptSphereBounds(auStack_148, local_130, local_e8, hb.radii, iVar23);
-            hitDetectFn_800691c0(objB, auStack_148, (uint)stateB->trackContactMask, 1);
-            bVar4 = hitDetectFn_80067958(objB, local_130, local_e8, iVar23, hb.out, 0);
-            if (bVar4 != 0)
+            hitDetect_calcSweptSphereBounds(bounds, startPoints, endPoints, hb.radii, pointCount);
+            hitDetectFn_800691c0(objB, bounds, (uint)stateB->trackContactMask, 1);
+            contact = hitDetectFn_80067958(objB, startPoints, endPoints, pointCount, hb.out, 0);
+            if (contact != 0)
             {
-                if ((bVar4 & 1) != 0)
+                if ((contact & 1) != 0)
                 {
-                    iVar23 = 0;
+                    pointCount = 0;
                 }
-                else if ((bVar4 & 2) != 0)
+                else if ((contact & 2) != 0)
                 {
-                    iVar23 = 1;
+                    pointCount = 1;
                 }
-                else if ((bVar4 & 4) != 0)
+                else if ((contact & 4) != 0)
                 {
-                    iVar23 = 2;
+                    pointCount = 2;
                 }
                 else
                 {
-                    iVar23 = 3;
+                    pointCount = 3;
                 }
-                stateB->contactHitVolume = hb.ids[iVar23];
-                stateB->contactPosX = local_e8[iVar23 * 3];
-                stateB->contactPosY = local_e8[iVar23 * 3 + 1];
-                stateB->contactPosZ = local_e8[iVar23 * 3 + 2];
-                if (hb.kinds[iVar23] != 0)
+                stateB->contactHitVolume = hb.ids[pointCount];
+                stateB->contactPosX = endPoints[pointCount * 3];
+                stateB->contactPosY = endPoints[pointCount * 3 + 1];
+                stateB->contactPosZ = endPoints[pointCount * 3 + 2];
+                if (hb.kinds[pointCount] != 0)
                 {
                     stateB->contactFlags = stateB->contactFlags | 2;
                 }
