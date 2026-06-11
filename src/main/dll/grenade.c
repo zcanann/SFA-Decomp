@@ -7,6 +7,8 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/dll/tricky_state.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 
 extern int randomGetRange(int min, int max);
@@ -85,7 +87,6 @@ extern f32 lbl_803E2454;
 extern f32 lbl_803E2458;
 extern f32 lbl_803E2484;
 extern f32 lbl_803E2530;
-extern int ObjHits_GetPriorityHit(int obj, int* out, int a, int b);
 extern f32 lbl_803E2534;
 extern f32 lbl_803E24A8;
 extern f32 lbl_803E24EC;
