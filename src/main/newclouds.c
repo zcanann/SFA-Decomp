@@ -1,5 +1,6 @@
 #include "main/newclouds_state.h"
 #include "main/newclouds.h"
+#include "main/object_transform.h"
 #include "main/resource.h"
 
 typedef struct LightningEffect
@@ -20,8 +21,10 @@ extern void mm_free(void* ptr);
 extern void* Obj_GetActiveModel(void* obj);
 extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
 extern void lightningRender(void* state);
-extern void Obj_GetWorldPosition(void* obj, f32* x, f32* y, f32* z);
 extern s16* Camera_GetCurrentViewSlot(void);
+extern void Obj_BuildWorldTransformMatrix(void* obj, f32 mtx[3][4], int flags);
+extern void skyFn_8008a04c(void);
+extern void skyFn_8008a500(void);
 extern int randomGetRange(int min, int max);
 
 extern int* gSHthorntailAnimationInterface;
@@ -2165,7 +2168,7 @@ void dll_07_func06(void)
             }
             if (*(u8**)D7_CLOUD != NULL)
             {
-                Obj_GetWorldPosition(*(u8**)D7_CLOUD, &pos[0], py, pz);
+                Obj_GetWorldPosition((u32)*(u8 **)D7_CLOUD, &pos[0], py, pz);
             }
             if (D7_CLOUD[0x1452] != 0 && cam != NULL)
             {
