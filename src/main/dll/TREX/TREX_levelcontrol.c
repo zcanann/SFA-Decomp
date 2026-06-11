@@ -48,30 +48,11 @@ typedef struct SBCannonBallState
 } SBCannonBallState;
 
 
-extern undefined4 FUN_8000680c();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068fc();
-extern undefined4 FUN_80006920();
-extern undefined4 FUN_800069bc();
-extern undefined4 FUN_8001771c();
-extern uint FUN_80017730();
-extern undefined8 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017a28();
-extern int FUN_80017a98();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern int FUN_80017b00();
 extern void ModelLightStruct_free(void* effect);
 extern int ObjHits_GetPriorityHit();
 extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 FUN_8008112c();
-extern uint FUN_8028683c();
-extern undefined4 FUN_80286888();
-extern double FUN_80293900();
 
-extern undefined4 DAT_803dc070;
 extern f32 lbl_803E6520;
 extern f32 lbl_803E6524;
 extern f32 lbl_803E6528;
