@@ -579,7 +579,7 @@ void kaldachom_update(int obj)
             {
                 control = ((CampfireState*)state)->control;
                 texPtr = (int*)objFindTexture(obj, 0, 0);
-                control->textureScrollAngle = control->textureScrollAngle + 0x1000;
+                control->textureScrollAngle += 0x1000;
                 scrollPhase = mathSinf((lbl_803E30B4 * (f32)(s32)control->textureScrollAngle) / lbl_803E30B8
                 )
                 ;
