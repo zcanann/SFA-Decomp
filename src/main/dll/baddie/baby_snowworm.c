@@ -3976,8 +3976,8 @@ extern f32 lbl_803E20B8; /* 0.25f */
 void pauseMenuDoSave(void)
 {
     u32 color[2];
-    int y;
     int x;
+    int y;
     f32 scale;
     u32 texture;
     u8 i;
