@@ -246,6 +246,21 @@ SfxTrigger* Sfx_FindTrigger(u16 id)
 }
 #pragma dont_inline reset
 
+static inline SfxObjectChannel* Sfx_FindFreeObjectChannel(void)
+{
+    SfxObjectChannel* ch = (SfxObjectChannel*)(int)gSfxObjectChannels;
+    s32 i;
+    for (i = SFX_OBJECT_CHANNEL_COUNT - 1; i >= 0; i--)
+    {
+        if (ch->handle == (u32) - 1)
+        {
+            return ch;
+        }
+        ch++;
+    }
+    return NULL;
+}
+
 SfxObjectChannel* Sfx_AllocObjectChannel(a, b, pitch, c, d)
 s16 a;
 int b;
@@ -264,20 +279,7 @@ int d;
         return 0;
     }
 
-    ch = (SfxObjectChannel*)(int)gSfxObjectChannels;
-    for (i = SFX_OBJECT_CHANNEL_COUNT - 1; i >= 0; i--)
-    {
-        if (ch->handle != (u32) - 1)
-        {
-            ch++;
-        }
-        else
-        {
-            goto found;
-        }
-    }
-    ch = NULL;
-found:
+    ch = Sfx_FindFreeObjectChannel();
     if (ch == NULL)
     {
         return 0;
@@ -312,9 +314,7 @@ found:
     ch->globalCtrlDisabled = (u8)d;
 
     {
-        u32 hi = gSfxObjectChannelAgeHi;
-        u32 lo = gSfxObjectChannelAgeLo;
-        u64 age = ((u64)hi << 32) | lo;
+        u64 age = gSfxObjectChannelAgeLo | ((u64)gSfxObjectChannelAgeHi << 32);
         u64 next = age + 1;
         gSfxObjectChannelAgeLo = (u32)next;
         gSfxObjectChannelAgeHi = (u32)(next >> 32);
@@ -2704,12 +2704,41 @@ void Music_Update(void)
     while (i-- != 0);
 }
 
+static inline MusicTrackSlot* Music_FindTrackSlot(int track)
+{
+    MusicTrackSlot* slot = (MusicTrackSlot*)sMusicTrackTable;
+    int i;
+    for (i = 99; i >= 0; i--)
+    {
+        if (slot->id == track)
+        {
+            return slot;
+        }
+        slot++;
+    }
+    return NULL;
+}
+
+static inline MusicChannel* Music_FindFreeChannel(void)
+{
+    MusicChannel* channel = gMusicChannels;
+    int i;
+    for (i = 15; i >= 0; i--)
+    {
+        if (channel->status == 0)
+        {
+            return channel;
+        }
+        channel++;
+    }
+    return NULL;
+}
+
 void Music_LoadChannelForTrigger(MusicTrigger* trigger)
 {
     MusicTrackSlot* slot;
     MusicChannel* channel;
     int counter;
-    int i;
     int track;
 
     if (((u32)trigger->pad[0xb] >> 5) & 1)
@@ -2727,32 +2756,12 @@ void Music_LoadChannelForTrigger(MusicTrigger* trigger)
         }
     }
     track = trigger->track;
-    slot = (MusicTrackSlot*)sMusicTrackTable;
-    for (i = 99; i >= 0; i--)
-    {
-        if (slot->id == track)
-        {
-            goto foundSlot;
-        }
-        slot++;
-    }
-    slot = NULL;
-foundSlot:
+    slot = Music_FindTrackSlot(track);
     if (slot == NULL)
     {
         return;
     }
-    channel = gMusicChannels;
-    for (i = 15; i >= 0; i--)
-    {
-        if (channel->status == 0)
-        {
-            goto foundChannel;
-        }
-        channel++;
-    }
-    channel = NULL;
-foundChannel:
+    channel = Music_FindFreeChannel();
     if (channel == NULL)
     {
         return;
