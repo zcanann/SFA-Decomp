@@ -532,8 +532,7 @@ void sideCommandEnable(int obj, int targetObj, int commandKind, int commandType)
     {
         if (*(uint*)(commandEntry + 0x748) == (uint)targetObj)
         {
-            commandEntry = state + commandIndex * 8;
-            *(u8*)(commandEntry + 0x74e) = 3;
+            *(u8*)((state + 0x74e) + commandIndex * 8) = 3;
             return;
         }
         commandEntry = commandEntry + 8;
