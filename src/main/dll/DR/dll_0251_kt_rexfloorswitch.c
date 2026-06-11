@@ -82,7 +82,7 @@ void ktrexfloorswitch_init(int obj, char* arg)
     if (r != -1)
     {
         r = (int)(*gRomCurveInterface)->getById(r);
-        if (r != 0)
+        if ((u32)r != 0)
         {
             ((GameObject*)obj)->anim.localPosX = *(f32*)(r + 0x8);
             ((GameObject*)obj)->anim.localPosZ = *(f32*)(r + 0x10);
