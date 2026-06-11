@@ -320,7 +320,7 @@ void copyMatrix44(f32* src, f32* dst)
     dst[15] = src[15];
 }
 
-void Vec3_Normalize(f32* v)
+f32 Vec3_Normalize(f32* v)
 {
     f32 len;
     f32 s;
@@ -333,6 +333,7 @@ void Vec3_Normalize(f32* v)
         v[1] *= s;
         v[2] *= s;
     }
+    return len;
 }
 
 #pragma fp_contract off

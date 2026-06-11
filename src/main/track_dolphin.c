@@ -8,6 +8,7 @@
 #include "main/objanim_internal.h"
 #include "main/objhits.h"
 #include "main/track_dolphin.h"
+#include "main/vecmath.h"
 #include "dolphin/os/OSFastCast.h"
 
 typedef struct TrackP6Entry
@@ -3261,8 +3262,6 @@ void fn_800659A8(f32 a, f32 b, void* p3, void* p4, void* desc, int e)
     }
 }
 
-extern f32 Vec3_Normalize(f32 * v);
-extern void Vec3_Cross(f32 * a, f32 * b, f32 * out);
 extern f32 fn_802925C4(f32 x, f32 y);
 extern f32 fn_802943F4(f32 x);
 extern f32 floor(f32 x);
