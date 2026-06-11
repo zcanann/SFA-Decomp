@@ -8,6 +8,7 @@
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
 #include "main/resource.h"
+#include "main/vecmath.h"
 
 typedef struct ObjLibRegionList ObjLibRegionList;
 
@@ -23,7 +24,6 @@ extern void OSReport(const char* fmt, ...);
 extern float* ObjModel_GetJointMatrix(int* model, int jointIndex);
 extern void Obj_BuildWorldTransformMatrix(void* obj, float* mtx, int flags);
 extern void mtx44Transpose(float* src, float* dst);
-extern void mtxRotateByVec3s(float* mtx, void* transform);
 extern int* Obj_GetActiveModel(int obj);
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_UpdateObject(ObjAnimComponent * obj, ObjModelInstance * modelInstance);
