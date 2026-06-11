@@ -576,16 +576,16 @@ int objAnimFn_8013a3f0(f32 speed, int obj, int newState, u32 flags)
     *(f32 *)(t + 0x38) = speed;
     *(u32 *)(t + 0x50) = flags;
     if ((flags & 0x20) == 0) {
-        *(u32 *)(t + 0x54) = *(u32 *)(t + 0x54) & 0xffffffdf;
+        *(u32 *)(t + 0x54) = *(u32 *)(t + 0x54) & ~(u64)0x20;
     }
     if ((flags & 0x40) == 0) {
-        *(u32 *)(t + 0x54) = *(u32 *)(t + 0x54) & 0xffffffbf;
+        *(u32 *)(t + 0x54) = *(u32 *)(t + 0x54) & ~(u64)0x40;
     }
     if ((flags & 0x80) == 0) {
-        *(u32 *)(t + 0x54) = *(u32 *)(t + 0x54) & 0xffffff7f;
+        *(u32 *)(t + 0x54) = *(u32 *)(t + 0x54) & ~(u64)0x80;
     }
     if ((flags & 0x100) == 0) {
-        *(u32 *)(t + 0x54) = *(u32 *)(t + 0x54) & 0xfffffeff;
+        *(u32 *)(t + 0x54) = *(u32 *)(t + 0x54) & ~(u64)0x100;
     }
     fz = lbl_803E23E8;
     *(f32 *)(t + 0x40) = fz;
@@ -1480,16 +1480,16 @@ undefined4 FUN_80139a4c(double param_1,int param_2,int param_3,uint param_4)
   *(float *)(iVar2 + 0x38) = (float)param_1;
   *(uint *)(iVar2 + 0x50) = param_4;
   if ((param_4 & 0x20) == 0) {
-    *(uint *)(iVar2 + 0x54) = *(uint *)(iVar2 + 0x54) & 0xffffffdf;
+    *(uint *)(iVar2 + 0x54) = *(uint *)(iVar2 + 0x54) & ~(u64)0x20;
   }
   if ((param_4 & 0x40) == 0) {
-    *(uint *)(iVar2 + 0x54) = *(uint *)(iVar2 + 0x54) & 0xffffffbf;
+    *(uint *)(iVar2 + 0x54) = *(uint *)(iVar2 + 0x54) & ~(u64)0x40;
   }
   if ((param_4 & 0x80) == 0) {
-    *(uint *)(iVar2 + 0x54) = *(uint *)(iVar2 + 0x54) & 0xffffff7f;
+    *(uint *)(iVar2 + 0x54) = *(uint *)(iVar2 + 0x54) & ~(u64)0x80;
   }
   if ((param_4 & 0x100) == 0) {
-    *(uint *)(iVar2 + 0x54) = *(uint *)(iVar2 + 0x54) & 0xfffffeff;
+    *(uint *)(iVar2 + 0x54) = *(uint *)(iVar2 + 0x54) & ~(u64)0x100;
   }
   fVar1 = FLOAT_803e3078;
   *(float *)(iVar2 + 0x40) = FLOAT_803e3078;
