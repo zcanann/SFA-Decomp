@@ -142,31 +142,31 @@ extern f32 lbl_803E30CC;
 #pragma dont_inline on
 void kaldaChomFn_8016821c(int obj, KaldaChomControl *control)
 {
-  u8 cVar1;
-  int iVar3;
-  int iVar2;
+  u8 loadLocked;
+  int placement;
+  int work;
 
-  iVar3 = *(int *)&((GameObject *)obj)->anim.placementData;
+  placement = *(int *)&((GameObject *)obj)->anim.placementData;
   lbl_803DDA94 =
-       lbl_803E30A0 + (float)(int)*(char *)(iVar3 + 0x28) / lbl_803E30A4;
+       lbl_803E30A0 + (float)(int)*(char *)(placement + 0x28) / lbl_803E30A4;
   control->hitFlashTimer = lbl_803E308C;
   Sfx_PlayFromObject(obj,SFXkr_land2);
-  iVar2 = 0x28;
+  work = 0x28;
   do {
     (*gPartfxInterface)->spawnObject((void *)obj,0x717,0,4,0xffffffff,&lbl_803DDA94);
-    iVar2 = iVar2 + -1;
-  } while (iVar2 != 0);
-  if ((control->spawnedDustObj == NULL) && (cVar1 = Obj_IsLoadingLocked(), cVar1 != '\0')) {
-    iVar2 = Obj_AllocObjectSetup(0x24,0x55e);
-    *(f32 *)(iVar2 + 8) = ((GameObject *)obj)->anim.localPosX;
-    *(float *)(iVar2 + 0xc) = lbl_803E30A8 + ((GameObject *)obj)->anim.localPosY;
-    *(f32 *)(iVar2 + 0x10) = ((GameObject *)obj)->anim.localPosZ;
-    *(undefined *)(iVar2 + 4) = *(undefined *)(iVar3 + 4);
-    *(undefined *)(iVar2 + 5) = *(undefined *)(iVar3 + 5);
-    *(undefined *)(iVar2 + 6) = *(undefined *)(iVar3 + 6);
-    *(undefined *)(iVar2 + 7) = *(undefined *)(iVar3 + 7);
-    iVar2 = Obj_SetupObject(iVar2,5,0xffffffff,0xffffffff,0);
-    control->spawnedDustObj = (void *)iVar2;
+    work = work + -1;
+  } while (work != 0);
+  if ((control->spawnedDustObj == NULL) && (loadLocked = Obj_IsLoadingLocked(), loadLocked != '\0')) {
+    work = Obj_AllocObjectSetup(0x24,0x55e);
+    *(f32 *)(work + 8) = ((GameObject *)obj)->anim.localPosX;
+    *(float *)(work + 0xc) = lbl_803E30A8 + ((GameObject *)obj)->anim.localPosY;
+    *(f32 *)(work + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+    *(undefined *)(work + 4) = *(undefined *)(placement + 4);
+    *(undefined *)(work + 5) = *(undefined *)(placement + 5);
+    *(undefined *)(work + 6) = *(undefined *)(placement + 6);
+    *(undefined *)(work + 7) = *(undefined *)(placement + 7);
+    work = Obj_SetupObject(work,5,0xffffffff,0xffffffff,0);
+    control->spawnedDustObj = (void *)work;
     *(float *)((u8 *)control->spawnedDustObj + 8) = lbl_803DDA94;
   }
   return;

@@ -55,8 +55,8 @@ int drshackle_updateSwingBlend(int obj, int state)
 {
     f32 fVar1;
     f32 fVar2;
-    int iVar3;
-    int iVar4;
+    int yawDelta;
+    int hitResult;
     f32 fade;
 
     {
@@ -77,7 +77,7 @@ int drshackle_updateSwingBlend(int obj, int state)
         fade = *(f32 *)&lbl_803E5AE8;
     }
 
-    iVar4 = (*(int (**)(int, int, u8, int, int, f32))(*gCheckpointInterface + 0x18))(
+    hitResult = (*(int (**)(int, int, u8, int, int, f32))(*gCheckpointInterface + 0x18))(
         state, state + DRSHACKLE_COLLIDER_OFFSET, *(u8 *)(state + DRSHACKLE_COLLIDER_MODE_OFFSET),
         1, 0, fade);
 
@@ -85,22 +85,22 @@ int drshackle_updateSwingBlend(int obj, int state)
 
     (*(void (**)(int))(*gCheckpointInterface + 0x2c))(state + DRSHACKLE_COLLIDER_OFFSET);
 
-    if (iVar4 != 0) {
+    if (hitResult != 0) {
         *(f32 *)(state + DRSHACKLE_SWING_BLEND_OFFSET) = lbl_803E5AE8;
         return 0;
     }
 
-    iVar3 = (s32)(u16)getAngle(((GameObject *)obj)->anim.localPosX - *(f32 *)(state + 0xc),
+    yawDelta = (s32)(u16)getAngle(((GameObject *)obj)->anim.localPosX - *(f32 *)(state + 0xc),
                                 ((GameObject *)obj)->anim.localPosZ - *(f32 *)(state + 0x14)) -
              (s32)(u16)*(s16 *)(state + DRSHACKLE_YAW_OFFSET);
-    if (0x8000 < iVar3) {
-        iVar3 = iVar3 + -0xffff;
+    if (0x8000 < yawDelta) {
+        yawDelta = yawDelta + -0xffff;
     }
-    if (iVar3 < -0x8000) {
-        iVar3 = iVar3 + 0xffff;
+    if (yawDelta < -0x8000) {
+        yawDelta = yawDelta + 0xffff;
     }
     {
-        s32 iVar2 = iVar3 / DRSHACKLE_ANGLE_STEP;
+        s32 iVar2 = yawDelta / DRSHACKLE_ANGLE_STEP;
         if (iVar2 < -DRSHACKLE_SWING_BLEND_LIMIT) {
             iVar2 = -DRSHACKLE_SWING_BLEND_LIMIT;
         } else if (iVar2 > DRSHACKLE_SWING_BLEND_LIMIT) {
@@ -123,7 +123,7 @@ int drshackle_updateSwingBlend(int obj, int state)
         f32 ang = fn_801EA678(obj, state);
         ang = -ang;
         if (*(f32 *)(state + DRSHACKLE_LAST_PITCH_OFFSET) < ang ||
-            iVar3 > DRSHACKLE_ANGLE_RETURN_LIMIT || iVar3 < -DRSHACKLE_ANGLE_RETURN_LIMIT) {
+            yawDelta > DRSHACKLE_ANGLE_RETURN_LIMIT || yawDelta < -DRSHACKLE_ANGLE_RETURN_LIMIT) {
             *(int *)(state + DRSHACKLE_SWING_RETURN_OFFSET) = 0;
         } else if (*(f32 *)(state + DRSHACKLE_LAST_PITCH_OFFSET) > ang) {
             *(int *)(state + DRSHACKLE_SWING_RETURN_OFFSET) = DRSHACKLE_SWING_RETURN_LEFT;

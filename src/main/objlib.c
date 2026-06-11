@@ -2707,26 +2707,26 @@ void ObjPath_GetPointWorldPosition(int obj,int pointIndex,float *outX,float *out
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
+int Obj_GetYawDeltaToObject(ushort *obj,int target,float *distOut)
 {
-  int iVar1;
-  float dVar3;
-  float dVar2;
+  int yawDelta;
+  float dx;
+  float dz;
 
-  dVar3 = *(float *)(param_1 + 6) - *(float *)(param_2 + 0xc);
-  dVar2 = *(float *)(param_1 + 10) - *(float *)(param_2 + 0x14);
-  iVar1 = getAngle(dVar3, dVar2);
-  if (param_3 != (float *)0x0) {
-    *param_3 = sqrtf(dVar3 * dVar3 + dVar2 * dVar2);
+  dx = *(float *)(obj + 6) - *(float *)(target + 0xc);
+  dz = *(float *)(obj + 10) - *(float *)(target + 0x14);
+  yawDelta = getAngle(dx, dz);
+  if (distOut != (float *)0x0) {
+    *distOut = sqrtf(dx * dx + dz * dz);
   }
-  iVar1 = (int)(short)iVar1 - (uint)(ushort)*(short *)param_1;
-  if (0x8000 < iVar1) {
-    iVar1 = iVar1 + -0xffff;
+  yawDelta = (int)(short)yawDelta - (uint)(ushort)*(short *)obj;
+  if (0x8000 < yawDelta) {
+    yawDelta = yawDelta + -0xffff;
   }
-  if (iVar1 < -0x8000) {
-    iVar1 = iVar1 + 0xffff;
+  if (yawDelta < -0x8000) {
+    yawDelta = yawDelta + 0xffff;
   }
-  return (int)(short)iVar1;
+  return (int)(short)yawDelta;
 }
 
 /*
