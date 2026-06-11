@@ -92,54 +92,17 @@ typedef struct Dll1DBState
 } Dll1DBState;
 
 
-extern undefined8 FUN_80006724();
-extern undefined8 FUN_80006728();
-extern undefined4 FUN_800067c0();
-extern undefined4 FUN_8000680c();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006a10();
-extern undefined4 FUN_80006a1c();
-extern undefined4 FUN_80006a30();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern double FUN_80017714();
-extern undefined4 FUN_8001771c();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017a88();
-extern int FUN_80017a98();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined4 FUN_80017af8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_AddContactObject();
 extern int ObjHits_GetPriorityHit();
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
-extern int FUN_80039520();
-extern undefined4 FUN_8003b818();
-extern undefined8 FUN_80047fdc();
-extern undefined4 FUN_80053b3c();
-extern int FUN_800620e8();
-extern int FUN_800632f4();
-extern undefined4 FUN_80080f14();
-extern undefined4 FUN_800e8630();
-extern int FUN_800e8b98();
-extern undefined4 FUN_800ea9b8();
 extern undefined4 SH_LevelControl_runBloopEvent();
-extern undefined4 FUN_801d8480();
-extern int FUN_8028683c();
-extern undefined4 FUN_80286888();
-extern double FUN_80293900();
-extern uint FUN_80294d00();
-extern undefined4 FUN_80294da0();
 
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803dcb90;
 extern EffectInterface** gPartfxInterface;
-extern undefined4* DAT_803dd718;
-extern undefined4* DAT_803dd71c;
 extern f64 DOUBLE_803e57c0;
 extern f64 DOUBLE_803e57d8;
 extern f64 DOUBLE_803e57f8;
@@ -181,7 +144,6 @@ extern f32 lbl_803E5828;
 extern f32 lbl_803E5834;
 extern f32 lbl_803E5838;
 extern f32 lbl_803E583C;
-extern undefined uRam803dcb93;
 
 /*
  * --INFO--
