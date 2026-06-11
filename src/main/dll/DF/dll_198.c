@@ -101,7 +101,7 @@ void dfropenode_update(DFropenodeObject* obj)
         {
             candidateObj = *objects;
             if ((candidateObj->objType == 0x36) &&
-                ((u32)objDef[0x18] == candidateObj->definition[0x18] - 1))
+                ((s32)objDef[0x18] == candidateObj->definition[0x18] - 1))
             {
                 linkedObj = candidateObj;
             }
@@ -124,7 +124,7 @@ void dfropenode_update(DFropenodeObject* obj)
         angle = getAngle(dx, dz);
         if (angle > 0x8000)
         {
-            angle -= 0xFFFF;
+            angle = (s16)(angle - 0xFFFF);
         }
         if (angle < -0x8000)
         {
