@@ -3265,7 +3265,7 @@ extern void romListReadCb();
 #pragma peephole off
 void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
 {
-    char buf[1048];
+    char buf[1024];
     int fi;
     int ok;
     int* p;
