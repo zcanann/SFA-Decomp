@@ -119,6 +119,7 @@ void fastCastFloatToS16(s16* p, float x)
     }
 }
 
+#pragma optimization_level 0
 float fastFloorf(float x)
 {
     register float input = x;
@@ -160,3 +161,4 @@ float fastFloorf(float x)
 
     return input;
 }
+#pragma optimization_level reset
