@@ -349,12 +349,14 @@ void appleontree_init(int obj, int def)
     ((CrackAnimState *)state)->unk0 = ((AppleontreeObjectDef *)def)->unk18;
     ((CrackAnimState *)state)->duration = (f32)((AppleontreeObjectDef *)def)->duration;
     ((CrackAnimState *)state)->elapsed = (f32)((AppleontreeObjectDef *)def)->elapsed;
-    ((CrackAnimState *)state)->stageEnd0 = (f32)((AppleontreeObjectDef *)def)->unk20 / lbl_803E3828;
-    ((CrackAnimState *)state)->stageEnd1 = ((CrackAnimState *)state)->stageEnd0 + (f32)((AppleontreeObjectDef *)def)->unk21 / lbl_803E3828;
-    ((CrackAnimState *)state)->stageEnd2 = ((CrackAnimState *)state)->stageEnd1 + (f32)((AppleontreeObjectDef *)def)->unk22 / lbl_803E3828;
-    ((CrackAnimState *)state)->stageEnd3 = ((CrackAnimState *)state)->stageEnd2 + (f32)((AppleontreeObjectDef *)def)->unk23 / lbl_803E3828;
-    ((CrackAnimState *)state)->unk20 = (f32)((AppleontreeObjectDef *)def)->unk24 / lbl_803E3828;
-    ((CrackAnimState *)state)->unk28 = (f32)((AppleontreeObjectDef *)def)->unk25 / lbl_803E3828;
+    {
+    f32 scale = lbl_803E3828;
+    ((CrackAnimState *)state)->stageEnd0 = (f32)((AppleontreeObjectDef *)def)->unk20 / scale;
+    ((CrackAnimState *)state)->stageEnd1 = ((CrackAnimState *)state)->stageEnd0 + (f32)((AppleontreeObjectDef *)def)->unk21 / scale;
+    ((CrackAnimState *)state)->stageEnd2 = ((CrackAnimState *)state)->stageEnd1 + (f32)((AppleontreeObjectDef *)def)->unk22 / scale;
+    ((CrackAnimState *)state)->stageEnd3 = ((CrackAnimState *)state)->stageEnd2 + (f32)((AppleontreeObjectDef *)def)->unk23 / scale;
+    ((CrackAnimState *)state)->unk20 = (f32)((AppleontreeObjectDef *)def)->unk24 / scale;
+    ((CrackAnimState *)state)->unk28 = (f32)((AppleontreeObjectDef *)def)->unk25 / scale;
     ((CrackAnimState *)state)->unk28 = ((CrackAnimState *)state)->unk28 * lbl_803E37DC;
     ((CrackAnimState *)state)->unk24 = lbl_803E37C8;
     ((CrackAnimState *)state)->unk38 = 0;
@@ -397,6 +399,7 @@ void appleontree_init(int obj, int def)
     }
 
     ObjMsg_AllocQueue(obj, 2);
+    }
 }
 
 /* Trivial 4b 0-arg blr leaves. */
