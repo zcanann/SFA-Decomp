@@ -2,6 +2,7 @@
 #include "main/dll/objpathtransform_struct.h"
 #include "main/dll/objmodel_types.h"
 #include "main/asset_load.h"
+#include "main/audio/sfx.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
@@ -92,7 +93,6 @@ extern char sObjFreeObjdefError[];
 extern void playerUpdateWhileTimeStopped(u8 * obj);
 extern void playerRenderQuakeSpell(void);
 extern void playerUpdate(u8 * obj);
-extern void Sfx_PlayFromObject(u8* obj, int sfx);
 extern u32 lbl_803DCB78;
 extern void objFn_80065604(void);
 extern void Obj_UpdateModelBlendStates(void);
@@ -117,8 +117,6 @@ extern void AudioStream_StopAll(void);
 extern int lbl_803DB448;
 extern int lbl_803DCB8C;
 extern void mapLoadForObject(int id, void* obj);
-extern void Sfx_RemoveLoopedObjectSoundForObject(u8 * obj);
-extern void Sfx_StopObjectChannel(u8* obj, int ch);
 extern char sObjFreeNonExistentObjectWarning[];
 extern void* lbl_803DCB90;
 extern void* lbl_803DCBC0;
@@ -1814,7 +1812,7 @@ void Obj_UpdateObject(u8* obj)
             cb(obj, 0x7fb, 0, 0x50, 0);
             cb = (void (*)(u8*, int, int, int, int))*(int*)(*gBoneParticleEffectInterface + 0xc);
             cb(obj, 0x7fc, 0, 0x32, 0);
-            Sfx_PlayFromObject(obj, 0x47b);
+            Sfx_PlayFromObject((u32)obj, 0x47b);
         }
     }
     if ((((GameObject*)obj)->objectFlags & 0x8000) == 0)
@@ -2359,8 +2357,8 @@ void Obj_FreeObject(u8* obj)
     {
         return;
     }
-    Sfx_RemoveLoopedObjectSoundForObject(obj);
-    Sfx_StopObjectChannel(obj, 0x7f);
+    Sfx_RemoveLoopedObjectSoundForObject((u32)obj);
+    Sfx_StopObjectChannel((u32)obj, 0x7f);
     if (((GameObject*)obj)->objectFlags & 0x10)
     {
         i = 0;
