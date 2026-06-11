@@ -72,7 +72,9 @@ void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
     flags = state->flags;
     if ((flags >> 7 & 1) != 0)
     {
-        if ((flags >> 6 & 1) == 0)
+        switch (flags >> 6 & 1)
+        {
+        case 0:
         {
             if (state->liftReset == 0)
             {
@@ -117,14 +119,11 @@ void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
             ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
                                                       &state->hitCooldown);
             state->previousLiftHeight = state->liftHeight;
-            ObjAnim_SetMoveProgress((f32)state->liftHeight / lbl_803E3BCC, (ObjAnimComponent*)obj);
+            ((void(*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, (f32)state->liftHeight / lbl_803E3BCC);
         }
-        else
-        {
-            goto done;
+        break;
         }
     }
-done:;
 }
 
 typedef struct PrisonGuardStateFlags
