@@ -3,6 +3,8 @@
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
+#include "main/gamebits.h"
 #include "main/dll/DIM/DIMlevcontrol.h"
 #include "main/objseq.h"
 #include "main/resource.h"
@@ -16,8 +18,6 @@ extern char FUN_80006bd0();
 extern uint FUN_80006bf8();
 extern uint FUN_80006c00();
 extern uint FUN_80006c10();
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
 extern undefined8 ObjGroup_RemoveObject();
@@ -51,7 +51,6 @@ extern void objRenderFn_8003b8f4(f32 x);
 extern f32 lbl_803E48E8;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 extern int ObjHits_GetPriorityHit(int obj, int* out, int* a, int* b);
-extern void Sfx_PlayFromObject(int obj, int sfx);
 extern void* lbl_803DDB50;
 extern void ObjMsg_AllocQueue(int* obj, int n);
 extern int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate);
@@ -79,16 +78,12 @@ extern void playerAddRemoveMagic(void* player, int amount);
 extern u32 getButtonsJustPressed(int chan);
 extern u32 getButtonsHeld(int chan);
 extern u32 getButtonsJustPressedIfNotBusy(int chan);
-extern int Sfx_IsPlayingFromObjectChannel(int* obj, int channel);
-extern void Sfx_StopObjectChannel(int* obj, int channel);
-extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
 extern u8 lbl_803DBF00;
 extern s16 lbl_803DBF02;
 extern s16 lbl_803DBF04;
 extern f32 lbl_803DBF08;
 extern f32 lbl_803DBEF8;
 extern f32 lbl_803DBEFC;
-extern unsigned long GameBit_Set(int eventId, int value);
 extern void objRenderFn_8003b8f4(f32);
 
 void FUN_801b2550(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
@@ -712,13 +707,13 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                     }
                 }
                 *(s16*)((int)vec + 0x2) = (s16)(*(s16*)((int)vec + 0x2) + delta);
-                Sfx_KeepAliveLoopedObjectSound(obj, 0x1ff);
+                Sfx_KeepAliveLoopedObjectSound((u32)obj, 0x1ff);
             }
             else
             {
                 if (((DimCannonState*)state)->unkA8 != 0)
                 {
-                    Sfx_PlayFromObject((int)obj, 0x1fe);
+                    Sfx_PlayFromObject((u32)obj, 0x1fe);
                 }
             }
             ((DimCannonState*)state)->unkA8 = delta;
@@ -736,20 +731,20 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 if (fn_80296A14(player) >= 1)
                 {
                     ((DimCannonState*)state)->unkAE += framesThisStep;
-                    if (Sfx_IsPlayingFromObjectChannel(obj, 2) == 0)
+                    if (Sfx_IsPlayingFromObjectChannel((u32)obj, 2) == 0)
                     {
-                        Sfx_PlayFromObject((int)obj, 0x201);
-                        Sfx_PlayFromObject((int)obj, 0x202);
+                        Sfx_PlayFromObject((u32)obj, 0x201);
+                        Sfx_PlayFromObject((u32)obj, 0x202);
                     }
                 }
                 else
                 {
-                    Sfx_PlayFromObject((int)obj, 0x40c);
+                    Sfx_PlayFromObject((u32)obj, 0x40c);
                 }
             }
             else
             {
-                Sfx_StopObjectChannel(obj, 2);
+                Sfx_StopObjectChannel((u32)obj, 2);
             }
             if (((DimCannonState*)state)->unkAE > lbl_803DBF00)
             {
@@ -797,11 +792,11 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 animUpdate->sequenceControlFlags |= 0x4;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8);
-                if (Sfx_IsPlayingFromObjectChannel(obj, 8) != 0)
+                if (Sfx_IsPlayingFromObjectChannel((u32)obj, 8) != 0)
                 {
-                    Sfx_IsPlayingFromObjectChannel(obj, 0);
+                    Sfx_IsPlayingFromObjectChannel((u32)obj, 0);
                 }
-                Sfx_StopObjectChannel(obj, 2);
+                Sfx_StopObjectChannel((u32)obj, 2);
             }
             ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803DBEF4, timeDelta, NULL);
         }
