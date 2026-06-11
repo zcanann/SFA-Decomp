@@ -24,41 +24,18 @@ typedef struct HagabonPlacement
 } HagabonPlacement;
 
 
-extern undefined4 FUN_800033a8();
-extern undefined4 FUN_8000680c();
-extern undefined4 FUN_80006810();
-extern undefined4 FUN_80006814();
-extern undefined4 FUN_80006824();
-extern int FUN_80006a10();
 extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 FUN_8001771c();
-extern uint FUN_80017730();
-extern undefined4 FUN_80017814();
-extern int FUN_80017830();
-extern undefined4 FUN_80017a88();
-extern int FUN_80017a98();
-extern undefined4 FUN_8002fc3c();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_8008111c();
-extern undefined4 FUN_80081120();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
 
-extern undefined4 DAT_803dc8d8;
-extern undefined4 DAT_803dc8e0;
-extern undefined4* DAT_803dd71c;
 extern MapEventInterface** gMapEventInterface;
 extern undefined4 DAT_803de6d0;
-extern undefined4 DAT_803de6d8;
-extern undefined4 DAT_803de6e0;
 extern f64 DOUBLE_803e32d8;
 extern f64 DOUBLE_803e32e0;
 extern f64 DOUBLE_803e3340;
