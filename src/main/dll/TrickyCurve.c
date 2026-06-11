@@ -32,11 +32,8 @@ extern int Obj_GetPlayerObject(void);
 extern undefined4 ObjMsg_SendToObject();
 extern void TrickyCurve_updateCooldownTrigger(int obj);
 extern uint FUN_80286838();
-extern uint FUN_8028683c();
 extern undefined4 FUN_80286884();
-extern undefined4 FUN_80286888();
 extern undefined4 FUN_80294c40();
-extern int FUN_80294d6c();
 
 extern MapEventInterface** gMapEventInterface;
 extern u8 gTrickyCurveBurstCounter;
