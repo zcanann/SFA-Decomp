@@ -128,25 +128,10 @@ static inline int* Transporter_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068f8();
-extern undefined4 FUN_80006904();
-extern uint FUN_80017690();
-extern undefined8 FUN_80017698();
-extern undefined4 FUN_8001771c();
 extern undefined4 FUN_80017748();
-extern undefined4 FUN_80017754();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017778();
-extern undefined4 FUN_800178b8();
-extern ushort FUN_80017934();
-extern undefined4 FUN_80017a7c();
-extern undefined4 FUN_80017a88();
 extern int FUN_80017a90();
-extern int FUN_80017a98();
 extern undefined8 FUN_80017ac8();
-extern undefined4 FUN_80017ad0();
-extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_SetTargetMask();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
@@ -156,97 +141,17 @@ extern undefined4 ObjHits_AddContactObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern void Obj_FreeObject(int* obj);
-extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_AllocQueue();
 extern int ObjList_ContainsObject();
 extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 FUN_8003b540();
-extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80053c98();
-extern int FUN_80056600();
-extern int FUN_800620e8();
-extern char FUN_800632f4();
-extern int FUN_80063a68();
-extern undefined4 FUN_80063a74();
-extern void trackDolphin_buildSweptBounds(uint* boundsOut, float* startPoints, float* endPoints,
-                                          float* radii, int pointCount);
-extern undefined4 FUN_8007f358();
-extern int FUN_8007f3c8();
-extern undefined4 FUN_800e82e0();
-extern undefined4 FUN_800e8630();
-extern undefined4 FUN_80135810();
 extern int FUN_801365ac();
 extern undefined4 FUN_801365b8();
-extern undefined4 FUN_801743f0();
-extern undefined4 FUN_80174524();
 extern int fn_80174A80();
 extern undefined4 fn_80174BFC();
 extern undefined4 fn_8017510C();
-extern int FUN_8028682c();
-extern undefined8 FUN_80286834();
-extern undefined8 FUN_8028683c();
-extern int FUN_80286840();
-extern undefined4 FUN_80286878();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_8028688c();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
-extern uint FUN_80294bd8();
-extern byte FUN_80294c20();
-extern int FUN_80294c54();
-extern uint FUN_80294d30();
 
-extern undefined4 DAT_802c29f0;
-extern undefined4 DAT_802c29f4;
-extern undefined4 DAT_802c29f8;
-extern undefined4 DAT_802c29fc;
-extern undefined4 DAT_803ad340;
-extern undefined4 DAT_803ad3e0;
-extern undefined4 DAT_803ad3e4;
-extern undefined4 DAT_803ad3e8;
-extern undefined4 DAT_803dc070;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern undefined4* DAT_803dd72c;
-extern undefined4 DAT_803dda60;
-extern undefined4 DAT_803ddb38;
-extern undefined4 DAT_803de738;
-extern f64 DOUBLE_803e41c8;
-extern f64 DOUBLE_803e41d0;
-extern f64 DOUBLE_803e4210;
-extern f64 DOUBLE_803e4268;
-extern f64 DOUBLE_803e4278;
-extern f64 DOUBLE_803e4290;
-extern f64 DOUBLE_803e42a8;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E41C0;
-extern f32 lbl_803E41D8;
-extern f32 lbl_803E41F0;
-extern f32 lbl_803E4220;
-extern f32 lbl_803E4224;
-extern f32 lbl_803E4234;
-extern f32 lbl_803E4238;
-extern f32 lbl_803E423C;
-extern f32 lbl_803E4240;
-extern f32 lbl_803E4244;
-extern f32 lbl_803E4248;
-extern f32 lbl_803E424C;
-extern f32 lbl_803E4250;
-extern f32 lbl_803E4254;
-extern f32 lbl_803E4258;
-extern f32 lbl_803E425C;
-extern f32 lbl_803E4260;
-extern f32 lbl_803E4264;
-extern f32 lbl_803E4270;
-extern f32 lbl_803E4274;
-extern f32 lbl_803E4284;
-extern f32 lbl_803E4288;
-extern f32 lbl_803E428C;
-extern f32 lbl_803E4298;
-extern f32 lbl_803E429C;
-extern f32 lbl_803E42A0;
-extern f32 lbl_803E42A4;
 extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
 extern f32 lbl_803E42B8;
@@ -310,7 +215,7 @@ FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 para
     {
         FUN_80053c98(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar1, '\x01',
                      param_11, param_12, param_13, param_14, param_15, param_16);
-        *(undefined*)(param_11 + 0x80) = 0;
+        *(u8*)(param_11 + 0x80) = 0;
     }
     return 0;
 }
@@ -331,7 +236,7 @@ FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 para
  */
 void FUN_801778d0(int param_1)
 {
-    *(undefined*)(*(int*)&((GameObject*)param_1)->extra + 0x10) = 1;
+    *(u8*)(*(int*)&((GameObject*)param_1)->extra + 0x10) = 1;
     return;
 }
 
@@ -867,7 +772,6 @@ void invhit_init(int* obj, u8* def)
 }
 #pragma opt_common_subs reset
 
-extern void* Obj_GetPlayerObject2(void);
 extern int playerIsDisguised(void* player);
 extern u32 GameBit_Get(int eventId);
 extern int fn_80295A04(void* player, int a);
