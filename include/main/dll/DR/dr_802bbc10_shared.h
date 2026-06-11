@@ -169,7 +169,7 @@ extern f32 lbl_803E83EC;
 extern f32 lbl_803E83F0;
 extern int lbl_802C2D00[];
 extern s16 lbl_803DC794;
-extern void Vec3_Normalize(void *v);
+extern f32 Vec3_Normalize(void *v);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void fn_802B0EA4(int obj, int q, int inner);
 extern void fn_802B1BF8(int obj, int q, int inner, f32 t);
