@@ -4167,9 +4167,9 @@ void RomCurve_func0D(RomCurveDef** startOut, RomCurveDef** endOut)
 /* getSaveFileStruct: return &saveData (lis/addi). */
 void* getSaveFileStruct(void) { return &saveData; }
 
-/* getLastSavedGameTexts: return (u8*)&lbl_803A32A8 + 0x558. Array form forces lis/addi. */
-extern u8 lbl_803A32A8[];
-void* getLastSavedGameTexts(void) { return lbl_803A32A8 + 0x558; }
+/* getLastSavedGameTexts: return (u8*)&gSaveGameData + 0x558. Array form forces lis/addi. */
+extern u8 gSaveGameData[];
+void* getLastSavedGameTexts(void) { return gSaveGameData + 0x558; }
 
 #define SAVEGAME_OBJECT_POSITION_COUNT 0x3f
 #define SAVEGAME_OBJECT_POSITION_OFFSET 0x168
@@ -4190,7 +4190,7 @@ int pushable_savePos(int obj)
 
     for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
     {
-        position = (CurvesSaveGameObjectPosition*)(lbl_803A32A8 + SAVEGAME_OBJECT_POSITION_OFFSET +
+        position = (CurvesSaveGameObjectPosition*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET +
             i * sizeof(CurvesSaveGameObjectPosition));
         objectId = ((RomCurveDef*)((GameObject*)obj)->anim.placementData)->id;
         if (objectId == position->objectId)

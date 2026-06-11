@@ -164,8 +164,8 @@ extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
-extern u8 lbl_803A32A8[];
-extern u8 lbl_803DD488;
+extern u8 gSaveGameData[];
+extern u8 saveGameLoadStatus;
 extern s8 lbl_803DB890;
 extern u8* lbl_803DD498;
 extern char sGameplayFoxName;
@@ -271,7 +271,7 @@ int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition* object)
     int i;
     SaveGameObjectPosition* position;
 
-    position = (SaveGameObjectPosition*)(lbl_803A32A8 + SAVEGAME_OBJECT_POSITION_OFFSET);
+    position = (SaveGameObjectPosition*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET);
     for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++, position++)
     {
         if (object->objectId == position->objectId)
@@ -297,10 +297,10 @@ void saveGame_unsaveObjectPos(u8* obj)
     {
         return;
     }
-    if (lbl_803DD488 == 0)
+    if (saveGameLoadStatus == 0)
     {
         objectId = *(u32*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x14);
-        saveBase = lbl_803A32A8;
+        saveBase = gSaveGameData;
         for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
         {
             if (((SaveGameObjectPosition*)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))->objectId == objectId)
@@ -322,7 +322,7 @@ void saveGame_unsaveObjectPos(u8* obj)
             slot[0].y = slot[1].y;
             slot[0].z = slot[1].z;
         }
-        *(u32*)(lbl_803A32A8 + SAVEGAME_OBJECT_POSITION_DIRTY_OFFSET) = 0;
+        *(u32*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_DIRTY_OFFSET) = 0;
     }
 }
 
@@ -339,7 +339,7 @@ int trySaveGame(int slot)
     int loaded;
 
     lbl_803DB890 = (s8)slot;
-    memset(lbl_803A32A8, 0, SAVEGAME_LIVE_BUFFER_SIZE);
+    memset(gSaveGameData, 0, SAVEGAME_LIVE_BUFFER_SIZE);
     if ((lbl_803DD498[0x21] & 0x80) == 0)
     {
         memset(lbl_803DD498, 0, SAVEGAME_ACTIVE_SIZE);
@@ -354,7 +354,7 @@ int trySaveGame(int slot)
         }
         else
         {
-            memcpy(lbl_803A32A8, lbl_803DD498, SAVEGAME_ACTIVE_SIZE);
+            memcpy(gSaveGameData, lbl_803DD498, SAVEGAME_ACTIVE_SIZE);
         }
     }
     else
@@ -408,13 +408,13 @@ int gplayNewGame(char* name, int slot)
 
     defaultPos = lbl_802C2170;
 
-    memset(lbl_803A32A8, 0, SAVEGAME_LIVE_BUFFER_SIZE);
+    memset(gSaveGameData, 0, SAVEGAME_LIVE_BUFFER_SIZE);
     if ((lbl_803DD498[SAVEGAME_NEW_FILE_FLAG_OFFSET] & 0x80) == 0)
     {
         memset(lbl_803DD498, 0, SAVEGAME_ACTIVE_SIZE);
     }
 
-    save = lbl_803A32A8;
+    save = gSaveGameData;
     save[SAVEGAME_CURRENT_CHARACTER_OFFSET] = 0;
     save[0] = 0xc;
     save[1] = 0xc;
@@ -973,14 +973,14 @@ extern u32 pRestartPoint;
 
 void gplaySaveGame(int param)
 {
-    lbl_803A32A8[0x21] = 0;
+    gSaveGameData[0x21] = 0;
     lbl_803DB890 = (s8)param;
-    if (lbl_803A32A8[0x22] == 0)
+    if (gSaveGameData[0x22] == 0)
     {
-        memcpy(lbl_803DD498, lbl_803A32A8, 0x564);
+        memcpy(lbl_803DD498, gSaveGameData, 0x564);
         if (pRestartPoint != 0)
         {
-            memcpy((void*)pRestartPoint, lbl_803A32A8, 0x564);
+            memcpy((void*)pRestartPoint, gSaveGameData, 0x564);
         }
     }
     if ((s8)lbl_803DB890 == -1)
@@ -1035,12 +1035,12 @@ void titleDoLoadSave(void)
  */
 void saveGame_save(void)
 {
-    if (lbl_803A32A8[0x22] == 0)
+    if (gSaveGameData[0x22] == 0)
     {
-        memcpy(lbl_803DD498, lbl_803A32A8, 0x564);
+        memcpy(lbl_803DD498, gSaveGameData, 0x564);
         if (pRestartPoint != 0)
         {
-            memcpy((void*)pRestartPoint, lbl_803A32A8, 0x564);
+            memcpy((void*)pRestartPoint, gSaveGameData, 0x564);
         }
     }
     if ((s8)lbl_803DB890 == -1)
@@ -1900,10 +1900,10 @@ int Dummy58_func03_ret_0(void) { return 0x0; }
 int Dummy6C_func03_ret_0(void) { return 0x0; }
 
 /* sda21 accessors. */
-u8 getSaveGameLoadStatus(void) { return lbl_803DD488; }
+u8 getSaveGameLoadStatus(void) { return saveGameLoadStatus; }
 
-void setSaveGameLoadingFlag(void) { if (lbl_803DD488 == 2) lbl_803DD488 = 1; }
-s32 isSaveGameLoading(void) { return lbl_803DD488 == 2; }
+void setSaveGameLoadingFlag(void) { if (saveGameLoadStatus == 2) saveGameLoadStatus = 1; }
+s32 isSaveGameLoading(void) { return saveGameLoadStatus == 2; }
 
 void Carryable_init(int obj, int state)
 {
@@ -1919,7 +1919,7 @@ void Carryable_init(int obj, int state)
 void Carryable_free(int x) { ObjGroup_RemoveObject(x, 0x10); }
 
 /* lbl = N (byte) */
-void clearSaveGameLoadingFlag(void) { lbl_803DD488 = 0x0; }
+void clearSaveGameLoadingFlag(void) { saveGameLoadStatus = 0x0; }
 
 /* 12b 3-insn patterns. */
 s32 Carryable_isHeld(u8* obj) { return *(s8*)(obj + 0x5); }
@@ -2044,11 +2044,11 @@ void SaveGame_gplayGotoRestartPoint(void)
 {
     if (pRestartPoint != 0)
     {
-        memcpy(lbl_803A32A8, (void*)pRestartPoint, 0x6ec);
+        memcpy(gSaveGameData, (void*)pRestartPoint, 0x6ec);
     }
     else
     {
-        memcpy(lbl_803A32A8, lbl_803DD498, 0x6ec);
+        memcpy(gSaveGameData, lbl_803DD498, 0x6ec);
     }
     loadMapForCurrentSaveGame();
 }
@@ -2057,7 +2057,7 @@ void SaveGame_gplayGotoSavegame(void)
 {
     if ((s8)lbl_803DD498[0] < 1) lbl_803DD498[0] = 1;
     if ((s8)lbl_803DD498[0xc] < 1) lbl_803DD498[0xc] = 1;
-    memcpy(lbl_803A32A8, lbl_803DD498, 0x6ec);
+    memcpy(gSaveGameData, lbl_803DD498, 0x6ec);
     loadMapForCurrentSaveGame();
 }
 
@@ -2077,19 +2077,19 @@ void loadMapForCurrentSaveGame(void)
     lbl_803DD494 = -1;
     lbl_803DD48C = -1;
     unlockLevel(0, 0, 1);
-    memset((char*)lbl_803A32A8 + 0x6ec, 0, 0x884);
+    memset((char*)gSaveGameData + 0x6ec, 0, 0x884);
     cutsceneExit();
     audioStopByMask(7);
     stopRumble2();
     resetYbutton();
-    base = (char*)lbl_803A32A8 + ((SaveGameData*)lbl_803A32A8)->currentCharacter * 16;
+    base = (char*)gSaveGameData + ((SaveGameData*)gSaveGameData)->currentCharacter * 16;
     mapLoadByCoords(*(f32*)(base + 0x684), *(f32*)(base + 0x688), *(f32*)(base + 0x68c), *(s8*)(base + 0x691));
     if (getCurUiDll() != 4)
     {
         loadUiDll(1);
     }
     screenTransitionFn_800d7b04(0x1e, 1);
-    lbl_803DD488 = 2;
+    saveGameLoadStatus = 2;
 }
 
 extern void* Obj_GetPlayerObject(void);
@@ -2261,9 +2261,9 @@ void saveGame_saveObjectPos(int* obj)
     register int v;
     register int i;
     if (((GameObject*)obj)->anim.flags & 0x2000) return;
-    if (lbl_803DD488 == 0)
+    if (saveGameLoadStatus == 0)
     {
-        slot = lbl_803A32A8;
+        slot = gSaveGameData;
         for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
         {
             v = *(int*)(slot + SAVEGAME_OBJECT_POSITION_OFFSET);
@@ -2274,7 +2274,7 @@ void saveGame_saveObjectPos(int* obj)
         if (i == SAVEGAME_OBJECT_POSITION_COUNT) return;
         {
             register int objectId = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
-            register char* entry = (char*)lbl_803A32A8 + i * sizeof(SaveGameObjectPosition);
+            register char* entry = (char*)gSaveGameData + i * sizeof(SaveGameObjectPosition);
             *(int*)(entry + SAVEGAME_OBJECT_POSITION_OFFSET) = objectId;
             *(f32*)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 4) = ((GameObject*)obj)->anim.localPosX;
             *(f32*)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 8) = ((GameObject*)obj)->anim.localPosY;
@@ -2324,11 +2324,11 @@ int Carryable_updateRenderState(int* obj, int flag)
 }
 
 
-void SaveGame_setCamActionNo(s16 actionNo) { ((SaveGameData*)lbl_803A32A8)->camActionNo = actionNo; }
-void* SaveGame_getLast(void) { return lbl_803A32A8; }
-s32 SaveGame_getCamActionNo(void) { return ((SaveGameData*)lbl_803A32A8)->camActionNo; }
-void* saveGameGetEnvState(void) { return (char*)lbl_803A32A8 + 0x6a8; }
-f32 SaveGame_getPlayTime(void) { return ((SaveGameData*)lbl_803A32A8)->playTime; }
+void SaveGame_setCamActionNo(s16 actionNo) { ((SaveGameData*)gSaveGameData)->camActionNo = actionNo; }
+void* SaveGame_getLast(void) { return gSaveGameData; }
+s32 SaveGame_getCamActionNo(void) { return ((SaveGameData*)gSaveGameData)->camActionNo; }
+void* saveGameGetEnvState(void) { return (char*)gSaveGameData + 0x6a8; }
+f32 SaveGame_getPlayTime(void) { return ((SaveGameData*)gSaveGameData)->playTime; }
 extern f32 lbl_803E06D0;
 extern f32 lbl_803E06D4;
 
@@ -2339,7 +2339,7 @@ void SaveGame_updateTimes(void)
     u8* base;
     s16 cnt;
     i = 0;
-    base = lbl_803A32A8;
+    base = gSaveGameData;
     ((SaveGameData*)base)->playTime = ((SaveGameData*)base)->playTime + timeDelta;
     p = base;
     while (i < *(s16*)(base + 0x6ec))
@@ -2357,7 +2357,7 @@ void SaveGame_updateTimes(void)
             i++;
         }
     }
-    if (((SaveGameData*)lbl_803A32A8)->unk55E > 5) *(u8*)0 = 0;
+    if (((SaveGameData*)gSaveGameData)->unk55E > 5) *(u8*)0 = 0;
     if (((SaveGameData*)lbl_803DD498)->unk55E > 5) *(u8*)0 = 0;
 }
 
@@ -2368,13 +2368,13 @@ f32 SaveGame_gplayGetTime(int id)
     int i;
     if (id == -1) return lbl_803E06D0;
     i = 0;
-    p = lbl_803A32A8;
+    p = gSaveGameData;
     count = *(s16*)(p + 0x6ec);
     for (; i < count; i++)
     {
         if (*(int*)(p + 0x6f0) == id)
         {
-            p = lbl_803A32A8;
+            p = gSaveGameData;
             return *(f32*)(p + i * 8 + 0x6f4) - ((SaveGameData*)p)->playTime;
         }
         p += 8;
@@ -2388,7 +2388,7 @@ int SaveGame_gplayShouldNotSaveTime(int id)
     s16 count;
     int i;
     if (id == -1) return 1;
-    p = lbl_803A32A8;
+    p = gSaveGameData;
     count = *(s16*)(p + 0x6ec);
     for (i = 0; i < count; i++)
     {
@@ -2406,7 +2406,7 @@ void SaveGame_gplayAddTime(int id, f32 time)
     int i;
     f32 total;
     if (id == -1) return;
-    base = lbl_803A32A8;
+    base = gSaveGameData;
     count = *(s16*)(base + 0x6ec);
     if (count == 0x100) return;
     total = lbl_803E06D4 * time;
@@ -2422,27 +2422,27 @@ void SaveGame_gplayAddTime(int id, f32 time)
     {
         (*(s16*)(base + 0x6ec))++;
     }
-    base = lbl_803A32A8;
+    base = gSaveGameData;
     p = base + i * 8;
     *(int*)(p + 0x6f0) = id;
     *(f32*)(p + 0x6f4) = total;
 }
 
-void* SaveGame_getTrickyEnergy(void) { return (char*)lbl_803A32A8 + 0x18; }
-void SaveGame_setCharacter(u8 c) { ((SaveGameData*)lbl_803A32A8)->currentCharacter = c; }
-u8 SaveGame_getCurChar(void) { return ((SaveGameData*)lbl_803A32A8)->currentCharacter; }
-char* getSaveFileName(void) { return (char*)lbl_803A32A8 + 0x1c; }
+void* SaveGame_getTrickyEnergy(void) { return (char*)gSaveGameData + 0x18; }
+void SaveGame_setCharacter(u8 c) { ((SaveGameData*)gSaveGameData)->currentCharacter = c; }
+u8 SaveGame_getCurChar(void) { return ((SaveGameData*)gSaveGameData)->currentCharacter; }
+char* getSaveFileName(void) { return (char*)gSaveGameData + 0x1c; }
 
 void* SaveGame_getCurCharPos(void)
 {
-    int idx = ((SaveGameData*)lbl_803A32A8)->currentCharacter;
-    return (char*)lbl_803A32A8 + idx * 16 + 0x684;
+    int idx = ((SaveGameData*)gSaveGameData)->currentCharacter;
+    return (char*)gSaveGameData + idx * 16 + 0x684;
 }
 
 void* SaveGame_getCurCharacterState(void)
 {
-    int idx = ((SaveGameData*)lbl_803A32A8)->currentCharacter;
-    return (char*)lbl_803A32A8 + idx * 12;
+    int idx = ((SaveGameData*)gSaveGameData)->currentCharacter;
+    return (char*)gSaveGameData + idx * 12;
 }
 
 s32 SaveGame_gplayGetRestartGameNotCleared(void) { return pRestartPoint != 0; }
@@ -2468,8 +2468,8 @@ void screens_initialise(void)
 
 void updateSavedHealth(void)
 {
-    int idx = ((SaveGameData*)lbl_803A32A8)->currentCharacter * 12;
-    *((u8*)lbl_803A32A8 + idx) = lbl_803DD498[idx];
+    int idx = ((SaveGameData*)gSaveGameData)->currentCharacter * 12;
+    *((u8*)gSaveGameData + idx) = lbl_803DD498[idx];
 }
 
 extern void* gameTextGet(int idx);
@@ -2580,9 +2580,9 @@ void SaveGame_gplaySavePoint(f32* pos, s16 angle, int flags, int mapByte)
     u8* base;
     if (flags & 4)
     {
-        lbl_803A32A8[0x22] = 0;
+        gSaveGameData[0x22] = 0;
     }
-    base = lbl_803A32A8;
+    base = gSaveGameData;
     if (base[0x22] == 0)
     {
         if (flags & 1)
@@ -2590,7 +2590,7 @@ void SaveGame_gplaySavePoint(f32* pos, s16 angle, int flags, int mapByte)
             memcpy(lbl_803DD498, base, 0x5d8);
             if (pRestartPoint != 0)
             {
-                memcpy((void*)pRestartPoint, lbl_803A32A8, 0x5d8);
+                memcpy((void*)pRestartPoint, gSaveGameData, 0x5d8);
             }
         }
         else
@@ -2635,7 +2635,7 @@ void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int b691, int flag)
             healed = 1;
         }
     }
-    memcpy((void*)pRestartPoint, lbl_803A32A8, 0x6ec);
+    memcpy((void*)pRestartPoint, gSaveGameData, 0x6ec);
     SAVEGAME_CHARACTER_POSITION((u8 *)pRestartPoint)->x = pos[0];
     SAVEGAME_CHARACTER_POSITION((u8 *)pRestartPoint)->y = pos[1];
     SAVEGAME_CHARACTER_POSITION((u8 *)pRestartPoint)->z = pos[2];
