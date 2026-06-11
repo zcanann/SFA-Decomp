@@ -104,7 +104,7 @@ extern f32 lbl_803E4D50;
 extern f32 lbl_803E4D60;
 extern f32 lbl_803E4D64;
 extern f32 lbl_803E4D68;
-extern f32 lbl_803E4D6C;
+extern const f32 lbl_803E4D6C;
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
@@ -183,12 +183,12 @@ void dimbossgut2_updateTracking(int obj, int state)
         }
         fv = (f32)(s32)
         q * lbl_803E4CD4;
-        if (lbl_803E4CF0 < fv)
+        if (fv > lbl_803E4CF0)
         {
             *(f32*)(curve + 0x10) = *(f32*)(curve + 0x10) / fv;
             *(f32*)(curve + 8) = *(f32*)(curve + 8) + lbl_803E4D1C;
         }
-        if (lbl_803E4CD8 < *(f32*)(curve + 8))
+        if (*(f32*)(curve + 8) > lbl_803E4CD8)
         {
             *(f32*)(curve + 8) = *(f32*)(curve + 8) / lbl_803E4D10;
         }
@@ -209,7 +209,7 @@ void dimbossgut2_updateTracking(int obj, int state)
         {
             rel = rel + 0xffff;
         }
-        *(s16*)obj = (s16)(*(s16*)obj + rel * (u8)framesThisStep / 3);
+        *(s16*)obj = (s16)(*(s16*)(long)obj + rel * (u8)framesThisStep / 3);
     }
     return;
 }
