@@ -12,9 +12,9 @@ extern char sObjAddObjectTypeReachedMaxTypes[];
 extern char sObjMsgOverflowInObjectWarning[];
 
 void ObjHitbox_SetStateIndex(int obj,int hitState,int stateIndex);
-void ObjHits_SetTargetMask(int obj,undefined targetMask);
+void ObjHits_SetTargetMask(int obj,u8 targetMask);
 void ObjHitbox_SetSphereRadius(int obj,s16 radius);
-void ObjHitbox_SetCapsuleBounds(int obj,undefined2 radius,short verticalMin,short verticalMax);
+void ObjHitbox_SetCapsuleBounds(int obj,s16 radius,s16 verticalMin,s16 verticalMax);
 void ObjHits_ClearHitVolumes(int obj);
 void ObjHits_SetHitVolumeMasks(int obj,int hitVolume,int hitType,int sourceMask);
 void ObjHits_SetHitVolumeSlot(u32 obj,int hitVolume,int hitType,int sourceSlot);

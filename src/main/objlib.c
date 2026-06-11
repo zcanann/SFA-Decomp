@@ -221,7 +221,7 @@ void ObjHitbox_SetStateIndex(int objPtr, int hitStatePtr, int stateIndex)
 #pragma optimization_level reset
 
 #pragma peephole off
-void ObjHits_SetTargetMask(int objPtr, undefined targetMask)
+void ObjHits_SetTargetMask(int objPtr, u8 targetMask)
 {
     ObjHitsPriorityState* hitState;
 
@@ -282,7 +282,7 @@ void ObjHitbox_SetSphereRadius(int objPtr, s16 radius)
     return;
 }
 
-void ObjHitbox_SetCapsuleBounds(int objPtr, undefined2 radius, short verticalMin, short verticalMax)
+void ObjHitbox_SetCapsuleBounds(int objPtr, s16 radius, s16 verticalMin, s16 verticalMax)
 {
     ObjAnimComponent* obj;
     ObjHitsPriorityState* hitState;
@@ -735,8 +735,8 @@ int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume, u8
         (hitState->priorityHitCount < OBJHITS_PRIORITY_HIT_COUNT))
     {
         hitState->sphereIndices[hitState->priorityHitCount] = sphereIndex;
-        *(char*)((int)hitState->priorities + hitState->priorityHitCount) = priority;
-        *(undefined*)((int)hitState->hitVolumes + hitState->priorityHitCount) = hitVolume;
+        hitState->priorities[hitState->priorityHitCount] = priority;
+        hitState->hitVolumes[hitState->priorityHitCount] = hitVolume;
         hitState->hitObjects[hitState->priorityHitCount] = hitObj;
         hitState->hitPosX[hitState->priorityHitCount] = sourceObj->localPosX;
         hitState->hitPosY[hitState->priorityHitCount] = sourceObj->localPosY;
@@ -791,12 +791,12 @@ int ObjHits_RecordPositionHit(f32 hitPosX, f32 hitPosY, f32 hitPosZ, int obj, in
         (hitState->priorityHitCount < OBJHITS_PRIORITY_HIT_COUNT))
     {
         hitState->sphereIndices[hitState->priorityHitCount] = sphereIndex;
-        *(char*)((int)hitState->priorities + hitState->priorityHitCount) = priority;
-        *(undefined*)((int)hitState->hitVolumes + hitState->priorityHitCount) = hitVolume;
+        hitState->priorities[hitState->priorityHitCount] = priority;
+        hitState->hitVolumes[hitState->priorityHitCount] = hitVolume;
         hitState->hitObjects[hitState->priorityHitCount] = hitObj;
-        *(float*)((int)hitState->hitPosX + hitState->priorityHitCount * 4) = hitPosX;
-        *(float*)((int)hitState->hitPosY + hitState->priorityHitCount * 4) = hitPosY;
-        *(float*)((int)hitState->hitPosZ + hitState->priorityHitCount * 4) = hitPosZ;
+        hitState->hitPosX[hitState->priorityHitCount] = hitPosX;
+        hitState->hitPosY[hitState->priorityHitCount] = hitPosY;
+        hitState->hitPosZ[hitState->priorityHitCount] = hitPosZ;
         hitState->priorityHitCount = hitState->priorityHitCount + '\x01';
     }
     return 1;
@@ -887,9 +887,9 @@ int ObjHits_GetPriorityHitWithPosition(int obj, int* outHitObject, int* outSpher
             }
             if (outHitPosX != (float*)0x0)
             {
-                *outHitPosX = *(float*)((int)hitState->hitPosX + bestHitSlot * 4);
-                *outHitPosY = *(float*)((int)hitState->hitPosY + bestHitSlot * 4);
-                *outHitPosZ = *(float*)((int)hitState->hitPosZ + bestHitSlot * 4);
+                *outHitPosX = hitState->hitPosX[bestHitSlot];
+                *outHitPosY = hitState->hitPosY[bestHitSlot];
+                *outHitPosZ = hitState->hitPosZ[bestHitSlot];
             }
             return (int)(s8)bestPriority;
         }
