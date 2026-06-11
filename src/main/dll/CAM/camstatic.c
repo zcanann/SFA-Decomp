@@ -53,21 +53,21 @@ extern f32 timeDelta;
 void camstatic_update(CameraObject* camera)
 {
     GameObject* target;
-    float fVar1;
-    int iVar2;
-    uint uVar3;
-    short sVar4;
-    float local_148;
-    float local_144;
-    float local_140;
+    float fa;
+    int val;
+    uint angleDelta;
+    short yaw;
+    float dx;
+    float dy;
+    float dz;
     undefined auStack_13c[4];
-    float local_138;
-    float local_134;
-    float local_130;
-    float local_12c;
-    float local_128;
-    float local_124;
-    float local_120;
+    float dx2;
+    float aimX;
+    float aimY;
+    float aimZ;
+    float aimX2;
+    float aimY2;
+    float aimZ2;
     undefined auStack_11c[112];
     undefined auStack_ac[116];
 
@@ -78,10 +78,10 @@ void camstatic_update(CameraObject* camera)
     }
     if (target->anim.classId == 1)
     {
-        fn_8029656C((int)target, &local_148);
-        lbl_803DD52C = timeDelta * local_148;
-        iVar2 = EmissionController_IsLingering((int)target);
-        switch (iVar2)
+        fn_8029656C((int)target, &dx);
+        lbl_803DD52C = timeDelta * dx;
+        val = EmissionController_IsLingering((int)target);
+        switch (val)
         {
         case 1:
             gCamcontrolModeSettings->heightAdjustRate = lbl_803E16AC;
@@ -146,10 +146,10 @@ void camstatic_update(CameraObject* camera)
     }
     else
     {
-        fVar1 = lbl_803E16AC;
-        camera->unk130 = fVar1;
-        camera->unk12C = fVar1;
-        if ((*(u8*)((int)camera + 0xa2) == 1) && (*(f32*)((u8*)camera + 0x38) < fVar1))
+        fa = lbl_803E16AC;
+        camera->unk130 = fa;
+        camera->unk12C = fa;
+        if ((*(u8*)((int)camera + 0xa2) == 1) && (*(f32*)((u8*)camera + 0x38) < fa))
         {
             gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 0;
         }
@@ -173,15 +173,15 @@ void camstatic_update(CameraObject* camera)
         {
             if (target->anim.classId == 1)
             {
-                cameraGetPrevPos2((int)target, &local_128, &local_124, &local_120);
+                cameraGetPrevPos2((int)target, &aimX2, &aimY2, &aimZ2);
             }
             else
             {
-                local_128 = target->anim.worldPosX;
-                local_124 = target->anim.worldPosY + gCamcontrolModeSettings->targetHeight;
-                local_120 = target->anim.worldPosZ;
+                aimX2 = target->anim.worldPosX;
+                aimY2 = target->anim.worldPosY + gCamcontrolModeSettings->targetHeight;
+                aimZ2 = target->anim.worldPosZ;
             }
-            camcontrol_traceMove(lbl_803E1688, &local_128, &camera->anim.worldPosX,
+            camcontrol_traceMove(lbl_803E1688, &aimX2, &camera->anim.worldPosX,
                                  &camera->anim.worldPosX, auStack_ac, 3, 1, 1);
             camera->probePosX = camera->anim.worldPosX;
             camera->probePosY = camera->anim.worldPosY;
@@ -203,15 +203,15 @@ void camstatic_update(CameraObject* camera)
         {
             if (target->anim.classId == 1)
             {
-                cameraGetPrevPos2((int)target, &local_134, &local_130, &local_12c);
+                cameraGetPrevPos2((int)target, &aimX, &aimY, &aimZ);
             }
             else
             {
-                local_134 = target->anim.worldPosX;
-                local_130 = target->anim.worldPosY + gCamcontrolModeSettings->targetHeight;
-                local_12c = target->anim.worldPosZ;
+                aimX = target->anim.worldPosX;
+                aimY = target->anim.worldPosY + gCamcontrolModeSettings->targetHeight;
+                aimZ = target->anim.worldPosZ;
             }
-            camcontrol_traceMove(lbl_803E1688, &local_134, &camera->anim.worldPosX,
+            camcontrol_traceMove(lbl_803E1688, &aimX, &camera->anim.worldPosX,
                                  &camera->anim.worldPosX, auStack_11c, 3, 1, 1);
             camera->probePosX = camera->anim.worldPosX;
             camera->probePosY = camera->anim.worldPosY;
@@ -220,29 +220,29 @@ void camstatic_update(CameraObject* camera)
         }
     }
     ((void (*)(int, f32*, f32*, f32*, f32*, int, f32))(*gCameraInterface)->getRelativePosition)(
-        (int)camera, &local_138, (f32*)auStack_13c, &local_140, &local_144, 0, gCamcontrolModeSettings->targetHeight);
-    sVar4 = getAngle(local_138, local_140);
+        (int)camera, &dx2, (f32*)auStack_13c, &dz, &dy, 0, gCamcontrolModeSettings->targetHeight);
+    yaw = getAngle(dx2, dz);
     gCamcontrolModeSettings->pitchOffset = 0;
-    camera->anim.rotX = (-0x8000 - sVar4) - gCamcontrolModeSettings->pitchOffset;
-    uVar3 = getAngle(camera->anim.worldPosY -
+    camera->anim.rotX = (-0x8000 - yaw) - gCamcontrolModeSettings->pitchOffset;
+    angleDelta = getAngle(camera->anim.worldPosY -
                      (target->anim.worldPosY + gCamcontrolModeSettings->targetHeight),
-                     local_144);
-    uVar3 = (uVar3 & 0xffff) - ((int)camera->anim.rotY & 0xffffU);
-    if (0x8000 < (int)uVar3)
+                     dy);
+    angleDelta = (angleDelta & 0xffff) - ((int)camera->anim.rotY & 0xffffU);
+    if (0x8000 < (int)angleDelta)
     {
-        uVar3 = uVar3 - 0xffff;
+        angleDelta = angleDelta - 0xffff;
     }
-    if ((int)uVar3 < -0x8000)
+    if ((int)angleDelta < -0x8000)
     {
-        uVar3 = uVar3 + 0xffff;
+        angleDelta = angleDelta + 0xffff;
     }
-    iVar2 = (int)interpolate((f32)(int)uVar3,
+    val = (int)interpolate((f32)(int)angleDelta,
                              lbl_803E16A4 /
                              (f32)(u32)gCamcontrolModeSettings->yawResponseFrames, timeDelta);
-    camera->anim.rotY = camera->anim.rotY + (short)iVar2;
+    camera->anim.rotY = camera->anim.rotY + (short)val;
     camcontrol_updateTargetAction((int)camera, (int)target);
-    iVar2 = (int)interpolate((f32)camera->anim.rotZ, lbl_803E1730, timeDelta);
-    camera->anim.rotZ = camera->anim.rotZ - (short)iVar2;
+    val = (int)interpolate((f32)camera->anim.rotZ, lbl_803E1730, timeDelta);
+    camera->anim.rotZ = camera->anim.rotZ - (short)val;
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY,
                                    camera->anim.worldPosZ, &camera->anim.localPosX,
                                    &camera->anim.localPosY, &camera->anim.localPosZ,

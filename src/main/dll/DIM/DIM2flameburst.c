@@ -502,7 +502,7 @@ extern int lbl_803AC960[4];
 
 #pragma scheduling off
 #pragma peephole off
-void explosion_release(uint param_1)
+void explosion_release(uint obj)
 {
     int i;
     int** p;
@@ -1008,12 +1008,12 @@ void dim_levelcontrol_free(int p1)
 extern void* objFindTexture(int obj, int a, int b);
 extern u8 framesThisStep;
 #pragma dont_inline on
-void dimmagicbridge_scrollTextureChannels(int param_1, u8* obj)
+void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
 {
     u8* tex;
     s32 v;
 
-    tex = (u8*)objFindTexture(param_1, 0, 0);
+    tex = (u8*)objFindTexture(arg1, 0, 0);
     *(s16*)(tex + 10) = (s16)(*(s16*)(tex + 10) + 0x14);
     if (*(s16*)(tex + 10) > 10000)
     {
@@ -1024,7 +1024,7 @@ void dimmagicbridge_scrollTextureChannels(int param_1, u8* obj)
     {
         *(s16*)(tex + 8) = (s16)(*(s16*)(tex + 8) - 10000);
     }
-    tex = (u8*)objFindTexture(param_1, 1, 0);
+    tex = (u8*)objFindTexture(arg1, 1, 0);
     *(s16*)(tex + 10) = (s16)(*(s16*)(tex + 10) + 0x1e);
     if (*(s16*)(tex + 10) > 10000)
     {

@@ -433,33 +433,33 @@ extern void objSetSlot(int* obj, int slot);
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
 extern int fn_801A27B8(int* obj, int v);
 
-void blasted_init(int param_1, int param_2)
+void blasted_init(int obj, int placement)
 {
-    int* state = ((GameObject*)param_1)->extra;
+    int* state = ((GameObject*)obj)->extra;
     int* targ;
     s16 gbid;
     u8 v;
 
     state[0xc / 4] = 0;
-    objSetSlot((int*)param_1, 0x51);
-    targ = *(int**)&((GameObject*)param_1)->anim.hitReactState;
+    objSetSlot((int*)obj, 0x51);
+    targ = *(int**)&((GameObject*)obj)->anim.hitReactState;
     ((ObjHitsPriorityState*)targ)->flags = (s16)(((ObjHitsPriorityState*)targ)->flags | 1);
-    ((BlastedState*)state)->unk10 = (u8) * (s16*)(param_2 + 0x1a);
-    gbid = *(s16*)(param_2 + 0x20);
+    ((BlastedState*)state)->unk10 = (u8) * (s16*)(placement + 0x1a);
+    gbid = *(s16*)(placement + 0x20);
     if (gbid != -1)
     {
         v = (u8)GameBit_Get(gbid);
         ((BlastedState*)state)->unk11 = v;
         if (v != 0)
         {
-            Obj_SetActiveModelIndex((int*)param_1, (int)((BlastedState*)state)->unk11);
+            Obj_SetActiveModelIndex((int*)obj, (int)((BlastedState*)state)->unk11);
         }
     }
     GameBit_Set(0x2de, 1);
-    *(s16*)param_1 = (s16)((s32) * (s8*)(param_2 + 0x18) << 8);
-    if ((u32)GameBit_Get(*(s16*)(param_2 + 0x1e)) != 0)
+    *(s16*)obj = (s16)((s32) * (s8*)(placement + 0x18) << 8);
+    if ((u32)GameBit_Get(*(s16*)(placement + 0x1e)) != 0)
     {
-        state[0xc / 4] = fn_801A27B8((int*)param_1, (int)*(s16*)(param_2 + 0x1c));
+        state[0xc / 4] = fn_801A27B8((int*)obj, (int)*(s16*)(placement + 0x1c));
     }
 }
 
@@ -668,8 +668,8 @@ void fn_801A2E80(int obj, int def, int p3, int state)
     int i14;
     int i8;
     int i13;
-    int iVar12;
-    u8 uVar1;
+    int objType;
+    u8 entMode;
     int j;
     int model;
     GasVentTableEntry* e;
@@ -681,10 +681,10 @@ void fn_801A2E80(int obj, int def, int p3, int state)
     } s;
 
     e = (GasVentTableEntry*)lbl_80322DA0;
-    iVar12 = e[((DrExplodableState*)state)->unk6E5].objType;
+    objType = e[((DrExplodableState*)state)->unk6E5].objType;
     ((DrExplodableState*)state)->unk6D0 = e[((DrExplodableState*)state)->unk6E5].sfx;
-    uVar1 = e[((DrExplodableState*)state)->unk6E5].mode;
-    if (iVar12 != -1)
+    entMode = e[((DrExplodableState*)state)->unk6E5].mode;
+    if (objType != -1)
     {
         i13 = 0;
         i15 = state;
@@ -693,7 +693,7 @@ void fn_801A2E80(int obj, int def, int p3, int state)
         for (; i13 < ((DrExplodableState*)state)->count6D4; i13++)
         {
             *(u8*)(state + i13 + 0x6d5) = 1;
-            *(u8*)(i15 + 0x6d) = uVar1;
+            *(u8*)(i15 + 0x6d) = entMode;
             if (p3 == 0)
             {
                 z = lbl_803E4368;
@@ -721,7 +721,7 @@ void fn_801A2E80(int obj, int def, int p3, int state)
             fn_801A30C0(obj, i15, def);
             *(u8*)(i15 + 0x6b) = 0xff;
             *(u8*)(i15 + 0x6a) = (u32)GameBit_Get(*(s16*)(def + 0x3e)) != 0 ? 2 : 0;
-            *(int*)(i8 + 0x690) = fn_801A2BDC(obj, iVar12, i15, i13);
+            *(int*)(i8 + 0x690) = fn_801A2BDC(obj, objType, i15, i13);
             i15 += 0x70;
             i14 += 4;
             i8 += 4;

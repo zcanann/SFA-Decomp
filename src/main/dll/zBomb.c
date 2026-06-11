@@ -39,8 +39,8 @@ extern f32 lbl_803E64D4;
  */
 void dfptargetblock_update(DfpTargetBlockObject* obj)
 {
-    u8 cVar1;
-    undefined uVar3;
+    u8 mode;
+    undefined bitVal;
     DfpTargetBlockState* state;
     DfpTargetBlockHome* home;
     float buf[6];
@@ -59,18 +59,18 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
     {
         if (state->completionSfxReady == '\0')
         {
-            uVar3 = GameBit_Get((int)state->completionSfxId);
-            state->completionSfxReady = uVar3;
+            bitVal = GameBit_Get((int)state->completionSfxId);
+            state->completionSfxReady = bitVal;
         }
         if (state->stateSfxReady == '\0')
         {
-            uVar3 = GameBit_Get((int)state->stateSfxId);
-            state->stateSfxReady = uVar3;
+            bitVal = GameBit_Get((int)state->stateSfxId);
+            state->stateSfxReady = bitVal;
         }
         if (((state->completionSfxReady == '\0') && (state->stateSfxReady != '\0')) &&
-            (cVar1 = state->mode, cVar1 != DFPTARGETBLOCK_MODE_SETTLED))
+            (mode = state->mode, mode != DFPTARGETBLOCK_MODE_SETTLED))
         {
-            if ((cVar1 == DFPTARGETBLOCK_MODE_RAISING) || (cVar1 == DFPTARGETBLOCK_MODE_RESETTING))
+            if ((mode == DFPTARGETBLOCK_MODE_RAISING) || (mode == DFPTARGETBLOCK_MODE_RESETTING))
             {
                 if (obj->y <= home->y)
                 {
@@ -82,7 +82,7 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
                     }
                 }
             }
-            else if (cVar1 == DFPTARGETBLOCK_MODE_LOWERING)
+            else if (mode == DFPTARGETBLOCK_MODE_LOWERING)
             {
                 if (obj->y >= home->y - lbl_803E64AC)
                 {
@@ -114,22 +114,22 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
  * EN v1.0 Size: 600b
  */
 
-void dfptargetblock_init(DfpTargetBlockObject* obj, int param_2)
+void dfptargetblock_init(DfpTargetBlockObject* obj, int arg2)
 {
-    char cVar1;
-    bool bVar2;
-    int iVar3;
-    int iVar4;
-    undefined uVar5;
-    int iVar6;
-    int iVar8;
+    char pointCount;
+    bool found;
+    int count;
+    int entry;
+    undefined bitVal;
+    int j;
+    int i;
     DfpTargetBlockState* state;
-    int iVar7;
-    double dVar11;
+    int model;
+    double fconv;
     DfpTargetBlockPoint point;
 
     state = (DfpTargetBlockState*)obj->state;
-    iVar7 = *ZBomb_GetActiveModel(obj);
+    model = *ZBomb_GetActiveModel(obj);
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x4000;
     if (obj->objectType == DFPTARGETBLOCK_HOME_OBJECT_TYPE)
     {
@@ -139,35 +139,35 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int param_2)
     }
     else
     {
-        dVar11 = (double)lbl_803E64CC;
-        for (iVar8 = 0; iVar8 < (int)(uint) * (ushort*)(iVar7 + 0xe4); iVar8 = iVar8 + 1)
+        fconv = (double)lbl_803E64CC;
+        for (i = 0; i < (int)(uint) * (ushort*)(model + 0xe4); i = i + 1)
         {
-            Model_GetVertexPosition(iVar7, iVar8, &point.x);
-            if ((double)point.y < dVar11)
+            Model_GetVertexPosition(model, i, &point.x);
+            if ((double)point.y < fconv)
             {
-                dVar11 = (double)point.y;
+                fconv = (double)point.y;
             }
         }
-        for (iVar8 = 0; iVar8 < (int)(uint) * (ushort*)(iVar7 + 0xe4); iVar8 = iVar8 + 1)
+        for (i = 0; i < (int)(uint) * (ushort*)(model + 0xe4); i = i + 1)
         {
-            Model_GetVertexPosition(iVar7, iVar8, &point.x);
-            if ((double)point.y == dVar11)
+            Model_GetVertexPosition(model, i, &point.x);
+            if ((double)point.y == fconv)
             {
-                bVar2 = false;
-                cVar1 = state->floorPointCount;
-                for (iVar6 = 0; iVar6 < cVar1; iVar6 = iVar6 + 1)
+                found = false;
+                pointCount = state->floorPointCount;
+                for (j = 0; j < pointCount; j = j + 1)
                 {
-                    iVar4 = (int)state + iVar6 * 12;
-                    if ((point.x == *(float*)(iVar4 + 4)) && (point.z == *(float*)(iVar4 + 12)))
+                    entry = (int)state + j * 12;
+                    if ((point.x == *(float*)(entry + 4)) && (point.z == *(float*)(entry + 12)))
                     {
-                        bVar2 = true;
-                        iVar6 = (int)cVar1;
+                        found = true;
+                        j = (int)pointCount;
                     }
                 }
-                if (!bVar2)
+                if (!found)
                 {
-                    iVar3 = (int)state->floorPointCount;
-                    state->floorPoints[iVar3].x = point.x;
+                    count = (int)state->floorPointCount;
+                    state->floorPoints[count].x = point.x;
                     state->floorPoints[(int)state->floorPointCount].y = point.y;
                     state->floorPoints[(int)state->floorPointCount].z = point.z;
                     state->floorPointCount = state->floorPointCount + '\x01';
@@ -176,12 +176,12 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int param_2)
         }
         state->mode = DFPTARGETBLOCK_MODE_RAISING;
         obj->y = obj->y - lbl_803E64AC;
-        state->completionSfxId = *(short*)(param_2 + 0x1e);
-        state->stateSfxId = *(short*)(param_2 + 0x20);
-        uVar5 = GameBit_Get((int)state->completionSfxId);
-        state->completionSfxReady = uVar5;
-        uVar5 = GameBit_Get((int)state->stateSfxId);
-        state->stateSfxReady = uVar5;
+        state->completionSfxId = *(short*)(arg2 + 0x1e);
+        state->stateSfxId = *(short*)(arg2 + 0x20);
+        bitVal = GameBit_Get((int)state->completionSfxId);
+        state->completionSfxReady = bitVal;
+        bitVal = GameBit_Get((int)state->stateSfxId);
+        state->stateSfxReady = bitVal;
         if (state->completionSfxReady != '\0')
         {
             obj->x = obj->x + lbl_803E64D0;
