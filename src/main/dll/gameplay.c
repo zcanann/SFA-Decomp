@@ -5699,7 +5699,7 @@ extern u8 lbl_80311DA8[];
 extern u8 lbl_803DB898, lbl_803DB8A0, lbl_803DB8A8;
 extern const f32 lbl_803E0710, lbl_803E0714, lbl_803E0718, lbl_803E071C, lbl_803E0720;
 
-void StaffCollision_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param_5, int *param_6)
+void StaffCollision_func03(u8 *sourceObj, int variant, u8 *spawnParams, uint spawnFlags, int modelId, int *colorArgs)
 {
   struct { s16 h0, h1, h2; f32 fx; f32 fy, fz, fw; } m;
   struct { GfxCmd *cmds; u8 *ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
@@ -5714,15 +5714,15 @@ void StaffCollision_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, 
   r = 0xff;
   g = 0xff;
   b = 0xff;
-  if (param_6 != (int *)0) {
-    cnt = param_6[0];
-    r = param_6[1];
-    g = param_6[2];
-    b = param_6[3];
+  if (colorArgs != (int *)0) {
+    cnt = colorArgs[0];
+    r = colorArgs[1];
+    g = colorArgs[2];
+    b = colorArgs[3];
   }
   for (i = 0; i < cnt; i++) {
     f32 ra, rb;
-    if (param_2 == 0) {
+    if (variant == 0) {
       r += randomGetRange(-0x1b, 0x1b);
       if (r > 0xff) {
         r = 0xff;
@@ -5743,8 +5743,8 @@ void StaffCollision_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, 
       }
     }
     ents[0].layer = 0;
-    ents[0].flags = param_2 != 0 ? 4 : 3;
-    ents[0].tex = param_2 != 0 ? &lbl_803DB8A8 : &lbl_803DB8A0;
+    ents[0].flags = variant != 0 ? 4 : 3;
+    ents[0].tex = variant != 0 ? &lbl_803DB8A8 : &lbl_803DB8A0;
     ents[0].mode = 8;
     ents[0].x = (f32)r;
     ents[0].y = (f32)g;
@@ -5754,8 +5754,8 @@ void StaffCollision_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, 
     ents[1].layer = 0; ents[1].flags = 0; ents[1].tex = (void *)0; ents[1].mode = 0x80;
     ents[1].x = lbl_803E0710; ents[1].y = rb; ents[1].z = ra;
     ents[2].layer = 0;
-    ents[2].flags = param_2 != 0 ? 4 : 3;
-    ents[2].tex = param_2 != 0 ? &lbl_803DB8A8 : &lbl_803DB8A0;
+    ents[2].flags = variant != 0 ? 4 : 3;
+    ents[2].tex = variant != 0 ? &lbl_803DB8A8 : &lbl_803DB8A0;
     ents[2].mode = 2;
     ents[2].x = lbl_803E0714; ents[2].y = lbl_803E0718; ents[2].z = lbl_803E071C;
     ents[3].layer = 1; ents[3].flags = 0; ents[3].tex = (void *)0; ents[3].mode = 0x400000;
@@ -5769,14 +5769,14 @@ void StaffCollision_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, 
     m.h0 = (s16)(int)ra;
     vecRotateZXY(&m, &ents[3].x);
     buf.v58 = 0;
-    buf.ctx = param_1;
-    buf.v44 = param_2;
+    buf.ctx = sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0710; buf.pos[1] = lbl_803E0710; buf.pos[2] = lbl_803E0710;
     buf.col[0] = lbl_803E0710; buf.col[1] = lbl_803E0710; buf.col[2] = lbl_803E0710;
     buf.scale = lbl_803E0714;
     buf.v40 = 1;
     buf.v3c = 0;
-    buf.v59 = param_2 != 0 ? 4 : 3;
+    buf.v59 = variant != 0 ? 4 : 3;
     buf.v5a = 0;
     buf.v5b = 0x10;
     buf.count = 4;
@@ -5784,25 +5784,25 @@ void StaffCollision_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, 
     buf.hw[4] = *(s16 *)&base[0x5c]; buf.hw[5] = *(s16 *)&base[0x5e]; buf.hw[6] = *(s16 *)&base[0x60];
     buf.cmds = ents;
     buf.flags = 0x2000490;
-    buf.flags |= param_4;
+    buf.flags |= spawnFlags;
     if ((buf.flags & 1) != 0) {
-      if (buf.ctx != 0 && param_3 != 0) {
-        buf.pos[0] += *(f32 *)(buf.ctx + 0x18) + ((PartFxSpawnParams *)param_3)->unkC;
-        buf.pos[1] += *(f32 *)(buf.ctx + 0x1c) + ((PartFxSpawnParams *)param_3)->unk10;
-        buf.pos[2] += *(f32 *)(buf.ctx + 0x20) + ((PartFxSpawnParams *)param_3)->unk14;
+      if (buf.ctx != 0 && spawnParams != 0) {
+        buf.pos[0] += *(f32 *)(buf.ctx + 0x18) + ((PartFxSpawnParams *)spawnParams)->unkC;
+        buf.pos[1] += *(f32 *)(buf.ctx + 0x1c) + ((PartFxSpawnParams *)spawnParams)->unk10;
+        buf.pos[2] += *(f32 *)(buf.ctx + 0x20) + ((PartFxSpawnParams *)spawnParams)->unk14;
       } else if (buf.ctx != 0) {
         buf.pos[0] += *(f32 *)(buf.ctx + 0x18);
         buf.pos[1] += *(f32 *)(buf.ctx + 0x1c);
         buf.pos[2] += *(f32 *)(buf.ctx + 0x20);
-      } else if (param_3 != 0) {
-        buf.pos[0] += ((PartFxSpawnParams *)param_3)->unkC;
-        buf.pos[1] += ((PartFxSpawnParams *)param_3)->unk10;
-        buf.pos[2] += ((PartFxSpawnParams *)param_3)->unk14;
+      } else if (spawnParams != 0) {
+        buf.pos[0] += ((PartFxSpawnParams *)spawnParams)->unkC;
+        buf.pos[1] += ((PartFxSpawnParams *)spawnParams)->unk10;
+        buf.pos[2] += ((PartFxSpawnParams *)spawnParams)->unk14;
       }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, param_2 != 0 ? 4 : 3,
-        param_2 != 0 ? &base[0x20] : base, param_2 != 0 ? 2 : 1,
-        param_2 != 0 ? (u8 *)&base[0x48] : &lbl_803DB898, 0, 0);
+    (*gModgfxInterface)->spawnEffect(&buf, 0, variant != 0 ? 4 : 3,
+        variant != 0 ? &base[0x20] : base, variant != 0 ? 2 : 1,
+        variant != 0 ? (u8 *)&base[0x48] : &lbl_803DB898, 0, 0);
   }
 }
 

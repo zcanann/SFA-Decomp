@@ -387,11 +387,11 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
 {
     FirePipeExtra *extra;
     FirePipeExtra *extra2;
-    int iVar7;
-    short sVar1;
-    short sVar5;
-    undefined4 uVar3;
-    uint uVar4;
+    int def;
+    short startTime;
+    short cycleTime;
+    undefined4 bitVal;
+    uint val;
 
     extra = obj->extra;
     if ((int)mapData->scale != 0) {
@@ -399,40 +399,40 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
         obj->scale = scale * *(float *)(*(int *)((int)obj + 0x50) + 4);
     }
     if (mapData->gameBit != -1) {
-        uVar3 = GameBit_Get((int)mapData->gameBit);
-        ((FirePipeBitFlags *)&extra->flags)->bit6 = (u8)uVar3;
+        bitVal = GameBit_Get((int)mapData->gameBit);
+        ((FirePipeBitFlags *)&extra->flags)->bit6 = (u8)bitVal;
     }
     else {
         ((FirePipeBitFlags *)&extra->flags)->bit6 = 1;
     }
     obj->sequenceCallback = firepipe_stateCallback;
     {
-        iVar7 = (int)obj->objectDef;
+        def = (int)obj->objectDef;
         extra2 = obj->extra;
         storeZeroToFloatParam(&extra2->cycleTimer);
-        sVar5 = *(short *)(iVar7 + 0x1a);
-        if (sVar5 != 0) {
-            sVar1 = *(short *)(iVar7 + 0x20);
-            if (sVar1 != 0) {
-                if (sVar1 < 0) {
-                    sVar5 = randomGetRange(1, sVar5 * 0x3c);
-                    s16toFloat(&extra2->cycleTimer, (int)sVar5);
+        cycleTime = *(short *)(def + 0x1a);
+        if (cycleTime != 0) {
+            startTime = *(short *)(def + 0x20);
+            if (startTime != 0) {
+                if (startTime < 0) {
+                    cycleTime = randomGetRange(1, cycleTime * 0x3c);
+                    s16toFloat(&extra2->cycleTimer, (int)cycleTime);
                 }
                 else {
-                    s16toFloat(&extra2->cycleTimer, (int)(short)(sVar1 * 0x3c));
-                    if (*(short *)(iVar7 + 0x20) >= *(short *)(iVar7 + 0x1a)) {
+                    s16toFloat(&extra2->cycleTimer, (int)(short)(startTime * 0x3c));
+                    if (*(short *)(def + 0x20) >= *(short *)(def + 0x1a)) {
                         ((FirePipeBitFlags *)&extra2->flags)->bit6 = 0;
                     }
                 }
             }
             else {
-                s16toFloat(&extra2->cycleTimer, (int)(short)(sVar5 * 0x3c));
+                s16toFloat(&extra2->cycleTimer, (int)(short)(cycleTime * 0x3c));
             }
         }
         extra->clearVolumeA = 0;
         extra->clearVolumeB = 0;
-        sVar5 = obj->objectId;
-        switch (sVar5) {
+        cycleTime = obj->objectId;
+        switch (cycleTime) {
         case 0x6f9:
             extra->effectType = 10;
             extra->effectMode = 1;
@@ -478,25 +478,25 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
         ObjHits_EnableObject(obj);
         ((FirePipeBitFlags *)&extra->flags)->bit4 = 0;
         extra->activeSpawn = 0;
-        uVar3 = GameBit_Get((int)mapData->gameBit);
+        bitVal = GameBit_Get((int)mapData->gameBit);
         {
-            uint clz = __cntlzw(uVar3);
+            uint clz = __cntlzw(bitVal);
             ((FirePipeBitFlags *)&extra->flags)->bit7 = (u8)(clz >> 5);
         }
         if ((mapData->flags & 1) != 0) {
-            uVar4 = 0;
+            val = 0;
         }
         else {
-            uVar4 = 1;
+            val = 1;
         }
-        ((FirePipeBitFlags *)&extra->flags)->bit1 = uVar4;
+        ((FirePipeBitFlags *)&extra->flags)->bit1 = val;
         if ((mapData->flags & 2) != 0) {
-            uVar4 = 0;
+            val = 0;
         }
         else {
-            uVar4 = 1;
+            val = 1;
         }
-        ((FirePipeBitFlags *)&extra->flags)->bit0 = uVar4;
+        ((FirePipeBitFlags *)&extra->flags)->bit0 = val;
         storeZeroToFloatParam(&extra->emitTimer);
         s16toFloat(&extra->emitTimer, 0x14);
         ObjGroup_AddObject(obj, 0x4a);

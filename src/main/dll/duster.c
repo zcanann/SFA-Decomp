@@ -554,32 +554,32 @@ void timeOfDayFn_80155cf8(int param_9,int param_10)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void baddieUpdateWhileFrozen_80155e10(uint param_9,int param_10,undefined4 param_11,int param_12,undefined4 param_13,int param_14)
+void baddieUpdateWhileFrozen_80155e10(uint obj,int state,undefined4 param_11,int eventKind,undefined4 param_13,int damage)
 {
-  if (param_12 == 0x10) {
-    ((BaddieState *)param_10)->reactionFlags = ((BaddieState *)param_10)->reactionFlags | 0x20;
+  if (eventKind == 0x10) {
+    ((BaddieState *)state)->reactionFlags = ((BaddieState *)state)->reactionFlags | 0x20;
   }
-  else if (param_12 == 0x11) {
-    if ((((BaddieState *)param_10)->seqEntryIndex == 2) && (((GameObject *)param_9)->anim.currentMove != 5)) {
-      fn_8014D08C(param_9,param_10,5,lbl_803E2A7C,0,0);
+  else if (eventKind == 0x11) {
+    if ((((BaddieState *)state)->seqEntryIndex == 2) && (((GameObject *)obj)->anim.currentMove != 5)) {
+      fn_8014D08C(obj,state,5,lbl_803E2A7C,0,0);
     }
   }
-  else if ((((GameObject *)param_9)->anim.currentMove == 5) || (((GameObject *)param_9)->anim.currentMove == 4)) {
-    if (param_14 > (int)(uint)((BaddieState *)param_10)->hitCounter) {
-      ((BaddieState *)param_10)->hitCounter = 0;
-      Sfx_PlayFromObject(param_9,SFXfox_climbgrunt1);
-      Sfx_PlayFromObject(param_9,SFXen_blkscrp6);
+  else if ((((GameObject *)obj)->anim.currentMove == 5) || (((GameObject *)obj)->anim.currentMove == 4)) {
+    if (damage > (int)(uint)((BaddieState *)state)->hitCounter) {
+      ((BaddieState *)state)->hitCounter = 0;
+      Sfx_PlayFromObject(obj,SFXfox_climbgrunt1);
+      Sfx_PlayFromObject(obj,SFXen_blkscrp6);
     }
     else {
-      ((BaddieState *)param_10)->hitCounter = ((BaddieState *)param_10)->hitCounter - param_14;
-      Sfx_PlayFromObject(param_9,SFXfox_roll1);
-      Sfx_PlayFromObject(param_9,SFXen_blkscrp6);
+      ((BaddieState *)state)->hitCounter = ((BaddieState *)state)->hitCounter - damage;
+      Sfx_PlayFromObject(obj,SFXfox_roll1);
+      Sfx_PlayFromObject(obj,SFXen_blkscrp6);
     }
-    ((BaddieState *)param_10)->reactionFlags = ((BaddieState *)param_10)->reactionFlags | 8;
+    ((BaddieState *)state)->reactionFlags = ((BaddieState *)state)->reactionFlags | 8;
   }
   else {
-    ((BaddieState *)param_10)->reactionFlags = ((BaddieState *)param_10)->reactionFlags | 0x10;
-    Sfx_PlayFromObject(param_9,SFXfox_roll2);
+    ((BaddieState *)state)->reactionFlags = ((BaddieState *)state)->reactionFlags | 0x10;
+    Sfx_PlayFromObject(obj,SFXfox_roll2);
   }
   return;
 }
