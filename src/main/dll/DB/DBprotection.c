@@ -445,8 +445,10 @@ void fn_801DFA28(u8* obj)
         ambC = lbl_803E5708;
         if (((SBGalleonState*)state)->cycleKind == 0)
         {
-            if ((((SBGalleonState*)state)->stage < 2) && (((SBGalleonState*)state)->stage >= 0))
+            switch (((SBGalleonState*)state)->stage)
             {
+            case 0:
+            case 1:
                 if (((SBGalleonState*)state)->headingLatch != 0)
                 {
                     ((SBGalleonState*)state)->headingLatch -= 1;
@@ -455,9 +457,8 @@ void fn_801DFA28(u8* obj)
                         ((SBGalleonState*)state)->headingLatch = 200;
                     }
                 }
-            }
-            else
-            {
+                break;
+            default:
                 ((SBGalleonState*)state)->stage = 2;
                 ((SBGalleonState*)state)->phaseTimer = 0;
                 ((SBGalleonState*)state)->phase = 1;
@@ -466,12 +467,15 @@ void fn_801DFA28(u8* obj)
                 *(s8*)&((SBGalleonState*)state)->flightPattern = 0;
                 ((SBGalleonState*)state)->headingLatch = 200;
                 GameBit_Set(0xF1E, 1);
+                break;
             }
         }
         else
         {
-            if ((((SBGalleonState*)state)->stage < 5) && (((SBGalleonState*)state)->stage >= 3))
+            switch (((SBGalleonState*)state)->stage)
             {
+            case 3:
+            case 4:
                 if (((SBGalleonState*)state)->headingLatch != 0)
                 {
                     ((SBGalleonState*)state)->headingLatch -= 1;
@@ -480,15 +484,15 @@ void fn_801DFA28(u8* obj)
                         ((SBGalleonState*)state)->headingLatch = 200;
                     }
                 }
-            }
-            else
-            {
+                break;
+            default:
                 ((SBGalleonState*)state)->stage = 5;
                 ((SBGalleonState*)state)->phaseTimer = 0;
                 ((SBGalleonState*)state)->phase = 1;
                 ((SBGalleonState*)state)->cycleKind = 2;
                 *(s8*)&((SBGalleonState*)state)->flightPattern = 0;
                 ((SBGalleonState*)state)->headingLatch = 200;
+                break;
             }
         }
         break;

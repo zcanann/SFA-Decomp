@@ -1436,16 +1436,17 @@ void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     GroundBaddieState* sub = ((GameObject*)p1)->extra;
     f32 t;
 
-    if (visible != 0 && ((GameObject*)p1)->unkF4 == 0 && sub->targetState != 0)
+    if (visible == 0 || ((GameObject*)p1)->unkF4 != 0 || sub->targetState == 0)
     {
-        t = sub->unk3E8;
-        if (t != lbl_803E2DC8)
-        {
-            fn_8003B5E0(200, 0, 0, (int)t);
-        }
-        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5,
-                                                                       lbl_803E2E10);
+        return;
     }
+    t = sub->unk3E8;
+    if (t != lbl_803E2DC8)
+    {
+        fn_8003B5E0(200, 0, 0, (int)t);
+    }
+    ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5,
+                                                                   lbl_803E2E10);
 }
 
 void dll_CE_init(int obj, u8* p, int flags)
