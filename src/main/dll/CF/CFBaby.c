@@ -1213,35 +1213,19 @@ int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         case 2:
         case 0x65:
             mapId = *(int*)(def + 0x14);
-            if (mapId == 0x49f5a)
+            switch (mapId)
             {
-                loadMapAndParent(0x26);
+            case 0x43775:
+                loadMapAndParent(0x29);
                 unlockLevel(0, 0, 1);
-                lockLevel(mapGetDirIdx(0x26), 0);
-                lockLevel(mapGetDirIdx(0xb), 1);
-            }
-            else if (mapId < 0x49f5a)
-            {
-                if (mapId == 0x451b9)
+                lockLevel(mapGetDirIdx(0x29), 0);
+                break;
+            case 0x451b9:
+                if (MAP_EVENT_STATUS(0xd) == 2)
                 {
-                    if (MAP_EVENT_STATUS(0xd) == 2)
-                    {
-                        loadMapAndParent(0xb);
-                        unlockLevel(0, 0, 1);
-                        lockLevel(mapGetDirIdx(0xb), 0);
-                    }
-                    else
-                    {
-                        loadMapAndParent(0x29);
-                        unlockLevel(0, 0, 1);
-                        lockLevel(mapGetDirIdx(0x29), 0);
-                    }
-                }
-                else if (mapId == 0x43775)
-                {
-                    loadMapAndParent(0x29);
+                    loadMapAndParent(0xb);
                     unlockLevel(0, 0, 1);
-                    lockLevel(mapGetDirIdx(0x29), 0);
+                    lockLevel(mapGetDirIdx(0xb), 0);
                 }
                 else
                 {
@@ -1249,117 +1233,105 @@ int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                     unlockLevel(0, 0, 1);
                     lockLevel(mapGetDirIdx(0x29), 0);
                 }
-            }
-            else if (mapId == 0x4cd65)
-            {
+                break;
+            case 0x49f5a:
+                loadMapAndParent(0x26);
+                unlockLevel(0, 0, 1);
+                lockLevel(mapGetDirIdx(0x26), 0);
+                lockLevel(mapGetDirIdx(0xb), 1);
+                break;
+            case 0x4cd65:
                 loadMapAndParent(0x41);
                 unlockLevel(0, 0, 1);
                 lockLevel(mapGetDirIdx(0x41), 0);
                 lockLevel(mapGetDirIdx(0xb), 1);
-            }
-            else
-            {
+                break;
+            default:
                 loadMapAndParent(0x29);
                 unlockLevel(0, 0, 1);
                 lockLevel(mapGetDirIdx(0x29), 0);
+                break;
             }
             break;
         case 3:
         case 0x64:
             mapId = ((LandedArwingPlacement*)def)->unk14;
-            if (mapId == 0x49f5a)
+            switch (mapId)
             {
+            case 0x43775:
+                unlockLevel(0, 0, 1);
+                mapUnload(mapGetDirIdx(7), 0x3f3c);
+                break;
+            case 0x49f5a:
                 MAP_EVENT_OP(0xb, 4, 0);
-            }
-            else if (mapId < 0x49f5a)
-            {
-                if (mapId == 0x451b9)
-                {
-                    if (MAP_EVENT_STATUS(0xd) == 2)
-                    {
-                        unlockLevel(0, 0, 1);
-                        mapUnload(mapGetDirIdx(0xd), 0x3f3f);
-                        MAP_EVENT_OP(0xd, 0xa, 0);
-                        MAP_EVENT_OP(0xd, 0xb, 0);
-                        MAP_EVENT_OP(0xd, 0xe, 0);
-                    }
-                }
-                else if (mapId == 0x43775)
+                break;
+            case 0x451b9:
+                if (MAP_EVENT_STATUS(0xd) == 2)
                 {
                     unlockLevel(0, 0, 1);
-                    mapUnload(mapGetDirIdx(7), 0x3f3c);
+                    mapUnload(mapGetDirIdx(0xd), 0x3f3f);
+                    MAP_EVENT_OP(0xd, 0xa, 0);
+                    MAP_EVENT_OP(0xd, 0xb, 0);
+                    MAP_EVENT_OP(0xd, 0xe, 0);
                 }
-            }
-            else if (mapId == 0x4cd65)
-            {
+                break;
+            case 0x4cd65:
                 unlockLevel(0, 0, 1);
                 mapUnload(mapGetDirIdx(0xb), 0x3f00);
+                break;
             }
             break;
         case 5:
             mapId = ((LandedArwingPlacement*)def)->unk14;
-            if (mapId == 0x451b9)
+            switch (mapId)
             {
+            case 0x43775:
+            case 0x49f5a:
+                setLoadedFileFlags_blocks1();
+                break;
+            case 0x451b9:
                 if (MAP_EVENT_STATUS(0xd) == 2)
                 {
                     setLoadedFileFlags_blocks1();
                 }
-            }
-            else if (mapId < 0x451b9)
-            {
-                if (mapId == 0x43775)
-                {
-                    setLoadedFileFlags_blocks1();
-                }
-            }
-            else if (mapId == 0x49f5a)
-            {
-                setLoadedFileFlags_blocks1();
+                break;
             }
             break;
         case 6:
             mapId = ((LandedArwingPlacement*)def)->unk14;
-            if (mapId == 0x451b9)
+            switch (mapId)
             {
+            case 0x43775:
+            case 0x49f5a:
+                clearLoadedFileFlags_blocks1();
+                break;
+            case 0x451b9:
                 if (MAP_EVENT_STATUS(0xd) == 2)
                 {
                     clearLoadedFileFlags_blocks1();
                 }
-            }
-            else if (mapId < 0x451b9)
-            {
-                if (mapId == 0x43775)
-                {
-                    clearLoadedFileFlags_blocks1();
-                }
-            }
-            else if (mapId == 0x49f5a)
-            {
-                clearLoadedFileFlags_blocks1();
+                break;
             }
             break;
         case 7:
         case 0x66:
             mapId = ((LandedArwingPlacement*)def)->unk14;
-            if (mapId == 0x49f5a)
+            switch (mapId)
             {
-                warpToMap(0x32, 0);
-            }
-            else if (mapId < 0x49f5a)
-            {
-                if (mapId == 0x451b9)
+            case 0x451b9:
+                if (MAP_EVENT_STATUS(0xd) == 2)
                 {
-                    if (MAP_EVENT_STATUS(0xd) == 2)
-                    {
-                        MAP_EVENT_SET(0xb, 5);
-                        warpToMap(0x4e, 0);
-                    }
+                    MAP_EVENT_SET(0xb, 5);
+                    warpToMap(0x4e, 0);
                 }
-            }
-            else if (mapId == 0x4cd65)
-            {
+                break;
+            case 0x49f5a:
+                warpToMap(0x32, 0);
+                break;
+            case 0x4cd65:
                 warpToMap(0x7f, 0);
                 MAP_EVENT_SET(0x41, 2);
+                break;
             }
             break;
         case 0xa:
@@ -1406,16 +1378,16 @@ int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         case 0x18:
             child = state->childObject;
-            if (child != 0)
+            if ((void*)child != NULL)
             {
-                *(u16*)(child + 6) &= 0xbfff;
+                *(s16*)(child + 6) &= ~0x4000;
             }
             break;
         case 0x19:
             child = state->childObject;
-            if (child != 0)
+            if ((void*)child != NULL)
             {
-                *(u16*)(child + 6) |= 0x4000;
+                *(s16*)(child + 6) |= 0x4000;
             }
             break;
         }
