@@ -68,46 +68,21 @@ sizeof
 );
 
 
-extern undefined8 FUN_80006724();
-extern undefined8 FUN_80006728();
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068d0();
 extern byte FUN_80006b44();
 extern undefined4 FUN_80006b4c();
 extern undefined4 FUN_80006b50();
 extern undefined4 FUN_80006b54();
-extern undefined4 FUN_80006c88();
-extern undefined4 FUN_80017680();
 extern uint FUN_80017690();
 extern undefined8 FUN_80017698();
-extern int FUN_80017a5c();
-extern undefined4 FUN_80017a6c();
-extern int FUN_80017a90();
 extern int FUN_80017a98();
-extern void* FUN_80017aa4();
-extern uint FUN_80017ae8();
 extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern undefined4 ObjHits_PollPriorityHitEffectWithCooldown();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80048000();
-extern undefined4 FUN_8004800c();
-extern undefined4 FUN_80053c98();
-extern int FUN_8005b024();
-extern undefined8 FUN_80080f14();
-extern undefined8 FUN_80080f28();
-extern undefined4 FUN_80080f3c();
-extern undefined4 FUN_80081110();
-extern undefined4 FUN_8012e250();
 extern undefined4 SH_LevelControl_runBloopEvent();
-extern undefined4 FUN_801da7f8();
 
-extern undefined4 DAT_803dccc8;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern undefined4* DAT_803dd6d8;
 extern MapEventInterface** gMapEventInterface;
-extern undefined4 DAT_803de878;
-extern undefined4 DAT_803de880;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E61C0;
 extern f32 lbl_803E61C8;
