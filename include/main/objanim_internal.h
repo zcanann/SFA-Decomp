@@ -299,12 +299,23 @@ typedef struct ObjAnimComponent {
   s8 activeHitboxMode;
   union {
     s8 resetHitboxMode;
-    u8 resetHitboxFlags; /* unsigned view - interaction-prompt state bits
-                            (0x01 interacted, 0x04 in range, 0x08 disabled,
-                            0x10 prompt armed); matched code reads lbz/stb
-                            here where the s8 view would emit extsb */
+    u8 resetHitboxFlags; /* unsigned view - INTERACT_FLAG_* bits; matched
+                            code reads lbz/stb here where the s8 view would
+                            emit extsb */
   };
 } ObjAnimComponent;
+
+/*
+ * anim.resetHitboxFlags bits - the engine<->DLL interact-prompt handshake.
+ * ACTIVATED and IN_RANGE are engine-written (DLL code only reads them:
+ * 44/31 sites); DISABLED and PROMPT_SUPPRESSED are DLL-written. The
+ * objhits system separately stores small mode VALUES in this same byte
+ * via the s8 view (OBJHITS_RESET_HITBOX_MODE).
+ */
+#define INTERACT_FLAG_ACTIVATED 0x01 /* player triggered the prompt this frame */
+#define INTERACT_FLAG_IN_RANGE 0x04  /* player close enough; DLLs show the A icon */
+#define INTERACT_FLAG_DISABLED 0x08  /* interaction off (DLLs default-set, clear to enable) */
+#define INTERACT_FLAG_PROMPT_SUPPRESSED 0x10 /* precondition unmet, hide the prompt */
 
 typedef struct ObjAnimEventTable {
   s32 byteCount;
