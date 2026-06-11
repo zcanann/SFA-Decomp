@@ -7,6 +7,7 @@
 #include "main/objHitReact.h"
 #include "main/objanim_internal.h"
 #include "main/objhits.h"
+#include "main/object_transform.h"
 #include "main/track_dolphin.h"
 #include "main/vecmath.h"
 #include "dolphin/os/OSFastCast.h"
@@ -2983,11 +2984,7 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
 }
 
 extern void Obj_BuildTransformMatrices(void* obj);
-extern void fn_80296EB4(u8 * p1, u8 * p2);
-extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, void* obj);
-extern void Obj_TransformLocalVectorToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, void* obj);
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, void* obj);
-extern void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, void* obj);
+extern void fn_80296EB4(u8* p1, u8* p2);
 
 void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode)
 {
@@ -3015,11 +3012,11 @@ void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode)
     if (oldParent != NULL)
     {
         Obj_TransformLocalPointToWorld(*(f32*)(obj + 0xc), *(f32*)(obj + 0x10), *(f32*)(obj + 0x14),
-                                       (f32*)(obj + 0x18), (f32*)(obj + 0x1c), (f32*)(obj + 0x20), oldParent);
+                                       (f32*)(obj + 0x18), (f32*)(obj + 0x1c), (f32*)(obj + 0x20), (u32)oldParent);
         Obj_TransformLocalPointToWorld(*(f32*)(obj + 0x80), *(f32*)(obj + 0x84), *(f32*)(obj + 0x88),
-                                       (f32*)(obj + 0x8c), (f32*)(obj + 0x90), (f32*)(obj + 0x94), oldParent);
+                                       (f32*)(obj + 0x8c), (f32*)(obj + 0x90), (f32*)(obj + 0x94), (u32)oldParent);
         Obj_TransformLocalVectorToWorld(*(f32*)(obj + 0x24), __AR_Callback, *(f32*)(obj + 0x2c),
-                                        &dirX, (f32*)dirBuf, &dirZ, oldParent);
+                                        &dirX, (f32*)dirBuf, &dirZ, (u32)oldParent);
         yawSum = *(s16*)oldParent + *(s16*)obj;
     }
     else
@@ -3035,13 +3032,13 @@ void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode)
         {
             Obj_TransformWorldPointToLocal(*(f32*)(obj + 0x18), *(f32*)(obj + 0x1c), *(f32*)(obj + 0x20),
                                            (f32*)(obj + 0xc), (f32*)(obj + 0x10), (f32*)(obj + 0x14),
-                                           *(u8**)(obj + 0x30));
+                                           (u32)*(u8**)(obj + 0x30));
             Obj_TransformWorldPointToLocal(*(f32*)(obj + 0x8c), *(f32*)(obj + 0x90), *(f32*)(obj + 0x94),
                                            (f32*)(obj + 0x80), (f32*)(obj + 0x84), (f32*)(obj + 0x88),
-                                           *(u8**)(obj + 0x30));
+                                           (u32)*(u8**)(obj + 0x30));
             Obj_TransformWorldVectorToLocal(dirX, __AR_Callback, dirZ,
                                             (f32*)(obj + 0x24), (f32*)dirBuf, (f32*)(obj + 0x2c),
-                                            *(u8**)(obj + 0x30));
+                                            (u32)*(u8**)(obj + 0x30));
             yawSum = yawSum - *(s16*)(*(u8**)(obj + 0x30));
             if (yawSum > 0x8000) yawSum -= 0xffff;
             if (yawSum < -0x8000) yawSum += 0xffff;
@@ -4222,8 +4219,8 @@ void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, i
     mtx = (self != NULL) ? *(int*)((char*)self + 0x30) : 0;
     if ((u32)mtx != 0)
     {
-        Obj_TransformLocalPointToWorld(p0[0], p0[1], p0[2], &w0[0], &w0[1], &w0[2], (void*)mtx);
-        Obj_TransformLocalPointToWorld(p1[0], p1[1], p1[2], &w1[0], &w1[1], &w1[2], (void*)mtx);
+        Obj_TransformLocalPointToWorld(p0[0], p0[1], p0[2], &w0[0], &w0[1], &w0[2], (u32)mtx);
+        Obj_TransformLocalPointToWorld(p1[0], p1[1], p1[2], &w1[0], &w1[1], &w1[2], (u32)mtx);
     }
     else
     {
@@ -4293,11 +4290,11 @@ void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, i
         }
         else
         {
-            Obj_TransformWorldPointToLocal(w0[0], w0[1], w0[2], &t20[0], &t20[1], &t20[2], o);
+            Obj_TransformWorldPointToLocal(w0[0], w0[1], w0[2], &t20[0], &t20[1], &t20[2], (u32)o);
         }
-        Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &t14[0], &t14[1], &t14[2], o);
+        Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &t14[0], &t14[1], &t14[2], (u32)o);
         if (doLotsOfMath(t20, t14, p5, out, o, p8, p9, arg8, (int)self, f) != 0)
-            Obj_TransformLocalPointToWorld(t14[0], t14[1], t14[2], &w1[0], &w1[1], &w1[2], o);
+            Obj_TransformLocalPointToWorld(t14[0], t14[1], t14[2], &w1[0], &w1[1], &w1[2], (u32)o);
         if ((u8)slot != 0xff)
         {
             char* fl;
@@ -4352,22 +4349,22 @@ void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, i
             Obj_TransformLocalPointToWorld(*(f32*)((char*)out + 4), *(f32*)((char*)out + 0xc),
                                            *(f32*)((char*)out + 0x14), (f32*)((int)out + 4),
                                            (f32*)((int)out + 0xc), (f32*)((int)out + 0x14),
-                                           (void*)*(int*)out);
+                                           (u32)*(int*)out);
             Obj_TransformLocalPointToWorld(*(f32*)((char*)out + 8), *(f32*)((char*)out + 0x10),
                                            *(f32*)((char*)out + 0x18), (f32*)((int)out + 8),
                                            (f32*)((int)out + 0x10), (f32*)((int)out + 0x18),
-                                           (void*)*(int*)out);
+                                           (u32)*(int*)out);
         }
         if ((u32)mtx != 0)
         {
             Obj_TransformWorldPointToLocal(*(f32*)((char*)out + 4), *(f32*)((char*)out + 0xc),
                                            *(f32*)((char*)out + 0x14), (f32*)((int)out + 4),
                                            (f32*)((int)out + 0xc), (f32*)((int)out + 0x14),
-                                           (void*)mtx);
+                                           (u32)mtx);
             Obj_TransformWorldPointToLocal(*(f32*)((char*)out + 8), *(f32*)((char*)out + 0x10),
                                            *(f32*)((char*)out + 0x18), (f32*)((int)out + 8),
                                            (f32*)((int)out + 0x10), (f32*)((int)out + 0x18),
-                                           (void*)mtx);
+                                           (u32)mtx);
         }
         *(f32*)((char*)out + 0x1c) = *(f32*)((char*)out + 0x18) - *(f32*)((char*)out + 0x14);
         *(f32*)((char*)out + 0x20) = __AR_Callback;
@@ -4384,7 +4381,7 @@ void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, i
     if (lbl_803DCF4C != 0)
     {
         if ((u32)mtx != 0)
-            Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &p1[0], &p1[1], &p1[2], (void*)mtx);
+            Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &p1[0], &p1[1], &p1[2], (u32)mtx);
         else
             memcpy(p1, w1, 0xc);
     }
