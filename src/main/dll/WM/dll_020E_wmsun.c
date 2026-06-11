@@ -136,15 +136,14 @@ renderEnabled
 0x0D
 );
 
+#pragma scheduling off
 int fn_801F6E8C(int p1, int p2, ObjAnimUpdateState* actor)
 {
-    int ret;
-
-    ret = 0;
     actor->hitVolumePair = -1;
-    actor->sequenceEventActive = (u8)ret;
-    return ret;
+    actor->sequenceEventActive = 0;
+    return 0;
 }
+#pragma scheduling reset
 
 int wmsun_getExtraSize(void) { return 0x10; }
 
@@ -244,7 +243,7 @@ void wmsun_init(int obj, int params)
         {
             ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5F24;
         }
-        objAnim->bankIndex = mapData->bankIndex;
+        *(u8*)&objAnim->bankIndex = mapData->bankIndex;
         c2 = objAnim->bankIndex;
         if (c2 == 0)
         {
@@ -272,9 +271,9 @@ void wmsun_init(int obj, int params)
         {
             j -= 2;
             i--;
-            *(s16*)((u8*)state->glareParams->angleOffsets + j) = 0;
-            *(s16*)((u8*)state->glareParams->flickerTimers + j) = randomGetRange(10, 0x14);
-            *(s16*)((u8*)state->glareParams->alphaValues + j) = randomGetRange(0x50, 0xff);
+            *(s16*)((u8*)state->glareParams + j + 0x28) = 0;
+            *(s16*)((u8*)state->glareParams + j + 0x50) = randomGetRange(10, 0x14);
+            *(s16*)((u8*)state->glareParams + j + 0x78) = randomGetRange(0x50, 0xff);
         }
         objAnim->alpha = 0;
         if (mapData->rootMotionScaleParam != 0)
@@ -305,7 +304,7 @@ void wmsun_update(int obj)
     int t;
     s8 c;
     u8 b;
-    int v;
+    register int v;
 
     objAnim = (ObjAnimComponent*)obj;
     thresh = 0;
