@@ -1,7 +1,6 @@
+#include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/dll/crate.h"
-
-extern void GameBit_Set(int eventId, int value);
 
 #define SFXPLAYER_EVENT_ACTIVATE 1
 #define SFXPLAYER_EVENT_DEACTIVATE 2

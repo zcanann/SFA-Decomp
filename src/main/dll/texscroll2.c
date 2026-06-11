@@ -1,4 +1,6 @@
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/wallanimator.h"
@@ -10,9 +12,6 @@ typedef struct KaldachomState
     u8 unk4A;
     u8 pad4B[0x50 - 0x4B];
 } KaldachomState;
-
-
-extern undefined4 GameBit_Set(int eventId, int value);
 
 int kaldachom_stateHandlerA04(int obj, int p2)
 {
