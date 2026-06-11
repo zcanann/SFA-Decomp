@@ -31,19 +31,19 @@ extern f32 lbl_803E175C;
  */
 void camclimb_update(CameraObject* cam)
 {
-    byte cVar2;
-    uint uVar1;
+    byte needsReset;
+    uint angle;
     int defaultHandler;
     int yawDelta;
     GameObject* target;
     int pointIndex;
-    float local_20[4];
-    float local_24;
-    float local_28;
-    float local_2c;
-    undefined auStack_30[4];
-    float local_34;
-    float local_38;
+    float localPosZ[4];
+    float localPosY;
+    float localPosX;
+    float relX;
+    undefined relY[4];
+    float relZ;
+    float relDistXZ;
 
     if (lbl_803DD538->active != 0)
     {
@@ -70,10 +70,10 @@ void camclimb_update(CameraObject* cam)
             lbl_803DD538->localFrameObj = *(int*)&cam->anim.parent;
         }
         target = (GameObject*)cam->anim.targetObj;
-        local_24 = cam->anim.localPosY;
-        cVar2 = camcontrol_samplePathState(&local_28, &local_24, local_20, target, cam);
-        cam->anim.localPosX = local_28;
-        cam->anim.localPosZ = local_20[0];
+        localPosY = cam->anim.localPosY;
+        needsReset = camcontrol_samplePathState(&localPosX, &localPosY, localPosZ, target, cam);
+        cam->anim.localPosX = localPosX;
+        cam->anim.localPosZ = localPosZ[0];
         defaultHandler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
         Obj_TransformLocalPointToWorld(cam->anim.localPosX, cam->anim.localPosY,
                                        cam->anim.localPosZ, &cam->anim.worldPosX, &cam->anim.worldPosY,
@@ -89,20 +89,20 @@ void camclimb_update(CameraObject* cam)
         }
         if (lbl_803DD538->initialiseCurve[4] > lbl_803E1740)
         {
-            cVar2 = camcontrol_getTargetPosition(cam, target, &cam->anim.worldPosX, &cam->anim.rotY);
-            if (cVar2 == 1)
+            needsReset = camcontrol_getTargetPosition(cam, target, &cam->anim.worldPosX, &cam->anim.rotY);
+            if (needsReset == 1)
             {
                 doNothing_80103660(1);
             }
             cam->probePosX = cam->anim.worldPosX;
             cam->probePosY = cam->anim.worldPosY;
             cam->probePosZ = cam->anim.worldPosZ;
-            cVar2 = 1;
+            needsReset = 1;
         }
-        (*gCameraInterface)->getRelativePosition(lbl_803E1740, (int)cam, &local_2c,
-                                                 (f32*)auStack_30, &local_34, &local_38, 0);
-        uVar1 = getAngle((double)local_2c, (double)local_34);
-        yawDelta = 0x8000 - (uVar1 & 0xffff);
+        (*gCameraInterface)->getRelativePosition(lbl_803E1740, (int)cam, &relX,
+                                                 (f32*)relY, &relZ, &relDistXZ, 0);
+        angle = getAngle((double)relX, (double)relZ);
+        yawDelta = 0x8000 - (angle & 0xffff);
         yawDelta = yawDelta - (uint)(u16)
         cam->anim.rotX;
         if (0x8000 < yawDelta)
@@ -115,8 +115,8 @@ void camclimb_update(CameraObject* cam)
         }
         cam->anim.rotX = (s16)(cam->anim.rotX + yawDelta);
         (*(code*)(**(int**)(defaultHandler + 4) + 0x18))
-            ((double)target->anim.worldPosY, (double)local_38, cam);
-        if (cVar2 != 0)
+            ((double)target->anim.worldPosY, (double)relDistXZ, cam);
+        if (needsReset != 0)
         {
             (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
         }

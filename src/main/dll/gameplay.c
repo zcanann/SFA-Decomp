@@ -1580,13 +1580,13 @@ int saveSelect_getInfo(void* outPtr)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 saveFileStruct_isCheatActive(uint param_1)
+undefined4 saveFileStruct_isCheatActive(uint cheatId)
 {
-    uint uVar1;
+    uint cheatMask;
 
-    uVar1 = 1 << (param_1 & 0xff);
-    if (((gGameplayRegisteredDebugOptions & uVar1) != 0) &&
-        ((gGameplayEnabledDebugOptions & uVar1) != 0))
+    cheatMask = 1 << (cheatId & 0xff);
+    if (((gGameplayRegisteredDebugOptions & cheatMask) != 0) &&
+        ((gGameplayEnabledDebugOptions & cheatMask) != 0))
     {
         return 1;
     }
@@ -1606,9 +1606,9 @@ undefined4 saveFileStruct_isCheatActive(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void saveFileStruct_unlockCheat(uint param_1)
+void saveFileStruct_unlockCheat(uint cheatId)
 {
-    gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (param_1 & 0xff);
+    gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (cheatId & 0xff);
     return;
 }
 
@@ -1625,9 +1625,9 @@ void saveFileStruct_unlockCheat(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint isCheatUnlocked(uint param_1)
+uint isCheatUnlocked(uint cheatId)
 {
-    return gGameplayRegisteredDebugOptions & 1 << (param_1 & 0xff);
+    return gGameplayRegisteredDebugOptions & 1 << (cheatId & 0xff);
 }
 
 /*
@@ -1823,10 +1823,10 @@ extern int maybeTryLoadSave(int a);
 
 int saveFn_800e8508(void)
 {
-    int iVar1;
+    int loadResult;
 
-    iVar1 = maybeTryLoadSave((int)saveData);
-    if ((iVar1 == 0) || (saveData[0] == '\0'))
+    loadResult = maybeTryLoadSave((int)saveData);
+    if ((loadResult == 0) || (saveData[0] == '\0'))
     {
         memset(saveData, 0, 0xE4);
         saveData[6] = 0;
@@ -1837,7 +1837,7 @@ int saveFn_800e8508(void)
         saveData[11] = 0x7F;
         saveData[12] = 0x7F;
     }
-    return iVar1;
+    return loadResult;
 }
 
 
@@ -5801,7 +5801,7 @@ void dll_68_func03(int sourceObj, int variant, int posSource, uint flags)
 
 extern f32 lbl_803E0A00, lbl_803E0A04, lbl_803E0A08, lbl_803E0A0C, lbl_803E0A10, lbl_803E0A14, lbl_803E0A18;
 
-void dll_69_func03(u8* sourceObj, int variant, u8* posSource, uint flags, int param_5, int* param_6)
+void dll_69_func03(u8* sourceObj, int variant, u8* posSource, uint flags, int param_5, int* overrideParams)
 {
     struct
     {
@@ -5828,12 +5828,12 @@ void dll_69_func03(u8* sourceObj, int variant, u8* posSource, uint flags, int pa
     int b = 0x30;
     int c = 0x31;
     int d = 0x50;
-    if (param_6 != (int*)0)
+    if (overrideParams != (int*)0)
     {
-        a = param_6[0];
-        b = param_6[1];
-        c = param_6[2];
-        d = param_6[3];
+        a = overrideParams[0];
+        b = overrideParams[1];
+        c = overrideParams[2];
+        d = overrideParams[3];
     }
     entries = buf.entries;
     entries[0].layer = 0;
