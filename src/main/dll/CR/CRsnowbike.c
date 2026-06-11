@@ -651,7 +651,7 @@ extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 extern int* gSHthorntailAnimationInterface;
 extern u16 lbl_803DC060[4];
 extern f32 timeDelta;
-extern f32 lbl_803E5558;
+extern const f32 lbl_803E5558;
 extern f32 lbl_803E555C;
 extern f32 lbl_803E5560;
 extern f32 lbl_803E556C;
@@ -760,7 +760,7 @@ void sc_levelcontrol_update(int obj)
             }
         }
     }
-    else if (((ScLevelControlState*)state)->timer10 != lbl_803E5558)
+    else if (((ScLevelControlState*)state)->timer10 != *(volatile f32*)&lbl_803E5558)
     {
         if ((((GameObject*)player)->objectFlags & 0x1000) == 0)
         {
