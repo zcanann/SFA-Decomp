@@ -1,7 +1,7 @@
 #include "main/dfplightni.h"
 #include "main/gameplay_runtime.h"
+#include "main/objhits.h"
 
-extern int ObjHits_GetPriorityHit(u8* obj, int* out, int param_3, int param_4);
 extern void lightningRender(void* handle);
 extern void* lightningCreate(f32* start, f32* end, f32 radiusX, f32 radiusY, int param_5, int param_6, int param_7);
 
@@ -244,7 +244,7 @@ int dfppowersl_spawnSeqObjectsOnHit(DfpPowerSlObject* obj)
     {
         return 0;
     }
-    i = ObjHits_GetPriorityHit((u8*)obj, &outObj, 0, 0);
+    i = ObjHits_GetPriorityHit((int)obj, &outObj, 0, 0);
     if (((u32)outObj != 0) && (i != 0))
     {
         i = 1;
