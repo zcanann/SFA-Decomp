@@ -48,26 +48,12 @@ static inline u32 float_bits(float value)
 
 static inline float int_float(s32 value)
 {
-    struct {
-        u32 hi;
-        u32 lo;
-    } cvt;
-
-    cvt.hi = 0x43300000;
-    cvt.lo = value ^ 0x80000000;
-    return (float)*(double*)&cvt - (float)lbl_803E7E60;
+    return (float)value;
 }
 
 static inline float int_float_wide(s32 value)
 {
-    struct {
-        u32 hi;
-        u32 lo;
-    } cvt;
-
-    cvt.hi = 0x43300000;
-    cvt.lo = value ^ 0x80000000;
-    return (float)(*(double*)&cvt - lbl_803E7E60);
+    return (float)(double)value;
 }
 
 static inline int classify_float(float value)
