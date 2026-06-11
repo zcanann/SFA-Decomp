@@ -18,22 +18,18 @@ void cfccrate_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     CfCcrateState* state;
 
     state = ((GameObject*)obj)->extra;
-    if ((s32)visible != 0)
+    if ((s32)visible == 0 || (objectType = ((GameObject*)obj)->anim.seqId) == 0x1b8)
     {
-        objectType = ((GameObject*)obj)->anim.seqId;
-        if (objectType == 0x1b8)
+        return;
+    }
+    if (visible == 0 || objectType == 0x6bf)
+    {
+        if (GameBit_Get(state->gameBit2) == 0)
         {
             return;
         }
-        if (visible == 0 || objectType == 0x6bf)
-        {
-            if (GameBit_Get(state->gameBit2) == 0)
-            {
-                return;
-            }
-        }
-        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3DD8);
     }
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3DD8);
 }
 
 int CFCrate_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -54,7 +50,7 @@ int CFCrate_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     case 0x8D:
         break;
     case 0x8E:
-        return 0;
+        break;
     case 0xAB:
         break;
     case 0xAE:
