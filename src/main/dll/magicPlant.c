@@ -281,7 +281,7 @@ void FUN_801534d8(ushort *param_1,undefined4 *param_2)
                  (int)param_2,&local_28,'\x01');
     param_2[0xc9] = (float)param_2[0xc9] + lbl_803DC074;
     if (lbl_803E3560 < (float)param_2[0xc9]) {
-      param_2[0xb9] = param_2[0xb9] & 0xfffeffff;
+      param_2[0xb9] = param_2[0xb9] & ~(u64)0x10000;
       param_2[0xc9] = lbl_803E3548;
     }
   }
@@ -565,7 +565,7 @@ void fn_80153040(int obj, int state)
 
     *(f32*)(state + 0x324) = *(f32*)(state + 0x324) + timeDelta;
     if (*(f32*)(state + 0x324) > lbl_803E28C8) {
-        *(u32 *)&((BaddieState *)state)->unk2E4 = *(u32 *)&((BaddieState *)state)->unk2E4 & 0xfffeffff;
+        *(u32 *)&((BaddieState *)state)->unk2E4 = *(u32 *)&((BaddieState *)state)->unk2E4 & ~(u64)0x10000;
         *(f32*)(state + 0x324) = lbl_803E28B0;
     }
 
@@ -997,7 +997,7 @@ void fn_80153E0C(int obj, int state)
             if (*(f32*)(state + 0x324) > lbl_803E294C) {
                 *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
                 if (*(f32*)(state + 0x324) <= lbl_803E294C) {
-                    *(u32 *)&((BaddieState *)state)->unk2E4 = *(u32 *)&((BaddieState *)state)->unk2E4 & 0xfffeffff;
+                    *(u32 *)&((BaddieState *)state)->unk2E4 = *(u32 *)&((BaddieState *)state)->unk2E4 & ~(u64)0x10000;
                     *(f32*)(state + 0x324) = lbl_803E294C;
                 }
             }
