@@ -357,8 +357,9 @@ extern undefined2 uRam803dd8da;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void objRenderFuzzFn_8003d6f8(int obj)
+void objRenderFuzzFn_8003d6f8(void* objArg)
 {
+    int obj = (int)objArg;
     int* renderHandle;
     double fade;
     uint matColor;
@@ -5072,7 +5073,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     }
     else if (m2 != 0)
     {
-        objRenderFuzzFn_8003d6f8((int)obj);
+        objRenderFuzzFn_8003d6f8((void*)obj);
     }
     else
     {
