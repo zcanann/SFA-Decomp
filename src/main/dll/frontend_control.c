@@ -1,9 +1,9 @@
+#include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/FRONT/frontend_control.h"
 
 extern u32 getButtonsHeld(int port);
 extern u32 getButtonsJustPressed(int port);
-extern void Sfx_PlayFromObject(int sfx, int id);
 extern void drawTexture(void* tex, f32 x, f32 y, int p2, int alpha);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShowStr(void* str, int id, int p3, int p4);
