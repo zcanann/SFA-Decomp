@@ -257,7 +257,7 @@ void staffactivated_render(void) { objRenderFn_8003b8f4(lbl_803E3BBC); }
 
 extern void Obj_GetPlayerObject(void);
 extern int fn_80295CE4(void);
-extern int GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern EffectInterface** gPartfxInterface;
@@ -266,6 +266,11 @@ extern f32 lbl_803E3C00;
 extern f32 lbl_803E3C04;
 extern void landed_arwing_updateHitReaction(int obj, int state);
 extern void landed_arwing_updateDamageTexture(int obj, int state);
+
+typedef struct StaffActivatedFlagsBits {
+    u8 active : 1;
+    u8 rest : 7;
+} StaffActivatedFlagsBits;
 
 void staffactivated_update(int obj)
 {
@@ -281,13 +286,12 @@ void staffactivated_update(int obj)
     } stk;
     StaffActivatedSetup * param = *(StaffActivatedSetup**)&((GameObject*)obj)->anim.placementData;
     StaffActivatedState * state = ((GameObject*)obj)->extra;
-    int mode;
     int isSet;
     int gb;
 
     Obj_GetPlayerObject();
 
-    if ((state->flags >> 6) & 1)
+    if (((state->flags >> 6) & 1) != 0u)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | STAFFACTIVATED_OBJ_FLAG_LOCKED);
@@ -298,41 +302,30 @@ void staffactivated_update(int obj)
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~STAFFACTIVATED_OBJ_FLAG_LOCKED);
     }
 
-    if ((state->flags >> 7) & 1)
+    if (((state->flags >> 7) & 1) == 0u || fn_80295CE4() == 0)
     {
-        if (fn_80295CE4() != 0)
-        {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~STAFFACTIVATED_OBJ_FLAG_DISABLED);
-            goto after_bit4;
-        }
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | STAFFACTIVATED_OBJ_FLAG_DISABLED);
     }
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | STAFFACTIVATED_OBJ_FLAG_DISABLED);
-after_bit4:
+    else
+    {
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~STAFFACTIVATED_OBJ_FLAG_DISABLED);
+    }
 
-    mode = param->mode;
-    if (mode == STAFFACTIVATED_MODE_LIFT)
+    switch (param->mode)
     {
+    case STAFFACTIVATED_MODE_LIFT:
         staffactivated_updateLiftHeight(obj, state);
-    }
-    else if (mode > STAFFACTIVATED_MODE_LIFT)
-    {
-        if (mode >= STAFFACTIVATED_MODE_DEFAULT)
-        {
-            goto default_case;
-        }
-        else if (mode >= STAFFACTIVATED_MODE_DAMAGE_FIRST)
-        {
-            landed_arwing_updateDamageTexture(obj, (int)state);
-        }
-        else
-        {
-            landed_arwing_updateHitReaction(obj, (int)state);
-        }
-    }
-    else if (mode == STAFFACTIVATED_MODE_ACTION)
-    {
+        break;
+    case STAFFACTIVATED_MODE_HIT_REACTION:
+        landed_arwing_updateHitReaction(obj, (int)state);
+        break;
+    case STAFFACTIVATED_MODE_DAMAGE_FIRST:
+    case STAFFACTIVATED_MODE_DAMAGE_FIRST + 1:
+        landed_arwing_updateDamageTexture(obj, (int)state);
+        break;
+    case STAFFACTIVATED_MODE_ACTION:
         if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & STAFFACTIVATED_OBJ_FLAG_HIT_TRIGGER)
         {
             if (GameBit_Get(STAFFACTIVATED_TRIGGER_GAMEBIT) == 0)
@@ -352,39 +345,33 @@ after_bit4:
         {
             isSet = 1;
         }
-        state->flags =
-            (u8)(isSet << 7) | (state->flags & 0x7f);
-        if ((state->flags >> 7) & 1)
+        ((StaffActivatedFlagsBits*)&state->flags)->active = (u8)isSet;
+        if (((state->flags >> 7) & 1) != 0u)
         {
-            stk.ox = lbl_803E3BBC;
             stk.oy = lbl_803E3C00;
             stk.oz = lbl_803E3C04;
             stk.ow = lbl_803E3BDC;
-            stk.life = 0x64;
+            stk.ox = lbl_803E3BBC;
             stk.extra = 0;
+            stk.life = 0x64;
             (*gPartfxInterface)->spawnObject((void*)obj, STAFFACTIVATED_PARTICLE_ID, &stk, 2, -1, NULL);
-            stk.ox = lbl_803E3BBC;
             stk.oy = lbl_803E3C00;
             stk.oz = lbl_803E3C04;
             stk.ow = lbl_803E3BDC;
-            stk.life = 0xa;
+            stk.ox = lbl_803E3BBC;
             stk.extra = 5;
+            stk.life = 0xa;
             (*gPartfxInterface)->spawnObject((void*)obj, STAFFACTIVATED_PARTICLE_ID, &stk, 2, -1, NULL);
         }
-        return;
+        break;
+    default:
+        isSet = 0;
+        gb = param->activeGameBit;
+        if (gb == -1 || GameBit_Get(gb) != 0)
+        {
+            isSet = 1;
+        }
+        ((StaffActivatedFlagsBits*)&state->flags)->active = (u8)isSet;
+        break;
     }
-    else
-    {
-        goto default_case;
-    }
-    return;
-default_case:
-    isSet = 0;
-    gb = param->activeGameBit;
-    if (gb == -1 || GameBit_Get(gb) != 0)
-    {
-        isSet = 1;
-    }
-    state->flags =
-        (u8)(isSet << 7) | (state->flags & 0x7f);
 }
