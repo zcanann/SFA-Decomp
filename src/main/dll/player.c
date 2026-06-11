@@ -17381,7 +17381,7 @@ int fn_802994D0(int obj, int state, f32 fv)
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F20 * fv + ((PlayerState*)state)->baddie.moveSpeed;
             if (((PlayerState*)state)->baddie.moveSpeed > lbl_803E7F6C)
             {
-                ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F6C;
+                ((PlayerState*)state)->baddie.moveSpeed = *(f32 *)&lbl_803E7F6C;
             }
             inner->unk7D4 = lbl_803E7F7C * fv + inner->unk7D4;
             inner->unk7D4 = lbl_803E7E98 * fv + inner->unk7D4;
