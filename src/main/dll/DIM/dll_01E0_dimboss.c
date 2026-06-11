@@ -1,4 +1,5 @@
 #include "main/dll/DIM/dll_01E0_dimboss.h"
+#include "main/dll/DIM/DIM2icicle.h"
 #include "main/resource.h"
 
 extern void Music_Trigger(s32 triggerId, s32 mode);
@@ -54,8 +55,6 @@ extern void fn_801BAF58(void);
 extern void fn_801BB0D8(void);
 extern void fn_801BB1EC(void);
 extern void fn_801BB2B0(void);
-extern undefined4 warpDarkIceMines_801bbb44();
-extern undefined8 fn_801BC7E4();
 extern undefined4 dll_2E_func04();
 extern void OSReport(const char* msg, ...);
 
@@ -71,8 +70,6 @@ extern undefined4 timeOfDayFn_80055000();
 extern void queueGlowRender(void* effect);
 extern void dll_2E_func06(DIMbossObject* obj, void* animController, int param_3);
 extern undefined4 dll_2E_func03();
-extern void fn_801BB598(DIMbossObject * obj, DIMbossRuntime * runtime);
-
 extern f32 timeDelta;
 extern u8 gDvdErrorPauseActive;
 extern u32 gDIMbossSequenceFlags;

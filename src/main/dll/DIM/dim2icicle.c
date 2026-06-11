@@ -346,7 +346,7 @@ typedef struct IcicleWarpFlags {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void warpDarkIceMines_801bbb44(int obj, int param_2)
+void warpDarkIceMines_801bbb44(int obj, int runtime)
 {
   u8 *state;
   int counter;
@@ -354,7 +354,7 @@ void warpDarkIceMines_801bbb44(int obj, int param_2)
   u32 flags;
   f32 vec[3];
 
-  state = *(u8 **)(param_2 + 0x40c);
+  state = *(u8 **)(runtime + 0x40c);
   counter = *(int *)(state + 0xb0);
   if (counter != 0) {
     *(int *)(state + 0xb0) = counter - 1;
@@ -373,26 +373,26 @@ void warpDarkIceMines_801bbb44(int obj, int param_2)
     skyFn_800895e0(7, 0xa0, 0xa0, 0xff, 0x7f, 0x28);
     ((IcicleWarpFlags *)(state + 0xb6))->pending = 0;
   }
-  if (*(int *)(param_2 + 0x314) & 4) {
-    *(int *)(param_2 + 0x314) = *(int *)(param_2 + 0x314) & ~4;
+  if (*(int *)(runtime + 0x314) & 4) {
+    *(int *)(runtime + 0x314) = *(int *)(runtime + 0x314) & ~4;
     Sfx_PlayFromObject(obj, (u16)lbl_80325AB8[0]);
     gDIMbossSequenceFlags |= 0x204;
     doRumble(lbl_803E4BF8);
   }
-  if (*(int *)(param_2 + 0x314) & 2) {
-    *(int *)(param_2 + 0x314) = *(int *)(param_2 + 0x314) & ~2;
+  if (*(int *)(runtime + 0x314) & 2) {
+    *(int *)(runtime + 0x314) = *(int *)(runtime + 0x314) & ~2;
     Sfx_PlayFromObject(obj, (u16)lbl_80325AB8[1]);
     gDIMbossSequenceFlags |= 0x404;
     doRumble(lbl_803E4BF8);
   }
-  if (*(int *)(param_2 + 0x314) & 0x10) {
-    *(int *)(param_2 + 0x314) = *(int *)(param_2 + 0x314) & ~0x10;
+  if (*(int *)(runtime + 0x314) & 0x10) {
+    *(int *)(runtime + 0x314) = *(int *)(runtime + 0x314) & ~0x10;
     Sfx_PlayFromObject(obj, (u16)lbl_80325AB8[2]);
     gDIMbossSequenceFlags |= 0x804;
     doRumble(lbl_803E4BF8);
   }
-  if (*(int *)(param_2 + 0x314) & 8) {
-    *(int *)(param_2 + 0x314) = *(int *)(param_2 + 0x314) & ~8;
+  if (*(int *)(runtime + 0x314) & 8) {
+    *(int *)(runtime + 0x314) = *(int *)(runtime + 0x314) & ~8;
     Sfx_PlayFromObject(obj, (u16)lbl_80325AB8[3]);
     gDIMbossSequenceFlags |= 0x1004;
     doRumble(lbl_803E4BF8);
@@ -409,7 +409,7 @@ void warpDarkIceMines_801bbb44(int obj, int param_2)
   if (gDIMbossSequenceFlags & 0x80000) {
     ((void (*)(int, int, int, int, int))*(code **)(*(int *)lbl_803DCAB4 + 0xc))(obj, 0x800, 0, 1, 0);
   }
-  if ((gDIMbossSequenceFlags & 0x8020) || *(s8 *)(param_2 + 0x354) < 2) {
+  if ((gDIMbossSequenceFlags & 0x8020) || *(s8 *)(runtime + 0x354) < 2) {
     if (gDIMbossSequenceFlags & 0x20) {
       i = 0;
       do {
@@ -418,7 +418,7 @@ void warpDarkIceMines_801bbb44(int obj, int param_2)
       } while (i < 7);
     }
     else {
-      if (randomGetRange(0, *(s8 *)(param_2 + 0x354)) == 0 && *(s16 *)(param_2 + 0x402) == 2) {
+      if (randomGetRange(0, *(s8 *)(runtime + 0x354)) == 0 && *(s16 *)(runtime + 0x402) == 2) {
         (*gPartfxInterface)->spawnObject((void *)obj, 0x4b4, state + 0x34, 0x200001, -1, NULL);
       }
     }
@@ -662,21 +662,21 @@ void fn_801BC2D8(int obj, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801BC7E4(int obj, int param_2, int param_3, int param_4)
+void fn_801BC7E4(int obj, int animUpdate, int runtime, int updateRuntime)
 {
   IcicleState *state;
   u8 *tricky;
   f32 timer;
   f32 limit;
 
-  state = *(IcicleState **)(param_3 + 0x40c);
+  state = *(IcicleState **)(runtime + 0x40c);
   tricky = (u8 *)getTrickyObject();
   ObjHits_EnableObject(obj);
-  *(u8 *)(param_4 + 0x25f) = 1;
-  ((void (*)(int, int, f32, int))*(code **)(*gBaddieControlInterface + 0x2c))(obj, param_4, lbl_803E4C70, 1);
+  *(u8 *)(updateRuntime + 0x25f) = 1;
+  ((void (*)(int, int, f32, int))*(code **)(*gBaddieControlInterface + 0x2c))(obj, updateRuntime, lbl_803E4C70, 1);
   ((void (*)(int, int, int, int, int, int, int, int))*(code **)(*gBaddieControlInterface + 0x54))
-            (obj, param_4, param_3 + 0x35c, (int)*(s16 *)(param_3 + 0x3f4), param_3 + 0x405, 0, 0, 0);
-  if (*(s16 *)(param_4 + 0x274) == 6) {
+            (obj, updateRuntime, runtime + 0x35c, (int)*(s16 *)(runtime + 0x3f4), runtime + 0x405, 0, 0, 0);
+  if (*(s16 *)(updateRuntime + 0x274) == 6) {
     state->meltTimer =
          -(timeDelta * (lbl_803E4BC8 * ((GameObject *)obj)->anim.currentMoveProgress + lbl_803E4C44) - state->meltTimer);
   }
@@ -706,40 +706,40 @@ void fn_801BC7E4(int obj, int param_2, int param_3, int param_4)
     if (state->fadeTimer > (timer = lbl_803E4BD8)) {
       state->fadeTimer = state->fadeTimer + timeDelta;
       if (state->fadeTimer >= lbl_803E4BEC) {
-        *(u16 *)(param_3 + 0x400) &= ~4;
+        *(u16 *)(runtime + 0x400) &= ~4;
         state->fadeTimer = timer;
         ((void (*)(u8 *, int, int))*(code **)(*(int *)(*(int *)(tricky + 0x68)) + 0x34))(tricky, 0, 0);
         state->lightTimer = lbl_803E4C44;
       }
     }
-    else if (*(s16 *)(param_3 + 0x402) == 1) {
-      *(u16 *)(param_3 + 0x400) |= 4;
+    else if (*(s16 *)(runtime + 0x402) == 1) {
+      *(u16 *)(runtime + 0x400) |= 4;
       state->fadeTimer = lbl_803E4C44;
       DIM2icicle_createStateLight(obj, 0);
     }
   }
-  if (*(s16 *)(param_3 + 0x402) == 2) {
+  if (*(s16 *)(runtime + 0x402) == 2) {
     DIM2icicle_createStateLight(obj, 1);
   }
   {
     if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_SPAWN_BLUE_WHITE_EFFECT) {
       gDIMbossSequenceFlags &= ~DIMBOSS_SEQUENCE_FLAG_SPAWN_BLUE_WHITE_EFFECT;
-      DIM2icicle_spawnBlueWhiteEffect((int *)(*(int *)(param_3 + 0x40c) + 4), (f32 *)(*(int *)(param_3 + 0x40c) + 0x94));
+      DIM2icicle_spawnBlueWhiteEffect((int *)(*(int *)(runtime + 0x40c) + 4), (f32 *)(*(int *)(runtime + 0x40c) + 0x94));
     }
   }
-  if (*(u16 *)(param_3 + 0x400) & 4) {
+  if (*(u16 *)(runtime + 0x400) & 4) {
     gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_TONSIL_GUARD_ACTIVE;
   }
-  if (*(s16 *)(param_3 + 0x402) == 1) {
+  if (*(s16 *)(runtime + 0x402) == 1) {
     ((void (*)(u8 *, int, int, int))*(code **)(*(int *)(*(int *)(tricky + 0x68)) + 0x28))(tricky, obj, 1, 2);
     ((GameObject *)obj)->unkE4 = 1;
   }
   else {
     ((GameObject *)obj)->unkE4 = 2;
   }
-  *(int *)(param_3 + 0x3e0) = *(int *)&((GameObject *)obj)->unkC0;
+  *(int *)(runtime + 0x3e0) = *(int *)&((GameObject *)obj)->unkC0;
   *(int *)&((GameObject *)obj)->unkC0 = 0;
   ((void (*)(f32, int, int, f32, void *, void *))*(code **)(*(int *)gPlayerInterface + 8))
-            (timeDelta, obj, param_4, timeDelta, gDIMbossHitDetectAnimTable, gDIMbossAnimTable);
-  *(int *)&((GameObject *)obj)->unkC0 = *(int *)(param_3 + 0x3e0);
+            (timeDelta, obj, updateRuntime, timeDelta, gDIMbossHitDetectAnimTable, gDIMbossAnimTable);
+  *(int *)&((GameObject *)obj)->unkC0 = *(int *)(runtime + 0x3e0);
 }
