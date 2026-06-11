@@ -146,13 +146,13 @@ void levelname_init(int obj, int objDef)
     ((GameObject *)obj)->animEventCallback = (void *)levelname_SeqFn;
     text = gameTextGet(*(int *)(objDef + 0x1c));
     ((TFrameAnimatorState *)state)->unk4 = **(int **)(text + 2);
-    ((TFrameAnimatorState *)state)->unk8 = 0x64;
+    ((TFrameAnimatorState *)state)->duration = 0x64;
     ((TFrameAnimatorState *)state)->textRecord = (int)text;
     ((TFrameAnimatorState *)state)->unkC = *(u8 *)(objDef + 0x20);
     ((TFrameAnimatorState *)state)->enableGameBit = *(s16 *)(objDef + 0x18);
     ((TFrameAnimatorState *)state)->phase = 0;
     ((TFrameAnimatorState *)state)->unk12 = 0;
-    ((TFrameAnimatorState *)state)->unk10 = 0;
+    ((TFrameAnimatorState *)state)->elapsedFrames = 0;
     if (((TFrameAnimatorState *)state)->enableGameBit != -1) {
         if (GameBit_Get(((TFrameAnimatorState *)state)->enableGameBit) != 0) {
             ((TFrameAnimatorState *)state)->phase = 4;

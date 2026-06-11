@@ -192,7 +192,7 @@ typedef struct DrakorenergyPlacement {
     u8 pad1A[0x1E - 0x1A];
     s8 unk1E;
     u8 pad1F[0x20 - 0x1F];
-    s16 unk20;
+    s16 gameBitId;
     u8 pad22[0x24 - 0x22];
     s16 unk24;
     u8 pad26[0x2B - 0x26];
@@ -4372,7 +4372,7 @@ void drakorenergy_update(int obj)
     data = *(int *)&((GameObject *)obj)->anim.placementData;
     switch (((DrakorEnergyState *)blob)->mode) {
     case 0:
-        if (GameBit_Get(((DrakorenergyPlacement *)data)->unk20) == 1) {
+        if (GameBit_Get(((DrakorenergyPlacement *)data)->gameBitId) == 1) {
             ((DrakorEnergyState *)blob)->mode = 2;
         }
         break;

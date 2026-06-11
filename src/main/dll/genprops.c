@@ -114,9 +114,9 @@ typedef struct AnimatedobjPlacement {
 
 typedef struct Dim2roofrubPlacement {
     u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
     s32 unk14;
     s16 unk18;
     s16 unk1A;
@@ -3493,9 +3493,9 @@ void dim2roofrub_render(int *obj, int p2, int p3, int p4, int p5)
         s16 *cam;
         Obj_BuildWorldTransformMatrix(obj, mWorld, 0);
         prm = *(int **)&((GameObject *)obj)->anim.placementData;
-        PSMTXTrans(mTransPlayer, -(((Dim2roofrubPlacement *)prm)->unk8 - playerMapOffsetX),
-                   -((Dim2roofrubPlacement *)prm)->unkC,
-                   -(((Dim2roofrubPlacement *)prm)->unk10 - playerMapOffsetZ));
+        PSMTXTrans(mTransPlayer, -(((Dim2roofrubPlacement *)prm)->posX - playerMapOffsetX),
+                   -((Dim2roofrubPlacement *)prm)->posY,
+                   -(((Dim2roofrubPlacement *)prm)->posZ - playerMapOffsetZ));
         PSMTXConcat(mTransPlayer, mWorld, mWorldCombined);
         cam = (s16 *)(*gCameraInterface)->getCamera();
         ((GameObject *)cam)->anim.rotY += 0x8000;

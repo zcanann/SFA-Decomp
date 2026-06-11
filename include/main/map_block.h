@@ -14,10 +14,10 @@ typedef struct MapBlockData {
     u16 unk4;
     u8 pad6[0xC - 0x6];
     s32 unkC;
-    s32 unk10;
+    s32 allocHandle;
     u16 unk14;
     u8 pad16[0x30 - 0x16];
-    s32 unk30;
+    s32 flags;
     u8 pad34[0x58 - 0x34];
     s32 unk58;
     u8 pad5C[0x90 - 0x5C];

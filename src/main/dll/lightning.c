@@ -11,16 +11,16 @@
 
 typedef struct EffectboxPlacement {
     u8 pad0[0x18 - 0x0];
-    u8 unk18;
-    u8 unk19;
-    u8 unk1A;
-    u8 unk1B;
-    u8 unk1C;
+    u8 rotYaw;
+    u8 rotPitch;
+    u8 extentX;
+    u8 extentY;
+    u8 extentZ;
     u8 unk1D;
     u8 pad1E[0x1F - 0x1E];
-    u8 unk1F;
+    u8 gameBitValue;
     s16 unk20;
-    u8 unk22;
+    u8 targetMode;
     u8 pad23[0x28 - 0x23];
 } EffectboxPlacement;
 
@@ -643,15 +643,15 @@ void effectbox_update(int obj)
 
   def = *(int *)&((GameObject *)obj)->anim.placementData;
   gb = ((GameObject *)obj)->unkF8;
-  if ((gb <= -1) || (((EffectboxPlacement *)def)->unk1F != GameBit_Get(gb))) {
-    sinY = mathCosf((lbl_803E350C * (f32)-(((EffectboxPlacement *)def)->unk18 << 8)) / lbl_803E3510);
-    cosY = mathSinf((lbl_803E350C * (f32)-(((EffectboxPlacement *)def)->unk18 << 8)) / lbl_803E3510);
-    sinX = mathCosf((lbl_803E350C * (f32)-(((EffectboxPlacement *)def)->unk19 << 8)) / lbl_803E3510);
-    cosX = mathSinf((lbl_803E350C * (f32)-(((EffectboxPlacement *)def)->unk19 << 8)) / lbl_803E3510);
-    extX = (f32)((EffectboxPlacement *)def)->unk1A;
-    extYNeg = (f32)-(((EffectboxPlacement *)def)->unk1B << 1);
-    extZ = (f32)((EffectboxPlacement *)def)->unk1C;
-    switch (((EffectboxPlacement *)def)->unk22) {
+  if ((gb <= -1) || (((EffectboxPlacement *)def)->gameBitValue != GameBit_Get(gb))) {
+    sinY = mathCosf((lbl_803E350C * (f32)-(((EffectboxPlacement *)def)->rotYaw << 8)) / lbl_803E3510);
+    cosY = mathSinf((lbl_803E350C * (f32)-(((EffectboxPlacement *)def)->rotYaw << 8)) / lbl_803E3510);
+    sinX = mathCosf((lbl_803E350C * (f32)-(((EffectboxPlacement *)def)->rotPitch << 8)) / lbl_803E3510);
+    cosX = mathSinf((lbl_803E350C * (f32)-(((EffectboxPlacement *)def)->rotPitch << 8)) / lbl_803E3510);
+    extX = (f32)((EffectboxPlacement *)def)->extentX;
+    extYNeg = (f32)-(((EffectboxPlacement *)def)->extentY << 1);
+    extZ = (f32)((EffectboxPlacement *)def)->extentZ;
+    switch (((EffectboxPlacement *)def)->targetMode) {
     case 1:
       single = (int)Obj_GetPlayerObject();
       if (single == 0) {
@@ -689,7 +689,7 @@ void effectbox_update(int obj)
         if ((proj > negExtZ) && (proj < extZ)) {
           proj = dy * sinX + proj * cosX;
           if ((proj >= lbl_803E3514) && (proj < extYNeg)) {
-            switch (((EffectboxPlacement *)def)->unk22) {
+            switch (((EffectboxPlacement *)def)->targetMode) {
             case 1:
               break;
             case 0:

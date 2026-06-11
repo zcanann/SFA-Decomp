@@ -11,15 +11,15 @@
 #include "dolphin/os/OSFastCast.h"
 
 typedef struct TrackP6Entry {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-    f32 unk18;
-    f32 unk1C;
-    f32 unk20;
+    f32 relX0;
+    f32 relY0;
+    f32 relZ0;
+    f32 relX1;
+    f32 relY1;
+    f32 relZ1;
+    f32 relX2;
+    f32 relY2;
+    f32 relZ2;
 } TrackP6Entry;
 
 
@@ -3163,15 +3163,15 @@ int fn_80060C14(f32 a, f32 b, int *obj, int p4, void *p5, int p6, int p7, int p8
             outA = (f32 *)((char *)p5 + outOff);
             while (j < (s16)*(s16 *)((char *)d + 0x1c) && grp < 0x4b0 && total < 0xe10) {
                 if (mask & (s8)*(u8 *)((char *)p4 + j * 0x4c + 0x49)) {
-                    ((TrackP6Entry *)p6)->unk0 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x10)) - fx;
-                    ((TrackP6Entry *)p6)->unk4 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x16)) - ((GameObject *)obj)->anim.localPosY;
-                    ((TrackP6Entry *)p6)->unk8 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1c)) - fz;
-                    ((TrackP6Entry *)p6)->unkC = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x12)) - fx;
-                    ((TrackP6Entry *)p6)->unk10 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x18)) - ((GameObject *)obj)->anim.localPosY;
-                    ((TrackP6Entry *)p6)->unk14 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1e)) - fz;
-                    ((TrackP6Entry *)p6)->unk18 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x14)) - fx;
-                    ((TrackP6Entry *)p6)->unk1C = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1a)) - ((GameObject *)obj)->anim.localPosY;
-                    ((TrackP6Entry *)p6)->unk20 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x20)) - fz;
+                    ((TrackP6Entry *)p6)->relX0 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x10)) - fx;
+                    ((TrackP6Entry *)p6)->relY0 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x16)) - ((GameObject *)obj)->anim.localPosY;
+                    ((TrackP6Entry *)p6)->relZ0 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1c)) - fz;
+                    ((TrackP6Entry *)p6)->relX1 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x12)) - fx;
+                    ((TrackP6Entry *)p6)->relY1 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x18)) - ((GameObject *)obj)->anim.localPosY;
+                    ((TrackP6Entry *)p6)->relZ1 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1e)) - fz;
+                    ((TrackP6Entry *)p6)->relX2 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x14)) - fx;
+                    ((TrackP6Entry *)p6)->relY2 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1a)) - ((GameObject *)obj)->anim.localPosY;
+                    ((TrackP6Entry *)p6)->relZ2 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x20)) - fz;
                     outA[0] = *(f32 *)((char *)p4 + j * 0x4c + 0x4);
                     outA[1] = *(f32 *)((char *)p4 + j * 0x4c + 0x8);
                     outA[2] = *(f32 *)((char *)p4 + j * 0x4c + 0xc);
@@ -3206,15 +3206,15 @@ int fn_80060C14(f32 a, f32 b, int *obj, int p4, void *p5, int p6, int p7, int p8
             outA = (f32 *)((char *)p5 + outOff);
             while (j < (s16)*(s16 *)((char *)d + 0x1c) && grp < 0x4b0 && total < 0xe10) {
                 if (mask & (s8)*(u8 *)((char *)p4 + j * 0x4c + 0x49)) {
-                    ((TrackP6Entry *)p6)->unk0 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x10));
-                    ((TrackP6Entry *)p6)->unk4 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x16));
-                    ((TrackP6Entry *)p6)->unk8 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1c));
-                    ((TrackP6Entry *)p6)->unkC = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x12));
-                    ((TrackP6Entry *)p6)->unk10 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x18));
-                    ((TrackP6Entry *)p6)->unk14 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1e));
-                    ((TrackP6Entry *)p6)->unk18 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x14));
-                    ((TrackP6Entry *)p6)->unk1C = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1a));
-                    ((TrackP6Entry *)p6)->unk20 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x20));
+                    ((TrackP6Entry *)p6)->relX0 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x10));
+                    ((TrackP6Entry *)p6)->relY0 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x16));
+                    ((TrackP6Entry *)p6)->relZ0 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1c));
+                    ((TrackP6Entry *)p6)->relX1 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x12));
+                    ((TrackP6Entry *)p6)->relY1 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x18));
+                    ((TrackP6Entry *)p6)->relZ1 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1e));
+                    ((TrackP6Entry *)p6)->relX2 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x14));
+                    ((TrackP6Entry *)p6)->relY2 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1a));
+                    ((TrackP6Entry *)p6)->relZ2 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x20));
                     outA[0] = *(f32 *)((char *)p4 + j * 0x4c + 0x4);
                     outA[1] = *(f32 *)((char *)p4 + j * 0x4c + 0x8);
                     outA[2] = *(f32 *)((char *)p4 + j * 0x4c + 0xc);
@@ -4101,16 +4101,16 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
     s31 = ((GameObject *)obj)->anim.rotX;
     s30 = ((GameObject *)obj)->anim.rotZ;
     s29 = ((GameObject *)obj)->anim.rotY;
-    handle = *(u32 *)&((MapBlockData *)blockData)->unk10;
+    handle = *(u32 *)&((MapBlockData *)blockData)->allocHandle;
     if (handle == 0 || handle != 0xFFFFFFFF)
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803DEC78;
     else
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803DEC68;
     ((GameObject *)obj)->anim.rotX = 0;
     ((GameObject *)obj)->anim.rotY = 0;
-    if ((*(u32 *)&((MapBlockData *)blockData)->unk30 & 0x2000) == 0)
+    if ((*(u32 *)&((MapBlockData *)blockData)->flags & 0x2000) == 0)
         ((GameObject *)obj)->anim.rotZ = 0;
-    if (*(u32 *)&((MapBlockData *)blockData)->unk30 & 0x20) {
+    if (*(u32 *)&((MapBlockData *)blockData)->flags & 0x20) {
         memcpy(save_c, (char *)obj + 0xc, 0xc);
         memcpy(save_18, (char *)obj + 0x18, 0xc);
         memcpy((char *)((int)obj + 0x18), (char *)blockData + 0x20, 0xc);
@@ -4128,7 +4128,7 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
             f30 = 10.0f;
         else
             f30 = ((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale;
-        handle = *(u32 *)&((MapBlockData *)blockData)->unk10;
+        handle = *(u32 *)&((MapBlockData *)blockData)->allocHandle;
         if (handle == 0xFFFFFFFF) {
             u32 h2 = textureFn_8006c5c4();
             hdr = ((MapBlockData *)blockData)->unkC;
@@ -4156,37 +4156,37 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
     ((GameObject *)obj)->anim.rotX = s31;
     ((GameObject *)obj)->anim.rotY = s29;
     ((GameObject *)obj)->anim.rotZ = s30;
-    if (*(u32 *)&((MapBlockData *)blockData)->unk10 == 0) {
+    if (*(u32 *)&((MapBlockData *)blockData)->allocHandle == 0) {
         f32 *cv;
         int off;
         int i;
         int *vbuf;
-        ((MapBlockData *)blockData)->unk10 = (int)mmAlloc(slot * 0x12 + 8, 0x18, 0);
-        vbuf = *(int **)&((MapBlockData *)blockData)->unk10;
+        ((MapBlockData *)blockData)->allocHandle = (int)mmAlloc(slot * 0x12 + 8, 0x18, 0);
+        vbuf = *(int **)&((MapBlockData *)blockData)->allocHandle;
         if (vbuf == NULL) return;
         vbuf[0] = (int)vbuf + 8;
-        *(int *)(((MapBlockData *)blockData)->unk10 + 4) = slot * 3;
+        *(int *)(((MapBlockData *)blockData)->allocHandle + 4) = slot * 3;
         i = 0;
         cv = (f32 *)cache;
         off = 0;
         kf = lbl_803DEC80;
-        for (; (u32)i < *(u32 *)(((MapBlockData *)blockData)->unk10 + 4); off += 6) {
-            *(s16 *)(*(int *)(((MapBlockData *)blockData)->unk10) + off + 0) = kf * cv[0];
-            *(s16 *)(*(int *)(((MapBlockData *)blockData)->unk10) + off + 2) = kf * cv[1];
-            *(s16 *)(*(int *)(((MapBlockData *)blockData)->unk10) + off + 4) = kf * cv[2];
+        for (; (u32)i < *(u32 *)(((MapBlockData *)blockData)->allocHandle + 4); off += 6) {
+            *(s16 *)(*(int *)(((MapBlockData *)blockData)->allocHandle) + off + 0) = kf * cv[0];
+            *(s16 *)(*(int *)(((MapBlockData *)blockData)->allocHandle) + off + 2) = kf * cv[1];
+            *(s16 *)(*(int *)(((MapBlockData *)blockData)->allocHandle) + off + 4) = kf * cv[2];
             cv += 3;
             i++;
         }
     }
-    handle = *(u32 *)&((MapBlockData *)blockData)->unk10;
+    handle = *(u32 *)&((MapBlockData *)blockData)->allocHandle;
     if (handle != 0xFFFFFFFF) {
         int k;
         int off;
-        GXBegin(0x90, 0, *(int *)(((MapBlockData *)blockData)->unk10 + 4) & 0xffff);
+        GXBegin(0x90, 0, *(int *)(((MapBlockData *)blockData)->allocHandle + 4) & 0xffff);
         k = 0;
         off = k;
-        for (; (u32)k < *(u32 *)(((MapBlockData *)blockData)->unk10 + 4); off += 6) {
-            s16 *ep = (s16 *)(*(int *)(((MapBlockData *)blockData)->unk10) + off);
+        for (; (u32)k < *(u32 *)(((MapBlockData *)blockData)->allocHandle + 4); off += 6) {
+            s16 *ep = (s16 *)(*(int *)(((MapBlockData *)blockData)->allocHandle) + off);
             s16 e2 = ep[2];
             s16 e1 = ep[1];
             s16 e0 = ep[0];
@@ -4232,7 +4232,7 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
             off += 0x24;
         }
     }
-    if (*(u32 *)&((MapBlockData *)blockData)->unk30 & 0x20) {
+    if (*(u32 *)&((MapBlockData *)blockData)->flags & 0x20) {
         memcpy((char *)((int)obj + 0xc), save_c, 0xc);
         memcpy((char *)((int)obj + 0x18), save_18, 0xc);
     }
