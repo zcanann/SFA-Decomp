@@ -48,7 +48,7 @@ extern void fn_8004C7AC(void* yTexture, void* uTexture, void* vTexture, int widt
 extern u8* ObjModel_GetRenderOp(undefined4 model, undefined4 idx);
 extern void PushFreeTextureSet(OSMessage msg);
 
-extern u16 lbl_8031A3B0[];
+extern u16 gAttractMovieVolumeScale[];
 extern undefined4 DAT_803a6420;
 extern undefined4 DAT_803a692c;
 extern undefined4 DAT_803a6a58;
@@ -303,7 +303,7 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, uint sampleCount)
                         volume = lbl_803A5D60.curVolume + lbl_803A5D60.deltaVolume;
                     }
                     lbl_803A5D60.curVolume = volume;
-                    volumeScale = lbl_8031A3B0[(int)lbl_803A5D60.curVolume];
+                    volumeScale = gAttractMovieVolumeScale[(int)lbl_803A5D60.curVolume];
                     mixed = (int)*source + ((int)((uint)volumeScale * (int)*audioPtr) >> 0xf);
                     if (mixed < -0x8000)
                     {
@@ -377,7 +377,7 @@ void AttractMovieAudio_Mix(s16* destination, s16* source, uint sampleCount)
                     volume = lbl_803A5D60.curVolume + lbl_803A5D60.deltaVolume;
                 }
                 lbl_803A5D60.curVolume = volume;
-                volumeScale = lbl_8031A3B0[(int)lbl_803A5D60.curVolume];
+                volumeScale = gAttractMovieVolumeScale[(int)lbl_803A5D60.curVolume];
                 mixed = (int)((uint)volumeScale * (int)*audioPtr) >> 0xf;
                 if (mixed < -0x8000)
                 {

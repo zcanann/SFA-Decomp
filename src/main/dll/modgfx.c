@@ -3516,7 +3516,7 @@ typedef struct
     u8 f, g, h, alpha;
 } ParticleSlot;
 
-extern ParticleSlot lbl_8030FFE8[];
+extern ParticleSlot gBoneParticleInitData[];
 extern void* textureLoadAsset(int id);
 extern void* mmAlloc(int size, int align, int flag);
 
@@ -3538,14 +3538,14 @@ void boneParticleEffect_initialise(void)
     {
         for (j = 0; j < BONE_PARTICLE_EFFECT_SLOT_COUNT; j++)
         {
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].a = lbl_8030FFE8[j].a;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].b = lbl_8030FFE8[j].b;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].c = lbl_8030FFE8[j].c;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].d = lbl_8030FFE8[j].d;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].e = lbl_8030FFE8[j].e;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].f = lbl_8030FFE8[j].f;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].g = lbl_8030FFE8[j].g;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].h = lbl_8030FFE8[j].h;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].a = gBoneParticleInitData[j].a;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].b = gBoneParticleInitData[j].b;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].c = gBoneParticleInitData[j].c;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].d = gBoneParticleInitData[j].d;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].e = gBoneParticleInitData[j].e;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].f = gBoneParticleInitData[j].f;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].g = gBoneParticleInitData[j].g;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].h = gBoneParticleInitData[j].h;
             ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].alpha = 0xff;
         }
     }

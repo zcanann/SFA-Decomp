@@ -54,7 +54,7 @@ extern f32 lbl_803E66D8;
 extern f32 lbl_803E665C;
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int extraSize, int id);
-extern GreatFoxFxEntry lbl_8032A210[10];
+extern GreatFoxFxEntry gGreatFoxEffects[10];
 extern f32 lbl_803E6640;
 extern f32 lbl_803E6644;
 extern f32 lbl_803E6648;
@@ -611,7 +611,7 @@ void worldobj_spawnGreatFoxEffects(int obj)
     {
         GreatFoxFxEntry* e;
         s = ((GameObject*)obj)->anim.rootMotionScale;
-        e = &lbl_8032A210[i];
+        e = &gGreatFoxEffects[i];
         params.offsetX = k * (s * e->f0);
         params.offsetY = k * (s * e->f4);
         params.offsetZ = k * (s * e->f8);

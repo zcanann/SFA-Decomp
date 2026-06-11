@@ -233,7 +233,7 @@ extern u8 linkTextures[0x30];
 extern int getScreenResolution(void);
 extern void* textureLoadAsset(int id);
 extern void* hudTextures[];
-extern s16 lbl_8031B624[];
+extern s16 gHudTextureIds[];
 extern u8 lbl_803A9398[];
 extern s8 lbl_803DD896;
 extern s16 lbl_803DD894;
@@ -344,7 +344,7 @@ void GameUI_initialise(void)
     lbl_803DD740 = height - 240;
     for (i = 0; i < 102; i++)
     {
-        hudTextures[i] = textureLoadAsset(lbl_8031B624[i]);
+        hudTextures[i] = textureLoadAsset(gHudTextureIds[i]);
     }
     p = textureLoadAsset(1280);
     lbl_803DD8C4 = p;

@@ -801,7 +801,7 @@ extern f32 lbl_803DBA80;
 extern f32 lbl_803DBA84;
 extern s16 lbl_803DBACC;
 extern s16 lbl_803DBACE;
-extern u8 lbl_8031B6F0[];
+extern u8 gHudButtonIcons[];
 extern char lbl_803DBB5C;
 extern u32 lbl_803E1E18;
 extern f64 lbl_803E1EA8;
@@ -1061,14 +1061,14 @@ void hudDrawButtons(int param1, int param2, int param3)
             {
                 for (bi = 0; bi < 0x1D; bi++)
                 {
-                    if (aButtonIcon == lbl_8031B6F0[bi * 2])
+                    if (aButtonIcon == gHudButtonIcons[bi * 2])
                     {
                         icon = bi;
                     }
                 }
                 textObj = gameTextGet(0x2AD);
             }
-            if (icon != 0 && (void*)textObj != NULL && *(u16*)(textObj + 2) > *(gp = lbl_8031B6F0 + icon * 2 + 1))
+            if (icon != 0 && (void*)textObj != NULL && *(u16*)(textObj + 2) > *(gp = gHudButtonIcons + icon * 2 + 1))
             {
                 textPtr = *(int*)(*(int*)(textObj + 8) + *gp * 4);
                 prevCharset2 = gameTextGetCharset();
@@ -1121,7 +1121,7 @@ void hudDrawButtons(int param1, int param2, int param3)
             icon = 0;
             for (bi = icon; bi < 0x1D; bi++)
             {
-                if (bButtonIcon == lbl_8031B6F0[bi * 2])
+                if (bButtonIcon == gHudButtonIcons[bi * 2])
                 {
                     icon = bi;
                 }
@@ -1129,7 +1129,7 @@ void hudDrawButtons(int param1, int param2, int param3)
             prevCharset = gameTextGetCharset();
             gameTextSetCharset(3, 3);
             textObj = gameTextGet(0x2AD);
-            if (icon != 0 && (void*)textObj != NULL && *(u16*)(textObj + 2) > *(gp = lbl_8031B6F0 + icon * 2 + 1))
+            if (icon != 0 && (void*)textObj != NULL && *(u16*)(textObj + 2) > *(gp = gHudButtonIcons + icon * 2 + 1))
             {
                 textPtr = *(int*)(*(int*)(textObj + 8) + *gp * 4);
                 prevCharset2 = gameTextGetCharset();

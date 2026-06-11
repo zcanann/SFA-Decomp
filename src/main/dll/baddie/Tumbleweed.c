@@ -101,7 +101,7 @@ typedef struct MinimapMapEntry
     u8 count;
 } MinimapMapEntry;
 
-extern MinimapMapEntry lbl_8031C508[];
+extern MinimapMapEntry gMinimapCellTable[];
 
 extern int coordsToMapCell(f32 x, f32 z);
 extern void* Obj_GetPlayerObject(void);
@@ -239,7 +239,7 @@ int Minimap_update(void)
         }
         while (!found && i < 0x19)
         {
-            if (cell == lbl_8031C508[i].cellId && GameBit_Get(lbl_8031C508[i].gameBit) != 0)
+            if (cell == gMinimapCellTable[i].cellId && GameBit_Get(gMinimapCellTable[i].gameBit) != 0)
             {
                 found = 1;
             }
@@ -250,7 +250,7 @@ int Minimap_update(void)
         }
         if (found != 0)
         {
-            rows = lbl_8031C508[i].rows;
+            rows = gMinimapCellTable[i].rows;
             if (rows->swap != 0)
             {
                 fx = ((GameObject*)player)->anim.worldPosZ;
@@ -264,7 +264,7 @@ int Minimap_update(void)
                 lbl_803DD95C = 0;
             }
             yi = (int)((GameObject*)player)->anim.worldPosY;
-            for (; k < lbl_8031C508[i].count; k++)
+            for (; k < gMinimapCellTable[i].count; k++)
             {
                 row = &rows[k];
                 if (fx >= (f32)row->x0 && fx < (f32)row->x1 &&
@@ -284,7 +284,7 @@ int Minimap_update(void)
                         lbl_803DD94A = -0x8000;
                         lbl_803DBBD0 = 0x7fff;
                         lbl_803DBBD2 = 0x7fff;
-                        for (; j < lbl_8031C508[i].count; j++)
+                        for (; j < gMinimapCellTable[i].count; j++)
                         {
                             r2 = &rows[j];
                             if (marker == r2->mapId)

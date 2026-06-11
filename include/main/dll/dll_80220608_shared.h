@@ -1099,7 +1099,7 @@ extern int ObjHits_GetPriorityHitWithPosition(int obj, f32 *a, f32 *b, f32 *c, f
 extern void ObjHits_RecordObjectHit(int handle, int obj, int a, int b, int c);
 extern int Obj_GetPlayerObject(void);
 extern f32 sqrtf(f32 x);
-extern f32 lbl_8032BBE0[];
+extern f32 gTreeEffectColors[];
 extern f32 lbl_803E730C;
 extern f32 lbl_803E7310;
 extern f32 lbl_803E7314;

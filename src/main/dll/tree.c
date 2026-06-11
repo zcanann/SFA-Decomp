@@ -455,7 +455,7 @@ void tree_update(int obj)
                 if (state->flags & TREE_FLAG_BURST_MODE_MASK)
                 {
                     intensity = state->scale;
-                    ctbl = &lbl_8032BBE0[state->effectProfileIndex * 4];
+                    ctbl = &gTreeEffectColors[state->effectProfileIndex * 4];
                     colorVec[0] = intensity * ctbl[0];
                     colorVec[1] = intensity * ctbl[1];
                     colorVec[2] = intensity * ctbl[2];
@@ -500,7 +500,7 @@ void tree_update(int obj)
                     state->playerBurstCooldown <= lbl_803E72F8)
                 {
                     intensity = state->scale;
-                    ctbl = &lbl_8032BBE0[state->effectProfileIndex * 4];
+                    ctbl = &gTreeEffectColors[state->effectProfileIndex * 4];
                     colorVec[0] = intensity * ctbl[0];
                     colorVec[1] = intensity * ctbl[1];
                     colorVec[2] = intensity * ctbl[2];
@@ -513,7 +513,7 @@ void tree_update(int obj)
                 if (state->ambientBurstTimer <= lbl_803E72F8)
                 {
                     intensity = state->scale;
-                    ctbl = &lbl_8032BBE0[state->effectProfileIndex * 4];
+                    ctbl = &gTreeEffectColors[state->effectProfileIndex * 4];
                     colorVec[0] = intensity * ctbl[0];
                     colorVec[1] = intensity * ctbl[1];
                     colorVec[2] = intensity * ctbl[2];
