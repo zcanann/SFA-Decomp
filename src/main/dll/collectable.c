@@ -565,9 +565,9 @@ int Tricky_updateSideCommandPrompts(int obj)
 {
     char cmdByte;
     ushort promptId;
-    bool promptA;
-    bool promptB;
-    bool promptC;
+    u8 promptA;
+    u8 promptB;
+    u8 promptC;
     int objVal;
     uint bitVal;
     uint commandMask;
