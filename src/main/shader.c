@@ -3292,7 +3292,7 @@ void doPendingMapLoads(void)
                         s16 mid = rc[2];
                         if (mid >= 0)
                         {
-                            *(u8*)(lbl_803DCE8C + mid) = *(u8*)(lbl_803DCE8C + mid) - 1;
+                            *(u8*)(lbl_803DCE8C + mid) -= 1;
                             if (*(u8*)(lbl_803DCE8C + mid) == 0)
                             {
                                 char* blk = (char*)*(int*)((char*)lbl_803DCE9C + mid * 4);
