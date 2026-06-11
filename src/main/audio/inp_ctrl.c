@@ -3,7 +3,7 @@
 extern int synthGetVoiceSlotChannelScale(int x);
 
 extern u32 lbl_803DC610;
-extern s16 lbl_80330028[];
+extern s16 sndSintab[];
 
 /*
  * Bit-11 (0x800) accessor - slot at +0x3a4, cached u16 at +0x3c4.
@@ -379,7 +379,7 @@ u16 sndRand(void)
  */
 s16 sndSin(u32 packed)
 {
-    s16* table = lbl_80330028;
+    s16* table = sndSintab;
     u32 zone = packed & 0xfff;
     if (zone < 0x400)
     {
