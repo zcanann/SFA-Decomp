@@ -1432,7 +1432,7 @@ config.libs = [
                 "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.c",
                 mw_version="GC/1.2.5n",
                 cflags=msl_math_o0_cflags,
-                extra_cflags=["-O0", "-opt", "functions", "-inline", "auto", *msl_math_extra],
+                extra_cflags=["-O0", "-opt", "functions,peephole", "-inline", "auto", *msl_math_extra],
                 progress_category="sdk",
             ),
             Object(
