@@ -496,16 +496,11 @@ void dll_1FB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     Dll1FBState* state = (Dll1FBState*)OBJ_PTR(obj, 0xb8);
 
-    if (visible == 0)
+    if (visible == 0 || state->hideModel != 0u)
     {
         return;
     }
-    switch (state->hideModel)
-    {
-    case 0:
-        ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5D00);
-        break;
-    }
+    ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5D00);
 }
 
 void dll_1FB_hitDetect_nop(void)
