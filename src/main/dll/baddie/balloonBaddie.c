@@ -2,119 +2,26 @@
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 
-extern undefined4 FUN_80006954();
-extern undefined4 FUN_8000695c();
-extern undefined4 FUN_80006960();
-extern undefined4 FUN_80006984();
-extern undefined4 FUN_80006988();
-extern undefined4 FUN_800069a8();
-extern undefined4 FUN_800069b0();
-extern undefined4 FUN_800069b8();
-extern undefined4 FUN_800069bc();
-extern undefined4 FUN_800069d4();
-extern double FUN_800069f8();
-extern undefined4 FUN_80006a00();
 extern uint GameBit_Get(int eventId);
-extern int FUN_800176d0();
 extern int FUN_8001792c();
-extern int FUN_80017a54();
-extern int FUN_80017a90();
-extern int FUN_80017a98();
-extern undefined4 FUN_8003b878();
-extern int FUN_80042838();
 extern undefined4 FUN_80051fc4();
 extern undefined4 FUN_80052778();
 extern undefined4 FUN_800528d0();
 extern undefined4 FUN_80052904();
 extern uint FUN_80053078();
-extern undefined8 FUN_80053754();
-extern int FUN_8005398c();
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
-extern undefined4 FUN_800709e8();
-extern undefined4 FUN_8011f048();
-extern undefined8 FUN_8011f04c();
 extern undefined4 FUN_8025c754();
 extern undefined4 FUN_8025cce8();
-extern undefined4 FUN_8025da64();
-extern undefined4 FUN_8025da88();
-extern undefined8 FUN_8028682c();
-extern undefined4 FUN_80286878();
-extern undefined4 FUN_80294964();
 
 extern undefined4 DAT_8031c130;
-extern undefined4 DAT_8031c268;
-extern undefined4 DAT_803a9450;
-extern undefined4 DAT_803a9684;
-extern undefined1 DAT_803a9898;
-extern undefined4 DAT_803a98d8;
-extern undefined4 DAT_803a9918;
-extern undefined4 DAT_803a9958;
-extern short DAT_803a9998;
-extern short DAT_803a9a18;
-extern undefined4 DAT_803a9a98;
-extern undefined4 DAT_803a9b98;
-extern int DAT_803a9c98;
-extern short DAT_803a9d98;
-extern int DAT_803a9e18;
-extern undefined4 DAT_803a9ff8;
 extern undefined4 DAT_803aa008;
 extern undefined4 DAT_803aa024;
-extern undefined4* DAT_803aa040;
-extern undefined4* DAT_803aa044;
-extern undefined4* DAT_803aa048;
-extern undefined4* DAT_803aa04c;
-extern undefined4* DAT_803aa050;
-extern undefined4* DAT_803aa054;
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803dc698;
-extern undefined4 DAT_803dc6cd;
-extern undefined4 DAT_803dc6ce;
-extern undefined4 DAT_803dd970;
 extern undefined4 DAT_803de3b8;
-extern undefined4 DAT_803de3bc;
-extern undefined4 DAT_803de400;
-extern undefined4 DAT_803de40e;
-extern undefined4 DAT_803de415;
-extern undefined4 DAT_803de416;
-extern undefined4 DAT_803de418;
-extern undefined4 DAT_803de41a;
-extern undefined4 DAT_803de41c;
-extern undefined4 DAT_803de41e;
-extern undefined4 DAT_803de454;
-extern undefined4 DAT_803de460;
-extern undefined4 DAT_803de4b0;
-extern undefined4 DAT_803de4b4;
-extern undefined4 DAT_803de4f4;
-extern undefined4 DAT_803de504;
-extern undefined4 DAT_803de50a;
-extern undefined4 DAT_803de514;
-extern undefined4 DAT_803de516;
-extern undefined4 DAT_803de536;
-extern undefined4 DAT_803de537;
-extern undefined4 DAT_803de554;
-extern undefined4 DAT_803de556;
 extern undefined4 DAT_803e2a90;
 extern undefined4 DAT_803e2a94;
-extern f64 DOUBLE_803e2af8;
 extern f64 DOUBLE_803e2b08;
-extern f64 DOUBLE_803e2ca8;
-extern f64 DOUBLE_803e2cb0;
-extern f32 FLOAT_803dc70c;
-extern f32 FLOAT_803dc72c;
-extern f32 FLOAT_803dc730;
-extern f32 FLOAT_803e2abc;
-extern f32 FLOAT_803e2ac0;
-extern f32 FLOAT_803e2ae8;
-extern f32 FLOAT_803e2b44;
-extern f32 FLOAT_803e2bb4;
 extern f32 FLOAT_803e2c90;
-extern f32 FLOAT_803e2c98;
-extern f32 FLOAT_803e2c9c;
-extern f32 FLOAT_803e2ca0;
-extern f32 FLOAT_803e2ca4;
-extern f32 FLOAT_803e2cb8;
-extern f32 FLOAT_803e2cbc;
 
 /*
  * --INFO--
@@ -461,7 +368,7 @@ undefined4 fn_80124A78(int shader, int* block, int idx)
     colorWord = DAT_803e2a94;
     rec = FUN_8001792c(*block, idx);
     FUN_80052904();
-    colorWord = CONCAT31(colorWord >> 8, *(undefined*)(shader + 0x37));
+    colorWord = CONCAT31(colorWord >> 8, *(u8*)(shader + 0x37));
     texHandle = FUN_80053078(*(uint*)(rec + 0x24));
     FUN_80051fc4(texHandle, 0, 0, (char*)&colorWord, 0, 1);
     FUN_800528d0();
@@ -512,7 +419,7 @@ undefined4 fn_80124B38(int shader, int* block, int idx)
             }
             else
             {
-                colorWord = CONCAT31(colorWord >> 8, *(undefined*)(shader + 0x37));
+                colorWord = CONCAT31(colorWord >> 8, *(u8*)(shader + 0x37));
             }
             FUN_80051fc4(tabA[rec], 0, 0, (char*)&colorWord, 0, 1);
         }
@@ -673,7 +580,6 @@ extern u32 lbl_803E1E10;
 extern void* lbl_803A93C4[7];
 extern int lbl_803A93A8[7];
 extern f32 lbl_803E2010;
-extern f64 lbl_803E1E88;
 extern void gxColorFn_80052764(void* p);
 
 #pragma peephole on
