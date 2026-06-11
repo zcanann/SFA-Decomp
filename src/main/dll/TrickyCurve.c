@@ -325,9 +325,9 @@ void TrickyCurve_updateBoundsTrigger(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void TrickyCurve_updateEffectRingTrigger(undefined8 param_1, undefined8 param_2, undefined8 param_3,
-                                         undefined8 param_4, undefined8 param_5, undefined8 param_6,
-                                         undefined8 param_7, undefined8 param_8)
+void TrickyCurve_updateEffectRingTrigger(undefined8 arg1, undefined8 arg2, undefined8 arg3,
+                                         undefined8 arg4, undefined8 arg5, undefined8 arg6,
+                                         undefined8 arg7, undefined8 arg8)
 {
     bool flag;
     uint objRef;
@@ -362,19 +362,19 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1, undefined8 param_2,
     float fdz;
     undefined4 convHi0;
     uint convLo0;
-    float local_28;
-    float fStack_24;
-    float local_18;
-    float fStack_14;
-    float local_8;
-    float fStack_4;
+    float tmp;
+    float fa;
+    float tmp2;
+    float fb;
+    float tmp3;
+    float fc;
 
-    local_8 = (float)savedF31;
-    fStack_4 = (float)savedPs31;
-    local_18 = (float)savedF30;
-    fStack_14 = (float)savedPs30;
-    local_28 = (float)savedF29;
-    fStack_24 = (float)savedPs29;
+    tmp3 = (float)savedF31;
+    fc = (float)savedPs31;
+    tmp2 = (float)savedF30;
+    fb = (float)savedPs30;
+    tmp = (float)savedF29;
+    fa = (float)savedPs29;
     objRef = FUN_80286838();
     state = *(short**)(objRef + 0xb8);
     ref = FUN_80017a98();
@@ -481,7 +481,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1, undefined8 param_2,
             bitVal = FUN_80017690(0x1d9);
             if (bitVal == 0)
             {
-                ObjMsg_SendToObject(ftmp, param_2, param_3, param_4, param_5, param_6, param_7, param_8, ref,
+                ObjMsg_SendToObject(ftmp, arg2, arg3, arg4, arg5, arg6, arg7, arg8, ref,
                                     0x60004,
                                     objRef, 1, unusedArg7, unusedArg8, unusedArg9, unusedArg10);
                 (*gPartfxInterface)->spawnObject((void*)objRef, 0x5ed, &rotX, 2, -1, NULL);
@@ -496,7 +496,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1, undefined8 param_2,
             else
             {
                 pairWord = FUN_80017698(0x468, 1);
-                ObjMsg_SendToObject(pairWord, param_2, param_3, param_4, param_5, param_6, param_7, param_8, ref,
+                ObjMsg_SendToObject(pairWord, arg2, arg3, arg4, arg5, arg6, arg7, arg8, ref,
                                     0x60004,
                                     objRef, 0, unusedArg7, unusedArg8, unusedArg9, unusedArg10);
                 (*gPartfxInterface)->spawnObject((void*)objRef, 0x5ed, &rotX, 2, -1, NULL);
@@ -551,17 +551,17 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1, undefined8 param_2,
  */
 #pragma scheduling on
 #pragma peephole on
-void TrickyCurve_updateState(undefined8 param_1, undefined8 param_2, undefined8 param_3,
-                             undefined8 param_4, undefined8 param_5, undefined8 param_6,
-                             undefined8 param_7, undefined8 param_8, int obj)
+void TrickyCurve_updateState(undefined8 arg1, undefined8 arg2, undefined8 arg3,
+                             undefined8 arg4, undefined8 arg5, undefined8 arg6,
+                             undefined8 arg7, undefined8 arg8, int obj)
 {
     char triggerKind;
 
     triggerKind = *(char*)(*(int*)&((GameObject*)obj)->extra + 0xe);
     if (triggerKind == '\0')
     {
-        TrickyCurve_updateEffectRingTrigger(param_1, param_2, param_3, param_4, param_5, param_6, param_7,
-                                            param_8);
+        TrickyCurve_updateEffectRingTrigger(arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                                            arg8);
     }
     else if (triggerKind == '\x01')
     {
@@ -595,10 +595,10 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
 {
     int step;
     char mode;
-    short sVar3;
+    short i;
     int state;
-    short sVar5;
-    int* piVar6;
+    short sval;
+    int* ptr;
     ushort idsOut[4];
     float outA;
     float outB;
@@ -644,36 +644,36 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
     outC = lbl_803E70F8;
     outD = lbl_803E70F8;
     outA = lbl_803E70F0;
-    sVar5 = 0;
+    sval = 0;
     idsOut[2] = 0;
     idsOut[1] = 0;
-    piVar6 = gSfxplayerEffectHandles;
-    for (sVar3 = 0; sVar3 < 4; sVar3 = sVar3 + 1)
+    ptr = gSfxplayerEffectHandles;
+    for (i = 0; i < 4; i = i + 1)
     {
-        if (*piVar6 != 0)
+        if (*ptr != 0)
         {
-            *(float*)(*piVar6 + 0xc) = lbl_803E70F8;
-            *(float*)(*piVar6 + 0x10) = lbl_803E70FC;
-            *(float*)(*piVar6 + 0x14) = lbl_803E7100;
-            idsOut[0] = *obj + sVar5;
-            FUN_80017748(idsOut, (float*)(*piVar6 + 0xc));
-            *(float*)(*piVar6 + 0xc) = *(float*)(*piVar6 + 0xc) + *(float*)(obj + 6);
-            *(float*)(*piVar6 + 0x10) = *(float*)(*piVar6 + 0x10) + *(float*)(obj + 8);
-            *(float*)(*piVar6 + 0x14) = *(float*)(*piVar6 + 0x14) + *(float*)(obj + 10);
+            *(float*)(*ptr + 0xc) = lbl_803E70F8;
+            *(float*)(*ptr + 0x10) = lbl_803E70FC;
+            *(float*)(*ptr + 0x14) = lbl_803E7100;
+            idsOut[0] = *obj + sval;
+            FUN_80017748(idsOut, (float*)(*ptr + 0xc));
+            *(float*)(*ptr + 0xc) = *(float*)(*ptr + 0xc) + *(float*)(obj + 6);
+            *(float*)(*ptr + 0x10) = *(float*)(*ptr + 0x10) + *(float*)(obj + 8);
+            *(float*)(*ptr + 0x14) = *(float*)(*ptr + 0x14) + *(float*)(obj + 10);
         }
-        if (piVar6[1] != 0)
+        if (ptr[1] != 0)
         {
-            *(float*)(piVar6[1] + 0xc) = lbl_803E70F8;
-            *(float*)(piVar6[1] + 0x10) = lbl_803E70FC;
-            *(float*)(piVar6[1] + 0x14) = lbl_803E7100;
-            idsOut[0] = *obj + sVar5;
-            FUN_80017748(idsOut, (float*)(piVar6[1] + 0xc));
-            *(float*)(piVar6[1] + 0xc) = *(float*)(piVar6[1] + 0xc) + *(float*)(obj + 6);
-            *(float*)(piVar6[1] + 0x10) = *(float*)(piVar6[1] + 0x10) + *(float*)(obj + 8);
-            *(float*)(piVar6[1] + 0x14) = *(float*)(piVar6[1] + 0x14) + *(float*)(obj + 10);
+            *(float*)(ptr[1] + 0xc) = lbl_803E70F8;
+            *(float*)(ptr[1] + 0x10) = lbl_803E70FC;
+            *(float*)(ptr[1] + 0x14) = lbl_803E7100;
+            idsOut[0] = *obj + sval;
+            FUN_80017748(idsOut, (float*)(ptr[1] + 0xc));
+            *(float*)(ptr[1] + 0xc) = *(float*)(ptr[1] + 0xc) + *(float*)(obj + 6);
+            *(float*)(ptr[1] + 0x10) = *(float*)(ptr[1] + 0x10) + *(float*)(obj + 8);
+            *(float*)(ptr[1] + 0x14) = *(float*)(ptr[1] + 0x14) + *(float*)(obj + 10);
         }
-        piVar6 = piVar6 + 2;
-        sVar5 = sVar5 + 0x3fff;
+        ptr = ptr + 2;
+        sval = sval + 0x3fff;
     }
     return;
 }
