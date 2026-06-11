@@ -291,8 +291,9 @@ void cloudaction_onMapSetup(void)
 void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
 {
     CloudEnvTbl* tbl = (CloudEnvTbl*)lbl_8030F7B0;
+    int env;
 
-    saveGameGetEnvState();
+    env = saveGameGetEnvState();
     if (state == NULL)
     {
         return;
@@ -301,7 +302,7 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
     {
         return;
     }
-    *(s16*)((int)tbl + 0xa) = (s16)((s16) * (u16*)(state + 0x24) - 1);
+    *(s16*)(env + 0xa) = (s16)((s16) * (u16*)(state + 0x24) - 1);
     if ((state[0x59] & 1) == 0)
     {
         return;
