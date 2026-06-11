@@ -2,6 +2,8 @@
 extern f32 lbl_803DC740[2];
 extern s16 lbl_803DC73C[2];
 #include "main/dll/DIM/dll_802B9780_shared.h"
+#include "main/effect_interfaces.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 
@@ -1086,7 +1088,6 @@ int DIMSnowHorn1_setScale(int obj)
 void fn_802BB998(int obj, int pointState, int inputState)
 {
     extern u16 audioPickSoundEffect_8006ed24(u8 id, int bank);
-    extern void Sfx_PlayFromObject(int obj, u16 sfxId);
     u8 flags;
     u8 pointIndex;
     u8 count;
