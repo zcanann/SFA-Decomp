@@ -1704,7 +1704,7 @@ int ktrex_stateHandlerA10(int obj, int runtime)
     ((KTRexArenaState*)gKTRexState)->unk4 -= timeDelta;
     if (((KTRexArenaState*)gKTRexState)->unk4 <= lbl_803E67B8)
     {
-        ((KTRexArenaState*)gKTRexState)->unk4 = lbl_803E67B8;
+        ((KTRexArenaState*)gKTRexState)->unk4 = *(f32 *)&lbl_803E67B8;
     }
     if (((KTRexArenaState*)gKTRexState)->unk4 <= lbl_803E67B8 &&
         ((KTRexArenaState*)gKTRexState)->unk0C == phase &&
