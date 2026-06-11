@@ -1989,163 +1989,55 @@ void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
 
 extern u8 framesThisStep;
 
-void characterDoEyeMovements(int obj, int p4, f32 unused)
+static inline int* characterFindEyeJoint(int obj, int kind)
 {
-    int* foundA;
-    int* foundB;
-    u8* list;
     int i;
+    u8* list;
     int n;
     int k;
     int* table;
-    int flag;
-    s16 t;
-    s8 timer;
-
-    foundA = NULL;
+    int* found;
+    found = NULL;
     table = (void*)((GameObject*)obj)->anim.modelInstance;
     if (table != NULL)
     {
         list = *(u8**)((char*)table + 0xc);
-        if (list != NULL)
+        if (list == NULL)
         {
-            i = 0;
-            n = (s32)(u32)((ObjDef*)table)->unk59;
-            for (k = 0; k < n; k++)
+            return NULL;
+        }
+        n = (s32)(u32)((ObjDef*)table)->unk59;
+        i = 0;
+        for (k = 0; k < n; k++)
+        {
+            if (list[0] == kind)
             {
-                if (list[0] == 1)
-                {
-                    foundA = (int*)((char*)*(void**)(obj + 0x70) + i);
-                }
-                list += 2;
-                i += 0x10;
+                found = (int*)((char*)*(void**)(obj + 0x70) + i);
             }
+            list += 2;
+            i += 0x10;
         }
     }
-    foundB = NULL;
-    if (table != NULL)
-    {
-        list = *(u8**)((char*)table + 0xc);
-        if (list != NULL)
-        {
-            i = 0;
-            n = (s32)(u32)((ObjDef*)table)->unk59;
-            for (k = 0; k < n; k++)
-            {
-                if (list[0] == 0)
-                {
-                    foundB = (int*)((char*)*(void**)(obj + 0x70) + i);
-                }
-                list += 2;
-                i += 0x10;
-            }
-        }
-    }
-    if (foundA == NULL) return;
-    if (foundB == NULL) return;
-
-    flag = 0;
-    t = *(s16*)(p4 + 0x22);
-    if (t == 0)
-    {
-        flag = 1;
-    }
-    if (t > 0)
-    {
-        if (*(s16*)((char*)foundA + 8) >= *(int*)(p4 + 0x24))
-        {
-            flag = 1;
-        }
-    }
-    if (t < 0)
-    {
-        if (*(s16*)((char*)foundA + 8) <= *(int*)(p4 + 0x24))
-        {
-            flag = 1;
-        }
-    }
-    if (flag != 0)
-    {
-        *(int*)(p4 + 0x24) = randomGetRange(-0x3e8, 0x3e8);
-        if (*(int*)(p4 + 0x24) < *(s16*)((char*)foundA + 8))
-        {
-            *(s16*)(p4 + 0x22) = -0x96;
-        }
-        else
-        {
-            *(s16*)(p4 + 0x22) = 0x96;
-        }
-        *(s8*)(p4 + 0x20) = (s8)randomGetRange(0x1e, 0x64);
-    }
-    timer = *(s8*)(p4 + 0x20);
-    if (timer > 0)
-    {
-        *(s8*)(p4 + 0x20) = timer - framesThisStep;
-    }
-    else
-    {
-        *(s16*)((char*)foundA + 8) =
-            (s16)(*(s16*)((char*)foundA + 8) + *(s16*)(p4 + 0x22) * framesThisStep);
-        *(s16*)((char*)foundA + 0xa) = 0;
-        *(s16*)((char*)foundB + 8) = *(s16*)((char*)foundA + 8);
-        *(s16*)((char*)foundB + 0xa) = 0;
-    }
+    return found;
 }
+
+void characterDoEyeMovements(int obj, int p4, f32 unused);
 
 
 void fn_8003B228(int obj, int p2)
 {
     int* foundA;
     int* foundB;
-    u8* list;
-    int i;
-    int n;
-    int k;
-    int* table;
     int val;
 
-    foundA = NULL;
-    table = (void*)((GameObject*)obj)->anim.modelInstance;
-    if (table != NULL)
+    foundA = characterFindEyeJoint(obj, 5);
+    foundB = characterFindEyeJoint(obj, 4);
+    if (foundA == NULL || foundB == NULL)
     {
-        list = *(u8**)((char*)table + 0xc);
-        if (list != NULL)
-        {
-            i = 0;
-            n = (s32)(u32)((ObjDef*)table)->unk59;
-            for (k = 0; k < n; k++)
-            {
-                if (list[0] == 5)
-                {
-                    foundA = (int*)((char*)*(void**)(obj + 0x70) + i);
-                }
-                list += 2;
-                i += 0x10;
-            }
-        }
+        return;
     }
-    foundB = NULL;
-    if (table != NULL)
-    {
-        list = *(u8**)((char*)table + 0xc);
-        if (list != NULL)
-        {
-            i = 0;
-            n = (s32)(u32)((ObjDef*)table)->unk59;
-            for (k = 0; k < n; k++)
-            {
-                if (list[0] == 4)
-                {
-                    foundB = (int*)((char*)*(void**)(obj + 0x70) + i);
-                }
-                list += 2;
-                i += 0x10;
-            }
-        }
-    }
-    if (foundA == NULL) return;
-    if (foundB == NULL) return;
-    val = *foundB + framesThisStep * 0x30;
+    val = *foundB;
+    val += framesThisStep * 0x30;
     if (val >= 0x200)
     {
         val = 0x200;
@@ -3241,56 +3133,9 @@ void characterDoEyeAnims(int obj, int p2)
     extern u8 framesThisStep;
     int* a;
     int* b;
-    void* m;
 
-    a = NULL;
-    m = (void*)((GameObject*)obj)->anim.modelInstance;
-    if (m != NULL)
-    {
-        u8* p = *(u8**)((char*)m + 0xc);
-        if (p == NULL)
-        {
-        }
-        else
-        {
-            int n = ((ObjDef*)m)->unk59;
-            int off = 0;
-            int j;
-            for (j = 0; j < n; j++)
-            {
-                if (*p == 5)
-                {
-                    a = (int*)(*(int*)(obj + 0x70) + off);
-                }
-                p += 2;
-                off += 0x10;
-            }
-        }
-    }
-
-    b = NULL;
-    if (m != NULL)
-    {
-        u8* p = *(u8**)((char*)m + 0xc);
-        if (p == NULL)
-        {
-        }
-        else
-        {
-            int n = ((ObjDef*)m)->unk59;
-            int off = 0;
-            int j;
-            for (j = 0; j < n; j++)
-            {
-                if (*p == 4)
-                {
-                    b = (int*)(*(int*)(obj + 0x70) + off);
-                }
-                p += 2;
-                off += 0x10;
-            }
-        }
-    }
+    a = characterFindEyeJoint(obj, 5);
+    b = characterFindEyeJoint(obj, 4);
 
     if (a == NULL)
     {
@@ -3354,6 +3199,62 @@ void characterDoEyeAnims(int obj, int p2)
             break;
         }
         characterDoEyeMovements(obj, p2, lbl_803DE9A4);
+    }
+}
+
+void characterDoEyeMovements(int obj, int p4, f32 unused)
+{
+    int* foundA;
+    int* foundB;
+    s16 t;
+    int flag;
+    s8 timer;
+
+    foundA = characterFindEyeJoint(obj, 1);
+    foundB = characterFindEyeJoint(obj, 0);
+    if (foundA == NULL || foundB == NULL)
+    {
+        return;
+    }
+
+    flag = 0;
+    t = *(s16*)(p4 + 0x22);
+    if (t == 0)
+    {
+        flag = 1;
+    }
+    if (t > 0)
+    {
+        if (*(s16*)((char*)foundA + 8) >= *(int*)(p4 + 0x24))
+        {
+            flag = 1;
+        }
+    }
+    if (t < 0)
+    {
+        if (*(s16*)((char*)foundA + 8) <= *(int*)(p4 + 0x24))
+        {
+            flag = 1;
+        }
+    }
+    if (flag != 0)
+    {
+        *(int*)(p4 + 0x24) = randomGetRange(-0x3e8, 0x3e8);
+        *(s16*)(p4 + 0x22) = (*(int*)(p4 + 0x24) < *(s16*)((char*)foundA + 8)) ? -0x96 : 0x96;
+        *(s8*)(p4 + 0x20) = (s8)randomGetRange(0x1e, 0x64);
+    }
+    timer = *(s8*)(p4 + 0x20);
+    if (timer > 0)
+    {
+        *(s8*)(p4 + 0x20) = timer - framesThisStep;
+    }
+    else
+    {
+        *(s16*)((char*)foundA + 8) =
+            (s16)(*(s16*)((char*)foundA + 8) + *(s16*)(p4 + 0x22) * framesThisStep);
+        *(s16*)((char*)foundA + 0xa) = 0;
+        *(s16*)((char*)foundB + 8) = *(s16*)((char*)foundA + 8);
+        *(s16*)((char*)foundB + 0xa) = 0;
     }
 }
 

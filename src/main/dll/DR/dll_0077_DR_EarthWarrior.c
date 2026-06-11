@@ -419,15 +419,7 @@ f32 DR_EarthWarrior_func19(int obj, f32* out)
 {
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
     f32 v = lbl_803E8360 * inner->baddie.animSpeedC + lbl_803E8354;
-    if (v < lbl_803E8354)
-    {
-        v = lbl_803E8354;
-    }
-    else if (v > lbl_803E8364)
-    {
-        v = lbl_803E8364;
-    }
-    *out = -v;
+    *out = -((v < lbl_803E8354) ? lbl_803E8354 : ((v > lbl_803E8364) ? lbl_803E8364 : v));
     return lbl_803E8304;
 }
 
