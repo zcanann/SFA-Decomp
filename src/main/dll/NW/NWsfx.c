@@ -631,16 +631,13 @@ void ediblemushroom_hitDetect(u8* obj)
     {
         hitCount = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                         ((GameObject*)obj)->anim.localPosZ, &hits, 0, 0);
-        i = 0;
-        hitIter = hits;
-        for (; i < hitCount; i++)
+        for (i = 0; i < hitCount; i++)
         {
-            if (**hitIter < lbl_803E5294 + ((GameObject*)obj)->anim.localPosY)
+            if (*hits[i] < lbl_803E5294 + ((GameObject*)obj)->anim.localPosY)
             {
                 ((GameObject*)obj)->anim.localPosY = *hits[i];
                 break;
             }
-            hitIter++;
         }
 
         hitCount = objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E52DC, 2, bboxHit, obj, 8,
