@@ -3716,7 +3716,7 @@ void fn_800659A8(f32 a, f32 b, void* p3, void* p4, void* desc, int e)
         *(f32*)(lbl_803DCF68 + 0xc) = vec[2];
         *(int*)(lbl_803DCF68 + 0x10) = *(int*)desc;
         lbl_803DCF68 = lbl_803DCF68 + 0x18;
-        lbl_803DCF60 = lbl_803DCF60 + 1;
+        lbl_803DCF60++;
     }
 }
 
@@ -5493,7 +5493,7 @@ void trackIntersect(void)
     lbl_803DCF44 = 0;
     if (lbl_803DCF4D != 0 && getHudHiddenFrameCount() == 0)
     {
-        lbl_803DCF4D = lbl_803DCF4D - 1;
+        lbl_803DCF4D--;
     }
     if ((s8)mapBlockFlag == 1)
     {

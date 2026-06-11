@@ -755,7 +755,7 @@ void mapTextureScrollGetOffset(int idx, float* outX, float* outY)
 /* 52b layer clamp pair. */
 void goToPrevMapLayer(void)
 {
-    curMapLayer = curMapLayer - 1;
+    curMapLayer--;
     if (curMapLayer < -2)
     {
         curMapLayer = -2;
@@ -765,7 +765,7 @@ void goToPrevMapLayer(void)
 
 void goToNextMapLayer(void)
 {
-    curMapLayer = curMapLayer + 1;
+    curMapLayer++;
     if (curMapLayer > 2)
     {
         curMapLayer = 2;
@@ -1351,7 +1351,7 @@ int mapProcessRomList(int slot)
         i++;
     }
     if (i == count)
-        lbl_803DCDEC = lbl_803DCDEC + 1;
+        lbl_803DCDEC++;
     rl = mapGetRomListAndOffsets(slot, 0);
     entry = base + i * 8 + 0x418C;
     *(int*)entry = rl;
