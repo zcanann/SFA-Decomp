@@ -64,10 +64,13 @@ DFRope *DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
   dy = dy / (f32)(count - 1);
   dz = dz / (f32)(count - 1);
 
-  rope = (DFRope *)mmAlloc(count * sizeof(DFRopeNode) + (count - 1) * sizeof(DFRopeLink) + sizeof(DFRope),
+  {
+  s32 nodesSize = count * sizeof(DFRopeNode);
+  rope = (DFRope *)mmAlloc(nodesSize + (count - 1) * sizeof(DFRopeLink) + sizeof(DFRope),
                            0xFF, 0);
   rope->nodes = (DFRopeNode *)((u8 *)rope + sizeof(DFRope));
-  rope->links = (DFRopeLink *)((u8 *)rope + count * sizeof(DFRopeNode) + sizeof(DFRope));
+  rope->links = (DFRopeLink *)((u8 *)rope + nodesSize + sizeof(DFRope));
+  }
   rope->count = (u8)count;
   rope->totalLength = length;
   rope->start[0] = startX;
