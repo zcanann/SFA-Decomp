@@ -1,4 +1,6 @@
 #include "main/dll/weaponE6.h"
+#include "main/audio/sfx.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/dll/tricky_state.h"
 
@@ -21,8 +23,6 @@
         *(s8 *)((st) + 0xd) = -1; \
     }
 
-extern uint GameBit_Get(int bit);
-extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern u32 randomGetRange(int min, int max);
 extern void objAudioFn_800393f8(int obj, void* audio, int sfxId, int volume, int param5, int param6);
 extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);

@@ -1,5 +1,6 @@
 #include "main/dll/tricky_state.h"
 #include "main/dll/tumbleweedbush.h"
+#include "main/audio/sfx.h"
 #include "main/game_object.h"
 
 typedef struct TrickyGrowlState
@@ -13,13 +14,9 @@ typedef struct TrickyGrowlState
 
 extern int trickyDebugPrint(const char* fmt, ...);
 extern int trickyFn_8013b368(void* param_1, float threshold, void* param_2);
-extern int Sfx_IsPlayingFromObjectChannel(void* obj, int chan);
 extern void* Obj_AllocObjectSetup(int p1, int p2);
 extern int Obj_SetupObject(void* setup, int p2, int p3, int p4, void* p5);
 extern int Obj_IsLoadingLocked(void);
-extern int Sfx_PlayFromObject(void* obj, int sfxId);
-extern int Sfx_AddLoopedObjectSound(void* obj, int sfxId);
-extern int Sfx_RemoveLoopedObjectSound(void* obj, int sfxId);
 extern int randomGetRange(int lo, int hi);
 extern int getAngle(float x, float z);
 extern void objAudioFn_800393f8(void* obj, void* p2, int p3, int p4, int p5, int p6);
@@ -55,7 +52,7 @@ void trickyGrowl(void* obj, void* trickyState)
                 s16 a0 = ((GameObject*)obj)->anim.currentMove;
                 if (a0 >= 0x30 || a0 < 0x29)
                 {
-                    if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
+                    if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
                     {
                         objAudioFn_800393f8(obj, (char*)state + 0x3a8, 0x299, 0x100, -1, 0);
                     }
@@ -86,7 +83,7 @@ void trickyGrowl(void* obj, void* trickyState)
                     s16 a0 = ((GameObject*)obj)->anim.currentMove;
                     if (a0 >= 0x30 || a0 < 0x29)
                     {
-                        if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
+                        if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
                         {
                             objAudioFn_800393f8(obj, (char*)state + 0x3a8, 0x299, 0x100, -1, 0);
                         }
@@ -112,8 +109,8 @@ void trickyGrowl(void* obj, void* trickyState)
                         setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                         ((GameObject*)obj)->anim.parent);
                 }
-                Sfx_PlayFromObject(obj, 0x3db);
-                Sfx_AddLoopedObjectSound(obj, 0x3dc);
+                Sfx_PlayFromObject((u32)obj, 0x3db);
+                Sfx_AddLoopedObjectSound((u32)obj, 0x3dc);
             }
             (*(u8*)*(int*)trickyState)--;
             objAnimFn_8013a3f0(obj, 0x34, lbl_803E2444, 0x4000000);
@@ -132,14 +129,14 @@ void trickyGrowl(void* obj, void* trickyState)
             {
                 objSetAnimSpeedTo1(slot[0x700 / 4]);
             }
-            Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
+            Sfx_RemoveLoopedObjectSound((u32)obj, 0x3dc);
             state = ((GameObject*)obj)->extra;
             if (((((TrickyGrowlState*)state)->unk58 >> 6) & 1) == 0u)
             {
                 s16 a0 = ((GameObject*)obj)->anim.currentMove;
                 if (a0 >= 0x30 || a0 < 0x29)
                 {
-                    if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
+                    if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
                     {
                         objAudioFn_800393f8(obj, (char*)state + 0x3a8, 0x29d, 0, -1, 0);
                     }
