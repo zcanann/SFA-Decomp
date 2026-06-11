@@ -227,7 +227,7 @@ f32 fn_801C1698(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ
   dx = endX - startX;
   dy = endY - startY;
   dz = endZ - startZ;
-  if ((lbl_803E4DFC == dx) && (lbl_803E4DFC == dz)) {
+  if ((dx == lbl_803E4DFC) && (dz == lbl_803E4DFC)) {
     t = lbl_803E4DFC;
   } else {
     t = (dx * (*x - startX) + dz * (*z - startZ)) / (dx * dx + dz * dz);
