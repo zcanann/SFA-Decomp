@@ -592,101 +592,96 @@ void fxemit_update(FxEmitObject* obj)
         obj->objAnim.worldPosY = obj->objAnim.localPosY;
         obj->objAnim.worldPosZ = obj->objAnim.localPosZ;
         player = Obj_GetPlayerObject();
-        if (player != NULL)
+        if (player == NULL || def == NULL)
         {
-            if (def == NULL)
+            return;
+        }
+        if (def->sfxPeriod != 0 && def->sfxPeriod != FXEMIT_SFX_SUPPRESS)
+        {
+            if (state->sfxTimer <= 0)
             {
+                int sfx;
+                state->suppressed = 0;
+                state->sfxTimer = def->sfxPeriod * 100;
+                sfx = def->sfxId;
+                if (sfx != 0)
+                {
+                    Sfx_PlayFromObject((int)obj, (u16)sfx);
+                }
             }
             else
             {
-                if (def->sfxPeriod != 0 && def->sfxPeriod != FXEMIT_SFX_SUPPRESS)
+                state->suppressed = 1;
+            }
+            state->sfxTimer -= framesThisStep;
+        }
+
+        delta = def->yawStep;
+        if (delta == FXEMIT_ROTATION_STEP_AUTO)
+        {
+            obj->objAnim.rotX = obj->objAnim.rotX + framesThisStep * 10;
+        }
+        else
+        {
+            obj->objAnim.rotX = obj->objAnim.rotX + delta * framesThisStep * 100;
+        }
+
+        delta = def->pitchStep;
+        if (delta == FXEMIT_ROTATION_STEP_AUTO)
+        {
+            obj->objAnim.rotY = obj->objAnim.rotY + framesThisStep * 10;
+        }
+        else
+        {
+            obj->objAnim.rotY = obj->objAnim.rotY + delta * framesThisStep * 100;
+        }
+
+        delta = def->rollStep;
+        if (delta == FXEMIT_ROTATION_STEP_AUTO)
+        {
+            obj->objAnim.rotZ = obj->objAnim.rotZ + framesThisStep * 10;
+        }
+        else
+        {
+            obj->objAnim.rotZ = obj->objAnim.rotZ + delta * framesThisStep * 100;
+        }
+
+        if (state->enableBit == -1 || GameBit_Get(state->enableBit) != 0)
+        {
+            switch (state->suppressed)
+            {
+            case 0:
                 {
-                    if (state->sfxTimer <= 0)
-                    {
-                        int sfx;
-                        state->suppressed = 0;
-                        state->sfxTimer = def->sfxPeriod * 100;
-                        sfx = def->sfxId;
-                        if (sfx != 0)
-                        {
-                            Sfx_PlayFromObject((int)obj, (u16)sfx);
-                        }
-                    }
-                    else
+                    if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0)
                     {
                         state->suppressed = 1;
                     }
-                    state->sfxTimer -= framesThisStep;
-                }
-
-                delta = def->yawStep;
-                if (delta == FXEMIT_ROTATION_STEP_AUTO)
-                {
-                    obj->objAnim.rotX = obj->objAnim.rotX + framesThisStep * 10;
-                }
-                else
-                {
-                    obj->objAnim.rotX = obj->objAnim.rotX + delta * framesThisStep * 100;
-                }
-
-                delta = def->pitchStep;
-                if (delta == FXEMIT_ROTATION_STEP_AUTO)
-                {
-                    obj->objAnim.rotY = obj->objAnim.rotY + framesThisStep * 10;
-                }
-                else
-                {
-                    obj->objAnim.rotY = obj->objAnim.rotY + delta * framesThisStep * 100;
-                }
-
-                delta = def->rollStep;
-                if (delta == FXEMIT_ROTATION_STEP_AUTO)
-                {
-                    obj->objAnim.rotZ = obj->objAnim.rotZ + framesThisStep * 10;
-                }
-                else
-                {
-                    obj->objAnim.rotZ = obj->objAnim.rotZ + delta * framesThisStep * 100;
-                }
-
-                if (state->enableBit == -1 || GameBit_Get(state->enableBit) != 0)
-                {
-                    switch (state->suppressed)
+                    if (def->sfxPeriod == FXEMIT_SFX_SUPPRESS)
                     {
-                    case 0:
-                        {
-                            if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0)
-                            {
-                                state->suppressed = 1;
-                            }
-                            if (def->sfxPeriod == FXEMIT_SFX_SUPPRESS)
-                            {
-                                state->suppressed = 1;
-                            }
-                            e = state->emitCount;
-                            if (e >= 0 || (e < 0 && obj->emitCooldown <= 0))
-                            {
-                                dx = obj->objAnim.worldPosX - player->worldPosX;
-                                dy = obj->objAnim.worldPosY - player->worldPosY;
-                                dz = obj->objAnim.worldPosZ - player->worldPosZ;
-                                if (e == 0)
-                                {
-                                    state->suppressed = 1;
-                                }
-                                dist = sqrtf(dx * dx + dy * dy + dz * dz);
-                                if (dist <= state->triggerRadius || lbl_803E3E4C == state->triggerRadius)
-                                {
-                                    fxemit_emitEffect(obj);
-                                }
-                                obj->emitCooldown = -(int)state->emitCount;
-                            }
-                            else if (e < 0 && obj->emitCooldown > 0)
-                            {
-                                obj->emitCooldown -= framesThisStep;
-                            }
-                            break;
-                        }
+                        state->suppressed = 1;
                     }
+                    e = state->emitCount;
+                    if (e >= 0 || (e < 0 && obj->emitCooldown <= 0))
+                    {
+                        dx = obj->objAnim.worldPosX - player->worldPosX;
+                        dy = obj->objAnim.worldPosY - player->worldPosY;
+                        dz = obj->objAnim.worldPosZ - player->worldPosZ;
+                        if (e == 0)
+                        {
+                            state->suppressed = 1;
+                        }
+                        dist = sqrtf(dx * dx + dy * dy + dz * dz);
+                        if (dist <= state->triggerRadius || lbl_803E3E4C == state->triggerRadius)
+                        {
+                            fxemit_emitEffect(obj);
+                        }
+                        obj->emitCooldown = -(int)state->emitCount;
+                    }
+                    else if (e < 0 && obj->emitCooldown > 0)
+                    {
+                        obj->emitCooldown -= framesThisStep;
+                    }
+                    break;
                 }
             }
         }
