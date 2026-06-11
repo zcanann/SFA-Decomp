@@ -41,13 +41,7 @@ int CFCrate_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x85:
-    case 0x87:
-    case 0x88:
-    case 0x89:
-    case 0x8A:
-    case 0x8B:
-    case 0x8C:
-    case 0x8D:
+    case 0x86:
         break;
     case 0x8E:
         break;
