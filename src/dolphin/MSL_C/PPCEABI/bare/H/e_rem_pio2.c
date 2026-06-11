@@ -245,16 +245,12 @@ void fn_80293C64(float x, float* sin_out, float* cos_out) {
 
     switch (n & 6) {
         case 0:
-            if (x < lbl_803E7D40) {
-                sin_y = -sin_y;
-            }
+            sin_y = (x >= lbl_803E7D40) ? sin_y : -sin_y;
             *sin_out = sin_y;
             *cos_out = cos_y;
             break;
         case 2:
-            if (x < lbl_803E7D40) {
-                cos_y = -cos_y;
-            }
+            cos_y = (x >= lbl_803E7D40) ? cos_y : -cos_y;
             *sin_out = cos_y;
             *cos_out = -sin_y;
             break;
