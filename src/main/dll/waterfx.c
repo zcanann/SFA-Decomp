@@ -194,7 +194,7 @@ void waterfx_spawnSplashBurst(void* obj, f32 a, f32 b, f32 c, f32 d)
     i = 0;
     base = lbl_803DD230;
     p = base;
-    while (i < 0xa && (p->active != 0 || p->f10 < lbl_803DF2EC))
+    while (i < 0xa && (p->active != 0 || p->f10 < *(f32 *)&lbl_803DF2EC))
     {
         p++;
         i++;
