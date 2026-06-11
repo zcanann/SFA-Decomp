@@ -477,15 +477,15 @@ void seqObject_render(int param_1, int p1, int p2, int p3, int p4, s8 visible)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void seqObject_update(int param_1)
+void seqObject_update(int obj)
 {
     uint uVar1;
     byte bVar2;
     SeqObjectPlacement * def;
     SeqObjectState* state;
 
-    state = ((GameObject*)param_1)->extra;
-    def = (SeqObjectPlacement*)((GameObject*)param_1)->anim.placementData;
+    state = ((GameObject*)obj)->extra;
+    def = (SeqObjectPlacement*)((GameObject*)obj)->anim.placementData;
     if ((state->flags & SEQOBJECT_STATE_SEQUENCE_DONE) != 0)
     {
         bVar2 = def->flags;
@@ -516,8 +516,8 @@ void seqObject_update(int param_1)
         {
             if (def->triggerId != -1)
             {
-                (*gObjectTriggerInterface)->setRunSequenceWorldSpace(param_1, 0);
-                (*gObjectTriggerInterface)->runSequence(def->triggerId, (void*)param_1, -1);
+                (*gObjectTriggerInterface)->setRunSequenceWorldSpace(obj, 0);
+                (*gObjectTriggerInterface)->runSequence(def->triggerId, (void*)obj, -1);
             }
             if (((def->flags & 1) == 0) && ((def->flags & 10) == 0))
             {
@@ -535,14 +535,14 @@ void seqObject_update(int param_1)
     }
     else
     {
-        (*gObjectTriggerInterface)->preempt(param_1, def->preemptSequenceId);
+        (*gObjectTriggerInterface)->preempt(obj, def->preemptSequenceId);
         if ((def->flags & SEQOBJECT_FLAG_USE_TRIGGER_PARAM) == 0)
         {
-            (*gObjectTriggerInterface)->runSequence(def->triggerId, (void*)param_1, 1);
+            (*gObjectTriggerInterface)->runSequence(def->triggerId, (void*)obj, 1);
         }
         else
         {
-            (*gObjectTriggerInterface)->runSequence(def->triggerId, (void*)param_1,
+            (*gObjectTriggerInterface)->runSequence(def->triggerId, (void*)obj,
                                                     def->sequenceParam);
         }
         state->flags = (u8)(state->flags & ~SEQOBJECT_STATE_TRIGGER_SEQUENCE);
@@ -600,14 +600,14 @@ void seqObj2_free(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void seqObj2_update(int param_1)
+void seqObj2_update(int obj)
 {
     uint uVar1;
     SeqObjectPlacement * def;
     SeqObj2State* state;
 
-    state = ((GameObject*)param_1)->extra;
-    def = (SeqObjectPlacement*)((GameObject*)param_1)->anim.placementData;
+    state = ((GameObject*)obj)->extra;
+    def = (SeqObjectPlacement*)((GameObject*)obj)->anim.placementData;
     if ((state->flags & SEQOBJECT_STATE_OPEN) == 0)
     {
         if ((state->flags & SEQOBJECT_STATE_TRIGGER_SEQUENCE) == 0)
@@ -628,7 +628,7 @@ void seqObj2_update(int param_1)
                     FUN_800723a0();
                 }
                 FUN_800723a0();
-                (*gObjectTriggerInterface)->runSequence(def->triggerId, (void*)param_1, -1);
+                (*gObjectTriggerInterface)->runSequence(def->triggerId, (void*)obj, -1);
             }
         }
         else
@@ -659,8 +659,8 @@ void seqObj2_update(int param_1)
             FUN_800723a0();
         }
         FUN_800723a0();
-        (*gObjectTriggerInterface)->preempt(param_1, def->preemptSequenceId);
-        (*gObjectTriggerInterface)->runSequence(def->triggerId, (void*)param_1, def->sequenceParam);
+        (*gObjectTriggerInterface)->preempt(obj, def->preemptSequenceId);
+        (*gObjectTriggerInterface)->runSequence(def->triggerId, (void*)obj, def->sequenceParam);
         state->flags = (u8)(state->flags & ~SEQOBJECT_STATE_OPEN);
     }
     return;

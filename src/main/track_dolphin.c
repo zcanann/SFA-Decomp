@@ -4164,7 +4164,7 @@ u8 hitDetectFn_80067958(void* param_1, int param_2, int param_3, int param_4, vo
     f32 fVar2, fVar1;
     f32* pfVar5;
     void** pfVar6;
-    s16 sVar7;
+    s16 i;
     u8 uVar4;
     u8* tbl = (u8*)gTrackBlockDescriptors;
 
@@ -4175,7 +4175,7 @@ u8 hitDetectFn_80067958(void* param_1, int param_2, int param_3, int param_4, vo
     fVar2 = lbl_803DECC4;
     pfVar5 = (f32*)param_5;
     pfVar6 = (void**)param_5;
-    for (sVar7 = 0; sVar7 < param_4; sVar7++)
+    for (i = 0; i < param_4; i++)
     {
         pfVar5[0] = fVar1;
         pfVar5[1] = fVar2;
@@ -4193,7 +4193,7 @@ u8 hitDetectFn_80067958(void* param_1, int param_2, int param_3, int param_4, vo
 
     pfVar5 = (f32*)param_5;
     pfVar6 = (void**)param_5;
-    for (sVar7 = 0; sVar7 < param_4; sVar7++)
+    for (i = 0; i < param_4; i++)
     {
         if (pfVar6[0x17] != NULL)
         {

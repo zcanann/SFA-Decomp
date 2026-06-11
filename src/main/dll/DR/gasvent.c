@@ -306,26 +306,26 @@ extern void ObjLink_DetachChild(int obj, void* child);
  * EN v1.0 Address: 0x801A189C
  * EN v1.0 Size: 196b
  */
-void gunpowderbarrel_free(int param_1, int param_2)
+void gunpowderbarrel_free(int obj, int param_2)
 {
     int extra;
     void* child;
-    extra = *(int*)&((GameObject*)param_1)->extra;
-    (*(code*)(*(int*)gCarryableInterface + 0x10))(param_1);
+    extra = *(int*)&((GameObject*)obj)->extra;
+    (*(code*)(*(int*)gCarryableInterface + 0x10))(obj);
     child = *(void**)&((GunpowderbarrelState*)extra)->unk10;
     if (child != 0 && param_2 == 0)
     {
         if (Obj_IsObjectAlive(child) != 0)
         {
-            ObjLink_DetachChild(param_1, *(void**)&((GunpowderbarrelState*)extra)->unk10);
+            ObjLink_DetachChild(obj, *(void**)&((GunpowderbarrelState*)extra)->unk10);
             ((GunpowderbarrelState*)extra)->unk10 = 0;
         }
     }
-    ObjGroup_RemoveObject(param_1, 0x19);
-    ObjGroup_RemoveObject(param_1, 0x16);
+    ObjGroup_RemoveObject(obj, 0x19);
+    ObjGroup_RemoveObject(obj, 0x16);
     if (*(unsigned char*)(extra + 0x17) != 0)
     {
-        (*gExpgfxInterface)->freeSource2((u32)param_1);
+        (*gExpgfxInterface)->freeSource2((u32)obj);
     }
 }
 

@@ -666,12 +666,12 @@ void DIMbossspit_updateBurst(int obj)
 void DIMbossspit_free(int param_1)
 {
     int obj = param_1;
-    uint uVar1;
+    uint state;
 
-    uVar1 = *(uint*)(*(int*)&((GameObject*)obj)->extra + 4);
-    if (uVar1 != 0)
+    state = *(uint*)(*(int*)&((GameObject*)obj)->extra + 4);
+    if (state != 0)
     {
-        ModelLightStruct_free((void*)uVar1);
+        ModelLightStruct_free((void*)state);
     }
     (*gExpgfxInterface)->freeSource2((u32)obj);
     return;
@@ -690,14 +690,14 @@ void DIMbossspit_free(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMbossspit_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void DIMbossspit_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     u8* light;
 
-    light = ((GameObject*)param_1)->extra;
+    light = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(param_1, param_2, param_3, param_4, param_5,
+        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, param_2, param_3, param_4, param_5,
                                                                       lbl_803E4D44);
         light = *(u8**)&((DIMbossspitState*)light)->light;
         if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0))

@@ -624,7 +624,7 @@ extern void* Obj_GetPlayerObject(void);
  * EN v1.0 Address: 0x80182504
  * EN v1.0 Size: 144b
  */
-void objThrowFn_80182504(int param_1)
+void objThrowFn_80182504(int obj)
 {
     struct LocalArgs
     {
@@ -639,13 +639,13 @@ void objThrowFn_80182504(int param_1)
     } local;
     int extra;
     short* player;
-    extra = *(int*)&((GameObject*)param_1)->extra;
+    extra = *(int*)&((GameObject*)obj)->extra;
     player = (short*)Obj_GetPlayerObject();
     ((SmallbasketState*)extra)->unk6 = 0;
     ((SmallbasketState*)extra)->unk5 = 0;
     ((SmallbasketState*)extra)->unk9 = 1;
-    ((GameObject*)param_1)->anim.velocityY = lbl_803E3958;
-    ((GameObject*)param_1)->anim.velocityZ = lbl_803E3974;
+    ((GameObject*)obj)->anim.velocityY = lbl_803E3958;
+    ((GameObject*)obj)->anim.velocityZ = lbl_803E3974;
     local.f14 = lbl_803E3938;
     local.f18 = lbl_803E3938;
     local.f1c = lbl_803E3938;
@@ -653,7 +653,7 @@ void objThrowFn_80182504(int param_1)
     local.fc = 0;
     local.fa = 0;
     local.f8 = *player;
-    vecRotateZXY(&local.f8, (void*)&((GameObject*)param_1)->anim.velocityX);
+    vecRotateZXY(&local.f8, (void*)&((GameObject*)obj)->anim.velocityX);
 }
 
 /*
@@ -663,33 +663,33 @@ void objThrowFn_80182504(int param_1)
  * EN v1.0 Address: 0x801825EC
  * EN v1.0 Size: 252b
  */
-void smallbasket_render(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
+void smallbasket_render(int obj, undefined4 param_2, undefined4 param_3, undefined4 param_4,
                         undefined4 param_5, char param_6)
 {
     int extra;
     int result;
     short field_a;
-    extra = *(int*)&((GameObject*)param_1)->extra;
+    extra = *(int*)&((GameObject*)obj)->extra;
     result = (*gMapEventInterface)->isTimedEventActive(
-        *(int*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x14));
+        *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14));
     if (result == 0)
     {
-        ((GameObject*)param_1)->anim.flags = ((GameObject*)param_1)->anim.flags | 0x4000;
+        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | 0x4000;
     }
     else
     {
         field_a = *(short*)(extra + 0xa);
         if ((field_a != 0 && field_a <= 0x32) || ((SmallbasketState*)extra)->unk14 != 0)
         {
-            ((GameObject*)param_1)->anim.flags = ((GameObject*)param_1)->anim.flags | 0x4000;
+            ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | 0x4000;
         }
-        else if (((GameObject*)param_1)->unkF8 != 0 && param_6 != -1)
+        else if (((GameObject*)obj)->unkF8 != 0 && param_6 != -1)
         {
-            ((GameObject*)param_1)->anim.flags = ((GameObject*)param_1)->anim.flags | 0x4000;
+            ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | 0x4000;
         }
         else
         {
-            objRenderFn_8003b8f4((void*)param_1, param_2, param_3, param_4, param_5,
+            objRenderFn_8003b8f4((void*)obj, param_2, param_3, param_4, param_5,
                                  (double)lbl_803E3950);
         }
     }

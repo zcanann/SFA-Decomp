@@ -106,7 +106,7 @@ void dll_FC_update(int obj)
 {
     BabyCloudRunnerPlacement* placement;
     BabyCloudRunnerState* state;
-    uint uVar3;
+    uint bitVal;
     float local8;
 
     local8 = lbl_803E384C;
@@ -123,8 +123,8 @@ void dll_FC_update(int obj)
         }
         else
         {
-            uVar3 = GameBit_Get((int)placement->rememberedGameBit);
-            state->rememberedGameBitValue = (byte)uVar3;
+            bitVal = GameBit_Get((int)placement->rememberedGameBit);
+            state->rememberedGameBitValue = (byte)bitVal;
         }
         state->mode = 1;
     }
@@ -166,8 +166,8 @@ void dll_FC_update(int obj)
             }
             if ((placement->flags & 4) != 0)
             {
-                uVar3 = randomGetRange((int)placement->triggerIdMin, (int)placement->triggerIdMax);
-                state->triggerId = (byte)uVar3;
+                bitVal = randomGetRange((int)placement->triggerIdMin, (int)placement->triggerIdMax);
+                state->triggerId = (byte)bitVal;
             }
             else
             {

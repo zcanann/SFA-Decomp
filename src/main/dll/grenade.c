@@ -1859,7 +1859,7 @@ void objAnimFn_801441c0(u8* obj, u8* state)
 void tricky_startRandomIdleMove(int obj, int trickyState)
 {
     int val;
-    int iVar3;
+    int state;
 
     val = randomGetRange(0, 4);
     switch (val)
@@ -1869,14 +1869,14 @@ void tricky_startRandomIdleMove(int obj, int trickyState)
         ((TrickyState*)trickyState)->substate = 2;
         break;
     case 1:
-        iVar3 = *(int*)&((GameObject*)obj)->extra;
-        if (((u32)(*(byte*)(iVar3 + 0x58) >> 6 & 1)) == 0U)
+        state = *(int*)&((GameObject*)obj)->extra;
+        if (((u32)(*(byte*)(state + 0x58) >> 6 & 1)) == 0U)
         {
             if (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
             {
                 if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
                 {
-                    objAudioFn_800393f8(obj, (void*)(iVar3 + 0x3a8), 0x357, 0, 0xffffffff, 0);
+                    objAudioFn_800393f8(obj, (void*)(state + 0x3a8), 0x357, 0, 0xffffffff, 0);
                 }
             }
         }

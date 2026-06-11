@@ -415,7 +415,7 @@ void fn_8013F100(int obj, register int state)
 
 void fn_8013F9E4(int obj, int state)
 {
-    int iVar3;
+    int state2;
     int iVar4;
     short sVar;
 
@@ -428,15 +428,15 @@ void fn_8013F9E4(int obj, int state)
             {
                 ((TrickyState*)state)->unk740 = (f32)(s32)
                 randomGetRange(500, 750);
-                iVar3 = *(int*)&((GameObject*)obj)->extra;
-                if ((((uint) * (u8*)(iVar3 + 0x58) >> 6) & 1) == 0)
+                state2 = *(int*)&((GameObject*)obj)->extra;
+                if ((((uint) * (u8*)(state2 + 0x58) >> 6) & 1) == 0)
                 {
                     sVar = ((GameObject*)obj)->anim.currentMove;
                     if (sVar >= 48 || sVar < 41)
                     {
                         if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0)
                         {
-                            objAudioFn_800393f8(obj, (void*)(iVar3 + 936), 864, 1280, -1, 0);
+                            objAudioFn_800393f8(obj, (void*)(state2 + 936), 864, 1280, -1, 0);
                         }
                     }
                 }

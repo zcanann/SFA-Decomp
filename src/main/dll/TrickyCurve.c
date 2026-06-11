@@ -595,7 +595,7 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
 {
     int step;
     char mode;
-    short sVar3;
+    short i;
     int state;
     short sVar5;
     int* piVar6;
@@ -648,7 +648,7 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
     idsOut[2] = 0;
     idsOut[1] = 0;
     piVar6 = gSfxplayerEffectHandles;
-    for (sVar3 = 0; sVar3 < 4; sVar3 = sVar3 + 1)
+    for (i = 0; i < 4; i = i + 1)
     {
         if (*piVar6 != 0)
         {

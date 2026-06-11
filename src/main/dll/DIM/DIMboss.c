@@ -235,7 +235,7 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
     byte hitReactMode;
     u8 loadWaitStarted;
     int updateResult;
-    int iVar4;
+    int model;
     int mapDirIndex;
     uint statusFlags;
     int eventIndex;
@@ -275,8 +275,8 @@ int DIMboss_updateState(DIMbossObject* obj, undefined4 param_2, ObjAnimUpdateSta
                 obj,DIMBOSS_BONE_PARTICLE_EFFECT_7FF, NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES, NULL);
             DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
                 obj,DIMBOSS_BONE_PARTICLE_EFFECT_7FF, NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES, NULL);
-            iVar4 = Obj_GetActiveModel((int)obj);
-            ObjModel_ClearRenderAttachment(iVar4);
+            model = Obj_GetActiveModel((int)obj);
+            ObjModel_ClearRenderAttachment(model);
             Music_Trigger(DIMBOSS_MUSIC_LIFT_RUMBLE, 1);
             break;
         case DIMBOSS_EVENT_LAUNCH_LIFT:

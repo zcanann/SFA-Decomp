@@ -1630,13 +1630,13 @@ extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sideload_update(int param_1)
+void sideload_update(int obj2)
 {
     int state;
     void* obj;
     short* p;
 
-    state = *(int*)&((GameObject*)param_1)->anim.placementData;
+    state = *(int*)&((GameObject*)obj2)->anim.placementData;
     if ((Obj_IsLoadingLocked() != 0) && (Obj_GetPlayerObject() != 0) &&
         (getTrickyObject() == 0) && (GameBit_Get((int)*(short*)(state + 0x18)) != 0))
     {
@@ -1644,9 +1644,9 @@ void sideload_update(int param_1)
         *(u8*)((char*)obj + 4) = 2;
         *(u8*)((char*)obj + 5) = 4;
         *(u8*)((char*)obj + 7) = 0xff;
-        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)param_1)->anim.localPosX;
-        ((GameObject*)obj)->anim.localPosX = ((GameObject*)param_1)->anim.localPosY;
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)param_1)->anim.localPosZ;
+        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj2)->anim.localPosX;
+        ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj2)->anim.localPosY;
+        ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj2)->anim.localPosZ;
         p = (short*)Obj_SetupObject(obj, 5, -1, -1, (void*)0);
         *p = (short)((u8)((SideloadPlacement*)state)->unk1A << 8);
     }
@@ -1699,13 +1699,13 @@ void curve_init(ObjAnimComponent* obj, CurvePlacementParams* params)
     }
 }
 
-void siderepel_init(int param_1, int param_2)
+void siderepel_init(int obj, int param_2)
 {
-    ((GameObject*)param_1)->objectFlags = ((GameObject*)param_1)->objectFlags | 0xe000;
-    ObjGroup_AddObject(param_1, 0x40);
-    if (((GameObject*)param_1)->anim.hitReactState != NULL)
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0xe000;
+    ObjGroup_AddObject(obj, 0x40);
+    if (((GameObject*)obj)->anim.hitReactState != NULL)
     {
-        ObjHitbox_SetSphereRadius(param_1, (short)((int)(uint) * (ushort*)(param_2 + 0x18) >> 3));
+        ObjHitbox_SetSphereRadius(obj, (short)((int)(uint) * (ushort*)(param_2 + 0x18) >> 3));
     }
 }
 

@@ -171,13 +171,13 @@ void kaldachompspit_render(undefined4 param_1, undefined4 param_2, undefined4 pa
                            undefined4 param_4, undefined4 param_5, char visible)
 {
     int iVar1;
-    int iVar2;
+    int state;
 
     iVar1 = FUN_8028683c();
-    iVar2 = **(int**)(iVar1 + 0xb8);
-    if (((iVar2 != 0) && (*(char*)(iVar2 + 0x2f8) != '\0')) && (((XyzAnimatorState*)iVar2)->gameBitValue != '\0'))
+    state = **(int**)(iVar1 + 0xb8);
+    if (((state != 0) && (*(char*)(state + 0x2f8) != '\0')) && (((XyzAnimatorState*)state)->gameBitValue != '\0'))
     {
-        FUN_8005fe14(iVar2);
+        FUN_8005fe14(state);
     }
     if (visible != '\0')
     {

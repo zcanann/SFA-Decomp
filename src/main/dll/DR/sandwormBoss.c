@@ -665,15 +665,15 @@ FUN_8019d238(undefined8 param_1, double param_2, double param_3, undefined8 para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void babycloudrunner_init_OLD_v1_1(int param_1)
+void babycloudrunner_init_OLD_v1_1(int obj)
 {
-    undefined4* puVar1;
+    undefined4* state;
 
-    puVar1 = ((GameObject*)param_1)->extra;
-    *puVar1 = 0;
-    puVar1[1] = 0;
-    ObjHits_EnableObject(param_1);
-    ((GameObject*)param_1)->anim.alpha = 0x80;
+    state = ((GameObject*)obj)->extra;
+    *state = 0;
+    state[1] = 0;
+    ObjHits_EnableObject(obj);
+    ((GameObject*)obj)->anim.alpha = 0x80;
     return;
 }
 
