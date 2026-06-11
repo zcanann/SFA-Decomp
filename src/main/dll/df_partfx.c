@@ -363,9 +363,9 @@ f32 screenTransition_getAlpha(void) { return screenTransitionAlpha; }
 int Dummy04_func03_ret_m1(void) { return -0x1; }
 
 /* sda21 writers. */
-extern u8 lbl_803DD42F;
+extern u8 screenTransitionPause;
 #pragma peephole off
-void setScreenTransitionPause(u32 pause) { lbl_803DD42F = (u8)pause; }
+void setScreenTransitionPause(u32 pause) { screenTransitionPause = (u8)pause; }
 #pragma peephole reset
 
 /* fcmp-eq-to-bool. */
@@ -1073,7 +1073,7 @@ void screenTransition_do2(int p1, int p2, int p3)
         lbl_803DD42E = lbl_803DD42E - 1;
         return;
     }
-    if (lbl_803DD42F == 0 && lbl_803DD428 >= lbl_803E0568)
+    if (screenTransitionPause == 0 && lbl_803DD428 >= lbl_803E0568)
     {
         (*gScreenTransitionInterface)->step(0x1e, lbl_803DD42C);
         lbl_803DD428 = lbl_803E0560;
@@ -1093,7 +1093,7 @@ void screenTransition_do2(int p1, int p2, int p3)
     {
         screenTransitionAlpha = lbl_803E0558;
         lbl_803DD42D = 1;
-        if (lbl_803DD42F == 0)
+        if (screenTransitionPause == 0)
         {
             lbl_803DD428 = lbl_803DD428 + timeDelta;
         }

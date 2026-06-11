@@ -181,10 +181,10 @@ extern u8 framesThisStep;
 
 /* Global game-state / text accessors. */
 extern u8 gameState;
-extern u8 lbl_803DCA3C;
-extern u8 lbl_803DCA3E;
+extern u8 timeStop;
+extern u8 shouldResetNextFrame;
 extern s8 hudHiddenFrameCount;
-extern s8 lbl_803DCA3B;
+extern s8 frameCountdown;
 extern s16 screenBlankFrameCount;
 
 int getGameState(void)
@@ -220,18 +220,18 @@ void setGameState(int state)
 
 void setTimeStop(int v)
 {
-    lbl_803DCA3C = (u8)v;
+    timeStop = (u8)v;
 }
 
 void setShouldResetNextFrame(int v)
 {
-    lbl_803DCA3E = (u8)v;
+    shouldResetNextFrame = (u8)v;
 }
 
 #pragma peephole on
 void setFrameCountdown_800202c4(u8 v)
 {
-    lbl_803DCA3B = v;
+    frameCountdown = v;
 }
 
 int getHudHiddenFrameCount(void)
@@ -322,7 +322,7 @@ extern void gameTextLoadDir(int dirId);
 void cutsceneExit(void)
 {
     hudHiddenFrameCount = 0;
-    lbl_803DCA3C = 0;
+    timeStop = 0;
     Sfx_SetObjectSoundsPaused(0);
 }
 
@@ -1077,7 +1077,7 @@ void gameUpdate(void)
     uiDll_runFrameStartAndLoadNext();
     camcontrol_playTargetTypeSfx();
     getButtonsJustPressed(0);
-    Obj_UpdateAllObjects(lbl_803DCA3C);
+    Obj_UpdateAllObjects(timeStop);
     if (hudHiddenFrameCount == 0)
     {
         void* player;
@@ -1171,11 +1171,11 @@ void gameUpdate(void)
     }
     Camera_ApplyCurrentViewport(0);
     {
-        s8 t = lbl_803DCA3B - framesThisStep;
-        lbl_803DCA3B = t;
+        s8 t = frameCountdown - framesThisStep;
+        frameCountdown = t;
         if (t < 0)
         {
-            lbl_803DCA3B = 0;
+            frameCountdown = 0;
         }
     }
 }
@@ -1340,7 +1340,7 @@ void cardShowMessage(void)
     if (st < 0xc)
     {
         cutsceneEnterExit(1, 1);
-        lbl_803DCA3C = 0xff;
+        timeStop = 0xff;
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         if (lbl_803DCACC == 0)
         {
@@ -1389,7 +1389,7 @@ void cardShowMessage(void)
             buttonDisable(0, 0x100);
             cardSetStatusNeedInit();
             hudHiddenFrameCount = 0;
-            lbl_803DCA3C = 0;
+            timeStop = 0;
             Sfx_SetObjectSoundsPaused(0);
             if (st == 0xa)
             {
@@ -1401,7 +1401,7 @@ void cardShowMessage(void)
             buttonDisable(0, 0x200);
             lbl_803DB424 = 0;
             hudHiddenFrameCount = 0;
-            lbl_803DCA3C = 0;
+            timeStop = 0;
             Sfx_SetObjectSoundsPaused(0);
             cardSetStatusNeedInit();
         }
@@ -1431,7 +1431,7 @@ void cutsceneEnterExit(int entering, int affectSounds)
         if ((s8)(u8)--hudHiddenFrameCount <= 0
         )
         {
-            lbl_803DCA3C = 0;
+            timeStop = 0;
             hudHiddenFrameCount = 0;
             if (affectSounds != 0)
             {
@@ -1647,7 +1647,7 @@ void checkReset(void)
     {
     case 0:
     case 1:
-        if (lbl_803DCA3E != 0)
+        if (shouldResetNextFrame != 0)
         {
             gameState = 2;
         }
