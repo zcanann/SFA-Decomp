@@ -7,37 +7,16 @@
 #include "main/pad.h"
 
 
-extern int FUN_800033a8();
-extern undefined4 FUN_800068f4();
-extern undefined4 FUN_800068f8();
-extern undefined4 FUN_80006a88();
-extern undefined4 FUN_80006a8c();
-extern ushort FUN_80006be8();
-extern uint FUN_80006c00();
 extern f32 Curve_EvalHermite(f32 param_1, float* param_2, float* param_3);
 extern ushort getPadFn_80014d9c(int controller);
-extern uint FUN_80017730();
 extern int objBboxFn_800640cc(float* p1, float* p2, float* p3, int* p4, int* p5, int p6, int p7, int p8, int p9);
 extern void hitDetectFn_80067958(int a, float* b, float* c, int d, int e, int f);
 extern void hitDetectFn_800691c0(int a, void* b, int c, int d);
 extern void hitDetect_calcSweptSphereBounds(uint* boundsOut, float* startPoints, float* endPoints,
                                             float* radii, int pointCount);
-extern int FUN_8007f7c0();
 extern int getCurSeqNo();
 extern void cameraSetInterpMode(u8);
 extern undefined4 camcontrol_applyState();
-extern undefined4 FUN_802473cc();
-extern undefined4 FUN_8028681c();
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286868();
-extern undefined4 FUN_80286888();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
-extern uint FUN_80294bf4();
-extern int FUN_80294c88();
-extern int FUN_80294d10();
-extern undefined4 FUN_80294d78();
 extern void cameraGetPrevPos2();
 extern int fn_80295C0C(int);
 extern int objFn_802962b4(int);
@@ -47,15 +26,6 @@ extern f32 mathCosf(f32 x);
 extern f64 sqrtf(f64 x);
 extern int getAngle(f32 dx, f32 dy);
 
-extern undefined4 DAT_803a4ed8;
-extern undefined4 gCamcontrolTargetTypeMask;
-extern undefined4 gCamcontrolTargetState;
-extern undefined4 DAT_803de143;
-extern undefined4 DAT_803de144;
-extern undefined4 DAT_803de188;
-extern undefined4 DAT_803de18c;
-extern undefined4 gCamcontrolCurrentActionId;
-extern undefined4* gCamcontrolState;
 extern u8 lbl_803DD528;
 extern u8 framesThisStep;
 extern f64 DOUBLE_803e2318;
