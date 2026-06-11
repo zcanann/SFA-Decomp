@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"
 #include "main/mapEvent.h"
@@ -21,8 +22,6 @@
  */
 
 extern f64 DOUBLE_803e6d90;
-extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
-extern void Sfx_StopObjectChannel(int obj, int channel);
 extern f32 lbl_803E6100;
 extern f32 lbl_803E6144;
 extern f32 lbl_803E6148;

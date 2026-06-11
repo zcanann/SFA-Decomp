@@ -4,6 +4,14 @@
 #include "global.h"
 
 s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
+s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId);
+void Sfx_StopFromObject(u32 obj, u32 sfxId);
+void Sfx_StopObjectChannel(u32 obj, u32 channel);
+void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
+void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
+void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId);
+void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
 
 #endif /* MAIN_AUDIO_SFX_H_ */

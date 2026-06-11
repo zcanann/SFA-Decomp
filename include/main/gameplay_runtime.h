@@ -1,12 +1,11 @@
 #ifndef MAIN_GAMEPLAY_RUNTIME_H_
 #define MAIN_GAMEPLAY_RUNTIME_H_
 
+#include "main/audio/sfx.h"
+#include "main/gamebits.h"
 #include "global.h"
 
-u32 GameBit_Get(int eventId);
-void GameBit_Set(int eventId, int value);
 void objRenderFn_80041018(int obj);
-void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 int Sfx_PlayFromObjectLimited(void *obj, int sfxId, int maxCount);
 void loadUiDll(int index);
 void defragMemory(int mode);
