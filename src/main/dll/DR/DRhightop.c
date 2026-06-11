@@ -164,14 +164,14 @@ typedef struct HightopFlags3 {
     u8 lo : 3;
 } HightopFlags3;
 
-void fn_801EAE4C(short *param_9,int param_10)
+void fn_801EAE4C(short *obj,int stateRaw)
 {
-  float fVar1;
+  float tickDir;
   float fVar2;
-  uint uVar3;
-  SnowBikeState *st = (SnowBikeState *)param_10;
-  short sVar4;
-  uint uVar6;
+  uint bitVal;
+  SnowBikeState *st = (SnowBikeState *)stateRaw;
+  short angDelta;
+  uint absDelta;
   int iVar7;
   ushort uRet;
   s8 ch;
@@ -182,51 +182,51 @@ void fn_801EAE4C(short *param_9,int param_10)
     st->checkpointIndexC = 0xffffffff;
     st->unk044 = 0;
     lbl_803DC0BC = -1;
-    uVar3 = GameBit_Get((int)*(short *)st->unk060);
-    if (uVar3 != 0) {
+    bitVal = GameBit_Get((int)*(short *)st->unk060);
+    if (bitVal != 0) {
       ((HightopFlags3 *)&st->flags428)->active = 1;
     }
     if ((u32)(st->flags428 >> 3 & 1) != 0) {
       if ((u32)(st->flags428 >> 1 & 1) != 0) {
-        SnowBike_func15(param_9);
+        SnowBike_func15(obj);
       }
       else {
-        (*(code *)(*gCheckpointInterface + 0x10))(param_9,param_10 + 0x28,
+        (*(code *)(*gCheckpointInterface + 0x10))(obj,stateRaw + 0x28,
                                                   st->unk05C);
       }
-      (*(code *)(*gCheckpointInterface + 0x28))(param_10 + 0x28);
+      (*(code *)(*gCheckpointInterface + 0x28))(stateRaw + 0x28);
     }
   }
   else {
     if ((u32)(st->flags428 >> 1 & 1) == 0) {
-      uRet = (*(code *)(*gCheckpointInterface + 0x14))(param_9,param_10 + 0x28);
-      sVar4 = *param_9 - uRet;
-      if (0x8000 < sVar4) {
-        sVar4 = sVar4 - 0xffff;
+      uRet = (*(code *)(*gCheckpointInterface + 0x14))(obj,stateRaw + 0x28);
+      angDelta = *obj - uRet;
+      if (0x8000 < angDelta) {
+        angDelta = angDelta - 0xffff;
       }
-      if (sVar4 < -0x8000) {
-        sVar4 = sVar4 + 0xffff;
+      if (angDelta < -0x8000) {
+        angDelta = angDelta + 0xffff;
       }
-      uVar6 = (uint)sVar4;
-      if ((int)uVar6 < 0) {
-        uVar6 = -uVar6;
+      absDelta = (uint)angDelta;
+      if ((int)absDelta < 0) {
+        absDelta = -absDelta;
       }
-      if ((int)((uint)(((int)(uVar6 ^ lbl_803DC0DC) >> 1) - ((uVar6 ^ lbl_803DC0DC) & uVar6)) >> 0x1f) == 0) {
-        fVar1 = timeDelta;
+      if ((int)((uint)(((int)(absDelta ^ lbl_803DC0DC) >> 1) - ((absDelta ^ lbl_803DC0DC) & absDelta)) >> 0x1f) == 0) {
+        tickDir = timeDelta;
       }
       else {
-        fVar1 = -timeDelta;
+        tickDir = -timeDelta;
       }
-      st->pathProgress = st->pathProgress + fVar1;
-      fVar1 = st->pathProgress;
+      st->pathProgress = st->pathProgress + tickDir;
+      tickDir = st->pathProgress;
       st->pathProgress =
-          (fVar1 < lbl_803E5AE8) ? lbl_803E5AE8
-                                 : ((fVar1 > lbl_803E5B68) ? lbl_803E5B68 : fVar1);
+          (tickDir < lbl_803E5AE8) ? lbl_803E5AE8
+                                 : ((tickDir > lbl_803E5B68) ? lbl_803E5B68 : tickDir);
       if (st->pathProgress > lbl_803E5B7C) {
         gameTextShow(0x475);
       }
-      (*(code *)(*gCheckpointInterface + 0x2c))(param_10 + 0x28);
-      st->unk422 = (s8)(*(code *)(*gCheckpointInterface + 0x34))(param_10 + 0x28);
+      (*(code *)(*gCheckpointInterface + 0x2c))(stateRaw + 0x28);
+      st->unk422 = (s8)(*(code *)(*gCheckpointInterface + 0x34))(stateRaw + 0x28);
       ch = st->unk422;
       if ((ch == 1) && (lbl_803DC0BC == -1)) {
         lbl_803DC0BC = -1;
@@ -237,8 +237,8 @@ void fn_801EAE4C(short *param_9,int param_10)
         *(f32 *)(lbl_803AD088 + 0xc) = st->unk034;
       }
     }
-    uVar3 = GameBit_Get((int)*(short *)(st->unk060 + 2));
-    if (uVar3 != 0) {
+    bitVal = GameBit_Get((int)*(short *)(st->unk060 + 2));
+    if (bitVal != 0) {
       ((HightopFlags3 *)&st->flags428)->active = 0;
     }
   }
@@ -468,40 +468,40 @@ extern void setMotionBlur(double amount, int p2);
 extern void fn_8009A8C8();
 extern int arrayIndexOf();
 
-void fn_801EB634(int param_1,int param_2)
+void fn_801EB634(int obj,int stateRaw)
 {
-  SnowBikeState *st = (SnowBikeState *)param_2;
-  int iVar2;
-  int iVar3;
-  int uVar4;
+  SnowBikeState *st = (SnowBikeState *)stateRaw;
+  int hitKind;
+  int hitReact;
+  int burstCount;
   uint hit;
   f32 dot;
-  int iStack_30;
-  uint uStack_34;
-  uint local_38;
-  float afStack_2c [3];
+  int hitOutB;
+  uint hitOutC;
+  uint hitObj;
+  float velNrm [3];
 
-  iVar3 = *(int *)(param_1 + 0x54);
-  if (ObjHits_IsObjectEnabled(param_1) != 0) {
+  hitReact = *(int *)(obj + 0x54);
+  if (ObjHits_IsObjectEnabled(obj) != 0) {
     if ((u32)(st->flags428 >> 1 & 1) == 0) {
-      ObjHits_SetHitVolumeSlot(param_1,0x15,1,0);
+      ObjHits_SetHitVolumeSlot(obj,0x15,1,0);
     }
     else {
-      ObjHits_ClearHitVolumes(param_1);
-      ObjHits_SyncObjectPositionIfDirty(param_1);
+      ObjHits_ClearHitVolumes(obj);
+      ObjHits_SyncObjectPositionIfDirty(obj);
     }
-    iVar2 = ObjHits_GetPriorityHit(param_1,&local_38,&iStack_30,&uStack_34);
-    switch (iVar2) {
+    hitKind = ObjHits_GetPriorityHit(obj,&hitObj,&hitOutB,&hitOutC);
+    switch (hitKind) {
     case 0xd:
       if ((u32)(st->flags428 >> 1 & 1) == 0) {
-        st->unk42C = local_38;
+        st->unk42C = hitObj;
         st->collisionFxDamping = lbl_803E5AEC;
       }
       break;
     case 0x15:
       if (st->collisionFxTimer == lbl_803E5AE8) {
-        PSVECNormalize((float *)(param_1 + 0x24),afStack_2c);
-        dot = PSVECDotProduct(afStack_2c,(float *)(local_38 + 0x24));
+        PSVECNormalize((float *)(obj + 0x24),velNrm);
+        dot = PSVECDotProduct(velNrm,(float *)(hitObj + 0x24));
         PSVECScale(&st->unk494,&st->unk494,
                    dot * st->unk4AC + lbl_803E5AEC);
         st->unk498 = st->unk498 * lbl_803E5BA8;
@@ -518,17 +518,17 @@ void fn_801EB634(int param_1,int param_2)
       }
       break;
     }
-    hit = *(uint *)(iVar3 + 0x50);
+    hit = *(uint *)(hitReact + 0x50);
     if (((hit != 0) &&
-        (local_38 = hit, *(u32 *)&st->unk42C = hit, st->collisionFxTimer == lbl_803E5AE8)) &&
-       (iVar2 = arrayIndexOf(lbl_8032852C,0xc,(int)*(short *)(local_38 + 0x46)), iVar2 != -1)) {
-      fn_8009A8C8((double)lbl_803E5BB0,param_1);
-      (*gPartfxInterface)->spawnObject((void *)param_1, 0x551, NULL, 4, -1, NULL);
-      (*gPartfxInterface)->spawnObject((void *)param_1, 0x552, NULL, 4, -1, NULL);
-      (*gPartfxInterface)->spawnObject((void *)param_1, 0x554, NULL, 4, -1, NULL);
-      uVar4 = 0x32 / framesThisStep;
-      while (uVar4-- != 0) {
-        (*gPartfxInterface)->spawnObject((void *)param_1, 0x553, NULL, 2, -1, NULL);
+        (hitObj = hit, *(u32 *)&st->unk42C = hit, st->collisionFxTimer == lbl_803E5AE8)) &&
+       (hitKind = arrayIndexOf(lbl_8032852C,0xc,(int)*(short *)(hitObj + 0x46)), hitKind != -1)) {
+      fn_8009A8C8((double)lbl_803E5BB0,obj);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x551, NULL, 4, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x552, NULL, 4, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)obj, 0x554, NULL, 4, -1, NULL);
+      burstCount = 0x32 / framesThisStep;
+      while (burstCount-- != 0) {
+        (*gPartfxInterface)->spawnObject((void *)obj, 0x553, NULL, 2, -1, NULL);
       }
       st->collisionFxTimer = lbl_803E5AF4;
       st->collisionFxDamping = lbl_803E5AEC;
@@ -570,26 +570,26 @@ extern void Sfx_SetObjectSfxVolume(f32 ratio, s16 *obj, int sfx, int vol);
 extern f32 powfBitEstimate(f32 base, f32 exp);
 extern f32 mathSinf(f32 x);
 
-void fn_801EB940(short *param_1,int param_2)
+void fn_801EB940(short *obj,int stateRaw)
 {
-  SnowBikeState *st = (SnowBikeState *)param_2;
-  float fVar1;
-  float fVar2;
-  short sVar3;
-  int iVar4;
-  int iVar5;
+  SnowBikeState *st = (SnowBikeState *)stateRaw;
+  float fa;
+  float fb;
+  short rotClamped;
+  int yawDelta;
+  int ival;
 
-  iVar5 = param_2 + 0x178;
-  (*gPathControlInterface)->update(param_1, (void *)iVar5, timeDelta);
-  (*gPathControlInterface)->apply(param_1, (void *)iVar5);
-  (*gPathControlInterface)->advance(param_1, (void *)iVar5, timeDelta);
-  iVar5 = 2;
-  if (*(char *)(param_2 + 0x3d9) == '\0') {
+  ival = stateRaw + 0x178;
+  (*gPathControlInterface)->update(obj, (void *)ival, timeDelta);
+  (*gPathControlInterface)->apply(obj, (void *)ival);
+  (*gPathControlInterface)->advance(obj, (void *)ival, timeDelta);
+  ival = 2;
+  if (*(char *)(stateRaw + 0x3d9) == '\0') {
     st->unk424 = st->unk424 + timeDelta;
-    fVar1 = st->unk424;
+    fa = st->unk424;
     st->unk424 =
-        (fVar1 < lbl_803E5AE8) ? lbl_803E5AE8
-                               : ((fVar1 > lbl_803E5BB4) ? lbl_803E5BB4 : fVar1);
+        (fa < lbl_803E5AE8) ? lbl_803E5AE8
+                               : ((fa > lbl_803E5BB4) ? lbl_803E5BB4 : fa);
     if (st->unk424 >= lbl_803E5BB8) {
       if ((u32)(st->flags428 >> 7 & 1) == 0) {
         st->unk584 = lbl_803E5AE8;
@@ -599,32 +599,32 @@ void fn_801EB940(short *param_1,int param_2)
   }
   else {
     if ((u32)(st->flags428 >> 7 & 1) != 0) {
-      iVar5 = 0;
-      fVar1 = lbl_803E5BBC;
-      st->haloYawDrift = fVar1 * (f32)(s32)param_1[1];
-      st->unk590 = fVar1 * (f32)(s32)param_1[2];
-      st->unk588 = iVar5;
-      st->unk58A = iVar5;
+      ival = 0;
+      fa = lbl_803E5BBC;
+      st->haloYawDrift = fa * (f32)(s32)obj[1];
+      st->unk590 = fa * (f32)(s32)obj[2];
+      st->unk588 = ival;
+      st->unk58A = ival;
       if ((u32)(st->flags428 >> 1 & 1) == 0) {
-        doRumble(st->unk424 * fVar1);
+        doRumble(st->unk424 * fa);
         Camera_EnableViewYOffset();
         CameraShake_SetAllMagnitudes(st->unk424 / lbl_803E5BC0);
-        Sfx_PlayFromObject((int)param_1,0x3bc);
-        fVar2 = (lbl_803E5B40 < lbl_803E5BC4 * st->unk424)
+        Sfx_PlayFromObject((int)obj,0x3bc);
+        fb = (lbl_803E5B40 < lbl_803E5BC4 * st->unk424)
                     ? lbl_803E5B40
                     : lbl_803E5BC4 * st->unk424;
-        Sfx_SetObjectSfxVolume(lbl_803E5B20,param_1,0x3bc,(int)fVar2);
+        Sfx_SetObjectSfxVolume(lbl_803E5B20,obj,0x3bc,(int)fb);
       }
     }
     ((HightopFlagsB *)&st->flags428)->resetLatch = 0;
     st->unk424 = lbl_803E5AE8;
     st->unk4B4 = st->unk230;
   }
-  fVar1 = lbl_803E5BC8;
+  fa = lbl_803E5BC8;
   st->unk588 =
-       fVar1 * timeDelta + (f32)(s32)st->unk588;
+       fa * timeDelta + (f32)(s32)st->unk588;
   st->unk58A =
-       fVar1 * timeDelta + (f32)(s32)st->unk58A;
+       fa * timeDelta + (f32)(s32)st->unk58A;
   st->haloYawDrift =
        st->haloYawDrift * powfBitEstimate(lbl_803E5BCC,timeDelta);
   st->unk590 =
@@ -635,33 +635,33 @@ void fn_801EB940(short *param_1,int param_2)
   st->unk598 =
        st->unk590 *
        mathSinf((lbl_803E5BD0 * (f32)(s32)st->unk58A) / lbl_803E5BD4);
-  iVar4 = (int)*param_1 - ((int)st->yaw & 0xffffU);
-  if (0x8000 < iVar4) {
-    iVar4 = iVar4 + -0xffff;
+  yawDelta = (int)*obj - ((int)st->yaw & 0xffffU);
+  if (0x8000 < yawDelta) {
+    yawDelta = yawDelta + -0xffff;
   }
-  if (iVar4 < -0x8000) {
-    iVar4 = iVar4 + 0xffff;
+  if (yawDelta < -0x8000) {
+    yawDelta = yawDelta + 0xffff;
   }
-  st->yaw = st->yaw + (short)iVar4;
-  st->unk40C = st->unk40C + (short)iVar4;
-  param_1[1] = param_1[1] + (short)((int)st->unk310 >> iVar5);
-  param_1[2] = param_1[2] + (short)((int)st->unk312 >> iVar5);
-  sVar3 = param_1[1];
-  if (sVar3 < -0x2000) {
-    sVar3 = -0x2000;
+  st->yaw = st->yaw + (short)yawDelta;
+  st->unk40C = st->unk40C + (short)yawDelta;
+  obj[1] = obj[1] + (short)((int)st->unk310 >> ival);
+  obj[2] = obj[2] + (short)((int)st->unk312 >> ival);
+  rotClamped = obj[1];
+  if (rotClamped < -0x2000) {
+    rotClamped = -0x2000;
   }
-  else if (0x2000 < sVar3) {
-    sVar3 = 0x2000;
+  else if (0x2000 < rotClamped) {
+    rotClamped = 0x2000;
   }
-  param_1[1] = sVar3;
-  sVar3 = param_1[2];
-  if (sVar3 < -0x2000) {
-    sVar3 = -0x2000;
+  obj[1] = rotClamped;
+  rotClamped = obj[2];
+  if (rotClamped < -0x2000) {
+    rotClamped = -0x2000;
   }
-  else if (0x2000 < sVar3) {
-    sVar3 = 0x2000;
+  else if (0x2000 < rotClamped) {
+    rotClamped = 0x2000;
   }
-  param_1[2] = sVar3;
+  obj[2] = rotClamped;
   return;
 }
 

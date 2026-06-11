@@ -43,7 +43,7 @@ extern f32 lbl_803E24D0;
  * EN v1.0 Address: 0x8013DC88
  * EN v1.0 Size: 1096b
  */
-void trickyGrowl(void *param_1, void *param_2)
+void trickyGrowl(void *obj, void *trickyState)
 {
     void *state;
     int i;
@@ -51,40 +51,40 @@ void trickyGrowl(void *param_1, void *param_2)
     void *setup;
     char *strBase = lbl_8031D2E8;
 
-    switch (((TrickyState *)param_2)->substate) {
+    switch (((TrickyState *)trickyState)->substate) {
     case 0:
         trickyDebugPrint(strBase + 0x558);
-        if (trickyFn_8013b368(param_1, lbl_803E24C8, param_2) == 0) {
-            state = ((GameObject *)param_1)->extra;
+        if (trickyFn_8013b368(obj, lbl_803E24C8, trickyState) == 0) {
+            state = ((GameObject *)obj)->extra;
             if ((((uint)((TrickyGrowlState *)state)->unk58 >> 6) & 1) == 0u) {
-                s16 a0 = ((GameObject *)param_1)->anim.currentMove;
+                s16 a0 = ((GameObject *)obj)->anim.currentMove;
                 if (a0 >= 0x30 || a0 < 0x29) {
-                    if (Sfx_IsPlayingFromObjectChannel(param_1, 0x10) == 0) {
-                        objAudioFn_800393f8(param_1, (char *)state + 0x3a8, 0x299, 0x100, -1, 0);
+                    if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) {
+                        objAudioFn_800393f8(obj, (char *)state + 0x3a8, 0x299, 0x100, -1, 0);
                     }
                 }
             }
-            ((TrickyState *)param_2)->substate = 1;
-            objAnimFn_8013a3f0(param_1, 0x33, lbl_803E2444, 0x4000000);
-            *(int *)((char *)param_2 + 0x728) = 0;
+            ((TrickyState *)trickyState)->substate = 1;
+            objAnimFn_8013a3f0(obj, 0x33, lbl_803E2444, 0x4000000);
+            *(int *)((char *)trickyState + 0x728) = 0;
         }
         break;
     case 1:
         trickyDebugPrint(strBase + 0x568);
-        if (*(u8 *)*(int *)param_2 != 0 && *(int *)((char *)param_2 + 0x728) != 0) {
-            ((TrickyState *)param_2)->substate = 2;
+        if (*(u8 *)*(int *)trickyState != 0 && *(int *)((char *)trickyState + 0x728) != 0) {
+            ((TrickyState *)trickyState)->substate = 2;
         } else {
-            void *target = *(void **)((char *)((GameObject *)param_1)->extra + 0x28);
-            trickyTurnTowardYaw(param_1, (s16)getAngle(
-                -(*(f32 *)target - ((GameObject *)param_1)->anim.worldPosX),
-                -(((TrickyGrowlState *)target)->unk8 - ((GameObject *)param_1)->anim.worldPosZ)));
+            void *target = *(void **)((char *)((GameObject *)obj)->extra + 0x28);
+            trickyTurnTowardYaw(obj, (s16)getAngle(
+                -(*(f32 *)target - ((GameObject *)obj)->anim.worldPosX),
+                -(((TrickyGrowlState *)target)->unk8 - ((GameObject *)obj)->anim.worldPosZ)));
             if (randomGetRange(0, 10) == 0) {
-                state = ((GameObject *)param_1)->extra;
+                state = ((GameObject *)obj)->extra;
                 if (((((TrickyGrowlState *)state)->unk58 >> 6) & 1) == 0u) {
-                    s16 a0 = ((GameObject *)param_1)->anim.currentMove;
+                    s16 a0 = ((GameObject *)obj)->anim.currentMove;
                     if (a0 >= 0x30 || a0 < 0x29) {
-                        if (Sfx_IsPlayingFromObjectChannel(param_1, 0x10) == 0) {
-                            objAudioFn_800393f8(param_1, (char *)state + 0x3a8, 0x299, 0x100, -1, 0);
+                        if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) {
+                            objAudioFn_800393f8(obj, (char *)state + 0x3a8, 0x299, 0x100, -1, 0);
                         }
                     }
                 }
@@ -93,63 +93,63 @@ void trickyGrowl(void *param_1, void *param_2)
         break;
     case 2:
         trickyDebugPrint(strBase + 0x57c);
-        if (trickyFn_8013b368(param_1, lbl_803E24CC, param_2) == 0) {
+        if (trickyFn_8013b368(obj, lbl_803E24CC, trickyState) == 0) {
             if ((u8)Obj_IsLoadingLocked() != 0) {
-                ((TrickyState *)param_2)->stateFlags = ((TrickyState *)param_2)->stateFlags | 0x800;
-                for (i = 0, slot = (void **)param_2; i < 7; slot++, i++) {
+                ((TrickyState *)trickyState)->stateFlags = ((TrickyState *)trickyState)->stateFlags | 0x800;
+                for (i = 0, slot = (void **)trickyState; i < 7; slot++, i++) {
                     setup = Obj_AllocObjectSetup(0x24, 0x4f0);
                     *(u8 *)((char *)setup + 0x4) = 2;
                     *(u8 *)((char *)setup + 0x5) = 1;
                     *(s16 *)((char *)setup + 0x1a) = (s16)i;
                     slot[0x700 / 4] = (void *)Obj_SetupObject(
-                        setup, 5, ((GameObject *)param_1)->anim.mapEventSlot, -1,
-                        ((GameObject *)param_1)->anim.parent);
+                        setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1,
+                        ((GameObject *)obj)->anim.parent);
                 }
-                Sfx_PlayFromObject(param_1, 0x3db);
-                Sfx_AddLoopedObjectSound(param_1, 0x3dc);
+                Sfx_PlayFromObject(obj, 0x3db);
+                Sfx_AddLoopedObjectSound(obj, 0x3dc);
             }
-            (*(u8 *)*(int *)param_2)--;
-            objAnimFn_8013a3f0(param_1, 0x34, lbl_803E2444, 0x4000000);
-            ((TrickyState *)param_2)->stateFlags = ((TrickyState *)param_2)->stateFlags | 0x10;
-            ((TrickyState *)param_2)->substate = 3;
-            *(int *)((char *)param_2 + 0x728) = 0;
+            (*(u8 *)*(int *)trickyState)--;
+            objAnimFn_8013a3f0(obj, 0x34, lbl_803E2444, 0x4000000);
+            ((TrickyState *)trickyState)->stateFlags = ((TrickyState *)trickyState)->stateFlags | 0x10;
+            ((TrickyState *)trickyState)->substate = 3;
+            *(int *)((char *)trickyState + 0x728) = 0;
         }
         break;
     case 3:
         trickyDebugPrint(strBase + 0x590);
-        if (((GameObject *)param_1)->anim.currentMoveProgress >= lbl_803E24D0) {
-            ((TrickyState *)param_2)->stateFlags &= ~0x800LL;
-            ((TrickyState *)param_2)->stateFlags = ((TrickyState *)param_2)->stateFlags | 0x1000;
-            for (i = 0, slot = (void **)param_2; i < 7; slot++, i++) {
+        if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E24D0) {
+            ((TrickyState *)trickyState)->stateFlags &= ~0x800LL;
+            ((TrickyState *)trickyState)->stateFlags = ((TrickyState *)trickyState)->stateFlags | 0x1000;
+            for (i = 0, slot = (void **)trickyState; i < 7; slot++, i++) {
                 objSetAnimSpeedTo1(slot[0x700 / 4]);
             }
-            Sfx_RemoveLoopedObjectSound(param_1, 0x3dc);
-            state = ((GameObject *)param_1)->extra;
+            Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
+            state = ((GameObject *)obj)->extra;
             if (((((TrickyGrowlState *)state)->unk58 >> 6) & 1) == 0u) {
-                s16 a0 = ((GameObject *)param_1)->anim.currentMove;
+                s16 a0 = ((GameObject *)obj)->anim.currentMove;
                 if (a0 >= 0x30 || a0 < 0x29) {
-                    if (Sfx_IsPlayingFromObjectChannel(param_1, 0x10) == 0) {
-                        objAudioFn_800393f8(param_1, (char *)state + 0x3a8, 0x29d, 0, -1, 0);
+                    if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) {
+                        objAudioFn_800393f8(obj, (char *)state + 0x3a8, 0x29d, 0, -1, 0);
                     }
                 }
             }
-            ((TrickyState *)param_2)->unk08 = 1;
-            ((TrickyState *)param_2)->substate = 0;
+            ((TrickyState *)trickyState)->unk08 = 1;
+            ((TrickyState *)trickyState)->substate = 0;
             {
                 f32 resetValue = lbl_803E23DC;
-                ((TrickyState *)param_2)->unk71C = resetValue;
-                ((TrickyState *)param_2)->unk720 = resetValue;
+                ((TrickyState *)trickyState)->unk71C = resetValue;
+                ((TrickyState *)trickyState)->unk720 = resetValue;
             }
-            ((TrickyState *)param_2)->stateFlags &= ~0x10LL;
-            ((TrickyState *)param_2)->stateFlags &= ~0x10000LL;
-            ((TrickyState *)param_2)->stateFlags &= ~0x20000LL;
-            ((TrickyState *)param_2)->stateFlags &= ~0x40000LL;
-            ((TrickyState *)param_2)->unkD = -1;
+            ((TrickyState *)trickyState)->stateFlags &= ~0x10LL;
+            ((TrickyState *)trickyState)->stateFlags &= ~0x10000LL;
+            ((TrickyState *)trickyState)->stateFlags &= ~0x20000LL;
+            ((TrickyState *)trickyState)->stateFlags &= ~0x40000LL;
+            ((TrickyState *)trickyState)->unkD = -1;
         } else {
-            void *target = *(void **)((char *)((GameObject *)param_1)->extra + 0x28);
-            trickyTurnTowardYaw(param_1, (s16)getAngle(
-                -(*(f32 *)target - ((GameObject *)param_1)->anim.worldPosX),
-                -(((TrickyGrowlState *)target)->unk8 - ((GameObject *)param_1)->anim.worldPosZ)));
+            void *target = *(void **)((char *)((GameObject *)obj)->extra + 0x28);
+            trickyTurnTowardYaw(obj, (s16)getAngle(
+                -(*(f32 *)target - ((GameObject *)obj)->anim.worldPosX),
+                -(((TrickyGrowlState *)target)->unk8 - ((GameObject *)obj)->anim.worldPosZ)));
         }
         break;
     }
