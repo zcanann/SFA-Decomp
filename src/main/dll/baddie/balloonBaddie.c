@@ -735,7 +735,7 @@ extern s16 lbl_803DD79A;
 extern s16 lbl_803DD79C;
 extern s16 lbl_803DD79E;
 extern u16 lbl_803DBA30;
-extern int lbl_803DCCF0;
+extern int gRenderModeObj;
 extern int lbl_803DD7E0;
 extern u8 lbl_803DD8B6;
 extern u8 lbl_803DD8B7;
@@ -807,8 +807,8 @@ void hudDrawCMenu(int p1, int p2, int p3)
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
-    GXSetViewport(sx - lbl_803E1F34, sy - lbl_803E2024, (f32)(u32) * (u16*)(lbl_803DCCF0 + 4),
-                  (f32)(u32) * (u16*)(lbl_803DCCF0 + 8), lbl_803E1E3C, lbl_803E1E68);
+    GXSetViewport(sx - lbl_803E1F34, sy - lbl_803E2024, (f32)(u32) * (u16*)(gRenderModeObj + 4),
+                  (f32)(u32) * (u16*)(gRenderModeObj + 8), lbl_803E1E3C, lbl_803E1E68);
     i = 0;
     u = used;
     objs = lbl_803A93EC;

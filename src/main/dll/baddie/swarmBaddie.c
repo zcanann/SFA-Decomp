@@ -158,7 +158,7 @@ extern s16 lbl_803DD854;
 extern u16 lbl_803DD77C;
 extern int lbl_803DD7E0;
 extern f32 lbl_803DBAA4;
-extern u8* lbl_803DCCF0;
+extern u8* gRenderModeObj;
 extern u8 framesThisStep;
 extern u8 lbl_8031AF34[];
 extern int lbl_803A93F8[];
@@ -271,7 +271,7 @@ void drawFn_80125424(void)
         Camera_UpdateViewMatrices();
         Camera_RebuildProjectionMatrix();
         GXSetViewport(lbl_803E2048, (f32)ypos - lbl_803E2024,
-                      (f32)(u32) * (u16*)(lbl_803DCCF0 + 4), (f32)(u32) * (u16*)(lbl_803DCCF0 + 8),
+                      (f32)(u32) * (u16*)(gRenderModeObj + 4), (f32)(u32) * (u16*)(gRenderModeObj + 8),
                       lbl_803E1E3C, lbl_803E1E68);
         if (*(u8**)&lbl_803A93F8[type] != NULL)
         {

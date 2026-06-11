@@ -917,7 +917,7 @@ void Camera_UpdateViewMatrices(void)
 
 void Camera_ApplyFullViewport(void)
 {
-    CameraRenderMode* renderMode = lbl_803DCCF0;
+    CameraRenderMode* renderMode = gRenderModeObj;
 
     if (renderMode->useViewportJitter != 0)
     {
@@ -934,7 +934,7 @@ void Camera_ApplyFullViewport(void)
 
 void fn_8000F83C(void)
 {
-    CameraRenderMode* renderMode = lbl_803DCCF0;
+    CameraRenderMode* renderMode = gRenderModeObj;
 
     if (renderMode->useViewportJitter != 0)
     {
@@ -951,7 +951,7 @@ void fn_8000F83C(void)
 
 void fn_8000F8F8(void)
 {
-    CameraRenderMode* renderMode = lbl_803DCCF0;
+    CameraRenderMode* renderMode = gRenderModeObj;
 
     if (renderMode->useViewportJitter != 0)
     {
@@ -968,7 +968,7 @@ void fn_8000F8F8(void)
 
 void fn_8000F9B4(void)
 {
-    CameraRenderMode* renderMode = lbl_803DCCF0;
+    CameraRenderMode* renderMode = gRenderModeObj;
 
     if (renderMode->useViewportJitter != 0)
     {

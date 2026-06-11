@@ -5055,12 +5055,12 @@ int GXFlush_(u8 visible, int unused)
 
 extern u8 GXNtsc480Prog[];
 extern u8 lbl_803DB5D4;
-extern GXRenderModeObj* lbl_803DCCF0;
+extern GXRenderModeObj* gRenderModeObj;
 extern void GXSetCopyFilter(u8 aa, u8* pat, u8 vf_en, u8* vfilter);
 #pragma peephole on
 void setDisplayCopyFilter(void)
 {
-    u8* p = (u8*)lbl_803DCCF0;
+    u8* p = (u8*)gRenderModeObj;
     if (p == GXNtsc480Prog || p[0x18] != 0)
     {
         GXSetCopyFilter(p[0x19], p + 0x1a, 0, p + 0x32);
@@ -7367,9 +7367,9 @@ extern void VIConfigure(void* mode);
 #pragma peephole on
 void tvInit(void)
 {
-    lbl_803DCCF0->viWidth = 0x294;
-    lbl_803DCCF0->viXOrigin = lbl_803DCCF0->viXOrigin - 0xa;
-    VIConfigure(lbl_803DCCF0);
+    gRenderModeObj->viWidth = 0x294;
+    gRenderModeObj->viXOrigin = gRenderModeObj->viXOrigin - 0xa;
+    VIConfigure(gRenderModeObj);
     VIFlush();
     VIWaitForRetrace();
     VIWaitForRetrace();
@@ -8177,16 +8177,16 @@ void videoInit(void)
     DCInvalidateRange((char*)lbl_802CC6A0, 0x40000);
     lbl_803DCCD4 = (void*)GXInit(lbl_803DCCD8, (u32)lbl_803DCCE4);
     lbl_803DCCE0 = lbl_803DCCD8;
-    GXSetDispCopySrc(0, 0, lbl_803DCCF0->fbWidth, lbl_803DCCF0->efbHeight);
-    lbl_803DCCB8 = GXSetDispCopyYScale((f32) lbl_803DCCF0->xfbHeight / (f32) lbl_803DCCF0->efbHeight);
-    fbSize = (u16)((lbl_803DCCF0->fbWidth + 0xf) & ~0xf) * lbl_803DCCB8 * 2 + 0x1f;
+    GXSetDispCopySrc(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
+    lbl_803DCCB8 = GXSetDispCopyYScale((f32) gRenderModeObj->xfbHeight / (f32) gRenderModeObj->efbHeight);
+    fbSize = (u16)((gRenderModeObj->fbWidth + 0xf) & ~0xf) * lbl_803DCCB8 * 2 + 0x1f;
     lbl_803DCCEC = (void*)((lo + 0x1f) & ~0x1f);
     lbl_803DCCE8 = (void*)(((u32)lbl_803DCCEC + fbSize) & ~0x1f);
     next = ((u32)lbl_803DCCE8 + fbSize) & ~0x1f;
     OSSetArenaLo((void*)next);
     OSSetArenaLo((void*)(x = (u32)OSInitAlloc((void*)next, (void*)hi, 1)));
     OSSetCurrentHeap(OSCreateHeap((void*)((x + 0x1f) & ~0x1f), (void*)(hi & ~0x1f)));
-    VIConfigure(lbl_803DCCF0);
+    VIConfigure(gRenderModeObj);
     GXInitFifoBase(fifo, lbl_803DCCEC, 0x10000);
     GXSetCPUFifo(fifo);
     GXSetGPFifo(fifo);
@@ -8198,12 +8198,12 @@ void videoInit(void)
     VISetPreRetraceCallback(videoSwapFrameBuffers);
     VISetPostRetraceCallback(gpuErrorHandler);
     GXSetBreakPtCallback(videoFn_800499e8);
-    GXSetViewport(lbl_803DEA70, lbl_803DEA70, (f32) lbl_803DCCF0->fbWidth, (f32) lbl_803DCCF0->xfbHeight,
+    GXSetViewport(lbl_803DEA70, lbl_803DEA70, (f32) gRenderModeObj->fbWidth, (f32) gRenderModeObj->xfbHeight,
                   lbl_803DEA70, lbl_803DEA78);
-    GXSetFieldMode(lbl_803DCCF0->field_rendering, (u32)(lbl_803DCCF0->xfbHeight - lbl_803DCCF0->viHeight) >> 31);
-    GXSetScissor(0, 0, lbl_803DCCF0->fbWidth, lbl_803DCCF0->efbHeight);
-    GXSetDispCopyDst(lbl_803DCCF0->fbWidth, (u16)lbl_803DCCB8);
-    if (lbl_803DCCF0->aa != 0)
+    GXSetFieldMode(gRenderModeObj->field_rendering, (u32)(gRenderModeObj->xfbHeight - gRenderModeObj->viHeight) >> 31);
+    GXSetScissor(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
+    GXSetDispCopyDst(gRenderModeObj->fbWidth, (u16)lbl_803DCCB8);
+    if (gRenderModeObj->aa != 0)
     {
         GXSetPixelFmt(2, 0);
         GXSetDither(1);

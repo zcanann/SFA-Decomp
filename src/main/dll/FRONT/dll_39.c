@@ -114,7 +114,7 @@ extern int lbl_803DD644;
 extern u8 lbl_803DD64D;
 extern u8 lbl_803DD64F;
 extern int lbl_803DD698;
-extern u16* lbl_803DCCF0;
+extern u16* gRenderModeObj;
 extern f32 lbl_803E1D10;
 extern f32 lbl_803E1D14;
 extern f32 lbl_803E1D18;
@@ -311,8 +311,8 @@ void n_attractmode_prepareMovie(void)
         else
         {
             THPPlayerGetVideoInfo(&gAttractMovieDims);
-            gAttractMovieOffsetX = ((uint)lbl_803DCCF0[2] - gAttractMovieDims.width) >> 1;
-            gAttractMovieOffsetY = ((uint)lbl_803DCCF0[3] - gAttractMovieDims.height) >> 1;
+            gAttractMovieOffsetX = ((uint)gRenderModeObj[2] - gAttractMovieDims.width) >> 1;
+            gAttractMovieOffsetY = ((uint)gRenderModeObj[3] - gAttractMovieDims.height) >> 1;
             AttractMovie_GetBufferSizes(movieBuffer0Size, &movieBuffer1Size, &movieBuffer2Size,
                                         &movieBuffer3Size, &optionalBufferSize, &workBufferSize);
             gAttractMovieBuffer0 = mmAlloc(movieBuffer0Size[0], NATTRACTMODE_MOVIE_HEAP, 0);

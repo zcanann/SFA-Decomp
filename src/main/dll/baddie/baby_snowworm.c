@@ -784,7 +784,7 @@ extern void* Obj_SetupObject(s32, s32, s32, s32, s32);
 extern void Obj_SetModelColorFadeRecursive(void*, s32, s32, s32, s32, s32);
 extern void padFn_80014b18(s32);
 
-extern void* lbl_803DCCF0;
+extern void* gRenderModeObj;
 extern void Camera_SetCurrentViewRotation(s32, s32, s32);
 extern void Camera_SetCurrentViewPosition(f32, f32, f32);
 extern int Camera_IsViewYOffsetEnabled(void);
@@ -1128,7 +1128,7 @@ int registerNewScore(s8 a, int b, u8 c, int mode)
  * Caches FOV via Camera_GetFovY, replaces it with arg0, activates render
  * layer 1, captures depth bias, snaps clip planes (0,0,0), restores
  * ZBuf window 0x8000, then calls GXSetViewport with width/height
- * from the global render obj at lbl_803DCCF0 (offsets 0x4, 0x8).
+ * from the global render obj at gRenderModeObj (offsets 0x4, 0x8).
  *
  * Logic-only -- MWCC schedules the s32->f32 magic conversion for the
  * GXSetViewport width/height differently from retail (interleaves
@@ -1148,7 +1148,7 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
     {
-        u16* obj = (u16*)lbl_803DCCF0;
+        u16* obj = (u16*)gRenderModeObj;
         GXSetViewport(x - lbl_803E1F34, y - lbl_803E2024,
                       (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, (f32)obj[4],
                       lbl_803E1E3C, lbl_803E1E68);
@@ -1316,7 +1316,7 @@ void npcTalkFn_8012e880(void)
  * render block: snaps clip planes (0,0,0), restores ZBuf window
  * 0x8000, saves current FOV (in f31) before swapping in 43.0f, then
  * issues GXSetViewport with width/height from the global render obj
- * at lbl_803DCCF0. Then walks to slot lbl_803A9410[(s8)lbl_803DBA64],
+ * at gRenderModeObj. Then walks to slot lbl_803A9410[(s8)lbl_803DBA64],
  * dispatches shadowRenderFn_8006b558(slot) to do the actual draw, re-reads the
  * slot pointer (reload across the call) and clears the +0x4c sentinel
  * if it overflowed the 0x90000000 watermark. Tail restores FOV from
@@ -1334,7 +1334,7 @@ void perspectiveFn_80129db4(void)
     Camera_RebuildProjectionMatrix();
     Camera_UpdateViewMatrices();
     {
-        u16* obj = (u16*)lbl_803DCCF0;
+        u16* obj = (u16*)gRenderModeObj;
         GXSetViewport(lbl_803E1E3C, lbl_803E1E3C,
                       (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, (f32)obj[4],
                       lbl_803E1E3C, lbl_803E1E68);
@@ -3994,7 +3994,7 @@ void pauseMenuDoSave(void)
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
     {
-        u16* obj = (u16*)lbl_803DCCF0;
+        u16* obj = (u16*)gRenderModeObj;
         GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, (f32)obj[4],
                       lbl_803E1E3C, lbl_803E1E68);
     }

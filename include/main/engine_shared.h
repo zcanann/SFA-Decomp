@@ -1219,7 +1219,7 @@ extern f32 lbl_80396850[12];
 extern s16 lbl_802C5ED0[];
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern CameraRenderMode* lbl_803DCCF0;
+extern CameraRenderMode* gRenderModeObj;
 extern u32 lbl_803DCCBC;
 extern s16 lbl_803DC88A;
 void Camera_ApplyCurrentViewport(void* viewportArg);

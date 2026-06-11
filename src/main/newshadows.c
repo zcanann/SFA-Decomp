@@ -3022,7 +3022,7 @@ extern f32 CPGPLinked_803DED44, BreakPointCB_803DED4C, __GXOverflowCount_803DED5
 extern f32 FinishQueue_803DED64;
 extern u8 lbl_803DB668[8];
 extern f32 lbl_803DB670;
-extern int lbl_803DCCF0;
+extern int gRenderModeObj;
 extern f32 lbl_803DCED0, lbl_803DCECC;
 extern int lbl_803DCF84, lbl_803DCF88;
 extern char lbl_8038DF48b[];
@@ -3205,7 +3205,7 @@ void renderShadows(void)
                         PSMTXConcat((f32*)(castSlot + 0x30), vm, (f32*)(castSlot + 0x30));
                         GXSetTexCopySrc(0, 0, screenW, screenW);
                         GXSetTexCopyDst(screenW, screenW, 0x11, 0);
-                        GXSetCopyFilter(0, (void*)(lbl_803DCCF0 + 0x1a), 0, (void*)(lbl_803DCCF0 + 0x32));
+                        GXSetCopyFilter(0, (void*)(gRenderModeObj + 0x1a), 0, (void*)(gRenderModeObj + 0x32));
                         GXCopyTex((void*)(*(int*)((char*)obj[0x64 / 4] + 4) + 0x60), 1);
                         setDisplayCopyFilter();
                         *(int*)(castSlot + 0x60) = *(int*)((char*)obj[0x64 / 4] + 4);
@@ -3268,7 +3268,7 @@ void renderShadows(void)
     if ((u8)r23 > 1)
     {
         gxSetZMode_(1, 3, 1);
-        GXSetCopyFilter(0, (void*)(lbl_803DCCF0 + 0x1a), 0, (void*)(lbl_803DCCF0 + 0x32));
+        GXSetCopyFilter(0, (void*)(gRenderModeObj + 0x1a), 0, (void*)(gRenderModeObj + 0x32));
         GXSetTexCopySrc(0, 0, 0x100, 0x100);
         GXSetTexCopyDst(0x100, 0x100, 0x28, 0);
         GXCopyTex((void*)(*(int*)(B + 0x3a14) + 0x60), 1);

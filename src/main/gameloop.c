@@ -837,7 +837,7 @@ extern void initViewport(void);
 extern void tvInit(void);
 extern u8 GXNtsc480IntDf[];
 extern u8 GXNtsc480Prog[];
-extern void* lbl_803DCCF0;
+extern void* gRenderModeObj;
 extern u8 lbl_803DCAE4;
 extern u8 lbl_8033C3B8[];
 extern u8 lbl_8033C378[];
@@ -887,11 +887,11 @@ void init(void)
     PADInit();
     LCEnable();
     OSInitFastCast();
-    lbl_803DCCF0 = GXNtsc480IntDf;
+    gRenderModeObj = GXNtsc480IntDf;
     lbl_803DCAE4 = OSGetProgressiveMode();
     if (OSGetResetCode() != 0 && lbl_803DCAE4 == 1)
     {
-        lbl_803DCCF0 = GXNtsc480Prog;
+        gRenderModeObj = GXNtsc480Prog;
         OSSetProgressiveMode(1);
     }
     else
@@ -1040,8 +1040,8 @@ void init(void)
         askProgressiveScanMode();
     }
     OSSetSaveRegion(NULL, NULL);
-    memcpy(lbl_8033C378, lbl_803DCCF0, 0x3c);
-    lbl_803DCCF0 = lbl_8033C378;
+    memcpy(lbl_8033C378, gRenderModeObj, 0x3c);
+    gRenderModeObj = lbl_8033C378;
     initViewport();
     tvInit();
     OSReport(sMainFinishedInitMessage);
@@ -1556,20 +1556,20 @@ void askProgressiveScanMode(void)
     VIWaitForRetrace();
     if ((u8)sel != 0)
     {
-        lbl_803DCCF0 = GXNtsc480Prog;
+        gRenderModeObj = GXNtsc480Prog;
         OSSetProgressiveMode(1);
-        GXSetCopyFilter(((u8*)lbl_803DCCF0)[0x19], (u8*)lbl_803DCCF0 + 0x1a, 0, (u8*)lbl_803DCCF0 + 0x32);
-        VIConfigure(lbl_803DCCF0);
+        GXSetCopyFilter(((u8*)gRenderModeObj)[0x19], (u8*)gRenderModeObj + 0x1a, 0, (u8*)gRenderModeObj + 0x32);
+        VIConfigure(gRenderModeObj);
         VISetBlack(1);
         VIFlush();
         sel = 0x340;
     }
     else
     {
-        lbl_803DCCF0 = GXNtsc480IntDf;
+        gRenderModeObj = GXNtsc480IntDf;
         OSSetProgressiveMode(0);
-        GXSetCopyFilter(((u8*)lbl_803DCCF0)[0x19], (u8*)lbl_803DCCF0 + 0x1a, 1, (u8*)lbl_803DCCF0 + 0x32);
-        VIConfigure(lbl_803DCCF0);
+        GXSetCopyFilter(((u8*)gRenderModeObj)[0x19], (u8*)gRenderModeObj + 0x1a, 1, (u8*)gRenderModeObj + 0x32);
+        VIConfigure(gRenderModeObj);
         VISetBlack(1);
         VIFlush();
         sel = 0x341;
