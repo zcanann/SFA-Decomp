@@ -202,20 +202,14 @@ u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
             u32 d = baseNote - inputNote;
             freq = voicePitchDownTable[d];
         }
-        conv.w.lo = packed & 0xffffff;
-        conv.w.hi = 0x43300000;
-        freq = (conv.d - lbl_803E7820) * freq;
+        freq = (f64)(u32)(packed & 0xffffff) * freq;
     }
     else
     {
-        conv.w.lo = packed & 0xffffff;
-        conv.w.hi = 0x43300000;
-        freq = conv.d - lbl_803E7820;
+        freq = (f64)(u32)(packed & 0xffffff);
     }
-    conv.w.lo = *(u32*)lbl_803BD150;
-    conv.w.hi = 0x43300000;
     return __cvt_fp2unsigned((freq * lbl_803E7828) /
-        (f32)(conv.d - lbl_803E7820));
+        (f32)(f64)*(u32*)lbl_803BD150);
 }
 
 /*
