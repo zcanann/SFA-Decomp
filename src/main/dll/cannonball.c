@@ -1,4 +1,5 @@
 #include "main/dll/cannonball.h"
+#include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 
@@ -18,7 +19,6 @@
 #define CANNONBALL_HIDE_FLAG 0x10
 #define CANNONBALL_SPEED_DECAY_FLAG 0x10000000
 
-extern bool Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern double getXZDistance(float* a, float* b);
 extern u32 randomGetRange(int min, int max);
 extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);

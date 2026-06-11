@@ -1,4 +1,5 @@
 #include "main/dll/cannon.h"
+#include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 
@@ -101,10 +102,6 @@ extern void trickyTurnTowardYaw(int p1, s16 angle);
 extern void objAnimFn_8013a3f0(int obj, int p2, f32 f, int p4);
 extern void* Obj_AllocObjectSetup(int p1, int p2);
 extern int Obj_SetupObject(void* setup, int p2, int p3, int p4, void* p5);
-extern int Sfx_PlayFromObject(int obj, int sfxId);
-extern int Sfx_AddLoopedObjectSound(int obj, int sfxId);
-extern int Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
-extern int Sfx_IsPlayingFromObjectChannel(int obj, int chan);
 extern int Obj_IsLoadingLocked(void);
 extern void objSetAnimSpeedTo1(void* obj);
 extern void objAudioFn_800393f8(int obj, void* p2, int p3, int p4, int p5, int p6);
