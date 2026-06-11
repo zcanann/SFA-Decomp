@@ -9,26 +9,16 @@
 
 
 extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b14();
 extern undefined4 FUN_800175cc();
-extern undefined4 FUN_80017620();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017a98();
-extern int FUN_80017af8();
-extern undefined4 FUN_800305f8();
 extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8008112c();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028688c();
 extern void objRenderFn_8003b8f4(double scale);
 extern void queueGlowRender(void* light);
 
 extern EffectInterface** gPartfxInterface;
-extern undefined4* DAT_803dd70c;
-extern undefined4* DAT_803dd738;
-extern undefined4 DAT_803de710;
 extern f64 DOUBLE_803e3d08;
 extern f64 DOUBLE_803e3d80;
 extern f32 lbl_803DC074;
