@@ -1609,14 +1609,14 @@ void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state)
                         {
                             GameBit_Set(*(s16*)(*(int*)&((GameObject*)other)->anim.placementData + 0x22), 1);
                         }
-                        otherState->hitFlags = otherState->hitFlags & 0x7f | 0x80;
+                        otherState->hitFlags &= 0x7f | 0x80;
                     }
                     break;
                 }
                 state->hitStarted = 0;
-                state->hitFlags = state->hitFlags & 0xef | 0x10;
+                state->hitFlags &= 0xef | 0x10;
             }
-            state->hitFlags = state->hitFlags & 0xbf | 0x40;
+            state->hitFlags &= 0xbf | 0x40;
             state->path8Fx = lbl_803E3BC4;
         }
         else
