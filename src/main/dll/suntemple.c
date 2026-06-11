@@ -164,6 +164,7 @@ int suntemple_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
     {
         switch (animUpdate->eventIds[i])
         {
+        case 1:
         default:
             if (setup->flags & SUNTEMPLE_FLAG_CALLBACK_LATCHES_BIT)
             {
@@ -177,8 +178,6 @@ int suntemple_interactCallback(int obj, int p2, ObjAnimUpdateState* animUpdate)
         case 2:
             if (setup->preemptSequenceId != 0)
                 (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, setup->preemptSequenceId);
-            break;
-        case 1:
             break;
         case 3:
             if (((ObjAnimComponent*)obj)->bankIndex == 1)
