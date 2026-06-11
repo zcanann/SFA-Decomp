@@ -412,7 +412,7 @@ void fn_80150910(int* obj, u8* state)
         }
         if (*(f32*)(state + 0x310) < lbl_803E2780)
         {
-            *(f32*)(state + 0x310) = lbl_803E2780;
+            *(f32*)(state + 0x310) = *(f32 *)&lbl_803E2780;
         }
         if (Curve_AdvanceAlongPath(path, *(f32*)(state + 0x310)) != 0 || *(int*)(path + 0x10) != 0)
         {
