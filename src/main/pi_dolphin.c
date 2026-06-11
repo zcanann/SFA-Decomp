@@ -5287,7 +5287,7 @@ void fn_80050FF4(u8 mode)
     GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 3);
     GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
     lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A = lbl_803DCD6A + 1;
+    lbl_803DCD6A++;
 }
 
 extern u8 lbl_803DCD30;
@@ -5310,7 +5310,7 @@ void gxTextureFn_80050e28(u8 mode)
     GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
     lbl_803DCD30 = 1;
     lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A = lbl_803DCD6A + 1;
+    lbl_803DCD6A++;
 }
 
 extern void GXSetTevIndRepeat(int stage);
@@ -6459,7 +6459,7 @@ void gxTextureFn_8004d5b4(void* p1)
     lbl_803DCD70 = lbl_803DCD70 + 1;
     lbl_803DCD6C = lbl_803DCD6C + 1;
     lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A = lbl_803DCD6A + 1;
+    lbl_803DCD6A++;
 }
 
 struct piIndMtx
@@ -7470,7 +7470,7 @@ void fn_8004EECC(void)
     GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
     lbl_803DCD30 = 1;
     lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A = lbl_803DCD6A + 1;
+    lbl_803DCD6A++;
 }
 
 void fn_8004F080(void)
@@ -7583,7 +7583,7 @@ void fn_8004F2B0(void)
     GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
     lbl_803DCD30 = 1;
     lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A = lbl_803DCD6A + 1;
+    lbl_803DCD6A++;
 }
 
 extern void GXSetTevColor(int id, void* color);
@@ -7601,7 +7601,7 @@ void fn_8004EF9C(int* param)
     GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
     lbl_803DCD30 = 1;
     lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A = lbl_803DCD6A + 1;
+    lbl_803DCD6A++;
 }
 
 extern u8 lbl_802CC6A0[];
