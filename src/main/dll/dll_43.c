@@ -1,8 +1,8 @@
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 #include "main/dll/dll_43.h"
 #include "main/screen_transition.h"
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void saveSelectGoToChooseSlot(int arg);
 
 extern u8 lbl_803DB424;

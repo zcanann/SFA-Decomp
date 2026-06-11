@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 #include "main/dll/dll_4E.h"
 #include "main/screen_transition.h"
 
@@ -28,8 +29,6 @@
 
 extern void audioSetSoundMode(u8 mode, u8 enabled);
 extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
-extern void Sfx_StopFromObject(int obj, int sfxId);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void saveFileStruct_resetVolumes(void);
 
 extern ScreenTransitionInterface** gScreenTransitionInterface;
