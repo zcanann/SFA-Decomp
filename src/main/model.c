@@ -2,6 +2,7 @@
 #include "main/dll/objmodel_types.h"
 #include "main/model.h"
 #include "main/game_object.h"
+#include "main/object_transform.h"
 #include "main/objanim_internal.h"
 
 extern void gxSetPeControl_ZCompLoc_();
@@ -1962,8 +1963,6 @@ int modelLoadAnimations(void* model, int id, void* animBase)
     return 0;
 }
 
-extern void Obj_GetWorldPosition(u8* obj, void* x, void* y, void* z);
-
 void* mmAlloc(int size, int type, int flag);
 
 #pragma opt_loop_invariants on
@@ -2419,7 +2418,7 @@ void objUpdateHitSpheres(u8* a, u8* b, u8* c, u8* d, u8* e)
             *(f32*)(c + 0xc) = vec[0] + playerMapOffsetX;
             *(f32*)(c + 0x10) = vec[1];
             *(f32*)(c + 0x14) = vec[2] + playerMapOffsetZ;
-            Obj_GetWorldPosition(c, c + 0x18, c + 0x1c, c + 0x20);
+            Obj_GetWorldPosition((u32)c, (f32 *)(c + 0x18), (f32 *)(c + 0x1c), (f32 *)(c + 0x20));
         }
         src = *(u8**)(b + 0x58);
         vec[0] = *(f32*)(src + (srcOff + 8));

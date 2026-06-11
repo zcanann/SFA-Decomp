@@ -1,11 +1,10 @@
 #include "main/dll/dll_A6.h"
 #include "main/game_object.h"
+#include "main/object_transform.h"
 
 extern f32 lbl_803E1628;
 extern f32 lbl_803E162C;
 
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z,
-                                           f32* outX, f32* outY, f32* outZ, void* xform);
 extern void objRenderFn_8003b8f4(u8* reticle, undefined4 a, undefined4 b, undefined4 c,
                                  undefined4 d, f32 f);
 
@@ -78,7 +77,7 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject* fallbackTarget, int 
                                            ((GameObject*)reticle)->anim.worldPosZ,
                                            (f32*)(reticle + 0xC), (f32*)(reticle + 0x10),
                                            (f32*)(reticle + 0x14),
-                                           (void*)*(u32*)&((GameObject*)reticle)->anim.parent);
+                                           *(u32*)&((GameObject*)reticle)->anim.parent);
         }
         else
         {

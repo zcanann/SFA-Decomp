@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/seqObj11D.h"
+#include "main/object_transform.h"
 #include "main/objseq.h"
 
 extern undefined4 FUN_80006824();
@@ -81,7 +82,6 @@ extern u16 lbl_803DBCA0[4];
 extern f32 mathCosf(f32 x);
 extern f32 mathSinf(f32 x);
 extern f32 sqrtf(f32 x);
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, int mtx);
 extern f32 lbl_803E27D8;
 extern f32 lbl_803E27DC;
 extern f32 lbl_803E27E0;

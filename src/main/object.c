@@ -9,11 +9,13 @@
 #include "main/model_light.h"
 #include "main/engine_8001746C_phantoms.h"
 #include "main/mapEvent.h"
+#include "main/object_transform.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 #include "main/objseq.h"
 #include "main/objlib.h"
 #include "main/resource.h"
+#include "main/vecmath.h"
 
 extern void mm_free(void* ptr);
 
@@ -47,7 +49,6 @@ extern int lbl_803DCB84;
 extern void* lbl_803DCB88;
 extern void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused);
 extern f32 lbl_803DE890;
-extern void mtxRotateByVec3s(f32* mtx, void* transform);
 extern void mtx44Transpose(f32 * src, f32 * dst);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
 extern void OSReport(char* fmt, ...);
@@ -92,7 +93,6 @@ extern void playerUpdateWhileTimeStopped(u8 * obj);
 extern void playerRenderQuakeSpell(void);
 extern void playerUpdate(u8 * obj);
 extern void Sfx_PlayFromObject(u8* obj, int sfx);
-extern void Obj_GetWorldPosition(u8* obj, void* x, void* y, void* z);
 extern u32 lbl_803DCB78;
 extern void objFn_80065604(void);
 extern void Obj_UpdateModelBlendStates(void);
@@ -116,7 +116,6 @@ extern void fn_80013B6C(int* p, int n);
 extern void AudioStream_StopAll(void);
 extern int lbl_803DB448;
 extern int lbl_803DCB8C;
-extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, void* ox, void* oy, void* oz);
 extern void mapLoadForObject(int id, void* obj);
 extern void Sfx_RemoveLoopedObjectSoundForObject(u8 * obj);
 extern void Sfx_StopObjectChannel(u8* obj, int ch);
@@ -1838,7 +1837,7 @@ void Obj_UpdateObject(u8* obj)
             }
             break;
         }
-        Obj_GetWorldPosition(obj, &object->worldPosX, &object->worldPosY, &object->worldPosZ);
+        Obj_GetWorldPosition((u32)obj, &object->worldPosX, &object->worldPosY, &object->worldPosZ);
     }
 skip:
     hitState = (ObjHitsPriorityState*)object->hitReactState;
@@ -1959,9 +1958,7 @@ void Obj_UpdateAllObjects(u8 flags)
                     cb(obj);
                     break;
                 }
-                Obj_GetWorldPosition((u8*)obj, (u8*)&((GameObject*)obj)->anim.worldPosX,
-                                     (u8*)&((GameObject*)obj)->anim.worldPosY,
-                                     (u8*)&((GameObject*)obj)->anim.worldPosZ);
+                Obj_GetWorldPosition((u32)obj, &((GameObject *)obj)->anim.worldPosX, &((GameObject *)obj)->anim.worldPosY, &((GameObject *)obj)->anim.worldPosZ);
             }
         next:;
         }
@@ -1999,7 +1996,7 @@ void Obj_UpdateAllObjects(u8 flags)
                     cb(child);
                     break;
                 }
-                Obj_GetWorldPosition((u8*)child, (u8*)(child + 0x18), (u8*)(child + 0x1c), (u8*)(child + 0x20));
+                Obj_GetWorldPosition((u32)child, (f32 *)(child + 0x18), (f32 *)(child + 0x1c), (f32 *)(child + 0x20));
             }
         }
     done:
@@ -2274,9 +2271,9 @@ void Obj_RegisterObject(u8* obj, int flags)
     object = (ObjAnimComponent*)obj;
     if (object->parent != NULL)
     {
-        ((void (*)(f32, f32, f32, f32*, f32*, f32*, void*))Obj_TransformLocalPointToWorld)(
-            object->localPosX, object->localPosY, object->localPosZ, &object->worldPosX,
-            &object->worldPosY, &object->worldPosZ, object->parent);
+        Obj_TransformLocalPointToWorld(object->localPosX, object->localPosY, object->localPosZ,
+                                       &object->worldPosX, &object->worldPosY, &object->worldPosZ,
+                                       (u32)object->parent);
     }
     else
     {
