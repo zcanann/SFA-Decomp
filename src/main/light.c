@@ -12,37 +12,16 @@
 #include "main/objlib.h"
 #include "main/resource.h"
 
-extern bool FUN_800067f0();
-extern undefined4 FUN_8000680c();
-extern undefined4 FUN_80006824();
-extern void* FUN_800069a8();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006ba8();
-extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
-extern undefined4 FUN_8001771c();
-extern undefined4 FUN_80017a78();
-extern int FUN_80017a98();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80041ff8();
 extern undefined4 FUN_80042b9c();
 extern undefined4 FUN_80042bec();
 extern undefined4 FUN_80044404();
 extern undefined4 FUN_80053c98();
-extern undefined4 FUN_8008112c();
-extern undefined4 FUN_801f5070();
-extern undefined4 FUN_80247e94();
-extern undefined4 FUN_80247eb8();
-extern undefined4 FUN_80247edc();
-extern undefined4 FUN_80247ef8();
-extern uint FUN_80286838();
-extern uint FUN_8028683c();
-extern undefined4 FUN_80286884();
-extern undefined4 FUN_80286888();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern MapEventInterface** gMapEventInterface;
-extern undefined4 DAT_803de940;
 extern f64 DOUBLE_803e6d90;
 extern f64 DOUBLE_803e6da8;
 extern f64 DOUBLE_803e6dc8;
