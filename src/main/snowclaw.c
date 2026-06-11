@@ -1,3 +1,5 @@
+#include "main/audio/sfx.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
@@ -50,7 +52,6 @@ typedef struct
 } SnowClawAnimTbl;
 
 extern void Obj_FreeObject(int obj);
-extern u32 GameBit_Get(int id);
 extern int Obj_GetPlayerObject(void);
 extern u32 fn_802972A8(int obj);
 extern int ObjGroup_FindNearestObject(int kind, int obj, f32* maxDistance);
@@ -74,7 +75,6 @@ extern f32 lbl_803E6708;
 extern f32 lbl_803E670C;
 extern f32 lbl_803E6710;
 extern int getAngle(f32 dx, f32 dz);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void* loadObjectAtObject(int obj, int spawn);
 extern f32 lbl_803E66E0;
 extern int ObjHits_GetPriorityHit(int* sub, int* hit, int c, int d);

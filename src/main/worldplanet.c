@@ -1,4 +1,6 @@
+#include "main/audio/sfx.h"
 #include "main/camera_interface.h"
+#include "main/gamebits.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/effect_interfaces.h"
@@ -11,8 +13,6 @@ extern void objRenderFn_8003b8f4(double scale);
 extern void setShowWorldMapHud(int enabled);
 
 extern f32 lbl_803E6618;
-extern u32 GameBit_Get(int id);
-extern int GameBit_Set(int id, int value);
 extern void unlockLevel(int a, int b, int c);
 extern int lbl_8032A1B4[5];
 extern u8 lbl_803DC1B8[8];
@@ -48,7 +48,6 @@ extern void setIsOvercast(int mode);
 extern u32 getButtonsJustPressed(int controller);
 extern EffectInterface** gPartfxInterface;
 extern void pauseMenuSetupTitle(int strId, int p2, int p3, int p4);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 lbl_803DDD00;
 extern s16 lbl_803DDD0C;
 extern int lbl_803DDD10;
@@ -66,7 +65,6 @@ extern void lockLevel(int idx, int p2);
 extern void loadModelAndAnimTabs(void);
 extern void streamFn_8000a380(int a, int b, int c);
 extern void warpToMap(int map, int p2);
-extern void Sfx_KeepAliveLoopedObjectSound(s16* obj, int sound);
 extern f32 fsin16Approx(int angle);
 extern f32 fcos16Approx(int angle);
 extern f32 lbl_803E661C;
@@ -596,7 +594,7 @@ void worldplanet_update(int obj)
                 }
                 if (state->orbitSoundFrameCount > 2)
                 {
-                    Sfx_KeepAliveLoopedObjectSound(p, 0x96);
+                    Sfx_KeepAliveLoopedObjectSound((u32)p, 0x96);
                 }
                 *(f32*)(p + 6) = r * fsin16Approx((ang + *off) & 0xffff) * fcos16Approx(3000) + ((GameObject*)obj)->anim
                     .localPosX;

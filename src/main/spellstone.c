@@ -1,10 +1,9 @@
+#include "main/gamebits.h"
 #include "main/mapEvent.h"
 #include "main/spellstone.h"
 #include "main/objlib.h"
 
 extern f32 Vec_distance(void* posA, void* posB);
-extern void GameBit_Set(int eventId, int value);
-extern int GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
 extern void Obj_RemoveFromUpdateList(void* obj);
 extern void objRenderFn_8003b8f4(void* obj, undefined4 param_2, undefined4 param_3, undefined4 param_4,
