@@ -4,6 +4,8 @@
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
 #include "main/game_ui_interface.h"
+#include "main/gamebits.h"
+#include "main/mapEvent.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/light.h"
@@ -322,7 +324,6 @@ void vfpplatform_init(int obj, int data)
 
 void vfpcoreplat_init(int obj, int data)
 {
-    extern u32 GameBit_Get(int); /* #57 */
     int state = *(int*)&((GameObject*)obj)->extra;
     *(s16*)obj = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
     *(s16*)state = *(s16*)(data + 0x20);
@@ -353,8 +354,6 @@ typedef struct SpellStoneUseState
 void spellStoneUseFn_801fd270(int obj)
 {
     extern u32 lbl_803DDCC8; /* #57 */
-    extern void GameBit_Set(int eventId, int value); /* #57 */
-    extern u32 GameBit_Get(int); /* #57 */
     SpellStoneUseState* state = ((GameObject*)obj)->extra;
     s16 cond = 1;
     void* player = Obj_GetPlayerObject();
@@ -473,7 +472,6 @@ typedef struct
 
 void vfpdoorswitch_update(int obj)
 {
-    extern u32 GameBit_Get(int); /* #57 */
     VfpDoorSwitchState* state;
     if (((GameObject*)obj)->anim.seqId != 0x3e7)
     {
@@ -492,7 +490,6 @@ void vfpdoorswitch_update(int obj)
 
 void vfpdoorswitch_init(int obj, int data)
 {
-    extern u32 GameBit_Get(int); /* #57 */
     VfpDoorSwitchState* state = ((GameObject*)obj)->extra;
     *(s16*)obj = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
     ((GameObject*)obj)->anim.rotZ = (s16)(((s32) * (s8*)(data + 0x19)) << 8);
@@ -514,7 +511,6 @@ void vfpdoorswitch_init(int obj, int data)
 
 void vfpdoorswitch_updateExplodingVariant(int obj)
 {
-    extern u32 GameBit_Get(int); /* #57 */
     VfpDoorSwitchState* state = ((GameObject*)obj)->extra;
     int camView = Camera_GetCurrentViewSlot();
 
@@ -556,8 +552,6 @@ void dll_224_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (vi
 #pragma peephole on
 void seqpoint_update(int* obj)
 {
-    extern void GameBit_Set(int eventId, int value); /* #57 */
-    extern u32 GameBit_Get(int); /* #57 */
     void* player = Obj_GetPlayerObject();
     SeqPointState* self = ((GameObject*)obj)->extra;
     int key = self->disableBit;
@@ -625,8 +619,6 @@ void seqpoint_update(int* obj)
 void vfpdraghead_update(int* obj)
 {
     extern void Obj_FreeObject(int* obj); /* #57 */
-    extern void GameBit_Set(int eventId, int value); /* #57 */
-    extern u32 GameBit_Get(int); /* #57 */
     int state = *(s8*)(*(char**)&((GameObject*)obj)->anim.placementData + 0x19);
     VfpDragHeadState* self2;
 
@@ -686,7 +678,6 @@ void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
 {
     extern undefined4 loadMapAndParent(int); /* #57 */
     extern undefined4 lockLevel(undefined4, int); /* #57 */
-    extern void GameBit_Set(int eventId, int value); /* #57 */
     SeqPointState* state = ((GameObject*)obj)->extra;
     int i;
 
@@ -735,7 +726,6 @@ void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
 
 void fn_801FBAC8(int obj)
 {
-    extern u32 GameBit_Get(int); /* #57 */
     int params = *(int*)&((GameObject*)obj)->anim.placementData;
     int state = *(int*)&((GameObject*)obj)->extra;
     if (GameBit_Get(*(s16*)state) != 0)
@@ -845,7 +835,6 @@ void fn_801FBAC8(int obj)
 
 void vfpplatform_update(int obj)
 {
-    extern u32 GameBit_Get(int); /* #57 */
     int params = *(int*)&((GameObject*)obj)->anim.placementData;
     int state = *(int*)&((GameObject*)obj)->extra;
     u8 s3 = *(u8*)(state + 3);

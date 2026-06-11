@@ -1,10 +1,9 @@
 #include "main/audio/sfx_ids.h"
 #include "main/crfueltank.h"
+#include "main/gamebits.h"
 
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(void* obj, u16 volumeId);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
 extern void ObjHits_SetHitVolumeSlot(void* obj, int animObjId, int frame, int flags);
 extern void ObjHits_DisableObject(void* obj);
 extern void ObjHits_EnableObject(void* obj);

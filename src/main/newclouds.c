@@ -1,5 +1,6 @@
 #include "main/newclouds_state.h"
 #include "main/newclouds.h"
+#include "main/gamebits.h"
 #include "main/object_transform.h"
 #include "main/resource.h"
 

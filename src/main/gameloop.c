@@ -4,6 +4,7 @@
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
+#include "main/gamebits.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/mapEventTypes.h"
@@ -326,8 +327,6 @@ void* getTabEntry(void* dst, int fileId, int offset, int size)
 
 typedef f32 Mtx[3][4];
 extern void cutsceneEnterExit(int a, int b);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
 
 #pragma dont_inline off
 void cutsceneFadeInOut(int a)

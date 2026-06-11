@@ -1,11 +1,10 @@
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/gamebits.h"
 #include "main/main.h"
 #include "main/objlib.h"
 #include "main/resource.h"
 
-extern uint GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017ac8();
 
