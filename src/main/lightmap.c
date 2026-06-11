@@ -1667,7 +1667,7 @@ void renderObjects(s8* arg0)
     }
 }
 
-extern s8 lbl_803DCEA4;
+extern s8 curMapType;
 extern int lbl_803DCEA8;
 extern void Camera_UpdateProjection(int a, int b);
 extern void Camera_EnableViewYOffset(void);
@@ -1681,7 +1681,7 @@ extern void screenFn_8000e944(int v);
 void sceneRender(void)
 {
     renderFlags |= 0x21;
-    if (lbl_803DCEA4 == 1 || lbl_803DCEA4 == 3)
+    if (curMapType == 1 || curMapType == 3)
     {
         renderFlags &= ~1LL;
     }

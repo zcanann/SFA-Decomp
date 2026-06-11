@@ -706,17 +706,17 @@ int return0_8005669C(void) { return 0x0; }
 
 /* 12b 3-insn patterns. */
 extern s8 curMapLayer;
-extern s8 lbl_803DCEA4;
+extern s8 curMapType;
 extern s16 lbl_803DCEB4;
 extern s16 lbl_803DCEB6;
 extern u32 renderFlags;
 s32 getCurMapLayer(void) { return curMapLayer; }
-s32 getCurMapType(void) { return lbl_803DCEA4; }
+s32 getCurMapType(void) { return curMapType; }
 
 /* 20b reset triplet. */
 void mapReloadWithFadeout(void)
 {
-    lbl_803DCEA4 = 0;
+    curMapType = 0;
     lbl_803DCEB6 = 0;
     lbl_803DCEB4 = 0;
 }
@@ -964,16 +964,16 @@ void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
     mapId = mapCoordsToId((s32)fastFloorf(a / gMapBlockWorldSize), mapY, layer);
     if (mapId < 0 || mapId >= (getDataFileSize(0x1f) >> 5))
     {
-        lbl_803DCEA4 = 0;
+        curMapType = 0;
     }
     else
     {
         tabEntry = lbl_803DCE78;
         getTabEntry(tabEntry, 0x1f, mapId << 5, 0x20);
-        lbl_803DCEA4 = *(s8*)(tabEntry + 0x1c);
+        curMapType = *(s8*)(tabEntry + 0x1c);
     }
     lbl_803DCEB4 = 0;
-    if (lbl_803DCEA4 == 1)
+    if (curMapType == 1)
     {
         lbl_803DCEB6 = (s16)mapId;
         lbl_803DCEB4 = *(s16*)(tabEntry + 0x1e);
@@ -1786,7 +1786,7 @@ void initMaps(void)
             *(s16*)((char*)data + i2 * 12 + 0xa);
         i2++;
     }
-    lbl_803DCEA4 = 0;
+    curMapType = 0;
     lbl_803DCEB6 = 0;
     lbl_803DCEB4 = 0;
     mm_free(data);
@@ -3118,13 +3118,13 @@ void doPendingMapLoads(void)
                             u32 sz = getDataFileSize(0x1f);
                             if (m2 < 0 || m2 >= (int)(sz >> 5))
                             {
-                                lbl_803DCEA4 = 0;
+                                curMapType = 0;
                             }
                             else
                             {
                                 u8* e = lbl_803DCE78;
                                 getTabEntry(e, 0x1f, m2 << 5, 0x20);
-                                lbl_803DCEA4 = *(u8*)(e + 0x1c);
+                                curMapType = *(u8*)(e + 0x1c);
                             }
                         }
                         *(s8*)(base + slot * 8 + 0x4192) = 1;
