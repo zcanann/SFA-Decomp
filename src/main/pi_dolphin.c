@@ -7768,8 +7768,8 @@ void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5)
 {
     char* base = (char*)lbl_8035F3E8;
     char* e;
-    if (*(int*)(base + 0x74) == 0) return;
-    if (*(int*)(base + 0x78) == 0) return;
+    if (*(void**)(base + 0x74) == NULL) return;
+    if (*(void**)(base + 0x78) == NULL) return;
     e = (char*)*(int*)(base + 0x74) + idx;
     *out1 = *(s16*)(e + 0x1c);
     *out2 = *(s16*)(e + 0x1e);
