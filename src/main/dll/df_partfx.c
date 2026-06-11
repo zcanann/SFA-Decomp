@@ -7,42 +7,10 @@
 #include "main/resource.h"
 #include "main/screen_transition.h"
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006950();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern int FUN_80017730();
-extern undefined4 FUN_80017754();
-extern undefined4 FUN_80017778();
-extern undefined4 FUN_80017a88();
-extern undefined4 FUN_8006f9a8();
-extern undefined4 FUN_8006fd90();
-extern int FUN_800c9030();
-extern undefined4 FUN_8025da88();
-extern undefined4 FUN_8025db38();
-extern undefined8 FUN_8028682c();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_80286878();
-extern undefined4 FUN_8028688c();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
 
-extern undefined4 DAT_8039d0b8;
-extern undefined4 DAT_8039d0bc;
-extern undefined4 DAT_803dd5d0;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern EffectInterface** gPartfxInterface;
-extern undefined4* DAT_803dd71c;
-extern undefined4 DAT_803de090;
-extern undefined4 DAT_803de0ac;
-extern undefined4 DAT_803de0ad;
-extern undefined4 DAT_803de0ae;
 extern undefined4 DAT_803de0af;
-extern undefined4 DAT_803de0b4;
-extern undefined4 DAT_803de0b8;
-extern undefined4 DAT_803de0bc;
-extern undefined4 DAT_803de0cc;
 extern f64 DOUBLE_803e1178;
 extern f64 DOUBLE_803e11a0;
 extern f64 DOUBLE_803e11d0;
