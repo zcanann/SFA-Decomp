@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/baddie_state.h"
@@ -305,12 +306,12 @@ void hightop_playMovementSfx(int obj, int p2, int p3)
         {
             idx = 1;
         }
-        Sfx_PlayFromObject(obj, (u16)(&lbl_803DC310)[idx]);
+        Sfx_PlayFromObject((u32)obj, (u16)(&lbl_803DC310)[idx]);
     }
     if (*(int*)((char*)p3 + 0x314) & 0x100)
     {
         fn_8009A8C8(obj, lbl_803E6B30);
-        Sfx_PlayFromObject(obj, (u16)lbl_803DC310);
+        Sfx_PlayFromObject((u32)obj, (u16)lbl_803DC310);
     }
 }
 #pragma dont_inline reset
@@ -703,7 +704,7 @@ void hightop_update(int obj)
         if (*(f32*)(p + 0xc38) > *(f32*)&lbl_803E6B48)
         {
             *(f32*)(p + 0xc38) -= lbl_803E6B48;
-            Sfx_PlayFromObject(obj, 0x47f);
+            Sfx_PlayFromObject((u32)obj, 0x47f);
         }
     }
 }
