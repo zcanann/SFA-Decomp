@@ -312,45 +312,45 @@ LAB_8005E718:
  * EN v1.1 Address: 0x8005E8AC
  * EN v1.1 Size: 588b
  */
-void mapBlockRender_drawDimmedAabbLights(undefined4 param_1,undefined4 param_2,int param_3)
+void mapBlockRender_drawDimmedAabbLights(undefined4 bounds,undefined4 blockXform,int i)
 {
-  int *piVar3;
+  int *lightPtr;
   SfaIntDouble iD1;
-  f32 fStack_18;
-  f32 fStack_14;
-  f32 fStack_10;
-  int local_C;
-  byte local_B;
-  byte local_A;
-  byte local_9;
-  byte local_8;
+  f32 posZ;
+  f32 posY;
+  f32 posX;
+  int lightCount;
+  byte colorA;
+  byte colorB;
+  byte colorG;
+  byte colorR;
 
   modelLightStruct_selectBrightestAabbLights(
-              (f32)(*(short *)((int)param_1 + 6) >> 3) + *(float *)((int)param_2 + 0x18) + playerMapOffsetX,
-              (f32)(*(short *)((int)param_1 + 8) >> 3) + *(float *)((int)param_2 + 0x28),
-              (f32)(*(short *)((int)param_1 + 10) >> 3) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ,
-              (f32)(*(short *)((int)param_1 + 0xc) >> 3) + *(float *)((int)param_2 + 0x18) + playerMapOffsetX,
-              (f32)(*(short *)((int)param_1 + 0xe) >> 3) + *(float *)((int)param_2 + 0x28),
-              (f32)(*(short *)((int)param_1 + 0x10) >> 3) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ,
-              (undefined*)&lbl_803DCE20,2,&local_C);
+              (f32)(*(short *)((int)bounds + 6) >> 3) + *(float *)((int)blockXform + 0x18) + playerMapOffsetX,
+              (f32)(*(short *)((int)bounds + 8) >> 3) + *(float *)((int)blockXform + 0x28),
+              (f32)(*(short *)((int)bounds + 10) >> 3) + *(float *)((int)blockXform + 0x38) + playerMapOffsetZ,
+              (f32)(*(short *)((int)bounds + 0xc) >> 3) + *(float *)((int)blockXform + 0x18) + playerMapOffsetX,
+              (f32)(*(short *)((int)bounds + 0xe) >> 3) + *(float *)((int)blockXform + 0x28),
+              (f32)(*(short *)((int)bounds + 0x10) >> 3) + *(float *)((int)blockXform + 0x38) + playerMapOffsetZ,
+              (undefined*)&lbl_803DCE20,2,&lightCount);
   resetLotsOfRenderVars();
-  fn_8004CE0C(param_3);
-  param_3 = 0;
-  piVar3 = (int *)&lbl_803DCE20;
+  fn_8004CE0C(i);
+  i = 0;
+  lightPtr = (int *)&lbl_803DCE20;
   {
-    byte *pB = &local_B;
-    byte *pA = &local_A;
-    byte *p9 = &local_9;
-    f32 *p18 = &fStack_18;
-    f32 *p14 = &fStack_14;
-    for (; param_3 < local_C; piVar3 = piVar3 + 1, param_3 = param_3 + 1) {
-      modelLightStruct_getDiffuseColor((void *)*piVar3,&local_8,p9,pA,pB);
-      local_8 = ((int)local_8 >> 1) + ((int)local_8 >> 2);
-      local_9 = ((int)local_9 >> 1) + ((int)local_9 >> 2);
-      local_A = ((int)local_A >> 1) + ((int)local_A >> 2);
-      modelLightStruct_getPosition((void *)*piVar3,&fStack_10,p14,p18);
-      modelLightStruct_getRadius((void *)*piVar3);
-      fn_8004FA30(&local_8,&fStack_10);
+    byte *pColorA = &colorA;
+    byte *pColorB = &colorB;
+    byte *pColorG = &colorG;
+    f32 *pPosZ = &posZ;
+    f32 *pPosY = &posY;
+    for (; i < lightCount; lightPtr = lightPtr + 1, i = i + 1) {
+      modelLightStruct_getDiffuseColor((void *)*lightPtr,&colorR,pColorG,pColorB,pColorA);
+      colorR = ((int)colorR >> 1) + ((int)colorR >> 2);
+      colorG = ((int)colorG >> 1) + ((int)colorG >> 2);
+      colorB = ((int)colorB >> 1) + ((int)colorB >> 2);
+      modelLightStruct_getPosition((void *)*lightPtr,&posX,pPosY,pPosZ);
+      modelLightStruct_getRadius((void *)*lightPtr);
+      fn_8004FA30(&colorR,&posX);
     }
   }
   textureFn_800528bc();
@@ -802,87 +802,87 @@ void mapBlockRender_setupShaderTextures(int param_1, int param_2)
  * EN v1.1 Address: 0x8005F6D4
  * EN v1.1 Size: 968b
  */
-int mapBlockRender_setShader(byte param_1,int param_2,int *param_3)
+int mapBlockRender_setShader(byte doSetup,int blockData,int *bitReader)
 {
-  uint iVar1;
-  uint uVar2;
+  uint shader;
+  uint shaderIdx;
   uint uPos;
-  int local_8;
-  int local_c;
-  byte local_14[4];
-  byte local_18;
-  byte local_19;
-  byte local_1a;
-  int local_1c;
+  int colorWord2;
+  int colorWord;
+  byte fogRgba[4];
+  byte ambR;
+  byte ambG;
+  byte ambB;
+  int fogColorWord;
 
-  local_1c = lbl_803E8444;
-  uPos = param_3[4];
+  fogColorWord = lbl_803E8444;
+  uPos = bitReader[4];
   {
     int _off = (int)uPos >> 3;
-    int _base = *param_3;
+    int _base = *bitReader;
     uint3 _bits = *(undefined *)(_base + _off);
     _base += _off;
     _bits |= (uint3)*(undefined *)(_base + 1) << 8;
     _bits |= (uint3)*(undefined *)(_base + 2) << 16;
-    param_3[4] = uPos + 6;
-    iVar1 = *(int *)((int)param_2 + 0x64);
-    uVar2 = (_bits >> (uPos & 7)) & 0x3f;
-    iVar1 = iVar1 + uVar2 * 0x44;
+    bitReader[4] = uPos + 6;
+    shader = *(int *)((int)blockData + 0x64);
+    shaderIdx = (_bits >> (uPos & 7)) & 0x3f;
+    shader = shader + shaderIdx * 0x44;
   }
 
-  if (param_1 == 0) {
-    return iVar1;
+  if (doSetup == 0) {
+    return shader;
   }
 
-  if ((*(uint *)(iVar1 + 0x3c) & 4) != 0) {
+  if ((*(uint *)(shader + 0x3c) & 4) != 0) {
     _gxSetFogParams();
     goto LAB_8005F608;
   }
-  local_c = local_1c;
-  GXSetFog(0,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,*(GXColor*)&local_c);
+  colorWord = fogColorWord;
+  GXSetFog(0,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,*(GXColor*)&colorWord);
 LAB_8005F608:
-  if ((iVar1 != 0) && ((*(uint *)(iVar1 + 0x3c) & 0x80000000) != 0)) {
-    return iVar1;
+  if ((shader != 0) && ((*(uint *)(shader + 0x3c) & 0x80000000) != 0)) {
+    return shader;
   }
-  if ((iVar1 != 0) && ((*(uint *)(iVar1 + 0x3c) & 0x20000) != 0)) {
+  if ((shader != 0) && ((*(uint *)(shader + 0x3c) & 0x20000) != 0)) {
     uint res;
     res = AttractMovie_DrawTextureCallback(0,0,0);
     if ((res & 0xff) != 0) {
-      return iVar1;
+      return shader;
     }
   }
   resetLotsOfRenderVars();
-  if ((*(uint *)(iVar1 + 0x3c) & 0x80) != 0) {
-    fn_8004DA54(iVar1);
+  if ((*(uint *)(shader + 0x3c) & 0x80) != 0) {
+    fn_8004DA54(shader);
     goto LAB_8005F690;
   }
-  mapBlockRender_setupShaderTextures(iVar1,(int)0x80);
+  mapBlockRender_setupShaderTextures(shader,(int)0x80);
 LAB_8005F690:
-  if ((*(uint *)(iVar1 + 0x3c) & 0x20) != 0) {
+  if ((*(uint *)(shader + 0x3c) & 0x20) != 0) {
     int *lPtr = lbl_803DCE34;
     if (lPtr != 0) {
       fn_8004FDA0(lPtr,(int*)&lbl_80382008,&lbl_803DB638);
       goto LAB_8005F6F4;
     }
   }
-  if ((*(uint *)(iVar1 + 0x3c) & 0x40) != 0) {
+  if ((*(uint *)(shader + 0x3c) & 0x40) != 0) {
     fn_8004E0FC();
     goto LAB_8005F6F4;
   }
   if (isHeavyFogEnabled()) {
-    getColor803dd01c(local_14);
-    renderHeavyFog(local_14);
+    getColor803dd01c(fogRgba);
+    renderHeavyFog(fogRgba);
   }
 LAB_8005F6F4:
-  if (((*(uint *)(iVar1 + 0x3c) & 0x40000000) != 0) || ((*(uint *)(iVar1 + 0x3c) & 0x20000000) != 0)) {
+  if (((*(uint *)(shader + 0x3c) & 0x40000000) != 0) || ((*(uint *)(shader + 0x3c) & 0x20000000) != 0)) {
     GXSetBlendMode(1,4,5,5);
     gxSetZMode_(1,3,0);
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(7,0,0,7,0);
     goto LAB_8005F7FC;
   }
-  if ((*(uint *)(iVar1 + 0x3c) & 0x400) != 0) {
-    if ((*(uint *)(iVar1 + 0x3c) & 0x80) == 0) {
+  if ((*(uint *)(shader + 0x3c) & 0x400) != 0) {
+    if ((*(uint *)(shader + 0x3c) & 0x80) == 0) {
       GXSetBlendMode(0,1,0,5);
       gxSetZMode_(1,3,1);
       gxSetPeControl_ZCompLoc_(0);
@@ -895,32 +895,32 @@ LAB_8005F6F4:
   gxSetPeControl_ZCompLoc_(1);
   GXSetAlphaCompare(7,0,0,7,0);
 LAB_8005F7FC:
-  if ((*(uint *)(iVar1 + 0x3c) & 1) == 0) {
-    if ((*(uint *)(iVar1 + 0x3c) & 0x40000) == 0) {
-      if ((*(uint *)(iVar1 + 0x3c) & 0x800) == 0) {
-        if ((*(uint *)(iVar1 + 0x3c) & 0x1000) == 0) goto LAB_8005F89C;
+  if ((*(uint *)(shader + 0x3c) & 1) == 0) {
+    if ((*(uint *)(shader + 0x3c) & 0x40000) == 0) {
+      if ((*(uint *)(shader + 0x3c) & 0x800) == 0) {
+        if ((*(uint *)(shader + 0x3c) & 0x1000) == 0) goto LAB_8005F89C;
       }
     }
   }
-  local_c = lbl_803DB63C;
-  GXSetChanAmbColor(0,*(GXColor *)&local_c);
-  if ((*(uint *)(iVar1 + 0x3c) & 0x40000) != 0) {
+  colorWord = lbl_803DB63C;
+  GXSetChanAmbColor(0,*(GXColor *)&colorWord);
+  if ((*(uint *)(shader + 0x3c) & 0x40000) != 0) {
     GXSetChanCtrl(0,0,0,1,0,0,2);
     goto LAB_8005F8E4;
   }
   GXSetChanCtrl(0,1,0,1,0,0,2);
   goto LAB_8005F8E4;
 LAB_8005F89C:
-  objGetColor(0,&local_18,&local_19,&local_1a);
+  objGetColor(0,&ambR,&ambG,&ambB);
   GXSetChanCtrl(0,1,0,1,0,0,2);
-  local_8 = *(int*)&local_18;
-  GXSetChanAmbColor(0,*(GXColor *)&local_8);
+  colorWord2 = *(int*)&ambR;
+  GXSetChanAmbColor(0,*(GXColor *)&colorWord2);
 LAB_8005F8E4:
-  if ((*(uint *)(iVar1 + 0x3c) & 0x8) != 0) {
+  if ((*(uint *)(shader + 0x3c) & 0x8) != 0) {
     GXSetCullMode(2);
     goto LAB_8005F908;
   }
   GXSetCullMode(0);
 LAB_8005F908:
-  return iVar1;
+  return shader;
 }
