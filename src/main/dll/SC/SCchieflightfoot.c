@@ -39,7 +39,7 @@ extern SHthorntailPathControlInterface** gPathControlInterface;
 extern f32 timeDelta;
 extern f64 lbl_803E5428;
 extern f64 lbl_803E5440;
-extern f32 lbl_803E5418;
+extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
 extern f32 lbl_803E5448;
 extern f32 lbl_803E544C;
 extern f32 lbl_803E5450;
@@ -138,7 +138,7 @@ void SHthorntail_update(SHthorntailObject* obj)
     ref = (int)config;
     if (runtime->behaviorState == '\f')
     {
-        if (runtime->effectTimer <= lbl_803E5418)
+        if (runtime->effectTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD)
         {
             if ((obj->objectFlags & 0x800U) != 0)
             {
@@ -215,7 +215,7 @@ void SHthorntail_update(SHthorntailObject* obj)
             ObjAnim_SetCurrentMove((int)obj,
                                    (int)SHTHORNTAIL_STATE_MOVE_IDS(stateTables)
                                    [runtime->behaviorState],
-                                   lbl_803E5418, 0);
+                                   SHTHORNTAIL_TIMER_DONE_THRESHOLD, 0);
             runtime->storedFacingAngle = obj->facingAngle;
         }
         val = ObjAnim_AdvanceCurrentMove(

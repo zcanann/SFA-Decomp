@@ -11,11 +11,11 @@ extern void OSPanic(const char* file, int line, const char* msg, ...);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern f32 lbl_803E5418;
+extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
 extern f64 lbl_803E5428;
-extern f32 lbl_803E5430;
-extern f32 lbl_803E5434;
-extern f32 lbl_803E5438;
+extern f32 SHTHORNTAIL_PROXIMITY_ALERT_MIN_TIME;
+extern f32 SHTHORNTAIL_PROXIMITY_ALERT_MAX_TIME;
+extern f32 SHTHORNTAIL_IDLE_COUNTDOWN_TIME;
 extern f64 lbl_803E5440;
 extern char sSHthorntailSourceFile[];
 extern char sThorntailEnteredInvalidState[];

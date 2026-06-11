@@ -17,10 +17,10 @@ extern int dll_2E_func07();
 extern int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject * obj);
 
 extern f32 timeDelta;
-extern f32 lbl_803E5418;
-extern f32 lbl_803E5424;
+extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
+extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
 extern f64 lbl_803E5428;
-extern f32 lbl_803E5438;
+extern f32 SHTHORNTAIL_IDLE_COUNTDOWN_TIME;
 extern f32 lbl_803E5448;
 extern SHthorntailDataTables gSHthorntailDataTables;
 
