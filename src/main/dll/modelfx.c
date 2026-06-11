@@ -3,46 +3,9 @@
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 
-extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
-extern undefined8 FUN_8028683c();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_8028688c();
-extern undefined4 FUN_80293f90();
 extern byte SUB41();
 
-extern undefined4 DAT_8039d010;
-extern undefined4 DAT_8039d012;
-extern undefined4 DAT_8039d014;
-extern undefined4 DAT_8039d018;
-extern undefined4 DAT_8039d01c;
-extern undefined4 DAT_8039d020;
-extern undefined4 DAT_8039d024;
-extern undefined4 DAT_8039d028;
-extern undefined4 DAT_8039d02a;
-extern undefined4 DAT_8039d02c;
-extern undefined4 DAT_8039d030;
-extern undefined4 DAT_8039d034;
-extern undefined4 DAT_8039d038;
-extern undefined4 DAT_8039d03c;
-extern undefined4 DAT_8039d040;
-extern undefined4 DAT_8039d042;
-extern undefined4 DAT_8039d044;
-extern undefined4 DAT_8039d048;
-extern undefined4 DAT_8039d04c;
-extern undefined4 DAT_8039d050;
-extern undefined4 DAT_8039d054;
-extern undefined4 DAT_8039d058;
-extern undefined4 DAT_8039d05a;
-extern undefined4 DAT_8039d05c;
-extern undefined4 DAT_8039d060;
-extern undefined4 DAT_8039d064;
-extern undefined4 DAT_8039d068;
-extern undefined4 DAT_8039d06c;
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803de030;
-extern undefined4 DAT_803de034;
 extern f64 DOUBLE_803e0ba8;
 extern f64 DOUBLE_803e0c20;
 extern f64 DOUBLE_803e0c78;
