@@ -1,5 +1,9 @@
 #include "main/dll/tesla.h"
+#include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
+#include "main/game_object.h"
+#include "main/gameplay_runtime.h"
+#include "main/objlib.h"
 
 #define TRICKY_CURVE_GAMEBIT_HIT 0x468
 #define TRICKY_CURVE_PLAYER_ANIM_SLIDE 0x1d7
@@ -45,12 +49,7 @@ typedef struct TrickyCurveBurstPartfxArgs
     f32 zDelta;
 } TrickyCurveBurstPartfxArgs;
 
-extern u32 GameBit_Set(u32 id, u32 value);
-extern int Obj_GetPlayerObject(void);
-extern void ObjHits_RecordObjectHit(int obj, int hitObj, int priority, int hitVolume, int sphereIndex);
-extern void ObjMsg_SendToObject(int obj, int message, int sender, int param);
 extern int objGetAnimState80A(int obj);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 extern EffectInterface** gPartfxInterface;
 extern u8 gTrickyCurveBurstCounter;
@@ -64,7 +63,7 @@ void fn_80206968(TrickyCurveObject* obj)
 {
     u8 insideAxes;
     TrickyCurveTriggerState* state;
-    int player;
+    GameObject* player;
     u8 xSide;
     u8 ySide;
     u8 zSide;
@@ -73,15 +72,15 @@ void fn_80206968(TrickyCurveObject* obj)
     f32 yDelta;
 
     state = obj->state;
-    player = Obj_GetPlayerObject();
+    player = (GameObject *)Obj_GetPlayerObject();
     insideAxes = 0;
     xSide = 0;
     ySide = 0;
     zSide = 0;
 
-    xDelta = *(f32*)(player + 0xc) - obj->x;
-    yDelta = *(f32*)(player + 0x10) - obj->y;
-    zDelta = *(f32*)(player + 0x14) - obj->z;
+    xDelta = player->anim.localPosX - obj->x;
+    yDelta = player->anim.localPosY - obj->y;
+    zDelta = player->anim.localPosZ - obj->z;
 
     if (xDelta <= 0.0f)
     {
@@ -138,16 +137,16 @@ void fn_80206968(TrickyCurveObject* obj)
     }
     if (insideAxes == 3 && state->cooldown <= 0)
     {
-        if (objGetAnimState80A(player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE)
+        if (objGetAnimState80A((int)player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE)
         {
             GameBit_Set(TRICKY_CURVE_GAMEBIT_HIT, 1);
             PARTFX_SPAWN(player, TRICKY_CURVE_PARTFX_COOLDOWN, 0, 2, -1, 0);
         }
         else
         {
-            ObjHits_RecordObjectHit(player, 0, TRICKY_CURVE_HIT_PRIORITY, 2, 0);
+            ObjHits_RecordObjectHit((int)player, 0, TRICKY_CURVE_HIT_PRIORITY, 2, 0);
         }
-        Sfx_PlayFromObject(player, TRICKY_CURVE_SFX_COOLDOWN);
+        Sfx_PlayFromObject((u32)player, TRICKY_CURVE_SFX_COOLDOWN);
         state->cooldown = TRICKY_CURVE_COOLDOWN_TICKS;
     }
 
@@ -160,7 +159,7 @@ void fn_80206C18(TrickyCurveObject* obj)
 {
     u8 insideAxes;
     TrickyCurveTriggerState* state;
-    int player;
+    GameObject* player;
     u8 xSide;
     u8 ySide;
     u8 zSide;
@@ -170,15 +169,15 @@ void fn_80206C18(TrickyCurveObject* obj)
     TrickyCurveBurstPartfxArgs partfxArgs;
 
     state = obj->state;
-    player = Obj_GetPlayerObject();
+    player = (GameObject *)Obj_GetPlayerObject();
     insideAxes = 0;
     xSide = 0;
     ySide = 0;
     zSide = 0;
 
-    xDelta = *(f32*)(player + 0xc) - obj->x;
-    yDelta = *(f32*)(player + 0x10) - obj->y;
-    zDelta = *(f32*)(player + 0x14) - obj->z;
+    xDelta = player->anim.localPosX - obj->x;
+    yDelta = player->anim.localPosY - obj->y;
+    zDelta = player->anim.localPosZ - obj->z;
     gTrickyCurveBurstCounter++;
 
     if (xDelta <= 0.0f)
@@ -244,7 +243,7 @@ void fn_80206C18(TrickyCurveObject* obj)
             partfxArgs.xRot = 0x3fff;
         }
 
-        if (objGetAnimState80A(player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE)
+        if (objGetAnimState80A((int)player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE)
         {
             if (gTrickyCurveBurstCounter > TRICKY_CURVE_BURST_LIMIT)
             {
@@ -257,7 +256,7 @@ void fn_80206C18(TrickyCurveObject* obj)
         else
         {
             GameBit_Set(TRICKY_CURVE_GAMEBIT_HIT, 1);
-            ObjMsg_SendToObject(player, TRICKY_CURVE_MESSAGE_BURST, (int)obj, 2);
+            ObjMsg_SendToObject(player, TRICKY_CURVE_MESSAGE_BURST, obj, 2);
             PARTFX_SPAWN((int)obj, TRICKY_CURVE_PARTFX_BURST, &partfxArgs, 2, -1, 0);
             Sfx_PlayFromObject((int)obj, TRICKY_CURVE_SFX_BURST);
         }
