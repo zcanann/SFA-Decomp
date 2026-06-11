@@ -1032,9 +1032,11 @@ extern char sMmFreeMemoryUsageCorruptedError[];
 
 void heapFree(int region, int idx)
 {
+    s16 next;
+    s16 prev;
     HeapItem* base = (HeapItem*)gMmRegionTable[region].start;
-    s16 next = base[idx].next;
-    s16 prev = base[idx].prev;
+    next = base[idx].next;
+    prev = base[idx].prev;
     base[idx].type = 0;
     lbl_803DCB14++;
     gMmRegionTable[region].f10 -= base[idx].size;
