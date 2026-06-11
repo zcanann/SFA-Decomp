@@ -1151,6 +1151,16 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     numbering, so battery cheaply. Pairs with #107's count-inline-in-
     condition (drop `s32 n` and write `i < lbl_X` to send the bound straight
     to ctr) and index-form `arr[i]` (#160) when the walker also diverges.
+    **THIRD-WEB edition — when a swapped SAVED pair's own decl perms are all
+    inert, battery the decl position of an UNRELATED short-lived local
+    instead.** wmwallcrawler_update's spawnk/tricky pair resisted every
+    direct permutation (tricky/idx/n/k, full-reverse), but moving the
+    unrelated `u8 sum;` decl AFTER `tricky` flipped the pair r26→r27 =
+    target (→ 100). The interfering web's position shifts which saved reg
+    the disjoint short webs inherit — a partial escape for #108's
+    "same-variable affinity across disjoint loops, not yet
+    source-controllable" claim; bisect a full-reverse decl battery to find
+    WHICH decl is the lever (here it was sum, not the pair's members).
 
 61c. **Limit of #61b — 2-variable chained-deref pairs (`p = load; q = *(p+off)`)
     do NOT respond to decl-order.** When the ONLY divergence is a 2-reg
@@ -3054,7 +3064,10 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
       multi-defs; the ORIGINAL compiler shows same-VARIABLE reg affinity
       across disjoint loops (Music_Update target: ch's loop-1 and loop-3
       webs share r21; ours cross-pairs them with i's) — not yet
-      source-controllable.
+      source-controllable. ⚠️ PARTIAL ESCAPE: an unrelated third web's
+      decl position can flip which saved reg disjoint short webs inherit
+      (#61b third-web edition, wmwallcrawler_update → 100) — bisect a
+      full-reverse decl battery before banking.
     - **All-const multi-def flag webs** (`int found = 0; ... found = 1;`)
       sink to the very bottom, descending creation (Music_Update r20/r19
       — both compiles agree on these).
