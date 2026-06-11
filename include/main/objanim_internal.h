@@ -263,7 +263,11 @@ typedef struct ObjAnimComponent {
   s16 seqId;
   s16 defId;
   u8 pad4A[0x4C - 0x4A];
-  s16 *placementData;
+  union {
+    s16 *placementData; /* raw view - the s16* deref width is load-bearing
+                           at placementData[i] sites; keep for those */
+    struct ObjPlacement *placement; /* typed view of the common head */
+  };
   ObjDef *modelInstance;
   ObjHitReactState *hitReactState;
   u8 pad58[0x5C - 0x58];
@@ -272,7 +276,9 @@ typedef struct ObjAnimComponent {
   ObjModelState *modelState;
   int **dll;
   u8 *jointPoseData;
-  u8 pad70[0x7C - 0x70];
+  u8 pad70[0x74 - 0x70];
+  void *unk74;
+  u8 pad78[0x7C - 0x78];
   ObjAnimBank **banks;
   f32 previousLocalPosX;
   f32 previousLocalPosY;
@@ -291,7 +297,13 @@ typedef struct ObjAnimComponent {
   s8 mapEventSlot;
   s8 bankIndex;
   s8 activeHitboxMode;
-  s8 resetHitboxMode;
+  union {
+    s8 resetHitboxMode;
+    u8 resetHitboxFlags; /* unsigned view - interaction-prompt state bits
+                            (0x01 interacted, 0x04 in range, 0x08 disabled,
+                            0x10 prompt armed); matched code reads lbz/stb
+                            here where the s8 view would emit extsb */
+  };
 } ObjAnimComponent;
 
 typedef struct ObjAnimEventTable {
@@ -420,6 +432,7 @@ STATIC_ASSERT(offsetof(ObjAnimComponent, classId) == 0x44);
 STATIC_ASSERT(offsetof(ObjAnimComponent, seqId) == 0x46);
 STATIC_ASSERT(offsetof(ObjAnimComponent, defId) == 0x48);
 STATIC_ASSERT(offsetof(ObjAnimComponent, placementData) == 0x4C);
+STATIC_ASSERT(offsetof(ObjAnimComponent, placement) == 0x4C);
 STATIC_ASSERT(offsetof(ObjAnimComponent, modelInstance) == 0x50);
 STATIC_ASSERT(offsetof(ObjAnimComponent, hitReactState) == 0x54);
 STATIC_ASSERT(offsetof(ObjAnimComponent, weaponDaTable) == 0x5C);
@@ -427,6 +440,7 @@ STATIC_ASSERT(offsetof(ObjAnimComponent, eventTable) == 0x60);
 STATIC_ASSERT(offsetof(ObjAnimComponent, modelState) == 0x64);
 STATIC_ASSERT(offsetof(ObjAnimComponent, dll) == 0x68);
 STATIC_ASSERT(offsetof(ObjAnimComponent, jointPoseData) == 0x6C);
+STATIC_ASSERT(offsetof(ObjAnimComponent, unk74) == 0x74);
 STATIC_ASSERT(offsetof(ObjAnimComponent, banks) == 0x7C);
 STATIC_ASSERT(offsetof(ObjAnimComponent, previousLocalPosX) == 0x80);
 STATIC_ASSERT(offsetof(ObjAnimComponent, previousWorldPosX) == 0x8C);
@@ -438,6 +452,7 @@ STATIC_ASSERT(offsetof(ObjAnimComponent, hitboxScale) == 0xA8);
 STATIC_ASSERT(offsetof(ObjAnimComponent, bankIndex) == 0xAD);
 STATIC_ASSERT(offsetof(ObjAnimComponent, activeHitboxMode) == 0xAE);
 STATIC_ASSERT(offsetof(ObjAnimComponent, resetHitboxMode) == 0xAF);
+STATIC_ASSERT(offsetof(ObjAnimComponent, resetHitboxFlags) == 0xAF);
 
 STATIC_ASSERT(sizeof(ObjAnimEventTable) == 0x08);
 STATIC_ASSERT(offsetof(ObjAnimEventTable, byteCount) == 0x00);

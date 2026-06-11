@@ -8,10 +8,9 @@
  * sky restores and spirit vision are driven from the sequence events
  * (wmspiritplace_SeqFn).
  *
- * Interaction state machine bits in anim.resetHitboxMode (accessed
- * through the u8 launders below): 0x01 = player interacted, 0x04 =
- * player in range (show A icon), 0x08 = interaction disabled, 0x10 =
- * prompt armed.
+ * Interaction state machine bits in anim.resetHitboxFlags: 0x01 =
+ * player interacted, 0x04 = player in range (show A icon), 0x08 =
+ * interaction disabled, 0x10 = prompt armed.
  */
 #include "main/dll/WM/wm_shared.h"
 #include "main/effect_interfaces.h"
@@ -63,7 +62,7 @@ STATIC_ASSERT(offsetof(WmSpiritPlaceMapData, sequenceGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(WmSpiritPlaceMapData, promptGameBit) == 0x20);
 STATIC_ASSERT(sizeof(WmSpiritPlaceMapData) == 0x24);
 
-/* placementData->mapId tags of the six spirit-place instances; place N
+/* placement mapId tags of the six spirit-place instances; place N
    becomes active once the world map's map-event mode reaches N. */
 enum
 {
@@ -141,7 +140,7 @@ int wmspiritplace_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
     }
 
     actor->sequenceEventActive = 0;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8);
+    ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~0x8);
     actor->freeCallback = (ObjAnimSequenceFreeCallback)wmspiritplace_onSeqFree;
 
     for (i = 0; i < actor->eventCount; i++)
@@ -153,7 +152,7 @@ int wmspiritplace_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
             unlockLevel(0, 0, 1);
             break;
         case WMSPIRITPLACE_SEQEV_WARP:
-            mapId = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
+            mapId = ((GameObject*)obj)->anim.placement->mapId;
             switch (mapId)
             {
             case WMSPIRITPLACE_MAP_2:
@@ -168,7 +167,7 @@ int wmspiritplace_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
             }
             break;
         case WMSPIRITPLACE_SEQEV_SET_SEQUENCE_BIT:
-            mapId = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
+            mapId = ((GameObject*)obj)->anim.placement->mapId;
             switch (mapId)
             {
             case WMSPIRITPLACE_MAP_2:
@@ -201,7 +200,7 @@ int wmspiritplace_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
             Rcp_SetSpiritVisionEnabled(0);
             break;
         case WMSPIRITPLACE_SEQEV_MAP_PROGRESS:
-            mapId = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
+            mapId = ((GameObject*)obj)->anim.placement->mapId;
             switch (mapId)
             {
             case WMSPIRITPLACE_MAP_1:
@@ -256,7 +255,7 @@ void wmspiritplace_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void wmspiritplace_hitDetect(GameObject* obj)
 {
-    if (*(void**)((u8*)obj + 0x74) != NULL)
+    if (obj->anim.unk74 != NULL)
     {
         objRenderFn_80041018((int)obj);
     }
@@ -279,27 +278,27 @@ void wmspiritplace_update(GameObject* obj)
     else
     {
         state->fxFlags &= ~1;
-        mapId = ((ObjPlacement*)obj->anim.placementData)->mapId;
+        mapId = obj->anim.placement->mapId;
         if (mapId == WMSPIRITPLACE_MAP_2)
         {
             if (state->mapEventMode == 2)
             {
                 if (GameBit_Get(state->promptGameBit) == 0)
                 {
-                    *(u8*)&obj->anim.resetHitboxMode |= 0x10;
+                    obj->anim.resetHitboxFlags |= 0x10;
                 }
                 if (GameBit_Get(state->promptGameBit) != 0)
                 {
-                    u8 flags = *(u8*)&obj->anim.resetHitboxMode;
+                    u8 flags = obj->anim.resetHitboxFlags;
                     if ((flags & 0x10) != 0)
                     {
-                        *(u8*)&obj->anim.resetHitboxMode = (u8)(flags & ~0x10);
+                        obj->anim.resetHitboxFlags = (u8)(flags & ~0x10);
                     }
-                    if ((*(u8*)&obj->anim.resetHitboxMode & 4) != 0)
+                    if ((obj->anim.resetHitboxFlags & 4) != 0)
                     {
                         setAButtonIcon(0x18);
                     }
-                    if ((*(u8*)&obj->anim.resetHitboxMode & 1) != 0)
+                    if ((obj->anim.resetHitboxFlags & 1) != 0)
                     {
                         (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                         GameBit_Set(state->promptGameBit, 0);
@@ -315,12 +314,12 @@ void wmspiritplace_update(GameObject* obj)
                 }
                 else
                 {
-                    *(u8*)&obj->anim.resetHitboxMode &= ~8;
+                    obj->anim.resetHitboxFlags &= ~8;
                 }
             }
             else
             {
-                *(u8*)&obj->anim.resetHitboxMode |= 8;
+                obj->anim.resetHitboxFlags |= 8;
             }
         }
         else if (mapId == WMSPIRITPLACE_MAP_1)
@@ -329,20 +328,20 @@ void wmspiritplace_update(GameObject* obj)
             {
                 if (GameBit_Get(state->promptGameBit) == 0)
                 {
-                    *(u8*)&obj->anim.resetHitboxMode |= 0x10;
+                    obj->anim.resetHitboxFlags |= 0x10;
                 }
                 if (GameBit_Get(state->promptGameBit) != 0)
                 {
-                    u8 flags = *(u8*)&obj->anim.resetHitboxMode;
+                    u8 flags = obj->anim.resetHitboxFlags;
                     if ((flags & 0x10) != 0)
                     {
-                        *(u8*)&obj->anim.resetHitboxMode = (u8)(flags & ~0x10);
+                        obj->anim.resetHitboxFlags = (u8)(flags & ~0x10);
                     }
-                    if ((*(u8*)&obj->anim.resetHitboxMode & 4) != 0)
+                    if ((obj->anim.resetHitboxFlags & 4) != 0)
                     {
                         setAButtonIcon(0x18);
                     }
-                    if ((*(u8*)&obj->anim.resetHitboxMode & 1) != 0)
+                    if ((obj->anim.resetHitboxFlags & 1) != 0)
                     {
                         GameBit_Set(state->sequenceGameBit, 1);
                         GameBit_Set(state->promptGameBit, 0);
@@ -350,12 +349,12 @@ void wmspiritplace_update(GameObject* obj)
                 }
                 else
                 {
-                    *(u8*)&obj->anim.resetHitboxMode &= ~8;
+                    obj->anim.resetHitboxFlags &= ~8;
                 }
             }
             else
             {
-                *(u8*)&obj->anim.resetHitboxMode |= 8;
+                obj->anim.resetHitboxFlags |= 8;
             }
         }
         else if (mapId == WMSPIRITPLACE_MAP_3)
@@ -364,20 +363,20 @@ void wmspiritplace_update(GameObject* obj)
             {
                 if (GameBit_Get(state->promptGameBit) == 0)
                 {
-                    *(u8*)&obj->anim.resetHitboxMode |= 0x10;
+                    obj->anim.resetHitboxFlags |= 0x10;
                 }
                 if (GameBit_Get(state->promptGameBit) != 0)
                 {
-                    u8 flags = *(u8*)&obj->anim.resetHitboxMode;
+                    u8 flags = obj->anim.resetHitboxFlags;
                     if ((flags & 0x10) != 0)
                     {
-                        *(u8*)&obj->anim.resetHitboxMode = (u8)(flags & ~0x10);
+                        obj->anim.resetHitboxFlags = (u8)(flags & ~0x10);
                     }
-                    if ((*(u8*)&obj->anim.resetHitboxMode & 4) != 0)
+                    if ((obj->anim.resetHitboxFlags & 4) != 0)
                     {
                         setAButtonIcon(0x18);
                     }
-                    if ((*(u8*)&obj->anim.resetHitboxMode & 1) != 0)
+                    if ((obj->anim.resetHitboxFlags & 1) != 0)
                     {
                         (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                         GameBit_Set(state->promptGameBit, 0);
@@ -392,12 +391,12 @@ void wmspiritplace_update(GameObject* obj)
                 }
                 else
                 {
-                    *(u8*)&obj->anim.resetHitboxMode &= ~8;
+                    obj->anim.resetHitboxFlags &= ~8;
                 }
             }
             else
             {
-                *(u8*)&obj->anim.resetHitboxMode |= 8;
+                obj->anim.resetHitboxFlags |= 8;
             }
         }
         else if (mapId == WMSPIRITPLACE_MAP_4)
@@ -406,20 +405,20 @@ void wmspiritplace_update(GameObject* obj)
             {
                 if (GameBit_Get(state->promptGameBit) == 0)
                 {
-                    *(u8*)&obj->anim.resetHitboxMode |= 0x10;
+                    obj->anim.resetHitboxFlags |= 0x10;
                 }
                 if (GameBit_Get(state->promptGameBit) != 0)
                 {
-                    u8 flags = *(u8*)&obj->anim.resetHitboxMode;
+                    u8 flags = obj->anim.resetHitboxFlags;
                     if ((flags & 0x10) != 0)
                     {
-                        *(u8*)&obj->anim.resetHitboxMode = (u8)(flags & ~0x10);
+                        obj->anim.resetHitboxFlags = (u8)(flags & ~0x10);
                     }
-                    if ((*(u8*)&obj->anim.resetHitboxMode & 4) != 0)
+                    if ((obj->anim.resetHitboxFlags & 4) != 0)
                     {
                         setAButtonIcon(0x18);
                     }
-                    if ((*(u8*)&obj->anim.resetHitboxMode & 1) != 0)
+                    if ((obj->anim.resetHitboxFlags & 1) != 0)
                     {
                         (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                         GameBit_Set(state->promptGameBit, 0);
@@ -434,12 +433,12 @@ void wmspiritplace_update(GameObject* obj)
                 }
                 else
                 {
-                    *(u8*)&obj->anim.resetHitboxMode &= ~8;
+                    obj->anim.resetHitboxFlags &= ~8;
                 }
             }
             else
             {
-                *(u8*)&obj->anim.resetHitboxMode |= 8;
+                obj->anim.resetHitboxFlags |= 8;
             }
         }
         else if (mapId == WMSPIRITPLACE_MAP_5)
@@ -448,20 +447,20 @@ void wmspiritplace_update(GameObject* obj)
             {
                 if (GameBit_Get(state->promptGameBit) == 0)
                 {
-                    *(u8*)&obj->anim.resetHitboxMode |= 0x10;
+                    obj->anim.resetHitboxFlags |= 0x10;
                 }
                 if (GameBit_Get(state->promptGameBit) != 0)
                 {
-                    u8 flags = *(u8*)&obj->anim.resetHitboxMode;
+                    u8 flags = obj->anim.resetHitboxFlags;
                     if ((flags & 0x10) != 0)
                     {
-                        *(u8*)&obj->anim.resetHitboxMode = (u8)(flags & ~0x10);
+                        obj->anim.resetHitboxFlags = (u8)(flags & ~0x10);
                     }
-                    if ((*(u8*)&obj->anim.resetHitboxMode & 4) != 0)
+                    if ((obj->anim.resetHitboxFlags & 4) != 0)
                     {
                         setAButtonIcon(0x18);
                     }
-                    if ((*(u8*)&obj->anim.resetHitboxMode & 1) != 0)
+                    if ((obj->anim.resetHitboxFlags & 1) != 0)
                     {
                         (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                         GameBit_Set(state->promptGameBit, 0);
@@ -487,12 +486,12 @@ void wmspiritplace_update(GameObject* obj)
                 }
                 else
                 {
-                    *(u8*)&obj->anim.resetHitboxMode &= ~8;
+                    obj->anim.resetHitboxFlags &= ~8;
                 }
             }
             else
             {
-                *(u8*)&obj->anim.resetHitboxMode |= 8;
+                obj->anim.resetHitboxFlags |= 8;
             }
         }
         else if (mapId == WMSPIRITPLACE_MAP_6)
@@ -501,20 +500,20 @@ void wmspiritplace_update(GameObject* obj)
             {
                 if (GameBit_Get(state->promptGameBit) == 0)
                 {
-                    *(u8*)&obj->anim.resetHitboxMode |= 0x10;
+                    obj->anim.resetHitboxFlags |= 0x10;
                 }
                 if (GameBit_Get(state->promptGameBit) != 0)
                 {
-                    u8 flags = *(u8*)&obj->anim.resetHitboxMode;
+                    u8 flags = obj->anim.resetHitboxFlags;
                     if ((flags & 0x10) != 0)
                     {
-                        *(u8*)&obj->anim.resetHitboxMode = (u8)(flags & ~0x10);
+                        obj->anim.resetHitboxFlags = (u8)(flags & ~0x10);
                     }
-                    if ((*(u8*)&obj->anim.resetHitboxMode & 4) != 0)
+                    if ((obj->anim.resetHitboxFlags & 4) != 0)
                     {
                         setAButtonIcon(0x18);
                     }
-                    if ((*(u8*)&obj->anim.resetHitboxMode & 1) != 0)
+                    if ((obj->anim.resetHitboxFlags & 1) != 0)
                     {
                         state->sequenceStarted = 1;
                         (*gObjectTriggerInterface)->runSequence(0, obj, -1);
@@ -528,17 +527,17 @@ void wmspiritplace_update(GameObject* obj)
                 }
                 else
                 {
-                    *(u8*)&obj->anim.resetHitboxMode &= ~8;
+                    obj->anim.resetHitboxFlags &= ~8;
                 }
             }
             else
             {
-                *(u8*)&obj->anim.resetHitboxMode |= 8;
+                obj->anim.resetHitboxFlags |= 8;
             }
         }
         if (state->sequenceStarted)
         {
-            *(u8*)&obj->anim.resetHitboxMode |= 8;
+            obj->anim.resetHitboxFlags |= 8;
         }
     }
 }
@@ -562,14 +561,14 @@ void wmspiritplace_init(GameObject* obj, WmSpiritPlaceMapData* placement)
     obj->objectFlags = (u16)(obj->objectFlags | 0x6000);
     state->mapEventMode = (*gMapEventInterface)->getMode(obj->anim.mapEventSlot);
 
-    if (((ObjPlacement*)obj->anim.placementData)->mapId == WMSPIRITPLACE_MAP_2)
+    if (obj->anim.placement->mapId == WMSPIRITPLACE_MAP_2)
     {
         if (GameBit_Get(0x1fc) != 0 || GameBit_Get(0xeaf) != 0 || state->mapEventMode > 2)
         {
             obj->anim.localPosX -= 25.0f;
         }
     }
-    else if (((ObjPlacement*)obj->anim.placementData)->mapId == WMSPIRITPLACE_MAP_6 && state->mapEventMode >= 6)
+    else if (obj->anim.placement->mapId == WMSPIRITPLACE_MAP_6 && state->mapEventMode >= 6)
     {
         obj->anim.localPosX += 25.0f;
     }
