@@ -1526,81 +1526,76 @@ void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state)
     ObjAnimEventList events;
 
     def = *(int*)&((GameObject*)obj)->anim.placementData;
-    if (((LandedArwingHitFlagBits*)&state->hitFlags)->damaged)
+    if (!((LandedArwingHitFlagBits*)&state->hitFlags)->damaged ||
+        (((LandedArwingHitFlagBits*)&state->hitFlags)->impactHandled && state->hitStarted == 0u))
     {
-        if (((LandedArwingHitFlagBits*)&state->hitFlags)->impactHandled)
-        {
-            if (state->hitStarted == 0u)
-            {
-                return;
-            }
-        }
-        if (state->hitStarted != 0)
-        {
-            ((GameObject*)obj)->anim.rotY = 0;
-            ((GameObject*)obj)->anim.rotZ = 0;
-            if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3BBC && !((LandedArwingHitFlagBits*)&state->hitFlags)->reactionDone)
-            {
-                if (((LandedArwingUpdateHitReactionPlacement*)def)->unk24 > 0)
-                {
-                    GameBit_Set(((LandedArwingUpdateHitReactionPlacement*)def)->unk24, 1);
-                }
-
-                switch (*(u8*)(def + 0x1e))
-                {
-                case 0:
-                    if (Obj_IsLoadingLocked() != 0)
-                    {
-                        i = 0;
-                        yOffset = lbl_803E3BB8;
-                        while (i < *(u8*)(def + 0x1f))
-                        {
-                            setup = Obj_AllocObjectSetup(0x24, 0x259);
-                            ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-                            ((ObjPlacement*)setup)->posY = yOffset + ((GameObject*)obj)->anim.localPosY;
-                            ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-                            *(u8*)(setup + 4) = 1;
-                            Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                            *(int*)&((GameObject*)obj)->anim.parent);
-                            i++;
-                        }
-                    }
-                    break;
-                case 1:
-                    range = lbl_803E3BC0;
-                    other = ObjGroup_FindNearestObject(0x41, obj, &range);
-                    if ((void*)other != NULL)
-                    {
-                        otherState = ((GameObject*)other)->extra;
-                        if (*(s16*)(*(int*)&((GameObject*)other)->anim.placementData + 0x22) > 0)
-                        {
-                            GameBit_Set(*(s16*)(*(int*)&((GameObject*)other)->anim.placementData + 0x22), 1);
-                        }
-                        ((LandedArwingHitFlagBits*)&otherState->hitFlags)->damaged = 1;
-                    }
-                    break;
-                case 2:
-                    break;
-                }
-                state->hitStarted = 0;
-                ((LandedArwingHitFlagBits*)&state->hitFlags)->reactionDone = 1;
-            }
-            ((LandedArwingHitFlagBits*)&state->hitFlags)->impactHandled = 1;
-            state->path8Fx = lbl_803E3BC4;
-        }
-        else
-        {
-            if (*(u8*)(def + 0x1e) == 2)
-            {
-                ((GameObject*)obj)->anim.rotY = (s16)randomGetRange(-200, 200);
-                ((GameObject*)obj)->anim.rotZ = (s16)randomGetRange(-200, 200);
-            }
-            ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
-                                                      state->hitCooldown);
-        }
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, state->path8Fx, timeDelta,
-                                                                      &events);
+        return;
     }
+    if (state->hitStarted != 0)
+    {
+        ((GameObject*)obj)->anim.rotY = 0;
+        ((GameObject*)obj)->anim.rotZ = 0;
+        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3BBC && !((LandedArwingHitFlagBits*)&state->hitFlags)->reactionDone)
+        {
+            if (((LandedArwingUpdateHitReactionPlacement*)def)->unk24 > 0)
+            {
+                GameBit_Set(((LandedArwingUpdateHitReactionPlacement*)def)->unk24, 1);
+            }
+
+            switch (*(u8*)(def + 0x1e))
+            {
+            case 0:
+                if (Obj_IsLoadingLocked() != 0)
+                {
+                    i = 0;
+                    yOffset = lbl_803E3BB8;
+                    while (i < *(u8*)(def + 0x1f))
+                    {
+                        setup = Obj_AllocObjectSetup(0x24, 0x259);
+                        ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
+                        ((ObjPlacement*)setup)->posY = yOffset + ((GameObject*)obj)->anim.localPosY;
+                        ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
+                        *(u8*)(setup + 4) = 1;
+                        Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                        *(int*)&((GameObject*)obj)->anim.parent);
+                        i++;
+                    }
+                }
+                break;
+            case 1:
+                range = lbl_803E3BC0;
+                other = ObjGroup_FindNearestObject(0x41, obj, &range);
+                if ((void*)other != NULL)
+                {
+                    otherState = ((GameObject*)other)->extra;
+                    if (*(s16*)(*(int*)&((GameObject*)other)->anim.placementData + 0x22) > 0)
+                    {
+                        GameBit_Set(*(s16*)(*(int*)&((GameObject*)other)->anim.placementData + 0x22), 1);
+                    }
+                    ((LandedArwingHitFlagBits*)&otherState->hitFlags)->damaged = 1;
+                }
+                break;
+            case 2:
+                break;
+            }
+            state->hitStarted = 0;
+            ((LandedArwingHitFlagBits*)&state->hitFlags)->reactionDone = 1;
+        }
+        ((LandedArwingHitFlagBits*)&state->hitFlags)->impactHandled = 1;
+        state->path8Fx = lbl_803E3BC4;
+    }
+    else
+    {
+        if (*(u8*)(def + 0x1e) == 2)
+        {
+            ((GameObject*)obj)->anim.rotY = (s16)randomGetRange(-200, 200);
+            ((GameObject*)obj)->anim.rotZ = (s16)randomGetRange(-200, 200);
+        }
+        ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
+                                                  state->hitCooldown);
+    }
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, state->path8Fx, timeDelta,
+                                                                  &events);
 }
 
 /* landed arwing material flags: mirrors game bits into the damaged texture state. */
@@ -1691,6 +1686,7 @@ void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut)
 }
 #pragma dont_inline reset
 
+#pragma peephole off
 int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     s16* inner = ((GameObject*)obj)->extra;
@@ -1703,11 +1699,13 @@ int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         case 2: inner[0xb] = 0;
             break;
-        case 5: break;
+        case 3: break;
+        case 4: break;
         }
     }
     return 0;
 }
+#pragma peephole reset
 
 #pragma scheduling on
 void dll_109_free(int obj)
@@ -1856,9 +1854,6 @@ void decoration11a_hitDetect(int obj)
     f32 radius;
     f32 localPos[3];
     f32 sum;
-    f32 bMin;
-    f32 bMax;
-    f32 p;
     f32 delta;
     f32 term;
 
@@ -1890,17 +1885,17 @@ check_decor_objects:
 
                 sum = lbl_803E3B7C;
 
-                bMin = state[3];
-                bMax = state[0];
-                p = localPos[0];
-                if (p < bMin)
                 {
-                    delta = p - bMin;
+                f32 bMin = state[3];
+                f32 bMax = state[0];
+                if (localPos[0] < bMin)
+                {
+                    delta = localPos[0] - bMin;
                     term = delta * delta;
                 }
-                else if (p > bMax)
+                else if (localPos[0] > bMax)
                 {
-                    delta = p - bMax;
+                    delta = localPos[0] - bMax;
                     term = delta * delta;
                 }
                 else
@@ -1908,18 +1903,21 @@ check_decor_objects:
                     term = lbl_803E3B7C;
                 }
                 sum += term;
+                }
 
+                {
+                f32 bMax;
+                f32 bMin;
                 bMin = state[4];
                 bMax = state[1];
-                p = localPos[1];
-                if (p < bMin)
+                if (localPos[1] < bMin)
                 {
-                    delta = p - bMin;
+                    delta = localPos[1] - bMin;
                     term = delta * delta;
                 }
-                else if (p > bMax)
+                else if (localPos[1] > bMax)
                 {
-                    delta = p - bMax;
+                    delta = localPos[1] - bMax;
                     term = delta * delta;
                 }
                 else
@@ -1927,18 +1925,21 @@ check_decor_objects:
                     term = *(f32*)&lbl_803E3B7C;
                 }
                 sum += term;
+                }
 
+                {
+                f32 bMax;
+                f32 bMin;
                 bMin = state[5];
                 bMax = state[2];
-                p = localPos[2];
-                if (p < bMin)
+                if (localPos[2] < bMin)
                 {
-                    delta = p - bMin;
+                    delta = localPos[2] - bMin;
                     term = delta * delta;
                 }
-                else if (p > bMax)
+                else if (localPos[2] > bMax)
                 {
-                    delta = p - bMax;
+                    delta = localPos[2] - bMax;
                     term = delta * delta;
                 }
                 else
@@ -1946,6 +1947,7 @@ check_decor_objects:
                     term = *(f32*)&lbl_803E3B7C;
                 }
                 sum += term;
+                }
 
                 if (sum < radius * radius)
                 {
