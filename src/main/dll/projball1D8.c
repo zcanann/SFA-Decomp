@@ -67,7 +67,7 @@ void nw_levcontrol_update(int param_1)
         *state = *state - lbl_803DC074;
         if (*state < lbl_803E5F10)
         {
-            *state = lbl_803E5F10;
+            *state = *(f32 *)&lbl_803E5F10;
         }
     }
     mode = (*gMapEventInterface)->getMode((int)((GameObject*)obj)->anim.mapEventSlot);
