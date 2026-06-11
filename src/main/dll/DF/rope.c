@@ -633,9 +633,9 @@ void DIMbossspit_render(int obj, int param_2, int param_3, int param_4, int para
 void DIMbossspit_update(int obj)
 {
     int state;
+    int i;
     s16 v;
     u8* p;
-    int i;
 
     state = *(int*)&((GameObject*)obj)->extra;
     if (*(s16*)state == 0)
