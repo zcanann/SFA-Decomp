@@ -1854,7 +1854,24 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     saved-reg web (+1 saved reg, +1 instr) where the raw arith re-derived
     per site — and it is PER-FN (same spellings byte-neutral in init,
     perturbing in update; wmwallcrawler gold pass). VALUE access converts
-    safely; ADDRESS-of-member args need a byte-gate per fn;
+    safely; ADDRESS-of-member args need a byte-gate per fn.
+    DISCRIMINATOR (WM gold sweep): the hazard is SINGLE-LEVEL member
+    addresses off a register-resident base (`&((GameObject*)player)->
+    anim.worldPosX` for `player + 0x18`); a CHAIN-DERIVED member address
+    (`&obj->anim.placement->posX` for `*(int*)&placementData + 0x8`) is
+    byte-neutral — the trailing addi exists either way after the pointer
+    load. Reliably-safe conversion classes from the same sweep: offset-0
+    member respelling (`*(s16*)obj` → `obj->anim.rotX`, 10/10 sites incl.
+    compound `+=` inside a hand-tuned 100% fn), accessor-macro
+    `*(T*)((u8*)(state)+K)` → typed member access at whole-TU scale
+    (firefly), and pointer→pointer PARAM retypes (`int* obj` →
+    `GameObject* obj` — no #126 pool-class change; int→pointer is the
+    risky direction). Also byte-neutral: widening an import-era NARROWED
+    callee decl to the real signature when the added leading args are the
+    caller's own pass-through params (`objRenderFn_8003b8f4(f32)` → the
+    real `(obj, p2..p5, scale)` — full-arg calls compile to zero moves,
+    recipe #9; killed the fn-ptr-cast noise at 6 sites via one wm_shared.h
+    decl);
     (c) field signedness/width must mirror the original deref EXACTLY:
     a u8-array decrement (`sub[9] -= 1`) needs a u8 field to keep the
     `clrlwi` (s8 emits `extsb` under peephole-off); an int-deref'd flag
@@ -5035,6 +5052,33 @@ fusion, peephole behavior, rlwinm vs andi, fp_contract surprises, etc.).
   penalty, 0 = perfect). A 200/22100 scratch is mostly there; a 22000/22100
   scratch is still broken. Filter accordingly when grepping for recipes that
   actually worked.
+
+### Retail-ISO forensics (object names, DLL ids, placements, cut content)
+
+The retail ISO at `orig/GSAE01/*.iso` answers naming/identity questions no
+amount of asm reading can (WM-folder relabel campaign: proved deaddino.c/
+WMcrystal.c were mislabeled SC totem units, wallcrawler is cut content,
+WM = Krazoa Palace). Verified facts + offsets (v1.0 USA):
+- GC FST: header at 0x424 (`>II` fst_off, fst_sz); entries 12B each, names
+  follow. Per-map `<map>.romlist.zlb` = the placement list.
+- ZLB payloads are zlib WITH header after the 16-byte ZLB header —
+  `zlib.decompress(data[16:])`, NOT wbits=-15.
+- Romlist record: `>h` romlist TYPE id at +0, length-in-WORDS u8 at +2;
+  the record from +0 is what init receives as `spawn` (ObjPlacement head:
+  pos at +8/+C/+10, unique id at +0x14). `anim.seqId` (obj+0x46) holds
+  the romlist type id at runtime.
+- OBJECTS.bin @ISO 0xb390e90 (301696B) + OBJECTS.tab @0xb424490 (1480
+  `>I` offsets): per-def the FIRST ASCII string is the retail object
+  name; the handling DLL id is `>H` at def+0x50. OBJINDEX.bin @0xb42ecd0
+  (2192 `>h`): romlist type → def index.
+- The dol's `gResourceDescriptors` (0x802C6300, size 0xB08) is the DLL
+  id → ObjectDescriptor* table — INDEX = the dll_XXXX number used in
+  filenames (verified 0xFC, 0x20B-0x212). Descriptor fn pointers locate
+  which text range (= which unit) a DLL id really owns — the tool that
+  exposed every WM-folder mislabel.
+Use for: naming units/objects from retail truth, cut-content checks
+(zero romlist placements), MapData field verification, and unit-boundary
+audits (descriptor fns straddling a file boundary = wrong split).
 
 ### MP4 as a "what C makes this asm?" oracle
 
