@@ -3860,8 +3860,9 @@ extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void gxTextureFn_80072dfc(u8* obj, int* p2, int p3);
 extern void GXBegin(int prim, int fmt, u16 count);
 
-void objRenderFn_8003d980(u8* obj, int* p2)
+void objRenderFn_8003d980(void* objArg, int* p2)
 {
+    u8* obj = (u8*)objArg;
     f32 wm[16];
     f32 cm[16];
     f32 sm[12];
