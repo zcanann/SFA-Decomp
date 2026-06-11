@@ -102,17 +102,11 @@ u8 trickyBallMove(u8 *obj)
   ObjHits_EnableObject(obj);
 
   dy = state->prevPos[1] - ((GameObject *)obj)->anim.localPosY;
-  if (dy < lbl_803E369C) {
-    dy = -dy;
-  }
+  dy = (dy >= lbl_803E369C) ? dy : -dy;
   dx = state->prevPos[0] - ((GameObject *)obj)->anim.localPosX;
-  if (dx < lbl_803E369C) {
-    dx = -dx;
-  }
+  dx = (dx >= lbl_803E369C) ? dx : -dx;
   dz = state->prevPos[2] - ((GameObject *)obj)->anim.localPosZ;
-  if (dz < lbl_803E369C) {
-    dz = -dz;
-  }
+  dz = (dz >= lbl_803E369C) ? dz : -dz;
 
   if ((dx + dy + dz) >= lbl_803E36B4) {
     PSVECSubtract((f32 *)(obj + 0x0c), state->prevPos, collisionNormal);
