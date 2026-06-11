@@ -2,6 +2,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
 #include "main/dll/BW/BWalphaanim.h"
 #include "main/dll/DR/DRcloudcage.h"
 #include "main/dll/DR/DRhightop.h"
@@ -14,8 +15,6 @@ extern void mtxRotateByVec3s(void* matrix, void* transform);
 extern void Matrix_TransformPoint(void* matrix, double x, double y, double z, float* outX,
                                   float* outY, float* outZ);
 extern f32 PSVECMag(void* vec);
-extern uint GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
