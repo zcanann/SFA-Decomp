@@ -1290,7 +1290,7 @@ void DR_EarthWarrior_hitDetect(int obj)
         inner->sub.unk410 -= timeDelta;
         if (inner->sub.unk410 < lbl_803E8304)
         {
-            inner->sub.unk410 = lbl_803E8304;
+            inner->sub.unk410 = *(f32 *)&lbl_803E8304;
         }
         if ((void*)inner != NULL)
         {
