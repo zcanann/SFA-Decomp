@@ -1529,7 +1529,7 @@ u32 macStart(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol,
 
             if (fxFlag != 0)
             {
-                sv->macroAllocating = 1;
+                sv->streamKind = 1;
                 key &= 0x7f;
                 inpResetMidiCtrl((u8)voice, 0xff, 1);
                 inpResetChannelDefaults((u8)voice, 0xff);
@@ -1539,7 +1539,7 @@ u32 macStart(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol,
             }
             else
             {
-                sv->macroAllocating = 0;
+                sv->streamKind = 0;
                 sv->startupMidiSlot = midi;
                 sv->startupMidiEvent = midiSet;
                 sv->startupMidiLayer = section;
