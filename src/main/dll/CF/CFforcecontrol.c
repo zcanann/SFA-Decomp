@@ -488,9 +488,9 @@ typedef struct
 #pragma opt_loop_invariants off
 void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
 {
-    FuelcellState* state = ((GameObject*)obj)->extra;
     int** list;
     u8* slot;
+    FuelcellState* state;
     u8 mode;
     u8 i;
     u8 j;
@@ -502,6 +502,7 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
     f32 pos[3];
     int objCount;
 
+    state = ((GameObject*)obj)->extra;
     angle = lbl_803E3CC8;
     objCount = 0;
     mode = 0x40;
@@ -553,8 +554,8 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
                         u8 ok;
                         if (other != obj)
                         {
-                            FuelcellState* ost = *(FuelcellState**)((char*)other + 0xb8);
-                            if (ost != NULL && ost->unkBit5)
+                            if (*(FuelcellState**)((char*)other + 0xb8) != NULL &&
+                                (*(FuelcellState**)((char*)other + 0xb8))->unkBit5)
                             {
                                 ok = 0;
                             }
