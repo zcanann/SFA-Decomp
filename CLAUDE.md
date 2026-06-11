@@ -3479,7 +3479,11 @@ still #92-open. Pairs with #21 (snd ternary invert), #58 (u32 clamp cmplwi),
     mechanism. Diagnostic: target li;mr where all C gives li;li + fn is
     small/loop-shaped → A/B the O1 wrap. Per-fn O1/O2 tested NEGATIVE on
     the audio memmove family (54.8/65.4 — allocation wrecks fns with
-    calls); see #111 for that class instead.
+    calls); see #111 for that class instead. ⚠️ **The "wrecks fns with
+    calls" negative is NOT universal — PARTIALLY CORRECTED by recipe
+    #126**: O2's allocation was target-EXACT on a call-bearing fn
+    (wmspiritplace_SeqFn, 6 calls + jumptable switch); only O2's isel
+    diverged. A/B the O2 wrap per fn instead of skipping on sight.
     FIELD CONFIRMATION (objlib, ObjHitbox_SetStateIndex 90.86->100
     byte-exact): the scope holds outside the discovery unit. The target
     mr,mr zero-chain (two locals copied from a third's `li r8,0`) was
@@ -3959,6 +3963,11 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     typed pointer. Both forms in the SAME TU is normal — read each fn's
     prologue and type the param accordingly; per-fn cast noise on an int
     obj is then FAITHFUL reconstruction, not import damage.
+    NOTE — decl-order stays LIVE for the non-param webs even while the
+    param web is stuck: under the rotated pointer param, swapping the
+    state copy's decl above the loop counter still landed state in
+    target's r30 (19→14 diff regions). Fix what decl-order can reach
+    before judging the param type.
     ADDENDUM — per-fn `#pragma optimization_level 2` CAN land the
     typed-pointer form byte-exact even in call-bearing fns (corrects
     #110's blanket "O1/O2 wrecks fns with calls": O2's ALLOCATION was
@@ -4651,6 +4660,17 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
 
 - **Run `timeout 60 ninja; echo EXIT=$?` and confirm `EXIT=0` BEFORE every
   commit/push.** Never push a new function body you haven't compiled.
+- **In A/B batteries, gate every variant on the COMPILE EXIT before reading
+  any diff — a failed compile leaves the PREVIOUS .o on disk and
+  ndiff/objdump/objdiff happily score the stale object.** A silent compile
+  failure mid-battery scores as "this variant diverges" and can enshrine a
+  false "spelling X is load-bearing" verdict that later reads as a cap
+  (wmspiritplace_SeqFn's typed-mapId "negative" was exactly this — a
+  corrupted edit failed to compile, the stale-.o diff was logged as proof,
+  and the wrong conclusion survived until a clean re-test). Also gate
+  default-target `ninja` expectations: it does NOT compile NonMatching
+  units' source .o files — build the unit's .o (or the report target)
+  explicitly when iterating.
 - **Warnings ≠ a broken build.** MWCC prints `'extraout_f1'/'in_rN' is not
   initialized before being used` for raw Ghidra register-phantoms — these are
   *warnings*; the object still compiles and `ninja` exits 0. A real break shows
