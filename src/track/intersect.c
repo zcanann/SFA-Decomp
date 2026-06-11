@@ -1,5 +1,6 @@
 #include "dolphin/card.h"
 #include "main/effect_interfaces.h"
+#include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "dolphin/gx.h"
@@ -112,8 +113,6 @@ extern f32 __THPHuffmanBits_803DEE24;
 extern f32 __THPHuffmanSizeTab_803DEE28;
 extern u8 lbl_8030E8B0[];
 extern u8 *Obj_GetPlayerObject(void);
-extern int Sfx_PlayFromObject(int obj, int sfxId);
-extern void Sfx_PlayAtPositionFromObject(u8 *obj, f32 x, f32 y, f32 z, int sfxId);
 extern int randomGetRange(int min, int max);
 
 void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unused, f32 scale)
@@ -178,7 +177,7 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
             }
             Sfx_PlayFromObject(0, sfxTab[sfx]);
         } else {
-            Sfx_PlayAtPositionFromObject(obj, vec[0], vec[1], vec[2], sfxTab[sfx]);
+            Sfx_PlayAtPositionFromObject(vec[0], vec[1], vec[2], (u32)obj, sfxTab[sfx]);
         }
     }
     if (i == 5) {
