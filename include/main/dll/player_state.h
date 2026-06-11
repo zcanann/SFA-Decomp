@@ -24,7 +24,7 @@ typedef struct PlayerState {
     f32 fxOffset2Y;
     f32 fxOffset2Z;
     int moveSlots; /* MoveSlot/HitDesc array base; indexed by moveSlotIndex, stride 0xB0 */
-    int unk3E0;
+    int pendingParentObj;
     u8 pad3E4[0x3E8 - 0x3E4];
     u8 maxMagicUsed;
     u8 pad3E9[0x3F0 - 0x3E9];

@@ -23,8 +23,8 @@ typedef struct PortalspelldoorPlacement {
 typedef struct LanternFireFlyPlacement {
     u8 pad0[0x18 - 0x0];
     s8 unk18;
-    u8 unk19;
-    s16 unk1A;
+    u8 stateId;
+    s16 timer;
     s16 unk1C;
     u8 pad1E[0x20 - 0x1E];
 } LanternFireFlyPlacement;
@@ -1195,7 +1195,7 @@ void LanternFireFly_func0B(int obj)
     state = ((GameObject *)obj)->extra;
     setup = *(int *)&((GameObject *)obj)->anim.placementData;
     state->field68 = ((LanternFireFlyPlacement *)setup)->unk18;
-    state->stateId = ((LanternFireFlyPlacement *)setup)->unk19;
+    state->stateId = ((LanternFireFlyPlacement *)setup)->stateId;
     state->field4C = lbl_803E3AA0;
     state->field50 = (f32)(int)((LanternFireFlyPlacement *)setup)->unk1C;
     state->field6F = 0;
@@ -1228,7 +1228,7 @@ void LanternFireFly_func0B(int obj)
     fn_801869DC(obj);
     fn_801869DC(obj);
     ((LFFlags *)&state->modeFlags)->mode = 1;
-    state->timer = ((LanternFireFlyPlacement *)setup)->unk1A;
+    state->timer = ((LanternFireFlyPlacement *)setup)->timer;
     gameBitIncrement(0x698);
 }
 

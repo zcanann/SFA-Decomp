@@ -30,7 +30,7 @@ typedef struct BombplantPlacement {
     f32 unkC;
     f32 unk10;
     u8 pad14[0x18 - 0x14];
-    s16 unk18;
+    s16 growTimer;
     s16 unk1A;
     s16 unk1C;
     u8 pad1E[0x20 - 0x1E];
@@ -374,7 +374,7 @@ void bombplant_update(void *obj)
     param = ((GameObject *)obj)->anim.placementData;
     if ((((BombPlantState *)state)->flags & 0x2) != 0) {
       ((BombPlantState *)state)->flags &= ~0x2;
-      ((BombPlantState *)state)->growTimer = (f32)(int)((BombplantPlacement *)param)->unk18;
+      ((BombPlantState *)state)->growTimer = (f32)(int)((BombplantPlacement *)param)->growTimer;
     }
     bitId = ((BombplantPlacement *)param)->unk1C;
     if (bitId != -1) {

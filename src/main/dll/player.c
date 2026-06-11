@@ -10424,11 +10424,11 @@ void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
             (*(void (*)(int, int, f32, int))(*(int *)(*gBaddieControlInterface + 0x2c)))(
                 obj, state, lbl_803E820C, 1);
         }
-        ((PlayerState *)inner)->unk3E0 = *(int *)&((GameObject *)obj)->pendingParentObj;
+        ((PlayerState *)inner)->pendingParentObj = *(int *)&((GameObject *)obj)->pendingParentObj;
         *(int *)&((GameObject *)obj)->pendingParentObj = 0;
         (*(void (*)(int, int, f32, f32, void *, void *))(*(int *)(*gPlayerInterface + 0x8)))(
             obj, state, timeDelta, timeDelta, lbl_803DB0DC, lbl_803DB0D0);
-        *(int *)&((GameObject *)obj)->pendingParentObj = ((PlayerState *)inner)->unk3E0;
+        *(int *)&((GameObject *)obj)->pendingParentObj = ((PlayerState *)inner)->pendingParentObj;
         Lightfoot_ProcessHitResponseFlags(obj, inner);
     }
 }

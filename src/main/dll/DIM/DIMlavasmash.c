@@ -17,7 +17,7 @@ typedef struct DimlogfirePlacement {
 typedef struct DimlogfireObjectDef {
     u8 pad0[0x1A - 0x0];
     s16 unk1A;
-    s16 unk1C;
+    s16 strengthInit;
     s16 unk1E;
 } DimlogfireObjectDef;
 
@@ -251,7 +251,7 @@ void dimlogfire_init(int obj, int def)
     state = ((GameObject *)obj)->extra;
     state->unk20 = 0;
     state->unk18 = ((DimlogfireObjectDef *)def)->unk1A;
-    state->strengthInit = (s8)((DimlogfireObjectDef *)def)->unk1C;
+    state->strengthInit = (s8)((DimlogfireObjectDef *)def)->strengthInit;
     *(u8 *)&state->strength = *(u8 *)&state->strengthInit;
     if (GameBit_Get(((DimlogfireObjectDef *)def)->unk1E) != 0) {
         state->mode = 1;

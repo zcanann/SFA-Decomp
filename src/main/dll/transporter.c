@@ -70,7 +70,7 @@ typedef struct WarpPointObjectDef {
 
 typedef struct PushableObjectDef {
     u8 pad0[0x18 - 0x0];
-    s16 unk18;
+    s16 gameBit;
     s16 unk1A;
     void *unk1C;
     s16 unk20;
@@ -1160,7 +1160,7 @@ void pushable_init(s16 *obj, char *def) {
     state->scale = state->scale * *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
     state->cullDistance = state->scale * (f32)(u16)modelFileHeaderGetCullDistance(*entry) + lbl_803E3558;
     state->timer_0x14 = lbl_803E3528;
-    state->gameBit = ((PushableObjectDef *)def)->unk18;
+    state->gameBit = ((PushableObjectDef *)def)->gameBit;
     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E3528, 0);
     ObjMsg_AllocQueue(obj, 4);
     ObjHits_EnableObject(obj);
@@ -1270,7 +1270,7 @@ void pushable_init(s16 *obj, char *def) {
         fn_80174588(obj, state);
         break;
     case 0x1cb:
-        if (((PushableObjectDef *)def)->unk18 > -1 && GameBit_Get(((PushableObjectDef *)def)->unk18) != 0) {
+        if (((PushableObjectDef *)def)->gameBit > -1 && GameBit_Get(((PushableObjectDef *)def)->gameBit) != 0) {
             state->flags = state->flags | 0x81;
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8;
             pushable_savePos((int *)obj);
@@ -1278,7 +1278,7 @@ void pushable_init(s16 *obj, char *def) {
         state->savePosEnabled = 0;
         break;
     default:
-        if (((PushableObjectDef *)def)->unk18 > -1 && GameBit_Get(((PushableObjectDef *)def)->unk18) != 0) {
+        if (((PushableObjectDef *)def)->gameBit > -1 && GameBit_Get(((PushableObjectDef *)def)->gameBit) != 0) {
             state->flags = state->flags | 1;
         }
         break;

@@ -45,7 +45,7 @@ typedef struct WmlasertargetPlacement {
     u8 pad0[0xC - 0x0];
     f32 unkC;
     u8 pad10[0x1A - 0x10];
-    s16 unk1A;
+    s16 cooldown;
     u8 pad1C[0x1E - 0x1C];
     s16 unk1E;
     s16 unk20;
@@ -855,7 +855,7 @@ void wmlasertarget_update(int *obj) {
     sub = ((GameObject *)obj)->extra;
     if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
         sub->toggleQueued = 1;
-        sub->cooldown = ((WmlasertargetPlacement *)def)->unk1A;
+        sub->cooldown = ((WmlasertargetPlacement *)def)->cooldown;
     }
     if (sub->cooldown <= 0 && sub->toggleQueued != 0) {
         if (GameBit_Get(((WmlasertargetPlacement *)def)->unk1E) != 0) {
@@ -868,7 +868,7 @@ void wmlasertarget_update(int *obj) {
             GameBit_Set(((WmlasertargetPlacement *)def)->unk20, 1);
         }
         sub->toggleQueued = 0;
-        sub->cooldown = ((WmlasertargetPlacement *)def)->unk1A;
+        sub->cooldown = ((WmlasertargetPlacement *)def)->cooldown;
     } else if (sub->cooldown > 0) {
         u8 fs = framesThisStep;
         sub->cooldown -= fs;

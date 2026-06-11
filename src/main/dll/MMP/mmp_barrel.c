@@ -6,18 +6,18 @@
 
 typedef struct WaveanimatorObjectDef {
     u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    s8 unk1C;
-    s8 unk1D;
-    s16 unk1E;
+    s16 originX;
+    s16 originY;
+    s8 spanX;
+    s8 spanY;
+    s16 modelVariant;
     s8 unk20;
-    s8 unk21;
-    s8 unk22;
+    s8 period;
+    s8 gridN;
     u8 pad23[0x25 - 0x23];
     u8 unk25;
-    u8 unk26;
-    u8 unk27;
+    u8 radius;
+    u8 yOffset;
 } WaveanimatorObjectDef;
 
 
@@ -39,13 +39,13 @@ typedef struct AlphaanimatorPlacement {
     u8 pad0[0x18 - 0x0];
     s16 unk18;
     s16 unk1A;
-    u8 unk1C;
-    u8 unk1D;
-    u8 unk1E;
+    s8 unk1C;
+    s8 unk1D;
+    u8 active;
     u8 unk1F;
     u8 unk20;
     u8 pad21[0x22 - 0x21];
-    u16 unk22;
+    u16 fadeMax;
     u16 unk24;
     u8 pad26[0x28 - 0x26];
 } AlphaanimatorPlacement;
@@ -377,14 +377,14 @@ void waveanimator_init(int *obj, int *desc)
     WaveAnimatorState *vstate = (WaveAnimatorState *)((int**)obj)[0xB8/4];
     f32 fz;
     vstate->unk18 = ((WaveanimatorObjectDef *)desc)->unk20;
-    vstate->originX = ((WaveanimatorObjectDef *)desc)->unk18;
-    vstate->originY = ((WaveanimatorObjectDef *)desc)->unk1A;
-    vstate->spanX = ((WaveanimatorObjectDef *)desc)->unk1C;
-    vstate->spanY = ((WaveanimatorObjectDef *)desc)->unk1D;
+    vstate->originX = ((WaveanimatorObjectDef *)desc)->originX;
+    vstate->originY = ((WaveanimatorObjectDef *)desc)->originY;
+    vstate->spanX = ((WaveanimatorObjectDef *)desc)->spanX;
+    vstate->spanY = ((WaveanimatorObjectDef *)desc)->spanY;
     vstate->ampX = (f32)*(s8*)((char*)desc + 0x1E);
     vstate->ampY = (f32)*(s8*)((char*)desc + 0x1F);
-    vstate->period = ((WaveanimatorObjectDef *)desc)->unk21;
-    vstate->gridN = ((WaveanimatorObjectDef *)desc)->unk22;
+    vstate->period = ((WaveanimatorObjectDef *)desc)->period;
+    vstate->gridN = ((WaveanimatorObjectDef *)desc)->gridN;
     fz = lbl_803E3F70;
     vstate->scaleA = fz;
     vstate->scaleB = fz;
@@ -456,18 +456,18 @@ extern f32 lbl_803E3FB8;
 void groundanimator_init(int *obj, int *desc)
 {
     GroundAnimatorState *vstate = (GroundAnimatorState *)((int**)obj)[0xB8/4];
-    vstate->modelVariant = (u8)((WaveanimatorObjectDef *)desc)->unk1E;
-    vstate->yOffset = (f32)((WaveanimatorObjectDef *)desc)->unk27;
+    vstate->modelVariant = (u8)((WaveanimatorObjectDef *)desc)->modelVariant;
+    vstate->yOffset = (f32)((WaveanimatorObjectDef *)desc)->yOffset;
     vstate->lastDepth = lbl_803E3FB8;
-    vstate->radius = (f32)((WaveanimatorObjectDef *)desc)->unk26;
+    vstate->radius = (f32)((WaveanimatorObjectDef *)desc)->radius;
     if (((WaveanimatorObjectDef *)desc)->unk25 != 0) {
-        if (GameBit_Get(((WaveanimatorObjectDef *)desc)->unk18) != 0) {
+        if (GameBit_Get(((WaveanimatorObjectDef *)desc)->originX) != 0) {
             vstate->sinkDepth = lbl_803E3F98 * (f32)*(u8 *)&((WaveanimatorObjectDef *)desc)->unk20;
             vstate->flags |= 2;
         }
         ObjGroup_AddObject(obj, 49);
-        if (*(u8 *)&((WaveanimatorObjectDef *)desc)->unk21 > 1) {
-            *(u8 *)&((WaveanimatorObjectDef *)desc)->unk21 = 0;
+        if (*(u8 *)&((WaveanimatorObjectDef *)desc)->period > 1) {
+            *(u8 *)&((WaveanimatorObjectDef *)desc)->period = 0;
         }
     }
 }
@@ -524,15 +524,15 @@ void visanimator_init(int *obj, int *desc)
     vstate = (VisAnimatorState *)((int**)obj)[0xB8/4];
     sv = *(s8*)((char*)desc + 0x1B);
     vstate->visBit = (s8)sv;
-    vstate->gateMask = (u8)(1 << *(u8 *)&((WaveanimatorObjectDef *)desc)->unk1C);
-    gate = (u32)GameBit_Get(((WaveanimatorObjectDef *)desc)->unk18);
+    vstate->gateMask = (u8)(1 << *(u8 *)&((WaveanimatorObjectDef *)desc)->spanX);
+    gate = (u32)GameBit_Get(((WaveanimatorObjectDef *)desc)->originX);
     if ((vstate->gateMask & gate) != 0) {
         vstate->visBit = vstate->visBit ^ 1;
     }
     mapGetBlock(objPosToMapBlockIdx((double)((GameObject *)obj)->anim.localPosX,
                                      (double)((GameObject *)obj)->anim.localPosY,
                                      (double)((GameObject *)obj)->anim.localPosZ));
-    gate = (u32)GameBit_Get(((WaveanimatorObjectDef *)desc)->unk18);
+    gate = (u32)GameBit_Get(((WaveanimatorObjectDef *)desc)->originX);
     tmp = (u8)(vstate->gateMask & gate);
     vstate->gateNow = tmp;
     vstate->gatePrev = tmp;
@@ -979,7 +979,7 @@ void alphaanimator_update(int *obj) {
         return;
     }
     if (s->vertCount == 0) {
-        s->active = ((AlphaanimatorPlacement *)d)->unk1E;
+        s->active = ((AlphaanimatorPlacement *)d)->active;
         if (s->vertCount == 0) {
             s->active = 0;
         }
@@ -988,7 +988,7 @@ void alphaanimator_update(int *obj) {
         }
         s->fadeA = lbl_803E3F7C;
         s->fadeB = lbl_803E3F7C;
-        s->fadeMax = (f32)(u32)((AlphaanimatorPlacement *)d)->unk22;
+        s->fadeMax = (f32)(u32)((AlphaanimatorPlacement *)d)->fadeMax;
         if (((AlphaanimatorPlacement *)d)->unk18 == -1) {
             s->gateVal = 1;
         } else {
@@ -996,7 +996,7 @@ void alphaanimator_update(int *obj) {
         }
         s->alphaLevel = ((AlphaanimatorPlacement *)d)->unk1C;
         if (((AlphaanimatorPlacement *)d)->unk1A != -1 && GameBit_Get(((AlphaanimatorPlacement *)d)->unk1A) != 0) {
-            s->alphaLevel = ((AlphaanimatorPlacement *)d)->unk1D;
+            s->alphaLevel = ((AlphaanimatorPlacement *)d)->unk1C;
             s->fadeA = lbl_803E3F78 + s->fadeMax;
             s->gateVal = 1;
         }
@@ -1041,7 +1041,7 @@ void alphaanimator_update(int *obj) {
             s->alphaLevel =
                 (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement *)d)->unk1F * framesThisStep);
             if (s->alphaLevel <= ((AlphaanimatorPlacement *)d)->unk1D) {
-                s->alphaLevel = ((AlphaanimatorPlacement *)d)->unk1D;
+                s->alphaLevel = ((AlphaanimatorPlacement *)d)->unk1C;
                 if (((AlphaanimatorPlacement *)d)->unk1A != -1) {
                     GameBit_Set(((AlphaanimatorPlacement *)d)->unk1A, 1);
                 }
@@ -1051,7 +1051,7 @@ void alphaanimator_update(int *obj) {
             s->alphaLevel =
                 (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement *)d)->unk1F * framesThisStep);
             if (s->alphaLevel >= ((AlphaanimatorPlacement *)d)->unk1D) {
-                s->alphaLevel = ((AlphaanimatorPlacement *)d)->unk1D;
+                s->alphaLevel = ((AlphaanimatorPlacement *)d)->unk1C;
                 if (((AlphaanimatorPlacement *)d)->unk1A != -1) {
                     GameBit_Set(((AlphaanimatorPlacement *)d)->unk1A, 1);
                 }
@@ -1081,7 +1081,7 @@ void alphaanimator_update(int *obj) {
             if (((AlphaanimatorPlacement *)d)->unk1C > ((AlphaanimatorPlacement *)d)->unk1D) {
                 s->alphaLevel =
                     (s16)(s->alphaLevel - (s8)((AlphaanimatorPlacement *)d)->unk1F * framesThisStep);
-                if (s->alphaLevel > ((AlphaanimatorPlacement *)d)->unk1D) {
+                if (s->alphaLevel > ((AlphaanimatorPlacement *)d)->unk1C) {
                     return;
                 }
             } else {
@@ -1091,7 +1091,7 @@ void alphaanimator_update(int *obj) {
                     return;
                 }
             }
-            s->alphaLevel = ((AlphaanimatorPlacement *)d)->unk1D;
+            s->alphaLevel = ((AlphaanimatorPlacement *)d)->unk1C;
             if (((AlphaanimatorPlacement *)d)->unk1A != -1) {
                 GameBit_Set(((AlphaanimatorPlacement *)d)->unk1A, 1);
             }
@@ -1100,7 +1100,7 @@ void alphaanimator_update(int *obj) {
             if (((AlphaanimatorPlacement *)d)->unk1C > ((AlphaanimatorPlacement *)d)->unk1D) {
                 s->alphaLevel =
                     (s16)(s->alphaLevel + (s8)((AlphaanimatorPlacement *)d)->unk1F * framesThisStep);
-                if (s->alphaLevel < ((AlphaanimatorPlacement *)d)->unk1C) {
+                if (s->alphaLevel < ((AlphaanimatorPlacement *)d)->unk1D) {
                     return;
                 }
             } else {

@@ -222,9 +222,9 @@ typedef struct DbstealerwormState {
 
 typedef struct DfpobjcreatorObjectDef {
     u8 pad0[0x18 - 0x0];
-    s16 unk18;
+    s16 gameBit;
     u8 pad1A[0x1C - 0x1A];
-    s16 unk1C;
+    s16 spawnPeriod;
     u8 pad1E[0x24 - 0x1E];
     s16 unk24;
     u8 pad26[0x28 - 0x26];
@@ -280,9 +280,9 @@ typedef struct DfpobjcreatorPlacement {
     u8 unk5;
     u8 unk6;
     u8 unk7;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
     s32 unk14;
     u8 pad18[0x19 - 0x18];
     u8 unk19;
@@ -1885,8 +1885,8 @@ void DFP_Torch_free(int obj) {
 void dfpobjcreator_init(int obj, s8 *def) {
     DfpObjCreatorState *state = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s32)def[0x1E] << 8);
-    state->gameBit = ((DfpobjcreatorObjectDef *)def)->unk18;
-    state->spawnPeriod = ((DfpobjcreatorObjectDef *)def)->unk1C;
+    state->gameBit = ((DfpobjcreatorObjectDef *)def)->gameBit;
+    state->spawnPeriod = ((DfpobjcreatorObjectDef *)def)->spawnPeriod;
     state->spawnTimer = state->spawnPeriod;
     state->unk12 = (s16)(s32)def[0x1F];
     state->unk14 = (s16)((s32)(u8)def[0x20] << 1);
@@ -2363,9 +2363,9 @@ void dfpobjcreator_update(int obj)
             if (state->spawnTimer <= 0 && GameBit_Get(state->gameBit) != 0) {
                 state->spawnTimer = state->spawnPeriod;
                 setup = Obj_AllocObjectSetup(0x24, 0x71b);
-                ((ObjPlacement *)setup)->posX = ((DfpobjcreatorPlacement *)data)->unk8;
-                ((ObjPlacement *)setup)->posY = ((DfpobjcreatorPlacement *)data)->unkC;
-                ((ObjPlacement *)setup)->posZ = ((DfpobjcreatorPlacement *)data)->unk10;
+                ((ObjPlacement *)setup)->posX = ((DfpobjcreatorPlacement *)data)->posX;
+                ((ObjPlacement *)setup)->posY = ((DfpobjcreatorPlacement *)data)->posY;
+                ((ObjPlacement *)setup)->posZ = ((DfpobjcreatorPlacement *)data)->posZ;
                 setup[4] = ((DfpobjcreatorPlacement *)data)->unk4;
                 setup[5] = ((DfpobjcreatorPlacement *)data)->unk5;
                 setup[6] = ((DfpobjcreatorPlacement *)data)->unk6;

@@ -6,7 +6,7 @@
 typedef struct CfDoorlightObjectDef {
     u8 pad0[0x1A - 0x0];
     s16 unk1A;
-    s16 unk1C;
+    s16 frameStep;
     u8 pad1E[0x20 - 0x1E];
 } CfDoorlightObjectDef;
 
@@ -304,7 +304,7 @@ void cf_doorlight_init(int *obj, s8 *def) {
     state->textureId = 0;
     *(s16 *)obj = (s16)((s32)def[0x19] << 9);
     state->maxFrame = (int)((CfDoorlightObjectDef *)def)->unk1A << 8;
-    state->frameStep = (u8)((CfDoorlightObjectDef *)def)->unk1C;
+    state->frameStep = (u8)((CfDoorlightObjectDef *)def)->frameStep;
     state->resetFrame = (int)def[0x18] << 8;
     b = (u32)(u8)GameBit_Get(((CfDoorLightDef *)def)->doneEvent);
     state->flags = (u8)((state->flags & ~0x40) | ((b & 1) << 6));

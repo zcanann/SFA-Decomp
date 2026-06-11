@@ -1308,8 +1308,8 @@ typedef struct WindliftObjectDef {
     u8 pad14[0x18 - 0x14];
     s16 unk18;
     s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
+    s16 delay;
+    s16 seqId;
     u8 pad20[0x22 - 0x20];
     s16 unk22;
     u8 pad24[0x28 - 0x24];
@@ -2480,7 +2480,7 @@ void windlift_init(int* obj, u8* def)
 {
     int i;
     WindLiftSub* sub = ((GameObject *)obj)->extra;
-    sub->seqId = ((WindliftObjectDef *)def)->unk1E;
+    sub->seqId = ((WindliftObjectDef *)def)->seqId;
     sub->duration = seqStreamLookupFn_8007fff8(lbl_80322A48, 4, sub->seqId);
     sub->gamebit = seqStreamLookupFn_8007fff8(lbl_80322A68, 3, sub->seqId);
     if (sub->gamebit == 0) {
@@ -2489,7 +2489,7 @@ void windlift_init(int* obj, u8* def)
     if (sub->duration == 0) {
         sub->duration = 100;
     }
-    sub->delay = ((WindliftObjectDef *)def)->unk1C;
+    sub->delay = ((WindliftObjectDef *)def)->delay;
     sub->timer = 0;
     if (*(s8*)(def + 0x19) != 0) {
         sub->liftHeight = lbl_803E41C8 * (f32)*(s8*)(def + 0x19);

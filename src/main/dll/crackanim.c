@@ -8,8 +8,8 @@
 typedef struct AppleontreeObjectDef {
     u8 pad0[0x18 - 0x0];
     u32 unk18;
-    u16 unk1C;
-    u16 unk1E;
+    u16 duration;
+    u16 elapsed;
     u8 unk20;
     u8 unk21;
     u8 unk22;
@@ -347,8 +347,8 @@ void appleontree_init(int obj, int def)
     state = *(int *)&((GameObject *)obj)->extra;
 
     ((CrackAnimState *)state)->unk0 = ((AppleontreeObjectDef *)def)->unk18;
-    ((CrackAnimState *)state)->duration = (f32)((AppleontreeObjectDef *)def)->unk1C;
-    ((CrackAnimState *)state)->elapsed = (f32)((AppleontreeObjectDef *)def)->unk1E;
+    ((CrackAnimState *)state)->duration = (f32)((AppleontreeObjectDef *)def)->duration;
+    ((CrackAnimState *)state)->elapsed = (f32)((AppleontreeObjectDef *)def)->elapsed;
     ((CrackAnimState *)state)->stageEnd0 = (f32)((AppleontreeObjectDef *)def)->unk20 / lbl_803E3828;
     ((CrackAnimState *)state)->stageEnd1 = ((CrackAnimState *)state)->stageEnd0 + (f32)((AppleontreeObjectDef *)def)->unk21 / lbl_803E3828;
     ((CrackAnimState *)state)->stageEnd2 = ((CrackAnimState *)state)->stageEnd1 + (f32)((AppleontreeObjectDef *)def)->unk22 / lbl_803E3828;

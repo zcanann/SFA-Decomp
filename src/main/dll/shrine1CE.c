@@ -11,9 +11,9 @@
 
 typedef struct Dll19CPlacement {
     u8 pad0[0x8 - 0x0];
-    f32 unk8;
+    f32 posX;
     f32 unkC;
-    f32 unk10;
+    f32 posZ;
     u8 pad14[0x19 - 0x14];
     u8 unk19;
     u8 pad1A[0x20 - 0x1A];
@@ -393,9 +393,9 @@ void dll_19C_update(int *obj) {
     }
     if (((Dll19CState *)sub)->unk4 <= 0 && (s8)def[0x1f] == 0 && (u8)Obj_IsLoadingLocked() != 0) {
         setup = Obj_AllocObjectSetup(0x18, 0x248);
-        ((ObjPlacement *)setup)->posX = ((Dll19CPlacement *)def)->unk8;
+        ((ObjPlacement *)setup)->posX = ((Dll19CPlacement *)def)->posX;
         ((ObjPlacement *)setup)->posY = lbl_803E51B4 + ((Dll19CPlacement *)def)->unkC;
-        ((ObjPlacement *)setup)->posZ = ((Dll19CPlacement *)def)->unk10;
+        ((ObjPlacement *)setup)->posZ = ((Dll19CPlacement *)def)->posZ;
         *(s16*)setup = 0x248;
         ((ObjPlacement *)setup)->mapId = -1;
         *(u8*)((char*)setup + 4) = def[4];

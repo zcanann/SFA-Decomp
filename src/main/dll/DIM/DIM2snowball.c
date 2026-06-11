@@ -11,23 +11,23 @@
 
 typedef struct Dll1D6Placement {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 unk1C;
+    s16 upTimer;
+    s16 downTimer;
     u8 pad1E[0x20 - 0x1E];
 } Dll1D6Placement;
 
 
 typedef struct DimtruthhorniceObjectDef {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
+    s16 hitsLeft;
     s16 unk1C;
-    s16 unk1E;
+    s16 gameBit;
 } DimtruthhorniceObjectDef;
 
 
 typedef struct Dim2snowballObjectDef {
     u8 pad0[0x14 - 0x0];
-    s32 unk14;
+    s32 targetId;
     s8 unk18;
     u8 pad19[0x1A - 0x19];
     s16 unk1A;
@@ -50,7 +50,7 @@ typedef struct Dll1CFObjectDef {
 typedef struct Dim2pathgeneratorObjectDef {
     u8 pad0[0x14 - 0x0];
     s32 unk14;
-    s16 unk18;
+    s16 spawnPeriod;
     s16 unk1A;
     s16 unk1C;
     u16 unk1E;
@@ -702,7 +702,7 @@ void dim2pathgenerator_init(int* obj, int* def)
     Dim2PathGeneratorState* state;
     *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 28) << 8);
     state = ((GameObject *)obj)->extra;
-    state->spawnPeriod = ((Dim2pathgeneratorObjectDef *)def)->unk18;
+    state->spawnPeriod = ((Dim2pathgeneratorObjectDef *)def)->spawnPeriod;
     state->spawnTimer = (s16)*(u8*)((char*)def + 29);
     state->spawnTypes[0] = (s16)((Dim2pathgeneratorObjectDef *)def)->unk1E;
     {
@@ -720,8 +720,8 @@ void dim2pathgenerator_init(int* obj, int* def)
 void dimtruthhornice_init(int* obj, int* def)
 {
     TruthHornIceState* state = ((GameObject *)obj)->extra;
-    state->hitsLeft = (s8)((DimtruthhorniceObjectDef *)def)->unk1A;
-    state->gameBit = ((DimtruthhorniceObjectDef *)def)->unk1E;
+    state->hitsLeft = (s8)((DimtruthhorniceObjectDef *)def)->hitsLeft;
+    state->gameBit = ((DimtruthhorniceObjectDef *)def)->gameBit;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
     {
         s16 slot = state->gameBit;
@@ -736,9 +736,9 @@ void dimtruthhornice_init(int* obj, int* def)
 void dim2snowball_init(int* obj, int* def)
 {
     Dim2SnowballState* state = ((GameObject *)obj)->extra;
-    state->targetId = ((Dim2snowballObjectDef *)def)->unk14;
+    state->targetId = ((Dim2snowballObjectDef *)def)->targetId;
     state->flagsAC = (u8)(state->flagsAC | 4);
-    ((Dim2snowballObjectDef *)def)->unk14 = -1;
+    ((Dim2snowballObjectDef *)def)->targetId = -1;
     *(s16*)obj = (s16)((s32)((Dim2snowballObjectDef *)def)->unk18 << 8);
     *(s8 *)&((GameObject *)obj)->anim.alpha = 0;
     {
@@ -1120,7 +1120,7 @@ void dll_1D6_update(int *obj)
         if (extra->downTimer <= 0) {
             model = DIM2snowball_GetActiveModel(obj);
             ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A80, 16);
-            extra->upTimer = ((Dll1D6Placement *)def)->unk1A;
+            extra->upTimer = ((Dll1D6Placement *)def)->upTimer;
             if (extra->upTimer < 15) {
                 extra->upTimer = 15;
             }
@@ -1137,7 +1137,7 @@ void dll_1D6_update(int *obj)
         extra->upTimer -= framesThisStep;
         if (extra->upTimer <= 0) {
             ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A84, 16);
-            extra->downTimer = ((Dll1D6Placement *)def)->unk1C;
+            extra->downTimer = ((Dll1D6Placement *)def)->downTimer;
             if (extra->downTimer < 15) {
                 extra->downTimer = 15;
             }
