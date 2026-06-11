@@ -276,17 +276,12 @@ void fn_80293C64(float x, float* sin_out, float* cos_out) {
 }
 
 float fn_80293DA4(float x) {
-    union {
-        float f;
-        u32 u;
-    } bits;
     u16 n;
     float y;
     float y2;
 
-    bits.f = x;
-    y = trigReduceQuadrant(&n, bits.f);
-    n += (bits.u >> 29) & 4;
+    y = trigReduceQuadrant(&n, x);
+    n += (*(u32*)&x >> 29) & 4;
     y2 = y * y;
 
     switch (n & 6) {
@@ -302,17 +297,12 @@ float fn_80293DA4(float x) {
 }
 
 float mathSinf(float x) {
-    union {
-        float f;
-        u32 u;
-    } bits;
     u16 n;
     float y;
     float y2;
 
-    bits.f = x;
-    y = trigReduceQuadrant(&n, bits.f);
-    n += (bits.u >> 29) & 4;
+    y = trigReduceQuadrant(&n, x);
+    n += (*(u32*)&x >> 29) & 4;
     y2 = y * y;
 
     switch (n & 6) {
@@ -328,17 +318,12 @@ float mathSinf(float x) {
 }
 
 float fn_80293F7C(float x) {
-    union {
-        float f;
-        u32 u;
-    } bits;
     u16 n;
     float y;
     float y2;
 
-    bits.f = x;
-    y = trigReduceQuadrant(&n, bits.f);
-    n += (bits.u >> 29) & 4;
+    y = trigReduceQuadrant(&n, x);
+    n += (*(u32*)&x >> 29) & 4;
     y2 = y * y;
 
     switch (n & 6) {
