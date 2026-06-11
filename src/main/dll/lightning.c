@@ -181,13 +181,13 @@ flags27A
 void magicdust_update(int obj)
 {
     float fval;
-    short sval;
+    short sVar2;
     byte byteVal;
     int player;
     int ref;
     uint val;
     int state;
-    double fa;
+    double dVar9;
     char fxArg;
     char burstArg[3];
     int msg[9];

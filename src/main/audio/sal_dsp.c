@@ -103,10 +103,10 @@ int salStartDsp(void)
  * EN v1.0 Address: 0x802849CC
  * EN v1.0 Size: 116b
  */
-void salCtrlDsp(u32 arg1)
+void salCtrlDsp(u32 param_1)
 {
     u32 elapsed = salGetStartDelay();
-    salBuildCommandList((s16*)arg1, elapsed);
+    salBuildCommandList((s16*)param_1, elapsed);
     {
         u32 saved = dspCmdList;
         salDspCallbackEnabled = 0;

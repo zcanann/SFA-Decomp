@@ -954,13 +954,13 @@ FUN_80162b78(undefined8 param_1, double param_2, double param_3, undefined8 para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void cannonclaw_release(int arg1)
+void cannonclaw_release(int param_1)
 {
-    undefined4 state;
+    undefined4 uVar1;
 
-    state = *(undefined4*)(arg1 + 0xb8);
-    ObjGroup_RemoveObject(arg1, 3);
-    (**(code**)(*DAT_803dd738 + 0x40))(arg1, state, 0);
+    uVar1 = *(undefined4*)(param_1 + 0xb8);
+    ObjGroup_RemoveObject(param_1, 3);
+    (**(code**)(*DAT_803dd738 + 0x40))(param_1, uVar1, 0);
     return;
 }
 

@@ -26,7 +26,7 @@ extern int objFn_80296700(int obj);
  */
 void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
 {
-    short sval;
+    short sVar1;
     u16 buttons;
     GameObject* targetObj;
     struct
@@ -34,7 +34,7 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
         f32 x;
         f32 z;
         s16 y;
-    } tmp;
+    } local_28;
 
     if (*(u32*)&target->pendingParentObj == 0)
     {
@@ -42,12 +42,12 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
         targetObj = (GameObject*)camera->secondaryTargetObj;
         if (targetObj != NULL)
         {
-            sval = targetObj->anim.classId;
-            if (sval == 0x1c)
+            sVar1 = targetObj->anim.classId;
+            if (sVar1 == 0x1c)
             {
                 goto checkActiveTarget;
             }
-            if (sval != 0x2a)
+            if (sVar1 != 0x2a)
             {
                 goto checkOverrideFlag;
             }
@@ -71,10 +71,10 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
         if ((((buttons & 0x10) != 0) && (target->anim.classId == 1)) &&
             (objFn_802962b4((int)target) != 0))
         {
-            tmp.x = gCamcontrolPathState->actionParamX;
-            tmp.z = gCamcontrolPathState->actionParamZ;
-            tmp.y = (s16)gCamcontrolPathState->actionParamY;
-            (*gCameraInterface)->setMode(0x44, 1, 0, 0xc, &tmp, 0, 0xff);
+            local_28.x = gCamcontrolPathState->actionParamX;
+            local_28.z = gCamcontrolPathState->actionParamZ;
+            local_28.y = (s16)gCamcontrolPathState->actionParamY;
+            (*gCameraInterface)->setMode(0x44, 1, 0, 0xc, &local_28, 0, 0xff);
         }
     }
 done:

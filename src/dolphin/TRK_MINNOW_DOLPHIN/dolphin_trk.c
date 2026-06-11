@@ -87,15 +87,15 @@ initCommTableSuccess:
 
 void EnableMetroTRKInterrupts(void) { EnableEXI2Interrupts(); }
 
-u32 TRKTargetTranslate(u32 arg0)
+u32 TRKTargetTranslate(u32 param_0)
 {
-	if (arg0 >= lc_base[0] && arg0 < lc_base[0] + 0x4000) {
+	if (param_0 >= lc_base[0] && param_0 < lc_base[0] + 0x4000) {
 		if ((gTRKCPUState.Extended1.DBAT3U & 3) != 0) {
-			return arg0;
+			return param_0;
 		}
 	}
 
-	return arg0 & 0x3FFFFFFF | 0x80000000;
+	return param_0 & 0x3FFFFFFF | 0x80000000;
 }
 
 

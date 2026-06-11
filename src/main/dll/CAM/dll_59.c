@@ -58,7 +58,7 @@ static f32 CameraModeStaffAnim_angleToRadians(int angle)
  */
 #pragma scheduling off
 #pragma peephole off
-void CameraModeStaffAnim_init(CameraObject* camera, undefined4 arg2, u8* settings)
+void CameraModeStaffAnim_init(CameraObject* camera, undefined4 param_2, u8* settings)
 {
     GameObject* target;
     int view;
@@ -256,12 +256,12 @@ void CameraModeStaffAnim_init(CameraObject* camera, undefined4 arg2, u8* setting
     }
 }
 
-void CameraModeBike_copyToCurrent(f32* arg1)
+void CameraModeBike_copyToCurrent(f32* param_1)
 {
-    lbl_803DD540->turnInput = arg1[0];
-    lbl_803DD540->heightInput = arg1[1];
-    lbl_803DD540->rollInput = arg1[2];
-    lbl_803DD540->pitchTarget = arg1[3];
+    lbl_803DD540->turnInput = param_1[0];
+    lbl_803DD540->heightInput = param_1[1];
+    lbl_803DD540->rollInput = param_1[2];
+    lbl_803DD540->pitchTarget = param_1[3];
 }
 
 

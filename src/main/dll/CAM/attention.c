@@ -30,7 +30,7 @@ extern f32 lbl_803E16D4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int arg3, float* upperBound,
+void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int param_3, float* upperBound,
                                      float* lowerBound)
 {
     float zLim;
@@ -57,7 +57,7 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int arg3, 
     {
         *(float*)(cameraAddr + 0x74) = lbl_803E1688;
         *(s8*)(cameraAddr + 0x84) = -1;
-        *(s8*)(cameraAddr + 0x88) = (s8)arg3;
+        *(s8*)(cameraAddr + 0x88) = (s8)param_3;
         res = objBboxFn_800640cc(&camera->probePosX, &camera->anim.worldPosX, 1, 0, 0, 0x10, 0xffffffff, 0xff, 0);
         camera->unk142 = res;
         pos[0] = camera->anim.worldPosX;

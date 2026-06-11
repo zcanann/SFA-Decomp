@@ -273,7 +273,7 @@ void fn_801554B4(int* obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void rachnopUpdateWhileFrozen(uint obj, int state, undefined4 arg3, int eventKind)
+void rachnopUpdateWhileFrozen(uint obj, int state, undefined4 param_3, int eventKind)
 {
     if (eventKind == 0x10)
     {
@@ -435,7 +435,7 @@ void fn_80155948(int* obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void rachnopInit(undefined4 arg1, int state)
+void rachnopInit(undefined4 param_1, int state)
 {
     float fa;
     float fb;
@@ -599,7 +599,7 @@ void timeOfDayFn_80155cf8(int obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void baddieUpdateWhileFrozen_80155e10(uint obj, int state, undefined4 arg11, int eventKind, undefined4 arg13,
+void baddieUpdateWhileFrozen_80155e10(uint obj, int state, undefined4 param_11, int eventKind, undefined4 param_13,
                                       int damage)
 {
     if (eventKind == 0x10)
@@ -695,7 +695,7 @@ void fn_80156010(uint obj, int state)
 {
     bool timerExpired;
     short move;
-    double fa;
+    double dVar3;
 
     timerExpired = false;
     *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
@@ -726,7 +726,7 @@ void fn_80156010(uint obj, int state)
         else if (((move == 2) && (timerExpired)) && ((((BaddieState*)state)->controlFlags & 0x4000000) != 0))
         {
             fn_8014D08C(obj, state, 4, lbl_803E2A54, 0, 0);
-            fa = (double)Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
+            dVar3 = (double)Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
         }
     }
     timeOfDayFn_80155cf8(obj, state);
@@ -746,7 +746,7 @@ void fn_80156010(uint obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void baddieInit_80156188(undefined4 arg1, int state)
+void baddieInit_80156188(undefined4 param_1, int state)
 {
     float fa;
     float fb;
@@ -783,7 +783,7 @@ void baddieInit_80156188(undefined4 arg1, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void wbUpdateWhileFrozen(uint obj, int state, undefined4 arg3, int eventKind)
+void wbUpdateWhileFrozen(uint obj, int state, undefined4 param_3, int eventKind)
 {
     if (eventKind != 0x11)
     {
@@ -1048,7 +1048,7 @@ void fn_8015652C(uint obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void wbInit(undefined4 arg1, int state)
+void wbInit(undefined4 param_1, int state)
 {
     float fa;
     uint ua;
@@ -1147,7 +1147,7 @@ void fn_80156950(uint obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void mutatedEbaUpdateWhileFrozen(uint obj, int state, undefined4 arg11, int eventKind)
+void mutatedEbaUpdateWhileFrozen(uint obj, int state, undefined4 param_11, int eventKind)
 {
     short move;
 
@@ -1261,7 +1261,7 @@ void fn_80156C34(uint obj, int state)
  * EN v1.0 Address: 0x80156CDC
  * EN v1.0 Size: 104b
  */
-void mutatedEbaInit(undefined4 arg1, int state)
+void mutatedEbaInit(undefined4 param_1, int state)
 {
     float fa;
 
@@ -1288,7 +1288,7 @@ void mutatedEbaInit(undefined4 arg1, int state)
  * EN v1.0 Address: 0x80156D44
  * EN v1.0 Size: 92b
  */
-void hoodedZyckUpdateWhileFrozen(uint obj, int state, undefined4 arg3, int eventKind)
+void hoodedZyckUpdateWhileFrozen(uint obj, int state, undefined4 param_3, int eventKind)
 {
     if (eventKind == 0x10)
     {

@@ -699,7 +699,7 @@ void SB_Propeller_init(int obj, int arg2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SB_ShipHead_render(int obj, int arg2, int arg3, int arg4, int arg5, s8 visible)
+void SB_ShipHead_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     int ref;
     int state;
@@ -1071,9 +1071,9 @@ void SB_Propeller_hitDetect(int obj)
 }
 
 /* SB_ShipGun_free: expgfx interface freeObject callback. */
-void SB_ShipGun_free(int arg1)
+void SB_ShipGun_free(int param_1)
 {
-    (*gExpgfxInterface)->freeSource2((u32)arg1);
+    (*gExpgfxInterface)->freeSource2((u32)param_1);
 }
 
 /* SB_Galleon_setScale: state machine; advance counter, optionally play sfx. */

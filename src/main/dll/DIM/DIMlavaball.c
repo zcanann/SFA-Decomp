@@ -756,8 +756,8 @@ void fn_801A7B10(int obj)
 {
     extern int fn_801A78C8(int obj, f32 x, f32 y, f32 z, f32 y2, f32* out1, int* out2);
     MmpMoonrockState * state = ((GameObject*)obj)->extra;
-    int buf[1];
-    f32 tmp;
+    int auStack_14[1];
+    f32 local_18;
     int idx;
     f32 v;
     int ret;
@@ -823,7 +823,7 @@ void fn_801A7B10(int obj)
     state->flags &= ~0x80;
     v = ((GameObject*)obj)->anim.localPosY;
     ret = fn_801A78C8(obj, ((GameObject*)obj)->anim.localPosX, v, ((GameObject*)obj)->anim.localPosZ, lbl_803E4568 + v,
-                      &tmp, buf);
+                      &local_18, auStack_14);
     if (ret == 0) return;
     if (ret == 2)
     {
@@ -838,7 +838,7 @@ void fn_801A7B10(int obj)
     {
         f32 c;
         state->flags |= 0x180;
-        ((GameObject*)obj)->anim.localPosY = tmp;
+        ((GameObject*)obj)->anim.localPosY = local_18;
         c = lbl_803E4554;
         ((GameObject*)obj)->anim.velocityX = c;
         ((GameObject*)obj)->anim.velocityY = c;
@@ -982,16 +982,16 @@ extern f32 lbl_803E4558;
 #pragma peephole off
 void fn_801A79E0(int obj)
 {
-    int buf[21];
-    int tmp;
+    int auStack_14[21];
+    int local_18;
     MmpMoonrockState * state;
     int ret;
     state = ((GameObject*)obj)->extra;
-    ret = ObjHits_GetPriorityHit(obj, &tmp, (int*)0, (int*)0);
+    ret = ObjHits_GetPriorityHit(obj, &local_18, (int*)0, (int*)0);
     if (ret == 0)
     {
         ret = objBboxFn_800640cc((int*)&((GameObject*)obj)->anim.previousLocalPosX,
-                                 (int*)&((GameObject*)obj)->anim.localPosX, lbl_803E454C, 1, buf, obj, 1, -1,
+                                 (int*)&((GameObject*)obj)->anim.localPosX, lbl_803E454C, 1, auStack_14, obj, 1, -1,
                                  0xff, 0);
     }
     if ((ret != 0) ||

@@ -185,7 +185,7 @@ DSError TRKRequestSend(TRKBuffer* msgBuf, int* bufferId, u32 p1, u32 p2, int p3)
     return error;
 }
 
-DSError HandleOpenFileSupportRequest(const char* path, u8 replyError, u32* arg3,
+DSError HandleOpenFileSupportRequest(const char* path, u8 replyError, u32* param_3,
                                      u8* ioResult) {
     DSError error;
     int replyBufferId;
@@ -193,7 +193,7 @@ DSError HandleOpenFileSupportRequest(const char* path, u8 replyError, u32* arg3,
     TRKBuffer* replyBuffer;
     TRKBuffer* buffer;
 
-    *arg3 = 0;
+    *param_3 = 0;
     error = TRKGetFreeBuffer(&bufferId, &buffer);
 
     if (error == DS_NoError) {
@@ -226,7 +226,7 @@ DSError HandleOpenFileSupportRequest(const char* path, u8 replyError, u32* arg3,
         }
 
         if (error == DS_NoError) {
-            error = TRKReadBuffer1_ui32(replyBuffer, arg3);
+            error = TRKReadBuffer1_ui32(replyBuffer, param_3);
         }
 
         TRKReleaseBuffer(replyBufferId);
@@ -273,7 +273,7 @@ DSError HandleCloseFileSupportRequest(int replyError, u8* ioResult) {
     return error;
 }
 
-DSError HandlePositionFileSupportRequest(u32 replyErr, u32 arg2, u8 arg3,
+DSError HandlePositionFileSupportRequest(u32 replyErr, u32 param_2, u8 param_3,
                                          u8* ioResult) {
     DSError error;
     int replyBufferId;
@@ -292,11 +292,11 @@ DSError HandlePositionFileSupportRequest(u32 replyErr, u32 arg2, u8 arg3,
     }
 
     if (error == DS_NoError) {
-        error = TRKAppendBuffer1_ui32(buffer, arg2);
+        error = TRKAppendBuffer1_ui32(buffer, param_2);
     }
 
     if (error == DS_NoError) {
-        error = TRKAppendBuffer1_ui8(buffer, arg3);
+        error = TRKAppendBuffer1_ui8(buffer, param_3);
     }
 
     if (error == DS_NoError) {

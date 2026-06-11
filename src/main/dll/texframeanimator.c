@@ -161,13 +161,13 @@ void collectible_init(int obj, int setup)
 }
 
 
-void magicdust_free(int arg1)
+void magicdust_free(int param_1)
 {
-    if (*(uint*)(arg1 + 0xc4) != 0)
+    if (*(uint*)(param_1 + 0xc4) != 0)
     {
-        ObjLink_DetachChild(*(int*)(arg1 + 0xc4), arg1);
+        ObjLink_DetachChild(*(int*)(param_1 + 0xc4), param_1);
     }
-    (*gExpgfxInterface)->freeSource2((u32)arg1);
+    (*gExpgfxInterface)->freeSource2((u32)param_1);
     return;
 }
 

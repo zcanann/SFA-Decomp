@@ -84,7 +84,7 @@ extern f32 lbl_803E3818;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void appleontree_update(int arg1)
+void appleontree_update(int param_1)
 {
     float fa;
     undefined2* obj;
@@ -101,7 +101,7 @@ void appleontree_update(int arg1)
     int msg;
     undefined msgExtra[4];
 
-    obj = (undefined2*)arg1;
+    obj = (undefined2*)param_1;
     state = *(int*)(obj + 0x5c);
     placement = *(int*)(obj + 0x26);
     msg = 0;

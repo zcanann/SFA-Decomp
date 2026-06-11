@@ -1248,13 +1248,13 @@ void gameTextResetCursor(int flags)
 
 extern void* lbl_803DC9CC;
 
-void gameTextSetWindow(u8* arg1)
+void gameTextSetWindow(u8* param_1)
 {
     int i;
     GameTextSlot* s;
     int idx;
 
-    if (arg1 == NULL)
+    if (param_1 == NULL)
     {
         i = lbl_803DC9C8;
         lbl_803DC9C8 = i + 1;
@@ -1268,7 +1268,7 @@ void gameTextSetWindow(u8* arg1)
         i = lbl_803DC9C8;
         lbl_803DC9C8 = i + 1;
         s = &lbl_8033A540[i];
-        idx = (arg1 - lbl_802C7400) / 0x20;
+        idx = (param_1 - lbl_802C7400) / 0x20;
         if (idx == 0xff)
         {
             lbl_803DC9CC = NULL;

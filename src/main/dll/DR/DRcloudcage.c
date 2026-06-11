@@ -484,15 +484,15 @@ f32 fn_801EA678(int obj, int state)
     f32 d;
     f32 v7;
     f32 v6;
-    int player;
+    int iVar3;
 
     if ((lbl_803DC0BC == -1) ||
-        (player = (*(int (**)(int))(*gCheckpointInterface + 0x34))(state + 0x28), lbl_803DC0BC > player))
+        (iVar3 = (*(int (**)(int))(*gCheckpointInterface + 0x34))(state + 0x28), lbl_803DC0BC > iVar3))
     {
         if (lbl_803DC0BC == -1)
         {
-            player = Obj_GetPlayerObject();
-            d = Vec_distance((int*)&((GameObject*)obj)->anim.worldPosX, (int*)(player + 0x18)) * lbl_803E5AF8;
+            iVar3 = Obj_GetPlayerObject();
+            d = Vec_distance((int*)&((GameObject*)obj)->anim.worldPosX, (int*)(iVar3 + 0x18)) * lbl_803E5AF8;
         }
         else
         {
@@ -542,8 +542,8 @@ f32 fn_801EA678(int obj, int state)
     }
     else
     {
-        player = (*(int (**)(int))(*gCheckpointInterface + 0x34))(state + 0x28);
-        if (player == 2)
+        iVar3 = (*(int (**)(int))(*gCheckpointInterface + 0x34))(state + 0x28);
+        if (iVar3 == 2)
         {
             result = lbl_803E5B60;
         }

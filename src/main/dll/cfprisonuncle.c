@@ -888,7 +888,7 @@ void StayPoint_init(u16* obj)
 
 extern void objRenderFn_8003b8f4(int obj, float arg);
 
-void MagicPlant_free(int obj, int arg2)
+void MagicPlant_free(int obj, int param_2)
 {
     MagicPlantObject* plant;
     MagicPlantState* state;
@@ -900,7 +900,7 @@ void MagicPlant_free(int obj, int arg2)
     if (plant->childLinkActive != 0)
     {
         ObjLink_DetachChild(obj, state->childObject);
-        if (arg2 == 0)
+        if (param_2 == 0)
         {
             Obj_FreeObject(state->childObject);
         }
@@ -1059,19 +1059,19 @@ int fn_8017FFD0(int obj, TrickyWarpState* state)
     return getPatchGroup((f32*)(playerObj + 0xc), state->patchGroup);
 }
 
-void trickywarp_init(s16* obj, u8* arg2)
+void trickywarp_init(s16* obj, u8* param_2)
 {
     u32 v;
     v = ((GameObject*)obj)->objectFlags;
     v |= 0x4000;
     ((GameObject*)obj)->objectFlags = (u16)v;
-    *obj = (s16)((u32)arg2[0x1a] << 8);
+    *obj = (s16)((u32)param_2[0x1a] << 8);
 }
 
-void trickyguard_init(s16* obj, u8* arg2)
+void trickyguard_init(s16* obj, u8* param_2)
 {
     u32 v;
-    *obj = (s16)((u32)arg2[0x18] << 8);
+    *obj = (s16)((u32)param_2[0x18] << 8);
     v = ((GameObject*)obj)->objectFlags;
     v |= 0x4000;
     ((GameObject*)obj)->objectFlags = (u16)v;
@@ -1096,9 +1096,9 @@ extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hi
                               void* obj, int flags, int mask, int arg9, int arg10);
 extern f32 lbl_803E38B4;
 
-void duster_hitDetect(int arg1)
+void duster_hitDetect(int param_1)
 {
-    int obj = arg1;
+    int obj = param_1;
     DusterState* state;
     u8 hit[0x54];
     int r;
@@ -1470,9 +1470,9 @@ typedef struct CurveFishState
     f32 phaseTimer;
 } CurveFishState;
 
-void trickywarp_update(int arg1)
+void trickywarp_update(int param_1)
 {
-    int obj = arg1;
+    int obj = param_1;
     TrickyWarpState* state;
     int r;
     state = ((GameObject*)obj)->extra;
@@ -1723,7 +1723,7 @@ void curvefish_update(int obj)
     state->animTimer += timeDelta;
 }
 
-void curvefish_init(int obj, u8* arg2)
+void curvefish_init(int obj, u8* param_2)
 {
     int state;
     u32 v;
@@ -1733,12 +1733,12 @@ void curvefish_init(int obj, u8* arg2)
     ((GameObject*)obj)->objectFlags = (u16)v;
     ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4) *
         ((f32)(u32)
-    arg2[0x18] / lbl_803E3928
+    param_2[0x18] / lbl_803E3928
     )
     ;
     ((CurvefishState*)state)->unk108 = 1;
     ((CurvefishState*)state)->unk110 = (f32)(u32)
-    arg2[0x19] / lbl_803E3928;
+    param_2[0x19] / lbl_803E3928;
 }
 
 typedef struct DusterHitEffectPos
@@ -1749,7 +1749,7 @@ typedef struct DusterHitEffectPos
     f32 z;
 } DusterHitEffectPos;
 
-void fn_801814D0(int obj, int arg2, u8* state)
+void fn_801814D0(int obj, int param_2, u8* state)
 {
     int hitWork[4];
     DusterHitEffectPos effectPos;
@@ -1812,7 +1812,7 @@ void fn_801814D0(int obj, int arg2, u8* state)
             }
             *(s16*)(state + 0xa) = 0x32;
             state[9] = 0;
-            fn_801816F8(obj, arg2, state);
+            fn_801816F8(obj, param_2, state);
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
             f = lbl_803E3938;
             ((GameObject*)obj)->anim.velocityX = lbl_803E3938;

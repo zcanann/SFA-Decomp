@@ -86,7 +86,7 @@ vectorZ
  */
 void camslide_update(CameraObject* camera, GameObject* target)
 {
-    f32 fa;
+    f32 fVar1;
     CamSlideObjectState* state;
     uint angle;
     int cur;
@@ -253,11 +253,11 @@ void camslide_update(CameraObject* camera, GameObject* target)
                     {
                         speed = lbl_803E16A4;
                     }
-                    fa = lbl_803E16F0 + target->anim.worldPosY;
+                    fVar1 = lbl_803E16F0 + target->anim.worldPosY;
                     low = speed * ((gCamcontrolModeSettings->targetHeight +
-                        gCamcontrolModeSettings->lowerHeightOffset) - lbl_803E16F0) + fa;
+                        gCamcontrolModeSettings->lowerHeightOffset) - lbl_803E16F0) + fVar1;
                     high = speed * ((gCamcontrolModeSettings->targetHeight +
-                        gCamcontrolModeSettings->upperHeightOffset) - lbl_803E16F0) + fa;
+                        gCamcontrolModeSettings->upperHeightOffset) - lbl_803E16F0) + fVar1;
                 }
             }
             else

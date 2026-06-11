@@ -154,8 +154,8 @@ void kaldachompme_free(void)
 {
 }
 
-void kaldachompme_render(undefined4 arg1, undefined4 arg2, undefined4 arg3, undefined4 arg4,
-                         undefined4 arg5, s8 renderFlag)
+void kaldachompme_render(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
+                         undefined4 param_5, s8 renderFlag)
 {
     s32 v = renderFlag;
     if (v != 0)

@@ -236,7 +236,7 @@ extern void RomCurve_stepClamped(int state, f32 dt);
 
 /* trickyAdvanceRouteTargetAhead  addr=0x80139834  size=0xFC  linkage=global */
 #pragma peephole on
-int trickyAdvanceRouteTargetAhead(f32 arg1, int arg2, int arg3)
+int trickyAdvanceRouteTargetAhead(f32 param_1, int param_2, int param_3)
 {
     f32 limit;
     f32 maxSq, dist, f29_val;
@@ -245,10 +245,10 @@ int trickyAdvanceRouteTargetAhead(f32 arg1, int arg2, int arg3)
     f32 tmp;
 
     result = 0;
-    tmp = lbl_803E244C * (arg1 * timeDelta);
+    tmp = lbl_803E244C * (param_1 * timeDelta);
     maxSq = tmp * tmp;
-    dist = getXZDistance((f32*)(arg3 + 0x68), (f32*)(arg2 + 0x18));
-    if (*(int*)(arg3 + 0x80) != 0)
+    dist = getXZDistance((f32*)(param_3 + 0x68), (f32*)(param_2 + 0x18));
+    if (*(int*)(param_3 + 0x80) != 0)
     {
         f29_val = lbl_803E2448;
     }
@@ -265,8 +265,8 @@ int trickyAdvanceRouteTargetAhead(f32 arg1, int arg2, int arg3)
             return result;
         }
         result = 1;
-        RomCurve_stepClamped(arg3, f29_val);
-        dist = getXZDistance((f32*)(arg3 + 0x68), (f32*)(arg2 + 0x18));
+        RomCurve_stepClamped(param_3, f29_val);
+        dist = getXZDistance((f32*)(param_3 + 0x68), (f32*)(param_2 + 0x18));
     }
     return 1;
 }
@@ -1753,7 +1753,7 @@ undefined4 FUN_80139a4c(double param_1, int param_2, int param_3, uint param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int fn_8013A874(undefined4 arg1, undefined4 arg2, uint filterKind, uint maskBit)
+int fn_8013A874(undefined4 param_1, undefined4 param_2, uint filterKind, uint maskBit)
 {
     int ctxHi;
     int found;

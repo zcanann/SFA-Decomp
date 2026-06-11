@@ -352,9 +352,9 @@ extern int lbl_803DDCC8;
 extern void spellStoneUseFn_801fd270(void* obj);
 #pragma scheduling off
 #pragma peephole off
-void dll_224_update(void* arg1)
+void dll_224_update(void* param_1)
 {
-    void* obj = arg1;
+    void* obj = param_1;
     int v;
     v = (*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot);
     v = (u8)v;

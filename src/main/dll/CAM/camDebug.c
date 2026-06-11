@@ -29,9 +29,9 @@ extern f32 lbl_803E19DC;
 
 void CameraModeClimb_init(undefined4 arg1, int mode, s8* args)
 {
-    undefined4 tmp[1];
-    undefined4 tmp2[1];
-    undefined4 tmp3[1];
+    undefined4 local_28[1];
+    undefined4 local_24[1];
+    undefined4 local_20[1];
     undefined4 outA[1];
     f32 vE;
     f32 vD;
@@ -69,8 +69,8 @@ void CameraModeClimb_init(undefined4 arg1, int mode, s8* args)
         handler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
         ((code)(*(undefined4**)((undefined4*)handler)[1])[8])(&vE, &vD, &vC, &vB, &vA);
         (*gCameraInterface)->getRelativePosition((f32)(u16)lbl_803DD578->relativePosition,
-                                                 (int)arg1, (f32*)tmp,
-                                                 (f32*)tmp2, (f32*)tmp3,
+                                                 (int)arg1, (f32*)local_28,
+                                                 (f32*)local_24, (f32*)local_20,
                                                  (f32*)outA, 0);
         lbl_803DD578->startRelativePosition = (s16)vA;
         lbl_803DD578->startMinHeight = vC;
@@ -108,7 +108,7 @@ void CameraModeFixed_update(void)
 {
 }
 
-void CameraModeFixed_init(CameraObject* camera, undefined4 arg2, CameraObject* src)
+void CameraModeFixed_init(CameraObject* camera, undefined4 param_2, CameraObject* src)
 {
     if (src != NULL)
     {

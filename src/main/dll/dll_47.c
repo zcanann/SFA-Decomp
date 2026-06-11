@@ -247,24 +247,24 @@ void SaveSelectScreen_release(void)
 
 /* Stubs for as-yet-unmatched functions. */
 #pragma dont_inline on
-void saveFileSelect_init(int arg1, int arg2)
+void saveFileSelect_init(int param_1, int param_2)
 {
     int i;
 
     saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
-    if (arg1 == 0)
+    if (param_1 == 0)
     {
         Sfx_PlayFromObject(0, SFXsp_snrot1_c);
         ((ScreenTransitionInterface*)gScreenTransitionInterface->vtable)->start(20, 5);
         lbl_803DD6CF = 0x23;
         lbl_803DD6CC = 1;
     }
-    else if (arg1 != -1)
+    else if (param_1 != -1)
     {
-        if (arg1 == 1)
+        if (param_1 == 1)
         {
-            saveFileSelect_currentSlotIndex = (s8)arg2;
-            i = (s8)arg2;
+            saveFileSelect_currentSlotIndex = (s8)param_2;
+            i = (s8)param_2;
             if (*(u8*)((char*)(saveFileSelect_saveSlots + i) + 0x20) == 0)
             {
                 loadUiDll(6);
@@ -499,7 +499,7 @@ void saveSelectGoToChooseSlot(int arg)
  * EN v1.0 Size: 316b
  */
 #pragma dont_inline on
-void saveSelectScreenFree(int arg1)
+void saveSelectScreenFree(int param_1)
 {
     void** p;
     int i;
@@ -543,7 +543,7 @@ void saveSelectScreenFree(int arg1)
     while (i < 4);
 
     textureFree(lbl_803DD6C8);
-    if (arg1 != 0)
+    if (param_1 != 0)
     {
         doNothing_onSaveSelectScreenExit();
     }

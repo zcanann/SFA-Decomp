@@ -5,7 +5,7 @@ extern CameraViewSlot* Camera_GetCurrentViewSlot(void);
 extern float Camera_GetFovY(void);
 extern f32 lbl_803E162C;
 
-void firstPersonZoomOutOnExit(byte arg1, byte arg2)
+void firstPersonZoomOutOnExit(byte param_1, byte param_2)
 {
     CameraViewSlot* vs;
 
@@ -14,8 +14,8 @@ void firstPersonZoomOutOnExit(byte arg1, byte arg2)
     Camera_GetCurrentViewSlot();
     fov_const = lbl_803E162C;
     *(float*)(pCamera + 0xf4) = fov_const;
-    *(float*)(pCamera + 0xf8) = fov_const / (float)arg1;
-    pCamera[0x13f] = arg2;
+    *(float*)(pCamera + 0xf8) = fov_const / (float)param_1;
+    pCamera[0x13f] = param_2;
 
     vs = Camera_GetCurrentViewSlot();
     *(float*)(pCamera + 0x10c) = vs->x;

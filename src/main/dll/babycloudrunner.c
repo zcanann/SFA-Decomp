@@ -106,7 +106,7 @@ void dll_FC_update(int obj)
 {
     BabyCloudRunnerPlacement* placement;
     BabyCloudRunnerState* state;
-    uint bitVal;
+    uint uVar3;
     float local8;
 
     local8 = lbl_803E384C;
@@ -123,8 +123,8 @@ void dll_FC_update(int obj)
         }
         else
         {
-            bitVal = GameBit_Get((int)placement->rememberedGameBit);
-            state->rememberedGameBitValue = (byte)bitVal;
+            uVar3 = GameBit_Get((int)placement->rememberedGameBit);
+            state->rememberedGameBitValue = (byte)uVar3;
         }
         state->mode = 1;
     }
@@ -166,8 +166,8 @@ void dll_FC_update(int obj)
             }
             if ((placement->flags & 4) != 0)
             {
-                bitVal = randomGetRange((int)placement->triggerIdMin, (int)placement->triggerIdMax);
-                state->triggerId = (byte)bitVal;
+                uVar3 = randomGetRange((int)placement->triggerIdMin, (int)placement->triggerIdMax);
+                state->triggerId = (byte)uVar3;
             }
             else
             {
@@ -237,9 +237,9 @@ void dll_FC_init(int obj, int objDef)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_14D_hitDetect(int arg1)
+void dll_14D_hitDetect(int param_1)
 {
-    if (((((ObjAnimComponent*)arg1)->modelInstance->flags & 1) != 0) && (*(uint*)(arg1 + 0x74) != 0))
+    if (((((ObjAnimComponent*)param_1)->modelInstance->flags & 1) != 0) && (*(uint*)(param_1 + 0x74) != 0))
     {
         objRenderFn_80041018();
     }
