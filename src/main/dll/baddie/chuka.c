@@ -46,23 +46,14 @@ void chuka_init(int obj, int params)
     state->linkedObject = 0;
 
     modeTable = gChukaModeTable;
-    *modeTable = 0;
-    modeTable++;
-    *modeTable = 0;
-    modeTable++;
-    *modeTable = 0;
-    modeTable++;
-    *modeTable = 0;
-    modeTable++;
-    *modeTable = 0;
-    modeTable++;
-    *modeTable = 0;
-    modeTable++;
-    *modeTable = 0;
-    modeTable++;
-    *modeTable = 0;
-    modeTable++;
-    *modeTable = 0;
+    {
+        int i;
+        for (i = 9; i != 0; i--)
+        {
+            *modeTable = 0;
+            modeTable++;
+        }
+    }
 }
 
 /*
