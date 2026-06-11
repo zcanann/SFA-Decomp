@@ -43,7 +43,7 @@ extern void gameBitIncrement(int eventId);
 extern void tumbleweed_updateRollingMotion(int obj, int aux);
 extern void fn_80163990(int obj, int aux);
 extern void fn_80165B3C(int obj, int state);
-extern void fn_80165C8C(int obj, int state);
+extern void landedarwing_moveSurfaceCrawler(int obj, int state);
 extern void fn_80166444(int obj, int state);
 extern void updateConstrainedChaseVelocity(int obj, f32 x, f32 y, f32 z, f32 scale);
 
@@ -541,7 +541,7 @@ update_action:
             fn_80166444(obj, (int)state);
         }
     } else {
-        fn_80165C8C(obj, (int)state);
+        landedarwing_moveSurfaceCrawler(obj, (int)state);
     }
     if ((int)state->scriptTimer <= (int)(u32)framesThisStep) {
         return 2;

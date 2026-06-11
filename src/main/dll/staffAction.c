@@ -334,7 +334,7 @@ void FUN_801660c0(int param_1,int param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_80165C8C(short *obj,LandedArwingState *state)
+void landedarwing_moveSurfaceCrawler(short *obj,LandedArwingState *state)
 {
   int headingAngle;
 
@@ -592,7 +592,7 @@ void fn_80165C8C(short *obj,LandedArwingState *state)
 #pragma peephole on
 void FUN_801661ec(short *param_1,int param_2)
 {
-  fn_80165C8C(param_1,(LandedArwingState *)param_2);
+  landedarwing_moveSurfaceCrawler(param_1,(LandedArwingState *)param_2);
 }
 
 /*
@@ -914,7 +914,7 @@ undefined4 fn_801659B8(s16 *obj,u32 *params)
         fn_80165B3C((int)obj,(int)state);
       }
     } else {
-      fn_80165C8C(obj,state);
+      landedarwing_moveSurfaceCrawler(obj,state);
     }
   }
   return 0;

@@ -13,7 +13,7 @@ extern f32 fsin16Precise(u16 angle);
 extern f32 fcos16Precise(u16 angle);
 
 extern void fn_80165B3C(int obj, int sub);
-extern void fn_80165C8C(int obj, int sub);
+extern void landedarwing_moveSurfaceCrawler(int obj, int sub);
 extern void fn_80166444(int obj, int sub);
 extern void updateConstrainedChaseVelocity(int obj, f32 x, f32 y, f32 z, f32 scale);
 
@@ -164,7 +164,7 @@ undefined4 LandedArwing_UpdateFlightChase(int obj, int state)
             fn_80166444(objLocal, (int)sub);
         }
     } else {
-        fn_80165C8C(objLocal, (int)sub);
+        landedarwing_moveSurfaceCrawler(objLocal, (int)sub);
     }
 
     return 0;

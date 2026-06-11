@@ -2971,7 +2971,7 @@ void hitDetect_calcSweptSphereBounds(int *boundsOut, f32 *startPoints, f32 *endP
 extern int shouldDrawShadows(void);
 extern void hitDetectFn_800691c0(int *obj, int *ranges, int a, int b);
 extern int fn_80060C14(f32 a, f32 b, int *obj, int p4, void *p5, int p6, int p7, int p8, int p9);
-void fn_80061954(int *obj, void *buf48, void *bufA8);
+void trackDolphin_buildShadowVolumePlanes(int *obj, void *buf48, void *bufA8);
 extern void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *p7, void *buf48, f32 f);
 extern u8 lbl_803879BC[];
 extern int lbl_803DCF2C;
@@ -3035,7 +3035,7 @@ int objShadowFn_80062498(int *obj, int param2)
         lbl_803DCEE0 = alpha;
         lbl_803DCEF0 = (s16)idxOut;
         lbl_803DCEE4 = (int)vtx;
-        fn_80061954(obj, buf48, bufA8);
+        trackDolphin_buildShadowVolumePlanes(obj, buf48, bufA8);
         fn_80061DD8(obj, buf48, bufA8, idxOut, (f32 *)lbl_803DCF2C, (f32 *)cache,
                     (f32 *)lbl_803879BC, 0x555);
     }
@@ -3969,7 +3969,7 @@ void objDrawFn_80061654(int param_1, int param_2)
     }
 }
 
-void fn_80061954(int *obj, void *buf48, void *bufA8)
+void trackDolphin_buildShadowVolumePlanes(int *obj, void *buf48, void *bufA8)
 {
     f32 *verts = (f32 *)buf48;
     f32 *planes = (f32 *)bufA8;
