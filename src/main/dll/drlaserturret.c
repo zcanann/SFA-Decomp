@@ -1,8 +1,10 @@
 #include "main/dll/DR/DRlaserturret.h"
+#include "main/audio/sfx.h"
+#include "main/gamebits.h"
+#include "main/objanim.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern int Stack_IsFull(void* stack);
 extern int Stack_Push(void* stack, void* value);
 extern void timerSetToCountUp(void);
@@ -10,8 +12,6 @@ extern void gameTimerInit(int, int);
 extern int buttonDisable(int, int);
 extern int padGetAnalogInput(int, char*, char*);
 extern uint getButtonsJustPressed(int);
-extern uint GameBit_Get(int bit);
-extern int GameBit_Set(int bit, int value);
 extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern void ObjHits_EnableObject(void*);
