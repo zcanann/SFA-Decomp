@@ -180,16 +180,16 @@ extern u8 framesThisStep;
 
 
 /* Global game-state / text accessors. */
-extern u8 lbl_803DCA3D;
+extern u8 gameState;
 extern u8 lbl_803DCA3C;
 extern u8 lbl_803DCA3E;
-extern s8 lbl_803DCA3A;
+extern s8 hudHiddenFrameCount;
 extern s8 lbl_803DCA3B;
-extern s16 lbl_803DCA46;
+extern s16 screenBlankFrameCount;
 
 int getGameState(void)
 {
-    return lbl_803DCA3D;
+    return gameState;
 }
 
 extern u8 lbl_803DCA49;
@@ -199,11 +199,11 @@ extern void gameLoop(void);
 
 void main(void)
 {
-    lbl_803DCA3D = 0;
+    gameState = 0;
     lbl_803DCA49 = 0;
     init();
     lbl_803DCA49 = 1;
-    lbl_803DCA3D = 1;
+    gameState = 1;
     do
     {
         checkReset();
@@ -215,7 +215,7 @@ void main(void)
 #pragma peephole off
 void setGameState(int state)
 {
-    lbl_803DCA3D = (u8)state;
+    gameState = (u8)state;
 }
 
 void setTimeStop(int v)
@@ -236,12 +236,12 @@ void setFrameCountdown_800202c4(u8 v)
 
 int getHudHiddenFrameCount(void)
 {
-    return lbl_803DCA3A;
+    return hudHiddenFrameCount;
 }
 
 s16 getScreenBlankFrameCount(void)
 {
-    return lbl_803DCA46;
+    return screenBlankFrameCount;
 }
 
 
@@ -292,10 +292,10 @@ void mainLoopDoGameText(void);
 void blankScreen(int frames)
 {
     s16 v = frames;
-    lbl_803DCA46 = v;
+    screenBlankFrameCount = v;
     if (v < 0)
     {
-        lbl_803DCA46 = 0;
+        screenBlankFrameCount = 0;
     }
 }
 
@@ -321,7 +321,7 @@ extern void gameTextLoadDir(int dirId);
 #pragma peephole off
 void cutsceneExit(void)
 {
-    lbl_803DCA3A = 0;
+    hudHiddenFrameCount = 0;
     lbl_803DCA3C = 0;
     Sfx_SetObjectSoundsPaused(0);
 }
@@ -960,8 +960,8 @@ void init(void)
         }
         GXFlush_(1, 0);
     }
-    while ((filesDone == 0 || audioDone == 0) && lbl_803DCA3D == 0);
-    while (lbl_803DCA3D != 0)
+    while ((filesDone == 0 || audioDone == 0) && gameState == 0);
+    while (gameState != 0)
     {
         mmFreeTick(0);
         padUpdate();
@@ -1078,7 +1078,7 @@ void gameUpdate(void)
     Obj_GetPlayerObject();
     lbl_803DCA42 = 0;
     mainLoopDoGameText();
-    if (lbl_803DCA3A == 0)
+    if (hudHiddenFrameCount == 0)
     {
         (*gCameraInterface)->updateTargetFeedback();
     }
@@ -1086,7 +1086,7 @@ void gameUpdate(void)
     camcontrol_playTargetTypeSfx();
     getButtonsJustPressed(0);
     Obj_UpdateAllObjects(lbl_803DCA3C);
-    if (lbl_803DCA3A == 0)
+    if (hudHiddenFrameCount == 0)
     {
         void* player;
         int idx;
@@ -1121,7 +1121,7 @@ void gameUpdate(void)
     Obj_ApplyPendingParentLinks();
     (*(void (**)(void))(*(int*)gCheckpointInterface + 0x3c))();
     resetSomeGxFlags();
-    if (lbl_803DCA46 == 0)
+    if (screenBlankFrameCount == 0)
     {
         sceneRender(0, 0, 0, 0, 0, 0);
         (*(void (**)(int))(*(int*)gScreensInterface + 0xc))(0);
@@ -1138,10 +1138,10 @@ void gameUpdate(void)
     }
     else
     {
-        lbl_803DCA46 = lbl_803DCA46 - 1;
-        if (lbl_803DCA46 < 0)
+        screenBlankFrameCount = screenBlankFrameCount - 1;
+        if (screenBlankFrameCount < 0)
         {
-            lbl_803DCA46 = 0;
+            screenBlankFrameCount = 0;
         }
     }
     if (lbl_803DCA42 != 0)
@@ -1204,7 +1204,7 @@ extern f32 lbl_803DE7A8;
 void gameLoop(void)
 {
     waitNextFrame();
-    if (lbl_803DCA3D == 1)
+    if (gameState == 1)
     {
         padUpdate();
         voxmaps_updateTimers();
@@ -1217,11 +1217,11 @@ void gameLoop(void)
     }
     debugPrintDraw(0);
     (*gScreenTransitionInterface)->init(0, 0, 0);
-    if (lbl_803DCA3D == 1)
+    if (gameState == 1)
     {
         if (lbl_803DCA48 != 0)
         {
-            if (lbl_803DCA46 == 0)
+            if (screenBlankFrameCount == 0)
             {
                 int* p;
                 int i;
@@ -1396,7 +1396,7 @@ void cardShowMessage(void)
         {
             buttonDisable(0, 0x100);
             cardSetStatusNeedInit();
-            lbl_803DCA3A = 0;
+            hudHiddenFrameCount = 0;
             lbl_803DCA3C = 0;
             Sfx_SetObjectSoundsPaused(0);
             if (st == 0xa)
@@ -1408,7 +1408,7 @@ void cardShowMessage(void)
         {
             buttonDisable(0, 0x200);
             lbl_803DB424 = 0;
-            lbl_803DCA3A = 0;
+            hudHiddenFrameCount = 0;
             lbl_803DCA3C = 0;
             Sfx_SetObjectSoundsPaused(0);
             cardSetStatusNeedInit();
@@ -1424,23 +1424,23 @@ void cutsceneEnterExit(int entering, int affectSounds)
     if (entering != 0)
     {
         stopRumble2();
-        if (lbl_803DCA3A == 0 && affectSounds != 0)
+        if (hudHiddenFrameCount == 0 && affectSounds != 0)
         {
             Sfx_SetObjectSoundsPaused(1);
         }
-        if ((s8)(u8)++lbl_803DCA3A > 2
+        if ((s8)(u8)++hudHiddenFrameCount > 2
         )
         {
-            lbl_803DCA3A = 2;
+            hudHiddenFrameCount = 2;
         }
     }
     else
     {
-        if ((s8)(u8)--lbl_803DCA3A <= 0
+        if ((s8)(u8)--hudHiddenFrameCount <= 0
         )
         {
             lbl_803DCA3C = 0;
-            lbl_803DCA3A = 0;
+            hudHiddenFrameCount = 0;
             if (affectSounds != 0)
             {
                 Sfx_SetObjectSoundsPaused(0);
@@ -1651,13 +1651,13 @@ void checkReset(void)
         return;
     }
     lbl_803DCCA6 = 0;
-    switch (lbl_803DCA3D)
+    switch (gameState)
     {
     case 0:
     case 1:
         if (lbl_803DCA3E != 0)
         {
-            lbl_803DCA3D = 2;
+            gameState = 2;
         }
         if ((getNewInputs(0) & 0x200) != 0 && (getNewInputs(0) & 0x400) != 0 &&
             (getNewInputs(0) & 0x1000) != 0)
@@ -1678,7 +1678,7 @@ void checkReset(void)
             lbl_803DCAC8 = t;
             if (t >= lbl_803DE7AC)
             {
-                lbl_803DCA3D = 2;
+                gameState = 2;
             }
         }
         else
@@ -1693,7 +1693,7 @@ void checkReset(void)
         {
             (*gScreenTransitionInterface)->start(0x1e, 1);
         }
-        if (lbl_803DCA3D == 6)
+        if (gameState == 6)
         {
             lbl_803DCAC5 = 1;
         }
@@ -1705,7 +1705,7 @@ void checkReset(void)
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
         audioStopAll();
-        lbl_803DCA3D = 3;
+        gameState = 3;
         lbl_803DCB00 = lbl_803DE7AC;
         break;
     case 3:
@@ -1713,7 +1713,7 @@ void checkReset(void)
         lbl_803DCB00 = t;
         if (t <= lbl_803DE7B0)
         {
-            lbl_803DCA3D = 4;
+            gameState = 4;
         }
         break;
     case 4:
@@ -1756,7 +1756,7 @@ void checkReset(void)
         VIFlush();
         VIWaitForRetrace();
         OSReport(msg + 0x12c);
-        lbl_803DCA3D = 5;
+        gameState = 5;
         if (lbl_803DCAC5 != 0)
         {
             OSResetSystem(1, 0x80000000, 1);
