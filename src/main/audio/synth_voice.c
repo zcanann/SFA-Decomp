@@ -1187,7 +1187,7 @@ typedef struct SynthFxSampleInfo
 
 extern SynthFxSampleInfo* dataGetFX(u32 fxId);
 
-int synthFXStart(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux)
+int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux)
 {
     SynthFxSampleInfo* sampleInfo;
     u32 handle;
@@ -1196,11 +1196,11 @@ int synthFXStart(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux)
     sampleInfo = dataGetFX(fxId);
     if (sampleInfo != (SynthFxSampleInfo*)0x0)
     {
-        if ((volume & 0xff) == 0xff)
+        if (volume == 0xff)
         {
             volume = sampleInfo->defaultVolume;
         }
-        if ((pan & 0xff) == 0xff)
+        if (pan == 0xff)
         {
             pan = sampleInfo->defaultPan;
         }
