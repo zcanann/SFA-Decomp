@@ -43,62 +43,12 @@ typedef struct SidekickToyUpdateCurveTargetLatchState
 
 
 extern undefined4 ABS();
-extern undefined8 FUN_80003494();
 extern double FUN_80017714();
 extern uint FUN_80017730();
-extern undefined4 FUN_80017754();
-extern undefined4 FUN_80017778();
-extern undefined8 FUN_800178a0();
-extern undefined4 FUN_80017a88();
-extern int FUN_80017a90();
-extern int FUN_80017a98();
-extern int FUN_8002f6ac();
-extern int FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
-extern undefined8 FUN_8003b06c();
-extern undefined8 FUN_8003b280();
-extern ushort FUN_800632f4();
-extern undefined4 FUN_80146fa4();
-extern undefined4 FUN_80147218();
-extern undefined4 FUN_801476cc();
-extern char FUN_80147884();
-extern undefined4 FUN_80147a70();
-extern undefined4 FUN_80147d2c();
-extern undefined4 FUN_8014ff20();
-extern undefined4 FUN_8014ff24();
-extern undefined4 FUN_80150624();
-extern undefined4 FUN_801511e8();
-extern undefined4 FUN_80151b1c();
-extern undefined4 FUN_801523f8();
-extern undefined4 FUN_80152cf0();
-extern undefined4 FUN_80152fb4();
-extern undefined4 FUN_801534d8();
-extern undefined4 FUN_80153738();
-extern undefined4 FUN_80153e5c();
-extern undefined4 FUN_801544a4();
-extern undefined4 FUN_80154290();
-extern undefined4 FUN_80154724();
 extern undefined4 fn_80154870();
-extern undefined4 FUN_80155b6c();
-extern undefined4 FUN_80155cac();
-extern undefined4 FUN_80155e00();
-extern undefined4 FUN_8015666c();
-extern undefined4 FUN_80156978();
-extern undefined4 FUN_80156eb8();
-extern undefined4 FUN_80157220();
-extern undefined4 FUN_801579f4();
-extern undefined4 FUN_80157004();
-extern undefined4 FUN_801571c4();
-extern undefined4 FUN_8015750c();
-extern undefined4 FUN_80157b68();
-extern undefined4 FUN_80158c58();
-extern undefined4 FUN_80158c5c();
-extern undefined4 FUN_80159520();
-extern undefined4 FUN_80159cdc();
-extern undefined4 FUN_80159ce0();
 extern undefined4 FUN_80247944();
 extern undefined4 FUN_80247cd8();
 extern undefined4 FUN_80247ef8();
@@ -106,38 +56,18 @@ extern double SeekTwiceBeforeRead();
 extern undefined4 FUN_80247f90();
 extern undefined4 FUN_80247fb0();
 extern ulonglong FUN_8028682c();
-extern undefined4 FUN_8028683c();
 extern undefined4 FUN_80286878();
-extern undefined4 FUN_80286888();
 extern undefined4 FUN_80292754();
-extern undefined4 FUN_80293130();
 extern double FUN_80293900();
-extern byte FUN_80294c20();
 
 extern undefined4 DAT_8031e840;
 extern undefined4 DAT_8031e860;
-extern undefined4 DAT_803dc8c0;
-extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd71c;
 extern f64 DOUBLE_803e3218;
 extern f64 DOUBLE_803e3278;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DC078;
 extern f32 lbl_803E31FC;
 extern f32 lbl_803E3200;
-extern f32 lbl_803E3204;
-extern f32 lbl_803E3208;
-extern f32 lbl_803E320C;
-extern f32 lbl_803E3210;
-extern f32 lbl_803E322C;
-extern f32 lbl_803E3234;
 extern f32 lbl_803E3258;
-extern f32 lbl_803E325C;
-extern f32 lbl_803E3260;
 extern f32 lbl_803E3264;
-extern f32 lbl_803E3268;
-extern f32 lbl_803E326C;
-extern f32 lbl_803E3270;
 extern f32 lbl_803E3280;
 
 typedef struct
@@ -1131,7 +1061,6 @@ void baddieAfterUpdateBonesCb(int obj, int* p2)
     }
 }
 
-extern f64 lbl_803E25E0;
 
 void fn_8014C540(int* obj, int* p4, f32* p5, f32* p6)
 {
@@ -1717,7 +1646,6 @@ extern f32 PSVECDotProduct(f32 * a, f32 * b);
 extern f32 fn_80291FF4(f32 v);
 extern void PSMTXRotAxisRad(void* mtx, f32* axis, f32 angle);
 extern void PSMTXMultVecSR(void* mtx, f32* src, f32* dst);
-extern f32 fabsf(f32 v);
 extern f32 lbl_803E25C4;
 extern f32 lbl_803E25E8;
 
