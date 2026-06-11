@@ -9,6 +9,7 @@
 
 #include "main/dll/hud_textures.h"
 #include "main/dll/baddie/wispBaddie.h"
+#include "main/gamebits.h"
 #include "main/mapEventTypes.h"
 
 extern f32 mathSinf(f32 x);
@@ -46,7 +47,6 @@ extern void gameTextSetDrawFunc(void* callback);
 extern void* gameTextGetBox(int boxId);
 extern void gameTextFn_8001628c(int id, int a, int b, s32* o1, s32* o2, s32* o3, s32* o4);
 extern int sprintf(char* dst, const char* fmt, ...);
-extern u32 GameBit_Get(int eventId);
 extern u16 getNextTaskHintText(void);
 extern f32 SaveGame_getPlayTime(void);
 extern void fn_80128120(void* obj, int v);
