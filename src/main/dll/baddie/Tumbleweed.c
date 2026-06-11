@@ -1,4 +1,5 @@
 #include "main/objanim.h"
+#include "main/texture.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
@@ -522,8 +523,6 @@ extern void gameTextSetCursor(int a, int b, int c);
 extern void gameTextResetCursor(int n);
 extern int gameTextGetCharset(void);
 extern void gameTextSetCharset(int a, int b);
-extern void textureFree(void* tex);
-extern void* textureLoadAsset(s32);
 void fn_80133718(void);
 void fn_8013351C(void);
 
@@ -814,8 +813,8 @@ int Minimap_update(void)
             case 0:
                 if (minimapTexture != NULL)
                 {
-                    texW = *(u16*)((u8*)minimapTexture + 0xa);
-                    texH = *(u16*)((u8*)minimapTexture + 0xc);
+                    texW = ((Texture*)minimapTexture)->width;
+                    texH = ((Texture*)minimapTexture)->height;
                     lbl_803DBBEC = (f32)texW / (f32)(lbl_803DD948 - lbl_803DBBD0);
                     bw = lbl_803DBBC0;
                     a = (f32)bw / (f32)texW;
@@ -3450,10 +3449,10 @@ void fn_80137A00(int p1, int p2, u8* grid, int p4)
             {
                 if (((1 << bit) & *grid) != 0)
                 {
-                    *(u16*)((char*)lbl_803DDA30 + a0 * 2) = 0xC080;
-                    *(u16*)((char*)lbl_803DDA30 + a1 * 2) = 0xC080;
-                    *(u16*)((char*)lbl_803DDA30 + a2 * 2) = 0xC080;
-                    *(u16*)((char*)lbl_803DDA30 + a3 * 2) = 0xC080;
+                    lbl_803DDA30[a0] = 0xC080;
+                    lbl_803DDA30[a1] = 0xC080;
+                    lbl_803DDA30[a2] = 0xC080;
+                    lbl_803DDA30[a3] = 0xC080;
                 }
                 a0++;
                 a1++;
@@ -4107,7 +4106,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     int r;
     u8 a;
     s16 v;
-    char* t;
+    Texture* tex;
     int box;
     f32 m;
     f32 sc3;
@@ -4124,23 +4123,23 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     {
         xb = *(s16*)((char*)lbl_803A9F98 + 0x58);
         yb = *(s16*)((char*)lbl_803A9F98 + 0x68);
-        t = (char*)lbl_803A9F98[4];
-        drawScaledTexture(t,
-                          (f32)(int)(xb - 0x32 + *(u16*)((char*)lbl_803A9F98[6] + 10) + 0x5a),
-                          (f32)(int)(yb - 0x10), p1, 0x100, *(u16*)(t + 10),
+        tex = (Texture*)lbl_803A9F98[4];
+        drawScaledTexture((char*)tex,
+                          (f32)(int)(xb - 0x32 + ((Texture*)lbl_803A9F98[6])->width + 0x5a),
+                          (f32)(int)(yb - 0x10), p1, 0x100, tex->width,
                           (u32)(lbl_803E2300 * lbl_803DD9C8) + 0x10, 0);
-        t = (char*)lbl_803A9F98[6];
-        drawScaledTexture(t, (f32)(int)(xb + 0x28), (f32)(int)(yb - 0x10), 0xff, 0x100,
-                          *(u16*)(t + 10), (u32)(lbl_803E2300 * lbl_803DD9C8) + 0x10, 0);
-        t = (char*)lbl_803A9F98[6];
-        drawScaledTexture(t,
-                          (f32)(int)(xb - 0x32 + *(u16*)((char*)lbl_803A9F98[4] + 10) +
-                              *(u16*)(t + 10) + 0x57),
-                          (f32)(int)(yb - 0x10), 0xff, 0x100, *(u16*)(t + 10),
+        tex = (Texture*)lbl_803A9F98[6];
+        drawScaledTexture((char*)tex, (f32)(int)(xb + 0x28), (f32)(int)(yb - 0x10), 0xff, 0x100,
+                          tex->width, (u32)(lbl_803E2300 * lbl_803DD9C8) + 0x10, 0);
+        tex = (Texture*)lbl_803A9F98[6];
+        drawScaledTexture((char*)tex,
+                          (f32)(int)(xb - 0x32 + ((Texture*)lbl_803A9F98[4])->width +
+                              tex->width + 0x57),
+                          (f32)(int)(yb - 0x10), 0xff, 0x100, tex->width,
                           (u32)(lbl_803E2300 * lbl_803DD9C8) + 0x10, 1);
-        t = (char*)lbl_803A9F98[0];
-        drawScaledTexture(t, (f32)(int)(xb - 0xf), (f32)(int)(yb - 0x10), 0xff, 0x100,
-                          *(u16*)(t + 10), (u32)(lbl_803E2300 * lbl_803DD9C8) + 0x10, 0);
+        tex = (Texture*)lbl_803A9F98[0];
+        drawScaledTexture((char*)tex, (f32)(int)(xb - 0xf), (f32)(int)(yb - 0x10), 0xff, 0x100,
+                          tex->width, (u32)(lbl_803E2300 * lbl_803DD9C8) + 0x10, 0);
     }
     xb = *(s16*)((char*)lbl_803A9F98 + 0x58);
     yb = *(s16*)((char*)lbl_803A9F98 + 0x68);
@@ -4150,7 +4149,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
         a = 0xff;
     }
     drawTexture(lbl_803A9F98[1], (f32)(int)(xb - 0x18),
-                (f32)(int)(yb - *(u16*)((char*)lbl_803A9F98[1] + 0xc) + 3), 0xff, 0xff);
+                (f32)(int)(yb - ((Texture*)lbl_803A9F98[1])->height + 3), 0xff, 0xff);
     drawTexture(lbl_803A9F98[7], (f32)(int)(xb + 0xa1), (f32)(int)(yb - 0x2e), a, 0xff);
     xb = *(s16*)((char*)lbl_803A9F98 + 0x58);
     yb = *(s16*)((char*)lbl_803A9F98 + 0x68);
@@ -4167,7 +4166,7 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
                      (int)(((f64)lbl_803DD9C0 - lbl_803E2310) * (lbl_803E2308 - (f64)lbl_803DD9C8)));
     gameTextShow(0x3da);
     drawTexture(lbl_803A9F98[3], (f32)(int)(*(s16*)((char*)lbl_803A9F98 + 0x58) - 0x32),
-                (f32)(int)(0xfe - (*(u16*)((char*)lbl_803A9F98[3] + 10) >> 1)), 0xff, 0xff);
+                (f32)(int)(0xfe - (((Texture*)lbl_803A9F98[3])->width >> 1)), 0xff, 0xff);
     if (lbl_803DD9C8 >= lbl_803E2338 && (p2 & 0xff) == 0)
     {
         xb = *(s16*)((char*)lbl_803A9F98 + 0x58);
@@ -4176,14 +4175,14 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
         sc3 = lbl_803E2300;
         do
         {
-            t = (char*)lbl_803A9F98[4];
+            tex = (Texture*)lbl_803A9F98[4];
             r = (u32)(sc3 * lbl_803DD9C8);
-            drawScaledTexture(t,
-                              (f32)(int)(xb + *(u16*)((char*)lbl_803A9F98[6] + 10) + 0x28 +
+            drawScaledTexture((char*)tex,
+                              (f32)(int)(xb + ((Texture*)lbl_803A9F98[6])->width + 0x28 +
                                   (i + 1) * -4),
                               (f32)(int)(yb - 0x10 + (i + 1) * -3),
                               (int)(u32)lbl_803DD9C0 >> ((i + 3) & 0x3f) & 0xff, 0x100,
-                              *(u16*)(t + 10) + (i + 1) * 8, r + (i + 1) * 6 + 0x10, 4);
+                              tex->width + (i + 1) * 8, r + (i + 1) * 6 + 0x10, 4);
             i++;
         }
         while (i < 4);
@@ -4201,33 +4200,33 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     drawScaledTexture((char*)lbl_803A9F98[18],
                       (f32)(int)((int)(lbl_803E22F0 * lbl_803DD9B0) - 0x50),
                       (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100,
-                      *(u16*)((char*)lbl_803A9F98[18] + 10),
-                      *(u16*)((char*)lbl_803A9F98[18] + 0xc), 1);
-    t = (char*)lbl_803A9F98[8 + ((int)((u32)lbl_803DD9C0 << 3) >> 8)];
-    drawScaledTexture(t,
+                      ((Texture*)lbl_803A9F98[18])->width,
+                      ((Texture*)lbl_803A9F98[18])->height, 1);
+    tex = (Texture*)lbl_803A9F98[8 + ((int)((u32)lbl_803DD9C0 << 3) >> 8)];
+    drawScaledTexture((char*)tex,
                       (f32)(int)((int)(lbl_803E22F0 * lbl_803DD9B0) +
-                          *(u16*)((char*)lbl_803A9F98[18] + 10) - 0x4a),
+                          ((Texture*)lbl_803A9F98[18])->width - 0x4a),
                       (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100,
-                      *(u16*)(t + 10), *(u16*)(t + 0xc), 0);
+                      tex->width, tex->height, 0);
     drawScaledTexture((char*)lbl_803A9F98[18],
                       (f32)(int)(0x280 - ((int)(lbl_803E22F0 * lbl_803DD9B0) - 0x50) -
-                          *(u16*)((char*)lbl_803A9F98[18] + 10)),
+                          ((Texture*)lbl_803A9F98[18])->width),
                       (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100,
-                      *(u16*)((char*)lbl_803A9F98[18] + 10),
-                      *(u16*)((char*)lbl_803A9F98[18] + 0xc), 0);
-    t = (char*)lbl_803A9F98[8 + ((int)((u32)lbl_803DD9C0 << 3) >> 8)];
-    drawScaledTexture(t,
+                      ((Texture*)lbl_803A9F98[18])->width,
+                      ((Texture*)lbl_803A9F98[18])->height, 0);
+    tex = (Texture*)lbl_803A9F98[8 + ((int)((u32)lbl_803DD9C0 << 3) >> 8)];
+    drawScaledTexture((char*)tex,
                       (f32)(int)(0x27a - ((int)(lbl_803E22F0 * lbl_803DD9B0) - 0x50) -
-                          *(u16*)((char*)lbl_803A9F98[18] + 10) - *(u16*)(t + 10)),
+                          ((Texture*)lbl_803A9F98[18])->width - tex->width),
                       (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100,
-                      *(u16*)(t + 10), *(u16*)(t + 0xc), 1);
+                      tex->width, tex->height, 1);
     m = lbl_803DD9B4;
     if (lbl_803DD9B4 > lbl_803DD9B0)
     {
         m = lbl_803DD9B0;
     }
     drawTexture(lbl_803DD9D4,
-                (f32)(int)((0x280 - ((int)((u32) * (u16*)((char*)lbl_803DD9D4 + 10) * 0xbe) >> 8)) / 2),
+                (f32)(int)((0x280 - ((int)((u32)((Texture*)lbl_803DD9D4)->width * 0xbe) >> 8)) / 2),
                 (f32)(int)(int)(lbl_803E2340 * m + lbl_803E233C), 0xff, 0xbe);
     if ((p3 & 0xff) != 0)
     {
