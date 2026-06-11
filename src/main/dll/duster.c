@@ -119,58 +119,58 @@ extern f32 lbl_803DBCEC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8015536C(float param_1, float param_2, float* param_3, float* param_4)
+void fn_8015536C(float lateral, float height, float* outPos, float* anchor)
 {
     float hi;
     float lo;
-    float local_2c[3];
-    float local_38[3];
+    float sideAxis[3];
+    float up[3];
 
-    hi = param_4[6] - lbl_803E2A20;
-    if (param_2 > hi)
+    hi = anchor[6] - lbl_803E2A20;
+    if (height > hi)
     {
-        param_2 = hi;
+        height = hi;
     }
     else
     {
-        lo = lbl_803E2A24 + param_4[5];
-        if (param_2 < lo)
+        lo = lbl_803E2A24 + anchor[5];
+        if (height < lo)
         {
-            param_2 = lo;
+            height = lo;
         }
     }
-    if (param_4[4] > lbl_803E2A00)
+    if (anchor[4] > lbl_803E2A00)
     {
-        hi = param_4[4] - lbl_803E2A20;
+        hi = anchor[4] - lbl_803E2A20;
         lo = lbl_803E2A20;
     }
     else
     {
         hi = lbl_803E2A28;
-        lo = lbl_803E2A20 + param_4[4];
+        lo = lbl_803E2A20 + anchor[4];
     }
-    if (param_1 > hi)
+    if (lateral > hi)
     {
-        param_1 = hi;
+        lateral = hi;
     }
     else
     {
-        if (param_1 < lo)
+        if (lateral < lo)
         {
-            param_1 = lo;
+            lateral = lo;
         }
     }
-    param_3[1] = param_2;
-    local_38[0] = lbl_803E2A00;
-    local_38[1] = lbl_803E2A04;
-    local_38[2] = lbl_803E2A00;
-    PSVECCrossProduct(local_38, param_4, local_2c);
-    PSVECNormalize(local_2c, local_2c);
-    *param_3 = param_1 * local_2c[0] + param_4[7];
-    param_3[2] = param_1 * local_2c[2] + param_4[8];
-    *param_3 = lbl_803E2A2C * *param_4 + *param_3;
-    param_3[1] = lbl_803E2A2C * param_4[1] + param_3[1];
-    param_3[2] = lbl_803E2A2C * param_4[2] + param_3[2];
+    outPos[1] = height;
+    up[0] = lbl_803E2A00;
+    up[1] = lbl_803E2A04;
+    up[2] = lbl_803E2A00;
+    PSVECCrossProduct(up, anchor, sideAxis);
+    PSVECNormalize(sideAxis, sideAxis);
+    *outPos = lateral * sideAxis[0] + anchor[7];
+    outPos[2] = lateral * sideAxis[2] + anchor[8];
+    *outPos = lbl_803E2A2C * *anchor + *outPos;
+    outPos[1] = lbl_803E2A2C * anchor[1] + outPos[1];
+    outPos[2] = lbl_803E2A2C * anchor[2] + outPos[2];
 }
 
 /*
@@ -186,77 +186,77 @@ void fn_8015536C(float param_1, float param_2, float* param_3, float* param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801554B4(int* param_1, int param_2)
+void fn_801554B4(int* obj, int state)
 {
-    u8 cVar3;
-    float* pfVar5;
-    int iVar4;
-    f32 dVar6;
+    u8 didHit;
+    float* probeOffsets;
+    int i;
+    f32 dot;
     float dv[3];
-    float local_c4[3];
+    float sideAxis[3];
     float bv[3];
-    float afStack_ac[3];
+    float toAnchor[3];
     float av[3];
     float cv[3];
-    float afStack_88[3];
+    float sideAxis0[3];
     float minv[3];
     float maxv[3];
     float hit[18];
 
-    cVar3 = 0;
-    pfVar5 = (float*)&lbl_8031F2F8;
-    for (iVar4 = 0; cVar3 == 0 && iVar4 < 4; iVar4 = iVar4 + 1)
+    didHit = 0;
+    probeOffsets = (float*)&lbl_8031F2F8;
+    for (i = 0; didHit == 0 && i < 4; i = i + 1)
     {
-        maxv[0] = *(float*)(param_1 + 3) + *pfVar5;
-        maxv[1] = *(float*)(param_1 + 4);
-        maxv[2] = *(float*)(param_1 + 5) + pfVar5[1];
-        minv[0] = *(float*)(param_1 + 3) - *pfVar5;
-        minv[1] = *(float*)(param_1 + 4);
-        minv[2] = *(float*)(param_1 + 5) - pfVar5[1];
-        cVar3 = objBboxFn_800640cc(maxv, minv, lbl_803E2A00, 3, hit, param_1, 5, 3, 0xff, 0);
-        pfVar5 = pfVar5 + 2;
+        maxv[0] = *(float*)(obj + 3) + *probeOffsets;
+        maxv[1] = *(float*)(obj + 4);
+        maxv[2] = *(float*)(obj + 5) + probeOffsets[1];
+        minv[0] = *(float*)(obj + 3) - *probeOffsets;
+        minv[1] = *(float*)(obj + 4);
+        minv[2] = *(float*)(obj + 5) - probeOffsets[1];
+        didHit = objBboxFn_800640cc(maxv, minv, lbl_803E2A00, 3, hit, obj, 5, 3, 0xff, 0);
+        probeOffsets = probeOffsets + 2;
     }
-    if (cVar3 != 0)
+    if (didHit != 0)
     {
-        *(float*)(param_1 + 3) = (hit[17] - lbl_803E2A20) * ((minv[0] - maxv[0]) / lbl_803E2A24) + maxv[0];
-        *(float*)(param_1 + 5) = (hit[17] - lbl_803E2A20) * ((minv[2] - maxv[2]) / lbl_803E2A24) + maxv[2];
-        *(float*)(param_2 + 0x344) = hit[7];
-        *(float*)(param_2 + 0x348) = hit[8];
-        *(float*)(param_2 + 0x34c) = hit[9];
-        *(float*)(param_2 + 0x350) = hit[10];
-        *(float*)(param_2 + 0x358) = (hit[3] > hit[4]) ? hit[3] : hit[4];
-        *(float*)(param_2 + 0x35c) = (hit[15] < hit[16]) ? hit[15] : hit[16];
+        *(float*)(obj + 3) = (hit[17] - lbl_803E2A20) * ((minv[0] - maxv[0]) / lbl_803E2A24) + maxv[0];
+        *(float*)(obj + 5) = (hit[17] - lbl_803E2A20) * ((minv[2] - maxv[2]) / lbl_803E2A24) + maxv[2];
+        *(float*)(state + 0x344) = hit[7];
+        *(float*)(state + 0x348) = hit[8];
+        *(float*)(state + 0x34c) = hit[9];
+        *(float*)(state + 0x350) = hit[10];
+        *(float*)(state + 0x358) = (hit[3] > hit[4]) ? hit[3] : hit[4];
+        *(float*)(state + 0x35c) = (hit[15] < hit[16]) ? hit[15] : hit[16];
         av[0] = lbl_803E2A00;
         av[1] = lbl_803E2A04;
         av[2] = lbl_803E2A00;
-        PSVECCrossProduct(av, (float*)(param_2 + 0x344), afStack_88);
-        PSVECNormalize(afStack_88, afStack_88);
-        *(float*)(param_2 + 0x360) = hit[1];
-        *(float*)(param_2 + 0x364) = hit[5];
+        PSVECCrossProduct(av, (float*)(state + 0x344), sideAxis0);
+        PSVECNormalize(sideAxis0, sideAxis0);
+        *(float*)(state + 0x360) = hit[1];
+        *(float*)(state + 0x364) = hit[5];
         cv[0] = hit[2];
         cv[2] = hit[6];
-        bv[0] = *(float*)(param_2 + 0x360);
-        bv[1] = *(float*)(param_2 + 0x358);
-        bv[2] = *(float*)(param_2 + 0x364);
-        PSVECSubtract(bv, cv, afStack_ac);
-        dVar6 = PSVECDotProduct(afStack_ac, (float*)(param_2 + 0x344));
-        bv[0] = *(float*)(param_2 + 0x344) * dVar6 + cv[0];
-        bv[1] = *(float*)(param_2 + 0x348) * dVar6 + cv[1];
-        bv[2] = *(float*)(param_2 + 0x34c) * dVar6 + cv[2];
+        bv[0] = *(float*)(state + 0x360);
+        bv[1] = *(float*)(state + 0x358);
+        bv[2] = *(float*)(state + 0x364);
+        PSVECSubtract(bv, cv, toAnchor);
+        dot = PSVECDotProduct(toAnchor, (float*)(state + 0x344));
+        bv[0] = *(float*)(state + 0x344) * dot + cv[0];
+        bv[1] = *(float*)(state + 0x348) * dot + cv[1];
+        bv[2] = *(float*)(state + 0x34c) * dot + cv[2];
         dv[0] = lbl_803E2A00;
         dv[1] = lbl_803E2A04;
         dv[2] = lbl_803E2A00;
-        PSVECCrossProduct(dv, (float*)(param_2 + 0x344), local_c4);
-        PSVECNormalize(local_c4, local_c4);
-        if (lbl_803E2A00 != local_c4[0])
+        PSVECCrossProduct(dv, (float*)(state + 0x344), sideAxis);
+        PSVECNormalize(sideAxis, sideAxis);
+        if (lbl_803E2A00 != sideAxis[0])
         {
-            *(float*)(param_2 + 0x354) = (cv[0] - *(float*)(param_2 + 0x360)) / local_c4[0];
+            *(float*)(state + 0x354) = (cv[0] - *(float*)(state + 0x360)) / sideAxis[0];
         }
         else
         {
-            *(float*)(param_2 + 0x354) = (cv[2] - *(float*)(param_2 + 0x364)) / local_c4[2];
+            *(float*)(state + 0x354) = (cv[2] - *(float*)(state + 0x364)) / sideAxis[2];
         }
-        ((BaddieState*)param_2)->seqEntryIndex = 1;
+        ((BaddieState*)state)->seqEntryIndex = 1;
     }
 }
 
@@ -273,17 +273,17 @@ void fn_801554B4(int* param_1, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void rachnopUpdateWhileFrozen(uint param_1, int param_2, undefined4 param_3, int param_4)
+void rachnopUpdateWhileFrozen(uint obj, int state, undefined4 param_3, int eventKind)
 {
-    if (param_4 == 0x10)
+    if (eventKind == 0x10)
     {
-        ((BaddieState*)param_2)->reactionFlags = ((BaddieState*)param_2)->reactionFlags | 0x20;
+        ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x20;
     }
-    else if (param_4 != 0x11)
+    else if (eventKind != 0x11)
     {
-        ((BaddieState*)param_2)->reactionFlags = ((BaddieState*)param_2)->reactionFlags | 8;
-        Sfx_PlayFromObject(param_1, SFXfox_runbreath2);
-        ((BaddieState*)param_2)->hitCounter = 0;
+        ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
+        Sfx_PlayFromObject(obj, SFXfox_runbreath2);
+        ((BaddieState*)state)->hitCounter = 0;
     }
     return;
 }
@@ -301,25 +301,25 @@ void rachnopUpdateWhileFrozen(uint param_1, int param_2, undefined4 param_3, int
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801557D4(int* param_9, int param_10)
+void fn_801557D4(int* obj, int state)
 {
-    int iVar1;
+    int cond;
 
-    if (((BaddieState*)param_10)->seqEntryIndex == 0)
+    if (((BaddieState*)state)->seqEntryIndex == 0)
     {
-        fn_801554B4(param_9, param_10);
+        fn_801554B4(obj, state);
     }
     else
     {
-        if ((*(short*)(*(int*)&((BaddieState*)param_10)->trackedObj + 0x44) == 1) &&
-            (iVar1 = (int)fn_80295CBC(*(int*)&((BaddieState*)param_10)->trackedObj), iVar1 != 0))
+        if ((*(short*)(*(int*)&((BaddieState*)state)->trackedObj + 0x44) == 1) &&
+            (cond = (int)fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
         {
-            *(uint*)&((BaddieState*)param_10)->unk2E4 = *(uint*)&((BaddieState*)param_10)->unk2E4 & ~0x10000;
+            *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000;
         }
-        if ((((BaddieState*)param_10)->controlFlags & 0x40000000) != 0)
+        if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
-            Sfx_PlayFromObject((uint)param_9, SFXfox_runbreath1);
-            fn_8014D08C((int)param_9, param_10, 2, lbl_803E2A04, 0, 0);
+            Sfx_PlayFromObject((uint)obj, SFXfox_runbreath1);
+            fn_8014D08C((int)obj, state, 2, lbl_803E2A04, 0, 0);
         }
     }
     return;
@@ -338,27 +338,27 @@ void fn_801557D4(int* param_9, int param_10)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80155884(int* param_9, int param_10)
+void fn_80155884(int* obj, int state)
 {
-    int iVar1;
+    int cond;
 
-    if (((BaddieState*)param_10)->seqEntryIndex == 0)
+    if (((BaddieState*)state)->seqEntryIndex == 0)
     {
-        fn_801554B4(param_9, param_10);
+        fn_801554B4(obj, state);
     }
-    else if ((*(short*)(*(int*)&((BaddieState*)param_10)->trackedObj + 0x44) == 1) &&
-        (iVar1 = (int)fn_80295CBC(*(int*)&((BaddieState*)param_10)->trackedObj), iVar1 != 0))
+    else if ((*(short*)(*(int*)&((BaddieState*)state)->trackedObj + 0x44) == 1) &&
+        (cond = (int)fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
     {
-        fn_80154FB4((double)lbl_803E2A30, (short*)param_9, param_10, 0x19);
-        if ((((BaddieState*)param_10)->controlFlags & 0x40000000) != 0)
+        fn_80154FB4((double)lbl_803E2A30, (short*)obj, state, 0x19);
+        if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
-            fn_8014D08C((int)param_9, param_10, 0, lbl_803E2A30, 0, 0);
-            Sfx_PlayFromObject((uint)param_9, SFXfox_roll4);
+            fn_8014D08C((int)obj, state, 0, lbl_803E2A30, 0, 0);
+            Sfx_PlayFromObject((uint)obj, SFXfox_roll4);
         }
     }
     else
     {
-        *(uint*)&((BaddieState*)param_10)->unk2E4 = *(uint*)&((BaddieState*)param_10)->unk2E4 | 0x10000;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
     }
     return;
 }
@@ -376,48 +376,48 @@ void fn_80155884(int* param_9, int param_10)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80155948(int* param_9, int param_10)
+void fn_80155948(int* obj, int state)
 {
-    short sVar1;
-    int iVar2;
-    ushort local_18[2];
-    float afStack_14[3];
+    short move;
+    int cond;
+    ushort outIds[2];
+    float outVec[3];
 
-    if (((BaddieState*)param_10)->seqEntryIndex == 0)
+    if (((BaddieState*)state)->seqEntryIndex == 0)
     {
-        fn_801554B4(param_9, param_10);
+        fn_801554B4(obj, state);
     }
-    else if ((*(short*)(*(int*)&((BaddieState*)param_10)->trackedObj + 0x44) == 1) &&
-        (iVar2 = (int)fn_80295CBC(*(int*)&((BaddieState*)param_10)->trackedObj), iVar2 != 0))
+    else if ((*(short*)(*(int*)&((BaddieState*)state)->trackedObj + 0x44) == 1) &&
+        (cond = (int)fn_80295CBC(*(int*)&((BaddieState*)state)->trackedObj), cond != 0))
     {
-        ObjHits_SetHitVolumeSlot((int)param_9, 10, 1, 0);
-        sVar1 = *(short*)(param_9 + 0x28);
-        if (sVar1 == 3)
+        ObjHits_SetHitVolumeSlot((int)obj, 10, 1, 0);
+        move = *(short*)(obj + 0x28);
+        if (move == 3)
         {
-            fn_80154FB4((double)lbl_803E2A00, (short*)param_9, param_10, 0x19);
+            fn_80154FB4((double)lbl_803E2A00, (short*)obj, state, 0x19);
         }
-        else if ((sVar1 == 0) || (sVar1 == 1))
+        else if ((move == 0) || (move == 1))
         {
-            fn_80154FB4((double)lbl_803E2A30, (short*)param_9, param_10, 0x19);
+            fn_80154FB4((double)lbl_803E2A30, (short*)obj, state, 0x19);
         }
-        fn_80154D0C((int)param_9, param_10, local_18, afStack_14);
-        if (((((BaddieState*)param_10)->controlFlags & 0x40000000) != 0) ||
-            ((local_18[0] < 0x5dc && (*(short*)(param_9 + 0x28) != 1))))
+        fn_80154D0C((int)obj, state, outIds, outVec);
+        if (((((BaddieState*)state)->controlFlags & 0x40000000) != 0) ||
+            ((outIds[0] < 0x5dc && (*(short*)(obj + 0x28) != 1))))
         {
-            if (local_18[0] < 0x5dc)
+            if (outIds[0] < 0x5dc)
             {
-                Sfx_PlayFromObject((uint)param_9, SFXfox_roll3);
-                fn_8014D08C((int)param_9, param_10, 1, lbl_803E2A30, 0, 0);
+                Sfx_PlayFromObject((uint)obj, SFXfox_roll3);
+                fn_8014D08C((int)obj, state, 1, lbl_803E2A30, 0, 0);
             }
             else
             {
-                fn_8014D08C((int)param_9, param_10, 3, lbl_803E2A30, 0, 0);
+                fn_8014D08C((int)obj, state, 3, lbl_803E2A30, 0, 0);
             }
         }
     }
     else
     {
-        *(uint*)&((BaddieState*)param_10)->unk2E4 = *(uint*)&((BaddieState*)param_10)->unk2E4 | 0x10000;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
     }
     return;
 }
@@ -435,29 +435,29 @@ void fn_80155948(int* param_9, int param_10)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void rachnopInit(undefined4 param_1, int param_2)
+void rachnopInit(undefined4 param_1, int state)
 {
-    float fVar1;
-    float fVar2;
+    float fa;
+    float fb;
 
-    ((BaddieState*)param_2)->speedScale = lbl_803E2A34;
-    *(undefined4*)&((BaddieState*)param_2)->unk2E4 = 1;
-    fVar1 = lbl_803E2A38;
-    ((BaddieState*)param_2)->unk308 = lbl_803E2A38;
-    ((BaddieState*)param_2)->unk300 = fVar1;
-    ((BaddieState*)param_2)->unk304 = lbl_803E2A3C;
-    ((BaddieState*)param_2)->unk320 = 0;
-    fVar2 = lbl_803E2A40;
-    *(float*)&((BaddieState*)param_2)->eventFlags = lbl_803E2A40;
-    ((BaddieState*)param_2)->unk321 = 4;
-    fVar1 = lbl_803E2A04;
-    ((BaddieState*)param_2)->unk318 = lbl_803E2A04;
-    ((BaddieState*)param_2)->unk322 = 0;
-    ((BaddieState*)param_2)->unk31C = fVar2;
-    *(float*)(param_2 + 0x324) = lbl_803E2A00;
-    ((BaddieState*)param_2)->seqEntryIndex = 0;
-    ((BaddieState*)param_2)->inWhirlpoolGroup = 0;
-    ((BaddieState*)param_2)->pathStep = fVar1;
+    ((BaddieState*)state)->speedScale = lbl_803E2A34;
+    *(undefined4*)&((BaddieState*)state)->unk2E4 = 1;
+    fa = lbl_803E2A38;
+    ((BaddieState*)state)->unk308 = lbl_803E2A38;
+    ((BaddieState*)state)->unk300 = fa;
+    ((BaddieState*)state)->unk304 = lbl_803E2A3C;
+    ((BaddieState*)state)->unk320 = 0;
+    fb = lbl_803E2A40;
+    *(float*)&((BaddieState*)state)->eventFlags = lbl_803E2A40;
+    ((BaddieState*)state)->unk321 = 4;
+    fa = lbl_803E2A04;
+    ((BaddieState*)state)->unk318 = lbl_803E2A04;
+    ((BaddieState*)state)->unk322 = 0;
+    ((BaddieState*)state)->unk31C = fb;
+    *(float*)(state + 0x324) = lbl_803E2A00;
+    ((BaddieState*)state)->seqEntryIndex = 0;
+    ((BaddieState*)state)->inWhirlpoolGroup = 0;
+    ((BaddieState*)state)->pathStep = fa;
     return;
 }
 
@@ -474,71 +474,71 @@ void rachnopInit(undefined4 param_1, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void pollenFn_80155b10(uint param_9, int param_10)
+void pollenFn_80155b10(uint obj, int state)
 {
-    uint uVar1;
-    int iVar2;
-    undefined2* puVar3;
+    uint loadLocked;
+    int ref;
+    undefined2* setup;
     f32 spd;
     f32 t;
     f32 dx;
     f32 dz;
     f32 a[3];
     f32 b[3];
-    float local_3c;
-    float local_40;
-    float local_44;
-    float local_48;
+    float velXZ;
+    float cosVal;
+    float velY;
+    float cosPitch;
 
-    uVar1 = Obj_IsLoadingLocked();
-    if ((uVar1 & 0xff) != 0)
+    loadLocked = Obj_IsLoadingLocked();
+    if ((loadLocked & 0xff) != 0)
     {
-        a[0] = ((GameObject*)param_9)->anim.localPosX;
-        a[1] = lbl_803E2A48 + ((GameObject*)param_9)->anim.localPosY;
-        a[2] = ((GameObject*)param_9)->anim.localPosZ;
-        iVar2 = *(int*)&((BaddieState*)param_10)->trackedObj;
-        b[0] = *(float*)(iVar2 + 0xc);
-        b[1] = lbl_803E2A4C + *(float*)(iVar2 + 0x10);
-        b[2] = *(float*)(iVar2 + 0x14);
+        a[0] = ((GameObject*)obj)->anim.localPosX;
+        a[1] = lbl_803E2A48 + ((GameObject*)obj)->anim.localPosY;
+        a[2] = ((GameObject*)obj)->anim.localPosZ;
+        ref = *(int*)&((BaddieState*)state)->trackedObj;
+        b[0] = *(float*)(ref + 0xc);
+        b[1] = lbl_803E2A4C + *(float*)(ref + 0x10);
+        b[2] = *(float*)(ref + 0x14);
         spd = lbl_803E2A50 *
             (lbl_803E2A58 * (f32)(int)
         randomGetRange(-10, 10) + lbl_803E2A54
         )
         ;
-        iVar2 = fn_80169EF4(spd, lbl_803E2A5C, a, b, 1);
-        fn_80293018(iVar2, &local_40, &local_3c);
-        local_3c = local_3c * spd;
-        local_40 = local_40 * spd;
-        dx = b[0] - ((GameObject*)param_9)->anim.localPosX;
-        dz = b[2] - ((GameObject*)param_9)->anim.localPosZ;
+        ref = fn_80169EF4(spd, lbl_803E2A5C, a, b, 1);
+        fn_80293018(ref, &cosVal, &velXZ);
+        velXZ = velXZ * spd;
+        cosVal = cosVal * spd;
+        dx = b[0] - ((GameObject*)obj)->anim.localPosX;
+        dz = b[2] - ((GameObject*)obj)->anim.localPosZ;
         if (lbl_803E2A60 != dz)
         {
-            iVar2 = getAngle(dx, dz);
-            fn_80293018(iVar2, &local_48, &local_44);
-            t = local_3c;
-            local_44 = local_44 * t;
-            local_3c = t * local_48;
+            ref = getAngle(dx, dz);
+            fn_80293018(ref, &cosPitch, &velY);
+            t = velXZ;
+            velY = velY * t;
+            velXZ = t * cosPitch;
         }
         else
         {
-            local_44 = lbl_803E2A60;
+            velY = lbl_803E2A60;
         }
-        puVar3 = Obj_AllocObjectSetup(0x24, 0x47b);
-        *(float*)(puVar3 + 4) = a[0];
-        *(float*)(puVar3 + 6) = a[1];
-        *(undefined4*)(puVar3 + 8) = a[2];
-        *(undefined*)(puVar3 + 2) = 1;
-        *(undefined*)((int)puVar3 + 5) = 1;
-        *(undefined*)(puVar3 + 3) = 0xff;
-        *(undefined*)((int)puVar3 + 7) = 0xff;
-        iVar2 = Obj_SetupObject(puVar3, 5, -1, -1, 0);
-        if (iVar2 != 0)
+        setup = Obj_AllocObjectSetup(0x24, 0x47b);
+        *(float*)(setup + 4) = a[0];
+        *(float*)(setup + 6) = a[1];
+        *(undefined4*)(setup + 8) = a[2];
+        *(undefined*)(setup + 2) = 1;
+        *(undefined*)((int)setup + 5) = 1;
+        *(undefined*)(setup + 3) = 0xff;
+        *(undefined*)((int)setup + 7) = 0xff;
+        ref = Obj_SetupObject(setup, 5, -1, -1, 0);
+        if (ref != 0)
         {
-            *(float*)(iVar2 + 0x24) = local_3c;
-            *(float*)(iVar2 + 0x28) = local_40;
-            *(float*)(iVar2 + 0x2c) = local_44;
-            *(uint*)(iVar2 + 0xc4) = param_9;
-            Sfx_PlayFromObject(param_9, SFXfox_climbgrunt2);
+            *(float*)(ref + 0x24) = velXZ;
+            *(float*)(ref + 0x28) = cosVal;
+            *(float*)(ref + 0x2c) = velY;
+            *(uint*)(ref + 0xc4) = obj;
+            Sfx_PlayFromObject(obj, SFXfox_climbgrunt2);
         }
     }
     return;
@@ -557,31 +557,31 @@ void pollenFn_80155b10(uint param_9, int param_10)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void timeOfDayFn_80155cf8(int param_9, int param_10)
+void timeOfDayFn_80155cf8(int obj, int state)
 {
-    byte bVar1;
-    float local_18[4];
+    byte isDaytime;
+    float timeInfo[4];
 
-    (*(code*)(*(int*)gSHthorntailAnimationInterface + 0x14))(local_18);
-    if ((local_18[0] >= lbl_803E2A70) && (local_18[0] <= lbl_803E2A74))
+    (*(code*)(*(int*)gSHthorntailAnimationInterface + 0x14))(timeInfo);
+    if ((timeInfo[0] >= lbl_803E2A70) && (timeInfo[0] <= lbl_803E2A74))
     {
-        bVar1 = 1;
+        isDaytime = 1;
     }
     else
     {
-        bVar1 = 0;
+        isDaytime = 0;
     }
-    if ((bVar1 != 0) && (((BaddieState*)param_10)->seqEntryIndex == 0))
+    if ((isDaytime != 0) && (((BaddieState*)state)->seqEntryIndex == 0))
     {
-        ((BaddieState*)param_10)->seqEntryIndex = 1;
-        *(uint*)&((BaddieState*)param_10)->unk2E4 = *(uint*)&((BaddieState*)param_10)->unk2E4 | 0x10000;
-        fn_8014D08C(param_9, param_10, 1, lbl_803E2A78, 0, 0);
+        ((BaddieState*)state)->seqEntryIndex = 1;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
+        fn_8014D08C(obj, state, 1, lbl_803E2A78, 0, 0);
     }
-    else if ((bVar1 == 0) && (((BaddieState*)param_10)->seqEntryIndex == 2))
+    else if ((isDaytime == 0) && (((BaddieState*)state)->seqEntryIndex == 2))
     {
-        ((BaddieState*)param_10)->seqEntryIndex = 1;
-        *(uint*)&((BaddieState*)param_10)->unk2E4 = *(uint*)&((BaddieState*)param_10)->unk2E4 | 0x10000;
-        fn_8014D08C(param_9, param_10, 3, lbl_803E2A78, 0, 0);
+        ((BaddieState*)state)->seqEntryIndex = 1;
+        *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
+        fn_8014D08C(obj, state, 3, lbl_803E2A78, 0, 0);
     }
     return;
 }
@@ -650,31 +650,31 @@ void baddieUpdateWhileFrozen_80155e10(uint obj, int state, undefined4 param_11, 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80155F20(int param_9, int param_10)
+void fn_80155F20(int obj, int state)
 {
-    *(float*)(param_10 + 0x324) = lbl_803E2A60;
-    if ((((BaddieState*)param_10)->controlFlags & 0x40000000) != 0)
+    *(float*)(state + 0x324) = lbl_803E2A60;
+    if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
-        if (((BaddieState*)param_10)->seqEntryIndex == 1)
+        if (((BaddieState*)state)->seqEntryIndex == 1)
         {
-            if (((GameObject*)param_9)->anim.currentMove == 1)
+            if (((GameObject*)obj)->anim.currentMove == 1)
             {
-                ((BaddieState*)param_10)->seqEntryIndex = 2;
-                *(uint*)&((BaddieState*)param_10)->unk2E4 = *(uint*)&((BaddieState*)param_10)->unk2E4 & ~0x10000;
+                ((BaddieState*)state)->seqEntryIndex = 2;
+                *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 & ~0x10000;
             }
-            else if (((GameObject*)param_9)->anim.currentMove == 3)
+            else if (((GameObject*)obj)->anim.currentMove == 3)
             {
-                ((BaddieState*)param_10)->seqEntryIndex = 0;
-                *(uint*)&((BaddieState*)param_10)->unk2E4 = *(uint*)&((BaddieState*)param_10)->unk2E4 | 0x10000;
-                fn_8014D08C(param_9, param_10, 0, lbl_803E2A54, 0, 0);
+                ((BaddieState*)state)->seqEntryIndex = 0;
+                *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x10000;
+                fn_8014D08C(obj, state, 0, lbl_803E2A54, 0, 0);
             }
         }
-        else if ((((BaddieState*)param_10)->seqEntryIndex == 2) && (((GameObject*)param_9)->anim.currentMove != 2))
+        else if ((((BaddieState*)state)->seqEntryIndex == 2) && (((GameObject*)obj)->anim.currentMove != 2))
         {
-            fn_8014D08C(param_9, param_10, 2, lbl_803E2A54, 0, 0);
+            fn_8014D08C(obj, state, 2, lbl_803E2A54, 0, 0);
         }
     }
-    timeOfDayFn_80155cf8(param_9, param_10);
+    timeOfDayFn_80155cf8(obj, state);
     return;
 }
 
@@ -691,45 +691,45 @@ void fn_80155F20(int param_9, int param_10)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80156010(uint param_9, int param_10)
+void fn_80156010(uint obj, int state)
 {
-    bool bVar1;
-    short sVar2;
+    bool timerExpired;
+    short move;
     double dVar3;
 
-    bVar1 = false;
-    *(float*)(param_10 + 0x324) = *(float*)(param_10 + 0x324) - timeDelta;
-    if (*(float*)(param_10 + 0x324) <= lbl_803E2A60)
+    timerExpired = false;
+    *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
+    if (*(float*)(state + 0x324) <= lbl_803E2A60)
     {
-        bVar1 = true;
-        *(float*)(param_10 + 0x324) = lbl_803E2A60;
+        timerExpired = true;
+        *(float*)(state + 0x324) = lbl_803E2A60;
     }
-    if ((((BaddieState*)param_10)->controlFlags & 0x40000000) != 0)
+    if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
-        sVar2 = ((GameObject*)param_9)->anim.currentMove;
-        if (sVar2 == 4)
+        move = ((GameObject*)obj)->anim.currentMove;
+        if (move == 4)
         {
-            pollenFn_80155b10(param_9, param_10);
-            *(float*)(param_10 + 0x324) = lbl_803E2A80;
-            fn_8014D08C(param_9, param_10, 5, lbl_803E2A54, 0, 0);
+            pollenFn_80155b10(obj, state);
+            *(float*)(state + 0x324) = lbl_803E2A80;
+            fn_8014D08C(obj, state, 5, lbl_803E2A54, 0, 0);
         }
-        else if ((sVar2 == 5) && (bVar1))
+        else if ((move == 5) && (timerExpired))
         {
-            fn_8014D08C(param_9, param_10, 6, lbl_803E2A54, 0, 0);
-            Sfx_PlayFromObject(param_9, SFXfox_fightbreath2);
+            fn_8014D08C(obj, state, 6, lbl_803E2A54, 0, 0);
+            Sfx_PlayFromObject(obj, SFXfox_fightbreath2);
         }
-        else if (sVar2 == 6)
+        else if (move == 6)
         {
-            fn_8014D08C(param_9, param_10, 2, lbl_803E2A54, 0, 0);
-            *(float*)(param_10 + 0x324) = lbl_803E2A80;
+            fn_8014D08C(obj, state, 2, lbl_803E2A54, 0, 0);
+            *(float*)(state + 0x324) = lbl_803E2A80;
         }
-        else if (((sVar2 == 2) && (bVar1)) && ((((BaddieState*)param_10)->controlFlags & 0x4000000) != 0))
+        else if (((move == 2) && (timerExpired)) && ((((BaddieState*)state)->controlFlags & 0x4000000) != 0))
         {
-            fn_8014D08C(param_9, param_10, 4, lbl_803E2A54, 0, 0);
-            dVar3 = (double)Sfx_PlayFromObject(param_9, SFXfox_fightbreath1);
+            fn_8014D08C(obj, state, 4, lbl_803E2A54, 0, 0);
+            dVar3 = (double)Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
         }
     }
-    timeOfDayFn_80155cf8(param_9, param_10);
+    timeOfDayFn_80155cf8(obj, state);
     return;
 }
 
@@ -746,27 +746,27 @@ void fn_80156010(uint param_9, int param_10)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void baddieInit_80156188(undefined4 param_1, int param_2)
+void baddieInit_80156188(undefined4 param_1, int state)
 {
-    float fVar1;
-    float fVar2;
+    float fa;
+    float fb;
 
-    ((BaddieState*)param_2)->speedScale = lbl_803E2A84;
-    *(undefined4*)&((BaddieState*)param_2)->unk2E4 = 1;
-    ((BaddieState*)param_2)->unk308 = lbl_803E2A58;
-    ((BaddieState*)param_2)->unk300 = lbl_803E2A88;
-    ((BaddieState*)param_2)->unk304 = lbl_803E2A8C;
-    ((BaddieState*)param_2)->unk320 = 0;
-    fVar2 = lbl_803E2A90;
-    *(float*)&((BaddieState*)param_2)->eventFlags = lbl_803E2A90;
-    ((BaddieState*)param_2)->unk321 = 7;
-    fVar1 = lbl_803E2A54;
-    ((BaddieState*)param_2)->unk318 = lbl_803E2A54;
-    ((BaddieState*)param_2)->unk322 = 0;
-    ((BaddieState*)param_2)->unk31C = fVar2;
-    ((BaddieState*)param_2)->seqEntryIndex = 0;
-    *(float*)(param_2 + 0x324) = lbl_803E2A60;
-    ((BaddieState*)param_2)->pathStep = fVar1;
+    ((BaddieState*)state)->speedScale = lbl_803E2A84;
+    *(undefined4*)&((BaddieState*)state)->unk2E4 = 1;
+    ((BaddieState*)state)->unk308 = lbl_803E2A58;
+    ((BaddieState*)state)->unk300 = lbl_803E2A88;
+    ((BaddieState*)state)->unk304 = lbl_803E2A8C;
+    ((BaddieState*)state)->unk320 = 0;
+    fb = lbl_803E2A90;
+    *(float*)&((BaddieState*)state)->eventFlags = lbl_803E2A90;
+    ((BaddieState*)state)->unk321 = 7;
+    fa = lbl_803E2A54;
+    ((BaddieState*)state)->unk318 = lbl_803E2A54;
+    ((BaddieState*)state)->unk322 = 0;
+    ((BaddieState*)state)->unk31C = fb;
+    ((BaddieState*)state)->seqEntryIndex = 0;
+    *(float*)(state + 0x324) = lbl_803E2A60;
+    ((BaddieState*)state)->pathStep = fa;
     return;
 }
 
@@ -783,20 +783,20 @@ void baddieInit_80156188(undefined4 param_1, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void wbUpdateWhileFrozen(uint param_1, int param_2, undefined4 param_3, int param_4)
+void wbUpdateWhileFrozen(uint obj, int state, undefined4 param_3, int eventKind)
 {
-    if (param_4 != 0x11)
+    if (eventKind != 0x11)
     {
-        if (param_4 == 0x10)
+        if (eventKind == 0x10)
         {
-            ((BaddieState*)param_2)->reactionFlags = ((BaddieState*)param_2)->reactionFlags | 0x20;
+            ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x20;
         }
         else
         {
-            Sfx_PlayFromObject(param_1, SFXfox_cough3);
-            ((BaddieState*)param_2)->hitCounter = 0;
-            *(uint*)&((BaddieState*)param_2)->unk2E4 = *(uint*)&((BaddieState*)param_2)->unk2E4 | 0x20;
-            ((BaddieState*)param_2)->reactionFlags = ((BaddieState*)param_2)->reactionFlags | 8;
+            Sfx_PlayFromObject(obj, SFXfox_cough3);
+            ((BaddieState*)state)->hitCounter = 0;
+            *(uint*)&((BaddieState*)state)->unk2E4 = *(uint*)&((BaddieState*)state)->unk2E4 | 0x20;
+            ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
         }
     }
     return;
@@ -1048,26 +1048,26 @@ void fn_8015652C(uint obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void wbInit(undefined4 param_1, int param_2)
+void wbInit(undefined4 param_1, int state)
 {
-    float fVar1;
-    uint uVar2;
+    float fa;
+    uint ua;
 
-    ((BaddieState*)param_2)->speedScale = lbl_803E2AE8;
-    *(undefined4*)&((BaddieState*)param_2)->unk2E4 = 0x2002b029;
-    ((BaddieState*)param_2)->unk308 = lbl_803E2ACC;
-    ((BaddieState*)param_2)->unk300 = lbl_803E2AEC;
-    ((BaddieState*)param_2)->unk304 = lbl_803E2AF0;
-    ((BaddieState*)param_2)->unk320 = 0;
-    fVar1 = lbl_803E2AF4;
-    *(float*)&((BaddieState*)param_2)->eventFlags = lbl_803E2AF4;
-    ((BaddieState*)param_2)->unk321 = 1;
-    ((BaddieState*)param_2)->unk318 = fVar1;
-    ((BaddieState*)param_2)->unk322 = 2;
-    ((BaddieState*)param_2)->unk31C = fVar1;
-    uVar2 = randomGetRange(0x78, 0x1e0);
-    *(float*)(param_2 + 0x328) =
-        (float)(int)uVar2;
+    ((BaddieState*)state)->speedScale = lbl_803E2AE8;
+    *(undefined4*)&((BaddieState*)state)->unk2E4 = 0x2002b029;
+    ((BaddieState*)state)->unk308 = lbl_803E2ACC;
+    ((BaddieState*)state)->unk300 = lbl_803E2AEC;
+    ((BaddieState*)state)->unk304 = lbl_803E2AF0;
+    ((BaddieState*)state)->unk320 = 0;
+    fa = lbl_803E2AF4;
+    *(float*)&((BaddieState*)state)->eventFlags = lbl_803E2AF4;
+    ((BaddieState*)state)->unk321 = 1;
+    ((BaddieState*)state)->unk318 = fa;
+    ((BaddieState*)state)->unk322 = 2;
+    ((BaddieState*)state)->unk31C = fa;
+    ua = randomGetRange(0x78, 0x1e0);
+    *(float*)(state + 0x328) =
+        (float)(int)ua;
     return;
 }
 
@@ -1084,49 +1084,49 @@ void wbInit(undefined4 param_1, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80156950(uint param_1, int param_2)
+void fn_80156950(uint obj, int state)
 {
-    switch (*(short*)(param_1 + 0xa0))
+    switch (*(short*)(obj + 0xa0))
     {
     case 5:
-        if (*(ushort*)(param_2 + 0x2f8) != 0)
+        if (*(ushort*)(state + 0x2f8) != 0)
         {
-            Sfx_PlayFromObject(param_1, SFXfox_fightbreath3);
+            Sfx_PlayFromObject(obj, SFXfox_fightbreath3);
         }
         break;
     case 6:
-        if (*(ushort*)(param_2 + 0x2f8) != 0)
+        if (*(ushort*)(state + 0x2f8) != 0)
         {
-            Sfx_PlayFromObject(param_1, SFXfox_fightbreath3);
+            Sfx_PlayFromObject(obj, SFXfox_fightbreath3);
         }
         break;
     case 7:
-        if (*(ushort*)(param_2 + 0x2f8) != 0)
+        if (*(ushort*)(state + 0x2f8) != 0)
         {
-            if (*(float*)(param_1 + 0x98) < lbl_803E2AF8)
+            if (*(float*)(obj + 0x98) < lbl_803E2AF8)
             {
-                Sfx_PlayFromObject(param_1, SFXfox_fightbreath3);
+                Sfx_PlayFromObject(obj, SFXfox_fightbreath3);
             }
             else
             {
-                Sfx_PlayFromObject(param_1, SFXfox_fightbreath2);
+                Sfx_PlayFromObject(obj, SFXfox_fightbreath2);
             }
         }
         break;
     case 8:
-        if (*(ushort*)(param_2 + 0x2f8) != 0)
+        if (*(ushort*)(state + 0x2f8) != 0)
         {
-            if (*(float*)(param_1 + 0x98) < lbl_803E2AFC)
+            if (*(float*)(obj + 0x98) < lbl_803E2AFC)
             {
-                Sfx_PlayFromObject(param_1, SFXfox_fightbreath1);
+                Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
             }
-            else if (*(float*)(param_1 + 0x98) < lbl_803E2B00)
+            else if (*(float*)(obj + 0x98) < lbl_803E2B00)
             {
-                Sfx_PlayFromObject(param_1, SFXfox_fightbreath4);
+                Sfx_PlayFromObject(obj, SFXfox_fightbreath4);
             }
             else
             {
-                Sfx_PlayFromObject(param_1, SFXfox_fightbreath2);
+                Sfx_PlayFromObject(obj, SFXfox_fightbreath2);
             }
         }
         break;
@@ -1147,30 +1147,30 @@ void fn_80156950(uint param_1, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void mutatedEbaUpdateWhileFrozen(uint param_9, int param_10, undefined4 param_11, int param_12)
+void mutatedEbaUpdateWhileFrozen(uint obj, int state, undefined4 param_11, int eventKind)
 {
-    short sVar1;
+    short move;
 
-    if (param_12 != 0x11)
+    if (eventKind != 0x11)
     {
-        if (param_12 == 0x10)
+        if (eventKind == 0x10)
         {
-            ((BaddieState*)param_10)->reactionFlags = ((BaddieState*)param_10)->reactionFlags | 0x20;
+            ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x20;
         }
         else
         {
-            sVar1 = ((GameObject*)param_9)->anim.currentMove;
-            if ((((sVar1 == 0) || (sVar1 == 1)) || (sVar1 == 3)) || (sVar1 == 4))
+            move = ((GameObject*)obj)->anim.currentMove;
+            if ((((move == 0) || (move == 1)) || (move == 3)) || (move == 4))
             {
-                Sfx_PlayFromObject(param_9, SFXfox_roll2);
-                ((BaddieState*)param_10)->reactionFlags = ((BaddieState*)param_10)->reactionFlags | 0x10;
+                Sfx_PlayFromObject(obj, SFXfox_roll2);
+                ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x10;
             }
             else
             {
-                fn_8014D08C(param_9, param_10, 4, lbl_803E2B04, 0, 0);
-                ((BaddieState*)param_10)->seqEntryIndex = 0;
-                Sfx_PlayFromObject(param_9, SFXfox_roll1);
-                ((BaddieState*)param_10)->reactionFlags = ((BaddieState*)param_10)->reactionFlags | 8;
+                fn_8014D08C(obj, state, 4, lbl_803E2B04, 0, 0);
+                ((BaddieState*)state)->seqEntryIndex = 0;
+                Sfx_PlayFromObject(obj, SFXfox_roll1);
+                ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
             }
         }
     }
@@ -1231,27 +1231,27 @@ void fn_80156B0C(uint obj, int state)
  * EN v1.0 Address: 0x80156C34
  * EN v1.0 Size: 168b
  */
-void fn_80156C34(uint param_9, int param_10)
+void fn_80156C34(uint obj, int state)
 {
-    int iVar1;
+    int tblOff;
     uint phase;
 
-    if ((((BaddieState*)param_10)->controlFlags & 0x40000000) != 0)
+    if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
-        phase = ((BaddieState*)param_10)->seqEntryIndex;
+        phase = ((BaddieState*)state)->seqEntryIndex;
         if (phase == 0)
         {
-            ((BaddieState*)param_10)->seqEntryIndex += 1;
+            ((BaddieState*)state)->seqEntryIndex += 1;
         }
         else if (phase >= 2)
         {
-            ((BaddieState*)param_10)->seqEntryIndex = 0;
+            ((BaddieState*)state)->seqEntryIndex = 0;
         }
-        iVar1 = (uint)((BaddieState*)param_10)->seqEntryIndex * 0xc;
-        fn_8014D08C(param_9, param_10, (uint)lbl_8031F318[iVar1 + 8],
-                    *(float*)(lbl_8031F318 + iVar1), 0, 0);
+        tblOff = (uint)((BaddieState*)state)->seqEntryIndex * 0xc;
+        fn_8014D08C(obj, state, (uint)lbl_8031F318[tblOff + 8],
+                    *(float*)(lbl_8031F318 + tblOff), 0, 0);
     }
-    fn_80156950(param_9, param_10);
+    fn_80156950(obj, state);
     return;
 }
 
@@ -1261,24 +1261,24 @@ void fn_80156C34(uint param_9, int param_10)
  * EN v1.0 Address: 0x80156CDC
  * EN v1.0 Size: 104b
  */
-void mutatedEbaInit(undefined4 param_1, int param_2)
+void mutatedEbaInit(undefined4 param_1, int state)
 {
-    float fVar1;
+    float fa;
 
-    ((BaddieState*)param_2)->speedScale = lbl_803E2A84;
-    *(undefined4*)&((BaddieState*)param_2)->unk2E4 = 0x46001;
-    ((BaddieState*)param_2)->unk308 = lbl_803E2A58;
-    ((BaddieState*)param_2)->unk300 = lbl_803E2A88;
-    ((BaddieState*)param_2)->unk304 = lbl_803E2A8C;
-    ((BaddieState*)param_2)->unk320 = 0;
-    fVar1 = lbl_803E2A54;
-    *(float*)&((BaddieState*)param_2)->eventFlags = lbl_803E2A54;
-    ((BaddieState*)param_2)->unk321 = 4;
-    ((BaddieState*)param_2)->unk318 = fVar1;
-    ((BaddieState*)param_2)->unk322 = 3;
-    ((BaddieState*)param_2)->unk31C = fVar1;
-    ((BaddieState*)param_2)->seqEntryIndex = 1;
-    ((BaddieState*)param_2)->hitCounter = 0xa;
+    ((BaddieState*)state)->speedScale = lbl_803E2A84;
+    *(undefined4*)&((BaddieState*)state)->unk2E4 = 0x46001;
+    ((BaddieState*)state)->unk308 = lbl_803E2A58;
+    ((BaddieState*)state)->unk300 = lbl_803E2A88;
+    ((BaddieState*)state)->unk304 = lbl_803E2A8C;
+    ((BaddieState*)state)->unk320 = 0;
+    fa = lbl_803E2A54;
+    *(float*)&((BaddieState*)state)->eventFlags = lbl_803E2A54;
+    ((BaddieState*)state)->unk321 = 4;
+    ((BaddieState*)state)->unk318 = fa;
+    ((BaddieState*)state)->unk322 = 3;
+    ((BaddieState*)state)->unk31C = fa;
+    ((BaddieState*)state)->seqEntryIndex = 1;
+    ((BaddieState*)state)->hitCounter = 0xa;
     return;
 }
 
@@ -1288,17 +1288,17 @@ void mutatedEbaInit(undefined4 param_1, int param_2)
  * EN v1.0 Address: 0x80156D44
  * EN v1.0 Size: 92b
  */
-void hoodedZyckUpdateWhileFrozen(uint param_1, int param_2, undefined4 param_3, int param_4)
+void hoodedZyckUpdateWhileFrozen(uint obj, int state, undefined4 param_3, int eventKind)
 {
-    if (param_4 == 0x10)
+    if (eventKind == 0x10)
     {
-        ((BaddieState*)param_2)->reactionFlags = ((BaddieState*)param_2)->reactionFlags | 0x20;
+        ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x20;
     }
     else
     {
-        ((BaddieState*)param_2)->reactionFlags = ((BaddieState*)param_2)->reactionFlags | 8;
-        Sfx_PlayFromObject(param_1, SFXwatery_bubble2);
-        ((BaddieState*)param_2)->hitCounter = 0;
+        ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
+        Sfx_PlayFromObject(obj, SFXwatery_bubble2);
+        ((BaddieState*)state)->hitCounter = 0;
     }
     return;
 }
@@ -1309,78 +1309,78 @@ void hoodedZyckUpdateWhileFrozen(uint param_1, int param_2, undefined4 param_3, 
  * EN v1.0 Address: 0x80156DA0
  * EN v1.0 Size: 612b
  */
-void fn_80156DA0(int param_9, int param_10)
+void fn_80156DA0(int obj, int state)
 {
-    bool bVar1;
-    int iVar2;
-    ushort uVar3;
-    float local_98[3];
-    float local_8c[3];
-    float local_80;
-    float local_7c;
-    undefined4 local_70;
+    bool resetting;
+    int groundHit;
+    ushort randBit;
+    float fromPos[3];
+    float toPos[3];
+    float sinYaw;
+    float cosYaw;
+    undefined4 hitOut;
 
-    *(float*)(param_10 + 0x324) = *(float*)(param_10 + 0x324) - timeDelta;
-    if (*(float*)(param_10 + 0x324) <= lbl_803E2A60)
+    *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
+    if (*(float*)(state + 0x324) <= lbl_803E2A60)
     {
-        *(float*)(param_10 + 0x324) = (float)(int)randomGetRange(0x3c, 0x78);
+        *(float*)(state + 0x324) = (float)(int)randomGetRange(0x3c, 0x78);
     }
-    if (lbl_803E2A60 != *(float*)(param_10 + 0x328))
+    if (lbl_803E2A60 != *(float*)(state + 0x328))
     {
-        ObjHits_DisableObject(param_9);
-        if (((GameObject*)param_9)->anim.currentMove != 5)
+        ObjHits_DisableObject(obj);
+        if (((GameObject*)obj)->anim.currentMove != 5)
         {
-            fn_8014D08C(param_9, param_10, 5, lbl_803DBCEC, 0, 0);
+            fn_8014D08C(obj, state, 5, lbl_803DBCEC, 0, 0);
         }
-        else if ((((BaddieState*)param_10)->controlFlags & 0x40000000) != 0)
+        else if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
-            ObjHits_EnableObject(param_9);
-            *(float*)(param_10 + 0x328) = lbl_803E2A60;
+            ObjHits_EnableObject(obj);
+            *(float*)(state + 0x328) = lbl_803E2A60;
         }
-        ((GameObject*)param_9)->anim.alpha = 0xff;
-        bVar1 = true;
+        ((GameObject*)obj)->anim.alpha = 0xff;
+        resetting = true;
     }
     else
     {
-        bVar1 = false;
+        resetting = false;
     }
-    if (!bVar1)
+    if (!resetting)
     {
-        *(short*)param_9 = (short)((short)*(short*)param_9 + (short)*(ushort*)(param_10 + 0x338));
-        local_98[0] = ((GameObject*)param_9)->anim.localPosX;
-        local_98[1] = ((GameObject*)param_9)->anim.localPosY;
-        local_98[2] = ((GameObject*)param_9)->anim.localPosZ;
-        fn_80292E20((uint) * (ushort*)param_9, &local_80, &local_7c);
-        local_8c[0] = ((GameObject*)param_9)->anim.localPosX - lbl_803E2ABC * local_80;
-        local_8c[1] = lbl_803E2AC0 + ((GameObject*)param_9)->anim.localPosY;
-        local_8c[2] = ((GameObject*)param_9)->anim.localPosZ - lbl_803E2ABC * local_7c;
-        local_70 = 0;
-        iVar2 = objBboxFn_800640cc(local_98, local_8c, (float*)0x3, &local_70, param_9,
-                                   (uint) * (byte*)(param_10 + 0x261), 0xff, 0xffffffff, 0);
-        if (((iVar2 & 0xff) == 0) || ((((BaddieState*)param_10)->controlFlags & 0x40000000) == 0))
+        *(short*)obj = (short)((short)*(short*)obj + (short)*(ushort*)(state + 0x338));
+        fromPos[0] = ((GameObject*)obj)->anim.localPosX;
+        fromPos[1] = ((GameObject*)obj)->anim.localPosY;
+        fromPos[2] = ((GameObject*)obj)->anim.localPosZ;
+        fn_80292E20((uint) * (ushort*)obj, &sinYaw, &cosYaw);
+        toPos[0] = ((GameObject*)obj)->anim.localPosX - lbl_803E2ABC * sinYaw;
+        toPos[1] = lbl_803E2AC0 + ((GameObject*)obj)->anim.localPosY;
+        toPos[2] = ((GameObject*)obj)->anim.localPosZ - lbl_803E2ABC * cosYaw;
+        hitOut = 0;
+        groundHit = objBboxFn_800640cc(fromPos, toPos, (float*)0x3, &hitOut, obj,
+                                   (uint) * (byte*)(state + 0x261), 0xff, 0xffffffff, 0);
+        if (((groundHit & 0xff) == 0) || ((((BaddieState*)state)->controlFlags & 0x40000000) == 0))
         {
-            if ((iVar2 & 0xff) != 0)
+            if ((groundHit & 0xff) != 0)
             {
-                if (((GameObject*)param_9)->anim.currentMove == 0)
+                if (((GameObject*)obj)->anim.currentMove == 0)
                 {
-                    *(undefined2*)(param_10 + 0x338) = 0;
-                    fn_8014D08C(param_9, param_10, 0, lbl_803E2AC8, 0, 1);
+                    *(undefined2*)(state + 0x338) = 0;
+                    fn_8014D08C(obj, state, 0, lbl_803E2AC8, 0, 1);
                 }
                 else
                 {
                     float fz;
-                    fn_8014D08C(param_9, param_10, 1, lbl_803E2ACC, 0, 0);
+                    fn_8014D08C(obj, state, 1, lbl_803E2ACC, 0, 0);
                     fz = lbl_803E2B18;
-                    ((GameObject*)param_9)->anim.velocityX = fz;
-                    ((GameObject*)param_9)->anim.velocityY = fz;
-                    ((GameObject*)param_9)->anim.velocityZ = fz;
-                    uVar3 = (ushort)randomGetRange(0, 1);
-                    *(undefined2*)(param_10 + 0x338) = (ushort)((uVar3 - 1) * 0x12c);
+                    ((GameObject*)obj)->anim.velocityX = fz;
+                    ((GameObject*)obj)->anim.velocityY = fz;
+                    ((GameObject*)obj)->anim.velocityZ = fz;
+                    randBit = (ushort)randomGetRange(0, 1);
+                    *(undefined2*)(state + 0x338) = (ushort)((randBit - 1) * 0x12c);
                 }
             }
         }
-        ((GameObject*)param_9)->anim.rotY = ((BaddieState*)param_10)->spawnRotY;
-        ((GameObject*)param_9)->anim.rotZ = ((BaddieState*)param_10)->spawnRotZ;
+        ((GameObject*)obj)->anim.rotY = ((BaddieState*)state)->spawnRotY;
+        ((GameObject*)obj)->anim.rotZ = ((BaddieState*)state)->spawnRotZ;
     }
     return;
 }
