@@ -4,6 +4,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/smallbasket.h"
 
@@ -64,7 +65,6 @@ extern int* allocModelStruct2(int p1, int p2);
 extern void tailFn_80026c38(int* p, f32 a, f32 b, f32 c);
 extern int baddieAfterUpdateBonesCb(void);
 extern f32 lbl_803E2CBC;
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u8 lbl_8031FD48[];
 extern void smallbasket_playReactionEffects(int* obj, int* st);
 extern f32 lbl_803E2CB8;
@@ -130,7 +130,6 @@ extern void modelLightStruct_setAffectsAabbLightSelection();
 extern void sidekickToy_accelerateTowardTarget3D(s16* obj, f32 x, f32 y, f32 z, f32 a, f32 b, f32 c, f32 spd);
 extern f32 powfBitEstimate(f32 base, f32 exp);
 extern f32 sqrtf(f32 x);
-extern void Sfx_SetObjectSfxVolume(f32 ratio, s16* obj, int sfx, int vol);
 extern f32 lbl_803E2C74;
 extern f32 lbl_803E2C30;
 extern f32 lbl_803E2C34;
@@ -421,7 +420,7 @@ void smallbasket_playReactionEffects(int* obj, int* st)
     case 2:
         if (*(u16*)((char*)st + 0x2f8) != 0)
         {
-            Sfx_PlayFromObjectLimited((int*)obj, 0x49b, 2);
+            Sfx_PlayFromObjectLimited((u32)obj, 0x49b, 2);
         }
         flag = 1;
         break;
@@ -459,7 +458,7 @@ void smallbasket_playReactionEffects(int* obj, int* st)
     case 7:
         if (*(u16*)((char*)st + 0x2f8) != 0)
         {
-            Sfx_PlayFromObjectLimited((int*)obj, 0x49c, 2);
+            Sfx_PlayFromObjectLimited((u32)obj, 0x49c, 2);
         }
         flag = 1;
         break;
@@ -1295,7 +1294,7 @@ void fn_80159FCC(s16* obj, u8* state)
     {
         Sfx_PlayFromObject((int)obj, 0x3e8);
         i = (int)((lbl_803E2C6C * *(f32*)(state + 0x324)) / lbl_803E2C70);
-        Sfx_SetObjectSfxVolume(*(f32*)(state + 0x324) / lbl_803E2C70, obj, 0x3e8, i);
+        Sfx_SetObjectSfxVolume((u32)obj, 0x3e8, (u8)i, *(f32*)(state + 0x324) / lbl_803E2C70);
     }
     else
     {
@@ -2318,7 +2317,7 @@ void fn_80159958(s16* obj, u8* state)
     {
         Sfx_PlayFromObject((int)obj, 0x3e8);
         i = (int)((lbl_803E2C6C * *(f32*)(state + 0x324)) / lbl_803E2C70);
-        Sfx_SetObjectSfxVolume(*(f32*)(state + 0x324) / lbl_803E2C70, obj, 0x3e8, i);
+        Sfx_SetObjectSfxVolume((u32)obj, 0x3e8, (u8)i, *(f32*)(state + 0x324) / lbl_803E2C70);
     }
     else
     {
