@@ -374,47 +374,47 @@ int cMenuSetItems(s16* itemsIn, char useTricky)
  */
 #pragma scheduling on
 #pragma peephole on
-int fn_801244B0(short* param_1, char param_2)
+int fn_801244B0(short* table, char mode)
 {
-    uint uVar1;
-    int iVar2;
-    short* psVar3;
+    uint bitVal;
+    int count;
+    short* entry;
 
-    iVar2 = 0;
-    psVar3 = param_1;
-    if (param_2 == '\0')
+    count = 0;
+    entry = table;
+    if (mode == '\0')
     {
-        for (; -1 < *psVar3; psVar3 = psVar3 + 8)
+        for (; -1 < *entry; entry = entry + 8)
         {
-            uVar1 = GameBit_Get((int)*psVar3);
-            if (uVar1 != 0)
+            bitVal = GameBit_Get((int)*entry);
+            if (bitVal != 0)
             {
-                if (param_1 == (short*)&DAT_8031c130)
+                if (table == (short*)&DAT_8031c130)
                 {
-                    if ((psVar3[2] < 0) || (uVar1 = GameBit_Get((int)psVar3[2]), uVar1 == 0))
+                    if ((entry[2] < 0) || (bitVal = GameBit_Get((int)entry[2]), bitVal == 0))
                     {
-                        iVar2 = iVar2 + 1;
+                        count = count + 1;
                     }
                 }
-                else if (((psVar3[1] < 0) || (uVar1 = GameBit_Get((int)psVar3[1]), uVar1 == 0)) &&
-                    ((psVar3[2] < 0 || (uVar1 = GameBit_Get((int)psVar3[2]), uVar1 == 0))))
+                else if (((entry[1] < 0) || (bitVal = GameBit_Get((int)entry[1]), bitVal == 0)) &&
+                    ((entry[2] < 0 || (bitVal = GameBit_Get((int)entry[2]), bitVal == 0))))
                 {
-                    iVar2 = iVar2 + 1;
+                    count = count + 1;
                 }
             }
         }
     }
     else if (0 < (int)DAT_803de3b8)
     {
-        for (; -1 < *param_1; param_1 = param_1 + 8)
+        for (; -1 < *table; table = table + 8)
         {
-            if ((DAT_803de3b8 != 0xffffffff) && ((DAT_803de3b8 & (int)*param_1) != 0))
+            if ((DAT_803de3b8 != 0xffffffff) && ((DAT_803de3b8 & (int)*table) != 0))
             {
-                iVar2 = iVar2 + 1;
+                count = count + 1;
             }
         }
     }
-    return iVar2;
+    return count;
 }
 
 /*
@@ -452,18 +452,18 @@ void FUN_801244a4(undefined8 param_1, double param_2, double param_3, undefined8
  */
 #pragma scheduling on
 #pragma peephole on
-undefined4 fn_80124A78(int param_1, int* param_2, int param_3)
+undefined4 fn_80124A78(int shader, int* block, int idx)
 {
-    int iVar1;
-    uint uVar2;
-    uint uVar3;
+    int rec;
+    uint texHandle;
+    uint colorWord;
 
-    uVar3 = DAT_803e2a94;
-    iVar1 = FUN_8001792c(*param_2, param_3);
+    colorWord = DAT_803e2a94;
+    rec = FUN_8001792c(*block, idx);
     FUN_80052904();
-    uVar3 = CONCAT31(uVar3 >> 8, *(undefined*)(param_1 + 0x37));
-    uVar2 = FUN_80053078(*(uint*)(iVar1 + 0x24));
-    FUN_80051fc4(uVar2, 0, 0, (char*)&uVar3, 0, 1);
+    colorWord = CONCAT31(colorWord >> 8, *(undefined*)(shader + 0x37));
+    texHandle = FUN_80053078(*(uint*)(rec + 0x24));
+    FUN_80051fc4(texHandle, 0, 0, (char*)&colorWord, 0, 1);
     FUN_800528d0();
     FUN_8025cce8(1, 4, 5, 5);
     gxSetZMode_(0, 7, 0);
@@ -485,45 +485,45 @@ undefined4 fn_80124A78(int param_1, int* param_2, int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 fn_80124B38(int param_1, int* param_2, int param_3)
+undefined4 fn_80124B38(int shader, int* block, int idx)
 {
-    int iVar1;
-    int iVar2;
-    uint uVar3;
-    uint* puVar4;
-    uint* puVar5;
+    int level;
+    int rec;
+    uint colorWord;
+    uint* tabA;
+    uint* tabB;
 
-    uVar3 = DAT_803e2a90;
-    iVar2 = FUN_8001792c(*param_2, param_3);
-    iVar2 = *(byte*)(iVar2 + 0x29) - 1;
+    colorWord = DAT_803e2a90;
+    rec = FUN_8001792c(*block, idx);
+    rec = *(byte*)(rec + 0x29) - 1;
     FUN_80052904();
-    if ((-1 < iVar2) && (iVar2 < 7))
+    if ((-1 < rec) && (rec < 7))
     {
-        puVar4 = &DAT_803aa024;
-        puVar5 = &DAT_803aa008;
-        if (puVar4[iVar2] != 0)
+        tabA = &DAT_803aa024;
+        tabB = &DAT_803aa008;
+        if (tabA[rec] != 0)
         {
-            if (puVar5[iVar2] == 0)
+            if (tabB[rec] == 0)
             {
-                iVar1 = (int)(FLOAT_803e2c90 *
-                    (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(param_1 + 0x37)) -
+                level = (int)(FLOAT_803e2c90 *
+                    (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(shader + 0x37)) -
                         DOUBLE_803e2b08));
-                uVar3 = CONCAT31(uVar3 >> 8, (undefined)iVar1);
+                colorWord = CONCAT31(colorWord >> 8, (undefined)level);
             }
             else
             {
-                uVar3 = CONCAT31(uVar3 >> 8, *(undefined*)(param_1 + 0x37));
+                colorWord = CONCAT31(colorWord >> 8, *(undefined*)(shader + 0x37));
             }
-            FUN_80051fc4(puVar4[iVar2], 0, 0, (char*)&uVar3, 0, 1);
+            FUN_80051fc4(tabA[rec], 0, 0, (char*)&colorWord, 0, 1);
         }
         else
         {
-            FUN_80052778((char*)&uVar3 + 1);
+            FUN_80052778((char*)&colorWord + 1);
         }
     }
     else
     {
-        FUN_80052778((char*)&uVar3 + 1);
+        FUN_80052778((char*)&colorWord + 1);
     }
     FUN_800528d0();
     FUN_8025cce8(1, 4, 5, 5);

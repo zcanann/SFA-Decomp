@@ -665,23 +665,23 @@ void SB_Propeller_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SB_Propeller_init(int param_1, int param_2)
+void SB_Propeller_init(int obj, int arg2)
 {
     ObjAnimComponent* objAnim;
-    uint uVar1;
-    float* pfVar2;
+    uint randVal;
+    float* state;
 
-    objAnim = (ObjAnimComponent*)param_1;
-    pfVar2 = ((GameObject*)param_1)->extra;
-    uVar1 = randomGetRange(0x5a, 0xf0);
-    ((SBPropellerState*)pfVar2)->smokeTimer = (f32)(s32)(uVar1);
-    ((SBPropellerState*)pfVar2)->spinBlend = lbl_803E64A8;
-    ((SBPropellerState*)pfVar2)->spinRate = 1200;
-    *(u8*)&((SBPropellerState*)pfVar2)->health = 4;
-    objAnim->bankIndex = (char)*(s16*)(param_2 + 0x1a);
-    if (((GameObject*)param_1)->anim.seqId != 0x69c)
+    objAnim = (ObjAnimComponent*)obj;
+    state = ((GameObject*)obj)->extra;
+    randVal = randomGetRange(0x5a, 0xf0);
+    ((SBPropellerState*)state)->smokeTimer = (f32)(s32)(randVal);
+    ((SBPropellerState*)state)->spinBlend = lbl_803E64A8;
+    ((SBPropellerState*)state)->spinRate = 1200;
+    *(u8*)&((SBPropellerState*)state)->health = 4;
+    objAnim->bankIndex = (char)*(s16*)(arg2 + 0x1a);
+    if (((GameObject*)obj)->anim.seqId != 0x69c)
     {
-        DAT_803de8c0 = param_1;
+        DAT_803de8c0 = obj;
     }
     return;
 }
@@ -699,45 +699,45 @@ void SB_Propeller_init(int param_1, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SB_ShipHead_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void SB_ShipHead_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-    int iVar1;
-    int iVar2;
-    byte bVar3;
-    undefined auStack_28[6];
-    undefined2 local_22;
-    float local_20;
-    float local_1c;
-    float local_18;
-    float local_14[3];
+    int ref;
+    int state;
+    byte i;
+    undefined fxArgs[6];
+    undefined2 sfxId;
+    float volume;
+    float dx;
+    float dy;
+    float dz[3];
 
     if (visible != 0)
     {
-        iVar2 = *(int*)&((GameObject*)param_1)->extra;
-        FUN_8003b818(param_1);
-        iVar1 = *(int*)&((GameObject*)param_1)->anim.parent;
-        if ((((iVar1 != 0) && (((GameObject*)iVar1)->anim.seqId == 0x8e)) &&
-            (iVar1 = (**(code**)(**(int**)&((GameObject*)iVar1)->anim.dll + 0x2c))(), iVar1 != 0)) && (iVar1 != 2))
+        state = *(int*)&((GameObject*)obj)->extra;
+        FUN_8003b818(obj);
+        ref = *(int*)&((GameObject*)obj)->anim.parent;
+        if ((((ref != 0) && (((GameObject*)ref)->anim.seqId == 0x8e)) &&
+            (ref = (**(code**)(**(int**)&((GameObject*)ref)->anim.dll + 0x2c))(), ref != 0)) && (ref != 2))
         {
-            ((SBShipHeadState*)iVar2)->swayA = ((SBShipHeadState*)iVar2)->swayA - lbl_803DC074;
-            if (((SBShipHeadState*)iVar2)->swayA <= lbl_803E64CC)
+            ((SBShipHeadState*)state)->swayA = ((SBShipHeadState*)state)->swayA - lbl_803DC074;
+            if (((SBShipHeadState*)state)->swayA <= lbl_803E64CC)
             {
-                ((SBShipHeadState*)iVar2)->swayA = ((SBShipHeadState*)iVar2)->swayA + lbl_803E64D0;
+                ((SBShipHeadState*)state)->swayA = ((SBShipHeadState*)state)->swayA + lbl_803E64D0;
             }
-            ((SBShipHeadState*)iVar2)->swayB = ((SBShipHeadState*)iVar2)->swayB - lbl_803DC074;
-            if (((SBShipHeadState*)iVar2)->swayB <= lbl_803E64CC)
+            ((SBShipHeadState*)state)->swayB = ((SBShipHeadState*)state)->swayB - lbl_803DC074;
+            if (((SBShipHeadState*)state)->swayB <= lbl_803E64CC)
             {
-                ((SBShipHeadState*)iVar2)->swayB = ((SBShipHeadState*)iVar2)->swayB + lbl_803E64C8;
+                ((SBShipHeadState*)state)->swayB = ((SBShipHeadState*)state)->swayB + lbl_803E64C8;
             }
-            local_20 = lbl_803E64D4;
-            local_22 = 0xc0a;
-            ObjPath_GetPointWorldPosition(param_1, 0xd, &local_1c, &local_18, local_14, 0);
-            local_1c = local_1c - ((GameObject*)param_1)->anim.worldPosX;
-            local_18 = local_18 - ((GameObject*)param_1)->anim.worldPosY;
-            local_14[0] = local_14[0] - ((GameObject*)param_1)->anim.worldPosZ;
-            for (bVar3 = 0; bVar3 < DAT_803dc070; bVar3 = bVar3 + 1)
+            volume = lbl_803E64D4;
+            sfxId = 0xc0a;
+            ObjPath_GetPointWorldPosition(obj, 0xd, &dx, &dy, dz, 0);
+            dx = dx - ((GameObject*)obj)->anim.worldPosX;
+            dy = dy - ((GameObject*)obj)->anim.worldPosY;
+            dz[0] = dz[0] - ((GameObject*)obj)->anim.worldPosZ;
+            for (i = 0; i < DAT_803dc070; i = i + 1)
             {
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7aa, auStack_28, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x7aa, fxArgs, 2, -1, NULL);
             }
         }
     }
@@ -1064,10 +1064,10 @@ void SB_ShipMast_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void SB_ShipHead_free(int x) { ObjGroup_RemoveObject(x, 0x3); }
 
 /* SB_Propeller_hitDetect: guard on 0x46 == 0x69c, copy halfword from sda21 ptr. */
-void SB_Propeller_hitDetect(int param_1)
+void SB_Propeller_hitDetect(int obj)
 {
-    if (((GameObject*)param_1)->anim.seqId != 0x69c) return;
-    ((GameObject*)param_1)->anim.rotZ = *(s16*)(lbl_803DDC40 + 4);
+    if (((GameObject*)obj)->anim.seqId != 0x69c) return;
+    ((GameObject*)obj)->anim.rotZ = *(s16*)(lbl_803DDC40 + 4);
 }
 
 /* SB_ShipGun_free: expgfx interface freeObject callback. */
