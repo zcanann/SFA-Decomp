@@ -3,35 +3,7 @@
 
 
 extern u32 randomGetRange(int min, int max);
-extern int FUN_80286838();
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286884();
-extern undefined4 FUN_80286888();
 
-extern undefined4 DAT_802c2900;
-extern undefined4 DAT_802c2904;
-extern undefined4 DAT_802c2908;
-extern undefined4 DAT_802c290c;
-extern undefined4 DAT_803187e8;
-extern undefined4 DAT_80318828;
-extern undefined4 DAT_803188fc;
-extern undefined DAT_803189d8;
-extern undefined DAT_80318a04;
-extern undefined4 DAT_80318a20;
-extern undefined4 DAT_80318a22;
-extern undefined4 DAT_80318a24;
-extern undefined4 DAT_80318a26;
-extern undefined4 DAT_80318a28;
-extern undefined4 DAT_80318a2a;
-extern undefined4 DAT_80318a2c;
-extern undefined4 DAT_80318a50;
-extern undefined4 DAT_80318b24;
-extern undefined DAT_80318c00;
-extern undefined DAT_80318c2c;
-extern undefined4 DAT_80318c48;
-extern undefined4 DAT_803dc5b8;
-extern undefined4 DAT_803dc5c0;
-extern undefined DAT_803dc5c4;
 extern f64 DOUBLE_803e2018;
 extern f64 DOUBLE_803e2070;
 extern f32 lbl_803E1FF0;
