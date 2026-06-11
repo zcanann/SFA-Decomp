@@ -2242,6 +2242,52 @@ ret0:
     return 0;
 }
 
+static inline MusicChannel* Music_FindActiveChannelForTrack(int track)
+{
+    int i;
+    MusicChannel* ch = (MusicChannel*)(int)gMusicChannels;
+    for (i = 15; i >= 0; i--)
+    {
+        if ((int)ch->field_0 == track)
+        {
+            if (ch->status == 0)
+            {
+            }
+            else if (ch->status == 2)
+            {
+            }
+            else
+            {
+                switch (ch->status)
+                {
+                case 5:
+                    break;
+                default:
+                    return ch;
+                }
+            }
+        }
+        ch++;
+    }
+    return NULL;
+}
+
+static inline MusicTrigger* Music_FindTriggerById(int id)
+{
+    int i = gMusicTriggersCount;
+    MusicTrigger* trigger = gMusicTriggersData;
+    while (i != 0)
+    {
+        if ((int)trigger->id == id)
+        {
+            return trigger;
+        }
+        trigger++;
+        i--;
+    }
+    return NULL;
+}
+
 void Music_Trigger(int id, int arg)
 {
     extern void sndSeqVolume(u8 volume, u16 time, u32 handle, u8 mode);
@@ -2254,90 +2300,21 @@ void Music_Trigger(int id, int arg)
     {
         return;
     }
-    trigger = gMusicTriggersData;
-    i = gMusicTriggersCount;
-    while (i != 0)
-    {
-        if ((int)trigger->id == id)
-        {
-            goto foundTrigger;
-        }
-        trigger++;
-        i--;
-    }
-    trigger = NULL;
-foundTrigger:
+    trigger = Music_FindTriggerById(id);
     if (trigger == NULL)
     {
         return;
     }
     if (id == 0xeb && arg == 1)
     {
-        MusicChannel* ch = (MusicChannel*)(int)gMusicChannels;
-        for (i = 15; i >= 0; i--)
+        MusicChannel* ch = Music_FindActiveChannelForTrack(0x5e);
+        if (ch != NULL || GameBit_Get(0xa7f) != 0u)
         {
-            if ((int)ch->field_0 == 0x5e)
-            {
-                if (ch->status == 0)
-                {
-                }
-                else if (ch->status == 2)
-                {
-                }
-                else
-                {
-                    switch (ch->status)
-                    {
-                    case 5:
-                        break;
-                    default:
-                        goto foundActive;
-                    }
-                }
-            }
-            ch++;
-        }
-        ch = NULL;
-    foundActive:
-        if (ch != NULL)
-        {
-            return;
-        }
-        switch (GameBit_Get(0xa7f))
-        {
-        case 0:
-            break;
-        default:
             return;
         }
     }
     track = trigger->track;
-    channel = (MusicChannel*)(int)gMusicChannels;
-    for (i = 15; i >= 0; i--)
-    {
-        if ((int)channel->field_0 == track)
-        {
-            if (channel->status == 0)
-            {
-            }
-            else if (channel->status == 2)
-            {
-            }
-            else
-            {
-                switch (channel->status)
-                {
-                case 5:
-                    break;
-                default:
-                    goto foundChannel;
-                }
-            }
-        }
-        channel++;
-    }
-    channel = NULL;
-foundChannel:
+    channel = Music_FindActiveChannelForTrack(track);
     if (arg == 1)
     {
         if (channel == NULL)
@@ -2790,19 +2767,7 @@ void Music_LoadChannelForTrigger(MusicTrigger* trigger)
 
 void Music_PlayTrackByIndex(int index)
 {
-    int count = gMusicTriggersCount;
-    MusicTrigger* trigger = gMusicTriggersData;
-    while (count != 0)
-    {
-        if ((int)trigger->id == 0xec)
-        {
-            goto found;
-        }
-        trigger++;
-        count--;
-    }
-    trigger = NULL;
-found:
+    MusicTrigger* trigger = Music_FindTriggerById(0xec);
     streamFn_8000a380(3, 1, 0);
     trigger->track = *(s16*)((u8*)sMusicTrackTable + (index << 4));
     Music_Trigger(0xec, 1);
