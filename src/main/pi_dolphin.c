@@ -8068,13 +8068,13 @@ void gpuErrorHandler(void)
     case 0:
         if (OSGetResetButtonState() != 0)
         {
-            lbl_803DCCA4 = lbl_803DCCA4 + 1;
+            lbl_803DCCA4++;
         }
         break;
     case 1:
         if (OSGetResetButtonState() == 0)
         {
-            lbl_803DCCA4 = lbl_803DCCA4 + 1;
+            lbl_803DCCA4++;
             setShouldResetNextFrame(1);
         }
         break;

@@ -6157,7 +6157,7 @@ int doLotsOfMath(void* ptA, void* ptB, int flags, void* out, int* obj,
     }
     if (count != 0)
     {
-        lbl_803DCF4C = lbl_803DCF4C + 1;
+        lbl_803DCF4C++;
         count = 1;
         ((f32*)ptB)[0] = pos[3];
         ((f32*)ptB)[2] = pos[1];
