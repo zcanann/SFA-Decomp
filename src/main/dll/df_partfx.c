@@ -1197,30 +1197,30 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     int sw;
     int sh;
     HudColor col;
-    uint uVar1, uVar3, uVar5, uVar7, uVar8, uVar9, uVar10, uVar11, uVar12, H;
+    uint halfSpan, cur, span, edge, hiEdge, step1, loEdge, inset, step0, H;
     u8 step, a8;
-    int iVar6;
+    int screenX;
     f32 conv;
 
     GXGetScissor(&sx, &sy, &sw, &sh);
     Camera_GetCurrentViewport(&vx, &vy, &vr, &vb);
-    uVar5 = (vr - vx) & 0xffff;
+    span = (vr - vx) & 0xffff;
     H = (vb - vy) & 0xffff;
     if (lbl_803DD420 > lbl_803E0540)
     {
-        uVar12 = 0xff;
-        uVar11 = (int)(lbl_803DD420 - lbl_803E0540);
+        step0 = 0xff;
+        inset = (int)(lbl_803DD420 - lbl_803E0540);
     }
     else
     {
-        uVar12 = (int)(lbl_803E0544 * lbl_803DD420);
-        uVar11 = 0;
+        step0 = (int)(lbl_803E0544 * lbl_803DD420);
+        inset = 0;
     }
-    uVar1 = (uVar5 >> 1) & 0xffff;
-    uVar11 = uVar11 & 0xffff;
-    conv = (f32)(int)(uVar11 * uVar1);
-    uVar7 = (uint)(int)(conv * lbl_803E0548) & 0xffff;
-    if (uVar7 == uVar1)
+    halfSpan = (span >> 1) & 0xffff;
+    inset = inset & 0xffff;
+    conv = (f32)(int)(inset * halfSpan);
+    edge = (uint)(int)(conv * lbl_803E0548) & 0xffff;
+    if (edge == halfSpan)
     {
         int sh2;
         int sw2;
@@ -1238,75 +1238,75 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     }
     else
     {
-        uVar10 = (uVar1 - uVar7) & 0xffff;
-        uVar8 = (uVar1 + uVar7) & 0xffff;
-        uVar7 = ((uVar1 - 1) - uVar7) & 0xffff;
+        loEdge = (halfSpan - edge) & 0xffff;
+        hiEdge = (halfSpan + edge) & 0xffff;
+        edge = ((halfSpan - 1) - edge) & 0xffff;
         GXSetScissor(vx, vy, vr - vx, vb - vy);
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;
-        col.a = uVar12;
-        hudDrawRect(vx + uVar7 + 1, vy, vx + uVar8, vb, col);
-        step = (int)uVar10 / ((int)uVar1 / 6);
+        col.a = step0;
+        hudDrawRect(vx + edge + 1, vy, vx + hiEdge, vb, col);
+        step = (int)loEdge / ((int)halfSpan / 6);
         if (step == 0)
         {
             step = 1;
         }
-        a8 = uVar12;
-        for (uVar9 = 0; uVar3 = uVar9 & 0xffff, (int)uVar3 < (int)(uVar10 - step); uVar9 += step)
+        a8 = step0;
+        for (step1 = 0; cur = step1 & 0xffff, (int)cur < (int)(loEdge - step); step1 += step)
         {
             col.r = 0xff;
             col.g = 0xff;
             col.b = 0xff;
-            col.a = ((int)(a8 * (uVar1 - uVar3)) / (int)uVar1) & 0xff;
-            iVar6 = vx + (uVar8 & 0xffff);
-            hudDrawRect(iVar6, vy, step + iVar6, vb, col);
-            iVar6 = vx + (uVar7 & 0xffff);
-            hudDrawRect((iVar6 - step) + 1, vy, iVar6 + 1, vb, col);
-            uVar8 += step;
-            uVar7 -= step;
+            col.a = ((int)(a8 * (halfSpan - cur)) / (int)halfSpan) & 0xff;
+            screenX = vx + (hiEdge & 0xffff);
+            hudDrawRect(screenX, vy, step + screenX, vb, col);
+            screenX = vx + (edge & 0xffff);
+            hudDrawRect((screenX - step) + 1, vy, screenX + 1, vb, col);
+            hiEdge += step;
+            edge -= step;
         }
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;
-        col.a = ((int)(a8 * (uVar1 - uVar3)) / (int)uVar1) & 0xff;
-        hudDrawRect(vx + (uVar8 & 0xffff), vy, vr, vb, col);
-        hudDrawRect(vx, vy, vx + (uVar7 & 0xffff) + 1, vb, col);
-        uVar7 = (H >> 1) & 0xffff;
-        conv = (f32)(int)(uVar11 * uVar7);
-        uVar11 = (uint)(int)(conv * lbl_803E0548) & 0xffff;
-        uVar1 = (uVar7 - uVar11) & 0xffff;
-        uVar10 = (uVar7 + uVar11) & 0xffff;
-        uVar11 = ((uVar7 - 1) - uVar11) & 0xffff;
+        col.a = ((int)(a8 * (halfSpan - cur)) / (int)halfSpan) & 0xff;
+        hudDrawRect(vx + (hiEdge & 0xffff), vy, vr, vb, col);
+        hudDrawRect(vx, vy, vx + (edge & 0xffff) + 1, vb, col);
+        edge = (H >> 1) & 0xffff;
+        conv = (f32)(int)(inset * edge);
+        inset = (uint)(int)(conv * lbl_803E0548) & 0xffff;
+        halfSpan = (edge - inset) & 0xffff;
+        loEdge = (edge + inset) & 0xffff;
+        inset = ((edge - 1) - inset) & 0xffff;
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;
-        col.a = uVar12;
-        hudDrawRect(vx, vy + uVar11 + 1, vr, vy + uVar10, col);
-        step = (int)uVar1 / (int)(uVar7 >> 3);
+        col.a = step0;
+        hudDrawRect(vx, vy + inset + 1, vr, vy + loEdge, col);
+        step = (int)halfSpan / (int)(edge >> 3);
         if (step == 0)
         {
             step = 1;
         }
-        for (uVar12 = 0; uVar8 = uVar12 & 0xffff, (int)uVar8 < (int)(uVar1 - step); uVar12 += step)
+        for (step0 = 0; hiEdge = step0 & 0xffff, (int)hiEdge < (int)(halfSpan - step); step0 += step)
         {
             col.r = 0xff;
             col.g = 0xff;
             col.b = 0xff;
-            col.a = ((int)(a8 * (uVar7 - uVar8)) / (int)uVar7) & 0xff;
-            iVar6 = vy + (uVar10 & 0xffff);
-            hudDrawRect(vx, iVar6, vr, step + iVar6, col);
-            iVar6 = vy + (uVar11 & 0xffff);
-            hudDrawRect(vx, (iVar6 - step) + 1, vr, iVar6 + 1, col);
-            uVar10 += step;
-            uVar11 -= step;
+            col.a = ((int)(a8 * (edge - hiEdge)) / (int)edge) & 0xff;
+            screenX = vy + (loEdge & 0xffff);
+            hudDrawRect(vx, screenX, vr, step + screenX, col);
+            screenX = vy + (inset & 0xffff);
+            hudDrawRect(vx, (screenX - step) + 1, vr, screenX + 1, col);
+            loEdge += step;
+            inset -= step;
         }
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;
-        col.a = ((int)(a8 * (uVar7 - uVar8)) / (int)uVar7) & 0xff;
-        hudDrawRect(vx, vy + (uVar10 & 0xffff), vr, vb, col);
-        hudDrawRect(vx, vy, vr, vy + (uVar11 & 0xffff) + 1, col);
+        col.a = ((int)(a8 * (edge - hiEdge)) / (int)edge) & 0xff;
+        hudDrawRect(vx, vy + (loEdge & 0xffff), vr, vb, col);
+        hudDrawRect(vx, vy, vr, vy + (inset & 0xffff) + 1, col);
         GXSetScissor(sx, sy, sw, sh);
     }
 }

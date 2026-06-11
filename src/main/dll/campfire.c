@@ -193,49 +193,49 @@ void kaldaChomFn_8016821c(int obj, KaldaChomControl* control)
 void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
 {
     KaldaChomControl* control;
-    int iVar3;
+    int ref;
     u8* setup;
     f32 h;
     f32 spd;
     f32 r;
 
     control = ((CampfireState*)state)->control;
-    iVar3 = *(int*)&((GameObject*)obj)->anim.placementData;
+    ref = *(int*)&((GameObject*)obj)->anim.placementData;
     if (Obj_IsLoadingLocked() != 0)
     {
-        h = lbl_803E30A0 + (f32)(s32) * (s8*)(iVar3 + 0x28) / lbl_803E30A4;
-        iVar3 = Obj_AllocObjectSetup(0x24, 0x51b);
+        h = lbl_803E30A0 + (f32)(s32) * (s8*)(ref + 0x28) / lbl_803E30A4;
+        ref = Obj_AllocObjectSetup(0x24, 0x51b);
         if (useUpperMouthPoint != 0)
         {
-            *(f32*)(iVar3 + 8) = control->upperMouthPosX;
-            *(f32*)(iVar3 + 0xc) = control->upperMouthPosY;
-            *(f32*)(iVar3 + 0x10) = control->upperMouthPosZ;
+            *(f32*)(ref + 8) = control->upperMouthPosX;
+            *(f32*)(ref + 0xc) = control->upperMouthPosY;
+            *(f32*)(ref + 0x10) = control->upperMouthPosZ;
         }
         else
         {
-            *(f32*)(iVar3 + 8) = control->lowerMouthPosX;
-            *(f32*)(iVar3 + 0xc) = control->lowerMouthPosY;
-            *(f32*)(iVar3 + 0x10) = control->lowerMouthPosZ;
+            *(f32*)(ref + 8) = control->lowerMouthPosX;
+            *(f32*)(ref + 0xc) = control->lowerMouthPosY;
+            *(f32*)(ref + 0x10) = control->lowerMouthPosZ;
         }
-        *(u8*)(iVar3 + 4) = 1;
-        *(u8*)(iVar3 + 5) = 4;
-        *(u8*)(iVar3 + 6) = 0xff;
-        *(u8*)(iVar3 + 7) = 0xff;
-        setup = (u8*)Obj_SetupObject(iVar3, 5, 0xffffffff, 0xffffffff, 0);
+        *(u8*)(ref + 4) = 1;
+        *(u8*)(ref + 5) = 4;
+        *(u8*)(ref + 6) = 0xff;
+        *(u8*)(ref + 7) = 0xff;
+        setup = (u8*)Obj_SetupObject(ref, 5, 0xffffffff, 0xffffffff, 0);
         if (setup != NULL)
         {
             spd = lbl_803E30AC * (((GroundBaddieState*)state)->baddie.targetDistance / (f32)(u32)(
                 (GroundBaddieState*)state)->aggroRange);
             *(f32*)(setup + 0x24) =
-                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.worldPosX - *(f32*)(iVar3 + 8)) /
+                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.worldPosX - *(f32*)(ref + 8)) /
                 spd;
             r = (f32)(s32)
             randomGetRange(-0xa, 0xa);
             *(f32*)(setup + 0x28) =
             (lbl_803E30A8 * h + ((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.worldPosY + r - *
-                (f32*)(iVar3 + 0xc)) / spd;
+                (f32*)(ref + 0xc)) / spd;
             *(f32*)(setup + 0x2c) =
-                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.worldPosZ - *(f32*)(iVar3 + 0x10)) /
+                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.worldPosZ - *(f32*)(ref + 0x10)) /
                 spd;
         }
     }
@@ -473,13 +473,13 @@ int kaldachom_getObjectTypeId(void) { return 0x49; }
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void kaldachom_free(int param_1)
+void kaldachom_free(int obj)
 {
-    undefined4 uVar1;
+    undefined4 state;
 
-    uVar1 = *(undefined4*)(param_1 + 0xb8);
-    ObjGroup_RemoveObject(param_1, 3);
-    (*(code*)(*gBaddieControlInterface + 0x40))(param_1, uVar1, 0x20);
+    state = *(undefined4*)(obj + 0xb8);
+    ObjGroup_RemoveObject(obj, 3);
+    (*(code*)(*gBaddieControlInterface + 0x40))(obj, state, 0x20);
     return;
 }
 
@@ -540,94 +540,94 @@ void kaldachom_hitDetect(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void kaldachom_update(int param_1)
+void kaldachom_update(int obj)
 {
-    int iVar1;
-    uint uVar2;
-    undefined4 uVar3;
-    int* piVar3;
-    undefined4 uVar4;
-    int iVar8;
-    int iVar9;
+    int cond;
+    uint ua;
+    undefined4 player;
+    int* texPtr;
+    undefined4 ub;
+    int ref;
+    int state;
     KaldaChomControl* control;
-    f32 dVar10;
+    f32 scrollPhase;
 
-    iVar9 = *(int*)&((GameObject*)param_1)->extra;
-    iVar8 = *(int*)&((GameObject*)param_1)->anim.placementData;
-    if (((GameObject*)param_1)->unkF4 != 0)
+    state = *(int*)&((GameObject*)obj)->extra;
+    ref = *(int*)&((GameObject*)obj)->anim.placementData;
+    if (((GameObject*)obj)->unkF4 != 0)
     {
-        if ((((CampfireState*)iVar9)->unk270 != 3) &&
-            (iVar1 = (*gMapEventInterface)->isTimedEventActive(((KaldachomPlacement*)iVar8)->unk14), iVar1 != 0))
+        if ((((CampfireState*)state)->unk270 != 3) &&
+            (cond = (*gMapEventInterface)->isTimedEventActive(((KaldachomPlacement*)ref)->unk14), cond != 0))
         {
-            (**(code**)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8, param_1, iVar8, iVar9, 8, 6, 0, 0x26);
-            *(undefined2*)(iVar9 + 0x402) = 0;
-            Sfx_PlayFromObject(param_1, SFXkr_pullup1);
-            ObjAnim_SetCurrentMove(param_1, 4, lbl_803E3060, 0x10);
-            *(undefined*)(iVar9 + 0x346) = 0;
-            ((GameObject*)param_1)->anim.alpha = 0xff;
-            *(byte*)&((GameObject*)param_1)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_1)->anim.
+            (**(code**)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8, obj, ref, state, 8, 6, 0, 0x26);
+            *(undefined2*)(state + 0x402) = 0;
+            Sfx_PlayFromObject(obj, SFXkr_pullup1);
+            ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, 0x10);
+            *(undefined*)(state + 0x346) = 0;
+            ((GameObject*)obj)->anim.alpha = 0xff;
+            *(byte*)&((GameObject*)obj)->anim.resetHitboxMode = *(byte*)&((GameObject*)obj)->anim.
                 resetHitboxMode | 8;
         }
     }
     else
     {
-        iVar8 = (**(code**)(*gBaddieControlInterface + 0x30))(param_1, iVar9, 0);
-        if (iVar8 == 0)
+        ref = (**(code**)(*gBaddieControlInterface + 0x30))(obj, state, 0);
+        if (ref == 0)
         {
-            *(undefined2*)(iVar9 + 0x402) = 0;
+            *(undefined2*)(state + 0x402) = 0;
         }
         else
         {
-            kaldachom_updateCombat(param_1, iVar9, iVar9);
-            if (((CampfireState*)iVar9)->targetState == 0)
+            kaldachom_updateCombat(obj, state, state);
+            if (((CampfireState*)state)->targetState == 0)
             {
-                control = ((CampfireState*)iVar9)->control;
+                control = ((CampfireState*)state)->control;
                 control->pullupSfxTimer = control->pullupSfxTimer - timeDelta;
                 if (control->pullupSfxTimer <= lbl_803E3060)
                 {
-                    Sfx_PlayFromObject(param_1, SFXkr_pullup2);
+                    Sfx_PlayFromObject(obj, SFXkr_pullup2);
                     control->pullupSfxTimer = (f32)(int)
                     randomGetRange(300, 600);
                 }
-                uVar3 = Obj_GetPlayerObject();
-                *(undefined4*)(iVar9 + 0x2d0) = uVar3;
-                if (((CampfireState*)iVar9)->controlMode != 6)
+                player = Obj_GetPlayerObject();
+                *(undefined4*)(state + 0x2d0) = player;
+                if (((CampfireState*)state)->controlMode != 6)
                 {
-                    (**(code**)(*gPlayerInterface + 0x30))((double)timeDelta, param_1, iVar9, 5);
+                    (**(code**)(*gPlayerInterface + 0x30))((double)timeDelta, obj, state, 5);
                 }
-                iVar8 = (**(code**)(*gBaddieControlInterface + 0x48))
-                    ((f64)(f32)(u32)((CampfireState*)iVar9)->aggroRange, param_1, iVar9, 0x8000);
-                if (iVar8 != 0)
+                ref = (**(code**)(*gBaddieControlInterface + 0x48))
+                    ((f64)(f32)(u32)((CampfireState*)state)->aggroRange, obj, state, 0x8000);
+                if (ref != 0)
                 {
                     (**(code**)(*gBaddieControlInterface + 0x28))
-                        (param_1, iVar9, iVar9 + 0x35c, (int)((CampfireState*)iVar9)->gameBitB, 0, 0, 0, 4, 0xffffffff);
-                    *(undefined*)(iVar9 + 0x349) = 0;
-                    *(undefined2*)(iVar9 + 0x402) = 1;
+                        (obj, state, state + 0x35c, (int)((CampfireState*)state)->gameBitB, 0, 0, 0, 4, 0xffffffff);
+                    *(undefined*)(state + 0x349) = 0;
+                    *(undefined2*)(state + 0x402) = 1;
                 }
             }
             else
             {
-                control = ((CampfireState*)iVar9)->control;
-                piVar3 = (int*)objFindTexture(param_1, 0, 0);
+                control = ((CampfireState*)state)->control;
+                texPtr = (int*)objFindTexture(obj, 0, 0);
                 control->textureScrollAngle = control->textureScrollAngle + 0x1000;
-                dVar10 = mathSinf((lbl_803E30B4 * (f32)(s32)control->textureScrollAngle) / lbl_803E30B8
+                scrollPhase = mathSinf((lbl_803E30B4 * (f32)(s32)control->textureScrollAngle) / lbl_803E30B8
                 )
                 ;
-                *piVar3 = (int)(lbl_803E30B0 * (lbl_803E3078 + dVar10));
-                uVar3 = Obj_GetPlayerObject();
-                *(undefined4*)(iVar9 + 0x2d0) = uVar3;
-                kaldachom_handleAnimEvents(param_1, iVar9, iVar9);
-                (**(code**)(*gBaddieControlInterface + 0x2c))((double)lbl_803E3060, param_1, iVar9, 0xffffffff);
-                if (((CampfireState*)iVar9)->controlMode != 6)
+                *texPtr = (int)(lbl_803E30B0 * (lbl_803E3078 + scrollPhase));
+                player = Obj_GetPlayerObject();
+                *(undefined4*)(state + 0x2d0) = player;
+                kaldachom_handleAnimEvents(obj, state, state);
+                (**(code**)(*gBaddieControlInterface + 0x2c))((double)lbl_803E3060, obj, state, 0xffffffff);
+                if (((CampfireState*)state)->controlMode != 6)
                 {
-                    (**(code**)(*gPlayerInterface + 0x30))((double)timeDelta, param_1, iVar9, 5);
+                    (**(code**)(*gPlayerInterface + 0x30))((double)timeDelta, obj, state, 5);
                 }
-                *(undefined4*)(iVar9 + 0x3e0) = *(undefined4*)&((GameObject*)param_1)->pendingParentObj;
-                *(undefined4*)&((GameObject*)param_1)->pendingParentObj = 0;
+                *(undefined4*)(state + 0x3e0) = *(undefined4*)&((GameObject*)obj)->pendingParentObj;
+                *(undefined4*)&((GameObject*)obj)->pendingParentObj = 0;
                 (**(code**)(*gPlayerInterface + 8))
-                ((double)timeDelta, (double)timeDelta, param_1, iVar9, &gKaldaChomStateHandlersA,
+                ((double)timeDelta, (double)timeDelta, obj, state, &gKaldaChomStateHandlersA,
                  &gKaldaChomStateHandlersB);
-                *(undefined4*)&((GameObject*)param_1)->pendingParentObj = *(undefined4*)(iVar9 + 0x3e0);
+                *(undefined4*)&((GameObject*)obj)->pendingParentObj = *(undefined4*)(state + 0x3e0);
             }
         }
     }
