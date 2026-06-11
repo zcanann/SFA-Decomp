@@ -144,7 +144,6 @@ extern f32 lbl_803E51A0;
 extern f32 timeDelta;
 extern u8 framesThisStep;
 
-#pragma peephole on
 void dll_19B_update(int obj)
 {
     s16* st;
@@ -178,7 +177,7 @@ void dll_19B_update(int obj)
     GameBit_Set(0x127, 1);
     if ((v = st[3]) != 0)
     {
-        st[2] = st[2] + v;
+        st[2] += (s16)v;
         if (st[2] <= 12)
         {
             st[2] = 12;
@@ -193,7 +192,7 @@ void dll_19B_update(int obj)
     }
     if ((v = st[5]) != 0)
     {
-        st[4] = st[4] + v;
+        st[4] += (s16)v;
         if (st[4] <= 1 && st[5] <= 0)
         {
             st[4] = 1;
@@ -289,7 +288,7 @@ void dll_19B_update(int obj)
                 ((Dll19BState*)st)->unk12 += 1;
                 GameBit_Set(0x1d8, 0);
             }
-            st[7] -= (int)timeDelta;
+            st[7] -= (s16)timeDelta;
             fn_80137948(sShrineTimeFormat, st[7]);
             if (st[7] <= 0)
             {
