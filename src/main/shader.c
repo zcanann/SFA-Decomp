@@ -10,256 +10,40 @@
 
 
 extern float ABS();
-extern undefined4 FUN_800033a8();
-extern undefined8 FUN_80006724();
-extern undefined4 FUN_80006728();
-extern undefined4 FUN_80006770();
-extern undefined4 FUN_800068b8();
-extern undefined4 FUN_800068d8();
-extern undefined4 FUN_800068f4();
 extern undefined4 FUN_8000693c();
 extern undefined4 FUN_80006958();
-extern undefined4 FUN_8000696c();
-extern void* FUN_800069a8();
-extern undefined8 FUN_80006a88();
-extern undefined4 FUN_80006adc();
-extern undefined8 FUN_80006c1c();
-extern undefined4 FUN_80006c28();
-extern undefined4 FUN_80017488();
-extern undefined8 FUN_800174b8();
-extern undefined8 FUN_80017630();
-extern undefined8 FUN_80017640();
-extern undefined8 FUN_80017644();
-extern undefined4 FUN_800176a8();
 extern undefined4 FUN_8001771c();
-extern undefined8 FUN_80017810();
-extern undefined8 FUN_80017814();
-extern undefined4 FUN_80017830();
-extern undefined4 FUN_800178bc();
 extern int FUN_80017a98();
-extern undefined4 FUN_80017aa0();
-extern undefined8 FUN_80017ac8();
-extern undefined4 FUN_80017ae4();
-extern int FUN_80017b00();
-extern undefined4 FUN_80017b10();
 extern void* ObjGroup_GetObjects();
-extern undefined4 FUN_80040d88();
-extern undefined8 FUN_80040d94();
-extern int FUN_80042830();
-extern int FUN_80042838();
-extern undefined4 FUN_80042f88();
 extern int mapLoadDataFile();
-extern undefined8 FUN_800443fc();
-extern int FUN_80044404();
-extern undefined8 FUN_80044424();
 extern undefined4 piRomLoadSection();
-extern undefined8 FUN_80044f74();
-extern uint FUN_800452f8();
-extern undefined8 FUN_80045328();
-extern undefined4 FUN_80045c4c();
-extern undefined8 FUN_8004600c();
-extern undefined4 FUN_80053754();
-extern undefined4 FUN_80053758();
-extern undefined4 FUN_80053c9c();
-extern uint FUN_80053f60();
-extern undefined4 FUN_800600f4();
-extern undefined8 FUN_800601e4();
-extern undefined4 FUN_800602d4();
-extern undefined4 FUN_800604ac();
-extern undefined4 FUN_8006069c();
-extern undefined4 FUN_800614d0();
-extern undefined8 FUN_800627a0();
-extern undefined4 FUN_800632cc();
-extern void trackDolphin_initIntersectionBuffers(void);
-extern undefined8 FUN_8006f564();
-extern undefined4 FUN_800723a0();
-extern undefined4 FUN_80080f28();
-extern undefined4 FUN_80080f3c();
-extern int FUN_800e83c8();
-extern int FUN_800e87a0();
-extern void* FUN_800e87a8();
-extern undefined4 FUN_800e8b48();
-extern undefined4 FUN_800e8b54();
-extern int FUN_800e9b14();
-extern undefined8 FUN_800e9c00();
-extern undefined4 FUN_80130150();
-extern undefined4 FUN_8013028c();
-extern undefined4 FUN_80130298();
-extern undefined4 FUN_80132550();
-extern undefined4 FUN_80135814();
-extern undefined4 FUN_80242114();
-extern undefined4 FUN_80247bf8();
-extern undefined4 FUN_80247e94();
-extern undefined4 FUN_80247edc();
-extern double FUN_80247f90();
-extern undefined8 FUN_8028681c();
-extern undefined8 FUN_80286820();
-extern undefined4 FUN_8028682c();
 extern undefined8 FUN_80286834();
-extern undefined8 FUN_80286838();
-extern undefined8 FUN_8028683c();
-extern int FUN_80286840();
-extern undefined4 FUN_80286868();
-extern undefined4 FUN_8028686c();
-extern undefined4 FUN_80286878();
 extern undefined4 FUN_80286880();
-extern undefined4 FUN_80286884();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_8028688c();
-extern undefined4 FUN_802924c4();
 
-extern undefined4 DAT_802c25d8;
-extern undefined4 DAT_802c25dc;
-extern undefined4 DAT_802c25e0;
-extern undefined4 DAT_802c25e4;
-extern undefined4 DAT_802c25e8;
-extern undefined4 DAT_802c25ec;
-extern undefined4 DAT_802c25f0;
-extern undefined4 DAT_802c25f4;
-extern undefined4 DAT_802c25f8;
-extern undefined4 DAT_802c25fc;
-extern undefined4 DAT_802c2600;
-extern undefined4 DAT_802c2604;
-extern undefined4 DAT_802c2608;
-extern undefined4 DAT_802c260c;
-extern undefined4 DAT_802c2610;
-extern undefined4 DAT_802c2614;
-extern undefined4 DAT_802c2618;
-extern undefined4 DAT_802c261c;
-extern undefined4 DAT_802c2620;
-extern undefined4 DAT_802c2624;
-extern undefined4 DAT_8030f11c;
-extern undefined4 DAT_8030f194;
-extern undefined4 DAT_80382e98;
-extern short* DAT_80382e9c;
-extern undefined4 DAT_80382ea0;
-extern char* DAT_80382ea4;
-extern undefined4 DAT_80382ea8;
 extern int DAT_80382eac;
-extern undefined4 DAT_80382eb0;
-extern undefined4 DAT_80382eb2;
-extern int DAT_80382eec;
-extern int DAT_80382f00;
-extern int DAT_80382f14;
-extern undefined4 DAT_80382fb0;
-extern uint DAT_803870c8;
-extern int DAT_80387208;
-extern undefined4 DAT_803872a8;
-extern undefined4 DAT_803872ac;
-extern undefined4 DAT_803872b0;
-extern undefined4 DAT_803872b4;
-extern undefined4 DAT_803872c4;
-extern undefined4 DAT_803872d4;
-extern undefined4 DAT_803872e4;
-extern undefined4 DAT_803872f4;
-extern undefined4 DAT_80387304;
-extern undefined4 DAT_80387314;
-extern undefined4 DAT_80387324;
-extern undefined4 DAT_80387334;
-extern undefined4 DAT_80387344;
-extern undefined4 DAT_80387354;
-extern undefined4 DAT_80387364;
-extern undefined4 DAT_80387374;
-extern undefined4 DAT_80387384;
-extern undefined4 DAT_80387394;
-extern undefined4 DAT_803873a4;
-extern undefined4 DAT_803873b4;
-extern undefined4 DAT_803873c4;
-extern undefined4 DAT_803873d4;
-extern undefined4 DAT_803873e4;
-extern undefined4 DAT_803873f4;
-extern undefined4 DAT_80387404;
-extern undefined4 DAT_80387414;
-extern undefined4 DAT_80387424;
-extern undefined4 DAT_80387434;
-extern undefined4 DAT_80387444;
-extern undefined4 DAT_80387454;
-extern undefined4 DAT_80387464;
-extern undefined4 DAT_80387474;
-extern undefined4 DAT_80387484;
-extern undefined4 DAT_80388538;
 extern undefined4 DAT_8038859c;
 extern undefined4 DAT_803885a0;
 extern undefined4 DAT_803885a4;
 extern undefined4 DAT_803885a8;
-extern undefined4 DAT_803dc280;
-extern undefined4 DAT_803dc284;
-extern undefined4 DAT_803dc2a8;
-extern undefined4 DAT_803dd5d0;
-extern undefined4* DAT_803dd6dc;
-extern undefined4* DAT_803dd6e0;
-extern undefined4* DAT_803dd6e4;
 extern undefined4* DAT_803dd6ec;
-extern undefined4* DAT_803dd700;
-extern undefined4* DAT_803dd718;
 extern undefined4* DAT_803dd71c;
 extern MapEventInterface** gMapEventInterface;
-extern undefined4 DAT_803dda48;
-extern undefined4 DAT_803dda4c;
-extern undefined4 DAT_803dda50;
-extern undefined4 DAT_803dda54;
-extern undefined4 DAT_803dda60;
 extern undefined4 DAT_803dda61;
-extern int* DAT_803dda64;
-extern undefined4 DAT_803dda68;
 extern undefined4 DAT_803dda6c;
-extern undefined4 DAT_803dda6d;
-extern undefined4 DAT_803dda74;
-extern undefined4 DAT_803dda77;
-extern undefined4 DAT_803dda80;
-extern undefined4 DAT_803dda84;
-extern undefined4 DAT_803dda9c;
 extern undefined4 DAT_803ddae8;
 extern int* DAT_803ddaec;
-extern undefined4 DAT_803ddaf0;
-extern undefined4 DAT_803ddaf4;
-extern short* DAT_803ddaf8;
-extern undefined4 DAT_803ddafc;
-extern undefined4 DAT_803ddb04;
-extern undefined4 DAT_803ddb08;
-extern undefined4 DAT_803ddb0c;
-extern undefined4 DAT_803ddb10;
-extern short* DAT_803ddb14;
-extern undefined4 DAT_803ddb18;
-extern undefined4 DAT_803ddb1c;
-extern undefined4 DAT_803ddb20;
-extern undefined4 DAT_803ddb24;
-extern undefined4 DAT_803ddb28;
-extern undefined4 DAT_803ddb30;
-extern undefined4 DAT_803ddb34;
-extern undefined4 DAT_803ddb36;
-extern undefined4 DAT_803ddb38;
-extern undefined4 DAT_803ddb3d;
-extern undefined4 DAT_803ddb40;
-extern undefined4 DAT_803ddb44;
-extern undefined4 DAT_803ddb48;
 extern f64 DOUBLE_803df840;
-extern f32 lbl_803DC28C;
 extern f32 lbl_803DDA58;
 extern f32 lbl_803DDA5C;
-extern f32 lbl_803DDADC;
-extern f32 lbl_803DDAE0;
-extern f32 lbl_803DDAE4;
-extern f32 lbl_803DDB4C;
-extern f32 lbl_803DDB50;
 extern f32 lbl_803DF834;
 extern f32 lbl_803DF838;
-extern f32 lbl_803DF848;
 extern f32 lbl_803DF84C;
-extern f32 lbl_803DF850;
 extern f32 lbl_803DF854;
 extern f32 lbl_803DF858;
 extern f32 lbl_803DF85C;
 extern f32 lbl_803DF860;
 extern f32 lbl_803DF864;
 extern f32 lbl_803DF868;
-extern f32 lbl_803DF86C;
-extern f32 lbl_803DF870;
-extern f32 lbl_803DF874;
-extern undefined cRam803dc285;
-extern undefined2 cRam803dc286;
-extern undefined cRam803dc287;
-extern undefined4 cRam803dc288;
 
 /*
  * --INFO--
@@ -713,7 +497,7 @@ void FUN_80056cfc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800571f8(undefined* param_1)
+void FUN_800571f8(u8* param_1)
 {
     int iVar1;
     int iVar2;
@@ -824,13 +608,13 @@ undefined4 FUN_80057690(int param_1)
     float fStack_44;
     float local_40;
     float fStack_3c;
-    undefined auStack_38[4];
-    undefined auStack_34[4];
+    u8 auStack_38[4];
+    u8 auStack_34[4];
     undefined8 local_30;
 
     if (((GameObject*)param_1)->anim.alpha == 0)
     {
-        *(undefined*)(param_1 + 0x37) = 0;
+        *(u8*)(param_1 + 0x37) = 0;
         return 0;
     }
     iVar5 = *(int*)&((GameObject*)param_1)->anim.placementData;
@@ -839,7 +623,7 @@ undefined4 FUN_80057690(int param_1)
         dVar9 = (double)*(float*)(param_1 + 0x40);
         if (dVar9 < (double)lbl_803DF838)
         {
-            *(undefined*)(param_1 + 0x37) = 0;
+            *(u8*)(param_1 + 0x37) = 0;
             return 0;
         }
         iVar2 = FUN_80017a98();
@@ -855,7 +639,7 @@ undefined4 FUN_80057690(int param_1)
         }
         if (dVar9 < dVar8)
         {
-            *(undefined*)(param_1 + 0x37) = 0;
+            *(u8*)(param_1 + 0x37) = 0;
             return 0;
         }
         uVar6 = 0xff;
@@ -876,7 +660,7 @@ undefined4 FUN_80057690(int param_1)
         fVar1 = ABS(local_40) * lbl_803DF834;
         if (fVar1 < lbl_803DF860)
         {
-            *(undefined*)(param_1 + 0x37) = 0;
+            *(u8*)(param_1 + 0x37) = 0;
             return 0;
         }
         if (fVar1 < lbl_803DF868)
@@ -3640,7 +3424,7 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
         found3:
             if (i4 == -1)
                 i4 = mapProcessRomList(cv4);
-            *(s8*)((char*)lbl_8038224C + 6 + i4 * 8) = 1;
+            *(s8*)&((BlockEntry*)lbl_8038224C)[i4].field_6 = 1;
         }
         rects = (s16*)(lbl_80382238[1] + id * 10);
         x = x - rects[0];
