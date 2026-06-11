@@ -1573,7 +1573,7 @@ void Tricky_update(int obj)
     p = state + i * 8;
     for (; i >= 0; i--)
     {
-        *(u8*)(p + 0x74e) = *(u8*)(p + 0x74e) - 1;
+        *(u8*)(p + 0x74e) -= 1;
         if (*(s8*)(p + 0x74e) == 0)
         {
             memmove((void*)(p + 0x748), (void*)(state + (i + 1) * 8 + 0x748),
