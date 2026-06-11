@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/rom_curve_interface.h"
@@ -6,7 +7,6 @@
 
 #pragma dont_inline on
 
-extern int Sfx_PlayFromObject(u32 obj, int sfxId);
 extern int getAngle(f32 dx, f32 dz);
 extern uint randomGetRange();
 extern void* Obj_AllocObjectSetup();
@@ -525,7 +525,6 @@ void fn_80156010(uint obj, int state)
 {
     bool timerExpired;
     short move;
-    double dVar3;
 
     timerExpired = false;
     *(float*)(state + 0x324) = *(float*)(state + 0x324) - timeDelta;
@@ -556,7 +555,7 @@ void fn_80156010(uint obj, int state)
         else if (((move == 2) && (timerExpired)) && ((((BaddieState*)state)->controlFlags & 0x4000000) != 0))
         {
             fn_8014D08C(obj, state, 4, lbl_803E2A54, 0, 0);
-            dVar3 = (double)Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
+            Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
         }
     }
     timeOfDayFn_80155cf8(obj, state);
