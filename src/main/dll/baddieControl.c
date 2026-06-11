@@ -2814,10 +2814,9 @@ void dll_54_update(u8* obj)
         }
         {
             GameObject* a = lbl_803DD5C0->lookAtObj;
-            GameObject* b = lbl_803DD5C0->originObj;
-            dx = a->anim.worldPosX - b->anim.worldPosX;
-            dy = a->anim.worldPosY - b->anim.worldPosY;
-            dz = a->anim.worldPosZ - b->anim.worldPosZ;
+            dx = a->anim.worldPosX - lbl_803DD5C0->originObj->anim.worldPosX;
+            dy = a->anim.worldPosY - lbl_803DD5C0->originObj->anim.worldPosY;
+            dz = a->anim.worldPosZ - lbl_803DD5C0->originObj->anim.worldPosZ;
         }
         zz = dz * dz;
         xx = dx * dx;
