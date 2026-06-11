@@ -322,7 +322,7 @@ extern f32 lbl_803E140C;
 extern f32 lbl_803E1410;
 extern f32 lbl_803E1414;
 
-void dll_9D_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
+void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     GfxBuf buf;
     u8* tab = lbl_80318038;
@@ -423,8 +423,8 @@ void dll_9D_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[12].z = lbl_803E13F8;
 
     buf.v58 = 0;
-    buf.ctx = (int)param_1;
-    buf.v44 = param_2;
+    buf.ctx = (int)sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E13F8;
     buf.pos[1] = lbl_803E13F8;
     buf.pos[2] = lbl_803E13F8;
@@ -449,21 +449,21 @@ void dll_9D_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     buf.cmds = e;
     fl = 0xc0100c0;
     buf.flags = fl;
-    fl |= param_4;
+    fl |= flags;
     buf.flags = fl;
     if (fl & 1)
     {
-        if (param_1 != 0)
+        if (sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E13F8 + *(f32*)(param_1 + 0x18);
-            buf.pos[1] = lbl_803E13F8 + *(f32*)(param_1 + 0x1c);
-            buf.pos[2] = lbl_803E13F8 + *(f32*)(param_1 + 0x20);
+            buf.pos[0] = lbl_803E13F8 + *(f32*)(sourceObj + 0x18);
+            buf.pos[1] = lbl_803E13F8 + *(f32*)(sourceObj + 0x1c);
+            buf.pos[2] = lbl_803E13F8 + *(f32*)(sourceObj + 0x20);
         }
         else
         {
-            buf.pos[0] = lbl_803E13F8 + *(f32*)(param_3 + 0xc);
-            buf.pos[1] = lbl_803E13F8 + *(f32*)(param_3 + 0x10);
-            buf.pos[2] = lbl_803E13F8 + *(f32*)(param_3 + 0x14);
+            buf.pos[0] = lbl_803E13F8 + *(f32*)(posSource + 0xc);
+            buf.pos[1] = lbl_803E13F8 + *(f32*)(posSource + 0x10);
+            buf.pos[2] = lbl_803E13F8 + *(f32*)(posSource + 0x14);
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, tab, 0x18, &tab[212], 0x46c, 0);
@@ -489,7 +489,7 @@ extern f32 lbl_803E1438;
 extern f32 lbl_803E143C;
 extern f32 lbl_803E1440;
 
-void dll_9E_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
+void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
     {
@@ -614,8 +614,8 @@ void dll_9E_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[13].z = lbl_803E1418;
 
     buf.v58 = 0;
-    buf.ctx = (int)param_1;
-    buf.v44 = param_2;
+    buf.ctx = (int)sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E1418;
     buf.pos[1] = lbl_803E1418;
     buf.pos[2] = lbl_803E1418;
@@ -640,21 +640,21 @@ void dll_9E_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     buf.cmds = e;
     fl = 0xc0100c0;
     buf.flags = fl;
-    fl |= param_4;
+    fl |= flags;
     buf.flags = fl;
     if (fl & 1)
     {
-        if (param_1 != 0)
+        if (sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E1418 + *(f32*)(param_1 + 0x18);
-            buf.pos[1] = lbl_803E1418 + *(f32*)(param_1 + 0x1c);
-            buf.pos[2] = lbl_803E1418 + *(f32*)(param_1 + 0x20);
+            buf.pos[0] = lbl_803E1418 + *(f32*)(sourceObj + 0x18);
+            buf.pos[1] = lbl_803E1418 + *(f32*)(sourceObj + 0x1c);
+            buf.pos[2] = lbl_803E1418 + *(f32*)(sourceObj + 0x20);
         }
         else
         {
-            buf.pos[0] = lbl_803E1418 + *(f32*)(param_3 + 0xc);
-            buf.pos[1] = lbl_803E1418 + *(f32*)(param_3 + 0x10);
-            buf.pos[2] = lbl_803E1418 + *(f32*)(param_3 + 0x14);
+            buf.pos[0] = lbl_803E1418 + *(f32*)(posSource + 0xc);
+            buf.pos[1] = lbl_803E1418 + *(f32*)(posSource + 0x10);
+            buf.pos[2] = lbl_803E1418 + *(f32*)(posSource + 0x14);
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, tab, 0x18, &tab[0xd4], 0x46c, 0);
@@ -683,7 +683,7 @@ extern f32 lbl_803E1474;
 extern f32 lbl_803E1478;
 extern f32 lbl_803E147C;
 
-void dll_9F_func03(short* param_1, int param_2, int param_3, uint param_4)
+void dll_9F_func03(short* sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -706,7 +706,7 @@ void dll_9F_func03(short* param_1, int param_2, int param_3, uint param_4)
     u8* tab = lbl_80318488;
     GfxCmd* base = buf.entries;
     GfxCmd* e = base;
-    int head = *param_1;
+    int head = *sourceObj;
     u32 fl;
 
     if (head != 0)
@@ -834,8 +834,8 @@ void dll_9F_func03(short* param_1, int param_2, int param_3, uint param_4)
     e[15].z = lbl_803E1478;
 
     buf.v58 = 0;
-    buf.ctx = (int)param_1;
-    buf.v44 = param_2;
+    buf.ctx = (int)sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E1448;
     buf.pos[1] = lbl_803E1448;
     buf.pos[2] = lbl_803E1448;
@@ -859,21 +859,21 @@ void dll_9F_func03(short* param_1, int param_2, int param_3, uint param_4)
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     fl = 0xc0104c0;
     buf.flags = fl;
-    fl |= param_4;
+    fl |= flags;
     buf.flags = fl;
     if (fl & 1)
     {
-        if (param_1 != 0)
+        if (sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E1448 + *(f32*)(param_1 + 0xc);
-            buf.pos[1] = lbl_803E1448 + *(f32*)(param_1 + 0xe);
-            buf.pos[2] = lbl_803E1448 + *(f32*)(param_1 + 0x10);
+            buf.pos[0] = lbl_803E1448 + *(f32*)(sourceObj + 0xc);
+            buf.pos[1] = lbl_803E1448 + *(f32*)(sourceObj + 0xe);
+            buf.pos[2] = lbl_803E1448 + *(f32*)(sourceObj + 0x10);
         }
         else
         {
-            buf.pos[0] = lbl_803E1448 + *(f32*)(param_3 + 0xc);
-            buf.pos[1] = lbl_803E1448 + *(f32*)(param_3 + 0x10);
-            buf.pos[2] = lbl_803E1448 + *(f32*)(param_3 + 0x14);
+            buf.pos[0] = lbl_803E1448 + *(f32*)(posSource + 0xc);
+            buf.pos[1] = lbl_803E1448 + *(f32*)(posSource + 0x10);
+            buf.pos[2] = lbl_803E1448 + *(f32*)(posSource + 0x14);
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, tab, 0x18, &tab[0xd4], 0x46c, 0);
@@ -905,7 +905,7 @@ extern f32 lbl_803E14A8;
 extern f32 lbl_803E14AC;
 extern f32 lbl_803E14B0;
 
-void dll_A0_func03(u8* param_1, int param_2, int param_3, uint param_4)
+void dll_A0_func03(u8* sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -937,7 +937,7 @@ void dll_A0_func03(u8* param_1, int param_2, int param_3, uint param_4)
     e[0].x = lbl_803E1488;
     e[0].y = lbl_803E1488;
     e[0].z = lbl_803E1488;
-    if (param_2 == 0)
+    if (variant == 0)
     {
         e[1].layer = 0;
         e[1].flags = 0x15;
@@ -1017,8 +1017,8 @@ void dll_A0_func03(u8* param_1, int param_2, int param_3, uint param_4)
     p[7].z = lbl_803E1488;
 
     buf.v58 = 0;
-    buf.ctx = (int)param_1;
-    buf.v44 = param_2;
+    buf.ctx = (int)sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E1488;
     buf.pos[1] = lbl_803E1488;
     buf.pos[2] = lbl_803E1488;
@@ -1042,21 +1042,21 @@ void dll_A0_func03(u8* param_1, int param_2, int param_3, uint param_4)
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     fl = 0xc010480;
     buf.flags = fl;
-    fl |= param_4;
+    fl |= flags;
     buf.flags = fl;
     if (fl & 1)
     {
-        if (param_1 != 0)
+        if (sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E1488 + *(f32*)(param_1 + 0x18);
-            buf.pos[1] = lbl_803E1488 + *(f32*)(param_1 + 0x1c);
-            buf.pos[2] = lbl_803E1488 + *(f32*)(param_1 + 0x20);
+            buf.pos[0] = lbl_803E1488 + *(f32*)(sourceObj + 0x18);
+            buf.pos[1] = lbl_803E1488 + *(f32*)(sourceObj + 0x1c);
+            buf.pos[2] = lbl_803E1488 + *(f32*)(sourceObj + 0x20);
         }
         else
         {
-            buf.pos[0] = lbl_803E1488 + *(f32*)(param_3 + 0xc);
-            buf.pos[1] = lbl_803E1488 + *(f32*)(param_3 + 0x10);
-            buf.pos[2] = lbl_803E1488 + *(f32*)(param_3 + 0x14);
+            buf.pos[0] = lbl_803E1488 + *(f32*)(posSource + 0xc);
+            buf.pos[1] = lbl_803E1488 + *(f32*)(posSource + 0x10);
+            buf.pos[2] = lbl_803E1488 + *(f32*)(posSource + 0x14);
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, tab, 0x18, &tab[0xd4], 0x1d9, 0);
@@ -1087,7 +1087,7 @@ extern f32 lbl_803E14D4;
 extern f32 lbl_803E14D8;
 extern f32 lbl_803E14DC;
 
-void dll_A1_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
+void dll_A1_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
     {
@@ -1211,8 +1211,8 @@ void dll_A1_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[13].z = lbl_803E14B8;
 
     buf.v58 = 0;
-    buf.ctx = (int)param_1;
-    buf.v44 = param_2;
+    buf.ctx = (int)sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E14B8;
     buf.pos[1] = lbl_803E14B8;
     buf.pos[2] = lbl_803E14B8;
@@ -1237,21 +1237,21 @@ void dll_A1_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     buf.cmds = e;
     fl = 0xc0104c0;
     buf.flags = fl;
-    fl |= param_4;
+    fl |= flags;
     buf.flags = fl;
     if (fl & 1)
     {
-        if (param_1 != 0)
+        if (sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E14B8 + *(f32*)(param_1 + 0x18);
-            buf.pos[1] = lbl_803E14B8 + *(f32*)(param_1 + 0x1c);
-            buf.pos[2] = lbl_803E14B8 + *(f32*)(param_1 + 0x20);
+            buf.pos[0] = lbl_803E14B8 + *(f32*)(sourceObj + 0x18);
+            buf.pos[1] = lbl_803E14B8 + *(f32*)(sourceObj + 0x1c);
+            buf.pos[2] = lbl_803E14B8 + *(f32*)(sourceObj + 0x20);
         }
         else
         {
-            buf.pos[0] = lbl_803E14B8 + *(f32*)(param_3 + 0xc);
-            buf.pos[1] = lbl_803E14B8 + *(f32*)(param_3 + 0x10);
-            buf.pos[2] = lbl_803E14B8 + *(f32*)(param_3 + 0x14);
+            buf.pos[0] = lbl_803E14B8 + *(f32*)(posSource + 0xc);
+            buf.pos[1] = lbl_803E14B8 + *(f32*)(posSource + 0x10);
+            buf.pos[2] = lbl_803E14B8 + *(f32*)(posSource + 0x14);
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, tab, 0x18, &tab[0xd4], 0x203, 0);
@@ -1281,7 +1281,7 @@ extern f32 lbl_803E14F8;
 extern f32 lbl_803E14FC;
 extern f32 lbl_803E1500;
 
-void dll_A2_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
+void dll_A2_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
     {
@@ -1391,8 +1391,8 @@ void dll_A2_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[11].z = lbl_803E14E0;
 
     buf.v58 = 0;
-    buf.ctx = (int)param_1;
-    buf.v44 = param_2;
+    buf.ctx = (int)sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E14E0;
     buf.pos[1] = lbl_803E14E0;
     buf.pos[2] = lbl_803E14E0;
@@ -1417,21 +1417,21 @@ void dll_A2_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     buf.cmds = e;
     fl = 0xc010480;
     buf.flags = fl;
-    fl |= param_4;
+    fl |= flags;
     buf.flags = fl;
     if (fl & 1)
     {
-        if (param_1 != 0)
+        if (sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E14E0 + *(f32*)(param_1 + 0x18);
-            buf.pos[1] = lbl_803E14E0 + *(f32*)(param_1 + 0x1c);
-            buf.pos[2] = lbl_803E14E0 + *(f32*)(param_1 + 0x20);
+            buf.pos[0] = lbl_803E14E0 + *(f32*)(sourceObj + 0x18);
+            buf.pos[1] = lbl_803E14E0 + *(f32*)(sourceObj + 0x1c);
+            buf.pos[2] = lbl_803E14E0 + *(f32*)(sourceObj + 0x20);
         }
         else
         {
-            buf.pos[0] = lbl_803E14E0 + *(f32*)(param_3 + 0xc);
-            buf.pos[1] = lbl_803E14E0 + *(f32*)(param_3 + 0x10);
-            buf.pos[2] = lbl_803E14E0 + *(f32*)(param_3 + 0x14);
+            buf.pos[0] = lbl_803E14E0 + *(f32*)(posSource + 0xc);
+            buf.pos[1] = lbl_803E14E0 + *(f32*)(posSource + 0x10);
+            buf.pos[2] = lbl_803E14E0 + *(f32*)(posSource + 0x14);
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, tab, 0x18, &tab[0xd4], 0x24, 0);
@@ -1462,7 +1462,7 @@ extern f32 lbl_803E1524;
 extern u8 lbl_803DB970;
 extern u8 lbl_803DB978;
 
-void dll_A5_func03(short* param_1, int param_2, u8* param_3, uint param_4)
+void dll_A5_func03(short* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
     {
@@ -1514,7 +1514,7 @@ void dll_A5_func03(short* param_1, int param_2, u8* param_3, uint param_4)
     e[3].mode = 0x80;
     e[3].x = lbl_803E1508;
     e[3].y = lbl_803E1508;
-    e[3].z = (f32) * param_1;
+    e[3].z = (f32) * sourceObj;
     e[4].layer = 0;
     e[4].flags = 0x7a;
     e[4].tex = (void*)0;
@@ -1579,9 +1579,9 @@ void dll_A5_func03(short* param_1, int param_2, u8* param_3, uint param_4)
     e[12].y = lbl_803E1508;
     e[12].z = lbl_803E1508;
 
-    buf.v58 = param_2;
-    buf.ctx = (int)param_1;
-    buf.v44 = param_2;
+    buf.v58 = variant;
+    buf.ctx = (int)sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E1508;
     buf.pos[1] = lbl_803E1508;
     buf.pos[2] = lbl_803E1508;
@@ -1606,21 +1606,21 @@ void dll_A5_func03(short* param_1, int param_2, u8* param_3, uint param_4)
     buf.cmds = e;
     fl = 0x4040000;
     buf.flags = fl;
-    fl |= (param_4 | 0x80);
+    fl |= (flags | 0x80);
     buf.flags = fl;
     if (fl & 1)
     {
-        if (param_1 != 0)
+        if (sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E1508 + *(f32*)(param_1 + 0xc);
-            buf.pos[1] = lbl_803E1508 + *(f32*)(param_1 + 0xe);
-            buf.pos[2] = lbl_803E1508 + *(f32*)(param_1 + 0x10);
+            buf.pos[0] = lbl_803E1508 + *(f32*)(sourceObj + 0xc);
+            buf.pos[1] = lbl_803E1508 + *(f32*)(sourceObj + 0xe);
+            buf.pos[2] = lbl_803E1508 + *(f32*)(sourceObj + 0x10);
         }
         else
         {
-            buf.pos[0] = lbl_803E1508 + *(f32*)(param_3 + 0xc);
-            buf.pos[1] = lbl_803E1508 + *(f32*)(param_3 + 0x10);
-            buf.pos[2] = lbl_803E1508 + *(f32*)(param_3 + 0x14);
+            buf.pos[0] = lbl_803E1508 + *(f32*)(posSource + 0xc);
+            buf.pos[1] = lbl_803E1508 + *(f32*)(posSource + 0x10);
+            buf.pos[2] = lbl_803E1508 + *(f32*)(posSource + 0x14);
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 8, tab, 4, &tab[0x50], 0x5e0, 0);
@@ -1635,8 +1635,8 @@ extern f32 lbl_803E1580;
 extern f32 lbl_803E1584;
 extern f32 lbl_803E1588;
 
-void dll_A7_func03(short* param_1, int param_2, u8* param_3, uint param_4, undefined4 param_5,
-                   uint* param_6)
+void dll_A7_func03(short* sourceObj, int variant, u8* posSource, uint flags, undefined4 arg5,
+                   uint* extraArgs)
 {
     struct
     {
@@ -1667,12 +1667,12 @@ void dll_A7_func03(short* param_1, int param_2, u8* param_3, uint param_4, undef
     v2 = 0x31;
     v0 = 1;
     v3 = 0x50;
-    if (param_6 != 0)
+    if (extraArgs != 0)
     {
-        v0 = param_6[0];
-        v1 = param_6[1];
-        v2 = param_6[2];
-        v3 = param_6[3];
+        v0 = extraArgs[0];
+        v1 = extraArgs[1];
+        v2 = extraArgs[2];
+        v3 = extraArgs[3];
     }
     e[0].layer = 0;
     e[0].flags = 8;
@@ -1685,11 +1685,11 @@ void dll_A7_func03(short* param_1, int param_2, u8* param_3, uint param_4, undef
     e[1].flags = 8;
     e[1].tex = &tab[0x68];
     e[1].mode = 2;
-    if (param_1 != 0)
+    if (sourceObj != 0)
     {
-        e[1].x = lbl_803E1574 * *(f32*)(param_1 + 4);
-        e[1].y = lbl_803E1578 * *(f32*)(param_1 + 4);
-        e[1].z = lbl_803E1574 * *(f32*)(param_1 + 4);
+        e[1].x = lbl_803E1574 * *(f32*)(sourceObj + 4);
+        e[1].y = lbl_803E1578 * *(f32*)(sourceObj + 4);
+        e[1].z = lbl_803E1574 * *(f32*)(sourceObj + 4);
     }
     else
     {
@@ -1703,9 +1703,9 @@ void dll_A7_func03(short* param_1, int param_2, u8* param_3, uint param_4, undef
     e[2].mode = 0x80;
     e[2].x = lbl_803E1570;
     e[2].y = lbl_803E1570;
-    if (param_1 != 0)
+    if (sourceObj != 0)
     {
-        e[2].z = (f32) * param_1;
+        e[2].z = (f32) * sourceObj;
     }
     else
     {
@@ -1729,7 +1729,7 @@ void dll_A7_func03(short* param_1, int param_2, u8* param_3, uint param_4, undef
     e[4].z = (f32)(int)
     v2;
     p = e + 5;
-    if (param_2 != 1)
+    if (variant != 1)
     {
         p->layer = 2;
         p->flags = 0x3b;
@@ -1772,13 +1772,13 @@ void dll_A7_func03(short* param_1, int param_2, u8* param_3, uint param_4, undef
     p[3].z = (f32)(int)
     v2;
 
-    buf.v58 = param_2;
-    buf.ctx = (int)param_1;
-    buf.v44 = param_2;
+    buf.v58 = variant;
+    buf.ctx = (int)sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E1570;
-    if (param_3 != 0)
+    if (posSource != 0)
     {
-        buf.pos[1] = *(f32*)(param_3 + 0x10);
+        buf.pos[1] = *(f32*)(posSource + 0x10);
     }
     else
     {
@@ -1805,21 +1805,21 @@ void dll_A7_func03(short* param_1, int param_2, u8* param_3, uint param_4, undef
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     fl = 0x4040000;
     buf.flags = fl;
-    fl |= (param_4 | 0x80);
+    fl |= (flags | 0x80);
     buf.flags = fl;
     if (fl & 1)
     {
-        if (param_1 != 0)
+        if (sourceObj != 0)
         {
-            buf.pos[0] = buf.pos[0] + *(f32*)(param_1 + 0xc);
-            buf.pos[1] = buf.pos[1] + *(f32*)(param_1 + 0xe);
-            buf.pos[2] = lbl_803E1570 + *(f32*)(param_1 + 0x10);
+            buf.pos[0] = buf.pos[0] + *(f32*)(sourceObj + 0xc);
+            buf.pos[1] = buf.pos[1] + *(f32*)(sourceObj + 0xe);
+            buf.pos[2] = lbl_803E1570 + *(f32*)(sourceObj + 0x10);
         }
         else
         {
-            buf.pos[0] = buf.pos[0] + *(f32*)(param_3 + 0xc);
-            buf.pos[1] = buf.pos[1] + *(f32*)(param_3 + 0x10);
-            buf.pos[2] = lbl_803E1570 + *(f32*)(param_3 + 0x14);
+            buf.pos[0] = buf.pos[0] + *(f32*)(posSource + 0xc);
+            buf.pos[1] = buf.pos[1] + *(f32*)(posSource + 0x10);
+            buf.pos[2] = lbl_803E1570 + *(f32*)(posSource + 0x14);
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 8, tab, 4, &tab[0x50], 0x5e0, 0);
@@ -1852,7 +1852,7 @@ extern f32 lbl_803E155C;
 extern f32 lbl_803E1560;
 extern f32 lbl_803E1564;
 
-void dll_A6_func03(short* param_1, int param_2, u8* param_3, uint param_4)
+void dll_A6_func03(short* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
     {
@@ -1878,7 +1878,7 @@ void dll_A6_func03(short* param_1, int param_2, u8* param_3, uint param_4)
     f32 yr;
     u32 fl;
 
-    if (param_2 == 0)
+    if (variant == 0)
     {
         p->layer = 0;
         p->flags = 3;
@@ -1889,7 +1889,7 @@ void dll_A6_func03(short* param_1, int param_2, u8* param_3, uint param_4)
         p->z = (f32)(int)(randomGetRange(0, 0x14) + 0x41);
         p++;
     }
-    else if (param_2 == 1)
+    else if (variant == 1)
     {
         p->layer = 0;
         p->flags = 3;
@@ -1981,8 +1981,8 @@ void dll_A6_func03(short* param_1, int param_2, u8* param_3, uint param_4)
     p[8].z = lbl_803E1560;
 
     buf.v58 = 0;
-    buf.ctx = (int)param_1;
-    buf.v44 = param_2;
+    buf.ctx = (int)sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E1530;
     buf.pos[1] = lbl_803E1530;
     buf.pos[2] = lbl_803E1530;
@@ -2006,27 +2006,27 @@ void dll_A6_func03(short* param_1, int param_2, u8* param_3, uint param_4)
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     fl = 0x4000400;
     buf.flags = fl;
-    fl |= param_4;
+    fl |= flags;
     buf.flags = fl;
     if (fl & 1)
     {
-        if (param_1 != 0 && param_3 != 0)
+        if (sourceObj != 0 && posSource != 0)
         {
-            buf.pos[0] = lbl_803E1530 + (*(f32*)(param_1 + 0xc) + *(f32*)(param_3 + 0xc));
-            buf.pos[1] = lbl_803E1530 + (*(f32*)(param_1 + 0xe) + *(f32*)(param_3 + 0x10));
-            buf.pos[2] = lbl_803E1530 + (*(f32*)(param_1 + 0x10) + *(f32*)(param_3 + 0x14));
+            buf.pos[0] = lbl_803E1530 + (*(f32*)(sourceObj + 0xc) + *(f32*)(posSource + 0xc));
+            buf.pos[1] = lbl_803E1530 + (*(f32*)(sourceObj + 0xe) + *(f32*)(posSource + 0x10));
+            buf.pos[2] = lbl_803E1530 + (*(f32*)(sourceObj + 0x10) + *(f32*)(posSource + 0x14));
         }
-        else if (param_1 != 0)
+        else if (sourceObj != 0)
         {
-            buf.pos[0] = buf.pos[0] + *(f32*)(param_1 + 0xc);
+            buf.pos[0] = buf.pos[0] + *(f32*)(sourceObj + 0xc);
             buf.pos[1] = buf.pos[1] + *(f32*)(buf.ctx + 0x1c);
             buf.pos[2] = buf.pos[2] + *(f32*)(buf.ctx + 0x20);
         }
-        else if (param_3 != 0)
+        else if (posSource != 0)
         {
-            buf.pos[0] = buf.pos[0] + *(f32*)(param_3 + 0xc);
-            buf.pos[1] = buf.pos[1] + *(f32*)(param_3 + 0x10);
-            buf.pos[2] = buf.pos[2] + *(f32*)(param_3 + 0x14);
+            buf.pos[0] = buf.pos[0] + *(f32*)(posSource + 0xc);
+            buf.pos[1] = buf.pos[1] + *(f32*)(posSource + 0x10);
+            buf.pos[2] = buf.pos[2] + *(f32*)(posSource + 0x14);
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 3, lbl_80318DF0, 1, &lbl_803DB980, 0x26a, 0);
@@ -2055,8 +2055,8 @@ extern f32 lbl_803E15C0;
 extern f32 lbl_803E15C4;
 extern f32 lbl_803E15C8;
 
-void dll_A8_func03(u8* param_1, int param_2, u8* param_3, uint param_4, undefined4 param_5,
-                   u8* param_6)
+void dll_A8_func03(u8* sourceObj, int variant, u8* posSource, uint flags, undefined4 arg5,
+                   u8* extraArgs)
 {
     struct
     {
@@ -2082,7 +2082,7 @@ void dll_A8_func03(u8* param_1, int param_2, u8* param_3, uint param_4, undefine
     GfxCmd* p;
     u32 fl;
 
-    if (param_6 != 0)
+    if (extraArgs != 0)
     {
         sx = lbl_803E1598;
     }
@@ -2098,7 +2098,7 @@ void dll_A8_func03(u8* param_1, int param_2, u8* param_3, uint param_4, undefine
     e[0].x = lbl_803E15A0;
     e[0].y = lbl_803E15A0;
     e[0].z = lbl_803E15A0;
-    if (param_6 != 0)
+    if (extraArgs != 0)
     {
         e[1].layer = 0;
         e[1].flags = 7;
@@ -2192,8 +2192,8 @@ void dll_A8_func03(u8* param_1, int param_2, u8* param_3, uint param_4, undefine
     p[7].z = lbl_803E15B8;
 
     buf.v58 = 0;
-    buf.ctx = (int)param_1;
-    buf.v44 = param_2;
+    buf.ctx = (int)sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E15A0;
     buf.pos[1] = lbl_803E15C8;
     buf.pos[2] = lbl_803E15A0;
@@ -2217,21 +2217,21 @@ void dll_A8_func03(u8* param_1, int param_2, u8* param_3, uint param_4, undefine
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     fl = 0xc010040;
     buf.flags = fl;
-    fl |= param_4;
+    fl |= flags;
     buf.flags = fl;
     if (fl & 1)
     {
-        if (param_1 != 0)
+        if (sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E15A0 + *(f32*)(param_1 + 0x18);
-            buf.pos[1] = lbl_803E15C8 + *(f32*)(param_1 + 0x1c);
-            buf.pos[2] = lbl_803E15A0 + *(f32*)(param_1 + 0x20);
+            buf.pos[0] = lbl_803E15A0 + *(f32*)(sourceObj + 0x18);
+            buf.pos[1] = lbl_803E15C8 + *(f32*)(sourceObj + 0x1c);
+            buf.pos[2] = lbl_803E15A0 + *(f32*)(sourceObj + 0x20);
         }
         else
         {
-            buf.pos[0] = lbl_803E15A0 + *(f32*)(param_3 + 0xc);
-            buf.pos[1] = lbl_803E15C8 + *(f32*)(param_3 + 0x10);
-            buf.pos[2] = lbl_803E15A0 + *(f32*)(param_3 + 0x14);
+            buf.pos[0] = lbl_803E15A0 + *(f32*)(posSource + 0xc);
+            buf.pos[1] = lbl_803E15C8 + *(f32*)(posSource + 0x10);
+            buf.pos[2] = lbl_803E15A0 + *(f32*)(posSource + 0x14);
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, tab, 0xc, &tab[0x8c], 0x586, 0);
@@ -2258,8 +2258,8 @@ extern f32 lbl_803E15F4;
 extern f32 lbl_803E15F8;
 extern f32 lbl_803E15FC;
 
-void dll_A9_func03(u8* param_1, int param_2, u8* param_3, uint param_4, undefined4 param_5,
-                   u8* param_6)
+void dll_A9_func03(u8* sourceObj, int variant, u8* posSource, uint flags, undefined4 arg5,
+                   u8* extraArgs)
 {
     struct
     {
@@ -2285,7 +2285,7 @@ void dll_A9_func03(u8* param_1, int param_2, u8* param_3, uint param_4, undefine
     GfxCmd* p;
     u32 fl;
 
-    if (param_6 != 0)
+    if (extraArgs != 0)
     {
         sx = lbl_803E15D0;
     }
@@ -2301,7 +2301,7 @@ void dll_A9_func03(u8* param_1, int param_2, u8* param_3, uint param_4, undefine
     e[0].x = lbl_803E15D8;
     e[0].y = lbl_803E15D8;
     e[0].z = lbl_803E15D8;
-    if (param_6 != 0)
+    if (extraArgs != 0)
     {
         e[1].layer = 0;
         e[1].flags = 7;
@@ -2395,8 +2395,8 @@ void dll_A9_func03(u8* param_1, int param_2, u8* param_3, uint param_4, undefine
     p[7].z = lbl_803E15F0;
 
     buf.v58 = 0;
-    buf.ctx = (int)param_1;
-    buf.v44 = param_2;
+    buf.ctx = (int)sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E15D8;
     buf.pos[1] = lbl_803E15D8;
     buf.pos[2] = lbl_803E15D8;
@@ -2420,21 +2420,21 @@ void dll_A9_func03(u8* param_1, int param_2, u8* param_3, uint param_4, undefine
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     fl = 0xc010040;
     buf.flags = fl;
-    fl |= param_4;
+    fl |= flags;
     buf.flags = fl;
     if (fl & 1)
     {
-        if (param_1 != 0)
+        if (sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E15D8 + *(f32*)(param_1 + 0x18);
-            buf.pos[1] = lbl_803E15D8 + *(f32*)(param_1 + 0x1c);
-            buf.pos[2] = lbl_803E15D8 + *(f32*)(param_1 + 0x20);
+            buf.pos[0] = lbl_803E15D8 + *(f32*)(sourceObj + 0x18);
+            buf.pos[1] = lbl_803E15D8 + *(f32*)(sourceObj + 0x1c);
+            buf.pos[2] = lbl_803E15D8 + *(f32*)(sourceObj + 0x20);
         }
         else
         {
-            buf.pos[0] = lbl_803E15D8 + *(f32*)(param_3 + 0xc);
-            buf.pos[1] = lbl_803E15D8 + *(f32*)(param_3 + 0x10);
-            buf.pos[2] = lbl_803E15D8 + *(f32*)(param_3 + 0x14);
+            buf.pos[0] = lbl_803E15D8 + *(f32*)(posSource + 0xc);
+            buf.pos[1] = lbl_803E15D8 + *(f32*)(posSource + 0x10);
+            buf.pos[2] = lbl_803E15D8 + *(f32*)(posSource + 0x14);
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, tab, 0xc, &tab[0x8c], 0x586, 0);
@@ -2442,19 +2442,19 @@ void dll_A9_func03(u8* param_1, int param_2, u8* param_3, uint param_4, undefine
 
 extern u8 lbl_80319168[];
 
-void dll_AA_func03(int param_1, int param_2, u8* param_3, u8* param_4)
+void dll_AA_func03(int sourceObj, int variant, u8* posSource, u8* seqFlags)
 {
     u8* tab = (u8*)(int)lbl_80319168;
     f32 scale;
 
     scale = lbl_803E1600;
-    if (param_3 != 0)
+    if (posSource != 0)
     {
-        scale = *(f32*)(param_3 + 8) / lbl_803E1604;
+        scale = *(f32*)(posSource + 8) / lbl_803E1604;
     }
-    (*gModgfxInterface)->beginSequence((void*)param_1, (u8)param_2, 0x15, 1, 0);
+    (*gModgfxInterface)->beginSequence((void*)sourceObj, (u8)variant, 0x15, 1, 0);
     (*gModgfxInterface)->setSequenceParams(&tab[0x1dc]);
-    (*gModgfxInterface)->addSequenceFlags((u32)param_4);
+    (*gModgfxInterface)->addSequenceFlags((u32)seqFlags);
     (*gModgfxInterface)->resetSequenceSpawns();
     (*gModgfxInterface)->addSequenceSpawn
         (4, lbl_803E1608, lbl_803E160C, lbl_803E160C, 0x15, &tab[0x1b0]);
@@ -2474,7 +2474,7 @@ void dll_AA_func03(int param_1, int param_2, u8* param_3, u8* param_4)
     (*gModgfxInterface)->addSequenceSpawn
         (4, lbl_803E160C, lbl_803E160C, lbl_803E160C, 7, &tab[0x174]);
     (*gModgfxInterface)->spawnSequence
-        (param_3, (u8*)(int)lbl_80319168, 0x15, &tab[0xd4], 0x18, 0x3e9, 0);
+        (posSource, (u8*)(int)lbl_80319168, 0x15, &tab[0xd4], 0x18, 0x3e9, 0);
     (*gModgfxInterface)->getLastSpawnHandle();
 }
 
