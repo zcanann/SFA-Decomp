@@ -1,4 +1,6 @@
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
+#include "main/gamebits.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
@@ -11,8 +13,6 @@ extern bool FUN_800067f8();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
 extern int FUN_80006a10();
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern void* FUN_80017aa4();
@@ -105,7 +105,6 @@ void FUN_80152040(int param_1, int param_2)
 #pragma peephole off
 void fn_80152440(int obj, int p, int p3, int msg)
 {
-    extern void Sfx_PlayFromObject(int obj, int sfx);
     extern void fn_8014D08C(int obj, int p, int type, f32 t, int a, int b);
     extern f32 lbl_803E2810;
     extern f32 lbl_803E2814;
@@ -117,8 +116,8 @@ void fn_80152440(int obj, int p, int p3, int msg)
     {
         return;
     }
-    Sfx_PlayFromObject(obj, SFXen_cavedirt22);
-    Sfx_PlayFromObject(obj, SFXspirit_voice2);
+    Sfx_PlayFromObject((u32)obj, SFXen_cavedirt22);
+    Sfx_PlayFromObject((u32)obj, SFXspirit_voice2);
     ((BaddieState*)p)->reactionFlags |= 0x8;
     *(f32*)(p + 0x32c) = (f32)(u32)(u16) * (s16*)(sub + 0x2c);
     fn_8014D08C(obj, p, 1, lbl_803E2810, 0, 0);
@@ -134,16 +133,13 @@ void fn_80152440(int obj, int p, int p3, int msg)
 
 extern int fn_80152370(int obj, int p2);
 extern void Obj_FreeObject(int* obj);
-extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern int Curve_AdvanceAlongPath(u8* curve, f32 t);
 extern u8 lbl_803DBCA8;
-extern int Sfx_IsPlayingFromObject(int* obj, int sfxId);
 extern int fn_801A0174(int* obj);
 extern int* Obj_GetPlayerObject(void);
 extern int* objFindTexture(int* obj, int a, int b);
 extern void fn_8014CF7C(void* p1, void* p2, f32 f1, f32 f2, int p5, int p6);
 extern void fn_8014D08C(void* p1, void* p2, int p3, f32 f1, int p5, int p6);
-extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern void objfx_spawnLightPulse(int* obj, f32 scale, int a, int b, int c, f32 v, void* params);
 extern void objfx_spawnMaskedHitEffect(int* obj, f32 scale, int a, int b, int c, void* params);
 extern f32 timeDelta;
@@ -197,7 +193,7 @@ void fn_80152514(int* obj, u8* state)
         {
             *(f32*)(state + 0x32c) = lbl_803E2814;
             *(u32*)&((BaddieState*)state)->unk2E4 |= 0x20;
-            Sfx_StopObjectChannel(obj, 4);
+            Sfx_StopObjectChannel((u32)obj, 4);
             fn_8014D08C(obj, state, 0, lbl_803E2820, 0, 0);
         }
         else if (!(*(u32*)&((BaddieState*)state)->unk2E4 & 0x20))
@@ -259,9 +255,9 @@ void fn_80152514(int* obj, u8* state)
         }
         if (((GameObject*)obj)->anim.localPosY - ((RomCurveWalker*)path)->posY < lbl_803E282C)
         {
-            if (Sfx_IsPlayingFromObject(obj, SFXar_laser216) == 0)
+            if (Sfx_IsPlayingFromObject((u32)obj, SFXar_laser216) == 0)
             {
-                Sfx_PlayFromObject(obj, SFXar_laser216);
+                Sfx_PlayFromObject((u32)obj, SFXar_laser216);
             }
             ((BaddieState*)state)->seqEntryIndex = 1;
         }
@@ -274,9 +270,9 @@ void fn_80152514(int* obj, u8* state)
     {
         if (((GameObject*)obj)->anim.localPosY - ((ObjPlacement*)def)->posY < lbl_803E2830)
         {
-            if (Sfx_IsPlayingFromObject(obj, SFXar_laser216) == 0)
+            if (Sfx_IsPlayingFromObject((u32)obj, SFXar_laser216) == 0)
             {
-                Sfx_PlayFromObject(obj, SFXar_laser216);
+                Sfx_PlayFromObject((u32)obj, SFXar_laser216);
             }
             ((BaddieState*)state)->seqEntryIndex = 1;
         }
@@ -322,12 +318,12 @@ void fn_80152514(int* obj, u8* state)
         {
             ObjHits_RecordObjectHit(Obj_GetPlayerObject(), obj, 0x16, 2, 0);
             fn_80152370((int)obj, 0x3b2);
-            Sfx_PlayFromObject(obj, SFXsp_literun116);
+            Sfx_PlayFromObject((u32)obj, SFXsp_literun116);
             *(f32*)(state + 0x32c) = lbl_803DBCB4;
         }
         if ((int)randomGetRange(0, (int)(lbl_803E284C * oneOverTimeDelta)) == 0)
         {
-            Sfx_PlayFromObject(obj, SFXsp_literun114);
+            Sfx_PlayFromObject((u32)obj, SFXsp_literun114);
         }
         child2 = ((GameObject*)obj)->childObjs[0];
         if (child2 != 0)
@@ -443,7 +439,7 @@ void fn_80152B90(int* obj, u8* state)
                     if (spawned != 0)
                     {
                         *(int**)((char*)spawned + 0xc4) = obj;
-                        Sfx_PlayFromObject(obj, 0x249);
+                        Sfx_PlayFromObject((u32)obj, 0x249);
                     }
                 }
             }
@@ -466,13 +462,13 @@ void fn_80152B90(int* obj, u8* state)
     {
         *(f32*)(state + 0x334) = (f32)(int)
         randomGetRange(0x3c, 0x78);
-        Sfx_PlayFromObject(obj, 0x31);
+        Sfx_PlayFromObject((u32)obj, 0x31);
     }
     *(f32*)(state + 0x330) = *(f32*)(state + 0x330) - timeDelta;
     if (*(f32*)(state + 0x330) <= lbl_803E2868)
     {
         *(f32*)(state + 0x330) = lbl_803E286C;
-        Sfx_PlayFromObject(obj, 0x24a);
+        Sfx_PlayFromObject((u32)obj, 0x24a);
     }
 }
 
@@ -646,7 +642,6 @@ FUN_80152a30(undefined8 param_1, double param_2, double param_3, undefined8 para
 #pragma scheduling off
 void fn_80152A94(int obj, int p)
 {
-    extern void Sfx_AddLoopedObjectSound(int obj, int sfx);
     extern f32 lbl_803E2814;
     extern f32 lbl_803E2820;
     extern f32 lbl_803E2850;
@@ -672,18 +667,16 @@ void fn_80152A94(int obj, int p)
     ((BaddieState*)p)->unk31C = fz;
     *(f32*)(p + 0x32c) = lbl_803E2814;
     ((GameObject*)obj)->anim.hitboxScale = lbl_803E2860;
-    Sfx_AddLoopedObjectSound(obj, SFXsp_literun115);
+    Sfx_AddLoopedObjectSound((u32)obj, SFXsp_literun115);
 }
 
 void fn_80152B2C(int obj, int p, int param3, int msg)
 {
-    extern void Sfx_PlayFromObject(int obj, int sfx);
-
     if (msg == 16 || msg == 17)
     {
         return;
     }
-    Sfx_PlayFromObject(obj, SFXfox_cough1);
+    Sfx_PlayFromObject((u32)obj, SFXfox_cough1);
     *(s16*)&((BaddieState*)p)->hitCounter = 0;
     *(u32*)&((BaddieState*)p)->unk2E4 |= 0x20;
     ((BaddieState*)p)->reactionFlags |= 0x8;
@@ -1035,7 +1028,7 @@ void fn_80152040(int* obj, u8* state)
             if (animTbl[((BaddieState*)state)->seqEntryIndex * 12] != 0 && animTbl[((BaddieState*)state)->seqEntryIndex
                 * 12] != 4)
             {
-                Sfx_PlayFromObject(obj, 0x4a8);
+                Sfx_PlayFromObject((u32)obj, 0x4a8);
             }
             fn_8014D08C(obj, state, animTbl[((BaddieState*)state)->seqEntryIndex * 12],
                         *(f32*)((u8*)lbl_8031F290 + ((BaddieState*)state)->seqEntryIndex * 12), 0, 0xf);

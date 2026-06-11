@@ -1,4 +1,6 @@
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
+#include "main/gamebits.h"
 #include "main/obj_placement.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -9,7 +11,6 @@
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_8001766c();
-extern undefined4 GameBit_Set(int eventId, int value);
 extern int FUN_80017730();
 extern undefined4 FUN_800305c4();
 extern undefined4 FUN_800305f8();
@@ -39,7 +40,6 @@ extern void* PTR_DAT_8031fdd8;
 
 #pragma scheduling on
 #pragma peephole on
-extern void Sfx_PlayFromObject(int obj, int sfx);
 extern void fn_8014D08C(int obj, u8* state, int a, int b, int c, f32 f);
 extern char lbl_8031F16C[];
 extern char lbl_8031DD30[];
@@ -303,7 +303,7 @@ void FUN_80151844(undefined8 param_1, undefined8 param_2, double param_3, undefi
 #pragma peephole off
 void fn_80152004(int obj, int* state)
 {
-    Sfx_PlayFromObject(obj, SFXen_cavedirt22);
+    Sfx_PlayFromObject((u32)obj, SFXen_cavedirt22);
     ((GroundBaddieState*)state)->baddie.reactionFlags |= 0x10;
 }
 
