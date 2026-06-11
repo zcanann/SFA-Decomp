@@ -2783,7 +2783,7 @@ void creditsStart_(void)
     {
         return;
     }
-    lbl_803DD998 = lbl_803DD998 + 1;
+    lbl_803DD998++;
     lbl_803DD9A8 = 0x3c;
     if (lbl_803DD998 < lbl_803DBC0A)
     {
