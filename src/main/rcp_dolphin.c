@@ -2919,7 +2919,8 @@ extern f32 lbl_803DEB88;
 
 void gxTextureFn_80052efc(void)
 {
-    f32 mtx[12];
+    union { f32 m[12]; f64 a8; } mtxu;
+#define mtx mtxu.m
     int lights[8];
     GXColor8 c;
     GXColor8 c2;
@@ -3023,6 +3024,7 @@ void gxTextureFn_80052efc(void)
     Camera_ApplyFullViewport();
     lbl_803DCDA4 = 0;
 }
+#undef mtx
 
 extern void texFlagFn_80023cbc(int flag);
 extern void OSReport(char* fmt, ...);
