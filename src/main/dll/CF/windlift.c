@@ -783,12 +783,17 @@ void fn_80185A24(int obj, int p2, int p3, int p4, int p5, s8 renderState)
     s16 t;
 
     state = ((GameObject*)obj)->extra;
-    if ((state->ventState == 0 || state->ventState > 50) && state->holdTimer == 0)
+    if (state->ventState != 0 && state->ventState <= 50)
     {
-        goto ok;
+        goto end;
     }
-    goto end;
-ok:
+    switch (state->holdTimer)
+    {
+    case 0:
+        break;
+    default:
+        goto end;
+    }
     if (((GameObject*)obj)->unkF8 != 0)
     {
         if (renderState == -1)
@@ -996,12 +1001,10 @@ void fn_80185B74(int obj)
         else
         {
             u8 st21;
-            ObjHitsPriorityState* hitState;
             ObjHits_DisableObject(obj);
-            hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-            hitState->localPosX = ((GameObject*)obj)->anim.localPosX;
-            hitState->localPosY = ((GameObject*)obj)->anim.localPosY;
-            hitState->localPosZ = ((GameObject*)obj)->anim.localPosZ;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosX = ((GameObject*)obj)->anim.localPosX;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosY = ((GameObject*)obj)->anim.localPosY;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosZ = ((GameObject*)obj)->anim.localPosZ;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
             if ((getButtonsJustPressed(0) & 0x100) != 0)
             {
@@ -1188,7 +1191,7 @@ void fn_801862CC(int obj, int p)
     if (((GameObject*)obj)->anim.modelState != NULL)
     {
         p64 = *(int*)&((GameObject*)obj)->anim.modelState;
-        *(u32*)(p64 + 0x30) |= 0x8000;
+        *(u32*)(p64 + 0x30) |= 0x8000LL;
     }
 }
 
@@ -1370,7 +1373,7 @@ void LanternFireFly_func0B(int obj)
     int p;
     f32 vec[3];
     f32* vp = vec;
-    f32 py;
+    f32 px;
     f32 y2;
 
     state = ((GameObject*)obj)->extra;
@@ -1382,15 +1385,15 @@ void LanternFireFly_func0B(int obj)
     state->field6F = 0;
     objHitDetectFn_80062e84(obj, 0, 1);
     p = Obj_GetPlayerObject();
-    vec[0] = *(f32*)(p + 0x18);
-    py = *(f32*)(p + 0x1c);
-    vec[1] = py;
+    px = *(f32*)(p + 0x18);
+    vec[0] = px;
+    vec[1] = *(f32*)(p + 0x1c);
     vec[2] = *(f32*)(p + 0x20);
-    vec[1] = py + lbl_803E3AA4;
-    y2 = lbl_803E3AA8 + py;
+    vec[1] = *(f32*)(p + 0x1c) + lbl_803E3AA4;
+    y2 = lbl_803E3AA8 + *(f32*)(p + 0x1c);
     {
         LanternFireFlyState* st = ((GameObject*)obj)->extra;
-        st->anchorX = vec[0];
+        st->anchorX = px;
         st->anchorY = y2;
         st->anchorZ = vec[2];
         st = ((GameObject*)obj)->extra;
