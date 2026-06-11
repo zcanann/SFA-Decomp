@@ -1955,17 +1955,17 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
     u8 frame = 0;
     u32 hi;
     int flags;
-    u32 off;
+    u32 entryOff;
     u32 moff;
     int s;
     int i;
     int j;
     int k;
-    int r;
+    int fileBuf;
     int ok;
-    u32 asize;
+    u32 alignedSize;
     int tmp;
-    u32 local_78;
+    u32 decompSize;
     char buf[0x3c];
 
     switch (fileId)
@@ -2551,11 +2551,11 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
         offsetFlags = offsetFlags & 0xfffffff;
         if (((u8)flagBits & 1) != 0)
         {
-            r = MLDF_PTR(fileId);
-            tmp = return0_8002A5B8(r + offsetFlags);
+            fileBuf = MLDF_PTR(fileId);
+            tmp = return0_8002A5B8(fileBuf + offsetFlags);
             if (tmp != 0)
             {
-                *sizeOut = ObjModel_GetUnpackedResourceSize(r + offsetFlags, *sizeOut);
+                *sizeOut = ObjModel_GetUnpackedResourceSize(fileBuf + offsetFlags, *sizeOut);
             }
         }
         break;
@@ -2572,11 +2572,11 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
         offsetFlags = offsetFlags & 0xfffffff;
         if (((u8)flagBits & 1) != 0)
         {
-            r = MLDF_PTR(fileId);
-            tmp = return0_8002A5B8(r + offsetFlags);
+            fileBuf = MLDF_PTR(fileId);
+            tmp = return0_8002A5B8(fileBuf + offsetFlags);
             if (tmp != 0)
             {
-                *sizeOut = ObjModel_GetUnpackedResourceSize(r + offsetFlags, *sizeOut);
+                *sizeOut = ObjModel_GetUnpackedResourceSize(fileBuf + offsetFlags, *sizeOut);
             }
         }
         break;
@@ -2655,8 +2655,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
             fileId = 0x4d;
             if (sizeOut != NULL)
             {
-                off = *(u32*)(a + entryIndex * 4) & 0xffffff;
-                if (off == 0)
+                entryOff = *(u32*)(a + entryIndex * 4) & 0xffffff;
+                if (entryOff == 0)
                 {
                     i = 0;
                     do
@@ -2676,8 +2676,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                         k = entryIndex * 4;
                         entryIndex = j;
                     }
-                    while ((*(u32*)(a + k) & 0xffffff) <= off);
-                    *sizeOut = (*(u32*)(a + j * 4 - 4) & 0xffffff) - off;
+                    while ((*(u32*)(a + k) & 0xffffff) <= entryOff);
+                    *sizeOut = (*(u32*)(a + j * 4 - 4) & 0xffffff) - entryOff;
                 }
             }
         }
@@ -2686,8 +2686,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
             fileId = 0x23;
             if (sizeOut != NULL)
             {
-                off = *(u32*)(b + entryIndex * 4) & 0xffffff;
-                if (off == 0)
+                entryOff = *(u32*)(b + entryIndex * 4) & 0xffffff;
+                if (entryOff == 0)
                 {
                     i = 0;
                     do
@@ -2707,8 +2707,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                         k = entryIndex * 4;
                         entryIndex = j;
                     }
-                    while ((*(u32*)(b + k) & 0xffffff) <= off);
-                    *sizeOut = (*(u32*)(b + j * 4 - 4) & 0xffffff) - off;
+                    while ((*(u32*)(b + k) & 0xffffff) <= entryOff);
+                    *sizeOut = (*(u32*)(b + j * 4 - 4) & 0xffffff) - entryOff;
                 }
             }
         }
@@ -2717,8 +2717,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
             fileId = 0x23;
             if (sizeOut != NULL)
             {
-                off = *(u32*)(b + entryIndex * 4) & 0xffffff;
-                if (off == 0)
+                entryOff = *(u32*)(b + entryIndex * 4) & 0xffffff;
+                if (entryOff == 0)
                 {
                     i = 0;
                     do
@@ -2738,8 +2738,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                         k = entryIndex * 4;
                         entryIndex = j;
                     }
-                    while ((*(u32*)(b + k) & 0xffffff) <= off);
-                    *sizeOut = (*(u32*)(b + j * 4 - 4) & 0xffffff) - off;
+                    while ((*(u32*)(b + k) & 0xffffff) <= entryOff);
+                    *sizeOut = (*(u32*)(b + j * 4 - 4) & 0xffffff) - entryOff;
                 }
             }
         }
@@ -2748,8 +2748,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
             fileId = 0x4d;
             if (sizeOut != NULL)
             {
-                off = *(u32*)(a + entryIndex * 4) & 0xffffff;
-                if (off == 0)
+                entryOff = *(u32*)(a + entryIndex * 4) & 0xffffff;
+                if (entryOff == 0)
                 {
                     i = 0;
                     do
@@ -2769,8 +2769,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                         k = entryIndex * 4;
                         entryIndex = j;
                     }
-                    while ((*(u32*)(a + k) & 0xffffff) <= off);
-                    *sizeOut = (*(u32*)(a + j * 4 - 4) & 0xffffff) - off;
+                    while ((*(u32*)(a + k) & 0xffffff) <= entryOff);
+                    *sizeOut = (*(u32*)(a + j * 4 - 4) & 0xffffff) - entryOff;
                 }
             }
         }
@@ -2851,8 +2851,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
             fileId = 0x4b;
             if (sizeOut != NULL)
             {
-                off = *(u32*)(a + entryIndex * 4) & 0xffffff;
-                if (off == 0)
+                entryOff = *(u32*)(a + entryIndex * 4) & 0xffffff;
+                if (entryOff == 0)
                 {
                     i = 0;
                     do
@@ -2872,8 +2872,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                         k = entryIndex * 4;
                         entryIndex = j;
                     }
-                    while ((*(u32*)(a + k) & 0xffffff) <= off);
-                    *sizeOut = (*(u32*)(a + j * 4 - 4) & 0xffffff) - off;
+                    while ((*(u32*)(a + k) & 0xffffff) <= entryOff);
+                    *sizeOut = (*(u32*)(a + j * 4 - 4) & 0xffffff) - entryOff;
                 }
             }
         }
@@ -2882,8 +2882,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
             fileId = 0x20;
             if (sizeOut != NULL)
             {
-                off = *(u32*)(b + entryIndex * 4) & 0xffffff;
-                if (off == 0)
+                entryOff = *(u32*)(b + entryIndex * 4) & 0xffffff;
+                if (entryOff == 0)
                 {
                     i = 0;
                     do
@@ -2903,8 +2903,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                         k = entryIndex * 4;
                         entryIndex = j;
                     }
-                    while ((*(u32*)(b + k) & 0xffffff) <= off);
-                    *sizeOut = (*(u32*)(b + j * 4 - 4) & 0xffffff) - off;
+                    while ((*(u32*)(b + k) & 0xffffff) <= entryOff);
+                    *sizeOut = (*(u32*)(b + j * 4 - 4) & 0xffffff) - entryOff;
                 }
             }
         }
@@ -2913,8 +2913,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
             fileId = 0x20;
             if (sizeOut != NULL)
             {
-                off = *(u32*)(b + entryIndex * 4) & 0xffffff;
-                if (off == 0)
+                entryOff = *(u32*)(b + entryIndex * 4) & 0xffffff;
+                if (entryOff == 0)
                 {
                     i = 0;
                     do
@@ -2934,8 +2934,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                         k = entryIndex * 4;
                         entryIndex = j;
                     }
-                    while ((*(u32*)(b + k) & 0xffffff) <= off);
-                    *sizeOut = (*(u32*)(b + j * 4 - 4) & 0xffffff) - off;
+                    while ((*(u32*)(b + k) & 0xffffff) <= entryOff);
+                    *sizeOut = (*(u32*)(b + j * 4 - 4) & 0xffffff) - entryOff;
                 }
             }
         }
@@ -2944,8 +2944,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
             fileId = 0x4b;
             if (sizeOut != NULL)
             {
-                off = *(u32*)(a + entryIndex * 4) & 0xffffff;
-                if (off == 0)
+                entryOff = *(u32*)(a + entryIndex * 4) & 0xffffff;
+                if (entryOff == 0)
                 {
                     i = 0;
                     do
@@ -2965,8 +2965,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                         k = entryIndex * 4;
                         entryIndex = j;
                     }
-                    while ((*(u32*)(a + k) & 0xffffff) <= off);
-                    *sizeOut = (*(u32*)(a + j * 4 - 4) & 0xffffff) - off;
+                    while ((*(u32*)(a + k) & 0xffffff) <= entryOff);
+                    *sizeOut = (*(u32*)(a + j * 4 - 4) & 0xffffff) - entryOff;
                 }
             }
         }
@@ -2978,8 +2978,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
             fileId = 0x4f;
             if (sizeOut != NULL)
             {
-                off = *(u32*)(MLDF_PTR(0x50) + entryIndex * 4) & 0xffffff;
-                if (off == 0)
+                entryOff = *(u32*)(MLDF_PTR(0x50) + entryIndex * 4) & 0xffffff;
+                if (entryOff == 0)
                 {
                     i = 0;
                     do
@@ -2999,8 +2999,8 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
                         k = entryIndex * 4;
                         entryIndex = j;
                     }
-                    while ((*(u32*)(MLDF_PTR(0x50) + k) & 0xffffff) <= off);
-                    *sizeOut = (*(u32*)(MLDF_PTR(0x50) + j * 4 - 4) & 0xffffff) - off;
+                    while ((*(u32*)(MLDF_PTR(0x50) + k) & 0xffffff) <= entryOff);
+                    *sizeOut = (*(u32*)(MLDF_PTR(0x50) + j * 4 - 4) & 0xffffff) - entryOff;
                 }
             }
         }
@@ -3011,29 +3011,29 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
     {
         return;
     }
-    r = MLDF_PTR(fileId);
-    if (r == 0)
+    fileBuf = MLDF_PTR(fileId);
+    if (fileBuf == 0)
     {
         if (fileId == 0x20 || fileId == 0x4b)
         {
             DVDOpen(sResourceFileNameTable[fileId], buf);
-            asize = (length + 0x1f) & 0xffffffe0;
-            r = (int)mmAlloc(asize, 0x7f7f7fff, 0);
-            DVDRead(buf, (void*)r, asize, offsetFlags & 0xffffff);
+            alignedSize = (length + 0x1f) & 0xffffffe0;
+            fileBuf = (int)mmAlloc(alignedSize, 0x7f7f7fff, 0);
+            DVDRead(buf, (void*)fileBuf, alignedSize, offsetFlags & 0xffffff);
             DVDClose(buf);
-            DCStoreRange((void*)r, length);
-            if (strncmp(&sDirBlockTag, (char*)r, 3) == 0)
+            DCStoreRange((void*)fileBuf, length);
+            if (strncmp(&sDirBlockTag, (char*)fileBuf, 3) == 0)
             {
                 for (;;)
                 {
                 }
             }
-            if (strncmp((char*)r, sZlbBlockTag, 3) == 0)
+            if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
             {
-                local_78 = *(u32*)(r + 8);
-                zlbDecompress((void*)(r + 0x10), *(int*)(r + 0xc), destBuf, &local_78);
+                decompSize = *(u32*)(fileBuf + 8);
+                zlbDecompress((void*)(fileBuf + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
             }
-            mm_free((void*)r);
+            mm_free((void*)fileBuf);
         }
         else
         {
@@ -3044,9 +3044,9 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
             }
             else
             {
-                asize = (length + 0x1f) & 0xffffffe0;
-                tmp = (int)mmAlloc(asize, 0x7f7f7fff, 0);
-                DVDRead(buf, (void*)tmp, asize, offsetFlags);
+                alignedSize = (length + 0x1f) & 0xffffffe0;
+                tmp = (int)mmAlloc(alignedSize, 0x7f7f7fff, 0);
+                DVDRead(buf, (void*)tmp, alignedSize, offsetFlags);
                 memcpy((void*)destBuf, (void*)tmp, length);
                 mm_free((void*)tmp);
             }
@@ -3056,45 +3056,45 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
     }
     else if (fileId == 0xd || fileId == 0x55)
     {
-        if (r == 0)
+        if (fileBuf == 0)
         {
             return;
         }
-        memcpy((void*)destBuf, (void*)(r + offsetFlags), length);
+        memcpy((void*)destBuf, (void*)(fileBuf + offsetFlags), length);
     }
     else if (fileId == 0x1b || fileId == 0x54)
     {
-        if (r == 0)
+        if (fileBuf == 0)
         {
             return;
         }
-        r = r + offsetFlags;
-        if (strncmp((char*)r, sZlbBlockTag, 3) != 0)
+        fileBuf = fileBuf + offsetFlags;
+        if (strncmp((char*)fileBuf, sZlbBlockTag, 3) != 0)
         {
             return;
         }
-        local_78 = *(u32*)(r + 8);
-        zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(r + 0xc), destBuf, &local_78);
-        DCStoreRange((void*)destBuf, local_78);
+        decompSize = *(u32*)(fileBuf + 8);
+        zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
+        DCStoreRange((void*)destBuf, decompSize);
     }
     else if (fileId == 0x25 || fileId == 0x47)
     {
-        if (r == 0)
+        if (fileBuf == 0)
         {
             return;
         }
-        r = r + offsetFlags;
-        if (strncmp((char*)r, sZlbBlockTag, 3) != 0)
+        fileBuf = fileBuf + offsetFlags;
+        if (strncmp((char*)fileBuf, sZlbBlockTag, 3) != 0)
         {
             return;
         }
-        local_78 = *(u32*)(r + 8);
-        zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(r + 0xc), destBuf, &local_78);
-        DCStoreRange((void*)destBuf, local_78);
+        decompSize = *(u32*)(fileBuf + 8);
+        zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
+        DCStoreRange((void*)destBuf, decompSize);
     }
     else if (fileId == 0x2b || fileId == 0x46)
     {
-        int* p = (int*)(r + offsetFlags);
+        int* p = (int*)(fileBuf + offsetFlags);
         if (*p == 0xe0e0e0e0)
         {
             memcpy((void*)destBuf, (void*)((int)p + p[2] + 0x18), p[1]);
@@ -3107,58 +3107,58 @@ void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 len
     }
     else if (fileId == 0x23 || fileId == 0x4d)
     {
-        r = r + (offsetFlags & 0xffffff);
-        local_78 = *(u32*)(r + 8);
-        zlbDecompress((void*)(r + 0x10), *(int*)(r + 0xc), destBuf, &local_78);
-        DCStoreRange((void*)destBuf, local_78);
+        fileBuf = fileBuf + (offsetFlags & 0xffffff);
+        decompSize = *(u32*)(fileBuf + 8);
+        zlbDecompress((void*)(fileBuf + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
+        DCStoreRange((void*)destBuf, decompSize);
     }
     else if (fileId == 0x20 || fileId == 0x4b)
     {
         offsetFlags = offsetFlags & 0xffffff;
-        r = r + offsetFlags;
-        if (strncmp(&sDirBlockTag, (char*)r, 3) == 0)
+        fileBuf = fileBuf + offsetFlags;
+        if (strncmp(&sDirBlockTag, (char*)fileBuf, 3) == 0)
         {
             return;
         }
-        if (strncmp((char*)r, sZlbBlockTag, 3) == 0)
+        if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
         {
-            local_78 = *(u32*)(r + 8);
-            zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(r + 0xc), destBuf, &local_78);
-            DCStoreRange((void*)destBuf, local_78);
+            decompSize = *(u32*)(fileBuf + 8);
+            zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
+            DCStoreRange((void*)destBuf, decompSize);
         }
     }
     else if (fileId == 0x4f)
     {
         offsetFlags = offsetFlags & 0xffffff;
-        r = r + offsetFlags;
-        if (strncmp(&sDirBlockTag, (char*)r, 3) == 0)
+        fileBuf = fileBuf + offsetFlags;
+        if (strncmp(&sDirBlockTag, (char*)fileBuf, 3) == 0)
         {
             return;
         }
-        if (strncmp((char*)r, sZlbBlockTag, 3) == 0)
+        if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
         {
-            local_78 = *(u32*)(r + 8);
-            zlbDecompress((void*)(MLDF_PTR(0x4f) + offsetFlags + 0x10), *(int*)(r + 0xc), destBuf, &local_78);
-            DCStoreRange((void*)destBuf, local_78);
+            decompSize = *(u32*)(fileBuf + 8);
+            zlbDecompress((void*)(MLDF_PTR(0x4f) + offsetFlags + 0x10), *(int*)(fileBuf + 0xc), destBuf, &decompSize);
+            DCStoreRange((void*)destBuf, decompSize);
         }
     }
     else if (fileId == 0x30 || fileId == 0x51 || fileId == 0x4a)
     {
-        r = r + offsetFlags;
-        tmp = return0_8002A5B8(r);
+        fileBuf = fileBuf + offsetFlags;
+        tmp = return0_8002A5B8(fileBuf);
         if (tmp == 0)
         {
             memcpy((void*)destBuf, (void*)(MLDF_PTR(fileId) + offsetFlags), length);
         }
         else
         {
-            asize = ObjModel_GetUnpackedResourceSize(r, *sizeOut);
-            ObjModel_UnpackResourcePayload(r, *sizeOut, destBuf, asize);
+            alignedSize = ObjModel_GetUnpackedResourceSize(fileBuf, *sizeOut);
+            ObjModel_UnpackResourcePayload(fileBuf, *sizeOut, destBuf, alignedSize);
         }
     }
     else
     {
-        memcpy((void*)destBuf, (void*)(r + offsetFlags), length);
+        memcpy((void*)destBuf, (void*)(fileBuf + offsetFlags), length);
     }
 }
 #pragma dont_inline reset
@@ -3263,46 +3263,46 @@ extern int lbl_803DCC74;
 extern void romListReadCb();
 #pragma scheduling off
 #pragma peephole off
-void piRomLoadSection(int param_1, int param_2, int param_3)
+void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
 {
     char buf[1048];
     int fi;
     int ok;
     int* p;
 
-    if ((param_3 == 0) && (lbl_8035F208[param_2] == 0))
+    if ((destBuf == 0) && (lbl_8035F208[mapIndex] == 0))
     {
-        sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[param_2]);
+        sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[mapIndex]);
         fi = AtomicSList_Pop(lbl_803DCC8C);
         ok = DVDOpen(buf, (void*)fi);
         if (ok != 0)
         {
-            lbl_8035F208[param_2] = (int)mmAlloc(*(int*)(fi + 0x34), 0x7d7d7d7d, 0);
+            lbl_8035F208[mapIndex] = (int)mmAlloc(*(int*)(fi + 0x34), 0x7d7d7d7d, 0);
             lbl_803DCC74 = 1;
-            DVDReadAsyncPrio((void*)fi, (void*)lbl_8035F208[param_2], *(int*)(fi + 0x34), 0, romListReadCb, 2);
+            DVDReadAsyncPrio((void*)fi, (void*)lbl_8035F208[mapIndex], *(int*)(fi + 0x34), 0, romListReadCb, 2);
         }
     }
     else
     {
-        if (lbl_8035F208[param_2] == 0)
+        if (lbl_8035F208[mapIndex] == 0)
         {
-            sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[param_2]);
+            sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[mapIndex]);
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (void*)fi);
             if (ok == 0)
             {
                 return;
             }
-            lbl_8035F208[param_2] = (int)mmAlloc(*(int*)(fi + 0x34), 0x7d7d7d7d, 0);
-            DVDRead((void*)fi, (void*)lbl_8035F208[param_2], *(int*)(fi + 0x34), 0);
+            lbl_8035F208[mapIndex] = (int)mmAlloc(*(int*)(fi + 0x34), 0x7d7d7d7d, 0);
+            DVDRead((void*)fi, (void*)lbl_8035F208[mapIndex], *(int*)(fi + 0x34), 0);
             DVDClose((void*)fi);
             AtomicSList_Push(lbl_803DCC8C, fi);
         }
-        p = (int*)(lbl_8035F3E8[0x1d] + param_1);
+        p = (int*)(lbl_8035F3E8[0x1d] + romOffset);
         if (*p == 0xfacefeed)
         {
-            zlbDecompress((void*)(lbl_8035F208[param_2] + 0x10), p[3], param_3, p + 1);
-            DCStoreRange((void*)param_3, p[1]);
+            zlbDecompress((void*)(lbl_8035F208[mapIndex] + 0x10), p[3], destBuf, p + 1);
+            DCStoreRange((void*)destBuf, p[1]);
         }
     }
 }
@@ -3492,9 +3492,9 @@ undefined4 FUN_80045c4c(char param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8004A8F8(char param_1)
+void fn_8004A8F8(char enabled)
 {
-    if (param_1 == '\0')
+    if (enabled == '\0')
     {
         *(undefined*)&DAT_cc008000 = 0x61;
         DAT_cc008000 = 0x24000000;
@@ -4595,7 +4595,7 @@ int fn_8004B148(int* p)
 
 extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 #pragma ppc_unroll_speculative off
-int fn_8004B31C(int* param_1, int param_2, int param_3, int param_4, u8 param_5)
+int fn_8004B31C(int* param_1, int startNode, int targetPos, int param_4, u8 flag)
 {
     int i = 0;
     int o4;
@@ -4639,10 +4639,10 @@ int fn_8004B31C(int* param_1, int param_2, int param_3, int param_4, u8 param_5)
         *(int*)(param_1[1] + i * 8) = 0;
         *(u8*)(*param_1 + i * 16 + 0xe) = 0;
     }
-    param_1[6] = param_2;
-    param_1[3] = param_3;
+    param_1[6] = startNode;
+    param_1[3] = targetPos;
     param_1[4] = param_4;
-    *(u8*)((char*)param_1 + 0x28) = param_5 & 1;
+    *(u8*)((char*)param_1 + 0x28) = flag & 1;
     param_1[9] = 10000;
     s = *(s16*)((char*)param_1 + 0x20);
     if (s == 0xfe)
@@ -4652,7 +4652,7 @@ int fn_8004B31C(int* param_1, int param_2, int param_3, int param_4, u8 param_5)
     else
     {
         node = (int*)(*param_1 + (*(s16*)((char*)param_1 + 0x20))++ * 0x10);
-        *node = param_2;
+        *node = startNode;
         node[2] = 0;
         *(u8*)(node + 3) = 0xff;
         node[1] = (u32)vec3f_distanceSquared((f32*)(*node + 8), (f32*)param_1[3]);
@@ -4679,34 +4679,34 @@ int fn_8004B31C(int* param_1, int param_2, int param_3, int param_4, u8 param_5)
 }
 #pragma ppc_unroll_speculative on
 
-void texPreGetMipmap(u32 param_1, int param_2, int* param_3, int* param_4, int param_5, u8* param_6, int param_7)
+void texPreGetMipmap(u32 texId, int unused, int* outA, int* outB, int count, u8* frameTable, int queryMode)
 {
     u32 base = lbl_8035F3E8[0x4f];
     if (base != 0)
     {
-        if (param_7 == 1 && param_6 != 0)
+        if (queryMode == 1 && frameTable != 0)
         {
-            int e = base + (param_1 & 0xffffff) * 2 + *(int*)(param_6 + param_5 * 4) + 4;
+            int e = base + (texId & 0xffffff) * 2 + *(int*)(frameTable + count * 4) + 4;
             int v = *(int*)(e + 8);
-            *param_3 = *(int*)(e + 4);
-            *param_4 = v;
+            *outA = *(int*)(e + 4);
+            *outB = v;
         }
-        else if (param_7 == 2 && param_6 != 0)
+        else if (queryMode == 2 && frameTable != 0)
         {
-            memcpy(param_6, (void*)(base + (param_1 & 0xffffff) * 2), (param_5 + 1) * 4);
+            memcpy(frameTable, (void*)(base + (texId & 0xffffff) * 2), (count + 1) * 4);
         }
         else
         {
-            int e = base + (param_1 & 0xffffff) * 2;
+            int e = base + (texId & 0xffffff) * 2;
             int v = *(int*)(e + 0xc);
-            *param_3 = *(int*)(e + 8);
+            *outA = *(int*)(e + 8);
             if (strncmp(&sDirBlockTag, (char*)e, 3) == 0)
             {
-                *param_4 = 0xffffffff;
+                *outB = 0xffffffff;
             }
             else
             {
-                *param_4 = v;
+                *outB = v;
             }
         }
     }
@@ -4918,9 +4918,9 @@ typedef union
 extern volatile PiWGPipe GXWGFifo : (0xCC008000);
 extern void GXSetGPMetric(int perf0, int perf1);
 #pragma dont_inline on
-void gxPerfFn_8004a77c(int param_1)
+void gxPerfFn_8004a77c(int enabled)
 {
-    if ((u8)param_1 != 0)
+    if ((u8)enabled != 0)
     {
         GXSetGPMetric(0x23, 0x16);
         GXWGFifo.u8 = 0x61;
@@ -6506,7 +6506,7 @@ extern f32 lbl_803DEAC4;
 extern void fn_8006C528(void* out);
 extern f32 ResetCoverCallback_803DEB2C;
 
-void renderHeavyFog(int* param_1)
+void renderHeavyFog(int* fogColorPtr)
 {
     f32 mcc[3][4];
     f32 m9c[3][4];
@@ -6537,7 +6537,7 @@ void renderHeavyFog(int* param_1)
     mcc[2][3] = lbl_803DEAC8;
     GXLoadTexMtxImm(mcc, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
-    kc = *param_1;
+    kc = *fogColorPtr;
     GXSetTevKColor(lbl_803DCD74, &kc);
     fn_8006C528(&tex20);
     {
@@ -7001,7 +7001,7 @@ void fn_8004D6D8(void)
 
 extern void fn_8006C540(u8 * *out);
 
-void fn_8004F380(f32 param_1, int* param_2, f32* param_3)
+void fn_8004F380(f32 scale, int* colorIn, f32* pos)
 {
     f32 matA[3][4];
     f32 matB[3][4];
@@ -7012,17 +7012,17 @@ void fn_8004F380(f32 param_1, int* param_2, f32* param_3)
     if (lbl_803DCD74 <= 3 && lbl_803DCD6A < 0xc && lbl_803DCD69 < 7)
     {
         d1 = lbl_803DEADC;
-        f = d1 / param_1;
+        f = d1 / scale;
         cc = lbl_803DEACC;
         c8 = lbl_803DEAC8;
         matA[0][0] = f;
         matA[0][1] = cc;
         matA[0][2] = cc;
-        matA[0][3] = -param_3[0] * f + d1;
+        matA[0][3] = -pos[0] * f + d1;
         matA[1][0] = cc;
         matA[1][1] = cc;
         matA[1][2] = f;
-        matA[1][3] = -param_3[2] * f + d1;
+        matA[1][3] = -pos[2] * f + d1;
         matA[2][0] = cc;
         matA[2][1] = cc;
         matA[2][2] = cc;
@@ -7030,7 +7030,7 @@ void fn_8004F380(f32 param_1, int* param_2, f32* param_3)
         matB[0][0] = cc;
         matB[0][1] = f;
         matB[0][2] = cc;
-        matB[0][3] = -param_3[1] * f + d1;
+        matB[0][3] = -pos[1] * f + d1;
         matB[1][0] = cc;
         matB[1][1] = cc;
         matB[1][2] = cc;
@@ -7046,7 +7046,7 @@ void fn_8004F380(f32 param_1, int* param_2, f32* param_3)
         GXSetTexCoordGen2(lbl_803DCD88 + 1, 0, 0, 0, 0, lbl_803DCD80 + 3);
         GXSetTevDirect(lbl_803DCD90);
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
-        color = *param_2;
+        color = *colorIn;
         GXSetTevKColor(lbl_803DCD74, &color);
         GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
         GXSetTevColorIn(lbl_803DCD90, 0xf, 0xe, 8, 0xf);
@@ -7086,7 +7086,7 @@ void fn_8004F380(f32 param_1, int* param_2, f32* param_3)
     }
 }
 
-void fn_8004F6D8(f32 param_1, int* param_2, f32* param_3)
+void fn_8004F6D8(f32 scale, int* colorIn, f32* pos)
 {
     f32 matA[3][4];
     f32 matB[3][4];
@@ -7097,17 +7097,17 @@ void fn_8004F6D8(f32 param_1, int* param_2, f32* param_3)
     if (lbl_803DCD74 <= 3 && lbl_803DCD6A < 0xc && lbl_803DCD69 < 7)
     {
         d1 = lbl_803DEADC;
-        f = d1 / param_1;
+        f = d1 / scale;
         cc = lbl_803DEACC;
         c8 = lbl_803DEAC8;
         matA[0][0] = f;
         matA[0][1] = cc;
         matA[0][2] = cc;
-        matA[0][3] = -param_3[0] * f + d1;
+        matA[0][3] = -pos[0] * f + d1;
         matA[1][0] = cc;
         matA[1][1] = cc;
         matA[1][2] = f;
-        matA[1][3] = -param_3[2] * f + d1;
+        matA[1][3] = -pos[2] * f + d1;
         matA[2][0] = cc;
         matA[2][1] = cc;
         matA[2][2] = cc;
@@ -7115,7 +7115,7 @@ void fn_8004F6D8(f32 param_1, int* param_2, f32* param_3)
         matB[0][0] = cc;
         matB[0][1] = f;
         matB[0][2] = cc;
-        matB[0][3] = -param_3[1] * f + d1;
+        matB[0][3] = -pos[1] * f + d1;
         matB[1][0] = cc;
         matB[1][1] = cc;
         matB[1][2] = cc;
@@ -7131,7 +7131,7 @@ void fn_8004F6D8(f32 param_1, int* param_2, f32* param_3)
         GXSetTexCoordGen2(lbl_803DCD88 + 1, 0, 0, 0, 0, lbl_803DCD80 + 3);
         GXSetTevDirect(lbl_803DCD90);
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
-        color = *param_2;
+        color = *colorIn;
         GXSetTevKColor(lbl_803DCD74, &color);
         GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
         GXSetTevColorIn(lbl_803DCD90, 0xf, 0xe, 8, 0xf);
@@ -7173,7 +7173,7 @@ void fn_8004F6D8(f32 param_1, int* param_2, f32* param_3)
 
 extern f32 lbl_803DEAE4;
 
-void fn_8004FA30(f32 param_1, int* param_2, f32* param_3)
+void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
 {
     f32 matA[3][4];
     f32 matB[3][4];
@@ -7183,22 +7183,22 @@ void fn_8004FA30(f32 param_1, int* param_2, f32* param_3)
     f32 c8, cc, d1, f;
     if (lbl_803DCD74 <= 3 && lbl_803DCD6A < 0x10 && lbl_803DCD69 < 7)
     {
-        if (param_1 < lbl_803DEAE4)
+        if (scale < lbl_803DEAE4)
         {
-            param_1 = lbl_803DEAE4;
+            scale = lbl_803DEAE4;
         }
         d1 = lbl_803DEADC;
-        f = d1 / param_1;
+        f = d1 / scale;
         cc = lbl_803DEACC;
         c8 = lbl_803DEAC8;
         matA[0][0] = f;
         matA[0][1] = cc;
         matA[0][2] = cc;
-        matA[0][3] = -param_3[0] * f + d1;
+        matA[0][3] = -pos[0] * f + d1;
         matA[1][0] = cc;
         matA[1][1] = cc;
         matA[1][2] = f;
-        matA[1][3] = -param_3[2] * f + d1;
+        matA[1][3] = -pos[2] * f + d1;
         matA[2][0] = cc;
         matA[2][1] = cc;
         matA[2][2] = cc;
@@ -7206,7 +7206,7 @@ void fn_8004FA30(f32 param_1, int* param_2, f32* param_3)
         matB[0][0] = cc;
         matB[0][1] = f;
         matB[0][2] = cc;
-        matB[0][3] = -param_3[1] * f + d1;
+        matB[0][3] = -pos[1] * f + d1;
         matB[1][0] = cc;
         matB[1][1] = cc;
         matB[1][2] = cc;
@@ -7222,7 +7222,7 @@ void fn_8004FA30(f32 param_1, int* param_2, f32* param_3)
         GXSetTexCoordGen2(lbl_803DCD88 + 1, 0, 0, 0, 0, lbl_803DCD80 + 3);
         GXSetTevDirect(lbl_803DCD90);
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
-        color = *param_2;
+        color = *colorIn;
         GXSetTevKColor(lbl_803DCD74, &color);
         GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
         GXSetTevColorIn(lbl_803DCD90, 0xf, 0xe, 8, 0xf);
@@ -7265,9 +7265,9 @@ void fn_8004FA30(f32 param_1, int* param_2, f32* param_3)
 
 extern void fn_8006C5B8(void* out);
 
-void fn_8005011C(int param_1)
+void fn_8005011C(int objInst)
 {
-    u8* local_48;
+    u8* src;
     f32 mtx[3][4];
     u8* obj2;
     int id;
@@ -7275,10 +7275,10 @@ void fn_8005011C(int param_1)
     GXSetTevDirect(lbl_803DCD90 + 1);
     GXSetTevDirect(lbl_803DCD90 + 2);
     GXSetTevDirect(lbl_803DCD90 + 3);
-    PSMTXConcat((f32 (*)[4])(param_1 + 0x30), Camera_GetInverseViewMatrix(), mtx);
+    PSMTXConcat((f32 (*)[4])(objInst + 0x30), Camera_GetInverseViewMatrix(), mtx);
     GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0x3c, 0, lbl_803DCD80);
-    PSMTXConcat((f32 (*)[4])param_1, Camera_GetInverseViewMatrix(), mtx);
+    PSMTXConcat((f32 (*)[4])objInst, Camera_GetInverseViewMatrix(), mtx);
     GXLoadTexMtxImm(mtx, lbl_803DCD80 + 3, 0);
     GXSetTexCoordGen2(lbl_803DCD88 + 1, 0, 0, 0x3c, 0, lbl_803DCD80 + 3);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
@@ -7306,14 +7306,14 @@ void fn_8005011C(int param_1)
     GXSetTevSwapMode(lbl_803DCD90 + 3, 0, 0);
     GXSetTevColorOp(lbl_803DCD90 + 3, 0, 0, 0, 1, 3);
     GXSetTevAlphaOp(lbl_803DCD90 + 3, 0, 0, 0, 1, 0);
-    fn_8006C5B8(&local_48);
+    fn_8006C5B8(&src);
     id = lbl_803DCD8C;
-    if (local_48 != NULL)
+    if (src != NULL)
     {
-        void* obj = local_48 + 0x20;
-        if (local_48[0x48] != 0)
+        void* obj = src + 0x20;
+        if (src[0x48] != 0)
         {
-            GXLoadTexObjPreLoaded(obj, *(void**)(local_48 + 0x40), id);
+            GXLoadTexObjPreLoaded(obj, *(void**)(src + 0x40), id);
         }
         else
         {
@@ -7321,7 +7321,7 @@ void fn_8005011C(int param_1)
         }
     }
     id = lbl_803DCD8C + 1;
-    obj2 = *(u8**)(param_1 + 0x60);
+    obj2 = *(u8**)(objInst + 0x60);
     if (obj2 != NULL)
     {
         void* obj = obj2 + 0x20;
@@ -7344,14 +7344,14 @@ void fn_8005011C(int param_1)
 
 extern u8 lbl_803DCD6B;
 
-void fn_80050558(u8* param_1, void* texMtx, int param_3, int param_4, int param_5)
+void fn_80050558(u8* texSrc, void* texMtx, int stageMode, int compMode, int variant)
 {
     int inputSel;
     int texmap;
     GXSetTevDirect(lbl_803DCD90);
     GXLoadTexMtxImm(texMtx, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
-    if (param_5 == 0 || param_5 == 2)
+    if (variant == 0 || variant == 2)
     {
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 4);
     }
@@ -7367,21 +7367,21 @@ void fn_80050558(u8* param_1, void* texMtx, int param_3, int param_4, int param_
     {
         inputSel = 4;
     }
-    if (param_3 == 0)
+    if (stageMode == 0)
     {
-        if (param_4 == 2)
+        if (compMode == 2)
         {
             GXSetTevColorIn(lbl_803DCD90, 0xf, inputSel, 8, 0xf);
         }
-        else if (param_4 == 3)
+        else if (compMode == 3)
         {
             GXSetTevColorIn(lbl_803DCD90, inputSel, 0xf, 8, 0xf);
         }
-        else if (param_4 == 1)
+        else if (compMode == 1)
         {
             GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 8, inputSel);
         }
-        else if (param_5 == 0 || param_5 == 1)
+        else if (variant == 0 || variant == 1)
         {
             GXSetTevColorIn(lbl_803DCD90, 0xf, 0xa, 8, inputSel);
         }
@@ -7391,7 +7391,7 @@ void fn_80050558(u8* param_1, void* texMtx, int param_3, int param_4, int param_
         }
         GXSetTevSwapMode(lbl_803DCD90, 0, 0);
         GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 7);
-        if (param_4 == 1)
+        if (compMode == 1)
         {
             GXSetTevColorOp(lbl_803DCD90, 1, 0, 0, 1, 2);
             GXSetTevAlphaOp(lbl_803DCD90, 1, 0, 0, 1, 2);
@@ -7402,21 +7402,21 @@ void fn_80050558(u8* param_1, void* texMtx, int param_3, int param_4, int param_
             GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 2);
         }
     }
-    else if (param_3 == 1)
+    else if (stageMode == 1)
     {
-        if (param_4 == 2)
+        if (compMode == 2)
         {
             GXSetTevColorIn(lbl_803DCD90, 0xf, 6, 8, 0xf);
         }
-        else if (param_4 == 3)
+        else if (compMode == 3)
         {
             GXSetTevColorIn(lbl_803DCD90, 6, 0xf, 8, 0xf);
         }
-        else if (param_4 == 1)
+        else if (compMode == 1)
         {
             GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 8, 6);
         }
-        else if (param_5 == 0 || param_5 == 1)
+        else if (variant == 0 || variant == 1)
         {
             GXSetTevColorIn(lbl_803DCD90, 0xf, 0xa, 8, 6);
         }
@@ -7426,7 +7426,7 @@ void fn_80050558(u8* param_1, void* texMtx, int param_3, int param_4, int param_
         }
         GXSetTevSwapMode(lbl_803DCD90, 0, 0);
         GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 7);
-        if (param_4 == 1)
+        if (compMode == 1)
         {
             GXSetTevColorOp(lbl_803DCD90, 1, 0, 0, 1, 3);
             GXSetTevAlphaOp(lbl_803DCD90, 1, 0, 0, 1, 3);
@@ -7444,7 +7444,7 @@ void fn_80050558(u8* param_1, void* texMtx, int param_3, int param_4, int param_
         GXSetTevSwapModeTable(1, 0, 0, 0, 1);
         GXSetTevSwapMode(lbl_803DCD90, 1, 1);
         GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0xc);
-        if (param_4 == 3)
+        if (compMode == 3)
         {
             GXSetTevAlphaIn(lbl_803DCD90, 7, 5, 4, 6);
             GXSetTevAlphaOp(lbl_803DCD90, 1, 0, 0, 1, 0);
@@ -7457,12 +7457,12 @@ void fn_80050558(u8* param_1, void* texMtx, int param_3, int param_4, int param_
         GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
     }
     texmap = lbl_803DCD8C;
-    if (param_1 != NULL)
+    if (texSrc != NULL)
     {
-        u8* tex = param_1 + 0x20;
-        if (param_1[0x48] != 0)
+        u8* tex = texSrc + 0x20;
+        if (texSrc[0x48] != 0)
         {
-            GXLoadTexObjPreLoaded(tex, *(void**)(param_1 + 0x40), texmap);
+            GXLoadTexObjPreLoaded(tex, *(void**)(texSrc + 0x40), texmap);
         }
         else
         {
@@ -7600,7 +7600,7 @@ extern f32 bootThisDol;
 extern f32 lbl_803DEAEC;
 extern f32 lbl_803DEAF0;
 
-void fn_8004CE0C(void* param_1)
+void fn_8004CE0C(void* viewMtx)
 {
     f32 mtx40[3][4];
     f32 mtx70[3][4];
@@ -7678,7 +7678,7 @@ void fn_8004CE0C(void* param_1)
     mtx40[1][1] = lbl_803DEACC;
     mtx40[1][2] = lbl_803DEACC;
     mtx40[1][3] = lbl_803DEACC;
-    PSMTXConcat(mtx40, param_1, mtx40);
+    PSMTXConcat(mtx40, viewMtx, mtx40);
     GXLoadTexMtxImm(mtx40, 0x24, 1);
     GXSetTexCoordGen2(3, 1, 0, 0x24, 0, 0x7d);
     GXSetTevDirect(2);
@@ -7913,10 +7913,10 @@ void fn_8004D928(void)
     lbl_803DCD69++;
 }
 
-void fn_8004FDA0(u8* param_1, void* param_2)
+void fn_8004FDA0(u8* texSrc, void* texMtx)
 {
     GXSetTevDirect(lbl_803DCD90);
-    GXLoadTexMtxImm(param_2, lbl_803DCD80, 0);
+    GXLoadTexMtxImm(texMtx, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
     GXSetTevKColorSel(lbl_803DCD90, 4);
@@ -7928,12 +7928,12 @@ void fn_8004FDA0(u8* param_1, void* param_2)
     lbl_803DCD30 = 1;
     {
         int id = lbl_803DCD8C;
-        if (param_1 != NULL)
+        if (texSrc != NULL)
         {
-            void* obj = param_1 + 0x20;
-            if (param_1[0x48] != 0)
+            void* obj = texSrc + 0x20;
+            if (texSrc[0x48] != 0)
             {
-                GXLoadTexObjPreLoaded(obj, *(void**)(param_1 + 0x40), id);
+                GXLoadTexObjPreLoaded(obj, *(void**)(texSrc + 0x40), id);
             }
             else
             {
@@ -7949,10 +7949,10 @@ void fn_8004FDA0(u8* param_1, void* param_2)
     lbl_803DCD69++;
 }
 
-void fn_80050A28(int param_1)
+void fn_80050A28(int scale)
 {
     f32 m[3][4];
-    PSMTXScale(m, (f32)param_1, (f32)param_1, lbl_803DEACC);
+    PSMTXScale(m, (f32)scale, (f32)scale, lbl_803DEACC);
     m[2][3] = lbl_803DEAC8;
     GXLoadTexMtxImm(m, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, 1, 4, 0x3c, 0, lbl_803DCD80);

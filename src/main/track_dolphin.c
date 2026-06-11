@@ -1588,8 +1588,8 @@ void FUN_80063a74(undefined4 param_1, undefined4 param_2, uint param_3, char par
 void trackDolphin_buildSweptBounds(uint* boundsOut, float* startPoints, float* endPoints,
                                    float* radii, int pointCount)
 {
-    double dVar1;
-    undefined8 local_8;
+    double bias;
+    undefined8 convTmp;
 
     *boundsOut = 1000000;
     boundsOut[3] = 0xfff0bdc0;
@@ -1597,68 +1597,68 @@ void trackDolphin_buildSweptBounds(uint* boundsOut, float* startPoints, float* e
     boundsOut[4] = 0xfff0bdc0;
     boundsOut[2] = 1000000;
     boundsOut[5] = 0xfff0bdc0;
-    dVar1 = DOUBLE_803df958;
+    bias = DOUBLE_803df958;
     if (pointCount != 0)
     {
         do
         {
-            local_8 = (double)CONCAT44(0x43300000, *boundsOut ^ 0x80000000);
-            if (*startPoints - *radii < (float)(local_8 - dVar1))
+            convTmp = (double)CONCAT44(0x43300000, *boundsOut ^ 0x80000000);
+            if (*startPoints - *radii < (float)(convTmp - bias))
             {
                 *boundsOut = (int)(*startPoints - *radii);
             }
-            local_8 = (double)CONCAT44(0x43300000, boundsOut[3] ^ 0x80000000);
-            if ((float)(local_8 - dVar1) < *startPoints + *radii)
+            convTmp = (double)CONCAT44(0x43300000, boundsOut[3] ^ 0x80000000);
+            if ((float)(convTmp - bias) < *startPoints + *radii)
             {
                 boundsOut[3] = (int)(*startPoints + *radii);
             }
-            local_8 = (double)CONCAT44(0x43300000, boundsOut[1] ^ 0x80000000);
-            if (startPoints[1] - *radii < (float)(local_8 - dVar1))
+            convTmp = (double)CONCAT44(0x43300000, boundsOut[1] ^ 0x80000000);
+            if (startPoints[1] - *radii < (float)(convTmp - bias))
             {
                 boundsOut[1] = (int)(startPoints[1] - *radii);
             }
-            local_8 = (double)CONCAT44(0x43300000, boundsOut[4] ^ 0x80000000);
-            if ((float)(local_8 - dVar1) < startPoints[1] + *radii)
+            convTmp = (double)CONCAT44(0x43300000, boundsOut[4] ^ 0x80000000);
+            if ((float)(convTmp - bias) < startPoints[1] + *radii)
             {
                 boundsOut[4] = (int)(startPoints[1] + *radii);
             }
-            local_8 = (double)CONCAT44(0x43300000, boundsOut[2] ^ 0x80000000);
-            if (startPoints[2] - *radii < (float)(local_8 - dVar1))
+            convTmp = (double)CONCAT44(0x43300000, boundsOut[2] ^ 0x80000000);
+            if (startPoints[2] - *radii < (float)(convTmp - bias))
             {
                 boundsOut[2] = (int)(startPoints[2] - *radii);
             }
-            local_8 = (double)CONCAT44(0x43300000, boundsOut[5] ^ 0x80000000);
-            if ((float)(local_8 - dVar1) < startPoints[2] + *radii)
+            convTmp = (double)CONCAT44(0x43300000, boundsOut[5] ^ 0x80000000);
+            if ((float)(convTmp - bias) < startPoints[2] + *radii)
             {
                 boundsOut[5] = (int)(startPoints[2] + *radii);
             }
-            local_8 = (double)CONCAT44(0x43300000, *boundsOut ^ 0x80000000);
-            if (*endPoints - *radii < (float)(local_8 - dVar1))
+            convTmp = (double)CONCAT44(0x43300000, *boundsOut ^ 0x80000000);
+            if (*endPoints - *radii < (float)(convTmp - bias))
             {
                 *boundsOut = (int)(*endPoints - *radii);
             }
-            local_8 = (double)CONCAT44(0x43300000, boundsOut[3] ^ 0x80000000);
-            if ((float)(local_8 - dVar1) < *endPoints + *radii)
+            convTmp = (double)CONCAT44(0x43300000, boundsOut[3] ^ 0x80000000);
+            if ((float)(convTmp - bias) < *endPoints + *radii)
             {
                 boundsOut[3] = (int)(*endPoints + *radii);
             }
-            local_8 = (double)CONCAT44(0x43300000, boundsOut[1] ^ 0x80000000);
-            if (endPoints[1] - *radii < (float)(local_8 - dVar1))
+            convTmp = (double)CONCAT44(0x43300000, boundsOut[1] ^ 0x80000000);
+            if (endPoints[1] - *radii < (float)(convTmp - bias))
             {
                 boundsOut[1] = (int)(endPoints[1] - *radii);
             }
-            local_8 = (double)CONCAT44(0x43300000, boundsOut[4] ^ 0x80000000);
-            if ((float)(local_8 - dVar1) < endPoints[1] + *radii)
+            convTmp = (double)CONCAT44(0x43300000, boundsOut[4] ^ 0x80000000);
+            if ((float)(convTmp - bias) < endPoints[1] + *radii)
             {
                 boundsOut[4] = (int)(endPoints[1] + *radii);
             }
-            local_8 = (double)CONCAT44(0x43300000, boundsOut[2] ^ 0x80000000);
-            if (endPoints[2] - *radii < (float)(local_8 - dVar1))
+            convTmp = (double)CONCAT44(0x43300000, boundsOut[2] ^ 0x80000000);
+            if (endPoints[2] - *radii < (float)(convTmp - bias))
             {
                 boundsOut[2] = (int)(endPoints[2] - *radii);
             }
-            local_8 = (double)CONCAT44(0x43300000, boundsOut[5] ^ 0x80000000);
-            if ((float)(local_8 - dVar1) < endPoints[2] + *radii)
+            convTmp = (double)CONCAT44(0x43300000, boundsOut[5] ^ 0x80000000);
+            if ((float)(convTmp - bias) < endPoints[2] + *radii)
             {
                 boundsOut[5] = (int)(endPoints[2] + *radii);
             }
@@ -1704,9 +1704,9 @@ undefined4* trackDolphin_getIntersectionDescriptorTable(uint* currentIndexOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void trackDolphin_getCurrentTrackPoint(uint** param_1)
+void trackDolphin_getCurrentTrackPoint(uint** trackPointOut)
 {
-    *param_1 = (uint*)&DAT_8038eaa4;
+    *trackPointOut = (uint*)&DAT_8038eaa4;
     return;
 }
 
@@ -1745,8 +1745,8 @@ void trackDolphin_getCurrentIntersectionList(int* entryCountOut, undefined4* ent
  */
 void trackDolphin_initIntersectionBuffers(void)
 {
-    int iVar1;
-    int iVar2;
+    int off;
+    int remaining;
 
     if (DAT_803ddbb0 == 0)
     {
@@ -1756,30 +1756,30 @@ void trackDolphin_initIntersectionBuffers(void)
         DAT_803ddbbc = FUN_80017830(3000, -0xff01);
         DAT_803ddbc8 = (int*)FUN_80017830(0x600, -0xff01);
     }
-    iVar1 = 0;
-    iVar2 = 4;
+    off = 0;
+    remaining = 4;
     do
     {
-        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x14) = 0;
-        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x2c) = 0;
-        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x44) = 0;
-        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x5c) = 0;
-        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x74) = 0;
-        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x8c) = 0;
-        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0xa4) = 0;
-        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0xbc) = 0;
-        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0xd4) = 0;
-        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0xec) = 0;
-        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x104) = 0;
-        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x11c) = 0;
-        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x134) = 0;
-        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x14c) = 0;
-        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x164) = 0;
-        *(undefined*)((int)DAT_803ddbc8 + iVar1 + 0x17c) = 0;
-        iVar1 = iVar1 + 0x180;
-        iVar2 = iVar2 + -1;
+        *(undefined*)((int)DAT_803ddbc8 + off + 0x14) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + off + 0x2c) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + off + 0x44) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + off + 0x5c) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + off + 0x74) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + off + 0x8c) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + off + 0xa4) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + off + 0xbc) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + off + 0xd4) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + off + 0xec) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + off + 0x104) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + off + 0x11c) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + off + 0x134) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + off + 0x14c) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + off + 0x164) = 0;
+        *(undefined*)((int)DAT_803ddbc8 + off + 0x17c) = 0;
+        off = off + 0x180;
+        remaining = remaining + -1;
     }
-    while (iVar2 != 0);
+    while (remaining != 0);
     DAT_803ddbde = 0;
     DAT_803ddbdc = 0;
     DAT_803ddbce = 0;
@@ -2517,12 +2517,12 @@ extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, i
 
 void* MapBlock_loadFromFile(int blockId)
 {
-    int local_c;
-    int local_8;
+    int compressedLen;
+    int decompressedSize;
     void* buf;
     int blockOff = 0;
     int* table;
-    int v;
+    int tableEntry;
     if (blockId > lbl_803DCEB0)
     {
         goto ret0a;
@@ -2530,15 +2530,15 @@ void* MapBlock_loadFromFile(int blockId)
     table = (int*)lbl_803DCDE4;
     if (table != 0)
     {
-        v = table[blockId];
-        if (v != -1)
+        tableEntry = table[blockId];
+        if (tableEntry != -1)
         {
-            if (v == 0 && table[blockId + 1] == 0)
+            if (tableEntry == 0 && table[blockId + 1] == 0)
             {
                 goto ret0b;
             }
-            blockOff = v;
-            checkLoadBlock(v, &local_c, &local_8);
+            blockOff = tableEntry;
+            checkLoadBlock(tableEntry, &compressedLen, &decompressedSize);
         }
     }
     goto cont;
@@ -2547,20 +2547,20 @@ ret0a:
 ret0b:
     return 0;
 cont:
-    if (local_c <= 0)
+    if (compressedLen <= 0)
     {
         return 0;
     }
-    if (local_8 > 0x32000)
+    if (decompressedSize > 0x32000)
     {
         return 0;
     }
-    buf = mmAlloc(local_8, 5, 0);
+    buf = mmAlloc(decompressedSize, 5, 0);
     if (buf == 0)
     {
         return 0;
     }
-    loadAndDecompressDataFile(0x25, buf, blockOff, local_c, 0, 0, 0);
+    loadAndDecompressDataFile(0x25, buf, blockOff, compressedLen, 0, 0, 0);
     return buf;
 }
 
@@ -2640,16 +2640,16 @@ void mapInitFn_80069990(void)
     lbl_803DCF4F = 0;
 }
 
-void fn_8006058C(short* param_1, float* param_2)
+void fn_8006058C(short* out, float* vec)
 {
-    int iVar1;
-    int iVar2;
+    int yScaled;
+    int zScaled;
 
-    iVar1 = (int)(lbl_803DEC50 * param_2[1]);
-    iVar2 = (int)(lbl_803DEC50 * param_2[2]);
-    *param_1 = (short)(int)(lbl_803DEC50 * *param_2);
-    param_1[1] = (short)iVar1;
-    param_1[2] = (short)iVar2;
+    yScaled = (int)(lbl_803DEC50 * vec[1]);
+    zScaled = (int)(lbl_803DEC50 * vec[2]);
+    *out = (short)(int)(lbl_803DEC50 * *vec);
+    out[1] = (short)yScaled;
+    out[2] = (short)zScaled;
 }
 
 #pragma dont_inline on
@@ -3611,9 +3611,9 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
     u8 fmt;
     u32 w, h;
     int i, j;
-    u32 uVar7, uVar8;
-    u16 v2, v3;
-    u8 r2, r3v;
+    u32 wA, wB;
+    u16 texA, texB;
+    u8 redA, redB;
     int rf, gf, bf;
 
     if (a == NULL) return;
@@ -3630,8 +3630,8 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
     if (w != *(u16*)(c + 0xa)) return;
     if (h == *(u16*)(c + 0xc))
     {
-        uVar7 = (int)(__PADFixBits * t) & 0xff;
-        uVar8 = (0xff - uVar7) & 0xff;
+        wA = (int)(__PADFixBits * t) & 0xff;
+        wB = (0xff - wA) & 0xff;
         if (fmt == 4)
         {
             for (i = 0; i < (int)*(u16*)(a + 0xc); i++)
@@ -3645,15 +3645,15 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
                     int i6 = (j & 3) * 2;
                     int i4 = (j >> 2) * 0x20;
                     int i12 = (int)*(u16*)(a + 0xa) * im * 2;
-                    v2 = *(u16*)(a + i6 + i4 + i5 + i12 + 0x60);
-                    r2 = ((int)(v2 & 0xf800) >> 8) | ((int)(v2 & 0xe000) >> 13);
-                    v3 = *(u16*)(b + i6 + i4 + i5 + i12 + 0x60);
-                    r3v = ((int)(v3 & 0xf800) >> 8) | ((int)(v3 & 0xe000) >> 13);
-                    bf = ((u8)(((int)(uVar7 * (u8)(((v2 & 0x1f) << 3) | ((int)(v2 & 0x1c) >> 2))) >> 8)
-                        + ((int)(uVar8 * (u8)(((v3 & 0x1f) << 3) | ((int)(v3 & 0x1c) >> 2))) >> 8)) & 0xf8) >> 3;
-                    rf = ((u8)(((int)(r2 * uVar7) >> 8) + ((int)(r3v * uVar8) >> 8)) & 0xf8) << 8;
-                    gf = ((u8)(((int)(uVar7 * (u8)(((int)(v2 & 0x7e0) >> 3) | ((int)(v2 & 0x600) >> 9))) >> 8)
-                        + ((int)(uVar8 * (u8)(((int)(v3 & 0x7e0) >> 3) | ((int)(v3 & 0x600) >> 9))) >> 8)) & 0xfc) << 3;
+                    texA = *(u16*)(a + i6 + i4 + i5 + i12 + 0x60);
+                    redA = ((int)(texA & 0xf800) >> 8) | ((int)(texA & 0xe000) >> 13);
+                    texB = *(u16*)(b + i6 + i4 + i5 + i12 + 0x60);
+                    redB = ((int)(texB & 0xf800) >> 8) | ((int)(texB & 0xe000) >> 13);
+                    bf = ((u8)(((int)(wA * (u8)(((texA & 0x1f) << 3) | ((int)(texA & 0x1c) >> 2))) >> 8)
+                        + ((int)(wB * (u8)(((texB & 0x1f) << 3) | ((int)(texB & 0x1c) >> 2))) >> 8)) & 0xf8) >> 3;
+                    rf = ((u8)(((int)(redA * wA) >> 8) + ((int)(redB * wB) >> 8)) & 0xf8) << 8;
+                    gf = ((u8)(((int)(wA * (u8)(((int)(texA & 0x7e0) >> 3) | ((int)(texA & 0x600) >> 9))) >> 8)
+                        + ((int)(wB * (u8)(((int)(texB & 0x7e0) >> 3) | ((int)(texB & 0x600) >> 9))) >> 8)) & 0xfc) << 3;
                     *(u16*)(c + i6 + i4 + i5 + i12 + 0x60) = bf | (rf | gf);
                 }
             }
@@ -3677,15 +3677,15 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
                     u8 aLo, bLo, aHi, bHi;
                     aLo = *(u16*)(ad + 0x60);
                     bLo = *(u16*)(bd + 0x60);
-                    v2 = *(u16*)(ad + 0x80);
-                    aHi = (int)(v2 & 0xff00) >> 8;
-                    v3 = *(u16*)(bd + 0x80);
-                    bHi = (int)(v3 & 0xff00) >> 8;
+                    texA = *(u16*)(ad + 0x80);
+                    aHi = (int)(texA & 0xff00) >> 8;
+                    texB = *(u16*)(bd + 0x80);
+                    bHi = (int)(texB & 0xff00) >> 8;
                     cd = c + i9 + i12 + i4 + 0x60;
-                    *(u16*)(cd + i6) = (u8)(((int)(aLo * uVar7) >> 8) + ((int)(bLo * uVar8) >> 8));
+                    *(u16*)(cd + i6) = (u8)(((int)(aLo * wA) >> 8) + ((int)(bLo * wB) >> 8));
                     *(u16*)(cd + (int)*(u16*)(a + 0xa) * i5 * 2 + 0x20) =
-                        ((u8)(((int)(aHi * uVar7) >> 8) + ((int)(bHi * uVar8) >> 8)) << 8)
-                        | (u8)(((int)(uVar7 * (u8)v2) >> 8) + ((int)(uVar8 * (u8)v3) >> 8));
+                        ((u8)(((int)(aHi * wA) >> 8) + ((int)(bHi * wB) >> 8)) << 8)
+                        | (u8)(((int)(wA * (u8)texA) >> 8) + ((int)(wB * (u8)texB) >> 8));
                 }
             }
         }
@@ -3798,7 +3798,7 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
     TrackBlockDescriptor* end;
     u8* ptr;
     int i, j;
-    int bVar7;
+    int sorted;
     int conv[6];
     f32 tx, ty, tz;
 
@@ -3849,10 +3849,10 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
         i += 4;
     }
 
-    bVar7 = 0;
-    while (!bVar7)
+    sorted = 0;
+    while (!sorted)
     {
-        bVar7 = 1;
+        sorted = 1;
         i = 0;
         for (j = 0; j < lbl_803DCF60 - 1; j++)
         {
@@ -3860,7 +3860,7 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f)
             f32* p5 = pp[0];
             if (*p5 < *pp[1])
             {
-                bVar7 = 0;
+                sorted = 0;
                 pp[0] = pp[1];
                 *(f32**)(lbl_803DCF64 + i + 4) = p5;
             }
@@ -4159,56 +4159,56 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
 extern u8 hitDetect_800667ec(int a, void* t1, void* t2, int p2, int p3, int p4, void* p5, int z);
 extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32* a, f32* b);
 
-u8 hitDetectFn_80067958(void* param_1, int param_2, int param_3, int param_4, void* param_5)
+u8 hitDetectFn_80067958(void* contactSrc, int param_2, int param_3, int count, void* results)
 {
-    f32 fVar2, fVar1;
-    f32* pfVar5;
-    void** pfVar6;
+    f32 initB, initA;
+    f32* fp;
+    void** pp;
     s16 i;
-    u8 uVar4;
+    u8 hitCount;
     u8* tbl = (u8*)gTrackBlockDescriptors;
 
-    if (param_4 > 4) param_4 = 4;
-    *(u16*)((u8*)param_5 + 0x6c) = 0;
+    if (count > 4) count = 4;
+    *(u16*)((u8*)results + 0x6c) = 0;
 
-    fVar1 = __AR_Callback;
-    fVar2 = lbl_803DECC4;
-    pfVar5 = (f32*)param_5;
-    pfVar6 = (void**)param_5;
-    for (i = 0; i < param_4; i++)
+    initA = __AR_Callback;
+    initB = lbl_803DECC4;
+    fp = (f32*)results;
+    pp = (void**)results;
+    for (i = 0; i < count; i++)
     {
-        pfVar5[0] = fVar1;
-        pfVar5[1] = fVar2;
-        pfVar5[2] = fVar1;
-        pfVar5[3] = fVar1;
-        pfVar6[0x17] = NULL;
-        pfVar5 += 4;
-        pfVar6 += 1;
+        fp[0] = initA;
+        fp[1] = initB;
+        fp[2] = initA;
+        fp[3] = initA;
+        pp[0x17] = NULL;
+        fp += 4;
+        pp += 1;
     }
 
-    uVar4 = hitDetect_800667ec(0,
+    hitCount = hitDetect_800667ec(0,
                                (void*)(lbl_803DCF30 + *(s16*)(tbl + 4) * 0x4c),
                                (void*)(lbl_803DCF30 + *(s16*)(tbl + 0x1c) * 0x4c),
-                               param_2, param_3, param_4, param_5, 0);
+                               param_2, param_3, count, results, 0);
 
-    pfVar5 = (f32*)param_5;
-    pfVar6 = (void**)param_5;
-    for (i = 0; i < param_4; i++)
+    fp = (f32*)results;
+    pp = (void**)results;
+    for (i = 0; i < count; i++)
     {
-        if (pfVar6[0x17] != NULL)
+        if (pp[0x17] != NULL)
         {
-            Obj_TransformLocalVectorByWorldMatrix((int)pfVar6[0x17], pfVar5, pfVar5);
-            if (param_1 != NULL)
+            Obj_TransformLocalVectorByWorldMatrix((int)pp[0x17], fp, fp);
+            if (contactSrc != NULL)
             {
-                ObjHits_AddContactObject(pfVar6[0x17], param_1);
+                ObjHits_AddContactObject(pp[0x17], contactSrc);
             }
         }
-        pfVar6 += 1;
-        pfVar5 += 4;
+        pp += 1;
+        fp += 4;
     }
 
-    *(u8*)((u8*)param_5 + 0x6e) = uVar4;
-    return uVar4;
+    *(u8*)((u8*)results + 0x6e) = hitCount;
+    return hitCount;
 }
 
 typedef union
@@ -4247,29 +4247,29 @@ extern void GXSetBlendMode(int a, int b, int c, int d);
 extern void selectTexture(int tex, int slot);
 extern void GXBegin(int type, int fmt, int count);
 
-void objDrawFn_80061654(int param_1, int param_2)
+void objDrawFn_80061654(int obj, int placementObj)
 {
-    s16* p;
+    s16* shadowVerts;
     u8 alpha;
     void* viewMtx;
-    int local_94;
-    int local_98;
+    int kColor;
+    int kColorCopy;
     f32 mtx[16];
     f32 outMtx[16];
 
-    p = *(s16**)(param_2 + 0x54);
-    if (*(u8*)((u8*)p + 0x18) == 0)
+    shadowVerts = *(s16**)(placementObj + 0x54);
+    if (*(u8*)((u8*)shadowVerts + 0x18) == 0)
     {
-        fn_8006135C(p, (void*)param_1);
+        fn_8006135C(shadowVerts, (void*)obj);
     }
-    if (*(u8*)((u8*)p + 0x18) != 0xff)
+    if (*(u8*)((u8*)shadowVerts + 0x18) != 0xff)
     {
-        alpha = (u8)objShadowFn_80062378((void*)param_1, 0x96);
-        *((u8*)&local_94 + 3) = alpha;
+        alpha = (u8)objShadowFn_80062378((void*)obj, 0x96);
+        *((u8*)&kColor + 3) = alpha;
         if (alpha != 0)
         {
             viewMtx = Camera_GetViewMatrix();
-            Obj_BuildWorldTransformMatrix(param_1, mtx, 0);
+            Obj_BuildWorldTransformMatrix(obj, mtx, 0);
             mtx[0] = lbl_803DEC68;
             mtx[1] = lbl_803DEC58;
             mtx[2] = lbl_803DEC58;
@@ -4286,8 +4286,8 @@ void objDrawFn_80061654(int param_1, int param_2)
             GXSetVtxDesc(0xd, 1);
             GXSetNumTexGens(1);
             GXSetTexCoordGen2(0, 1, 4, 0x3c, 0, 0x7d);
-            local_98 = local_94;
-            GXSetTevKColor(0, &local_98);
+            kColorCopy = kColor;
+            GXSetTevKColor(0, &kColorCopy);
             GXSetTevKAlphaSel(0, 0x1c);
             GXSetNumTevStages(1);
             GXSetNumIndStages(0);
@@ -4304,26 +4304,26 @@ void objDrawFn_80061654(int param_1, int param_2)
             GXSetCullMode(0);
             GXSetCurrentMtx(0x1b);
             GXSetBlendMode(1, 4, 5, 5);
-            selectTexture((int)((ObjAnimComponent*)param_1)->modelState->shadowTexture, 0);
+            selectTexture((int)((ObjAnimComponent*)obj)->modelState->shadowTexture, 0);
             GXBegin(0x80, 6, 4);
-            GXWGFifo.s16 = p[0];
-            GXWGFifo.s16 = p[1];
-            GXWGFifo.s16 = p[2];
+            GXWGFifo.s16 = shadowVerts[0];
+            GXWGFifo.s16 = shadowVerts[1];
+            GXWGFifo.s16 = shadowVerts[2];
             GXWGFifo.s16 = 0;
             GXWGFifo.s16 = 0;
-            GXWGFifo.s16 = p[3];
-            GXWGFifo.s16 = p[4];
-            GXWGFifo.s16 = p[5];
+            GXWGFifo.s16 = shadowVerts[3];
+            GXWGFifo.s16 = shadowVerts[4];
+            GXWGFifo.s16 = shadowVerts[5];
             GXWGFifo.s16 = 0x400;
             GXWGFifo.s16 = 0;
-            GXWGFifo.s16 = p[6];
-            GXWGFifo.s16 = p[7];
-            GXWGFifo.s16 = p[8];
+            GXWGFifo.s16 = shadowVerts[6];
+            GXWGFifo.s16 = shadowVerts[7];
+            GXWGFifo.s16 = shadowVerts[8];
             GXWGFifo.s16 = 0x400;
             GXWGFifo.s16 = 0x400;
-            GXWGFifo.s16 = p[9];
-            GXWGFifo.s16 = p[10];
-            GXWGFifo.s16 = p[11];
+            GXWGFifo.s16 = shadowVerts[9];
+            GXWGFifo.s16 = shadowVerts[10];
+            GXWGFifo.s16 = shadowVerts[11];
             GXWGFifo.s16 = 0;
             GXWGFifo.s16 = 0x400;
             GXSetCurrentMtx(0);
