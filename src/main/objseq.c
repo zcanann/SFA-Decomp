@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/audio/sfx.h"
 #include "main/obj_placement.h"
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
@@ -39,7 +40,6 @@ extern void Rcp_SetMonochromeFilterEnabled(int enabled);
 extern void gameTimerInit(int type, int value);
 extern void timerSetToCountUp(void);
 extern void gameTimerStop(void);
-extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern void Camera_EnableViewYOffset(void);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern void CameraShake_Start(f32 a, f32 b, f32 c);
@@ -91,8 +91,6 @@ extern f32 lbl_803DF038;
 extern f32 lbl_803DF03C;
 extern f32 lbl_803DF040;
 extern f32 lbl_803DF044;
-extern int Sfx_IsPlayingFromObject(void* obj, int sfxId);
-extern void Sfx_SetObjectSfxVolume(void* obj, int sfxId, int volume, f32 p4);
 extern int* seqFn_800394a0(void);
 extern u8 lbl_803DB411;
 extern int objSeqObjs;
@@ -120,9 +118,6 @@ extern u8 lbl_803DD111;
 extern u8 lbl_803DD112;
 extern f32 lbl_803DF02C;
 extern void ObjModel_SetBlendChannelTargets(void* action, int mode, int target, int channel, int p5, f32 t);
-extern void Sfx_PlayFromObject(void* obj, int sfxId);
-extern void Sfx_RemoveLoopedObjectSound(void* obj, int sfxId);
-extern void Sfx_AddLoopedObjectSound(void* obj, int sfxId);
 extern void warpToMap(int map, int mode);
 int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmd, int flags, void* out);
 void* ObjSeq_ToggleCommand3Target(u8 * obj, u8 * seq, u8 * src);
@@ -1341,7 +1336,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         gameTimerStop();
         break;
     case 13:
-        Sfx_StopObjectChannel(sourceObj, 0x7f);
+        Sfx_StopObjectChannel((u32)sourceObj, 0x7f);
         break;
     case 16:
         *(s8*)&((ObjSeqState*)seq)->unk7D = (s8)cmdArg;
@@ -1758,17 +1753,17 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
         {
             if (*(s16*)(walk + 0x30) != 0)
             {
-                Sfx_IsPlayingFromObject(seqObj, (u16) * (s16*)(walk + 0x38));
+                Sfx_IsPlayingFromObject((u32)seqObj, (u16) * (s16*)(walk + 0x38));
             }
             walk += 2;
         }
 
         if (vol > 0 && ((ObjSeqState*)seq)->sfxTimer[3] != 0)
         {
-            if (Sfx_IsPlayingFromObject(seqObj, (u16)((ObjSeqState*)seq)->sfxId[3]) != 0)
+            if (Sfx_IsPlayingFromObject((u32)seqObj, (u16)((ObjSeqState*)seq)->sfxId[3]) != 0)
             {
-                Sfx_SetObjectSfxVolume(seqObj, (u16)((ObjSeqState*)seq)->sfxId[3], (u8)vol,
-                                       lbl_803DF038);
+                Sfx_SetObjectSfxVolume((u32)seqObj, (u16)((ObjSeqState*)seq)->sfxId[3], (u8)vol,
+                                        lbl_803DF038);
             }
         }
 
@@ -2484,11 +2479,11 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         }
         if (((*(s16*)(cmd + 2) >> 12) & 0xf) != 0xf)
         {
-            Sfx_PlayFromObject(obj, (u16)(*(s16*)(cmd + 2) & 0xfff));
+            Sfx_PlayFromObject((u32)obj, (u16)(*(s16*)(cmd + 2) & 0xfff));
         }
         else
         {
-            Sfx_PlayFromObject(obj, (u16)(*(s16*)(cmd + 2) & 0xfff));
+            Sfx_PlayFromObject((u32)obj, (u16)(*(s16*)(cmd + 2) & 0xfff));
             ((ObjSeqState*)seq)->sfxTimer[3] = -1;
             ((ObjSeqState*)seq)->sfxId[3] = (s16)(*(s16*)(cmd + 2) & 0xfff);
         }
@@ -2581,13 +2576,13 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         entry = seq + slot * 2;
         if (*(s16*)(entry + 0x30) > 0)
         {
-            Sfx_RemoveLoopedObjectSound(obj, (u16) * (s16*)(entry + 0x38));
+            Sfx_RemoveLoopedObjectSound((u32)obj, (u16) * (s16*)(entry + 0x38));
         }
         cmd[1] = cmd[5];
         cmd[4] = 0x63;
         *(s16*)(entry + 0x30) = *(s16*)(cmd + 6);
         *(s16*)(seq + slot * 2 + 0x38) = (s16)(*(s16*)(cmd + 2) & 0xfff);
-        Sfx_AddLoopedObjectSound(obj, (u16) * (s16*)(seq + slot * 2 + 0x38));
+        Sfx_AddLoopedObjectSound((u32)obj, (u16) * (s16*)(seq + slot * 2 + 0x38));
         break;
     }
     return 0;
@@ -2678,7 +2673,7 @@ int ObjSeq_update(u8* obj, f32 t)
             if (*(s16*)(p + 0x30) <= 0)
             {
                 *(s16*)(p + 0x30) = 0;
-                Sfx_RemoveLoopedObjectSound(obj, (u16) * (s16*)(p + 0x38));
+                Sfx_RemoveLoopedObjectSound((u32)obj, (u16) * (s16*)(p + 0x38));
             }
         }
     }
