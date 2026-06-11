@@ -3550,7 +3550,7 @@ extern f32 mathSinf(f32);
  * the 20 cached particle resource slots. */
 #pragma scheduling off
 #pragma peephole off
-void ParticleEffectController_func05(void)
+void partfx_updateFrameState(void)
 {
     lbl_803DB7A8 = lbl_803DB7A8 + lbl_803DF4C8 * timeDelta;
     if (lbl_803DB7A8 > 1.0f) {
@@ -5194,7 +5194,7 @@ extern f32 lbl_803DF9BC;
 
 extern s32 lbl_80310660[];
 
-/* ---- partfx_update (FUN_800a4df4, v1.0) ---- */
+/* ---- partfx_spawnObject (FUN_800a4df4, v1.0) ---- */
 extern f32 lbl_803DB7A0;
 extern f32 lbl_803DB7A4;
 extern f32 lbl_803DF4D4;
@@ -5344,7 +5344,7 @@ extern void vecRotateZXY(void *obj, f32 *vec);
 extern char sModgfxAlphaDebugFormat[];
 extern void fn_80137948(char *fmt, ...);
 
-int partfx_update(s16 *sourceObj, u32 effectIdArg, s16 *spawnParams, u32 spawnFlags,
+int partfx_spawnObject(s16 *sourceObj, u32 effectIdArg, s16 *spawnParams, u32 spawnFlags,
                   u32 modelIdArg, void *extraArgsArg)
 {
     int modelId = (int)modelIdArg;
