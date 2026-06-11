@@ -202,105 +202,26 @@ typedef struct Dll200State
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
 extern undefined4 FUN_8000680c();
-extern undefined4 FUN_80006820();
 extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
 extern undefined8 FUN_80006ba8();
 extern uint FUN_80006c00();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
 extern undefined4 FUN_8001771c();
-extern int FUN_80017730();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017a78();
-extern int FUN_80017a90();
 extern uint FUN_80017a98();
-extern undefined4 FUN_80017ac8();
 extern undefined8 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
-extern void* ObjGroup_GetObjects();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined8 ObjMsg_AllocQueue();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80053754();
-extern int FUN_8005398c();
 extern int FUN_800632f4();
-extern undefined4 FUN_80135814();
-extern uint FUN_8028683c();
-extern int FUN_80286840();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_8028688c();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
-extern undefined4 FUN_80294cc0();
-extern int FUN_80294d38();
-extern undefined4 FUN_80294d40();
-extern int FUN_80294d6c();
 
-extern undefined4 DAT_802c2bf0;
-extern undefined4 DAT_802c2bf4;
-extern undefined4 DAT_802c2bf8;
-extern undefined4 DAT_802c2bfc;
-extern undefined4 DAT_802c2c00;
-extern undefined4 DAT_802c2c04;
-extern undefined4 DAT_803294d8;
-extern undefined4 DAT_803295b4;
-extern undefined4 DAT_803295b8;
-extern undefined4 DAT_803295bc;
-extern undefined4 DAT_803295c0;
-extern undefined4 DAT_803295c4;
-extern undefined4 DAT_803dc070;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern undefined4* DAT_803dd6e8;
 extern ModgfxInterface** gModgfxInterface;
 extern MapEventInterface** gMapEventInterface;
-extern undefined4* DAT_803de900;
-extern f64 DOUBLE_803e69e8;
-extern f64 DOUBLE_803e6a38;
-extern f64 DOUBLE_803e6a50;
 extern f32 lbl_803DC074;
-extern f32 lbl_803E699C;
-extern f32 lbl_803E69A0;
-extern f32 lbl_803E69A8;
-extern f32 lbl_803E69AC;
-extern f32 lbl_803E69B0;
-extern f32 lbl_803E69B4;
-extern f32 lbl_803E69C0;
-extern f32 lbl_803E69C4;
-extern f32 lbl_803E69C8;
-extern f32 lbl_803E69CC;
-extern f32 lbl_803E69D0;
-extern f32 lbl_803E69D4;
-extern f32 lbl_803E69D8;
-extern f32 lbl_803E69DC;
-extern f32 lbl_803E69E0;
-extern f32 lbl_803E69F4;
-extern f32 lbl_803E69F8;
-extern f32 lbl_803E69FC;
-extern f32 lbl_803E6A00;
-extern f32 lbl_803E6A04;
-extern f32 lbl_803E6A08;
-extern f32 lbl_803E6A0C;
-extern f32 lbl_803E6A10;
 extern f32 lbl_803E6A1C;
 extern f32 lbl_803E6A20;
 extern f32 lbl_803E6A24;
-extern f32 lbl_803E6A30;
-extern f32 lbl_803E6A34;
-extern f32 lbl_803E6A40;
-extern f32 lbl_803E6A44;
-extern f32 lbl_803E6A48;
-extern f32 lbl_803E6A4C;
-extern f32 lbl_803E6A58;
-extern f32 lbl_803E6A64;
-extern f32 lbl_803E6A68;
-extern f32 lbl_803E6A6C;
-extern f32 lbl_803E6A70;
-extern f32 lbl_803E6A74;
-extern f32 lbl_803E6A78;
 extern f32 lbl_803E6A80;
 
 /*
@@ -663,7 +584,7 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     float fVar3;
     float fVar4;
     int iVar5;
-    undefined uVar8;
+    u8 uVar8;
     float* pfVar6;
     uint uVar7;
     int iVar9;
@@ -689,10 +610,10 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
             FUN_80006ba8(0, 0x100);
             uVar8 = 1;
         }
-        *(undefined*)((int)puVar12 + 5) = uVar8;
+        *(u8*)((int)puVar12 + 5) = uVar8;
         if (*(char*)((int)puVar12 + 5) != '\0')
         {
-            *(undefined*)(puVar12 + 3) = 1;
+            *(u8*)(puVar12 + 3) = 1;
         }
         if (((GameObject*)param_9)->unkF8 == 0)
         {
@@ -750,17 +671,17 @@ void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
         uVar7 = FUN_80006c00(0);
         if ((uVar7 & 0x100) != 0)
         {
-            *(undefined*)(puVar12 + 3) = 0;
+            *(u8*)(puVar12 + 3) = 0;
             uVar13 = FUN_80006ba8(0, 0x100);
         }
         if (((GameObject*)param_9)->unkF8 == 1)
         {
-            *(undefined*)((int)puVar12 + 5) = 2;
+            *(u8*)((int)puVar12 + 5) = 2;
         }
         if ((*(char*)((int)puVar12 + 5) == '\x02') && (((GameObject*)param_9)->unkF8 == 0))
         {
-            *(undefined*)((int)puVar12 + 5) = 0;
-            *(undefined*)(puVar12 + 3) = 0;
+            *(u8*)((int)puVar12 + 5) = 0;
+            *(u8*)(puVar12 + 3) = 0;
         }
         if (*(char*)(puVar12 + 3) != '\0')
         {
@@ -1844,10 +1765,7 @@ void dll_1FF_update(int obj)
     extern void*Obj_GetPlayerObject(void);
     extern void buttonDisable(int a, int b);
     extern uint getButtonsJustPressed(int pad);
-    extern void objFn_80035F20(int obj);
-    extern void objFn_80035F00(int obj);
     extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int* list, int a, int b);
-    extern void objFn_800378C4(void* player, int msg, int obj, int data);
     extern f32 timeDelta;
     extern f32 lbl_803E5D84;
     extern const f32 lbl_803E5D88;
