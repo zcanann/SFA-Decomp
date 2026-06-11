@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 #include "main/dll/magicPlant.h"
 #include "main/dll/baddie_state.h"
 #include "main/effect_interfaces.h"
@@ -98,7 +99,6 @@ extern f32 lbl_803E2928;
 extern f32 lbl_803E292C;
 extern f32 lbl_803E2930;
 extern void fn_80293018(int idx, f32* outA, f32* outB);
-extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int prio);
 extern void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c);
 extern void fn_8015355C(int obj, int p2);
 extern f32 lbl_803E28D4;
