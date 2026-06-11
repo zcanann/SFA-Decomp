@@ -59,7 +59,7 @@ void fn_80154870(int obj, int* state)
     int curve;
     u8 flag;
     f32 dvec[3];
-    f32 fVar1;
+    f32 fval;
 
     curve = *state;
     if (state[0xb7] & 0x80000000U)
@@ -89,9 +89,9 @@ void fn_80154870(int obj, int* state)
             (f32)((GameObject*)obj)->anim.rotY);
     if (flag == 0)
     {
-        fVar1 = lbl_803E2990;
-        ((GameObject*)obj)->anim.velocityX = fVar1;
-        ((GameObject*)obj)->anim.velocityZ = fVar1;
+        fval = lbl_803E2990;
+        ((GameObject*)obj)->anim.velocityX = fval;
+        ((GameObject*)obj)->anim.velocityZ = fval;
         fn_8014CF7C(obj, state, *(f32*)(state[0xa7] + 0xc), *(f32*)(state[0xa7] + 0x14), 10, 0);
     }
     else
@@ -101,8 +101,8 @@ void fn_80154870(int obj, int* state)
     }
     if (state[0xb7] & 0x40000000U)
     {
-        fVar1 = *(f32*)&lbl_803E2990;
-        if (fVar1 == *(f32*)(state + 0xca))
+        fval = *(f32*)&lbl_803E2990;
+        if (fval == *(f32*)(state + 0xca))
         {
             if (flag == 0)
             {
@@ -130,9 +130,9 @@ void fn_80154870(int obj, int* state)
         else
         {
             *(f32*)(state + 0xca) = *(f32*)(state + 0xca) - timeDelta;
-            if (*(f32*)(state + 0xca) <= fVar1)
+            if (*(f32*)(state + 0xca) <= fval)
             {
-                *(f32*)(state + 0xca) = fVar1;
+                *(f32*)(state + 0xca) = fval;
                 if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29C8)
                 {
                     Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
@@ -155,8 +155,8 @@ void fn_80154870(int obj, int* state)
 
 void fn_80154C24(int obj, int state)
 {
-    float fVar1;
-    uint uVar2;
+    float fval;
+    uint randVal;
 
     *(float*)(state + 0x2ac) = lbl_803E29E8;
     *(undefined4*)(state + 0x2e4) = 0x8000009;
@@ -164,25 +164,25 @@ void fn_80154C24(int obj, int state)
     *(float*)(state + 0x300) = lbl_803E29B4;
     *(float*)(state + 0x304) = lbl_803E29EC;
     *(undefined*)(state + 0x320) = 0;
-    fVar1 = lbl_803E29F0;
+    fval = lbl_803E29F0;
     *(float*)(state + 0x314) = lbl_803E29F0;
     *(undefined*)(state + 0x321) = 1;
     *(float*)(state + 0x318) = lbl_803E2994;
     *(undefined*)(state + 0x322) = 0;
-    *(float*)(state + 0x31c) = fVar1;
-    fVar1 = lbl_803E2990;
+    *(float*)(state + 0x31c) = fval;
+    fval = lbl_803E2990;
     *(float*)(state + 0x324) = lbl_803E2990;
-    *(float*)(state + 0x328) = fVar1;
+    *(float*)(state + 0x328) = fval;
     *(float*)(state + 0x32c) = ((GameObject*)obj)->anim.localPosY;
-    uVar2 = randomGetRange(0, 0xff);
-    *(u8*)(state + 0x33a) = uVar2;
+    randVal = randomGetRange(0, 0xff);
+    *(u8*)(state + 0x33a) = randVal;
     *(undefined*)(state + 0x33b) = 0;
     *(float*)(state + 0x330) = lbl_803E29F4;
-    uVar2 = randomGetRange(0x32, 0x4b);
-    fVar1 = (f32)(s32)
-    uVar2;
-    fVar1 = lbl_803E29F8 * fVar1;
-    *(float*)(state + 0x2fc) = fVar1;
+    randVal = randomGetRange(0x32, 0x4b);
+    fval = (f32)(s32)
+    randVal;
+    fval = lbl_803E29F8 * fval;
+    *(float*)(state + 0x2fc) = fval;
 }
 
 void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance)
@@ -289,9 +289,9 @@ uint fn_80154FB4(short* obj, int state, uint turnTime, f32 maxDistance)
     f32 dxA;
     f32 dxDiff;
     f32 d;
-    f32 fVar1;
+    f32 turnStep;
     s16 rot;
-    int iVar2;
+    int curve;
     int delta;
     int angleStep;
     uint angle;
@@ -317,10 +317,10 @@ uint fn_80154FB4(short* obj, int state, uint turnTime, f32 maxDistance)
     {
         dxA = (*(f32*)(obj + 10) - *(f32*)(state + 0x364)) / crossA[2];
     }
-    iVar2 = *(int*)(state + 0x29c);
-    targetPos[0] = *(f32*)(iVar2 + 0xc);
-    targetPos[1] = lbl_803E2A08 + *(f32*)(iVar2 + 0x10);
-    targetPos[2] = *(f32*)(iVar2 + 0x14);
+    curve = *(int*)(state + 0x29c);
+    targetPos[0] = *(f32*)(curve + 0xc);
+    targetPos[1] = lbl_803E2A08 + *(f32*)(curve + 0x10);
+    targetPos[2] = *(f32*)(curve + 0x14);
     vecB[0] = *(f32*)(state + 0x360);
     vecB[1] = *(f32*)(state + 0x358);
     vecB[2] = *(f32*)(state + 0x364);
@@ -355,32 +355,32 @@ uint fn_80154FB4(short* obj, int state, uint turnTime, f32 maxDistance)
     {
         delta = delta + 0xffff;
     }
-    fVar1 = timeDelta / (f32)(turnTime & 0xffff);
-    if (fVar1 > lbl_803E2A04)
+    turnStep = timeDelta / (f32)(turnTime & 0xffff);
+    if (turnStep > lbl_803E2A04)
     {
-        fVar1 = lbl_803E2A04;
+        turnStep = lbl_803E2A04;
     }
-    angleStep = (int)((f32)delta * fVar1);
+    angleStep = (int)((f32)delta * turnStep);
     *obj = (s16)(rot + angleStep);
     ((GameObject*)obj)->anim.rotZ = 0x4000;
     ((GameObject*)obj)->anim.rotY = *obj;
     *obj = (s16)getAngle(*(f32*)(state + 0x34c), -*(f32*)(state + 0x344));
-    fVar1 = sqrtf(dxDiff * dxDiff + dy * dy);
-    if (fVar1 > maxDistance)
+    turnStep = sqrtf(dxDiff * dxDiff + dy * dy);
+    if (turnStep > maxDistance)
     {
-        f32 ratio = lbl_803E2A04 / fVar1;
+        f32 ratio = lbl_803E2A04 / turnStep;
         dxDiff = maxDistance * (dxDiff * ratio);
         dy = maxDistance * (dy * ratio);
     }
     dxA -= dxDiff;
-    fVar1 = objY - dy;
-    fn_8015536C(moveTarget, (f32*)(state + 0x344), dxA, fVar1);
+    turnStep = objY - dy;
+    fn_8015536C(moveTarget, (f32*)(state + 0x344), dxA, turnStep);
     PSVECSubtract(moveTarget, (f32*)(obj + 6), moveDelta);
     objMove(obj, moveDelta[0], moveDelta[1], moveDelta[2]);
-    fVar1 = lbl_803E2A00;
-    *(f32*)(obj + 0x12) = fVar1;
-    *(f32*)(obj + 0x14) = fVar1;
-    *(f32*)(obj + 0x16) = fVar1;
+    turnStep = lbl_803E2A00;
+    *(f32*)(obj + 0x12) = turnStep;
+    *(f32*)(obj + 0x14) = turnStep;
+    *(f32*)(obj + 0x16) = turnStep;
     if (angleStep < 0)
     {
         angleStep = -angleStep;

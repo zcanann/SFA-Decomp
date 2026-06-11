@@ -27,62 +27,62 @@ extern f32 lbl_803E19D4;
 extern f32 lbl_803E19D8;
 extern f32 lbl_803E19DC;
 
-void CameraModeClimb_init(undefined4 param_1, int param_2, s8* param_3)
+void CameraModeClimb_init(undefined4 arg1, int mode, s8* args)
 {
     undefined4 local_28[1];
     undefined4 local_24[1];
     undefined4 local_20[1];
-    undefined4 local_1c[1];
-    f32 local_58;
-    f32 local_5c;
-    f32 local_60;
-    f32 local_64;
-    f32 local_68;
-    int iVar2;
+    undefined4 outA[1];
+    f32 vE;
+    f32 vD;
+    f32 vC;
+    f32 vB;
+    f32 vA;
+    int handler;
 
     if (lbl_803DD578 == NULL)
     {
         lbl_803DD578 = (CameraModeClimbState*)mmAlloc(sizeof(CameraModeClimbState), 0xf, 0);
     }
-    switch (param_2)
+    switch (mode)
     {
     case 2:
         lbl_803DD578->startRelativePosition = lbl_803DD578->relativePosition;
         lbl_803DD578->startMinHeight = lbl_803DD578->minHeight;
         lbl_803DD578->startMaxHeight = lbl_803DD578->maxHeight;
         lbl_803DD578->startDistance = lbl_803DD578->targetDistance;
-        lbl_803DD578->targetRelativePosition = (u16)(int)(lbl_803E19B8 * (f32)(s8)param_3[3]);
+        lbl_803DD578->targetRelativePosition = (u16)(int)(lbl_803E19B8 * (f32)(s8)args[3]);
         lbl_803DD578->endMinHeight = (f32)(s8)
-        param_3[5];
+        args[5];
         lbl_803DD578->endMaxHeight = (f32)(s8)
-        param_3[4];
+        args[4];
         lbl_803DD578->endDistance = (f32)(s8)
-        param_3[2];
+        args[2];
         lbl_803DD578->transitionTimer = (s16)(s8)
-        param_3[1];
+        args[1];
         lbl_803DD578->transitionDuration = (s16)(s8)
-        param_3[1];
+        args[1];
         break;
     case 1:
     default:
         memset(lbl_803DD578, 0, sizeof(CameraModeClimbState));
-        iVar2 = (int)(*gCameraInterface)->getDefaultHandlerEntry();
-        ((code)(*(undefined4**)((undefined4*)iVar2)[1])[8])(&local_58, &local_5c, &local_60, &local_64, &local_68);
+        handler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
+        ((code)(*(undefined4**)((undefined4*)handler)[1])[8])(&vE, &vD, &vC, &vB, &vA);
         (*gCameraInterface)->getRelativePosition((f32)(u16)lbl_803DD578->relativePosition,
-                                                 (int)param_1, (f32*)local_28,
+                                                 (int)arg1, (f32*)local_28,
                                                  (f32*)local_24, (f32*)local_20,
-                                                 (f32*)local_1c, 0);
-        lbl_803DD578->startRelativePosition = (s16)local_68;
-        lbl_803DD578->startMinHeight = local_60;
-        lbl_803DD578->startMaxHeight = local_64;
-        lbl_803DD578->startDistance = *(f32*)local_1c;
+                                                 (f32*)outA, 0);
+        lbl_803DD578->startRelativePosition = (s16)vA;
+        lbl_803DD578->startMinHeight = vC;
+        lbl_803DD578->startMaxHeight = vB;
+        lbl_803DD578->startDistance = *(f32*)outA;
         lbl_803DD578->targetRelativePosition = 30;
         lbl_803DD578->endMinHeight = lbl_803E19BC;
         lbl_803DD578->endMaxHeight = lbl_803E19C0;
-        lbl_803DD578->endDistance = lbl_803E19C4 * (local_5c + local_58);
+        lbl_803DD578->endDistance = lbl_803E19C4 * (vD + vE);
         lbl_803DD578->transitionTimer = 60;
         lbl_803DD578->transitionDuration = 60;
-        lbl_803DD578->smoothedDistance = *(f32*)local_1c;
+        lbl_803DD578->smoothedDistance = *(f32*)outA;
         lbl_803DD578->heightAdjustRate = lbl_803E19C8;
         break;
     }

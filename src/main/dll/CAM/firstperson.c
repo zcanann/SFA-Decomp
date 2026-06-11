@@ -197,7 +197,7 @@ void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
  */
 void firstperson_loadSettings(CamcontrolFirstPersonActionSettings* settings)
 {
-    float fVar1;
+    float fval;
     CameraObject* camera;
 
     camera = (CameraObject*)(*gCameraInterface)->getCamera();
@@ -211,59 +211,59 @@ void firstperson_loadSettings(CamcontrolFirstPersonActionSettings* settings)
     gCamcontrolModeSettings->savedSlideLeftAmount = gCamcontrolModeSettings->slideLeftAmount;
     gCamcontrolModeSettings->savedHeightAdjustRate = gCamcontrolModeSettings->heightAdjustRate;
     gCamcontrolModeSettings->savedDistanceAdjustRate = gCamcontrolModeSettings->distanceAdjustRate;
-    fVar1 = (f32)settings->targetHeight;
-    gCamcontrolModeSettings->targetHeight = fVar1;
-    gCamcontrolModeSettings->targetTargetHeight = fVar1;
-    fVar1 = (f32)(u32)
+    fval = (f32)settings->targetHeight;
+    gCamcontrolModeSettings->targetHeight = fval;
+    gCamcontrolModeSettings->targetTargetHeight = fval;
+    fval = (f32)(u32)
     settings->lowerHeightOffset;
-    gCamcontrolModeSettings->lowerHeightOffset = fVar1;
-    gCamcontrolModeSettings->baseLowerHeightOffset = fVar1;
-    gCamcontrolModeSettings->targetLowerHeightOffset = fVar1;
-    fVar1 = (f32)(u32)
+    gCamcontrolModeSettings->lowerHeightOffset = fval;
+    gCamcontrolModeSettings->baseLowerHeightOffset = fval;
+    gCamcontrolModeSettings->targetLowerHeightOffset = fval;
+    fval = (f32)(u32)
     settings->upperHeightOffset;
-    gCamcontrolModeSettings->upperHeightOffset = fVar1;
-    gCamcontrolModeSettings->baseUpperHeightOffset = fVar1;
-    gCamcontrolModeSettings->targetUpperHeightOffset = fVar1;
-    fVar1 = (f32)(u32)
+    gCamcontrolModeSettings->upperHeightOffset = fval;
+    gCamcontrolModeSettings->baseUpperHeightOffset = fval;
+    gCamcontrolModeSettings->targetUpperHeightOffset = fval;
+    fval = (f32)(u32)
     settings->minDistance;
-    gCamcontrolModeSettings->minDistance = fVar1;
-    gCamcontrolModeSettings->targetMinDistance = fVar1;
-    fVar1 = (f32)(u32)
+    gCamcontrolModeSettings->minDistance = fval;
+    gCamcontrolModeSettings->targetMinDistance = fval;
+    fval = (f32)(u32)
     settings->maxDistance;
-    gCamcontrolModeSettings->maxDistance = fVar1;
-    gCamcontrolModeSettings->targetMaxDistance = fVar1;
-    fVar1 = (f32)settings->fov;
-    camera->fov = fVar1;
-    gCamcontrolModeSettings->fov = fVar1;
-    fVar1 = (f32)(u32)
+    gCamcontrolModeSettings->maxDistance = fval;
+    gCamcontrolModeSettings->targetMaxDistance = fval;
+    fval = (f32)settings->fov;
+    camera->fov = fval;
+    gCamcontrolModeSettings->fov = fval;
+    fval = (f32)(u32)
     settings->slideRightAmount;
-    gCamcontrolModeSettings->slideRightAmount = fVar1;
-    gCamcontrolModeSettings->targetSlideRightAmount = fVar1;
-    fVar1 = (f32)(u32)
+    gCamcontrolModeSettings->slideRightAmount = fval;
+    gCamcontrolModeSettings->targetSlideRightAmount = fval;
+    fval = (f32)(u32)
     settings->slideLeftAmount;
-    gCamcontrolModeSettings->slideLeftAmount = fVar1;
-    gCamcontrolModeSettings->targetSlideLeftAmount = fVar1;
-    if (settings->distanceAdjustRate != 0)
-    {
-        fVar1 = (f32)(u32)
-        settings->distanceAdjustRate / lbl_803E1710;
-        gCamcontrolModeSettings->distanceAdjustRate = fVar1;
-        gCamcontrolModeSettings->targetDistanceAdjustRate = fVar1;
-    }
-    else
+    gCamcontrolModeSettings->slideLeftAmount = fval;
+    gCamcontrolModeSettings->targetSlideLeftAmount = fval;
+    if (settings->distanceAdjustRate == 0)
     {
         gCamcontrolModeSettings->targetDistanceAdjustRate = lbl_803E1714;
     }
-    if (settings->heightAdjustRate != 0)
+    else
     {
-        fVar1 = (f32)(u32)
-        settings->heightAdjustRate / lbl_803E1710;
-        gCamcontrolModeSettings->heightAdjustRate = fVar1;
-        gCamcontrolModeSettings->targetHeightAdjustRate = fVar1;
+        fval = (f32)(u32)
+        settings->distanceAdjustRate / lbl_803E1710;
+        gCamcontrolModeSettings->distanceAdjustRate = fval;
+        gCamcontrolModeSettings->targetDistanceAdjustRate = fval;
+    }
+    if (settings->heightAdjustRate == 0)
+    {
+        gCamcontrolModeSettings->targetHeightAdjustRate = lbl_803E1714;
     }
     else
     {
-        gCamcontrolModeSettings->targetHeightAdjustRate = lbl_803E1714;
+        fval = (f32)(u32)
+        settings->heightAdjustRate / lbl_803E1710;
+        gCamcontrolModeSettings->heightAdjustRate = fval;
+        gCamcontrolModeSettings->targetHeightAdjustRate = fval;
     }
     gCamcontrolModeSettings->transitionTimer = 0;
     gCamcontrolModeSettings->transitionDuration = 0;
