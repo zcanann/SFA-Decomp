@@ -56,74 +56,18 @@ typedef struct Dll19State
 
 
 extern undefined4 FUN_80003494();
-extern undefined4 FUN_800068f4();
-extern int FUN_80006a10();
-extern double FUN_80006a30();
-extern char FUN_80006a64();
-extern undefined8 FUN_80006a68();
 extern undefined4 GameBit_Set(int eventId, int value);
-extern uint FUN_80017730();
-extern int FUN_80017738();
-extern undefined4 FUN_80017744();
 extern undefined4 FUN_80017748();
-extern undefined4 FUN_80017a88();
-extern undefined4 FUN_80017a98();
-extern undefined4 FUN_8002f6ac();
-extern undefined4 FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
-extern undefined4 ObjHits_SetHitVolumeSlot();
 extern int ObjGroup_FindNearestObjectToPoint();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern void* FUN_80039518();
-extern undefined4 FUN_8003964c();
 extern undefined4 FUN_8003a9c8();
 extern undefined4 FUN_8003ac24();
 extern undefined8 FUN_8003ad08();
-extern undefined4 FUN_800620e8();
-extern int FUN_800632e8();
-extern undefined4 FUN_8006f7a0();
 extern int objAnimFn_80115650();
-extern undefined8 FUN_80286834();
-extern undefined8 FUN_80286838();
-extern undefined8 FUN_8028683c();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_80286884();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_8028688c();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
 
-extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd70c;
-extern undefined4* DAT_803dd71c;
-extern undefined4 DAT_803de254;
-extern f64 DOUBLE_803e28b0;
-extern f64 DOUBLE_803e2918;
-extern f64 DOUBLE_803e2928;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DE250;
-extern f32 lbl_803E28AC;
-extern f32 lbl_803E28C0;
-extern f32 lbl_803E28C8;
-extern f32 lbl_803E28DC;
-extern f32 lbl_803E28E8;
-extern f32 lbl_803E28EC;
-extern f32 lbl_803E28F0;
-extern f32 lbl_803E28F4;
-extern f32 lbl_803E28F8;
-extern f32 lbl_803E28FC;
-extern f32 lbl_803E2908;
 extern f32 lbl_803E290C;
 extern f32 lbl_803E2910;
-extern f32 lbl_803E2920;
-extern f32 lbl_803E2924;
-extern f32 lbl_803E2930;
-extern f32 lbl_803E2934;
-extern f32 lbl_803E2938;
-extern f32 lbl_803E2944;
 extern f32 lbl_803E2948;
 extern f32 lbl_803E294C;
 
@@ -339,7 +283,6 @@ void FUN_801141e8(int param_1, wchar_t* param_2, wchar_t* param_3)
 
 extern f32 Curve_EvalHermite(f32* points, f32 t, int unused);
 extern f32 sqrtf(f32 x);
-extern f64 lbl_803E1C98;
 
 #pragma scheduling off
 #pragma peephole off
@@ -575,7 +518,7 @@ void FUN_801149bc(short* param_1, int param_2, int param_3)
         local_36 = -param_1[1];
         local_34 = -*param_1;
         FUN_80017748(&local_38, (float*)(param_2 + 4));
-        *(undefined*)(param_2 + 0x601) = 0;
+        *(u8*)(param_2 + 0x601) = 0;
     }
     ObjPath_GetPointWorldPosition(param_1, param_3, &local_30, &local_2c, &local_28, 0);
     *(float*)(param_2 + 0x10) = local_30;
@@ -612,8 +555,8 @@ void FUN_80114b10(int param_1, undefined4* param_2, undefined2 param_3, undefine
     param_2[0x181] = 0;
     param_2[0x182] = 0;
     param_2[0x185] = lbl_803E290C;
-    *(undefined*)(param_2 + 0x180) = 0;
-    *(undefined*)((int)param_2 + 0x601) = 1;
+    *(u8*)(param_2 + 0x180) = 0;
+    *(u8*)((int)param_2 + 0x601) = 1;
     param_2[1] = fVar1;
     param_2[2] = fVar1;
     param_2[3] = fVar1;
