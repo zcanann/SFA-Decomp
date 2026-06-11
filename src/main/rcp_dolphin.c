@@ -1093,6 +1093,17 @@ void fn_80054F74(int* p, f32* vec)
     vec[2] = vec[2] + playerMapOffsetZ;
 }
 
+/* Pending warp destination saved by warpToMap from the map-warp tab entry and
+ * applied to the player position on map reload (vec3 + two orientation s16s
+ * truncated into the pos angle bytes). */
+typedef struct WarpDestination {
+    f32 x;
+    f32 y;
+    f32 z;
+    s16 angle0;
+    s16 angle1;
+} WarpDestination;
+
 extern u8 lbl_803879A0[];
 extern u8* lbl_803DCE78;
 extern s16 lbl_803DCEBA;
@@ -1106,11 +1117,11 @@ void warpToMap(int idx, s8 transType)
 {
     u8* p = lbl_803DCE78;
     getTabEntry(p, 28, idx << 4, 16);
-    *(f32*)(lbl_803879A0 + 0) = *(f32*)(p + 0);
-    *(f32*)(lbl_803879A0 + 4) = *(f32*)(p + 4);
-    *(f32*)(lbl_803879A0 + 8) = *(f32*)(p + 8);
-    *(s16*)(lbl_803879A0 + 12) = *(s16*)(p + 12);
-    *(s16*)(lbl_803879A0 + 14) = *(s16*)(p + 14);
+    ((WarpDestination*)lbl_803879A0)->x = *(f32*)(p + 0);
+    ((WarpDestination*)lbl_803879A0)->y = *(f32*)(p + 4);
+    ((WarpDestination*)lbl_803879A0)->z = *(f32*)(p + 8);
+    ((WarpDestination*)lbl_803879A0)->angle0 = *(s16*)(p + 12);
+    ((WarpDestination*)lbl_803879A0)->angle1 = *(s16*)(p + 14);
     lbl_803DCEBA = (s16)idx;
     lbl_803DCEBD = 1;
     *(s8*)&lbl_803DCEBC = transType;
@@ -2564,11 +2575,11 @@ void loadNextMap(void)
             (*(void (***)(void))gNewCloudsInterface)[2]();
             gameUiResetMenuState();
             lbl_803DCEBD = 0;
-            *(f32*)(pos + 0) = *(f32*)(lbl_803879A0 + 0);
-            *(f32*)(pos + 4) = *(f32*)(lbl_803879A0 + 4);
-            *(f32*)(pos + 8) = *(f32*)(lbl_803879A0 + 8);
-            pos[0xd] = (s8) * (s16*)(lbl_803879A0 + 0xc);
-            pos[0xc] = (s8) * (s16*)(lbl_803879A0 + 0xe);
+            *(f32*)(pos + 0) = ((WarpDestination*)lbl_803879A0)->x;
+            *(f32*)(pos + 4) = ((WarpDestination*)lbl_803879A0)->y;
+            *(f32*)(pos + 8) = ((WarpDestination*)lbl_803879A0)->z;
+            pos[0xd] = (s8)((WarpDestination*)lbl_803879A0)->angle0;
+            pos[0xc] = (s8)((WarpDestination*)lbl_803879A0)->angle1;
             mapReload();
             lbl_803DCEB8 = lbl_803DCEBA;
             lbl_803DCEBA = -1;
