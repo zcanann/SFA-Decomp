@@ -9,8 +9,6 @@
 #include "main/vecmath.h"
 
 extern uint getAngle(f32 a, f32 b);
-extern void mtxRotateByVec3s(f32* mtx, void* transform);
-extern void setMatrixFromObjectPos(f32* mtx, void* transform);
 extern byte hitDetectFn_80067958(int obj, float* startPoints, float* endPoints, int pointCount,
                                  void* outHits, int flags);
 extern void hitDetectFn_800691c0(int obj, void* bounds, uint mask, int flags);

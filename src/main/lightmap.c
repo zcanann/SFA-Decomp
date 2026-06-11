@@ -6,6 +6,7 @@
 #include "main/lightmap.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
+#include "main/vecmath.h"
 
 extern undefined4 FUN_80006934();
 extern undefined4 FUN_8000694c();
@@ -109,7 +110,6 @@ extern f32 lbl_803DEBDC;
 extern f32 changeMode_803DEC00;
 extern f32 lbl_803DEC04;
 extern F32Pair changed_803DEC08;
-extern void setMatrixFromObjectPos(f32 * m, PosRot * st);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 gViewFrustumPlanes[];
 extern f32 fn_80293AC4(int v);
