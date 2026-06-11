@@ -1273,6 +1273,12 @@ void fn_8019AE3C(int p1, int p2, s16* p3)
 extern s8 lbl_803DDB08;
 extern s8 lbl_803DDB09;
 extern int lbl_803DDB0C;
+/* cloudprisoncontrol map-event tables (recovered layout; kept raw int[] - the
+ * struct-field form flips MWCC's variable-index/walker addressing, banked).
+ * lbl_803AC7D8: registered-target list, 8-byte entries (count lbl_803DDB09):
+ *   s32 target @0; s16 data @4; u8 unk6 @6 (zeroed on add); u8 pad @7.
+ * lbl_803AC878: deferred-message queue, 12-byte entries (count lbl_803DDB08):
+ *   s32 message @0; s32 target @4; s32 data @8. */
 extern int lbl_803AC7D8[];
 extern int lbl_803AC878[];
 
