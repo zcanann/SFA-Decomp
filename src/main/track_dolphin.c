@@ -3374,8 +3374,10 @@ void fn_80069B1C(u8* a, u8* b, u8* c, f32 t)
     if (w != *(u16*)(b + 0xa)) return;
     h = *(u16*)(a + 0xc);
     if (h != *(u16*)(b + 0xc)) return;
-    if (w != *(u16*)(c + 0xa)) return;
-    if (h == *(u16*)(c + 0xc))
+    if (w != *(u16*)(c + 0xa) || h != *(u16*)(c + 0xc))
+    {
+        return;
+    }
     {
         wA = (int)(__PADFixBits * t) & 0xff;
         wB = (0xff - wA) & 0xff;

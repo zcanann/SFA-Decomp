@@ -1661,15 +1661,7 @@ int mediumbasket_stateHandlerA06(int obj, int state)
     {
         lbl_803DDA79 = randomGetRange(0, 2);
         choice = randomGetRange(0, 1);
-        if (choice == 0)
-        {
-            if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
-            {
-                ObjAnim_SetCurrentMove(obj, 3, lbl_803E2D14, 0);
-                ((GroundBaddieState*)state)->baddie.moveDone = 0;
-            }
-        }
-        else
+        if (choice != 0)
         {
             if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
             {
@@ -1677,24 +1669,35 @@ int mediumbasket_stateHandlerA06(int obj, int state)
                 ((GroundBaddieState*)state)->baddie.moveDone = 0;
             }
         }
+        else
+        {
+            if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
+            {
+                ObjAnim_SetCurrentMove(obj, 3, lbl_803E2D14, 0);
+                ((GroundBaddieState*)state)->baddie.moveDone = 0;
+            }
+        }
         ((GroundBaddieState*)state)->baddie.unk34D = 1;
         ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D4C + (f32)sub->aggression / lbl_803E2D50;
     }
-    if (sub->aggression <= 50 || (sub->configFlags & 2) != 0)
+    if (sub->aggression > 50 && (sub->configFlags & 2) == 0)
     {
-        ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2D14;
-    }
-    else if (((GroundBaddieState*)state)->baddie.targetDistance <= lbl_803E2D54 || (s8)((GroundBaddieState*)state)->
-        baddie.moveDone != 0)
-    {
-        ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2D14;
+        if (((GroundBaddieState*)state)->baddie.targetDistance > lbl_803E2D54 &&
+            (s8)((GroundBaddieState*)state)->baddie.moveDone == 0)
+        {
+            ((GroundBaddieState*)state)->baddie.animSpeedA = ((GroundBaddieState*)state)->baddie.targetDistance /
+                lbl_803E2D54 - lbl_803E2D48;
+            ((GroundBaddieState*)state)->baddie.animSpeedA =
+                ((GroundBaddieState*)state)->baddie.animSpeedA * ((f32)sub->aggression / lbl_803E2D58);
+        }
+        else
+        {
+            ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2D14;
+        }
     }
     else
     {
-        ((GroundBaddieState*)state)->baddie.animSpeedA = ((GroundBaddieState*)state)->baddie.targetDistance /
-            lbl_803E2D54 - lbl_803E2D48;
-        ((GroundBaddieState*)state)->baddie.animSpeedA =
-            ((GroundBaddieState*)state)->baddie.animSpeedA * ((f32)sub->aggression / lbl_803E2D58);
+        ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2D14;
     }
     ((void (*)(int, int, f32, int))((void**)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
     return 0;
@@ -1712,16 +1715,7 @@ int mediumbasket_stateHandlerA05(int obj, int state)
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         choice = randomGetRange(0, 1);
-        if (choice == 0)
-        {
-            lbl_803DDA78 = 3;
-            if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
-            {
-                ObjAnim_SetCurrentMove(obj, 10, lbl_803E2D14, 0);
-                ((GroundBaddieState*)state)->baddie.moveDone = 0;
-            }
-        }
-        else
+        if (choice != 0)
         {
             lbl_803DDA78 = randomGetRange(0, 2);
             if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
@@ -1730,24 +1724,36 @@ int mediumbasket_stateHandlerA05(int obj, int state)
                 ((GroundBaddieState*)state)->baddie.moveDone = 0;
             }
         }
+        else
+        {
+            lbl_803DDA78 = 3;
+            if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
+            {
+                ObjAnim_SetCurrentMove(obj, 10, lbl_803E2D14, 0);
+                ((GroundBaddieState*)state)->baddie.moveDone = 0;
+            }
+        }
         ((GroundBaddieState*)state)->baddie.unk34D = 1;
         ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D4C + (f32)sub->aggression / lbl_803E2D50;
     }
-    if (sub->aggression <= 50 || (sub->configFlags & 2) != 0)
+    if (sub->aggression > 50 && (sub->configFlags & 2) == 0)
     {
-        ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2D14;
-    }
-    else if (((GroundBaddieState*)state)->baddie.targetDistance <= lbl_803E2D54 || (s8)((GroundBaddieState*)state)->
-        baddie.moveDone != 0)
-    {
-        ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2D14;
+        if (((GroundBaddieState*)state)->baddie.targetDistance > lbl_803E2D54 &&
+            (s8)((GroundBaddieState*)state)->baddie.moveDone == 0)
+        {
+            ((GroundBaddieState*)state)->baddie.animSpeedA = ((GroundBaddieState*)state)->baddie.targetDistance /
+                lbl_803E2D54 - lbl_803E2D48;
+            ((GroundBaddieState*)state)->baddie.animSpeedA =
+                ((GroundBaddieState*)state)->baddie.animSpeedA * ((f32)sub->aggression / lbl_803E2D58);
+        }
+        else
+        {
+            ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2D14;
+        }
     }
     else
     {
-        ((GroundBaddieState*)state)->baddie.animSpeedA = ((GroundBaddieState*)state)->baddie.targetDistance /
-            lbl_803E2D54 - lbl_803E2D48;
-        ((GroundBaddieState*)state)->baddie.animSpeedA =
-            ((GroundBaddieState*)state)->baddie.animSpeedA * ((f32)sub->aggression / lbl_803E2D58);
+        ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2D14;
     }
     ((void (*)(int, int, f32, int))((void**)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
     return 0;
