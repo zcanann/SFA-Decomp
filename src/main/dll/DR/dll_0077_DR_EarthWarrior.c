@@ -255,11 +255,11 @@ extern f32 lbl_803E82F0;
 extern f32 GXIndTexMtxScale1024;
 extern f32 oneOverTimeDelta;
 extern int lbl_803E82D8;
-extern u8 lbl_803351F8[];
-extern u8 lbl_803352AC[];
+extern u8 gDREarthWarriorInitData[];
+extern u8 gDREarthWarriorRowIndices[];
 extern EWPathRange lbl_802C2CA8;
 extern EWPathRange lbl_802C2CB4;
-extern EWColorTbl lbl_802C2CC0;
+extern EWColorTbl gDREarthWarriorColors;
 extern char lbl_803DC768;
 
 extern void setAButtonIcon(int icon);
@@ -1160,7 +1160,7 @@ void DR_EarthWarrior_hitDetect(int obj)
     EWColorTbl rows;
     EarthWarriorState* inner = ((GameObject*)obj)->extra;
     int p54 = *(int*)&((GameObject*)obj)->anim.hitReactState;
-    rows = lbl_802C2CC0;
+    rows = gDREarthWarriorColors;
     if (!(((GameObject*)obj)->objectFlags & 0x1000))
     {
         if (((ObjHitsPriorityState*)p54)->contactFlags != 0)
@@ -1182,7 +1182,7 @@ void DR_EarthWarrior_hitDetect(int obj)
             v.mat[2] = ((ObjHitsPriorityState*)p54)->contactPosY;
             v.mat[3] = ((ObjHitsPriorityState*)p54)->contactPosZ;
             (*(void (*)(int, int, void*, int, int, void*))(*(int*)(*(int*)lbl_803DE4D0 + 0x4)))(
-                0, 1, &v, 0x401, -1, rows.m[lbl_803352AC[i]]);
+                0, 1, &v, 0x401, -1, rows.m[gDREarthWarriorRowIndices[i]]);
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
             doRumble(lbl_803E8330);
         }
@@ -1419,7 +1419,7 @@ void DR_EarthWarrior_update(int obj)
 
 void DR_EarthWarrior_init(int obj, int p2)
 {
-    register u8* base = lbl_803351F8;
+    register u8* base = gDREarthWarriorInitData;
     int inner = *(int*)&((GameObject*)obj)->extra;
     int stk;
     EWPathRange r2;
