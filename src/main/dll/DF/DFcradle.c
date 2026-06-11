@@ -108,7 +108,7 @@ void dimbossfire_update(int obj)
             *state = *state | 1;
             ((DimbossfireState*)state)->unk4 = lbl_80325D68[state[1]];
             ((DimbossfireState*)state)->unk8 = ((DimbossfireState*)state)->unk4;
-            state[1] = state[1] + 1;
+            state[1] += 1;
             if (state[1] >= 10)
             {
                 state[1] = 0;
@@ -125,7 +125,7 @@ void dimbossfire_update(int obj)
             *state = *state | 1;
             ((DimbossfireState*)state)->unk4 = lbl_80325D68[state[1]];
             ((DimbossfireState*)state)->unk8 = ((DimbossfireState*)state)->unk4;
-            state[1] = state[1] + 1;
+            state[1] += 1;
             if (state[1] >= 10)
             {
                 state[1] = 0;

@@ -1274,7 +1274,7 @@ void alphaanimator_update(int* obj)
                 {
                     GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 1);
                 }
-                s->doneCount = s->doneCount + 1;
+                s->doneCount += 1;
             }
         }
         else
@@ -1288,7 +1288,7 @@ void alphaanimator_update(int* obj)
                 {
                     GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 1);
                 }
-                s->doneCount = s->doneCount + 1;
+                s->doneCount += 1;
             }
         }
     }
@@ -1344,7 +1344,7 @@ void alphaanimator_update(int* obj)
             {
                 GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 1);
             }
-            s->doneCount = s->doneCount + 1;
+            s->doneCount += 1;
         }
         else
         {
@@ -1371,7 +1371,7 @@ void alphaanimator_update(int* obj)
             {
                 GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 0);
             }
-            s->doneCount = s->doneCount + 1;
+            s->doneCount += 1;
         }
     }
     else
@@ -1387,7 +1387,7 @@ void alphaanimator_update(int* obj)
         {
             s->fadeA = s->fadeMax;
             GameBit_Set(((AlphaanimatorPlacement*)d)->unk1A, 1);
-            s->doneCount = s->doneCount + 1;
+            s->doneCount += 1;
         }
         s->fadeB = s->fadeA - lbl_803E3F84;
     }
