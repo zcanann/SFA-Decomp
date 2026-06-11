@@ -272,90 +272,90 @@ void fn_8012F04C(undefined8 param_1, double param_2, double param_3, undefined8 
                  undefined4 param_9, undefined4 param_10, undefined4 param_11, undefined4 param_12,
                  undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16)
 {
-    undefined4 uVar1;
-    int iVar2;
-    int iVar3;
-    int iVar4;
-    undefined4 uVar5;
-    undefined4 uVar6;
+    undefined4 ctxHi;
+    int refA;
+    int refB;
+    int refC;
+    undefined4 ctxLo;
+    undefined4 uval;
     undefined8 timeDeltaF;
-    undefined8 uVar7;
-    float local_38;
-    float local_34[2];
-    uint uStack_2c;
-    undefined4 local_28;
-    uint uStack_24;
+    undefined8 passWord;
+    float fa;
+    float fpair[2];
+    uint convLo0;
+    undefined4 convHi1;
+    uint convLo1;
 
-    uVar7 = FUN_80286840();
-    uVar1 = (undefined4)((ulonglong)uVar7 >> 0x20);
-    uVar5 = (undefined4)uVar7;
-    uVar7 = timeDeltaF;
-    iVar2 = FUN_80017a98();
-    iVar3 = FUN_8020a6fc();
-    iVar4 = FUN_80017674();
-    if (iVar4 == 0)
+    passWord = FUN_80286840();
+    ctxHi = (undefined4)((ulonglong)passWord >> 0x20);
+    ctxLo = (undefined4)passWord;
+    passWord = timeDeltaF;
+    refA = FUN_80017a98();
+    refB = FUN_8020a6fc();
+    refC = FUN_80017674();
+    if (refC == 0)
     {
-        if (iVar3 == 0)
+        if (refB == 0)
         {
-            uVar7 = pauseMenuDraw(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-            uVar7 = FUN_8012dab8(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, uVar1, uVar5
+            passWord = pauseMenuDraw(passWord, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+            passWord = FUN_8012dab8(passWord, param_2, param_3, param_4, param_5, param_6, param_7, param_8, ctxHi, ctxLo
                                  , param_11, param_12, param_13, param_14, param_15, param_16);
             if (DAT_803de3fe != '\0')
             {
-                FUN_8012cd38(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+                FUN_8012cd38(passWord, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
             }
-            FUN_80294be4(iVar2);
-            uVar7 = FUN_8025da88(0, 0, 0x280, 0x1e0);
-            if ((iVar2 != 0) && (DAT_803de400 == '\0'))
+            FUN_80294be4(refA);
+            passWord = FUN_8025da88(0, 0, 0x280, 0x1e0);
+            if ((refA != 0) && (DAT_803de400 == '\0'))
             {
-                iVar3 = FUN_80294c38(iVar2, local_34, &local_38);
-                if (iVar3 != 0)
+                refB = FUN_80294c38(refA, fpair, &fa);
+                if (refB != 0)
                 {
                     FUN_800533cc(DAT_803de544, &DAT_803de4ac, &DAT_803de4a8);
                     param_3 = (double)FLOAT_803e2af0;
-                    uStack_2c = (uint) * (ushort*)(DAT_803de544 + 10);
-                    local_34[1] = 176.0f;
-                    uStack_24 = (uint) * (ushort*)(DAT_803de544 + 0xc);
-                    local_28 = 0x43300000;
+                    convLo0 = (uint) * (ushort*)(DAT_803de544 + 10);
+                    fpair[1] = 176.0f;
+                    convLo1 = (uint) * (ushort*)(DAT_803de544 + 0xc);
+                    convHi1 = 0x43300000;
                     param_2 = -(double)(float)(param_3 *
-                        (double)(float)((double)CONCAT44(0x43300000, uStack_24) -
-                            DOUBLE_803e2b08) - (double)local_38);
-                    uVar7 = FUN_800709e8(-(double)(float)(param_3 *
-                                             (double)(float)((double)CONCAT44(0x43300000, uStack_2c
+                        (double)(float)((double)CONCAT44(0x43300000, convLo1) -
+                            DOUBLE_803e2b08) - (double)fa);
+                    passWord = FUN_800709e8(-(double)(float)(param_3 *
+                                             (double)(float)((double)CONCAT44(0x43300000, convLo0
                                              ) - DOUBLE_803e2b08)
-                                             - (double)local_34[0]), param_2, DAT_803de544, 0x96,
+                                             - (double)fpair[0]), param_2, DAT_803de544, 0x96,
                                          0x100);
                 }
-                FUN_8011f438(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+                FUN_8011f438(passWord, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
             }
-            uVar6 = 0x1e0;
-            uVar7 = FUN_8025da88(0, 0, 0x280, 0x1e0);
-            if (iVar2 != 0)
+            uval = 0x1e0;
+            passWord = FUN_8025da88(0, 0, 0x280, 0x1e0);
+            if (refA != 0)
             {
-                uVar7 = FUN_80122b14(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, uVar1,
-                                     uVar5, param_11, uVar6, param_13, param_14, param_15, param_16);
-                FUN_8012eb7c(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-                uVar7 = FUN_801249bc(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, uVar1);
+                passWord = FUN_80122b14(passWord, param_2, param_3, param_4, param_5, param_6, param_7, param_8, ctxHi,
+                                     ctxLo, param_11, uval, param_13, param_14, param_15, param_16);
+                FUN_8012eb7c(passWord, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+                passWord = FUN_801249bc(passWord, param_2, param_3, param_4, param_5, param_6, param_7, param_8, ctxHi);
             }
             if (DAT_803de3db != '\0')
             {
-                FUN_801291ac(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+                FUN_801291ac(passWord, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
             }
             FUN_80006948();
         }
         else
         {
-            uVar7 = FUN_80126044();
-            uVar7 = pauseMenuDraw(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-            FUN_8012eb7c(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-            FUN_8012dab8(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8, uVar1, uVar5,
+            passWord = FUN_80126044();
+            passWord = pauseMenuDraw(passWord, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+            FUN_8012eb7c(passWord, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+            FUN_8012dab8(passWord, param_2, param_3, param_4, param_5, param_6, param_7, param_8, ctxHi, ctxLo,
                          param_11, param_12, param_13, param_14, param_15, param_16);
         }
         FUN_8011ebb8();
-        uVar7 = FUN_8011e880();
+        passWord = FUN_8011e880();
         if (-1 < DAT_803dc6f8)
         {
-            FUN_801294d8(uVar7, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
+            FUN_801294d8(passWord, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
         }
         DAT_803de42a = 0;
         DAT_803de42c = 0;

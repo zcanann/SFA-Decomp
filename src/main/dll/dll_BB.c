@@ -41,155 +41,155 @@ extern f32 lbl_803E166C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void camcontrol_applyState(short* param_1)
+void camcontrol_applyState(short* camObj)
 {
-    float fVar1;
-    float fVar2;
-    short* psVar3;
-    int iVar4;
-    float fVar5;
-    float fVar6;
+    float fa;
+    float fb;
+    short* viewSlot;
+    int val;
+    float dist;
+    float step;
     float delta[3];
 
     Camera_SetCurrentViewIndex(0);
-    psVar3 = (short*)Camera_GetCurrentViewSlot();
-    *psVar3 = *param_1;
-    psVar3[1] = param_1[1];
-    psVar3[2] = param_1[2];
-    if ((*(byte*)((int)param_1 + 0x143) >> 7 & 1) != 0u)
+    viewSlot = (short*)Camera_GetCurrentViewSlot();
+    *viewSlot = *camObj;
+    viewSlot[1] = camObj[1];
+    viewSlot[2] = camObj[2];
+    if ((*(byte*)((int)camObj + 0x143) >> 7 & 1) != 0u)
     {
-        PSVECSubtract((float*)(param_1 + 0xc), (float*)(psVar3 + 6), delta);
-        fVar5 = PSVECMag(delta);
-        if (fVar5 > lbl_803E1630)
+        PSVECSubtract((float*)(camObj + 0xc), (float*)(viewSlot + 6), delta);
+        dist = PSVECMag(delta);
+        if (dist > lbl_803E1630)
         {
             PSVECNormalize(delta, delta);
         }
-        fVar6 = interpolate(fVar5, lbl_803E1668, timeDelta);
-        fVar5 = (fVar6 < lbl_803E1630)
+        step = interpolate(dist, lbl_803E1668, timeDelta);
+        dist = (step < lbl_803E1630)
                     ? lbl_803E1630
-                    : ((fVar6 > lbl_803E166C * timeDelta) ? lbl_803E166C * timeDelta : fVar6);
-        *(float*)(psVar3 + 6) = fVar5 * delta[0] + *(float*)(psVar3 + 6);
-        *(float*)(psVar3 + 8) = fVar5 * delta[1] + *(float*)(psVar3 + 8);
-        *(float*)(psVar3 + 10) = fVar5 * delta[2] + *(float*)(psVar3 + 10);
+                    : ((step > lbl_803E166C * timeDelta) ? lbl_803E166C * timeDelta : step);
+        *(float*)(viewSlot + 6) = dist * delta[0] + *(float*)(viewSlot + 6);
+        *(float*)(viewSlot + 8) = dist * delta[1] + *(float*)(viewSlot + 8);
+        *(float*)(viewSlot + 10) = dist * delta[2] + *(float*)(viewSlot + 10);
     }
     else
     {
-        *(float*)(psVar3 + 6) = *(float*)(param_1 + 0xc);
-        *(float*)(psVar3 + 8) = *(float*)(param_1 + 0xe);
-        *(float*)(psVar3 + 10) = *(float*)(param_1 + 0x10);
+        *(float*)(viewSlot + 6) = *(float*)(camObj + 0xc);
+        *(float*)(viewSlot + 8) = *(float*)(camObj + 0xe);
+        *(float*)(viewSlot + 10) = *(float*)(camObj + 0x10);
     }
-    fVar2 = lbl_803E1630;
-    lbl_803DD4D0 = *(float*)(param_1 + 0x5a);
-    if (lbl_803E1630 < *(float*)(param_1 + 0x7a))
+    fb = lbl_803E1630;
+    lbl_803DD4D0 = *(float*)(camObj + 0x5a);
+    if (lbl_803E1630 < *(float*)(camObj + 0x7a))
     {
-        *(float*)(param_1 + 0x7a) =
-            -(*(float*)(param_1 + 0x7c) * timeDelta - *(float*)(param_1 + 0x7a));
-        fVar1 = *(float*)(param_1 + 0x7a);
-        fVar2 = (fVar1 < fVar2) ? fVar2 : ((fVar1 > lbl_803E162C) ? lbl_803E162C : fVar1);
-        *(float*)(param_1 + 0x7a) = fVar2;
+        *(float*)(camObj + 0x7a) =
+            -(*(float*)(camObj + 0x7c) * timeDelta - *(float*)(camObj + 0x7a));
+        fa = *(float*)(camObj + 0x7a);
+        fb = (fa < fb) ? fb : ((fa > lbl_803E162C) ? lbl_803E162C : fa);
+        *(float*)(camObj + 0x7a) = fb;
         if (pCamera[0x139] == '\x02')
         {
-            fVar2 = *(float*)(param_1 + 0x7a);
-            fVar5 = lbl_803E162C - fVar2 * fVar2 * fVar2;
+            fb = *(float*)(camObj + 0x7a);
+            dist = lbl_803E162C - fb * fb * fb;
         }
         else if (pCamera[0x139] == '\x01')
         {
-            fVar5 = lbl_803E162C - *(float*)(param_1 + 0x7a) * *(float*)(param_1 + 0x7a);
+            dist = lbl_803E162C - *(float*)(camObj + 0x7a) * *(float*)(camObj + 0x7a);
         }
         else
         {
-            fVar5 = lbl_803E162C - *(float*)(param_1 + 0x7a);
+            dist = lbl_803E162C - *(float*)(camObj + 0x7a);
         }
-        fVar6 = (fVar5 < lbl_803E1630) ? lbl_803E1630 : ((fVar5 > lbl_803E162C) ? lbl_803E162C : fVar5);
-        if ((*(byte*)((int)param_1 + 0x13f) & 8) != 0)
+        step = (dist < lbl_803E1630) ? lbl_803E1630 : ((dist > lbl_803E162C) ? lbl_803E162C : dist);
+        if ((*(byte*)((int)camObj + 0x13f) & 8) != 0)
         {
-            *(float*)(psVar3 + 6) =
-                fVar6 * (*(float*)(psVar3 + 6) - *(float*)(param_1 + 0x86)) +
-                *(float*)(param_1 + 0x86);
+            *(float*)(viewSlot + 6) =
+                step * (*(float*)(viewSlot + 6) - *(float*)(camObj + 0x86)) +
+                *(float*)(camObj + 0x86);
         }
-        if ((*(byte*)((int)param_1 + 0x13f) & 0x10) != 0)
+        if ((*(byte*)((int)camObj + 0x13f) & 0x10) != 0)
         {
-            *(float*)(psVar3 + 8) =
-                fVar6 * (*(float*)(psVar3 + 8) - *(float*)(param_1 + 0x88)) +
-                *(float*)(param_1 + 0x88);
+            *(float*)(viewSlot + 8) =
+                step * (*(float*)(viewSlot + 8) - *(float*)(camObj + 0x88)) +
+                *(float*)(camObj + 0x88);
         }
-        if ((*(byte*)((int)param_1 + 0x13f) & 0x20) != 0)
+        if ((*(byte*)((int)camObj + 0x13f) & 0x20) != 0)
         {
-            *(float*)(psVar3 + 10) =
-                fVar6 * (*(float*)(psVar3 + 10) - *(float*)(param_1 + 0x8a)) +
-                *(float*)(param_1 + 0x8a);
+            *(float*)(viewSlot + 10) =
+                step * (*(float*)(viewSlot + 10) - *(float*)(camObj + 0x8a)) +
+                *(float*)(camObj + 0x8a);
         }
-        OSReport(sDllBBTimeDebugFormat, fVar6);
-        if ((*(byte*)((int)param_1 + 0x13f) & 1) != 0)
+        OSReport(sDllBBTimeDebugFormat, step);
+        if ((*(byte*)((int)camObj + 0x13f) & 1) != 0)
         {
-            param_1[0x80] = param_1[0x83] - *psVar3;
-            if (0x8000 < param_1[0x80])
+            camObj[0x80] = camObj[0x83] - *viewSlot;
+            if (0x8000 < camObj[0x80])
             {
-                param_1[0x80] = param_1[0x80] + 1;
+                camObj[0x80] = camObj[0x80] + 1;
             }
-            if (param_1[0x80] < -0x8000)
+            if (camObj[0x80] < -0x8000)
             {
-                param_1[0x80] = param_1[0x80] + -1;
+                camObj[0x80] = camObj[0x80] + -1;
             }
-            iVar4 = (int)((float)param_1[0x80] * fVar6);
-            *psVar3 = param_1[0x83] - (short)iVar4;
+            val = (int)((float)camObj[0x80] * step);
+            *viewSlot = camObj[0x83] - (short)val;
         }
-        if ((*(byte*)((int)param_1 + 0x13f) & 2) != 0)
+        if ((*(byte*)((int)camObj + 0x13f) & 2) != 0)
         {
-            param_1[0x81] = param_1[0x84] - psVar3[1];
-            if (0x8000 < param_1[0x81])
+            camObj[0x81] = camObj[0x84] - viewSlot[1];
+            if (0x8000 < camObj[0x81])
             {
-                param_1[0x81] = param_1[0x81] + 1;
+                camObj[0x81] = camObj[0x81] + 1;
             }
-            if (param_1[0x81] < -0x8000)
+            if (camObj[0x81] < -0x8000)
             {
-                param_1[0x81] = param_1[0x81] + -1;
+                camObj[0x81] = camObj[0x81] + -1;
             }
-            iVar4 = (int)((float)param_1[0x81] * fVar6);
-            psVar3[1] = param_1[0x84] - (short)iVar4;
+            val = (int)((float)camObj[0x81] * step);
+            viewSlot[1] = camObj[0x84] - (short)val;
         }
-        if ((*(byte*)((int)param_1 + 0x13f) & 4) != 0)
+        if ((*(byte*)((int)camObj + 0x13f) & 4) != 0)
         {
-            param_1[0x82] = param_1[0x85] - psVar3[2];
-            if (0x8000 < param_1[0x82])
+            camObj[0x82] = camObj[0x85] - viewSlot[2];
+            if (0x8000 < camObj[0x82])
             {
-                param_1[0x82] = param_1[0x82] + 1;
+                camObj[0x82] = camObj[0x82] + 1;
             }
-            if (param_1[0x82] < -0x8000)
+            if (camObj[0x82] < -0x8000)
             {
-                param_1[0x82] = param_1[0x82] + -1;
+                camObj[0x82] = camObj[0x82] + -1;
             }
-            iVar4 = (int)((float)param_1[0x82] * fVar6);
-            psVar3[2] = param_1[0x85] - (short)iVar4;
+            val = (int)((float)camObj[0x82] * step);
+            viewSlot[2] = camObj[0x85] - (short)val;
         }
     }
     Camera_SetFovY(lbl_803DD4D0);
-    Obj_UpdateWorldTransform(psVar3);
-    loadMapForCameraPos(*(float*)(param_1 + 0xc), *(float*)(param_1 + 0xe),
-                        *(float*)(param_1 + 0x10));
-    iVar4 = Camera_GetViewportYOffset();
-    lbl_803DD4C0 = (short)iVar4;
-    if ((int)lbl_803DD4C0 != (int)*(char*)((int)param_1 + 0x13b))
+    Obj_UpdateWorldTransform(viewSlot);
+    loadMapForCameraPos(*(float*)(camObj + 0xc), *(float*)(camObj + 0xe),
+                        *(float*)(camObj + 0x10));
+    val = Camera_GetViewportYOffset();
+    lbl_803DD4C0 = (short)val;
+    if ((int)lbl_803DD4C0 != (int)*(char*)((int)camObj + 0x13b))
     {
-        if ((int)lbl_803DD4C0 < (int)*(char*)((int)param_1 + 0x13b))
+        if ((int)lbl_803DD4C0 < (int)*(char*)((int)camObj + 0x13b))
         {
-            lbl_803DD4C0 = lbl_803DD4C0 + (short)*(char*)(param_1 + 0x9e) * (short)(int)timeDelta;
-            if ((int)*(char*)((int)param_1 + 0x13b) < (int)lbl_803DD4C0)
+            lbl_803DD4C0 = lbl_803DD4C0 + (short)*(char*)(camObj + 0x9e) * (short)(int)timeDelta;
+            if ((int)*(char*)((int)camObj + 0x13b) < (int)lbl_803DD4C0)
             {
-                lbl_803DD4C0 = (short)*(char*)((int)param_1 + 0x13b);
+                lbl_803DD4C0 = (short)*(char*)((int)camObj + 0x13b);
             }
         }
         else
         {
-            lbl_803DD4C0 = lbl_803DD4C0 - (short)*(char*)(param_1 + 0x9e) * (short)(int)timeDelta;
-            if ((int)lbl_803DD4C0 < (int)*(char*)((int)param_1 + 0x13b))
+            lbl_803DD4C0 = lbl_803DD4C0 - (short)*(char*)(camObj + 0x9e) * (short)(int)timeDelta;
+            if ((int)lbl_803DD4C0 < (int)*(char*)((int)camObj + 0x13b))
             {
-                lbl_803DD4C0 = (short)*(char*)((int)param_1 + 0x13b);
+                lbl_803DD4C0 = (short)*(char*)((int)camObj + 0x13b);
             }
         }
         Camera_SetViewportYOffset(lbl_803DD4C0);
     }
-    *(undefined*)((int)param_1 + 0x13b) = 0;
+    *(undefined*)((int)camObj + 0x13b) = 0;
     Camera_UpdateViewMatrices();
     return;
 }

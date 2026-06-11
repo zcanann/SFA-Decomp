@@ -75,20 +75,20 @@ extern f32 lbl_803E2450;
 #pragma peephole on
 void CameraModeBike_update(CameraObject* camera)
 {
-    int iVar1;
-    float fVar2;
-    float fVar3;
-    short sVar4;
+    int ref;
+    float fa;
+    float fb;
+    short angle;
     GameObject* target;
-    float dVar6;
-    float dVar7;
-    float dVar8;
-    float dVar9;
-    float local_108;
-    float local_104;
-    float local_100;
-    CamTalkTransformInput local_fc;
-    float afStack_e4[17];
+    float fc;
+    float fd;
+    float fe;
+    float ff;
+    float posX;
+    float posY;
+    float posZ;
+    CamTalkTransformInput xformIn;
+    float mtxBuf[17];
     longlong local_a0;
     undefined4 local_98;
     uint uStack_94;
@@ -114,74 +114,74 @@ void CameraModeBike_update(CameraObject* camera)
     if (target != NULL)
     {
         camera->fov = lbl_803E1784;
-        local_fc.x = target->anim.worldPosX;
-        local_fc.y = target->anim.worldPosY;
-        local_fc.z = target->anim.worldPosZ;
-        local_fc.scale = lbl_803E1788;
-        local_fc.yaw = target->anim.rotX;
+        xformIn.x = target->anim.worldPosX;
+        xformIn.y = target->anim.worldPosY;
+        xformIn.z = target->anim.worldPosZ;
+        xformIn.scale = lbl_803E1788;
+        xformIn.yaw = target->anim.rotX;
         local_a0 = (longlong)(int)
         lbl_803DD540->pitchTarget;
-        local_fc.pitch = (undefined2)(int)
+        xformIn.pitch = (undefined2)(int)
         lbl_803DD540->pitchTarget;
-        local_fc.roll = 0;
-        setMatrixFromObjectPos(afStack_e4, &local_fc);
-        Matrix_TransformPoint(afStack_e4, lbl_803E1780, lbl_803E178C, lbl_803E1780,
-                              &local_100, &local_104, &local_108);
+        xformIn.roll = 0;
+        setMatrixFromObjectPos(mtxBuf, &xformIn);
+        Matrix_TransformPoint(mtxBuf, lbl_803E1780, lbl_803E178C, lbl_803E1780,
+                              &posZ, &posY, &posX);
         camera->anim.rotX = -0x8000 - target->anim.rotX;
         lbl_803DD540->smoothedYawOffset =
             lbl_803E1790 *
             (lbl_803E1794 * lbl_803DD540->turnInput - lbl_803DD540->smoothedYawOffset) +
             lbl_803DD540->smoothedYawOffset;
-        iVar1 = (int)
+        ref = (int)
         ((f32)(s32)
         camera->anim.rotX + lbl_803DD540->smoothedYawOffset
         )
         ;
-        camera->anim.rotX = (short)iVar1;
-        iVar1 = (int)(lbl_803E1798 - lbl_803DD540->pitchTarget);
-        sVar4 = (short)iVar1 - camera->anim.rotY;
-        if (0x8000 < sVar4)
+        camera->anim.rotX = (short)ref;
+        ref = (int)(lbl_803E1798 - lbl_803DD540->pitchTarget);
+        angle = (short)ref - camera->anim.rotY;
+        if (0x8000 < angle)
         {
-            sVar4 = sVar4 + 1;
+            angle = angle + 1;
         }
-        if (sVar4 < -0x8000)
+        if (angle < -0x8000)
         {
-            sVar4 = sVar4 + -1;
+            angle = angle + -1;
         }
-        camera->anim.rotY = camera->anim.rotY + (sVar4 >> 3);
-        dVar6 = mathSinf(lbl_803E179C * (f32)(s32)((int)camera->anim.rotX - 0x4000) / lbl_803E17A0);
-        dVar7 = mathCosf(lbl_803E179C * (f32)(s32)((int)camera->anim.rotX - 0x4000) / lbl_803E17A0);
-        dVar8 = mathCosf(lbl_803E179C * (f32)(s32)camera->anim.rotY / lbl_803E17A0);
-        dVar9 = mathSinf(lbl_803E179C * (f32)(s32)camera->anim.rotY / lbl_803E17A0);
-        fVar2 = -lbl_803DD540->heightInput / lbl_803E17A4;
-        fVar3 = (fVar2 < lbl_803E1780) ? lbl_803E1780 : ((fVar2 > lbl_803E1788) ? lbl_803E1788 : fVar2);
+        camera->anim.rotY = camera->anim.rotY + (angle >> 3);
+        fc = mathSinf(lbl_803E179C * (f32)(s32)((int)camera->anim.rotX - 0x4000) / lbl_803E17A0);
+        fd = mathCosf(lbl_803E179C * (f32)(s32)((int)camera->anim.rotX - 0x4000) / lbl_803E17A0);
+        fe = mathCosf(lbl_803E179C * (f32)(s32)camera->anim.rotY / lbl_803E17A0);
+        ff = mathSinf(lbl_803E179C * (f32)(s32)camera->anim.rotY / lbl_803E17A0);
+        fa = -lbl_803DD540->heightInput / lbl_803E17A4;
+        fb = (fa < lbl_803E1780) ? lbl_803E1780 : ((fa > lbl_803E1788) ? lbl_803E1788 : fa);
         lbl_803DD540->followDistance =
             lbl_803E17A8 *
-            ((lbl_803E17B0 * fVar3 + lbl_803E17AC) - lbl_803DD540->followDistance) +
+            ((lbl_803E17B0 * fb + lbl_803E17AC) - lbl_803DD540->followDistance) +
             lbl_803DD540->followDistance;
-        fVar2 = lbl_803DD540->followDistance;
-        dVar8 = fVar2 * dVar8;
-        camera->anim.worldPosX = local_100 + dVar8 * dVar7;
-        camera->anim.worldPosY = local_104 + fVar2 * dVar9;
-        camera->anim.worldPosZ = local_108 + dVar8 * dVar6;
-        iVar1 = (int)(lbl_803E17A8 * lbl_803DD540->rollInput);
-        local_60 = (longlong)iVar1;
-        sVar4 = (short)iVar1 - camera->anim.rotZ;
-        if (0x8000 < sVar4)
+        fa = lbl_803DD540->followDistance;
+        fe = fa * fe;
+        camera->anim.worldPosX = posZ + fe * fd;
+        camera->anim.worldPosY = posY + fa * ff;
+        camera->anim.worldPosZ = posX + fe * fc;
+        ref = (int)(lbl_803E17A8 * lbl_803DD540->rollInput);
+        local_60 = (longlong)ref;
+        angle = (short)ref - camera->anim.rotZ;
+        if (0x8000 < angle)
         {
-            sVar4 = sVar4 + 1;
+            angle = angle + 1;
         }
-        if (sVar4 < -0x8000)
+        if (angle < -0x8000)
         {
-            sVar4 = sVar4 + -1;
+            angle = angle + -1;
         }
-        iVar1 = (int)
+        ref = (int)
         ((f32)(s32)
-        sVar4 * timeDelta * lbl_803E17B4 + (f32)(s32)
+        angle * timeDelta * lbl_803E17B4 + (f32)(s32)
         camera->anim.rotZ
         )
         ;
-        camera->anim.rotZ = (short)iVar1;
+        camera->anim.rotZ = (short)ref;
         Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY,
                                        camera->anim.worldPosZ, &camera->anim.localPosX, &camera->anim.localPosY,
                                        &camera->anim.localPosZ, (u32)camera->anim.parent);
