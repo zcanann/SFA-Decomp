@@ -5648,8 +5648,11 @@ void loadVoxMaps(int a, int* pc, int* p8)
             }
             else
             {
-                *p8 = *(int*)(blk + 0x8);
-                *pc = *(int*)(blk + 0xc);
+                {
+                    int vc = *(int*)(blk + 0xc);
+                    *p8 = *(int*)(blk + 0x8);
+                    *pc = vc;
+                }
             }
         }
         else
