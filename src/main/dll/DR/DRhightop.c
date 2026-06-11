@@ -333,7 +333,7 @@ void fn_801EB0D4(uint obj, int stateRaw)
                 {
                     if (st->unk464 < lbl_803E5B20)
                     {
-                        st->unk464 = lbl_803E5B20;
+                        st->unk464 = *(f32 *)&lbl_803E5B20;
                     }
                 }
             }
