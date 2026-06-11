@@ -1,5 +1,6 @@
 #include "global.h"
 #include "ghidra_import.h"
+#include "main/audio/sfx.h"
 
 extern int saveFileStruct_isCheatActive();
 extern void mm_free(void* ptr);
@@ -1560,7 +1561,6 @@ extern void setLanguageFn_8001ad64(void* slot);
 extern void textDisplayFn_800168dc(int a, int b);
 extern void gameTextFn_8001658c(int a, int b, int c);
 extern void gameTextRenderStrs(int a, int b);
-extern void Sfx_StopFromObject(int obj, int sfxId);
 extern int lbl_803DC984;
 extern u8 lbl_803DC990;
 extern u8 lbl_803DC991;

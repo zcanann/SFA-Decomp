@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gamebits.h"
 #include "main/main.h"
@@ -44,7 +45,6 @@ extern f32 lbl_803E6198;
 extern f32 lbl_803E61B0;
 extern f32 lbl_803E61B4;
 extern void* getTrickyObject(void);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int* objFindTexture(int obj, int idx, int p3);
 extern f32 mathSinf(f32 x);
 
@@ -318,7 +318,7 @@ void fn_801FD6B4(int obj)
         )
         ;
         *(f32*)(extra + 0xc) = lbl_803E616C;
-        Sfx_PlayFromObject(obj, 0x111);
+        Sfx_PlayFromObject((u32)obj, 0x111);
         speed = lbl_803E6170;
     }
     lbl_803DDCD0 = mathSinf((lbl_803E6174 * (f32)(s16)(int) * (f32*)(extra + 0xc)) / lbl_803E6178);
