@@ -1,4 +1,6 @@
+#include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/dll/cf_doorlight_state.h"
 #include "main/dll/cf_doorlight.h"
@@ -14,7 +16,6 @@ extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_DisableObject();
 
 extern void** gPlayerInterface;
-extern void GameBit_Set(int bit, int value);
 
 extern f32 timeDelta;
 extern f32 lbl_803E3060;

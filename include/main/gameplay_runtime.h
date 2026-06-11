@@ -6,7 +6,6 @@
 #include "global.h"
 
 void objRenderFn_80041018(int obj);
-int Sfx_PlayFromObjectLimited(void *obj, int sfxId, int maxCount);
 void loadUiDll(int index);
 void defragMemory(int mode);
 int loadMapAndParent(int mapId);
