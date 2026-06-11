@@ -73,11 +73,11 @@ typedef struct
 
 void wmwallcrawler_update(int obj)
 {
+    u32 player;
     u8* st;
     int bestIdx;
     f32 speed;
     u8 sum;
-    u32 player;
     int k;
     int n;
     int idx;
