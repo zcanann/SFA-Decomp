@@ -1077,7 +1077,7 @@ void groundanimator_update(int* obj)
         if (g->dirtyFrames != 0)
         {
             f32 lim = lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r20)->unk20;
-            g->dirtyFrames = g->dirtyFrames - 1;
+            g->dirtyFrames -= 1;
             if (g->lastDepth > lim)
             {
                 g->lastDepth = lim;
