@@ -1,5 +1,7 @@
 /* DLL 0x00D2 (tumbleweed) — Tumbleweed and tumbleweed bush objects [0x80163BBC-0x801650D0). */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/effect_interfaces.h"
 #include "main/gameplay_runtime.h"
@@ -54,7 +56,6 @@ extern f32 sqrtf(f32 x);
 void tumbleweed_updateRollingMotion(short* obj, int state)
 {
     extern u32 randomGetRange(int min, int max); /* #57 */
-    extern void Sfx_PlayFromObject(int obj, int sfxId); /* #57 */
     int hitCount;
     uint uval;
     undefined4* hitEntry;
@@ -291,7 +292,6 @@ void tumbleweed_updateStateMachine(int obj)
 {
     extern void tumbleweed_updateRollingMotion(int obj, int aux); /* #57 */
     extern void ObjHits_EnableObject(int obj); /* #57 */
-    extern void Sfx_PlayFromObject(int obj, int sfxId);
     int aux;
     int sphereIndex;
     u32 hitVolume;
@@ -554,7 +554,6 @@ void tumbleweed_init(int obj, int defData)
 void tumbleweed_updateEffects(int obj)
 {
     extern void ObjHits_DisableObject(int obj); /* #57 */
-    extern void Sfx_PlayFromObject(int obj, int sfxId); /* #57 */
     TumbleweedState* state = ((GameObject*)obj)->extra;
     int i;
     s16 type;
