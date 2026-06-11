@@ -780,7 +780,6 @@ config.libs = [
             Object(NonMatching, "main/mm.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/model.c"),
             Object(NonMatching, "main/object.c"),
-            Object(NonMatching, "main/unknown/autos/placeholder_8002F604.c"),
             Object(NonMatching, "main/objseq.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/sky.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/newclouds.c", cflags=cflags_dll_noopt),
