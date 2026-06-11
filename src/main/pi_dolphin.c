@@ -8300,13 +8300,13 @@ extern u16 lbl_8030C9A0[];
 extern u8 lbl_8030CDA0[];
 extern u8 lbl_8030CDC0[];
 extern u8 lbl_8030CDE0[];
-extern u8 lbl_802C1C50[];
+extern u8 gInflateCodeLengthOrder[];
 typedef struct {
     u16 base;
     u16 extra;
 } InflateBaseExtra;
-extern InflateBaseExtra lbl_802C1C64[29];
-extern InflateBaseExtra lbl_802C1CD8[30];
+extern InflateBaseExtra gInflateLengthCodes[29];
+extern InflateBaseExtra gInflateDistCodes[30];
 extern u8 lbl_803DCD20[];
 extern u8 lbl_803DCD18[];
 extern u8 lbl_80377880[];
@@ -8450,7 +8450,7 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                 for (i = 0; i != hclen; i++)
                 {
                     u32 v = ZGB8() & 7;
-                    lbl_80377880[lbl_802C1C50[i]] = v;
+                    lbl_80377880[gInflateCodeLengthOrder[i]] = v;
                     lbl_803DCD20[v] += 1;
                     ZADV(3);
                 }
@@ -8611,8 +8611,8 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                     u32 dsym;
                     u32 dist;
                     int io = sym - 0x101;
-                    len2 = lbl_802C1C64[io].base;
-                    eb = lbl_802C1C64[io].extra;
+                    len2 = gInflateLengthCodes[io].base;
+                    eb = gInflateLengthCodes[io].extra;
                     if (eb != 0)
                     {
                         len2 += ZGB8() & ((1 << eb) - 1);
@@ -8623,8 +8623,8 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                         (u32)__rlwnm(lbl_8030CDE0[dt >> 8], distMax + 0x10, 24, 31);
                     dsym = distTblP[dcode];
                     ZADV(distBitsP[dsym]);
-                    dist = lbl_802C1CD8[dsym].base;
-                    eb = lbl_802C1CD8[dsym].extra;
+                    dist = gInflateDistCodes[dsym].base;
+                    eb = gInflateDistCodes[dsym].extra;
                     if (eb != 0)
                     {
                         dist += ZGB16() & ((1 << eb) - 1);
