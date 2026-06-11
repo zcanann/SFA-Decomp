@@ -1785,7 +1785,7 @@ void hudDrawFn_80121440(void)
     else if (op < lbl_803DD844)
     {
         lbl_803DD844 = lbl_803DD844 - lbl_803E1FA0 * timeDelta;
-        if (lbl_803DD844 < lbl_803E1E3C) lbl_803DD844 = lbl_803E1E3C;
+        if (lbl_803DD844 < *(f32 *)&lbl_803E1E3C) lbl_803DD844 = lbl_803E1E3C;
     }
     alpha = (int)lbl_803DD83C;
     if ((u8)alpha != 0)
