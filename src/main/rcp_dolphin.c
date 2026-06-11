@@ -1176,10 +1176,8 @@ typedef struct LoadedTextureEntry
     u32 size;
 } LoadedTextureEntry;
 
-extern int lbl_803DCDBC;
-extern LoadedTextureEntry* lbl_803DCDC4;
-#define gLoadedTextureCount lbl_803DCDBC
-#define gLoadedTextures lbl_803DCDC4
+extern int gLoadedTextureCount;
+extern LoadedTextureEntry* gLoadedTextures;
 #pragma peephole off
 void* textureIdxToPtr(int idx)
 {

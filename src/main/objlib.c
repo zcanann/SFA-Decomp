@@ -80,18 +80,18 @@ struct ObjLibRegionList
     ObjLibRegionEntry* entries;
 };
 
-extern ObjContactCallbackEntry lbl_80342D50[];
+extern ObjContactCallbackEntry gObjContactCallbacks[];
 extern void* lbl_803DCBD8;
 extern u8* gObjHitsPriorityHitStates;
 extern u8 gObjGroupObjectCount;
-extern int lbl_803DCBF8;
+extern int gObjContactCallbackCount;
 extern f64 DOUBLE_803df5c0;
 extern f64 DOUBLE_803df640;
 extern f32 lbl_803DC074;
 extern f32 gObjHitsPriorityHitTickDelta;
 extern f32 lbl_803DE914;
 extern f32 lbl_803DE968;
-extern f32 lbl_803DE97C;
+extern f32 OBJLIB_UNIT_SCALE;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
@@ -131,9 +131,6 @@ extern f32 lbl_803DF638;
 #define OBJCONTACT_CALLBACK_CAPACITY 0x10
 #define OBJCONTACT_CALLBACK_LAST_INDEX (OBJCONTACT_CALLBACK_CAPACITY - 1)
 #define OBJCONTACT_OBJECT_REFCOUNT_OFFSET 0xe9
-#define gObjContactCallbacks lbl_80342D50
-#define gObjContactCallbackCount lbl_803DCBF8
-
 #define OBJTRIGGER_FLAGS_OFFSET 0xaf
 #define OBJTRIGGER_CURRENT_ENABLE_FLAG 0x01
 #define OBJTRIGGER_CURRENT_BLOCK_FLAG 0x08
@@ -169,8 +166,6 @@ extern f32 lbl_803DF638;
 #define OBJPATH_POINTS_OFFSET 0x2c
 #define OBJPATH_POINT_COUNT_OFFSET 0x58
 #define OBJPATH_ROOT_JOINT_INDEX -1
-#define OBJLIB_UNIT_SCALE lbl_803DE97C
-
 typedef struct ObjMsgEntry
 {
     uint message;

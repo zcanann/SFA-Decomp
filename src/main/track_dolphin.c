@@ -1677,9 +1677,7 @@ typedef struct TrackBlockDescriptor
     void* alternateCollisionMatrix;
 } TrackBlockDescriptor;
 
-extern TrackBlockDescriptor lbl_8038DC64[];
-#define gTrackBlockDescriptors lbl_8038DC64
-
+extern TrackBlockDescriptor gTrackBlockDescriptors[];
 /* fn_80069944 -- store sbss byte into *p1 and return a fixed table base. */
 #pragma dont_inline on
 void* fn_80069944(u32* outVal)
@@ -1754,7 +1752,7 @@ void fn_80062894(void)
     lbl_803DCEE8 = 0;
 }
 
-/* fn_80069968 -- read s16 at lbl_8038DC64[idx*0x18 + 4] into *out1, and
+/* fn_80069968 -- read s16 at gTrackBlockDescriptors[idx*0x18 + 4] into *out1, and
  * the sbss u32 lbl_803DCF30 into *out2. Asm form locks the lis/addi
  * pair so MWCC doesn't route the table base through r0. */
 #pragma dont_inline on

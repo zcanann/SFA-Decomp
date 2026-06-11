@@ -555,15 +555,9 @@ void gameTextInitFn_8001bd14(void);
 
 void Obj_ApplyPendingParentLinks(void);
 
-extern u8* lbl_803DCADC;
-#define gGameBitTable lbl_803DCADC
-
-
-extern s16 lbl_803DCAD8;
-extern u8* lbl_803DCAE0;
-#define gGameBitCount lbl_803DCAD8
-#define gGameBitSaveData lbl_803DCAE0
-
+extern u8* gGameBitTable;
+extern s16 gGameBitCount;
+extern u8* gGameBitSaveData;
 #pragma dont_inline off
 u32 GameBit_Get(int eventId)
 {
@@ -630,10 +624,8 @@ u32 GameBit_Get(int eventId)
 
 extern int isSaveGameLoading(void);
 extern void gameBitFn_800ea2e0(int a);
-extern char lbl_802CA4E0[];
+extern char sGameBitSetDuringSaveLoadWarning[];
 #define GameBit_RequestSync gameBitFn_800ea2e0
-#define sGameBitSetDuringSaveLoadWarning lbl_802CA4E0
-
 void GameBit_Set(int eventId, int value)
 {
     s16 id;
@@ -1023,9 +1015,9 @@ void init(void)
     initFn_800534f8();
     titleScreenDrawFn_80093db4();
     testAndSet_onlyUseHeap3(0);
-    loadAssetFileById((int)&lbl_803DCADC, 0x33);
-    lbl_803DCAD8 = (s16)(getDataFileSize(0x33) >> 1);
-    lbl_803DCAE0 = (*(u8 *(**)(void))((u8*)*gMapEventInterface + 0x88))();
+    loadAssetFileById((int)&gGameBitTable, 0x33);
+    gGameBitCount = (s16)(getDataFileSize(0x33) >> 1);
+    gGameBitSaveData = (*(u8 *(**)(void))((u8*)*gMapEventInterface + 0x88))();
     lbl_803DCA3F = 1;
     loadUiDll(2);
     doNothing_beforeTitleScreen();
