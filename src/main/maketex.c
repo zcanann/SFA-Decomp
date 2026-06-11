@@ -6,126 +6,23 @@
 #include "main/objseq.h"
 
 
-extern int FUN_800033a8();
-extern undefined4 FUN_80003494();
-extern undefined8 FUN_80006868();
-extern char FUN_80006884();
-extern undefined4 FUN_8000689c();
-extern undefined4 FUN_80006b58();
-extern undefined4 FUN_80006c1c();
-extern undefined8 FUN_80006c30();
-extern undefined8 FUN_80006c84();
-extern undefined4 gameTextSetWindow();
-extern undefined8 FUN_80017484();
-extern int FUN_800174a0();
-extern undefined4 FUN_800174b8();
-extern undefined4 FUN_800174e8();
-extern undefined4 FUN_800174f0();
-extern undefined4 FUN_800174f4();
-extern uint FUN_80017658();
-extern int FUN_80017730();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017810();
-extern undefined4 FUN_80017814();
-extern undefined4 FUN_80017830();
-extern int FUN_80017a98();
-extern undefined4 FUN_8002f6ac();
-extern undefined4 FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
-extern int FUN_8003964c();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80045c4c();
-extern undefined4 FUN_8004600c();
-extern int newshadows_getShadowRenderTexture(void);
-extern undefined4 FUN_800709dc();
-extern undefined4 FUN_800709e4();
-extern int FUN_8007284c();
 extern undefined4 FUN_802420b0();
 extern undefined4 FUN_802420e0();
-extern int FUN_80249300();
-extern undefined4 FUN_802493c8();
-extern int FUN_8026218c();
-extern int FUN_80262b10();
-extern undefined4 FUN_80262bf4();
-extern int FUN_80263710();
-extern undefined4 FUN_80263888();
-extern int FUN_80263c34();
 extern int FUN_802640ac();
 extern int FUN_80264428();
 extern undefined4 FUN_80264624();
-extern int FUN_80264864();
-extern int FUN_80264b04();
-extern int FUN_80264b4c();
-extern ulonglong FUN_80286830();
-extern undefined8 FUN_80286834();
-extern char FUN_80286840();
-extern undefined4 FUN_8028687c();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_8028688c();
-extern undefined8 FUN_8028fde8();
-extern double FUN_80293900();
-extern uint countLeadingZeros();
 
-extern undefined4 DAT_8030f8b8;
 extern undefined4 DAT_80397560;
-extern undefined4 DAT_80397564;
-extern undefined4 DAT_8039ae0c;
-extern undefined4 DAT_8039b010;
-extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dc360;
 extern undefined4 DAT_803dc364;
-extern undefined4 DAT_803dc368;
-extern undefined4 DAT_803dc374;
-extern undefined4 DAT_803dc378;
-extern undefined4 DAT_803dc37c;
-extern undefined4 DAT_803dc380;
-extern undefined4 DAT_803dc384;
-extern undefined4 DAT_803dc388;
-extern undefined4 DAT_803ddcc0;
 extern undefined4 DAT_803ddcc4;
-extern undefined4 DAT_803ddcc8;
-extern undefined4 DAT_803ddccc;
 extern undefined4 DAT_803ddcd0;
 extern undefined4 DAT_803ddcd4;
-extern undefined4 DAT_803ddcd9;
-extern undefined4 DAT_803ddcda;
-extern undefined* DAT_803ddcdc;
 extern undefined4 DAT_803ddd0c;
-extern undefined4 DAT_803ddd14;
-extern undefined4 DAT_803ddd64;
-extern undefined4 DAT_803ddd66;
-extern undefined4 DAT_803ddd68;
-extern undefined4 DAT_803ddd78;
-extern undefined4 DAT_803ddd7c;
 extern f64 DOUBLE_803dfc28;
-extern f64 DOUBLE_803dfc38;
-extern f64 DOUBLE_803dfc60;
 extern f32 lbl_803DC074;
-extern f32 lbl_803DDCF4;
-extern f32 lbl_803DDD60;
-extern f32 lbl_803DDD6C;
-extern f32 lbl_803DDD70;
-extern f32 lbl_803DDD74;
-extern f32 lbl_803DFC18;
 extern f32 lbl_803DFC20;
-extern f32 lbl_803DFC30;
-extern f32 lbl_803DFC40;
-extern f32 lbl_803DFC44;
-extern f32 lbl_803DFC48;
-extern f32 lbl_803DFC4C;
-extern f32 lbl_803DFC50;
-extern f32 lbl_803DFC54;
-extern f32 lbl_803DFC58;
-extern void* PTR_LAB_80310000;
-extern char s_Dinosaur_Planet_8030f7b0[];
-extern char s_STARFOX_ADVENTURES_8030f79c[];
-extern char s_Star_Fox_Adventures_8030f678[];
-extern char s_card_memcardicon0_img_8030f724[];
-extern char s_card_memcardicon0_pal_8030f784[];
-extern char s_card_memcardicon1_img_8030f73c[];
-extern char s_card_memcardicon2_img_8030f754[];
-extern char s_card_memcardicon3_img_8030f76c[];
-extern char s_opening_bnr_8030f718[];
 
 /*
  * --INFO--
@@ -533,7 +430,7 @@ undefined4 FUN_8007f764(float* param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined FUN_8007f7c0(void)
+u8 FUN_8007f7c0(void)
 {
     return DAT_803ddd0c;
 }
