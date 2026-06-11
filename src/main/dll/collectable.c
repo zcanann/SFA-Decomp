@@ -492,7 +492,7 @@ int tricky_SeqFn(int obj,int unused,ObjAnimUpdateState *animUpdate)
     ObjHits_DisableObject(obj);
     Sfx_StopObjectChannel(obj,0x7f);
     if ((((TrickyState *)state)->stateFlags & 0x800) != 0) {
-      ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & 0xfffff7ff;
+      ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & ~(u64)0x800;
       ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags | 0x1000;
       i = 0;
       slot = state;
@@ -523,7 +523,7 @@ int tricky_SeqFn(int obj,int unused,ObjAnimUpdateState *animUpdate)
     switch (animUpdate->eventIds[i]) {
     case 1:
       if ((((TrickyState *)state)->stateFlags & 0x800) != 0) {
-        ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & 0xfffff7ff;
+        ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & ~(u64)0x800;
         ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags | 0x1000;
         j = 0;
         slot = state;
@@ -890,7 +890,7 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
   ObjGroup_RemoveObject(obj,1);
   (*gExpgfxInterface)->freeSource((u32)obj);
   if ((shouldKeepFlameChildren == 0) && ((((TrickyState *)state)->stateFlags & 0x800) != 0)) {
-    ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & 0xfffff7ff;
+    ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & ~(u64)0x800;
     ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags | 0x1000;
     i = 0;
     childSlot = state;
@@ -1102,7 +1102,7 @@ void Tricky_update(int obj)
         ((TrickyState *)state)->waterLevel = lbl_803E23DC;
       }
     }
-    ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & 0xffffbdfe;
+    ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & ~(u64)0x4201;
     if (((TrickyByteFlags *)&((TrickyState *)state)->unk82E)->bit5 != 0) {
       ((TrickyByteFlags *)&((TrickyState *)state)->unk82E)->bit5 = 0;
     } else {
@@ -1128,9 +1128,9 @@ void Tricky_update(int obj)
       ((TrickyState *)state)->prevSpeed = z;
       ((TrickyState *)state)->speed = z;
       ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags | 0x80000;
-      ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & 0xffffdfff;
+      ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & ~(u64)0x2000;
       if ((((TrickyState *)state)->stateFlags & 0x800) != 0) {
-        ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & 0xfffff7ff;
+        ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & ~(u64)0x800;
         ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags | 0x1000;
         p = state;
         do {
@@ -1340,7 +1340,7 @@ void Tricky_update(int obj)
           target = *(int *)&((TrickyState *)state)->followObj + 0x18;
           if (*(u32 *)&((TrickyState *)state)->unk28 != target) {
             *(u32 *)&((TrickyState *)state)->unk28 = target;
-            ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & 0xfffffbff;
+            ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & ~(u64)0x400;
             ((TrickyState *)state)->unkD2 = 0;
           }
           ((TrickyState *)state)->substate = 0;
@@ -1354,7 +1354,7 @@ void Tricky_update(int obj)
             *(int *)&((TrickyState *)state)->followObj = step;
             if (*(u32 *)&((TrickyState *)state)->unk28 != (u32)(step + 0x18)) {
               *(u32 *)&((TrickyState *)state)->unk28 = step + 0x18;
-              ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & 0xfffffbff;
+              ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & ~(u64)0x400;
               ((TrickyState *)state)->unkD2 = 0;
             }
             ((TrickyState *)state)->unk08 = 0xd;
@@ -1386,7 +1386,7 @@ void Tricky_update(int obj)
       ((TrickyState *)state)->unkD = 3;
       if (*(u32 *)&((TrickyState *)state)->unk28 != (u32)&((TrickyState *)state)->unk72C) {
         *(u32 *)&((TrickyState *)state)->unk28 = (u32)&((TrickyState *)state)->unk72C;
-        ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & 0xfffffbff;
+        ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & ~(u64)0x400;
         ((TrickyState *)state)->unkD2 = 0;
       }
     }
@@ -1394,7 +1394,7 @@ void Tricky_update(int obj)
   *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8;
   ((TrickyState *)state)->unk353 = 1;
   ((TrickyHandlerTable *)base)->handlers[((TrickyState *)state)->unk08](obj,state);
-  ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & 0xfffffffd;
+  ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & ~(u64)0x2;
   ((TrickyState *)state)->animTransitionTimer += timeDelta;
   if (((TrickyState *)state)->animTransitionTimer > lbl_803E247C) {
     if (((GameObject *)obj)->anim.currentMove != ((TrickyState *)state)->moveId) {
@@ -1513,7 +1513,7 @@ void Tricky_update(int obj)
       played = 1;
     }
     if (played != 0) {
-      ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & 0xfffffffb;
+      ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & ~(u64)0x4;
     }
   }
   ((TrickyState *)state)->unk7A0f -= timeDelta;
@@ -1679,7 +1679,7 @@ void Tricky_resumeAfterCommand(int obj,int state)
       ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
     }
     ((TrickyState *)state)->flags2DC = ((TrickyState *)state)->flags2DC & 0xffffef7f;
-    ((TrickyState *)state)->unk2E8 = ((TrickyState *)state)->unk2E8 & 0xfffffffb;
+    ((TrickyState *)state)->unk2E8 = ((TrickyState *)state)->unk2E8 & ~(u64)0x4;
     ((TrickyState *)state)->currentMoveProgress = lbl_803E2574;
     ((GameObject *)obj)->anim.alpha = 0xff;
   }
@@ -1778,7 +1778,7 @@ void trickyFn_80148d8c(int obj,int state)
         (*gMapEventInterface)->startTimedEvent(((ObjPlacement *)setup)->mapId,
                                                lbl_803E2570 * (f32)*(s16 *)(setup + 0x2c));
       }
-      ((TrickyState *)state)->flags2DC = ((TrickyState *)state)->flags2DC & 0xfffff7ff;
+      ((TrickyState *)state)->flags2DC = ((TrickyState *)state)->flags2DC & ~(u64)0x800;
       ((TrickyState *)state)->unk2E8 = ((TrickyState *)state)->unk2E8 & ~3;
     }
   }
