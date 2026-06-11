@@ -6,7 +6,7 @@ void doNothing_endOfFrame(void)
 
 void setJoypadDisabled(void)
 {
-    lbl_803DC908 = 1;
+    joypadDisabled = 1;
 }
 
 void padFn_80014b18(int value)
@@ -36,7 +36,7 @@ void padClearAnalogInputX(int port)
 
 void stopRumble2(void)
 {
-    if (lbl_803DC909 != 0)
+    if (rumbleEnabled != 0)
     {
         PADControlMotor(0, 2);
         lbl_803DC90C = lbl_803DE6E8;
@@ -45,7 +45,7 @@ void stopRumble2(void)
 
 void stopRumble(void)
 {
-    if (lbl_803DC909 != 0)
+    if (rumbleEnabled != 0)
     {
         PADControlMotor(0, 0);
         lbl_803DC90C = lbl_803DE6E8;
@@ -54,7 +54,7 @@ void stopRumble(void)
 
 void doRumble(f32 duration)
 {
-    if (lbl_803DC909 != 0 && getGameState() == 1)
+    if (rumbleEnabled != 0 && getGameState() == 1)
     {
         f32 rumbleTimer;
 
@@ -70,12 +70,12 @@ void doRumble(f32 duration)
 
 void setRumbleEnabled(u8 enabled)
 {
-    lbl_803DC909 = enabled;
+    rumbleEnabled = enabled;
 }
 
 void padGetAnalogInput(int port, u8* x, u8* y)
 {
-    if (lbl_803DC908 != 0 || port > 0 || gDvdErrorPauseActive != 0)
+    if (joypadDisabled != 0 || port > 0 || gDvdErrorPauseActive != 0)
     {
         *x = 0;
         *y = 0;
@@ -93,7 +93,7 @@ u8 padGetCY(int port)
     {
         return 0;
     }
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
     {
         return 0;
     }
@@ -109,7 +109,7 @@ u8 padGetCX(int port)
     {
         return 0;
     }
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
     {
         return 0;
     }
@@ -125,7 +125,7 @@ u8 padGetStickY(int port)
     {
         return 0;
     }
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
     {
         return 0;
     }
@@ -141,7 +141,7 @@ u8 padGetStickX(int port)
     {
         return 0;
     }
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
     {
         return 0;
     }
@@ -153,7 +153,7 @@ u8 padGetLTrigger(int port)
 {
     PadStatusLite* statuses;
 
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
     {
         return 0;
     }
@@ -165,7 +165,7 @@ u8 padGetRTrigger(int port)
 {
     PadStatusLite* statuses;
 
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
     {
         return 0;
     }
@@ -179,7 +179,7 @@ u16 getPadFn_80014d9c(int port)
     {
         port = 0;
     }
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
     {
         return 0;
     }
@@ -192,7 +192,7 @@ u16 getButtons_80014dd8(int port)
     {
         port = 0;
     }
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
     {
         return 0;
     }
@@ -209,7 +209,7 @@ u32 getButtonsJustPressedIfNotBusy(int port)
     {
         return 0;
     }
-    if (lbl_803DC908 != 0)
+    if (joypadDisabled != 0)
     {
         return -1;
     }
@@ -222,7 +222,7 @@ u32 getButtonsJustPressed(int port)
     {
         return 0;
     }
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
     {
         return 0;
     }
@@ -244,7 +244,7 @@ u32 getButtonsHeld(int port)
     {
         return 0;
     }
-    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0)
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
     {
         return 0;
     }
@@ -331,7 +331,7 @@ int initControllers(void)
     }
 
     lbl_803DC94C = 0;
-    lbl_803DC909 = 1;
+    rumbleEnabled = 1;
     PADControlMotor(0, 2);
     lbl_803DC90C = lbl_803DE6E8;
     return 0;
@@ -376,14 +376,14 @@ void padUpdate(void)
         return;
     }
     PADClamp(readPad);
-    if (lbl_803DC909 != 0)
+    if (rumbleEnabled != 0)
     {
         if (lbl_803DC90C > lbl_803DE6E8)
         {
             lbl_803DC90C = lbl_803DC90C - timeDelta;
             if (lbl_803DC90C <= lbl_803DE6E8)
             {
-                if (lbl_803DC909 != 0)
+                if (rumbleEnabled != 0)
                 {
                     PADControlMotor(0, 0);
                     lbl_803DC90C = lbl_803DE6E8;
@@ -392,7 +392,7 @@ void padUpdate(void)
         }
     }
     useprev = 0;
-    lbl_803DC908 = 0;
+    joypadDisabled = 0;
 
     prevStickY = (s8*)&lbl_803DC944;
     prevStickX = (s8*)&lbl_803DC948;
