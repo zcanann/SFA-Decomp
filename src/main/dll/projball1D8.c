@@ -47,36 +47,36 @@ extern f32 lbl_803E5F14;
  */
 void nw_levcontrol_update(int param_1)
 {
-    int iVar1;
-    short* psVar2;
-    u8 cVar7;
-    int iVar3;
-    uint uVar4;
-    uint uVar5;
-    byte bVar8;
-    uint uVar6;
-    uint uVar9;
-    float* pfVar10;
+    int obj;
+    short* player;
+    u8 mode;
+    int val;
+    uint bitVal;
+    uint bitVal3;
+    byte flag;
+    uint bitVal2;
+    uint bitVal4;
+    float* state;
 
-    iVar1 = param_1;
-    pfVar10 = *(float**)(iVar1 + 0xb8);
-    psVar2 = (short*)Obj_GetPlayerObject();
-    if (*pfVar10 > lbl_803E5F10)
+    obj = param_1;
+    state = *(float**)(obj + 0xb8);
+    player = (short*)Obj_GetPlayerObject();
+    if (*state > lbl_803E5F10)
     {
         gameTextShow(0x435);
-        *pfVar10 = *pfVar10 - lbl_803DC074;
-        if (*pfVar10 < lbl_803E5F10)
+        *state = *state - lbl_803DC074;
+        if (*state < lbl_803E5F10)
         {
-            *pfVar10 = lbl_803E5F10;
+            *state = lbl_803E5F10;
         }
     }
-    cVar7 = (*gMapEventInterface)->getMode((int)((GameObject*)iVar1)->anim.mapEventSlot);
-    if (cVar7 != '\x01')
+    mode = (*gMapEventInterface)->getMode((int)((GameObject*)obj)->anim.mapEventSlot);
+    if (mode != '\x01')
     {
-        (*gMapEventInterface)->setMode((int)((GameObject*)iVar1)->anim.mapEventSlot, 1);
+        (*gMapEventInterface)->setMode((int)((GameObject*)obj)->anim.mapEventSlot, 1);
     }
-    cVar7 = (*gMapEventInterface)->getMode(7);
-    if (cVar7 == '\x01')
+    mode = (*gMapEventInterface)->getMode(7);
+    if (mode == '\x01')
     {
         (*gMapEventInterface)->setMode(7, 2);
         GameBit_Set(0xf22, 1);
@@ -84,65 +84,65 @@ void nw_levcontrol_update(int param_1)
         GameBit_Set(0xf24, 1);
         GameBit_Set(0xf25, 1);
     }
-    iVar3 = (**(code**)(*DAT_803dd6d8 + 0x24))(0);
-    if (iVar3 == 0)
+    val = (**(code**)(*DAT_803dd6d8 + 0x24))(0);
+    if (val == 0)
     {
-        if ((*(short*)(pfVar10 + 4) != 0x1a) &&
-            (*(undefined2*)(pfVar10 + 4) = 0x1a, (*((uint*)pfVar10 + 2) & 0x10) != 0))
+        if ((*(short*)(state + 4) != 0x1a) &&
+            (*(undefined2*)(state + 4) = 0x1a, (*((uint*)state + 2) & 0x10) != 0))
         {
             Music_Trigger((int*)0x1a, 1);
         }
     }
-    else if ((*(short*)(pfVar10 + 4) != -1) &&
-        (*(undefined2*)(pfVar10 + 4) = 0xffff, (*((uint*)pfVar10 + 2) & 0x10) != 0))
+    else if ((*(short*)(state + 4) != -1) &&
+        (*(undefined2*)(state + 4) = 0xffff, (*((uint*)state + 2) & 0x10) != 0))
     {
         Music_Trigger((int*)0x1a, 0);
     }
-    SCGameBitLatch_Update(pfVar10 + 2, 8, -1, -1, 0x3a0, (int*)0x35);
-    SCGameBitLatch_Update(pfVar10 + 2, 0x10, -1, -1, 0x3a1, (int*)(int)*(short*)(pfVar10 + 4));
-    SCGameBitLatch_Update(pfVar10 + 2, 0x20, -1, -1, 0x393, (int*)0x36);
-    SCGameBitLatch_Update(pfVar10 + 2, 0x40, -1, -1, 0xcbb, (int*)0xc4);
-    uVar9 = 0;
-    uVar4 = GameBit_Get(0x19f);
-    uVar5 = GameBit_Get(0x19d);
-    if ((uVar5 != uVar4) && (bVar8 = gameTimerIsRunning(), bVar8 != 0))
+    SCGameBitLatch_Update(state + 2, 8, -1, -1, 0x3a0, (int*)0x35);
+    SCGameBitLatch_Update(state + 2, 0x10, -1, -1, 0x3a1, (int*)(int)*(short*)(state + 4));
+    SCGameBitLatch_Update(state + 2, 0x20, -1, -1, 0x393, (int*)0x36);
+    SCGameBitLatch_Update(state + 2, 0x40, -1, -1, 0xcbb, (int*)0xc4);
+    bitVal4 = 0;
+    bitVal = GameBit_Get(0x19f);
+    bitVal3 = GameBit_Get(0x19d);
+    if ((bitVal3 != bitVal) && (flag = gameTimerIsRunning(), flag != 0))
     {
-        uVar9 = 1;
+        bitVal4 = 1;
     }
-    GameBit_Set(0xf31, uVar9);
-    SCGameBitLatch_Update(pfVar10 + 2, 0x80, -1, -1, 0xf31, (int*)0xaf);
-    uVar4 = GameBit_Get(0x398);
-    if ((uVar4 != 0) &&
-        (cVar7 = (*gMapEventInterface)->getAnimEvent((int)((GameObject*)iVar1)->anim.mapEventSlot, 0x1f), cVar7 == '\0')
+    GameBit_Set(0xf31, bitVal4);
+    SCGameBitLatch_Update(state + 2, 0x80, -1, -1, 0xf31, (int*)0xaf);
+    bitVal = GameBit_Get(0x398);
+    if ((bitVal != 0) &&
+        (mode = (*gMapEventInterface)->getAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f), mode == '\0')
     )
     {
-        (*gMapEventInterface)->setAnimEvent((int)((GameObject*)iVar1)->anim.mapEventSlot, 0x1f, 1);
+        (*gMapEventInterface)->setAnimEvent((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f, 1);
     }
-    if (((*((uint*)pfVar10 + 2) & 2) == 0) || (bVar8 = FUN_80006b44(), bVar8 == 0))
+    if (((*((uint*)state + 2) & 2) == 0) || (flag = FUN_80006b44(), flag == 0))
     {
-        switch (*(undefined*)(pfVar10 + 1))
+        switch (*(undefined*)(state + 1))
         {
         case 0:
-            uVar4 = GameBit_Get(0x19d);
-            if (uVar4 != 0)
+            bitVal = GameBit_Get(0x19d);
+            if (bitVal != 0)
             {
-                (*gObjectTriggerInterface)->runSequence(0, (void*)iVar1, -1);
-                *(undefined*)(pfVar10 + 1) = 2;
+                (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+                *(undefined*)(state + 1) = 2;
                 GameBit_Set(0xecd, 1);
             }
             break;
         case 1:
-            (*gObjectTriggerInterface)->preempt(iVar1, 0x64a);
-            (*gObjectTriggerInterface)->runSequence(0, (void*)iVar1, 0x20);
-            *(undefined*)(pfVar10 + 1) = 2;
+            (*gObjectTriggerInterface)->preempt(obj, 0x64a);
+            (*gObjectTriggerInterface)->runSequence(0, (void*)obj, 0x20);
+            *(undefined*)(state + 1) = 2;
             GameBit_Set(0xecd, 1);
             break;
         case 2:
-            iVar1 = fn_801CFD68((u8*)pfVar10);
-            if (iVar1 != 0)
+            obj = fn_801CFD68((u8*)state);
+            if (obj != 0)
             {
-                *(undefined*)((int)pfVar10 + 5) = 0x32;
-                *((uint*)pfVar10 + 2) = *((uint*)pfVar10 + 2) | 1;
+                *(undefined*)((int)state + 5) = 0x32;
+                *((uint*)state + 2) = *((uint*)state + 2) | 1;
             }
             break;
         case 3:
@@ -150,64 +150,64 @@ void nw_levcontrol_update(int param_1)
         case 5:
         case 6:
         case 7:
-            fn_801CFD68((u8*)pfVar10);
+            fn_801CFD68((u8*)state);
             break;
         case 8:
-            iVar1 = fn_801CFD68((u8*)pfVar10);
-            if (iVar1 == 1)
+            obj = fn_801CFD68((u8*)state);
+            if (obj == 1)
             {
-                *((uint*)pfVar10 + 2) = *((uint*)pfVar10 + 2) | 4;
+                *((uint*)state + 2) = *((uint*)state + 2) | 4;
             }
             break;
         case 9:
-            if ((psVar2[0x58] & 0x1000U) != 0)
+            if ((player[0x58] & 0x1000U) != 0)
             {
-                *(undefined*)(pfVar10 + 1) = 10;
+                *(undefined*)(state + 1) = 10;
             }
             break;
         case 10:
-            if ((psVar2[0x58] & 0x1000U) == 0)
+            if ((player[0x58] & 0x1000U) == 0)
             {
-                uVar6 = *((uint*)pfVar10 + 2);
-                if ((uVar6 & 1) != 0)
+                bitVal2 = *((uint*)state + 2);
+                if ((bitVal2 & 1) != 0)
                 {
-                    *((uint*)pfVar10 + 2) = uVar6 & ~1;
-                    *((uint*)pfVar10 + 2) = *((uint*)pfVar10 + 2) | 2;
-                    FUN_80006b54(0x15, (uint) * (byte*)((int)pfVar10 + 5));
+                    *((uint*)state + 2) = bitVal2 & ~1;
+                    *((uint*)state + 2) = *((uint*)state + 2) | 2;
+                    FUN_80006b54(0x15, (uint) * (byte*)((int)state + 5));
                     FUN_80006b50();
-                    (*gMapEventInterface)->triggerEvent((int)(psVar2 + 6), (int)*psVar2, 0, 0);
+                    (*gMapEventInterface)->triggerEvent((int)(player + 6), (int)*player, 0, 0);
                 }
-                else if ((uVar6 & 4) != 0)
+                else if ((bitVal2 & 4) != 0)
                 {
-                    *((uint*)pfVar10 + 2) = uVar6 & 0xfffffffd;
-                    *((uint*)pfVar10 + 2) = *((uint*)pfVar10 + 2) & 0xfffffffb;
+                    *((uint*)state + 2) = bitVal2 & 0xfffffffd;
+                    *((uint*)state + 2) = *((uint*)state + 2) & 0xfffffffb;
                     FUN_80006b4c();
                     Music_Trigger((int*)0xaf, 0);
                     GameBit_Set(0x19f, 1);
                 }
                 else
                 {
-                    iVar3 = (int)(FUN_80006b3c() / (double)lbl_803E5F14);
+                    val = (int)(FUN_80006b3c() / (double)lbl_803E5F14);
                     FUN_80006b4c();
-                    FUN_80006b54(0x15, (uint) * (byte*)((int)pfVar10 + 5) + iVar3);
+                    FUN_80006b54(0x15, (uint) * (byte*)((int)state + 5) + val);
                     FUN_80006b50();
                 }
-                (*gObjectTriggerInterface)->runSequence(*(u8*)(pfVar10 + 3), (void*)iVar1,
+                (*gObjectTriggerInterface)->runSequence(*(u8*)(state + 3), (void*)obj,
                                                         -1);
-                *(undefined*)(pfVar10 + 1) = *(undefined*)((int)pfVar10 + 0xd);
+                *(undefined*)(state + 1) = *(undefined*)((int)state + 0xd);
             }
             break;
         case 0xb:
-            uVar4 = GameBit_Get(0xecd);
-            if (uVar4 != 0)
+            bitVal = GameBit_Get(0xecd);
+            if (bitVal != 0)
             {
                 GameBit_Set(0xecd, 0);
             }
             break;
         case 0xc:
-            (*gObjectTriggerInterface)->preempt(iVar1, 0x5a);
-            (*gObjectTriggerInterface)->runSequence(1, (void*)iVar1, 8);
-            *(undefined*)(pfVar10 + 1) = 0xb;
+            (*gObjectTriggerInterface)->preempt(obj, 0x5a);
+            (*gObjectTriggerInterface)->runSequence(1, (void*)obj, 8);
+            *(undefined*)(state + 1) = 0xb;
         }
     }
     else
