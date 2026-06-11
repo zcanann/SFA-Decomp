@@ -576,47 +576,47 @@ int FUN_8005b398(undefined8 param_1, double param_2)
  */
 void lightmap_sortQueuedRenderKeys(int queueBase, int keyCount)
 {
-    int iVar1;
-    int iVar2;
-    uint uVar3;
-    int iVar4;
-    int iVar5;
-    int iVar6;
-    int iVar7;
-    uint uVar8;
-    int iVar9;
+    int scratch;
+    int remain;
+    uint cmpKey;
+    int insertPtr;
+    int srcPtr;
+    int i;
+    int j;
+    uint key;
+    int gap;
 
-    iVar1 = keyCount / 9 + (keyCount >> 0x1f);
-    for (iVar9 = 1; iVar9 <= iVar1 - (iVar1 >> 0x1f); iVar9 = iVar9 * 3 + 1)
+    scratch = keyCount / 9 + (keyCount >> 0x1f);
+    for (gap = 1; gap <= scratch - (scratch >> 0x1f); gap = gap * 3 + 1)
     {
     }
-    for (; 0 < iVar9; iVar9 = iVar9 / 3)
+    for (; 0 < gap; gap = gap / 3)
     {
-        iVar6 = iVar9 + 1;
-        iVar1 = iVar6 * 4;
-        iVar5 = queueBase + iVar1;
-        iVar2 = (keyCount + 1) - iVar6;
-        if (iVar6 <= keyCount)
+        i = gap + 1;
+        scratch = i * 4;
+        srcPtr = queueBase + scratch;
+        remain = (keyCount + 1) - i;
+        if (i <= keyCount)
         {
             do
             {
-                uVar8 = *(uint*)(iVar5 + -4);
-                iVar4 = queueBase + iVar1;
-                iVar7 = iVar6;
-                while ((iVar9 < iVar7 &&
-                    (uVar3 = *(uint*)(queueBase + (iVar7 - iVar9) * 4 + -4), uVar3 < uVar8)))
+                key = *(uint*)(srcPtr + -4);
+                insertPtr = queueBase + scratch;
+                j = i;
+                while ((gap < j &&
+                    (cmpKey = *(uint*)(queueBase + (j - gap) * 4 + -4), cmpKey < key)))
                 {
-                    *(uint*)(iVar4 + -4) = uVar3;
-                    iVar4 = iVar4 + iVar9 * -4;
-                    iVar7 = iVar7 - iVar9;
+                    *(uint*)(insertPtr + -4) = cmpKey;
+                    insertPtr = insertPtr + gap * -4;
+                    j = j - gap;
                 }
-                *(uint*)(queueBase + iVar7 * 4 + -4) = uVar8;
-                iVar5 = iVar5 + 4;
-                iVar6 = iVar6 + 1;
-                iVar1 = iVar1 + 4;
-                iVar2 = iVar2 + -1;
+                *(uint*)(queueBase + j * 4 + -4) = key;
+                srcPtr = srcPtr + 4;
+                i = i + 1;
+                scratch = scratch + 4;
+                remain = remain + -1;
             }
-            while (iVar2 != 0);
+            while (remain != 0);
         }
     }
     return;
@@ -1142,16 +1142,16 @@ void FUN_8005d1e8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8005D108(int param_1, int param_2, int param_3)
+void fn_8005D108(int vtxTable, int indices, int triCount)
 {
     volatile byte* fifo8;
     volatile ushort* fifo16;
-    undefined2* puVar1;
-    int iVar2;
-    int iVar3;
-    int iVar4;
-    int iVar5;
-    int iVar6;
+    undefined2* vtx;
+    int idx;
+    int vtxAddr;
+    int i;
+    int corner;
+    int cornerCount;
 
     fifo8 = (volatile byte*)&DAT_cc008000;
     fifo16 = (volatile ushort*)&DAT_cc008000;
@@ -1160,32 +1160,32 @@ void fn_8005D108(int param_1, int param_2, int param_3)
     FUN_802570dc(9, 1);
     FUN_802570dc(0xb, 1);
     FUN_802570dc(0xd, 1);
-    FUN_80259000(0x90, 0, param_3 * 3 & 0xffff);
-    for (iVar4 = 0; iVar4 < param_3; iVar4 = iVar4 + 1)
+    FUN_80259000(0x90, 0, triCount * 3 & 0xffff);
+    for (i = 0; i < triCount; i = i + 1)
     {
-        iVar5 = 0;
-        iVar6 = 3;
+        corner = 0;
+        cornerCount = 3;
         do
         {
             *fifo8 = 0;
-            iVar2 = iVar5 + 1;
-            puVar1 = (undefined2*)(param_1 + (uint) * (byte*)(param_2 + iVar2) * 0x10);
-            *fifo16 = *puVar1;
-            *fifo16 = puVar1[1];
-            *fifo16 = puVar1[2];
-            iVar3 = param_1 + (uint) * (byte*)(param_2 + iVar2) * 0x10;
-            *fifo8 = *(undefined*)(iVar3 + 0xc);
-            *fifo8 = *(undefined*)(iVar3 + 0xd);
-            *fifo8 = *(undefined*)(iVar3 + 0xe);
-            *fifo8 = *(undefined*)(iVar3 + 0xf);
-            iVar2 = param_1 + (uint) * (byte*)(param_2 + iVar2) * 0x10;
-            *fifo16 = *(undefined2*)(iVar2 + 8);
-            *fifo16 = *(undefined2*)(iVar2 + 10);
-            iVar5 = iVar5 + 1;
-            iVar6 = iVar6 + -1;
+            idx = corner + 1;
+            vtx = (undefined2*)(vtxTable + (uint) * (byte*)(indices + idx) * 0x10);
+            *fifo16 = *vtx;
+            *fifo16 = vtx[1];
+            *fifo16 = vtx[2];
+            vtxAddr = vtxTable + (uint) * (byte*)(indices + idx) * 0x10;
+            *fifo8 = *(undefined*)(vtxAddr + 0xc);
+            *fifo8 = *(undefined*)(vtxAddr + 0xd);
+            *fifo8 = *(undefined*)(vtxAddr + 0xe);
+            *fifo8 = *(undefined*)(vtxAddr + 0xf);
+            idx = vtxTable + (uint) * (byte*)(indices + idx) * 0x10;
+            *fifo16 = *(undefined2*)(idx + 8);
+            *fifo16 = *(undefined2*)(idx + 10);
+            corner = corner + 1;
+            cornerCount = cornerCount + -1;
         }
-        while (iVar6 != 0);
-        param_2 = param_2 + 0x10;
+        while (cornerCount != 0);
+        indices = indices + 0x10;
     }
     return;
 }
@@ -1227,12 +1227,12 @@ void FUN_8005d370(undefined4 param_1, undefined param_2, undefined param_3, unde
  */
 void lightmap_queueObjectRenderEntry(int object, int sortGroup, int depthBias)
 {
-    int iVar1;
-    uint uVar2;
-    float* pfVar3;
-    float local_28;
-    undefined4 local_24;
-    float local_20;
+    int idx;
+    uint sortKey;
+    float* viewMtx;
+    float viewX;
+    undefined4 viewY;
+    float viewZ;
 
     if (DAT_803ddab0 == 1000)
     {
@@ -1241,30 +1241,30 @@ void lightmap_queueObjectRenderEntry(int object, int sortGroup, int depthBias)
     }
     if (*(int*)(object + 0x30) == 0)
     {
-        local_28 = *(float*)(object + 0x18) - lbl_803DDA58;
-        local_24 = *(undefined4*)(object + 0x1c);
-        local_20 = *(float*)(object + 0x20) - lbl_803DDA5C;
+        viewX = *(float*)(object + 0x18) - lbl_803DDA58;
+        viewY = *(undefined4*)(object + 0x1c);
+        viewZ = *(float*)(object + 0x20) - lbl_803DDA5C;
     }
     else
     {
-        local_28 = *(float*)(object + 0x18);
-        local_24 = *(undefined4*)(object + 0x1c);
-        local_20 = *(float*)(object + 0x20);
+        viewX = *(float*)(object + 0x18);
+        viewY = *(undefined4*)(object + 0x1c);
+        viewZ = *(float*)(object + 0x20);
     }
-    pfVar3 = (float*)FUN_80006974();
-    FUN_80247bf8(pfVar3, &local_28, &local_28);
-    iVar1 = DAT_803ddab0;
-    uVar2 = (int)-local_20 + depthBias;
-    if ((int)uVar2 < 0)
+    viewMtx = (float*)FUN_80006974();
+    FUN_80247bf8(viewMtx, &viewX, &viewX);
+    idx = DAT_803ddab0;
+    sortKey = (int)-viewZ + depthBias;
+    if ((int)sortKey < 0)
     {
-        uVar2 = 0;
+        sortKey = 0;
     }
-    else if (0x7ffffff < (int)uVar2)
+    else if (0x7ffffff < (int)sortKey)
     {
-        uVar2 = 0x7ffffff;
+        sortKey = 0x7ffffff;
     }
     (&DAT_8037ed20)[DAT_803ddab0 * 4] = object;
-    (&DAT_8037ed28)[iVar1 * 4] = uVar2 | sortGroup << 0x1b;
+    (&DAT_8037ed28)[idx * 4] = sortKey | sortGroup << 0x1b;
     return;
 }
 
@@ -1283,56 +1283,56 @@ void lightmap_queueObjectRenderEntry(int object, int sortGroup, int depthBias)
  */
 void lightmap_sortQueuedRenderPackets(void)
 {
-    int iVar1;
-    undefined4 uVar2;
-    undefined4 uVar3;
-    undefined4 uVar4;
-    int iVar5;
-    int iVar6;
-    int iVar7;
-    undefined4 uVar8;
-    uint uVar9;
-    int iVar10;
-    undefined4* puVar11;
-    undefined4* puVar12;
-    int iVar12;
+    int byteOff;
+    undefined4 word1;
+    undefined4 word3;
+    undefined4 tmpWord;
+    int prevIdx;
+    int i;
+    int gap;
+    undefined4 word0;
+    uint sortKey;
+    int insertPos;
+    undefined4* src;
+    undefined4* packets;
+    int j;
 
-    puVar12 = &DAT_8037ed10;
-    iVar1 = (DAT_803ddab0 + -1) / 9 + (DAT_803ddab0 + -1 >> 0x1f);
-    for (iVar7 = 1; iVar7 <= iVar1 - (iVar1 >> 0x1f); iVar7 = iVar7 * 3 + 1)
+    packets = &DAT_8037ed10;
+    byteOff = (DAT_803ddab0 + -1) / 9 + (DAT_803ddab0 + -1 >> 0x1f);
+    for (gap = 1; gap <= byteOff - (byteOff >> 0x1f); gap = gap * 3 + 1)
     {
     }
-    for (; 0 < iVar7; iVar7 = iVar7 / 3)
+    for (; 0 < gap; gap = gap / 3)
     {
-        iVar6 = iVar7 + 1;
-        iVar1 = iVar6 * 0x10;
-        puVar11 = puVar12 + iVar6 * 4;
-        for (; iVar6 <= DAT_803ddab0; iVar6 = iVar6 + 1)
+        i = gap + 1;
+        byteOff = i * 0x10;
+        src = packets + i * 4;
+        for (; i <= DAT_803ddab0; i = i + 1)
         {
-            uVar8 = puVar11[-4];
-            uVar2 = puVar11[-3];
-            uVar9 = puVar11[-2];
-            uVar3 = puVar11[-1];
-            iVar10 = (int)(puVar12 + iVar6 * 4);
-            iVar12 = iVar6;
-            while ((iVar7 < iVar12 &&
-                (iVar5 = iVar12 - iVar7, (uint)puVar12[iVar5 * 4 + 2] < uVar9)))
+            word0 = src[-4];
+            word1 = src[-3];
+            sortKey = src[-2];
+            word3 = src[-1];
+            insertPos = (int)(packets + i * 4);
+            j = i;
+            while ((gap < j &&
+                (prevIdx = j - gap, (uint)packets[prevIdx * 4 + 2] < sortKey)))
             {
-                uVar4 = puVar12[iVar5 * 4 + 1];
-                *(undefined4*)(iVar10 + -0x10) = puVar12[iVar5 * 4];
-                *(undefined4*)(iVar10 + -0xc) = uVar4;
-                uVar4 = puVar12[iVar5 * 4 + 3];
-                *(undefined4*)(iVar10 + -8) = puVar12[iVar5 * 4 + 2];
-                *(undefined4*)(iVar10 + -4) = uVar4;
-                iVar10 = iVar10 + iVar7 * -0x10;
-                iVar12 = iVar12 - iVar7;
+                tmpWord = packets[prevIdx * 4 + 1];
+                *(undefined4*)(insertPos + -0x10) = packets[prevIdx * 4];
+                *(undefined4*)(insertPos + -0xc) = tmpWord;
+                tmpWord = packets[prevIdx * 4 + 3];
+                *(undefined4*)(insertPos + -8) = packets[prevIdx * 4 + 2];
+                *(undefined4*)(insertPos + -4) = tmpWord;
+                insertPos = insertPos + gap * -0x10;
+                j = j - gap;
             }
-            puVar12[iVar12 * 4] = uVar8;
-            puVar12[iVar12 * 4 + 1] = uVar2;
-            puVar12[iVar12 * 4 + 2] = uVar9;
-            puVar12[iVar12 * 4 + 3] = uVar3;
-            puVar11 = puVar11 + 4;
-            iVar1 = iVar1 + 0x10;
+            packets[j * 4] = word0;
+            packets[j * 4 + 1] = word1;
+            packets[j * 4 + 2] = sortKey;
+            packets[j * 4 + 3] = word3;
+            src = src + 4;
+            byteOff = byteOff + 0x10;
         }
     }
     return;
@@ -1354,10 +1354,10 @@ void lightmap_sortQueuedRenderPackets(void)
  */
 void lightmap_renderQueuedObject(ushort* object)
 {
-    int iVar1;
+    int val;
 
-    iVar1 = FUN_80017a54((int)object);
-    if (*(int*)(iVar1 + 0x58) == 0)
+    val = FUN_80017a54((int)object);
+    if (*(int*)(val + 0x58) == 0)
     {
         (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, object);
         FUN_8003f9f8();
@@ -1367,7 +1367,7 @@ void lightmap_renderQueuedObject(ushort* object)
         {
             if (*(short*)(*(int*)(object + 0x28) + 0x48) == 3)
             {
-                FUN_80060a64(object, iVar1);
+                FUN_80060a64(object, val);
             }
         }
         else
@@ -1378,7 +1378,7 @@ void lightmap_renderQueuedObject(ushort* object)
     }
     else
     {
-        FUN_8003d97c(object, iVar1);
+        FUN_8003d97c(object, val);
     }
     return;
 }
@@ -1398,47 +1398,47 @@ void lightmap_renderQueuedObject(ushort* object)
  */
 void lightmap_flushQueuedRenderPackets(void)
 {
-    byte bVar2;
-    float* pfVar1;
-    int iVar3;
-    int iVar4;
-    int iVar5;
-    int* piVar6;
-    undefined4 local_88;
-    uint local_84;
-    undefined4 local_80;
-    uint local_7c;
-    undefined4 local_78;
-    uint local_74;
-    float afStack_70[28];
+    byte bval;
+    float* mtx;
+    int entryObj;
+    int ref;
+    int i;
+    int* packet;
+    undefined4 convHi0;
+    uint convLo0;
+    undefined4 convHi1;
+    uint convLo1;
+    undefined4 convHi2;
+    uint convLo2;
+    float mtxBuf[28];
 
     FUN_80286830();
     lightmap_sortQueuedRenderPackets();
-    piVar6 = &DAT_8037ed20;
-    for (iVar5 = 0; iVar5 < DAT_803ddab0; iVar5 = iVar5 + 1)
+    packet = &DAT_8037ed20;
+    for (i = 0; i < DAT_803ddab0; i = i + 1)
     {
-        switch (piVar6[3])
+        switch (packet[3])
         {
         case 0:
-            expgfx_renderSourcePools(*piVar6, 0);
-            lightmap_renderQueuedObject((ushort*)*piVar6);
-            expgfx_renderSourcePools(*piVar6, 1);
+            expgfx_renderSourcePools(*packet, 0);
+            lightmap_renderQueuedObject((ushort*)*packet);
+            expgfx_renderSourcePools(*packet, 1);
             break;
         case 1:
-            iVar3 = *piVar6;
-            FUN_80017a54(iVar3);
-            iVar4 = FUN_80017a98();
-            if (iVar3 == iVar4)
+            entryObj = *packet;
+            FUN_80017a54(entryObj);
+            ref = FUN_80017a98();
+            if (entryObj == ref)
             {
-                bVar2 = FUN_80294c20(iVar3);
-                if (bVar2 == 0)
+                bval = FUN_80294c20(entryObj);
+                if (bval == 0)
                 {
-                    FUN_802950c4(iVar3, '\x01', '\x01');
+                    FUN_802950c4(entryObj, '\x01', '\x01');
                 }
             }
             else
             {
-                FUN_800404cc(iVar3);
+                FUN_800404cc(entryObj);
             }
             break;
         case 2:
@@ -1448,51 +1448,51 @@ void lightmap_flushQueuedRenderPackets(void)
             break;
         case 3:
             FUN_80006994();
-            iVar4 = FUN_80017a54(*piVar6);
-            FUN_80060a64((ushort*)*piVar6, iVar4);
+            ref = FUN_80017a54(*packet);
+            FUN_80060a64((ushort*)*packet, ref);
             FUN_80006988();
             break;
         case 4:
-            iVar4 = piVar6[1];
+            ref = packet[1];
             FUN_8025a608(0, 1, 0, 1, 0, 0, 2);
             FUN_8025a608(2, 0, 0, 1, 0, 0, 2);
-            FUN_80080f88(0, (byte*)&local_78, (byte*)((int)&local_78 + 1), (byte*)((int)&local_78 + 2));
-            local_74 = local_78;
-            FUN_8025a2ec(0, &local_74);
+            FUN_80080f88(0, (byte*)&convHi2, (byte*)((int)&convHi2 + 1), (byte*)((int)&convHi2 + 2));
+            convLo2 = convHi2;
+            FUN_8025a2ec(0, &convLo2);
             FUN_8025a5bc(1);
-            pfVar1 = (float*)FUN_80006974();
-            FUN_80247618(pfVar1, (float*)(iVar4 + 0xc), afStack_70);
-            FUN_8005fab0(iVar4, afStack_70);
-            FUN_8005daec(*piVar6, piVar6[1], afStack_70);
+            mtx = (float*)FUN_80006974();
+            FUN_80247618(mtx, (float*)(ref + 0xc), mtxBuf);
+            FUN_8005fab0(ref, mtxBuf);
+            FUN_8005daec(*packet, packet[1], mtxBuf);
             break;
         case 5:
-            iVar4 = piVar6[1];
+            ref = packet[1];
             FUN_8025a608(0, 1, 0, 1, 0, 0, 2);
             FUN_8025a608(2, 0, 0, 1, 0, 0, 2);
-            FUN_80080f88(0, (byte*)&local_80, (byte*)((int)&local_80 + 1), (byte*)((int)&local_80 + 2));
-            local_7c = local_80;
-            FUN_8025a2ec(0, &local_7c);
+            FUN_80080f88(0, (byte*)&convHi1, (byte*)((int)&convHi1 + 1), (byte*)((int)&convHi1 + 2));
+            convLo1 = convHi1;
+            FUN_8025a2ec(0, &convLo1);
             FUN_8025a5bc(1);
-            pfVar1 = (float*)FUN_80006974();
-            FUN_80247618(pfVar1, (float*)(iVar4 + 0xc), afStack_70);
-            FUN_8005fab0(iVar4, afStack_70);
-            FUN_8005d984(*piVar6, piVar6[1], afStack_70);
+            mtx = (float*)FUN_80006974();
+            FUN_80247618(mtx, (float*)(ref + 0xc), mtxBuf);
+            FUN_8005fab0(ref, mtxBuf);
+            FUN_8005d984(*packet, packet[1], mtxBuf);
             break;
         case 6:
-            iVar4 = piVar6[1];
+            ref = packet[1];
             FUN_8025a608(0, 1, 0, 1, 0, 0, 2);
             FUN_8025a608(2, 0, 0, 1, 0, 0, 2);
-            FUN_80080f88(0, (byte*)&local_88, (byte*)((int)&local_88 + 1), (byte*)((int)&local_88 + 2));
-            local_84 = local_88;
-            FUN_8025a2ec(0, &local_84);
+            FUN_80080f88(0, (byte*)&convHi0, (byte*)((int)&convHi0 + 1), (byte*)((int)&convHi0 + 2));
+            convLo0 = convHi0;
+            FUN_8025a2ec(0, &convLo0);
             FUN_8025a5bc(1);
-            pfVar1 = (float*)FUN_80006974();
-            FUN_80247618(pfVar1, (float*)(iVar4 + 0xc), afStack_70);
-            FUN_8005fab0(iVar4, afStack_70);
-            FUN_8005d85c(*piVar6, piVar6[1], afStack_70);
+            mtx = (float*)FUN_80006974();
+            FUN_80247618(mtx, (float*)(ref + 0xc), mtxBuf);
+            FUN_8005fab0(ref, mtxBuf);
+            FUN_8005d85c(*packet, packet[1], mtxBuf);
             break;
         case 7:
-            drawGlow(*piVar6, piVar6[1]);
+            drawGlow(*packet, packet[1]);
             break;
         case 8:
             FUN_8006f09c();
@@ -1500,7 +1500,7 @@ void lightmap_flushQueuedRenderPackets(void)
         case 9:
             (**(code**)(*DAT_803dd718 + 0xc))(0, 0);
         }
-        piVar6 = piVar6 + 4;
+        packet = packet + 4;
     }
     FUN_8028687c();
     return;
