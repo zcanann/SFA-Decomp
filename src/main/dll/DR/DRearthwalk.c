@@ -54,43 +54,15 @@ sizeof
 );
 
 
-extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
-extern double FUN_80017708();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017a50();
-extern int FUN_80017a5c();
-extern undefined4 FUN_80017a6c();
-extern int FUN_80017a98();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ac8();
-extern uint FUN_80017ae8();
-extern undefined4 FUN_800305c4();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
 extern undefined4 ObjPath_GetPointLocalMtx();
 extern undefined4 ObjPath_GetPointModelMtx();
 extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_8004036c();
-extern undefined4 FUN_80040a88();
-extern undefined4 FUN_80041ff8();
-extern undefined4 FUN_80043030();
-extern undefined4 FUN_80081110();
-extern undefined4 FUN_8011e800();
-extern undefined4 FUN_80247618();
-extern undefined4 FUN_80247734();
-extern undefined4 FUN_80286834();
-extern int FUN_8028683c();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_80294c30();
-extern int FUN_80294cf8();
-extern undefined4 FUN_80294d18();
 
-extern undefined4 DAT_803dccc0;
-extern undefined4* DAT_803dd6e8;
 extern f64 DOUBLE_803e6198;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E6168;
