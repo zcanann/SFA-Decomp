@@ -2790,14 +2790,14 @@ u8 getSaveGameLoadStatus(void) { return lbl_803DD488; }
 void setSaveGameLoadingFlag(void) { if (lbl_803DD488 == 2) lbl_803DD488 = 1; }
 s32 isSaveGameLoading(void) { return lbl_803DD488 == 2; }
 
-void Carryable_init(int param_1, int param_2)
+void Carryable_init(int obj, int state)
 {
-    ObjGroup_AddObject(param_1, 0x10);
-    *(undefined2*)(param_2 + 2) = 0;
-    *(undefined*)(param_2 + 5) = 0;
-    *(undefined*)(param_2 + 4) = 0;
-    *(undefined*)(param_2 + 6) = 0;
-    *(undefined4*)(param_1 + 0xf8) = 0;
+    ObjGroup_AddObject(obj, 0x10);
+    *(undefined2*)(state + 2) = 0;
+    *(undefined*)(state + 5) = 0;
+    *(undefined*)(state + 4) = 0;
+    *(undefined*)(state + 6) = 0;
+    *(undefined4*)(obj + 0xf8) = 0;
 }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
@@ -3758,7 +3758,7 @@ extern f32 lbl_803E0A64;
 extern f32 lbl_803E0A68;
 extern f32 lbl_803E0A6C;
 
-void dll_6B_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_6B_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -3824,9 +3824,9 @@ void dll_6B_func03(int param_1, int param_2, int param_3, uint param_4)
     e[5].y = lbl_803E0A6C;
     e[5].z = lbl_803E0A68;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0A6C;
     buf.pos[1] = lbl_803E0A6C;
     buf.pos[2] = lbl_803E0A6C;
@@ -3849,14 +3849,14 @@ void dll_6B_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[108];
     buf.cmds = buf.entries;
     buf.flags = 0x4000010;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (ctx == 0)
         {
-            buf.pos[0] = lbl_803E0A6C + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0A6C + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0A6C + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0A6C + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0A6C + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0A6C + ((PartFxSpawnParams*)posSource)->unk14;
         }
         else
         {
@@ -4114,7 +4114,7 @@ extern f32 lbl_803E0D14;
 extern f32 lbl_803E0D18;
 extern f32 lbl_803E0D1C;
 
-void dll_59_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_59_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -4201,9 +4201,9 @@ void dll_59_func03(int param_1, int param_2, int param_3, uint param_4)
     e[8].y = lbl_803E0708;
     e[8].z = lbl_803E0708;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0708;
     buf.pos[1] = lbl_803E0708;
     buf.pos[2] = lbl_803E0708;
@@ -4226,14 +4226,14 @@ void dll_59_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[300];
     buf.cmds = buf.entries;
     buf.flags = 0x4000000;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (ctx == 0)
         {
-            buf.pos[0] = lbl_803E0708 + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0708 + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0708 + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0708 + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0708 + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0708 + ((PartFxSpawnParams*)posSource)->unk14;
         }
         else
         {
@@ -4245,7 +4245,7 @@ void dll_59_func03(int param_1, int param_2, int param_3, uint param_4)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x11, (u8*)(int)lbl_80311C58, 8, &base[172], 0xc0d, 0);
 }
 
-void dll_5C_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_5C_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -4346,9 +4346,9 @@ void dll_5C_func03(int param_1, int param_2, int param_3, uint param_4)
     e[10].y = lbl_803E0774;
     e[10].z = lbl_803E0760;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E078C;
     buf.pos[1] = lbl_803E078C;
     buf.pos[2] = lbl_803E078C;
@@ -4371,14 +4371,14 @@ void dll_5C_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[488];
     buf.cmds = buf.entries;
     buf.flags = 0xc000040;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (ctx == 0)
         {
-            buf.pos[0] = lbl_803E078C + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E078C + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E078C + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E078C + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E078C + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E078C + ((PartFxSpawnParams*)posSource)->unk14;
         }
         else
         {
@@ -4390,7 +4390,7 @@ void dll_5C_func03(int param_1, int param_2, int param_3, uint param_4)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80311F20, 0x18, &base[212], 0x20b, 0);
 }
 
-void dll_5D_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_5D_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -4491,9 +4491,9 @@ void dll_5D_func03(int param_1, int param_2, int param_3, uint param_4)
     e[10].y = lbl_803E07A4;
     e[10].z = lbl_803E0790;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E07BC;
     buf.pos[1] = lbl_803E07BC;
     buf.pos[2] = lbl_803E07BC;
@@ -4516,14 +4516,14 @@ void dll_5D_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[488];
     buf.cmds = buf.entries;
     buf.flags = 0xc000040;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (ctx == 0)
         {
-            buf.pos[0] = lbl_803E07BC + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E07BC + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E07BC + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E07BC + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E07BC + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E07BC + ((PartFxSpawnParams*)posSource)->unk14;
         }
         else
         {
@@ -4535,7 +4535,7 @@ void dll_5D_func03(int param_1, int param_2, int param_3, uint param_4)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80312130, 0x18, &base[212], 0x20b, 0);
 }
 
-void dll_5F_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_5F_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -4650,9 +4650,9 @@ void dll_5F_func03(int param_1, int param_2, int param_3, uint param_4)
     e[12].y = lbl_803E0828;
     e[12].z = lbl_803E0804;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0828;
     buf.pos[1] = lbl_803E0828;
     buf.pos[2] = lbl_803E0828;
@@ -4675,14 +4675,14 @@ void dll_5F_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[284];
     buf.cmds = buf.entries;
     buf.flags = 0x4000002;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (ctx == 0)
         {
-            buf.pos[0] = lbl_803E0828 + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0828 + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0828 + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0828 + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0828 + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0828 + ((PartFxSpawnParams*)posSource)->unk14;
         }
         else
         {
@@ -4697,7 +4697,7 @@ void dll_5F_func03(int param_1, int param_2, int param_3, uint param_4)
 extern f32 lbl_803E086C;
 extern f32 lbl_803E0888;
 
-void dll_61_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
+void dll_61_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
     {
@@ -4747,7 +4747,7 @@ void dll_61_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[3].mode = 0x80;
     e[3].x = lbl_803E0858;
     e[3].y = lbl_803E0858;
-    e[3].z = (f32) * (s16*)param_1;
+    e[3].z = (f32) * (s16*)sourceObj;
     e[4].layer = 0;
     e[4].flags = 0x7a;
     e[4].tex = (void*)0;
@@ -4828,8 +4828,8 @@ void dll_61_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[14].y = lbl_803E0858;
     e[14].z = lbl_803E0858;
     buf.v58 = 0;
-    buf.ctx = param_1;
-    buf.v44 = param_2;
+    buf.ctx = sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0858;
     buf.pos[1] = lbl_803E0864;
     buf.pos[2] = lbl_803E0888;
@@ -4852,26 +4852,26 @@ void dll_61_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[0xbc];
     buf.cmds = buf.entries;
     buf.flags = 0x4000010;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if (param_1 != 0)
+        if (sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E0858 + ((GameObject*)param_1)->anim.worldPosX;
-            buf.pos[1] = lbl_803E0864 + ((GameObject*)param_1)->anim.worldPosY;
-            buf.pos[2] = lbl_803E0888 + ((GameObject*)param_1)->anim.worldPosZ;
+            buf.pos[0] = lbl_803E0858 + ((GameObject*)sourceObj)->anim.worldPosX;
+            buf.pos[1] = lbl_803E0864 + ((GameObject*)sourceObj)->anim.worldPosY;
+            buf.pos[2] = lbl_803E0888 + ((GameObject*)sourceObj)->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = lbl_803E0858 + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0864 + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0888 + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0858 + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0864 + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0888 + ((PartFxSpawnParams*)posSource)->unk14;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 9, &base[0x0], 8, &base[0x5c], 0x90, 0);
 }
 
-void dll_62_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_62_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -4992,9 +4992,9 @@ void dll_62_func03(int param_1, int param_2, int param_3, uint param_4)
     e[13].y = lbl_803E08A0;
     e[13].z = lbl_803E08B0;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0898;
     buf.pos[1] = lbl_803E0898;
     buf.pos[2] = lbl_803E0898;
@@ -5017,14 +5017,14 @@ void dll_62_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&lbl_803129C8[488];
     buf.cmds = buf.entries;
     buf.flags = 0xc0400c0;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (ctx == 0)
         {
-            buf.pos[0] = lbl_803E0898 + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0898 + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0898 + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0898 + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0898 + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0898 + ((PartFxSpawnParams*)posSource)->unk14;
         }
         else
         {
@@ -5036,7 +5036,7 @@ void dll_62_func03(int param_1, int param_2, int param_3, uint param_4)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, &lbl_803129C8[0], 0x18, &lbl_803129C8[212], 0x5e0, 0);
 }
 
-void dll_64_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
+void dll_64_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
     {
@@ -5059,11 +5059,11 @@ void dll_64_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     GfxCmd* e;
     uint flag;
     u8* base = (u8*)(int)lbl_80312D18;
-    if (param_2 == 1)
+    if (variant == 1)
     {
         *(s16*)&base[0x112] = 0;
     }
-    flag = *(u8*)(*(u8**)&((GameObject*)param_1)->anim.placementData + 0x1a);
+    flag = *(u8*)(*(u8**)&((GameObject*)sourceObj)->anim.placementData + 0x1a);
     e = buf.entries;
     e[0].layer = 0;
     e[0].flags = 7;
@@ -5129,8 +5129,8 @@ void dll_64_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[8].y = lbl_803E0918;
     e[8].z = lbl_803E0920;
     buf.v58 = 0;
-    buf.ctx = param_1;
-    buf.v44 = param_2;
+    buf.ctx = sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0918;
     buf.pos[1] = lbl_803E0918;
     buf.pos[2] = lbl_803E0918;
@@ -5160,7 +5160,7 @@ void dll_64_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[0x11c];
     buf.cmds = buf.entries;
     buf.flags = 0x4040080;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (buf.ctx != 0)
@@ -5171,15 +5171,15 @@ void dll_64_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         }
         else
         {
-            buf.pos[0] += ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] += ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] += ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] += ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] += ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] += ((PartFxSpawnParams*)posSource)->unk14;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8*)(int)lbl_80312D18, 0xc, &base[0x8c], 0x5e0, 0);
 }
 
-void dll_65_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_65_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -5293,9 +5293,9 @@ void dll_65_func03(int param_1, int param_2, int param_3, uint param_4)
     e[12].y = lbl_803E0938;
     e[12].z = lbl_803E0938;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0958;
     buf.pos[1] = lbl_803E0958;
     buf.pos[2] = lbl_803E0958;
@@ -5318,14 +5318,14 @@ void dll_65_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&lbl_80312E58[284];
     buf.cmds = buf.entries;
     buf.flags = 0x40000c0;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (ctx == 0)
         {
-            buf.pos[0] = lbl_803E0958 + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0958 + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0958 + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0958 + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0958 + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0958 + ((PartFxSpawnParams*)posSource)->unk14;
         }
         else
         {
@@ -5337,7 +5337,7 @@ void dll_65_func03(int param_1, int param_2, int param_3, uint param_4)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, &lbl_80312E58[0], 0xc, &lbl_80312E58[140], 0x40, 0);
 }
 
-void dll_66_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_66_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -5493,9 +5493,9 @@ void dll_66_func03(int param_1, int param_2, int param_3, uint param_4)
     e[18].y = lbl_803E09A0;
     e[18].z = lbl_803E09A4;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E09C0;
     buf.pos[1] = lbl_803E09C0;
     buf.pos[2] = lbl_803E09C0;
@@ -5518,14 +5518,14 @@ void dll_66_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&lbl_803131A8[488];
     buf.cmds = buf.entries;
     buf.flags = 0xc010080;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (ctx == 0)
         {
-            buf.pos[0] = lbl_803E09C0 + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E09C0 + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E09C0 + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E09C0 + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E09C0 + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E09C0 + ((PartFxSpawnParams*)posSource)->unk14;
         }
         else
         {
@@ -5537,7 +5537,7 @@ void dll_66_func03(int param_1, int param_2, int param_3, uint param_4)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, &lbl_803131A8[0], 0x18, &lbl_803131A8[212], 0x155, 0);
 }
 
-void dll_67_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_67_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -5610,9 +5610,9 @@ void dll_67_func03(int param_1, int param_2, int param_3, uint param_4)
     e[6].y = lbl_803E09D8;
     e[6].z = lbl_803E09C8;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E09DC;
     buf.pos[1] = lbl_803E09DC;
     buf.pos[2] = lbl_803E09DC;
@@ -5635,14 +5635,14 @@ void dll_67_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[488];
     buf.cmds = buf.entries;
     buf.flags = 0xc010040;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (ctx == 0)
         {
-            buf.pos[0] = lbl_803E09DC + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E09DC + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E09DC + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E09DC + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E09DC + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E09DC + ((PartFxSpawnParams*)posSource)->unk14;
         }
         else
         {
@@ -5654,7 +5654,7 @@ void dll_67_func03(int param_1, int param_2, int param_3, uint param_4)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_803133B8, 0x18, &base[212], 0xe3, 0);
 }
 
-void dll_68_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_68_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -5755,9 +5755,9 @@ void dll_68_func03(int param_1, int param_2, int param_3, uint param_4)
     e[10].y = lbl_803E09E0;
     e[10].z = lbl_803E09F8;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E09F8;
     buf.pos[1] = lbl_803E09F8;
     buf.pos[2] = lbl_803E09F8;
@@ -5780,14 +5780,14 @@ void dll_68_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[488];
     buf.cmds = buf.entries;
     buf.flags = 0xc0100c0;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (ctx == 0)
         {
-            buf.pos[0] = lbl_803E09F8 + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E09F8 + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E09F8 + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E09F8 + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E09F8 + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E09F8 + ((PartFxSpawnParams*)posSource)->unk14;
         }
         else
         {
@@ -5801,7 +5801,7 @@ void dll_68_func03(int param_1, int param_2, int param_3, uint param_4)
 
 extern f32 lbl_803E0A00, lbl_803E0A04, lbl_803E0A08, lbl_803E0A0C, lbl_803E0A10, lbl_803E0A14, lbl_803E0A18;
 
-void dll_69_func03(u8* param_1, int param_2, u8* param_3, uint param_4, int param_5, int* param_6)
+void dll_69_func03(u8* sourceObj, int variant, u8* posSource, uint flags, int param_5, int* param_6)
 {
     struct
     {
@@ -5847,9 +5847,9 @@ void dll_69_func03(u8* param_1, int param_2, u8* param_3, uint param_4, int para
     entries[1].flags = 8;
     entries[1].tex = &base[0x68];
     entries[1].mode = 2;
-    if (param_1 != 0)
+    if (sourceObj != 0)
     {
-        f32 s = ((GameObject*)param_1)->anim.rootMotionScale;
+        f32 s = ((GameObject*)sourceObj)->anim.rootMotionScale;
         entries[1].x = lbl_803E0A04 * s;
         entries[1].y = lbl_803E0A08 * s;
         entries[1].z = lbl_803E0A04 * s;
@@ -5866,9 +5866,9 @@ void dll_69_func03(u8* param_1, int param_2, u8* param_3, uint param_4, int para
     entries[2].mode = 0x80;
     entries[2].x = lbl_803E0A00;
     entries[2].y = lbl_803E0A00;
-    if (param_1 != 0)
+    if (sourceObj != 0)
     {
-        entries[2].z = (f32) * (s16*)param_1;
+        entries[2].z = (f32) * (s16*)sourceObj;
     }
     else
     {
@@ -5889,7 +5889,7 @@ void dll_69_func03(u8* param_1, int param_2, u8* param_3, uint param_4, int para
     entries[4].y = (f32)b;
     entries[4].z = (f32)c;
     e = &entries[5];
-    if (param_2 == 0)
+    if (variant == 0)
     {
         e->layer = 2;
         e->flags = 0x3b;
@@ -5928,13 +5928,13 @@ void dll_69_func03(u8* param_1, int param_2, u8* param_3, uint param_4, int para
     e[3].x = (f32)a;
     e[3].y = (f32)b;
     e[3].z = (f32)c;
-    buf.v58 = param_2;
-    buf.ctx = param_1;
-    buf.v44 = param_2;
+    buf.v58 = variant;
+    buf.ctx = sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0A00;
-    if (param_3 != 0)
+    if (posSource != 0)
     {
-        buf.pos[1] = ((PartFxSpawnParams*)param_3)->unk10;
+        buf.pos[1] = ((PartFxSpawnParams*)posSource)->unk10;
     }
     else
     {
@@ -5960,8 +5960,8 @@ void dll_69_func03(u8* param_1, int param_2, u8* param_3, uint param_4, int para
     buf.hw[6] = *(s16*)&base[0x84];
     buf.cmds = buf.entries;
     buf.flags = 0x4000000;
-    buf.flags |= param_4 | 0x80;
-    if (param_2 == 2)
+    buf.flags |= flags | 0x80;
+    if (variant == 2)
     {
         buf.flags ^= 0x40000;
     }
@@ -5979,16 +5979,16 @@ void dll_69_func03(u8* param_1, int param_2, u8* param_3, uint param_4, int para
         }
         else
         {
-            buf.pos[0] += ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] += ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] += ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] += ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] += ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] += ((PartFxSpawnParams*)posSource)->unk14;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 8, (u8*)(int)lbl_803137F8, 4, &base[0x50], param_2 == 2 ? 0xc11 : 0x5e0,
+    (*gModgfxInterface)->spawnEffect(&buf, 0, 8, (u8*)(int)lbl_803137F8, 4, &base[0x50], variant == 2 ? 0xc11 : 0x5e0,
                                      0);
 }
 
-void dll_6A_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
+void dll_6A_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
     {
@@ -6080,8 +6080,8 @@ void dll_6A_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[9].y = lbl_803E0A28;
     e[9].z = lbl_803E0A28;
     buf.v58 = 0;
-    buf.ctx = param_1;
-    buf.v44 = param_2;
+    buf.ctx = sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0A28;
     buf.pos[1] = lbl_803E0A28;
     buf.pos[2] = lbl_803E0A28;
@@ -6104,26 +6104,26 @@ void dll_6A_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     buf.hw[6] = *(s16*)&lbl_803138A0[364];
     buf.cmds = buf.entries;
     buf.flags = 0x5000004;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if (param_1 != 0)
+        if (sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E0A28 + ((GameObject*)param_1)->anim.worldPosX;
-            buf.pos[1] = lbl_803E0A28 + ((GameObject*)param_1)->anim.worldPosY;
-            buf.pos[2] = lbl_803E0A28 + ((GameObject*)param_1)->anim.worldPosZ;
+            buf.pos[0] = lbl_803E0A28 + ((GameObject*)sourceObj)->anim.worldPosX;
+            buf.pos[1] = lbl_803E0A28 + ((GameObject*)sourceObj)->anim.worldPosY;
+            buf.pos[2] = lbl_803E0A28 + ((GameObject*)sourceObj)->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = lbl_803E0A28 + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0A28 + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0A28 + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0A28 + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0A28 + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0A28 + ((PartFxSpawnParams*)posSource)->unk14;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, &lbl_803138A0[0], 0x10, &lbl_803138A0[180], 0x3e, 0);
 }
 
-void dll_6D_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_6D_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -6189,9 +6189,9 @@ void dll_6D_func03(int param_1, int param_2, int param_3, uint param_4)
     e[5].y = lbl_803E0A78;
     e[5].z = lbl_803E0A78;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0A90;
     buf.pos[1] = lbl_803E0A90;
     buf.pos[2] = lbl_803E0A90;
@@ -6214,14 +6214,14 @@ void dll_6D_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[284];
     buf.cmds = buf.entries;
     buf.flags = 0x4000004;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (ctx == 0)
         {
-            buf.pos[0] = lbl_803E0A90 + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0A90 + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0A90 + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0A90 + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0A90 + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0A90 + ((PartFxSpawnParams*)posSource)->unk14;
         }
         else
         {
@@ -6233,7 +6233,7 @@ void dll_6D_func03(int param_1, int param_2, int param_3, uint param_4)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8*)(int)lbl_80313AF0, 0xc, &base[140], 0x34, 0);
 }
 
-void dll_6E_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_6E_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -6299,9 +6299,9 @@ void dll_6E_func03(int param_1, int param_2, int param_3, uint param_4)
     e[5].y = lbl_803E0AAC;
     e[5].z = lbl_803E0AA8;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0AAC;
     buf.pos[1] = lbl_803E0AAC;
     buf.pos[2] = lbl_803E0AAC;
@@ -6324,14 +6324,14 @@ void dll_6E_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[108];
     buf.cmds = buf.entries;
     buf.flags = 0x4000010;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (ctx == 0)
         {
-            buf.pos[0] = lbl_803E0AAC + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0AAC + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0AAC + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0AAC + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0AAC + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0AAC + ((PartFxSpawnParams*)posSource)->unk14;
         }
         else
         {
@@ -6343,7 +6343,7 @@ void dll_6E_func03(int param_1, int param_2, int param_3, uint param_4)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 5, (u8*)(int)lbl_80313C30, 4, &base[52], 0x5e, 0);
 }
 
-void dll_6F_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_6F_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -6577,9 +6577,9 @@ void dll_6F_func03(int param_1, int param_2, int param_3, uint param_4)
     e[29].y = lbl_803E0AC0;
     e[29].z = lbl_803E0ADC;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0AF0;
     buf.pos[1] = lbl_803E0AF0;
     buf.pos[2] = lbl_803E0AF0;
@@ -6602,14 +6602,14 @@ void dll_6F_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[436];
     buf.cmds = buf.entries;
     buf.flags = 0x4000084;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (ctx == 0)
         {
-            buf.pos[0] = lbl_803E0AF0 + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0AF0 + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0AF0 + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0AF0 + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0AF0 + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0AF0 + ((PartFxSpawnParams*)posSource)->unk14;
         }
         else
         {
@@ -6621,7 +6621,7 @@ void dll_6F_func03(int param_1, int param_2, int param_3, uint param_4)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x18, (u8*)(int)lbl_80313CC0, 0x10, &base[240], 0x48, 0);
 }
 
-void dll_70_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_70_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -6834,9 +6834,9 @@ void dll_70_func03(int param_1, int param_2, int param_3, uint param_4)
     e[26].y = lbl_803E0B2C;
     e[26].z = lbl_803E0AF8;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0B30;
     buf.pos[1] = lbl_803E0B30;
     buf.pos[2] = lbl_803E0B30;
@@ -6859,14 +6859,14 @@ void dll_70_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[416];
     buf.cmds = buf.entries;
     buf.flags = 0x1000082;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (ctx == 0)
         {
-            buf.pos[0] = lbl_803E0B30 + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0B30 + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0B30 + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0B30 + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0B30 + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0B30 + ((PartFxSpawnParams*)posSource)->unk14;
         }
         else
         {
@@ -6878,7 +6878,7 @@ void dll_70_func03(int param_1, int param_2, int param_3, uint param_4)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, (u8*)(int)lbl_80313E98, 0x10, &base[180], 0x45, 0);
 }
 
-void dll_71_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_71_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -7000,9 +7000,9 @@ void dll_71_func03(int param_1, int param_2, int param_3, uint param_4)
     e[13].y = lbl_803E0B44;
     e[13].z = lbl_803E0B38;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0B58;
     buf.pos[1] = lbl_803E0B58;
     buf.pos[2] = lbl_803E0B58;
@@ -7025,14 +7025,14 @@ void dll_71_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[516];
     buf.cmds = buf.entries;
     buf.flags = 0xc0100c0;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (ctx == 0)
         {
-            buf.pos[0] = lbl_803E0B58 + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0B58 + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0B58 + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0B58 + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0B58 + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0B58 + ((PartFxSpawnParams*)posSource)->unk14;
         }
         else
         {
@@ -7044,7 +7044,7 @@ void dll_71_func03(int param_1, int param_2, int param_3, uint param_4)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80314060, 0x18, &base[212], 0x154, 0);
 }
 
-void dll_72_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_72_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -7138,9 +7138,9 @@ void dll_72_func03(int param_1, int param_2, int param_3, uint param_4)
     e[9].y = lbl_803E0B60;
     e[9].z = lbl_803E0B60;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0B7C;
     buf.pos[1] = lbl_803E0B7C;
     buf.pos[2] = lbl_803E0B7C;
@@ -7163,14 +7163,14 @@ void dll_72_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[516];
     buf.cmds = buf.entries;
     buf.flags = 0xc0100c0;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (ctx == 0)
         {
-            buf.pos[0] = lbl_803E0B7C + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0B7C + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0B7C + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0B7C + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0B7C + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0B7C + ((PartFxSpawnParams*)posSource)->unk14;
         }
         else
         {
@@ -7182,7 +7182,7 @@ void dll_72_func03(int param_1, int param_2, int param_3, uint param_4)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80314288, 0x18, &base[212], 0x154, 0);
 }
 
-void dll_73_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
+void dll_73_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
     {
@@ -7326,8 +7326,8 @@ void dll_73_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[16].y = lbl_803E0BAC;
     e[16].z = lbl_803E0B80;
     buf.v58 = 0;
-    buf.ctx = param_1;
-    buf.v44 = param_2;
+    buf.ctx = sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0B80;
     buf.pos[1] = lbl_803E0B80;
     buf.pos[2] = lbl_803E0B80;
@@ -7350,26 +7350,26 @@ void dll_73_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[516];
     buf.cmds = buf.entries;
     buf.flags = 0xc0104c0;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if (param_1 != 0)
+        if (sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E0B80 + ((GameObject*)param_1)->anim.worldPosX;
-            buf.pos[1] = lbl_803E0B80 + ((GameObject*)param_1)->anim.worldPosY;
-            buf.pos[2] = lbl_803E0B80 + ((GameObject*)param_1)->anim.worldPosZ;
+            buf.pos[0] = lbl_803E0B80 + ((GameObject*)sourceObj)->anim.worldPosX;
+            buf.pos[1] = lbl_803E0B80 + ((GameObject*)sourceObj)->anim.worldPosY;
+            buf.pos[2] = lbl_803E0B80 + ((GameObject*)sourceObj)->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = lbl_803E0B80 + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0B80 + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0B80 + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0B80 + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0B80 + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0B80 + ((PartFxSpawnParams*)posSource)->unk14;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_803144B0, 0x18, &base[212], 0xd9, 0);
 }
 
-void dll_76_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_76_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -7434,9 +7434,9 @@ void dll_76_func03(int param_1, int param_2, int param_3, uint param_4)
     e[5].y = lbl_803E0C44;
     e[5].z = lbl_803E0C48;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0C4C;
     buf.pos[1] = lbl_803E0C4C;
     buf.pos[2] = lbl_803E0C4C;
@@ -7459,7 +7459,7 @@ void dll_76_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&lbl_80314950[12];
     buf.cmds = buf.entries;
     buf.flags = 0x10c00;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if ((u32)ctx != 0)
@@ -7470,15 +7470,15 @@ void dll_76_func03(int param_1, int param_2, int param_3, uint param_4)
         }
         else
         {
-            buf.pos[0] = lbl_803E0C4C + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0C4C + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0C4C + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0C4C + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0C4C + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0C4C + ((PartFxSpawnParams*)posSource)->unk14;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);
 }
 
-void dll_77_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_77_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -7543,9 +7543,9 @@ void dll_77_func03(int param_1, int param_2, int param_3, uint param_4)
     e[5].y = lbl_803E0C5C;
     e[5].z = lbl_803E0C60;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0C64;
     buf.pos[1] = lbl_803E0C64;
     buf.pos[2] = lbl_803E0C64;
@@ -7568,7 +7568,7 @@ void dll_77_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&lbl_80314980[12];
     buf.cmds = buf.entries;
     buf.flags = 0x10c00;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if ((u32)ctx != 0)
@@ -7579,9 +7579,9 @@ void dll_77_func03(int param_1, int param_2, int param_3, uint param_4)
         }
         else
         {
-            buf.pos[0] = lbl_803E0C64 + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0C64 + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0C64 + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0C64 + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0C64 + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0C64 + ((PartFxSpawnParams*)posSource)->unk14;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);
@@ -7589,7 +7589,7 @@ void dll_77_func03(int param_1, int param_2, int param_3, uint param_4)
 
 extern f32 lbl_803E0C84;
 
-void dll_78_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
+void dll_78_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
     {
@@ -7623,9 +7623,9 @@ void dll_78_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[1].mode = 0x80;
     e[1].x = lbl_803E0C74;
     e[1].y = lbl_803E0C74;
-    if (param_3 != 0)
+    if (posSource != 0)
     {
-        e[1].z = (f32) * (s16*)param_3;
+        e[1].z = (f32) * (s16*)posSource;
     }
     else
     {
@@ -7649,7 +7649,7 @@ void dll_78_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[4].flags = 7;
     e[4].tex = &lbl_803149B0[256];
     e[4].mode = 2;
-    if (param_3 != 0)
+    if (posSource != 0)
     {
         e[4].x = lbl_803E0C70;
         e[4].y = lbl_803E0C80;
@@ -7665,11 +7665,11 @@ void dll_78_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[5].flags = 7;
     e[5].tex = &lbl_803149B0[256];
     e[5].mode = 2;
-    if (param_3 != 0)
+    if (posSource != 0)
     {
-        e[5].x = lbl_803E0C84 * (lbl_803E0C88 * (f32)((PartFxSpawnParams*)param_3)->unk4);
-        e[5].y = lbl_803E0C84 * (lbl_803E0C8C * (f32)((PartFxSpawnParams*)param_3)->unk4);
-        e[5].z = lbl_803E0C84 * (lbl_803E0C88 * (f32)((PartFxSpawnParams*)param_3)->unk4);
+        e[5].x = lbl_803E0C84 * (lbl_803E0C88 * (f32)((PartFxSpawnParams*)posSource)->unk4);
+        e[5].y = lbl_803E0C84 * (lbl_803E0C8C * (f32)((PartFxSpawnParams*)posSource)->unk4);
+        e[5].z = lbl_803E0C84 * (lbl_803E0C88 * (f32)((PartFxSpawnParams*)posSource)->unk4);
     }
     else
     {
@@ -7720,13 +7720,13 @@ void dll_78_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[11].y = lbl_803E0C74;
     e[11].z = lbl_803E0C74;
     buf.v58 = 0;
-    buf.ctx = param_1;
-    buf.v44 = param_2;
-    if (param_3 != 0)
+    buf.ctx = sourceObj;
+    buf.v44 = variant;
+    if (posSource != 0)
     {
-        buf.pos[0] = ((PartFxSpawnParams*)param_3)->unkC;
-        buf.pos[1] = ((PartFxSpawnParams*)param_3)->unk10;
-        buf.pos[2] = ((PartFxSpawnParams*)param_3)->unk14;
+        buf.pos[0] = ((PartFxSpawnParams*)posSource)->unkC;
+        buf.pos[1] = ((PartFxSpawnParams*)posSource)->unk10;
+        buf.pos[2] = ((PartFxSpawnParams*)posSource)->unk14;
     }
     else
     {
@@ -7753,7 +7753,7 @@ void dll_78_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     buf.hw[6] = *(s16*)&lbl_803149B0[284];
     buf.cmds = buf.entries;
     buf.flags = 0x4000400;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (buf.ctx != 0)
@@ -7764,9 +7764,9 @@ void dll_78_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         }
         else
         {
-            buf.pos[0] += ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] += ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] += ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] += ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] += ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] += ((PartFxSpawnParams*)posSource)->unk14;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, &lbl_803149B0[0], 0xc, &lbl_803149B0[140], 0x34, 0);
@@ -7792,7 +7792,7 @@ extern u8 lbl_80312790[];
 extern f32 lbl_803E0D08, lbl_803E0D0C, lbl_803E0D10, lbl_803E0D14, lbl_803E0D18, lbl_803E0D1C;
 extern f32 lbl_803E0D20, lbl_803E0D24, lbl_803E0D28, lbl_803E0D2C;
 
-int dll_7A_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
+int dll_7A_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
     {
@@ -7865,7 +7865,7 @@ int dll_7A_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     entries[5].y = lbl_803E0D08;
     entries[5].z = lbl_803E0D08;
     e = &entries[6];
-    if (param_2 == 0)
+    if (variant == 0)
     {
         e->layer = 3;
         e->flags = 0;
@@ -7876,9 +7876,9 @@ int dll_7A_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         e->z = lbl_803E0D28;
         e++;
     }
-    buf.ctx = param_1;
-    buf.v44 = param_2;
-    if (param_2 == 0)
+    buf.ctx = sourceObj;
+    buf.v44 = variant;
+    if (variant == 0)
     {
         buf.pos[0] = lbl_803E0D08;
         buf.pos[1] = lbl_803E0D08;
@@ -7909,7 +7909,7 @@ int dll_7A_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[0xbc];
     buf.cmds = buf.entries;
     buf.flags = 0x4000000;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (buf.ctx != 0)
@@ -7920,17 +7920,17 @@ int dll_7A_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         }
         else
         {
-            buf.pos[0] += ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] += ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] += ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] += ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] += ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] += ((PartFxSpawnParams*)posSource)->unk14;
         }
     }
-    if (param_2 == 0)
+    if (variant == 0)
     {
         buf.v58 = 0;
         ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_80314BD0, 8, &base[0x5c], 0x156, 0);
     }
-    else if (param_2 == 1)
+    else if (variant == 1)
     {
         buf.v58 = 0;
         ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_80314BD0, 8, &base[0x5c], 0xc0d, 0);
@@ -7938,7 +7938,7 @@ int dll_7A_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     return ret;
 }
 
-void dll_60_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
+void dll_60_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
     {
@@ -8056,8 +8056,8 @@ void dll_60_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[12].y = lbl_803E0840;
     e[12].z = lbl_803E0840;
     buf.v58 = 0;
-    buf.ctx = param_1;
-    buf.v44 = param_2;
+    buf.ctx = sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0830;
     buf.pos[1] = lbl_803E0840;
     buf.pos[2] = lbl_803E0830;
@@ -8080,7 +8080,7 @@ void dll_60_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[304];
     buf.cmds = e;
     buf.flags = 0x1000000;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (buf.ctx != 0)
@@ -8091,15 +8091,15 @@ void dll_60_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         }
         else
         {
-            buf.pos[0] = lbl_803E0830 + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0840 + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0830 + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0830 + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0840 + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0830 + ((PartFxSpawnParams*)posSource)->unk14;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8*)(int)lbl_80312790, 0xc, &base[140], 0x46, 0);
 }
 
-void dll_A3_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_A3_func03(int sourceObj, int variant, int posSource, uint flags)
 {
     struct
     {
@@ -8220,9 +8220,9 @@ void dll_A3_func03(int param_1, int param_2, int param_3, uint param_4)
     e[13].y = lbl_803E0968;
     e[13].z = lbl_803E0978;
     buf.v58 = 0;
-    ctx = param_1;
+    ctx = sourceObj;
     buf.ctx = ctx;
-    buf.v44 = param_2;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0984;
     buf.pos[1] = lbl_803E0984;
     buf.pos[2] = lbl_803E0984;
@@ -8245,14 +8245,14 @@ void dll_A3_func03(int param_1, int param_2, int param_3, uint param_4)
     buf.hw[6] = *(s16*)&lbl_80312F98[488];
     buf.cmds = buf.entries;
     buf.flags = 0xc0400c0;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (ctx == 0)
         {
-            buf.pos[0] = lbl_803E0984 + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0984 + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0984 + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0984 + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0984 + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0984 + ((PartFxSpawnParams*)posSource)->unk14;
         }
         else
         {
@@ -8268,7 +8268,7 @@ extern u8 lbl_803146D8[];
 extern f32 lbl_803E0BB8, lbl_803E0BBC, lbl_803E0BC0, lbl_803E0BC4, lbl_803E0BC8, lbl_803E0BCC;
 extern f32 lbl_803E0BD0, lbl_803E0BD4, lbl_803E0BD8, lbl_803E0BDC, lbl_803E0BE0, lbl_803E0BE4;
 
-void dll_74_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
+void dll_74_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
     {
@@ -8298,7 +8298,7 @@ void dll_74_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     entries[0].x = lbl_803E0BB8;
     entries[0].y = lbl_803E0BB8;
     entries[0].z = lbl_803E0BB8;
-    if (param_2 == 0)
+    if (variant == 0)
     {
         entries[1].layer = 0;
         entries[1].flags = 0x15;
@@ -8320,7 +8320,7 @@ void dll_74_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         entries[1].z = lbl_803E0BBC;
         e = &entries[2];
     }
-    if (param_2 == 0)
+    if (variant == 0)
     {
         e->layer = 0;
         e->flags = 0;
@@ -8356,7 +8356,7 @@ void dll_74_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[1].x = lbl_803E0BD8;
     e[1].y = lbl_803E0BB8;
     e[1].z = lbl_803E0BB8;
-    if (param_2 == 0)
+    if (variant == 0)
     {
         e[2].layer = 1;
         e[2].flags = 0x15;
@@ -8392,7 +8392,7 @@ void dll_74_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[1].x = lbl_803E0BD4;
     e[1].y = lbl_803E0BC0;
     e[1].z = lbl_803E0BD4;
-    if (param_2 == 0)
+    if (variant == 0)
     {
         e[2].layer = 2;
         e[2].flags = 0x15;
@@ -8422,8 +8422,8 @@ void dll_74_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[0].y = lbl_803E0BB8;
     e[0].z = lbl_803E0BB8;
     buf.v58 = 0;
-    buf.ctx = param_1;
-    buf.v44 = param_2;
+    buf.ctx = sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0BB8;
     buf.pos[1] = lbl_803E0BB8;
     buf.pos[2] = lbl_803E0BB8;
@@ -8446,23 +8446,23 @@ void dll_74_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[0x220];
     buf.cmds = buf.entries;
     buf.flags = 0xc0104c0;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if (param_1 != 0)
+        if (sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E0BB8 + ((GameObject*)param_1)->anim.localPosX;
-            buf.pos[1] = lbl_803E0BB8 + ((GameObject*)param_1)->anim.localPosY;
-            buf.pos[2] = lbl_803E0BB8 + ((GameObject*)param_1)->anim.localPosZ;
+            buf.pos[0] = lbl_803E0BB8 + ((GameObject*)sourceObj)->anim.localPosX;
+            buf.pos[1] = lbl_803E0BB8 + ((GameObject*)sourceObj)->anim.localPosY;
+            buf.pos[2] = lbl_803E0BB8 + ((GameObject*)sourceObj)->anim.localPosZ;
         }
         else
         {
-            buf.pos[0] = lbl_803E0BB8 + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0BB8 + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0BB8 + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0BB8 + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0BB8 + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0BB8 + ((PartFxSpawnParams*)posSource)->unk14;
         }
     }
-    if (param_2 == 0)
+    if (variant == 0)
     {
         (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, base, 0x18, &base[0xd4], 0x2e, 0);
     }
@@ -8477,7 +8477,7 @@ extern f32 lbl_803E08C8, lbl_803E08CC, lbl_803E08D0, lbl_803E08D4, lbl_803E08D8,
 extern f32 lbl_803E08E0, lbl_803E08E4, lbl_803E08E8, lbl_803E08EC, lbl_803E08F0, lbl_803E08F4;
 extern f32 lbl_803E08F8, lbl_803E08FC;
 
-void dll_63_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
+void dll_63_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
     {
@@ -8503,12 +8503,12 @@ void dll_63_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     int i;
     s16* p;
     u8* base = lbl_80312BD8;
-    if (param_2 == 1)
+    if (variant == 1)
     {
         *(s16*)&base[0x112] = 0;
     }
-    flag = *(u8*)(*(u8**)&((GameObject*)param_1)->anim.placementData + 0x1a);
-    if (param_2 == 2)
+    flag = *(u8*)(*(u8**)&((GameObject*)sourceObj)->anim.placementData + 0x1a);
+    if (variant == 2)
     {
         p = (s16*)base;
         for (i = 0; i < 14; i++)
@@ -8541,7 +8541,7 @@ void dll_63_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         }
     }
     entries = buf.entries;
-    if (param_2 == 2)
+    if (variant == 2)
     {
         entries[0].layer = 0;
         entries[0].flags = 7;
@@ -8584,7 +8584,7 @@ void dll_63_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e->x = lbl_803E08D4;
     e->y = lbl_803E08D4;
     e->z = lbl_803E08D4;
-    if (param_2 != 3 || param_3 == 0)
+    if (variant != 3 || posSource == 0)
     {
         e[1].layer = 0;
         e[1].flags = 7;
@@ -8604,7 +8604,7 @@ void dll_63_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     }
     else
     {
-        f32 s = ((PartFxSpawnParams*)param_3)->unk8;
+        f32 s = ((PartFxSpawnParams*)posSource)->unk8;
         e[1].layer = 0;
         e[1].flags = 7;
         e[1].tex = &base[0x100];
@@ -8713,8 +8713,8 @@ void dll_63_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[12].y = lbl_803E08D4;
     e[12].z = lbl_803E08D4;
     buf.v58 = 0;
-    buf.ctx = param_1;
-    buf.v44 = param_2;
+    buf.ctx = sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E08D4;
     buf.pos[1] = lbl_803E08F8;
     buf.pos[2] = lbl_803E08D4;
@@ -8744,7 +8744,7 @@ void dll_63_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[0x11c];
     buf.cmds = buf.entries;
     buf.flags = 0x40000c0;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (buf.ctx != 0)
@@ -8755,9 +8755,9 @@ void dll_63_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         }
         else
         {
-            buf.pos[0] += ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] += ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] += ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] += ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] += ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] += ((PartFxSpawnParams*)posSource)->unk14;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, base, 0xc, &base[0x8c], 0x40, 0);
@@ -8770,7 +8770,7 @@ extern f32 lbl_803E0CC8, lbl_803E0CCC, lbl_803E0CD0, lbl_803E0CD4, lbl_803E0CD8,
 extern f32 lbl_803E0CE0, lbl_803E0CE4, lbl_803E0CE8, lbl_803E0CEC, lbl_803E0CF0, lbl_803E0CF4;
 extern f32 lbl_803E0CF8, lbl_803E0CFC;
 
-int dll_79_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
+int dll_79_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
     {
@@ -8794,7 +8794,7 @@ int dll_79_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     int ret = 0;
     GfxCmd* entries = buf.entries;
     GfxCmd* e = entries;
-    if (param_2 == 0)
+    if (variant == 0)
     {
         e[0].layer = 0;
         e[0].flags = 9;
@@ -8812,7 +8812,7 @@ int dll_79_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         e[1].z = lbl_803E0CBC;
         e += 2;
     }
-    else if (param_2 == 1)
+    else if (variant == 1)
     {
         f32 t;
         *(s16*)&base[0xb2] = 0x50;
@@ -8849,7 +8849,7 @@ int dll_79_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         e[3].z = lbl_803E0CB0;
         e += 4;
     }
-    else if (param_2 == 2)
+    else if (variant == 2)
     {
         f32 t;
         *(s16*)&base[0xb2] = 0x50;
@@ -8886,7 +8886,7 @@ int dll_79_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         e[3].z = lbl_803E0CD0;
         e += 4;
     }
-    if (param_2 == 0)
+    if (variant == 0)
     {
         e[0].layer = 1;
         e[0].flags = 9;
@@ -8904,7 +8904,7 @@ int dll_79_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         e[1].z = lbl_803E0CEC;
         e += 2;
     }
-    else if (param_2 == 1)
+    else if (variant == 1)
     {
         e[0].layer = 1;
         e[0].flags = 9;
@@ -8929,7 +8929,7 @@ int dll_79_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         e[2].z = lbl_803E0CF4;
         e += 3;
     }
-    else if (param_2 == 2)
+    else if (variant == 2)
     {
         e[0].layer = 1;
         e[0].flags = 9;
@@ -8947,7 +8947,7 @@ int dll_79_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         e[1].z = lbl_803E0CB0;
         e += 2;
     }
-    if (param_2 == 0)
+    if (variant == 0)
     {
         e[0].layer = 1;
         e[0].flags = 9;
@@ -8958,7 +8958,7 @@ int dll_79_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         e[0].z = lbl_803E0CB0;
         e += 1;
     }
-    else if (param_2 == 1)
+    else if (variant == 1)
     {
         e[0].layer = 1;
         e[0].flags = 9;
@@ -8969,7 +8969,7 @@ int dll_79_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         e[0].z = lbl_803E0CB0;
         e += 1;
     }
-    else if (param_2 == 2)
+    else if (variant == 2)
     {
         e[0].layer = 1;
         e[0].flags = 9;
@@ -8980,7 +8980,7 @@ int dll_79_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         e[0].z = lbl_803E0CB0;
         e += 1;
     }
-    if (param_2 == 0)
+    if (variant == 0)
     {
         e[0].layer = 2;
         e[0].flags = 9;
@@ -8998,7 +8998,7 @@ int dll_79_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         e[1].z = lbl_803E0CB0;
         e += 2;
     }
-    else if (param_2 == 1)
+    else if (variant == 1)
     {
         e[0].layer = 2;
         e[0].flags = 9;
@@ -9009,7 +9009,7 @@ int dll_79_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         e[0].z = lbl_803E0CB0;
         e += 1;
     }
-    else if (param_2 == 2)
+    else if (variant == 2)
     {
         e[0].layer = 2;
         e[0].flags = 9;
@@ -9027,7 +9027,7 @@ int dll_79_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         e[1].z = lbl_803E0CB0;
         e += 2;
     }
-    if (param_2 == 2)
+    if (variant == 2)
     {
         e[0].layer = 3;
         e[0].flags = 0;
@@ -9038,9 +9038,9 @@ int dll_79_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         e[0].z = lbl_803E0CE8;
         e += 1;
     }
-    buf.ctx = param_1;
-    buf.v44 = param_2;
-    if (param_2 == 0)
+    buf.ctx = sourceObj;
+    buf.v44 = variant;
+    if (variant == 0)
     {
         buf.pos[0] = lbl_803E0CB0;
         buf.pos[1] = lbl_803E0CB0;
@@ -9071,7 +9071,7 @@ int dll_79_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[0xbc];
     buf.cmds = buf.entries;
     buf.flags = 0x4000000;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (buf.ctx != 0)
@@ -9082,23 +9082,23 @@ int dll_79_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         }
         else
         {
-            buf.pos[0] += ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] += ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] += ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] += ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] += ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] += ((PartFxSpawnParams*)posSource)->unk14;
         }
     }
-    if (param_2 == 0)
+    if (variant == 0)
     {
         buf.v58 = 0;
         ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_80314AF0, 8, &base[0x5c], 0x156, 0);
     }
-    else if (param_2 == 1)
+    else if (variant == 1)
     {
         buf.v58 = 0;
         buf.flags |= 4;
         ret = (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_80314AF0, 8, &base[0x5c], 0x89, 0);
     }
-    else if (param_2 == 2)
+    else if (variant == 2)
     {
         buf.v58 = 0;
         buf.flags |= 4;
@@ -9112,7 +9112,7 @@ extern f32 lbl_803E0D38, lbl_803E0D3C, lbl_803E0D40, lbl_803E0D44, lbl_803E0D48,
 extern f32 lbl_803E0D50, lbl_803E0D54, lbl_803E0D58, lbl_803E0D5C, lbl_803E0D60, lbl_803E0D64;
 extern f32 lbl_803E0D68, lbl_803E0D6C, lbl_803E0D70, lbl_803E0D74, lbl_803E0D78;
 
-void dll_7B_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
+void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
     {
@@ -9135,7 +9135,7 @@ void dll_7B_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     GfxCmd* entries = buf.entries;
     GfxCmd* e;
     u8* base = lbl_80314CB0;
-    if (param_2 == 1)
+    if (variant == 1)
     {
         *(s16*)&base[0x128] = 0x1130;
     }
@@ -9150,7 +9150,7 @@ void dll_7B_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     entries[0].x = lbl_803E0D38;
     entries[0].y = lbl_803E0D38;
     entries[0].z = lbl_803E0D38;
-    if (param_2 == 1)
+    if (variant == 1)
     {
         entries[1].layer = 0;
         entries[1].flags = 0xe;
@@ -9180,7 +9180,7 @@ void dll_7B_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[0].x = lbl_803E0D38;
     e[0].y = lbl_803E0D38;
     e[0].z = lbl_803E0D44;
-    if (param_2 == 1)
+    if (variant == 1)
     {
         e[1].layer = 0;
         e[1].flags = 0xe;
@@ -9233,7 +9233,7 @@ void dll_7B_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[1].y = lbl_803E0D3C;
     e[1].z = lbl_803E0D3C;
     e += 2;
-    if (param_2 != 1)
+    if (variant != 1)
     {
         e[0].layer = 2;
         e[0].flags = 0xe;
@@ -9268,7 +9268,7 @@ void dll_7B_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[2].y = lbl_803E0D38;
     e[2].z = lbl_803E0D38;
     e += 3;
-    if (param_2 == 1)
+    if (variant == 1)
     {
         e[0].layer = 3;
         e[0].flags = 0;
@@ -9280,8 +9280,8 @@ void dll_7B_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         e += 1;
     }
     buf.v58 = 0;
-    buf.ctx = param_1;
-    buf.v44 = param_2;
+    buf.ctx = sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0D38;
     buf.pos[1] = lbl_803E0D78;
     buf.pos[2] = lbl_803E0D38;
@@ -9304,7 +9304,7 @@ void dll_7B_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     buf.hw[6] = *(s16*)&base[0x130];
     buf.cmds = buf.entries;
     buf.flags = 0x1000000;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
         if (buf.ctx != 0)
@@ -9315,9 +9315,9 @@ void dll_7B_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         }
         else
         {
-            buf.pos[0] += ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] += ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] += ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] += ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] += ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] += ((PartFxSpawnParams*)posSource)->unk14;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, base, 0xc, &base[0x8c], 0x8e, 0);
@@ -9503,12 +9503,12 @@ extern f32 lbl_803E07D8, lbl_803E07DC, lbl_803E07E0, lbl_803E07E4, lbl_803E07E8,
 extern f32 lbl_803E07F0, lbl_803E07F4, lbl_803E07F8;
 
 
-void dll_5E_func03(int param_1, int param_2, u8* param_3, uint param_4)
+void dll_5E_func03(int sourceObj, int variant, u8* posSource, uint flags)
 {
     u8* base = (u8*)(int)lbl_80312340;
-    (*gModgfxInterface)->beginSequence((void*)param_1, (u8)param_2, 0x12, 3, 9);
+    (*gModgfxInterface)->beginSequence((void*)sourceObj, (u8)variant, 0x12, 3, 9);
     (*gModgfxInterface)->setSequenceParams(&base[0x2cc]);
-    (*gModgfxInterface)->addSequenceFlags(param_4 | 0x4004484);
+    (*gModgfxInterface)->addSequenceFlags(flags | 0x4004484);
     (*gModgfxInterface)->resetSequenceSpawns();
     (*gModgfxInterface)->addSequenceSpawn(2, lbl_803E07C0, lbl_803E07C4, lbl_803E07C0, 9, &base[0x1c8]);
     (*gModgfxInterface)->addSequenceSpawn(2, lbl_803E07C8, lbl_803E07C4, lbl_803E07CC, 9, &base[0x1dc]);
@@ -9533,7 +9533,7 @@ void dll_5E_func03(int param_1, int param_2, u8* param_3, uint param_4)
     (*gModgfxInterface)->addSequenceSpawn(0x4000, lbl_803E07D0, lbl_803E07E8, lbl_803E07D0, 0x24, &base[0x260]);
     (*gModgfxInterface)->addSequenceSpawn(0x100, lbl_803E07D0, lbl_803E07D0, lbl_803E07F8, 0, (u8*)0);
     (*gModgfxInterface)->addSequenceSpawn(4, lbl_803E07D0, lbl_803E07D0, lbl_803E07D0, 0x24, &base[0x260]);
-    (*gModgfxInterface)->spawnSequence(param_3, (u8*)(int)lbl_80312340, 0x24, &base[0x168], 0x10, 0x120, 0);
+    (*gModgfxInterface)->spawnSequence(posSource, (u8*)(int)lbl_80312340, 0x24, &base[0x168], 0x10, 0x120, 0);
     (*gModgfxInterface)->getLastSpawnHandle();
 }
 
@@ -9543,7 +9543,7 @@ extern f32 lbl_803E0C00, lbl_803E0C04, lbl_803E0C08, lbl_803E0C0C, lbl_803E0C10,
 extern f32 lbl_803E0C18, lbl_803E0C1C, lbl_803E0C20, lbl_803E0C24, lbl_803E0C28, lbl_803E0C2C;
 extern f32 lbl_803E0C30, lbl_803E0C34, lbl_803E0C38, lbl_803E0C3C;
 
-void dll_75_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
+void dll_75_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
     {
@@ -9568,49 +9568,49 @@ void dll_75_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     f32 fa = lbl_803E0BE8;
     f32 fb = lbl_803E0BEC;
     int fl = 100;
-    if (param_2 == 0)
+    if (variant == 0)
     {
         fl = 0x8c;
     }
-    else if (param_2 == 1)
+    else if (variant == 1)
     {
         fa = lbl_803E0BF0;
         fb = lbl_803E0BF4;
         fl = 0x8c;
     }
-    else if (param_2 == 2)
+    else if (variant == 2)
     {
         fa = lbl_803E0BF8;
         fb = lbl_803E0BFC;
         fl = 0x8c;
     }
-    else if (param_2 == 3)
+    else if (variant == 3)
     {
         fa = lbl_803E0C00;
         fb = lbl_803E0C04;
         fl = 0x8c;
     }
-    else if (param_2 == 4)
+    else if (variant == 4)
     {
         fa = lbl_803E0C08;
         fb = lbl_803E0C0C;
         fl = 0x154;
     }
-    else if (param_2 == 5)
+    else if (variant == 5)
     {
         fa = lbl_803E0C10;
         fb = lbl_803E0C14;
         fl = 0x280;
         lbl_80314920[2] = 800;
     }
-    else if (param_2 == 6)
+    else if (variant == 6)
     {
         fa = lbl_803E0C18;
         fb = lbl_803E0C1C;
         fl = 100;
         lbl_80314920[2] = 0x14;
     }
-    else if (param_2 == 7)
+    else if (variant == 7)
     {
         fa = lbl_803E0C20;
         fb = lbl_803E0C24;
@@ -9619,7 +9619,7 @@ void dll_75_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         lbl_80314920[2] = 0x14;
         lbl_80314920[3] = 0x14;
     }
-    else if (param_2 == 8)
+    else if (variant == 8)
     {
         fa = lbl_803E0C28;
         fb = lbl_803E0C2C;
@@ -9637,7 +9637,7 @@ void dll_75_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     entries[0].y = fa;
     entries[0].z = fb;
     e = &entries[1];
-    if (param_2 == 0)
+    if (variant == 0)
     {
         e[0].layer = 0;
         e[0].flags = 0;
@@ -9662,7 +9662,7 @@ void dll_75_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         e[2].z = lbl_803E0C34;
         e += 3;
     }
-    else if (param_2 == 6)
+    else if (variant == 6)
     {
         e[0].layer = 3;
         e[0].flags = 1;
@@ -9673,7 +9673,7 @@ void dll_75_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
         e[0].z = lbl_803E0C34;
         e += 1;
     }
-    else if (param_2 == 8)
+    else if (variant == 8)
     {
         e[0].layer = 3;
         e[0].flags = 1;
@@ -9692,8 +9692,8 @@ void dll_75_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     e[0].y = fa;
     e[0].z = fb;
     buf.v58 = 0;
-    buf.ctx = param_1;
-    buf.v44 = param_2;
+    buf.ctx = sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0C34;
     buf.pos[1] = lbl_803E0C34;
     buf.pos[2] = lbl_803E0C34;
@@ -9716,20 +9716,20 @@ void dll_75_func03(u8* param_1, int param_2, u8* param_3, uint param_4)
     buf.hw[6] = lbl_80314920[6];
     buf.cmds = buf.entries;
     buf.flags = 0x10800;
-    buf.flags |= param_4;
+    buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if (param_1 != 0)
+        if (sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E0C34 + ((GameObject*)param_1)->anim.worldPosX;
-            buf.pos[1] = lbl_803E0C34 + ((GameObject*)param_1)->anim.worldPosY;
-            buf.pos[2] = lbl_803E0C34 + ((GameObject*)param_1)->anim.worldPosZ;
+            buf.pos[0] = lbl_803E0C34 + ((GameObject*)sourceObj)->anim.worldPosX;
+            buf.pos[1] = lbl_803E0C34 + ((GameObject*)sourceObj)->anim.worldPosY;
+            buf.pos[2] = lbl_803E0C34 + ((GameObject*)sourceObj)->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = lbl_803E0C34 + ((PartFxSpawnParams*)param_3)->unkC;
-            buf.pos[1] = lbl_803E0C34 + ((PartFxSpawnParams*)param_3)->unk10;
-            buf.pos[2] = lbl_803E0C34 + ((PartFxSpawnParams*)param_3)->unk14;
+            buf.pos[0] = lbl_803E0C34 + ((PartFxSpawnParams*)posSource)->unkC;
+            buf.pos[1] = lbl_803E0C34 + ((PartFxSpawnParams*)posSource)->unk10;
+            buf.pos[2] = lbl_803E0C34 + ((PartFxSpawnParams*)posSource)->unk14;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);
