@@ -9,53 +9,17 @@
 #include "main/objseq.h"
 
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068cc();
-extern undefined4 FUN_800068d0();
-extern undefined4 FUN_80006ba8();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
-extern double FUN_80017708();
-extern undefined4 FUN_80017710();
-extern int FUN_80017730();
-extern undefined4 FUN_80017a6c();
-extern void* FUN_80017aa4();
-extern int FUN_80017ae4();
-extern uint FUN_80017ae8();
 extern int randomGetRange(int min, int max);
 extern undefined4 ObjHits_SyncObjectPosition();
 extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjLink_AttachChild();
-extern undefined4 FUN_80039580();
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern undefined4 objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
-extern int FUN_800da5f0();
-extern undefined4 FUN_800da700();
-extern uint FUN_800db47c();
-extern undefined4 FUN_8011e824();
-extern int FUN_8012efc4();
-extern undefined4 FUN_80139910();
-extern int FUN_80139a48();
-extern undefined4 FUN_80139a4c();
 extern int trickyFn_8013b368();
 extern undefined4 objAnimFn_8013a3f0(int param_1, int param_2, f32 param_3, int param_4);
 extern void trickyFn_8013d8f0(u8 * arg1, u8 * arg2);
-extern undefined4 FUN_801778d0();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
 
-extern undefined4 DAT_802c295c;
-extern undefined4 DAT_802c2960;
-extern undefined4 DAT_802c2964;
-extern undefined4 DAT_802c2968;
-extern undefined4 DAT_802c296c;
 extern undefined4* DAT_803dd6d8;
-extern undefined4* DAT_803dd71c;
-extern undefined4 DAT_803e305c;
-extern undefined4 DAT_803e3060;
 extern f64 DOUBLE_803e30f0;
 extern f64 DOUBLE_803e31b8;
 extern f32 lbl_803DC074;
