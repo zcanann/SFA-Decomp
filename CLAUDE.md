@@ -486,7 +486,12 @@ probes on the bundled compilers):
     `int`-param `cmpwi` and #3 `*(void**)` `cmplwi` for the individual compares.)
 
     **Inverse-direction note: an embedded assignment in the merged guard
-    also DEFEATS the adjacent-value RANGE-FOLD.** `c == 72 || c == 71`
+    also DEFEATS the adjacent-value RANGE-FOLD** — and a target
+    `bne next; b end` (INVERTED-polarity branch-over-branch) on an `== K`
+    guard = a merged `||` guard whose LAST term falls through into the
+    then-block (`if (a == 0 || (v = load) == K) return;` — earlier terms
+    branch-thread, the last doesn't; cfccrate_render → 100, CF sweep).
+    `c == 72 || c == 71`
     folds to `(c-71) <= 1`; writing the first term as
     `(c = *(u8 *)(p+off)) == 72 || c == 71` keeps the separate beq tests
     AND places the lbz at target's position (fn_802A98FC 95.13→100).
@@ -2055,6 +2060,12 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       dll_86 → 100);
       the `addi r0,rH,lo; mr rX,r0` saved-home materialization
       (dll_8B — the open triage-table residual, NOT this class).
+    - LOOP-INVARIANT pragma lever (fuelcell_render, CF sweep): when
+      target re-derives loop-invariant ADDRESSES per iteration and
+      launders/decl-perms/#126 are all inert, wrap the fn in
+      `#pragma opt_loop_invariants off` ... `reset` — LICM itself is the
+      mechanism (functional in GC/2.0 per the #108 pragma note). Try it
+      before the scalar-split below.
     - LOOP-INVARIANT variant (tumbleweedbush_update 97.43->99.06): when
       OURS hoists a loop-invariant STACK address (`&hitInfo[1]` passed to
       a call inside a loop) into a saved reg (`addi r28,r1,12` pre-loop +
@@ -2125,6 +2136,10 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       precolored f1 call-arg web nearby (cfprisonguard_render 99.79) — that's
       the open FP volatile-permutation problem (#82); launders tested inert
       there, re-attack via #82's web-kind classification.
+    **IN-LOOP HOISTED-CONSTANT extension (CF sweep, scarab loops): laundering
+    a loop-hoisted compare/multiply constant (`*(f32 *)&lbl`) re-ranks the
+    whole loop's FP volatile rotation in count-up scan loops (~12 instrs per
+    loop from one launder) — try before banking a loop-wide FP rotation.**
     **STORE-CLAMP DISCRIMINATOR (~20-AB calibration, miner-4) — the launder
     is RELIABLE iff the clamp STORES the constant back AND the swap is a CLEAN
     SAME-REGISTER pair.** This generalizes #81 from the reload case to all FP
@@ -3715,7 +3730,9 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
       register widening is free; fctiwz-on-double is the same opcode).
       `(int)(f32)(f64)x` does NOT work — emits a real frsp.
       (Sfx_UpdateObjectChannel3D 93.26→95.94, supersedes #97's f32→int
-      "no spelling found" caveat.)
+      "no spelling found" caveat.) UNSIGNED sibling: `(int)(u16)x` splits
+      a u8 ZERO-EXTENSION's VN key (fresh per-use clrlwi) where
+      `(int)(long)x` gets folded (CF sweep).
     - **`e * 48 + (int)(long)(c * 48)`** keeps SEPARATE mulli products
       where the plain distributed spelling gets re-FACTORED to
       `(e+c)*48` (add; mulli) — the (int)(long) sandwich blocks the
@@ -4950,7 +4967,10 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   track_dolphin keeps push/pop (genuinely fine-grained controls).
 - `python3 tools/pragma_audit.py [--max-pct N] [--unit-filter S] [--all]` —
   flag <100% fns whose effective pragma state (stack model, recipe #1) is an
-  OUTLIER vs their unit's majority state. THE highest-yield triage signal on
+  OUTLIER vs their unit's majority state. ⚠️ CAVEAT: the tool does NOT read
+  unit cflags — in a `cflags_dll_noopt` unit (-opt nopeephole,noschedule)
+  its "sched=def-on/peep=def-on" flags are NOISE (CF sweep: scarab/fxemit
+  flagged, wraps byte-inert). Check the unit's configure.py cflags first. THE highest-yield triage signal on
   the 60-90 band: run it BEFORE any shape work on a partial (per-fn #1 wraps
   alone ran +12 to +27pp; intersect.c's 7-fn cluster banked ~+103pp in one
   commit). A/B MANDATORY both ways — ~50% of peep=ON-only flags are correct-
