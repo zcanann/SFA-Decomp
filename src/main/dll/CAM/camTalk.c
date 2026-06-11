@@ -310,7 +310,7 @@ void firstPersonExit(CameraObject *camera)
   lbl_803DD548->yawCurve.startTangent = lbl_803E17C4;
   lbl_803DD548->yawCurve.endTangent = fVar1;
   fVar1 = lbl_803DD548->yawCurve.start - lbl_803DD548->yawCurve.end;
-  if ((lbl_803E17C8 < fVar1) || (fVar1 < lbl_803E17CC)) {
+  if ((fVar1 > lbl_803E17C8) || (fVar1 < lbl_803E17CC)) {
     if (lbl_803E17C4 <= lbl_803DD548->yawCurve.start) {
       if (lbl_803DD548->yawCurve.end < lbl_803E17C4) {
         lbl_803DD548->yawCurve.end = lbl_803DD548->yawCurve.end + lbl_803E17D0;
@@ -326,7 +326,7 @@ void firstPersonExit(CameraObject *camera)
   lbl_803DD548->pitchCurve.startTangent = fVar1;
   lbl_803DD548->pitchCurve.endTangent = fVar1;
   fVar1 = lbl_803DD548->pitchCurve.start - lbl_803DD548->pitchCurve.end;
-  if ((lbl_803E17C8 < fVar1) || (fVar1 < lbl_803E17CC)) {
+  if ((fVar1 > lbl_803E17C8) || (fVar1 < lbl_803E17CC)) {
     if (lbl_803E17C4 <= lbl_803DD548->pitchCurve.start) {
       if (lbl_803DD548->pitchCurve.end < lbl_803E17C4) {
         lbl_803DD548->pitchCurve.end = lbl_803DD548->pitchCurve.end + lbl_803E17D0;
