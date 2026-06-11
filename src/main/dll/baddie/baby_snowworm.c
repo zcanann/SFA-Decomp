@@ -1840,7 +1840,7 @@ extern s8 shouldCloseCMenu;
 extern u8 lbl_803DD8AC;
 extern int lbl_803DD8A0;
 extern s8 lbl_803DD8B6;
-extern s16 lbl_803DD8C0;
+extern s16 cMenuSelectedItem;
 extern s16 lbl_803DD8B4;
 extern int lbl_803DD8B0;
 extern s16 lbl_803DD8BC;
@@ -1903,7 +1903,7 @@ void cMenuRun(void)
     int flags;
 
     player = Obj_GetPlayerObject();
-    lbl_803DD8C0 = -1;
+    cMenuSelectedItem = -1;
     if (player == 0)
     {
         return;
@@ -2019,7 +2019,7 @@ void cMenuRun(void)
         {
             s16 cur = lbl_803DD8B4;
             s16 cy;
-            lbl_803DD8C0 = (s16)hud->ids848[cur];
+            cMenuSelectedItem = (s16)hud->ids848[cur];
             lbl_803DD8BC = (s16)hud->ids648[cur];
             lbl_803DD8BE = (s16)hud->ids748[cur];
             {
@@ -2154,7 +2154,7 @@ void cMenuRun(void)
                             u8 matched = 0;
                             if (b2 & 0x800)
                             {
-                                if (yButtonState != 0 && yButtonItem == lbl_803DD8C0)
+                                if (yButtonState != 0 && yButtonItem == cMenuSelectedItem)
                                 {
                                     matched = 1;
                                 }
@@ -2162,7 +2162,7 @@ void cMenuRun(void)
                                 {
                                     Sfx_PlayFromObject(0, 0x408);
                                     yButtonItemTextureId = hud->texIds[lbl_803DD8B4];
-                                    yButtonItem = (u16)lbl_803DD8C0;
+                                    yButtonItem = (u16)cMenuSelectedItem;
                                     lbl_803DD888 = lbl_803DD8BE;
                                     lbl_803DD886 = lbl_803DD8BC;
                                     lbl_803DD878 = lbl_803DBA84;
@@ -2191,8 +2191,8 @@ void cMenuRun(void)
                                 {
                                     if ((b2 & 0x100) || matched != 0)
                                     {
-                                        ObjMsg_SendToObject(player, flags, 0, lbl_803DD8C0);
-                                        lbl_803DD8C2 = lbl_803DD8C0;
+                                        ObjMsg_SendToObject(player, flags, 0, cMenuSelectedItem);
+                                        lbl_803DD8C2 = cMenuSelectedItem;
                                         lbl_803DD8B8 = (s8)hud->closeMode[lbl_803DD8B4];
                                         cMenuOpen = 0;
                                     }
@@ -2212,7 +2212,7 @@ void cMenuRun(void)
                                     if ((b2 & 0x100) || matched != 0)
                                     {
                                         cMenuOpen = 0;
-                                        lbl_803DD8C2 = lbl_803DD8C0;
+                                        lbl_803DD8C2 = cMenuSelectedItem;
                                         cMenuPlaySelectedItemSfx(player);
                                         lbl_803DD8B8 = 0;
                                     }

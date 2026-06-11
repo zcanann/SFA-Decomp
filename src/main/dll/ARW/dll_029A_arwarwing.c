@@ -16,7 +16,7 @@ typedef struct ArwarwingState
 } ArwarwingState;
 
 
-int getArwing(void) { return lbl_803DDD88; }
+int getArwing(void) { return gArwing; }
 
 int arwarwing_getExtraSize(void) { return 0x498; }
 
@@ -28,7 +28,7 @@ void arwarwing_free(int obj)
     ArwingState* state = ((GameObject*)obj)->extra;
 
     ObjGroup_RemoveObject(obj, 0x26);
-    lbl_803DDD88 = 0;
+    gArwing = 0;
     if (state->light != NULL)
     {
         ModelLightStruct_free(state->light);
@@ -1272,7 +1272,7 @@ void arwarwing_init(int obj)
     (*gPathControlInterface)->setup(pathBlock, 3, lbl_8032B408, lbl_8032B480, &cfg);
     (*gPathControlInterface)->attachObject((void*)obj, pathBlock);
     ObjGroup_AddObject(obj, 0x26);
-    lbl_803DDD88 = obj;
+    gArwing = obj;
     ObjHits_SetTargetMask(obj, 1);
     ((ArwingState*)state)->fullLoadout = 1;
     switch (((GameObject*)obj)->anim.mapEventSlot - 0x26)

@@ -766,7 +766,7 @@ extern void ObjHits_MarkObjectPositionDirty(int obj);
 
 
 /* Arwing family (untouched: arwarwing, arwarwinggu, arwingandrossstuff, arwlevelcon, arwsquadron). */
-extern int lbl_803DDD88;
+extern int gArwing;
 extern f32 lbl_803E701C;
 extern f32 lbl_803E7058;
 extern f32 lbl_803E70E0;

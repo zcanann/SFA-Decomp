@@ -392,15 +392,15 @@ void FUN_8012f744(undefined2 param_1)
  * matches; new fn_xxxxxxxx helpers are appended in batches. */
 
 extern s8 lbl_803DD8B8;
-extern s16 lbl_803DD8C0;
+extern s16 cMenuSelectedItem;
 extern s16 lbl_803DD8C2;
 
-/* EN v1.0 0x8012EBC8  size: 8b   s16 getter for lbl_803DD8C0. */
+/* EN v1.0 0x8012EBC8  size: 8b   s16 getter for cMenuSelectedItem. */
 #pragma scheduling off
 #pragma peephole off
 s16 cMenuGetSelectedItem(void)
 {
-    return lbl_803DD8C0;
+    return cMenuSelectedItem;
 }
 
 /* EN v1.0 0x8012EBD0  size: 36b  Match-and-consume helper. If the s32

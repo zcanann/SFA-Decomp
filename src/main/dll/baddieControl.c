@@ -1282,13 +1282,13 @@ extern u8 lbl_803DD5D2;
 extern u8 lbl_803DD5D1;
 extern u8 lbl_803DD5D0;
 extern f32 lbl_803E1BE0;
-extern f32 lbl_803DB9D8;
+extern f32 titleScreenCamProgress;
 
 void CameraModeTitle_init(CameraObject* camera)
 {
     lbl_803DD5D2 = 4;
     lbl_803DD5D1 = 4;
-    lbl_803DB9D8 = lbl_803E1BE0;
+    titleScreenCamProgress = lbl_803E1BE0;
     lbl_803DD5D0 = 0;
 
     camera->anim.localPosX = lbl_80319FB8[4].x;
@@ -1445,7 +1445,7 @@ void CameraModeTitle_moveCam(u8 newCam)
     if (newCam == lbl_803DD5D2) return;
     if (lbl_803DD5D1 == 4)
     {
-        if (lbl_803E1BE0 != lbl_803DB9D8)
+        if (lbl_803E1BE0 != titleScreenCamProgress)
         {
             u8* save = getSaveFileStruct();
             Movie_SetVolumeFade(0, 1000);
@@ -1459,12 +1459,12 @@ void CameraModeTitle_moveCam(u8 newCam)
     }
     lbl_803DD5D1 = lbl_803DD5D2;
     lbl_803DD5D2 = newCam;
-    lbl_803DB9D8 = lbl_803E1BE4;
+    titleScreenCamProgress = lbl_803E1BE4;
     lbl_803DD5D0 = 1;
 }
 
 /* misc 8b leaves */
-f32 titleScreenGetCamProgress(void) { return lbl_803DB9D8; }
+f32 titleScreenGetCamProgress(void) { return titleScreenCamProgress; }
 
 /* fn_X(lbl); lbl = 0; */
 void CameraModeWorldMap_free(void)
@@ -3130,8 +3130,8 @@ void CameraModeTitle_update(CameraObject* camera)
         u8* save = getSaveFileStruct();
         f32 v;
 
-        lbl_803DB9D8 = lbl_803DB9D8 + lbl_803E1BE8;
-        if (lbl_803DB9D8 >= lbl_803E1BE0)
+        titleScreenCamProgress = titleScreenCamProgress + lbl_803E1BE8;
+        if (titleScreenCamProgress >= lbl_803E1BE0)
         {
             if (lbl_803DD5D2 == 4)
             {
@@ -3145,33 +3145,33 @@ void CameraModeTitle_update(CameraObject* camera)
                 Movie_SetVolumeFade(0, 1);
                 audioSetVolumes(*(u8*)(save + 10), 10, 1, 0, 0);
             }
-            lbl_803DB9D8 = lbl_803E1BE0;
+            titleScreenCamProgress = lbl_803E1BE0;
             lbl_803DD5D1 = lbl_803DD5D2;
         }
         else
         {
             if (lbl_803DD5D2 == 4)
             {
-                Movie_SetVolumeFade((s32)(lbl_803E1BEC * lbl_803DB9D8), 1);
+                Movie_SetVolumeFade((s32)(lbl_803E1BEC * titleScreenCamProgress), 1);
                 audioSetVolumes(
-                    (s32)((f32)(u32) * (u8*)(save + 10) * (lbl_803E1BE0 - lbl_803DB9D8)), 10, 1, 0,
+                    (s32)((f32)(u32) * (u8*)(save + 10) * (lbl_803E1BE0 - titleScreenCamProgress)), 10, 1, 0,
                     0);
             }
             else if (lbl_803DD5D1 == 4)
             {
-                Movie_SetVolumeFade((s32)(lbl_803E1BEC * (lbl_803E1BE0 - lbl_803DB9D8)), 1);
-                audioSetVolumes((s32)((f32)(u32) * (u8*)(save + 10) * lbl_803DB9D8), 10, 1, 0, 0);
+                Movie_SetVolumeFade((s32)(lbl_803E1BEC * (lbl_803E1BE0 - titleScreenCamProgress)), 1);
+                audioSetVolumes((s32)((f32)(u32) * (u8*)(save + 10) * titleScreenCamProgress), 10, 1, 0, 0);
             }
         }
 
-        if (lbl_803DB9D8 < lbl_803E1BF0)
+        if (titleScreenCamProgress < lbl_803E1BF0)
         {
             v = lbl_803E1BF0 *
-                ((lbl_803E1BF4 * lbl_803DB9D8) * (lbl_803E1BF4 * lbl_803DB9D8));
+                ((lbl_803E1BF4 * titleScreenCamProgress) * (lbl_803E1BF4 * titleScreenCamProgress));
         }
         else
         {
-            f32 w = -(lbl_803E1BF4 * (lbl_803DB9D8 - lbl_803E1BF0) - lbl_803E1BE0);
+            f32 w = -(lbl_803E1BF4 * (titleScreenCamProgress - lbl_803E1BF0) - lbl_803E1BE0);
             w = w * w;
             v = lbl_803E1BF0 * (lbl_803E1BE0 - w) + lbl_803E1BF0;
         }

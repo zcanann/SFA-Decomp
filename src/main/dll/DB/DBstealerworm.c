@@ -1033,9 +1033,9 @@ int SB_ShipMast_getObjectTypeId(void) { return 0x0; }
 int SB_ShipGun_getExtraSize(void) { return 0x10; }
 
 /* sda21 accessors. */
-extern u32 lbl_803DDC20;
+extern u32 gSbGalleon;
 extern u32 lbl_803DDC40;
-u32 getSbGalleon(void) { return lbl_803DDC20; }
+u32 getSbGalleon(void) { return gSbGalleon; }
 u32 fn_801E2570(void) { return lbl_803DDC40; }
 
 /* Pattern wrappers. */
@@ -1246,7 +1246,7 @@ extern f32 lbl_803E580C;
 void SB_Galleon_init(int obj)
 {
     int p = *(int*)&((GameObject*)obj)->extra;
-    lbl_803DDC20 = obj;
+    gSbGalleon = obj;
     ObjGroup_AddObject(obj, 3);
     objSetSlot((void*)obj, 0x5a);
     ((GameObject*)obj)->animEventCallback = (void*)SB_Galleon_animEventCallback;
@@ -1304,7 +1304,7 @@ void SB_Galleon_free(int obj, int p2)
     {
         ((SBGalleonState*)p)->unk80 = 0;
     }
-    lbl_803DDC20 = 0;
+    gSbGalleon = 0;
     Music_Trigger(((SBGalleonState*)p)->musicIdB, 0);
     Music_Trigger(((SBGalleonState*)p)->musicIdA, 0);
     GameBit_Set(0xac8, 1);

@@ -388,8 +388,8 @@ void player_setAnimIds(int unused1, int unused2, u32 a, u32 b)
 }
 
 /* misc 8b leaves */
-extern f32 lbl_803DD420;
-f32 screenTransition_getAlpha(void) { return lbl_803DD420; }
+extern f32 screenTransitionAlpha;
+f32 screenTransition_getAlpha(void) { return screenTransitionAlpha; }
 
 /* Pattern wrappers. */
 int Dummy04_func03_ret_m1(void) { return -0x1; }
@@ -402,7 +402,7 @@ void setScreenTransitionPause(u32 pause) { lbl_803DD42F = (u8)pause; }
 
 /* fcmp-eq-to-bool. */
 extern f32 lbl_803E0558;
-u32 isScreenTransitionActive(void) { return lbl_803E0558 == lbl_803DD420; }
+u32 isScreenTransitionActive(void) { return lbl_803E0558 == screenTransitionAlpha; }
 
 /* multi-store leaf (single float broadcast). */
 extern f32 lbl_803E0570;
@@ -511,7 +511,7 @@ void player_findCurve(int* obj, int* state, int p3)
 
 void screenTransitionFn_800d7b04(int duration, int type)
 {
-    lbl_803DD420 = lbl_803E0558;
+    screenTransitionAlpha = lbl_803E0558;
     lbl_803DD424 = lbl_803E0564 / (f32)duration;
     lbl_803DD428 = lbl_803E0560;
     lbl_803DD42C = (u8)type;
@@ -520,7 +520,7 @@ void screenTransitionFn_800d7b04(int duration, int type)
 
 void screenTransition_fadeFrom(int duration, int type, f32 from)
 {
-    lbl_803DD420 = lbl_803E0558 * from;
+    screenTransitionAlpha = lbl_803E0558 * from;
     lbl_803DD424 = -(lbl_803E055C * from) / (f32)duration;
     lbl_803DD428 = lbl_803E0560;
     lbl_803DD42C = (u8)type;
@@ -530,9 +530,9 @@ void screenTransition_fadeFrom(int duration, int type, f32 from)
 #pragma opt_common_subs off
 void screenTransition_screenFade(int duration, int type)
 {
-    if (lbl_803DD424 >= lbl_803E0560 || lbl_803E0560 == lbl_803DD420)
+    if (lbl_803DD424 >= lbl_803E0560 || lbl_803E0560 == screenTransitionAlpha)
     {
-        lbl_803DD420 = lbl_803E0558;
+        screenTransitionAlpha = lbl_803E0558;
     }
     lbl_803DD424 = lbl_803E0564 / (f32)duration;
     lbl_803DD428 = lbl_803E0560;
@@ -544,9 +544,9 @@ void screenTransition_screenFade(int duration, int type)
 #pragma opt_common_subs off
 void screenTransition_Do(int duration, int type)
 {
-    if (lbl_803DD424 <= lbl_803E0560 || lbl_803E0558 == lbl_803DD420)
+    if (lbl_803DD424 <= lbl_803E0560 || lbl_803E0558 == screenTransitionAlpha)
     {
-        lbl_803DD420 = lbl_803E0560;
+        screenTransitionAlpha = lbl_803E0560;
     }
     lbl_803DD424 = lbl_803E055C / (f32)duration;
     lbl_803DD428 = lbl_803E0560;
@@ -1110,10 +1110,10 @@ void screenTransition_do2(int p1, int p2, int p3)
         (*gScreenTransitionInterface)->step(0x1e, lbl_803DD42C);
         lbl_803DD428 = lbl_803E0560;
     }
-    lbl_803DD420 = lbl_803DD424 * timeDelta + lbl_803DD420;
-    if (lbl_803DD420 < lbl_803E0560)
+    screenTransitionAlpha = lbl_803DD424 * timeDelta + screenTransitionAlpha;
+    if (screenTransitionAlpha < lbl_803E0560)
     {
-        lbl_803DD420 = lbl_803E0560;
+        screenTransitionAlpha = lbl_803E0560;
         lbl_803DD42D = 1;
         if (lbl_803DD42C == 5)
         {
@@ -1121,9 +1121,9 @@ void screenTransition_do2(int p1, int p2, int p3)
         }
         return;
     }
-    if (lbl_803DD420 > lbl_803E0558)
+    if (screenTransitionAlpha > lbl_803E0558)
     {
-        lbl_803DD420 = lbl_803E0558;
+        screenTransitionAlpha = lbl_803E0558;
         lbl_803DD42D = 1;
         if (lbl_803DD42F == 0)
         {
@@ -1150,7 +1150,7 @@ void screenTransition_do2(int p1, int p2, int p3)
         col.b = 0;
         col.g = 0;
         col.r = 0;
-        col.a = (int)lbl_803DD420;
+        col.a = (int)screenTransitionAlpha;
         hudDrawRect(sx, sy, sw, sh, col);
         GXSetScissor(sx, sy, sw, sh);
         break;
@@ -1160,7 +1160,7 @@ void screenTransition_do2(int p1, int p2, int p3)
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;
-        col.a = (int)lbl_803DD420;
+        col.a = (int)screenTransitionAlpha;
         hudDrawRect(sx, sy, sw, sh, col);
         GXSetScissor(sx, sy, sw, sh);
         break;
@@ -1173,7 +1173,7 @@ void screenTransition_do2(int p1, int p2, int p3)
         col.r = 0xff;
         col.g = 0;
         col.b = 0;
-        col.a = (int)lbl_803DD420;
+        col.a = (int)screenTransitionAlpha;
         hudDrawRect(sx, sy, sw, sh, col);
         GXSetScissor(sx, sy, sw, sh);
         break;
@@ -1206,14 +1206,14 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     Camera_GetCurrentViewport(&vx, &vy, &vr, &vb);
     span = (vr - vx) & 0xffff;
     H = (vb - vy) & 0xffff;
-    if (lbl_803DD420 > lbl_803E0540)
+    if (screenTransitionAlpha > lbl_803E0540)
     {
         step0 = 0xff;
-        inset = (int)(lbl_803DD420 - lbl_803E0540);
+        inset = (int)(screenTransitionAlpha - lbl_803E0540);
     }
     else
     {
-        step0 = (int)(lbl_803E0544 * lbl_803DD420);
+        step0 = (int)(lbl_803E0544 * screenTransitionAlpha);
         inset = 0;
     }
     halfSpan = (span >> 1) & 0xffff;
@@ -1232,7 +1232,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         col2.r = r;
         col2.g = b;
         col2.b = g;
-        col2.a = (int)lbl_803DD420;
+        col2.a = (int)screenTransitionAlpha;
         hudDrawRect(sx2, sy2, sw2, sh2, col2);
         GXSetScissor(sx2, sy2, sw2, sh2);
     }
