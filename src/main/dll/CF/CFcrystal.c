@@ -334,9 +334,7 @@ int FireFlyLantern_spawnFireFly(int* obj)
 int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     FireFlyLanternState* state;
-    int* slot;
     void* child;
-    f32 yOffset;
     int i;
 
     state = ((GameObject*)obj)->extra;
@@ -364,15 +362,12 @@ int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
     ((FireFlyLanternStateFlags*)&state->flags)->finished = 1;
     i = 0;
-    slot = state->fireflies;
-    yOffset = lbl_803E3AEC;
     while (i < state->fireflyCount)
     {
-        child = (void*)*slot;
+        child = (void*)state->fireflies[i];
         (*(void (*)(void*, f32, f32, f32))(*(int*)(*(int*)(*(int*)((u8*)child + 0x68)) + 0x28)))(
-            child, ((GameObject*)obj)->anim.localPosX, yOffset + ((GameObject*)obj)->anim.localPosY,
+            child, ((GameObject*)obj)->anim.localPosX, 5.0f + ((GameObject*)obj)->anim.localPosY,
             ((GameObject*)obj)->anim.localPosZ);
-        slot++;
         i++;
     }
 
