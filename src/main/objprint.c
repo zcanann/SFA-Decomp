@@ -815,53 +815,53 @@ void FUN_8003a1c4(int param_1, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8003A328(double param_1, short* param_2, char* param_3)
+void fn_8003A328(double amount, short* obj, char* ctx)
 {
     uint uVar1;
-    short* psVar2;
-    int iVar3;
-    int iVar4;
-    int iVar5;
+    short* found;
+    int model;
+    int entryIdx;
+    int vecOffset;
 
-    psVar2 = (short*)0x0;
-    iVar3 = (int)OBJPRINT_MODEL_INSTANCE(param_2);
-    if (iVar3 != 0)
+    found = (short*)0x0;
+    model = (int)OBJPRINT_MODEL_INSTANCE(obj);
+    if (model != 0)
     {
-        iVar4 = 0;
-        iVar5 = 0;
-        for (uVar1 = (uint)OBJPRINT_JOINT_COUNT(iVar3); uVar1 != 0; uVar1 = uVar1 - 1)
+        entryIdx = 0;
+        vecOffset = 0;
+        for (uVar1 = (uint)OBJPRINT_JOINT_COUNT(model); uVar1 != 0; uVar1 = uVar1 - 1)
         {
-            if ((*(char*)(*(int*)(iVar3 + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(param_2) + iVar4 + 1) != -1) &&
-                (*(char*)(*(int*)(iVar3 + 0x10) + iVar4) == '\0'))
+            if ((*(char*)(*(int*)(model + 0x10) + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != -1) &&
+                (*(char*)(*(int*)(model + 0x10) + entryIdx) == '\0'))
             {
-                psVar2 = (short*)(*(int*)(param_2 + 0x36) + iVar5);
+                found = (short*)(*(int*)(obj + 0x36) + vecOffset);
             }
-            iVar4 = OBJPRINT_MODEL_COUNT(iVar3) + iVar4 + 1;
-            iVar5 = iVar5 + 0x12;
+            entryIdx = OBJPRINT_MODEL_COUNT(model) + entryIdx + 1;
+            vecOffset = vecOffset + 0x12;
         }
     }
-    if (psVar2 != (short*)0x0)
+    if (found != (short*)0x0)
     {
-        if (*psVar2 != 0)
+        if (*found != 0)
         {
-            uVar1 = *psVar2 * 3;
-            *psVar2 = (short)((int)uVar1 >> 2) + (ushort)((int)uVar1 < 0 && (uVar1 & 3) != 0);
+            uVar1 = *found * 3;
+            *found = (short)((int)uVar1 >> 2) + (ushort)((int)uVar1 < 0 && (uVar1 & 3) != 0);
         }
-        if (param_1 < (double)lbl_803DF624)
+        if (amount < (double)lbl_803DF624)
         {
-            param_1 = -param_1;
+            amount = -amount;
         }
-        if ((double)lbl_803DF664 < param_1)
+        if ((double)lbl_803DF664 < amount)
         {
-            FUN_80039bc4(param_1, (undefined4)(u32)param_2, param_3, (int)psVar2);
+            FUN_80039bc4(amount, (undefined4)(u32)obj, ctx, (int)found);
         }
         else
         {
-            FUN_80039e6c(param_1, param_2, param_3, (int)psVar2);
+            FUN_80039e6c(amount, obj, ctx, (int)found);
         }
-        *(ushort*)(param_3 + 0x1a) = *(ushort*)(param_3 + 0x1a) & 0xff;
-        *(ushort*)(param_3 + 0x1a) =
-            *(ushort*)(param_3 + 0x1a) | (ushort)((double)lbl_803DF664 < param_1) << 8;
+        *(ushort*)(ctx + 0x1a) = *(ushort*)(ctx + 0x1a) & 0xff;
+        *(ushort*)(ctx + 0x1a) =
+            *(ushort*)(ctx + 0x1a) | (ushort)((double)lbl_803DF664 < amount) << 8;
     }
 }
 
