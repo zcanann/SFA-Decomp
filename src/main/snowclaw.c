@@ -4,6 +4,7 @@
 
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 
 typedef struct SnowclawState
@@ -77,8 +78,6 @@ extern f32 lbl_803E6710;
 extern int getAngle(f32 dx, f32 dz);
 extern void* loadObjectAtObject(int obj, int spawn);
 extern f32 lbl_803E66E0;
-extern int ObjHits_GetPriorityHit(int* sub, int* hit, int c, int d);
-extern void ObjHits_RecordObjectHit(int* sub, int hit, int c, int d, int e);
 extern void ObjLink_DetachChild(int obj, int* child);
 extern void spawnExplosion(int obj, f32 f, int a, int b, int c, int d, int e, int g, int h);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
@@ -452,9 +451,9 @@ void snowclaw_hitDetect(int obj)
     {
         return;
     }
-    if (ObjHits_GetPriorityHit(sub, &hit, 0, 0) == 0x15 && *(s8*)&((SnowclawState*)inner)->health >= 0)
+    if (ObjHits_GetPriorityHit((int)sub, &hit, 0, 0) == 0x15 && *(s8*)&((SnowclawState*)inner)->health >= 0)
     {
-        ObjHits_RecordObjectHit(sub, hit, 0x15, 1, 0);
+        ObjHits_RecordObjectHit((int)sub, hit, 0x15, 1, 0);
         if (((SnowclawState*)inner)->hitCooldown < 0)
         {
             *(s8*)&((SnowclawState*)inner)->health -= 1;

@@ -286,6 +286,9 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
                                void *scratchD,void *scratchE,int depth);
 void ObjHits_CheckTrackContact(int objA,int objB);
 void ObjHits_Update(int objectCount);
+int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sphereIndex);
+int ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hitObj,
+                              char priority,u8 hitVolume,u8 sphereIndex);
 int ObjHits_GetPriorityHitWithPosition(int obj,int *outHitObject,int *outSphereIndex,
                 uint *outHitVolume,float *outHitPosX,float *outHitPosY,float *outHitPosZ);
 int ObjHits_GetPriorityHit(int obj,int *outHitObject,int *outSphereIndex,uint *outHitVolume);
