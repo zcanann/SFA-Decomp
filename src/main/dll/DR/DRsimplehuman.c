@@ -30,38 +30,9 @@ typedef struct SpdrapeState
 } SpdrapeState;
 
 
-extern undefined4 FUN_8000680c();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068cc();
-extern undefined4 FUN_800068d0();
-extern undefined4 FUN_800069a8();
-extern double FUN_80017708();
-extern int FUN_80017730();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_8001777c();
-extern undefined4 FUN_80017958();
-extern int FUN_80017a54();
-extern undefined4 FUN_80017a88();
-extern int FUN_80017a98();
-extern undefined4 FUN_8002f6ac();
-extern undefined FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
 extern undefined4 ObjGroup_AddObject();
-extern int FUN_800620e8();
-extern undefined4 FUN_800810f4();
-extern undefined4 FUN_80081118();
-extern undefined4 FUN_801e8278();
-extern undefined4 FUN_801e85b0();
-extern undefined4 FUN_801f4f98();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
 
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803dcd18;
-extern undefined4 DAT_803dcd1c;
-extern undefined4 DAT_803e6708;
-extern undefined4 DAT_803e670a;
 extern f64 DOUBLE_803e6730;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E670C;
