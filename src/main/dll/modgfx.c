@@ -2799,17 +2799,12 @@ int projgfx_getObjectTypeId(void) { return 0x0; }
 
 /* sda21 accessors. */
 extern u8 lbl_8039BE98[];
-extern ModgfxPendingSpawn lbl_8039BEF8[];
-extern s16 lbl_803DD288;
-extern s16 lbl_803DD28A;
-extern ModgfxPendingSpawn* lbl_803DD28C;
-extern ModgfxPendingSpawn* lbl_803DD290;
+extern ModgfxPendingSpawn gModgfxPendingSpawnQueue[];
+extern s16 gModgfxLastSpawnHandle;
+extern s16 gModgfxSequenceParamIndex;
+extern ModgfxPendingSpawn* gModgfxPendingSpawnWriteCursor;
+extern ModgfxPendingSpawn* gModgfxPendingSpawnStartCursor;
 #define gModgfxSpawnContext (*(ModgfxSpawnContext *)lbl_8039BE98)
-#define gModgfxPendingSpawnQueue lbl_8039BEF8
-#define gModgfxLastSpawnHandle lbl_803DD288
-#define gModgfxSequenceParamIndex lbl_803DD28A
-#define gModgfxPendingSpawnWriteCursor lbl_803DD28C
-#define gModgfxPendingSpawnStartCursor lbl_803DD290
 #pragma scheduling off
 #pragma peephole off
 s16 dll_0B_func18(void) { return gModgfxLastSpawnHandle; }
@@ -2824,7 +2819,7 @@ void dll_0B_func15(void* params) { memcpy(gModgfxSpawnContext.sequenceParams, pa
 void dll_0B_func14(s16 value)
 {
     u8* state = lbl_8039BE98;
-    state = state + lbl_803DD28A * 2;
+    state = state + gModgfxSequenceParamIndex * 2;
     *(s16*)(state + 0x46) = value;
 }
 
@@ -2916,10 +2911,8 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 /* Small stub recoveries (drifted unit, add-as-new). */
 extern u8 lbl_803DD282;
 extern u8 gPlayerShadowMode;
-#define gPartfxCachedResourceCount lbl_803DD2C0
 extern u8 gPartfxCachedResourceCount;
 extern void fn_800A1040(s16 a, int b);
-#define gPartfxResourceTimeouts lbl_8039C2E0
 extern s16 gPartfxResourceTimeouts[];
 extern u32 lbl_802C2160[];
 extern f64 lbl_803DF480;
@@ -3089,15 +3082,11 @@ extern f32 lbl_803DF434;
 #define BONE_PARTICLE_EFFECT_BUFFER_COUNT 7
 #define BONE_PARTICLE_EFFECT_BUFFER_BYTES 0x140
 #define BONE_PARTICLE_EFFECT_SLOT_COUNT 20
-#define gBoneParticleEffectBuffers lbl_8039C2C0
-
 extern void*gBoneParticleEffectBuffers[];
 extern void* lbl_803DD2A4;
 extern void* lbl_803DD2A8;
 extern void mm_free(void* p);
 extern void textureFree(void* resource);
-#define gPartfxActiveEffects lbl_8039C1F8
-
 extern void*gPartfxActiveEffects[];
 extern void Obj_FreeObject(void* obj);
 #pragma peephole off
@@ -3821,26 +3810,6 @@ void dll_0B_func0E(void)
 #pragma peephole reset
 #pragma scheduling reset
 
-#define gPartfxResourceModule00 lbl_803DD2C8
-#define gPartfxResourceModule01 lbl_803DD2CC
-#define gPartfxResourceModule02 lbl_803DD2D0
-#define gPartfxResourceModule03 lbl_803DD2D4
-#define gPartfxResourceModule04 lbl_803DD2D8
-#define gPartfxResourceModule05 lbl_803DD2DC
-#define gPartfxResourceModule16 lbl_803DD2E0
-#define gPartfxResourceModule06 lbl_803DD2E4
-#define gPartfxResourceModule07 lbl_803DD2E8
-#define gPartfxResourceModule08 lbl_803DD2EC
-#define gPartfxResourceModule09 lbl_803DD2F0
-#define gPartfxResourceModule10 lbl_803DD2F4
-#define gPartfxResourceModule11 lbl_803DD2F8
-#define gPartfxResourceModule12 lbl_803DD2FC
-#define gPartfxResourceModule13 lbl_803DD300
-#define gPartfxResourceModule14 lbl_803DD304
-#define gPartfxResourceModule15 lbl_803DD308
-#define gPartfxResourceModule17 lbl_803DD30C
-#define gPartfxResourceModule18 lbl_803DD310
-#define gPartfxResourceModule19 lbl_803DD314
 extern void*gPartfxResourceModule00;
 extern void*gPartfxResourceModule01;
 extern void*gPartfxResourceModule02;
@@ -14768,7 +14737,7 @@ void dll_0B_onMapSetup(void)
     fn_800A1040(0, 1);
     for (i = 0; i < 0x32; i++)
     {
-        lbl_8039C1F8[i] = NULL;
+        gPartfxActiveEffects[i] = NULL;
     }
 }
 #pragma peephole reset
@@ -14991,7 +14960,7 @@ void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
 #pragma peephole off
 void dll_0B_func08(void* param)
 {
-    int** arr = (int**)lbl_8039C1F8;
+    int** arr = (int**)gPartfxActiveEffects;
     int i;
 
     for (i = 0; i < 0x32; i++)
@@ -15444,7 +15413,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         return 1;
     }
     view = Camera_GetCurrentViewSlot();
-    p = (int**)lbl_8039C1F8;
+    p = (int**)gPartfxActiveEffects;
     for (slot = 0; slot < 50; slot++, p++)
     {
         if (*p == NULL) continue;
@@ -15981,7 +15950,7 @@ void dll_0B_func05(void)
         return;
     }
     lbl_803DD284 = timeDelta;
-    pp = (int**)lbl_8039C1F8;
+    pp = (int**)gPartfxActiveEffects;
     for (slot = 0; slot < 50; slot++, pp++)
     {
         reprocess = 1;
