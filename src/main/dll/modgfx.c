@@ -3404,16 +3404,14 @@ void boneParticleEffect_update(void* ctx, int p2, u8* o)
                     cls = *(u8*)(t + 0x590);
                     if (cls == 0)
                     {
-                        t4 = base + id * 4;
-                        s.vx = pa[0] * *(f32*)(t4 + 0x5d8);
-                        s.vy = pa[1] * *(f32*)(t4 + 0x5d8);
+                        s.vx = pa[0] * *(f32*)((base + 0x5d8) + id * 4);
+                        s.vy = pa[1] * *(f32*)((base + 0x5d8) + id * 4);
                         s.vz = pa[2] * *(f32*)(t4 + 0x664);
                     }
                     else if (cls == 1)
                     {
-                        t4 = base + id * 4;
-                        s.vx = pb[0] * *(f32*)(t4 + 0x5d8);
-                        s.vy = pb[1] * *(f32*)(t4 + 0x5d8);
+                        s.vx = pb[0] * *(f32*)((base + 0x5d8) + id * 4);
+                        s.vy = pb[1] * *(f32*)((base + 0x5d8) + id * 4);
                         s.vz = pb[2] * *(f32*)(t4 + 0x664);
                     }
                     else if (cls == 2)
