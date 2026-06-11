@@ -42,36 +42,13 @@ typedef struct MmshWaterspikeObjectDef
 } MmshWaterspikeObjectDef;
 
 
-extern undefined8 FUN_80006728();
-extern undefined4 FUN_80006770();
-extern undefined4 FUN_800067c0();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800175cc();
-extern undefined4 FUN_80017620();
-extern void* FUN_80017624();
-extern undefined4 FUN_80017698();
 extern u32 randomGetRange(int min, int max);
-extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80017b00();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80042b9c();
-extern int FUN_80044404();
-extern undefined8 FUN_80080f28();
-extern undefined4 FUN_8008111c();
-extern undefined4 FUN_8011eb10();
 extern void fn_801C4664(void* obj);
-extern undefined4 FUN_801c4f4c();
 extern undefined4 SH_LevelControl_runBloopEvent();
-extern undefined4 FUN_801d8480();
-extern int FUN_8028683c();
-extern undefined4 FUN_80286888();
-extern uint FUN_80294cd0();
 extern int objCreateLight(int param_1, int param_2);
 extern void GameBit_Set(int eventId, int value);
 extern void Obj_FreeObject(void* obj);
 
-extern undefined4 DAT_803dc071;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
