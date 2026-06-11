@@ -274,9 +274,9 @@ void appleontree_update(int param_1)
         } while ((iVar3 == 100) || (iVar3 != 0x66));
         if (lbl_803E37D4 != *(float *)(iVar8 + 0x30)) {
           fVar11 = *(float *)(iVar8 + 0xc) / *(float *)(iVar8 + 0x50);
-          *puVar2 = (short)(int)((f32)*(s16 *)(iVar8 + 0x48) * fVar11);
-          puVar2[1] = (short)(int)((f32)*(s16 *)(iVar8 + 0x4a) * fVar11);
-          puVar2[2] = (short)(int)((f32)*(s16 *)(iVar8 + 0x4c) * fVar11);
+          *puVar2 = (f32)*(s16 *)(iVar8 + 0x48) * fVar11;
+          puVar2[1] = (f32)*(s16 *)(iVar8 + 0x4a) * fVar11;
+          puVar2[2] = (f32)*(s16 *)(iVar8 + 0x4c) * fVar11;
         }
         piVar6 = (int *)FUN_80039520((int)puVar2,0);
         *piVar6 = (int)(lbl_803E380C * fVar13);
