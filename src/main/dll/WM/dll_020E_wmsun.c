@@ -1,8 +1,8 @@
 /*
- * wmsun (DLL 0x20E) - the sky objects over Krazoa Palace (map 'warlock'
- * = Dinosaur Planet's Warlock Mountain, hence the WM dll prefix). One
- * DLL serves two retail object defs, neither placed by any romlist on
- * the 124 retail maps - instances are spawned at runtime:
+ * wmsun (DLL 0x20E) - the finale sky/crystal objects at Krazoa Palace
+ * (map 'warlock' = Dinosaur Planet's Warlock Mountain, hence the WM dll
+ * prefix). One DLL serves two retail object defs, neither placed by any
+ * romlist on the 124 retail maps - instances are spawned at runtime:
  *  - def 922 'WM_Crystal' (romlist type 0x262): Krystal's crystal
  *    prison above the palace. Each returned Krazoa spirit (game bits
  *    0x21B/0x21C/0x21D/0x21F/0x221/0x222) raises its rise threshold
@@ -10,13 +10,19 @@
  *    faster, rumbling the camera (bit 0x370) past 0x960. Once the
  *    last spirit is in it sets bit 0x38D, clears 0x370 and frees
  *    itself.
- *  - def 907 'WM_sun' (romlist type 0x2BD): the palace sun layers
- *    (three alpha tiers by placement bank). They spin idly until the
- *    crystal sets bit 0x38D, then bank 0 runs the finale countdowns in
- *    lbl_803DDCA8..B0 (armed to 800 at init): quakes, envfx 0x30/0x34,
- *    and finally bit 0x38F, after which every bank fades in and bank 0
- *    flickers the view-dependent glare (wmsun_updateGlare, intensity/damping
- *    state in lbl_803DDCA0/A4).
+ *  - def 907 'WM_sun' (romlist type 0x2BD): despite the retail name
+ *    there is no sun in the finale's storm sky - three additive layers
+ *    (alpha 0xFF/0x55/0x19 by placement bank) that spawn INVISIBLE and
+ *    spin until the crystal sets bit 0x38D; bank 0 then runs the finale
+ *    countdowns in lbl_803DDCA8..B0 (armed to 800 at init): quakes, a
+ *    ONE-SHOT envfx 0x30/0x34 burst, and finally bit 0x38F, after which
+ *    every bank fades in and bank 0 flickers the view-dependent glare
+ *    (wmsun_updateGlare, intensity/damping state in lbl_803DDCA0/A4).
+ *    The on-screen visual is unconfirmed - plausibly the bright energy
+ *    mass in the storm sky where the released spirits converge. The
+ *    repeated explosion flashes over the crystal during the shake come
+ *    from elsewhere (the wmnewcrystal detonations are three one-shots;
+ *    this unit's envfx fires once).
  * A third variant (type 0x2C2, mapped to no def by the retail
  * OBJINDEX, so unreachable in retail) allocates the WmSunGlareParams
  * flicker table and scroll-fades a texture once bit 0x38F is set.
