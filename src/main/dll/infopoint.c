@@ -44,8 +44,8 @@ void TrickyCurve_updateCooldownTrigger(int obj)
     TrickyCurveObject* player;
     int axisCount;
     f32 deltaX;
-    f32 deltaY;
     f32 deltaZ;
+    f32 deltaY;
     f32 bound;
     f32 randomX;
     f32 randomZ;
