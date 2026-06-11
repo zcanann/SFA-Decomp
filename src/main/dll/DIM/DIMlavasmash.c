@@ -32,26 +32,10 @@ typedef struct DimsnowballState
 } DimsnowballState;
 
 
-extern undefined4 FUN_8000680c();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_8001753c();
-extern undefined4 FUN_80017544();
-extern undefined4 FUN_8001754c();
-extern undefined4 FUN_80017588();
-extern undefined4 FUN_80017594();
-extern undefined4 FUN_8001759c();
-extern undefined4 FUN_800175b0();
-extern undefined4 FUN_800175cc();
-extern undefined4 FUN_800175d0();
-extern undefined4 FUN_800175ec();
-extern undefined4 FUN_80017620();
-extern void* FUN_80017624();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int FUN_80017a90();
-extern undefined4 FUN_80017ac8();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern int getTrickyObject(void);
@@ -71,11 +55,6 @@ extern void modelLightStruct_startColorFade(int light, int param_2, int param_3)
 extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setupGlow(int light, int param_2, int r, int g, int b, int a, f32 radius);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 radius);
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_8005fe14();
-extern undefined4 FUN_80081110();
-extern int FUN_8028683c();
-extern undefined4 FUN_80286888();
 
 extern EffectInterface** gPartfxInterface;
 extern f64 DOUBLE_803e54b0;
