@@ -1484,6 +1484,12 @@ ids lost from vcall sites (doorlock_update, sc_totemstrength_update,
 saveSelectOpenFile, imspacethruster_update). When the gap reg is LOADED
 with a meaningful value in target before the bl, the import dropped a real
 argument — restore it, don't just pad the signature.
+RETURN-CALL-POSITION tell (CFcrystal spawnFireFly): an arg with no visible
+setup before a tail `bl` PLUS an otherwise-inexplicable `mr r4,r3` after an
+alloc call = a dropped argument riding the alloc result. METHOD: after 2-3
+failed coloring spellings on such an mr, grep SIBLING units for the same
+callee (in-tree oracle — DRearthwalk.c showed `loadObjectAtObject(obj,
+setup)` 2-arg) instead of continuing the spelling battery.
 
 ### 99.5%+ tier sweep findings (task #142) — category triage table
 
@@ -3731,7 +3737,10 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     ranges still need `volatile` (type/address launders on loads fold —
     probed (u32)-lvalue, (int)(long)-value, (int)&-address; only the
     load-INSTRUCTION-changing u16-vs-s16 cast differs, and that changes
-    lha/lhz). Sibling of #83a (launders) and #59/#78 (FP reassociation);
+    lha/lhz). Same boundary for CR0 REUSE: repeated FP compares on the
+    same operands (else-if chains) need the volatile launder to re-emit
+    the fcmpo — `*(f32 *)&` and `(f64)` are VN'd through (CFlevelControl).
+    Sibling of #83a (launders) and #59/#78 (FP reassociation);
     same mechanism family as #110/#111.
 
 115. **CALLEE-DECL PARAM WIDTHS shift the caller's WEB CREATION ORDER at
@@ -4078,7 +4087,9 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     exempts the load from store invalidation so the CSE survives — AND the
     value stays an UN-named temp-class web (a named local achieves the
     same CSE but flips the FP pair per #107's class model). rope → 100,
-    CRsnowbike clamp (near-100 sweep). Decl-only change, A/B per unit —
+    CRsnowbike clamp (near-100 sweep); independently rediscovered on
+    CFlevelControl lbl_803E3DE8 (load survives the stfs → CSE + FP
+    numbering). Decl-only change, A/B per unit —
     `const` on a symbol other fns WRITE would be wrong; check writers
     first.
 Field-tested across the object DLL near-100 tier (src/main/dll/{baddie,DIM,DR,CF,
