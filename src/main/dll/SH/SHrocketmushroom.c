@@ -243,10 +243,7 @@ void bombplantspore_init(void *obj, void *param2) {
     ObjHits_DisableObject(obj);
     state->spinAngle = (s16)randomGetRange(0, 0xffff);
 
-    randAsDouble[1] = randomGetRange(0, 1000) ^ 0x80000000;
-    randAsDouble[0] = 0x43300000;
-    randomPhase = *(f64 *)randAsDouble - lbl_803E53A0;
-    state->randomPhase = randomPhase / lbl_803E5390;
+    state->randomPhase = (f32)(int)randomGetRange(0, 1000) / lbl_803E5390;
 
     (*gPathControlInterface)->init(state->pathState, 0, 0x40002, 1);
     (*gPathControlInterface)->setup(state->pathState, 1, lbl_80326D98, &lbl_803DBFC0, events);
