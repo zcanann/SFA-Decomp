@@ -414,7 +414,10 @@ void dim_levelcontrol_update(int obj)
         }
     }
     t = GameBit_Get(0x3e2);
-    t = !GameBit_Get(0x3e3) & t;
+    {
+        int gb = !GameBit_Get(0x3e3);
+        t = gb & t;
+    }
     t2 = t & 0xff;
     if (t2 != st->saveState)
     {
