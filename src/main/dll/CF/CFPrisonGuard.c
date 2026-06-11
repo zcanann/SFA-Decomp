@@ -70,60 +70,54 @@ void staffactivated_updateLiftHeight(int obj, StaffActivatedState* state)
     s32 rumbleStrength;
 
     flags = state->flags;
-    if ((flags >> 7 & 1) != 0)
+    if ((flags >> 7 & 1) == 0u || (flags >> 6 & 1) != 0u)
     {
-        switch (flags >> 6 & 1)
+        return;
+    }
+    if (state->liftReset == 0)
+    {
+        state->liftVelocity = (s32) - (lbl_803E3BC8 * timeDelta - (f32)state->liftVelocity);
+        state->liftHeight =
+            (s32)((f32)state->liftVelocity * timeDelta + (f32)state->liftHeight);
+        if (state->liftHeight > state->peakLiftHeight)
         {
-        case 0:
-        {
-            if (state->liftReset == 0)
-            {
-                state->liftVelocity = (s32) - (lbl_803E3BC8 * timeDelta - (f32)state->liftVelocity);
-                state->liftHeight =
-                    (s32)((f32)state->liftVelocity * timeDelta + (f32)state->liftHeight);
-                if (state->liftHeight > state->peakLiftHeight)
-                {
-                    state->peakLiftHeight = state->liftHeight;
-                }
-                if (state->previousLiftHeight == 0x800 && state->liftHeight < 0x800)
-                {
-                    Sfx_PlayFromObject(obj, 0x374);
-                }
-                if (state->liftHeight < 0)
-                {
-                    if (state->previousLiftHeight > 0)
-                    {
-                        Sfx_PlayFromObject(obj, SFXmn_dimraw36);
-                        rumbleStrength = state->peakLiftHeight / 200;
-                        if (rumbleStrength > 0)
-                        {
-                            doRumble((f32)rumbleStrength);
-                        }
-                    }
-                    state->liftVelocity = 0;
-                    state->liftHeight = 0;
-                }
-            }
-            else
-            {
-                state->liftReset = 0;
-                state->peakLiftHeight = 0;
-            }
-
-            prevHeight = state->previousLiftHeight;
-            if ((prevHeight < 0x40 && state->liftHeight >= 0x40) ||
-                (prevHeight >= 0x40 && state->liftHeight < 0x40))
-            {
-                Sfx_PlayFromObject(obj, 0x374);
-            }
-            ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
-                                                      &state->hitCooldown);
-            state->previousLiftHeight = state->liftHeight;
-            ((void(*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, (f32)state->liftHeight / lbl_803E3BCC);
+            state->peakLiftHeight = state->liftHeight;
         }
-        break;
+        if (state->previousLiftHeight == 0x800 && state->liftHeight < 0x800)
+        {
+            Sfx_PlayFromObject(obj, 0x374);
+        }
+        if (state->liftHeight < 0)
+        {
+            if (state->previousLiftHeight > 0)
+            {
+                Sfx_PlayFromObject(obj, SFXmn_dimraw36);
+                rumbleStrength = state->peakLiftHeight / 200;
+                if (rumbleStrength > 0)
+                {
+                    doRumble((f32)rumbleStrength);
+                }
+            }
+            state->liftVelocity = 0;
+            state->liftHeight = 0;
         }
     }
+    else
+    {
+        state->liftReset = 0;
+        state->peakLiftHeight = 0;
+    }
+
+    prevHeight = state->previousLiftHeight;
+    if ((prevHeight < 0x40 && state->liftHeight >= 0x40) ||
+        (prevHeight >= 0x40 && state->liftHeight < 0x40))
+    {
+        Sfx_PlayFromObject(obj, 0x374);
+    }
+    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
+                                              &state->hitCooldown);
+    state->previousLiftHeight = state->liftHeight;
+    ((void(*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, (f32)state->liftHeight / lbl_803E3BCC);
 }
 
 typedef struct PrisonGuardStateFlags
