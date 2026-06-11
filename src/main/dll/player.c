@@ -1139,9 +1139,9 @@ void fn_802AA4B0(int obj, int p2, f32 unused)
         {
             int sp = *(int*)&((PlayerState*)p2)->baddie.targetObj;
             int pt = *(int*)((char*)sp + 0x74) + *(u8*)((char*)sp + 0xe4) * 0x18;
-            f32 dx = *(f32*)pt - *(f32*)((char*)lbl_803DE44C + 0xc);
-            f32 dy = *(f32*)((char*)pt + 4) - *(f32*)((char*)lbl_803DE44C + 0x10);
-            f32 dz = *(f32*)((char*)pt + 8) - *(f32*)((char*)lbl_803DE44C + 0x14);
+            f32 dx = *(f32*)pt - ((GameObject*)lbl_803DE44C)->anim.localPosX;
+            f32 dy = *(f32*)((char*)pt + 4) - ((GameObject*)lbl_803DE44C)->anim.localPosY;
+            f32 dz = *(f32*)((char*)pt + 8) - ((GameObject*)lbl_803DE44C)->anim.localPosZ;
             spawned = sp;
             v.mat[1] = lbl_803E7EA4;
             v.mat[2] = lbl_803E7EA4;
@@ -3154,7 +3154,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     }
     if (*(void**)&lbl_803DE448 != NULL)
     {
-        *(int*)(lbl_803DE448 + 0x30) = *(int*)&((GameObject*)obj)->anim.parent;
+        *(int*)&((GameObject*)lbl_803DE448)->anim.parent = *(int*)&((GameObject*)obj)->anim.parent;
         if (*(s16*)((char*)inner + 0x81a) == 0)
         {
             *(s16*)(lbl_803DE448 + 6) |= 0x4000;
@@ -3167,8 +3167,8 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     }
     if (*(void**)&lbl_803DE450 != NULL)
     {
-        ObjPath_GetPointWorldPosition(obj, 4, lbl_803DE450 + 0xc, lbl_803DE450 + 0x10,
-                                      lbl_803DE450 + 0x14, 0);
+        ObjPath_GetPointWorldPosition(obj, 4, &((GameObject*)lbl_803DE450)->anim.localPosX, &((GameObject*)lbl_803DE450)->anim.localPosY,
+                                      &((GameObject*)lbl_803DE450)->anim.localPosZ, 0);
     }
     if ((((u32) * (u8*)((char*)inner + 0x3f3) >> 3 & 1) != 0 ||
             *(s16*)((char*)inner + 0x80a) == 0x40) &&
@@ -4061,17 +4061,17 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     {
         lbl_803DC66C = 1;
     }
-    if (*(s16*)((char*)lbl_803DE44C + 0x44) == 0x2d)
+    if (((GameObject*)lbl_803DE44C)->anim.classId == 0x2d)
     {
         ((void (*)(void))objSetAnimField48to0)();
     }
     ((void (*)(int, int, f32))fn_802AEF34)(obj, (int)inner, timeDelta);
     if (lbl_803DE44C != NULL && ((u32) * (u8*)((char*)inner + 0x3f4) >> 6 & 1) != 0)
     {
-        *(u16*)((char*)lbl_803DE44C + 0xb0) &= ~7;
+        ((GameObject*)lbl_803DE44C)->objectFlags &= ~7;
         if (*(u8*)((char*)inner + 0x8b3) == 0)
         {
-            *(u16*)((char*)lbl_803DE44C + 0xb0) |= 2;
+            ((GameObject*)lbl_803DE44C)->objectFlags |= 2;
         }
     }
     *(u32*)((char*)inner + 0x360) |= 0x800000LL;
@@ -6169,7 +6169,7 @@ int fn_802A7160(int obj, int state)
 void fn_8029BC08(int obj)
 {
     ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->objectHitMask = 0;
-    if (*(s16*)((char*)lbl_803DE44C + 0x44) == 0x2d)
+    if (((GameObject*)lbl_803DE44C)->anim.classId == 0x2d)
     {
         objSetAnimField48to0((int*)lbl_803DE44C);
     }
@@ -7264,7 +7264,7 @@ void playerUpdate(int obj)
             }
             if ((u32)lbl_803DE448 != 0)
             {
-                *(int*)(lbl_803DE448 + 0x30) = *(int*)&((GameObject*)obj)->anim.parent;
+                *(int*)&((GameObject*)lbl_803DE448)->anim.parent = *(int*)&((GameObject*)obj)->anim.parent;
                 if (((PlayerState*)inner)->characterId == 0)
                 {
                     *(s16*)(lbl_803DE448 + 6) = *(s16*)(lbl_803DE448 + 6) | 0x4000;
@@ -7277,9 +7277,9 @@ void playerUpdate(int obj)
             }
             if ((u32)lbl_803DE450 != 0)
             {
-                ObjPath_GetPointWorldPosition(obj, 4, (void*)(lbl_803DE450 + 0xc),
-                                              (void*)(lbl_803DE450 + 0x10),
-                                              (void*)(lbl_803DE450 + 0x14), 0);
+                ObjPath_GetPointWorldPosition(obj, 4, (void*)(&((GameObject*)lbl_803DE450)->anim.localPosX),
+                                              (void*)(&((GameObject*)lbl_803DE450)->anim.localPosY),
+                                              (void*)(&((GameObject*)lbl_803DE450)->anim.localPosZ), 0);
             }
             if (*(s16**)&((GameObject*)obj)->anim.parent != NULL)
             {
@@ -7432,12 +7432,12 @@ void playerUpdate(int obj)
             }
             if (lbl_803DE44C != 0 && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
             {
-                *(u16*)((char*)lbl_803DE44C + 0xb0) =
-                    *(u16*)((char*)lbl_803DE44C + 0xb0) & ~7;
+                ((GameObject*)lbl_803DE44C)->objectFlags =
+                    ((GameObject*)lbl_803DE44C)->objectFlags & ~7;
                 if (((PlayerState*)inner)->unk8B3 == 0)
                 {
-                    *(u16*)((char*)lbl_803DE44C + 0xb0) =
-                        *(u16*)((char*)lbl_803DE44C + 0xb0) | 2;
+                    ((GameObject*)lbl_803DE44C)->objectFlags =
+                        ((GameObject*)lbl_803DE44C)->objectFlags | 2;
                 }
             }
             hov = ((ByteFlags*)((char*)inner + 0x3f4))->b40;
@@ -11325,7 +11325,7 @@ void fn_802B07D8(int obj, int state)
     }
     if (lbl_803DE44C != NULL)
     {
-        *(int*)((char*)lbl_803DE44C + 0x30) = *(int*)&((GameObject*)obj)->anim.parent;
+        *(int*)&((GameObject*)lbl_803DE44C)->anim.parent = *(int*)&((GameObject*)obj)->anim.parent;
     }
 
     ((PlayerState*)state)->unk7D4 -= lbl_803E7E98 * timeDelta;
@@ -15829,9 +15829,9 @@ void fn_802AAF80(int obj, int inner, int a, int b, int c)
     v = ((PlayerState*)inner)->flags360;
     if ((v & 0x60000) != 0)
     {
-        *(f32*)((char*)lbl_803DAEF0 + 0xc) = ((GameObject*)obj)->anim.localPosX;
-        *(f32*)((char*)lbl_803DAEF0 + 0x10) = ((GameObject*)obj)->anim.localPosY;
-        *(f32*)((char*)lbl_803DAEF0 + 0x14) = ((GameObject*)obj)->anim.localPosZ;
+        ((PartFxSpawnParams*)lbl_803DAEF0)->unkC = ((GameObject*)obj)->anim.localPosX;
+        ((PartFxSpawnParams*)lbl_803DAEF0)->unk10 = ((GameObject*)obj)->anim.localPosY;
+        ((PartFxSpawnParams*)lbl_803DAEF0)->unk14 = ((GameObject*)obj)->anim.localPosZ;
         if ((v & 0x40000) != 0)
         {
             (*gPartfxInterface)->spawnObject(
