@@ -10,7 +10,6 @@
 extern bool FUN_800067f8();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068f4();
 extern int FUN_80006a10();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -33,9 +32,6 @@ extern undefined4 FUN_8014d4c8();
 extern byte FUN_8019e768();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
 extern int FUN_80294d20();
 extern undefined4 FUN_80294d28();
 
@@ -50,21 +46,10 @@ extern undefined4 DAT_803dc910;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd71c;
-extern f64 DOUBLE_803e34b0;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DC078;
 extern f32 lbl_803DC918;
 extern f32 lbl_803DC91C;
-extern f32 lbl_803E3470;
-extern f32 lbl_803E3474;
-extern f32 lbl_803E3480;
-extern f32 lbl_803E3490;
-extern f32 lbl_803E3494;
-extern f32 lbl_803E3498;
-extern f32 lbl_803E349C;
-extern f32 lbl_803E34A0;
-extern f32 lbl_803E34A4;
-extern f32 lbl_803E34A8;
 extern f32 lbl_803E34AC;
 extern f32 lbl_803E34B8;
 extern f32 lbl_803E34BC;
@@ -604,12 +589,12 @@ void FUN_801523f8(undefined8 param_1, double param_2, double param_3, undefined8
                 uVar2 = GameBit_Get((int)*(short*)(iVar3 + 0x1c));
                 if (uVar2 == 0)
                 {
-                    *(undefined*)(param_10 + 0x33a) =
+                    *(u8*)(param_10 + 0x33a) =
                         (&DAT_8031fee9)[(uint) * (byte*)(param_10 + 0x33a) * 0xc];
                 }
                 else
                 {
-                    *(undefined*)(param_10 + 0x33a) =
+                    *(u8*)(param_10 + 0x33a) =
                         (&DAT_8031feea)[(uint) * (byte*)(param_10 + 0x33a) * 0xc];
                 }
             }
@@ -619,7 +604,7 @@ void FUN_801523f8(undefined8 param_1, double param_2, double param_3, undefined8
             uVar2 = GameBit_Get((int)*(short*)(iVar3 + 0x1c));
             if ((uVar2 != 0) || ((*(uint*)(param_10 + 0x2dc) & 0x20000000) == 0))
             {
-                *(undefined*)(param_10 + 0x33a) = (&DAT_8031fee9)[(uint) * (byte*)(param_10 + 0x33a) * 0xc];
+                *(u8*)(param_10 + 0x33a) = (&DAT_8031fee9)[(uint) * (byte*)(param_10 + 0x33a) * 0xc];
             }
         }
         else if (uVar2 == 3)
@@ -627,16 +612,16 @@ void FUN_801523f8(undefined8 param_1, double param_2, double param_3, undefined8
             uVar2 = GameBit_Get((int)*(short*)(iVar3 + 0x1c));
             if (uVar2 == 0)
             {
-                *(undefined*)(param_10 + 0x33a) = (&DAT_8031fee9)[(uint) * (byte*)(param_10 + 0x33a) * 0xc];
+                *(u8*)(param_10 + 0x33a) = (&DAT_8031fee9)[(uint) * (byte*)(param_10 + 0x33a) * 0xc];
             }
             else
             {
-                *(undefined*)(param_10 + 0x33a) = (&DAT_8031feea)[(uint) * (byte*)(param_10 + 0x33a) * 0xc];
+                *(u8*)(param_10 + 0x33a) = (&DAT_8031feea)[(uint) * (byte*)(param_10 + 0x33a) * 0xc];
             }
         }
         else
         {
-            *(undefined*)(param_10 + 0x33a) = (&DAT_8031fee9)[uVar2 * 0xc];
+            *(u8*)(param_10 + 0x33a) = (&DAT_8031fee9)[uVar2 * 0xc];
         }
         uVar1 = (ushort)(byte)(&DAT_8031fee8)[(uint) * (byte*)(param_10 + 0x33a) * 0xc];
         if (*(ushort*)(param_9 + 0xa0) != uVar1)
@@ -696,14 +681,14 @@ FUN_80152a30(undefined8 param_1, double param_2, double param_3, undefined8 para
     {
         puVar3 = FUN_80017aa4(0x24, param_10);
         *puVar3 = param_10;
-        *(undefined*)(puVar3 + 2) = *(undefined*)(iVar4 + 4);
-        *(undefined*)(puVar3 + 3) = *(undefined*)(iVar4 + 6);
-        *(undefined*)((int)puVar3 + 5) = 1;
-        *(undefined*)((int)puVar3 + 7) = *(undefined*)(iVar4 + 7);
+        *(u8*)(puVar3 + 2) = *(u8*)(iVar4 + 4);
+        *(u8*)(puVar3 + 3) = *(u8*)(iVar4 + 6);
+        *(u8*)((int)puVar3 + 5) = 1;
+        *(u8*)((int)puVar3 + 7) = *(u8*)(iVar4 + 7);
         *(undefined4*)(puVar3 + 4) = *(undefined4*)(param_9 + 0xc);
         *(undefined4*)(puVar3 + 6) = *(undefined4*)(param_9 + 0x10);
         *(undefined4*)(puVar3 + 8) = *(undefined4*)(param_9 + 0x14);
-        *(undefined*)((int)puVar3 + 0x19) = 0;
+        *(u8*)((int)puVar3 + 0x19) = 0;
         puVar3[0x10] = 0x95;
         uVar2 = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, puVar3, 5,
                              ((GameObject*)param_9)->anim.mapEventSlot, 0xffffffff, *(uint**)(param_9 + 0x30), in_r8,
@@ -807,7 +792,7 @@ void FUN_80152cf0(undefined8 param_1, double param_2, double param_3, undefined8
     int iVar12;
     double dVar13;
     undefined8 uVar14;
-    undefined auStack_48[8];
+    u8 auStack_48[8];
     float local_40;
     float local_3c;
     float local_38;
@@ -848,7 +833,7 @@ void FUN_80152cf0(undefined8 param_1, double param_2, double param_3, undefined8
     {
         if (lbl_803E34C8 <= *(float*)(psVar1 + 8) - *(float*)(iVar12 + 0xc))
         {
-            *(undefined*)((int)puVar10 + 0x33a) = 0;
+            *(u8*)((int)puVar10 + 0x33a) = 0;
         }
         else
         {
@@ -857,7 +842,7 @@ void FUN_80152cf0(undefined8 param_1, double param_2, double param_3, undefined8
             {
                 FUN_80006824((uint)psVar1, SFXar_laser216);
             }
-            *(undefined*)((int)puVar10 + 0x33a) = 1;
+            *(u8*)((int)puVar10 + 0x33a) = 1;
         }
         *psVar1 = *psVar1 + (short)*(char*)(iVar12 + 0x2a);
     }
@@ -910,7 +895,7 @@ void FUN_80152cf0(undefined8 param_1, double param_2, double param_3, undefined8
         }
         if (lbl_803E34C4 <= *(float*)(psVar1 + 8) - pfVar11[0x1b])
         {
-            *(undefined*)((int)puVar10 + 0x33a) = 0;
+            *(u8*)((int)puVar10 + 0x33a) = 0;
         }
         else
         {
@@ -919,7 +904,7 @@ void FUN_80152cf0(undefined8 param_1, double param_2, double param_3, undefined8
             {
                 FUN_80006824((uint)psVar1, SFXar_laser216);
             }
-            *(undefined*)((int)puVar10 + 0x33a) = 1;
+            *(u8*)((int)puVar10 + 0x33a) = 1;
         }
     }
     if (*(char*)((int)puVar10 + 0x33a) != '\0')
