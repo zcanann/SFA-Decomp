@@ -1042,8 +1042,7 @@ void fn_80165B3C(int obj, int state)
 
     radius = lbl_803E3020;
     ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - lbl_803E2FF4;
-    damping = lbl_803E3024;
-    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * lbl_803E3024;
+    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (damping = lbl_803E3024);
     ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * damping;
     ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * damping;
     start[0] = ((GameObject*)obj)->anim.localPosX;
