@@ -63,50 +63,50 @@ extern f32 lbl_803E5018;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_blasted_init_v11_unused(int obj, int arg2)
+void fn_blasted_init_v11_unused(int param_1, int param_2)
 {
-    int state;
+    int iVar1;
 
-    state = *(int*)&((GameObject*)obj)->extra;
-    *(byte*)(state + 7) = *(byte*)(state + 7) | 2;
-    (**(code**)(*DAT_803dd740 + 4))(obj, state, 5);
-    ObjGroup_AddObject(obj, 0x19);
-    ObjGroup_AddObject(obj, 0x16);
-    ObjMsg_AllocQueue(obj, 8);
-    ((GameObject*)obj)->unkF8 = 0;
-    *(undefined2*)(state + 0x44) = 0;
-    *(undefined2*)(state + 0x46) = 0;
-    *(undefined*)(state + 0x15) = 0;
-    *(undefined2*)(state + 0x3c) = 0;
-    *(undefined*)(state + 0x16) = 0;
-    *(undefined*)(state + 0x17) = 0;
-    *(undefined*)(state + 0x3e) = 0;
-    *(undefined4*)(state + 0x40) = 0;
-    *(float*)(state + 0x30) = lbl_803E4F58;
-    *(undefined*)(state + 0x49) = 0;
-    FUN_8007f6e4((undefined4*)(state + 0x18));
-    FUN_8007f6e4((undefined4*)(state + 0x1c));
-    *(byte*)(state + 0x49) = *(byte*)(state + 0x49) | 1;
-    *(byte*)(state + 0x48) =
-        (*(char*)(arg2 + 0x19) < '\x01') << 7 | *(byte*)(state + 0x48) & 0x7f;
-    *(byte*)(state + 0x48) = (*(short*)(arg2 + 0x1c) != 0) << 6 | *(byte*)(state + 0x48) & 0xbf;
-    ObjHits_EnableObject(obj);
-    *(float*)(state + 0x2c) =
+    iVar1 = *(int*)&((GameObject*)param_1)->extra;
+    *(byte*)(iVar1 + 7) = *(byte*)(iVar1 + 7) | 2;
+    (**(code**)(*DAT_803dd740 + 4))(param_1, iVar1, 5);
+    ObjGroup_AddObject(param_1, 0x19);
+    ObjGroup_AddObject(param_1, 0x16);
+    ObjMsg_AllocQueue(param_1, 8);
+    ((GameObject*)param_1)->unkF8 = 0;
+    *(undefined2*)(iVar1 + 0x44) = 0;
+    *(undefined2*)(iVar1 + 0x46) = 0;
+    *(undefined*)(iVar1 + 0x15) = 0;
+    *(undefined2*)(iVar1 + 0x3c) = 0;
+    *(undefined*)(iVar1 + 0x16) = 0;
+    *(undefined*)(iVar1 + 0x17) = 0;
+    *(undefined*)(iVar1 + 0x3e) = 0;
+    *(undefined4*)(iVar1 + 0x40) = 0;
+    *(float*)(iVar1 + 0x30) = lbl_803E4F58;
+    *(undefined*)(iVar1 + 0x49) = 0;
+    FUN_8007f6e4((undefined4*)(iVar1 + 0x18));
+    FUN_8007f6e4((undefined4*)(iVar1 + 0x1c));
+    *(byte*)(iVar1 + 0x49) = *(byte*)(iVar1 + 0x49) | 1;
+    *(byte*)(iVar1 + 0x48) =
+        (*(char*)(param_2 + 0x19) < '\x01') << 7 | *(byte*)(iVar1 + 0x48) & 0x7f;
+    *(byte*)(iVar1 + 0x48) = (*(short*)(param_2 + 0x1c) != 0) << 6 | *(byte*)(iVar1 + 0x48) & 0xbf;
+    ObjHits_EnableObject(param_1);
+    *(float*)(iVar1 + 0x2c) =
         (float)((double)CONCAT44(0x43300000,
-                                 (int)*(short*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0x5a) ^ 0x80000000)
+                                 (int)*(short*)(*(int*)&((GameObject*)param_1)->anim.hitReactState + 0x5a) ^ 0x80000000)
             -
             DOUBLE_803e4f98);
-    *(byte*)(state + 0x4a) = *(byte*)(state + 0x4a) & 0xdf;
-    *(float*)(state + 0x38) = lbl_803E4F58;
-    *(undefined4*)(state + 0x10) = 0;
-    (**(code**)(*DAT_803dd740 + 0x2c))(state, 1);
-    if (*(int*)&((GameObject*)obj)->anim.hitReactState != 0)
+    *(byte*)(iVar1 + 0x4a) = *(byte*)(iVar1 + 0x4a) & 0xdf;
+    *(float*)(iVar1 + 0x38) = lbl_803E4F58;
+    *(undefined4*)(iVar1 + 0x10) = 0;
+    (**(code**)(*DAT_803dd740 + 0x2c))(iVar1, 1);
+    if (*(int*)&((GameObject*)param_1)->anim.hitReactState != 0)
     {
-        *(undefined2*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0xb2) = 1;
+        *(undefined2*)(*(int*)&((GameObject*)param_1)->anim.hitReactState + 0xb2) = 1;
     }
-    if (((GameObject*)obj)->anim.seqId == 0x754)
+    if (((GameObject*)param_1)->anim.seqId == 0x754)
     {
-        *(byte*)(state + 0x4a) = *(byte*)(state + 0x4a) & 0xfb | 4;
+        *(byte*)(iVar1 + 0x4a) = *(byte*)(iVar1 + 0x4a) & 0xfb | 4;
     }
     return;
 }
