@@ -396,9 +396,9 @@ int sc_totempole_sortCompletionGameBits(u16* bits, u16 param2)
         {
             if (stk[j + 1] != 0)
             {
-                u16 b = stk[j];
-                if ((stk[j + 1] < b) || (b == 0))
+                if ((stk[j + 1] < stk[j]) || (stk[j] == 0))
                 {
+                    u16 b = stk[j];
                     stk[j] = stk[j + 1];
                     stk[j + 1] = b;
                     changed = 1;
