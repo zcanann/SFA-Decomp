@@ -270,15 +270,15 @@ void camcontrol_initialiseModeSettings(void)
     return;
 }
 
-void camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, undefined4 param_4, int param_5)
+void camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, undefined4 arg4, int arg5)
 {
     CamcontrolPathSampleWork work;
-    int iVar1;
-    int iVar2;
+    int val2;
+    int val;
     f32 pathT;
 
     memset(&work, 0, 0x144);
-    work.model = *(int*)(param_5 + 0x30);
+    work.model = *(int*)(arg5 + 0x30);
     work.sampleX = gCamcontrolPathState->pointsX[gCamcontrolPathState->pathCurve.count - 2];
     work.sampleY = *height;
     work.sampleZ = gCamcontrolPathState->pointsZ[gCamcontrolPathState->pathCurve.count - 2];
@@ -287,18 +287,18 @@ void camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, undefined4 pa
     work.localZ = work.sampleZ;
     Obj_TransformLocalPointToWorld((double)work.sampleX, (double)work.sampleY, (double)work.sampleZ,
                                    &work.worldX, &work.worldY, work.worldZ, work.model);
-    work.targetObj = param_4;
-    iVar1 = (int)(*gCameraInterface)->getDefaultHandlerEntry();
-    (*(code*)(**(int**)(iVar1 + 4) + 0x14))(&work, param_4);
+    work.targetObj = arg4;
+    val2 = (int)(*gCameraInterface)->getDefaultHandlerEntry();
+    (*(code*)(**(int**)(val2 + 4) + 0x14))(&work, arg4);
     Obj_TransformLocalPointToWorld(work.sampleX, work.sampleY, work.sampleZ,
                                    &work.targetX, &work.targetY, work.targetZ, work.model);
-    (*(code*)(**(int**)(iVar1 + 4) + 0x24))
+    (*(code*)(**(int**)(val2 + 4) + 0x24))
         (&work, 1, 3, &gCamcontrolPathState->curveMin, &gCamcontrolPathState->curveMax);
-    iVar2 = gCamcontrolPathState->pathCurve.count + -3;
-    for (; iVar2 < gCamcontrolPathState->pathCurve.count; iVar2 = iVar2 + 1)
+    val = gCamcontrolPathState->pathCurve.count + -3;
+    for (; val < gCamcontrolPathState->pathCurve.count; val = val + 1)
     {
-        gCamcontrolPathState->pointsX[iVar2] = work.sampleX;
-        gCamcontrolPathState->pointsZ[iVar2] = work.sampleZ;
+        gCamcontrolPathState->pointsX[val] = work.sampleX;
+        gCamcontrolPathState->pointsZ[val] = work.sampleZ;
     }
     if (lbl_803E1740 != gCamcontrolPathState->pathCurve.pathLength)
     {

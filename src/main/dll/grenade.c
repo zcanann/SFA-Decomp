@@ -1094,16 +1094,16 @@ int trickyFn_801430e0(u8* obj, u8* state)
  */
 undefined4 trickyFn_80143210(int obj, int* trickyState)
 {
-    short sVar1;
-    int iVar2;
+    short sval;
+    int val;
 
-    iVar2 = trickyFoodFn_8014460c(obj, trickyState);
-    if (iVar2 != 0)
+    val = trickyFoodFn_8014460c(obj, trickyState);
+    if (val != 0)
     {
         return 1;
     }
-    sVar1 = ((GameObject*)obj)->anim.currentMove;
-    switch (sVar1)
+    sval = ((GameObject*)obj)->anim.currentMove;
+    switch (sval)
     {
     case 0x23:
         if ((trickyState[0x15] & 0x8000000U) != 0)
@@ -1136,16 +1136,16 @@ undefined4 trickyFn_80143210(int obj, int* trickyState)
  */
 undefined4 trickyFn_801432cc(int obj, int* trickyState)
 {
-    short sVar1;
-    int iVar2;
+    short sval;
+    int val;
 
-    iVar2 = trickyFoodFn_8014460c(obj, trickyState);
-    if (iVar2 != 0)
+    val = trickyFoodFn_8014460c(obj, trickyState);
+    if (val != 0)
     {
         return 1;
     }
-    sVar1 = ((GameObject*)obj)->anim.currentMove;
-    switch (sVar1)
+    sval = ((GameObject*)obj)->anim.currentMove;
+    switch (sval)
     {
     case 0x21:
         if ((trickyState[0x15] & 0x8000000U) != 0)
@@ -1544,7 +1544,7 @@ int trickyFn_80143c04(int obj, int state)
     int tex;
     short sVar;
     int result;
-    int iVar4;
+    int val;
     float fVar;
 
     *(int*)&((TrickyState*)state)->followObj = ((TrickyState*)state)->playerObj;
@@ -1594,21 +1594,21 @@ int trickyFn_80143c04(int obj, int state)
     }
     if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
     {
-        iVar4 = 0;
+        val = 0;
     }
     else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
     {
-        iVar4 = 1;
+        val = 1;
     }
     else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
     {
-        iVar4 = 1;
+        val = 1;
     }
     else
     {
-        iVar4 = 0;
+        val = 0;
     }
-    if (iVar4 != 0)
+    if (val != 0)
     {
         return 0;
     }
@@ -1859,7 +1859,7 @@ void objAnimFn_801441c0(u8* obj, u8* state)
 void tricky_startRandomIdleMove(int obj, int trickyState)
 {
     int val;
-    int iVar3;
+    int state;
 
     val = randomGetRange(0, 4);
     switch (val)
@@ -1869,14 +1869,14 @@ void tricky_startRandomIdleMove(int obj, int trickyState)
         ((TrickyState*)trickyState)->substate = 2;
         break;
     case 1:
-        iVar3 = *(int*)&((GameObject*)obj)->extra;
-        if (((u32)(*(byte*)(iVar3 + 0x58) >> 6 & 1)) == 0U)
+        state = *(int*)&((GameObject*)obj)->extra;
+        if (((u32)(*(byte*)(state + 0x58) >> 6 & 1)) == 0U)
         {
             if (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)
             {
                 if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
                 {
-                    objAudioFn_800393f8(obj, (void*)(iVar3 + 0x3a8), 0x357, 0, 0xffffffff, 0);
+                    objAudioFn_800393f8(obj, (void*)(state + 0x3a8), 0x357, 0, 0xffffffff, 0);
                 }
             }
         }

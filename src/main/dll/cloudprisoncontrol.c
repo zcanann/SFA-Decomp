@@ -19,31 +19,31 @@ extern f32 lbl_803E3750;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void InvisibleHitSwitch_init(int param_1, u8* param_2)
+void InvisibleHitSwitch_init(int obj, u8* arg2)
 {
     u8* info;
 
-    info = (u8*)*(int*)&((GameObject*)param_1)->extra;
-    ((GameObject*)param_1)->objectFlags = (u16)(((GameObject*)param_1)->objectFlags | 0x6000);
-    if (param_2[0x1d] == 0)
+    info = (u8*)*(int*)&((GameObject*)obj)->extra;
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
+    if (arg2[0x1d] == 0)
     {
-        ((GameObject*)param_1)->anim.rootMotionScale = *(f32*)(*(int*)&((GameObject*)param_1)->anim.modelInstance + 4);
+        ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
     }
     else
     {
         {
-            f32 v = (f32)(u32)param_2[0x1d] * *(f32
+            f32 v = (f32)(u32)arg2[0x1d] * *(f32
             *
             )
-            (*(int*)&((GameObject*)param_1)->anim.modelInstance + 4);
-            ((GameObject*)param_1)->anim.rootMotionScale = v * lbl_803E3750;
+            (*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
+            ((GameObject*)obj)->anim.rootMotionScale = v * lbl_803E3750;
         }
     }
     ObjHitbox_SetSphereRadius(
-        param_1,
-        (s16)((param_2[0x1d] * (int)*(u8*)(*(int*)&((GameObject*)param_1)->anim.modelInstance + 0x62)) / 64));
-    info[0] = (u8)GameBit_Get(*(s16*)(param_2 + 0x18));
-    switch ((param_2[0x23] & 0xe) >> 1)
+        obj,
+        (s16)((arg2[0x1d] * (int)*(u8*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x62)) / 64));
+    info[0] = (u8)GameBit_Get(*(s16*)(arg2 + 0x18));
+    switch ((arg2[0x23] & 0xe) >> 1)
     {
     case 0:
     default:

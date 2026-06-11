@@ -1221,17 +1221,17 @@ extern f32 lbl_803259A0[16];
 
 int fn_801BB0D8(int obj, int param2, f32 fParam)
 {
-    u16 local_c;
-    s16 local_a;
-    s16 local_8;
+    u16 tmp;
+    s16 tmp2;
+    s16 tmp3;
     ((BaddieState*)param2)->animSpeedA = lbl_803E4BD8;
     if (*(s8*)&((BaddieState*)param2)->moveDone != 0 || *(s8*)&((BaddieState*)param2)->moveJustStartedA != 0 || ((
         GameObject*)obj)->anim.currentMove == 1)
     {
         (*(int (**)(int, int, int, u16*, s16*, s16*))(*(int*)gBaddieControlInterface + 0x14))(
-            obj, *(int*)&((BaddieState*)param2)->targetObj, 0x10, &local_c, &local_a, &local_8);
-        ObjAnim_SetCurrentMove(obj, lbl_80325960[local_c], lbl_803E4BD8, 0);
-        ((BaddieState*)param2)->moveSpeed = lbl_803259A0[local_c];
+            obj, *(int*)&((BaddieState*)param2)->targetObj, 0x10, &tmp, &tmp2, &tmp3);
+        ObjAnim_SetCurrentMove(obj, lbl_80325960[tmp], lbl_803E4BD8, 0);
+        ((BaddieState*)param2)->moveSpeed = lbl_803259A0[tmp];
         ((BaddieState*)param2)->moveDone = 0;
     }
     (*(int (**)(int, int, int, f32))(*(int*)gPlayerInterface + 0x20))(obj, param2, 8, fParam);
@@ -1492,20 +1492,20 @@ extern u8 gDIMbossAnimController[];
 
 int fn_801BA224(int obj, int param2)
 {
-    u16 local_c;
-    s16 local_a;
-    u16 local_8;
+    u16 tmp;
+    s16 tmp3;
+    u16 tmp2;
     int state;
     s16 mode;
     state = *(int*)&((GameObject*)obj)->extra;
     if (*(s8*)&((BaddieState*)param2)->moveDone != 0 || *(s8*)&((BaddieState*)param2)->moveJustStartedB != 0)
     {
         (*(int (**)(int, int, int, u16*, s16*, u16*))(*(int*)gBaddieControlInterface + 0x14))(
-            obj, *(int*)&((BaddieState*)param2)->targetObj, 0x10, &local_c, &local_a, &local_8);
+            obj, *(int*)&((BaddieState*)param2)->targetObj, 0x10, &tmp, &tmp3, &tmp2);
         ((BaddieState*)param2)->moveDone = 0;
-        if (local_8 < 90)
+        if (tmp2 < 90)
         {
-            if (local_8 > 30 && ((u16)(local_c - 3) <= 1 || local_c == 11 || local_c == 12))
+            if (tmp2 > 30 && ((u16)(tmp - 3) <= 1 || tmp == 11 || tmp == 12))
             {
                 (*(int (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, param2, 2);
             }
@@ -1516,10 +1516,10 @@ int fn_801BA224(int obj, int param2)
         }
         else
         {
-            if (local_c == 0 || local_c == 15)
+            if (tmp == 0 || tmp == 15)
             {
                 ((BaddieState*)param2)->moveDone = 0;
-                if (local_8 > 240 && (((u8)(*(u8 (**)(int, int, f32))(*(int*)gBaddieControlInterface + 0x18))(
+                if (tmp2 > 240 && (((u8)(*(u8 (**)(int, int, f32))(*(int*)gBaddieControlInterface + 0x18))(
                     obj, param2, lbl_803E4BBC)) & 1))
                 {
                     (*(int (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(

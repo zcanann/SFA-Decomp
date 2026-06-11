@@ -972,7 +972,7 @@ int Tricky_updateSideCommandPrompts(int obj)
  */
 void Tricky_destroy(int obj, int shouldKeepFlameChildren)
 {
-    bool bVar1;
+    bool bval;
     int state;
     int i;
     int childSlot;
@@ -1006,7 +1006,7 @@ void Tricky_destroy(int obj, int shouldKeepFlameChildren)
         childSlot = *(int*)&((GameObject*)obj)->extra;
         if (((*(byte*)(childSlot + 0x58) >> 6 & 1) == 0) &&
             (((0x2f < ((GameObject*)obj)->anim.currentMove || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
-                (bVar1 = Sfx_IsPlayingFromObjectChannel(obj, 0x10), !bVar1))))
+                (bval = Sfx_IsPlayingFromObjectChannel(obj, 0x10), !bval))))
         {
             objAudioFn_800393f8(obj, (void*)(childSlot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
         }
@@ -2943,7 +2943,7 @@ void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, char doRender)
+void Tricky_render(int obj, int arg2, int arg3, int arg4, int arg5, char doRender)
 {
     u8 mode;
     int state;
@@ -2955,7 +2955,7 @@ void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, 
     if (doRender != '\0')
     {
         state = *(int*)&((GameObject*)obj)->extra;
-        objRenderFn_8003b8f4(obj, param_2, param_3, param_4, param_5, lbl_803E23E8);
+        objRenderFn_8003b8f4(obj, arg2, arg3, arg4, arg5, lbl_803E23E8);
         pathState = *(int*)&((GameObject*)obj)->extra;
         i = 0;
         pathPoint = pathState;
@@ -2994,7 +2994,7 @@ void Tricky_render(int obj, int param_2, int param_3, int param_4, int param_5, 
                     *(f32*)(*(int*)&((TrickyState*)state)->unk700 + 0x10) = ((TrickyState*)state)->unk40C;
                     *(f32*)(*(int*)&((TrickyState*)state)->unk700 + 0x14) = ((TrickyState*)state)->unk410;
                 }
-                objRenderFn_8003b8f4(*(int*)&((TrickyState*)state)->unk700, param_2, param_3, param_4, param_5,
+                objRenderFn_8003b8f4(*(int*)&((TrickyState*)state)->unk700, arg2, arg3, arg4, arg5,
                                      lbl_803E23E8);
             }
         }

@@ -355,14 +355,14 @@ void dimbossgut2_free(int arg9)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossgut2_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void dimbossgut2_render(int obj, int arg2, int arg3, int arg4, int arg5, s8 visible)
 {
     u8* light;
 
     light = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, param_2, param_3, param_4, param_5,
+        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, arg2, arg3, arg4, arg5,
                                                                       lbl_803E4CF0);
         light = *(u8**)(((Dimbossgut2State*)light)->unk40C + 0x18);
         if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0))
@@ -392,7 +392,7 @@ void dimbossgut2_update(int obj)
     int iVar;
     uint uval;
     uint n;
-    float* pfVar4;
+    float* ptr;
     int val;
     f32 fdiff;
     f32 fscale;
@@ -422,19 +422,19 @@ void dimbossgut2_update(int obj)
             iVar = ObjMsg_Pop(obj, &msgA, &msgB, &msgC);
         }
         while (iVar != 0);
-        pfVar4 = *(float**)&((Dimbossgut2State*)state)->unk40C;
-        if ((*pfVar4 < lbl_803E4CD0) && (pfVar4[4] < lbl_803E4CD4))
+        ptr = *(float**)&((Dimbossgut2State*)state)->unk40C;
+        if ((*ptr < lbl_803E4CD0) && (ptr[4] < lbl_803E4CD4))
         {
-            fdiff = pfVar4[3] - ((GameObject*)obj)->anim.localPosY;
+            fdiff = ptr[3] - ((GameObject*)obj)->anim.localPosY;
             if (fdiff < lbl_803E4CD8)
             {
                 fdiff = -fdiff;
             }
             if ((fdiff < lbl_803E4CDC) &&
-                (stk.f4c = pfVar4[3], uval = randomGetRange(0x1e, 0x3c),
-                    (int)(uint) * (u16*)((int)pfVar4 + 0x16) > (int)uval))
+                (stk.f4c = ptr[3], uval = randomGetRange(0x1e, 0x3c),
+                    (int)(uint) * (u16*)((int)ptr + 0x16) > (int)uval))
             {
-                fscale = lbl_803E4CE0 * pfVar4[4];
+                fscale = lbl_803E4CE0 * ptr[4];
                 stk.f50 = ((GameObject*)obj)->anim.localPosX -
                     fscale * mathSinf(lbl_803E4CE4 * (f32) * (s16*)obj / lbl_803E4CE8);
                 stk.f48 = ((GameObject*)obj)->anim.localPosZ -
@@ -442,10 +442,10 @@ void dimbossgut2_update(int obj)
                 stk.f54 = lbl_803E4CEC * (lbl_803E4CF0 - fdiff / lbl_803E4CDC);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x32b, &stk, 1, -1,
                                                  NULL);
-                *(u16*)((int)pfVar4 + 0x16) = 0;
+                *(u16*)((int)ptr + 0x16) = 0;
             }
         }
-        *(u16*)((int)pfVar4 + 0x16) += (u8)framesThisStep;
+        *(u16*)((int)ptr + 0x16) += (u8)framesThisStep;
         fn_801BEEA0((s16*)obj, (u8*)state);
         dimbossgut2_updateTracking(obj, state);
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E4D20, timeDelta, NULL);
@@ -663,15 +663,15 @@ void DIMbossspit_updateBurst(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMbossspit_free(int param_1)
+void DIMbossspit_free(int arg1)
 {
-    int obj = param_1;
-    uint uVar1;
+    int obj = arg1;
+    uint state;
 
-    uVar1 = *(uint*)(*(int*)&((GameObject*)obj)->extra + 4);
-    if (uVar1 != 0)
+    state = *(uint*)(*(int*)&((GameObject*)obj)->extra + 4);
+    if (state != 0)
     {
-        ModelLightStruct_free((void*)uVar1);
+        ModelLightStruct_free((void*)state);
     }
     (*gExpgfxInterface)->freeSource2((u32)obj);
     return;
@@ -690,14 +690,14 @@ void DIMbossspit_free(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMbossspit_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void DIMbossspit_render(int obj, int arg2, int arg3, int arg4, int arg5, s8 visible)
 {
     u8* light;
 
-    light = ((GameObject*)param_1)->extra;
+    light = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(param_1, param_2, param_3, param_4, param_5,
+        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, arg2, arg3, arg4, arg5,
                                                                       lbl_803E4D44);
         light = *(u8**)&((DIMbossspitState*)light)->light;
         if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0))

@@ -188,7 +188,7 @@ typedef struct IndMtxCopy
     int w[6];
 } IndMtxCopy;
 
-void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* param_3, Mtx param_4)
+void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* arg3, Mtx arg4)
 {
     Mtx m2;
     float m[2][3];
@@ -206,12 +206,12 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* par
     f32 kH;
     u8* tbl;
 
-    pos = param_3[4];
-    word = *(u8*)(*param_3 + (pos >> 3));
-    bptr = *param_3 + (pos >> 3);
+    pos = arg3[4];
+    word = *(u8*)(*arg3 + (pos >> 3));
+    bptr = *arg3 + (pos >> 3);
     word = word | (u32)(*(u8*)(bptr + 1) << 8);
     word = word | (u32)(*(u8*)(bptr + 2) << 16);
-    param_3[4] = pos + 8;
+    arg3[4] = pos + 8;
     ptr = *(int*)(blockData + 0x68) + ((word >> (pos & 7)) & 0xff) * 0x1c;
     flags = *(uint*)(arg2 + 0x3c);
     if ((flags & 0x4000) != 0)
@@ -238,7 +238,7 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* par
     for (; i < count; i = i + 1)
     {
         PSMTXTrans(m2, lbl_803DEBCC, k * (f32)(i + 1), lbl_803DEBCC);
-        PSMTXConcat(param_4, m2, m2);
+        PSMTXConcat(arg4, m2, m2);
         GXLoadPosMtxImm(m2, 0);
         *(IndMtxCopy*)m = *(IndMtxCopy*)tbl;
         textureFn_8006c4e0(&la, &lb);
@@ -750,7 +750,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
     byte layerByte;
     TexOverride* pE;
     undefined4 colorWord;
-    Mtx afStack_44;
+    Mtx fbuf;
 
     colorWord = lbl_803DEBB0;
     if ((*(byte*)(shader + 0x41) == 2) &&
@@ -786,11 +786,11 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         else
         {
             layerIdx = (uint) * (byte*)((int)layer + 6) * 0x10;
-            PSMTXTrans(afStack_44,
+            PSMTXTrans(fbuf,
                        *(float*)(lbl_803DCE68 + layerIdx) / lbl_803DEBC8,
                        *(float*)(lbl_803DCE68 + layerIdx + 4) / lbl_803DEBC8,
                        lbl_803DEBCC);
-            texMtx = (float*)afStack_44;
+            texMtx = (float*)fbuf;
         }
         fn_80051B00(texId, texMtx, 0, (char*)&colorWord);
         if ((*(uint*)(shader + 0x3c) & 0x100) != 0)
@@ -827,11 +827,11 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         else
         {
             layerIdx = (uint) * (byte*)((int)layer + 6) * 0x10;
-            PSMTXTrans(afStack_44,
+            PSMTXTrans(fbuf,
                        *(float*)(lbl_803DCE68 + layerIdx) / lbl_803DEBC8,
                        *(float*)(lbl_803DCE68 + layerIdx + 4) / lbl_803DEBC8,
                        lbl_803DEBCC);
-            texMtx = (float*)afStack_44;
+            texMtx = (float*)fbuf;
         }
         fn_80051868(texId, texMtx, 9);
         textureFn_800524ec((char*)&colorWord);
@@ -872,8 +872,8 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                 else
                 {
                     texMtx = (float*)(lbl_803DCE68 + (uint) * (byte*)((int)layer + 6) * 0x10);
-                    PSMTXTrans(afStack_44, *texMtx / lbl_803DEBC8, texMtx[1] / lbl_803DEBC8, lbl_803DEBCC);
-                    texMtx = (float*)afStack_44;
+                    PSMTXTrans(fbuf, *texMtx / lbl_803DEBC8, texMtx[1] / lbl_803DEBC8, lbl_803DEBCC);
+                    texMtx = (float*)fbuf;
                 }
                 if ((*(uint*)(shader + 0x3c) & 0x40000) == 0)
                 {

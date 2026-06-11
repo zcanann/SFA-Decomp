@@ -641,7 +641,7 @@ void FUN_8018f650(void)
  */
 #pragma scheduling off
 #pragma peephole off
-void warpPadFn_8019042c(int param_1)
+void warpPadFn_8019042c(int obj)
 {
     WarpPadState* state;
     int player;
@@ -657,7 +657,7 @@ void warpPadFn_8019042c(int param_1)
         f32 pos[3];
     } fx;
 
-    state = ((GameObject*)param_1)->extra;
+    state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
     fx.pos[0] = lbl_803E3E98;
     fx.pos[1] = lbl_803E3E9C;
@@ -684,16 +684,16 @@ void warpPadFn_8019042c(int param_1)
     }
     else if ((flags & 8) != 0)
     {
-        if (vec3f_distanceSquared(&((GameObject*)param_1)->anim.worldPosX, (f32*)(player + 0x18)) < lbl_803E3EA0)
+        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < lbl_803E3EA0)
         {
             if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0))
             {
-                objfx_spawnArcedBurst(param_1, 1, lbl_803E3EA4, 2, 7, 100,
+                objfx_spawnArcedBurst(obj, 1, lbl_803E3EA4, 2, 7, 100,
                                       lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
             }
             else
             {
-                objfx_spawnArcedBurst(param_1, 1, lbl_803E3EB0, 1, 6, 100,
+                objfx_spawnArcedBurst(obj, 1, lbl_803E3EB0, 1, 6, 100,
                                       lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
             }
         }
@@ -702,16 +702,16 @@ void warpPadFn_8019042c(int param_1)
     }
     else if ((flags & 0x10) != 0)
     {
-        if (vec3f_distanceSquared(&((GameObject*)param_1)->anim.worldPosX, (f32*)(player + 0x18)) < lbl_803E3EA0)
+        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < lbl_803E3EA0)
         {
             if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0))
             {
-                objfx_spawnArcedBurst(param_1, 1, lbl_803E3EA4, 2, 7, 100,
+                objfx_spawnArcedBurst(obj, 1, lbl_803E3EA4, 2, 7, 100,
                                       lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
             }
             else
             {
-                objfx_spawnArcedBurst(param_1, 1, lbl_803E3EB0, 5, 6, 100,
+                objfx_spawnArcedBurst(obj, 1, lbl_803E3EB0, 5, 6, 100,
                                       lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
             }
         }
@@ -720,16 +720,16 @@ void warpPadFn_8019042c(int param_1)
     }
     else
     {
-        if (vec3f_distanceSquared(&((GameObject*)param_1)->anim.worldPosX, (f32*)(player + 0x18)) < lbl_803E3EA0)
+        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) < lbl_803E3EA0)
         {
             if (((state->flags & 0xa0) != 0) && (state->countdownActive == 0))
             {
-                objfx_spawnArcedBurst(param_1, 1, lbl_803E3EA4, 2, 7, 100,
+                objfx_spawnArcedBurst(obj, 1, lbl_803E3EA4, 2, 7, 100,
                                       lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
             }
             else
             {
-                objfx_spawnArcedBurst(param_1, 1, lbl_803E3EB0, 3, 6, 100,
+                objfx_spawnArcedBurst(obj, 1, lbl_803E3EB0, 3, 6, 100,
                                       lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
             }
         }
@@ -744,7 +744,7 @@ void warpPadFn_8019042c(int param_1)
             if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0
             )
             {
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7ca, &fx, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x7ca, &fx, 2, -1, NULL);
             }
         }
         else if (state->pulseTimer < lbl_803E3EB8)
@@ -752,12 +752,12 @@ void warpPadFn_8019042c(int param_1)
             if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer / lbl_803E3EBC
             )
             {
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7ca, &fx, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x7ca, &fx, 2, -1, NULL);
             }
             fx.count = 0x28;
             fx.unk0 = 0;
             fx.scale = lbl_803E3EC0 * ((state->pulseTimer - lbl_803E3EB4) / lbl_803E3EC4);
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x7d2, &fx, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x7d2, &fx, 2, -1, NULL);
             state->flags = state->flags | 2;
         }
         else if (state->pulseTimer < lbl_803E3EC8)
@@ -765,7 +765,7 @@ void warpPadFn_8019042c(int param_1)
             if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0
             )
             {
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x7ca, &fx, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x7ca, &fx, 2, -1, NULL);
             }
             if ((state->flags & 2) != 0)
             {
@@ -774,7 +774,7 @@ void warpPadFn_8019042c(int param_1)
                 fx.scale = lbl_803E3ECC;
                 for (i = 0xf; i != 0; i--)
                 {
-                    (*gPartfxInterface)->spawnObject((void*)param_1, 0x7d2, &fx, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject((void*)obj, 0x7d2, &fx, 2, -1, NULL);
                 }
             }
         }

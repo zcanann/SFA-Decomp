@@ -120,7 +120,7 @@ extern f32 lbl_803E4348;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void gunpowderbarrel_hitDetect(int param_1)
+void gunpowderbarrel_hitDetect(int arg1)
 {
     GameObject* barrel;
     GunpowderBarrelState* state;
@@ -128,14 +128,14 @@ void gunpowderbarrel_hitDetect(int param_1)
     f32 sp1c[3];
     f32 collision_buf[26];
 
-    barrel = (GameObject*)param_1;
+    barrel = (GameObject*)arg1;
     state = barrel->extra;
 
     if (Obj_IsObjectAlive(state->linkedTimerObject) == 0)
     {
         if (state->linkedTimerObject != 0)
         {
-            ObjLink_DetachChild(param_1);
+            ObjLink_DetachChild(arg1);
             state->linkedTimerObject = 0;
         }
     }
@@ -156,7 +156,7 @@ void gunpowderbarrel_hitDetect(int param_1)
 
     if (state->queuedHitObject != 0)
     {
-        objHitDetectFn_80062e84(param_1, state->queuedHitObject, 1);
+        objHitDetectFn_80062e84(arg1, state->queuedHitObject, 1);
         state->queuedHitObject = 0;
     }
 
@@ -187,8 +187,8 @@ void gunpowderbarrel_hitDetect(int param_1)
         goto copy_end;
     }
 
-    if (objBboxFn_800640cc(param_1 + 0x80, param_1 + 0xc, lbl_803E432C, 1,
-                           (int)&collision_buf[0], param_1, 8, -1, 0xff, 0) == 0)
+    if (objBboxFn_800640cc(arg1 + 0x80, arg1 + 0xc, lbl_803E432C, 1,
+                           (int)&collision_buf[0], arg1, 8, -1, 0xff, 0) == 0)
     {
         goto copy_end;
     }
@@ -201,15 +201,15 @@ void gunpowderbarrel_hitDetect(int param_1)
     if (((state->heldFlags >> 7) & 1) != 0 &&
         (s8) * ((u8*)&collision_buf[0] + 0x51) == 3)
     {
-        gunpowderbarrel_setPlayerHeldState(param_1, 0);
-        ObjGroup_RemoveObject(param_1, 0x16);
+        gunpowderbarrel_setPlayerHeldState(arg1, 0);
+        ObjGroup_RemoveObject(arg1, 0x16);
         goto copy_end;
     }
 
     sp10[0] = *((f32*)&collision_buf[0] + 7);
     sp10[1] = *((f32*)&collision_buf[0] + 8);
     sp10[2] = *((f32*)&collision_buf[0] + 9);
-    Vec3_ReflectAgainstNormal(sp10, (void*)(param_1 + 0x24), (void*)(param_1 + 0x24));
+    Vec3_ReflectAgainstNormal(sp10, (void*)(arg1 + 0x24), (void*)(arg1 + 0x24));
     Vec3_ReflectAgainstNormal(sp10, &state->throwVelX, &state->throwVelX);
 
     barrel->anim.velocityX = lbl_803E4330 * barrel->anim.velocityX;
@@ -225,7 +225,7 @@ void gunpowderbarrel_hitDetect(int param_1)
     {
         if (PSVECMag(&state->throwVelX) > lbl_803DBE84)
         {
-            Sfx_PlayFromObject(param_1, 0x446);
+            Sfx_PlayFromObject(arg1, 0x446);
         }
         state->impactSoundCooldown = lbl_803E42C0;
     }

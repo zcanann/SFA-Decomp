@@ -155,9 +155,9 @@ uint fn_8010AEA8(CameraObject* camera, uint flagsIn)
 void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject* camera, f32* posEnd,
                                        s32 rotXEnd, s32 rotYEnd, s32 rotZEnd)
 {
-    f32 fVar1;
-    f32 fVar2;
-    f32 fVar3;
+    f32 fa;
+    f32 fb;
+    f32 fc;
 
     lbl_803DD560->transitionComplete = 0;
     lbl_803DD560->posXStart = camera->anim.localPosX;
@@ -178,10 +178,10 @@ void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject* camera, f32* po
     lbl_803DD560->rotZEnd = (f32)rotZEnd;
     lbl_803DD560->fovEnd = fovEnd;
     lbl_803DD560->elapsed = lbl_803E1888;
-    fVar1 = lbl_803DD560->posXEnd - lbl_803DD560->posXStart;
-    fVar2 = lbl_803DD560->posYEnd - lbl_803DD560->posYStart;
-    fVar3 = lbl_803DD560->posZEnd - lbl_803DD560->posZStart;
-    lbl_803DD560->duration = sqrtf(fVar1 * fVar1 + fVar2 * fVar2 + fVar3 * fVar3);
+    fa = lbl_803DD560->posXEnd - lbl_803DD560->posXStart;
+    fb = lbl_803DD560->posYEnd - lbl_803DD560->posYStart;
+    fc = lbl_803DD560->posZEnd - lbl_803DD560->posZStart;
+    lbl_803DD560->duration = sqrtf(fa * fa + fb * fb + fc * fc);
     (*gCameraInterface)->initialise(lbl_803DD560->speedCurve, (f64)lbl_803DD560->duration,
                                     (f64)lbl_803E18B0, (f64)lbl_803E18B4,
                                     (f64)lbl_803E18B4, (f64)lbl_803E18B8);

@@ -781,9 +781,9 @@ extern void* PTR_DAT_803211ec;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void staticCamera_free(int param_1)
+void staticCamera_free(int arg1)
 {
-    ObjGroup_RemoveObject(param_1, 7);
+    ObjGroup_RemoveObject(arg1, 7);
     return;
 }
 
@@ -800,11 +800,11 @@ void staticCamera_free(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void staticCamera_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
+void staticCamera_render(int arg1, int arg2, int arg3, int arg4, int arg5, s8 visible)
 {
     if (visible != 0)
     {
-        FUN_8003b818(param_1);
+        FUN_8003b818(arg1);
     }
     return;
 }
@@ -822,21 +822,21 @@ void staticCamera_render(int param_1, int param_2, int param_3, int param_4, int
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void staticCamera_init(short* param_1, int param_2, int param_3)
+void staticCamera_init(short* arg1, int arg2, int arg3)
 {
-    undefined* puVar1;
+    undefined* ptr;
 
-    *param_1 = -*(short*)(param_2 + 0x1c);
-    param_1[1] = -*(short*)(param_2 + 0x1e);
-    param_1[2] = -*(short*)(param_2 + 0x20);
-    puVar1 = *(undefined**)(param_1 + 0x5c);
-    *puVar1 = *(undefined*)(param_2 + 0x19);
-    *(float*)(puVar1 + 4) =
-        (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(param_2 + 0x1a)) - DOUBLE_803e3e88);
-    puVar1[1] = 0;
-    if (param_3 == 0)
+    *arg1 = -*(short*)(arg2 + 0x1c);
+    arg1[1] = -*(short*)(arg2 + 0x1e);
+    arg1[2] = -*(short*)(arg2 + 0x20);
+    ptr = *(undefined**)(arg1 + 0x5c);
+    *ptr = *(undefined*)(arg2 + 0x19);
+    *(float*)(ptr + 4) =
+        (float)((double)CONCAT44(0x43300000, (uint) * (byte*)(arg2 + 0x1a)) - DOUBLE_803e3e88);
+    ptr[1] = 0;
+    if (arg3 == 0)
     {
-        ObjGroup_AddObject((int)param_1, 7);
+        ObjGroup_AddObject((int)arg1, 7);
     }
     return;
 }
@@ -1547,7 +1547,7 @@ void FUN_80170048(void)
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3420;
 
-void checkpoint4_render(int param_1)
+void checkpoint4_render(int arg1)
 {
     objRenderFn_8003b8f4(lbl_803E3420);
 }
@@ -1630,13 +1630,13 @@ extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sideload_update(int param_1)
+void sideload_update(int obj2)
 {
     int state;
     void* obj;
     short* p;
 
-    state = *(int*)&((GameObject*)param_1)->anim.placementData;
+    state = *(int*)&((GameObject*)obj2)->anim.placementData;
     if ((Obj_IsLoadingLocked() != 0) && (Obj_GetPlayerObject() != 0) &&
         (getTrickyObject() == 0) && (GameBit_Get((int)*(short*)(state + 0x18)) != 0))
     {
@@ -1644,9 +1644,9 @@ void sideload_update(int param_1)
         *(u8*)((char*)obj + 4) = 2;
         *(u8*)((char*)obj + 5) = 4;
         *(u8*)((char*)obj + 7) = 0xff;
-        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)param_1)->anim.localPosX;
-        ((GameObject*)obj)->anim.localPosX = ((GameObject*)param_1)->anim.localPosY;
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)param_1)->anim.localPosZ;
+        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj2)->anim.localPosX;
+        ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj2)->anim.localPosY;
+        ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj2)->anim.localPosZ;
         p = (short*)Obj_SetupObject(obj, 5, -1, -1, (void*)0);
         *p = (short)((u8)((SideloadPlacement*)state)->unk1A << 8);
     }
@@ -1699,13 +1699,13 @@ void curve_init(ObjAnimComponent* obj, CurvePlacementParams* params)
     }
 }
 
-void siderepel_init(int param_1, int param_2)
+void siderepel_init(int obj, int arg2)
 {
-    ((GameObject*)param_1)->objectFlags = ((GameObject*)param_1)->objectFlags | 0xe000;
-    ObjGroup_AddObject(param_1, 0x40);
-    if (((GameObject*)param_1)->anim.hitReactState != NULL)
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0xe000;
+    ObjGroup_AddObject(obj, 0x40);
+    if (((GameObject*)obj)->anim.hitReactState != NULL)
     {
-        ObjHitbox_SetSphereRadius(param_1, (short)((int)(uint) * (ushort*)(param_2 + 0x18) >> 3));
+        ObjHitbox_SetSphereRadius(obj, (short)((int)(uint) * (ushort*)(arg2 + 0x18) >> 3));
     }
 }
 

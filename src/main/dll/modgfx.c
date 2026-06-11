@@ -1647,7 +1647,7 @@ void modgfx_allocExpgfxPools(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modgfx_initExpgfxSpawnConfig(undefined4 param_1, undefined4 param_2, undefined colorLowByte,
+void modgfx_initExpgfxSpawnConfig(undefined4 arg1, undefined4 arg2, undefined colorLowByte,
                                   undefined4 textureWord, undefined4 scaleBits)
 {
     undefined4 setupWord;
@@ -2325,9 +2325,9 @@ void modgfx_restoreActiveVertexState(int stateArg)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modgfx_releaseActiveEffectsByType(undefined8 param_1, undefined8 param_2, undefined8 param_3,
-                                       undefined8 param_4, undefined8 param_5, undefined8 param_6,
-                                       undefined8 param_7, undefined8 param_8, short effectType,
+void modgfx_releaseActiveEffectsByType(undefined8 arg1, undefined8 arg2, undefined8 arg3,
+                                       undefined8 arg4, undefined8 arg5, undefined8 arg6,
+                                       undefined8 arg7, undefined8 arg8, short effectType,
                                        int releaseAll)
 {
     ModgfxActiveEffect* activeEffect;
@@ -2344,11 +2344,11 @@ void modgfx_releaseActiveEffectsByType(undefined8 param_1, undefined8 param_2, u
         {
             if (activeEffect->releaseTransformSource != 0)
             {
-                param_1 = FUN_80017814(activeEffect->releaseTransformSource);
+                arg1 = FUN_80017814(activeEffect->releaseTransformSource);
             }
             if (activeEffect->instanceHandle != 0)
             {
-                FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+                FUN_80017ac8(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
                              activeEffect->instanceHandle);
             }
             activeEffect->state = 0;
@@ -2360,7 +2360,7 @@ void modgfx_releaseActiveEffectsByType(undefined8 param_1, undefined8 param_2, u
             {
                 activeEffect->sharedResourceHandle = 0;
             }
-            param_1 = FUN_80017814(activeEffect);
+            arg1 = FUN_80017814(activeEffect);
             activeEffects[i] = (ModgfxActiveEffect*)0x0;
         }
         i = i + 1;
@@ -2383,9 +2383,9 @@ void modgfx_releaseActiveEffectsByType(undefined8 param_1, undefined8 param_2, u
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modgfx_releaseActiveEffectsByOwner(undefined8 param_1, undefined8 param_2, undefined8 param_3,
-                                        undefined8 param_4, undefined8 param_5, undefined8 param_6,
-                                        undefined8 param_7, undefined8 param_8, int ownerToken)
+void modgfx_releaseActiveEffectsByOwner(undefined8 arg1, undefined8 arg2, undefined8 arg3,
+                                        undefined8 arg4, undefined8 arg5, undefined8 arg6,
+                                        undefined8 arg7, undefined8 arg8, int ownerToken)
 {
     ModgfxActiveEffect* activeEffect;
     ModgfxActiveEffect** activeEffects;
@@ -2400,7 +2400,7 @@ void modgfx_releaseActiveEffectsByOwner(undefined8 param_1, undefined8 param_2, 
         {
             if (activeEffect->instanceHandle != 0)
             {
-                FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+                FUN_80017ac8(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
                              activeEffect->instanceHandle);
             }
             activeEffect->state = 0;
@@ -2412,7 +2412,7 @@ void modgfx_releaseActiveEffectsByOwner(undefined8 param_1, undefined8 param_2, 
             {
                 activeEffect->sharedResourceHandle = 0;
             }
-            param_1 = FUN_80017814(activeEffect);
+            arg1 = FUN_80017814(activeEffect);
             activeEffects[i] = (ModgfxActiveEffect*)0x0;
         }
         i = i + 1;
@@ -2434,11 +2434,11 @@ void modgfx_releaseActiveEffectsByOwner(undefined8 param_1, undefined8 param_2, 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modgfx_releaseAllActiveEffects(undefined8 param_1, undefined8 param_2, undefined8 param_3,
-                                    undefined8 param_4, undefined8 param_5, undefined8 param_6,
-                                    undefined8 param_7, undefined8 param_8)
+void modgfx_releaseAllActiveEffects(undefined8 arg1, undefined8 arg2, undefined8 arg3,
+                                    undefined8 arg4, undefined8 arg5, undefined8 arg6,
+                                    undefined8 arg7, undefined8 arg8)
 {
-    modgfx_releaseActiveEffectsByType(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+    modgfx_releaseActiveEffectsByType(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
                                       0, 1);
     return;
 }
@@ -2457,14 +2457,14 @@ void modgfx_releaseAllActiveEffects(undefined8 param_1, undefined8 param_2, unde
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modgfx_resetActiveEffectRegistry(undefined8 param_1, undefined8 param_2, undefined8 param_3,
-                                      undefined8 param_4, undefined8 param_5, undefined8 param_6,
-                                      undefined8 param_7, undefined8 param_8)
+void modgfx_resetActiveEffectRegistry(undefined8 arg1, undefined8 arg2, undefined8 arg3,
+                                      undefined8 arg4, undefined8 arg5, undefined8 arg6,
+                                      undefined8 arg7, undefined8 arg8)
 {
     ModgfxActiveEffect** activeEffects;
     int i;
 
-    modgfx_releaseActiveEffectsByType(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
+    modgfx_releaseActiveEffectsByType(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
                                       0, 1);
     activeEffects = modgfx_getActiveEffectRegistry();
     for (i = 0; i < MODGFX_ACTIVE_EFFECT_COUNT; i = i + 1)

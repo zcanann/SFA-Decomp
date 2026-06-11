@@ -415,8 +415,8 @@ void fn_8013F100(int obj, register int state)
 
 void fn_8013F9E4(int obj, int state)
 {
-    int iVar3;
-    int iVar4;
+    int state2;
+    int val;
     short sVar;
 
     if (trickyFoodFn_8014460c(obj, state) == 0)
@@ -428,36 +428,36 @@ void fn_8013F9E4(int obj, int state)
             {
                 ((TrickyState*)state)->unk740 = (f32)(s32)
                 randomGetRange(500, 750);
-                iVar3 = *(int*)&((GameObject*)obj)->extra;
-                if ((((uint) * (u8*)(iVar3 + 0x58) >> 6) & 1) == 0)
+                state2 = *(int*)&((GameObject*)obj)->extra;
+                if ((((uint) * (u8*)(state2 + 0x58) >> 6) & 1) == 0)
                 {
                     sVar = ((GameObject*)obj)->anim.currentMove;
                     if (sVar >= 48 || sVar < 41)
                     {
                         if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0)
                         {
-                            objAudioFn_800393f8(obj, (void*)(iVar3 + 936), 864, 1280, -1, 0);
+                            objAudioFn_800393f8(obj, (void*)(state2 + 936), 864, 1280, -1, 0);
                         }
                     }
                 }
             }
             if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
             {
-                iVar4 = 0;
+                val = 0;
             }
             else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
             {
-                iVar4 = 1;
+                val = 1;
             }
             else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
             {
-                iVar4 = 1;
+                val = 1;
             }
             else
             {
-                iVar4 = 0;
+                val = 0;
             }
-            if (iVar4 != 0)
+            if (val != 0)
             {
                 objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
                 ((TrickyState*)state)->unk79C = lbl_803E2440;
@@ -494,7 +494,7 @@ typedef struct
 
 void fn_8013FBE4(int obj, register int state)
 {
-    int iVar4;
+    int val;
     float dx;
     float dz;
     float distance;
@@ -548,21 +548,21 @@ void fn_8013FBE4(int obj, register int state)
             {
                 if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
                 {
-                    iVar4 = 0;
+                    val = 0;
                 }
                 else if (lbl_803E2410 == ((TrickyState*)state)->unk2B0)
                 {
-                    iVar4 = 1;
+                    val = 1;
                 }
                 else if (((TrickyState*)state)->unk2B4 - ((TrickyState*)state)->unk2B0 > lbl_803E2414)
                 {
-                    iVar4 = 1;
+                    val = 1;
                 }
                 else
                 {
-                    iVar4 = 0;
+                    val = 0;
                 }
-                if (iVar4 != 0)
+                if (val != 0)
                 {
                     objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
                     ((TrickyState*)state)->unk79C = lbl_803E2440;

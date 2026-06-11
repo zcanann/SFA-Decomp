@@ -2575,18 +2575,18 @@ void fn_800E58FC(int obj, f32* state)
 void fn_800E5CBC(short* obj, int state)
 {
     CurvesCollisionState* collision;
-    float fVar1;
+    float fa;
     short pitch;
     int angle;
     float dy;
     float dx;
     float dz;
     short outVec[4];
-    float local_64;
-    float local_60;
-    float local_5c;
-    float local_58;
-    float afStack_54[20];
+    float tmp;
+    float tmp2;
+    float tmp3;
+    float tmp4;
+    float fbuf[20];
 
     collision = (CurvesCollisionState*)state;
     if ((collision->surfaceFlags & 0x10) != 0)
@@ -2598,12 +2598,12 @@ void fn_800E5CBC(short* obj, int state)
         }
         outVec[1] = 0;
         outVec[2] = 0;
-        local_64 = lbl_803E068C;
-        local_60 = lbl_803E0668;
-        local_5c = lbl_803E0668;
-        local_58 = lbl_803E0668;
-        mtxRotateByVec3s(afStack_54, outVec);
-        Matrix_TransformPoint(afStack_54, (double)collision->surfaceNormalX,
+        tmp = lbl_803E068C;
+        tmp2 = lbl_803E0668;
+        tmp3 = lbl_803E0668;
+        tmp4 = lbl_803E0668;
+        mtxRotateByVec3s(fbuf, outVec);
+        Matrix_TransformPoint(fbuf, (double)collision->surfaceNormalX,
                               (double)collision->surfaceNormalY, (double)collision->surfaceNormalZ,
                               &dy, &dx, &dz);
         angle = getAngle(dx, dz);
@@ -2627,10 +2627,10 @@ void fn_800E5CBC(short* obj, int state)
         collision->tiltRoll =
             collision->tiltRoll -
             ((int)((int)collision->tiltRoll * (uint)framesThisStep) >> 3);
-        fVar1 = lbl_803E0668;
+        fa = lbl_803E0668;
         collision->surfaceNormalX = lbl_803E0668;
         collision->surfaceNormalY = lbl_803E068C;
-        collision->surfaceNormalZ = fVar1;
+        collision->surfaceNormalZ = fa;
     }
     return;
 }
