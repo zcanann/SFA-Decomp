@@ -56,15 +56,14 @@ void wmspiritset_initialise(void)
 {
 }
 
-void wmspiritset_init(int* obj, u8* init)
+void wmspiritset_init(GameObject* obj, WmSpiritSetMapData* mapData)
 {
-    WmSpiritSetState* state = ((GameObject*)obj)->extra;
-    WmSpiritSetMapData* mapData = (WmSpiritSetMapData*)init;
+    WmSpiritSetState* state = obj->extra;
 
-    ((GameObject*)obj)->anim.rotX = (s16)(mapData->rotXByte << 8);
-    if (((GameObject*)obj)->anim.seqId == 0x264)
+    obj->anim.rotX = (s16)(mapData->rotXByte << 8);
+    if (obj->anim.seqId == 0x264)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5F94; /* 0.0085f */
+        obj->anim.rootMotionScale = lbl_803E5F94; /* 0.0085f */
     }
     state->visibilityGameBit = mapData->visibilityGameBit;
 }
@@ -76,6 +75,6 @@ void wmspiritset_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 
     if ((visibilityGameBit == -1 || (u32)GameBit_Get(visibilityGameBit) != 0) && vis != 0)
     {
-        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E5F90); /* 1.0f */
+        objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E5F90); /* 1.0f */
     }
 }
