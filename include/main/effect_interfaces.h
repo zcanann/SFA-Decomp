@@ -14,7 +14,10 @@ typedef void (*EffectFreeObjectFn)(void *obj);
  * per-effect Effect*_func04 handlers (modgfx/dim_partfx/df_partfx and the
  * gameplay.c spawners). Offset/width layout observed consistent across all
  * handlers (s16 head + f32 block); field semantics vary per effect id, so
- * names stay positional (unkNN convention).
+ * names stay positional (unkNN convention). Proven non-semantic: dim_partfx
+ * reads unk8 as a position-X for some effect ids and as a scale for others,
+ * and unkC is a posY to the modgfx/dim_partfx handlers but a position-X
+ * offset to gameplay's spawner - no field has a fixed role.
  */
 typedef struct PartFxSpawnParams {
     s16 unk0;
