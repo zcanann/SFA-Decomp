@@ -644,7 +644,7 @@ struct MldfTables
 
 #pragma scheduling off
 #pragma peephole off
-undefined4 mapLoadDataFile(int param_1, int param_2)
+undefined4 mapLoadDataFile(int mapId, int fileId)
 {
     struct MldfNames* nm = (struct MldfNames*)sResourceFileNameAudioTab;
     struct MldfTables* t = (struct MldfTables*)lbl_80345E10;
@@ -662,7 +662,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
         lbl_803DCC92 = 0;
         sync = 1;
     }
-    adj = MLDF_ADJ(param_1);
+    adj = MLDF_ADJ(mapId);
     if (adj != -1)
     {
         int c = 0;
@@ -693,33 +693,33 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
             }
             if ((int)tmp == -1)
             {
-                mapLoadDataFile(adj, param_2);
+                mapLoadDataFile(adj, fileId);
             }
             sync = 1;
         }
     }
     sync = sync | lbl_803DCC70;
-    switch (param_2)
+    switch (fileId)
     {
     case 0xd:
     case 0x55:
         result = MLDF_PTR(0xd);
-        if ((result != 0) && (MLDF_OWNER(0xd) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0xd) == mapId))
         {
             return result;
         }
         result = MLDF_PTR(0x55);
-        if ((result != 0) && (MLDF_OWNER(0x55) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x55) == mapId))
         {
             return result;
         }
         {
-            if (MLDF_ID(0xd) == param_1)
+            if (MLDF_ID(0xd) == mapId)
             {
                 slot = 0xd;
                 MLDF_ID(0xd) = -1;
             }
-            else if (MLDF_ID(0x55) == param_1)
+            else if (MLDF_ID(0x55) == mapId)
             {
                 slot = 0x55;
                 MLDF_ID(0x55) = -1;
@@ -741,7 +741,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, nm->fmtAnimCurvBin, MLDF_MAP_NAME(param_1));
+            sprintf(buf, nm->fmtAnimCurvBin, MLDF_MAP_NAME(mapId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (void*)fi);
             if (ok == 0)
@@ -762,14 +762,14 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                     tmp = MLDF_SP_PTR(x);
                     if (tmp == 0)
                     {
-                        if (MLDF_ID(param_2) == -1)
+                        if (MLDF_ID(fileId) == -1)
                         {
                             texRestructRefs(1);
                         }
                         DVDClose((void*)fi);
                         AtomicSList_Push(lbl_803DCC8C, fi);
                         MLDF_SP_SIZE(x) = 0;
-                        MLDF_SP_ID(x) = param_1;
+                        MLDF_SP_ID(x) = mapId;
                         return 0;
                     }
                     else
@@ -797,7 +797,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                             DVDReadAsyncPrio((void*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0, animCurvReadCb, 2);
                             MLDF_FINFO4(x) = fi;
                         }
-                        MLDF_OWNER(slot) = param_1;
+                        MLDF_OWNER(slot) = mapId;
                         return MLDF_SP_PTR(x);
                     }
                 }
@@ -807,12 +807,12 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
     case 0xe:
     case 0x56:
         result = MLDF_PTR(0xe);
-        if ((result != 0) && (MLDF_OWNER(0xe) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0xe) == mapId))
         {
             return result;
         }
         result = MLDF_PTR(0x56);
-        if ((result != 0) && (MLDF_OWNER(0x56) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x56) == mapId))
         {
             return result;
         }
@@ -834,7 +834,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, nm->fmtAnimCurvTab, MLDF_MAP_NAME(param_1));
+            sprintf(buf, nm->fmtAnimCurvTab, MLDF_MAP_NAME(mapId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (void*)fi);
             if (ok == 0)
@@ -875,7 +875,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                         DVDReadAsyncPrio((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animCurvTabReadCb, 2);
                         MLDF_FINFO4(x) = fi;
                     }
-                    MLDF_OWNER(slot) = param_1;
+                    MLDF_OWNER(slot) = mapId;
                     return MLDF_SP_PTR(x);
                 }
             }
@@ -884,12 +884,12 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
     case 0x1b:
     case 0x54:
         result = MLDF_PTR(0x1b);
-        if ((result != 0) && (MLDF_OWNER(0x1b) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x1b) == mapId))
         {
             return result;
         }
         result = MLDF_PTR(0x54);
-        if ((result != 0) && (MLDF_OWNER(0x54) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x54) == mapId))
         {
             return result;
         }
@@ -911,7 +911,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, nm->fmtVoxmapBin, MLDF_MAP_NAME(param_1));
+            sprintf(buf, nm->fmtVoxmapBin, MLDF_MAP_NAME(mapId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (void*)fi);
             if (ok == 0)
@@ -961,19 +961,19 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 MLDF_FINFO4(x) = fi;
                 DVDReadAsyncPrio((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapReadCb, 2);
             }
-            MLDF_OWNER(slot) = param_1;
+            MLDF_OWNER(slot) = mapId;
             return MLDF_SP_PTR(x);
         }
         break;
     case 0x1a:
     case 0x53:
         result = MLDF_PTR(0x1a);
-        if ((result != 0) && (MLDF_OWNER(0x1a) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x1a) == mapId))
         {
             return result;
         }
         result = MLDF_PTR(0x53);
-        if ((result != 0) && (MLDF_OWNER(0x53) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x53) == mapId))
         {
             return result;
         }
@@ -995,7 +995,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, nm->fmtVoxmapTab, MLDF_MAP_NAME(param_1));
+            sprintf(buf, nm->fmtVoxmapTab, MLDF_MAP_NAME(mapId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (void*)fi);
             if (ok == 0)
@@ -1037,7 +1037,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                         MLDF_FINFO4(x) = fi;
                         DVDReadAsyncPrio((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapTabReadCb, 2);
                     }
-                    MLDF_OWNER(slot) = param_1;
+                    MLDF_OWNER(slot) = mapId;
                     return MLDF_SP_PTR(x);
                 }
             }
@@ -1046,22 +1046,22 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
     case 0x25:
     case 0x47:
         result = MLDF_PTR(0x25);
-        if ((result != 0) && (MLDF_OWNER(0x25) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x25) == mapId))
         {
             return result;
         }
         result = MLDF_PTR(0x47);
-        if ((result != 0) && (MLDF_OWNER(0x47) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x47) == mapId))
         {
             return result;
         }
         {
-            if (MLDF_ID(0x25) == param_1)
+            if (MLDF_ID(0x25) == mapId)
             {
                 slot = 0x25;
                 MLDF_ID(0x25) = -1;
             }
-            else if (MLDF_ID(0x47) == param_1)
+            else if (MLDF_ID(0x47) == mapId)
             {
                 slot = 0x47;
                 MLDF_ID(0x47) = -1;
@@ -1083,13 +1083,13 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            if (param_1 > 4)
+            if (mapId > 4)
             {
-                sprintf(buf, nm->fmtModBin, MLDF_MAP_NAME(param_1), param_1 + 1);
+                sprintf(buf, nm->fmtModBin, MLDF_MAP_NAME(mapId), mapId + 1);
             }
             else
             {
-                sprintf(buf, nm->fmtModBin, MLDF_MAP_NAME(param_1), param_1);
+                sprintf(buf, nm->fmtModBin, MLDF_MAP_NAME(mapId), mapId);
             }
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (void*)fi);
@@ -1105,14 +1105,14 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 tmp = MLDF_SP_PTR(x);
                 if (tmp == 0)
                 {
-                    if (MLDF_ID(param_2) == -1)
+                    if (MLDF_ID(fileId) == -1)
                     {
                         texRestructRefs(1);
                     }
                     DVDClose((void*)fi);
                     AtomicSList_Push(lbl_803DCC8C, fi);
                     MLDF_SP_SIZE(x) = 0;
-                    MLDF_SP_ID(x) = param_1;
+                    MLDF_SP_ID(x) = mapId;
                     return 0;
                 }
                 else
@@ -1140,7 +1140,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                         MLDF_FINFO4(x) = fi;
                         DVDReadAsyncPrio((void*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0, blocksReadCb, 2);
                     }
-                    MLDF_OWNER(slot) = param_1;
+                    MLDF_OWNER(slot) = mapId;
                     return MLDF_SP_PTR(x);
                 }
             }
@@ -1153,12 +1153,12 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
             int* grp;
             int n;
             result = MLDF_PTR(0x26);
-            if ((result != 0) && (MLDF_OWNER(0x26) == param_1))
+            if ((result != 0) && (MLDF_OWNER(0x26) == mapId))
             {
                 return result;
             }
             result = MLDF_PTR(0x48);
-            if ((result != 0) && (MLDF_OWNER(0x48) == param_1))
+            if ((result != 0) && (MLDF_OWNER(0x48) == mapId))
             {
                 return result;
             }
@@ -1184,27 +1184,27 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 grp = MLDF_REMAP;
                 for (n = 0xf; n != 0; n--)
                 {
-                    if (param_1 == grp[0]) goto remap_found;
+                    if (mapId == grp[0]) goto remap_found;
                     idx = idx + 1;
-                    if (param_1 == grp[1]) goto remap_found;
+                    if (mapId == grp[1]) goto remap_found;
                     idx = idx + 1;
-                    if (param_1 == grp[2]) goto remap_found;
+                    if (mapId == grp[2]) goto remap_found;
                     idx = idx + 1;
-                    if (param_1 == grp[3]) goto remap_found;
+                    if (mapId == grp[3]) goto remap_found;
                     idx = idx + 1;
-                    if (param_1 == grp[4]) goto remap_found;
+                    if (mapId == grp[4]) goto remap_found;
                     grp = grp + 5;
                     idx = idx + 1;
                 }
             remap_found:
                 piRomLoadSection(0, idx, 0);
-                if (param_1 > 4)
+                if (mapId > 4)
                 {
-                    sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(param_1), param_1 + 1);
+                    sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(mapId), mapId + 1);
                 }
                 else
                 {
-                    sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(param_1), param_1);
+                    sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(mapId), mapId);
                 }
                 fi = AtomicSList_Pop(lbl_803DCC8C);
                 ok = DVDOpen(buf, (void*)fi);
@@ -1240,7 +1240,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                         MLDF_FINFO4(x) = fi;
                         DVDReadAsyncPrio((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, blocksTabReadCb, 2);
                     }
-                    MLDF_OWNER(slot) = param_1;
+                    MLDF_OWNER(slot) = mapId;
                     return MLDF_SP_PTR(x);
                 }
             }
@@ -1249,22 +1249,22 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
     case 0x2b:
     case 0x46:
         result = MLDF_PTR(0x2b);
-        if ((result != 0) && (MLDF_OWNER(0x2b) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x2b) == mapId))
         {
             return result;
         }
         result = MLDF_PTR(0x46);
-        if ((result != 0) && (MLDF_OWNER(0x46) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x46) == mapId))
         {
             return result;
         }
         {
-            if (MLDF_ID(0x2b) == param_1)
+            if (MLDF_ID(0x2b) == mapId)
             {
                 slot = 0x2b;
                 MLDF_ID(0x2b) = -1;
             }
-            else if (MLDF_ID(0x46) == param_1)
+            else if (MLDF_ID(0x46) == mapId)
             {
                 slot = 0x46;
                 MLDF_ID(0x46) = -1;
@@ -1286,7 +1286,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (void*)fi);
             if (ok == 0)
@@ -1301,14 +1301,14 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 tmp = MLDF_SP_PTR(x);
                 if (tmp == 0)
                 {
-                    if (MLDF_ID(param_2) == -1)
+                    if (MLDF_ID(fileId) == -1)
                     {
                         texRestructRefs(1);
                     }
                     DVDClose((void*)fi);
                     AtomicSList_Push(lbl_803DCC8C, fi);
                     MLDF_SP_SIZE(x) = 0;
-                    MLDF_SP_ID(x) = param_1;
+                    MLDF_SP_ID(x) = mapId;
                     return 0;
                 }
                 else
@@ -1338,7 +1338,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                         MLDF_FINFO4(x) = fi;
                         DVDReadAsyncPrio((void*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0, modelsReadCb, 2);
                     }
-                    MLDF_OWNER(slot) = param_1;
+                    MLDF_OWNER(slot) = mapId;
                     return MLDF_SP_PTR(x);
                 }
             }
@@ -1347,12 +1347,12 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
     case 0x2a:
     case 0x45:
         result = MLDF_PTR(0x2a);
-        if ((result != 0) && (MLDF_OWNER(0x2a) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x2a) == mapId))
         {
             return result;
         }
         result = MLDF_PTR(0x45);
-        if ((result != 0) && (MLDF_OWNER(0x45) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x45) == mapId))
         {
             return result;
         }
@@ -1374,7 +1374,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (void*)fi);
             if (ok == 0)
@@ -1409,7 +1409,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                     MLDF_FINFO4(x) = fi;
                     DVDReadAsyncPrio((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, modelsTabReadCb, 2);
                 }
-                MLDF_OWNER(slot) = param_1;
+                MLDF_OWNER(slot) = mapId;
                 return MLDF_SP_PTR(x);
             }
         }
@@ -1417,22 +1417,22 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
     case 0x30:
     case 0x4a:
         result = MLDF_PTR(0x30);
-        if ((result != 0) && (MLDF_OWNER(0x30) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x30) == mapId))
         {
             return result;
         }
         result = MLDF_PTR(0x4a);
-        if ((result != 0) && (MLDF_OWNER(0x4a) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x4a) == mapId))
         {
             return result;
         }
         {
-            if (MLDF_ID(0x30) == param_1)
+            if (MLDF_ID(0x30) == mapId)
             {
                 slot = 0x30;
                 MLDF_ID(0x30) = -1;
             }
-            else if (MLDF_ID(0x4a) == param_1)
+            else if (MLDF_ID(0x4a) == mapId)
             {
                 slot = 0x4a;
                 MLDF_ID(0x4a) = -1;
@@ -1454,7 +1454,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (void*)fi);
             if (ok == 0)
@@ -1469,14 +1469,14 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 tmp = MLDF_SP_PTR(x);
                 if (tmp == 0)
                 {
-                    if (MLDF_ID(param_2) == -1)
+                    if (MLDF_ID(fileId) == -1)
                     {
                         texRestructRefs(1);
                     }
                     DVDClose((void*)fi);
                     AtomicSList_Push(lbl_803DCC8C, fi);
                     MLDF_SP_SIZE(x) = 0;
-                    MLDF_SP_ID(x) = param_1;
+                    MLDF_SP_ID(x) = mapId;
                     return 0;
                 }
                 else
@@ -1504,7 +1504,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                         MLDF_FINFO4(x) = fi;
                         DVDReadAsyncPrio((void*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0, animReadCb, 2);
                     }
-                    MLDF_OWNER(slot) = param_1;
+                    MLDF_OWNER(slot) = mapId;
                     return MLDF_SP_PTR(x);
                 }
             }
@@ -1513,12 +1513,12 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
     case 0x2f:
     case 0x49:
         result = MLDF_PTR(0x2f);
-        if ((result != 0) && (MLDF_OWNER(0x2f) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x2f) == mapId))
         {
             return result;
         }
         result = MLDF_PTR(0x49);
-        if ((result != 0) && (MLDF_OWNER(0x49) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x49) == mapId))
         {
             return result;
         }
@@ -1540,7 +1540,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (void*)fi);
             if (ok == 0)
@@ -1575,7 +1575,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                     MLDF_FINFO4(x) = fi;
                     DVDReadAsyncPrio((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animTabReadCb, 2);
                 }
-                MLDF_OWNER(slot) = param_1;
+                MLDF_OWNER(slot) = mapId;
                 return MLDF_SP_PTR(x);
             }
         }
@@ -1583,22 +1583,22 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
     case 0x23:
     case 0x4d:
         result = MLDF_PTR(0x23);
-        if ((result != 0) && (MLDF_OWNER(0x23) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x23) == mapId))
         {
             return result;
         }
         result = MLDF_PTR(0x4d);
-        if ((result != 0) && (MLDF_OWNER(0x4d) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x4d) == mapId))
         {
             return result;
         }
         {
-            if (MLDF_ID(0x23) == param_1)
+            if (MLDF_ID(0x23) == mapId)
             {
                 slot = 0x23;
                 MLDF_ID(0x23) = -1;
             }
-            else if (MLDF_ID(0x4d) == param_1)
+            else if (MLDF_ID(0x4d) == mapId)
             {
                 slot = 0x4d;
                 MLDF_ID(0x4d) = -1;
@@ -1620,7 +1620,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (void*)fi);
             if (ok == 0)
@@ -1635,14 +1635,14 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 tmp = MLDF_SP_PTR(x);
                 if (tmp == 0)
                 {
-                    if (MLDF_ID(param_2) == -1)
+                    if (MLDF_ID(fileId) == -1)
                     {
                         texRestructRefs(1);
                     }
                     DVDClose((void*)fi);
                     AtomicSList_Push(lbl_803DCC8C, fi);
                     MLDF_SP_SIZE(x) = 0;
-                    MLDF_SP_ID(x) = param_1;
+                    MLDF_SP_ID(x) = mapId;
                     return 0;
                 }
                 else
@@ -1670,7 +1670,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                         MLDF_FINFO4(x) = fi;
                         DVDReadAsyncPrio((void*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0, tex0readCb, 2);
                     }
-                    MLDF_OWNER(slot) = param_1;
+                    MLDF_OWNER(slot) = mapId;
                     return MLDF_SP_PTR(x);
                 }
             }
@@ -1679,12 +1679,12 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
     case 0x24:
     case 0x4e:
         result = MLDF_PTR(0x24);
-        if ((result != 0) && (MLDF_OWNER(0x24) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x24) == mapId))
         {
             return result;
         }
         result = MLDF_PTR(0x4e);
-        if ((result != 0) && (MLDF_OWNER(0x4e) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x4e) == mapId))
         {
             return result;
         }
@@ -1706,7 +1706,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (void*)fi);
             if (ok == 0)
@@ -1742,7 +1742,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                         DVDReadAsyncPrio((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex0tab2readCb, 2);
                     }
                 }
-                MLDF_OWNER(slot) = param_1;
+                MLDF_OWNER(slot) = mapId;
                 return MLDF_SP_PTR(x);
             }
         }
@@ -1750,22 +1750,22 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
     case 0x20:
     case 0x4b:
         result = MLDF_PTR(0x20);
-        if ((result != 0) && (MLDF_OWNER(0x20) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x20) == mapId))
         {
             return result;
         }
         result = MLDF_PTR(0x4b);
-        if ((result != 0) && (MLDF_OWNER(0x4b) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x4b) == mapId))
         {
             return result;
         }
         {
-            if (MLDF_ID(0x20) == param_1)
+            if (MLDF_ID(0x20) == mapId)
             {
                 slot = 0x20;
                 MLDF_ID(0x20) = -1;
             }
-            else if (MLDF_ID(0x4b) == param_1)
+            else if (MLDF_ID(0x4b) == mapId)
             {
                 slot = 0x4b;
                 MLDF_ID(0x4b) = -1;
@@ -1787,7 +1787,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (void*)fi);
             if (ok == 0)
@@ -1802,14 +1802,14 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 tmp = MLDF_SP_PTR(x);
                 if (tmp == 0)
                 {
-                    if (MLDF_ID(param_2) == -1)
+                    if (MLDF_ID(fileId) == -1)
                     {
                         texRestructRefs(1);
                     }
                     DVDClose((void*)fi);
                     AtomicSList_Push(lbl_803DCC8C, fi);
                     MLDF_SP_SIZE(x) = 0;
-                    MLDF_SP_ID(x) = param_1;
+                    MLDF_SP_ID(x) = mapId;
                     return 0;
                 }
                 else
@@ -1837,7 +1837,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                         MLDF_FINFO4(x) = fi;
                         DVDReadAsyncPrio((void*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0, tex1ReadCb, 2);
                     }
-                    MLDF_OWNER(slot) = param_1;
+                    MLDF_OWNER(slot) = mapId;
                     return MLDF_SP_PTR(x);
                 }
             }
@@ -1846,12 +1846,12 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
     case 0x21:
     case 0x4c:
         result = MLDF_PTR(0x21);
-        if ((result != 0) && (MLDF_OWNER(0x21) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x21) == mapId))
         {
             return result;
         }
         result = MLDF_PTR(0x4c);
-        if ((result != 0) && (MLDF_OWNER(0x4c) == param_1))
+        if ((result != 0) && (MLDF_OWNER(0x4c) == mapId))
         {
             return result;
         }
@@ -1873,7 +1873,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (void*)fi);
             if (ok == 0)
@@ -1909,7 +1909,7 @@ undefined4 mapLoadDataFile(int param_1, int param_2)
                         DVDReadAsyncPrio((void*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex1tab2readCb, 2);
                     }
                 }
-                MLDF_OWNER(slot) = param_1;
+                MLDF_OWNER(slot) = mapId;
                 return MLDF_SP_PTR(x);
             }
         }
@@ -1946,8 +1946,8 @@ void loadDataFiles(void);
 int GXFlush_(u8 visible, int unused);
 
 #pragma dont_inline on
-void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_4, u32* param_5, int param_6,
-                               u32 param_7)
+void loadAndDecompressDataFile(int fileId, int destBuf, u32 offsetFlags, u32 length, u32* sizeOut, int entryIndex,
+                               u32 flagBits)
 {
     struct MldfTables* t = (struct MldfTables*)lbl_80345E10;
     u32 b = 0;
@@ -1968,7 +1968,7 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
     u32 local_78;
     char buf[0x3c];
 
-    switch (param_1)
+    switch (fileId)
     {
     case 0xd:
         s = OSDisableInterrupts();
@@ -1982,7 +1982,7 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
         {
             a = MLDF_PTR(0x56);
         }
-        hi = param_3 & 0x80000000;
+        hi = offsetFlags & 0x80000000;
         if (hi != 0 && b == 0)
         {
             while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
@@ -2012,7 +2012,7 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                 }
             }
         }
-        else if ((param_3 & 0x20000000) != 0 && a == 0)
+        else if ((offsetFlags & 0x20000000) != 0 && a == 0)
         {
             while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
             {
@@ -2041,23 +2041,23 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                 }
             }
         }
-        if ((param_3 & 0x20000000) != 0 && a != 0)
+        if ((offsetFlags & 0x20000000) != 0 && a != 0)
         {
-            param_1 = 0x55;
+            fileId = 0x55;
         }
         else if (hi != 0 && b != 0)
         {
-            param_1 = 0xd;
+            fileId = 0xd;
         }
         else if (b != 0)
         {
-            param_1 = 0xd;
+            fileId = 0xd;
         }
         else if (a != 0)
         {
-            param_1 = 0x55;
+            fileId = 0x55;
         }
-        param_3 = param_3 & 0xfffffff;
+        offsetFlags = offsetFlags & 0xfffffff;
         break;
     case 0x1b:
         s = OSDisableInterrupts();
@@ -2071,7 +2071,7 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
         {
             a = MLDF_PTR(0x53);
         }
-        hi = param_3 & 0x80000000;
+        hi = offsetFlags & 0x80000000;
         if (hi != 0 && b == 0)
         {
             while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
@@ -2101,7 +2101,7 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                 }
             }
         }
-        else if ((param_3 & 0x20000000) != 0 && a == 0)
+        else if ((offsetFlags & 0x20000000) != 0 && a == 0)
         {
             while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
             {
@@ -2130,23 +2130,23 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                 }
             }
         }
-        if ((param_3 & 0x20000000) != 0 && a != 0)
+        if ((offsetFlags & 0x20000000) != 0 && a != 0)
         {
-            param_1 = 0x54;
+            fileId = 0x54;
         }
         else if (hi != 0 && b != 0)
         {
-            param_1 = 0x1b;
+            fileId = 0x1b;
         }
         else if (b != 0)
         {
-            param_1 = 0x1b;
+            fileId = 0x1b;
         }
         else if (a != 0)
         {
-            param_1 = 0x54;
+            fileId = 0x54;
         }
-        param_3 = param_3 & 0xfffffff;
+        offsetFlags = offsetFlags & 0xfffffff;
         break;
     case 0x25:
         s = OSDisableInterrupts();
@@ -2160,23 +2160,23 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
         {
             a = MLDF_PTR(0x48);
         }
-        if ((param_3 & 0x20000000) != 0 && a != 0)
+        if ((offsetFlags & 0x20000000) != 0 && a != 0)
         {
-            param_1 = 0x47;
+            fileId = 0x47;
         }
-        else if ((param_3 & 0x10000000) != 0 && b != 0)
+        else if ((offsetFlags & 0x10000000) != 0 && b != 0)
         {
-            param_1 = 0x25;
+            fileId = 0x25;
         }
         else if (b != 0)
         {
-            param_1 = 0x25;
+            fileId = 0x25;
         }
         else if (a != 0)
         {
-            param_1 = 0x47;
+            fileId = 0x47;
         }
-        param_3 = param_3 & 0xfffffff;
+        offsetFlags = offsetFlags & 0xfffffff;
         break;
     case 0x2b:
         s = OSDisableInterrupts();
@@ -2190,7 +2190,7 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
         {
             a = MLDF_PTR(0x45);
         }
-        if ((param_3 & 0x10000000) != 0 && b == 0)
+        if ((offsetFlags & 0x10000000) != 0 && b == 0)
         {
             while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
             {
@@ -2219,7 +2219,7 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                 }
             }
         }
-        else if ((param_3 & 0x20000000) != 0 && a == 0)
+        else if ((offsetFlags & 0x20000000) != 0 && a == 0)
         {
             while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
             {
@@ -2248,12 +2248,12 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                 }
             }
         }
-        if (a != 0 && (param_3 & 0x20000000) != 0)
+        if (a != 0 && (offsetFlags & 0x20000000) != 0)
         {
-            param_1 = 0x46;
-            if (param_5 != NULL)
+            fileId = 0x46;
+            if (sizeOut != NULL)
             {
-                moff = *(u32*)(a + param_6 * 4) & 0xffffff;
+                moff = *(u32*)(a + entryIndex * 4) & 0xffffff;
                 i = 0;
                 if (moff == 0)
                 {
@@ -2264,9 +2264,9 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                         i = j;
                     }
                     while ((*(u32*)(a + k) & 0xffffff) == 0);
-                    *param_5 = *(u32*)(a + j * 4 - 4) & 0xffffff;
+                    *sizeOut = *(u32*)(a + j * 4 - 4) & 0xffffff;
                 }
-                else if (moff < (*(u32*)(a + param_6 * 4 - 4) & 0xffffff))
+                else if (moff < (*(u32*)(a + entryIndex * 4 - 4) & 0xffffff))
                 {
                     do
                     {
@@ -2282,27 +2282,27 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                         j = i;
                     }
                     while ((*(u32*)(a + k) & 0xffffff) <= moff);
-                    *param_5 = (*(u32*)(a + i * 4 - 4) & 0xffffff) - moff;
+                    *sizeOut = (*(u32*)(a + i * 4 - 4) & 0xffffff) - moff;
                 }
                 else
                 {
                     do
                     {
-                        j = param_6 + 1;
-                        k = param_6 * 4;
-                        param_6 = j;
+                        j = entryIndex + 1;
+                        k = entryIndex * 4;
+                        entryIndex = j;
                     }
                     while ((*(u32*)(a + k) & 0xffffff) <= moff);
-                    *param_5 = (*(u32*)(a + j * 4 - 4) & 0xffffff) - moff;
+                    *sizeOut = (*(u32*)(a + j * 4 - 4) & 0xffffff) - moff;
                 }
             }
         }
-        else if (b != 0 && (param_3 & 0x10000000) != 0)
+        else if (b != 0 && (offsetFlags & 0x10000000) != 0)
         {
-            param_1 = 0x2b;
-            if (param_5 != NULL)
+            fileId = 0x2b;
+            if (sizeOut != NULL)
             {
-                moff = *(u32*)(b + param_6 * 4) & 0xffffff;
+                moff = *(u32*)(b + entryIndex * 4) & 0xffffff;
                 i = 0;
                 if (moff == 0)
                 {
@@ -2313,9 +2313,9 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                         i = j;
                     }
                     while ((*(u32*)(b + k) & 0xffffff) == 0);
-                    *param_5 = *(u32*)(b + j * 4 - 4) & 0xffffff;
+                    *sizeOut = *(u32*)(b + j * 4 - 4) & 0xffffff;
                 }
-                else if (moff < (*(u32*)(b + param_6 * 4 - 4) & 0xffffff))
+                else if (moff < (*(u32*)(b + entryIndex * 4 - 4) & 0xffffff))
                 {
                     do
                     {
@@ -2331,27 +2331,27 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                         j = i;
                     }
                     while ((*(u32*)(b + k) & 0xffffff) <= moff);
-                    *param_5 = (*(u32*)(b + i * 4 - 4) & 0xffffff) - moff;
+                    *sizeOut = (*(u32*)(b + i * 4 - 4) & 0xffffff) - moff;
                 }
                 else
                 {
                     do
                     {
-                        j = param_6 + 1;
-                        k = param_6 * 4;
-                        param_6 = j;
+                        j = entryIndex + 1;
+                        k = entryIndex * 4;
+                        entryIndex = j;
                     }
                     while ((*(u32*)(b + k) & 0xffffff) <= moff);
-                    *param_5 = (*(u32*)(b + j * 4 - 4) & 0xffffff) - moff;
+                    *sizeOut = (*(u32*)(b + j * 4 - 4) & 0xffffff) - moff;
                 }
             }
         }
         else if (b != 0)
         {
-            param_1 = 0x2b;
-            if (param_5 != NULL)
+            fileId = 0x2b;
+            if (sizeOut != NULL)
             {
-                moff = *(u32*)(b + param_6 * 4) & 0xffffff;
+                moff = *(u32*)(b + entryIndex * 4) & 0xffffff;
                 i = 0;
                 if (moff == 0)
                 {
@@ -2362,9 +2362,9 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                         i = j;
                     }
                     while ((*(u32*)(b + k) & 0xffffff) == 0);
-                    *param_5 = *(u32*)(b + j * 4 - 4) & 0xffffff;
+                    *sizeOut = *(u32*)(b + j * 4 - 4) & 0xffffff;
                 }
-                else if (moff < (*(u32*)(b + param_6 * 4 - 4) & 0xffffff))
+                else if (moff < (*(u32*)(b + entryIndex * 4 - 4) & 0xffffff))
                 {
                     do
                     {
@@ -2380,27 +2380,27 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                         j = i;
                     }
                     while ((*(u32*)(b + k) & 0xffffff) <= moff);
-                    *param_5 = (*(u32*)(b + i * 4 - 4) & 0xffffff) - moff;
+                    *sizeOut = (*(u32*)(b + i * 4 - 4) & 0xffffff) - moff;
                 }
                 else
                 {
                     do
                     {
-                        j = param_6 + 1;
-                        k = param_6 * 4;
-                        param_6 = j;
+                        j = entryIndex + 1;
+                        k = entryIndex * 4;
+                        entryIndex = j;
                     }
                     while ((*(u32*)(b + k) & 0xffffff) <= moff);
-                    *param_5 = (*(u32*)(b + j * 4 - 4) & 0xffffff) - moff;
+                    *sizeOut = (*(u32*)(b + j * 4 - 4) & 0xffffff) - moff;
                 }
             }
         }
         else if (a != 0)
         {
-            param_1 = 0x46;
-            if (param_5 != NULL)
+            fileId = 0x46;
+            if (sizeOut != NULL)
             {
-                moff = *(u32*)(a + param_6 * 4) & 0xffffff;
+                moff = *(u32*)(a + entryIndex * 4) & 0xffffff;
                 i = 0;
                 if (moff == 0)
                 {
@@ -2411,9 +2411,9 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                         i = j;
                     }
                     while ((*(u32*)(a + k) & 0xffffff) == 0);
-                    *param_5 = *(u32*)(a + j * 4 - 4) & 0xffffff;
+                    *sizeOut = *(u32*)(a + j * 4 - 4) & 0xffffff;
                 }
-                else if (moff < (*(u32*)(a + param_6 * 4 - 4) & 0xffffff))
+                else if (moff < (*(u32*)(a + entryIndex * 4 - 4) & 0xffffff))
                 {
                     do
                     {
@@ -2429,22 +2429,22 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                         j = i;
                     }
                     while ((*(u32*)(a + k) & 0xffffff) <= moff);
-                    *param_5 = (*(u32*)(a + i * 4 - 4) & 0xffffff) - moff;
+                    *sizeOut = (*(u32*)(a + i * 4 - 4) & 0xffffff) - moff;
                 }
                 else
                 {
                     do
                     {
-                        j = param_6 + 1;
-                        k = param_6 * 4;
-                        param_6 = j;
+                        j = entryIndex + 1;
+                        k = entryIndex * 4;
+                        entryIndex = j;
                     }
                     while ((*(u32*)(a + k) & 0xffffff) <= moff);
-                    *param_5 = (*(u32*)(a + j * 4 - 4) & 0xffffff) - moff;
+                    *sizeOut = (*(u32*)(a + j * 4 - 4) & 0xffffff) - moff;
                 }
             }
         }
-        param_3 = param_3 & 0xfffffff;
+        offsetFlags = offsetFlags & 0xfffffff;
         break;
     case 0x30:
         s = OSDisableInterrupts();
@@ -2458,7 +2458,7 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
         {
             a = MLDF_PTR(0x49);
         }
-        if ((param_3 & 0x10000000) != 0 && b == 0)
+        if ((offsetFlags & 0x10000000) != 0 && b == 0)
         {
             while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
             {
@@ -2487,7 +2487,7 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                 }
             }
         }
-        else if ((param_3 & 0x20000000) != 0 && a == 0)
+        else if ((offsetFlags & 0x20000000) != 0 && a == 0)
         {
             while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
             {
@@ -2516,67 +2516,67 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                 }
             }
         }
-        if ((param_3 & 0x20000000) != 0)
+        if ((offsetFlags & 0x20000000) != 0)
         {
-            param_1 = 0x4a;
-            if (param_5 != NULL)
+            fileId = 0x4a;
+            if (sizeOut != NULL)
             {
-                *param_5 = (*(u32*)(a + param_6 * 4 + 4) & 0xfffffff) - (*(u32*)(a + param_6 * 4) & 0xfffffff);
+                *sizeOut = (*(u32*)(a + entryIndex * 4 + 4) & 0xfffffff) - (*(u32*)(a + entryIndex * 4) & 0xfffffff);
             }
         }
-        else if ((param_3 & 0x10000000) != 0)
+        else if ((offsetFlags & 0x10000000) != 0)
         {
-            param_1 = 0x30;
-            if (param_5 != NULL)
+            fileId = 0x30;
+            if (sizeOut != NULL)
             {
-                *param_5 = (*(u32*)(b + param_6 * 4 + 4) & 0xfffffff) - (*(u32*)(b + param_6 * 4) & 0xfffffff);
+                *sizeOut = (*(u32*)(b + entryIndex * 4 + 4) & 0xfffffff) - (*(u32*)(b + entryIndex * 4) & 0xfffffff);
             }
         }
         else if (b != 0)
         {
-            param_1 = 0x30;
-            if (param_5 != NULL)
+            fileId = 0x30;
+            if (sizeOut != NULL)
             {
-                *param_5 = (*(u32*)(b + param_6 * 4 + 4) & 0xfffffff) - (*(u32*)(b + param_6 * 4) & 0xfffffff);
+                *sizeOut = (*(u32*)(b + entryIndex * 4 + 4) & 0xfffffff) - (*(u32*)(b + entryIndex * 4) & 0xfffffff);
             }
         }
         else if (a != 0)
         {
-            param_1 = 0x4a;
-            if (param_5 != NULL)
+            fileId = 0x4a;
+            if (sizeOut != NULL)
             {
-                *param_5 = (*(u32*)(a + param_6 * 4 + 4) & 0xfffffff) - (*(u32*)(a + param_6 * 4) & 0xfffffff);
+                *sizeOut = (*(u32*)(a + entryIndex * 4 + 4) & 0xfffffff) - (*(u32*)(a + entryIndex * 4) & 0xfffffff);
             }
         }
-        param_3 = param_3 & 0xfffffff;
-        if (((u8)param_7 & 1) != 0)
+        offsetFlags = offsetFlags & 0xfffffff;
+        if (((u8)flagBits & 1) != 0)
         {
-            r = MLDF_PTR(param_1);
-            tmp = return0_8002A5B8(r + param_3);
+            r = MLDF_PTR(fileId);
+            tmp = return0_8002A5B8(r + offsetFlags);
             if (tmp != 0)
             {
-                *param_5 = ObjModel_GetUnpackedResourceSize(r + param_3, *param_5);
+                *sizeOut = ObjModel_GetUnpackedResourceSize(r + offsetFlags, *sizeOut);
             }
         }
         break;
     case 0x51:
         if (MLDF_PTR(0x52) != 0)
         {
-            param_1 = 0x51;
-            if (param_5 != NULL)
+            fileId = 0x51;
+            if (sizeOut != NULL)
             {
-                *param_5 = (*(u32*)(MLDF_PTR(0x52) + param_6 * 4 + 4) & 0xfffffff) - (*(u32*)(MLDF_PTR(0x52) + param_6 *
+                *sizeOut = (*(u32*)(MLDF_PTR(0x52) + entryIndex * 4 + 4) & 0xfffffff) - (*(u32*)(MLDF_PTR(0x52) + entryIndex *
                     4) & 0xfffffff);
             }
         }
-        param_3 = param_3 & 0xfffffff;
-        if (((u8)param_7 & 1) != 0)
+        offsetFlags = offsetFlags & 0xfffffff;
+        if (((u8)flagBits & 1) != 0)
         {
-            r = MLDF_PTR(param_1);
-            tmp = return0_8002A5B8(r + param_3);
+            r = MLDF_PTR(fileId);
+            tmp = return0_8002A5B8(r + offsetFlags);
             if (tmp != 0)
             {
-                *param_5 = ObjModel_GetUnpackedResourceSize(r + param_3, *param_5);
+                *sizeOut = ObjModel_GetUnpackedResourceSize(r + offsetFlags, *sizeOut);
             }
         }
         break;
@@ -2592,7 +2592,7 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
         {
             a = MLDF_PTR(0x4e);
         }
-        if ((param_3 & 0x40000000) != 0 && b == 0)
+        if ((offsetFlags & 0x40000000) != 0 && b == 0)
         {
             while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
             {
@@ -2621,7 +2621,7 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                 }
             }
         }
-        else if ((param_3 & 0x80000000) != 0 && a == 0)
+        else if ((offsetFlags & 0x80000000) != 0 && a == 0)
         {
             while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
             {
@@ -2650,12 +2650,12 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                 }
             }
         }
-        if (a != 0 && (((u32*)t->mergeTex0)[param_6] & 0x80000000) != 0)
+        if (a != 0 && (((u32*)t->mergeTex0)[entryIndex] & 0x80000000) != 0)
         {
-            param_1 = 0x4d;
-            if (param_5 != NULL)
+            fileId = 0x4d;
+            if (sizeOut != NULL)
             {
-                off = *(u32*)(a + param_6 * 4) & 0xffffff;
+                off = *(u32*)(a + entryIndex * 4) & 0xffffff;
                 if (off == 0)
                 {
                     i = 0;
@@ -2666,27 +2666,27 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                         i = j;
                     }
                     while ((*(u32*)(a + k) & 0xffffff) == 0);
-                    *param_5 = *(u32*)(a + j * 4 - 4) & 0xffffff;
+                    *sizeOut = *(u32*)(a + j * 4 - 4) & 0xffffff;
                 }
                 else
                 {
                     do
                     {
-                        j = param_6 + 1;
-                        k = param_6 * 4;
-                        param_6 = j;
+                        j = entryIndex + 1;
+                        k = entryIndex * 4;
+                        entryIndex = j;
                     }
                     while ((*(u32*)(a + k) & 0xffffff) <= off);
-                    *param_5 = (*(u32*)(a + j * 4 - 4) & 0xffffff) - off;
+                    *sizeOut = (*(u32*)(a + j * 4 - 4) & 0xffffff) - off;
                 }
             }
         }
-        else if (b != 0 && (((u32*)t->mergeTex0)[param_6] & 0x40000000) != 0)
+        else if (b != 0 && (((u32*)t->mergeTex0)[entryIndex] & 0x40000000) != 0)
         {
-            param_1 = 0x23;
-            if (param_5 != NULL)
+            fileId = 0x23;
+            if (sizeOut != NULL)
             {
-                off = *(u32*)(b + param_6 * 4) & 0xffffff;
+                off = *(u32*)(b + entryIndex * 4) & 0xffffff;
                 if (off == 0)
                 {
                     i = 0;
@@ -2697,27 +2697,27 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                         i = j;
                     }
                     while ((*(u32*)(b + k) & 0xffffff) == 0);
-                    *param_5 = *(u32*)(b + j * 4 - 4) & 0xffffff;
+                    *sizeOut = *(u32*)(b + j * 4 - 4) & 0xffffff;
                 }
                 else
                 {
                     do
                     {
-                        j = param_6 + 1;
-                        k = param_6 * 4;
-                        param_6 = j;
+                        j = entryIndex + 1;
+                        k = entryIndex * 4;
+                        entryIndex = j;
                     }
                     while ((*(u32*)(b + k) & 0xffffff) <= off);
-                    *param_5 = (*(u32*)(b + j * 4 - 4) & 0xffffff) - off;
+                    *sizeOut = (*(u32*)(b + j * 4 - 4) & 0xffffff) - off;
                 }
             }
         }
         else if (b != 0)
         {
-            param_1 = 0x23;
-            if (param_5 != NULL)
+            fileId = 0x23;
+            if (sizeOut != NULL)
             {
-                off = *(u32*)(b + param_6 * 4) & 0xffffff;
+                off = *(u32*)(b + entryIndex * 4) & 0xffffff;
                 if (off == 0)
                 {
                     i = 0;
@@ -2728,27 +2728,27 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                         i = j;
                     }
                     while ((*(u32*)(b + k) & 0xffffff) == 0);
-                    *param_5 = *(u32*)(b + j * 4 - 4) & 0xffffff;
+                    *sizeOut = *(u32*)(b + j * 4 - 4) & 0xffffff;
                 }
                 else
                 {
                     do
                     {
-                        j = param_6 + 1;
-                        k = param_6 * 4;
-                        param_6 = j;
+                        j = entryIndex + 1;
+                        k = entryIndex * 4;
+                        entryIndex = j;
                     }
                     while ((*(u32*)(b + k) & 0xffffff) <= off);
-                    *param_5 = (*(u32*)(b + j * 4 - 4) & 0xffffff) - off;
+                    *sizeOut = (*(u32*)(b + j * 4 - 4) & 0xffffff) - off;
                 }
             }
         }
         else if (a != 0)
         {
-            param_1 = 0x4d;
-            if (param_5 != NULL)
+            fileId = 0x4d;
+            if (sizeOut != NULL)
             {
-                off = *(u32*)(a + param_6 * 4) & 0xffffff;
+                off = *(u32*)(a + entryIndex * 4) & 0xffffff;
                 if (off == 0)
                 {
                     i = 0;
@@ -2759,22 +2759,22 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                         i = j;
                     }
                     while ((*(u32*)(a + k) & 0xffffff) == 0);
-                    *param_5 = *(u32*)(a + j * 4 - 4) & 0xffffff;
+                    *sizeOut = *(u32*)(a + j * 4 - 4) & 0xffffff;
                 }
                 else
                 {
                     do
                     {
-                        j = param_6 + 1;
-                        k = param_6 * 4;
-                        param_6 = j;
+                        j = entryIndex + 1;
+                        k = entryIndex * 4;
+                        entryIndex = j;
                     }
                     while ((*(u32*)(a + k) & 0xffffff) <= off);
-                    *param_5 = (*(u32*)(a + j * 4 - 4) & 0xffffff) - off;
+                    *sizeOut = (*(u32*)(a + j * 4 - 4) & 0xffffff) - off;
                 }
             }
         }
-        param_3 = param_3 & 0xfffffff;
+        offsetFlags = offsetFlags & 0xfffffff;
         break;
     case 0x20:
         s = OSDisableInterrupts();
@@ -2788,7 +2788,7 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
         {
             a = MLDF_PTR(0x4c);
         }
-        if ((param_3 & 0x40000000) != 0 && b == 0)
+        if ((offsetFlags & 0x40000000) != 0 && b == 0)
         {
             while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
             {
@@ -2817,7 +2817,7 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                 }
             }
         }
-        else if ((param_3 & 0x80000000) != 0 && a == 0)
+        else if ((offsetFlags & 0x80000000) != 0 && a == 0)
         {
             while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0)
             {
@@ -2846,12 +2846,12 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                 }
             }
         }
-        if (a != 0 && (((u32*)t->mergeTex1)[param_6] & 0x80000000) != 0)
+        if (a != 0 && (((u32*)t->mergeTex1)[entryIndex] & 0x80000000) != 0)
         {
-            param_1 = 0x4b;
-            if (param_5 != NULL)
+            fileId = 0x4b;
+            if (sizeOut != NULL)
             {
-                off = *(u32*)(a + param_6 * 4) & 0xffffff;
+                off = *(u32*)(a + entryIndex * 4) & 0xffffff;
                 if (off == 0)
                 {
                     i = 0;
@@ -2862,27 +2862,27 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                         i = j;
                     }
                     while ((*(u32*)(a + k) & 0xffffff) == 0);
-                    *param_5 = *(u32*)(a + j * 4 - 4) & 0xffffff;
+                    *sizeOut = *(u32*)(a + j * 4 - 4) & 0xffffff;
                 }
                 else
                 {
                     do
                     {
-                        j = param_6 + 1;
-                        k = param_6 * 4;
-                        param_6 = j;
+                        j = entryIndex + 1;
+                        k = entryIndex * 4;
+                        entryIndex = j;
                     }
                     while ((*(u32*)(a + k) & 0xffffff) <= off);
-                    *param_5 = (*(u32*)(a + j * 4 - 4) & 0xffffff) - off;
+                    *sizeOut = (*(u32*)(a + j * 4 - 4) & 0xffffff) - off;
                 }
             }
         }
-        else if (b != 0 && (((u32*)t->mergeTex1)[param_6] & 0x40000000) != 0)
+        else if (b != 0 && (((u32*)t->mergeTex1)[entryIndex] & 0x40000000) != 0)
         {
-            param_1 = 0x20;
-            if (param_5 != NULL)
+            fileId = 0x20;
+            if (sizeOut != NULL)
             {
-                off = *(u32*)(b + param_6 * 4) & 0xffffff;
+                off = *(u32*)(b + entryIndex * 4) & 0xffffff;
                 if (off == 0)
                 {
                     i = 0;
@@ -2893,27 +2893,27 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                         i = j;
                     }
                     while ((*(u32*)(b + k) & 0xffffff) == 0);
-                    *param_5 = *(u32*)(b + j * 4 - 4) & 0xffffff;
+                    *sizeOut = *(u32*)(b + j * 4 - 4) & 0xffffff;
                 }
                 else
                 {
                     do
                     {
-                        j = param_6 + 1;
-                        k = param_6 * 4;
-                        param_6 = j;
+                        j = entryIndex + 1;
+                        k = entryIndex * 4;
+                        entryIndex = j;
                     }
                     while ((*(u32*)(b + k) & 0xffffff) <= off);
-                    *param_5 = (*(u32*)(b + j * 4 - 4) & 0xffffff) - off;
+                    *sizeOut = (*(u32*)(b + j * 4 - 4) & 0xffffff) - off;
                 }
             }
         }
         else if (b != 0)
         {
-            param_1 = 0x20;
-            if (param_5 != NULL)
+            fileId = 0x20;
+            if (sizeOut != NULL)
             {
-                off = *(u32*)(b + param_6 * 4) & 0xffffff;
+                off = *(u32*)(b + entryIndex * 4) & 0xffffff;
                 if (off == 0)
                 {
                     i = 0;
@@ -2924,27 +2924,27 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                         i = j;
                     }
                     while ((*(u32*)(b + k) & 0xffffff) == 0);
-                    *param_5 = *(u32*)(b + j * 4 - 4) & 0xffffff;
+                    *sizeOut = *(u32*)(b + j * 4 - 4) & 0xffffff;
                 }
                 else
                 {
                     do
                     {
-                        j = param_6 + 1;
-                        k = param_6 * 4;
-                        param_6 = j;
+                        j = entryIndex + 1;
+                        k = entryIndex * 4;
+                        entryIndex = j;
                     }
                     while ((*(u32*)(b + k) & 0xffffff) <= off);
-                    *param_5 = (*(u32*)(b + j * 4 - 4) & 0xffffff) - off;
+                    *sizeOut = (*(u32*)(b + j * 4 - 4) & 0xffffff) - off;
                 }
             }
         }
         else if (a != 0)
         {
-            param_1 = 0x4b;
-            if (param_5 != NULL)
+            fileId = 0x4b;
+            if (sizeOut != NULL)
             {
-                off = *(u32*)(a + param_6 * 4) & 0xffffff;
+                off = *(u32*)(a + entryIndex * 4) & 0xffffff;
                 if (off == 0)
                 {
                     i = 0;
@@ -2955,30 +2955,30 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                         i = j;
                     }
                     while ((*(u32*)(a + k) & 0xffffff) == 0);
-                    *param_5 = *(u32*)(a + j * 4 - 4) & 0xffffff;
+                    *sizeOut = *(u32*)(a + j * 4 - 4) & 0xffffff;
                 }
                 else
                 {
                     do
                     {
-                        j = param_6 + 1;
-                        k = param_6 * 4;
-                        param_6 = j;
+                        j = entryIndex + 1;
+                        k = entryIndex * 4;
+                        entryIndex = j;
                     }
                     while ((*(u32*)(a + k) & 0xffffff) <= off);
-                    *param_5 = (*(u32*)(a + j * 4 - 4) & 0xffffff) - off;
+                    *sizeOut = (*(u32*)(a + j * 4 - 4) & 0xffffff) - off;
                 }
             }
         }
-        param_3 = param_3 & 0xfffffff;
+        offsetFlags = offsetFlags & 0xfffffff;
         break;
     case 0x4f:
         if (MLDF_PTR(0x50) != 0)
         {
-            param_1 = 0x4f;
-            if (param_5 != NULL)
+            fileId = 0x4f;
+            if (sizeOut != NULL)
             {
-                off = *(u32*)(MLDF_PTR(0x50) + param_6 * 4) & 0xffffff;
+                off = *(u32*)(MLDF_PTR(0x50) + entryIndex * 4) & 0xffffff;
                 if (off == 0)
                 {
                     i = 0;
@@ -2989,39 +2989,39 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
                         i = j;
                     }
                     while ((*(u32*)(MLDF_PTR(0x50) + k) & 0xffffff) == 0);
-                    *param_5 = *(u32*)(MLDF_PTR(0x50) + j * 4 - 4) & 0xffffff;
+                    *sizeOut = *(u32*)(MLDF_PTR(0x50) + j * 4 - 4) & 0xffffff;
                 }
                 else
                 {
                     do
                     {
-                        j = param_6 + 1;
-                        k = param_6 * 4;
-                        param_6 = j;
+                        j = entryIndex + 1;
+                        k = entryIndex * 4;
+                        entryIndex = j;
                     }
                     while ((*(u32*)(MLDF_PTR(0x50) + k) & 0xffffff) <= off);
-                    *param_5 = (*(u32*)(MLDF_PTR(0x50) + j * 4 - 4) & 0xffffff) - off;
+                    *sizeOut = (*(u32*)(MLDF_PTR(0x50) + j * 4 - 4) & 0xffffff) - off;
                 }
             }
         }
-        param_3 = param_3 & 0xfffffff;
+        offsetFlags = offsetFlags & 0xfffffff;
         break;
     }
-    if (((u8)param_7 & 1) != 0)
+    if (((u8)flagBits & 1) != 0)
     {
         return;
     }
-    r = MLDF_PTR(param_1);
+    r = MLDF_PTR(fileId);
     if (r == 0)
     {
-        if (param_1 == 0x20 || param_1 == 0x4b)
+        if (fileId == 0x20 || fileId == 0x4b)
         {
-            DVDOpen(sResourceFileNameTable[param_1], buf);
-            asize = (param_4 + 0x1f) & 0xffffffe0;
+            DVDOpen(sResourceFileNameTable[fileId], buf);
+            asize = (length + 0x1f) & 0xffffffe0;
             r = (int)mmAlloc(asize, 0x7f7f7fff, 0);
-            DVDRead(buf, (void*)r, asize, param_3 & 0xffffff);
+            DVDRead(buf, (void*)r, asize, offsetFlags & 0xffffff);
             DVDClose(buf);
-            DCStoreRange((void*)r, param_4);
+            DCStoreRange((void*)r, length);
             if (strncmp(&sDirBlockTag, (char*)r, 3) == 0)
             {
                 for (;;)
@@ -3031,91 +3031,91 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
             if (strncmp((char*)r, sZlbBlockTag, 3) == 0)
             {
                 local_78 = *(u32*)(r + 8);
-                zlbDecompress((void*)(r + 0x10), *(int*)(r + 0xc), param_2, &local_78);
+                zlbDecompress((void*)(r + 0x10), *(int*)(r + 0xc), destBuf, &local_78);
             }
             mm_free((void*)r);
         }
         else
         {
-            DVDOpen(sResourceFileNameTable[param_1], buf);
-            if (((u32)param_2 & 0x1f) == 0 && (param_4 & 0x1f) == 0)
+            DVDOpen(sResourceFileNameTable[fileId], buf);
+            if (((u32)destBuf & 0x1f) == 0 && (length & 0x1f) == 0)
             {
-                DVDRead(buf, (void*)param_2, param_4, param_3);
+                DVDRead(buf, (void*)destBuf, length, offsetFlags);
             }
             else
             {
-                asize = (param_4 + 0x1f) & 0xffffffe0;
+                asize = (length + 0x1f) & 0xffffffe0;
                 tmp = (int)mmAlloc(asize, 0x7f7f7fff, 0);
-                DVDRead(buf, (void*)tmp, asize, param_3);
-                memcpy((void*)param_2, (void*)tmp, param_4);
+                DVDRead(buf, (void*)tmp, asize, offsetFlags);
+                memcpy((void*)destBuf, (void*)tmp, length);
                 mm_free((void*)tmp);
             }
-            DCStoreRange((void*)param_2, param_4);
+            DCStoreRange((void*)destBuf, length);
             DVDClose(buf);
         }
     }
-    else if (param_1 == 0xd || param_1 == 0x55)
+    else if (fileId == 0xd || fileId == 0x55)
     {
         if (r == 0)
         {
             return;
         }
-        memcpy((void*)param_2, (void*)(r + param_3), param_4);
+        memcpy((void*)destBuf, (void*)(r + offsetFlags), length);
     }
-    else if (param_1 == 0x1b || param_1 == 0x54)
+    else if (fileId == 0x1b || fileId == 0x54)
     {
         if (r == 0)
         {
             return;
         }
-        r = r + param_3;
+        r = r + offsetFlags;
         if (strncmp((char*)r, sZlbBlockTag, 3) != 0)
         {
             return;
         }
         local_78 = *(u32*)(r + 8);
-        zlbDecompress((void*)(MLDF_PTR(param_1) + param_3 + 0x10), *(int*)(r + 0xc), param_2, &local_78);
-        DCStoreRange((void*)param_2, local_78);
+        zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(r + 0xc), destBuf, &local_78);
+        DCStoreRange((void*)destBuf, local_78);
     }
-    else if (param_1 == 0x25 || param_1 == 0x47)
+    else if (fileId == 0x25 || fileId == 0x47)
     {
         if (r == 0)
         {
             return;
         }
-        r = r + param_3;
+        r = r + offsetFlags;
         if (strncmp((char*)r, sZlbBlockTag, 3) != 0)
         {
             return;
         }
         local_78 = *(u32*)(r + 8);
-        zlbDecompress((void*)(MLDF_PTR(param_1) + param_3 + 0x10), *(int*)(r + 0xc), param_2, &local_78);
-        DCStoreRange((void*)param_2, local_78);
+        zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(r + 0xc), destBuf, &local_78);
+        DCStoreRange((void*)destBuf, local_78);
     }
-    else if (param_1 == 0x2b || param_1 == 0x46)
+    else if (fileId == 0x2b || fileId == 0x46)
     {
-        int* p = (int*)(r + param_3);
+        int* p = (int*)(r + offsetFlags);
         if (*p == 0xe0e0e0e0)
         {
-            memcpy((void*)param_2, (void*)((int)p + p[2] + 0x18), p[1]);
+            memcpy((void*)destBuf, (void*)((int)p + p[2] + 0x18), p[1]);
         }
         else if (*p == 0xfacefeed)
         {
-            zlbDecompress((void*)((int)p + p[2] + 0x28), p[3] - 0x10, param_2, p + 1);
-            DCStoreRange((void*)param_2, p[1]);
+            zlbDecompress((void*)((int)p + p[2] + 0x28), p[3] - 0x10, destBuf, p + 1);
+            DCStoreRange((void*)destBuf, p[1]);
         }
     }
-    else if (param_1 == 0x23 || param_1 == 0x4d)
+    else if (fileId == 0x23 || fileId == 0x4d)
     {
-        r = r + (param_3 & 0xffffff);
+        r = r + (offsetFlags & 0xffffff);
         local_78 = *(u32*)(r + 8);
-        zlbDecompress((void*)(r + 0x10), *(int*)(r + 0xc), param_2, &local_78);
-        DCStoreRange((void*)param_2, local_78);
+        zlbDecompress((void*)(r + 0x10), *(int*)(r + 0xc), destBuf, &local_78);
+        DCStoreRange((void*)destBuf, local_78);
     }
-    else if (param_1 == 0x20 || param_1 == 0x4b)
+    else if (fileId == 0x20 || fileId == 0x4b)
     {
-        param_3 = param_3 & 0xffffff;
-        r = r + param_3;
+        offsetFlags = offsetFlags & 0xffffff;
+        r = r + offsetFlags;
         if (strncmp(&sDirBlockTag, (char*)r, 3) == 0)
         {
             return;
@@ -3123,14 +3123,14 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
         if (strncmp((char*)r, sZlbBlockTag, 3) == 0)
         {
             local_78 = *(u32*)(r + 8);
-            zlbDecompress((void*)(MLDF_PTR(param_1) + param_3 + 0x10), *(int*)(r + 0xc), param_2, &local_78);
-            DCStoreRange((void*)param_2, local_78);
+            zlbDecompress((void*)(MLDF_PTR(fileId) + offsetFlags + 0x10), *(int*)(r + 0xc), destBuf, &local_78);
+            DCStoreRange((void*)destBuf, local_78);
         }
     }
-    else if (param_1 == 0x4f)
+    else if (fileId == 0x4f)
     {
-        param_3 = param_3 & 0xffffff;
-        r = r + param_3;
+        offsetFlags = offsetFlags & 0xffffff;
+        r = r + offsetFlags;
         if (strncmp(&sDirBlockTag, (char*)r, 3) == 0)
         {
             return;
@@ -3138,27 +3138,27 @@ void loadAndDecompressDataFile(int param_1, int param_2, u32 param_3, u32 param_
         if (strncmp((char*)r, sZlbBlockTag, 3) == 0)
         {
             local_78 = *(u32*)(r + 8);
-            zlbDecompress((void*)(MLDF_PTR(0x4f) + param_3 + 0x10), *(int*)(r + 0xc), param_2, &local_78);
-            DCStoreRange((void*)param_2, local_78);
+            zlbDecompress((void*)(MLDF_PTR(0x4f) + offsetFlags + 0x10), *(int*)(r + 0xc), destBuf, &local_78);
+            DCStoreRange((void*)destBuf, local_78);
         }
     }
-    else if (param_1 == 0x30 || param_1 == 0x51 || param_1 == 0x4a)
+    else if (fileId == 0x30 || fileId == 0x51 || fileId == 0x4a)
     {
-        r = r + param_3;
+        r = r + offsetFlags;
         tmp = return0_8002A5B8(r);
         if (tmp == 0)
         {
-            memcpy((void*)param_2, (void*)(MLDF_PTR(param_1) + param_3), param_4);
+            memcpy((void*)destBuf, (void*)(MLDF_PTR(fileId) + offsetFlags), length);
         }
         else
         {
-            asize = ObjModel_GetUnpackedResourceSize(r, *param_5);
-            ObjModel_UnpackResourcePayload(r, *param_5, param_2, asize);
+            asize = ObjModel_GetUnpackedResourceSize(r, *sizeOut);
+            ObjModel_UnpackResourcePayload(r, *sizeOut, destBuf, asize);
         }
     }
     else
     {
-        memcpy((void*)param_2, (void*)(r + param_3), param_4);
+        memcpy((void*)destBuf, (void*)(r + offsetFlags), length);
     }
 }
 #pragma dont_inline reset
@@ -3709,59 +3709,59 @@ void FUN_80046270(int param_1, int param_2, int param_3)
  */
 void fn_8004B11C(undefined4 param_1, undefined4 param_2, undefined param_3)
 {
-    int iVar1;
-    uint uVar2;
-    int iVar3;
-    int iVar4;
-    uint uVar5;
-    int* piVar6;
-    int iVar7;
-    int iVar8;
-    int iVar9;
-    double dVar10;
-    undefined8 uVar11;
+    int sel;
+    uint mask;
+    int ctxHi;
+    int found;
+    uint uval;
+    int* ctx;
+    int bit;
+    int ent;
+    int entCur;
+    double fval;
+    undefined8 pairWord;
 
-    uVar11 = FUN_80286834();
-    iVar3 = (int)((ulonglong)uVar11 >> 0x20);
-    piVar6 = (int*)uVar11;
-    iVar8 = *piVar6;
-    if (*(char*)(iVar3 + 0x28) == '\0')
+    pairWord = FUN_80286834();
+    ctxHi = (int)((ulonglong)pairWord >> 0x20);
+    ctx = (int*)pairWord;
+    ent = *ctx;
+    if (*(char*)(ctxHi + 0x28) == '\0')
     {
-        uVar2 = ~(int)*(char*)(iVar8 + 0x1b);
+        mask = ~(int)*(char*)(ent + 0x1b);
     }
     else
     {
-        uVar2 = (uint) * (char*)(iVar8 + 0x1b);
+        mask = (uint) * (char*)(ent + 0x1b);
     }
-    iVar7 = 0;
-    iVar9 = iVar8;
+    bit = 0;
+    entCur = ent;
     do
     {
-        iVar1 = DAT_803dd988;
-        if ((((-1 < *(int*)(iVar9 + 0x1c)) && ((uVar2 & 0xff & 1 << iVar7) != 0)) &&
-                (iVar4 = (**(code**)(*DAT_803dd71c + 0x1c))(), iVar1 = DAT_803dd988, iVar4 != 0)) &&
-            (iVar1 = iVar4, *(char*)(iVar4 + 0x19) == '$'))
+        sel = DAT_803dd988;
+        if ((((-1 < *(int*)(entCur + 0x1c)) && ((mask & 0xff & 1 << bit) != 0)) &&
+                (found = (**(code**)(*DAT_803dd71c + 0x1c))(), sel = DAT_803dd988, found != 0)) &&
+            (sel = found, *(char*)(found + 0x19) == '$'))
         {
             FUN_80017690(0x4e2);
-            if (((((int)*(short*)(iVar4 + 0x30) == -1) ||
-                        (uVar5 = FUN_80017690((int)*(short*)(iVar4 + 0x30)), iVar1 = DAT_803dd988, uVar5 != 0))
-                    && (((int)*(short*)(iVar4 + 0x32) == -1 ||
-                        (uVar5 = FUN_80017690((int)*(short*)(iVar4 + 0x32)), iVar1 = DAT_803dd988,
-                            uVar5 == 0)))) &&
-                ((*(char*)(iVar4 + 0x1a) != '\b' || (*(char*)(iVar8 + 0x1a) != '\t'))))
+            if (((((int)*(short*)(found + 0x30) == -1) ||
+                        (uval = FUN_80017690((int)*(short*)(found + 0x30)), sel = DAT_803dd988, uval != 0))
+                    && (((int)*(short*)(found + 0x32) == -1 ||
+                        (uval = FUN_80017690((int)*(short*)(found + 0x32)), sel = DAT_803dd988,
+                            uval == 0)))) &&
+                ((*(char*)(found + 0x1a) != '\b' || (*(char*)(ent + 0x1a) != '\t'))))
             {
-                dVar10 = FUN_80017714((float*)(iVar8 + 8), (float*)(iVar4 + 8));
-                uVar5 = FUN_80286718((double)(float)((double)(float)((double)CONCAT44(0x43300000, piVar6[2]) -
-                    DOUBLE_803df728) + dVar10));
-                FUN_800462f8((undefined4)iVar3, (undefined4)(u32)piVar6, param_3, uVar5, iVar4);
-                iVar1 = DAT_803dd988;
+                fval = FUN_80017714((float*)(ent + 8), (float*)(found + 8));
+                uval = FUN_80286718((double)(float)((double)(float)((double)CONCAT44(0x43300000, ctx[2]) -
+                    DOUBLE_803df728) + fval));
+                FUN_800462f8((undefined4)ctxHi, (undefined4)(u32)ctx, param_3, uval, found);
+                sel = DAT_803dd988;
             }
         }
-        DAT_803dd988 = iVar1;
-        iVar9 = iVar9 + 4;
-        iVar7 = iVar7 + 1;
+        DAT_803dd988 = sel;
+        entCur = entCur + 4;
+        bit = bit + 1;
     }
-    while (iVar7 < 4);
+    while (bit < 4);
     FUN_80286880();
 }
 
@@ -3807,52 +3807,52 @@ undefined4 FUN_800469d0(int param_1)
  */
 void fn_8004B394(void)
 {
-    short sVar1;
-    bool bVar2;
-    int* piVar3;
-    int iVar4;
-    uint uVar5;
-    int* piVar6;
-    uint uVar7;
-    int iVar8;
+    short count;
+    bool done;
+    int* heapCtx;
+    int heapArr;
+    uint uval;
+    int* entry;
+    uint poppedKey;
+    int remaining;
     undefined8 uVar9;
 
     uVar9 = FUN_8028683c();
-    piVar3 = (int*)((ulonglong)uVar9 >> 0x20);
-    bVar2 = false;
-    for (iVar8 = (int)uVar9; (!bVar2 && (iVar8 != 0)); iVar8 = iVar8 + -1)
+    heapCtx = (int*)((ulonglong)uVar9 >> 0x20);
+    done = false;
+    for (remaining = (int)uVar9; (!done && (remaining != 0)); remaining = remaining + -1)
     {
-        iVar4 = piVar3[1];
-        if (*(short*)((int)piVar3 + 0x22) == 0)
+        heapArr = heapCtx[1];
+        if (*(short*)((int)heapCtx + 0x22) == 0)
         {
-            uVar7 = 0xffffffff;
+            poppedKey = 0xffffffff;
         }
         else
         {
-            uVar7 = (uint) * (ushort*)(iVar4 + 0xc);
-            *(undefined4*)(iVar4 + 8) = *(undefined4*)(iVar4 + *(short*)((int)piVar3 + 0x22) * 8);
-            sVar1 = *(short*)((int)piVar3 + 0x22);
-            *(short*)((int)piVar3 + 0x22) = sVar1 + -1;
-            *(undefined2*)(iVar4 + 0xc) = *(undefined2*)(iVar4 + sVar1 * 8 + 4);
-            FUN_80046270(iVar4, (int)*(short*)((int)piVar3 + 0x22), 1);
+            poppedKey = (uint) * (ushort*)(heapArr + 0xc);
+            *(undefined4*)(heapArr + 8) = *(undefined4*)(heapArr + *(short*)((int)heapCtx + 0x22) * 8);
+            count = *(short*)((int)heapCtx + 0x22);
+            *(short*)((int)heapCtx + 0x22) = count + -1;
+            *(undefined2*)(heapArr + 0xc) = *(undefined2*)(heapArr + count * 8 + 4);
+            FUN_80046270(heapArr, (int)*(short*)((int)heapCtx + 0x22), 1);
         }
-        if ((int)uVar7 < 0)
+        if ((int)poppedKey < 0)
         {
-            bVar2 = true;
+            done = true;
         }
         else
         {
-            piVar6 = (int*)(*piVar3 + uVar7 * 0x10);
-            piVar3[7] = uVar7;
-            uVar5 = FUN_800461b4(piVar3, piVar6);
-            if (uVar5 == 0)
+            entry = (int*)(*heapCtx + poppedKey * 0x10);
+            heapCtx[7] = poppedKey;
+            uval = FUN_800461b4(heapCtx, entry);
+            if (uval == 0)
             {
-                *(undefined*)((int)piVar6 + 0xe) = 1;
-                fn_8004B11C((undefined4)piVar3, (undefined4)piVar6, (char)uVar7);
+                *(undefined*)((int)entry + 0xe) = 1;
+                fn_8004B11C((undefined4)heapCtx, (undefined4)entry, (char)poppedKey);
             }
             else
             {
-                bVar2 = true;
+                done = true;
             }
         }
     }
