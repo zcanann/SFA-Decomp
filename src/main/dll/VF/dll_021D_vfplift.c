@@ -62,7 +62,6 @@ STATIC_ASSERT(offsetof(VFPLiftPlacement, toggleGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(VFPLiftPlacement, hitDisableGameBit) == 0x20);
 
 extern void buttonDisable(int index, u32 flags);
-extern void Sfx_StopObjectChannel(int obj, int channel);
 extern f32 lbl_803E60E0;
 extern f32 lbl_803E60E4;
 extern f32 lbl_803E60E8;

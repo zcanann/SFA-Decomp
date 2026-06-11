@@ -7,7 +7,6 @@ extern f32 lbl_803E6094;
 extern f32 lbl_803E6098;
 extern f32 lbl_803E60A0;
 extern void hitDetectFn_800658a4(int obj, f32* out, int flags, f32 x, f32 y, f32 z);
-extern void Sfx_StopObjectChannel(int obj, int channel);
 
 #define VFPMINIFIRE_SMOKE_EFFECT 0x38a
 #define VFPMINIFIRE_SPARK_EFFECT 0x38b

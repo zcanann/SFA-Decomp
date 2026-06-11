@@ -2,8 +2,10 @@
 #define MAIN_DLL_VF_VF_SHARED_H_
 
 #include "ghidra_import.h"
+#include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/gamebits.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
@@ -245,9 +247,6 @@ extern int getAngle(f32 dx, f32 dy);
 extern f32 Vec_xzDistance(f32 *a, f32 *b);
 extern f32 getXZDistance(f32 *a, f32 *b);
 extern void gameBitIncrement(int eventId);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int GameBit_Get(int eventId);
-extern int GameBit_Set(int eventId, int val);
 extern u32 randomGetRange(int min, int max);
 extern void fn_801F4D54(int obj, int state);
 extern EffectInterface **gPartfxInterface;

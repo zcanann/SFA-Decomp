@@ -9,11 +9,9 @@ typedef struct VfpstatueballPlacement
     u8 pad1C[0x20 - 0x1C];
 } VfpstatueballPlacement;
 
-
 extern void objfx_spawnDirectionalBurst(int* obj, u8 idx, f32 scale, int model, int mode, u8 chance,
                                         f32 alpha, int flags, int unused);
 extern u8 fn_8016F16C(int* obj);
-extern void Sfx_StopObjectChannel(int obj, int channel);
 extern f32 lbl_803E60B8;
 
 typedef struct VfpStatueBallState
