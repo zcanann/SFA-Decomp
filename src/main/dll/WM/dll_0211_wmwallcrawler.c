@@ -410,9 +410,12 @@ void wmwallcrawler_update(int obj)
                                 }
                                 dy = *(f32*)(player + 0x10) - *(f32*)(obj + 0x10);
                                 dz = *(f32*)(player + 0x14) - *(f32*)(obj + 0x14);
-                                *(f32*)(obj + 0x24) = ((*(f32*)(player + 0xc) - *(f32*)(obj + 0xc)) / (d = lbl_803E5FF0)) * timeDelta;
-                                *(f32*)(obj + 0x28) = (dy / d) * timeDelta;
-                                *(f32*)(obj + 0x2c) = (dz / d) * timeDelta;
+                                sq = (*(f32*)(player + 0xc) - *(f32*)(obj + 0xc)) / (d = lbl_803E5FF0);
+                                *(f32*)(obj + 0x24) = sq * timeDelta;
+                                sq = dy / d;
+                                *(f32*)(obj + 0x28) = sq * timeDelta;
+                                sq = dz / d;
+                                *(f32*)(obj + 0x2c) = sq * timeDelta;
                                 if ((((WmwallcrawlerState*)st)->unk294 & 0x20) != 0 &&
                                     sqrtf(*(f32*)(obj + 0x2c) * *(f32*)(obj + 0x2c) +
                                         (*(f32*)(obj + 0x24) * *(f32*)(obj + 0x24) +
@@ -476,8 +479,7 @@ void wmwallcrawler_update(int obj)
                                 ang = getAngle(*(f32*)(player + 0xc) - *(f32*)(obj + 0xc),
                                                *(f32*)(player + 0x14) - *(f32*)(obj + 0x14));
                                 ((GameObject*)obj)->anim.rotX = ang + 0x7fff;
-                                sq = *(f32*)(obj + 0x24) * *(f32*)(obj + 0x24) + *(f32*)(obj + 0x2c) * *(f32*)(obj +
-                                    0x16);
+                                sq = *(f32*)(obj + 0x24) * *(f32*)(obj + 0x24) + *(f32*)(obj + 0x2c) * *(f32*)(obj + 0x2c);
                                 if (lbl_803E5FB0 != sq)
                                 {
                                     speed = sqrtf(sq);
