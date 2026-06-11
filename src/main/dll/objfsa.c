@@ -4639,31 +4639,31 @@ int fn_800DB240(int p1, f32* outVec, u16 id)
 {
     extern f32 vec3f_distanceSquared(int, int);
     u8 i;
-    char* entry;
+    ObjfsaPatch* entry;
     f32 d1;
 
     for (i = 0; i < 256; i++)
     {
-        if (*(u16*)((char*)lbl_8039CAE8 + (u32)i * 48 + 36) == id) break;
+        if (lbl_8039CAE8[i].groupId == id) break;
     }
 
-    entry = (char*)lbl_8039CAE8 + (u32)i * 48;
+    entry = &lbl_8039CAE8[i];
 
-    outVec[0] = (f32)(s32) * (s16*)(entry + 38);
+    outVec[0] = (f32)(s32)entry->exit0X;
     outVec[1] = *(f32*)(p1 + 4);
-    outVec[2] = (f32)(s32) * (s16*)(entry + 40);
+    outVec[2] = (f32)(s32)entry->exit0Z;
     d1 = vec3f_distanceSquared(p1, (int)outVec);
 
-    outVec[0] = (f32)(s32) * (s16*)(entry + 42);
-    outVec[2] = (f32)(s32) * (s16*)(entry + 44);
+    outVec[0] = (f32)(s32)entry->exit1X;
+    outVec[2] = (f32)(s32)entry->exit1Z;
 
     if (vec3f_distanceSquared(p1, (int)outVec) < d1)
     {
         return 1;
     }
 
-    outVec[0] = (f32)(s32) * (s16*)(entry + 38);
-    outVec[2] = (f32)(s32) * (s16*)(entry + 40);
+    outVec[0] = (f32)(s32)entry->exit0X;
+    outVec[2] = (f32)(s32)entry->exit0Z;
     return 1;
 }
 
