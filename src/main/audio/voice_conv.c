@@ -235,9 +235,7 @@ u32 voiceConvertDbToLinear(u32 dbCents)
     f32 base;
     f32 result;
 
-    conv.w.hi = 0x43300000;
-    conv.w.lo = dbCents ^ 0x80000000U;
-    scaledDb = conv.d - lbl_803E7840;
+    scaledDb = (f32)(s32)dbCents;
     base = powf(lbl_803E7834, lbl_803E7838 * scaledDb);
     result = lbl_803E7830 * base;
     return __cvt_fp2unsigned(result);
