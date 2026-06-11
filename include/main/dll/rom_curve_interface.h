@@ -13,6 +13,7 @@ typedef RomCurveDef *(*RomCurveGetByIdFn)(int curveId);
 typedef u8 (*RomCurveInitWalkerFn)(void *walker,void *obj,f32 scale,int *curveParam,int arg);
 typedef u8 (*RomCurveGoNextPointFn)(void *walker);
 typedef int (*RomCurveSetClosedFn)(void *walker,int closed);
+typedef u8 (*RomCurveGoNextPointIndexedFn)(void *walker,int pickIdx);
 
 typedef struct RomCurveInterface {
   RomCurveVoidFn release;
@@ -54,7 +55,7 @@ typedef struct RomCurveInterface {
   RomCurveGoNextPointFn goNextPoint;
   RomCurveSetClosedFn setClosed;
   void *slot98;
-  void *slot9C;
+  RomCurveGoNextPointIndexedFn goNextPointIndexed;
   void *slotA0;
   void *slotA4;
   void *slotA8;
@@ -68,6 +69,7 @@ STATIC_ASSERT(offsetof(RomCurveInterface, getById) == 0x1C);
 STATIC_ASSERT(offsetof(RomCurveInterface, initCurve) == 0x8C);
 STATIC_ASSERT(offsetof(RomCurveInterface, goNextPoint) == 0x90);
 STATIC_ASSERT(offsetof(RomCurveInterface, setClosed) == 0x94);
+STATIC_ASSERT(offsetof(RomCurveInterface, goNextPointIndexed) == 0x9C);
 STATIC_ASSERT(offsetof(RomCurveInterface, slotA8) == 0xA8);
 
 #endif /* MAIN_DLL_ROM_CURVE_INTERFACE_H_ */
