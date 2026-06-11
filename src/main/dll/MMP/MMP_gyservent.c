@@ -43,7 +43,7 @@ extern f32 lbl_803E40E8;
  * EN v1.0 Address: 0x80198FA4
  * EN v1.0 Size: 484b
  */
-void objFn_80198fa4(s16* param_1, void* param_2)
+void objFn_80198fa4(s16* obj, void* arg2)
 {
     void* state;
     s16 vec[3];
@@ -54,16 +54,16 @@ void objFn_80198fa4(s16* param_1, void* param_2)
     f32 out_z;
     f32 tmp[20];
 
-    state = ((GameObject*)param_1)->extra;
-    param_1[0] = (s16)((*(u8*)((char*)param_2 + 0x3d) & 0x3f) << 10);
-    param_1[1] = (s16)(*(u8*)((char*)param_2 + 0x3e) << 8);
-    *(f32*)(param_1 + 4) =
-        *(f32*)(*(int*)&((GameObject*)param_1)->anim.modelInstance + 4) *
-        ((float)(u32) * (u8*)((char*)param_2 + 0x3a)) * lbl_803E40DC;
+    state = ((GameObject*)obj)->extra;
+    obj[0] = (s16)((*(u8*)((char*)arg2 + 0x3d) & 0x3f) << 10);
+    obj[1] = (s16)(*(u8*)((char*)arg2 + 0x3e) << 8);
+    *(f32*)(obj + 4) =
+        *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4) *
+        ((float)(u32) * (u8*)((char*)arg2 + 0x3a)) * lbl_803E40DC;
 
-    vec[0] = param_1[0];
-    vec[1] = param_1[1];
-    vec[2] = param_1[2];
+    vec[0] = obj[0];
+    vec[1] = obj[1];
+    vec[2] = obj[2];
     tmp[0] = lbl_803E40E0;
     tmp[1] = lbl_803E40D8;
     tmp[2] = lbl_803E40D8;
@@ -74,23 +74,23 @@ void objFn_80198fa4(s16* param_1, void* param_2)
     ((MmpGyserventState*)state)->unk10 = out_z;
     ((MmpGyserventState*)state)->unk14 = out_x;
     ((MmpGyserventState*)state)->unk18 =
-        -(((GameObject*)param_1)->anim.worldPosZ * out_x +
-            ((GameObject*)param_1)->anim.worldPosX * out_y +
-            ((GameObject*)param_1)->anim.worldPosY * out_z);
+        -(((GameObject*)obj)->anim.worldPosZ * out_x +
+            ((GameObject*)obj)->anim.worldPosX * out_y +
+            ((GameObject*)obj)->anim.worldPosY * out_z);
 
-    vec[0] = (s16)(-param_1[0]);
-    vec[1] = (s16)(-param_1[1]);
+    vec[0] = (s16)(-obj[0]);
+    vec[1] = (s16)(-obj[1]);
     vec[2] = 0;
     tmp[0] = lbl_803E40E0;
-    tmp[1] = -((GameObject*)param_1)->anim.worldPosX;
-    tmp[2] = -((GameObject*)param_1)->anim.worldPosY;
-    tmp[3] = -((GameObject*)param_1)->anim.worldPosZ;
+    tmp[1] = -((GameObject*)obj)->anim.worldPosX;
+    tmp[2] = -((GameObject*)obj)->anim.worldPosY;
+    tmp[3] = -((GameObject*)obj)->anim.worldPosZ;
     mtxRotateByVec3s(mtx, vec);
     mtx44Transpose(mtx, (char*)state + 0x38);
 
-    ((MmpGyserventState*)state)->unk34 = lbl_803E40E4 * *(f32*)(param_1 + 4);
-    ((MmpGyserventState*)state)->unk4 = lbl_803E40E8 * *(f32*)(param_1 + 4) * lbl_803E40E8 * *(f32*)(param_1 + 4);
-    if (*(int*)((char*)param_2 + 0x14) == 0x46a31)
+    ((MmpGyserventState*)state)->unk34 = lbl_803E40E4 * *(f32*)(obj + 4);
+    ((MmpGyserventState*)state)->unk4 = lbl_803E40E8 * *(f32*)(obj + 4) * lbl_803E40E8 * *(f32*)(obj + 4);
+    if (*(int*)((char*)arg2 + 0x14) == 0x46a31)
     {
         OSReport(lbl_8032253C);
     }
@@ -103,82 +103,82 @@ void objFn_80198fa4(s16* param_1, void* param_2)
  * EN v1.0 Address: 0x80199188
  * EN v1.0 Size: 356b
  */
-void objSeqMoveFn_80199188(void* param_1, int param_2)
+void objSeqMoveFn_80199188(void* obj, int arg2)
 {
-    f32 fVar1;
-    f32 fVar2;
-    f32 fVar3;
-    f32 fVar4;
-    f32 fVar5;
-    f32 fVar6;
-    bool bVar7;
-    char cVar8;
-    int iVar9;
+    f32 speed;
+    f32 dx;
+    f32 dz;
+    f32 dy;
+    f32 dy2;
+    f32 dz2;
+    bool nearEnd;
+    char leg;
+    int state;
 
-    iVar9 = *(int*)&((GameObject*)param_1)->extra;
-    fVar1 = (float)(s32)(*(u8*)(*(int*)&((GameObject*)param_1)->anim.placementData + 0x3b) * 2);
-    fVar2 = *(f32*)(iVar9 + 0x1c) - ((GameObject*)param_1)->anim.worldPosX;
-    fVar4 = *(f32*)(iVar9 + 0x20) - ((GameObject*)param_1)->anim.worldPosY;
-    fVar3 = *(f32*)(iVar9 + 0x24) - ((GameObject*)param_1)->anim.worldPosZ;
-    fVar3 = fVar2 * fVar2 + fVar3 * fVar3;
-    fVar2 = *(f32*)(iVar9 + 0x28) - ((GameObject*)param_1)->anim.worldPosX;
-    fVar5 = *(f32*)(iVar9 + 0x2c) - ((GameObject*)param_1)->anim.worldPosY;
-    fVar6 = *(f32*)(iVar9 + 0x30) - ((GameObject*)param_1)->anim.worldPosZ;
-    fVar6 = fVar2 * fVar2 + fVar6 * fVar6;
-    fVar2 = *(f32*)(iVar9 + 4);
-    if (fVar6 < fVar2)
+    state = *(int*)&((GameObject*)obj)->extra;
+    speed = (float)(s32)(*(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x3b) * 2);
+    dx = *(f32*)(state + 0x1c) - ((GameObject*)obj)->anim.worldPosX;
+    dy = *(f32*)(state + 0x20) - ((GameObject*)obj)->anim.worldPosY;
+    dz = *(f32*)(state + 0x24) - ((GameObject*)obj)->anim.worldPosZ;
+    dz = dx * dx + dz * dz;
+    dx = *(f32*)(state + 0x28) - ((GameObject*)obj)->anim.worldPosX;
+    dy2 = *(f32*)(state + 0x2c) - ((GameObject*)obj)->anim.worldPosY;
+    dz2 = *(f32*)(state + 0x30) - ((GameObject*)obj)->anim.worldPosZ;
+    dz2 = dx * dx + dz2 * dz2;
+    dx = *(f32*)(state + 4);
+    if (dz2 < dx)
     {
-        if (fVar5 < lbl_803E40D8)
+        if (dy2 < lbl_803E40D8)
         {
-            fVar5 = -fVar5;
+            dy2 = -dy2;
         }
-        if (fVar5 < fVar1)
+        if (dy2 < speed)
         {
-            bVar7 = false;
-            if (fVar3 < fVar2)
+            nearEnd = false;
+            if (dz < dx)
             {
-                if (fVar4 < lbl_803E40D8)
+                if (dy < lbl_803E40D8)
                 {
-                    fVar4 = -fVar4;
+                    dy = -dy;
                 }
-                if (fVar4 < fVar1)
+                if (dy < speed)
                 {
-                    bVar7 = true;
+                    nearEnd = true;
                 }
             }
-            if (bVar7)
+            if (nearEnd)
             {
-                cVar8 = '\x02';
+                leg = '\x02';
             }
             else
             {
-                cVar8 = '\x01';
+                leg = '\x01';
             }
             goto end;
         }
     }
-    bVar7 = false;
-    if (fVar3 < fVar2)
+    nearEnd = false;
+    if (dz < dx)
     {
-        if (fVar4 < lbl_803E40D8)
+        if (dy < lbl_803E40D8)
         {
-            fVar4 = -fVar4;
+            dy = -dy;
         }
-        if (fVar4 < fVar1)
+        if (dy < speed)
         {
-            bVar7 = true;
+            nearEnd = true;
         }
     }
-    if (bVar7)
+    if (nearEnd)
     {
-        cVar8 = -1;
+        leg = -1;
     }
     else
     {
-        cVar8 = -2;
+        leg = -2;
     }
 end:
-    objInterpretSeq(param_1, param_2, (int)cVar8, (int)fVar6);
+    objInterpretSeq(obj, arg2, (int)leg, (int)dz2);
 }
 
 /*
@@ -188,7 +188,7 @@ end:
  * EN v1.0 Address: 0x801992EC
  * EN v1.0 Size: 196b
  */
-void objSeqFn_801992ec(void* param_1, int param_2)
+void objSeqFn_801992ec(void* obj, int arg2)
 {
     void* state;
     f32 dx0, dy0, dz0, d0;
@@ -196,16 +196,16 @@ void objSeqFn_801992ec(void* param_1, int param_2)
     f32 r;
     s8 cat;
 
-    state = ((GameObject*)param_1)->extra;
+    state = ((GameObject*)obj)->extra;
 
-    dx0 = ((MmpGyserventState*)state)->unk1C - ((GameObject*)param_1)->anim.worldPosX;
-    dy0 = ((MmpGyserventState*)state)->unk20 - ((GameObject*)param_1)->anim.worldPosY;
-    dz0 = ((MmpGyserventState*)state)->unk24 - ((GameObject*)param_1)->anim.worldPosZ;
+    dx0 = ((MmpGyserventState*)state)->unk1C - ((GameObject*)obj)->anim.worldPosX;
+    dy0 = ((MmpGyserventState*)state)->unk20 - ((GameObject*)obj)->anim.worldPosY;
+    dz0 = ((MmpGyserventState*)state)->unk24 - ((GameObject*)obj)->anim.worldPosZ;
     d0 = dx0 * dx0 + dy0 * dy0 + dz0 * dz0;
 
-    dx1 = ((MmpGyserventState*)state)->unk28 - ((GameObject*)param_1)->anim.worldPosX;
-    dy1 = ((MmpGyserventState*)state)->unk2C - ((GameObject*)param_1)->anim.worldPosY;
-    dz1 = ((MmpGyserventState*)state)->unk30 - ((GameObject*)param_1)->anim.worldPosZ;
+    dx1 = ((MmpGyserventState*)state)->unk28 - ((GameObject*)obj)->anim.worldPosX;
+    dy1 = ((MmpGyserventState*)state)->unk2C - ((GameObject*)obj)->anim.worldPosY;
+    dz1 = ((MmpGyserventState*)state)->unk30 - ((GameObject*)obj)->anim.worldPosZ;
     d1 = dx1 * dx1 + dy1 * dy1 + dz1 * dz1;
 
     r = ((MmpGyserventState*)state)->unk4;
@@ -217,6 +217,6 @@ void objSeqFn_801992ec(void* param_1, int param_2)
     {
         cat = (d0 < r) ? -1 : -2;
     }
-    objInterpretSeq(param_1, param_2, (int)cat, (int)d1);
+    objInterpretSeq(obj, arg2, (int)cat, (int)d1);
 }
 
