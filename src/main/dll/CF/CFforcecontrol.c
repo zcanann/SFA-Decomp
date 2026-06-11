@@ -485,6 +485,7 @@ typedef struct
     f32 pos2[3]; // 0x18
 } GameObjPos;
 
+#pragma opt_loop_invariants off
 void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
 {
     FuelcellState* state = ((GameObject*)obj)->extra;
@@ -605,6 +606,7 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
         }
     }
 }
+#pragma opt_loop_invariants reset
 
 typedef struct
 {
@@ -742,8 +744,7 @@ void deathseq_update(int* obj)
         cam[1] = 0x1000;
         xTerm = lbl_803E3D38 * -mathSinf((lbl_803E3D3C * (f32) * (s16*)obj) / lbl_803E3D40);
         negSin = -mathCosf((lbl_803E3D3C * (f32) * (s16*)obj) / lbl_803E3D40);
-        fz = lbl_803E3D38;
-        zTerm = fz * negSin;
+        zTerm = (fz = lbl_803E3D38) * negSin;
         ((GameObject*)cam)->anim.localPosX = sin30 + (((GameObject*)obj)->anim.worldPosX + xTerm);
         ((GameObject*)cam)->anim.localPosY = (fz + ((GameObject*)obj)->anim.worldPosY) + dz;
         ((GameObject*)cam)->anim.localPosZ = sin34 + (((GameObject*)obj)->anim.worldPosZ + zTerm);
