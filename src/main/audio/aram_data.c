@@ -46,10 +46,7 @@ u32 aramStoreData(void *src, u32 size)
     }
 
     while (alignedSize != 0) {
-        chunk = aramChunkSize;
-        if (alignedSize < chunk) {
-            chunk = alignedSize;
-        }
+        chunk = (alignedSize < aramChunkSize) ? alignedSize : aramChunkSize;
         piece = aramChunkCallback(src, chunk);
         DCFlushRange(piece, chunk);
         aramUploadData((u32)piece, aramWrite, chunk, 0, 0, 0);
