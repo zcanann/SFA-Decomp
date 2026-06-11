@@ -48,10 +48,10 @@ void trickyFn_8013d8f0(u8 *self, u8 *state)
     zero = lbl_803E23DC;
     *(f32 *)(state + 0x71C) = zero;
     *(f32 *)(state + 0x720) = zero;
-    *(u32 *)(state + 0x54) = *(u32 *)(state + 0x54) & 0xFFFFFFEF;
-    *(u32 *)(state + 0x54) = *(u32 *)(state + 0x54) & 0xFFFEFFFF;
-    *(u32 *)(state + 0x54) = *(u32 *)(state + 0x54) & 0xFFFDFFFF;
-    *(u32 *)(state + 0x54) = *(u32 *)(state + 0x54) & 0xFFFBFFFF;
+    *(u32 *)(state + 0x54) = *(u32 *)(state + 0x54) & ~(u64)0x10;
+    *(u32 *)(state + 0x54) = *(u32 *)(state + 0x54) & ~(u64)0x10000;
+    *(u32 *)(state + 0x54) = *(u32 *)(state + 0x54) & ~(u64)0x20000;
+    *(u32 *)(state + 0x54) = *(u32 *)(state + 0x54) & ~(u64)0x40000;
     *(s8 *)(state + 0xD) = -1;
     return;
   }
