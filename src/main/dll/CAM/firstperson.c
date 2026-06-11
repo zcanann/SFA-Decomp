@@ -243,27 +243,27 @@ void firstperson_loadSettings(CamcontrolFirstPersonActionSettings* settings)
     settings->slideLeftAmount;
     gCamcontrolModeSettings->slideLeftAmount = fVar1;
     gCamcontrolModeSettings->targetSlideLeftAmount = fVar1;
-    if (settings->distanceAdjustRate == 0)
-    {
-        gCamcontrolModeSettings->targetDistanceAdjustRate = lbl_803E1714;
-    }
-    else
+    if (settings->distanceAdjustRate != 0)
     {
         fVar1 = (f32)(u32)
         settings->distanceAdjustRate / lbl_803E1710;
         gCamcontrolModeSettings->distanceAdjustRate = fVar1;
         gCamcontrolModeSettings->targetDistanceAdjustRate = fVar1;
     }
-    if (settings->heightAdjustRate == 0)
-    {
-        gCamcontrolModeSettings->targetHeightAdjustRate = lbl_803E1714;
-    }
     else
+    {
+        gCamcontrolModeSettings->targetDistanceAdjustRate = lbl_803E1714;
+    }
+    if (settings->heightAdjustRate != 0)
     {
         fVar1 = (f32)(u32)
         settings->heightAdjustRate / lbl_803E1710;
         gCamcontrolModeSettings->heightAdjustRate = fVar1;
         gCamcontrolModeSettings->targetHeightAdjustRate = fVar1;
+    }
+    else
+    {
+        gCamcontrolModeSettings->targetHeightAdjustRate = lbl_803E1714;
     }
     gCamcontrolModeSettings->transitionTimer = 0;
     gCamcontrolModeSettings->transitionDuration = 0;
