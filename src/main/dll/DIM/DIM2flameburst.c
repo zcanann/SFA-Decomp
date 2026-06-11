@@ -522,70 +522,70 @@ void explosion_release(uint obj)
 
 #pragma scheduling on
 #pragma peephole on
-void fn_explosion_release_v11_unused(uint param_1)
+void fn_explosion_release_v11_unused(uint obj)
 {
-    short sVar1;
-    float fVar2;
-    bool bVar3;
-    int iVar4;
-    int iVar5;
-    char* pcVar6;
-    short* psVar7;
+    short sval;
+    float fa;
+    bool bval;
+    int val;
+    int val2;
+    char* state;
+    short* placement;
 
-    psVar7 = *(short**)&((GameObject*)param_1)->anim.placementData;
-    pcVar6 = ((GameObject*)param_1)->extra;
-    FUN_8002fc3c((double)((FnExplosionReleaseV11UnusedState*)pcVar6)->unk4, (double)lbl_803DC074);
-    ((GameObject*)param_1)->anim.localPosZ = ((GameObject*)param_1)->anim.localPosZ + ((FnExplosionReleaseV11UnusedState
-        *)pcVar6)->unk8;
-    fVar2 = lbl_803E566C;
-    if (((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8 != lbl_803E566C)
+    placement = *(short**)&((GameObject*)obj)->anim.placementData;
+    state = ((GameObject*)obj)->extra;
+    FUN_8002fc3c((double)((FnExplosionReleaseV11UnusedState*)state)->unk4, (double)lbl_803DC074);
+    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + ((FnExplosionReleaseV11UnusedState
+        *)state)->unk8;
+    fa = lbl_803E566C;
+    if (((FnExplosionReleaseV11UnusedState*)state)->unk8 != lbl_803E566C)
     {
-        ((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8 = ((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8 *
+        ((FnExplosionReleaseV11UnusedState*)state)->unk8 = ((FnExplosionReleaseV11UnusedState*)state)->unk8 *
             lbl_803E5670;
-        if (((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8 < fVar2)
+        if (((FnExplosionReleaseV11UnusedState*)state)->unk8 < fa)
         {
-            fVar2 = ((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8;
+            fa = ((FnExplosionReleaseV11UnusedState*)state)->unk8;
         }
-        ((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8 = fVar2;
+        ((FnExplosionReleaseV11UnusedState*)state)->unk8 = fa;
     }
-    if ((('\0' < *pcVar6) || (*psVar7 != 0x338)) || (((GameObject*)param_1)->anim.currentMoveProgress <= lbl_803E5674))
+    if ((('\0' < *state) || (*placement != 0x338)) || (((GameObject*)obj)->anim.currentMoveProgress <= lbl_803E5674))
     {
-        bVar3 = false;
-        iVar5 = 0;
-        iVar4 = (int)*(char*)(*(int*)(param_1 + 0x58) + 0x10f);
-        if (0 < iVar4)
+        bval = false;
+        val2 = 0;
+        val = (int)*(char*)(*(int*)(obj + 0x58) + 0x10f);
+        if (0 < val)
         {
             do
             {
-                sVar1 = *(short*)(*(int*)(*(int*)(param_1 + 0x58) + iVar5 + 0x100) + 0x46);
-                if ((sVar1 == 399) || (sVar1 == 0x1d6))
+                sval = *(short*)(*(int*)(*(int*)(obj + 0x58) + val2 + 0x100) + 0x46);
+                if ((sval == 399) || (sval == 0x1d6))
                 {
-                    bVar3 = true;
+                    bval = true;
                     break;
                 }
-                iVar5 = iVar5 + 4;
-                iVar4 = iVar4 + -1;
+                val2 = val2 + 4;
+                val = val + -1;
             }
-            while (iVar4 != 0);
+            while (val != 0);
         }
-        if (bVar3)
+        if (bval)
         {
-            ((FnExplosionReleaseV11UnusedState*)pcVar6)->unk4 = lbl_803E5678;
-            ((FnExplosionReleaseV11UnusedState*)pcVar6)->unk8 = lbl_803E567C;
-            *pcVar6 = '\0';
-            GameBit_Set((int)psVar7[0xf], 1);
-            FUN_80006824(param_1, 0x3e1);
+            ((FnExplosionReleaseV11UnusedState*)state)->unk4 = lbl_803E5678;
+            ((FnExplosionReleaseV11UnusedState*)state)->unk8 = lbl_803E567C;
+            *state = '\0';
+            GameBit_Set((int)placement[0xf], 1);
+            FUN_80006824(obj, 0x3e1);
         }
     }
     else
     {
-        iVar4 = (uint)((GameObject*)param_1)->anim.alpha + (uint)DAT_803dc070 * -0x10;
-        if (iVar4 < 0)
+        val = (uint)((GameObject*)obj)->anim.alpha + (uint)DAT_803dc070 * -0x10;
+        if (val < 0)
         {
-            iVar4 = 0;
+            val = 0;
         }
-        (*(ObjHitsPriorityState**)&((GameObject*)param_1)->anim.hitReactState)->flags &= ~1;
-        ((GameObject*)param_1)->anim.alpha = iVar4;
+        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+        ((GameObject*)obj)->anim.alpha = val;
     }
     return;
 }
