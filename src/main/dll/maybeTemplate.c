@@ -717,7 +717,7 @@ void pauseMenuDrawStatus(void)
         lbl_803DD83C = -(lbl_803E1FA0 * timeDelta - lbl_803DD83C);
         if (lbl_803DD83C < lbl_803E1E3C)
         {
-            lbl_803DD83C = lbl_803E1E3C;
+            lbl_803DD83C = *(f32 *)&lbl_803E1E3C;
         }
     }
     if ((cMenuEnabled == 0) && (GameBit_Get(0xA7B) != 0))
@@ -754,7 +754,7 @@ void pauseMenuDrawStatus(void)
                 *op = -(lbl_803E1FA0 * timeDelta - *op);
                 if (*op < lbl_803E1E3C)
                 {
-                    *op = lbl_803E1E3C;
+                    *op = *(f32 *)&lbl_803E1E3C;
                 }
             }
             break;
