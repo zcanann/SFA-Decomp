@@ -1395,8 +1395,6 @@ void landed_arwing_update(int obj)
     CFLandedArwingState* state;
     int player;
     int child;
-    int nearest;
-    int def;
 
     state = ((GameObject*)obj)->extra;
     player = (int)Obj_GetPlayerObject();
@@ -1434,6 +1432,8 @@ void landed_arwing_update(int obj)
     case 0:
         if (ObjTrigger_IsSet(obj) != 0)
         {
+            int nearest;
+            int def;
             def = *(int*)&((GameObject*)obj)->anim.placementData;
             nearest = ObjGroup_FindNearestObject(0xf, obj, NULL);
             if (((GameObject*)obj)->anim.mapEventSlot == 0xd && GameBit_Get(0xc92) != 0)
@@ -1459,6 +1459,8 @@ void landed_arwing_update(int obj)
     case 2:
         if (fn_8012DDA4() != 0)
         {
+            int def;
+            int nearest;
             def = *(int*)&((GameObject*)obj)->anim.placementData;
             nearest = ObjGroup_FindNearestObject(0xf, obj, NULL);
             if (((GameObject*)obj)->anim.mapEventSlot == 0xd && GameBit_Get(0xc92) != 0)
