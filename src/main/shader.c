@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/audio/sfx.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
@@ -1443,7 +1444,6 @@ extern int* gCheckpointInterface;
 extern int* gNewCloudsInterface;
 extern CloudActionInterface** gCloudActionInterface;
 extern void audioStopByMask(int mask);
-extern void Sfx_ClearLoopedObjectSounds(void);
 extern void doNothing_8001F678(int a, int b);
 extern void Obj_ResetObjectSystem(void);
 extern void textureFree(int id);

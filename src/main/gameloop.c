@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "dolphin/os/OSFastCast.h"
 #include "main/asset_load.h"
+#include "main/audio/sfx.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
@@ -203,7 +204,6 @@ int testAndSet_onlyUseHeap3(int v);
 
 void* getCache(void);
 
-extern void Sfx_SetObjectSoundsPaused(s32 paused);
 extern void gameTextLoadDir(int dirId);
 
 #pragma peephole off
@@ -1045,7 +1045,6 @@ extern void voxmaps_updateTimers(void);
 extern void viewportEffectFn_8000e380(void);
 extern void loadDataFiles(void);
 extern void audioUpdate(void);
-extern void Sfx_UpdateLoopedObjectSounds(void);
 extern void debugPrintDraw(int a);
 extern void drawRect(f32 a, f32 b, int w, int h);
 extern void objRenderFn_8003b8f4(int obj, int b, int c, int d, int e, f32 a);

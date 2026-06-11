@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/objprint.h"
 #include "main/objanim_internal.h"
 
@@ -60,7 +61,6 @@ extern f32 lbl_803DF66C;
 
 void objAnimFn_80038f38(int obj, char* p2)
 {
-    extern int Sfx_StopObjectChannel(int obj, int ch);
     extern void ObjModel_SetBlendChannelTargets(int model, int a, int b, int c, f32 ratio, int d);
     extern f32 lbl_803DE9A4;
     extern f32 lbl_803DE9C8;
@@ -96,14 +96,14 @@ void objAnimFn_80038f38(int obj, char* p2)
     {
         *(s8*)p2 = 0;
     }
-    else if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) != 0)
+    else if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) != 0)
     {
         if (t != -1)
         {
             t -= framesThisStep;
             if (t < 0)
             {
-                Sfx_StopObjectChannel(obj, 0x10);
+                Sfx_StopObjectChannel((u32)obj, 0x10);
                 *(f32*)(p2 + 4) = lbl_803DE9A4;
                 *(s16*)(p2 + 0x14) = 0;
             }
@@ -1286,17 +1286,14 @@ void fn_8003A9C0(char* p, int count, s16 a, s16 b)
         p += 0x60;
     }
 }
-
-extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
-extern void Sfx_PlayFromObjectChannel(int obj, int ch, int sfxId);
 extern f32 lbl_803DE9C8;
 extern f32 lbl_803DE99C;
 
 void objAudioFn_80039270(int obj, void* p, int sfxId)
 {
-    if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
+    if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
     {
-        Sfx_PlayFromObjectChannel(obj, 0x10, sfxId);
+        Sfx_PlayFromObjectChannel((u32)obj, 0x10, (u16)sfxId);
         *(f32*)((char*)p + 0xc) = lbl_803DE9C8;
         *(s16*)((char*)p + 0x14) = -0x500;
         *(u8*)p = 1;
@@ -1757,11 +1754,11 @@ extern f32 lbl_803DE9A4;
 
 void objAudioFn_800393f8(int p1, int p2, int p3, int p4, int p5, u8 p6)
 {
-    if (p6 == 0 && Sfx_IsPlayingFromObjectChannel(p1, 0x10) != 0)
+    if (p6 == 0 && Sfx_IsPlayingFromObjectChannel((u32)p1, 0x10) != 0)
     {
         return;
     }
-    Sfx_PlayFromObjectChannel(p1, 0x10, p3);
+    Sfx_PlayFromObjectChannel((u32)p1, 0x10, (u16)p3);
     *(f32*)((char*)p2 + 0xc) = (f32)p5;
     *(s16*)((char*)p2 + 0x14) = (s16)(-p4);
     *(u8*)((char*)p2 + 0) = 1;
@@ -1820,9 +1817,9 @@ void objSoundFn_800392f0(int p1, int p2, int p3, u8 flag6)
 
     pitch = *(s16*)((char*)p3 + 2);
     sfx = (u16) * (s16*)((char*)p3 + 0);
-    if (flag6 != 0 || Sfx_IsPlayingFromObjectChannel(p1, 0x10) == 0)
+    if (flag6 != 0 || Sfx_IsPlayingFromObjectChannel((u32)p1, 0x10) == 0)
     {
-        Sfx_PlayFromObjectChannel(p1, 0x10, sfx);
+        Sfx_PlayFromObjectChannel((u32)p1, 0x10, sfx);
         *(f32*)((char*)p2 + 0xc) = lbl_803DE9C8;
         *(s16*)((char*)p2 + 0x14) = (s16)(-pitch);
         *(u8*)((char*)p2 + 0) = 1;
@@ -2030,7 +2027,7 @@ void objModelAndSoundFn_80039118(int obj, int p2)
     {
         if (frame == 1)
         {
-            Sfx_PlayFromObjectChannel(obj, 0x10, *(u16*)((char*)p2 + 0x14));
+            Sfx_PlayFromObjectChannel((u32)obj, 0x10, *(u16*)((char*)p2 + 0x14));
         }
         kf = *(int**)((char*)p2 + 0x10);
         frame = *(int*)((char*)p2 + 0);
