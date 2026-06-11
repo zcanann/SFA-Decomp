@@ -40,7 +40,7 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803DC948;
 extern f32 lbl_803DC94C;
 extern f32 gDvdErrorPauseActive;
-extern f32 lbl_803DC954;
+extern f32 gFileInfo;
 extern f32 lbl_803DE6F0;
 extern f32 lbl_803E379C;
 extern f32 lbl_803E37A0;

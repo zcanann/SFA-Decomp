@@ -511,19 +511,19 @@ void dll_07_func0A_nop(void)
 {
 }
 
-extern u8 lbl_803DD1EC;
+extern u8 cloudOverridePosition;
 extern f32 lbl_803DD1E8;
 extern f32 lbl_803DD1E4;
 extern f32 lbl_803DD1E0;
 
 void cloudClearOverridePosition(void)
 {
-    lbl_803DD1EC = 0;
+    cloudOverridePosition = 0;
 }
 
 void cloudSetOverridePosition(f32 a, f32 b, f32 c)
 {
-    lbl_803DD1EC = 1;
+    cloudOverridePosition = 1;
     lbl_803DD1E8 = a;
     lbl_803DD1E4 = b;
     lbl_803DD1E0 = c;

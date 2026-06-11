@@ -828,7 +828,7 @@ void FUN_8013651c(int param_1)
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
-extern u8 lbl_803DD988;
+extern u8 warpstoneUIState;
 extern u32 lbl_803DD9B8;
 extern u32 lbl_803DD9BC;
 extern u8 lbl_803DD9AB;
@@ -862,9 +862,9 @@ u8 shouldShowCredits(void) { return showCredits; }
 u16 getMinimapY(void) { return (u16)lbl_803DD938; }
 
 /* EN v1.0 0x801344F0  size: 12b  u8 setter writing arg low byte to
- * lbl_803DD988. */
+ * warpstoneUIState. */
 #pragma peephole off
-void WarpstoneUI_setState(int val) { lbl_803DD988 = (u8)val; }
+void WarpstoneUI_setState(int val) { warpstoneUIState = (u8)val; }
 #pragma peephole reset
 
 /* EN v1.0 0x80135814  size: 12b  Two-word setter for state pair. */
@@ -1616,7 +1616,7 @@ void WarpstoneUI_release(void)
 }
 
 /* EN v1.0 0x801347A4  size: 100b  Per-frame integrator with clamp.
- * Adds (or subtracts, when lbl_803DD988 != 0) lbl_803E22D8*timeDelta
+ * Adds (or subtracts, when warpstoneUIState != 0) lbl_803E22D8*timeDelta
  * to lbl_803DD97C, then clamps to [lbl_803E22E0, lbl_803E22DC]. */
 extern f32 lbl_803E22D8;
 extern f32 lbl_803E22DC;
@@ -1625,7 +1625,7 @@ extern f32 timeDelta;
 int WarpstoneUI_frameStart(void)
 {
     f32 v;
-    if (lbl_803DD988 == 0)
+    if (warpstoneUIState == 0)
     {
         lbl_803DD97C = lbl_803DD97C - (lbl_803E22D8 * timeDelta);
     }
@@ -2819,7 +2819,7 @@ void WarpstoneUI_showUI(int param_1)
     int n;
 
     CMenu_SetFadeCounter(0);
-    switch (lbl_803DD988)
+    switch (warpstoneUIState)
     {
     case 2:
     case 3:
@@ -2855,7 +2855,7 @@ void WarpstoneUI_showUI(int param_1)
         (**(void (**)(int))((char*)(*gTitleMenuLinkInterface) + 0x10))(param_1);
         break;
     }
-    if (lbl_803DD978 != 0 && lbl_803DD988 != 4)
+    if (lbl_803DD978 != 0 && warpstoneUIState != 4)
     {
         (**(void (**)(void))((char*)(*gTitleMenuLinkInterface) + 8))();
         lbl_803DD978 = 0;

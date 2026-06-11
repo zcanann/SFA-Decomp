@@ -2512,8 +2512,8 @@ void doNothing_onTrickyInit(void)
 int dll_12_func06_ret_0(void) { return 0x0; }
 
 /* sda21 accessors. */
-extern u32 lbl_803DD430;
-void player_setOverride(u32 x) { lbl_803DD430 = x; }
+extern u32 playerOverride;
+void player_setOverride(u32 x) { playerOverride = x; }
 
 /* Pattern wrappers. */
 extern u32 lbl_803DD458;
@@ -2840,7 +2840,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
         player_applyVelocityStep(pos, state, dt);
     }
 
-    overrideObj = lbl_803DD430;
+    overrideObj = playerOverride;
     if (overrideObj != 0)
     {
         dx = *(f32*)(overrideObj + 0xc) - lbl_803DD448;
@@ -2872,7 +2872,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
         }
     }
 
-    lbl_803DD430 = 0;
+    playerOverride = 0;
 
     if ((*(u32*)state & 0x1000000) == 0 && (*(u32*)state & 0x400000) == 0 && keepPathControls != 0)
     {

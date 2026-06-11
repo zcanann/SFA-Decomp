@@ -1627,9 +1627,9 @@ int return0_80060B90(void) { return 0x0; }
 
 /* Pattern wrappers. */
 extern s8 lbl_803DB658;
-extern u8 lbl_803DCF4E;
+extern u8 mapBlockFlag;
 void fn_800628CC(void) { lbl_803DB658 = 0x1; }
-void setMapBlockFlag(void) { lbl_803DCF4E = 0x1; }
+void setMapBlockFlag(void) { mapBlockFlag = 0x1; }
 
 /* arr indexing: obj->arr + idx*size */
 void* mapBlockFn_800606ec(int* obj, int idx) { return (char*)((int**)obj)[0x50 / 4] + idx * 0x14; }
@@ -1770,7 +1770,7 @@ extern u8 lbl_803DCF4D;
 int fn_80065640(void)
 {
     int r = 0;
-    if ((s8)lbl_803DCF4E != 0 || (s8)lbl_803DCF4F != 0 || lbl_803DCF4D != 0) r = 1;
+    if ((s8)mapBlockFlag != 0 || (s8)lbl_803DCF4F != 0 || lbl_803DCF4D != 0) r = 1;
     return r;
 }
 
@@ -1953,7 +1953,7 @@ void intersectModLineBuild(int* obj)
     int li;
     int prev;
 
-    lbl_803DCF4E = 1;
+    mapBlockFlag = 1;
     lbl_803DCF5E = 0;
     lbl_803DCF5C = 0;
     segCount = *(u8*)((char*)obj + 0x5c);
@@ -2383,7 +2383,7 @@ void mapInitFn_80069990(void)
     }
     lbl_803DCF5E = 0;
     lbl_803DCF5C = 0;
-    lbl_803DCF4E = 0;
+    mapBlockFlag = 0;
     lbl_803DCF4F = 0;
 }
 
@@ -5495,10 +5495,10 @@ void trackIntersect(void)
     {
         lbl_803DCF4D = lbl_803DCF4D - 1;
     }
-    if ((s8)lbl_803DCF4E == 1)
+    if ((s8)mapBlockFlag == 1)
     {
         lbl_803DCF4F = 1;
-        lbl_803DCF4E = 0;
+        mapBlockFlag = 0;
         return;
     }
     if ((s8)lbl_803DCF4F == 0)

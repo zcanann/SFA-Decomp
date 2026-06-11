@@ -758,7 +758,7 @@ extern u32 lbl_803398E0[];
 extern u8 lbl_803398F0[];
 extern s32 lbl_802C6E08[];
 extern u8 gTextBoxes[];
-extern void* lbl_803DC954;
+extern void* gFileInfo;
 extern volatile int gDvdReadCallbackResult;
 extern void* gCurTextBox;
 extern f32 lbl_803DE6B8;

@@ -44,7 +44,7 @@ extern int getHudHiddenFrameCount(void);
 extern f32 lbl_803DD1E0;
 extern f32 lbl_803DD1E4;
 extern f32 lbl_803DD1E8;
-extern u8 lbl_803DD1EC;
+extern u8 cloudOverridePosition;
 extern volatile f32 lbl_803DB780;
 extern const f32 lbl_803DF2B4;
 extern const f32 lbl_803DF2C0;
@@ -143,7 +143,7 @@ void renderClouds(int a, int b, int c, int d)
         model = Obj_GetActiveModel(*(int*)(lbl_8039AB28 + 4));
         *(u16*)(model + 0x18) = *(u16*)(model + 0x18) & ~8;
         *(u8*)(*(int*)(lbl_8039AB28 + 4) + 0x37) = 0xff;
-        if ((u32)lbl_803DD1EC != 0)
+        if ((u32)cloudOverridePosition != 0)
         {
             *(f32*)(*(int*)(lbl_8039AB28 + 4) + 0xc) = lbl_803DD1E8;
             *(f32*)(*(int*)(lbl_8039AB28 + 4) + 0x10) = lbl_803DF2C0 + lbl_803DD1E4;
@@ -249,7 +249,7 @@ void renderClouds(int a, int b, int c, int d)
         model = Obj_GetActiveModel(*(int*)(lbl_8039AB28 + 8));
         *(u16*)(model + 0x18) = *(u16*)(model + 0x18) & ~8;
         *(u8*)(*(int*)(lbl_8039AB28 + 8) + 0x37) = 0xff;
-        if ((u32)lbl_803DD1EC != 0)
+        if ((u32)cloudOverridePosition != 0)
         {
             *(f32*)(*(int*)(lbl_8039AB28 + 8) + 0xc) = lbl_803DD1E8;
             *(f32*)(*(int*)(lbl_8039AB28 + 8) + 0x10) = lbl_803DD1E4 - lbl_803DF2D8;

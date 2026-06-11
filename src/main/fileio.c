@@ -104,7 +104,7 @@ void fileReadCb_80015954(void* result)
 
 void setFileInfo(void* fileInfo)
 {
-    lbl_803DC954 = fileInfo;
+    gFileInfo = fileInfo;
 }
 
 void* loadFileByPath(char* path, int* outSize)
@@ -191,9 +191,9 @@ void* loadFileByPathAsync(char* path, int* outSize, int unused, void (*cb)(void*
         *outSize = 0;
     }
     DVDSetAutoInvalidation(1);
-    if (lbl_803DC954 != NULL)
+    if (gFileInfo != NULL)
     {
-        fileInfo = lbl_803DC954;
+        fileInfo = gFileInfo;
     }
     else
     {
