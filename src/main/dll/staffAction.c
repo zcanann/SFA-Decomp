@@ -6,15 +6,10 @@
 #include "main/objanim.h"
 
 extern uint GameBit_Get(int eventId);
-extern int FUN_80017728();
-extern undefined4 FUN_80017740();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_8001776c();
 extern undefined4 FUN_80017784();
 extern undefined4 FUN_80017788();
-extern undefined4 FUN_80017a88();
 extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int atan2_8002178c(f32 dx, f32 dz);
 extern undefined4 FUN_800305f8();
@@ -22,8 +17,6 @@ extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_EnableObject();
 extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_8003b870();
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
 extern void mtx44_mult(f32 * lhs, f32 * rhs, f32 * out);
 extern void fn_8003B950(void* mtx);
@@ -37,8 +30,6 @@ extern void hitDetect_calcSweptSphereBounds(uint* boundsOut, float* startPoints,
                                             int pointCount);
 extern void trackDolphin_buildSweptBounds(uint* boundsOut, float* startPoints, float* endPoints,
                                           float* radii, int pointCount);
-extern int FUN_8028683c();
-extern undefined4 FUN_80286888();
 extern f32 fsin16Precise(int angle);
 extern f32 fcos16Precise(int angle);
 extern f32 sqrtf(f32 x);
@@ -47,7 +38,6 @@ extern undefined4 FUN_80293bc4();
 extern undefined4 FUN_80293f80();
 
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd738;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
