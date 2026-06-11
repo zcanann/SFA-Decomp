@@ -133,7 +133,7 @@ void arwblocker_update(int obj)
     ARWBlockerState* state = ((GameObject*)obj)->extra;
     int arwing = getArwing();
 
-    if (arwing == 0)
+    if ((u32)arwing == 0)
         arwing = Obj_GetPlayerObject();
     if (Vec_distance(obj + 0x18, arwing + 0x18) < lbl_803E721C)
     {
