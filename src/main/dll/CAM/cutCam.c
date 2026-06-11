@@ -151,23 +151,23 @@ camcontrol_traceMove(float* startPos, float* targetPos, float* endPosOut, u8* tr
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined camcontrol_traceFromTarget(float* param_1, int param_2, float* param_3)
+undefined camcontrol_traceFromTarget(float* fromPos, int channel, float* outPos)
 {
-    float local_88[3];
-    undefined auStack_7c[111];
+    float targetPos[3];
+    undefined traceRec[111];
 
-    if (*(short*)(param_2 + 0x44) == 1)
+    if (*(short*)(channel + 0x44) == 1)
     {
-        cameraGetPrevPos2(param_2, &local_88[0], &local_88[1], &local_88[2]);
+        cameraGetPrevPos2(channel, &targetPos[0], &targetPos[1], &targetPos[2]);
     }
     else
     {
-        local_88[0] = *(float*)(param_2 + 0x18);
-        local_88[1] = *(float*)(param_2 + 0x1c) + cameraMtxVar57->targetHeight;
-        local_88[2] = *(float*)(param_2 + 0x20);
+        targetPos[0] = *(float*)(channel + 0x18);
+        targetPos[1] = *(float*)(channel + 0x1c) + cameraMtxVar57->targetHeight;
+        targetPos[2] = *(float*)(channel + 0x20);
     }
-    camcontrol_traceMove(local_88, param_1, param_3, auStack_7c, 3, '\x01', '\x01', (double)lbl_803E1688);
-    return auStack_7c[110];
+    camcontrol_traceMove(targetPos, fromPos, outPos, traceRec, 3, '\x01', '\x01', (double)lbl_803E1688);
+    return traceRec[110];
 }
 
 /*
@@ -185,10 +185,10 @@ undefined camcontrol_traceFromTarget(float* param_1, int param_2, float* param_3
  */
 undefined camcontrol_getTargetPosition(int arg0, void* arg1, void* arg2, void* arg3)
 {
-    short* param_4;
-    int param_1;
-    float* param_3;
-    short* param_2;
+    short* pitchOut;
+    int obj;
+    float* posOut;
+    short* rotOut;
     u8 box[112];
     float prev[3];
     float pos[3];
@@ -201,12 +201,12 @@ undefined camcontrol_getTargetPosition(int arg0, void* arg1, void* arg2, void* a
     uint ang;
     int d;
 
-    param_1 = arg0;
-    param_2 = (short*)arg1;
-    param_3 = (float*)arg2;
-    param_4 = (short*)arg3;
-    cosv = mathSinf((lbl_803E168C * (f32) * param_2) / lbl_803E1690);
-    sinv = mathCosf((lbl_803E168C * (f32) * param_2) / lbl_803E1690);
+    obj = arg0;
+    rotOut = (short*)arg1;
+    posOut = (float*)arg2;
+    pitchOut = (short*)arg3;
+    cosv = mathSinf((lbl_803E168C * (f32) * rotOut) / lbl_803E1690);
+    sinv = mathCosf((lbl_803E168C * (f32) * rotOut) / lbl_803E1690);
     d2 = cameraMtxVar57->maxDistance * cameraMtxVar57->maxDistance -
         cameraMtxVar57->lowerHeightOffset * cameraMtxVar57->lowerHeightOffset;
     if (d2 < lbl_803E1694)
@@ -214,27 +214,27 @@ undefined camcontrol_getTargetPosition(int arg0, void* arg1, void* arg2, void* a
         d2 = *(f32*)&lbl_803E1694;
     }
     d2 = sqrtf(d2);
-    pos[0] = cosv * d2 + *(float*)(param_2 + 0xc);
+    pos[0] = cosv * d2 + *(float*)(rotOut + 0xc);
     pos[1] = cameraMtxVar57->lowerHeightOffset +
-        (*(float*)(param_2 + 0xe) + cameraMtxVar57->targetHeight);
-    pos[2] = sinv * d2 + *(float*)(param_2 + 0x10);
-    if (param_2[0x22] == 1)
+        (*(float*)(rotOut + 0xe) + cameraMtxVar57->targetHeight);
+    pos[2] = sinv * d2 + *(float*)(rotOut + 0x10);
+    if (rotOut[0x22] == 1)
     {
-        cameraGetPrevPos2((int)param_2, &prev[0], &prev[1], &prev[2]);
+        cameraGetPrevPos2((int)rotOut, &prev[0], &prev[1], &prev[2]);
     }
     else
     {
-        prev[0] = *(float*)(param_2 + 0xc);
-        prev[1] = *(float*)(param_2 + 0xe) + cameraMtxVar57->targetHeight;
-        prev[2] = *(float*)(param_2 + 0x10);
+        prev[0] = *(float*)(rotOut + 0xc);
+        prev[1] = *(float*)(rotOut + 0xe) + cameraMtxVar57->targetHeight;
+        prev[2] = *(float*)(rotOut + 0x10);
     }
-    camcontrol_traceMove(prev, pos, param_3, box, 3, '\x01', '\x01', lbl_803E1688);
-    (*gCameraInterface)->getRelativePosition(cameraMtxVar57->targetHeight, param_1, &a, &b, &c, &d2, 0);
-    b = *(float*)(param_1 + 0x1c) -
-        (*(float*)(param_2 + 0xe) + cameraMtxVar57->targetHeight);
+    camcontrol_traceMove(prev, pos, posOut, box, 3, '\x01', '\x01', lbl_803E1688);
+    (*gCameraInterface)->getRelativePosition(cameraMtxVar57->targetHeight, obj, &a, &b, &c, &d2, 0);
+    b = *(float*)(obj + 0x1c) -
+        (*(float*)(rotOut + 0xe) + cameraMtxVar57->targetHeight);
     ang = getAngle(b, d2);
     d = ang & 0xffff;
-    d -= (u16) * (s16*)(param_1 + 2);
+    d -= (u16) * (s16*)(obj + 2);
     if (0x8000 < d)
     {
         d = d - 0xffff;
@@ -243,9 +243,9 @@ undefined camcontrol_getTargetPosition(int arg0, void* arg1, void* arg2, void* a
     {
         d = d + 0xffff;
     }
-    if (param_4 != (short*)0x0)
+    if (pitchOut != (short*)0x0)
     {
-        *param_4 = *(s16*)(param_1 + 2) + d;
+        *pitchOut = *(s16*)(obj + 2) + d;
     }
     return box[110];
 }

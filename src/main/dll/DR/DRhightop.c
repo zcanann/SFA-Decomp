@@ -275,12 +275,12 @@ void fn_801EAE4C(short* obj, int stateRaw)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801EB0D4(uint param_1, int param_2)
+void fn_801EB0D4(uint obj, int stateRaw)
 {
-    SnowBikeState* st = (SnowBikeState*)param_2;
-    float fVar1;
-    float fVar2;
-    float fVar3;
+    SnowBikeState* st = (SnowBikeState*)stateRaw;
+    float cur;
+    float lim;
+    float rate;
     float td;
     float v;
 
@@ -292,36 +292,36 @@ void fn_801EB0D4(uint param_1, int param_2)
             st->airMeterCurrent -=
                 td * lbl_803DC0D8 + (f32)(s32)(st->airDrainRate *
                     (td * PSVECMag(&st->unk494)));
-            fVar2 = lbl_803E5AE8;
-            if (fVar2 != st->unk4C4)
+            lim = lbl_803E5AE8;
+            if (lim != st->unk4C4)
             {
-                fVar3 = lbl_803E5B14;
+                rate = lbl_803E5B14;
                 st->airMeterCurrent =
-                    fVar3 * timeDelta + st->airMeterCurrent;
+                    rate * timeDelta + st->airMeterCurrent;
                 st->unk4C4 =
-                    st->unk4C4 - (f32)(s32)(fVar3 * timeDelta);
-                fVar1 = st->unk4C4;
+                    st->unk4C4 - (f32)(s32)(rate * timeDelta);
+                cur = st->unk4C4;
                 st->unk4C4 =
-                    (fVar1 < fVar2)
-                        ? fVar2
-                        : ((fVar1 > lbl_803E5B80) ? lbl_803E5B80 : fVar1);
-                fVar1 = st->airMeterCurrent;
+                    (cur < lim)
+                        ? lim
+                        : ((cur > lbl_803E5B80) ? lbl_803E5B80 : cur);
+                cur = st->airMeterCurrent;
                 st->airMeterCurrent =
-                    (fVar1 < lbl_803E5AE8)
+                    (cur < lbl_803E5AE8)
                         ? lbl_803E5AE8
-                        : ((fVar1 > st->airMeterMax)
+                        : ((cur > st->airMeterMax)
                                ? st->airMeterMax
-                               : fVar1);
+                               : cur);
             }
             if (st->airMeterCurrent < lbl_803E5B84)
             {
-                Sfx_KeepAliveLoopedObjectSound(param_1, 0x44e);
+                Sfx_KeepAliveLoopedObjectSound(obj, 0x44e);
             }
             (*gGameUIInterface)->runAirMeter((s32)st->airMeterCurrent);
         }
         else
         {
-            Sfx_StopObjectChannel(param_1, 0x7f);
+            Sfx_StopObjectChannel(obj, 0x7f);
             if (st->unk464 > lbl_803E5B20)
             {
                 if ((u32)randomGetRange(0, 10) == 0)
@@ -340,11 +340,11 @@ void fn_801EB0D4(uint param_1, int param_2)
             else
             {
                 (*gGameUIInterface)->airMeterSetShutdown();
-                (*gObjectTriggerInterface)->runSequence(0, (void*)param_1, -1);
-                fVar2 = lbl_803E5B8C;
+                (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+                lim = lbl_803E5B8C;
                 st->unk464 = lbl_803E5B8C;
-                st->unk468 = fVar2;
-                st->unk46C = fVar2;
+                st->unk468 = lim;
+                st->unk46C = lim;
             }
         }
     }
@@ -403,7 +403,7 @@ void fn_801EB334(int* obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 SnowBike_animEventCallback(short* param_1, undefined4 param_2, ObjSeqState* seq)
+undefined4 SnowBike_animEventCallback(short* obj, undefined4 arg2, ObjSeqState* seq)
 {
     typedef struct HightopMatrixSeed
     {
@@ -426,9 +426,9 @@ undefined4 SnowBike_animEventCallback(short* param_1, undefined4 param_2, ObjSeq
     double ySpeed;
     double zSpeed;
 
-    state = *(int*)(param_1 + 0x5c);
+    state = *(int*)(obj + 0x5c);
     seq->freeCallback = (ObjAnimSequenceFreeCallback)fn_801EB334;
-    ObjHits_DisableObject((int)param_1);
+    ObjHits_DisableObject((int)obj);
 
     for (i = 0; i < (int)(uint)seq->eventCount; i++)
     {
@@ -436,7 +436,7 @@ undefined4 SnowBike_animEventCallback(short* param_1, undefined4 param_2, ObjSeq
         switch (triggerType)
         {
         case 2:
-            if (param_1[0x23] != 0x16c && param_1[0x23] != 0x16f)
+            if (obj[0x23] != 0x16c && obj[0x23] != 0x16f)
             {
                 GameBit_Set(0x499, 1);
             }
@@ -450,17 +450,17 @@ undefined4 SnowBike_animEventCallback(short* param_1, undefined4 param_2, ObjSeq
     if (((SnowBikeState*)state)->riderMode == 2)
     {
         xSpeed = (double)(float)(oneOverTimeDelta *
-            (*(float*)(param_1 + 6) - ((SnowBikeState*)state)->unk16C));
+            (*(float*)(obj + 6) - ((SnowBikeState*)state)->unk16C));
         ySpeed = (double)(float)(oneOverTimeDelta *
-            (*(float*)(param_1 + 8) - ((SnowBikeState*)state)->unk170));
+            (*(float*)(obj + 8) - ((SnowBikeState*)state)->unk170));
         zSpeed = (double)(float)(oneOverTimeDelta *
-            (*(float*)(param_1 + 10) - ((SnowBikeState*)state)->unk174));
+            (*(float*)(obj + 10) - ((SnowBikeState*)state)->unk174));
 
         transform.x = lbl_803E5AE8;
         transform.y = lbl_803E5AE8;
         transform.z = lbl_803E5AE8;
         transform.unused = lbl_803E5AEC;
-        transform.rotX = -*param_1;
+        transform.rotX = -*obj;
         transform.rotY = 0;
         transform.rotZ = 0;
         mtxRotateByVec3s(matrix, &transform);
@@ -473,7 +473,7 @@ undefined4 SnowBike_animEventCallback(short* param_1, undefined4 param_2, ObjSeq
             ((SnowBikeState*)state)->stickY = 0x46;
         }
 
-        fn_801EA240(((SnowBikeState*)state)->distanceScale, (int)param_1, state,
+        fn_801EA240(((SnowBikeState*)state)->distanceScale, (int)obj, state,
                     (int)(lbl_803E5BA0 * -((SnowBikeState*)state)->unk430),
                     state + 0x461, 4);
     }

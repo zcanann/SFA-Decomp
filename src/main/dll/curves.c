@@ -391,7 +391,7 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int curves_distanceToNearestOfType16(f32 x, f32 y, f32 z, int param_4)
+int curves_distanceToNearestOfType16(f32 x, f32 y, f32 z, int queryAll)
 {
     float dx;
     float dy;
@@ -413,7 +413,7 @@ int curves_distanceToNearestOfType16(f32 x, f32 y, f32 z, int param_4)
     {
         obj = objects[i];
         if ((((((GameObject*)obj)->anim.classId == 0x2c) &&
-                    (((GameObject*)obj)->anim.mapEventSlot != param_4)) &&
+                    (((GameObject*)obj)->anim.mapEventSlot != queryAll)) &&
                 (curve = (RomCurveDef*)((GameObject*)obj)->anim.placementData, curve != NULL)) &&
             ((curve->type == 0x16 &&
                 ((dx = ((GameObject*)obj)->anim.worldPosX - x,
@@ -444,7 +444,7 @@ int curves_distanceToNearestOfType16(f32 x, f32 y, f32 z, int param_4)
  */
 #define SQ(v) ((v) * (v))
 
-int RomCurve_func13(uint curveId, int typeFilter, uint param_3, int* param_4)
+int RomCurve_func13(uint curveId, int typeFilter, uint maxDist, int* outLink)
 {
     int done;
     int found;
@@ -581,8 +581,8 @@ int RomCurve_func13(uint curveId, int typeFilter, uint param_3, int* param_4)
                         node = romCurves[queueIds[count]];
                         curDist = queueDist[count];
                         if ((((int)node->type == typeFilter) || (typeFilter == -1)) &&
-                            ((*(u8*)((u8*)node + 0x31) == param_3 ||
-                                ((*(u8*)((u8*)node + 0x32) == param_3 || (*(u8*)((u8*)node + 0x33) == param_3))))))
+                            ((*(u8*)((u8*)node + 0x31) == maxDist ||
+                                ((*(u8*)((u8*)node + 0x32) == maxDist || (*(u8*)((u8*)node + 0x33) == maxDist))))))
                         {
                             done = 1;
                             *distWrite = queueDist[count];
@@ -652,9 +652,9 @@ int RomCurve_func13(uint curveId, int typeFilter, uint param_3, int* param_4)
         }
         while (found != 0);
     }
-    if (param_4 != NULL)
+    if (outLink != NULL)
     {
-        *param_4 = resultLinks[best];
+        *outLink = resultLinks[best];
     }
     return resultIds[best];
 }
@@ -2572,52 +2572,52 @@ void fn_800E58FC(int obj, f32* state)
  * PAL Size: TODO
  */
 #pragma dont_inline on
-void fn_800E5CBC(short* param_1, int param_2)
+void fn_800E5CBC(short* obj, int state)
 {
     CurvesCollisionState* collision;
     float fVar1;
-    short sVar2;
-    int iVar3;
-    float local_70;
-    float local_74;
-    float local_78;
-    short local_6c[4];
+    short pitch;
+    int angle;
+    float dy;
+    float dx;
+    float dz;
+    short outVec[4];
     float local_64;
     float local_60;
     float local_5c;
     float local_58;
     float afStack_54[20];
 
-    collision = (CurvesCollisionState*)param_2;
+    collision = (CurvesCollisionState*)state;
     if ((collision->surfaceFlags & 0x10) != 0)
     {
-        local_6c[0] = -*param_1;
-        if (*(short**)(param_1 + 0x18) != (short*)0x0)
+        outVec[0] = -*obj;
+        if (*(short**)(obj + 0x18) != (short*)0x0)
         {
-            local_6c[0] = local_6c[0] - **(short**)(param_1 + 0x18);
+            outVec[0] = outVec[0] - **(short**)(obj + 0x18);
         }
-        local_6c[1] = 0;
-        local_6c[2] = 0;
+        outVec[1] = 0;
+        outVec[2] = 0;
         local_64 = lbl_803E068C;
         local_60 = lbl_803E0668;
         local_5c = lbl_803E0668;
         local_58 = lbl_803E0668;
-        mtxRotateByVec3s(afStack_54, local_6c);
+        mtxRotateByVec3s(afStack_54, outVec);
         Matrix_TransformPoint(afStack_54, (double)collision->surfaceNormalX,
                               (double)collision->surfaceNormalY, (double)collision->surfaceNormalZ,
-                              &local_70, &local_74, &local_78);
-        iVar3 = getAngle(local_74, local_78);
-        sVar2 = 0x4000 - (short)iVar3;
-        collision->tiltPitchTarget = sVar2;
+                              &dy, &dx, &dz);
+        angle = getAngle(dx, dz);
+        pitch = 0x4000 - (short)angle;
+        collision->tiltPitchTarget = pitch;
         collision->tiltPitch =
             collision->tiltPitch +
-            ((int)((uint)framesThisStep * ((int)sVar2 - (int)collision->tiltPitch)) >> 3);
-        iVar3 = getAngle(local_74, local_70);
-        sVar2 = -(0x4000 - (short)iVar3);
-        collision->tiltRollTarget = sVar2;
+            ((int)((uint)framesThisStep * ((int)pitch - (int)collision->tiltPitch)) >> 3);
+        angle = getAngle(dx, dy);
+        pitch = -(0x4000 - (short)angle);
+        collision->tiltRollTarget = pitch;
         collision->tiltRoll =
             collision->tiltRoll +
-            ((int)((uint)framesThisStep * ((int)sVar2 - (int)collision->tiltRoll)) >> 3);
+            ((int)((uint)framesThisStep * ((int)pitch - (int)collision->tiltRoll)) >> 3);
     }
     else
     {
