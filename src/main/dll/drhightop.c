@@ -4,6 +4,7 @@
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
+#include "main/objhits.h"
 #include "main/dll/BW/BWalphaanim.h"
 #include "main/dll/DR/DRcloudcage.h"
 #include "main/dll/DR/DRhightop.h"
@@ -23,7 +24,6 @@ extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_IsObjectEnabled();
-extern int ObjHits_GetPriorityHit();
 
 extern u8 framesThisStep;
 extern f32 oneOverTimeDelta;
