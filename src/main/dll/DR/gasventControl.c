@@ -2,38 +2,21 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
-extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_800178b8();
-extern undefined4 FUN_80017a78();
-extern undefined4 FUN_80017a7c();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 ObjMsg_AllocQueue();
-extern undefined4 FUN_8003b818();
 extern int FUN_8005af70();
 extern int FUN_8005b398();
 extern uint FUN_80060058();
 extern int FUN_800600c4();
 extern int FUN_800600e4();
-extern undefined4 FUN_8006f7a0();
 extern undefined4 FUN_8007f6e4();
-extern undefined8 FUN_80286824();
-extern int FUN_80286834();
-extern undefined4 FUN_80286870();
-extern undefined4 FUN_80286880();
-extern double FUN_80293900();
 
-extern undefined4 DAT_803239f4;
-extern undefined4 DAT_803239f8;
-extern undefined4 DAT_803239fc;
 extern undefined4* DAT_803dd740;
-extern undefined4 DAT_803de798;
 extern f64 DOUBLE_803e4f98;
 extern f64 DOUBLE_803e4ff8;
 extern f64 DOUBLE_803e5020;
