@@ -1,10 +1,10 @@
+#include "main/audio/sfx.h"
 #include "main/dll/maybeTemplate.h"
 #include "main/camera_interface.h"
+#include "main/gamebits.h"
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
 
-extern uint GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
 extern void* Obj_GetPlayerObject(void);
 extern void* getTrickyObject(void);
 extern void* fn_80296AE8(void* player);
@@ -12,8 +12,6 @@ extern void* fn_80296AD4(void* player);
 extern int fn_80296A14(void* player);
 extern int fn_80296A8C(void* player);
 extern int objIsCurModelNotZero(void* obj);
-extern void Sfx_KeepAliveLoopedObjectSound(int a, int b);
-extern void* Sfx_PlayFromObject(int a, int b);
 extern int playerGetMoney(void* player);
 extern int getHudHiddenFrameCount(void);
 
