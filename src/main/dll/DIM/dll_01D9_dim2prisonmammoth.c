@@ -3,6 +3,8 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/objseq.h"
+#include "main/resource.h"
+#include "main/vecmath.h"
 
 typedef struct Dim2prisonmammothPlacement
 {
@@ -39,7 +41,6 @@ extern void fn_8003A168(int obj, int q);
 extern void characterDoEyeAnims(int obj, int q);
 extern void buttonDisable(int a, int b);
 extern int GameBit_Set(int bit, int val);
-extern void setMatrixFromObjectPos(f32* out, void* vec);
 extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 
 extern int GameBit_Get(int id);

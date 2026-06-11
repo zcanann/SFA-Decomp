@@ -4,6 +4,8 @@
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/fall_ladders.h"
+#include "main/vecmath.h"
+#include "main/objhits_types.h"
 
 extern undefined4 FUN_80006824();
 extern u32 randomGetRange(int min, int max);
@@ -225,7 +227,6 @@ void fn_80154584(int obj, int p)
 void fn_80154328(int obj, int p)
 {
     extern u32 randomGetRange(int min, int max);
-    extern void setMatrixFromObjectPos(void* mtx, s16* args);
     extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* px, f32* py, f32* pz);
     extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfx);
     extern f32 sqrtf(f32 x);
