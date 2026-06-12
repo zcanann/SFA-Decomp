@@ -7,57 +7,22 @@
 
 
 extern undefined4 FUN_800067e8();
-extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined8 ObjHits_EnableObject();
-extern void ObjHits_SetTargetMask(int obj, u8 mask);
 extern int ObjHits_GetPriorityHit();
-extern int ObjGroup_FindNearestObject();
-extern undefined4 ObjPath_GetPointWorldPosition();
 extern uint FUN_8007f6c8();
 extern undefined4 FUN_8007f718();
 extern undefined4 FUN_8008112c();
-extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
-extern void s16toFloat(void* timer, int duration);
 
-typedef struct
-{
-    s16 unk00; /* 0x00 */
-    s16 loopSfx; /* 0x02 */
-    s16 explodeSfx; /* 0x04 */
-    s16 unk06; /* 0x06 */
-    s16 burstFx; /* 0x08 */
-    s16 auraFx; /* 0x0A */
-    s16 unk0C; /* 0x0C */
-    s16 unk0E; /* 0x0E */
-    s16 targetGroup; /* 0x10 */
-    u8 noVertical : 1; /* 0x12 bit 7 */
-    u8 timed : 1; /* 0x12 bit 6 */
-    u8 smoothTurn : 1; /* 0x12 bit 5 */
-    u8 usePath : 1; /* 0x12 bit 4 */
-} PollenFragmentDef;
 
 /* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
-typedef struct PollenFragmentExtra
-{
-    u8 unk00[0xC];
-    f32 velX;
-    f32 velY;
-    f32 velZ;
-    u8 unk18[4];
-    PollenFragmentDef* def; /* 0x1C */
-} PollenFragmentExtra;
 
 
-extern void storeZeroToFloatParam(void* timer);
 
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E3DF4;
 extern f32 lbl_803E3DF8;
-extern f32 lbl_803E3198;
-extern f32 lbl_803E319C;
 
 /*
  * --INFO--
@@ -92,7 +57,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 
 #pragma dont_inline on
-void fn_8016A660(int obj);
 #pragma dont_inline reset
 
 
@@ -194,9 +158,7 @@ void pollenfragment_release(void);
 
 void pollenfragment_initialise(void);
 
-void mikabomb_hitDetect(void);
 
-extern f32 lbl_803E313C;
 
 void pinponspike_free(int obj)
 {
@@ -218,7 +180,6 @@ void pollen_hitDetect(int obj);
 
 void pollenfragment_free(int obj);
 
-void mikabomb_free(int obj, int mode);
 
 /* 8b "li r3, N; blr" returners. */
 int pinponspike_getExtraSize(void) { return 0x0; }
@@ -227,15 +188,11 @@ int pollen_getExtraSize(void);
 int pollen_getObjectTypeId(void);
 int pollenfragment_getExtraSize(void);
 int pollenfragment_getObjectTypeId(void);
-int mikabomb_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E3138;
-extern void objRenderFn_8003b8f4(f32);
 
 void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_update(void);
@@ -361,8 +318,6 @@ PollenFragmentConfig* lbl_8032059C[] = {
     &lbl_80320588,
 };
 
-extern int fn_80080150(int p);
-extern f32 lbl_803E3158;
 
 void pollenfragment_render(int* obj, int p2, int p3, int p4, int p5);
 
@@ -383,22 +338,14 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-extern f32 lbl_803E3148;
 
 void pollen_init(int* obj);
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
 
 
-typedef struct
-{
-    f32 x, y, z;
-} XyzVec;
 
 extern f32 timeDelta;
-extern u8 framesThisStep;
-extern f32 lbl_803DBD48;
-extern f32 lbl_803DBD4C;
 extern f32 lbl_803E3110;
 extern f32 lbl_803E3114;
 extern f32 lbl_803E3118;
@@ -407,34 +354,11 @@ extern f32 lbl_803E3120;
 extern f32 lbl_803E3124;
 extern f32 lbl_803E3128;
 extern f32 lbl_803E312C;
-extern f32 lbl_803E3140;
-extern f32 lbl_803E315C;
-extern f32 lbl_803E3160;
-extern f32 lbl_803E3164;
-extern f32 lbl_803E3168;
-extern f32 lbl_803E316C;
-extern f32 lbl_803E3170;
-extern f32 lbl_803E3174;
-extern f32 lbl_803E3178;
-extern f32 lbl_803E317C;
-extern f32 lbl_803E3180;
 extern f32 sqrtf(f32 x);
 extern int getAngle(f32 a, f32 b);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void* Obj_GetPlayerObject(void);
 extern void* getTrickyObject(void);
-extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 mag);
-extern int getCurSeqNo(void);
-extern int timerCountDown(int timer);
-extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-extern void Obj_SmoothTurnAnglesTowardVelocity(int obj, void* vel, int rate, f32 a, f32 b);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
-extern void PSVECSubtract(void* a, void* b, void* out);
-extern f32 PSVECMag(void* v);
-extern void PSVECNormalize(void* src, void* dst);
-extern void PSVECScale(void* src, void* dst, f32 scale);
-extern void PSVECAdd(void* a, void* b, void* out);
 
 int fn_80169EF4(f32 speed, f32 grav, f32* from, f32* to, u8 flag)
 {

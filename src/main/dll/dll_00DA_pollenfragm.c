@@ -8,7 +8,6 @@
 
 extern undefined4 FUN_800067e8();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined8 ObjHits_EnableObject();
@@ -87,12 +86,10 @@ extern f32 lbl_803E319C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 
 
 #pragma dont_inline on
-void fn_8016A660(int obj);
 #pragma dont_inline reset
 
 
@@ -243,7 +240,6 @@ void pollenfragment_initialise(void)
 
 void mikabomb_hitDetect(void);
 
-extern f32 lbl_803E313C;
 
 void pinponspike_free(int obj);
 
@@ -276,12 +272,10 @@ int pollenfragment_getObjectTypeId(void) { return 0x0; }
 int mikabomb_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E3138;
 extern void objRenderFn_8003b8f4(f32);
 
 void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_update(void);
@@ -434,7 +428,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-extern f32 lbl_803E3148;
 
 void pollen_init(int* obj);
 
@@ -450,15 +443,6 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803DBD48;
 extern f32 lbl_803DBD4C;
-extern f32 lbl_803E3110;
-extern f32 lbl_803E3114;
-extern f32 lbl_803E3118;
-extern f32 lbl_803E311C;
-extern f32 lbl_803E3120;
-extern f32 lbl_803E3124;
-extern f32 lbl_803E3128;
-extern f32 lbl_803E312C;
-extern f32 lbl_803E3140;
 extern f32 lbl_803E315C;
 extern f32 lbl_803E3160;
 extern f32 lbl_803E3164;
@@ -469,13 +453,7 @@ extern f32 lbl_803E3174;
 extern f32 lbl_803E3178;
 extern f32 lbl_803E317C;
 extern f32 lbl_803E3180;
-extern f32 sqrtf(f32 x);
-extern int getAngle(f32 a, f32 b);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern void* Obj_GetPlayerObject(void);
-extern void* getTrickyObject(void);
-extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 mag);
 extern int getCurSeqNo(void);
 extern int timerCountDown(int timer);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
@@ -487,7 +465,6 @@ extern void PSVECNormalize(void* src, void* dst);
 extern void PSVECScale(void* src, void* dst, f32 scale);
 extern void PSVECAdd(void* a, void* b, void* out);
 
-int fn_80169EF4(f32 speed, f32 grav, f32* from, f32* to, u8 flag);
 
 void pinponspike_update(int obj);
 
