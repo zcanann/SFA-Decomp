@@ -725,7 +725,7 @@ void setMatrixFromObjectTransposed(void* obj, f32* out);
 
 void objFn_8002b67c(u8* obj)
 {
-    u8* dst;
+    ObjHitVolumeRuntimeBounds *dst;
     ObjDefHitVolume *src;
     int idx;
 
@@ -733,7 +733,7 @@ void objFn_8002b67c(u8* obj)
     {
         return;
     }
-    dst = *(u8**)(obj + 0x78);
+    dst = ((GameObject *)obj)->anim.hitVolumeBounds;
     if (dst == NULL)
     {
         return;
@@ -741,12 +741,12 @@ void objFn_8002b67c(u8* obj)
     src = ((GameObject *)obj)->anim.modelInstance->hitVolumes;
     idx = ((GameObject *)obj)->unkE4;
     src += idx;
-    dst += idx * 5;
-    dst[0] = src->bounds[0];
-    dst[1] = src->bounds[1];
-    dst[2] = src->bounds[2];
-    dst[3] = src->bounds[3];
-    dst[4] = src->flags;
+    dst += idx;
+    dst->bounds[0] = src->bounds[0];
+    dst->bounds[1] = src->bounds[1];
+    dst->bounds[2] = src->bounds[2];
+    dst->bounds[3] = src->bounds[3];
+    dst->flags = src->flags;
 }
 
 int objApplyVelocity(u8* obj)
@@ -796,36 +796,36 @@ void Obj_FlushDeferredFreeList(void)
 
 void fn_8002B6D8(u8* obj, int a, int b, int c, u8 d, u8 e)
 {
-    u8* p;
+    ObjHitVolumeRuntimeBounds *p;
     if (obj == NULL)
     {
         return;
     }
-    p = *(u8**)(obj + 0x78);
+    p = ((GameObject *)obj)->anim.hitVolumeBounds;
     if (p == NULL)
     {
         return;
     }
-    p += ((GameObject*)obj)->unkE4 * 5;
+    p += ((GameObject*)obj)->unkE4;
     if (a != 0)
     {
-        p[0] = a >> 2;
+        p->bounds[0] = a >> 2;
     }
     if (c != 0)
     {
-        p[1] = c >> 2;
+        p->bounds[1] = c >> 2;
     }
     if (b != 0)
     {
-        p[2] = b >> 2;
+        p->bounds[2] = b >> 2;
     }
     if (d != 0)
     {
-        p[3] = d;
+        p->bounds[3] = d;
     }
     if (e != 0)
     {
-        p[4] = e;
+        p->flags = e;
     }
 }
 
@@ -1145,8 +1145,8 @@ typedef struct LoadedObj
     int** dll;
     int f6c;
     int f70;
-    int f74;
-    int f78;
+    ObjHitVolumeRuntimeTransform* hitVolumeTransforms;
+    ObjHitVolumeRuntimeBounds* hitVolumeBounds;
     u8** models;
     u8 pad80[0x22];
     s16 fa2;
@@ -1199,8 +1199,6 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     s16 seq2;
     int sz;
     int tmp;
-    int j;
-    int k;
 
     seq = *data;
     if (flags & 2)
@@ -1494,7 +1492,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     if (modelDef->hitVolumeCount != 0)
     {
         tmp = roundUpTo4(cursor);
-        obj->f74 = tmp;
+        obj->hitVolumeTransforms = (ObjHitVolumeRuntimeTransform*)tmp;
         cursor = tmp + modelDef->hitVolumeCount * 0x18;
     }
     if (*(u8*)(def + 0x61) != 0 && *(u8*)(def + 0x66) != 0)
@@ -1506,19 +1504,17 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     if (modelDef->hitVolumeCount != 0)
     {
         ObjDefHitVolume *hitVolume;
-        obj->f78 = roundUpTo4(cursor);
+        obj->hitVolumeBounds = (ObjHitVolumeRuntimeBounds*)roundUpTo4(cursor);
         i = 0;
-        j = 0;
         hitVolume = modelDef->hitVolumes;
         for (; i < modelDef->hitVolumeCount; i++)
         {
-            ((u8*)obj->f78)[j + 4] = hitVolume->flags;
-            ((u8*)obj->f78)[j] = hitVolume->bounds[0];
-            ((u8*)obj->f78)[j + 3] = hitVolume->bounds[3];
-            ((u8*)obj->f78)[j + 1] = hitVolume->bounds[1];
-            ((u8*)obj->f78)[j + 2] = hitVolume->bounds[2];
+            obj->hitVolumeBounds[i].flags = hitVolume->flags;
+            obj->hitVolumeBounds[i].bounds[0] = hitVolume->bounds[0];
+            obj->hitVolumeBounds[i].bounds[3] = hitVolume->bounds[3];
+            obj->hitVolumeBounds[i].bounds[1] = hitVolume->bounds[1];
+            obj->hitVolumeBounds[i].bounds[2] = hitVolume->bounds[2];
             hitVolume++;
-            j += 5;
         }
     }
     obj->parent = parent;

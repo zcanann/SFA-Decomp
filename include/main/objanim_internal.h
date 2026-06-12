@@ -151,9 +151,9 @@ typedef struct ObjAnimRootCurve {
 #define OBJMODEL_FLAG_SKIP_RESET_UPDATE 0x40
 
 typedef struct ObjDefHitVolume {
-  s16 rotX;
-  s16 rotY;
-  s16 rotZ;
+  s16 jointOffsetX;
+  s16 jointOffsetY;
+  s16 jointOffsetZ;
   s16 posX;
   s16 posY;
   s16 posZ;
@@ -163,6 +163,20 @@ typedef struct ObjDefHitVolume {
   s8 jointIndices[2];
   u8 pad14[0x18 - 0x14];
 } ObjDefHitVolume;
+
+typedef struct ObjHitVolumeRuntimeTransform {
+  f32 jointX;
+  f32 jointY;
+  f32 jointZ;
+  f32 centerX;
+  f32 centerY;
+  f32 centerZ;
+} ObjHitVolumeRuntimeTransform;
+
+typedef struct ObjHitVolumeRuntimeBounds {
+  u8 bounds[4];
+  u8 flags;
+} ObjHitVolumeRuntimeBounds;
 
 /*
  * Minimal recovered shape of the model pointer carried by ObjAnimComponent.
@@ -304,8 +318,8 @@ typedef struct ObjAnimComponent {
   int **dll;
   u8 *jointPoseData;
   u8 pad70[0x74 - 0x70];
-  void *unk74;
-  u8 pad78[0x7C - 0x78];
+  ObjHitVolumeRuntimeTransform *hitVolumeTransforms;
+  ObjHitVolumeRuntimeBounds *hitVolumeBounds;
   ObjAnimBank **banks;
   f32 previousLocalPosX;
   f32 previousLocalPosY;
@@ -413,6 +427,8 @@ STATIC_ASSERT(offsetof(ObjDefHitVolume, bounds) == 0x0C);
 STATIC_ASSERT(offsetof(ObjDefHitVolume, flags) == 0x10);
 STATIC_ASSERT(offsetof(ObjDefHitVolume, priority) == 0x11);
 STATIC_ASSERT(offsetof(ObjDefHitVolume, jointIndices) == 0x12);
+STATIC_ASSERT(sizeof(ObjHitVolumeRuntimeTransform) == 0x18);
+STATIC_ASSERT(sizeof(ObjHitVolumeRuntimeBounds) == 0x05);
 
 STATIC_ASSERT(sizeof(ObjDef) == 0x94);
 STATIC_ASSERT(offsetof(ObjDef, rootMotionScaleBase) == 0x04);
@@ -464,6 +480,8 @@ STATIC_ASSERT(offsetof(ObjAnimBank, currentState) == 0x2C);
 STATIC_ASSERT(offsetof(ObjAnimBank, activeState) == 0x30);
 
 STATIC_ASSERT(sizeof(ObjAnimComponent) == 0xB0);
+STATIC_ASSERT(offsetof(ObjAnimComponent, hitVolumeTransforms) == 0x74);
+STATIC_ASSERT(offsetof(ObjAnimComponent, hitVolumeBounds) == 0x78);
 STATIC_ASSERT(offsetof(ObjAnimComponent, targetObj) == 0xA4);
 STATIC_ASSERT(offsetof(ObjAnimComponent, mapEventSlot) == 0xAC);
 STATIC_ASSERT(offsetof(ObjAnimComponent, rotX) == 0x00);
@@ -494,7 +512,6 @@ STATIC_ASSERT(offsetof(ObjAnimComponent, eventTable) == 0x60);
 STATIC_ASSERT(offsetof(ObjAnimComponent, modelState) == 0x64);
 STATIC_ASSERT(offsetof(ObjAnimComponent, dll) == 0x68);
 STATIC_ASSERT(offsetof(ObjAnimComponent, jointPoseData) == 0x6C);
-STATIC_ASSERT(offsetof(ObjAnimComponent, unk74) == 0x74);
 STATIC_ASSERT(offsetof(ObjAnimComponent, banks) == 0x7C);
 STATIC_ASSERT(offsetof(ObjAnimComponent, previousLocalPosX) == 0x80);
 STATIC_ASSERT(offsetof(ObjAnimComponent, previousWorldPosX) == 0x8C);

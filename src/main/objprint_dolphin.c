@@ -1357,7 +1357,7 @@ void FUN_800400b0(void)
                 pfVar3 = (float*)FUN_80017970(piVar2, iVar4);
             }
             FUN_800401a0((float*)0x0, pfVar7 + 3, &psVar8->posX, psVar6->flags & 0x10, puVar1, 0);
-            FUN_800401a0(pfVar3, pfVar7, &psVar8->rotX, psVar6->flags & 0x10, puVar1, 1);
+            FUN_800401a0(pfVar3, pfVar7, &psVar8->jointOffsetX, psVar6->flags & 0x10, puVar1, 1);
             psVar8++;
             pfVar7 = pfVar7 + 6;
         }
@@ -2729,12 +2729,12 @@ void objRenderFuzz(int* obj)
 void objRenderFn_80041018(int* obj)
 {
     ObjDefHitVolume* p;
-    u8* q;
+    ObjHitVolumeRuntimeTransform* q;
     int* model;
     ObjDefHitVolume* base;
     int i;
     base = ((GameObject*)obj)->anim.modelInstance->hitVolumes;
-    q = *(u8**)((char*)obj + 0x74);
+    q = ((GameObject*)obj)->anim.hitVolumeTransforms;
     if (!(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x28))
     {
         model = Obj_GetActiveModel(obj);
@@ -2752,10 +2752,10 @@ void objRenderFn_80041018(int* obj)
             {
                 mtx = NULL;
             }
-            objMtxFn_80041104(NULL, (f32*)(q + 0xc), &p->posX, base->flags & 0x10, obj, 0);
-            objMtxFn_80041104((f32*)mtx, (f32*)q, &p->rotX, base->flags & 0x10, obj, 1);
+            objMtxFn_80041104(NULL, &q->centerX, &p->posX, base->flags & 0x10, obj, 0);
+            objMtxFn_80041104((f32*)mtx, &q->jointX, &p->jointOffsetX, base->flags & 0x10, obj, 1);
             p++;
-            q += 0x18;
+            q++;
         }
     }
 }
