@@ -1767,8 +1767,11 @@ main/dll/dll_0195_dbshshrine.c:
 main/dll/colrise.c:
 	.text       start:0x801C9660 end:0x801C9660
 
-main/dll/cup1C3.c:
-	.text       start:0x801C9660 end:0x801CA718
+main/dll/dll_0196_dbshsymbol.c:
+	.text       start:0x801C9660 end:0x801C9E54
+
+main/dll/dll_0197_dll197.c:
+	.text       start:0x801C9E54 end:0x801CA718
 
 main/dll/dll_0198_nwshlevcon.c:
 	.text       start:0x801CA718 end:0x801CA9C0
