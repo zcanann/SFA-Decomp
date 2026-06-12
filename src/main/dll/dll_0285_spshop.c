@@ -9,7 +9,6 @@
 
 
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjPath_GetPointWorldPosition();
 
 
 /*
@@ -25,10 +24,6 @@ extern undefined4 ObjPath_GetPointWorldPosition();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void Sfx_StopObjectChannel();
-extern s16 getAngle(f32 dx, f32 dz);
-extern u8 framesThisStep;
-extern EffectInterface** gPartfxInterface;
 
 
 
@@ -39,20 +34,13 @@ extern EffectInterface** gPartfxInterface;
 /* 8b "li r3, N; blr" returners. */
 
 
-int SB_FireBall_getExtraSize(void);
-int SB_FireBall_getObjectTypeId(void);
 
-void SB_FireBall_free(int obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E58B0;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E58D8;
 
 
-void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-extern f32 timeDelta;
 
 
 
@@ -70,11 +58,6 @@ extern f32 timeDelta;
 #include "main/objseq.h"
 #include "main/resource.h"
 
-typedef struct SBShipGunBrokePlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 unk1E;
-} SBShipGunBrokePlacement;
 
 
 typedef struct ShopBuyItemState
@@ -97,35 +80,10 @@ typedef struct ShopBuyItemState
 } ShopBuyItemState;
 
 
-typedef struct LampObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s8 unk18;
-    u8 pad19[0x1A - 0x19];
-    u8 unk1A;
-    u8 pad1B[0x20 - 0x1B];
-} LampObjectDef;
 
 
-typedef struct SBSeqDoorObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s8 unk18;
-    s8 unk19;
-    u8 unk1A;
-    u8 pad1B[0x20 - 0x1B];
-} SBSeqDoorObjectDef;
 
 
-typedef struct ShipBattleObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    u8 pad1C[0x24 - 0x1C];
-    u8 unk24;
-    u8 pad25[0x28 - 0x25];
-} ShipBattleObjectDef;
 
 
 /*
@@ -201,9 +159,6 @@ typedef struct ShipBattleState
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
 
-extern undefined4 getLActions();
-extern undefined4 ObjLink_DetachChild();
-extern undefined4 ObjLink_AttachChild();
 extern void playerAddMoney(int player, int amount);
 extern void playerAddHealth(int player, int amount);
 extern int gameBitIncrement(int bit);
@@ -215,9 +170,6 @@ extern void envFxActFn_800887f8(int id);
 extern void getEnvfxAct(int obj, int target, int effectId, int flags);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern ModgfxInterface** gModgfxInterface;
-extern int* gTitleMenuControlInterfaceCopy;
-#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
 /*
  * --INFO--
@@ -233,7 +185,6 @@ extern int* gTitleMenuControlInterfaceCopy;
  * PAL Size: TODO
  */
 
-void SB_FireBall_hitDetect(int* obj);
 
 /*
  * --INFO--
@@ -363,65 +314,35 @@ void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8
 #pragma peephole off
 void SB_FireBall_release(void);
 
-void SB_FireBall_initialise(void);
 
-void SB_CloudBall_release(void);
 
-void SB_CloudBall_initialise(void);
 
-void SB_KyteCage_render(void);
 
-void SB_KyteCage_hitDetect(void);
 
-void SB_KyteCage_release(void);
 
-void SB_KyteCage_initialise(void);
 
-void SB_CageKyte_free(void);
 
-void SB_CageKyte_hitDetect(void);
 
-void SB_CageKyte_release(void);
 
-void SB_CageKyte_initialise(void);
 
-void SB_SeqDoor_free(void);
 
-void SB_SeqDoor_hitDetect(void);
 
-void SB_SeqDoor_release(void);
 
-void SB_SeqDoor_initialise(void);
 
-void SB_MiniFire_hitDetect(void);
 
-void SB_MiniFire_release(void);
 
-void SB_MiniFire_initialise(void);
 
-void ShipBattle_hitDetect(void);
 
-void ShipBattle_release(void);
 
-void ShipBattle_initialise(void);
 
-void Flag_free(void);
 
-void Flag_hitDetect(void);
 
-void Flag_release(void);
 
-void Flag_initialise(void);
 
-void SB_ShipGunBroke_free(void);
 
-void SB_ShipGunBroke_hitDetect(void);
 
-void SB_ShipGunBroke_init(void);
 
-void SB_ShipGunBroke_release(void);
 
-void SB_ShipGunBroke_initialise(void);
 
 void shop_hitDetect(void)
 {
@@ -437,26 +358,9 @@ void shop_initialise(void)
 
 /* 8b "li r3, N; blr" returners. */
 int SB_CloudBall_getExtraSize(void);
-int SB_CloudBall_getObjectTypeId(void);
-int SB_KyteCage_getExtraSize(void);
-int SB_KyteCage_getObjectTypeId(void);
-int SB_CageKyte_getExtraSize(void);
-int SB_CageKyte_getObjectTypeId(void);
-int SB_SeqDoor_getExtraSize(void);
-int SB_SeqDoor_getObjectTypeId(void);
-int SB_MiniFire_getExtraSize(void);
-int SB_MiniFire_getObjectTypeId(void);
-int ShipBattle_getExtraSize(void);
-int ShipBattle_getObjectTypeId(void);
-int Lamp_getExtraSize(void);
-int Flag_getExtraSize(void);
-int Flag_getObjectTypeId(void);
-int SB_ShipGunBroke_getExtraSize(void);
-int SB_ShipGunBroke_getObjectTypeId(void);
 int shop_getExtraSize(void) { return 0x5; }
 int shop_getObjectTypeId(void) { return 0x0; }
 int fn_801E66DC(void);
-int fn_801E66E4(void);
 
 /* 16b chained patterns. */
 s32 shop_getStateField1(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x1); }
@@ -464,44 +368,16 @@ s32 shop_setScale(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x0)
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E58E8;
-extern f32 lbl_803E5920;
-extern f32 lbl_803E5978;
-extern f32 lbl_803E59A8;
 extern f32 lbl_803E59C8;
-extern void Sfx_StopObjectChannel(int* obj, int channel);
-extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern int GameBit_Get(int);
 extern void GameBit_Set(int slot, int val);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(int obj, int group);
 extern void Music_Trigger(int a, int b);
-extern f32 lbl_803E5998;
-extern f32 lbl_803E599C;
-extern f32 lbl_803E59AC;
-extern f32 lbl_803E59B0;
-extern f32 lbl_803E5958;
-extern f32 lbl_803E595C;
-extern f32 lbl_803E5970;
-extern f32 lbl_803E5974;
-extern f32 lbl_803E5960;
-extern f32 lbl_803E5918;
-extern f32 lbl_803E59D8;
-extern f32 lbl_803E59DC;
-extern u8 lbl_803DB411;
-extern f32 lbl_803DDC50;
-extern int* gBoneParticleEffectInterface;
-extern int Stack_IsEmpty(int stack);
-extern int Stack_Pop(int stack, int* out);
-int SB_SeqDoor_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-int Lamp_SeqFn(int obj, int unused, int state);
 
-void SB_CloudBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void SB_SeqDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void Lamp_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void Flag_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -514,118 +390,51 @@ void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
  * definition so future hunters can fill bodies one at a time. */
 void Flag_init(int* obj, int* def);
 
-void Flag_update(int obj);
 
-int SB_KyteCage_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /* EN v1.0 0x801E4F14  size: 60b  Decrement obj->_f4 if > 0, OR in bit 0x8
  * of obj->_af, latch state->_6e = -2 and state->_56 = 0; return 0. */
-int SB_CageKyte_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
-int SB_SeqDoor_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
-extern f32 lbl_803E597C;
-extern f32 lbl_803E5980;
-extern f32 lbl_803E5984;
-extern f32 lbl_803E5988;
-extern f32 lbl_803E598C;
 
-int Lamp_SeqFn(int obj, int unused, int state);
 
-int fn_801E66EC(int arg1, int arg2);
 
-void Lamp_free(int* obj);
 
-void Lamp_init(int* obj, int* def);
 
-void Lamp_update(int obj);
 
-void SB_CageKyte_init(int p);
 
-void SB_CageKyte_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void SB_CageKyte_update(int obj);
 
-void SB_CloudBall_free(int* obj);
 
-extern f32 lbl_803E58EC;
-extern f32 lbl_803E58F0;
-extern void projectileParticleFxFn_80099660(int* obj, f32 scale, int type);
 
-void SB_CloudBall_hitDetect(int* obj);
 
-extern f32 lbl_803E5910;
-extern f32 lbl_803E5914;
 
-void SB_CloudBall_init(int* obj);
 
-extern f32 lbl_803E58F4;
-extern f32 lbl_803E58F8;
-extern f32 lbl_803E58FC;
-extern f32 lbl_803E5900;
-extern f32 lbl_803E5904;
-extern f32 lbl_803E58DC;
-extern f32 lbl_803E58E0;
 
-void SB_CloudBall_update(int obj);
 
-void SB_FireBall_init(int p);
 
-void SB_FireBall_update(int obj);
 
 /* EN v1.0 0x801E4BA4  size: 48b  When obj->_b8->[0] is non-null,
  * call ObjLink_DetachChild(obj). */
-void SB_KyteCage_free(int* obj);
 
-void SB_KyteCage_init(int* obj, int* params);
 
-extern void buttonDisable(int controller, int mask);
-extern int* objModelGetVecFn_800395d8(int obj, int idx);
-extern f32 lbl_803E591C;
 
-void SB_KyteCage_update(int obj);
 
-void SB_MiniFire_free(int* obj);
 
-extern int lbl_803DC098;
-extern f32 lbl_803E592C;
-extern f32 lbl_803E5948;
-extern f32 lbl_803E594C;
-extern f32 lbl_803E5950;
 
-void SB_MiniFire_init(int obj);
 
-extern void fn_80053ED0(int);
-extern void fn_80053EBC(int);
-extern f32 lbl_803E5928;
 
-void SB_MiniFire_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-extern f64 lbl_803E5940;
-extern f32 lbl_803E5930;
-extern f32 lbl_803E5934;
-extern f32 lbl_803E5938;
-extern f32 lbl_803E593C;
 
-void SB_MiniFire_update(int obj);
 
-void SB_SeqDoor_init(int* obj, int* def);
 
-void SB_SeqDoor_update(int* obj);
 
-extern f32 lbl_803E59C0;
 
-void SB_ShipGunBroke_render(int* obj, int p2, int p3, int p4, int p5);
 
-void SB_ShipGunBroke_update(int* obj);
 
-void ShipBattle_free(int* obj);
 
-void ShipBattle_init(int obj, int def);
 
-void ShipBattle_render(int* obj);
 
-void ShipBattle_update(int obj);
 
 void shop_buyItem(int obj, int price)
 {
