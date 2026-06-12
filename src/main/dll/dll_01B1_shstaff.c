@@ -99,13 +99,6 @@ typedef struct ShStaffPlacement
 } ShStaffPlacement;
 
 
-typedef struct ShBeaconPlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} ShBeaconPlacement;
 
 
 /* sh_beacon_getExtraSize == 0x18. */
@@ -402,33 +395,18 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 /* 8b "li r3, N; blr" returners. */
 int sh_beacon_getExtraSize(void);
 
-extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
-extern void Obj_FreeObject(int obj);
-extern void ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d,
-                                                      int e, void* f);
-extern f32 lbl_803E5518;
-extern f32 lbl_803E551C;
-extern f32 lbl_803E5520;
-extern f32 lbl_803E5528;
-extern f32 lbl_803E552C;
 
 /* 96b: render via objRenderFn + fn_80098B18 with 3-float local. */
-void sh_staffhaze_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5);
 
 /* 48b: free if 0x4000 flag set. */
-void sh_staffhaze_update(int obj);
 
 /* 120b: tick a float timer; on wrap optionally trigger an effect. */
-int sh_beacon_SeqFn(int obj);
 
 /* 20b: reset extra->field_0x8 = lbl_803E552C, return 1. */
-int fn_801DA9CC(int obj);
 
 /* 112b: vtable cleanup then maybe Obj_FreeObject. */
-void sh_beacon_free(int obj, int param_2);
 
 /* 56b: single-call hit-effect poll. */
-void sh_emptytumblew_update(int obj);
 
 /* TODO stubs to align function set with v1.0 asm. Bodies are large
  * state-machine and animation logic; filling them is a follow-up task. */
@@ -693,16 +671,7 @@ end:
 
 void sh_beacon_init(int obj, int defData);
 
-extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
 extern int GameBit_Set(int eventId, int value);
-extern void gameBitDecrement(int eventId);
-extern void* getTrickyObject(void);
-extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
-extern f32 lbl_803E5530;
-extern f32 lbl_803E5534;
-extern f32 lbl_803E5538;
-extern f32 lbl_803E553C;
-extern int lbl_803DDBF8;
 
 typedef struct
 {
@@ -717,4 +686,3 @@ typedef struct
  * EN v1.0 Address: 0x801DAA58
  * EN v1.0 Size: 1080b
  */
-void sh_beacon_update(int obj);

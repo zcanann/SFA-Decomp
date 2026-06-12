@@ -26,7 +26,6 @@
 
 
 /* 8b "li r3, N; blr" returners. */
-int sh_staff_getExtraSize(void);
 
 
 
@@ -35,7 +34,6 @@ int sh_staff_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
-void sh_staff_free(int* obj, int p2);
 
 #include "main/dll/DR/DRearthwalk.h"
 #include "main/obj_placement.h"
@@ -46,27 +44,8 @@ void sh_staff_free(int* obj, int p2);
 
 #include "main/dll/DR/shstaff_state.h"
 
-typedef struct ShStaffPlacement
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 pad6[0x7 - 0x6];
-    u8 unk7;
-    u8 pad8[0x18 - 0x8];
-    u8 unk18;
-    u8 unk19;
-    u8 pad1A[0x20 - 0x1A];
-} ShStaffPlacement;
 
 
-typedef struct ShBeaconPlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} ShBeaconPlacement;
 
 
 /* sh_beacon_getExtraSize == 0x18. */
@@ -85,14 +64,6 @@ typedef struct ShBeaconState
 STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
 
-extern uint GameBit_Get(int eventId);
-extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjGroup_FindNearestObject();
-extern int ObjTrigger_IsSet();
-extern undefined4 ObjPath_GetPointLocalMtx();
-extern undefined4 ObjPath_GetPointModelMtx();
-extern undefined4 ObjPath_GetPointWorldPosition();
 
 
 /*
@@ -108,40 +79,16 @@ extern undefined4 ObjPath_GetPointWorldPosition();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void* Obj_GetPlayerObject(void);
-extern void Obj_BuildWorldTransformMatrix(int obj, f32* mtx, int p3);
-extern void PSMTXInverse(int src, f32* dst);
-extern void PSMTXConcat(f32 * a, f32 * b, f32 * dst);
-extern void objSetMtxFn_800412d4(f32 * mtx);
-extern void objRenderModel(int obj);
-extern f32 timeDelta;
-extern f32 lbl_803E54D0;
-extern f32 lbl_803E54D4;
-extern f32 lbl_803E54D8;
-extern f32 lbl_803E54DC;
-extern f32 lbl_803E54E0;
-extern f32 lbl_803E54E4;
-extern f32 lbl_803E54E8;
-extern f32 lbl_803E54EC;
-extern f32 lbl_803E54F0;
-extern f32 lbl_803E54F4;
-extern f32 lbl_803E54F8;
 
-void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
 
 /* 8b "li r3, N; blr" returners. */
-int sh_beacon_getExtraSize(void);
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern void Obj_FreeObject(int obj);
-extern void ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d,
-                                                      int e, void* f);
 extern f32 lbl_803E5518;
 extern f32 lbl_803E551C;
 extern f32 lbl_803E5520;
-extern f32 lbl_803E5528;
-extern f32 lbl_803E552C;
 
 /* 96b: render via objRenderFn + fn_80098B18 with 3-float local. */
 void sh_staffhaze_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5)
@@ -168,54 +115,19 @@ void sh_staffhaze_update(int obj)
 int sh_beacon_SeqFn(int obj);
 
 /* 20b: reset extra->field_0x8 = lbl_803E552C, return 1. */
-int fn_801DA9CC(int obj);
 
 /* 112b: vtable cleanup then maybe Obj_FreeObject. */
-void sh_beacon_free(int obj, int param_2);
 
 /* 56b: single-call hit-effect poll. */
-void sh_emptytumblew_update(int obj);
 
 /* TODO stubs to align function set with v1.0 asm. Bodies are large
  * state-machine and animation logic; filling them is a follow-up task. */
-extern u8 Obj_IsLoadingLocked(void);
-extern int* Obj_AllocObjectSetup(int a, int b);
-extern int loadObjectAtObject(int obj, int* setup);
-extern void hudFn_8011f38c(int a);
-extern void fn_801DA4A8(int obj, ShStaffState* state, int a);
-extern f32 lbl_803E5508;
 
-int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
-extern f32 getXZDistance(f32 * a, f32 * b);
-extern void* fn_802966CC(int player);
-extern int fn_80295CF4(int player, int a);
-extern int fn_8029672C(int player, int a);
-extern int ObjTrigger_IsSet(int obj);
-extern void mapUnload(int idx, int flags);
-extern void loadMapAndParent(int mapId);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f32 lbl_803E550C;
-extern f32 lbl_803E5510;
-extern f32 lbl_803E5514;
 
-void fn_801DA4A8(int obj, ShStaffState* state, int clearChildren);
 
-void sh_staff_update(int obj);
 
-void sh_beacon_init(int obj, int defData);
 
-extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
-extern int GameBit_Set(int eventId, int value);
-extern void gameBitDecrement(int eventId);
-extern void* getTrickyObject(void);
-extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
-extern f32 lbl_803E5530;
-extern f32 lbl_803E5534;
-extern f32 lbl_803E5538;
-extern f32 lbl_803E553C;
-extern int lbl_803DDBF8;
 
 typedef struct
 {
@@ -230,4 +142,3 @@ typedef struct
  * EN v1.0 Address: 0x801DAA58
  * EN v1.0 Size: 1080b
  */
-void sh_beacon_update(int obj);
