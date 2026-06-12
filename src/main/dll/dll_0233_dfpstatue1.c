@@ -126,7 +126,6 @@ void dfperchwitch_render(void);
 void dfperchwitch_hitDetect(void);
 
 /* OSReport(string) wrappers. */
-extern void OSReport(const char* fmt, ...);
 void dfperchwitch_update(void);
 void dfperchwitch_init(void);
 

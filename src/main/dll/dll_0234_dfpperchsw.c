@@ -1,13 +1,7 @@
 #include "main/dll/crate2.h"
 
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 sfxplayer_updateState(int obj, undefined4 param_2, int hitState);
 
-extern f32 timeDelta;
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 /*
  * --INFO--
@@ -23,7 +17,6 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
  * PAL Size: TODO
  */
 #pragma dont_inline on
-void dfpstatue1_updateState(DfpStatue1Object* obj);
 #pragma dont_inline reset
 
 
