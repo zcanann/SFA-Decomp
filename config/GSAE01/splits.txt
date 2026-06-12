@@ -984,17 +984,11 @@ main/dll/symbol.c:
 main/dll/dimmagicbridge.c:
 	.text       start:0x801CA9C0 end:0x801CBA98
 
-main/dll/torch1CD.c:
-	.text       start:0x801CBA98 end:0x801CBD88
-
 main/dll/shrine1CE.c:
-	.text       start:0x801CBD88 end:0x801CCFB4
-
-main/dll/creator1CF.c:
-	.text       start:0x801CCFB4 end:0x801CD258
+	.text       start:0x801CBA98 end:0x801CCFA4
 
 main/dll/dim_tricky.c:
-	.text       start:0x801CD258 end:0x801CD7DC
+	.text       start:0x801CCFA4 end:0x801CD7DC
 
 main/dll/dimtruthhornice.c:
 	.text       start:0x801CD7DC end:0x801CDBEC

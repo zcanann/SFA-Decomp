@@ -1,3 +1,145 @@
+/* === merged from main/dll/torch1CD.c [801CBA98-801CBD88) (TU re-split, docs/boundary_audit.md) === */
+#pragma scheduling off
+#pragma peephole off
+#include "main/dll/torch1CD.h"
+#include "main/game_object.h"
+#include "main/dll/torch1cd_state.h"
+#include "main/effect_interfaces.h"
+
+extern void getEnvfxAct(int obj, int target, int id, int p);
+extern void* return0_8005669C(int);
+
+extern int lbl_803DB610;
+extern void* lbl_803DDBE0;
+
+/*
+ * --INFO--
+ *
+ * Function: dll_19B_SeqFn
+ * EN v1.0 Address: 0x801CBA98
+ * EN v1.0 Size: 636b
+ */
+int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    extern int* gTitleMenuControlInterface;
+    extern void GameBit_Set(int eventId, int value);
+    int state;
+    int i;
+
+    state = *(int*)&((GameObject*)obj)->extra;
+    animUpdate->hitVolumePair = -1;
+    animUpdate->sequenceEventActive = 0;
+
+    if (((Torch1CDState*)state)->flameFrameVel != 0)
+    {
+        ((Torch1CDState*)state)->flameFrame += ((Torch1CDState*)state)->flameFrameVel;
+        if (((Torch1CDState*)state)->flameFrame <= 1 && ((Torch1CDState*)state)->flameFrameVel <= 0)
+        {
+            ((Torch1CDState*)state)->flameFrame = 1;
+            ((Torch1CDState*)state)->flameFrameVel = 0;
+        }
+        else if (((Torch1CDState*)state)->flameFrame >= 0x46 && ((Torch1CDState*)state)->flameFrameVel >= 0)
+        {
+            ((Torch1CDState*)state)->flameFrame = 0x46;
+            ((Torch1CDState*)state)->flameFrameVel = 0;
+        }
+        ((void (**)(int, u8))*gTitleMenuControlInterface)[0x38 / 4](3, (u8)((Torch1CDState*)state)->flameFrame);
+    }
+
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
+        u8 cmd = animUpdate->eventIds[i];
+        if (cmd != 0)
+        {
+            switch (cmd)
+            {
+            case 1:
+                getEnvfxAct(obj, obj, 0xc3, 0);
+                break;
+            case 2:
+                if (lbl_803DB610 == -1)
+                {
+                    getEnvfxAct(obj, obj, 0x14, 0);
+                }
+                else
+                {
+                    getEnvfxAct(obj, obj, lbl_803DB610 & 0xffff, 0);
+                }
+                break;
+            case 3:
+                ((Torch1CDState*)state)->unk14 = 1;
+                break;
+            case 4:
+                ((Torch1CDState*)state)->unk13 = 4;
+                ((Torch1CDState*)state)->unk14 = 2;
+                GameBit_Set(0x129, 1);
+                GameBit_Set(0x1d2, 0);
+                GameBit_Set(0x126, 1);
+                ((Torch1CDState*)state)->flameFrameVel = -3;
+                break;
+            case 5:
+                ((Torch1CDState*)state)->unk13 = 6;
+                ((Torch1CDState*)state)->unk14 = 3;
+                ((Torch1CDState*)state)->flameFrameVel = -3;
+                GameBit_Set(0x129, 1);
+                break;
+            case 6:
+                GameBit_Set(0x1d2, 1);
+                break;
+            case 7:
+                GameBit_Set(0x1d2, 0);
+                ((Torch1CDState*)state)->flameFrameVel = -3;
+                break;
+            case 8:
+                GameBit_Set(0x128, 1);
+                if (lbl_803DDBE0 == NULL)
+                {
+                    lbl_803DDBE0 = return0_8005669C(1);
+                }
+                break;
+            case 9:
+                GameBit_Set(0x127, 1);
+                break;
+            case 0xb:
+                ((Torch1CDState*)state)->flameFrame = 100;
+                ((void (**)(int, int, int, u8, int))*gTitleMenuControlInterface)[0x18 / 4]
+                    (3, 0x2d, 0x50, (u8)((Torch1CDState*)state)->flameFrame, 0);
+                break;
+            }
+        }
+        animUpdate->eventIds[i] = 0;
+    }
+    return 0;
+}
+
+/* Trivial 4b 0-arg blr leaves. */
+void dll_19B_hitDetect(void)
+{
+}
+
+/* 8b "li r3, N; blr" returners. */
+int dll_19B_getExtraSize(void) { return 0x18; }
+int dll_19B_getObjectTypeId(void) { return 0x0; }
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E5188;
+extern void objRenderFn_8003b8f4(f32);
+
+void dll_19B_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E5188);
+}
+
+extern ModgfxInterface** gModgfxInterface;
+
+void dll_19B_free(int* obj)
+{
+    (*gModgfxInterface)->detachSource(obj);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 #include "ghidra_import.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -127,12 +269,10 @@ extern int Obj_GetPlayerObject(void);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32* outDist);
 extern int ObjMsg_Pop(int obj, int* msg, int* a, int* b);
 extern uint GameBit_Get(int eventId);
-extern int GameBit_Set(int eventId, int value);
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern void fn_80296B78(int obj, int a);
 extern void fn_80137948(char* fmt, ...);
 extern char sShrineTimeFormat[];
-extern void* gTitleMenuControlInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E518C;
@@ -146,6 +286,8 @@ extern u8 framesThisStep;
 
 void dll_19B_update(int obj)
 {
+    extern void* gTitleMenuControlInterface;
+    extern int GameBit_Set(int eventId, int value);
     s16* st;
     int player;
     int near;
@@ -404,8 +546,8 @@ int dll_19C_getExtraSize(void) { return 0x8; }
 int dll_19C_getObjectTypeId(void) { return 0x0; }
 int dll_19D_getExtraSize(void) { return 0x38; }
 int dll_19D_getObjectTypeId(void) { return 0x0; }
-int dll_19E_getExtraSize(void) { return 0x10; }
-int dll_19E_getObjectTypeId(void) { return 0x1; }
+int dll_19E_getExtraSize(void);
+int dll_19E_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E51B0;
@@ -484,6 +626,8 @@ void dll_19C_update(int* obj)
 #pragma peephole off
 void dll_19B_init(u8* obj, u8* params)
 {
+    extern void* gTitleMenuControlInterface;
+    extern int GameBit_Set(int eventId, int value);
     register u8* sub;
     void* res;
 
