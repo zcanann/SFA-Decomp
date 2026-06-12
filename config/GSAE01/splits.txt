@@ -1414,14 +1414,8 @@ main/crfueltank.c:
 main/proximitymine_reset.c:
 	.text       start:0x802110F8 end:0x8021122C
 
-main/proximitymine.c:
-	.text       start:0x8021122C end:0x802113F8
-
 main/proximitymine_update.c:
-	.text       start:0x802113F8 end:0x80211A10
-
-main/proximitymine_init.c:
-	.text       start:0x80211A10 end:0x80211C24
+	.text       start:0x8021122C end:0x80211C24
 
 main/dll/DR/dll_024F_kt_rexlevel.c:
 	.text       start:0x80211C24 end:0x80211F38
