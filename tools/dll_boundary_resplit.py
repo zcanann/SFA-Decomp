@@ -1326,6 +1326,9 @@ class Executor:
             return False
         bounds = [h for k, n, h, e in items] + [len(lines)]
         injections = []   # (fn_head, decl)
+        # an extern block-scope decl of `name` already present in a fn body
+        block_decl_re = re.compile(
+            r"^\s*extern\b.*\b%s\b" % re.escape(name))
         for idx, (k, n, h, e) in enumerate(items):
             decl = norm_item_text(lines, h, e)
             if not decl.startswith("extern"):
@@ -1334,6 +1337,10 @@ class Executor:
             for fn, fh, fe in fns:
                 if lo <= fh < hi and pat.search(
                         "\n".join(strip_code(l)[0] for l in lines[fh:fe + 1])):
+                    # don't double-inject when the fn already block-declares it
+                    if any(block_decl_re.match(lines[kk])
+                           for kk in range(fh, fe + 1)):
+                        continue
                     injections.append((fh, fe, decl))
         ops = []
         for fh, fe, decl in injections:
@@ -1385,6 +1392,14 @@ class Executor:
         return True, f"{len(b[0])} fns conserved, matched_code {b[1]} unchanged"
 
     def revert(self):
+        if os.environ.get("RESPLIT_DEBUG_SNAPSHOT"):
+            import shutil
+            dbg = os.environ["RESPLIT_DEBUG_SNAPSHOT"]
+            os.makedirs(dbg, exist_ok=True)
+            for p in sorted(self.touched | self.created):
+                fp = os.path.join(REPO, p)
+                if os.path.exists(fp):
+                    shutil.copy(fp, os.path.join(dbg, p.replace("/", "__")))
         paths = sorted(self.touched | self.deleted)
         if paths:
             run_cmd(["git", "checkout", "--"] + paths)
