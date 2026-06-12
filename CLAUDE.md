@@ -1022,7 +1022,14 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     `extern` declarations inside the specific function bodies that need the
     non-global variant.** MWCC accepts this (legal C89 — local extern
     redeclarations override outer scope for that block only), and the byte
-    output is identical to the per-file form. Took the 4-placeholder
+    output is identical to the per-file form. REFINEMENTS (resplit
+    pipeline, probe-verified): the redecl tolerance is TYPE-PAIR dependent
+    — incompatible POINTER-RETURN fn redecls are accepted under a visible
+    file-scope decl; OBJECT decls and void-vs-int returns are REJECTED;
+    per-block externs with NO file-scope decl are always legal. And MWCC
+    errors even on IDENTICAL typedef/struct-tag redefinitions — merged TUs
+    must dedupe them (its `identifier ... redeclared` diagnostic can WRAP
+    onto the next line; error parsers must tolerate). Took the 4-placeholder
     DIMSnowHorn1 + dim2prisonmammoth merge byte-exact: 4 specific fns needed
     block-scope overrides (`fn_802BB4B4`: `u32 getButtonsHeld/JustPressed`
     no-clrlwi; `fn_802BB998`: `u16 audioPickSoundEffect` chain; `func15`:
@@ -4722,7 +4729,10 @@ match-preserving** when the preconditions hold. Done twice (80211C24→19 files,
 4. Emit each family's fns in **source-line order** (preserves intra-family
    call-before-def) and wrap **each fn** in its **effective** pragma state
    computed from a **stack model** (`reset` pops — see recipe #1; tracking only
-   the last label silently miscompiles nested-region fns).
+   the last label silently miscompiles nested-region fns). When CONCATENATING
+   segments from one donor, BALANCE each segment's pragma forest to net-zero —
+   a non-net-zero segment re-states every fn after it (resplit pipeline:
+   dll_19B_SeqFn 100→84.17 until balanced).
 5. Update `splits.txt` (replace placeholder range with the per-family ranges) +
    `configure.py` (replace the 1 placeholder Object with N). Delete the
    placeholder `.c`/`.h` and any unbuilt doc-stub.
@@ -4836,7 +4846,10 @@ session, every carve byte-exact first try. (alpha-35, task #134.)
   auto-inlined — apply helper-last placement for ANY newly co-resident
   callee, not just small leaves (dll_010C: two 0x100B helpers inlined into
   LanternFireFly_update, 100→65.86, caught by the conservation gate;
-  helper-after-caller restored 100.0).
+  helper-after-caller restored 100.0). Helper-last is achievable BY
+  CONSTRUCTION: address-ordered assembly + EOF appends keeps moved fns
+  below their callers; the mechanized demote-to-EOF retry recovered the
+  one regression observed (resplit pipeline, dfptargetblock_hitDetect).
 - **MWCC ERRORS (not warns) on implicit int→pointer args in PROTOTYPED
   calls** — drift code compiles only because its externs are UNPROTOTYPED.
   When merging TUs, keep the donor's unprototyped extern forms (or cast at
@@ -5246,11 +5259,18 @@ units): a DLL's descriptor fns sit in REVERSE slot order ascending
 (getExtraSize lowest → initialise highest); the DLL's TU spans
 (previous DLL's initialise end)..(own initialise end); helpers precede
 their own descriptor fns. Tools: `tools/dll_boundary_audit.py`
-(--census / --map LO HI --syms / --md) + the full 132-cut table in
-docs/boundary_audit.md (audit found 132 of 653 DLLs cut by unit
-boundaries across 129 container files; 5 carved so far, see the doc's
-status section for the deferred campaign: sandwormBoss 10-DLL container,
-ARWarwingattachment 8 WM DLLs, modgfx micro-units, CAM lane).
+(--census / --map LO HI --syms / --md) + `tools/dll_boundary_resplit.py`
+(the SURGEON: snaps boundaries to TU edges and executes skeleton-projection
+ABSORB/MOVE/CARVE with per-case ninja+dol+EXACT-conservation gates,
+auto-commit/auto-revert) + the cut table in docs/boundary_audit.md.
+Campaign status: 132 cuts found → 66 remain after 5 manual + 38 pipeline
+surgeries (sandwormBoss, ARWarwingattachment, modgfx field, CAM, DR lane
+all canonical). The 19 flagged cases in the doc are real import drift —
+boundary sides disagreeing on shared symbols (conflicting typedefs,
+def-vs-header signature splits, one double-decomp) — fix path: #84
+signature arbitration, then re-run the tool (it picks cases up from the
+live audit); plus the 2 deferred engine extractions (gamecube.c dll-0x009
+stubs, light.c/main.c VFP code).
 NonMatching boundary moves are dol-safe BY CONSTRUCTION (dtk re-splits
 on splits.txt edits; the link stayed byte-identical across all five
 carves) — the conservation gate, not the dol, is what catches mistakes.
