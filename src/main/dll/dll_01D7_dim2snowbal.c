@@ -198,7 +198,7 @@ extern EffectInterface** gPartfxInterface;
 #pragma peephole off
 
 /* 8b "li r3, N; blr" returners. */
-int dim_levelcontrol_getExtraSize(void) { return 0x10; }
+int dim_levelcontrol_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E49D0;
@@ -207,12 +207,7 @@ extern f32 lbl_803E4A20;
 
 
 
-void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E4A20);
-}
+void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* conditional init/free pair. */
 extern void* lbl_803DDB78;
@@ -245,13 +240,7 @@ extern void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
 /* dim_levelcontrol_free: gameplay music + time-of-day reset. */
 extern void timeOfDayFn_80055000(void);
 
-void dim_levelcontrol_free(int p1)
-{
-    extern void Music_Trigger(s32 triggerId, s32 mode);
-    Music_Trigger(0xa1, 0);
-    Music_Trigger(0xed, 0);
-    timeOfDayFn_80055000();
-}
+void dim_levelcontrol_free(int p1);
 
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
@@ -544,142 +533,7 @@ extern void SCGameBitLatch_Update(int* state, int mask, int a, int b, int bit, i
 extern int* gSHthorntailAnimationInterface;
 extern f32 lbl_803E4A24;
 
-void dim_levelcontrol_update(int obj)
-{
-    extern void Music_Trigger(int id, int value);
-    extern int Sfx_PlayFromObject(int obj, int id);
-    u8 a;
-    u8 b;
-    u8 c;
-    u8 d;
-    DimLevelControlState* st;
-    u32 t;
-    u32 t2;
-
-    a = GameBit_Get(0xd0b);
-    b = GameBit_Get(0xd0c);
-    c = GameBit_Get(0xd0d);
-    d = GameBit_Get(0xd0e);
-    st = ((GameObject*)obj)->extra;
-    if ((a && !st->b7) || (b && !st->b6) || (c && !st->b5) || (d && !st->b4))
-    {
-        Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
-    }
-    st->b7 = a;
-    st->b6 = b;
-    st->b5 = c;
-    st->b4 = d;
-    if (!st->b3 && (u32)GameBit_Get(0xa21) != 0)
-    {
-        Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
-        st->b3 = 1;
-    }
-    if (((GameObject*)obj)->unkF4 != 0)
-    {
-        if ((u32)GameBit_Get(0xa82) == 0 ||
-            ((u32)GameBit_Get(0x17) != 0 && (u32)GameBit_Get(0xead) == 0))
-        {
-            if (((GameObject*)obj)->unkF4 == 2)
-            {
-                getEnvfxActImmediately(0, 0, 0x160, 0);
-                getEnvfxActImmediately(0, 0, 0x15a, 0);
-                getEnvfxActImmediately(0, 0, 0x15c, 0);
-                getEnvfxActImmediately(0, 0, 0x15f, 0);
-            }
-            else
-            {
-                getEnvfxAct(0, 0, 0x160, 0);
-                getEnvfxAct(0, 0, 0x15a, 0);
-                getEnvfxAct(0, 0, 0x15c, 0);
-                getEnvfxAct(0, 0, 0x15f, 0);
-            }
-        }
-        ((GameObject*)obj)->unkF4 = 0;
-    }
-    if (st->unkD != 0)
-    {
-        if ((u32)GameBit_Get(0x651) == 0)
-        {
-            (*gMapEventInterface)->setAnimEvent(0x13, 0xd, 0);
-            st->unkD = 0;
-        }
-    }
-    else
-    {
-        if ((u32)GameBit_Get(0x651) != 0)
-        {
-            (*gMapEventInterface)->setAnimEvent(0x13, 0xd, 1);
-            st->unkD = 1;
-        }
-    }
-    if (st->timer > lbl_803E4A24)
-    {
-        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        gameTextShow(0x430);
-        st->timer = st->timer - timeDelta;
-        if (st->timer < *(f32*)&lbl_803E4A24)
-        {
-            st->timer = lbl_803E4A24;
-        }
-    }
-    if (st->unkC == 0)
-    {
-        t = GameBit_Get(0x3e2);
-        t2 = GameBit_Get(0x3e3);
-        st->unkC = (u8)(t2 & t);
-        if (st->unkC != 0)
-        {
-            (*gGameUIInterface)->showNpcDialogue(0x4ba, 0x14, 0x8c, 1);
-        }
-    }
-    t = GameBit_Get(0x3e2);
-    {
-        int gb = !GameBit_Get(0x3e3);
-        t = gb & t;
-    }
-    t2 = t & 0xff;
-    if (t2 != st->saveState)
-    {
-        GameBit_Set(0x3e8, t2);
-        st->saveState = t2;
-    }
-    if (!(u8)GameBit_Get(0x8a5) && (u32)GameBit_Get(0x89d) != 0)
-    {
-        GameBit_Set(0x8a4, 1);
-    }
-    if ((*(int (**)(int))(*(int*)gSHthorntailAnimationInterface + 0x24))(0) == 0)
-    {
-        if (st->musicTrack != 0xe2)
-        {
-            st->musicTrack = 0xe2;
-            if (st->latch & 4)
-            {
-                Music_Trigger(0xc5, 0);
-                Music_Trigger(0xe2, 1);
-            }
-        }
-    }
-    else
-    {
-        if (st->musicTrack != 0xc5)
-        {
-            st->musicTrack = 0xc5;
-            if (st->latch & 4)
-            {
-                Music_Trigger(0xe2, 0);
-                Music_Trigger(0xc5, 1);
-            }
-        }
-    }
-    SCGameBitLatch_Update(&st->latch, 1, 0x1a7, 0x64b, 0xc1e, 0xa1);
-    SCGameBitLatch_Update(&st->latch, 2, 0x1a8, 0xc0, 0xc1f, 0xcf);
-    SCGameBitLatch_Update(&st->latch, 4, 0x1ba, 0x1b9, 0xc20, st->musicTrack);
-    SCGameBitLatch_Update(&st->latch, 8, -1, -1, 0xd8f, 0xdc);
-    SCGameBitLatch_Update(&st->latch, 0x10, 0x1a7, 0x64b, 0xc1e, 0xed);
-    SCGameBitLatch_Update(&st->latch, 0x20, 0x1a8, 0xc0, 0xc1f, 0x36);
-    SCGameBitLatch_Update(&st->latch, 0x40, 0x1ba, 0x1b9, 0xc20, 0x35);
-    SCGameBitLatch_Update(&st->latch, 0x100, -1, -1, 0x3e2, 0x2b);
-}
+void dim_levelcontrol_update(int obj);
 
 /*
  * --INFO--
@@ -834,57 +688,31 @@ void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void dll_1CF_free(void)
-{
-}
+void dll_1CF_free(void);
 
-void dll_1CF_hitDetect(void)
-{
-}
+void dll_1CF_hitDetect(void);
 
-void dll_1CF_update(void)
-{
-}
+void dll_1CF_update(void);
 
-void dll_1CF_release(void)
-{
-}
+void dll_1CF_release(void);
 
-void dll_1CF_initialise(void)
-{
-}
+void dll_1CF_initialise(void);
 
-void dim_tricky_free(void)
-{
-}
+void dim_tricky_free(void);
 
-void dim_tricky_hitDetect(void)
-{
-}
+void dim_tricky_hitDetect(void);
 
-void dim2conveyor_hitDetect(void)
-{
-}
+void dim2conveyor_hitDetect(void);
 
-void dim2conveyor_release(void)
-{
-}
+void dim2conveyor_release(void);
 
-void dim2conveyor_initialise(void)
-{
-}
+void dim2conveyor_initialise(void);
 
-void dll_1D6_hitDetect(void)
-{
-}
+void dll_1D6_hitDetect(void);
 
-void dll_1D6_release(void)
-{
-}
+void dll_1D6_release(void);
 
-void dll_1D6_initialise(void)
-{
-}
+void dll_1D6_initialise(void);
 
 void dim2snowball_free(void)
 {
@@ -902,48 +730,34 @@ void dim2snowball_initialise(void)
 {
 }
 
-void dim2pathgenerator_free(void)
-{
-}
+void dim2pathgenerator_free(void);
 
-void dim2pathgenerator_render(void)
-{
-}
+void dim2pathgenerator_render(void);
 
-void dim2pathgenerator_hitDetect(void)
-{
-}
+void dim2pathgenerator_hitDetect(void);
 
-void dim2pathgenerator_release(void)
-{
-}
+void dim2pathgenerator_release(void);
 
-void dim2pathgenerator_initialise(void)
-{
-}
+void dim2pathgenerator_initialise(void);
 
 
 /* 8b "li r3, N; blr" returners. */
-int dll_1CF_getExtraSize(void) { return 0x0; }
-int dll_1CF_getObjectTypeId(void) { return 0x0; }
-int dim_tricky_getExtraSize(void) { return 0x1; }
-int dim_tricky_getObjectTypeId(void) { return 0x0; }
-int dimtruthhornice_getExtraSize(void) { return 0x8; }
-int dim2conveyor_getExtraSize(void) { return 0x14; }
-int dim2conveyor_getObjectTypeId(void) { return 0x0; }
-int dll_1D6_getExtraSize(void) { return 0x20; }
-int dll_1D6_getObjectTypeId(void) { return 0x0; }
+int dll_1CF_getExtraSize(void);
+int dll_1CF_getObjectTypeId(void);
+int dim_tricky_getExtraSize(void);
+int dim_tricky_getObjectTypeId(void);
+int dimtruthhornice_getExtraSize(void);
+int dim2conveyor_getExtraSize(void);
+int dim2conveyor_getObjectTypeId(void);
+int dll_1D6_getExtraSize(void);
+int dll_1D6_getObjectTypeId(void);
 int dim2snowball_getExtraSize(void) { return 0xb0; }
 int dim2snowball_getObjectTypeId(void) { return 0x0; }
-int dim2pathgenerator_getExtraSize(void) { return 0x9a8; }
-int dim2pathgenerator_getObjectTypeId(void) { return 0x0; }
+int dim2pathgenerator_getExtraSize(void);
+int dim2pathgenerator_getObjectTypeId(void);
 
 /* 16b chained patterns. */
-void dim_tricky_init(int* obj)
-{
-    u8 v = 0x0;
-    *((u8*)((int**)obj)[0xb8 / 4] + 0x0) = v;
-}
+void dim_tricky_init(int* obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4A30;
@@ -951,26 +765,11 @@ extern f32 lbl_803E4A58;
 extern f32 lbl_803E4A78;
 extern f32 lbl_803E4AA0;
 
-void dll_1CF_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    extern void objRenderFn_8003b8f4(f32);
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E4A30);
-}
+void dll_1CF_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dim2conveyor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    extern void objRenderFn_8003b8f4(f32);
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E4A58);
-}
+void dim2conveyor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    extern void objRenderFn_8003b8f4(f32);
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E4A78);
-}
+void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -982,56 +781,14 @@ void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E4A38;
-void dim_tricky_render(void) { extern void objRenderFn_8003b8f4(f32); objRenderFn_8003b8f4(lbl_803E4A38); }
+void dim_tricky_render(void);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void dim2conveyor_free(int x) { ObjGroup_RemoveObject(x, 0x16); }
+void dim2conveyor_free(int x);
 
 /* dim2conveyor_setScale: per-area scale/sign + music latch for two specific map ids. */
 
-void dim2conveyor_setScale(int* obj, int unused, f32* outX, f32* outY)
-{
-    extern void Music_Trigger(int trackId, int restart);
-    Dim2ConveyorState* state = ((GameObject*)obj)->extra;
-    int id;
-    if (state->musicHold == 0)
-    {
-        Music_Trigger(0xdf, 1);
-    }
-    state->musicHold = 20;
-    id = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
-    switch (id)
-    {
-    case 7849:
-        *outX = state->scrollX;
-        *outY = state->scrollY;
-        break;
-    case 0x49B23:
-        if (GameBit_Get(3164) != 0 && GameBit_Get(3163) == 0)
-        {
-            *outX = state->scrollX;
-            *outY = state->scrollY;
-        }
-        if (GameBit_Get(3163) != 0 && GameBit_Get(3164) == 0)
-        {
-            *outX = -state->scrollX;
-            *outY = -state->scrollY;
-        }
-        if (GameBit_Get(3163) != 0)
-        {
-            GameBit_Set(3164, 0);
-        }
-        if (GameBit_Get(3163) == 0)
-        {
-            GameBit_Set(3164, 1);
-        }
-        break;
-    default:
-        *outX = state->scrollX;
-        *outY = state->scrollY;
-        break;
-    }
-}
+void dim2conveyor_setScale(int* obj, int unused, f32* outX, f32* outY);
 
 extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, uint* outHitVolume);
 
@@ -1044,77 +801,15 @@ extern int* getTrickyObject(void);
 
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if the signed result dropped to or below 0. */
-int fn_801B6D40(int* obj, int v)
-{
-    u8* state = ((GameObject*)obj)->extra;
-    *(s8*)(state + 2) = (s8)(state[2] - v);
-    return *(s8*)(state + 2) <= 0;
-}
+int fn_801B6D40(int* obj, int v);
 
-u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** p4)
-{
-    int* state = ((GameObject*)obj)->extra;
-    *p1 = (int*)((char*)state + 12);
-    *p2 = (int*)((char*)state + 812);
-    *p3 = (int*)((char*)state + 1612);
-    if (p4 != NULL)
-    {
-        *p4 = (int*)((char*)state + 2412);
-    }
-    return ((Dim2PathGeneratorState*)state)->curveValid;
-}
+u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** p4);
 
-void dll_1D6_free(int* obj)
-{
-    Dll1D6State* state = ((GameObject*)obj)->extra;
-    if ((state->flags1D & 4) != 0)
-    {
-        state->flags1D = (u8)(state->flags1D & ~4);
-    }
-    mm_free(state->bufA);
-    mm_free(state->bufB);
-    (&lbl_803DBF20)[state->slot] = 0;
-}
+void dll_1D6_free(int* obj);
 
-void dim2pathgenerator_init(int* obj, int* def)
-{
-    Dim2PathGeneratorState* state;
-    *(s16*)obj = (s16)((u32) * (u8*)((char*)def + 28) << 8);
-    state = ((GameObject*)obj)->extra;
-    state->spawnPeriod = ((Dim2pathgeneratorObjectDef*)def)->spawnPeriod;
-    state->spawnTimer = (s16) * (u8*)((char*)def + 29);
-    state->spawnTypes[0] = (s16)((Dim2pathgeneratorObjectDef*)def)->unk1E;
-    {
-        s16 v = ((Dim2pathgeneratorObjectDef*)def)->unk20;
-        if (v == -1)
-        {
-            state->spawnTypes[1] = (s16)((Dim2pathgeneratorObjectDef*)def)->unk1E;
-        }
-        else
-        {
-            state->spawnTypes[1] = v;
-        }
-    }
-    state->flags = (u8)(state->flags | 4);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
-}
+void dim2pathgenerator_init(int* obj, int* def);
 
-void dimtruthhornice_init(int* obj, int* def)
-{
-    TruthHornIceState* state = ((GameObject*)obj)->extra;
-    state->hitsLeft = (s8)((DimtruthhorniceObjectDef*)def)->hitsLeft;
-    state->gameBit = ((DimtruthhorniceObjectDef*)def)->gameBit;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
-    {
-        s16 slot = state->gameBit;
-        if (slot != -1 && (u32)GameBit_Get(slot) != 0u)
-        {
-            ObjHits_DisableObject(obj);
-            state->phase = 2;
-            ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        }
-    }
-}
+void dimtruthhornice_init(int* obj, int* def);
 
 void dim2snowball_init(int* obj, int* def)
 {
@@ -1135,84 +830,16 @@ void dim2snowball_init(int* obj, int* def)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
 }
 
-void dll_1CF_init(int* obj, int* def)
-{
-    if ((u32)GameBit_Get(((Dll1CFObjectDef*)def)->unk1E) != 0u)
-    {
-        ((GameObject*)obj)->anim.rotY = (s16)(((s32)((Dll1CFObjectDef*)def)->unk1A << 13) / 45);
-    }
-    *(s16*)obj = (s16)((s32)((Dll1CFObjectDef*)def)->unk18 << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0xe000);
-}
+void dll_1CF_init(int* obj, int* def);
 
 extern f32 lbl_803E4A28;
 extern int getSaveGameLoadStatus(void);
 extern void gameBitFn_800ea2e0(u8 n);
 extern void unlockLevel(int a, int b, int c);
 
-void dim_levelcontrol_init(int obj)
-{
-    DimLevelControlState* st;
-    u8 i;
+void dim_levelcontrol_init(int obj);
 
-    randomGetRange(0, 11);
-    st = ((GameObject*)obj)->extra;
-    st->saveState = 0;
-    st->timer = lbl_803E4A28;
-    if (getSaveGameLoadStatus() != 0)
-    {
-        ((GameObject*)obj)->unkF4 = 2;
-    }
-    else
-    {
-        ((GameObject*)obj)->unkF4 = 1;
-    }
-    for (i = 1; i <= 38; i++)
-    {
-        gameBitFn_800ea2e0(i);
-    }
-    st->unkC = (u8)GameBit_Get(0xdc);
-    GameBit_Set(0xf0a, 0);
-    if ((u32)GameBit_Get(0x89d) != 0 && (u32)GameBit_Get(0x8a5) == 0)
-    {
-        GameBit_Set(0x89d, 0);
-    }
-    st->b7 = (u8)GameBit_Get(0xd0b);
-    st->b6 = (u8)GameBit_Get(0xd0c);
-    st->b5 = (u8)GameBit_Get(0xd0d);
-    st->b4 = (u8)GameBit_Get(0xd0e);
-    st->b3 = (u8)GameBit_Get(0xa21);
-    (*gMapEventInterface)->setMode(((GameObject*)obj)->anim.mapEventSlot, 1);
-    ((GameObject*)obj)->objectFlags |= 0x6000;
-    unlockLevel(0, 0, 1);
-}
-
-void dim_tricky_update(int* obj)
-{
-    int* state = ((GameObject*)obj)->extra;
-    int* trickyObj = getTrickyObject();
-    if (trickyObj == NULL) return;
-    switch (*(u8*)state)
-    {
-    case 0:
-        if (GameBit_Get(0xa1b) != 0)
-        {
-            GameBit_Set(0x4e4, 0);
-            GameBit_Set(0x4e5, 0);
-            *(s8*)state = 1;
-        }
-        break;
-    case 1:
-        *(s8*)state = 2;
-        break;
-    case 2:
-        ((void(*)(int*, int*))((void**)*(*(int***)((char*)trickyObj + 104)))[14])(trickyObj, obj);
-        *(s8*)state = 3;
-        break;
-    case 3:
-        break;
-    }
-}
+void dim_tricky_update(int* obj);
 
 extern f32 mathCosf(f32 x);
 extern f32 lbl_803E4A5C;
@@ -1221,72 +848,9 @@ extern f32 lbl_803E4A64;
 extern f32 lbl_803E4A68;
 extern f32 lbl_803E4A6C;
 
-void dim2conveyor_init(int* obj, u8* params)
-{
-    f32 scale = (f32) * (s16*)((char*)params + 0x1a) / lbl_803E4A64;
-    Dim2ConveyorState* extra;
-    *(s16*)obj = (s16)(*(s8*)((char*)params + 0x18) << 8);
-    extra = ((GameObject*)obj)->extra;
-    extra->scrollX = scale * mathSinf(lbl_803E4A68 * (f32) * (s16*)obj / lbl_803E4A6C);
-    extra->scrollY = scale * mathCosf(lbl_803E4A68 * (f32) * (s16*)obj / lbl_803E4A6C);
-    extra->swapTimer = lbl_803E4A60;
-    extra->musicHold = 0;
-    ObjGroup_AddObject(obj, 22);
-    ((GameObject*)obj)->objectFlags |= 0x2000;
-    if (*(u32*)((char*)params + 0x14) == 0x49b23)
-    {
-        GameBit_Set(3164, 1);
-    }
-}
+void dim2conveyor_init(int* obj, u8* params);
 
-void dim2conveyor_update(int* obj)
-{
-    extern void Music_Trigger(int trackId, int restart);
-    extern int Sfx_PlayFromObject(int obj, int sfxId);
-    Dim2ConveyorState* extra = ((GameObject*)obj)->extra;
-    Sfx_PlayFromObject((int)obj, SFXfoot_metal_scuff);
-    if (extra->musicHold != 0)
-    {
-        extra->musicHold = extra->musicHold - 1;
-        if (extra->musicHold == 0)
-        {
-            Music_Trigger(223, 0);
-        }
-    }
-    switch (*(int*)((char*)*(int**)&((GameObject*)obj)->anim.placementData + 0x14))
-    {
-    case 0x49b23:
-        if (GameBit_Get(3169) != 0)
-        {
-            extra->swapTimer = extra->swapTimer + timeDelta;
-            if (extra->swapTimer > lbl_803E4A5C)
-            {
-                if (GameBit_Get(3163) != 0)
-                {
-                    GameBit_Set(3164, 1);
-                    GameBit_Set(3163, 0);
-                }
-                else if (GameBit_Get(3164) != 0)
-                {
-                    GameBit_Set(3164, 0);
-                    GameBit_Set(3163, 1);
-                }
-                extra->swapTimer = lbl_803E4A60;
-            }
-        }
-        if (GameBit_Get(3163) != 0)
-        {
-            GameBit_Set(3164, 0);
-        }
-        if (GameBit_Get(3163) == 0)
-        {
-            GameBit_Set(3164, 1);
-        }
-        break;
-    case 7849:
-        break;
-    }
-}
+void dim2conveyor_update(int* obj);
 
 extern void* mmAlloc(int size, int a, int b);
 extern void ObjModel_SetBlendChannelTargets(int* model, int a, int b, int c, f32 w, int d);
@@ -1294,228 +858,16 @@ extern void ObjModel_SetBlendChannelWeight(int* model, int a, f32 w);
 extern s16 lbl_803DBF18;
 extern f32 lbl_803E4A88;
 
-void dll_1D6_init(int* obj, u8* params)
-{
-    Dll1D6State* extra;
-    int* model;
-    int i;
-
-    *(s16*)obj = (s16)(*(s8*)((char*)params + 0x18) << 8);
-    extra = ((GameObject*)obj)->extra;
-    model = DIM2snowball_GetActiveModel(obj);
-    ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A88, 0);
-    ObjModel_SetBlendChannelWeight(model, 0, lbl_803E4A78);
-    extra->upTimer = *(s16*)((char*)params + 0x1a);
-    if (extra->upTimer < 15)
-    {
-        extra->upTimer = 15;
-    }
-    extra->downTimer = *(s16*)((char*)params + 0x1c);
-    if (extra->downTimer < 15)
-    {
-        extra->downTimer = 15;
-    }
-    {
-        f32 k = lbl_803E4A88;
-        extra->hitRangeSqA = k * ((GameObject*)obj)->anim.rootMotionScale;
-        extra->hitRangeSqA = extra->hitRangeSqA * extra->hitRangeSqA;
-        extra->hitRangeSqB = k * ((GameObject*)obj)->anim.rootMotionScale;
-        extra->hitRangeSqB = extra->hitRangeSqB * extra->hitRangeSqB;
-    }
-    extra->flags1D = GameBit_Get(496) ? 2 : 0;
-    for (i = 0; i < 4; i++)
-    {
-        if ((&lbl_803DBF20)[i] == 0)
-        {
-            (&lbl_803DBF20)[i] = 1;
-            extra->slot = i;
-            i = 4;
-        }
-    }
-    extra->bufA = mmAlloc(40, 18, 0);
-    getTabEntry(extra->bufA, 12, (&lbl_803DBF18)[extra->slot] * 40, 40);
-    extra->bufB = mmAlloc(40, 18, 0);
-    getTabEntry(extra->bufB, 12,
-                ((&lbl_803DBF18)[extra->slot] + 1) * 40, 40);
-    ((GameObject*)obj)->objectFlags |= 0x2000;
-}
+void dll_1D6_init(int* obj, u8* params);
 
 extern f32 lbl_803E4A40;
 extern f32 lbl_803E4A44;
 
-void dimtruthhornice_update(int* obj)
-{
-    extern int Sfx_PlayFromObject(int obj, int sfxId);
-    TruthHornIceState* extra = ((GameObject*)obj)->extra;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-    switch (extra->phase)
-    {
-    case 0:
-        if (extra->hitsLeft <= 0)
-        {
-            if (extra->gameBit != -1)
-            {
-                GameBit_Set(extra->gameBit, 1);
-                ObjHits_DisableObject(obj);
-                extra->phase = 1;
-                extra->timer = lbl_803E4A40;
-            }
-        }
-        else
-        {
-            int* tricky = (int*)getTrickyObject();
-            if (tricky != NULL)
-            {
-                if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
-                {
-                    (*(void (**)(int*, int*, int, int))(**(int**)((char*)tricky + 0x68) + 0x28))(tricky, obj, 1, 4);
-                }
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
-            }
-        }
-        break;
-    case 1:
-        {
-            f32 desc2[6];
-            extra->timer = extra->timer + timeDelta;
-            if (extra->timer > lbl_803E4A44)
-            {
-                int i;
-                extra->phase = 2;
-                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
-                Sfx_PlayFromObject((int)obj, 1147);
-                for (i = 30; i != 0; i--)
-                {
-                    f32 desc[6];
-                    desc[3] = 0.1f * (f32)(int)
-                    randomGetRange(-100, 100);
-                    desc[4] = 0.1f * (f32)(int)
-                    randomGetRange(0, 350);
-                    desc[5] = 0.1f * (f32)(int)
-                    randomGetRange(-100, 100);
-                    desc[2] = 1.0f;
-                    (*gPartfxInterface)->spawnObject(obj, 2043, desc, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject(obj, 2044, desc, 2, -1, NULL);
-                }
-            }
-            desc2[3] = 0.1f * (f32)(int)
-            randomGetRange(-100, 100);
-            desc2[4] = 0.1f * (f32)(int)
-            randomGetRange(0, 350);
-            desc2[5] = 0.1f * (f32)(int)
-            randomGetRange(-100, 100);
-            desc2[2] = 1.0f;
-            (*gPartfxInterface)->spawnObject(obj, 2044, desc2, 2, -1, NULL);
-            break;
-        }
-    case 2:
-        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        break;
-    }
-}
+void dimtruthhornice_update(int* obj);
 
 extern int** ObjGroup_GetObjects(int group, int* countOut);
 
-void dim2pathgenerator_update(int* obj)
-{
-    extern u8 Obj_IsLoadingLocked(void);
-    extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
-    extern int Obj_AllocObjectSetup(int kind, int id);
-    int* def;
-    int* extra = ((GameObject*)obj)->extra;
-    int toggle;
-    int** objs;
-    int i;
-    int count;
-
-    def = *(int**)&((GameObject*)obj)->anim.placementData;
-    if (GameBit_Get(((Dim2pathgeneratorPlacement*)def)->unk22) == 0)
-    {
-        return;
-    }
-    if ((((Dim2PathGeneratorState*)extra)->flags & 4) != 0)
-    {
-        if ((((Dim2PathGeneratorState*)extra)->flags & 2) == 0)
-        {
-            int n = 21;
-            int found = (*gRomCurveInterface)->find(&n, 1, 10, ((GameObject*)obj)->anim.localPosX,
-                                                    ((GameObject*)obj)->anim.localPosY,
-                                                    ((GameObject*)obj)->anim.localPosZ);
-            if (found != -1)
-            {
-                int* cv = (int*)(*gRomCurveInterface)->getById(found);
-                ((void (*)(int))(*gRomCurveInterface)->slot74)((int)cv);
-                ((Dim2PathGeneratorState*)extra)->curveValid =
-                    ((int (*)(int*, void*, void*, void*, void*))(*gRomCurveInterface)->slot78)(
-                        cv, (char*)extra + 0xc, (char*)extra + 0x32c, (char*)extra + 0x64c,
-                        (char*)extra + 0x96c);
-                ((Dim2PathGeneratorState*)extra)->flags |= 2;
-                ((Dim2PathGeneratorState*)extra)->originX = *(f32*)((char*)cv + 8);
-                ((Dim2PathGeneratorState*)extra)->originY = *(f32*)((char*)cv + 0xc);
-                ((Dim2PathGeneratorState*)extra)->originZ = *(f32*)((char*)cv + 0x10);
-            }
-        }
-    }
-    else
-    {
-        ((Dim2PathGeneratorState*)extra)->originX = ((GameObject*)obj)->anim.localPosX;
-        ((Dim2PathGeneratorState*)extra)->originY = ((GameObject*)obj)->anim.localPosY;
-        ((Dim2PathGeneratorState*)extra)->originZ = ((GameObject*)obj)->anim.localPosZ;
-    }
-    {
-        s16 t = ((Dim2PathGeneratorState*)extra)->spawnTimer - framesThisStep;
-        ((Dim2PathGeneratorState*)extra)->spawnTimer = t;
-        if (t > 0)
-        {
-            return;
-        }
-    }
-    toggle = ((Dim2PathGeneratorState*)extra)->flags & 1;
-    ((Dim2PathGeneratorState*)extra)->spawnTimer = ((Dim2PathGeneratorState*)extra)->spawnPeriod;
-    ((Dim2PathGeneratorState*)extra)->flags &= ~1;
-    objs = ObjGroup_GetObjects(47, &count);
-    for (i = 0; i < count; i++)
-    {
-        if (((Dim2PathGeneratorState*)extra)->spawnTypes[toggle] == *(s16*)((char*)objs[i] + 0x46))
-        {
-            int* p = *(int**)((char*)objs[i] + 0x4c);
-            int c2;
-            int j;
-            int** o2;
-            *(f32*)((char*)p + 8) = ((Dim2PathGeneratorState*)extra)->originX;
-            *(f32*)((char*)p + 0xc) = ((Dim2PathGeneratorState*)extra)->originY;
-            *(f32*)((char*)p + 0x10) = ((Dim2PathGeneratorState*)extra)->originZ;
-            *(int*)((char*)p + 0x14) = ((Dim2pathgeneratorPlacement*)def)->unk14;
-            (*(void (**)(int*, int))(**(int**)((char*)objs[i] + 0x68) + 4))(objs[i], 1);
-            ObjGroup_RemoveObject(objs[i], 47);
-            o2 = ObjGroup_GetObjects(47, &c2);
-            for (j = 0; j < c2; j++)
-            {
-            }
-            ((Dim2PathGeneratorState*)extra)->flags |= (toggle ^ 1) & 1;
-            return;
-        }
-    }
-    if (Obj_IsLoadingLocked())
-    {
-        int* np = (int*)Obj_AllocObjectSetup(36, ((Dim2PathGeneratorState*)extra)->spawnTypes[toggle]);
-        *(f32*)((char*)np + 8) = ((Dim2PathGeneratorState*)extra)->originX;
-        *(f32*)((char*)np + 0xc) = ((Dim2PathGeneratorState*)extra)->originY;
-        *(f32*)&((ObjDef*)np)->jointData = ((Dim2PathGeneratorState*)extra)->originZ;
-        *(u8*)((char*)np + 4) = ((Dim2pathgeneratorPlacement*)def)->unk4;
-        *(u8*)((char*)np + 6) = ((Dim2pathgeneratorPlacement*)def)->unk6;
-        *(u8*)((char*)np + 5) = ((Dim2pathgeneratorPlacement*)def)->unk5;
-        *(u8*)((char*)np + 7) = ((Dim2pathgeneratorPlacement*)def)->unk7;
-        *(u8*)((char*)np + 7) = 255;
-        *(u8*)((char*)np + 3) = ((Dim2pathgeneratorPlacement*)def)->unk3;
-        *(s8*)((char*)np + 0x18) = (s8) * (u8*)((char*)def + 0x1c);
-        *(s16*)((char*)np + 0x1a) = *(u8*)((char*)def + 0x1a);
-        *(s16*)((char*)np + 0x1c) = *(u8*)((char*)def + 0x1b);
-        *(int*)((char*)np + 0x14) = ((Dim2pathgeneratorPlacement*)def)->unk14;
-        Obj_SetupObject((int)np, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
-        ((Dim2PathGeneratorState*)extra)->flags |= (toggle ^ 1) & 1;
-    }
-}
+void dim2pathgenerator_update(int* obj);
 
 extern void mtxRotateByVec3s(f32 * mtx, s16 * ang);
 extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
@@ -1525,154 +877,7 @@ extern f32 lbl_803E4A84;
 extern f32 lbl_803E4A8C;
 extern f32 lbl_803E4A90;
 
-void dll_1D6_update(int* obj)
-{
-    extern int* objFindTexture(int* obj, int a, int b);
-    extern int Sfx_PlayFromObject(int obj, int sfxId);
-    Dll1D6State* extra;
-    int* def;
-    int* model;
-    int* tex;
-    int* player;
-    f32 mtx[20];
-    s16 ang[6];
-    f32 lx, ly, lz;
-
-    def = *(int**)&((GameObject*)obj)->anim.placementData;
-    extra = ((GameObject*)obj)->extra;
-
-    if ((extra->flags1D & 1) != 0)
-    {
-        if ((extra->flags1D & 4) == 0)
-        {
-            extra->flags1D |= 4;
-            extra->bobPhase = (f32)(int)
-            randomGetRange(20, 40);
-            extra->bobRate = (f32)(int)
-            randomGetRange(6, 10) / lbl_803E4A7C;
-        }
-        extra->downTimer -= framesThisStep;
-        extra->dizzyTimer = extra->dizzyTimer - framesThisStep;
-        if (extra->dizzyTimer <= 0)
-        {
-            Sfx_PlayFromObject((int)obj, SFXmv_mushdizzylp12);
-        }
-        if (extra->downTimer <= 0)
-        {
-            model = DIM2snowball_GetActiveModel(obj);
-            ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A80, 16);
-            extra->upTimer = ((Dll1D6Placement*)def)->upTimer;
-            if (extra->upTimer < 15)
-            {
-                extra->upTimer = 15;
-            }
-            extra->flags1D &= ~1;
-            Sfx_PlayFromObject((int)obj, SFXfoot_metal_land);
-        }
-    }
-    else
-    {
-        model = DIM2snowball_GetActiveModel(obj);
-        if (*(int*)((char*)model + 0x28) != 0 && (extra->flags1D & 4) != 0)
-        {
-            if (*(f32*)*(int**)((char*)model + 0x28) >= lbl_803E4A78)
-            {
-                extra->flags1D &= ~4;
-            }
-        }
-        extra->upTimer -= framesThisStep;
-        if (extra->upTimer <= 0)
-        {
-            ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A84, 16);
-            extra->downTimer = ((Dll1D6Placement*)def)->downTimer;
-            if (extra->downTimer < 15)
-            {
-                extra->downTimer = 15;
-            }
-            extra->flags1D |= 1;
-            Sfx_PlayFromObject((int)obj, SFXfoot_ice_scuff);
-            extra->dizzyTimer = 20;
-        }
-    }
-    tex = objFindTexture(obj, 0, 0);
-    {
-        s16 v = -*(s16*)((char*)tex + 0xa) + 256;
-        if (v > 2048)
-        {
-            v = v - 2048;
-        }
-        *(s16*)((char*)tex + 0xa) = -v;
-    }
-    tex = objFindTexture(obj, 1, 0);
-    {
-        s16 v = -*(s16*)((char*)tex + 0xa) + 160;
-        if (v > 2048)
-        {
-            v = v - 2048;
-        }
-        *(s16*)((char*)tex + 0xa) = -v;
-    }
-    player = (int*)Obj_GetPlayerObject();
-    mtx[0] = -((GameObject*)obj)->anim.localPosX;
-    mtx[1] = -((GameObject*)obj)->anim.localPosY;
-    mtx[2] = -((GameObject*)obj)->anim.localPosZ;
-    ang[0] = -*(s16*)obj;
-    ang[1] = 0;
-    ang[2] = 0;
-    mtxRotateByVec3s(&mtx[3], ang);
-    Matrix_TransformPoint(&mtx[3], ((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosY,
-                          ((GameObject*)player)->anim.localPosZ, &lx, &ly, &lz);
-    if ((extra->flags1D & 2) != 0)
-    {
-        ly = ((GameObject*)obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
-        if (ly < lbl_803E4A88)
-        {
-            ly = -ly;
-        }
-        if (ly < lbl_803E4A8C)
-        {
-            lz = lz * lz;
-            if (lz <= extra->hitRangeSqA)
-            {
-                int* row;
-                f32 lim;
-                model = DIM2snowball_GetActiveModel(obj);
-                row = *(int**)((char*)model + ((*(u16*)((char*)model + 0x18) >> 1) & 1) * 4 + 4);
-                lim = ((GameObject*)obj)->anim.rootMotionScale *
-                    (f32)(int) * (s16*)((char*)row + extra->hitRow * 16);
-                if (lx <= lim)
-                {
-                    ObjHits_RecordObjectHit(player, obj, 11, 4, 0);
-                }
-            }
-        }
-    }
-    if ((extra->flags1D & 4) != 0)
-    {
-        extra->bobPhase =
-            extra->bobRate * timeDelta + extra->bobPhase;
-        if (extra->bobPhase > lbl_803E4A90)
-        {
-            extra->bobRate = -(f32)(int)
-            randomGetRange(6, 10) / lbl_803E4A7C;
-            extra->bobPhase = lbl_803E4A90;
-        }
-        else if (extra->bobPhase < lbl_803E4A7C)
-        {
-            extra->bobRate = (f32)(int)
-            randomGetRange(6, 10) / lbl_803E4A7C;
-            extra->bobPhase = lbl_803E4A7C;
-        }
-    }
-    if (GameBit_Get(496) != 0)
-    {
-        extra->flags1D |= 2;
-    }
-    else
-    {
-        extra->flags1D &= ~2;
-    }
-}
+void dll_1D6_update(int* obj);
 
 extern int Curve_AdvanceAlongPath(int* extra, f32 t);
 extern void Curve_BuildHermiteCoeffs(void);

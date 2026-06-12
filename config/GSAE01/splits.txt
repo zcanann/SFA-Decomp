@@ -1359,8 +1359,29 @@ main/dll/DIM2conveyor.c:
 main/dll/DIM2flameburst.c:
 	.text       start:0x801B3DE4 end:0x801B63F4
 
-main/dll/DIM2snowball.c:
-	.text       start:0x801B63F4 end:0x801B8798
+main/dll/dll_01CD_dimlevelco.c:
+	.text       start:0x801B63F4 end:0x801B6B44
+
+main/dll/dll_01CF_dll1cf.c:
+	.text       start:0x801B6B44 end:0x801B6C2C
+
+main/dll/dll_01D0_dimtricky.c:
+	.text       start:0x801B6C2C end:0x801B6D40
+
+main/dll/dll_01D1_dimtruthhor.c:
+	.text       start:0x801B6D40 end:0x801B7154
+
+main/dll/dll_01D5_dim2conveyo.c:
+	.text       start:0x801B7154 end:0x801B75B8
+
+main/dll/dll_01D6_dll1d6.c:
+	.text       start:0x801B75B8 end:0x801B7D48
+
+main/dll/dll_01D7_dim2snowbal.c:
+	.text       start:0x801B7D48 end:0x801B837C
+
+main/dll/dll_01D8_dim2pathgen.c:
+	.text       start:0x801B837C end:0x801B8798
 
 main/dll/DIM2projrock.c:
 	.text       start:0x801B8798 end:0x801BA224
