@@ -84,7 +84,7 @@ extern f32 lbl_803E28C8;
 extern f32 lbl_803E28CC;
 extern int lbl_803DBCB8;
 extern f32 timeDelta;
-extern int Curve_AdvanceAlongPath(int* curve, f32 t);
+extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
 extern void fn_8014CF7C(int obj, int state, int p3, int p4, f32 f1, f32 f2);
 extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
 extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
@@ -515,10 +515,10 @@ void fn_801534D8(int obj, int state)
 void fn_80153040(int obj, int state)
 {
     ObjHitsPriorityState* hitState;
-    int* curve;
+    RomCurveWalker* curve;
     f32 vec[3];
 
-    curve = *(int**)state;
+    curve = *(RomCurveWalker**)state;
     if (((GameObject*)obj)->anim.hitReactState != NULL)
     {
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
@@ -530,12 +530,11 @@ void fn_80153040(int obj, int state)
     }
     if ((((BaddieState*)state)->controlFlags & 0x2000) != 0)
     {
-        if (Curve_AdvanceAlongPath(curve, ((BaddieState*)state)->pathStep) != 0 || ((RomCurveWalker*)curve)->
-            atSegmentEnd != 0)
+        if (Curve_AdvanceAlongPath(curve, ((BaddieState*)state)->pathStep) != 0 || curve->atSegmentEnd != 0)
         {
             if ((*gRomCurveInterface)->goNextPoint(curve) != 0)
             {
-                if ((*gRomCurveInterface)->initCurve(*(void**)state, (void*)obj, lbl_803E28B8,
+                if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E28B8,
                                                      &lbl_803DBCB8, -1) != 0)
                 {
                     ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000;
@@ -544,11 +543,11 @@ void fn_80153040(int obj, int state)
         }
     }
 
-    fn_8014CF7C(obj, state, 0xf, 0, ((RomCurveWalker*)curve)->posX, ((RomCurveWalker*)curve)->posZ);
+    fn_8014CF7C(obj, state, 0xf, 0, curve->posX, curve->posZ);
 
-    vec[0] = ((RomCurveWalker*)curve)->posX - ((GameObject*)obj)->anim.localPosX;
-    vec[1] = ((RomCurveWalker*)curve)->posY - ((GameObject*)obj)->anim.localPosY;
-    vec[2] = ((RomCurveWalker*)curve)->posZ - ((GameObject*)obj)->anim.localPosZ;
+    vec[0] = curve->posX - ((GameObject*)obj)->anim.localPosX;
+    vec[1] = curve->posY - ((GameObject*)obj)->anim.localPosY;
+    vec[2] = curve->posZ - ((GameObject*)obj)->anim.localPosZ;
     fn_8014C678(obj, state, vec, lbl_803E28BC, lbl_803E28C0, lbl_803E28C4, 1);
 
     *(f32*)(state + 0x324) = *(f32*)(state + 0x324) + timeDelta;
@@ -701,7 +700,7 @@ void fn_80152FA8(int obj, int p2, int unused, int msgFlag)
 
 void fn_80153248(int obj, int state)
 {
-    int* curve;
+    RomCurveWalker* curve;
     f32 vec[3];
     f32 worldPos[3];
     int gridB[3];
@@ -709,7 +708,7 @@ void fn_80153248(int obj, int state)
     u8 hitOut;
     int p29c;
 
-    curve = *(int**)state;
+    curve = *(RomCurveWalker**)state;
     if (((BaddieState*)state)->inWhirlpoolGroup != 0)
     {
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x80;
@@ -721,11 +720,11 @@ void fn_80153248(int obj, int state)
     if ((((BaddieState*)state)->controlFlags & 0x2000) != 0)
     {
         if (Curve_AdvanceAlongPath(curve, lbl_803E28D4 * ((BaddieState*)state)->pathStep) != 0
-            || ((RomCurveWalker*)curve)->atSegmentEnd != 0)
+            || curve->atSegmentEnd != 0)
         {
             if ((*gRomCurveInterface)->goNextPoint(curve) != 0)
             {
-                if ((*gRomCurveInterface)->initCurve(*(void**)state, (void*)obj, lbl_803E28B8,
+                if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E28B8,
                                                      &lbl_803DBCB8, -1) != 0)
                 {
                     ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000;
@@ -752,9 +751,9 @@ void fn_80153248(int obj, int state)
         worldPos[1] = ((GameObject*)obj)->anim.localPosY;
         worldPos[2] = ((GameObject*)obj)->anim.localPosZ;
         voxmaps_worldToGrid(worldPos, gridA);
-        worldPos[0] = ((RomCurveWalker*)curve)->posX;
-        worldPos[1] = ((RomCurveWalker*)curve)->posY;
-        worldPos[2] = ((RomCurveWalker*)curve)->posZ;
+        worldPos[0] = curve->posX;
+        worldPos[1] = curve->posY;
+        worldPos[2] = curve->posZ;
         voxmaps_worldToGrid(worldPos, gridB);
         if (((countLeadingZeros(((BaddieState*)state)->controlFlags) >> 5) & 0x01000000) != 0)
         {
@@ -996,21 +995,20 @@ checkedKind:
 
 void fn_80153E0C(int obj, int state)
 {
-    int* curve;
+    RomCurveWalker* curve;
     u32 rnd;
     u8 ctr;
 
-    curve = *(int**)state;
+    curve = *(RomCurveWalker**)state;
     ((BaddieState*)state)->seqEntryIndex = 0;
     *(f32*)(state + 0x328) = lbl_803E294C;
     if ((((BaddieState*)state)->controlFlags & 0x2000) != 0)
     {
-        if (Curve_AdvanceAlongPath(curve, ((BaddieState*)state)->pathStep) != 0 || ((RomCurveWalker*)curve)->
-            atSegmentEnd != 0)
+        if (Curve_AdvanceAlongPath(curve, ((BaddieState*)state)->pathStep) != 0 || curve->atSegmentEnd != 0)
         {
             if ((*gRomCurveInterface)->goNextPoint(curve) != 0)
             {
-                if ((*gRomCurveInterface)->initCurve(*(void**)state, (void*)obj, lbl_803E2950,
+                if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E2950,
                                                      &lbl_803DBCC8, -1) != 0)
                 {
                     ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000;
@@ -1021,7 +1019,7 @@ void fn_80153E0C(int obj, int state)
         {
             if (((GameObject*)obj)->anim.currentMove == 0)
             {
-                fn_8014CF7C(obj, state, 0x3c, 0, ((RomCurveWalker*)curve)->posX, ((RomCurveWalker*)curve)->posZ);
+                fn_8014CF7C(obj, state, 0x3c, 0, curve->posX, curve->posZ);
             }
             if (*(f32*)(state + 0x324) > lbl_803E294C)
             {
