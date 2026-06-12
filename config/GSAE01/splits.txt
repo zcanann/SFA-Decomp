@@ -1834,8 +1834,17 @@ main/dll/dll_01B3_shbeacon.c:
 main/dll/CRsnowbike.c:
 	.text       start:0x801DAFA4 end:0x801DBFA0
 
-main/dll/DRcloudrunner.c:
-	.text       start:0x801DBFA0 end:0x801DD1A8
+main/dll/dll_01B7_scmusictre.c:
+	.text       start:0x801DBFA0 end:0x801DC8D4
+
+main/dll/dll_01B8_sctotempol.c:
+	.text       start:0x801DC8D4 end:0x801DCC70
+
+main/dll/dll_01B9_sccloudrun.c:
+	.text       start:0x801DCC70 end:0x801DD170
+
+main/dll/dll_801DD170.c:
+	.text       start:0x801DD170 end:0x801DD1A8
 
 main/dll/dll_01BA_sctotempuzzle.c:
 	.text       start:0x801DD1A8 end:0x801DDA28
