@@ -152,7 +152,7 @@ int grimble_stateHandlerB00(int obj, GroundBaddieState *state);
 int grimble_stateHandlerA09(int obj, GroundBaddieState *state);
 int grimble_stateHandlerA08(int *obj, GroundBaddieState *state);
 int grimble_stateHandlerA07(short *obj, GroundBaddieState *state);
-int grimble_stateHandlerA06(short *obj, GroundBaddieState *state, f32 speed);
+int grimble_stateHandlerA06(int obj, GroundBaddieState *state, f32 speed);
 int grimble_stateHandlerA05(short *obj, GroundBaddieState *state);
 int grimble_stateHandlerA04(short *obj, GroundBaddieState *state);
 int grimble_stateHandlerA03(short *obj, GroundBaddieState *state);

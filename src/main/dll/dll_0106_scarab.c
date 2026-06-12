@@ -12,6 +12,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
+#include "main/objhits.h"
 
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
@@ -19,9 +20,6 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
-extern undefined8 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHit();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
@@ -177,7 +175,7 @@ void scarab_update(int obj)
         {
             if (((GameObject*)obj)->anim.hitReactState != NULL)
             {
-                ObjHits_EnableObject(obj);
+                ObjHits_EnableObject((u32)obj);
             }
             ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->
                 anim.localPosX;
@@ -505,7 +503,7 @@ void scarab_update(int obj)
                     }
                     if (((GameObject*)obj)->anim.hitReactState != NULL)
                     {
-                        ObjHits_DisableObject(obj);
+                        ObjHits_DisableObject((u32)obj);
                     }
                     Sfx_PlayFromObject(obj, (u16) * (s16*)(state + 0x1e));
                     itemPickupDoParticleFx(obj, lbl_803E3A00, *(s16*)(state + 0x20), 0x28);

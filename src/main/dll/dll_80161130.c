@@ -927,7 +927,7 @@ int grimble_stateHandlerA09(int obj, GroundBaddieState* p)
     return 0;
 }
 
-int grimble_stateHandlerA06(short* obj, GroundBaddieState* p, f32 spd)
+int grimble_stateHandlerA06(int obj, GroundBaddieState* p, f32 spd)
 {
     extern f32 sqrtf(f32);
     extern int getAngle(f32 a, f32 b);
@@ -968,7 +968,7 @@ int grimble_stateHandlerA06(short* obj, GroundBaddieState* p, f32 spd)
         *(s8*)&p->baddie.moveDone = 0;
     }
     p->baddie.moveSpeed = lbl_803E2EF0;
-    (*(void (**)(short*, u8*, f32, int))((char*)*gPlayerInterface + 0x20))(obj, (u8*)p, spd, 1);
+    (*(void (**)(short*, u8*, f32, int))((char*)*gPlayerInterface + 0x20))((short*)obj, (u8*)p, spd, 1);
     (*(void (**)(void*, void*, f32))(**(int**)(((GrimbleState*)hit)->unk38 + 0x68) + 0x28))(
         *(void**)&((GrimbleState*)hit)->unk38, (void*)(hit + 0x48),
         p->baddie.animSpeedA * (f32)(1 - (((GrimbleState*)hit)->unk45 << 1)));
