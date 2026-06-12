@@ -8,17 +8,10 @@
 /* SDK / engine externs */
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32 * a, f32 * b);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern u32 randomGetRange(int min, int max);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int p3);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
 
-extern int modelLightStruct_createPointLight(int obj, int a, int b, int c, int d);
-extern void modelLightStruct_freeSlot(void* p);
-extern void modelLightStruct_setDistanceAttenuation(void* p, f32 a, f32 b);
 extern f32 Curve_AdvanceAlongPath(void* state, f32 t);
 extern s16 getAngle(f32 dx, f32 dz);
 
@@ -30,9 +23,6 @@ extern int ObjHits_GetPriorityHit(int obj, int* outHitObj, int* outB, u32* outC)
 extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void ObjGroup_RemoveObject(int obj, int groupId);
 extern void ObjGroup_AddObject(int obj, int groupId);
-extern int* objFindTexture(int obj, int a, int b);
-extern void Obj_TransformLocalVectorByWorldMatrix(int obj, f32* in, f32* out);
-extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
 extern void Obj_FreeObject(int obj);
 
 extern void spawnExplosion(int obj, int p2, int p3, int p4, int p5, int p6, int p7, int p8, f32 size);
@@ -41,24 +31,10 @@ extern void doRumble(f32 v);
 
 extern void objRenderFn_8003b8f4(f32 v);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 extern f32 timeDelta;
-extern u8 framesThisStep;
-extern int lbl_802C22F8[4];
-extern s16 lbl_803DBED0;
-extern s32 lbl_803DBED4;
-extern s32 lbl_803DBED8;
 extern s16 lbl_803DDB20;
 
-extern f32 lbl_803E4430;
-extern f32 lbl_803E4440;
-extern f32 lbl_803E4444;
-extern f32 lbl_803E4448;
-extern f32 lbl_803E444C;
-extern f32 lbl_803E4450;
-extern f32 lbl_803E4454;
-extern f32 lbl_803E4458;
 extern int lbl_803E4460;
 extern int lbl_803E4464;
 extern f32 lbl_803E4468;
@@ -81,11 +57,8 @@ extern f32 lbl_803E44B8;
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void SpiritDoorLock_hitDetect(void);
 
-void SpiritDoorLock_release(void);
 
-void SpiritDoorLock_initialise(void);
 
 void RollingBarrel_hitDetect(void)
 {
@@ -98,7 +71,6 @@ void RollingBarrel_release(void)
 
 /* 8b "li r3, N; blr" returners. */
 int SpiritDoorLock_getExtraSize(void);
-int SpiritDoorLock_getObjectTypeId(void);
 int RollingBarrel_getExtraSize(void) { return ROLLINGBARREL_EXTRA_SIZE; }
 int RollingBarrel_getObjectTypeId(void) { return 0x0; }
 
@@ -172,7 +144,6 @@ void RollingBarrel_init(int obj, RollingBarrelMapData* params)
 
 void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode);
 
-void SpiritDoorLock_update(int obj);
 
 #pragma peephole on
 void RollingBarrel_update(int obj)
