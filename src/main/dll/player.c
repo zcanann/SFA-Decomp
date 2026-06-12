@@ -5359,6 +5359,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
     u8 changed;
     int path;
     PlayerState* inner = ((GameObject*)obj)->extra;
+    ObjHitsPriorityState* hitState = Player_GetObjHitsState(obj);
     f32 amt;
 
     r = fn_8029B9FC(obj, state, fv);
@@ -5579,9 +5580,8 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             inner->lastHitObject = 0;
         }
     }
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 0xb;
-    *(u8*)&((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId =
-        ((u8*)(inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0))[0x14];
+    hitState->hitVolumePriority = 0xb;
+    hitState->hitVolumeId = ((u8*)(inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0))[0x14];
     {
         int slot = inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0;
         f32 t = *(f32*)(slot + 0xa0);
@@ -5634,7 +5634,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         int i;
         int n;
         off = 0;
-        ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->objectHitMask = 0;
+        hitState->objectHitMask = 0;
         i = 0;
         n = 3;
         do
@@ -5671,7 +5671,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
                         bits = 0;
                         break;
                     }
-                    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->objectHitMask = bits;
+                    hitState->objectHitMask = bits;
                 }
                 if (i != inner->unk8CD)
                 {
@@ -6120,7 +6120,7 @@ int fn_802A7160(int obj, int state)
 
 void fn_8029BC08(int obj)
 {
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->objectHitMask = 0;
+    Player_GetObjHitsState(obj)->objectHitMask = 0;
     if (((GameObject*)lbl_803DE44C)->anim.classId == 0x2d)
     {
         objSetAnimField48to0((int*)lbl_803DE44C);
@@ -8087,6 +8087,7 @@ extern f32 lbl_803E8160;
 void playerDoHitDetection(int obj)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
+    ObjHitsPriorityState* hitState = Player_GetObjHitsState(obj);
     f32 dt = timeDelta;
     f32 spd;
     int sub;
@@ -8281,7 +8282,7 @@ void playerDoHitDetection(int obj)
                 if (((*(s8*)((char*)inner + 0x264) & 2) != 0 &&
                         (*(s8*)((char*)inner + 0x264) & 0x20) == 0) ||
                     *(u8*)((char*)inner + 0x262) != 0 ||
-                    ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags & 8) != 0)
+                    (hitState->flags & 8) != 0)
                 {
                     if (((PlayerState*)inner)->unk410 <= lbl_803E7EA4 &&
                         ((PlayerState*)inner)->baddie.animSpeedA > lbl_803E8160)
