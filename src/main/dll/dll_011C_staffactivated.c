@@ -312,7 +312,7 @@ void staffactivated_init(int obj, int setup)
                 scale));
     }
 
-    ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4) * scale;
+    ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * scale;
     if (((GameObject*)obj)->anim.rootMotionScale < *(f32*)&lbl_803E3C10)
     {
         ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3C10;

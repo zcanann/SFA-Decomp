@@ -91,8 +91,8 @@ void barrelpad_init(s16* obj, u8* def)
         {
             ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3F00;
         }
-        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * *(f32*)((char*)*(int**)&((
-            GameObject*)obj)->anim.modelInstance + 4);
+        ((GameObject*)obj)->anim.rootMotionScale =
+            ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     }
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }

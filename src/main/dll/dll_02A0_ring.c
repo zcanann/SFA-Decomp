@@ -203,7 +203,7 @@ void ring_update(int obj)
                 (*(s16*)(hit + 0x46) == RING_SHOT_TYPE_A || *(s16*)(hit + 0x46) == RING_SHOT_TYPE_B))
             {
                 arwarwing_addScore(getArwing(), RING_SCORE_VALUE);
-                ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
+                ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
                 Obj_SetActiveModelIndex(obj, RING_MODEL_DEFAULT);
                 ObjHits_DisableObject(obj);
                 state->flags.bit80 = 1;
@@ -220,7 +220,7 @@ void ring_update(int obj)
                 (*(s16*)(hit + 0x46) == RING_SHOT_TYPE_A || *(s16*)(hit + 0x46) == RING_SHOT_TYPE_B))
             {
                 arwarwing_addScore(getArwing(), RING_SCORE_VALUE);
-                ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
+                ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
                 Obj_SetActiveModelIndex(obj, RING_MODEL_DEFAULT);
                 ObjHits_DisableObject(obj);
                 state->flags.bit80 = 1;
@@ -270,7 +270,7 @@ void ring_update(int obj)
                     ((GameObject*)obj)->anim.rotX =
                         (s16)(((GameObject*)obj)->anim.rotX + lbl_8032B720[state->mode].f10);
                     ((GameObject*)obj)->anim.rootMotionScale = (state->pullTimer - sixty) / sixty *
-                        *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
+                        ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
                     if (lbl_803E70C0 != state->pullTimer)
                     {
                         Obj_BuildWorldTransformMatrix(obj, mtx, 0);
@@ -327,7 +327,7 @@ void ring_update(int obj)
                 ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
                 ((GameObject*)obj)->anim.rotX = 0;
                 ((GameObject*)obj)->anim.alpha = RING_ALPHA_OPAQUE;
-                ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
+                ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
                 {
                     f32 fz = lbl_803E70A0;
                     ((GameObject*)obj)->anim.velocityX = fz;
