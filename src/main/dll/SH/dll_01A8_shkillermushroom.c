@@ -8,8 +8,6 @@
 #include "main/dll/dll_01A8_shkillermushroom.h"
 
 extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 ObjHits_DisableObject();
-extern void ObjHits_EnableObject(int obj);
 extern undefined8 ObjGroup_RemoveObject();
 extern u32 randomGetRange(int min, int max);
 
