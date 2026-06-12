@@ -540,49 +540,27 @@ void explosion_hitDetect(void)
 {
 }
 
-void dimwooddoor2_free(void)
-{
-}
+void dimwooddoor2_free(void);
 
-void dimwooddoor2_hitDetect(void)
-{
-}
+void dimwooddoor2_hitDetect(void);
 
-void dimwooddoor2_release(void)
-{
-}
+void dimwooddoor2_release(void);
 
-void dimwooddoor2_initialise(void)
-{
-}
+void dimwooddoor2_initialise(void);
 
-void dll_1CE_hitDetect(void)
-{
-}
+void dll_1CE_hitDetect(void);
 
-void dll_1CE_release(void)
-{
-}
+void dll_1CE_release(void);
 
-void dll_1CE_initialise(void)
-{
-}
+void dll_1CE_initialise(void);
 
-void dimmagicbridge_free(void)
-{
-}
+void dimmagicbridge_free(void);
 
-void dimmagicbridge_hitDetect(void)
-{
-}
+void dimmagicbridge_hitDetect(void);
 
-void dimmagicbridge_release(void)
-{
-}
+void dimmagicbridge_release(void);
 
-void dimmagicbridge_initialise(void)
-{
-}
+void dimmagicbridge_initialise(void);
 
 extern int Obj_GetActiveModel(int obj);
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
@@ -590,89 +568,16 @@ extern void fn_80065574(int a, int b, int c);
 
 #pragma scheduling off
 #pragma peephole off
-void dimmagicbridge_init(u8* obj, u8* params)
-{
-    DimMagicBridgeState * sub;
-    int model;
-    int modelData;
-    s32 minY;
-    int i;
-    int j;
-    int stable;
-    f32* p;
-    f32 a, b;
-    int v;
-    s16 hh;
-
-    *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8
-    )
-    ;
-    ((GameObject*)obj)->animEventCallback = (void*)dimmagicbridge_flameSeqFn;
-    sub = ((GameObject*)obj)->extra;
-    minY = 0;
-    model = Obj_GetActiveModel((int)obj);
-    modelData = *(int*)model;
-
-    i = 0;
-    while (i < *(u16*)(modelData + 0xe4))
-    {
-        v = ObjModel_GetCurrentVertexCoords(model, i);
-        hh = *(s16*)(v + 4);
-        if (hh < minY)
-        {
-            minY = hh;
-        }
-        i++;
-    }
-
-    stable = 0;
-    while (stable == 0)
-    {
-        stable = 1;
-        j = 0;
-        p = (f32*)sub;
-        while (j < (int)sub->segmentCount - 1)
-        {
-            a = p[1];
-            b = p[2];
-            if (a < b)
-            {
-                p[1] = b;
-                p[2] = (f32)(s32)
-                a;
-                stable = 0;
-            }
-            p++;
-            j++;
-        }
-    }
-
-    sub->segmentCount = 0xa;
-    sub->minVertexY = (f32)minY;
-
-    if (GameBit_Get(0x1e9) != 0)
-    {
-        sub->ignited = 1;
-    }
-    if (sub->ignited != 0)
-    {
-        for (i = 0; i < (int)sub->segmentCount; i++)
-        {
-            sub->segmentGlow[i] = 0xff;
-            sub->segmentLit[i] = 1;
-            fn_80065574(0x11, 0, 0);
-        }
-    }
-}
+void dimmagicbridge_init(u8* obj, u8* params);
 
 /* 8b "li r3, N; blr" returners. */
 int explosion_getExtraSize(void) { return 0xa60; }
-int dimwooddoor2_getExtraSize(void) { return 0xc; }
-int dimwooddoor2_getObjectTypeId(void) { return 0x0; }
-int dll_1CE_getExtraSize(void) { return 0xc; }
-int dll_1CE_getObjectTypeId(void) { return 0x0; }
-int dimmagicbridge_getExtraSize(void) { return 0x68; }
-int dimmagicbridge_getObjectTypeId(void) { return 0x0; }
+int dimwooddoor2_getExtraSize(void);
+int dimwooddoor2_getObjectTypeId(void);
+int dll_1CE_getExtraSize(void);
+int dll_1CE_getObjectTypeId(void);
+int dimmagicbridge_getExtraSize(void);
+int dimmagicbridge_getObjectTypeId(void);
 int dim_levelcontrol_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
@@ -681,23 +586,11 @@ extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
 extern f32 lbl_803E49E8;
 extern f32 lbl_803E4A18;
 
-void dimwooddoor2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E49D0);
-}
+void dimwooddoor2_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E49E8);
-}
+void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E4A18);
-}
+void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
@@ -705,14 +598,7 @@ void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 extern void* lbl_803DDB78;
 #pragma scheduling on
 #pragma peephole on
-void dll_1CE_free(void)
-{
-    if (lbl_803DDB78 != NULL)
-    {
-        Resource_Release(lbl_803DDB78);
-    }
-    lbl_803DDB78 = NULL;
-}
+void dll_1CE_free(void);
 
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
@@ -728,71 +614,14 @@ extern int EmissionController_IsLingering(void* player);
  * when GameBit 0x1ef is on and the player's emission controller is lingering,
  * latch GameBit 0x1e8. */
 #pragma scheduling off
-void dimmagicbridge_update(int obj)
-{
-    DimMagicBridgeState * sub;
-    void* player;
-    player = Obj_GetPlayerObject();
-    sub = ((GameObject*)obj)->extra;
-    dimmagicbridge_scrollTextureChannels(obj, (u8*)sub);
-    dimmagicbridge_updateVertexWave(obj, (u8*)sub);
-    if (sub->ignited == 0)
-    {
-        if (GameBit_Get(0x1ef) != 0)
-        {
-            if (EmissionController_IsLingering(player) != 0)
-            {
-                GameBit_Set(0x1e8, 1);
-            }
-        }
-    }
-    else
-    {
-        fn_80065574(0x11, 0, 0);
-    }
-}
+void dimmagicbridge_update(int obj);
 
 /* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
  * and using mask 0x6000 + initial state byte 3 at +0. */
 #pragma peephole off
-void dimwooddoor2_init(u8* obj, u8* params)
-{
-    DimWoodDoor2State* sub;
-    f32 fz;
-    *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8
-    )
-    ;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
-    sub = ((GameObject*)obj)->extra;
-    sub->burnState = 3;
-    fz = lbl_803E49D4;
-    sub->animSpeed = fz;
-    sub->riseSpeed = fz;
-    if (GameBit_Get(*(s16*)(params + 0x1e)) != 0)
-    {
-        sub->burnState = 0;
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
-        ((GameObject*)obj)->anim.alpha = 0;
-    }
-}
+void dimwooddoor2_init(u8* obj, u8* params);
 
-void dll_1CE_init(u8* obj, u8* params)
-{
-    Dll1CEState* sub;
-    *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8
-    )
-    ;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
-    sub = ((GameObject*)obj)->extra;
-    sub->igniteCountdown = 1;
-    if (GameBit_Get(*(s16*)(params + 0x1e)) != 0)
-    {
-        sub->igniteCountdown = 0;
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
-        ((GameObject*)obj)->anim.alpha = 0;
-    }
-    sub->openVelocity = lbl_803E49F0;
-}
+void dll_1CE_init(u8* obj, u8* params);
 
 /* explosion_free: model-light release if present. */
 extern void ModelLightStruct_free(void*);
@@ -830,78 +659,14 @@ void dim_levelcontrol_free(int p1);
 extern void* objFindTexture(int obj, int a, int b);
 extern u8 framesThisStep;
 #pragma dont_inline on
-void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
-{
-    u8* tex;
-    s32 v;
-
-    tex = (u8*)objFindTexture(arg1, 0, 0);
-    *(s16*)(tex + 10) = (s16)(*(s16*)(tex + 10) + 0x14);
-    if (*(s16*)(tex + 10) > 10000)
-    {
-        *(s16*)(tex + 10) = (s16)(*(s16*)(tex + 10) - 10000);
-    }
-    *(s16*)(tex + 8) = (s16)(*(s16*)(tex + 8) + 10);
-    if (*(s16*)(tex + 8) > 10000)
-    {
-        *(s16*)(tex + 8) = (s16)(*(s16*)(tex + 8) - 10000);
-    }
-    tex = (u8*)objFindTexture(arg1, 1, 0);
-    *(s16*)(tex + 10) = (s16)(*(s16*)(tex + 10) + 0x1e);
-    if (*(s16*)(tex + 10) > 10000)
-    {
-        *(s16*)(tex + 10) = (s16)(*(s16*)(tex + 10) - 10000);
-    }
-    v = (s32) * (u16*)(obj + 0x60) + (s32)framesThisStep * 0x100;
-    if (v > 0xffff) v = v - 0xffff;
-    *(u16*)(obj + 0x60) = (u16)v;
-    v = (s32) * (u16*)(obj + 0x62) + (s32)framesThisStep * 0x80;
-    if (v > 0xffff) v = v - 0xffff;
-    *(u16*)(obj + 0x62) = (u16)v;
-}
+void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj);
 #pragma dont_inline reset
 
 /* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
  * every 16 frames, and ramp each active slot's alpha toward full; then update
  * the animated bridge mesh. */
 #pragma peephole off
-int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    u8* sub = ((GameObject*)obj)->extra;
-    int j;
-    int i;
-    animUpdate->sequenceEventActive = 0;
-    animUpdate->hitVolumePair &= ~0x40;
-    dimmagicbridge_scrollTextureChannels((int)obj, (u8*)sub);
-    if (animUpdate->triggerCommand == 1)
-    {
-        animUpdate->triggerCommand = 0;
-        sub[0x5f] = 1;
-    }
-    if (sub[0x5f] != 0)
-    {
-        ((DimmagicbridgeFlameSeqFnState*)sub)->unk64 = ((DimmagicbridgeFlameSeqFnState*)sub)->unk64 - framesThisStep;
-        if (((DimmagicbridgeFlameSeqFnState*)sub)->unk64 <= 0)
-        {
-            ((DimmagicbridgeFlameSeqFnState*)sub)->unk64 = 0x10;
-            for (j = 1; sub[0x40 + j] != 0 && j < sub[0x4f]; j++)
-            {
-            }
-            sub[0x40 + j] = 1;
-        }
-        for (i = 1; i < sub[0x4f]; i++)
-        {
-            if (sub[0x40 + i] != 0)
-            {
-                int v = sub[0x50 + i] + framesThisStep;
-                if (v > 0xff) v = 0xff;
-                sub[0x50 + i] = (u8)v;
-            }
-        }
-    }
-    dimmagicbridge_updateVertexWave((int)obj, (u8*)sub);
-    return 0;
-}
+int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -914,53 +679,7 @@ extern f32 lbl_803E49E4;
  * shake anim and decay its wobble; while idle near map-cue 0x338 bleed off
  * alpha, otherwise scan the nearby objects and, if a key object is present,
  * snap the door open (reset wobble, ring the gamebit, play the open sfx). */
-void dimwooddoor2_update(int* obj)
-{
-    int* q = *(int**)&((GameObject*)obj)->anim.placementData;
-    DimWoodDoor2State* sub = ((GameObject*)obj)->extra;
-    ObjAnim_AdvanceCurrentMove(sub->animSpeed, timeDelta, (int)obj, 0);
-    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + sub->riseSpeed;
-    if (sub->riseSpeed != lbl_803E49D4)
-    {
-        sub->riseSpeed = sub->riseSpeed * lbl_803E49D8;
-        if (sub->riseSpeed > lbl_803E49D4)
-        {
-            sub->riseSpeed = lbl_803E49D4;
-        }
-    }
-    if ((s8)sub->burnState <= 0 && *(s16*)q == 0x338 && ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E49DC)
-    {
-        int v = ((GameObject*)obj)->anim.alpha - framesThisStep * 16;
-        int* q2 = *(int**)&((GameObject*)obj)->anim.hitReactState;
-        if (v < 0) v = 0;
-        ((ObjHitsPriorityState*)q2)->flags = (s16)(((ObjHitsPriorityState*)q2)->flags & ~1);
-        ((GameObject*)obj)->anim.alpha = (u8)v;
-    }
-    else
-    {
-        int found = 0;
-        int i;
-        int* list = *(int**)((char*)obj + 0x58);
-        int n = (s8) * (s8*)((char*)list + 0x10f);
-        for (i = 0; i < n; i++)
-        {
-            int* o = *(int**)((char*)list + 0x100 + i * 4);
-            if (*(s16*)((char*)o + 0x46) == 0x18f || *(s16*)((char*)o + 0x46) == 0x1d6)
-            {
-                found = 1;
-                break;
-            }
-        }
-        if (found)
-        {
-            sub->animSpeed = lbl_803E49E0;
-            sub->riseSpeed = lbl_803E49E4;
-            sub->burnState = 0;
-            GameBit_Set(((Dimwooddoor2Placement*)q)->unk1E, 1);
-            Sfx_PlayFromObject((int)obj, 0x3e1);
-        }
-    }
-}
+void dimwooddoor2_update(int* obj);
 
 extern int Obj_IsLoadingLocked(void);
 extern int* Obj_AllocObjectSetup(int a, int b);
@@ -974,70 +693,7 @@ extern f32 lbl_803E49FC;
  * the lid open with clamped velocity while idle, and once a key object is
  * nearby, count down then ring the gamebit and (if the load isn't locked)
  * spawn the contents object seeded from the door's transform. */
-void dll_1CE_update(int* obj)
-{
-    int* q = *(int**)&((GameObject*)obj)->anim.placementData;
-    Dll1CEState* sub = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->anim.alpha == 0) return;
-    if ((s8)sub->igniteCountdown <= 0)
-    {
-        int* q2 = *(int**)&((GameObject*)obj)->anim.hitReactState;
-        ((ObjHitsPriorityState*)q2)->flags = (s16)(((ObjHitsPriorityState*)q2)->flags & ~1);
-        if (sub->opened == 1)
-        {
-            sub->openProgress = sub->openVelocity * timeDelta + sub->openProgress;
-            if (sub->openProgress > lbl_803E49EC)
-            {
-                sub->openProgress = lbl_803E49EC;
-                sub->openVelocity = lbl_803E49F0;
-            }
-            else if (sub->openProgress < lbl_803E49F4)
-            {
-                sub->openProgress = lbl_803E49F4;
-                sub->openVelocity = lbl_803E49F8;
-            }
-        }
-    }
-    if (((GameObject*)obj)->anim.seqId == 0x334) return;
-    {
-        int found = 0;
-        int i;
-        int* list = *(int**)((char*)obj + 0x58);
-        int n = (s8) * (s8*)((char*)list + 0x10f);
-        for (i = 0; i < n; i++)
-        {
-            int* o = *(int**)((char*)list + 0x100 + i * 4);
-            if (*(s16*)((char*)o + 0x46) == 0x18f || *(s16*)((char*)o + 0x46) == 0x1d6)
-            {
-                found = 1;
-                break;
-            }
-        }
-        if (!found) return;
-    }
-    sub->igniteCountdown -= 1;
-    if ((s8)sub->igniteCountdown > 0) return;
-    GameBit_Set(((Dll1CEPlacement*)q)->gameBitId, 1);
-    sub->opened = 1;
-    if ((s16)((Dll1CEPlacement*)q)->unk1A != (int)GameBit_Get(0x46d)) return;
-    if (Obj_IsLoadingLocked() == 0) return;
-    {
-        int* no = Obj_AllocObjectSetup(0x30, 0x246);
-        *(f32*)((char*)no + 8) = ((Dll1CEPlacement*)q)->posX;
-        *(f32*)((char*)no + 0xc) = lbl_803E49FC + ((Dll1CEPlacement*)q)->posYOffset;
-        *(f32*)&((ObjDef*)no)->jointData = ((Dll1CEPlacement*)q)->posZ;
-        *(u8*)((char*)no + 4) = ((Dll1CEPlacement*)q)->unk4;
-        *(u8*)((char*)no + 5) = ((Dll1CEPlacement*)q)->unk5;
-        *(u8*)((char*)no + 6) = ((Dll1CEPlacement*)q)->unk6;
-        *(u8*)((char*)no + 7) = ((Dll1CEPlacement*)q)->unk7;
-        *(s16*)((char*)no + 0x1c) = 0x17f;
-        *(s16*)((char*)no + 0x24) = -1;
-        *(s16*)((char*)no + 0x2c) = -1;
-        *(u8*)((char*)no + 0x1a) = 5;
-        *(u8*)((char*)no + 0x1b) = (u8)((s16) * (s16*)obj >> 8);
-        Obj_SetupObject(no, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
-    }
-}
+void dll_1CE_update(int* obj);
 
 typedef union
 {
@@ -1833,32 +1489,4 @@ void explosion_initialise(void)
     }
 }
 
-void dimmagicbridge_updateVertexWave(int obj, u8* sub)
-{
-    int model = (int)Obj_GetActiveModel((int)obj);
-    int mdl = *(int*)model;
-    int i;
-    int cnt;
-    for (i = 0; cnt = *(u16*)((char*)mdl + 0xe4), i < cnt; i++)
-    {
-        s16* vc = (s16*)ObjModel_GetCurrentVertexCoords(model, i);
-        s16* vb = (s16*)ObjModel_GetBaseVertexCoords(mdl, i);
-        int u = (u16)(int)(lbl_803E4A00 * ((f32)(int)vc[2] / *(f32*)sub)
-        )
-        +*(u16*)(sub + 0x60);
-        if (*vb > 0)
-        {
-            *vc = lbl_803E4A04 * mathSinf((lbl_803E4A08 * (f32)(int)u) / lbl_803E4A0C
-            )
-            +(f32)(int) * vb;
-        }
-        else
-        {
-            *vc = -(lbl_803E4A04 * mathSinf((lbl_803E4A08 * (f32)(int)u) / lbl_803E4A0C) - (f32)(int) * vb
-            )
-            ;
-        }
-    }
-    DCStoreRange((void*)ObjModel_GetCurrentVertexCoords(model, 0), cnt * 6);
-    ((GameObject*)obj)->anim.alpha = *(u8*)(sub + 0x51);
-}
+void dimmagicbridge_updateVertexWave(int obj, u8* sub);

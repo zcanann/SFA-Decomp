@@ -1497,8 +1497,17 @@ main/dll/DIMlevcontrol.c:
 main/dll/DIM2conveyor.c:
 	.text       start:0x801B3768 end:0x801B3DE4
 
-main/dll/DIM2flameburst.c:
-	.text       start:0x801B3DE4 end:0x801B63F4
+main/dll/dll_01CA_dimexplosio.c:
+	.text       start:0x801B3DE4 end:0x801B57BC
+
+main/dll/dll_01CB_dimwooddoor.c:
+	.text       start:0x801B57BC end:0x801B5A28
+
+main/dll/dll_01CE_dll1ce.c:
+	.text       start:0x801B5A28 end:0x801B5D48
+
+main/dll/dll_01CC_dimmagicbri.c:
+	.text       start:0x801B5D48 end:0x801B63F4
 
 main/dll/dll_01CD_dimlevelco.c:
 	.text       start:0x801B63F4 end:0x801B6B44
