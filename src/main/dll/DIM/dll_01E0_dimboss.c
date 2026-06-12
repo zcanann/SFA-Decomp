@@ -1,4 +1,4 @@
-#include "main/dll/DIM/DIMboss.h"
+#include "main/dll/DIM/dll_01E0_dimboss.h"
 #include "main/resource.h"
 
 

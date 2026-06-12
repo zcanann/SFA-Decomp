@@ -1,7 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
-#include "main/dll/SC/SCcollectables.h"
+#include "main/dll/SC/dll_01B0_shswapston.h"
 #include "main/objanim_update.h"
 #include "main/objfx.h"
 

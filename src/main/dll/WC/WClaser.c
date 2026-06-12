@@ -1,5 +1,5 @@
 /* === moved from main/dll/WC/WCpressureSwitch.c [801EFF7C-801F02F0) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/WC/WCpressureSwitch.h"
+#include "main/dll/WC/dll_01F9_wmobjcreator.h"
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -235,7 +235,7 @@ int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 }
 
 #include "main/dll/WC/WClaser.h"
-#include "main/dll/WC/WCpressureSwitch.h"
+#include "main/dll/WC/dll_01F9_wmobjcreator.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"

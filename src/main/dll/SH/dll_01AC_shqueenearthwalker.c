@@ -1,6 +1,6 @@
 #include "main/dll/SH/SHrocketmushroom.h"
 #include "main/game_object.h"
-#include "main/dll/SH/SHspore.h"
+#include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
 #include "main/mapEvent.h"
 #include "main/objseq.h"
 

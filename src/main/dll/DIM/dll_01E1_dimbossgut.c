@@ -1,4 +1,4 @@
-#include "main/dll/DIM/DIMbossgut.h"
+#include "main/dll/DIM/dll_01E1_dimbossgut.h"
 #include "main/game_object.h"
 
 extern void objSetSlot(void* obj, int resourceId);

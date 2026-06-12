@@ -324,7 +324,7 @@ void SB_CloudRunner_update(int obj);
 #pragma peephole reset
 #pragma peephole reset
 
-#include "main/dll/WC/WCpressureSwitch.h"
+#include "main/dll/WC/dll_01F9_wmobjcreator.h"
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"

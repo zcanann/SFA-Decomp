@@ -395,7 +395,7 @@ void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorStat
 
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/dll/MMP/mmp_levelcontrol.h"
+#include "main/dll/MMP/dll_013B_wallanimator.h"
 
 typedef struct WallanimatorPlacement
 {

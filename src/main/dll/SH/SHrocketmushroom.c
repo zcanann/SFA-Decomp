@@ -1,7 +1,7 @@
 /* === moved from main/dll/SH/SHkillermushroom.c [801D3378-801D383C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/expgfx.h"
 #include "main/game_object.h"
-#include "main/dll/SH/SHkillermushroom.h"
+#include "main/dll/SH/dll_01A9_bombplant.h"
 #include "main/objseq.h"
 
 typedef struct BombplantsporeStartDriftBurstPlacement
@@ -324,7 +324,7 @@ void bombplant_update(void* obj);
 #include "main/dll/path_control_interface.h"
 #include "main/objseq.h"
 #include "main/dll/SH/SHrocketmushroom.h"
-#include "main/dll/SH/SHspore.h"
+#include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
 
 
 extern uint GameBit_Get(int bit);

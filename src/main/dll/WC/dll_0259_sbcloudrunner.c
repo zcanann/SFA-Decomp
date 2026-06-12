@@ -1,7 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
-#include "main/dll/WC/WClevcontrol.h"
+#include "main/dll/WC/dll_0259_sbcloudrunner.h"
 #include "main/resource.h"
 
 typedef struct SBCloudRunnerState

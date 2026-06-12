@@ -753,7 +753,7 @@ main/dll/mmp_moonrock.c:
 main/dll/MMP/mmp_barrel.c:
 	.text       start:0x80192394 end:0x80194408
 
-main/dll/MMP/mmp_levelcontrol.c:
+main/dll/MMP/dll_013B_wallanimator.c:
 	.text       start:0x80194408 end:0x801948C0
 
 main/dll/MMP/MMP_asteroid.c:
@@ -865,11 +865,11 @@ main/dll/DIM/DIM2lift.c:
 main/dll/DIM/DIM2icicle.c:
 	.text       start:0x801BB598 end:0x801BCB34
 
-main/dll/DIM/DIMboss.c:
+main/dll/DIM/dll_01E0_dimboss.c:
 	.text       start:0x801BCB34 end:0x801BDBE0
 	.data       start:0x80325B04 end:0x80325B44
 
-main/dll/DIM/DIMbossgut.c:
+main/dll/DIM/dll_01E1_dimbossgut.c:
 	.text       start:0x801BDBE0 end:0x801BDCF8
 	.data       start:0x80325BF8 end:0x80325C30
 
@@ -903,7 +903,7 @@ main/dll/DF/DFbarrelanim.c:
 main/dll/DF/dll_0175_dfropenode.c:
 	.text       start:0x801C1740 end:0x801C26E0
 
-main/dll/DF/dll_0177_dfshdoor2s.c:
+main/dll/DF/dll_0177_dfshdoor2speci.c:
 	.text       start:0x801C26E0 end:0x801C2914
 
 main/dll/dll_017A_spiritprize.c:
@@ -969,7 +969,7 @@ main/dll/creator1D6.c:
 main/dll/projball1D8.c:
 	.text       start:0x801CFD68 end:0x801D083C
 
-main/dll/NW/NWsfx.c:
+main/dll/NW/dll_01A7_ediblemushroom.c:
 	.text       start:0x801D083C end:0x801D1BFC
 
 main/dll/NW/dll_1DC.c:
@@ -981,13 +981,13 @@ main/dll/dim_boss.c:
 main/dll/dim_bossgut.c:
 	.text       start:0x801D1BFC end:0x801D286C
 
-main/dll/SH/SHkillermushroom.c:
+main/dll/SH/dll_01A9_bombplant.c:
 	.text       start:0x801D286C end:0x801D3378
 
 main/dll/SH/SHrocketmushroom.c:
 	.text       start:0x801D3378 end:0x801D4364
 
-main/dll/SH/SHspore.c:
+main/dll/SH/dll_01AC_shqueenearthwalker.c:
 	.text       start:0x801D4364 end:0x801D4CD0
 
 main/dll/SH/dll_1E7.c:
@@ -1002,7 +1002,7 @@ main/dll/SH/dll_1E8.c:
 main/dll/SH/SHthorntail.c:
 	.text       start:0x801D5174 end:0x801D58E4
 
-main/dll/SC/dll_01AD_shthorntai.c:
+main/dll/SC/dll_01AD_shthorntail.c:
 	.text       start:0x801D58E4 end:0x801D6914
 
 main/dll/SC/SCchieflightfoot.c:
@@ -1011,10 +1011,10 @@ main/dll/SC/SCchieflightfoot.c:
 main/dll/SC/SClantern.c:
 	.text       start:0x801D6C04 end:0x801D6D98
 
-main/dll/SC/SCcollectables.c:
+main/dll/SC/dll_01B0_shswapston.c:
 	.text       start:0x801D6D98 end:0x801D7BA8
 
-main/dll/IM/IMsnowbike.c:
+main/dll/IM/dll_01AE_shlevelcontrol.c:
 	.text       start:0x801D7BA8 end:0x801D981C
 
 main/dll/SP/SPdrape.c:
@@ -1106,7 +1106,7 @@ main/dll/DR/DRhightop.c:
 main/dll/DR/DRpickup.c:
 	.text       start:0x801EC1AC end:0x801EC7A0
 
-main/dll/BW/dll_0255_crsnowbike.c:
+main/dll/BW/dll_0255_snowbike.c:
 	.text       start:0x801EC7A0 end:0x801EE088
 
 main/dll/BW/BWalphaanim.c:
@@ -1115,13 +1115,13 @@ main/dll/BW/BWalphaanim.c:
 main/dll/WC/WCpushblock.c:
 	.text       start:0x801EE0C0 end:0x801EE668
 
-main/dll/WC/WClevcontrol.c:
+main/dll/WC/dll_0259_sbcloudrunner.c:
 	.text       start:0x801EE668 end:0x801EF360
 
 main/dll/WC/WCbeacon.c:
 	.text       start:0x801EF360 end:0x801EF360
 
-main/dll/WC/WCpressureSwitch.c:
+main/dll/WC/dll_01F9_wmobjcreator.c:
 	.text       start:0x801EF360 end:0x801EFF7C
 
 main/dll/WC/WCdial.c:

@@ -1,4 +1,4 @@
-#include "main/dll/NW/NWsfx.h"
+#include "main/dll/NW/dll_01A7_ediblemushroom.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
