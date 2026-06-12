@@ -107,10 +107,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 static inline int* DIM2snowball_GetActiveModel(void* obj);
 
-extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_DisableObject();
 
 extern EffectInterface** gPartfxInterface;
 
@@ -128,9 +125,6 @@ extern EffectInterface** gPartfxInterface;
  * PAL Size: TODO
  */
 
-extern void getEnvfxActImmediately(int a, int b, int id, int d);
-extern void getEnvfxAct(int a, int b, int id, int d);
-extern void Music_Trigger(int id, int value);
 extern f32 timeDelta;
 
 
@@ -259,44 +253,30 @@ extern f32 timeDelta;
 
 
 
-void dll_1DA_free(void);
 
 /* 8b "li r3, N; blr" returners. */
-int dimtruthhornice_getExtraSize(void);
-int dll_1DA_getExtraSize(void);
-int dll_1DA_getObjectTypeId(void);
 
 /* 16b chained patterns. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E4A30;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E4AD8;
 
 
 
 
 
-void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* render-with-fn(lbl) (no visibility check). */
-extern f32 lbl_803E4A38;
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
 /* dim2conveyor_setScale: per-area scale/sign + music latch for two specific map ids. */
-extern void Music_Trigger(int trackId, int restart);
 
 
-extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, uint* outHitVolume);
-extern float Vec_distance(float* a, float* b);
 extern void* Obj_GetPlayerObject(void);
-extern f32 lbl_803E4ADC;
 
 /* dim2pathgenerator hitDetect: on hit type 0xE, scale velocity by const and SFX. */
-void dll_1DA_hitDetect(int obj);
 
-extern int ObjList_FindObjectById(int id);
 extern u8 lbl_803DBF20;
 
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
@@ -308,7 +288,6 @@ extern u8 lbl_803DBF20;
 
 
 
-extern int getSaveGameLoadStatus(void);
 
 
 
@@ -320,12 +299,10 @@ extern void* mmAlloc(int size, int a, int b);
 
 
 
-extern u8 framesThisStep;
 
 
 
 
-extern void Curve_BuildHermiteCoeffs(void);
 
 
 /* segment pragma-stack balance (re-split): */
@@ -348,41 +325,10 @@ extern void Curve_BuildHermiteCoeffs(void);
 #include "main/dll/DIM/DIM2projrock.h"
 #include "main/objanim_internal.h"
 
-typedef struct Dim2lavacontrolPlacement
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    s8 unk18;
-    u8 unk19;
-    u8 unk1A;
-    u8 unk1B;
-    s16 unk1C;
-    s16 unk1E;
-} Dim2lavacontrolPlacement;
 
 
-typedef struct Dim2iciclePlacement
-{
-    u8 pad0[0x1 - 0x0];
-    u8 unk1;
-    u8 pad2[0x3 - 0x2];
-    u8 unk3;
-    u8 unk4;
-    u8 pad5[0xC - 0x5];
-    f32 unkC;
-    u8 pad10[0x1E - 0x10];
-    s16 unk1E;
-} Dim2iciclePlacement;
 
 
-typedef struct Dll1DAState
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 pad7[0x8 - 0x7];
-} Dll1DAState;
 
 
 typedef struct Dll1DFState
@@ -396,46 +342,12 @@ typedef struct Dll1DFState
 } Dll1DFState;
 
 
-typedef struct Dll1DBPlacement
-{
-    u8 pad0[0x1 - 0x0];
-    u8 unk1;
-    u8 pad2[0x3 - 0x2];
-    u8 unk3;
-    u8 unk4;
-    u8 pad5[0xC - 0x5];
-    f32 unkC;
-    u8 pad10[0x1E - 0x10];
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} Dll1DBPlacement;
 
 
-typedef struct Dim2lavacontrolState
-{
-    s8 unk0;
-    u8 pad1[0x2 - 0x1];
-    s8 unk2;
-    u8 pad3[0x24 - 0x3];
-    f32 unk24;
-} Dim2lavacontrolState;
 
 
-typedef struct Dll1DBState
-{
-    s8 unk0;
-    u8 pad1[0x2 - 0x1];
-    s8 unk2;
-    u8 pad3[0x4 - 0x3];
-    u8 unk4;
-    u8 pad5[0x24 - 0x5];
-    f32 unk24;
-} Dll1DBState;
 
 
-extern undefined4 ObjHits_AddContactObject();
-extern int ObjHits_GetPriorityHit();
 
 
 /*
@@ -526,132 +438,43 @@ void FUN_801b9cc4(int param_1)
 #pragma peephole off
 void dll_1DA_release(void);
 
-void dll_1DA_initialise(void);
 
-void dll_1DB_free(void);
 
-void dll_1DB_hitDetect(void);
 
-void dll_1DB_release(void);
 
-void dll_1DB_initialise(void);
 
-void dim2icefloe_free(void);
 
-void dim2icefloe_hitDetect(void);
 
-void dim2icefloe_release(void);
 
-void dim2icefloe_initialise(void);
 
-void dim2icicle_free(void);
 
-void dim2icicle_hitDetect(void);
 
-void dim2icicle_release(void);
 
-void dim2icicle_initialise(void);
 
-extern u32 GameBit_Get(int id);
-extern f32 lbl_803E4B80;
 
-void dim2icicle_init(int obj, s8* p);
 
 /* dim2icefloe: per-frame curve-follow update + path-param init. */
-typedef struct
-{
-    u8 finished : 1;
-    u8 rest : 7;
-} IceFloeFlags;
 
-extern void Curve_BuildHermiteCoeffs();
-extern void fn_80296D20(void* player, int obj);
-extern f32 lbl_803E4B34;
-extern f32 lbl_803E4B38;
-extern f32 lbl_803E4B3C;
 
-void dim2icefloe_update(int obj);
 
-extern f32 lbl_803E4B48;
-extern f32 lbl_803E4B4C;
-extern f32 lbl_803E4B50;
-extern f32 lbl_803E4B54;
-extern f32 lbl_803E4B58;
 
-void dim2icefloe_init(int obj, int p);
 
 /* dim2icicle_update: state machine -- wait for hit, shake, drop into water, melt. */
-extern WaterfxInterface** gWaterfxInterface;
-extern f32 lbl_803E4B6C;
-extern f32 lbl_803E4B70;
-extern f32 lbl_803E4B74;
-extern f32 lbl_803E4B78;
-extern f32 lbl_803E4B7C;
 
-void dim2icicle_update(int obj);
 
 /* dll_1DB_update: geyser state machine driven by player standing on it. */
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern f32 lbl_803E4B0C;
-extern f32 lbl_803E4B10;
-extern f32 lbl_803E4B14;
-extern f32 lbl_803E4B18;
-extern f32 lbl_803E4B1C;
-extern f32 lbl_803E4B20;
-extern f32 lbl_803E4B24;
 
-void dll_1DB_update(int obj);
 
 /* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
  * fall, land on contact object, clamp to floor height. */
-extern f32 sqrtf(f32 x);
-extern void saveGame_saveObjectPos(int obj);
-extern f32 lbl_803E4AE0;
-extern f32 lbl_803E4AE4;
-extern f32 lbl_803E4AE8;
-extern f32 lbl_803E4AEC;
-extern f32 lbl_803E4AF0;
-extern f32 lbl_803E4AF4;
-extern f32 lbl_803E4AF8;
-extern f32 lbl_803E4AFC;
-extern f32 lbl_803E4B00;
-extern const f32 lbl_803E4B04;
 
-typedef struct
-{
-    int hit[7];
-    f32 nx;
-    f32 ny;
-    f32 nz;
-    int pad[8];
-} RockHitInfo;
 
-void dll_1DA_update(int obj);
 
 /* fn_801B9ECC: DIM boss player-vs-baddie reaction dispatcher -- picks a player anim
  * from distance/anim-state via the interface vtables. */
-extern int* gBaddieControlInterface;
-extern int* gPlayerInterface;
-extern u8 lbl_803DDB84;
-extern u8 lbl_80325960[];
-extern u8 gDIMbossAnimController[];
-extern int fn_801BC2D8(int a, int obj);
-extern f32 lbl_803E4BB8;
 
-typedef void (*BaddieQueryFn)(int a, int objId, int n, u16* anim, u16* pad, u16* dist);
-typedef u8 (*BaddieCheckFn)(int a, int obj, f32 d);
-typedef void (*PlayerAnimFn)(int a, int obj, int animId);
 
-typedef struct
-{
-    u8 pad[0x168];
-    s16 surprised[6]; /* 0x168 */
-    s16 group3[8]; /* 0x174 */
-    s16 group2[8]; /* 0x184 */
-    s16 group1[8]; /* 0x194 */
-} DimAnimTable;
 
-int fn_801B9ECC(int a, int obj);
 
 void dll_1DF_free(void)
 {
@@ -671,29 +494,16 @@ void dll_1DF_initialise(void)
 
 /* 8b "li r3, N; blr" returners. */
 int dll_1DB_getExtraSize(void);
-int dll_1DB_getObjectTypeId(void);
-int dim2icefloe_getExtraSize(void);
-int dim2icefloe_getObjectTypeId(void);
-int dim2icicle_getExtraSize(void);
-int dim2icicle_getObjectTypeId(void);
-int dim2lavacontrol_getExtraSize(void);
 int dll_1DF_getExtraSize(void) { return 0x28; }
 int dll_1DF_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4B08;
-extern f32 lbl_803E4B30;
-extern f32 lbl_803E4B68;
-extern f32 lbl_803E4B90;
 extern f32 lbl_803E4B98;
 
-void dll_1DB_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dim2icefloe_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dim2icicle_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dim2lavacontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void dll_1DF_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -741,10 +551,7 @@ void dll_1DF_init(void* obj, void* p)
 void dim2lavacontrol_setScale(void* obj);
 
 /* dim2lavacontrol_free: stop lava sfx, kill the lava music track, refresh time-of-day. */
-extern void fn_8004C1E4(int sfxId, f32 vol);
-extern void timeOfDayFn_80055000(void);
 
-void dim2lavacontrol_free(void);
 
 /* dll_1DF_update: per-frame texture-color update + proximity-driven expgfx trigger.
  *   - objFindTexture(obj,0,0); if non-null and obj.s16_46 == 209 set tex.color
@@ -801,12 +608,6 @@ void dll_1DF_update(void* obj)
  *              from a GameBit, and OR-set bit 0x2000 in obj->flags_B0. */
 void dll_1DB_init(void* obj, void* p);
 
-extern void envFxActFn_800887f8(int a);
-extern u8 lbl_803DBF28[8];
 
-void dim2lavacontrol_init(int obj, int param2);
 
-extern int fn_802966D4(void* obj, f32* out);
-extern void SCGameBitLatch_UpdateInverted(void* p, int mask, int a, int b, int e1, int e2);
 
-void dim2lavacontrol_update(int obj);
