@@ -48,7 +48,7 @@ void objFn_80198fa4(s16* obj, void* arg2)
     obj[0] = (s16)((*(u8*)((char*)arg2 + 0x3d) & 0x3f) << 10);
     obj[1] = (s16)(*(u8*)((char*)arg2 + 0x3e) << 8);
     *(f32*)(obj + 4) =
-        *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4) *
+        ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase *
         ((float)(u32) * (u8*)((char*)arg2 + 0x3a)) * lbl_803E40DC;
 
     vec[0] = obj[0];

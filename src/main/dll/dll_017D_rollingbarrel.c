@@ -196,7 +196,7 @@ void RollingBarrel_update(int obj)
             }
 
             state->hitVolumeSlot = 10;
-            ObjHitbox_SetSphereRadius(obj, *(u8*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x62));
+            ObjHitbox_SetSphereRadius(obj, ((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius);
 
             if (descriptor->objectDefId == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE)
             {
@@ -334,8 +334,7 @@ void fn_801A5D88(int obj, int explosionVariant)
     state->timer = lbl_803E4468;
     ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     ObjHitbox_SetSphereRadius(obj,
-                              (s32)(lbl_803E446C * (f32)(u32) * (u8*)(*(int*)&((GameObject*)obj)->anim.modelInstance +
-                                  0x62)));
+                              (s32)(lbl_803E446C * (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
     player = (int)Obj_GetPlayerObject();
     if ((((GameObject*)player)->objectFlags & 0x1000) == 0)
     {

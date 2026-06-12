@@ -384,7 +384,7 @@ void explodable_init(int obj, int setup)
         *(u8*)(setup + 0x3d) = 0x14;
     }
     ((GameObject*)obj)->anim.rootMotionScale =
-        *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4) * (f32)(int) * (s8*)(setup + 0x3d) / lbl_803E435C;
+        ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * (f32)(int) * (s8*)(setup + 0x3d) / lbl_803E435C;
     e = lbl_80322DA0;
     if ((e[((DrExplodableState*)state)->unk6E5].flags & 1) != 0)
     {

@@ -784,7 +784,7 @@ void pushable_init(s16* obj, char* def)
     model = (int*)*entry;
     state->unk_B0 = *(int*)&((PushableObjectDef*)def)->unk1C;
     state->scale = (f32) * (u16*)&((PushableObjectDef*)def)->unk20 / lbl_803E35CC;
-    state->scale = state->scale * *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
+    state->scale = state->scale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     state->cullDistance = state->scale * (f32)(u16)
     modelFileHeaderGetCullDistance(*entry) + lbl_803E3558;
     state->timer_0x14 = lbl_803E3528;

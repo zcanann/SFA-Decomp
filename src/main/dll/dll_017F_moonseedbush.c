@@ -280,8 +280,8 @@ void MoonSeedBush_init(int obj, int data)
     {
         ((GameObject*)obj)->anim.rootMotionScale = lbl_803E44D0;
     }
-    ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * *(f32*)(*(int*)&((GameObject*)
-        obj)->anim.modelInstance + 4);
+    ((GameObject*)obj)->anim.rootMotionScale =
+        ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     if (*(s16*)(data + 0x1a) != -1)
     {
         state->seedState = (u8)GameBit_Get(*(s16*)(data + 0x1a));

@@ -1045,7 +1045,7 @@ void DIMSnowHorn1_func22(int obj, f32 scale)
     transform.rotX = 0;
     transform.rotY = 0;
     transform.rotZ = 0;
-    transform.scale = scale / *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
+    transform.scale = scale / ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     setMatrixFromObjectPos((f32*)lbl_803DB0F0, (s16*)&transform);
     mtx44_mult(lbl_803DB0F0, pathMtx, lbl_803DB0F0);
     fn_8003B950(lbl_803DB0F0);
