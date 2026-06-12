@@ -1032,6 +1032,7 @@ void dbegg_update(int obj)
     extern f32 lbl_803E6264;
     extern f32 lbl_803E6268;
     int data = *(int*)&((GameObject*)obj)->anim.placementData;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     int player;
     int blob;
     int p2;
@@ -1057,13 +1058,13 @@ void dbegg_update(int obj)
                             ((GameObject*)obj)->anim.localPosZ) != -1)
     {
         dbegg_processMessages(obj);
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~0x400;
+        hitState->flags &= ~0x400;
         switch (((DbEggState*)blob)->mode)
         {
         case 5:
             if (((GameObject*)obj)->unkF8 == 0)
             {
-                (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags |= 1;
+                hitState->flags |= 1;
             }
             if (fn_801FE560(obj, &h, lbl_803E61C8, *(f32*)&lbl_803E61C8, 1) == 0)
             {
@@ -1111,7 +1112,7 @@ void dbegg_update(int obj)
         case 1:
             if (((GameObject*)obj)->unkF8 == 0)
             {
-                (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags |= 1;
+                hitState->flags |= 1;
             }
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
             break;
@@ -1130,7 +1131,7 @@ void dbegg_update(int obj)
                     ((DbEggState*)blob)->mode = 0xa;
                 }
             }
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags |= 0x400;
+            hitState->flags |= 0x400;
             fz = lbl_803E61C8;
             b3[0] = lbl_803E61C8;
             b3[1] = fz;
@@ -1220,7 +1221,7 @@ void dbegg_update(int obj)
             }
             else
             {
-                (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+                hitState->flags &= ~1;
                 ObjMsg_SendToObject(player, 0x100008, obj, 0x38000);
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
             }
@@ -1400,7 +1401,7 @@ void dbegg_update(int obj)
                         {
                             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
                             ((DbEggState*)blob)->mode = 6;
-                            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+                            hitState->flags &= ~1;
                         }
                     }
                 }
