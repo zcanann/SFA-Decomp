@@ -216,14 +216,11 @@ main/dll/dll_00C0_projcore2.c:
 main/dll/dll_00C1_projcore3.c:
 	.text       start:0x80100A20 end:0x80100A58
 
-main/dll/dll_89.c:
-	.text       start:0x80100A58 end:0x80100A88
-
-main/dll/dll_8A.c:
-	.text       start:0x80100A88 end:0x80100A8C
+main/dll/dll_00C2_projdfp1r.c:
+	.text       start:0x80100A58 end:0x80100A90
 
 main/dll/dll_8B.c:
-	.text       start:0x80100A8C end:0x80100AA4
+	.text       start:0x80100A90 end:0x80100AA4
 
 main/dll/dll_8C.c:
 	.text       start:0x80100AA4 end:0x80100AA4
