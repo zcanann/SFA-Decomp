@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/DR/DRpushcart.h"
+#include "main/dll/dll_002E_moveLib.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
@@ -64,7 +65,6 @@ extern void warpToMap(int mapId, int flag);
 extern int getCurUiDll(void);
 extern int* getDLL16(void);
 extern void playerAddMoney(void* player, int amount);
-extern int dll_2E_func07(int obj, u8* data, int p3, int p4, int p5);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E5A24;
 extern f32 lbl_803E5A34;
@@ -281,7 +281,7 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
         }
         return 0;
     }
-    if (dll_2E_func07(obj, (u8*)seq, state + 0x35C, 0, 0) != 0)
+    if (dll_2E_func07(obj, seq, (char*)(state + 0x35C), 0, 0) != 0)
     {
         return 1;
     }
