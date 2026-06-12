@@ -1043,9 +1043,14 @@ main/dll/wallanimator.c:
 	.text       start:0x80169360 end:0x80169EF4
 	.data       start:0x80320458 end:0x80320490
 
-main/dll/xyzanimator.c:
-	.text       start:0x80169EF4 end:0x8016B230
-	.data       start:0x80320490 end:0x803205E8
+main/dll/dll_00D8_pinponspike.c:
+	.text       start:0x80169EF4 end:0x8016A3C8
+
+main/dll/dll_00D9_pollen.c:
+	.text       start:0x8016A3C8 end:0x8016A8E0
+
+main/dll/dll_00DA_pollenfragm.c:
+	.text       start:0x8016A8E0 end:0x8016B230
 
 main/dll/dll_00DB_mikabomb.c:
 	.text       start:0x8016B230 end:0x8016B710
