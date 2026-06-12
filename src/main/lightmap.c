@@ -1163,8 +1163,8 @@ void renderObjects(s8* arg0)
     {
         idx = keys[i] & 0x3ff;
         obj = (u8*)objects[idx];
-        flags = *(u32*)((u8*)((GameObject*)obj)->anim.modelInstance + 0x44);
-        if ((flags & 0x800) != 0 || ((*(u8**)&((GameObject*)obj)->anim.modelInstance)[0x5f] & 0x10) != 0)
+        flags = ((GameObject*)obj)->anim.modelInstance->flags;
+        if ((flags & 0x800) != 0 || ((((GameObject*)obj)->anim.modelInstance->renderFlags & 0x10) != 0))
         {
             if (arg0[idx] != 0 && lbl_803DCDF0 < 0x14)
             {
@@ -1187,7 +1187,7 @@ void renderObjects(s8* arg0)
                 ((LightmapQEnt*)qbase)[lbl_803DCE30].d = 2;
                 lbl_803DCE30++;
             }
-            else if (*(s16*)((u8*)((GameObject*)obj)->anim.modelInstance + 0x48) == 3 && (((GameObject*)obj)->anim.flags
+            else if (((GameObject*)obj)->anim.modelInstance->shadowType == 3 && (((GameObject*)obj)->anim.flags
                 & OBJANIM_FLAG_HIDDEN) == 0 && (((GameObject*)obj)->anim.modelState->flags &
                 OBJ_MODEL_STATE_SHADOW_VISIBLE))
             {
