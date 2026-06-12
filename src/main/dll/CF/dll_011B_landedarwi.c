@@ -212,9 +212,7 @@ extern f32 FLOAT_803e4848;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void infopoint_hitDetect(void)
-{
-}
+void infopoint_hitDetect(void);
 
 
 /*
@@ -505,74 +503,46 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void flammablevine_release(void)
-{
-}
+void flammablevine_release(void);
 
-void flammablevine_initialise(void)
-{
-}
+void flammablevine_initialise(void);
 
-void dll_109_hitDetect_nop(void)
-{
-}
+void dll_109_hitDetect_nop(void);
 
-void dll_109_release_nop(void)
-{
-}
+void dll_109_release_nop(void);
 
-void dll_109_initialise_nop(void)
-{
-}
+void dll_109_initialise_nop(void);
 
-void Fall_Ladders_render(void)
-{
-}
+void Fall_Ladders_render(void);
 
-void Fall_Ladders_hitDetect(void)
-{
-}
+void Fall_Ladders_hitDetect(void);
 
-void Fall_Ladders_release(void)
-{
-}
+void Fall_Ladders_release(void);
 
-void Fall_Ladders_initialise(void)
-{
-}
+void Fall_Ladders_initialise(void);
 
-void infopoint_free(void)
-{
-}
+void infopoint_free(void);
 
-void infopoint_release(void)
-{
-}
+void infopoint_release(void);
 
-void infopoint_initialise(void)
-{
-}
+void infopoint_initialise(void);
 
-void decoration11a_free(void)
-{
-}
+void decoration11a_free(void);
 
-void decoration11a_update(void)
-{
-}
+void decoration11a_update(void);
 
 /* 8b "li r3, N; blr" returners. */
-int flammablevine_getExtraSize(void) { return 0x14; }
-int flammablevine_getObjectTypeId(void) { return 0x0; }
-int dll_109_getExtraSize_ret_16(void) { return 0x10; }
-int dll_109_getObjectTypeId(void) { return 0x0; }
-int Fall_Ladders_SeqFn(void) { return 0x0; }
-int Fall_Ladders_getExtraSize(void) { return 0xc; }
-int Fall_Ladders_getObjectTypeId(void) { return 0x0; }
-int coldwatercontrol_getExtraSize(void) { return 0x8; }
-int infopoint_getExtraSize(void) { return 0x20; }
-int infopoint_getObjectTypeId(void) { return 0x0; }
-int decoration11a_getExtraSize(void) { return 0x1c; }
+int flammablevine_getExtraSize(void);
+int flammablevine_getObjectTypeId(void);
+int dll_109_getExtraSize_ret_16(void);
+int dll_109_getObjectTypeId(void);
+int Fall_Ladders_SeqFn(void);
+int Fall_Ladders_getExtraSize(void);
+int Fall_Ladders_getObjectTypeId(void);
+int coldwatercontrol_getExtraSize(void);
+int infopoint_getExtraSize(void);
+int infopoint_getObjectTypeId(void);
+int decoration11a_getExtraSize(void);
 int landed_arwing_getExtraSize(void) { return 0x1c; }
 
 typedef struct FallLaddersState
@@ -606,65 +576,7 @@ extern int ViewFrustum_IsSphereVisible(f32* pos, f32 radius);
 /* Carryable impact state machine that spawns break particles, hides, then respawns. */
 #pragma scheduling off
 #pragma peephole off
-void carryable_break_respawn_update(int obj)
-{
-    CarryableBreakRespawnState* state;
-    int def;
-    int setup;
-    u32 hitVolume;
-
-    state = ((GameObject*)obj)->extra;
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
-    switch (state->state)
-    {
-    case 0:
-        (*(void (*)(int, CarryableBreakRespawnState*))(*(int*)(*gCarryableInterface + 8)))(obj, state);
-        if (ObjHits_GetPriorityHit(obj, 0, 0, &hitVolume) != 0)
-        {
-            (*(void (*)(int, CarryableBreakRespawnState*))(*(int*)(*gCarryableInterface + 0x30)))(obj, state);
-            Sfx_PlayFromObject(obj, SFXen_rfall5_c);
-            ObjHitbox_SetSphereRadius(obj, 0x28);
-            ObjHits_SetHitVolumeSlot(obj, 5, 4, 0);
-            if (Obj_IsLoadingLocked() != 0)
-            {
-                setup = Obj_AllocObjectSetup(0x24, 0x253);
-                ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-                ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
-                ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-                Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                *(int*)&((GameObject*)obj)->anim.parent);
-            }
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x355, NULL, 0, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x352, NULL, 0, -1, NULL);
-            state->state = 1;
-        }
-        break;
-    case 1:
-        ObjHits_ClearHitVolumes();
-        ObjHits_DisableObject(obj);
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-        state->state = 2;
-        state->timer = lbl_803E3B44;
-        ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)def)->posX;
-        ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
-        ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)def)->posZ;
-        break;
-    case 2:
-        state->timer += timeDelta;
-        if (state->timer > lbl_803E3B48)
-        {
-            if (ViewFrustum_IsSphereVisible(&((GameObject*)obj)->anim.localPosX,
-                                            ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.
-                                            rootMotionScale) == 0)
-            {
-                ObjHits_EnableObject(obj);
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
-                state->state = 0;
-            }
-        }
-        break;
-    }
-}
+void carryable_break_respawn_update(int obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3AF8;
@@ -692,230 +604,25 @@ extern void* getTrickyObject(void);
 extern f32 lbl_803E3B70;
 extern f32 lbl_803E3B78;
 
-void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E3AF8);
-}
+void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void infopoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E3B70);
-}
+void infopoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E3B78);
-}
+void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void flammablevine_free(int x) { ObjGroup_RemoveObject(x, 0x31); }
+void flammablevine_free(int x);
 
-void flammablevine_hitDetect(int obj)
-{
-    u8* state;
-    u8* def;
-    int hitObj;
+void flammablevine_hitDetect(int obj);
 
-    state = ((GameObject*)obj)->extra;
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if ((state[0] & 3) == 0)
-    {
-        if (ObjHits_GetPriorityHit(obj, 0, 0, &hitObj) == 0x1a)
-        {
-            if (((FlammablevinePlacement*)def)->unk1E != -1)
-            {
-                GameBit_Set(((FlammablevinePlacement*)def)->unk1E, 1);
-                Sfx_PlayFromObject(0, 0x409);
-            }
-            *(f32*)(state + 4) = lbl_803E3AFC;
-            state[0] = state[0] | 1;
-        }
-    }
-}
+void flammablevine_init(int obj, int def);
 
-void flammablevine_init(int obj, int def)
-{
-    u8* state;
-    f32 scale;
-
-    state = ((GameObject*)obj)->extra;
-    ObjGroup_AddObject(obj, 0x31);
-    *(s16*)obj = (s16)((s8) * (u8*)(def + 0x18) << 8);
-
-    ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3B20 * ((f32)((FlammablevineObjectDef*)def)->unk1A /
-        lbl_803E3B24);
-    if (((GameObject*)obj)->anim.rootMotionScale <= *(f32*)&lbl_803E3B28)
-    {
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3B28;
-    }
-
-    scale = ((GameObject*)obj)->anim.rootMotionScale;
-    ObjHitbox_SetCapsuleBounds(
-        obj,
-        (s16)(lbl_803E3B2C * scale),
-        0,
-        (s16)(lbl_803E3B30 * scale));
-    *(f32*)(state + 0x10) = lbl_803E3B34;
-    ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, lbl_803E3B00);
-
-    if (((FlammablevineObjectDef*)def)->unk1E != -1 && GameBit_Get(((FlammablevineObjectDef*)def)->unk1E) != 0)
-    {
-        Obj_RemoveFromUpdateList(obj);
-        ObjHits_DisableObject(obj);
-        ((GameObject*)obj)->anim.alpha = 0;
-        state[0] = state[0] | 2;
-    }
-
-    state[1] = *(u8*)(def + 0x19);
-    if (state[1] == 1)
-    {
-        ObjHits_MarkObjectPositionDirty(obj);
-    }
-}
-
-void flammablevine_update(int obj)
-{
-    u8* state;
-    u8* def;
-    void* tricky;
-    u8 canUse;
-    f32 burnTimer;
-    f32 zero;
-    int pulseStyle;
-    u32 fadeAlpha;
-
-    state = ((GameObject*)obj)->extra;
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    tricky = getTrickyObject();
-
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
-    if (((FlammablevinePlacement*)def)->unk20 == -1)
-    {
-        goto can_use_vine;
-    }
-    if (GameBit_Get(((FlammablevinePlacement*)def)->unk20) == 0)
-    {
-        goto cant_use_vine;
-    }
-    if (tricky == NULL)
-    {
-        goto cant_use_vine;
-    }
-    if (GameBit_Get(0x245) == 0)
-    {
-        goto cant_use_vine;
-    }
-can_use_vine:
-    canUse = 1;
-    goto checked_vine_use;
-cant_use_vine:
-    canUse = 0;
-checked_vine_use:
-
-    if ((state[0] & 3) == 0)
-    {
-        if (state[1] == 0)
-        {
-            ObjHits_SetHitVolumeSlot(obj, 9, 1, 0);
-        }
-        ObjHits_EnableObject(obj);
-
-        if (((GameObject*)obj)->anim.seqId == 0x102)
-        {
-            if (cMenuGetSelectedItem() == -1)
-            {
-                *(u8*)(*(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x40) + 0x11) = 0;
-            }
-            else
-            {
-                *(u8*)(*(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x40) + 0x11) = 0x10;
-            }
-        }
-
-        if (tricky != NULL && canUse != 0)
-        {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8;
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
-            {
-                ((void (*)(void*, int, int, int))(*(int*)(*(int*)(*(int*)((u8*)tricky + 0x68)) + 0x28)))(
-                    tricky, obj, 1, 4);
-            }
-        }
-    }
-
-    burnTimer = *(f32*)(state + 4);
-    zero = lbl_803E3B00;
-    if (burnTimer > zero)
-    {
-        *(f32*)(state + 4) = burnTimer - timeDelta;
-        if (*(f32*)(state + 4) <= zero)
-        {
-            ((GameObject*)obj)->anim.alpha = 0;
-            *(f32*)(state + 4) = zero;
-            state[0] = state[0] & ~1;
-            state[0] = state[0] | 2;
-            Obj_RemoveFromUpdateList(obj);
-            ObjHits_DisableObject(obj);
-        }
-    }
-
-    if ((state[0] & 1) != 0)
-    {
-        if (*(f32*)(state + 4) < lbl_803E3B04)
-        {
-            *(f32*)(state + 0x10) = lbl_803E3AF8;
-        }
-        else
-        {
-            *(f32*)(state + 0x10) = lbl_803E3AF8 - ((*(f32*)(state + 4) - lbl_803E3B04) / lbl_803E3B04);
-        }
-
-        if (*(f32*)(state + 4) < lbl_803E3B08 && *(f32*)(state + 4) > lbl_803E3B04)
-        {
-            ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
-                (ObjAnimComponent*)obj,
-                lbl_803E3AF8 - ((*(f32*)(state + 4) - lbl_803E3B04) / lbl_803E3B0C));
-        }
-
-        if (*(f32*)(state + 4) < lbl_803E3B10)
-        {
-            if (*(f32*)(state + 4) < lbl_803E3B04)
-            {
-                ((GameObject*)obj)->anim.alpha = 0;
-            }
-            else
-            {
-                fadeAlpha = (u8)(lbl_803E3B14 * ((*(f32*)(state + 4) - lbl_803E3B04) / lbl_803E3B18));
-                ((GameObject*)obj)->anim.alpha = fadeAlpha;
-            }
-        }
-
-        *(f32*)(state + 0xc) = *(f32*)(state + 0xc) - timeDelta;
-        if (*(f32*)(state + 0xc) <= lbl_803E3B00)
-        {
-            pulseStyle = 3;
-            *(f32*)(state + 0xc) = *(f32*)(state + 0xc) + lbl_803E3AF8;
-        }
-        else
-        {
-            pulseStyle = 0;
-        }
-        fn_80098B18(obj, lbl_803E3B1C * (*(f32*)(state + 0x10) * ((GameObject*)obj)->anim.rootMotionScale), 3, 0,
-                    pulseStyle, 0);
-        Sfx_KeepAliveLoopedObjectSound(obj, SFXmv_liftloop);
-    }
-}
+void flammablevine_update(int obj);
 
 /* Fall_Ladders_free: expgfx interface freeObject callback. */
 #pragma scheduling on
 #pragma peephole on
-void Fall_Ladders_free(int obj)
-{
-    (*gExpgfxInterface)->freeSource2((u32)obj);
-}
+void Fall_Ladders_free(int obj);
 
 /* coldwatercontrol_init: set float field + OR flag bits. */
 extern f32 lbl_803E3B68;
@@ -923,52 +630,10 @@ extern f32 lbl_803E3B6C;
 extern int fn_80295C40(int obj);
 #pragma scheduling off
 #pragma peephole off
-void coldwatercontrol_update(int obj)
-{
-    u8* state;
-
-    state = ((GameObject*)obj)->extra;
-    if (GameBit_Get(0x1bf) != 0 && GameBit_Get(0x1bd) == 0)
-    {
-        (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-        GameBit_Set(0x1bd, 1);
-        return;
-    }
-
-    if (*(void**)(state + 4) != NULL)
-    {
-        if (fn_80295C40(*(int*)(state + 4)) != 0)
-        {
-            if (lbl_803E3B68 == *(f32*)state)
-            {
-                ObjHits_RecordObjectHit(*(int*)(state + 4), obj, 0x1c, 0, 1);
-            }
-
-            *(f32*)state = *(f32*)state + timeDelta;
-            if (*(f32*)state > lbl_803E3B6C)
-            {
-                ObjHits_RecordObjectHit(*(int*)(state + 4), obj, 0x1c, 1, 1);
-                *(f32*)state = *(f32*)state - lbl_803E3B6C;
-            }
-        }
-        else
-        {
-            *(f32*)state = lbl_803E3B68;
-        }
-    }
-    else
-    {
-        *(int*)(state + 4) = (int)Obj_GetPlayerObject();
-    }
-}
+void coldwatercontrol_update(int obj);
 
 #pragma scheduling on
-void coldwatercontrol_init(int obj)
-{
-    int* p = ((int**)obj)[0xb8 / 4];
-    *(f32*)p = lbl_803E3B68;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
-}
+void coldwatercontrol_init(int obj);
 
 /* landed_arwing_free: free child object + detach link. */
 extern void Obj_FreeObject(int obj);
@@ -1418,14 +1083,7 @@ void landed_arwing_update(int obj)
 /* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
 extern void buttonDisable(int p1, int mask);
 
-void infopoint_update(int obj)
-{
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
-    {
-        buttonDisable(0, 0x100);
-        (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-    }
-}
+void infopoint_update(int obj);
 
 /* landed_arwing_init: flag bits, counter, conditional unlock, set callback. */
 void landed_arwing_init(int obj, int param)
@@ -1447,219 +1105,29 @@ extern f32 lbl_803E3BC4;
 extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
 
 /* landed arwing hit/animation step: handles impact reactions and spawned debris. */
-void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state)
-{
-    int i;
-    CFLandedArwingState* otherState;
-    int def;
-    int setup;
-    int other;
-    f32 range;
-    f32 yOffset;
-    ObjAnimEventList events;
-
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
-    if (!((LandedArwingHitFlagBits*)&state->hitFlags)->damaged ||
-        (((LandedArwingHitFlagBits*)&state->hitFlags)->impactHandled && state->hitStarted == 0u))
-    {
-        return;
-    }
-    if (state->hitStarted != 0)
-    {
-        ((GameObject*)obj)->anim.rotY = 0;
-        ((GameObject*)obj)->anim.rotZ = 0;
-        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3BBC && !((LandedArwingHitFlagBits*)&state->hitFlags)->reactionDone)
-        {
-            if (((LandedArwingUpdateHitReactionPlacement*)def)->unk24 > 0)
-            {
-                GameBit_Set(((LandedArwingUpdateHitReactionPlacement*)def)->unk24, 1);
-            }
-
-            switch (*(u8*)(def + 0x1e))
-            {
-            case 0:
-                if (Obj_IsLoadingLocked() != 0)
-                {
-                    i = 0;
-                    yOffset = lbl_803E3BB8;
-                    while (i < *(u8*)(def + 0x1f))
-                    {
-                        setup = Obj_AllocObjectSetup(0x24, 0x259);
-                        ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-                        ((ObjPlacement*)setup)->posY = yOffset + ((GameObject*)obj)->anim.localPosY;
-                        ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-                        *(u8*)(setup + 4) = 1;
-                        Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                        *(int*)&((GameObject*)obj)->anim.parent);
-                        i++;
-                    }
-                }
-                break;
-            case 1:
-                range = lbl_803E3BC0;
-                other = ObjGroup_FindNearestObject(0x41, obj, &range);
-                if ((void*)other != NULL)
-                {
-                    otherState = ((GameObject*)other)->extra;
-                    if (*(s16*)(*(int*)&((GameObject*)other)->anim.placementData + 0x22) > 0)
-                    {
-                        GameBit_Set(*(s16*)(*(int*)&((GameObject*)other)->anim.placementData + 0x22), 1);
-                    }
-                    ((LandedArwingHitFlagBits*)&otherState->hitFlags)->damaged = 1;
-                }
-                break;
-            case 2:
-                break;
-            }
-            state->hitStarted = 0;
-            ((LandedArwingHitFlagBits*)&state->hitFlags)->reactionDone = 1;
-        }
-        ((LandedArwingHitFlagBits*)&state->hitFlags)->impactHandled = 1;
-        state->path8Fx = lbl_803E3BC4;
-    }
-    else
-    {
-        if (*(u8*)(def + 0x1e) == 2)
-        {
-            ((GameObject*)obj)->anim.rotY = (s16)randomGetRange(-200, 200);
-            ((GameObject*)obj)->anim.rotZ = (s16)randomGetRange(-200, 200);
-        }
-        ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
-                                                  state->hitCooldown);
-    }
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, state->path8Fx, timeDelta,
-                                                                  &events);
-}
+void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state);
 
 /* landed arwing material flags: mirrors game bits into the damaged texture state. */
-void landed_arwing_updateDamageTexture(int obj, CFLandedArwingState* state)
-{
-    int def;
-    int* texture;
-    u32 bit;
-    LandedArwingHitFlagBits* flags;
+void landed_arwing_updateDamageTexture(int obj, CFLandedArwingState* state);
 
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
-    flags = (LandedArwingHitFlagBits*)&state->hitFlags;
-    if (((LandedArwingUpdateDamageTexturePlacement*)def)->unk24 != -1)
-    {
-        bit = GameBit_Get(((LandedArwingUpdateDamageTexturePlacement*)def)->unk24);
-        flags->gameBit24Set = bit;
-        bit = flags->gameBit24Set;
-        if (bit != 0 && *(u8*)(def + 0x1c) == 5)
-        {
-            flags->impactHandled = 1;
-        }
-        else if (bit == 0)
-        {
-            flags->impactHandled = 0;
-        }
-    }
-
-    if (flags->damaged == 0)
-    {
-        if (((LandedArwingUpdateDamageTexturePlacement*)def)->unk22 != -1 && GameBit_Get(
-            ((LandedArwingUpdateDamageTexturePlacement*)def)->unk22) != 0)
-        {
-            flags->damaged = 1;
-        }
-    }
-    else
-    {
-        if (((LandedArwingUpdateDamageTexturePlacement*)def)->unk22 != -1 && GameBit_Get(
-            ((LandedArwingUpdateDamageTexturePlacement*)def)->unk22) == 0)
-        {
-            flags->damaged = 0;
-        }
-    }
-
-    texture = objFindTexture(obj, 0, 0);
-    if (texture != NULL)
-    {
-        if (flags->damaged != 0)
-        {
-            if (flags->gameBit24Set != 0)
-            {
-                *texture = 0x200;
-            }
-            else
-            {
-                *texture = 0x100;
-            }
-        }
-        else
-        {
-            *texture = 0;
-        }
-    }
-}
-
-void dll_109_init(int obj, u8* p)
-{
-    *(s16*)obj = (s16)((s32)p[0x1a] << 8);
-    ((GameObject*)obj)->objectFlags |= 0x2000;
-    (*(void (*)(int, int*, int))(*(int*)(*gCarryableInterface + 0x4)))(obj, ((GameObject*)obj)->extra, 0x21);
-    (*(void (*)(int*, int))(*(int*)(*gCarryableInterface + 0x2c)))(((GameObject*)obj)->extra, 1);
-}
+void dll_109_init(int obj, u8* p);
 
 #pragma dont_inline on
 #pragma peephole on
-void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut)
-{
-    f32 v;
-    v = vertex[0];
-    if (v > maxOut[0]) maxOut[0] = v;
-    else if (v < minOut[0]) minOut[0] = v;
-    v = vertex[1];
-    if (v > maxOut[1]) maxOut[1] = v;
-    else if (v < minOut[1]) minOut[1] = v;
-    v = vertex[2];
-    if (v > maxOut[2]) maxOut[2] = v;
-    else if (v < minOut[2]) minOut[2] = v;
-}
+void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut);
 #pragma dont_inline reset
 
 #pragma peephole off
-int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    s16* inner = ((GameObject*)obj)->extra;
-    int i;
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        switch (animUpdate->eventIds[i])
-        {
-        case 1: inner[0xb] = (s16)0xff;
-            break;
-        case 2: inner[0xb] = 0;
-            break;
-        case 3: break;
-        case 4: break;
-        }
-    }
-    return 0;
-}
+int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 
 #pragma scheduling on
-void dll_109_free(int obj)
-{
-    (*(void (*)(int))(*(int*)(*gCarryableInterface + 0x10)))(obj);
-}
+void dll_109_free(int obj);
 
 extern f32 lbl_803E3B40;
 #pragma scheduling off
 #pragma peephole off
-void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
-{
-    int* inner = ((GameObject*)obj)->extra;
-    if (((Dll109State*)inner)->unkA == 0)
-    {
-        if ((*(int (*)(int, s32))(*(int*)(*gCarryableInterface + 0xc)))(obj, visible) != 0)
-        {
-            ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E3B40);
-        }
-    }
-}
+void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
 extern f32 lbl_803E3B50;
@@ -1667,108 +1135,16 @@ extern f32 lbl_803E3B54;
 extern f32 lbl_803E3B58;
 extern f32 lbl_803E3B5C;
 
-void Fall_Ladders_update(int obj)
-{
-    int def;
-    FallLaddersState* state;
-    f32 speed;
+void Fall_Ladders_update(int obj);
 
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
-    state = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->anim.seqId == 0x548)
-    {
-        if (GameBit_Get(state->upperGameBit) != 0 && GameBit_Get(state->lowerGameBit) == 0)
-        {
-            (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-        }
-        if (GameBit_Get(state->upperGameBit) == 0 && GameBit_Get(state->lowerGameBit) != 0)
-        {
-            (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-        }
-    }
-    else if (state->delay != 0)
-    {
-        state->delay -= (s16)timeDelta;
-        if (state->delay <= 0)
-        {
-            state->motionState = 1;
-            if (state->playStartSound != 0)
-            {
-                Sfx_PlayFromObject(obj, 0x4bc);
-                state->playStartSound = 0;
-            }
-            state->delay = 0;
-        }
-    }
-    else
-    {
-        if ((s8)state->motionState == 0 && GameBit_Get(state->upperGameBit) != 0)
-        {
-            state->delay = 10;
-        }
-        if ((s8)state->motionState == 1 && ((GameObject*)obj)->anim.localPosY >= ((ObjPlacement*)def)->posY)
-        {
-            ((GameObject*)obj)->anim.velocityY -= lbl_803E3B50;
-            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->
-                anim.localPosY;
-            if (((GameObject*)obj)->anim.localPosY <= ((ObjPlacement*)def)->posY)
-            {
-                ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
-                ((GameObject*)obj)->anim.velocityY = lbl_803E3B54 * -((GameObject*)obj)->anim.velocityY;
-                speed = ((GameObject*)obj)->anim.velocityY;
-                speed = (speed >= lbl_803E3B58) ? speed : -speed;
-                if (speed < lbl_803E3B5C)
-                {
-                    state->motionState = 2;
-                }
-            }
-        }
-    }
-}
-
-void Fall_Ladders_init(int* obj, s8* def)
-{
-    s16* state = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((s32) * (s8*)((char*)def + 0x18) << 8);
-    state[3] = ((FallLaddersObjectDef*)def)->unk20;
-    state[2] = ((FallLaddersObjectDef*)def)->unk1E;
-    *(f32*)state = (f32)(s32)((FallLaddersObjectDef*)def)->unk1A;
-    ((GameObject*)obj)->objectFlags |= 0x6000;
-    ((GameObject*)obj)->animEventCallback = (void*)Fall_Ladders_SeqFn;
-    ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY + *(f32*)state;
-    Obj_SetActiveModelIndex(obj, (s32) * (s8*)((char*)def + 0x19));
-    ((FallLaddersState*)state)->motionState = 0;
-    if (GameBit_Get(state[3]) == 0)
-    {
-        ((FallLaddersState*)state)->playStartSound = 1;
-    }
-}
+void Fall_Ladders_init(int* obj, s8* def);
 
 extern int textureLoadAsset(int id);
 extern int* gameTextGet(int id);
 extern int lbl_803219A0[];
 extern int lbl_80321990[];
 
-void infopoint_init(int* obj, u8* def)
-{
-    u8* state = ((GameObject*)obj)->extra;
-    int* txt;
-    ((GameObject*)obj)->animEventCallback = (void*)InfoPoint_SeqFn;
-    if (*(void**)lbl_803219A0 == NULL)
-    {
-        *(int*)lbl_803219A0 = textureLoadAsset(616);
-    }
-    *(int*)(state + 8) = (int)lbl_80321990;
-    txt = gameTextGet(((InfopointObjectDef*)def)->unk18);
-    *(int*)(state + 4) = **(int**)((char*)txt + 8);
-    *(int*)(state + 0xc) = 100;
-    *(int*)state = (int)txt;
-    *(s16*)obj = (s16)((s32) * (u8*)((char*)def + 0x1c) << 8);
-    *(int*)(state + 0x18) = 2;
-    *(u8*)(state + 0x10) = ((InfopointObjectDef*)def)->unk1B;
-    *(s16*)(state + 0x16) = 0;
-    ((GameObject*)obj)->objectFlags |= 0x2000;
-}
+void infopoint_init(int* obj, u8* def);
 
 extern f32 lbl_803E3B7C;
 extern f32 lbl_803E3B88;
@@ -1778,172 +1154,6 @@ extern void Model_GetVertexPosition(int* model, int idx, f32* out);
 extern void PSVECScale(f32* dst, f32* src, f32 s);
 extern f32 PSVECMag(f32 * v);
 
-void decoration11a_hitDetect(int obj)
-{
-    s16 modelId;
-    f32* state;
-    int count;
-    int* objects;
-    f32 radius;
-    f32 localPos[3];
-    f32 bMax;
-    f32 sum;
-    f32 delta;
-    f32 term;
+void decoration11a_hitDetect(int obj);
 
-    modelId = ((GameObject*)obj)->anim.seqId;
-    if (modelId == 0x7a1)
-    {
-        goto check_decor_objects;
-    }
-    if (modelId == 0x7a2)
-    {
-        goto check_decor_objects;
-    }
-    if (modelId != 0x7a3)
-    {
-        return;
-    }
-
-check_decor_objects:
-    state = ((GameObject*)obj)->extra;
-    objects = ObjGroup_GetObjects(2, &count);
-    while (count != 0)
-    {
-        if (Vec_distance((f32*)(*objects + 0x18), (f32*)(obj + 0x18)) < state[6])
-        {
-            if (*(void**)(*objects + 0x54) != NULL)
-            {
-                radius = (f32) * (s16*)(*(int*)(*objects + 0x54) + 0x5a);
-                objWorldToLocalPos(localPos, obj, (f32*)(*objects + 0xc));
-
-                sum = lbl_803E3B7C;
-
-                {
-                f32 bMin;
-                f32 px;
-                bMin = state[3];
-                bMax = state[0];
-                sum += ((px = localPos[0]) < bMin) ? (px - bMin) * (px - bMin)
-                     : (px > bMax) ? (px - bMax) * (px - bMax)
-                     : lbl_803E3B7C;
-                }
-
-                {
-                f32 bMax;
-                f32 bMin;
-                bMin = state[4];
-                bMax = state[1];
-                if (localPos[1] < bMin)
-                {
-                    delta = localPos[1] - bMin;
-                    term = delta * delta;
-                }
-                else if (localPos[1] > bMax)
-                {
-                    delta = localPos[1] - bMax;
-                    term = delta * delta;
-                }
-                else
-                {
-                    term = *(f32*)&lbl_803E3B7C;
-                }
-                sum += term;
-                }
-
-                {
-                f32 bMax;
-                f32 bMin;
-                bMin = state[5];
-                bMax = state[2];
-                if (localPos[2] < bMin)
-                {
-                    delta = localPos[2] - bMin;
-                    term = delta * delta;
-                }
-                else if (localPos[2] > bMax)
-                {
-                    delta = localPos[2] - bMax;
-                    term = delta * delta;
-                }
-                else
-                {
-                    term = *(f32*)&lbl_803E3B7C;
-                }
-                sum += term;
-                }
-
-                if (sum < radius * radius)
-                {
-                    (*(ObjHitsPriorityState**)(*objects + 0x54))->lastHitObject = obj;
-                    (*(ObjHitsPriorityState**)(*objects + 0x54))->contactFlags = 1;
-                }
-            }
-        }
-        count--;
-        objects++;
-    }
-}
-
-void decoration11a_init(int* obj, u8* def)
-{
-    ((GameObject*)obj)->anim.rotZ = (s16)((s32)def[24] << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)((s32)def[25] << 8);
-    *(s16*)obj = (s16)((s32)def[26] << 8);
-    if (def[27] != 0)
-    {
-        ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)
-        def[27] / lbl_803E3B88;
-        if (((GameObject*)obj)->anim.rootMotionScale == lbl_803E3B7C)
-        {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3B78;
-        }
-        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * *(f32*)(*(int*)&((
-            GameObject*)obj)->anim.modelInstance + 4);
-    }
-    {
-        s16 model = ((GameObject*)obj)->anim.seqId;
-        if (model == 1953)
-        {
-            goto calc_decor_bounds;
-        }
-        if (model == 1954)
-        {
-            goto calc_decor_bounds;
-        }
-        if (model == 1955)
-        {
-        calc_decor_bounds:
-            {
-                int i;
-                int* m;
-                f32* state;
-                f32 tmp[3];
-                f32 magB;
-                f32 maxMag;
-
-                state = ((GameObject*)obj)->extra;
-                m = **(int***)(*(int*)&((GameObject*)obj)->anim.banks);
-                Model_GetVertexPosition(m, 0, state);
-                Model_GetVertexPosition(m, 0, state + 3);
-                for (i = 1; i < *(u16*)((char*)m + 0xe4); i++)
-                {
-                    Model_GetVertexPosition(m, i, tmp);
-                    decoration11a_expandBoundsWithVertex(tmp, state, state + 3);
-                }
-                PSVECScale(state, state, ((GameObject*)obj)->anim.rootMotionScale);
-                PSVECScale(state + 3, state + 3, ((GameObject*)obj)->anim.rootMotionScale);
-                magB = PSVECMag(state + 3);
-                if (PSVECMag(state) > magB)
-                {
-                    maxMag = PSVECMag(state);
-                }
-                else
-                {
-                    maxMag = PSVECMag(state + 3);
-                }
-                state[6] = maxMag;
-            }
-        }
-    }
-}
+void decoration11a_init(int* obj, u8* def);

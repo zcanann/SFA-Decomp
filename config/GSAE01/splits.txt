@@ -702,8 +702,29 @@ main/dll/CF/dll_010C_lanternfirefly.c:
 main/dll/CF/dll_010B_fireflylantern.c:
 	.text       start:0x801871C8 end:0x80187640
 
-main/dll/CF/CFBaby.c:
-	.text       start:0x80187640 end:0x801899B4
+main/dll/CF/dll_00E7_cceyevines.c:
+	.text       start:0x80187640 end:0x80187BA0
+
+main/dll/CF/dll_0109_unk.c:
+	.text       start:0x80187BA0 end:0x80187F30
+
+main/dll/CF/dll_010A_fallladder.c:
+	.text       start:0x80187F30 end:0x8018824C
+
+main/dll/CF/dll_0119_coldwaterco.c:
+	.text       start:0x8018824C end:0x80188398
+
+main/dll/CF/dll_00EC_infopoint.c:
+	.text       start:0x80188398 end:0x80188584
+
+main/dll/CF/dll_011A_drdebrisgir.c:
+	.text       start:0x80188584 end:0x801889C8
+
+main/dll/CF/dll_011B_landedarwi.c:
+	.text       start:0x801889C8 end:0x80189610
+
+main/dll/CF/dll_80189610.c:
+	.text       start:0x80189610 end:0x801899B4
 
 main/dll/CF/CFPrisonGuard.c:
 	.text       start:0x801899B4 end:0x80189F5C
