@@ -4,6 +4,9 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
+struct GameObject;
+struct WmColumnPlacement;
+
 void dll_115_update(int obj);
 void dll_115_init(short *obj,int mapData);
 void dll_115_release_nop(void);
@@ -14,7 +17,7 @@ void wm_column_free(int obj);
 void wm_column_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void wm_column_hitDetect(void);
 void wm_column_update(int obj);
-void wm_column_init(short *obj,int mapData);
+void wm_column_init(struct GameObject *obj, struct WmColumnPlacement *mapData);
 void wm_column_release(void);
 void wm_column_initialise(void);
 extern ObjectDescriptor gWM_ColumnObjDescriptor;

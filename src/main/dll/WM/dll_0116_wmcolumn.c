@@ -219,17 +219,16 @@ void wm_column_update(int obj)
     }
 }
 
-void wm_column_init(short* obj, int mapData)
+void wm_column_init(GameObject* obj, WmColumnPlacement* mapData)
 {
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    undefined4 state = *(undefined4*)&((GameObject*)(int)obj)->extra;
-    *obj = (s16)(*(u8*)(mapData + 0x18) << 8);
-    ((GameObject*)(int)obj)->objectFlags |= 0x2000;
-    ((GameObject*)(int)obj)->unkF4 = 0;
-    objAnim->bankIndex = (s8)(int) * (s8*)(mapData + 0x19);
-    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
+    int state = *(int*)&obj->extra;
+    obj->anim.rotX = (s16)(mapData->unk18 << 8);
+    obj->objectFlags |= 0x2000;
+    obj->unkF4 = 0;
+    obj->anim.bankIndex = (s8)mapData->unk19;
+    if (obj->anim.bankIndex >= obj->anim.modelInstance->modelCount)
     {
-        objAnim->bankIndex = 0;
+        obj->anim.bankIndex = 0;
     }
     (*(GroundAnimatorInitAnimFn*)(*gCarryableInterface + 4))(obj, state, 0x32);
     ObjGroup_AddObject((int)obj, 4);

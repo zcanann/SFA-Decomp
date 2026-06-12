@@ -251,8 +251,6 @@ void wm_column_hitDetect(void);
 
 void wm_column_update(int obj);
 
-void wm_column_init(short* obj, int mapData);
-
 void wm_column_release(void);
 
 void wm_column_initialise(void);
