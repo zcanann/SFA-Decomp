@@ -356,7 +356,7 @@ int MoonSeedPlantingSpot_getExtraSize(void) { return 0x18; }
 int MoonSeedPlantingSpot_getObjectTypeId(void) { return 0x1; }
 int ccgasvent_getExtraSize(void) { return 0x1; }
 int ccgasventcontrol_getExtraSize(void) { return 0x10; }
-int ccqueen_getExtraSize(void) { return 0x654; }
+int ccqueen_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E45C8;

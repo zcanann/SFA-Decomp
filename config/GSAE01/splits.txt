@@ -829,10 +829,10 @@ main/dll/DIM/DIMlavaball.c:
 	.text       start:0x801A6778 end:0x801A8F88
 
 main/dll/DIM/DIMlogfire.c:
-	.text       start:0x801A8F88 end:0x801AA560
+	.text       start:0x801A8F88 end:0x801AA558
 
 main/dll/DIM/DIMsnowball.c:
-	.text       start:0x801AA560 end:0x801AC248
+	.text       start:0x801AA558 end:0x801AC248
 
 main/dll/DIM/DIMboulder.c:
 	.text       start:0x801AC248 end:0x801AE100

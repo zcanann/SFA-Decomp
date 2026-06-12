@@ -1,3 +1,340 @@
+/* === moved from main/dll/DIM/DIMlogfire.c [801AA558-801AA560) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/DIM/dimlogfire.h"
+#include "main/obj_placement.h"
+#include "main/camera_interface.h"
+#include "main/effect_interfaces.h"
+#include "main/game_ui_interface.h"
+#include "main/game_object.h"
+#include "main/mapEventTypes.h"
+#include "main/objseq.h"
+
+typedef struct AnimsharpclawPlacement
+{
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    u8 pad1A[0x20 - 0x1A];
+} AnimsharpclawPlacement;
+
+
+typedef struct MoonSeedPlantingSpotPlacement
+{
+    u8 pad0[0xC - 0x0];
+    f32 unkC;
+} MoonSeedPlantingSpotPlacement;
+
+
+typedef struct AnimsharpclawState
+{
+    u8 pad0[0x24 - 0x0];
+    f32 unk24;
+    s32 unk28;
+    u8 pad2C[0x57 - 0x2C];
+    u8 unk57;
+    u8 pad58[0x6A - 0x58];
+    s16 unk6A;
+    u8 pad6C[0x6E - 0x6C];
+    s16 unk6E;
+    u8 pad70[0x94 - 0x70];
+    s32 unk94;
+    s32 unk98;
+    u8 pad9C[0x140 - 0x9C];
+} AnimsharpclawState;
+
+
+typedef struct CcgasventcontrolState
+{
+    u8 pad0[0x4 - 0x0];
+    f32 unk4;
+    f32 unk8;
+    s16 unkC;
+    u8 padE[0x10 - 0xE];
+} CcgasventcontrolState;
+
+
+typedef struct MoonSeedPlantingSpotState
+{
+    u8 pad0[0x1 - 0x0];
+    u8 flags;
+    u8 pad2[0x4 - 0x2];
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    u8 pad18[0x24 - 0x18];
+    f32 unk24;
+    s32 unk28;
+    u8 pad2C[0x57 - 0x2C];
+    u8 unk57;
+    u8 pad58[0x6A - 0x58];
+    s16 unk6A;
+    u8 pad6C[0x6E - 0x6C];
+    s16 unk6E;
+    u8 pad70[0x94 - 0x70];
+    s32 unk94;
+    s32 unk98;
+    u8 pad9C[0xA0 - 0x9C];
+} MoonSeedPlantingSpotState;
+
+
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
+extern undefined4 FUN_80017748();
+extern u32 randomGetRange(int min, int max);
+extern void* FUN_80017aa4();
+extern undefined4 FUN_80017ac8();
+extern int FUN_80017ae4();
+extern int ObjHits_GetPriorityHit();
+extern undefined4 ObjGroup_FindNearestObject();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern undefined4 ObjLink_AttachChild();
+extern int FUN_80286840();
+extern undefined4 FUN_8028688c();
+
+extern undefined4 DAT_803ad590;
+extern undefined4 DAT_803ad598;
+extern undefined4 DAT_803ad59c;
+extern undefined4 DAT_803ad5a0;
+extern undefined4 DAT_803ad5a4;
+extern EffectInterface** gPartfxInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern int* gTitleMenuControlInterfaceCopy;
+#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
+extern f64 DOUBLE_803e5250;
+extern f64 DOUBLE_803e5268;
+extern f64 DOUBLE_803e5280;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E5248;
+extern f32 lbl_803E524C;
+extern f32 lbl_803E5260;
+extern f32 lbl_803E5270;
+extern f32 lbl_803E5274;
+extern f32 lbl_803E5288;
+extern f32 lbl_803E528C;
+extern f32 lbl_803E5290;
+extern f32 lbl_803E5294;
+extern f32 lbl_803E5298;
+extern f32 lbl_803E529C;
+extern f32 lbl_803E52A0;
+extern f32 lbl_803E52A8;
+extern f32 lbl_803E52AC;
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801a8f88
+ * EN v1.0 Address: 0x801A8F88
+ * EN v1.0 Size: 836b
+ * EN v1.1 Address: 0x801A9044
+ * EN v1.1 Size: 944b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_801a8f88(void);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801a9408
+ * EN v1.0 Address: 0x801A9408
+ * EN v1.0 Size: 524b
+ * EN v1.1 Address: 0x801A953C
+ * EN v1.1 Size: 280b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4
+FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, ObjAnimUpdateState* animUpdate);
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void animsharpclaw_hitDetect(void);
+
+void animsharpclaw_release(void);
+
+void animsharpclaw_initialise(void);
+
+void MoonSeedPlantingSpot_hitDetect(void);
+
+void MoonSeedPlantingSpot_release(void);
+
+void MoonSeedPlantingSpot_initialise(void);
+
+
+#pragma scheduling off
+#pragma peephole off
+void MoonSeedPlantingSpot_init(int* obj, u8* init);
+#pragma peephole reset
+#pragma scheduling reset
+void ccgasvent_render(void);
+
+/* 8b "li r3, N; blr" returners. */
+int animsharpclaw_getExtraSize(void);
+int animsharpclaw_getObjectTypeId(void);
+int MoonSeedPlantingSpot_render2(void);
+int MoonSeedPlantingSpot_modelMtxFn(void);
+int MoonSeedPlantingSpot_func0B(void);
+int MoonSeedPlantingSpot_getExtraSize(void);
+int MoonSeedPlantingSpot_getObjectTypeId(void);
+int ccgasvent_getExtraSize(void);
+int ccgasventcontrol_getExtraSize(void);
+int ccqueen_getExtraSize(void) { return 0x654; }
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E45C8;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E4620;
+#pragma peephole off
+void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+#pragma peephole reset
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+#pragma scheduling off
+void MoonSeedPlantingSpot_free(int x);
+void ccgasvent_free(int x);
+#pragma scheduling reset
+
+/* call(x, N) wrappers. */
+#pragma scheduling off
+void ccgasvent_init(int x);
+#pragma scheduling reset
+
+/* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
+extern void disableHeavyFog(void);
+#pragma scheduling off
+#pragma peephole off
+void animsharpclaw_free(int obj);
+#pragma peephole reset
+#pragma scheduling reset
+#pragma scheduling off
+#pragma peephole off
+void ccgasventcontrol_free(int obj);
+
+void ccgasventcontrol_init(int obj, u8* p);
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int MoonSeedPlantingSpot_SeqFn(int obj);
+#pragma peephole reset
+#pragma scheduling reset
+
+/* CCGasVentControl_SeqFn: trampoline to CCGasVentControlFn_801a9fd0 passing (obj, obj->extra), returns 0. */
+extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
+#pragma scheduling off
+int CCGasVentControl_SeqFn(int obj);
+#pragma scheduling reset
+
+extern int* ObjGroup_GetObjects(int group, int* count);
+extern f32 lbl_803E4618;
+extern f32 timeDelta;
+extern MapEventInterface** gMapEventInterface;
+extern void Sfx_PlayFromObject(int obj, int id);
+extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
+extern f32 lbl_803E4624;
+extern f32 lbl_803E4628;
+extern f32 lbl_803E462C;
+extern f32 lbl_803E4630;
+extern f32 lbl_803E4634;
+extern f32 lbl_803E4638;
+extern f32 lbl_803E463C;
+extern f32 lbl_803E4640;
+
+#pragma scheduling off
+#pragma peephole off
+void ccgasventcontrol_update(int obj);
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_SetObjectSfxVolume(int obj, int sound, int vol, f32 v);
+extern f32 lbl_803E461C;
+
+#pragma scheduling off
+#pragma peephole off
+u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
+extern f32 lbl_803E45DC;
+extern f64 lbl_803E45E8;
+extern f32 lbl_803E45F0;
+extern f32 lbl_803E45F4;
+extern f32 lbl_803E45F8;
+extern f32 lbl_803E45FC;
+extern f32 lbl_803E4600;
+extern f32 lbl_803E4604;
+extern f32 lbl_803E4608;
+
+#pragma scheduling off
+#pragma peephole off
+void MoonSeedPlantingSpot_update(int obj);
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int Obj_AllocObjectSetup(int size, int type);
+extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
+
+#pragma scheduling off
+#pragma dont_inline on
+int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate);
+#pragma dont_inline reset
+#pragma scheduling reset
+
+extern f32 lbl_803E4610;
+extern f32 lbl_803E4614;
+
+#pragma scheduling off
+#pragma peephole off
+void ccgasvent_update(int* obj);
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int MoonSeedPlantingSpot_setScale(int* obj, int arg);
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E45D8;
+extern f32 lbl_803E45E0;
+extern f32 lbl_803E45E4;
+extern f32 mathSinf(f32 x);
+extern void fn_8003B608(int r, int g, int b);
+
+#pragma scheduling off
+#pragma peephole off
+void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void objSetSlot(void* obj, int slot);
+
+#pragma scheduling off
+#pragma peephole off
+void animsharpclaw_init(int* obj, u8* init);
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u8 framesThisStep;
+
+#pragma scheduling off
+#pragma peephole off
+void animsharpclaw_update(int* obj);
+#pragma peephole reset
+#pragma scheduling reset
+
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
@@ -15,7 +352,6 @@ extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHit();
 extern int ObjHits_PollPriorityHitWithCooldown();
-extern undefined4 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
 extern int ObjTrigger_IsSetById();
 extern int ObjTrigger_IsSet();
@@ -48,6 +384,7 @@ extern f32 lbl_803E5360;
 #pragma peephole off
 void ccqueen_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
+    extern undefined4 ccqueen_render();
     void* state = ((GameObject*)obj)->extra;
     objRenderFn_8003b8f4(lbl_803E4660);
     dll_2E_func06(obj, state, 0);
@@ -193,6 +530,7 @@ int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 void cclightfoot_free(int* obj, int p2)
 {
+    extern undefined4 ObjLink_DetachChild();
     int* state = ((GameObject*)obj)->extra;
     int* sub = (int*)state[0];
     if (sub != NULL)
@@ -432,10 +770,10 @@ extern f32 lbl_803E4668;
 extern f32 timeDelta;
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
 extern void characterDoEyeAnims(int obj, void* p);
-extern void* Obj_GetPlayerObject(void);
 
 void ccqueen_update(int* obj)
 {
+    extern void* Obj_GetPlayerObject(void);
     u8* sub;
     int* player;
 
@@ -465,6 +803,7 @@ void ccqueen_update(int* obj)
 
 int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
+    extern undefined4 ObjLink_DetachChild();
     int* state = ((GameObject*)obj)->extra;
     if (animUpdate->eventCount != 0)
     {
@@ -521,6 +860,7 @@ extern void lockLevel(int idx, int flag);
 #pragma peephole on
 void fn_801AC01C(int obj)
 {
+    extern void* Obj_GetPlayerObject(void);
     int state = *(int*)&((GameObject*)obj)->extra;
     int r;
     void* res;
@@ -553,6 +893,7 @@ void fn_801AC01C(int obj)
 
 void fn_801AC108(int obj, int param2)
 {
+    extern void* Obj_GetPlayerObject(void);
     int r;
     void* res;
     (*gGameUIInterface)->setShowWorldMapHud(0);
@@ -612,6 +953,7 @@ typedef struct SharpClawPadParticleArgs
 #pragma peephole off
 void ccsharpclawpad_update(int obj)
 {
+    extern void* Obj_GetPlayerObject(void);
     SharpClawPadParticleArgs particleArgs;
     f32* state;
     int* player;
@@ -699,11 +1041,11 @@ typedef struct CcpedstalState
 
 extern f32 lbl_803E46D0;
 extern void gameTextShow(int textId);
-extern void* getTrickyObject(void);
 extern int* gSHthorntailAnimationInterface;
 
 void cclevcontrol_update(int obj)
 {
+    extern void* getTrickyObject(void);
     int* state = ((GameObject*)obj)->extra;
     int* tricky;
     u32 a;
@@ -802,7 +1144,6 @@ extern f32 lbl_803E4694;
 extern f32 lbl_803E4698;
 extern u8 lbl_80323408[];
 extern u8 lbl_803DDB38[8];
-extern f32 getXZDistance(void* a, void* b);
 extern int getAngle(f32 dx, f32 dz);
 extern f32 fn_8014C5D0(int obj);
 extern void fn_8014C66C(int obj, int target);
@@ -824,6 +1165,9 @@ typedef struct LightfootAnimTable
 
 void cclightfoot_update(int obj)
 {
+    extern f32 getXZDistance(void* a, void* b);
+    extern void* Obj_GetPlayerObject(void);
+    extern undefined4 ObjLink_DetachChild();
     LightfootAnimTable* tbl = (LightfootAnimTable*)lbl_80323408;
     u32 fallback;
     int* state = ((GameObject*)obj)->extra;
