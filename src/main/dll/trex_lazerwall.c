@@ -1,6 +1,7 @@
 #include "main/mapEvent.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
+#include "main/objhits.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/TREX/TREX_Lazerwall.h"
 
@@ -22,7 +23,6 @@ typedef struct TREXLazerwallUpdateTimedChallengeState
 } TREXLazerwallUpdateTimedChallengeState;
 
 extern void* Obj_GetPlayerObject(void);
-extern void ObjHits_DisableObject(int obj);
 
 extern int Stack_IsEmpty(int stack);
 extern int Stack_IsFull(int stack);
