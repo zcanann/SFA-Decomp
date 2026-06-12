@@ -81,8 +81,8 @@ void drakormissile_startActiveLaunch(int obj)
                                                 lbl_803E6954);
     }
     ((GameObject*)obj)->anim.alpha = 255;
-    ((GameObject*)obj)->anim.rootMotionScale = lbl_803E6958 * *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance +
-        4);
+    ((GameObject*)obj)->anim.rootMotionScale =
+        lbl_803E6958 * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     *(int*)(p + DRAKORMISSILE_FIELD_TIMER) = DRAKORMISSILE_ACTIVE_TIMER;
     ObjHits_SetTargetMask(obj, DRAKORMISSILE_TARGET_MASK);
     ObjHits_SetHitVolumeSlot(obj, DRAKORMISSILE_HIT_VOLUME_SLOT, 1, 0);
@@ -164,8 +164,8 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed)
     }
     *(void**)(p + DRAKORMISSILE_FIELD_LIGHT) = light;
     ((GameObject*)obj)->anim.alpha = 255;
-    ((GameObject*)obj)->anim.rootMotionScale = lbl_803E6958 * *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance +
-        4);
+    ((GameObject*)obj)->anim.rootMotionScale =
+        lbl_803E6958 * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     Sfx_PlayFromObject(obj, SFXwp_barrel_bounce2);
 }
 

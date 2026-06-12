@@ -244,19 +244,16 @@ void ProjectileSwitch_init(int obj, u8* initData)
     ((GameObject*)obj)->anim.rotY = (short)(initData[0x1c] << 8);
     if (initData[0x1d] == 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = *(float*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
+        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     }
     else
     {
-        f32 scaledRadius =
-                (f32)(u32)initData[0x1d] * *(
-        float*
-        )
-        (*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
+        f32 scaledRadius = (f32)(u32)initData[0x1d] * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
         ((GameObject*)obj)->anim.rootMotionScale = scaledRadius * lbl_803E3728;
     }
     ObjHitbox_SetSphereRadius(
-        obj, (short)(((int)initData[0x1d] * (int)*(u8*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x62)) / 64));
+        obj,
+        (short)(((int)initData[0x1d] * (int)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius) / 64));
     objAnim->bankIndex = initData[0x1e] >> 2;
     if ((int)objAnim->bankIndex >= (int)objAnim->modelInstance->modelCount)
     {

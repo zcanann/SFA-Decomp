@@ -905,7 +905,8 @@ void appleontree_init(int obj, int def)
             }
             else if (progress < ((CrackAnimState*)state)->stageEnd1)
             {
-                ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
+                ((GameObject*)obj)->anim.rootMotionScale =
+                    ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
                 ((CrackAnimState*)state)->stage = 1;
             }
             else if (progress < ((CrackAnimState*)state)->stageEnd2)
@@ -918,7 +919,8 @@ void appleontree_init(int obj, int def)
                 texture = objFindTexture(obj, 0, 0);
                 *texture = 0;
                 ((CrackAnimState*)state)->unk24 = lbl_803E37C8;
-                ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
+                ((GameObject*)obj)->anim.rootMotionScale =
+                    ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
                 Obj_SetActiveModelIndex(obj, 1);
                 ((CrackAnimState*)state)->stage = 3;
             }
