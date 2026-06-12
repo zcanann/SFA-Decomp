@@ -41,7 +41,6 @@ extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_80053c98();
 extern int FUN_801365ac();
 extern undefined4 FUN_801365b8();
-extern undefined4 fn_8017510C();
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
@@ -334,7 +333,7 @@ void fn_80174BFC(int obj, int ext)
     memcpy(((PushableState*)ext)->cornerWorld, points, ((PushableState*)ext)->pointCount * 0xc);
 }
 
-undefined4 fn_8017510C(short* obj, short* refObj, int attach)
+undefined4 fn_8017510C(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
 {
     extern int Obj_GetPlayerObject(); /* #57 */
     extern void GameBit_Set(int bit, int value); /* #57 */
@@ -352,49 +351,48 @@ undefined4 fn_8017510C(short* obj, short* refObj, int attach)
     {
         (*gCameraInterface)->setTargetReticleOverride((int)obj);
     }
-    *(short*)(attach + 0x70) = -1;
-    if (*(char*)(attach + 0x56) != '\0')
+    animUpdate->activeHitVolumePair = -1;
+    if (animUpdate->movementState != 0)
     {
-        if (*(char*)(attach + 0x56) != '\x02')
+        if (animUpdate->movementState != 2)
         {
-            *(float*)(attach + 0x4c) = lbl_803E3588;
-            *(float*)(attach + 0x40) = *(float*)(obj + 6) - *(float*)(refObj + 6);
-            *(float*)(attach + 0x44) = *(float*)(obj + 8) - *(float*)(refObj + 8);
-            *(float*)(attach + 0x48) = *(float*)(obj + 10) - *(float*)(refObj + 10);
-            *(short*)(attach + 0x50) = *obj - (u16) * refObj;
-            if (0x8000 < *(short*)(attach + 0x50))
+            animUpdate->posOffsetScale = lbl_803E3588;
+            animUpdate->posOffsetX = *(float*)(obj + 6) - *(float*)(refObj + 6);
+            animUpdate->posOffsetY = *(float*)(obj + 8) - *(float*)(refObj + 8);
+            animUpdate->posOffsetZ = *(float*)(obj + 10) - *(float*)(refObj + 10);
+            animUpdate->rotOffsetX = *obj - (u16)*refObj;
+            if (0x8000 < animUpdate->rotOffsetX)
             {
-                *(short*)(attach + 0x50) = *(short*)(attach + 0x50) - 0xffff;
+                animUpdate->rotOffsetX = animUpdate->rotOffsetX - 0xffff;
             }
-            if (*(short*)(attach + 0x50) < -0x8000)
+            if (animUpdate->rotOffsetX < -0x8000)
             {
-                *(short*)(attach + 0x50) = *(short*)(attach + 0x50) + 0xffff;
+                animUpdate->rotOffsetX = animUpdate->rotOffsetX + 0xffff;
             }
-            *(short*)(attach + 0x52) = obj[1] - (u16)refObj[1];
-            if (0x8000 < *(short*)(attach + 0x52))
+            animUpdate->rotOffsetY = obj[1] - (u16)refObj[1];
+            if (0x8000 < animUpdate->rotOffsetY)
             {
-                *(short*)(attach + 0x52) = *(short*)(attach + 0x52) - 0xffff;
+                animUpdate->rotOffsetY = animUpdate->rotOffsetY - 0xffff;
             }
-            if (*(short*)(attach + 0x52) < -0x8000)
+            if (animUpdate->rotOffsetY < -0x8000)
             {
-                *(short*)(attach + 0x52) = *(short*)(attach + 0x52) + 0xffff;
+                animUpdate->rotOffsetY = animUpdate->rotOffsetY + 0xffff;
             }
-            *(short*)(attach + 0x54) = (u16)refObj[2] - (u16)obj[2];
-            if (0x8000 < *(short*)(attach + 0x54))
+            animUpdate->rotOffsetZ = (u16)refObj[2] - (u16)obj[2];
+            if (0x8000 < animUpdate->rotOffsetZ)
             {
-                *(short*)(attach + 0x54) = *(short*)(attach + 0x54) - 0xffff;
+                animUpdate->rotOffsetZ = animUpdate->rotOffsetZ - 0xffff;
             }
-            if (*(short*)(attach + 0x54) < -0x8000)
+            if (animUpdate->rotOffsetZ < -0x8000)
             {
-                *(short*)(attach + 0x54) = *(short*)(attach + 0x54) + 0xffff;
+                animUpdate->rotOffsetZ = animUpdate->rotOffsetZ + 0xffff;
             }
-            *(undefined*)(attach + 0x56) = 2;
+            animUpdate->movementState = 2;
         }
-        *(float*)(attach + 0x4c) =
-            -(*(float*)(attach + 0x24) * timeDelta - *(float*)(attach + 0x4c));
-        if (*(float*)(attach + 0x4c) <= lbl_803E3528)
+        animUpdate->posOffsetScale = -(animUpdate->posOffsetDecay * timeDelta - animUpdate->posOffsetScale);
+        if (animUpdate->posOffsetScale <= lbl_803E3528)
         {
-            *(undefined*)(attach + 0x56) = 0;
+            animUpdate->movementState = 0;
         }
     }
     if (*(int*)(obj + 0x7c) == 0)

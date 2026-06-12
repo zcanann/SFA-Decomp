@@ -6,8 +6,20 @@
 #include "main/objseq_control.h"
 
 typedef struct ObjAnimUpdateState {
-  u8 pad00[0x56];
-  u8 sequenceEventActive;
+  u8 pad00[0x24];
+  f32 posOffsetDecay;
+  u8 pad28[0x40 - 0x28];
+  f32 posOffsetX;
+  f32 posOffsetY;
+  f32 posOffsetZ;
+  f32 posOffsetScale;
+  s16 rotOffsetX;
+  s16 rotOffsetY;
+  s16 rotOffsetZ;
+  union {
+    u8 sequenceEventActive;
+    u8 movementState;
+  };
   s8 sequenceSlot;
   u8 pad58[0x6E - 0x58];
   union {
@@ -36,6 +48,14 @@ typedef struct ObjAnimUpdateState {
   ObjAnimEventList animEvents;
 } ObjAnimUpdateState;
 
+STATIC_ASSERT(offsetof(ObjAnimUpdateState, posOffsetDecay) == 0x24);
+STATIC_ASSERT(offsetof(ObjAnimUpdateState, posOffsetX) == 0x40);
+STATIC_ASSERT(offsetof(ObjAnimUpdateState, posOffsetY) == 0x44);
+STATIC_ASSERT(offsetof(ObjAnimUpdateState, posOffsetZ) == 0x48);
+STATIC_ASSERT(offsetof(ObjAnimUpdateState, posOffsetScale) == 0x4C);
+STATIC_ASSERT(offsetof(ObjAnimUpdateState, rotOffsetX) == 0x50);
+STATIC_ASSERT(offsetof(ObjAnimUpdateState, rotOffsetY) == 0x52);
+STATIC_ASSERT(offsetof(ObjAnimUpdateState, rotOffsetZ) == 0x54);
 STATIC_ASSERT(offsetof(ObjAnimUpdateState, sequenceEventActive) == 0x56);
 STATIC_ASSERT(offsetof(ObjAnimUpdateState, sequenceSlot) == 0x57);
 STATIC_ASSERT(offsetof(ObjAnimUpdateState, hitVolumePair) == 0x6E);
