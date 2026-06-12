@@ -1,4 +1,4 @@
-/* === moved from main/dll/DIM/DIMcannon.c [801B0670-801B0924) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x01C1 (dimsnowball) — DIM snowball object [0x801B0DD4-0x801B13E8). */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/linklevcontrolstate_struct.h"
 #include "main/dll/lavaball1bfstate_struct.h"

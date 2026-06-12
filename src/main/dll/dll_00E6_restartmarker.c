@@ -1,4 +1,4 @@
-/* === moved from main/dll/xyzanimator.c [8016B230-8016B2E0) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x00E6 (restartmarker) — Restart marker object [0x801713D8-0x801713FC). */
 #include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/effect_interfaces.h"

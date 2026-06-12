@@ -1,4 +1,4 @@
-/* === moved from main/dll/DIM/DIMboulder.c [801AE0EC-801AE100) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x01BE (dimlava) — DIM lava objects [0x801AF9E4-0x801B02BC). */
 #pragma scheduling on
 #pragma peephole on
 #include "main/effect_interfaces.h"

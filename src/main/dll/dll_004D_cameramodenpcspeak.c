@@ -1,4 +1,4 @@
-/* === moved from main/dll/CAM/camDebug.c [8010DB7C-8010DD58) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x004D (cameramodenpcspeak) — Camera mode NPC speak handlers [0x8010DB7C-0x8010E51C). */
 #include "main/dll/CAM/camnpcspeak_state.h"
 #include "main/dll/cameramodetitlepose_struct.h"
 #include "main/game_object.h"

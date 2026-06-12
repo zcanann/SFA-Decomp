@@ -1,4 +1,4 @@
-/* === merged from main/dll/waterfallControl.c [80163BBC-801641B0) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x00D2 (tumbleweed) — Tumbleweed and tumbleweed bush objects [0x80163BBC-0x801650D0). */
 #pragma scheduling on
 #pragma peephole on
 #include "main/audio/sfx_ids.h"

@@ -1,4 +1,4 @@
-/* === moved from main/dll/mmp_moonrock.c [80192394-801923C4) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x013A (visanimator) — Visibility animator object [0x8019423C-0x80194408). */
 #pragma scheduling off
 #pragma peephole off
 #include "main/dll/mmp_moonrock.h"

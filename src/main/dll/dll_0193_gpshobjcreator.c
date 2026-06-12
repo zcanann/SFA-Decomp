@@ -1,4 +1,4 @@
-/* === moved from main/dll/mmshrine/shrine1C2.c [801C70F0-801C7724) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0193 (gpshobjcreator) — GPSH shrine object creator and ecsh_shrine update [0x801C8084-0x801C82C8). */
 #include "main/obj_placement.h"
 #include "main/dll/gpshshrineflags_struct.h"
 #include "main/game_object.h"

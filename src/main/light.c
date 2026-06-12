@@ -1,4 +1,4 @@
-/* === merged from main/dll/VF/dll_021E_vfpblock1.c [801FB9AC-801FB9F4) (TU re-split, docs/boundary_audit.md) === */
+/* Light functions and VFP block 1 object [0x801FB9AC-0x801FD4A8). */
 #include "main/dll/VF/vf_shared.h"
 
 /*

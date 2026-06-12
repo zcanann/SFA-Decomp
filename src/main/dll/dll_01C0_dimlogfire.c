@@ -1,4 +1,4 @@
-/* === moved from main/dll/DIM/DIMcannon.c [801B0670-801B0924) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x01C0 (dimlogfire) — DIM logfire object [0x801B0670-0x801B0DD4). */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/linklevcontrolstate_struct.h"
 #include "main/dll/lavaball1bfstate_struct.h"

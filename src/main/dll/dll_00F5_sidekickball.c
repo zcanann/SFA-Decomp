@@ -1,4 +1,4 @@
-/* === moved from main/dll/autoTransporter.c [801793A4-801797A4) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x00F5 (sidekickball) — Sidekick ball and auto-transporter objects [0x801793A4-0x8017A00C). */
 #include "main/dll/dll_00F4_doorf4.h"
 #include "main/game_object.h"
 #include "main/objseq.h"

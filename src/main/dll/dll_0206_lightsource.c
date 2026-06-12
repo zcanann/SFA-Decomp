@@ -1,4 +1,4 @@
-/* === merged from main/dll/ARW/dll_801F33B4.c [801F33B4-801F37CC) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0206 (lightsource) — Light source and Arwing attachment objects [0x801F33B4-0x801F3C2C). */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/laserbeamstate_struct.h"
 #include "main/dll/dll200state_struct.h"

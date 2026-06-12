@@ -1,4 +1,4 @@
-/* === moved from main/dll/TREX/TREX_levelcontrol.c [801E4288-801E42F8) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x801E66DC — SB ship gun and related Starfox battle objects [0x801E66DC-0x801E67BC). */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/shipbattlestate_struct.h"
 #include "main/dll/sbkytecagestate_struct.h"

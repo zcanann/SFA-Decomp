@@ -1,4 +1,4 @@
-/* === moved from main/dll/CF/dll_166.c [8018ADB4-8018ADF0) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0120 (trickyguardspot) — Tricky guard spot object [0x8018B7B0-0x8018B9F0). */
 #include "main/objseq.h"
 
 

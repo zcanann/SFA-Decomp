@@ -1,4 +1,4 @@
-/* === moved from main/dll/DIM/DIMboulder.c [801AE0EC-801AE100) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x016E (imanimspacecraft) — IM animated spacecraft object [0x801AE144-0x801AE508). */
 #pragma scheduling on
 #pragma peephole on
 #include "main/effect_interfaces.h"

@@ -1,4 +1,4 @@
-/* === moved from main/dll/SH/SHkillermushroom.c [801D3378-801D383C) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x01AA (bombplantspore) — Bomb plant spore projectile [0x801D3378-0x801D3FF4). */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/SH/dll_01A9_bombplant.h"

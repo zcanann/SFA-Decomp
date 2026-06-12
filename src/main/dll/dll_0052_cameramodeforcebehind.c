@@ -1,4 +1,4 @@
-/* === moved from main/dll/CAM/camDebug.c [8010DB7C-8010DD58) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0052 (cameramodeforcebehind) — Camera mode force-behind handlers [0x8010FC74-0x801101E4). */
 #include "main/dll/CAM/camnpcspeak_state.h"
 #include "main/game_object.h"
 #include "main/mm.h"

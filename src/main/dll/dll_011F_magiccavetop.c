@@ -1,4 +1,4 @@
-/* === moved from main/dll/CF/dll_166.c [8018ADB4-8018ADF0) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x011F (magiccavetop) — Magic Cave top area objects [0x8018AFC8-0x8018B7B0). */
 #include "main/objseq.h"
 
 extern uint GameBit_Get(int eventId);

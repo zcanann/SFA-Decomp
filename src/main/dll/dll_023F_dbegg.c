@@ -1,4 +1,4 @@
-/* === moved from main/main.c [801FE118-801FEB30) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x023F (dbegg) — DB egg and Dragon Fire Palace objects [0x801FE118-0x801FF884). */
 #pragma scheduling on
 #pragma peephole on
 #include "main/game_object.h"

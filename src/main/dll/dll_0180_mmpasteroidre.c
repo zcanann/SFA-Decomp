@@ -1,4 +1,4 @@
-/* === moved from main/dll/IM/IMspacecraft.c [801A6638-801A6778) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x0180 (mmpasteroidre) — MMP asteroid re-entry object [0x801A6F4C-0x801A78C8). */
 #pragma scheduling off
 #pragma peephole off
 #include "main/objseq.h"

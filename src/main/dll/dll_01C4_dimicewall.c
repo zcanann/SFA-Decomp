@@ -1,4 +1,4 @@
-/* === moved from main/dll/DIM/dimsnowball_init.c [801B13E8-801B13F0) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x01C4 (dimicewall) — DIM ice wall and gate objects [0x801B17F4-0x801B1B40). */
 #include "ghidra_import.h"
 #include "main/dll/dimicewallstate_struct.h"
 

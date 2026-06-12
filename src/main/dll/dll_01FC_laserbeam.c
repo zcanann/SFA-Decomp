@@ -1,4 +1,4 @@
-/* === moved from main/dll/WC/WClaser.c [801F0AE4-801F0B50) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x01FC (laserbeam) — WC laser beam and related objects [0x801F0AE4-0x801F160C). */
 #include "main/dll/WC/WClaser.h"
 #include "main/dll/dll1fbstate_struct.h"
 #include "main/dll/laserbeamstate_struct.h"

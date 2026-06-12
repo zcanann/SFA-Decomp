@@ -1,4 +1,4 @@
-/* === moved from main/dll/tFrameAnimator.c [8017A350-8017A38C) (TU re-split, docs/boundary_audit.md) === */
+/* DLL 0x00F9 (projectileswitch) — Projectile switch object [0x8017A350-0x8017A8EC). */
 #include "main/dll/tFrameAnimator.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
