@@ -144,9 +144,11 @@ void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8
     uint uVar1;
     int iVar2;
     int iVar3;
+    ObjHitsPriorityState* hitState;
     int hitObject;
 
     iVar3 = *(int*)&((GameObject*)param_9)->extra;
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
     uVar1 = FUN_8007f6c8((float*)(iVar3 + 0x20));
     if (uVar1 == 0)
     {
@@ -162,7 +164,7 @@ void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8
             ObjHits_DisableObject((u32)param_9);
             FUN_8007f718((float*)(iVar3 + 0x20), 0x78);
         }
-        if ((*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->contactFlags != 0)
+        if (hitState->contactFlags != 0)
         {
             ObjHits_DisableObject((u32)param_9);
             *(float*)&((XyzAnimatorState*)iVar3)->unk8 = lbl_803E3DF8;
@@ -427,6 +429,7 @@ void pollenfragment_update(int obj)
 {
     u8* extra;
     u8* nearObj;
+    ObjHitsPriorityState* hitState;
     void* hit;
     int i;
     f32 w;
@@ -436,6 +439,7 @@ void pollenfragment_update(int obj)
     XyzVec pos;
 
     extra = *(u8**)&((GameObject*)obj)->extra;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     if (getCurSeqNo() != 0)
     {
         Obj_FreeObject(obj);
@@ -553,7 +557,7 @@ void pollenfragment_update(int obj)
             ((GameObject*)obj)->anim.velocityZ * timeDelta);
     ObjHits_SetHitVolumeSlot((u32)obj, 0x16, 1, 0);
     ObjHits_EnableObject((u32)obj);
-    hit = (void*)(*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject;
+    hit = (void*)hitState->lastHitObject;
     if (hit != NULL && *(s16*)((u8*)hit + 0x46) != ((GameObject*)obj)->anim.seqId && hit != *(void**)extra)
     {
         *(f32*)(extra + 8) = lbl_803E3160;

@@ -44,9 +44,11 @@ void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8
     uint uVar1;
     int iVar2;
     int iVar3;
+    ObjHitsPriorityState* hitState;
     undefined4 auStack_18[4];
 
     iVar3 = *(int*)&((GameObject*)param_9)->extra;
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
     uVar1 = FUN_8007f6c8((float*)(iVar3 + 0x20));
     if (uVar1 == 0)
     {
@@ -62,7 +64,7 @@ void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8
             ObjHits_DisableObject(param_9);
             FUN_8007f718((float*)(iVar3 + 0x20), 0x78);
         }
-        if ((*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->contactFlags != 0)
+        if (hitState->contactFlags != 0)
         {
             ObjHits_DisableObject(param_9);
             *(float*)&((XyzAnimatorState*)iVar3)->unk8 = lbl_803E3DF8;
