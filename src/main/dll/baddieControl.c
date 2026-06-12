@@ -18,12 +18,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
 
-typedef struct Dll19State
-{
-    u8 pad0[0x354 - 0x0];
-    s8 progressNumerator;
-    u8 pad355[0x358 - 0x355];
-} Dll19State;
+#include "main/dll/dll19_state.h"
 
 
 typedef struct CameraArwingWork
