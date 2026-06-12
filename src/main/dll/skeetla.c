@@ -10,6 +10,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/baddie/skeetla.h"
+#include "main/objhits.h"
 #include "main/objfx.h"
 #include "ghidra_import.h"
 
@@ -34,7 +35,6 @@ extern void objfx_spawnHitEmitterAtPos(void* hitPos, int a, int b, int c, int d)
 extern void Sfx_PlayFromObject(u8* obj, int sfxId);
 extern int coordsToMapCell(f32 x, f32 z);
 extern int ObjGroup_FindNearestObject(int group, u8* obj, f32* outDistance);
-extern int ObjHits_PollPriorityHitWithCooldown(u8* obj, f32* cooldown, void** outObj, f32* outPos);
 extern int trickyDebugPrint(const char* fmt, ...);
 
 #pragma peephole off
@@ -125,6 +125,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
     f32 hitPos[3];
     f32 lightArgs[3];
     f32* hitPosPtr;
+    int hitObject;
     u8 doGroundSnap;
     int doHeightSnap;
     int hitKind;
@@ -244,8 +245,9 @@ void trickyUpdateCollisionAndPathState(u8* obj)
 
     state->lastContactObj = lastContactObj;
     hitPosPtr = hitPos;
-    hitKind = ObjHits_PollPriorityHitWithCooldown(obj, &state->hitCooldown,
-                                                  (void**)&lastContactObj, hitPosPtr);
+    hitKind = ObjHits_PollPriorityHitWithCooldown((int)obj, &state->hitCooldown,
+                                                  &hitObject, hitPosPtr);
+    lastContactObj = (void*)hitObject;
     state->light = hitKind;
 
     switch (state->light)
