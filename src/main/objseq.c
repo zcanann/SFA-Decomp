@@ -1704,9 +1704,9 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
     u8* walk;
     s16* vec;
     s16* vec2;
-    u8* tex1;
-    u8* tex2;
-    u8* tex5;
+    ObjTextureRuntimeSlot* tex1;
+    ObjTextureRuntimeSlot* tex2;
+    ObjTextureRuntimeSlot* tex5;
     int* modelIds;
     int vol;
     int i;
@@ -2105,8 +2105,8 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
 
         if ((((ObjSeqState*)seq)->flags & 0x40) != 0)
         {
-            tex1 = (u8*)objFindTexture((int)seqObj, 1, 0);
-            tex2 = (u8*)objFindTexture((int)seqObj, 0, 0);
+            tex1 = objFindTexture(seqObj, 1, 0);
+            tex2 = objFindTexture(seqObj, 0, 0);
             if (tex1 != NULL || tex2 != NULL)
             {
                 if (((ObjSeqState*)seq)->trackRunLength[15] != 0)
@@ -2133,11 +2133,11 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                 scroll = (int)(lbl_803DF004 * val);
                 if (tex1 != NULL)
                 {
-                    *(s16*)(tex1 + 8) = scroll;
+                    tex1->offsetS = scroll;
                 }
                 if (tex2 != NULL)
                 {
-                    *(s16*)(tex2 + 8) = (s16) - scroll;
+                    tex2->offsetS = (s16)-scroll;
                 }
 
                 if (((ObjSeqState*)seq)->trackRunLength[16] != 0)
@@ -2164,23 +2164,23 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                 scroll = (s16) - (int)(lbl_803DF004 * val);
                 if (tex1 != NULL)
                 {
-                    *(s16*)(tex1 + 0xa) = scroll;
+                    tex1->offsetT = scroll;
                 }
                 if (tex2 != NULL)
                 {
-                    *(s16*)(tex2 + 0xa) = scroll;
+                    tex2->offsetT = scroll;
                 }
             }
 
-            tex5 = (u8*)objFindTexture((int)seqObj, 5, 0);
-            tex2 = (u8*)objFindTexture((int)seqObj, 4, 0);
+            tex5 = objFindTexture(seqObj, 5, 0);
+            tex2 = objFindTexture(seqObj, 4, 0);
             if (tex5 != NULL)
             {
-                *(int*)tex5 = (s16)((ObjSeqState*)seq)->unk8D << 8;
+                tex5->textureId = (s16)((ObjSeqState*)seq)->unk8D << 8;
             }
             if (tex2 != NULL)
             {
-                *(int*)tex2 = (s16)((ObjSeqState*)seq)->unk8E << 8;
+                tex2->textureId = (s16)((ObjSeqState*)seq)->unk8E << 8;
             }
         }
     }

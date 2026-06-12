@@ -7,6 +7,7 @@
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
 #include "main/newclouds.h"
+#include "main/objtexture.h"
 #include "main/resource.h"
 #include "main/screen_transition.h"
 
@@ -1118,7 +1119,6 @@ extern void debugPrintf(char *fmt, ...);
 #pragma pop
 
 extern int ObjModel_GetRenderOp(int model, int x);
-extern int *objFindTexture(int obj, int idx, int p3);
 
 #pragma push
 #pragma pop
