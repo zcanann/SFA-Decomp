@@ -1521,7 +1521,7 @@ main/dll/DIMwooddoor.c:
 main/dll/DIMlevcontrol.c:
 	.text       start:0x801B2550 end:0x801B3768
 
-main/dll/DIM2conveyor.c:
+main/dll/dim2conveyor.c:
 	.text       start:0x801B3768 end:0x801B3DE4
 
 main/dll/dll_01CA_dimexplosio.c:

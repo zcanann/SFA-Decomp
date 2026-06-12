@@ -1308,7 +1308,7 @@ config.libs = [
             Object(NonMatching, "main/dll/DIMExplosion.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/DIMwooddoor.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/DIMlevcontrol.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/DIM2conveyor.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/dim2conveyor.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_01CA_dimexplosio.c"),
             Object(NonMatching, "main/dll/dll_01CB_dimwooddoor.c"),
             Object(NonMatching, "main/dll/dll_01CE_dll1ce.c"),
