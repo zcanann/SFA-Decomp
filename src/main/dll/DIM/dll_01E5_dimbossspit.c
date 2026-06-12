@@ -222,15 +222,15 @@ void DIMbossspit_update(int obj)
             i = i + 1;
         }
         while (i < 3);
-        if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
         {
-            ((GameObject*)obj)->anim.localPosX = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->
-                contactPosX;
-            ((GameObject*)obj)->anim.localPosY = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->
-                contactPosY - lbl_803E4D50;
-            ((GameObject*)obj)->anim.localPosZ = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->
-                contactPosZ;
-            *(s16*)state = 1;
+            ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+            if (hitState->contactFlags != 0)
+            {
+                ((GameObject*)obj)->anim.localPosX = hitState->contactPosX;
+                ((GameObject*)obj)->anim.localPosY = hitState->contactPosY - lbl_803E4D50;
+                ((GameObject*)obj)->anim.localPosZ = hitState->contactPosZ;
+                *(s16*)state = 1;
+            }
         }
     }
     else
