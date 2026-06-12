@@ -683,26 +683,26 @@ main/dll/blasted.c:
 main/dll/dll_0105_largecrate.c:
 	.text       start:0x801833E4 end:0x801843C0
 
-main/dll/CF/dll_0106_scarab.c:
+main/dll/dll_0106_scarab.c:
 	.text       start:0x801843C0 end:0x80185868
 
 main/dll/CF/dll_0107_unused.c:
 	.text       start:0x80185868 end:0x8018646C
 
-main/dll/CF/dll_0108_endobject.c:
+main/dll/dll_0108_endobject.c:
 	.text       start:0x8018646C end:0x80186498
 	.data       start:0x803217C0 end:0x803217F8
 
-main/dll/CF/dll_010D_portalspelldoor.c:
+main/dll/dll_010D_portalspelldoor.c:
 	.text       start:0x80186498 end:0x80186704
 
-main/dll/CF/dll_010C_lanternfirefly.c:
+main/dll/dll_010C_lanternfirefly.c:
 	.text       start:0x80186704 end:0x801871C8
 
-main/dll/CF/dll_010B_fireflylantern.c:
+main/dll/dll_010B_fireflylantern.c:
 	.text       start:0x801871C8 end:0x80187640
 
-main/dll/CF/dll_00E7_flammablevine.c:
+main/dll/dll_00E7_flammablevine.c:
 	.text       start:0x80187640 end:0x80187BA0
 
 main/dll/CF/dll_0109_unk.c:
@@ -711,76 +711,76 @@ main/dll/CF/dll_0109_unk.c:
 main/dll/CF/dll_010A_fallladders.c:
 	.text       start:0x80187F30 end:0x8018824C
 
-main/dll/CF/dll_0119_coldwatercontrol.c:
+main/dll/dll_0119_coldwatercontrol.c:
 	.text       start:0x8018824C end:0x80188398
 
-main/dll/CF/dll_00EC_infopoint.c:
+main/dll/dll_00EC_infopoint.c:
 	.text       start:0x80188398 end:0x80188584
 
-main/dll/CF/dll_011A_decoration11a.c:
+main/dll/dll_011A_decoration11a.c:
 	.text       start:0x80188584 end:0x801889C8
 
-main/dll/CF/dll_011B_landedarwing.c:
+main/dll/dll_011B_landedarwing.c:
 	.text       start:0x801889C8 end:0x801899B4
 
 main/dll/CF/CFPrisonGuard.c:
 	.text       start:0x801899B4 end:0x80189F5C
 
-main/dll/CF/dll_011C_staffactivated.c:
+main/dll/dll_011C_staffactivated.c:
 	.text       start:0x80189F5C end:0x8018A8BC
 
-main/dll/CF/dll_011D_treasurechest.c:
+main/dll/dll_011D_treasurechest.c:
 	.text       start:0x8018A8BC end:0x8018ADB4
 
-main/dll/CF/dll_011E_magiccavebottom.c:
+main/dll/dll_011E_magiccavebottom.c:
 	.text       start:0x8018ADB4 end:0x8018AFC8
 
-main/dll/CF/dll_011F_magiccavetop.c:
+main/dll/dll_011F_magiccavetop.c:
 	.text       start:0x8018AFC8 end:0x8018B7B0
 
-main/dll/CF/dll_0120_trickyguardspot.c:
+main/dll/dll_0120_trickyguardspot.c:
 	.text       start:0x8018B7B0 end:0x8018B9F0
 
-main/dll/CF/dll_0121_infotext.c:
+main/dll/dll_0121_infotext.c:
 	.text       start:0x8018B9F0 end:0x8018BB00
 
-main/dll/CF/dll_0122_cctestinfot.c:
+main/dll/dll_0122_cctestinfot.c:
 	.text       start:0x8018BB00 end:0x8018BC48
 
 main/dll/CF/dll_0124_deathgas.c:
 	.text       start:0x8018BC48 end:0x8018C000
 
-main/dll/CF/dll_0123_fuelcell.c:
+main/dll/dll_0123_fuelcell.c:
 	.text       start:0x8018C000 end:0x8018C7D8
 
-main/dll/CF/dll_010E_deathseq.c:
+main/dll/dll_010E_deathseq.c:
 	.text       start:0x8018C7D8 end:0x8018CD64
 
 main/dll/CF/dll_0127_dll127.c:
 	.text       start:0x8018CD64 end:0x8018CEE4
 
-main/dll/CF/dll_0129_campfire.c:
+main/dll/dll_0129_campfire.c:
 	.text       start:0x8018CEE4 end:0x8018D4AC
 
-main/dll/CF/dll_0128_kttorch.c:
+main/dll/dll_0128_kttorch.c:
 	.text       start:0x8018D4AC end:0x8018D6E8
 
 main/dll/CF/dll_012A_cfcrate.c:
 	.text       start:0x8018D6E8 end:0x8018E6C4
 
-main/dll/CF/dll_012B_fxemit.c:
+main/dll/dll_012B_fxemit.c:
 	.text       start:0x8018E6C4 end:0x8018F148
 
-main/dll/CF/dll_0130_areafxemit.c:
+main/dll/dll_0130_areafxemit.c:
 	.text       start:0x8018F148 end:0x8018FF28
 
-main/dll/CF/dll_012D_lfxemitter.c:
+main/dll/dll_012D_lfxemitter.c:
 	.text       start:0x8018FF28 end:0x8019042C
 
 main/dll/CF/warppad.c:
 	.text       start:0x8019042C end:0x80190BD4
 
-main/dll/CF/dll_012C_transporter.c:
+main/dll/dll_012C_transporter.c:
 	.text       start:0x80190BD4 end:0x80191A70
 
 main/dll/moonseedbush.c:
@@ -1301,11 +1301,11 @@ main/dll/DF/dll_0235_dfptargetblock.c:
 	.text       start:0x80208508 end:0x80208FDC
 	.data       start:0x80329B78 end:0x80329BC0
 
-main/dll/CF/dll_0236_dfplaserbe.c:
+main/dll/dll_0236_dfplaserbe.c:
 	.text       start:0x80208FDC end:0x802090A8
 	.data       start:0x80329BC0 end:0x80329C48
 
-main/dll/CF/dll_0237_dfpsppl.c:
+main/dll/dll_0237_dfpsppl.c:
 	.text       start:0x802090A8 end:0x8020930C
 	.data       start:0x80329C48 end:0x80329C80
 
