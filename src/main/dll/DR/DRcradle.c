@@ -214,14 +214,14 @@ void SnowBike_func15(int obj)
 extern void setMatrixFromObjectPos(void* mtx, s16* vec);
 extern void mtxRotateByVec3s(void* mtx, s16* vec);
 
-typedef struct SnowBikeFlags
+typedef struct DRcradleSnowBikeFlags
 {
     u8 resetLatch : 1; /* 0x80 */
     u8 pathActive : 1; /* 0x40 */
     u8 uiPrompt : 1; /* 0x20 */
     u8 impulseLatch : 1; /* 0x10 */
     u8 flags : 4;
-} SnowBikeFlags;
+} DRcradleSnowBikeFlags;
 
 /*
  * --INFO--
@@ -275,7 +275,7 @@ void fn_801EC7A0(int p1, int p2)
 void fn_801EC870(int p1, register int p2_int)
 {
     f32 fz, fa, fb, fc;
-    SnowBikeFlags* flags;
+    DRcradleSnowBikeFlags* flags;
     *(f32*)(p2_int + 0x52c) = lbl_803E5C34;
     *(f32*)(p2_int + 0x530) = lbl_803E5C38;
     *(f32*)(p2_int + 0x534) = lbl_803E5BF4;
@@ -288,7 +288,7 @@ void fn_801EC870(int p1, register int p2_int)
     *(f32*)(p2_int + 0x544) = lbl_803E5AF8;
     *(f32*)(p2_int + 0x558) = lbl_803E5BA8;
     *(f32*)(p2_int + 0x56c) = lbl_803E5C00;
-    flags = (SnowBikeFlags*)(p2_int + 0x428);
+    flags = (DRcradleSnowBikeFlags*)(p2_int + 0x428);
     flags->resetLatch = 0;
     *(f32*)(p2_int + 0x430) = fz;
     fa = *(f32*)(p2_int + 0x470);
