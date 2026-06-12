@@ -177,21 +177,18 @@ void InvisibleHitSwitch_init(int obj, u8* param_2)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
     if (param_2[0x1d] == 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
+        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     }
     else
     {
         {
-            f32 v = (f32)(u32)param_2[0x1d] * *(f32
-            *
-            )
-            (*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
+            f32 v = (f32)(u32)param_2[0x1d] * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
             ((GameObject*)obj)->anim.rootMotionScale = v * lbl_803E3750;
         }
     }
     ObjHitbox_SetSphereRadius(
         obj,
-        (s16)((param_2[0x1d] * (int)*(u8*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x62)) / 64));
+        (s16)((param_2[0x1d] * (int)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius) / 64));
     info[0] = (u8)GameBit_Get(*(s16*)(param_2 + 0x18));
     switch ((param_2[0x23] & 0xe) >> 1)
     {
