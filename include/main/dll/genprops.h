@@ -11,7 +11,7 @@
 int mikabomb_getExtraSize();
 int mikabomb_getObjectTypeId();
 void mikabomb_free();
-void mikabomb_render();
+void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void mikabomb_hitDetect();
 void mikabomb_update(int *obj);
 void mikabomb_init();
