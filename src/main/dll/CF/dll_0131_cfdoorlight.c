@@ -127,6 +127,7 @@ void cf_doorlight_init(GameObject* obj, CfDoorLightMapData* mapData)
     register CfDoorLightState* state = obj->extra;
     state->textureId = 0;
     obj->anim.rotX = (s16)(mapData->rotXByte << 9);
+    /* placement frames are whole frames; runtime frames are 1/256ths */
     state->maxFrame = mapData->maxFrame << 8;
     state->frameStep = (u8)mapData->frameStep;
     state->resetFrame = mapData->resetFrame << 8;

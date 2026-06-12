@@ -27,6 +27,31 @@ STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
 STATIC_ASSERT(offsetof(CfPowerBaseMapData, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(CfPowerBaseMapData, typeBit) == 0x1E);
 
+/* pylon beam-report protocol shared with cfmaincrystal (dll_014B): the
+   crystal probes each pylon with the matching message; the powered base
+   bounces it back at the requester once its trigger sequence has played
+   far enough. CFPOWERBASE_MSG_POWERED marks this base lit. */
+enum
+{
+    CFPOWERBASE_MSG_POWERED = 0xA0005,
+    CFPOWERBASE_MSG_PYLON_1 = 0x110001,
+    CFPOWERBASE_MSG_PYLON_2 = 0x110002,
+    CFPOWERBASE_MSG_PYLON_3 = 0x110003
+};
+
+/* game bits: one type bit per base (0x54..0x56, also used as the
+   placement type id); 0x4E0 is granted once all three are powered. */
+enum
+{
+    GAMEBIT_CFBASE_1 = 0x54,
+    GAMEBIT_CFBASE_2 = 0x55,
+    GAMEBIT_CFBASE_3 = 0x56,
+    GAMEBIT_CF_ALL_BASES = 0x4E0
+};
+
+/* trigger-sequence progress past which pylon messages are answered */
+#define CFPOWERBASE_SEQ_READY 175
+
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
@@ -56,25 +81,25 @@ int cfpowerbase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate)
     {
         switch (msgType)
         {
-        case 0x110001:
-            if (sub->typeBit == 84 && *(s16*)(animUpdateBytes + 0x58) > 175)
+        case CFPOWERBASE_MSG_PYLON_1:
+            if (sub->typeBit == GAMEBIT_CFBASE_1 && *(s16*)(animUpdateBytes + 0x58) > CFPOWERBASE_SEQ_READY)
             {
-                ObjMsg_SendToObject((void*)msgArg, 0x110001, p1, 0);
+                ObjMsg_SendToObject((void*)msgArg, CFPOWERBASE_MSG_PYLON_1, p1, 0);
             }
             break;
-        case 0x110002:
-            if (sub->typeBit == 85 && *(s16*)(animUpdateBytes + 0x58) > 175)
+        case CFPOWERBASE_MSG_PYLON_2:
+            if (sub->typeBit == GAMEBIT_CFBASE_2 && *(s16*)(animUpdateBytes + 0x58) > CFPOWERBASE_SEQ_READY)
             {
-                ObjMsg_SendToObject((void*)msgArg, 0x110002, p1, 0);
+                ObjMsg_SendToObject((void*)msgArg, CFPOWERBASE_MSG_PYLON_2, p1, 0);
             }
             break;
-        case 0x110003:
-            if (sub->typeBit == 86 && *(s16*)(animUpdateBytes + 0x58) > 175)
+        case CFPOWERBASE_MSG_PYLON_3:
+            if (sub->typeBit == GAMEBIT_CFBASE_3 && *(s16*)(animUpdateBytes + 0x58) > CFPOWERBASE_SEQ_READY)
             {
-                ObjMsg_SendToObject((void*)msgArg, 0x110003, p1, 0);
+                ObjMsg_SendToObject((void*)msgArg, CFPOWERBASE_MSG_PYLON_3, p1, 0);
             }
             break;
-        case 0xA0005:
+        case CFPOWERBASE_MSG_POWERED:
             GameBit_Set(sub->typeBit, 1);
             break;
         }
@@ -85,9 +110,9 @@ int cfpowerbase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate)
         switch (animUpdate->eventIds[i])
         {
         case 1:
-            if (GameBit_Get(84) != 0 && GameBit_Get(85) != 0 && GameBit_Get(86) != 0)
+            if (GameBit_Get(GAMEBIT_CFBASE_1) != 0 && GameBit_Get(GAMEBIT_CFBASE_2) != 0 && GameBit_Get(GAMEBIT_CFBASE_3) != 0)
             {
-                GameBit_Set(1248, 1);
+                GameBit_Set(GAMEBIT_CF_ALL_BASES, 1);
             }
             break;
         }
@@ -160,16 +185,16 @@ void cfpowerbase_init(int* obj, u8* params)
     type = sub->typeBit;
     switch (type)
     {
-    case 0x54:
+    case GAMEBIT_CFBASE_1:
         sub->litBit = 0x51;
         sub->typeIndex = 0;
         break;
-    case 0x55:
+    case GAMEBIT_CFBASE_2:
         sub->litBit = 0x52;
         sub->typeIndex = 1;
         Obj_SetActiveModelIndex(obj, 2);
         break;
-    case 0x56:
+    case GAMEBIT_CFBASE_3:
         sub->litBit = 0x53;
         sub->typeIndex = 2;
         Obj_SetActiveModelIndex(obj, 1);

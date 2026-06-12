@@ -57,6 +57,12 @@ STATIC_ASSERT(offsetof(CfForceFieldEmitter, angleStep) == 0x08);
 STATIC_ASSERT(offsetof(CfForceFieldEmitter, waveScale) == 0x14);
 STATIC_ASSERT(sizeof(CfForceFieldEmitter) == 0x18);
 
+/* the second collapse jingle is skipped for the placement on this map */
+#define CFFORCEFIELD_MAP_SILENT_COLLAPSE 0x47F5E
+
+/* frames the collapse spin-down runs for */
+#define CFFORCEFIELD_COLLAPSE_FRAMES 60
+
 extern u32 randomGetRange(int min, int max);
 extern uint GameBit_Get(int eventId);
 extern void Obj_BuildWorldTransformMatrix(void* obj, f32* mtx, int flags);
@@ -70,14 +76,14 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void storeZeroToFloatParam(void* p);
 extern EffectInterface** gPartfxInterface;
 extern f32 timeDelta;
-extern f32 lbl_803DBE90;
-extern int lbl_803DBE94;
-extern int lbl_803DBE98;
-extern int lbl_80322ED8[];
-extern f32 lbl_803E4390;
-extern f32 lbl_803E4394;
-extern f32 lbl_803E4398;
-extern f32 lbl_803E439C;
+extern f32 lbl_803DBE90; /* ring radius scale */
+extern int lbl_803DBE94; /* burst position jitter, +/- units */
+extern int lbl_803DBE98; /* collapse rotY rate */
+extern int lbl_80322ED8[]; /* CfForceFieldEmitter[3] style table */
+extern f32 lbl_803E4390; /* 0.0f */
+extern f32 lbl_803E4394; /* 1.0f */
+extern f32 lbl_803E4398; /* 1/60 - collapse time -> ring scale */
+extern f32 lbl_803E439C; /* 512.0f - idle rotZ rate */
 
 int cfforcefield_getExtraSize(void) { return sizeof(CfForceFieldState); }
 
@@ -123,6 +129,8 @@ void cfforcefield_update(u8* obj)
     {
         if (!state->flags.disabled)
         {
+            /* the ring runs at full strength until the collapse timer is
+               started, then shrinks with the time left */
             style = data->style % 3;
             val = state->timer;
             isZero = (val != lbl_803E4390);
@@ -156,6 +164,8 @@ void cfforcefield_update(u8* obj)
                         mathSinf(3.1415927f * (f32)(angle + (s32)(100.0f * *wavePtr)) / 32768.0f);
                     local[2] = 0.0f;
                     PSMTXMultVecSR((f32*)mtx, local, local);
+                    /* burst target = ring point in world space; the burst
+                       inherits the field's velocity (obj + 0x24) */
                     world[3] = local[0] + ((GameObject*)obj)->anim.localPosX;
                     world[4] = local[1] + ((GameObject*)obj)->anim.localPosY;
                     world[5] = local[2] + ((GameObject*)obj)->anim.localPosZ;
@@ -165,6 +175,7 @@ void cfforcefield_update(u8* obj)
                 }
             }
 
+            /* collapse: spin while the timer runs, then switch off */
             if (fn_80080150(&state->timer) != 0)
             {
                 ((GameObject*)obj)->anim.rotY = (s16)((f32)(s32)lbl_803DBE98 * timeDelta + (f32)(s32)((GameObject*)obj)->anim.rotY);
@@ -176,16 +187,17 @@ void cfforcefield_update(u8* obj)
             }
             else if (GameBit_Get(data->collapseEvent) != 0)
             {
-                s16toFloat(&state->timer, 0x3c);
-                Sfx_PlayFromObject((int)obj, 0x366);
-                if (((CfForceFieldMapData*)((GameObject*)obj)->anim.placement)->base.mapId != 0x47f5e)
+                s16toFloat(&state->timer, CFFORCEFIELD_COLLAPSE_FRAMES);
+                Sfx_PlayFromObject((int)obj, 0x366); /* field power-down */
+                if (((CfForceFieldMapData*)((GameObject*)obj)->anim.placement)->base.mapId != CFFORCEFIELD_MAP_SILENT_COLLAPSE)
                 {
-                    Sfx_PlayFromObject((int)obj, 0x409);
+                    Sfx_PlayFromObject((int)obj, 0x409); /* collapse jingle */
                 }
             }
         }
         else
         {
+            /* a collapsed field re-arms once its collapse bit is cleared */
             state->flags.disabled = (u8)GameBit_Get(data->collapseEvent);
         }
     }
@@ -195,6 +207,7 @@ void cfforcefield_init(GameObject* obj, CfForceFieldMapData* data)
 {
     register CfForceFieldState* state = obj->extra;
     {
+        /* placement angle byte -> 1/65536-turn units */
         s8 v = data->rotXByte;
         s16 t = v << 8;
         obj->anim.rotX = t;

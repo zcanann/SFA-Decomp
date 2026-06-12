@@ -22,14 +22,17 @@ typedef struct CfMagicWallMapData
 STATIC_ASSERT(offsetof(CfMagicWallMapData, fadeRange) == 0x1A);
 STATIC_ASSERT(offsetof(CfMagicWallMapData, visibleEvent) == 0x20);
 
+/* a quarter turn: the wall is invisible when viewed from behind */
+#define CFMAGICWALL_SIDE_ANGLE 0x4000
+
 extern uint GameBit_Get(int eventId);
 extern int Obj_GetYawDeltaToObject();
 extern void objRenderFn_8003b8f4(f32);
 extern void* Obj_GetPlayerObject(void);
 extern f32 Vec_distance(void* a, void* b);
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
-extern f32 lbl_803E43D8;
-extern f32 lbl_803E43DC;
+extern f32 lbl_803E43D8; /* render scale */
+extern f32 lbl_803E43DC; /* 255.0f - full alpha */
 
 int cfmagicwall_getExtraSize(void) { return 0x0; }
 
@@ -61,13 +64,14 @@ void cfmagicwall_update(int obj)
 
         yaw = (yaw >= 0) ? yaw : -yaw;
 
-        if (yaw > 0x4000)
+        if (yaw > CFMAGICWALL_SIDE_ANGLE)
         {
             ((GameObject*)obj)->anim.alpha = 0;
             return;
         }
 
         {
+            /* fade on the nearer of player distance and camera distance */
             f32 playerDistance;
             f32 range;
             f32 fadeDistance;
