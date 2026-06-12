@@ -1632,8 +1632,8 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 
 
-#pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 void partfx_initialise(void)
 {
     s16* p;
@@ -1648,9 +1648,6 @@ void partfx_initialise(void)
     }
     gPartfxCachedResourceCount = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
-#pragma peephole reset
 
 void fn_800A081C(int p1, int p2, int mode);
 
@@ -1692,8 +1689,6 @@ extern f32 mathSinf(f32);
 
 /* EN v1.0 0x800AEC50  size: 1992b  tick global effect phases and expire
  * the 20 cached particle resource slots. */
-#pragma scheduling off
-#pragma peephole off
 void partfx_updateFrameState(void)
 {
     lbl_803DB7A8 = lbl_803DB7A8 + lbl_803DF4C8 * timeDelta;
@@ -1859,13 +1854,9 @@ void partfx_updateFrameState(void)
         gPartfxCachedResourceCount -= 1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x800AF41C  size: 560b  partfx_release: clear the 20-slot
  * effect-id table and free all 20 cached particle resources. */
-#pragma scheduling off
-#pragma peephole off
 void partfx_release(void)
 {
     s16* p;
@@ -1920,8 +1911,6 @@ void partfx_release(void)
     gPartfxResourceModule19 = NULL;
     gPartfxCachedResourceCount = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803DF720;
 
@@ -1929,8 +1918,6 @@ extern f32 lbl_803DF720;
 extern f32 lbl_803DF878;
 extern f32 lbl_803DFCE0;
 
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -5976,6 +5963,4 @@ extern FxNode9 lbl_8039C320;
 /* ===== (3) function ===== */
 #undef FILL320
 
-#pragma peephole reset
-#pragma scheduling reset
 

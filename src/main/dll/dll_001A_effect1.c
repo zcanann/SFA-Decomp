@@ -1637,7 +1637,6 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 
 
-#pragma peephole reset
 
 
 extern f32 mathSinf(f32);
@@ -1685,14 +1684,11 @@ void Effect1_func05(void)
     }
     lbl_803DD330 = mathSinf(lbl_803DF868 * (f32)(s16)lbl_803DD32C / lbl_803DF86C);
 }
-#pragma scheduling reset
 
 extern f32 lbl_803DB7C8;
 extern f32 lbl_803DF878;
 extern f32 lbl_803DFCE0;
 
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -1892,6 +1888,7 @@ extern FxNode9 lbl_8039C320;
   } while (0)
 
 /* ===== (3) function ===== */
+#pragma peephole off
 int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags,
                    u8 modelId, s16* extraArgs)
 {
@@ -3057,6 +3054,4 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
 #undef FILL320
 
 void Effect9_func05(void);
-#pragma peephole reset
-#pragma scheduling reset
 

@@ -39,6 +39,8 @@ extern f32 sqrtf(f32 x);
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_800d7780(undefined param_1)
 {
     DAT_803de0af = param_1;
@@ -210,8 +212,6 @@ void player_updateCurve(int* obj, int* state, f32 t)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E0574;
 extern f32 lbl_803E0578;
@@ -219,8 +219,6 @@ extern f32 lbl_803E057C;
 extern f32 lbl_803E0580;
 extern f32 lbl_803E0584;
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5)
 {
@@ -265,8 +263,6 @@ void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5)
     }
 }
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 lbl_803DD434;
 extern f32 lbl_803E05A4;
@@ -274,8 +270,6 @@ extern f32 lbl_803E05A8;
 extern f32 lbl_803E05AC;
 extern f32 lbl_803E05B0;
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
 {
@@ -321,11 +315,9 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
         c;
 }
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
 
-#pragma scheduling off
+#pragma peephole on
 void player_updateParticles(int* p1, int p2, int p3, int count, int mode)
 {
     while (count != 0 && p1 != NULL)
@@ -346,9 +338,7 @@ void player_updateParticles(int* p1, int p2, int p3, int count, int mode)
     }
 }
 
-#pragma scheduling reset
 
-#pragma scheduling off
 void player_doProjGfx(int* p1, int p2, int p3, int count, int p5, int mode)
 {
     void* res = Resource_Acquire((u16)(p3 + 0x58), 1);
@@ -370,17 +360,13 @@ void player_doProjGfx(int* p1, int p2, int p3, int count, int p5, int mode)
     }
     Resource_Release(res);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 void Checkpoint_remove(int* obj);
 #pragma opt_common_subs reset
 extern f32 timeDelta;
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
+#pragma peephole off
 void player_rotateTowardEnemy(int* obj, int* ctx, int spd)
 {
     int* enemy;
@@ -425,8 +411,6 @@ struct PartDesc
     s16 ang[3];
     f32 sc[4];
 };
-#pragma scheduling off
-#pragma peephole off
 void player_applyVelocityStep(int* p, int* ctx, f32 t)
 {
     int flags;
@@ -479,8 +463,6 @@ void player_applyVelocityStep(int* p, int* ctx, f32 t)
 extern f32 lbl_803E0590;
 extern f32 lbl_803E0594;
 extern s16 lbl_803DD44C;
-#pragma scheduling off
-#pragma peephole off
 void fn_800D8414(int* obj, int* ctx)
 {
     int diff;
@@ -532,8 +514,6 @@ void fn_800D8414(int* obj, int* ctx)
         *(u8*)((char*)ctx + 0x34b) = (u8)(4 - diff / 0x4000);
     }
 }
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 void player_getExtraSize(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 spd)
 {
@@ -579,8 +559,6 @@ void player_getExtraSize(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 s
 }
 #pragma opt_common_subs reset
 extern f32 lbl_803E05A0;
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 void player_animFn16(int* obj, int* ctx, int moveA, int moveB)
 {
@@ -640,18 +618,6 @@ void player_animFn16(int* obj, int* ctx, int moveA, int moveB)
 #pragma opt_common_subs reset
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/dll/baddie_state.h"
 #include "main/dll/path_control_interface.h"
@@ -692,8 +658,6 @@ typedef struct PlayerMoveBuf
     s8 count;
 } PlayerMoveBuf;
 
-#pragma scheduling off
-#pragma peephole off
 void player_setScale(f32 dt, short* moveState, uint* obj, uint flags)
 {
     PlayerMoveBuf buf;
@@ -780,8 +744,6 @@ void player_setScale(f32 dt, short* moveState, uint* obj, uint flags)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -993,7 +955,6 @@ undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 
 /*
  * --INFO--
@@ -1008,7 +969,6 @@ undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
 
 /*
  * --INFO--
@@ -1023,8 +983,6 @@ undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -1095,7 +1053,6 @@ undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole on
 
 /*
  * --INFO--
@@ -1110,7 +1067,6 @@ undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 
 /*
  * --INFO--
@@ -1537,27 +1493,15 @@ extern f32 lbl_803E0610;
 
 void RomCurve_setA4(void* a, void* b);
 
-#pragma scheduling on
-#pragma peephole on
 
-#pragma scheduling off
-#pragma peephole off
 
 /* RomCurve_stepClamped: keep the curve phase just inside the endpoints, then advance it. */
-#pragma peephole on
 
-#pragma peephole off
 
-#pragma peephole on
 
-#pragma peephole off
 
 /* UIController dispatch through the shared GameUI interface. */
-#pragma scheduling on
-#pragma peephole on
 
-#pragma scheduling off
-#pragma peephole off
 
 /* player_setState */
 void player_setState(void* ctx, void* p, int new_state)
@@ -1590,9 +1534,7 @@ end:
 void walkPath_writeU16LE(u32 v, u8* dst);
 
 /* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
-#pragma scheduling on
 
-#pragma scheduling off
 
 void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval)
 {

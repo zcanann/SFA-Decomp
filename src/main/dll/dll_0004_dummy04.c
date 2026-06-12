@@ -198,8 +198,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  * PAL Size: TODO
  */
 
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -214,8 +212,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -426,7 +422,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 
 /*
  * --INFO--
@@ -441,7 +436,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
 
 /*
  * --INFO--
@@ -456,8 +450,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -528,7 +520,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole on
 
 /*
  * --INFO--
@@ -543,7 +534,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 
 /*
  * --INFO--
@@ -588,8 +578,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  */
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling on
-#pragma peephole on
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -598,8 +586,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
 /* Pattern wrappers. */
 
 /* player_init: memset constructor */
-#pragma scheduling off
-#pragma peephole off
 
 /* fn_800D9F38 ? large init updating multiple float fields based on b's bytes */
 
@@ -607,34 +593,20 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
 
 /* RomCurve_setA4: similar to fn_800D9F38 branch2 with different consts */
 
-#pragma scheduling on
-#pragma peephole on
 
-#pragma scheduling off
-#pragma peephole off
 
 /* RomCurve_stepClamped: keep the curve phase just inside the endpoints, then advance it. */
-#pragma peephole on
 
-#pragma peephole off
 
-#pragma peephole on
 
-#pragma peephole off
 
 /* UIController dispatch through the shared GameUI interface. */
-#pragma scheduling on
-#pragma peephole on
 
-#pragma scheduling off
-#pragma peephole off
 
 /* player_setState */
 
 /* walkPath_writeU16LE: split a path id into two little-endian bytes. */
 
 /* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
-#pragma scheduling on
 
-#pragma scheduling off
 

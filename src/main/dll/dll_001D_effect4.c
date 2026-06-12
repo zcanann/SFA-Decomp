@@ -1637,7 +1637,6 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 
 
-#pragma peephole reset
 
 
 extern f32 mathSinf(f32);
@@ -1661,9 +1660,9 @@ extern f32 lbl_803DFBD8;
 extern f32 lbl_803DFBDC;
 extern f32 lbl_803DFCE0;
 
+
 #pragma scheduling off
 #pragma peephole off
-
 void Effect4_func05(void)
 {
     f32 sum;
@@ -2937,6 +2936,4 @@ extern FxNode9 lbl_8039C320;
 int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
 #undef FILL320
 
-#pragma peephole reset
-#pragma scheduling reset
 

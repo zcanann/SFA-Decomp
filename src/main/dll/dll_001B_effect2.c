@@ -1636,7 +1636,6 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 
 
-#pragma peephole reset
 
 
 extern f32 mathSinf(f32);
@@ -3018,6 +3017,4 @@ extern FxNode9 lbl_8039C320;
 /* ===== (3) function ===== */
 #undef FILL320
 
-#pragma peephole reset
-#pragma scheduling reset
 

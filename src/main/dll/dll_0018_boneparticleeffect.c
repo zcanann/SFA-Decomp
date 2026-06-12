@@ -1643,13 +1643,13 @@ extern void* lbl_803DD2A4;
 extern void* lbl_803DD2A8;
 extern void mm_free(void* p);
 extern void textureFree(void* resource);
-#pragma peephole off
-#pragma scheduling off
 
 
 #pragma dont_inline on
 #pragma dont_inline reset
 
+#pragma scheduling off
+#pragma peephole off
 void boneParticleEffect_release(void)
 {
     int i;
@@ -1962,20 +1962,15 @@ void boneParticleEffect_initialise(void)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern f32 lbl_803DF438;
 
 
-#pragma peephole reset
 
 
 extern f32 lbl_803DF878;
 extern f32 lbl_803DFCE0;
 
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -2099,8 +2094,6 @@ extern FxNode9 lbl_8039C320;
 /* ===== (3) function ===== */
 #undef FILL320
 
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern void* Obj_GetActiveModel(void);
@@ -2108,7 +2101,7 @@ extern void* ObjModel_GetJointMatrix(void* model, int joint);
 extern void PSMTXMultVec(void* m, void* src, void* dst);
 
 
-#pragma scheduling off
+#pragma peephole on
 void boneParticleEffect_spawnAtBones(void* obj, int effectId, void* extraArg, u8 prob, short* src)
 {
     void* model;
@@ -2155,7 +2148,6 @@ void boneParticleEffect_spawnAtBones(void* obj, int effectId, void* extraArg, u8
         }
     }
 }
-#pragma scheduling reset
 
 extern void* Camera_GetCurrentViewSlot(void);
 

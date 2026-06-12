@@ -599,8 +599,6 @@ int Minimap_update(void)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /*
@@ -616,6 +614,8 @@ int Minimap_update(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80132034(void)
 {
     bool bVar1;
@@ -887,8 +887,6 @@ void fn_80133818(void)
         *(f32*)((char*)lbl_803DBBC8[i] + 8) = e;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 extern u8 gameTimerIsRunning(void);
@@ -897,8 +895,6 @@ extern int sprintf(char* buf, const char* fmt, ...);
 extern f32 lbl_803E22A0;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80133F70(void* obj)
 {
     char buf[12];
@@ -930,8 +926,6 @@ void fn_80133F70(void* obj)
     }
     sprintf(buf, lbl_803DBBF0, b);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 extern void viewFn_80129c74(void);
@@ -943,8 +937,6 @@ extern f32 lbl_803E2278;
 extern f32 lbl_803E227C;
 extern f32 lbl_803E2280;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80133718(void)
 {
     u8 count;
@@ -976,8 +968,6 @@ void fn_80133718(void)
     }
     viewFn_80129c74();
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Variadic debug-print sink: retail keeps only the ABI varargs spill frame. */
@@ -987,6 +977,8 @@ void fn_80133718(void)
  * non-null), then walks the 2-slot live-objects table at lbl_803DBBC8
  * tearing down each non-null entry via Obj_FreeObject. Both buffer
  * pointers are zeroed at the end. */
+#pragma scheduling on
+#pragma peephole on
 void Minimap_release(void)
 {
     u8 i;
@@ -1020,7 +1012,6 @@ void Minimap_initialise(void)
     lbl_803DD940 = textureLoadAsset(0xBE5);
     lbl_803DD938 = 340;
 }
-#pragma scheduling reset
 
 /* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960
  * via textureFree. */
@@ -1054,6 +1045,7 @@ extern f32 timeDelta;
 /* EN v1.0 0x80133934  size: 52b  Release-and-clear pair: when
  * minimapTexture is non-null, release via textureFree and zero both
  * minimapTexture and lbl_803DD92C. */
+#pragma scheduling on
 void fn_80133934(void)
 {
     if (minimapTexture != NULL)
@@ -1082,8 +1074,8 @@ void titlescreen_free(u8* obj);
 /* EN v1.0 0x801334E0  size: 60b  Gate: when lbl_803DD944 == 2 (s8 compare)
  * and lbl_803DBBB0 != 0, latch lbl_803DD928 = 5 and return 1; else
  * return 0 without touching the latch. */
-#pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 u8 fn_801334E0(void)
 {
     u32 act = 0;
@@ -1096,8 +1088,6 @@ u8 fn_801334E0(void)
     lbl_803DD928 = 5;
     return (u8)act;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void OSSetErrorHandler(int kind, void* handler);
 
@@ -1108,13 +1098,8 @@ volatile PPCWGPipe GXWGFifo : (0xCC008000);
 extern void Sfx_StopFromObject(int obj, int id);
 
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
 
 
-#pragma peephole off
-#pragma peephole reset
 
 extern u32 lbl_803E2200;
 extern f32 lbl_803DD94C;
@@ -1125,7 +1110,6 @@ extern f32 lbl_803E226C;
 extern f32 lbl_803E2270;
 extern f32 lbl_803E2274;
 
-#pragma peephole off
 void fn_8013351C(void)
 {
     u32 col;
@@ -1157,12 +1141,9 @@ void fn_8013351C(void)
                     lbl_803E2278 - c1, (f32)y - s1,
                     lbl_803E2278 - cc2, (f32)y - s2, &c2);
 }
-#pragma peephole reset
 
 extern u8 enableDebugText;
 
-#pragma peephole off
-#pragma peephole reset
 
 
 extern int getButtonsHeld(int p);
@@ -1184,7 +1165,6 @@ extern f32 lbl_803E2294;
 extern f32 lbl_803E2298;
 extern f32 lbl_803E229C;
 
-#pragma peephole off
 void fn_8013396C(void)
 {
     int player;
@@ -1410,28 +1390,19 @@ void fn_8013396C(void)
         }
     }
 }
-#pragma peephole reset
 
 extern void GXSetTevColor(int id, int* color);
 
-#pragma peephole off
-#pragma peephole reset
 
 
-#pragma peephole off
-#pragma peephole reset
 
 
 /* EN v1.0 0x80137DF8  size: 2776b  fn_80137DF8: error display thread.
  * Clears the debug framebuffer, prints the exception type, DSISR/SRR0,
  * stack trace and GPR dump via debugPrintfxy, draws the underline and
  * box pixels directly into the framebuffer, and flips buffers forever. */
-#pragma peephole off
-#pragma peephole reset
 
 
 /* EN v1.0 0x801375C8  size: 736b  debugPrintDraw: lay out the debug log
  * twice (measure pass then draw pass), drawing the backing rect between
  * the passes when the log produced any extent. */
-#pragma peephole off
-#pragma peephole reset

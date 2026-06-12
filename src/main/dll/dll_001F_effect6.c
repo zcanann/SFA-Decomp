@@ -1636,7 +1636,6 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 
 
-#pragma peephole reset
 
 
 extern f32 mathSinf(f32);
@@ -1656,8 +1655,6 @@ extern f32 lbl_803DFCD0;
 extern f32 lbl_803DFCD4;
 extern f32 lbl_803DFCE0;
 
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -1686,6 +1683,8 @@ extern f32 lbl_803DFCBC;
 extern f32 lbl_803DFCC0;
 extern f32 lbl_803DFCC4;
 
+#pragma scheduling off
+#pragma peephole off
 int Effect6_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags,
                    u8 modelId, s16* extraArgs)
 {
@@ -2056,6 +2055,4 @@ extern FxNode9 lbl_8039C320;
 /* ===== (3) function ===== */
 #undef FILL320
 
-#pragma peephole reset
-#pragma scheduling reset
 

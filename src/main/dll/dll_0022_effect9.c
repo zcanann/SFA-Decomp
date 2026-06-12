@@ -1633,7 +1633,6 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 
 
-#pragma peephole reset
 
 
 extern f32 mathSinf(f32);
@@ -1653,8 +1652,6 @@ extern f32 lbl_803DFE38;
 extern f32 lbl_803DFEB0;
 extern f32 lbl_803DFEB4;
 
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -1708,6 +1705,8 @@ extern f32 lbl_803DFEA4;
     spawnParams = (s16 *)&lbl_8039C398;             \
   } while (0)
 
+#pragma scheduling off
+#pragma peephole off
 int Effect9_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags,
                    u8 modelId, s16* extraArgs)
 {
@@ -2270,8 +2269,6 @@ void Effect9_func05(void)
     }
     lbl_803DD3A8 = mathSinf(lbl_803DFEB0 * (f32)(s16)lbl_803DD3A4 / lbl_803DFEB4);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void dll_0B_onMapSetup(void);
 

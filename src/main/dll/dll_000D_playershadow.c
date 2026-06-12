@@ -1653,10 +1653,8 @@ void playerShadow_setMode(u8 v)
         gPlayerShadowMode = v;
     }
 }
-#pragma peephole reset
 
 #pragma scheduling off
-#pragma peephole off
 void playerShadow_renderObject(void* obj)
 {
     u32* defaults;
@@ -1771,20 +1769,15 @@ void playerShadow_renderObject(void* obj)
                 ((GameObject*)obj)->anim.localPosX - (f32)tileInfo[0],
                 ((GameObject*)obj)->anim.localPosZ - (f32)tileInfo[2]);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803DF430;
 
 
-#pragma peephole reset
 
 
 extern f32 lbl_803DF878;
 extern f32 lbl_803DFCE0;
 
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -1908,8 +1901,6 @@ extern FxNode9 lbl_8039C320;
 /* ===== (3) function ===== */
 #undef FILL320
 
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern void* Camera_GetCurrentViewSlot(void);
@@ -1922,8 +1913,6 @@ extern f32 lbl_803DF470;
 extern f32 lbl_803DF474;
 extern f32 lbl_803DF478;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
 {
     BoneSpawnData data;
@@ -2057,6 +2046,4 @@ void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 

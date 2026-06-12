@@ -68,6 +68,8 @@ STATIC_ASSERT(offsetof(ModgfxState, rotOffsetZ) == 0x106);
 /* vertex-group command payload handed to the updateVertex* handlers */
 
 
+#pragma scheduling on
+#pragma peephole on
 static inline int* Modgfx_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -1636,10 +1638,10 @@ extern s16 gModgfxSequenceParamIndex;
 extern ModgfxPendingSpawn* gModgfxPendingSpawnWriteCursor;
 extern ModgfxPendingSpawn* gModgfxPendingSpawnStartCursor;
 #define gModgfxSpawnContext (*(ModgfxSpawnContext *)lbl_8039BE98)
-#pragma scheduling off
-#pragma peephole off
 s16 dll_0B_func18(void) { return gModgfxLastSpawnHandle; }
 
+#pragma scheduling off
+#pragma peephole off
 void dll_0B_func17(u32 flags)
 {
     gModgfxSpawnContext.flags |= flags;
@@ -1684,8 +1686,6 @@ void dll_0B_func10(void)
     gModgfxPendingSpawnWriteCursor = cursor;
     gModgfxSequenceParamIndex = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* OSReport(literal) wrapper. */
 extern void OSReport(const char* fmt, ...);
@@ -1723,6 +1723,8 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 extern u8 lbl_803DD282;
 extern void fn_800A1040(s16 a, int b);
 
+#pragma scheduling on
+#pragma peephole on
 void dll_0B_func0B(void)
 {
     lbl_803DD282 = lbl_803DD282 + 1;
@@ -1738,7 +1740,6 @@ void dll_0B_release(void)
 {
     fn_800A1040(0, 1);
 }
-#pragma scheduling reset
 
 
 extern f32 lbl_803DF430;
@@ -1748,7 +1749,6 @@ extern void textureFree(void* resource);
 extern void*gPartfxActiveEffects[];
 extern void Obj_FreeObject(void* obj);
 #pragma peephole off
-#pragma scheduling off
 void dll_0B_initialise(void)
 {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
@@ -1907,13 +1907,9 @@ extern void drawFn_8005cf8c(void* a, void* b, int count);
 extern void* textureLoadAsset(int id);
 extern void* mmAlloc(int size, int align, int flag);
 
-#pragma scheduling reset
-#pragma peephole reset
 
 extern f32 lbl_803DF438;
 
-#pragma peephole off
-#pragma scheduling off
 void fn_800A02DC(ModgfxState* state, f32* in)
 {
     extern f32 lbl_803DD284;
@@ -1975,10 +1971,8 @@ void fn_800A02DC(ModgfxState* state, f32* in)
         slot++;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
+#pragma peephole on
 void fn_800A0FD0(ModgfxState* state)
 {
     int i;
@@ -2035,12 +2029,9 @@ void fn_800A0478(ModgfxState* state)
     *(f32*)((char*)state + 0x58) = f0;
     *(f32*)((char*)state + 0x5C) = f0;
 }
-#pragma scheduling reset
 
 
-#pragma peephole reset
 
-#pragma scheduling off
 #pragma peephole off
 void fn_800A081C(int p1, int p2, int mode)
 {
@@ -2093,14 +2084,10 @@ void fn_800A081C(int p1, int p2, int mode)
         ((ModgfxState*)p1)->posCurZ = ((ModgfxState*)p1)->posStepZ * lbl_803DD284 + ((ModgfxState*)p1)->posCurZ;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x800A09C4  size: 240b  modgfx_stepS16VectorLerp: integer-vector lerp setup.
  * On mode 1, snap or step-interpolate the rotation offset triple
  * toward the rounded params, then advance it by the per-step delta. */
-#pragma scheduling off
-#pragma peephole off
 void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
 {
     if (mode == 1)
@@ -2131,13 +2118,9 @@ void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
     ((ModgfxState*)obj)->rotOffsetY = ((ModgfxState*)obj)->rotOffsetY + ((ModgfxState*)obj)->rotStepY;
     ((ModgfxState*)obj)->rotOffsetX = ((ModgfxState*)obj)->rotOffsetX + ((ModgfxState*)obj)->rotStepX;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x800A113C  size: 276b  dll_0B_func0E: flag every active effect
  * whose owner object has the 0x800 state bit by setting its byte _13e. */
-#pragma scheduling off
-#pragma peephole off
 void dll_0B_func0E(void)
 {
     int i;
@@ -2157,8 +2140,6 @@ void dll_0B_func0E(void)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void*gPartfxResourceModule00;
 
@@ -2169,8 +2150,6 @@ extern f32 lbl_803DD284;
 extern f32 lbl_803DF878;
 extern f32 lbl_803DFCE0;
 
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -2295,11 +2274,7 @@ extern FxNode9 lbl_8039C320;
 /* ===== (3) function ===== */
 #undef FILL320
 
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void dll_0B_onMapSetup(void)
 {
     int i;
@@ -2310,8 +2285,6 @@ void dll_0B_onMapSetup(void)
         gPartfxActiveEffects[i] = NULL;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void* Obj_GetActiveModel(void);
 
@@ -2320,8 +2293,6 @@ extern void* Camera_GetCurrentViewSlot(void);
 extern f32 sqrtf(f32 x);
 
 
-#pragma scheduling off
-#pragma peephole off
 void dll_0B_func08(void* param)
 {
     int** arr = (int**)gPartfxActiveEffects;
@@ -2359,13 +2330,9 @@ void dll_0B_func08(void* param)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g);
 
-#pragma scheduling off
-#pragma peephole off
 void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g)
 {
     ModgfxSpawnContext* context = &gModgfxSpawnContext;
@@ -2397,14 +2364,10 @@ void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g)
     }
     gModgfxLastSpawnHandle = dll_0B_func04(context, 0, (int)c, b, (int)e, d, f, g);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803DF460;
 extern s16 lbl_803DD280;
 
-#pragma scheduling off
-#pragma peephole off
 int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g)
 {
     u8* st = (u8*)base;
@@ -2705,8 +2668,6 @@ int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     effect->initialDelayFrames = *(s16*)(st + 0x44);
     return effect->sequenceId;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern s16 renderModeSetOrGet(int mode);
 extern void* Camera_GetViewMatrix(void);
@@ -2735,8 +2696,6 @@ typedef struct
     f32 pos[3];
 } EffXform;
 
-#pragma scheduling off
-#pragma peephole off
 int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
 {
     u8 ar;
@@ -3053,11 +3012,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
 {
     extern f32 lbl_803DD284;
@@ -3116,11 +3071,7 @@ animate:
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_800A0524(void* state, void* p, int mode)
 {
     extern f32 lbl_803DF430;
@@ -3204,11 +3155,7 @@ void fn_800A0524(void* state, void* p, int mode)
         buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xe] = (int)*(f32*)((char*)state + 0xc4);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 {
     extern f32 lbl_803DD284;
@@ -3268,8 +3215,6 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int Obj_IsLoadingLocked(void);
 extern int* Obj_AllocObjectSetup(int size, int type);
@@ -3285,8 +3230,6 @@ typedef void (*ExpResFn6)(void*, int, void*, int, int, void*);
 
 #define E9 ((char *)*(int **)((char *)eff + 0x9c))
 
-#pragma scheduling off
-#pragma peephole off
 void dll_0B_func05(void)
 {
     int slot;
@@ -3696,5 +3639,3 @@ void dll_0B_func05(void)
         gExpgfxUpdatingActivePools = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

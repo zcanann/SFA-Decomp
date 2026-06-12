@@ -312,7 +312,6 @@ void Credits_initialise(void)
     lbl_803DD970 = 0;
     lbl_803DD968 = lbl_803E22A8;
 }
-#pragma scheduling reset
 
 
 extern u8 gameTimerIsRunning(void);
@@ -321,7 +320,6 @@ extern int sprintf(char* buf, const char* fmt, ...);
 extern f32 lbl_803E22A0;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
-#pragma scheduling off
 #pragma peephole off
 void fn_80133F70(void* obj)
 {
@@ -354,8 +352,6 @@ void fn_80133F70(void* obj)
     }
     sprintf(buf, lbl_803DBBF0, b);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 
@@ -377,6 +373,8 @@ extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 
 
 /* EN v1.0 0x80134364  size: 36b  Release lbl_803DD974 buffer. */
+#pragma scheduling on
+#pragma peephole on
 void Credits_release(void)
 {
     textureFree(lbl_803DD974);
@@ -423,9 +421,6 @@ void titlescreen_free(u8* obj);
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
 
 
 typedef struct
@@ -454,6 +449,7 @@ extern f32 lbl_803E22B0;
 extern f32 lbl_803E22B4;
 extern f32 lbl_803E22B8;
 
+#pragma scheduling off
 #pragma peephole off
 int Credits_frameStart(void)
 {
@@ -532,42 +528,27 @@ int Credits_frameStart(void)
     }
     return 0;
 }
-#pragma peephole reset
 
 extern u32 lbl_803E2200;
 
-#pragma peephole off
-#pragma peephole reset
 
 
-#pragma peephole off
-#pragma peephole reset
 
 
 extern int ObjGroup_FindNearestObject(int type, int obj, f32* distOut);
 
-#pragma peephole off
-#pragma peephole reset
 
 
-#pragma peephole off
-#pragma peephole reset
 
 
-#pragma peephole off
-#pragma peephole reset
 
 
 /* EN v1.0 0x80137DF8  size: 2776b  fn_80137DF8: error display thread.
  * Clears the debug framebuffer, prints the exception type, DSISR/SRR0,
  * stack trace and GPR dump via debugPrintfxy, draws the underline and
  * box pixels directly into the framebuffer, and flips buffers forever. */
-#pragma peephole off
-#pragma peephole reset
 
 
 /* EN v1.0 0x801375C8  size: 736b  debugPrintDraw: lay out the debug log
  * twice (measure pass then draw pass), drawing the backing rect between
  * the passes when the log produced any extent. */
-#pragma peephole off
-#pragma peephole reset
