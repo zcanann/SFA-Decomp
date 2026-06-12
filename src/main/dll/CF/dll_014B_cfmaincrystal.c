@@ -25,7 +25,9 @@ enum
 };
 
 /* game bits: the three base bits (see cfpowerbase) + 0x57 = the
-   convergence cutscene bit that pins everything fully charged */
+   convergence cutscene bit that pins everything fully charged - and
+   the "power restored" bit that starts the city's wind lifts
+   (see cfwindlift) */
 enum
 {
     GAMEBIT_CFBASE_1 = 0x54,

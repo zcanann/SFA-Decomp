@@ -1,9 +1,14 @@
 /*
- * cfprisoncage (DLL 0x154) - CloudRunner prison cage at CF. The SeqFn
- * locks interaction once the placement's done bit is set, grants that
- * bit when the 0xA0005 unlock message arrives, mirrors GameBit 0x44
- * into the prompt bits and runs sequence 0 when the caged dialog event
- * is ready. Carved from the sandwormBoss 10-DLL container.
+ * cfprisoncage (DLL 0x154) - the CloudRunner dungeon prison cages and
+ * their release switch. clouddungeon places four cages whose opened
+ * bits are 0x4C-0x4F; 0x4D is the old CloudRunner's cage (see
+ * cfprisonuncle) and 0x4E the caged guardian's (see cfguardian). The
+ * SeqFn locks interaction once a cage's opened bit is set; the rest of
+ * its logic (granting the bit on the 0xA0005 message, mirroring the
+ * 0x44 event into the prompt bits, running the open sequence) belongs
+ * to the switch type, which ships no placements in v1.0 - the cage
+ * bits are set by sequence scripts instead. Carved from the
+ * sandwormBoss 10-DLL container.
  */
 
 #include "main/effect_interfaces.h"
@@ -21,12 +26,12 @@ typedef struct CfPrisonCageMapData
 } CfPrisonCageMapData;
 
 /* placement type ids this DLL serves (anim.seqId carries the romlist
-   type): 0x128 reports object type 8 and runs sequence 1, 0x127 runs
-   sequence 0. */
+   type; retail names CFPrisonCage / CFCageSwitch): the cage runs
+   sequence 0, the switch reports object type 8 and runs sequence 1. */
 enum
 {
     CFPRISONCAGE_TYPE_CAGE = 0x127,
-    CFPRISONCAGE_TYPE_CAGE_2 = 0x128
+    CFPRISONCAGE_TYPE_SWITCH = 0x128
 };
 
 typedef struct CfPrisonCageObjectDef
@@ -47,7 +52,8 @@ typedef struct CfPrisonCageObjectDef
 
 STATIC_ASSERT(offsetof(CfPrisonCageMapData, openedBit) == 0x18);
 
-/* message granting the cage's open bit (sent by the prison guard) */
+/* generic activate message granting the opened bit (switch path only;
+   the same id powers a base in cfpowerbase) */
 #define CFPRISONCAGE_MSG_OPEN 0xA0005
 
 extern int ObjMsg_Pop();
@@ -60,9 +66,11 @@ extern void objfx_spawnHitEmitterAtPos(f32* p, int a, int b, int c, int d);
 extern f32 lbl_803E42B4;
 extern int ObjHits_GetPriorityHitWithPosition(int* obj, int a, int b, int c, f32* out_x, f32* out_y, f32* out_z);
 
-/* cfprisoncage_SeqFn: drain the object's message queue (granting the
- * cage's opened bit on the keyed message), then mirror the dialog bit
- * into the prompt flags and run sequence 0 once the talk is ready. */
+/* cfprisoncage_SeqFn: lock interaction once the opened bit is set;
+ * everything past the cage early-return is the SWITCH's logic - drain
+ * the message queue (granting the opened bit on the keyed message),
+ * mirror the 0x44 event into the prompt flags and run the open
+ * sequence once it is ready. */
 int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int msg;
@@ -88,7 +96,8 @@ int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         }
     }
-    /* 0x44: the caged-prisoner dialog bit (shared with cfprisonguard) */
+    /* 0x44: the free-the-prisoner event (also stands the guard down -
+       see cfprisonguard) */
     if (GameBit_Get(0x44) != 0)
     {
         ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
@@ -131,7 +140,7 @@ void cfprisoncage_update(int* obj)
         {
         case CFPRISONCAGE_TYPE_CAGE: v = 0;
             break;
-        case CFPRISONCAGE_TYPE_CAGE_2:
+        case CFPRISONCAGE_TYPE_SWITCH:
         default: v = 1;
             break;
         }
@@ -150,7 +159,7 @@ void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 int cfprisoncage_getObjectTypeId(int* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == CFPRISONCAGE_TYPE_CAGE_2) return 0x8;
+    if (((GameObject*)obj)->anim.seqId == CFPRISONCAGE_TYPE_SWITCH) return 0x8;
     return 0x0;
 }
 
@@ -169,7 +178,9 @@ void cfprisoncage_init(int* obj, u8* def)
     *(s16*)obj = (s16)((s32)def[0x1a] << 8);
     ((GameObject*)obj)->unkF4 = 1;
     ((GameObject*)obj)->animEventCallback = (void*)cfprisoncage_SeqFn;
-    if (((GameObject*)obj)->anim.seqId == CFPRISONCAGE_TYPE_CAGE_2)
+    /* switch: pose thrown/reset from the bit; cage: jump the open
+       sequence forward when already opened */
+    if (((GameObject*)obj)->anim.seqId == CFPRISONCAGE_TYPE_SWITCH)
     {
         if (GameBit_Get(((CfPrisonCageObjectDef*)def)->unk18) != 0)
         {

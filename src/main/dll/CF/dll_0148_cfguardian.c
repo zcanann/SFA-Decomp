@@ -527,7 +527,8 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             sub->questState = 1;
         }
         break;
-    case 1: /* wait for the release bit (0x4e); alert + take off */
+    case 1: /* wait for its own cage to open (0x4E - one of the four
+               clouddungeon cage bits 0x4C-0x4F); alert + take off */
         if (sub->chatterState == 2)
         {
             sub->chatterState = 1;
@@ -537,6 +538,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             sub->questState = 3;
             ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
             ((GameObject*)obj)->unkF4 = 0;
+            /* 0x48: broken out - the prison guard stands down on it */
             GameBit_Set(0x48, 1);
             sub->flagsA9B |= 1;
         }

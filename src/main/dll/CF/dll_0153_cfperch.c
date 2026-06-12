@@ -1,8 +1,8 @@
 /*
  * cfperch (DLL 0x153) - the CloudRunner perch bird at CF. Squawks its
- * trigger sequence at the player once per spawn until the prisoners
- * are freed, and notifies the flock when removed. Carved from the
- * sandwormBoss 10-DLL container.
+ * trigger sequence at the player once per spawn until the old
+ * CloudRunner prisoner is freed, and notifies the flock when removed.
+ * Carved from the sandwormBoss 10-DLL container.
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -34,8 +34,8 @@ int cfperch_getExtraSize(void) { return 0x0; }
 
 int cfperch_getObjectTypeId(void) { return 0x0; }
 
-/* perch anim-event callback: stop the sequence once the player has
- * been captured (0x4D) */
+/* perch anim-event callback: stop the sequence once the old
+ * CloudRunner has been freed from his cage (0x4D) */
 int fn_801A04F4(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     if (GameBit_Get(0x4d) != 0)
@@ -60,7 +60,7 @@ void cfperch_update(int* obj)
 {
     if (((GameObject*)obj)->unkF4 != 0)
     {
-        /* squawk at the player until the prisoners are freed (0x50) */
+        /* squawk at the player until the old CloudRunner is gone (0x50) */
         if (GameBit_Get(0x50) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);

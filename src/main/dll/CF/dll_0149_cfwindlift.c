@@ -1,9 +1,13 @@
 /*
  * cfwindlift (DLL 0x149, defs CFWindLift + CFTreasWind) - wind lifts
- * at CF. update ramps the lift alpha from its game bit, runs the rise
- * sequence with a squared ramp-in, and tracks up to 14 rider slots
- * (riders get pulled by fn_8019C784's per-slot spring model).
- * TU = 0x8019C784..0x8019D578.
+ * at CF and elsewhere. update ramps the lift alpha from its game bit,
+ * runs the rise sequence with a squared ramp-in, and tracks up to 14
+ * rider slots (riders get pulled by fn_8019C784's per-slot spring
+ * model). The three fortress lifts (placement seqIds 0x58-0x5A in the
+ * lookup tables) only run once GameBit 0x57 is set - the city's power
+ * restored via the three power bases and the main crystal convergence
+ * (see cfpowerbase/cfmaincrystal), which is what the freed old
+ * CloudRunner sends you off to do. TU = 0x8019C784..0x8019D578.
  */
 
 #include "main/effect_interfaces.h"
@@ -453,6 +457,8 @@ void windlift_update(int* obj)
         }
     }
     ((GameObject*)obj)->anim.alpha = (level < 0) ? 0 : ((level > 0xff) ? 0xff : level);
+    /* the fortress lifts (table durations 1-4) stay dead until the
+       city's power is restored (0x57, the crystal convergence) */
     if ((GameBit_Get(0x57) != 0 || sub->duration > 0xa) && sub->active)
     {
         int t = sub->timer;

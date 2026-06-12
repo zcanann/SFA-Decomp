@@ -5,7 +5,7 @@
 
 typedef struct CfPrisonUncleState
 {
-    int target; /* keyed type-0x3d object */
+    int target; /* class-0x3D companion object (carries his escape path) */
     u8 lookBlock[0x30]; /* fn_8003ADC4 head-track block */
     u8 audioBlock[0x30]; /* objAudioFn block */
     int unk64;
@@ -13,8 +13,8 @@ typedef struct CfPrisonUncleState
     u8 pad6C[4];
     s16 unk70;
     u8 pad72;
-    s8 captured; /* GameBit 0x4d latch */
-    s8 kicked; /* fn_8019FC84 one-shot */
+    s8 released; /* GameBit 0x4D latch: his cage has been opened */
+    s8 magicGranted; /* one-shot thank-you magic in fn_8019FC84 */
     u8 pad75[0x33];
 } CfPrisonUncleState;
 

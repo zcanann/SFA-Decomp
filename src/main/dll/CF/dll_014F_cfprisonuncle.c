@@ -1,8 +1,12 @@
 /*
- * cfprisonuncle (DLL 0x14F) - the imprisoned CloudRunner elder at CF.
- * update head-tracks the player, mutters ambient barks, runs sequence
- * 1 on interaction and sequence 0 once GameBit 0x4D marks the rescue.
- * Carved from the sandwormBoss 10-DLL container.
+ * cfprisonuncle (DLL 0x14F) - the old CloudRunner imprisoned in the CF
+ * dungeon. While caged he head-tracks the player, mutters, and runs
+ * his dialog sequence on interaction; once his cage opens (GameBit
+ * 0x4D - the cage placement's opened bit on clouddungeon) he runs his
+ * release sequence, which thanks Fox (+2 magic here, the Power Room
+ * key and the "restore the power to run the wind lifts" exposition via
+ * the sequence script). Once he is gone (0x50) only his companion
+ * object still renders. Carved from the sandwormBoss 10-DLL container.
  */
 #include "main/dll/cfprisonunclestate_struct.h"
 #include "main/effect_interfaces.h"
@@ -50,10 +54,10 @@ void cfprisonuncle_initialise(void)
 {
 }
 
-/* cfprisonuncle_update: while not captured, drain pending messages,
- * re-acquire the guard to glance at, then head-track the player and
- * mutter (running sequence 1 on interaction); once captured, disable
- * interaction and run the rescue sequence. */
+/* cfprisonuncle_update: while still caged, drain pending messages,
+ * re-acquire the companion object, then head-track the player and
+ * mutter (running sequence 1 on interaction); once his cage is open,
+ * disable interaction and run the release sequence. */
 void cfprisonuncle_update(int* obj)
 {
     CfPrisonUncleState* sub = ((GameObject*)obj)->extra;
@@ -62,7 +66,7 @@ void cfprisonuncle_update(int* obj)
     int* objects;
     int i;
     if (sub == NULL) return;
-    /* 0x50: the prisoners are free - nothing left to do */
+    /* 0x50: the uncle has flown off - nothing left to do */
     if (GameBit_Get(0x50) != 0) return;
     if (ObjMsg_Pop(obj, &m1, &m2, &m3) != 0)
     {
@@ -73,7 +77,7 @@ void cfprisonuncle_update(int* obj)
         objects = ObjList_GetObjects(&objectIndex, &objectCount);
         for (i = objectIndex; i < objectCount; i++)
         {
-            /* find the guard (object class 0x3D) to glance at */
+            /* find the class-0x3D companion object he renders with */
             if (((GameObject*)objects[i])->anim.classId == 0x3d)
             {
                 sub->target = objects[i];
@@ -82,9 +86,9 @@ void cfprisonuncle_update(int* obj)
         }
     }
     ObjTrigger_UpdateIdBlockFlag((int)obj);
-    /* 0x4D: the player has been thrown into the cell */
-    sub->captured = (s8)GameBit_Get(0x4d);
-    if (sub->captured == 0)
+    /* 0x4D: his cage has been opened */
+    sub->released = (s8)GameBit_Get(0x4d);
+    if (sub->released == 0)
     {
         player = Obj_GetPlayerObject();
         fn_8003ADC4(obj, player, (char*)((GameObject*)obj)->extra + 4, 0x41, 0, 3);
@@ -122,13 +126,15 @@ void cfprisonuncle_update(int* obj)
 int cfprisonuncle_getExtraSize(void) { return 0xa8; }
 int cfprisonuncle_getObjectTypeId(void) { return 0x9; }
 
+/* release-sequence callback: on the cued trigger, thank Fox with a
+ * one-shot +2 magic (the Power Room key comes from the script) */
 int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     CfPrisonUncleState* p = ((GameObject*)obj)->extra;
-    if (p->kicked != 0) return 0;
+    if (p->magicGranted != 0) return 0;
     if (animUpdate->triggerCommand == 2)
     {
-        p->kicked = 1;
+        p->magicGranted = 1;
         playerAddRemoveMagic(Obj_GetPlayerObject(), 2);
     }
     return 0;
@@ -143,16 +149,17 @@ void cfprisonuncle_init(int* obj)
     state->unk64 = 464;
     state->unk68 = 465;
     state->unk70 = 0;
-    state->kicked = 0;
+    state->magicGranted = 0;
+    /* already released on a previous visit: he has flown off (0x50) */
     if ((u32)GameBit_Get(0x4d) != 0u)
     {
         GameBit_Set(0x50, 1);
     }
 }
 
-/* cfprisonuncle_render: render the uncle and/or his held model
- * depending on the rescue gamebits, opacity and visibility; when
- * path-following, snap the held model to the path point first. */
+/* cfprisonuncle_render: render the uncle and/or his companion object
+ * depending on the release gamebits, opacity and visibility; while
+ * still caged, snap the uncle to the companion's path start first. */
 void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     CfPrisonUncleState* sub = ((GameObject*)obj)->extra;
@@ -173,7 +180,7 @@ void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
     else if (sub != NULL && *(void**)&sub->target != NULL)
     {
-        if (sub->captured == 0)
+        if (sub->released == 0)
         {
             if (visible != 0)
             {
