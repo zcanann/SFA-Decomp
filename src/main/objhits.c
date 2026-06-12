@@ -2328,7 +2328,7 @@ void ObjHits_CheckTrackContact(int objA, int objB)
             startPoints[0] = ((GameObject*)objA)->anim.previousWorldPosX;
             startPoints[1] = ((GameObject*)objA)->anim.previousWorldPosY;
             startPoints[2] = ((GameObject*)objA)->anim.previousWorldPosZ;
-            fConv = (f32)(u32) * (u8*)(*(int*)&((GameObject*)objA)->anim.modelInstance + 0x8f);
+            fConv = (f32)(u32)((GameObject*)objA)->anim.modelInstance->fallbackHitSphereRadius;
             if (fConv < lbl_803DE91C)
             {
                 fConv = lbl_803DE91C;

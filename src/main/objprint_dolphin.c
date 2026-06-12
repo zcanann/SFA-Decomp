@@ -705,7 +705,7 @@ void fn_8003EEEC(undefined4 param_1, undefined4 param_2, int* node, int* cmdStre
         lightCount = DAT_803dd8dc;
         if (DAT_803dd8cc == '\0')
         {
-            renderFlags = *(byte*)(*(int*)(modelData + 0x28) + 0x5f);
+            renderFlags = OBJPRINT_MODEL_DEF(modelData)->renderFlags;
             if (((renderFlags & 4) == 0) || (*(float**)(*(int*)(modelData + 0x32) + 0xc) == (float*)0x0))
             {
                 if ((renderFlags & 0x10) == 0)
@@ -816,7 +816,7 @@ void fn_8003EEEC(undefined4 param_1, undefined4 param_2, int* node, int* cmdStre
             FUN_8025d8c4(worldMtx, 0x24, 0);
             FUN_80049260();
         }
-        if ((*(byte*)(*(int*)(modelData + 0x28) + 0x5f) & 0x10) != 0)
+        if ((OBJPRINT_MODEL_DEF(modelData)->renderFlags & 0x10) != 0)
         {
             FUN_80048f00(subNode);
         }
@@ -1237,7 +1237,7 @@ void fn_8003FDA8(undefined4 param_1, undefined4 param_2, int obj)
     FUN_8025c754(7, 0, 0, 7, 0);
     FUN_8025a608(4, 0, 0, 0, 0, 0, 2);
     FUN_8025a5bc(1);
-    if ((*(byte*)(*(int*)(modelData + 0x28) + 0x5f) & 4) == 0)
+    if ((OBJPRINT_MODEL_DEF(modelData)->renderFlags & 4) == 0)
     {
         gxSetZMode_(0, 3, 0);
         FUN_80259288(0);
@@ -1562,7 +1562,7 @@ void FUN_80040784(undefined4 param_1, undefined4 param_2, uint param_3)
         {
             pfVar3 = (float*)FUN_80017970(piVar2, iVar6);
         }
-        if ((*(byte*)(*(int*)(puVar1 + 0x28) + 0x5f) & 8) == 0)
+        if ((OBJPRINT_MODEL_DEF(puVar1)->renderFlags & 8) == 0)
         {
             local_d4 = lbl_803DF69C;
             iVar8 = *(int*)(*(int*)(puVar5 + 0x28) + 0x2c) + iVar8;

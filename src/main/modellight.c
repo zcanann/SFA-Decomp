@@ -1472,7 +1472,7 @@ void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights,
 
     if (obj != NULL)
     {
-        objectLightMask = 1 << *(u8*)(*(u32*)&((GameObject*)obj)->anim.modelInstance + 0x8d);
+        objectLightMask = 1 << ((GameObject*)obj)->anim.modelInstance->modelLightMaskIndex;
     }
     else
     {

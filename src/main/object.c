@@ -392,7 +392,7 @@ void Obj_StartModelFadeIn(u8* obj, int frames)
     {
         fadeLimit = 40;
     }
-    if ((*(u8*)((u8*)((GameObject*)obj)->anim.modelInstance + 0x76) & 1) != 0)
+    if ((((GameObject*)obj)->anim.modelInstance->effectFlags & 1) != 0)
     {
         if (((GameObject*)obj)->fadeCounter < fadeLimit)
         {

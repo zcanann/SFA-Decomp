@@ -8149,11 +8149,11 @@ void playerDoHitDetection(int obj)
                     char* h2 = *(char**)(sub + 0x50);
                     if (h2 != NULL)
                     {
-                        if ((*(u8*)(*(int*)((char*)h2 + 0x50) + 0x76) & 4) != 0)
+                        if ((((GameObject*)h2)->anim.modelInstance->effectFlags & 4) != 0)
                         {
                             doRumble(lbl_803E7ED8);
                         }
-                        if ((*(u8*)(*(int*)((char*)h2 + 0x50) + 0x76) & 8) != 0)
+                        if ((((GameObject*)h2)->anim.modelInstance->effectFlags & 8) != 0)
                         {
                             lbl_803DE459 = 1;
                         }

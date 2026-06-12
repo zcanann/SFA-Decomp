@@ -2283,8 +2283,8 @@ void getVisibleObjects(s8* opacity)
             {
                 if ((modelDef->flags & 0x80000) != 0)
                 {
-                    *(f32*)&((GameObject*)o)->anim.targetObj = (f32)(
-                        *((u8*)((GameObject*)o)->anim.modelInstance + 0x74) * 100);
+                    *(f32*)&((GameObject*)o)->anim.targetObj =
+                        (f32)(((GameObject*)o)->anim.modelInstance->fixedSortDepth * 100);
                     depthInt = (int)*(f32*)&((GameObject*)o)->anim.targetObj;
                 }
                 else
