@@ -43,9 +43,9 @@ void FUN_801adca0(undefined2 *param_1,undefined2 *param_2,undefined4 param_3,und
                  undefined4 param_5,undefined4 param_6,char param_7,int param_8,int param_9);
 undefined4
 FUN_801addec(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10
-            ,int param_11,undefined4 param_12,uint *param_13,undefined4 param_14,undefined4 param_15
-            ,undefined4 param_16);
+            undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10,
+            ObjAnimUpdateState *animUpdate,undefined4 param_12,uint *param_13,undefined4 param_14,
+            undefined4 param_15,undefined4 param_16);
 
 int imicemountain_getExtraSize(void);
 int imicemountain_getObjectTypeId(void);
