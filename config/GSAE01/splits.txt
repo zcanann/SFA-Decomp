@@ -1111,16 +1111,16 @@ main/dll/SC/dll_01BB_sctotembond.c:
 	.text       start:0x801DDA28 end:0x801DE430
 
 main/dll/VF/platform1.c:
-	.text       start:0x801DE430 end:0x801DF43C
+	.text       start:0x801DE430 end:0x801DF4AC
 
 main/dll/VF/draghead.c:
-	.text       start:0x801DF43C end:0x801DF43C
+	.text       start:0x801DF4AC end:0x801DF4AC
 
 main/dll/VF/lavaflow.c:
-	.text       start:0x801DF43C end:0x801DF43C
+	.text       start:0x801DF4AC end:0x801DF4AC
 
 main/dll/DB/DBrockfall.c:
-	.text       start:0x801DF43C end:0x801DFA28
+	.text       start:0x801DF4AC end:0x801DFA28
 	.data       start:0x80327B70 end:0x80327BA8
 
 main/dll/DB/DBpointmum.c:

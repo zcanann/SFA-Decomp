@@ -15,7 +15,6 @@ extern double FUN_80006b34();
 extern byte FUN_80006b44();
 extern uint FUN_80006bf8();
 extern uint randomGetRange();
-extern uint FUN_80017a98();
 extern int ObjList_GetObjects();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_80080eec();
@@ -452,7 +451,6 @@ void sc_totemstrength_init(int* obj)
     st->savedPosZ = self->anim.localPosZ;
 }
 
-extern void GameBit_Set(int eventId, int value);
 extern u32 GameBit_Get(int eventId);
 extern MapEventInterface** gMapEventInterface;
 extern u32 getButtonsJustPressed(int pad);
@@ -474,6 +472,7 @@ extern KioskTextPair lbl_80327AF0[];
  * tug-of-war intro/outro sequencing once map event 0xe reaches state 6. */
 void sc_totemstrength_update(u8* obj)
 {
+    extern void GameBit_Set(int eventId, int value);
     Platform1State* st = ((GameObject*)obj)->extra;
     u8 t;
     s16 step;
@@ -596,6 +595,7 @@ u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
 /* EN v1.0 0x801DF1EC  size: 280b  PaymentKiosk_SeqFn. */
 int PaymentKiosk_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
+    extern void GameBit_Set(int eventId, int value);
     PaymentKioskState* st = ((GameObject*)obj)->extra;
     PaymentKioskMapData* setup = (PaymentKioskMapData*)((GameObject*)obj)->anim.placementData;
     int player;
@@ -666,3 +666,243 @@ void paymentkiosk_update(int obj)
         objRenderFn_80041018(obj);
     }
 }
+
+/* === moved from main/dll/DB/DBrockfall.c [801DF43C-801DF4AC) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/paymentkiosk.h"
+#include "main/dll/DB/DBrockfall.h"
+#include "main/dll/VF/platform1.h"
+#include "main/effect_interfaces.h"
+#include "main/game_object.h"
+#include "main/mapEventTypes.h"
+#include "main/objanim_internal.h"
+#include "main/objseq.h"
+
+extern uint FUN_80006c00();
+extern undefined4 FUN_80006c88();
+extern undefined8 FUN_80017484();
+extern uint GameBit_Get(int eventId);
+extern undefined4 FUN_8003b818();
+extern undefined4 FUN_800400b0();
+extern undefined4 FUN_80080eec();
+extern undefined4 FUN_8011e800();
+extern int FUN_80286838();
+extern undefined4 FUN_80286884();
+extern int FUN_80294d20();
+extern undefined4 FUN_80294d28();
+extern uint countLeadingZeros();
+
+extern undefined4 DAT_80328730;
+extern undefined4 DAT_80328734;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern MapEventInterface** gMapEventInterface;
+extern undefined4 DAT_803de890;
+extern f32 lbl_803E6310;
+extern EffectInterface** gPartfxInterface;
+extern f32 lbl_803E56B0;
+extern f32 lbl_803E56B4;
+
+/*
+ * --INFO--
+ *
+ * Function: paymentkiosk_init
+ * EN v1.0 Address: 0x801DF43C
+ * EN v1.0 Size: 32b
+ * EN v1.1 Address: 0x801DF458
+ * EN v1.1 Size: 40b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void paymentkiosk_init(int obj, PaymentKioskMapData* initData)
+{
+    register int self = obj;
+    register PaymentKioskMapData* setup = initData;
+    register PaymentKioskState* state = ((GameObject*)self)->extra;
+    u32 secondaryFlag;
+
+    ((GameObject*)self)->animEventCallback = (void*)PaymentKiosk_SeqFn;
+    *(short*)self = (short)((int)setup->facingByte << 8);
+    state->payState = 0;
+    ((GameObject*)self)->objectFlags = (u16)(((GameObject*)self)->objectFlags | 0x6000);
+    *(u8*)&((GameObject*)self)->anim.resetHitboxMode =
+        (u8)(*(u8*)&((GameObject*)self)->anim.resetHitboxMode | 0x8);
+    secondaryFlag = (((GameObject*)self)->anim.seqId == PAYMENT_KIOSK_WELL_TEXT_SEQ_ID) ? 1 : 0;
+    state->textVariant = (u8)secondaryFlag;
+}
+
+typedef struct FEseqobjectEffectParams
+{
+    s16 xRot;
+    s16 yRot;
+    s16 variant;
+    s16 pad06;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} FEseqobjectEffectParams;
+
+#pragma scheduling on
+#pragma peephole on
+static void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams* params);
+
+static int FEseqobject_findControlObject(void);
+
+#pragma scheduling off
+#pragma peephole off
+int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801df45c
+ * EN v1.0 Address: 0x801DF45C
+ * EN v1.0 Size: 576b
+ * EN v1.1 Address: 0x801DF480
+ * EN v1.1 Size: 640b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801df784
+ * EN v1.0 Address: 0x801DF784
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801DF7DC
+ * EN v1.1 Size: 316b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801df788
+ * EN v1.0 Address: 0x801DF788
+ * EN v1.0 Size: 252b
+ * EN v1.1 Address: 0x801DF918
+ * EN v1.1 Size: 276b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
+void paymentkiosk_release(void)
+{
+}
+
+void paymentkiosk_initialise(void)
+{
+}
+
+void FEseqobject_free(void);
+
+void FEseqobject_hitDetect(void);
+
+void FEseqobject_release(void);
+
+void FEseqobject_initialise(void);
+
+void FElevControl_free(void);
+
+void FElevControl_hitDetect(void);
+
+void FElevControl_update(void);
+
+void FElevControl_release(void);
+
+void FElevControl_initialise(void);
+
+void dll_144_free(void);
+
+void dll_144_hitDetect(void);
+
+void dll_144_update(void);
+
+void dll_144_release(void);
+
+void dll_144_initialise(void);
+
+/* 8b "li r3, N; blr" returners. */
+int FEseqobject_getExtraSize(void);
+int FEseqobject_getObjectTypeId(void);
+int FElevControl_getExtraSize(void);
+int FElevControl_getObjectTypeId(void);
+int dll_144_getExtraSize(void);
+int dll_144_getObjectTypeId(void);
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E56B8;
+extern f32 lbl_803E56C0;
+
+void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void dll_144_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+/* call(x, N) wrappers. */
+void FElevControl_init(int x);
+
+/*
+ * Function: FEseqobject_init
+ * EN v1.0 Address: 0x801DF8F4
+ * EN v1.0 Size: 56b
+ */
+void FEseqobject_init(int obj);
+
+/*
+ * Function: FEseqobject_update
+ * EN v1.0 Address: 0x801DF894
+ * EN v1.0 Size: 96b
+ */
+void FEseqobject_update(int obj);
+
+/*
+ * Function: dll_144_SeqFn
+ * EN v1.0 Address: 0x801DF9AC
+ * EN v1.0 Size: 16b
+ */
+int dll_144_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+
+/*
+ * Function: dll_144_init
+ * EN v1.0 Address: 0x801DFA08
+ * EN v1.0 Size: 24b
+ */
+void dll_144_init(int obj);
+
+ObjectDescriptor gFElevControlObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)FElevControl_initialise,
+    (ObjectDescriptorCallback)FElevControl_release,
+    0,
+    (ObjectDescriptorCallback)FElevControl_init,
+    (ObjectDescriptorCallback)FElevControl_update,
+    (ObjectDescriptorCallback)FElevControl_hitDetect,
+    (ObjectDescriptorCallback)FElevControl_render,
+    (ObjectDescriptorCallback)FElevControl_free,
+    (ObjectDescriptorCallback)FElevControl_getObjectTypeId,
+    FElevControl_getExtraSize,
+};

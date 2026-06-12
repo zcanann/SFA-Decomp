@@ -46,22 +46,7 @@ extern f32 lbl_803E56B4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void paymentkiosk_init(int obj, PaymentKioskMapData* initData)
-{
-    register int self = obj;
-    register PaymentKioskMapData* setup = initData;
-    register PaymentKioskState* state = ((GameObject*)self)->extra;
-    u32 secondaryFlag;
-
-    ((GameObject*)self)->animEventCallback = (void*)PaymentKiosk_SeqFn;
-    *(short*)self = (short)((int)setup->facingByte << 8);
-    state->payState = 0;
-    ((GameObject*)self)->objectFlags = (u16)(((GameObject*)self)->objectFlags | 0x6000);
-    *(u8*)&((GameObject*)self)->anim.resetHitboxMode =
-        (u8)(*(u8*)&((GameObject*)self)->anim.resetHitboxMode | 0x8);
-    secondaryFlag = (((GameObject*)self)->anim.seqId == PAYMENT_KIOSK_WELL_TEXT_SEQ_ID) ? 1 : 0;
-    state->textVariant = (u8)secondaryFlag;
-}
+void paymentkiosk_init(int obj, PaymentKioskMapData* initData);
 
 typedef struct FEseqobjectEffectParams
 {
@@ -246,13 +231,9 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void paymentkiosk_release(void)
-{
-}
+void paymentkiosk_release(void);
 
-void paymentkiosk_initialise(void)
-{
-}
+void paymentkiosk_initialise(void);
 
 void FEseqobject_free(void)
 {
