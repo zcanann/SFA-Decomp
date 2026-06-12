@@ -15,7 +15,6 @@ extern void ModelLightStruct_free(void* light);
 extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_EnableObject();
-extern undefined8 ObjGroup_RemoveObject();
 extern void objRenderFn_8003b8f4(f32 scale);
 
 
@@ -24,8 +23,6 @@ extern EffectInterface** gPartfxInterface;
 extern void Sfx_PlayFromObject(int obj, int id);
 extern void doRumble(f32 v);
 extern void modelLightStruct_setEnabled(int light, int v, f32 f);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
 extern int Obj_GetPlayerObject(void);
 
 /*
@@ -273,7 +270,6 @@ typedef struct DimbossfireState
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void CameraShake_Start(f32 magnitude, f32 duration, f32 param_3);
 extern void doRumble(f32 val);
-extern void* memcpy(void* dst, const void* src, u32 size);
 extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
 extern void lightSetFieldBC_8001db14(int light, int value);
 extern void modelLightStruct_setLightKind(int light, int value);
@@ -281,8 +277,6 @@ extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern uint GameBit_Get(int eventId);
 extern f32 Vec_distance(float* posA, float* posB);
 extern undefined4 ObjHits_DisableObject();
-extern undefined8 ObjGroup_RemoveObject(int obj, int groupId);
-extern undefined4 ObjGroup_AddObject(int obj, int groupId);
 
 extern f32 lbl_80325D68[];
 extern f32 lbl_803E4DA0;
@@ -294,11 +288,6 @@ extern f32 lbl_803E4DB4;
 extern f32 lbl_803E4DB8;
 extern f32 lbl_803E4DBC;
 extern f32 lbl_803E4DC0;
-extern f32 lbl_803E4DD0;
-extern f32 lbl_803E4DD4;
-extern f32 lbl_803E4DE0;
-extern f32 lbl_803E4DE4;
-extern f32 lbl_803E4DE8;
 
 
 /*
@@ -548,7 +537,6 @@ int ccriverflow_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ccriverflow_free(CCriverflowObject* obj);
 
 /*
  * --INFO--
@@ -563,7 +551,6 @@ void ccriverflow_free(CCriverflowObject* obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ccriverflow_render(void);
 
 /*
  * --INFO--
@@ -578,7 +565,6 @@ void ccriverflow_render(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ccriverflow_update(CCriverflowObject* obj);
 
 /*
  * --INFO--
@@ -593,7 +579,6 @@ void ccriverflow_update(CCriverflowObject* obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ccriverflow_init(CCriverflowObject* obj, CCriverflowMapData* params);
 
 /*
  * --INFO--
@@ -608,4 +593,3 @@ void ccriverflow_init(CCriverflowObject* obj, CCriverflowMapData* params);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode, short* out);

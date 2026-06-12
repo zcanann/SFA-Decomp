@@ -11,22 +11,9 @@
 
 
 
-extern void ModelLightStruct_free(void* light);
-extern undefined4 ObjHitbox_SetSphereRadius();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_EnableObject();
 extern undefined8 ObjGroup_RemoveObject();
-extern void objRenderFn_8003b8f4(f32 scale);
 
 
-extern f32 timeDelta;
-extern EffectInterface** gPartfxInterface;
-extern void Sfx_PlayFromObject(int obj, int id);
-extern void doRumble(f32 v);
-extern void modelLightStruct_setEnabled(int light, int v, f32 f);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern int Obj_GetPlayerObject(void);
 
 /*
  * --INFO--
@@ -97,9 +84,6 @@ extern int Obj_GetPlayerObject(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void lightSetFieldBC_8001db14(int light, int v);
-extern void modelLightStruct_setLightKind(int light, int v);
-extern void modelLightStruct_setDiffuseColor(int light, int a, int b, int c, int d);
 
 
 /*
@@ -211,7 +195,6 @@ extern void modelLightStruct_setDiffuseColor(int light, int a, int b, int c, int
 
 
 
-void dimbossfire_hitDetect(void);
 
 /*
  * --INFO--
@@ -226,63 +209,25 @@ void dimbossfire_hitDetect(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossfire_free(int obj);
 
-void dimbossfire_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* 8b "li r3, N; blr" returners. */
-int dimbossgut2_setScale(void);
-int dimbossfire_getExtraSize(void);
-int dimbossfire_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/DF/DFcradle.h"
 #include "main/effect_interfaces.h"
 
-typedef struct DimbossfireState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 light;
-    u8 pad14[0x18 - 0x14];
-} DimbossfireState;
 
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void CameraShake_Start(f32 magnitude, f32 duration, f32 param_3);
-extern void doRumble(f32 val);
-extern void* memcpy(void* dst, const void* src, u32 size);
-extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
-extern void lightSetFieldBC_8001db14(int light, int value);
-extern void modelLightStruct_setLightKind(int light, int value);
-extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern uint GameBit_Get(int eventId);
-extern f32 Vec_distance(float* posA, float* posB);
-extern undefined4 ObjHits_DisableObject();
 extern undefined8 ObjGroup_RemoveObject(int obj, int groupId);
 extern undefined4 ObjGroup_AddObject(int obj, int groupId);
 
-extern f32 lbl_80325D68[];
-extern f32 lbl_803E4DA0;
-extern f32 lbl_803E4DA4;
-extern f32 lbl_803E4DA8;
-extern f32 lbl_803E4DAC;
-extern f32 lbl_803E4DB0;
-extern f32 lbl_803E4DB4;
-extern f32 lbl_803E4DB8;
-extern f32 lbl_803E4DBC;
-extern f32 lbl_803E4DC0;
 extern f32 lbl_803E4DD0;
 extern f32 lbl_803E4DD4;
-extern f32 lbl_803E4DE0;
-extern f32 lbl_803E4DE4;
-extern f32 lbl_803E4DE8;
 
 
 /*
@@ -298,7 +243,6 @@ extern f32 lbl_803E4DE8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossfire_update(int obj);
 
 /*
  * --INFO--
@@ -313,7 +257,6 @@ void dimbossfire_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossfire_init(int obj, undefined4 arg2, int placement);
 
 /*
  * --INFO--
@@ -328,7 +271,6 @@ void dimbossfire_init(int obj, undefined4 arg2, int placement);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossfire_release(void);
 
 /*
  * --INFO--
@@ -343,7 +285,6 @@ void dimbossfire_release(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossfire_initialise(void);
 
 /*
  * --INFO--
