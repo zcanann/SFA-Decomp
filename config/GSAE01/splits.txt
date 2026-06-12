@@ -1117,8 +1117,17 @@ main/dll/screenOverlay.c:
 main/dll/dll_147.c:
 	.text       start:0x8017AC2C end:0x8017AC2C
 
-main/dll/cfguardian.c:
-	.text       start:0x8017AC2C end:0x8017C294
+main/dll/dll_00FB_wctemplepre.c:
+	.text       start:0x8017AC2C end:0x8017B5C8
+
+main/dll/dll_0110_ktrexdoorp.c:
+	.text       start:0x8017B5C8 end:0x8017BB80
+
+main/dll/dll_010F_mmpbridge.c:
+	.text       start:0x8017BB80 end:0x8017BCF8
+
+main/dll/dll_0111_cfpowerlock.c:
+	.text       start:0x8017BCF8 end:0x8017C294
 
 main/dll/alphaanim.c:
 	.text       start:0x8017C294 end:0x8017CF90
