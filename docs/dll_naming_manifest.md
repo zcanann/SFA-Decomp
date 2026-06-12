@@ -814,3 +814,109 @@ same commit. Counted for rename-ready/canonical-variant dlls only —
 blocked units will surface more when carved.
 
 (none)
+
+## Appendix: CF/ lane-homing audit (retail-placement census)
+
+Lane DIRECTORIES are project organization, not retail data, but they
+should reflect retail PLACEMENT EVIDENCE rather than drift-era donor-file
+inheritance (the carve donor for a unit landed it in CF/ regardless of
+whether the object is Cloud-Runner-Fortress content). This appendix
+re-homes every `src/main/dll/CF/` unit from retail truth.
+
+**Method** (`tools/cf_lane_homing.py`, reproducible from the retail ISO):
+1. Decompress every `<map>.romlist.zlb` from the ISO FST (ZLB = zlib
+   *with* header after the 16-byte ZLB header). Parse placement records
+   (`>h` romlist TYPE at +0, length-in-WORDS u8 at +2).
+2. Reverse-map romlist-type → def via OBJINDEX.bin, def → handling DLL id
+   (`>H` at def+0x50) and retail name (def+0x91) via OBJECTS.bin/.tab.
+3. Map each CF/ unit → its DLL id(s) via gResourceDescriptors
+   (0x802C6300) → text-fn addresses → splits.txt unit.
+4. Census each DLL id's placements across maps; classify CF-family maps
+   = the Cloud-Runner-Fortress set (`fortress`, `clouddungeon`,
+   `cloudrace`, `cloudjoin`, `cloudtrap`, `cloudtreasure`,
+   `cloudrunnermap`, `cf*` = cfcolumn/cfdungeonblock/cfgalleon/cfgangplank/
+   cfledge/cfliftplat/cfprisoncage/cfprisondoor).
+
+**Homing rule** (applied uniformly): a unit **STAYS** in CF/ iff
+(a) a CF-family map is its single #1 placement map, OR
+(b) its canonical (first) retail def name is CF*-prefixed
+    (name-prefix rule has precedence per the manifest header), OR
+(c) it has no retail name AND no placements (a CF address-lane orphan/
+    helper sliver with no descriptor or no spawn — no evidence to move).
+Otherwise it **MOVES → `main/dll/` root** (runtime-spawned globals with
+0 placements, or objects placed predominantly/entirely at non-CF maps,
+or shared multi-map global DLLs). Prefixed names for lanes whose dir does
+NOT exist (CC/, KT/, MagicCave/, DFP/ — each <3 residents, not created)
+go to root, not a fabricated dir.
+
+placements column = total / CF-family / other. The `cfprisoncage`/
+`cfprisondoor`/`cfgalleon` romlists are tiny setup-point lists, so the
+fortress map (24 KB romlist) carries the real CF placement signal.
+
+| unit | dll id(s) | canonical retail name | placements (tot/CF/other) | top non-CF maps | verdict | rationale |
+|---|---|---|---|---|---|---|
+| `CFPrisonGuard.c` | — | — (helper, no descriptor) | 0 / 0 / 0 | — | **STAY** | CF* name; `cfPrisonGuard_*` helper sliver in CF address-lane, no own descriptor |
+| `dll_00E7_flammablevine.c` | 0xE7 | CCeyeVines (2 defs) | 6 / 0 / 6 | capeclaw×2, wallcity×2, linkj×1 | **MOVE → dll/** | CCeyeVines/BurnableVin vine; #1 map capeclaw — no CF placement |
+| `dll_00EC_infopoint.c` | 0xEC | InfoPoint (1 defs) | 0 / 0 / 0 | — | **MOVE → dll/** | InfoPoint generic marker, 0 placements (runtime/global) |
+| `dll_0106_scarab.c` | 0x106 | GreenScarab (5 defs) | 0 / 0 / 0 | — | **MOVE → dll/** | Scarab family runtime-spawned globals, 0 placements — flagship donor case |
+| `dll_0107_unused.c` | 0x107 | — | 0 / 0 / 0 | — | **STAY** | no retail name + 0 placements; CF address-lane orphan, no evidence to move |
+| `dll_0108_endobject.c` | 0x108 | EndObject (1 defs) | 1 / 0 / 1 | temple×1 | **MOVE → dll/** | EndObject sequence global, #1 map temple — runtime global |
+| `dll_0109_unk.c` | 0x109 | — | 0 / 0 / 0 | — | **STAY** | no retail name + 0 placements; CF address-lane orphan |
+| `dll_010A_fallladders.c` | 0x10A | Fall_Ladder (1 defs) | 3 / 3 / 0 | — | **STAY** | Fall_Ladders 3× fortress (CF) ONLY — genuine CF content |
+| `dll_010B_fireflylantern.c` | 0x10B | FireFlyLant (1 defs) | 0 / 0 / 0 | — | **MOVE → dll/** | FireFlyLantern runtime global, 0 placements |
+| `dll_010C_lanternfirefly.c` | 0x10C | LanternFire (1 defs) | 0 / 0 / 0 | — | **MOVE → dll/** | LanternFireFly runtime global, 0 placements |
+| `dll_010D_portalspelldoor.c` | 0x10D | PortalSpell (1 defs) | 6 / 0 / 6 | wallcity×2, capeclaw×1, dfptop×1 | **MOVE → dll/** | PortalSpelldoor #1 map wallcity, 5 non-CF maps — spread global |
+| `dll_010E_deathseq.c` | 0x10E | DieDuster (3 defs) | 0 / 0 / 0 | — | **MOVE → dll/** | DieDuster/DieFox/DieKrystal death-seq global, 0 placements |
+| `dll_0119_coldwatercontrol.c` | 0x119 | coldWaterCo (1 defs) | 3 / 0 / 3 | snowmines×1, snowmines2×1, wastes×1 | **MOVE → dll/** | coldWaterControl #1 snowmines — ice/desert, no CF |
+| `dll_011A_decoration11a.c` | 0x11A | DRDebrisGir (21 defs) | 387 / 40 / 347 | finalboss×141, newicemount×39, moonpass×26 | **MOVE → dll/** | generic decoration DLL, 23 def names / 18 non-CF maps (#1 finalboss×141) — shared global |
+| `dll_011B_landedarwing.c` | 0x11B | Landed_Arwi (1 defs) | 7 / 1 / 6 | warlock×2, dragrock×1, hollow×1 | **MOVE → dll/** | Landed_Arwing #1 map warlock; CF 1/7 — not CF-dominant |
+| `dll_011C_staffactivated.c` | 0x11C | LINKStaffLe (6 defs) | 115 / 19 / 96 | swapcircle×15, hollow×11, wastes×9 | **MOVE → dll/** | staff puzzle objs #1 swapcircle (fortress #2=13); 19/115 CF / 25 maps — reused, not predominant |
+| `dll_011D_treasurechest.c` | 0x11D | TreasureChe (2 defs) | 11 / 3 / 8 | snowmines×4, snowmines2×2, wallcity×2 | **MOVE → dll/** | TreasureChest #1 snowmines (fortress #2=3); 3/11 CF — spread |
+| `dll_011E_magiccavebottom.c` | 0x11E | MagicCaveBo (1 defs) | 2 / 0 / 2 | magicave×2 | **MOVE → dll/** | MagicCaveBottom magicave only; MagicCave dir absent (<3 residents) → root |
+| `dll_011F_magiccavetop.c` | 0x11F | MagicCaveTo (1 defs) | 9 / 0 / 9 | hollow×3, capeclaw×1, hollow2×1 | **MOVE → dll/** | MagicCaveTop #1 hollow; MagicCave dir absent → root |
+| `dll_0120_trickyguardspot.c` | 0x120 | TrickyGuard (1 defs) | 4 / 0 / 4 | hollow×4 | **MOVE → dll/** | TrickyGuardspot hollow only — no CF |
+| `dll_0121_infotext.c` | 0x121 | LINKF_InfoT (8 defs) | 14 / 0 / 14 | hollow×4, linkf×2, linkg×2 | **MOVE → dll/** | InfoText shared LINK/MMP/DIM/NW/SH/VFP (8 defs) — shared global |
+| `dll_0122_cctestinfot.c` | 0x122 | CCTestInfot (1 defs) | 0 / 0 / 0 | — | **MOVE → dll/** | CCTestInfot Cape Claw test marker, 0 placements; CC dir absent |
+| `dll_0123_fuelcell.c` | 0x123 | fuelCell (1 defs) | 77 / 0 / 77 | hollow×16, wastes×14, temple×8 | **MOVE → dll/** | fuelCell 14 non-CF maps (#1 hollow×16) — shared global |
+| `dll_0124_deathgas.c` | 0x124 | deathGas (2 defs) | 2 / 1 / 1 | linke×1 | **STAY** | deathGas #1 map fortress (CF), 1×fortress + 1×linke — CF top, small-N |
+| `dll_0127_dll127.c` | 0x127 | — | 0 / 0 / 0 | — | **STAY** | no retail name + 0 placements; CF address-lane orphan |
+| `dll_0128_kttorch.c` | 0x128 | KT_Torch (10 defs) | 25 / 0 / 25 | snowmines×14, snowmines2×5, trexboss×4 | **MOVE → dll/** | KT_Torch+DIM/WC/Trex door/torch DLL #1 snowmines; KT dir absent — shared global |
+| `dll_0129_campfire.c` | 0x129 | CampFire (1 defs) | 4 / 0 / 4 | wastes×3, linkb×1 | **MOVE → dll/** | CampFire #1 wastes — no CF |
+| `dll_012A_cfcrate.c` | 0x12A | CFCrate (37 defs) | 42 / 0 / 42 | kraztest×18, linkf×16, temple×3 | **STAY** | canonical CFCrate (CF* prefix) — name-prefix rule precedence (shared-asset DLL but CF-named primary) |
+| `dll_012B_fxemit.c` | 0x12B | FXEmit (1 defs) | 189 / 15 / 174 | kraztest×36, temple×34, wgshrine×17 | **MOVE → dll/** | FXEmit #1 kraztest; 15/189 CF (8%) — general effect emitter, not predominantly CF |
+| `dll_012C_transporter.c` | 0x12C | KP_Transpor (2 defs) | 35 / 0 / 35 | kraztest×5, warlock×5, mazecave×4 | **MOVE → dll/** | Transporter 20 non-CF maps (#1 kraztest) — spread global |
+| `dll_012D_lfxemitter.c` | 0x12D | LFXEmitter (1 defs) | 2 / 0 / 2 | trexboss×2 | **MOVE → dll/** | LFXEmitter trexboss only — no CF |
+| `dll_0130_areafxemit.c` | 0x130 | AreaFXEmit (2 defs) | 56 / 5 / 51 | moonpass×10, galleonship×7, hollow2×6 | **MOVE → dll/** | AreaFXEmit #1 moonpass; 5/56 CF (9%) — general area-effect emitter |
+| `dll_0236_dfplaserbe.c` | 0x236 | DFP_LaserBe (1 defs) | 0 / 0 / 0 | — | **MOVE → dll/** | DFP_LaserBe (Dark Fortress Pit) 0 placements; DFP dir absent — not CF |
+| `dll_0237_dfpsppl.c` | 0x237 | DFPSpPl (1 defs) | 2 / 0 / 2 | kraztest×2 | **MOVE → dll/** | DFPSpPl (Dark Fortress Pit) kraztest only; DFP dir absent — not CF |
+| `warppad.c` | — | — (helper, no descriptor) | 0 / 0 / 0 | — | **STAY** | `warpPad_*` helper sliver in CF address-lane (between lfxemitter/transporter), no own descriptor |
+
+**Summary: 8 STAY, 27 MOVE → `main/dll/` root.**
+
+STAY (genuinely CF): `dll_010A_fallladders` (fortress-only),
+`dll_0124_deathgas` (fortress top), `dll_012A_cfcrate` (CFCrate name),
+`CFPrisonGuard` (CF* helper), `dll_0107_unused` / `dll_0109_unk` /
+`dll_0127_dll127` / `warppad` (no-name CF address-lane orphans).
+
+The MOVE set includes every mission-named runtime global — Scarab (0x106),
+EndObject (0x108), PortalSpelldoor (0x10D), Transporter (0x12C),
+FireFlyLantern/LanternFireFly (0x10B/0x10C) — none of which has any CF
+placement. Pure `git mv` of the `.c` only; headers stay in
+`include/main/dll/CF/` (includes are `-I include` root-relative, so moved
+`.c` files keep valid include paths with zero edits — byte-neutral).
+
+Headers NOT moved (shared web inside CF/): `dll_012B_fxemit.h` (also
+included by the staying `dll_012A_cfcrate.c` + `CFchuckobj.h`),
+`dll_012C_transporter.h`, `treasureRelated0177.h` (shared
+campfire/kttorch/dll127), `lanternfirefly_state.h` (in `CFcrystal.h`),
+and the shared `CFguardian.h`/`windlift.h`/`CFcrystal.h`/`CFchuckobj.h`/
+`warp_pad.h` headers. These keep their `main/dll/CF/...` include paths.
+
+**Cross-lane observation** (read-only — a project-wide homing pass is a
+separate follow-up): the same donor-inheritance problem visibly exists in
+other lane dirs. `DR/dll_014E_cfprisonguard.c` is a CF-named DLL homed to
+DR/ by address-lane inheritance; `DR/dll_0149_cfwindlift.c` is the
+manifest's own cited precedent for "address-lane beats name prefix."
+The manifest's lane-dir rule (address-lane ownership) directly conflicts
+with retail-placement homing — resolving that project-wide would re-home
+dozens of units across DR/, DIM/, WC/, etc. by the same census method.
