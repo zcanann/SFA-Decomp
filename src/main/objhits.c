@@ -2524,9 +2524,9 @@ void ObjHits_Update(int objectCount)
                                 ((objState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
                                 ((candState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
                                 (((candState->flags & 4) == 0) || (slotIndex >= candidateIndex)) &&
-                                ((*(u8*)((u8*)((GameObject*)obj)->anim.modelInstance + 0x71) & candState->targetMask) !=
+                                ((((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask & candState->targetMask) !=
                                     0) &&
-                                ((*(u8*)((u8*)((GameObject*)candObj)->anim.modelInstance + 0x71) & objState->targetMask)
+                                ((((GameObject*)candObj)->anim.modelInstance->runtimeSourceHitMask & objState->targetMask)
                                     != 0))
                             {
                                 if ((candState->shapeFlags & OBJHITS_SHAPE_SKELETON) != 0)

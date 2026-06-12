@@ -440,7 +440,7 @@ void hightop_init(void* obj, u8* arg)
     runtime->unk9FD |= 8;
     runtime->unkC18 = *(s16*)(arg + 0x1a);
     runtime->unk9FD |= 1;
-    *(u8*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x71) = 127;
+    ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask = 127;
     runtime->flagsC49.b4 = 0;
     runtime->flagsC49.b7 = 0;
     lbl_803DC320 = *(s16*)(arg + 0x1a);
@@ -549,7 +549,7 @@ int hightop_handleMotionEvent(int obj, u8 event)
     case 7:
         GameBit_Set(0x634, 0);
         GameBit_Set(0x631, 1);
-        *(u8*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x71) |= 1;
+        ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask |= 1;
         runtime->unkC40 &= ~0x140;
         runtime->unk9FD &= ~2;
         (*(void (**)(int, char*, int))((char*)*gPlayerInterface + 0x14))(obj, (char*)runtime, 7);
@@ -806,7 +806,7 @@ int hightop_stateHandler04(int obj, int p)
         GameBit_Set(0x62f, 1);
         ObjHits_MarkObjectPositionDirty(obj);
         ObjHits_ClearSourceMask(obj, 1);
-        *(u8*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x71) &= ~1;
+        ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask &= ~1;
         state->unkC4B = -1;
         state->unkC40 |= 0x40;
         state->unkC40 |= 0x20;

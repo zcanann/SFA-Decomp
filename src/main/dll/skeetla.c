@@ -224,7 +224,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
                                       (f32*)(Obj_GetPlayerObject() + 0x18)) > lbl_803E2430)
             {
                 state->contactTimer -= lbl_803E242C;
-                *(u8*)(*(u8**)&((GameObject*)obj)->anim.modelInstance + 0x71) = 0x7f;
+                ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask = 0x7f;
                 state->stateFlags &= ~8;
             }
         }
@@ -237,7 +237,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         {
             state->contactTimer -= lbl_803E23E0;
             state->stateFlags |= 8;
-            *(u8*)(*(u8**)&((GameObject*)obj)->anim.modelInstance + 0x71) = 0x7e;
+            ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask = 0x7e;
         }
     }
     else
@@ -1440,7 +1440,7 @@ void FUN_8013939c(uint param_1)
             {
                 ((TrickyState*)iVar3)->contactTimer = ((TrickyState*)iVar3)->contactTimer - FLOAT_803e3070;
                 ((TrickyState*)iVar3)->stateFlags = ((TrickyState*)iVar3)->stateFlags | 8;
-                *(u8*)(*(int*)&((GameObject*)param_1)->anim.modelInstance + 0x71) = 0x7e;
+                ((GameObject*)param_1)->anim.modelInstance->runtimeSourceHitMask = 0x7e;
             }
         }
     }
@@ -1454,7 +1454,7 @@ void FUN_8013939c(uint param_1)
             if ((double)FLOAT_803e30c0 < dVar4)
             {
                 ((TrickyState*)iVar3)->contactTimer = ((TrickyState*)iVar3)->contactTimer - FLOAT_803e30bc;
-                *(u8*)(*(int*)&((GameObject*)param_1)->anim.modelInstance + 0x71) = 0x7f;
+                ((GameObject*)param_1)->anim.modelInstance->runtimeSourceHitMask = 0x7f;
                 ((TrickyState*)iVar3)->stateFlags = ((TrickyState*)iVar3)->stateFlags & 0xfffffff7;
             }
         }

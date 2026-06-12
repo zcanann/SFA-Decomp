@@ -191,7 +191,8 @@ typedef struct ObjDef {
   s16 secondaryCapsuleOffsetA;
   s16 secondaryCapsuleOffsetB;
   u8 sourceHitMask;
-  u8 pad71[0x77 - 0x71];
+  u8 runtimeSourceHitMask;
+  u8 pad72[0x77 - 0x72];
   u8 secondaryHitboxRadius;
   s16 mapLoadObjectId;
   u8 pad7A[0x90 - 0x7A];
@@ -406,6 +407,7 @@ STATIC_ASSERT(offsetof(ObjDef, primaryCapsuleOffsetB) == 0x6A);
 STATIC_ASSERT(offsetof(ObjDef, secondaryCapsuleOffsetA) == 0x6C);
 STATIC_ASSERT(offsetof(ObjDef, secondaryCapsuleOffsetB) == 0x6E);
 STATIC_ASSERT(offsetof(ObjDef, sourceHitMask) == 0x70);
+STATIC_ASSERT(offsetof(ObjDef, runtimeSourceHitMask) == 0x71);
 STATIC_ASSERT(offsetof(ObjDef, secondaryHitboxRadius) == 0x77);
 STATIC_ASSERT(offsetof(ObjDef, mapLoadObjectId) == 0x78);
 STATIC_ASSERT(offsetof(ObjDef, secondaryHitboxShapeFlags) == 0x90);
