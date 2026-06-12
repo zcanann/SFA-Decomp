@@ -2,7 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/expgfx.h"
 #include "main/dll/ARW/ARWarwingattachment.h"
-#include "main/dll/LGT/LGTpointlight.h"
+#include "main/dll/LGT/dll_0206_lightsource.h"
 #include "main/objHitReact.h"
 #include "main/objseq.h"
 
@@ -778,7 +778,7 @@ typedef struct ArwAttachTarget
 #pragma opt_strength_reduction reset
 #pragma opt_strength_reduction reset
 
-#include "main/dll/LGT/LGTpointlight.h"
+#include "main/dll/LGT/dll_0206_lightsource.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"

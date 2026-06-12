@@ -1151,10 +1151,10 @@ main/dll/ARW/dll_0201_wmcolrise.c:
 main/dll/ARW/dll_0204_wmtorch.c:
 	.text       start:0x801F30DC end:0x801F33B4
 
-main/dll/LGT/LGTpointlight.c:
+main/dll/LGT/dll_0206_lightsource.c:
 	.text       start:0x801F33B4 end:0x801F3C2C
 
-main/dll/LGT/LGTdirectionallight.c:
+main/dll/LGT/dll_0207_wmworm.c:
 	.text       start:0x801F3C2C end:0x801F3F18
 
 main/dll/WM/dll_0209_wmlevelcontrol.c:
@@ -1506,16 +1506,16 @@ main/dll/ARW/dll_02A7_arwproximit.c:
 main/dll/ARW/dll_02A8_arwblocker.c:
 	.text       start:0x802338F0 end:0x80233B0C
 
-main/dll/LGT/dll_02A9_pointlight.c:
+main/dll/LGT/dll_02A9_lgtpointlight.c:
 	.text       start:0x80233B0C end:0x8023404C
 
-main/dll/LGT/dll_02AA_directionallight.c:
+main/dll/LGT/dll_02AA_lgtdirectionallight.c:
 	.text       start:0x8023404C end:0x80234748
 
-main/dll/LGT/dll_02AB_projectedlight.c:
+main/dll/LGT/dll_02AB_lgtprojectedlight.c:
 	.text       start:0x80234748 end:0x80234C10
 
-main/dll/LGT/dll_02AC_controllight.c:
+main/dll/LGT/dll_02AC_lgtcontrollight.c:
 	.text       start:0x80234C10 end:0x80234DC8
 
 main/dll/softbody.c:

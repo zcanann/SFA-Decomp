@@ -9,7 +9,7 @@
  * LAST in this file so MWCC cannot inline it into wmlevelcontrol_update
  * (it was an extern call before the re-split).
  */
-#include "main/dll/LGT/LGTdirectionallight.h"
+#include "main/dll/LGT/dll_0207_wmworm.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
 typedef struct WmlevelcontrolState

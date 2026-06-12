@@ -64,7 +64,7 @@ void wmworm_free(int obj)
 
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/dll/LGT/LGTdirectionallight.h"
+#include "main/dll/LGT/dll_0207_wmworm.h"
 
 extern undefined4 FUN_8001753c();
 extern undefined4 FUN_80017544();
