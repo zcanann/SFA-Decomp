@@ -1,8 +1,6 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/screen_transition.h"
 
-
-
 extern u32 GameBit_Get(int bit);
 
 extern u8 framesThisStep;
@@ -22,7 +20,6 @@ extern f32 timeDelta;
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -37,11 +34,7 @@ extern f32 timeDelta;
  * PAL Size: TODO
  */
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
 
 /*
  * --INFO--
@@ -51,7 +44,6 @@ extern f32 timeDelta;
  * EN v1.0 Size: 556b
  */
 
-
 /*
  * --INFO--
  *
@@ -60,7 +52,6 @@ extern f32 timeDelta;
  * EN v1.0 Size: 732b
  */
 
-
 /*
  * --INFO--
  *
@@ -68,13 +59,6 @@ extern f32 timeDelta;
  * EN v1.0 Address: 0x8018D584
  * EN v1.0 Size: 348b
  */
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int cfccrate_getExtraSize(void) { return 0x4c; }
@@ -87,7 +71,6 @@ void cfccrate_free(int obj)
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
-/* === merged from main/dll/CF/dll_179.c [8018D728-8018D8DC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
 #include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/effect_interfaces.h"
@@ -177,7 +160,6 @@ typedef struct CfccratePlacement
     s8 unk18;
     u8 pad19[0x20 - 0x19];
 } CfccratePlacement;
-
 
 extern void* Camera_GetCurrentViewSlot(void);
 extern u32 GameBit_Set(int bit, int value);
@@ -410,7 +392,6 @@ void cfccrate_update(int obj)
     }
 }
 
-/* === moved from main/dll/CF/CFTreasSharpy.c [8018E0A4-8018E6C4) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/dll/CF/dll_179.h"
 #include "main/effect_interfaces.h"
@@ -421,7 +402,6 @@ void cfccrate_update(int obj)
 extern undefined4 FUN_80017a78();
 
 extern void Obj_SetActiveModelIndex(int obj, int idx);
-
 
 extern void* lbl_803DBDE8;
 
@@ -613,13 +593,10 @@ void cfccrate_init(int obj, int aux)
     }
 }
 
-
 #define CFTREAS_PARTFX_SPAWN(obj, id, data, flags, model, arg) \
     (*gPartfxInterface)->spawnObject((void *)(obj), id, data, flags, model, (void *)(arg))
 
-
 #undef CFTREAS_PARTFX_SPAWN
-
 
 /*
  * --INFO--
@@ -682,7 +659,6 @@ void cfccrate_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--

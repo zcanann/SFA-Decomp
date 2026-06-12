@@ -34,7 +34,6 @@
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
 
-
 extern undefined4 ObjMsg_SendToObject();
 extern void saveGame_save();
 
@@ -63,22 +62,17 @@ extern void fn_8000FB20(void);
 extern void fn_8000F7A0(void);
 extern undefined4 DAT_803de3f6;
 
-
 #pragma scheduling on
 #pragma peephole on
-
 
 #pragma scheduling off
 #pragma peephole off
 
-
 #pragma scheduling on
 #pragma peephole on
 
-
 #pragma scheduling off
 #pragma peephole off
-
 
 void fn_80129FB0(void)
 {
@@ -92,7 +86,6 @@ void fn_80129FB0(void)
     fn_8000FB20();
     fn_8000F7A0();
 }
-
 
 int fn_8012B9F8(void)
 {
@@ -125,14 +118,11 @@ int fn_8012B9F8(void)
     return 1;
 }
 
-
 #pragma scheduling on
 #pragma peephole on
 
-
 #pragma scheduling off
 #pragma peephole off
-
 
 void FUN_8012c894()
 {
@@ -141,15 +131,12 @@ void FUN_8012c894()
 #pragma scheduling on
 #pragma peephole on
 
-
 #pragma scheduling off
 #pragma peephole off
-
 
 void FUN_8012dab8()
 {
 }
-
 
 void fn_8012E050(void)
 {
@@ -194,7 +181,6 @@ void FUN_8012e0f4(char param_1)
     return;
 }
 
-
 void fn_8012E250(void)
 {
     lbl_803DE3DB = 1;
@@ -202,7 +188,6 @@ void fn_8012E250(void)
     fn_800207AC(1);
     fn_800206EC(0xff);
 }
-
 
 /* ===== EN v1.0 retargeted leaves ==========================================
  * The FUN_xxx stubs above are still at stale pre-v1.0 addresses and produce
@@ -1219,7 +1204,6 @@ void pauseMenuFn_8012b77c(void)
     fn_8012C000();
 }
 
-
 extern s16 lbl_803DD770;
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int u, int w, int h, int q);
 extern f32 lbl_803E213C;
@@ -1372,7 +1356,6 @@ void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
     drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x + (s16)w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
     drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x - 5), (f32)(y + (s16)h), alpha, 0x100, 5, 5, 2);
 }
-
 
 extern u8 lbl_803DBA94[8];
 
@@ -3694,8 +3677,6 @@ extern f64 lbl_803E2118;
 extern f32 lbl_803E2120;
 extern f64 lbl_803E2128;
 
-
-
 /* EN v1.0 0x80128A7C  size: 1012b  Draws one pause-menu grid cell with its
  * motion trail: each trail step (count, stepping by 4) redraws the cell's
  * texture offset along the entry's trail vector, fading via the scaled
@@ -3976,7 +3957,6 @@ void fn_8012C000(void)
 #pragma peephole reset
 #pragma peephole reset
 
-/* === merged from main/dll/baddie/wall_crawler.c [8012EB7C-8012FCEC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/camera_interface.h"
@@ -4087,7 +4067,6 @@ void FUN_8012eb7c(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     return;
 }
 
-
 /*
  * --INFO--
  *
@@ -4104,7 +4083,6 @@ void FUN_8012eb7c(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -4120,7 +4098,6 @@ void FUN_8012eb7c(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -4278,13 +4255,11 @@ void FUN_8012f744(undefined2 param_1)
     return;
 }
 
-
 /* ===== EN v1.0 retargeted leaves ==========================================
  * Hand-ported helpers below pair by name in objdiff against the live v1.0
  * asm at build/GSAE01/asm/main/dll/baddie/wall_crawler.s. The legacy
  * FUN_xxxx scaffold above is at pre-v1.0 addresses and produces no
  * matches; new fn_xxxxxxxx helpers are appended in batches. */
-
 
 /* EN v1.0 0x8012EBC8  size: 8b   s16 getter for cMenuSelectedItem. */
 #pragma scheduling off
@@ -5040,11 +5015,8 @@ void GameUI_update(void)
 #pragma peephole reset
 #pragma peephole reset
 
-/* === moved from main/dll/baddie/dll_DB.c [8012FCEC-8012FECC) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling on
 #pragma peephole on
-
-
 
 /*
  * --INFO--
@@ -5122,7 +5094,6 @@ void textureFreeFn_8012fcec(void)
  */
 undefined4 FUN_8012fe70(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8);
 
-
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
 extern s16 cMenuFadeCounter;
@@ -5133,8 +5104,6 @@ extern s8 lbl_803DD896;
 extern int lbl_803DD744;
 extern int lbl_803DD740;
 extern int airMeter;
-
-
 
 void Pause_SetDisabled(u8 v) { pauseDisabled = v; }
 void Pause_ResetMenuFrameCounter(void) { pauseMenuFrameCounter = 60; }

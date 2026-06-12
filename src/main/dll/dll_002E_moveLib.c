@@ -4,8 +4,6 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/dll_002E_moveLib.h"
 
-
-
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80017748();
 extern int ObjGroup_FindNearestObjectToPoint();
@@ -34,7 +32,6 @@ extern f32 lbl_803E294C;
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -51,7 +48,6 @@ extern f32 lbl_803E294C;
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -67,7 +63,6 @@ extern f32 lbl_803E294C;
  */
 #pragma scheduling off
 #pragma peephole off
-
 
 /*
  * --INFO--
@@ -101,7 +96,6 @@ void FUN_801141e8(int param_1, wchar_t* param_2, wchar_t* param_3)
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 extern f32 Curve_EvalHermite(f32* points, f32 t, int unused);
 extern f32 sqrtf(f32 x);
@@ -235,7 +229,6 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -252,7 +245,6 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -268,7 +260,6 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -394,12 +385,10 @@ void FUN_80114b10(int param_1, undefined4* param_2, undefined2 param_3, undefine
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
 void dll_19_func04_nop(void);
-
 
 /* 8b "li r3, N; blr" returners. */
 int dll_2E_func0F_ret_0(void) { return 0x0; }
@@ -442,7 +431,6 @@ f32 dll_2E_func0B(int obj, int arg)
     }
     return lbl_803E1C88;
 }
-
 
 void fn_80114B1C(int* obj)
 {
@@ -885,8 +873,6 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
 #pragma peephole reset
 #pragma peephole reset
 
-/* === merged from main/dll/projLib.c [80115094-80115650) (TU re-split, docs/boundary_audit.md) === */
-
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern u32 randomGetRange(int min, int max);
 extern int ObjGroup_FindNearestObject();
@@ -1140,7 +1126,6 @@ LAB_801158cc:
     return;
 }
 
-
 void FUN_801150ac(void)
 {
     undefined8 ctx;
@@ -1151,7 +1136,6 @@ void FUN_801150ac(void)
     return;
 }
 
-/* === merged from main/dll/FRONT/POST.c [80115650-801159E4) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/FRONT/POST.h"
 #include "main/objanim.h"
 

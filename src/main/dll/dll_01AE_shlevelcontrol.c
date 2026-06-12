@@ -2,11 +2,6 @@
 #include "main/game_ui_interface.h"
 #include "main/dll/SC/SClantern.h"
 
-
-
-
-
-
 /*
  * --INFO--
  *
@@ -20,7 +15,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -49,7 +43,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -86,7 +79,6 @@ void sh_levelcontrol_free(void)
     }
 }
 
-/* === merged from main/dll/SC/SCtotemlogpuz.c [801D7C14-801D8060) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/SC/SCtotemlogpuz.h"
 
 extern int mapUnload(int id, int flags);
@@ -95,7 +87,6 @@ extern int mapUnload(int id, int flags);
 #define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET 5
 #define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE 1
 #define SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS 0x20000000
-
 
 /*
  * --INFO--
@@ -240,9 +231,6 @@ end:
     return;
 }
 
-/* === merged from main/dll/SC/SCtotembondpuz.c [801D8060-801D80F4) (TU re-split, docs/boundary_audit.md) === */
-
-
 /*
  * --INFO--
  *
@@ -259,9 +247,7 @@ void SCGameBitLatch_UpdateInverted(SCGameBitLatchState* state, int mask, s16 cle
     GameBit_Set(latchBit, !GameBit_Get(latchBit));
 }
 
-/* === merged from main/dll/brokecannon.c [801D80F4-801D8308) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/SC/SCtotemlogpuz.h"
-
 
 /*
  * --INFO--
@@ -334,13 +320,11 @@ void SH_LevelControl_setMusic(short* obj)
 }
 #pragma dont_inline reset
 
-/* === merged from main/dll/SP/SPshop.c [801D8308-801D87F8) (TU re-split, docs/boundary_audit.md) === */
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/game_ui_interface.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
-
 
 extern undefined4 FUN_800067c0();
 extern undefined8 FUN_80286838();
@@ -356,7 +340,6 @@ extern f32 timeDelta;
 
 extern void fn_80137948(char* fmt, ...);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-
 
 /*
  * --INFO--
@@ -567,14 +550,12 @@ void FUN_801d8480(undefined4 param_1, undefined4 param_2, short param_3, short p
 #pragma scheduling off
 #pragma peephole off
 
-
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
 #pragma scheduling reset
 #pragma peephole reset
 #pragma peephole reset
 
-/* === merged from main/dll/SP/SPshopkeeper.c [801D87F8-801D8D20) (TU re-split, docs/boundary_audit.md) === */
 #include "main/mapEvent.h"
 #include "main/dll/SP/SPshopkeeper.h"
 #include "main/objseq.h"
@@ -600,7 +581,6 @@ extern void padClearAnalogInputX(int controller);
 extern void padClearAnalogInputY(int controller);
 extern void buttonDisable(int controller, int flags);
 extern int playerHasSpell(int obj, int spell);
-
 
 #define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg) \
     (*gObjectTriggerInterface)->runSequence((triggerId), (void *)(obj), (arg))
@@ -818,7 +798,6 @@ typedef struct ShLevelcontrolState
     u8 pad14[0x18 - 0x14];
 } ShLevelcontrolState;
 
-
 extern void buttonDisable(int a, int b);
 extern void padClearAnalogInputY(int a);
 extern void padClearAnalogInputX(int a);
@@ -828,7 +807,6 @@ extern void envFxActFn_800887f8(int a);
 extern void skyFn_80088e54(int a, f32 b);
 extern void getEnvfxAct(int a, int b, int c, int d);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
-
 
 /*
  * --INFO--
@@ -1160,12 +1138,8 @@ void sh_levelcontrol_update(int obj)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void warpstonelift_free(void);
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -1231,8 +1205,6 @@ void sh_levelcontrol_init(int obj)
 }
 
 void warpstonelift_init(int obj, s8* def);
-
-
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 

@@ -11,7 +11,6 @@ typedef struct GrimblePlacement
     s32 unk14;
 } GrimblePlacement;
 
-
 typedef struct GrimbleState
 {
     u8 pad0[0x27A - 0x0];
@@ -32,7 +31,6 @@ typedef struct GrimbleState
     void* unk40C;
     u8 pad410[0x46C - 0x410];
 } GrimbleState;
-
 
 extern undefined4 FUN_80006824();
 extern int FUN_80017730();
@@ -598,7 +596,6 @@ FUN_801620c0(undefined8 param_1, double param_2, double param_3, undefined8 para
     return uVar2;
 }
 
-
 /*
  * --INFO--
  *
@@ -931,7 +928,6 @@ FUN_80162b78(undefined8 param_1, double param_2, double param_3, undefined8 para
     return uVar1;
 }
 
-
 /*
  * --INFO--
  *
@@ -946,14 +942,12 @@ FUN_80162b78(undefined8 param_1, double param_2, double param_3, undefined8 para
  * PAL Size: TODO
  */
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void grimble_release(void)
 {
 }
 
 void cannonclaw_free(void);
-
 
 /* 8b "li r3, N; blr" returners. */
 int grimble_animEventCallback(void) { return 0x0; }
@@ -1010,16 +1004,11 @@ ObjectDescriptor gGrimbleObjDescriptor = {
 #pragma peephole reset
 #pragma peephole reset
 
-/* === moved from main/dll/ladders.c [801630EC-801631C8) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
-
-
-
-
 
 /*
  * --INFO--
@@ -1037,8 +1026,6 @@ ObjectDescriptor gGrimbleObjDescriptor = {
 /* Actual cannonclaw_update is 188b -- trigger-once cannon-arm awakener.
  * The 668b "Ghidra body" was misattributed; replaced with the right one. */
 
-
-
 /*
  * --INFO--
  *
@@ -1054,7 +1041,6 @@ ObjectDescriptor gGrimbleObjDescriptor = {
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -1086,7 +1072,6 @@ ObjectDescriptor gGrimbleObjDescriptor = {
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -1103,11 +1088,9 @@ ObjectDescriptor gGrimbleObjDescriptor = {
 #pragma scheduling on
 #pragma peephole on
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-
 
 void tumbleweedbush_free(void);
 
@@ -1117,14 +1100,11 @@ void tumbleweedbush_release(void);
 
 void tumbleweedbush_initialise(void);
 
-
 void tumbleweedbush_init(u8* obj, u8* params, int param3);
 
 /* 8b "li r3, N; blr" returners. */
 int tumbleweedbush_getExtraSize(void);
 int tumbleweedbush_getObjectTypeId(void);
-
-
 
 void tumbleweedbush_update(int* obj);
 
@@ -1141,16 +1121,9 @@ void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
  * the supplied position vector). Returns NULL if no match. */
 extern void* ObjGroup_GetObjects(int type, int* outCount);
 
-
 /* tumbleweedbush_setScale: scan the sub-array at obj->_b8 (sub[0x50] entries
  * of 4 bytes each), zeroing every slot whose +0xc word matches `match`. */
 void tumbleweedbush_setScale(u8* obj, void* match);
-
-
-
-
-
-
 
 ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
     {

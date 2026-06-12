@@ -20,7 +20,6 @@ typedef struct MediumbasketUpdateDropStateState
     u16 unk46;
 } MediumbasketUpdateDropStateState;
 
-
 typedef struct MediumbasketUpdateHeightBlendStateState
 {
     u8 pad0[0x4 - 0x0];
@@ -36,9 +35,6 @@ typedef struct MediumbasketUpdateHeightBlendStateState
     u8 pad45[0x46 - 0x45];
     u16 unk46;
 } MediumbasketUpdateHeightBlendStateState;
-
-
-
 
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_80006a54();
@@ -202,7 +198,6 @@ void FUN_8015ad60(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-
 /*
  * --INFO--
  *
@@ -228,7 +223,6 @@ void FUN_8015b2d0(short* param_1, int param_2)
     *param_1 = *param_1 + -0x100;
     return;
 }
-
 
 /*
  * --INFO--
@@ -326,7 +320,6 @@ FUN_8015b7f0(undefined8 param_1, double param_2, double param_3, undefined8 para
     return uVar4;
 }
 
-
 /*
  * --INFO--
  *
@@ -376,7 +369,6 @@ FUN_8015bc20(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     }
     return 0;
 }
-
 
 /*
  * --INFO--
@@ -1279,7 +1271,6 @@ FUN_8015d6ec(undefined8 param_1, double param_2, double param_3, undefined8 para
     (**(code**)(*DAT_803dd70c + 0x30))((double)lbl_803DC074, param_9, param_10, 4);
     return 0;
 }
-
 
 extern f32 lbl_803E2CD8;
 extern f32 lbl_803E2D00;
@@ -2547,7 +2538,6 @@ return0:
 #pragma peephole reset
 #pragma peephole reset
 
-/* === moved from main/dll/scarab.c [8015D7B0-8015DAE8) (TU re-split, docs/boundary_audit.md) === */
 #include "ghidra_import.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -2559,13 +2549,6 @@ return0:
 #include "main/objanim.h"
 #include "main/objhits_types.h"
 #include "main/objseq.h"
-
-
-
-
-
-
-
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
@@ -2668,7 +2651,6 @@ void dll_CA_update(int obj, int p2, int p3)
 #pragma scheduling on
 #pragma peephole on
 
-
 #pragma scheduling off
 #pragma peephole off
 int fn_8015E3A0(int obj, int p2);
@@ -2705,7 +2687,6 @@ int fn_8015E3A0(int obj, int p2);
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -2780,11 +2761,6 @@ void dll_CA_init(int obj, u8* p, int flags)
 }
 
 int fn_8015E5DC(short* obj, GroundBaddieState* p);
-
-
-
-
-
 
 /*
  * --INFO--
@@ -2862,9 +2838,6 @@ int fn_8015E5DC(short* obj, GroundBaddieState* p);
  * PAL Size: TODO
  */
 
-
-
-
 /*
  * --INFO--
  *
@@ -2881,14 +2854,12 @@ int fn_8015E5DC(short* obj, GroundBaddieState* p);
 #pragma scheduling on
 #pragma peephole on
 
-
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline reset
 
 static inline u8 scarab_isObjectInList(void* o);
-
 
 /*
  * --INFO--
@@ -2906,8 +2877,6 @@ static inline u8 scarab_isObjectInList(void* o);
 #pragma scheduling on
 #pragma peephole on
 
-
-
 /*
  * --INFO--
  *
@@ -2924,14 +2893,11 @@ static inline u8 scarab_isObjectInList(void* o);
 #pragma scheduling off
 #pragma peephole off
 
-
-
 #pragma dont_inline on
 #pragma dont_inline reset
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
 
 /*
  * --INFO--
@@ -2949,7 +2915,6 @@ static inline u8 scarab_isObjectInList(void* o);
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -2963,7 +2928,6 @@ static inline u8 scarab_isObjectInList(void* o);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -2979,7 +2943,6 @@ static inline u8 scarab_isObjectInList(void* o);
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -2993,7 +2956,6 @@ static inline u8 scarab_isObjectInList(void* o);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -3009,7 +2971,6 @@ static inline u8 scarab_isObjectInList(void* o);
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -3023,7 +2984,6 @@ static inline u8 scarab_isObjectInList(void* o);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -3039,7 +2999,6 @@ static inline u8 scarab_isObjectInList(void* o);
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -3053,7 +3012,6 @@ static inline u8 scarab_isObjectInList(void* o);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -3069,14 +3027,12 @@ static inline u8 scarab_isObjectInList(void* o);
  * PAL Size: TODO
  */
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void dll_CA_release_nop(void)
 {
 }
 
 void dll_CE_hitDetect_nop(void);
-
 
 void chukchuk_free(void);
 
@@ -3086,12 +3042,10 @@ void chukchuk_release(void);
 
 void chukchuk_initialise(void);
 
-
 /*
  * Per-object extra state for the ChukChuk ice-spitter
  * (chukchuk_getExtraSize == 0x18).
  */
-
 
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
@@ -3107,14 +3061,8 @@ void iceball_release(void);
 
 void iceball_initialise(void);
 
-
-
-
 #pragma scheduling off
 #pragma peephole off
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int chukchuk_getExtraSize(void);
@@ -3133,8 +3081,6 @@ void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 /* plain forwarder. */
 void dll_CA_initialise(void) { fn_8015DAE8(); }
 void iceball_free(void);
-
-
 
 void chukchuk_update(short* obj);
 
@@ -3160,7 +3106,6 @@ void iceball_init(void* obj);
 
 /* fn_801603E8 (84B). If obj2->27b != 0, vtable call through gBaddieControlInterface with (obj, x->unk3F0, -1, 0). */
 
-
 /* dll_CB_hitDetect (60B). Vtable dispatch through gPlayerInterface with extra args (obj->b8, lbl_803AC5E8). */
 #pragma peephole on
 
@@ -3174,37 +3119,13 @@ void iceball_init(void* obj);
 
 /* fn_80160690 (96B). Like fn_801605A8 but with extra stfs at 0x2a0 and a vtable call. */
 
-
 /* Drift-recovery: add new fns with v1.0 names to capture asm symbols. */
 
 #pragma peephole off
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 #pragma peephole on
 
 #pragma peephole off
-
-
-
-
-
-
-
-
-
-
 
 ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
     {

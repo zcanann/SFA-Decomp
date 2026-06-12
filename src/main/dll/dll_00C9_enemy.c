@@ -22,9 +22,6 @@ typedef struct BaddieAfterUpdateBonesCbState
     s32 unk36C;
 } BaddieAfterUpdateBonesCbState;
 
-
-
-
 extern undefined4 ABS();
 extern double FUN_80017714();
 extern uint FUN_80017730();
@@ -594,7 +591,6 @@ void objAnimFn_8014a9f0(short* obj, int state)
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -611,7 +607,6 @@ void objAnimFn_8014a9f0(short* obj, int state)
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -627,7 +622,6 @@ void objAnimFn_8014a9f0(short* obj, int state)
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -792,7 +786,6 @@ void FUN_8014c78c(undefined4 param_1, undefined4 param_2, int param_3, int* para
     return;
 }
 
-
 /*
  * --INFO--
  *
@@ -829,7 +822,6 @@ double FUN_8014cbcc(int param_1)
     }
     return dVar2;
 }
-
 
 /*
  * --INFO--
@@ -960,7 +952,6 @@ void FUN_8014ccb8(double param_1, double param_2, double param_3, int param_4, i
     return;
 }
 
-
 /* 8b "li r3, N; blr" returners. */
 int Baddie_EnemygetExtraSize(void) { return 0x370; }
 int enemy_getObjectTypeId(void) { return 0x14b; }
@@ -970,7 +961,6 @@ void fn_8014C66C(int* obj, int x) { *(int*)((char*)((int**)obj)[0xb8 / 4] + 0x29
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern f32 lbl_803E2598;
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -1008,7 +998,6 @@ null_state:
     return 0;
 }
 
-
 void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c)
 {
     extern f32 lbl_803E256C;
@@ -1043,7 +1032,6 @@ void baddieAfterUpdateBonesCb(int obj, int* p2)
         break;
     }
 }
-
 
 void fn_8014C540(int* obj, int* p4, f32* p5, f32* p6)
 {
@@ -1086,7 +1074,6 @@ f32 fn_8014C5D0(register int obj)
     }
     return lbl_803E2574;
 }
-
 
 /* sidekickToy_accelerateTowardTargetXZ: xz-plane physics step toward a target. Computes the planar
  * distance to (tx,ty,tz), then nudges the obj's xz velocity (offsets 0x24,
@@ -1482,7 +1469,6 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
     return 0;
 }
 
-
 extern f32 lbl_803E25B8;
 extern f32 lbl_803E25EC;
 extern f32 lbl_803E25F0;
@@ -1855,7 +1841,6 @@ void fn_8014CF7C(int* node, int p2, u16 p3, int p4, f32 fa, f32 fb)
     *(s16*)node = newVal;
 }
 
-/* === merged from main/dll/projswitch.c [8014D164-8014E1DC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
@@ -1888,7 +1873,6 @@ typedef struct EnemyPlacement
     u16 unk34;
     u8 pad36[0x38 - 0x36];
 } EnemyPlacement;
-
 
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_EnableObject();
@@ -2074,7 +2058,6 @@ void FUN_8014d4c8(double param_1, double param_2, double param_3, undefined8 par
     return;
 }
 
-
 /*
  * --INFO--
  *
@@ -2088,7 +2071,6 @@ void FUN_8014d4c8(double param_1, double param_2, double param_3, undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /* conditional init/free pair. */
 extern void* lbl_803DDA50;
@@ -2261,7 +2243,6 @@ extern int objIsFrozen(int obj);
 extern void baddie_updateWhileFrozen(int obj, u8* state, int flag);
 extern void hudFn_8011f38c(int a);
 extern f32 lbl_803E2600;
-
 
 void enemy_update(int obj)
 {

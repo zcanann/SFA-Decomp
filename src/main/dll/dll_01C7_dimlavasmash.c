@@ -275,17 +275,13 @@ void FUN_801b2550(undefined8 param_1, undefined8 param_2, double param_3, undefi
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
 void dimcannon_hitDetect(void);
 
-
-
 extern void objRenderFn_8003b8f4(f32 x);
 extern f32 lbl_803E48F8;
-
 
 void dimlavasmash_free(void)
 {
@@ -339,11 +335,6 @@ typedef struct DimlavasmashPlacement
     u8 pad22[0x28 - 0x22];
 } DimlavasmashPlacement;
 
-
-
-
-
-
 typedef struct DimlavasmashState
 {
     u8 pad0[0x1 - 0x0];
@@ -358,12 +349,9 @@ typedef struct DimlavasmashState
     u8 padC[0x10 - 0xC];
 } DimlavasmashState;
 
-
 /* dimcannon extra block (0xb4); the head is the per-cannonball column
  * arrays walked via state + i*4 (kept raw), this names the scalar tail. */
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
-
-
 
 extern int ObjHits_GetPriorityHit(int obj, int* out, int* a, int* b);
 extern void Sfx_PlayFromObject(int obj, int sfx);
@@ -463,28 +451,20 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 extern void* lbl_803DDB50;
 
-
-
 /* EN v1.0 0x801B30C8  size: 628b  Dimcannon constructor: handles the 0x1d6
  * sub-variant, else seeds the 10-slot trail particle array, installs the
  * sequence fn, acquires its model resource and applies map flags. */
 
-
 /* EN v1.0 0x801B2C68  size: 1120b  Dimcannon per-frame state machine: idle ->
  * tracking -> firing -> spent, plus the 0x1d6 falling-debris sub-variant. */
-
-
 
 /* EN v1.0 0x801B2550  size: 1504b  Dimcannon manned-control sequence: aims the
  * turret with the stick, charges with A, fires on release/full charge, and
  * exits on B or after the post-completion delay. */
 
-/* === moved from main/dll/DIM/DIM2conveyor.c [801B3658-801B3768) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/DIM/DIMlevcontrol.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
-
-
 
 typedef struct DimlavasmashObjectDef
 {
@@ -494,12 +474,6 @@ typedef struct DimlavasmashObjectDef
     s16 unk1C;
     s16 unk1E;
 } DimlavasmashObjectDef;
-
-
-
-
-
-
 
 /*
  * --INFO--
@@ -557,32 +531,14 @@ void dimlavasmash_initialise(void)
 {
 }
 
-
-
-
-
-
 extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
 
-
 extern unsigned long GameBit_Set(int eventId, int value);
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
-
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-
-
-
-
-
-
-
-
-
-
 

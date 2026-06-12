@@ -349,12 +349,9 @@ void SHthorntail_free(SHthorntailObject* obj)
     ObjGroup_RemoveObject((int)obj, 0x4d);
 }
 
-/* === merged from main/dll/SC/SClevelcontrol.c [801D5ED4-801D5F58) (TU re-split, docs/boundary_audit.md) === */
-
 extern void ObjPath_GetPointWorldPosition(SHthorntailObject* obj, int pointIndex, f32* x, f32* y, f32* z, int param_6);
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void dll_2E_func06(SHthorntailObject* obj, SHthorntailRuntime* runtime, int param_3);
-
 
 /*
  * --INFO--
@@ -439,7 +436,6 @@ extern f32 lbl_803E545C;
   ((u16 *)((tables) + SHTHORNTAIL_STATE_TRIGGER0_SFX_OFFSET))
 #define SHTHORNTAIL_STATE_TRIGGER7_SFX(tables) \
   ((u8 *)((tables) + SHTHORNTAIL_STATE_TRIGGER7_SFX_OFFSET))
-
 
 typedef struct SHthorntailTailSwingEffectScratch
 {

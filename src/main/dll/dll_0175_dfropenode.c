@@ -2,15 +2,12 @@
 #include "main/dll/DF/DFbarrelanim.h"
 #include "main/dll/DF/dfropenode.h"
 
-
-
 extern f32 sqrtf(f32 x);
 
 extern f64 lbl_803E4DF0;
 extern f32 lbl_803E4DFC;
 extern f32 lbl_803E4E18;
 extern f32 lbl_803E4E1C;
-
 
 static inline f32 DFRope_S32AsFloat(s32 value)
 {
@@ -231,7 +228,6 @@ void dfropenode_func0B(f32 phase, int obj, float* xOut, float* yOut, float* zOut
     *zOut = dz * fraction + (((GameObject*)obj)->anim.localPosZ + extra->rope->nodes[idx].pos[2]);
 }
 
-/* === merged from main/dll/DF/dll_195.c [801C1BC8-801C1BF0) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling on
 #pragma peephole on
 /*
@@ -254,8 +250,6 @@ void dfropenode_func0B(f32 phase, int obj, float* xOut, float* yOut, float* zOut
  * Start from the current EN split window and the surrounding corridor.
  */
 
-
-
 /* dfropenode_setScale: copy 4 floats from obj->_b8[0x1c..0x28] to *out_dst[0..0xc]. */
 void dfropenode_setScale(int* obj, f32* out)
 {
@@ -267,9 +261,6 @@ void dfropenode_setScale(int* obj, f32* out)
 }
 #pragma scheduling reset
 #pragma peephole reset
-
-/* === merged from main/dll/DF/dll_196.c [801C1BF0-801C1EAC) (TU re-split, docs/boundary_audit.md) === */
-
 
 extern f32 lbl_803E4E20;
 extern f32 lbl_803E4E24;
@@ -430,7 +421,6 @@ int dfropenode_getObjectTypeId(void)
     return 0;
 }
 
-/* === merged from main/dll/DF/DFmole.c [801C1EAC-801C1F5C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
 #include "main/objlib.h"
 
@@ -470,7 +460,6 @@ void dfropenode_free(void* obj)
     }
 }
 
-/* === merged from main/dll/DF/DFwhirlpool.c [801C1F5C-801C2278) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/DF/DFcradle.h"
 #include "main/game_object.h"
 #include "main/dll/DF/dfropenode.h"
@@ -484,7 +473,6 @@ typedef struct DfropenodePlacement
     s16 unk1C;
     u8 pad1E[0x20 - 0x1E];
 } DfropenodePlacement;
-
 
 typedef struct DFWhirlpoolRenderState
 {
@@ -666,13 +654,9 @@ void dfropenode_hitDetect(void)
 {
 }
 
-/* === moved from main/dll/DF/dll_198.c [801C2278-801C26E0) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/DF/DFbarrelanim.h"
 #include "main/game_object.h"
 #include "main/dll/DF/dll_196.h"
-
-
-
 
 extern void textureFree(void* resource);
 extern void* textureLoadAsset(int assetId);

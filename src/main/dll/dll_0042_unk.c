@@ -169,11 +169,9 @@ void CameraModeNormal_func0A(float* minDistanceOut, float* maxDistanceOut,
     return;
 }
 
-/* === merged from main/dll/CAM/camslide.c [801049B0-8010509C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/CAM/camslide.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcontrol_mode_settings.h"
-
 
 extern void mtxRotateByVec3s(void* matrix, void* angles);
 extern void Matrix_TransformPoint(void* matrix, f64 x, f64 y, f64 z, f32* outX, f32* outY, f32* outZ);
@@ -489,10 +487,8 @@ void firstperson_updatePitch(f32 targetY, CameraObject* camera)
     camera->anim.rotY = (s16)((int)d + camera->anim.rotY);
 }
 
-/* === merged from main/dll/CAM/firstperson.c [8010509C-80105810) (TU re-split, docs/boundary_audit.md) === */
 #include "main/camera_interface.h"
 #include "main/object_transform.h"
-
 
 extern undefined4 FUN_800068f4();
 extern undefined4 camcontrol_getTargetPosition();
@@ -750,7 +746,6 @@ void CameraModeNormal_free(CameraObject* camera)
     cameraMtxVar57->wallAvoidanceFlags.b6 = 0;
 }
 
-/* === merged from main/dll/CAM/camstatic.c [80105810-80105E7C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/attention.h"
@@ -1000,8 +995,6 @@ void camstatic_update(CameraObject* camera)
 #include "main/mm.h"
 #include "main/object_transform.h"
 #include "string.h"
-
-
 
 extern f32 lbl_803E1734;
 extern f32 lbl_803E1738;

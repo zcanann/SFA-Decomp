@@ -4,19 +4,8 @@
 #include "main/effect_interfaces.h"
 #include "main/objseq.h"
 
-
-
-
-
-
-
-
-
-
-
 #pragma peephole off
 #pragma scheduling off
-
 
 /*
  * --INFO--
@@ -34,17 +23,7 @@
 extern ModgfxInterface** gModgfxInterface;
 extern u8 framesThisStep;
 
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int dll_19E_getExtraSize(void) { return 0x10; }
@@ -79,7 +58,6 @@ extern f32 lbl_803E51B0;
 #pragma peephole off
 #pragma peephole reset
 
-
 /*
  * Function: dll_19D_init
  * EN v1.0 Address: 0x801CCECC
@@ -111,7 +89,6 @@ extern EffectInterface** gPartfxInterface;
 #pragma scheduling reset
 #pragma peephole reset
 
-/* === merged from main/dll/creator1CF.c [801CCFB4-801CD258) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
@@ -254,7 +231,6 @@ void dll_19E_render(int obj, int param_2, int param_3, int param_4,
     }
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void dll_19E_hitDetect(void)
 {
@@ -268,7 +244,6 @@ void dll_19E_hitDetect(void)
 #include "main/gameplay_runtime.h"
 #include "main/obj_placement.h"
 #include "main/resource.h"
-
 
 extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern void objUpdateOpacity(void* obj);
@@ -452,7 +427,6 @@ void dll_19E_update(void* obj)
     }
 }
 
-
 /*
  * --INFO--
  *
@@ -503,7 +477,6 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
     }
     state->delayTimer = 0;
 }
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void dll_19E_release(void)

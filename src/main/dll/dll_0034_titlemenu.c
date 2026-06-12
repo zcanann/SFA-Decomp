@@ -66,7 +66,6 @@ extern f32 lbl_803E1D18;
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -350,7 +349,6 @@ void TitleMenu_frameEnd(void)
 #include "main/camera_interface.h"
 #include "main/dll/FRONT/dll_0034_n_filemenu.h"
 #include "main/dll/FRONT/dll_39.h"
-
 
 extern void Sfx_PlayFromObject(uint obj, ushort sfxId);
 extern void buttonDisable(int controller, uint buttons);
@@ -700,7 +698,6 @@ void TitleMenu_setSelection(int selection)
     (*(*(void (**)(int))((int)gTitleMenuLinkInterface->vtable + 0x18)))(v);
 }
 
-/* === moved from main/dll/FRONT/dll_3B.c [80116F84-8011730C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/FRONT/dll_39.h"
 #include "main/screen_transition.h"
 
@@ -824,8 +821,6 @@ void TitleMenu_initialise(void)
     audioFn_8000b694(0);
     gAttractMovieIdleFrameCount = 0;
 }
-
-
 
 #pragma dont_inline on
 #pragma dont_inline reset

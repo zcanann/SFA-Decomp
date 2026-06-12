@@ -3,11 +3,7 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 
-
-
 extern void GameBit_Set(int gameBit, int value);
-
-
 
 /*
  * --INFO--
@@ -22,7 +18,6 @@ extern void GameBit_Set(int gameBit, int value);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 int area_getExtraSize(void);
 int area_getObjectTypeId(void);
@@ -44,18 +39,9 @@ void area_initialise(void);
 
 /* Trivial 4b 0-arg blr leaves. */
 
-
-
-
-
 extern u8 framesThisStep;
 
-
-
-
 /* 8b "li r3, N; blr" returners. */
-
-
 
 ObjectDescriptor gAreaObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
@@ -76,8 +62,6 @@ ObjectDescriptor gAreaObjDescriptor = {
 #include "main/dll/screenOverlay.h"
 #include "main/objanim_internal.h"
 
-
-
 typedef struct InvisibleHitSwitchPlacement
 {
     u8 pad0[0x1A - 0x0];
@@ -86,9 +70,6 @@ typedef struct InvisibleHitSwitchPlacement
     u8 unk1E;
     u8 pad1F[0x20 - 0x1F];
 } InvisibleHitSwitchPlacement;
-
-
-
 
 typedef struct InvisibleHitSwitchState
 {
@@ -105,7 +86,6 @@ typedef struct InvisibleHitSwitchState
     u8 pad24[0x28 - 0x24];
 } InvisibleHitSwitchState;
 
-
 extern void GameBit_Set(int eventId, int value);
 
 extern f32 timeDelta;
@@ -113,7 +93,6 @@ extern f32 lbl_803E3730;
 extern f32 lbl_803E3734;
 extern f32 lbl_803E3738;
 extern f32 lbl_803E373C;
-
 
 /*
  * --INFO--
@@ -148,7 +127,6 @@ extern f32 lbl_803E373C;
  */
 
 /* Trivial 4b 0-arg blr leaves. */
-
 
 /* 8b "li r3, N; blr" returners. */
 int InvisibleHitSwitch_getExtraSize(void) { return 0xc; }
@@ -249,9 +227,7 @@ void InvisibleHitSwitch_update(int obj)
     }
 }
 
-/* === merged from main/dll/cloudprisoncontrol.c [8017AB20-8017AC2C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
-
 
 extern f32 lbl_803E3750;
 

@@ -205,7 +205,6 @@ static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, uint currentWalkGr
  */
 extern u8 lbl_803DD440;
 
-
 #pragma scheduling off
 #pragma peephole off
 
@@ -224,7 +223,6 @@ extern u8 lbl_803DD440;
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -419,7 +417,6 @@ bool FUN_800da5e8(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     return 0;
 }
 
-
 /*
  * --INFO--
  *
@@ -500,7 +497,6 @@ void FUN_800da850(uint param_1, undefined* param_2)
     return;
 }
 
-
 /*
  * --INFO--
  *
@@ -565,7 +561,6 @@ FUN_800db110(float* param_1, int param_2, undefined4 param_3, undefined4 param_4
     }
     while (true);
 }
-
 
 /*
  * --INFO--
@@ -860,7 +855,6 @@ int FUN_800db820(float* param_1)
     while (true);
 }
 
-
 /*
  * --INFO--
  *
@@ -881,7 +875,6 @@ FUN_800dd3e4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 {
     return 0;
 }
-
 
 /*
  * --INFO--
@@ -1070,7 +1063,6 @@ FUN_800dd62c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     }
     return 1;
 }
-
 
 /*
  * --INFO--
@@ -1561,7 +1553,6 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
  * PAL Size: TODO
  */
 #pragma scheduling on
-
 
 static inline int Objfsa_FindRomCurveById(int curveId)
 {
@@ -2346,22 +2337,10 @@ int mathFn_800dbff0(float* point)
  * PAL Size: TODO
  */
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling on
 #pragma peephole on
 void player_release(void);
-
-
-
-
-
-
-
-
-
-
-
 
 void doNothing_onTrickyFree(void)
 {
@@ -2441,10 +2420,7 @@ int fn_800D9F38(void* a, void* b)
 extern f32 lbl_803E05A4;
 extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
 
-
-
 void player_updateVel(char* p, char* obj, int unused);
-
 
 /* RomCurve_setA4: similar to fn_800D9F38 branch2 with different consts */
 extern f32 lbl_803E0610;
@@ -2725,7 +2701,6 @@ u8 RomCurve_goNextPoint(float* state)
     return 0;
 }
 
-
 #pragma scheduling on
 #pragma peephole on
 static inline f32 RomCurveNode_GetHermiteTangent(void* node, int angleOffset, int useSin)
@@ -2747,10 +2722,8 @@ static inline f32 RomCurveNode_GetHermiteTangent(void* node, int angleOffset, in
     return lbl_803E05D0 * ((f32)(u32) * (u8*)((char*)node + 0x2e) * trig);
 }
 
-
 int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
 int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx);
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -3000,7 +2973,6 @@ void curves_getPos(f32 phase, int curve, float* outX, float* outY, float* outZ)
         *outZ = dz * phase + *(f32*)(curve + 0x10);
     }
 }
-
 
 int RomCurve_func2C(float* state, int unused, int startCurveId)
 {
@@ -3358,7 +3330,6 @@ void RomCurve_stepClamped(float* state, f32 dt)
     Curve_AdvanceAlongPath(state, dt);
 }
 
-
 extern int curveFn_800da23c(float* state, void* targetCurve);
 
 #pragma peephole off
@@ -3598,7 +3569,6 @@ void* Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
     }
     return bestHit;
 }
-
 
 extern void mapBlockFn_80059c2c(u8 * outFlags);
 extern f32 lbl_803E0600;
@@ -4111,7 +4081,6 @@ void fn_800D9EE8(float* p)
     }
 }
 
-
 #pragma scheduling off
 int fn_800DB240(int p1, f32* outVec, u16 id)
 {
@@ -4177,14 +4146,12 @@ void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval);
 #pragma peephole reset
 #pragma peephole reset
 
-/* === moved from main/dll/curves.c [800E1B24-800E5434) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
 #include "main/dll/dll_0015_curves.h"
 #include "main/game_ui_interface.h"
 #include "main/objlib.h"
 #include "main/game_object.h"
-
 
 extern f32 vec3f_distanceSquared(f32 * posA, f32 * posB);
 
@@ -4194,8 +4161,6 @@ extern f32 lbl_803E12B8;
 extern f32 lbl_803E065C;
 extern f32 lbl_803E0660;
 extern f32 lbl_803E0664;
-
-
 
 static inline u32 RomCurve_GetId(RomCurveDef* curve);
 
@@ -4327,7 +4292,6 @@ RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds,
     *outPhase = phase;
     return 1;
 }
-
 
 /*
  * --INFO--
@@ -6250,8 +6214,6 @@ void curves_addCurveDef(RomCurveDef* curve)
  * PAL Size: TODO
  */
 
-
-
 /*
  * --INFO--
  *
@@ -6311,7 +6273,6 @@ void curves_addCurveDef(RomCurveDef* curve)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -6383,7 +6344,6 @@ void curves_addCurveDef(RomCurveDef* curve)
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -6412,8 +6372,6 @@ void curves_addCurveDef(RomCurveDef* curve)
  * PAL Size: TODO
  */
 
-
-
 /*
  * --INFO--
  *
@@ -6427,7 +6385,6 @@ void curves_addCurveDef(RomCurveDef* curve)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -6443,9 +6400,7 @@ void curves_addCurveDef(RomCurveDef* curve)
  * PAL Size: TODO
  */
 
-
 /* Forward active hit-segment bounds to ObjHits with the state-derived target mask. */
-
 
 /* Extended local-point collision setup with a secondary hit type. */
 
@@ -6493,10 +6448,7 @@ void curves_addCurveDef(RomCurveDef* curve)
  * PAL Size: TODO
  */
 
-
 extern SaveData saveData;
-
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void curves_release(void)
@@ -6506,8 +6458,6 @@ void curves_release(void)
 void RomCurve_initialise(void)
 {
 }
-
-
 
 /*
  * --INFO--
@@ -6539,9 +6489,6 @@ void* getSaveFileStruct(void);
 
 /* getLastSavedGameTexts: return (u8*)&gSaveGameData + 0x558. Array form forces lis/addi. */
 
-
-
-
 /* RomCurve_getCurves: *outCount = nRomCurves; return romCurves. */
 void* RomCurve_getCurves(int* outCount)
 {
@@ -6549,12 +6496,10 @@ void* RomCurve_getCurves(int* outCount)
     return romCurves;
 }
 
-
 /* isCheatUnlocked: return registeredDebugOptions & (1 << (idx & 0xff)). */
 int isCheatUnlocked(u8 idx);
 
 /* saveFileStruct_unlockCheat: set bit (1 << (idx & 0xff)) in registeredDebugOptions. */
-
 
 /* curves_findByAction: scan romCurves for matching action curves, return curve id. */
 int curves_findByAction(int act)

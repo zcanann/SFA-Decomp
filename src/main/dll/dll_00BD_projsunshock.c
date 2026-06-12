@@ -20,7 +20,6 @@
  * Start from the current EN split window and the surrounding corridor.
  */
 
-
 extern void OSReport(const char* fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
@@ -30,8 +29,6 @@ int projsunshock_doUnsupported(void)
     OSReport(sProjsunshockDoNoLongerSupported);
     return PROJECTILE_UNSUPPORTED_RETURN;
 }
-
-/* === merged from main/dll/dll_7B.c [80100970-80100974) (TU re-split, docs/boundary_audit.md) === */
 
 /*
  * --INFO--
@@ -49,8 +46,6 @@ int projsunshock_doUnsupported(void)
 void projsunshock_release(void)
 {
 }
-
-/* === merged from main/dll/dll_7C.c [80100974-80100978) (TU re-split, docs/boundary_audit.md) === */
 
 /*
  * --INFO--

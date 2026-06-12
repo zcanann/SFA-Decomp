@@ -5,7 +5,6 @@
 #include "main/dll/projball1D8.h"
 #include "main/objseq.h"
 
-
 extern undefined4 Music_Trigger();
 extern undefined4 FUN_80006824();
 extern byte gameTimerIsRunning();
@@ -227,11 +226,7 @@ void nw_levcontrol_update(int param_1)
  */
 int sh_tricky_getExtraSize(void);
 
-
-
-
 extern uint GameBit_Get(int id);
-
 
 extern f32 lbl_803E5280;
 extern void fn_80088870(char* a, char* b, char* c, char* d);
@@ -285,7 +280,6 @@ void nw_levcontrol_init(int* obj)
     (*gMapEventInterface)->setAnimEvent(7, 9, 1);
 }
 
-/* === merged from main/dll/flybaddie1D7.c [801CFD68-801CFF20) (TU re-split, docs/boundary_audit.md) === */
 #include "main/mapEvent.h"
 #include "main/dll/flybaddie1D7.h"
 #include "main/game_object.h"
@@ -293,7 +287,6 @@ void nw_levcontrol_init(int* obj)
 
 extern int ObjList_FindObjectById(int objectId);
 extern int ObjTrigger_IsSetById();
-
 
 /*
  * --INFO--

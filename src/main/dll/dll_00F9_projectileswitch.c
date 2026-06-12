@@ -3,11 +3,7 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 
-
-
 extern void GameBit_Set(int gameBit, int value);
-
-
 
 /*
  * --INFO--
@@ -22,7 +18,6 @@ extern void GameBit_Set(int gameBit, int value);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 int area_getExtraSize(void);
 int area_getObjectTypeId(void);
@@ -44,13 +39,7 @@ void area_initialise(void);
 
 /* Trivial 4b 0-arg blr leaves. */
 
-
-
-
-
 extern u8 framesThisStep;
-
-
 
 void ProjectileSwitch_free(void)
 {
@@ -71,7 +60,6 @@ int ProjectileSwitch_getObjectTypeId(int* obj)
     }
     return ((u32)v << 11) | 0x400;
 }
-
 
 ObjectDescriptor gAreaObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
@@ -106,9 +94,6 @@ typedef struct ProjectileSwitchPlacement
     u8 pad24[0x28 - 0x24];
 } ProjectileSwitchPlacement;
 
-
-
-
 typedef struct ProjectileSwitchState
 {
     u8 pad0[0x4 - 0x0];
@@ -120,9 +105,6 @@ typedef struct ProjectileSwitchState
     u8 unk23;
     u8 pad24[0x28 - 0x24];
 } ProjectileSwitchState;
-
-
-
 
 extern void GameBit_Set(int eventId, int value);
 extern void Sfx_PlayFromObject(int obj, int soundId);
@@ -137,7 +119,6 @@ extern f32 lbl_803E3704;
 extern f32 lbl_803E3708;
 extern f32 lbl_803E3718;
 extern f32 lbl_803E3728;
-
 
 /*
  * --INFO--
@@ -390,10 +371,7 @@ int InvisibleHitSwitch_getExtraSize(void);
  * EN v1.0 Size: 556b
  */
 
-/* === merged from main/dll/cloudprisoncontrol.c [8017AB20-8017AC2C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
-
-
 
 /*
  * --INFO--

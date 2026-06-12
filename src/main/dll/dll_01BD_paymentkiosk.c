@@ -9,9 +9,6 @@
 
 extern u8* Obj_GetPlayerObject(void);
 
-
-
-
 /*
  * --INFO--
  *
@@ -33,11 +30,7 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
  * and grunt/creak sfx, and ends the game through the screen transition
  * when either side wins. */
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
 
 void paymentkiosk_free(void)
 {
@@ -195,7 +188,6 @@ void paymentkiosk_update(int obj)
     }
 }
 
-/* === moved from main/dll/DB/DBrockfall.c [801DF43C-801DF4AC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/paymentkiosk.h"
 #include "main/dll/DB/DBrockfall.h"
 #include "main/dll/VF/platform1.h"
@@ -207,7 +199,6 @@ void paymentkiosk_update(int obj)
 
 extern uint FUN_80006c00();
 extern uint GameBit_Get(int eventId);
-
 
 /*
  * --INFO--
@@ -239,8 +230,6 @@ void paymentkiosk_init(int obj, PaymentKioskMapData* initData)
     state->textVariant = (u8)secondaryFlag;
 }
 
-
-
 #pragma scheduling on
 #pragma peephole on
 static void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams* params);
@@ -266,7 +255,6 @@ static int FEseqobject_findControlObject(void);
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -282,7 +270,6 @@ static int FEseqobject_findControlObject(void);
  */
 #pragma scheduling off
 #pragma peephole off
-
 
 /*
  * --INFO--
@@ -300,7 +287,6 @@ static int FEseqobject_findControlObject(void);
 #pragma scheduling on
 #pragma peephole on
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
@@ -312,27 +298,11 @@ void paymentkiosk_initialise(void)
 {
 }
 
-
-
-
-
-
-
-
-
-
 void dll_144_free(void);
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
 
 /* call(x, N) wrappers. */
 

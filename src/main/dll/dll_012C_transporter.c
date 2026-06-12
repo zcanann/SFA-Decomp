@@ -4,8 +4,6 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
-
-
 /*
  * --INFO--
  *
@@ -358,17 +356,9 @@ void transporter_render(void)
 {
 }
 
-/* === moved from main/dll/mmp_asteroid_re.c [801916A0-80191A70) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/CF/dll_012C_transporter.h"
 #include "main/dll/CF/warp_pad.h"
 #include "main/game_object.h"
-
-
-
-
-
-
-
 
 /*
  * --INFO--
@@ -488,7 +478,6 @@ void transporter_init(int obj, u8* params)
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -505,29 +494,10 @@ void transporter_init(int obj, u8* params)
 #pragma scheduling off
 #pragma peephole off
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3EE8;
-
-
-
-
-
 

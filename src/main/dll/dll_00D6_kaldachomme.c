@@ -3,7 +3,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/wallanimator.h"
 
-
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800175cc();
 extern u32 randomGetRange(int min, int max);
@@ -225,7 +224,6 @@ ObjectDescriptor gKaldaChompMeObjDescriptor = {
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -247,7 +245,6 @@ void FUN_8016980c(int param_1, int param_2, int param_3, int param_4, int param_
     }
     return;
 }
-
 
 /*
  * --INFO--
@@ -314,7 +311,6 @@ void FUN_80169a44(undefined8 param_1, double param_2, double param_3, undefined8
 #pragma scheduling off
 #pragma peephole off
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void kaldachompspit_hitDetect(void);
 
@@ -322,11 +318,9 @@ void kaldachompspit_hitDetect(void);
 int kaldachompspit_getExtraSize(void);
 int kaldachompspit_getObjectTypeId(void);
 
-
 void kaldachompspit_free(int* obj);
 
 void kaldachompspit_render(void* obj, int p2, int p3, int p4, int p5, s8 visible);
-
 
 /*
  * --INFO--
@@ -351,7 +345,6 @@ void kaldachompspit_update(int obj);
 #pragma peephole reset
 #pragma peephole reset
 
-/* === moved from main/dll/xyzanimator.c [80169CC4-80169EF4) (TU re-split, docs/boundary_audit.md) === */
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/xyzanimator.h"
@@ -359,14 +352,7 @@ void kaldachompspit_update(int obj);
 #include "main/objhits_types.h"
 #include "main/game_object.h"
 
-
-
-
-
 /* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
-
-
-
 
 /*
  * --INFO--
@@ -381,7 +367,6 @@ void kaldachompspit_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -399,10 +384,8 @@ void kaldachompspit_update(int obj);
 
 void kaldachompspit_init(int obj);
 
-
 #pragma dont_inline on
 #pragma dont_inline reset
-
 
 /*
  * --INFO--
@@ -418,7 +401,6 @@ void kaldachompspit_init(int obj);
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -433,34 +415,14 @@ void kaldachompspit_init(int obj);
  * PAL Size: TODO
  */
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void kaldachompspit_release(void);
 
 void kaldachompspit_initialise(void);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -581,8 +543,6 @@ PollenFragmentConfig* lbl_8032059C[] = {
     &lbl_80320588,
 };
 
-
-
 ObjectDescriptor gPollenFragmentObjDescriptor = {
     0,
     0,
@@ -600,14 +560,5 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-
-
 /* ==== v1.0 recovered functions (drift additions) ==== */
-
-
-
-
-
-
-
 

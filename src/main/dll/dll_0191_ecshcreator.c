@@ -5,7 +5,6 @@
 
 #include "main/dll/mmshrine/ecsh_shrine_state.h"
 
-
 extern void* FUN_80017aa4();
 extern uint FUN_80017ae8();
 
@@ -13,10 +12,6 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f64 DOUBLE_803e5c08;
 extern f32 lbl_803E5C00;
 extern f32 lbl_803E5C10;
-
-
-
-
 
 /*
  * --INFO--
@@ -93,18 +88,9 @@ void FUN_801c5990(undefined8 param_1, undefined8 param_2, double param_3, undefi
     return;
 }
 
-
 #pragma scheduling off
 #pragma peephole off
 void fn_801C5990(MmShrineAnimObj* obj);
-
-
-
-
-
-
-
-
 
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
@@ -112,14 +98,8 @@ void fn_801C5990(MmShrineAnimObj* obj);
 #pragma peephole reset
 #pragma peephole reset
 
-/* === merged from main/dll/mmshrine/torch1C1.c [801C5ED8-801C60B8) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
 #include "main/objseq.h"
-
-
-
-
-
 
 /*
  * --INFO--
@@ -136,7 +116,6 @@ void fn_801C5990(MmShrineAnimObj* obj);
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -182,9 +161,6 @@ void fn_801C5990(MmShrineAnimObj* obj);
  * PAL Size: TODO
  */
 
-
-
-
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
 #pragma scheduling reset
@@ -203,7 +179,6 @@ void fn_801C5990(MmShrineAnimObj* obj);
 #include "main/screen_transition.h"
 
 #include "main/dll/mmshrine/ecsh_shrine_state.h"
-
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b0c();
@@ -229,11 +204,8 @@ extern undefined4 DAT_803dc070;
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
 extern int GameBit_Get(int bit);
 
-
-
 #pragma opt_strength_reduction off
 #pragma opt_strength_reduction reset
-
 
 /*
  * --INFO--
@@ -322,10 +294,8 @@ void FUN_801c6e04(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void ecsh_shrine_release(void);
-
 
 void ecsh_creator_free(void)
 {
@@ -349,9 +319,6 @@ void gpsh_shrine_hitDetect(void);
 int ecsh_creator_getExtraSize(void) { return 0xa; }
 int ecsh_creator_getObjectTypeId(void) { return 0x0; }
 int gpsh_shrine_getExtraSize(void);
-
-
-
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4FF8;
@@ -378,9 +345,6 @@ void ecsh_creator_init(s16* obj, s8* def)
 }
 
 extern int objCreateLight(int a, int b);
-
-
-
 
 extern u8* mmAlloc(int size, int tag, int p);
 extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);

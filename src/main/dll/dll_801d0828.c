@@ -5,9 +5,7 @@
 #include "main/dll/projball1D8.h"
 #include "main/objseq.h"
 
-
 extern uint GameBit_Get();
-
 
 /*
  * --INFO--
@@ -37,8 +35,6 @@ extern uint GameBit_Get();
  * PAL Size: TODO
  */
 
-
-
 int EdibleMushroom_SeqFn(int* obj)
 {
     *(u8*)(*(int*)&((GameObject*)obj)->extra + 0x139) = 1;
@@ -47,16 +43,10 @@ int EdibleMushroom_SeqFn(int* obj)
 
 extern uint GameBit_Get(int id);
 
-
-
-
-/* === merged from main/dll/flybaddie1D7.c [801CFD68-801CFF20) (TU re-split, docs/boundary_audit.md) === */
 #include "main/mapEvent.h"
 #include "main/dll/flybaddie1D7.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
-
-
 
 /*
  * --INFO--
@@ -79,7 +69,6 @@ extern uint GameBit_Get(int id);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /* EN v1.0 0x801CFECC  size: 84b  nw_levcontrol_free: dispatches the object's
  * map event slot through gMapEventInterface; when the call returns 0 also fires

@@ -2,8 +2,6 @@
 #include "main/dll/CAM/camclimb_state.h"
 #include "main/mm.h"
 
-
-
 extern CameraModeClimbState* lbl_803DD578;
 
 /*
@@ -20,9 +18,6 @@ extern CameraModeClimbState* lbl_803DD578;
  * PAL Size: TODO
  */
 
-
-
-
 /*
  * --INFO--
  *
@@ -36,7 +31,6 @@ extern CameraModeClimbState* lbl_803DD578;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -52,7 +46,6 @@ extern CameraModeClimbState* lbl_803DD578;
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -67,12 +60,7 @@ extern CameraModeClimbState* lbl_803DD578;
  * PAL Size: TODO
  */
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
 
 void CameraModeClimb_copyToCurrent_nop(void)
 {
@@ -89,7 +77,6 @@ void CameraModeClimb_free(void)
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camclimb_state.h"
 #include "main/object_transform.h"
-
 
 extern uint getAngle(f32 dx, f32 dz);
 extern void camcontrol_traceMove(f32* from, void* to, f32* out, void* work, int a, int b, int c, f32 radius);
@@ -230,7 +217,6 @@ void CameraModeClimb_update(short* camObj)
                                    *(int*)(camObj + 0x18));
 }
 
-/* === moved from main/dll/CAM/camDebug.c [8010D810-8010DAD4) (TU re-split, docs/boundary_audit.md) === */
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camclimb_state.h"
@@ -239,7 +225,6 @@ void CameraModeClimb_update(short* camObj)
 #include "main/object_transform.h"
 
 extern void memset(void* dst, int val, int size);
-
 
 extern f32 lbl_803E19B8;
 extern f32 lbl_803E19BC;

@@ -20,7 +20,6 @@
  * Start from the current EN split window and the surrounding corridor.
  */
 
-
 extern void OSReport(const char* fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_FALSE_RETURN 0
@@ -30,8 +29,6 @@ int projtesla_doUnsupported(void)
     OSReport(sProjteslaDoNoLongerSupported);
     return PROJECTILE_UNSUPPORTED_FALSE_RETURN;
 }
-
-/* === merged from main/dll/dll_7E.c [801009A8-801009AC) (TU re-split, docs/boundary_audit.md) === */
 
 /*
  * --INFO--
@@ -49,8 +46,6 @@ int projtesla_doUnsupported(void)
 void projtesla_release(void)
 {
 }
-
-/* === merged from main/dll/dll_7F.c [801009AC-801009B0) (TU re-split, docs/boundary_audit.md) === */
 
 /*
  * --INFO--

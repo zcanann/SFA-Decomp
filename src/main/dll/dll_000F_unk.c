@@ -6,7 +6,6 @@
 #include "main/resource.h"
 #include "main/screen_transition.h"
 
-
 extern EffectInterface** gPartfxInterface;
 extern undefined4 DAT_803de0af;
 
@@ -33,7 +32,6 @@ extern f32 sqrtf(f32 x);
 #pragma peephole reset
 #pragma scheduling reset
 
-
 /*
  * --INFO--
  *
@@ -53,36 +51,8 @@ void FUN_800d7780(undefined param_1)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void Checkpoint_release(void);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void dll_0F_func19_nop(void)
 {
@@ -213,7 +183,6 @@ void player_findCurve(int* obj, int* state, int p3)
 }
 
 void screenTransitionFn_800d7b04(int duration, int type);
-
 
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
@@ -691,10 +660,6 @@ void player_animFn16(int* obj, int* ctx, int moveA, int moveB)
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
-
-
-
-
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
 #pragma scheduling reset
@@ -709,34 +674,16 @@ void player_animFn16(int* obj, int* ctx, int moveA, int moveB)
 #pragma peephole reset
 #pragma peephole reset
 
-/* === moved from main/dll/objfsa.c [800D8F90-800D9DCC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/baddie_state.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 
-
 /* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
  * deref-cleanup wave; curves.h re-exports it). */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
-
-
-
 
 /*
  * --INFO--
@@ -857,7 +804,6 @@ void player_setScale(f32 dt, short* moveState, uint* obj, uint flags)
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -901,7 +847,6 @@ undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -930,7 +875,6 @@ undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -944,7 +888,6 @@ undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -988,7 +931,6 @@ undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -1003,7 +945,6 @@ undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -1017,7 +958,6 @@ undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -1090,8 +1030,6 @@ undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Size: TODO
  */
 #pragma scheduling on
-
-
 
 /*
  * --INFO--
@@ -1223,7 +1161,6 @@ undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -1238,7 +1175,6 @@ undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Size: TODO
  */
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling on
 #pragma peephole on
@@ -1249,18 +1185,6 @@ void player_release(void)
 void player_initialise(void)
 {
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -1629,59 +1553,25 @@ void player_updateVel(char* p, char* obj, int unused)
     }
 }
 
-
 /* RomCurve_setA4: similar to fn_800D9F38 branch2 with different consts */
 extern f32 lbl_803E0610;
 
 void RomCurve_setA4(void* a, void* b);
 
-
-
-
-
-
-
 #pragma scheduling on
 #pragma peephole on
-
-
-
 
 #pragma scheduling off
 #pragma peephole off
 
-
-
-
-
-
-
-
-
-
 /* RomCurve_stepClamped: keep the curve phase just inside the endpoints, then advance it. */
 #pragma peephole on
 
-
-
 #pragma peephole off
 
 #pragma peephole on
 
-
 #pragma peephole off
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* UIController dispatch through the shared GameUI interface. */
 #pragma scheduling on
@@ -1722,7 +1612,6 @@ void walkPath_writeU16LE(u32 v, u8* dst);
 
 /* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
 #pragma scheduling on
-
 
 #pragma scheduling off
 

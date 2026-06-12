@@ -4,7 +4,6 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/dim_partfx.h"
 
-
 extern u32 randomGetRange(int min, int max);
 
 extern undefined4 DAT_8039d0b8;
@@ -49,7 +48,6 @@ extern f32 lbl_803E0E8C;
  * PAL Size: TODO
  */
 /* Effect16_func04 is defined further below (full recovered body). */
-
 
 /*
  * --INFO--
@@ -443,7 +441,6 @@ FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4,
     return uVar1;
 }
 
-
 /*
  * --INFO--
  *
@@ -490,19 +487,11 @@ undefined4 FUN_800c9030(uint param_1, int* param_2)
     return (&DAT_8039d0bc)[iVar3 * 2];
 }
 
-
 /* sda21 globals used by leaf accessors below. */
 extern s16 lbl_803DD414;
 extern s16 lbl_803DD416;
 
-
-
 /* Globals for tick functions Effect16_func05 / Effect17_func05 / Effect18_func05 / Effect19_func05 / Effect20_func05. */
-
-
-
-
-
 
 extern f32 lbl_803E0180;
 extern f32 lbl_803E0184;
@@ -519,20 +508,10 @@ extern f32 lbl_803E01AC;
 extern WaterfxInterface** gWaterfxInterface;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-
-
 extern WaterfxCfg lbl_8039C440;
-
-
-
-
-
-
 
 /* Binary search for key in lbl_8039C458 (count = lbl_803DD410). */
 #pragma dont_inline on
-
-
 
 /* Build particle quad positions from a checkpoint pair. */
 #pragma dont_inline off
@@ -566,8 +545,6 @@ void fn_800D6584(void)
 
 /* Tick: counter1, counter2 + rate*timeDelta; clamp; periodic sin. */
 
-
-
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
  * the consumer-side definition of this 0x64-byte spawn request consumed by
@@ -575,8 +552,6 @@ void fn_800D6584(void)
  * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
  * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
  */
-
-
 
 int Effect13_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId)
 {
@@ -731,22 +706,9 @@ int Effect13_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFl
 
 int Effect17_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
 
-
-
-
-
 /* ---- Effect20_func04 (FUN_800cd430, v1.0) ---- */
 
-
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
 
 void Effect13_func05_nop(void)
 {
@@ -766,35 +728,19 @@ void Effect13_initialise(void)
 
 void Effect17_func03_nop(void);
 
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
-
 /* Advance along the checkpoint curve by dist; write position/angles to out. */
-
 
 /* segment pragma-stack balance (re-split): */
 #pragma dont_inline reset
 #pragma dont_inline reset
 
-/* === moved from main/dll/df_partfx.c [800D6660-800D7568) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling on
 #pragma peephole on
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
-
-
 
 /*
  * --INFO--
@@ -817,7 +763,6 @@ void Effect17_func03_nop(void);
 #pragma peephole reset
 #pragma scheduling reset
 
-
 /*
  * --INFO--
  *
@@ -832,36 +777,7 @@ void Effect17_func03_nop(void);
  * PAL Size: TODO
  */
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -870,7 +786,6 @@ void Effect17_func03_nop(void);
 /* Pattern wrappers. */
 
 /* 12b 3-insn patterns. */
-
 
 /* misc 8b leaves */
 
@@ -884,28 +799,19 @@ void Effect17_func03_nop(void);
 
 /* multi-store leaf (single float broadcast). */
 
-
 /* Checkpoint table initialiser. */
 
 #pragma scheduling off
 #pragma peephole off
 
-
-
-
-
-
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-
 
 #pragma peephole reset
 #pragma scheduling reset
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -913,7 +819,6 @@ void Effect17_func03_nop(void);
 #pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -966,9 +871,6 @@ void Effect17_func03_nop(void);
 
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-
-
-
 
 #pragma scheduling reset
 #pragma peephole reset

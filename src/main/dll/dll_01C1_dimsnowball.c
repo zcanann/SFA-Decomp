@@ -11,38 +11,27 @@
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/objseq.h"
 
-
-
-
-
 /* imanimspacecraft_getExtraSize == 0x4. */
-
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
 /* imspacethruster_getExtraSize == 0xc. */
 
-
 STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
 
 /* link_levcontrol_getExtraSize == 0x10. */
-
 
 STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
 
 /* lavaball1be extra (getExtraSize 0x14 for the non-0x1fa variant). */
 
-
 STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 /* lavaball1bf_getExtraSize == 0x1c (launcher). */
 
-
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
 static inline int* DIMcannon_GetActiveModel(void* obj);
-
-
 
 extern void imicepillar_free(void);
 extern int imicepillar_getObjectTypeId(void);
@@ -78,7 +67,6 @@ extern int imicepillar_getExtraSize(void);
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -94,7 +82,6 @@ extern int imicepillar_getExtraSize(void);
  */
 #pragma scheduling off
 #pragma peephole off
-
 
 /*
  * --INFO--
@@ -112,7 +99,6 @@ extern int imicepillar_getExtraSize(void);
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -128,7 +114,6 @@ extern int imicepillar_getExtraSize(void);
  */
 #pragma scheduling off
 #pragma peephole off
-
 
 /*
  * --INFO--
@@ -146,7 +131,6 @@ extern int imicepillar_getExtraSize(void);
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -163,7 +147,6 @@ extern int imicepillar_getExtraSize(void);
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -179,7 +162,6 @@ extern int imicepillar_getExtraSize(void);
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
@@ -211,26 +193,6 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
     imicepillar_getExtraSize,
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 /* Pattern wrappers. */
@@ -241,8 +203,6 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
 
 /* Free: call vtable[6] on obj through global dll-services pointer. */
 
-
-
 /* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
 
 /* lavaball1bf "consume" hook: only clear pending flag if both gates set. */
@@ -252,61 +212,11 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
-
-
-
-
-
 /* if (o->_X == K) return A; else return B;  pattern. */
-
 
 /* chained byte mask. */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extern u8 framesThisStep;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
@@ -334,18 +244,12 @@ extern u8 framesThisStep;
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/objanim_internal.h"
 
-
-
-
-
 typedef struct DimsnowballState
 {
     u8 pad0[0xC - 0x0];
     s8 unkC;
     u8 padD[0x10 - 0xD];
 } DimsnowballState;
-
-
 
 extern f32 oneOverTimeDelta;
 extern s16 lbl_803DBEE8;
@@ -383,7 +287,6 @@ extern f32 lbl_803E4854;
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -592,9 +495,6 @@ void dimsnowball_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 #pragma peephole reset
-
-/* === moved from main/dll/DIM/dimsnowball_init.c [801B1354-801B13E8) (TU re-split, docs/boundary_audit.md) === */
-
 
 typedef struct DimSnowballState
 {

@@ -35,7 +35,6 @@ typedef struct SnowBikeMountState
     f32 unk49C;
 } SnowBikeMountState;
 
-
 typedef struct SnowBikeSetTypeState
 {
     s16 unk0;
@@ -75,7 +74,6 @@ typedef struct SnowBikeSetTypeState
     f32 unk4C0;
     u8 pad4C4[0x4C8 - 0x4C4];
 } SnowBikeSetTypeState;
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void SnowBike_func17(void)
@@ -501,13 +499,11 @@ void SnowBike_free(int obj)
 s32 SnowBike_func14(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x422); }
 s32 SnowBike_getType(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x421); }
 
-/* === merged from main/dll/DR/DRpulley.c [801ECEC4-801ECF94) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
 
 extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
 extern void fn_801E991C(void* obj, void* path);
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
-
 
 /*
  * --INFO--
@@ -534,7 +530,6 @@ void SnowBike_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, und
     }
 }
 
-/* === merged from main/dll/DR/DRhalolight.c [801ECF94-801ED428) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
 #include "main/objhits_types.h"
 #include "main/dll/BW/BWalphaanim.h"
@@ -769,14 +764,12 @@ clamp:
 #include "main/dll/dll_0015_curves.h"
 #include "main/dll/path_control_interface.h"
 
-
 extern undefined4 FUN_8000680c();
 extern uint GameBit_Get(int eventId);
 extern undefined4 fn_801EAE4C();
 extern undefined4 fn_801EB0D4();
 extern undefined4 fn_801EB634();
 extern void fn_801EC1AC(int obj, int state);
-
 
 extern void textureFree(u32);
 extern u32 textureLoadAsset(int);
@@ -1008,7 +1001,6 @@ void SnowBike_init(int obj, u8* params, int flag)
     path[0x264] = lbl_803E5C68 + lbl_803DC0B8;
     (*gPathControlInterface)->attachObject((void*)obj, path);
 }
-
 
 extern void Obj_SetModelSlotIndex(int obj, int slot);
 extern void Sfx_StopObjectChannel(int obj, int channel);

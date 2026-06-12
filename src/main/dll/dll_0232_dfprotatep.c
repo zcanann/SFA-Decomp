@@ -7,8 +7,6 @@
 #include "main/dll/TrickyCurve.h"
 #include "main/dll/sfxplayer.h"
 
-
-
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
 extern uint FUN_80017690();
@@ -69,7 +67,6 @@ extern f32 lbl_803E6478;
 #define SFXPLAYER_RING_HIT_OBJECT_ID 0x71C
 #define SFXPLAYER_RING_SETUP_MODE 5
 #define SFXPLAYER_EFFECT_RING_ROT_STEP 0x3FFF
-
 
 /*
  * --INFO--
@@ -377,7 +374,6 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1, undefined8 param_2,
  */
 #pragma scheduling off
 #pragma peephole off
-
 
 /*
  * --INFO--
@@ -724,12 +720,8 @@ void sfxplayer_free(int obj, int arg1)
 
 #undef SFXPLAYER_UPDATE_EFFECT_HANDLE_POS
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void TrickyCurve_render(void);
-
-
-
 
 void sfxplayer_render(void)
 {
@@ -746,10 +738,6 @@ int sfxplayer_getObjectTypeId(void) { return 0x0; }
 
 extern void fn_80206C18(int* obj);
 
-
-
-
-/* === merged from main/dll/sfxplayer.c [80207CE4-80208098) (TU re-split, docs/boundary_audit.md) === */
 #include "main/mapEvent.h"
 #include "main/dll/TrickyCurve.h"
 #include "main/dll/sfxplayer.h"

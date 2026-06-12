@@ -167,7 +167,6 @@ void dbsh_shrine_update(DbshShrineObject* obj)
     }
 }
 
-/* === merged from main/dll/creator1C6.c [801C8EBC-801C91B0) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
 
 extern undefined4 FUN_80017710();
@@ -272,7 +271,6 @@ int fn_801C8EBC(int obj, undefined4 unused, ObjAnimUpdateState* animUpdate)
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -373,7 +371,6 @@ void dbsh_shrine_hitDetect(void)
 {
 }
 
-/* === merged from main/dll/flybaddie.c [801C9544-801C9660) (TU re-split, docs/boundary_audit.md) === */
 #include "main/mapEvent.h"
 #include "main/dll/creator1C6.h"
 

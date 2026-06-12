@@ -51,7 +51,6 @@ void FUN_801ce078(undefined2* param_1, int param_2)
 {
 }
 
-
 /*
  * --INFO--
  *
@@ -91,7 +90,6 @@ void FUN_801ce340(short* param_1, int param_2, int param_3)
     }
     return;
 }
-
 
 /*
  * --INFO--
@@ -704,12 +702,10 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
 #pragma scheduling reset
 #pragma peephole reset
 
-/* === merged from main/dll/creator1D4.c [801CEFBC-801CF0AC) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
 #include "main/game_object.h"
 #include "main/game_ui_interface.h"
-
 
 extern f32 lbl_803E5210;
 
@@ -766,7 +762,6 @@ void nw_mammoth_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, u
 #pragma scheduling reset
 #pragma peephole reset
 
-/* === moved from main/dll/dim2conveyor.c [801CF0AC-801CF78C) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
 #include "main/dll/creator1D4.h"
@@ -988,7 +983,6 @@ void nw_mammoth_update(NwMammothObject* obj, int param_2)
     }
 }
 
-
 /*
  * --INFO--
  *
@@ -1077,7 +1071,6 @@ void nw_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
     ObjGroup_AddObject(obj, NW_MAMMOTH_GROUP_ID);
 }
 
-
 /*
  * --INFO--
  *
@@ -1093,7 +1086,6 @@ void nw_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -1135,7 +1127,6 @@ int nw_tricky_SeqFn(void);
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 #pragma scheduling off
 #pragma peephole off

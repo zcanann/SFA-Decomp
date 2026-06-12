@@ -8,8 +8,6 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
-
-
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -54,19 +52,14 @@ typedef struct Cup197State
  * PAL Size: TODO
  */
 
-
-
 /*
  * Per-object extra state for the DBSH spin-symbol minigame
  * (dbsh_symbol_getExtraSize == 0x24).
  */
 
-
 STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
 STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);
 STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
-
-
 
 /*
  * --INFO--
@@ -96,7 +89,6 @@ STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -124,8 +116,6 @@ STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void dll_197_hitDetect(void)
@@ -394,18 +384,12 @@ void dll_197_free(int obj)
 
 extern f32 lbl_803E5118;
 
-
-/* === moved from main/dll/explosion.c [801CA5B4-801CA718) (TU re-split, docs/boundary_audit.md) === */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 
-
-
-
 extern int ObjHits_GetPriorityHit();
-
 
 /*
  * --INFO--
@@ -468,7 +452,6 @@ void dll_197_init(int obj, int data)
     ((Dll197State*)st)->unk4 = 0;
 }
 
-
 /*
  * --INFO--
  *
@@ -485,7 +468,6 @@ void dll_197_init(int obj, int data)
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -500,7 +482,6 @@ void dll_197_init(int obj, int data)
  * PAL Size: TODO
  */
 void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
-
 
 /*
  * --INFO--
@@ -518,7 +499,6 @@ void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -535,7 +515,6 @@ void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_
 #pragma scheduling on
 #pragma peephole on
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
@@ -549,21 +528,7 @@ void dll_197_initialise(void)
 
 void nwsh_levcon_hitDetect(void);
 
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
-
-
-
-
-
-
-
-
 

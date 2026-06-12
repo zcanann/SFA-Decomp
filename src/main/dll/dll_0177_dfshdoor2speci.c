@@ -9,7 +9,6 @@ typedef struct DFSHDoor2SpeciPlacement
     u8 pad24[0x28 - 0x24];
 } DFSHDoor2SpeciPlacement;
 
-
 typedef struct DFDoorSpeciExtra
 {
     u16 phase;
@@ -162,7 +161,6 @@ int dfsh_door2speci_getExtraSize(void)
     return sizeof(DFDoorSpeciExtra);
 }
 
-/* === merged from main/dll/DF/dll_199.c [801C2824-801C282C) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling on
 #pragma peephole on
 
@@ -186,15 +184,12 @@ int dfsh_door2speci_getObjectTypeId(void)
 #pragma scheduling reset
 #pragma peephole reset
 
-/* === moved from main/dll/DF/DFlantern.c [801C282C-801C2914) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
 #include "main/dll/DF/dll_198.h"
 
 extern uint GameBit_Get(int eventId);
 extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
 extern void objRenderFn_8003b8f4(f32);
-
-
 
 /*
  * --INFO--
@@ -375,7 +370,6 @@ void dfsh_door2speci_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--

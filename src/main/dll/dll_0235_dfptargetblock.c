@@ -18,7 +18,6 @@ extern f32 lbl_803E6490;
 #define DFPTARGETBLOCK_POINT_OFFSET_Z 0x0C
 #define DFPTARGETBLOCK_POINT_STRIDE 0x0C
 
-
 /*
  * --INFO--
  *
@@ -102,12 +101,10 @@ void dfptargetblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-/* === merged from main/dll/fruit.c [802086C4-80208B70) (TU re-split, docs/boundary_audit.md) === */
 #include "main/mapEvent.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/door.h"
 #include "main/dll/fruit.h"
-
 
 typedef struct DfpTargetBlockPartfxArgs
 {
@@ -545,7 +542,6 @@ ObjectDescriptor10WithPadding gDfptargetblockObjDescriptor = {
     },
     0,
 };
-
 
 /* === helper-last relocation (re-split inline suppression; defs moved below their callers to suppress cross-TU-merge auto-inlining) === */
 /*

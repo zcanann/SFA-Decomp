@@ -98,13 +98,11 @@ void camcontrol_releasePathState(void)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void CameraModeStaffAnim_copyToCurrent_nop(void)
 {
 }
 
-/* === merged from main/dll/CAM/camclimb.c [801070FC-8010747C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
@@ -481,8 +479,6 @@ void CameraModeStaffAnim_init(CameraObject* camera, undefined4 param_2, u8* sett
         gCamcontrolPathState->curveMax = lbl_803E175C;
     }
 }
-
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void CameraModeStaffAnim_release(void)

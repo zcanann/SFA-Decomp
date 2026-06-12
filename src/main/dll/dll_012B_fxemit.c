@@ -2,10 +2,8 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
 
-
 extern u32 GameBit_Get(int bit);
 extern u32 randomGetRange(int min, int max);
-
 
 extern ModgfxInterface** gModgfxInterface;
 extern EffectInterface** gPartfxInterface;
@@ -13,7 +11,6 @@ extern u8 framesThisStep;
 extern f32 lbl_803E3E48;
 extern char sCFTreasSharpyDebugFormat[];
 extern void fn_80137948(char* fmt, ...);
-
 
 /*
  * --INFO--
@@ -479,7 +476,6 @@ void fxemit_update(FxEmitObject* obj)
     }
 }
 
-/* === moved from main/dll/CF/CFchuckobj.c [8018EFE0-8018F148) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
@@ -488,13 +484,10 @@ void fxemit_update(FxEmitObject* obj)
 #include "main/objseq.h"
 #include "main/resource.h"
 
-
-
 extern uint GameBit_Get(int eventId);
 extern f32 sqrtf(f32 value);
 
 extern f32 lbl_803E3E50;
-
 
 /*
  * --INFO--
@@ -568,7 +561,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -584,7 +576,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
  */
 #pragma scheduling off
 #pragma peephole off
-
 
 /*
  * --INFO--
@@ -602,7 +593,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -616,7 +606,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -634,7 +623,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -650,7 +638,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -668,7 +655,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -684,7 +670,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -702,7 +687,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -718,7 +702,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -739,27 +722,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
 /* Drift-recovery: add new fns with v1.0 names. */
 extern u8 lbl_803AC7B0[];
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* Trivial 4b 0-arg blr leaves. */
 void fxemit_release(void)
 {
@@ -768,11 +730,5 @@ void fxemit_release(void)
 void fxemit_initialise(void)
 {
 }
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */

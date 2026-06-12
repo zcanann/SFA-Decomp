@@ -354,7 +354,6 @@ void proximitymine_update(ProximityMineObject* obj)
     }
 }
 
-/* === merged from main/proximitymine_init.c [80211A10-80211C24) (TU re-split, docs/boundary_audit.md) === */
 #include "main/proximitymine.h"
 #include "main/objlib.h"
 

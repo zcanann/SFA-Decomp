@@ -10,7 +10,6 @@ typedef struct MmshShrineState
     u8 pad1C[0x20 - 0x1C];
 } MmshShrineState;
 
-
 extern void modelLightStruct_setEnabled(int p1, int p2, f32 f);
 extern void fn_8011F6D4(int p);
 extern int fn_801C49B8(int obj);
@@ -432,20 +431,12 @@ void mmsh_shrine_update(int objArg)
     }
 }
 
-/* === moved from main/dll/mmshrine/shrine.c [801C52D8-801C53A0) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/dll_018C_mmshshrine.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-
-
-
-
-
-
 extern int objCreateLight(int param_1, int param_2);
-
 
 /*
  * --INFO--
@@ -513,7 +504,6 @@ extern u8 lbl_803DB411;
 
 void mmsh_scales_update(int objArg);
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void mmsh_shrine_release(void)
 {
@@ -525,16 +515,9 @@ void mmsh_shrine_initialise(void)
 
 void mmsh_scales_hitDetect(void);
 
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
 
 /*
  * --INFO--
@@ -543,7 +526,4 @@ void mmsh_scales_hitDetect(void);
  * EN v1.0 Address: 0x801C57B0
  * EN v1.0 Size: 380b
  */
-
-
-
 

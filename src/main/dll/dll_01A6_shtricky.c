@@ -5,10 +5,8 @@
 #include "main/dll/projball1D8.h"
 #include "main/objseq.h"
 
-
 extern uint GameBit_Get();
 extern undefined4 GameBit_Set();
-
 
 /*
  * --INFO--
@@ -110,14 +108,10 @@ void sh_tricky_init(int* obj)
 
 extern f32 lbl_803E5280;
 
-
-/* === merged from main/dll/flybaddie1D7.c [801CFD68-801CFF20) (TU re-split, docs/boundary_audit.md) === */
 #include "main/mapEvent.h"
 #include "main/dll/flybaddie1D7.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
-
-
 
 /*
  * --INFO--
@@ -140,7 +134,6 @@ extern f32 lbl_803E5280;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /* EN v1.0 0x801CFECC  size: 84b  nw_levcontrol_free: dispatches the object's
  * map event slot through gMapEventInterface; when the call returns 0 also fires

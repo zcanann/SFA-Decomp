@@ -7,7 +7,6 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
-
 #define DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG OBJ_MODEL_STATE_SHADOW_VISIBLE
 
 extern uint GameBit_Get(int eventId);
@@ -18,7 +17,6 @@ extern void Sfx_StopObjectChannel(int obj, int channel);
 extern u8 lbl_803DBF68;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern u8 framesThisStep;
-
 
 /*
  * --INFO--
@@ -53,13 +51,10 @@ extern f32 lbl_803E5100;
 extern f32 lbl_803E5104;
 extern f32 lbl_803E5108;
 
-
-
 /*
  * Per-object extra state for the DBSH spin-symbol minigame
  * (dbsh_symbol_getExtraSize == 0x24).
  */
-
 
 STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
 STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);
@@ -241,7 +236,6 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-
 /*
  * --INFO--
  *
@@ -330,7 +324,6 @@ int dbsh_symbol_getExtraSize(void)
     return 0x24;
 }
 
-
 /*
  * --INFO--
  *
@@ -369,16 +362,12 @@ void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     objRenderFn_8003b8f4(lbl_803E5104);
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void dll_197_hitDetect(void);
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* Render-side line-of-sight particle callback for the cup object. */
-
-
 
 extern f32 lbl_803E5118;
 
@@ -400,15 +389,10 @@ void dbsh_symbol_init(int* obj)
     ((GameObject*)obj)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
 }
 
-/* === moved from main/dll/explosion.c [801CA5B4-801CA718) (TU re-split, docs/boundary_audit.md) === */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/resource.h"
-
-
-
-
 
 /*
  * --INFO--
@@ -423,8 +407,6 @@ void dbsh_symbol_init(int* obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-
 
 /*
  * --INFO--
@@ -442,7 +424,6 @@ void dbsh_symbol_init(int* obj)
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -456,7 +437,6 @@ void dbsh_symbol_init(int* obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -474,7 +454,6 @@ void dbsh_symbol_init(int* obj)
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -491,28 +470,11 @@ void dbsh_symbol_init(int* obj)
 #pragma scheduling on
 #pragma peephole on
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
 
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
-
-
-
-
-
-
-
-
 

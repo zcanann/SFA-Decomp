@@ -4,7 +4,6 @@
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 
-
 /* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
  * deref-cleanup wave; curves.h re-exports it). */
 #include "main/dll/curve_walker.h"
@@ -82,7 +81,6 @@ typedef struct ObjfsaWalkGroup
     s16 minY;
     u8 patchIndices[OBJFSA_PATCHGROUP_PATCH_COUNT];
 } ObjfsaWalkGroup;
-
 
 extern ObjfsaPatch lbl_8039CAE8[];
 extern ObjfsaWalkGroup lbl_8039FAE8[];
@@ -177,7 +175,6 @@ static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, uint currentWalkGr
  */
 extern u8 lbl_803DD440;
 
-
 #pragma scheduling off
 #pragma peephole off
 
@@ -196,7 +193,6 @@ extern u8 lbl_803DD440;
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -391,7 +387,6 @@ bool FUN_800da5e8(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     return 0;
 }
 
-
 /*
  * --INFO--
  *
@@ -472,7 +467,6 @@ void FUN_800da850(uint param_1, undefined* param_2)
     return;
 }
 
-
 /*
  * --INFO--
  *
@@ -537,7 +531,6 @@ FUN_800db110(float* param_1, int param_2, undefined4 param_3, undefined4 param_4
     }
     while (true);
 }
-
 
 /*
  * --INFO--
@@ -832,7 +825,6 @@ int FUN_800db820(float* param_1)
     while (true);
 }
 
-
 /*
  * --INFO--
  *
@@ -853,7 +845,6 @@ FUN_800dd3e4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 {
     return 0;
 }
-
 
 /*
  * --INFO--
@@ -1042,7 +1033,6 @@ FUN_800dd62c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     }
     return 1;
 }
-
 
 /*
  * --INFO--
@@ -1447,7 +1437,6 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
  */
 #pragma scheduling on
 
-
 static inline int Objfsa_FindRomCurveById(int curveId)
 {
     int lo;
@@ -1616,7 +1605,6 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2);
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -1631,11 +1619,9 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2);
  * PAL Size: TODO
  */
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling on
 #pragma peephole on
-
 
 void UIController_release(void)
 {
@@ -1646,15 +1632,6 @@ void UIController_initialise(void)
 }
 
 void dll_12_func0A_nop(void);
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -1671,21 +1648,9 @@ extern f32 lbl_803E05D0;
 extern f32 lbl_803E05D4;
 extern f32 lbl_803E05D8;
 
-
 /* player_updateVel */
 
-
-
-
-
 /* RomCurve_setA4: similar to fn_800D9F38 branch2 with different consts */
-
-
-
-
-
-
-
 
 #pragma scheduling on
 #pragma peephole on
@@ -1708,46 +1673,21 @@ static inline f32 RomCurveNode_GetHermiteTangent(void* node, int angleOffset, in
     return lbl_803E05D0 * ((f32)(u32) * (u8*)((char*)node + 0x2e) * trig);
 }
 
-
 int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
-
 
 #pragma scheduling off
 #pragma peephole off
 
 int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
 
-
-
-
-
-
-
-
-
 /* RomCurve_stepClamped: keep the curve phase just inside the endpoints, then advance it. */
 #pragma peephole on
 
-
-
 #pragma peephole off
 
 #pragma peephole on
 
-
 #pragma peephole off
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* UIController dispatch through the shared GameUI interface. */
 extern u8 gameTimerIsRunning(void* p, int a, int b);
@@ -1784,9 +1724,7 @@ void player_setState(void* ctx, void* p, int new_state);
 /* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
 #pragma scheduling on
 
-
 #pragma scheduling off
-
 
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
@@ -1818,7 +1756,6 @@ void player_setState(void* ctx, void* p, int new_state);
 #pragma peephole reset
 #pragma peephole reset
 
-/* === moved from main/dll/curves.c [800E1B24-800E5434) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
 #include "main/dll/dll_0015_curves.h"
@@ -1826,18 +1763,13 @@ void player_setState(void* ctx, void* p, int new_state);
 #include "main/objlib.h"
 #include "main/game_object.h"
 
-
-
 /* Hcurves keeps the ROM curve definitions sorted by id for binary searches. */
-
-
 
 static inline u32 RomCurve_GetId(RomCurveDef* curve);
 
 static inline int RomCurve_IsLinkIdValid(int linkId);
 
 static inline RomCurveDef* RomCurve_FindByIdInline(u32 curveId);
-
 
 /*
  * --INFO--
@@ -1852,7 +1784,6 @@ static inline RomCurveDef* RomCurve_FindByIdInline(u32 curveId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -1895,7 +1826,6 @@ static inline RomCurveDef* RomCurve_FindByIdInline(u32 curveId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -1955,8 +1885,6 @@ static inline RomCurveDef* RomCurve_FindByIdInline(u32 curveId);
  * PAL Size: TODO
  */
 
-
-
 /*
  * --INFO--
  *
@@ -1999,11 +1927,9 @@ static inline RomCurveDef* RomCurve_FindByIdInline(u32 curveId);
  * PAL Size: TODO
  */
 
-
 static inline int RomCurve_noUnblockedLinks(RomCurvePlacementDef* curve);
 
 static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve);
-
 
 /*
  * --INFO--
@@ -2189,8 +2115,6 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve);
  * PAL Size: TODO
  */
 
-
-
 /*
  * --INFO--
  *
@@ -2250,7 +2174,6 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -2322,7 +2245,6 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve);
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -2351,8 +2273,6 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve);
  * PAL Size: TODO
  */
 
-
-
 /*
  * --INFO--
  *
@@ -2366,7 +2286,6 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -2382,9 +2301,7 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve);
  * PAL Size: TODO
  */
 
-
 /* Forward active hit-segment bounds to ObjHits with the state-derived target mask. */
-
 
 /* Extended local-point collision setup with a secondary hit type. */
 
@@ -2432,13 +2349,7 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve);
  * PAL Size: TODO
  */
 
-
-
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
 
 /*
  * --INFO--
@@ -2454,24 +2365,17 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve);
  * PAL Size: TODO
  */
 
-
 /* Pattern wrappers. */
-
 
 /* getSaveFileStruct: return &saveData (lis/addi). */
 
 /* getLastSavedGameTexts: return (u8*)&gSaveGameData + 0x558. Array form forces lis/addi. */
 
-
-
-
 /* RomCurve_getCurves: *outCount = nRomCurves; return romCurves. */
-
 
 /* isCheatUnlocked: return registeredDebugOptions & (1 << (idx & 0xff)). */
 
 /* saveFileStruct_unlockCheat: set bit (1 << (idx & 0xff)) in registeredDebugOptions. */
-
 
 /* curves_findByAction: scan romCurves for matching action curves, return curve id. */
 

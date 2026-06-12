@@ -6,7 +6,6 @@
 
 extern u32 randomGetRange(int min, int max);
 
-
 /*
  * --INFO--
  *
@@ -55,7 +54,6 @@ extern void textureFree(void* p);
  * PAL Size: TODO
  */
 
-
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
 extern u8 linkFlag_803dd8f8;
@@ -92,7 +90,6 @@ typedef struct LinkMenuItemDB
     s8 field38;
     u8 pad39[3];
 } LinkMenuItemDB;
-
 
 #pragma peephole off
 #pragma peephole reset
@@ -271,9 +268,6 @@ void Link_func0B(u8* srcArg)
 #pragma scheduling reset
 #pragma scheduling reset
 #pragma peephole reset
-
-/* === merged from main/dll/baddie/dll_DA.c [80130888-80130CF0) (TU re-split, docs/boundary_audit.md) === */
-
 
 typedef struct LinkTexture
 {
@@ -506,8 +500,6 @@ void Link_render(void)
 
 #include "main/dll/baddie/dll_003C_TumbleweedBush.h"
 
-
-
 typedef struct LinkTextureSlot
 {
     void* texture;
@@ -546,11 +538,9 @@ typedef struct LinkMenuItem
     u8 pad39[3];
 } LinkMenuItem;
 
-
 #define LINK_FLAG_DISABLE_NAV_TO 0x1000
 #define LINK_FLAG_NO_ACCEPT      0x0020
 #define LINK_IS_NAVIGABLE(index) ((lbl_803A9458[(index)].flags & LINK_FLAG_DISABLE_NAV_TO) == 0)
-
 
 extern uint GameBit_Get(int eventId);
 extern int getHudHiddenFrameCount(void);
@@ -564,7 +554,6 @@ extern void linkDrawFn_80130484(void);
 extern u8 framesThisStep;
 extern s8 lbl_803DD910;
 extern s8 lbl_803DD913;
-
 
 /*
  * --INFO--
@@ -719,7 +708,6 @@ undefined4 Link_update(void)
     return result;
 }
 
-
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
 /* EN v1.0 0x80131570  size: 12b  Read changed bit from item->flags. */
@@ -767,13 +755,11 @@ extern void padFn_80014b18(int value);
 extern const char* lbl_803DD908;
 extern char lbl_8031C1A8[];
 
-
 /* EN v1.0 0x80131D14  size: 168b  Create text-window title menu item. */
 
 /* EN v1.0 0x80131DBC  size: 164b  Create simple title menu item. */
 
 /* EN v1.0 0x80131E60  size: 172b  Create text-backed title menu item. */
-
 
 void Link_release(void)
 {
@@ -936,7 +922,6 @@ void Link_free(void)
     }
     lbl_803DD911 = 0;
 }
-
 
 /* === helper-last relocation (re-split inline suppression; defs moved below their callers to suppress cross-TU-merge auto-inlining) === */
 void linkDrawFn_801302c0(void)

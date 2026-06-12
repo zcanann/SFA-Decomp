@@ -145,19 +145,12 @@ void pressureswitchfb_free(int obj)
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-
-
 typedef struct PressureswitchfbState
 {
     u8 pad0[0x68 - 0x0];
     s32 unk68;
     u8 pad6C[0x70 - 0x6C];
 } PressureswitchfbState;
-
-
-
-
-
 
 typedef struct PressureswitchfbPlacement
 {
@@ -172,13 +165,6 @@ typedef struct PressureswitchfbPlacement
     s16 unk24;
     u8 pad26[0x28 - 0x26];
 } PressureswitchfbPlacement;
-
-
-
-
-
-
-
 
 extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjGroup_AddObject();
@@ -503,7 +489,6 @@ void pressureswitchfb_update(int obj)
     }
 }
 
-
 /*
  * --INFO--
  *
@@ -519,7 +504,6 @@ void pressureswitchfb_update(int obj)
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -537,7 +521,6 @@ void pressureswitchfb_update(int obj)
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -553,7 +536,6 @@ void pressureswitchfb_update(int obj)
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -571,7 +553,6 @@ void pressureswitchfb_update(int obj)
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -588,15 +569,10 @@ void pressureswitchfb_update(int obj)
 #pragma scheduling on
 #pragma peephole on
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
 void mmp_bridge_free(void);
-
-
-
-
 
 extern f32 lbl_803E3778;
 __declspec(section ".sdata") extern char lbl_803DBD90[];
@@ -692,14 +668,6 @@ int Door_getExtraSize(void);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
-
-
-
-
-
-
-
-
 /*
  * --INFO--
  *
@@ -738,23 +706,12 @@ int Door_getExtraSize(void);
 #pragma peephole reset
 #pragma peephole reset
 
-/* === moved from main/dll/alphaanim.c [8017C178-8017C294) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/alphaanim.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
-
 extern uint GameBit_Get(int eventId);
-
-
-
-
-
-
-
-
-
 
 /*
  * --INFO--
@@ -769,7 +726,6 @@ extern uint GameBit_Get(int eventId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -855,7 +811,6 @@ extern uint GameBit_Get(int eventId);
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -898,29 +853,15 @@ extern uint GameBit_Get(int eventId);
  * PAL Size: TODO
  */
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
-
-
-
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
 /* Drift-recovery: add new fns with v1.0 names. */
-
 
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read

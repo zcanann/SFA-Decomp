@@ -872,7 +872,6 @@ void FUN_80166c6c(int param_1, int param_2, float* param_3, float* param_4)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void dll_D3_hitDetect_nop(void)
 {
@@ -1355,7 +1354,6 @@ void fn_80166444(int obj, int state)
 #pragma peephole reset
 #pragma peephole reset
 
-/* === moved from main/dll/treasurechest.c [80166F2C-801675E0) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
 #include "main/dll/landedArwing.h"
@@ -1376,7 +1374,6 @@ typedef struct DllD3Placement
     u8 unk2E;
     u8 pad2F[0x30 - 0x2F];
 } DllD3Placement;
-
 
 extern void* Obj_GetPlayerObject(void);
 extern int ObjContact_AddCallback(int* obj, int p2, void* cb);
@@ -1649,7 +1646,6 @@ void dll_D3_initialise(void)
     gLandedArwingDefaultStateHandler = LandedArwing_ReturnZero;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void dll_D3_release_nop(void)
 {
@@ -1668,7 +1664,6 @@ void skeetlawall_initialise(void);
 /* 8b "li r3, N; blr" returners. */
 int skeetlawall_getExtraSize(void);
 int skeetlawall_getObjectTypeId(void);
-
 
 void skeetlawall_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 

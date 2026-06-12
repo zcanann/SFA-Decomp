@@ -1,13 +1,6 @@
 /* DLL 0x010F — mmpbridge (MoonMountain Pass bridge object). TU: 0x8017BB80–0x8017BCF8. */
 #include "main/game_object.h"
 
-
-
-
-
-
-
-
 /*
  * --INFO--
  *
@@ -70,21 +63,6 @@ typedef struct MmpBridgePlacement
     s16 unk1E;
 } MmpBridgePlacement;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 
@@ -104,11 +82,8 @@ extern f32 timeDelta;
  * PAL Size: TODO
  */
 
-
 extern int* objFindTexture(int* obj, int a, int b);
 extern u32 GameBit_Get(int eventId);
-
-
 
 /*
  * --INFO--
@@ -126,7 +101,6 @@ extern u32 GameBit_Get(int eventId);
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -142,7 +116,6 @@ extern u32 GameBit_Get(int eventId);
  */
 #pragma scheduling off
 #pragma peephole off
-
 
 /*
  * --INFO--
@@ -160,7 +133,6 @@ extern u32 GameBit_Get(int eventId);
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -177,7 +149,6 @@ extern u32 GameBit_Get(int eventId);
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -193,7 +164,6 @@ extern u32 GameBit_Get(int eventId);
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
@@ -222,8 +192,6 @@ extern f32 lbl_803E3778;
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 extern void fn_80137948(char* fmt, ...);
 
-
-
 /* 8b "li r3, N; blr" returners. */
 int mmp_bridge_getExtraSize(void) { return 0x0; }
 int mmp_bridge_getObjectTypeId(void) { return 0x0; }
@@ -251,10 +219,6 @@ void mmp_bridge_init(int* obj)
 }
 
 extern f32 lbl_803E3798;
-
-
-
-
 
 void mmp_bridge_update(int* obj)
 {
@@ -319,23 +283,12 @@ extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 #pragma peephole reset
 #pragma peephole reset
 
-/* === moved from main/dll/alphaanim.c [8017C178-8017C294) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/alphaanim.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
-
 extern uint GameBit_Get(int eventId);
-
-
-
-
-
-
-
-
-
 
 /*
  * --INFO--
@@ -350,7 +303,6 @@ extern uint GameBit_Get(int eventId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -436,7 +388,6 @@ extern uint GameBit_Get(int eventId);
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -479,29 +430,15 @@ extern uint GameBit_Get(int eventId);
  * PAL Size: TODO
  */
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
-
-
-
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
 /* Drift-recovery: add new fns with v1.0 names. */
-
 
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read

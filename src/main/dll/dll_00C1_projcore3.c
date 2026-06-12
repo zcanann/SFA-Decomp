@@ -31,7 +31,6 @@
  * Start from the estimated window and nearby anchors above.
  */
 
-
 extern void OSReport(const char* fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
@@ -41,8 +40,6 @@ int projcore3_doUnsupported(void)
     OSReport(sProjcore3DoNoLongerSupported);
     return PROJECTILE_UNSUPPORTED_RETURN;
 }
-
-/* === merged from main/dll/dll_87.c [80100A50-80100A54) (TU re-split, docs/boundary_audit.md) === */
 
 /*
  * --INFO--
@@ -60,8 +57,6 @@ int projcore3_doUnsupported(void)
 void projcore3_release(void)
 {
 }
-
-/* === merged from main/dll/dll_88.c [80100A54-80100A58) (TU re-split, docs/boundary_audit.md) === */
 
 /*
  * --INFO--

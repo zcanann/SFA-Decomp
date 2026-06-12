@@ -20,7 +20,6 @@
  * Start from the current EN split window and the surrounding corridor.
  */
 
-
 extern void OSReport(const char* fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
@@ -30,8 +29,6 @@ int projsquirt1_doUnsupported(void)
     OSReport(sProjsquirt1DoNoLongerSupported);
     return PROJECTILE_UNSUPPORTED_RETURN;
 }
-
-/* === merged from main/dll/dll_71.c [80100890-80100894) (TU re-split, docs/boundary_audit.md) === */
 
 /*
  * --INFO--
@@ -49,8 +46,6 @@ int projsquirt1_doUnsupported(void)
 void projsquirt1_release(void)
 {
 }
-
-/* === merged from main/dll/dll_AF.c [80100894-80100898) (TU re-split, docs/boundary_audit.md) === */
 
 /*
  * --INFO--

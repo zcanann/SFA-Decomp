@@ -17,7 +17,6 @@
 
 extern uint GameBit_Get(int eventId);
 
-
 /*
  * --INFO--
  *
@@ -32,26 +31,12 @@ extern uint GameBit_Get(int eventId);
  * PAL Size: TODO
  */
 
-
 #pragma scheduling off
 #pragma peephole off
 #pragma peephole reset
 #pragma scheduling reset
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -67,18 +52,15 @@ extern uint GameBit_Get(int eventId);
 
 /* dll_224_hitDetect: render iff obj->field_0x74 set. */
 
-
 /* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
 #pragma scheduling off
 #pragma peephole off
 #pragma peephole reset
 #pragma scheduling reset
 
-
 /* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
 #pragma scheduling off
 #pragma scheduling reset
-
 
 /* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
 extern int Obj_SetActiveModelIndex(int obj, int idx);
@@ -113,12 +95,10 @@ extern int Obj_SetActiveModelIndex(int obj, int idx);
 #pragma peephole reset
 #pragma scheduling reset
 
-
 #pragma scheduling off
 #pragma scheduling reset
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -186,58 +166,38 @@ extern int Obj_SetActiveModelIndex(int obj, int idx);
  * the control record itself is memset(0x50) in dbstealerworm_init).
  */
 
-
 STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
 
 /* dfplevelcontrol extra block (extraSize 0xC). */
-
 
 STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 
 /* dfpobjcreator extra block (extraSize 0x1C). */
 
-
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 
 /* DFP_Torch extra block (extraSize 0x10). */
-
 
 STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
 
 /* dll_22C (raising platform) extra block (extraSize 0x10). */
 
-
 STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
 
 /* dbegg extra block: rom-curve walker + egg mode machine. */
-
 
 STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
 
 /* dfpseqpoint extra block (extraSize 0x10). */
 
-
-
-
 STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
 /* drakorenergy extra block (extraSize 0xC). */
-
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
 /* chuka extra block (extraSize 0xC). */
 #include "main/dll/baddie/chuka.h"
-
-
-
-
-
-
-
-
-
-
 
 typedef struct ChukaPlacement
 {
@@ -261,20 +221,11 @@ typedef struct ChukaPlacement
     u8 pad2F[0x30 - 0x2F];
 } ChukaPlacement;
 
-
-
-
-
-
-
-
 /* GCRobotBlast extra block (extraSize 0x8). */
-
 
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
 /* dbholecontrol1 extra block (extraSize 0xC). */
-
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
@@ -309,12 +260,6 @@ extern f32 lbl_803E6FE4;
 extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
-
-
-
-
-
-
 
 /*
  * --INFO--
@@ -463,7 +408,6 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
     }
     return 0;
 }
-
 
 /*
  * --INFO--
@@ -703,7 +647,6 @@ FUN_802017a0(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
 /*
  * --INFO--
  *
@@ -821,13 +764,7 @@ FUN_80202130(double param_1, double param_2, undefined8 param_3, double param_4,
     return 0;
 }
 
-
 int dbstealerworm_stateHandlerA05(int obj, int p);
-
-
-
-
-
 
 /*
  * --INFO--
@@ -853,56 +790,9 @@ void FUN_80204320(int param_1, int param_2, int param_3, int param_4, int param_
 
 void fn_80204320(int obj);
 
-
-
-
 /* Trivial 4b 0-arg blr leaves. */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extern u8 lbl_80329514[];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void chuka_render(void)
 {
@@ -918,13 +808,6 @@ int chuka_getObjectTypeId(void) { return 0x0; }
 s16 DBstealerworm_setScale(int* obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
-
-
-
-
 
 void chuka_free(int obj)
 {
@@ -943,13 +826,11 @@ void chuka_hitDetect(int obj)
 
 void dbstealerworm_hitDetect(int obj);
 
-
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
 /* plain forwarder. */
 
 /* OSReport(string) wrappers. */
-
 
 /* alpha-flag predicate: returns 7 on fire/clear, 0 on idle */
 
@@ -957,39 +838,13 @@ void dbstealerworm_hitDetect(int obj);
 
 /* anim progress accumulator */
 
-
 /* clear list-actions wrapper: notifies vtable[6] then resets getLActions */
 
 /* timed counter: decrement (p1->b8)->0 by timeDelta, then notify */
 extern f32 timeDelta;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #pragma dont_inline on
 #pragma dont_inline reset
-
-
-
-
-
-
-
-
-
-
 
 #pragma opt_common_subs off
 #pragma dont_inline on
@@ -1000,25 +855,8 @@ extern f32 timeDelta;
 
 #pragma dont_inline reset
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #pragma opt_loop_invariants off
 #pragma opt_loop_invariants reset
-
-
-
 
 void chuka_update(int obj)
 {
@@ -1168,12 +1006,6 @@ void chuka_update(int obj)
 
 void DFP_Torch_update(int obj);
 
-
-
-
-
-
-/* === moved from main/dll/baddie/chuka.c [8020637C-80206474) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/baddie/chuka.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"

@@ -20,7 +20,6 @@
  * Start from the current EN split window and the surrounding corridor.
  */
 
-
 extern void OSReport(const char* fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_FALSE_RETURN 0
@@ -30,8 +29,6 @@ int projwallpower_doUnsupported(void)
     OSReport(sProjwallpowerDoNoLongerSupported);
     return PROJECTILE_UNSUPPORTED_FALSE_RETURN;
 }
-
-/* === merged from main/dll/dll_75.c [80100900-80100904) (TU re-split, docs/boundary_audit.md) === */
 
 /*
  * --INFO--
@@ -49,8 +46,6 @@ int projwallpower_doUnsupported(void)
 void projwallpower_release(void)
 {
 }
-
-/* === merged from main/dll/dll_76.c [80100904-80100908) (TU re-split, docs/boundary_audit.md) === */
 
 /*
  * --INFO--

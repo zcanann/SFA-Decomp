@@ -3,7 +3,6 @@
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
 
-
 extern void Music_Trigger(s32 triggerId, s32 mode);
 extern void modelLightStruct_getSpecularColor(void* light, void* red, void* green, void* blue, void* alpha);
 extern void modelLightStruct_setGlowColor(void* light, u8 red, u8 green, u8 blue, int alpha);
@@ -296,7 +295,6 @@ void DIMbosstonsil_free(void* obj)
     }
 }
 
-/* === merged from main/dll/vfp_lavastar.c [801BE8F8-801BEC70) (TU re-split, docs/boundary_audit.md) === */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
@@ -452,7 +450,6 @@ void DIMbosstonsil_update(void* obj)
     }
 }
 
-/* === merged from main/dll/riverFlowRelated018D.c [801BEC70-801BEEA0) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/DIM/DIMbosstonsil.h"
 #include "main/game_object.h"
 

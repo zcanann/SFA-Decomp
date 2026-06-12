@@ -20,7 +20,6 @@
  * Start from the current EN split window and the surrounding corridor.
  */
 
-
 extern void OSReport(const char* fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
@@ -30,8 +29,6 @@ int projquakeshock_doUnsupported(void)
     OSReport(sProjquakeshockDoNoLongerSupported);
     return PROJECTILE_UNSUPPORTED_RETURN;
 }
-
-/* === merged from main/dll/dll_78.c [80100938-8010093C) (TU re-split, docs/boundary_audit.md) === */
 
 /*
  * --INFO--
@@ -49,8 +46,6 @@ int projquakeshock_doUnsupported(void)
 void projquakeshock_release(void)
 {
 }
-
-/* === merged from main/dll/dll_79.c [8010093C-80100940) (TU re-split, docs/boundary_audit.md) === */
 
 /*
  * --INFO--

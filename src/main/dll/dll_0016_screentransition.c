@@ -6,7 +6,6 @@
 #include "main/resource.h"
 #include "main/screen_transition.h"
 
-
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern undefined4 DAT_803de0af;
 
@@ -31,7 +30,6 @@ extern undefined4 DAT_803de0af;
 #pragma peephole reset
 #pragma scheduling reset
 
-
 /*
  * --INFO--
  *
@@ -51,37 +49,8 @@ void FUN_800d7780(undefined param_1)
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void Checkpoint_release(void);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -93,7 +62,6 @@ u8 screenTransition_func07(void) { return lbl_803DD42D; }
 extern u32 lbl_803DD410;
 
 /* 12b 3-insn patterns. */
-
 
 /* misc 8b leaves */
 extern f32 screenTransitionAlpha;
@@ -115,7 +83,6 @@ u32 isScreenTransitionActive(void) { return lbl_803E0558 == screenTransitionAlph
 /* multi-store leaf (single float broadcast). */
 extern f32 lbl_803E0570;
 
-
 /* Checkpoint table initialiser. */
 extern f32 lbl_803E0564;
 extern f32 lbl_803E0560;
@@ -127,10 +94,6 @@ extern u8 lbl_803DD42E;
 
 #pragma scheduling off
 #pragma peephole off
-
-
-
-
 
 void screenTransitionFn_800d7b04(int duration, int type)
 {
@@ -183,14 +146,12 @@ void dll_0F_func0B(int* obj, int* state, f32 f1, f32 f2, f32 f3);
 #pragma peephole reset
 #pragma scheduling reset
 
-
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -477,7 +438,6 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
 
 extern f64 lbl_803E0520;
 
-
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
 #pragma scheduling reset
@@ -492,34 +452,16 @@ extern f64 lbl_803E0520;
 #pragma peephole reset
 #pragma peephole reset
 
-/* === moved from main/dll/objfsa.c [800D8F90-800D9DCC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/baddie_state.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 
-
 /* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
  * deref-cleanup wave; curves.h re-exports it). */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
-
-
-
 
 /*
  * --INFO--
@@ -534,7 +476,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -554,7 +495,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -598,7 +538,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -627,7 +566,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -641,7 +579,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -685,7 +622,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -700,7 +636,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -714,7 +649,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -787,8 +721,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  * PAL Size: TODO
  */
 #pragma scheduling on
-
-
 
 /*
  * --INFO--
@@ -920,7 +852,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -935,23 +866,9 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  * PAL Size: TODO
  */
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling on
 #pragma peephole on
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -965,63 +882,24 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
 
 /* fn_800D9F38 ? large init updating multiple float fields based on b's bytes */
 
-
 /* player_updateVel */
 
-
-
-
-
 /* RomCurve_setA4: similar to fn_800D9F38 branch2 with different consts */
-
-
-
-
-
-
-
 
 #pragma scheduling on
 #pragma peephole on
 
-
-
-
 #pragma scheduling off
 #pragma peephole off
-
-
-
-
-
-
-
-
-
 
 /* RomCurve_stepClamped: keep the curve phase just inside the endpoints, then advance it. */
 #pragma peephole on
 
-
-
 #pragma peephole off
 
 #pragma peephole on
 
-
 #pragma peephole off
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* UIController dispatch through the shared GameUI interface. */
 #pragma scheduling on
@@ -1036,7 +914,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
 
 /* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
 #pragma scheduling on
-
 
 #pragma scheduling off
 

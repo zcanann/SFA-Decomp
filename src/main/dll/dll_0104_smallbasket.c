@@ -16,10 +16,8 @@ typedef struct SmallbasketState
     s32 unk14;
 } SmallbasketState;
 
-
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-
 
 extern u8 Obj_IsLoadingLocked(void);
 extern int fn_80296AE8(u8 * obj);
@@ -681,7 +679,6 @@ ObjectDescriptor gSmallBasketObjDescriptor = {
     smallbasket_getExtraSize,
 };
 
-/* === moved from main/dll/cfperch.c [801826E8-80183204) (TU re-split, docs/boundary_audit.md) === */
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/cfperch_state.h"
@@ -700,16 +697,12 @@ typedef struct SmallbasketObjectDef
     f32 unk24;
 } SmallbasketObjectDef;
 
-
-
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-
 
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern int GameBit_Get(int id);
 extern void Sfx_PlayFromObject(int obj, int sfx);
-
 
 extern void ObjGroup_AddObject(int obj, int group);
 

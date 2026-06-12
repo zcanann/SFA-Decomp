@@ -4,12 +4,6 @@
 
 extern undefined8 ObjGroup_RemoveObject();
 
-
-
-
-
-
-
 /*
  * --INFO--
  *
@@ -60,12 +54,6 @@ extern undefined8 ObjGroup_RemoveObject();
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-
-
-
-
-
-
 typedef struct LockDoorLockPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -80,11 +68,6 @@ typedef struct LockDoorLockPlacement
     u8 pad26[0x28 - 0x26];
 } LockDoorLockPlacement;
 
-
-
-
-
-
 typedef struct DoorlockPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -97,9 +80,6 @@ typedef struct DoorlockPlacement
     s16 unk24;
     s16 unk26;
 } DoorlockPlacement;
-
-
-
 
 extern undefined4 ObjGroup_AddObject();
 
@@ -119,10 +99,7 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
  * PAL Size: TODO
  */
 
-
 extern u32 GameBit_Get(int eventId);
-
-
 
 /*
  * --INFO--
@@ -140,7 +117,6 @@ extern u32 GameBit_Get(int eventId);
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -156,7 +132,6 @@ extern u32 GameBit_Get(int eventId);
  */
 #pragma scheduling off
 #pragma peephole off
-
 
 /*
  * --INFO--
@@ -174,7 +149,6 @@ extern u32 GameBit_Get(int eventId);
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -190,7 +164,6 @@ extern u32 GameBit_Get(int eventId);
  */
 #pragma scheduling off
 #pragma peephole off
-
 
 /*
  * --INFO--
@@ -208,18 +181,11 @@ extern u32 GameBit_Get(int eventId);
 #pragma scheduling on
 #pragma peephole on
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
 
-
-
-
-
 __declspec(section ".sdata") extern char lbl_803DBD90[];
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int doorlock_getExtraSize(void) { return 0x1; }
@@ -257,9 +223,6 @@ render_basic:
 }
 
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-
-
-
 
 extern int ObjTrigger_IsSetById(int obj, int id);
 extern int ObjTrigger_IsSet(int obj);
@@ -436,24 +399,12 @@ void doorlock_update(int obj)
 #pragma peephole reset
 #pragma peephole reset
 
-/* === moved from main/dll/alphaanim.c [8017C178-8017C294) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/alphaanim.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
-
 extern uint GameBit_Get(int eventId);
-
-
-
-
-
-
-
-
-
-
 
 /*
  * --INFO--
@@ -506,7 +457,6 @@ void doorlock_init(short* obj, DoorLockPlacement* config)
     }
     return;
 }
-
 
 /*
  * --INFO--
@@ -593,7 +543,6 @@ undefined4 FUN_8017c608(undefined8 param_1, double param_2, double param_3, unde
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -636,29 +585,15 @@ undefined4 FUN_8017c608(undefined8 param_1, double param_2, double param_3, unde
  * PAL Size: TODO
  */
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
-
-
-
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
 /* Drift-recovery: add new fns with v1.0 names. */
-
 
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read

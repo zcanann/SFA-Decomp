@@ -26,7 +26,6 @@ typedef struct TreeBirdState
 #define TREEBIRD_SPAWN_PARTICLE(obj,id) \
   (*gPartfxInterface)->spawnObject((void *)(obj),(id),0,1,-1,0)
 
-
 /*
  * --INFO--
  *
@@ -214,15 +213,11 @@ void treebird_update(int obj)
     }
 }
 
-/* === moved from main/dll/ped.c [801CDBEC-801CDC78) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/dll/dll_019F_nwtreebrid.h"
 
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
-
-
-
 
 /*
  * --INFO--
@@ -270,11 +265,4 @@ void treebird_init(int obj, int setup)
  */
 
 char* fn_801CDE70(int* obj);
-
-
-
-
-
-
-
 

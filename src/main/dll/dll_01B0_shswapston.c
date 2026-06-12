@@ -12,7 +12,6 @@ typedef struct WarpstoneUpdateMenuAnimObjState
     u8 pad9[0x10 - 0x9];
 } WarpstoneUpdateMenuAnimObjState;
 
-
 extern uint GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
 extern uint getButtonsJustPressed(int controller);
@@ -400,7 +399,6 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
     return 0;
 }
 
-/* === moved from main/dll/SC/SCanimobj.c [801D7674-801D7BA8) (TU re-split, docs/boundary_audit.md) === */
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/SC/SClantern.h"
@@ -415,8 +413,6 @@ typedef struct WarpstoneState
     s16 unk10;
     u8 pad12[0x18 - 0x12];
 } WarpstoneState;
-
-
 
 extern u32 GameBit_Get(int eventId);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32* outDistance);

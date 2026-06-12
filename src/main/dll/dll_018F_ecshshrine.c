@@ -5,7 +5,6 @@
 
 #include "main/dll/mmshrine/ecsh_shrine_state.h"
 
-
 extern u32 randomGetRange(int min, int max);
 extern void* FUN_80017aa4();
 extern uint FUN_80017ae8();
@@ -29,8 +28,6 @@ extern f32 lbl_803E4FB8;
 extern f32 lbl_803E4FC8;
 extern f32 lbl_803E5C00;
 extern f32 lbl_803E5C10;
-
-
 
 typedef struct MmShrineAnimState
 {
@@ -128,7 +125,6 @@ void FUN_801c5990(undefined8 param_1, undefined8 param_2, double param_3, undefi
     }
     return;
 }
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -265,7 +261,6 @@ int fn_801C5CE4(void* objArg, int unused, void* eventListArg)
     return 0;
 }
 
-
 void ecsh_shrine_modelMtxFn(int* p1, u8* p2)
 {
     extern int lbl_803DDBC4; /* #57 */
@@ -303,7 +298,6 @@ typedef struct EcshRenderPair
     f32 b;
 } EcshRenderPair;
 
-
 void ecsh_shrine_render2(u8 idx, f32 a, f32 b)
 {
     extern EcshRenderPair lbl_80326208[]; /* #57 */
@@ -321,14 +315,11 @@ void ecsh_shrine_render2(u8 idx, f32 a, f32 b)
 #pragma peephole reset
 #pragma peephole reset
 
-/* === merged from main/dll/mmshrine/torch1C1.c [801C5ED8-801C60B8) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
 #include "main/objseq.h"
 
 extern undefined4 FUN_800067c0();
 extern undefined8 ObjGroup_RemoveObject();
-
-
 
 void ecsh_shrine_func0B(u8 idx, f32* out1, f32* out2)
 {
@@ -369,7 +360,6 @@ void ecsh_shrine_setScale(s16* out)
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -488,7 +478,6 @@ void ecsh_shrine_free(int* obj)
 #include "main/screen_transition.h"
 
 #include "main/dll/mmshrine/ecsh_shrine_state.h"
-
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b0c();
@@ -964,7 +953,6 @@ void ecsh_shrine_update(s16* obj)
 }
 #pragma opt_strength_reduction reset
 
-
 /*
  * --INFO--
  *
@@ -1052,7 +1040,6 @@ void FUN_801c6e04(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void ecsh_shrine_release(void)
 {
@@ -1064,24 +1051,14 @@ void ecsh_shrine_initialise(void)
 
 void ecsh_creator_free(void);
 
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 extern void ModelLightStruct_free(void* light);
 
-
-
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
 
 extern int objCreateLight(int a, int b);
 extern int lbl_803DDBC0;
-
-
 
 void ecsh_shrine_init(s16* obj, s8* def)
 {
@@ -1124,7 +1101,6 @@ void ecsh_shrine_init(s16* obj, s8* def)
 }
 
 extern u8* mmAlloc(int size, int tag, int p);
-
 
 extern f32 mathSinf(f32 angle);
 

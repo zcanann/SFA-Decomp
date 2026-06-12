@@ -620,7 +620,6 @@ void ediblemushroom_hitDetect(u8* obj)
     }
 }
 
-/* === merged from main/dll/NW/dll_1DB.c [801D16EC-801D1978) (TU re-split, docs/boundary_audit.md) === */
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 
@@ -633,10 +632,7 @@ typedef struct EdiblemushroomPlacement
     u8 pad14[0x18 - 0x14];
 } EdiblemushroomPlacement;
 
-
 #include "main/dll/NW/ediblemushroom_state.h"
-
-
 
 extern u8* getTrickyObject(void);
 extern int objIsFrozen(u8 * self);
@@ -647,7 +643,6 @@ extern void Obj_StartModelFadeIn(u8* obj, int frames);
 extern void Obj_SetModelColorFadeRecursive(u8* obj, int a, int b, int c, int d, int e);
 extern int ObjHits_GetPriorityHit(u8* obj, int* outOther, int a, int b);
 extern f32 sqrtf(f32 x);
-
 
 /*
  * --INFO--
@@ -761,7 +756,6 @@ end:
     ;
 }
 
-/* === moved from main/dll/NW/NWmammoth.c [801D1978-801D1BFC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/ediblemushroom.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
@@ -770,13 +764,11 @@ end:
 
 #include "main/dll/NW/ediblemushroom_state.h"
 
-
 extern undefined4 FUN_80006824();
 extern int ObjHits_GetPriorityHit();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_AllocQueue();
-
 
 extern u32 GameBit_Get(int bit);
 extern f32 Vec_distance(int a, int b);
@@ -925,9 +917,7 @@ void ediblemushroom_init(int obj, int aux)
  * PAL Size: TODO
  */
 
-
 extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
-
 
 /*
  * --INFO--

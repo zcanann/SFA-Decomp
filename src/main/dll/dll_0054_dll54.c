@@ -6,20 +6,6 @@
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include "ghidra_import.h"
 #include "main/dll/baddieControl.h"
 #include "main/camera_object.h"
@@ -40,11 +26,6 @@ extern f32 sqrtf(f32 x);
 #include "main/screen_transition.h"
 
 #include "main/dll/dll19_state.h"
-
-
-
-
-
 
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
@@ -131,7 +112,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -147,7 +127,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -165,7 +144,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -181,7 +159,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -199,7 +176,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -215,7 +191,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -233,7 +208,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -249,7 +223,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -267,7 +240,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -283,7 +255,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -301,7 +272,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -317,7 +287,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -335,7 +304,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -351,7 +319,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -369,7 +336,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -385,7 +351,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -403,7 +368,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -419,7 +383,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -437,7 +400,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -453,7 +415,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -471,7 +432,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -487,7 +447,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -552,7 +511,6 @@ void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-
 /*
  * --INFO--
  *
@@ -568,7 +526,6 @@ void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8
  */
 #pragma scheduling off
 #pragma peephole off
-
 
 /*
  * --INFO--
@@ -586,22 +543,10 @@ void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8
 #pragma scheduling on
 #pragma peephole on
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
 void CameraModeNpcSpeak_release(void);
-
-
-
-
-
-
-
-
-
-
-
 
 void CameraModeForceBehind_func06_nop(void)
 {
@@ -613,13 +558,11 @@ void CameraModeForceBehind_func05_nop(void)
 
 void CameraModeForceBehind_release(void);
 
-
 void fn_801101E4(void)
 {
 }
 
 void CameraModeCloudRunner_release(void);
-
 
 void dll_54_func06_nop(void)
 {
@@ -639,42 +582,18 @@ void fn_80110C80(void)
 
 void CameraModePerv_release(void);
 
-
 void fn_80110EC0(void)
 {
 }
 
 void CameraModeArwing_release(void);
 
-
-
-
-
-
-
-
-
 extern void* memset(void* dst, int val, u32 n);
-
-
 
 extern f32 timeDelta;
 
-
-
-
-
-
-
-
-
-
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-
-
-
 
 extern CameraMode54State* lbl_803DD5C0;
 extern f32 lbl_803E1B5C;
@@ -711,19 +630,11 @@ void dll_54_init(int* p1, int unused, int* p3)
 
 int dll_19_func1B(int p);
 
-
-
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
-
-
-
 
 /* misc 8b leaves */
 
 /* fn_X(lbl); lbl = 0; */
-
-
-
 
 void fn_801101E8(void)
 {
@@ -743,30 +654,19 @@ void dll_54_func05(void)
 
 void CameraModePerv_free(void);
 
-
 /* baddie spawn/visibility predicate */
-
 
 /* compute progress ratio (signed numerator / unsigned denominator) */
 
-
 /* baddie state reset */
 
-
-
 /* dll_19_func19  addr=0x80111EB4  size=0x100  linkage=global */
-
-
 
 /* dll_19_func0C  addr=0x80112D80  size=0x114  linkage=global */
 #pragma dont_inline on
 #pragma dont_inline reset
 
-
 /* CameraModePerv_update  addr=0x80110CB0  size=0x10C  linkage=global */
-
-
-
 
 /* CameraModeForceBehind_init  addr=0x801100B8  size=0x124  linkage=global */
 
@@ -774,35 +674,25 @@ extern int Obj_GetPlayerObject(void);
 
 /* dll_19_func13  addr=0x8011313C  size=0x13C  linkage=global */
 
-
 /* dll_19_func10  addr=0x80113398  size=0x16C  linkage=global */
-
 
 /* CameraModeCrawl_copyToCurrent  addr=0x8010F540  size=0x1E0  linkage=global */
 
 /* dll_19_func17  addr=0x80112544  size=0x19C  linkage=global */
 
-
 /* CameraModeCannon_update  addr=0x8010FA84  size=0x168  linkage=global */
-
 
 /* dll_19_func14  addr=0x80112E94  size=0x2A8  linkage=global */
 
-
 /* dll_19_func16  addr=0x801126E0  size=0x348  linkage=global */
-
 
 /* dll_19_func15  addr=0x80112A28  size=0x358  linkage=global */
 
-
 /* dll_19_func18  addr=0x80112098  size=0x47C  linkage=global */
-
 
 /* CameraModeCrawl_update  addr=0x8010F74C  size=0x2B8  linkage=global */
 
-
 /* CameraModeCloudRunner_update  addr=0x80110214  size=0x36C  linkage=global */
-
 
 /* CameraModeForceBehind_update  addr=0x8010FC7C  size=0x43C  linkage=global */
 
@@ -932,18 +822,13 @@ void dll_54_update(u8* obj)
 
 extern int getFocusedNpc(void);
 
-
 /* CameraModeNpcSpeak_init  addr=0x8010DFF0  size=0x524  linkage=global */
-
 
 /* CameraModeTitle_update  addr=0x801116E0  size=0x58C  linkage=global */
 
-
 /* CameraModeArwing_update  addr=0x80110EC4  size=0x5FC  linkage=global */
 
-
 /* CameraModeWorldMap_update  addr=0x8010E5B4  size=0xC8C  linkage=global */
-
 
 /* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
 
@@ -1001,7 +886,6 @@ extern int getFocusedNpc(void);
 #pragma peephole reset
 #pragma peephole reset
 
-/* === moved from main/dll/moveLib.c [80113504-80113F8C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/objanim.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
@@ -1009,9 +893,6 @@ extern int getFocusedNpc(void);
 #include "main/dll/rom_curve_interface.h"
 
 #include "main/dll/dll19_state.h"
-
-
-
 
 /*
  * --INFO--
@@ -1026,7 +907,6 @@ extern int getFocusedNpc(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -1044,7 +924,6 @@ extern int getFocusedNpc(void);
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -1060,7 +939,6 @@ extern int getFocusedNpc(void);
  */
 #pragma scheduling off
 #pragma peephole off
-
 
 /*
  * --INFO--
@@ -1092,11 +970,8 @@ extern int getFocusedNpc(void);
 #pragma scheduling on
 #pragma peephole on
 
-
-
 #pragma scheduling off
 #pragma peephole off
-
 
 /*
  * --INFO--
@@ -1114,7 +989,6 @@ extern int getFocusedNpc(void);
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -1131,7 +1005,6 @@ extern int getFocusedNpc(void);
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -1147,7 +1020,6 @@ extern int getFocusedNpc(void);
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -1195,11 +1067,9 @@ extern int getFocusedNpc(void);
  * PAL Size: TODO
  */
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -1207,30 +1077,18 @@ extern int getFocusedNpc(void);
 
 /* misc 8b leaves */
 
-
-
-
-
-
-
-
-
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */
-
 
 /* EN v1.0 0x80114084  size: 256b  Copies a curve point's position into the
  * caller's record and aims its angle at the nearest group-8 object (falling
  * back to the point's packed angle). */
 
-
 /* EN v1.0 0x80113864  size: 248b  Steps the movement blend factors toward the
  * current target and turns the yaw by the buffered turn rate. */
 
-
 /* EN v1.0 0x80114F64  size: 280b  Initializes the movement-state block and
  * primes the animation channel tables. */
-
 
 /* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
  * first use and refreshes the current path point position. */
@@ -1240,25 +1098,19 @@ extern s16 getAngle(f32 x, f32 z);
 /* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
  * distance from an object to its target, updating the wide-turn flag. */
 
-
 /* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
  * the object for walkable space, returning a bitmask of clear directions. */
-
 
 /* EN v1.0 0x801145BC  size: 512b  Advances the object along its movement
  * curve, snapping to ground and easing the yaw toward the path direction. */
 
-
 /* EN v1.0 0x80114BB0  size: 572b  Object-sequence scripted-move step: phase 4
  * arms the move, phase 5 walks the setup/playback sub-phases. */
-
 
 /* EN v1.0 0x8011395C  size: 628b  Constrains a follow point against the
  * object's facing plane and returns the lateral offset of the result. */
 
-
 /* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
  * given speed, snapping when close, easing yaw and pacing the walk anim. */
-
 
 /* === helper-last relocation (re-split inline suppression; defs moved below their callers to suppress cross-TU-merge auto-inlining) === */

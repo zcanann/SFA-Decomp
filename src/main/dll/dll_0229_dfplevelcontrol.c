@@ -17,7 +17,6 @@
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 
-
 /*
  * --INFO--
  *
@@ -32,26 +31,12 @@ extern void GameBit_Set(int eventId, int value);
  * PAL Size: TODO
  */
 
-
 #pragma scheduling off
 #pragma peephole off
 #pragma peephole reset
 #pragma scheduling reset
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -67,18 +52,15 @@ extern void GameBit_Set(int eventId, int value);
 
 /* dll_224_hitDetect: render iff obj->field_0x74 set. */
 
-
 /* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
 #pragma scheduling off
 #pragma peephole off
 #pragma peephole reset
 #pragma scheduling reset
 
-
 /* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
 #pragma scheduling off
 #pragma scheduling reset
-
 
 /* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
 #pragma scheduling off
@@ -112,12 +94,10 @@ extern void GameBit_Set(int eventId, int value);
 #pragma peephole reset
 #pragma scheduling reset
 
-
 #pragma scheduling off
 #pragma scheduling reset
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
-
 
 #pragma scheduling off
 #pragma peephole off
@@ -185,74 +165,44 @@ extern void GameBit_Set(int eventId, int value);
  * the control record itself is memset(0x50) in dbstealerworm_init).
  */
 
-
 STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
 
 /* dfplevelcontrol extra block (extraSize 0xC). */
-
 
 STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 
 /* dfpobjcreator extra block (extraSize 0x1C). */
 
-
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 
 /* DFP_Torch extra block (extraSize 0x10). */
-
 
 STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
 
 /* dll_22C (raising platform) extra block (extraSize 0x10). */
 
-
 STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
 
 /* dbegg extra block: rom-curve walker + egg mode machine. */
-
 
 STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
 
 /* dfpseqpoint extra block (extraSize 0x10). */
 
-
-
-
 STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
 /* drakorenergy extra block (extraSize 0xC). */
-
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
 /* chuka extra block (extraSize 0xC). */
 #include "main/dll/baddie/chuka.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* GCRobotBlast extra block (extraSize 0x8). */
-
 
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
 /* dbholecontrol1 extra block (extraSize 0xC). */
-
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
@@ -287,12 +237,6 @@ extern f32 lbl_803E6FE4;
 extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
-
-
-
-
-
-
 
 /*
  * --INFO--
@@ -441,7 +385,6 @@ FUN_80200740(undefined8 param_1, double param_2, double param_3, undefined8 para
     }
     return 0;
 }
-
 
 /*
  * --INFO--
@@ -681,7 +624,6 @@ FUN_802017a0(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
 /*
  * --INFO--
  *
@@ -799,13 +741,7 @@ FUN_80202130(double param_1, double param_2, undefined8 param_3, double param_4,
     return 0;
 }
 
-
 int dbstealerworm_stateHandlerA05(int obj, int p);
-
-
-
-
-
 
 /*
  * --INFO--
@@ -893,36 +829,11 @@ void fn_80204320(int obj)
     }
 }
 
-
 void dll_22C_init(int obj, char* p);
-
 
 /* Trivial 4b 0-arg blr leaves. */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extern u8 lbl_80329514[];
-
-
-
 
 void dfplevelcontrol_render(void)
 {
@@ -938,24 +849,6 @@ void dfplevelcontrol_release(void)
 
 void dfpobjcreator_hitDetect(void);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int dfplevelcontrol_getExtraSize(void) { return 0xc; }
 int dfplevelcontrol_getObjectTypeId(void) { return 0x0; }
@@ -965,17 +858,6 @@ int dfpobjcreator_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
-
-
-
-
-
-
-
-
-
-
-
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 void dfplevelcontrol_free(int x) { extern undefined8 ObjGroup_RemoveObject(); /* #57 */ ObjGroup_RemoveObject(x, 0x9); }
 
@@ -984,13 +866,11 @@ extern void DBstealerwo_setFuncPtrs_80203c78(void);
 
 /* OSReport(string) wrappers. */
 
-
 /* alpha-flag predicate: returns 7 on fire/clear, 0 on idle */
 
 /* baddie anim update: fires vtable[0x13] when flag set */
 
 /* anim progress accumulator */
-
 
 /* clear list-actions wrapper: notifies vtable[6] then resets getLActions */
 
@@ -1030,10 +910,6 @@ void dfplevelcontrol_initialise(void)
 
 void dfpobjcreator_free(int obj, int flag);
 
-
-
-
-
 void dfplevelcontrol_setScale(int unused, u8* out)
 {
     s16 i = 0;
@@ -1049,19 +925,15 @@ void dfplevelcontrol_setScale(int unused, u8* out)
 
 int dbstealerworm_stateHandlerA00(int obj, int p2);
 
-
-
 extern int dbstealerworm_stateHandlerB06();
 
 void DBstealerwo_setFuncPtrs_80203c78(void);
-
 
 #pragma dont_inline on
 #pragma dont_inline reset
 
 extern void unlockLevel(int a, int b, int c);
 extern void Music_Trigger(int a, int b);
-
 
 void dfplevelcontrol_init(int obj, int param2)
 {
@@ -1095,12 +967,6 @@ void dfplevelcontrol_init(int obj, int param2)
 
 extern f32 lbl_803E62F4;
 
-
-
-
-
-
-
 #pragma opt_common_subs off
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -1109,12 +975,6 @@ extern f32 lbl_803E62F4;
 #pragma dont_inline on
 
 #pragma dont_inline reset
-
-
-
-
-
-
 
 void dfplevelcontrol_update(int obj)
 {
@@ -1182,7 +1042,6 @@ void dfplevelcontrol_update(int obj)
 }
 
 int fn_80202A2C(int obj, int* objs, f32* weights, int n, f32 limit);
-
 
 void fn_80204098(int obj)
 {
@@ -1260,28 +1119,13 @@ void fn_80204098(int obj)
 
 int dbstealerworm_stateHandlerB06(int obj, int p2);
 
-
-
-
 #pragma opt_loop_invariants off
 #pragma opt_loop_invariants reset
 
-
-
-
-
-
-
-
-
-
-
-/* === moved from main/dll/baddie/chuka.c [8020637C-80206474) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/baddie/chuka.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-
 
 /*
  * --INFO--
@@ -1356,7 +1200,6 @@ int dbstealerworm_stateHandlerB06(int obj, int p2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /* EN v1.0 0x802064D0  size: 48b   if (p6) objRenderFn_8003b8f4(lbl_803E6408).
  * Logic-only (~91%): retail uses extsb+cmpwi, MWCC -O4,p folds to extsb.

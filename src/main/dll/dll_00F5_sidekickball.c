@@ -40,7 +40,6 @@ typedef struct Doorf4State
     u8 pad1E[0x24 - 0x1E];
 } Doorf4State;
 
-
 extern undefined4 FUN_80006728();
 extern bool FUN_800067f8();
 extern undefined4 FUN_80006810();
@@ -98,7 +97,6 @@ extern f32 lbl_803E431C;
 #pragma peephole on
 void FUN_80178338(undefined4 param_1);
 
-
 /*
  * --INFO--
  *
@@ -114,7 +112,6 @@ void FUN_80178338(undefined4 param_1);
  */
 #pragma scheduling off
 #pragma peephole off
-
 
 /*
  * --INFO--
@@ -132,12 +129,9 @@ void FUN_80178338(undefined4 param_1);
 #pragma scheduling on
 #pragma peephole on
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int sidekickball_getExtraSize(void) { return 0x2cc; }
@@ -146,14 +140,12 @@ int sidekickball_getExtraSize(void) { return 0x2cc; }
 extern f32 lbl_803E3680;
 extern void objRenderFn_8003b8f4(f32);
 
-
 int fn_801793A4(int* obj) { return *((u8*)((int**)obj)[0xb8 / 4] + 0x274) == 0; }
 
 void sidekickball_free(int obj) { GameBit_Set(0x3F8, 1); }
 
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
-
 
 extern f32 lbl_803E36A0;
 
@@ -322,15 +314,12 @@ end:
 
 extern u32 GameBit_Get(int eventId);
 
-
 extern f32 lbl_803E3654;
 extern f32 lbl_803E3684;
 extern f32 lbl_803E364C;
 extern f32 lbl_803E3650;
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
-
-
 
 extern f32 sqrtf(f32 x);
 extern f32* Camera_GetCurrentViewSlot(void);
@@ -345,8 +334,6 @@ extern f32 lbl_803E366C;
 extern f32 lbl_803E3670;
 extern f32 lbl_803E3674;
 
-
-/* === merged from main/dll/sidekickball.c [801797A4-80179A2C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
 #include "main/dll/path_control_interface.h"
 
@@ -474,7 +461,6 @@ void sidekickball_update(u8* self)
 #include "main/dll/dll_00F5_sidekickball.h"
 #include "main/game_object.h"
 #include "main/dll/path_control_interface.h"
-
 
 extern void OSReport(const char* msg, ...);
 extern uint FUN_80006ba0();
@@ -682,7 +668,6 @@ u8 trickyBallMove(u8* obj)
     return 3;
 }
 
-/* === moved from main/dll/tFrameAnimator.c [80179EB0-8017A00C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/tframeanimator_state.h"
@@ -698,13 +683,11 @@ typedef struct LevelnameState
     u8 pad14[0x18 - 0x14];
 } LevelnameState;
 
-
 extern void* memset(void* dest, int value, u32 size);
 extern u32 GameBit_Get(int gameBit);
 extern int* gameTextGet(int textId);
 
 extern u8 lbl_80320F30[];
-
 
 /*
  * --INFO--
@@ -748,7 +731,6 @@ undefined4 sidekickball_init(int obj)
     GameBit_Set(0x3f8, 0);
 }
 
-
 int area_getExtraSize(void);
 int area_getObjectTypeId(void);
 
@@ -787,7 +769,6 @@ extern f32 lbl_803E36E8;
 
 void levelname_update(int* obj);
 
-
 void ProjectileSwitch_free(void);
 
 /* 8b "li r3, N; blr" returners. */
@@ -796,7 +777,6 @@ int levelname_getObjectTypeId(void);
 int ProjectileSwitch_getExtraSize(void);
 
 int ProjectileSwitch_getObjectTypeId(int* obj);
-
 
 ObjectDescriptor gAreaObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

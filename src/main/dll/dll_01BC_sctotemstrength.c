@@ -15,7 +15,6 @@ extern int ObjList_GetObjects();
 extern undefined4 setAButtonIcon();
 extern u8* Obj_GetPlayerObject(void);
 
-
 #define PLATFORM1_ANCHOR_SEQ_ID 0x3ff
 #define PLATFORM1_PEER_SEQ_ID 0x282
 #define PLATFORM1_PLAYER_PULL_MOVE_ID 0x401
@@ -370,7 +369,6 @@ done:
     return ret;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 void sc_totemstrength_free(void)
 {
@@ -389,7 +387,6 @@ void sc_totemstrength_initialise(void)
 }
 
 void paymentkiosk_free(void);
-
 
 /* 8b "li r3, N; blr" returners. */
 int sc_totemstrength_getExtraSize(void) { return 0x34; }
@@ -417,8 +414,6 @@ void sc_totemstrength_init(int* obj)
 }
 
 extern u32 GameBit_Get(int eventId);
-
-
 
 /* EN v1.0 0x801DEE90  size: 548b  sc_totemstrength_update: drive the
  * tug-of-war intro/outro sequencing once map event 0xe reaches state 6. */
@@ -508,7 +503,6 @@ u32 PaymentKiosk_testEvent(int obj, int p2, int ev);
 
 /* EN v1.0 0x801DF328  size: 276b  paymentkiosk_update. */
 
-/* === moved from main/dll/DB/DBrockfall.c [801DF43C-801DF4AC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/paymentkiosk.h"
 #include "main/dll/DB/DBrockfall.h"
 #include "main/dll/VF/platform1.h"
@@ -519,7 +513,6 @@ u32 PaymentKiosk_testEvent(int obj, int p2, int ev);
 #include "main/objseq.h"
 
 extern uint GameBit_Get(int eventId);
-
 
 /*
  * --INFO--
@@ -534,8 +527,6 @@ extern uint GameBit_Get(int eventId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-
 
 #pragma scheduling on
 #pragma peephole on
@@ -562,7 +553,6 @@ static int FEseqobject_findControlObject(void);
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -578,7 +568,6 @@ static int FEseqobject_findControlObject(void);
  */
 #pragma scheduling off
 #pragma peephole off
-
 
 /*
  * --INFO--
@@ -596,32 +585,13 @@ static int FEseqobject_findControlObject(void);
 #pragma scheduling on
 #pragma peephole on
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
 
 /* call(x, N) wrappers. */
 

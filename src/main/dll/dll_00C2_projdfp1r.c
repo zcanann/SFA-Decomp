@@ -20,7 +20,6 @@
  * Start from the current EN split window and the surrounding corridor.
  */
 
-
 extern void OSReport(const char* fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
@@ -30,8 +29,6 @@ int projdfp1r_doUnsupported(void)
     OSReport(sProjdfp1rDoNoLongerSupported);
     return PROJECTILE_UNSUPPORTED_RETURN;
 }
-
-/* === merged from main/dll/dll_8A.c [80100A88-80100A8C) (TU re-split, docs/boundary_audit.md) === */
 
 /*
  * --INFO--
@@ -49,8 +46,6 @@ int projdfp1r_doUnsupported(void)
 void projdfp1r_release(void)
 {
 }
-
-/* === moved from main/dll/dll_8B.c [80100A8C-80100A90) (TU re-split, docs/boundary_audit.md) === */
 
 /*
  * --INFO--

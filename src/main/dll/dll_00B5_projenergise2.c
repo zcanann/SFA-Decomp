@@ -20,7 +20,6 @@
  * Start from the current EN split window and the surrounding corridor.
  */
 
-
 extern void OSReport(const char* fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
@@ -30,8 +29,6 @@ int projenergise2_doUnsupported(void)
     OSReport(sProjenergise2DoNoLongerSupported);
     return PROJECTILE_UNSUPPORTED_RETURN;
 }
-
-/* === merged from main/dll/dll_6B.c [80100820-80100824) (TU re-split, docs/boundary_audit.md) === */
 
 /*
  * --INFO--
@@ -49,8 +46,6 @@ int projenergise2_doUnsupported(void)
 void projenergise2_release(void)
 {
 }
-
-/* === merged from main/dll/dll_6C.c [80100824-80100828) (TU re-split, docs/boundary_audit.md) === */
 
 /*
  * --INFO--

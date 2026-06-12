@@ -8,20 +8,7 @@ extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern float mathCosf(float x);
 
-
-
-
-
-
-
-
-
-
-
-
 void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
-
-
 
 #include "ghidra_import.h"
 #include "main/dll/baddieControl.h"
@@ -44,9 +31,6 @@ void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
 
 #include "main/dll/dll19_state.h"
 
-
-
-
 typedef struct Dll19Placement
 {
     u8 pad0[0x22 - 0x0];
@@ -60,7 +44,6 @@ typedef struct Dll19Placement
     u16 unk400;
     u8 pad402[0x408 - 0x402];
 } Dll19Placement;
-
 
 extern undefined4 GameBit_Set(int eventId, int value);
 extern int FUN_80017730();
@@ -158,7 +141,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -174,7 +156,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -192,7 +173,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -208,7 +188,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -226,7 +205,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -242,7 +220,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -260,7 +237,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -276,7 +252,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -294,7 +269,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -310,7 +284,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -328,7 +301,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -344,7 +316,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -362,7 +333,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -378,7 +348,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -396,7 +365,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -412,7 +380,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -430,7 +397,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -446,7 +412,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -464,7 +429,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -480,7 +444,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -498,7 +461,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -514,7 +476,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -579,7 +540,6 @@ void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-
 /*
  * --INFO--
  *
@@ -595,7 +555,6 @@ void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8
  */
 #pragma scheduling off
 #pragma peephole off
-
 
 /*
  * --INFO--
@@ -613,22 +572,10 @@ void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8
 #pragma scheduling on
 #pragma peephole on
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
 void CameraModeNpcSpeak_release(void);
-
-
-
-
-
-
-
-
-
-
-
 
 void CameraModeForceBehind_func06_nop(void)
 {
@@ -640,16 +587,11 @@ void CameraModeForceBehind_func05_nop(void)
 
 void CameraModeForceBehind_release(void);
 
-
 void fn_801101E4(void)
 {
 }
 
 void CameraModeCloudRunner_release(void);
-
-
-
-
 
 void fn_80110C80(void)
 {
@@ -657,46 +599,20 @@ void fn_80110C80(void)
 
 void CameraModePerv_release(void);
 
-
 void fn_80110EC0(void)
 {
 }
 
 void CameraModeArwing_release(void);
 
-
-
-
-
-
-
-
-
 extern void* memset(void* dst, int val, u32 n);
-
-
 
 extern f32 mathCosf(f32);
 extern f32 mathSinf(f32);
 extern f32 timeDelta;
 
-
-
-
-
-
-
-
-
-
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-
-
-
-
-
 
 int dll_19_func1B(int p)
 {
@@ -764,15 +680,9 @@ void dll_19_func12(int* p1, int* p2, u8 flag)
 
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
-
-
-
 /* misc 8b leaves */
 
 /* fn_X(lbl); lbl = 0; */
-
-
-
 
 void fn_801101E8(void)
 {
@@ -782,8 +692,6 @@ void fn_801101E8(void)
 }
 
 void CameraModeCloudRunner_free(void);
-
-
 
 void dll_19_func11(void)
 {
@@ -903,7 +811,6 @@ void dll_19_func19(u8* cam, u8* ctx)
     }
 }
 
-
 extern int* gPlayerInterface;
 
 /* dll_19_func0C  addr=0x80112D80  size=0x114  linkage=global */
@@ -949,9 +856,6 @@ void dll_19_func0C(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, int p
 extern f32 lbl_803E1B78;
 
 /* CameraModePerv_update  addr=0x80110CB0  size=0x10C  linkage=global */
-
-
-
 
 /* CameraModeForceBehind_init  addr=0x801100B8  size=0x124  linkage=global */
 
@@ -1651,29 +1555,21 @@ extern f32 lbl_803E1AD0;
 
 /* CameraModeCrawl_update  addr=0x8010F74C  size=0x2B8  linkage=global */
 
-
 /* CameraModeCloudRunner_update  addr=0x80110214  size=0x36C  linkage=global */
 
-
 /* CameraModeForceBehind_update  addr=0x8010FC7C  size=0x43C  linkage=global */
-
 
 /* dll_54_update  addr=0x801106E4  size=0x490  linkage=global */
 
 extern void fn_8010DB7C(GameObject * target, f32 * a, f32 * b, f32 * c);
 
-
 /* CameraModeNpcSpeak_init  addr=0x8010DFF0  size=0x524  linkage=global */
-
 
 /* CameraModeTitle_update  addr=0x801116E0  size=0x58C  linkage=global */
 
-
 /* CameraModeArwing_update  addr=0x80110EC4  size=0x5FC  linkage=global */
 
-
 /* CameraModeWorldMap_update  addr=0x8010E5B4  size=0xC8C  linkage=global */
-
 
 /* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
 
@@ -1731,7 +1627,6 @@ extern void fn_8010DB7C(GameObject * target, f32 * a, f32 * b, f32 * c);
 #pragma peephole reset
 #pragma peephole reset
 
-/* === moved from main/dll/moveLib.c [80113504-80113F8C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/objanim.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
@@ -1739,9 +1634,6 @@ extern void fn_8010DB7C(GameObject * target, f32 * a, f32 * b, f32 * c);
 #include "main/dll/rom_curve_interface.h"
 
 #include "main/dll/dll19_state.h"
-
-
-
 
 /*
  * --INFO--
@@ -1884,7 +1776,6 @@ int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6)
     return 1;
 }
 
-
 /*
  * --INFO--
  *
@@ -1901,7 +1792,6 @@ int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6)
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -1917,7 +1807,6 @@ int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6)
  */
 #pragma scheduling off
 #pragma peephole off
-
 
 /*
  * --INFO--
@@ -1949,11 +1838,8 @@ int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6)
 #pragma scheduling on
 #pragma peephole on
 
-
-
 #pragma scheduling off
 #pragma peephole off
-
 
 /*
  * --INFO--
@@ -1971,7 +1857,6 @@ int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6)
 #pragma scheduling on
 #pragma peephole on
 
-
 /*
  * --INFO--
  *
@@ -1988,7 +1873,6 @@ int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6)
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -2004,7 +1888,6 @@ int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6)
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -2052,7 +1935,6 @@ int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6)
  * PAL Size: TODO
  */
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
@@ -2072,7 +1954,6 @@ f32 dll_19_func0B(int* obj) { return *(f32*)((char*)((int**)obj)[0xb8 / 4] + 0x3
 
 /* misc 8b leaves */
 
-
 u16 dll_19_func0A(int obj)
 {
     void* p = ((GameObject*)obj)->anim.placementData;
@@ -2080,15 +1961,8 @@ u16 dll_19_func0A(int obj)
     return 0xd2;
 }
 
-
-
-
-
-
-
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */
-
 
 /* EN v1.0 0x80114084  size: 256b  Copies a curve point's position into the
  * caller's record and aims its angle at the nearest group-8 object (falling
@@ -2126,10 +2000,8 @@ void dll_19_func06(s16* yaw, char* st, f32 cap, f32 speed)
     }
 }
 
-
 /* EN v1.0 0x80114F64  size: 280b  Initializes the movement-state block and
  * primes the animation channel tables. */
-
 
 /* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
  * first use and refreshes the current path point position. */
@@ -2263,7 +2135,6 @@ u8 dll_19_func08(int obj, char* st, f32 dist)
     return mask;
 }
 
-
 /* EN v1.0 0x801145BC  size: 512b  Advances the object along its movement
  * curve, snapping to ground and easing the yaw toward the path direction. */
 
@@ -2271,7 +2142,6 @@ extern u8 framesThisStep;
 
 /* EN v1.0 0x80114BB0  size: 572b  Object-sequence scripted-move step: phase 4
  * arms the move, phase 5 walks the setup/playback sub-phases. */
-
 
 /* EN v1.0 0x8011395C  size: 628b  Constrains a follow point against the
  * object's facing plane and returns the lateral offset of the result. */
@@ -2328,10 +2198,8 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char* st)
     return -(-(((GameObject*)obj)->anim.localPosX * c + ((GameObject*)obj)->anim.localPosZ * s) + (c * fx + s * fz));
 }
 
-
 /* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
  * given speed, snapping when close, easing yaw and pacing the walk anim. */
-
 
 /* === helper-last relocation (re-split inline suppression; defs moved below their callers to suppress cross-TU-merge auto-inlining) === */
 void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);

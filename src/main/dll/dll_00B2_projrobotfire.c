@@ -20,7 +20,6 @@
  * Start from the current EN split window and the surrounding corridor.
  */
 
-
 extern void OSReport(const char* fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
@@ -30,8 +29,6 @@ int projrobotfire_doUnsupported(void)
     OSReport(sProjrobotfireDoNoLongerSupported);
     return PROJECTILE_UNSUPPORTED_RETURN;
 }
-
-/* === merged from main/dll/dll_6E.c [80100858-8010085C) (TU re-split, docs/boundary_audit.md) === */
 
 /*
  * --INFO--
@@ -49,8 +46,6 @@ int projrobotfire_doUnsupported(void)
 void projrobotfire_release(void)
 {
 }
-
-/* === merged from main/dll/dll_6F.c [8010085C-80100860) (TU re-split, docs/boundary_audit.md) === */
 
 /*
  * --INFO--

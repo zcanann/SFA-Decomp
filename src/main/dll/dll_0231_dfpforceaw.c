@@ -19,7 +19,6 @@ typedef struct TrickyCurveObjectDef
     u8 pad22[0x28 - 0x22];
 } TrickyCurveObjectDef;
 
-
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
 extern uint FUN_80017690();
@@ -54,7 +53,6 @@ extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E6460;
 extern f32 lbl_803E6464;
 extern f32 lbl_803E6468;
-
 
 typedef struct TrickyCurveBurstFxParams
 {
@@ -502,7 +500,6 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1, undefined8 param_2,
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -662,11 +659,7 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
 #pragma scheduling off
 #pragma peephole off
 
-
-
-
 #undef SFXPLAYER_UPDATE_EFFECT_HANDLE_POS
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void TrickyCurve_render(void)
@@ -686,7 +679,6 @@ void TrickyCurve_initialise(void)
 }
 
 void sfxplayer_render(void);
-
 
 /* 8b "li r3, N; blr" returners. */
 int TrickyCurve_getExtraSize(void) { return 0x14; }
@@ -740,14 +732,12 @@ void TrickyCurve_init(int* obj, u8* def)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
 }
 
-/* === merged from main/dll/sfxplayer.c [80207CE4-80208098) (TU re-split, docs/boundary_audit.md) === */
 #include "main/mapEvent.h"
 #include "main/dll/TrickyCurve.h"
 #include "main/dll/sfxplayer.h"
 #include "main/game_object.h"
 
 extern int ObjHits_GetPriorityHit(int obj, undefined4* outHitObject, int* outSphereIndex, uint* outHitVolume);
-
 
 /*
  * --INFO--

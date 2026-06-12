@@ -36,7 +36,6 @@ void vfpblock1_free(int obj)
 #include "main/objlib.h"
 #include "main/resource.h"
 
-
 extern f64 DOUBLE_803e6d90;
 
 /* Per-object extra state for SeqPoint (seqpoint_getExtraSize == 0x10). */
@@ -107,7 +106,6 @@ void vfpblock1_update(int obj)
  */
 #pragma scheduling on
 
-
 /*
  * --INFO--
  *
@@ -126,7 +124,6 @@ void FUN_801fc978(int param_1)
     FUN_8003b818(param_1);
     return;
 }
-
 
 /*
  * --INFO--
@@ -212,7 +209,6 @@ FUN_801fcccc(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-
 void FUN_801fc374(undefined4 param_1)
 {
 }
@@ -221,7 +217,6 @@ int FUN_801fc4f4(void)
 {
     return 4;
 }
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void vfpblock1_release(void)
@@ -623,7 +618,6 @@ void vfpdoorswitch_updateExplodingVariant(int obj)
 
 void dll_224_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
-
 #pragma peephole on
 void seqpoint_update(int* obj)
 {
@@ -755,7 +749,6 @@ void vfpdraghead_update(int* obj)
         }
     }
 }
-
 
 void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
 {
@@ -919,7 +912,6 @@ void fn_801FBAC8(int obj)
         }
     }
 }
-
 
 void vfpplatform_update(int obj)
 {
@@ -1132,7 +1124,6 @@ void vfpplatform_update(int obj)
 #pragma peephole reset
 #pragma peephole reset
 
-/* === moved from main/main.c [801FD398-801FD4A8) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
@@ -1140,8 +1131,6 @@ void vfpplatform_update(int obj)
 #include "main/dll_000A_expgfx.h"
 #include "main/objlib.h"
 #include "main/resource.h"
-
-
 
 /*
  * --INFO--
@@ -1158,12 +1147,10 @@ void vfpplatform_update(int obj)
  */
 void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9);
 
-
 #pragma scheduling off
 #pragma peephole off
 #pragma peephole reset
 #pragma scheduling reset
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void dll_224_release_nop(void)
@@ -1173,17 +1160,6 @@ void dll_224_release_nop(void)
 void dll_224_initialise_nop(void)
 {
 }
-
-
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -1239,11 +1215,9 @@ void dll_224_update(void* param_1)
 #pragma peephole reset
 #pragma scheduling reset
 
-
 /* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
 #pragma scheduling off
 #pragma scheduling reset
-
 
 /* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
 #pragma scheduling off
@@ -1288,12 +1262,10 @@ void dll_224_init(void* obj, void* other)
 #pragma peephole reset
 #pragma scheduling reset
 
-
 #pragma scheduling off
 #pragma scheduling reset
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
-
 
 #pragma scheduling off
 #pragma peephole off

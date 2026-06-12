@@ -242,7 +242,6 @@ void staffactivated_update(int obj)
     }
 }
 
-/* === moved from main/dll/CF/dll_165.c [8018A53C-8018A8BC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/CF/dll_165.h"
 #include "main/dll/CF/dll_163.h"
 #include "main/game_object.h"
@@ -265,8 +264,6 @@ STATIC_ASSERT(offsetof(TreasureChestSetup, hitboxKind) == 0x19);
 STATIC_ASSERT(offsetof(TreasureChestSetup, triggerObjectId) == 0x1a);
 STATIC_ASSERT(offsetof(TreasureChestSetup, dialogueId) == 0x1c);
 STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
-
-
 
 /*
  * --INFO--
@@ -441,6 +438,4 @@ void staffactivated_init(int obj, int setup)
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3C20;
-
-
 

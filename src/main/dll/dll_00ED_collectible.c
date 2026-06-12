@@ -8,34 +8,6 @@
 #include "main/effect_interfaces.h"
 #include "main/objseq.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extern undefined4 ObjHits_EnableObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
@@ -44,7 +16,6 @@ extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E40EC;
-
 
 /*
  * --INFO--
@@ -88,7 +59,6 @@ extern f32 lbl_803E40EC;
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -117,7 +87,6 @@ extern f32 lbl_803E40EC;
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -131,7 +100,6 @@ extern f32 lbl_803E40EC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -147,7 +115,6 @@ extern f32 lbl_803E40EC;
  * PAL Size: TODO
  */
 
-
 /*
  * --INFO--
  *
@@ -161,7 +128,6 @@ extern f32 lbl_803E40EC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /*
  * --INFO--
@@ -194,13 +160,7 @@ extern u32 GameBit_Get(int eventId);
  * PAL Size: TODO
  */
 
-
-
 void mikabombshadow_update(int* obj);
-
-
-
-
 
 /*
  * --INFO--
@@ -218,26 +178,7 @@ void mikabombshadow_update(int* obj);
 
 /* Trivial 4b 0-arg blr leaves. */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void staff_func0F(void);
-
 
 void staff_func0B(void);
 
@@ -267,20 +208,7 @@ void shield_release(void);
 
 void shield_initialise(void);
 
-
 void shield_free(int obj);
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* 8b "li r3, N; blr" returners. */
 int animatedobj_getExtraSize(void);
@@ -295,12 +223,9 @@ int flamethrowerspe_getObjectTypeId(void);
 int shield_getExtraSize(void);
 int shield_getObjectTypeId(void);
 
-
 void dll_F7_free(int obj);
 
-
 void dim2roofrub_free(int* obj);
-
 
 extern void gcbaddieshield_update(int* obj);
 extern void animatedobj_free();
@@ -736,7 +661,6 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-
 /* Pattern wrappers. */
 s16 staff_getHitReactValue(int* obj);
 u8 collectible_func0F(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x1e); }
@@ -745,10 +669,6 @@ u8 collectible_func0F(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 
 s32 staff_func16(int* obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
-
 
 /* render-with-fn(lbl) (no visibility check). */
 void flamethrowerspe_render(void);
@@ -763,12 +683,9 @@ void objSetAnimField48to0(int* obj);
 
 void flamethrowerspe_func0B(int* obj);
 
-
 /* state-byte setters / leaf writers. */
 #pragma dont_inline on
 #pragma dont_inline reset
-
-
 
 void collectible_func0E(int* obj, u32 v)
 {
@@ -836,15 +753,7 @@ extern void staff_setupSwipe(int p1, int p2, int p3, int p4);
 
 void staff_modelMtxFn(int* obj, int p4, int p5);
 
-
-
-
-
 extern u8 framesThisStep;
-
-
-
-
 
 extern f32 timeDelta;
 
@@ -854,53 +763,35 @@ void staff_free(int* obj);
 
 void fireball_free(int* obj);
 
-
-
 void depthoffieldpoint_init(int* obj);
 
 void depthoffieldpoint_update(int* obj);
 
 void staff_release(void);
 
-
 void mikabombshadow_init(int* obj);
 
 void StaticCamera_init(int* obj, int* params, int flag);
 
-
 void flamethrowerspe_init(int* obj, int* params);
-
 
 void animatedobj_free(int* obj, int seqFlag);
 
-
 void staff_init(int* obj);
-
 
 void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-
-
-
 void dll_F7_init(int* obj, int* params);
-
-
-
-
 
 void fireball_hitDetect(int* obj);
 
-
 void dim2roofrub_init(int* obj, int* params);
-
 
 void animatedobj_init(int* obj, int* params);
 
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
 
 void flamethrowerspe_update(int* obj);
-
-
 
 void mikabomb_init(int* obj);
 
@@ -910,23 +801,15 @@ extern void GameBit_Set(int eventId, int value);
 void baddieinterestp_update(int* obj);
 #pragma opt_loop_invariants reset
 
-
 #pragma opt_loop_invariants off
 void animatedobj_update(int* obj);
 #pragma opt_loop_invariants reset
 
-
 void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-
-
-
 
 void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
 
-
 void dim2roofrub_update(int* obj);
-
 
 void fireball_init(int* obj);
 
@@ -935,41 +818,23 @@ extern f32 mathCosf(f32 x);
 
 void fireball_update(int* obj);
 
-
 void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 extern f32 sqrtf(f32 x);
 
-
-
 void shield_update(int* obj);
-
-
 
 /* dll_F7 (bouncing prop) object extra-state */
 
-
 void dll_F7_update(int* obj);
-
 
 void staff_initialise(void);
 
-
-
 void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-
-
-
-
-
 
 /* per-swipe trail record (stride 0x18, 3 records) */
 
-
 void staff_hitDetectGeometry(int* obj);
-
-
 
 volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
 
@@ -979,9 +844,7 @@ static inline void swipeColor4u8(const u8 r, const u8 g, const u8 b, const u8 a)
 
 static inline void swipeTexCoord2f32(const f32 s, const f32 t);
 
-
 #pragma opt_common_subs off
-
 
 void staff_update(int* obj);
 
@@ -1165,10 +1028,6 @@ extern f32 fastFloorf(f32 v);
 
 void staff_setupSwipe(int p1, int p2, int p3, int p4);
 
-
-
-
-
 #pragma scheduling reset
 #pragma peephole reset
 /* segment pragma-stack balance (re-split): */
@@ -1295,7 +1154,6 @@ void FUN_801723dc(int param_1)
     return;
 }
 
-
 /*
  * --INFO--
  *
@@ -1317,7 +1175,6 @@ void collectible_free(int obj)
     return;
 }
 #pragma scheduling reset
-
 
 /*
  * --INFO--
@@ -1554,7 +1411,6 @@ extern f32 lbl_803E3480;
 
 extern void fn_801723DC(int obj);
 
-
 extern int ObjMsg_Pop(int obj, int* outMessage, int* outParam, int* outSender);
 
 void collectible_update(int obj)
@@ -1762,7 +1618,6 @@ void fn_801723DC(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-/* === moved from main/dll/texframeanimator.c [80172F14-80173224) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
 #include "main/obj_placement.h"
@@ -1899,9 +1754,6 @@ void collectible_init(int obj, int setup)
         (*gPathControlInterface)->attachObject((void*)obj, state + 0x50);
     }
 }
-
-
-
 
 /*
  * --INFO--

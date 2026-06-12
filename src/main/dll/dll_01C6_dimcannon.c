@@ -277,7 +277,6 @@ void FUN_801b2550(undefined8 param_1, undefined8 param_2, double param_3, undefi
     return;
 }
 
-
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
@@ -320,14 +319,9 @@ void dimcannon_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void dimlavasmash_free(void);
 
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 /* if (o->_X == K) return A; else return B; */
-
-
 
 typedef struct DimcannonPlacement
 {
@@ -341,7 +335,6 @@ typedef struct DimcannonPlacement
     u8 pad29[0x30 - 0x29];
 } DimcannonPlacement;
 
-
 typedef struct DimcannonState
 {
     u8 pad0[0x7 - 0x0];
@@ -352,9 +345,6 @@ typedef struct DimcannonState
     s8 unkB;
     u8 padC[0x10 - 0xC];
 } DimcannonState;
-
-
-
 
 /* dimcannon extra block (0xb4); the head is the per-cannonball column
  * arrays walked via state + i*4 (kept raw), this names the scalar tail. */
@@ -378,7 +368,6 @@ extern void Sfx_PlayFromObject(int obj, int sfx);
 #pragma dont_inline on
 /* Toggle collision/render surface flags for matching block polys and layers. */
 #pragma dont_inline reset
-
 
 extern void* lbl_803DDB50;
 
@@ -855,19 +844,9 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-/* === moved from main/dll/DIM/DIM2conveyor.c [801B3658-801B3768) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/DIM/DIMlevcontrol.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
-
-
-
-
-
-
-
-
-
 
 /*
  * --INFO--
@@ -883,35 +862,14 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
  * PAL Size: TODO
  */
 
-
 /* Trivial 4b 0-arg blr leaves. */
 
-
-
-
-
-
-
-
-
 extern unsigned long GameBit_Set(int eventId, int value);
-
 
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
-
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-
-
-
-
-
-
-
-
-
-
 

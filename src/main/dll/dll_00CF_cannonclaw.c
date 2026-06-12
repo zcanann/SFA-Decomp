@@ -5,10 +5,6 @@
 #include "main/dll/scarab.h"
 #include "main/mapEventTypes.h"
 
-
-
-
-
 extern undefined4 FUN_80006824();
 extern int FUN_80017730();
 extern u32 randomGetRange(int min, int max);
@@ -52,7 +48,6 @@ extern void* gGrimbleStateHandlersA[11];
 extern void* gGrimbleStateHandlersB[6];
 int grimble_animEventCallback(void);
 
-
 #pragma scheduling off
 #pragma peephole off
 int grimble_stateHandlerA02(int obj, char* state, f32 arg);
@@ -60,7 +55,6 @@ int grimble_stateHandlerA02(int obj, char* state, f32 arg);
 int grimble_stateHandlerA01(int obj, char* state, f32 arg);
 
 int grimble_stateHandlerA00(int obj, char* state, f32 arg);
-
 
 void grimble_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
@@ -131,7 +125,6 @@ FUN_801620c0(undefined8 param_1, double param_2, double param_3, undefined8 para
     }
     return uVar2;
 }
-
 
 /*
  * --INFO--
@@ -465,7 +458,6 @@ FUN_80162b78(undefined8 param_1, double param_2, double param_3, undefined8 para
     return uVar1;
 }
 
-
 /*
  * --INFO--
  *
@@ -479,7 +471,6 @@ FUN_80162b78(undefined8 param_1, double param_2, double param_3, undefined8 para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void grimble_release(void);
@@ -566,18 +557,14 @@ ObjectDescriptor gGrimbleObjDescriptor = {
 #pragma peephole reset
 #pragma peephole reset
 
-/* === moved from main/dll/ladders.c [801630EC-801631C8) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 
-
-
 extern uint GameBit_Get(int eventId);
 extern undefined4 ObjHits_DisableObject();
-
 
 /*
  * --INFO--
@@ -618,7 +605,6 @@ void cannonclaw_update(u8* obj)
     ObjHits_DisableObject(obj);
 }
 
-
 /*
  * --INFO--
  *
@@ -634,7 +620,6 @@ void cannonclaw_update(u8* obj)
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /*
  * --INFO--
@@ -666,7 +651,6 @@ void cannonclaw_update(u8* obj)
 #pragma scheduling off
 #pragma peephole off
 
-
 /*
  * --INFO--
  *
@@ -682,7 +666,6 @@ void cannonclaw_update(u8* obj)
  */
 #pragma scheduling on
 #pragma peephole on
-
 
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
@@ -703,14 +686,11 @@ void tumbleweedbush_release(void);
 
 void tumbleweedbush_initialise(void);
 
-
 void tumbleweedbush_init(u8* obj, u8* params, int param3);
 
 /* 8b "li r3, N; blr" returners. */
 int tumbleweedbush_getExtraSize(void);
 int tumbleweedbush_getObjectTypeId(void);
-
-
 
 void tumbleweedbush_update(int* obj);
 
@@ -739,12 +719,6 @@ void* tumbleweedbush_findNearestActive(f32* p_pos);
 /* tumbleweedbush_setScale: scan the sub-array at obj->_b8 (sub[0x50] entries
  * of 4 bytes each), zeroing every slot whose +0xc word matches `match`. */
 void tumbleweedbush_setScale(u8* obj, void* match);
-
-
-
-
-
-
 
 ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
     {
