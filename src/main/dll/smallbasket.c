@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
@@ -154,7 +155,7 @@ extern f32 lbl_803E2BAC;
 extern f32 lbl_803E2BB0;
 extern f32 lbl_803E2BB4;
 extern char lbl_803DBCF0;
-extern int Curve_AdvanceAlongPath(int p, f32 v);
+extern int Curve_AdvanceAlongPath(RomCurveWalker *path, f32 step);
 extern u8 lbl_8031FB48[];
 extern f32 lbl_803E2BA0;
 extern f32 lbl_803E2BA4;
@@ -1198,7 +1199,7 @@ typedef struct
 
 void fn_80159FCC(s16* obj, u8* state)
 {
-    int base = *(int*)state;
+    RomCurveWalker* base = *(RomCurveWalker**)state;
     f32 d[3];
     BasketSfxParams sp;
     int i;
@@ -1279,9 +1280,9 @@ void fn_80159FCC(s16* obj, u8* state)
     if ((((BaddieState*)state)->controlFlags & 0x2000) != 0)
     {
         f32* dp = d;
-        dp[0] = *(f32*)(base + 0x68) - ((GameObject*)obj)->anim.worldPosX;
-        dp[1] = *(f32*)(base + 0x6c) - ((GameObject*)obj)->anim.worldPosY;
-        dp[2] = *(f32*)(base + 0x70) - ((GameObject*)obj)->anim.worldPosZ;
+        dp[0] = base->posX - ((GameObject*)obj)->anim.worldPosX;
+        dp[1] = base->posY - ((GameObject*)obj)->anim.worldPosY;
+        dp[2] = base->posZ - ((GameObject*)obj)->anim.worldPosZ;
         *(f32*)(state + 0x32c) = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
         if (*(f32*)(state + 0x32c) > lbl_803E2C40)
         {
@@ -1730,7 +1731,7 @@ void fn_80158494(s16* obj, u8* state)
     u8* t0 = d[*(u8*)(state + 0x33b)].tbl0;
     BasketSeq16* seq = d[*(u8*)(state + 0x33b)].seq;
     u8* tC = d[*(u8*)(state + 0x33b)].tblC;
-    int base = *(int*)state;
+    RomCurveWalker* base = *(RomCurveWalker**)state;
     f32 scale = lbl_803E2BA4;
     f32 cap;
     int i;
@@ -1745,7 +1746,7 @@ void fn_80158494(s16* obj, u8* state)
     if ((*(u32*)(state + 0x2dc) & 0x80000000) != 0)
     {
         *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) | 8;
-        if ((*gRomCurveInterface)->initCurve((void*)*(int*)state, obj, lbl_803E2BA8,
+        if ((*gRomCurveInterface)->initCurve(base, obj, lbl_803E2BA8,
                                              (int*)&lbl_803DBCF0, -1) != 0)
         {
             *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) & ~0x2000;
@@ -1808,8 +1809,8 @@ void fn_80158494(s16* obj, u8* state)
                 }
             }
             {
-                f32 dx = *(f32*)(base + 0x68) - ((GameObject*)obj)->anim.localPosX;
-                f32 dz = *(f32*)(base + 0x70) - ((GameObject*)obj)->anim.localPosZ;
+                f32 dx = base->posX - ((GameObject*)obj)->anim.localPosX;
+                f32 dz = base->posZ - ((GameObject*)obj)->anim.localPosZ;
                 f32 dist = sqrtf(dx * dx + dz * dz);
                 if (dist > lbl_803E2BA0)
                 {
@@ -1821,9 +1822,9 @@ void fn_80158494(s16* obj, u8* state)
                     *(f32*)(state + 0x310) = *(f32 *)&lbl_803E2BBC;
                 }
             }
-            if ((Curve_AdvanceAlongPath(base, *(f32*)(state + 0x310)) != 0 || *(int*)(base + 0x10) != 0)
-                && (*gRomCurveInterface)->goNextPoint((void*)base) != 0
-                && (*gRomCurveInterface)->initCurve((void*)*(int*)state, obj, lbl_803E2BC0,
+            if ((Curve_AdvanceAlongPath(base, *(f32*)(state + 0x310)) != 0 || base->atSegmentEnd != 0)
+                && (*gRomCurveInterface)->goNextPoint(base) != 0
+                && (*gRomCurveInterface)->initCurve(base, obj, lbl_803E2BC0,
                                                     (int*)&lbl_803DBCF0, -1) != 0)
             {
                 *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) & ~0x2000;
@@ -1833,7 +1834,7 @@ void fn_80158494(s16* obj, u8* state)
                 f32 diff;
                 f32 t;
                 f32 a;
-                diff = (f32)(int)(((getAngle(*(f32*)(base + 0x74), *(f32*)(base + 0x7c)) & 0xffff) + 0x8000)
+                diff = (f32)(int)(((getAngle(base->tangentX, base->tangentZ) & 0xffff) + 0x8000)
                     - ((int)*(s16*)obj & 0xffffu));
                 if (diff > lbl_803E2BC8)
                 {
@@ -1873,9 +1874,9 @@ void fn_80158494(s16* obj, u8* state)
                     int rel2;
                     u16 oct2;
                     u8 mv;
-                    dp2[0] = ((GameObject*)obj)->anim.worldPosX - *(f32*)(base + 0x68);
-                    dp2[1] = ((GameObject*)obj)->anim.worldPosY - *(f32*)(base + 0x6c);
-                    dp2[2] = ((GameObject*)obj)->anim.worldPosZ - *(f32*)(base + 0x70);
+                    dp2[0] = ((GameObject*)obj)->anim.worldPosX - base->posX;
+                    dp2[1] = ((GameObject*)obj)->anim.worldPosY - base->posY;
+                    dp2[2] = ((GameObject*)obj)->anim.worldPosZ - base->posZ;
                     rel2 = (getAngle(-dp2[0], -dp2[2]) & 0xffff) - ((int)*(s16*)obj & 0xffffu);
                     if (rel2 > 0x8000)
                     {
@@ -1928,7 +1929,7 @@ void fn_80158494(s16* obj, u8* state)
             }
             if ((*(u8*)(state + 0x323) & 8) == 0 && (*(u8*)(state + 0x33d) & 0x10) == 0)
             {
-                fn_8014CF7C((int*)obj, state, *(f32*)(base + 0x68), *(f32*)(base + 0x70), 0xf, 0);
+                fn_8014CF7C((int*)obj, state, base->posX, base->posZ, 0xf, 0);
             }
         }
         else if ((flags & 0xc0000000) != 0)
@@ -2159,7 +2160,7 @@ void fn_80158C2C(s16* obj, u8* state)
 
 void fn_80159958(s16* obj, u8* state)
 {
-    int base = *(int*)state;
+    RomCurveWalker* base = *(RomCurveWalker**)state;
     f32 spd;
     f32 cap;
     BasketSfxParams sp;
@@ -2222,9 +2223,9 @@ void fn_80159958(s16* obj, u8* state)
     {
         f32* dp = dv;
         f32 t;
-        dp[0] = *(f32*)(base + 0x68) - ((GameObject*)obj)->anim.worldPosX;
-        dp[1] = *(f32*)(base + 0x6c) - ((GameObject*)obj)->anim.worldPosY;
-        dp[2] = *(f32*)(base + 0x70) - ((GameObject*)obj)->anim.worldPosZ;
+        dp[0] = base->posX - ((GameObject*)obj)->anim.worldPosX;
+        dp[1] = base->posY - ((GameObject*)obj)->anim.worldPosY;
+        dp[2] = base->posZ - ((GameObject*)obj)->anim.worldPosZ;
         *(f32*)(state + 0x32c) = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
         if (*(f32*)(state + 0x32c) < lbl_803E2C10 && *(f32*)(state + 0x330) == lbl_803E2C30)
         {
@@ -2239,15 +2240,15 @@ void fn_80159958(s16* obj, u8* state)
         {
             t = lbl_803E2C3C;
         }
-        if ((Curve_AdvanceAlongPath(base, ((BaddieState*)state)->pathStep * t) != 0 || *(int*)(base + 0x10) != 0)
-            && (*gRomCurveInterface)->goNextPoint((void*)base) != 0
-            && (*gRomCurveInterface)->initCurve((void*)*(int*)state, obj, lbl_803E2C44,
+        if ((Curve_AdvanceAlongPath(base, ((BaddieState*)state)->pathStep * t) != 0 || base->atSegmentEnd != 0)
+            && (*gRomCurveInterface)->goNextPoint(base) != 0
+            && (*gRomCurveInterface)->initCurve(base, obj, lbl_803E2C44,
                                                 (int*)&lbl_803DBCF8, -1) != 0)
         {
             ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x2000;
         }
-        sidekickToy_accelerateTowardTarget3D(obj, *(f32*)(base + 0x68), *(f32*)(base + 0x6c),
-                                             *(f32*)(base + 0x70), lbl_803E2C48, lbl_803E2C4C, lbl_803E2C50,
+        sidekickToy_accelerateTowardTarget3D(obj, base->posX, base->posY,
+                                             base->posZ, lbl_803E2C48, lbl_803E2C4C, lbl_803E2C50,
                                              ((BaddieState*)state)->unk304);
     }
 
