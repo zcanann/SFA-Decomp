@@ -5,6 +5,7 @@
 #include "main/camera_interface.h"
 #include "main/dll/cannon.h"
 #include "main/game_object.h"
+#include "main/objanim_internal.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
@@ -50,9 +51,7 @@ void infotext_update(int obj)
         else
         {
             *sub = *sub - timeDelta;
-            showHelpText(
-                ((s16*)((char*)*(int**)&((GameObject*)obj)->anim.modelInstance + 0x7c))[(*(u8**)&((GameObject*)obj)->
-                    anim.placementData)[0x19]]);
+            showHelpText(((GameObject*)obj)->anim.modelInstance->helpTextIds[(*(u8**)&((GameObject*)obj)->anim.placementData)[0x19]]);
         }
     }
     if ((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0)

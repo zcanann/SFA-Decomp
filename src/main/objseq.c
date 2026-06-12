@@ -3713,7 +3713,7 @@ int objRunSeq(int seqIdx, u8* obj, int flags)
     {
         return -1;
     }
-    if (seqIdx < 0 || seqIdx >= *(u8*)(*(u8**)&((GameObject*)obj)->anim.modelInstance + 0x5e))
+    if (seqIdx < 0 || seqIdx >= ((GameObject*)obj)->anim.modelInstance->sequenceCount)
     {
         return -1;
     }
@@ -3738,7 +3738,7 @@ int objRunSeq(int seqIdx, u8* obj, int flags)
         return -1;
     }
 
-    mapTbl = *(s16**)(*(u8**)&((GameObject*)obj)->anim.modelInstance + 0x1c);
+    mapTbl = ((GameObject*)obj)->anim.modelInstance->sequenceMap;
     if (mapTbl != NULL)
     {
         seqIdx = mapTbl[seqIdx];

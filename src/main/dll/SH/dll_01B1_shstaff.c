@@ -50,6 +50,7 @@ void sh_staff_free(int* obj, int p2)
 #include "main/dll_000A_expgfx.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/objanim_internal.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
 
@@ -417,7 +418,7 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     if (state->hudFlag != 0)
     {
         ((void (*)(s16, int, int))((int*)*gGameUIInterface)[0x34 / 4])
-            (*(s16*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x7e), 0xa0, 0x8c);
+            (((GameObject*)obj)->anim.modelInstance->helpTextIds[1], 0xa0, 0x8c);
     }
     state->pulseTimer = lbl_803E54D8 * timeDelta + state->pulseTimer;
     if (state->pulseTimer > lbl_803E54D0)

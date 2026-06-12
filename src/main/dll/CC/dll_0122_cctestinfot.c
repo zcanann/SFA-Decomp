@@ -7,6 +7,7 @@ extern void* Obj_GetPlayerObject(void);
 #include "main/camera_interface.h"
 #include "main/dll/cannon.h"
 #include "main/game_object.h"
+#include "main/objanim_internal.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
@@ -70,7 +71,7 @@ void cctestinfot_update(int* obj)
         else
         {
             *(f32*)sub = *(f32*)sub - timeDelta;
-            showHelpText(((s16*)((char*)*(int**)&((GameObject*)obj)->anim.modelInstance + 0x7c))[sub[4]]);
+            showHelpText(((GameObject*)obj)->anim.modelInstance->helpTextIds[sub[4]]);
         }
     }
 }

@@ -14,6 +14,7 @@ extern void Sfx_PlayFromObject(int obj, int id);
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/objanim_internal.h"
 #include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMsnowball.h"
@@ -172,7 +173,7 @@ void ccsharpclawpad_update(int obj)
             else
             {
                 *state -= timeDelta;
-                showHelpText(*(s16*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x7c));
+                showHelpText(((GameObject*)obj)->anim.modelInstance->helpTextIds[0]);
             }
         }
         player = (int*)Obj_GetPlayerObject();
