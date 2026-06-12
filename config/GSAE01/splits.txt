@@ -1133,14 +1133,14 @@ main/dll/DR/DRlaserturret.c:
 	.text       start:0x801E6B10 end:0x801E76A0
 
 main/dll/DR/DRpushcart.c:
-	.text       start:0x801E76A0 end:0x801E8EE0
+	.text       start:0x801E76A0 end:0x801E8EA4
 
 main/dll/DR/DRCloudball.c:
-	.text       start:0x801E8EE0 end:0x801E9344
+	.text       start:0x801E8EA4 end:0x801E9328
 	.data       start:0x80328418 end:0x80328450
 
 main/dll/DR/DRsimplehuman.c:
-	.text       start:0x801E9344 end:0x801E9C00
+	.text       start:0x801E9328 end:0x801E9C00
 
 main/dll/DR/DRcloudcage.c:
 	.text       start:0x801E9C00 end:0x801EA854
@@ -1154,17 +1154,11 @@ main/dll/DR/DRhightop.c:
 main/dll/DR/DRpickup.c:
 	.text       start:0x801EC1AC end:0x801EC7A0
 
-main/dll/DR/DRcradle.c:
-	.text       start:0x801EC7A0 end:0x801ECEC4
-
-main/dll/DR/DRpulley.c:
-	.text       start:0x801ECEC4 end:0x801ECF94
-
-main/dll/DR/DRhalolight.c:
-	.text       start:0x801ECF94 end:0x801ED428
+main/dll/BW/dll_0255_crsnowbike.c:
+	.text       start:0x801EC7A0 end:0x801EE088
 
 main/dll/BW/BWalphaanim.c:
-	.text       start:0x801ED428 end:0x801EE0C0
+	.text       start:0x801EE088 end:0x801EE0C0
 
 main/dll/WC/WCpushblock.c:
 	.text       start:0x801EE0C0 end:0x801EE668

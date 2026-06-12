@@ -1,3 +1,516 @@
+/* === moved from main/dll/DR/DRpushcart.c [801E8EA4-801E8EE0) (TU re-split, docs/boundary_audit.md) === */
+#include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
+#include "main/expgfx.h"
+#include "main/game_object.h"
+#include "main/mapEvent.h"
+#include "main/objanim_internal.h"
+#include "main/dll/DR/DRpushcart.h"
+#include "main/objseq.h"
+#include "main/screen_transition.h"
+
+typedef struct ShopitemState
+{
+    u8 pad0[0x88 - 0x0];
+    s16 unk88;
+    u8 pad8A[0xEC - 0x8A];
+} ShopitemState;
+
+
+typedef struct ShopitemPlacement
+{
+    u8 pad0[0x19 - 0x0];
+    u8 unk19;
+    u8 pad1A[0x20 - 0x1A];
+} ShopitemPlacement;
+
+
+/* shopitem_getExtraSize == 0xec (spline-following pushcart item). */
+typedef struct ShopItemState
+{
+    u8 pad00[4];
+    f32 controlX[4]; /* 0x04: B-spline control ring (address-passed, raw) */
+    f32 controlY[4]; /* 0x14 */
+    f32 controlZ[4]; /* 0x24 */
+    u8 pad34[0xC];
+    f32 splineT; /* 0x40 */
+    f32 splineSpeed; /* 0x44 */
+    u8 pad48[0x20];
+    u8 segCounter; /* 0x68 */
+    u8 pad69[0x1F];
+    s16 msgParam; /* 0x88: ObjMsg payload (address-used, raw) */
+    u8 pad8A[6];
+    int vendorObj; /* 0x90: nearest group-9 shop manager */
+    s16 helpTextId; /* 0x94 */
+    u8 pad96;
+    u8 flags97; /* 0x97: PushcartState97 overlay */
+    u8 pad98[0xEC - 0x98];
+} ShopItemState;
+
+STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
+
+/* shopkeeper_getExtraSize == 0x9d8. */
+typedef struct ShopkeeperState
+{
+    u8 pad000[0x280];
+    f32 animSpeed; /* 0x280 */
+    u8 pad284[0x35C - 0x284];
+    u8 dll2EBlock[0x96D - 0x35C]; /* 0x35c: dll_2E look-controller block (address-used) */
+    u8 unk96D; /* 0x96d */
+    u8 pad96E[0x980 - 0x96E];
+    u8 eyeAnimBlock[0x9B0 - 0x980]; /* 0x980: characterDoEyeAnims block (address-used) */
+    void* msgStack; /* 0x9b0: Stack_Free'd on free */
+    int vendorObj; /* 0x9b4: nearest group-9 shop manager */
+    f32 unk9B8; /* 0x9b8 */
+    u8 pad9BC[8];
+    f32 textTimer; /* 0x9c4: gameTextShow 0x433 countdown */
+    s16 playerMoney; /* 0x9c8 */
+    u8 pad9CA[2];
+    s16 price; /* 0x9cc */
+    s16 unk9CE; /* 0x9ce */
+    s16 priceShown; /* 0x9d0 */
+    u8 unk9D2; /* 0x9d2 */
+    u8 pad9D3;
+    u8 flags9D4; /* 0x9d4: 2 purchased-event, 4 facing, 0x10 leave, 0x20 tick */
+    u8 amount; /* 0x9d5 */
+    u8 opacity; /* 0x9d6: copied to obj alpha */
+    u8 pad9D7;
+} ShopkeeperState;
+
+STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
+STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
+
+
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
+extern undefined4 ObjGroup_FindNearestObject();
+extern undefined8 ObjGroup_RemoveObject();
+extern void gxSetPeControl_ZCompLoc_();
+extern void gxSetZMode_();
+extern void dll_2E_func06();
+extern uint countLeadingZeros();
+
+extern ScreenTransitionInterface** gScreenTransitionInterface;
+extern MapEventInterface** gMapEventInterface;
+extern undefined4* gBoneParticleEffectInterface;
+extern f64 DOUBLE_803e6698;
+extern f64 DOUBLE_803e66f0;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E59D8;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E6670;
+extern f32 lbl_803E6674;
+extern f32 lbl_803E6688;
+extern f32 lbl_803E66B8;
+extern f32 lbl_803E66BC;
+extern f32 lbl_803E66C0;
+extern f32 lbl_803E66C8;
+extern f32 lbl_803E66CC;
+extern f32 lbl_803E66D0;
+extern f32 lbl_803E66D4;
+extern f32 lbl_803E66D8;
+extern f32 lbl_803E66DC;
+extern f32 lbl_803E66E0;
+extern f32 lbl_803E66E4;
+extern f32 lbl_803E66E8;
+extern f32 lbl_803E66F8;
+extern void** gTitleMenuControlInterfaceCopy;
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e76a0
+ * EN v1.0 Address: 0x801E76A0
+ * EN v1.0 Size: 132b
+ * EN v1.1 Address: 0x801E7714
+ * EN v1.1 Size: 128b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+undefined4 FUN_801e76a0(int param_1);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e7be4
+ * EN v1.0 Address: 0x801E7BE4
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801E7C90
+ * EN v1.1 Size: 1452b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e7be8
+ * EN v1.0 Address: 0x801E7BE8
+ * EN v1.0 Size: 340b
+ * EN v1.1 Address: 0x801E823C
+ * EN v1.1 Size: 380b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801E7DC8(int p1, int p2, int count);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e7d3c
+ * EN v1.0 Address: 0x801E7D3C
+ * EN v1.0 Size: 688b
+ * EN v1.1 Address: 0x801E83B8
+ * EN v1.1 Size: 508b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: shopkeeper_render
+ * EN v1.0 Address: 0x801E7FEC
+ * EN v1.0 Size: 40b
+ * EN v1.1 Address: 0x801E85B4
+ * EN v1.1 Size: 40b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern void Stack_Free();
+
+#pragma scheduling off
+#pragma peephole off
+void shopkeeper_free(int obj);
+
+/*
+ * --INFO--
+ *
+ * Function: shopkeeper_render
+ * EN v1.0 Address: 0x801E8014
+ * EN v1.0 Size: 156b
+ * EN v1.1 Address: 0x801E85DC
+ * EN v1.1 Size: 164b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void shopkeeper_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e80b0
+ * EN v1.0 Address: 0x801E80B0
+ * EN v1.0 Size: 452b
+ * EN v1.1 Address: 0x801E8680
+ * EN v1.1 Size: 324b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e8274
+ * EN v1.0 Address: 0x801E8274
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801E87C4
+ * EN v1.1 Size: 344b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e8300
+ * EN v1.0 Address: 0x801E8300
+ * EN v1.0 Size: 532b
+ * EN v1.1 Address: 0x801E89A0
+ * EN v1.1 Size: 688b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e85b0
+ * EN v1.0 Address: 0x801E85B0
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x801E8CE4
+ * EN v1.1 Size: 452b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e85b8
+ * EN v1.0 Address: 0x801E85B8
+ * EN v1.0 Size: 160b
+ * EN v1.1 Address: 0x801E8EA8
+ * EN v1.1 Size: 160b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801E86F4(int obj, int p2, ObjSeqState* seq);
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void shopkeeper_hitDetect(void);
+
+void shopkeeper_release(void);
+
+void shopitem_hitDetect(void);
+
+void shopitem_release(void);
+
+void shopitem_initialise(void);
+
+void spscarab_render(void)
+{
+}
+
+void spscarab_hitDetect(void)
+{
+}
+
+/* 8b "li r3, N; blr" returners. */
+int shopkeeper_getExtraSize(void);
+int shopkeeper_getObjectTypeId(void);
+int shopitem_getExtraSize(void);
+int shopitem_getObjectTypeId(void);
+int spscarab_getExtraSize(void) { return 0x14; }
+int spscarab_getObjectTypeId(void) { return 0x0; }
+
+extern void Sfx_RemoveLoopedObjectSound(int x, int y);
+void spscarab_free(int x) { Sfx_RemoveLoopedObjectSound(x, 0x406); }
+
+extern f32 lbl_803E5A30;
+extern void fn_801E83B0(int obj, int, int, int, int);
+
+void shopitem_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+
+void shopitem_free(int obj);
+
+extern void* lbl_803AD068[8];
+extern void* lbl_803DDC58;
+extern void DRlaserturret_startLinkedTarget(int);
+extern void DRlaserturret_updateTracking(int);
+extern void DRlaserturret_updateIdle(int);
+extern void TREX_Lazerwall_updateTimedChallenge(int);
+extern void TREX_Lazerwall_waitForStartBit(int);
+extern void TREX_Lazerwall_popQueuedState(int);
+extern void fn_801E66EC(int);
+extern void fn_801E66E4(int);
+extern void fn_801E66DC(int);
+
+extern void GXSetBlendMode(int type, int src, int dst, int op);
+extern void gxSetZMode_(u32 a, int b, u32 c);
+extern void gxSetPeControl_ZCompLoc_(u32 a);
+extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
+
+void fn_801E832C(int obj);
+
+void shopkeeper_initialise(void);
+
+extern void hudFn_8011f38c(int);
+extern f32 lbl_803E5A20;
+extern f32 timeDelta;
+extern f32 lbl_803E59DC;
+extern void gameTextShow(int);
+extern u32 ObjGroup_FindNearestObject(int kind, int obj, f32* out);
+extern int playerGetMoney(void* player);
+extern void characterDoEyeAnims(int obj, int p2);
+extern void dll_2E_func03(int, int);
+extern f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode);
+extern int* gPlayerInterface;
+
+typedef struct
+{
+    u8 bit80 : 1;
+    u8 bit40 : 1;
+    u8 bit20 : 1;
+    u8 bit10 : 1;
+    u8 bit08 : 1;
+    u8 bit04 : 1;
+    u8 bit02 : 1;
+    u8 bit01 : 1;
+} BitsAt9D4;
+
+void shopkeeper_update(int obj);
+
+extern f32 lbl_803E59F0;
+extern f32 lbl_803E5A28;
+extern void* allocModelStruct_800139e8(int, int);
+extern void dll_2E_func05(int, int, int, int, int);
+extern int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance);
+extern void ObjModel_SetPostRenderCallback(void*, void*);
+extern void ObjGroup_AddObject(int, int);
+extern void fn_801F4C28(int, int);
+extern EffectInterface** gPartfxInterface;
+
+void shopitem_init(int obj, int data);
+
+void shopkeeper_init(int obj);
+
+typedef struct
+{
+    u8 flag_80 : 1;
+    u8 flag_40 : 1;
+    u8 _rest : 6;
+} PushcartState97;
+
+
+void fn_801E8660(int obj);
+
+extern f32 lbl_803E5A60;
+extern f32 lbl_803E5A64;
+extern f32 lbl_803E5A68;
+extern void ObjMsg_SendToObject(void* to, int msg, int obj, void* data);
+extern void forceAButtonIcon(int icon);
+extern void showHelpText(int textId);
+extern void buttonDisable(int a, int b);
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern void objRenderFn_80041018(int obj);
+extern f32 Curve_EvalBSpline(int p, f32 t, int m);
+
+void shopitem_update(int obj);
+
+extern void DRlaserturret_startTimedChallenge(int);
+extern void DRlaserturret_handlePromptChoice(int);
+extern void setAButtonIcon(int icon);
+extern void setBButtonIcon(int icon);
+extern void warpToMap(int mapId, int flag);
+extern int getCurUiDll(void);
+extern int* getDLL16(void);
+extern void playerAddMoney(void* player, int amount);
+extern void* objFindTexture(int obj, int target, int p3);
+extern int dll_2E_func07(int obj, u8* data, int p3, int p4, int p5);
+
+int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance);
+
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803E5A24;
+
+f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode);
+
+extern f32 lbl_803E5A34;
+extern f32 lbl_803E5A38;
+extern f32 lbl_803E5A3C;
+extern f32 lbl_803E5A40;
+extern f32 lbl_803E5A44;
+extern f32 lbl_803E5A48;
+extern f32 lbl_803E5A4C;
+extern f32 lbl_803E5A50;
+extern void objfx_spawnDirectionalBurst(int obj, int a, f32 radius, int c, int d, int e, f32 scale, int g, int h);
+extern int ObjModel_GetRenderOp(int model, int idx);
+extern void lightningRender(void);
+extern int getHudHiddenFrameCount(void);
+extern void mm_free_(int p);
+extern int lightningCreate(f32* start, void* end, f32 a, f32 b, int c, int d, int e);
+
+typedef struct ShopSparkleSpawn
+{
+    f32 x;
+    f32 y;
+    f32 z;
+    int owner;
+    u8 pad[0x28];
+} ShopSparkleSpawn;
+
+typedef struct PushcartStateE8
+{
+    u8 flag_80 : 1;
+    u8 flag_40 : 1;
+    u8 _rest : 6;
+} PushcartStateE8;
+
+void fn_801E83B0(int obj, int p2, int p3, int p4, int p5);
+
+/* segment pragma-stack balance (re-split): */
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+
 #include "main/dll/DR/DRCloudball.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
@@ -25,11 +538,8 @@ typedef struct SpscarabState
 extern f32 sqrtf(f32 x);
 extern f32 mathCosf(double x);
 extern f32 mathSinf(double x); /* cos-like */
-extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
-extern int Obj_GetActiveModel(int obj);
-extern int Obj_GetPlayerObject(void);
 extern s16 getAngle(f32 dx, f32 dz);
 extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
@@ -67,6 +577,7 @@ extern int spscarab_getExtraSize(void);
  */
 void spscarab_update(int obj)
 {
+    extern int Obj_GetPlayerObject(void); /* #57 */
     int state;
     int placement;
     s16 angle;
@@ -147,6 +658,8 @@ void spscarab_update(int obj)
  */
 void spscarab_init(int obj, int param_2)
 {
+    extern int Obj_GetActiveModel(int obj); /* #57 */
+    extern int randomGetRange(int lo, int hi); /* #57 */
     ObjAnimComponent* objAnim;
     int p_b8;
     int model;
@@ -243,10 +756,7 @@ ObjectDescriptor gSPScarabObjDescriptor = {
  * EN v1.0 Address: 0x801E9328
  * EN v1.0 Size: 8b
  */
-int spdrape_getExtraSize(void)
-{
-    return 0x18;
-}
+int spdrape_getExtraSize(void);
 
 /*
  * --INFO--
@@ -255,10 +765,7 @@ int spdrape_getExtraSize(void)
  * EN v1.0 Address: 0x801E9330
  * EN v1.0 Size: 8b
  */
-int spdrape_getObjectTypeId(void)
-{
-    return 0;
-}
+int spdrape_getObjectTypeId(void);
 
 /*
  * --INFO--
@@ -267,9 +774,7 @@ int spdrape_getObjectTypeId(void)
  * EN v1.0 Address: 0x801E9338
  * EN v1.0 Size: 4b
  */
-void spdrape_free(void)
-{
-}
+void spdrape_free(void);
 
 /*
  * --INFO--
@@ -278,9 +783,7 @@ void spdrape_free(void)
  * EN v1.0 Address: 0x801E933C
  * EN v1.0 Size: 4b
  */
-void spdrape_render(void)
-{
-}
+void spdrape_render(void);
 
 /*
  * --INFO--
@@ -289,6 +792,4 @@ void spdrape_render(void)
  * EN v1.0 Address: 0x801E9340
  * EN v1.0 Size: 4b
  */
-void spdrape_hitDetect(void)
-{
-}
+void spdrape_hitDetect(void);

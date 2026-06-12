@@ -491,24 +491,20 @@ void shopitem_initialise(void)
 {
 }
 
-void spscarab_render(void)
-{
-}
+void spscarab_render(void);
 
-void spscarab_hitDetect(void)
-{
-}
+void spscarab_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 int shopkeeper_getExtraSize(void) { return 0x9d8; }
 int shopkeeper_getObjectTypeId(void) { return 0x0; }
 int shopitem_getExtraSize(void) { return 0xec; }
 int shopitem_getObjectTypeId(void) { return 0x0; }
-int spscarab_getExtraSize(void) { return 0x14; }
-int spscarab_getObjectTypeId(void) { return 0x0; }
+int spscarab_getExtraSize(void);
+int spscarab_getObjectTypeId(void);
 
 extern void Sfx_RemoveLoopedObjectSound(int x, int y);
-void spscarab_free(int x) { Sfx_RemoveLoopedObjectSound(x, 0x406); }
+void spscarab_free(int x);
 
 extern f32 lbl_803E5A30;
 extern void fn_801E83B0(int obj, int, int, int, int);

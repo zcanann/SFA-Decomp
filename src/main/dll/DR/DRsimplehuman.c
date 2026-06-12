@@ -1,3 +1,169 @@
+/* === moved from main/dll/DR/DRCloudball.c [801E9328-801E9344) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/DR/DRCloudball.h"
+#include "main/game_object.h"
+#include "main/objanim_internal.h"
+
+typedef struct SpscarabPlacement
+{
+    u8 pad0[0x19 - 0x0];
+    s8 unk19;
+    u8 pad1A[0x20 - 0x1A];
+} SpscarabPlacement;
+
+
+typedef struct SpscarabState
+{
+    f32 unk0;
+    f32 unk4;
+    s32 unk8;
+    s16 sfxId;
+    s16 mode;
+    s16 unk10;
+    u8 pad12[0x18 - 0x12];
+} SpscarabState;
+
+
+extern f32 sqrtf(f32 x);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
+extern int Obj_GetActiveModel(int obj);
+extern s16 getAngle(f32 dx, f32 dz);
+extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
+extern void Vec3_ReflectAgainstNormal(int normal, int velocity, int out);
+extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
+extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
+
+extern f32 timeDelta;
+extern u16 lbl_803E5A70;
+extern u8 lbl_803E5A72;
+extern f32 lbl_803E5A74;
+extern f32 lbl_803E5A78;
+extern f32 lbl_803E5A7C;
+extern f32 lbl_803E5A80;
+extern f32 lbl_803E5A84;
+extern f32 lbl_803E5A88;
+extern f32 lbl_803E5A8C;
+extern f32 lbl_803E5A90;
+extern f32 lbl_803E5A94;
+extern f64 lbl_803E5A98; /* int->float magic 0x4330000000000000 */
+
+extern void spscarab_hitDetect(void);
+extern void spscarab_render(void);
+extern void spscarab_free(int x);
+extern int spscarab_getObjectTypeId(void);
+extern int spscarab_getExtraSize(void);
+
+/*
+ * --INFO--
+ *
+ * Function: spscarab_update
+ * EN v1.0 Address: 0x801E8EE0
+ * EN v1.0 Size: 588b
+ */
+void spscarab_update(int obj);
+
+/*
+ * --INFO--
+ *
+ * Function: spscarab_init
+ * EN v1.0 Address: 0x801E912C
+ * EN v1.0 Size: 500b
+ */
+void spscarab_init(int obj, int param_2);
+
+/*
+ * --INFO--
+ *
+ * Function: spscarab_release
+ * EN v1.0 Address: 0x801E9320
+ * EN v1.0 Size: 4b
+ */
+void spscarab_release(void);
+
+/*
+ * --INFO--
+ *
+ * Function: spscarab_initialise
+ * EN v1.0 Address: 0x801E9324
+ * EN v1.0 Size: 4b
+ */
+void spscarab_initialise(void);
+
+ObjectDescriptor gSPScarabObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)spscarab_initialise,
+    (ObjectDescriptorCallback)spscarab_release,
+    0,
+    (ObjectDescriptorCallback)spscarab_init,
+    (ObjectDescriptorCallback)spscarab_update,
+    (ObjectDescriptorCallback)spscarab_hitDetect,
+    (ObjectDescriptorCallback)spscarab_render,
+    (ObjectDescriptorCallback)spscarab_free,
+    (ObjectDescriptorCallback)spscarab_getObjectTypeId,
+    spscarab_getExtraSize,
+};
+
+/*
+ * --INFO--
+ *
+ * Function: spdrape_getExtraSize
+ * EN v1.0 Address: 0x801E9328
+ * EN v1.0 Size: 8b
+ */
+int spdrape_getExtraSize(void)
+{
+    return 0x18;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: spdrape_getObjectTypeId
+ * EN v1.0 Address: 0x801E9330
+ * EN v1.0 Size: 8b
+ */
+int spdrape_getObjectTypeId(void)
+{
+    return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: spdrape_free
+ * EN v1.0 Address: 0x801E9338
+ * EN v1.0 Size: 4b
+ */
+void spdrape_free(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: spdrape_render
+ * EN v1.0 Address: 0x801E933C
+ * EN v1.0 Size: 4b
+ */
+void spdrape_render(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: spdrape_hitDetect
+ * EN v1.0 Address: 0x801E9340
+ * EN v1.0 Size: 4b
+ */
+void spdrape_hitDetect(void)
+{
+}
+
 #include "main/objanim_internal.h"
 #include "main/game_object.h"
 #include "main/dll/DR/DRsimplehuman.h"
@@ -30,7 +196,6 @@ typedef struct SpdrapeState
 } SpdrapeState;
 
 
-extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjGroup_AddObject();
 
 extern f64 DOUBLE_803e6730;
@@ -63,8 +228,6 @@ extern f32 lbl_803E6754;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void* Obj_GetPlayerObject(void);
-extern f32 getXZDistance(f32 * a, f32 * b);
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void Camera_GetCurrentViewSlot(void);
@@ -83,6 +246,9 @@ extern f32 lbl_803E5ABC;
 
 void spdrape_update(int obj)
 {
+    extern f32 getXZDistance(f32 * a, f32 * b); /* #57 */
+    extern void* Obj_GetPlayerObject(void); /* #57 */
+    extern u32 randomGetRange(int min, int max); /* #57 */
     f32* state;
     char* player;
 
@@ -305,12 +471,13 @@ extern f32 lbl_803E5AC0;
 extern f32 lbl_803E5AC4;
 extern f32 lbl_803E5AC8;
 extern f32 lbl_803E5ACC;
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern unsigned long randomGetRange(int a, int b);
 
 void spdrape_init(int* obj, u8* def)
 {
+    extern f32 mathCosf(f32 x); /* #57 */
+    extern f32 mathSinf(f32 x); /* #57 */
+    extern void* Obj_GetPlayerObject(void); /* #57 */
+    extern unsigned long randomGetRange(int a, int b); /* #57 */
     f32* state;
     int* player;
     state = ((GameObject*)obj)->extra;
