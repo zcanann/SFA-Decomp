@@ -104,12 +104,7 @@ void cfforcefield_update(u8* obj)
     int style;
     f32 val;
     int isZero;
-    f32 kA4;
-    f32 kA8;
-    f32 kAC;
-    f32 kA0;
     f32 strength;
-    f32 kZero;
     f32 z;
     f32 mtx[3][4];
     f32 world[6];
@@ -148,22 +143,17 @@ void cfforcefield_update(u8* obj)
                 emitter = (ForceFieldEmitter*)((u8*)lbl_80322ED8 + style * 0x18);
                 wavePtr = &emitter->waveScale;
                 stepPtr = &emitter->angleStep;
-                kA4 = lbl_803E43A4;
-                kA8 = lbl_803E43A8;
-                kAC = lbl_803E43AC;
-                kA0 = lbl_803E43A0;
-                kZero = lbl_803E4390;
                 for (; angle < 0x7fff; angle += *stepPtr)
                 {
                     local[0] = (f32)(int)
                     randomGetRange(-lbl_803DBE94, lbl_803DBE94) +
-                        kA0 * (strength * lbl_803DBE90) *
-                        mathCosf(kA4 * (f32)(angle + (s32)(kA8 * *wavePtr)) / kAC);
+                        10.0f * (strength * lbl_803DBE90) *
+                        mathCosf(3.1415927f * (f32)(angle + (s32)(100.0f * *wavePtr)) / 32768.0f);
                     local[1] = (f32)(int)
                     randomGetRange(-lbl_803DBE94, lbl_803DBE94) +
-                        kA0 * (strength * lbl_803DBE90) *
-                        mathSinf(kA4 * (f32)(angle + (s32)(kA8 * *wavePtr)) / kAC);
-                    local[2] = kZero;
+                        10.0f * (strength * lbl_803DBE90) *
+                        mathSinf(3.1415927f * (f32)(angle + (s32)(100.0f * *wavePtr)) / 32768.0f);
+                    local[2] = 0.0f;
                     PSMTXMultVecSR((f32*)mtx, local, local);
                     world[3] = local[0] + ((GameObject*)obj)->anim.localPosX;
                     world[4] = local[1] + ((GameObject*)obj)->anim.localPosY;
