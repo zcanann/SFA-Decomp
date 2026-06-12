@@ -111,6 +111,7 @@ int LandedArwing_ReturnZero(void) { return 0x0; }
  */
 void tumbleweed_updateStateMachine(int obj)
 {
+    extern void Sfx_PlayFromObject(int obj, int sfxId);
     int aux;
     int sphereIndex;
     u32 hitVolume;
