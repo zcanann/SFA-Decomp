@@ -680,3 +680,40 @@ stem is the slot fn prefix (manifest stem-derivation rule). 4 found.
 | `main/dll/baddie/dll_0000_baby_snowworm.c` | 0x000 | `gameui`×11 | `babysnowworm` | `dll_0000_gameui.c` |
 | `main/dll/baddie/dll_003C_TumbleweedBush.c` | 0x03C | `link`×13 | `tumbleweedbush` | `dll_003C_link.c` |
 
+
+## Decl-trim pass (runs AFTER content-homing completes)
+
+The skeleton-copy carve method (CLAUDE.md "Graduating a placeholder")
+leaves every carved/homed file carrying its donor's full decl forest —
+hundreds of unreached extern prototypes, FUN_ phantom decls, typedefs,
+and #defines that the carved-OUT functions referenced but the retained
+ones never touch. **This is intentional during homing** (the over-broad
+decl set keeps every intermediate carve compiling byte-exact); the trim
+is the deferred cleanup, not part of the homing edit itself.
+
+Run `tools/decl_trim.py` as a SEPARATE pass once the content-homing
+workflow has finished moving functions between units (the workflow owns
+src//include//config/ while it is active; the trim must not race it):
+
+```
+python3 tools/decl_trim.py --audit src/main/dll --out /tmp/trim.json   # read-only
+python3 tools/decl_trim.py --apply src/main/dll                        # per-file .o-gated
+python3 tools/decl_trim.py --apply src/main/dll --check-all            # + project md5 sweep
+```
+
+It computes a transitive-closure reachability set from the retained
+function bodies / table initializers / STATIC_ASSERTs / #pragmas, drops
+every unreached extern/proto/typedef/aggregate/#define block, then gates
+each file on a rebuilt `.o` byte-compare and auto-reverts any file whose
+bytes change (the closure is a conservative candidate selector; the byte
+gate is the truth). It honors the documented failure modes (multi-line
+`#define \` spans, multi-bracket array externs, pragma push/pop pairs,
+recipe-#57 block-scope externs inside fn bodies, SJIS byte-wise IO with a
+sjiswrap-warning abort, comment-attached decls, own-header keep).
+
+Projected tree-wide savings (read-only `--audit src/`, June 2026):
+**~24.9K lines / ~17.6K decl blocks across 307 files**, 0 parse errors —
+dominated by `extern` (~14.0K) and forward-`proto` (~2.5K) blocks. The
+38K→18K-line / byte-identical-.o result of the original /tmp-era script
+(7 files, alpha-35 task #134) is the precedent; this is that script made
+a permanent, gated tool.
