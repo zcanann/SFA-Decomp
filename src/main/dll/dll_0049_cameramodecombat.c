@@ -167,7 +167,6 @@ extern int objAnimFn_80296328(int obj);
 extern undefined4 cameraGetPrevPos2();
 
 extern s32 lbl_803DD56C;
-extern CameraModeShipBattleState* lbl_803DD570;
 extern f64 lbl_803E1918;
 extern f32 lbl_803E18CC;
 extern f32 lbl_803E18D0;
@@ -193,21 +192,6 @@ extern f32 lbl_803E1928;
 extern f32 lbl_803E192C;
 extern f32 lbl_803E1930;
 extern f32 lbl_803E1940;
-extern f32 lbl_803E1948;
-extern f32 lbl_803E194C;
-extern f32 lbl_803E1950;
-extern f32 lbl_803E1954;
-extern f32 lbl_803E1958;
-extern f32 lbl_803E195C;
-extern f32 lbl_803E1960;
-extern f32 lbl_803E1964;
-extern f32 lbl_803E1968;
-extern f32 lbl_803E196C;
-extern f32 lbl_803E1970;
-extern f32 lbl_803E1974;
-extern f32 lbl_803E1978;
-extern f32 lbl_803E197C;
-extern f32 lbl_803E1980;
 
 /*
  * --INFO--
@@ -684,7 +668,6 @@ void CameraModeShipBattle_update(short* cam);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeShipBattle_init(void);
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -698,13 +681,8 @@ void CameraModeCombat_initialise(void)
 
 void CameraModeShipBattle_copyToCurrent_nop(void);
 
-void CameraModeShipBattle_release(void);
 
-void CameraModeShipBattle_initialise(void);
 
-void CameraModeClimb_copyToCurrent_nop(void);
 
 /* fn_X(lbl); lbl = 0; */
-void CameraModeShipBattle_free(void);
 
-void CameraModeClimb_free(void);

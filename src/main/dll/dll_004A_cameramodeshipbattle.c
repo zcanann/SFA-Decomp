@@ -37,14 +37,8 @@
 /* Trivial 4b 0-arg blr leaves. */
 
 
-void CameraModeCombat_copyToCurrent_nop(void);
 
-extern CameraModeCombatState* lbl_803DD568;
-extern f32 lbl_803E18C0;
-extern f32 lbl_803E18C4;
-extern f32 lbl_803E18C8;
 extern f32 timeDelta;
-extern void Rcp_DisableBlurFilter(void);
 
 /*
  * --INFO--
@@ -53,15 +47,7 @@ extern void Rcp_DisableBlurFilter(void);
  * EN v1.0 Address: 0x8010BF08
  * EN v1.0 Size: 348b
  */
-typedef struct
-{
-    u8 pad[0xc];
-    f32 x;
-    f32 y;
-    f32 z;
-} CamPathEntry;
 
-void fn_8010BF08(int control, float* outX, float* outY, float* outZ, void* inFloatPtr);
 
 /*
  * --INFO--
@@ -70,12 +56,7 @@ void fn_8010BF08(int control, float* outX, float* outY, float* outZ, void* inFlo
  * EN v1.0 Address: 0x8010C068
  * EN v1.0 Size: 112b
  */
-typedef struct
-{
-    u8 flag80 : 1;
-} CamByte143;
 
-void CameraModeCombat_free(int obj);
 
 #include "main/dll/CAM/camdrakor.h"
 #include "main/camera_interface.h"
@@ -89,44 +70,8 @@ void CameraModeCombat_free(int obj);
 #include "main/pad.h"
 
 
-extern void* FUN_800069a8();
-extern void camcontrol_traceMove(f32 radius, f32* from, void* to, f32* out, void* work, int a,
-                                 int b, int c);
-extern undefined4 Camera_GetCurrentViewSlot();
-extern f32 sqrtf(f32 x);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern uint fn_8029630C(int obj);
-extern int objAnimFn_80296328(int obj);
-extern undefined4 cameraGetPrevPos2();
 
-extern s32 lbl_803DD56C;
 extern CameraModeShipBattleState* lbl_803DD570;
-extern f64 lbl_803E1918;
-extern f32 lbl_803E18CC;
-extern f32 lbl_803E18D0;
-extern f32 lbl_803E18D4;
-extern f32 lbl_803E18D8;
-extern f32 lbl_803E18DC;
-extern f32 lbl_803E18E0;
-extern f32 lbl_803E18E4;
-extern f32 lbl_803E18E8;
-extern f32 lbl_803E18EC;
-extern f32 lbl_803E18F0;
-extern f32 lbl_803E18F4;
-extern f32 lbl_803E18F8;
-extern f32 lbl_803E18FC;
-extern f32 lbl_803E1900;
-extern f32 lbl_803E1904;
-extern f32 lbl_803E1908;
-extern f32 lbl_803E190C;
-extern f32 lbl_803E1910;
-extern f32 lbl_803E1920;
-extern f32 lbl_803E1924;
-extern f32 lbl_803E1928;
-extern f32 lbl_803E192C;
-extern f32 lbl_803E1930;
-extern f32 lbl_803E1940;
 extern f32 lbl_803E1948;
 extern f32 lbl_803E194C;
 extern f32 lbl_803E1950;
@@ -156,33 +101,9 @@ extern f32 lbl_803E1980;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct
-{
-    f32 pad0;
-    f32 pad4;
-    f32 pad8;
-    f32 x;
-    f32 y;
-    f32 z;
-} CombatPathPoint;
 
-typedef struct
-{
-    u8 b80 : 1;
-    u8 rest : 7;
-} CombatCamFlags;
 
-extern int getAngle(f32 dx, f32 dz);
-extern f32 interpolate(f32 cur, f32 target, f32 t);
-extern f32 powfBitEstimate(f32 a, f32 b);
-extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
-extern f32 PSVECMag(f32 * v);
-extern void PSVECNormalize(f32 * v, f32 * out);
-extern void PSVECScale(f32* v, f32* out, f32 s);
-extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
-extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
 
-void CameraModeCombat_update(short* cam);
 
 /*
  * --INFO--
@@ -197,7 +118,6 @@ void CameraModeCombat_update(short* cam);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeCombat_init(int camObj, undefined4 arg2, undefined4* args);
 
 
 /*
@@ -361,7 +281,6 @@ void CameraModeShipBattle_init(void)
 /* Trivial 4b 0-arg blr leaves. */
 void CameraModeCombat_release(void);
 
-void CameraModeCombat_initialise(void);
 
 void CameraModeShipBattle_copyToCurrent_nop(void)
 {
