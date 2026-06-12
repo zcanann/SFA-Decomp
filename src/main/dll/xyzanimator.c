@@ -89,25 +89,6 @@ extern f32 lbl_803E319C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void kaldachompspit_render(undefined4 param_1, undefined4 param_2, undefined4 param_3,
-                           undefined4 param_4, undefined4 param_5, char visible)
-{
-    int iVar1;
-    int state;
-
-    iVar1 = FUN_8028683c();
-    state = **(int**)(iVar1 + 0xb8);
-    if (((state != 0) && (*(char*)(state + 0x2f8) != '\0')) && (((XyzAnimatorState*)state)->gameBitValue != '\0'))
-    {
-        FUN_8005fe14(state);
-    }
-    if (visible != '\0')
-    {
-        FUN_8003b818(iVar1);
-    }
-    FUN_80286888();
-    return;
-}
 
 
 /*
