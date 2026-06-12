@@ -1,6 +1,6 @@
 /*
  * cfguardian (DLL 0x148) - the CloudRunner Fortress guardian. The big
- * waterSpellStone1Fn drives the quest state machine (chatter, curve
+ * cfguardian_updateMain drives the quest state machine (chatter, curve
  * flight between rom-curve points, the six fire spirits and the water
  * spell stone hand-off); helpers steer along rom curves (fn_8019B1D8)
  * and play per-event sfx (fn_8019AE3C). Carved from the front of the
@@ -87,7 +87,7 @@ extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
 extern f32 timeDelta;
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
 extern u8 framesThisStep;
-extern int waterSpellStone1Fn_8019b4c8();
+extern int cfguardian_updateMain();
 extern f32 lbl_803E4130;
 extern void dll_2E_func06(int* a, int* b, int c);
 extern f32 sqrtf(f32 x);
@@ -344,7 +344,7 @@ int cfguardian_getExtraSize(void) { return 0xa9c; }
 
 int cfguardian_getObjectTypeId(void) { return 0x41; }
 
-void cfguardian_update(void) { waterSpellStone1Fn_8019b4c8(); }
+void cfguardian_update(void) { cfguardian_updateMain(); }
 
 void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -469,7 +469,7 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
 }
 #pragma dont_inline reset
 
-/* waterSpellStone1Fn_8019b4c8: the guardian brain - sixteen-state
+/* cfguardian_updateMain: the guardian brain - sixteen-state
  * quest progression with path flights, landing physics, sequenced
  * triggers and idle chatter.
  *
@@ -484,7 +484,7 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
    identical, product-locals/k-respellings/FP-local promotions inert),
    the |w| site's beq vs target bne;b (front-end fold, see #63 fold
    caveat), and content-matched jumptable/bias relocs. */
-int waterSpellStone1Fn_8019b4c8(int obj)
+int cfguardian_updateMain(int obj)
 {
     extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int p); /* #57 */
     extern void fn_8019AE3C(int* obj, void* evbuf, void* p); /* #57 */

@@ -823,7 +823,7 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     #16. (dc221d25d task #121.)
     **BURST RULE — #36 scales to WHOLE-QUAD rotations, but only when ALL the
     no-op casts drop AT ONCE (the #74 burst lesson applied to casts).**
-    cfguardian waterSpellStone1Fn had been BANKED as a "fn-text-bound #108
+    cfguardian cfguardian_updateMain (nee waterSpellStone1Fn) had been BANKED as a "fn-text-bound #108
     rotation" ("#36 cast drops tried — inert") with all four saved webs
     exactly reversed (T obj=r28/def=r29/player=r30/sub=r31, ours the mirror).
     The real cause: 19 Ghidra-noise `(int)obj` casts on an ALREADY-`int`
@@ -2395,7 +2395,7 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       that rotation is SYSTEMATIC and in-principle source-reachable
       (unlike the render anomaly). ⚠️ RESOLVED — the census read was
       right: the obj-pusher construct was the import's 19 no-op
-      `(int)obj` casts at call args (#36 burst rule; waterSpellStone1Fn
+      `(int)obj` casts at call args (#36 burst rule; cfguardian_updateMain
       94.50→99.31). When OUR compile is the census deviant, hunt for an
       import-only IR construct (cast noise) before any allocator theory.
       The same census also explains why the in-repo oracle (lightning)
@@ -4780,7 +4780,7 @@ getter target CSEs) are a sub-shape — drop/hoist. NOT-a-clean-fix: when CUR
 has a SET of unrelated extra calls with no same-TU helper, the import
 mis-structured the logic (reconstruction, treat separately). Confirmed wins
 (task #20/#21, miner-3): drakorhoverpad_updateMain +16.7, Sky_func03 +15,
-ObjSeq_update, waterSpellStone1Fn, + 4 behavioral bugs (staffAction,
+ObjSeq_update, cfguardian_updateMain, + 4 behavioral bugs (staffAction,
 titleDoLoadSave, CameraModeViewfinder_free's all-6-calls-wrong, barrelgener).
 The MSL math cluster (savefpr/restfpr-only diffs → #99 optimize_for_size) is a
 parked delicate -O0 batch. `tools/unrolled_loop_audit.py` is the sibling #28
