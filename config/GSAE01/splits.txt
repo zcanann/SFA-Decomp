@@ -792,8 +792,11 @@ main/dll/mmp_asteroid_re.c:
 main/dll/holoPoint.c:
 	.text       start:0x80191F2C end:0x80191F2C
 
-main/dll/texscroll_container.c:
-	.text       start:0x80191F2C end:0x80192394
+main/dll/dll_0134_texscroll2.c:
+	.text       start:0x80191F2C end:0x801922E4
+
+main/dll/dll_0135_texscroll.c:
+	.text       start:0x801922E4 end:0x80192394
 
 main/dll/mmp_barrel.c:
 	.text       start:0x80192394 end:0x80194408
