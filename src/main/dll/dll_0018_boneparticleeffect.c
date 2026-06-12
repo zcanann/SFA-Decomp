@@ -1645,9 +1645,6 @@ extern void mm_free(void* p);
 extern void textureFree(void* resource);
 
 
-#pragma dont_inline on
-#pragma dont_inline reset
-
 #pragma scheduling off
 #pragma peephole off
 void boneParticleEffect_release(void)
@@ -1966,11 +1963,8 @@ void boneParticleEffect_initialise(void)
 extern f32 lbl_803DF438;
 
 
-
-
 extern f32 lbl_803DF878;
 extern f32 lbl_803DFCE0;
-
 
 
 /*
@@ -2093,7 +2087,6 @@ extern FxNode9 lbl_8039C320;
 
 /* ===== (3) function ===== */
 #undef FILL320
-
 
 
 extern void* Obj_GetActiveModel(void);

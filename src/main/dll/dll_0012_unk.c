@@ -1695,8 +1695,6 @@ int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
 /* RomCurve_stepClamped: keep the curve phase just inside the endpoints, then advance it. */
 
 
-
-
 /* UIController dispatch through the shared GameUI interface. */
 
 
@@ -1778,21 +1776,6 @@ static inline RomCurveDef* RomCurve_FindByIdInline(u32 curveId);
  * PAL Size: TODO
  */
 
-/*
- * --INFO--
- *
- * Function: RomCurve_func11
- * EN v1.0 Address: 0x800E2590
- * EN v1.0 Size: 1528b
- * EN v1.1 Address: 0x800E2B94
- * EN v1.1 Size: 1612b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma fp_contract off
-#pragma fp_contract reset
 
 /*
  * --INFO--
@@ -2080,37 +2063,6 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve);
  * PAL Size: TODO
  */
 
-/*
- * --INFO--
- *
- * Function: fn_800E5CBC
- * EN v1.0 Address: 0x800E4C64
- * EN v1.0 Size: 336b
- * EN v1.1 Address: 0x800E5F40
- * EN v1.1 Size: 380b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma dont_inline on
-#pragma dont_inline reset
-
-/*
- * --INFO--
- *
- * Function: fn_800E5E38
- * EN v1.0 Address: 0x800E5E38
- * EN v1.0 Size: 228b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma dont_inline on
-#pragma dont_inline reset
 
 /*
  * --INFO--

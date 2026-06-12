@@ -1103,8 +1103,6 @@ void Effect19_func03_nop(void);
  */
 extern f32 sqrtf(f32 x);
 
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
 
 /*
  * --INFO--
@@ -1139,43 +1137,4 @@ extern f32 sqrtf(f32 x);
 /* fcmp-eq-to-bool. */
 
 /* multi-store leaf (single float broadcast). */
-
-/* Checkpoint table initialiser. */
-
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-
-/* Checkpoint_Add: sorted insertion of (entry->_14 as key, entry as pointer) into lbl_8039C458 table. */
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-
-
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
 

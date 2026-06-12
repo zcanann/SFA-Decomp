@@ -887,22 +887,6 @@ void Effect18_func03_nop(void);
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 
-/*
- * --INFO--
- *
- * Function: Checkpoint_func07
- * EN v1.0 Address: 0x800D6660
- * EN v1.0 Size: 132b
- * EN v1.1 Address: 0x800D6844
- * EN v1.1 Size: 168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
 
 /*
  * --INFO--
@@ -937,43 +921,4 @@ void Effect18_func03_nop(void);
 /* fcmp-eq-to-bool. */
 
 /* multi-store leaf (single float broadcast). */
-
-/* Checkpoint table initialiser. */
-
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-
-/* Checkpoint_Add: sorted insertion of (entry->_14 as key, entry as pointer) into lbl_8039C458 table. */
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-
-
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
 
