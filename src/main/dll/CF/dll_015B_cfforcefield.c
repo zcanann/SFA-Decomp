@@ -154,14 +154,12 @@ void cfforcefield_update(u8* obj)
                 stepPtr = &emitter->angleStep;
                 for (; angle < 0x7fff; angle += *stepPtr)
                 {
-                    local[0] = (f32)(int)
-                    randomGetRange(-lbl_803DBE94, lbl_803DBE94) +
-                        10.0f * (strength * lbl_803DBE90) *
-                        mathCosf(3.1415927f * (f32)(angle + (s32)(100.0f * *wavePtr)) / 32768.0f);
-                    local[1] = (f32)(int)
-                    randomGetRange(-lbl_803DBE94, lbl_803DBE94) +
-                        10.0f * (strength * lbl_803DBE90) *
-                        mathSinf(3.1415927f * (f32)(angle + (s32)(100.0f * *wavePtr)) / 32768.0f);
+                    local[0] = (f32)(int)randomGetRange(-lbl_803DBE94, lbl_803DBE94)
+                             + 10.0f * (strength * lbl_803DBE90)
+                                   * mathCosf(3.1415927f * (f32)(angle + (s32)(100.0f * *wavePtr)) / 32768.0f);
+                    local[1] = (f32)(int)randomGetRange(-lbl_803DBE94, lbl_803DBE94)
+                             + 10.0f * (strength * lbl_803DBE90)
+                                   * mathSinf(3.1415927f * (f32)(angle + (s32)(100.0f * *wavePtr)) / 32768.0f);
                     local[2] = 0.0f;
                     PSMTXMultVecSR((f32*)mtx, local, local);
                     /* burst target = ring point in world space; the burst

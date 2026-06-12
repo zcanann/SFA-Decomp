@@ -209,8 +209,7 @@ void cfprisonguard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         f32 t = sub->alarmRamp;
         if (t > lbl_803E4260)
         {
-            sub->alarmRamp = lbl_803E4264 * (f32)(u32)
-            framesThisStep + t;
+            sub->alarmRamp = lbl_803E4264 * (f32)(u32)framesThisStep + t;
             if (sub->alarmRamp < lbl_803E4284)
             {
                 objParticleFn_80099d84((int)obj, lbl_803E4280, 3, 0);
