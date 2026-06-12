@@ -315,7 +315,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 fn_80156B0C(obj, state);
                 break;
             case 0x851:
-                mediumbasket_enterWhirlpoolGroup((int*)obj, (GroundBaddieState*)state);
+                mediumbasket_enterWhirlpoolGroup((int)obj, (GroundBaddieState*)state);
                 break;
             case 0x842:
             case 0x84b:
@@ -392,7 +392,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 fn_80156B0C(obj, state);
                 break;
             case 0x851:
-                mediumbasket_enterWhirlpoolGroup((int*)obj, (GroundBaddieState*)state);
+                mediumbasket_enterWhirlpoolGroup((int)obj, (GroundBaddieState*)state);
                 break;
             case 0x842:
             case 0x84b:
@@ -502,7 +502,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
             fn_80156C34(obj, state);
             break;
         case 0x851:
-            mediumbasket_leaveWhirlpoolGroup((int*)obj, (GroundBaddieState*)state);
+            mediumbasket_leaveWhirlpoolGroup((int)obj, (GroundBaddieState*)state);
             break;
         case 0x842:
         case 0x84b:

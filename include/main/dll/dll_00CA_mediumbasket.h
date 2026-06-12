@@ -14,8 +14,8 @@ void FUN_8015b218(int param_1,int param_2);
 void FUN_8015b2cc(void);
 void FUN_8015b2d0(short *param_1,int param_2);
 void FUN_8015b34c(short *param_1,int param_2);
-void mediumbasket_enterWhirlpoolGroup(int *obj, GroundBaddieState *state);
-void mediumbasket_leaveWhirlpoolGroup(int *obj, GroundBaddieState *state);
+void mediumbasket_enterWhirlpoolGroup(int obj, GroundBaddieState *state);
+void mediumbasket_leaveWhirlpoolGroup(int obj, GroundBaddieState *state);
 void FUN_8015b3d4(int param_1,int param_2);
 undefined4 FUN_8015b47c(int param_1,int param_2);
 undefined4

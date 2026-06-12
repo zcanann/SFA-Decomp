@@ -9,7 +9,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
-#include "main/objhits_types.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 
 typedef struct MediumbasketUpdateDropStateState
@@ -50,10 +50,6 @@ extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_800305f8();
-extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjMsg_SendToObjects();
@@ -2175,7 +2171,7 @@ int mediumbasket_stateHandlerB01(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-void mediumbasket_leaveWhirlpoolGroup(int* obj, GroundBaddieState* state)
+void mediumbasket_leaveWhirlpoolGroup(int obj, GroundBaddieState* state)
 {
     if (state->baddie.inWhirlpoolGroup != 0)
     {
@@ -2185,7 +2181,7 @@ void mediumbasket_leaveWhirlpoolGroup(int* obj, GroundBaddieState* state)
     *(u16*)obj = (float)(int)*(s16*)obj - lbl_803E2CD8 * timeDelta;
 }
 
-void mediumbasket_enterWhirlpoolGroup(int* obj, GroundBaddieState* state)
+void mediumbasket_enterWhirlpoolGroup(int obj, GroundBaddieState* state)
 {
     if (state->baddie.inWhirlpoolGroup == 0)
     {
@@ -2201,7 +2197,6 @@ void mediumbasket_tryAcquireTarget(int obj, int p2, int p3)
 {
     extern int* gBaddieControlInterface;
     extern int* gPlayerInterface;
-    extern void ObjHits_DisableObject(int);
     extern f32 timeDelta;
     extern f32 lbl_803E2D00;
     extern f32 lbl_803E2D24;
