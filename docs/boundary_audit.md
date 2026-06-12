@@ -159,6 +159,83 @@ Deferred (documented, descriptor-pinned but out of this campaign's scope):
   units cutting 0x0B2..0x0C2) and the CAM lane (0x42..0x4D) need
   campaign-scale merges, not single boundary moves.
 
+## Mechanized surgery campaign (tools/dll_boundary_resplit.py)
+
+The boundary surgery is now mechanized: `tools/dll_boundary_resplit.py`
+consumes the TU model from `dll_boundary_audit.py` (imported as a library),
+snaps every cutting boundary onto a TU edge (ts/te, min total move,
+region-level monotonic brute force), derives skeleton-projection source ops
+(ABSORB whole-unit merges, MOVE partial-fn nudges, CARVE single-donor
+splits, address-ordered assembly, pragma-stack-balanced segments, recipe-#57
+compile-error-driven decl repair, helper-last auto-retry for inline
+regressions), edits splits.txt/configure.py assert-counted, and gates each
+case on: full ninja green, main.dol md5 byte-identical, EXACT per-symbol
+conservation (fuzzy+size by virtual address, summed matched_code) before
+auto-committing. Failures revert completely and are flagged.
+
+Usage: `--plan` to classify the live backlog; `--run [--case ID|--class X]`
+to execute; `--carve UNIT` to dissolve a clean multi-DLL container into
+per-descriptor units.
+
+Campaign results (38 commits, all conservation-EXACT, dol byte-identical;
+global check: 9501 fns and matched_code 1129296 identical before/after):
+cut count **125 -> 66**.
+
+- The whole modgfx/proj micro-field (0x0B2..0x0C2, 13 TUs x 3 micro-units
+  each) merged into canonical `dll_00XX_<name>.c` units.
+- The CAM lane 0x042/0x043/0x045 carve (pathcam/attention/camslide/
+  firstperson/camstatic merged + carved at TU edges).
+- DR lane fully canonical: dll_0148..dll_0159 (sandwormBoss.c dissolved
+  into dll_014A..dll_0157 per-descriptor units).
+- ARWarwingattachment.c dissolved into dll_01FD..dll_0204 + two edge
+  fragments (dll_801F0B50.c, dll_801F33B4.c); the follow-up r801EE668 pass
+  then re-bounded the WClevcontrol..dll_801F0B50 chain, fixing the
+  0x1F8/0x1F9/0x1FC cuts (the carve unblocked it).
+- One-DLL-shift chains fixed across SH/SC/DIM/DF/CF/MMP/FRONT-adjacent
+  lanes (see `git log --grep 're-split: TU-align'` for per-case forensics).
+- proximitymine quartet, dll_36/48/49/4A, door/fruit/zBomb (helper-last
+  inline suppression; zBomb kept as survivor for its .data descriptor
+  claim) merged.
+
+### Flagged cases (mechanically unrecoverable - manual follow-up)
+
+Every case below was attempted and auto-reverted; the tree is untouched.
+The dominant blocker classes are REAL import drift, not tool gaps: the two
+sides of a drift boundary disagree about a shared symbol's type, so no
+merge can compile both forms at file scope (MWCC errors even on IDENTICAL
+typedef/struct-tag redefinitions, and its tolerance for incompatible
+block-scope redecls is type-pair-dependent: fn pointer-return pairs OK,
+void-vs-int returns and all object decls rejected).
+
+| case | DLLs | blocker |
+|---|---|---|
+| r8008EE18 | 0x009 | gamecube.c (MSL/SDK lane) hosts the dll's stubs - SDK-side splits change needed (pre-existing class d) |
+| r800C8008 | 0x003,0x00F,0x014 | objfsa.c in-file `typedef RomCurveSegmentProjection` vs curves.h header (tag redef); partfx chain otherwise mechanizable |
+| r8010847C | 0x019,0x02E,0x047-0x04D | conflicting `typedef Dll19State` moveLib.c vs camDebug donor |
+| r801159E4 | 0x033,0x034 | n_filemenu.c: moved fns reference `gTitleMenuLinkInterface` whose decl environment doesn't transplant |
+| r8011CD54 | 0x000,0x03C | conflicting `typedef LinkMenuItem` (baddie/dll_DA.c) |
+| r8014E1DC | 0x0CA,0x0E1 | mediumbasket.c decl conflicts after scarab head move |
+| r80161F0C | 0x0CF,0x0D2,0x0D3 | DUPLICATE fn definition `cannonclaw_release` in ladders.c and barrel.c (drift double-decomp) |
+| r80169360 | 0x0D7,0x0DB,0x0ED,0x0EF,0x0FF | `kaldachompspit_render` def vs header decl signature disagreement |
+| r8017AC2C | 0x0FB,0x0FC,0x0FD,0x111,0x115,0x117 | `doorlock_free` def vs header decl (cfguardian.c) |
+| r80191F2C | 0x136,0x13B,0x13C,0x141 | `waveanimator_modelMtxFn` def vs header proto (mmp_barrel) |
+| r801993B0 | 0x148 | hightop.c tail move into dll_0148_cfguardian.c: decl conflicts (the 0x8019B1D8 cut stays) |
+| r801A2BDC | 0x15B | `cfforcefield_render` def vs IMicicle-side header decl |
+| r801AC248 | 0x16D,0x1C0,0x1C1,0x1C2 | `imicepillar_render` def vs DIMcannon-side header decl |
+| r801C5990 | 0x18F,0x190,0x192 | conflicting `typedef EcshShrineState` (shrine1C2.c) |
+| r801CD7DC | 0x19F,0x1A1,0x1A2 | worldobj.c `gGameUIInterface` typed-interface extern conflicts |
+| r801D4CD0 | 0x1AD,0x1AE,0x1B0,0x1B1,0x1B4,0x1B7 | `sc_musictree_update` def (DRcloudrunner.c) vs CRsnowbike-side decl; SH/SC chain otherwise mechanizable |
+| r801E76A0 | 0x255,0x287,0x288 | conflicting `typedef SnowBikeFlags` (BWalphaanim.c) |
+| r801CFD68(2) | 0x1A7,0x1A8,0x1A9,0x1AA | conflicting `typedef EdiblemushroomState` (NWmammoth.c); NW/SH mushroom chain otherwise mechanizable |
+| r801F33B4 | 0x206,0x207 | `LightSourceState` tag redefined via LGTpointlight header vs dll_801F33B4.c in-file typedef |
+| r801FB9AC | 0x21E,0x224,0x22F,0x230,0x23F | light.c/main.c VFP engine-file extraction (mission class d) + `ObjHits_SyncObjectPositionIfDirty` header conflict |
+
+The fix pattern for the def-vs-header rows: reconcile the symbol's REAL
+signature first (recipe #84 cross-caller arbitration), land that as its own
+conservation-gated commit, then re-run the case - the tool will pick it up
+from the live audit. The conflicting-typedef rows want the struct moved to
+a shared header (or the two copies textually unified) first.
+
 ## Complete cut table (132 descriptors, pre-surgery)
 
 | dll | descriptor | fn range | TU (proposed) | cutting boundary(ies) | reach | names |
