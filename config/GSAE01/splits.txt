@@ -339,38 +339,23 @@ main/dll/CAM/camcontrol.c:
 main/dll/CAM/cutCam.c:
 	.text       start:0x80103524 end:0x801046F4
 
-main/dll/CAM/attention.c:
-	.text       start:0x801046F4 end:0x801049B0
-
-main/dll/CAM/camslide.c:
-	.text       start:0x801049B0 end:0x8010509C
-
-main/dll/CAM/firstperson.c:
-	.text       start:0x8010509C end:0x80105810
+main/dll/CAM/dll_0042_unk.c:
+	.text       start:0x801046F4 end:0x80106654
 
 main/dll/CAM/dll_53.c:
-	.text       start:0x80105810 end:0x80105810
-
-main/dll/CAM/camstatic.c:
-	.text       start:0x80105810 end:0x80105E7C
+	.text       start:0x80106654 end:0x80106654
 
 main/dll/CAM/pathcam.c:
-	.text       start:0x80105E7C end:0x8010684C
+	.text       start:0x80106654 end:0x8010684C
 
 main/dll/CAM/camlockon.c:
 	.text       start:0x8010684C end:0x80106F78
 
-main/dll/CAM/camshipbattle.c:
-	.text       start:0x80106F78 end:0x801070FC
-
-main/dll/CAM/camclimb.c:
-	.text       start:0x801070FC end:0x8010747C
-
-main/dll/CAM/dll_59.c:
-	.text       start:0x8010747C end:0x80107B4C
+main/dll/CAM/dll_0043_unk.c:
+	.text       start:0x80106F78 end:0x80107AEC
 
 main/dll/CAM/camTalk.c:
-	.text       start:0x80107B4C end:0x8010847C
+	.text       start:0x80107AEC end:0x8010847C
 
 main/dll/CAM/dll_5B.c:
 	.text       start:0x8010847C end:0x8010A590

@@ -1,3 +1,86 @@
+/* === moved from main/dll/CAM/dll_59.c [80107AEC-80107B4C) (TU re-split, docs/boundary_audit.md) === */
+#include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
+#include "main/camera_interface.h"
+#include "main/game_object.h"
+#include "main/dll/CAM/cambike_state.h"
+#include "main/dll/CAM/camcontrol_path_state.h"
+#include "main/dll/CAM/dll_59.h"
+#include "main/mm.h"
+#include "main/object_transform.h"
+
+extern int getAngle(f32 dx, f32 dz);
+extern void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 targetY, f32 targetZ,
+                                       f32 height, s16 angleRange, s16 angleLimit,
+                                       int* outPointCount);
+extern int Camera_GetCurrentViewSlot();
+extern undefined4 FUN_8028688c();
+extern f32 sqrtf(f32 value);
+extern f32 mathSinf(f32 angle);
+extern f32 mathCosf(f32 angle);
+
+extern CameraModeBikeState* lbl_803DD540;
+extern f64 lbl_803E1750;
+extern f32 lbl_803E1740;
+extern f32 lbl_803E1744;
+extern f32 lbl_803E1758;
+extern f32 lbl_803E175C;
+extern f32 lbl_803E1760;
+extern f32 lbl_803E1764;
+extern f32 lbl_803E1768;
+extern f32 lbl_803E176C;
+extern f32 lbl_803E1770;
+extern f32 lbl_803E1774;
+extern f32 lbl_803E1778;
+
+#pragma scheduling on
+#pragma peephole on
+static f32 CameraModeStaffAnim_angleToRadians(int angle);
+
+/*
+ * --INFO--
+ *
+ * Function: CameraModeStaffAnim_init
+ * EN v1.0 Address: 0x8010747C
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80107718
+ * EN v1.1 Size: 1640b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+void CameraModeStaffAnim_init(CameraObject* camera, undefined4 param_2, u8* settings);
+
+void CameraModeBike_copyToCurrent(f32* param_1)
+{
+    lbl_803DD540->turnInput = param_1[0];
+    lbl_803DD540->heightInput = param_1[1];
+    lbl_803DD540->rollInput = param_1[2];
+    lbl_803DD540->pitchTarget = param_1[3];
+}
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void CameraModeStaffAnim_release(void);
+
+void CameraModeStaffAnim_initialise(void);
+
+/* fn_X(lbl); lbl = 0; */
+void CameraModeBike_free(void)
+{
+    mm_free(lbl_803DD540);
+    lbl_803DD540 = 0;
+}
+
+/* segment pragma-stack balance (re-split): */
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma peephole reset
+#pragma peephole reset
+
 #include "main/dll/CAM/camTalk.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
@@ -7,7 +90,6 @@
 #include "main/mm.h"
 #include "main/object_transform.h"
 
-extern void* memset(void* dst, int val, u32 n);
 extern undefined4 FUN_80006a1c();
 extern undefined4 FUN_80006a30();
 extern int FUN_80017730();
@@ -16,7 +98,6 @@ extern undefined4 setMatrixFromObjectPos();
 extern void Matrix_TransformPoint(void* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
-extern undefined4 camcontrol_getTargetPosition(int param_1, int param_2, float* outPos, void* outAngle);
 extern int getAngle(f32 dx, f32 dz);
 extern GameObject* getSbGalleon(void);
 extern int DBprotection_getCameraState(GameObject * obj);
@@ -205,6 +286,7 @@ void CameraModeBike_update(CameraObject* camera)
 #pragma peephole off
 void CameraModeBike_init(CameraObject* camera)
 {
+    extern void* memset(void* dst, int val, u32 n);
     if (lbl_803DD540 == 0)
     {
         lbl_803DD540 = (CameraModeBikeState*)mmAlloc(sizeof(CameraModeBikeState), 0xf, 0);
@@ -291,6 +373,7 @@ void firstPersonPlaceCamera(GameObject* focus, int resetClamp)
  */
 void firstPersonExit(CameraObject* camera)
 {
+    extern undefined4 camcontrol_getTargetPosition(int param_1, int param_2, float* outPos, void* outAngle);
     register CameraObject* self = camera;
     GameObject* target;
     float fVar1;

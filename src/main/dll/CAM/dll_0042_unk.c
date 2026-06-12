@@ -1,0 +1,1301 @@
+/* === merged from main/dll/CAM/attention.c [801046F4-801049B0) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/CAM/attention.h"
+#include "main/dll/CAM/camcontrol_mode_settings.h"
+#include "main/object_transform.h"
+
+extern int objBboxFn_800640cc(f32* startPoints, f32* endPoints, int radii, int hitOut, int objOut,
+                              int pointCount, int mask, int flags, int mode);
+extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int* hitsOut, int pointCount,
+                                int mask);
+extern void hitDetectFn_80067958(int obj, float* startPoints, float* endPoints, int pointCount,
+                                 void* outPos, int mode);
+extern void hitDetectFn_800691c0(int obj, uint* bounds, int mask, int flags);
+extern void hitDetect_calcSweptSphereBounds(uint* boundsOut, float* startPoints, float* endPoints, float* radii,
+                                            int pointCount);
+extern f32 lbl_803E1688;
+extern f32 lbl_803E16AC;
+extern f32 lbl_803E16B4;
+extern f32 lbl_803E16D0;
+extern f32 lbl_803E16D4;
+
+/*
+ * --INFO--
+ *
+ * Function: camcontrol_updateVerticalBounds
+ * EN v1.0 Address: 0x801046F4
+ * EN v1.0 Size: 612b
+ * EN v1.1 Address: 0x80104990
+ * EN v1.1 Size: 700b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int param_3, float* upperBound,
+                                     float* lowerBound)
+{
+    float zLim;
+    float pt0;
+    float zB;
+    float diff;
+    float bestUpper;
+    float bestLower;
+    int res;
+    int count;
+    int i;
+    int j;
+    int off;
+    int off2;
+    int camObj;
+    int cameraAddr;
+    uint bounds[6];
+    f32 pos[3];
+    int hits;
+
+    cameraAddr = (int)camera;
+    camObj = (int)camera->anim.targetObj;
+    if ((flags & 1) != 0)
+    {
+        *(float*)(cameraAddr + 0x74) = lbl_803E1688;
+        *(s8*)(cameraAddr + 0x84) = -1;
+        *(s8*)(cameraAddr + 0x88) = (s8)param_3;
+        res = objBboxFn_800640cc(&camera->probePosX, &camera->anim.worldPosX, 1, 0, 0, 0x10, 0xffffffff, 0xff, 0);
+        camera->unk142 = res;
+        pos[0] = camera->anim.worldPosX;
+        pos[1] = camera->anim.worldPosY;
+        pos[2] = camera->anim.worldPosZ;
+        hitDetect_calcSweptSphereBounds(bounds, &camera->probePosX, pos, (float*)(cameraAddr + 0x74), 1);
+        hitDetectFn_800691c0(camObj, bounds, 0x240, 1);
+        hitDetectFn_80067958(camObj, &camera->probePosX, pos, 1, &camera->anim.pad34[0], 0);
+        camera->anim.worldPosX = pos[0];
+        camera->anim.worldPosY = pos[1];
+        camera->anim.worldPosZ = pos[2];
+    }
+    if ((flags & 2) != 0)
+    {
+        count = hitDetectFn_80065e50(camObj, camera->anim.worldPosX, camera->anim.worldPosY,
+                                     camera->anim.worldPosZ, &hits, 1, 0x40);
+        *upperBound = lbl_803E16D0;
+        bestUpper = (*lowerBound = lbl_803E16D4);
+        bestLower = bestUpper;
+        off = 0;
+        zLim = lbl_803E16AC;
+        for (i = 0; i < count; i++)
+        {
+            zB = lbl_803E16B4;
+            if ((*(float**)(hits + off))[2] < zLim)
+            {
+                pt0 = **(float**)(hits + off);
+                if (pt0 > camera->anim.worldPosY - zB)
+                {
+                    diff = camera->anim.worldPosY - pt0;
+                    if (diff < zLim)
+                    {
+                        diff = -diff;
+                    }
+                    if (diff < bestLower)
+                    {
+                        *lowerBound = pt0;
+                        camera->unk12C = (*(float**)(hits + off))[2];
+                        bestLower = diff;
+                    }
+                }
+            }
+            off += 4;
+        }
+        off2 = 0;
+        zLim = lbl_803E16AC;
+        for (j = 0; j < count; j++)
+        {
+            zB = lbl_803E16B4;
+            if ((*(float**)(hits + off2))[2] > zLim)
+            {
+                pt0 = **(float**)(hits + off2);
+                if (pt0 < zB + camera->anim.worldPosY)
+                {
+                    diff = camera->anim.worldPosY - pt0;
+                    if (diff < zLim)
+                    {
+                        diff = -diff;
+                    }
+                    if (diff < bestUpper)
+                    {
+                        *upperBound = pt0;
+                        camera->unk130 = (*(float**)(hits + off2))[2];
+                        bestUpper = diff;
+                    }
+                }
+            }
+            off2 += 4;
+        }
+    }
+    Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY,
+                                   camera->anim.worldPosZ, &camera->anim.localPosX,
+                                   &camera->anim.localPosY, &camera->anim.localPosZ,
+                                   *(int*)&camera->anim.parent);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: CameraModeNormal_func0A
+ * EN v1.0 Address: 0x80104958
+ * EN v1.0 Size: 88b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void CameraModeNormal_func0A(float* minDistanceOut, float* maxDistanceOut,
+                             float* lowerHeightOffsetOut, float* upperHeightOffsetOut,
+                             float* targetHeightOut)
+{
+    *minDistanceOut = cameraMtxVar57->minDistance;
+    *maxDistanceOut = cameraMtxVar57->maxDistance;
+    if (lowerHeightOffsetOut != (float*)0x0)
+    {
+        *lowerHeightOffsetOut = cameraMtxVar57->lowerHeightOffset;
+    }
+    if (upperHeightOffsetOut != (float*)0x0)
+    {
+        *upperHeightOffsetOut = cameraMtxVar57->upperHeightOffset;
+    }
+    if (targetHeightOut != (float*)0x0)
+    {
+        *targetHeightOut = cameraMtxVar57->targetHeight;
+    }
+    return;
+}
+
+/* === merged from main/dll/CAM/camslide.c [801049B0-8010509C) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/CAM/camslide.h"
+#include "main/game_object.h"
+#include "main/camera_interface.h"
+#include "main/camera_object.h"
+#include "main/dll/CAM/camcontrol_mode_settings.h"
+
+
+extern void mtxRotateByVec3s(void* matrix, void* angles);
+extern void Matrix_TransformPoint(void* matrix, f64 x, f64 y, f64 z, f32* outX, f32* outY, f32* outZ);
+extern f32 mathSinf(f32 x);
+extern f32 fn_802966F4(GameObject * obj);
+
+extern u8 framesThisStep;
+extern f32 lbl_803E168C;
+extern f32 lbl_803E1690;
+extern f32 lbl_803E1694;
+extern f32 lbl_803E16A4;
+extern f32 lbl_803E16AC;
+extern f32 lbl_803E16B4;
+extern f32 lbl_803E16B8;
+extern f32 lbl_803E16D8;
+extern f32 lbl_803E16DC;
+extern f32 lbl_803E16E0;
+extern f32 lbl_803E16E4;
+extern f32 lbl_803E16E8;
+extern f32 lbl_803E16EC;
+extern f32 lbl_803E16F0;
+extern f32 lbl_803E16F4;
+extern f32 timeDelta;
+
+#define gCamcontrolModeSettings cameraMtxVar57
+
+typedef struct CamSlideRot
+{
+    s16 angles[4];
+    f32 unkA4;
+    f32 unkA0;
+    f32 unk9C;
+    f32 unk98;
+} CamSlideRot;
+
+typedef struct CamSlideObjectState
+{
+    u8 pad00[0x1A4];
+    f32 vectorX;
+    f32 vectorY;
+    f32 vectorZ;
+} CamSlideObjectState;
+
+STATIC_ASSERT(offsetof(CamSlideObjectState, vectorX) == 0x1A4);
+STATIC_ASSERT(offsetof(CamSlideObjectState, vectorY) == 0x1A8);
+STATIC_ASSERT(offsetof(CamSlideObjectState, vectorZ) == 0x1AC);
+
+/*
+ * --INFO--
+ *
+ * Function: camslide_update
+ * EN v1.0 Address: 0x801049B0
+ * EN v1.0 Size: 1552b
+ * EN v1.1 Address: 0x80104C4C
+ * EN v1.1 Size: 1552b
+ */
+void camslide_update(CameraObject* camera, GameObject* target)
+{
+    extern uint getAngle();
+    extern f64 interpolate(f64 value, f64 rate, f64 t);
+    extern f32 sqrtf(f32 x);
+    f32 fVar1;
+    CamSlideObjectState* state;
+    uint angle;
+    int cur;
+    f32 high;
+    f32 low;
+    f32 range;
+    f32 slide;
+    f64 approach;
+    f32 mtx[16];
+    CamSlideRot rot;
+    f32 velX;
+    f32 step;
+    f32 velZ;
+    f32 speed;
+    f32 outX;
+    f32 outY;
+    f32 outZ;
+
+    ((void (*)(int, f32*, f32*, f32*, f32*, int, f32))(*gCameraInterface)->getRelativePosition)(
+        (int)camera, &velX, &step, &velZ, &speed, 0, gCamcontrolModeSettings->targetHeight);
+    speed = velZ * velZ + (velX * velX + step * step);
+    if (speed > lbl_803E16AC)
+    {
+        speed = sqrtf(speed);
+    }
+    if (speed < lbl_803E1694)
+    {
+        speed = lbl_803E1694;
+    }
+    high = gCamcontrolModeSettings->upperHeightOffset +
+        (target->anim.worldPosY + gCamcontrolModeSettings->targetHeight);
+    low = gCamcontrolModeSettings->lowerHeightOffset +
+        (target->anim.worldPosY + gCamcontrolModeSettings->targetHeight);
+    if (target->anim.classId == 1)
+    {
+        state = (CamSlideObjectState*)target->extra;
+        angle = getAngle((f64)velX, (f64)velZ);
+        rot.angles[0] = (s16)(0x8000 - angle);
+        rot.angles[1] = 0;
+        rot.angles[2] = 0;
+        rot.unkA4 = lbl_803E16A4;
+        rot.unkA0 = lbl_803E16AC;
+        rot.unk9C = lbl_803E16AC;
+        rot.unk98 = lbl_803E16AC;
+        mtxRotateByVec3s(mtx, rot.angles);
+        Matrix_TransformPoint(mtx, (f64)state->vectorX, (f64)state->vectorY,
+                              (f64)state->vectorZ, &outX, &outY, &outZ);
+        angle = getAngle((f64)outY, (f64)outZ);
+        gCamcontrolModeSettings->slideAngle +=
+            (int)(framesThisStep * ((0x4000 - (angle & 0xffff)) -
+                gCamcontrolModeSettings->slideAngle)) >> 5;
+    }
+    else
+    {
+        gCamcontrolModeSettings->slideAngle -=
+            (int)(gCamcontrolModeSettings->slideAngle * framesThisStep) >> 5;
+    }
+    cur = gCamcontrolModeSettings->slideAngle;
+    if (cur < 0)
+    {
+        slide = gCamcontrolModeSettings->slideLeftAmount *
+            mathSinf((lbl_803E168C * (f32)cur) / lbl_803E1690);
+    }
+    else if (cur > 0)
+    {
+        slide = gCamcontrolModeSettings->slideRightAmount *
+            mathSinf((lbl_803E168C * (f32)cur) / lbl_803E1690);
+    }
+    else
+    {
+        slide = lbl_803E16AC;
+    }
+    low += slide;
+    high += slide;
+    range = gCamcontrolModeSettings->minDistance - lbl_803E16D8;
+    if (range < lbl_803E16DC)
+    {
+        range = lbl_803E16DC;
+    }
+    if (target->anim.classId == 1)
+    {
+        if (fn_802966F4(target) <= lbl_803E16DC)
+        {
+            step = lbl_803E16E0 * gCamcontrolModeSettings->maxDistance -
+                gCamcontrolModeSettings->lowerHeightOffset;
+            step *= lbl_803E16E4;
+            if (step > lbl_803E16B4)
+            {
+                step = lbl_803E16B4;
+            }
+            gCamcontrolModeSettings->lowerHeightOffset =
+                gCamcontrolModeSettings->lowerHeightOffset + step;
+            if (gCamcontrolModeSettings->lowerHeightOffset > gCamcontrolModeSettings->maxDistance)
+            {
+                gCamcontrolModeSettings->lowerHeightOffset = gCamcontrolModeSettings->maxDistance;
+            }
+            step = lbl_803E16E0 * gCamcontrolModeSettings->maxDistance -
+                gCamcontrolModeSettings->upperHeightOffset;
+            step *= lbl_803E16E4;
+            if (step > lbl_803E16B4)
+            {
+                step = lbl_803E16B4;
+            }
+            gCamcontrolModeSettings->upperHeightOffset =
+                gCamcontrolModeSettings->upperHeightOffset + step;
+            if (gCamcontrolModeSettings->upperHeightOffset > gCamcontrolModeSettings->maxDistance)
+            {
+                gCamcontrolModeSettings->upperHeightOffset = gCamcontrolModeSettings->maxDistance;
+            }
+        }
+        else
+        {
+            step = gCamcontrolModeSettings->baseLowerHeightOffset -
+                gCamcontrolModeSettings->lowerHeightOffset;
+            step *= lbl_803E16E4;
+            if (step > *(f32*)&lbl_803E16E8)
+            {
+                step = lbl_803E16E8;
+            }
+            if (step < lbl_803E16EC)
+            {
+                step = lbl_803E16EC;
+            }
+            gCamcontrolModeSettings->lowerHeightOffset =
+                gCamcontrolModeSettings->lowerHeightOffset + step;
+            if (gCamcontrolModeSettings->lowerHeightOffset <
+                gCamcontrolModeSettings->baseLowerHeightOffset)
+            {
+                gCamcontrolModeSettings->lowerHeightOffset =
+                    gCamcontrolModeSettings->baseLowerHeightOffset;
+            }
+            step = gCamcontrolModeSettings->baseUpperHeightOffset -
+                gCamcontrolModeSettings->upperHeightOffset;
+            step *= lbl_803E16E4;
+            if (step > *(f32*)&lbl_803E16E8)
+            {
+                step = lbl_803E16E8;
+            }
+            if (step < lbl_803E16EC)
+            {
+                step = lbl_803E16EC;
+            }
+            gCamcontrolModeSettings->upperHeightOffset =
+                gCamcontrolModeSettings->upperHeightOffset + step;
+            if (gCamcontrolModeSettings->upperHeightOffset <
+                gCamcontrolModeSettings->baseUpperHeightOffset)
+            {
+                gCamcontrolModeSettings->upperHeightOffset =
+                    gCamcontrolModeSettings->baseUpperHeightOffset;
+            }
+            if (speed > lbl_803E16DC)
+            {
+                if (speed <= range)
+                {
+                    if (range - lbl_803E16DC > lbl_803E16AC)
+                    {
+                        speed = (speed - lbl_803E16DC) / (range - lbl_803E16DC);
+                    }
+                    if (speed < lbl_803E16AC)
+                    {
+                        speed = lbl_803E16AC;
+                    }
+                    else if (speed > lbl_803E16A4)
+                    {
+                        speed = lbl_803E16A4;
+                    }
+                    fVar1 = lbl_803E16F0 + target->anim.worldPosY;
+                    low = speed * ((gCamcontrolModeSettings->targetHeight +
+                        gCamcontrolModeSettings->lowerHeightOffset) - lbl_803E16F0) + fVar1;
+                    high = speed * ((gCamcontrolModeSettings->targetHeight +
+                        gCamcontrolModeSettings->upperHeightOffset) - lbl_803E16F0) + fVar1;
+                }
+            }
+            else
+            {
+                high = lbl_803E16E0 * (lbl_803E16DC - speed) + (lbl_803E16F0 + target->anim.worldPosY);
+                low = high;
+            }
+        }
+    }
+    if (camera->anim.worldPosY < low)
+    {
+        step = low - camera->anim.worldPosY;
+    }
+    else if (camera->anim.worldPosY > high)
+    {
+        step = high - camera->anim.worldPosY;
+    }
+    else
+    {
+        step = lbl_803E16AC;
+    }
+    approach = interpolate((f64)step, (f64)gCamcontrolModeSettings->heightAdjustRate,
+                           (f64)timeDelta);
+    step = approach;
+    if ((f32)approach > lbl_803E16E8 && (f32)approach < lbl_803E16F4)
+    {
+        step = lbl_803E16AC;
+    }
+    camera->anim.worldPosY = camera->anim.worldPosY + step;
+    if (camera->anim.worldPosY > lbl_803E16B8 + high)
+    {
+        camera->anim.worldPosY = lbl_803E16B8 + high;
+    }
+    if (gCamcontrolModeSettings->upperHeightOffset > gCamcontrolModeSettings->baseUpperHeightOffset)
+    {
+        if (gCamcontrolModeSettings->clampFlags.b6 &&
+            camera->anim.worldPosY > gCamcontrolModeSettings->heightLockLimit)
+        {
+            camera->anim.worldPosY = gCamcontrolModeSettings->heightLockLimit;
+        }
+        if (target->anim.velocityY > lbl_803E16AC)
+        {
+            gCamcontrolModeSettings->clampFlags.b6 = 0;
+        }
+    }
+    else
+    {
+        gCamcontrolModeSettings->clampFlags.b6 = 0;
+    }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: firstperson_updatePitch
+ * EN v1.0 Address: 0x80104FC0
+ * EN v1.0 Size: 220b
+ * EN v1.1 Address: 0x8010525C
+ * EN v1.1 Size: 220b
+ */
+void firstperson_updatePitch(f32 targetY, CameraObject* camera)
+{
+    extern uint getAngle();
+    extern f64 interpolate(f64 value, f64 rate, f64 t);
+    int v;
+    f64 d;
+
+    v = getAngle((f64)(camera->anim.worldPosY -
+        (targetY + gCamcontrolModeSettings->targetHeight))) & 0xffff;
+    v -= (uint)camera->anim.rotY & 0xffff;
+    if (v > 0x8000)
+    {
+        v -= 0xffff;
+    }
+    if (v < -0x8000)
+    {
+        v += 0xffff;
+    }
+    d = interpolate((f64)(f32)v,
+                    (f64)(lbl_803E16A4 / (f32)gCamcontrolModeSettings->yawResponseFrames),
+                    (f64)timeDelta);
+    camera->anim.rotY = (s16)((int)d + camera->anim.rotY);
+}
+
+/* === merged from main/dll/CAM/firstperson.c [8010509C-80105810) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/CAM/firstperson.h"
+#include "main/camera_interface.h"
+#include "main/object_transform.h"
+
+
+extern undefined4 FUN_800068f4();
+extern double FUN_800176f4();
+extern undefined4 camcontrol_getTargetPosition();
+extern double SeekTwiceBeforeRead();
+extern double FUN_80293900();
+
+extern f64 DOUBLE_803e1698;
+extern f64 DOUBLE_803e16f8;
+extern f32 lbl_803E1710;
+extern f32 lbl_803E1714;
+extern f64 DOUBLE_803e2318;
+extern f64 DOUBLE_803e2378;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E2314;
+extern f32 lbl_803E2324;
+extern f32 lbl_803E232C;
+extern f32 lbl_803E2380;
+extern f32 lbl_803E2384;
+extern f32 lbl_803E2388;
+extern f32 lbl_803E238C;
+extern f32 lbl_803E2390;
+extern f32 lbl_803E2394;
+
+#define gCamcontrolModeSettings cameraMtxVar57
+
+static inline f64 FirstPerson_U32AsDouble(u32 value)
+{
+    u64 bits = CONCAT44(0x43300000, value);
+    return *(f64*)&bits;
+}
+
+static inline f64 FirstPerson_S32AsDouble(s32 value)
+{
+    u64 bits = CONCAT44(0x43300000, (u32)value ^ 0x80000000);
+    return *(f64*)&bits;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: firstperson_updatePosition
+ * EN v1.0 Address: 0x80105178
+ * EN v1.0 Size: 1352b
+ * EN v1.1 Address: 0x80105338
+ * EN v1.1 Size: 1140b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern f32 PSVECMag(f32 * vec);
+extern f32 timeDelta;
+extern f32 lbl_803E16AC;
+extern f32 lbl_803E1694;
+extern f32 lbl_803E16A4;
+extern f32 lbl_803E1700;
+extern f32 lbl_803E1704;
+extern f32 lbl_803E1708;
+extern f32 lbl_803E170C;
+
+void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
+{
+    extern f32 interpolate(f32 delta, f32 rate, f32 dt);
+    extern f32 sqrtf();
+    f32 dx;
+    f32 dz;
+    f32 dy;
+    f32 dist;
+    f32 clamped;
+    f32 targetX;
+    f32 targetZ;
+    f32 ratio;
+    f32 speed;
+
+    ((void (*)(int, f32*, f32*, f32*, f32*, int, f32))(*gCameraInterface)->getRelativePosition)(
+        (int)camera, &dx, &dz, &dy, &dist, 1, gCamcontrolModeSettings->targetHeight);
+    dist = dy * dy + (dx * dx + dz * dz);
+    if (dist > lbl_803E16AC)
+    {
+        dist = sqrtf(dist);
+    }
+    if (dist < *(f32 *)&lbl_803E1694)
+    {
+        dist = lbl_803E1694;
+    }
+    if (dist > lbl_803E1700 * gCamcontrolModeSettings->maxDistance)
+    {
+        camcontrol_getTargetPosition((int)camera, target, &camera->anim.worldPosX, &camera->anim.rotY);
+        Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
+                                       &camera->anim.localPosX, &camera->anim.localPosY,
+                                       &camera->anim.localPosZ, (u32)camera->anim.parent);
+        camera->probePosX = camera->anim.worldPosX;
+        camera->probePosY = camera->anim.worldPosY;
+        camera->probePosZ = camera->anim.worldPosZ;
+        (*gCameraInterface)->getRelativePosition(gCamcontrolModeSettings->targetHeight, (int)camera, &dx,
+                                                 &dz, &dy, &dist, 1);
+        dist = dy * dy + (dx * dx + dz * dz);
+        if (dist > lbl_803E16AC)
+        {
+            dist = sqrtf(dist);
+        }
+        if (dist < lbl_803E1694)
+        {
+            dist = lbl_803E1694;
+        }
+    }
+
+    if (dist > gCamcontrolModeSettings->maxDistance)
+    {
+        clamped = gCamcontrolModeSettings->maxDistance;
+        gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 0;
+        gCamcontrolModeSettings->clampFlags.b7 = 1;
+    }
+    else if (dist < gCamcontrolModeSettings->minDistance)
+    {
+        clamped = gCamcontrolModeSettings->minDistance;
+        gCamcontrolModeSettings->clampFlags.b7 = 0;
+    }
+    else
+    {
+        clamped = dist;
+        gCamcontrolModeSettings->clampFlags.b7 = 0;
+    }
+
+    targetX = camera->anim.localPosX;
+    targetZ = camera->anim.localPosZ;
+    if ((gCamcontrolModeSettings->wallAvoidanceFlags.b7 == 0) && (clamped != dist) &&
+        (lbl_803E16AC != gCamcontrolModeSettings->distanceAdjustRate))
+    {
+        if (dist < lbl_803E16A4)
+        {
+            dist = lbl_803E16A4;
+        }
+        ratio = interpolate(dist - clamped, gCamcontrolModeSettings->distanceAdjustRate, timeDelta);
+        ratio = (dist + ratio) / dist;
+        if (ratio > lbl_803E16AC)
+        {
+            targetX = target->localPosX + dx / ratio;
+            targetZ = target->localPosZ + dy / ratio;
+        }
+    }
+
+    dx = targetX - camera->anim.localPosX;
+    dy = targetZ - camera->anim.localPosZ;
+    dist = sqrtf(dx * dx + dy * dy);
+    if (dist > lbl_803E16AC)
+    {
+        dx = dx / dist;
+        dy = dy / dist;
+    }
+    speed = PSVECMag(&target->velocityX) * (lbl_803E1704 * timeDelta);
+    if (speed < lbl_803E16A4)
+    {
+        speed = lbl_803E16A4;
+    }
+    dist = dist < lbl_803E16AC ? lbl_803E16AC : (dist > speed ? speed : dist);
+    dist = dist < lbl_803E16AC ? lbl_803E16AC : (dist > lbl_803E1708 ? lbl_803E1708 : dist);
+    camera->anim.localPosX = dx * dist + camera->anim.localPosX;
+    camera->anim.localPosZ = dy * dist + camera->anim.localPosZ;
+
+    if (gCamcontrolModeSettings->upperHeightOffset > gCamcontrolModeSettings->baseUpperHeightOffset)
+    {
+        dx = camera->anim.localPosX - target->localPosX;
+        dy = camera->anim.localPosZ - target->localPosZ;
+        dist = sqrtf(dx * dx + dy * dy);
+        if (dist < lbl_803E170C * gCamcontrolModeSettings->minDistance)
+        {
+            if (dist > lbl_803E16AC)
+            {
+                dx = dx / dist;
+                dy = dy / dist;
+            }
+            dist = lbl_803E170C * gCamcontrolModeSettings->minDistance;
+            camera->anim.localPosX = dist * dx + target->localPosX;
+            camera->anim.localPosZ = dist * dy + target->localPosZ;
+        }
+    }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: firstperson_loadSettings
+ * EN v1.0 Address: 0x801056C0
+ * EN v1.0 Size: 812b
+ * EN v1.1 Address: 0x801057AC
+ * EN v1.1 Size: 672b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void firstperson_loadSettings(CamcontrolFirstPersonActionSettings* settings)
+{
+    float fval;
+    CameraObject* camera;
+
+    camera = (CameraObject*)(*gCameraInterface)->getCamera();
+    gCamcontrolModeSettings->savedTargetHeight = gCamcontrolModeSettings->targetHeight;
+    gCamcontrolModeSettings->savedLowerHeightOffset = gCamcontrolModeSettings->lowerHeightOffset;
+    gCamcontrolModeSettings->savedUpperHeightOffset = gCamcontrolModeSettings->upperHeightOffset;
+    gCamcontrolModeSettings->savedMinDistance = gCamcontrolModeSettings->minDistance;
+    gCamcontrolModeSettings->savedMaxDistance = gCamcontrolModeSettings->maxDistance;
+    gCamcontrolModeSettings->savedFov = camera->fov;
+    gCamcontrolModeSettings->savedSlideRightAmount = gCamcontrolModeSettings->slideRightAmount;
+    gCamcontrolModeSettings->savedSlideLeftAmount = gCamcontrolModeSettings->slideLeftAmount;
+    gCamcontrolModeSettings->savedHeightAdjustRate = gCamcontrolModeSettings->heightAdjustRate;
+    gCamcontrolModeSettings->savedDistanceAdjustRate = gCamcontrolModeSettings->distanceAdjustRate;
+    fval = (f32)settings->targetHeight;
+    gCamcontrolModeSettings->targetHeight = fval;
+    gCamcontrolModeSettings->targetTargetHeight = fval;
+    fval = (f32)(u32)
+    settings->lowerHeightOffset;
+    gCamcontrolModeSettings->lowerHeightOffset = fval;
+    gCamcontrolModeSettings->baseLowerHeightOffset = fval;
+    gCamcontrolModeSettings->targetLowerHeightOffset = fval;
+    fval = (f32)(u32)
+    settings->upperHeightOffset;
+    gCamcontrolModeSettings->upperHeightOffset = fval;
+    gCamcontrolModeSettings->baseUpperHeightOffset = fval;
+    gCamcontrolModeSettings->targetUpperHeightOffset = fval;
+    fval = (f32)(u32)
+    settings->minDistance;
+    gCamcontrolModeSettings->minDistance = fval;
+    gCamcontrolModeSettings->targetMinDistance = fval;
+    fval = (f32)(u32)
+    settings->maxDistance;
+    gCamcontrolModeSettings->maxDistance = fval;
+    gCamcontrolModeSettings->targetMaxDistance = fval;
+    fval = (f32)settings->fov;
+    camera->fov = fval;
+    gCamcontrolModeSettings->fov = fval;
+    fval = (f32)(u32)
+    settings->slideRightAmount;
+    gCamcontrolModeSettings->slideRightAmount = fval;
+    gCamcontrolModeSettings->targetSlideRightAmount = fval;
+    fval = (f32)(u32)
+    settings->slideLeftAmount;
+    gCamcontrolModeSettings->slideLeftAmount = fval;
+    gCamcontrolModeSettings->targetSlideLeftAmount = fval;
+    if (settings->distanceAdjustRate != 0)
+    {
+        fval = (f32)(u32)
+        settings->distanceAdjustRate / lbl_803E1710;
+        gCamcontrolModeSettings->distanceAdjustRate = fval;
+        gCamcontrolModeSettings->targetDistanceAdjustRate = fval;
+    }
+    else
+    {
+        gCamcontrolModeSettings->targetDistanceAdjustRate = lbl_803E1714;
+    }
+    if (settings->heightAdjustRate != 0)
+    {
+        fval = (f32)(u32)
+        settings->heightAdjustRate / lbl_803E1710;
+        gCamcontrolModeSettings->heightAdjustRate = fval;
+        gCamcontrolModeSettings->targetHeightAdjustRate = fval;
+    }
+    else
+    {
+        gCamcontrolModeSettings->targetHeightAdjustRate = lbl_803E1714;
+    }
+    gCamcontrolModeSettings->transitionTimer = 0;
+    gCamcontrolModeSettings->transitionDuration = 0;
+}
+
+void CameraModeNormal_free(CameraObject* camera)
+{
+    cameraMtxVar57->savedWorldX = camera->anim.worldPosX;
+    cameraMtxVar57->savedWorldY = camera->anim.worldPosY;
+    cameraMtxVar57->savedWorldZ = camera->anim.worldPosZ;
+    cameraMtxVar57->savedRotX = camera->anim.rotX;
+    cameraMtxVar57->savedRotY = camera->anim.rotY;
+    cameraMtxVar57->savedRotZ = camera->anim.rotZ;
+    cameraMtxVar57->wallAvoidanceFlags.b6 = 0;
+}
+
+/* === merged from main/dll/CAM/camstatic.c [80105810-80105E7C) (TU re-split, docs/boundary_audit.md) === */
+#include "ghidra_import.h"
+#include "main/camera_interface.h"
+#include "main/camera_object.h"
+#include "main/dll/CAM/attention.h"
+#include "main/dll/CAM/camcontrol_mode_settings.h"
+#include "main/dll/CAM/camslide.h"
+#include "main/dll/CAM/firstperson.h"
+#include "main/object_transform.h"
+
+extern void camcontrol_traceMove(f32 radius, f32* from, void* to, f32* out, void* work, int a,
+                                 int b, int c);
+extern void camcontrol_updateTargetAction(int camera, int obj);
+extern void camMoveFn_80104040(int camera, int obj);
+extern void camcontrol_updateModeSettings(int camera);
+extern int EmissionController_IsLingering(int obj);
+extern void fn_8029656C(int obj, float* out);
+extern void cameraGetPrevPos2(int obj, float* x, float* y, float* z);
+
+extern f64 lbl_803E1698;
+extern f64 lbl_803E16F8;
+extern f32 lbl_803DD52C;
+extern f32 lbl_803E1688;
+extern f32 lbl_803E16A4;
+extern f32 lbl_803E16AC;
+extern f32 lbl_803E16DC;
+extern f32 lbl_803E1708;
+extern f32 lbl_803E1718;
+extern f32 lbl_803E171C;
+extern f32 lbl_803E1720;
+extern f32 lbl_803E1724;
+extern f32 lbl_803E1728;
+extern f32 lbl_803E172C;
+extern f32 lbl_803E1730;
+extern f32 timeDelta;
+
+#define gCamcontrolModeSettings cameraMtxVar57
+
+/*
+ * --INFO--
+ *
+ * Function: camstatic_update
+ * EN v1.0 Address: 0x80105810
+ * EN v1.0 Size: 1644b
+ * EN v1.1 Address: 0x80105AAC
+ * EN v1.1 Size: 1644b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void camstatic_update(CameraObject* camera)
+{
+    extern s16 getAngle(f32 dx, f32 dz);
+    extern f32 interpolate(f32 cur, f32 target, f32 t);
+    GameObject* target;
+    float fa;
+    int val;
+    uint angleDelta;
+    short yaw;
+    float dx;
+    float dy;
+    float dz;
+    undefined auStack_13c[4];
+    float dx2;
+    float aimX;
+    float aimY;
+    float aimZ;
+    float aimX2;
+    float aimY2;
+    float aimZ2;
+    undefined auStack_11c[112];
+    undefined auStack_ac[116];
+
+    target = (GameObject*)camera->anim.targetObj;
+    if (target == NULL)
+    {
+        return;
+    }
+    if (target->anim.classId == 1)
+    {
+        fn_8029656C((int)target, &dx);
+        lbl_803DD52C = timeDelta * dx;
+        val = EmissionController_IsLingering((int)target);
+        switch (val)
+        {
+        case 1:
+            gCamcontrolModeSettings->heightAdjustRate = lbl_803E16AC;
+            gCamcontrolModeSettings->yawResponseFrames = 0xff;
+            break;
+        case 2:
+            gCamcontrolModeSettings->heightAdjustRate = lbl_803E1718;
+            gCamcontrolModeSettings->yawResponseFrames = 0xc;
+            break;
+        case 4:
+            gCamcontrolModeSettings->heightAdjustRate = lbl_803E171C;
+            gCamcontrolModeSettings->yawResponseFrames = 2;
+            break;
+        case 3:
+            gCamcontrolModeSettings->heightAdjustRate = lbl_803E1720;
+            gCamcontrolModeSettings->yawResponseFrames = 8;
+            break;
+        default:
+            gCamcontrolModeSettings->heightAdjustRate =
+                gCamcontrolModeSettings->targetHeightAdjustRate;
+            gCamcontrolModeSettings->yawResponseFrames = 8;
+            break;
+        }
+    }
+    else
+    {
+        lbl_803DD52C = timeDelta;
+    }
+    camera->unk13E = 0;
+    camcontrol_updateModeSettings((int)camera);
+    camMoveFn_80104040((int)camera, (int)target);
+    firstperson_updatePosition(camera, &target->anim);
+    Obj_TransformLocalPointToWorld(camera->anim.localPosX, camera->anim.localPosY,
+                                   camera->anim.localPosZ, &camera->anim.worldPosX,
+                                   &camera->anim.worldPosY, &camera->anim.worldPosZ,
+                                   (u32)camera->anim.parent);
+    camslide_update(camera, target);
+    camcontrol_updateVerticalBounds(camera, 1, 8, &gCamcontrolModeSettings->verticalLowerBound,
+                                    &gCamcontrolModeSettings->verticalUpperBound);
+    if (gCamcontrolModeSettings->wallAvoidanceFlags.b7 == 0)
+    {
+        gCamcontrolModeSettings->targetActionFlags = *(u8*)((int)camera + 0xa2);
+        if (((camera->unk142 != 0) ||
+                ((gCamcontrolModeSettings->targetActionFlags == 1 &&
+                    (*(f32*)((u8*)camera + 0x38) >= lbl_803E16AC)))) &&
+            (gCamcontrolModeSettings->clampFlags.b7 == 0))
+        {
+            if (((camera->anim.worldPosY > lbl_803E16DC + target->anim.worldPosY) &&
+                    (camera->anim.worldPosY < lbl_803E1724 + target->anim.worldPosY)) &&
+                (camera->anim.parent == NULL))
+            {
+                gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 1;
+            }
+        }
+        if ((((gCamcontrolModeSettings->targetActionFlags & 0x10) != 0) &&
+                (*(f32*)((u8*)camera + 0x38) < lbl_803E1728)) &&
+            (target->anim.localPosZ <= lbl_803E16AC))
+        {
+            gCamcontrolModeSettings->clampFlags.b6 = 1;
+            gCamcontrolModeSettings->heightLockLimit = camera->anim.worldPosY;
+        }
+    }
+    else
+    {
+        fa = lbl_803E16AC;
+        camera->unk130 = fa;
+        camera->unk12C = fa;
+        if ((*(u8*)((int)camera + 0xa2) == 1) && (*(f32*)((u8*)camera + 0x38) < fa))
+        {
+            gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 0;
+        }
+        if ((camera->anim.worldPosY > lbl_803E172C + target->anim.worldPosY) ||
+            (camera->anim.worldPosY < lbl_803E1708 + target->anim.worldPosY))
+        {
+            gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 0;
+        }
+    }
+    if (gCamcontrolModeSettings->clampFlags.b7 != 0)
+    {
+        if ((gCamcontrolModeSettings->targetActionFlags == 1) || (camera->unk142 != 0))
+        {
+            gCamcontrolModeSettings->wallAvoidanceTimer += 1;
+        }
+        else
+        {
+            gCamcontrolModeSettings->wallAvoidanceTimer = 0;
+        }
+        if (10 < gCamcontrolModeSettings->wallAvoidanceTimer)
+        {
+            if (target->anim.classId == 1)
+            {
+                cameraGetPrevPos2((int)target, &aimX2, &aimY2, &aimZ2);
+            }
+            else
+            {
+                aimX2 = target->anim.worldPosX;
+                aimY2 = target->anim.worldPosY + gCamcontrolModeSettings->targetHeight;
+                aimZ2 = target->anim.worldPosZ;
+            }
+            camcontrol_traceMove(lbl_803E1688, &aimX2, &camera->anim.worldPosX,
+                                 &camera->anim.worldPosX, auStack_ac, 3, 1, 1);
+            camera->probePosX = camera->anim.worldPosX;
+            camera->probePosY = camera->anim.worldPosY;
+            camera->probePosZ = camera->anim.worldPosZ;
+            gCamcontrolModeSettings->wallAvoidanceTimer = 0;
+        }
+    }
+    if (gCamcontrolModeSettings->wallAvoidanceFlags.b7 == 0)
+    {
+        if ((gCamcontrolModeSettings->targetActionFlags & 0x10) != 0)
+        {
+            gCamcontrolModeSettings->collisionProbeTimer += 1;
+        }
+        else
+        {
+            gCamcontrolModeSettings->collisionProbeTimer = 0;
+        }
+        if (5 < gCamcontrolModeSettings->collisionProbeTimer)
+        {
+            if (target->anim.classId == 1)
+            {
+                cameraGetPrevPos2((int)target, &aimX, &aimY, &aimZ);
+            }
+            else
+            {
+                aimX = target->anim.worldPosX;
+                aimY = target->anim.worldPosY + gCamcontrolModeSettings->targetHeight;
+                aimZ = target->anim.worldPosZ;
+            }
+            camcontrol_traceMove(lbl_803E1688, &aimX, &camera->anim.worldPosX,
+                                 &camera->anim.worldPosX, auStack_11c, 3, 1, 1);
+            camera->probePosX = camera->anim.worldPosX;
+            camera->probePosY = camera->anim.worldPosY;
+            camera->probePosZ = camera->anim.worldPosZ;
+            gCamcontrolModeSettings->collisionProbeTimer = 0;
+        }
+    }
+    ((void (*)(int, f32*, f32*, f32*, f32*, int, f32))(*gCameraInterface)->getRelativePosition)(
+        (int)camera, &dx2, (f32*)auStack_13c, &dz, &dy, 0, gCamcontrolModeSettings->targetHeight);
+    yaw = getAngle(dx2, dz);
+    gCamcontrolModeSettings->pitchOffset = 0;
+    camera->anim.rotX = (-0x8000 - yaw) - gCamcontrolModeSettings->pitchOffset;
+    angleDelta = getAngle(camera->anim.worldPosY -
+                     (target->anim.worldPosY + gCamcontrolModeSettings->targetHeight),
+                     dy);
+    angleDelta = (angleDelta & 0xffff) - ((int)camera->anim.rotY & 0xffffU);
+    if (0x8000 < (int)angleDelta)
+    {
+        angleDelta = angleDelta - 0xffff;
+    }
+    if ((int)angleDelta < -0x8000)
+    {
+        angleDelta = angleDelta + 0xffff;
+    }
+    val = (int)interpolate((f32)(int)angleDelta,
+                             lbl_803E16A4 /
+                             (f32)(u32)gCamcontrolModeSettings->yawResponseFrames, timeDelta);
+    camera->anim.rotY = camera->anim.rotY + (short)val;
+    camcontrol_updateTargetAction((int)camera, (int)target);
+    val = (int)interpolate((f32)camera->anim.rotZ, lbl_803E1730, timeDelta);
+    camera->anim.rotZ = camera->anim.rotZ - (short)val;
+    Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY,
+                                   camera->anim.worldPosZ, &camera->anim.localPosX,
+                                   &camera->anim.localPosY, &camera->anim.localPosZ,
+                                   (u32)camera->anim.parent);
+}
+
+#include "main/dll/CAM/pathcam.h"
+#include "main/camera_interface.h"
+#include "main/camera_object.h"
+#include "main/dll/CAM/camcontrol_mode_settings.h"
+#include "main/dll/CAM/camcontrol_path_state.h"
+#include "main/game_object.h"
+#include "main/mm.h"
+#include "main/object_transform.h"
+#include "string.h"
+
+
+extern undefined4 camcontrol_getTargetPosition();
+
+extern f64 DOUBLE_803e1698;
+extern f64 DOUBLE_803e16f8;
+extern f32 lbl_803E16D0;
+extern f32 lbl_803E16D4;
+extern f32 lbl_803E16DC;
+extern f32 lbl_803E16F0;
+extern f32 lbl_803E1710;
+extern f32 lbl_803E1714;
+extern f32 lbl_803E1734;
+extern f32 lbl_803E1738;
+extern f32 lbl_803E1740;
+extern f32 lbl_803E1744;
+extern f32 lbl_803E1748;
+
+#define gCamcontrolModeSettings cameraMtxVar57
+/*
+ * --INFO--
+ *
+ * Function: pathcam_loadSettings
+ * EN v1.0 Address: 0x80105E7C
+ * EN v1.0 Size: 1900b
+ * EN v1.1 Address: 0x80106118
+ * EN v1.1 Size: 1904b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)
+{
+    extern int getAngle(f32 dx, f32 dz);
+    GameObject* target;
+    f32 vOutA;
+    f32 vOutB;
+    f32 vOutC;
+    f32 vOutD;
+    f32 fVal;
+    u32 uVal;
+
+    gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 0;
+    gCamcontrolModeSettings->collisionState = 0;
+    gCamcontrolModeSettings->collisionProbeTimer = 0;
+    gCamcontrolModeSettings->wallAvoidanceTimer = 0;
+    gCamcontrolModeSettings->clampFlags.b7 = 0;
+    gCamcontrolModeSettings->yawResponseFrames = 8;
+    target = (GameObject*)cam->anim.targetObj;
+    switch (mode)
+    {
+    case 0:
+        memset(gCamcontrolModeSettings, 0, sizeof(CamcontrolModeSettings));
+        if (data != NULL)
+        {
+            fVal = (f32)(u32) * (u16*)(data + 0x1c);
+            gCamcontrolModeSettings->minDistance = fVal;
+            gCamcontrolModeSettings->targetMinDistance = fVal;
+            fVal = (f32)(u32) * (u16*)(data + 0x1a);
+            gCamcontrolModeSettings->maxDistance = fVal;
+            gCamcontrolModeSettings->targetMaxDistance = fVal;
+            fVal = (f32)(u32)
+            data[0x1f];
+            gCamcontrolModeSettings->baseLowerHeightOffset = fVal;
+            gCamcontrolModeSettings->lowerHeightOffset = fVal;
+            gCamcontrolModeSettings->targetLowerHeightOffset = fVal;
+            fVal = (f32)(u32)
+            data[0x1f];
+            gCamcontrolModeSettings->baseUpperHeightOffset = fVal;
+            gCamcontrolModeSettings->upperHeightOffset = fVal;
+            gCamcontrolModeSettings->targetUpperHeightOffset = fVal;
+        }
+        fVal = lbl_803E16F0;
+        gCamcontrolModeSettings->targetHeight = fVal;
+        gCamcontrolModeSettings->targetTargetHeight = fVal;
+        fVal = lbl_803E1714;
+        gCamcontrolModeSettings->distanceAdjustRate = fVal;
+        gCamcontrolModeSettings->targetDistanceAdjustRate = fVal;
+        fVal = lbl_803E1734;
+        gCamcontrolModeSettings->savedHeightAdjustRate = fVal;
+        gCamcontrolModeSettings->heightAdjustRate = fVal;
+        gCamcontrolModeSettings->targetHeightAdjustRate = fVal;
+        fVal = lbl_803E1738;
+        gCamcontrolModeSettings->slideRightAmount = fVal;
+        gCamcontrolModeSettings->targetSlideRightAmount = fVal;
+        fVal = lbl_803E16DC;
+        gCamcontrolModeSettings->slideLeftAmount = fVal;
+        gCamcontrolModeSettings->targetSlideLeftAmount = fVal;
+        gCamcontrolModeSettings->pad24 = lbl_803E16D0;
+        gCamcontrolModeSettings->pad20 = lbl_803E16D4;
+        gCamcontrolModeSettings->initialized = 1;
+        gCamcontrolModeSettings->fov = cam->fov;
+        camcontrol_getTargetPosition((int)cam, target, &cam->anim.worldPosX, &cam->anim.rotY);
+        fVal = cam->anim.worldPosX;
+        cam->anim.localPosX = fVal;
+        cam->probePosX = fVal;
+        cam->anim.hitboxScale = fVal;
+        fVal = cam->anim.worldPosY;
+        cam->anim.localPosY = fVal;
+        cam->probePosY = fVal;
+        *(f32*)((u8*)cam + 0xAC) = fVal;
+        fVal = cam->anim.worldPosZ;
+        cam->anim.localPosZ = fVal;
+        cam->probePosZ = fVal;
+        *(f32*)((u8*)cam + 0xB0) = fVal;
+        cam->anim.rotX = 0;
+        cam->anim.rotZ = 0;
+        if (data != NULL)
+        {
+            cam->fov = (f32)(u32)
+            data[0x19];
+        }
+        break;
+    case 4:
+        camcontrol_getTargetPosition((int)cam, target, &cam->anim.worldPosX, &cam->anim.rotY);
+        Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
+                                       &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,
+                                       *(int*)&cam->anim.parent);
+        ((void (*)(int, f32*, f32*, f32*, f32*, int, f32))(*gCameraInterface)->getRelativePosition)(
+            (int)cam, &vOutA, &vOutB, &vOutC, &vOutD, 0, gCamcontrolModeSettings->targetHeight);
+        vOutB = cam->anim.localPosY - (target->anim.localPosY + gCamcontrolModeSettings->targetHeight);
+        cam->anim.rotY = getAngle(vOutB, vOutD);
+        cam->anim.rotZ = 0;
+        cam->probePosX = cam->anim.worldPosX;
+        cam->probePosY = cam->anim.worldPosY;
+        cam->probePosZ = cam->anim.worldPosZ;
+        cam->anim.hitboxScale = cam->anim.localPosX;
+        *(f32*)((u8*)cam + 0xAC) = cam->anim.localPosY;
+        *(f32*)((u8*)cam + 0xB0) = cam->anim.localPosZ;
+        cam->fov = gCamcontrolModeSettings->fov;
+        gCamcontrolModeSettings->transitionTimer = 0;
+        break;
+    case 2:
+        if (data != NULL)
+        {
+            gCamcontrolModeSettings->targetTargetHeight = lbl_803E16F0;
+            fVal = (f32)(u32)
+            data[6];
+            gCamcontrolModeSettings->baseLowerHeightOffset = fVal;
+            gCamcontrolModeSettings->targetLowerHeightOffset = fVal;
+            fVal = (f32)(u32)
+            data[8];
+            gCamcontrolModeSettings->baseUpperHeightOffset = fVal;
+            gCamcontrolModeSettings->targetUpperHeightOffset = fVal;
+            gCamcontrolModeSettings->targetMinDistance = (f32)(u32)
+            data[3];
+            gCamcontrolModeSettings->targetMaxDistance = (f32)(u32)
+            data[4];
+            gCamcontrolModeSettings->fov = (f32) * (s8*)(data + 2);
+            gCamcontrolModeSettings->targetSlideRightAmount = (f32)(u32)
+            data[9];
+            gCamcontrolModeSettings->targetSlideLeftAmount = (f32)(u32)
+            data[0xa];
+            uVal = data[0xb];
+            if (uVal != 0)
+            {
+                gCamcontrolModeSettings->targetDistanceAdjustRate = (f32)uVal / lbl_803E1710;
+            }
+            else
+            {
+                gCamcontrolModeSettings->targetDistanceAdjustRate = lbl_803E1714;
+            }
+            uVal = data[0xc];
+            if (uVal != 0)
+            {
+                gCamcontrolModeSettings->targetHeightAdjustRate = (f32)uVal / lbl_803E1710;
+            }
+            else
+            {
+                gCamcontrolModeSettings->targetHeightAdjustRate = lbl_803E1714;
+            }
+            gCamcontrolModeSettings->transitionTimer = (s16) * (s8*)(data + 1);
+            gCamcontrolModeSettings->transitionDuration = (s16) * (s8*)(data + 1);
+            cam->unk13B = data[7];
+        }
+        else
+        {
+            gCamcontrolModeSettings->targetTargetHeight = gCamcontrolModeSettings->savedTargetHeight;
+            fVal = gCamcontrolModeSettings->savedLowerHeightOffset;
+            gCamcontrolModeSettings->baseLowerHeightOffset = fVal;
+            gCamcontrolModeSettings->targetLowerHeightOffset = fVal;
+            fVal = gCamcontrolModeSettings->savedUpperHeightOffset;
+            gCamcontrolModeSettings->baseUpperHeightOffset = fVal;
+            gCamcontrolModeSettings->targetUpperHeightOffset = fVal;
+            gCamcontrolModeSettings->targetMinDistance = gCamcontrolModeSettings->savedMinDistance;
+            gCamcontrolModeSettings->targetMaxDistance = gCamcontrolModeSettings->savedMaxDistance;
+            gCamcontrolModeSettings->fov = gCamcontrolModeSettings->savedFov;
+            gCamcontrolModeSettings->targetSlideRightAmount =
+                gCamcontrolModeSettings->savedSlideRightAmount;
+            gCamcontrolModeSettings->targetSlideLeftAmount =
+                gCamcontrolModeSettings->savedSlideLeftAmount;
+            gCamcontrolModeSettings->targetDistanceAdjustRate =
+                gCamcontrolModeSettings->savedDistanceAdjustRate;
+            gCamcontrolModeSettings->targetHeightAdjustRate =
+                gCamcontrolModeSettings->savedHeightAdjustRate;
+            gCamcontrolModeSettings->transitionTimer = 0x3c;
+            gCamcontrolModeSettings->transitionDuration = 0x3c;
+        }
+        gCamcontrolModeSettings->savedTargetHeight = gCamcontrolModeSettings->targetHeight;
+        gCamcontrolModeSettings->savedLowerHeightOffset = gCamcontrolModeSettings->lowerHeightOffset;
+        gCamcontrolModeSettings->savedUpperHeightOffset = gCamcontrolModeSettings->upperHeightOffset;
+        gCamcontrolModeSettings->savedMinDistance = gCamcontrolModeSettings->minDistance;
+        gCamcontrolModeSettings->savedMaxDistance = gCamcontrolModeSettings->maxDistance;
+        gCamcontrolModeSettings->savedFov = cam->fov;
+        gCamcontrolModeSettings->savedSlideRightAmount = gCamcontrolModeSettings->slideRightAmount;
+        gCamcontrolModeSettings->savedSlideLeftAmount = gCamcontrolModeSettings->slideLeftAmount;
+        gCamcontrolModeSettings->savedDistanceAdjustRate =
+            gCamcontrolModeSettings->distanceAdjustRate;
+        gCamcontrolModeSettings->savedHeightAdjustRate = gCamcontrolModeSettings->heightAdjustRate;
+        if ((data != NULL) && (data[0xd] != 0))
+        {
+            camcontrol_getTargetPosition((int)cam, target, &cam->anim.worldPosX, &cam->anim.rotY);
+            Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
+                                           &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,
+                                           *(int*)&cam->anim.parent);
+            gCamcontrolModeSettings->transitionTimer = 0;
+        }
+        break;
+    case 3:
+        cam->fov = gCamcontrolModeSettings->fov;
+        cam->anim.worldPosX = gCamcontrolModeSettings->savedWorldX;
+        cam->anim.worldPosY = gCamcontrolModeSettings->savedWorldY;
+        cam->anim.worldPosZ = gCamcontrolModeSettings->savedWorldZ;
+        Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
+                                       &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,
+                                       *(int*)&cam->anim.parent);
+        cam->anim.rotX = gCamcontrolModeSettings->savedRotX;
+        cam->anim.rotY = gCamcontrolModeSettings->savedRotY;
+        cam->anim.rotZ = gCamcontrolModeSettings->savedRotZ;
+        cam->anim.hitboxScale = cam->anim.localPosX;
+        *(f32*)((u8*)cam + 0xAC) = cam->anim.localPosY;
+        *(f32*)((u8*)cam + 0xB0) = cam->anim.localPosZ;
+        cam->probePosX = cam->anim.worldPosX;
+        cam->probePosY = cam->anim.worldPosY;
+        cam->probePosZ = cam->anim.worldPosZ;
+        gCamcontrolModeSettings->transitionTimer = 0;
+        break;
+    case 1:
+        cam->fov = gCamcontrolModeSettings->fov;
+        gCamcontrolModeSettings->wallAvoidanceFlags.b7 =
+            gCamcontrolModeSettings->wallAvoidanceFlags.b6;
+        break;
+    }
+    gCamcontrolModeSettings->wallAvoidanceFlags.b6 = 0;
+    cam->unk13E = 1;
+}
+
+void camcontrol_releaseModeSettings(void)
+{
+    mm_free(cameraMtxVar57);
+    cameraMtxVar57 = 0;
+}
+
+void camcontrol_initialiseModeSettings(void)
+{
+    cameraMtxVar57 = (CamcontrolModeSettings*)mmAlloc(sizeof(CamcontrolModeSettings), 0xf, 0);
+    memset(cameraMtxVar57, 0, sizeof(CamcontrolModeSettings));
+    return;
+}
+
+void camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, undefined4 param_4, int param_5);
