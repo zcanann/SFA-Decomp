@@ -27,10 +27,6 @@ extern int fn_8008912C(void);
 extern void selectTexture(int tex, int a);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 extern int getHudHiddenFrameCount(void);
-extern f32 lbl_803DD1E0;
-extern f32 lbl_803DD1E4;
-extern f32 lbl_803DD1E8;
-extern u8 cloudOverridePosition;
 extern volatile f32 lbl_803DB780;
 extern const f32 lbl_803DF2B4;
 extern const f32 lbl_803DF2C0;
@@ -142,11 +138,11 @@ void renderClouds(int a, int b, int c, int d)
         model = Obj_GetActiveModel((int)lbl_8039AB28.upperCloudObj);
         *(u16*)(model + 0x18) = *(u16*)(model + 0x18) & ~8;
         lbl_8039AB28.upperCloudObj->anim.alpha = 0xff;
-        if ((u32)cloudOverridePosition != 0)
+        if ((u32)gCloudOverridePositionValid != 0)
         {
-            lbl_8039AB28.upperCloudObj->anim.localPosX = lbl_803DD1E8;
-            lbl_8039AB28.upperCloudObj->anim.localPosY = lbl_803DF2C0 + lbl_803DD1E4;
-            lbl_8039AB28.upperCloudObj->anim.localPosZ = lbl_803DD1E0;
+            lbl_8039AB28.upperCloudObj->anim.localPosX = gCloudOverridePositionX;
+            lbl_8039AB28.upperCloudObj->anim.localPosY = lbl_803DF2C0 + gCloudOverridePositionY;
+            lbl_8039AB28.upperCloudObj->anim.localPosZ = gCloudOverridePositionZ;
         }
         else
         {
@@ -248,11 +244,11 @@ void renderClouds(int a, int b, int c, int d)
         model = Obj_GetActiveModel((int)lbl_8039AB28.lowerCloudObj);
         *(u16*)(model + 0x18) = *(u16*)(model + 0x18) & ~8;
         lbl_8039AB28.lowerCloudObj->anim.alpha = 0xff;
-        if ((u32)cloudOverridePosition != 0)
+        if ((u32)gCloudOverridePositionValid != 0)
         {
-            lbl_8039AB28.lowerCloudObj->anim.localPosX = lbl_803DD1E8;
-            lbl_8039AB28.lowerCloudObj->anim.localPosY = lbl_803DD1E4 - lbl_803DF2D8;
-            lbl_8039AB28.lowerCloudObj->anim.localPosZ = lbl_803DD1E0;
+            lbl_8039AB28.lowerCloudObj->anim.localPosX = gCloudOverridePositionX;
+            lbl_8039AB28.lowerCloudObj->anim.localPosY = gCloudOverridePositionY - lbl_803DF2D8;
+            lbl_8039AB28.lowerCloudObj->anim.localPosZ = gCloudOverridePositionZ;
         }
         else
         {

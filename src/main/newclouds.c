@@ -2,6 +2,7 @@
 #include "main/newclouds.h"
 #include "main/audio/sfx.h"
 #include "main/cloud_action_runtime.h"
+#include "main/cloud_layer_state.h"
 #include "main/gamebits.h"
 #include "main/object_transform.h"
 #include "main/objtexture.h"
@@ -114,22 +115,17 @@ void dll_07_func0A_nop(void)
 {
 }
 
-extern u8 cloudOverridePosition;
-extern f32 lbl_803DD1E8;
-extern f32 lbl_803DD1E4;
-extern f32 lbl_803DD1E0;
-
 void cloudClearOverridePosition(void)
 {
-    cloudOverridePosition = 0;
+    gCloudOverridePositionValid = 0;
 }
 
 void cloudSetOverridePosition(f32 a, f32 b, f32 c)
 {
-    cloudOverridePosition = 1;
-    lbl_803DD1E8 = a;
-    lbl_803DD1E4 = b;
-    lbl_803DD1E0 = c;
+    gCloudOverridePositionValid = 1;
+    gCloudOverridePositionX = a;
+    gCloudOverridePositionY = b;
+    gCloudOverridePositionZ = c;
 }
 
 extern void padUpdate(void);

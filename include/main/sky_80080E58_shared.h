@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/cloud_action_runtime.h"
+#include "main/cloud_layer_state.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/gamebits.h"
@@ -848,8 +849,6 @@ extern void getEnvfxActImmediately(void *obj, void *target, int effectId, int fl
 #pragma pop
 
 /* Pattern wrappers. */
-
-
 
 #pragma push
 #pragma pop
