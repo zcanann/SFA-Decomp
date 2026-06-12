@@ -52,13 +52,9 @@ extern u8 framesThisStep;
 
 
 
-void ProjectileSwitch_free(void);
 
 /* 8b "li r3, N; blr" returners. */
-int levelname_getExtraSize(void);
-int ProjectileSwitch_getExtraSize(void);
 
-int ProjectileSwitch_getObjectTypeId(int* obj);
 
 
 ObjectDescriptor gAreaObjDescriptor = {
@@ -80,19 +76,6 @@ ObjectDescriptor gAreaObjDescriptor = {
 #include "main/dll/screenOverlay.h"
 #include "main/objanim_internal.h"
 
-typedef struct ProjectileSwitchPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    u8 unk1E;
-    u8 pad1F[0x20 - 0x1F];
-    u8 unk20;
-    u8 unk21;
-    u8 unk22;
-    u8 unk23;
-    u8 pad24[0x28 - 0x24];
-} ProjectileSwitchPlacement;
 
 
 typedef struct InvisibleHitSwitchPlacement
@@ -105,17 +88,6 @@ typedef struct InvisibleHitSwitchPlacement
 } InvisibleHitSwitchPlacement;
 
 
-typedef struct ProjectileSwitchState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    u8 pad8[0x20 - 0x8];
-    u8 unk20;
-    u8 unk21;
-    u8 unk22;
-    u8 unk23;
-    u8 pad24[0x28 - 0x24];
-} ProjectileSwitchState;
 
 
 typedef struct InvisibleHitSwitchState
@@ -135,19 +107,8 @@ typedef struct InvisibleHitSwitchState
 
 
 extern void GameBit_Set(int eventId, int value);
-extern void Sfx_PlayFromObject(int obj, int soundId);
-extern void* objFindTexture(int obj, int a, int b);
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, float arg);
-extern int seqStreamLookupFn_8007fff8(void* table, int mode, int seq);
-extern void fn_8003B608(u32 a, u32 b, u32 c);
 
 extern f32 timeDelta;
-extern u8 lbl_80321008[];
-extern f32 lbl_803E3700;
-extern f32 lbl_803E3704;
-extern f32 lbl_803E3708;
-extern f32 lbl_803E3718;
-extern f32 lbl_803E3728;
 extern f32 lbl_803E3730;
 extern f32 lbl_803E3734;
 extern f32 lbl_803E3738;
@@ -161,7 +122,6 @@ extern f32 lbl_803E373C;
  * EN v1.0 Address: 0x8017A38C
  * EN v1.0 Size: 140b
  */
-void ProjectileSwitch_render(int obj, int p2, int p3, int p4, int p5, char flag);
 
 /*
  * --INFO--
@@ -170,7 +130,6 @@ void ProjectileSwitch_render(int obj, int p2, int p3, int p4, int p5, char flag)
  * EN v1.0 Address: 0x8017A418
  * EN v1.0 Size: 460b
  */
-void ProjectileSwitch_hitDetect(int obj);
 
 /*
  * --INFO--
@@ -179,7 +138,6 @@ void ProjectileSwitch_hitDetect(int obj);
  * EN v1.0 Address: 0x8017A5E4
  * EN v1.0 Size: 280b
  */
-void ProjectileSwitch_update(int obj);
 
 /*
  * --INFO--
@@ -188,12 +146,9 @@ void ProjectileSwitch_update(int obj);
  * EN v1.0 Address: 0x8017A6FC
  * EN v1.0 Size: 488b
  */
-void ProjectileSwitch_init(int obj, u8* initData);
 
 /* Trivial 4b 0-arg blr leaves. */
-void ProjectileSwitch_release(void);
 
-void ProjectileSwitch_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
 int InvisibleHitSwitch_getExtraSize(void) { return 0xc; }

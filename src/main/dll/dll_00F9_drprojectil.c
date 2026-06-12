@@ -107,14 +107,6 @@ typedef struct ProjectileSwitchPlacement
 } ProjectileSwitchPlacement;
 
 
-typedef struct InvisibleHitSwitchPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    u8 unk1E;
-    u8 pad1F[0x20 - 0x1F];
-} InvisibleHitSwitchPlacement;
 
 
 typedef struct ProjectileSwitchState
@@ -130,20 +122,6 @@ typedef struct ProjectileSwitchState
 } ProjectileSwitchState;
 
 
-typedef struct InvisibleHitSwitchState
-{
-    u8 pad0[0x1 - 0x0];
-    u8 unk1;
-    u8 pad2[0x4 - 0x2];
-    f32 unk4;
-    f32 unk8;
-    u8 padC[0x20 - 0xC];
-    u8 unk20;
-    u8 unk21;
-    u8 unk22;
-    u8 unk23;
-    u8 pad24[0x28 - 0x24];
-} InvisibleHitSwitchState;
 
 
 extern void GameBit_Set(int eventId, int value);
@@ -153,17 +131,12 @@ extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, float 
 extern int seqStreamLookupFn_8007fff8(void* table, int mode, int seq);
 extern void fn_8003B608(u32 a, u32 b, u32 c);
 
-extern f32 timeDelta;
 extern u8 lbl_80321008[];
 extern f32 lbl_803E3700;
 extern f32 lbl_803E3704;
 extern f32 lbl_803E3708;
 extern f32 lbl_803E3718;
 extern f32 lbl_803E3728;
-extern f32 lbl_803E3730;
-extern f32 lbl_803E3734;
-extern f32 lbl_803E3738;
-extern f32 lbl_803E373C;
 
 
 /*
@@ -416,13 +389,11 @@ int InvisibleHitSwitch_getExtraSize(void);
  * EN v1.0 Address: 0x8017A8F4
  * EN v1.0 Size: 556b
  */
-void InvisibleHitSwitch_update(int obj);
 
 /* === merged from main/dll/cloudprisoncontrol.c [8017AB20-8017AC2C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
 
 
-extern f32 lbl_803E3750;
 
 /*
  * --INFO--
@@ -437,4 +408,3 @@ extern f32 lbl_803E3750;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void InvisibleHitSwitch_init(int obj, u8* param_2);
