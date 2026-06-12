@@ -174,7 +174,7 @@ extern void dll_2E_func08(u8* sub, int b, int c);
 extern void dll_2E_func09(u8* sub, void* a, void* b, int c);
 extern void objSeqInitFn_80080078(u8* p, int n);
 extern GuardianMsg lbl_802C22D8; /* active/idle heading-pair template (cfguardian_SeqFn) */
-extern int dll_2E_func07(int* obj, ObjAnimUpdateState* animUpdate, u8* sub, int x, int y);
+extern int dll_2E_func07(int obj, ObjSeqState* seq, char* st, s16 x, s16 y);
 extern int animatedObjGetSeqId(int* p);
 extern void saveGame_saveObjectPos(int obj);
 extern void* Obj_GetPlayerObject(void);
@@ -922,7 +922,7 @@ int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     if (animatedObjGetSeqId((int*)animUpdate) != 0x283)
     {
-        if (dll_2E_func07(obj, animUpdate, (u8*)sub, (s16)sel[0], (s16)sel[1]) != 0)
+        if (dll_2E_func07((int)obj, (ObjSeqState*)animUpdate, (char*)sub, (s16)sel[0], (s16)sel[1]) != 0)
         {
             return 1;
         }

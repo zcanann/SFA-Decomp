@@ -87,7 +87,7 @@ void SB_FireBall_release(void);
 int Lamp_getExtraSize(void) { return 0x1; }
 int Flag_getExtraSize(void);
 
-int Lamp_SeqFn(int obj, int unused, int state);
+int Lamp_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 void Lamp_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -104,7 +104,7 @@ void Flag_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 /* EN v1.0 0x801E4F14  size: 60b  Decrement obj->_f4 if > 0, OR in bit 0x8
  * of obj->_af, latch state->_6e = -2 and state->_56 = 0; return 0. */
 
-int Lamp_SeqFn(int obj, int unused, int state)
+int Lamp_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern void* Obj_GetPlayerObject(void);
     u8 effectArgs[0x18];
@@ -112,15 +112,15 @@ int Lamp_SeqFn(int obj, int unused, int state)
 
     if ((s32)randomGetRange(0, 1) != 0)
     {
-        *(u8*)(state + 0x90) = 4;
+        animUpdate->sequenceControlFlags = 4;
     }
     else
     {
-        *(u8*)(state + 0x90) = 8;
+        animUpdate->sequenceControlFlags = 8;
     }
-    *(u8*)(state + 0x56) = 0;
-    *(s16*)(state + 0x6e) = -1;
-    *(s16*)(state + 0x6e) = (s16)(*(s16*)(state + 0x6e) & ~0x20);
+    animUpdate->sequenceEventActive = 0;
+    animUpdate->hitVolumePair = -1;
+    animUpdate->hitVolumePair &= ~0x20;
 
     if (Obj_GetPlayerObject() == NULL)
     {

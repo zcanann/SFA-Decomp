@@ -4,6 +4,7 @@
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
+#include "main/dll/dll_002E_moveLib.h"
 
 extern void Sfx_PlayFromObject(SHthorntailObject* obj, u16 volumeId);
 extern void Sfx_StopObjectChannel(int obj, u16 volumeId);
@@ -14,7 +15,6 @@ extern int ObjTrigger_IsSet();
 extern void characterDoEyeAnims(int obj, int collisionShapeState);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
-extern int dll_2E_func07();
 extern int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject * obj);
 
 extern f32 timeDelta;
@@ -282,7 +282,7 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unuse
     impactPending = (int)(runtime->behaviorFlags & SHTHORNTAIL_FLAG_IMPACT_PENDING);
     if (impactPending != 0)
     {
-        impactHandled = dll_2E_func07((int)obj, (int)animUpdate, (int)runtime, 0, 0);
+        impactHandled = dll_2E_func07((int)obj, (ObjSeqState*)animUpdate, (char*)runtime, 0, 0);
         if (impactHandled != 0)
         {
             return 0;

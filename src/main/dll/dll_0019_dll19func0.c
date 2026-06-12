@@ -2,6 +2,7 @@
 #include "main/dll/CAM/camnpcspeak_state.h"
 #include "main/game_object.h"
 #include "main/mm.h"
+#include "main/objseq.h"
 
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
@@ -1123,7 +1124,7 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
 
 /* segment pragma-stack balance (re-split): */
 
-int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6)
+int dll_19_func0F(int obj, ObjSeqState* seq, char* st, int p4, int p5, s16 p6)
 {
     extern int* gPlayerInterface;
     extern f32 lbl_803DD5D8;
@@ -1149,19 +1150,19 @@ int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6)
         ((BaddieState*)st)->moveInputX = rest;
         ((BaddieState*)st)->moveInputZ = rest;
     }
-    if ((s8) * (u8*)(state + 0x56) != 1)
+    if ((s8)seq->movementState != 1)
     {
-        *(f32*)(state + 0x40) = ((GameObject*)obj)->anim.localPosX;
-        *(f32*)(state + 0x44) = ((GameObject*)obj)->anim.localPosY;
-        *(f32*)(state + 0x48) = ((GameObject*)obj)->anim.localPosZ;
+        seq->posOffsetX = ((GameObject*)obj)->anim.localPosX;
+        seq->posOffsetY = ((GameObject*)obj)->anim.localPosY;
+        seq->posOffsetZ = ((GameObject*)obj)->anim.localPosZ;
         lbl_803DD5D8 = lbl_803E1C70;
         lbl_803DD5DC = 0;
     }
-    *(s16*)(state + 0x6e) = 0;
-    *(u8*)(state + 0x56) = 1;
+    seq->flags = 0;
+    seq->movementState = 1;
     {
-        f32 ex = *(f32*)(state + 0x40) - ((GameObject*)obj)->anim.localPosX;
-        f32 ez = *(f32*)(state + 0x48) - ((GameObject*)obj)->anim.localPosZ;
+        f32 ex = seq->posOffsetX - ((GameObject*)obj)->anim.localPosX;
+        f32 ez = seq->posOffsetZ - ((GameObject*)obj)->anim.localPosZ;
         dist = sqrtf(ex * ex + ez * ez);
     }
     t = *(char**)&((BaddieState*)st)->targetObj;
@@ -1169,8 +1170,8 @@ int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6)
     {
         return 0;
     }
-    nx = *(f32*)(t + 0xc) - *(f32*)(state + 0x40);
-    nz = *(f32*)(t + 0x14) - *(f32*)(state + 0x48);
+    nx = *(f32*)(t + 0xc) - seq->posOffsetX;
+    nz = *(f32*)(t + 0x14) - seq->posOffsetZ;
     {
         f32 total = sqrtf(nx * nx + nz * nz);
         f32 step = timeDelta * (total - dist) * lbl_803E1C74;
@@ -1214,8 +1215,8 @@ int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6)
             }
             if (delta < 0x100 && delta > -0x100)
             {
-                *(u8*)(state + 0x56) = 0;
-                *(s16*)(state + 0x5a) = (s16)(*(s16*)(state + 0x58) - 1);
+                seq->movementState = 0;
+                seq->prevFrame = (s16)(seq->curFrame - 1);
             }
             else
             {
@@ -1230,21 +1231,21 @@ int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6)
             nz = nz / total;
             ((BaddieState*)st)->moveInputX = -nx * step;
             ((BaddieState*)st)->moveInputZ = nz * step;
-            ((GameObject*)obj)->anim.localPosX = dist * nx + *(f32*)(state + 0x40);
-            ((GameObject*)obj)->anim.localPosZ = dist * nz + *(f32*)(state + 0x48);
+            ((GameObject*)obj)->anim.localPosX = dist * nx + seq->posOffsetX;
+            ((GameObject*)obj)->anim.localPosZ = dist * nz + seq->posOffsetZ;
             td = timeDelta;
             (*(void (**)(int, char*, f32, f32, int, int))(*gPlayerInterface + 0x8))(
                 obj, st, td, td, p4, p5);
         }
     }
     lbl_803DD5D8 = dist;
-    if ((s8) * (u8*)(state + 0x56) == 0)
+    if ((s8)seq->movementState == 0)
     {
         *(u8*)(st + 0x405) = 0;
         ((BaddieState*)st)->controlMode = p6;
         *(int*)&((BaddieState*)st)->targetObj = 0;
-        *(s16*)(state + 0x6e) = -1;
-        *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) & ~0x60;
+        seq->flags = -1;
+        seq->flags = seq->flags & ~0x60;
         ((BaddieState*)st)->physicsActive = 0;
         GameBit_Set(*(s16*)(st + 0x3f4), 0);
     }

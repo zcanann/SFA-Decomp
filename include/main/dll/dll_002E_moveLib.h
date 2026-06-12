@@ -2,8 +2,9 @@
 #define MAIN_DLL_MOVELIB_H_
 
 #include "ghidra_import.h"
+#include "main/objseq.h"
 
-int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6);
+int dll_19_func0F(int obj, ObjSeqState *seq, char *st, int p4, int p5, s16 p6);
 void FUN_801135c0(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                  undefined2 param_5,float *param_6,float *param_7,int *param_8);
 void FUN_80113758(undefined4 param_1,undefined4 param_2,int param_3,undefined4 param_4,
@@ -33,5 +34,6 @@ void FUN_801149b8(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined2 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 void FUN_801149bc(short *param_1,int param_2,int param_3);
 void FUN_80114b10(int param_1,undefined4 *param_2,undefined2 param_3,undefined2 param_4,int param_5);
+int dll_2E_func07(int obj, ObjSeqState *seq, char *st, s16 a, s16 b);
 
 #endif /* MAIN_DLL_MOVELIB_H_ */

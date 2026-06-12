@@ -519,7 +519,7 @@ int dll_2E_func0E(int obj, int curve, f32 phase, int p4, int c, f32* d, int* fla
 
 /* EN v1.0 0x80114BB0  size: 572b  Object-sequence scripted-move step: phase 4
  * arms the move, phase 5 walks the setup/playback sub-phases. */
-int dll_2E_func07(int obj, char* state, char* st, s16 a, s16 b)
+int dll_2E_func07(int obj, ObjSeqState* seq, char* st, s16 a, s16 b)
 {
     extern void* seqFn_800394a0(void); /* #57 */
     extern void objFn_8003acfc(int* obj, int* types, int count, char* out); /* #57 */
@@ -535,19 +535,19 @@ int dll_2E_func07(int obj, char* state, char* st, s16 a, s16 b)
         char* p = *(char**)&((GameObject*)obj)->anim.hitReactState;
         *(s16*)(p + 0x60) = *(s16*)(p + 0x60) | 1;
     }
-    mode = (s8) * (u8*)(state + 0x56);
+    mode = (s8)seq->movementState;
     if (mode == 4)
     {
         *(int*)(st + 0x5f8) = 0x50;
-        *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) & ~8;
-        *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) & ~2;
+        seq->flags = seq->flags & ~8;
+        seq->flags = seq->flags & ~2;
         *(u8*)(st + 0x600) = 3;
-        *(u8*)(state + 0x56) = 5;
+        seq->movementState = 5;
         if ((*(u8*)(st + 0x611) & 2) == 0)
         {
-            *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) & ~4;
+            seq->flags = seq->flags & ~4;
         }
-        *(void (**)(int*))(state + 0xe8) = fn_80114B1C;
+        seq->freeCallback = (ObjAnimSequenceFreeCallback)fn_80114B1C;
         return 0;
     }
     else if (mode == 5)
@@ -579,16 +579,16 @@ int dll_2E_func07(int obj, char* state, char* st, s16 a, s16 b)
             if (*(u8*)(st + 0x600) == 7)
             {
                 s16* v;
-                *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) | 8;
+                seq->flags = seq->flags | 8;
                 v = objModelGetVecFn_800395d8(obj, 0);
                 if (v != NULL)
                 {
-                    *(s16*)(state + 0x114) = v[1];
-                    *(s16*)(state + 0x116) = v[0];
+                    seq->unk114 = v[1];
+                    seq->unk116 = v[0];
                 }
                 *(u8*)(st + 0x600) = 0;
-                *(u8*)(state + 0x56) = 0;
-                *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) | 4;
+                seq->movementState = 0;
+                seq->flags = seq->flags | 4;
                 return 0;
             }
             return 0;
