@@ -984,14 +984,8 @@ main/dll/creator1C4.c:
 main/dll/dimbarrier.c:
 	.text       start:0x801C83D0 end:0x801C8EBC
 
-main/dll/creator1C6.c:
-	.text       start:0x801C8EBC end:0x801C91B0
-
 main/dll/scene1C7.c:
-	.text       start:0x801C91B0 end:0x801C9544
-
-main/dll/flybaddie.c:
-	.text       start:0x801C9544 end:0x801C9660
+	.text       start:0x801C8EBC end:0x801C9660
 
 main/dll/colrise.c:
 	.text       start:0x801C9660 end:0x801C9660
