@@ -335,6 +335,9 @@ void wmsun_update(int obj)
     {
         if (GameBit_Get(0x38f) != 0)
         {
+            /* v is only set when b < 0xfa - retail-faithful shape (at
+               b >= 0xfa the clamp-and-store is effectively a no-op);
+               same pattern in the fades below. Do not "fix". */
             b = objAnim->alpha;
             if (b < 0xfa)
             {

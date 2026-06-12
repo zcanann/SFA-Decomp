@@ -377,7 +377,7 @@ void wmwallcrawler_update(int obj)
                             for (k = 0; k < n; k++)
                             {
                                 d = *list[idx] - ((GameObject*)obj)->anim.localPosY;
-                                if (d < *(f32*)&lbl_803E5FB0)
+                                if (d < *(f32*)&lbl_803E5FB0 /* #81 launder */)
                                 {
                                     d = d * *(f32*)&lbl_803E5FE0;
                                 }

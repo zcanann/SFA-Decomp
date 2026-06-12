@@ -35,7 +35,6 @@ STATIC_ASSERT(offsetof(WmObjCreatorPlacement, yaw) == 0x1E);
 STATIC_ASSERT(offsetof(WmObjCreatorPlacement, spawnJitter) == 0x1F);
 STATIC_ASSERT(sizeof(WmObjCreatorPlacement) == 0x24);
 
-/* WM_Galleon_getExtraSize == 0x10. */
 typedef struct WmGalleonState
 {
     u8 pad00[0xC];
@@ -195,9 +194,6 @@ int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-#define OBJ_U8(obj, offset) (*(u8 *)((u8 *)(obj) + (offset)))
-#define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
-#define OBJ_S32(obj, offset) (*(s32 *)((u8 *)(obj) + (offset)))
 #define OBJ_F32(obj, offset) (*(f32 *)((u8 *)(obj) + (offset)))
 #define OBJ_PTR(obj, offset) (*(void **)((u8 *)(obj) + (offset)))
 
@@ -208,6 +204,7 @@ int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 #define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
     (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
 
+/* neighbor-TU placement layouts (dll_01FB) shared by this unit */
 typedef struct Dll1FBSetup
 {
     ObjPlacement base;
@@ -230,6 +227,9 @@ typedef struct WMSeqObjectSetup
     s8 setupType;
 } WMSeqObjectSetup;
 
+/* NOTE: distinct from the WmGalleonState head-section copy above -
+   this is the galleon TU's own state layout (the lowercase-m one is
+   the WM_ObjCreator-group view of the same 0x10 block). */
 typedef struct WMGalleonState
 {
     f32 savedX;
@@ -387,4 +387,5 @@ void WM_Galleon_initialise(void)
 {
 }
 
+/* cross-TU: defined in dll_01FA_wmseqobject.c */
 int WM_seqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);

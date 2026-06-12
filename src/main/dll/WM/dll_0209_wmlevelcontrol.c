@@ -99,7 +99,7 @@ void wmlevelcontrol_update(int obj)
     WmLevelControlState* state;
     float timer;
 
-    Obj_GetPlayerObject();
+    Obj_GetPlayerObject(); /* result unused (retail does the same call) */
     state = ((GameObject*)obj)->extra;
     timer = state->messageTimer;
     if (timer > lbl_803E5E70)

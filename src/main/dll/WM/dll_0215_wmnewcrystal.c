@@ -131,6 +131,8 @@ int wmnewcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
         if (GameBit_Get(WMNEWCRYSTAL_GAMEBIT_AMBIENT_FX) == 0)
         {
             (*gPartfxInterface)->spawnObject(obj, WMNEWCRYSTAL_PARTICLE_ID, NULL, 2, -1, NULL);
+            /* params is uninitialized here on purpose - retail passes the raw
+               stack block for this effect */
             (*gPartfxInterface)->spawnObject(obj, WMNEWCRYSTAL_PARTICLE_ID, &params, 2, -1, NULL);
         }
         WM_newcrystalFn_800969b0((int*)obj, state, 640.0f, 36.0f, -60.0f, 5.0f, 100.0f, 1);
@@ -165,7 +167,7 @@ void wmnewcrystal_free(void)
 
 void wmnewcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
-    objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f);
+    objRenderFn_8003b8f4(p1, p2, p3, p4, p5, 1.0f); /* literal, not the named 1.0 extern (#71 pool shape) */
 }
 
 void wmnewcrystal_hitDetect(void)

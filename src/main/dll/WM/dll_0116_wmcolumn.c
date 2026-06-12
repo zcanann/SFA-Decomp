@@ -24,14 +24,14 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 #include "main/audio/sfx_ids.h"
 #include "main/dll/groundAnimator.h"
 #include "main/game_object.h"
-#include "main/objseq.h"
 
 typedef struct WmColumnPlacement
 {
     u8 pad0[0x18 - 0x0];
     u8 rotXByte;    /* 0x18: rotX in 1/256 turns */
-    u8 modelIndex;  /* 0x19: bank index; also the column's type offset
-                       (its seqId is GPSHpickobj + modelIndex) */
+    u8 modelIndex;  /* 0x19: bank index; the column variant's seqId is
+                       500 + modelIndex (500 = retail type 'GPSHpickobj',
+                       this DLL; 499 = its 'GPSH_Scene' spot object) */
     u8 pad1A[0x1E - 0x1A];
     s16 gameBit;    /* 0x1E: set while this column sits on its scene
                        spot, -1 = none */
@@ -91,7 +91,7 @@ typedef void (*GroundAnimatorFreeFn)(int obj);
 typedef int (*GroundAnimatorVisibleFn)(int obj, int visible);
 typedef int (*GroundAnimatorAnimStateFn)(int obj, int state);
 typedef void (*GroundAnimatorSetVisibleFn)(int state, int visible);
-typedef void (*GroundAnimatorInitAnimFn)(void* obj, undefined4 state, int param_3);
+typedef void (*GroundAnimatorInitAnimFn)(void* obj, undefined4 state, int arg);
 
 /* the carryable/groundAnimator interface vtable (gCarryableInterface) */
 typedef struct CarryableInterface
@@ -305,6 +305,8 @@ u32 jumptable_803214DC[] = {
     (u32)((u8*)appleontree_update + 0x71C),
 };
 
+/* ---- v1.1-drift appleontree content (DLL 0x0117 range) from here
+   down - see the header note. ---- */
 #pragma scheduling on
 #pragma peephole on
 void FUN_8017db40(uint param_1, int param_2)
@@ -501,9 +503,10 @@ void FUN_8017de58(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-/* appleontree_handleCollectableHit: ground-animator collectable hit handler. When player is in
- * range, either send a trigger event (first contact) or apply healing +
- * particle FX + sfx + free-or-disable. */
+/* forward decl only - appleontree_handleCollectableHit (the
+ * ground-animator collectable hit handler: trigger event on first
+ * contact, else healing + particle FX + sfx + free-or-disable) is
+ * FUN_8017de58's real name; see the header note. */
 void appleontree_handleCollectableHit(int obj);
 
 undefined4 FUN_8017e15c(double param_1, undefined2* param_2, int param_3)
@@ -703,12 +706,3 @@ undefined4 FUN_8017e3c0(double param_1, undefined2* param_2, int param_3)
     return uVar4;
 }
 
-void appleontree_setScale(void);
-
-int appleontree_getExtraSize(void);
-
-u8 appleontree_modelMtxFn(int* obj);
-
-void appleontree_free(int* obj);
-
-void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible);

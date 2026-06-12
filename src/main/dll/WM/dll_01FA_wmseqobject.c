@@ -3,6 +3,8 @@
 #include "main/obj_placement.h"
 
 /* WM_ObjCreator per-object extra state (four s16 slots). */
+/* TU-boundary copies of the WM_ObjCreator records (canonical copies
+   in dll_01F9_wmobjcreator.c) */
 typedef struct WmObjCreatorState
 {
     s16 gameBit; /* 0x00: spawn gate, -1 = always */
@@ -31,7 +33,6 @@ STATIC_ASSERT(offsetof(WmObjCreatorPlacement, yaw) == 0x1E);
 STATIC_ASSERT(offsetof(WmObjCreatorPlacement, spawnJitter) == 0x1F);
 STATIC_ASSERT(sizeof(WmObjCreatorPlacement) == 0x24);
 
-/* WM_Galleon_getExtraSize == 0x10. */
 typedef struct WmGalleonState
 {
     u8 pad00[0xC];
@@ -44,18 +45,9 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 
-#define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
-#define OBJ_S32(obj, offset) (*(s32 *)((u8 *)(obj) + (offset)))
-
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-#include "main/dll/WC/dll_01F9_wmobjcreator.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
-#include "main/obj_placement.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
@@ -262,4 +254,5 @@ void WM_seqobject_initialise(void)
 {
 }
 
+/* cross-TU: defined in dll_01FB_dll1fb.c (shared SeqFn) */
 int dll_1FB_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);

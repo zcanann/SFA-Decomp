@@ -13,7 +13,7 @@ extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);
 extern void ObjLink_AttachChild(int obj, int child, int p3);
 extern EffectInterface** gPartfxInterface;
-extern byte framesThisStep;
+extern u8 framesThisStep;
 extern f32 lbl_803E5E98;
 extern f32 lbl_803E5E9C;
 extern f32 lbl_803E5EA0;
