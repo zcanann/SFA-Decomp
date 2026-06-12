@@ -1,0 +1,512 @@
+#include "main/dll/CAM/camshipbattle5C.h"
+#include "main/audio/sfx.h"
+#include "main/camera_interface.h"
+#include "main/dll/CAM/camdebug_state.h"
+#include "main/dll/CAM/dll_0045_camTalk.h"
+#include "main/dll/CAM/camstatic_state.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/dll/CAM/viewfinder_state.h"
+#include "main/dll/CAM/dll_5B.h"
+#include "main/mm.h"
+#include "main/object_transform.h"
+#include "main/pad.h"
+
+typedef struct CameraModeStaticPlacement
+{
+    u8 pad0[0x1C - 0x0];
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} CameraModeStaticPlacement;
+
+
+extern u32 getButtonsHeld(int port);
+extern char padGetCX(int port);
+extern char padGetCY(int port);
+extern uint getAngle();
+extern int ObjHits_GetPriorityHit();
+extern void* ObjGroup_GetObjects();
+extern f32 sqrtf(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+
+extern u8 framesThisStep;
+extern ViewfinderState* lbl_803DD548;
+extern CameraModeDebugState* lbl_803DD550;
+extern CameraModeStaticState* lbl_803DD558;
+extern f32 timeDelta;
+extern f32 lbl_803E17C0;
+extern f32 lbl_803E17C4;
+extern f32 lbl_803E17C8;
+extern f32 lbl_803E17CC;
+extern f32 lbl_803E17D0;
+extern f32 lbl_803E17E0;
+extern f32 lbl_803E17E4;
+extern f32 lbl_803E17E8;
+extern f32 lbl_803E17EC;
+extern f32 lbl_803E17F0;
+extern f32 lbl_803E17F4;
+extern f32 lbl_803E17F8;
+extern f32 lbl_803E17FC;
+extern f32 lbl_803E1800;
+extern f32 lbl_803E1804;
+extern f32 lbl_803E1808;
+extern f32 lbl_803E180C;
+extern f32 lbl_803E1810;
+extern f32 lbl_803E1814;
+extern f32 lbl_803E1818;
+extern f32 lbl_803E181C;
+extern f32 lbl_803E1820;
+extern f32 lbl_803E1824;
+extern f32 lbl_803E1828;
+extern f32 lbl_803E182C;
+extern f32 lbl_803E1830;
+extern f32 lbl_803E1840;
+extern f32 lbl_803E1844;
+extern f32 lbl_803E1848;
+extern f32 lbl_803E184C;
+extern f32 lbl_803E1850;
+extern f32 lbl_803E1854;
+extern f32 lbl_803E1858;
+extern f32 lbl_803E185C;
+extern f32 lbl_803E1860;
+extern f32 lbl_803E1870;
+extern f32 lbl_803E1878;
+extern f32 lbl_803E1888;
+extern f32 lbl_803E188C;
+
+
+extern char padGetStickX(int port);
+extern char padGetStickY(int port);
+extern f32 interpolate(f32 v, f32 a, f32 b);
+extern void fn_802961D4(short* obj, int v);
+extern f32 Camera_GetFovY(void);
+extern void viewFinderSetZoom(f32 fov);
+extern void Sfx_StopFromObject(int obj, int sfxId);
+
+/*
+ * --INFO--
+ *
+ * Function: firstPersonDoControls
+ * EN v1.0 Address: 0x8010847C
+ * EN v1.0 Size: 1012b
+ * EN v1.1 Address: 0x80108718
+ * EN v1.1 Size: 1024b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void firstPersonDoControls(short* obj);
+
+
+/*
+ * --INFO--
+ *
+ * Function: firstPersonEnter
+ * EN v1.0 Address: 0x80108870
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80108B18
+ * EN v1.1 Size: 596b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern int fn_802966D4(int obj, int* out);
+
+int firstPersonEnter(u8* cam, s16* p2);
+
+/*
+ * --INFO--
+ *
+ * Function: CameraModeViewfinder_copyToCurrent
+ * EN v1.0 Address: 0x80108874
+ * EN v1.0 Size: 160b
+ * EN v1.1 Address: 0x80108D6C
+ * EN v1.1 Size: 156b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void CameraModeViewfinder_copyToCurrent(undefined2* camObj);
+
+/*
+ * --INFO--
+ *
+ * Function: CameraModeViewfinder_free
+ * EN v1.0 Address: 0x80108914
+ * EN v1.0 Size: 188b
+ * EN v1.1 Address: 0x80108E08
+ * EN v1.1 Size: 192b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern void Rcp_SetViewFinderHudEnabled(int on);
+
+void CameraModeViewfinder_free(int camObj);
+
+extern void buttonDisable(int port, int mask);
+extern void firstPersonZoomOutOnExit(int a, int b);
+extern void fn_80137948(char* fmt, ...);
+extern char sCam5BYDebugFormat;
+
+/*
+ * --INFO--
+ *
+ * Function: CameraModeViewfinder_update
+ * EN v1.0 Address: 0x801089D0
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80108EC8
+ * EN v1.1 Size: 1452b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void CameraModeViewfinder_update(s16* obj);
+
+extern u32 GameBit_Get(int bit);
+extern void* memset(void* dst, int v, int n);
+extern f32 lbl_803E1834;
+
+/*
+ * --INFO--
+ *
+ * Function: CameraModeViewfinder_init
+ * EN v1.0 Address: 0x801089D4
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80109474
+ * EN v1.1 Size: 1396b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void CameraModeViewfinder_init(s16* obj, int mode, int* args);
+
+
+/*
+ * --INFO--
+ *
+ * Function: CameraModeDebug_update
+ * EN v1.0 Address: 0x80108A04
+ * EN v1.0 Size: 848b
+ * EN v1.1 Address: 0x80109A14
+ * EN v1.1 Size: 816b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void CameraModeDebug_update(short* camObj);
+
+/*
+ * --INFO--
+ *
+ * Function: CameraModeDebug_init
+ * EN v1.0 Address: 0x80108D54
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80109D44
+ * EN v1.1 Size: 92b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void CameraModeDebug_init(void);
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80109B04
+ * EN v1.0 Address: 0x80108D58
+ * EN v1.0 Size: 292b
+ * EN v1.1 Address: 0x80109DA0
+ * EN v1.1 Size: 276b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma dont_inline on
+void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2)
+{
+    int* list;
+    int i;
+    void* best;
+    double bestDist;
+    int count;
+    int* obj;
+    int* tmpList;
+    f32 dx, dy, dz;
+    f32 yy;
+    double dist;
+
+    bestDist = lbl_803E1878;
+    best = NULL;
+    tmpList = (int*)ObjGroup_GetObjects(7, &count);
+    for (i = 0, list = tmpList; i < count; i++)
+    {
+        obj = (int*)*list;
+        if (((GameObject*)obj)->anim.classId == filter2 &&
+            *(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x18) == filter1)
+        {
+            dx = x - ((GameObject*)obj)->anim.worldPosX;
+            dy = y - ((GameObject*)obj)->anim.worldPosY;
+            dz = z - ((GameObject*)obj)->anim.worldPosZ;
+            yy = dy * dy;
+            dist = sqrtf(yy + dx * dx + dz * dz);
+            if (dist < bestDist)
+            {
+                bestDist = dist;
+                best = obj;
+            }
+        }
+        list++;
+    }
+    return best;
+}
+#pragma dont_inline reset
+
+
+/*
+ * --INFO--
+ *
+ * Function: CameraModeStatic_update
+ * EN v1.0 Address: 0x80108EA8
+ * EN v1.0 Size: 608b
+ * EN v1.1 Address: 0x80109EE0
+ * EN v1.1 Size: 696b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void CameraModeStatic_update(short* camObj)
+{
+    int angle;
+    uint pitch;
+    int viewObj;
+    int placement;
+    double dz;
+    double dx;
+    double dy;
+
+    if (lbl_803DD558->missingObject != 0)
+    {
+        (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
+    }
+    else
+    {
+        viewObj = *(int*)(camObj + 0x52);
+        placement = (int)lbl_803DD558->staticObject->anim.placementData;
+        if ((*(byte*)(placement + 0x1b) & 1) == 0)
+        {
+            *camObj = ((CameraModeStaticPlacement*)placement)->unk1C + -0x8000;
+        }
+        if ((*(byte*)(placement + 0x1b) & 2) == 0)
+        {
+            camObj[1] = ((CameraModeStaticPlacement*)placement)->unk1E;
+        }
+        if ((*(byte*)(placement + 0x1b) & 4) == 0)
+        {
+            camObj[2] = ((CameraModeStaticPlacement*)placement)->unk20;
+        }
+        ((CameraObject*)camObj)->anim.worldPosX = lbl_803DD558->staticObject->anim.worldPosX;
+        ((CameraObject*)camObj)->anim.worldPosY = lbl_803DD558->staticObject->anim.worldPosY;
+        ((CameraObject*)camObj)->anim.worldPosZ = lbl_803DD558->staticObject->anim.worldPosZ;
+        *(float*)(camObj + 0x5a) = (float)(uint) * (byte*)(placement + 0x1a);
+        dx = (double)(*(float*)(camObj + 0xc) - *(float*)(viewObj + 0x18));
+        dy = (double)(*(float*)(camObj + 0xe) - *(float*)(viewObj + 0x1c));
+        dz = (double)(*(float*)(camObj + 0x10) - *(float*)(viewObj + 0x20));
+        if ((*(byte*)(placement + 0x1b) & 1) != 0)
+        {
+            angle = getAngle(dx, dz);
+            *camObj = -0x8000 - (short)angle;
+        }
+        if ((*(byte*)(placement + 0x1b) & 2) != 0)
+        {
+            pitch = getAngle(dy, sqrtf((float)(dx * dx + (double)(float)(dz * dz))));
+            angle = ((pitch & 0xffff) - (int)((CameraModeStaticPlacement*)placement)->unk1E) - (uint)(ushort)
+            camObj[1];
+            if (0x8000 < angle)
+            {
+                angle = angle + -0xffff;
+            }
+            if (angle < -0x8000)
+            {
+                angle = angle + 0xffff;
+            }
+            camObj[1] = camObj[1] + (short)((int)(angle * (uint)framesThisStep) >> 3);
+        }
+        if ((*(byte*)(placement + 0x1b) & 4) != 0)
+        {
+            viewObj = (int)camObj[2] - (uint) * (ushort*)(viewObj + 4);
+            if (0x8000 < viewObj)
+            {
+                viewObj = viewObj + -0xffff;
+            }
+            if (viewObj < -0x8000)
+            {
+                viewObj = viewObj + 0xffff;
+            }
+            camObj[2] = camObj[2] + (short)((int)(viewObj * (uint)framesThisStep) >> 3);
+        }
+        Obj_TransformWorldPointToLocal(*(float*)(camObj + 0xc), *(float*)(camObj + 0xe),
+                                       *(float*)(camObj + 0x10), (float*)(camObj + 6), (float*)(camObj + 8),
+                                       (float*)(camObj + 10), *(int*)(camObj + 0x18));
+    }
+    return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: CameraModeStatic_init
+ * EN v1.0 Address: 0x80109108
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8010A198
+ * EN v1.1 Size: 520b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void CameraModeStatic_init(u8* cam, int p2, int* p3)
+{
+    GameObject* state;
+    GameObject* best;
+    u8* setup;
+    s16 yaw;
+    int pitch;
+    s16 roll;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+
+    state = ((CameraObject*)cam)->anim.targetObj;
+    if (lbl_803DD558 == NULL)
+    {
+        lbl_803DD558 = (CameraModeStaticState*)mmAlloc(sizeof(CameraModeStaticState), 15, 0);
+    }
+    lbl_803DD558->active = 1;
+    lbl_803DD558->missingObject = 0;
+    best = (GameObject*)fn_80109B04(state->anim.worldPosX, state->anim.worldPosY, state->anim.worldPosZ, *p3, 18);
+    if (best == NULL)
+    {
+        lbl_803DD558->missingObject = 1;
+        return;
+    }
+    lbl_803DD558->staticObject = best;
+    setup = (u8*)best->anim.placementData;
+    dx = best->anim.worldPosX - state->anim.worldPosX;
+    dy = best->anim.worldPosY - state->anim.worldPosY;
+    dz = best->anim.worldPosZ - state->anim.worldPosZ;
+    if ((setup[27] & 1) != 0)
+    {
+        yaw = 0x8000 - getAngle(dx, dz);
+    }
+    else
+    {
+        yaw = ((CameraModeStaticPlacement*)setup)->unk1C + 0x8000;
+    }
+    if ((setup[27] & 2) != 0)
+    {
+        pitch = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz)) - ((CameraModeStaticPlacement*)setup)->unk1E;
+    }
+    else
+    {
+        pitch = ((CameraModeStaticPlacement*)setup)->unk1E;
+    }
+    if ((setup[27] & 4) != 0)
+    {
+        roll = state->anim.rotZ;
+    }
+    else
+    {
+        roll = ((CameraModeStaticPlacement*)setup)->unk20;
+    }
+    {
+        f32 fov = (f32)(u32)setup[26];
+        ((CameraObject*)cam)->anim.worldPosX = best->anim.worldPosX;
+        ((CameraObject*)cam)->anim.worldPosY = best->anim.worldPosY;
+        ((CameraObject*)cam)->anim.worldPosZ = best->anim.worldPosZ;
+        ((CameraObject*)cam)->anim.rotX = yaw;
+        ((CameraObject*)cam)->anim.rotY = pitch;
+        ((CameraObject*)cam)->anim.rotZ = roll;
+        ((CameraObject*)cam)->fov = fov;
+    }
+    Obj_TransformWorldPointToLocal(((CameraObject*)cam)->anim.worldPosX, ((CameraObject*)cam)->anim.worldPosY,
+                                   ((CameraObject*)cam)->anim.worldPosZ,
+                                   (f32*)(cam + 12), (f32*)(cam + 16), (f32*)(cam + 20),
+                                   *(int*)&((CameraObject*)cam)->anim.parent);
+}
+
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8010A104
+ * EN v1.0 Address: 0x8010910C
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8010A3A0
+ * EN v1.1 Size: 888b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag);
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8010A47C
+ * EN v1.0 Address: 0x80109110
+ * EN v1.0 Size: 280b
+ * EN v1.1 Address: 0x8010A718
+ * EN v1.1 Size: 276b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int fn_8010A47C(int curve, int* count, int tag);
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void CameraModeViewfinder_release(void);
+
+void CameraModeViewfinder_initialise(void);
+
+void CameraModeDebug_copyToCurrent_nop(void);
+
+void CameraModeDebug_release_nop(void);
+
+void CameraModeDebug_initialise_nop(void);
+
+void CameraModeStatic_copyToCurrent_nop(void)
+{
+}
+
+void CameraModeStatic_release(void)
+{
+}
+
+void CameraModeStatic_initialise(void)
+{
+}
+
+/* fn_X(lbl); lbl = 0; */
+void CameraModeDebug_free(void);
+
+void CameraModeStatic_free(void)
+{
+    mm_free(lbl_803DD558);
+    lbl_803DD558 = 0;
+}

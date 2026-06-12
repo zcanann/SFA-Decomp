@@ -708,67 +708,7 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeDebug_update(short* camObj)
-{
-    u8* cam = (u8*)camObj;
-    u8* state = *(u8**)(cam + 164);
-    u16 held;
-    f32 move;
-    f32 absMove;
-    f32 absVel;
-    f32 factor;
-    f32 radius;
-
-    if ((getButtonsJustPressed(0) & 2) != 0)
-    {
-        (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
-        return;
-    }
-    move = lbl_803E1840;
-    held = getButtonsHeld(0);
-    if ((held & 8) != 0)
-    {
-        move = lbl_803E1844 * lbl_803DD550->orbitRadius;
-    }
-    if ((held & 4) != 0)
-    {
-        move = lbl_803E1848 * lbl_803DD550->orbitRadius;
-    }
-    absMove = (move < lbl_803E1840) ? -move : move;
-    absVel = (lbl_803DD550->radiusVelocity < lbl_803E1840)
-                 ? -lbl_803DD550->radiusVelocity
-                 : lbl_803DD550->radiusVelocity;
-    factor = lbl_803E1850;
-    if (absMove < absVel)
-    {
-        factor = lbl_803E184C;
-    }
-    lbl_803DD550->radiusVelocity = factor * (move - lbl_803DD550->radiusVelocity) + lbl_803DD550->radiusVelocity;
-    lbl_803DD550->orbitRadius = lbl_803DD550->orbitRadius + lbl_803DD550->radiusVelocity;
-    if (lbl_803DD550->orbitRadius < lbl_803E1854)
-    {
-        lbl_803DD550->orbitRadius = lbl_803E1854;
-    }
-    if (lbl_803DD550->orbitRadius > lbl_803E1858)
-    {
-        lbl_803DD550->orbitRadius = lbl_803E1858;
-    }
-    *(s16*)cam = (s16)(*(s16*)cam - (s8)padGetCX(0) * 3);
-    *(s16*)(cam + 2) = (s16)(*(s16*)(cam + 2) + (s8)padGetCY(0) * 3);
-    {
-        f32 cosYaw = mathSinf(lbl_803E185C * (f32)(s32)(*(s16*)cam - 0x4000) / lbl_803E1860);
-        f32 sinYaw = mathCosf(lbl_803E185C * (f32)(s32)(*(s16*)cam - 0x4000) / lbl_803E1860);
-        f32 sinPitch = mathCosf(lbl_803E185C * (f32)(s32)(*(s16*)(cam + 2) - 0x4000) / lbl_803E1860);
-        f32 cosPitch = mathSinf(lbl_803E185C * (f32)(s32)(*(s16*)(cam + 2) - 0x4000) / lbl_803E1860);
-        radius = lbl_803DD550->orbitRadius;
-        *(f32*)(cam + 24) = *(f32*)(state + 24) + radius * sinPitch * sinYaw;
-        *(f32*)(cam + 28) = lbl_803E1854 + *(f32*)(state + 28) + radius * cosPitch;
-        *(f32*)(cam + 32) = *(f32*)(state + 32) + radius * sinPitch * cosYaw;
-    }
-    Obj_TransformWorldPointToLocal(*(f32*)(cam + 24), *(f32*)(cam + 28), *(f32*)(cam + 32),
-                                   (f32*)(cam + 12), (f32*)(cam + 16), (f32*)(cam + 20),
-                                   *(int*)(cam + 48));
-}
+void CameraModeDebug_update(short* camObj);
 
 /*
  * --INFO--
@@ -783,16 +723,7 @@ void CameraModeDebug_update(short* camObj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeDebug_init(void)
-{
-    if (lbl_803DD550 == NULL)
-    {
-        lbl_803DD550 = (CameraModeDebugState*)mmAlloc(sizeof(CameraModeDebugState), 0xf, 0);
-    }
-    lbl_803DD550->orbitRadius = lbl_803E1870;
-    lbl_803DD550->radiusVelocity = lbl_803E1840;
-    return;
-}
+void CameraModeDebug_init(void);
 
 /*
  * --INFO--
@@ -808,43 +739,7 @@ void CameraModeDebug_init(void)
  * PAL Size: TODO
  */
 #pragma dont_inline on
-void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2)
-{
-    int* list;
-    int i;
-    void* best;
-    double bestDist;
-    int count;
-    int* obj;
-    int* tmpList;
-    f32 dx, dy, dz;
-    f32 yy;
-    double dist;
-
-    bestDist = lbl_803E1878;
-    best = NULL;
-    tmpList = (int*)ObjGroup_GetObjects(7, &count);
-    for (i = 0, list = tmpList; i < count; i++)
-    {
-        obj = (int*)*list;
-        if (((GameObject*)obj)->anim.classId == filter2 &&
-            *(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x18) == filter1)
-        {
-            dx = x - ((GameObject*)obj)->anim.worldPosX;
-            dy = y - ((GameObject*)obj)->anim.worldPosY;
-            dz = z - ((GameObject*)obj)->anim.worldPosZ;
-            yy = dy * dy;
-            dist = sqrtf(yy + dx * dx + dz * dz);
-            if (dist < bestDist)
-            {
-                bestDist = dist;
-                best = obj;
-            }
-        }
-        list++;
-    }
-    return best;
-}
+void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2);
 #pragma dont_inline reset
 
 
@@ -861,82 +756,7 @@ void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeStatic_update(short* camObj)
-{
-    int angle;
-    uint pitch;
-    int viewObj;
-    int placement;
-    double dz;
-    double dx;
-    double dy;
-
-    if (lbl_803DD558->missingObject != 0)
-    {
-        (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
-    }
-    else
-    {
-        viewObj = *(int*)(camObj + 0x52);
-        placement = (int)lbl_803DD558->staticObject->anim.placementData;
-        if ((*(byte*)(placement + 0x1b) & 1) == 0)
-        {
-            *camObj = ((CameraModeStaticPlacement*)placement)->unk1C + -0x8000;
-        }
-        if ((*(byte*)(placement + 0x1b) & 2) == 0)
-        {
-            camObj[1] = ((CameraModeStaticPlacement*)placement)->unk1E;
-        }
-        if ((*(byte*)(placement + 0x1b) & 4) == 0)
-        {
-            camObj[2] = ((CameraModeStaticPlacement*)placement)->unk20;
-        }
-        ((CameraObject*)camObj)->anim.worldPosX = lbl_803DD558->staticObject->anim.worldPosX;
-        ((CameraObject*)camObj)->anim.worldPosY = lbl_803DD558->staticObject->anim.worldPosY;
-        ((CameraObject*)camObj)->anim.worldPosZ = lbl_803DD558->staticObject->anim.worldPosZ;
-        *(float*)(camObj + 0x5a) = (float)(uint) * (byte*)(placement + 0x1a);
-        dx = (double)(*(float*)(camObj + 0xc) - *(float*)(viewObj + 0x18));
-        dy = (double)(*(float*)(camObj + 0xe) - *(float*)(viewObj + 0x1c));
-        dz = (double)(*(float*)(camObj + 0x10) - *(float*)(viewObj + 0x20));
-        if ((*(byte*)(placement + 0x1b) & 1) != 0)
-        {
-            angle = getAngle(dx, dz);
-            *camObj = -0x8000 - (short)angle;
-        }
-        if ((*(byte*)(placement + 0x1b) & 2) != 0)
-        {
-            pitch = getAngle(dy, sqrtf((float)(dx * dx + (double)(float)(dz * dz))));
-            angle = ((pitch & 0xffff) - (int)((CameraModeStaticPlacement*)placement)->unk1E) - (uint)(ushort)
-            camObj[1];
-            if (0x8000 < angle)
-            {
-                angle = angle + -0xffff;
-            }
-            if (angle < -0x8000)
-            {
-                angle = angle + 0xffff;
-            }
-            camObj[1] = camObj[1] + (short)((int)(angle * (uint)framesThisStep) >> 3);
-        }
-        if ((*(byte*)(placement + 0x1b) & 4) != 0)
-        {
-            viewObj = (int)camObj[2] - (uint) * (ushort*)(viewObj + 4);
-            if (0x8000 < viewObj)
-            {
-                viewObj = viewObj + -0xffff;
-            }
-            if (viewObj < -0x8000)
-            {
-                viewObj = viewObj + 0xffff;
-            }
-            camObj[2] = camObj[2] + (short)((int)(viewObj * (uint)framesThisStep) >> 3);
-        }
-        Obj_TransformWorldPointToLocal(*(float*)(camObj + 0xc), *(float*)(camObj + 0xe),
-                                       *(float*)(camObj + 0x10), (float*)(camObj + 6), (float*)(camObj + 8),
-                                       (float*)(camObj + 10), *(int*)(camObj + 0x18));
-    }
-    return;
-}
+void CameraModeStatic_update(short* camObj);
 
 /*
  * --INFO--
@@ -951,75 +771,7 @@ void CameraModeStatic_update(short* camObj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeStatic_init(u8* cam, int p2, int* p3)
-{
-    GameObject* state;
-    GameObject* best;
-    u8* setup;
-    s16 yaw;
-    int pitch;
-    s16 roll;
-    f32 dx;
-    f32 dy;
-    f32 dz;
-
-    state = ((CameraObject*)cam)->anim.targetObj;
-    if (lbl_803DD558 == NULL)
-    {
-        lbl_803DD558 = (CameraModeStaticState*)mmAlloc(sizeof(CameraModeStaticState), 15, 0);
-    }
-    lbl_803DD558->active = 1;
-    lbl_803DD558->missingObject = 0;
-    best = (GameObject*)fn_80109B04(state->anim.worldPosX, state->anim.worldPosY, state->anim.worldPosZ, *p3, 18);
-    if (best == NULL)
-    {
-        lbl_803DD558->missingObject = 1;
-        return;
-    }
-    lbl_803DD558->staticObject = best;
-    setup = (u8*)best->anim.placementData;
-    dx = best->anim.worldPosX - state->anim.worldPosX;
-    dy = best->anim.worldPosY - state->anim.worldPosY;
-    dz = best->anim.worldPosZ - state->anim.worldPosZ;
-    if ((setup[27] & 1) != 0)
-    {
-        yaw = 0x8000 - getAngle(dx, dz);
-    }
-    else
-    {
-        yaw = ((CameraModeStaticPlacement*)setup)->unk1C + 0x8000;
-    }
-    if ((setup[27] & 2) != 0)
-    {
-        pitch = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz)) - ((CameraModeStaticPlacement*)setup)->unk1E;
-    }
-    else
-    {
-        pitch = ((CameraModeStaticPlacement*)setup)->unk1E;
-    }
-    if ((setup[27] & 4) != 0)
-    {
-        roll = state->anim.rotZ;
-    }
-    else
-    {
-        roll = ((CameraModeStaticPlacement*)setup)->unk20;
-    }
-    {
-        f32 fov = (f32)(u32)setup[26];
-        ((CameraObject*)cam)->anim.worldPosX = best->anim.worldPosX;
-        ((CameraObject*)cam)->anim.worldPosY = best->anim.worldPosY;
-        ((CameraObject*)cam)->anim.worldPosZ = best->anim.worldPosZ;
-        ((CameraObject*)cam)->anim.rotX = yaw;
-        ((CameraObject*)cam)->anim.rotY = pitch;
-        ((CameraObject*)cam)->anim.rotZ = roll;
-        ((CameraObject*)cam)->fov = fov;
-    }
-    Obj_TransformWorldPointToLocal(((CameraObject*)cam)->anim.worldPosX, ((CameraObject*)cam)->anim.worldPosY,
-                                   ((CameraObject*)cam)->anim.worldPosZ,
-                                   (f32*)(cam + 12), (f32*)(cam + 16), (f32*)(cam + 20),
-                                   *(int*)&((CameraObject*)cam)->anim.parent);
-}
+void CameraModeStatic_init(u8* cam, int p2, int* p3);
 
 
 /*
@@ -1035,103 +787,7 @@ void CameraModeStatic_init(u8* cam, int p2, int* p3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
-{
-    int curve;
-    int linked;
-    int i;
-    int k;
-    int window[4];
-    int count;
-    int dummy;
-    int found;
-    int done;
-    f32 dist;
-
-    curve = (int)(*gRomCurveInterface)->getById(*p1);
-    found = 1;
-    for (i = 0; i < 5; i++)
-    {
-        if (*(int*)(curve + 28 + i * 4) > -1 &&
-            ((s8) * (s8*)(curve + 27) & (1 << i)) == 0)
-        {
-            linked = (int)(*gRomCurveInterface)->getById(*(int*)(curve + 28 + i * 4));
-            if (linked != 0 &&
-                (*(u8*)(linked + 49) == tag || *(u8*)(linked + 50) == tag ||
-                    *(u8*)(linked + 51) == tag))
-            {
-                found = 0;
-                i = 5;
-            }
-        }
-    }
-    if (found != 0)
-    {
-        for (i = 0; i < 5; i++)
-        {
-            if (*(int*)(curve + 28 + i * 4) > -1 &&
-                ((s8) * (s8*)(curve + 27) & (1 << i)) != 0)
-            {
-                linked = (int)(*gRomCurveInterface)->getById(*(int*)(curve + 28 + i * 4));
-                if (linked != 0 &&
-                    (*(u8*)(linked + 49) == tag || *(u8*)(linked + 50) == tag ||
-                        *(u8*)(linked + 51) == tag))
-                {
-                    *p1 = *(int*)(curve + 28 + i * 4);
-                    i = 5;
-                }
-            }
-        }
-    }
-    done = 0;
-    do
-    {
-        done = 1;
-        curve = (int)(*gRomCurveInterface)->getById(*p1);
-        pathcam_findTaggedNodeWindow((u8*)curve, window, tag);
-        dist = fn_8010AC48(window, x, y, z);
-        if (dist < lbl_803E1888)
-        {
-            if (window[0] > -1)
-            {
-                *p1 = window[0];
-                done = 0;
-            }
-        }
-        else if (dist > lbl_803E188C)
-        {
-            if (window[2] > -1 && window[3] > -1)
-            {
-                *p1 = window[2];
-                done = 0;
-            }
-        }
-    }
-    while (done == 0);
-    curve = (int)(*gRomCurveInterface)->getById(*p1);
-    fn_8010A47C(curve, &count, tag);
-    curve = (int)(*gRomCurveInterface)->getById(*p2);
-    *p2 = *(int*)(fn_8010A47C(curve, &dummy, tag) + 20);
-    for (k = 0; k < count; k++)
-    {
-        curve = (int)(*gRomCurveInterface)->getById(*p2);
-        for (i = 0; i < 5; i++)
-        {
-            if (*(int*)(curve + 28 + i * 4) > -1 &&
-                ((s8) * (s8*)(curve + 27) & (1 << i)) == 0)
-            {
-                linked = (int)(*gRomCurveInterface)->getById(*(int*)(curve + 28 + i * 4));
-                if (linked != 0 &&
-                    (*(u8*)(linked + 49) == tag || *(u8*)(linked + 50) == tag ||
-                        *(u8*)(linked + 51) == tag))
-                {
-                    *p2 = *(int*)(curve + 28 + i * 4);
-                    i = 5;
-                }
-            }
-        }
-    }
-}
+void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag);
 
 /*
  * --INFO--
@@ -1146,43 +802,7 @@ void fn_8010A104(int* p1, int* p2, f32 x, f32 y, f32 z, int tag)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int fn_8010A47C(int curve, int* count, int tag)
-{
-    int i;
-    int done;
-    int linked;
-
-    done = 0;
-    *count = 0;
-    while (done == 0)
-    {
-        done = 1;
-        if ((*(char*)(curve + 0x19) != '\x1b') && (*(char*)(curve + 0x19) != '\x1a'))
-        {
-            for (i = 0; i < 5; i = i + 1)
-            {
-                if ((*(int*)(curve + i * 4 + 0x1c) > -1) &&
-                    (((int)*(char*)(curve + 0x1b) & (1 << i)) != 0))
-                {
-                    linked = (int)(*gRomCurveInterface)->getById(*(int*)(curve + i * 4 + 0x1c));
-                    if (((u32)linked != 0) &&
-                        ((*(u8*)(linked + 0x31) == tag || (*(u8*)(linked + 0x32) == tag)) ||
-                            (*(u8*)(linked + 0x33) == tag)))
-                    {
-                        curve = linked;
-                        done = 0;
-                        i = 5;
-                    }
-                }
-            }
-        }
-        if (done == 0)
-        {
-            *count = *count + 1;
-        }
-    }
-    return curve;
-}
+int fn_8010A47C(int curve, int* count, int tag);
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -1194,39 +814,19 @@ void CameraModeViewfinder_initialise(void)
 {
 }
 
-void CameraModeDebug_copyToCurrent_nop(void)
-{
-}
+void CameraModeDebug_copyToCurrent_nop(void);
 
-void CameraModeDebug_release_nop(void)
-{
-}
+void CameraModeDebug_release_nop(void);
 
-void CameraModeDebug_initialise_nop(void)
-{
-}
+void CameraModeDebug_initialise_nop(void);
 
-void CameraModeStatic_copyToCurrent_nop(void)
-{
-}
+void CameraModeStatic_copyToCurrent_nop(void);
 
-void CameraModeStatic_release(void)
-{
-}
+void CameraModeStatic_release(void);
 
-void CameraModeStatic_initialise(void)
-{
-}
+void CameraModeStatic_initialise(void);
 
 /* fn_X(lbl); lbl = 0; */
-void CameraModeDebug_free(void)
-{
-    mm_free(lbl_803DD550);
-    lbl_803DD550 = 0;
-}
+void CameraModeDebug_free(void);
 
-void CameraModeStatic_free(void)
-{
-    mm_free(lbl_803DD558);
-    lbl_803DD558 = 0;
-}
+void CameraModeStatic_free(void);

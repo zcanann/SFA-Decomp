@@ -710,8 +710,17 @@ main/dll/dll_0043_unk.c:
 main/dll/dll_0045_camTalk.c:
 	.text       start:0x80107AEC end:0x8010847C
 
-main/dll/dll_5B.c:
-	.text       start:0x8010847C end:0x8010A590
+main/dll/dll_0044_cameramodeviewfinder.c:
+	.text       start:0x8010847C end:0x80109748
+
+main/dll/dll_0046_cameramodedebug.c:
+	.text       start:0x80109748 end:0x80109B04
+
+main/dll/dll_0048_cameramodestatic.c:
+	.text       start:0x80109B04 end:0x8010A104
+
+main/dll/dll_8010A104.c:
+	.text       start:0x8010A104 end:0x8010A590
 
 main/dll/camshipbattle5C.c:
 	.text       start:0x8010A590 end:0x8010AEA8
