@@ -1130,16 +1130,16 @@ main/dll/WC/WCdial.c:
 main/dll/WC/WClaser.c:
 	.text       start:0x801EFF7C end:0x801F0AE4
 
-main/dll/ARW/dll_801F0B50.c:
+main/dll/ARW/dll_01FC_laserbeam.c:
 	.text       start:0x801F0AE4 end:0x801F160C
 
-main/dll/ARW/dll_01FE_cfpressures.c:
+main/dll/ARW/dll_01FE_pressureswitch.c:
 	.text       start:0x801F160C end:0x801F1BC8
 
 main/dll/ARW/dll_01FF_dll1ff.c:
 	.text       start:0x801F1BC8 end:0x801F1F1C
 
-main/dll/ARW/dll_01FD_wmlasertar.c:
+main/dll/ARW/dll_01FD_wmlasertarget.c:
 	.text       start:0x801F1F1C end:0x801F20D4
 
 main/dll/ARW/dll_0200_dll200.c:
