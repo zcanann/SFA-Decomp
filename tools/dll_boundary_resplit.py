@@ -509,7 +509,25 @@ def parse_fn_spans(text):
                             started = True
                         if started and d <= 0:
                             break
-                    spans.append((m.group(1), i, e))
+                    name = m.group(1)
+                    head = i
+                    # return-type-on-own-line form (Ghidra phantoms:
+                    # "undefined4\nFUN_xxxx(...)"): FNHEAD_RE eats the first
+                    # char of the leading identifier as a return-type token
+                    # (FUN -> UN). When the head line itself starts with the
+                    # full callable identifier directly before '(' and the
+                    # line above is a bare type token, take the real name and
+                    # extend the span upward so projection collapses the type
+                    # line too (else it orphans as broken syntax).
+                    bm = re.match(r"^([A-Za-z_]\w*)\s*\(", code)
+                    if bm and head > 0:
+                        prev = stripped[head - 1].strip()
+                        if prev and re.fullmatch(
+                                r"[A-Za-z_][\w \t\*]*", prev) and \
+                                "(" not in prev and ";" not in prev:
+                            name = bm.group(1)
+                            head -= 1
+                    spans.append((name, head, e))
                     i = e + 1
                     continue
         depth += code.count("{") - code.count("}")
