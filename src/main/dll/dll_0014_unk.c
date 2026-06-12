@@ -2605,7 +2605,7 @@ void curves_getPos(f32 phase, int curve, float* outX, float* outY, float* outZ)
     }
 }
 
-int RomCurve_func2C(float* state, int unused, int startCurveId)
+int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
 {
     char* stateBytes;
     int currentCurve;
@@ -2623,10 +2623,10 @@ int RomCurve_func2C(float* state, int unused, int startCurveId)
     }
 
     stateBytes = (char*)state;
-    if (((RomCurveWalker*)stateBytes)->reverse != 0)
+    if (state->reverse != 0)
     {
         currentCurve = Objfsa_FindRomCurveById(startCurveId);
-        *(s32*)&((RomCurveWalker*)stateBytes)->nodeA0 = currentCurve;
+        *(s32*)&state->nodeA0 = currentCurve;
         nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
         if (nextId == -1)
         {
@@ -2636,14 +2636,14 @@ int RomCurve_func2C(float* state, int unused, int startCurveId)
     }
 
     currentCurve = Objfsa_FindRomCurveById(startCurveId);
-    *(s32*)&((RomCurveWalker*)stateBytes)->nodeA0 = currentCurve;
-    if (((RomCurveWalker*)stateBytes)->nodeA0 == NULL)
+    *(s32*)&state->nodeA0 = currentCurve;
+    if (state->nodeA0 == NULL)
     {
-        ((RomCurveWalker*)stateBytes)->nodeA0 = NULL;
+        state->nodeA0 = NULL;
         return 1;
     }
 
-    if (((RomCurveWalker*)stateBytes)->reverse == 0)
+    if (state->reverse == 0)
     {
         nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
     }
@@ -2657,30 +2657,30 @@ int RomCurve_func2C(float* state, int unused, int startCurveId)
     }
 
     nextCurve = Objfsa_FindRomCurveById(nextId);
-    *(s32*)&((RomCurveWalker*)stateBytes)->nodeA4 = nextCurve;
-    if (((RomCurveWalker*)stateBytes)->nodeA4 == NULL)
+    *(s32*)&state->nodeA4 = nextCurve;
+    if (state->nodeA4 == NULL)
     {
-        ((RomCurveWalker*)stateBytes)->nodeA4 = NULL;
+        state->nodeA4 = NULL;
         return 1;
     }
 
     ROMCURVE_REFRESH_CONTROL(0xa4);
-    if (RomCurve_goNextPoint((RomCurveWalker*)state) != 0)
+    if (RomCurve_goNextPoint(state) != 0)
     {
         return 1;
     }
 
-    ((RomCurveWalker*)stateBytes)->node94 = Curve_EvalHermite;
-    ((RomCurveWalker*)stateBytes)->node98 = Curve_BuildHermiteCoeffs;
-    ((RomCurveWalker*)stateBytes)->unk84 = stateBytes + 0xa8;
-    ((RomCurveWalker*)stateBytes)->unk88 = stateBytes + 0xc8;
-    ((RomCurveWalker*)stateBytes)->unk8C = stateBytes + 0xe8;
-    ((RomCurveWalker*)stateBytes)->moveNetwork = 8;
-    curvesMove(state);
+    state->node94 = Curve_EvalHermite;
+    state->node98 = Curve_BuildHermiteCoeffs;
+    state->unk84 = state->hermX;
+    state->unk88 = state->hermY;
+    state->unk8C = state->hermZ;
+    state->moveNetwork = 8;
+    curvesMove((float*)state);
     return 0;
 }
 
-int RomCurve_get(float* state, int obj, int* curveTypes, int curveType, f32 maxDistance)
+int RomCurve_get(RomCurveWalker* state, int obj, int* curveTypes, int curveType, f32 maxDistance)
 {
     char* stateBytes;
     int curveId;
@@ -2706,10 +2706,10 @@ int RomCurve_get(float* state, int obj, int* curveTypes, int curveType, f32 maxD
         return 1;
     }
 
-    if (((RomCurveWalker*)stateBytes)->reverse != 0)
+    if (state->reverse != 0)
     {
         currentCurve = Objfsa_FindRomCurveById(curveId);
-        *(s32*)&((RomCurveWalker*)stateBytes)->nodeA0 = currentCurve;
+        *(s32*)&state->nodeA0 = currentCurve;
         nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
         if (nextId == -1)
         {
@@ -2719,14 +2719,14 @@ int RomCurve_get(float* state, int obj, int* curveTypes, int curveType, f32 maxD
     }
 
     currentCurve = Objfsa_FindRomCurveById(curveId);
-    *(s32*)&((RomCurveWalker*)stateBytes)->nodeA0 = currentCurve;
-    if (((RomCurveWalker*)stateBytes)->nodeA0 == NULL)
+    *(s32*)&state->nodeA0 = currentCurve;
+    if (state->nodeA0 == NULL)
     {
-        ((RomCurveWalker*)stateBytes)->nodeA0 = NULL;
+        state->nodeA0 = NULL;
         return 1;
     }
 
-    if (((RomCurveWalker*)stateBytes)->reverse == 0)
+    if (state->reverse == 0)
     {
         nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
     }
@@ -2740,22 +2740,22 @@ int RomCurve_get(float* state, int obj, int* curveTypes, int curveType, f32 maxD
     }
 
     nextCurve = Objfsa_FindRomCurveById(nextId);
-    *(s32*)&((RomCurveWalker*)stateBytes)->nodeA4 = nextCurve;
-    if (((RomCurveWalker*)stateBytes)->nodeA4 == NULL)
+    *(s32*)&state->nodeA4 = nextCurve;
+    if (state->nodeA4 == NULL)
     {
-        ((RomCurveWalker*)stateBytes)->nodeA4 = NULL;
+        state->nodeA4 = NULL;
         return 1;
     }
 
     if (maxDistance != gFloatZero)
     {
-        if (((RomCurveWalker*)stateBytes)->reverse != 0)
+        if (state->reverse != 0)
         {
-            distanceCurve = *(s32*)&((RomCurveWalker*)stateBytes)->nodeA4;
+            distanceCurve = *(s32*)&state->nodeA4;
         }
         else
         {
-            distanceCurve = *(s32*)&((RomCurveWalker*)stateBytes)->nodeA0;
+            distanceCurve = *(s32*)&state->nodeA0;
         }
         dx = *(f32*)(distanceCurve + 0x8) - ((GameObject*)obj)->anim.localPosX;
         dy = *(f32*)(distanceCurve + 0xc) - ((GameObject*)obj)->anim.localPosY;
@@ -2768,18 +2768,18 @@ int RomCurve_get(float* state, int obj, int* curveTypes, int curveType, f32 maxD
     }
 
     ROMCURVE_REFRESH_CONTROL(0xa4);
-    if (RomCurve_goNextPoint((RomCurveWalker*)state) != 0)
+    if (RomCurve_goNextPoint(state) != 0)
     {
         return 1;
     }
 
-    ((RomCurveWalker*)stateBytes)->node94 = Curve_EvalHermite;
-    ((RomCurveWalker*)stateBytes)->node98 = Curve_BuildHermiteCoeffs;
-    ((RomCurveWalker*)stateBytes)->unk84 = stateBytes + 0xa8;
-    ((RomCurveWalker*)stateBytes)->unk88 = stateBytes + 0xc8;
-    ((RomCurveWalker*)stateBytes)->unk8C = stateBytes + 0xe8;
-    ((RomCurveWalker*)stateBytes)->moveNetwork = 8;
-    curvesMove(state);
+    state->node94 = Curve_EvalHermite;
+    state->node98 = Curve_BuildHermiteCoeffs;
+    state->unk84 = state->hermX;
+    state->unk88 = state->hermY;
+    state->unk8C = state->hermZ;
+    state->moveNetwork = 8;
+    curvesMove((float*)state);
     return 0;
 }
 
