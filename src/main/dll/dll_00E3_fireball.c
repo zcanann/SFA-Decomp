@@ -1861,10 +1861,11 @@ void fireball_hitDetect(int* obj)
     extern void modelLightStruct_setDiffuseColor(int* light, int r, int g, int b, int a); /* #57 */
     extern undefined4 ObjHits_EnableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     int* target;
     if (((GameObject*)obj)->anim.seqId == 0x83e) return;
     if (((FireballState*)state)->stateFlags & 8) return;
-    target = (int*)(*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject;
+    target = (int*)hitState->lastHitObject;
     if (target == NULL) return;
     if (*(s16*)((char*)target + 0x46) == 0x6e8)
     {
@@ -1943,10 +1944,10 @@ void fireball_init(int* obj)
         ((FireballState*)state)->unk42 = (s16)randomGetRange(-600, 600);
         ((FireballState*)state)->colorIndex = 0;
         {
-            int* r54 = *(int**)&((GameObject*)obj)->anim.hitReactState;
-            if (r54 != NULL)
+            ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+            if (hitState != NULL)
             {
-                *(s16*)&((ObjHitsPriorityState*)r54)->trackContactMask = 257;
+                hitState->trackContactMask = 257;
             }
         }
         if (*(void**)state == NULL)
@@ -1994,6 +1995,7 @@ void fireball_update(int* obj)
     extern void Obj_FreeObject(int* obj); /* #57 */
     extern undefined8 ObjHits_DisableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     int* other = *(int**)&((GameObject*)obj)->unkF8;
     int* params = *(int**)&((GameObject*)obj)->anim.placementData;
 
@@ -2032,10 +2034,9 @@ void fireball_update(int* obj)
         ((FireballState*)state)->stateFlags |= 1;
     }
     {
-        int* r54 = *(int**)&((GameObject*)obj)->anim.hitReactState;
-        if (((ObjHitsPriorityState*)r54)->contactFlags != 0)
+        if (hitState->contactFlags != 0)
         {
-            if (*(s8*)&((ObjHitsPriorityState*)r54)->contactHitVolume != 14)
+            if (hitState->contactHitVolume != 14)
             {
                 Sfx_PlayFromObject(obj, 179);
             }

@@ -2184,14 +2184,14 @@ void staffDrawSwipe(int* obj, int* swipe);
 
 void staff_hitDetectGeometry(int* obj)
 {
-    u8* state = *(u8**)&((GameObject*)obj)->anim.hitReactState;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     int* swipe = ((GameObject*)obj)->extra;
     SwipeColorTable tbl = lbl_802C2220;
 
     staffDrawSwipe(obj, swipe);
-    if (((ObjHitsPriorityState*)state)->contactFlags != 0 && getHudHiddenFrameCount() == 0)
+    if (hitState->contactFlags != 0 && getHudHiddenFrameCount() == 0)
     {
-        int t = *(s8*)&((ObjHitsPriorityState*)state)->contactHitVolume;
+        int t = hitState->contactHitVolume;
         int idx;
         if (t < 0)
         {
@@ -2207,15 +2207,12 @@ void staff_hitDetectGeometry(int* obj)
         }
         if (idx == 14)
         {
-            Sfx_PlayAtPositionFromObject(obj, ((ObjHitsPriorityState*)state)->contactPosX,
-                                         ((ObjHitsPriorityState*)state)->contactPosY,
-                                         ((ObjHitsPriorityState*)state)->contactPosZ, 186);
+            Sfx_PlayAtPositionFromObject(obj, hitState->contactPosX, hitState->contactPosY,
+                                         hitState->contactPosZ, 186);
             (*gWaterfxInterface)->spawnSplashBurst(
-                obj, ((ObjHitsPriorityState*)state)->contactPosX, ((ObjHitsPriorityState*)state)->contactPosY,
-                ((ObjHitsPriorityState*)state)->contactPosZ, lbl_803E32B4);
+                obj, hitState->contactPosX, hitState->contactPosY, hitState->contactPosZ, lbl_803E32B4);
             ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
-                ((ObjHitsPriorityState*)state)->contactPosX, ((ObjHitsPriorityState*)state)->contactPosY,
-                ((ObjHitsPriorityState*)state)->contactPosZ, 0, lbl_803E32B4, 2);
+                hitState->contactPosX, hitState->contactPosY, hitState->contactPosZ, 0, lbl_803E32B4, 2);
         }
         else
         {
@@ -2224,14 +2221,13 @@ void staff_hitDetectGeometry(int* obj)
             v.h2 = 0;
             v.h1 = 0;
             v.h0 = 0;
-            v.x = ((ObjHitsPriorityState*)state)->contactPosX;
-            v.y = ((ObjHitsPriorityState*)state)->contactPosY;
-            v.z = ((ObjHitsPriorityState*)state)->contactPosZ;
+            v.x = hitState->contactPosX;
+            v.y = hitState->contactPosY;
+            v.z = hitState->contactPosZ;
             ((void (*)(int, int, void*, int, int, u8*))(*(int**)lbl_803DDAA0)[1])(0, 1, &v, 0x401, -1,
                 (u8*)&tbl + (((u8*)lbl_803208E8)[idx] << 4));
-            Sfx_PlayAtPositionFromObject(obj, ((ObjHitsPriorityState*)state)->contactPosX,
-                                         ((ObjHitsPriorityState*)state)->contactPosY,
-                                         ((ObjHitsPriorityState*)state)->contactPosZ, (u16)((s16*)lbl_803208A0)[idx]);
+            Sfx_PlayAtPositionFromObject(obj, hitState->contactPosX, hitState->contactPosY,
+                                         hitState->contactPosZ, (u16)((s16*)lbl_803208A0)[idx]);
         }
     }
 }

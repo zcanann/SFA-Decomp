@@ -1772,6 +1772,7 @@ void mikabomb_update(int* obj)
     extern undefined4 ObjHits_EnableObject(); /* #57 */
     extern undefined8 ObjHits_DisableObject(); /* #57 */
     int* state = ((GameObject*)obj)->extra;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     uint timer = ((GameObject*)obj)->anim.alpha;
 
     if (timer < 0xff)
@@ -1809,9 +1810,7 @@ void mikabomb_update(int* obj)
         u32 localA;
         ObjHits_SetHitVolumeSlot(obj, 5, 1, 0);
         ObjHits_EnableObject(obj);
-        if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject == (int)
-            Obj_GetPlayerObject())
+        if (hitState->lastHitObject != 0 && hitState->lastHitObject == (int)Obj_GetPlayerObject())
         {
             if (((GameObject*)obj)->anim.alpha == 0xff)
             {
