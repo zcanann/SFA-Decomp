@@ -181,7 +181,6 @@ void swarmbaddie_release(void);
 
 void swarmbaddie_initialise(void);
 
-void wispbaddie_hitDetect(void);
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, u16 sfxId);
@@ -213,32 +212,9 @@ extern f32 lbl_803E2668;
 extern f32 lbl_803E266C;
 extern f32 lbl_803E2670;
 extern f32 lbl_803E2674;
-extern f32 lbl_803E2678;
-extern f32 lbl_803E267C;
-extern f32 lbl_803E2680;
-extern f32 lbl_803E2684;
-extern f32 lbl_803E2688;
-extern f32 lbl_803E268C;
-extern f32 lbl_803E2690;
-extern f32 lbl_803E2694;
-extern f32 lbl_803E2698;
-extern f32 lbl_803E269C;
-extern f32 lbl_803E26A0;
-extern f32 lbl_803E26A4;
-extern f32 lbl_803E26B0;
-extern f32 lbl_803E26B4;
-extern f32 lbl_803E26B8;
-extern f32 lbl_803E26BC;
-extern f32 lbl_803E26C0;
-extern f32 lbl_803E26C4;
-extern f32 lbl_803E26C8;
-extern f32 lbl_803E26CC;
-extern int lbl_803DBC78;
 extern void* mmAlloc(int size, int heap, int flags);
 extern void* memset(void* dst, int val, u32 n);
-extern EffectInterface** gPartfxInterface;
 extern int lbl_803DBC70;
-extern int lbl_803DDA60;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
@@ -249,7 +225,6 @@ extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern int getAngle(f32 dx, f32 dz);
-extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
 
 typedef union PressureSwitchIntToDouble
 {
@@ -257,24 +232,7 @@ typedef union PressureSwitchIntToDouble
     f64 value;
 } PressureSwitchIntToDouble;
 
-#define SWARMBADDIE_FLAG_PATH_NEEDS_LINK 0x01
-#define SWARMBADDIE_FLAG_CHASE_PLAYER 0x02
 
-typedef struct SwarmBaddieState
-{
-    int curve;
-    int player;
-    f32 curveStep;
-    f32 playerDistance;
-    f32 pathDistance;
-    f32 chaseRadius;
-    f32 hitVolumeEnvelope;
-    u8 flags;
-    u8 pad1d;
-    s16 yawWavePhase;
-    s16 rollWavePhase;
-    u8 pad22[2];
-} SwarmBaddieState;
 
 /* Per-object extra state for Hagabon (hagabon_getExtraSize == 0x28). */
 typedef struct HagabonState
@@ -453,7 +411,6 @@ void hagabon_hitDetect(int obj)
 
 void swarmbaddie_free(int obj);
 
-void wispbaddie_free(int obj);
 
 void hagabon_free(int obj)
 {
@@ -526,14 +483,10 @@ int hagabon_getExtraSize(void) { return 0x28; }
 int hagabon_getObjectTypeId(void) { return 0xb; }
 int swarmbaddie_getExtraSize(void);
 int swarmbaddie_getObjectTypeId(void);
-int wispbaddie_getExtraSize(void);
 
 void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void wispbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void fn_8014EE8C(int obj, SwarmBaddieState* state);
 
-void fn_8014F620(int obj, int* state);
 
 void swarmbaddie_update(int obj);
 

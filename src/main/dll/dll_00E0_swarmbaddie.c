@@ -6,32 +6,16 @@
 #include "main/game_object.h"
 #include "main/objfx.h"
 
-typedef struct HagabonPlacement
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    u8 pad18[0x19 - 0x18];
-    s8 unk19;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} HagabonPlacement;
 
 
 extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined8 ObjGroup_RemoveObject();
 
 extern undefined4 DAT_803de6d0;
-extern f32 lbl_803DDA58;
 
 /*
  * --INFO--
@@ -186,35 +170,7 @@ void swarmbaddie_initialise(void)
 void wispbaddie_hitDetect(void);
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void Sfx_StopFromObject(int obj, u16 sfxId);
-extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void mm_free(void* p);
-extern void objRenderFn_8003b8f4(f32);
-extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
-extern f32 lbl_803E2608;
-extern f32 lbl_803E260C;
-extern f32 lbl_803E2610;
-extern f32 lbl_803E2614;
-extern f32 lbl_803E2618;
-extern f32 lbl_803E261C;
-extern f32 lbl_803E2620;
-extern f32 lbl_803E2624;
-extern f32 lbl_803E2628;
-extern f32 lbl_803E262C;
-extern f32 lbl_803E2630;
-extern f32 lbl_803E2634;
-extern f32 lbl_803E2638;
-extern f32 lbl_803E263C;
-extern f32 lbl_803E2650;
-extern f32 lbl_803E2654;
-extern f32 lbl_803E2658;
-extern f32 lbl_803E265C;
-extern f32 lbl_803E2660;
-extern f32 lbl_803E2664;
-extern f32 lbl_803E2668;
-extern f32 lbl_803E266C;
-extern f32 lbl_803E2670;
-extern f32 lbl_803E2674;
 extern f32 lbl_803E2678;
 extern f32 lbl_803E267C;
 extern f32 lbl_803E2680;
@@ -239,25 +195,15 @@ extern int lbl_803DBC78;
 extern void* mmAlloc(int size, int heap, int flags);
 extern void* memset(void* dst, int val, u32 n);
 extern EffectInterface** gPartfxInterface;
-extern int lbl_803DBC70;
 extern int lbl_803DDA60;
 extern f32 timeDelta;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern int Obj_GetPlayerObject(void);
-extern f32 Vec_distance(void* a, void* b);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
-extern int getAngle(f32 dx, f32 dz);
 extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
 
-typedef union PressureSwitchIntToDouble
-{
-    u64 bits;
-    f64 value;
-} PressureSwitchIntToDouble;
 
 #define SWARMBADDIE_FLAG_PATH_NEEDS_LINK 0x01
 #define SWARMBADDIE_FLAG_CHASE_PLAYER 0x02
@@ -300,7 +246,6 @@ STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 
-void fn_8014E1DC(int obj, HagabonState* state);
 
 void hagabon_hitDetect(int obj);
 
