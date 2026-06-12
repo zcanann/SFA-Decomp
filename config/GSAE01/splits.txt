@@ -826,10 +826,10 @@ main/dll/DR/dll_0159_blasted.c:
 	.text       start:0x801A27B8 end:0x801A2BDC
 
 main/dll/DR/gasventControl.c:
-	.text       start:0x801A2BDC end:0x801A39D0
+	.text       start:0x801A2BDC end:0x801A39B4
 
 main/dll/IM/IMicicle.c:
-	.text       start:0x801A39D0 end:0x801A57E8
+	.text       start:0x801A39B4 end:0x801A57E8
 
 main/dll/IM/IMspacecraft.c:
 	.text       start:0x801A57E8 end:0x801A6638

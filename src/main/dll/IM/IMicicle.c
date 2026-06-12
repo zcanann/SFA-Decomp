@@ -1,3 +1,274 @@
+/* === moved from main/dll/DR/gasventControl.c [801A39B4-801A39D0) (TU re-split, docs/boundary_audit.md) === */
+#pragma scheduling on
+#pragma peephole on
+#include "main/dll/DR/gasventControl.h"
+#include "main/obj_placement.h"
+#include "main/game_object.h"
+
+extern u32 randomGetRange(int min, int max);
+extern void* FUN_80017aa4();
+extern undefined4 FUN_80017ae4();
+extern uint FUN_80017ae8();
+extern undefined4 ObjHits_EnableObject();
+extern undefined4 ObjGroup_AddObject();
+extern undefined4 ObjMsg_AllocQueue();
+extern int FUN_8005af70();
+extern int FUN_8005b398();
+extern uint FUN_80060058();
+extern int FUN_800600c4();
+extern int FUN_800600e4();
+extern undefined4 FUN_8007f6e4();
+
+extern undefined4* DAT_803dd740;
+extern f64 DOUBLE_803e4f98;
+extern f64 DOUBLE_803e4ff8;
+extern f64 DOUBLE_803e5020;
+extern f32 lbl_803E4F58;
+extern f32 lbl_803E4FE8;
+extern f32 lbl_803E4FEC;
+extern f32 lbl_803E4FF0;
+extern f32 lbl_803E4FF4;
+extern f32 lbl_803E5000;
+extern f32 lbl_803E5004;
+extern f32 lbl_803E5008;
+extern f32 lbl_803E500C;
+extern f32 lbl_803E5010;
+extern f32 lbl_803E5014;
+extern f32 lbl_803E5018;
+
+/*
+ * --INFO--
+ *
+ * Function: blasted_init
+ * EN v1.0 Address: 0x801A2AF8
+ * EN v1.0 Size: 448b
+ * EN v1.1 Address: 0x801A2B9C
+ * EN v1.1 Size: 464b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_blasted_init_v11_unused(int param_1, int param_2);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801a2cb8
+ * EN v1.0 Address: 0x801A2CB8
+ * EN v1.0 Size: 268b
+ * EN v1.1 Address: 0x801A2D6C
+ * EN v1.1 Size: 300b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4 FUN_801a2cb8(int param_1, uint param_2);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801a32d4
+ * EN v1.0 Address: 0x801A32D4
+ * EN v1.0 Size: 800b
+ * EN v1.1 Address: 0x801A3190
+ * EN v1.1 Size: 676b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4
+FUN_801a32d4(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined2 param_10, int param_11, undefined param_12, undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
+
+
+/* Trivial 4b 0-arg blr leaves. */
+
+
+void explodable_render(void);
+
+void cfforcefield_free(void)
+{
+}
+
+void cfforcefield_render(void)
+{
+}
+
+void cfforcefield_hitDetect(void)
+{
+}
+
+/* 8b "li r3, N; blr" returners. */
+#include "global.h"
+
+typedef struct ExplodablePlacement
+{
+    u8 pad0[0x1A - 0x0];
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    s16 unk20;
+    s16 unk22;
+    s16 unk24;
+    u8 pad26[0x2C - 0x26];
+    s16 unk2C;
+    s16 unk2E;
+    s16 unk30;
+    u8 pad32[0x38 - 0x32];
+    u16 unk38;
+    u8 pad3A[0x3E - 0x3A];
+    s16 unk3E;
+    s16 activateGameBit;
+    u8 pad42[0x48 - 0x42];
+} ExplodablePlacement;
+
+
+typedef struct BlastedState
+{
+    u8 pad0[0x10 - 0x0];
+    u8 unk10;
+    u8 unk11;
+    u8 pad12[0x6E4 - 0x12];
+    u8 unk6E4;
+    u8 pad6E5[0x6E8 - 0x6E5];
+} BlastedState;
+
+
+typedef struct FnBlastedInitV11UnusedState
+{
+    u8 pad0[0x2C - 0x0];
+    f32 unk2C;
+    f32 unk30;
+    u8 pad34[0x38 - 0x34];
+    f32 unk38;
+    u8 pad3C[0x40 - 0x3C];
+} FnBlastedInitV11UnusedState;
+
+
+/* explodable_getExtraSize == 0x6e8 (gas-vent explodable). */
+/* Per-fragment record inside DrExplodableState (stride 0x70). */
+typedef struct DrExplodableChunk
+{
+    u8 pad00[4];
+    f32 centroidX; /* 0x04: model vertex average */
+    f32 centroidY; /* 0x08 */
+    f32 centroidZ; /* 0x0c */
+    f32 offX; /* 0x10: rotated launch offset */
+    f32 offY; /* 0x14 */
+    f32 offZ; /* 0x18 */
+    f32 spinX; /* 0x1c */
+    f32 spinY; /* 0x20 */
+    f32 spinZ; /* 0x24 */
+    f32 unk28;
+    f32 unk2C;
+    f32 unk30;
+    f32 unk34;
+    f32 unk38;
+    f32 unk3C;
+    f32 velX; /* 0x40 */
+    f32 velY; /* 0x44 */
+    f32 velZ; /* 0x48 */
+    f32 posX; /* 0x4c */
+    f32 posY; /* 0x50 */
+    f32 posZ; /* 0x54 */
+    f32 height;
+    int unk5C;
+    int launchDelay; /* 0x60: per-fragment delay roll, -1 = none */
+    s16 unk64; /* 0x64: from def+0x1e */
+    s16 unk66; /* 0x66: from def+0x1c */
+    s16 unk68; /* 0x68: from def+0x1a */
+    u8 gameBitMode; /* 0x6a: gamebit-gated mode */
+    u8 unk6B; /* 0x6b: init 0xff */
+    u8 launchFlags; /* 0x6c: axis sign bits */
+    u8 spinScale; /* 0x6d */
+    u8 pad6E[2];
+} DrExplodableChunk;
+
+STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
+
+typedef struct DrExplodableState
+{
+    DrExplodableChunk chunks[15]; /* 0x000 */
+    int children[15]; /* 0x690: spawned fragment objects */
+    u32 flags6CC;
+    int unk6D0;
+    u8 count6D4;
+    u8 spawnedFlags[15]; /* 0x6d5 */
+    u8 phase6E4;
+    u8 unk6E5;
+    u8 pad6E6[2];
+} DrExplodableState;
+
+STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
+STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
+
+int explodable_getExtraSize(void);
+int cfforcefield_getExtraSize(void) { return 0x8; }
+int cfforcefield_getObjectTypeId(void) { return 0x0; }
+
+extern void Obj_FreeObject(int obj);
+#pragma scheduling off
+#pragma peephole off
+void explodable_free(int obj, int flag);
+
+extern void Obj_SetActiveModelIndex(int* obj, int idx);
+extern int fn_801A27B8(int* obj, int v);
+
+
+extern void fn_801A2E80(int obj, int def, int p3, int state);
+
+void explodable_update(int obj);
+
+typedef struct
+{
+    int key;
+    int objType;
+    int sfx;
+    u8 mode;
+    u8 flags;
+    u8 pad[2];
+} GasVentTableEntry;
+
+extern GasVentTableEntry lbl_80322DA0[];
+extern f32 lbl_803E435C;
+
+void explodable_init(int obj, int setup);
+
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int a, int b);
+extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
+extern f32 lbl_803E4350;
+extern f32 lbl_803E4354;
+extern f32 lbl_803E4358;
+
+int fn_801A2BDC(int p1, int p2, int p3, int p4);
+
+extern void fn_801A30C0(int obj, int slot, int def);
+extern void Model_GetVertexPosition(int model, int i, f32* out);
+extern f32 lbl_803E4368;
+extern f32 lbl_803E436C;
+
+void fn_801A2E80(int obj, int def, int p3, int state);
+
+extern void vecRotateZXY(s16 * rot, f32 * vec);
+extern f32 sqrtf(f32 x);
+extern void normalize(f32 * x, f32 * y, f32 * z);
+extern f32 lbl_803E4370;
+extern f32 lbl_803E4374;
+extern f32 lbl_803E4378;
+extern f32 lbl_803E437C;
+extern f32 lbl_803E4380;
+
+void fn_801A30C0(int obj, int slot, int def);
+#pragma scheduling reset
+#pragma peephole reset
+/* segment pragma-stack balance (re-split): */
+#pragma scheduling reset
+#pragma peephole reset
+
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
 #include "main/mapEvent.h"
@@ -428,11 +699,11 @@ void cflevelcontrol_initialise(void)
 }
 
 extern void storeZeroToFloatParam(void* p);
-extern void objSetSlot(void* obj, int resourceId);
 extern s16 lbl_80323008[];
 
 void cflevelcontrol_init(u8* obj, u8* params)
 {
+    extern void objSetSlot(void* obj, int resourceId); /* #57 */
     typedef struct LevelControlFlags
     {
         u8 b7 : 1;

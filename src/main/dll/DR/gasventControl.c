@@ -243,17 +243,11 @@ void explodable_render(void)
 {
 }
 
-void cfforcefield_free(void)
-{
-}
+void cfforcefield_free(void);
 
-void cfforcefield_render(void)
-{
-}
+void cfforcefield_render(void);
 
-void cfforcefield_hitDetect(void)
-{
-}
+void cfforcefield_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 #include "global.h"
@@ -360,8 +354,8 @@ STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
 STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
 int explodable_getExtraSize(void) { return 0x6e8; }
-int cfforcefield_getExtraSize(void) { return 0x8; }
-int cfforcefield_getObjectTypeId(void) { return 0x0; }
+int cfforcefield_getExtraSize(void);
+int cfforcefield_getObjectTypeId(void);
 
 extern void Obj_FreeObject(int obj);
 #pragma scheduling off
