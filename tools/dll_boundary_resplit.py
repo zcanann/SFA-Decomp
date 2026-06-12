@@ -1043,10 +1043,17 @@ class Executor:
 
     # ---------- inline-regression analysis (helper-last retry) ----------
     def compute_demote(self, regressed):
-        """For each regressed fn, find cross-segment co-resident callees
-        defined ABOVE it in the applied final files: the auto-inline
-        suspects. Returns {final_unit: set(fn names)} safe to demote (no
-        same-segment caller below would lose an existing inline)."""
+        """For each regressed fn, find co-resident callees defined ABOVE it
+        in the applied final files: the auto-inline suspects. Returns
+        {final_unit: set(fn names)} safe to demote (no other caller below
+        would lose an existing inline).
+
+        A MOVED-in fn (address in self.moved_addrs) is a suspect even when
+        the address-order assembly interleaved it into the owner's own
+        segment region (the segment-mark test alone misses it — e.g. a 264B
+        donor fn auto-inlining into its owner caller, r801159E4)."""
+        moved_names = {self.w.sym_at[a] for a in getattr(self, "moved_addrs", [])
+                       if a in self.w.sym_at}
         out = {}
         for sp in self.case.spans:
             fin = self.final_name[sp]
@@ -1077,14 +1084,21 @@ class Executor:
                     continue
                 rseg = seg_of(r[1])
                 for n, h, e in fns:
-                    if e >= r[1] or seg_of(h) == rseg or n == rn:
+                    if e >= r[1] or n == rn:
+                        continue
+                    if seg_of(h) == rseg and n not in moved_names:
                         continue
                     if not re.search(r"\b%s\b" % re.escape(n), bodies[rn]):
                         continue
-                    # unsafe if a same-segment sibling below n already calls it
+                    # unsafe if a NON-regressed same-segment sibling below n
+                    # already calls it (demoting n past that sibling would
+                    # lose an existing inline); the regressed fns are exactly
+                    # the callers whose unwanted inline we are suppressing, so
+                    # they must not veto the demote.
                     nseg = seg_of(h)
-                    unsafe = any(seg_of(h2) == nseg and h2 > e and
-                                 re.search(r"\b%s\b" % re.escape(n), bodies[n2])
+                    unsafe = any(seg_of(h2) == nseg and h2 > e and n2 != n
+                                 and n2 not in regressed
+                                 and re.search(r"\b%s\b" % re.escape(n), bodies[n2])
                                  for n2, h2, e2 in fns)
                     if not unsafe:
                         out.setdefault(fin, set()).add(n)
