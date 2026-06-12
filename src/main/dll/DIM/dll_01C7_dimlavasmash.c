@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIMlevcontrol.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 
@@ -302,12 +303,12 @@ void dimlavasmash_update(int* obj)
 {
     extern ObjectTriggerInterface** gObjectTriggerInterface;
     u8* sub;
-    int* p;
+    ObjHitsPriorityState* hitState;
     sub = ((GameObject*)obj)->extra;
     if (sub[2] == 1)
     {
-        p = *(int**)&((GameObject*)obj)->anim.hitReactState;
-        ((ObjHitsPriorityState*)p)->flags = (s16)(((ObjHitsPriorityState*)p)->flags & ~1);
+        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState->flags &= ~1;
     }
     else if (((GameObject*)obj)->unkF4 == 0)
     {
@@ -402,13 +403,15 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     int hit;
     int block;
     int* state;
+    ObjHitsPriorityState* hitState;
     state = ((GameObject*)obj)->extra;
     def = *(int**)&((GameObject*)obj)->anim.placementData;
     if (((DimlavasmashState*)state)->state == 0)
     {
         if (GameBit_Get(((DimlavasmashPlacement*)def)->unk20) != 0)
         {
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags |= 1;
+            hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+            hitState->flags |= 1;
             if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0)
             {
                 if (*(s16*)((char*)hit + 0x46) == 397)
@@ -466,6 +469,7 @@ void dimlavasmash_init(s16* obj, s8* def)
     ObjAnimComponent* objAnim;
     int* block;
     char* inner;
+    ObjHitsPriorityState* hitState;
 
     objAnim = (ObjAnimComponent*)obj;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x18] << 8);
@@ -485,10 +489,8 @@ void dimlavasmash_init(s16* obj, s8* def)
         }
     }
     objAnim->bankIndex = def[0x19];
-    {
-        s16* p = *(s16**)&((GameObject*)obj)->anim.hitReactState;
-        p[0x30] = (s16)(p[0x30] & ~1);
-    }
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState->flags &= ~1;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
 }
 
