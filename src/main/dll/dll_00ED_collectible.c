@@ -721,7 +721,7 @@ void fn_80171E5C(int* obj)
     extern void* Obj_GetPlayerObject(void); /* #57 */
     u8* state = ((GameObject*)obj)->extra;
     u8* params = *(u8**)&((GameObject*)obj)->anim.placementData;
-    u8* setup2 = *(u8**)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x18);
+    u8* setup2 = ((GameObject*)obj)->anim.modelInstance->extraSetupData;
     Obj_GetPlayerObject();
     getTrickyObject();
     Obj_GetPlayerObject();
@@ -1417,7 +1417,7 @@ void collectible_init(int obj, int setup)
     }
     if (((GameObject*)obj)->unkF4 == 0)
     {
-        data = *(u8**)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x18);
+        data = ((GameObject*)obj)->anim.modelInstance->extraSetupData;
         if (data != 0)
         {
             ((CollectibleState*)state)->scale = (f32) * (s8*)(data + 8);

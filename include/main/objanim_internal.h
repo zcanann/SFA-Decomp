@@ -188,7 +188,8 @@ typedef struct ObjDef {
   f32 rootMotionScaleBase;
   u8 pad08[0x10 - 0x08];
   s8 *jointData;
-  u8 pad14[0x1C - 0x14];
+  u8 pad14[0x18 - 0x14];
+  u8 *extraSetupData;
   s16 *sequenceMap;
   s16 *eventMoveTable;
   ObjHitReactMoveEntry *hitReactMoveTable;
@@ -433,6 +434,7 @@ STATIC_ASSERT(sizeof(ObjHitVolumeRuntimeBounds) == 0x05);
 STATIC_ASSERT(sizeof(ObjDef) == 0x94);
 STATIC_ASSERT(offsetof(ObjDef, rootMotionScaleBase) == 0x04);
 STATIC_ASSERT(offsetof(ObjDef, jointData) == 0x10);
+STATIC_ASSERT(offsetof(ObjDef, extraSetupData) == 0x18);
 STATIC_ASSERT(offsetof(ObjDef, sequenceMap) == 0x1C);
 STATIC_ASSERT(offsetof(ObjDef, eventMoveTable) == 0x20);
 STATIC_ASSERT(offsetof(ObjDef, hitReactMoveTable) == 0x24);

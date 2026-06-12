@@ -105,7 +105,7 @@ void magicdust_update(int obj)
     {
         if (msg[0] == msgId)
         {
-            ref = *(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x18);
+            ref = (int)((GameObject*)obj)->anim.modelInstance->extraSetupData;
             (*gExpgfxInterface)->freeSource2((u32)obj);
             itemPickupDoParticleFx(obj, lbl_803E34B0, ((MagicDustState*)state)->mode, 0x28);
             ObjHits_DisableObject(obj);
@@ -296,7 +296,7 @@ void magicdust_update(int obj)
                 }
                 else
                 {
-                    ref = *(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x18);
+                    ref = (int)((GameObject*)obj)->anim.modelInstance->extraSetupData;
                     (*gExpgfxInterface)->freeSource2((u32)obj);
                     itemPickupDoParticleFx(obj, lbl_803E34B0, ((MagicDustState*)state)->mode, 0x28);
                     ObjHits_DisableObject(obj);

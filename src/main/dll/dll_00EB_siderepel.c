@@ -1009,7 +1009,7 @@ void FUN_801713ac(undefined8 param_1, double param_2, double param_3, undefined8
 
     iVar6 = *(int*)&((GameObject*)param_9)->extra;
     iVar5 = *(int*)&((GameObject*)param_9)->anim.placementData;
-    iVar4 = *(int*)(*(int*)&((GameObject*)param_9)->anim.modelInstance + 0x18);
+    iVar4 = (int)((GameObject*)param_9)->anim.modelInstance->extraSetupData;
     FUN_80017a98();
     FUN_80017a90();
     FUN_80017a98();
