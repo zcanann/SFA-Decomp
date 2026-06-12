@@ -149,18 +149,21 @@ void androsshand_update(int obj)
             ObjAnim_SetCurrentMove(obj, 1, lbl_803E75AC, 0);
             *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x14) = lbl_8032C270[1];
         }
-        if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0)
         {
-            struct
+            ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+            if (hitState->lastHitObject != 0)
             {
-                f32 x, y, z;
-            } v, w;
-            v.x = state->sideFlag ? lbl_803E75C0 : lbl_803E75C4;
-            v.y = lbl_803E75AC;
-            v.z = lbl_803E75AC;
-            w = v;
-            arwarwing_setVelocity(state->arwingObj, (int)&w);
-            doRumble(lbl_803E75C8);
+                struct
+                {
+                    f32 x, y, z;
+                } v, w;
+                v.x = state->sideFlag ? lbl_803E75C0 : lbl_803E75C4;
+                v.y = lbl_803E75AC;
+                v.z = lbl_803E75AC;
+                w = v;
+                arwarwing_setVelocity(state->arwingObj, (int)&w);
+                doRumble(lbl_803E75C8);
+            }
         }
         if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E75D0)
         {
@@ -202,18 +205,21 @@ void androsshand_update(int obj)
         {
             state->animSpeed = lbl_803E75DC;
         }
-        if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0)
         {
-            struct
+            ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+            if (hitState->lastHitObject != 0)
             {
-                f32 x, y, z;
-            } v, w;
-            v.x = lbl_803E75AC;
-            v.y = lbl_803E75F4;
-            v.z = lbl_803E75AC;
-            w = v;
-            arwarwing_setVelocity(state->arwingObj, (int)&w);
-            doRumble(lbl_803E75C8);
+                struct
+                {
+                    f32 x, y, z;
+                } v, w;
+                v.x = lbl_803E75AC;
+                v.y = lbl_803E75F4;
+                v.z = lbl_803E75AC;
+                w = v;
+                arwarwing_setVelocity(state->arwingObj, (int)&w);
+                doRumble(lbl_803E75C8);
+            }
         }
         if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E75E0 && ((GameObject*)obj)->anim.currentMoveProgress
             < lbl_803E75F8 &&
