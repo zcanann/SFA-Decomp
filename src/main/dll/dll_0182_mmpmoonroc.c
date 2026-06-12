@@ -7,30 +7,18 @@
 /* SDK / engine externs */
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern u32 randomGetRange(int min, int max);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern u32 GameBit_Get(int eventId);
 
 
 extern int ObjHits_GetPriorityHit(int obj, int* outHitObj, int* outB, u32* outC);
 
-extern void doRumble(f32 v);
 
 extern void objRenderFn_8003b8f4(f32 v);
-extern void Music_Trigger(int id, int p2);
-extern int getSaveGameLoadStatus(void);
-extern int getEnvfxAct(int obj, int player, int id, int p);
-extern void MMP_levelcontrol_update(int obj);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 extern f32 timeDelta;
-extern u8 framesThisStep;
 
-extern f32 lbl_803E44C0;
-extern f32 lbl_803E44C4;
 
-extern f32 lbl_803DDB28;
-extern int lbl_803DDB2C;
 
 /* Trivial 4b 0-arg blr leaves. */
 
@@ -38,21 +26,16 @@ extern int lbl_803DDB2C;
 
 
 
-void MMP_levelcontrol_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
-int MMP_levelcontrol_getExtraSize(void);
-int MMP_levelcontrol_getObjectTypeId(void);
 
 /* Pattern wrappers. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
-void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 
 
-void MMP_levelcontrol_free(int obj);
 
 
 
@@ -61,7 +44,6 @@ void MMP_levelcontrol_free(int obj);
 #pragma peephole on
 
 #pragma peephole off
-int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 #pragma scheduling reset
 #pragma peephole reset
@@ -78,13 +60,6 @@ int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-typedef struct MmpGyserventPlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 unk1E;
-    u8 unk20;
-    u8 pad21[0x28 - 0x21];
-} MmpGyserventPlacement;
 
 
 typedef struct MmpMoonrockPlacement
@@ -98,16 +73,6 @@ typedef struct MmpMoonrockPlacement
 
 
 
-typedef struct MoonSeedBushPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} MoonSeedBushPlacement;
 
 
 /*
@@ -171,15 +136,6 @@ extern undefined4 FUN_8005d0ac();
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E5180;
 
-extern void gameTextShow(int textId);
-extern void envFxActFn_800887f8(int value);
-extern void skyFn_80088c94(int flags, int mode);
-extern int getEnvfxActImmediately(int obj, int target, int actId, int flags);
-extern int getEnvfxAct(int obj, int target, int actId, int flags);
-extern int coordsToMapCell(f32 x, f32 z);
-extern void Music_Trigger(int id, int mode);
-extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit,
-                                  int setBit, int textId);
 
 /*
  * --INFO--
@@ -195,7 +151,6 @@ extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int 
  * PAL Size: TODO
  */
 #pragma scheduling off
-void MMP_levelcontrol_update(int obj);
 #pragma scheduling reset
 
 /*
@@ -316,23 +271,14 @@ FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 para
 /* Trivial 4b 0-arg blr leaves. */
 void MMP_levelcontrol_release(void);
 
-void MMP_levelcontrol_initialise(void);
 
-void MoonSeedBush_free(void);
 
-void MoonSeedBush_hitDetect(void);
 
-void MoonSeedBush_release(void);
 
-void MoonSeedBush_initialise(void);
 
-void mmp_asteroid_re_free(void);
 
-void mmp_asteroid_re_hitDetect(void);
 
-void mmp_asteroid_re_release(void);
 
-void mmp_asteroid_re_initialise(void);
 
 void mmp_moonrock_hitDetect(void)
 {
@@ -348,74 +294,45 @@ void mmp_moonrock_initialise(void)
 
 void mmp_trenchfx_hitDetect(void);
 
-void mmp_trenchfx_release(void);
 
-void mmp_trenchfx_initialise(void);
 
-void mmp_gyservent_free(void);
 
-void mmp_gyservent_render(void);
 
-void mmp_gyservent_hitDetect(void);
 
-void mmp_gyservent_release(void);
 
-void mmp_gyservent_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int MoonSeedBush_getExtraSize(void);
-int MoonSeedBush_getObjectTypeId(void);
-int mmp_asteroid_re_getExtraSize(void);
-int mmp_asteroid_re_getObjectTypeId(void);
 int mmp_moonrock_getExtraSize(void) { return 0x30; }
 int mmp_moonrock_getObjectTypeId(void) { return 0x0; }
 int mmp_trenchfx_getExtraSize(void);
-int mmp_trenchfx_getObjectTypeId(void);
-int mmp_gyservent_getExtraSize(void);
-int mmp_gyservent_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E44D0;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E44F8;
 #pragma peephole off
-void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 #pragma peephole reset
 
-extern f32 lbl_803E44D4;
-extern f32 lbl_803E44D8;
 
 #pragma scheduling off
 #pragma peephole off
-void MoonSeedBush_update(int obj);
-#pragma peephole reset
-#pragma scheduling reset
-
-extern int mapGetDirIdx(int);
-extern void unlockLevel(int, int, int);
-extern f32 lbl_803E44C8;
-#pragma scheduling off
-#pragma peephole off
-void mmp_gyservent_update(int obj);
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
-int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
-void MMP_levelcontrol_init(int obj);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void setDrawLights(int v);
-extern f32 lbl_803E44E8;
+#pragma scheduling off
+#pragma peephole off
+#pragma peephole reset
+#pragma scheduling reset
+
 
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
@@ -534,13 +451,11 @@ int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 #pragma scheduling off
 #pragma peephole off
-void mmp_asteroid_re_init(int obj);
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
-void MoonSeedBush_init(int obj, int data);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -601,9 +516,7 @@ void fn_801A80C4(int obj, f32 x, f32 y, f32 z)
 /* mmp_trenchfx_free: expgfx interface freeObject callback. */
 void mmp_trenchfx_free(int obj);
 
-extern f32 lbl_803E45C0;
 #pragma peephole off
-void mmp_trenchfx_init(int obj, int data);
 #pragma peephole reset
 
 /* ObjGroup_RemoveObject + vtable[4] tail-call. */
@@ -696,7 +609,6 @@ void fn_801A80F0(int obj, u8 flag)
 #pragma peephole off
 void mmp_gyservent_init(int obj);
 
-void mmp_trenchfx_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -920,42 +832,17 @@ void fn_801A7D74(int obj, u8 a, u8 b)
 #pragma scheduling reset
 
 extern char lbl_803AC930[];
-extern f32 lbl_803E45B0;
-extern f32 lbl_803E45B4;
 
 #pragma scheduling off
 #pragma peephole off
-void mmp_trenchfx_update(int obj);
 #pragma peephole reset
 #pragma scheduling reset
 
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
 extern f32 mathSinf(f32);
-extern void doRumble(f32 duration);
-extern char lbl_803231D0[];
-extern char lbl_803AC900[];
-extern int lbl_803DDB30;
-extern f32 lbl_803E44FC;
-extern f32 lbl_803E4500;
-extern f32 lbl_803E4504;
-extern f32 lbl_803E4508;
-extern f32 lbl_803E450C;
-extern f32 lbl_803E4510;
-extern f32 lbl_803E4514;
-extern f32 lbl_803E4518;
-extern f32 lbl_803E451C;
-extern f32 lbl_803E4520;
-extern f32 lbl_803E4524;
-extern f32 lbl_803E4528;
-extern f32 lbl_803E452C;
-extern f32 lbl_803E4530;
-extern f32 lbl_803E4534;
-extern f32 lbl_803E4538;
-extern f32 lbl_803E453C;
 
 #pragma scheduling off
 #pragma peephole off
-void mmp_asteroid_re_update(int obj);
 #pragma peephole reset
 #pragma scheduling reset
 
