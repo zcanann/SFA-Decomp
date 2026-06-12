@@ -1,3 +1,43 @@
+/* === moved from main/dll/DIM/dimsnowball_init.c [801B13E8-801B13F0) (TU re-split, docs/boundary_audit.md) === */
+#include "ghidra_import.h"
+
+extern u8* ObjList_FindObjectById(int objectId);
+
+typedef struct DimSnowballState
+{
+    void* target;
+    int targetId;
+} DimSnowballState;
+
+typedef struct DimSnowballObject
+{
+    u8 unk0[0x54];
+    u8* handle54;
+    u8 unk58[0xc];
+    u8* handle64;
+    u8 unk68[0x48];
+    u16 flags;
+    u8 unkB2[6];
+    DimSnowballState* state;
+} DimSnowballObject;
+
+typedef struct DimSnowballDef
+{
+    u8 unk0[0x14];
+    int targetId;
+} DimSnowballDef;
+
+void dimsnowball_init(DimSnowballObject* param_1, DimSnowballDef* def);
+
+void dimsnowball_release(void);
+
+void dimsnowball_initialise(void);
+
+int dimsnowball1c2_getExtraSize(void)
+{
+    return 4;
+}
+
 #include "main/dll/explosion_state.h"
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"

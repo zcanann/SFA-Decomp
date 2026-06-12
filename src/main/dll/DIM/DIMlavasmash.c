@@ -1,3 +1,640 @@
+/* === moved from main/dll/DIM/DIMcannon.c [801B0670-801B0924) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/DIM/dimcannon_state.h"
+#include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
+#include "main/effect_interfaces.h"
+#include "main/expgfx.h"
+#include "main/game_object.h"
+#include "main/mapEvent.h"
+#include "main/dll/DIM/DIMcannon.h"
+#include "main/dll/DIM/dimlogfire.h"
+#include "main/objanim_internal.h"
+#include "main/objseq.h"
+#include "global.h"
+
+typedef struct Lavaball1bePlacement
+{
+    u8 pad0[0x18 - 0x0];
+    s8 unk18;
+    u8 pad19[0x20 - 0x19];
+} Lavaball1bePlacement;
+
+
+typedef struct Lavaball1bfPlacement
+{
+    u8 pad0[0x18 - 0x0];
+    s8 unk18;
+    u8 pad19[0x1E - 0x19];
+    s16 unk1E;
+    u8 pad20[0x24 - 0x20];
+    s16 unk24;
+    u8 pad26[0x28 - 0x26];
+} Lavaball1bfPlacement;
+
+
+/* imanimspacecraft_getExtraSize == 0x4. */
+typedef struct ImAnimSpacecraftState
+{
+    s16 blinkTimer; /* 0x00 */
+    u8 maskBits; /* 0x02: per-event toggle bits (bit4..6 = group) */
+    u8 flags; /* 0x03: 2 = blink phase, 4/8 = SeqFn toggles */
+} ImAnimSpacecraftState;
+
+STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
+
+/* imspacethruster_getExtraSize == 0xc. */
+typedef struct ImSpaceThrusterState
+{
+    u8 kind; /* 0x00: thruster slot from def+0x19 */
+    u8 phase; /* 0x01 */
+    s16 blendTimer; /* 0x02 */
+    void* bufA; /* 0x04: mmAlloc'd getTabEntry rows */
+    void* bufB; /* 0x08 */
+} ImSpaceThrusterState;
+
+STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
+
+/* link_levcontrol_getExtraSize == 0x10. */
+typedef struct LinkLevControlState
+{
+    s8 areaCell; /* 0x00 */
+    u8 pad01[3];
+    int unk04; /* 0x04: init -1 */
+    int musicTrack; /* 0x08 */
+    int latch; /* 0x0c: SCGameBitLatch block */
+} LinkLevControlState;
+
+STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
+
+/* lavaball1be extra (getExtraSize 0x14 for the non-0x1fa variant). */
+typedef struct Lavaball1beState
+{
+    char* targetObj; /* 0x00: ObjList_FindObjectById(linkedId) */
+    u8* light; /* 0x04 */
+    f32 floorY; /* 0x08: spawn height; falling below it re-arms */
+    int linkedId; /* 0x0c */
+    u8 flags; /* 0x10: 8 = ticked, 0x10 = dormant, 0x20 = whistle sfx */
+    u8 explodeCooldown; /* 0x11 */
+    u8 pad12[2];
+} Lavaball1beState;
+
+STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
+
+/* lavaball1bf_getExtraSize == 0x1c (launcher). */
+typedef struct Lavaball1bfState
+{
+    u8 pad00[8];
+    int* spawnedObj; /* 0x08: the 0x18d cannon object */
+    f32 fireTimer; /* 0x0c */
+    f32 firePeriod; /* 0x10 */
+    s16 gateA; /* 0x14 */
+    s16 pending; /* 0x16 */
+    u8 gateB; /* 0x18 */
+    u8 pad19;
+    u8 gbState; /* 0x1a */
+    u8 soloLatch; /* 0x1b */
+} Lavaball1bfState;
+
+STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
+
+static inline int* DIMcannon_GetActiveModel(void* obj);
+
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 randomGetRange(int min, int max);
+extern undefined4 FUN_80017ac8();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
+extern undefined4 ObjPath_GetPointWorldPosition();
+extern undefined4 FUN_8003b818();
+extern undefined4 FUN_80057690();
+extern undefined4 FUN_801adca0();
+extern undefined8 FUN_80286830();
+extern undefined4 FUN_8028687c();
+
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern EffectInterface** gPartfxInterface;
+extern MapEventInterface** gMapEventInterface;
+
+extern void imicepillar_free(void);
+extern int imicepillar_getObjectTypeId(void);
+extern int imicepillar_getExtraSize(void);
+
+/*
+ * --INFO--
+ *
+ * Function: imicepillar_render
+ * EN v1.0 Address: 0x801AE100
+ * EN v1.0 Size: 132b
+ * EN v1.1 Address: 0x801AE134
+ * EN v1.1 Size: 44b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+void FUN_801ae0_dropped_old_imicepillar_render(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ae184
+ * EN v1.0 Address: 0x801AE184
+ * EN v1.0 Size: 360b
+ * EN v1.1 Address: 0x801AE160
+ * EN v1.1 Size: 380b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, char param_6);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ae9e4
+ * EN v1.0 Address: 0x801AE9E4
+ * EN v1.0 Size: 52b
+ * EN v1.1 Address: 0x801AE9BC
+ * EN v1.1 Size: 48b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801aea18
+ * EN v1.0 Address: 0x801AEA18
+ * EN v1.0 Size: 40b
+ * EN v1.1 Address: 0x801AE9EC
+ * EN v1.1 Size: 76b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801aea40
+ * EN v1.0 Address: 0x801AEA40
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801AEA38
+ * EN v1.1 Size: 148b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801aea44
+ * EN v1.0 Address: 0x801AEA44
+ * EN v1.0 Size: 72b
+ * EN v1.1 Address: 0x801AEACC
+ * EN v1.1 Size: 72b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801b0190
+ * EN v1.0 Address: 0x801B0190
+ * EN v1.0 Size: 88b
+ * EN v1.1 Address: 0x801AFE04
+ * EN v1.1 Size: 96b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801b01e8
+ * EN v1.0 Address: 0x801B01E8
+ * EN v1.0 Size: 308b
+ * EN v1.1 Address: 0x801AFE64
+ * EN v1.1 Size: 200b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
+void imicepillar_hitDetect(void);
+
+void imicepillar_update(void);
+
+void imicepillar_init(void);
+
+void imicepillar_release(void);
+
+void imicepillar_initialise(void);
+
+ObjectDescriptor gIMIcePillarObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)imicepillar_initialise,
+    (ObjectDescriptorCallback)imicepillar_release,
+    0,
+    (ObjectDescriptorCallback)imicepillar_init,
+    (ObjectDescriptorCallback)imicepillar_update,
+    (ObjectDescriptorCallback)imicepillar_hitDetect,
+    (ObjectDescriptorCallback)imicepillar_render,
+    (ObjectDescriptorCallback)imicepillar_free,
+    (ObjectDescriptorCallback)imicepillar_getObjectTypeId,
+    imicepillar_getExtraSize,
+};
+
+void imanimspacecraft_modelMtxFn(void);
+
+void imanimspacecraft_hitDetect(void);
+
+void imanimspacecraft_release(void);
+
+void imanimspacecraft_initialise(void);
+
+void imspacethruster_hitDetect(void);
+
+void imspacethruster_release(void);
+
+void imspacethruster_initialise(void);
+
+void imspacering_free(void);
+
+void imspacering_hitDetect(void);
+
+void imspacering_release(void);
+
+void imspacering_initialise(void);
+
+void imspaceringgen_hitDetect(void);
+
+void imspaceringgen_release(void);
+
+void imspaceringgen_initialise(void);
+
+void lavaball1be_hitDetect(void);
+
+void lavaball1be_release(void);
+
+void lavaball1be_initialise(void);
+
+void lavaball1bf_hitDetect(void);
+
+void lavaball1bf_release(void);
+
+void lavaball1bf_initialise(void);
+
+/* 8b "li r3, N; blr" returners. */
+int imanimspacecraft_getExtraSize(void);
+int imanimspacecraft_getObjectTypeId(void);
+int imspacethruster_getExtraSize(void);
+int imspacethruster_getObjectTypeId(void);
+int imspacering_getExtraSize(void);
+int imspacering_getObjectTypeId(void);
+int imspaceringgen_getExtraSize(void);
+int imspaceringgen_getObjectTypeId(void);
+int linkb_levcontrol_getExtraSize(void);
+int link_levcontrol_getExtraSize(void);
+int lavaball1bf_getExtraSize(void);
+int lavaball1bf_getObjectTypeId(void);
+int dimlogfire_getExtraSize(void) { return 0x24; }
+int dimlogfire_getObjectTypeId(void) { return 0x1; }
+
+/* Pattern wrappers. */
+extern u32 lbl_803DDB48;
+void imspaceringgen_free(void);
+
+/* Init: clear obj->_F4 and record obj globally in lbl_803DDB48. */
+void imspaceringgen_init(int* obj);
+
+/* If obj->_F4 == 0, set it to 1; else early-return. */
+void imanimspacecraft_update(int* obj);
+
+/* Free: call vtable[6] on obj through global dll-services pointer. */
+void imanimspacecraft_free(int* obj);
+
+extern f32 lbl_803E4784;
+extern char lbl_803AC948[];
+
+void imanimspacecraft_init(int* obj);
+
+/* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
+int imanimspacecraft_setScale(int* obj, int bitIdx);
+
+/* lavaball1bf "consume" hook: only clear pending flag if both gates set. */
+void lavaball1bf_func11(int* obj);
+
+/* lavaball1bf "request" hook: set pending if gated, return success. */
+int lavaball1bf_setScale(int* obj);
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E4768;
+extern f32 lbl_803E4780;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E4788;
+extern f32 lbl_803E47B8;
+extern f32 lbl_803E4810;
+
+void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void imanimspacecraft_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void imspacethruster_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void imspacering_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+/* if (o->_X == K) return A; else return B;  pattern. */
+int lavaball1be_getExtraSize(int* obj);
+
+int lavaball1be_getObjectTypeId(int* obj);
+
+/* chained byte mask. */
+u32 imanimspacecraft_func0B(int* obj);
+u32 lavaball1be_func11(int* obj);
+
+int fn_801B0784(int obj, int delta)
+{
+    s8* inner = ((GameObject*)obj)->extra;
+    inner[0x1c] = (s8)(inner[0x1c] - delta);
+    return inner[0x1c] <= 0;
+}
+
+extern void Music_Trigger(int id, int p2);
+extern int getSaveGameLoadStatus(void);
+extern int coordsToMapCell(f32 x, f32 z);
+
+void link_levcontrol_free(int obj);
+
+void link_levcontrol_update(int* obj);
+
+extern void* gSHthorntailAnimationInterface;
+extern void SCGameBitLatch_Update(void* p, int a, int b, int c, int d, int e);
+
+void link_levcontrol_updateAreaMusic(int* obj);
+
+extern void fn_80088870(u8 * a, u8 * b, u8 * c, u8 * d);
+extern void envFxActFn_800887f8(int id);
+extern void getEnvfxAct(int a, int b, int c, int d);
+extern u8 lbl_803239F0[];
+
+void link_levcontrol_applyEnterAreaEffects(int* obj);
+
+extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
+extern void ObjModel_SetBlendChannelWeight(int* model, int channel, f32 weight);
+extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4, lbl_803E4798, lbl_803E4788;
+extern s16 lbl_80323818[], lbl_80323824[];
+
+void imspacethruster_init(int* obj, u8* param2);
+
+void link_levcontrol_init(int* obj);
+
+extern u8 lbl_803238D8[];
+extern void getEnvfxActImmediately(int a, int b, int c, int d);
+extern void fn_80138908(int* tricky, int mode);
+extern f32 timeDelta;
+extern f32 lbl_803E47C8;
+
+typedef struct
+{
+    int flags;
+    s8 cnt : 2;
+    u8 stage : 3;
+    u8 low : 3;
+    u8 flag5 : 1;
+    u8 pad5 : 7;
+    u8 pad6[2];
+    f32 timer;
+    s16 music;
+} LinkbLevState;
+
+void linkb_levcontrol_init(int* obj);
+
+void linkb_levcontrol_update(int* obj);
+
+extern f32 lbl_803E47C0;
+extern u8 framesThisStep;
+extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int extraSize, int id);
+extern void Obj_SetupObject(int obj, int a, int b, int c, int d);
+extern f32 lbl_803E47C4;
+
+typedef struct
+{
+    int* ringA;
+    int* ringB;
+    u8 visible;
+} RingGenState;
+
+void imspacering_init(s16* obj, s8* p);
+
+void imspacering_update(s16* obj);
+
+void imspaceringgen_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
+
+void imspaceringgen_update(s16* obj);
+
+extern void ModelLightStruct_free(void* light);
+extern void mm_free(void* p);
+
+extern f32 lbl_803E4814;
+
+void lavaball1bf_init(s16* obj, u8* p);
+
+void lavaball1bf_free(int obj, int mode);
+
+void lavaball1be_free(int obj);
+
+void imspacethruster_free(int obj);
+
+void dimlogfire_free(int* obj, int mode)
+{
+    extern void Obj_FreeObject(void* o); /* #57 */
+    DimLogFireState* inner = ((GameObject*)obj)->extra;
+    (*gExpgfxInterface)->freeSource2((u32)obj);
+    if ((void*)inner->subObj != NULL && mode == 0)
+    {
+        Obj_FreeObject((int*)inner->subObj);
+    }
+    ObjGroup_RemoveObject(obj, 0x31);
+    if ((void*)inner->light != NULL)
+    {
+        ModelLightStruct_free((void*)inner->light);
+    }
+}
+
+extern void Sfx_StopObjectChannel(int* obj, int channel);
+
+int dimlogfire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    extern int Sfx_PlayFromObject(int* obj, int sfxId); /* #57 */
+    DimLogFireState* state = ((GameObject*)obj)->extra;
+    if (state->mode == 1)
+    {
+        Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
+    }
+    else
+    {
+        Sfx_StopObjectChannel(obj, 64);
+    }
+    switch (animUpdate->triggerCommand)
+    {
+    case 1:
+        state->smokeToggle = (u8)(state->smokeToggle ^ 1);
+        break;
+    case 2:
+        GameBit_Set(46, 1);
+        break;
+    case 3:
+        state->mode = 4;
+        break;
+    }
+    if (state->smokeToggle != 0)
+    {
+        (*gPartfxInterface)->spawnObject(obj, 215, NULL, 0, -1, NULL);
+        Sfx_StopObjectChannel(obj, 5);
+    }
+    else
+    {
+        Sfx_StopObjectChannel(obj, 1);
+    }
+    animUpdate->triggerCommand = 0;
+    return 0;
+}
+
+extern void queueGlowRender(int* obj);
+extern f32 lbl_803E4820;
+
+void dimlogfire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    DimLogFireState* state;
+    int* subobj;
+    if ((s32)visible != 0)
+    {
+        state = ((GameObject*)obj)->extra;
+        subobj = (int*)state->subObj;
+        if (subobj != NULL)
+        {
+            int* q = (int*)((ObjAnimComponent*)subobj)->banks[((ObjAnimComponent*)subobj)->bankIndex];
+            *(u16*)((char*)q + 0x18) = (u16)(*(u16*)((char*)q + 0x18) & ~0x8);
+            *(u8*)((char*)(int*)state->subObj + 0x37) = *(u8*)((char*)obj + 0x37);
+            ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(
+                (int*)state->subObj, p2, p3, p4, p5, lbl_803E4820);
+        }
+        ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4820);
+        if (*(void**)&state->light != NULL)
+        {
+            if (*(u8*)((char*)*(void**)&state->light + 0x2f8) != 0)
+            {
+                if (*(u8*)((char*)*(void**)&state->light + 0x4c) != 0)
+                {
+                    queueGlowRender(*(int**)&state->light);
+                }
+            }
+        }
+    }
+}
+
+extern int modelLightStruct_getActiveState(int* p);
+extern f32 lbl_803E47F0;
+
+void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5);
+
+extern void spawnExplosion(s16* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
+extern void modelLightStruct_updateGlowAlpha(int p);
+extern f32 lbl_803E47D0, lbl_803E47F4, lbl_803E47F8, lbl_803E47FC;
+extern f32 lbl_803E47D4, lbl_803E47D8, lbl_803E47DC, lbl_803E47E0;
+extern f32 lbl_803E4800, lbl_803E4804, lbl_803E4808;
+extern u8 lbl_802C2318[];
+extern void vecRotateZXY(void* in, void* out);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+
+typedef struct
+{
+    f32 x, y, z;
+} LavaVec;
+
+void lavaball1be_init(s16* obj, u8* p);
+
+void lavaball1be_update(s16* obj);
+
+extern int* objFindTexture(int* obj, int a, int b);
+extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C;
+
+int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
+
+extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;
+
+void imspacethruster_update(int* obj);
+
+
+void lavaball1bf_update(int* obj);
+
+void lavaball1be_setScale(s16* obj, int p2, int p3);
+
+/* segment pragma-stack balance (re-split): */
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
@@ -36,26 +673,15 @@ typedef struct DimsnowballState
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
-extern int getTrickyObject(void);
-extern int Obj_GetPlayerObject(void);
-extern void Obj_FreeObject(int obj);
 extern void fn_80098B18(int obj, f32 scale, int type, int param_4, int param_5, int param_6);
-extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern int objCreateLight(int obj, int param_2);
-extern void modelLightStruct_setLightKind(int light, int value);
-extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_startColorFade(int light, int param_2, int param_3);
 extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setupGlow(int light, int param_2, int r, int g, int b, int a, f32 radius);
-extern void modelLightStruct_setGlowProjectionRadius(int light, f32 radius);
 
 extern EffectInterface** gPartfxInterface;
 extern f64 DOUBLE_803e54b0;
@@ -104,6 +730,8 @@ extern f32 lbl_803E54D4;
  */
 void dimlogfire_update(int obj)
 {
+    extern int getTrickyObject(void); /* #57 */
+    extern void Sfx_PlayFromObject(int obj, int sfxId); /* #57 */
     int a;
     int b;
     int rand;
@@ -249,6 +877,12 @@ void dimlogfire_update(int obj)
 #pragma peephole off
 void dimlogfire_init(int obj, int def)
 {
+    extern void modelLightStruct_setGlowProjectionRadius(int light, f32 radius); /* #57 */
+    extern void modelLightStruct_setupGlow(int light, int param_2, int r, int g, int b, int a, f32 radius); /* #57 */
+    extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far); /* #57 */
+    extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a); /* #57 */
+    extern void modelLightStruct_setLightKind(int light, int value); /* #57 */
+    extern int objCreateLight(int obj, int param_2); /* #57 */
     int radius;
     DimLogFireState* state;
 
@@ -361,6 +995,9 @@ void dimsnowball_hitDetect(int* obj)
 
 void dimsnowball_update(int obj)
 {
+    extern void Obj_FreeObject(int obj); /* #57 */
+    extern int Obj_GetPlayerObject(void); /* #57 */
+    extern void Sfx_PlayFromObject(int obj, int sfxId); /* #57 */
     s16 idx[4];
     f32 x[4];
     f32 y[4];
@@ -471,3 +1108,68 @@ void dimsnowball_update(int obj)
         *(int*)&((ObjHitsPriorityState*)model)->skeletonHitMask = 0x10;
     }
 }
+
+/* segment pragma-stack balance (re-split): */
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma peephole reset
+#pragma peephole reset
+
+/* === moved from main/dll/DIM/dimsnowball_init.c [801B1354-801B13E8) (TU re-split, docs/boundary_audit.md) === */
+#include "ghidra_import.h"
+
+
+typedef struct DimSnowballState
+{
+    void* target;
+    int targetId;
+} DimSnowballState;
+
+typedef struct DimSnowballObject
+{
+    u8 unk0[0x54];
+    u8* handle54;
+    u8 unk58[0xc];
+    u8* handle64;
+    u8 unk68[0x48];
+    u16 flags;
+    u8 unkB2[6];
+    DimSnowballState* state;
+} DimSnowballObject;
+
+typedef struct DimSnowballDef
+{
+    u8 unk0[0x14];
+    int targetId;
+} DimSnowballDef;
+
+void dimsnowball_init(DimSnowballObject* param_1, DimSnowballDef* def)
+{
+    extern u8* ObjList_FindObjectById(int objectId); /* #57 */
+    DimSnowballObject* obj = param_1;
+    DimSnowballState* state;
+
+    state = obj->state;
+    state->targetId = def->targetId;
+    def->targetId = -1;
+    state->target = ObjList_FindObjectById(state->targetId);
+    if (obj->handle54 != NULL)
+    {
+        obj->handle54[0x6a] = 0;
+    }
+    if (obj->handle64 != NULL)
+    {
+        *(u32*)(obj->handle64 + 0x30) |= 0x810;
+    }
+    obj->flags = (u16)(obj->flags | 0x4000);
+}
+
+void dimsnowball_release(void)
+{
+}
+
+void dimsnowball_initialise(void)
+{
+}
+
+int dimsnowball1c2_getExtraSize(void);

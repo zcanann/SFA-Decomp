@@ -755,7 +755,6 @@ config.libs = [
             Object(NonMatching, "main/audio/synth_control.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/snd_synth_api.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/mcmd_volume.c", mw_version="GC/1.2.5n"),
-            Object(NonMatching, "main/dll/DIM/dimsnowball_init.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/audio/voice_prio.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/vid_init.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/vsample_alloc.c", mw_version="GC/1.2.5n"),

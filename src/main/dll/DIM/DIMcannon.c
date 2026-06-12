@@ -1,3 +1,449 @@
+/* === moved from main/dll/DIM/DIMboulder.c [801AE0EC-801AE100) (TU re-split, docs/boundary_audit.md) === */
+#pragma scheduling on
+#pragma peephole on
+#include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
+#include "main/expgfx.h"
+#include "main/game_object.h"
+#include "main/mapEvent.h"
+#include "main/objanim.h"
+#include "main/objanim_internal.h"
+#include "main/objseq.h"
+#include "main/dll/DIM/DIMboulder.h"
+#include "main/resource.h"
+
+typedef struct CrrockfallPlacement
+{
+    u8 pad0[0x1A - 0x0];
+    u8 unk1A;
+    u8 unk1B;
+    s16 unk1C;
+    u8 pad1E[0x20 - 0x1E];
+} CrrockfallPlacement;
+
+
+/*
+ * Per-object extra state for the IM ice-mountain event controller
+ * (imicemountain_getExtraSize == 0x14).
+ */
+typedef struct IMIceMountainState
+{
+    u8 eventState; /* 0..7 event machine (imicemountain_updateEventState) */
+    u8 pad01[3];
+    s32 latchFlags; /* SCGameBitLatch record; bit 1 = latch fired this frame */
+    s8 warpCountdown; /* state 6: frames until warpToMap(0x1A) */
+    u8 pad09;
+    s16 musicTrack; /* -1 or 26; Music_Trigger edge latch */
+    u8 mapEventState; /* MEVT_QUERY result at init (1/2/5) */
+    u8 pad0D[3];
+    f32 warningTextTimer; /* shows text 0x351 while above the floor value */
+} IMIceMountainState;
+
+STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
+
+/*
+ * Per-object extra state for the magiclight proximity light
+ * (magiclight_getExtraSize == 0x14 for non-0x172 types).
+ */
+typedef struct MagicLightState
+{
+    f32 triggerRadius; /* preset by subtype */
+    s16 lifetime; /* rand(200,600) at init */
+    s16 enterAction; /* L-action when the player enters the radius */
+    s16 leaveAction; /* L-action when the player leaves radius + hysteresis */
+    u8 pad0A;
+    s8 inRange; /* hysteresis latch */
+    s8 subtype; /* params+0x1A */
+    u8 pad0D[3];
+    s16 unk10; /* 301 at init */
+    u8 pad12[2];
+} MagicLightState;
+
+STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
+
+/*
+ * Per-object extra state for the dll_16C map-event boulder proxy
+ * (dll_16C_getExtraSize == 0x24).
+ */
+typedef struct Dll16CState
+{
+    void* linkedObj; /* group-10 object matched by type (364/367) */
+    f32 unk04; /* set on anim event 2 */
+    f32 snapX; /* path point snapshot taken on anim event 2 */
+    f32 snapY;
+    f32 snapZ;
+    f32 pathPointX; /* path point 1 world position, refreshed in render */
+    f32 pathPointY;
+    f32 pathPointZ;
+    u8 opacity; /* distance fade; 0xFF when unlinked */
+    s8 subObjIndex; /* lbl_802C2308 id selector; -1 = clear (anim event 3) */
+    s8 subObjIndexApplied;
+    u8 pad23;
+} Dll16CState;
+
+STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
+
+/*
+ * Per-object extra state for the crrockfall falling rock
+ * (crrockfall_getExtraSize == 0x14).
+ */
+typedef struct CrRockfallCfgEntry
+{
+    f32 unk00;
+    s32 landSfx; /* 0 = none */
+    f32 restOffsetY; /* scaled by obj scale, added to floorY at rest */
+} CrRockfallCfgEntry;
+
+typedef struct CrRockfallState
+{
+    CrRockfallCfgEntry* cfg; /* lbl_803236B8 entry 0, or entry 1 for type 0x600 */
+    f32 floorY; /* probed landing height */
+    f32 startY; /* obj Y at init; fade fraction reference */
+    u8 mode; /* 0 armed, 1 falling, 2 resting, 3 shattered */
+    u8 fallStarted;
+    u8 floorFound;
+    u8 pad0F;
+    s16 fallDelay; /* params+0x1E; counts down while the player is in range */
+    u8 pad12[2];
+} CrRockfallState;
+
+STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
+
+
+extern undefined4 getLActions();
+extern uint GameBit_Get(int eventId);
+extern undefined4 FUN_8001771c();
+extern int FUN_80017a98();
+extern void* FUN_80017aa4();
+extern undefined4 FUN_80017ac8();
+extern undefined4 FUN_80017ae4();
+extern uint FUN_80017ae8();
+extern undefined4 FUN_800305f8();
+extern undefined4 ObjHitbox_SetCapsuleBounds();
+extern undefined4 ObjHits_DisableObject();
+
+extern undefined4 DAT_802c2a88;
+extern undefined4 DAT_802c2a8c;
+extern undefined4 DAT_802c2a90;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern MapEventInterface** gMapEventInterface;
+extern f32 lbl_803E53D0;
+extern f32 lbl_803E53E0;
+extern f32 lbl_803E53F0;
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ac248
+ * EN v1.0 Address: 0x801AC248
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801AC4FC
+ * EN v1.1 Size: 212b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_801ac248(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ad984
+ * EN v1.0 Address: 0x801AD984
+ * EN v1.0 Size: 420b
+ * EN v1.1 Address: 0x801AD9F4
+ * EN v1.1 Size: 272b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4
+FUN_801ad984(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801adca0
+ * EN v1.0 Address: 0x801ADCA0
+ * EN v1.0 Size: 332b
+ * EN v1.1 Address: 0x801ADD98
+ * EN v1.1 Size: 332b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801addec
+ * EN v1.0 Address: 0x801ADDEC
+ * EN v1.0 Size: 896b
+ * EN v1.1 Address: 0x801ADEE4
+ * EN v1.1 Size: 576b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4
+FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10 , int param_11, undefined4 param_12, uint* param_13, undefined4 param_14, undefined4 param_15 , undefined4 param_16);
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void imicemountain_free(void);
+
+void imicemountain_hitDetect(void);
+
+extern void gameBitFn_800ea2e0(int idx);
+extern void unlockLevel(int a, int b, int c);
+extern f32 lbl_803E46E0;
+
+#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
+#define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
+#define MEVT_QUERY(a)         (*gMapEventInterface)->getMode((a))
+
+/* EN v1.0 0x801AC9C0  size: 828b  imicemountain_init: clear the ice-mountain
+ * gamebit block, arm the map-event triggers, then branch on the queried level
+ * state to set the boulder's start state and fire the appropriate triggers. */
+#pragma scheduling off
+void imicemountain_init(int* obj);
+#pragma peephole reset
+#pragma scheduling reset
+#undef MEVT_TRIGGER
+#undef MEVT_SET
+#undef MEVT_QUERY
+void crrockfall_free(void);
+
+void crrockfall_hitDetect(void);
+
+void magiclight_hitDetect(void);
+
+void magiclight_release(void);
+
+void magiclight_initialise(void);
+
+extern u32 randomGetRange(int min, int max);
+extern f32 lbl_803E4740;
+extern f32 lbl_803E4744;
+
+/* EN v1.0 0x801AD684  size: 344b  magiclight_init: seed header + update fn;
+ * for the non-172 variants pick a random lifetime and, for type 0x16b, map
+ * the spawn subtype to a light-pair / intensity preset. */
+#pragma scheduling off
+#pragma peephole off
+void magiclight_init(int* obj, u8* params);
+#pragma peephole reset
+#pragma scheduling reset
+void dll_16C_release(void);
+
+void dll_16C_initialise(void);
+
+void imicepillar_free(void)
+{
+}
+
+/* 8b "li r3, N; blr" returners. */
+int imicemountain_getExtraSize(void);
+int imicemountain_getObjectTypeId(void);
+int crrockfall_getExtraSize(void);
+int crrockfall_getObjectTypeId(void);
+int magiclight_getObjectTypeId(void);
+int dll_16C_getExtraSize(void);
+int dll_16C_getObjectTypeId(void);
+int imicepillar_getExtraSize(void) { return 0x4; }
+int imicepillar_getObjectTypeId(void) { return 0x0; }
+
+/* Pattern wrappers. */
+extern void* lbl_803DDB40;
+void crrockfall_initialise(void);
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E46D8;
+extern f32 lbl_803E4708;
+extern f32 lbl_803E473C;
+extern void objRenderFn_8003b8f4(f32);
+#pragma peephole off
+void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+#pragma peephole reset
+
+#pragma peephole off
+void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
+
+void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
+#pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+extern int hitDetectFn_80065e50(int obj, int** listOut, int p3, int p4, f32 x, f32 y, f32 z);
+extern f32 lbl_803E4700;
+extern f32 lbl_803E4704;
+#pragma dont_inline on
+f32 fn_801ACCFC(int obj);
+#pragma dont_inline reset
+
+void magiclight_free(int obj);
+
+void magiclight_update(int obj);
+#pragma peephole reset
+#pragma scheduling reset
+
+/* if (o->_X == K) return A; else return B; */
+#pragma peephole off
+int magiclight_getExtraSize(int* obj);
+#pragma peephole reset
+
+
+void dll_16C_free(int* obj);
+
+/* conditional init/free pair. */
+void crrockfall_release(void);
+
+/* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, sync its transform into obj. */
+extern void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
+#pragma scheduling off
+#pragma peephole off
+void dll_16C_hitDetect(void* obj);
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int objUpdateOpacity(int* obj);
+extern f32 lbl_803E4758;
+#pragma scheduling off
+#pragma peephole off
+void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate);
+#pragma scheduling reset
+
+/* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
+#pragma scheduling off
+void dll_16C_init(void* obj, void* arg2);
+#pragma scheduling reset
+
+extern float Vec_distance(float* a, float* b);
+extern f32 lbl_803E4738;
+#pragma scheduling off
+#pragma peephole off
+int magiclight_SeqFn(int* obj);
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void fn_801AC108(int* obj, int* extra);
+extern CloudActionInterface** gCloudActionInterface;
+extern void warpToMap(int mapId, int flags);
+
+#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
+#define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
+
+/* EN v1.0 0x801AC248  imicemountain_updateEventState: 8-state ice-mountain event machine dispatched
+ * through jumptable_80323698 (states 1..7; state 0 idles). */
+#pragma scheduling off
+#pragma peephole off
+void imicemountain_updateEventState(int* obj);
+#pragma peephole reset
+#pragma scheduling reset
+#undef MEVT_TRIGGER
+#undef MEVT_SET
+
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int kind, int id);
+extern f32 lbl_803E4748;
+extern u8 lbl_802C2308[];
+
+typedef struct
+{
+    s16 v[5];
+} Blob10;
+
+/* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
+ * from a small id table, then run the map-event sub-object state callbacks. */
+#pragma scheduling off
+#pragma peephole off
+int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
+#pragma peephole reset
+#pragma scheduling reset
+
+/* dll_16C_syncSubObjectTransform: snapshot the map-event sub-object's transform into the boulder
+ * extra block, optionally re-issuing a move on the sub-object first. */
+#pragma scheduling off
+#pragma peephole off
+void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void fn_801AC01C(int* obj);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void gameTextShow(int id);
+extern void Music_Trigger(int track, int flag);
+extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
+extern f32 timeDelta;
+extern f32 lbl_803E46DC;
+
+/* imicemountain_update: lazy-spawn the ambient effects, run the active state,
+ * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
+#pragma scheduling off
+void imicemountain_update(int* obj);
+#pragma scheduling reset
+
+extern int* ObjGroup_GetObjects(int group, int* countOut);
+extern u8 framesThisStep;
+extern f32 lbl_803E474C;
+extern f32 lbl_803E475C;
+extern f32 lbl_803E4760;
+extern f32 lbl_803E4764;
+
+/* dll_16C_update: re-link the spawned sub-object, then while active/visible run
+ * its move and fade opacity by distance to the player. */
+#pragma scheduling off
+#pragma peephole off
+void dll_16C_update(int* obj);
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u8 lbl_803236B8[];
+extern f32 lbl_803E4730;
+
+/* crrockfall_init: derive the per-rock scale from the placement params, size the
+ * capsule hitbox from the sub-object bounds, set up render flags, and pick the
+ * state-table variant by object type. */
+#pragma scheduling off
+#pragma peephole off
+void crrockfall_init(int* obj, u8* params);
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void fn_800628CC(int* obj);
+extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern void Sfx_StopObjectChannel(int* obj, int channel);
+extern f32 lbl_803E46E8;
+extern f32 lbl_803E46EC;
+extern f32 lbl_803E46F0;
+extern f32 lbl_803E470C;
+extern f32 lbl_803E4710;
+extern f32 lbl_803E4714;
+extern f32 lbl_803E4718;
+extern f32 lbl_803E471C;
+extern f32 lbl_803E4720;
+
+/* crrockfall_update: drive the falling-rock state machine - fade-in opacity by
+ * height/distance, trigger the fall when the player is in range, integrate the
+ * fall, then shatter (sfx + explosion) on impact. */
+#pragma scheduling off
+#pragma peephole off
+void crrockfall_update(int* obj);
+#pragma peephole reset
+#pragma scheduling reset
+#pragma scheduling reset
+
 #include "main/dll/DIM/dimcannon_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
@@ -103,15 +549,12 @@ static inline int* DIMcannon_GetActiveModel(void* obj)
 }
 
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017ac8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
-extern undefined4 FUN_801adca0();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
 
@@ -168,6 +611,8 @@ void FUN_801ae0_dropped_old_imicepillar_render(undefined8 param_1, undefined8 pa
 void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
                   undefined4 param_5, char param_6)
 {
+    extern undefined4 FUN_801adca0(); /* #57 */
+    extern undefined4 ObjPath_GetPointWorldPosition(); /* #57 */
     u8 uVar1;
     bool bVar2;
     undefined2* puVar3;
@@ -462,8 +907,8 @@ int linkb_levcontrol_getExtraSize(void) { return 0x10; }
 int link_levcontrol_getExtraSize(void) { return 0x10; }
 int lavaball1bf_getExtraSize(void) { return 0x1c; }
 int lavaball1bf_getObjectTypeId(void) { return 0x0; }
-int dimlogfire_getExtraSize(void) { return 0x24; }
-int dimlogfire_getObjectTypeId(void) { return 0x1; }
+int dimlogfire_getExtraSize(void);
+int dimlogfire_getObjectTypeId(void);
 
 /* Pattern wrappers. */
 extern u32 lbl_803DDB48;
@@ -494,6 +939,7 @@ extern char lbl_803AC948[];
 
 void imanimspacecraft_init(int* obj)
 {
+    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
     f32 v;
     ((GameObject*)obj)->animEventCallback = (void*)imanimspacecraft_SeqFn;
     v = lbl_803E4784;
@@ -599,12 +1045,7 @@ int lavaball1be_getObjectTypeId(int* obj)
 u32 imanimspacecraft_func0B(int* obj) { return *((u8*)((int**)obj)[0xb8 / 4] + 0x3) & 0x4; }
 u32 lavaball1be_func11(int* obj) { return *((u8*)((int**)obj)[0xb8 / 4] + 0x10) & 0x10; }
 
-int fn_801B0784(int obj, int delta)
-{
-    s8* inner = ((GameObject*)obj)->extra;
-    inner[0x1c] = (s8)(inner[0x1c] - delta);
-    return inner[0x1c] <= 0;
-}
+int fn_801B0784(int obj, int delta);
 
 extern void Music_Trigger(int id, int p2);
 extern int getSaveGameLoadStatus(void);
@@ -647,11 +1088,11 @@ void link_levcontrol_update(int* obj)
     inner->areaCell = (s8)coordsToMapCell(player[3], player[5]);
 }
 
-extern void* gSHthorntailAnimationInterface;
 extern void SCGameBitLatch_Update(void* p, int a, int b, int c, int d, int e);
 
 void link_levcontrol_updateAreaMusic(int* obj)
 {
+    extern void* gSHthorntailAnimationInterface; /* #57 */
     LinkLevControlState* sub = ((GameObject*)obj)->extra;
     switch (((GameObject*)obj)->anim.mapEventSlot)
     {
@@ -708,11 +1149,11 @@ void link_levcontrol_updateAreaMusic(int* obj)
 
 extern void fn_80088870(u8 * a, u8 * b, u8 * c, u8 * d);
 extern void envFxActFn_800887f8(int id);
-extern void getEnvfxAct(int a, int b, int c, int d);
 extern u8 lbl_803239F0[];
 
 void link_levcontrol_applyEnterAreaEffects(int* obj)
 {
+    extern void getEnvfxAct(int a, int b, int c, int d); /* #57 */
     u8* tbl = lbl_803239F0;
     switch (((GameObject*)obj)->anim.mapEventSlot)
     {
@@ -841,6 +1282,7 @@ typedef struct
 
 void linkb_levcontrol_init(int* obj)
 {
+    extern void getEnvfxAct(int a, int b, int c, int d); /* #57 */
     u8* t = (u8*)(int)lbl_803238D8;
     LinkbLevState* sub = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
@@ -890,6 +1332,8 @@ void linkb_levcontrol_init(int* obj)
 
 void linkb_levcontrol_update(int* obj)
 {
+    extern void* gSHthorntailAnimationInterface; /* #57 */
+    extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
     LinkbLevState* state;
     int* tricky;
     int* player;
@@ -1044,7 +1488,6 @@ extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int extraSize, int id);
-extern void Obj_SetupObject(int obj, int a, int b, int c, int d);
 extern f32 lbl_803E47C4;
 
 typedef struct
@@ -1093,6 +1536,7 @@ void imspaceringgen_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 
 void imspaceringgen_update(s16* obj)
 {
+    extern void Obj_SetupObject(int obj, int a, int b, int c, int d); /* #57 */
     int i;
     int ring;
     u8* setup;
@@ -1178,7 +1622,6 @@ void imspaceringgen_update(s16* obj)
     }
 }
 
-extern void Obj_FreeObject(void* o);
 extern void ModelLightStruct_free(void* light);
 extern void mm_free(void* p);
 
@@ -1202,6 +1645,7 @@ void lavaball1bf_init(s16* obj, u8* p)
 
 void lavaball1bf_free(int obj, int mode)
 {
+    extern void Obj_FreeObject(void* o); /* #57 */
     Lavaball1bfState* inner = ((GameObject*)obj)->extra;
     if (mode == 0 && inner->spawnedObj != 0)
     {
@@ -1226,92 +1670,16 @@ void imspacethruster_free(int obj)
     if (inner->bufB != 0) mm_free(inner->bufB);
 }
 
-void dimlogfire_free(int* obj, int mode)
-{
-    DimLogFireState* inner = ((GameObject*)obj)->extra;
-    (*gExpgfxInterface)->freeSource2((u32)obj);
-    if ((void*)inner->subObj != NULL && mode == 0)
-    {
-        Obj_FreeObject((int*)inner->subObj);
-    }
-    ObjGroup_RemoveObject(obj, 0x31);
-    if ((void*)inner->light != NULL)
-    {
-        ModelLightStruct_free((void*)inner->light);
-    }
-}
+void dimlogfire_free(int* obj, int mode);
 
-extern int Sfx_PlayFromObject(int* obj, int sfxId);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 
-int dimlogfire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    DimLogFireState* state = ((GameObject*)obj)->extra;
-    if (state->mode == 1)
-    {
-        Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
-    }
-    else
-    {
-        Sfx_StopObjectChannel(obj, 64);
-    }
-    switch (animUpdate->triggerCommand)
-    {
-    case 1:
-        state->smokeToggle = (u8)(state->smokeToggle ^ 1);
-        break;
-    case 2:
-        GameBit_Set(46, 1);
-        break;
-    case 3:
-        state->mode = 4;
-        break;
-    }
-    if (state->smokeToggle != 0)
-    {
-        (*gPartfxInterface)->spawnObject(obj, 215, NULL, 0, -1, NULL);
-        Sfx_StopObjectChannel(obj, 5);
-    }
-    else
-    {
-        Sfx_StopObjectChannel(obj, 1);
-    }
-    animUpdate->triggerCommand = 0;
-    return 0;
-}
+int dimlogfire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 extern void queueGlowRender(int* obj);
 extern f32 lbl_803E4820;
 
-void dimlogfire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    DimLogFireState* state;
-    int* subobj;
-    if ((s32)visible != 0)
-    {
-        state = ((GameObject*)obj)->extra;
-        subobj = (int*)state->subObj;
-        if (subobj != NULL)
-        {
-            int* q = (int*)((ObjAnimComponent*)subobj)->banks[((ObjAnimComponent*)subobj)->bankIndex];
-            *(u16*)((char*)q + 0x18) = (u16)(*(u16*)((char*)q + 0x18) & ~0x8);
-            *(u8*)((char*)(int*)state->subObj + 0x37) = *(u8*)((char*)obj + 0x37);
-            ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(
-                (int*)state->subObj, p2, p3, p4, p5, lbl_803E4820);
-        }
-        ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4820);
-        if (*(void**)&state->light != NULL)
-        {
-            if (*(u8*)((char*)*(void**)&state->light + 0x2f8) != 0)
-            {
-                if (*(u8*)((char*)*(void**)&state->light + 0x4c) != 0)
-                {
-                    queueGlowRender(*(int**)&state->light);
-                }
-            }
-        }
-    }
-}
+void dimlogfire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 extern int modelLightStruct_getActiveState(int* p);
 extern f32 lbl_803E47F0;
@@ -1329,7 +1697,6 @@ void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5)
     ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E47F0);
 }
 
-extern void spawnExplosion(s16* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern void modelLightStruct_updateGlowAlpha(int p);
 extern f32 lbl_803E47D0, lbl_803E47F4, lbl_803E47F8, lbl_803E47FC;
 extern f32 lbl_803E47D4, lbl_803E47D8, lbl_803E47DC, lbl_803E47E0;
@@ -1421,6 +1788,9 @@ void lavaball1be_init(s16* obj, u8* p)
 
 void lavaball1be_update(s16* obj)
 {
+    extern void spawnExplosion(s16* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g); /* #57 */
+    extern int Sfx_PlayFromObject(int* obj, int sfxId); /* #57 */
+    extern void Obj_FreeObject(void* o); /* #57 */
     Lavaball1beState* state;
     int* sub;
 
@@ -1681,6 +2051,7 @@ void imspacethruster_update(int* obj)
 
 void lavaball1bf_update(int* obj)
 {
+    extern void Obj_SetupObject(int obj, int a, int b, int c, int d); /* #57 */
     u8* setup;
     Lavaball1bfState* state;
     int* spawned;
