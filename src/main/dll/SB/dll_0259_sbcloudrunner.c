@@ -24,6 +24,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/WC/dll_0259_sbcloudrunner.h"
+#include "main/objhits.h"
 #include "main/resource.h"
 
 typedef struct SBCloudRunnerState
@@ -145,7 +146,6 @@ extern f32 lbl_803E5CA8;
 extern f32 lbl_803E5CAC;
 extern f32 lbl_803E5CB0;
 extern f32 lbl_803E5CB4;
-extern int ObjHits_GetPriorityHitWithPosition(int obj, int *outHit, int *p3, int *p4, f32 *outX, f32 *outY, f32 *outZ);
 extern int objGetFlagsE5_2(int obj);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 extern void doRumble(f32 val);
