@@ -1,4 +1,4 @@
-#include "main/dll/gcrobotlightbea.h"
+#include "main/dll/dll_0104_smallbasket.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"

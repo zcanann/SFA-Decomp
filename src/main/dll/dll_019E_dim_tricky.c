@@ -374,7 +374,7 @@ void dll_19E_hitDetect(void)
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/dll/dim_tricky.h"
+#include "main/dll/dll_019E_dim_tricky.h"
 #include "main/effect_interfaces.h"
 #include "main/gameplay_runtime.h"
 #include "main/obj_placement.h"

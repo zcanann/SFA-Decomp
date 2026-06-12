@@ -552,7 +552,7 @@ int pushable_func0B(int obj, int other)
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/pushable.h"
-#include "main/dll/transporter.h"
+#include "main/dll/dll_00EF_pushable.h"
 #include "main/objseq.h"
 
 typedef struct IceblastPlacement

@@ -1,4 +1,4 @@
-#include "main/dll/laser19F.h"
+#include "main/dll/dll_018C_mmshshrine.h"
 #include "main/game_object.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/objseq.h"
@@ -470,7 +470,7 @@ void mmsh_shrine_update(int objArg)
 }
 
 /* === moved from main/dll/mmshrine/shrine.c [801C52D8-801C53A0) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/laser19F.h"
+#include "main/dll/dll_018C_mmshshrine.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"

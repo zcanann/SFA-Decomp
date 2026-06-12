@@ -1,5 +1,5 @@
 /* === moved from main/dll/crackanim.c [8017EC10-8017EC94) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/crackanim.h"
+#include "main/dll/dll_0117_appleontree.h"
 
 typedef struct AppleontreeObjectDef
 {
@@ -97,7 +97,7 @@ ObjectDescriptor gDllFCObjDescriptor = {
     dll_FC_getExtraSize_ret_8,
 };
 
-#include "main/dll/babycloudrunner.h"
+#include "main/dll/dll_00FC_babycloudrunner.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/obj_placement.h"

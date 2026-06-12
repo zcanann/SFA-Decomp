@@ -1,5 +1,5 @@
 /* === moved from main/dll/autoTransporter.c [801793A4-801797A4) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/autoTransporter.h"
+#include "main/dll/dll_00F4_doorf4.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 
@@ -471,7 +471,7 @@ void sidekickball_update(u8* self)
     (*gPathControlInterface)->advance(self, state, timeDelta);
 }
 
-#include "main/dll/fogcontrol.h"
+#include "main/dll/dll_00F5_sidekickball.h"
 #include "main/game_object.h"
 #include "main/dll/path_control_interface.h"
 

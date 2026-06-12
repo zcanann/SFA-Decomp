@@ -87,7 +87,7 @@ void dll_14D_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E3850);
 }
 
-#include "main/dll/dll_14D.h"
+#include "main/dll/dll_00FD.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objseq.h"

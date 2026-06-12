@@ -183,7 +183,7 @@ void gpsh_scene_init(int* obj, int* def);
 #pragma scheduling reset
 #pragma peephole reset
 
-#include "main/dll/dimbarrier.h"
+#include "main/dll/dll_0190_ecshcup.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"

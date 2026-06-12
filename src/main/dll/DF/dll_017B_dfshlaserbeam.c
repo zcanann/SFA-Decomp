@@ -158,7 +158,7 @@ int DFSH_LaserBeam_getObjectTypeId(void) { return 0x0; }
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/dll/creator19D.h"
+#include "main/dll/dll_017B_dfshlaserbeam.h"
 #include "main/resource.h"
 
 extern undefined4 FUN_8000680c();

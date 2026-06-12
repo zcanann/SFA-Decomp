@@ -1,5 +1,5 @@
 /* === moved from main/dll/explosion.c [801CA9C0-801CAD80) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/explosion.h"
+#include "main/dll/dll_0198_nwshlevcon.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"

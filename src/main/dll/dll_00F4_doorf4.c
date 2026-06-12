@@ -1,4 +1,4 @@
-#include "main/dll/autoTransporter.h"
+#include "main/dll/dll_00F4_doorf4.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objseq.h"

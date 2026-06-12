@@ -2,7 +2,7 @@
 #define MAIN_DLL_CREATOR1C6_H_
 
 #include "ghidra_import.h"
-#include "main/dll/scene1C7.h"
+#include "main/dll/dll_0195_dbshshrine.h"
 #include "main/objanim_update.h"
 
 int fn_801C8EBC(int obj, undefined4 unused, ObjAnimUpdateState *animUpdate);

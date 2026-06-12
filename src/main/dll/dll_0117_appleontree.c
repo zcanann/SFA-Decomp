@@ -878,7 +878,7 @@ int fn_8017DF34(int p, int state, f32 y)
 #include "main/game_object.h"
 #include "main/dll/crackanim_state.h"
 #include "main/dll/baddie_state.h"
-#include "main/dll/crackanim.h"
+#include "main/dll/dll_0117_appleontree.h"
 
 typedef struct AppleontreeObjectDef
 {

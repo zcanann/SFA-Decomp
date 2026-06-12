@@ -623,16 +623,16 @@ main/dll/dll_00ED_collectible.c:
 main/dll/lightning.c:
 	.text       start:0x80173224 end:0x80174A80
 
-main/dll/transporter.c:
+main/dll/dll_00EF_pushable.c:
 	.text       start:0x80174A80 end:0x80176FC4
 
 main/dll/dll_00F3_flameblast.c:
 	.text       start:0x80176FC4 end:0x80178338
 
-main/dll/autoTransporter.c:
+main/dll/dll_00F4_doorf4.c:
 	.text       start:0x80178338 end:0x801793A4
 
-main/dll/fogcontrol.c:
+main/dll/dll_00F5_sidekickball.c:
 	.text       start:0x801793A4 end:0x8017A00C
 
 main/dll/tFrameAnimator.c:
@@ -655,14 +655,14 @@ main/dll/groundAnimator.c:
 	.text       start:0x8017CF90 end:0x8017D818
 	.data       start:0x80321460 end:0x803214F8
 
-main/dll/crackanim.c:
+main/dll/dll_0117_appleontree.c:
 	.text       start:0x8017D818 end:0x8017EC10
 	.data       start:0x803214F8 end:0x80321530
 
-main/dll/babycloudrunner.c:
+main/dll/dll_00FC_babycloudrunner.c:
 	.text       start:0x8017EC10 end:0x8017EF6C
 
-main/dll/dll_14D.c:
+main/dll/dll_00FD.c:
 	.text       start:0x8017EF6C end:0x8017F4F4
 	.data       start:0x80321530 end:0x80321568
 
@@ -670,7 +670,7 @@ main/dll/cfprisonuncle.c:
 	.text       start:0x8017F4F4 end:0x801816F8
 	.data       start:0x80321568 end:0x803216B8
 
-main/dll/gcrobotlightbea.c:
+main/dll/dll_0104_smallbasket.c:
 	.text       start:0x801816F8 end:0x80183204
 	.data       start:0x803216B8 end:0x803216F0
 
@@ -680,7 +680,7 @@ main/dll/cfperch.c:
 main/dll/blasted.c:
 	.text       start:0x801833E4 end:0x801833E4
 
-main/dll/explodable.c:
+main/dll/dll_0105_largecrate.c:
 	.text       start:0x801833E4 end:0x801843C0
 
 main/dll/CF/dll_0106_scarab.c:
@@ -909,13 +909,13 @@ main/dll/DF/dll_0177_dfshdoor2speci.c:
 main/dll/dll_017A_spiritprize.c:
 	.text       start:0x801C2914 end:0x801C3B68
 
-main/dll/dll_0179_dfshobjcre.c:
+main/dll/DF/dll_0179_dfshobjcreator.c:
 	.text       start:0x801C3B68 end:0x801C3E3C
 
-main/dll/creator19D.c:
+main/dll/DF/dll_017B_dfshlaserbeam.c:
 	.text       start:0x801C3E3C end:0x801C4B10
 
-main/dll/laser19F.c:
+main/dll/mmshrine/dll_018C_mmshshrine.c:
 	.text       start:0x801C4B10 end:0x801C53A0
 
 main/dll/mmshrine/shrine.c:
@@ -927,10 +927,10 @@ main/dll/mmshrine/shrine1C2.c:
 main/dll/creator1C4.c:
 	.text       start:0x801C70F0 end:0x801C835C
 
-main/dll/dimbarrier.c:
+main/dll/dll_0190_ecshcup.c:
 	.text       start:0x801C835C end:0x801C8EBC
 
-main/dll/scene1C7.c:
+main/dll/dll_0195_dbshshrine.c:
 	.text       start:0x801C8EBC end:0x801C9660
 
 main/dll/colrise.c:
@@ -939,7 +939,7 @@ main/dll/colrise.c:
 main/dll/cup1C3.c:
 	.text       start:0x801C9660 end:0x801CA718
 
-main/dll/explosion.c:
+main/dll/NW/dll_0198_nwshlevcon.c:
 	.text       start:0x801CA718 end:0x801CA9C0
 
 main/dll/symbol.c:
@@ -951,7 +951,7 @@ main/dll/dimmagicbridge.c:
 main/dll/shrine1CE.c:
 	.text       start:0x801CBA98 end:0x801CCFA4
 
-main/dll/dim_tricky.c:
+main/dll/dll_019E_dim_tricky.c:
 	.text       start:0x801CCFA4 end:0x801CD7DC
 
 main/dll/dimtruthhornice.c:

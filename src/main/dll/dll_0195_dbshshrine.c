@@ -1,4 +1,4 @@
-#include "main/dll/scene1C7.h"
+#include "main/dll/dll_0195_dbshshrine.h"
 #include "main/objseq.h"
 
 #define DBSH_SHRINE_STATE_WAITING 0
