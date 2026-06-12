@@ -7,7 +7,6 @@
 #include "main/resource.h"
 
 
-#define DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG OBJ_MODEL_STATE_SHADOW_VISIBLE
 
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
@@ -17,8 +16,6 @@ extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern f32 Vec_distance(void* a, void* b);
 extern void objUpdateOpacity(int obj);
 
-extern u8 lbl_803DBF68;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ModgfxInterface** gModgfxInterface;
 extern EffectInterface** gPartfxInterface;
 extern u8 framesThisStep;
@@ -54,25 +51,6 @@ typedef struct Cup197State
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void Sfx_SetObjectSfxVolume(int obj, int sfx, int vol, f32 f);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfx);
-extern void gameTimerInit(int a, int b);
-extern void timerSetToCountUp(void);
-extern void gameTimerStop(void);
-extern int isGameTimerDisabled(void);
-extern int getButtonsJustPressedIfNotBusy(int p);
-extern f32 timeDelta;
-extern f32 lbl_803E50E0;
-extern f32 lbl_803E50E4;
-extern f32 lbl_803E50E8;
-extern f32 lbl_803E50EC;
-extern f32 lbl_803E50F0;
-extern f32 lbl_803E50F4;
-extern f32 lbl_803E50F8;
-extern f32 lbl_803E50FC;
-extern f32 lbl_803E5100;
-extern f32 lbl_803E5104;
-extern f32 lbl_803E5108;
 
 typedef struct DbshSymbolFlags
 {
@@ -103,7 +81,6 @@ STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
 STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);
 STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
 
-int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate);
 
 
 /*
@@ -119,7 +96,6 @@ int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dbsh_symbol_update(int obj);
 
 /*
  * --INFO--
@@ -134,7 +110,6 @@ void dbsh_symbol_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dbsh_symbol_getExtraSize(void);
 
 
 /*
@@ -150,7 +125,6 @@ int dbsh_symbol_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dbsh_symbol_free(void);
 
 /*
  * --INFO--
@@ -165,9 +139,7 @@ void dbsh_symbol_free(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void objRenderFn_8003b8f4(f32);
 
-void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -437,7 +409,6 @@ void dll_197_free(int obj)
 
 extern f32 lbl_803E5118;
 
-void dbsh_symbol_init(int* obj);
 
 /* === moved from main/dll/explosion.c [801CA5B4-801CA718) (TU re-split, docs/boundary_audit.md) === */
 #include "main/effect_interfaces.h"

@@ -13,33 +13,11 @@ extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
-extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
-extern f32 Vec_distance(void* a, void* b);
-extern void objUpdateOpacity(int obj);
 
 extern u8 lbl_803DBF68;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern ModgfxInterface** gModgfxInterface;
-extern EffectInterface** gPartfxInterface;
 extern u8 framesThisStep;
-extern int lbl_802C23C8[];
-extern s8 lbl_803DDBD0;
-extern f32 lbl_803E5138;
-extern f32 lbl_803E513C;
 
-typedef struct Cup197State
-{
-    s32 gameBit;
-    s16 sparkTimer;
-    s16 activeTimer;
-    s16 hitCooldown;
-    u8 visibleToCamera;
-    u8 mode;
-    u8 active;
-    u8 sparkArmed;
-    u8 previousActive;
-    u8 stage;
-} Cup197State;
 
 /*
  * --INFO--
@@ -411,27 +389,12 @@ void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 /* Trivial 4b 0-arg blr leaves. */
 void dll_197_hitDetect(void);
 
-void dll_197_update(int obj);
 
 /* 8b "li r3, N; blr" returners. */
-int dll_197_getExtraSize(void);
-int dll_197_getObjectTypeId(void);
 
 /* Render-side line-of-sight particle callback for the cup object. */
-extern f32 lbl_803E5120;
-extern f32 lbl_803E5124;
-extern f32 lbl_803E5128;
-extern f32 lbl_803E512C;
-extern f32 lbl_803E5130;
-extern f32 lbl_803E5134;
-extern void* Camera_GetCurrentViewSlot(void);
-extern f32 sqrtf(f32 x);
-extern void voxmaps_worldToGrid(void* world, void* grid);
-extern int voxmaps_traceLine(void* from, void* to, void* out, int p4, int p5);
 
-void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void dll_197_free(int obj);
 
 extern f32 lbl_803E5118;
 
@@ -459,24 +422,8 @@ void dbsh_symbol_init(int* obj)
 #include "main/objseq.h"
 #include "main/resource.h"
 
-typedef struct Dll197State
-{
-    u8 pad0[0x2 - 0x0];
-    s16 unk2;
-    s16 unk4;
-    u8 pad6[0x8 - 0x6];
-    s16 unk8;
-    s16 unkA;
-    u8 unkC;
-    u8 unkD;
-    u8 unkE;
-    u8 unkF;
-    u8 unk10;
-    u8 pad11[0x18 - 0x11];
-} Dll197State;
 
 
-extern int ObjHits_GetPriorityHit();
 
 
 /*
@@ -492,10 +439,7 @@ extern int ObjHits_GetPriorityHit();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern f32 lbl_803E5140;
-extern f32 lbl_803E5144;
 
-void dll_197_init(int obj, int data);
 
 
 /*
@@ -528,7 +472,6 @@ void dll_197_init(int obj, int data);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 
 
 /*
@@ -568,11 +511,8 @@ void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void dll_197_release(void);
 
-void dll_197_initialise(void);
 
-void nwsh_levcon_hitDetect(void);
 
 
 
