@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMlavasmash.h"
 #include "main/dll/DIM/dimlogfire.h"
+#include "main/objanim_internal.h"
 
 typedef struct DimlogfirePlacement
 {

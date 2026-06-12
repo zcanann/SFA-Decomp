@@ -1293,7 +1293,7 @@ void dimlogfire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         subobj = (int*)state->subObj;
         if (subobj != NULL)
         {
-            int* q = DIMcannon_GetActiveModel(subobj);
+            int* q = (int*)((ObjAnimComponent*)subobj)->banks[((ObjAnimComponent*)subobj)->bankIndex];
             *(u16*)((char*)q + 0x18) = (u16)(*(u16*)((char*)q + 0x18) & ~0x8);
             *(u8*)((char*)(int*)state->subObj + 0x37) = *(u8*)((char*)obj + 0x37);
             ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(
