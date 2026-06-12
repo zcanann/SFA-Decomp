@@ -704,11 +704,11 @@ main/dll/cfprisonuncle.c:
 	.data       start:0x80321568 end:0x803216B8
 
 main/dll/gcrobotlightbea.c:
-	.text       start:0x801816F8 end:0x801826E8
+	.text       start:0x801816F8 end:0x80183204
 	.data       start:0x803216B8 end:0x803216F0
 
 main/dll/cfperch.c:
-	.text       start:0x801826E8 end:0x801833E4
+	.text       start:0x80183204 end:0x801833E4
 
 main/dll/blasted.c:
 	.text       start:0x801833E4 end:0x801833E4
