@@ -2233,20 +2233,20 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
         return 1;
     }
     stateBytes = (char*)state;
-    if (((RomCurveWalker*)stateBytes)->nodeA0 == NULL || ((RomCurveWalker*)stateBytes)->nodeA4 == NULL)
+    if (state->nodeA0 == NULL || state->nodeA4 == NULL)
     {
         return 1;
     }
 
-    ((RomCurveWalker*)stateBytes)->node9C = ((RomCurveWalker*)stateBytes)->nodeA0;
-    ((RomCurveWalker*)stateBytes)->nodeA0 = ((RomCurveWalker*)stateBytes)->nodeA4;
+    state->node9C = state->nodeA0;
+    state->nodeA0 = state->nodeA4;
     memcpy(stateBytes + 0xa8, stateBytes + 0xb8, 0x10);
     memcpy(stateBytes + 0xc8, stateBytes + 0xd8, 0x10);
     memcpy(stateBytes + 0xe8, stateBytes + 0xf8, 0x10);
 
-    curve = *(s32*)&((RomCurveWalker*)stateBytes)->nodeA0;
+    curve = *(s32*)&state->nodeA0;
     candidateCount = 0;
-    if (((RomCurveWalker*)stateBytes)->reverse == 0)
+    if (state->reverse == 0)
     {
         ROMCURVE_ADD_LINK(0x1c, 1, 0);
         ROMCURVE_ADD_LINK(0x20, 2, 0);
@@ -2271,7 +2271,7 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
     }
     if (neighborId == -1)
     {
-        ((RomCurveWalker*)stateBytes)->nodeA4 = NULL;
+        state->nodeA4 = NULL;
         return 1;
     }
 
@@ -2307,13 +2307,13 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
         }
     }
 
-    *(s32*)&((RomCurveWalker*)stateBytes)->nodeA4 = nextCurve;
-    if (((RomCurveWalker*)stateBytes)->nodeA4 == NULL)
+    *(s32*)&state->nodeA4 = nextCurve;
+    if (state->nodeA4 == NULL)
     {
         return 1;
     }
 
-    if (((RomCurveWalker*)stateBytes)->reverse == 0)
+    if (state->reverse == 0)
     {
         ROMCURVE_REFRESH_CONTROL(0xa4);
     }
@@ -2322,11 +2322,11 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
         ROMCURVE_REFRESH_CONTROL(0x9c);
     }
 
-    if (((RomCurveWalker*)stateBytes)->moveNetwork != 0)
+    if (state->moveNetwork != 0)
     {
         curvesSetupMoveNetworkCurve((float*)state);
     }
-    if (((RomCurveWalker*)stateBytes)->reverse == 0)
+    if (state->reverse == 0)
     {
         ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatOne);
     }
@@ -2363,7 +2363,7 @@ int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx);
 
 #pragma scheduling off
 #pragma peephole off
-int RomCurve_func29(float* state, int pickIdx)
+int RomCurve_func29(RomCurveWalker* state, int pickIdx)
 {
     char* stateBytes;
     int nextId;
@@ -2376,24 +2376,24 @@ int RomCurve_func29(float* state, int pickIdx)
     }
 
     stateBytes = (char*)state;
-    if (((RomCurveWalker*)stateBytes)->nodeA0 == NULL || ((RomCurveWalker*)stateBytes)->nodeA4 == NULL)
+    if (state->nodeA0 == NULL || state->nodeA4 == NULL)
     {
         return 1;
     }
 
-    ((RomCurveWalker*)stateBytes)->node9C = ((RomCurveWalker*)stateBytes)->nodeA0;
-    ((RomCurveWalker*)stateBytes)->nodeA0 = ((RomCurveWalker*)stateBytes)->nodeA4;
+    state->node9C = state->nodeA0;
+    state->nodeA0 = state->nodeA4;
     memcpy(stateBytes + 0xa8, stateBytes + 0xb8, 0x10);
     memcpy(stateBytes + 0xc8, stateBytes + 0xd8, 0x10);
     memcpy(stateBytes + 0xe8, stateBytes + 0xf8, 0x10);
 
-    if (((RomCurveWalker*)stateBytes)->reverse != 0)
+    if (state->reverse != 0)
     {
-        nextId = RomCurve_getControlPointId_2B(*(s32*)&((RomCurveWalker*)stateBytes)->nodeA0, -1, pickIdx);
+        nextId = RomCurve_getControlPointId_2B(*(s32*)&state->nodeA0, -1, pickIdx);
     }
     else
     {
-        nextId = RomCurve_getControlPointId_2A(*(s32*)&((RomCurveWalker*)stateBytes)->nodeA0, -1, pickIdx);
+        nextId = RomCurve_getControlPointId_2A(*(s32*)&state->nodeA0, -1, pickIdx);
     }
 
     if (nextId == -1)
@@ -2402,13 +2402,13 @@ int RomCurve_func29(float* state, int pickIdx)
     }
 
     nextCurve = Objfsa_FindRomCurveById(nextId);
-    *(s32*)&((RomCurveWalker*)stateBytes)->nodeA4 = nextCurve;
-    if (((RomCurveWalker*)stateBytes)->nodeA4 == NULL)
+    *(s32*)&state->nodeA4 = nextCurve;
+    if (state->nodeA4 == NULL)
     {
         goto fail;
     }
 
-    if (((RomCurveWalker*)stateBytes)->reverse != 0)
+    if (state->reverse != 0)
     {
         ROMCURVE_REFRESH_CONTROL(0x9c);
     }
@@ -2417,24 +2417,24 @@ int RomCurve_func29(float* state, int pickIdx)
         ROMCURVE_REFRESH_CONTROL(0xa4);
     }
 
-    if (((RomCurveWalker*)stateBytes)->moveNetwork != 0)
+    if (state->moveNetwork != 0)
     {
-        curvesSetupMoveNetworkCurve(state);
+        curvesSetupMoveNetworkCurve((float*)state);
     }
 
-    if (((RomCurveWalker*)stateBytes)->reverse != 0)
+    if (state->reverse != 0)
     {
-        ((void (*)(float*, double))Curve_AdvanceAlongPath)(state, gFloatNegOne);
+        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatNegOne);
     }
     else
     {
-        ((void (*)(float*, double))Curve_AdvanceAlongPath)(state, gFloatOne);
+        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatOne);
     }
 
     return 0;
 
 failClear:
-    ((RomCurveWalker*)stateBytes)->nodeA4 = NULL;
+    state->nodeA4 = NULL;
 fail:
     return 1;
 }
