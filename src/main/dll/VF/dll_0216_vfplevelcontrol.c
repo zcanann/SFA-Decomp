@@ -132,11 +132,13 @@ void vfplevelcontrol_release(void)
 
 void vfplevelcontrol_initialise(void)
 {
+    extern undefined4 ObjGroup_AddObject();
     lbl_803DC148 = 0x82;
 }
 
 void vfplevelcontrol_free(int obj)
 {
+    extern undefined8 ObjGroup_RemoveObject();
     timeOfDayFn_80055000();
     ObjGroup_RemoveObject(obj, 9);
     Music_Trigger(0xe1, 0);
@@ -144,6 +146,7 @@ void vfplevelcontrol_free(int obj)
 
 void vfplevelcontrol_init(int* obj, u8* init)
 {
+    extern undefined4 ObjGroup_AddObject();
     VFPLevelControlState* state = ((GameObject*)obj)->extra;
     VFPLevelControlSetup* setup = (VFPLevelControlSetup*)init;
     ObjGroup_AddObject(obj, 9);
