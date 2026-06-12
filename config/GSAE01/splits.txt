@@ -218,8 +218,14 @@ main/dll/dll_002D_effect20.c:
 main/dll/dll_0003_checkpoint.c:
 	.text       start:0x800D5530 end:0x800D7568
 
-main/dll/df_partfx.c:
-	.text       start:0x800D7568 end:0x800D9DCC
+main/dll/dll_0016_screentransition.c:
+	.text       start:0x800D7568 end:0x800D7F5C
+
+main/dll/dll_0004_dummy04.c:
+	.text       start:0x800D7F5C end:0x800D8020
+
+main/dll/dll_000F_unk.c:
+	.text       start:0x800D8020 end:0x800D9DCC
 
 main/dll/objfsa.c:
 	.text       start:0x800D9DCC end:0x800E5434

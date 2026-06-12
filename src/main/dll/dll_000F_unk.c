@@ -58,133 +58,79 @@ void FUN_800d7780(undefined param_1)
 /* Trivial 4b 0-arg blr leaves. */
 void Checkpoint_release(void);
 
-void Dummy04_func14_nop(void)
-{
-}
+void Dummy04_func14_nop(void);
 
-void Dummy04_func26_nop(void)
-{
-}
+void Dummy04_func26_nop(void);
 
-void Dummy04_func25_nop(void)
-{
-}
+void Dummy04_func25_nop(void);
 
-void Dummy04_func23_nop(void)
-{
-}
+void Dummy04_func23_nop(void);
 
-void Dummy04_func20_nop(void)
-{
-}
+void Dummy04_func20_nop(void);
 
-void Dummy04_func1F_nop(void)
-{
-}
+void Dummy04_func1F_nop(void);
 
-void Dummy04_func1E_nop(void)
-{
-}
+void Dummy04_func1E_nop(void);
 
-void Dummy04_func1C_nop(void)
-{
-}
+void Dummy04_func1C_nop(void);
 
-void Dummy04_func1B_nop(void)
-{
-}
+void Dummy04_func1B_nop(void);
 
-void Dummy04_func1A_nop(void)
-{
-}
+void Dummy04_func1A_nop(void);
 
-void Dummy04_func19_nop(void)
-{
-}
+void Dummy04_func19_nop(void);
 
-void Dummy04_func18_nop(void)
-{
-}
+void Dummy04_func18_nop(void);
 
-void Dummy04_func17_nop(void)
-{
-}
+void Dummy04_func17_nop(void);
 
-void Dummy04_func16_nop(void)
-{
-}
+void Dummy04_func16_nop(void);
 
-void Dummy04_onSetupPlayer(void)
-{
-}
+void Dummy04_onSetupPlayer(void);
 
-void Dummy04_func15_nop(void)
-{
-}
+void Dummy04_func15_nop(void);
 
-void Dummy04_func13_nop(void)
-{
-}
+void Dummy04_func13_nop(void);
 
-void Dummy04_func12_nop(void)
-{
-}
+void Dummy04_func12_nop(void);
 
-void Dummy04_func10_nop(void)
-{
-}
+void Dummy04_func10_nop(void);
 
-void Dummy04_func0E_nop(void)
-{
-}
+void Dummy04_func0E_nop(void);
 
-void Dummy04_func0C_nop(void)
-{
-}
+void Dummy04_func0C_nop(void);
 
-void Dummy04_onSelectSave(void)
-{
-}
+void Dummy04_onSelectSave(void);
 
-void Dummy04_func08_nop(void)
-{
-}
+void Dummy04_func08_nop(void);
 
-void Dummy04_func07_nop(void)
-{
-}
+void Dummy04_func07_nop(void);
 
-void Dummy04_func04_nop(void)
-{
-}
+void Dummy04_func04_nop(void);
 
-void Dummy04_release(void)
-{
-}
+void Dummy04_release(void);
 
-void Dummy04_initialise(void)
-{
-}
+void Dummy04_initialise(void);
 
 void dll_0F_func19_nop(void)
 {
 }
 
 /* 8b "li r3, N; blr" returners. */
-int Dummy04_func24_ret_0(void) { return 0x0; }
-int Dummy04_func22_ret_127(void) { return 0x7f; }
-int Dummy04_func21_ret_0(void) { return 0x0; }
-int Dummy04_func1D_ret_0(void) { return 0x0; }
-int Dummy04_func11_ret_0(void) { return 0x0; }
-int Dummy04_func0F_ret_0(void) { return 0x0; }
-int Dummy04_func0D_ret_0(void) { return 0x0; }
-int Dummy04_func0B_ret_0(void) { return 0x0; }
-int Dummy04_func0A_ret_0(void) { return 0x0; }
-int Dummy04_func05_ret_0(void) { return 0x0; }
+int Dummy04_func24_ret_0(void);
+int Dummy04_func22_ret_127(void);
+int Dummy04_func21_ret_0(void);
+int Dummy04_func1D_ret_0(void);
+int Dummy04_func11_ret_0(void);
+int Dummy04_func0F_ret_0(void);
+int Dummy04_func0D_ret_0(void);
+int Dummy04_func0B_ret_0(void);
+int Dummy04_func0A_ret_0(void);
+int Dummy04_func05_ret_0(void);
 
 /* sda21 accessors. */
 extern u8 lbl_803DD42D;
-u8 screenTransition_func07(void) { return lbl_803DD42D; }
+u8 screenTransition_func07(void);
 
 /* Pattern wrappers. */
 extern u32 lbl_803DD410;
@@ -201,20 +147,20 @@ void player_setAnimIds(int unused1, int unused2, u32 a, u32 b)
 
 /* misc 8b leaves */
 extern f32 screenTransitionAlpha;
-f32 screenTransition_getAlpha(void) { return screenTransitionAlpha; }
+f32 screenTransition_getAlpha(void);
 
 /* Pattern wrappers. */
-int Dummy04_func03_ret_m1(void) { return -0x1; }
+int Dummy04_func03_ret_m1(void);
 
 /* sda21 writers. */
 extern u8 screenTransitionPause;
 #pragma peephole off
-void setScreenTransitionPause(u32 pause) { screenTransitionPause = (u8)pause; }
+void setScreenTransitionPause(u32 pause);
 #pragma peephole reset
 
 /* fcmp-eq-to-bool. */
 extern f32 lbl_803E0558;
-u32 isScreenTransitionActive(void) { return lbl_803E0558 == screenTransitionAlpha; }
+u32 isScreenTransitionActive(void);
 
 /* multi-store leaf (single float broadcast). */
 extern f32 lbl_803E0570;
@@ -319,50 +265,16 @@ void player_findCurve(int* obj, int* state, int p3)
                                     ((GameObject*)obj)->anim.localPosZ);
 }
 
-void screenTransitionFn_800d7b04(int duration, int type)
-{
-    screenTransitionAlpha = lbl_803E0558;
-    lbl_803DD424 = lbl_803E0564 / (f32)duration;
-    lbl_803DD428 = lbl_803E0560;
-    lbl_803DD42C = (u8)type;
-    lbl_803DD42E = 5;
-}
+void screenTransitionFn_800d7b04(int duration, int type);
 
-void screenTransition_fadeFrom(int duration, int type, f32 from)
-{
-    screenTransitionAlpha = lbl_803E0558 * from;
-    lbl_803DD424 = -(lbl_803E055C * from) / (f32)duration;
-    lbl_803DD428 = lbl_803E0560;
-    lbl_803DD42C = (u8)type;
-    lbl_803DD42E = 1;
-}
+void screenTransition_fadeFrom(int duration, int type, f32 from);
 
 #pragma opt_common_subs off
-void screenTransition_screenFade(int duration, int type)
-{
-    if (lbl_803DD424 >= lbl_803E0560 || lbl_803E0560 == screenTransitionAlpha)
-    {
-        screenTransitionAlpha = lbl_803E0558;
-    }
-    lbl_803DD424 = lbl_803E0564 / (f32)duration;
-    lbl_803DD428 = lbl_803E0560;
-    lbl_803DD42C = (u8)type;
-    lbl_803DD42E = 1;
-}
+void screenTransition_screenFade(int duration, int type);
 #pragma opt_common_subs reset
 
 #pragma opt_common_subs off
-void screenTransition_Do(int duration, int type)
-{
-    if (lbl_803DD424 <= lbl_803E0560 || lbl_803E0558 == screenTransitionAlpha)
-    {
-        screenTransitionAlpha = lbl_803E0560;
-    }
-    lbl_803DD424 = lbl_803E055C / (f32)duration;
-    lbl_803DD428 = lbl_803E0560;
-    lbl_803DD42C = (u8)type;
-    lbl_803DD42E = 0;
-}
+void screenTransition_Do(int duration, int type);
 #pragma opt_common_subs reset
 
 void dll_0F_func0B(int* obj, int* state, f32 f1, f32 f2, f32 f3)
@@ -847,92 +759,7 @@ extern void hudDrawRect(int x, int y, int w, int h, HudColor col);
 extern void setHudOpacity(int op);
 extern void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b);
 #pragma opt_common_subs off
-void screenTransition_do2(int p1, int p2, int p3)
-{
-    int sx;
-    int sy;
-    int sw;
-    int sh;
-    HudColor col;
-    if (lbl_803DD42E != 0)
-    {
-        lbl_803DD42E = lbl_803DD42E - 1;
-        return;
-    }
-    if (screenTransitionPause == 0 && lbl_803DD428 >= lbl_803E0568)
-    {
-        (*gScreenTransitionInterface)->step(0x1e, lbl_803DD42C);
-        lbl_803DD428 = lbl_803E0560;
-    }
-    screenTransitionAlpha = lbl_803DD424 * timeDelta + screenTransitionAlpha;
-    if (screenTransitionAlpha < lbl_803E0560)
-    {
-        screenTransitionAlpha = lbl_803E0560;
-        lbl_803DD42D = 1;
-        if (lbl_803DD42C == 5)
-        {
-            setHudOpacity(0xff);
-        }
-        return;
-    }
-    if (screenTransitionAlpha > lbl_803E0558)
-    {
-        screenTransitionAlpha = lbl_803E0558;
-        lbl_803DD42D = 1;
-        if (screenTransitionPause == 0)
-        {
-            lbl_803DD428 = lbl_803DD428 + timeDelta;
-        }
-        if (lbl_803DD42C != 5)
-        {
-            setHudOpacity(0xff);
-        }
-    }
-    else
-    {
-        lbl_803DD42D = 0;
-    }
-    if (gDvdErrorPauseActive != 0)
-    {
-        return;
-    }
-    switch (lbl_803DD42C)
-    {
-    case 1:
-        GXGetScissor(&sx, &sy, &sw, &sh);
-        GXSetScissor(0, 0, 0x280, 0x1e0);
-        col.b = 0;
-        col.g = 0;
-        col.r = 0;
-        col.a = (int)screenTransitionAlpha;
-        hudDrawRect(sx, sy, sw, sh, col);
-        GXSetScissor(sx, sy, sw, sh);
-        break;
-    case 2:
-        GXGetScissor(&sx, &sy, &sw, &sh);
-        GXSetScissor(0, 0, 0x280, 0x1e0);
-        col.r = 0xff;
-        col.g = 0xff;
-        col.b = 0xff;
-        col.a = (int)screenTransitionAlpha;
-        hudDrawRect(sx, sy, sw, sh, col);
-        GXSetScissor(sx, sy, sw, sh);
-        break;
-    case 3:
-        screenRectFn_800d7568(p1, p2, p3, 0xff, 0xff, 0xff);
-        break;
-    case 4:
-        GXGetScissor(&sx, &sy, &sw, &sh);
-        GXSetScissor(0, 0, 0x280, 0x1e0);
-        col.r = 0xff;
-        col.g = 0;
-        col.b = 0;
-        col.a = (int)screenTransitionAlpha;
-        hudDrawRect(sx, sy, sw, sh, col);
-        GXSetScissor(sx, sy, sw, sh);
-        break;
-    }
-}
+void screenTransition_do2(int p1, int p2, int p3);
 #pragma opt_common_subs reset
 
 extern f32 lbl_803E0540;
@@ -940,130 +767,7 @@ extern f32 lbl_803E0544;
 extern f32 lbl_803E0548;
 extern void Camera_GetCurrentViewport(int* x1, int* y1, int* x2, int* y2);
 
-void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
-{
-    int vx;
-    int vy;
-    int vr;
-    int vb;
-    int sx;
-    int sy;
-    int sw;
-    int sh;
-    HudColor col;
-    uint halfSpan, cur, span, edge, hiEdge, step1, loEdge, inset, step0, H;
-    u8 step, a8;
-    int screenX;
-    f32 conv;
-
-    GXGetScissor(&sx, &sy, &sw, &sh);
-    Camera_GetCurrentViewport(&vx, &vy, &vr, &vb);
-    span = (vr - vx) & 0xffff;
-    H = (vb - vy) & 0xffff;
-    if (screenTransitionAlpha > lbl_803E0540)
-    {
-        step0 = 0xff;
-        inset = (int)(screenTransitionAlpha - lbl_803E0540);
-    }
-    else
-    {
-        step0 = (int)(lbl_803E0544 * screenTransitionAlpha);
-        inset = 0;
-    }
-    halfSpan = (span >> 1) & 0xffff;
-    inset = inset & 0xffff;
-    conv = (f32)(int)(inset * halfSpan);
-    edge = (uint)(int)(conv * lbl_803E0548) & 0xffff;
-    if (edge == halfSpan)
-    {
-        int sh2;
-        int sw2;
-        int sy2;
-        int sx2;
-        HudColor col2;
-        GXGetScissor(&sx2, &sy2, &sw2, &sh2);
-        GXSetScissor(0, 0, 0x280, 0x1e0);
-        col2.r = r;
-        col2.g = b;
-        col2.b = g;
-        col2.a = (int)screenTransitionAlpha;
-        hudDrawRect(sx2, sy2, sw2, sh2, col2);
-        GXSetScissor(sx2, sy2, sw2, sh2);
-    }
-    else
-    {
-        loEdge = (halfSpan - edge) & 0xffff;
-        hiEdge = (halfSpan + edge) & 0xffff;
-        edge = ((halfSpan - 1) - edge) & 0xffff;
-        GXSetScissor(vx, vy, vr - vx, vb - vy);
-        col.r = 0xff;
-        col.g = 0xff;
-        col.b = 0xff;
-        col.a = step0;
-        hudDrawRect(vx + edge + 1, vy, vx + hiEdge, vb, col);
-        step = (int)loEdge / ((int)halfSpan / 6);
-        if (step == 0)
-        {
-            step = 1;
-        }
-        a8 = step0;
-        for (step1 = 0; cur = step1 & 0xffff, (int)cur < (int)(loEdge - step); step1 += step)
-        {
-            col.r = 0xff;
-            col.g = 0xff;
-            col.b = 0xff;
-            col.a = ((int)(a8 * (halfSpan - cur)) / (int)halfSpan) & 0xff;
-            screenX = vx + (hiEdge & 0xffff);
-            hudDrawRect(screenX, vy, step + screenX, vb, col);
-            screenX = vx + (edge & 0xffff);
-            hudDrawRect((screenX - step) + 1, vy, screenX + 1, vb, col);
-            hiEdge += step;
-            edge -= step;
-        }
-        col.r = 0xff;
-        col.g = 0xff;
-        col.b = 0xff;
-        col.a = ((int)(a8 * (halfSpan - cur)) / (int)halfSpan) & 0xff;
-        hudDrawRect(vx + (hiEdge & 0xffff), vy, vr, vb, col);
-        hudDrawRect(vx, vy, vx + (edge & 0xffff) + 1, vb, col);
-        edge = (H >> 1) & 0xffff;
-        conv = (f32)(int)(inset * edge);
-        inset = (uint)(int)(conv * lbl_803E0548) & 0xffff;
-        halfSpan = (edge - inset) & 0xffff;
-        loEdge = (edge + inset) & 0xffff;
-        inset = ((edge - 1) - inset) & 0xffff;
-        col.r = 0xff;
-        col.g = 0xff;
-        col.b = 0xff;
-        col.a = step0;
-        hudDrawRect(vx, vy + inset + 1, vr, vy + loEdge, col);
-        step = (int)halfSpan / (int)(edge >> 3);
-        if (step == 0)
-        {
-            step = 1;
-        }
-        for (step0 = 0; hiEdge = step0 & 0xffff, (int)hiEdge < (int)(halfSpan - step); step0 += step)
-        {
-            col.r = 0xff;
-            col.g = 0xff;
-            col.b = 0xff;
-            col.a = ((int)(a8 * (edge - hiEdge)) / (int)edge) & 0xff;
-            screenX = vy + (loEdge & 0xffff);
-            hudDrawRect(vx, screenX, vr, step + screenX, col);
-            screenX = vy + (inset & 0xffff);
-            hudDrawRect(vx, (screenX - step) + 1, vr, screenX + 1, col);
-            loEdge += step;
-            inset -= step;
-        }
-        col.r = 0xff;
-        col.g = 0xff;
-        col.b = 0xff;
-        col.a = ((int)(a8 * (edge - hiEdge)) / (int)edge) & 0xff;
-        hudDrawRect(vx, vy + (loEdge & 0xffff), vr, vb, col);
-        hudDrawRect(vx, vy, vr, vy + (inset & 0xffff) + 1, col);
-        GXSetScissor(sx, sy, sw, sh);
-    }
-}
+void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b);
 
 extern f64 lbl_803E0520;
 
