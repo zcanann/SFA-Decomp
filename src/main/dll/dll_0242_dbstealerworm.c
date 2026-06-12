@@ -1,4 +1,3 @@
-/* === moved from main/main.c [801FE118-801FEB30) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling on
 #pragma peephole on
 #include "main/game_object.h"
