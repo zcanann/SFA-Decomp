@@ -2309,6 +2309,17 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       itself is near-unanimous AGAINST its own choice at the banked
       site, reclassify the residual as retail-anomaly and stop spending
       on it. Census script pattern in the CF-campaign commits.
+      GUARDIAN COUNTER-RESULT (same instrument, opposite verdict): the
+      obj-copy-vs-extra-copy saved-reg ORDER censuses at ~91% obj-BELOW
+      in BOTH corpora (T 846:76, ours 817:86) - target's cfguardian
+      layout is the COMMON case and our compile is the ~10% deviant, so
+      that rotation is SYSTEMATIC and in-principle source-reachable
+      (unlike the render anomaly). Next lever: prologue-anchored
+      pairwise census (the v1 12-line window falsely flags fns whose
+      window catches a call-result mr), then diff the C of agree-above
+      fns (spellstone_update, dimlavasmash_SeqFn, FireFlyLantern_init,
+      wmworm_update...) against cfguardian's to isolate the
+      obj-pusher construct.
       The same census also explains why the in-repo oracle (lightning)
       shows f2 legitimately: there the reload web is 2-USE (the arm's
       compound += CSE-reuses the compare load - fadds f0,f2,f0), a
