@@ -1,5 +1,5 @@
 /* === moved from main/dll/LGT/LGTpointlight.c [801F3C2C-801F3C7C) (TU re-split, docs/boundary_audit.md) === */
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 
 
 extern void* objCreateLight(void* obj, int);

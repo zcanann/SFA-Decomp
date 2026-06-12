@@ -124,7 +124,7 @@ dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:
 main/dll/cloudaction.c:
 	.text       start:0x800944A0 end:0x80094F7C
 
-main/dll/waterfx.c:
+main/dll/dll_0013_waterfx.c:
 	.text       start:0x80094F7C end:0x80096994
 
 main/dll/viewfinder.c:
@@ -136,7 +136,7 @@ main/dll/objfx.c:
 main/dll/expgfxresource.c:
 	.text       start:0x8009AD44 end:0x8009B0E0
 
-main/dll/expgfx.c:
+main/dll/dll_000A_expgfx.c:
 	.text       start:0x8009B0E0 end:0x8009FFF0
 	.data       start:0x8030FA54 end:0x8030FA9C
 
@@ -156,7 +156,7 @@ main/dll/df_partfx.c:
 main/dll/objfsa.c:
 	.text       start:0x800D9DCC end:0x800E5434
 
-main/dll/curves.c:
+main/dll/dll_0015_curves.c:
 	.text       start:0x800E5434 end:0x800E8100
 
 main/dll/gameplay.c:
@@ -384,7 +384,7 @@ main/dll/CAM/dll_004C_camDebug.c:
 main/dll/baddieControl.c:
 	.text       start:0x8010DB7C end:0x80113F8C
 
-main/dll/moveLib.c:
+main/dll/dll_002E_moveLib.c:
 	.text       start:0x80113F8C end:0x801159E4
 
 main/dll/FRONT/dll_0032_n_rareware.c:
@@ -429,7 +429,7 @@ main/dll/FRONT/frontend_control.c:
 main/dll/dll_43.c:
 	.text       start:0x80119FAC end:0x8011A0DC
 
-main/dll/dll_47.c:
+main/dll/dll_0035_saveselectscreen.c:
 	.text       start:0x8011A0DC end:0x8011B5D4
 
 main/dll/dll_48.c:
@@ -526,17 +526,17 @@ main/dll/cannonball.c:
 main/dll/grenade.c:
 	.text       start:0x80141880 end:0x80144E40
 
-main/dll/collectable.c:
+main/dll/dll_00C4_tricky.c:
 	.text       start:0x80144E40 end:0x8014A9F0
 
-main/dll/sidekickToy.c:
+main/dll/dll_00C9_enemy.c:
 	.text       start:0x8014A9F0 end:0x8014E1DC
 
 main/dll/pressureSwitch.c:
 	.text       start:0x8014E1DC end:0x8014F620
 	.data       start:0x8031DC88 end:0x8031DCF8
 
-main/dll/seqObj.c:
+main/dll/dll_00E1_wispbaddie.c:
 	.text       start:0x8014F620 end:0x801504F8
 	.data       start:0x8031DCF8 end:0x8031DD30
 
@@ -564,7 +564,7 @@ main/dll/duster.c:
 main/dll/smallbasket.c:
 	.text       start:0x80157004 end:0x8015AD60
 
-main/dll/mediumbasket.c:
+main/dll/dll_00CA_mediumbasket.c:
 	.text       start:0x8015AD60 end:0x8015DAE8
 
 main/dll/scarab.c:
@@ -575,11 +575,11 @@ main/dll/barrel.c:
 	.text       start:0x80161F0C end:0x801631C8
 	.data       start:0x80320178 end:0x803201B0
 
-main/dll/ladders.c:
+main/dll/dll_00D1_tumbleweedbush.c:
 	.text       start:0x801631C8 end:0x80163BBC
 	.data       start:0x80320248 end:0x80320288
 
-main/dll/dll_00D2_tumbleweed1.c:
+main/dll/dll_00D2_tumbleweed.c:
 	.text       start:0x80163BBC end:0x801650D0
 
 main/dll/backpack.c:
@@ -588,10 +588,10 @@ main/dll/backpack.c:
 main/dll/landedArwing.c:
 	.text       start:0x8016558C end:0x801659B8
 
-main/dll/staffAction.c:
+main/dll/dll_00D3_staffAction.c:
 	.text       start:0x801659B8 end:0x801675E0
 
-main/dll/treasurechest.c:
+main/dll/dll_00D4_skeetlawall.c:
 	.text       start:0x801675E0 end:0x80167764
 	.data       start:0x803203B8 end:0x803203F8
 
@@ -601,7 +601,7 @@ main/dll/cf_doorlight.c:
 main/dll/texscroll2.c:
 	.text       start:0x80167D10 end:0x8016821C
 
-main/dll/campfire.c:
+main/dll/dll_00D5_kaldachom.c:
 	.text       start:0x8016821C end:0x80169360
 	.data       start:0x80320418 end:0x80320458
 
@@ -617,7 +617,7 @@ main/dll/genprops.c:
 	.text       start:0x8016B230 end:0x80171D14
 	.data       start:0x803205E8 end:0x80320BB0
 
-main/dll/gfxEmit.c:
+main/dll/dll_00ED_collectible.c:
 	.text       start:0x80171D14 end:0x80173224
 
 main/dll/lightning.c:

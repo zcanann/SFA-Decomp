@@ -578,7 +578,7 @@ void fn_801FE774(int cam, f32* vel)
 #include "main/audio/sfx_ids.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/dll/anim.h"
 #include "main/dll/baddie_state.h"
 #include "main/objseq.h"
@@ -6295,7 +6295,7 @@ void dbegg_update(int obj)
 /* === moved from main/dll/baddie/chuka.c [8020637C-80206474) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/baddie/chuka.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 
 extern u8 gChukaModeTable[9];

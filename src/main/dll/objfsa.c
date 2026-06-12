@@ -4270,7 +4270,7 @@ void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval);
 /* === moved from main/dll/curves.c [800E1B24-800E5434) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
-#include "main/dll/curves.h"
+#include "main/dll/dll_0015_curves.h"
 #include "main/game_ui_interface.h"
 #include "main/objlib.h"
 #include "main/game_object.h"

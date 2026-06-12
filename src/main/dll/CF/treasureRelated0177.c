@@ -276,7 +276,7 @@ extern f32 lbl_803E3D48;
 void deathseq_update(int* obj);
 
 #include "main/dll/CF/treasureRelated0177.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/screen_transition.h"

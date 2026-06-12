@@ -4,7 +4,7 @@
  * 0x80186B94 across windlift.c | CFcrystal.c (both drift mislabels).
  */
 #include "main/dll/CF/CFcrystal.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/CF/windlift.h"
 

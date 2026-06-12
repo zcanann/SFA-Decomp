@@ -1,5 +1,5 @@
 /* === moved from main/dll/TREX/TREX_levelcontrol.c [801E4288-801E42F8) (TU re-split, docs/boundary_audit.md) === */
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
 
 typedef struct SBShipGunPlacement
@@ -157,7 +157,7 @@ void SB_CannonBall_init(int* obj);
 #include "main/mapEvent.h"
 #include "main/dll/TREX/TREX_trex.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/objhits_types.h"
 #include "main/objseq.h"
 #include "main/resource.h"

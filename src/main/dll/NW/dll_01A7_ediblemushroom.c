@@ -1,5 +1,5 @@
 #include "main/dll/NW/dll_01A7_ediblemushroom.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
@@ -764,7 +764,7 @@ end:
 /* === moved from main/dll/NW/NWmammoth.c [801D1978-801D1BFC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/ediblemushroom.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 

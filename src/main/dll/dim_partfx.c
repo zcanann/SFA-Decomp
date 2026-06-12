@@ -1,5 +1,5 @@
 #include "main/audio/sfx_ids.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/dll/dim_partfx.h"
 
 

@@ -1,4 +1,4 @@
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/pushable.h"

@@ -402,7 +402,7 @@ int fn_80169EF4(f32 speed, f32 grav, f32* from, f32* to, u8 flag);
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/camera_interface.h"
 #include "main/mapEvent.h"
 #include "main/objhits_types.h"

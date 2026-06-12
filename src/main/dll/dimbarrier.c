@@ -1,7 +1,7 @@
 /* === moved from main/dll/creator1C4.c [801C835C-801C83D0) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
@@ -185,7 +185,7 @@ void gpsh_scene_init(int* obj, int* def);
 
 #include "main/dll/dimbarrier.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 

@@ -142,7 +142,7 @@ void dll_19B_free(int* obj)
 
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/shrine1CE.h"

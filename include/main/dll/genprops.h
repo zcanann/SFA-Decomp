@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/dll/checkpoint4.h"
-#include "main/dll/curves.h"
+#include "main/dll/dll_0015_curves.h"
 #include "main/object_descriptor.h"
 #include "main/objanim.h"
 #include "main/objanim_update.h"

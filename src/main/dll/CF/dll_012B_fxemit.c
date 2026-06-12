@@ -1,5 +1,5 @@
 #include "main/dll/CF/dll_012B_fxemit.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
 
 extern undefined4 FUN_80017a78();
@@ -508,7 +508,7 @@ void fxemit_update(FxEmitObject* obj)
 /* === moved from main/dll/CF/CFchuckobj.c [8018EFE0-8018F148) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/objseq.h"

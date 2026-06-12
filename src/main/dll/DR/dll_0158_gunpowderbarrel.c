@@ -7,7 +7,7 @@
  * it held only the middle of the barrel DLL), and the head of
  * cannontargetControl.c (801A1A60-801A27B8).
  */
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/gunpowderbarrel_state.h"

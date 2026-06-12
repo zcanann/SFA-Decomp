@@ -1,6 +1,6 @@
 /* === moved from main/dll/DB/DBstealerworm.c [801E341C-801E34C0) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/objseq.h"
 
 /* SB_Propeller_getExtraSize == 0x10. */
@@ -335,7 +335,7 @@ void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
 #include "main/objhits_types.h"

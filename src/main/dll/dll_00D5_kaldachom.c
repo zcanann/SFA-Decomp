@@ -1,7 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/dll/campfire.h"
+#include "main/dll/dll_00D5_kaldachom.h"
 #include "main/dll/cf_doorlight.h"
 #include "main/dll/texscroll2.h"
 #include "main/mapEventTypes.h"

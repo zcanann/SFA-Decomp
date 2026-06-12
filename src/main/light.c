@@ -30,7 +30,7 @@ void vfpblock1_free(int obj)
 #include "main/audio/sfx_ids.h"
 #include "main/game_ui_interface.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/light.h"
 #include "main/objanim_update.h"
 #include "main/objlib.h"
@@ -1147,7 +1147,7 @@ void vfpplatform_update(int obj)
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/objlib.h"
 #include "main/resource.h"
 

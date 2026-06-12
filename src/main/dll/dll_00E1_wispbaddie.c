@@ -523,7 +523,7 @@ ObjectDescriptor gSwarmBaddieObjDescriptor = {
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/dll/seqObj.h"
+#include "main/dll/dll_00E1_wispbaddie.h"
 #include "main/objanim.h"
 
 #define SEQOBJ_ANIM_BLEND_ACTIVE_FLAG 0x40

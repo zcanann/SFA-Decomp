@@ -1,6 +1,6 @@
 #include "dolphin/os.h"
 #include "main/camera_interface.h"
-#include "main/dll/curves.h"
+#include "main/dll/dll_0015_curves.h"
 #include "main/game_ui_interface.h"
 #include "main/objlib.h"
 #include <string.h>

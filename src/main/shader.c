@@ -1,7 +1,7 @@
 #include "main/asset_load.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/mapEvent.h"

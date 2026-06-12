@@ -2,7 +2,7 @@
 #include "math.h"
 #include "main/camera.h"
 #include "main/audio/sfx.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/expgfx_internal.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"

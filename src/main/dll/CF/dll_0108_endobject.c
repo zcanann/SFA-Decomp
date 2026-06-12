@@ -4,7 +4,7 @@
  * 0x8018646C..0x80186498 plus the gDummy108ObjDescriptor .data object at
  * 0x803217C0 (both formerly inside windlift.c).
  */
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 
 /* Trivial 4b 0-arg blr leaves. */
 void Dummy108_free(void)

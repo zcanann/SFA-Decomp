@@ -225,7 +225,7 @@ extern f64 lbl_803E51C0;
 /* === merged from main/dll/creator1CF.c [801CCFB4-801CD258) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 
 extern void* Camera_GetCurrentViewSlot(void);
 extern float sqrtf(float x);
@@ -372,7 +372,7 @@ void dll_19E_hitDetect(void)
 }
 
 #include "main/audio/sfx_ids.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/dim_tricky.h"
 #include "main/effect_interfaces.h"

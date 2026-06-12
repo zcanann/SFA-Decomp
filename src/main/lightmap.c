@@ -1,7 +1,7 @@
 #include "main/game_object.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/frustum.h"
 #include "main/lightmap.h"
 #include "main/objanim_internal.h"

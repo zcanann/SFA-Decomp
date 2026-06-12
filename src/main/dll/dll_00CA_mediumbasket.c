@@ -1,6 +1,6 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/mediumbasket.h"
+#include "main/dll/dll_00CA_mediumbasket.h"
 #include "main/effect_interfaces.h"
 
 typedef struct MediumbasketUpdateDropStateState

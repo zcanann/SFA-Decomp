@@ -2116,11 +2116,11 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2);
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/gfxemit_state.h"
-#include "main/dll/gfxEmit.h"
+#include "main/dll/dll_00ED_collectible.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
@@ -2725,13 +2725,13 @@ void fn_801723DC(int obj)
 #pragma peephole off
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 /* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
  * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
  * verified). File rename parked as a repo-owner proposal. */
 #include "main/game_object.h"
 #include "main/dll/collectible_state.h"
-#include "main/dll/gfxEmit.h"
+#include "main/dll/dll_00ED_collectible.h"
 #include "main/dll/path_control_interface.h"
 #include "main/objanim_internal.h"
 

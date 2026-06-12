@@ -1,5 +1,5 @@
 #include "main/dfppowersl.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
 
 extern void ObjHits_SetHitVolumeSlot(DfpPowerSlObject* obj, int slot, int enabled, int param_4);

@@ -1,5 +1,5 @@
 #include "main/dll/grenade.h"
-#include "main/dll/collectable.h"
+#include "main/dll/dll_00C4_tricky.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/dll/path_control_interface.h"

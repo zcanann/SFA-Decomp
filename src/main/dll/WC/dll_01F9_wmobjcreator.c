@@ -1,5 +1,5 @@
 /* === moved from main/dll/WC/WClevcontrol.c [801EF360-801EF3A8) (TU re-split, docs/boundary_audit.md) === */
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 
 typedef struct SBCloudRunnerState
 {

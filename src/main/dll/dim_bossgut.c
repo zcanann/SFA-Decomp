@@ -1,6 +1,6 @@
 /* === moved from main/dll/NW/NWmammoth.c [801D1BFC-801D1E24) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/ediblemushroom.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 
 
@@ -186,7 +186,7 @@ void enemymushroom_hitDetect(void)
 }
 
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
 #include "main/dll/dim_bossgut.h"

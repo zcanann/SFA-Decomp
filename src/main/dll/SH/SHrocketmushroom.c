@@ -1,5 +1,5 @@
 /* === moved from main/dll/SH/SHkillermushroom.c [801D3378-801D383C) (TU re-split, docs/boundary_audit.md) === */
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/SH/dll_01A9_bombplant.h"
 #include "main/objseq.h"
@@ -319,7 +319,7 @@ void bombplant_update(void* obj);
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/path_control_interface.h"
 #include "main/objseq.h"

@@ -1,5 +1,5 @@
 /* === moved from main/dll/CF/treasureRelated0177.c [8018D6E8-8018D728) (TU re-split, docs/boundary_audit.md) === */
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/screen_transition.h"
 
 typedef struct KtTorchPlacement
@@ -484,7 +484,7 @@ void cfccrate_update(int obj)
 #include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/dll/CF/dll_179.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 

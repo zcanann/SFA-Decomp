@@ -366,7 +366,7 @@ typedef struct
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/dim_bossgut.h"
 #include "main/dll/SH/dll_01A9_bombplant.h"

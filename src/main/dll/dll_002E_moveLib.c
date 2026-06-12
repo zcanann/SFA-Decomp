@@ -2,7 +2,7 @@
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/dll/moveLib.h"
+#include "main/dll/dll_002E_moveLib.h"
 
 
 

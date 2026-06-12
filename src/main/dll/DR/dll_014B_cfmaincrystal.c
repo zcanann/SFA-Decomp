@@ -6,7 +6,7 @@
  * their defs here are collapsed to prototypes).
  */
 #include "main/dll/cfguardian_state.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"

@@ -2,7 +2,7 @@
 #include "main/asset_load.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/model_light.h"
 #include "main/engine_8001746C_phantoms.h"

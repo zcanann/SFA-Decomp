@@ -463,7 +463,7 @@ void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
 

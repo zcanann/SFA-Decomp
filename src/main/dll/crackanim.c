@@ -1,7 +1,7 @@
 /* === moved from main/dll/groundAnimator.c [8017D818-8017E1A0) (TU re-split, docs/boundary_audit.md) === */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/groundAnimator.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 

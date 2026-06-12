@@ -1,7 +1,7 @@
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/xyzanimator.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 
 typedef struct PollenfragmentState

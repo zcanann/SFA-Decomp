@@ -2,8 +2,8 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/dll/sidekickToy.h"
-#include "main/dll/mediumbasket.h"
+#include "main/dll/dll_00C9_enemy.h"
+#include "main/dll/dll_00CA_mediumbasket.h"
 #include "main/dll/tricky_state.h"
 
 typedef struct BaddieAfterUpdateBonesCbState
@@ -1872,7 +1872,7 @@ void fn_8014CF7C(int* node, int p2, u16 p3, int p4, f32 fa, f32 fb)
 /* === merged from main/dll/projswitch.c [8014D164-8014E1DC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/enemy_state.h"
 #include "main/dll/path_control_interface.h"

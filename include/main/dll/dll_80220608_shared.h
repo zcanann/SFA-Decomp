@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
-#include "main/expgfx.h"
+#include "main/dll_000A_expgfx.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/obj_placement.h"

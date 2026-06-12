@@ -2,7 +2,7 @@
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
 #include "main/dll/landedArwing.h"
-#include "main/dll/staffAction.h"
+#include "main/dll/dll_00D3_staffAction.h"
 
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
