@@ -1756,8 +1756,14 @@ main/dll/dll_01A0_nwgeyser.c:
 main/dll/dll_01A1_nwmammoth.c:
 	.text       start:0x801CE078 end:0x801CF78C
 
-main/dll/creator1D6.c:
-	.text       start:0x801CF78C end:0x801CFD68
+main/dll/dll_01A2_nwtricky.c:
+	.text       start:0x801CF78C end:0x801CFB24
+
+main/dll/dll_01A3_nwanimice1.c:
+	.text       start:0x801CFB24 end:0x801CFBB4
+
+main/dll/dll_01A4_nwice1.c:
+	.text       start:0x801CFBB4 end:0x801CFD68
 
 main/dll/projball1D8.c:
 	.text       start:0x801CFD68 end:0x801D083C

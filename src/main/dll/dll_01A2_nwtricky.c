@@ -314,102 +314,32 @@ void nw_tricky_update(int* obj)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void nw_animice_render(void)
-{
-}
+void nw_animice_render(void);
 
-void nw_animice_hitDetect(void)
-{
-}
+void nw_animice_hitDetect(void);
 
-void nw_animice_update(void)
-{
-}
+void nw_animice_update(void);
 
-void nw_animice_release(void)
-{
-}
+void nw_animice_release(void);
 
-void nw_animice_initialise(void)
-{
-}
+void nw_animice_initialise(void);
 
-void nw_ice_render(void)
-{
-}
+void nw_ice_render(void);
 
 /* 8b "li r3, N; blr" returners. */
-int nw_animice_SeqFn(void) { return 0x0; }
-int nw_animice_getExtraSize(void) { return 0x0; }
-int nw_animice_getObjectTypeId(void) { return 0x0; }
-int nw_ice_getExtraSize(void) { return 0x4; }
+int nw_animice_SeqFn(void);
+int nw_animice_getExtraSize(void);
+int nw_animice_getObjectTypeId(void);
+int nw_ice_getExtraSize(void);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void nw_animice_free(int x) { ObjGroup_RemoveObject(x, 0x3d); }
-void nw_ice_free(int x) { ObjGroup_RemoveObject(x, 0x3c); }
+void nw_animice_free(int x);
+void nw_ice_free(int x);
 
-void nw_ice_update(int* obj)
-{
-    extern int Obj_GetPlayerObject(void); /* #57 */
-    NwIceState* state;
-    int* setup;
-    int i;
-    int** scan;
-    int** objects;
-    int* candidate;
-    int count;
-    f32 nearestDist;
-
-    nearestDist = lbl_803E5270;
-    state = ((GameObject*)obj)->extra;
-    if (state->linkedObj != NULL)
-    {
-        ((GameObject*)obj)->anim.localPosX = *(f32*)((char*)state->linkedObj + 0xc);
-        ((GameObject*)obj)->anim.localPosY = *(f32*)((char*)state->linkedObj + 0x10);
-        ((GameObject*)obj)->anim.localPosZ = *(f32*)((char*)state->linkedObj + 0x14);
-        *(s16*)obj = *(s16*)state->linkedObj;
-        ObjGroup_FindNearestObjectForObject(0x3c, obj, &nearestDist);
-
-        if (((GameObject*)state->linkedObj)->anim.alpha < 0xc0)
-        {
-            ObjHits_DisableObject(obj);
-            fn_80296D20(Obj_GetPlayerObject(), obj);
-        }
-        else
-        {
-            ObjHits_EnableObject(obj);
-        }
-
-        if ((((GameObject*)state->linkedObj)->anim.alpha < 0xc0) || (nearestDist < lbl_803E5274))
-        {
-            ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x100);
-        }
-        else
-        {
-            ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags & ~0x100);
-        }
-    }
-    else
-    {
-        objects = ObjGroup_GetObjects(0x3d, &count);
-        setup = *(int**)&((GameObject*)obj)->anim.placementData;
-        scan = objects;
-        for (i = 0; i < count; scan++, i++)
-        {
-            candidate = *scan;
-            if ((obj != candidate) &&
-                (((NwIcePlacement*)setup)->unk1B ==
-                    *(u8*)((char*)*(int**)((char*)candidate + 0x4c) + 0x1b)))
-            {
-                state->linkedObj = objects[i];
-                break;
-            }
-        }
-    }
-}
+void nw_ice_update(int* obj);
 
 /* call(x, N) wrappers. */
-void nw_ice_init(int x) { ObjGroup_AddObject(x, 0x3c); }
+void nw_ice_init(int x);
 
 void nw_tricky_init(int* obj)
 {
@@ -417,9 +347,4 @@ void nw_tricky_init(int* obj)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
 }
 
-void nw_animice_init(int* obj)
-{
-    ((GameObject*)obj)->animEventCallback = (void*)nw_animice_SeqFn;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
-    ObjGroup_AddObject(obj, 0x3d);
-}
+void nw_animice_init(int* obj);
