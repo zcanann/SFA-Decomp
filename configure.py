@@ -1034,7 +1034,7 @@ config.libs = [
             Object(NonMatching, "main/dll/CF/dll_012B_fxemit.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/CF/dll_0130_areafxemit.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/CF/dll_012D_lfxemitter.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/CF/dll_8019042C.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/CF/warppad.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/CF/dll_012C_transporter.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/moonseedbush.c"),
             Object(NonMatching, "main/dll/mmp_asteroid_re.c", cflags=cflags_dll_noopt),
