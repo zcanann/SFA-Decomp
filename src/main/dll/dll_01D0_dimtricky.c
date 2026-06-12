@@ -96,8 +96,6 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
-extern EffectInterface** gPartfxInterface;
 
 
 /*
@@ -198,26 +196,19 @@ extern EffectInterface** gPartfxInterface;
 #pragma peephole off
 
 /* 8b "li r3, N; blr" returners. */
-int dim_levelcontrol_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E49D0;
-extern f32 lbl_803E4A20;
 
 
 
 
-void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* conditional init/free pair. */
-extern void* lbl_803DDB78;
 #pragma scheduling on
 #pragma peephole on
 
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
-extern void* Obj_GetPlayerObject(void);
-extern void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
 
 /* dimmagicbridge_update: advance texture phase and bridge vertex wave, then
  * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
@@ -238,15 +229,11 @@ extern void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
 #pragma scheduling off
 
 /* dim_levelcontrol_free: gameplay music + time-of-day reset. */
-extern void timeOfDayFn_80055000(void);
 
-void dim_levelcontrol_free(int p1);
 
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
-extern u8 framesThisStep;
 #pragma dont_inline on
-void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj);
 #pragma dont_inline reset
 
 /* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
@@ -254,7 +241,6 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj);
  * the animated bridge mesh. */
 #pragma peephole off
 
-extern f32 timeDelta;
 
 /* EN v1.0 0x801B5804  size: 380b  dimwooddoor2_update: advance the door's
  * shake anim and decay its wobble; while idle near map-cue 0x338 bleed off
@@ -281,7 +267,6 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 
 
-extern f32 mathSinf(f32 x);
 
 
 
@@ -318,79 +303,16 @@ extern f32 mathSinf(f32 x);
 #include "main/dll/DIM/DIM2snowball.h"
 #include "main/objanim_internal.h"
 
-typedef struct Dll1D6Placement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 upTimer;
-    s16 downTimer;
-    u8 pad1E[0x20 - 0x1E];
-} Dll1D6Placement;
 
 
-typedef struct DimtruthhorniceObjectDef
-{
-    u8 pad0[0x1A - 0x0];
-    s16 hitsLeft;
-    s16 unk1C;
-    s16 gameBit;
-} DimtruthhorniceObjectDef;
 
 
-typedef struct Dim2snowballObjectDef
-{
-    u8 pad0[0x14 - 0x0];
-    s32 targetId;
-    s8 unk18;
-    u8 pad19[0x1A - 0x19];
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-} Dim2snowballObjectDef;
 
 
-typedef struct Dll1CFObjectDef
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    s8 unk18;
-    u8 pad19[0x1A - 0x19];
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-} Dll1CFObjectDef;
 
 
-typedef struct Dim2pathgeneratorObjectDef
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    s16 spawnPeriod;
-    s16 unk1A;
-    s16 unk1C;
-    u16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} Dim2pathgeneratorObjectDef;
 
 
-typedef struct Dim2pathgeneratorPlacement
-{
-    u8 pad0[0x3 - 0x0];
-    u8 unk3;
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
-    u8 pad8[0x14 - 0x8];
-    s32 unk14;
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    u16 unk1E;
-    s16 unk20;
-    s16 unk22;
-    u8 pad24[0x28 - 0x24];
-} Dim2pathgeneratorPlacement;
 
 
 /* dim2conveyor_getExtraSize == 0x14. */
@@ -490,10 +412,7 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
 }
 
 extern undefined4 FUN_800067c0();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_RecordObjectHit();
 extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
 
 
 /*
@@ -509,31 +428,8 @@ extern undefined4 ObjGroup_AddObject();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct DimLevelControlState
-{
-    f32 timer;
-    int latch;
-    u8 saveState;
-    u8 unk9;
-    s16 musicTrack;
-    u8 unkC;
-    u8 unkD;
-    u8 b7 : 1;
-    u8 b6 : 1;
-    u8 b5 : 1;
-    u8 b4 : 1;
-    u8 b3 : 1;
-} DimLevelControlState;
 
-extern void getEnvfxActImmediately(int a, int b, int id, int d);
-extern void getEnvfxAct(int a, int b, int id, int d);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShow(int id);
-extern void SCGameBitLatch_Update(int* state, int mask, int a, int b, int bit, int value);
-extern int* gSHthorntailAnimationInterface;
-extern f32 lbl_803E4A24;
 
-void dim_levelcontrol_update(int obj);
 
 /*
  * --INFO--
@@ -690,13 +586,9 @@ void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_
 #pragma peephole off
 void dll_1CF_free(void);
 
-void dll_1CF_hitDetect(void);
 
-void dll_1CF_update(void);
 
-void dll_1CF_release(void);
 
-void dll_1CF_initialise(void);
 
 void dim_tricky_free(void)
 {
@@ -708,49 +600,25 @@ void dim_tricky_hitDetect(void)
 
 void dim2conveyor_hitDetect(void);
 
-void dim2conveyor_release(void);
 
-void dim2conveyor_initialise(void);
 
-void dll_1D6_hitDetect(void);
 
-void dll_1D6_release(void);
 
-void dll_1D6_initialise(void);
 
-void dim2snowball_free(void);
 
-void dim2snowball_hitDetect(void);
 
-void dim2snowball_release(void);
 
-void dim2snowball_initialise(void);
 
-void dim2pathgenerator_free(void);
 
-void dim2pathgenerator_render(void);
 
-void dim2pathgenerator_hitDetect(void);
 
-void dim2pathgenerator_release(void);
 
-void dim2pathgenerator_initialise(void);
 
 
 /* 8b "li r3, N; blr" returners. */
-int dll_1CF_getExtraSize(void);
-int dll_1CF_getObjectTypeId(void);
 int dim_tricky_getExtraSize(void) { return 0x1; }
 int dim_tricky_getObjectTypeId(void) { return 0x0; }
 int dimtruthhornice_getExtraSize(void);
-int dim2conveyor_getExtraSize(void);
-int dim2conveyor_getObjectTypeId(void);
-int dll_1D6_getExtraSize(void);
-int dll_1D6_getObjectTypeId(void);
-int dim2snowball_getExtraSize(void);
-int dim2snowball_getObjectTypeId(void);
-int dim2pathgenerator_getExtraSize(void);
-int dim2pathgenerator_getObjectTypeId(void);
 
 /* 16b chained patterns. */
 void dim_tricky_init(int* obj)
@@ -761,17 +629,10 @@ void dim_tricky_init(int* obj)
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4A30;
-extern f32 lbl_803E4A58;
-extern f32 lbl_803E4A78;
-extern f32 lbl_803E4AA0;
 
-void dll_1CF_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dim2conveyor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 
 /* render-with-fn(lbl) (no visibility check). */
@@ -783,39 +644,23 @@ void dim2conveyor_free(int x);
 
 /* dim2conveyor_setScale: per-area scale/sign + music latch for two specific map ids. */
 
-void dim2conveyor_setScale(int* obj, int unused, f32* outX, f32* outY);
 
-extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, uint* outHitVolume);
 
 /* dim2pathgenerator hitDetect: on hit type 0xE, scale velocity by const and SFX. */
 
-extern int ObjList_FindObjectById(int id);
-extern void mm_free(void* p);
 extern u8 lbl_803DBF20;
 extern int* getTrickyObject(void);
 
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if the signed result dropped to or below 0. */
-int fn_801B6D40(int* obj, int v);
 
-u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** p4);
 
-void dll_1D6_free(int* obj);
 
-void dim2pathgenerator_init(int* obj, int* def);
 
-void dimtruthhornice_init(int* obj, int* def);
 
-void dim2snowball_init(int* obj, int* def);
 
-void dll_1CF_init(int* obj, int* def);
 
-extern f32 lbl_803E4A28;
-extern int getSaveGameLoadStatus(void);
-extern void gameBitFn_800ea2e0(u8 n);
-extern void unlockLevel(int a, int b, int c);
 
-void dim_levelcontrol_init(int obj);
 
 void dim_tricky_update(int* obj)
 {
@@ -845,63 +690,16 @@ void dim_tricky_update(int* obj)
 }
 
 extern f32 mathCosf(f32 x);
-extern f32 lbl_803E4A5C;
-extern f32 lbl_803E4A60;
-extern f32 lbl_803E4A64;
-extern f32 lbl_803E4A68;
-extern f32 lbl_803E4A6C;
 
-void dim2conveyor_init(int* obj, u8* params);
 
-void dim2conveyor_update(int* obj);
 
 extern void* mmAlloc(int size, int a, int b);
-extern void ObjModel_SetBlendChannelTargets(int* model, int a, int b, int c, f32 w, int d);
-extern void ObjModel_SetBlendChannelWeight(int* model, int a, f32 w);
-extern s16 lbl_803DBF18;
-extern f32 lbl_803E4A88;
 
-void dll_1D6_init(int* obj, u8* params);
 
-extern f32 lbl_803E4A40;
-extern f32 lbl_803E4A44;
 
-void dimtruthhornice_update(int* obj);
 
-extern int** ObjGroup_GetObjects(int group, int* countOut);
 
-void dim2pathgenerator_update(int* obj);
 
-extern void mtxRotateByVec3s(f32 * mtx, s16 * ang);
-extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern f32 lbl_803E4A7C;
-extern f32 lbl_803E4A80;
-extern f32 lbl_803E4A84;
-extern f32 lbl_803E4A8C;
-extern f32 lbl_803E4A90;
 
-void dll_1D6_update(int* obj);
 
-extern int Curve_AdvanceAlongPath(int* extra, f32 t);
-extern void Curve_BuildHermiteCoeffs(void);
-extern void Curve_EvalHermite(void);
-extern void curvesMove(int* extra);
-extern int** ObjList_GetObjects(int* startOut, int* countOut);
-extern void objMove(int* obj, f32 dx, f32 dy, f32 dz);
-extern int objBboxFn_800640cc(void* a, void* b, f32 c, int d, int e, int* f, int g, int h, int i, int j);
-extern int getAngle(f32 a, f32 b);
-extern int hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, int*** listOut, int p3, int p4);
-extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int sfx);
-extern f32 oneOverTimeDelta;
-extern f32 lbl_803E4AA4;
-extern f32 lbl_803E4AA8;
-extern f32 lbl_803E4AAC;
-extern f32 lbl_803E4AB0;
-extern f32 lbl_803E4AB4;
-extern f32 lbl_803E4AB8;
-extern f32 lbl_803E4ABC;
-extern f32 lbl_803E4AC0;
-extern f64 lbl_803E4AC8;
-extern f32 lbl_803E4AD0;
 
-void dim2snowball_update(int* obj);
