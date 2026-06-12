@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cfprisonuncle.h"
+#include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
@@ -28,9 +29,6 @@ extern f32 getXZDistance(f32 * a, f32 * b);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
 extern int fn_80296448(int obj);
-extern int fn_800DA980(int curveState, int firstNode, int secondNode, int thirdNode);
-extern int Curve_AdvanceAlongPath(int curveState, f32 step);
-extern int curveFn_800da23c(int curveState, int node);
 
 extern u32 lbl_803E38E8;
 extern f32 lbl_803E38EC;
@@ -191,7 +189,7 @@ void curvefish_update(int obj)
         thirdNode = (int)(*gRomCurveInterface)->getById(
             ((int (*)(int, int))(*gRomCurveInterface)->slot54)(secondNode, 0));
 
-        if (fn_800DA980((int)state, firstNode, secondNode, thirdNode) != 0)
+        if (fn_800DA980((RomCurveWalker*)state, (void*)firstNode, (void*)secondNode, (void*)thirdNode) != 0)
         {
             return;
         }
@@ -297,7 +295,7 @@ void curvefish_update(int obj)
         i = 0;
         while (distance < distLimit && i < 5)
         {
-            Curve_AdvanceAlongPath((int)state, lbl_803E38F8);
+            Curve_AdvanceAlongPath((RomCurveWalker*)state, lbl_803E38F8);
             distance = getXZDistance(&state->targetX, (f32*)(obj + 0xc));
             i++;
         }
@@ -305,7 +303,7 @@ void curvefish_update(int obj)
         if (state->hasRouteEdge != 0)
         {
             nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot54)(state->routeCursor, 0);
-            if (curveFn_800da23c((int)state, (int)(*gRomCurveInterface)->getById(nextNode)) != 0)
+            if (curveFn_800da23c((RomCurveWalker*)state, (*gRomCurveInterface)->getById(nextNode)) != 0)
             {
                 state->mode = 0;
                 state->phaseTimer = lbl_803E38F0;

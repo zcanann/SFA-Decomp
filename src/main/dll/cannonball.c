@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/dll/baddie/skeetla.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/dll/objfsa.h"
 
 #define CANNONBALL_INIT_DONE 0x0a
 #define CANNONBALL_SPEED 0x14
@@ -19,12 +20,9 @@
 
 extern double getXZDistance(float* a, float* b);
 extern u32 randomGetRange(int min, int max);
-extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
-extern void curveFn_800da23c(RomCurveWalker* route, int node);
-extern void RomCurve_stepClamped(RomCurveWalker* route, float speed);
-extern void fn_800DA980(RomCurveWalker* route, int curve, int fromNode, int toNode);
-extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
-extern void trickyMove(int obj, void* moveState);
+extern void objAudioFn_800393f8(int obj, void *audio, int soundId, int volume, int param5, int param6);
+extern int Objfsa_GetWalkGroupIndexAtPoint(float *pos, void *flag);
+extern void trickyMove(int obj, void *moveState);
 extern void trickyFn_8013b368(int obj1, int obj2, float arg);
 
 extern f32 timeDelta;
@@ -116,7 +114,7 @@ void trickyFn_80141290(int obj, int ball)
                 }
             }
 
-            curveFn_800da23c(route, targetNode);
+            curveFn_800da23c(route, (void *)targetNode);
         }
 
         speed = *(float*)(ball + CANNONBALL_SPEED);
@@ -207,9 +205,8 @@ void trickyFn_80141290(int obj, int ball)
                 route->reverse = 1;
             }
 
-            fn_800DA980(route, curve, fromNode, targetNode);
-            if (route->reverse != 0)
-            {
+            fn_800DA980(route, (void *)curve, (void *)fromNode, (void *)targetNode);
+            if (route->reverse != 0) {
                 RomCurve_stepClamped(route, lbl_803E250C);
             }
             else

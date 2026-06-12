@@ -61,6 +61,10 @@ FUN_800dd62c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 void FUN_800dde2c(int param_1,int param_2);
 int RomCurve_setClosed(RomCurveWalker *state,int closed);
 u8 RomCurve_goNextPoint(RomCurveWalker *state);
+int Curve_AdvanceAlongPath(RomCurveWalker *state,f32 step);
+void RomCurve_stepClamped(RomCurveWalker *state,f32 step);
+int curveFn_800da23c(RomCurveWalker *state,void *targetCurve);
+int fn_800DA980(RomCurveWalker *state,void *fromCurve,void *toCurve,void *targetCurve);
 undefined4
 FUN_800ddf84(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,

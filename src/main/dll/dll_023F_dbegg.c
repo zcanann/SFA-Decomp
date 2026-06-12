@@ -5,6 +5,7 @@
 #include "main/dll/dbholecontrol1state_struct.h"
 #include "main/dll/dfptorchstate_struct.h"
 #include "main/dll/dbeggstate_struct.h"
+#include "main/dll/objfsa.h"
 #include "main/dll/drakorenergystate_struct.h"
 #include "main/dll/dbstealerwormcontrol_struct.h"
 #include "main/dll/blastflags4_types.h"
@@ -994,7 +995,6 @@ void dbegg_update(int obj)
     extern void ObjGroup_AddObject(int, int);
     extern void ObjMsg_SendToObject(int, int, int, int);
     extern uint getButtonsJustPressed(int);
-    extern int Curve_AdvanceAlongPath(int, f32);
     extern f32 sqrtf(f32);
     extern void Vec3_Normalize(int);
     extern f32 PSVECMag(int);
@@ -1262,7 +1262,7 @@ void dbegg_update(int obj)
             }
             break;
         case 0xa:
-            if ((*gRomCurveInterface)->initCurve((void*)(blob + 4), (void*)obj, lbl_803E624C,
+            if ((*gRomCurveInterface)->initCurve(&((DbEggState*)blob)->curve, (void*)obj, lbl_803E624C,
                                                  buf2, 2) != 0)
             {
                 ((DbEggState*)blob)->mode = 5;
@@ -1279,20 +1279,21 @@ void dbegg_update(int obj)
             }
             break;
         case 9:
-            if (Curve_AdvanceAlongPath(blob + 4, lbl_803E6250) != 0 || ((DbEggState*)blob)->unk14 != 0)
+            if (Curve_AdvanceAlongPath(&((DbEggState*)blob)->curve, lbl_803E6250) != 0 ||
+                ((DbEggState*)blob)->curve.atSegmentEnd != 0)
             {
-                if ((*gRomCurveInterface)->goNextPoint((void*)(blob + 4)) != 0)
+                if ((*gRomCurveInterface)->goNextPoint(&((DbEggState*)blob)->curve) != 0)
                 {
                     ((DbEggState*)blob)->mode = 5;
                 }
             }
             else
             {
-                ((GameObject*)obj)->anim.velocityX = ((DbEggState*)blob)->curvePosX - ((GameObject*)obj)->anim.
+                ((GameObject*)obj)->anim.velocityX = ((DbEggState*)blob)->curve.posX - ((GameObject*)obj)->anim.
                     localPosX;
-                ((GameObject*)obj)->anim.velocityY = ((DbEggState*)blob)->curvePosY - ((GameObject*)obj)->anim.
+                ((GameObject*)obj)->anim.velocityY = ((DbEggState*)blob)->curve.posY - ((GameObject*)obj)->anim.
                     localPosY;
-                ((GameObject*)obj)->anim.velocityZ = ((DbEggState*)blob)->curvePosZ - ((GameObject*)obj)->anim.
+                ((GameObject*)obj)->anim.velocityZ = ((DbEggState*)blob)->curve.posZ - ((GameObject*)obj)->anim.
                     localPosZ;
                 fx = sqrtf(
                     ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ + (((GameObject*)obj)->anim.

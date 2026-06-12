@@ -125,7 +125,6 @@ extern void* memset(void* dst, int val, u32 n);
 extern f32 lbl_803E05C8;
 extern f32 lbl_803E05CC;
 extern f32 lbl_803E05F4;
-extern int Curve_AdvanceAlongPath(float* p, f32 dt);
 extern f32 lbl_803E05D0;
 extern f32 lbl_803E05D4;
 extern f32 lbl_803E05D8;
@@ -2947,15 +2946,15 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
 }
 
 #pragma peephole on
-void RomCurve_stepClamped(float* state, f32 dt)
+void RomCurve_stepClamped(RomCurveWalker* state, f32 dt)
 {
-    if (*state <= lbl_803E05F0)
+    if (state->phase <= lbl_803E05F0)
     {
-        *state = lbl_803E05F4;
+        state->phase = lbl_803E05F4;
     }
-    else if (*state >= lbl_803E05C8)
+    else if (state->phase >= lbl_803E05C8)
     {
-        *state = lbl_803E05CC;
+        state->phase = lbl_803E05CC;
     }
     Curve_AdvanceAlongPath(state, dt);
 }
