@@ -1164,8 +1164,14 @@ main/dll/dll_010F_mmpbridge.c:
 main/dll/dll_0111_cfpowerlock.c:
 	.text       start:0x8017BCF8 end:0x8017C294
 
-main/dll/alphaanim.c:
-	.text       start:0x8017C294 end:0x8017CF90
+main/dll/dll_0112_bossdrakor.c:
+	.text       start:0x8017C294 end:0x8017C7A4
+
+main/dll/dll_0113_cameranewse.c:
+	.text       start:0x8017C7A4 end:0x8017CBDC
+
+main/dll/dll_0114_immultiseq.c:
+	.text       start:0x8017CBDC end:0x8017CF90
 
 main/dll/groundAnimator.c:
 	.text       start:0x8017CF90 end:0x8017D818
