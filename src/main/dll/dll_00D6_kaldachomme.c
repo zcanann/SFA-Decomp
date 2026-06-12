@@ -319,38 +319,17 @@ void FUN_80169a44(undefined8 param_1, double param_2, double param_3, undefined8
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void kaldachompspit_hitDetect(void)
-{
-}
+void kaldachompspit_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
-int kaldachompspit_getExtraSize(void) { return 0x4; }
-int kaldachompspit_getObjectTypeId(void) { return 0x0; }
+int kaldachompspit_getExtraSize(void);
+int kaldachompspit_getObjectTypeId(void);
 
 extern void ModelLightStruct_free(void* p);
 
-void kaldachompspit_free(int* obj)
-{
-    void* p = *(void**)((GameObject*)obj)->extra;
-    if (p != NULL)
-    {
-        ModelLightStruct_free(p);
-    }
-}
+void kaldachompspit_free(int* obj);
 
-void kaldachompspit_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    extern void objRenderFn_8003b8f4(double scale); /* #57 */
-    u8* light = **(u8***)&((GameObject*)obj)->extra;
-    if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0)
-    {
-        queueGlowRender(light);
-    }
-    if (visible != 0)
-    {
-        ((void (*)(void*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E30E0);
-    }
-}
+void kaldachompspit_render(void* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 extern void modelLightStruct_setEnabled(int light, int onoff, f32 intensity);
 extern void spawnExplosion(int obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
@@ -373,120 +352,7 @@ void kaldachompspit_burst(int obj);
  * EN v1.0 Address: 0x801698E8
  * EN v1.0 Size: 988b
  */
-void kaldachompspit_update(int obj)
-{
-    extern int getTrickyObject(void); /* #57 */
-    extern int Obj_GetPlayerObject(void); /* #57 */
-    extern int objMove(int obj, f32 vx, f32 vy, f32 vz); /* #57 */
-    extern void ObjHits_EnableObject(int obj); /* #57 */
-    extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra); /* #57 */
-    ObjAnimComponent* objAnim;
-    u32* state;
-    f32 vx;
-    u32 ptr;
-    int rnd;
-    f32 vy;
-    f32 vz;
-    s16 v;
-    f32 t;
-
-    objAnim = &((GameObject*)obj)->anim;
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->unkF4 = (int)((f32)((GameObject*)obj)->unkF4 - timeDelta);
-    if (((GameObject*)obj)->unkF4 < 0)
-    {
-        Sfx_StopObjectChannel(obj, 0x7f);
-        Obj_FreeObject(obj);
-    }
-    else if (objAnim->alpha != 0)
-    {
-        if (((GameObject*)obj)->unkF4 < 0x11b)
-        {
-            ((GameObject*)obj)->anim.velocityY = -(lbl_803E30F0 * timeDelta - ((GameObject*)obj)->anim.velocityY);
-            if ((f32)(u32)objAnim->alpha - (t = lbl_803E30F4 * timeDelta) > lbl_803E30F8
-            )
-            {
-                objAnim->alpha = (f32)(u32)
-                objAnim->alpha - t;
-            }
-            else
-            {
-                Sfx_StopObjectChannel(obj, 0x7f);
-                objAnim->alpha = 0;
-            }
-            Sfx_SetObjectChannelVolume(obj, 0x40, (u8)(objAnim->alpha >> 1), lbl_803E30FC);
-        }
-        vx = ((GameObject*)obj)->anim.velocityX * timeDelta;
-        vy = ((GameObject*)obj)->anim.velocityY * timeDelta;
-        vz = ((GameObject*)obj)->anim.velocityZ * timeDelta;
-        objMove(obj, vx, vy, vz);
-        if (((GameObject*)obj)->anim.seqId == 0x869)
-        {
-            ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
-            ((GameObject*)obj)->anim.rotX += 0x100;
-            ((GameObject*)obj)->anim.rotY += 0x800;
-        }
-        else
-        {
-            ObjHits_SetHitVolumeSlot(obj, 0xa, 1, 0);
-            ((GameObject*)obj)->anim.rotX = getAngle(vx, vz) - 0x8000;
-            ((GameObject*)obj)->anim.rotY = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
-        }
-        ObjHits_EnableObject(obj);
-        if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0)
-        {
-            if (((GameObject*)obj)->unkF4 < 0x17c)
-            {
-                kaldachompspit_burst(obj);
-                return;
-            }
-            if (((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
-                    Obj_GetPlayerObject()) ||
-                ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
-                    getTrickyObject()))
-            {
-                kaldachompspit_burst(obj);
-                return;
-            }
-        }
-        if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
-        {
-            kaldachompspit_burst(obj);
-        }
-        else
-        {
-            if (((GameObject*)obj)->anim.seqId == 0x869)
-            {
-                fn_80098B18(obj, lbl_803E30E0, 1, 0, 0, 0);
-            }
-            else
-            {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x714, NULL, 2, -1,
-                                                 &objAnim->alpha);
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, NULL);
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, NULL);
-            }
-            ptr = *state;
-            if ((ptr != 0) && (*(u8*)(ptr + 0x2f8) != 0) && (*(u8*)(ptr + 0x4c) != 0))
-            {
-                rnd = randomGetRange(-0x19, 0x19);
-                ptr = *state;
-                v = *(u8*)(ptr + 0x2f9) + *(s8*)(ptr + 0x2fa) + rnd;
-                if (v < 0)
-                {
-                    v = 0;
-                    *(u8*)(ptr + 0x2fa) = 0;
-                }
-                else if (v > 0xff)
-                {
-                    v = 0xff;
-                    *(u8*)(ptr + 0x2fa) = 0;
-                }
-                *(u8*)(*state + 0x2f9) = v;
-            }
-        }
-    }
-}
+void kaldachompspit_update(int obj);
 
 /*
  * --INFO--
@@ -495,35 +361,7 @@ void kaldachompspit_update(int obj)
  * EN v1.0 Address: 0x801696D4
  * EN v1.0 Size: 312b
  */
-void kaldachompspit_burst(int obj)
-{
-    extern void Sfx_PlayFromObject(int obj, u32 sfxId); /* #57 */
-    int i;
-    u32* state;
-    u8 rnd;
-
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.alpha = 0;
-    ((GameObject*)obj)->unkF4 = 0xdc;
-    (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
-    if (*state != 0)
-    {
-        modelLightStruct_setEnabled(*state, 0, lbl_803E30E0);
-    }
-    if (((GameObject*)obj)->anim.seqId == 0x869)
-    {
-        rnd = randomGetRange(0, 1);
-        spawnExplosion(obj, (f32)(int)randomGetRange(0x32, 0x3c), 1, 1, 0, rnd, 0, 1, 0);
-    }
-    else
-    {
-        for (i = 0; i < 0x19; i++)
-        {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x715, NULL, 1, -1, &i);
-        }
-        Sfx_PlayFromObject(obj, 0x279);
-    }
-}
+void kaldachompspit_burst(int obj);
 
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
@@ -590,54 +428,7 @@ extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern f32 lbl_803E3108;
 extern f32 lbl_803E310C;
 
-void kaldachompspit_init(int obj)
-{
-    extern void Sfx_PlayFromObject(int obj, int sfxId); /* #57 */
-    int* extra;
-
-    extra = *(int**)&((GameObject*)obj)->extra;
-    ((GameObject*)obj)->unkF4 = 400;
-    ObjHits_DisableObject(obj);
-    ((GameObject*)obj)->anim.alpha = 0xff;
-    Sfx_PlayFromObject(obj, 0x278);
-    ((GameObject*)obj)->objectFlags |= 0x2000;
-    if (*(void**)extra == NULL)
-    {
-        *extra = (int)objCreateLight(obj, 1);
-        if (*(void**)extra != NULL)
-        {
-            modelLightStruct_setLightKind(*extra, 2);
-        }
-    }
-    if (*(void**)extra != NULL)
-    {
-        f32 k = lbl_803E30F8;
-        modelLightStruct_setPosition(*extra, k, k, k);
-        if (((GameObject*)obj)->anim.seqId == 0x869)
-        {
-            modelLightStruct_setDiffuseColor(*extra, 0xff, 0xc0, 0, 0xff);
-            modelLightStruct_setSpecularColor(*extra, 0xff, 0xc0, 0, 0xff);
-            modelLightStruct_setupGlow(*extra, 0, 0xff, 0xc0, 0, 0x7f,
-                                       lbl_803E3108 * (lbl_803E310C * ((GameObject*)obj)->anim.rootMotionScale));
-            modelLightStruct_setDiffuseTargetColor(*extra, 0xff, 0xd2, 0, 0xff);
-        }
-        else
-        {
-            modelLightStruct_setDiffuseColor(*extra, 0, 0xff, 0, 0xff);
-            modelLightStruct_setSpecularColor(*extra, 0, 0xff, 0, 0xff);
-            modelLightStruct_setupGlow(*extra, 0, 0, 0xff, 0, 0x28,
-                                       lbl_803E310C * ((GameObject*)obj)->anim.rootMotionScale);
-            modelLightStruct_setDiffuseTargetColor(*extra, 0, 0xff, 0, 0xff);
-        }
-        {
-            int a = (int)(lbl_803E310C * ((GameObject*)obj)->anim.rootMotionScale);
-            modelLightStruct_setDistanceAttenuation(*extra, (f32)a, (f32)(a + 0x28));
-        }
-        lightSetField4D(*extra, 1);
-        modelLightStruct_setEnabled(*extra, 1, lbl_803E30E0);
-        modelLightStruct_startColorFade(*extra, 1, 3);
-    }
-}
+void kaldachompspit_init(int obj);
 
 
 #pragma dont_inline on
@@ -676,13 +467,9 @@ void fn_8016A660(int obj);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void kaldachompspit_release(void)
-{
-}
+void kaldachompspit_release(void);
 
-void kaldachompspit_initialise(void)
-{
-}
+void kaldachompspit_initialise(void);
 
 
 

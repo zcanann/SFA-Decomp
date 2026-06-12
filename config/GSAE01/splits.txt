@@ -1045,9 +1045,11 @@ main/dll/dll_00D5_kaldachom.c:
 	.text       start:0x8016821C end:0x80169360
 	.data       start:0x80320418 end:0x80320458
 
-main/dll/wallanimator.c:
-	.text       start:0x80169360 end:0x80169EF4
-	.data       start:0x80320458 end:0x80320490
+main/dll/dll_00D6_kaldachomme.c:
+	.text       start:0x80169360 end:0x801696D4
+
+main/dll/dll_00D7_kaldachomsp.c:
+	.text       start:0x801696D4 end:0x80169EF4
 
 main/dll/dll_00D8_pinponspike.c:
 	.text       start:0x80169EF4 end:0x8016A3C8
