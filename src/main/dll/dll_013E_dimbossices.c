@@ -1,0 +1,876 @@
+/* === moved from main/dll/MMP/mmp_levelcontrol.c [801948C0-80195008) (TU re-split, docs/boundary_audit.md) === */
+#include "main/effect_interfaces.h"
+#include "main/game_object.h"
+
+
+
+
+
+
+
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 randomGetRange(int min, int max);
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern void* fn_800606DC(int* obj, int idx);
+extern void* fn_800606FC(int* obj, int idx);
+extern void* fn_8006070C(int* obj, int idx);
+extern void mm_free(void* ptr);
+extern void DCStoreRange(void* addr, u32 nBytes);
+extern int return0_80060B90(void);
+extern void* Shader_getLayer(void* shader, int idx);
+
+extern EffectInterface** gPartfxInterface;
+extern f32 lbl_803E4000;
+extern f32 lbl_803E4008;
+
+/*
+ * --INFO--
+ *
+ * Function: wallanimator_setScale
+ * EN v1.0 Address: 0x8019443C
+ * EN v1.0 Size: 264b
+ * EN v1.1 Address: 0x80194688
+ * EN v1.1 Size: 332b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_80194544
+ * EN v1.0 Address: 0x80194544
+ * EN v1.0 Size: 184b
+ * EN v1.1 Address: 0x801947D4
+ * EN v1.1 Size: 208b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: objFn_801948c0
+ * EN v1.0 Address: 0x801948C0
+ * EN v1.0 Size: 164b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+f32 objFn_801948c0(u8* obj, u8 coord);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_80194a70
+ * EN v1.0 Address: 0x80194A70
+ * EN v1.0 Size: 160b
+ * EN v1.1 Address: 0x80194E3C
+ * EN v1.1 Size: 164b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_80194b10
+ * EN v1.0 Address: 0x80194B10
+ * EN v1.0 Size: 512b
+ * EN v1.1 Address: 0x80194EE0
+ * EN v1.1 Size: 504b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+typedef struct MapBlockHdr
+{
+    u16 start;
+    u16 pad1[2];
+    s16 posA;
+    s16 posB;
+} MapBlockHdr;
+
+typedef struct VertexS16
+{
+    s16 x;
+    s16 y;
+    s16 z;
+} VertexS16;
+
+typedef struct EdgeVerts
+{
+    u8 pad[6];
+    s16 a;
+    s16 b;
+    s16 c;
+    s16 d;
+    s16 e;
+    s16 f;
+} EdgeVerts;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80194964(int obj, int state, int block);
+
+void fn_80194C40(undefined4 def, int state, int block);
+
+/*
+ * --INFO--
+ *
+ * Function: wallanimator_getExtraSize
+ * EN v1.0 Address: 0x8019469C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+/*
+ * --INFO--
+ *
+ * Function: xyzanimator_getExtraSize
+ * EN v1.0 Address: 0x80194B5C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int xyzanimator_getExtraSize(void);
+
+void xyzanimator_free(int obj, int param_2);
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E3FF8;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E4004;
+
+
+void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+
+
+
+/* segment pragma-stack balance (re-split): */
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+
+#include "main/map_block.h"
+#include "main/dll/MMP/MMP_asteroid.h"
+#include "main/obj_placement.h"
+#include "main/effect_interfaces.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/dll/path_control_interface.h"
+#include "main/game_object.h"
+
+typedef struct TexframeanimatorPlacement
+{
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    s16 unk24;
+    u8 pad26[0x3C - 0x26];
+    u8 unk3C;
+    u8 pad3D[0x3E - 0x3D];
+    s16 unk3E;
+} TexframeanimatorPlacement;
+
+
+typedef struct ExplodeanimatorState
+{
+    u8 pad0[0x2 - 0x0];
+    u8 unk2;
+    u8 pad3[0x4 - 0x3];
+} ExplodeanimatorState;
+
+
+typedef struct DimbossicesmashPlacement
+{
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    s16 unk24;
+    s16 unk26;
+    s16 unk28;
+    s16 unk2A;
+    s16 unk2C;
+    s16 unk2E;
+    s16 unk30;
+    s16 unk32;
+    s16 unk34;
+    s16 unk36;
+    u16 unk38;
+    u16 unk3A;
+    u8 unk3C;
+    u8 pad3D[0x3E - 0x3D];
+    s16 unk3E;
+    s16 unk40;
+    s16 unk42;
+    s16 unk44;
+    s16 unk46;
+} DimbossicesmashPlacement;
+
+
+typedef struct FogcontrolPlacement
+{
+    u8 pad0[0x18 - 0x0];
+    s16 enableGameBit;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    s16 unk24;
+    s16 unk26;
+    s16 unk28;
+    s16 unk2A;
+    s16 unk2C;
+    s16 unk2E;
+    s16 unk30;
+    s16 unk32;
+    s16 unk34;
+    s16 unk36;
+    u16 unk38;
+    u16 unk3A;
+    u8 unk3C;
+    u8 pad3D[0x3E - 0x3D];
+    s16 unk3E;
+    s16 unk40;
+    s16 unk42;
+    s16 unk44;
+    s16 unk46;
+} FogcontrolPlacement;
+
+
+typedef struct ExplodeanimatorPlacement
+{
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    s16 unk24;
+    u8 pad26[0x28 - 0x26];
+    s16 unk28;
+    s16 unk2A;
+    u8 pad2C[0x2E - 0x2C];
+    s16 unk2E;
+    s16 unk30;
+    s16 unk32;
+    s16 unk34;
+    u8 pad36[0x38 - 0x36];
+} ExplodeanimatorPlacement;
+
+
+
+
+/*
+ * --INFO--
+ *
+ * Function: xyzanimator_update
+ * EN v1.0 Address: 0x80195008
+ * EN v1.0 Size: 164b
+ * EN v1.1 Address: 0x801950E0
+ * EN v1.1 Size: 172b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern int mmAlloc(int size, int pool, int tag);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj);
+extern f32 timeDelta;
+extern f32 lbl_803E4018;
+
+void xyzanimator_update(int obj);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801950ac
+ * EN v1.0 Address: 0x801950AC
+ * EN v1.0 Size: 40b
+ * EN v1.1 Address: 0x8019518C
+ * EN v1.1 Size: 48b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801954f0
+ * EN v1.0 Address: 0x801954F0
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80195584
+ * EN v1.1 Size: 4624b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801954f4
+ * EN v1.0 Address: 0x801954F4
+ * EN v1.0 Size: 176b
+ * EN v1.1 Address: 0x80196794
+ * EN v1.1 Size: 192b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_80195b40
+ * EN v1.0 Address: 0x80195B40
+ * EN v1.0 Size: 52b
+ * EN v1.1 Address: 0x80196EA8
+ * EN v1.1 Size: 48b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_80195b74
+ * EN v1.0 Address: 0x80195B74
+ * EN v1.0 Size: 40b
+ * EN v1.1 Address: 0x80196ED8
+ * EN v1.1 Size: 52b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
+void explodeanimator_render(void);
+
+void explodeanimator_hitDetect(void);
+
+void explodeanimator_release(void);
+
+void explodeanimator_initialise(void);
+
+extern f32 lbl_803E4020;
+
+void explodeanimator_update(int* obj);
+
+void dimbossicesmash_hitDetect(void)
+{
+}
+
+void dimbossicesmash_release(void)
+{
+}
+
+void dimbossicesmash_initialise(void)
+{
+}
+
+void texframeanimator_free(void);
+
+void texframeanimator_hitDetect(void);
+
+void texframeanimator_release(void);
+
+void texframeanimator_initialise(void);
+
+void fogcontrol_hitDetect(void);
+
+typedef struct TexFrameAnimatorState
+{
+    int textureSlot;
+    u8 speed;
+    u8 pad5[3];
+    int endFrame;
+    int wrapFrame;
+    int frame;
+    u8 flag80 : 1;
+    u8 done : 1;
+    u8 active : 1;
+    u8 flagLow : 5;
+} TexFrameAnimatorState;
+
+extern u8 framesThisStep;
+extern char sTexFrameAnimDebugFormat[];
+extern int* return0_80056694(int* block, int textureSlot);
+extern int* mapTextureOverrideGetEntry(int idx);
+extern void fn_80137948(char* fmt, ...);
+
+void texframeanimator_update(int* obj);
+
+void texframeanimator_init(int* obj, u8* params);
+
+/* 8b "li r3, N; blr" returners. */
+int explodeanimator_getExtraSize(void);
+int explodeanimator_getObjectTypeId(void);
+int dimbossicesmash_getExtraSize(void) { return 0x2a0; }
+int texframeanimator_getExtraSize(void);
+int texframeanimator_getObjectTypeId(void);
+int fogcontrol_getExtraSize(void);
+int fogcontrol_getObjectTypeId(void);
+int lightning_getExtraSize(void);
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E4048;
+extern f32 lbl_803E4060;
+
+void dimbossicesmash_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E4048);
+}
+
+void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+void explodeanimator_free(int x);
+
+/* state encode: ((obj->_X)->_Y << shift) | const. */
+u32 dimbossicesmash_getObjectTypeId(int* obj) { return (*((u8*)((int**)obj)[0x4c / 4] + 0x18) << 11) | 0x400; }
+
+/* Drift-recovery: add new fns with v1.0 names. */
+extern void disableHeavyFog(void);
+
+
+void dimbossicesmash_free(int* obj)
+{
+    (*gExpgfxInterface)->freeSource((u32)obj);
+}
+
+void fogcontrol_free(int* obj);
+
+extern f32 lbl_803E4070;
+extern f32 lbl_803E4074;
+extern f32 lbl_803E4078;
+extern f32 lbl_803E407C;
+extern void enableHeavyFog(u8 mode, f32 a, f32 b, f32 c, f32 d, f32 e);
+
+typedef struct FogControlState
+{
+    f32 blend;
+    u8 on : 1;
+    u8 full : 1;
+    u8 rest : 6;
+} FogControlState;
+
+
+void fogcontrol_init(u8* obj, u8* params);
+
+void explodeanimator_init(int* obj, int* def);
+
+
+void xyzanimator_init(int obj);
+
+extern f32 sqrtf(f32);
+extern void Obj_FreeObject(u8 * obj);
+extern u8 lbl_803DDB00;
+extern f32 lbl_803E4034;
+extern f32 lbl_803E404C;
+extern f32 lbl_803E4050;
+extern f32 lbl_803E4054;
+extern f32 lbl_803E4058;
+extern f32 lbl_803E405C;
+
+/* EN v1.0 0x80196990  size: 1752b  dimbossicesmash_update: gate on the
+ * trigger gamebit, integrate velocity/rotation with per-axis gravity
+ * clamps, run the path-control hooks with surface bounce, fade alpha over
+ * the lifetime window, and emit the two trail particles. */
+void dimbossicesmash_update(u8* obj)
+{
+    u8* state = ((GameObject*)obj)->extra;
+    u8 flags = state[0x29e];
+    u8* setup;
+    u32 t;
+    int a;
+    s16 cnt;
+    int t1;
+    f32 nx, ny, nz;
+    f32 len, inv, dot;
+    f32 fy, fz, ff;
+    f32 dx, dy, dz, k;
+    int i;
+    f32 stk[3];
+
+    if ((flags & 2) != 0)
+    {
+        if ((((GameObject*)obj)->anim.flags & 0x2000U) != 0)
+        {
+            Obj_FreeObject(obj);
+        }
+        ((GameObject*)obj)->anim.alpha = 0;
+    }
+    else
+    {
+        setup = *(u8**)&((GameObject*)obj)->anim.placementData;
+        if ((flags & 1) == 0)
+        {
+            if (((ObjAnimComponent*)obj)->bankIndex == 0)
+            {
+                t = GameBit_Get(((DimbossicesmashPlacement*)setup)->unk40);
+                if (t != 0 || ((DimbossicesmashPlacement*)setup)->unk40 == -1)
+                {
+                    state[0x29e] = state[0x29e] | 1;
+                    GameBit_Set(((DimbossicesmashPlacement*)setup)->unk3E, 1);
+                    lbl_803DDB00 = 1;
+                }
+            }
+            else if (lbl_803DDB00 != 0)
+            {
+                state[0x29e] = flags | 1;
+            }
+            ((GameObject*)obj)->anim.alpha = 0;
+        }
+        else
+        {
+            ((GameObject*)obj)->anim.alpha = 0xff;
+            ((DimBossIceSmashState*)state)->unk29C += framesThisStep;
+            cnt = ((DimBossIceSmashState*)state)->unk29C;
+            if (((DimbossicesmashPlacement*)setup)->unk38 <= cnt)
+            {
+                state[0x29e] = state[0x29e] | 2;
+            }
+            if (((DimBossIceSmashState*)state)->unk29C > ((DimbossicesmashPlacement*)setup)->unk3A &&
+                (t1 = ((DimbossicesmashPlacement*)setup)->unk38 - ((DimbossicesmashPlacement*)setup)->unk3A) != 0)
+            {
+                a = (int)(lbl_803E404C *
+                    (lbl_803E4048 -
+                        (f32)(((DimBossIceSmashState*)state)->unk29C - ((DimbossicesmashPlacement*)setup)->unk3A) / (
+                            f32)t1));
+                if (a > 0xff)
+                {
+                    a = 0xff;
+                }
+                else if (a < 0)
+                {
+                    a = 0;
+                }
+                ((GameObject*)obj)->anim.alpha = (u8)a;
+            }
+            ((GameObject*)obj)->anim.velocityX = timeDelta * ((DimBossIceSmashState*)state)->unk290 + ((GameObject*)obj)
+                ->anim.velocityX;
+            ((GameObject*)obj)->anim.velocityY = timeDelta * ((DimBossIceSmashState*)state)->unk294 + ((GameObject*)obj)
+                ->anim.velocityY;
+            ((GameObject*)obj)->anim.velocityZ = timeDelta * ((DimBossIceSmashState*)state)->unk298 + ((GameObject*)obj)
+                ->anim.velocityZ;
+            ((DimBossIceSmashState*)state)->unk278 =
+                timeDelta * ((DimBossIceSmashState*)state)->unk284 + ((DimBossIceSmashState*)state)->unk278;
+            ((DimBossIceSmashState*)state)->unk27C =
+                timeDelta * ((DimBossIceSmashState*)state)->unk288 + ((DimBossIceSmashState*)state)->unk27C;
+            ((DimBossIceSmashState*)state)->unk280 =
+                timeDelta * ((DimBossIceSmashState*)state)->unk28C + ((DimBossIceSmashState*)state)->unk280;
+            if ((state[0x29f] & 1) != 0)
+            {
+                if (((GameObject*)obj)->anim.velocityX < *(f32*)&lbl_803E4034)
+                {
+                    ((GameObject*)obj)->anim.velocityX = lbl_803E4034;
+                }
+            }
+            else if (((GameObject*)obj)->anim.velocityX > *(f32*)&lbl_803E4034)
+            {
+                ((GameObject*)obj)->anim.velocityX = lbl_803E4034;
+            }
+            if ((state[0x29f] & 2) != 0)
+            {
+                if (((GameObject*)obj)->anim.velocityZ < *(f32*)&lbl_803E4034)
+                {
+                    ((GameObject*)obj)->anim.velocityZ = lbl_803E4034;
+                }
+            }
+            else if (((GameObject*)obj)->anim.velocityZ > *(f32*)&lbl_803E4034)
+            {
+                ((GameObject*)obj)->anim.velocityZ = lbl_803E4034;
+            }
+            if ((state[0x29f] & 4) != 0)
+            {
+                if (((DimBossIceSmashState*)state)->unk278 < *(f32*)&lbl_803E4034)
+                {
+                    ((DimBossIceSmashState*)state)->unk278 = lbl_803E4034;
+                }
+            }
+            else if (((DimBossIceSmashState*)state)->unk278 > *(f32*)&lbl_803E4034)
+            {
+                ((DimBossIceSmashState*)state)->unk278 = lbl_803E4034;
+            }
+            if ((state[0x29f] & 8) != 0)
+            {
+                if (((DimBossIceSmashState*)state)->unk27C < *(f32*)&lbl_803E4034)
+                {
+                    ((DimBossIceSmashState*)state)->unk27C = lbl_803E4034;
+                }
+            }
+            else if (((DimBossIceSmashState*)state)->unk27C > *(f32*)&lbl_803E4034)
+            {
+                ((DimBossIceSmashState*)state)->unk27C = lbl_803E4034;
+            }
+            if ((state[0x29f] & 0x10) != 0)
+            {
+                if (((DimBossIceSmashState*)state)->unk280 < *(f32*)&lbl_803E4034)
+                {
+                    ((DimBossIceSmashState*)state)->unk280 = lbl_803E4034;
+                }
+            }
+            else if (((DimBossIceSmashState*)state)->unk280 > *(f32*)&lbl_803E4034)
+            {
+                ((DimBossIceSmashState*)state)->unk280 = lbl_803E4034;
+            }
+            ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->
+                anim.localPosX;
+            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->
+                anim.localPosY;
+            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->
+                anim.localPosZ;
+            ((GameObject*)obj)->anim.rotX = ((DimBossIceSmashState*)state)->unk278 * timeDelta + (f32)((GameObject*)obj)
+                ->anim.rotX;
+            ((GameObject*)obj)->anim.rotY = ((DimBossIceSmashState*)state)->unk27C * timeDelta + (f32)((GameObject*)obj)
+                ->anim.rotY;
+            ((GameObject*)obj)->anim.rotZ = ((DimBossIceSmashState*)state)->unk280 * timeDelta + (f32)((GameObject*)obj)
+                ->anim.rotZ;
+            if ((((DimbossicesmashPlacement*)setup)->unk3C & 2) != 0)
+            {
+                (*gPathControlInterface)->update(obj, state, timeDelta);
+                (*gPathControlInterface)->apply(obj, state);
+                (*gPathControlInterface)->advance(obj, state, timeDelta);
+                if (((DimBossIceSmashState*)state)->unk261 != 0)
+                {
+                    nx = -((GameObject*)obj)->anim.velocityX;
+                    ny = -((GameObject*)obj)->anim.velocityY;
+                    nz = -((GameObject*)obj)->anim.velocityZ;
+                    len = sqrtf(nz * nz + (nx * nx + ny * ny));
+                    if (lbl_803E4034 != len)
+                    {
+                        inv = lbl_803E4048 / len;
+                        nx = nx * inv;
+                        ny = ny * inv;
+                        nz = nz * inv;
+                    }
+                    fy = ((DimBossIceSmashState*)state)->unk6C;
+                    fz = ((DimBossIceSmashState*)state)->unk70;
+                    dot = lbl_803E4050 *
+                        (nz * fz + (nx * ((DimBossIceSmashState*)state)->unk68 + ny * fy));
+                    ((GameObject*)obj)->anim.velocityX = ((DimBossIceSmashState*)state)->unk68 * dot;
+                    ((GameObject*)obj)->anim.velocityY = fy * dot;
+                    ((GameObject*)obj)->anim.velocityZ = fz * dot;
+                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX - nx;
+                    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - ny;
+                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ - nz;
+                    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * len;
+                    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * lbl_803E4054;
+                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * len;
+                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * len;
+                    ff = lbl_803E4058;
+                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * ff;
+                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * ff;
+                }
+            }
+            if ((((DimbossicesmashPlacement*)setup)->unk3C & 4) != 0 && ((GameObject*)obj)->anim.alpha == 0xff)
+            {
+                dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
+                dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
+                dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ;
+                i = 0;
+                do
+                {
+                    k = (f32)i * lbl_803E405C;
+                    stk[0] = dx * k + ((GameObject*)obj)->anim.previousLocalPosX;
+                    stk[1] = dy * k + ((GameObject*)obj)->anim.previousLocalPosY;
+                    stk[2] = dz * k + ((GameObject*)obj)->anim.previousLocalPosZ;
+                    (*gPartfxInterface)->spawnObject(obj, 1000, stk, 0x200001, -1, NULL);
+                    i++;
+                }
+                while (i < 2);
+            }
+        }
+    }
+}
+
+extern f32 lbl_803E4030;
+extern f32 lbl_803E4038;
+extern f32 lbl_803E403C;
+extern u8 lbl_80322368[0xC];
+extern u8 lbl_803DBDF8[8];
+
+/* EN v1.0 0x80196520  size: 1008b  fn_80196520: seed the icesmash launch
+ * state from the setup record: spawn position/rotation, launch velocity
+ * (optionally homing on the target point), rotation velocities and the
+ * gravity/clamp direction flags. */
+void fn_80196520(u8* obj, u8* state, u8* setup)
+{
+    f32 vx, vy, vz;
+    f32 spd, len;
+
+    ((GameObject*)obj)->anim.localPosX = ((DimBossIceSmashState*)state)->unk26C * ((GameObject*)obj)->anim.
+        rootMotionScale + ((ObjPlacement*)setup)->posX;
+    ((GameObject*)obj)->anim.localPosY = ((DimBossIceSmashState*)state)->unk270 * ((GameObject*)obj)->anim.
+        rootMotionScale + ((ObjPlacement*)setup)->posY;
+    ((GameObject*)obj)->anim.localPosZ = ((DimBossIceSmashState*)state)->unk274 * ((GameObject*)obj)->anim.
+        rootMotionScale + ((ObjPlacement*)setup)->posZ;
+    ((GameObject*)obj)->anim.rotX = *(s16*)(setup + 0x1a);
+    ((GameObject*)obj)->anim.rotY = *(s16*)(setup + 0x1c);
+    ((GameObject*)obj)->anim.rotZ = *(s16*)(setup + 0x1e);
+    if ((*(u8*)(setup + 0x3c) & 1) != 0)
+    {
+        spd = (f32) * (s16*)(setup + 0x20) / lbl_803E4030;
+        vx = ((GameObject*)obj)->anim.localPosX - (f32) * (s16*)(setup + 0x42);
+        vy = ((GameObject*)obj)->anim.localPosY - (f32) * (s16*)(setup + 0x44);
+        vz = ((GameObject*)obj)->anim.localPosZ - (f32) * (s16*)(setup + 0x46);
+        len = sqrtf(vz * vz + (vx * vx + vy * vy));
+        if (lbl_803E4034 != len)
+        {
+            vx = vx / len;
+            vy = vy / len;
+            vz = vz / len;
+        }
+        ((GameObject*)obj)->anim.velocityX = spd * vx;
+        ((GameObject*)obj)->anim.velocityY = spd * vy;
+        ((GameObject*)obj)->anim.velocityZ = spd * vz;
+    }
+    else
+    {
+        ((GameObject*)obj)->anim.velocityX = (f32) * (s16*)(setup + 0x20) / (spd = lbl_803E4030);
+        ((GameObject*)obj)->anim.velocityY = (f32) * (s16*)(setup + 0x22) / spd;
+        ((GameObject*)obj)->anim.velocityZ = (f32) * (s16*)(setup + 0x24) / spd;
+    }
+    ((DimBossIceSmashState*)state)->unk278 = (f32) * (s16*)(setup + 0x2c);
+    ((DimBossIceSmashState*)state)->unk27C = (f32) * (s16*)(setup + 0x2e);
+    ((DimBossIceSmashState*)state)->unk280 = (f32) * (s16*)(setup + 0x30);
+    if (((GameObject*)obj)->anim.velocityX > lbl_803E4034)
+    {
+        state[0x29f] = state[0x29f] | 1;
+    }
+    if (((GameObject*)obj)->anim.velocityZ > lbl_803E4034)
+    {
+        state[0x29f] = state[0x29f] | 2;
+    }
+    if (((DimBossIceSmashState*)state)->unk278 > lbl_803E4034)
+    {
+        state[0x29f] = state[0x29f] | 4;
+    }
+    if (((DimBossIceSmashState*)state)->unk27C > lbl_803E4034)
+    {
+        state[0x29f] = state[0x29f] | 8;
+    }
+    if (((DimBossIceSmashState*)state)->unk280 > lbl_803E4034)
+    {
+        state[0x29f] = state[0x29f] | 0x10;
+    }
+    ((DimBossIceSmashState*)state)->unk284 = (f32) * (s16*)(setup + 0x32) / (spd = lbl_803E4038);
+    ((DimBossIceSmashState*)state)->unk288 = (f32) * (s16*)(setup + 0x34) / spd;
+    ((DimBossIceSmashState*)state)->unk28C = (f32) * (s16*)(setup + 0x36) / spd;
+    ((DimBossIceSmashState*)state)->unk290 = (f32) * (s16*)(setup + 0x26) / (spd = lbl_803E403C);
+    ((DimBossIceSmashState*)state)->unk294 = (f32) * (s16*)(setup + 0x28) / spd;
+    ((DimBossIceSmashState*)state)->unk298 = (f32) * (s16*)(setup + 0x2a) / spd;
+    ((DimBossIceSmashState*)state)->unk29C = 0;
+}
+
+/* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
+void dimbossicesmash_init(u8* obj, u8* params)
+{
+    u8* state;
+    f32 fz;
+    u8 t;
+    u8 buf[12];
+
+    buf[0] = 5;
+    ((ObjAnimComponent*)obj)->bankIndex = params[0x18];
+    fz = lbl_803E4034;
+    state = ((GameObject*)obj)->extra;
+    ((DimBossIceSmashState*)state)->unk26C = lbl_803E4034;
+    ((DimBossIceSmashState*)state)->unk270 = fz;
+    ((DimBossIceSmashState*)state)->unk274 = fz;
+    fn_80196520(obj, state, params);
+    if (GameBit_Get(*(s16*)(params + 0x3e)) == 0)
+    {
+        t = 0;
+    }
+    else
+    {
+        t = 2;
+    }
+    state[0x29e] = t;
+    lbl_803DDB00 = 0;
+    if ((*(u8*)(params + 0x3c) & 2) != 0)
+    {
+        (*gPathControlInterface)->init(state, 0, 0x40002, 1);
+        (*gPathControlInterface)->setup(state, 1, lbl_80322368, lbl_803DBDF8, buf);
+        (*gPathControlInterface)->attachObject(obj, state);
+    }
+}
+
+extern f32 lbl_803E4068;
+extern f32 lbl_803E406C;
+
+/* EN v1.0 0x80197474  size: 648b  fogcontrol_update: ramp the fog blend
+ * toward the gamebit-selected target and feed the heavy fog params. */
+void fogcontrol_update(int obj);

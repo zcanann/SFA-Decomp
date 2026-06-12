@@ -1081,85 +1081,33 @@ done_lbl:
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void explodeanimator_render(void)
-{
-}
+void explodeanimator_render(void);
 
-void explodeanimator_hitDetect(void)
-{
-}
+void explodeanimator_hitDetect(void);
 
-void explodeanimator_release(void)
-{
-}
+void explodeanimator_release(void);
 
-void explodeanimator_initialise(void)
-{
-}
+void explodeanimator_initialise(void);
 
 extern f32 lbl_803E4020;
 
-void explodeanimator_update(int* obj)
-{
-    u8* sub;
-    u8* def;
-    int i;
-    f32 buf[6];
-    f32 vel[2];
+void explodeanimator_update(int* obj);
 
-    sub = ((GameObject*)obj)->extra;
-    if ((sub[2] & 1) != 0) return;
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (GameBit_Get(((ExplodeanimatorPlacement*)def)->unk34) == 0) return;
-    GameBit_Set(((ExplodeanimatorPlacement*)def)->unk32, 1);
-    sub[2] = (u8)(sub[2] | 1);
-    for (i = 0; i < def[0x2c]; i++)
-    {
-        vel[0] = (f32)(s32)
-        randomGetRange(((ExplodeanimatorPlacement*)def)->unk2E, ((ExplodeanimatorPlacement*)def)->unk28) * lbl_803E4020;
-        vel[1] = (f32)(s32)
-        randomGetRange(((ExplodeanimatorPlacement*)def)->unk30, ((ExplodeanimatorPlacement*)def)->unk2A) * lbl_803E4020;
-        buf[3] = (f32)(s32)
-        randomGetRange(((ExplodeanimatorPlacement*)def)->unk18, ((ExplodeanimatorPlacement*)def)->unk1E);
-        buf[4] = (f32)(s32)
-        randomGetRange(((ExplodeanimatorPlacement*)def)->unk1A, ((ExplodeanimatorPlacement*)def)->unk20);
-        buf[5] = (f32)(s32)
-        randomGetRange(((ExplodeanimatorPlacement*)def)->unk1C, ((ExplodeanimatorPlacement*)def)->unk22);
-        (*gPartfxInterface)->spawnObject(obj, ((ExplodeanimatorPlacement*)def)->unk24, buf, 2, -1, vel);
-    }
-}
+void dimbossicesmash_hitDetect(void);
 
-void dimbossicesmash_hitDetect(void)
-{
-}
+void dimbossicesmash_release(void);
 
-void dimbossicesmash_release(void)
-{
-}
+void dimbossicesmash_initialise(void);
 
-void dimbossicesmash_initialise(void)
-{
-}
+void texframeanimator_free(void);
 
-void texframeanimator_free(void)
-{
-}
+void texframeanimator_hitDetect(void);
 
-void texframeanimator_hitDetect(void)
-{
-}
+void texframeanimator_release(void);
 
-void texframeanimator_release(void)
-{
-}
+void texframeanimator_initialise(void);
 
-void texframeanimator_initialise(void)
-{
-}
-
-void fogcontrol_hitDetect(void)
-{
-}
+void fogcontrol_hitDetect(void);
 
 typedef struct TexFrameAnimatorState
 {
@@ -1181,133 +1129,41 @@ extern int* return0_80056694(int* block, int textureSlot);
 extern int* mapTextureOverrideGetEntry(int idx);
 extern void fn_80137948(char* fmt, ...);
 
-void texframeanimator_update(int* obj)
-{
-    extern int* mapGetBlock(int idx); /* #57 */
-    extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z); /* #57 */
-    TexFrameAnimatorState* state;
-    u8* params;
-    int* block;
-    int* textureHit;
-    int* textureEntry;
+void texframeanimator_update(int* obj);
 
-    state = ((GameObject*)obj)->extra;
-    params = *(u8**)&((GameObject*)obj)->anim.placementData;
-
-    if ((state->active == 0) &&
-        ((u32)GameBit_Get(((TexframeanimatorPlacement*)params)->unk20) != 0) &&
-        (state->done == 0))
-    {
-        state->active = 1;
-        state->frame = 0;
-    }
-
-    if ((state->active != 0) && (state->textureSlot != 0))
-    {
-        block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX,
-                                                ((GameObject*)obj)->anim.localPosY,
-                                                ((GameObject*)obj)->anim.localPosZ));
-        if ((block != NULL) && ((((MapBlockData*)block)->unk4 & 8) != 0))
-        {
-            textureHit = return0_80056694(block, state->textureSlot);
-            if (textureHit != NULL)
-            {
-                textureEntry = mapTextureOverrideGetEntry(*(s16*)textureHit);
-                state->frame += state->speed * framesThisStep;
-                fn_80137948(sTexFrameAnimDebugFormat, state->frame);
-                if (state->frame < 0)
-                {
-                    state->frame = 0;
-                }
-                else if (state->frame > state->endFrame)
-                {
-                    if (((TexframeanimatorPlacement*)params)->unk1E != -1)
-                    {
-                        GameBit_Set(((TexframeanimatorPlacement*)params)->unk1E, 1);
-                        state->active = 0;
-                        state->done = 1;
-                        state->frame = state->endFrame;
-                    }
-                    else
-                    {
-                        state->frame = state->wrapFrame;
-                    }
-                }
-                textureEntry[1] = state->frame;
-            }
-        }
-    }
-}
-
-void texframeanimator_init(int* obj, u8* params)
-{
-    TexFrameAnimatorState* state;
-    u8 done;
-
-    state = ((GameObject*)obj)->extra;
-    state->textureSlot = (s8)params[0x19];
-    state->endFrame = *(s16*)(params + 0x1a) << 8;
-    state->speed = (u8) * (s16*)(params + 0x1c);
-    state->wrapFrame = (s8)params[0x18] << 8;
-    done = (u8)GameBit_Get(*(s16*)(params + 0x1e));
-    if ((state->done = done) != 0)
-    {
-        state->frame = state->endFrame;
-        state->active = 1;
-    }
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
-}
+void texframeanimator_init(int* obj, u8* params);
 
 /* 8b "li r3, N; blr" returners. */
-int explodeanimator_getExtraSize(void) { return 0x4; }
-int explodeanimator_getObjectTypeId(void) { return 0x0; }
-int dimbossicesmash_getExtraSize(void) { return 0x2a0; }
-int texframeanimator_getExtraSize(void) { return 0x18; }
-int texframeanimator_getObjectTypeId(void) { return 0x0; }
-int fogcontrol_getExtraSize(void) { return 0x8; }
-int fogcontrol_getObjectTypeId(void) { return 0x0; }
+int explodeanimator_getExtraSize(void);
+int explodeanimator_getObjectTypeId(void);
+int dimbossicesmash_getExtraSize(void);
+int texframeanimator_getExtraSize(void);
+int texframeanimator_getObjectTypeId(void);
+int fogcontrol_getExtraSize(void);
+int fogcontrol_getObjectTypeId(void);
 int lightning_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4048;
 extern f32 lbl_803E4060;
 
-void dimbossicesmash_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E4048);
-}
+void dimbossicesmash_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E4060);
-}
+void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void explodeanimator_free(int x) { ObjGroup_RemoveObject(x, 0x1a); }
+void explodeanimator_free(int x);
 
 /* state encode: ((obj->_X)->_Y << shift) | const. */
-u32 dimbossicesmash_getObjectTypeId(int* obj) { return (*((u8*)((int**)obj)[0x4c / 4] + 0x18) << 11) | 0x400; }
+u32 dimbossicesmash_getObjectTypeId(int* obj);
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern void disableHeavyFog(void);
 
 
-void dimbossicesmash_free(int* obj)
-{
-    (*gExpgfxInterface)->freeSource((u32)obj);
-}
+void dimbossicesmash_free(int* obj);
 
-void fogcontrol_free(int* obj)
-{
-    u8* state = ((GameObject*)obj)->extra;
-    if (((u32)state[4] >> 7) & 1u)
-    {
-        disableHeavyFog();
-    }
-}
+void fogcontrol_free(int* obj);
 
 extern f32 lbl_803E4070;
 extern f32 lbl_803E4074;
@@ -1324,59 +1180,9 @@ typedef struct FogControlState
 } FogControlState;
 
 
-void fogcontrol_init(u8* obj, u8* params)
-{
-    FogControlState* st;
-    u8 cv;
-    f32 t;
+void fogcontrol_init(u8* obj, u8* params);
 
-    st = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
-    st->on = 0;
-    st->full = 0;
-    st->blend = lbl_803E4070;
-    if ((params[0x1a] & 0x08) != 0)
-    {
-        if (*(s16*)(params + 0x18) == -1)
-        {
-            cv = 1;
-        }
-        else
-        {
-            cv = (u8)GameBit_Get(*(s16*)(params + 0x18));
-        }
-        if (cv != 0)
-        {
-            st->full = 1;
-            st->on = 1;
-            st->blend = lbl_803E4074;
-            t = ((GameObject*)obj)->anim.localPosY +
-            (st->blend * ((f32) * (s16*)(params + 0x1c) - (f32) * (s16*)(params + 0x20)) +
-                (f32) * (s16*)(params + 0x20));
-            enableHeavyFog(params[0x1a] & 1, t,
-                           ((f32) * (s16*)(params + 0x1e) + t) - (f32) * (s16*)(params + 0x1c),
-                           (f32) * (s16*)(params + 0x24),
-                           (f32) * (s16*)(params + 0x22) / lbl_803E4078,
-                           lbl_803E407C);
-        }
-    }
-}
-
-void explodeanimator_init(int* obj, int* def)
-{
-    int* state = ((GameObject*)obj)->extra;
-    int v;
-    if ((u32)GameBit_Get(*(s16*)((char*)def + 50)) != 0u)
-    {
-        v = 1;
-    }
-    else
-    {
-        v = 0;
-    }
-    ((ExplodeanimatorState*)state)->unk2 = (u8)v;
-    ObjGroup_AddObject(obj, 26);
-}
+void explodeanimator_init(int* obj, int* def);
 
 
 void xyzanimator_init(int obj)
@@ -1413,213 +1219,7 @@ extern f32 lbl_803E405C;
  * trigger gamebit, integrate velocity/rotation with per-axis gravity
  * clamps, run the path-control hooks with surface bounce, fade alpha over
  * the lifetime window, and emit the two trail particles. */
-void dimbossicesmash_update(u8* obj)
-{
-    u8* state = ((GameObject*)obj)->extra;
-    u8 flags = state[0x29e];
-    u8* setup;
-    u32 t;
-    int a;
-    s16 cnt;
-    int t1;
-    f32 nx, ny, nz;
-    f32 len, inv, dot;
-    f32 fy, fz, ff;
-    f32 dx, dy, dz, k;
-    int i;
-    f32 stk[3];
-
-    if ((flags & 2) != 0)
-    {
-        if ((((GameObject*)obj)->anim.flags & 0x2000U) != 0)
-        {
-            Obj_FreeObject(obj);
-        }
-        ((GameObject*)obj)->anim.alpha = 0;
-    }
-    else
-    {
-        setup = *(u8**)&((GameObject*)obj)->anim.placementData;
-        if ((flags & 1) == 0)
-        {
-            if (((ObjAnimComponent*)obj)->bankIndex == 0)
-            {
-                t = GameBit_Get(((DimbossicesmashPlacement*)setup)->unk40);
-                if (t != 0 || ((DimbossicesmashPlacement*)setup)->unk40 == -1)
-                {
-                    state[0x29e] = state[0x29e] | 1;
-                    GameBit_Set(((DimbossicesmashPlacement*)setup)->unk3E, 1);
-                    lbl_803DDB00 = 1;
-                }
-            }
-            else if (lbl_803DDB00 != 0)
-            {
-                state[0x29e] = flags | 1;
-            }
-            ((GameObject*)obj)->anim.alpha = 0;
-        }
-        else
-        {
-            ((GameObject*)obj)->anim.alpha = 0xff;
-            ((DimBossIceSmashState*)state)->unk29C += framesThisStep;
-            cnt = ((DimBossIceSmashState*)state)->unk29C;
-            if (((DimbossicesmashPlacement*)setup)->unk38 <= cnt)
-            {
-                state[0x29e] = state[0x29e] | 2;
-            }
-            if (((DimBossIceSmashState*)state)->unk29C > ((DimbossicesmashPlacement*)setup)->unk3A &&
-                (t1 = ((DimbossicesmashPlacement*)setup)->unk38 - ((DimbossicesmashPlacement*)setup)->unk3A) != 0)
-            {
-                a = (int)(lbl_803E404C *
-                    (lbl_803E4048 -
-                        (f32)(((DimBossIceSmashState*)state)->unk29C - ((DimbossicesmashPlacement*)setup)->unk3A) / (
-                            f32)t1));
-                if (a > 0xff)
-                {
-                    a = 0xff;
-                }
-                else if (a < 0)
-                {
-                    a = 0;
-                }
-                ((GameObject*)obj)->anim.alpha = (u8)a;
-            }
-            ((GameObject*)obj)->anim.velocityX = timeDelta * ((DimBossIceSmashState*)state)->unk290 + ((GameObject*)obj)
-                ->anim.velocityX;
-            ((GameObject*)obj)->anim.velocityY = timeDelta * ((DimBossIceSmashState*)state)->unk294 + ((GameObject*)obj)
-                ->anim.velocityY;
-            ((GameObject*)obj)->anim.velocityZ = timeDelta * ((DimBossIceSmashState*)state)->unk298 + ((GameObject*)obj)
-                ->anim.velocityZ;
-            ((DimBossIceSmashState*)state)->unk278 =
-                timeDelta * ((DimBossIceSmashState*)state)->unk284 + ((DimBossIceSmashState*)state)->unk278;
-            ((DimBossIceSmashState*)state)->unk27C =
-                timeDelta * ((DimBossIceSmashState*)state)->unk288 + ((DimBossIceSmashState*)state)->unk27C;
-            ((DimBossIceSmashState*)state)->unk280 =
-                timeDelta * ((DimBossIceSmashState*)state)->unk28C + ((DimBossIceSmashState*)state)->unk280;
-            if ((state[0x29f] & 1) != 0)
-            {
-                if (((GameObject*)obj)->anim.velocityX < *(f32*)&lbl_803E4034)
-                {
-                    ((GameObject*)obj)->anim.velocityX = lbl_803E4034;
-                }
-            }
-            else if (((GameObject*)obj)->anim.velocityX > *(f32*)&lbl_803E4034)
-            {
-                ((GameObject*)obj)->anim.velocityX = lbl_803E4034;
-            }
-            if ((state[0x29f] & 2) != 0)
-            {
-                if (((GameObject*)obj)->anim.velocityZ < *(f32*)&lbl_803E4034)
-                {
-                    ((GameObject*)obj)->anim.velocityZ = lbl_803E4034;
-                }
-            }
-            else if (((GameObject*)obj)->anim.velocityZ > *(f32*)&lbl_803E4034)
-            {
-                ((GameObject*)obj)->anim.velocityZ = lbl_803E4034;
-            }
-            if ((state[0x29f] & 4) != 0)
-            {
-                if (((DimBossIceSmashState*)state)->unk278 < *(f32*)&lbl_803E4034)
-                {
-                    ((DimBossIceSmashState*)state)->unk278 = lbl_803E4034;
-                }
-            }
-            else if (((DimBossIceSmashState*)state)->unk278 > *(f32*)&lbl_803E4034)
-            {
-                ((DimBossIceSmashState*)state)->unk278 = lbl_803E4034;
-            }
-            if ((state[0x29f] & 8) != 0)
-            {
-                if (((DimBossIceSmashState*)state)->unk27C < *(f32*)&lbl_803E4034)
-                {
-                    ((DimBossIceSmashState*)state)->unk27C = lbl_803E4034;
-                }
-            }
-            else if (((DimBossIceSmashState*)state)->unk27C > *(f32*)&lbl_803E4034)
-            {
-                ((DimBossIceSmashState*)state)->unk27C = lbl_803E4034;
-            }
-            if ((state[0x29f] & 0x10) != 0)
-            {
-                if (((DimBossIceSmashState*)state)->unk280 < *(f32*)&lbl_803E4034)
-                {
-                    ((DimBossIceSmashState*)state)->unk280 = lbl_803E4034;
-                }
-            }
-            else if (((DimBossIceSmashState*)state)->unk280 > *(f32*)&lbl_803E4034)
-            {
-                ((DimBossIceSmashState*)state)->unk280 = lbl_803E4034;
-            }
-            ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->
-                anim.localPosX;
-            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->
-                anim.localPosY;
-            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->
-                anim.localPosZ;
-            ((GameObject*)obj)->anim.rotX = ((DimBossIceSmashState*)state)->unk278 * timeDelta + (f32)((GameObject*)obj)
-                ->anim.rotX;
-            ((GameObject*)obj)->anim.rotY = ((DimBossIceSmashState*)state)->unk27C * timeDelta + (f32)((GameObject*)obj)
-                ->anim.rotY;
-            ((GameObject*)obj)->anim.rotZ = ((DimBossIceSmashState*)state)->unk280 * timeDelta + (f32)((GameObject*)obj)
-                ->anim.rotZ;
-            if ((((DimbossicesmashPlacement*)setup)->unk3C & 2) != 0)
-            {
-                (*gPathControlInterface)->update(obj, state, timeDelta);
-                (*gPathControlInterface)->apply(obj, state);
-                (*gPathControlInterface)->advance(obj, state, timeDelta);
-                if (((DimBossIceSmashState*)state)->unk261 != 0)
-                {
-                    nx = -((GameObject*)obj)->anim.velocityX;
-                    ny = -((GameObject*)obj)->anim.velocityY;
-                    nz = -((GameObject*)obj)->anim.velocityZ;
-                    len = sqrtf(nz * nz + (nx * nx + ny * ny));
-                    if (lbl_803E4034 != len)
-                    {
-                        inv = lbl_803E4048 / len;
-                        nx = nx * inv;
-                        ny = ny * inv;
-                        nz = nz * inv;
-                    }
-                    fy = ((DimBossIceSmashState*)state)->unk6C;
-                    fz = ((DimBossIceSmashState*)state)->unk70;
-                    dot = lbl_803E4050 *
-                        (nz * fz + (nx * ((DimBossIceSmashState*)state)->unk68 + ny * fy));
-                    ((GameObject*)obj)->anim.velocityX = ((DimBossIceSmashState*)state)->unk68 * dot;
-                    ((GameObject*)obj)->anim.velocityY = fy * dot;
-                    ((GameObject*)obj)->anim.velocityZ = fz * dot;
-                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX - nx;
-                    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - ny;
-                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ - nz;
-                    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * len;
-                    ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * lbl_803E4054;
-                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * len;
-                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * len;
-                    ff = lbl_803E4058;
-                    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * ff;
-                    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * ff;
-                }
-            }
-            if ((((DimbossicesmashPlacement*)setup)->unk3C & 4) != 0 && ((GameObject*)obj)->anim.alpha == 0xff)
-            {
-                dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
-                dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
-                dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ;
-                i = 0;
-                do
-                {
-                    k = (f32)i * lbl_803E405C;
-                    stk[0] = dx * k + ((GameObject*)obj)->anim.previousLocalPosX;
-                    stk[1] = dy * k + ((GameObject*)obj)->anim.previousLocalPosY;
-                    stk[2] = dz * k + ((GameObject*)obj)->anim.previousLocalPosZ;
-                    (*gPartfxInterface)->spawnObject(obj, 1000, stk, 0x200001, -1, NULL);
-                    i++;
-                }
-                while (i < 2);
-            }
-        }
-    }
-}
+void dimbossicesmash_update(u8* obj);
 
 extern f32 lbl_803E4030;
 extern f32 lbl_803E4038;
@@ -1631,186 +1231,14 @@ extern u8 lbl_803DBDF8[8];
  * state from the setup record: spawn position/rotation, launch velocity
  * (optionally homing on the target point), rotation velocities and the
  * gravity/clamp direction flags. */
-void fn_80196520(u8* obj, u8* state, u8* setup)
-{
-    f32 vx, vy, vz;
-    f32 spd, len;
-
-    ((GameObject*)obj)->anim.localPosX = ((DimBossIceSmashState*)state)->unk26C * ((GameObject*)obj)->anim.
-        rootMotionScale + ((ObjPlacement*)setup)->posX;
-    ((GameObject*)obj)->anim.localPosY = ((DimBossIceSmashState*)state)->unk270 * ((GameObject*)obj)->anim.
-        rootMotionScale + ((ObjPlacement*)setup)->posY;
-    ((GameObject*)obj)->anim.localPosZ = ((DimBossIceSmashState*)state)->unk274 * ((GameObject*)obj)->anim.
-        rootMotionScale + ((ObjPlacement*)setup)->posZ;
-    ((GameObject*)obj)->anim.rotX = *(s16*)(setup + 0x1a);
-    ((GameObject*)obj)->anim.rotY = *(s16*)(setup + 0x1c);
-    ((GameObject*)obj)->anim.rotZ = *(s16*)(setup + 0x1e);
-    if ((*(u8*)(setup + 0x3c) & 1) != 0)
-    {
-        spd = (f32) * (s16*)(setup + 0x20) / lbl_803E4030;
-        vx = ((GameObject*)obj)->anim.localPosX - (f32) * (s16*)(setup + 0x42);
-        vy = ((GameObject*)obj)->anim.localPosY - (f32) * (s16*)(setup + 0x44);
-        vz = ((GameObject*)obj)->anim.localPosZ - (f32) * (s16*)(setup + 0x46);
-        len = sqrtf(vz * vz + (vx * vx + vy * vy));
-        if (lbl_803E4034 != len)
-        {
-            vx = vx / len;
-            vy = vy / len;
-            vz = vz / len;
-        }
-        ((GameObject*)obj)->anim.velocityX = spd * vx;
-        ((GameObject*)obj)->anim.velocityY = spd * vy;
-        ((GameObject*)obj)->anim.velocityZ = spd * vz;
-    }
-    else
-    {
-        ((GameObject*)obj)->anim.velocityX = (f32) * (s16*)(setup + 0x20) / (spd = lbl_803E4030);
-        ((GameObject*)obj)->anim.velocityY = (f32) * (s16*)(setup + 0x22) / spd;
-        ((GameObject*)obj)->anim.velocityZ = (f32) * (s16*)(setup + 0x24) / spd;
-    }
-    ((DimBossIceSmashState*)state)->unk278 = (f32) * (s16*)(setup + 0x2c);
-    ((DimBossIceSmashState*)state)->unk27C = (f32) * (s16*)(setup + 0x2e);
-    ((DimBossIceSmashState*)state)->unk280 = (f32) * (s16*)(setup + 0x30);
-    if (((GameObject*)obj)->anim.velocityX > lbl_803E4034)
-    {
-        state[0x29f] = state[0x29f] | 1;
-    }
-    if (((GameObject*)obj)->anim.velocityZ > lbl_803E4034)
-    {
-        state[0x29f] = state[0x29f] | 2;
-    }
-    if (((DimBossIceSmashState*)state)->unk278 > lbl_803E4034)
-    {
-        state[0x29f] = state[0x29f] | 4;
-    }
-    if (((DimBossIceSmashState*)state)->unk27C > lbl_803E4034)
-    {
-        state[0x29f] = state[0x29f] | 8;
-    }
-    if (((DimBossIceSmashState*)state)->unk280 > lbl_803E4034)
-    {
-        state[0x29f] = state[0x29f] | 0x10;
-    }
-    ((DimBossIceSmashState*)state)->unk284 = (f32) * (s16*)(setup + 0x32) / (spd = lbl_803E4038);
-    ((DimBossIceSmashState*)state)->unk288 = (f32) * (s16*)(setup + 0x34) / spd;
-    ((DimBossIceSmashState*)state)->unk28C = (f32) * (s16*)(setup + 0x36) / spd;
-    ((DimBossIceSmashState*)state)->unk290 = (f32) * (s16*)(setup + 0x26) / (spd = lbl_803E403C);
-    ((DimBossIceSmashState*)state)->unk294 = (f32) * (s16*)(setup + 0x28) / spd;
-    ((DimBossIceSmashState*)state)->unk298 = (f32) * (s16*)(setup + 0x2a) / spd;
-    ((DimBossIceSmashState*)state)->unk29C = 0;
-}
+void fn_80196520(u8* obj, u8* state, u8* setup);
 
 /* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
-void dimbossicesmash_init(u8* obj, u8* params)
-{
-    u8* state;
-    f32 fz;
-    u8 t;
-    u8 buf[12];
-
-    buf[0] = 5;
-    ((ObjAnimComponent*)obj)->bankIndex = params[0x18];
-    fz = lbl_803E4034;
-    state = ((GameObject*)obj)->extra;
-    ((DimBossIceSmashState*)state)->unk26C = lbl_803E4034;
-    ((DimBossIceSmashState*)state)->unk270 = fz;
-    ((DimBossIceSmashState*)state)->unk274 = fz;
-    fn_80196520(obj, state, params);
-    if (GameBit_Get(*(s16*)(params + 0x3e)) == 0)
-    {
-        t = 0;
-    }
-    else
-    {
-        t = 2;
-    }
-    state[0x29e] = t;
-    lbl_803DDB00 = 0;
-    if ((*(u8*)(params + 0x3c) & 2) != 0)
-    {
-        (*gPathControlInterface)->init(state, 0, 0x40002, 1);
-        (*gPathControlInterface)->setup(state, 1, lbl_80322368, lbl_803DBDF8, buf);
-        (*gPathControlInterface)->attachObject(obj, state);
-    }
-}
+void dimbossicesmash_init(u8* obj, u8* params);
 
 extern f32 lbl_803E4068;
 extern f32 lbl_803E406C;
 
 /* EN v1.0 0x80197474  size: 648b  fogcontrol_update: ramp the fog blend
  * toward the gamebit-selected target and feed the heavy fog params. */
-void fogcontrol_update(int obj)
-{
-    u8* setup = *(u8**)&((GameObject*)obj)->anim.placementData;
-    FogControlState* st = ((GameObject*)obj)->extra;
-    u8 cv;
-    u8 run;
-    f32 t;
-
-    if (((FogcontrolPlacement*)setup)->enableGameBit == -1)
-    {
-        cv = 1;
-    }
-    else
-    {
-        cv = (u8)GameBit_Get(((FogcontrolPlacement*)setup)->enableGameBit);
-    }
-    if ((cv != 0 && st->full == 0) || (cv == 0 && st->on != 0))
-    {
-        run = 1;
-    }
-    else
-    {
-        run = 0;
-    }
-    if (run != 0)
-    {
-        if (cv != 0)
-        {
-            if ((*(u8*)(setup + 0x1a) & 2) != 0)
-            {
-                st->blend = lbl_803E4068 * timeDelta + st->blend;
-            }
-            else
-            {
-                st->blend = lbl_803E406C * timeDelta + st->blend;
-            }
-            st->on = 1;
-        }
-        else
-        {
-            if ((*(u8*)(setup + 0x1a) & 4) != 0)
-            {
-                st->blend = -(lbl_803E4068 * timeDelta - st->blend);
-            }
-            else
-            {
-                st->blend = -(lbl_803E406C * timeDelta - st->blend);
-            }
-            st->full = 0;
-        }
-        if (st->blend <= lbl_803E4070)
-        {
-            st->blend = *(f32*)&lbl_803E4070;
-            st->on = 0;
-            disableHeavyFog();
-        }
-        else
-        {
-            st->on = 1;
-            if (st->blend > lbl_803E4074)
-            {
-                st->blend = *(f32*)&lbl_803E4074;
-                st->full = 1;
-            }
-            t = st->blend * ((f32)((FogcontrolPlacement*)setup)->unk1C - (f32)((FogcontrolPlacement*)setup)->unk20) +
-                (f32)((FogcontrolPlacement*)setup)->unk20;
-            t = ((GameObject*)obj)->anim.localPosY + t;
-            enableHeavyFog(*(u8*)(setup + 0x1a) & 1, t,
-                           ((f32)((FogcontrolPlacement*)setup)->unk1E + t) - (f32)((FogcontrolPlacement*)setup)->unk1C,
-                           (f32)((FogcontrolPlacement*)setup)->unk24,
-                           (f32)((FogcontrolPlacement*)setup)->unk22 / lbl_803E4078,
-                           lbl_803E407C);
-        }
-    }
-}
+void fogcontrol_update(int obj);

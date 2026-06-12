@@ -1261,8 +1261,20 @@ main/dll/mmp_barrel.c:
 main/dll/dll_013B_wallanimator.c:
 	.text       start:0x80194408 end:0x801948C0
 
-main/dll/MMP_asteroid.c:
-	.text       start:0x801948C0 end:0x801978A0
+main/dll/dll_013C_xyzanimator.c:
+	.text       start:0x801948C0 end:0x801962C8
+
+main/dll/dll_013D_explodeanim.c:
+	.text       start:0x801962C8 end:0x80196520
+
+main/dll/dll_013E_dimbossices.c:
+	.text       start:0x80196520 end:0x8019718C
+
+main/dll/dll_013F_texframeani.c:
+	.text       start:0x8019718C end:0x8019742C
+
+main/dll/dll_0140_fogcontrol.c:
+	.text       start:0x8019742C end:0x801978A0
 
 main/dll/dll_0141_lightning.c:
 	.text       start:0x801978A0 end:0x80197DA8
