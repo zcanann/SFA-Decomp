@@ -180,14 +180,8 @@ main/dll/modanimeflash1.c:
 main/dll/dll_66.c:
 	.text       start:0x80100550 end:0x801007B8
 
-main/dll/modgfx67.c:
-	.text       start:0x801007B8 end:0x801007E8
-
-main/dll/dll_68.c:
-	.text       start:0x801007E8 end:0x801007EC
-
-main/dll/dll_69.c:
-	.text       start:0x801007EC end:0x801007F0
+main/dll/dll_00B4_projenergise1.c:
+	.text       start:0x801007B8 end:0x801007F0
 
 main/dll/dll_6A.c:
 	.text       start:0x801007F0 end:0x80100820
