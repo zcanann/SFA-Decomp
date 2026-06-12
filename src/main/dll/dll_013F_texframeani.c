@@ -10,20 +10,8 @@
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
 extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern void* fn_800606DC(int* obj, int idx);
-extern void* fn_800606FC(int* obj, int idx);
-extern void* fn_8006070C(int* obj, int idx);
-extern void mm_free(void* ptr);
-extern void DCStoreRange(void* addr, u32 nBytes);
-extern int return0_80060B90(void);
-extern void* Shader_getLayer(void* shader, int idx);
 
-extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E4000;
-extern f32 lbl_803E4008;
 
 /*
  * --INFO--
@@ -71,7 +59,6 @@ extern f32 lbl_803E4008;
  */
 #pragma scheduling off
 #pragma peephole off
-f32 objFn_801948c0(u8* obj, u8 coord);
 
 /*
  * --INFO--
@@ -104,37 +91,12 @@ f32 objFn_801948c0(u8* obj, u8 coord);
 #pragma peephole on
 
 
-typedef struct MapBlockHdr
-{
-    u16 start;
-    u16 pad1[2];
-    s16 posA;
-    s16 posB;
-} MapBlockHdr;
 
-typedef struct VertexS16
-{
-    s16 x;
-    s16 y;
-    s16 z;
-} VertexS16;
 
-typedef struct EdgeVerts
-{
-    u8 pad[6];
-    s16 a;
-    s16 b;
-    s16 c;
-    s16 d;
-    s16 e;
-    s16 f;
-} EdgeVerts;
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80194964(int obj, int state, int block);
 
-void fn_80194C40(undefined4 def, int state, int block);
 
 /*
  * --INFO--
@@ -163,17 +125,12 @@ void fn_80194C40(undefined4 def, int state, int block);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int xyzanimator_getExtraSize(void);
 
-void xyzanimator_free(int obj, int param_2);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E3FF8;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E4004;
 
 
-void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 
 
@@ -213,95 +170,12 @@ typedef struct TexframeanimatorPlacement
 } TexframeanimatorPlacement;
 
 
-typedef struct ExplodeanimatorState
-{
-    u8 pad0[0x2 - 0x0];
-    u8 unk2;
-    u8 pad3[0x4 - 0x3];
-} ExplodeanimatorState;
 
 
-typedef struct DimbossicesmashPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    s16 unk22;
-    s16 unk24;
-    s16 unk26;
-    s16 unk28;
-    s16 unk2A;
-    s16 unk2C;
-    s16 unk2E;
-    s16 unk30;
-    s16 unk32;
-    s16 unk34;
-    s16 unk36;
-    u16 unk38;
-    u16 unk3A;
-    u8 unk3C;
-    u8 pad3D[0x3E - 0x3D];
-    s16 unk3E;
-    s16 unk40;
-    s16 unk42;
-    s16 unk44;
-    s16 unk46;
-} DimbossicesmashPlacement;
 
 
-typedef struct FogcontrolPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 enableGameBit;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    s16 unk22;
-    s16 unk24;
-    s16 unk26;
-    s16 unk28;
-    s16 unk2A;
-    s16 unk2C;
-    s16 unk2E;
-    s16 unk30;
-    s16 unk32;
-    s16 unk34;
-    s16 unk36;
-    u16 unk38;
-    u16 unk3A;
-    u8 unk3C;
-    u8 pad3D[0x3E - 0x3D];
-    s16 unk3E;
-    s16 unk40;
-    s16 unk42;
-    s16 unk44;
-    s16 unk46;
-} FogcontrolPlacement;
 
 
-typedef struct ExplodeanimatorPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    s16 unk22;
-    s16 unk24;
-    u8 pad26[0x28 - 0x26];
-    s16 unk28;
-    s16 unk2A;
-    u8 pad2C[0x2E - 0x2C];
-    s16 unk2E;
-    s16 unk30;
-    s16 unk32;
-    s16 unk34;
-    u8 pad36[0x38 - 0x36];
-} ExplodeanimatorPlacement;
 
 
 
@@ -319,12 +193,7 @@ typedef struct ExplodeanimatorPlacement
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int mmAlloc(int size, int pool, int tag);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj);
-extern f32 timeDelta;
-extern f32 lbl_803E4018;
 
-void xyzanimator_update(int obj);
 
 /*
  * --INFO--
@@ -414,23 +283,14 @@ void xyzanimator_update(int obj);
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void explodeanimator_render(void);
 
-void explodeanimator_hitDetect(void);
 
-void explodeanimator_release(void);
 
-void explodeanimator_initialise(void);
 
-extern f32 lbl_803E4020;
 
-void explodeanimator_update(int* obj);
 
-void dimbossicesmash_hitDetect(void);
 
-void dimbossicesmash_release(void);
 
-void dimbossicesmash_initialise(void);
 
 void texframeanimator_free(void)
 {
@@ -550,19 +410,13 @@ void texframeanimator_init(int* obj, u8* params)
 
 /* 8b "li r3, N; blr" returners. */
 int explodeanimator_getExtraSize(void);
-int explodeanimator_getObjectTypeId(void);
-int dimbossicesmash_getExtraSize(void);
 int texframeanimator_getExtraSize(void) { return 0x18; }
 int texframeanimator_getObjectTypeId(void) { return 0x0; }
 int fogcontrol_getExtraSize(void);
-int fogcontrol_getObjectTypeId(void);
-int lightning_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E4048;
 extern f32 lbl_803E4060;
 
-void dimbossicesmash_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -574,72 +428,33 @@ void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void explodeanimator_free(int x);
 
 /* state encode: ((obj->_X)->_Y << shift) | const. */
-u32 dimbossicesmash_getObjectTypeId(int* obj);
 
 /* Drift-recovery: add new fns with v1.0 names. */
-extern void disableHeavyFog(void);
 
 
-void dimbossicesmash_free(int* obj);
-
-void fogcontrol_free(int* obj);
-
-extern f32 lbl_803E4070;
-extern f32 lbl_803E4074;
-extern f32 lbl_803E4078;
-extern f32 lbl_803E407C;
-extern void enableHeavyFog(u8 mode, f32 a, f32 b, f32 c, f32 d, f32 e);
-
-typedef struct FogControlState
-{
-    f32 blend;
-    u8 on : 1;
-    u8 full : 1;
-    u8 rest : 6;
-} FogControlState;
 
 
-void fogcontrol_init(u8* obj, u8* params);
-
-void explodeanimator_init(int* obj, int* def);
 
 
-void xyzanimator_init(int obj);
 
-extern f32 sqrtf(f32);
-extern void Obj_FreeObject(u8 * obj);
-extern u8 lbl_803DDB00;
-extern f32 lbl_803E4034;
-extern f32 lbl_803E404C;
-extern f32 lbl_803E4050;
-extern f32 lbl_803E4054;
-extern f32 lbl_803E4058;
-extern f32 lbl_803E405C;
+
+
+
+
 
 /* EN v1.0 0x80196990  size: 1752b  dimbossicesmash_update: gate on the
  * trigger gamebit, integrate velocity/rotation with per-axis gravity
  * clamps, run the path-control hooks with surface bounce, fade alpha over
  * the lifetime window, and emit the two trail particles. */
-void dimbossicesmash_update(u8* obj);
 
-extern f32 lbl_803E4030;
-extern f32 lbl_803E4038;
-extern f32 lbl_803E403C;
-extern u8 lbl_80322368[0xC];
-extern u8 lbl_803DBDF8[8];
 
 /* EN v1.0 0x80196520  size: 1008b  fn_80196520: seed the icesmash launch
  * state from the setup record: spawn position/rotation, launch velocity
  * (optionally homing on the target point), rotation velocities and the
  * gravity/clamp direction flags. */
-void fn_80196520(u8* obj, u8* state, u8* setup);
 
 /* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
-void dimbossicesmash_init(u8* obj, u8* params);
 
-extern f32 lbl_803E4068;
-extern f32 lbl_803E406C;
 
 /* EN v1.0 0x80197474  size: 648b  fogcontrol_update: ramp the fog blend
  * toward the gamebit-selected target and feed the heavy fog params. */
-void fogcontrol_update(int obj);
