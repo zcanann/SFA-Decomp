@@ -1,5 +1,6 @@
 #include "main/game_object.h"
 #include "main/dll/DF/dll_198.h"
+#include "main/objtexture.h"
 
 typedef struct DFSHDoor2SpeciPlacement
 {
@@ -19,7 +20,6 @@ typedef struct DFDoorSpeciExtra
 } DFDoorSpeciExtra;
 
 extern u32 GameBit_Get(int eventId);
-extern int* objFindTexture(int obj, int a, int b);
 extern f32 mathCosf(f32 x);
 extern u8 framesThisStep;
 extern f32 lbl_803E4E30;
@@ -29,12 +29,11 @@ extern f32 lbl_803E4E3C;
 extern f32 lbl_803E4E40;
 
 extern uint GameBit_Get(int eventId);
-extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
 extern void objRenderFn_8003b8f4(f32);
 
 int DFSH_Door2Speci_SeqFn(int obj)
 {
-    int* texture;
+    ObjTextureRuntimeSlot* texture;
     DFDoorSpeciExtra* extra;
     int objDef;
     int alpha;
@@ -52,27 +51,27 @@ int DFSH_Door2Speci_SeqFn(int obj)
         }
         break;
     case 1:
-        texture = objFindTexture(obj, 0, 0);
+        texture = objFindTexture((void*)obj, 0, 0);
         if (texture != NULL)
         {
-            alpha = *texture + framesThisStep * 0x10;
+            alpha = texture->textureId + framesThisStep * 0x10;
             if (alpha > 0x100)
             {
                 alpha = 0x100;
                 extra->state = 2;
             }
-            *texture = alpha;
+            texture->textureId = alpha;
         }
         break;
     case 2:
     default:
-        texture = objFindTexture(obj, 0, 0);
+        texture = objFindTexture((void*)obj, 0, 0);
         if (texture != NULL)
         {
             phaseStep = (extra->phase + framesThisStep * 800) & 0xffff;
             extra->phase = phaseStep;
             phase = (lbl_803E4E3C * (f32)(u32)extra->phase) / lbl_803E4E40;
-            *texture = (s32) - (lbl_803E4E34 * (lbl_803E4E38 - mathCosf(phase)) - lbl_803E4E30);
+            texture->textureId = (s32) - (lbl_803E4E34 * (lbl_803E4E38 - mathCosf(phase)) - lbl_803E4E30);
         }
         break;
     }
@@ -119,7 +118,7 @@ void dfsh_door2speci_update(void)
 void dfsh_door2speci_init(int obj, int def)
 {
     int state;
-    int* texture;
+    ObjTextureRuntimeSlot* texture;
 
     state = *(int*)&((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = (void*)DFSH_Door2Speci_SeqFn;
@@ -131,16 +130,16 @@ void dfsh_door2speci_init(int obj, int def)
     {
         *(unsigned char*)(state + 3) = 0;
     }
-    texture = objFindTexture(obj, 0, 0);
-    if (texture != (int*)0x0)
+    texture = objFindTexture((void*)obj, 0, 0);
+    if (texture != NULL)
     {
         if (*(unsigned char*)(state + 3) == 2)
         {
-            *texture = 1;
+            texture->textureId = 1;
         }
         else
         {
-            *texture = 0;
+            texture->textureId = 0;
         }
     }
     *(short*)state = 0;
