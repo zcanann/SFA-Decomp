@@ -2274,7 +2274,23 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       Try decl-swap first, launder second, before classifying as sub-class 3.
     - Diagnostic: reduced /tmp probes do NOT reproduce these permutations —
       the coloring depends on whole-function web pressure; A/B in the real
-      TU.
+      TU. ⚠️ CORRECTED (CF campaign): SOME instances DO reproduce in a
+      probe (cfprisonguard_render's reload-f1-vs-f2 and cfwindlift
+      fn_8019C784's scale-f0 inversion both reproduce standalone with the
+      real headers) — probe first; a reproducing probe gives a 2s
+      brute-force harness.
+    - EXHAUSTIVE-ENUMERATION NEGATIVE (cfprisonguard_render, CF campaign):
+      the expression-temp FP digit is invariant under ~50 source
+      structures (named/compound/embedded/split temps, launders on every
+      const ref, (f64) fcmpo promotion nodes, static-inline helper
+      factoring, both visible-block shapes), 15 opt pragmas (incl.
+      register_coloring/opt_lifetimes/O1/O2/O3/optimize_for_size), AND all
+      20 bundled GC compiler versions (1.0-3.0a5.2 — every one emits the
+      same wrong digit on the minimal reproducer). The class is therefore
+      NOT version-tunable and NOT C-surface-reachable on such fns; the
+      divergence lives in compiler-internal IR state the TU content does
+      not determine (the #108 fn-global-state phenomenon, FP edition).
+      Bank on sight once the probe confirms invariance; do not re-spell.
 
 83. **Fresh-slot paradox CRACKED (task #151) — MWCC's conversion-temp pool
     is flushed by STATEMENT-level control-flow joins, NOT by ternary
