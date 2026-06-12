@@ -1,3 +1,342 @@
+/* === moved from main/dll/mmshrine/shrine1C2.c [801C70F0-801C7724) (TU re-split, docs/boundary_audit.md) === */
+#include "main/audio/sfx_ids.h"
+#include "main/game_ui_interface.h"
+#include "main/obj_placement.h"
+#include "main/game_object.h"
+#include "main/objanim.h"
+#include "main/mapEventTypes.h"
+#include "main/dll/mmshrine/shrine1C2.h"
+#include "main/dll/mmshrine/torch1C1.h"
+#include "main/objseq.h"
+#include "main/resource.h"
+#include "main/screen_transition.h"
+
+#include "main/dll/mmshrine/ecsh_shrine_state.h"
+
+
+extern undefined4 FUN_80006824();
+extern undefined4 FUN_80006b0c();
+extern undefined4 FUN_80006b14();
+extern uint FUN_80017690();
+extern u32 randomGetRange(int min, int max);
+extern undefined4 FUN_80017830();
+extern int FUN_80017ae4();
+extern uint FUN_80017ae8();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
+extern undefined4 ObjMsg_AllocQueue();
+
+extern undefined4 DAT_803dc070;
+extern MapEventInterface** gMapEventInterface;
+
+/*
+ * --INFO--
+ *
+ * Function: ecsh_shrine_update
+ * EN v1.0 Address: 0x801C60B8
+ * EN v1.0 Size: 3360b
+ * EN v1.1 Address: 0x801C666C
+ * EN v1.1 Size: 3104b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern void skyFn_80088c94(int a, int b);
+extern void fn_801C5990(s16 * obj);
+extern int objIsCurModelNotZero(int* player);
+extern void fn_80295CF4(int* player, int a);
+extern void audioStopByMask(int mask);
+extern void Sfx_KeepAliveLoopedObjectSound(s16* obj, int sfxId);
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern ScreenTransitionInterface** gScreenTransitionInterface;
+extern u8 lbl_80326208[];
+extern int lbl_803E8470;
+extern f32 timeDelta;
+extern f32 lbl_803E4FA8;
+extern f32 lbl_803E4FB0;
+extern f32 lbl_803E4FCC;
+extern f32 lbl_803E4FD0;
+extern f32 lbl_803E4FD4;
+extern f32 lbl_803E4FD8;
+extern f32 lbl_803E4FDC;
+extern f32 lbl_803E4FE0;
+extern f32 lbl_803E4FE4;
+extern f32 lbl_803E4FE8;
+extern f32 lbl_803E4FEC;
+extern f32 lbl_803E4FF0;
+
+typedef struct EcshPuzzleState
+{
+    f32 f[12]; /* 0x00 */
+    s16 cur[6]; /* 0x30 */
+    s16 next[7]; /* 0x3c */
+} EcshPuzzleState;
+
+typedef struct EcshIntPair
+{
+    int a;
+    int b;
+} EcshIntPair;
+
+#pragma opt_strength_reduction off
+void ecsh_shrine_update(s16* obj);
+#pragma opt_strength_reduction reset
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c6e04
+ * EN v1.0 Address: 0x801C6E04
+ * EN v1.0 Size: 704b
+ * EN v1.1 Address: 0x801C7408
+ * EN v1.1 Size: 668b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_801c6e04(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined2* param_9);
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void ecsh_shrine_release(void);
+
+void ecsh_shrine_initialise(void);
+
+void ecsh_creator_free(void);
+
+void ecsh_creator_hitDetect(void);
+
+void ecsh_creator_release(void);
+
+void ecsh_creator_initialise(void);
+
+void gpsh_shrine_hitDetect(void)
+{
+}
+
+/* 8b "li r3, N; blr" returners. */
+int ecsh_creator_getExtraSize(void);
+int ecsh_creator_getObjectTypeId(void);
+int gpsh_shrine_getExtraSize(void) { return 0x18; }
+int gpsh_shrine_getObjectTypeId(void) { return 0x0; }
+
+extern void ModelLightStruct_free(void* light);
+extern void gameTimerStop(void);
+extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
+extern void objRenderFn_8003b8f4(f32);
+extern void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void* light);
+extern f32 lbl_803E5038;
+
+void gpsh_shrine_free(int* obj)
+{
+    extern void Music_Trigger(int id, int restart); /* #57 */
+    extern void GameBit_Set(int bit, int value); /* #57 */
+    extern int GameBit_Get(int bit); /* #57 */
+    void** state = ((GameObject*)obj)->extra;
+    void* light = state[0];
+
+    if (light != NULL)
+    {
+        ModelLightStruct_free(light);
+        state[0] = NULL;
+    }
+    gameTimerStop();
+    ObjGroup_RemoveObject(obj, 0xb);
+    Music_Trigger(0xd8, 0);
+    Music_Trigger(0xd9, 0);
+    Music_Trigger(8, 0);
+    Music_Trigger(0xb, 0);
+    GameBit_Set(0xefa, 0);
+    GameBit_Set(0xcbb, GameBit_Get(0xc91) == 0);
+}
+
+void gpsh_shrine_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    void** state = ((GameObject*)obj)->extra;
+
+    if (visible == 0)
+    {
+        void* light = state[0];
+        if (light != NULL)
+        {
+            modelLightStruct_setEnabled(light, 0, lbl_803E5038);
+        }
+    }
+    else
+    {
+        void* light = state[0];
+        if (light != NULL)
+        {
+            modelLightStruct_setEnabled(light, 1, lbl_803E5038);
+        }
+        ((void (*)(void*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5038);
+        objParticleFn_80099d84(obj, lbl_803E5038, 7, *(f32*)&lbl_803E5038, state[0]);
+    }
+}
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E4FF8;
+
+void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void ecsh_creator_init(s16* obj, s8* def);
+
+extern void fn_80296518(int* player, int a, int b);
+extern int fn_801C5CE4(void* objArg, int unused, void* eventListArg);
+extern int lbl_803DDBC0;
+extern s16* lbl_803DDBC4;
+
+typedef struct EcshShrineByte15
+{
+    u8 flag : 1;
+    u8 rest : 7;
+} EcshShrineByte15;
+
+int gpsh_shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    extern void GameBit_Set(int bit, int value); /* #57 */
+    extern int* Obj_GetPlayerObject(void); /* #57 */
+    u8* sub;
+    int* player;
+    int i;
+    u8 ev;
+    void* light;
+
+    sub = ((GameObject*)obj)->extra;
+    player = Obj_GetPlayerObject();
+    animUpdate->activeHitVolumePair = -1;
+    animUpdate->sequenceEventActive = 0;
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
+        ev = animUpdate->eventIds[i];
+        if (ev != 0)
+        {
+            switch (ev)
+            {
+            case 3:
+                ((EcshShrineByte15*)(sub + 0x15))->flag = 1;
+                break;
+            case 7:
+                fn_80296518(player, 0x80, 1);
+                GameBit_Set(0x12b, 1);
+                GameBit_Set(0xc85, 1);
+                (*gMapEventInterface)->setMode(0xb, 5);
+                break;
+            case 14:
+                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                light = *(void**)sub;
+                if (light != NULL)
+                {
+                    modelLightStruct_setEnabled(light, 0, lbl_803E5038);
+                }
+                break;
+            case 15:
+                ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+                light = *(void**)sub;
+                if (light != NULL)
+                {
+                    modelLightStruct_setEnabled(light, 0, lbl_803E5038);
+                }
+                break;
+            }
+        }
+        animUpdate->eventIds[i] = 0;
+    }
+    return 0;
+}
+
+void ecsh_shrine_init(s16* obj, s8* def);
+
+extern u8* mmAlloc(int size, int tag, int p);
+extern u8 Obj_IsLoadingLocked(void);
+extern u8 framesThisStep;
+
+void ecsh_creator_update(s16* obj);
+
+extern int getAngle(f32 dx, f32 dz);
+extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern f32 lbl_803E5000;
+extern f32 lbl_803E5004;
+extern f32 lbl_803E5008;
+extern f32 lbl_803E500C;
+extern f32 lbl_803E5010;
+extern f32 lbl_803E5014;
+extern f32 lbl_803E5018;
+extern f32 lbl_803E501C;
+extern f32 lbl_803E5020;
+extern f32 lbl_803E5024;
+extern f32 lbl_803E5028;
+extern f32 mathSinf(f32 angle);
+
+void fn_801C70F0(s16* obj)
+{
+    extern int* Obj_GetPlayerObject(void); /* #57 */
+    u8 buf[32];
+    u8* def;
+    u8* sub;
+    int* player;
+    int diff;
+    f32 c1;
+    f32 c2;
+    f32 dist;
+
+    def = *(u8**)&((GameObject*)obj)->anim.placementData;
+    sub = ((GameObject*)obj)->extra;
+    player = Obj_GetPlayerObject();
+    if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0)
+    {
+        *obj = 0;
+        ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
+    }
+    else
+    {
+        *(s16*)(sub + 0xc) = (s16)(*(s16*)(sub + 0xc) + (int)(lbl_803E5000 * timeDelta));
+        *(s16*)(sub + 0xe) = (s16)(*(s16*)(sub + 0xe) + (int)(lbl_803E5004 * timeDelta));
+        *(s16*)(sub + 0x10) = (s16)(*(s16*)(sub + 0x10) + (int)(lbl_803E5008 * timeDelta));
+        ((GameObject*)obj)->anim.localPosY =
+            lbl_803E500C + (((ObjPlacement*)def)->posY
+                + mathSinf((lbl_803E5010 * (f32) * (s16*)(sub + 0xc)) / lbl_803E5014));
+        c1 = mathSinf((lbl_803E5010 * (f32) * (s16*)(sub + 0xe)) / lbl_803E5014);
+        c2 = mathSinf((lbl_803E5010 * (f32) * (s16*)(sub + 0xc)) / lbl_803E5014);
+        c2 = c2 + c1;
+        ((GameObject*)obj)->anim.rotZ = lbl_803E5018 * c2;
+        c1 = mathSinf((lbl_803E5010 * (f32) * (s16*)(sub + 0x10)) / lbl_803E5014);
+        c2 = mathSinf((lbl_803E5010 * (f32) * (s16*)(sub + 0xc)) / lbl_803E5014);
+        c2 = c2 + c1;
+        ((GameObject*)obj)->anim.rotY = lbl_803E5018 * c2;
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E501C, timeDelta,
+                                                                     (ObjAnimEventList*)buf);
+        if (player != NULL)
+        {
+            diff = (getAngle(((f32*)obj)[6] - ((f32*)player)[6],
+                             ((f32*)obj)[8] - ((f32*)player)[8]) & 0xffff)
+                - (*obj & 0xffff);
+            if (diff > 0x8000)
+            {
+                diff = diff - 0xffff;
+            }
+            if (diff < -0x8000)
+            {
+                diff = diff + 0xffff;
+            }
+            *obj = (s16)(*(s16*)(int)obj + (int)(((f32)diff * timeDelta) / lbl_803E5020));
+            dist = Vec_xzDistance((f32*)((int)obj + 0x18), (f32*)((int)player + 0x18));
+            if (dist <= lbl_803E5024)
+            {
+                ((GameObject*)obj)->anim.alpha = (u8)(int)(lbl_803E5028 * (dist / lbl_803E5024));
+            }
+            else
+            {
+                ((GameObject*)obj)->anim.alpha = 0xff;
+            }
+        }
+    }
+}
+
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -58,7 +397,6 @@ extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_80042b9c();
 extern int FUN_80044404();
 extern undefined8 FUN_80080f28();
-extern undefined4 FUN_801c70c4();
 extern undefined4 SH_LevelControl_runBloopEvent();
 extern undefined4 FUN_801d8480();
 extern undefined4 FUN_80286834();
@@ -69,7 +407,6 @@ extern f64 DOUBLE_803e5cc8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5CD4;
 extern f32 lbl_803E5CD8;
-extern void* objCreateLight(int obj, int kind);
 
 /*
  * --INFO--
@@ -96,25 +433,15 @@ typedef struct
     u8 b01 : 1;
 } GpshShrineFlags;
 
-extern void* Obj_GetPlayerObject(void);
-extern u32 GameBit_Get(int bit);
-extern int GameBit_Set(int bit, int val);
-extern void Sfx_PlayFromObject(int obj, int sfx);
 extern void skyFn_80088c94(int a, int b);
-extern int getEnvfxAct(int obj, int player, int id, int p);
-extern void fn_801C70F0(int obj);
 extern int mapGetDirIdx(int a);
 extern int unlockLevel(int a, int b, int c);
-extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
-extern void SCGameBitLatch_UpdateInverted(int state, int a, int b, int c, int d, int e);
 extern void gameTimerInit(int a, int b);
 extern void timerSetToCountUp(void);
 extern void gameTimerStop(void);
 extern int isGameTimerDisabled(void);
 extern int Obj_FreeObject(int obj);
-extern int objGetAnimStateFlags(int obj, int flag);
 extern void audioStopByMask(int mask);
-extern int Music_Trigger(int id, int value);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern MapEventInterface** gMapEventInterface;
@@ -124,6 +451,16 @@ extern f32 lbl_803E5040;
 
 void gpsh_shrine_update(int obj)
 {
+    extern int Music_Trigger(int id, int value); /* #57 */
+    extern int objGetAnimStateFlags(int obj, int flag); /* #57 */
+    extern void SCGameBitLatch_UpdateInverted(int state, int a, int b, int c, int d, int e); /* #57 */
+    extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e); /* #57 */
+    extern void fn_801C70F0(int obj); /* #57 */
+    extern int getEnvfxAct(int obj, int player, int id, int p); /* #57 */
+    extern void Sfx_PlayFromObject(int obj, int sfx); /* #57 */
+    extern int GameBit_Set(int bit, int val); /* #57 */
+    extern u32 GameBit_Get(int bit); /* #57 */
+    extern void* Obj_GetPlayerObject(void); /* #57 */
     int count;
     int data = *(int*)&((GameObject*)obj)->extra;
     char* player = Obj_GetPlayerObject();
@@ -353,6 +690,8 @@ void gpsh_shrine_update(int obj)
 
 void gpsh_shrine_init(int* obj, int* def)
 {
+    extern int GameBit_Set(int bit, int val); /* #57 */
+    extern void* objCreateLight(int obj, int kind); /* #57 */
     u8* state;
 
     state = ((GameObject*)obj)->extra;
@@ -409,7 +748,6 @@ extern u8 Obj_IsLoadingLocked(void);
 extern void hitDetectFn_80097070(int* obj, f32 e, int a, int b, int c, int d);
 extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int v);
 extern void* Obj_AllocObjectSetup(int size, int type);
-extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 extern f32 lbl_803E504C;
 extern f32 lbl_803E5050;
 extern f32 lbl_803E5054;
@@ -417,6 +755,8 @@ extern s16 lbl_803263B8[];
 
 void gpsh_objcreator_update(int* obj)
 {
+    extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d); /* #57 */
+    extern u32 GameBit_Get(int bit); /* #57 */
     u8* sub;
     void* setup;
 
@@ -479,17 +819,15 @@ void gpsh_scene_initialise(void)
 {
 }
 
-void ecsh_cup_hitDetect(void)
-{
-}
+void ecsh_cup_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 int gpsh_objcreator_getExtraSize(void) { return 0x8; }
 int gpsh_objcreator_getObjectTypeId(void) { return 0x0; }
 int gpsh_scene_getExtraSize(void) { return 0x0; }
 int gpsh_scene_getObjectTypeId(void) { return 0x0; }
-int ecsh_cup_getExtraSize(void) { return 0x30; }
-int ecsh_cup_getObjectTypeId(void) { return 0x0; }
+int ecsh_cup_getExtraSize(void);
+int ecsh_cup_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5048;
@@ -509,16 +847,9 @@ void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E5058);
 }
 
-void ecsh_cup_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E5060);
-}
+void ecsh_cup_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void ecsh_cup_free(int* obj)
-{
-    (*gExpgfxInterface)->freeSource2((u32)obj);
-}
+void ecsh_cup_free(int* obj);
 
 void gpsh_scene_init(int* obj, int* def)
 {

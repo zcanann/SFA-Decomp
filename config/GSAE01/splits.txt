@@ -939,20 +939,14 @@ main/dll/laser19F.c:
 main/dll/mmshrine/shrine.c:
 	.text       start:0x801C53A0 end:0x801C5990
 
-main/dll/mmshrine/animobj1C0.c:
-	.text       start:0x801C5990 end:0x801C5ED8
-
-main/dll/mmshrine/torch1C1.c:
-	.text       start:0x801C5ED8 end:0x801C60B8
-
 main/dll/mmshrine/shrine1C2.c:
-	.text       start:0x801C60B8 end:0x801C7724
+	.text       start:0x801C5990 end:0x801C70F0
 
 main/dll/creator1C4.c:
-	.text       start:0x801C7724 end:0x801C83D0
+	.text       start:0x801C70F0 end:0x801C835C
 
 main/dll/dimbarrier.c:
-	.text       start:0x801C83D0 end:0x801C8EBC
+	.text       start:0x801C835C end:0x801C8EBC
 
 main/dll/scene1C7.c:
 	.text       start:0x801C8EBC end:0x801C9660

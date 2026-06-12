@@ -1100,8 +1100,6 @@ config.libs = [
             Object(NonMatching, "main/dll/creator19D.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/laser19F.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/mmshrine/shrine.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/mmshrine/animobj1C0.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/mmshrine/torch1C1.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/mmshrine/shrine1C2.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/creator1C4.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dimbarrier.c"),
