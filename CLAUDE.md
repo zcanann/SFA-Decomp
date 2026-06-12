@@ -3505,9 +3505,15 @@ sweep; tools/rotmap.py):**
   between alloc and uses keep r3-direct, no local form matters). A
   same-variable merge of an arm flag INTO the fn-scope var regresses
   (affinity coalesces all its webs to the bottom) — keep distinct
-  variables. Residual there: one 6-instr s8-flag web (C r27 vs T r29 =
-  state's dead-on-path reg) resisted decl position ×6, scope, int+(s8)
-  retype, register kw, split init — within-class order, still open.
+  variables. **Same-variable AFFINITY is the per-register AIMER (the
+  final crack, fn → 100.0)**: when target holds an arm-local flag in a
+  HEAD COPY's dead-on-path reg (ok in state's r29), the original
+  RECYCLED that variable (#119: `state = (WmObjCreatorState*)0/1` defs
+  + `(s8)(int)state` tests) — affinity lands the flag web on the head
+  web's reg exactly, all other webs untouched. Aim the merge at the
+  variable OWNING target's reg (the n-merge dragged webs to r27 = wrong
+  host); decl position ×6, scope, int+(s8) retype, register kw, split
+  init were all inert on the same web.
 - **Exhausted levers on the standalone-reproducing timer probe (~35
   variants — do NOT re-run these on this class)**: decl-order perms,
   block-scope flag/v, v-as-ternary/x-copy/hoisted-def, #77 void*+cast-copy
