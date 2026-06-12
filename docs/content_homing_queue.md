@@ -32,8 +32,8 @@ catch for the spellstone-in-prisonuncle content-drift class.
 |---|---|---|
 | CARVE | 0 | tool-ready container dissolution (`dll_boundary_resplit.py --carve`) |
 | CARVE-HARD | 0 | container with a known blocker (interleave / irreducible) |
-| FORENSIC | 22 | fn-prefix anomaly / appendix mislabel — human-grade content read |
-| RENAME-ONLY | 119 | clean filename↔content stem rename (no carve) |
+| FORENSIC | 19 | fn-prefix anomaly / appendix mislabel — human-grade content read |
+| RENAME-ONLY | 122 | clean filename↔content stem rename (no carve) |
 
 > **CARVE-HARD = 0**: the June-2026 `dll_boundary_resplit.py` campaign
 > (boundary_audit.md) TU-aligned every cutting boundary, so no resident
@@ -47,7 +47,8 @@ catch for the spellstone-in-prisonuncle content-drift class.
 
 | verdict | effort | count |
 |---|---|---|
-| MISLABELED | FORENSIC | 4 |
+| MISLABELED | FORENSIC | 1 |
+| MISLABELED | RENAME-ONLY | 3 |
 | HELPER-TU | RENAME-ONLY | 119 |
 | ENGINE-HOST | FORENSIC | 18 |
 
@@ -66,7 +67,7 @@ families.)
 | 4 | `main/dll/dll_000F_unk.c` | 1 | 24 | player×24 | CANONICAL-OK/OK |
 | 5 | `main/dll/dll_0285_spshop.c` | 1 | 23 | shop×23 | CANONICAL-OK/OK |
 | 6 | `main/dll/dll_02C0_front.c` | 1 | 21 | titlescreen×9, title×3, titlescreenfn×3, credits×2, should×1 | CANONICAL-OK/OK |
-| 7 | `main/dll/dll_003C_TumbleweedBush.c` | 1 | 19 | link×16, linkdrawfn×2, titlescreenfn×1 | MISLABELED/FORENSIC |
+| 7 | `main/dll/dll_003C_tumbleweedbush.c` | 1 | 19 | link×16, linkdrawfn×2, titlescreenfn×1 | MISLABELED/RENAME-ONLY |
 | 8 | `main/dll/dll_0001_camcontrol.c` | 1 | 18 | camera×18 | CANONICAL-OK/OK |
 | 9 | `main/dll/grenade.c` | 0 | 18 | trickyfn×12, trickyfoodfn×3, tricky×2, trickyflamefn×1 | HELPER-TU/OK |
 | 10 | `main/dll/player.c` | 0 | 18 | lightfoot×14, objfn×2, emission×1, camera×1 | HELPER-TU/OK |
@@ -80,9 +81,9 @@ address. `[lo-hi)` is the splits.txt `.text` range (the partition unit).
 | # | unit | range | verdict | effort | resident DLLs / anomalies | proposed / carve plan |
 |---|---|---|---|---|---|---|
 | 1 | `main/dll/dll_0000_baby_snowworm.c` | 80128120-8012FECC | MISLABELED | FORENSIC | 0x000 anom:gameui,pause,viewfn,pausemenufn | dll_0000_gameui.c |
-| 2 | `main/dll/dll_003C_TumbleweedBush.c` | 80130124-80131540 | MISLABELED | FORENSIC | 0x03C anom:link,linkdrawfn,titlescreenfn | dll_003C_link.c |
-| 3 | `main/dll/dll_0034_n_filemenu.c` | 8011611C-8011730C | MISLABELED | FORENSIC | 0x034 anom:title | dll_0034_titlemenu.c |
-| 4 | `main/dll/dll_0032_n_rareware.c` | 801159E4-80115F20 | MISLABELED | FORENSIC | 0x032 anom:title | dll_0032_titlescreeninit.c |
+| 2 | `main/dll/dll_003C_tumbleweedbush.c` | 80130124-80131540 | MISLABELED | RENAME-ONLY | 0x03C anom:link,linkdrawfn,titlescreenfn | main/dll/dll_003C_TumbleweedBush.c |
+| 3 | `main/dll/dll_0034_titlemenu.c` | 8011611C-8011730C | MISLABELED | RENAME-ONLY | 0x034 anom:n | main/dll/dll_0034_n_filemenu.c |
+| 4 | `main/dll/dll_0032_titlescreeninit.c` | 801159E4-80115F20 | MISLABELED | RENAME-ONLY | 0x032 | main/dll/dll_0032_n_rareware.c |
 | 5 | `main/dll/dll_80161130.c` | 80161130-80161F0C | HELPER-TU | RENAME-ONLY | — anom:grimble,scarab | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | 6 | `main/dll/dll_80136A40.c` | 80136A40-8013939C | HELPER-TU | RENAME-ONLY | — anom:tricky,debug,report,trickyfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | 7 | `main/dll/cutCam.c` | 80103524-801046F4 | HELPER-TU | RENAME-ONLY | — anom:camcontrol,camerafn,cammovefn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
@@ -239,10 +240,10 @@ Batches: 18. Region-disjoint: NO OVERLAP — verified (each batch owns a contigu
 | B03 | 8 | 80100AA4-80100C90 | RENAME-ONLY×8 |
 | B04 | 8 | 80100C90-80100DCC | RENAME-ONLY×8 |
 | B05 | 8 | 80100DCC-8010224C | RENAME-ONLY×8 |
-| B06 | 8 | 8010224C-80115F20 | FORENSIC×1,RENAME-ONLY×7 |
-| B07 | 8 | 8011611C-8011B5D4 | FORENSIC×1,RENAME-ONLY×7 |
+| B06 | 8 | 8010224C-80115F20 | RENAME-ONLY×8 |
+| B07 | 8 | 8011611C-8011B5D4 | RENAME-ONLY×8 |
 | B08 | 8 | 8011BFC8-80128120 | RENAME-ONLY×8 |
-| B09 | 8 | 80128120-8013F100 | FORENSIC×2,RENAME-ONLY×6 |
+| B09 | 8 | 80128120-8013F100 | FORENSIC×1,RENAME-ONLY×7 |
 | B10 | 8 | 8013F100-801659B8 | RENAME-ONLY×8 |
 | B11 | 8 | 80174438-801B1FF4 | RENAME-ONLY×8 |
 | B12 | 8 | 801B1FF4-801C0FD8 | RENAME-ONLY×8 |
@@ -329,13 +330,13 @@ Batches: 18. Region-disjoint: NO OVERLAP — verified (each batch owns a contigu
 | `main/dll/dll_8010A104.c` | 8010A104-8010A590 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/camshipbattle5C.c` | 8010A590-8010AEA8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_60.c` | 8010BF08-8010BF08 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/dll_0032_n_rareware.c` | 801159E4-80115F20 | MISLABELED | FORENSIC | dll_0032_titlescreeninit.c |
+| `main/dll/dll_0032_titlescreeninit.c` | 801159E4-80115F20 | MISLABELED | RENAME-ONLY | main/dll/dll_0032_n_rareware.c |
 
 ### Batch B07 — `8011611C-8011B5D4` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
-| `main/dll/dll_0034_n_filemenu.c` | 8011611C-8011730C | MISLABELED | FORENSIC | dll_0034_titlemenu.c |
+| `main/dll/dll_0034_titlemenu.c` | 8011611C-8011730C | MISLABELED | RENAME-ONLY | main/dll/dll_0034_n_filemenu.c |
 | `main/dll/dll_3B.c` | 8011730C-801175A4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_3E.c` | 8011846C-80118C88 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_40.c` | 80118C88-80118C88 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
@@ -362,7 +363,7 @@ Batches: 18. Region-disjoint: NO OVERLAP — verified (each batch owns a contigu
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
 | `main/dll/dll_0000_baby_snowworm.c` | 80128120-8012FECC | MISLABELED | FORENSIC | dll_0000_gameui.c |
-| `main/dll/dll_003C_TumbleweedBush.c` | 80130124-80131540 | MISLABELED | FORENSIC | dll_003C_link.c |
+| `main/dll/dll_003C_tumbleweedbush.c` | 80130124-80131540 | MISLABELED | RENAME-ONLY | main/dll/dll_003C_TumbleweedBush.c |
 | `main/dll/dll_80136A40.c` | 80136A40-8013939C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_DF.c` | 8013B368-8013D8F0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/MMP_cratercritter.c` | 8013D8F0-8013DB3C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
@@ -490,12 +491,10 @@ Single-DLL files with NO retail name whose OWN descriptor-slot fns
 (`<Family>_initialise/_update/_render`) name a family the descriptive
 filename contradicts — the descriptor itself proves the file is
 mislabeled (e.g. `baby_snowworm.c` whose slots are `GameUI_*`). Proposed
-stem is the slot fn prefix (manifest stem-derivation rule). 4 found.
+stem is the slot fn prefix (manifest stem-derivation rule). 2 found.
 
 | unit | dll | slot family | filename stem | proposed |
 |---|---|---|---|---|
-| `main/dll/dll_0032_n_rareware.c` | 0x032 | `title`×5 | `nrareware` | `dll_0032_titlescreeninit.c` |
-| `main/dll/dll_0034_n_filemenu.c` | 0x034 | `title`×5 | `nfilemenu` | `dll_0034_titlemenu.c` |
 | `main/dll/dll_0000_baby_snowworm.c` | 0x000 | `gameui`×11 | `babysnowworm` | `dll_0000_gameui.c` |
-| `main/dll/dll_003C_TumbleweedBush.c` | 0x03C | `link`×13 | `tumbleweedbush` | `dll_003C_link.c` |
+| `main/dll/dll_003C_tumbleweedbush.c` | 0x03C | `link`×13 | `tumbleweedbush` | `dll_003C_TumbleweedBush.c` |
 
