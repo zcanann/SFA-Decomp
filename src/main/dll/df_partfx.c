@@ -68,8 +68,6 @@ extern f32 lbl_803E1230;
  */
 extern int* Checkpoint_find(int id, int* slot);
 extern int getAngle(f32 dx, f32 dz);
-extern f32 mathCosf(f32 x);
-extern f32 mathSinf(f32 x);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E04D8;
 extern f32 lbl_803E04DC;
@@ -83,106 +81,7 @@ extern f32 lbl_803E0518;
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-int Checkpoint_func07(int* obj, int* state)
-{
-    int slotC;
-    int slot8;
-    char* cp;
-    char* cp2;
-    short ang;
-    f32 cosv, sinv, cos2, sin2;
-    f32 dist, dist2, nx, nz, offs, dz;
-    f32 offs2, distA, distB, dx, dy, len, q, proj, proj2, t0, sum, frac, zero;
-
-    if (*(int*)&((BaddieState*)state)->posY < 0)
-    {
-        *(int*)&((BaddieState*)state)->posZ = 0;
-        *(f32*)((char*)state + 0xc) = lbl_803E04E8;
-        if (*(int*)((char*)state + 0x10) < 0)
-        {
-            return 0;
-        }
-        *(int*)&((BaddieState*)state)->posY = *(int*)((char*)state + 0x10);
-    }
-    cp = (char*)Checkpoint_find(*(int*)&((BaddieState*)state)->posY, &slot8);
-    if (cp == NULL)
-    {
-        *(int*)&((BaddieState*)state)->posY = -1;
-        return 0;
-    }
-    cosv = mathSinf((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
-    sinv = mathCosf((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
-    offs = -(*(f32*)(cp + 8) * cosv + *(f32*)(cp + 0x10) * sinv);
-    dist = offs + (cosv * ((GameObject*)obj)->anim.localPosX + sinv * ((GameObject*)obj)->anim.localPosZ);
-    if (*(int*)(cp + 0x18) > -1 && dist >= lbl_803E04E8)
-    {
-        *(int*)&((BaddieState*)state)->posY = *(int*)(cp + 0x18);
-        *(f32*)((char*)state + 0xc) = lbl_803E050C;
-        *(int*)&((BaddieState*)state)->posZ = *(int*)&((BaddieState*)state)->posZ - 1;
-        return *(u8*)(cp + 0x29);
-    }
-    if (*(int*)(cp + 0x20) < 0)
-    {
-        return *(u8*)(cp + 0x29);
-    }
-    cp2 = (char*)Checkpoint_find(*(int*)(cp + 0x20), &slotC);
-    ang = getAngle(*(f32*)(cp2 + 8) - *(f32*)(cp + 8), *(f32*)(cp2 + 0x10) - *(f32*)(cp + 0x10));
-    cos2 = mathSinf((lbl_803E04D8 * (f32)(*(u8*)(cp2 + 0x29) << 8)) / lbl_803E04DC);
-    sin2 = mathCosf((lbl_803E04D8 * (f32)(*(u8*)(cp2 + 0x29) << 8)) / lbl_803E04DC);
-    offs2 = -(*(f32*)(cp2 + 8) * cos2 + *(f32*)(cp2 + 0x10) * sin2);
-    dist2 = offs2 + (cos2 * ((GameObject*)obj)->anim.localPosX + sin2 * ((GameObject*)obj)->anim.localPosZ);
-    zero = lbl_803E04E8;
-    if (dist2 < zero)
-    {
-        *(int*)&((BaddieState*)state)->posY = *(int*)(cp + 0x20);
-        *(f32*)((char*)state + 0xc) = zero;
-        *(int*)&((BaddieState*)state)->posZ = *(int*)&((BaddieState*)state)->posZ + 1;
-        return ang;
-    }
-    distA = offs + (cosv * *(f32*)(cp2 + 8) + sinv * *(f32*)(cp2 + 0x10));
-    distB = offs2 + (cos2 * *(f32*)(cp + 8) + sin2 * *(f32*)(cp + 0x10));
-    if (((distA < zero && dist < zero) || (distA >= lbl_803E04E8 && dist >= lbl_803E04E8)) &&
-        ((distB <= lbl_803E04E8 && dist2 <= lbl_803E04E8) || (distB > lbl_803E04E8 && dist2 > lbl_803E04E8)))
-    {
-        dx = *(f32*)(cp + 8) - *(f32*)(cp2 + 8);
-        dy = *(f32*)(cp + 0xc) - *(f32*)(cp2 + 0xc);
-        dz = *(f32*)(cp + 0x10) - *(f32*)(cp2 + 0x10);
-        len = sqrtf(dz * dz + (dx * dx + dy * dy));
-        if (len > lbl_803E04E8)
-        {
-            q = lbl_803E0504 / len;
-            nx = dx * q;
-            nz = dz * q;
-        }
-        proj = cosv * nx + sinv * nz;
-        if (proj > lbl_803E0510 && proj < lbl_803E0514)
-        {
-            return ang;
-        }
-        t0 = -dist / proj;
-        proj2 = cos2 * nx + sin2 * nz;
-        if (proj2 > lbl_803E0510 && proj2 < lbl_803E0514)
-        {
-            return ang;
-        }
-        sum = t0 + dist2 / proj2;
-        frac = lbl_803E04E8;
-        if (lbl_803E04E8 != sum)
-        {
-            frac = t0 / sum;
-        }
-        *(f32*)((char*)state + 0xc) = frac;
-        if (*(f32*)((char*)state + 0xc) < lbl_803E04E8)
-        {
-            *(f32*)((char*)state + 0xc) = lbl_803E04E8;
-        }
-        if (*(f32*)((char*)state + 0xc) >= lbl_803E0518)
-        {
-            *(f32*)((char*)state + 0xc) = lbl_803E0518;
-        }
-    }
-    return ang;
-}
+int Checkpoint_func07(int* obj, int* state);
 #pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
@@ -209,9 +108,7 @@ void FUN_800d7780(undefined param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void Checkpoint_release(void)
-{
-}
+void Checkpoint_release(void);
 
 void Dummy04_func14_nop(void)
 {
@@ -343,7 +240,7 @@ u8 screenTransition_func07(void) { return lbl_803DD42D; }
 
 /* Pattern wrappers. */
 extern u32 lbl_803DD410;
-void Checkpoint_reset(void) { lbl_803DD410 = 0x0; }
+void Checkpoint_reset(void);
 
 /* 12b 3-insn patterns. */
 extern u32 lbl_803DD43C;
@@ -621,6 +518,8 @@ extern f32 lbl_803E05B0;
 #pragma opt_common_subs off
 void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
 {
+    extern f32 mathCosf(f32 x); /* #57 */
+    extern f32 mathSinf(f32 x); /* #57 */
     f32 ang, vx, vz, q, w, dist, c, s;
 
     *(s8*)((char*)state + 0x34c) |= 1;
@@ -665,12 +564,7 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
 #pragma scheduling reset
 
 #pragma scheduling off
-void Checkpoint_initialise(void)
-{
-    lbl_803DD410 = 0;
-    lbl_803DD41C = lbl_8039CA98;
-    lbl_803DD418 = (void*)((u8*)lbl_8039CA98 + 0x28);
-}
+void Checkpoint_initialise(void);
 #pragma scheduling reset
 
 /* Checkpoint_Add: sorted insertion of (entry->_14 as key, entry as pointer) into lbl_8039C458 table. */
@@ -684,29 +578,7 @@ extern CheckpointSlot lbl_8039C458[];
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-void Checkpoint_Add(int* entry)
-{
-    int i = 0;
-    CheckpointSlot* p = lbl_8039C458;
-    int count = lbl_803DD410;
-    while (i < count && (u32)entry[5] > p[i].key)
-    {
-        i++;
-    }
-    {
-        CheckpointSlot* end = &lbl_8039C458[count];
-        while (count > i)
-        {
-            end->entry = (end - 1)->entry;
-            end->key = (end - 1)->key;
-            end--;
-            count--;
-        }
-    }
-    lbl_803DD410 = lbl_803DD410 + 1;
-    lbl_8039C458[i].entry = entry;
-    lbl_8039C458[i].key = entry[5];
-}
+void Checkpoint_Add(int* entry);
 #pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
@@ -761,31 +633,7 @@ void player_doProjGfx(int* p1, int p2, int p3, int count, int p5, int mode)
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-void Checkpoint_remove(int* obj)
-{
-    int count;
-    int i = 0;
-    CheckpointSlot* p = lbl_8039C458;
-    CheckpointSlot* e;
-
-    count = lbl_803DD410;
-
-    while (i < count && (u32) * (int*)&((GameObject*)obj)->anim.localPosZ != p[i].key)
-    {
-        i++;
-    }
-    if (i >= count) return;
-    count = lbl_803DD410 - 1;
-    lbl_803DD410 = count;
-    e = &lbl_8039C458[i];
-    while (i < count)
-    {
-        e->entry = (e + 1)->entry;
-        e->key = (e + 1)->key;
-        e++;
-        i++;
-    }
-}
+void Checkpoint_remove(int* obj);
 #pragma opt_common_subs reset
 extern f32 timeDelta;
 #pragma scheduling off
@@ -1287,171 +1135,1265 @@ extern f32 lbl_803E0530;
 extern f32 lbl_803E0534;
 extern f32 lbl_803E0538;
 
-void Checkpoint_func06(int* obj, int* state, int filter)
-{
-    int stack[64];
-    char visited[200];
-    int cur;
-    int slot;
-    int k, count, i, j;
-    char* cp;
-    char* p;
-    char* n;
-    char* e;
-    f32 cos1, sin1, cos2, sin2;
-    f32 dist1, dist2, nx, nz, offs1, dz;
-    f32 offs2, distA, distB, dx, dy, len, q, t0, sum, frac, b1, width;
-    f32 px, py, pz, outX, outY;
-    f32 ddx, ddy, ddz;
+void Checkpoint_func06(int* obj, int* state, int filter);
 
-    count = 0;
-    for (i = 0; i < (int)lbl_803DD410; i++)
+/* segment pragma-stack balance (re-split): */
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+
+/* === moved from main/dll/objfsa.c [800D8F90-800D9DCC) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/objfsa_romcurve.h"
+#include "main/dll/baddie_state.h"
+#include "main/dll/objfsa.h"
+#include "main/dll/path_control_interface.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/game_ui_interface.h"
+#include "main/game_object.h"
+#include "main/objanim.h"
+
+
+/* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
+ * deref-cleanup wave; curves.h re-exports it). */
+#include "main/dll/curve_walker.h"
+
+#include "main/dll/rom_curve_segment_projection.h"
+
+extern int mathFn_800dbff0(float* point);
+
+
+extern f32 lbl_803E05F0;
+extern int lbl_803DD464;
+extern int lbl_803DD468;
+
+#define OBJFSA_PATCHGROUP_PATCH_COUNT 4
+#define OBJFSA_PATCHGROUP_STRIDE 0x28
+#define OBJFSA_PATCHGROUP_PATCHES_OFFSET 0x3024
+#define OBJFSA_ACTIVE_WALKGROUPS_OFFSET 0x4C48
+#define OBJFSA_WALKGROUP_COUNT 0xB5
+
+typedef struct ObjfsaPatchPlane
+{
+    s16 normalX;
+    s16 normalZ;
+} ObjfsaPatchPlane;
+
+typedef struct ObjfsaPatch
+{
+    ObjfsaPatchPlane planes[OBJFSA_PATCHGROUP_PATCH_COUNT];
+    f32 planeOffsets[OBJFSA_PATCHGROUP_PATCH_COUNT];
+    s16 maxY;
+    s16 minY;
+    u16 groupId;
+    s16 exit0X;
+    s16 exit0Z;
+    s16 exit1X;
+    s16 exit1Z;
+    u8 pad2E[2];
+} ObjfsaPatch;
+
+typedef struct ObjfsaWalkGroup
+{
+    ObjfsaPatchPlane planes[OBJFSA_PATCHGROUP_PATCH_COUNT];
+    f32 planeOffsets[OBJFSA_PATCHGROUP_PATCH_COUNT];
+    s16 maxY;
+    s16 minY;
+    u8 patchIndices[OBJFSA_PATCHGROUP_PATCH_COUNT];
+} ObjfsaWalkGroup;
+
+typedef struct ObjfsaWalkGroupPatchInfo
+{
+    u8 walkGroupIndex;
+    u8 patchMask;
+    u16 patchGroupIds[OBJFSA_PATCHGROUP_PATCH_COUNT];
+} ObjfsaWalkGroupPatchInfo;
+
+extern ObjfsaWalkGroup lbl_8039FAE8[];
+
+
+
+
+static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
+
+
+
+
+/*
+ * --INFO--
+ *
+ * Function: player_setScale
+ * EN v1.0 Address: 0x800D8F90
+ * EN v1.0 Size: 256b
+ * EN v1.1 Address: 0x800D8FE0
+ * EN v1.1 Size: 296b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern u8 lbl_803DD440;
+
+typedef struct PlayerMoveBuf
+{
+    f32 a;
+    f32 b;
+    f32 c;
+    u8 padC[2];
+    s16 angleDelta;
+    u8 pad10[2];
+    u8 flag;
+    s8 ids[8];
+    s8 count;
+} PlayerMoveBuf;
+
+#pragma scheduling off
+#pragma peephole off
+void player_setScale(f32 dt, short* moveState, uint* obj, uint flags)
+{
+    PlayerMoveBuf buf;
+    s8* ptr;
+    int i;
+    f32 stopVal;
+
+    buf.flag = 0;
+    *(s8*)&((BaddieState*)obj)->moveDone = (s8)ObjAnim_AdvanceCurrentMove(
+        ((BaddieState*)obj)->moveSpeed, dt, (int)moveState, (ObjAnimEventList*)&buf);
+
+    ((BaddieState*)obj)->eventFlags = 0;
+    ptr = (s8*)&buf;
+    for (i = 0; i < buf.count; i++)
     {
-        visited[i] = 0;
+        ((BaddieState*)obj)->eventFlags |= 1 << ptr[0x13];
+        ptr++;
     }
-    cp = (char*)Checkpoint_find(*(int*)((char*)state + 0x10), &cur);
-    if (cp != NULL)
+
+    *obj &= ~0x10000;
+
+    if (buf.flag != 0)
     {
-        stack[count++] = cur;
-    }
-    else
-    {
-        for (i = 0; i < (int)lbl_803DD410; i++)
+        if ((flags & 0x10) != 0)
         {
-            e = (char*)lbl_8039C458[i].entry;
-            if (visited[i] == 0 && (filter == -1 || *(s8*)(e + 0x28) == filter))
+            if ((flags & 1) != 0)
             {
-                ddx = *(f32*)(e + 8) - ((GameObject*)obj)->anim.localPosX;
-                ddy = *(f32*)(e + 0xc) - ((GameObject*)obj)->anim.localPosY;
-                ddz = *(f32*)(e + 0x10) - ((GameObject*)obj)->anim.localPosZ;
-                if (ddz * ddz + (ddx * ddx + ddy * ddy) < lbl_803E051C)
-                {
-                    stack[count++] = i;
-                    for (j = i; j < (int)lbl_803DD410; j++)
-                    {
-                        if (filter == *(s8*)((char*)lbl_8039C458[j].entry + 0x28))
-                        {
-                            visited[j] = 1;
-                        }
-                    }
-                }
+                *(f32*)((char*)obj + 0x2b4) = -buf.c;
             }
-        }
-    }
-    for (i = 0; i < (int)lbl_803DD410; i++)
-    {
-        visited[i] = 0;
-    }
-    for (;;)
-    {
-        if (count > 0)
-        {
-            count--;
-            cur = stack[count];
-            cp = (char*)lbl_8039C458[cur].entry;
+            if ((flags & 2) != 0)
+            {
+                *(f32*)((char*)obj + 0x2b4) = buf.a;
+            }
+            if ((flags & 4) != 0)
+            {
+                *(f32*)((char*)obj + 0x2b4) = buf.b;
+            }
+            if ((flags & 8) != 0)
+            {
+                *moveState += buf.angleDelta;
+            }
         }
         else
         {
-            *(int*)((char*)state + 0x10) = -1;
-            return;
-        }
-        if (cp == NULL)
-        {
-            return;
-        }
-        p = cp;
-        for (k = 0; k < 2; k++)
-        {
-            n = (char*)Checkpoint_find(*(int*)(p + 0x20), &slot);
-            if (n != NULL)
+            if ((flags & 1) != 0)
             {
-                cos1 = mathSinf((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
-                sin1 = mathCosf((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
-                offs1 = -(*(f32*)(cp + 8) * cos1 + *(f32*)(cp + 0x10) * sin1);
-                cos2 = mathSinf((lbl_803E04D8 * (f32)(*(u8*)(n + 0x29) << 8)) / lbl_803E04DC);
-                sin2 = mathCosf((lbl_803E04D8 * (f32)(*(u8*)(n + 0x29) << 8)) / lbl_803E04DC);
-                offs2 = -(*(f32*)(n + 8) * cos2 + *(f32*)(n + 0x10) * sin2);
-                dist1 = offs1 + (cos1 * ((GameObject*)obj)->anim.localPosX + sin1 * ((GameObject*)obj)->anim.localPosZ);
-                dist2 = offs2 + (cos2 * ((GameObject*)obj)->anim.localPosX + sin2 * ((GameObject*)obj)->anim.localPosZ);
-                distA = offs1 + (cos1 * *(f32*)(n + 8) + sin1 * *(f32*)(n + 0x10));
-                distB = offs2 + (cos2 * *(f32*)(cp + 8) + sin2 * *(f32*)(cp + 0x10));
-                if (((distA <= lbl_803E04E8 && dist1 <= lbl_803E04E8) || (distA > lbl_803E04E8 && dist1 > lbl_803E04E8))
-                    &&
-                    ((distB <= lbl_803E04E8 && dist2 <= lbl_803E04E8) || (distB > lbl_803E04E8 && dist2 >
-                        lbl_803E04E8)))
+                ((BaddieState*)obj)->animSpeedA = (f32)(-(f64)buf.c / dt);
+            }
+            if ((flags & 2) != 0)
+            {
+                ((BaddieState*)obj)->animSpeedB = (f32)((f64)buf.a / dt);
+            }
+            if ((flags & 8) != 0)
+            {
+                *moveState += buf.angleDelta;
+            }
+            if ((flags & 4) != 0)
+            {
+                *(f32*)((char*)obj + 0x288) = (f32)((f64)buf.b / dt);
+                *obj |= 0x10000;
+            }
+        }
+    }
+    else
+    {
+        stopVal = lbl_803E0570;
+        ((BaddieState*)obj)->animSpeedA = stopVal;
+        ((BaddieState*)obj)->animSpeedB = stopVal;
+    }
+
+    lbl_803DD440 = 1;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800d9090
+ * EN v1.0 Address: 0x800D9090
+ * EN v1.0 Size: 104b
+ * EN v1.1 Address: 0x800D9108
+ * EN v1.1 Size: 184b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800d9de0
+ * EN v1.0 Address: 0x800D9DE0
+ * EN v1.0 Size: 1972b
+ * EN v1.1 Address: 0x800DA4C8
+ * EN v1.1 Size: 1772b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, float* param_9, float param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800da594
+ * EN v1.0 Address: 0x800DA594
+ * EN v1.0 Size: 84b
+ * EN v1.1 Address: 0x800DABB4
+ * EN v1.1 Size: 88b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_800da594(double param_1, float* param_2);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800da5e8
+ * EN v1.0 Address: 0x800DA5E8
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x800DAC0C
+ * EN v1.1 Size: 1628b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+bool FUN_800da5e8(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, float* param_9, float param_10, float param_11, float param_12, undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800da700
+ * EN v1.0 Address: 0x800DA700
+ * EN v1.0 Size: 336b
+ * EN v1.1 Address: 0x800DB36C
+ * EN v1.1 Size: 324b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_800da700(undefined4 param_1, undefined4 param_2, int param_3);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800da850
+ * EN v1.0 Address: 0x800DA850
+ * EN v1.0 Size: 16b
+ * EN v1.1 Address: 0x800DB4B0
+ * EN v1.1 Size: 28b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_800da850(uint param_1, undefined* param_2);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800db110
+ * EN v1.0 Address: 0x800DB110
+ * EN v1.0 Size: 480b
+ * EN v1.1 Address: 0x800DBCD8
+ * EN v1.1 Size: 344b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined2 FUN_800db110(float* param_1, int param_2, undefined4 param_3, undefined4 param_4, byte param_5);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800db47c
+ * EN v1.0 Address: 0x800DB47C
+ * EN v1.0 Size: 532b
+ * EN v1.1 Address: 0x800DBF88
+ * EN v1.1 Size: 464b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_800db47c(float* param_1, undefined* param_2);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800db690
+ * EN v1.0 Address: 0x800DB690
+ * EN v1.0 Size: 400b
+ * EN v1.1 Address: 0x800DC158
+ * EN v1.1 Size: 292b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+ushort FUN_800db690(float* param_1);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800db820
+ * EN v1.0 Address: 0x800DB820
+ * EN v1.0 Size: 1096b
+ * EN v1.1 Address: 0x800DC27C
+ * EN v1.1 Size: 936b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int FUN_800db820(float* param_1);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800dd3e4
+ * EN v1.0 Address: 0x800DD3E4
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x800DD8CC
+ * EN v1.1 Size: 2208b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4 FUN_800dd3e4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, float* param_9, undefined4 param_10, uint param_11);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800dd62c
+ * EN v1.0 Address: 0x800DD62C
+ * EN v1.0 Size: 2048b
+ * EN v1.1 Address: 0x800DE41C
+ * EN v1.1 Size: 1880b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4 FUN_800dd62c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, float* param_9, uint param_10, undefined4 param_11, int param_12, int param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800ddf84
+ * EN v1.0 Address: 0x800DDF84
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x800DED20
+ * EN v1.1 Size: 956b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4 FUN_800ddf84(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, float* param_9, float param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800ddf8c
+ * EN v1.0 Address: 0x800DDF8C
+ * EN v1.0 Size: 2572b
+ * EN v1.1 Address: 0x800DF0DC
+ * EN v1.1 Size: 2428b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4 FUN_800ddf8c(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, float* param_9);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800de998
+ * EN v1.0 Address: 0x800DE998
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x800DFA58
+ * EN v1.1 Size: 2400b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4 FUN_800de998(double param_1, undefined8 param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, float* param_9, int param_10, undefined4 param_11, int param_12, undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
+
+/*
+ * --INFO--
+ *
+ * Function: curves_findNearObj
+ * EN v1.0 Address: 0x800E0134
+ * EN v1.0 Size: 696b
+ * EN v1.1 Address: 0x800E03B8
+ * EN v1.1 Size: 696b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char bboxMode);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800dece0
+ * EN v1.0 Address: 0x800DECE0
+ * EN v1.0 Size: 1476b
+ * EN v1.1 Address: 0x800E0670
+ * EN v1.1 Size: 1572b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+
+
+
+/*
+ * --INFO--
+ *
+ * Function: curves_lengthFn24
+ * EN v1.0 Address: 0x800E0E18
+ * EN v1.0 Size: 1888b
+ * EN v1.1 Address: 0x800E109C
+ * EN v1.1 Size: 1888b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2);
+
+/*
+ * --INFO--
+ *
+ * Function: curves_getPos
+ * EN v1.0 Address: 0x800E1578
+ * EN v1.0 Size: 592b
+ * EN v1.1 Address: 0x800E17FC
+ * EN v1.1 Size: 592b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+/*
+ * --INFO--
+ *
+ * Function: walkGroupFn_800db3e4
+ * EN v1.0 Address: 0x800DB3E4
+ * EN v1.0 Size: 1268b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, uint currentWalkGroupIndex);
+
+/*
+ * --INFO--
+ *
+ * Function: isPointWithinPatchGroup
+ * EN v1.0 Address: 0x800DB8D8
+ * EN v1.0 Size: 372b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+uint isPointWithinPatchGroup(float* point, uint patchGroupIndex, int groupId);
+
+/*
+ * --INFO--
+ *
+ * Function: getPatchGroup
+ * EN v1.0 Address: 0x800DBA4C
+ * EN v1.0 Size: 344b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+u16 getPatchGroup(float* point, int patchGroupIndex, undefined4 param_3, undefined4 param_4, u8 startPatchIndex);
+
+/*
+ * --INFO--
+ *
+ * Function: isInWalkGroupOrPatch
+ * EN v1.0 Address: 0x800DBBA4
+ * EN v1.0 Size: 344b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma peephole on
+uint isInWalkGroupOrPatch(float* point);
+
+/*
+ * --INFO--
+ *
+ * Function: Objfsa_GetWalkGroupIndexAtPoint
+ * EN v1.0 Address: 0x800DBCFC
+ * EN v1.0 Size: 464b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma peephole off
+int Objfsa_GetWalkGroupIndexAtPoint(float* point, ObjfsaWalkGroupPatchInfo* patchInfo);
+
+/*
+ * --INFO--
+ *
+ * Function: Objfsa_GetPatchGroupIdAtPoint
+ * EN v1.0 Address: 0x800DBECC
+ * EN v1.0 Size: 292b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+u16 Objfsa_GetPatchGroupIdAtPoint(float* point);
+
+/*
+ * --INFO--
+ *
+ * Function: mathFn_800dbff0
+ * EN v1.0 Address: 0x800DBFF0
+ * EN v1.0 Size: 936b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#define WALKGROUP_TRY_RETURN(idx)                                                  \
+    if (Objfsa_IsWalkGroupActive(idx)) {                                           \
+        g = &lbl_8039FAE8[idx];                                                    \
+        y = point[1];                                                              \
+        if (y < (f32)g->maxY && y > (f32)g->minY) {                                \
+            z = point[2];                                                          \
+            x = point[0];                                                          \
+            i = 0;                                                                 \
+            j = i;                                                                 \
+            for (; i < 4; i++, j += 2) {                                           \
+                if (g->planeOffsets[i] +                                           \
+                        (x * (f32)((s16 *)g)[j] + z * (f32)((s16 *)g)[j + 1]) >    \
+                    0.0f) {                                                        \
+                    break;                                                         \
+                }                                                                  \
+            }                                                                      \
+            if (i == 4) {                                                          \
+                lbl_803DD464 = (idx);                                              \
+                return (idx);                                                      \
+            }                                                                      \
+        }                                                                          \
+    }
+
+int mathFn_800dbff0(float* point);
+
+/*
+ * --INFO--
+ *
+ * Function: RomCurve_findProjectedCurveFromStart
+ * EN v1.0 Address: 0x800DFE64
+ * EN v1.0 Size: 720b
+ * EN v1.1 Address: 0x800E1A4C
+ * EN v1.1 Size: 860b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+
+/* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling on
+#pragma peephole on
+void player_release(void)
+{
+}
+
+void player_initialise(void)
+{
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 8b "li r3, N; blr" returners. */
+
+/* sda21 accessors. */
+extern u32 playerOverride;
+void player_setOverride(u32 x) { playerOverride = x; }
+
+/* Pattern wrappers. */
+
+/* player_init: memset constructor */
+extern void* memset(void* dst, int val, u32 n);
+extern f32 lbl_803E05BC;
+#pragma scheduling off
+#pragma peephole off
+void player_init(int unused, void* obj, int a, int b)
+{
+    memset(obj, 0, 0x35c);
+    *(s16*)((char*)obj + 0x26c) = (s16)a;
+    *(s16*)((char*)obj + 0x26e) = (s16)b;
+    ((BaddieState*)obj)->moveJustStartedA = 1;
+    ((BaddieState*)obj)->moveJustStartedB = 1;
+    ((BaddieState*)obj)->velSmoothTime = lbl_803E05BC;
+    *(s32*)((char*)obj + 0x33c) = -1;
+    *(s32*)((char*)obj + 0x340) = -1;
+    *(u8*)((char*)obj + 0x358) = 0;
+}
+
+/* fn_800D9F38 ? large init updating multiple float fields based on b's bytes */
+
+int fn_800D9F38(void* a, void* b);
+
+/* player_updateVel */
+extern u8 lbl_803DD44E;
+extern u8 lbl_803DD44F;
+extern u8 lbl_803DD450;
+extern f64 lbl_803E0598;
+extern f32 lbl_803E05C0;
+extern f32 lbl_803E05C4;
+extern f32 lbl_803DD444;
+extern f32 lbl_803DD448;
+extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
+extern void setMatrixFromObjectPos(f32* matrix, void* objpos);
+extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+
+void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
+{
+    int changed;
+    int done;
+    int iterations;
+    int currentState;
+    int result;
+    void (*exitFn)(char*, char*);
+
+    changed = 0;
+    iterations = 0;
+    lbl_803DD450 = 0;
+    lbl_803DD440 = 0;
+
+    if (*(s16*)(state + 0x274) != *(s16*)(state + 0x276))
+    {
+        *(u8*)(state + 0x27a) = 1;
+        *(s16*)(state + 0x338) = 0;
+    }
+
+    do
+    {
+        done = 0;
+        currentState = *(s16*)(state + 0x274);
+        result = (*(int (**)(char*, char*, f32))(stateFns + currentState * 4))(pos, state, dt);
+        if (result > 0)
+        {
+            *(s16*)(state + 0x276) = *(s16*)(state + 0x274);
+            *(s16*)(state + 0x274) = (s16)(result - 1);
+            exitFn = *(void (**)(char*, char*))(state + 0x304);
+            if (exitFn != 0)
+            {
+                exitFn(pos, state);
+                *(void**)(state + 0x304) = 0;
+            }
+            *(void**)(state + 0x304) = *(void**)(state + 0x308);
+            *(u8*)(state + 0x27a) = 1;
+            *(s16*)(state + 0x338) = 0;
+            *(u8*)(state + 0x34d) = 0;
+            *(u8*)(state + 0x34c) = 0;
+            *(u8*)(state + 0x356) = 0;
+            *(s16*)(state + 0x278) = 0;
+            if (*(int*)(pos + 0x54) != 0)
+            {
+                *(u8*)(*(int*)(pos + 0x54) + 0x70) = 0;
+            }
+        }
+        else if (result < 0)
+        {
+            result = -result;
+            *(s16*)(state + 0x274) = (s16)result;
+            if (result != currentState)
+            {
+                *(s16*)(state + 0x276) = (s16)currentState;
+                exitFn = *(void (**)(char*, char*))(state + 0x304);
+                if (exitFn != 0)
                 {
-                    dx = *(f32*)(cp + 8) - *(f32*)(n + 8);
-                    dy = *(f32*)(cp + 0xc) - *(f32*)(n + 0xc);
-                    dz = *(f32*)(cp + 0x10) - *(f32*)(n + 0x10);
-                    len = sqrtf(dz * dz + (dx * dx + dy * dy));
-                    if (len > lbl_803E0520)
-                    {
-                        q = lbl_803E0504 / len;
-                        nx = dx * q;
-                        nz = dz * q;
-                    }
-                    q = cos1 * nx + sin1 * nz;
-                    t0 = -dist1 / q;
-                    sum = t0 + dist2 / (cos2 * nx + sin2 * nz);
-                    if (sum > lbl_803E0528 || sum < lbl_803E052C)
-                    {
-                        frac = t0 / sum;
-                    }
-                    else
-                    {
-                        frac = lbl_803E04E8;
-                    }
-                    if (frac < lbl_803E04E8)
-                    {
-                        frac = lbl_803E04E8;
-                    }
-                    if (frac >= lbl_803E0518)
-                    {
-                        frac = lbl_803E0518;
-                    }
-                    b1 = (f32) * (u8*)(cp + 0x2a);
-                    width = frac * ((f32) * (u8*)(n + 0x2a) - b1) + b1;
-                    px = -(dx * frac - *(f32*)(cp + 8));
-                    py = -(dy * frac - *(f32*)(cp + 0xc));
-                    pz = -(dz * frac - *(f32*)(cp + 0x10));
-                    outY = (((GameObject*)obj)->anim.localPosY - py) / width;
-                    outX = (-(px * nz - pz * nx) + (((GameObject*)obj)->anim.localPosX * nz - ((GameObject*)obj)->anim.
-                        localPosZ * nx)) / width;
-                    if (outX < lbl_803E0530 || outX > lbl_803E0534 || outY < lbl_803E0538 || outY > lbl_803E0534)
-                    {
-                    }
-                    else
-                    {
-                        *(int*)((char*)state + 0x10) = *(int*)(cp + 0x14);
-                        *(int*)&((BaddieState*)state)->posX = *(int*)(cp + 0x14);
-                        *(f32*)((char*)state + 0) = outX;
-                        *(f32*)((char*)state + 4) = outY;
-                        *(f32*)((char*)state + 8) = frac;
-                        *(s16*)((char*)state + 0x20) = *(s8*)(cp + 0x28);
-                        return;
-                    }
+                    exitFn(pos, state);
+                    *(void**)(state + 0x304) = 0;
+                }
+                *(void**)(state + 0x304) = *(void**)(state + 0x308);
+                *(u8*)(state + 0x27a) = 1;
+                *(s16*)(state + 0x338) = 0;
+                *(u8*)(state + 0x34d) = 0;
+                *(u8*)(state + 0x34c) = 0;
+                *(u8*)(state + 0x356) = 0;
+                *(s16*)(state + 0x278) = 0;
+                if (*(int*)(pos + 0x54) != 0)
+                {
+                    *(u8*)(*(int*)(pos + 0x54) + 0x70) = 0;
                 }
             }
-            p += 4;
+            done = 1;
+            changed = 1;
         }
-        if (visited[cur] == 0)
+        else
         {
-            p = cp + 4;
-            for (k = 1; k >= 0; k--)
+            done = 1;
+        }
+
+        iterations++;
+        if (iterations > 0xff)
+        {
+            done = 1;
+        }
+    }
+    while (done == 0);
+
+    if (changed == 0)
+    {
+        *(u8*)(state + 0x27a) = 0;
+    }
+    *(s16*)(state + 0x276) = *(s16*)(state + 0x274);
+
+    if (lbl_803DD440 == 0 && ((s32) * (s8*)(state + 0x34c) & 1) == 0)
+    {
+        u8 animEvents[0x1c];
+        int i;
+
+        animEvents[0x1b] = 0;
+        *(s8*)(state + 0x346) = ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(
+            (int)pos, *(f32*)(state + 0x2a0), dt, (ObjAnimEventList*)animEvents);
+        *(u32*)(state + 0x314) = 0;
+        for (i = 0; i < (s8)animEvents[0x1b]; i++)
+        {
+            *(u32*)(state + 0x314) |= 1 << (s32)(s8)
+            animEvents[0x13 + i];
+        }
+        *(u32*)state &= 0xfffeffff;
+    }
+
+    if ((*(u32*)state & 0x4000) == 0)
+    {
+        int decay;
+
+        decay = (s32)((f32)((f64) * (s16*)(pos + 2) - lbl_803E0598) * dt * lbl_803E05C0);
+        *(s16*)(pos + 2) = *(s16*)(pos + 2) - (s16)decay;
+        decay = (s32)((f32)((f64) * (s16*)(pos + 4) - lbl_803E0598) * dt * lbl_803E05C0);
+        *(s16*)(pos + 4) = *(s16*)(pos + 4) - (s16)decay;
+    }
+}
+
+void player_update(char* pos, char* state, float dt, float pathDt, int stateFns, int auxStateFns)
+{
+    extern void player_applyVelocityStep(char* pos, char* state, f32 dt); /* #57 */
+    extern void fn_800D8414(char* pos, char* state); /* #57 */
+    struct
+    {
+        s16 rotX;
+        s16 rotY;
+        s16 rotZ;
+        f32 scale;
+        f32 x;
+        f32 y;
+        f32 z;
+    } localTransform;
+    f32 matrix[16];
+    int keepPathControls;
+    int attachment;
+    int mapBlock;
+    int overrideObj;
+    f32 dx;
+    f32 dz;
+    f32 dist;
+    f32 limit;
+
+    keepPathControls = 1;
+    lbl_803DD44E = 0;
+
+    attachment = *(int*)(state + 0x2d0);
+    if (attachment != 0)
+    {
+        dx = *(f32*)(attachment + 0xc) - *(f32*)(pos + 0xc);
+        dz = *(f32*)(attachment + 0x14) - *(f32*)(pos + 0x14);
+        *(f32*)(state + 0x2c0) = sqrtf(dx * dx + dz * dz);
+    }
+    else
+    {
+        *(f32*)(state + 0x2c0) = lbl_803E0570;
+    }
+
+    if ((*(u32*)state & 0x8000) != 0 && *(int*)(pos + 0xc0) == 0)
+    {
+        fn_800D915C((int)pos, (int*)state, (void*)auxStateFns, dt);
+        *(s16*)(state + 0x32e) = (s16)((f32) * (s16*)(state + 0x32e) + dt);
+        if ((f32) * (s16*)(state + 0x32e) > lbl_803E05C4)
+        {
+            *(s16*)(state + 0x32e) = 10000;
+        }
+    }
+
+    *(u32*)state |= 0x8000;
+
+    if (*(int*)(state + 0x27c) != 0)
+    {
+        localTransform.rotX = *(s16*)(pos + 0);
+        localTransform.rotY = *(s16*)(pos + 2);
+        localTransform.rotZ = *(s16*)(pos + 4);
+        localTransform.scale = lbl_803E0588;
+        localTransform.x = lbl_803E0570;
+        localTransform.y = lbl_803E0570;
+        localTransform.z = lbl_803E0570;
+        setMatrixFromObjectPos(matrix, &localTransform);
+
+        attachment = *(int*)(state + 0x27c);
+        Matrix_TransformPoint(matrix, lbl_803E0570, *(f32*)&lbl_803E0570, lbl_803E0588,
+                              (f32*)(attachment + 0x4), (f32*)(attachment + 0x8), (f32*)(attachment + 0xc));
+        attachment = *(int*)(state + 0x27c);
+        Matrix_TransformPoint(matrix, lbl_803E0570, lbl_803E0588, lbl_803E0570,
+                              (f32*)(attachment + 0x10), (f32*)(attachment + 0x14), (f32*)(attachment + 0x18));
+        attachment = *(int*)(state + 0x27c);
+        Matrix_TransformPoint(matrix, lbl_803E0588, lbl_803E0570, *(f32*)&lbl_803E0570,
+                              (f32*)(attachment + 0x1c), (f32*)(attachment + 0x20), (f32*)(attachment + 0x24));
+    }
+
+    if ((*(u32*)state & 0x1000000) == 0)
+    {
+        fn_800D8414(pos, state);
+    }
+
+    *(u32*)state &= 0xffdfffff;
+    *(u8*)(state + 0x34d) = 0;
+    lbl_803DD434 = 0;
+    *(u32*)state &= 0xfff7ffff;
+    *(u8*)(state + 0x34c) = 0;
+    lbl_803DD44F = 0;
+
+    playerRunStateMachine(pos, state, dt, stateFns);
+
+    *(s16*)(state + 0x338) = (s16)((f32) * (s16*)(state + 0x338) + dt);
+    if ((f32) * (s16*)(state + 0x338) > lbl_803E05C4)
+    {
+        *(s16*)(state + 0x338) = 10000;
+    }
+
+    lbl_803DD448 = *(f32*)(pos + 0xc);
+    lbl_803DD444 = *(f32*)(pos + 0x14);
+    mapBlock = objPosToMapBlockIdx(*(f32*)(pos + 0x18), *(f32*)(pos + 0x1c), *(f32*)(pos + 0x20));
+    if (mapBlock == -1 && *(int*)(pos + 0x30) == 0)
+    {
+        *(u32*)state |= 0x200000;
+        keepPathControls = 0;
+    }
+
+    if ((*(u32*)state & 0x1000000) == 0)
+    {
+        player_applyVelocityStep(pos, state, dt);
+    }
+
+    overrideObj = playerOverride;
+    if (overrideObj != 0)
+    {
+        dx = *(f32*)(overrideObj + 0xc) - lbl_803DD448;
+        dz = *(f32*)(overrideObj + 0x14) - lbl_803DD444;
+        dist = sqrtf(dx * dx + dz * dz);
+        if (dist < lbl_803E05BC)
+        {
+            limit = sqrtf((*(f32*)(pos + 0xc) - lbl_803DD448) * (*(f32*)(pos + 0xc) - lbl_803DD448) +
+                (*(f32*)(pos + 0x14) - lbl_803DD444) * (*(f32*)(pos + 0x14) - lbl_803DD444));
+            if (limit < lbl_803E05B4)
             {
-                n = (char*)Checkpoint_find(*(int*)(p + 0x18), &slot);
-                if (n != NULL && visited[slot] == 0 && count < 0x3c)
-                {
-                    stack[count++] = slot;
-                }
-                n = (char*)Checkpoint_find(*(int*)(p + 0x20), &slot);
-                if (n != NULL && visited[slot] == 0 && count < 0x3c)
-                {
-                    stack[count++] = slot;
-                }
-                p -= 4;
+                limit = lbl_803E05B4;
             }
-            visited[cur] = 1;
+
+            if (dist < lbl_803E0588)
+            {
+                *(f32*)(pos + 0xc) = *(f32*)(overrideObj + 0xc);
+                *(f32*)(pos + 0x14) = *(f32*)(overrideObj + 0x14);
+            }
+            else
+            {
+                if (limit > dist)
+                {
+                    limit = dist;
+                }
+                *(f32*)(pos + 0xc) = dx / dist * limit + lbl_803DD448;
+                *(f32*)(pos + 0x14) = dz / dist * limit + lbl_803DD444;
+            }
+        }
+    }
+
+    playerOverride = 0;
+
+    if ((*(u32*)state & 0x1000000) == 0 && (*(u32*)state & 0x400000) == 0 && keepPathControls != 0)
+    {
+        (*gPathControlInterface)->update(pos, state + 0x4, dt);
+        (*gPathControlInterface)->apply(pos, state + 0x4);
+        (*gPathControlInterface)->advance(pos, state + 0x4, pathDt);
+
+        if (((s32) * (s8*)(state + 0x264) & 0x10) == 0)
+        {
+            *(u32*)state &= 0xfffbffff;
+        }
+        else
+        {
+            *(u32*)state |= 0x40000;
+        }
+
+        if ((*(u32*)state & 0x800000) != 0)
+        {
+            if (((s32) * (s8*)(state + 0x264) & 2) != 0 || *(u8*)(state + 0x262) != 0)
+            {
+                *(f32*)(pos + 0x24) = (*(f32*)(pos + 0xc) - *(f32*)(*(int*)(pos + 0x54) + 0x10)) / dt;
+                *(f32*)(pos + 0x2c) = (*(f32*)(pos + 0x14) - *(f32*)(*(int*)(pos + 0x54) + 0x18)) / dt;
+            }
+            *(u32*)state &= 0xff7fffff;
+        }
+    }
+}
+
+void player_updateVel(char* p, char* obj, int unused)
+{
+    extern float mathCosf(double x); /* #57 */
+    extern float mathSinf(double angle); /* #57 */
+    float fcos, fsin;
+    if (((s32)(s8) * (obj + 0x34c) & 1) != 0)
+    {
+        fcos = mathSinf(lbl_803E05A4 * (float)(s32) * (s16*)p / lbl_803E05A8);
+        fsin = mathCosf(lbl_803E05A4 * (float)(s32) * (s16*)p / lbl_803E05A8);
+        if (((s32)(s8) * (obj + 0x34c) & 8) != 0)
+        {
+            *(f32*)(obj + 0x280) = -*(f32*)(p + 0x2c) * fsin - *(f32*)(p + 0x24) * fcos;
+            *(f32*)(obj + 0x294) = *(f32*)(obj + 0x280);
+        }
+        else
+        {
+            *(f32*)(obj + 0x284) = *(f32*)(p + 0x24) * fsin - *(f32*)(p + 0x2c) * fcos;
+            *(f32*)(obj + 0x280) = -*(f32*)(p + 0x2c) * fsin - *(f32*)(p + 0x24) * fcos;
+            if (((s32)(s8) * (obj + 0x34c) & 4) != 0)
+            {
+                *(f32*)(obj + 0x294) = sqrtf(*(f32*)(p + 0x24) * *(f32*)(p + 0x24) +
+                    *(f32*)(p + 0x2c) * *(f32*)(p + 0x2c));
+            }
+        }
+        *(s8*)(obj + 0x34c) = 0;
+        *(u32*)obj |= 0x80000;
+        lbl_803DD434 = 1;
+        lbl_803DD44F = 0;
+        lbl_803DD44E = 1;
+        playerRunStateMachine(p, obj, timeDelta, unused);
+    }
+}
+
+
+/* RomCurve_setA4: similar to fn_800D9F38 branch2 with different consts */
+extern f32 lbl_803E0610;
+extern f32 lbl_803E0614;
+extern f32 lbl_803E0618;
+
+void RomCurve_setA4(void* a, void* b);
+
+
+
+#define ROMCURVE_ADD_LINK(off, mask, wantSet)                                     \
+    neighborId = *(s32 *)(curve + (off));                                         \
+    if (neighborId > -1 && (((*(s8 *)(curve + 0x1b) & (mask)) != 0) == (wantSet)) && \
+        neighborId != -1) {                                                       \
+        candidateIds[candidateCount++] = neighborId;                              \
+    }
+
+#define ROMCURVE_REFRESH_CONTROL(secondOff)                                       \
+    *(f32 *)(stateBytes + 0xb8) = *(f32 *)(*(s32 *)(stateBytes + 0xa0) + 0x8);    \
+    *(f32 *)(stateBytes + 0xbc) = *(f32 *)(*(s32 *)(stateBytes + (secondOff)) + 0x8); \
+    t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2e) *                 \
+        mathSinf(lbl_803E0614 *                                                \
+                    (float)((s32)*(s8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2c) << 8) / \
+                    lbl_803E0618);                                                \
+    *(f32 *)(stateBytes + 0xc0) = lbl_803E0610 * t;                               \
+    t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2e) *          \
+        mathSinf(lbl_803E0614 *                                                \
+                    (float)((s32)*(s8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2c) << 8) / \
+                    lbl_803E0618);                                                \
+    *(f32 *)(stateBytes + 0xc4) = lbl_803E0610 * t;                               \
+    *(f32 *)(stateBytes + 0xd8) = *(f32 *)(*(s32 *)(stateBytes + 0xa0) + 0xc);    \
+    *(f32 *)(stateBytes + 0xdc) = *(f32 *)(*(s32 *)(stateBytes + (secondOff)) + 0xc); \
+    t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2e) *                 \
+        mathSinf(lbl_803E0614 *                                                \
+                    (float)((s32)*(s8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2d) << 8) / \
+                    lbl_803E0618);                                                \
+    *(f32 *)(stateBytes + 0xe0) = lbl_803E0610 * t;                               \
+    t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2e) *          \
+        mathSinf(lbl_803E0614 *                                                \
+                    (float)((s32)*(s8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2d) << 8) / \
+                    lbl_803E0618);                                                \
+    *(f32 *)(stateBytes + 0xe4) = lbl_803E0610 * t;                               \
+    *(f32 *)(stateBytes + 0xf8) = *(f32 *)(*(s32 *)(stateBytes + 0xa0) + 0x10);   \
+    *(f32 *)(stateBytes + 0xfc) = *(f32 *)(*(s32 *)(stateBytes + (secondOff)) + 0x10); \
+    t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2e) *                 \
+        mathCosf(lbl_803E0614 *                                                        \
+            (float)((s32)*(s8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2c) << 8) / lbl_803E0618); \
+    *(f32 *)(stateBytes + 0x100) = lbl_803E0610 * t;                              \
+    t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2e) *          \
+        mathCosf(lbl_803E0614 *                                                        \
+            (float)((s32)*(s8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2c) << 8) / \
+            lbl_803E0618);                                                        \
+    *(f32 *)(stateBytes + 0x104) = lbl_803E0610 * t
+
+
+
+#pragma scheduling on
+#pragma peephole on
+
+
+
+
+#pragma scheduling off
+#pragma peephole off
+
+
+
+
+int RomCurve_findProjectedCurveFromStart(f32 x, f32 y, f32 z, int curve, float* outPhase);
+
+void curves_getPos(f32 phase, int curve, float* outX, float* outY, float* outZ);
+
+
+
+
+
+/* RomCurve_stepClamped: keep the curve phase just inside the endpoints, then advance it. */
+#pragma peephole on
+void RomCurve_stepClamped(float* state, f32 dt);
+
+
+
+#pragma peephole off
+
+#pragma peephole on
+
+
+#pragma peephole off
+
+
+
+extern f32 lbl_803E05FC;
+
+
+#define OBJFSA_CORNER(BASE, OFF, POSOFF)                                        \
+    (f32)((f32)*(s8 *)(OFF) * scale + *(f32 *)((BASE) + (POSOFF)))
+
+#define OBJFSA_SET_PLANE(P, K, XA, ZA)                                          \
+    len = sqrtf(dxn * dxn + dzn * dzn);                                         \
+    if (len != lbl_803E05F0) {                                                  \
+        dxn = dxn / len;                                                        \
+        dzn = dzn / len;                                                        \
+    }                                                                           \
+    (P).planes[K].normalX = (s16)(lbl_803E05FC * dxn);                          \
+    (P).planes[K].normalZ = (s16)(lbl_803E05FC * dzn);                          \
+    (P).planeOffsets[K] = -((f32)(P).planes[K].normalX * (XA) +                 \
+                            (f32)(P).planes[K].normalZ * (ZA))
+
+#define OBJFSA_WG(GRP) ((ObjfsaWalkGroup *)((char *)patchBase + (GRP) * OBJFSA_PATCHGROUP_STRIDE + 0x3000))
+
+#define OBJFSA_EXIT_INSIDE(GRP, XF, ZF)                                         \
+    ez = (f32)(ZF);                                                             \
+    ex = (f32)(XF);                                                             \
+    j2 = 0;                                                                     \
+    for (e = 0; e < 4; e++) {                                                   \
+        if (lbl_803E05F0 <                                                      \
+            OBJFSA_WG(GRP)->planeOffsets[e] +                                   \
+                ex * (f32)((s16 *)OBJFSA_WG(GRP))[j2 & 0xff] +                  \
+                ez * (f32)((s16 *)OBJFSA_WG(GRP))[(j2 & 0xff) + 1]) {           \
+            break;                                                              \
+        }                                                                       \
+        j2 += 2;                                                                \
+    }
+
+#define OBJFSA_NEWPATCH (patchBase[lbl_803DD468])
+
+
+
+
+/* UIController dispatch through the shared GameUI interface. */
+#pragma scheduling on
+#pragma peephole on
+
+#pragma scheduling off
+#pragma peephole off
+
+/* player_setState */
+void player_setState(void* ctx, void* p, int new_state)
+{
+    void* q;
+    if (((BaddieState*)p)->controlMode == new_state) goto end;
+    ((BaddieState*)p)->unk276 = ((BaddieState*)p)->controlMode;
+    ((BaddieState*)p)->controlMode = (s16)new_state;
+    {
+        void (*fn)(void) = *(void (**)(void))((char*)p + 0x304);
+        if (fn != 0)
+        {
+            fn();
+            *(void**)&((BaddieState*)p)->unk304 = 0;
+        }
+    }
+    *(void**)&((BaddieState*)p)->unk304 = *(void**)&((BaddieState*)p)->unk308;
+end:
+    *(s16*)((char*)p + 0x338) = 0;
+    ((BaddieState*)p)->moveJustStartedA = 1;
+    ((BaddieState*)p)->unk34D = 0;
+    *(u8*)((char*)p + 0x34c) = 0;
+    ((BaddieState*)p)->moveEventFlags = 0;
+    *(s16*)((char*)p + 0x278) = 0;
+    q = *(void**)((char*)ctx + 0x54);
+    if (q != 0) *(u8*)((char*)q + 0x70) = 0;
+}
+
+/* walkPath_writeU16LE: split a path id into two little-endian bytes. */
+void walkPath_writeU16LE(u32 v, u8* dst);
+
+/* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
+#pragma scheduling on
+void fn_800D9EE8(float* p);
+
+
+#pragma scheduling off
+
+void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval)
+{
+    int flag30 = 0;
+    int i = 0;
+    int done;
+    s16 startState;
+    int result;
+    if (((BaddieState*)obj)->substate != ((BaddieState*)obj)->prevSubstate)
+    {
+        ((BaddieState*)obj)->moveJustStartedB = 1;
+        ((BaddieState*)obj)->unk32E = 0;
+    }
+    do
+    {
+        done = 0;
+        startState = ((BaddieState*)obj)->substate;
+        result = ((int (*)(int, int*, f32))((int**)fnTable)[startState])(p1, obj, fval);
+        if (result > 0)
+        {
+            ((BaddieState*)obj)->prevSubstate = ((BaddieState*)obj)->substate;
+            ((BaddieState*)obj)->substate = result - 1;
+            ((BaddieState*)obj)->moveJustStartedB = 1;
+            ((BaddieState*)obj)->unk32E = 0;
+        }
+        else if (result < 0)
+        {
+            result = -result;
+            if (result == startState)
+            {
+                ((BaddieState*)obj)->moveJustStartedB = 0;
+            }
+            else
+            {
+                ((BaddieState*)obj)->prevSubstate = startState;
+                ((BaddieState*)obj)->moveJustStartedB = 1;
+                ((BaddieState*)obj)->unk32E = 0;
+            }
+            ((BaddieState*)obj)->substate = result;
+            done = 1;
+            flag30 = 1;
+        }
+        else
+        {
+            done = 1;
+        }
+        i++;
+        if (i > 0xff)
+        {
+            done = 1;
+        }
+    }
+    while (done == 0);
+    ((BaddieState*)obj)->prevSubstate = ((BaddieState*)obj)->substate;
+    if (flag30 == 0)
+    {
+        ((BaddieState*)obj)->moveJustStartedB = 0;
+        if ((f32) * (s16*)((char*)obj + 0x338) > lbl_803E05BC)
+        {
+            ((BaddieState*)obj)->moveJustStartedB = 0;
         }
     }
 }

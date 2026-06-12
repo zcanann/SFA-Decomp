@@ -148,16 +148,16 @@ main/dll/modelfx.c:
 	.text       start:0x800C291C end:0x800C8008
 
 main/dll/dim_partfx.c:
-	.text       start:0x800C8008 end:0x800D6660
+	.text       start:0x800C8008 end:0x800D7568
 
 main/dll/df_partfx.c:
-	.text       start:0x800D6660 end:0x800D8F90
+	.text       start:0x800D7568 end:0x800D9DCC
 
 main/dll/objfsa.c:
-	.text       start:0x800D8F90 end:0x800E1B24
+	.text       start:0x800D9DCC end:0x800E5434
 
 main/dll/curves.c:
-	.text       start:0x800E1B24 end:0x800E8100
+	.text       start:0x800E5434 end:0x800E8100
 
 main/dll/gameplay.c:
 	.text       start:0x800E8100 end:0x800F472C

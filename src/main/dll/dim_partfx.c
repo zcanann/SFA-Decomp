@@ -493,9 +493,6 @@ undefined4 FUN_800c9030(uint param_1, int* param_2)
 /* sda21 globals used by leaf accessors below. */
 extern s16 lbl_803DD414;
 extern s16 lbl_803DD416;
-extern u32 lbl_803DD418;
-extern u32 lbl_803DD41C;
-extern s32 lbl_803DD410;
 
 typedef struct PartFxKV
 {
@@ -503,7 +500,6 @@ typedef struct PartFxKV
     u32 value;
 } PartFxKV;
 
-extern PartFxKV lbl_8039C458[];
 extern f32 lbl_803E04E8;
 extern f32 lbl_803E0500;
 
@@ -742,6 +738,8 @@ typedef struct PartFxNode
 #pragma dont_inline on
 u32 Checkpoint_find(s32 key, s32* idx_out)
 {
+    extern PartFxKV lbl_8039C458[]; /* #57 */
+    extern s32 lbl_803DD410; /* #57 */
     s32 high;
     s32 low;
     s32 mid;
@@ -919,6 +917,7 @@ s32 fn_800D55BC(u8* p, s32 idx, f32* out1, f32* out2, f32* out3, u8 mode, f32 fa
 /* Set *p to lbl_803DD414 (sign-extended) and return lbl_803DD418. */
 u32 Checkpoint_func0E(s32* p)
 {
+    extern u32 lbl_803DD418; /* #57 */
     *p = lbl_803DD414;
     return lbl_803DD418;
 }
@@ -926,6 +925,8 @@ u32 Checkpoint_func0E(s32* p)
 /* Swap lbl_803DD418 with lbl_803DD41C; copy 416 into 414 then clear 416. */
 void fn_800D6584(void)
 {
+    extern u32 lbl_803DD418; /* #57 */
+    extern u32 lbl_803DD41C; /* #57 */
     u32 tmp = lbl_803DD418;
     lbl_803DD418 = lbl_803DD41C;
     lbl_803DD41C = tmp;
@@ -945,6 +946,7 @@ typedef struct PartFxItem
 /* NOTE: 96.8% ? register choice differs (r5 vs r7 for rank). */
 s32 Checkpoint_func0F(PartFxItem* p)
 {
+    extern u32 lbl_803DD418; /* #57 */
     PartFxItem* q;
     s32 rank = 1;
     PartFxItem** arr = (PartFxItem**)lbl_803DD418;
@@ -973,6 +975,7 @@ s32 Checkpoint_func0F(PartFxItem* p)
 /* Find item in lbl_803DD418 array whose rank equals target_rank. */
 PartFxItem* Checkpoint_func10(s32 target_rank)
 {
+    extern u32 lbl_803DD418; /* #57 */
     s32 i = 0;
     PartFxItem** outer = (PartFxItem**)lbl_803DD418;
     PartFxItem** base = outer;
@@ -1096,6 +1099,7 @@ void Checkpoint_func0C(PartFxNode* o)
  * NOTE: stuck at ~78% ? instruction scheduling differs. */
 void Checkpoint_func0D(u32 v)
 {
+    extern u32 lbl_803DD41C; /* #57 */
     if (lbl_803DD416 >= 10) return;
     ((u32*)lbl_803DD41C)[lbl_803DD416++] = v;
 }
@@ -6239,11 +6243,11 @@ int Checkpoint_func09_ret_1(void) { return 0x1; }
 extern f32 lbl_803E0504;
 extern f32 lbl_803E0508;
 extern f32 Curve_EvalHermite(f32* values, f32 t, f32* outTangent);
-extern u16 getAngle(f32 a, f32 b);
 
 /* Advance along the checkpoint curve by dist; write position/angles to out. */
 s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag)
 {
+    extern u16 getAngle(f32 a, f32 b); /* #57 */
     f32 v1[4];
     f32 v2[4];
     f32 v3[4];
@@ -6377,9 +6381,575 @@ s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag)
 
 void Checkpoint_onGameLoop(void)
 {
+    extern u32 lbl_803DD418; /* #57 */
+    extern u32 lbl_803DD41C; /* #57 */
     u32 tmp = lbl_803DD418;
     lbl_803DD418 = lbl_803DD41C;
     lbl_803DD41C = tmp;
     lbl_803DD414 = lbl_803DD416;
     lbl_803DD416 = 0;
 }
+
+/* segment pragma-stack balance (re-split): */
+#pragma dont_inline reset
+#pragma dont_inline reset
+
+/* === moved from main/dll/df_partfx.c [800D6660-800D7568) (TU re-split, docs/boundary_audit.md) === */
+#pragma scheduling on
+#pragma peephole on
+#include "main/dll/df_partfx.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/effect_interfaces.h"
+#include "main/game_object.h"
+#include "main/dll/baddie_state.h"
+#include "main/objanim.h"
+#include "main/resource.h"
+#include "main/screen_transition.h"
+
+
+
+/*
+ * --INFO--
+ *
+ * Function: Checkpoint_func07
+ * EN v1.0 Address: 0x800D6660
+ * EN v1.0 Size: 132b
+ * EN v1.1 Address: 0x800D6844
+ * EN v1.1 Size: 168b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803E050C;
+extern f32 lbl_803E0510;
+extern f32 lbl_803E0514;
+extern f32 lbl_803E0518;
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+int Checkpoint_func07(int* obj, int* state)
+{
+    extern int getAngle(f32 dx, f32 dz); /* #57 */
+    extern int* Checkpoint_find(int id, int* slot); /* #57 */
+    int slotC;
+    int slot8;
+    char* cp;
+    char* cp2;
+    short ang;
+    f32 cosv, sinv, cos2, sin2;
+    f32 dist, dist2, nx, nz, offs, dz;
+    f32 offs2, distA, distB, dx, dy, len, q, proj, proj2, t0, sum, frac, zero;
+
+    if (*(int*)&((BaddieState*)state)->posY < 0)
+    {
+        *(int*)&((BaddieState*)state)->posZ = 0;
+        *(f32*)((char*)state + 0xc) = lbl_803E04E8;
+        if (*(int*)((char*)state + 0x10) < 0)
+        {
+            return 0;
+        }
+        *(int*)&((BaddieState*)state)->posY = *(int*)((char*)state + 0x10);
+    }
+    cp = (char*)Checkpoint_find(*(int*)&((BaddieState*)state)->posY, &slot8);
+    if (cp == NULL)
+    {
+        *(int*)&((BaddieState*)state)->posY = -1;
+        return 0;
+    }
+    cosv = mathSinf((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
+    sinv = mathCosf((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
+    offs = -(*(f32*)(cp + 8) * cosv + *(f32*)(cp + 0x10) * sinv);
+    dist = offs + (cosv * ((GameObject*)obj)->anim.localPosX + sinv * ((GameObject*)obj)->anim.localPosZ);
+    if (*(int*)(cp + 0x18) > -1 && dist >= lbl_803E04E8)
+    {
+        *(int*)&((BaddieState*)state)->posY = *(int*)(cp + 0x18);
+        *(f32*)((char*)state + 0xc) = lbl_803E050C;
+        *(int*)&((BaddieState*)state)->posZ = *(int*)&((BaddieState*)state)->posZ - 1;
+        return *(u8*)(cp + 0x29);
+    }
+    if (*(int*)(cp + 0x20) < 0)
+    {
+        return *(u8*)(cp + 0x29);
+    }
+    cp2 = (char*)Checkpoint_find(*(int*)(cp + 0x20), &slotC);
+    ang = getAngle(*(f32*)(cp2 + 8) - *(f32*)(cp + 8), *(f32*)(cp2 + 0x10) - *(f32*)(cp + 0x10));
+    cos2 = mathSinf((lbl_803E04D8 * (f32)(*(u8*)(cp2 + 0x29) << 8)) / lbl_803E04DC);
+    sin2 = mathCosf((lbl_803E04D8 * (f32)(*(u8*)(cp2 + 0x29) << 8)) / lbl_803E04DC);
+    offs2 = -(*(f32*)(cp2 + 8) * cos2 + *(f32*)(cp2 + 0x10) * sin2);
+    dist2 = offs2 + (cos2 * ((GameObject*)obj)->anim.localPosX + sin2 * ((GameObject*)obj)->anim.localPosZ);
+    zero = lbl_803E04E8;
+    if (dist2 < zero)
+    {
+        *(int*)&((BaddieState*)state)->posY = *(int*)(cp + 0x20);
+        *(f32*)((char*)state + 0xc) = zero;
+        *(int*)&((BaddieState*)state)->posZ = *(int*)&((BaddieState*)state)->posZ + 1;
+        return ang;
+    }
+    distA = offs + (cosv * *(f32*)(cp2 + 8) + sinv * *(f32*)(cp2 + 0x10));
+    distB = offs2 + (cos2 * *(f32*)(cp + 8) + sin2 * *(f32*)(cp + 0x10));
+    if (((distA < zero && dist < zero) || (distA >= lbl_803E04E8 && dist >= lbl_803E04E8)) &&
+        ((distB <= lbl_803E04E8 && dist2 <= lbl_803E04E8) || (distB > lbl_803E04E8 && dist2 > lbl_803E04E8)))
+    {
+        dx = *(f32*)(cp + 8) - *(f32*)(cp2 + 8);
+        dy = *(f32*)(cp + 0xc) - *(f32*)(cp2 + 0xc);
+        dz = *(f32*)(cp + 0x10) - *(f32*)(cp2 + 0x10);
+        len = sqrtf(dz * dz + (dx * dx + dy * dy));
+        if (len > lbl_803E04E8)
+        {
+            q = lbl_803E0504 / len;
+            nx = dx * q;
+            nz = dz * q;
+        }
+        proj = cosv * nx + sinv * nz;
+        if (proj > lbl_803E0510 && proj < lbl_803E0514)
+        {
+            return ang;
+        }
+        t0 = -dist / proj;
+        proj2 = cos2 * nx + sin2 * nz;
+        if (proj2 > lbl_803E0510 && proj2 < lbl_803E0514)
+        {
+            return ang;
+        }
+        sum = t0 + dist2 / proj2;
+        frac = lbl_803E04E8;
+        if (lbl_803E04E8 != sum)
+        {
+            frac = t0 / sum;
+        }
+        *(f32*)((char*)state + 0xc) = frac;
+        if (*(f32*)((char*)state + 0xc) < lbl_803E04E8)
+        {
+            *(f32*)((char*)state + 0xc) = lbl_803E04E8;
+        }
+        if (*(f32*)((char*)state + 0xc) >= lbl_803E0518)
+        {
+            *(f32*)((char*)state + 0xc) = lbl_803E0518;
+        }
+    }
+    return ang;
+}
+#pragma opt_common_subs reset
+#pragma peephole reset
+#pragma scheduling reset
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800d7780
+ * EN v1.0 Address: 0x800D7780
+ * EN v1.0 Size: 12b
+ * EN v1.1 Address: 0x800D7CFC
+ * EN v1.1 Size: 28b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_800d7780(undefined param_1);
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void Checkpoint_release(void)
+{
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 8b "li r3, N; blr" returners. */
+
+/* sda21 accessors. */
+
+/* Pattern wrappers. */
+void Checkpoint_reset(void) { extern u32 lbl_803DD410; /* #57 */ lbl_803DD410 = 0x0; }
+
+/* 12b 3-insn patterns. */
+
+
+/* misc 8b leaves */
+
+/* Pattern wrappers. */
+
+/* sda21 writers. */
+#pragma peephole off
+#pragma peephole reset
+
+/* fcmp-eq-to-bool. */
+
+/* multi-store leaf (single float broadcast). */
+
+
+/* Checkpoint table initialiser. */
+extern u32 lbl_8039CA98[];
+
+#pragma scheduling off
+#pragma peephole off
+
+
+
+
+
+
+
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
+
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
+
+
+#pragma peephole reset
+#pragma scheduling reset
+
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
+#pragma peephole reset
+#pragma scheduling reset
+
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+void Checkpoint_initialise(void)
+{
+    extern void* lbl_803DD418; /* #57 */
+    extern void* lbl_803DD41C; /* #57 */
+    extern u32 lbl_803DD410; /* #57 */
+    lbl_803DD410 = 0;
+    lbl_803DD41C = lbl_8039CA98;
+    lbl_803DD418 = (void*)((u8*)lbl_8039CA98 + 0x28);
+}
+#pragma scheduling reset
+
+/* Checkpoint_Add: sorted insertion of (entry->_14 as key, entry as pointer) into lbl_8039C458 table. */
+typedef struct CheckpointSlot
+{
+    u32 key;
+    void* entry;
+} CheckpointSlot;
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+void Checkpoint_Add(int* entry)
+{
+    extern CheckpointSlot lbl_8039C458[]; /* #57 */
+    extern u32 lbl_803DD410; /* #57 */
+    int i = 0;
+    CheckpointSlot* p = lbl_8039C458;
+    int count = lbl_803DD410;
+    while (i < count && (u32)entry[5] > p[i].key)
+    {
+        i++;
+    }
+    {
+        CheckpointSlot* end = &lbl_8039C458[count];
+        while (count > i)
+        {
+            end->entry = (end - 1)->entry;
+            end->key = (end - 1)->key;
+            end--;
+            count--;
+        }
+    }
+    lbl_803DD410 = lbl_803DD410 + 1;
+    lbl_8039C458[i].entry = entry;
+    lbl_8039C458[i].key = entry[5];
+}
+#pragma opt_common_subs reset
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+void Checkpoint_remove(int* obj)
+{
+    extern CheckpointSlot lbl_8039C458[]; /* #57 */
+    extern u32 lbl_803DD410; /* #57 */
+    int count;
+    int i = 0;
+    CheckpointSlot* p = lbl_8039C458;
+    CheckpointSlot* e;
+
+    count = lbl_803DD410;
+
+    while (i < count && (u32) * (int*)&((GameObject*)obj)->anim.localPosZ != p[i].key)
+    {
+        i++;
+    }
+    if (i >= count) return;
+    count = lbl_803DD410 - 1;
+    lbl_803DD410 = count;
+    e = &lbl_8039C458[i];
+    while (i < count)
+    {
+        e->entry = (e + 1)->entry;
+        e->key = (e + 1)->key;
+        e++;
+        i++;
+    }
+}
+#pragma opt_common_subs reset
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
+
+struct PartDesc
+{
+    s16 ang[3];
+    f32 sc[4];
+};
+#pragma scheduling off
+#pragma peephole off
+
+#pragma scheduling off
+#pragma peephole off
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
+typedef struct
+{
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} HudColor;
+
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
+
+
+
+extern f64 lbl_803E0520;
+extern f32 lbl_803E051C;
+extern f32 lbl_803E0528;
+extern f32 lbl_803E052C;
+extern f32 lbl_803E0530;
+extern f32 lbl_803E0534;
+extern f32 lbl_803E0538;
+
+void Checkpoint_func06(int* obj, int* state, int filter)
+{
+    extern CheckpointSlot lbl_8039C458[]; /* #57 */
+    extern u32 lbl_803DD410; /* #57 */
+    extern int* Checkpoint_find(int id, int* slot); /* #57 */
+    int stack[64];
+    char visited[200];
+    int cur;
+    int slot;
+    int k, count, i, j;
+    char* cp;
+    char* p;
+    char* n;
+    char* e;
+    f32 cos1, sin1, cos2, sin2;
+    f32 dist1, dist2, nx, nz, offs1, dz;
+    f32 offs2, distA, distB, dx, dy, len, q, t0, sum, frac, b1, width;
+    f32 px, py, pz, outX, outY;
+    f32 ddx, ddy, ddz;
+
+    count = 0;
+    for (i = 0; i < (int)lbl_803DD410; i++)
+    {
+        visited[i] = 0;
+    }
+    cp = (char*)Checkpoint_find(*(int*)((char*)state + 0x10), &cur);
+    if (cp != NULL)
+    {
+        stack[count++] = cur;
+    }
+    else
+    {
+        for (i = 0; i < (int)lbl_803DD410; i++)
+        {
+            e = (char*)lbl_8039C458[i].entry;
+            if (visited[i] == 0 && (filter == -1 || *(s8*)(e + 0x28) == filter))
+            {
+                ddx = *(f32*)(e + 8) - ((GameObject*)obj)->anim.localPosX;
+                ddy = *(f32*)(e + 0xc) - ((GameObject*)obj)->anim.localPosY;
+                ddz = *(f32*)(e + 0x10) - ((GameObject*)obj)->anim.localPosZ;
+                if (ddz * ddz + (ddx * ddx + ddy * ddy) < lbl_803E051C)
+                {
+                    stack[count++] = i;
+                    for (j = i; j < (int)lbl_803DD410; j++)
+                    {
+                        if (filter == *(s8*)((char*)lbl_8039C458[j].entry + 0x28))
+                        {
+                            visited[j] = 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    for (i = 0; i < (int)lbl_803DD410; i++)
+    {
+        visited[i] = 0;
+    }
+    for (;;)
+    {
+        if (count > 0)
+        {
+            count--;
+            cur = stack[count];
+            cp = (char*)lbl_8039C458[cur].entry;
+        }
+        else
+        {
+            *(int*)((char*)state + 0x10) = -1;
+            return;
+        }
+        if (cp == NULL)
+        {
+            return;
+        }
+        p = cp;
+        for (k = 0; k < 2; k++)
+        {
+            n = (char*)Checkpoint_find(*(int*)(p + 0x20), &slot);
+            if (n != NULL)
+            {
+                cos1 = mathSinf((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
+                sin1 = mathCosf((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
+                offs1 = -(*(f32*)(cp + 8) * cos1 + *(f32*)(cp + 0x10) * sin1);
+                cos2 = mathSinf((lbl_803E04D8 * (f32)(*(u8*)(n + 0x29) << 8)) / lbl_803E04DC);
+                sin2 = mathCosf((lbl_803E04D8 * (f32)(*(u8*)(n + 0x29) << 8)) / lbl_803E04DC);
+                offs2 = -(*(f32*)(n + 8) * cos2 + *(f32*)(n + 0x10) * sin2);
+                dist1 = offs1 + (cos1 * ((GameObject*)obj)->anim.localPosX + sin1 * ((GameObject*)obj)->anim.localPosZ);
+                dist2 = offs2 + (cos2 * ((GameObject*)obj)->anim.localPosX + sin2 * ((GameObject*)obj)->anim.localPosZ);
+                distA = offs1 + (cos1 * *(f32*)(n + 8) + sin1 * *(f32*)(n + 0x10));
+                distB = offs2 + (cos2 * *(f32*)(cp + 8) + sin2 * *(f32*)(cp + 0x10));
+                if (((distA <= lbl_803E04E8 && dist1 <= lbl_803E04E8) || (distA > lbl_803E04E8 && dist1 > lbl_803E04E8))
+                    &&
+                    ((distB <= lbl_803E04E8 && dist2 <= lbl_803E04E8) || (distB > lbl_803E04E8 && dist2 >
+                        lbl_803E04E8)))
+                {
+                    dx = *(f32*)(cp + 8) - *(f32*)(n + 8);
+                    dy = *(f32*)(cp + 0xc) - *(f32*)(n + 0xc);
+                    dz = *(f32*)(cp + 0x10) - *(f32*)(n + 0x10);
+                    len = sqrtf(dz * dz + (dx * dx + dy * dy));
+                    if (len > lbl_803E0520)
+                    {
+                        q = lbl_803E0504 / len;
+                        nx = dx * q;
+                        nz = dz * q;
+                    }
+                    q = cos1 * nx + sin1 * nz;
+                    t0 = -dist1 / q;
+                    sum = t0 + dist2 / (cos2 * nx + sin2 * nz);
+                    if (sum > lbl_803E0528 || sum < lbl_803E052C)
+                    {
+                        frac = t0 / sum;
+                    }
+                    else
+                    {
+                        frac = lbl_803E04E8;
+                    }
+                    if (frac < lbl_803E04E8)
+                    {
+                        frac = lbl_803E04E8;
+                    }
+                    if (frac >= lbl_803E0518)
+                    {
+                        frac = lbl_803E0518;
+                    }
+                    b1 = (f32) * (u8*)(cp + 0x2a);
+                    width = frac * ((f32) * (u8*)(n + 0x2a) - b1) + b1;
+                    px = -(dx * frac - *(f32*)(cp + 8));
+                    py = -(dy * frac - *(f32*)(cp + 0xc));
+                    pz = -(dz * frac - *(f32*)(cp + 0x10));
+                    outY = (((GameObject*)obj)->anim.localPosY - py) / width;
+                    outX = (-(px * nz - pz * nx) + (((GameObject*)obj)->anim.localPosX * nz - ((GameObject*)obj)->anim.
+                        localPosZ * nx)) / width;
+                    if (outX < lbl_803E0530 || outX > lbl_803E0534 || outY < lbl_803E0538 || outY > lbl_803E0534)
+                    {
+                    }
+                    else
+                    {
+                        *(int*)((char*)state + 0x10) = *(int*)(cp + 0x14);
+                        *(int*)&((BaddieState*)state)->posX = *(int*)(cp + 0x14);
+                        *(f32*)((char*)state + 0) = outX;
+                        *(f32*)((char*)state + 4) = outY;
+                        *(f32*)((char*)state + 8) = frac;
+                        *(s16*)((char*)state + 0x20) = *(s8*)(cp + 0x28);
+                        return;
+                    }
+                }
+            }
+            p += 4;
+        }
+        if (visited[cur] == 0)
+        {
+            p = cp + 4;
+            for (k = 1; k >= 0; k--)
+            {
+                n = (char*)Checkpoint_find(*(int*)(p + 0x18), &slot);
+                if (n != NULL && visited[slot] == 0 && count < 0x3c)
+                {
+                    stack[count++] = slot;
+                }
+                n = (char*)Checkpoint_find(*(int*)(p + 0x20), &slot);
+                if (n != NULL && visited[slot] == 0 && count < 0x3c)
+                {
+                    stack[count++] = slot;
+                }
+                p -= 4;
+            }
+            visited[cur] = 1;
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
