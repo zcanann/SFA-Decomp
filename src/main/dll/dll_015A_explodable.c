@@ -2,12 +2,12 @@
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 
 extern u32 randomGetRange(int min, int max);
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 ObjMsg_AllocQueue();
 extern int FUN_8005af70();
@@ -31,8 +31,10 @@ extern f32 lbl_803E4FF4;
 void fn_blasted_init_v11_unused(int param_1, int param_2)
 {
     int iVar1;
+    ObjHitsPriorityState* hitState;
 
     iVar1 = *(int*)&((GameObject*)param_1)->extra;
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_1)->anim.hitReactState;
     *(byte*)(iVar1 + 7) = *(byte*)(iVar1 + 7) | 2;
     (**(code**)(*DAT_803dd740 + 4))(param_1, iVar1, 5);
     ObjGroup_AddObject(param_1, 0x19);
@@ -57,17 +59,14 @@ void fn_blasted_init_v11_unused(int param_1, int param_2)
     *(byte*)(iVar1 + 0x48) = (*(short*)(param_2 + 0x1c) != 0) << 6 | *(byte*)(iVar1 + 0x48) & 0xbf;
     ObjHits_EnableObject(param_1);
     *(float*)(iVar1 + 0x2c) =
-        (float)((double)CONCAT44(0x43300000,
-                                 (int)*(short*)(*(int*)&((GameObject*)param_1)->anim.hitReactState + 0x5a) ^ 0x80000000)
-            -
-            DOUBLE_803e4f98);
+        (float)((double)CONCAT44(0x43300000, (int)hitState->primaryRadius ^ 0x80000000) - DOUBLE_803e4f98);
     *(byte*)(iVar1 + 0x4a) = *(byte*)(iVar1 + 0x4a) & 0xdf;
     *(float*)(iVar1 + 0x38) = lbl_803E4F58;
     *(undefined4*)(iVar1 + 0x10) = 0;
     (**(code**)(*DAT_803dd740 + 0x2c))(iVar1, 1);
-    if (*(int*)&((GameObject*)param_1)->anim.hitReactState != 0)
+    if (hitState != NULL)
     {
-        *(undefined2*)(*(int*)&((GameObject*)param_1)->anim.hitReactState + 0xb2) = 1;
+        hitState->trackContactMask = 1;
     }
     if (((GameObject*)param_1)->anim.seqId == 0x754)
     {
