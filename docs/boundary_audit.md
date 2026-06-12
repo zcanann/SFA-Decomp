@@ -34,14 +34,22 @@ precede). The same model holds at every clean per-descriptor unit checked.
 
 ## Headline numbers
 
-| metric | count |
-|---|---|
-| gResourceDescriptors entries with a non-null descriptor | 704 |
-| descriptors with .text fn pointers | 653 |
-| **descriptors whose fn range is CUT by a unit boundary** | **132** |
-| units hosting fns of 2+ DLL ids (containers and/or fragment-holders) | 129 |
-| descriptors with no OBJECTS.bin def (no object names them) | 256 |
-| descriptors with defs but none OBJINDEX-reachable | 0 |
+| metric | count (pre-surgery) | count (now, post-campaign) |
+|---|---|---|
+| gResourceDescriptors entries with a non-null descriptor | 704 | 704 |
+| descriptors with .text fn pointers | 653 | 653 |
+| **descriptors whose fn range is CUT by a unit boundary** | **132** | **1** |
+| units hosting fns of 2+ DLL ids (containers and/or fragment-holders) | 129 | 85 |
+| descriptors with no OBJECTS.bin def (no object names them) | 256 | 256 |
+| descriptors with defs but none OBJINDEX-reachable | 0 | 0 |
+
+The June 2026 mechanized re-split campaign (`tools/dll_boundary_resplit.py`,
+see status section below) resolved 131 of the 132 cuts; the single remaining
+cut (dll 0x009, MSL gamecube.c | cloudaction.c) is proven-irreducible (the
+descriptor's helper gap genuinely straddles an MSL-library/DLL TU edge that
+cannot be moved without breaking the MSL unit). The 85 remaining multi-DLL
+units are legitimate multi-descriptor original TUs, not drift-era
+cross-family containers.
 
 Notes on the 256 no-def descriptors: most are infrastructure DLLs (partfx /
 modgfx effects, cameras, FRONT menus, level-control helpers) that no object
@@ -312,7 +320,16 @@ conservation-EXACT at the binary level.
 The historical fix patterns (now all proven) are above; the resplit campaign is
 complete bar the one irreducible SDK-gated descriptor (r8008EE18).
 
-## Complete cut table (132 descriptors, pre-surgery)
+## Live cut table (1 descriptor — post-campaign)
+
+Reproduce with `--md`. After the June 2026 re-split campaign only the
+proven-irreducible MSL-edge cut remains.
+
+| dll | descriptor | fn range | TU (proposed) | cutting boundary(ies) | reach | names |
+|---|---|---|---|---|---|---|
+| 0x009 | lbl_8030F7E8 | 80094494-80094F60 | 80093AE0-80094F7C | 800944A0 (dolphin/MSL_C/PPCEABI/bare/H/gamecube.c \| main/dll/cloudaction.c) | n |  |
+
+## Complete cut table (132 descriptors, pre-surgery — historical record)
 
 | dll | descriptor | fn range | TU (proposed) | cutting boundary(ies) | reach | names |
 |---|---|---|---|---|---|---|
@@ -456,133 +473,89 @@ descriptor's range CROSSES its edge (see cut table); several complete DLLs
 in one unit can be a legitimate multi-descriptor TU.
 
 ```
-main/dll/ARW/ARWarwingattachment.c                      8 dlls: 0x1FC:WM_LaserBea, 0x1FD:WM_LaserTar, 0x1FE:CFPressureS, 0x1FF:dll_1FF, 0x200:dll_200, 0x201:WM_colrise, 0x204:WM_Torch, 0x206:LINKPoleFla
-main/dll/CAM/camDebug.c                                 3 dlls: 0x04B:lbl_80319D48, 0x04C:lbl_80319D78, 0x04D:lbl_80319DA8
-main/dll/CAM/camdrakor.c                                3 dlls: 0x049:lbl_80319CE8, 0x04A:lbl_80319D18, 0x04B:lbl_80319D48
-main/dll/CAM/dll_59.c                                   2 dlls: 0x043:lbl_80319B98, 0x045:lbl_80319BC8
+main/dll/CAM/camdrakor.c                                2 dlls: 0x049:lbl_80319CE8, 0x04A:lbl_80319D18
 main/dll/CAM/dll_5B.c                                   3 dlls: 0x044:lbl_80319BF8, 0x046:lbl_80319C28, 0x048:lbl_80319C58
-main/dll/CAM/dll_5F.c                                   2 dlls: 0x047:lbl_80319C88, 0x049:lbl_80319CE8
-main/dll/CF/CFBaby.c                                    8 dlls: 0x0E7:CCeyeVines, 0x0EC:InfoPoint, 0x109:lbl_803218E8, 0x10A:Fall_Ladder, 0x10B:FireFlyLant, 0x119:coldWaterCo, 0x11A:DRDebrisGir, 0x11B:Landed_Arwi
-main/dll/CF/CFTreasSharpy.c                             2 dlls: 0x12A:CFCrate, 0x12B:FXEmit
-main/dll/CF/CFchuckobj.c                                3 dlls: 0x12B:FXEmit, 0x12D:LFXEmitter, 0x130:AreaFXEmit
-main/dll/CF/CFcrystal.c                                 2 dlls: 0x10B:FireFlyLant, 0x10C:LanternFire
-main/dll/CF/CFforcecontrol.c                            4 dlls: 0x10E:DieDuster, 0x123:fuelCell, 0x124:deathGas, 0x127:lbl_80321E58
-main/dll/CF/CFtoggleswitch.c                            6 dlls: 0x11E:MagicCaveBo, 0x11F:MagicCaveTo, 0x120:TrickyGuard, 0x121:LINKF_InfoT, 0x122:CCTestInfot, 0x124:deathGas
-main/dll/CF/dll_165.c                                   2 dlls: 0x11C:LINKStaffLe, 0x11D:TreasureChe
-main/dll/CF/dll_166.c                                   2 dlls: 0x11D:TreasureChe, 0x11E:MagicCaveBo
-main/dll/CF/treasureRelated0177.c                       4 dlls: 0x127:lbl_80321E58, 0x128:KT_Torch, 0x129:CampFire, 0x12A:CFCrate
-main/dll/CF/windlift.c                                  5 dlls: 0x106:GreenScarab, 0x107:lbl_80321788, 0x108:EndObject, 0x10C:LanternFire, 0x10D:PortalSpell
-main/dll/CR/CRsnowbike.c                                3 dlls: 0x1B4:SH_EmptyTum, 0x1B6:SC_levelcon, 0x1B7:SC_MusicTre
-main/dll/DB/DBrockfall.c                                4 dlls: 0x142:FElevContro, 0x143:FEseqobject, 0x144:lbl_80327BA8, 0x1BD:SC_paypoint
-main/dll/DB/DBstealerworm.c                             5 dlls: 0x1E8:SB_Galleon, 0x1E9:SB_Propelle, 0x1EA:SB_ShipHead, 0x1EB:SB_ShipMast, 0x1EC:SB_ShipGun
+main/dll/CF/CFBaby.c                                    7 dlls: 0x0E7:CCeyeVines, 0x0EC:InfoPoint, 0x109:lbl_803218E8, 0x10A:Fall_Ladder, 0x119:coldWaterCo, 0x11A:DRDebrisGir, 0x11B:Landed_Arwi
+main/dll/CF/CFchuckobj.c                                2 dlls: 0x12D:LFXEmitter, 0x130:AreaFXEmit
+main/dll/CF/CFforcecontrol.c                            3 dlls: 0x10E:DieDuster, 0x123:fuelCell, 0x124:deathGas
+main/dll/CF/CFtoggleswitch.c                            5 dlls: 0x11E:MagicCaveBo, 0x11F:MagicCaveTo, 0x120:TrickyGuard, 0x121:LINKF_InfoT, 0x122:CCTestInfot
+main/dll/CF/treasureRelated0177.c                       3 dlls: 0x127:lbl_80321E58, 0x128:KT_Torch, 0x129:CampFire
+main/dll/CR/CRsnowbike.c                                2 dlls: 0x1B4:SH_EmptyTum, 0x1B6:SC_levelcon
+main/dll/DB/DBrockfall.c                                3 dlls: 0x142:FElevContro, 0x143:FEseqobject, 0x144:lbl_80327BA8
+main/dll/DB/DBstealerworm.c                             4 dlls: 0x1E8:SB_Galleon, 0x1E9:SB_Propelle, 0x1EA:SB_ShipHead, 0x1EB:SB_ShipMast
 main/dll/DF/DFcradle.c                                  2 dlls: 0x174:CCriverflow, 0x1E7:DIMbossfire
-main/dll/DF/DFlantern.c                                 2 dlls: 0x177:DFSH_Door2S, 0x178:DFSH_Shrine
-main/dll/DF/dll_198.c                                   2 dlls: 0x175:DFropenode, 0x177:DFSH_Door2S
-main/dll/DF/rope.c                                      5 dlls: 0x1E3:DIM_BossGut, 0x1E4:MAGICMaker, 0x1E5:DIM_BossSpi, 0x1E6:DIMbosscrac, 0x1E7:DIMbossfire
-main/dll/DIM/DIM2conveyor.c                             3 dlls: 0x1C7:DIMLavaSmas, 0x1C8:DIMBridgeCo, 0x1C9:DIMDismount
-main/dll/DIM/DIM2flameburst.c                           5 dlls: 0x1CA:DIMExplosio, 0x1CB:DIMWoodDoor, 0x1CC:DIMMagicBri, 0x1CD:DIM_LevelCo, 0x1CE:dll_1CE
+main/dll/DF/rope.c                                      4 dlls: 0x1E3:DIM_BossGut, 0x1E4:MAGICMaker, 0x1E5:DIM_BossSpi, 0x1E6:DIMbosscrac
+main/dll/DIM/DIM2conveyor.c                             2 dlls: 0x1C8:DIMBridgeCo, 0x1C9:DIMDismount
+main/dll/DIM/DIM2flameburst.c                           4 dlls: 0x1CA:DIMExplosio, 0x1CB:DIMWoodDoor, 0x1CC:DIMMagicBri, 0x1CE:dll_1CE
 main/dll/DIM/DIM2projrock.c                             6 dlls: 0x1DA:dll_1DA, 0x1DB:dll_1DB, 0x1DC:DIM2IceFloe, 0x1DD:DIM2Icicle, 0x1DE:DIM2LavaCon, 0x1DF:lbl_80325928
-main/dll/DIM/DIM2snowball.c                             9 dlls: 0x1CD:DIM_LevelCo, 0x1CF:dll_1CF, 0x1D0:DIM_tricky, 0x1D1:DIMTruthHor, 0x1D5:DIM2Conveyo, 0x1D6:dll_1D6, 0x1D7:DIM2SnowBal, 0x1D8:DIM2PathGen, 0x1DA:dll_1DA
+main/dll/DIM/DIM2snowball.c                             8 dlls: 0x1CD:DIM_LevelCo, 0x1CF:dll_1CF, 0x1D0:DIM_tricky, 0x1D1:DIMTruthHor, 0x1D5:DIM2Conveyo, 0x1D6:dll_1D6, 0x1D7:DIM2SnowBal, 0x1D8:DIM2PathGen
 main/dll/DIM/DIMExplosion.c                             4 dlls: 0x1C2:DIMSnowBall, 0x1C3:DIMGate, 0x1C4:DIMIceWall, 0x1C5:DIMBarrier
-main/dll/DIM/DIMboulder.c                               5 dlls: 0x169:IMIceMounta, 0x16A:CRrockfall, 0x16B:DIMMagicLig, 0x16C:lbl_80323740, 0x16D:IMIcePillar
-main/dll/DIM/DIMcannon.c                                10 dlls: 0x16D:IMIcePillar, 0x16E:IMAnimSpace, 0x16F:IMSpaceThru, 0x170:IMSpaceRing, 0x171:IMSpaceRing, 0x172:LINKB_levco, 0x173:LINK_levcon, 0x1BE:DIMLavaBall, 0x1BF:DIMLavaBall, 0x1C0:DIMLogFire
+main/dll/DIM/DIMboulder.c                               4 dlls: 0x169:IMIceMounta, 0x16A:CRrockfall, 0x16B:DIMMagicLig, 0x16C:lbl_80323740
+main/dll/DIM/DIMcannon.c                                9 dlls: 0x16D:IMIcePillar, 0x16E:IMAnimSpace, 0x16F:IMSpaceThru, 0x170:IMSpaceRing, 0x171:IMSpaceRing, 0x172:LINKB_levco, 0x173:LINK_levcon, 0x1BE:DIMLavaBall, 0x1BF:DIMLavaBall
 main/dll/DIM/DIMlavaball.c                              6 dlls: 0x17E:MMP_levelco, 0x17F:MSBush, 0x180:MMP_asteroi, 0x181:MMP_trenchF, 0x182:MMP_moonroc, 0x183:MMP_gyserve
 main/dll/DIM/DIMlavasmash.c                             2 dlls: 0x1C0:DIMLogFire, 0x1C1:DIMSnowBall
 main/dll/DIM/DIMlevcontrol.c                            2 dlls: 0x1C6:DIMCannon, 0x1C7:DIMLavaSmas
-main/dll/DIM/DIMlogfire.c                               5 dlls: 0x184:DIMAnimShar, 0x185:CCgasvent, 0x186:CCgasventCo, 0x187:CCqueen, 0x25B:MSPlantingS
+main/dll/DIM/DIMlogfire.c                               4 dlls: 0x184:DIMAnimShar, 0x185:CCgasvent, 0x186:CCgasventCo, 0x25B:MSPlantingS
 main/dll/DIM/DIMsnowball.c                              5 dlls: 0x187:CCqueen, 0x188:CClightfoot, 0x189:CCSharpclaw, 0x18A:CCpedstal, 0x18B:CClevcontro
-main/dll/DIM/dimsnowball_init.c                         2 dlls: 0x1C1:DIMSnowBall, 0x1C2:DIMSnowBall
-main/dll/DR/DRCloudball.c                               2 dlls: 0x287:SPScarab, 0x288:SPDrape
 main/dll/DR/DRcloudrunner.c                             3 dlls: 0x1B7:SC_MusicTre, 0x1B8:SC_totempol, 0x1B9:SC_Cloudrun
-main/dll/DR/DRearthwalk.c                               4 dlls: 0x1B1:SH_staff, 0x1B2:SH_staffHaz, 0x1B3:SH_Beacon, 0x1B4:SH_EmptyTum
-main/dll/DR/DRpushcart.c                                3 dlls: 0x284:SPFruitSmal, 0x286:SPShopKeepe, 0x287:SPScarab
+main/dll/DR/DRearthwalk.c                               3 dlls: 0x1B1:SH_staff, 0x1B2:SH_staffHaz, 0x1B3:SH_Beacon
+main/dll/DR/DRpushcart.c                                2 dlls: 0x284:SPFruitSmal, 0x286:SPShopKeepe
 main/dll/DR/DRsimplehuman.c                             2 dlls: 0x288:SPDrape, 0x289:SPitembeam
-main/dll/DR/cannontargetControl.c                       2 dlls: 0x158:GunPowderBa, 0x159:CFBlastedRo
-main/dll/DR/gasventControl.c                            3 dlls: 0x159:CFBlastedRo, 0x15A:CFbrokenGra, 0x15B:CFForceFiel
-main/dll/DR/hightop.c                                   3 dlls: 0x126:TrigPnt, 0x145:CloudPrison, 0x148:CFGuardian
-main/dll/DR/sandwormBoss.c                              12 dlls: 0x148:CFGuardian, 0x149:CFWindLift, 0x14A:CFPowerBase, 0x14B:CFMainCryst, 0x14C:CFCloudBaby, 0x14E:CFPrisonGua, 0x14F:CFPrisonUnc, 0x150:GCRobotLigh, 0x153:CFPerch, 0x154:CFPrisonCag, 0x157:SpiritDoorS, 0x158:GunPowderBa
-main/dll/FRONT/dll_39.c                                 2 dlls: 0x033:lbl_8031A1A0, 0x034:lbl_8031A304
-main/dll/FRONT/n_rareware.c                             2 dlls: 0x032:lbl_8031A178, 0x033:lbl_8031A1A0
+main/dll/DR/hightop.c                                   2 dlls: 0x126:TrigPnt, 0x145:CloudPrison
 main/dll/IM/IMicicle.c                                  6 dlls: 0x15B:CFForceFiel, 0x15D:CFSlideDoor, 0x15F:CFAttractor, 0x162:CFMagicWall, 0x164:CFLevelCont, 0x166:CFbrokenGra
-main/dll/IM/IMsnowbike.c                                3 dlls: 0x1AE:SH_LevelCon, 0x1AF:SH_swaplift, 0x1B1:SH_staff
-main/dll/IM/IMspacecraft.c                              3 dlls: 0x167:SpiritDoorL, 0x17D:DIM2_barrel, 0x17E:MMP_levelco
-main/dll/LGT/LGTdirectionallight.c                      2 dlls: 0x207:WM_Worm, 0x209:WM_LevelCon
-main/dll/LGT/LGTpointlight.c                            2 dlls: 0x206:LINKPoleFla, 0x207:WM_Worm
-main/dll/LGT/LGTprojectedlight.c                        2 dlls: 0x209:WM_LevelCon, 0x20A:WM_GeneralS
-main/dll/MMP/MMP_asteroid.c                             6 dlls: 0x13C:XYZAnimator, 0x13D:ExplodeAnim, 0x13E:DIMBossIceS, 0x13F:TexFrameAni, 0x140:fogControl, 0x141:Lightning
+main/dll/IM/IMspacecraft.c                              2 dlls: 0x167:SpiritDoorL, 0x17D:DIM2_barrel
+main/dll/MMP/MMP_asteroid.c                             5 dlls: 0x13C:XYZAnimator, 0x13D:ExplodeAnim, 0x13E:DIMBossIceS, 0x13F:TexFrameAni, 0x140:fogControl
 main/dll/MMP/MMP_moonrock.c                             3 dlls: 0x132:WaterFallSp, 0x133:sfxPlayer, 0x141:Lightning
-main/dll/MMP/mmp_barrel.c                               6 dlls: 0x136:WaveAnimato, 0x137:AlphaAnimat, 0x138:GroundAnima, 0x139:HitAnimator, 0x13A:VisAnimator, 0x13B:WallAnimato
-main/dll/MMP/mmp_levelcontrol.c                         2 dlls: 0x13B:WallAnimato, 0x13C:XYZAnimator
-main/dll/NW/NWmammoth.c                                 2 dlls: 0x1A7:LINK_BlueMu, 0x1A8:SH_killermu
-main/dll/SC/SCanimobj.c                                 2 dlls: 0x1AE:SH_LevelCon, 0x1B0:SH_swapston
-main/dll/SC/dll_01BB_sctotembond.c                      2 dlls: 0x1BA:SC_totempuz, 0x1BB:SC_totembon
-main/dll/SH/SHkillermushroom.c                          2 dlls: 0x1A9:BombPlant, 0x1AA:BombPlantSp
+main/dll/MMP/mmp_barrel.c                               5 dlls: 0x136:WaveAnimato, 0x137:AlphaAnimat, 0x138:GroundAnima, 0x139:HitAnimator, 0x13A:VisAnimator
 main/dll/SH/SHrocketmushroom.c                          2 dlls: 0x1AA:BombPlantSp, 0x1AB:BombPlantin
-main/dll/TREX/TREX_levelcontrol.c                       3 dlls: 0x1EC:SB_ShipGun, 0x1ED:SB_FireBall, 0x1EE:SB_CannonBa
+main/dll/TREX/TREX_levelcontrol.c                       2 dlls: 0x1EC:SB_ShipGun, 0x1EE:SB_CannonBa
 main/dll/TREX/TREX_trex.c                               11 dlls: 0x1ED:SB_FireBall, 0x1EF:SB_CloudBal, 0x1F0:SB_KyteCage, 0x1F1:SB_SeqDoor, 0x1F2:SB_CageKyte, 0x1F3:SB_MiniFire, 0x1F4:CF_Lamp, 0x1F5:generalscal, 0x1F6:DIMFlag, 0x1F7:SB_ShipGunB, 0x285:SPShop
 main/dll/TrickyCurve.c                                  2 dlls: 0x231:DFP_ForceAw, 0x232:DFP_RotateP
 main/dll/VF/platform1.c                                 2 dlls: 0x1BC:SC_totemstr, 0x1BD:SC_paypoint
-main/dll/WC/WClaser.c                                   4 dlls: 0x1F8:WM_Galleon, 0x1FA:WM_seqobjec, 0x1FB:dll_1FB, 0x1FC:WM_LaserBea
-main/dll/WC/WClevcontrol.c                              2 dlls: 0x1F9:WM_ObjCreat, 0x259:SB_Cloudrun
-main/dll/WC/WCpressureSwitch.c                          2 dlls: 0x1F8:WM_Galleon, 0x1F9:WM_ObjCreat
-main/dll/alphaanim.c                                    5 dlls: 0x111:CFPowerLock, 0x112:BossDrakor_, 0x113:CAMERAnewse, 0x114:IMMultiSeq, 0x115:lbl_80321428
+main/dll/WC/WClaser.c                                   3 dlls: 0x1F8:WM_Galleon, 0x1FA:WM_seqobjec, 0x1FB:dll_1FB
+main/dll/alphaanim.c                                    3 dlls: 0x112:BossDrakor_, 0x113:CAMERAnewse, 0x114:IMMultiSeq
 main/dll/anim.c                                         12 dlls: 0x229:DFP_LevelCo, 0x22A:DFP_ObjCrea, 0x22B:DFP_Torch, 0x22C:lbl_803298D0, 0x22D:DFP_seqpoin, 0x22E:DFP_DoorSwi, 0x230:DFP_wallbar, 0x23F:DB_egg, 0x240:GCRobotBlas, 0x241:DrakorEnerg, 0x242:DBstealerwo, 0x243:DBHoleContr
-main/dll/autoTransporter.c                              2 dlls: 0x0F4:CFPowerDoor, 0x0F5:SidekickBal
-main/dll/babycloudrunner.c                              2 dlls: 0x0FC:gDllFCObjDescriptor, 0x0FD:gDll14DObjDescriptor
 main/dll/baddie/Tumbleweed.c                            5 dlls: 0x031:lbl_8031C5D0, 0x03F:lbl_8031C5F8, 0x040:lbl_8031CC10, 0x041:lbl_8031CDB8, 0x2C0:FrontFox
-main/dll/baddie/TumbleweedBush.c                        3 dlls: 0x03C:lbl_8031C1E4, 0x03D:lbl_8031C2B4, 0x03E:lbl_8031C300
-main/dll/baddie/chuka.c                                 2 dlls: 0x22F:DFP_floorba, 0x230:DFP_wallbar
-main/dll/baddie/dll_DB.c                                3 dlls: 0x000:lbl_8031C020, 0x03B:lbl_8031C168, 0x03C:lbl_8031C1E4
+main/dll/baddie/dll_003E_dummy3e.c                      2 dlls: 0x03D:lbl_8031C2B4, 0x03E:lbl_8031C300
 main/dll/baddieControl.c                                12 dlls: 0x019:dll_19, 0x04D:lbl_80319DA8, 0x04E:lbl_80319E08, 0x04F:lbl_80319E38, 0x050:lbl_80319E68, 0x051:lbl_80319E98, 0x052:lbl_80319EC8, 0x053:lbl_80319EF8, 0x054:dll_54, 0x055:lbl_80319F58, 0x056:lbl_80319F88, 0x057:lbl_8031A01C
 main/dll/barrel.c                                       2 dlls: 0x0CF:CannonClaw, 0x0D0:Grimble
 main/dll/cfguardian.c                                   4 dlls: 0x0FB:WCTemplePre, 0x10F:MMP_Bridge, 0x110:KT_RexDoorP, 0x111:CFPowerLock
 main/dll/cfprisonuncle.c                                6 dlls: 0x0FE:MagicPlant, 0x100:TrickyWarp, 0x101:TrickyGuard, 0x102:StayPoint, 0x103:CurveFish, 0x118:Duster
-main/dll/crackanim.c                                    2 dlls: 0x0FC:gDllFCObjDescriptor, 0x117:AppleOnTree
 main/dll/crate2.c                                       2 dlls: 0x233:DFP_Statue1, 0x234:DFP_PerchSw
-main/dll/creator1C4.c                                   4 dlls: 0x190:ECSH_Cup, 0x192:GPSH_Shrine, 0x193:GPSH_ObjCre, 0x194:GPSH_Scene
+main/dll/creator1C4.c                                   3 dlls: 0x192:GPSH_Shrine, 0x193:GPSH_ObjCre, 0x194:GPSH_Scene
 main/dll/creator1D6.c                                   3 dlls: 0x1A2:NW_tricky, 0x1A3:NW_animice1, 0x1A4:NW_ice1
 main/dll/cup1C3.c                                       2 dlls: 0x196:DBSH_Symbol, 0x197:dll_197
-main/dll/curves.c                                       2 dlls: 0x014:lbl_803115F8, 0x015:lbl_803116E0
 main/dll/debug/dimenu.c                                 4 dlls: 0x037:lbl_8031ACF8, 0x038:lbl_8031ADA4, 0x039:lbl_8031ADD0, 0x03A:lbl_8031ADF8
-main/dll/df_partfx.c                                    4 dlls: 0x003:lbl_803112E8, 0x004:lbl_80311378, 0x00F:lbl_80311438, 0x016:lbl_80311340
-main/dll/dim2conveyor.c                                 2 dlls: 0x1A1:NW_mammothh, 0x1A2:NW_tricky
-main/dll/dim_bossgut.c                                  2 dlls: 0x1A8:SH_killermu, 0x1A9:BombPlant
+main/dll/df_partfx.c                                    3 dlls: 0x004:lbl_80311378, 0x00F:lbl_80311438, 0x016:lbl_80311340
 main/dll/dim_partfx.c                                   8 dlls: 0x003:lbl_803112E8, 0x026:lbl_80310FB8, 0x028:lbl_80310F38, 0x029:lbl_80310E88, 0x02A:lbl_80310FE0, 0x02B:lbl_80311038, 0x02C:lbl_803110D8, 0x02D:lbl_80311100
 main/dll/dimmagicbridge.c                               2 dlls: 0x199:dll_199, 0x19A:dll_19A
-main/dll/dll_19C.c                                      3 dlls: 0x178:DFSH_Shrine, 0x179:DFSH_ObjCre, 0x17A:SpiritPrize
-main/dll/dll_19E.c                                      2 dlls: 0x179:DFSH_ObjCre, 0x17B:DFSH_LaserB
+main/dll/dll_00F3_flameblast.c                          4 dlls: 0x0F0:MMP_WarpPoi, 0x0F1:InvHit, 0x0F2:iceblast, 0x0F3:flameblast
+main/dll/dll_017A_spiritprize.c                         2 dlls: 0x178:DFSH_Shrine, 0x17A:SpiritPrize
 main/dll/dll_66.c                                       11 dlls: 0x0AB:lbl_80319378, 0x0AC:lbl_803193C0, 0x0AD:lbl_80319410, 0x0AE:lbl_80319460, 0x0AF:lbl_803194A8, 0x0B0:lbl_803194F8, 0x0B1:lbl_80319548, 0x0B3:lbl_80319598, 0x0B8:lbl_803195E8, 0x0B9:lbl_80319638, 0x0BA:lbl_80319688
-main/dll/explosion.c                                    3 dlls: 0x197:dll_197, 0x198:NWSH_levcon, 0x199:dll_199
 main/dll/foodbag.c                                      21 dlls: 0x07C:lbl_80315010, 0x07D:lbl_80315238, 0x07E:lbl_80315304, 0x07F:lbl_80315444, 0x080:lbl_80315528, 0x081:lbl_80315750, 0x082:lbl_80315978, 0x083:lbl_80315C84, 0x084:lbl_80315F84, 0x085:lbl_80316000, 0x086:lbl_80316030, 0x087:lbl_80316220, 0x088:lbl_80316440, 0x089:lbl_80316630, 0x08A:lbl_80316708, 0x08B:lbl_80316930, 0x08C:lbl_80316B3C, 0x08D:lbl_80316C20, 0x08E:lbl_80316C70, 0x08F:lbl_80316E0C, 0x090:lbl_80316FD4
 main/dll/gameplay.c                                     40 dlls: 0x011:lbl_80311BE0, 0x017:lbl_80311900, 0x02F:Carryable_funcs, 0x058:lbl_803137D8, 0x059:lbl_80311D88, 0x05A:lbl_80311E0C, 0x05B:lbl_80311E80, 0x05C:lbl_8031210C, 0x05D:lbl_8031231C, 0x05E:lbl_8031262C, 0x05F:lbl_80312770, 0x060:lbl_803128C4, 0x061:lbl_803129A8, 0x062:lbl_80312BB4, 0x063:lbl_80312CF8, 0x064:lbl_80312E38, 0x065:lbl_80312F78, 0x066:lbl_80313394, 0x067:lbl_803135A4, 0x068:lbl_803137B4, 0x069:lbl_80313880, 0x06A:lbl_80313A1C, 0x06B:lbl_80313AB0, 0x06C:lbl_80313AD0, 0x06D:lbl_80313C10, 0x06E:lbl_80313CA0, 0x06F:lbl_80313E78, 0x070:lbl_8031403C, 0x071:lbl_80314268, 0x072:lbl_80314490, 0x073:lbl_803146B8, 0x074:lbl_803148FC, 0x075:lbl_80314930, 0x076:lbl_80314960, 0x077:lbl_80314990, 0x078:lbl_80314AD0, 0x079:lbl_80314BB0, 0x07A:lbl_80314C90, 0x07B:lbl_80314DE4, 0x0A3:lbl_80313184
-main/dll/genprops.c                                     20 dlls: 0x0C6:AnimDummy, 0x0C7:DIM2RoofRub, 0x0C8:DepthOfFiel, 0x0DB:MikaBomb, 0x0DC:MikaBombSha, 0x0DD:GCbaddieShi, 0x0DE:baddieInter, 0x0E2:sword, 0x0E3:projball, 0x0E4:FlameThrowe, 0x0E5:fox_shield, 0x0E6:ReStartMark, 0x0E8:checkpoint4, 0x0E9:setuppoint, 0x0EA:sideload, 0x0EB:siderepel, 0x0ED:CFCloudCalP, 0x0F7:dll_F7, 0x125:curve, 0x25A:StaticCamer
-main/dll/groundAnimator.c                               3 dlls: 0x115:lbl_80321428, 0x116:WM_Column, 0x117:AppleOnTree
-main/dll/ladders.c                                      2 dlls: 0x0CF:CannonClaw, 0x0D1:TumbleWeedB
+main/dll/genprops.c                                     19 dlls: 0x0C6:AnimDummy, 0x0C7:DIM2RoofRub, 0x0C8:DepthOfFiel, 0x0DB:MikaBomb, 0x0DC:MikaBombSha, 0x0DD:GCbaddieShi, 0x0DE:baddieInter, 0x0E2:sword, 0x0E3:projball, 0x0E4:FlameThrowe, 0x0E5:fox_shield, 0x0E6:ReStartMark, 0x0E8:checkpoint4, 0x0E9:setuppoint, 0x0EA:sideload, 0x0EB:siderepel, 0x0F7:dll_F7, 0x125:curve, 0x25A:StaticCamer
+main/dll/groundAnimator.c                               2 dlls: 0x115:lbl_80321428, 0x116:WM_Column
 main/dll/lightning.c                                    2 dlls: 0x0EE:EffectBox, 0x0FF:MagicDustSm
-main/dll/mmp_asteroid_re.c                              4 dlls: 0x12C:KP_Transpor, 0x12E:LaserTurret, 0x12F:NWCallOFEld, 0x131:CF_DoorLigh
-main/dll/mmp_moonrock.c                                 3 dlls: 0x134:texscroll2, 0x135:texscroll, 0x136:WaveAnimato
-main/dll/mmshrine/shrine.c                              3 dlls: 0x18C:MMSH_Shrine, 0x18D:MMSH_Scales, 0x18E:MMSH_WaterS
-main/dll/mmshrine/shrine1C2.c                           3 dlls: 0x18F:ECSH_Shrine, 0x191:ECSH_Creato, 0x192:GPSH_Shrine
+main/dll/mmp_asteroid_re.c                              3 dlls: 0x12E:LaserTurret, 0x12F:NWCallOFEld, 0x131:CF_DoorLigh
+main/dll/mmp_moonrock.c                                 2 dlls: 0x134:texscroll2, 0x135:texscroll
+main/dll/mmshrine/shrine.c                              2 dlls: 0x18D:MMSH_Scales, 0x18E:MMSH_WaterS
+main/dll/mmshrine/shrine1C2.c                           2 dlls: 0x18F:ECSH_Shrine, 0x191:ECSH_Creato
 main/dll/modelfx.c                                      4 dlls: 0x023:lbl_80310C60, 0x024:lbl_80310D20, 0x025:lbl_80310D80, 0x027:lbl_80310DE8
 main/dll/modgfx.c                                       14 dlls: 0x00B:lbl_8030FCA8, 0x00C:projgfx_funcs, 0x00D:playerShadow_funcs, 0x00E:lbl_80310604, 0x018:boneParticleEffect_funcs, 0x01A:lbl_80310638, 0x01B:lbl_80310670, 0x01C:lbl_80310808, 0x01D:lbl_803108A0, 0x01E:lbl_803109B8, 0x01F:lbl_80310A20, 0x020:lbl_80310A78, 0x021:lbl_80310B50, 0x022:lbl_80310BD8
-main/dll/moveLib.c                                      2 dlls: 0x019:dll_19, 0x02E:dll_2E
-main/dll/objfsa.c                                       4 dlls: 0x00F:lbl_80311438, 0x010:lbl_803114B0, 0x012:lbl_803114D8, 0x014:lbl_803115F8
-main/dll/ped.c                                          2 dlls: 0x19F:NW_treebrid, 0x1A0:NW_geyser
+main/dll/objfsa.c                                       3 dlls: 0x010:lbl_803114B0, 0x012:lbl_803114D8, 0x014:lbl_803115F8
 main/dll/pickup.c                                       13 dlls: 0x09D:lbl_80318240, 0x09E:lbl_80318468, 0x09F:lbl_80318690, 0x0A0:lbl_803188B8, 0x0A1:lbl_80318AE0, 0x0A2:lbl_80318D08, 0x0A4:lbl_80318D28, 0x0A5:lbl_80318DD0, 0x0A6:lbl_80318E20, 0x0A7:lbl_80318EC8, 0x0A8:lbl_80319008, 0x0A9:lbl_80319148, 0x0AA:lbl_80319354
-main/dll/pressureSwitch.c                               3 dlls: 0x0DF:Hagabon, 0x0E0:SwarmBaddie, 0x0E1:WispBaddie
+main/dll/pressureSwitch.c                               2 dlls: 0x0DF:Hagabon, 0x0E0:SwarmBaddie
 main/dll/projball1D8.c                                  2 dlls: 0x1A5:NW_levcontr, 0x1A6:SH_tricky
 main/dll/savegame.c                                     9 dlls: 0x091:lbl_8031719C, 0x092:lbl_8031723C, 0x093:lbl_80317468, 0x094:lbl_80317504, 0x095:lbl_803175C8, 0x096:lbl_803177F0, 0x097:lbl_8031788C, 0x098:lbl_80317AD4, 0x099:lbl_80317B74
-main/dll/scarab.c                                       5 dlls: 0x0CA:dll_CA, 0x0CB:dll_CB, 0x0CC:ChukChuk, 0x0CD:IceBall, 0x0CE:dll_CE
+main/dll/scarab.c                                       4 dlls: 0x0CB:dll_CB, 0x0CC:ChukChuk, 0x0CD:IceBall, 0x0CE:dll_CE
 main/dll/screenOverlay.c                                2 dlls: 0x0F9:DRProjectil, 0x0FA:InvisibleHi
 main/dll/screens.c                                      3 dlls: 0x09A:lbl_80317BB8, 0x09B:lbl_80317DE0, 0x09C:lbl_80318014
-main/dll/shrine1CE.c                                    4 dlls: 0x19B:dll_19B, 0x19C:dll_19C, 0x19D:dll_19D, 0x19E:dll_19E
-main/dll/tFrameAnimator.c                               4 dlls: 0x0F5:SidekickBal, 0x0F6:Area, 0x0F8:LevelName, 0x0F9:DRProjectil
-main/dll/texframeanimator.c                             2 dlls: 0x0ED:CFCloudCalP, 0x0FF:MagicDustSm
-main/dll/transporter.c                                  5 dlls: 0x0EF:WCPushBlock, 0x0F0:MMP_WarpPoi, 0x0F1:InvHit, 0x0F2:iceblast, 0x0F3:flameblast
-main/dll/treasurechest.c                                2 dlls: 0x0D3:dll_D3, 0x0D4:SkeetlaWall
+main/dll/shrine1CE.c                                    3 dlls: 0x19B:dll_19B, 0x19C:dll_19C, 0x19D:dll_19D
+main/dll/tFrameAnimator.c                               2 dlls: 0x0F6:Area, 0x0F8:LevelName
 main/dll/wallanimator.c                                 2 dlls: 0x0D6:KaldachomMe, 0x0D7:KaldachomSp
-main/dll/xyzanimator.c                                  5 dlls: 0x0D7:KaldachomSp, 0x0D8:PinPonSpike, 0x0D9:Pollen, 0x0DA:PollenFragm, 0x0DB:MikaBomb
+main/dll/xyzanimator.c                                  3 dlls: 0x0D8:PinPonSpike, 0x0D9:Pollen, 0x0DA:PollenFragm
 main/light.c                                            7 dlls: 0x21E:VFP_Block1, 0x21F:VFP_Platfor, 0x220:VFP_DoorSwi, 0x221:VFP_seqpoin, 0x222:VFPDragHead, 0x223:VFP_corepla, 0x224:dll_224
-main/main.c                                             6 dlls: 0x224:dll_224, 0x225:VFP_flamepo, 0x226:VFP_lavapoo, 0x227:VFP_lavasta, 0x228:VFPSpPl, 0x23F:DB_egg
+main/main.c                                             4 dlls: 0x225:VFP_flamepo, 0x226:VFP_lavapoo, 0x227:VFP_lavasta, 0x228:VFPSpPl
 main/sky.c                                              2 dlls: 0x005:lbl_8030F414, 0x006:lbl_8030F4AC
 ```
