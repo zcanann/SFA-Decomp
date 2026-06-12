@@ -17,7 +17,7 @@ extern undefined8 ObjGroup_RemoveObject();
 
 extern u8 framesThisStep;
 
-extern f32 lbl_803E586C;
+extern const f32 lbl_803E586C;
 extern f32 lbl_803E5870;
 extern f32 lbl_803E5874;
 extern f32 lbl_803E5878;
