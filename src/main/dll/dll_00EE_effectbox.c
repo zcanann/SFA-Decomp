@@ -1,9 +1,7 @@
-/* === moved from main/dll/texframeanimator.c [80173224-801732A4) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/magicduststate_struct.h"
-/* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
- * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
- * verified). File rename parked as a repo-owner proposal. */
+/* This TU contains the COLLECTIBLE/MAGICDUST family; the
+ * texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-verified). */
 
 extern uint GameBit_Get(int eventId);
 

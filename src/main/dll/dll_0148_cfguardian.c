@@ -1,4 +1,3 @@
-/* === moved from main/dll/DR/hightop.c [8019AE3C-8019B1D8) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling off
 #pragma peephole off
 #include "main/game_object.h"

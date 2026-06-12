@@ -2,15 +2,9 @@
  * main/dll/baddie/wispBaddie.c
  *
  * Text span (EN v1.0): 0x801262CC..0x80128120 (3 functions, 7764 b)
- *  - pauseMenuDraw   @ 0x801262CC, 4564 b
- *  - pauseMenuDrawStatus_801274a0     @ 0x801274A0, 2692 b
- *  - fn_80127F24     @ 0x80127F24,  508 b
- *
- * The Ghidra-imported placeholder previously declared two 4-byte
- * `FUN_801262cc` / `FUN_801262d0` ghost stubs which do not exist in the
- * v1.0 binary (cf. sfa_ghost_stubs.md). Those have been deleted; this
- * file now hosts hand-decompiled implementations of the three real
- * functions in the unit.
+ *  - pauseMenuDraw              @ 0x801262CC, 4564 b
+ *  - pauseMenuDrawStatus_801274a0 @ 0x801274A0, 2692 b
+ *  - fn_80127F24                @ 0x80127F24,  508 b
  */
 
 #include "main/dll/hud_textures.h"

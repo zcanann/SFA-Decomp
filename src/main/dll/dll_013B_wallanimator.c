@@ -1,4 +1,3 @@
-/* === moved from main/dll/MMP/mmp_barrel.c [80194408-8019443C) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling on
 #pragma peephole on
 #include "main/dll/groundanimator_state.h"

@@ -1,4 +1,3 @@
-/* === moved from main/dll/TREX/TREX_levelcontrol.c [801E4288-801E42F8) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/shipbattlestate_struct.h"
 #include "main/dll/sbkytecagestate_struct.h"

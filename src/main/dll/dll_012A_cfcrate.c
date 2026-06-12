@@ -1,4 +1,3 @@
-/* === moved from main/dll/CF/treasureRelated0177.c [8018D6E8-8018D728) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll_000A_expgfx.h"
 #include "main/screen_transition.h"
 

@@ -1,4 +1,3 @@
-/* === moved from main/dll/CAM/camdrakor.c [8010D33C-8010D36C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/camera_object.h"
 #include "main/dll/CAM/camclimb_state.h"
 #include "main/mm.h"

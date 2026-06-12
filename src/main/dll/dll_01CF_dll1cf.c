@@ -1,4 +1,3 @@
-/* === moved from main/dll/DIM/DIM2flameburst.c [801B63F4-801B6464) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling on
 #pragma peephole on
 #include "main/dll/dimmagicbridge_state.h"

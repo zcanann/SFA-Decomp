@@ -1,4 +1,3 @@
-/* === moved from main/dll/DR/gasventControl.c [801A39B4-801A39D0) (TU re-split, docs/boundary_audit.md) === */
 #pragma scheduling on
 #pragma peephole on
 #include "main/dll/DR/dll_015A_explodable.h"

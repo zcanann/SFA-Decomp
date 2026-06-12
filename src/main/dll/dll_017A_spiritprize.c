@@ -1,4 +1,3 @@
-/* === moved from main/dll/DF/DFlantern.c [801C2914-801C2E68) (TU re-split, docs/boundary_audit.md) === */
 #include "main/mapEvent.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"

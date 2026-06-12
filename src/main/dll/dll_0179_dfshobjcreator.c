@@ -1,4 +1,3 @@
-/* === moved from main/dll/dll_19C.c [801C3B68-801C3BB0) (TU re-split, docs/boundary_audit.md) === */
 #include "main/obj_placement.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"

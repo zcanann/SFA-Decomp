@@ -1,9 +1,7 @@
 /*
- * FireFlyLantern (DLL 0x10B). Re-split (descriptor forensics,
- * docs/boundary_audit.md): TU = 0x801871C8..0x80187640, previously cut at
- * 0x80187524 across CFcrystal.c | CFBaby.c (init was CFBaby's first fn).
- * FireFlyLantern_spawnFireFly is placed LAST so it cannot be auto-inlined
- * into init (extern bl before the re-split).
+ * FireFlyLantern (DLL 0x10B). TU = 0x801871C8..0x80187640.
+ * FireFlyLantern_spawnFireFly is placed LAST so MWCC cannot auto-inline it
+ * into init; the target keeps it as an extern call.
  */
 #include "main/dll/CF/CFcrystal.h"
 #include "main/effect_interfaces.h"

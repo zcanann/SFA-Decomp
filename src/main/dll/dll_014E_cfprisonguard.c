@@ -1,9 +1,8 @@
 /*
- * sandwormBoss.c - still a 10-DLL container (0x14A CFPowerBase .. 0x157
- * SpiritDoorSpirit) covering [8019D578-801A0B14); see
- * docs/boundary_audit.md. The 0x148/0x149 head was carved to
- * DR/dll_0148_cfguardian.c + DR/dll_0149_cfwindlift.c (skeleton-copy:
- * their defs here are collapsed to prototypes).
+ * sandwormBoss.c — 10-DLL container (DLL 0x14A CFPowerBase .. 0x157
+ * SpiritDoorSpirit), TU [8019D578-801A0B14). DLLs 0x148 and 0x149 are
+ * defined in dll_0148_cfguardian.c and dll_0149_cfwindlift.c; their
+ * definitions here are collapsed to forward prototypes.
  */
 #include "main/dll/cfguardian_state.h"
 #include "main/dll/bit80_struct.h"

@@ -1,4 +1,3 @@
-/* === moved from main/dll/alphaanim.c [8017CF90-8017D0D4) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/alphaanim.h"
 #include "main/dll/appleontreestate_struct.h"
 #include "main/game_object.h"

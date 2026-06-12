@@ -1,4 +1,3 @@
-/* === moved from main/dll/DR/DRearthwalk.c [801DAFA4-801DAFDC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/DR/DRearthwalk.h"
 #include "main/dll/sclevelcontrolprocessanimeventsstate_struct.h"
 #include "main/dll/sclevelcontrolstate_types.h"

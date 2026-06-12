@@ -1,4 +1,3 @@
-/* === moved from main/dll/crackanim.c [8017EC10-8017EC94) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/dll_0117_appleontree.h"
 
 

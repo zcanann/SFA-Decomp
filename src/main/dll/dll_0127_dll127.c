@@ -1,4 +1,3 @@
-/* === moved from main/dll/CF/CFforcecontrol.c [8018CD64-8018CDAC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
 #include "main/screen_transition.h"
 

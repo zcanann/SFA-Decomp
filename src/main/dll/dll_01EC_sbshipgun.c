@@ -1,4 +1,3 @@
-/* === moved from main/dll/DB/DBstealerworm.c [801E341C-801E34C0) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"

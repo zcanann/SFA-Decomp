@@ -1,4 +1,3 @@
-/* === moved from main/dll/DF/rope.c [801C04B8-801C053C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll_000A_expgfx.h"
 
 
