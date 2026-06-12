@@ -79,6 +79,7 @@ void arwingandrossstuff_hitDetect(int obj)
         f32 x, y, z;
     } d, v, w;
     ArwProjectileState* state = ((GameObject*)obj)->extra;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     int arwing = getArwing();
 
     if (((GameObject*)obj)->anim.seqId == 0x80d)
@@ -94,8 +95,7 @@ void arwingandrossstuff_hitDetect(int obj)
             state->despawnTimer = lbl_803E7028;
         }
     }
-    if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 && *((u8*)&state->param0
-        + 1) == 0)
+    if (hitState->lastHitObject != 0 && *((u8*)&state->param0 + 1) == 0)
     {
         if (((GameObject*)obj)->anim.seqId != 0x6ae)
         {
@@ -114,7 +114,7 @@ void arwingandrossstuff_hitDetect(int obj)
             arwarwing_setVelocity(arwing, (int)&w);
             doRumble(lbl_803E703C);
         }
-        if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject == arwing)
+        if (hitState->lastHitObject == arwing)
         {
             if (arwarwing_isBarrelRolling(arwing) != 0)
             {
@@ -175,7 +175,7 @@ void arwingandrossstuff_init(int obj, u8* setup)
 {
     ArwProjectileState* state = ((GameObject*)obj)->extra;
     ArwProjectileSetup* mapData = (ArwProjectileSetup*)setup;
-    int linked;
+    ObjHitsPriorityState* hitState;
 
     *(s16*)obj = (s16)(mapData->rotX << 8);
     ((GameObject*)obj)->anim.rotY = (s16)(mapData->rotY << 8);
@@ -214,10 +214,10 @@ void arwingandrossstuff_init(int obj, u8* setup)
         state->param0.particleKind = 2;
         break;
     }
-    linked = *(int*)&((GameObject*)obj)->anim.hitReactState;
-    if (linked != 0)
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    if (hitState != NULL)
     {
-        *(s16*)&((ObjHitsPriorityState*)linked)->trackContactMask = 1;
+        hitState->trackContactMask = 1;
     }
     ObjGroup_AddObject(obj, 2);
 }
@@ -226,6 +226,7 @@ void arwingandrossstuff_init(int obj, u8* setup)
 void arwingandrossstuff_update(int obj)
 {
     ArwProjectileState* state = ((GameObject*)obj)->extra;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     int arwing = getArwing();
 
     if (arwing != 0 && (*(u16*)(arwing + 0xb0) & 0x1000) != 0)
@@ -253,7 +254,7 @@ void arwingandrossstuff_update(int obj)
             Obj_FreeObject(obj);
             return;
         }
-        if ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
+        if (hitState->contactFlags != 0)
         {
             if (((GameObject*)obj)->anim.seqId != 0x6ae)
             {
