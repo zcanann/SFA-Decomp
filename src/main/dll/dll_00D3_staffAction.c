@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/dll/landedArwing.h"
 #include "main/dll/dll_00D3_staffAction.h"
+#include "main/objhits.h"
 
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
@@ -12,9 +13,6 @@ extern int FUN_80017a98();
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int atan2_8002178c(f32 dx, f32 dz);
 extern undefined4 FUN_800305f8();
-extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_EnableObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
 extern void mtx44_mult(f32 * lhs, f32 * rhs, f32 * out);
@@ -84,7 +82,7 @@ FUN_801659b8(undefined8 param_1, double param_2, double param_3, undefined8 para
     if (*(char*)((int)param_10 + 0x27a) != '\0')
     {
         *(float*)(iVar3 + 0x60) = lbl_803E3C9C;
-        ObjHits_EnableObject((int)param_9);
+        ObjHits_EnableObject((u32)param_9);
         dVar4 = (double)FUN_80293bc4();
         *(float*)(param_9 + 0x12) = (float)(-(double)*(float*)(iVar3 + 0x60) * dVar4);
         *(float*)(param_9 + 0x14) = lbl_803E3C74;
@@ -95,10 +93,10 @@ FUN_801659b8(undefined8 param_1, double param_2, double param_3, undefined8 para
                      param_9, 0, 0, param_12, param_13, param_14, param_15, param_16);
         *(float*)(iVar3 + 0x44) = lbl_803E3CA0;
     }
-    ObjHits_SetHitVolumeSlot((int)param_9, 9, 1, -1);
+    ObjHits_SetHitVolumeSlot((u32)param_9, 9, 1, -1);
     *(undefined*)(*(int*)(param_9 + 0x2a) + 0x6c) = 9;
     *(undefined*)(*(int*)(param_9 + 0x2a) + 0x6d) = 1;
-    ObjHits_RegisterActiveHitVolumeObject(param_9);
+    ObjHits_RegisterActiveHitVolumeObject((int)param_9);
     (*gPathControlInterface)->advance(param_9, param_10 + 1, lbl_803DC074);
     if (*(char*)(iVar3 + 0x90) == '\x06')
     {
@@ -209,7 +207,7 @@ FUN_80165e74(undefined8 param_1, double param_2, double param_3, undefined8 para
     if (*(char*)((int)param_10 + 0x27a) != '\0')
     {
         *(float*)(iVar1 + 0x60) = lbl_803E3C9C;
-        ObjHits_EnableObject((int)param_9);
+        ObjHits_EnableObject((u32)param_9);
         dVar2 = (double)FUN_80293bc4();
         *(float*)(param_9 + 0x12) = (float)(-(double)*(float*)(iVar1 + 0x60) * dVar2);
         *(float*)(param_9 + 0x14) = lbl_803E3C74;
@@ -220,10 +218,10 @@ FUN_80165e74(undefined8 param_1, double param_2, double param_3, undefined8 para
                      param_9, 0, 0, param_12, param_13, param_14, param_15, param_16);
         *(float*)(iVar1 + 0x44) = lbl_803E3C74;
     }
-    ObjHits_SetHitVolumeSlot((int)param_9, 9, 1, -1);
+    ObjHits_SetHitVolumeSlot((u32)param_9, 9, 1, -1);
     *(undefined*)(*(int*)(param_9 + 0x2a) + 0x6c) = 9;
     *(undefined*)(*(int*)(param_9 + 0x2a) + 0x6d) = 1;
-    ObjHits_RegisterActiveHitVolumeObject(param_9);
+    ObjHits_RegisterActiveHitVolumeObject((int)param_9);
     (*gPathControlInterface)->advance(param_9, param_10 + 1, lbl_803DC074);
     if (*(char*)((int)param_10 + 0x27a) != '\0')
     {
@@ -903,7 +901,7 @@ undefined4 fn_801659B8(s16* obj, u32* params)
     if (*(s8*)((int)params + 0x27a) != 0)
     {
         state->speed = lbl_803E3004;
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject((u32)obj);
         *(f32*)(obj + 0x12) = -(state->speed) * fsin16Precise((u16) * obj);
         *(f32*)(obj + 0x14) = lbl_803E2FDC;
         *(f32*)(obj + 0x16) = -(state->speed) * fcos16Precise((u16) * obj);
@@ -911,10 +909,10 @@ undefined4 fn_801659B8(s16* obj, u32* params)
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2FDC, 0);
         state->animSpeed = lbl_803E2FDC;
     }
-    ObjHits_SetHitVolumeSlot((int)obj, 9, 1, -1);
+    ObjHits_SetHitVolumeSlot((u32)obj, 9, 1, -1);
     *(undefined*)(*(int*)(obj + 0x2a) + 0x6c) = 9;
     *(undefined*)(*(int*)(obj + 0x2a) + 0x6d) = 1;
-    ObjHits_RegisterActiveHitVolumeObject(obj);
+    ObjHits_RegisterActiveHitVolumeObject((int)obj);
     (*gPathControlInterface)->advance(obj, params + 1, timeDelta);
     if (*(s8*)((int)params + 0x27a) != 0)
     {
@@ -1291,7 +1289,6 @@ extern void* Obj_GetPlayerObject(void);
 extern int ObjContact_AddCallback(int* obj, int p2, void* cb);
 extern int ObjList_FindNearestObjectByDefNo(int* obj, int defNo, f32* radius);
 extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, int* out, int* obj, int e, int g, int h, int i);
-extern void ObjHits_DisableObject(int obj);
 extern f32 sqrtf(f32);
 extern void* memset(void* dst, int val, u32 size);
 
@@ -1524,7 +1521,7 @@ void dll_D3_init(int obj, int def, int flag)
     ((TreasureChestState*)state)->targetState = 0;
     ((TreasureChestState*)state)->unk405 = 0;
     ((TreasureChestState*)state)->unk25F = 0;
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((u32)obj);
 
     fz = lbl_803E2FF4;
     extra->unk_04 = fz;

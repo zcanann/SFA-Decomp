@@ -10,10 +10,9 @@
 #include "main/dll/dll_01A0_nwgeyser.h"
 #include "main/gameplay_runtime.h"
 #include "main/objanim.h"
+#include "main/objhits.h"
 
 extern uint GameBit_Get(int eventId);
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
 extern undefined4 FUN_8003a1c4();

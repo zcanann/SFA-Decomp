@@ -2,6 +2,7 @@
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/objanim.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
@@ -14,7 +15,6 @@ extern int padGetAnalogInput(int, char*, char*);
 extern uint getButtonsJustPressed(int);
 extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
-extern void ObjHits_EnableObject(void*);
 extern int ObjTrigger_IsSet(void*);
 extern void* objFindTexture(void* obj, int idx, int flags);
 extern int hitDetectFn_80065e50(void* obj, float x, float y, float z, void* out, int p5, int p6);
@@ -63,7 +63,7 @@ int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* a
     {
         ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_IDLE, lbl_803E59DC, 0);
     }
-    ObjHits_EnableObject(obj);
+    ObjHits_EnableObject((u32)obj);
     obj->hitFlags &= ~DR_LASERTURRET_HITFLAG_CLEAR_PROMPT;
     if (GameBit_Get(DR_LASERTURRET_GAMEBIT_SHOP_OPEN) == 0)
     {

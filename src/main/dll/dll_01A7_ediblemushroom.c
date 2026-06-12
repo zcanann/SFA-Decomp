@@ -8,6 +8,7 @@
 #include "main/dll/NW/ediblemushroom_state.h"
 #include "main/dll/ediblemushroom.h"
 #include "main/effect_interfaces.h"
+#include "main/objhits.h"
 
 extern undefined8 ObjGroup_RemoveObject();
 extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, int p6, int p7);
@@ -20,8 +21,6 @@ extern f32 mathCosf(f32 x);
 extern int Curve_AdvanceAlongPath(u8* curve, f32 t);
 extern void Sfx_PlayFromObject(u8* obj, int sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(u8* obj, int sfxId);
-extern void ObjHits_ClearSourceMask(u8* obj, int mask);
-extern void ObjHits_SetSourceMask(u8* obj, int mask);
 extern u32 randomGetRange(int min, int max);
 extern u32 GameBit_Get(int eventId);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
@@ -95,10 +94,8 @@ extern int ObjMsg_Pop(u8* obj, int* outMsg, int a, int b);
 extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 extern void Obj_StartModelFadeIn(u8* obj, int frames);
 extern void Obj_SetModelColorFadeRecursive(u8* obj, int a, int b, int c, int d, int e);
-extern int ObjHits_GetPriorityHit(u8* obj, int* outOther, int a, int b);
 extern f32 sqrtf(f32 x);
 extern undefined4 FUN_80006824();
-extern int ObjHits_GetPriorityHit();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_AllocQueue();
@@ -375,7 +372,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         }
         break;
     case 9:
-        ObjHits_ClearSourceMask(obj, 1);
+        ObjHits_ClearSourceMask((int)obj, 1);
         Sfx_KeepAliveLoopedObjectSound(obj, 0x9b);
         if (((EdibleMushroomState*)state)->unk124 <= lbl_803E5288)
         {
@@ -386,7 +383,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
         ((EdibleMushroomState*)state)->unk124 = t;
         if (t <= lbl_803E5288)
         {
-            ObjHits_SetSourceMask(obj, 1);
+            ObjHits_SetSourceMask((int)obj, 1);
             (*gExpgfxInterface)->freeSource((u32)obj);
             ((EdibleMushroomState*)state)->unk136 = 0;
             ((EdibleMushroomState*)state)->unk137 &= ~0x10;
@@ -625,7 +622,6 @@ typedef struct EdiblemushroomPlacement
 void ediblemushroom_update(u8* self)
 {
     extern void edibleMushroomFn_801d083c(u8 * self, u8 * state, u8 * other); /* #57 */
-    extern void ObjHits_DisableObject(u8 * obj); /* #57 */
     extern void GameBit_Set(int bit, int value); /* #57 */
     extern u8* Obj_GetPlayerObject(void); /* #57 */
     u8* state;
@@ -651,7 +647,7 @@ void ediblemushroom_update(u8* self)
         {
             if (((u32)msg - 0x70000) != 0xB) continue;
             ((GameObject*)self)->anim.flags = (s16)(((GameObject*)self)->anim.flags | 0x4000);
-            ObjHits_DisableObject(self);
+            ObjHits_DisableObject((u32)self);
             gameBitIncrement(((EdiblemushroomState*)state)->eventId);
             GameBit_Set(0x12E, 0);
             if (((GameObject*)self)->anim.seqId == 0x658)
@@ -701,7 +697,7 @@ void ediblemushroom_update(u8* self)
         }
     }
 
-    hitKind = ObjHits_GetPriorityHit(self, &hitObj, 0, 0);
+    hitKind = ObjHits_GetPriorityHit((int)self, &hitObj, 0, 0);
     if (hitKind != 0)
     {
         if (hitKind == 0x10)
@@ -729,7 +725,6 @@ end:
 
 void ediblemushroom_init(int obj, int aux)
 {
-    extern undefined4 ObjHits_DisableObject(); /* #57 */
     extern void* Obj_GetPlayerObject(void); /* #57 */
     int state;
     int player;
@@ -747,7 +742,7 @@ void ediblemushroom_init(int obj, int aux)
     if (GameBit_Get(*(short*)(aux + 0x1a)) != 0)
     {
         ((EdiblemushroomState*)state)->unk136 = 8;
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((u32)obj);
         ((GameObject*)obj)->anim.flags = (short)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     }
 
