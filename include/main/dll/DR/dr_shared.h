@@ -103,7 +103,7 @@ extern GameUIInterface **gGameUIInterface;
 extern int gmmazewell_clearPendingTriggerCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
 extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
-extern int explodeplan_updateTriggerCallback(int obj);
+extern int cagecontrol_updateTriggerCallback(int obj);
 extern void Sfx_StopObjectChannel(int obj, int ch);
 extern void firepipe_clearLinkedUpdateFlag(int handle);
 extern void ObjLink_DetachChild(int obj, int child);

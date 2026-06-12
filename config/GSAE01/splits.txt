@@ -1363,10 +1363,10 @@ main/dll/DR/dll_0266_kytesmum.c:
 main/dll/DR/dll_0265_drcreator.c:
 	.text       start:0x80219A88 end:0x8021A008
 
-main/dll/DR/dll_0268_dr_cagecontrol.c:
+main/dll/DR/dll_0269_explodeplan.c:
 	.text       start:0x8021A008 end:0x8021A13C
 
-main/dll/DR/dll_0269_explodeplan.c:
+main/dll/DR/dll_0268_drcagecontrol.c:
 	.text       start:0x8021A13C end:0x8021A42C
 
 main/dll/DR/dll_026B_drchimmey.c:
