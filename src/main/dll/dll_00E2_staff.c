@@ -4,7 +4,6 @@
 #include "main/game_object.h"
 
 
-
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
@@ -12,7 +11,6 @@ extern undefined4 FUN_8003b818();
 
 
 /* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
-
 
 
 extern EffectInterface** gPartfxInterface;
@@ -30,26 +28,6 @@ extern EffectInterface** gPartfxInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-
-/*
- * --INFO--
- *
- * Function: kaldachompspit_init
- * EN v1.0 Address: 0x80169CC4
- * EN v1.0 Size: 552b
- * EN v1.1 Address: 0x8016A170
- * EN v1.1 Size: 560b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 /*
@@ -85,20 +63,7 @@ extern EffectInterface** gPartfxInterface;
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
-
-
-
-
-
-
-
 void mikabomb_hitDetect(void);
-
-
-
-
-
 
 
 void mikabomb_free(int obj, int mode);
@@ -238,7 +203,6 @@ PollenFragmentConfig* lbl_8032059C[] = {
 };
 
 
-
 ObjectDescriptor gPollenFragmentObjDescriptor = {
     0,
     0,
@@ -257,17 +221,11 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 };
 
 
-
 /* ==== v1.0 recovered functions (drift additions) ==== */
-
 
 
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
-
-
-
-
 
 
 #include "ghidra_import.h"
@@ -282,21 +240,6 @@ extern void* Obj_GetPlayerObject(void);
 #include "main/objhits_types.h"
 #include "main/objseq.h"
 #include "main/resource.h"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 typedef struct StaffDoGrowShrinkAnimState
@@ -324,16 +267,6 @@ typedef struct StaffDoGrowShrinkAnimState
     s16 unkB0;
     u8 padB2[0xB8 - 0xB2];
 } StaffDoGrowShrinkAnimState;
-
-
-
-
-
-
-
-
-
-
 
 
 extern undefined4 FUN_80006810();
@@ -1247,12 +1180,10 @@ extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
  */
 
 
-
 void mikabombshadow_update(int* obj);
 
 
 void curve_init(ObjAnimComponent* obj, CurvePlacementParams* params);
-
 
 
 /*
@@ -2060,10 +1991,6 @@ void staff_setHitReactValue(int* obj, s32 v)
 void collectible_func0E(int* obj, u32 v);
 
 
-
-
-
-
 extern void staff_setupSwipe(int p1, int p2, int p3, int p4);
 extern int getHudHiddenFrameCount(void);
 
@@ -2284,9 +2211,6 @@ void staffDoGrowShrinkAnim(int* obj, u8 grow, u8 flag2)
 void dll_F7_init(int* obj, int* params);
 
 
-
-
-
 void fireball_hitDetect(int* obj);
 
 
@@ -2305,15 +2229,6 @@ void mikabomb_update(int* obj);
 void mikabomb_init(int* obj);
 
 
-#pragma opt_loop_invariants off
-void baddieinterestp_update(int* obj);
-#pragma opt_loop_invariants reset
-
-
-#pragma opt_loop_invariants off
-void animatedobj_update(int* obj);
-#pragma opt_loop_invariants reset
-
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
@@ -2321,9 +2236,6 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
 void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-
-
 
 
 void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
@@ -2344,10 +2256,7 @@ void fireball_update(int* obj);
 void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 
-
-
 void shield_update(int* obj);
-
 
 
 /* dll_F7 (bouncing prop) object extra-state */
@@ -2391,7 +2300,6 @@ void staff_initialise(void)
         lbl_803DDAA0 = Resource_Acquire(90, 1);
     }
 }
-
 
 
 void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
@@ -2581,7 +2489,6 @@ void staff_hitDetectGeometry(int* obj)
     }
 }
 #pragma opt_common_subs reset
-
 
 
 volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
@@ -2805,8 +2712,6 @@ void staff_update(int* obj)
 }
 
 extern void playerAddHealth(void* player, int amount);
-
-
 
 
 extern f32 fastFloorf(f32 v);

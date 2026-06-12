@@ -5,7 +5,6 @@
 #include "main/game_object.h"
 
 
-
 extern undefined4 FUN_800067e8();
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_SetHitVolumeSlot();
@@ -71,26 +70,6 @@ extern f32 lbl_803E319C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-
-/*
- * --INFO--
- *
- * Function: kaldachompspit_init
- * EN v1.0 Address: 0x80169CC4
- * EN v1.0 Size: 552b
- * EN v1.1 Address: 0x8016A170
- * EN v1.1 Size: 560b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 /*

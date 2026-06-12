@@ -506,7 +506,6 @@ extern uint GameBit_Get(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 
 
-
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
 typedef struct BabyCloudRunnerState
@@ -753,28 +752,13 @@ void FUN_8019f1dc(void)
 void cfguardian_release(void);
 
 
-
-
 /* Per-object extra state for the CloudRunner guardian
  * (cfguardian_getExtraSize == 0xa9c). */
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
 
 extern void* Obj_GetPlayerObject(void);
 
-/* EN v1.0 0x8019C3A0  size: 252b  cfguardian_SeqFn: guardian message handler.
- * Persists position on a negative cue, otherwise picks the active/idle
- * heading pair and routes a move request; on the magic-grant message it
- * tops the player back up. Returns 1 if the move was consumed. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
 extern f32 lbl_803E4218;
@@ -834,14 +818,6 @@ void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
 #pragma dont_inline reset
 
 
-/* EN v1.0 0x801A0614  size: 368b  cfprisoncage_SeqFn: drain the object's message
- * queue (re-arming its gamebit on the keyed message), then sync the
- * lit/active state from gamebit 0x44 and notify on completion. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
 extern f32 Vec_distance(void* a, void* b);
 extern f32 s16toFloat(int a, int b);
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
@@ -900,13 +876,6 @@ int babycloudrunner_func0B(void* p)
 void windlift_hitDetect(void);
 
 
-
-
-
-
-
-
-
 /* Per-object extra state for the CloudRunner main crystal
  * (cfmaincrystal_getExtraSize == 0x160). */
 
@@ -940,47 +909,6 @@ STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 /* spiritdoorspirit_getExtraSize == 0x1. */
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* EN v1.0 0x8019D8B4  size: 308b  cfpowerbase_init: seed header and the
- * sub's type from spawn params, map the type id (0x54..0x56) to a model
- * and gamebit, then gate the active/lit state bits on those gamebits. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-/* EN v1.0 0x8019D77C  size: 312b  cfpowerbase_update: track its gamebit's
- * lit state, fire the queued state-change trigger, and when the base is
- * powered and its UI condition clears, mark it done and notify. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
 void babycloudrunner_hitDetect(void)
 {
 }
@@ -996,101 +924,16 @@ void babycloudrunner_initialise(void)
 void cfprisonguard_free(void);
 
 
-
-
-/* EN v1.0 0x8019FBD0  size: 172b  cfprisonguard_init: set up the guard's
- * substate (update fn cfprisonguard_SeqFn, message queue), seed its header from
- * the spawn params, and apply the alarm-active gating bits. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
-
 extern void objAudioFn_80039270(int obj, void* p, int id);
-
-/* EN v1.0 0x8019FEDC  size: 536b  cfprisonuncle_update: while not captured,
- * drain pending messages, re-acquire the keyed target object, then either
- * track/animate toward the player (firing the alert trigger) or, once
- * captured, raise the done flag and notify. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
-
-/* EN v1.0 0x801A01E8  size: 296b  gcrobotlightbea_hitDetect: clear the hit
- * flag, then re-set it only if the priority hit is the (undisguised) player
- * and lands inside the beacon's bounding box. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
-
-
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
 
 
 /* 8b "li r3, N; blr" returners. */
 int babycloudrunner_getExtraSize(void) { return 0x248; }
 int cfprisonguard_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
-#pragma peephole off
-
-
-
-#pragma peephole reset
-
-
-/* EN v1.0 0x8019F93C  size: 188b  cfprisonguard_render: render the guard
- * model when visible, ramp its alarm timer at sub->_30 each frame, and
- * once it crosses the threshold spawn a one-shot particle. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
-#pragma scheduling reset
-
-/* if (o->_X == K) return A; else return B; */
-#pragma peephole off
-#pragma peephole reset
 
 /* chained byte bit-extract. */
 
-
-
-
-/* state-transition: kicks player into mode 2 when sandworm not yet eaten. */
-#pragma peephole off
-int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate);
-#pragma peephole reset
-
-/* GameBit-gated byte write. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* plain forwarder. */
 
@@ -1106,7 +949,6 @@ int babycloudrunner_getObjectTypeId(void) { return 0; }
 void spiritdoorspirit_init(int* obj);
 
 
-
 int babycloudrunner_setScale(int* obj)
 {
     BabyCloudRunnerState* state = ((GameObject*)obj)->extra;
@@ -1114,7 +956,6 @@ int babycloudrunner_setScale(int* obj)
 }
 
 void cfperch_init(int* obj);
-
 
 
 void babycloudrunner_free(int* obj)
@@ -1126,54 +967,13 @@ void babycloudrunner_free(int* obj)
 void gcrobotlightbea_init(int* obj);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 #pragma peephole reset
 #pragma scheduling reset
-
-/* copy 3 floats within same struct */
-
-#pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma scheduling reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
 
 
 extern f32 lbl_803E4230;
 extern f32 lbl_803E4234;
 extern f32 lbl_803DBE4C;
-
 
 
 /* EN v1.0 0x8019E3F4  size: 372b  fn_8019E3F4: pick the burrow/surface move
@@ -1234,38 +1034,8 @@ int fn_8019E3F4(int* obj)
 
 extern int objUpdateOpacity(int sub);
 
-/* EN v1.0 0x8019FCF4  size: 484b  cfprisonuncle_render: render the uncle and/or
- * his held model depending on the rescue gamebits, opacity and visibility;
- * when path-following, snap the held model to the path point first. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-
-/* EN v1.0 0x8019B1D8  size: 544b  fn_8019B1D8: steer the object toward the
- * target: scale its velocity along the normalized delta, blend the yaw by
- * speed over distance, move it and keep the chase move playing. Returns 1
- * when already within the closing threshold. */
-#pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma dont_inline reset
-
-
-
-
-/* EN v1.0 0x8019D2AC  size: 708b  windlift_init: look up the lift's sequence
- * timings, scale its rise height from the def byte, arm it from the
- * gamebits and clear all 14 rider slots. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
 
 
 extern void* getTrickyObject(void);
@@ -1388,35 +1158,6 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 
 extern void Sfx_StopObjectChannel(int obj, int ch);
 
-
-/* EN v1.0 0x8019F540  size: 1000b  cfprisonguard_SeqFn: drive the guard state
- * machine - ramp/reset the alarm on cues, bail when captured or freed, watch
- * the player distance/water impacts and chase or stand down, with idle digging
- * SFX and queued-message drain. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-/* EN v1.0 0x8019C784  size: 1396b  fn_8019C784: per-rider wind lift physics -
- * track the rider while above the lift and in range, send the lift/drop
- * messages on state edges, and integrate the rise speed with ramp-up,
- * oscillation damping and player-mode handoff. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-/* EN v1.0 0x8019CD98  size: 1300b  windlift_update: fade the lift opacity
- * with its gamebit, spin up over the first second, then assign every nearby
- * group-0x16 object (and the player) to a rider slot and run the lift
- * physics on each. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int fn_80080150(void* p);
 extern int timerCountDown(void* p);
@@ -1671,23 +1412,3 @@ void babycloudrunner_update(int* obj)
 
 extern void getEnvfxAct(int a, int b, int c, int d);
 
-
-
-/* EN v1.0 0x8019D9F0  size: 2112b  fn_8019D9F0: main crystal beam update -
- * collect the three pylon positions from messages, re-request missing ones,
- * emit the beam particles toward the crystal (and down from each pylon),
- * ramp the convergence charge, hum volume and per-beam chime timers. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-/* EN v1.0 0x8019B4C8  size: 3800b  waterSpellStone1Fn_8019b4c8: cfguardian
- * brain - sixteen-state quest progression for the CloudRunner guardian, with
- * sandworm avoidance, path flights, landing physics, sequenced triggers and
- * idle chatter. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset

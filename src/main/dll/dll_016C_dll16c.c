@@ -12,8 +12,6 @@
 #include "main/resource.h"
 
 
-
-
 /*
  * Per-object extra state for the IM ice-mountain event controller
  * (imicemountain_getExtraSize == 0x14).
@@ -53,8 +51,6 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
  * Per-object extra state for the crrockfall falling rock
  * (crrockfall_getExtraSize == 0x14).
  */
-
-
 
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
@@ -307,33 +303,16 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
 void imicemountain_free(void);
 
 
-
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
 #define MEVT_QUERY(a)         (*gMapEventInterface)->getMode((a))
 
-/* EN v1.0 0x801AC9C0  size: 828b  imicemountain_init: clear the ice-mountain
- * gamebit block, arm the map-event triggers, then branch on the queried level
- * state to set the boulder's start state and fire the appropriate triggers. */
-#pragma scheduling off
-#pragma peephole reset
 #pragma scheduling reset
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 #undef MEVT_QUERY
 
 
-
-
-
-
-/* EN v1.0 0x801AD684  size: 344b  magiclight_init: seed header + update fn;
- * for the non-172 variants pick a random lifetime and, for type 0x16b, map
- * the spawn subtype to a light-pair / intensity preset. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 void dll_16C_release(void)
 {
 }
@@ -353,25 +332,7 @@ extern void* lbl_803DDB40;
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
-#pragma peephole reset
 
-#pragma peephole off
-
-#pragma peephole reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
-#pragma peephole reset
-#pragma scheduling reset
-
-/* if (o->_X == K) return A; else return B; */
-#pragma peephole off
-#pragma peephole reset
 
 extern void Obj_FreeObject(int*);
 
@@ -460,9 +421,6 @@ void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate);
-#pragma scheduling reset
 
 /* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
 #pragma scheduling off
@@ -484,23 +442,12 @@ void dll_16C_init(void* obj, void* arg2)
 #pragma scheduling reset
 
 extern float Vec_distance(float* a, float* b);
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void warpToMap(int mapId, int flags);
 
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
 
-/* EN v1.0 0x801AC248  imicemountain_updateEventState: 8-state ice-mountain event machine dispatched
- * through jumptable_80323698 (states 1..7; state 0 idles). */
-#pragma scheduling off
-#pragma peephole off
-void imicemountain_updateEventState(int* obj);
-#pragma peephole reset
-#pragma scheduling reset
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 
@@ -509,7 +456,6 @@ extern int Obj_AllocObjectSetup(int kind, int id);
 extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
 extern f32 lbl_803E4748;
 extern u8 lbl_802C2308[];
-
 
 
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
@@ -634,10 +580,6 @@ void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f
 extern void fn_801AC01C(int* obj);
 extern void Music_Trigger(int track, int flag);
 
-/* imicemountain_update: lazy-spawn the ambient effects, run the active state,
- * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
-#pragma scheduling off
-#pragma peephole reset
 #pragma scheduling reset
 
 extern int* ObjGroup_GetObjects(int group, int* countOut);
@@ -759,19 +701,3 @@ void dll_16C_update(int* obj)
 
 extern u8 lbl_803236B8[];
 
-/* crrockfall_init: derive the per-rock scale from the placement params, size the
- * capsule hitbox from the sub-object bounds, set up render flags, and pick the
- * state-table variant by object type. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-/* crrockfall_update: drive the falling-rock state machine - fade-in opacity by
- * height/distance, trigger the fall when the player is in range, integrate the
- * fall, then shatter (sfx + explosion) on impact. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset

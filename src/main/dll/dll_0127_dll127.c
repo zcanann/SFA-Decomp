@@ -2,8 +2,6 @@
 #include "main/screen_transition.h"
 
 
-
-
 /*
  * --INFO--
  *
@@ -19,10 +17,7 @@
  */
 
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
 
 
 void dll_127_free_nop(void)
@@ -52,37 +47,11 @@ void dll_127_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 extern void setPendingMapLoad(int v);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
-
-
-
-
 #include "main/dll/CF/treasureRelated0177.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/screen_transition.h"
-
-
 
 
 extern u8 framesThisStep;
@@ -213,12 +182,6 @@ extern int* gSHthorntailAnimationInterface;
  * EN v1.0 Address: 0x8018D584
  * EN v1.0 Size: 348b
  */
-
-
-
-
-
-
 
 
 /* 8b "li r3, N; blr" returners. */

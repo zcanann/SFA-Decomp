@@ -4,7 +4,6 @@
 #include "main/game_object.h"
 
 
-
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
@@ -12,7 +11,6 @@ extern undefined4 FUN_8003b818();
 
 
 /* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
-
 
 
 extern EffectInterface** gPartfxInterface;
@@ -30,26 +28,6 @@ extern EffectInterface** gPartfxInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-
-/*
- * --INFO--
- *
- * Function: kaldachompspit_init
- * EN v1.0 Address: 0x80169CC4
- * EN v1.0 Size: 552b
- * EN v1.1 Address: 0x8016A170
- * EN v1.1 Size: 560b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 /*
@@ -85,20 +63,7 @@ extern EffectInterface** gPartfxInterface;
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
-
-
-
-
-
-
-
 void mikabomb_hitDetect(void);
-
-
-
-
-
 
 
 void mikabomb_free(int obj, int mode);
@@ -238,7 +203,6 @@ PollenFragmentConfig* lbl_8032059C[] = {
 };
 
 
-
 ObjectDescriptor gPollenFragmentObjDescriptor = {
     0,
     0,
@@ -257,16 +221,10 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 };
 
 
-
 /* ==== v1.0 recovered functions (drift additions) ==== */
 
 
-
 extern f32 timeDelta;
-
-
-
-
 
 
 #include "ghidra_import.h"
@@ -281,33 +239,6 @@ extern f32 timeDelta;
 #include "main/objhits_types.h"
 #include "main/objseq.h"
 #include "main/resource.h"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 extern undefined4 FUN_80006810();
@@ -1214,12 +1145,10 @@ void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* place
  */
 
 
-
 void mikabombshadow_update(int* obj);
 
 
 void curve_init(ObjAnimComponent* obj, CurvePlacementParams* params);
-
 
 
 /*
@@ -1976,19 +1905,9 @@ void StaticCamera_free(int x);
 void flamethrowerspe_func0B(int* obj);
 
 
-/* state-byte setters / leaf writers. */
-#pragma dont_inline on
-#pragma dont_inline reset
-
 void staff_func10(int* obj, s32 v);
 
 void staff_setHitReactValue(int* obj, s32 v);
-
-
-
-
-
-
 
 
 void staff_modelMtxFn(int* obj, int p4, int p5);
@@ -2010,7 +1929,6 @@ extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
 void mikabombshadow_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
-
 
 
 extern f32 lbl_803E31FC;
@@ -2047,7 +1965,6 @@ void staff_free(int* obj);
 void fireball_free(int* obj);
 
 
-
 void depthoffieldpoint_init(int* obj);
 
 void depthoffieldpoint_update(int* obj);
@@ -2072,12 +1989,7 @@ void staff_init(int* obj);
 void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 
-
-
 void dll_F7_init(int* obj, int* params);
-
-
-
 
 
 void fireball_hitDetect(int* obj);
@@ -2097,20 +2009,7 @@ void mikabomb_update(int* obj);
 void mikabomb_init(int* obj);
 
 
-#pragma opt_loop_invariants off
-void baddieinterestp_update(int* obj);
-#pragma opt_loop_invariants reset
-
-
-#pragma opt_loop_invariants off
-void animatedobj_update(int* obj);
-#pragma opt_loop_invariants reset
-
-
 void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-
-
 
 
 void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
@@ -2128,10 +2027,7 @@ void fireball_update(int* obj);
 void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 
-
-
 void shield_update(int* obj);
-
 
 
 /* dll_F7 (bouncing prop) object extra-state */
@@ -2143,13 +2039,7 @@ void dll_F7_update(int* obj);
 void staff_initialise(void);
 
 
-
 void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-
-
-
-
 
 
 /* per-swipe trail record (stride 0x18, 3 records) */
@@ -2157,7 +2047,6 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 void staff_hitDetectGeometry(int* obj);
 #pragma opt_common_subs reset
-
 
 
 volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
@@ -2191,13 +2080,5 @@ extern void selectTexture(void* tex, int x);
 void staff_update(int* obj);
 
 
-
-
-
-
-
-
 void staffFn_80170380(int* obj, int cmd);
-
-
 

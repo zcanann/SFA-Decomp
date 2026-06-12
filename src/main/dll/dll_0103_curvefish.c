@@ -9,7 +9,6 @@
 #include "main/objfx.h"
 
 
-
 typedef struct CurvefishState
 {
     u8 pad0[0xA - 0x0];
@@ -50,7 +49,6 @@ extern f32 lbl_803E3914;
 extern f32 timeDelta;
 
 
-
 /*
  * --INFO--
  *
@@ -65,21 +63,6 @@ extern f32 timeDelta;
  * PAL Size: TODO
  */
 
-/*
- * --INFO--
- *
- * Function: fn_8017F7B8
- * EN v1.0 Address: 0x8017F7B8
- * EN v1.0 Size: 272b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma dont_inline on
-#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -241,9 +224,6 @@ int duster_getExtraSize(void);
 int curvefish_getExtraSize(void) { return 0x120; }
 
 
-
-
-
 STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
 STATIC_ASSERT(sizeof(DusterState) == 0x20);
 STATIC_ASSERT(offsetof(DusterState, moveStepScale) == 0x00);
@@ -281,8 +261,6 @@ void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void trickywarp_free(int obj);
 
 
-
-
 void trickywarp_init(s16* obj, u8* param_2);
 
 void trickyguard_init(s16* obj, u8* param_2);
@@ -291,8 +269,6 @@ void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
 
 void duster_hitDetect(int param_1);
-
-
 
 
 void duster_init(int obj, u8* params);
@@ -585,7 +561,6 @@ void curvefish_init(int obj, u8* param_2)
     ((CurvefishState*)state)->unk110 = (f32)(u32)
     param_2[0x19] / lbl_803E3928;
 }
-
 
 
 void trickyguard_update(int* obj);

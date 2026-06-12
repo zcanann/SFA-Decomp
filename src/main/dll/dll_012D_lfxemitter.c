@@ -8,7 +8,6 @@
 #include "main/resource.h"
 
 
-
 extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
 extern uint GameBit_Get(int eventId);
@@ -34,23 +33,6 @@ extern f32 lbl_803E3E80;
 extern f32 lbl_803E3E84;
 extern f32 lbl_803E3E88;
 
-
-/*
- * --INFO--
- *
- * Function: fxemit_init
- * EN v1.0 Address: 0x8018EFE0
- * EN v1.0 Size: 376b
- * EN v1.1 Address: 0x8018F020
- * EN v1.1 Size: 400b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-#pragma dont_inline on
-#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -468,15 +450,6 @@ extern u8 lbl_803AC7B0[];
 extern void mm_free(void* p);
 
 
-
-
-
-
-
-
-
-
-
 void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup)
 {
     LfxEmitterState* state;
@@ -652,9 +625,6 @@ void lfxemitter_free(LfxEmitterObject* obj)
 
 /* Trivial 4b 0-arg blr leaves. */
 void fxemit_release(void);
-
-
-
 
 
 void lfxemitter_render(void)

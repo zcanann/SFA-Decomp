@@ -22,12 +22,7 @@ extern u32 randomGetRange(int min, int max);
  */
 
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
 
 
 /* 8b "li r3, N; blr" returners. */
@@ -39,29 +34,7 @@ extern void objRenderFn_8003b8f4(f32);
 /* Drift-recovery: add new fns with v1.0 names. */
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 extern f32 timeDelta;
-
-
-
-
-
-
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
-
-
 
 
 #include "main/dll/CF/treasureRelated0177.h"
@@ -69,7 +42,6 @@ extern f32 timeDelta;
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/screen_transition.h"
-
 
 
 extern void ModelLightStruct_free(void* effect);
@@ -355,9 +327,6 @@ void campfire_render(int obj, int param_2, int param_3, int param_4, int param_5
 }
 
 void kt_torch_free(void);
-
-
-
 
 
 /* 8b "li r3, N; blr" returners. */

@@ -7,28 +7,10 @@
 #include "main/dll/visanimatorstate_struct.h"
 
 
-
 extern uint GameBit_Get(int eventId);
 
 
 extern void* mapGetBlock(int idx);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 extern void objRenderFn_8003b8f4(f32);
@@ -42,9 +24,6 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/dll/MMP/mmp_barrel.h"
 #include "main/game_object.h"
 #include "global.h"
-
-
-
 
 
 typedef struct AlphaanimatorPlacement
@@ -95,25 +74,6 @@ extern int FUN_800600e4();
 extern undefined8 FUN_8028682c();
 extern undefined4 FUN_80286878();
 
-
-/*
- * --INFO--
- *
- * Function: waveanimator_func0B
- * EN v1.0 Address: 0x801923C4
- * EN v1.0 Size: 196b
- * EN v1.1 Address: 0x801923CC
- * EN v1.1 Size: 260b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma peephole off
-#pragma scheduling off
-
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void mm_free(void* p);
 
@@ -218,7 +178,6 @@ void FUN_80192488(void)
 void waveanimator_update(void);
 
 
-
 void alphaanimator_hitDetect(void)
 {
 }
@@ -232,9 +191,6 @@ void alphaanimator_initialise(void)
 }
 
 void visanimator_free(void);
-
-
-
 
 
 /* 8b "li r3, N; blr" returners. */
@@ -267,44 +223,7 @@ void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 #pragma peephole reset
 
-/* wall variant: hashes lha to byte */
-#pragma peephole off
 
-#pragma peephole reset
-
-#pragma scheduling off
-#pragma scheduling reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole off
-#pragma scheduling off
-
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 extern u8 framesThisStep;
 #pragma scheduling off
 #pragma peephole off
@@ -561,6 +480,4 @@ void alphaanimator_update(int* obj)
 }
 
 extern f32 lbl_803E3F40;
-
-
 

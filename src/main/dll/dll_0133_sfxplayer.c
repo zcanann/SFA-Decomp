@@ -2,15 +2,6 @@
 #include "main/effect_interfaces.h"
 
 
-
-
-
-
-
-
-
-
-
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 
@@ -31,166 +22,6 @@ extern f32 lbl_803DC074;
  */
 
 
-/*
- * --INFO--
- *
- * Function: FUN_801950ac
- * EN v1.0 Address: 0x801950AC
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x8019518C
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling on
-#pragma peephole on
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801954f0
- * EN v1.0 Address: 0x801954F0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80195584
- * EN v1.1 Size: 4624b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling off
-#pragma peephole off
-
-
-/*
- * --INFO--
- *
- * Function: FUN_801954f4
- * EN v1.0 Address: 0x801954F4
- * EN v1.0 Size: 176b
- * EN v1.1 Address: 0x80196794
- * EN v1.1 Size: 192b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling on
-#pragma peephole on
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80195b40
- * EN v1.0 Address: 0x80195B40
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x80196EA8
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling off
-#pragma peephole off
-
-
-/*
- * --INFO--
- *
- * Function: FUN_80195b74
- * EN v1.0 Address: 0x80195B74
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x80196ED8
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling on
-#pragma peephole on
-
-
-/* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* state encode: ((obj->_X)->_Y << shift) | const. */
-
-/* Drift-recovery: add new fns with v1.0 names. */
-
-
-
-
-
-
-
-
-
-
-
-
-/* EN v1.0 0x80196990  size: 1752b  dimbossicesmash_update: gate on the
- * trigger gamebit, integrate velocity/rotation with per-axis gravity
- * clamps, run the path-control hooks with surface bounce, fade alpha over
- * the lifetime window, and emit the two trail particles. */
-
-
-/* EN v1.0 0x80196520  size: 1008b  fn_80196520: seed the icesmash launch
- * state from the setup record: spawn position/rotation, launch velocity
- * (optionally homing on the target point), rotation velocities and the
- * gravity/clamp direction flags. */
-
-/* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
-
-
-/* EN v1.0 0x80197474  size: 648b  fogcontrol_update: ramp the fog blend
- * toward the gamebit-selected target and feed the heavy fog params. */
-
-/* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-
 #include "main/dll/MMP/mmp_moonrock_state.h"
 #include "main/dll/MMP/MMP_moonrock.h"
 #include "main/camera_interface.h"
@@ -198,9 +29,6 @@ extern f32 lbl_803DC074;
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-
-
-
 
 
 typedef struct SfxplayerObjPlacement
@@ -213,9 +41,6 @@ typedef struct SfxplayerObjPlacement
     s16 unk24;
     u8 pad26[0x28 - 0x26];
 } SfxplayerObjPlacement;
-
-
-
 
 
 extern f32 lbl_803E40B8;
@@ -242,15 +67,6 @@ extern int getCurSeqNo(void);
 
 /* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
  * lightningRender(handle). */
-
-
-
-
-
-
-
-
-
 
 
 /* WaterFallSpray_init: stash 3 signed-byte<<8 fields at obj+0..+4, clear
@@ -479,7 +295,6 @@ void sfxplayerObj_update(u8* obj)
 }
 
 void fn_80198A00(u8* obj, int seqArg);
-
 
 
 /*

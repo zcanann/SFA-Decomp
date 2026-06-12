@@ -9,9 +9,6 @@
 #include "main/objfx.h"
 
 
-
-
-
 extern u32 GameBit_Get(int eventId);
 extern void* getTrickyObject(void);
 extern void* Obj_GetPlayerObject(void);
@@ -22,7 +19,6 @@ extern int getPatchGroup(f32* pos, int patchGroup);
 
 extern f32 lbl_803E38A0;
 extern int ViewFrustum_IsSphereVisible(f32* pos, f32 radius);
-
 
 
 /*
@@ -39,21 +35,6 @@ extern int ViewFrustum_IsSphereVisible(f32* pos, f32 radius);
  * PAL Size: TODO
  */
 
-/*
- * --INFO--
- *
- * Function: fn_8017F7B8
- * EN v1.0 Address: 0x8017F7B8
- * EN v1.0 Size: 272b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma dont_inline on
-#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -213,9 +194,6 @@ int MagicPlant_getExtraSize(void);
 int trickywarp_getExtraSize(void) { return 0x64; }
 int duster_getExtraSize(void);
 int curvefish_getExtraSize(void);
-
-
-
 
 
 STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
@@ -396,16 +374,12 @@ void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void duster_hitDetect(int param_1);
 
 
-
-
 void duster_init(int obj, u8* params);
 
 void duster_update(int obj);
 
 
 void MagicPlant_init(int obj, MagicPlantSetup* setup);
-
-
 
 
 void trickywarp_update(int param_1)
@@ -436,7 +410,6 @@ void trickywarp_update(int param_1)
 void curvefish_update(int obj);
 
 void curvefish_init(int obj, u8* param_2);
-
 
 
 void trickyguard_update(int* obj);

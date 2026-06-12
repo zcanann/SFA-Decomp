@@ -3,11 +3,6 @@
 #include "main/game_object.h"
 
 
-
-
-
-
-
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined8 ObjGroup_RemoveObject();
@@ -27,123 +22,7 @@ extern undefined8 ObjGroup_RemoveObject();
  * PAL Size: TODO
  */
 
-/*
- * --INFO--
- *
- * Function: FUN_80194544
- * EN v1.0 Address: 0x80194544
- * EN v1.0 Size: 184b
- * EN v1.1 Address: 0x801947D4
- * EN v1.1 Size: 208b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling on
-#pragma peephole on
-
-
-/*
- * --INFO--
- *
- * Function: objFn_801948c0
- * EN v1.0 Address: 0x801948C0
- * EN v1.0 Size: 164b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling off
-#pragma peephole off
-
-/*
- * --INFO--
- *
- * Function: FUN_80194a70
- * EN v1.0 Address: 0x80194A70
- * EN v1.0 Size: 160b
- * EN v1.1 Address: 0x80194E3C
- * EN v1.1 Size: 164b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: FUN_80194b10
- * EN v1.0 Address: 0x80194B10
- * EN v1.0 Size: 512b
- * EN v1.1 Address: 0x80194EE0
- * EN v1.1 Size: 504b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling on
-#pragma peephole on
-
-
-
-
-
-#pragma scheduling off
-#pragma peephole off
-
-
-/*
- * --INFO--
- *
- * Function: wallanimator_getExtraSize
- * EN v1.0 Address: 0x8019469C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-/*
- * --INFO--
- *
- * Function: xyzanimator_getExtraSize
- * EN v1.0 Address: 0x80194B5C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
-
-
-
-
-
-/* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/map_block.h"
 #include "main/dll/MMP/MMP_asteroid.h"
@@ -168,16 +47,6 @@ typedef struct TexframeanimatorPlacement
     u8 pad3D[0x3E - 0x3D];
     s16 unk3E;
 } TexframeanimatorPlacement;
-
-
-
-
-
-
-
-
-
-
 
 
 /*
@@ -283,13 +152,6 @@ typedef struct TexframeanimatorPlacement
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-
-
-
-
-
-
-
 
 
 void texframeanimator_free(void)
@@ -430,16 +292,6 @@ void explodeanimator_free(int x);
 /* state encode: ((obj->_X)->_Y << shift) | const. */
 
 /* Drift-recovery: add new fns with v1.0 names. */
-
-
-
-
-
-
-
-
-
-
 
 
 /* EN v1.0 0x80196990  size: 1752b  dimbossicesmash_update: gate on the

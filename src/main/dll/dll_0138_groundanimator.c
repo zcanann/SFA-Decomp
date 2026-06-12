@@ -8,28 +8,10 @@
 #include "main/dll/visanimatorstate_struct.h"
 
 
-
 extern uint GameBit_Get(int eventId);
 
 
 extern void* mapGetBlock(int idx);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 extern void objRenderFn_8003b8f4(f32);
@@ -45,8 +27,6 @@ extern void objRenderFn_8003b8f4(f32);
 #include "global.h"
 
 
-
-
 typedef struct GroundanimatorPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -60,8 +40,6 @@ typedef struct GroundanimatorPlacement
     u8 unk25;
     u8 pad26[0x28 - 0x26];
 } GroundanimatorPlacement;
-
-
 
 
 /* waveanimator_getExtraSize == 0x3c (also the shared wave-grid config fed
@@ -98,25 +76,6 @@ extern int FUN_800600e4();
 extern undefined8 FUN_8028682c();
 extern undefined4 FUN_80286878();
 
-
-/*
- * --INFO--
- *
- * Function: waveanimator_func0B
- * EN v1.0 Address: 0x801923C4
- * EN v1.0 Size: 196b
- * EN v1.1 Address: 0x801923CC
- * EN v1.1 Size: 260b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma peephole off
-#pragma scheduling off
-
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void mm_free(void* p);
 
@@ -215,15 +174,6 @@ void FUN_80192488(void)
 void waveanimator_update(void);
 
 
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int groundanimator_getExtraSize(void) { return 0x30; }
 int hitanimator_getExtraSize(void);
@@ -231,10 +181,6 @@ int hitanimator_getExtraSize(void);
 /* Pattern wrappers. */
 u8 groundanimator_modelMtxFn(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x2b); }
 
-/* 16b chained patterns. */
-#pragma scheduling off
-void alphaanimator_init(int* obj);
-#pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3FC4;
@@ -248,11 +194,6 @@ void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole reset
 
-/* wall variant: hashes lha to byte */
-#pragma peephole off
-u8 wallanimator_modelMtxFn(int* obj);
-
-#pragma peephole reset
 
 extern f32 lbl_803E3F98;
 #pragma scheduling off
@@ -267,15 +208,7 @@ u8 groundanimator_func0B(int* obj)
 #pragma scheduling reset
 
 extern void fn_801923F8(int* cfg);
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 
 extern f32 lbl_803E3FB8;
 #pragma peephole off
@@ -304,22 +237,7 @@ void groundanimator_init(int* obj, int* desc)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
-void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc);
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
-
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 #pragma scheduling off
 #pragma peephole off
 
@@ -751,7 +669,5 @@ void groundanimator_update(int* obj)
 extern f32 lbl_803E3F7C;
 
 
-
 void fn_801923F8(int* cfgArg);
-
 

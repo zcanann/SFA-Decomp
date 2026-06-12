@@ -9,9 +9,6 @@
 #include "main/objfx.h"
 
 
-
-
-
 extern u32 randomGetRange(int min, int max);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
@@ -42,7 +39,6 @@ extern f32 timeDelta;
 extern void vecRotateZXY(void* angles, void* outVec);
 
 
-
 /*
  * --INFO--
  *
@@ -57,21 +53,6 @@ extern void vecRotateZXY(void* angles, void* outVec);
  * PAL Size: TODO
  */
 
-/*
- * --INFO--
- *
- * Function: fn_8017F7B8
- * EN v1.0 Address: 0x8017F7B8
- * EN v1.0 Size: 272b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma dont_inline on
-#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -233,9 +214,6 @@ int duster_getExtraSize(void) { return 0x20; }
 int curvefish_getExtraSize(void);
 
 
-
-
-
 STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
 STATIC_ASSERT(sizeof(DusterState) == 0x20);
 STATIC_ASSERT(offsetof(DusterState, moveStepScale) == 0x00);
@@ -279,8 +257,6 @@ void MagicPlant_free(int obj, int param_2);
 void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
 void trickywarp_free(int obj);
-
-
 
 
 void trickywarp_init(s16* obj, u8* param_2);
@@ -595,14 +571,11 @@ void duster_update(int obj)
 void MagicPlant_init(int obj, MagicPlantSetup* setup);
 
 
-
-
 void trickywarp_update(int param_1);
 
 void curvefish_update(int obj);
 
 void curvefish_init(int obj, u8* param_2);
-
 
 
 void trickyguard_update(int* obj);

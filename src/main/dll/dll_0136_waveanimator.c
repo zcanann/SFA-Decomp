@@ -22,22 +22,6 @@ typedef struct WaveanimatorState
 extern uint GameBit_Get(int eventId);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void waveanimator_modelMtxFn(int obj, int a, int b, int c)
 {
     int* state = ((GameObject*)obj)->extra;
@@ -48,7 +32,6 @@ void waveanimator_modelMtxFn(int obj, int a, int b, int c)
     ((WaveanimatorState*)state)->unk37 = (u8)b;
     ((WaveanimatorState*)state)->unk38 = (u8)c;
 }
-
 
 
 extern f32 lbl_803E3F30;
@@ -63,12 +46,6 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/dll/MMP/mmp_barrel.h"
 #include "main/game_object.h"
 #include "global.h"
-
-
-
-
-
-
 
 
 /* waveanimator_getExtraSize == 0x3c (also the shared wave-grid config fed
@@ -237,12 +214,6 @@ void waveanimator_initialise(void)
 void alphaanimator_hitDetect(void);
 
 
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int waveanimator_getExtraSize(void) { return 0x3c; }
 int waveanimator_getObjectTypeId(void) { return 0x0; }
@@ -250,9 +221,6 @@ int alphaanimator_getExtraSize(void);
 
 /* Pattern wrappers. */
 
-/* 16b chained patterns. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3F70;
@@ -279,8 +247,6 @@ void waveanimator_setScale(int* obj, f32 fval)
 #pragma peephole reset
 
 extern f32 lbl_803E3F98;
-#pragma scheduling off
-#pragma scheduling reset
 
 extern void fn_801923F8(int* cfg);
 extern u8 lbl_803DDAE8;
@@ -312,27 +278,6 @@ void waveanimator_init(int* obj, int* desc)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
-void hitanimator_update(HitAnimatorObject* obj);
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole off
-#pragma scheduling off
-
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void* lbl_803DDAEC;
 extern void* lbl_803DDAF0;
@@ -400,7 +345,6 @@ extern void* mapBlockFn_800606ec(void* block, int idx);
 extern void* mmAlloc(int size, int align, int tag);
 #pragma scheduling off
 #pragma peephole off
-
 
 
 extern f32 lbl_803E3F40;

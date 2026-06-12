@@ -384,8 +384,6 @@ void kaldachompspit_update(int obj);
 
 void kaldachompspit_init(int obj);
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 /*
  * --INFO--

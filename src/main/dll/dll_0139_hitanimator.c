@@ -7,30 +7,10 @@
 #include "main/dll/visanimatorstate_struct.h"
 
 
-
 extern uint GameBit_Get(int eventId);
 
 
 extern void* mapGetBlock(int idx);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #pragma scheduling reset
@@ -41,11 +21,6 @@ extern void* mapGetBlock(int idx);
 #include "main/dll/MMP/mmp_barrel.h"
 #include "main/game_object.h"
 #include "global.h"
-
-
-
-
-
 
 
 /* waveanimator_getExtraSize == 0x3c (also the shared wave-grid config fed
@@ -77,27 +52,6 @@ extern int FUN_8005b398();
 extern int FUN_800600e4();
 extern undefined8 FUN_8028682c();
 extern undefined4 FUN_80286878();
-
-
-/*
- * --INFO--
- *
- * Function: waveanimator_func0B
- * EN v1.0 Address: 0x801923C4
- * EN v1.0 Size: 196b
- * EN v1.1 Address: 0x801923CC
- * EN v1.1 Size: 260b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma peephole off
-#pragma scheduling off
-
-#pragma scheduling reset
-#pragma peephole reset
-
 
 
 /*
@@ -194,47 +148,17 @@ void FUN_80192488(void)
 void waveanimator_update(void);
 
 
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int hitanimator_getExtraSize(void) { return 0x4; }
 int visanimator_getExtraSize(void);
 
 /* Pattern wrappers. */
 
-/* 16b chained patterns. */
-#pragma scheduling off
-#pragma scheduling reset
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-#pragma peephole off
-
-
-#pragma peephole reset
-
-/* wall variant: hashes lha to byte */
-#pragma peephole off
-
-#pragma peephole reset
-
-#pragma scheduling off
-#pragma scheduling reset
 
 extern void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* vstate,
                                    HitAnimatorPlacement* desc);
 extern int fn_80065640(void);
 extern void fn_80065574(int a, int b, int c);
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -303,10 +227,6 @@ void hitanimator_update(HitAnimatorObject* obj)
 #pragma peephole reset
 
 extern f32 lbl_803E3FB8;
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -352,17 +272,7 @@ void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
-void visanimator_init(int* obj, int* desc);
 
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 #pragma scheduling off
 #pragma peephole off
 
@@ -379,9 +289,6 @@ extern int mapBlockFn_80060678(void* entry);
 
 #pragma scheduling off
 #pragma peephole off
-
-
-
 
 
 extern u8* Shader_getLayer(char* s, int layer);

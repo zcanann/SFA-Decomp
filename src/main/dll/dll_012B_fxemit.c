@@ -542,8 +542,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
     state->altEffectId = 0;
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 /*
  * --INFO--

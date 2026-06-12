@@ -472,9 +472,6 @@ void kaldachompspit_init(int obj)
     }
 }
 
-#pragma dont_inline on
-void fn_8016A660(int obj);
-#pragma dont_inline reset
 
 /*
  * --INFO--

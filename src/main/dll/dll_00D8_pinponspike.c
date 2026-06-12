@@ -5,7 +5,6 @@
 #include "main/game_object.h"
 
 
-
 extern undefined4 FUN_800067e8();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
@@ -17,7 +16,6 @@ extern undefined4 FUN_8008112c();
 
 
 /* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
-
 
 
 extern EffectInterface** gPartfxInterface;
@@ -53,11 +51,6 @@ extern f32 lbl_803E3DF8;
  * PAL Size: TODO
  */
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 /*
@@ -157,7 +150,6 @@ void pollen_initialise(void);
 void pollenfragment_release(void);
 
 void pollenfragment_initialise(void);
-
 
 
 void pinponspike_free(int obj)
@@ -342,7 +334,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 void pollen_init(int* obj);
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
-
 
 
 extern f32 timeDelta;

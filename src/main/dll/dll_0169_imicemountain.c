@@ -12,8 +12,6 @@
 #include "main/resource.h"
 
 
-
-
 /*
  * Per-object extra state for the IM ice-mountain event controller
  * (imicemountain_getExtraSize == 0x14).
@@ -53,8 +51,6 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
  * Per-object extra state for the crrockfall falling rock
  * (crrockfall_getExtraSize == 0x14).
  */
-
-
 
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
@@ -404,20 +400,6 @@ void imicemountain_init(int* obj)
 void crrockfall_free(void);
 
 
-
-
-
-
-/* EN v1.0 0x801AD684  size: 344b  magiclight_init: seed header + update fn;
- * for the non-172 variants pick a random lifetime and, for type 0x16b, map
- * the spawn subtype to a light-pair / intensity preset. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int imicemountain_getExtraSize(void) { return 0x14; }
 int imicemountain_getObjectTypeId(void) { return 0x0; }
@@ -436,38 +418,9 @@ void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole reset
 
-#pragma peephole off
-void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
-
-#pragma peephole reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
-#pragma peephole reset
-#pragma scheduling reset
-
-/* if (o->_X == K) return A; else return B; */
-#pragma peephole off
-#pragma peephole reset
-
-
 
 /* conditional init/free pair. */
 
-/* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, sync its transform into obj. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -486,15 +439,6 @@ int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate)
 }
 #pragma scheduling reset
 
-/* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
-#pragma scheduling off
-void dll_16C_init(void* obj, void* arg2);
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void getEnvfxAct(int* obj, int* target, int id, int p);
 extern void fn_801AC108(int* obj, int* extra);
@@ -617,21 +561,6 @@ void imicemountain_updateEventState(int* obj)
 extern u8 Obj_IsLoadingLocked(void);
 
 
-
-/* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
- * from a small id table, then run the map-event sub-object state callbacks. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-/* dll_16C_syncSubObjectTransform: snapshot the map-event sub-object's transform into the boulder
- * extra block, optionally re-issuing a move on the sub-object first. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
 extern void fn_801AC01C(int* obj);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int id);
@@ -712,27 +641,3 @@ void imicemountain_update(int* obj)
 
 extern int* ObjGroup_GetObjects(int group, int* countOut);
 
-/* dll_16C_update: re-link the spawned sub-object, then while active/visible run
- * its move and fade opacity by distance to the player. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-/* crrockfall_init: derive the per-rock scale from the placement params, size the
- * capsule hitbox from the sub-object bounds, set up render flags, and pick the
- * state-table variant by object type. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-/* crrockfall_update: drive the falling-rock state machine - fade-in opacity by
- * height/distance, trigger the fall when the player is in range, integrate the
- * fall, then shatter (sfx + explosion) on impact. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset

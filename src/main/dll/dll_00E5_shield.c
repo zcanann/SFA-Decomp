@@ -5,7 +5,6 @@
 #include "main/game_object.h"
 
 
-
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
@@ -13,7 +12,6 @@ extern undefined4 FUN_8003b818();
 
 
 /* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
-
 
 
 extern EffectInterface** gPartfxInterface;
@@ -55,11 +53,6 @@ extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
 
 
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
 /*
  * --INFO--
  *
@@ -93,20 +86,7 @@ extern void modelLightStruct_startColorFade(int light, int a, int b);
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
-
-
-
-
-
-
-
 void mikabomb_hitDetect(void);
-
-
-
-
-
 
 
 void mikabomb_free(int obj, int mode);
@@ -246,7 +226,6 @@ PollenFragmentConfig* lbl_8032059C[] = {
 };
 
 
-
 ObjectDescriptor gPollenFragmentObjDescriptor = {
     0,
     0,
@@ -265,17 +244,11 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 };
 
 
-
 /* ==== v1.0 recovered functions (drift additions) ==== */
-
 
 
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
-
-
-
-
 
 
 #include "ghidra_import.h"
@@ -290,29 +263,6 @@ extern void* Obj_GetPlayerObject(void);
 #include "main/objhits_types.h"
 #include "main/objseq.h"
 #include "main/resource.h"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 typedef struct ShieldState
@@ -353,8 +303,6 @@ typedef struct ShieldState
     s16 unk114;
     s16 unk116;
 } ShieldState;
-
-
 
 
 extern undefined4 FUN_80006810();
@@ -1265,12 +1213,10 @@ extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
  */
 
 
-
 void mikabombshadow_update(int* obj);
 
 
 void curve_init(ObjAnimComponent* obj, CurvePlacementParams* params);
-
 
 
 /*
@@ -2043,19 +1989,11 @@ void StaticCamera_free(int x);
 void flamethrowerspe_func0B(int* obj);
 
 
-/* state-byte setters / leaf writers. */
-#pragma dont_inline on
 void staffSetGlow(int* obj, u8 a, u8 b);
-#pragma dont_inline reset
 
 void staff_func10(int* obj, s32 v);
 
 void staff_setHitReactValue(int* obj, s32 v);
-
-
-
-
-
 
 
 extern int getHudHiddenFrameCount(void);
@@ -2105,7 +2043,6 @@ void staff_free(int* obj);
 void fireball_free(int* obj);
 
 
-
 void depthoffieldpoint_init(int* obj);
 
 void depthoffieldpoint_update(int* obj);
@@ -2130,13 +2067,10 @@ void staff_init(int* obj);
 void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 
-
-
 void dll_F7_init(int* obj, int* params);
 
 
 extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
-
 
 
 void fireball_hitDetect(int* obj);
@@ -2157,20 +2091,13 @@ void mikabomb_update(int* obj);
 void mikabomb_init(int* obj);
 
 
-#pragma opt_loop_invariants off
 void baddieinterestp_update(int* obj);
-#pragma opt_loop_invariants reset
 
 
-#pragma opt_loop_invariants off
 void animatedobj_update(int* obj);
-#pragma opt_loop_invariants reset
 
 
 void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-
-
 
 
 void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
@@ -2189,7 +2116,6 @@ void fireball_update(int* obj);
 
 
 void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
 
 
 extern f32 fcos16(u16 angle);
@@ -2277,7 +2203,6 @@ void shield_update(int* obj)
         }
     }
 }
-
 
 
 /* dll_F7 (bouncing prop) object extra-state */
@@ -2411,16 +2336,11 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 extern void quakeSpellTextureFn_8007366c(int param);
 
 
-
-
-
-
 /* per-swipe trail record (stride 0x18, 3 records) */
 
 
 void staff_hitDetectGeometry(int* obj);
 #pragma opt_common_subs reset
-
 
 
 volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
@@ -2452,11 +2372,6 @@ extern void selectTexture(void* tex, int x);
 
 
 void staff_update(int* obj);
-
-
-
-
-
 
 
 extern int* fn_802966CC(int* player);
@@ -2765,5 +2680,4 @@ void staffFn_80170380(int* obj, int cmd)
 }
 
 extern int objFn_80296700(int* obj);
-
 

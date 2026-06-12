@@ -11,8 +11,6 @@ extern u32 randomGetRange(int min, int max);
 extern u32 GameBit_Get(int eventId);
 
 
-
-
 extern void objRenderFn_8003b8f4(f32 v);
 extern void Music_Trigger(int id, int p2);
 extern int getSaveGameLoadStatus(void);
@@ -29,9 +27,6 @@ extern f32 lbl_803DDB28;
 extern int lbl_803DDB2C;
 
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
 
 
 void MMP_levelcontrol_hitDetect(void)
@@ -53,16 +48,12 @@ void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 
-
 void MMP_levelcontrol_free(int obj)
 {
     lbl_803DDB28 = lbl_803E44C0;
     lbl_803DDB2C = 0;
     Music_Trigger(0xd5, 0);
 }
-
-
-
 
 
 #pragma peephole on
@@ -107,13 +98,6 @@ int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 #include "main/dll/IM/IMspacecraft.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
-
-
-
-
-
-
-
 
 
 /*
@@ -408,49 +392,16 @@ void MMP_levelcontrol_initialise(void)
 void MoonSeedBush_free(void);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 
-#pragma peephole reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int mapGetDirIdx(int);
 extern void unlockLevel(int, int, int);
 extern f32 lbl_803E44C8;
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -483,100 +434,3 @@ void MMP_levelcontrol_init(int obj)
 
 extern void setDrawLights(int v);
 
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
-#pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma dont_inline reset
-
-
-/* mmp_trenchfx_free: expgfx interface freeObject callback. */
-
-#pragma peephole off
-#pragma peephole reset
-
-/* ObjGroup_RemoveObject + vtable[4] tail-call. */
-#pragma scheduling off
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma scheduling reset
-
-
-#pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma dont_inline reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-
-#pragma peephole reset
-#pragma scheduling reset
-
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma peephole off
-#pragma scheduling off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-
-
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
