@@ -144,7 +144,7 @@ extern u8 framesThisStep;
 
 
 /* 8b "li r3, N; blr" returners. */
-int lightning_getExtraSize(void) { return 0x28; }
+int lightning_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4048;
@@ -281,30 +281,13 @@ extern const char sMoonrockTriggerIdentFormat[];
 /* lightning_free: ObjGroup_RemoveObject + free of obj->_b8->_0 if non-null. */
 extern void mm_free(void* p);
 
-void lightning_free(u8* obj, int p2)
-{
-    u8* state = ((GameObject*)obj)->extra;
-    void* h;
-    ObjGroup_RemoveObject(obj, MMP_LIGHTNING_OBJGROUP);
-    h = *(void**)state;
-    if (h != NULL)
-    {
-        mm_free(h);
-    }
-}
+void lightning_free(u8* obj, int p2);
 
 /* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
  * lightningRender(handle). */
 extern void lightningRender(u32 handle);
 
-void lightning_render(u8* obj)
-{
-    u32 handle = *(u32*)(((GameObject*)obj)->extra);
-    if (handle != 0)
-    {
-        lightningRender(handle);
-    }
-}
+void lightning_render(u8* obj);
 
 extern int lightningCreate(float* start, float* end, f32 radiusX, f32 radiusY, int delay,
                            int param_6, int param_7);
@@ -327,141 +310,11 @@ typedef struct LightningMode
     u8 mode : 4; /* 0x0f */
 } LightningMode;
 
-void lightning_update(u8* obj)
-{
-    u8* state;
-    u8* data;
-    u32* objects;
-    u8* otherState;
-    int objectCount;
-    int objectIndex;
-    int spawnLightning;
-    int handle;
+void lightning_update(u8* obj);
 
-    state = ((GameObject*)obj)->extra;
-    data = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (((LightningPlacement*)data)->unk24 != -1)
-    {
-        if (((LightningFlags*)(state + 0x25))->enabled)
-        {
-            if (GameBit_Get(((LightningPlacement*)data)->unk24) == 0)
-            {
-                ((LightningFlags*)(state + 0x25))->enabled = 0;
-                if (*(u32*)state != 0)
-                {
-                    mm_free(*(void**)state);
-                    *(u32*)state = 0;
-                }
-            }
-        }
-        else if (GameBit_Get(((LightningPlacement*)data)->unk24) != 0)
-        {
-            ((LightningFlags*)(state + 0x25))->enabled = 1;
-        }
-    }
+void lightning_init(u8* obj, u8* data);
 
-    if (*(u32*)state == 0 && ((LightningFlags*)(state + 0x25))->enabled)
-    {
-        spawnLightning = 0;
-        ((MmpMoonrockState*)state)->homeX -= timeDelta;
-        if (((MmpMoonrockState*)state)->homeX <= lbl_803E4088)
-        {
-            ((MmpMoonrockState*)state)->homeX += (f32)(s32)((u32)data[0x23] * 0x3c);
-            spawnLightning = 1;
-        }
-        if (spawnLightning != 0)
-        {
-            objects = (u32*)ObjGroup_GetObjects(MMP_LIGHTNING_OBJGROUP, &objectCount);
-            objectIndex = 0;
-            while (objectIndex < objectCount)
-            {
-                u32 linkedHandle = *(u32*)(*(u32*)(objects[objectIndex] + 0x4c) + 0x14);
-                if (linkedHandle == *(u32*)&((MmpMoonrockState*)state)->homeZ)
-                {
-                    break;
-                }
-                objectIndex++;
-            }
-            if (objectIndex == objectCount)
-            {
-                ((LightningFlags*)(state + 0x25))->enabled = 0;
-                return;
-            }
-
-            handle = lightningCreate((float*)(obj + 0x0c), (float*)(objects[objectIndex] + 0x0c),
-                                     *(f32*)(state + 0x08), ((MmpMoonrockState*)state)->baseY,
-                                     (u16)(state[0x1c] + randomGetRange(-5, 5)), state[0x1d],
-                                     ((LightningFlags*)(state + 0x25))->style ? 1 : 0);
-            *(int*)state = handle;
-            *(f32*)(state + 0x04) = lbl_803E4088;
-            if ((((LightningMode*)(state + 0x24))->mode & 1) != 0)
-            {
-                hitDetectFn_80097070(obj, ((MmpMoonrockState*)state)->baseY2, 1, 7, 0x1e, 0);
-            }
-            otherState = *(u8**)(objects[objectIndex] + 0xb8);
-            if ((((LightningMode*)(otherState + 0x24))->mode & 1) != 0)
-            {
-                hitDetectFn_80097070((u8*)objects[objectIndex], *(f32*)(otherState + 0x10), 1, 7,
-                                     0x1e, 0);
-            }
-            if ((((LightningMode*)(state + 0x24))->mode & 2) != 0)
-            {
-                objfx_spawnDirectionalBurst(obj, 5, ((MmpMoonrockState*)state)->respawnTimer, 1, 1, 100, lbl_803E408C,
-                                            0, 0);
-            }
-            if ((((LightningMode*)(otherState + 0x24))->mode & 2) != 0)
-            {
-                objfx_spawnDirectionalBurst((u8*)objects[objectIndex], 5, *(f32*)(otherState + 0x14),
-                                            1, 1, 100, lbl_803E408C, 0, 0);
-            }
-        }
-    }
-
-    if (*(u32*)state != 0)
-    {
-        if (((LightningFlags*)(state + 0x25))->noAge == 0)
-        {
-            *(f32*)(state + 0x04) += timeDelta;
-            *(u16*)(*(u32*)state + 0x20) = (u16)(int)(lbl_803E4090 + *(f32*)(state + 0x04));
-        }
-        if (*(u16*)(*(u32*)state + 0x20) >= *(u16*)(*(u32*)state + 0x22))
-        {
-            mm_free(*(void**)state);
-            *(u32*)state = 0;
-        }
-    }
-}
-
-void lightning_init(u8* obj, u8* data)
-{
-    u8* state;
-    f32 defaultScale;
-
-    state = ((GameObject*)obj)->extra;
-    ObjGroup_AddObject(obj, MMP_LIGHTNING_OBJGROUP);
-    ((LightningMode*)(state + 0x24))->mode = data[0x21];
-    defaultScale = lbl_803E40A0;
-    ((MmpMoonrockState*)state)->baseY2 = defaultScale;
-    ((MmpMoonrockState*)state)->respawnTimer = defaultScale;
-    *(f32*)(state + 0x08) = (f32)(u32)
-    data[0x1c];
-    ((MmpMoonrockState*)state)->baseY = (f32)(u32)
-    data[0x1d];
-    state[0x1c] = data[0x1e];
-    state[0x1d] = data[0x1f];
-    *(u32*)&((MmpMoonrockState*)state)->homeZ = *(u32*)(data + 0x18);
-
-    ((LightningFlags*)(state + 0x25))->enabled = (data[0x20] & 1) ? 1 : 0;
-    ((LightningFlags*)(state + 0x25))->style = (data[0x20] & 2) ? 1 : 0;
-    ((LightningFlags*)(state + 0x25))->noAge = (data[0x20] & 4) ? 1 : 0;
-
-    ((MmpMoonrockState*)state)->homeX = (f32)(s32)((u32)data[0x22] * 0x3c);
-}
-
-void WaterFallSpray_free(u8* obj)
-{
-    (*gExpgfxInterface)->freeSource2((u32)obj);
-}
+void WaterFallSpray_free(u8* obj);
 
 typedef struct WaterFallSprayPartfxArgs
 {
@@ -477,118 +330,12 @@ typedef struct WaterFallSprayPartfxArgs
     (*gPartfxInterface)->spawnObject( \
         (obj), (id), (args), 4, -1, 0)
 
-void WaterFallSpray_update(int* objParam)
-{
-    extern void Sfx_KeepAliveLoopedObjectSound(u8* obj, int sfxId); /* #57 */
-    u8* obj;
-    u32* state;
-    u8* data;
-    u8* player;
-    WaterFallSprayPartfxArgs partfxArgs;
-    f32 dx;
-    f32 dy;
-    f32 dz;
-    f32 distance;
-    int cooldown;
-    s16 i;
-
-    obj = (u8*)objParam;
-    state = ((GameObject*)obj)->extra;
-    data = *(u8**)&((GameObject*)obj)->anim.placementData;
-    player = Obj_GetPlayerObject();
-    if (player != NULL)
-    {
-        if (*(s16*)(data + 0x18) != -1)
-        {
-            i = GameBit_Get(*(s16*)(data + 0x18));
-        }
-        else
-        {
-            i = 1;
-        }
-        if (i != 0)
-        {
-            if ((data[0x23] & 0x10) == 0)
-            {
-                Sfx_KeepAliveLoopedObjectSound(obj, state[0] & 0xffff);
-                Sfx_KeepAliveLoopedObjectSound(obj, state[1] & 0xffff);
-            }
-
-            cooldown = ((GameObject*)obj)->unkF4;
-            if (cooldown <= 0)
-            {
-                dx = ((GameObject*)obj)->anim.worldPosX - *(f32*)(player + 0x18);
-                dy = ((GameObject*)obj)->anim.worldPosY - *(f32*)(player + 0x1c);
-                dz = ((GameObject*)obj)->anim.worldPosZ - *(f32*)(player + 0x20);
-                distance = sqrtf(dz * dz + (dx * dx + dy * dy));
-                if (((distance <= (f32)(s32)((u32)data[0x20] << 4)) || (data[0x20] == 0)) &&
-                    ((((GameObject*)obj)->objectFlags & 0x800) != 0))
-                {
-                    for (i = 0; i < data[0x24]; i++)
-                    {
-                        partfxArgs.xOffset = (f32)(s32)
-                        randomGetRange(-data[0x1d], data[0x1d]);
-                        partfxArgs.yOffset = (f32)(s32)
-                        randomGetRange(-data[0x1f], data[0x1f]);
-                        partfxArgs.zOffset = (f32)(s32)
-                        randomGetRange(-data[0x1e], data[0x1e]);
-                        if ((data[0x23] & 1) != 0)
-                        {
-                            WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x320, &partfxArgs);
-                        }
-                        if ((data[0x23] & 2) != 0)
-                        {
-                            WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x321, &partfxArgs);
-                        }
-                        if ((data[0x23] & 4) != 0)
-                        {
-                            WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x322, &partfxArgs);
-                        }
-                        if ((data[0x23] & 8) != 0)
-                        {
-                            WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x351, &partfxArgs);
-                        }
-                    }
-                }
-                *(u32*)&((GameObject*)obj)->unkF4 = -(u32)data[0x24];
-            }
-            else if (cooldown > 0)
-            {
-                *(u32*)&((GameObject*)obj)->unkF4 = cooldown - (u32)framesThisStep;
-            }
-        }
-    }
-}
+void WaterFallSpray_update(int* objParam);
 
 /* WaterFallSpray_init: stash 3 signed-byte<<8 fields at obj+0..+4, clear
  * obj+0xf4, install WaterFallSpray_SeqFn as the think routine at obj+0xbc, then
  * pick one of two SFX-id pairs based on the range of obj->_4c->_14. */
-void WaterFallSpray_init(u8* obj, u8* data)
-{
-    u8* sub = ((GameObject*)obj)->extra;
-    s16 a, b, c;
-    int v;
-    a = (s16)((s32)(s8)data[0x1a] << 8);
-    ((GameObject*)obj)->anim.rotZ = a;
-    b = (s16)((s32)(s8)data[0x1b] << 8);
-    ((GameObject*)obj)->anim.rotY = b;
-    c = (s16)((s32)(s8)data[0x1c] << 8);
-    ((GameObject*)obj)->anim.rotX = c;
-    *(u32*)&((GameObject*)obj)->unkF4 = 0;
-    ((GameObject*)obj)->animEventCallback = (void*)WaterFallSpray_SeqFn;
-    v = *(int*)((char*)(*(u8**)&((GameObject*)obj)->anim.placementData) + 0x14);
-    if (v < WATERFALLSPRAY_ALT_SFX_DEF_END)
-    {
-        if (v >= WATERFALLSPRAY_ALT_SFX_DEF_MIN)
-        {
-            ((WaterFallSprayState*)sub)->unk0 = WATERFALLSPRAY_ALT_SFX_A;
-            ((WaterFallSprayState*)sub)->unk4 = WATERFALLSPRAY_ALT_SFX_B;
-            return;
-        }
-    }
-    ((WaterFallSprayState*)sub)->unk0 = WATERFALLSPRAY_DEFAULT_SFX_A;
-    ((WaterFallSprayState*)sub)->unk4 = WATERFALLSPRAY_DEFAULT_SFX_B;
-}
+void WaterFallSpray_init(u8* obj, u8* data);
 
 /* sfxplayerObj_init: prime obj->_b0 with SFXPLAYER_OBJECT_FLAGS, then dispatch
  * on (s8)data->_1d: gamebit mode stores GameBit_Get(data->_18) at sub[0] if the
@@ -811,179 +558,11 @@ void sfxplayerObj_update(u8* obj)
     }
 }
 
-void fn_80198A00(u8* obj, int seqArg)
-{
-    u8* state;
-    f32 hitDistance;
-    int queryType;
-    int curveHit;
-    int frontBlocked;
-    int rearBlocked;
+void fn_80198A00(u8* obj, int seqArg);
 
-    queryType = 0x17;
-    state = ((GameObject*)obj)->extra;
-    curveHit = (*gRomCurveInterface)->find(&queryType, 1,
-                                           *(s16*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x38),
-                                           *(f32*)(state + 0x28), *(f32*)(state + 0x2c), *(f32*)(state + 0x30));
-    frontBlocked = ((int (*)(int, f32, f32, f32, f32*))(*gRomCurveInterface)->slot4C)(
-        curveHit, *(f32*)(state + 0x28), *(f32*)(state + 0x2c), *(f32*)(state + 0x30),
-        &hitDistance);
-    rearBlocked = ((int (*)(int, f32, f32, f32, f32*))(*gRomCurveInterface)->slot4C)(
-        curveHit, ((MmpMoonrockState*)state)->homeY, ((MmpMoonrockState*)state)->homeZ, *(f32*)(state + 0x24),
-        &hitDistance);
+int fn_80198B68(u8* obj, f32* point);
 
-    if (frontBlocked != 0)
-    {
-        if (rearBlocked == 0)
-        {
-            objInterpretSeq(obj, seqArg, 1, (int)hitDistance);
-        }
-        else
-        {
-            objInterpretSeq(obj, seqArg, 2, (int)hitDistance);
-        }
-    }
-    else if (rearBlocked != 0)
-    {
-        objInterpretSeq(obj, seqArg, -1, (int)hitDistance);
-    }
-    else
-    {
-        objInterpretSeq(obj, seqArg, -2, (int)hitDistance);
-    }
-}
-
-int fn_80198B68(u8* obj, f32* point)
-{
-    u8* data;
-    f32 pointX;
-    f32 pointY;
-    f32 pointZ;
-    f32 yawCos;
-    f32 yawSin;
-    f32 pitchCos;
-    f32 pitchSin;
-    f32 relX;
-    f32 relY;
-    f32 relZ;
-    f32 localX;
-    f32 localY;
-    f32 localZ;
-    f32 forward;
-
-    data = *(u8**)&((GameObject*)obj)->anim.placementData;
-    pointX = point[0];
-    pointY = point[1];
-    pointZ = point[2];
-
-    yawCos = mathSinf(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)obj));
-    yawSin = mathCosf(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)obj));
-    pitchCos = mathSinf(MOONROCK_ANGLE_TO_RADIANS(((GameObject *)obj)->anim.rotY));
-    pitchSin = mathCosf(MOONROCK_ANGLE_TO_RADIANS(((GameObject *)obj)->anim.rotY));
-
-    relX = pointX - ((GameObject*)obj)->anim.worldPosX;
-    relY = pointY - ((GameObject*)obj)->anim.worldPosY;
-    relZ = pointZ - ((GameObject*)obj)->anim.worldPosZ;
-    localX = relX * yawSin - relZ * yawCos;
-    forward = relX * yawCos + relZ * yawSin;
-    localY = relY * pitchSin - forward * pitchCos;
-    localZ = relY * pitchCos + forward * pitchSin;
-
-    if (localX < lbl_803E40D8)
-    {
-        localX = -localX;
-    }
-    if (localY < lbl_803E40D8)
-    {
-        localY = -localY;
-    }
-    if (localZ < lbl_803E40D8)
-    {
-        localZ = -localZ;
-    }
-
-    if ((localX <= (f32)(s32)(data[0x3a] << 1)) &&
-        (localY <= (f32)(s32)(data[0x3b] << 1)) &&
-        (localZ <= (f32)(s32)(data[0x3c] << 1)))
-    {
-        return 1;
-    }
-    return 0;
-}
-
-void fn_80198DE8(u8* obj, int seqArg)
-{
-    u8* data;
-    u8* state;
-    f32 planeBase;
-    f32 normalX;
-    f32 normalY;
-    f32 normalZ;
-    f32 nearX;
-    f32 nearY;
-    f32 nearZ;
-    f32 farX;
-    f32 farY;
-    f32 farZ;
-    f32 prodY;
-    f32 prodZ;
-    f32 nearDist;
-    f32 farDist;
-    f32 deltaX;
-    f32 deltaY;
-    f32 deltaZ;
-    f32 t;
-    f32 localPos[3];
-    s8 triggerState;
-
-    data = *(u8**)&((GameObject*)obj)->anim.placementData;
-    state = ((GameObject*)obj)->extra;
-
-    planeBase = ((MmpMoonrockState*)state)->homeX;
-    normalZ = ((MmpMoonrockState*)state)->respawnTimer;
-    nearZ = *(f32*)(state + 0x24);
-    prodZ = normalZ * nearZ;
-    normalX = ((MmpMoonrockState*)state)->baseY;
-    nearX = ((MmpMoonrockState*)state)->homeY;
-    normalY = ((MmpMoonrockState*)state)->baseY2;
-    nearY = ((MmpMoonrockState*)state)->homeZ;
-    prodY = normalY * nearY;
-    nearDist = planeBase + (prodZ + (normalX * nearX + prodY));
-    farZ = *(f32*)(state + 0x30);
-    farX = *(f32*)(state + 0x28);
-    farY = *(f32*)(state + 0x2c);
-    farDist = planeBase + (normalZ * farZ + (normalX * farX + normalY * farY));
-
-    if (farDist < lbl_803E40D8)
-    {
-        triggerState = (nearDist < lbl_803E40D8) ? 2 : 1;
-    }
-    else
-    {
-        triggerState = (nearDist < lbl_803E40D8) ? -1 : -2;
-    }
-
-    if ((triggerState == 1) || (triggerState == -1))
-    {
-        deltaX = farX - nearX;
-        deltaY = farY - nearY;
-        deltaZ = farZ - nearZ;
-        t = (((-normalX * nearX - prodY) - prodZ) - planeBase) /
-            ((normalY * deltaY) + (normalX * deltaX) + (normalZ * deltaZ));
-
-        localPos[0] = t * deltaX + nearX;
-        localPos[1] = t * deltaY + ((MmpMoonrockState*)state)->homeZ;
-        localPos[2] = t * deltaZ + *(f32*)(state + 0x24);
-        PSMTXMultVec((f32*)(state + 0x38), localPos, localPos);
-
-        if ((localPos[0] >= -*(f32*)(state + 0x34)) && (localPos[0] <= *(f32*)(state + 0x34)) &&
-            (localPos[1] >= -*(f32*)(state + 0x34)) && (localPos[1] <= *(f32*)(state + 0x34)))
-        {
-            OSReport(sMoonrockTriggerIdentFormat, triggerState, *(u32*)(data + 0x14));
-            objInterpretSeq(obj, seqArg, triggerState, (int)farDist);
-        }
-    }
-}
+void fn_80198DE8(u8* obj, int seqArg);
 
 /*
  * --INFO--
@@ -1073,16 +652,10 @@ void fn_80198DE8(u8* obj, int seqArg)
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void WaterFallSpray_render(void)
-{
-}
+void WaterFallSpray_render(void);
 
 /* 8b "li r3, N; blr" returners. */
-int WaterFallSpray_getExtraSize(void) { return 0x8; }
+int WaterFallSpray_getExtraSize(void);
 int sfxplayerObj_getExtraSize(void) { return 0x8; }
 
-int WaterFallSpray_SeqFn(int* obj)
-{
-    WaterFallSpray_update(obj);
-    return 0;
-}
+int WaterFallSpray_SeqFn(int* obj);
