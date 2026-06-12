@@ -1230,14 +1230,8 @@ main/dll/dll_0104_smallbasket.c:
 	.text       start:0x801816F8 end:0x80183204
 	.data       start:0x803216B8 end:0x803216F0
 
-main/dll/CF/cfperch.c:
-	.text       start:0x80183204 end:0x801833E4
-
-main/dll/blasted.c:
-	.text       start:0x801833E4 end:0x801833E4
-
 main/dll/dll_0105_largecrate.c:
-	.text       start:0x801833E4 end:0x801843C0
+	.text       start:0x80183204 end:0x801843C0
 
 main/dll/dll_0106_scarab.c:
 	.text       start:0x801843C0 end:0x80185868
@@ -1338,9 +1332,6 @@ main/dll/warppad.c:
 
 main/dll/dll_012C_transporter.c:
 	.text       start:0x80190BD4 end:0x80191A70
-
-main/dll/moonseedbush.c:
-	.text       start:0x80191A70 end:0x80191A70
 
 main/dll/CF/dll_012E_cflightwall.c:
 	.text       start:0x80191A70 end:0x80191B60
@@ -1881,9 +1872,6 @@ main/dll/SH/dll_01B0_shswapston.c:
 main/dll/SH/dll_01AE_shlevelcontrol.c:
 	.text       start:0x801D7BA8 end:0x801D981C
 
-main/dll/SP/spdrape.c:
-	.text       start:0x801D981C end:0x801D981C
-
 main/dll/SH/dll_01AF_shswaplift.c:
 	.text       start:0x801D981C end:0x801D9B1C
 
@@ -2061,9 +2049,6 @@ main/dll/WC/wcpushblock.c:
 
 main/dll/SB/dll_0259_sbcloudrunner.c:
 	.text       start:0x801EE668 end:0x801EF360
-
-main/dll/WC/wcbeacon.c:
-	.text       start:0x801EF360 end:0x801EF360
 
 main/dll/WM/dll_01F9_wmobjcreator.c:
 	.text       start:0x801EF360 end:0x801EFF7C

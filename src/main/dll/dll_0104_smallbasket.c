@@ -738,8 +738,6 @@ void smallbasket_init(int obj, int def)
     }
 }
 
-void fn_80183250(int obj, int def);
-
 typedef struct
 {
     s16 h0;
