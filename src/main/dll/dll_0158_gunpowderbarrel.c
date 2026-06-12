@@ -151,17 +151,15 @@ extern f32 lbl_803E42F0;
 
 void FUN_801a1230(int param_1, char param_2)
 {
-    int iVar1;
     int iVar2;
+    ObjHitsPriorityState* hitState;
 
     iVar2 = *(int*)&((GameObject*)param_1)->extra;
-    iVar1 = *(int*)&((GameObject*)param_1)->anim.hitReactState;
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_1)->anim.hitReactState;
     if (param_2 == '\0')
     {
-        ((ObjHitsPriorityState*)iVar1)->lateralResponseWeight = *(undefined*)(*(int*)&((GameObject*)param_1)->anim.
-            modelInstance + 99);
-        ((ObjHitsPriorityState*)iVar1)->axialResponseWeight = *(undefined*)(*(int*)&((GameObject*)param_1)->anim.
-            modelInstance + 100);
+        hitState->lateralResponseWeight = *(u8*)(*(int*)&((GameObject*)param_1)->anim.modelInstance + 99);
+        hitState->axialResponseWeight = *(u8*)(*(int*)&((GameObject*)param_1)->anim.modelInstance + 100);
         *(byte*)(iVar2 + 0x4a) = *(byte*)(iVar2 + 0x4a) & 0x7f;
         *(byte*)&((GameObject*)param_1)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_1)->anim.resetHitboxMode &
             0xf7;
@@ -170,8 +168,8 @@ void FUN_801a1230(int param_1, char param_2)
     }
     else
     {
-        ((ObjHitsPriorityState*)iVar1)->lateralResponseWeight = 1;
-        ((ObjHitsPriorityState*)iVar1)->axialResponseWeight = 1;
+        hitState->lateralResponseWeight = 1;
+        hitState->axialResponseWeight = 1;
         *(byte*)&((GameObject*)param_1)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_1)->anim.resetHitboxMode |
             8;
         *(byte*)(iVar2 + 0x4a) = *(byte*)(iVar2 + 0x4a) & 0x7f | 0x80;
@@ -188,6 +186,7 @@ void FUN_801a1654(undefined8 param_1, double param_2, double param_3, undefined8
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
 {
     uint uVar1;
+    ObjHitsPriorityState* hitState;
     int iVar2;
     int* piVar3;
     int iVar4;
@@ -221,9 +220,9 @@ void FUN_801a1654(undefined8 param_1, double param_2, double param_3, undefined8
     fStack_24 = (float)in_ps29_1;
     uVar1 = FUN_80286838();
     iVar8 = *(int*)(uVar1 + 0xb8);
+    hitState = (ObjHitsPriorityState*)((GameObject*)uVar1)->anim.hitReactState;
     iVar2 = ObjHits_GetPriorityHit(uVar1, auStack_54, (int*)0x0, (uint*)0x0);
-    if ((iVar2 != 0) ||
-        (((*(ObjHitsPriorityState**)(uVar1 + 0x54))->contactFlags != 0 && ((*(byte*)(iVar8 + 0x49) & 2) != 0))))
+    if ((iVar2 != 0) || ((hitState->contactFlags != 0 && ((*(byte*)(iVar8 + 0x49) & 2) != 0))))
     {
         *(char*)(iVar8 + 0x16) = *(char*)(iVar8 + 0x16) + '\x01';
         *(byte*)(iVar8 + 0x49) = *(byte*)(iVar8 + 0x49) | 1;
@@ -401,14 +400,16 @@ typedef struct
 void gunpowderbarrel_triggerExplosion(int* obj)
 {
     u8* sub;
+    ObjHitsPriorityState* hitState;
     int hitObj;
     int count;
     u8* tricky;
     int* timer;
 
     sub = ((GameObject*)obj)->extra;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     if (ObjHits_GetPriorityHit((int)obj, &hitObj, 0, 0) != 0 ||
-        ((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags != 0 && (sub[0x49] & 2) != 0))
+        (hitState->contactFlags != 0 && (sub[0x49] & 2) != 0))
     {
         sub[0x16] += 1;
         sub[0x49] = (u8)(sub[0x49] | 1);
