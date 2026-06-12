@@ -89,7 +89,7 @@ void dll_16C_initialise(void);
 int imicepillar_getExtraSize(void);
 int imicepillar_getObjectTypeId(void);
 void imicepillar_free(void);
-void imicepillar_render(void);
+void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void imicepillar_hitDetect(void);
 void imicepillar_update(void);
 void imicepillar_init(void);
