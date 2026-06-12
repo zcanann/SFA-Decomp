@@ -3,6 +3,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/fall_ladders.h"
 #include "main/objhits.h"
@@ -35,7 +36,7 @@ extern f32 lbl_803E360C;
 #pragma peephole on
 extern f32 lbl_803E294C;
 extern f32 lbl_803E2958;
-extern int Curve_AdvanceAlongPath(int curve, f32 t);
+extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
 extern int fn_8014D08C(int obj, int p, int c, f32 f, int d, int e);
 extern void fn_8014CF7C(int obj, int p, f32 a, f32 b, int c, int d);
 extern void fn_8014C678(int obj, int p, f32* vec, f32 a, f32 b, f32 c, int d);
@@ -161,26 +162,26 @@ void fn_801540A0(int obj, void* pp)
 void fn_80154584(int obj, int p)
 {
     ObjHitsPriorityState* hitState;
-    int curve;
+    RomCurveWalker* curve;
     u8 rnd;
     f32 vec[3];
 
-    curve = *(int*)p;
+    curve = *(RomCurveWalker**)p;
     *(u8*)(p + 0x33b) = 0;
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
     if ((*(u32*)(p + 0x2dc) & 0x2000) != 0)
     {
-        if ((Curve_AdvanceAlongPath(curve, *(f32*)(p + 0x2fc)) != 0 || *(int*)(curve + 0x10) != 0) &&
+        if ((Curve_AdvanceAlongPath(curve, *(f32*)(p + 0x2fc)) != 0 || curve->atSegmentEnd != 0) &&
             (*gRomCurveInterface)->goNextPoint((void*)curve) != 0 &&
-            (*gRomCurveInterface)->initCurve(*(void**)p, (void*)obj, lbl_803E29B0,
+            (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)p, (void*)obj, lbl_803E29B0,
                                              (int*)&lbl_803DBCD0, -1) != 0)
         {
             *(u32*)(p + 0x2dc) &= ~(u64)0x2000;
         }
-        vec[0] = *(f32*)(curve + 0x68) - ((GameObject*)obj)->anim.localPosX;
+        vec[0] = curve->posX - ((GameObject*)obj)->anim.localPosX;
         vec[1] = lbl_803E2990;
-        vec[2] = *(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.localPosZ;
+        vec[2] = curve->posZ - ((GameObject*)obj)->anim.localPosZ;
         fn_8014C678(obj, p, vec, lbl_803E29A0, lbl_803E29B4, *(f32*)&lbl_803E29B4, 1);
         *(f32*)(p + 0x324) += timeDelta;
         if (*(f32*)(p + 0x324) > lbl_803E29B8)

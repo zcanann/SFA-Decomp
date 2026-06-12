@@ -1,6 +1,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
+#include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/newSeqObj.h"
 
@@ -35,7 +36,7 @@ extern f32 lbl_803E27A0;
 extern u8 lbl_8031F16C[];
 
 extern void sidekickToy_updateCurveTargetLatch(int* obj);
-extern int Curve_AdvanceAlongPath(u8* curve, f32 t);
+extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 t);
 extern f32 sqrtf(f32 x);
 extern int getAngle(f32 a, f32 b);
 extern u32 randomGetRange(int min, int max);
@@ -321,7 +322,7 @@ void fn_80150EDC(void* p1, void* p2)
 
 void fn_80150910(int* obj, u8* state)
 {
-    u8* path = *(u8**)state;
+    RomCurveWalker* path = *(RomCurveWalker**)state;
     u8* base = lbl_8031F16C;
     u8* tbl4 = *(u8**)(base + state[0x33b] * 0x28 + 4);
     u8* tbl0 = *(u8**)(base + state[0x33b] * 0x28);
@@ -383,8 +384,8 @@ void fn_80150910(int* obj, u8* state)
         f32 delta;
 
         {
-            f32 dx = *(f32*)(path + 0x68) - ((GameObject*)obj)->anim.localPosX;
-            f32 dz = *(f32*)(path + 0x70) - ((GameObject*)obj)->anim.localPosZ;
+            f32 dx = path->posX - ((GameObject*)obj)->anim.localPosX;
+            f32 dz = path->posZ - ((GameObject*)obj)->anim.localPosZ;
             d = sqrtf(dx * dx + dz * dz);
         }
         if (d > lbl_803E2778)
@@ -399,14 +400,14 @@ void fn_80150910(int* obj, u8* state)
         {
             *(f32*)(state + 0x310) = *(f32 *)&lbl_803E2780;
         }
-        if (Curve_AdvanceAlongPath(path, *(f32*)(state + 0x310)) != 0 || *(int*)(path + 0x10) != 0)
+        if (Curve_AdvanceAlongPath(path, *(f32*)(state + 0x310)) != 0 || path->atSegmentEnd != 0)
         {
             if ((*gRomCurveInterface)->goNextPoint(path) != 0)
             {
                 sidekickToy_updateCurveTargetLatch(obj);
             }
         }
-        delta = (f32)(int)((u16)getAngle(*(f32*)(path + 0x74), *(f32*)(path + 0x7c)) + 0x8000 -
+        delta = (f32)(int)((u16)getAngle(path->tangentX, path->tangentZ) + 0x8000 -
             (u16) * (s16*)obj);
         if (delta > lbl_803E2788)
         {
@@ -462,7 +463,7 @@ void fn_80150910(int* obj, u8* state)
                 *(f32*)(state + 0x310) = lbl_803E2740;
             }
         }
-        fn_8014CF7C(obj, state, *(f32*)(path + 0x68), *(f32*)(path + 0x70), 0xf, 0);
+        fn_8014CF7C(obj, state, path->posX, path->posZ, 0xf, 0);
     }
     else
     {
