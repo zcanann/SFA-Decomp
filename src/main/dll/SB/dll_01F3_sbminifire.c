@@ -59,7 +59,7 @@ extern ModgfxInterface** gModgfxInterface;
 
 extern int lbl_803DC098;
 extern f32 lbl_803E592C;
-extern f32 lbl_803E5948;
+extern const f32 lbl_803E5948;
 extern f32 lbl_803E594C;
 extern f32 lbl_803E5950;
 extern void fn_80053ED0(int);
@@ -119,10 +119,8 @@ void SB_MiniFire_init(int obj)
     void* resource;
 
     ((GameObject*)obj)->unkF4 = 180;
-    ((GameObject*)obj)->anim.velocityX = -(lbl_803E594C * (f32)(s32)
-    randomGetRange(20, 40)
-    )
-    +lbl_803E5948;
+    ((GameObject*)obj)->anim.velocityX =
+        -(lbl_803E594C * (f32)(s32)randomGetRange(20, 40) + lbl_803E5948);
     ((GameObject*)obj)->anim.velocityY = lbl_803E592C;
     ((GameObject*)obj)->anim.velocityZ = lbl_803E5950;
     ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5948;
