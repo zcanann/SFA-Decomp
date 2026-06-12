@@ -2,19 +2,44 @@
  * WM_LevelControl (DLL 0x209) - Krazoa Palace level control.
  * TU = 0x801F3F18..0x801F48C0 (helper fn_801F3F18 + wmlevelcontrol_*,
  * reverse slot order ascending).
- * fn_801F3F18 (the sky/light override helper called by update) is placed
- * LAST in this file so MWCC cannot inline it into wmlevelcontrol_update
- * (the target keeps it as an extern call).
+ *
+ * init seeds the palace's game-bit progression from the map-event mode
+ * (the 0xD1B..0xD1F spirit chain consumed by wmspiritplace and
+ * friends); update shows the intro message while messageTimer runs,
+ * drives the music game-bit latches, and calls the sky/light override
+ * helper every frame. fn_801F3F18 cross-fades the palace's sky, light
+ * and fog colors toward their spirit-restored values while the
+ * lbl_803DDC8C blend factor (held at 1.0 during restore progress,
+ * decaying 0.02/tick after) is up.
+ *
+ * fn_801F3F18 is placed LAST in this file so MWCC cannot inline it
+ * into wmlevelcontrol_update (the retail unit keeps it as an extern
+ * call).
  */
 #include "main/dll/WM/dll_0207_wmworm.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
-typedef struct WmlevelcontrolState
+/* per-object extra state (getExtraSize == 0x1C) */
+typedef struct WmLevelControlState
 {
-    u8 pad0[0x4 - 0x0];
-    s16 unk4;
-    s16 unk6;
-} WmlevelcontrolState;
+    f32 messageTimer;          /* 0x00: intro-message frames left */
+    s16 unk04;                 /* 0x04: -1 at map-event mode 4, else unset */
+    s16 unk06;                 /* 0x06 */
+    s16 unk08;                 /* 0x08: 700 at mode 7, else unset */
+    u8 unk0A;                  /* 0x0A: 0x1E at mode 7, else unset */
+    u8 unk0B;                  /* 0x0B: cleared at init, never read */
+    u8 pad0C[4];
+    SCGameBitLatchState latch; /* 0x10: music-trigger latches */
+    u8 latchesDisabled;        /* 0x14: set at mode 7; skips all latching */
+    u8 pad15[3];
+    u32 frameCounter;          /* 0x18: frames since init */
+} WmLevelControlState;
+
+STATIC_ASSERT(offsetof(WmLevelControlState, unk08) == 0x08);
+STATIC_ASSERT(offsetof(WmLevelControlState, latch) == 0x10);
+STATIC_ASSERT(offsetof(WmLevelControlState, latchesDisabled) == 0x14);
+STATIC_ASSERT(offsetof(WmLevelControlState, frameCounter) == 0x18);
+STATIC_ASSERT(sizeof(WmLevelControlState) == 0x1C);
 
 extern undefined4 GameBit_Set(int eventId, int value);
 extern void* Obj_GetPlayerObject(void);
@@ -23,17 +48,14 @@ extern void gameTextShow(int textId);
 extern uint GameBit_Get(int eventId);
 extern int getCurSeqNo(void);
 
-extern f64 DOUBLE_803e6b00;
-extern f32 lbl_803E5E70;
+extern f32 lbl_803E5E70; /* 0.0 */
 extern f32 timeDelta;
 
-#pragma scheduling on
-#pragma peephole on
 extern void ObjGroup_AddObject(int obj, int group);
 extern int mapGetDirIdx(int mapId);
 extern void unlockLevel(int a, int b, int c);
 extern void lockLevel(int idx, int p2);
-extern f32 lbl_803E5E90;
+extern f32 lbl_803E5E90; /* 300.0: intro-message duration */
 extern void setDrawLights(int mode);
 extern int getSkyColorFn_80088e08(int slot);
 extern void skySetOverrideLightColorEnabled(u8 enabled);
@@ -48,109 +70,88 @@ extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
 extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
 extern void ObjGroup_RemoveObject(int obj, int group);
 extern void Music_Trigger(int musicId, int param);
-extern f32 lbl_802C24B8[];
-extern u8 lbl_803DC110;
-extern u8 lbl_803DC114;
-extern u8 lbl_803DC118;
-extern u8 lbl_803DC11C;
-extern u8 lbl_803DC120;
-extern u8 lbl_803DC124;
-extern f32 lbl_803DDC88;
-extern f32 lbl_803DDC8C;
-extern u8 lbl_803DDC90;
-extern u8 lbl_803DDC94;
-extern u8 lbl_803DDC98;
-extern u8 lbl_803DDC9C;
-extern f32 lbl_803E5E74;
-extern f32 lbl_803E5E78;
-extern f32 lbl_803E5E7C;
-extern f32 lbl_803E5E80;
-extern f32 lbl_803E5E84;
+extern f32 lbl_802C24B8[]; /* sky light/color/fog vector table */
+extern u8 lbl_803DC110;    /* sky-color blend source triplet */
+extern u8 lbl_803DC114;    /* sky-color blend target triplet */
+extern u8 lbl_803DC118;    /* light-color blend source triplet */
+extern u8 lbl_803DC11C;    /* light-color blend target triplet */
+extern u8 lbl_803DC120;    /* fog-color blend source triplet */
+extern u8 lbl_803DC124;    /* fog-color blend target triplet */
+extern f32 lbl_803DDC88;   /* restore-blend hold flag */
+extern f32 lbl_803DDC8C;   /* current blend factor */
+extern u8 lbl_803DDC90;    /* blended light-intensity byte */
+extern u8 lbl_803DDC94;    /* blended fog-color out-triplet */
+extern u8 lbl_803DDC98;    /* blended sky-color out-triplet */
+extern u8 lbl_803DDC9C;    /* blended light-color out-triplet */
+extern f32 lbl_803E5E74;   /* 1.0 */
+extern f32 lbl_803E5E78;   /* 0.02: blend decay per tick */
+extern f32 lbl_803E5E7C;   /* 32.0: light-intensity base */
+extern f32 lbl_803E5E80;   /* 128.0: light-intensity blend range */
+extern f32 lbl_803E5E84;   /* 100.0: override light intensity */
 extern void objRenderFn_8003b8f4(f32);
-
-void wmlevelcontrol_readParams(undefined2* param_1, int param_2)
-{
-    float* pfVar1;
-
-    *param_1 = 0;
-    pfVar1 = *(float**)(param_1 + 0x5c);
-    *pfVar1 = (float)((double)CONCAT44(0x43300000, (int)*(char*)(param_2 + 0x18) << 2 ^ 0x80000000) -
-        DOUBLE_803e6b00);
-    *(undefined2*)(pfVar1 + 1) = *(undefined2*)(param_2 + 0x1a);
-    *(undefined2*)(pfVar1 + 2) = *(undefined2*)(param_2 + 0x1c);
-    *(undefined2*)(pfVar1 + 3) = 0;
-    if (*(short*)(pfVar1 + 2) < 1)
-    {
-        *(int*)(param_1 + 0x7a) = (int)*(short*)(pfVar1 + 2);
-    }
-    else
-    {
-        *(undefined4*)(param_1 + 0x7a) = 0;
-    }
-    pfVar1[4] = *(float*)(param_1 + 6);
-    pfVar1[5] = *(float*)(param_1 + 8);
-    pfVar1[6] = *(float*)(param_1 + 10);
-    return;
-}
 
 #pragma scheduling off
 #pragma peephole off
 void wmlevelcontrol_update(int obj)
 {
-    uint areaId;
+    uint mode6;
     int loadingDone;
-    float* state;
+    WmLevelControlState* state;
     float timer;
 
     Obj_GetPlayerObject();
     state = ((GameObject*)obj)->extra;
-    timer = *state;
+    timer = state->messageTimer;
     if (timer > lbl_803E5E70)
     {
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         gameTextShow(0x42c);
-        *state = *state - timeDelta;
-        timer = *state;
+        state->messageTimer = state->messageTimer - timeDelta;
+        timer = state->messageTimer;
         if (timer < lbl_803E5E70)
         {
-            *state = *(f32*)&lbl_803E5E70;
+            state->messageTimer = *(f32*)&lbl_803E5E70;
         }
     }
-    if (*(u8*)(state + 5) == 0)
+    if (state->latchesDisabled == 0)
     {
-        areaId = (*gMapEventInterface)->getMode((int)((GameObject*)obj)->anim.mapEventSlot);
-        areaId = __cntlzw(6 - (areaId & 0xff));
-        areaId = areaId >> 5;
-        if ((((int)areaId == 0) || (loadingDone = getCurSeqNo(), loadingDone == 0)) ||
-            (areaId = GameBit_Get(0xa7f), areaId == 0))
+        /* mode6 = (map-event mode == 6), via the cntlzw idiom (#23) */
+        mode6 = (*gMapEventInterface)->getMode((int)((GameObject*)obj)->anim.mapEventSlot);
+        mode6 = __cntlzw(6 - (mode6 & 0xff));
+        mode6 = mode6 >> 5;
+        if ((((int)mode6 == 0) || (loadingDone = getCurSeqNo(), loadingDone == 0)) ||
+            (mode6 = GameBit_Get(0xa7f), mode6 == 0))
         {
-            SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)(state + 4), 0x10, -1, -1, 0xa7f, 0xa6);
-            SCGameBitLatch_Update((SCGameBitLatchState*)(state + 4), 2, -1, -1, 0xa7f, 0xa8);
+            SCGameBitLatch_UpdateInverted(&state->latch, 0x10, -1, -1, 0xa7f, 0xa6);
+            SCGameBitLatch_Update(&state->latch, 2, -1, -1, 0xa7f, 0xa8);
         }
-        if (0x3c < *(uint*)(state + 6))
+        if (0x3c < state->frameCounter)
         {
-            SCGameBitLatch_Update((SCGameBitLatchState*)(state + 4), 1, -1, -1, 0xada, 0xac);
+            SCGameBitLatch_Update(&state->latch, 1, -1, -1, 0xada, 0xac);
         }
-        SCGameBitLatch_Update((SCGameBitLatchState*)(state + 4), 0x20, -1, -1, 0xcbb, 0xc4);
+        SCGameBitLatch_Update(&state->latch, 0x20, -1, -1, 0xcbb, 0xc4);
     }
     fn_801F3F18(obj);
-    *(uint*)(state + 6) = *(uint*)(state + 6) + 1;
+    state->frameCounter = state->frameCounter + 1;
     return;
 }
 
 void wmlevelcontrol_init(int obj)
 {
-    f32* state;
+    WmLevelControlState* state;
     u8 mode;
 
     ObjGroup_AddObject(obj, 9);
     unlockLevel(mapGetDirIdx(0xb), 0, 0);
     state = ((GameObject*)obj)->extra;
-    *((u8*)state + 0xb) = 0;
-    ((WmlevelcontrolState*)state)->unk6 = 0x1e;
-    *state = lbl_803E5E90;
-    *(int*)(state + 4) = 0;
+    state->unk0B = 0;
+    state->unk06 = 0x1e;
+    state->messageTimer = lbl_803E5E90;
+    state->latch.activeMask = 0;
     lockLevel(0xf, 0);
+    /* the 0xD1B..0xD1F chain marks how many Krazoa spirits the palace
+       has received (wmspiritplace's progression); 0xF43/0xF44 pick the
+       ambience variant. All cross-TU bits without established names. */
     mode = (*gMapEventInterface)->getMode((int)((GameObject*)obj)->anim.mapEventSlot);
     switch (mode)
     {
@@ -178,7 +179,7 @@ void wmlevelcontrol_init(int obj)
         GameBit_Set(0xa7f, 1);
         GameBit_Set(0xf43, 0);
         GameBit_Set(0xf44, 1);
-        ((WmlevelcontrolState*)state)->unk4 = -1;
+        state->unk04 = -1;
         break;
     case 5:
         GameBit_Set(0xd1b, 1);
@@ -199,10 +200,10 @@ void wmlevelcontrol_init(int obj)
         GameBit_Set(0xf44, 0);
         break;
     case 7:
-        *(s16*)(state + 2) = 700;
-        *((u8*)state + 0xa) = 0x1e;
-        ((WmlevelcontrolState*)state)->unk6 = *((u8*)state + 0xa);
-        *((u8*)state + 0x14) = 1;
+        state->unk08 = 700;
+        state->unk0A = 0x1e;
+        state->unk06 = state->unk0A;
+        state->latchesDisabled = 1;
         break;
     }
 }
@@ -214,9 +215,6 @@ void wmlevelcontrol_release(void)
 void wmlevelcontrol_initialise(void)
 {
 }
-
-/* Head of the TU (0x801F3F18..0x801F44B4), formerly the tail of
- * LGTdirectionallight.c. */
 
 typedef struct
 {
@@ -230,7 +228,7 @@ typedef struct
     LightVec3 fog;
 } LightVecSet;
 
-int wmlevelcontrol_getExtraSize(void) { return 0x1c; }
+int wmlevelcontrol_getExtraSize(void) { return sizeof(WmLevelControlState); }
 int wmlevelcontrol_getObjectTypeId(void) { return 0x0; }
 
 void wmlevelcontrol_free(int obj)
@@ -261,7 +259,6 @@ void fn_801F3F18(int obj)
     LightVec3* vecs;
     u8* fromColor;
     u8* toColor;
-    u8* outColor;
 
     vecs = (LightVec3*)lbl_802C24B8;
     L.fog = vecs[1];
@@ -294,6 +291,8 @@ void fn_801F3F18(int obj)
         skyFn_80089710(1, 1, 1);
     }
 
+    /* hold the blend at full while spirit-restore progress is running,
+       then decay it toward 0 */
     if (fn_8008ED88() > 0.0f)
     {
         lbl_803DDC88 = lbl_803E5E74;
@@ -305,6 +304,11 @@ void fn_801F3F18(int obj)
         lbl_803DDC8C = 0.0f;
     }
 
+    /* blend each color channel source->target by the blend factor.
+       The call args re-read the just-stored bytes VOLATILE (#114):
+       MWCC's word-granular store forwarding otherwise passes the last
+       byte stored for all three args - the misforward this fn shipped
+       with before the volatile reads. */
     fromColor = &lbl_803DC118;
     toColor = &lbl_803DC11C;
     (&lbl_803DDC9C)[0] = lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
@@ -337,6 +341,8 @@ void fn_801F3F18(int obj)
 
     lbl_803DDC90 = lbl_803DDC8C * lbl_803E5E80 + lbl_803E5E7C;
     skySetOverrideLightDirectionEnabled(1);
+    /* the embedded def pins light.x-then-color.x load order in the
+       x arg (the bare spelling pre-hoists the two-use color.x) */
     skySetOverrideLightDirection(lbl_803DDC8C * (L.light.x - (lightX = L.color.x)) + lightX,
                                  lbl_803DDC8C * (L.light.y - L.color.y) + L.color.y,
                                  lbl_803DDC8C * (L.light.z - L.color.z) + L.color.z,
