@@ -400,7 +400,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 
 /* 8b "li r3, N; blr" returners. */
-int sh_beacon_getExtraSize(void) { return 0x18; }
+int sh_beacon_getExtraSize(void);
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern void Obj_FreeObject(int obj);
@@ -413,63 +413,19 @@ extern f32 lbl_803E5528;
 extern f32 lbl_803E552C;
 
 /* 96b: render via objRenderFn + fn_80098B18 with 3-float local. */
-void sh_staffhaze_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5)
-{
-    extern void objRenderFn_8003b8f4(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale); /* #57 */
-    float local[3];
-    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E5518);
-    local[0] = lbl_803E551C;
-    local[1] = lbl_803E5520;
-    local[2] = lbl_803E551C;
-    fn_80098B18(obj, ((GameObject*)obj)->anim.rootMotionScale, 4, 0, 0, (int)&local[0]);
-}
+void sh_staffhaze_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5);
 
 /* 48b: free if 0x4000 flag set. */
-void sh_staffhaze_update(int obj)
-{
-    if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0)
-    {
-        Obj_FreeObject(obj);
-    }
-}
+void sh_staffhaze_update(int obj);
 
 /* 120b: tick a float timer; on wrap optionally trigger an effect. */
-int sh_beacon_SeqFn(int obj)
-{
-    int extra = *(int*)&((GameObject*)obj)->extra;
-    ((ShBeaconState*)extra)->seqTimer = ((ShBeaconState*)extra)->seqTimer + timeDelta;
-    if (((ShBeaconState*)extra)->seqTimer >= lbl_803E5528)
-    {
-        ((ShBeaconState*)extra)->seqTimer = ((ShBeaconState*)extra)->seqTimer - lbl_803E5528;
-        if ((*(unsigned short*)(obj + 0xb0) & 0x800) != 0)
-        {
-            fn_80098B18(obj, ((GameObject*)obj)->anim.rootMotionScale, 0, 2, 0, 0);
-        }
-    }
-    return 0;
-}
+int sh_beacon_SeqFn(int obj);
 
 /* 20b: reset extra->field_0x8 = lbl_803E552C, return 1. */
-int fn_801DA9CC(int obj)
-{
-    ((ShBeaconState*)*(int*)&((GameObject*)obj)->extra)->fadeTimer = lbl_803E552C;
-    return 1;
-}
+int fn_801DA9CC(int obj);
 
 /* 112b: vtable cleanup then maybe Obj_FreeObject. */
-void sh_beacon_free(int obj, int param_2)
-{
-    int extra = *(int*)&((GameObject*)obj)->extra;
-    (*gExpgfxInterface)->freeSource2((u32)obj);
-    if (param_2 == 0)
-    {
-        void* p = *(void**)&((ShBeaconState*)extra)->childObj;
-        if (p != NULL && (*(unsigned short*)((char*)p + 0xb0) & 0x40) == 0)
-        {
-            Obj_FreeObject((int)p);
-        }
-    }
-}
+void sh_beacon_free(int obj, int param_2);
 
 /* 56b: single-call hit-effect poll. */
 void sh_emptytumblew_update(int obj);
@@ -735,38 +691,7 @@ end:
     }
 }
 
-void sh_beacon_init(int obj, int defData)
-{
-    int state;
-    int* setup;
-
-    state = *(int*)&((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((s32) * (s8*)(defData + 0x18) << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
-
-    ((ShBeaconState*)state)->mode = (u8)GameBit_Get(*(s16*)(defData + 0x1e));
-    if (((ShBeaconState*)state)->mode == 0)
-    {
-        if (GameBit_Get(*(s16*)(defData + 0x20)) != 0)
-        {
-            ((ShBeaconState*)state)->mode = 2;
-        }
-    }
-
-    if (((ShBeaconState*)state)->mode != 0 && Obj_IsLoadingLocked() != 0)
-    {
-        setup = Obj_AllocObjectSetup(0x20, 0x55);
-        ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-        ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
-        ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-        *(u8*)((char*)setup + 4) = 2;
-        *(u8*)((char*)setup + 5) = *(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 5);
-        *(u8*)((char*)setup + 7) = *(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 7);
-        ((ShBeaconState*)state)->childObj = loadObjectAtObject(obj, setup);
-    }
-
-    ((GameObject*)obj)->animEventCallback = (void*)sh_beacon_SeqFn;
-}
+void sh_beacon_init(int obj, int defData);
 
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
 extern int GameBit_Set(int eventId, int value);
@@ -792,130 +717,4 @@ typedef struct
  * EN v1.0 Address: 0x801DAA58
  * EN v1.0 Size: 1080b
  */
-void sh_beacon_update(int obj)
-{
-    u8* state;
-    int def;
-    int tmp;
-    int* setup;
-    int mode;
-    int state2;
-
-    state = ((GameObject*)obj)->extra;
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
-    switch (((ShBeaconState*)state)->mode)
-    {
-    case 0:
-        if (((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0) &&
-            ((*gGameUIInterface)->isEventReady(0x194) != 0))
-        {
-            gameBitDecrement(0x194);
-            GameBit_Set(((ShBeaconPlacement*)def)->unk20, 1);
-            if (Obj_IsLoadingLocked() != 0)
-            {
-                setup = Obj_AllocObjectSetup(0x20, 0x55);
-                ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-                ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
-                ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-                *(u8*)((char*)setup + 4) = 2;
-                *(u8*)((char*)setup + 5) = *(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 5);
-                *(u8*)((char*)setup + 7) = *(u8*)(*(int*)&((GameObject*)obj)->anim.placementData + 7);
-                ((ShBeaconState*)state)->childObj = loadObjectAtObject(obj, setup);
-            }
-            (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-            ((ShBeaconState*)state)->mode = 2;
-        }
-    case 2:
-        state2 = *(int*)&((GameObject*)obj)->extra;
-        ((ShBeaconState*)state2)->seqTimer = ((ShBeaconState*)state2)->seqTimer + timeDelta;
-        if (((ShBeaconState*)state2)->seqTimer >= lbl_803E5528)
-        {
-            ((ShBeaconState*)state2)->seqTimer = ((ShBeaconState*)state2)->seqTimer - lbl_803E5528;
-            if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
-            {
-                fn_80098B18(obj, ((GameObject*)obj)->anim.rootMotionScale, 0, 2, 0, 0);
-            }
-        }
-        break;
-    case 1:
-        if ((((BeaconFlags*)&((ShBeaconState*)state)->flags15)->looping) == 0)
-        {
-            Sfx_AddLoopedObjectSound(obj, 0x9e);
-            ((BeaconFlags*)&((ShBeaconState*)state)->flags15)->looping = 1;
-        }
-        if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
-        {
-            ((ShBeaconState*)state)->modeTimer = ((ShBeaconState*)state)->modeTimer + timeDelta;
-            if (((ShBeaconState*)state)->modeTimer > lbl_803E5530)
-            {
-                mode = 2;
-                ((ShBeaconState*)state)->modeTimer = ((ShBeaconState*)state)->modeTimer - lbl_803E5530;
-            }
-            else
-            {
-                mode = 0;
-            }
-            ((ShBeaconState*)state)->burstTimer = ((ShBeaconState*)state)->burstTimer + timeDelta;
-            if (((ShBeaconState*)state)->burstTimer > lbl_803E5534)
-            {
-                ((ShBeaconState*)state)->burstTimer = ((ShBeaconState*)state)->burstTimer - lbl_803E5534;
-                fn_80098B18(obj, ((GameObject*)obj)->anim.rootMotionScale, 2, mode, 0, 0);
-            }
-        }
-        break;
-    }
-    if (((ShBeaconState*)state)->mode != 1)
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
-        if (((ShBeaconState*)state)->mode == 2)
-        {
-            fn_8002B6D8(obj, 0, 0, 0, 0, 8);
-        }
-        else if ((((ShBeaconState*)state)->mode == 0) && (GameBit_Get(0x194) == 0))
-        {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
-        }
-        else
-        {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
-        }
-        tmp = (int)getTrickyObject();
-        if (((void*)tmp != NULL) && ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0))
-        {
-            (*(code*)(*(int*)(*(int*)(tmp + 0x68)) + 0x28))(tmp, obj, 1, 4);
-        }
-    }
-    else
-    {
-        if ((GameBit_Get(0x193) != 0) || (((ShBeaconPlacement*)def)->unk1E != 0x95))
-        {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-        }
-        else
-        {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
-        }
-    }
-    if (((ShBeaconState*)state)->fadeTimer > lbl_803E5538)
-    {
-        ((ShBeaconState*)state)->fadeTimer = ((ShBeaconState*)state)->fadeTimer - timeDelta;
-        if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
-        {
-            fn_80098B18(obj, lbl_803E553C * ((GameObject*)obj)->anim.rootMotionScale, 3, 0, 0, 0);
-        }
-        if ((((ShBeaconState*)state)->fadeTimer <= lbl_803E5538) && (((ShBeaconState*)state)->mode == 2))
-        {
-            ((ShBeaconState*)state)->mode = 1;
-            GameBit_Set(((ShBeaconPlacement*)def)->unk1E, 1);
-            if ((GameBit_Get(0x190) != 0) && (GameBit_Get(0x191) != 0) && (GameBit_Get(0x192) != 0))
-            {
-                Sfx_PlayFromObject(0, 0x7e);
-            }
-            else
-            {
-                Sfx_PlayFromObject(0, 0x409);
-            }
-        }
-    }
-    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, &lbl_803DDBF8);
-}
+void sh_beacon_update(int obj);
