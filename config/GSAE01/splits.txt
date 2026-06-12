@@ -1408,8 +1408,11 @@ main/dll/dll_80198A00.c:
 main/dll/MMP_gyservent.c:
 	.text       start:0x80198FA4 end:0x801993B0
 
-main/dll/hightop.c:
-	.text       start:0x801993B0 end:0x8019AE3C
+main/dll/dll_0126_trigpnt.c:
+	.text       start:0x801993B0 end:0x8019AA7C
+
+main/dll/dll_0145_cloudprison.c:
+	.text       start:0x8019AA7C end:0x8019AE3C
 
 main/dll/dll_0148_cfguardian.c:
 	.text       start:0x8019AE3C end:0x8019C784
