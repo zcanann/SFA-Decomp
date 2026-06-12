@@ -405,48 +405,32 @@ void OptionsScreen_release(void)
 {
 }
 
-void WeirdUnusedMenu_render(void)
-{
-}
+void WeirdUnusedMenu_render(void);
 
-void WeirdUnusedMenu_frameEnd(void)
-{
-}
+void WeirdUnusedMenu_frameEnd(void);
 
-void Dummy39_render(void)
-{
-}
+void Dummy39_render(void);
 
-void Dummy39_frameEnd(void)
-{
-}
+void Dummy39_frameEnd(void);
 
-void Dummy3A_render(void)
-{
-}
+void Dummy3A_render(void);
 
-void Dummy3A_frameEnd(void)
-{
-}
+void Dummy3A_frameEnd(void);
 
-void Dummy3A_release(void)
-{
-}
+void Dummy3A_release(void);
 
-void Dummy3A_initialise(void)
-{
-}
+void Dummy3A_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int Dummy3A_frameStart(void) { return 0x0; }
+int Dummy3A_frameStart(void);
 
 /* Pattern wrappers. */
 extern u8 lbl_803DD728;
-void Dummy39_initialise(void) { lbl_803DD728 = 0x28; }
+void Dummy39_initialise(void);
 
 extern u32 lbl_803DD72C;
 extern void textureFree(u32);
-void Dummy39_release(void) { textureFree(lbl_803DD72C); }
+void Dummy39_release(void);
 
 extern u32 lbl_803DD714, lbl_803DD718, lbl_803DD71C;
 extern void warpToMap(int mapId, int spawnId);
@@ -460,149 +444,20 @@ extern u8 lbl_803DD713;
 extern u32 lbl_8031AD20[];
 #pragma scheduling off
 #pragma peephole off
-int WeirdUnusedMenu_run(void)
-{
-    int selection;
-    int action;
+int WeirdUnusedMenu_run(void);
 
-    if (lbl_803DD713 == 0)
-    {
-        selection = (*(int (*)(void))(*(int*)(*gTitleMenuLinkInterface + 0xc)))();
-        action = (*(int (*)(void))(*(int*)(*gTitleMenuLinkInterface + 0x14)))();
-        if (selection == 1)
-        {
-            if (action == 0)
-            {
-                Sfx_PlayFromObject(0, SFXqu_longsob2);
-                loadUiDll(1);
-                cutsceneExit();
-                buttonDisable(0, 0x300);
-            }
-            else
-            {
-                Sfx_PlayFromObject(0, SFXqu_shortsob1);
-                lbl_803DD712 = 0;
-                lbl_803DD713 = 1;
-                ((WeirdMenuWork*)lbl_8031AD20)->unk16 =
-                    (u16)(((WeirdMenuWork*)lbl_8031AD20)->unk16 | 0x1000);
-                ((WeirdMenuWork*)lbl_8031AD20)->unk52 =
-                    (u16)(((WeirdMenuWork*)lbl_8031AD20)->unk52 | 0x1000);
-                (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + 0x2c)))();
-            }
-        }
-        else if (selection == 0)
-        {
-            Sfx_PlayFromObject(0, 0x419);
-            loadUiDll(1);
-            cutsceneExit();
-            buttonDisable(0, 0x300);
-        }
-    }
-    else if (lbl_803DD713 == 1)
-    {
-        if ((s8)lbl_803DD712 == 0)
-        {
-            saveGame_save();
-        }
-        *(char*)&lbl_803DD712 = (int)
-        ((f32)(s8)
-        lbl_803DD712 + timeDelta
-        )
-        ;
-        if ((f32)(s8)lbl_803DD712 >= lbl_803E1DF0
-        )
-        {
-            lbl_803DD713 = 0;
-            ((WeirdMenuWork*)lbl_8031AD20)->unk16 =
-                (u16)(((WeirdMenuWork*)lbl_8031AD20)->unk16 & ~0x1000);
-            ((WeirdMenuWork*)lbl_8031AD20)->unk52 =
-                (u16)(((WeirdMenuWork*)lbl_8031AD20)->unk52 & ~0x1000);
-            (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + 0x2c)))();
-            (*(void (*)(int))(*(int*)(*gTitleMenuLinkInterface + 0x18)))(0);
-        }
-    }
-
-    lbl_803DD710 = (s16)(lbl_803DD710 + (framesThisStep << 3));
-    if (lbl_803DD710 > 0x8c)
-    {
-        lbl_803DD710 = 0x8c;
-    }
-    return 0;
-}
-
-void WeirdUnusedMenu_release(void)
-{
-    textureFree(lbl_803DD71C);
-    textureFree(lbl_803DD718);
-    textureFree(lbl_803DD714);
-    warpToMap(0, 1);
-    (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + 0x8)))();
-}
+void WeirdUnusedMenu_release(void);
 
 extern u32 lbl_803DD720;
 extern u32 lbl_8031AD98[];
 extern u32 textureLoadAsset(int);
 extern int Obj_GetPlayerObject(void);
 
-int Dummy39_run(void)
-{
-    s32 v;
-    u8 cur;
-    s8 next;
-    Obj_GetPlayerObject();
-    v = framesThisStep;
-    if (v > 3) v = 3;
-    cur = lbl_803DD728;
-    if ((s8)cur > 0)
-    {
-        next = (s8)(cur - v);
-        *(s8*)&lbl_803DD728 = next;
-        if ((s8)(u8)next <= 0
-        )
-        {
-            loadUiDll(1);
-            warpToMap(0x60, 1);
-        }
-    }
-    return 0;
-}
+int Dummy39_run(void);
 
 extern s16 lbl_803DD8C2;
 extern void Sfx_PlayFromObjectLimited(int obj, u16 sfx, int);
 #pragma peephole on
-void cMenuPlaySelectedItemSfx(int obj)
-{
-    int sfx = 0;
-    switch (lbl_803DD8C2)
-    {
-    case 0: sfx = 0x3FB;
-        break;
-    case 5: sfx = 0x3FA;
-        break;
-    case 1: sfx = 0x3F8;
-        break;
-    case 4: sfx = 0x3F9;
-        break;
-    case 2: sfx = 0x3F7;
-        break;
-    case 3: sfx = 0x3FC;
-        break;
-    }
-    if (sfx != 0)
-    {
-        Sfx_PlayFromObjectLimited(obj, (u16)sfx, 1);
-    }
-}
+void cMenuPlaySelectedItemSfx(int obj);
 
-void WeirdUnusedMenu_initialise(void)
-{
-    lbl_803DD71C = textureLoadAsset(0x31e);
-    lbl_803DD718 = textureLoadAsset(0x310);
-    lbl_803DD714 = textureLoadAsset(0x31f);
-    lbl_803DD720 = gameTextGet(0);
-    (*(void (*)(u32*, int, int, u32*, int, int, int, int, int, int, int, int))(*(int*)(*gTitleMenuLinkInterface +
-        0x4)))(
-        lbl_8031AD20, 2, 0, lbl_8031AD98, 0, 0, 0x5b, 0x45, 0x30, 0xff, 0xd7, 0x3d);
-    lbl_803DD710 = 0;
-    lbl_803DD713 = 0;
-}
+void WeirdUnusedMenu_initialise(void);
