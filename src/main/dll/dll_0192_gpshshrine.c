@@ -630,21 +630,13 @@ void gpsh_shrine_initialise(void)
 {
 }
 
-void gpsh_objcreator_free(void)
-{
-}
+void gpsh_objcreator_free(void);
 
-void gpsh_objcreator_hitDetect(void)
-{
-}
+void gpsh_objcreator_hitDetect(void);
 
-void gpsh_objcreator_release(void)
-{
-}
+void gpsh_objcreator_release(void);
 
-void gpsh_objcreator_initialise(void)
-{
-}
+void gpsh_objcreator_initialise(void);
 
 extern void hitDetectFn_80097070(int* obj, f32 e, int a, int b, int c, int d);
 extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int v);
@@ -654,119 +646,38 @@ extern f32 lbl_803E5050;
 extern f32 lbl_803E5054;
 extern s16 lbl_803263B8[];
 
-void gpsh_objcreator_update(int* obj)
-{
-    extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d); /* #57 */
-    extern u32 GameBit_Get(int bit); /* #57 */
-    u8* sub;
-    void* setup;
+void gpsh_objcreator_update(int* obj);
 
-    sub = ((GameObject*)obj)->extra;
-    if (GameBit_Get(0x5af) != 0)
-    {
-        ((GameObject*)obj)->unkF8 = 0;
-        ((GpshShrineFlags*)(sub + 5))->b80 = 0;
-        *(u8*)((char*)obj + 0x37) = 0xff;
-        ((GameObject*)obj)->anim.alpha = 0xff;
-    }
-    if (((GpshShrineFlags*)(sub + 5))->b80) return;
-    if (((GameObject*)obj)->unkF8 == 0)
-    {
-        if (GameBit_Get(0x148) != 0)
-        {
-            *(f32*)sub = lbl_803E504C;
-            ((GameObject*)obj)->unkF8 = 1;
-        }
-    }
-    if ((u8)Obj_IsLoadingLocked() == 0) return;
-    if (*(f32*)sub == lbl_803E5050) return;
-    *(f32*)sub = *(f32*)sub - timeDelta;
-    hitDetectFn_80097070(obj, lbl_803E5054, 2, 1, 1, 0);
-    if (*(f32*)sub <= lbl_803E5050)
-    {
-        Sfx_PlayFromObjectLimited(0, SFXwp_swtst1_c, 1);
-        setup = Obj_AllocObjectSetup(0x24, sub[4] + 0x1f4);
-        ((GpshShrineFlags*)(sub + 5))->b80 = 1;
-        *(u8*)((char*)setup + 7) = 0xff;
-        *(u8*)((char*)setup + 4) = 0x20;
-        *(u8*)((char*)setup + 5) = 2;
-        ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-        ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
-        ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-        *(s16*)setup = (s16)(sub[4] + 0x1f4);
-        *(u8*)((char*)setup + 0x18) = (u8)((s32) * (s16*)obj >> 8);
-        *(s16*)((char*)setup + 0x1a) = lbl_803263B8[sub[4]];
-        Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, *(void**)&((GameObject*)obj)->anim.parent);
-    }
-}
+void gpsh_scene_free(void);
 
-void gpsh_scene_free(void)
-{
-}
+void gpsh_scene_hitDetect(void);
 
-void gpsh_scene_hitDetect(void)
-{
-}
+void gpsh_scene_update(void);
 
-void gpsh_scene_update(void)
-{
-}
+void gpsh_scene_release(void);
 
-void gpsh_scene_release(void)
-{
-}
-
-void gpsh_scene_initialise(void)
-{
-}
+void gpsh_scene_initialise(void);
 
 void ecsh_cup_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
-int gpsh_objcreator_getExtraSize(void) { return 0x8; }
-int gpsh_objcreator_getObjectTypeId(void) { return 0x0; }
-int gpsh_scene_getExtraSize(void) { return 0x0; }
-int gpsh_scene_getObjectTypeId(void) { return 0x0; }
+int gpsh_objcreator_getExtraSize(void);
+int gpsh_objcreator_getObjectTypeId(void);
+int gpsh_scene_getExtraSize(void);
+int gpsh_scene_getObjectTypeId(void);
 int ecsh_cup_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5048;
 extern f32 lbl_803E5058;
 
-void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E5048);
-}
+void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E5058);
-}
+void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void ecsh_cup_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 
-void gpsh_scene_init(int* obj, int* def)
-{
-    *(s16*)obj = (s16)((s32) * (s8*)((char*)def + 0x18) << 8);
-    ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
-}
+void gpsh_scene_init(int* obj, int* def);
 
-void gpsh_objcreator_init(int* obj, int* def)
-{
-    register u32 zero;
-    register int* state;
-    state = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((s32)((GpshObjcreatorObjectDef*)def)->unk1E << 8);
-    zero = 0;
-    ((GameObject*)obj)->unkF8 = zero;
-    ((GpshObjcreatorState*)state)->unk4 = (u8)((GpshObjcreatorObjectDef*)def)->unk1A;
-    ((GpshShrineFlags*)((char*)state + 5))->b80 = 0;
-    *(u8*)((char*)obj + 0x37) = 0xff;
-    ((GameObject*)obj)->anim.alpha = 0xff;
-}
+void gpsh_objcreator_init(int* obj, int* def);
