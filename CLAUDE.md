@@ -5212,6 +5212,21 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   ~150 files this way with zero regressions (2 parser-bug bad edits caught and
   reverted by exactly this check).
 
+### In-repo oracle: grep the matched corpus's TARGET .o for a shape
+
+Sibling of the MP4 oracle, using OUR OWN tree: when a residual is a specific
+instruction shape, walk `build/GSAE01/obj/**/*.o` disasms for the exact
+pattern and read the C of any unit already at 100% that produces it (the
+re-split duplicates make multiple hits per shape likely). One script find:
+the store-reload-into-f2 fcmpo shape (cfprisonguard_render's banked digit)
+EXISTS in matched dll_0141_lightning (lightning_update, compound `-=` +
+`<=`), proving the compiler emits it from plain C — but with FEWER in-flight
+FP webs at the reload (2 vs 4): at 2 webs the reload numbers FRESH-ascending
+(f2); at 4 webs the dead-slot REUSE pick diverges (ours f1, target f2) and
+is reuse-policy-internal (invariant under the #82 enumeration battery).
+Use the oracle to settle whether a shape is C-reachable at all before
+banking; the corpus-walk script pattern is in the CF-campaign commits.
+
 ### Matching-help corpus (Discord export + decomp.me scratches)
 
 A year of decomp.me's matching-help Discord channel (`reference_projects/Discord_chat_*.csv`,
