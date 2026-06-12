@@ -200,8 +200,9 @@ cut count **125 -> 66**.
 ### Flagged cases — STATUS (campaign June 2026)
 
 The audit started at 132 cut descriptors; a long re-split campaign drove it to
-32, then the June-2026 push (this section) drove it to **2 remaining cuts**
-(both genuinely irreducible or SDK-gated — see below). Every drift-typedef /
+32, then the June-2026 push (this section) drove it to **1 remaining cut**
+(r8008EE18, proven irreducible — a descriptor that legitimately references
+SDK code in a second TU). Every drift-typedef /
 def-vs-header / typed-interface / inline-cascade blocker in the historical
 flagged table BELOW has been RESOLVED — the prep pattern is in the per-case
 `re-split: TU-align` + `resplit prep:` commits (`git log --grep 're-split:'`).
@@ -261,12 +262,27 @@ The prep recipes that cracked the historical blockers, for reuse:
 | r801F33B4 | 0x206,0x207 | RESOLVED (21fcab956) |
 | r801FB9AC | 0x21E,0x224,0x22F,0x230,0x23F | RESOLVED (887fa72dd) |
 
-### Remaining (proven-irreducible / SDK-gated)
+### Remaining (proven-irreducible)
 
 | case | DLLs | status |
 |---|---|---|
-| r8008EE18 | 0x009 | IRREDUCIBLE — descriptor legitimately spans two TUs |
-| r800C8008 | 0x003,0x00F,0x014 | OPEN — large inline/frame cascade in the curves chain |
+| r8008EE18 | 0x009 | IRREDUCIBLE — descriptor legitimately references SDK code in gamecube.c |
+
+r800C8008 (0x003,0x00F,0x014) is now RESOLVED (bcc2674e2) — see the
+conservation-gate note below; the "frame/coloring cascade" was an objdiff
+re-attribution artifact, the linked binary is byte-identical.
+
+**CONSERVATION-GATE INSIGHT (r800C8008):** the resplit tool's per-symbol
+fuzzy conservation check OVER-rejects when a unit's splits range shifts. When
+the curves chain (a 32-fn move into objfsa) was applied, objdiff reported 244
+matched_code "lost" and ~14 fns "regressed" (RomCurve_func2C 90.6→80.8, etc.)
+— but main.dol md5 stayed == DOL_MD5 (7b955850...), and the regressed fns were
+proven BYTE-IDENTICAL in the linked elf disasm vs the clean build. The drop is
+pure objdiff re-attribution: objdiff maps a unit's symbols onto target
+addresses by position, so already-partial fns in a range-shifted unit score
+against neighbouring target bytes. The dol md5 is the authoritative
+conservation proof (a real matched-byte change moves it); the gate now trusts
+it and passes range-shift cases with the per-symbol drift logged as advisory.
 
 **r8008EE18 (0x009) — IRREDUCIBLE, not a drift cut.** The dll 0x009
 descriptor `lbl_8030F7E8` (auto_07 data) legitimately points its tail slots
@@ -280,26 +296,21 @@ flags it because the descriptor's fn-pointer span crosses the gamecube|
 cloudaction boundary, but that span is a legitimate two-TU reference, not a
 unit-boundary error. No conservation-preserving move exists. Leave as-is.
 
-**r800C8008 (0x003,0x00F,0x014) — OPEN, large inline/frame cascade.** The
-partfx→curves chain (df_partfx→dim_partfx, objfsa→df_partfx, curves→objfsa, a
-32-fn move into objfsa) now COMPILES cleanly with the current tool (the old
-RomCurveSegmentProjection tag-redef and illegal-name-overloading blockers are
-fixed). It fails the conservation gate: ~11+ fns regress, both objfsa OWNER
-fns (RomCurve_func2C 90.6→80.8, func29 99.3→75.9, goNextPoint, get) AND moved
-curves fns (curves_distFn15 90.6→57.8, distXZ 89→34, findByIdWithIndex
-100→44.5, …). Diagnosis so far: RomCurve_func2C's call set is UNCHANGED (not an
-inline-victim) but its FRAME grows -160→-208 (+48B, a #67-class conversion-temp
-/ struct-local change) — so the regressions are decl-environment / frame /
-coloring driven by the chained merge, not simple auto-inline (compute_demote
-returns empty: the inlined callees, when present, append AFTER their callers so
-can't inline upward). curves_distFn15 additionally needs #84 cross-caller
-signature arbitration (per the original handoff). This is the genuinely-hard
-remaining case: it wants per-fn frame/coloring reconciliation across the 32-fn
-move, not a single prep. Banked for a focused follow-up.
+**r800C8008 (0x003,0x00F,0x014) — RESOLVED (bcc2674e2).** The partfx→curves
+chain (df_partfx→dim_partfx, objfsa→df_partfx, curves→objfsa, a 32-fn move into
+objfsa) compiles cleanly with the current tool (the old RomCurveSegmentProjection
+tag-redef and illegal-name-overloading blockers are fixed). The apparent
+conservation failure (~14 fns "regressing", 244 matched_code "lost") was a
+FALSE ALARM: with the merge applied, main.dol md5 stayed == DOL_MD5 and the
+"regressed" fns (RomCurve_func2C, func29, curves_distFn15, findByIdWithIndex)
+are byte-identical in the linked elf. RomCurve_func2C's frame is -208 in BOTH
+the clean and merged builds (the -160 I first saw was the retail TARGET tree
+under build/GSAE01/obj — that fn was a 90.6% partial to begin with; the merge
+changed nothing). The gate now trusts the dol md5; the case lands
+conservation-EXACT at the binary level.
 
-The historical fix patterns (now all proven) are above; the remaining open
-case wants per-fn #67 frame analysis + #84 signature arbitration before the
-tool can land it conservation-EXACT.
+The historical fix patterns (now all proven) are above; the resplit campaign is
+complete bar the one irreducible SDK-gated descriptor (r8008EE18).
 
 ## Complete cut table (132 descriptors, pre-surgery)
 
