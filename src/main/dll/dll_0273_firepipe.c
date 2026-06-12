@@ -1,6 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
-#include "main/dll/firepipe.h"
+#include "main/dll/dll_0273_firepipe.h"
 #include "string.h"
 
 extern undefined4 modelLightStruct_freeSlot(int param_1);

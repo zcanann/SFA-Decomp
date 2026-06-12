@@ -2,7 +2,7 @@
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/dll/worldobj.h"
+#include "main/dll/dll_01A1_nwmammoth.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
@@ -773,7 +773,7 @@ void nw_mammoth_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, u
 #include "main/game_object.h"
 #include "main/game_ui_interface.h"
 #include "main/dll/dim2conveyor.h"
-#include "main/dll/ped.h"
+#include "main/dll/dll_01A0_nwgeyser.h"
 #include "main/gameplay_runtime.h"
 #include "main/objanim.h"
 

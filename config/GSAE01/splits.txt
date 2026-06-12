@@ -879,7 +879,7 @@ main/dll/DIM/dll_223.c:
 main/dll/DIM/DIMbossspit.c:
 	.text       start:0x801BE19C end:0x801BE44C
 
-main/dll/vfp_lavapool.c:
+main/dll/DIM/dll_01E2_dimbosstonsil.c:
 	.text       start:0x801BE44C end:0x801BEEA0
 
 main/dll/mmsh_waterspike.c:
@@ -954,13 +954,13 @@ main/dll/shrine1CE.c:
 main/dll/dll_019E_dim_tricky.c:
 	.text       start:0x801CCFA4 end:0x801CD7DC
 
-main/dll/dimtruthhornice.c:
+main/dll/NW/dll_019F_nwtreebrid.c:
 	.text       start:0x801CD7DC end:0x801CDC78
 
-main/dll/ped.c:
+main/dll/NW/dll_01A0_nwgeyser.c:
 	.text       start:0x801CDC78 end:0x801CE078
 
-main/dll/worldobj.c:
+main/dll/NW/dll_01A1_nwmammoth.c:
 	.text       start:0x801CE078 end:0x801CF78C
 
 main/dll/creator1D6.c:
@@ -978,7 +978,7 @@ main/dll/NW/dll_1DC.c:
 main/dll/dim_boss.c:
 	.text       start:0x801D1BFC end:0x801D1BFC
 
-main/dll/dim_bossgut.c:
+main/dll/SH/dll_01A8_shkillermushroom.c:
 	.text       start:0x801D1BFC end:0x801D286C
 
 main/dll/SH/dll_01A9_bombplant.c:
@@ -1252,7 +1252,7 @@ main/dll/crate2.c:
 	.text       start:0x802081F4 end:0x80208508
 	.data       start:0x80329AD8 end:0x80329B78
 
-main/dll/zBomb.c:
+main/dll/DF/dll_0235_dfptargetblock.c:
 	.text       start:0x80208508 end:0x80208FDC
 	.data       start:0x80329B78 end:0x80329BC0
 
@@ -1264,7 +1264,7 @@ main/dll/CF/dll_0237_dfpsppl.c:
 	.text       start:0x802090A8 end:0x8020930C
 	.data       start:0x80329C48 end:0x80329C80
 
-main/dll/fire.c:
+main/dll/dll_0238_linkalevco.c:
 	.text       start:0x8020930C end:0x80209810
 	.data       start:0x80329C80 end:0x80329CB8
 
@@ -1387,7 +1387,7 @@ main/dll/DR/dll_0272_hightop.c:
 main/dll/DR/dll_026F_drgenerator.c:
 	.text       start:0x8021F34C end:0x8021F8CC
 
-main/dll/firepipe.c:
+main/dll/dll_0273_firepipe.c:
 	.text       start:0x8021F8CC end:0x80220608
 	.data       start:0x8032AC90 end:0x8032ACC8
 
@@ -1406,13 +1406,13 @@ main/dll/DR/dll_0280_drcloudper.c:
 main/dll/DR/dll_0281_drearthcal.c:
 	.text       start:0x80221430 end:0x80221670
 
-main/dll/barrelgener.c:
+main/dll/dll_0282_barrelgener.c:
 	.text       start:0x80221670 end:0x802227EC
 
 main/dll/DR/dll_0283_drbarrelgr.c:
 	.text       start:0x802227EC end:0x80223004
 
-main/dll/earthwalker.c:
+main/dll/WC/dll_028A_wcearthwalker.c:
 	.text       start:0x80223004 end:0x80223D18
 
 main/dll/dll_028B.c:
@@ -1439,7 +1439,7 @@ main/dll/WC/dll_028F_wcpressures.c:
 main/dll/WC/dll_0292_wctrexstatu.c:
 	.text       start:0x802281CC end:0x80228478
 
-main/dll/suntemple.c:
+main/dll/dll_0293_suntemple.c:
 	.text       start:0x80228478 end:0x80228B38
 
 main/dll/WC/dll_0294_wctemple.c:
@@ -1478,7 +1478,7 @@ main/dll/dll_029E_Dummy29E.c:
 main/dll/ARW/dll_029F_arwbombcoll.c:
 	.text       start:0x8022F588 end:0x8022FE00
 
-main/dll/ring.c:
+main/dll/dll_02A0_ring.c:
 	.text       start:0x8022FE00 end:0x802308B4
 
 main/dll/ARW/dll_02A1_arwlevelcon.c:
@@ -1518,13 +1518,13 @@ main/dll/LGT/dll_02AB_lgtprojectedlight.c:
 main/dll/LGT/dll_02AC_lgtcontrollight.c:
 	.text       start:0x80234C10 end:0x80234DC8
 
-main/dll/softbody.c:
+main/dll/dll_02AD_softbody.c:
 	.text       start:0x80234DC8 end:0x8023503C
 
-main/dll/waterflowwe.c:
+main/dll/dll_02AE_waterflowwe.c:
 	.text       start:0x8023503C end:0x802356CC
 
-main/dll/tree.c:
+main/dll/dll_02AF_tree.c:
 	.text       start:0x802356CC end:0x80236154
 
 main/dll/brokenpipe.c:

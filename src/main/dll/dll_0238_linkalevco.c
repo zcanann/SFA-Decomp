@@ -1,4 +1,4 @@
-#include "main/dll/fire.h"
+#include "main/dll/dll_0238_linkalevco.h"
 #include "main/gameplay_runtime.h"
 
 extern FireObjectInterface** gObjectTriggerInterface;

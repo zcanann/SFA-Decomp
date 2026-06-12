@@ -189,7 +189,7 @@ void enemymushroom_hitDetect(void)
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
-#include "main/dll/dim_bossgut.h"
+#include "main/dll/dll_01A8_shkillermushroom.h"
 #include "main/dll/ediblemushroom.h"
 
 

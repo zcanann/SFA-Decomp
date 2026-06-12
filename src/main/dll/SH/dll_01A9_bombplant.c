@@ -368,7 +368,7 @@ typedef struct
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/dll/dim_bossgut.h"
+#include "main/dll/dll_01A8_shkillermushroom.h"
 #include "main/dll/SH/dll_01A9_bombplant.h"
 #include "main/objanim.h"
 #include "main/objfx.h"

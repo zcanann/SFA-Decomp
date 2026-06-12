@@ -344,7 +344,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
 #include "main/game_object.h"
 #include "main/dll/fruit.h"
 #include "main/dll/path_control_interface.h"
-#include "main/dll/zBomb.h"
+#include "main/dll/dll_0235_dfptargetblock.h"
 
 static inline int* ZBomb_GetActiveModel(DfpTargetBlockObject* obj)
 {

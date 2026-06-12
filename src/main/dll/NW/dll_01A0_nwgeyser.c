@@ -1,7 +1,7 @@
 #include "main/mapEvent.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
-#include "main/dll/ped.h"
+#include "main/dll/dll_01A0_nwgeyser.h"
 
 extern uint GameBit_Get(int eventId);
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
