@@ -1312,6 +1312,23 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     forms per site; the ternary stays right when the result is stored or
     multi-use (the fn_80151DB8/d-site cases), the empty-else wins when the
     sole consumer is a larger expression.
+    ⚠️ **THE SUBSTITUTED FORM IS RESCUED — `static inline` 2-return helper
+    + volatile-laundered compare constant (cfguardian_updateMain → 100,
+    unit 100.0).** `static inline f32 abs2(f32 x) { if (x >= *(volatile
+    f32*)&lbl_ZERO) return x; return -x; }` called with the product as the
+    argument (`w = abs2(k * field);`) lands target's exact shape: the
+    inlined return-join is a multi-def web (ONE web — diamond emitted with
+    bne;b, in-place `fneg fX,fX`, keep-arm empty, product takes the fresh
+    f2 because the web crosses the consumer's conversion), and the
+    volatile read blocks the forward-substitution that otherwise hoists
+    the consumer's conversion above the compare. BOTH halves load-bearing:
+    helper alone → conv hoists above the fcmpo (substitution); volatile
+    ternary alone → SSA-renamed split webs (product squeezes into frA's
+    f1, join forced to f2, visible `fmr` in the keep-arm). Contradicts
+    #92's "a small helper gets simplified away" for the FP-cror case —
+    the 2-return FP keep-or-negate helper's join SURVIVES inlining.
+    Retry list: trickyBallMove dy/dx/dz (current shows the exact split-web
+    fmr shape ×3), drakorhoverpad_updateMain, hightop_stateHandler04.
 
 64. **`int` local + `(u32)` cast in the test for a direct saved-reg `lbz` +
     `cmplwi`.** A `u8 vr = p->byteField; if (vr != 0)` local that lives across
@@ -2217,9 +2234,11 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       interact (exploded_stepDebrisPhysics: compare-side +1.03, store-side
       +0.76, BOTH stacked worse than either).
     - Residual NOT this class: reload lands in f1 but target wants f2 with a
-      precolored f1 call-arg web nearby (cfprisonguard_render 99.79) — that's
-      the open FP volatile-permutation problem (#82); launders tested inert
-      there, re-attack via #82's web-kind classification.
+      precolored call-arg web nearby (cfprisonguard_render 99.79). ⚠️
+      RESOLVED — that one was recipe #65 (a Ghidra-dropped f32 call arg:
+      the reload IS the arg load, CSE'd into the f2 arg register); see the
+      #82 census-overturn note. A "1-use" reload feeding a compare right
+      before a bl deserves a #65 hidden-arg read before any coloring work.
     **IN-LOOP HOISTED-CONSTANT extension (CF sweep, scarab loops): laundering
     a loop-hoisted compare/multiply constant (`*(f32 *)&lbl`) re-ranks the
     whole loop's FP volatile rotation in count-up scan loops (~12 instrs per
@@ -2291,7 +2310,8 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       reorder, term-order swaps (canonicalized), pointer-form stores,
       embedded assigns (LanternFireFly_func0B 12 forms, exploded_
       seedDebrisMotion 6, Curve_SampleSegmentPoints Z-block 3, drawTexture
-      fctiwz, cfprisonguard_render reload-f2). The residual is 1-8 bytes —
+      fctiwz; cfprisonguard_render reload-f2 left this list — it was a
+      #65 dropped arg, see the overturn note below). The residual is 1-8 bytes —
       bank it, recognize the signature, and re-attack when a lever for
       unnamed expression-temp coloring lands (the #114 conversion-node
       splitter is the closest existing tool to try).
@@ -2368,8 +2388,16 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       Bank on sight once the probe confirms invariance; do not re-spell.
       Re-confirmed post-#119: the recycling lever (named const var reused
       for the reload), double-embed `(a = field) < (lim = lbl)`,
-      single-embed, and reload-via-t forms are all invariant at f1 too —
-      the anomaly verdict stands.
+      single-embed, and reload-via-t forms are all invariant at f1 too.
+      ⚠️ ANOMALY VERDICT OVERTURNED — cfprisonguard_render → 100: the
+      digit was never allocator-internal; the original call passed ONE
+      MORE ARGUMENT (objParticleFn_80099d84 really takes (int, f32, int,
+      f32, int) per the fx/DR shared headers; the import's 4-arg decl
+      dropped the f32 c = sub->alarmRamp). The arg load CSEs with the
+      clamp compare's reload, precoloring the web into the f2 ARG
+      register with zero extra instructions — recipe #65, not #82. The
+      ~50-spelling battery could never reach it because no spelling of
+      the EXISTING args changes the call's register demand.
     - ⚠️ RETAIL-ANOMALY CENSUS (the conclusive instrument for this class,
       CF research program): for cfprisonguard_render's banked digit, a
       corpus census of the exact 1-use [stfs fX,K(rN); lfs fY,K(rN);
@@ -2388,6 +2416,15 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       itself is near-unanimous AGAINST its own choice at the banked
       site, reclassify the residual as retail-anomaly and stop spending
       on it. Census script pattern in the CF-campaign commits.
+      ⚠️ METHOD CAVEAT (the prisonguard overturn): a census shape
+      filter like "no further fY use" is BLIND to arg-register liveness
+      into a following bl — the one "anomalous" f2 site in the game was
+      target CSE-ing the reload with a call's f32 arg the import had
+      dropped (#65). Before trusting a retail-anomaly verdict on a
+      "1-use" value near a call, read the callee's REAL signature across
+      sibling decls (#84 arbitration) and check whether the odd register
+      is the next unclaimed arg slot. "Anomalous singleton" should first
+      be read as "this site has a construct the filter can't see."
       GUARDIAN COUNTER-RESULT (same instrument, opposite verdict): the
       obj-copy-vs-extra-copy saved-reg ORDER censuses at ~91% obj-BELOW
       in BOTH corpora (T 846:76, ours 817:86) - target's cfguardian
@@ -5439,12 +5476,12 @@ Sibling of the MP4 oracle, using OUR OWN tree: when a residual is a specific
 instruction shape, walk `build/GSAE01/obj/**/*.o` disasms for the exact
 pattern and read the C of any unit already at 100% that produces it (the
 re-split duplicates make multiple hits per shape likely). One script find:
-the store-reload-into-f2 fcmpo shape (cfprisonguard_render's banked digit)
-EXISTS in matched dll_0141_lightning (lightning_update, compound `-=` +
-`<=`), proving the compiler emits it from plain C — but with FEWER in-flight
-FP webs at the reload (2 vs 4): at 2 webs the reload numbers FRESH-ascending
-(f2); at 4 webs the dead-slot REUSE pick diverges (ours f1, target f2) and
-is reuse-policy-internal (invariant under the #82 enumeration battery).
+the store-reload-into-f2 fcmpo shape (cfprisonguard_render's once-banked
+digit) EXISTS in matched dll_0141_lightning (lightning_update, compound `-=`
++ `<=`), proving the compiler emits it from plain C. (The prisonguard site
+itself turned out to be a #65 dropped f32 call arg — the reload CSEs into
+the f2 arg register — so its "dead-slot reuse divergence" framing was a
+misread; see the #82 overturn note.)
 Use the oracle to settle whether a shape is C-reachable at all before
 banking; the corpus-walk script pattern is in the CF-campaign commits.
 
