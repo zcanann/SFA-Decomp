@@ -813,34 +813,34 @@ main/dll/MMP/MMP_gyservent.c:
 main/dll/DR/hightop.c:
 	.text       start:0x801993B0 end:0x8019AE3C
 
-main/dll/DR/dll_0148_cfguardian.c:
+main/dll/CF/dll_0148_cfguardian.c:
 	.text       start:0x8019AE3C end:0x8019C784
 
-main/dll/DR/dll_0149_cfwindlift.c:
+main/dll/CF/dll_0149_cfwindlift.c:
 	.text       start:0x8019C784 end:0x8019D578
 
-main/dll/DR/dll_014A_cfpowerbase.c:
+main/dll/CF/dll_014A_cfpowerbase.c:
 	.text       start:0x8019D578 end:0x8019D9F0
 
-main/dll/DR/dll_014B_cfmaincrystal.c:
+main/dll/CF/dll_014B_cfmaincrystal.c:
 	.text       start:0x8019D9F0 end:0x8019E3F4
 
 main/dll/DR/dll_014C_babycloudrunner.c:
 	.text       start:0x8019E3F4 end:0x8019F540
 
-main/dll/DR/dll_014E_cfprisonguard.c:
+main/dll/CF/dll_014E_cfprisonguard.c:
 	.text       start:0x8019F540 end:0x8019FC84
 
-main/dll/DR/dll_014F_cfprisonuncle.c:
+main/dll/CF/dll_014F_cfprisonuncle.c:
 	.text       start:0x8019FC84 end:0x801A0174
 
 main/dll/DR/dll_0150_gcrobotlightbea.c:
 	.text       start:0x801A0174 end:0x801A04F4
 
-main/dll/DR/dll_0153_cfperch.c:
+main/dll/CF/dll_0153_cfperch.c:
 	.text       start:0x801A04F4 end:0x801A0614
 
-main/dll/DR/dll_0154_cfprisoncage.c:
+main/dll/CF/dll_0154_cfprisoncage.c:
 	.text       start:0x801A0614 end:0x801A0994
 
 main/dll/DR/dll_0157_spiritdoorspirit.c:
