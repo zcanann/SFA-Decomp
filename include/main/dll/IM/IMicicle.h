@@ -85,7 +85,7 @@ typedef struct ExplodedObject {
 } ExplodedObject;
 
 void cfforcefield_free(void);
-void cfforcefield_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void cfforcefield_render(void);
 void cfforcefield_hitDetect(void);
 int cfforcefield_getExtraSize(void);
 int cfforcefield_getObjectTypeId(void);
