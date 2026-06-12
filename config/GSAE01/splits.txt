@@ -198,14 +198,8 @@ main/dll/dll_00B7_projship1.c:
 main/dll/dll_00BB_projwallpower.c:
 	.text       start:0x801008D0 end:0x80100908
 
-main/dll/dll_77.c:
-	.text       start:0x80100908 end:0x80100938
-
-main/dll/dll_78.c:
-	.text       start:0x80100938 end:0x8010093C
-
-main/dll/dll_79.c:
-	.text       start:0x8010093C end:0x80100940
+main/dll/dll_00BC_projquakeshock.c:
+	.text       start:0x80100908 end:0x80100940
 
 main/dll/dll_7A.c:
 	.text       start:0x80100940 end:0x80100970
