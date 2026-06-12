@@ -50,6 +50,7 @@ void sh_staff_free(int* obj, int p2)
 #include "main/dll_000A_expgfx.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 
 #include "main/dll/DR/shstaff_state.h"
@@ -71,7 +72,6 @@ STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
 extern undefined4 ObjPath_GetPointLocalMtx();

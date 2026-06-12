@@ -4,12 +4,13 @@
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/dll/CR/CRsnowbike.h"
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
 #include "global.h"
 
-extern int lbl_803DDC00;
+extern f32 lbl_803DDC00;
 
 STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 extern undefined4 FUN_800067c0();
@@ -29,7 +30,6 @@ extern f32 lbl_803E5548;
 
 void sh_emptytumblew_update(int obj)
 {
-    extern void ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d, int e, void* f); /* #57 */
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x280,
                                               &lbl_803DDC00);
 }

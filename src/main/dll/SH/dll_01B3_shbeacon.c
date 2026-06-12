@@ -13,6 +13,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 
 #include "main/dll/DR/shstaff_state.h"
@@ -33,8 +34,6 @@ extern f32 timeDelta;
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern void Obj_FreeObject(int obj);
-extern void ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d,
-                                                      int e, void* f);
 extern f32 lbl_803E5528;
 extern f32 lbl_803E552C;
 extern u8 Obj_IsLoadingLocked(void);
@@ -51,7 +50,7 @@ extern f32 lbl_803E5530;
 extern f32 lbl_803E5534;
 extern f32 lbl_803E5538;
 extern f32 lbl_803E553C;
-extern int lbl_803DDBF8;
+extern f32 lbl_803DDBF8;
 
 int sh_beacon_getExtraSize(void) { return 0x18; }
 
