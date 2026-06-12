@@ -3,6 +3,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "dolphin/mtx.h"
 #include "main/dll/dll_00C4_tricky.h"
 #include "main/dll/baddie/skeetla.h"
@@ -1715,6 +1716,7 @@ void Tricky_init(int obj)
 
 void Tricky_resumeAfterCommand(int obj, int state)
 {
+    ObjHitsPriorityState* hitState;
     u8 moveId;
 
     ((TrickyState*)state)->unk2EF = 1;
@@ -1728,7 +1730,8 @@ void Tricky_resumeAfterCommand(int obj, int state)
         ObjAnim_SetCurrentMove(obj, moveId, lbl_803E2574, 0x10);
         if (((GameObject*)obj)->anim.hitReactState != NULL)
         {
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
+            hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+            hitState->suppressOutgoingHits = 0;
         }
         ((TrickyState*)state)->unk2E8 = ((TrickyState*)state)->unk2E8 | 4;
         Sfx_PlayFromObjectLimited(obj, 1099, 2);
@@ -1741,7 +1744,8 @@ void Tricky_resumeAfterCommand(int obj, int state)
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E2574, 0);
         if (((GameObject*)obj)->anim.hitReactState != NULL)
         {
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
+            hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+            hitState->suppressOutgoingHits = 0;
         }
         ((TrickyState*)state)->flags2DC = ((TrickyState*)state)->flags2DC & 0xffffef7f;
         ((TrickyState*)state)->unk2E8 = ((TrickyState*)state)->unk2E8 & ~(u64)0x4;
@@ -1757,6 +1761,7 @@ void Tricky_resumeAfterCommand(int obj, int state)
 
 void trickyFn_80148d8c(int obj, int state)
 {
+    ObjHitsPriorityState* hitState;
     int setup;
     int alpha;
     void* tricky;
@@ -1793,7 +1798,8 @@ void trickyFn_80148d8c(int obj, int state)
         ObjAnim_SetCurrentMove(obj, moveId, lbl_803E2574, 0);
         if (*(int*)&((GameObject*)obj)->anim.hitReactState != 0)
         {
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
+            hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+            hitState->suppressOutgoingHits = 0;
         }
         ((TrickyState*)state)->unk2E8 = ((TrickyState*)state)->unk2E8 | 1;
         Sfx_PlayFromObject(obj, SFXdoor_creak);
