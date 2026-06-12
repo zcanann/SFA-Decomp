@@ -1,6 +1,4 @@
 /* DLL 0x17E - MMPLevelControl [801A6638-801A6778) */
-#pragma scheduling off
-#pragma peephole off
 #include "main/objseq.h"
 #include "main/dll/mmptrenchfxstate_struct.h"
 #include "main/dll/moonseedbushstate_struct.h"
@@ -56,9 +54,7 @@ void MMP_levelcontrol_free(int obj)
 }
 
 
-#pragma peephole on
 
-#pragma peephole off
 int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern int Obj_GetPlayerObject(void);
@@ -84,11 +80,7 @@ int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-#pragma scheduling reset
-#pragma peephole reset
 /* segment pragma-stack balance (re-split): */
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/dll/MMP/mmp_asteroid_re_state.h"
 #include "main/dll/MMP/mmp_moonrock_state.h"
@@ -162,7 +154,7 @@ extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
+#pragma peephole on
 void MMP_levelcontrol_update(int obj)
 {
     extern void* Obj_GetPlayerObject(void);
@@ -263,7 +255,6 @@ void MMP_levelcontrol_update(int obj)
     SCGameBitLatch_Update(&lbl_803DDB2C, 1, -1, -1, 0x389, 0xd5);
     SCGameBitLatch_Update(&lbl_803DDB2C, 2, -1, -1, 0xcbb, 0xc4);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -279,6 +270,7 @@ void MMP_levelcontrol_update(int obj)
  * PAL Size: TODO
  */
 undefined4
+#pragma scheduling on
 FUN_801a68b8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
              , ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13, undefined4 param_14,
@@ -429,8 +421,6 @@ void MMP_levelcontrol_init(int obj)
     Music_Trigger(0xC2, 0);
     GameBit_Set(0xDCF, 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void setDrawLights(int v);
 

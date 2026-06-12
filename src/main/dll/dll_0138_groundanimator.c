@@ -1,6 +1,4 @@
 /* DLL 0x0138 (groundanimator) — Ground animator object [0x80193100-0x80193DBC). */
-#pragma scheduling off
-#pragma peephole off
 #include "main/dll/mmp_moonrock.h"
 #include "main/dll/waveanimatorobjectdef_struct.h"
 #include "main/dll/waveanimatorstate_struct.h"
@@ -17,8 +15,6 @@ extern void* mapGetBlock(int idx);
 extern void objRenderFn_8003b8f4(f32);
 
 
-#pragma scheduling reset
-#pragma peephole reset
 
 #include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
@@ -93,6 +89,8 @@ extern void mm_free(void* p);
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80192488(void)
 {
     int iVar1;
@@ -184,19 +182,19 @@ u8 groundanimator_modelMtxFn(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3FC4;
+
+
 #pragma peephole off
-
-
 void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E3FC4);
 }
-#pragma peephole reset
 
 
 extern f32 lbl_803E3F98;
 #pragma scheduling off
+#pragma peephole on
 u8 groundanimator_func0B(int* obj)
 {
     GroundAnimatorState * p1 = (GroundAnimatorState*)((int**)obj)[0xB8 / 4];
@@ -205,14 +203,12 @@ u8 groundanimator_func0B(int* obj)
     u8 byte = *(u8*)((char*)p2 + 0x20);
     return v > lbl_803E3F98 * (f32)byte;
 }
-#pragma scheduling reset
 
 extern void fn_801923F8(int* cfg);
 
 
 extern f32 lbl_803E3FB8;
 #pragma peephole off
-#pragma scheduling off
 void groundanimator_init(int* obj, int* desc)
 {
     GroundAnimatorState * vstate = (GroundAnimatorState*)((int**)obj)[0xB8 / 4];
@@ -234,20 +230,14 @@ void groundanimator_init(int* obj, int* desc)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 
-#pragma scheduling off
-#pragma peephole off
 
 extern void* mapBlockFn_800606ec(void* block, int idx);
 extern int mapBlockFn_80060678(void* entry);
 extern void* fn_800606DC(void* block, int idx);
 extern void fn_800605F0(void* cell, void* out);
 extern void fn_8006058C(void* cell, void* in);
-#pragma scheduling off
-#pragma peephole off
 void groundanimator_free(int* obj, int flag)
 {
     extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
@@ -318,8 +308,6 @@ extern f32 lbl_803E3FB4;
 extern f32 lbl_803E3FBC;
 extern f32 timeDelta;
 extern void fn_801A80F0(int* e, int arg);
-#pragma scheduling off
-#pragma peephole off
 f32 groundanimator_setScale(int* obj, int* target)
 {
     GroundAnimatorState * g;
@@ -368,8 +356,6 @@ extern float fastFloorf(float x);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803E3FC0;
-#pragma scheduling off
-#pragma peephole off
 void fn_801932C8(int* obj, GroundAnimatorState* p2, int* p3)
 {
     extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
@@ -450,8 +436,6 @@ extern void objRenderFn_80041018(int* obj);
 extern void DCStoreRangeNoSync(void* addr, int len);
 extern void* mmAlloc(int size, int align, int tag);
 extern u16 lbl_803DBDF0[];
-#pragma scheduling off
-#pragma peephole off
 void groundanimator_update(int* obj)
 {
     extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */

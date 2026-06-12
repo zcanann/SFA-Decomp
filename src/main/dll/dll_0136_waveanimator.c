@@ -1,6 +1,4 @@
 /* DLL 0x136 - WaveAnimator [80192394-801923C4) */
-#pragma scheduling off
-#pragma peephole off
 #include "main/dll/mmp_moonrock.h"
 #include "main/dll/waveanimatorobjectdef_struct.h"
 #include "main/dll/waveanimatorstate_struct.h"
@@ -38,8 +36,6 @@ extern f32 lbl_803E3F30;
 extern void objRenderFn_8003b8f4(f32);
 
 
-#pragma scheduling reset
-#pragma peephole reset
 
 #include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
@@ -94,16 +90,12 @@ extern undefined4 FUN_80286878();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void waveanimator_func0B(int* obj)
 {
     WaveAnimatorState* p = (WaveAnimatorState*)((int**)obj)[0xb8 / 4];
     p->flags |= 2;
 }
 
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void mm_free(void* p);
 
@@ -121,6 +113,8 @@ extern void mm_free(void* p);
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80192488(void)
 {
     int iVar1;
@@ -233,10 +227,8 @@ void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-#pragma peephole reset
 
 /* wall variant: hashes lha to byte */
-#pragma peephole off
 
 void waveanimator_setScale(int* obj, f32 fval)
 {
@@ -244,13 +236,11 @@ void waveanimator_setScale(int* obj, f32 fval)
     p->flags |= 1;
     p->scaleB = fval;
 }
-#pragma peephole reset
 
 extern f32 lbl_803E3F98;
 
 extern void fn_801923F8(int* cfg);
 extern u8 lbl_803DDAE8;
-#pragma peephole off
 #pragma scheduling off
 void waveanimator_init(int* obj, int* desc)
 {
@@ -275,15 +265,11 @@ void waveanimator_init(int* obj, int* desc)
     ObjGroup_AddObject(obj, 27);
     lbl_803DDAE8++;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 
 extern void* lbl_803DDAEC;
 extern void* lbl_803DDAF0;
 extern void* lbl_803DDAF4;
-#pragma peephole off
-#pragma scheduling off
 void waveanimator_free(int* obj)
 {
     if (--lbl_803DDAE8 == 0)
@@ -294,12 +280,8 @@ void waveanimator_free(int* obj)
     }
     ObjGroup_RemoveObject(obj, 27);
 }
-#pragma scheduling reset
-#pragma peephole reset
 extern u8 lbl_803DDAF8;
 extern u8 framesThisStep;
-#pragma scheduling off
-#pragma peephole off
 void waveanimator_hitDetect(int* obj)
 {
     int i;
@@ -333,18 +315,10 @@ void waveanimator_hitDetect(int* obj)
 }
 
 extern void* mapBlockFn_800606ec(void* block, int idx);
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling off
-#pragma peephole off
 
 extern void* mmAlloc(int size, int align, int tag);
-#pragma scheduling off
-#pragma peephole off
 
 
 extern f32 lbl_803E3F40;

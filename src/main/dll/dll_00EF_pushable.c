@@ -1,6 +1,4 @@
 /* DLL 0xEF — pushable object [80174A80-801755CC) */
-#pragma scheduling off
-#pragma peephole off
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
@@ -514,8 +512,6 @@ int pushable_func0B(int obj, int other)
     return sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1])) <
         *(f32*)(state + 0xc);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -567,6 +563,8 @@ typedef struct PushableObjectDef
 
 
 
+#pragma scheduling on
+#pragma peephole on
 static inline int* Transporter_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -807,20 +805,16 @@ int pushable_getExtraSize(void) { return 0x148; }
 int pushable_getObjectTypeId(void) { return 0x48; }
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
-#pragma peephole on
 
 /* 16b chained patterns. */
 
 /* render-with-fn(lbl) (no visibility check). */
 extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
 
-#pragma peephole off
 
 
-#pragma peephole on
 
 
-#pragma peephole off
 
 
 

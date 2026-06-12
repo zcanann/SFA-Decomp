@@ -1,6 +1,4 @@
 /* DLL 0x00ED — collectible / genprops group. TU: 0x80171D14–0x801723DC. */
-#pragma scheduling off
-#pragma peephole off
 #include "main/game_object.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/dll/genprops.h"
@@ -1028,8 +1026,6 @@ extern f32 fastFloorf(f32 v);
 
 void staff_setupSwipe(int p1, int p2, int p3, int p4);
 
-#pragma scheduling reset
-#pragma peephole reset
 /* segment pragma-stack balance (re-split): */
 #pragma opt_common_subs reset
 
@@ -1070,6 +1066,8 @@ extern f32 lbl_803E4104;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801723dc(int param_1)
 {
     float fVar1;
@@ -1174,7 +1172,6 @@ void collectible_free(int obj)
     ObjGroup_RemoveObject(obj, 4);
     return;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1189,6 +1186,7 @@ void collectible_free(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
 int collectible_getExtraSize(void)
 {
     return 0x2b8;
@@ -1615,11 +1613,7 @@ void fn_801723DC(int obj)
 }
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
@@ -1793,5 +1787,3 @@ void collectible_initialise(void)
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E34B0;
-#pragma scheduling reset
-#pragma peephole reset

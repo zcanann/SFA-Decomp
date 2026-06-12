@@ -75,8 +75,6 @@ extern f32 lbl_803E3B94;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -91,12 +89,8 @@ extern f32 lbl_803E3B94;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
-#pragma scheduling off
-#pragma peephole off
 int fn_8015E3A0(int obj, int p2)
 {
     extern void ObjHits_EnableObject(int);
@@ -287,8 +281,6 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -305,6 +297,8 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
  * PAL Size: TODO
  */
 undefined4
+#pragma scheduling on
+#pragma peephole on
 FUN_8015e2e0(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
@@ -1399,13 +1393,9 @@ void dll_CE_update(int obj, int p2, int p3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 void fn_8015FBEC(int obj);
 #pragma dont_inline reset
 
@@ -1440,8 +1430,6 @@ void fn_8015FCCC(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 extern int Obj_GetPlayerObject(void);
@@ -1461,8 +1449,6 @@ extern f32 timeDelta;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void iceball_update(undefined2* param_1, int param_2);
 
 
@@ -1487,8 +1473,6 @@ void iceball_update(undefined2* param_1, int param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -1504,6 +1488,8 @@ void iceball_update(undefined2* param_1, int param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8016043c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     if (visible != 0)
@@ -1912,11 +1898,7 @@ void chukchuk_initialise(void);
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 
-#pragma scheduling off
-#pragma peephole off
 void chukchuk_init(u8* obj, u8* params);
-#pragma scheduling on
-#pragma peephole on
 void iceball_hitDetect(void);
 
 void iceball_release(void);
@@ -1926,8 +1908,6 @@ void iceball_initialise(void);
 
 
 
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -1959,21 +1939,17 @@ void iceball_free(void);
 void chukchuk_update(short* obj);
 
 /* chukchuk_setScale (52B). If low-byte of arg2 (u8) == 0x80, call Sfx_PlayFromObject(obj, SFXkr_jump1). */
-#pragma scheduling on
-#pragma peephole on
 void chukchuk_setScale(int obj, int v);
 
 /* iceball_init (60B). Sets ->f4 = 0xb4, calls ObjHits_DisableObject(obj), then stb 0xff at 0x36. */
-#pragma scheduling off
-#pragma peephole off
 void iceball_init(void* obj);
 
 /* fn_8016050C (32B). Returns 3 if (s8)obj[0x354] < 1 else 6. */
-#pragma scheduling on
 
 /* grimble_stateHandlerB03 (32B). Returns 5 if (s8)obj[0x354] < 1 else 1. */
 
 /* fn_8015E00C (56B). Two-tier select: <1 -> 3, else if obj[0x346]!=0 -> 6 else 0. */
+#pragma peephole off
 int fn_8015E00C(int p1, u8* obj)
 {
     if ((s8)obj[0x354] < 1) return 3;
@@ -1983,7 +1959,6 @@ int fn_8015E00C(int p1, u8* obj)
 
 /* grimble_stateHandlerB05 (92B). If obj2->27b != 0, clear obj->b8->405, call GameBit_Set twice. */
 extern void GameBit_Set(int eventId, int value);
-#pragma scheduling off
 int grimble_stateHandlerB05(int* obj, u8* obj2);
 
 /* fn_801603E8 (84B). If obj2->27b != 0, vtable call through gBaddieControlInterface with (obj, x->unk3F0, -1, 0). */
@@ -1992,15 +1967,10 @@ extern undefined4* gBaddieControlInterface;
 
 /* dll_CB_hitDetect (60B). Vtable dispatch through gPlayerInterface with extra args (obj->b8, lbl_803AC5E8). */
 extern undefined4* gPlayerInterface;
-#pragma peephole on
 
 /* dll_CB_render (64B). Render variant: if visible && !obj->f4 then objRenderFn(lbl_803E2E8C). */
-#pragma scheduling on
-#pragma peephole off
 
 /* fn_801605A8 (44B). Writes float+state fields into obj and copies two halfwords to out. */
-#pragma scheduling off
-#pragma peephole on
 
 /* fn_80160690 (96B). Like fn_801605A8 but with extra stfs at 0x2a0 and a vtable call. */
 
@@ -2008,7 +1978,7 @@ extern f32 lbl_803E2DC8;
 
 /* Drift-recovery: add new fns with v1.0 names to capture asm symbols. */
 
-#pragma peephole off
+#pragma scheduling off
 int fn_8015DE50(int* obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
@@ -2115,9 +2085,7 @@ extern f32 lbl_803E2E90;
 
 
 
-#pragma peephole on
 
-#pragma peephole off
 
 
 

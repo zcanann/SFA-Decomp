@@ -1,5 +1,3 @@
-#pragma scheduling off
-#pragma peephole off
 #include "main/game_object.h"
 #include "main/dll/wormspitbyte_struct.h"
 #include "main/dll/cfprisonunclestate_struct.h"
@@ -24,8 +22,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -44,8 +40,6 @@
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 
 
 /* 8b "li r3, N; blr" returners. */
@@ -211,13 +205,7 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
     }
     return ret;
 }
-#pragma scheduling reset
-#pragma peephole reset
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
 
 /*
  * CFGuardian (DLL 0x148) - CloudRunner Fortress guardian (head fragment).
@@ -311,6 +299,8 @@ extern f32 lbl_803E4ECC;
  * PAL Size: TODO
  */
 undefined4
+#pragma scheduling on
+#pragma peephole on
 FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, undefined4 param_5,
              undefined4 param_6, undefined4 param_7, undefined4 param_8, undefined4 param_9)
 {
@@ -771,8 +761,6 @@ void cfguardian_init(int* obj, u8* params)
     objSeqInitFn_80080078(lbl_8032284C, 0xf);
     sub->flags611 = (u8)(sub->flags611 | 0x2);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct
 {
@@ -790,8 +778,6 @@ extern void playerAddRemoveMagic(void* player, int n);
  * Persists position on a negative cue, otherwise picks the active/idle
  * heading pair and routes a move request; on the magic-grant message it
  * tops the player back up. Returns 1 if the move was consumed. */
-#pragma scheduling off
-#pragma peephole off
 int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int* sel;
@@ -824,8 +810,6 @@ int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
 extern f32 timeDelta;
@@ -898,8 +882,6 @@ extern f32 lbl_803E4130;
 extern void dll_2E_func06(int* a, int* b, int c);
 /* ObjMsg_AllocQueue already declared as undefined */
 
-#pragma scheduling off
-#pragma peephole off
 
 
 void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -936,10 +918,10 @@ void cfguardian_free(int* obj, int p2)
 
 void cfprisonuncle_init(int* obj);
 
-#pragma peephole reset
-#pragma scheduling reset
 
 /* copy 3 floats within same struct */
+#pragma scheduling on
+#pragma peephole on
 void cfguardian_hitDetect(int* obj)
 {
     ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
@@ -947,8 +929,8 @@ void cfguardian_hitDetect(int* obj)
     ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
 }
 
-#pragma scheduling off
 #pragma dont_inline on
+#pragma scheduling off
 int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4)
 {
     int* result = NULL;
@@ -985,7 +967,6 @@ int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4)
     return result;
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
 extern void fn_8019D9F0(int* obj);
 
@@ -1001,7 +982,6 @@ extern f32 lbl_803E4128;
  * speed over distance, move it and keep the chase move playing. Returns 1
  * when already within the closing threshold. */
 #pragma dont_inline on
-#pragma scheduling off
 #pragma peephole off
 int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
 {
@@ -1045,8 +1025,6 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
     ((int(*)(int*, f32, int))ObjAnim_SampleRootCurvePhase)(obj, speed, p4);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
@@ -1083,8 +1061,6 @@ extern f32 lbl_803E412C;
  * brain - sixteen-state quest progression for the CloudRunner guardian, with
  * sandworm avoidance, path flights, landing physics, sequenced triggers and
  * idle chatter. */
-#pragma scheduling off
-#pragma peephole off
 int waterSpellStone1Fn_8019b4c8(int* obj)
 {
     extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int p); /* #57 */
@@ -1503,5 +1479,3 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

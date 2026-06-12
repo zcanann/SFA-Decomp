@@ -1,6 +1,4 @@
 /* DLL 0x0139 — hitanimator (hit-reaction animation driver). TU: 0x80193DBC–0x8019423C. */
-#pragma scheduling off
-#pragma peephole off
 #include "main/dll/mmp_moonrock.h"
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/dll/alphaanimatorstate_struct.h"
@@ -13,8 +11,6 @@ extern uint GameBit_Get(int eventId);
 extern void* mapGetBlock(int idx);
 
 
-#pragma scheduling reset
-#pragma peephole reset
 
 #include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
@@ -67,6 +63,8 @@ extern undefined4 FUN_80286878();
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80192488(void)
 {
     int iVar1;
@@ -160,8 +158,8 @@ extern void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnima
 extern int fn_80065640(void);
 extern void fn_80065574(int a, int b, int c);
 
-#pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 void hitanimator_update(HitAnimatorObject* obj)
 {
     extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
@@ -223,13 +221,9 @@ void hitanimator_update(HitAnimatorObject* obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern f32 lbl_803E3FB8;
 
-#pragma peephole off
-#pragma scheduling off
 void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
 {
     extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
@@ -269,26 +263,14 @@ void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
     state->previousGameBitValue = g;
     obj->objectFlags |= HITANIMATOR_OBJECT_FLAGS_ENABLED;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 
-#pragma scheduling off
-#pragma peephole off
 
 extern void* mapBlockFn_800606ec(void* block, int idx);
 extern int mapBlockFn_80060678(void* entry);
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling off
-#pragma peephole off
 
 
 extern u8* Shader_getLayer(char* s, int layer);

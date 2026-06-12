@@ -106,8 +106,6 @@ extern f32 FLOAT_803e4848;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -139,6 +137,8 @@ extern f32 FLOAT_803e4848;
  * PAL Size: TODO
  */
 undefined4
+#pragma scheduling on
+#pragma peephole on
 FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
              , int param_11, int param_12, undefined4 param_13, undefined4 param_14, undefined4 param_15,
@@ -439,8 +439,6 @@ extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
 
 /* Carryable impact state machine that spawns break particles, hides, then respawns. */
-#pragma scheduling off
-#pragma peephole off
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
@@ -454,18 +452,14 @@ extern void objRenderFn_8003b8f4(f32);
 
 
 /* Fall_Ladders_free: expgfx interface freeObject callback. */
-#pragma scheduling on
-#pragma peephole on
 
 /* coldwatercontrol_init: set float field + OR flag bits. */
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling on
 
 /* landed_arwing_free: free child object + detach link. */
 extern void Obj_FreeObject(int obj);
 #pragma scheduling off
+#pragma peephole off
 void landed_arwing_free(int obj)
 {
     int o = obj;
@@ -1083,16 +1077,10 @@ void landed_arwing_updateDamageTexture(int obj, CFLandedArwingState* state)
 void dll_109_init(int obj, u8* p);
 
 #pragma dont_inline on
-#pragma peephole on
 #pragma dont_inline reset
 
-#pragma peephole off
-#pragma peephole reset
 
-#pragma scheduling on
 
-#pragma scheduling off
-#pragma peephole off
 
 
 

@@ -90,8 +90,6 @@ extern f32 FLOAT_803e4848;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -123,6 +121,8 @@ extern f32 FLOAT_803e4848;
  * PAL Size: TODO
  */
 undefined4
+#pragma scheduling on
+#pragma peephole on
 FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
              , int param_11, int param_12, undefined4 param_13, undefined4 param_14, undefined4 param_15,
@@ -429,8 +429,6 @@ extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 /* Carryable impact state machine that spawns break particles, hides, then respawns. */
-#pragma scheduling off
-#pragma peephole off
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3AF8;
@@ -456,6 +454,8 @@ extern void fn_80098B18(int obj, f32 scale, int type, int a, int b, int c);
 extern int cMenuGetSelectedItem(void);
 extern void* getTrickyObject(void);
 
+#pragma scheduling off
+#pragma peephole off
 void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -665,18 +665,12 @@ checked_vine_use:
 }
 
 /* Fall_Ladders_free: expgfx interface freeObject callback. */
-#pragma scheduling on
-#pragma peephole on
 void Fall_Ladders_free(int obj);
 
 /* coldwatercontrol_init: set float field + OR flag bits. */
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling on
 
 /* landed_arwing_free: free child object + detach link. */
-#pragma scheduling off
 
 /* landed_arwing_render: visible-guarded render with extra call. */
 
@@ -704,16 +698,10 @@ void Fall_Ladders_free(int obj);
 
 
 #pragma dont_inline on
-#pragma peephole on
 #pragma dont_inline reset
 
-#pragma peephole off
-#pragma peephole reset
 
-#pragma scheduling on
 
-#pragma scheduling off
-#pragma peephole off
 
 
 

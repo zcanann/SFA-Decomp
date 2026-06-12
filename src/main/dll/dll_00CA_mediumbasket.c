@@ -112,6 +112,8 @@ extern void* PTR_DAT_80320998;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8015ad60(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   short* param_9, int param_10)
@@ -2529,14 +2531,6 @@ return0:
 }
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "ghidra_import.h"
 #include "main/obj_placement.h"
@@ -2565,8 +2559,6 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void dll_CA_update(int obj, int p2, int p3)
 {
     extern void Sfx_PlayFromObject(int obj, int sfx);
@@ -2648,11 +2640,7 @@ void dll_CA_update(int obj, int p2, int p3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
-#pragma scheduling off
-#pragma peephole off
 int fn_8015E3A0(int obj, int p2);
 
 /*
@@ -2669,8 +2657,6 @@ int fn_8015E3A0(int obj, int p2);
  * PAL Size: TODO
  */
 
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -2685,8 +2671,6 @@ int fn_8015E3A0(int obj, int p2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -2716,8 +2700,6 @@ int fn_8015E3A0(int obj, int p2);
  * PAL Size: TODO
  */
 
-#pragma scheduling off
-#pragma peephole off
 
 #pragma dont_inline on
 void fn_8015DAE8(void);
@@ -2804,8 +2786,6 @@ int fn_8015E5DC(short* obj, GroundBaddieState* p);
  * PAL Size: TODO
  */
 
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -2821,8 +2801,6 @@ int fn_8015E5DC(short* obj, GroundBaddieState* p);
  * PAL Size: TODO
  */
 
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -2851,12 +2829,8 @@ int fn_8015E5DC(short* obj, GroundBaddieState* p);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline reset
 
 static inline u8 scarab_isObjectInList(void* o);
@@ -2874,8 +2848,6 @@ static inline u8 scarab_isObjectInList(void* o);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -2890,8 +2862,6 @@ static inline u8 scarab_isObjectInList(void* o);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -2912,8 +2882,6 @@ static inline u8 scarab_isObjectInList(void* o);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -3028,6 +2996,8 @@ static inline u8 scarab_isObjectInList(void* o);
  */
 
 /* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling on
+#pragma peephole on
 void dll_CA_release_nop(void)
 {
 }
@@ -3050,19 +3020,13 @@ void chukchuk_initialise(void);
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 
-#pragma scheduling off
-#pragma peephole off
 void chukchuk_init(u8* obj, u8* params);
-#pragma scheduling on
-#pragma peephole on
 void iceball_hitDetect(void);
 
 void iceball_release(void);
 
 void iceball_initialise(void);
 
-#pragma scheduling off
-#pragma peephole off
 
 /* 8b "li r3, N; blr" returners. */
 int chukchuk_getExtraSize(void);
@@ -3085,47 +3049,33 @@ void iceball_free(void);
 void chukchuk_update(short* obj);
 
 /* chukchuk_setScale (52B). If low-byte of arg2 (u8) == 0x80, call Sfx_PlayFromObject(obj, SFXkr_jump1). */
-#pragma scheduling on
-#pragma peephole on
 void chukchuk_setScale(int obj, int v);
 
 /* iceball_init (60B). Sets ->f4 = 0xb4, calls ObjHits_DisableObject(obj), then stb 0xff at 0x36. */
-#pragma scheduling off
-#pragma peephole off
 void iceball_init(void* obj);
 
 /* fn_8016050C (32B). Returns 3 if (s8)obj[0x354] < 1 else 6. */
-#pragma scheduling on
 
 /* grimble_stateHandlerB03 (32B). Returns 5 if (s8)obj[0x354] < 1 else 1. */
 
 /* fn_8015E00C (56B). Two-tier select: <1 -> 3, else if obj[0x346]!=0 -> 6 else 0. */
 
 /* grimble_stateHandlerB05 (92B). If obj2->27b != 0, clear obj->b8->405, call GameBit_Set twice. */
-#pragma scheduling off
 
 /* fn_801603E8 (84B). If obj2->27b != 0, vtable call through gBaddieControlInterface with (obj, x->unk3F0, -1, 0). */
 
 /* dll_CB_hitDetect (60B). Vtable dispatch through gPlayerInterface with extra args (obj->b8, lbl_803AC5E8). */
-#pragma peephole on
 
 /* dll_CB_render (64B). Render variant: if visible && !obj->f4 then objRenderFn(lbl_803E2E8C). */
-#pragma scheduling on
-#pragma peephole off
 
 /* fn_801605A8 (44B). Writes float+state fields into obj and copies two halfwords to out. */
-#pragma scheduling off
-#pragma peephole on
 
 /* fn_80160690 (96B). Like fn_801605A8 but with extra stfs at 0x2a0 and a vtable call. */
 
 /* Drift-recovery: add new fns with v1.0 names to capture asm symbols. */
 
-#pragma peephole off
 
-#pragma peephole on
 
-#pragma peephole off
 
 ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
     {

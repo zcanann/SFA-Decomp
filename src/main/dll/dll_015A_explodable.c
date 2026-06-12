@@ -39,6 +39,8 @@ extern f32 lbl_803E4FF4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void fn_blasted_init_v11_unused(int param_1, int param_2)
 {
     int iVar1;

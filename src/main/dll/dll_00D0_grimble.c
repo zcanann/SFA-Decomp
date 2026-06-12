@@ -101,8 +101,6 @@ extern f32 lbl_803E2F20;
 extern f32 lbl_803E2F24;
 extern f32 lbl_803E2F28;
 
-#pragma scheduling off
-#pragma peephole off
 int grimble_stateHandlerA02(int obj, char* state, f32 arg)
 {
     extern double sqrtf(double x); /* #57 */
@@ -956,13 +954,13 @@ int grimble_getObjectTypeId(void) { return 0x59; }
 int cannonclaw_getExtraSize(void);
 
 #pragma dont_inline on
-#pragma scheduling off
 void grimble_initialiseStateHandlerTables(void);
 #pragma dont_inline reset
 void grimble_initialise(void) { grimble_initialiseStateHandlerTables(); }
 
 extern f32 lbl_803E2F30;
 
+#pragma scheduling off
 #pragma peephole off
 void grimble_free(int obj)
 {
@@ -997,15 +995,7 @@ ObjectDescriptor gGrimbleObjDescriptor = {
 };
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
@@ -1039,8 +1029,6 @@ ObjectDescriptor gGrimbleObjDescriptor = {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -1069,8 +1057,6 @@ ObjectDescriptor gGrimbleObjDescriptor = {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -1085,12 +1071,8 @@ ObjectDescriptor gGrimbleObjDescriptor = {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 
 void tumbleweedbush_free(void);
 
@@ -1145,5 +1127,3 @@ ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
     },
     0,
 };
-#pragma scheduling reset
-#pragma peephole reset

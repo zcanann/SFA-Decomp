@@ -75,6 +75,8 @@ extern f32 lbl_803E3CC8;
  * PAL Size: TODO
  */
 undefined4
+#pragma scheduling on
+#pragma peephole on
 FUN_801659b8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, short* param_9, uint* param_10,
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
@@ -1345,17 +1347,7 @@ void fn_80166444(int obj, int state)
 }
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 #include "main/dll/landedArwing.h"
 #include "main/game_object.h"
 #include "main/dll/treasurechest_state.h"
@@ -1697,5 +1689,3 @@ void fn_80167550(int* obj)
 }
 
 void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte);
-#pragma scheduling reset
-#pragma peephole reset
