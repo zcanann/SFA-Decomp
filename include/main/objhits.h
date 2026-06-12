@@ -288,6 +288,7 @@ void ObjHits_CheckTrackContact(int objA,int objB);
 void ObjHits_Update(int objectCount);
 void ObjHits_SetTargetMask(int obj,u8 targetMask);
 void ObjHits_ClearHitVolumes(int obj);
+void ObjHits_SetHitVolumeMasks(int obj,int hitVolume,int hitType,int sourceMask);
 void ObjHits_SetHitVolumeSlot(u32 obj,int hitVolume,int hitType,int sourceSlot);
 void ObjHits_ClearSourceMask(int obj,int sourceMask);
 void ObjHits_SetSourceMask(int obj,u8 sourceMask);

@@ -7,14 +7,11 @@
 #include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/smallbasket.h"
+#include "main/objhits.h"
 
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006824();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_SetHitVolumeMasks();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
 extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjLink_AttachChild();
 extern undefined8 ObjPath_GetPointWorldPosition();
@@ -507,7 +504,7 @@ void smallbasket_initTailModelState(int* obj, int* st)
                     *(f32*)((char*)fbase + off), 0, 0);
     }
     *(f32*)((char*)st + 0x328) = lbl_803E2C58;
-    ObjHits_SetHitVolumeMasks(obj, 0xe, 1, 0xfff);
+    ObjHits_SetHitVolumeMasks((int)obj, 0xe, 1, 0xfff);
     *(int**)((char*)st + 0x36c) = allocModelStruct2((int)lbl_8031FC2C, 5);
     tailFn_80026c38(*(int**)((char*)st + 0x36c), lbl_803E2C8C, lbl_803E2C90, lbl_803E2C94);
     ((BaddieState*)st)->reactionFlags = ((BaddieState*)st)->reactionFlags | 0x100;
@@ -862,12 +859,12 @@ void fn_8015A924(int* obj, u8* state)
     if (((GameObject*)obj)->anim.currentMove == 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8;
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((int)obj);
     }
     else
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8;
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((int)obj);
     }
 
     if ((((BaddieState*)state)->controlFlags & 0x80000000) != 0 && ((BaddieState*)state)->seqEntryIndex <= 1)
@@ -939,14 +936,14 @@ void fn_80157558(s16* obj, u8* state)
 
     if (lbl_803E2B18 != *(f32*)(state + 0x328))
     {
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((int)obj);
         if (((GameObject*)obj)->anim.currentMove != 5)
         {
             fn_8014D08C((int*)obj, (int*)state, 5, lbl_803DBCEC, 0, 0);
         }
         else if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
-            ObjHits_EnableObject(obj);
+            ObjHits_EnableObject((int)obj);
             *(f32*)(state + 0x328) = lbl_803E2B18;
         }
         ((GameObject*)obj)->anim.alpha = 0xff;
@@ -967,7 +964,7 @@ void fn_80157558(s16* obj, u8* state)
         ((GameObject*)obj)->anim.velocityX = z;
         ((GameObject*)obj)->anim.velocityY = z;
         ((GameObject*)obj)->anim.velocityZ = z;
-        ObjHits_SetHitVolumeSlot(obj, 9, 1, -1);
+        ObjHits_SetHitVolumeSlot((int)obj, 9, 1, -1);
         ang = getAngle(((GameObject*)obj)->anim.localPosX - *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0xc),
                        ((GameObject*)obj)->anim.localPosZ - *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0x14)) &
             0xffff;
@@ -985,7 +982,7 @@ void fn_80157558(s16* obj, u8* state)
             int t = (s16)turnRaw;
             mag = (u16)(t >= 0 ? t : -t);
         }
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((int)obj);
         grabbed = ((BaddieState*)state)->controlFlags & 0x40000000;
         if (grabbed != 0 && ((GameObject*)obj)->anim.currentMove == 6)
         {
@@ -1345,14 +1342,14 @@ void fn_80157004(s16* obj, u8* state)
 
     if (lbl_803E2B18 != *(f32*)(state + 0x328))
     {
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((int)obj);
         if (((GameObject*)obj)->anim.currentMove != 5)
         {
             fn_8014D08C((int*)obj, (int*)state, 5, lbl_803DBCEC, 0, 0);
         }
         else if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
         {
-            ObjHits_EnableObject(obj);
+            ObjHits_EnableObject((int)obj);
             *(f32*)(state + 0x328) = lbl_803E2B18;
         }
         ((GameObject*)obj)->anim.alpha = 0xff;
