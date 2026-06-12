@@ -46,12 +46,7 @@ typedef struct ShopItemState
     u8 pad98[0xEC - 0x98];
 } ShopItemState;
 
-STATIC_ASSERT (
-sizeof
-(ShopItemState)
-==
-0xEC
-);
+STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 
 /* shopkeeper_getExtraSize == 0x9d8. */
 typedef struct ShopkeeperState
@@ -81,20 +76,8 @@ typedef struct ShopkeeperState
     u8 pad9D7;
 } ShopkeeperState;
 
-STATIC_ASSERT (
-sizeof
-(ShopkeeperState)
-==
-0x9D8
-);
-STATIC_ASSERT (offsetof
-(ShopkeeperState
-,
-msgStack
-)
-==
-0x9B0
-);
+STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
+STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
 
 extern uint GameBit_Get(int eventId);

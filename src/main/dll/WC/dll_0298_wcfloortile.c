@@ -23,69 +23,15 @@ typedef struct WcFloorTileSetup
     u8 pad1C[0x24 - 0x1C];
 } WcFloorTileSetup;
 
-STATIC_ASSERT (
-sizeof
-(WcFloorTileState)
-==
-0x8
-);
-STATIC_ASSERT (offsetof
-(WcFloorTileState
-,
-shakeTime
-)
-==
-0x00
-);
-STATIC_ASSERT (offsetof
-(WcFloorTileState
-,
-shakeMag
-)
-==
-0x04
-);
-STATIC_ASSERT (offsetof
-(WcFloorTileState
-,
-phase
-)
-==
-0x06
-);
-STATIC_ASSERT (offsetof
-(WcFloorTileState
-,
-flags
-)
-==
-0x07
-);
+STATIC_ASSERT(sizeof(WcFloorTileState) == 0x8);
+STATIC_ASSERT(offsetof(WcFloorTileState, shakeTime) == 0x00);
+STATIC_ASSERT(offsetof(WcFloorTileState, shakeMag) == 0x04);
+STATIC_ASSERT(offsetof(WcFloorTileState, phase) == 0x06);
+STATIC_ASSERT(offsetof(WcFloorTileState, flags) == 0x07);
 
-STATIC_ASSERT (
-sizeof
-(WcFloorTileSetup)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(WcFloorTileSetup
-,
-base
-.
-posY
-)
-==
-0x0C
-);
-STATIC_ASSERT (offsetof
-(WcFloorTileSetup
-,
-eventId
-)
-==
-0x1A
-);
+STATIC_ASSERT(sizeof(WcFloorTileSetup) == 0x24);
+STATIC_ASSERT(offsetof(WcFloorTileSetup, base . posY) == 0x0C);
+STATIC_ASSERT(offsetof(WcFloorTileSetup, eventId) == 0x1A);
 
 int wcfloortile_getExtraSize(void) { return 8; }
 

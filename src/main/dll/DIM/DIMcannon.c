@@ -39,12 +39,7 @@ typedef struct ImAnimSpacecraftState
     u8 flags; /* 0x03: 2 = blink phase, 4/8 = SeqFn toggles */
 } ImAnimSpacecraftState;
 
-STATIC_ASSERT (
-sizeof
-(ImAnimSpacecraftState)
-==
-0x4
-);
+STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
 /* imspacethruster_getExtraSize == 0xc. */
 typedef struct ImSpaceThrusterState
@@ -56,12 +51,7 @@ typedef struct ImSpaceThrusterState
     void* bufB; /* 0x08 */
 } ImSpaceThrusterState;
 
-STATIC_ASSERT (
-sizeof
-(ImSpaceThrusterState)
-==
-0xC
-);
+STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
 
 /* link_levcontrol_getExtraSize == 0x10. */
 typedef struct LinkLevControlState
@@ -73,12 +63,7 @@ typedef struct LinkLevControlState
     int latch; /* 0x0c: SCGameBitLatch block */
 } LinkLevControlState;
 
-STATIC_ASSERT (
-sizeof
-(LinkLevControlState)
-==
-0x10
-);
+STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
 
 /* lavaball1be extra (getExtraSize 0x14 for the non-0x1fa variant). */
 typedef struct Lavaball1beState
@@ -92,12 +77,7 @@ typedef struct Lavaball1beState
     u8 pad12[2];
 } Lavaball1beState;
 
-STATIC_ASSERT (
-sizeof
-(Lavaball1beState)
-==
-0x14
-);
+STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 /* lavaball1bf_getExtraSize == 0x1c (launcher). */
 typedef struct Lavaball1bfState
@@ -114,12 +94,7 @@ typedef struct Lavaball1bfState
     u8 soloLatch; /* 0x1b */
 } Lavaball1bfState;
 
-STATIC_ASSERT (
-sizeof
-(Lavaball1bfState)
-==
-0x1C
-);
+STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
 static inline int* DIMcannon_GetActiveModel(void* obj)
 {

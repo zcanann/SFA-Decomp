@@ -87,12 +87,7 @@ typedef struct SBCloudBallState
     f32 fadeTimer; /* nonzero = despawning */
 } SBCloudBallState;
 
-STATIC_ASSERT (
-sizeof
-(SBCloudBallState)
-==
-0x24
-);
+STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
 
 /*
  * Per-object extra state for the ShipBattle fireball projectile
@@ -110,12 +105,7 @@ typedef struct SBFireBallState
     u8 pad15[3];
 } SBFireBallState;
 
-STATIC_ASSERT (
-sizeof
-(SBFireBallState)
-==
-0x18
-);
+STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
 
 /*
  * Per-object extra state for the ShipBattle kyte cage
@@ -129,12 +119,7 @@ typedef struct SBKyteCageState
     u8 pad06[2];
 } SBKyteCageState;
 
-STATIC_ASSERT (
-sizeof
-(SBKyteCageState)
-==
-0x8
-);
+STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 
 /*
  * Per-object extra state for the ShipBattle chain segment
@@ -154,12 +139,7 @@ typedef struct ShipBattleState
     u8 unk70[0x140 - 0x70];
 } ShipBattleState;
 
-STATIC_ASSERT (
-sizeof
-(ShipBattleState)
-==
-0x140
-);
+STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
 
 extern undefined4 getLActions();

@@ -27,82 +27,16 @@ typedef struct TimerState
     u8 padE[0x20 - 0xE];
 } TimerState;
 
-STATIC_ASSERT (offsetof
-(TimerSetup
-,
-mode
-)
-==
-0x19
-);
-STATIC_ASSERT (offsetof
-(TimerSetup
-,
-durationMinutes
-)
-==
-0x1A
-);
-STATIC_ASSERT (offsetof
-(TimerSetup
-,
-expiredGameBit
-)
-==
-0x1E
-);
-STATIC_ASSERT (offsetof
-(TimerSetup
-,
-startGameBit
-)
-==
-0x20
-);
-STATIC_ASSERT (
-sizeof
-(TimerSetup)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(TimerState
-,
-lightSlot
-)
-==
-0x04
-);
-STATIC_ASSERT (offsetof
-(TimerState
-,
-lightScale
-)
-==
-0x08
-);
-STATIC_ASSERT (offsetof
-(TimerState
-,
-mode
-)
-==
-0x0C
-);
-STATIC_ASSERT (offsetof
-(TimerState
-,
-flags
-)
-==
-0x0D
-);
-STATIC_ASSERT (
-sizeof
-(TimerState)
-==
-0x20
-);
+STATIC_ASSERT(offsetof(TimerSetup, mode) == 0x19);
+STATIC_ASSERT(offsetof(TimerSetup, durationMinutes) == 0x1A);
+STATIC_ASSERT(offsetof(TimerSetup, expiredGameBit) == 0x1E);
+STATIC_ASSERT(offsetof(TimerSetup, startGameBit) == 0x20);
+STATIC_ASSERT(sizeof(TimerSetup) == 0x24);
+STATIC_ASSERT(offsetof(TimerState, lightSlot) == 0x04);
+STATIC_ASSERT(offsetof(TimerState, lightScale) == 0x08);
+STATIC_ASSERT(offsetof(TimerState, mode) == 0x0C);
+STATIC_ASSERT(offsetof(TimerState, flags) == 0x0D);
+STATIC_ASSERT(sizeof(TimerState) == 0x20);
 
 
 int timer_getExtraSize(void) { return 0x20; }

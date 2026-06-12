@@ -34,106 +34,19 @@ typedef struct DRChimmeyObject
     DRChimmeyState* state;
 } DRChimmeyObject;
 
-STATIC_ASSERT (
-sizeof
-(DRChimmeyState)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(DRChimmeyState
-,
-timerDuration
-)
-==
-0x0c
-);
-STATIC_ASSERT (offsetof
-(DRChimmeyState
-,
-timer
-)
-==
-0x10
-);
-STATIC_ASSERT (offsetof
-(DRChimmeyState
-,
-completionGameBit
-)
-==
-0x14
-);
-STATIC_ASSERT (offsetof
-(DRChimmeyState
-,
-offeringsRemaining
-)
-==
-0x16
-);
-STATIC_ASSERT (offsetof
-(DRChimmeyState
-,
-eventActive
-)
-==
-0x17
-);
-STATIC_ASSERT (
-sizeof
-(DRChimmeySetup)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(DRChimmeySetup
-,
-yawByte
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(DRChimmeySetup
-,
-completionGameBit
-)
-==
-0x1e
-);
-STATIC_ASSERT (offsetof
-(DRChimmeySetup
-,
-enableGameBit
-)
-==
-0x20
-);
-STATIC_ASSERT (offsetof
-(DRChimmeyObject
-,
-setup
-)
-==
-0x4c
-);
-STATIC_ASSERT (offsetof
-(DRChimmeyObject
-,
-renderFlags
-)
-==
-0xaf
-);
-STATIC_ASSERT (offsetof
-(DRChimmeyObject
-,
-state
-)
-==
-0xb8
-);
+STATIC_ASSERT(sizeof(DRChimmeyState) == 0x18);
+STATIC_ASSERT(offsetof(DRChimmeyState, timerDuration) == 0x0c);
+STATIC_ASSERT(offsetof(DRChimmeyState, timer) == 0x10);
+STATIC_ASSERT(offsetof(DRChimmeyState, completionGameBit) == 0x14);
+STATIC_ASSERT(offsetof(DRChimmeyState, offeringsRemaining) == 0x16);
+STATIC_ASSERT(offsetof(DRChimmeyState, eventActive) == 0x17);
+STATIC_ASSERT(sizeof(DRChimmeySetup) == 0x24);
+STATIC_ASSERT(offsetof(DRChimmeySetup, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(DRChimmeySetup, completionGameBit) == 0x1e);
+STATIC_ASSERT(offsetof(DRChimmeySetup, enableGameBit) == 0x20);
+STATIC_ASSERT(offsetof(DRChimmeyObject, setup) == 0x4c);
+STATIC_ASSERT(offsetof(DRChimmeyObject, renderFlags) == 0xaf);
+STATIC_ASSERT(offsetof(DRChimmeyObject, state) == 0xb8);
 
 int drchimmey_getExtraSize(void) { return 0x18; }
 

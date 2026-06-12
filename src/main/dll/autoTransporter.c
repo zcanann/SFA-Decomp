@@ -25,12 +25,7 @@ typedef struct DoorF4State
     u8 pad23;
 } DoorF4State;
 
-STATIC_ASSERT (
-sizeof
-(DoorF4State)
-==
-0x24
-);
+STATIC_ASSERT(sizeof(DoorF4State) == 0x24);
 
 /*
  * Per-object extra state for the sidekick (Tricky) ball

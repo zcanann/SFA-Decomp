@@ -94,12 +94,7 @@ typedef struct Dim2ConveyorState
     int musicHold; /* 0x10: frames left keeping music track 0xdf alive */
 } Dim2ConveyorState;
 
-STATIC_ASSERT (
-sizeof
-(Dim2ConveyorState)
-==
-0x14
-);
+STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
 /* dll_1D6_getExtraSize == 0x20 (crusher platform). */
 typedef struct Dll1D6State
@@ -118,12 +113,7 @@ typedef struct Dll1D6State
     u8 slot; /* 0x1f: index into the lbl_803DBF20 slot table */
 } Dll1D6State;
 
-STATIC_ASSERT (
-sizeof
-(Dll1D6State)
-==
-0x20
-);
+STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
 
 /* dimtruthhornice_getExtraSize == 0x8. */
 typedef struct TruthHornIceState
@@ -134,12 +124,7 @@ typedef struct TruthHornIceState
     f32 timer; /* 0x04 */
 } TruthHornIceState;
 
-STATIC_ASSERT (
-sizeof
-(TruthHornIceState)
-==
-0x8
-);
+STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
 
 /* dim2snowball_getExtraSize == 0xb0 (curve walker head + roll state). */
 typedef struct Dim2SnowballState
@@ -166,12 +151,7 @@ typedef struct Dim2SnowballState
     u8 padAD[3];
 } Dim2SnowballState;
 
-STATIC_ASSERT (
-sizeof
-(Dim2SnowballState)
-==
-0xb0
-);
+STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 /* dim2pathgenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
  * tables filled by the RomCurve interface). */
@@ -192,12 +172,7 @@ typedef struct Dim2PathGeneratorState
     u8 flags; /* 0x9a7: 1 = toggle, 2 = curve built, 4 = enabled */
 } Dim2PathGeneratorState;
 
-STATIC_ASSERT (
-sizeof
-(Dim2PathGeneratorState)
-==
-0x9a8
-);
+STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {

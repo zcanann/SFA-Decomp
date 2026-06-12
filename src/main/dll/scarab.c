@@ -2518,20 +2518,8 @@ typedef struct ChukChukState
     u8 pad16[2];
 } ChukChukState;
 
-STATIC_ASSERT (
-sizeof
-(ChukChukState)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(ChukChukState
-,
-flags
-)
-==
-0x12
-);
+STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
+STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 
 #pragma scheduling off
 #pragma peephole off

@@ -253,8 +253,7 @@ STATIC_ASSERT(offsetof(DIMbossTopState, steamFlags) == 0xB6);
 STATIC_ASSERT(sizeof(DIMbossAnimScratch) == 0x6D8);
 STATIC_ASSERT(offsetof(DIMbossAnimScratch, animController) == DIMBOSS_ANIM_CONTROLLER_OFFSET);
 STATIC_ASSERT(offsetof(DIMbossAnimScratch, animTable) == DIMBOSS_ANIM_TABLE_OFFSET);
-STATIC_ASSERT(offsetof(DIMbossAnimScratch, hitDetectAnimTable) ==
-              DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET);
+STATIC_ASSERT(offsetof(DIMbossAnimScratch, hitDetectAnimTable) == DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET);
 
 STATIC_ASSERT(sizeof(DIMbossRuntime) == DIMBOSS_RUNTIME_SIZE);
 STATIC_ASSERT(offsetof(DIMbossRuntime, field270) == 0x270);

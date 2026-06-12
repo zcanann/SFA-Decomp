@@ -26,42 +26,11 @@ typedef struct WCTempleState
     u8 pad05[WCTEMPLE_EXTRA_SIZE - 0x05];
 } WCTempleState;
 
-STATIC_ASSERT (
-sizeof
-(WCTempleState)
-==
-WCTEMPLE_EXTRA_SIZE
-);
-STATIC_ASSERT (
-sizeof
-(WCTempleSetup)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(WCTempleState
-,
-timer
-)
-==
-WCTEMPLE_STATE_TIMER
-);
-STATIC_ASSERT (offsetof
-(WCTempleState
-,
-triggerSlot
-)
-==
-WCTEMPLE_STATE_TRIGGER_SLOT
-);
-STATIC_ASSERT (offsetof
-(WCTempleSetup
-,
-type
-)
-==
-WCTEMPLE_SETUP_TYPE_OFFSET
-);
+STATIC_ASSERT(sizeof(WCTempleState) == WCTEMPLE_EXTRA_SIZE);
+STATIC_ASSERT(sizeof(WCTempleSetup) == 0x24);
+STATIC_ASSERT(offsetof(WCTempleState, timer) == WCTEMPLE_STATE_TIMER);
+STATIC_ASSERT(offsetof(WCTempleState, triggerSlot) == WCTEMPLE_STATE_TRIGGER_SLOT);
+STATIC_ASSERT(offsetof(WCTempleSetup, type) == WCTEMPLE_SETUP_TYPE_OFFSET);
 
 int wctemple_getExtraSize(void) { return WCTEMPLE_EXTRA_SIZE; }
 

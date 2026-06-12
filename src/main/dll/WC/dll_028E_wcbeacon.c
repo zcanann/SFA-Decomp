@@ -56,74 +56,15 @@ typedef struct WCBeaconState
     u8 pad06[WCBEACON_EXTRA_SIZE - 0x06];
 } WCBeaconState;
 
-STATIC_ASSERT (
-sizeof
-(WCBeaconState)
-==
-WCBEACON_EXTRA_SIZE
-);
-STATIC_ASSERT (
-sizeof
-(WCBeaconSetup)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(WCBeaconState
-,
-timer
-)
-==
-WCBEACON_STATE_TIMER
-);
-STATIC_ASSERT (offsetof
-(WCBeaconState
-,
-phase
-)
-==
-WCBEACON_STATE_PHASE
-);
-STATIC_ASSERT (offsetof
-(WCBeaconState
-,
-acceptedInteraction
-)
-==
-WCBEACON_STATE_ACCEPTED_INTERACTION
-);
-STATIC_ASSERT (offsetof
-(WCBeaconSetup
-,
-type
-)
-==
-WCBEACON_SETUP_TYPE_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCBeaconSetup
-,
-modelIndex
-)
-==
-WCBEACON_SETUP_MODEL_INDEX_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCBeaconSetup
-,
-solvedBit
-)
-==
-WCBEACON_SETUP_SOLVED_BIT_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCBeaconSetup
-,
-armBit
-)
-==
-WCBEACON_SETUP_ARM_BIT_OFFSET
-);
+STATIC_ASSERT(sizeof(WCBeaconState) == WCBEACON_EXTRA_SIZE);
+STATIC_ASSERT(sizeof(WCBeaconSetup) == 0x24);
+STATIC_ASSERT(offsetof(WCBeaconState, timer) == WCBEACON_STATE_TIMER);
+STATIC_ASSERT(offsetof(WCBeaconState, phase) == WCBEACON_STATE_PHASE);
+STATIC_ASSERT(offsetof(WCBeaconState, acceptedInteraction) == WCBEACON_STATE_ACCEPTED_INTERACTION);
+STATIC_ASSERT(offsetof(WCBeaconSetup, type) == WCBEACON_SETUP_TYPE_OFFSET);
+STATIC_ASSERT(offsetof(WCBeaconSetup, modelIndex) == WCBEACON_SETUP_MODEL_INDEX_OFFSET);
+STATIC_ASSERT(offsetof(WCBeaconSetup, solvedBit) == WCBEACON_SETUP_SOLVED_BIT_OFFSET);
+STATIC_ASSERT(offsetof(WCBeaconSetup, armBit) == WCBEACON_SETUP_ARM_BIT_OFFSET);
 
 int wcbeacon_aButtonCallback(int obj)
 {

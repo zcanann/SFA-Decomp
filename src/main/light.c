@@ -47,12 +47,7 @@ typedef struct SeqPointState
     u8 pad0F;
 } SeqPointState;
 
-STATIC_ASSERT (
-sizeof
-(SeqPointState)
-==
-0x10
-);
+STATIC_ASSERT(sizeof(SeqPointState) == 0x10);
 
 /*
  * --INFO--
@@ -450,12 +445,7 @@ typedef struct VfpDragHeadState
     u8 headIndex; /* from def+0x1A; matched against lbl_803DDCC6 */
 } VfpDragHeadState;
 
-STATIC_ASSERT (
-sizeof
-(VfpDragHeadState)
-==
-0xC
-);
+STATIC_ASSERT(sizeof(VfpDragHeadState) == 0xC);
 
 #pragma peephole off
 void vfpdraghead_init(int obj, int data)

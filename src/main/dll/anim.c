@@ -49,12 +49,7 @@ typedef struct DbStealerwormControl
     f32 randomTimer4C;
 } DbStealerwormControl;
 
-STATIC_ASSERT (
-sizeof
-(DbStealerwormControl)
-==
-0x50
-);
+STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
 
 /* dfplevelcontrol extra block (extraSize 0xC). */
 typedef struct DfpLevelControlState
@@ -67,12 +62,7 @@ typedef struct DfpLevelControlState
     u8 unk08[4];
 } DfpLevelControlState;
 
-STATIC_ASSERT (
-sizeof
-(DfpLevelControlState)
-==
-0xC
-);
+STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 
 /* dfpobjcreator extra block (extraSize 0x1C). */
 typedef struct DfpObjCreatorState
@@ -88,12 +78,7 @@ typedef struct DfpObjCreatorState
     u8 unk18[4];
 } DfpObjCreatorState;
 
-STATIC_ASSERT (
-sizeof
-(DfpObjCreatorState)
-==
-0x1C
-);
+STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 
 /* DFP_Torch extra block (extraSize 0x10). */
 typedef struct DfpTorchState
@@ -110,12 +95,7 @@ typedef struct DfpTorchState
     u8 unk0E[2];
 } DfpTorchState;
 
-STATIC_ASSERT (
-sizeof
-(DfpTorchState)
-==
-0x10
-);
+STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
 
 /* dll_22C (raising platform) extra block (extraSize 0x10). */
 typedef struct Dll22CState
@@ -130,12 +110,7 @@ typedef struct Dll22CState
     u8 unk0E[2];
 } Dll22CState;
 
-STATIC_ASSERT (
-sizeof
-(Dll22CState)
-==
-0x10
-);
+STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
 
 /* dbegg extra block: rom-curve walker + egg mode machine. */
 typedef struct DbEggState
@@ -156,14 +131,7 @@ typedef struct DbEggState
     f32 msg120;
 } DbEggState;
 
-STATIC_ASSERT (offsetof
-(DbEggState
-,
-mode
-)
-==
-0x118
-);
+STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
 
 /* dfpseqpoint extra block (extraSize 0x10). */
 typedef struct DfpSeqPointState
@@ -186,12 +154,7 @@ typedef struct DfpFlags7
     u8 rest : 5;
 } DfpFlags7;
 
-STATIC_ASSERT (
-sizeof
-(DfpSeqPointState)
-==
-0x10
-);
+STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
 /* drakorenergy extra block (extraSize 0xC). */
 typedef struct DrakorEnergyState
@@ -202,12 +165,7 @@ typedef struct DrakorEnergyState
     u8 unk09[3];
 } DrakorEnergyState;
 
-STATIC_ASSERT (
-sizeof
-(DrakorEnergyState)
-==
-0xC
-);
+STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
 /* chuka extra block (extraSize 0xC). */
 #include "main/dll/baddie/chuka.h"
@@ -418,12 +376,7 @@ typedef struct GCRobotBlastState
     u8 unk05[3];
 } GCRobotBlastState;
 
-STATIC_ASSERT (
-sizeof
-(GCRobotBlastState)
-==
-0x8
-);
+STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
 
 /* dbholecontrol1 extra block (extraSize 0xC). */
 typedef struct DbHoleControl1State
@@ -433,12 +386,7 @@ typedef struct DbHoleControl1State
     u8 unk08[4];
 } DbHoleControl1State;
 
-STATIC_ASSERT (
-sizeof
-(DbHoleControl1State)
-==
-0xC
-);
+STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
 extern undefined4 getLActions();
 extern undefined4 FUN_80006824();

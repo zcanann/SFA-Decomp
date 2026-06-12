@@ -672,130 +672,22 @@ typedef struct DusterState
     u8 pad1F;
 } DusterState;
 
-STATIC_ASSERT (
-sizeof
-(DusterStateFlags)
-==
-1
-);
-STATIC_ASSERT (
-sizeof
-(DusterState)
-==
-0x20
-);
-STATIC_ASSERT (offsetof
-(DusterState
-,
-moveStepScale
-)
-==
-0x00
-);
-STATIC_ASSERT (offsetof
-(DusterState
-,
-floorY
-)
-==
-0x04
-);
-STATIC_ASSERT (offsetof
-(DusterState
-,
-settleTimer
-)
-==
-0x08
-);
-STATIC_ASSERT (offsetof
-(DusterState
-,
-hitReactTimer
-)
-==
-0x0a
-);
-STATIC_ASSERT (offsetof
-(DusterState
-,
-completeGameBit
-)
-==
-0x0c
-);
-STATIC_ASSERT (offsetof
-(DusterState
-,
-activeGameBit
-)
-==
-0x0e
-);
-STATIC_ASSERT (offsetof
-(DusterState
-,
-heldObjectId
-)
-==
-0x10
-);
-STATIC_ASSERT (offsetof
-(DusterState
-,
-driftDir
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(DusterState
-,
-hitReactActive
-)
-==
-0x19
-);
-STATIC_ASSERT (offsetof
-(DusterState
-,
-priorityHit
-)
-==
-0x1a
-);
-STATIC_ASSERT (offsetof
-(DusterState
-,
-active
-)
-==
-0x1b
-);
-STATIC_ASSERT (offsetof
-(DusterState
-,
-complete
-)
-==
-0x1c
-);
-STATIC_ASSERT (offsetof
-(DusterState
-,
-useLaunchVelocity
-)
-==
-0x1d
-);
-STATIC_ASSERT (offsetof
-(DusterState
-,
-flags
-)
-==
-0x1e
-);
+STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
+STATIC_ASSERT(sizeof(DusterState) == 0x20);
+STATIC_ASSERT(offsetof(DusterState, moveStepScale) == 0x00);
+STATIC_ASSERT(offsetof(DusterState, floorY) == 0x04);
+STATIC_ASSERT(offsetof(DusterState, settleTimer) == 0x08);
+STATIC_ASSERT(offsetof(DusterState, hitReactTimer) == 0x0a);
+STATIC_ASSERT(offsetof(DusterState, completeGameBit) == 0x0c);
+STATIC_ASSERT(offsetof(DusterState, activeGameBit) == 0x0e);
+STATIC_ASSERT(offsetof(DusterState, heldObjectId) == 0x10);
+STATIC_ASSERT(offsetof(DusterState, driftDir) == 0x18);
+STATIC_ASSERT(offsetof(DusterState, hitReactActive) == 0x19);
+STATIC_ASSERT(offsetof(DusterState, priorityHit) == 0x1a);
+STATIC_ASSERT(offsetof(DusterState, active) == 0x1b);
+STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
+STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
+STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 
 #pragma scheduling off
 #pragma peephole off

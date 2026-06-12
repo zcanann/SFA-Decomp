@@ -47,52 +47,12 @@ typedef struct Dll19ESetup
     s16 gameBitId;
 } Dll19ESetup;
 
-STATIC_ASSERT (
-sizeof
-(Dll19ESetup)
-==
-0x20
-);
-STATIC_ASSERT (offsetof
-(Dll19ESetup
-,
-objectType
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(Dll19ESetup
-,
-mode
-)
-==
-0x19
-);
-STATIC_ASSERT (offsetof
-(Dll19ESetup
-,
-scaleTimer
-)
-==
-0x1A
-);
-STATIC_ASSERT (offsetof
-(Dll19ESetup
-,
-sequenceIndex
-)
-==
-0x1C
-);
-STATIC_ASSERT (offsetof
-(Dll19ESetup
-,
-gameBitId
-)
-==
-0x1E
-);
+STATIC_ASSERT(sizeof(Dll19ESetup) == 0x20);
+STATIC_ASSERT(offsetof(Dll19ESetup, objectType) == 0x18);
+STATIC_ASSERT(offsetof(Dll19ESetup, mode) == 0x19);
+STATIC_ASSERT(offsetof(Dll19ESetup, scaleTimer) == 0x1A);
+STATIC_ASSERT(offsetof(Dll19ESetup, sequenceIndex) == 0x1C);
+STATIC_ASSERT(offsetof(Dll19ESetup, gameBitId) == 0x1E);
 
 /*
  * --INFO--

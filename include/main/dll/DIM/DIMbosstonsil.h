@@ -108,25 +108,18 @@ STATIC_ASSERT(offsetof(DIMbosstonsilState, field270) == DIMBOSSTONSIL_FIELD270_O
 STATIC_ASSERT(offsetof(DIMbosstonsilState, scale) == DIMBOSSTONSIL_SCALE_OFFSET);
 STATIC_ASSERT(offsetof(DIMbosstonsilState, active) == DIMBOSSTONSIL_ACTIVE_OFFSET);
 STATIC_ASSERT(offsetof(DIMbosstonsilState, stunReady) == DIMBOSSTONSIL_STUN_READY_OFFSET);
-STATIC_ASSERT(offsetof(DIMbosstonsilState, recoveryTimer) ==
-              DIMBOSSTONSIL_RECOVERY_TIMER_OFFSET);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, recoveryTimer) == DIMBOSSTONSIL_RECOVERY_TIMER_OFFSET);
 STATIC_ASSERT(offsetof(DIMbosstonsilState, targetObject) == 0x2D0);
 STATIC_ASSERT(offsetof(DIMbosstonsilState, hitResult) == DIMBOSSTONSIL_HIT_RESULT_OFFSET);
-STATIC_ASSERT(offsetof(DIMbosstonsilState, animFinished) ==
-              DIMBOSSTONSIL_ANIM_FINISHED_OFFSET);
-STATIC_ASSERT(offsetof(DIMbosstonsilState, hitDamageCount) ==
-              DIMBOSSTONSIL_HIT_DAMAGE_COUNT_OFFSET);
-STATIC_ASSERT(offsetof(DIMbosstonsilState, hitPointsLeft) ==
-              DIMBOSSTONSIL_HIT_POINTS_LEFT_OFFSET);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, animFinished) == DIMBOSSTONSIL_ANIM_FINISHED_OFFSET);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, hitDamageCount) == DIMBOSSTONSIL_HIT_DAMAGE_COUNT_OFFSET);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, hitPointsLeft) == DIMBOSSTONSIL_HIT_POINTS_LEFT_OFFSET);
 STATIC_ASSERT(offsetof(DIMbosstonsilState, animPoints) == DIMBOSSTONSIL_ANIM_POINTS_OFFSET);
-STATIC_ASSERT(offsetof(DIMbosstonsilState, savedObjFieldC0) ==
-              DIMBOSSTONSIL_SAVED_OBJ_FIELD_C0_OFFSET);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, savedObjFieldC0) == DIMBOSSTONSIL_SAVED_OBJ_FIELD_C0_OFFSET);
 STATIC_ASSERT(offsetof(DIMbosstonsilState, animFrame) == DIMBOSSTONSIL_ANIM_FRAME_OFFSET);
-STATIC_ASSERT(offsetof(DIMbosstonsilState, eventGameBit) ==
-              DIMBOSSTONSIL_EVENT_GAMEBIT_OFFSET);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, eventGameBit) == DIMBOSSTONSIL_EVENT_GAMEBIT_OFFSET);
 STATIC_ASSERT(offsetof(DIMbosstonsilState, stateFlags) == DIMBOSSTONSIL_STATE_FLAGS_OFFSET);
-STATIC_ASSERT(offsetof(DIMbosstonsilState, hitReactMode) ==
-              DIMBOSSTONSIL_HIT_REACT_MODE_OFFSET);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, hitReactMode) == DIMBOSSTONSIL_HIT_REACT_MODE_OFFSET);
 
 extern DIMbosstonsilLight *gDIMbosstonsilLight;
 extern s8 gDIMbosstonsilRoutePhase;

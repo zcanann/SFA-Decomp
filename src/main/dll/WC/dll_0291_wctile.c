@@ -72,84 +72,16 @@ typedef struct WCTileSetup
     u8 pad1C[0x24 - 0x1C];
 } WCTileSetup;
 
-STATIC_ASSERT (
-sizeof
-(WCTileState)
-==
-WCTILE_EXTRA_SIZE
-);
-STATIC_ASSERT (offsetof
-(WCTileState
-,
-controller
-)
-==
-WCTILE_STATE_CONTROLLER
-);
-STATIC_ASSERT (offsetof
-(WCTileState
-,
-tileX
-)
-==
-WCTILE_STATE_TILE_X
-);
-STATIC_ASSERT (offsetof
-(WCTileState
-,
-tileY
-)
-==
-WCTILE_STATE_TILE_Y
-);
-STATIC_ASSERT (offsetof
-(WCTileState
-,
-targetTile
-)
-==
-WCTILE_STATE_TARGET_TILE
-);
-STATIC_ASSERT (offsetof
-(WCTileState
-,
-mode
-)
-==
-WCTILE_STATE_MODE
-);
-STATIC_ASSERT (
-sizeof
-(WCTileSetup)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(WCTileSetup
-,
-base
-.
-posY
-)
-==
-0x0c
-);
-STATIC_ASSERT (offsetof
-(WCTileSetup
-,
-modelIndex
-)
-==
-WCTILE_MODEL_INDEX_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCTileSetup
-,
-initialTile
-)
-==
-WCTILE_INITIAL_TILE_OFFSET
-);
+STATIC_ASSERT(sizeof(WCTileState) == WCTILE_EXTRA_SIZE);
+STATIC_ASSERT(offsetof(WCTileState, controller) == WCTILE_STATE_CONTROLLER);
+STATIC_ASSERT(offsetof(WCTileState, tileX) == WCTILE_STATE_TILE_X);
+STATIC_ASSERT(offsetof(WCTileState, tileY) == WCTILE_STATE_TILE_Y);
+STATIC_ASSERT(offsetof(WCTileState, targetTile) == WCTILE_STATE_TARGET_TILE);
+STATIC_ASSERT(offsetof(WCTileState, mode) == WCTILE_STATE_MODE);
+STATIC_ASSERT(sizeof(WCTileSetup) == 0x24);
+STATIC_ASSERT(offsetof(WCTileSetup, base . posY) == 0x0c);
+STATIC_ASSERT(offsetof(WCTileSetup, modelIndex) == WCTILE_MODEL_INDEX_OFFSET);
+STATIC_ASSERT(offsetof(WCTileSetup, initialTile) == WCTILE_INITIAL_TILE_OFFSET);
 
 #define WCTILE_STATE_IFACE(state) (*(WCTileIface **)(*(int *)((state)->controller + 0x68)))
 

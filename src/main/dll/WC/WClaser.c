@@ -93,138 +93,23 @@ typedef struct Dll1FBState
     u8 pad0A[2];
 } Dll1FBState;
 
-STATIC_ASSERT (
-sizeof
-(Dll1FBState)
-==
-0xc
-);
-STATIC_ASSERT (offsetof
-(Dll1FBState
-,
-baseMove
-)
-==
-0x04
-);
-STATIC_ASSERT (offsetof
-(Dll1FBState
-,
-triggerMode
-)
-==
-0x06
-);
-STATIC_ASSERT (offsetof
-(Dll1FBState
-,
-hideModel
-)
-==
-0x09
-);
-STATIC_ASSERT (
-sizeof
-(WMGalleonState)
-==
-0x10
-);
-STATIC_ASSERT (offsetof
-(WMGalleonState
-,
-savedX
-)
-==
-0x00
-);
-STATIC_ASSERT (offsetof
-(WMGalleonState
-,
-savedY
-)
-==
-0x04
-);
-STATIC_ASSERT (offsetof
-(WMGalleonState
-,
-savedZ
-)
-==
-0x08
-);
-STATIC_ASSERT (offsetof
-(WMGalleonState
-,
-mapEventsLatched
-)
-==
-0x0C
-);
-STATIC_ASSERT (offsetof
-(WMGalleonState
-,
-savedYaw
-)
-==
-0x0E
-);
-STATIC_ASSERT (offsetof
-(Dll1FBSetup
-,
-yawByte
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(Dll1FBSetup
-,
-baseMove
-)
-==
-0x19
-);
-STATIC_ASSERT (offsetof
-(Dll1FBSetup
-,
-triggerMode
-)
-==
-0x1a
-);
-STATIC_ASSERT (offsetof
-(Dll1FBSetup
-,
-objectParam
-)
-==
-0x1c
-);
-STATIC_ASSERT (offsetof
-(WMGalleonSetup
-,
-yawByte
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(WMSeqObjectSetup
-,
-yawByte
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(WMSeqObjectSetup
-,
-setupType
-)
-==
-0x19
-);
+STATIC_ASSERT(sizeof(Dll1FBState) == 0xc);
+STATIC_ASSERT(offsetof(Dll1FBState, baseMove) == 0x04);
+STATIC_ASSERT(offsetof(Dll1FBState, triggerMode) == 0x06);
+STATIC_ASSERT(offsetof(Dll1FBState, hideModel) == 0x09);
+STATIC_ASSERT(sizeof(WMGalleonState) == 0x10);
+STATIC_ASSERT(offsetof(WMGalleonState, savedX) == 0x00);
+STATIC_ASSERT(offsetof(WMGalleonState, savedY) == 0x04);
+STATIC_ASSERT(offsetof(WMGalleonState, savedZ) == 0x08);
+STATIC_ASSERT(offsetof(WMGalleonState, mapEventsLatched) == 0x0C);
+STATIC_ASSERT(offsetof(WMGalleonState, savedYaw) == 0x0E);
+STATIC_ASSERT(offsetof(Dll1FBSetup, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(Dll1FBSetup, baseMove) == 0x19);
+STATIC_ASSERT(offsetof(Dll1FBSetup, triggerMode) == 0x1a);
+STATIC_ASSERT(offsetof(Dll1FBSetup, objectParam) == 0x1c);
+STATIC_ASSERT(offsetof(WMGalleonSetup, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(WMSeqObjectSetup, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
 
 void WM_Galleon_update(int* obj)
 {

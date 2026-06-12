@@ -60,114 +60,20 @@ typedef struct WCTempleBriState
     u8 pad67;
 } WCTempleBriState;
 
-STATIC_ASSERT (
-sizeof
-(WCTempleBriState)
-==
-WCTEMPLEBRI_EXTRA_SIZE
-);
-STATIC_ASSERT (
-sizeof
-(WCTempleBriSetup)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(WCTempleBriState
-,
-maxY
-)
-==
-WCTEMPLEBRI_STATE_MAX_Y
-);
-STATIC_ASSERT (offsetof
-(WCTempleBriState
-,
-sortedOffsets
-)
-==
-WCTEMPLEBRI_STATE_SORTED_OFFSETS
-);
-STATIC_ASSERT (offsetof
-(WCTempleBriState
-,
-partFlags
-)
-==
-WCTEMPLEBRI_STATE_PART_FLAGS
-);
-STATIC_ASSERT (offsetof
-(WCTempleBriState
-,
-partCount
-)
-==
-WCTEMPLEBRI_STATE_PART_COUNT
-);
-STATIC_ASSERT (offsetof
-(WCTempleBriState
-,
-partAlpha
-)
-==
-WCTEMPLEBRI_STATE_PART_ALPHA
-);
-STATIC_ASSERT (offsetof
-(WCTempleBriState
-,
-active
-)
-==
-WCTEMPLEBRI_STATE_ACTIVE
-);
-STATIC_ASSERT (offsetof
-(WCTempleBriState
-,
-wavePhaseA
-)
-==
-WCTEMPLEBRI_STATE_WAVE_PHASE_A
-);
-STATIC_ASSERT (offsetof
-(WCTempleBriState
-,
-wavePhaseB
-)
-==
-WCTEMPLEBRI_STATE_WAVE_PHASE_B
-);
-STATIC_ASSERT (offsetof
-(WCTempleBriState
-,
-flags
-)
-==
-WCTEMPLEBRI_STATE_FLAGS
-);
-STATIC_ASSERT (offsetof
-(WCTempleBriSetup
-,
-type
-)
-==
-WCTEMPLEBRI_SETUP_TYPE_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCTempleBriSetup
-,
-modelIndex
-)
-==
-WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCTempleBriSetup
-,
-solvedBit
-)
-==
-WCTEMPLEBRI_SETUP_SOLVED_BIT_OFFSET
-);
+STATIC_ASSERT(sizeof(WCTempleBriState) == WCTEMPLEBRI_EXTRA_SIZE);
+STATIC_ASSERT(sizeof(WCTempleBriSetup) == 0x24);
+STATIC_ASSERT(offsetof(WCTempleBriState, maxY) == WCTEMPLEBRI_STATE_MAX_Y);
+STATIC_ASSERT(offsetof(WCTempleBriState, sortedOffsets) == WCTEMPLEBRI_STATE_SORTED_OFFSETS);
+STATIC_ASSERT(offsetof(WCTempleBriState, partFlags) == WCTEMPLEBRI_STATE_PART_FLAGS);
+STATIC_ASSERT(offsetof(WCTempleBriState, partCount) == WCTEMPLEBRI_STATE_PART_COUNT);
+STATIC_ASSERT(offsetof(WCTempleBriState, partAlpha) == WCTEMPLEBRI_STATE_PART_ALPHA);
+STATIC_ASSERT(offsetof(WCTempleBriState, active) == WCTEMPLEBRI_STATE_ACTIVE);
+STATIC_ASSERT(offsetof(WCTempleBriState, wavePhaseA) == WCTEMPLEBRI_STATE_WAVE_PHASE_A);
+STATIC_ASSERT(offsetof(WCTempleBriState, wavePhaseB) == WCTEMPLEBRI_STATE_WAVE_PHASE_B);
+STATIC_ASSERT(offsetof(WCTempleBriState, flags) == WCTEMPLEBRI_STATE_FLAGS);
+STATIC_ASSERT(offsetof(WCTempleBriSetup, type) == WCTEMPLEBRI_SETUP_TYPE_OFFSET);
+STATIC_ASSERT(offsetof(WCTempleBriSetup, modelIndex) == WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET);
+STATIC_ASSERT(offsetof(WCTempleBriSetup, solvedBit) == WCTEMPLEBRI_SETUP_SOLVED_BIT_OFFSET);
 
 #pragma peephole on
 void wctemplebri_updateModelWarp(int obj, int p2)

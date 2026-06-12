@@ -677,14 +677,7 @@ typedef struct ExpgfxCameraViewSlot
     f32 z;
 } ExpgfxCameraViewSlot;
 
-STATIC_ASSERT (offsetof
-(ExpgfxCameraViewSlot
-,
-x
-)
-==
-0x0C
-);
+STATIC_ASSERT(offsetof(ExpgfxCameraViewSlot, x) == 0x0C);
 
 /*
  * --INFO--

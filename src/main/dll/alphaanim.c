@@ -43,232 +43,36 @@ typedef struct IMMultiSeqState
     u8 flags;
 } IMMultiSeqState;
 
-STATIC_ASSERT (
-sizeof
-(DoorLockPlacement)
-==
-0x28
-);
-STATIC_ASSERT (offsetof
-(DoorLockPlacement
-,
-rotXByte
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(DoorLockPlacement
-,
-rotYByte
-)
-==
-0x19
-);
-STATIC_ASSERT (offsetof
-(DoorLockPlacement
-,
-rotZByte
-)
-==
-0x1A
-);
-STATIC_ASSERT (offsetof
-(DoorLockPlacement
-,
-flags
-)
-==
-0x1B
-);
-STATIC_ASSERT (offsetof
-(DoorLockPlacement
-,
-lockGameBit
-)
-==
-0x1C
-);
-STATIC_ASSERT (offsetof
-(DoorLockPlacement
-,
-modelBankIndex
-)
-==
-0x21
-);
-STATIC_ASSERT (offsetof
-(DoorLockPlacement
-,
-modeFlags
-)
-==
-0x26
-);
-STATIC_ASSERT (
-sizeof
-(DoorLockState)
-==
-0x1
-);
-STATIC_ASSERT (
-sizeof
-(SeqObjectPlacement)
-==
-0x28
-);
-STATIC_ASSERT (offsetof
-(SeqObjectPlacement
-,
-openGameBit
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(SeqObjectPlacement
-,
-triggerGameBit
-)
-==
-0x1A
-);
-STATIC_ASSERT (offsetof
-(SeqObjectPlacement
-,
-initialYaw
-)
-==
-0x1C
-);
-STATIC_ASSERT (offsetof
-(SeqObjectPlacement
-,
-flags
-)
-==
-0x1D
-);
-STATIC_ASSERT (offsetof
-(SeqObjectPlacement
-,
-triggerId
-)
-==
-0x1E
-);
-STATIC_ASSERT (offsetof
-(SeqObjectPlacement
-,
-modelBankIndex
-)
-==
-0x1F
-);
-STATIC_ASSERT (offsetof
-(SeqObjectPlacement
-,
-preemptSequenceId
-)
-==
-0x20
-);
-STATIC_ASSERT (offsetof
-(SeqObjectPlacement
-,
-sequenceParam
-)
-==
-0x22
-);
-STATIC_ASSERT (offsetof
-(SeqObjectPlacement
-,
-warpMapId
-)
-==
-0x24
-);
-STATIC_ASSERT (
-sizeof
-(IMMultiSeqPlacement)
-==
-0x34
-);
-STATIC_ASSERT (offsetof
-(IMMultiSeqPlacement
-,
-completionGameBits
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(IMMultiSeqPlacement
-,
-activeGameBits
-)
-==
-0x20
-);
-STATIC_ASSERT (offsetof
-(IMMultiSeqPlacement
-,
-initialYaw
-)
-==
-0x28
-);
-STATIC_ASSERT (offsetof
-(IMMultiSeqPlacement
-,
-modelBankIndex
-)
-==
-0x2A
-);
-STATIC_ASSERT (offsetof
-(IMMultiSeqPlacement
-,
-triggerIds
-)
-==
-0x2C
-);
-STATIC_ASSERT (offsetof
-(IMMultiSeqPlacement
-,
-polarityMask
-)
-==
-0x30
-);
-STATIC_ASSERT (
-sizeof
-(SeqObjectState)
-==
-0x3
-);
-STATIC_ASSERT (offsetof
-(SeqObjectState
-,
-triggerBitState
-)
-==
-0x1
-);
-STATIC_ASSERT (
-sizeof
-(SeqObj2State)
-==
-0x1
-);
-STATIC_ASSERT (
-sizeof
-(IMMultiSeqState)
-==
-0x2
-);
+STATIC_ASSERT(sizeof(DoorLockPlacement) == 0x28);
+STATIC_ASSERT(offsetof(DoorLockPlacement, rotXByte) == 0x18);
+STATIC_ASSERT(offsetof(DoorLockPlacement, rotYByte) == 0x19);
+STATIC_ASSERT(offsetof(DoorLockPlacement, rotZByte) == 0x1A);
+STATIC_ASSERT(offsetof(DoorLockPlacement, flags) == 0x1B);
+STATIC_ASSERT(offsetof(DoorLockPlacement, lockGameBit) == 0x1C);
+STATIC_ASSERT(offsetof(DoorLockPlacement, modelBankIndex) == 0x21);
+STATIC_ASSERT(offsetof(DoorLockPlacement, modeFlags) == 0x26);
+STATIC_ASSERT(sizeof(DoorLockState) == 0x1);
+STATIC_ASSERT(sizeof(SeqObjectPlacement) == 0x28);
+STATIC_ASSERT(offsetof(SeqObjectPlacement, openGameBit) == 0x18);
+STATIC_ASSERT(offsetof(SeqObjectPlacement, triggerGameBit) == 0x1A);
+STATIC_ASSERT(offsetof(SeqObjectPlacement, initialYaw) == 0x1C);
+STATIC_ASSERT(offsetof(SeqObjectPlacement, flags) == 0x1D);
+STATIC_ASSERT(offsetof(SeqObjectPlacement, triggerId) == 0x1E);
+STATIC_ASSERT(offsetof(SeqObjectPlacement, modelBankIndex) == 0x1F);
+STATIC_ASSERT(offsetof(SeqObjectPlacement, preemptSequenceId) == 0x20);
+STATIC_ASSERT(offsetof(SeqObjectPlacement, sequenceParam) == 0x22);
+STATIC_ASSERT(offsetof(SeqObjectPlacement, warpMapId) == 0x24);
+STATIC_ASSERT(sizeof(IMMultiSeqPlacement) == 0x34);
+STATIC_ASSERT(offsetof(IMMultiSeqPlacement, completionGameBits) == 0x18);
+STATIC_ASSERT(offsetof(IMMultiSeqPlacement, activeGameBits) == 0x20);
+STATIC_ASSERT(offsetof(IMMultiSeqPlacement, initialYaw) == 0x28);
+STATIC_ASSERT(offsetof(IMMultiSeqPlacement, modelBankIndex) == 0x2A);
+STATIC_ASSERT(offsetof(IMMultiSeqPlacement, triggerIds) == 0x2C);
+STATIC_ASSERT(offsetof(IMMultiSeqPlacement, polarityMask) == 0x30);
+STATIC_ASSERT(sizeof(SeqObjectState) == 0x3);
+STATIC_ASSERT(offsetof(SeqObjectState, triggerBitState) == 0x1);
+STATIC_ASSERT(sizeof(SeqObj2State) == 0x1);
+STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
 
 #define SEQOBJECT_STATE_OPEN 0x01
 #define SEQOBJECT_STATE_TRIGGER_SEQUENCE 0x02

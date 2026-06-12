@@ -98,128 +98,21 @@ typedef struct WCPressuresState
     WCPressuresSavedPos savedPos[WCPRESSURES_TRACKED_COUNT];
 } WCPressuresState;
 
-STATIC_ASSERT (
-sizeof
-(WCPressuresState)
-==
-WCPRESSURES_EXTRA_SIZE
-);
-STATIC_ASSERT (offsetof
-(WCPressuresState
-,
-pressTimer
-)
-==
-WCPRESSURES_STATE_PRESS_TIMER
-);
-STATIC_ASSERT (offsetof
-(WCPressuresState
-,
-mode
-)
-==
-WCPRESSURES_STATE_MODE
-);
-STATIC_ASSERT (offsetof
-(WCPressuresState
-,
-objects
-)
-==
-WCPRESSURES_STATE_OBJECTS
-);
-STATIC_ASSERT (offsetof
-(WCPressuresState
-,
-savedPos [0]
-.
-x
-)
-==
-WCPRESSURES_STATE_SAVED_X
-);
-STATIC_ASSERT (offsetof
-(WCPressuresState
-,
-savedPos [0]
-.
-z
-)
-==
-WCPRESSURES_STATE_SAVED_Z
-);
-STATIC_ASSERT (offsetof
-(WCPressuresSetup
-,
-x
-)
-==
-WCPRESSURES_SETUP_POS_X_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCPressuresSetup
-,
-y
-)
-==
-WCPRESSURES_SETUP_POS_Y_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCPressuresSetup
-,
-z
-)
-==
-WCPRESSURES_SETUP_POS_Z_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCPressuresSetup
-,
-objectTypeHi
-)
-==
-WCPRESSURES_SETUP_OBJECT_TYPE_HI_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCPressuresSetup
-,
-modelIndex
-)
-==
-WCPRESSURES_SETUP_MODEL_INDEX_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCPressuresSetup
-,
-solvedBit
-)
-==
-WCPRESSURES_SETUP_SOLVED_BIT_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCPressuresSetup
-,
-pressDepth
-)
-==
-WCPRESSURES_SETUP_PRESS_DEPTH_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCPressuresSetup
-,
-triggerHeight
-)
-==
-WCPRESSURES_SETUP_TRIGGER_HEIGHT_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCPressuresSetup
-,
-activateBit
-)
-==
-WCPRESSURES_SETUP_ACTIVATE_BIT_OFFSET
-);
+STATIC_ASSERT(sizeof(WCPressuresState) == WCPRESSURES_EXTRA_SIZE);
+STATIC_ASSERT(offsetof(WCPressuresState, pressTimer) == WCPRESSURES_STATE_PRESS_TIMER);
+STATIC_ASSERT(offsetof(WCPressuresState, mode) == WCPRESSURES_STATE_MODE);
+STATIC_ASSERT(offsetof(WCPressuresState, objects) == WCPRESSURES_STATE_OBJECTS);
+STATIC_ASSERT(offsetof(WCPressuresState, savedPos [0] . x) == WCPRESSURES_STATE_SAVED_X);
+STATIC_ASSERT(offsetof(WCPressuresState, savedPos [0] . z) == WCPRESSURES_STATE_SAVED_Z);
+STATIC_ASSERT(offsetof(WCPressuresSetup, x) == WCPRESSURES_SETUP_POS_X_OFFSET);
+STATIC_ASSERT(offsetof(WCPressuresSetup, y) == WCPRESSURES_SETUP_POS_Y_OFFSET);
+STATIC_ASSERT(offsetof(WCPressuresSetup, z) == WCPRESSURES_SETUP_POS_Z_OFFSET);
+STATIC_ASSERT(offsetof(WCPressuresSetup, objectTypeHi) == WCPRESSURES_SETUP_OBJECT_TYPE_HI_OFFSET);
+STATIC_ASSERT(offsetof(WCPressuresSetup, modelIndex) == WCPRESSURES_SETUP_MODEL_INDEX_OFFSET);
+STATIC_ASSERT(offsetof(WCPressuresSetup, solvedBit) == WCPRESSURES_SETUP_SOLVED_BIT_OFFSET);
+STATIC_ASSERT(offsetof(WCPressuresSetup, pressDepth) == WCPRESSURES_SETUP_PRESS_DEPTH_OFFSET);
+STATIC_ASSERT(offsetof(WCPressuresSetup, triggerHeight) == WCPRESSURES_SETUP_TRIGGER_HEIGHT_OFFSET);
+STATIC_ASSERT(offsetof(WCPressuresSetup, activateBit) == WCPRESSURES_SETUP_ACTIVATE_BIT_OFFSET);
 
 int wcpressures_getExtraSize(void) { return WCPRESSURES_EXTRA_SIZE; }
 

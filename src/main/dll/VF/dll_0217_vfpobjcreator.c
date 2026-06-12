@@ -30,66 +30,14 @@ typedef struct VfpObjCreatorPlacement
     u8 pad21[3];
 } VfpObjCreatorPlacement;
 
-STATIC_ASSERT (
-sizeof
-(VfpObjCreatorState)
-==
-0xa
-);
-STATIC_ASSERT (offsetof
-(VfpObjCreatorPlacement
-,
-gameBit
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(VfpObjCreatorPlacement
-,
-spawnMode
-)
-==
-0x1A
-);
-STATIC_ASSERT (offsetof
-(VfpObjCreatorPlacement
-,
-spawnInterval
-)
-==
-0x1C
-);
-STATIC_ASSERT (offsetof
-(VfpObjCreatorPlacement
-,
-yaw
-)
-==
-0x1E
-);
-STATIC_ASSERT (offsetof
-(VfpObjCreatorPlacement
-,
-spawnParam
-)
-==
-0x1F
-);
-STATIC_ASSERT (offsetof
-(VfpObjCreatorPlacement
-,
-spawnRadius
-)
-==
-0x20
-);
-STATIC_ASSERT (
-sizeof
-(VfpObjCreatorPlacement)
-==
-0x24
-);
+STATIC_ASSERT(sizeof(VfpObjCreatorState) == 0xa);
+STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, gameBit) == 0x18);
+STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, spawnMode) == 0x1A);
+STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, spawnInterval) == 0x1C);
+STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, yaw) == 0x1E);
+STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, spawnParam) == 0x1F);
+STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, spawnRadius) == 0x20);
+STATIC_ASSERT(sizeof(VfpObjCreatorPlacement) == 0x24);
 
 int vfpobjcreator_getExtraSize(void) { return 0xa; }
 

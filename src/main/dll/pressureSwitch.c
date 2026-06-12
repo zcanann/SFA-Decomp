@@ -370,28 +370,9 @@ typedef struct HagabonState
     u8 pad27;
 } HagabonState;
 
-STATIC_ASSERT (
-sizeof
-(HagabonState)
-==
-0x28
-);
-STATIC_ASSERT (offsetof
-(HagabonState
-,
-wavePhaseA
-)
-==
-0x20
-);
-STATIC_ASSERT (offsetof
-(HagabonState
-,
-flags
-)
-==
-0x26
-);
+STATIC_ASSERT(sizeof(HagabonState) == 0x28);
+STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
+STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 
 void fn_8014E1DC(int obj, HagabonState* state)
 {

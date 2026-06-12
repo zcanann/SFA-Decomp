@@ -557,12 +557,7 @@ typedef struct BabyCloudRunnerState
     u8 pad245[3];
 } BabyCloudRunnerState;
 
-STATIC_ASSERT (
-sizeof
-(BabyCloudRunnerState)
-==
-0x248
-);
+STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 
 #pragma scheduling off
 #pragma peephole off
@@ -794,12 +789,7 @@ extern void objSeqInitFn_80080078(u8* p, int n);
 
 /* Per-object extra state for the CloudRunner guardian
  * (cfguardian_getExtraSize == 0xa9c). */
-STATIC_ASSERT (
-sizeof
-(CfGuardianState)
-==
-0xa9c
-);
+STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
 #pragma scheduling off
 #pragma peephole off
@@ -1039,12 +1029,7 @@ typedef struct CfMainCrystalState
     u8 chime[4]; /* 0x15c: per-beam chime timers */
 } CfMainCrystalState;
 
-STATIC_ASSERT (
-sizeof
-(CfMainCrystalState)
-==
-0x160
-);
+STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
 
 /* Per-object extra state for the CloudRunner power base
  * (cfpowerbase_getExtraSize == 0x6). */
@@ -1056,12 +1041,7 @@ typedef struct CfPowerBaseState
     u8 pad5;
 } CfPowerBaseState;
 
-STATIC_ASSERT (
-sizeof
-(CfPowerBaseState)
-==
-0x6
-);
+STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
 
 /* Per-object extra state for the CloudRunner prison guard
  * (cfprisonguard_getExtraSize == 0x3c). */
@@ -1077,12 +1057,7 @@ typedef struct CfPrisonGuardState
     u8 pad3A[2];
 } CfPrisonGuardState;
 
-STATIC_ASSERT (
-sizeof
-(CfPrisonGuardState)
-==
-0x3c
-);
+STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
 
 /* Per-object extra state for the CloudRunner prison uncle
  * (cfprisonuncle_getExtraSize == 0xa8). */
@@ -1101,12 +1076,7 @@ typedef struct CfPrisonUncleState
     u8 pad75[0x33];
 } CfPrisonUncleState;
 
-STATIC_ASSERT (
-sizeof
-(CfPrisonUncleState)
-==
-0xa8
-);
+STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
 /* Per-object extra state for the robot light beacon
  * (gcrobotlightbea_getExtraSize == 0xc). */
@@ -1118,12 +1088,7 @@ typedef struct GcRobotLightBeaState
     u8 pad9[3];
 } GcRobotLightBeaState;
 
-STATIC_ASSERT (
-sizeof
-(GcRobotLightBeaState)
-==
-0xc
-);
+STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 
 /* spiritdoorspirit_getExtraSize == 0x1. */
 typedef struct SpiritDoorSpiritState

@@ -2270,22 +2270,8 @@ typedef struct GameTextBox
     u8 unk1F;
 } GameTextBox;
 
-STATIC_ASSERT (offsetof
-(GameTextBox
-,
-style
-)
-==
-0x13
-);
-STATIC_ASSERT (offsetof
-(GameTextBox
-,
-alpha
-)
-==
-0x1E
-);
+STATIC_ASSERT(offsetof(GameTextBox, style) == 0x13);
+STATIC_ASSERT(offsetof(GameTextBox, alpha) == 0x1E);
 
 extern void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* box);
 

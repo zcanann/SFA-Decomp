@@ -18,36 +18,10 @@ typedef struct SoftBodySetup
     u8 phaseDriverDisabled;
 } SoftBodySetup;
 
-STATIC_ASSERT (offsetof
-(SoftBodySetup
-,
-rotZ
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(SoftBodySetup
-,
-scale
-)
-==
-0x1b
-);
-STATIC_ASSERT (offsetof
-(SoftBodySetup
-,
-phaseDriverDisabled
-)
-==
-0x1f
-);
-STATIC_ASSERT (
-sizeof
-(SoftBodySetup)
-==
-0x20
-);
+STATIC_ASSERT(offsetof(SoftBodySetup, rotZ) == 0x18);
+STATIC_ASSERT(offsetof(SoftBodySetup, scale) == 0x1b);
+STATIC_ASSERT(offsetof(SoftBodySetup, phaseDriverDisabled) == 0x1f);
+STATIC_ASSERT(sizeof(SoftBodySetup) == 0x20);
 
 int softbody_getExtraSize(void) { return 0; }
 

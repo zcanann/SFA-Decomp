@@ -88,12 +88,7 @@ typedef struct DimWoodDoor2State
     f32 riseSpeed; /* added to obj Z, decays back to rest */
 } DimWoodDoor2State;
 
-STATIC_ASSERT (
-sizeof
-(DimWoodDoor2State)
-==
-0xC
-);
+STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 
 /*
  * Per-object extra state for the dll_1CE hatch door
@@ -108,12 +103,7 @@ typedef struct Dll1CEState
     u8 pad0A[2];
 } Dll1CEState;
 
-STATIC_ASSERT (
-sizeof
-(Dll1CEState)
-==
-0xC
-);
+STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
 
 /*
  * Per-object extra state for the dimmagicbridge flame bridge
@@ -121,12 +111,7 @@ sizeof
  * variants in dimmagicbridge.c use their own layout.
  */
 
-STATIC_ASSERT (
-sizeof
-(DimMagicBridgeState)
-==
-0x68
-);
+STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 
 typedef struct ExplosionPartfxSource
 {
@@ -150,44 +135,11 @@ typedef struct ExplosionPartfxSource
     u8 pad37;
 } ExplosionPartfxSource;
 
-STATIC_ASSERT (
-sizeof
-(ExplosionPartfxSource)
-==
-0x38
-);
-STATIC_ASSERT (offsetof
-(ExplosionPartfxSource
-,
-rootMotionScale
-)
-==
-0x08
-);
-STATIC_ASSERT (offsetof
-(ExplosionPartfxSource
-,
-localPosX
-)
-==
-0x0C
-);
-STATIC_ASSERT (offsetof
-(ExplosionPartfxSource
-,
-worldPosX
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(ExplosionPartfxSource
-,
-velocityX
-)
-==
-0x24
-);
+STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
+STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
+STATIC_ASSERT(offsetof(ExplosionPartfxSource, localPosX) == 0x0C);
+STATIC_ASSERT(offsetof(ExplosionPartfxSource, worldPosX) == 0x18);
+STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 
 /*
  * Per-object extra state for the explosion effect
@@ -199,20 +151,8 @@ velocityX
  * (recipe #36/#77); the layout is documented here for a future pass.
  */
 
-STATIC_ASSERT (
-sizeof
-(ExplosionState)
-==
-0xA60
-);
-STATIC_ASSERT (offsetof
-(ExplosionState
-,
-driftYSpeed
-)
-==
-0xA3C
-);
+STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
+STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
 
 extern undefined4 FUN_800067e8();

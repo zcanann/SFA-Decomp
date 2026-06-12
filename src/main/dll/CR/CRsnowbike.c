@@ -60,12 +60,7 @@ typedef struct ScLevelControlState
     u8 pad23;
 } ScLevelControlState;
 
-STATIC_ASSERT (
-sizeof
-(ScLevelControlState)
-==
-0x24
-);
+STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 
 
 extern undefined4 FUN_800067c0();

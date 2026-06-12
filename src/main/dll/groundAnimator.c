@@ -598,36 +598,10 @@ typedef struct AppleOnTreeState
     f32 unk60;
 } AppleOnTreeState;
 
-STATIC_ASSERT (offsetof
-(AppleOnTreeState
-,
-healthRestore
-)
-==
-0x38
-);
-STATIC_ASSERT (offsetof
-(AppleOnTreeState
-,
-unk50
-)
-==
-0x50
-);
-STATIC_ASSERT (offsetof
-(AppleOnTreeState
-,
-unk60
-)
-==
-0x60
-);
-STATIC_ASSERT (
-sizeof
-(AppleOnTreeState)
-==
-0x64
-);
+STATIC_ASSERT(offsetof(AppleOnTreeState, healthRestore) == 0x38);
+STATIC_ASSERT(offsetof(AppleOnTreeState, unk50) == 0x50);
+STATIC_ASSERT(offsetof(AppleOnTreeState, unk60) == 0x60);
+STATIC_ASSERT(sizeof(AppleOnTreeState) == 0x64);
 
 /*
  * --INFO--

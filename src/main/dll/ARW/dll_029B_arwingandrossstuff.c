@@ -33,84 +33,16 @@ typedef struct ArwProjectileSetup
     u8 rotX;
 } ArwProjectileSetup;
 
-STATIC_ASSERT (
-sizeof
-(ArwProjectileState)
-==
-0x20
-);
-STATIC_ASSERT (offsetof
-(ArwProjectileState
-,
-lifetime
-)
-==
-0x04
-);
-STATIC_ASSERT (offsetof
-(ArwProjectileState
-,
-deflectSpeedScale
-)
-==
-0x08
-);
-STATIC_ASSERT (offsetof
-(ArwProjectileState
-,
-despawnTimer
-)
-==
-0x10
-);
-STATIC_ASSERT (offsetof
-(ArwProjectileState
-,
-light
-)
-==
-0x14
-);
-STATIC_ASSERT (offsetof
-(ArwProjectileState
-,
-hitVolumeMode
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(ArwProjectileState
-,
-rotZSpeed
-)
-==
-0x1A
-);
-STATIC_ASSERT (offsetof
-(ArwProjectileState
-,
-rotYSpeed
-)
-==
-0x1C
-);
-STATIC_ASSERT (offsetof
-(ArwProjectileSetup
-,
-rotY
-)
-==
-0x19
-);
-STATIC_ASSERT (offsetof
-(ArwProjectileSetup
-,
-rotX
-)
-==
-0x1A
-);
+STATIC_ASSERT(sizeof(ArwProjectileState) == 0x20);
+STATIC_ASSERT(offsetof(ArwProjectileState, lifetime) == 0x04);
+STATIC_ASSERT(offsetof(ArwProjectileState, deflectSpeedScale) == 0x08);
+STATIC_ASSERT(offsetof(ArwProjectileState, despawnTimer) == 0x10);
+STATIC_ASSERT(offsetof(ArwProjectileState, light) == 0x14);
+STATIC_ASSERT(offsetof(ArwProjectileState, hitVolumeMode) == 0x18);
+STATIC_ASSERT(offsetof(ArwProjectileState, rotZSpeed) == 0x1A);
+STATIC_ASSERT(offsetof(ArwProjectileState, rotYSpeed) == 0x1C);
+STATIC_ASSERT(offsetof(ArwProjectileSetup, rotY) == 0x19);
+STATIC_ASSERT(offsetof(ArwProjectileSetup, rotX) == 0x1A);
 
 int arwingandrossstuff_getExtraSize(void) { return 0x20; }
 

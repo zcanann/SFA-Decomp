@@ -16,12 +16,7 @@ typedef struct WmObjCreatorState
     s16 spawnJitter; /* 0x06: randomGetRange(0, jitter) added per cycle */
 } WmObjCreatorState;
 
-STATIC_ASSERT (
-sizeof
-(WmObjCreatorState)
-==
-0x8
-);
+STATIC_ASSERT(sizeof(WmObjCreatorState) == 0x8);
 
 typedef struct WmObjCreatorPlacement
 {
@@ -34,52 +29,12 @@ typedef struct WmObjCreatorPlacement
     u8 pad20[4];
 } WmObjCreatorPlacement;
 
-STATIC_ASSERT (offsetof
-(WmObjCreatorPlacement
-,
-gameBit
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(WmObjCreatorPlacement
-,
-spawnMode
-)
-==
-0x1A
-);
-STATIC_ASSERT (offsetof
-(WmObjCreatorPlacement
-,
-spawnPeriod
-)
-==
-0x1C
-);
-STATIC_ASSERT (offsetof
-(WmObjCreatorPlacement
-,
-yaw
-)
-==
-0x1E
-);
-STATIC_ASSERT (offsetof
-(WmObjCreatorPlacement
-,
-spawnJitter
-)
-==
-0x1F
-);
-STATIC_ASSERT (
-sizeof
-(WmObjCreatorPlacement)
-==
-0x24
-);
+STATIC_ASSERT(offsetof(WmObjCreatorPlacement, gameBit) == 0x18);
+STATIC_ASSERT(offsetof(WmObjCreatorPlacement, spawnMode) == 0x1A);
+STATIC_ASSERT(offsetof(WmObjCreatorPlacement, spawnPeriod) == 0x1C);
+STATIC_ASSERT(offsetof(WmObjCreatorPlacement, yaw) == 0x1E);
+STATIC_ASSERT(offsetof(WmObjCreatorPlacement, spawnJitter) == 0x1F);
+STATIC_ASSERT(sizeof(WmObjCreatorPlacement) == 0x24);
 
 /* WM_Galleon_getExtraSize == 0x10. */
 typedef struct WmGalleonState
@@ -89,12 +44,7 @@ typedef struct WmGalleonState
     u8 pad0D[3];
 } WmGalleonState;
 
-STATIC_ASSERT (
-sizeof
-(WmGalleonState)
-==
-0x10
-);
+STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
 
 extern uint GameBit_Get(int eventId);

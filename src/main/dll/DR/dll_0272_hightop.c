@@ -120,36 +120,10 @@ typedef struct HighTopRuntime
     u8 unkC4B;
 } HighTopRuntime;
 
-STATIC_ASSERT (
-sizeof
-(HighTopRuntime)
-==
-0xC4C
-);
-STATIC_ASSERT (offsetof
-(HighTopRuntime
-,
-unk9FD
-)
-==
-0x9FD
-);
-STATIC_ASSERT (offsetof
-(HighTopRuntime
-,
-unkC16
-)
-==
-0xC16
-);
-STATIC_ASSERT (offsetof
-(HighTopRuntime
-,
-unkC4B
-)
-==
-0xC4B
-);
+STATIC_ASSERT(sizeof(HighTopRuntime) == 0xC4C);
+STATIC_ASSERT(offsetof(HighTopRuntime, unk9FD) == 0x9FD);
+STATIC_ASSERT(offsetof(HighTopRuntime, unkC16) == 0xC16);
+STATIC_ASSERT(offsetof(HighTopRuntime, unkC4B) == 0xC4B);
 
 typedef struct HighTopObject
 {

@@ -52,44 +52,11 @@ typedef struct KytesMumObject
     void* interactionCallback;
 } KytesMumObject;
 
-STATIC_ASSERT (
-sizeof
-(KytesMumSetup)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(KytesMumSetup
-,
-yaw
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(KytesMumSetup
-,
-mode
-)
-==
-0x19
-);
-STATIC_ASSERT (offsetof
-(KytesMumSetup
-,
-interactionRange
-)
-==
-0x1A
-);
-STATIC_ASSERT (offsetof
-(KytesMumSetup
-,
-completionGameBit
-)
-==
-0x1E
-);
+STATIC_ASSERT(sizeof(KytesMumSetup) == 0x24);
+STATIC_ASSERT(offsetof(KytesMumSetup, yaw) == 0x18);
+STATIC_ASSERT(offsetof(KytesMumSetup, mode) == 0x19);
+STATIC_ASSERT(offsetof(KytesMumSetup, interactionRange) == 0x1A);
+STATIC_ASSERT(offsetof(KytesMumSetup, completionGameBit) == 0x1E);
 
 int kytesmum_getExtraSize(void) { return 0x6ec; }
 

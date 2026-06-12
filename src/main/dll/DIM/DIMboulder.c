@@ -36,12 +36,7 @@ typedef struct IMIceMountainState
     f32 warningTextTimer; /* shows text 0x351 while above the floor value */
 } IMIceMountainState;
 
-STATIC_ASSERT (
-sizeof
-(IMIceMountainState)
-==
-0x14
-);
+STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
 
 /*
  * Per-object extra state for the magiclight proximity light
@@ -61,12 +56,7 @@ typedef struct MagicLightState
     u8 pad12[2];
 } MagicLightState;
 
-STATIC_ASSERT (
-sizeof
-(MagicLightState)
-==
-0x14
-);
+STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 
 /*
  * Per-object extra state for the dll_16C map-event boulder proxy
@@ -88,12 +78,7 @@ typedef struct Dll16CState
     u8 pad23;
 } Dll16CState;
 
-STATIC_ASSERT (
-sizeof
-(Dll16CState)
-==
-0x24
-);
+STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 
 /*
  * Per-object extra state for the crrockfall falling rock
@@ -119,12 +104,7 @@ typedef struct CrRockfallState
     u8 pad12[2];
 } CrRockfallState;
 
-STATIC_ASSERT (
-sizeof
-(CrRockfallState)
-==
-0x14
-);
+STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 
 extern undefined4 getLActions();

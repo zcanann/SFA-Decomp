@@ -50,30 +50,9 @@ typedef struct CamSlideObjectState
     f32 vectorZ;
 } CamSlideObjectState;
 
-STATIC_ASSERT (offsetof
-(CamSlideObjectState
-,
-vectorX
-)
-==
-0x1A4
-);
-STATIC_ASSERT (offsetof
-(CamSlideObjectState
-,
-vectorY
-)
-==
-0x1A8
-);
-STATIC_ASSERT (offsetof
-(CamSlideObjectState
-,
-vectorZ
-)
-==
-0x1AC
-);
+STATIC_ASSERT(offsetof(CamSlideObjectState, vectorX) == 0x1A4);
+STATIC_ASSERT(offsetof(CamSlideObjectState, vectorY) == 0x1A8);
+STATIC_ASSERT(offsetof(CamSlideObjectState, vectorZ) == 0x1AC);
 
 /*
  * --INFO--

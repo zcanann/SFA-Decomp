@@ -84,146 +84,24 @@ typedef struct WCPushBlockRuntimeState
     u8 pad286[2];
 } WCPushBlockRuntimeState;
 
-STATIC_ASSERT (
-sizeof
-(PushBlockFlags)
-==
-1
-);
-STATIC_ASSERT (
-sizeof
-(WCPushBlockRuntimeState)
-==
-WCPUSHBLOCK_EXTRA_SIZE
-);
-STATIC_ASSERT (offsetof
-(WCPushBlockRuntimeState
-,
-controller
-)
-==
-WCPUSHBLOCK_STATE_CONTROLLER
-);
-STATIC_ASSERT (offsetof
-(WCPushBlockRuntimeState
-,
-targetX
-)
-==
-WCPUSHBLOCK_STATE_TARGET_X
-);
-STATIC_ASSERT (offsetof
-(WCPushBlockRuntimeState
-,
-targetZ
-)
-==
-WCPUSHBLOCK_STATE_TARGET_Z
-);
-STATIC_ASSERT (offsetof
-(WCPushBlockRuntimeState
-,
-baseY
-)
-==
-WCPUSHBLOCK_STATE_BASE_Y
-);
-STATIC_ASSERT (offsetof
-(WCPushBlockRuntimeState
-,
-bobY
-)
-==
-WCPUSHBLOCK_STATE_BOB_Y
-);
-STATIC_ASSERT (offsetof
-(WCPushBlockRuntimeState
-,
-bobAngle
-)
-==
-WCPUSHBLOCK_STATE_BOB_ANGLE
-);
-STATIC_ASSERT (offsetof
-(WCPushBlockRuntimeState
-,
-tileX
-)
-==
-WCPUSHBLOCK_STATE_TILE_X
-);
-STATIC_ASSERT (offsetof
-(WCPushBlockRuntimeState
-,
-tileY
-)
-==
-WCPUSHBLOCK_STATE_TILE_Y
-);
-STATIC_ASSERT (offsetof
-(WCPushBlockRuntimeState
-,
-pushDir
-)
-==
-WCPUSHBLOCK_STATE_PUSH_DIR
-);
-STATIC_ASSERT (offsetof
-(WCPushBlockRuntimeState
-,
-initialTile
-)
-==
-WCPUSHBLOCK_STATE_INITIAL_TILE
-);
-STATIC_ASSERT (offsetof
-(WCPushBlockRuntimeState
-,
-moveResult
-)
-==
-WCPUSHBLOCK_STATE_MOVE_RESULT
-);
-STATIC_ASSERT (offsetof
-(WCPushBlockRuntimeState
-,
-flags
-)
-==
-WCPUSHBLOCK_STATE_FLAGS
-);
-STATIC_ASSERT (
-sizeof
-(WCPushBlockSetup)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(WCPushBlockSetup
-,
-base
-.
-posY
-)
-==
-0xc
-);
-STATIC_ASSERT (offsetof
-(WCPushBlockSetup
-,
-modelIndex
-)
-==
-WCPUSHBLOCK_MODEL_INDEX_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCPushBlockSetup
-,
-initialTile
-)
-==
-WCPUSHBLOCK_INITIAL_TILE_OFFSET
-);
+STATIC_ASSERT(sizeof(PushBlockFlags) == 1);
+STATIC_ASSERT(sizeof(WCPushBlockRuntimeState) == WCPUSHBLOCK_EXTRA_SIZE);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, controller) == WCPUSHBLOCK_STATE_CONTROLLER);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, targetX) == WCPUSHBLOCK_STATE_TARGET_X);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, targetZ) == WCPUSHBLOCK_STATE_TARGET_Z);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, baseY) == WCPUSHBLOCK_STATE_BASE_Y);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, bobY) == WCPUSHBLOCK_STATE_BOB_Y);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, bobAngle) == WCPUSHBLOCK_STATE_BOB_ANGLE);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, tileX) == WCPUSHBLOCK_STATE_TILE_X);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, tileY) == WCPUSHBLOCK_STATE_TILE_Y);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, pushDir) == WCPUSHBLOCK_STATE_PUSH_DIR);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, initialTile) == WCPUSHBLOCK_STATE_INITIAL_TILE);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, moveResult) == WCPUSHBLOCK_STATE_MOVE_RESULT);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, flags) == WCPUSHBLOCK_STATE_FLAGS);
+STATIC_ASSERT(sizeof(WCPushBlockSetup) == 0x24);
+STATIC_ASSERT(offsetof(WCPushBlockSetup, base . posY) == 0xc);
+STATIC_ASSERT(offsetof(WCPushBlockSetup, modelIndex) == WCPUSHBLOCK_MODEL_INDEX_OFFSET);
+STATIC_ASSERT(offsetof(WCPushBlockSetup, initialTile) == WCPUSHBLOCK_INITIAL_TILE_OFFSET);
 
 #define WCPUSHBLOCK_CONTROLLER(state) (((WCPushBlockRuntimeState *)(state))->controller)
 #define WCPUSHBLOCK_IFACE (*(int *)(*(int *)(WCPUSHBLOCK_CONTROLLER(state) + 0x68)))

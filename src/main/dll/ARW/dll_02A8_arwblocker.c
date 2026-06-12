@@ -17,50 +17,12 @@ typedef struct ARWBlockerState
     u8 sequenceLocked;
 } ARWBlockerState;
 
-STATIC_ASSERT (
-sizeof
-(ARWBlockerState)
-==
-0x2
-);
-STATIC_ASSERT (
-sizeof
-(ARWBlockerSetup)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(ARWBlockerState
-,
-sequenceMode
-)
-==
-0x00
-);
-STATIC_ASSERT (offsetof
-(ARWBlockerState
-,
-sequenceLocked
-)
-==
-0x01
-);
-STATIC_ASSERT (offsetof
-(ARWBlockerSetup
-,
-rotZ
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(ARWBlockerSetup
-,
-sequenceMode
-)
-==
-0x19
-);
+STATIC_ASSERT(sizeof(ARWBlockerState) == 0x2);
+STATIC_ASSERT(sizeof(ARWBlockerSetup) == 0x24);
+STATIC_ASSERT(offsetof(ARWBlockerState, sequenceMode) == 0x00);
+STATIC_ASSERT(offsetof(ARWBlockerState, sequenceLocked) == 0x01);
+STATIC_ASSERT(offsetof(ARWBlockerSetup, rotZ) == 0x18);
+STATIC_ASSERT(offsetof(ARWBlockerSetup, sequenceMode) == 0x19);
 
 #pragma peephole off
 int arwblocker_getBlockState(int obj)

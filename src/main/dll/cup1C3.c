@@ -144,28 +144,9 @@ typedef struct DbshSymbolState
     u8 pad21[3];
 } DbshSymbolState;
 
-STATIC_ASSERT (
-sizeof
-(DbshSymbolState)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(DbshSymbolState
-,
-phase
-)
-==
-0x1E
-);
-STATIC_ASSERT (offsetof
-(DbshSymbolState
-,
-flags
-)
-==
-0x20
-);
+STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
+STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);
+STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
 
 int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 {

@@ -10,36 +10,10 @@ typedef struct Dll2A3State
     u8 pad0A[2];
 } Dll2A3State;
 
-STATIC_ASSERT (
-sizeof
-(Dll2A3State)
-==
-0x0c
-);
-STATIC_ASSERT (offsetof
-(Dll2A3State
-,
-rotXSpeed
-)
-==
-0x04
-);
-STATIC_ASSERT (offsetof
-(Dll2A3State
-,
-rotYSpeed
-)
-==
-0x06
-);
-STATIC_ASSERT (offsetof
-(Dll2A3State
-,
-rotZSpeed
-)
-==
-0x08
-);
+STATIC_ASSERT(sizeof(Dll2A3State) == 0x0c);
+STATIC_ASSERT(offsetof(Dll2A3State, rotXSpeed) == 0x04);
+STATIC_ASSERT(offsetof(Dll2A3State, rotYSpeed) == 0x06);
+STATIC_ASSERT(offsetof(Dll2A3State, rotZSpeed) == 0x08);
 
 int dll_2A3_getExtraSize_ret_12(void) { return 0xc; }
 

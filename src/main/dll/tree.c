@@ -59,162 +59,26 @@ typedef struct TreeState
     u16 effectProfileIndex;
 } TreeState;
 
-STATIC_ASSERT (offsetof
-(TreeSetup
-,
-rotZ
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(TreeSetup
-,
-scale
-)
-==
-0x1b
-);
-STATIC_ASSERT (offsetof
-(TreeSetup
-,
-flagsLo
-)
-==
-0x1c
-);
-STATIC_ASSERT (offsetof
-(TreeSetup
-,
-proximityRadiusHalf
-)
-==
-0x1d
-);
-STATIC_ASSERT (offsetof
-(TreeSetup
-,
-flagsHi
-)
-==
-0x1e
-);
-STATIC_ASSERT (offsetof
-(TreeSetup
-,
-colorR
-)
-==
-0x20
-);
-STATIC_ASSERT (offsetof
-(TreeSetup
-,
-colorB
-)
-==
-0x22
-);
-STATIC_ASSERT (offsetof
-(TreeAmbientEffectSetup
-,
-sourceObject
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(TreeAmbientEffectSetup
-,
-animFrame
-)
-==
-0x1c
-);
-STATIC_ASSERT (offsetof
-(TreeAmbientEffectSetup
-,
-colorA
-)
-==
-0x20
-);
-STATIC_ASSERT (
-sizeof
-(TreeAmbientEffectSetup)
-==
-TREE_AMBIENT_EFFECT_SETUP_SIZE
-);
-STATIC_ASSERT (offsetof
-(TreeState
-,
-ambientEffectPos
-)
-==
-0xc
-);
-STATIC_ASSERT (offsetof
-(TreeState
-,
-ambientSpawnTimers
-)
-==
-0x30
-);
-STATIC_ASSERT (offsetof
-(TreeState
-,
-playerBurstCooldown
-)
-==
-0x3c
-);
-STATIC_ASSERT (offsetof
-(TreeState
-,
-scale
-)
-==
-0x48
-);
-STATIC_ASSERT (offsetof
-(TreeState
-,
-hitEffectCooldown
-)
-==
-0x50
-);
-STATIC_ASSERT (offsetof
-(TreeState
-,
-proximityRadius
-)
-==
-0x54
-);
-STATIC_ASSERT (offsetof
-(TreeState
-,
-lastPlayerDistance
-)
-==
-0x56
-);
-STATIC_ASSERT (offsetof
-(TreeState
-,
-flags
-)
-==
-0x58
-);
-STATIC_ASSERT (
-sizeof
-(TreeState)
-==
-0x5c
-);
+STATIC_ASSERT(offsetof(TreeSetup, rotZ) == 0x18);
+STATIC_ASSERT(offsetof(TreeSetup, scale) == 0x1b);
+STATIC_ASSERT(offsetof(TreeSetup, flagsLo) == 0x1c);
+STATIC_ASSERT(offsetof(TreeSetup, proximityRadiusHalf) == 0x1d);
+STATIC_ASSERT(offsetof(TreeSetup, flagsHi) == 0x1e);
+STATIC_ASSERT(offsetof(TreeSetup, colorR) == 0x20);
+STATIC_ASSERT(offsetof(TreeSetup, colorB) == 0x22);
+STATIC_ASSERT(offsetof(TreeAmbientEffectSetup, sourceObject) == 0x18);
+STATIC_ASSERT(offsetof(TreeAmbientEffectSetup, animFrame) == 0x1c);
+STATIC_ASSERT(offsetof(TreeAmbientEffectSetup, colorA) == 0x20);
+STATIC_ASSERT(sizeof(TreeAmbientEffectSetup) == TREE_AMBIENT_EFFECT_SETUP_SIZE);
+STATIC_ASSERT(offsetof(TreeState, ambientEffectPos) == 0xc);
+STATIC_ASSERT(offsetof(TreeState, ambientSpawnTimers) == 0x30);
+STATIC_ASSERT(offsetof(TreeState, playerBurstCooldown) == 0x3c);
+STATIC_ASSERT(offsetof(TreeState, scale) == 0x48);
+STATIC_ASSERT(offsetof(TreeState, hitEffectCooldown) == 0x50);
+STATIC_ASSERT(offsetof(TreeState, proximityRadius) == 0x54);
+STATIC_ASSERT(offsetof(TreeState, lastPlayerDistance) == 0x56);
+STATIC_ASSERT(offsetof(TreeState, flags) == 0x58);
+STATIC_ASSERT(sizeof(TreeState) == 0x5c);
 
 int tree_getExtraSize(void) { return 0x5c; }
 

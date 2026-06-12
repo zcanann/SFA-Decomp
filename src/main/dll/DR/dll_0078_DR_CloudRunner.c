@@ -9,12 +9,7 @@
 #include "global.h"
 
 /* DR_CloudRunner_getExtraSize == 0xbc8; BaddieState head + family tail. */
-STATIC_ASSERT (
-sizeof
-(CloudRunnerState)
-==
-0xbc8
-);
+STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
 
 
 #include "main/audio/sfx_ids.h"

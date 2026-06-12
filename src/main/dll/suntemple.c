@@ -51,82 +51,16 @@ typedef struct SunTempleState
     u8 mapEventMode;
 } SunTempleState;
 
-STATIC_ASSERT (offsetof
-(SunTempleSetup
-,
-rotXByte
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(SunTempleSetup
-,
-flags
-)
-==
-0x1B
-);
-STATIC_ASSERT (offsetof
-(SunTempleSetup
-,
-activationGameBit
-)
-==
-0x1C
-);
-STATIC_ASSERT (offsetof
-(SunTempleSetup
-,
-readyEventId
-)
-==
-0x1E
-);
-STATIC_ASSERT (offsetof
-(SunTempleSetup
-,
-triggerSlot
-)
-==
-0x20
-);
-STATIC_ASSERT (offsetof
-(SunTempleSetup
-,
-bankIndex
-)
-==
-0x21
-);
-STATIC_ASSERT (offsetof
-(SunTempleSetup
-,
-gateGameBit
-)
-==
-0x22
-);
-STATIC_ASSERT (offsetof
-(SunTempleSetup
-,
-preemptSequenceId
-)
-==
-0x24
-);
-STATIC_ASSERT (
-sizeof
-(SunTempleSetup)
-==
-0x28
-);
-STATIC_ASSERT (
-sizeof
-(SunTempleState)
-==
-SUNTEMPLE_STATE_SIZE
-);
+STATIC_ASSERT(offsetof(SunTempleSetup, rotXByte) == 0x18);
+STATIC_ASSERT(offsetof(SunTempleSetup, flags) == 0x1B);
+STATIC_ASSERT(offsetof(SunTempleSetup, activationGameBit) == 0x1C);
+STATIC_ASSERT(offsetof(SunTempleSetup, readyEventId) == 0x1E);
+STATIC_ASSERT(offsetof(SunTempleSetup, triggerSlot) == 0x20);
+STATIC_ASSERT(offsetof(SunTempleSetup, bankIndex) == 0x21);
+STATIC_ASSERT(offsetof(SunTempleSetup, gateGameBit) == 0x22);
+STATIC_ASSERT(offsetof(SunTempleSetup, preemptSequenceId) == 0x24);
+STATIC_ASSERT(sizeof(SunTempleSetup) == 0x28);
+STATIC_ASSERT(sizeof(SunTempleState) == SUNTEMPLE_STATE_SIZE);
 
 int suntemple_getExtraSize(void) { return SUNTEMPLE_STATE_SIZE; }
 

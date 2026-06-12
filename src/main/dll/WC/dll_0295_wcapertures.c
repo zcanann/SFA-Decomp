@@ -60,82 +60,16 @@ typedef struct WCAperturesState
     u8 flags;
 } WCAperturesState;
 
-STATIC_ASSERT (
-sizeof
-(WCAperturesState)
-==
-WCAPERTURES_EXTRA_SIZE
-);
-STATIC_ASSERT (
-sizeof
-(WCAperturesSetup)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(WCAperturesState
-,
-light
-)
-==
-WCAPERTURES_STATE_LIGHT
-);
-STATIC_ASSERT (offsetof
-(WCAperturesState
-,
-targetAlpha
-)
-==
-WCAPERTURES_STATE_TARGET_ALPHA
-);
-STATIC_ASSERT (offsetof
-(WCAperturesState
-,
-mode
-)
-==
-WCAPERTURES_STATE_MODE
-);
-STATIC_ASSERT (offsetof
-(WCAperturesState
-,
-flags
-)
-==
-WCAPERTURES_STATE_FLAGS
-);
-STATIC_ASSERT (offsetof
-(WCAperturesSetup
-,
-type
-)
-==
-WCAPERTURES_SETUP_TYPE_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCAperturesSetup
-,
-modelIndex
-)
-==
-WCAPERTURES_SETUP_MODEL_INDEX_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCAperturesSetup
-,
-openBit
-)
-==
-WCAPERTURES_SETUP_OPEN_BIT_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCAperturesSetup
-,
-armBit
-)
-==
-WCAPERTURES_SETUP_ARM_BIT_OFFSET
-);
+STATIC_ASSERT(sizeof(WCAperturesState) == WCAPERTURES_EXTRA_SIZE);
+STATIC_ASSERT(sizeof(WCAperturesSetup) == 0x24);
+STATIC_ASSERT(offsetof(WCAperturesState, light) == WCAPERTURES_STATE_LIGHT);
+STATIC_ASSERT(offsetof(WCAperturesState, targetAlpha) == WCAPERTURES_STATE_TARGET_ALPHA);
+STATIC_ASSERT(offsetof(WCAperturesState, mode) == WCAPERTURES_STATE_MODE);
+STATIC_ASSERT(offsetof(WCAperturesState, flags) == WCAPERTURES_STATE_FLAGS);
+STATIC_ASSERT(offsetof(WCAperturesSetup, type) == WCAPERTURES_SETUP_TYPE_OFFSET);
+STATIC_ASSERT(offsetof(WCAperturesSetup, modelIndex) == WCAPERTURES_SETUP_MODEL_INDEX_OFFSET);
+STATIC_ASSERT(offsetof(WCAperturesSetup, openBit) == WCAPERTURES_SETUP_OPEN_BIT_OFFSET);
+STATIC_ASSERT(offsetof(WCAperturesSetup, armBit) == WCAPERTURES_SETUP_ARM_BIT_OFFSET);
 
 int wcapertures_getExtraSize(void) { return WCAPERTURES_EXTRA_SIZE; }
 

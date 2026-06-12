@@ -21,12 +21,7 @@ typedef struct SBPropellerState
     u8 pad0D[3];
 } SBPropellerState;
 
-STATIC_ASSERT (
-sizeof
-(SBPropellerState)
-==
-0x10
-);
+STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
 /* SB_ShipHead_getExtraSize == 0x10. */
 typedef struct SBShipHeadState
@@ -38,12 +33,7 @@ typedef struct SBShipHeadState
     f32 swayB; /* 0x0c */
 } SBShipHeadState;
 
-STATIC_ASSERT (
-sizeof
-(SBShipHeadState)
-==
-0x10
-);
+STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 #include "main/objhits_types.h"
 
 extern undefined4 getLActions();

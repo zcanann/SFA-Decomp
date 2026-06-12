@@ -291,60 +291,13 @@ typedef struct BlastedTargetState
     u8 pad12[2];
 } BlastedTargetState;
 
-STATIC_ASSERT (offsetof
-(BlastedTargetSetup
-,
-pieceCount
-)
-==
-0x1A
-);
-STATIC_ASSERT (offsetof
-(BlastedTargetSetup
-,
-triggerId
-)
-==
-0x1C
-);
-STATIC_ASSERT (offsetof
-(BlastedTargetSetup
-,
-completedGameBit
-)
-==
-0x1E
-);
-STATIC_ASSERT (offsetof
-(BlastedTargetSetup
-,
-progressGameBit
-)
-==
-0x20
-);
-STATIC_ASSERT (offsetof
-(BlastedTargetState
-,
-triggerFired
-)
-==
-0x0C
-);
-STATIC_ASSERT (offsetof
-(BlastedTargetState
-,
-damageStep
-)
-==
-0x11
-);
-STATIC_ASSERT (
-sizeof
-(BlastedTargetState)
-==
-0x14
-);
+STATIC_ASSERT(offsetof(BlastedTargetSetup, pieceCount) == 0x1A);
+STATIC_ASSERT(offsetof(BlastedTargetSetup, triggerId) == 0x1C);
+STATIC_ASSERT(offsetof(BlastedTargetSetup, completedGameBit) == 0x1E);
+STATIC_ASSERT(offsetof(BlastedTargetSetup, progressGameBit) == 0x20);
+STATIC_ASSERT(offsetof(BlastedTargetState, triggerFired) == 0x0C);
+STATIC_ASSERT(offsetof(BlastedTargetState, damageStep) == 0x11);
+STATIC_ASSERT(sizeof(BlastedTargetState) == 0x14);
 
 /* EN v1.0 0x801A2928  size: 464b  Blasted-target update: once the target's
  * GameBit is latched, fires the map trigger; otherwise scans the model's

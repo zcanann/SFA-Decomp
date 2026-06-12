@@ -22,68 +22,14 @@ typedef struct ARWProximitState
     u8 pad16[2];
 } ARWProximitState;
 
-STATIC_ASSERT (
-sizeof
-(ARWProximitState)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(ARWProximitState
-,
-spinSpeed
-)
-==
-0x00
-);
-STATIC_ASSERT (offsetof
-(ARWProximitState
-,
-light
-)
-==
-0x04
-);
-STATIC_ASSERT (offsetof
-(ARWProximitState
-,
-warningTimer
-)
-==
-0x0c
-);
-STATIC_ASSERT (offsetof
-(ARWProximitState
-,
-despawnTimer
-)
-==
-0x10
-);
-STATIC_ASSERT (offsetof
-(ARWProximitState
-,
-phase
-)
-==
-0x14
-);
-STATIC_ASSERT (offsetof
-(ARWProximitState
-,
-textVariant
-)
-==
-0x15
-);
-STATIC_ASSERT (offsetof
-(ARWProximitSetup
-,
-textVariant
-)
-==
-0x31
-);
+STATIC_ASSERT(sizeof(ARWProximitState) == 0x18);
+STATIC_ASSERT(offsetof(ARWProximitState, spinSpeed) == 0x00);
+STATIC_ASSERT(offsetof(ARWProximitState, light) == 0x04);
+STATIC_ASSERT(offsetof(ARWProximitState, warningTimer) == 0x0c);
+STATIC_ASSERT(offsetof(ARWProximitState, despawnTimer) == 0x10);
+STATIC_ASSERT(offsetof(ARWProximitState, phase) == 0x14);
+STATIC_ASSERT(offsetof(ARWProximitState, textVariant) == 0x15);
+STATIC_ASSERT(offsetof(ARWProximitSetup, textVariant) == 0x31);
 
 int arwproximit_getExtraSize(void) { return 0x18; }
 

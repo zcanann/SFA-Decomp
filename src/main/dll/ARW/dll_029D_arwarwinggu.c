@@ -14,26 +14,9 @@ typedef union ArwingGuState
     u8 fadeIn;
 } ArwingGuState;
 
-STATIC_ASSERT (
-sizeof
-(ArwingGuTextureState)
-==
-0x8
-);
-STATIC_ASSERT (offsetof
-(ArwingGuTextureState
-,
-textureFrame
-)
-==
-0x04
-);
-STATIC_ASSERT (
-sizeof
-(ArwingGuState)
-==
-0x8
-);
+STATIC_ASSERT(sizeof(ArwingGuTextureState) == 0x8);
+STATIC_ASSERT(offsetof(ArwingGuTextureState, textureFrame) == 0x04);
+STATIC_ASSERT(sizeof(ArwingGuState) == 0x8);
 
 int arwarwinggu_getExtraSize(int obj)
 {

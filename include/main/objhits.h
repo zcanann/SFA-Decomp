@@ -215,12 +215,9 @@ typedef struct ObjHitsSkeletonHit {
 
 STATIC_ASSERT(sizeof(ObjHitsModelJointInfo) == 0x1C);
 STATIC_ASSERT(sizeof(ObjHitsModelHitVolume) == OBJHITS_MODEL_HIT_VOLUME_SIZE);
-STATIC_ASSERT(offsetof(ObjHitsModelHitVolume, linkedSpheres) ==
-              OBJHITS_MODEL_HIT_VOLUME_LINKS_OFFSET);
-STATIC_ASSERT(offsetof(ObjHitsModelHitVolume, sphereIndex) ==
-              OBJHITS_MODEL_HIT_VOLUME_SPHERE_INDEX_OFFSET);
-STATIC_ASSERT(offsetof(ObjHitsModelHitVolume, maskBit) ==
-              OBJHITS_MODEL_HIT_VOLUME_MASK_BIT_OFFSET);
+STATIC_ASSERT(offsetof(ObjHitsModelHitVolume, linkedSpheres) == OBJHITS_MODEL_HIT_VOLUME_LINKS_OFFSET);
+STATIC_ASSERT(offsetof(ObjHitsModelHitVolume, sphereIndex) == OBJHITS_MODEL_HIT_VOLUME_SPHERE_INDEX_OFFSET);
+STATIC_ASSERT(offsetof(ObjHitsModelHitVolume, maskBit) == OBJHITS_MODEL_HIT_VOLUME_MASK_BIT_OFFSET);
 STATIC_ASSERT(offsetof(ObjHitsModelFileHeader, joints) == 0x3C);
 STATIC_ASSERT(offsetof(ObjHitsModelFileHeader, hitVolumes) == 0x58);
 STATIC_ASSERT(offsetof(ObjHitsModelFileHeader, jointCount) == 0xF3);
@@ -244,12 +241,9 @@ STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, capsuleAxial) == OBJHITS_SKELETON_HIT
 STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, signedSurfaceDistance) == 0x30);
 STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, centerDistance) == 0x34);
 STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, radiusSum) == 0x38);
-STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, inverseDistance) ==
-              OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
-STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointIndexA) ==
-              OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET);
-STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointIndexB) ==
-              OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, inverseDistance) == OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointIndexA) == OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointIndexB) == OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET);
 
 int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,ObjHitsSkeletonJointData *jointData,
                                   int *model,ObjHitsSkeletonHit *hits,

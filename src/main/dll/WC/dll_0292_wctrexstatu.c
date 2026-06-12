@@ -31,36 +31,10 @@ typedef struct WCTrexStatueSetup
     u8 pad20[0x24 - 0x20];
 } WCTrexStatueSetup;
 
-STATIC_ASSERT (
-sizeof
-(WCTrexStatueSetup)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(WCTrexStatueSetup
-,
-type
-)
-==
-WCTREXSTATU_SETUP_TYPE_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCTrexStatueSetup
-,
-modelIndex
-)
-==
-WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCTrexStatueSetup
-,
-raisedBit
-)
-==
-WCTREXSTATU_SETUP_RAISED_BIT_OFFSET
-);
+STATIC_ASSERT(sizeof(WCTrexStatueSetup) == 0x24);
+STATIC_ASSERT(offsetof(WCTrexStatueSetup, type) == WCTREXSTATU_SETUP_TYPE_OFFSET);
+STATIC_ASSERT(offsetof(WCTrexStatueSetup, modelIndex) == WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET);
+STATIC_ASSERT(offsetof(WCTrexStatueSetup, raisedBit) == WCTREXSTATU_SETUP_RAISED_BIT_OFFSET);
 
 #pragma opt_strength_reduction off
 int wctrexstatu_interactCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)

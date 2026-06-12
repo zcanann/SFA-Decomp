@@ -42,44 +42,11 @@ typedef struct WCBouncyCrateState
     u8 bounceCount;
 } WCBouncyCrateState;
 
-STATIC_ASSERT (
-sizeof
-(WCBouncyCrateState)
-==
-WBOUNCY_EXTRA_SIZE
-);
-STATIC_ASSERT (offsetof
-(WCBouncyCrateState
-,
-homeY
-)
-==
-WBOUNCY_STATE_HOME_Y
-);
-STATIC_ASSERT (offsetof
-(WCBouncyCrateState
-,
-cooldown
-)
-==
-WBOUNCY_STATE_COOLDOWN
-);
-STATIC_ASSERT (offsetof
-(WCBouncyCrateState
-,
-flags
-)
-==
-WBOUNCY_STATE_FLAGS
-);
-STATIC_ASSERT (offsetof
-(WCBouncyCrateState
-,
-bounceCount
-)
-==
-WBOUNCY_STATE_BOUNCE_COUNT
-);
+STATIC_ASSERT(sizeof(WCBouncyCrateState) == WBOUNCY_EXTRA_SIZE);
+STATIC_ASSERT(offsetof(WCBouncyCrateState, homeY) == WBOUNCY_STATE_HOME_Y);
+STATIC_ASSERT(offsetof(WCBouncyCrateState, cooldown) == WBOUNCY_STATE_COOLDOWN);
+STATIC_ASSERT(offsetof(WCBouncyCrateState, flags) == WBOUNCY_STATE_FLAGS);
+STATIC_ASSERT(offsetof(WCBouncyCrateState, bounceCount) == WBOUNCY_STATE_BOUNCE_COUNT);
 
 int wcbouncycra_getExtraSize(void) { return WBOUNCY_EXTRA_SIZE; }
 

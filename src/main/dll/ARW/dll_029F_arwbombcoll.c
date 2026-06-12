@@ -18,20 +18,8 @@ typedef struct ARWBombCollSetup
     u8 pad19[0x24 - 0x19];
 } ARWBombCollSetup;
 
-STATIC_ASSERT (
-sizeof
-(ARWBombCollSetup)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(ARWBombCollSetup
-,
-rotX
-)
-==
-0x18
-);
+STATIC_ASSERT(sizeof(ARWBombCollSetup) == 0x24);
+STATIC_ASSERT(offsetof(ARWBombCollSetup, rotX) == 0x18);
 
 int arwbombcoll_getExtraSize(void) { return 8; }
 

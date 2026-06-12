@@ -33,74 +33,15 @@ typedef struct BabyCloudRunnerState
     GameObject* target;
 } BabyCloudRunnerState;
 
-STATIC_ASSERT (
-sizeof
-(BabyCloudRunnerState)
-==
-0x8
-);
-STATIC_ASSERT (
-sizeof
-(BabyCloudRunnerPlacement)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(BabyCloudRunnerPlacement
-,
-gateGameBit
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(BabyCloudRunnerPlacement
-,
-rememberedGameBit
-)
-==
-0x1A
-);
-STATIC_ASSERT (offsetof
-(BabyCloudRunnerPlacement
-,
-targetGroup
-)
-==
-0x1C
-);
-STATIC_ASSERT (offsetof
-(BabyCloudRunnerPlacement
-,
-triggerIdMin
-)
-==
-0x1D
-);
-STATIC_ASSERT (offsetof
-(BabyCloudRunnerPlacement
-,
-triggerIdMax
-)
-==
-0x1E
-);
-STATIC_ASSERT (offsetof
-(BabyCloudRunnerPlacement
-,
-flags
-)
-==
-0x1F
-);
-STATIC_ASSERT (offsetof
-(BabyCloudRunnerState
-,
-target
-)
-==
-0x4
-);
+STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x8);
+STATIC_ASSERT(sizeof(BabyCloudRunnerPlacement) == 0x24);
+STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, gateGameBit) == 0x18);
+STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, rememberedGameBit) == 0x1A);
+STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, targetGroup) == 0x1C);
+STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, triggerIdMin) == 0x1D);
+STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, triggerIdMax) == 0x1E);
+STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, flags) == 0x1F);
+STATIC_ASSERT(offsetof(BabyCloudRunnerState, target) == 0x4);
 
 void dll_FC_update(int obj)
 {

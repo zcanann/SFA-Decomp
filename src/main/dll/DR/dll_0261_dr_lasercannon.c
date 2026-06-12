@@ -106,228 +106,34 @@ typedef struct DrLaserCannonState
     u16 bobPhase;
 } DrLaserCannonState;
 
-STATIC_ASSERT (offsetof
-(DrLaserCannonSetup
-,
-initialYaw
-)
-==
-DR_LASERCANNON_SETUP_INITIAL_YAW
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonSetup
-,
-reloadFrames
-)
-==
-DR_LASERCANNON_SETUP_RELOAD_FRAMES
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonSetup
-,
-targetRange
-)
-==
-DR_LASERCANNON_SETUP_TARGET_RANGE
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonSetup
-,
-beamSpeed
-)
-==
-DR_LASERCANNON_SETUP_BEAM_SPEED
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonSetup
-,
-destroyedGameBit
-)
-==
-DR_LASERCANNON_SETUP_DESTROYED_GAMEBIT
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonSetup
-,
-warningOffGameBit
-)
-==
-DR_LASERCANNON_SETUP_WARNING_OFF_GAMEBIT
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonAim
-,
-yaw
-)
-==
-DR_LASERCANNON_AIM_YAW
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonAim
-,
-pitch
-)
-==
-DR_LASERCANNON_AIM_PITCH
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-beamObject
-)
-==
-DR_LASERCANNON_STATE_BEAM_OBJECT
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-lastHitObject
-)
-==
-DR_LASERCANNON_STATE_LAST_HIT_OBJECT
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-muzzleX
-)
-==
-DR_LASERCANNON_STATE_MUZZLE_X
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-curveFollow
-)
-==
-DR_LASERCANNON_STATE_CURVE_FOLLOW
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-curveEndX
-)
-==
-DR_LASERCANNON_STATE_CURVE_END_X
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-animStepScale
-)
-==
-DR_LASERCANNON_STATE_ANIM_STEP_SCALE
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-trickyCooldown
-)
-==
-DR_LASERCANNON_STATE_TRICKY_COOLDOWN
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-reloadTimer
-)
-==
-DR_LASERCANNON_STATE_RELOAD_TIMER
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-aim
-)
-==
-DR_LASERCANNON_STATE_AIM
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-warningObject
-)
-==
-DR_LASERCANNON_STATE_WARNING_OBJECT
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-firepipeObject
-)
-==
-DR_LASERCANNON_STATE_FIREPIPE_OBJECT
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-activeFrames
-)
-==
-DR_LASERCANNON_STATE_ACTIVE_FRAMES
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-hitExcludeType
-)
-==
-DR_LASERCANNON_STATE_HIT_EXCLUDE_TYPE
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-bobOffset
-)
-==
-DR_LASERCANNON_STATE_BOB_OFFSET
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-optionalGameBit
-)
-==
-DR_LASERCANNON_STATE_OPTIONAL_GAMEBIT
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-health
-)
-==
-DR_LASERCANNON_STATE_HEALTH
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-hasFirepipe
-)
-==
-DR_LASERCANNON_STATE_HAS_FIREPIPE
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-flags
-)
-==
-DR_LASERCANNON_STATE_FLAGS
-);
-STATIC_ASSERT (offsetof
-(DrLaserCannonState
-,
-bobPhase
-)
-==
-DR_LASERCANNON_STATE_BOB_PHASE
-);
-STATIC_ASSERT (
-sizeof
-(DrLaserCannonState)
-==
-DR_LASERCANNON_EXTRA_SIZE
-);
+STATIC_ASSERT(offsetof(DrLaserCannonSetup, initialYaw) == DR_LASERCANNON_SETUP_INITIAL_YAW);
+STATIC_ASSERT(offsetof(DrLaserCannonSetup, reloadFrames) == DR_LASERCANNON_SETUP_RELOAD_FRAMES);
+STATIC_ASSERT(offsetof(DrLaserCannonSetup, targetRange) == DR_LASERCANNON_SETUP_TARGET_RANGE);
+STATIC_ASSERT(offsetof(DrLaserCannonSetup, beamSpeed) == DR_LASERCANNON_SETUP_BEAM_SPEED);
+STATIC_ASSERT(offsetof(DrLaserCannonSetup, destroyedGameBit) == DR_LASERCANNON_SETUP_DESTROYED_GAMEBIT);
+STATIC_ASSERT(offsetof(DrLaserCannonSetup, warningOffGameBit) == DR_LASERCANNON_SETUP_WARNING_OFF_GAMEBIT);
+STATIC_ASSERT(offsetof(DrLaserCannonAim, yaw) == DR_LASERCANNON_AIM_YAW);
+STATIC_ASSERT(offsetof(DrLaserCannonAim, pitch) == DR_LASERCANNON_AIM_PITCH);
+STATIC_ASSERT(offsetof(DrLaserCannonState, beamObject) == DR_LASERCANNON_STATE_BEAM_OBJECT);
+STATIC_ASSERT(offsetof(DrLaserCannonState, lastHitObject) == DR_LASERCANNON_STATE_LAST_HIT_OBJECT);
+STATIC_ASSERT(offsetof(DrLaserCannonState, muzzleX) == DR_LASERCANNON_STATE_MUZZLE_X);
+STATIC_ASSERT(offsetof(DrLaserCannonState, curveFollow) == DR_LASERCANNON_STATE_CURVE_FOLLOW);
+STATIC_ASSERT(offsetof(DrLaserCannonState, curveEndX) == DR_LASERCANNON_STATE_CURVE_END_X);
+STATIC_ASSERT(offsetof(DrLaserCannonState, animStepScale) == DR_LASERCANNON_STATE_ANIM_STEP_SCALE);
+STATIC_ASSERT(offsetof(DrLaserCannonState, trickyCooldown) == DR_LASERCANNON_STATE_TRICKY_COOLDOWN);
+STATIC_ASSERT(offsetof(DrLaserCannonState, reloadTimer) == DR_LASERCANNON_STATE_RELOAD_TIMER);
+STATIC_ASSERT(offsetof(DrLaserCannonState, aim) == DR_LASERCANNON_STATE_AIM);
+STATIC_ASSERT(offsetof(DrLaserCannonState, warningObject) == DR_LASERCANNON_STATE_WARNING_OBJECT);
+STATIC_ASSERT(offsetof(DrLaserCannonState, firepipeObject) == DR_LASERCANNON_STATE_FIREPIPE_OBJECT);
+STATIC_ASSERT(offsetof(DrLaserCannonState, activeFrames) == DR_LASERCANNON_STATE_ACTIVE_FRAMES);
+STATIC_ASSERT(offsetof(DrLaserCannonState, hitExcludeType) == DR_LASERCANNON_STATE_HIT_EXCLUDE_TYPE);
+STATIC_ASSERT(offsetof(DrLaserCannonState, bobOffset) == DR_LASERCANNON_STATE_BOB_OFFSET);
+STATIC_ASSERT(offsetof(DrLaserCannonState, optionalGameBit) == DR_LASERCANNON_STATE_OPTIONAL_GAMEBIT);
+STATIC_ASSERT(offsetof(DrLaserCannonState, health) == DR_LASERCANNON_STATE_HEALTH);
+STATIC_ASSERT(offsetof(DrLaserCannonState, hasFirepipe) == DR_LASERCANNON_STATE_HAS_FIREPIPE);
+STATIC_ASSERT(offsetof(DrLaserCannonState, flags) == DR_LASERCANNON_STATE_FLAGS);
+STATIC_ASSERT(offsetof(DrLaserCannonState, bobPhase) == DR_LASERCANNON_STATE_BOB_PHASE);
+STATIC_ASSERT(sizeof(DrLaserCannonState) == DR_LASERCANNON_EXTRA_SIZE);
 
 int drlasercannon_getExtraSize(void) { return DR_LASERCANNON_EXTRA_SIZE; }
 

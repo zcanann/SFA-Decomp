@@ -128,14 +128,7 @@ typedef struct MagicDustState
     u16 unk280;
 } MagicDustState;
 
-STATIC_ASSERT (offsetof
-(MagicDustState
-,
-flags27A
-)
-==
-0x27A
-);
+STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
 
 /*
  * --INFO--

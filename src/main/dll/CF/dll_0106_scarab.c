@@ -70,12 +70,7 @@ typedef struct ScarabState
     f32 msgParamC; /* 0x30 */
 } ScarabState;
 
-STATIC_ASSERT (
-sizeof
-(ScarabState)
-==
-0x34
-);
+STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
 /* dll_107_getExtraSize == 0x2c (CF wind lift / blow vent). */
 typedef struct WindLift107State
@@ -104,12 +99,7 @@ typedef struct WindLift107State
     u8 pad28[4];
 } WindLift107State;
 
-STATIC_ASSERT (
-sizeof
-(WindLift107State)
-==
-0x2c
-);
+STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 /* portalspelldoor_getExtraSize == 0x10. */
 typedef struct PortalSpellDoorState
@@ -121,12 +111,7 @@ typedef struct PortalSpellDoorState
     u8 pad0D[3];
 } PortalSpellDoorState;
 
-STATIC_ASSERT (
-sizeof
-(PortalSpellDoorState)
-==
-0x10
-);
+STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
 
 extern uint GameBit_Get(int eventId);

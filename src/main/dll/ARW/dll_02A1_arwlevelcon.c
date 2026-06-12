@@ -27,84 +27,16 @@ typedef struct ARWLevelConState
     u8 pad22[2];
 } ARWLevelConState;
 
-STATIC_ASSERT (
-sizeof
-(ARWLevelConState)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(ARWLevelConState
-,
-sequenceSlot
-)
-==
-0x14
-);
-STATIC_ASSERT (offsetof
-(ARWLevelConState
-,
-sequenceCameraId
-)
-==
-0x16
-);
-STATIC_ASSERT (offsetof
-(ARWLevelConState
-,
-skyConfigured
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(ARWLevelConState
-,
-sequenceStarted
-)
-==
-0x19
-);
-STATIC_ASSERT (offsetof
-(ARWLevelConState
-,
-ringChoiceTriggered
-)
-==
-0x1a
-);
-STATIC_ASSERT (offsetof
-(ARWLevelConState
-,
-alternateRoute
-)
-==
-0x1b
-);
-STATIC_ASSERT (offsetof
-(ARWLevelConState
-,
-streamId
-)
-==
-0x1c
-);
-STATIC_ASSERT (offsetof
-(ARWLevelConState
-,
-ringChoiceTriggerId
-)
-==
-0x20
-);
-STATIC_ASSERT (offsetof
-(ARWLevelConSetup
-,
-routeSignature
-)
-==
-0x14
-);
+STATIC_ASSERT(sizeof(ARWLevelConState) == 0x24);
+STATIC_ASSERT(offsetof(ARWLevelConState, sequenceSlot) == 0x14);
+STATIC_ASSERT(offsetof(ARWLevelConState, sequenceCameraId) == 0x16);
+STATIC_ASSERT(offsetof(ARWLevelConState, skyConfigured) == 0x18);
+STATIC_ASSERT(offsetof(ARWLevelConState, sequenceStarted) == 0x19);
+STATIC_ASSERT(offsetof(ARWLevelConState, ringChoiceTriggered) == 0x1a);
+STATIC_ASSERT(offsetof(ARWLevelConState, alternateRoute) == 0x1b);
+STATIC_ASSERT(offsetof(ARWLevelConState, streamId) == 0x1c);
+STATIC_ASSERT(offsetof(ARWLevelConState, ringChoiceTriggerId) == 0x20);
+STATIC_ASSERT(offsetof(ARWLevelConSetup, routeSignature) == 0x14);
 
 void arwlevelcon_commitRingChoice(int obj)
 {

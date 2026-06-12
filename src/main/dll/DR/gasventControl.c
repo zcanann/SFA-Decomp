@@ -341,12 +341,7 @@ typedef struct DrExplodableChunk
     u8 pad6E[2];
 } DrExplodableChunk;
 
-STATIC_ASSERT (
-sizeof
-(DrExplodableChunk)
-==
-0x70
-);
+STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 
 typedef struct DrExplodableState
 {
@@ -361,20 +356,8 @@ typedef struct DrExplodableState
     u8 pad6E6[2];
 } DrExplodableState;
 
-STATIC_ASSERT (offsetof
-(DrExplodableState
-,
-children
-)
-==
-0x690
-);
-STATIC_ASSERT (
-sizeof
-(DrExplodableState)
-==
-0x6e8
-);
+STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
+STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
 int explodable_getExtraSize(void) { return 0x6e8; }
 int cfforcefield_getExtraSize(void) { return 0x8; }

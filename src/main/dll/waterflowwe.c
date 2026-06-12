@@ -42,74 +42,15 @@ typedef struct ObjectCurrentSourceSetup
     u8 strengthTenths;
 } ObjectCurrentSourceSetup;
 
-STATIC_ASSERT (
-sizeof
-(WaterFlowWeState)
-==
-0x8
-);
-STATIC_ASSERT (offsetof
-(WaterFlowWeSetup
-,
-rotZ
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(WaterFlowWeSetup
-,
-scale
-)
-==
-0x1b
-);
-STATIC_ASSERT (offsetof
-(WaterFlowWeSetup
-,
-phaseDriverDisabled
-)
-==
-0x1f
-);
-STATIC_ASSERT (
-sizeof
-(WaterFlowWeSetup)
-==
-0x20
-);
-STATIC_ASSERT (offsetof
-(FoliageCurrentSetup
-,
-currentRadius
-)
-==
-0x19
-);
-STATIC_ASSERT (offsetof
-(FoliageCurrentSetup
-,
-currentFlags
-)
-==
-0x1a
-);
-STATIC_ASSERT (offsetof
-(ObjectCurrentSourceSetup
-,
-radiusCells
-)
-==
-0x29
-);
-STATIC_ASSERT (offsetof
-(ObjectCurrentSourceSetup
-,
-strengthTenths
-)
-==
-0x32
-);
+STATIC_ASSERT(sizeof(WaterFlowWeState) == 0x8);
+STATIC_ASSERT(offsetof(WaterFlowWeSetup, rotZ) == 0x18);
+STATIC_ASSERT(offsetof(WaterFlowWeSetup, scale) == 0x1b);
+STATIC_ASSERT(offsetof(WaterFlowWeSetup, phaseDriverDisabled) == 0x1f);
+STATIC_ASSERT(sizeof(WaterFlowWeSetup) == 0x20);
+STATIC_ASSERT(offsetof(FoliageCurrentSetup, currentRadius) == 0x19);
+STATIC_ASSERT(offsetof(FoliageCurrentSetup, currentFlags) == 0x1a);
+STATIC_ASSERT(offsetof(ObjectCurrentSourceSetup, radiusCells) == 0x29);
+STATIC_ASSERT(offsetof(ObjectCurrentSourceSetup, strengthTenths) == 0x32);
 
 extern f32 lbl_803E72B4;
 extern f32 lbl_803E72B8;

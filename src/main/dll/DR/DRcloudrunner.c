@@ -117,60 +117,13 @@ typedef struct SCMusicTreeSetup
     u8 flags;
 } SCMusicTreeSetup;
 
-STATIC_ASSERT (
-sizeof
-(SCMusicTreeSetup)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(SCMusicTreeSetup
-,
-rotXByte
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(SCMusicTreeSetup
-,
-rotZByte
-)
-==
-0x19
-);
-STATIC_ASSERT (offsetof
-(SCMusicTreeSetup
-,
-yawByte
-)
-==
-0x1A
-);
-STATIC_ASSERT (offsetof
-(SCMusicTreeSetup
-,
-hearRadiusHalf
-)
-==
-0x1B
-);
-STATIC_ASSERT (offsetof
-(SCMusicTreeSetup
-,
-scale
-)
-==
-0x1C
-);
-STATIC_ASSERT (offsetof
-(SCMusicTreeSetup
-,
-flags
-)
-==
-0x23
-);
+STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
+STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);
+STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotZByte) == 0x19);
+STATIC_ASSERT(offsetof(SCMusicTreeSetup, yawByte) == 0x1A);
+STATIC_ASSERT(offsetof(SCMusicTreeSetup, hearRadiusHalf) == 0x1B);
+STATIC_ASSERT(offsetof(SCMusicTreeSetup, scale) == 0x1C);
+STATIC_ASSERT(offsetof(SCMusicTreeSetup, flags) == 0x23);
 
 void sc_musictree_update(int obj)
 {

@@ -93,14 +93,7 @@ typedef struct KTRexArenaState
     void* light; /* 0x178 */
 } KTRexArenaState;
 
-STATIC_ASSERT (offsetof
-(KTRexArenaState
-,
-light
-)
-==
-0x178
-);
+STATIC_ASSERT(offsetof(KTRexArenaState, light) == 0x178);
 
 /* Per-object extra block for the KT Rex boss (ktrex_getExtraSize == 0x5a4). */
 typedef struct KTRexRuntime
@@ -144,14 +137,7 @@ typedef struct KTRexRuntime
     KTRexArenaState* arena; /* 0x40c: gKTRexState */
 } KTRexRuntime;
 
-STATIC_ASSERT (offsetof
-(KTRexRuntime
-,
-arena
-)
-==
-0x40c
-);
+STATIC_ASSERT(offsetof(KTRexRuntime, arena) == 0x40c);
 
 static inline f32* KTRex_GetActiveContactPointTable(int obj)
 {

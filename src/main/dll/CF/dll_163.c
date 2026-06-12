@@ -34,154 +34,25 @@ extern f32 lbl_803E3BFC;
 #define STAFFACTIVATED_ENABLE_GAMEBIT 0x957
 #define STAFFACTIVATED_PARTICLE_ID 0x7c3
 
-STATIC_ASSERT (
-sizeof
-(StaffActivatedState)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(StaffActivatedState
-,
-targetX
-)
-==
-0x00
-);
-STATIC_ASSERT (offsetof
-(StaffActivatedState
-,
-targetZ
-)
-==
-0x04
-);
-STATIC_ASSERT (offsetof
-(StaffActivatedState
-,
-liftVelocity
-)
-==
-0x0c
-);
-STATIC_ASSERT (offsetof
-(StaffActivatedState
-,
-previousLiftHeight
-)
-==
-0x10
-);
-STATIC_ASSERT (offsetof
-(StaffActivatedState
-,
-liftHeight
-)
-==
-0x14
-);
-STATIC_ASSERT (offsetof
-(StaffActivatedState
-,
-peakLiftHeight
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(StaffActivatedState
-,
-liftReset
-)
-==
-0x1c
-);
-STATIC_ASSERT (offsetof
-(StaffActivatedState
-,
-flags
-)
-==
-STAFFACTIVATED_STATE_FLAGS
-);
-STATIC_ASSERT (offsetof
-(StaffActivatedState
-,
-hitCooldown
-)
-==
-0x20
-);
-STATIC_ASSERT (
-sizeof
-(StaffActivatedSetup)
-==
-0x28
-);
-STATIC_ASSERT (offsetof
-(StaffActivatedSetup
-,
-type
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(StaffActivatedSetup
-,
-mode
-)
-==
-0x1c
-);
-STATIC_ASSERT (offsetof
-(StaffActivatedSetup
-,
-size
-)
-==
-0x1d
-);
-STATIC_ASSERT (offsetof
-(StaffActivatedSetup
-,
-debrisObjectSet
-)
-==
-0x1e
-);
-STATIC_ASSERT (offsetof
-(StaffActivatedSetup
-,
-debrisCount
-)
-==
-0x1f
-);
-STATIC_ASSERT (offsetof
-(StaffActivatedSetup
-,
-timedEventSeconds
-)
-==
-0x20
-);
-STATIC_ASSERT (offsetof
-(StaffActivatedSetup
-,
-activeGameBit
-)
-==
-0x22
-);
-STATIC_ASSERT (offsetof
-(StaffActivatedSetup
-,
-lockGameBit
-)
-==
-0x24
-);
+STATIC_ASSERT(sizeof(StaffActivatedState) == 0x24);
+STATIC_ASSERT(offsetof(StaffActivatedState, targetX) == 0x00);
+STATIC_ASSERT(offsetof(StaffActivatedState, targetZ) == 0x04);
+STATIC_ASSERT(offsetof(StaffActivatedState, liftVelocity) == 0x0c);
+STATIC_ASSERT(offsetof(StaffActivatedState, previousLiftHeight) == 0x10);
+STATIC_ASSERT(offsetof(StaffActivatedState, liftHeight) == 0x14);
+STATIC_ASSERT(offsetof(StaffActivatedState, peakLiftHeight) == 0x18);
+STATIC_ASSERT(offsetof(StaffActivatedState, liftReset) == 0x1c);
+STATIC_ASSERT(offsetof(StaffActivatedState, flags) == STAFFACTIVATED_STATE_FLAGS);
+STATIC_ASSERT(offsetof(StaffActivatedState, hitCooldown) == 0x20);
+STATIC_ASSERT(sizeof(StaffActivatedSetup) == 0x28);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, type) == 0x18);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, mode) == 0x1c);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, size) == 0x1d);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, debrisObjectSet) == 0x1e);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, debrisCount) == 0x1f);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, timedEventSeconds) == 0x20);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, activeGameBit) == 0x22);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, lockGameBit) == 0x24);
 
 void staffactivated_calcInteractionTargetXZ(int obj, f32* outX, f32* outZ)
 {

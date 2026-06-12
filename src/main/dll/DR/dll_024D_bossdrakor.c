@@ -71,12 +71,7 @@ typedef struct BossDrakorState
     f32 hurtSfxCooldown;
 } BossDrakorState;
 
-STATIC_ASSERT (
-sizeof
-(BossDrakorState)
-==
-0x1a4
-);
+STATIC_ASSERT(sizeof(BossDrakorState) == 0x1a4);
 
 int bossdrakor_getExtraSize(void)
 {

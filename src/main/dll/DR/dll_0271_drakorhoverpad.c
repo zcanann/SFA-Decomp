@@ -120,12 +120,7 @@ typedef struct DrakorPadCurve
     f32 vecF8[4];
 } DrakorPadCurve;
 
-STATIC_ASSERT (
-sizeof
-(DrakorPadCurve)
-==
-0x108
-);
+STATIC_ASSERT(sizeof(DrakorPadCurve) == 0x108);
 
 /* drakorhoverpad_getExtraSize == 0x17c. */
 typedef struct DrakorHoverpadState
@@ -152,12 +147,7 @@ typedef struct DrakorHoverpadState
     u8 pad178[4];
 } DrakorHoverpadState;
 
-STATIC_ASSERT (
-sizeof
-(DrakorHoverpadState)
-==
-0x17c
-);
+STATIC_ASSERT(sizeof(DrakorHoverpadState) == 0x17c);
 
 int drakorhoverpad_getExtraSize(void) { return 0x17c; }
 

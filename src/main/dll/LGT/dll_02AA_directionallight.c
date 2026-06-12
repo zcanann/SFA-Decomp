@@ -48,138 +48,23 @@ typedef struct DirectionalLightState
 #define DIRECTIONALLIGHT_FLAG_USE_AMBIENT_COLOR 0x01
 #define DIRECTIONALLIGHT_DEBUG_FIELD_COUNT 8
 
-STATIC_ASSERT (
-sizeof
-(DirectionalLightState)
-==
-0x10
-);
-STATIC_ASSERT (offsetof
-(DirectionalLightState
-,
-light
-)
-==
-0x08
-);
-STATIC_ASSERT (offsetof
-(DirectionalLightState
-,
-debugEditing
-)
-==
-0x0C
-);
-STATIC_ASSERT (offsetof
-(DirectionalLightState
-,
-debugField
-)
-==
-0x0D
-);
-STATIC_ASSERT (offsetof
-(DirectionalLightState
-,
-enabled
-)
-==
-0x0E
-);
-STATIC_ASSERT (offsetof
-(DirectionalLightSetup
-,
-rotX
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(DirectionalLightSetup
-,
-rotY
-)
-==
-0x19
-);
-STATIC_ASSERT (offsetof
-(DirectionalLightSetup
-,
-diffuseR
-)
-==
-0x1A
-);
-STATIC_ASSERT (offsetof
-(DirectionalLightSetup
-,
-eventName
-)
-==
-0x1D
-);
-STATIC_ASSERT (offsetof
-(DirectionalLightSetup
-,
-enableBit
-)
-==
-0x1E
-);
-STATIC_ASSERT (offsetof
-(DirectionalLightSetup
-,
-flags
-)
-==
-0x2A
-);
-STATIC_ASSERT (offsetof
-(DirectionalLightSetup
-,
-selectionPriority
-)
-==
-0x2C
-);
-STATIC_ASSERT (offsetof
-(DirectionalLightSetup
-,
-colorFadeFrames
-)
-==
-0x2E
-);
-STATIC_ASSERT (offsetof
-(DirectionalLightSetup
-,
-enabled
-)
-==
-0x30
-);
-STATIC_ASSERT (offsetof
-(DirectionalLightSetup
-,
-rotXSpeed
-)
-==
-0x32
-);
-STATIC_ASSERT (offsetof
-(DirectionalLightSetup
-,
-rotYSpeed
-)
-==
-0x34
-);
-STATIC_ASSERT (
-sizeof
-(DirectionalLightSetup)
-==
-0x38
-);
+STATIC_ASSERT(sizeof(DirectionalLightState) == 0x10);
+STATIC_ASSERT(offsetof(DirectionalLightState, light) == 0x08);
+STATIC_ASSERT(offsetof(DirectionalLightState, debugEditing) == 0x0C);
+STATIC_ASSERT(offsetof(DirectionalLightState, debugField) == 0x0D);
+STATIC_ASSERT(offsetof(DirectionalLightState, enabled) == 0x0E);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, rotX) == 0x18);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, rotY) == 0x19);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, diffuseR) == 0x1A);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, eventName) == 0x1D);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, enableBit) == 0x1E);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, flags) == 0x2A);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, selectionPriority) == 0x2C);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, colorFadeFrames) == 0x2E);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, enabled) == 0x30);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, rotXSpeed) == 0x32);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, rotYSpeed) == 0x34);
+STATIC_ASSERT(sizeof(DirectionalLightSetup) == 0x38);
 
 int directionallight_getExtraSize(void) { return 0x10; }
 

@@ -15,40 +15,16 @@ typedef struct BrokenPipeSetup
     u8 pad1C[4];
 } BrokenPipeSetup;
 
-STATIC_ASSERT (offsetof
-(BrokenPipeSetup
-,
-rotZ
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(BrokenPipeSetup
-,
-scale
-)
-==
-0x1b
-);
-STATIC_ASSERT (
-sizeof
-(BrokenPipeSetup)
-==
-0x20
-);
+STATIC_ASSERT(offsetof(BrokenPipeSetup, rotZ) == 0x18);
+STATIC_ASSERT(offsetof(BrokenPipeSetup, scale) == 0x1b);
+STATIC_ASSERT(sizeof(BrokenPipeSetup) == 0x20);
 
 typedef struct BrokenPipeState
 {
     int hitEffectCooldown;
 } BrokenPipeState;
 
-STATIC_ASSERT (
-sizeof
-(BrokenPipeState)
-==
-4
-);
+STATIC_ASSERT(sizeof(BrokenPipeState) == 4);
 
 int brokenpipe_getExtraSize(void) { return 4; }
 

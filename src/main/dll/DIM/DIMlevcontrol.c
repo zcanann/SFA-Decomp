@@ -421,12 +421,7 @@ typedef struct DimlavasmashState
 
 /* dimcannon extra block (0xb4); the head is the per-cannonball column
  * arrays walked via state + i*4 (kept raw), this names the scalar tail. */
-STATIC_ASSERT (
-sizeof
-(DimCannonState)
-==
-0xb4
-);
+STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 
 int dimcannon_getExtraSize(int* obj)
 {

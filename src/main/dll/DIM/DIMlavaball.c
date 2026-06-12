@@ -60,24 +60,14 @@ typedef struct MoonSeedBushState
     u8 flags; /* bit 1 = pending update */
 } MoonSeedBushState;
 
-STATIC_ASSERT (
-sizeof
-(MoonSeedBushState)
-==
-0x2
-);
+STATIC_ASSERT(sizeof(MoonSeedBushState) == 0x2);
 
 /*
  * Per-object extra state for the mmp asteroid set piece
  * (mmp_asteroid_re_getExtraSize == 0x1C).
  */
 
-STATIC_ASSERT (
-sizeof
-(MmpAsteroidReState)
-==
-0x1C
-);
+STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
 
 /*
  * Per-object extra state for the mmp trench fx emitter
@@ -101,12 +91,7 @@ typedef struct MmpTrenchfxState
     f32 emitTimer; /* rand(50,100); spawns effect 0x71F while > 0 */
 } MmpTrenchfxState;
 
-STATIC_ASSERT (
-sizeof
-(MmpTrenchfxState)
-==
-0x30
-);
+STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 
 /*
  * Per-object extra state for the mmp moonrock carryable
@@ -114,12 +99,7 @@ sizeof
  * gCarryableInterface record (the state pointer itself is handed to it).
  */
 
-STATIC_ASSERT (
-sizeof
-(MmpMoonrockState)
-==
-0x30
-);
+STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
 
 
 extern undefined8 FUN_80006728();

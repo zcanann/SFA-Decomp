@@ -119,70 +119,14 @@ typedef struct ModgfxState
     u8 activeVertexBufferIndex;
 } ModgfxState;
 
-STATIC_ASSERT (offsetof
-(ModgfxState
-,
-vertexBuffers
-)
-==
-0x78
-);
-STATIC_ASSERT (offsetof
-(ModgfxState
-,
-alphaChannels
-)
-==
-0xAC
-);
-STATIC_ASSERT (offsetof
-(ModgfxState
-,
-blendColorR
-)
-==
-0xBC
-);
-STATIC_ASSERT (offsetof
-(ModgfxState
-,
-vertexCount
-)
-==
-0xEA
-);
-STATIC_ASSERT (offsetof
-(ModgfxState
-,
-posCurX
-)
-==
-0x60
-);
-STATIC_ASSERT (offsetof
-(ModgfxState
-,
-activeChannel
-)
-==
-0xFC
-);
-STATIC_ASSERT (offsetof
-(ModgfxState
-,
-rotStepZ
-)
-==
-0x100
-);
-STATIC_ASSERT (offsetof
-(ModgfxState
-,
-rotOffsetZ
-)
-==
-0x106
-);
+STATIC_ASSERT(offsetof(ModgfxState, vertexBuffers) == 0x78);
+STATIC_ASSERT(offsetof(ModgfxState, alphaChannels) == 0xAC);
+STATIC_ASSERT(offsetof(ModgfxState, blendColorR) == 0xBC);
+STATIC_ASSERT(offsetof(ModgfxState, vertexCount) == 0xEA);
+STATIC_ASSERT(offsetof(ModgfxState, posCurX) == 0x60);
+STATIC_ASSERT(offsetof(ModgfxState, activeChannel) == 0xFC);
+STATIC_ASSERT(offsetof(ModgfxState, rotStepZ) == 0x100);
+STATIC_ASSERT(offsetof(ModgfxState, rotOffsetZ) == 0x106);
 
 /* vertex-group command payload handed to the updateVertex* handlers */
 typedef struct ModgfxVertexGroupCmd
@@ -261,52 +205,12 @@ typedef struct ModgfxSpawnContext
     u8 pad5E[0x60 - 0x5E];
 } ModgfxSpawnContext;
 
-STATIC_ASSERT (
-sizeof
-(ModgfxSpawnContext)
-==
-0x60
-);
-STATIC_ASSERT (offsetof
-(ModgfxSpawnContext
-,
-vecX
-)
-==
-0x20
-);
-STATIC_ASSERT (offsetof
-(ModgfxSpawnContext
-,
-posX
-)
-==
-0x2C
-);
-STATIC_ASSERT (offsetof
-(ModgfxSpawnContext
-,
-sequenceParams
-)
-==
-0x46
-);
-STATIC_ASSERT (offsetof
-(ModgfxSpawnContext
-,
-flags
-)
-==
-0x54
-);
-STATIC_ASSERT (offsetof
-(ModgfxSpawnContext
-,
-pendingSpawnCount
-)
-==
-0x5D
-);
+STATIC_ASSERT(sizeof(ModgfxSpawnContext) == 0x60);
+STATIC_ASSERT(offsetof(ModgfxSpawnContext, vecX) == 0x20);
+STATIC_ASSERT(offsetof(ModgfxSpawnContext, posX) == 0x2C);
+STATIC_ASSERT(offsetof(ModgfxSpawnContext, sequenceParams) == 0x46);
+STATIC_ASSERT(offsetof(ModgfxSpawnContext, flags) == 0x54);
+STATIC_ASSERT(offsetof(ModgfxSpawnContext, pendingSpawnCount) == 0x5D);
 
 typedef struct PartfxEffectState
 {
@@ -390,140 +294,23 @@ typedef struct PartfxEffectState
     u8 textureIsBorrowed;
 } PartfxEffectState;
 
-STATIC_ASSERT (
-sizeof
-(PartfxEffectState)
-==
-0x140
-);
-STATIC_ASSERT (offsetof
-(PartfxEffectState
-,
-vertexBuffers
-)
-==
-0x78
-);
-STATIC_ASSERT (offsetof
-(PartfxEffectState
-,
-textureResource
-)
-==
-0x98
-);
-STATIC_ASSERT (offsetof
-(PartfxEffectState
-,
-flags
-)
-==
-0xA4
-);
-STATIC_ASSERT (offsetof
-(PartfxEffectState
-,
-drawPosX
-)
-==
-0x60
-);
-STATIC_ASSERT (offsetof
-(PartfxEffectState
-,
-velocityX
-)
-==
-0x6C
-);
-STATIC_ASSERT (offsetof
-(PartfxEffectState
-,
-alphaChannels
-)
-==
-0xAC
-);
-STATIC_ASSERT (offsetof
-(PartfxEffectState
-,
-blendColorR
-)
-==
-0xBC
-);
-STATIC_ASSERT (offsetof
-(PartfxEffectState
-,
-renderScale
-)
-==
-0xD4
-);
-STATIC_ASSERT (offsetof
-(PartfxEffectState
-,
-vertexCount
-)
-==
-0xEA
-);
-STATIC_ASSERT (offsetof
-(PartfxEffectState
-,
-colorVertexCount
-)
-==
-0xEC
-);
-STATIC_ASSERT (offsetof
-(PartfxEffectState
-,
-stageDurations
-)
-==
-0xEE
-);
-STATIC_ASSERT (offsetof
-(PartfxEffectState
-,
-sequenceId
-)
-==
-0x10C
-);
-STATIC_ASSERT (offsetof
-(PartfxEffectState
-,
-inlineData
-)
-==
-0x12C
-);
-STATIC_ASSERT (offsetof
-(PartfxEffectState
-,
-activeVertexBufferIndex
-)
-==
-0x130
-);
-STATIC_ASSERT (offsetof
-(PartfxEffectState
-,
-emitterCount
-)
-==
-0x139
-);
-STATIC_ASSERT (offsetof
-(PartfxEffectState
-,
-textureIsBorrowed
-)
-==
-0x13F
-);
+STATIC_ASSERT(sizeof(PartfxEffectState) == 0x140);
+STATIC_ASSERT(offsetof(PartfxEffectState, vertexBuffers) == 0x78);
+STATIC_ASSERT(offsetof(PartfxEffectState, textureResource) == 0x98);
+STATIC_ASSERT(offsetof(PartfxEffectState, flags) == 0xA4);
+STATIC_ASSERT(offsetof(PartfxEffectState, drawPosX) == 0x60);
+STATIC_ASSERT(offsetof(PartfxEffectState, velocityX) == 0x6C);
+STATIC_ASSERT(offsetof(PartfxEffectState, alphaChannels) == 0xAC);
+STATIC_ASSERT(offsetof(PartfxEffectState, blendColorR) == 0xBC);
+STATIC_ASSERT(offsetof(PartfxEffectState, renderScale) == 0xD4);
+STATIC_ASSERT(offsetof(PartfxEffectState, vertexCount) == 0xEA);
+STATIC_ASSERT(offsetof(PartfxEffectState, colorVertexCount) == 0xEC);
+STATIC_ASSERT(offsetof(PartfxEffectState, stageDurations) == 0xEE);
+STATIC_ASSERT(offsetof(PartfxEffectState, sequenceId) == 0x10C);
+STATIC_ASSERT(offsetof(PartfxEffectState, inlineData) == 0x12C);
+STATIC_ASSERT(offsetof(PartfxEffectState, activeVertexBufferIndex) == 0x130);
+STATIC_ASSERT(offsetof(PartfxEffectState, emitterCount) == 0x139);
+STATIC_ASSERT(offsetof(PartfxEffectState, textureIsBorrowed) == 0x13F);
 
 #define gModgfxActiveEffectRegistry DAT_8039ce58
 #define gModgfxEffectRenderBuffers DAT_8039cf20

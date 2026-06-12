@@ -360,16 +360,11 @@ typedef struct ExpgfxStaticDataLayout {
   char noTextureString[1];
 } ExpgfxStaticDataLayout;
 
-STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, poolSlotTypeIds) ==
-              EXPGFX_STATIC_POOL_SLOT_TYPE_IDS_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, poolFrameFlags) ==
-              EXPGFX_STATIC_POOL_FRAME_FLAGS_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, quadTemplateA) ==
-              EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, quadTemplateB) ==
-              EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, mismatchInAddRemoveString) ==
-              EXPGFX_STATIC_MISMATCH_ADD_REMOVE_STRING_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, poolSlotTypeIds) == EXPGFX_STATIC_POOL_SLOT_TYPE_IDS_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, poolFrameFlags) == EXPGFX_STATIC_POOL_FRAME_FLAGS_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, quadTemplateA) == EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, quadTemplateB) == EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, mismatchInAddRemoveString) == EXPGFX_STATIC_MISMATCH_ADD_REMOVE_STRING_OFFSET);
 
 /*
  * Retail diagnostics call the 0x980 table "exptab". This layout captures the
@@ -394,16 +389,11 @@ STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolBounds) == EXPGFX_POOL_BOUND
 STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, expTab) == EXPGFX_EXPTAB_OFFSET);
 STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolSourceModes) == EXPGFX_POOL_SOURCE_MODES_OFFSET);
 STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolSourceIds) == EXPGFX_POOL_SOURCE_IDS_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, trackedSourceFrameMasks) ==
-              EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolBoundsTemplateIds) ==
-              EXPGFX_POOL_BOUNDS_TEMPLATE_IDS_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolActiveCounts) ==
-              EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolActiveMasks) ==
-              EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
-STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, slotPoolBases) ==
-              EXPGFX_SLOT_POOL_BASES_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, trackedSourceFrameMasks) == EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolBoundsTemplateIds) == EXPGFX_POOL_BOUNDS_TEMPLATE_IDS_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolActiveCounts) == EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolActiveMasks) == EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, slotPoolBases) == EXPGFX_SLOT_POOL_BASES_OFFSET);
 STATIC_ASSERT(sizeof(ExpgfxRuntimeDataLayout) == 0x1340);
 
 typedef union ExpgfxSlotStateBits {

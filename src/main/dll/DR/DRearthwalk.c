@@ -46,12 +46,7 @@ typedef struct ShBeaconState
     u8 pad16[2];
 } ShBeaconState;
 
-STATIC_ASSERT (
-sizeof
-(ShBeaconState)
-==
-0x18
-);
+STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
 
 extern uint GameBit_Get(int eventId);

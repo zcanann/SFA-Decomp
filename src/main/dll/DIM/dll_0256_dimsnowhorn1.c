@@ -41,20 +41,8 @@ typedef struct DIMSnowHorn1State
     u8 padD01[0xB];
 } DIMSnowHorn1State;
 
-STATIC_ASSERT (
-sizeof
-(DIMSnowHorn1State)
-==
-0xD0C
-);
-STATIC_ASSERT (offsetof
-(DIMSnowHorn1State
-,
-countdownTimer
-)
-==
-0xA84
-);
+STATIC_ASSERT(sizeof(DIMSnowHorn1State) == 0xD0C);
+STATIC_ASSERT(offsetof(DIMSnowHorn1State, countdownTimer) == 0xA84);
 
 #include "main/mapEventTypes.h"
 

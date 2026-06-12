@@ -54,110 +54,19 @@ typedef struct TrickyRuntime
     u8 guardCanSpawnHelpers;
 } TrickyRuntime;
 
-STATIC_ASSERT (offsetof
-(TrickyRuntime
-,
-flags
-)
-==
-TRICKY_STATE_FLAGS_OFFSET
-);
-STATIC_ASSERT (offsetof
-(TrickyRuntime
-,
-helperSpawnCount
-)
-==
-0x00
-);
-STATIC_ASSERT (offsetof
-(TrickyRuntime
-,
-growlLatState
-)
-==
-0x08
-);
-STATIC_ASSERT (offsetof
-(TrickyRuntime
-,
-guardState
-)
-==
-0x0A
-);
-STATIC_ASSERT (offsetof
-(TrickyRuntime
-,
-homeObj
-)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(TrickyRuntime
-,
-targetPosition
-)
-==
-0x28
-);
-STATIC_ASSERT (offsetof
-(TrickyRuntime
-,
-targetTurnTimer
-)
-==
-0xD2
-);
-STATIC_ASSERT (offsetof
-(TrickyRuntime
-,
-guardHelpers
-)
-==
-0x700
-);
-STATIC_ASSERT (offsetof
-(TrickyRuntime
-,
-guardPoint
-)
-==
-0x71C
-);
-STATIC_ASSERT (offsetof
-(TrickyRuntime
-,
-guardTimer
-)
-==
-0x728
-);
-STATIC_ASSERT (offsetof
-(TrickyRuntime
-,
-guardTarget
-)
-==
-0x72C
-);
-STATIC_ASSERT (offsetof
-(TrickyRuntime
-,
-guardWalkGroup
-)
-==
-0x730
-);
-STATIC_ASSERT (offsetof
-(TrickyRuntime
-,
-guardCanSpawnHelpers
-)
-==
-0x734
-);
+STATIC_ASSERT(offsetof(TrickyRuntime, flags) == TRICKY_STATE_FLAGS_OFFSET);
+STATIC_ASSERT(offsetof(TrickyRuntime, helperSpawnCount) == 0x00);
+STATIC_ASSERT(offsetof(TrickyRuntime, growlLatState) == 0x08);
+STATIC_ASSERT(offsetof(TrickyRuntime, guardState) == 0x0A);
+STATIC_ASSERT(offsetof(TrickyRuntime, homeObj) == 0x24);
+STATIC_ASSERT(offsetof(TrickyRuntime, targetPosition) == 0x28);
+STATIC_ASSERT(offsetof(TrickyRuntime, targetTurnTimer) == 0xD2);
+STATIC_ASSERT(offsetof(TrickyRuntime, guardHelpers) == 0x700);
+STATIC_ASSERT(offsetof(TrickyRuntime, guardPoint) == 0x71C);
+STATIC_ASSERT(offsetof(TrickyRuntime, guardTimer) == 0x728);
+STATIC_ASSERT(offsetof(TrickyRuntime, guardTarget) == 0x72C);
+STATIC_ASSERT(offsetof(TrickyRuntime, guardWalkGroup) == 0x730);
+STATIC_ASSERT(offsetof(TrickyRuntime, guardCanSpawnHelpers) == 0x734);
 
 #define TRICKY_RUNTIME(st) ((TrickyRuntime *)(st))
 

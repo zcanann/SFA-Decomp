@@ -24,68 +24,14 @@ typedef struct VfpLaddersSetup
     s16 triggerGameBit;
 } VfpLaddersSetup;
 
-STATIC_ASSERT (
-sizeof
-(VfpLaddersState)
-==
-0x08
-);
-STATIC_ASSERT (offsetof
-(VfpLaddersState
-,
-baseGameBit
-)
-==
-0x00
-);
-STATIC_ASSERT (offsetof
-(VfpLaddersState
-,
-triggerGameBit
-)
-==
-0x02
-);
-STATIC_ASSERT (offsetof
-(VfpLaddersState
-,
-phase
-)
-==
-0x04
-);
-STATIC_ASSERT (offsetof
-(VfpLaddersState
-,
-delayTimer
-)
-==
-0x06
-);
-STATIC_ASSERT (offsetof
-(VfpLaddersSetup
-,
-baseY
-)
-==
-0x0C
-);
-STATIC_ASSERT (offsetof
-(VfpLaddersSetup
-,
-baseGameBit
-)
-==
-0x1E
-);
-STATIC_ASSERT (offsetof
-(VfpLaddersSetup
-,
-triggerGameBit
-)
-==
-0x20
-);
+STATIC_ASSERT(sizeof(VfpLaddersState) == 0x08);
+STATIC_ASSERT(offsetof(VfpLaddersState, baseGameBit) == 0x00);
+STATIC_ASSERT(offsetof(VfpLaddersState, triggerGameBit) == 0x02);
+STATIC_ASSERT(offsetof(VfpLaddersState, phase) == 0x04);
+STATIC_ASSERT(offsetof(VfpLaddersState, delayTimer) == 0x06);
+STATIC_ASSERT(offsetof(VfpLaddersSetup, baseY) == 0x0C);
+STATIC_ASSERT(offsetof(VfpLaddersSetup, baseGameBit) == 0x1E);
+STATIC_ASSERT(offsetof(VfpLaddersSetup, triggerGameBit) == 0x20);
 
 int vfpladders_SeqFn(void) { return 0x0; }
 

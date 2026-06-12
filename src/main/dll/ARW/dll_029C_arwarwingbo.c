@@ -26,44 +26,11 @@ typedef struct ArwingBombSetup
     u8 rotX;
 } ArwingBombSetup;
 
-STATIC_ASSERT (
-sizeof
-(ArwingBombState)
-==
-0x0c
-);
-STATIC_ASSERT (offsetof
-(ArwingBombState
-,
-explosionTimer
-)
-==
-0x08
-);
-STATIC_ASSERT (offsetof
-(ArwingBombSetup
-,
-rotZ
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(ArwingBombSetup
-,
-rotY
-)
-==
-0x19
-);
-STATIC_ASSERT (offsetof
-(ArwingBombSetup
-,
-rotX
-)
-==
-0x1A
-);
+STATIC_ASSERT(sizeof(ArwingBombState) == 0x0c);
+STATIC_ASSERT(offsetof(ArwingBombState, explosionTimer) == 0x08);
+STATIC_ASSERT(offsetof(ArwingBombSetup, rotZ) == 0x18);
+STATIC_ASSERT(offsetof(ArwingBombSetup, rotY) == 0x19);
+STATIC_ASSERT(offsetof(ArwingBombSetup, rotX) == 0x1A);
 
 int arwarwingbo_getExtraSize(void) { return 0xc; }
 

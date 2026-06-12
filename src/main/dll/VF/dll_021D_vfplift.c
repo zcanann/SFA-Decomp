@@ -52,98 +52,18 @@ typedef struct VFPLiftPlacement
     s16 hitDisableGameBit;
 } VFPLiftPlacement;
 
-STATIC_ASSERT (
-sizeof
-(VFPLiftState)
-==
-0x20
-);
-STATIC_ASSERT (offsetof
-(VFPLiftState
-,
-travelDistance
-)
-==
-0x00
-);
-STATIC_ASSERT (offsetof
-(VFPLiftState
-,
-mode
-)
-==
-0x0A
-);
-STATIC_ASSERT (offsetof
-(VFPLiftState
-,
-hitDisableGameBit
-)
-==
-0x0C
-);
-STATIC_ASSERT (offsetof
-(VFPLiftState
-,
-toggleGameBit
-)
-==
-0x0E
-);
-STATIC_ASSERT (offsetof
-(VFPLiftState
-,
-mapEventNo
-)
-==
-0x1A
-);
-STATIC_ASSERT (
-sizeof
-(VFPLiftPlacement)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(VFPLiftPlacement
-,
-yawByte
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(VFPLiftPlacement
-,
-travelDistance
-)
-==
-0x1A
-);
-STATIC_ASSERT (offsetof
-(VFPLiftPlacement
-,
-mapEventNo
-)
-==
-0x1C
-);
-STATIC_ASSERT (offsetof
-(VFPLiftPlacement
-,
-toggleGameBit
-)
-==
-0x1E
-);
-STATIC_ASSERT (offsetof
-(VFPLiftPlacement
-,
-hitDisableGameBit
-)
-==
-0x20
-);
+STATIC_ASSERT(sizeof(VFPLiftState) == 0x20);
+STATIC_ASSERT(offsetof(VFPLiftState, travelDistance) == 0x00);
+STATIC_ASSERT(offsetof(VFPLiftState, mode) == 0x0A);
+STATIC_ASSERT(offsetof(VFPLiftState, hitDisableGameBit) == 0x0C);
+STATIC_ASSERT(offsetof(VFPLiftState, toggleGameBit) == 0x0E);
+STATIC_ASSERT(offsetof(VFPLiftState, mapEventNo) == 0x1A);
+STATIC_ASSERT(sizeof(VFPLiftPlacement) == 0x24);
+STATIC_ASSERT(offsetof(VFPLiftPlacement, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(VFPLiftPlacement, travelDistance) == 0x1A);
+STATIC_ASSERT(offsetof(VFPLiftPlacement, mapEventNo) == 0x1C);
+STATIC_ASSERT(offsetof(VFPLiftPlacement, toggleGameBit) == 0x1E);
+STATIC_ASSERT(offsetof(VFPLiftPlacement, hitDisableGameBit) == 0x20);
 
 extern void buttonDisable(int index, u32 flags);
 extern void Sfx_StopObjectChannel(int obj, int channel);

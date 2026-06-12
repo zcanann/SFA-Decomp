@@ -76,12 +76,7 @@ typedef struct WaveAnimatorState
     u8 pad35[7];
 } WaveAnimatorState;
 
-STATIC_ASSERT (
-sizeof
-(WaveAnimatorState)
-==
-0x3C
-);
+STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 
 /* alphaanimator_getExtraSize == 0x1c. */
 typedef struct AlphaAnimatorState
@@ -99,20 +94,10 @@ typedef struct AlphaAnimatorState
     u8 pad1A[2];
 } AlphaAnimatorState;
 
-STATIC_ASSERT (
-sizeof
-(AlphaAnimatorState)
-==
-0x1C
-);
+STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 
 /* groundanimator_getExtraSize == 0x30. */
-STATIC_ASSERT (
-sizeof
-(GroundAnimatorState)
-==
-0x30
-);
+STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 
 /* visanimator_getExtraSize == 0x5. */
 typedef struct VisAnimatorState
@@ -124,12 +109,7 @@ typedef struct VisAnimatorState
     u8 gateMask; /* 0x04 */
 } VisAnimatorState;
 
-STATIC_ASSERT (
-sizeof
-(VisAnimatorState)
-==
-0x5
-);
+STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
 extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);

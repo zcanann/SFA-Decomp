@@ -111,44 +111,11 @@ typedef struct ArwSquadronState
     u8 pad161[3];
 } ArwSquadronState;
 
-STATIC_ASSERT (
-sizeof
-(ArwSquadronState)
-==
-0x164
-);
-STATIC_ASSERT (offsetof
-(ArwSquadronState
-,
-pathSpeed
-)
-==
-0x108
-);
-STATIC_ASSERT (offsetof
-(ArwSquadronState
-,
-volleyCooldownTimer
-)
-==
-0x124
-);
-STATIC_ASSERT (offsetof
-(ArwSquadronState
-,
-leaderObj
-)
-==
-0x13c
-);
-STATIC_ASSERT (offsetof
-(ArwSquadronState
-,
-flags
-)
-==
-0x160
-);
+STATIC_ASSERT(sizeof(ArwSquadronState) == 0x164);
+STATIC_ASSERT(offsetof(ArwSquadronState, pathSpeed) == 0x108);
+STATIC_ASSERT(offsetof(ArwSquadronState, volleyCooldownTimer) == 0x124);
+STATIC_ASSERT(offsetof(ArwSquadronState, leaderObj) == 0x13c);
+STATIC_ASSERT(offsetof(ArwSquadronState, flags) == 0x160);
 
 int arwsquadron_getExtraSize(void) { return 0x164; }
 

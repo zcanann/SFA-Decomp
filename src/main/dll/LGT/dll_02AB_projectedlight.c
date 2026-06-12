@@ -47,170 +47,27 @@ typedef struct ProjectedLightState
 #define PROJECTEDLIGHT_DEFAULT_TEXTURE_ASSET 0x5dc
 #define PROJECTEDLIGHT_PROJECTION_ORTHO 0
 
-STATIC_ASSERT (
-sizeof
-(ProjectedLightState)
-==
-0x8
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightState
-,
-texture
-)
-==
-0x04
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightSetup
-,
-rotX
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightSetup
-,
-distanceNear
-)
-==
-0x1A
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightSetup
-,
-colorFadeFrames
-)
-==
-0x1E
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightSetup
-,
-rotXSpeed
-)
-==
-0x20
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightSetup
-,
-textureAsset
-)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightSetup
-,
-projectionMode
-)
-==
-0x26
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightSetup
-,
-diffuseR
-)
-==
-0x2D
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightSetup
-,
-colorFadeSpeed
-)
-==
-0x33
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightSetup
-,
-rotZ
-)
-==
-0x34
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightSetup
-,
-rotZSpeed
-)
-==
-0x35
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightSetup
-,
-tevModeA
-)
-==
-0x36
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightSetup
-,
-alpha
-)
-==
-0x37
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightSetup
-,
-channelPreference
-)
-==
-0x39
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightSetup
-,
-enabled
-)
-==
-0x3A
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightSetup
-,
-nearZ
-)
-==
-0x3B
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightSetup
-,
-farZ
-)
-==
-0x3C
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightSetup
-,
-tevModeB
-)
-==
-0x3E
-);
-STATIC_ASSERT (offsetof
-(ProjectedLightSetup
-,
-orthoDepthNibbles
-)
-==
-0x3F
-);
-STATIC_ASSERT (
-sizeof
-(ProjectedLightSetup)
-==
-0x40
-);
+STATIC_ASSERT(sizeof(ProjectedLightState) == 0x8);
+STATIC_ASSERT(offsetof(ProjectedLightState, texture) == 0x04);
+STATIC_ASSERT(offsetof(ProjectedLightSetup, rotX) == 0x18);
+STATIC_ASSERT(offsetof(ProjectedLightSetup, distanceNear) == 0x1A);
+STATIC_ASSERT(offsetof(ProjectedLightSetup, colorFadeFrames) == 0x1E);
+STATIC_ASSERT(offsetof(ProjectedLightSetup, rotXSpeed) == 0x20);
+STATIC_ASSERT(offsetof(ProjectedLightSetup, textureAsset) == 0x24);
+STATIC_ASSERT(offsetof(ProjectedLightSetup, projectionMode) == 0x26);
+STATIC_ASSERT(offsetof(ProjectedLightSetup, diffuseR) == 0x2D);
+STATIC_ASSERT(offsetof(ProjectedLightSetup, colorFadeSpeed) == 0x33);
+STATIC_ASSERT(offsetof(ProjectedLightSetup, rotZ) == 0x34);
+STATIC_ASSERT(offsetof(ProjectedLightSetup, rotZSpeed) == 0x35);
+STATIC_ASSERT(offsetof(ProjectedLightSetup, tevModeA) == 0x36);
+STATIC_ASSERT(offsetof(ProjectedLightSetup, alpha) == 0x37);
+STATIC_ASSERT(offsetof(ProjectedLightSetup, channelPreference) == 0x39);
+STATIC_ASSERT(offsetof(ProjectedLightSetup, enabled) == 0x3A);
+STATIC_ASSERT(offsetof(ProjectedLightSetup, nearZ) == 0x3B);
+STATIC_ASSERT(offsetof(ProjectedLightSetup, farZ) == 0x3C);
+STATIC_ASSERT(offsetof(ProjectedLightSetup, tevModeB) == 0x3E);
+STATIC_ASSERT(offsetof(ProjectedLightSetup, orthoDepthNibbles) == 0x3F);
+STATIC_ASSERT(sizeof(ProjectedLightSetup) == 0x40);
 
 int projectedlight_getExtraSize(void) { return 8; }
 

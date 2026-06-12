@@ -98,28 +98,9 @@ typedef struct DfshShrinePlacement
     u8 pad1C[0x24 - 0x1C];
 } DfshShrinePlacement;
 
-STATIC_ASSERT (
-sizeof
-(DfshShrinePlacement)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(DfshShrinePlacement
-,
-initialYaw
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(DfshShrinePlacement
-,
-startDelay
-)
-==
-0x1A
-);
+STATIC_ASSERT(sizeof(DfshShrinePlacement) == 0x24);
+STATIC_ASSERT(offsetof(DfshShrinePlacement, initialYaw) == 0x18);
+STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
 
 /*
  * --INFO--

@@ -179,12 +179,7 @@ typedef struct EarthWarriorSub
     int unk9A0; /* spawned helper object */
 } EarthWarriorSub;
 
-STATIC_ASSERT (
-sizeof
-(EarthWarriorSub)
-==
-0x9a4
-);
+STATIC_ASSERT(sizeof(EarthWarriorSub) == 0x9a4);
 
 /* DR_EarthWarrior_getExtraSize == 0x14fc; BaddieState head + family tail. */
 typedef struct EarthWarriorState
@@ -197,20 +192,8 @@ typedef struct EarthWarriorState
     EarthWarriorSub sub; /* 0xb58 */
 } EarthWarriorState;
 
-STATIC_ASSERT (
-sizeof
-(EarthWarriorState)
-==
-0x14fc
-);
-STATIC_ASSERT (offsetof
-(EarthWarriorState
-,
-sub
-)
-==
-0xb58
-);
+STATIC_ASSERT(sizeof(EarthWarriorState) == 0x14fc);
+STATIC_ASSERT(offsetof(EarthWarriorState, sub) == 0xb58);
 
 typedef struct
 {

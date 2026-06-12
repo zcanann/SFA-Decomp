@@ -17,60 +17,13 @@ typedef struct AndrossBrainState
     u8 pad20[8];
 } AndrossBrainState;
 
-STATIC_ASSERT (
-sizeof
-(AndrossBrainState)
-==
-0x28
-);
-STATIC_ASSERT (offsetof
-(AndrossBrainState
-,
-andross
-)
-==
-0x0
-);
-STATIC_ASSERT (offsetof
-(AndrossBrainState
-,
-lightning
-)
-==
-0x4
-);
-STATIC_ASSERT (offsetof
-(AndrossBrainState
-,
-brainState
-)
-==
-0x1C
-);
-STATIC_ASSERT (offsetof
-(AndrossBrainState
-,
-prevState
-)
-==
-0x1D
-);
-STATIC_ASSERT (offsetof
-(AndrossBrainState
-,
-health
-)
-==
-0x1E
-);
-STATIC_ASSERT (offsetof
-(AndrossBrainState
-,
-flashTimer
-)
-==
-0x1F
-);
+STATIC_ASSERT(sizeof(AndrossBrainState) == 0x28);
+STATIC_ASSERT(offsetof(AndrossBrainState, andross) == 0x0);
+STATIC_ASSERT(offsetof(AndrossBrainState, lightning) == 0x4);
+STATIC_ASSERT(offsetof(AndrossBrainState, brainState) == 0x1C);
+STATIC_ASSERT(offsetof(AndrossBrainState, prevState) == 0x1D);
+STATIC_ASSERT(offsetof(AndrossBrainState, health) == 0x1E);
+STATIC_ASSERT(offsetof(AndrossBrainState, flashTimer) == 0x1F);
 
 
 int androssbrain_getExtraSize(void) { return 0x28; }

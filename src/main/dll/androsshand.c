@@ -35,12 +35,7 @@ typedef struct AndrossHandState
     u8 pad2A[2];
 } AndrossHandState;
 
-STATIC_ASSERT (
-sizeof
-(AndrossHandState)
-==
-0x2C
-);
+STATIC_ASSERT(sizeof(AndrossHandState) == 0x2C);
 
 
 int androsshand_getExtraSize(void) { return 0x2c; }

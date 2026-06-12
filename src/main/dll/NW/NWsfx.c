@@ -82,36 +82,10 @@ typedef struct EdibleMushroomState
     f32 unk140;
 } EdibleMushroomState;
 
-STATIC_ASSERT (offsetof
-(EdibleMushroomState
-,
-distanceToTarget
-)
-==
-0x108
-);
-STATIC_ASSERT (offsetof
-(EdibleMushroomState
-,
-unk136
-)
-==
-0x136
-);
-STATIC_ASSERT (offsetof
-(EdibleMushroomState
-,
-unk140
-)
-==
-0x140
-);
-STATIC_ASSERT (
-sizeof
-(EdibleMushroomState)
-==
-0x144
-);
+STATIC_ASSERT(offsetof(EdibleMushroomState, distanceToTarget) == 0x108);
+STATIC_ASSERT(offsetof(EdibleMushroomState, unk136) == 0x136);
+STATIC_ASSERT(offsetof(EdibleMushroomState, unk140) == 0x140);
+STATIC_ASSERT(sizeof(EdibleMushroomState) == 0x144);
 
 s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist);
 

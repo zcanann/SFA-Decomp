@@ -14,44 +14,11 @@ typedef struct CntCounterSetup
     s16 decrementGameBit;
 } CntCounterSetup;
 
-STATIC_ASSERT (offsetof
-(CntCounterSetup
-,
-displayHud
-)
-==
-0x19
-);
-STATIC_ASSERT (offsetof
-(CntCounterSetup
-,
-initialCount
-)
-==
-0x1A
-);
-STATIC_ASSERT (offsetof
-(CntCounterSetup
-,
-doneGameBit
-)
-==
-0x1E
-);
-STATIC_ASSERT (offsetof
-(CntCounterSetup
-,
-decrementGameBit
-)
-==
-0x20
-);
-STATIC_ASSERT (
-sizeof
-(CntCounterSetup)
-==
-0x24
-);
+STATIC_ASSERT(offsetof(CntCounterSetup, displayHud) == 0x19);
+STATIC_ASSERT(offsetof(CntCounterSetup, initialCount) == 0x1A);
+STATIC_ASSERT(offsetof(CntCounterSetup, doneGameBit) == 0x1E);
+STATIC_ASSERT(offsetof(CntCounterSetup, decrementGameBit) == 0x20);
+STATIC_ASSERT(sizeof(CntCounterSetup) == 0x24);
 
 int cntcounter_getExtraSize(void) { return 8; }
 

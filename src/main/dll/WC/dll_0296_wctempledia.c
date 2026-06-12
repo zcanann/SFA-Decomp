@@ -47,90 +47,17 @@ typedef struct WCTempleDiaState
     s16* gamebits;
 } WCTempleDiaState;
 
-STATIC_ASSERT (
-sizeof
-(WCTempleDiaState)
-==
-WCTEMPLE_DIA_EXTRA_SIZE
-);
-STATIC_ASSERT (
-sizeof
-(WCTempleDiaSetup)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(WCTempleDiaState
-,
-currentSpeed
-)
-==
-WCTEMPLE_DIA_STATE_CURRENT_SPEED
-);
-STATIC_ASSERT (offsetof
-(WCTempleDiaState
-,
-targetSpeed
-)
-==
-WCTEMPLE_DIA_STATE_TARGET_SPEED
-);
-STATIC_ASSERT (offsetof
-(WCTempleDiaState
-,
-stageMask
-)
-==
-WCTEMPLE_DIA_STATE_STAGE_MASK
-);
-STATIC_ASSERT (offsetof
-(WCTempleDiaState
-,
-flags
-)
-==
-WCTEMPLE_DIA_STATE_FLAGS
-);
-STATIC_ASSERT (offsetof
-(WCTempleDiaState
-,
-targetTable
-)
-==
-WCTEMPLE_DIA_STATE_TARGET_TABLE
-);
-STATIC_ASSERT (offsetof
-(WCTempleDiaState
-,
-gamebits
-)
-==
-WCTEMPLE_DIA_STATE_GAMEBITS
-);
-STATIC_ASSERT (offsetof
-(WCTempleDiaSetup
-,
-type
-)
-==
-WCTEMPLE_DIA_SETUP_TYPE_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCTempleDiaSetup
-,
-modelIndex
-)
-==
-WCTEMPLE_DIA_SETUP_MODEL_INDEX_OFFSET
-);
-STATIC_ASSERT (offsetof
-(WCTempleDiaSetup
-,
-solvedBit
-)
-==
-WCTEMPLE_DIA_SETUP_SOLVED_BIT_OFFSET
-);
+STATIC_ASSERT(sizeof(WCTempleDiaState) == WCTEMPLE_DIA_EXTRA_SIZE);
+STATIC_ASSERT(sizeof(WCTempleDiaSetup) == 0x24);
+STATIC_ASSERT(offsetof(WCTempleDiaState, currentSpeed) == WCTEMPLE_DIA_STATE_CURRENT_SPEED);
+STATIC_ASSERT(offsetof(WCTempleDiaState, targetSpeed) == WCTEMPLE_DIA_STATE_TARGET_SPEED);
+STATIC_ASSERT(offsetof(WCTempleDiaState, stageMask) == WCTEMPLE_DIA_STATE_STAGE_MASK);
+STATIC_ASSERT(offsetof(WCTempleDiaState, flags) == WCTEMPLE_DIA_STATE_FLAGS);
+STATIC_ASSERT(offsetof(WCTempleDiaState, targetTable) == WCTEMPLE_DIA_STATE_TARGET_TABLE);
+STATIC_ASSERT(offsetof(WCTempleDiaState, gamebits) == WCTEMPLE_DIA_STATE_GAMEBITS);
+STATIC_ASSERT(offsetof(WCTempleDiaSetup, type) == WCTEMPLE_DIA_SETUP_TYPE_OFFSET);
+STATIC_ASSERT(offsetof(WCTempleDiaSetup, modelIndex) == WCTEMPLE_DIA_SETUP_MODEL_INDEX_OFFSET);
+STATIC_ASSERT(offsetof(WCTempleDiaSetup, solvedBit) == WCTEMPLE_DIA_SETUP_SOLVED_BIT_OFFSET);
 
 void wctempledia_syncPartVisibility(int obj, u8 mask)
 {

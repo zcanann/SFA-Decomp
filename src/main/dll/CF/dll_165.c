@@ -24,52 +24,12 @@ extern f32 lbl_803E3C14;
 extern f32 lbl_803E3C18;
 extern f64 lbl_803E3BD0;
 
-STATIC_ASSERT (
-sizeof
-(TreasureChestSetup)
-==
-0x24
-);
-STATIC_ASSERT (offsetof
-(TreasureChestSetup
-,
-type
-)
-==
-0x18
-);
-STATIC_ASSERT (offsetof
-(TreasureChestSetup
-,
-hitboxKind
-)
-==
-0x19
-);
-STATIC_ASSERT (offsetof
-(TreasureChestSetup
-,
-triggerObjectId
-)
-==
-0x1a
-);
-STATIC_ASSERT (offsetof
-(TreasureChestSetup
-,
-dialogueId
-)
-==
-0x1c
-);
-STATIC_ASSERT (offsetof
-(TreasureChestSetup
-,
-openGameBit
-)
-==
-0x1e
-);
+STATIC_ASSERT(sizeof(TreasureChestSetup) == 0x24);
+STATIC_ASSERT(offsetof(TreasureChestSetup, type) == 0x18);
+STATIC_ASSERT(offsetof(TreasureChestSetup, hitboxKind) == 0x19);
+STATIC_ASSERT(offsetof(TreasureChestSetup, triggerObjectId) == 0x1a);
+STATIC_ASSERT(offsetof(TreasureChestSetup, dialogueId) == 0x1c);
+STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
 
 typedef struct
 {
