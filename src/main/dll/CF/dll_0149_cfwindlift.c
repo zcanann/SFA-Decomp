@@ -225,6 +225,11 @@ void windlift_init(int* obj, u8* def)
 void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int pm, uint dur, f32 height)
 {
     char* player;
+    f32 lim;
+    f32 t;
+    f32 d;
+    f32 v;
+    f32 thr;
     f32 dy;
     f32 dist;
     f32 factor;
@@ -306,15 +311,14 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
         }
         if (gb == 0)
         {
-            f32 lim = pull - (pull / lbl_803E418C) * (slot->fc * (slot->fc * slot->fc));
-            f32 t;
+            lim = pull - (pull / lbl_803E418C) * (slot->fc * (slot->fc * slot->fc));
             if (dy > lim)
             {
                 t = lbl_803E416C;
             }
             else
             {
-                f32 d = lim - dy;
+                d = lim - dy;
                 if (d > lbl_803E4174)
                 {
                     t = lbl_803E4190;
@@ -339,8 +343,7 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
         }
         else
         {
-            f32 v = slot->fc;
-            f32 thr;
+            v = slot->fc;
             if (fe != 0)
             {
                 thr = lbl_803E4168;
@@ -356,20 +359,19 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
             scale = scale * lbl_803E41A0;
             if (slot->b11 == 0)
             {
-                f32 c;
                 if ((slot->b10 & 0xe) != 0)
                 {
-                    c = lbl_803E4190 - dy / (lbl_803E41A4 * pull);
+                    factor = lbl_803E4190 - dy / (lbl_803E41A4 * pull);
                 }
                 else
                 {
-                    c = lbl_803E4190 - dy / (lbl_803E41A8 * pull);
+                    factor = lbl_803E4190 - dy / (lbl_803E41A8 * pull);
                 }
-                if (c < lbl_803E416C)
+                if (factor < lbl_803E416C)
                 {
-                    c = lbl_803E416C;
+                    factor = lbl_803E416C;
                 }
-                factor = c * c;
+                factor = factor * factor;
             }
             else
             {
@@ -380,7 +382,7 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
         slot->fc = slot->fc + slot->f8;
         if (slot->fc > lbl_803E41B4)
         {
-            slot->fc = lbl_803E41B4;
+            slot->fc = *(f32*)&lbl_803E41B4;
         }
         if (lbl_803E416C == slot->fc)
         {
