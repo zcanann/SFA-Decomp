@@ -638,8 +638,41 @@ main/dll/dll_004B_cameramodeclimb.c:
 main/dll/dll_004C_camDebug.c:
 	.text       start:0x8010DAD4 end:0x8010DB7C
 
-main/dll/baddieControl.c:
-	.text       start:0x8010DB7C end:0x80113F8C
+main/dll/dll_004D_cameramodenpcspeak.c:
+	.text       start:0x8010DB7C end:0x8010E51C
+
+main/dll/dll_004E_cameramodeworldmap.c:
+	.text       start:0x8010E51C end:0x8010F2F8
+
+main/dll/dll_004F_dll4f.c:
+	.text       start:0x8010F2F8 end:0x8010F540
+
+main/dll/dll_0050_cameramodecrawl.c:
+	.text       start:0x8010F540 end:0x8010FA54
+
+main/dll/dll_0051_cameramodecannon.c:
+	.text       start:0x8010FA54 end:0x8010FC74
+
+main/dll/dll_0052_cameramodeforcebehind.c:
+	.text       start:0x8010FC74 end:0x801101E4
+
+main/dll/dll_0053_cameramodecloudrunner.c:
+	.text       start:0x801101E4 end:0x801106B4
+
+main/dll/dll_0054_dll54.c:
+	.text       start:0x801106B4 end:0x80110C80
+
+main/dll/dll_0055_cameramodeperv.c:
+	.text       start:0x80110C80 end:0x80110E30
+
+main/dll/dll_0056_cameramodearwing.c:
+	.text       start:0x80110E30 end:0x801115E4
+
+main/dll/dll_0057_cameramodetitle.c:
+	.text       start:0x801115E4 end:0x80111D14
+
+main/dll/dll_0019_dll19func0.c:
+	.text       start:0x80111D14 end:0x80113F8C
 
 main/dll/dll_002E_moveLib.c:
 	.text       start:0x80113F8C end:0x801159E4
