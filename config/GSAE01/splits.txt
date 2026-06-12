@@ -1331,8 +1331,23 @@ main/dll/dll_0166_cfbrokengra.c:
 main/dll/IMspacecraft.c:
 	.text       start:0x801A57E8 end:0x801A6638
 
-main/dll/DIMlavaball.c:
-	.text       start:0x801A6638 end:0x801A8F88
+main/dll/dll_017E_mmplevelco.c:
+	.text       start:0x801A6638 end:0x801A6C28
+
+main/dll/dll_017F_msbush.c:
+	.text       start:0x801A6C28 end:0x801A6F4C
+
+main/dll/dll_0180_mmpasteroi.c:
+	.text       start:0x801A6F4C end:0x801A78C8
+
+main/dll/dll_0182_mmpmoonroc.c:
+	.text       start:0x801A78C8 end:0x801A8A40
+
+main/dll/dll_0181_mmptrenchf.c:
+	.text       start:0x801A8A40 end:0x801A8E24
+
+main/dll/dll_0183_mmpgyserve.c:
+	.text       start:0x801A8E24 end:0x801A8F88
 
 main/dll/DIMlogfire.c:
 	.text       start:0x801A8F88 end:0x801AA558
