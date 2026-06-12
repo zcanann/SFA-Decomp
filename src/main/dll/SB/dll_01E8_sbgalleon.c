@@ -25,7 +25,7 @@ extern void DBprotection_storeHomePosition(int obj);
 extern int ObjList_GetObjects(int* start, int* end);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Music_Trigger(s32 snd, s32 mode);
-extern f32 lbl_803E56CC;
+extern const f32 lbl_803E56CC;
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern u32 fn_801E2570(void);
 extern void gameTextSetColor(int r, int g, int b, int a);
@@ -186,16 +186,13 @@ int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUp
             break;
         }
     }
+    if (((SBGalleonState*)state)->textTimer >= lbl_803E56CC)
     {
-        f32 z = lbl_803E56CC;
-        if (((SBGalleonState*)state)->textTimer >= z)
+        ((SBGalleonState*)state)->textTimer = ((SBGalleonState*)state)->textTimer - timeDelta;
+        if (((SBGalleonState*)state)->textTimer < lbl_803E56CC)
         {
-            ((SBGalleonState*)state)->textTimer = ((SBGalleonState*)state)->textTimer - timeDelta;
-            if (((SBGalleonState*)state)->textTimer < z)
-            {
-                ((SBGalleonState*)state)->textTimer = z;
-                ((SBGalleonState*)state)->textRising = 0;
-            }
+            ((SBGalleonState*)state)->textTimer = lbl_803E56CC;
+            ((SBGalleonState*)state)->textRising = 0;
         }
     }
     if (((SBGalleonState*)state)->textRising != 0)
@@ -208,16 +205,8 @@ int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUp
     }
     {
         f32 v = ((SBGalleonState*)state)->textAlpha;
-        f32 c = lbl_803E56CC;
-        if (!(v < lbl_803E56CC))
-        {
-            c = lbl_803E57F4;
-            if (!(v > lbl_803E57F4))
-            {
-                c = v;
-            }
-        }
-        ((SBGalleonState*)state)->textAlpha = c;
+        ((SBGalleonState*)state)->textAlpha =
+            (v < lbl_803E56CC) ? lbl_803E56CC : ((v > lbl_803E57F4) ? lbl_803E57F4 : v);
     }
     if (((SBGalleonState*)state)->textAlpha > lbl_803E56CC)
     {
@@ -364,14 +353,14 @@ int SB_Galleon_setScale(int obj)
         {
             Sfx_PlayFromObject(obj, SFXen_diallp_c);
         }
-        ((SBGalleonState*)p)->stage = ((SBGalleonState*)p)->stage + 1;
+        ((SBGalleonState*)p)->stage += 1;
         return 1;
     }
     {
-        int t = *(s8*)&((SBGalleonState*)p)->flightPattern;
-        if (t == 0 || t == 1 || t == 2)
+        int t;
+        if ((t = *(s8*)&((SBGalleonState*)p)->flightPattern) == 0 || t == 1 || t == 2)
         {
-            ((SBGalleonState*)p)->phaseCounter = ((SBGalleonState*)p)->phaseCounter + 1;
+            ((SBGalleonState*)p)->phaseCounter += 1;
             return 1;
         }
     }
@@ -394,12 +383,12 @@ void SB_Galleon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         if ((s8)((SBGalleonState*)p)->cameraState < 2)
         {
-            stk.mode = (u16)(s32)((SBGalleonState*)p)->wanderA;
-            stk.a = lbl_803E5804;
-            stk.b = lbl_803E5800;
+            stk.mode = ((SBGalleonState*)p)->wanderA;
             stk.c = lbl_803E57FC;
+            stk.b = lbl_803E5800;
+            stk.a = lbl_803E5804;
             (*gPartfxInterface)->spawnObject((void*)obj, 0xa3, stk.pad, 2, -1, NULL);
-            stk.mode = (u16)(s32)((SBGalleonState*)p)->wanderB;
+            stk.mode = ((SBGalleonState*)p)->wanderB;
             stk.a = lbl_803E5808;
             (*gPartfxInterface)->spawnObject((void*)obj, 0xa3, stk.pad, 2, -1, NULL);
         }
@@ -420,14 +409,14 @@ void SB_Galleon_hitDetect(int obj)
         f32 c;
         f32 d;
     } stk;
-    if (((SBGalleonState*)p)->sprayActive != 0 && ((SBGalleonState*)p)->linkedActor != 0)
+    if (((SBGalleonState*)p)->sprayActive != 0 && *(void**)&((SBGalleonState*)p)->linkedActor != NULL)
     {
         stk.a = lbl_803E5738;
         stk.mode = 0xc0a;
         stk.b = lbl_803E56CC;
         stk.c = lbl_803E56F0;
         stk.d = lbl_803E56C8;
-        for (i = 0; i < framesThisStep; i = i + 1)
+        for (i = 0; i < framesThisStep; i++)
         {
             (*gPartfxInterface)->spawnObject(
                 (void*)((SBGalleonState*)p)->linkedActor, 0x7aa, stk.pad, 2, -1, 0);
@@ -549,18 +538,17 @@ void SB_ShipHead_init(int obj);
 
 int SB_Galleon_modelMtxFn(int* obj)
 {
+    int b;
     u8* p = (u8*)((int**)obj)[0xb8 / 4];
-    u8 b = *(u8*)&((SBGalleonState*)p)->phase;
+    int t;
+    b = *(u8*)&((SBGalleonState*)p)->phase;
     if ((s8)b == 0)
     {
         if (((SBGalleonState*)p)->timer26 > 0) return -2;
     }
     if ((s8)b == 1)
     {
-        int t = (s8)((SBGalleonState*)p)->flightPattern;
-        if (t == 2) return -1;
-        if (t == 3) return -1;
-        if (t == 5) return -1;
+        if ((t = (s8)((SBGalleonState*)p)->flightPattern) == 2 || t == 3 || t == 5) return -1;
     }
     return (s8)b;
 }
