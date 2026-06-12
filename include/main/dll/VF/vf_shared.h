@@ -40,7 +40,6 @@ extern uint FUN_80017ae8();
 extern int FUN_80017af8();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined8 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjHits_RecordObjectHit();
