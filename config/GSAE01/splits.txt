@@ -1513,8 +1513,41 @@ main/dll/DBstealerworm.c:
 main/dll/TREX_levelcontrol.c:
 	.text       start:0x801E341C end:0x801E4288
 
-main/dll/TREX_trex.c:
-	.text       start:0x801E4288 end:0x801E67BC
+main/dll/dll_01ED_sbfireball.c:
+	.text       start:0x801E4288 end:0x801E45AC
+
+main/dll/dll_01EF_sbcloudbal.c:
+	.text       start:0x801E45AC end:0x801E4AC0
+
+main/dll/dll_01F0_sbkytecage.c:
+	.text       start:0x801E4AC0 end:0x801E4F14
+
+main/dll/dll_01F2_sbcagekyte.c:
+	.text       start:0x801E4F14 end:0x801E5060
+
+main/dll/dll_01F1_sbseqdoor.c:
+	.text       start:0x801E5060 end:0x801E519C
+
+main/dll/dll_01F3_sbminifire.c:
+	.text       start:0x801E519C end:0x801E55B8
+
+main/dll/dll_01F5_generalscal.c:
+	.text       start:0x801E55B8 end:0x801E59AC
+
+main/dll/dll_01F4_cflamp.c:
+	.text       start:0x801E59AC end:0x801E5DC4
+
+main/dll/dll_01F6_dimflag.c:
+	.text       start:0x801E5DC4 end:0x801E5F74
+
+main/dll/dll_01F7_sbshipgunb.c:
+	.text       start:0x801E5F74 end:0x801E6050
+
+main/dll/dll_0285_spshop.c:
+	.text       start:0x801E6050 end:0x801E66DC
+
+main/dll/dll_801E66DC.c:
+	.text       start:0x801E66DC end:0x801E67BC
 
 main/dll/TREX_Lazerwall.c:
 	.text       start:0x801E67BC end:0x801E6B10
