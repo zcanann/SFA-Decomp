@@ -726,8 +726,14 @@ main/dll/CF/dll_0123_fuelcell.c:
 main/dll/CF/dll_010E_dieduster.c:
 	.text       start:0x8018C7D8 end:0x8018CD64
 
-main/dll/CF/treasureRelated0177.c:
-	.text       start:0x8018CD64 end:0x8018D6E8
+main/dll/CF/dll_0127_dll127.c:
+	.text       start:0x8018CD64 end:0x8018CEE4
+
+main/dll/CF/dll_0129_campfire.c:
+	.text       start:0x8018CEE4 end:0x8018D4AC
+
+main/dll/CF/dll_0128_kttorch.c:
+	.text       start:0x8018D4AC end:0x8018D6E8
 
 main/dll/CF/dll_17A.c:
 	.text       start:0x8018D6E8 end:0x8018D6E8
