@@ -133,7 +133,33 @@ Boundary 801DD46C cuts 0x1BA mid-block (between hitDetect and update);
 ranges do not interleave; real edge = 801DDA28 (0x1BA initialise
 801DDA24 + 4). The 01BA file header already notes "boundary fix pending".
 
-## Complete cut table (132 descriptors)
+## Surgery status (this campaign)
+
+Re-splits landed (all conservation-EXACT, dol byte-identical; see the
+per-commit forensics): cut count 132 -> 125.
+
+| case | DLLs | outcome |
+|---|---|---|
+| LGT/WM | 0x209, 0x20A | dll_0209_wmlevelcontrol.c + dll_020A_wmgeneralscales.c; LGTprojectedlight.c dissolved; LGTdirectionallight/LGTcontrollight re-bounded |
+| DR barrel | 0x158, 0x159 | dll_0158_gunpowderbarrel.c + dll_0159_blasted.c; gasvent.c + cannontargetControl.c dissolved |
+| windlift complex | 0x106, 0x107, 0x108, 0x10B, 0x10C, 0x10D | six dll_XXXX units; CFguardian.c/windlift.c/CFcrystal.c dissolved; cfforcefield.c/CFBaby.c re-bounded |
+| sandwormBoss head | 0x148 (fragment), 0x149 | dll_0148_cfguardian.c + dll_0149_cfwindlift.c (skeleton-copy); sandwormBoss.c keeps the 10-DLL tail |
+| SC totem | 0x1BA | dll_01BA/01BB boundary moved 801DD46C -> 801DDA28 |
+
+Deferred (documented, descriptor-pinned but out of this campaign's scope):
+- 0x148's true TU start is inside DR/hightop.c (slot-10 callback at
+  0x8019AF4C); the boundary at 0x8019B1D8 still cuts it.
+- sandwormBoss.c remains a 10-DLL container (0x14A..0x157).
+- The WM chain upstream of 0x209 (0x1F8 cut at 801F02F0, 0x1FC at
+  801F0B50, 0x206 at 801F37CC, 0x207 at 801F3C7C) - ARWarwingattachment.c
+  is an 8-DLL container.
+- fn_801DD170 (sc_totempuzzle callback) sits just before dll_01BA's start;
+  helper-gap attribution of [801DD170-801DD1A8) left alone (ambiguous).
+- The modgfx micro-unit field (dll_64..dll_8B etc., dozens of 1-3-fn
+  units cutting 0x0B2..0x0C2) and the CAM lane (0x42..0x4D) need
+  campaign-scale merges, not single boundary moves.
+
+## Complete cut table (132 descriptors, pre-surgery)
 
 | dll | descriptor | fn range | TU (proposed) | cutting boundary(ies) | reach | names |
 |---|---|---|---|---|---|---|
