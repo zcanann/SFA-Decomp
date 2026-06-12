@@ -489,9 +489,9 @@ int waterSpellStone1Fn_8019b4c8(int obj)
     extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int p); /* #57 */
     extern void fn_8019AE3C(int* obj, void* evbuf, void* p); /* #57 */
     extern int fn_8019AF64(int* obj, void* path, f32 f, int phase, void* spd); /* #57 */
-    u8* def;
-    char* player;
     CfGuardianState* sub;
+    char* player;
+    u8* def;
     struct
     {
         f32 v[3];
@@ -506,7 +506,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
     sub->flagsA9B &= ~0x2;
     sub->moveSpeed = lbl_803E4134;
     player = (char*)Obj_GetPlayerObject();
-    ObjTrigger_UpdateIdBlockFlag((int)obj);
+    ObjTrigger_UpdateIdBlockFlag(obj);
     if (((CfGuardianMapData*)def)->variant == 1 && GameBit_Get(0x57) == 0)
     {
         ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
@@ -536,7 +536,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
         if (GameBit_Get(0x4e) != 0)
         {
             sub->questState = 3;
-            ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
+            ObjAnim_SetCurrentMove(obj, 0x1a, lbl_803E4110, 0);
             ((GameObject*)obj)->unkF4 = 0;
             /* 0x48: broken out - the prison guard stands down on it */
             GameBit_Set(0x48, 1);
@@ -606,7 +606,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
                     ((GameObject*)obj)->anim.localPosY -= ground;
                     sub->chatterState = 1;
                     ((GameObject*)obj)->unkF4 = 0;
-                    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4110, 0);
+                    ObjAnim_SetCurrentMove(obj, 0, lbl_803E4110, 0);
                     {
                         RomCurvePlacementDef* pt = (RomCurvePlacementDef*)findRomCurvePointNearObject((int*)obj, 0, 0, 2);
                         f32 d;
@@ -620,7 +620,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
                         {
                             ObjGroup_AddObject(obj, 0x16);
                             sub->questState = 7;
-                            ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
+                            ObjAnim_SetCurrentMove(obj, 0x1a, lbl_803E4110, 0);
                         }
                     }
                 }
@@ -637,7 +637,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
                 sub->moveSpeed = lbl_803E4148;
                 if (GameBit_Get(0x8e9) != 0)
                 {
-                    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4110, 0);
+                    ObjAnim_SetCurrentMove(obj, 0, lbl_803E4110, 0);
                     ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
                     ((GameObject*)obj)->anim.velocityY = lbl_803E4110;
                     ObjGroup_RemoveObject(obj, 0x16);
@@ -721,7 +721,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
         if ((sub->flagsA9B & 4) != 0
             && fn_8019B1D8((int*)obj, (int*)&sub->homeYaw, lbl_803E4128, (int)&sub->moveSpeed) != 0)
         {
-            ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
+            ObjAnim_SetCurrentMove(obj, 0x1a, lbl_803E4110, 0);
             sub->flagsA9B &= ~0x5;
         }
         if (GameBit_Get(0x43) != 0)
@@ -762,13 +762,13 @@ int waterSpellStone1Fn_8019b4c8(int obj)
         if ((sub->flagsA9B & 4) != 0
             && fn_8019B1D8((int*)obj, (int*)&sub->homeYaw, lbl_803E4128, (int)&sub->moveSpeed) != 0)
         {
-            ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
+            ObjAnim_SetCurrentMove(obj, 0x1a, lbl_803E4110, 0);
             sub->flagsA9B &= ~0x5;
         }
         if (GameBit_Get(0x4be) != 0)
         {
             sub->questState = 0xa;
-            ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
+            ObjAnim_SetCurrentMove(obj, 0x1a, lbl_803E4110, 0);
             ((GameObject*)obj)->unkF4 = 0;
         }
         break;
@@ -801,7 +801,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
         }
         if (GameBit_Get(0x4b7) != 0)
         {
-            (*gCameraInterface)->setTarget((int)obj);
+            (*gCameraInterface)->setTarget(obj);
             (*gObjectTriggerInterface)->runSequence(0xb, (void*)obj, -1);
             GameBit_Set(0x4b7, 0);
         }
@@ -817,7 +817,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
         }
         if (GameBit_Get(0x4b7) != 0)
         {
-            (*gCameraInterface)->setTarget((int)obj);
+            (*gCameraInterface)->setTarget(obj);
             (*gObjectTriggerInterface)->runSequence(0xa, (void*)obj, -1);
             GameBit_Set(0x4b7, 0);
         }
@@ -884,11 +884,11 @@ int waterSpellStone1Fn_8019b4c8(int obj)
         int mv = lbl_80322954[sub->questState];
         if (mv != -1 && (sub->flagsA9B & 1) == 0 && ((GameObject*)obj)->anim.currentMove != mv)
         {
-            ObjAnim_SetCurrentMove((int)obj, mv, lbl_803E4110, 0);
+            ObjAnim_SetCurrentMove(obj, mv, lbl_803E4110, 0);
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x50);
         }
     }
-    if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, sub->moveSpeed, (f32)framesThisStep,
+    if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, sub->moveSpeed, (f32)framesThisStep,
                                                                     stk.evbuf) != 0
         && (sub->flagsA9B & 1) != 0
         && ((GameObject*)obj)->anim.currentMove != 0x1a
@@ -899,9 +899,9 @@ int waterSpellStone1Fn_8019b4c8(int obj)
     fn_8019AE3C((int*)obj, stk.evbuf, &lbl_803DBE20);
     if (randFn_80080100(0x3c) != 0)
     {
-        objAudioFn_800393f8((int)obj, (u8*)sub + 0x624, 0xdf, 0x1000, -1, 0);
+        objAudioFn_800393f8(obj, (u8*)sub + 0x624, 0xdf, 0x1000, -1, 0);
     }
-    objAnimFn_80038f38((int)obj, (u8*)sub + 0x624);
+    objAnimFn_80038f38(obj, (u8*)sub + 0x624);
     characterDoEyeAnims((int*)obj, (u8*)sub + 0x654);
     if (sub->questState != GameBit_Get(0x4b))
     {
