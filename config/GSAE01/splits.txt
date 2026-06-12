@@ -159,8 +159,125 @@ main/dll/objfsa.c:
 main/dll/dll_0015_curves.c:
 	.text       start:0x800E5434 end:0x800E8100
 
-main/dll/gameplay.c:
-	.text       start:0x800E8100 end:0x800F472C
+main/dll/dll_0017_savegame.c:
+	.text       start:0x800E8100 end:0x800EA174
+
+main/dll/dll_0011_screens.c:
+	.text       start:0x800EA174 end:0x800EA774
+
+main/dll/dll_002F_carryable.c:
+	.text       start:0x800EA774 end:0x800EADCC
+
+main/dll/dll_0059_dll59func0.c:
+	.text       start:0x800EADCC end:0x800EB098
+
+main/dll/dll_005A_staffcollisionfunc03.c:
+	.text       start:0x800EB098 end:0x800EB618
+
+main/dll/dll_005B_modgfxfunc03.c:
+	.text       start:0x800EB618 end:0x800EC7BC
+
+main/dll/dll_005C_dll5cfunc0.c:
+	.text       start:0x800EC7BC end:0x800ECAE0
+
+main/dll/dll_005D_dll5dfunc0.c:
+	.text       start:0x800ECAE0 end:0x800ECE04
+
+main/dll/dll_005E_dll5efunc0.c:
+	.text       start:0x800ECE04 end:0x800ED294
+
+main/dll/dll_005F_dll5ffunc0.c:
+	.text       start:0x800ED294 end:0x800ED5E4
+
+main/dll/dll_0060_dll60func0.c:
+	.text       start:0x800ED5E4 end:0x800EDA28
+
+main/dll/dll_0061_dll61func0.c:
+	.text       start:0x800EDA28 end:0x800EDE74
+
+main/dll/dll_0062_dll62func0.c:
+	.text       start:0x800EDE74 end:0x800EE25C
+
+main/dll/dll_0063_dll63func0.c:
+	.text       start:0x800EE25C end:0x800EE8FC
+
+main/dll/dll_0064_dll64func0.c:
+	.text       start:0x800EE8FC end:0x800EEC34
+
+main/dll/dll_0065_dll65func0.c:
+	.text       start:0x800EEC34 end:0x800EEFEC
+
+main/dll/dll_00A3_dlla3func0.c:
+	.text       start:0x800EEFEC end:0x800EF3A0
+
+main/dll/dll_0066_dll66func0.c:
+	.text       start:0x800EF3A0 end:0x800EF7B4
+
+main/dll/dll_0067_dll67func0.c:
+	.text       start:0x800EF7B4 end:0x800EFA30
+
+main/dll/dll_0068_dll68func0.c:
+	.text       start:0x800EFA30 end:0x800EFD34
+
+main/dll/dll_0058_dummy58.c:
+	.text       start:0x800EFD34 end:0x800EFD44
+
+main/dll/dll_0069_dll69func0.c:
+	.text       start:0x800EFD44 end:0x800F022C
+
+main/dll/dll_006A_dll6afunc0.c:
+	.text       start:0x800F022C end:0x800F058C
+
+main/dll/dll_006B_dll6bfunc0.c:
+	.text       start:0x800F058C end:0x800F07DC
+
+main/dll/dll_006C_dummy6c.c:
+	.text       start:0x800F07DC end:0x800F07EC
+
+main/dll/dll_006D_dll6dfunc0.c:
+	.text       start:0x800F07EC end:0x800F0A4C
+
+main/dll/dll_006E_dll6efunc0.c:
+	.text       start:0x800F0A4C end:0x800F0C9C
+
+main/dll/dll_006F_dll6ffunc0.c:
+	.text       start:0x800F0C9C end:0x800F11E4
+
+main/dll/dll_0070_dll70func0.c:
+	.text       start:0x800F11E4 end:0x800F16E4
+
+main/dll/dll_0071_dll71func0.c:
+	.text       start:0x800F16E4 end:0x800F1A58
+
+main/dll/dll_0072_dll72func0.c:
+	.text       start:0x800F1A58 end:0x800F1D64
+
+main/dll/dll_0073_dll73func0.c:
+	.text       start:0x800F1D64 end:0x800F220C
+
+main/dll/dll_0074_dll74func0.c:
+	.text       start:0x800F220C end:0x800F2694
+
+main/dll/dll_0075_dll75func0.c:
+	.text       start:0x800F2694 end:0x800F2A8C
+
+main/dll/dll_0076_dll76func0.c:
+	.text       start:0x800F2A8C end:0x800F2CEC
+
+main/dll/dll_0077_dll77func0.c:
+	.text       start:0x800F2CEC end:0x800F2F4C
+
+main/dll/dll_0078_dll78func0.c:
+	.text       start:0x800F2F4C end:0x800F3400
+
+main/dll/dll_0079_dll79func0.c:
+	.text       start:0x800F3400 end:0x800F3CD0
+
+main/dll/dll_007A_dll7afunc0.c:
+	.text       start:0x800F3CD0 end:0x800F4174
+
+main/dll/dll_007B_dll7bfunc0.c:
+	.text       start:0x800F4174 end:0x800F472C
 
 main/dll/foodbag.c:
 	.text       start:0x800F472C end:0x800FA5D8
