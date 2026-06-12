@@ -2,15 +2,7 @@
 #include "main/objseq.h"
 
 
-
-
-
-
-
-
-
 extern uint GameBit_Get(int eventId);
-
 
 
 /*
@@ -61,8 +53,6 @@ extern uint GameBit_Get(int eventId);
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
-
 /* 8b "li r3, N; blr" returners. */
 int deathgas_getExtraSize(void) { return 0x10; }
 
@@ -71,21 +61,8 @@ int deathgas_getExtraSize(void) { return 0x10; }
 extern void objSetHintTextIdx(int obj, int idx);
 
 
-
-
 extern int playerIsDisguised(void);
 extern f32 timeDelta;
-
-
-
-
-
-
-
-
-
-
-
 
 
 #include "main/game_ui_interface.h"
@@ -114,12 +91,7 @@ extern undefined8 ObjGroup_RemoveObject();
  */
 
 
-
 /* Trivial 4b 0-arg blr leaves. */
-
-
-
-
 
 
 /* 8b "li r3, N; blr" returners. */
@@ -149,9 +121,6 @@ typedef struct
 } DeathGasSetup;
 
 
-
-
-
 void deathgas_init(int* obj)
 {
     register DeathGasState* state = ((GameObject*)obj)->extra;
@@ -163,8 +132,6 @@ void deathgas_init(int* obj)
 }
 
 int fuelcell_func0B(int* obj);
-
-
 
 
 extern void disableHeavyFog(void);
@@ -288,12 +255,4 @@ void deathgas_update(int* obj)
 }
 
 extern void gameBitIncrement(int eventId);
-
-
-
-
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
-
-
 

@@ -2,16 +2,6 @@
 #include "main/objseq.h"
 
 
-
-
-
-
-
-
-
-
-
-
 /*
  * --INFO--
  *
@@ -60,28 +50,12 @@
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
-
 /* 8b "li r3, N; blr" returners. */
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
 
-
-
-
 extern f32 timeDelta;
-
-
-
-
-
-
-
-
-
-
-
 
 
 #include "main/game_ui_interface.h"
@@ -89,8 +63,6 @@ extern f32 timeDelta;
 #include "main/objanim_internal.h"
 #include "main/dll/CF/CFforcecontrol.h"
 #include "main/screen_transition.h"
-
-
 
 
 /*
@@ -170,10 +142,6 @@ extern void setPendingMapLoad(int v);
 extern void removeButtonObject(int* obj);
 
 
-
-
-
-
 void deathseq_free(int* obj)
 {
     setScreenTransitionPause(0);
@@ -183,20 +151,6 @@ void deathseq_free(int* obj)
 
 void deathgas_init(int* obj);
 
-
-
-
-
-
-
-
-
-
-
-
-
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
 
 typedef struct
 {

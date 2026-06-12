@@ -45,8 +45,6 @@ typedef struct DllCBState
 } DllCBState;
 
 
-
-
 extern undefined8 FUN_80003494();
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80006a54();
@@ -121,7 +119,6 @@ extern f32 lbl_803E3B94;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 
 /*
@@ -332,15 +329,6 @@ FUN_8015e488(undefined8 param_1, double param_2, double param_3, undefined8 para
 }
 
 int fn_8015DC04(int obj, GroundBaddieState* p);
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
-
-
-
-
 
 
 /*
@@ -602,26 +590,6 @@ void fn_8015ED1C(int p1, int p2, int p3);
  * PAL Size: TODO
  */
 
-
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8015f068
- * EN v1.0 Address: 0x8015F068
- * EN v1.0 Size: 444b
- * EN v1.1 Address: 0x8015EEF4
- * EN v1.1 Size: 292b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -1352,7 +1320,6 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
 void dll_CA_release_nop(void);
 
 
-
 void chukchuk_free(void);
 
 void chukchuk_hitDetect(void);
@@ -1490,7 +1457,6 @@ void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void iceball_free(void);
 
 
-
 void chukchuk_update(short* obj);
 
 /* chukchuk_setScale (52B). If low-byte of arg2 (u8) == 0x80, call Sfx_PlayFromObject(obj, SFXkr_jump1). */
@@ -1592,8 +1558,6 @@ extern u8 framesThisStep;
 /* Drift-recovery: add new fns with v1.0 names to capture asm symbols. */
 
 
-
-
 extern f32 lbl_803E2E7C;
 extern f64 lbl_803E2E80;
 extern f32 lbl_803E2E88;
@@ -1634,7 +1598,6 @@ int fn_8015E520(int* obj, GroundBaddieState* state);
 extern void* lbl_803AC5D0[];
 extern int fn_801605D4(int* obj, GroundBaddieState* def);
 int fn_80160534(int* obj);
-
 
 
 extern f32 lbl_803E2E90;
@@ -1693,12 +1656,6 @@ int fn_80160534(int* obj)
 }
 
 int grimble_stateHandlerB01(int* obj, GroundBaddieState* state);
-
-
-
-
-
-
 
 
 #pragma peephole off

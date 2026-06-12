@@ -10,7 +10,6 @@
 #include "main/objseq.h"
 
 
-
 /*
  * Per-object extra state for the IM ice-mountain event controller
  * (imicemountain_getExtraSize == 0x14).
@@ -50,8 +49,6 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
  * Per-object extra state for the crrockfall falling rock
  * (crrockfall_getExtraSize == 0x14).
  */
-
-
 
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
@@ -124,7 +121,6 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
 #define MEVT_QUERY(a)         (*gMapEventInterface)->getMode((a))
@@ -135,10 +131,6 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 #undef MEVT_QUERY
-
-
-
-
 
 
 /* EN v1.0 0x801AD684  size: 344b  magiclight_init: seed header + update fn;
@@ -154,23 +146,13 @@ int imicepillar_getObjectTypeId(void);
 
 /* Pattern wrappers. */
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
 
 /* if (o->_X == K) return A; else return B; */
-
 
 
 /* conditional init/free pair. */
 
 /* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, sync its transform into obj. */
-
 
 
 /* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
@@ -185,7 +167,6 @@ extern void warpToMap(int mapId, int flags);
  * through jumptable_80323698 (states 1..7; state 0 idles). */
 #undef MEVT_TRIGGER
 #undef MEVT_SET
-
 
 
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
@@ -226,9 +207,6 @@ extern f32 timeDelta;
 #include "main/objseq.h"
 
 
-
-
-
 /* imanimspacecraft_getExtraSize == 0x4. */
 
 
@@ -265,7 +243,6 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
-
 
 
 /*
@@ -493,25 +470,6 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int linkb_levcontrol_getExtraSize(void) { return 0x10; }
 int link_levcontrol_getExtraSize(void);
@@ -525,7 +483,6 @@ int link_levcontrol_getExtraSize(void);
 /* Free: call vtable[6] on obj through global dll-services pointer. */
 
 
-
 /* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
 
 /* lavaball1bf "consume" hook: only clear pending flag if both gates set. */
@@ -535,9 +492,6 @@ int link_levcontrol_getExtraSize(void);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-
-
 
 
 /* if (o->_X == K) return A; else return B;  pattern. */
@@ -551,15 +505,11 @@ extern int getSaveGameLoadStatus(void);
 extern void* Obj_GetPlayerObject(void);
 
 
-
 extern void SCGameBitLatch_Update(void* p, int a, int b, int c, int d, int e);
 
 
 extern void fn_80088870(u8 * a, u8 * b, u8 * c, u8 * d);
 extern void envFxActFn_800887f8(int id);
-
-
-
 
 
 extern u8 lbl_803238D8[];
@@ -786,32 +736,4 @@ void linkb_levcontrol_update(int* obj)
 }
 
 extern f32 lbl_803E47C0;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

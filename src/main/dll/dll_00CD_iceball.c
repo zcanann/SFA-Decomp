@@ -9,11 +9,6 @@
 #include "main/objseq.h"
 
 
-
-
-
-
-
 extern undefined8 FUN_80003494();
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80006a54();
@@ -89,7 +84,6 @@ extern f32 lbl_803E3B94;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 
 /*
@@ -300,15 +294,6 @@ FUN_8015e488(undefined8 param_1, double param_2, double param_3, undefined8 para
 }
 
 int fn_8015DC04(int obj, GroundBaddieState* p);
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
-
-
-
-
 
 
 /*
@@ -569,8 +554,6 @@ void fn_8015ED1C(int p1, int p2, int p3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-
 
 
 /*
@@ -1197,7 +1180,6 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
 void dll_CA_release_nop(void);
 
 
-
 void chukchuk_free(void);
 
 void chukchuk_hitDetect(void);
@@ -1230,11 +1212,6 @@ void iceball_initialise(void)
 }
 
 void dll_CB_func0B_nop(void);
-
-
-
-
-
 
 
 /* 8b "li r3, N; blr" returners. */
@@ -1303,31 +1280,6 @@ int fn_8016050C(int p1, u8* obj);
 
 
 /* Drift-recovery: add new fns with v1.0 names to capture asm symbols. */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ObjectDescriptor11WithPadding gChukChukObjDescriptor = {

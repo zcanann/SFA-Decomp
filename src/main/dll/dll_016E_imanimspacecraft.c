@@ -11,7 +11,6 @@
 #include "main/objseq.h"
 
 
-
 /*
  * Per-object extra state for the IM ice-mountain event controller
  * (imicemountain_getExtraSize == 0x14).
@@ -51,8 +50,6 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
  * Per-object extra state for the crrockfall falling rock
  * (crrockfall_getExtraSize == 0x14).
  */
-
-
 
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
@@ -124,7 +121,6 @@ extern undefined4 FUN_80017ac8();
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
 #define MEVT_QUERY(a)         (*gMapEventInterface)->getMode((a))
@@ -135,10 +131,6 @@ extern undefined4 FUN_80017ac8();
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 #undef MEVT_QUERY
-
-
-
-
 
 
 /* EN v1.0 0x801AD684  size: 344b  magiclight_init: seed header + update fn;
@@ -158,20 +150,12 @@ int imicepillar_getObjectTypeId(void);
 extern void objRenderFn_8003b8f4(f32);
 
 
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
-
 /* if (o->_X == K) return A; else return B; */
-
 
 
 /* conditional init/free pair. */
 
 /* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, sync its transform into obj. */
-
 
 
 /* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
@@ -226,9 +210,6 @@ extern u8 lbl_803236B8[];
 #include "main/dll/DIM/DIMcannon.h"
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
-
-
-
 
 
 /* imanimspacecraft_getExtraSize == 0x4. */
@@ -516,20 +497,6 @@ void imanimspacecraft_initialise(void)
 void imspacethruster_hitDetect(void);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int imanimspacecraft_getExtraSize(void) { return 0x4; }
 int imanimspacecraft_getObjectTypeId(void) { return 0x0; }
@@ -604,7 +571,6 @@ void imanimspacecraft_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void imspacethruster_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 
-
 /* if (o->_X == K) return A; else return B;  pattern. */
 
 
@@ -616,41 +582,10 @@ u32 lavaball1be_func11(int* obj);
 extern void Music_Trigger(int id, int p2);
 
 
-
-
-
-
-
 extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4, lbl_803E4798, lbl_803E4788;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extern int ObjList_FindObjectById(int id);
-
-
 
 
 extern int* objFindTexture(int* obj, int a, int b);
@@ -722,7 +657,4 @@ int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 }
 
 extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;
-
-
-
 

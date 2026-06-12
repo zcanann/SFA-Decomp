@@ -10,7 +10,6 @@
 #include "main/objseq.h"
 
 
-
 /*
  * Per-object extra state for the IM ice-mountain event controller
  * (imicemountain_getExtraSize == 0x14).
@@ -50,8 +49,6 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
  * Per-object extra state for the crrockfall falling rock
  * (crrockfall_getExtraSize == 0x14).
  */
-
-
 
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
@@ -123,7 +120,6 @@ extern undefined4 FUN_80017ac8();
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
 #define MEVT_QUERY(a)         (*gMapEventInterface)->getMode((a))
@@ -134,10 +130,6 @@ extern undefined4 FUN_80017ac8();
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 #undef MEVT_QUERY
-
-
-
-
 
 
 /* EN v1.0 0x801AD684  size: 344b  magiclight_init: seed header + update fn;
@@ -157,20 +149,12 @@ int imicepillar_getObjectTypeId(void);
 extern void objRenderFn_8003b8f4(f32);
 
 
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
-
 /* if (o->_X == K) return A; else return B; */
-
 
 
 /* conditional init/free pair. */
 
 /* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, sync its transform into obj. */
-
 
 
 /* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
@@ -185,7 +169,6 @@ extern void warpToMap(int mapId, int flags);
  * through jumptable_80323698 (states 1..7; state 0 idles). */
 #undef MEVT_TRIGGER
 #undef MEVT_SET
-
 
 
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
@@ -225,9 +208,6 @@ extern u8 framesThisStep;
 #include "main/objseq.h"
 
 
-
-
-
 /* imanimspacecraft_getExtraSize == 0x4. */
 
 
@@ -264,7 +244,6 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
-
 
 
 /*
@@ -492,9 +471,6 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
 };
 
 
-
-
-
 #pragma scheduling off
 #pragma peephole off
 void imspacethruster_hitDetect(void)
@@ -512,17 +488,6 @@ void imspacethruster_initialise(void)
 void imspacering_free(void);
 
 
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int imspacethruster_getExtraSize(void) { return 0xc; }
 int imspacethruster_getObjectTypeId(void) { return 0x0; }
@@ -535,7 +500,6 @@ int imspacering_getExtraSize(void);
 /* If obj->_F4 == 0, set it to 1; else early-return. */
 
 /* Free: call vtable[6] on obj through global dll-services pointer. */
-
 
 
 /* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
@@ -566,11 +530,6 @@ void imspacering_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 
 extern void Music_Trigger(int id, int p2);
-
-
-
-
-
 
 
 extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
@@ -625,19 +584,7 @@ void imspacethruster_init(int* obj, u8* param2)
 void link_levcontrol_init(int* obj);
 
 
-
-
-
-
-
-
-
-
-
 extern void mm_free(void* p);
-
-
-
 
 
 void imspacethruster_free(int obj)
@@ -648,15 +595,6 @@ void imspacethruster_free(int obj)
 }
 
 void dimlogfire_free(int* obj, int mode);
-
-
-
-
-
-
-
-
-
 
 
 extern int* objFindTexture(int* obj, int a, int b);

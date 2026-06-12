@@ -7,11 +7,6 @@
 #include "main/dll/CF/CFBaby.h"
 
 
-
-
-
-
-
 typedef struct FallLaddersObjectDef
 {
     u8 pad0[0x14 - 0x0];
@@ -23,22 +18,6 @@ typedef struct FallLaddersObjectDef
     s16 unk20;
     u8 pad22[0x28 - 0x22];
 } FallLaddersObjectDef;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 extern uint GameBit_Get(int eventId);
@@ -379,9 +358,6 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
 void flammablevine_release(void);
 
 
-
-
-
 void Fall_Ladders_render(void)
 {
 }
@@ -399,9 +375,6 @@ void Fall_Ladders_initialise(void)
 }
 
 void infopoint_free(void);
-
-
-
 
 
 /* 8b "li r3, N; blr" returners. */
@@ -429,11 +402,7 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 
-
-
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-
-
 
 
 /* Fall_Ladders_free: expgfx interface freeObject callback. */
@@ -452,17 +421,6 @@ void coldwatercontrol_init(int obj);
 /* landed_arwing_render: visible-guarded render with extra call. */
 
 
-
-
-
-
-
-
-
-
-
-
-
 /* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
 
 
@@ -470,14 +428,6 @@ void coldwatercontrol_init(int obj);
 
 
 /* landed arwing hit/animation step: handles impact reactions and spawned debris. */
-
-/* landed arwing material flags: mirrors game bits into the damaged texture state. */
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
 
 
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
@@ -566,7 +516,4 @@ void Fall_Ladders_init(int* obj, s8* def)
 }
 
 extern int textureLoadAsset(int id);
-
-
-
 

@@ -681,9 +681,6 @@ void objSetAnimField48to0(int* obj);
 
 void flamethrowerspe_func0B(int* obj);
 
-/* state-byte setters / leaf writers. */
-#pragma dont_inline on
-#pragma dont_inline reset
 
 void collectible_func0E(int* obj, u32 v)
 {
@@ -795,13 +792,6 @@ void mikabomb_init(int* obj);
 
 extern void GameBit_Set(int eventId, int value);
 
-#pragma opt_loop_invariants off
-void baddieinterestp_update(int* obj);
-#pragma opt_loop_invariants reset
-
-#pragma opt_loop_invariants off
-void animatedobj_update(int* obj);
-#pragma opt_loop_invariants reset
 
 void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 

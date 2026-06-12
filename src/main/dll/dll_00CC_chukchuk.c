@@ -9,11 +9,6 @@
 #include "main/objseq.h"
 
 
-
-
-
-
-
 extern undefined8 FUN_80003494();
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80006a54();
@@ -88,7 +83,6 @@ extern f32 lbl_803E3B94;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 
 /*
@@ -299,15 +293,6 @@ FUN_8015e488(undefined8 param_1, double param_2, double param_3, undefined8 para
 }
 
 int fn_8015DC04(int obj, GroundBaddieState* p);
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
-
-
-
-
 
 
 /*
@@ -570,26 +555,6 @@ void fn_8015ED1C(int p1, int p2, int p3);
  */
 
 
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8015f068
- * EN v1.0 Address: 0x8015F068
- * EN v1.0 Size: 444b
- * EN v1.1 Address: 0x8015EEF4
- * EN v1.1 Size: 292b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
 #pragma scheduling off
 #pragma peephole off
 static inline u8 scarab_isObjectInList(void* o)
@@ -642,7 +607,6 @@ extern f32 timeDelta;
  * PAL Size: TODO
  */
 void iceball_update(undefined2* param_1, int param_2);
-
 
 
 #pragma dont_inline on
@@ -1065,7 +1029,6 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
 void dll_CA_release_nop(void);
 
 
-
 void chukchuk_free(void)
 {
 }
@@ -1122,10 +1085,6 @@ void iceball_hitDetect(void);
 void iceball_release(void);
 
 void iceball_initialise(void);
-
-
-
-
 
 
 extern int getAngle(f32 a, f32 b);
@@ -1383,31 +1342,6 @@ extern void GameBit_Set(int eventId, int value);
 
 
 /* Drift-recovery: add new fns with v1.0 names to capture asm symbols. */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ObjectDescriptor11WithPadding gChukChukObjDescriptor = {

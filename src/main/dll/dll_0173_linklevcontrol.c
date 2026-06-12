@@ -11,7 +11,6 @@
 #include "main/objseq.h"
 
 
-
 /*
  * Per-object extra state for the IM ice-mountain event controller
  * (imicemountain_getExtraSize == 0x14).
@@ -51,8 +50,6 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
  * Per-object extra state for the crrockfall falling rock
  * (crrockfall_getExtraSize == 0x14).
  */
-
-
 
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
@@ -124,7 +121,6 @@ extern undefined4 FUN_80017ac8();
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
 #define MEVT_QUERY(a)         (*gMapEventInterface)->getMode((a))
@@ -135,10 +131,6 @@ extern undefined4 FUN_80017ac8();
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 #undef MEVT_QUERY
-
-
-
-
 
 
 /* EN v1.0 0x801AD684  size: 344b  magiclight_init: seed header + update fn;
@@ -154,23 +146,13 @@ int imicepillar_getObjectTypeId(void);
 
 /* Pattern wrappers. */
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
 
 /* if (o->_X == K) return A; else return B; */
-
 
 
 /* conditional init/free pair. */
 
 /* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, sync its transform into obj. */
-
 
 
 /* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
@@ -227,9 +209,6 @@ extern u8 lbl_803236B8[];
 #include "main/objseq.h"
 
 
-
-
-
 /* imanimspacecraft_getExtraSize == 0x4. */
 
 
@@ -266,7 +245,6 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
-
 
 
 /*
@@ -494,25 +472,6 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int link_levcontrol_getExtraSize(void) { return 0x10; }
 int lavaball1bf_getExtraSize(void);
@@ -526,7 +485,6 @@ int lavaball1bf_getExtraSize(void);
 /* Free: call vtable[6] on obj through global dll-services pointer. */
 
 
-
 /* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
 
 /* lavaball1bf "consume" hook: only clear pending flag if both gates set. */
@@ -536,9 +494,6 @@ int lavaball1bf_getExtraSize(void);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-
-
 
 
 /* if (o->_X == K) return A; else return B;  pattern. */
@@ -719,35 +674,5 @@ void link_levcontrol_init(int* obj)
 extern u8 lbl_803238D8[];
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extern int ObjList_FindObjectById(int id);
-
-
-
-
-
-
-
-
-
 
