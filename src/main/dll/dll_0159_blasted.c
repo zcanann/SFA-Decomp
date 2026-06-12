@@ -3,6 +3,7 @@
  * TU = 0x801A27B8..0x801A2BDC (helper fn_801A27B8 + blasted_*).
  */
 #include "main/game_object.h"
+#include "main/objhits.h"
 
 extern void objRenderFn_8003b8f4(f32 alpha);
 extern f32 lbl_803E4348;
@@ -141,14 +142,17 @@ void blasted_update(int obj)
         return;
     }
     {
+        ObjHitsPriorityState* hitState;
         int i;
-        for (i = 0; i < (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->priorityHitCount; i++)
+
+        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        for (i = 0; i < hitState->priorityHitCount; i++)
         {
             u32 v;
             s8 m;
             int found;
-            m = *(u8*)&(*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->priorities[i];
-            v = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->hitObjects[i];
+            m = *(u8*)&hitState->priorities[i];
+            v = hitState->hitObjects[i];
             found = 0;
             if (m != 5)
             {
