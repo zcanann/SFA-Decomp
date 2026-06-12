@@ -99,7 +99,7 @@ extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern f32 Vec_xzDistance(void* a, void* b);
 extern int randFn_80080100(int n);
 extern int fn_80296A14(int p);
-extern void dll_2E_func04(void* sub);
+extern void dll_2E_func04(void* sub, void* target);
 extern void dll_2E_func0C(int a, void* p);
 extern void buttonDisable(int a, int b);
 extern void characterDoEyeAnims(int* obj, void* p);
@@ -473,16 +473,17 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
  * quest progression with path flights, landing physics, sequenced
  * triggers and idle chatter.
  *
- * BANKED at 99.31: the old saved-quad rotation fell to the #36 burst
+ * BANKED at 99.54: the old saved-quad rotation fell to the #36 burst
    rule (19 no-op (int)obj casts dropped at once sank obj to r28) +
-   decl reorder. Remaining residuals, all probed: the case-6 velocity
-   stk.v trio perm f3/f2/f4 with in-place products + 2 add-side reloads
-   (#82 expression-temp class; compound/product-local/k-respellings
-   inert), found/questState volatile homings (target mr r4,r3 / lbz r4
-   = named-web homes; named-local, fn-scope, and embedded-def movers
-   all copy-propped), the |w| site's beq vs target bne;b (front-end
-   fold, see #63 fold caveat), and content-matched jumptable/bias
-   relocs. */
+   decl reorder; the "found/questState volatile homings" were really
+   #65 dropped args (dll_2E_func04(sub, found) head-track target,
+   GameBit_Set(0x4b, sub->questState) sync - both real behavioral
+   bugs in the import). Remaining residuals, all probed: the case-6
+   velocity stk.v trio perm f3/f2/f4 with in-place products + 2
+   add-side reloads (#82 expression-temp class; compound = byte-
+   identical, product-locals/k-respellings/FP-local promotions inert),
+   the |w| site's beq vs target bne;b (front-end fold, see #63 fold
+   caveat), and content-matched jumptable/bias relocs. */
 int waterSpellStone1Fn_8019b4c8(int obj)
 {
     extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int p); /* #57 */
@@ -705,10 +706,13 @@ int waterSpellStone1Fn_8019b4c8(int obj)
         }
         break;
     case 8: /* talk spot: greet and head-track the player; 0x43 advances */
-        if ((void*)ObjGroup_FindNearestObject(3, obj, &nearDist) != NULL && nearDist < lbl_803E4158)
         {
-            dll_2E_func04(sub);
-            ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
+            void* found = (void*)ObjGroup_FindNearestObject(3, obj, &nearDist);
+            if (found != NULL && nearDist < lbl_803E4158)
+            {
+                dll_2E_func04(sub, found);
+                ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
+            }
         }
         if (nearDist > lbl_803E4158 && Vec_xzDistance(player + 0x18, (char*)obj + 0x18) < lbl_803E413C)
         {
@@ -748,9 +752,12 @@ int waterSpellStone1Fn_8019b4c8(int obj)
         }
         break;
     case 9: /* second talk loop; 0x4be sends him onward */
-        if ((void*)ObjGroup_FindNearestObject(3, obj, &nearDist) != NULL && nearDist < lbl_803E4158)
         {
-            dll_2E_func04(sub);
+            void* found = (void*)ObjGroup_FindNearestObject(3, obj, &nearDist);
+            if (found != NULL && nearDist < lbl_803E4158)
+            {
+                dll_2E_func04(sub, found);
+            }
         }
         if (nearDist > lbl_803E4158 && Vec_xzDistance(player + 0x18, (char*)obj + 0x18) < lbl_803E413C)
         {
@@ -922,7 +929,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
     characterDoEyeAnims((int*)obj, (u8*)sub + 0x654);
     if (sub->questState != GameBit_Get(0x4b))
     {
-        GameBit_Set(0x4b); /* (sic) one-arg call - no prototype in scope; matches retail */
+        GameBit_Set(0x4b, sub->questState);
     }
     return 0;
 }
