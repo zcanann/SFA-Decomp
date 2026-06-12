@@ -1,62 +1,63 @@
 #include "main/dll/CAM/dll_60.h"
+#include "main/dll/CAM/camcombat_state.h"
+#include "main/game_object.h"
 
-extern undefined4 DAT_803de1e0;
+extern CameraModeCombatState* DAT_803de1e0;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E2540;
 extern f32 lbl_803E2544;
 extern f32 lbl_803E2548;
 
 void camdrakor_computeTargetOffset
-(int param_1, float* param_2, float* param_3, float* param_4, float* param_5)
+(CameraObject* camera, float* outX, float* outY, float* outZ, float* targetY)
 {
     float fVar1;
     float fVar2;
     float fVar3;
     float fVar4;
     float fVar5;
-    int iVar6;
-    int iVar7;
-    int iVar8;
-    int iVar9;
+    GameObject* focus;
+    GameObject* target;
+    ObjHitVolumeRuntimeTransform* hitVolumes;
+    ObjHitVolumeRuntimeTransform* startHitVolume;
+    ObjHitVolumeRuntimeTransform* targetHitVolume;
 
-    iVar7 = *(int*)(param_1 + 0x11c);
-    iVar6 = *(int*)(param_1 + 0xa4);
-    iVar9 = *(int*)(iVar7 + 0x74);
-    if (*(char*)(iVar7 + 0xe4) != *(char*)(DAT_803de1e0 + 0x14))
+    target = (GameObject*)camera->targetObj;
+    focus = (GameObject*)camera->anim.targetObj;
+    hitVolumes = target->anim.hitVolumeTransforms;
+    if (target->unkE4 != DAT_803de1e0->pathBlendTargetIndex)
     {
-        *(char*)(DAT_803de1e0 + 0x13) = *(char*)(DAT_803de1e0 + 0x14);
-        *(float*)(DAT_803de1e0 + 0x18) = lbl_803E2540;
+        DAT_803de1e0->pathBlendStartIndex = DAT_803de1e0->pathBlendTargetIndex;
+        DAT_803de1e0->pathBlendWeight = lbl_803E2540;
     }
     fVar1 = lbl_803E2544;
-    if (*(float*)(DAT_803de1e0 + 0x18) <= lbl_803E2544)
+    if (DAT_803de1e0->pathBlendWeight <= lbl_803E2544)
     {
-        *param_2 = *(float*)(iVar9 + (uint) * (byte*)(iVar7 + 0xe4) * 0x18 + 0xc) -
-            *(float*)(iVar6 + 0x18);
-        *param_3 = *(float*)(iVar9 + (uint) * (byte*)(iVar7 + 0xe4) * 0x18 + 0x10) - *param_5;
-        *param_4 = *(float*)(iVar9 + (uint) * (byte*)(iVar7 + 0xe4) * 0x18 + 0x14) -
-            *(float*)(iVar6 + 0x20);
+        *outX = hitVolumes[target->unkE4].centerX - focus->anim.worldPosX;
+        *outY = hitVolumes[target->unkE4].centerY - *targetY;
+        *outZ = hitVolumes[target->unkE4].centerZ - focus->anim.worldPosZ;
     }
     else
     {
-        *(float*)(DAT_803de1e0 + 0x18) =
-            -(lbl_803E2548 * lbl_803DC074 - *(float*)(DAT_803de1e0 + 0x18));
-        if (*(float*)(DAT_803de1e0 + 0x18) < fVar1)
+        DAT_803de1e0->pathBlendWeight =
+            -(lbl_803E2548 * lbl_803DC074 - DAT_803de1e0->pathBlendWeight);
+        if (DAT_803de1e0->pathBlendWeight < fVar1)
         {
-            *(float*)(DAT_803de1e0 + 0x18) = fVar1;
-            *(undefined*)(DAT_803de1e0 + 0x13) = *(undefined*)(iVar7 + 0xe4);
+            DAT_803de1e0->pathBlendWeight = fVar1;
+            DAT_803de1e0->pathBlendStartIndex = target->unkE4;
         }
-        iVar8 = iVar9 + (uint) * (byte*)(DAT_803de1e0 + 0x13) * 0x18;
-        iVar9 = iVar9 + (uint) * (byte*)(iVar7 + 0xe4) * 0x18;
-        fVar1 = *(float*)(iVar8 + 0x10);
-        fVar2 = *(float*)(iVar9 + 0x10);
-        fVar3 = *(float*)(iVar8 + 0x14);
-        fVar4 = *(float*)(iVar9 + 0x14);
-        fVar5 = *(float*)(DAT_803de1e0 + 0x18);
-        *param_2 = ((*(float*)(iVar8 + 0xc) - *(float*)(iVar9 + 0xc)) * fVar5 +
-            *(float*)(iVar9 + 0xc)) - *(float*)(iVar6 + 0x18);
-        *param_3 = ((fVar1 - fVar2) * fVar5 + fVar2) - *param_5;
-        *param_4 = ((fVar3 - fVar4) * fVar5 + fVar4) - *(float*)(iVar6 + 0x20);
+        startHitVolume = &hitVolumes[DAT_803de1e0->pathBlendStartIndex];
+        targetHitVolume = &hitVolumes[target->unkE4];
+        fVar1 = startHitVolume->centerY;
+        fVar2 = targetHitVolume->centerY;
+        fVar3 = startHitVolume->centerZ;
+        fVar4 = targetHitVolume->centerZ;
+        fVar5 = DAT_803de1e0->pathBlendWeight;
+        *outX = ((startHitVolume->centerX - targetHitVolume->centerX) * fVar5 +
+            targetHitVolume->centerX) - focus->anim.worldPosX;
+        *outY = ((fVar1 - fVar2) * fVar5 + fVar2) - *targetY;
+        *outZ = ((fVar3 - fVar4) * fVar5 + fVar4) - focus->anim.worldPosZ;
     }
-    *(undefined*)(DAT_803de1e0 + 0x14) = *(undefined*)(iVar7 + 0xe4);
+    DAT_803de1e0->pathBlendTargetIndex = target->unkE4;
     return;
 }

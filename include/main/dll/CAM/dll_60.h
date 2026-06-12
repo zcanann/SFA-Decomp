@@ -2,8 +2,9 @@
 #define MAIN_DLL_CAM_DLL_60_H_
 
 #include "ghidra_import.h"
+#include "main/camera_object.h"
 
 void camdrakor_computeTargetOffset
-          (int param_1,float *param_2,float *param_3,float *param_4,float *param_5);
+          (CameraObject *camera,float *outX,float *outY,float *outZ,float *targetY);
 
 #endif /* MAIN_DLL_CAM_DLL_60_H_ */

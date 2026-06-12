@@ -68,27 +68,19 @@ void CameraModeCombat_copyToCurrent_nop(void)
 {
 }
 
-typedef struct
+void fn_8010BF08(CameraObject* camera, float* outX, float* outY, float* outZ, f32* targetY)
 {
-    u8 pad[0xc];
-    f32 x;
-    f32 y;
-    f32 z;
-} CamPathEntry;
-
-void fn_8010BF08(int control, float* outX, float* outY, float* outZ, void* inFloatPtr)
-{
-    int cameraObj;
-    CamPathEntry* paths;
-    int settings;
+    GameObject* focus;
+    GameObject* target;
+    ObjHitVolumeRuntimeTransform* hitVolumes;
     u8 curIdx;
     float t;
     float lim;
 
-    settings = *(int*)(control + 0x11c);
-    cameraObj = *(int*)(control + 0xa4);
-    paths = *(CamPathEntry**)(settings + 0x74);
-    curIdx = *(u8*)(settings + 0xe4);
+    target = (GameObject*)camera->targetObj;
+    focus = (GameObject*)camera->anim.targetObj;
+    hitVolumes = target->anim.hitVolumeTransforms;
+    curIdx = target->unkE4;
     if ((u32)curIdx != (u32)lbl_803DD568->pathBlendTargetIndex)
     {
         lbl_803DD568->pathBlendStartIndex = lbl_803DD568->pathBlendTargetIndex;
@@ -103,60 +95,50 @@ void fn_8010BF08(int control, float* outX, float* outY, float* outZ, void* inFlo
         if (lbl_803DD568->pathBlendWeight < lim)
         {
             lbl_803DD568->pathBlendWeight = lim;
-            lbl_803DD568->pathBlendStartIndex = *(u8*)(settings + 0xe4);
+            lbl_803DD568->pathBlendStartIndex = target->unkE4;
         }
         {
             u8 ci = lbl_803DD568->pathBlendStartIndex;
-            u8 ti = *(u8*)(settings + 0xe4);
-            float dx = paths[ci].x - paths[ti].x;
-            float dy = paths[ci].y - paths[ti].y;
-            float dz = paths[ci].z - paths[ti].z;
+            u8 ti = target->unkE4;
+            float dx = hitVolumes[ci].centerX - hitVolumes[ti].centerX;
+            float dy = hitVolumes[ci].centerY - hitVolumes[ti].centerY;
+            float dz = hitVolumes[ci].centerZ - hitVolumes[ti].centerZ;
             float w = lbl_803DD568->pathBlendWeight;
             dx *= w;
             dy *= w;
             dz *= w;
-            dx += paths[ti].x;
-            dy += paths[ti].y;
-            dz += paths[ti].z;
-            *outX = dx - *(float*)(cameraObj + 0x18);
-            *outY = dy - *(float*)inFloatPtr;
-            *outZ = dz - *(float*)(cameraObj + 0x20);
+            dx += hitVolumes[ti].centerX;
+            dy += hitVolumes[ti].centerY;
+            dz += hitVolumes[ti].centerZ;
+            *outX = dx - focus->anim.worldPosX;
+            *outY = dy - *targetY;
+            *outZ = dz - focus->anim.worldPosZ;
         }
     }
     else
     {
-        *outX = paths[*(u8*)(settings + 0xe4)].x - *(float*)(cameraObj + 0x18);
-        *outY = paths[*(u8*)(settings + 0xe4)].y - *(float*)inFloatPtr;
-        *outZ = paths[*(u8*)(settings + 0xe4)].z - *(float*)(cameraObj + 0x20);
+        *outX = hitVolumes[target->unkE4].centerX - focus->anim.worldPosX;
+        *outY = hitVolumes[target->unkE4].centerY - *targetY;
+        *outZ = hitVolumes[target->unkE4].centerZ - focus->anim.worldPosZ;
     }
-    lbl_803DD568->pathBlendTargetIndex = *(u8*)(settings + 0xe4);
+    lbl_803DD568->pathBlendTargetIndex = target->unkE4;
 }
 
-void CameraModeCombat_free(int obj)
+void CameraModeCombat_free(CameraObject* camera)
 {
-    if (*(void**)(obj + 0x11c) != NULL)
+    if (camera->targetObj != NULL)
     {
         (*gCameraInterface)->setTarget(0);
     }
     mm_free(lbl_803DD568);
     lbl_803DD568 = 0;
     Rcp_DisableBlurFilter();
-    ((CameraObject*)obj)->smoothingFlags &= ~0x80;
+    camera->smoothingFlags &= ~0x80;
 }
-
-typedef struct
-{
-    f32 pad0;
-    f32 pad4;
-    f32 pad8;
-    f32 x;
-    f32 y;
-    f32 z;
-} CombatPathPoint;
 
 void CameraModeCombat_update(short* cam)
 {
-    extern void fn_8010BF08(int cam, f32* dx, f32* dy, f32* dz, f32* ty); /* #57 */
+    extern void fn_8010BF08(CameraObject* camera, f32* dx, f32* dy, f32* dz, f32* ty); /* #57 */
     f32 nz;
     f32 ny;
     f32 nx;
@@ -170,9 +152,9 @@ void CameraModeCombat_update(short* cam)
     f32 vec[3];
     u8 trace[116];
     int view = (int)Camera_GetCurrentViewSlot();
-    char* tgt;
-    int focus;
-    CombatPathPoint* path;
+    GameObject* tgt;
+    GameObject* focus;
+    ObjHitVolumeRuntimeTransform* hitVolumes;
     f32 range;
     f32 dist;
     f32 px;
@@ -198,7 +180,7 @@ void CameraModeCombat_update(short* cam)
     {
         if (((CameraObject*)cam)->targetObj != NULL)
         {
-            if ((*(u8*)(*(int*)&((CameraObject*)cam)->targetObj + 0xaf) & 0x40) || (((CameraObject*)cam)->targetFlags & 2))
+            if ((((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40) || (((CameraObject*)cam)->targetFlags & 2))
             {
                 return;
             }
@@ -208,12 +190,12 @@ void CameraModeCombat_update(short* cam)
     }
     else
     {
-        focus = *(int*)&((CameraObject*)cam)->anim.targetObj;
-        if (((GameObject*)focus)->anim.classId == 1 && objAnimFn_80296328(focus) == 0)
+        focus = (GameObject*)((CameraObject*)cam)->anim.targetObj;
+        if (focus->anim.classId == 1 && objAnimFn_80296328((int)focus) == 0)
         {
             if (((CameraObject*)cam)->targetObj != NULL)
             {
-                if ((*(u8*)(*(int*)&((CameraObject*)cam)->targetObj + 0xaf) & 0x40) || (((CameraObject*)cam)->targetFlags &
+                if ((((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40) || (((CameraObject*)cam)->targetFlags &
                     2))
                 {
                     return;
@@ -224,13 +206,12 @@ void CameraModeCombat_update(short* cam)
         }
         else
         {
-            tgt = *(char**)&((CameraObject*)cam)->targetObj;
-            if (tgt == NULL || (((GameObject*)tgt)->objectFlags & 0x40) || (*(u8*)&((GameObject*)tgt)->anim.
-                resetHitboxMode & 0x28))
+            tgt = (GameObject*)((CameraObject*)cam)->targetObj;
+            if (tgt == NULL || (tgt->objectFlags & 0x40) || (tgt->anim.resetHitboxMode & 0x28))
             {
                 if (tgt != NULL)
                 {
-                    if ((*(u8*)&((GameObject*)tgt)->anim.resetHitboxMode & 0x40) || (((CameraObject*)cam)->targetFlags & 2))
+                    if ((tgt->anim.resetHitboxMode & 0x40) || (((CameraObject*)cam)->targetFlags & 2))
                     {
                         return;
                     }
@@ -240,15 +221,15 @@ void CameraModeCombat_update(short* cam)
             }
             else
             {
-                path = (CombatPathPoint*)((GameObject*)tgt)->anim.hitVolumeTransforms;
-                if (path != NULL)
+                hitVolumes = tgt->anim.hitVolumeTransforms;
+                if (hitVolumes != NULL)
                 {
-                    range = (f32)(s32)((u32)((GameObject*)tgt)->anim.modelInstance->hitVolumes[0].bounds[1] << 2);
-                    if (((u16)getButtonsJustPressed(0) & 0x200) && (int)fn_8029630C(focus) != 0)
+                    range = (f32)(s32)((u32)tgt->anim.modelInstance->hitVolumes[0].bounds[1] << 2);
+                    if (((u16)getButtonsJustPressed(0) & 0x200) && (int)fn_8029630C((int)focus) != 0)
                     {
                         if (((CameraObject*)cam)->targetObj != NULL)
                         {
-                            if ((*(u8*)(*(int*)&((CameraObject*)cam)->targetObj + 0xaf) & 0x40) || (((CameraObject*)cam)
+                            if ((((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40) || (((CameraObject*)cam)
                                 ->targetFlags & 2))
                             {
                                 return;
@@ -259,31 +240,31 @@ void CameraModeCombat_update(short* cam)
                     }
                     else
                     {
-                        ty = lbl_803E18D0 + ((GameObject*)focus)->anim.worldPosY;
-                        classId = ((GameObject*)tgt)->anim.classId;
+                        ty = lbl_803E18D0 + focus->anim.worldPosY;
+                        classId = tgt->anim.classId;
                         if (classId == 0x1c || classId == 0x6d || classId == 0x2a)
                         {
-                            if (((GameObject*)tgt)->anim.seqId == 0x200)
+                            if (tgt->anim.seqId == 0x200)
                             {
                                 ty = ty + lbl_803E18D0;
                             }
-                            if (((GameObject*)tgt)->anim.modelInstance->hitVolumeCount <= 1)
+                            if (tgt->anim.modelInstance->hitVolumeCount <= 1)
                             {
-                                dx = path[((GameObject*)tgt)->unkE4].x - ((GameObject*)focus)->anim.worldPosX;
-                                dy = path[((GameObject*)tgt)->unkE4].y - ty;
-                                dz = path[((GameObject*)tgt)->unkE4].z - ((GameObject*)focus)->anim.worldPosZ;
+                                dx = hitVolumes[tgt->unkE4].centerX - focus->anim.worldPosX;
+                                dy = hitVolumes[tgt->unkE4].centerY - ty;
+                                dz = hitVolumes[tgt->unkE4].centerZ - focus->anim.worldPosZ;
                             }
                             else
                             {
-                                fn_8010BF08((int)cam, &dx, &dy, &dz, &ty);
+                                fn_8010BF08((CameraObject*)cam, &dx, &dy, &dz, &ty);
                             }
                         }
                         else
                         {
-                            ty = lbl_803E18D0 + ((GameObject*)focus)->anim.worldPosY;
-                            dx = path[((GameObject*)tgt)->unkE4].x - ((GameObject*)focus)->anim.worldPosX;
-                            dy = path[((GameObject*)tgt)->unkE4].y - ty;
-                            dz = path[((GameObject*)tgt)->unkE4].z - ((GameObject*)focus)->anim.worldPosZ;
+                            ty = lbl_803E18D0 + focus->anim.worldPosY;
+                            dx = hitVolumes[tgt->unkE4].centerX - focus->anim.worldPosX;
+                            dy = hitVolumes[tgt->unkE4].centerY - ty;
+                            dz = hitVolumes[tgt->unkE4].centerZ - focus->anim.worldPosZ;
                         }
                         dist = sqrtf(dx * dx + dz * dz);
                         ((CameraObject*)cam)->letterboxTargetOffset = 0x30;
@@ -292,7 +273,7 @@ void CameraModeCombat_update(short* cam)
                         {
                             if (((CameraObject*)cam)->targetObj != NULL)
                             {
-                                if ((*(u8*)(*(int*)&((CameraObject*)cam)->targetObj + 0xaf) & 0x40) || (((CameraObject*)
+                                if ((((GameObject*)((CameraObject*)cam)->targetObj)->anim.resetHitboxMode & 0x40) || (((CameraObject*)
                                     cam)->targetFlags & 2))
                                 {
                                     return;
@@ -304,9 +285,9 @@ void CameraModeCombat_update(short* cam)
                         else
                         {
                             cameraGetPrevPos2(focus, &prevX, &prevY, &prevZ);
-                            px = lbl_803E18D4 * dx + ((GameObject*)focus)->anim.worldPosX;
+                            px = lbl_803E18D4 * dx + focus->anim.worldPosX;
                             py = lbl_803E18D8 + ty;
-                            pz = lbl_803E18D4 * dz + ((GameObject*)focus)->anim.worldPosZ;
+                            pz = lbl_803E18D4 * dz + focus->anim.worldPosZ;
                             ang = getAngle(dx, dz);
                             diff = (int)*cam - (0x8000 - ((ang & 0xffff) + 0x8000) & 0xffff);
                             if (diff > 0x8000)
@@ -390,10 +371,8 @@ void CameraModeCombat_update(short* cam)
                             speed = mag;
                             if (((CameraObject*)cam)->blendProgress <= lbl_803E18C4)
                             {
-                                fa = ((GameObject*)focus)->anim.previousWorldPosX - ((GameObject*)focus)->anim.
-                                    worldPosX;
-                                fb = ((GameObject*)focus)->anim.previousWorldPosZ - ((GameObject*)focus)->anim.
-                                    worldPosZ;
+                                fa = focus->anim.previousWorldPosX - focus->anim.worldPosX;
+                                fb = focus->anim.previousWorldPosZ - focus->anim.worldPosZ;
                                 speed = sqrtf(fa * fa + fb * fb);
                                 lim = speed * (lbl_803E190C * timeDelta);
                                 if ((f64)lim < lbl_803E1918)
@@ -422,9 +401,9 @@ void CameraModeCombat_update(short* cam)
                             PSVECAdd((f32*)((char*)cam + 0x18), vec, (f32*)((char*)cam + 0x18));
                             camcontrol_traceMove(lbl_803E18CC, &prevX, (f32*)((char*)cam + 0x18),
                                                  (f32*)((char*)cam + 0x18), trace, 3, 1, 1);
-                            fb = *(f32*)(view + 0xc) - (lbl_803E18F8 * dx + ((GameObject*)focus)->anim.worldPosX);
+                            fb = *(f32*)(view + 0xc) - (lbl_803E18F8 * dx + focus->anim.worldPosX);
                             dy = *(f32*)(view + 0x10) - py;
-                            fa = *(f32*)(view + 0x14) - (lbl_803E18F8 * dz + ((GameObject*)focus)->anim.worldPosZ);
+                            fa = *(f32*)(view + 0x14) - (lbl_803E18F8 * dz + focus->anim.worldPosZ);
                             t = sqrtf(fb * fb + fa * fa);
                             ad = getAngle(dy, t);
                             ad = (ad & 0xffff) - ((int)cam[1] & 0xffffU);
@@ -463,8 +442,7 @@ void CameraModeCombat_update(short* cam)
                                 fa = lbl_803E1930 * timeDelta;
                             }
                             lbl_803DD568->followDistance = lbl_803DD568->followDistance + fa;
-                            turnOnBlurFilter(((GameObject*)tgt)->anim.worldPosX, ((GameObject*)tgt)->anim.worldPosY,
-                                             ((GameObject*)tgt)->anim.worldPosZ, 1, 0);
+                            turnOnBlurFilter(tgt->anim.worldPosX, tgt->anim.worldPosY, tgt->anim.worldPosZ, 1, 0);
                             if (lbl_803E18C4 == ((CameraObject*)cam)->blendProgress)
                             {
                                 ((CameraObject*)cam)->smoothingFlags |= 0x80;
@@ -484,17 +462,16 @@ void CameraModeCombat_update(short* cam)
     }
 }
 
-void CameraModeCombat_init(int camObj, undefined4 arg2, undefined4* args)
+void CameraModeCombat_init(CameraObject* camera, undefined4 arg2, GameObject** targetPtr)
 {
     float dx;
     float dz;
     ObjHitVolumeRuntimeTransform* hitVolume;
-    int targetObj;
-    int playerObj;
-    double fconv;
+    GameObject* target;
+    GameObject* focus;
 
-    *(undefined4*)(camObj + 0x11c) = *args;
-    playerObj = *(int*)(camObj + 0xa4);
+    camera->targetObj = *targetPtr;
+    focus = (GameObject*)camera->anim.targetObj;
     if (lbl_803DD568 == (CameraModeCombatState*)0x0)
     {
         lbl_803DD568 = (CameraModeCombatState*)mmAlloc(0x1c, 0xf, 0);
@@ -507,31 +484,31 @@ void CameraModeCombat_init(int camObj, undefined4 arg2, undefined4* args)
     lbl_803DD568->pathBlendStartIndex = 1;
     lbl_803DD568->pathBlendTargetIndex = 1;
     lbl_803DD568->pathBlendWeight = dx;
-    if (*(short*)(playerObj + 0x44) != 1)
+    if (focus->anim.classId != 1)
     {
         lbl_803DD568->invalidTarget = 1;
     }
     else
     {
-        targetObj = *(int*)(camObj + 0x11c);
-        if ((void*)targetObj == NULL)
+        target = (GameObject*)camera->targetObj;
+        if (target == NULL)
         {
             lbl_803DD568->invalidTarget = 1;
         }
         else
         {
-            if (((GameObject*)targetObj)->anim.hitVolumeTransforms == NULL)
+            if (target->anim.hitVolumeTransforms == NULL)
             {
-                dx = *(float*)(playerObj + 0x18) - *(float*)(targetObj + 0x18);
-                dz = *(float*)(playerObj + 0x20) - *(float*)(targetObj + 0x20);
+                dx = focus->anim.worldPosX - target->anim.worldPosX;
+                dz = focus->anim.worldPosZ - target->anim.worldPosZ;
             }
             else
             {
-                hitVolume = &((GameObject*)targetObj)->anim.hitVolumeTransforms[((GameObject*)targetObj)->unkE4];
-                dx = hitVolume->centerX - *(float*)(playerObj + 0x18);
-                dz = hitVolume->centerZ - *(float*)(playerObj + 0x20);
+                hitVolume = &target->anim.hitVolumeTransforms[target->unkE4];
+                dx = hitVolume->centerX - focus->anim.worldPosX;
+                dz = hitVolume->centerZ - focus->anim.worldPosZ;
             }
-            if (*(short*)(targetObj + 0x44) != 0x6d)
+            if (target->anim.classId != 0x6d)
             {
                 lbl_803DD568->followDistance = sqrtf(dx * dx + dz * dz);
             }
