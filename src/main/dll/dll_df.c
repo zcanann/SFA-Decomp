@@ -1,4 +1,5 @@
 #include "main/dll/baddie/dll_DF.h"
+#include "main/dll/curve_walker.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
@@ -59,16 +60,16 @@ extern int trickyMove(u8* obj, void* moveState);
 extern void trickyRankLinkedRouteCandidates(u8* obj, u8* flags, int walkGroup, int* routes);
 extern int trickyFindReachableRouteIndex(u8* state, int* routes, u8* flags, u16 group);
 extern u8* trickySelectRouteEntry(u8* state, void* route, u8 dir);
-extern void fn_800DA980(void* route, void* fromNode, void* toNode);
-extern void RomCurve_stepClamped(void* route, f32 step);
+extern void fn_800DA980(RomCurveWalker* route, void* fromNode, void* toNode);
+extern void RomCurve_stepClamped(RomCurveWalker* route, f32 step);
 extern s16 getAngle(f32 x, f32 z);
 extern u32 GameBit_Get(int bit);
-extern void trickyAdvanceRouteTargetAhead(u8* obj, void* route, f32 speed);
+extern void trickyAdvanceRouteTargetAhead(u8* obj, RomCurveWalker* route, f32 speed);
 extern u32 randomGetRange(int min, int max);
 extern void objAnimFn_8013a3f0(u8* obj, int animId, f32 speed, int flags);
-extern void curveFn_800da23c(void* route);
-extern void fn_800D9F38(void* route);
-extern void fn_800D9EE8(void* route);
+extern void curveFn_800da23c(RomCurveWalker* route);
+extern void fn_800D9F38(RomCurveWalker* route);
+extern void fn_800D9EE8(RomCurveWalker* route);
 extern void fn_8004B31C(void* search, u32 route, void* target, int pathId, u32 dir);
 extern int fn_8004B218(void* search, int timeout);
 extern void trickyTurnTowardYaw(u8* obj, int yaw);
@@ -121,7 +122,9 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
         u16 patch[5];
     } wgi;
     int routePtrs[9];
+    RomCurveWalker* route;
 
+    route = (RomCurveWalker*)(state + 0x420);
     moved = 1;
     if ((((TrickyState*)state)->unk09 < 5) && (isInWalkGroupOrPatch((f32*)(obj + 0x18)) == 0))
     {
@@ -523,8 +526,8 @@ state_selected:
                 }
                 else
                 {
-                    fn_800DA980(state + 0x420, prevNode, node);
-                    RomCurve_stepClamped(state + 0x420, lbl_803E2484);
+                    fn_800DA980(route, prevNode, node);
+                    RomCurve_stepClamped(route, lbl_803E2484);
                     yawA = getAngle(((TrickyState*)state)->prevLocalPosX - ((GameObject*)obj)->anim.localPosX,
                                     ((TrickyState*)state)->prevLocalPosZ - ((GameObject*)obj)->anim.localPosZ);
                     yawB = getAngle(((TrickyState*)state)->prevLocalPosX - *(f32*)(state + 0x488),
@@ -552,7 +555,7 @@ state_selected:
                         ((TrickyState*)state)->speed = velBefore;
                         trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32*)(state + 0x488), 1);
                     }
-                    trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState*)state)->speed);
+                    trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
                     moved = trickyMove(obj, state + 0x488);
                     switch (*(s8*)(prevNode + 0x1a))
                     {
@@ -599,16 +602,16 @@ state_selected:
                         ((TrickyState*)state)->unk09 = 0xc;
                         if (((TrickyState*)state)->unk4A0 != 0)
                         {
-                            while (*(int*)(state + 0x430) != 0)
+                            while (route->atSegmentEnd != 0)
                             {
-                                RomCurve_stepClamped(state + 0x420, lbl_803E2448);
+                                RomCurve_stepClamped(route, lbl_803E2448);
                             }
                         }
                         else
                         {
-                            while (*(int*)(state + 0x430) == 0)
+                            while (route->atSegmentEnd == 0)
                             {
-                                RomCurve_stepClamped(state + 0x420, lbl_803E23F8);
+                                RomCurve_stepClamped(route, lbl_803E23F8);
                             }
                         }
                         ((TrickyState*)state)->unk7A0f = lbl_803E2440;
@@ -632,16 +635,16 @@ state_selected:
                         ((TrickyState*)state)->unk09 = 0xe;
                         if (((TrickyState*)state)->unk4A0 != 0)
                         {
-                            while (*(int*)(state + 0x430) != 0)
+                            while (route->atSegmentEnd != 0)
                             {
-                                RomCurve_stepClamped(state + 0x420, lbl_803E2448);
+                                RomCurve_stepClamped(route, lbl_803E2448);
                             }
                         }
                         else
                         {
-                            while (*(int*)(state + 0x430) == 0)
+                            while (route->atSegmentEnd == 0)
                             {
-                                RomCurve_stepClamped(state + 0x420, lbl_803E23F8);
+                                RomCurve_stepClamped(route, lbl_803E23F8);
                             }
                         }
                         ((TrickyState*)state)->unk7A0f = lbl_803E2440;
@@ -751,14 +754,14 @@ state_selected:
                                     dir = (*(u32*)&((TrickyState*)state)->unk4A0 ^ 1) & 0xff;
                                     if (dir == 0)
                                     {
-                                        RomCurve_stepClamped(state + 0x420, lbl_803E23F8);
+                                        RomCurve_stepClamped(route, lbl_803E23F8);
                                     }
                                     else
                                     {
-                                        RomCurve_stepClamped(state + 0x420, lbl_803E2448);
+                                        RomCurve_stepClamped(route, lbl_803E2448);
                                     }
                                     *(u32*)&((TrickyState*)state)->unk4A0 = dir;
-                                    fn_800D9EE8(state + 0x420);
+                                    fn_800D9EE8(route);
                                 }
                             }
                         }
@@ -767,13 +770,13 @@ state_selected:
             }
         }
         dir = *(u32*)&((TrickyState*)state)->unk4A0;
-        if (((dir == 0) && (*(int*)(state + 0x430) != 0)) ||
-            ((dir != 0 && (*(int*)(state + 0x430) == 0))))
+        if (((dir == 0) && (route->atSegmentEnd != 0)) ||
+            ((dir != 0 && (route->atSegmentEnd == 0))))
         {
             node = trickySelectRouteEntry(state, *(void**)(state + 0x4c4), dir & 0xff);
             if (node != 0)
             {
-                curveFn_800da23c(state + 0x420);
+                curveFn_800da23c(route);
                 type = *(s8*)(*(int*)(state + 0x4bc) + 0x1a);
                 switch (type)
                 {
@@ -805,7 +808,7 @@ state_selected:
             {
                 if (node != *(u8**)(state + 0x4c4))
                 {
-                    fn_800D9F38(state + 0x420);
+                    fn_800D9F38(route);
                 }
             walk_nodes_common:
                 if ((((TrickyState*)state)->unk534 == 0) || (wg != ((TrickyState*)state)->unk534))
@@ -838,7 +841,7 @@ state_selected:
                         trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32*)(state + 0x488), 1);
                     }
                 }
-                trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState*)state)->speed);
+                trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
                 moved = trickyMove(obj, state + 0x488);
                 type = *(s8*)(*(int*)(state + 0x4c0) + 0x1a);
                 if (type == 5)
@@ -895,11 +898,11 @@ state_selected:
             ((TrickyState*)state)->speed = velBefore;
             trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32*)(state + 0x488), 1);
         }
-        trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState*)state)->speed);
+        trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
         trickyMove(obj, state + 0x488);
         dir = *(u32*)&((TrickyState*)state)->unk4A0;
-        if (((dir == 0) && (*(int*)(state + 0x430) != 0)) ||
-            ((dir != 0 && (*(int*)(state + 0x430) == 0))))
+        if (((dir == 0) && (route->atSegmentEnd != 0)) ||
+            ((dir != 0 && (route->atSegmentEnd == 0))))
         {
             node = trickySelectRouteEntry(state, *(void**)(state + 0x4c4), dir & 0xff);
             if (node == 0)
@@ -908,7 +911,7 @@ state_selected:
             }
             else
             {
-                curveFn_800da23c(state + 0x420);
+                curveFn_800da23c(route);
                 ((TrickyState*)state)->dirX =
                     *(f32*)(*(int*)(state + 0x4c0) + 8) - ((GameObject*)obj)->anim.worldPosX;
                 ((TrickyState*)state)->dirZ =
@@ -1004,16 +1007,16 @@ state_selected:
             ((TrickyState*)state)->unk09 = 10;
             if (((TrickyState*)state)->unk4A0 != 0)
             {
-                while (*(int*)(state + 0x430) != 0)
+                while (route->atSegmentEnd != 0)
                 {
-                    RomCurve_stepClamped(state + 0x420, lbl_803E2448);
+                    RomCurve_stepClamped(route, lbl_803E2448);
                 }
             }
             else
             {
-                while (*(int*)(state + 0x430) == 0)
+                while (route->atSegmentEnd == 0)
                 {
-                    RomCurve_stepClamped(state + 0x420, lbl_803E23F8);
+                    RomCurve_stepClamped(route, lbl_803E23F8);
                 }
             }
         }
@@ -1106,11 +1109,11 @@ state_selected:
             ((TrickyState*)state)->speed = velBefore;
             trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32*)(state + 0x488), 1);
         }
-        trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState*)state)->speed);
+        trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
         trickyMove(obj, state + 0x488);
         dir = *(u32*)&((TrickyState*)state)->unk4A0;
-        if (((dir == 0) && (*(int*)(state + 0x430) != 0)) ||
-            ((dir != 0 && (*(int*)(state + 0x430) == 0))))
+        if (((dir == 0) && (route->atSegmentEnd != 0)) ||
+            ((dir != 0 && (route->atSegmentEnd == 0))))
         {
             node = trickySelectRouteEntry(state, *(void**)(state + 0x4c4), dir & 0xff);
             if (node == 0)
@@ -1119,7 +1122,7 @@ state_selected:
             }
             else
             {
-                curveFn_800da23c(state + 0x420);
+                curveFn_800da23c(route);
                 ((TrickyState*)state)->dirX =
                     *(f32*)(*(int*)(state + 0x4c0) + 8) - ((GameObject*)obj)->anim.worldPosX;
                 ((TrickyState*)state)->dirZ =
@@ -1145,16 +1148,16 @@ state_selected:
                 ((TrickyState*)state)->unk09 = 0xc;
                 if (((TrickyState*)state)->unk4A0 != 0)
                 {
-                    while (*(int*)(state + 0x430) != 0)
+                    while (route->atSegmentEnd != 0)
                     {
-                        RomCurve_stepClamped(state + 0x420, lbl_803E2448);
+                        RomCurve_stepClamped(route, lbl_803E2448);
                     }
                 }
                 else
                 {
-                    while (*(int*)(state + 0x430) == 0)
+                    while (route->atSegmentEnd == 0)
                     {
-                        RomCurve_stepClamped(state + 0x420, lbl_803E23F8);
+                        RomCurve_stepClamped(route, lbl_803E23F8);
                     }
                 }
                 ((TrickyState*)state)->unk7A0f = lbl_803E2440;
@@ -1165,7 +1168,7 @@ state_selected:
     case 0xe:
         trickyDebugPrint(strs + 0x4d4);
         ((TrickyState*)state)->unk353 = 0;
-        trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState*)state)->speed);
+        trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
         {
             f32 dx = *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x2c);
             f32 dz = *(f32*)(*(int*)&((GameObject*)obj)->extra + 0x30);
@@ -1218,11 +1221,11 @@ state_selected:
             ((TrickyState*)state)->speed = velBefore;
             trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32*)(state + 0x488), 1);
         }
-        trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState*)state)->speed);
+        trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
         trickyMove(obj, state + 0x488);
         dir = *(u32*)&((TrickyState*)state)->unk4A0;
-        if (((dir == 0) && (*(int*)(state + 0x430) != 0)) ||
-            ((dir != 0 && (*(int*)(state + 0x430) == 0))))
+        if (((dir == 0) && (route->atSegmentEnd != 0)) ||
+            ((dir != 0 && (route->atSegmentEnd == 0))))
         {
             node = trickySelectRouteEntry(state, *(void**)(state + 0x4c4), dir & 0xff);
             if (node == 0)
@@ -1231,7 +1234,7 @@ state_selected:
             }
             else
             {
-                curveFn_800da23c(state + 0x420);
+                curveFn_800da23c(route);
                 ((TrickyState*)state)->dirX =
                     *(f32*)(*(int*)(state + 0x4c0) + 8) - ((GameObject*)obj)->anim.worldPosX;
                 ((TrickyState*)state)->dirZ =
@@ -1250,16 +1253,16 @@ state_selected:
                 ((TrickyState*)state)->unk09 = 0xe;
                 if (((TrickyState*)state)->unk4A0 != 0)
                 {
-                    while (*(int*)(state + 0x430) != 0)
+                    while (route->atSegmentEnd != 0)
                     {
-                        RomCurve_stepClamped(state + 0x420, lbl_803E2448);
+                        RomCurve_stepClamped(route, lbl_803E2448);
                     }
                 }
                 else
                 {
-                    while (*(int*)(state + 0x430) == 0)
+                    while (route->atSegmentEnd == 0)
                     {
-                        RomCurve_stepClamped(state + 0x420, lbl_803E23F8);
+                        RomCurve_stepClamped(route, lbl_803E23F8);
                     }
                 }
                 ((TrickyState*)state)->unk7A0f = lbl_803E2440;
