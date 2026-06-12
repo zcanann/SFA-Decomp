@@ -1812,8 +1812,17 @@ main/dll/DBprotection.c:
 main/dll/DBdustgeezer.c:
 	.text       start:0x801E1588 end:0x801E1588
 
-main/dll/DBstealerworm.c:
-	.text       start:0x801E1588 end:0x801E341C
+main/dll/dll_01E8_sbgalleon.c:
+	.text       start:0x801E1588 end:0x801E2570
+
+main/dll/dll_01E9_sbpropelle.c:
+	.text       start:0x801E2570 end:0x801E2B28
+
+main/dll/dll_01EA_sbshiphead.c:
+	.text       start:0x801E2B28 end:0x801E32BC
+
+main/dll/dll_01EB_sbshipmast.c:
+	.text       start:0x801E32BC end:0x801E341C
 
 main/dll/TREX_levelcontrol.c:
 	.text       start:0x801E341C end:0x801E4288
