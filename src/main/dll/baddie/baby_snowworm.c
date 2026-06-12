@@ -601,6 +601,7 @@ void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
  * to retail (target r31=prev, r30=buttons; MWCC picks r30=prev,
  * r31=buttons regardless of declaration order tried so far). The
  * stack frame matches retail's 0x20 layout via the buf[16] trick. */
+#pragma dont_inline on
 void timeListFn_8012be84(void)
 {
     s32 buttons;
@@ -651,6 +652,7 @@ void timeListFn_8012be84(void)
         Sfx_PlayFromObject(0, 0x419);
     }
 }
+#pragma dont_inline reset
 
 /* EN v1.0 0x8012B6BC  size: 192b  Snowworm "should-spawn" gate: 9-entry
  * table lookup with the same shape as the previously-matched
@@ -2782,6 +2784,7 @@ typedef struct
 extern PauseTbl lbl_8031AE20;
 
 /* EN v1.0 0x80129EE0  size: 5604b  Pause menu master state machine. */
+#pragma dont_inline on
 void pauseMenuFn_80129ee0(void)
 {
     PauseTbl* tbl = &lbl_8031AE20;
@@ -3550,6 +3553,7 @@ void pauseMenuFn_80129ee0(void)
         }
     }
 }
+#pragma dont_inline reset
 
 extern void objRender(int a, int b, int c, int d, void* obj, int e);
 extern int* Obj_GetActiveModel(void* obj);
