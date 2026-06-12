@@ -1,6 +1,5 @@
 /* === moved from main/dll/WC/WClevcontrol.c [801EF360-801EF3A8) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll_000A_expgfx.h"
-#include "main/dll/wm_types.h"
 
 
 
@@ -221,7 +220,13 @@ extern u8 framesThisStep;
 #include "main/resource.h"
 
 /* WM_ObjCreator per-object extra state (four s16 slots). */
-
+typedef struct WmObjCreatorState
+{
+    s16 gameBit; /* 0x00: spawn gate, -1 = always */
+    s16 spawnPeriod; /* 0x02 */
+    s16 spawnTimer; /* 0x04 */
+    s16 spawnJitter; /* 0x06: randomGetRange(0, jitter) added per cycle */
+} WmObjCreatorState;
 
 STATIC_ASSERT(sizeof(WmObjCreatorState) == 0x8);
 

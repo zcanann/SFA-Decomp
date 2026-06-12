@@ -2,7 +2,6 @@
 #pragma scheduling on
 #pragma peephole on
 #include "main/dll/DR/dll_015A_explodable.h"
-#include "main/dll/dr_types.h"
 #include "main/obj_placement.h"
 
 extern u32 randomGetRange(int min, int max);
@@ -69,11 +68,57 @@ extern u32 randomGetRange(int min, int max);
 
 /* explodable_getExtraSize == 0x6e8 (gas-vent explodable). */
 /* Per-fragment record inside DrExplodableState (stride 0x70). */
-
+typedef struct DrExplodableChunk
+{
+    u8 pad00[4];
+    f32 centroidX; /* 0x04: model vertex average */
+    f32 centroidY; /* 0x08 */
+    f32 centroidZ; /* 0x0c */
+    f32 offX; /* 0x10: rotated launch offset */
+    f32 offY; /* 0x14 */
+    f32 offZ; /* 0x18 */
+    f32 spinX; /* 0x1c */
+    f32 spinY; /* 0x20 */
+    f32 spinZ; /* 0x24 */
+    f32 unk28;
+    f32 unk2C;
+    f32 unk30;
+    f32 unk34;
+    f32 unk38;
+    f32 unk3C;
+    f32 velX; /* 0x40 */
+    f32 velY; /* 0x44 */
+    f32 velZ; /* 0x48 */
+    f32 posX; /* 0x4c */
+    f32 posY; /* 0x50 */
+    f32 posZ; /* 0x54 */
+    f32 height;
+    int unk5C;
+    int launchDelay; /* 0x60: per-fragment delay roll, -1 = none */
+    s16 unk64; /* 0x64: from def+0x1e */
+    s16 unk66; /* 0x66: from def+0x1c */
+    s16 unk68; /* 0x68: from def+0x1a */
+    u8 gameBitMode; /* 0x6a: gamebit-gated mode */
+    u8 unk6B; /* 0x6b: init 0xff */
+    u8 launchFlags; /* 0x6c: axis sign bits */
+    u8 spinScale; /* 0x6d */
+    u8 pad6E[2];
+} DrExplodableChunk;
 
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 
-
+typedef struct DrExplodableState
+{
+    DrExplodableChunk chunks[15]; /* 0x000 */
+    int children[15]; /* 0x690: spawned fragment objects */
+    u32 flags6CC;
+    int unk6D0;
+    u8 count6D4;
+    u8 spawnedFlags[15]; /* 0x6d5 */
+    u8 phase6E4;
+    u8 unk6E5;
+    u8 pad6E6[2];
+} DrExplodableState;
 
 STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
 STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);

@@ -6,10 +6,6 @@
  * their defs here are collapsed to prototypes).
  */
 #include "main/dll/cfguardian_state.h"
-#include "main/dll/wormspitbyte_struct.h"
-#include "main/dll/gcrobotlightbeastate_struct.h"
-#include "main/dll/crystalbeam_struct.h"
-#include "main/dll/babycloudrunnerflags_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -490,7 +486,11 @@ void babycloudrunner_init_OLD_v1_1(int obj)
 extern f32 lbl_803E422C;
 extern uint GameBit_Get(int eventId);
 
-
+typedef struct BabyCloudrunnerFlags
+{
+    u8 resetLatch : 1;
+    u8 flags : 7;
+} BabyCloudrunnerFlags;
 
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
@@ -777,7 +777,11 @@ extern f32 Vec_distance(void* a, void* b);
 
 
 
-
+typedef struct
+{
+    f32 f0, f4, f8, fc, f10, f14;
+    u8 b18, b19, b1a, b1b;
+} CrystalBeam;
 
 /* Per-object extra state for the CloudRunner main crystal
  * (cfmaincrystal_getExtraSize == 0x160). */
@@ -849,7 +853,13 @@ STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
 /* Per-object extra state for the robot light beacon
  * (gcrobotlightbea_getExtraSize == 0xc). */
-
+typedef struct GcRobotLightBeaState
+{
+    void* light; /* modelLightStruct point light */
+    int unk4;
+    u8 hitFlags; /* 0x80 = player caught in the beam */
+    u8 pad9[3];
+} GcRobotLightBeaState;
 
 STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 
@@ -1155,7 +1165,12 @@ void windlift_free(int* obj);
 
 
 
-
+typedef struct
+{
+    u8 _p0 : 1;
+    u8 spitLatch : 1;
+    u8 _p1 : 6;
+} WormSpitByte;
 
 /* EN v1.0 0x8019E3F4  size: 372b  fn_8019E3F4: pick the burrow/surface move
  * from the vertical speed, clamp the playback rate, latch the spit SFX

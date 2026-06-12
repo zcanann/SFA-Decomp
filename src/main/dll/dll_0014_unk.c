@@ -1,5 +1,4 @@
 #include "main/dll/objfsa_romcurve.h"
-#include "main/dll/objfsa_types.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_ui_interface.h"
@@ -76,7 +75,11 @@ extern char sObjfsaIsPointWithinPatchGroupError[];
 #define OBJFSA_ACTIVE_WALKGROUPS_OFFSET 0x4C48
 #define OBJFSA_WALKGROUP_COUNT 0xB5
 
-
+typedef struct ObjfsaPatchPlane
+{
+    s16 normalX;
+    s16 normalZ;
+} ObjfsaPatchPlane;
 
 typedef struct ObjfsaPatch
 {

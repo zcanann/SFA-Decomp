@@ -1,5 +1,4 @@
 #include "main/dll/tricky.h"
-#include "main/dll/ppcwgpipe_struct.h"
 #include "main/game_object.h"
 #include "main/camera_interface.h"
 #include "main/mapEventTypes.h"
@@ -784,7 +783,15 @@ void hudDrawTimedElement(int unused, int* e)
                 (int)*(f32*)((char*)e + 0x8), 0x100);
 }
 
-
+typedef union
+{
+    u8 u8;
+    u16 u16;
+    u32 u32;
+    s16 s16;
+    s32 s32;
+    f32 f32;
+} PPCWGPipe;
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 

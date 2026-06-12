@@ -1,7 +1,4 @@
 #include "main/dll_000A_expgfx.h"
-#include "main/dll/pushcartstate97_struct.h"
-#include "main/dll/shopkeeperstate_struct.h"
-#include "main/dll/shopitemstate_struct.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/DR/DRpushcart.h"
@@ -25,12 +22,56 @@ typedef struct ShopitemPlacement
 
 
 /* shopitem_getExtraSize == 0xec (spline-following pushcart item). */
-
+typedef struct ShopItemState
+{
+    u8 pad00[4];
+    f32 controlX[4]; /* 0x04: B-spline control ring (address-passed, raw) */
+    f32 controlY[4]; /* 0x14 */
+    f32 controlZ[4]; /* 0x24 */
+    u8 pad34[0xC];
+    f32 splineT; /* 0x40 */
+    f32 splineSpeed; /* 0x44 */
+    u8 pad48[0x20];
+    u8 segCounter; /* 0x68 */
+    u8 pad69[0x1F];
+    s16 msgParam; /* 0x88: ObjMsg payload (address-used, raw) */
+    u8 pad8A[6];
+    int vendorObj; /* 0x90: nearest group-9 shop manager */
+    s16 helpTextId; /* 0x94 */
+    u8 pad96;
+    u8 flags97; /* 0x97: PushcartState97 overlay */
+    u8 pad98[0xEC - 0x98];
+} ShopItemState;
 
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 
 /* shopkeeper_getExtraSize == 0x9d8. */
-
+typedef struct ShopkeeperState
+{
+    u8 pad000[0x280];
+    f32 animSpeed; /* 0x280 */
+    u8 pad284[0x35C - 0x284];
+    u8 dll2EBlock[0x96D - 0x35C]; /* 0x35c: dll_2E look-controller block (address-used) */
+    u8 unk96D; /* 0x96d */
+    u8 pad96E[0x980 - 0x96E];
+    u8 eyeAnimBlock[0x9B0 - 0x980]; /* 0x980: characterDoEyeAnims block (address-used) */
+    void* msgStack; /* 0x9b0: Stack_Free'd on free */
+    int vendorObj; /* 0x9b4: nearest group-9 shop manager */
+    f32 unk9B8; /* 0x9b8 */
+    u8 pad9BC[8];
+    f32 textTimer; /* 0x9c4: gameTextShow 0x433 countdown */
+    s16 playerMoney; /* 0x9c8 */
+    u8 pad9CA[2];
+    s16 price; /* 0x9cc */
+    s16 unk9CE; /* 0x9ce */
+    s16 priceShown; /* 0x9d0 */
+    u8 unk9D2; /* 0x9d2 */
+    u8 pad9D3;
+    u8 flags9D4; /* 0x9d4: 2 purchased-event, 4 facing, 0x10 leave, 0x20 tick */
+    u8 amount; /* 0x9d5 */
+    u8 opacity; /* 0x9d6: copied to obj alpha */
+    u8 pad9D7;
+} ShopkeeperState;
 
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
@@ -454,7 +495,12 @@ void shopitem_init(int obj, int data)
 
 void shopkeeper_init(int obj);
 
-
+typedef struct
+{
+    u8 flag_80 : 1;
+    u8 flag_40 : 1;
+    u8 _rest : 6;
+} PushcartState97;
 
 
 void fn_801E8660(int obj)

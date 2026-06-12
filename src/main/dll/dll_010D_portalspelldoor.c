@@ -4,9 +4,6 @@
  * 0x80186498..0x80186704, formerly inside windlift.c.
  */
 #include "main/game_object.h"
-#include "main/dll/portalspelldoorstate_struct.h"
-#include "main/dll/windlift107state_struct.h"
-#include "main/dll/scarabstate_struct.h"
 #include "main/objseq.h"
 
 typedef struct PortalspelldoorPlacement
@@ -19,17 +16,72 @@ typedef struct PortalspelldoorPlacement
 
 
 /* scarab_getExtraSize == 0x34 (collectible money beetle). */
-
+typedef struct ScarabState
+{
+    f32 velX; /* 0x00 */
+    f32 velZ; /* 0x04 */
+    f32 riseAmount; /* 0x08 */
+    f32 baseY; /* 0x0c: def spawn height */
+    s16 despawnTimer; /* 0x10 */
+    u8 pad12[2];
+    s16 mode; /* 0x14 */
+    s16 yawSpeed; /* 0x16 */
+    s16 spawnYaw; /* 0x18 */
+    s16 fleeTimer; /* 0x1a */
+    s16 riseLimit; /* 0x1c */
+    s16 pickupSfx; /* 0x1e */
+    s16 particleId; /* 0x20 */
+    s16 unk22; /* 0x22 */
+    u8 phase; /* 0x24 */
+    u8 pad25[2];
+    u8 moneyKind; /* 0x27 */
+    u8 flags28; /* 0x28: 1 = collected, waiting on the money message */
+    u8 pad29[3];
+    s16 msgParamA; /* 0x2c */
+    s16 msgParamB; /* 0x2e */
+    f32 msgParamC; /* 0x30 */
+} ScarabState;
 
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
 /* dll_107_getExtraSize == 0x2c (CF wind lift / blow vent). */
-
+typedef struct WindLift107State
+{
+    int holdTimer; /* 0x00: countdown while the vent is plugged */
+    int holdReload; /* 0x04 */
+    f32 radius; /* 0x08 */
+    s16 yawLow; /* 0x0c */
+    s16 yawHigh; /* 0x0e */
+    s16 ventState; /* 0x10 */
+    s16 maxDist; /* 0x12 */
+    s16 unk14; /* 0x14 */
+    s16 unk16; /* 0x16 */
+    s16 unk18; /* 0x18 */
+    s16 liftTimer; /* 0x1a */
+    u8 pad1C[2];
+    s16 spitTimer; /* 0x1e */
+    u8 pad20;
+    u8 rideState; /* 0x21 */
+    u8 riding; /* 0x22 */
+    u8 launchPhase; /* 0x23 */
+    u8 pad24;
+    u8 unk25; /* 0x25 */
+    u8 glowPulse; /* 0x26 */
+    u8 unk27; /* 0x27 */
+    u8 pad28[4];
+} WindLift107State;
 
 STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 /* portalspelldoor_getExtraSize == 0x10. */
-
+typedef struct PortalSpellDoorState
+{
+    u8 pad00[4];
+    f32 openAmount; /* 0x04 */
+    int openTimer; /* 0x08 */
+    u8 flags0C; /* 0x0c: bit 7 = open (via PortalFlags cast) */
+    u8 pad0D[3];
+} PortalSpellDoorState;
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 

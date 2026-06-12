@@ -1,6 +1,5 @@
 /* === moved from main/dll/dll_19C.c [801C3B68-801C3BB0) (TU re-split, docs/boundary_audit.md) === */
 #include "main/obj_placement.h"
-#include "main/dll/dfshshrineplacement_struct.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
@@ -12,7 +11,14 @@ extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 
-
+typedef struct DfshShrinePlacement
+{
+    ObjPlacement base;
+    s8 initialYaw;
+    u8 pad19;
+    s16 startDelay;
+    u8 pad1C[0x24 - 0x1C];
+} DfshShrinePlacement;
 
 STATIC_ASSERT(sizeof(DfshShrinePlacement) == 0x24);
 STATIC_ASSERT(offsetof(DfshShrinePlacement, initialYaw) == 0x18);

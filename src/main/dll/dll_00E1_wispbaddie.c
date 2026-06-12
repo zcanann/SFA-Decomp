@@ -1,7 +1,5 @@
 /* === moved from main/dll/pressureSwitch.c [8014F620-8014F9E8) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/rom_curve_interface.h"
-#include "main/dll/swarmbaddiestate_struct.h"
-#include "main/dll/hagabonstate_struct.h"
 #include "main/dll/pressureSwitch.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -175,10 +173,39 @@ extern f32 mathSinf(f32 x);
 
 
 
-
+typedef struct SwarmBaddieState
+{
+    int curve;
+    int player;
+    f32 curveStep;
+    f32 playerDistance;
+    f32 pathDistance;
+    f32 chaseRadius;
+    f32 hitVolumeEnvelope;
+    u8 flags;
+    u8 pad1d;
+    s16 yawWavePhase;
+    s16 rollWavePhase;
+    u8 pad22[2];
+} SwarmBaddieState;
 
 /* Per-object extra state for Hagabon (hagabon_getExtraSize == 0x28). */
-
+typedef struct HagabonState
+{
+    int curve;
+    int player;
+    f32 curveStep;
+    f32 animSpeed;
+    f32 playerDistance;
+    f32 pathDistance;
+    f32 chaseRadius;
+    u8 pad1C[4];
+    u16 wavePhaseA; /* yaw wave */
+    u16 wavePhaseB; /* shared bob wave */
+    u16 wavePhaseC; /* pitch wave */
+    u8 flags;
+    u8 pad27;
+} HagabonState;
 
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);

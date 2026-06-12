@@ -1,6 +1,5 @@
 /* === moved from main/dll/CF/dll_165.c [8018A8BC-8018AA60) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/CF/dll_165.h"
-#include "main/dll/staffflags_struct.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/resource.h"
@@ -16,7 +15,14 @@ STATIC_ASSERT(offsetof(TreasureChestSetup, triggerObjectId) == 0x1a);
 STATIC_ASSERT(offsetof(TreasureChestSetup, dialogueId) == 0x1c);
 STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
 
-
+typedef struct
+{
+    u8 b7 : 1;
+    u8 b6 : 1;
+    u8 b5 : 1;
+    u8 b4 : 1;
+    u8 rest : 4;
+} StaffFlags;
 
 /*
  * --INFO--

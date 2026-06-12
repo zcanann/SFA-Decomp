@@ -1,5 +1,4 @@
 #include "main/obj_placement.h"
-#include "main/dll/duster_types.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cfprisonuncle.h"
@@ -214,9 +213,31 @@ int trickywarp_getExtraSize(void);
 int duster_getExtraSize(void);
 int curvefish_getExtraSize(void);
 
+typedef struct DusterStateFlags
+{
+    u8 floorCached : 1;
+    u8 pad : 7;
+} DusterStateFlags;
 
-
-
+typedef struct DusterState
+{
+    f32 moveStepScale;
+    f32 floorY;
+    s16 settleTimer;
+    s16 hitReactTimer;
+    s16 completeGameBit;
+    s16 activeGameBit;
+    s16 heldObjectId;
+    u8 pad12[6];
+    u8 driftDir;
+    u8 hitReactActive;
+    u8 priorityHit;
+    u8 active;
+    u8 complete;
+    u8 useLaunchVelocity;
+    DusterStateFlags flags;
+    u8 pad1F;
+} DusterState;
 
 STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
 STATIC_ASSERT(sizeof(DusterState) == 0x20);

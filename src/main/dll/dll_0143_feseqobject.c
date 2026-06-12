@@ -1,5 +1,4 @@
 #include "main/dll/DB/DBrockfall.h"
-#include "main/dll/feseqobjecteffectparams_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
@@ -26,7 +25,17 @@ extern f32 lbl_803E56B4;
  * PAL Size: TODO
  */
 
-
+typedef struct FEseqobjectEffectParams
+{
+    s16 xRot;
+    s16 yRot;
+    s16 variant;
+    s16 pad06;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} FEseqobjectEffectParams;
 
 #pragma scheduling on
 #pragma peephole on

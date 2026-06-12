@@ -1,6 +1,5 @@
 /* === moved from main/dll/DR/DRCloudball.c [801E9328-801E9344) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/DR/dll_0287_spscarab.h"
-#include "main/dll/sh_types.h"
 
 
 
@@ -387,7 +386,15 @@ void spdrape_init(int* obj, u8* def)
     }
 }
 
-
+typedef union
+{
+    u8 u8;
+    u16 u16;
+    u32 u32;
+    s16 s16;
+    s32 s32;
+    f32 f32;
+} ShWGPipe;
 
 volatile ShWGPipe GXWGFifo : (0xCC008000);
 

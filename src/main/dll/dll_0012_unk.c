@@ -1,5 +1,4 @@
 #include "main/dll/objfsa_romcurve.h"
-#include "main/dll/objfsa_types.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_ui_interface.h"
@@ -55,7 +54,11 @@ extern f32 lbl_803E05F0;
 
 #define OBJFSA_PATCHGROUP_PATCH_COUNT 4
 
-
+typedef struct ObjfsaPatchPlane
+{
+    s16 normalX;
+    s16 normalZ;
+} ObjfsaPatchPlane;
 
 typedef struct ObjfsaPatch
 {

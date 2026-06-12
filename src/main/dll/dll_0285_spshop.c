@@ -1,9 +1,5 @@
 /* === moved from main/dll/TREX/TREX_levelcontrol.c [801E4288-801E42F8) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll_000A_expgfx.h"
-#include "main/dll/shipbattlestate_struct.h"
-#include "main/dll/sbkytecagestate_struct.h"
-#include "main/dll/sbfireballstate_struct.h"
-#include "main/dll/sbcloudballstate_struct.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
 
 
@@ -94,7 +90,19 @@ typedef struct ShopBuyItemState
  * Per-object extra state for the ShipBattle cloud-ball projectile
  * (SB_CloudBall_getExtraSize == 0x24).
  */
-
+typedef struct SBCloudBallState
+{
+    f32 velX; /* captured from obj+0x24.. on launch */
+    f32 velY;
+    f32 velZ;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    int light; /* objCreateLight handle */
+    u8 launched;
+    u8 pad1D[3];
+    f32 fadeTimer; /* nonzero = despawning */
+} SBCloudBallState;
 
 STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
 
@@ -102,7 +110,17 @@ STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
  * Per-object extra state for the ShipBattle fireball projectile
  * (SB_FireBall_getExtraSize == SB_FIREBALL_EXTRA_SIZE == 0x18).
  */
-
+typedef struct SBFireBallState
+{
+    void* owner; /* taken from obj+0xF8 */
+    s16 age; /* frames; gates the hitbox enable */
+    u8 pad06[2];
+    f32 velX;
+    f32 velY;
+    f32 velZ;
+    u8 launched;
+    u8 pad15[3];
+} SBFireBallState;
 
 STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
 
@@ -110,7 +128,13 @@ STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
  * Per-object extra state for the ShipBattle kyte cage
  * (SB_KyteCage_getExtraSize == 0x8).
  */
-
+typedef struct SBKyteCageState
+{
+    void* kyte; /* attached objType-0x121 child */
+    u8 seqLatch;
+    u8 doorChoice; /* picks trigger 2 vs 1 on release */
+    u8 pad06[2];
+} SBKyteCageState;
 
 STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 
@@ -120,7 +144,17 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
  * gObjectTriggerInterface (+0x1C/+0x24) - interface-owned record;
  * only the locally-evidenced fields are named.
  */
-
+typedef struct ShipBattleState
+{
+    u8 unk00[0x24];
+    f32 unk24; /* lbl/(lbl + def[0x24]) damping factor */
+    int unk28; /* -1 at init */
+    u8 unk2C[0x6A - 0x2C];
+    s16 unk6A; /* def+0x1A */
+    u8 pad6C[2];
+    s16 unk6E; /* -1 at init */
+    u8 unk70[0x140 - 0x70];
+} ShipBattleState;
 
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 

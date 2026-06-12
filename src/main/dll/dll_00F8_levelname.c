@@ -1,9 +1,17 @@
 #include "main/dll/tFrameAnimator.h"
-#include "main/dll/levelnamestate_struct.h"
 #include "main/game_object.h"
 #include "main/dll/tframeanimator_state.h"
 
-
+typedef struct LevelnameState
+{
+    u8 pad0[0x8 - 0x0];
+    s32 unk8;
+    u8 padC[0xE - 0xC];
+    s16 unkE;
+    s16 unk10;
+    s16 unk12;
+    u8 pad14[0x18 - 0x14];
+} LevelnameState;
 
 
 extern int* Obj_GetPlayerObject(void);

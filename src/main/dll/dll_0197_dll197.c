@@ -1,6 +1,4 @@
 #include "main/audio/sfx_ids.h"
-#include "main/dll/dll197state_struct.h"
-#include "main/dll/dbsh_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/cup1C3.h"
@@ -54,13 +52,30 @@ typedef struct Cup197State
  * PAL Size: TODO
  */
 
-
+typedef struct DbshSymbolFlags
+{
+    u8 finished : 1;
+    u8 active : 1;
+} DbshSymbolFlags;
 
 /*
  * Per-object extra state for the DBSH spin-symbol minigame
  * (dbsh_symbol_getExtraSize == 0x24).
  */
-
+typedef struct DbshSymbolState
+{
+    void* partnerObj; /* nearest objType-0x20F symbol, spun in mirror */
+    f32 spinSpeed;
+    f32 sfxTimerB; /* object creak sfx 0x4A3 */
+    f32 sfxTimerA; /* player grunt sfx 0x13A */
+    int spinProgress; /* 0..0x7EF4 = fully turned */
+    int prevSpinProgress;
+    int triggerHandle;
+    u8 pad1C[2];
+    s16 phase; /* update: 0 hide, 1 scuff, 2 arm trigger, 3 resolve */
+    DbshSymbolFlags flags;
+    u8 pad21[3];
+} DbshSymbolState;
 
 STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
 STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);
@@ -401,7 +416,21 @@ extern f32 lbl_803E5118;
 #include "main/objseq.h"
 #include "main/resource.h"
 
-
+typedef struct Dll197State
+{
+    u8 pad0[0x2 - 0x0];
+    s16 unk2;
+    s16 unk4;
+    u8 pad6[0x8 - 0x6];
+    s16 unk8;
+    s16 unkA;
+    u8 unkC;
+    u8 unkD;
+    u8 unkE;
+    u8 unkF;
+    u8 unk10;
+    u8 pad11[0x18 - 0x11];
+} Dll197State;
 
 
 extern int ObjHits_GetPriorityHit();
