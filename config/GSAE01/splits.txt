@@ -207,14 +207,8 @@ main/dll/dll_00BD_projsunshock.c:
 main/dll/dll_00BE_projtesla.c:
 	.text       start:0x80100978 end:0x801009B0
 
-main/dll/dll_80.c:
-	.text       start:0x801009B0 end:0x801009E0
-
-main/dll/dll_81.c:
-	.text       start:0x801009E0 end:0x801009E4
-
-main/dll/dll_82.c:
-	.text       start:0x801009E4 end:0x801009E8
+main/dll/dll_00BF_projcore1.c:
+	.text       start:0x801009B0 end:0x801009E8
 
 main/dll/dll_83.c:
 	.text       start:0x801009E8 end:0x80100A18
