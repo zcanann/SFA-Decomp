@@ -5,6 +5,7 @@
 #include "main/dll/backpack.h"
 #include "main/dll/landedArwing.h"
 #include "main/objlib.h"
+#include "main/objhits.h"
 
 typedef struct LandedArwingTriggerLaunchTargetState
 {
