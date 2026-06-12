@@ -84,21 +84,6 @@ void magicdust_render(void) { objRenderFn_8003b8f4(lbl_803E34B0); }
 #include "main/game_object.h"
 #include "main/resource.h"
 
-typedef struct EffectboxPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    u8 rotYaw;
-    u8 rotPitch;
-    u8 extentX;
-    u8 extentY;
-    u8 extentZ;
-    u8 unk1D;
-    u8 pad1E[0x1F - 0x1E];
-    u8 gameBitValue;
-    s16 unk20;
-    u8 targetMode;
-    u8 pad23[0x28 - 0x23];
-} EffectboxPlacement;
 
 
 extern int Sfx_PlayFromObject(int obj, int sfxId);
@@ -139,8 +124,6 @@ extern f32 lbl_803E34DC;
 extern f32 lbl_803E34E0;
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-extern void* ObjGroup_GetObjects();
-extern undefined4 fn_80174BFC();
 extern u8* Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32 x);
@@ -589,58 +572,20 @@ extern void fn_8002B758(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void effectbox_free(void);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void effectbox_hitDetect(void);
 
-void effectbox_release(void);
 
-void effectbox_initialise(void);
 
-extern void fn_8002B860(int obj);
 
-void effectbox_init(int obj, int* def);
 
 /* 8b "li r3, N; blr" returners. */
-int effectbox_getExtraSize(void);
-int effectbox_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E3508;
 
-void effectbox_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void fn_80174588(int obj, PushableState* p2);
 
-extern void* getTrickyObject(void);
-extern void fn_80295918(f32 amount, int obj, int p3);
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern int fn_80295A04(void* player, int p2);
-extern int ObjGroup_FindNearestObject(int group, int obj, f32* dist);
-extern int* objFindTexture(int obj, int a, int b);
-extern void fn_80175428(int obj, int p2);
-extern f32 lbl_803E350C;
-extern f32 lbl_803E3510;
-extern f32 lbl_803E3514;
-extern f32 lbl_803E352C;
-extern f64 lbl_803E3530;
-extern f64 lbl_803E3538;
-extern f32 lbl_803E3540;
-extern f32 lbl_803E3544;
-extern f32 lbl_803E3548;
-extern f32 lbl_803E354C;
-extern f32 lbl_803E3550;
-extern f32 lbl_803E3554;
-extern f32 lbl_803E3558;
-extern f32 lbl_803E355C;
-extern f32 lbl_803E3560;
-extern f32 lbl_803E3564;
-extern f32 lbl_803E3568;
-extern f32 lbl_803E356C;
-extern f32 lbl_803E3570;
-extern f32 lbl_803E3528;
 
 /*
  * --INFO--
@@ -649,7 +594,6 @@ extern f32 lbl_803E3528;
  * EN v1.0 Address: 0x80173FE4
  * EN v1.0 Size: 980b
  */
-void effectbox_update(int obj);
 
 /*
  * --INFO--
@@ -658,7 +602,6 @@ void effectbox_update(int obj);
  * EN v1.0 Address: 0x80174438
  * EN v1.0 Size: 336b
  */
-int fn_80174438(int obj, PushableState* state);
 
 /*
  * --INFO--
@@ -667,4 +610,3 @@ int fn_80174438(int obj, PushableState* state);
  * EN v1.0 Address: 0x80174668
  * EN v1.0 Size: 1048b
  */
-int fn_80174668(int obj, PushableState* state);

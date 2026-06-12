@@ -5,10 +5,6 @@
  * verified). File rename parked as a repo-owner proposal. */
 
 extern uint GameBit_Get(int eventId);
-extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_SendToObject();
-extern undefined4 ObjMsg_AllocQueue();
-extern undefined4 ObjLink_DetachChild();
 
 
 /*
@@ -26,7 +22,6 @@ extern undefined4 ObjLink_DetachChild();
  */
 
 
-void magicdust_free(int param_1);
 
 
 /*
@@ -58,12 +53,8 @@ void magicdust_free(int param_1);
  */
 
 /* 8b "li r3, N; blr" returners. */
-int magicdust_getExtraSize(void);
 
 /* render-with-fn(lbl) (no visibility check). */
-extern f32 lbl_803E34B0;
-extern void objRenderFn_8003b8f4(f32);
-void magicdust_render(void);
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -76,67 +67,14 @@ void magicdust_render(void);
 #include "main/game_object.h"
 #include "main/resource.h"
 
-typedef struct EffectboxPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    u8 rotYaw;
-    u8 rotPitch;
-    u8 extentX;
-    u8 extentY;
-    u8 extentZ;
-    u8 unk1D;
-    u8 pad1E[0x1F - 0x1E];
-    u8 gameBitValue;
-    s16 unk20;
-    u8 targetMode;
-    u8 pad23[0x28 - 0x23];
-} EffectboxPlacement;
 
 
 extern int Sfx_PlayFromObject(int obj, int sfxId);
-extern void Sfx_StopFromObject(int obj, int sfxId);
-extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
-extern void playerAddRemoveMagic(int player, int amount);
-extern void OSReport(const char* fmt, ...);
-extern f32 getXZDistance(void* a, void* b);
-extern int fn_8029622C(int player);
-extern u8 framesThisStep;
-extern char sMagicDustCollectedMessage[];
-extern f32 mathCosf(f32 x);
-extern f32 mathSinf(f32 x);
-extern int Obj_GetActiveModel(int obj);
-extern u16 lbl_803E34A8;
-extern u16 lbl_803E34AC;
-extern u8 lbl_80320CB8[];
-extern f32 lbl_803E34E4;
-extern f32 lbl_803E34E8;
-extern f32 lbl_803E34EC;
-extern f32 lbl_803E34F0;
-extern f32 lbl_803E34F4;
-extern f32 lbl_803E34F8;
-extern f32 lbl_803E34FC;
-extern EffectInterface** gPartfxInterface;
 extern f32 timeDelta;
-extern f32 lbl_803E34B4;
-extern f32 lbl_803E34B8;
-extern f32 lbl_803E34BC;
-extern f32 lbl_803E34C0;
-extern f32 lbl_803E34C4;
-extern f32 lbl_803E34C8;
-extern f32 lbl_803E34CC;
-extern f32 lbl_803E34D0;
-extern f32 lbl_803E34D4;
-extern f32 lbl_803E34D8;
-extern f32 lbl_803E34DC;
-extern f32 lbl_803E34E0;
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-extern void* ObjGroup_GetObjects();
 extern undefined4 fn_80174BFC();
 extern u8* Obj_GetPlayerObject(void);
-extern void Obj_FreeObject(int obj);
-extern f32 sqrtf(f32 x);
-extern void objMove(f32 a, f32 b, f32 c, int obj);
 
 
 /* magicdust extra block (collectible sparkle state; tail of the pickup record). */
@@ -178,7 +116,6 @@ STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void magicdust_update(int obj);
 
 /*
  * --INFO--
@@ -193,10 +130,8 @@ void magicdust_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void magicdust_init(int obj, int placement);
 
 
-extern void fn_8002B758(void);
 
 /*
  * --INFO--
@@ -211,28 +146,18 @@ extern void fn_8002B758(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void effectbox_free(void);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void effectbox_hitDetect(void);
 
-void effectbox_release(void);
 
-void effectbox_initialise(void);
 
-extern void fn_8002B860(int obj);
 
-void effectbox_init(int obj, int* def);
 
 /* 8b "li r3, N; blr" returners. */
-int effectbox_getExtraSize(void);
-int effectbox_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E3508;
 
-void effectbox_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void fn_80174588(int obj, PushableState* p2)
 {
@@ -267,15 +192,11 @@ void fn_80174588(int obj, PushableState* p2)
 }
 
 extern void* getTrickyObject(void);
-extern void fn_80295918(f32 amount, int obj, int p3);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int fn_80295A04(void* player, int p2);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32* dist);
 extern int* objFindTexture(int obj, int a, int b);
 extern void fn_80175428(int obj, int p2);
-extern f32 lbl_803E350C;
-extern f32 lbl_803E3510;
-extern f32 lbl_803E3514;
 extern f32 lbl_803E352C;
 extern f64 lbl_803E3530;
 extern f64 lbl_803E3538;
@@ -301,7 +222,6 @@ extern f32 lbl_803E3528;
  * EN v1.0 Address: 0x80173FE4
  * EN v1.0 Size: 980b
  */
-void effectbox_update(int obj);
 
 /*
  * --INFO--
