@@ -338,12 +338,6 @@ extern u16 lbl_803DC060[4];
 #include "main/objfx.h"
 #include "main/objseq.h"
 
-typedef struct ScCloudrunneraPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    u8 pad1A[0x20 - 0x1A];
-} ScCloudrunneraPlacement;
 
 
 typedef struct ScMusictreeState
@@ -365,32 +359,20 @@ extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
 extern int ObjHits_GetPriorityHitWithPosition(int obj, int* type, int* a, int* b, f32* x, f32* y, f32* z);
 extern int ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d, int e, int* state);
 extern void ObjHits_RecordObjectHit(int target, int src, int a, int b, int c);
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern int Obj_SetupObject(int s, int a, int b, int c, int d);
-extern int ObjLink_AttachChild(int parent, int child, int a);
-extern int ObjLink_DetachChild(int parent, int child);
-extern void cmbsrc_setExternalActive(int obj, int active);
-extern void Obj_FreeObject(int obj);
 extern void* Obj_GetPlayerObject(void);
-extern void objSetSlot(int obj, int slot);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void* vec, f32 f, int flag);
 extern void vecRotateZXY(int obj, void* vec);
 extern f32 sqrtf(f32 x);
-extern f32 fn_8001461C(void);
 
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern int* gTitleMenuControlInterface;
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
-extern u8 lbl_803DB411;
-extern int lbl_803DC068;
-extern int lbl_803DDC08;
 extern f32 lbl_803E5590;
 extern f32 lbl_803E5594;
 extern f32 lbl_803E5598;
@@ -404,11 +386,6 @@ extern f32 lbl_803E55B4;
 extern f32 lbl_803E55B8;
 extern f32 lbl_803E55BC;
 extern f32 lbl_803E55C0;
-extern f32 lbl_803E55D0;
-extern f32 lbl_803E55D4;
-extern f32 lbl_803E55D8;
-extern f32 lbl_803E55DC;
-extern f32 lbl_803E55E0;
 
 
 typedef struct SCMusicTreeSetup
@@ -621,58 +598,22 @@ void sc_musictree_initialise(void)
 {
 }
 
-typedef struct SCTotemPoleState
-{
-    u16 gameBit;
-    u8 currentState;
-    u8 previousState;
-    f32 animSpeed;
-} SCTotemPoleState;
 
-#define SC_TOTEMPOLE_OBJECT_TYPE 0x282
-#define SC_TOTEMPOLE_GAMEBIT_FRONT 0x81
-#define SC_TOTEMPOLE_GAMEBIT_LEFT 0x82
-#define SC_TOTEMPOLE_GAMEBIT_RIGHT 0x83
-#define SC_TOTEMPOLE_GAMEBIT_REAR 0x84
-#define SC_TOTEMPOLE_SETUP_REAR 0x44916
-#define SC_TOTEMPOLE_SETUP_RIGHT 0x44909
-#define SC_TOTEMPOLE_SETUP_FRONT 0x4490C
-#define SC_TOTEMPOLE_SETUP_LEFT 0x4490F
 
-int sc_totempole_sortCompletionGameBits(u16* bits, u16 param2);
 
-int sc_totempole_getExtraSize(void);
-int sc_totempole_getObjectTypeId(void);
 
-void sc_totempole_free(void);
 
-void sc_totempole_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void sc_totempole_hitDetect(void);
 
-void sc_totempole_update(int obj);
 
-void sc_totempole_init(int obj, int p2);
 
-void sc_totempole_release(void);
 
-void sc_totempole_initialise(void);
 
-int sc_cloudrunnera_getExtraSize(void);
-int sc_cloudrunnera_getObjectTypeId(void);
 
-void sc_cloudrunnera_free(int* obj);
 
-void sc_cloudrunnera_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void sc_cloudrunnera_hitDetect(void);
 
-void sc_cloudrunnera_update(int obj);
 
-void sc_cloudrunnera_init(int obj, int p2);
 
-void sc_cloudrunnera_release(void);
 
-void sc_cloudrunnera_initialise(void);
 
-int fn_801DD170(void);
