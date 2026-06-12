@@ -1158,8 +1158,11 @@ main/dll/dll_00F6_area.c:
 main/dll/dll_00F8_levelname.c:
 	.text       start:0x8017A048 end:0x8017A350
 
-main/dll/screenOverlay.c:
-	.text       start:0x8017A350 end:0x8017AC2C
+main/dll/dll_00F9_drprojectil.c:
+	.text       start:0x8017A350 end:0x8017A8EC
+
+main/dll/dll_00FA_invisiblehi.c:
+	.text       start:0x8017A8EC end:0x8017AC2C
 
 main/dll/dll_147.c:
 	.text       start:0x8017AC2C end:0x8017AC2C
