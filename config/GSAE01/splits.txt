@@ -1390,8 +1390,23 @@ main/dll/dll_0183_mmpgyserve.c:
 main/dll/DIMlogfire.c:
 	.text       start:0x801A8F88 end:0x801AA558
 
-main/dll/DIMsnowball.c:
-	.text       start:0x801AA558 end:0x801AC248
+main/dll/dll_0187_ccqueen.c:
+	.text       start:0x801AA558 end:0x801AA734
+
+main/dll/dll_0188_cclightfoot.c:
+	.text       start:0x801AA734 end:0x801AB468
+
+main/dll/dll_0189_ccsharpclaw.c:
+	.text       start:0x801AB468 end:0x801AB6F8
+
+main/dll/dll_018A_ccpedstal.c:
+	.text       start:0x801AB6F8 end:0x801ABA84
+
+main/dll/dll_018B_cclevcontro.c:
+	.text       start:0x801ABA84 end:0x801AC01C
+
+main/dll/dll_801AC01C.c:
+	.text       start:0x801AC01C end:0x801AC248
 
 main/dll/DIMboulder.c:
 	.text       start:0x801AC248 end:0x801AE0EC

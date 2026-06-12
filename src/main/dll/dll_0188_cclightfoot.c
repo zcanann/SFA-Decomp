@@ -66,7 +66,7 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 #pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
-int ccqueen_getExtraSize(void) { return 0x654; }
+int ccqueen_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E45C8;
@@ -197,13 +197,7 @@ extern f32 lbl_803E5360;
  */
 #pragma scheduling off
 #pragma peephole off
-void ccqueen_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    extern undefined4 ccqueen_render();
-    void* state = ((GameObject*)obj)->extra;
-    objRenderFn_8003b8f4(lbl_803E4660);
-    dll_2E_func06(obj, state, 0);
-}
+void ccqueen_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 /*
  * --INFO--
@@ -296,13 +290,13 @@ FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 /* 8b "li r3, N; blr" returners. */
 int cclightfoot_getExtraSize(void) { return 0x18; }
-int ccsharpclawpad_getExtraSize(void) { return 0x4; }
-int ccpedstal_getExtraSize(void) { return 0x8; }
-int cclevcontrol_getExtraSize(void) { return 0x10; }
+int ccsharpclawpad_getExtraSize(void);
+int ccpedstal_getExtraSize(void);
+int cclevcontrol_getExtraSize(void);
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E46CC;
-void cclevcontrol_render(void) { objRenderFn_8003b8f4(lbl_803E46CC); }
+void cclevcontrol_render(void);
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern void envFxActFn_800887f8(int a);
@@ -313,17 +307,9 @@ extern f32 lbl_803E46C8;
 
 #pragma scheduling off
 #pragma peephole off
-void ccsharpclawpad_init(int* obj, int* def)
-{
-    *(s16*)obj = (s16)((u32) * (u8*)((char*)def + 24) << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
-}
+void ccsharpclawpad_init(int* obj, int* def);
 
-void cclevcontrol_free(void)
-{
-    envFxActFn_800887f8(0);
-    Music_Trigger(200, 0);
-}
+void cclevcontrol_free(void);
 
 void cclightfoot_init(int* obj, int* def)
 {
@@ -332,14 +318,7 @@ void cclightfoot_init(int* obj, int* def)
     ((GameObject*)obj)->animEventCallback = (void*)ccqueen_SeqFn;
 }
 
-int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    if (animUpdate->eventCount != 0)
-    {
-        spawnExplosion(obj, lbl_803E46C8, 1, 1, 0, 1, 1, 1, 0);
-    }
-    return 0;
-}
+int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /* ObjLink_DetachChild and Obj_FreeObject already declared in earlier extern blocks */
 
@@ -371,51 +350,9 @@ extern void ccpedstal_updateGameBitGate(int obj, u8* state2);
 extern void ccpedstal_updateAltVariant(int obj, u8* state2);
 extern void fn_8002B6D8(void* obj, int p2, int p3, int p4, int p5, int p6);
 
-void ccpedstal_init(int* obj, u8* params)
-{
-    u8* state = ((GameObject*)obj)->extra;
-    *(s16*)obj = (s16)((u32)params[0x1a] << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
-    switch (*(int*)(params + 0x14))
-    {
-    case 0x45f1a:
-        *(void**)state = (void*)ccpedstal_updateAltVariant;
-        *(s16*)(state + 4) = 0xaa;
-        fn_8002B6D8(obj, 0, 0, 0, 0, 3);
-        break;
-    case 0x45f1b:
-        *(void**)state = (void*)ccpedstal_updateGameBitGate;
-        *(s16*)(state + 4) = 0xf1;
-        break;
-    case 0x45f1c:
-        *(void**)state = (void*)ccpedstal_updateGameBitGate;
-        *(s16*)(state + 4) = 0xfe;
-        break;
-    }
-}
+void ccpedstal_init(int* obj, u8* params);
 
-void cclevcontrol_init(int* obj)
-{
-    void* envfxTable;
-    int* state;
-    envfxTable = lbl_80323548;
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)cclevcontrol_SeqFn;
-    fn_80088870((char*)envfxTable + 0x38, envfxTable, (char*)envfxTable + 0x70, (char*)envfxTable + 0xa8);
-    if (getSaveGameLoadStatus() != 0)
-    {
-        envFxActFn_800887f8(0x3f);
-        getEnvfxActImmediately((void*)0, (void*)0, 0x242, 0);
-    }
-    else
-    {
-        envFxActFn_800887f8(0x1f);
-        getEnvfxAct(0, 0, 0x242, 0);
-    }
-    *(f32*)state = lbl_803E46D4;
-    state[2] = -1;
-    state[3] = (u32)(u8)(*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot);
-}
+void cclevcontrol_init(int* obj);
 
 
 extern f32 lbl_803E4674;
@@ -467,42 +404,7 @@ extern void gameBitDecrement(int id);
  * decrements the gamebit, and flags state2[0x6] bit 0. If gbit 0xa9 is
  * clear, sets the obj[0xaf] 0x10 flag instead. */
 #pragma scheduling off
-void ccpedstal_updateGameBitGate(int obj, u8* state2)
-{
-    if (GameBit_Get(*(s16*)(state2 + 0x4)) != 0)
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
-        Obj_SetActiveModelIndex(obj, 1);
-    }
-    else
-    {
-        int doMark;
-        Obj_SetActiveModelIndex(obj, 0);
-        if (GameBit_Get(0xa9) != 0)
-        {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x10);
-            if (ObjTrigger_IsSetById(obj, 0xa9) != 0)
-            {
-                (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-                gameBitDecrement(0xa9);
-                doMark = 1;
-                goto check;
-            }
-        }
-        else
-        {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x10);
-        }
-        doMark = 0;
-    check:
-        if (doMark != 0)
-        {
-            state2[0x6] = (u8)(state2[0x6] | 1);
-        }
-    }
-}
+void ccpedstal_updateGameBitGate(int obj, u8* state2);
 
 extern int ObjTrigger_IsSet(int obj);
 extern void gameBitIncrement(int id);
@@ -514,40 +416,7 @@ extern void gameBitIncrement(int id);
  * id=1, increments gbit 0xa9, and latches state2[0x6] bit 0. Mirrors
  * the no-mark branches into a shared r0=0/cmpwi end-check via goto to
  * match target's layout. */
-void ccpedstal_updateAltVariant(int obj, u8* state2)
-{
-    if (GameBit_Get(0xdc5) != 0)
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
-    }
-    else
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8);
-    }
-    if (GameBit_Get(*(s16*)(state2 + 0x4)) != 0)
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
-        Obj_SetActiveModelIndex(obj, 0);
-    }
-    else
-    {
-        int doMark;
-        Obj_SetActiveModelIndex(obj, 1);
-        if (ObjTrigger_IsSet(obj) != 0)
-        {
-            (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-            gameBitIncrement(0xa9);
-            doMark = 1;
-            goto check;
-        }
-        doMark = 0;
-    check:
-        if (doMark != 0)
-        {
-            state2[0x6] = (u8)(state2[0x6] | 1);
-        }
-    }
-}
+void ccpedstal_updateAltVariant(int obj, u8* state2);
 
 extern WaterfxInterface** gWaterfxInterface;
 extern f32 lbl_803E4670;
@@ -564,55 +433,14 @@ typedef struct
 extern _S16x3 lbl_803E4650;
 extern _S16x3 lbl_803E4658;
 
-void ccqueen_init(int* obj, u8* init)
-{
-    u8* sub;
-    _S16x3 buf2;
-    _S16x3 buf1;
-    sub = ((GameObject*)obj)->extra;
-    buf2 = lbl_803E4650;
-    buf1 = lbl_803E4658;
-    *(s16*)obj = (s16)(init[0x1a] << 8);
-    dll_2E_func05(obj, sub, 0x71c7, 0x3555, 3);
-    dll_2E_func08(sub, 0x258, 0xf0);
-    dll_2E_func09(sub, &buf1, &buf2, 3);
-    sub[0x611] = (u8)(sub[0x611] | 0xa);
-}
+void ccqueen_init(int* obj, u8* init);
 
 extern f32 lbl_803E4664;
 extern f32 lbl_803E4668;
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
 extern void characterDoEyeAnims(int obj, void* p);
 
-void ccqueen_update(int* obj)
-{
-    extern void* Obj_GetPlayerObject(void);
-    u8* sub;
-    int* player;
-
-    sub = ((GameObject*)obj)->extra;
-    if (GameBit_Get(0x1c2) == 0 && GameBit_Get(0xa3) != 0)
-    {
-        player = (int*)Obj_GetPlayerObject();
-        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
-            lbl_803E4664)
-        {
-            GameBit_Set(0x1c2, 1);
-        }
-    }
-    if (GameBit_Get(0x1c3) != 0)
-    {
-        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
-        ObjHits_DisableObject(obj);
-    }
-    else
-    {
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E4668, timeDelta, NULL);
-        dll_2E_func03(obj, sub);
-        characterDoEyeAnims((int)obj, sub + 0x624);
-    }
-}
+void ccqueen_update(int* obj);
 
 int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -644,102 +472,16 @@ int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void ccpedstal_update(int obj)
-{
-    int state = *(int*)&((GameObject*)obj)->extra;
-    if (*(u8*)(state + 6) != 0)
-    {
-        if (*(u8*)(state + 6) & 1)
-        {
-            GameBit_Set(*(s16*)(state + 4), 1);
-        }
-        else
-        {
-            GameBit_Set(*(s16*)(state + 4), 0);
-        }
-        *(u8*)(state + 6) = 0;
-        if (GameBit_Get(0xdf0) == 0 && GameBit_Get(0xaa) != 0)
-        {
-            GameBit_Set(0xdf0, 1);
-        }
-    }
-    (*(void (*)(int, int))*(int*)state)(obj, state);
-}
+void ccpedstal_update(int obj);
 
 extern void* fn_802972A8(void* obj);
 extern int mapGetDirIdx(int a);
 extern void lockLevel(int idx, int flag);
 
 #pragma peephole on
-void fn_801AC01C(int obj)
-{
-    extern void* Obj_GetPlayerObject(void);
-    int state = *(int*)&((GameObject*)obj)->extra;
-    int r;
-    void* res;
-    GameBit_Set(0x3a3, 0);
-    GameBit_Set(0x3a2, 0);
-    res = fn_802972A8(Obj_GetPlayerObject());
-    if (res != 0)
-    {
-        r = (*(int (**)(int))(*(int*)(*(int*)&((GameObject*)res)->anim.dll) + 0x48))((int)res);
-    }
-    else
-    {
-        r = 0;
-    }
-    lockLevel(mapGetDirIdx(0x17), 1);
-    if (r == 1)
-    {
-        (*gGameUIInterface)->setShowWorldMapHud(1);
-        *(u8*)(state + 0) = 5;
-        GameBit_Set(0x37b, 1);
-    }
-    else
-    {
-        *(u8*)(state + 0) = 6;
-        GameBit_Set(0xce, 1);
-    }
-    GameBit_Set(0x378, 0);
-    GameBit_Set(0x3b9, 0);
-}
+void fn_801AC01C(int obj);
 
-void fn_801AC108(int obj, int param2)
-{
-    extern void* Obj_GetPlayerObject(void);
-    int r;
-    void* res;
-    (*gGameUIInterface)->setShowWorldMapHud(0);
-    if (GameBit_Get(0x3a3) != 0)
-    {
-        GameBit_Set(0x3a3, 0);
-        GameBit_Set(0x3a2, 0);
-        GameBit_Set(0x378, 0);
-        GameBit_Set(0x3b9, 0);
-        res = fn_802972A8(Obj_GetPlayerObject());
-        if (res != 0)
-        {
-            r = (*(int (**)(int))(*(int*)(*(int*)&((GameObject*)res)->anim.dll) + 0x48))((int)res);
-        }
-        else
-        {
-            r = 0;
-        }
-        GameBit_Set(0x4e5, 1);
-        (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 1, 1);
-        if (r == 1)
-        {
-            (*gGameUIInterface)->setShowWorldMapHud(1);
-            *(u8*)(param2 + 0) = 5;
-            GameBit_Set(0x379, 1);
-        }
-        else
-        {
-            *(u8*)(param2 + 0) = 6;
-            GameBit_Set(0xcb, 1);
-        }
-    }
-}
+void fn_801AC108(int obj, int param2);
 
 extern f32 lbl_803E46A8;
 extern f32 lbl_803E46AC;
@@ -764,72 +506,7 @@ typedef struct SharpClawPadParticleArgs
 } SharpClawPadParticleArgs;
 
 #pragma peephole off
-void ccsharpclawpad_update(int obj)
-{
-    extern void* Obj_GetPlayerObject(void);
-    SharpClawPadParticleArgs particleArgs;
-    f32* state;
-    int* player;
-
-    if (GameBit_Get(*(s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1a)) != 0)
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-        particleArgs.offset[0] = lbl_803E46A8;
-        particleArgs.offset[1] = lbl_803E46AC;
-        particleArgs.offset[2] = lbl_803E46B0;
-        objfx_spawnArcedBurst(obj, 5, lbl_803E46B4, 2, 2, 0x19, lbl_803E46B8,
-                              *(f32*)&lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
-        particleArgs.offset[0] = lbl_803E46AC;
-        objfx_spawnArcedBurst(obj, 5, lbl_803E46B4, 2, 2, 0x19, lbl_803E46B8,
-                              *(f32*)&lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
-    }
-    else
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
-        if (GameBit_Get(0x40) == 0)
-        {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
-        }
-        else
-        {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
-        }
-        state = ((GameObject*)obj)->extra;
-        if (ObjTrigger_IsSet(obj) != 0 && fn_801334E0() == 0)
-        {
-            *state = lbl_803E46C0;
-        }
-        if (*state > lbl_803E46B0)
-        {
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) == 0)
-            {
-                *state = lbl_803E46B0;
-            }
-            else
-            {
-                *state -= timeDelta;
-                showHelpText(*(s16*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x7c));
-            }
-        }
-        player = (int*)Obj_GetPlayerObject();
-        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
-            lbl_803E46C4
-            && playerIsDisguised((int)player) != 0)
-        {
-            Sfx_PlayFromObject(obj, 0x109);
-            GameBit_Set(*(s16*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x1a), 1);
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-        }
-        particleArgs.offset[0] = lbl_803E46A8;
-        particleArgs.offset[1] = lbl_803E46AC;
-        particleArgs.offset[2] = lbl_803E46B0;
-        objfx_spawnArcedBurst(obj, 5, lbl_803E46B4, 5, 2, 0x19, lbl_803E46B8,
-                              *(f32*)&lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
-        particleArgs.offset[0] = lbl_803E46AC;
-        objfx_spawnArcedBurst(obj, 5, lbl_803E46B4, 5, 2, 0x19, lbl_803E46B8,
-                              *(f32*)&lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
-    }
-}
+void ccsharpclawpad_update(int obj);
 
 #include "main/dll/SC/SCtotemlogpuz.h"
 
@@ -840,97 +517,7 @@ extern f32 lbl_803E46D0;
 extern void gameTextShow(int textId);
 extern int* gSHthorntailAnimationInterface;
 
-void cclevcontrol_update(int obj)
-{
-    extern void* getTrickyObject(void);
-    int* state = ((GameObject*)obj)->extra;
-    int* tricky;
-    u32 a;
-    u32 b;
-
-    if (*(f32*)state > lbl_803E46D0)
-    {
-        gameTextShow(0x34c);
-        *(f32*)state -= timeDelta;
-        if (*(f32*)state < lbl_803E46D0)
-        {
-            *(f32*)state = *(f32*)&lbl_803E46D0;
-        }
-    }
-    if ((*(int (**)(int))(*(int*)gSHthorntailAnimationInterface + 0x24))(0) != 0)
-    {
-        if (state[2] != -1)
-        {
-            state[2] = -1;
-            if (state[1] & 0x20)
-            {
-                Music_Trigger(0xc8, 0);
-            }
-        }
-    }
-    else
-    {
-        if (state[2] != 0xc8)
-        {
-            state[2] = 0xc8;
-            if (state[1] & 0x20)
-            {
-                Music_Trigger(0xc8, 1);
-            }
-        }
-    }
-    SCGameBitLatch_Update((SCGameBitLatchState*)(state + 1), 2, -1, -1, 0xb72, 0x95);
-    SCGameBitLatch_Update((SCGameBitLatchState*)(state + 1), 0x20, -1, -1, 0xc47, state[2]);
-    SCGameBitLatch_Update((SCGameBitLatchState*)(state + 1), 4, -1, -1, 0xb45, 0x37);
-    SCGameBitLatch_Update((SCGameBitLatchState*)(state + 1), 8, -1, -1, 0xb73, 0xbf);
-    SCGameBitLatch_Update((SCGameBitLatchState*)(state + 1), 0x10, -1, -1, 0xb24, 0xc0);
-    SCGameBitLatch_Update((SCGameBitLatchState*)(state + 1), 0x40, -1, -1, 0x19e, 0xcd);
-    if (state[3] == 2)
-    {
-        SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)(state + 1), 0x80, -1, -1, 0x24, 0xea);
-    }
-    if (GameBit_Get(0x3d6) != 0
-        && (*gMapEventInterface)->getAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x1f) != 0)
-    {
-        (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x1f, 0);
-    }
-    if (GameBit_Get(0x161) != 0
-        && (*gMapEventInterface)->getAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x1e) == 0)
-    {
-        (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x1e, 1);
-    }
-    if (GameBit_Get(0x3d7) != 0
-        && (*gMapEventInterface)->getAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x1d) == 0)
-    {
-        (*gMapEventInterface)->setAnimEvent(((GameObject*)obj)->anim.mapEventSlot, 0x1d, 1);
-    }
-    tricky = (int*)getTrickyObject();
-    if (state[1] & 1)
-    {
-        if (GameBit_Get(0x22d) != 0 || GameBit_Get(0x22e) == 0
-            || (*(u16*)((char*)tricky + 0xb0) & 0x1000) != 0)
-        {
-            state[1] &= ~1;
-            (*gCameraInterface)->loadTriggeredCamAction(0, 1, 0);
-        }
-    }
-    else
-    {
-        if (GameBit_Get(0x22d) == 0 && GameBit_Get(0x22a) != 0 && GameBit_Get(0x22e) != 0
-            && GameBit_Get(0x160) == 0)
-        {
-            state[1] |= 1;
-            (*gCameraInterface)->loadTriggeredCamAction(1, 1, 0);
-        }
-    }
-    a = GameBit_Get(0x3f0);
-    b = GameBit_Get(0xaf7);
-    if (b + a == 4 && GameBit_Get(0xf26) == 0)
-    {
-        Sfx_PlayFromObject(obj, 0x7e);
-        GameBit_Set(0xf26, 1);
-    }
-}
+void cclevcontrol_update(int obj);
 
 extern f32 lbl_803E4680;
 extern f32 lbl_803E4684;
