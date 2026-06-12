@@ -15,10 +15,11 @@ int cfguardian_setScale(int* obj)
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-void fn_8019AE3C(int p1, int p2, s16* p3)
+int fn_8019AE3C(int p1, int p2, s16* p3)
 {
-    u8 v;
+    extern void Sfx_PlayFromObject(int, u16); /* #57/#115 */
     int i;
+    u8 v;
 
     v = 0;
     for (i = 0; i < *(s8*)(p2 + 0x1b); i++)
@@ -58,6 +59,7 @@ void fn_8019AE3C(int p1, int p2, s16* p3)
     {
         Sfx_PlayFromObject(p1, (u16)p3[2]);
     }
+    return v;
 }
 
 /* cloudprisoncontrol map-event tables (recovered layout; kept raw int[] - the
@@ -85,7 +87,7 @@ typedef struct
 
 int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
 {
-    extern int hitDetectFn_800658a4(f32 x, f32 y, f32 z, int obj, f32* out, int p6); /* #57 */
+    extern int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* out, int p6); /* #57/#29 */
     int ret;
     int moved;
     u8 sel;
@@ -133,8 +135,8 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
         {
             ((GameObject*)obj)->unkF4 = -1;
         }
-        if (hitDetectFn_800658a4(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                 ((GameObject*)obj)->anim.localPosZ, obj, &ground, 0) == 0)
+        if (hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                 ((GameObject*)obj)->anim.localPosZ, &ground, 0) == 0)
         {
             ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - ground;
         }
@@ -147,13 +149,13 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
         v = v - (u16) * (s16*)obj;
         if (v > 0x8000)
         {
-            v -= 0xffff;
+            v = v - 0xffff;
         }
         if (v < -0x8000)
         {
-            v += 0xffff;
+            v = v + 0xffff;
         }
-        *(s16*)obj = *(s16*)obj + (v >> 3);
+        *(s16*)obj = *(s16*)(int)obj + (v >> 3);
     }
     if (((GameObject*)obj)->anim.currentMove != 0x1a)
     {
@@ -537,9 +539,7 @@ void cfguardian_initialise(void)
 
 typedef struct
 {
-    int a;
-    int b;
-    s16 c;
+    s16 v[5];
 } GuardianVec;
 
 extern GuardianVec lbl_802C22C0;
@@ -717,11 +717,12 @@ void cfprisoncage_hitDetect(int* obj);
 
 void cfguardian_free(int* obj, int p2)
 {
-    char* state = ((GameObject*)obj)->extra;
+    char* extra = ((GameObject*)obj)->extra;
     if (p2 == 0)
     {
+        char* state;
         int i;
-        for (i = 0; i < 6; i++)
+        for (i = 0, state = extra; i < 6; i++)
         {
             int* sub = *(int**)&((CfguardianState*)state)->unk68C;
             if (sub != NULL)
@@ -763,11 +764,11 @@ int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4)
         local[1] = 21;
     }
 
-    found = (*gRomCurveInterface)->find(
-        local, 2, p2,
+    found = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
         ((GameObject*)obj)->anim.localPosX,
         ((GameObject*)obj)->anim.localPosY,
-        ((GameObject*)obj)->anim.localPosZ);
+        ((GameObject*)obj)->anim.localPosZ,
+        local, 2, p2);
 
     if (found > -1)
     {
@@ -829,7 +830,7 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
     {
         d = d + 0xffff;
     }
-    *(s16*)obj = (f32) * (s16*)obj + ((lbl_803E4128 + (f32)d) * (speed * timeDelta)) / dist;
+    *(s16*)obj = (f32) * (s16*)(int)obj + ((lbl_803E4128 + (f32)d) * (speed * timeDelta)) / dist;
     objMove((int)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
             ((GameObject*)obj)->anim.velocityZ);
     if (((GameObject*)obj)->anim.currentMove != 0x1a)
@@ -872,7 +873,7 @@ extern f32 lbl_803E412C;
  * brain - sixteen-state quest progression for the CloudRunner guardian, with
  * sandworm avoidance, path flights, landing physics, sequenced triggers and
  * idle chatter. */
-int waterSpellStone1Fn_8019b4c8(int* obj)
+int waterSpellStone1Fn_8019b4c8(int obj)
 {
     extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int p); /* #57 */
     extern void fn_8019AE3C(int* obj, void* evbuf, void* p); /* #57 */
@@ -880,13 +881,16 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
     u8* def;
     char* player;
     CfGuardianState * sub;
-    u8 evbuf[0x1c];
-    f32 v[3];
+    struct
+    {
+        f32 v[3];
+        u8 evbuf[0x1c];
+    } stk;
     f32 k;
     f32 nearDist = lbl_803E412C;
     f32 ground = lbl_803E4130;
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    evbuf[0x1b] = 0;
+    stk.evbuf[0x1b] = 0;
     sub = ((GameObject*)obj)->extra;
     sub->flagsA9B &= ~0x2;
     sub->moveSpeed = lbl_803E4134;
@@ -930,14 +934,14 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
             sub->chatterState = 1;
         }
         sub->flagsA9B |= 2;
-        if (fn_8019AF64(obj, (u8*)sub + 0x6bc, lbl_803E4138, 0, (u8*)sub + 0x7fc) != 0)
+        if (fn_8019AF64((int*)obj, (u8*)sub + 0x6bc, lbl_803E4138, 0, (u8*)sub + 0x7fc) != 0)
         {
             sub->flagsA9B &= ~1;
             sub->questState = 4;
         }
         break;
     case 3:
-        (*gObjectTriggerInterface)->runSequence(2, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
         GameBit_Set(0x60, 1);
         sub->questState = 2;
         break;
@@ -977,7 +981,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
                 ((GameObject*)obj)->anim.velocityZ = lbl_803E4110;
                 ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)
                     ->anim.localPosY;
-                hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                hitDetectFn_800658a4((int*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                      ((GameObject*)obj)->anim.localPosZ, &ground, 0);
                 *(s16*)obj = (s16)((0xc0 << (*(s16*)obj + 8)) >> 1);
                 (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~0x400;
@@ -989,7 +993,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
                     ((GameObject*)obj)->unkF4 = 0;
                     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4110, 0);
                     {
-                        char* pt = (char*)findRomCurvePointNearObject(obj, 0, 0, 2);
+                        char* pt = (char*)findRomCurvePointNearObject((int*)obj, 0, 0, 2);
                         f32 d;
                         sub->homeX = *(f32*)(pt + 8);
                         sub->homeY = *(f32*)(pt + 0xc);
@@ -1040,16 +1044,16 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
                     ((GameObject*)obj)->anim.velocityX = lbl_803E4150 * -((GameObject*)obj)->anim.velocityX;
                     ((GameObject*)obj)->anim.velocityZ = lbl_803E4150 * -((GameObject*)obj)->anim.velocityZ;
                 }
-                v[0] = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
-                v[1] = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
-                v[2] = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ;
+                stk.v[0] = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
+                stk.v[1] = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
+                stk.v[2] = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ;
                 k = lbl_803E4154 * oneOverTimeDelta;
-                v[0] = v[0] * k;
-                v[1] = v[1] * k;
-                v[2] = v[2] * k;
-                ((GameObject*)obj)->anim.velocityX = v[0] + ((GameObject*)obj)->anim.velocityX;
-                ((GameObject*)obj)->anim.velocityY = v[1] + ((GameObject*)obj)->anim.velocityY;
-                ((GameObject*)obj)->anim.velocityZ = v[2] + ((GameObject*)obj)->anim.velocityZ;
+                stk.v[0] = stk.v[0] * k;
+                stk.v[1] = stk.v[1] * k;
+                stk.v[2] = stk.v[2] * k;
+                ((GameObject*)obj)->anim.velocityX = stk.v[0] + ((GameObject*)obj)->anim.velocityX;
+                ((GameObject*)obj)->anim.velocityY = stk.v[1] + ((GameObject*)obj)->anim.velocityY;
+                ((GameObject*)obj)->anim.velocityZ = stk.v[2] + ((GameObject*)obj)->anim.velocityZ;
                 ((GameObject*)obj)->anim.velocityX = lbl_803E4138 * ((GameObject*)obj)->anim.velocityX;
                 ((GameObject*)obj)->anim.velocityY = lbl_803E4138 * ((GameObject*)obj)->anim.velocityY;
                 ((GameObject*)obj)->anim.velocityZ = lbl_803E4138 * ((GameObject*)obj)->anim.velocityZ;
@@ -1062,7 +1066,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
             sub->chatterState = 1;
         }
         sub->flagsA9B |= 2;
-        if (fn_8019AF64(obj, (u8*)sub + 0x6bc, lbl_803E4138, 1, (u8*)sub + 0x7fc) != 0)
+        if (fn_8019AF64((int*)obj, (u8*)sub + 0x6bc, lbl_803E4138, 1, (u8*)sub + 0x7fc) != 0)
         {
             sub->questState = 8;
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
@@ -1100,7 +1104,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
             }
         }
         if ((sub->flagsA9B & 4) != 0
-            && fn_8019B1D8(obj, (int*)((u8*)sub + 0xa68), lbl_803E4128, (int)((u8*)sub + 0x7fc)) != 0)
+            && fn_8019B1D8((int*)obj, (int*)((u8*)sub + 0xa68), lbl_803E4128, (int)((u8*)sub + 0x7fc)) != 0)
         {
             ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
             sub->flagsA9B &= ~0x5;
@@ -1141,7 +1145,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
             }
         }
         if ((sub->flagsA9B & 4) != 0
-            && fn_8019B1D8(obj, (int*)((u8*)sub + 0xa68), lbl_803E4128, (int)((u8*)sub + 0x7fc)) != 0)
+            && fn_8019B1D8((int*)obj, (int*)((u8*)sub + 0xa68), lbl_803E4128, (int)((u8*)sub + 0x7fc)) != 0)
         {
             ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
             sub->flagsA9B &= ~0x5;
@@ -1159,7 +1163,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
             sub->chatterState = 1;
         }
         sub->flagsA9B |= 2;
-        if (fn_8019AF64(obj, (u8*)sub + 0x6bc, lbl_803E415C, 2, (u8*)sub + 0x7fc) != 0)
+        if (fn_8019AF64((int*)obj, (u8*)sub + 0x6bc, lbl_803E415C, 2, (u8*)sub + 0x7fc) != 0)
         {
             sub->questState = 0xb;
         }
@@ -1171,7 +1175,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         }
         ((GameObject*)obj)->anim.alpha = 0;
         (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
-        Obj_RemoveFromUpdateList(obj);
+        Obj_RemoveFromUpdateList((int*)obj);
         ((GameObject*)obj)->anim.flags |= 0x4000;
         sub->questState = 0xf;
         break;
@@ -1183,7 +1187,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         if (GameBit_Get(0x4b7) != 0)
         {
             (*gCameraInterface)->setTarget((int)obj);
-            (*gObjectTriggerInterface)->runSequence(0xb, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0xb, (void*)obj, -1);
             GameBit_Set(0x4b7, 0);
         }
         if (GameBit_Get(0x49a) != 0)
@@ -1199,7 +1203,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         if (GameBit_Get(0x4b7) != 0)
         {
             (*gCameraInterface)->setTarget((int)obj);
-            (*gObjectTriggerInterface)->runSequence(0xa, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0xa, (void*)obj, -1);
             GameBit_Set(0x4b7, 0);
         }
         if (GameBit_Get(0x4aa) != 0)
@@ -1215,7 +1219,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         break;
     case 15:
         ((GameObject*)obj)->anim.flags |= 0x4000;
-        Obj_RemoveFromUpdateList(obj);
+        Obj_RemoveFromUpdateList((int*)obj);
         (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
         break;
     }
@@ -1247,7 +1251,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
             if (pick != -1)
             {
                 sub->chatterState = 2;
-                (*gObjectTriggerInterface)->runSequence(pick, obj, -1);
+                (*gObjectTriggerInterface)->runSequence(pick, (void*)obj, -1);
             }
         }
     }
@@ -1257,7 +1261,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         if (tbl2[0] != -1)
         {
             sub->chatterState = 2;
-            (*gObjectTriggerInterface)->runSequence(tbl2[0], obj, -1);
+            (*gObjectTriggerInterface)->runSequence(tbl2[0], (void*)obj, -1);
             GameBit_Set(0x902, 0);
         }
     }
@@ -1270,20 +1274,20 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         }
     }
     if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, sub->moveSpeed, (f32)framesThisStep,
-                                                                    evbuf) != 0
+                                                                    stk.evbuf) != 0
         && (sub->flagsA9B & 1) != 0
         && ((GameObject*)obj)->anim.currentMove != 0x1a
         && ((GameObject*)obj)->anim.currentMove != 9)
     {
         sub->flagsA9B &= ~1;
     }
-    fn_8019AE3C(obj, evbuf, &lbl_803DBE20);
+    fn_8019AE3C((int*)obj, stk.evbuf, &lbl_803DBE20);
     if (randFn_80080100(0x3c) != 0)
     {
         objAudioFn_800393f8((int)obj, (u8*)sub + 0x624, 0xdf, 0x1000, -1, 0);
     }
     objAnimFn_80038f38((int)obj, (u8*)sub + 0x624);
-    characterDoEyeAnims(obj, (u8*)sub + 0x654);
+    characterDoEyeAnims((int*)obj, (u8*)sub + 0x654);
     if (sub->questState != GameBit_Get(0x4b))
     {
         GameBit_Set(0x4b);
