@@ -1310,8 +1310,23 @@ main/dll/dll_0159_blasted.c:
 main/dll/dll_015A_explodable.c:
 	.text       start:0x801A2BDC end:0x801A39B4
 
-main/dll/IMicicle.c:
-	.text       start:0x801A39B4 end:0x801A57E8
+main/dll/dll_015B_cfforcefiel.c:
+	.text       start:0x801A39B4 end:0x801A3E9C
+
+main/dll/dll_015D_cfslidedoor.c:
+	.text       start:0x801A3E9C end:0x801A41D8
+
+main/dll/dll_015F_cfattractor.c:
+	.text       start:0x801A41D8 end:0x801A4380
+
+main/dll/dll_0162_cfmagicwall.c:
+	.text       start:0x801A4380 end:0x801A4524
+
+main/dll/dll_0164_cflevelcont.c:
+	.text       start:0x801A4524 end:0x801A4DB8
+
+main/dll/dll_0166_cfbrokengra.c:
+	.text       start:0x801A4DB8 end:0x801A57E8
 
 main/dll/IMspacecraft.c:
 	.text       start:0x801A57E8 end:0x801A6638
