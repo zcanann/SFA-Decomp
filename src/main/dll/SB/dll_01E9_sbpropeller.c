@@ -17,6 +17,7 @@
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
+#include "main/objhits.h"
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/dll/DB/sbgalleon_state.h"
 
@@ -80,6 +81,7 @@ void SB_Propeller_update(int obj)
     int j;
     u32 hit;
     SBPropellerState* state;
+    ObjHitsPriorityState* hitState;
     struct
     {
         u8 pad[6];
@@ -176,14 +178,16 @@ void SB_Propeller_update(int obj)
         }
         if (o->unkF4 == 0)
         {
-            ((ObjHitsPriorityState*)objAnim->hitReactState)->hitVolumePriority = 6;
-            ((ObjHitsPriorityState*)objAnim->hitReactState)->hitVolumeId = 1;
-            ((ObjHitsPriorityState*)objAnim->hitReactState)->objectHitMask = 0x10;
-            ((ObjHitsPriorityState*)objAnim->hitReactState)->skeletonHitMask = 0x10;
+            hitState = (ObjHitsPriorityState*)objAnim->hitReactState;
+            hitState->hitVolumePriority = 6;
+            hitState->hitVolumeId = 1;
+            hitState->objectHitMask = 0x10;
+            hitState->skeletonHitMask = 0x10;
         }
         else
         {
-            ((ObjHitsPriorityState*)objAnim->hitReactState)->objectPairPriority = 0;
+            hitState = (ObjHitsPriorityState*)objAnim->hitReactState;
+            hitState->objectPairPriority = 0;
         }
         objAnim->rotZ = -((f32)state->spinRate * timeDelta - (
             f32)objAnim->rotZ);

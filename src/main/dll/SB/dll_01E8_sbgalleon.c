@@ -31,6 +31,7 @@
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
+#include "main/objhits.h"
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/dll/DB/sbgalleon_state.h"
 
@@ -542,6 +543,7 @@ void SB_Galleon_update(GameObject* obj)
 void SB_Galleon_init(GameObject* obj)
 {
     SBGalleonState* state = (SBGalleonState*)obj->extra;
+    ObjHitsPriorityState* hitState;
     gSbGalleon = (u32)obj;
     ObjGroup_AddObject((int)obj, 3);
     objSetSlot(obj, 0x5a);
@@ -571,7 +573,8 @@ void SB_Galleon_init(GameObject* obj)
     getLActions(obj, obj, 0x58, 0, 0, 0);
     state->wanderTimerA = lbl_803E56CC;
     state->wanderTimerB = lbl_803E580C;
-    ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags |= 0x1800;
+    hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
+    hitState->flags |= 0x1800;
     setDrawLights(0);
     state->musicIdA = 0x92;
     state->musicIdB = 0x91;
