@@ -1408,8 +1408,17 @@ main/dll/dll_0181_mmptrenchf.c:
 main/dll/dll_0183_mmpgyserve.c:
 	.text       start:0x801A8E24 end:0x801A8F88
 
-main/dll/DIMlogfire.c:
-	.text       start:0x801A8F88 end:0x801AA558
+main/dll/dll_0184_dimanimshar.c:
+	.text       start:0x801A8F88 end:0x801A9468
+
+main/dll/dll_025B_msplantings.c:
+	.text       start:0x801A9468 end:0x801A9E74
+
+main/dll/dll_0185_ccgasvent.c:
+	.text       start:0x801A9E74 end:0x801A9FA8
+
+main/dll/dll_0186_ccgasventco.c:
+	.text       start:0x801A9FA8 end:0x801AA558
 
 main/dll/dll_0187_ccqueen.c:
 	.text       start:0x801AA558 end:0x801AA734

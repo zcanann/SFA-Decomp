@@ -237,17 +237,11 @@ FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void animsharpclaw_hitDetect(void)
-{
-}
+void animsharpclaw_hitDetect(void);
 
-void animsharpclaw_release(void)
-{
-}
+void animsharpclaw_release(void);
 
-void animsharpclaw_initialise(void)
-{
-}
+void animsharpclaw_initialise(void);
 
 void MoonSeedPlantingSpot_hitDetect(void)
 {
@@ -326,20 +320,18 @@ void MoonSeedPlantingSpot_init(int* obj, u8* init)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void ccgasvent_render(void)
-{
-}
+void ccgasvent_render(void);
 
 /* 8b "li r3, N; blr" returners. */
-int animsharpclaw_getExtraSize(void) { return 0x140; }
-int animsharpclaw_getObjectTypeId(void) { return 0xb; }
+int animsharpclaw_getExtraSize(void);
+int animsharpclaw_getObjectTypeId(void);
 int MoonSeedPlantingSpot_render2(void) { return 0x2; }
 int MoonSeedPlantingSpot_modelMtxFn(void) { return 0x0; }
 int MoonSeedPlantingSpot_func0B(void) { return 0x0; }
 int MoonSeedPlantingSpot_getExtraSize(void) { return 0x18; }
 int MoonSeedPlantingSpot_getObjectTypeId(void) { return 0x1; }
-int ccgasvent_getExtraSize(void) { return 0x1; }
-int ccgasventcontrol_getExtraSize(void) { return 0x10; }
+int ccgasvent_getExtraSize(void);
+int ccgasventcontrol_getExtraSize(void);
 int ccqueen_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
@@ -347,74 +339,34 @@ extern f32 lbl_803E45C8;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4620;
 #pragma peephole off
-void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E45C8);
-}
+void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E4620);
-}
+void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 #pragma peephole reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
 void MoonSeedPlantingSpot_free(int x) { ObjGroup_RemoveObject(x, 0x2e); }
-void ccgasvent_free(int x) { ObjGroup_RemoveObject(x, 0x3f); }
+void ccgasvent_free(int x);
 #pragma scheduling reset
 
 /* call(x, N) wrappers. */
 #pragma scheduling off
-void ccgasvent_init(int x) { ObjGroup_AddObject(x, 0x3f); }
+void ccgasvent_init(int x);
 #pragma scheduling reset
 
 /* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 extern void disableHeavyFog(void);
 #pragma scheduling off
 #pragma peephole off
-void animsharpclaw_free(int obj)
-{
-    char* inner;
-    int* child;
-    child = ((GameObject*)obj)->childObjs[0];
-    inner = ((GameObject*)obj)->extra;
-    if (child != NULL)
-    {
-        ObjLink_DetachChild(obj, (int)child);
-        Obj_FreeObject((int)child);
-    }
-    (*gObjectTriggerInterface)->freeState((u8*)inner);
-    (*(void (*)(int, int, int, int, int))(*(int*)(*gTitleMenuControlInterface + 0x8)))(obj, 0xffff, 0, 0, 0);
-    Sfx_StopObjectChannel(obj, 0x7f);
-}
+void animsharpclaw_free(int obj);
 #pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
-void ccgasventcontrol_free(int obj)
-{
-    char* inner = ((GameObject*)obj)->extra;
-    u8 t = *(u8*)inner;
-    if (t == 3 || t == 4)
-    {
-        disableHeavyFog();
-    }
-    (*gGameUIInterface)->airMeterSetShutdown();
-}
+void ccgasventcontrol_free(int obj);
 
-void ccgasventcontrol_init(int obj, u8* p)
-{
-    char* inner = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)CCGasVentControl_SeqFn;
-    *(s16*)obj = (s16)((u32)p[0x1a] << 8);
-    if (GameBit_Get(0xa3) != 0)
-    {
-        *(u8*)inner = 7;
-    }
-}
+void ccgasventcontrol_init(int obj, u8* p);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -432,11 +384,7 @@ int MoonSeedPlantingSpot_SeqFn(int obj)
 /* CCGasVentControl_SeqFn: trampoline to CCGasVentControlFn_801a9fd0 passing (obj, obj->extra), returns 0. */
 extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
 #pragma scheduling off
-int CCGasVentControl_SeqFn(int obj)
-{
-    CCGasVentControlFn_801a9fd0(obj, *(int*)&((GameObject*)obj)->extra);
-    return 0;
-}
+int CCGasVentControl_SeqFn(int obj);
 #pragma scheduling reset
 
 extern int* ObjGroup_GetObjects(int group, int* count);
@@ -456,108 +404,7 @@ extern f32 lbl_803E4640;
 
 #pragma scheduling off
 #pragma peephole off
-void ccgasventcontrol_update(int obj)
-{
-    int ex = *(int*)&((GameObject*)obj)->extra;
-    u8 b = CCGasVentControlFn_801a9fd0(obj, ex);
-    switch (*(u8*)ex)
-    {
-    case 0:
-        {
-            int cnt;
-            ObjGroup_GetObjects(0x3f, &cnt);
-            if (cnt == 4)
-            {
-                *(u8*)ex = 1;
-            }
-            break;
-        }
-    case 1:
-        if (GameBit_Get(0x3ec) != 0)
-        {
-            (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-            *(u8*)ex = 2;
-        }
-        break;
-    case 2:
-        (*gGameUIInterface)->initAirMeter(6000, 0x603);
-        ((CcgasventcontrolState*)ex)->unk4 = lbl_803E4624;
-        *(u8*)ex = 3;
-        *(u8*)((char*)ex + 0xc) = b;
-        break;
-    case 3:
-        if (b != 0)
-        {
-            int player = Obj_GetPlayerObject();
-            ((CcgasventcontrolState*)ex)->unk8 = ((CcgasventcontrolState*)ex)->unk8 + timeDelta / lbl_803E4618;
-            if (((CcgasventcontrolState*)ex)->unk8 > lbl_803E4628)
-            {
-                ((CcgasventcontrolState*)ex)->unk8 = *(f32*)&lbl_803E4628;
-            }
-            if (((GameObject*)player)->anim.localPosY <= ((GameObject*)obj)->anim.localPosY + ((CcgasventcontrolState*)
-                ex)->unk8)
-            {
-                ((CcgasventcontrolState*)ex)->unk4 = -(timeDelta * (f32)b - ((CcgasventcontrolState*)ex)->unk4);
-            }
-            else
-            {
-                ((CcgasventcontrolState*)ex)->unk4 = lbl_803E462C * timeDelta + ((CcgasventcontrolState*)ex)->unk4;
-                if (((CcgasventcontrolState*)ex)->unk4 > lbl_803E4624)
-                {
-                    ((CcgasventcontrolState*)ex)->unk4 = *(f32*)&lbl_803E4624;
-                }
-            }
-            enableHeavyFog(((GameObject*)obj)->anim.localPosY + ((CcgasventcontrolState*)ex)->unk8,
-                           ((GameObject*)obj)->anim.localPosY - lbl_803E4630, lbl_803E4634, lbl_803E4638,
-                           lbl_803E463C, 0);
-            if (((CcgasventcontrolState*)ex)->unk4 >= lbl_803E4640)
-            {
-                (*gGameUIInterface)->runAirMeter((int)((CcgasventcontrolState*)ex)->unk4);
-            }
-            else
-            {
-                (*gGameUIInterface)->airMeterSetShutdown();
-                ((GameObject*)obj)->anim.localPosX = ((GameObject*)player)->anim.localPosX;
-                ((GameObject*)obj)->anim.localPosY = ((GameObject*)player)->anim.localPosY;
-                ((GameObject*)obj)->anim.localPosZ = ((GameObject*)player)->anim.localPosZ;
-                (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-                (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
-                *(u8*)ex = 4;
-            }
-            if (b != *(u8*)((char*)ex + 0xc))
-            {
-                Sfx_PlayFromObject(0, 0x409);
-                *(u8*)((char*)ex + 0xc) = b;
-            }
-        }
-        else
-        {
-            Sfx_PlayFromObject(0, 0x7e);
-            (*gGameUIInterface)->airMeterSetShutdown();
-            GameBit_Set(0xa3, 1);
-            GameBit_Set(0x620, 0);
-            *(u8*)ex = 5;
-        }
-        break;
-    case 4:
-        (*gMapEventInterface)->finishCurrentEvent(*gMapEventInterface);
-        break;
-    case 5:
-        {
-            int player = Obj_GetPlayerObject();
-            (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16*)player, 1, 0);
-            *(u8*)ex = 6;
-            break;
-        }
-    case 6:
-        if (GameBit_Get(0x1c0) == 0)
-        {
-            disableHeavyFog();
-            *(u8*)ex = 7;
-        }
-        break;
-    }
-}
+void ccgasventcontrol_update(int obj);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -569,45 +416,7 @@ extern f32 lbl_803E461C;
 
 #pragma scheduling off
 #pragma peephole off
-u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
-{
-    u8 i;
-    u8 count = 0;
-    if (GameBit_Get(0x1c0) != 0)
-    {
-        int cnt;
-        int* list = ObjGroup_GetObjects(0x3f, &cnt);
-        f32 thr;
-        i = 0;
-        thr = lbl_803E4618;
-        for (; i < 4; i++)
-        {
-            int other = ObjGroup_FindNearestObject(5, list[i], 0);
-            if (getXZDistance((f32*)(list[i] + 0x18), (f32*)(other + 0x18)) > thr)
-            {
-                count = (u8)count + 1;
-            }
-        }
-    }
-    if (count != 0)
-    {
-        if (*(u8*)((char*)extra + 1) == 0)
-        {
-            Sfx_AddLoopedObjectSound(obj, 0x223);
-            *(u8*)((char*)extra + 1) = 1;
-        }
-        Sfx_SetObjectSfxVolume(obj, 0x223, (u8)(count * 0xf + 0x28), lbl_803E461C);
-    }
-    else
-    {
-        if (*(u8*)((char*)extra + 1) != 0)
-        {
-            Sfx_RemoveLoopedObjectSound(obj, 0x223);
-            *(u8*)((char*)extra + 1) = 0;
-        }
-    }
-    return count;
-}
+u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -784,42 +593,7 @@ extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 
 #pragma scheduling off
 #pragma dont_inline on
-int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
-{
-    int i;
-    int state;
-    int alloc;
-    for (i = 0; i < (int)animUpdate->eventCount; i++)
-    {
-        u8 v = animUpdate->eventIds[i];
-        switch (v)
-        {
-        case 1:
-            ((GameObject*)obj)->unkF8 = 779;
-            state = (int)((GameObject*)obj)->childObjs[0];
-            if ((void*)state != NULL)
-            {
-                ObjLink_DetachChild(obj, state);
-                Obj_FreeObject(state);
-            }
-            alloc = Obj_AllocObjectSetup(32, ((GameObject*)obj)->unkF8);
-            alloc = Obj_SetupObject(alloc, 4, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                    *(int*)&((GameObject*)obj)->anim.parent);
-            ObjLink_AttachChild(obj, alloc, 0);
-            break;
-        case 2:
-            state = (int)((GameObject*)obj)->childObjs[0];
-            if ((void*)state != NULL)
-            {
-                ObjLink_DetachChild(obj, state);
-                Obj_FreeObject(state);
-            }
-            ((GameObject*)obj)->unkF8 = -1;
-            break;
-        }
-    }
-    return 0;
-}
+int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate);
 #pragma dont_inline reset
 #pragma scheduling reset
 
@@ -828,34 +602,7 @@ extern f32 lbl_803E4614;
 
 #pragma scheduling off
 #pragma peephole off
-void ccgasvent_update(int* obj)
-{
-    f32 dist = lbl_803E4610;
-    u8* state = ((GameObject*)obj)->extra;
-    if (GameBit_Get(0x1c0) != 0)
-    {
-        ObjGroup_FindNearestObject(5, (uint)obj, &dist);
-        switch (state[0])
-        {
-        case 0:
-            if (dist >= lbl_803E4614)
-            {
-                state[0] = 1;
-            }
-            break;
-        case 1:
-            if (dist < lbl_803E4614)
-            {
-                state[0] = 0;
-            }
-            else
-            {
-                (*gPartfxInterface)->spawnObject(obj, 0x3df, NULL, 0, -1, NULL);
-            }
-            break;
-        }
-    }
-}
+void ccgasvent_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -950,45 +697,7 @@ extern void objSetSlot(void* obj, int slot);
 
 #pragma scheduling off
 #pragma peephole off
-void animsharpclaw_init(int* obj, u8* init)
-{
-    int* inner;
-    int f4;
-
-    ((GameObject*)obj)->animEventCallback = NULL;
-    objSetSlot(obj, 0x64);
-    inner = ((GameObject*)obj)->extra;
-    ((AnimsharpclawState*)inner)->unk6A = *(s16*)((char*)init + 0x1a);
-    ((AnimsharpclawState*)inner)->unk6E = -1;
-    ((AnimsharpclawState*)inner)->unk24 = lbl_803E45C8 / (lbl_803E45C8 + (f32)(u32)
-    init[0x24]
-    )
-    ;
-    ((AnimsharpclawState*)inner)->unk28 = -1;
-    ((AnimsharpclawState*)inner)->unk98 = 0;
-    ((AnimsharpclawState*)inner)->unk94 = 0;
-    ((GameObject*)obj)->unkF8 = -1;
-    f4 = ((GameObject*)obj)->unkF4;
-    if (f4 == 0 && *(s16*)((char*)init + 0x18) != 1)
-    {
-        (*gObjectTriggerInterface)->loadAnimData((u8*)inner, init);
-        ((GameObject*)obj)->unkF4 = *(s16*)((char*)init + 0x18) + 1;
-    }
-    else if (f4 != 0 && *(s16*)((char*)init + 0x18) != f4 - 1)
-    {
-        (*gObjectTriggerInterface)->freeState((u8*)inner);
-        if (*(s16*)((char*)init + 0x18) != -1)
-        {
-            (*gObjectTriggerInterface)->loadAnimData((u8*)inner, init);
-        }
-        ((GameObject*)obj)->unkF4 = *(s16*)((char*)init + 0x18) + 1;
-    }
-    if (((GameObject*)obj)->anim.modelState != NULL)
-    {
-        ((GameObject*)obj)->anim.modelState->shadowTintA = 0x64;
-        ((GameObject*)obj)->anim.modelState->shadowTintB = 0x96;
-    }
-}
+void animsharpclaw_init(int* obj, u8* init);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -996,63 +705,6 @@ extern u8 framesThisStep;
 
 #pragma scheduling off
 #pragma peephole off
-void animsharpclaw_update(int* obj)
-{
-    int* found;
-    int* inner;
-    int* child;
-    int kind;
-    int matchCount;
-    int* objects;
-    int i;
-    int count;
-    int result;
-
-    inner = ((GameObject*)obj)->extra;
-    child = *(int**)&((GameObject*)obj)->anim.placementData;
-    if (child == NULL)
-    {
-        return;
-    }
-    if (((AnimsharpclawPlacement*)child)->unk18 == -1)
-    {
-        return;
-    }
-    {
-        volatile int vres = (*gObjectTriggerInterface)->update((u8*)obj, (f32)(u32)framesThisStep);
-        fn_801A8F88((int)obj, (ObjAnimUpdateState*)inner);
-        if (vres == 0)
-        {
-            return;
-        }
-    }
-    if (((GameObject*)obj)->seqIndex != -2)
-    {
-        return;
-    }
-    kind = (s8)((AnimsharpclawState*)inner)->unk57;
-    found = NULL;
-    objects = (int*)ObjList_GetObjects(&i, &count);
-    matchCount = 0;
-    for (i = 0; i < count; i++)
-    {
-        int* o = (int*)objects[i];
-        if (((GameObject*)o)->seqIndex == kind)
-        {
-            found = o;
-        }
-        if (((GameObject*)o)->seqIndex == -2 && ((GameObject*)o)->anim.classId == 0x10 &&
-            kind == (s8) * (u8*)((char*)*(int**)&((GameObject*)o)->extra + 0x57))
-        {
-            matchCount++;
-        }
-    }
-    if (matchCount <= 1 && found != NULL && *(s16*)((char*)found + 0xb4) != -1)
-    {
-        *(s16*)((char*)found + 0xb4) = -1;
-        (*gObjectTriggerInterface)->endSequence(kind);
-    }
-    ((GameObject*)obj)->seqIndex = -1;
-}
+void animsharpclaw_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
