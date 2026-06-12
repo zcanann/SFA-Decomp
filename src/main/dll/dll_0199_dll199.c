@@ -276,16 +276,6 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 #include "main/objseq.h"
 #include "main/resource.h"
 
-typedef struct Dll19APlacement
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
-    u8 pad8[0x1F - 0x8];
-    s8 unk1F;
-} Dll19APlacement;
 
 
 
@@ -628,9 +618,6 @@ void dll_199_init(int obj, int def)
 }
 
 extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int size, int typeId);
-extern char* Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern void Sfx_PlayFromObject(int obj, int sfx);
 
 /*
  * --INFO--
@@ -639,7 +626,6 @@ extern void Sfx_PlayFromObject(int obj, int sfx);
  * EN v1.0 Address: 0x801CB7F0
  * EN v1.0 Size: 612b
  */
-void dll_19A_update(int obj);
 
 /* Trivial 4b 0-arg blr leaves. */
 void dll_199_release(void)
@@ -652,19 +638,11 @@ void dll_199_initialise(void)
 
 void dll_19A_free(void);
 
-void dll_19A_hitDetect(void);
 
-void dll_19A_release(void);
 
-void dll_19A_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int dll_19A_getExtraSize(void);
-int dll_19A_getObjectTypeId(void);
 
-void dll_19A_init(int obj, s8* def);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E5180;
 
-void dll_19A_render(int p1, int p2, int p3, int p4, int p5, s8 visible);

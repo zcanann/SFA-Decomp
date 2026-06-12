@@ -4,25 +4,9 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-typedef struct Dll197State
-{
-    u8 pad0[0x2 - 0x0];
-    s16 unk2;
-    s16 unk4;
-    u8 pad6[0x8 - 0x6];
-    s16 unk8;
-    s16 unkA;
-    u8 unkC;
-    u8 unkD;
-    u8 unkE;
-    u8 unkF;
-    u8 unk10;
-    u8 pad11[0x18 - 0x11];
-} Dll197State;
 
 
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 /*
  * --INFO--
@@ -114,41 +98,23 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 
 
-void dll_199_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
-int nwsh_levcon_getExtraSize(void);
-int dll_199_getExtraSize(void);
-int dll_199_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E5150;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E5158;
-
-
-void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern void Music_Trigger(int track, int param);
-extern int GameBit_Set(int eventId, int value);
-
-
-extern void getEnvfxAct(int a, int b, int c, int d);
 
 
 
-extern ModgfxInterface** gModgfxInterface;
-
-void dll_199_free(int* obj);
-
-extern void fn_80296518(void* player, int a, int b);
-extern int getButtonsHeld(int pad);
-extern int return0_8005669C(int p);
-extern int lbl_803DB610;
-extern u32 lbl_803DDBD8;
 
 
-int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate);
+
+
+
+
+
+
+
 
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -172,12 +138,6 @@ typedef struct Dll19APlacement
 
 
 
-typedef struct Dll199ObjectDef
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    u8 pad1C[0x20 - 0x1C];
-} Dll199ObjectDef;
 
 
 typedef struct Dll199State
@@ -195,21 +155,10 @@ typedef struct Dll199State
 
 
 extern u32 GameBit_Get(int eventId);
-extern int ObjMsg_Pop(int obj, int* msgOut, int* paramOut, int* flagsOut);
-extern char* ObjGroup_FindNearestObject(int group, char* from, f32* distInOut);
-extern void Obj_FreeObject(char* obj);
-extern f32 Vec_distance(f32 * a, f32 * b);
 
 
 extern byte framesThisStep;
 
-extern f32 lbl_803E515C;
-extern f32 lbl_803E5160;
-extern f32 lbl_803E5164;
-extern f32 lbl_803E5168;
-extern f32 lbl_803E516C;
-extern f32 lbl_803E5170;
-extern f32 lbl_803E5174;
 
 /*
  * --INFO--
@@ -218,9 +167,7 @@ extern f32 lbl_803E5174;
  * EN v1.0 Address: 0x801CAD80
  * EN v1.0 Size: 2228b
  */
-void dll_199_update(int obj);
 
-extern void ObjMsg_AllocQueue(int obj, int n);
 
 /*
  * --INFO--
@@ -229,7 +176,6 @@ extern void ObjMsg_AllocQueue(int obj, int n);
  * EN v1.0 Address: 0x801CB634
  * EN v1.0 Size: 364b
  */
-void dll_199_init(int obj, int def);
 
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int typeId);
@@ -321,7 +267,6 @@ void dll_19A_update(int obj)
 /* Trivial 4b 0-arg blr leaves. */
 void dll_199_release(void);
 
-void dll_199_initialise(void);
 
 void dll_19A_free(void)
 {
