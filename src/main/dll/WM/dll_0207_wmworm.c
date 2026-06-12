@@ -1,7 +1,12 @@
 /*
- * wmworm (DLL 0x0207) - the worm enemy at Krazoa Palace (map 'warlock',
- * Dinosaur Planet's Warlock Mountain - hence the WM dll prefix).
- * TU: 0x801F3C2C-0x801F3F18.
+ * wmworm (DLL 0x0207) - 'WM_Worm', a worm enemy for Krazoa Palace
+ * (map 'warlock', Dinosaur Planet's Warlock Mountain - hence the WM
+ * dll prefix). TU: 0x801F3C2C-0x801F3F18.
+ *
+ * CUT CONTENT: the object def shipped (OBJECTS.bin def 954, romlist
+ * type 0x179) and this handler is fully implemented, but no map
+ * romlist places type 0x179 and nothing spawns it dynamically - the
+ * worm is unreachable in retail (same status as WM_WallCraw).
  *
  * While the player is within WMWORM_CHASE_RANGE (in the XZ plane of the
  * placement) the worm drifts toward the player at 1% of the offset per
