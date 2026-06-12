@@ -2,8 +2,6 @@
 #include "main/dll/dim2conveyor.h"
 #include "main/gameplay_runtime.h"
 
-extern undefined4 ObjGroup_AddObject();
-extern undefined8 ObjGroup_RemoveObject();
 
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
 extern void Sfx_StopObjectChannel(void* obj, int channel);
@@ -127,12 +125,6 @@ void nw_tricky_free(int obj)
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
-typedef struct NwIcePlacement
-{
-    u8 pad0[0x1B - 0x0];
-    u8 unk1B;
-    u8 pad1C[0x20 - 0x1C];
-} NwIcePlacement;
 
 
 typedef struct NwTrickyState
@@ -142,19 +134,9 @@ typedef struct NwTrickyState
 } NwTrickyState;
 
 
-extern int ObjGroup_FindNearestObjectForObject(int group, int* obj, f32* maxDistance);
 extern int** ObjGroup_GetObjects(int group, int* countOut);
-extern void ObjHits_DisableObject(int* obj);
-extern void ObjHits_EnableObject(int* obj);
-extern void fn_80296D20(int playerObj, int* obj);
 
-extern f32 lbl_803E5270;
-extern f32 lbl_803E5274;
 
-typedef struct NwIceState
-{
-    int* linkedObj;
-} NwIceState;
 
 extern void fn_8014C66C(int* obj, int* target);
 extern f32 fn_8014C5D0(int* obj);
@@ -316,30 +298,17 @@ void nw_tricky_update(int* obj)
 /* Trivial 4b 0-arg blr leaves. */
 void nw_animice_render(void);
 
-void nw_animice_hitDetect(void);
 
-void nw_animice_update(void);
 
-void nw_animice_release(void);
 
-void nw_animice_initialise(void);
 
-void nw_ice_render(void);
 
 /* 8b "li r3, N; blr" returners. */
-int nw_animice_SeqFn(void);
-int nw_animice_getExtraSize(void);
-int nw_animice_getObjectTypeId(void);
-int nw_ice_getExtraSize(void);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void nw_animice_free(int x);
-void nw_ice_free(int x);
 
-void nw_ice_update(int* obj);
 
 /* call(x, N) wrappers. */
-void nw_ice_init(int x);
 
 void nw_tricky_init(int* obj)
 {

@@ -5,10 +5,7 @@
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjGroup_RemoveObject();
 
-extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
-extern void Sfx_StopObjectChannel(void* obj, int channel);
 
-extern f32 timeDelta;
 
 
 
@@ -70,7 +67,6 @@ extern f32 timeDelta;
  */
 #pragma scheduling off
 #pragma peephole off
-int nw_tricky_getExtraSize(void);
 
 /*
  * --INFO--
@@ -79,7 +75,6 @@ int nw_tricky_getExtraSize(void);
  * EN v1.0 Address: 0x801CF78C
  * EN v1.0 Size: 44b
  */
-int nw_tricky_SeqFn(void);
 
 /*
  * --INFO--
@@ -100,7 +95,6 @@ int nw_tricky_SeqFn(void);
 
 #pragma scheduling off
 #pragma peephole off
-void nw_tricky_free(int obj);
 
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
@@ -116,55 +110,15 @@ void nw_tricky_free(int obj);
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
-typedef struct NwIcePlacement
-{
-    u8 pad0[0x1B - 0x0];
-    u8 unk1B;
-    u8 pad1C[0x20 - 0x1C];
-} NwIcePlacement;
 
 
-typedef struct NwTrickyState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-} NwTrickyState;
 
 
-extern int ObjGroup_FindNearestObjectForObject(int group, int* obj, f32* maxDistance);
-extern int** ObjGroup_GetObjects(int group, int* countOut);
-extern void ObjHits_DisableObject(int* obj);
-extern void ObjHits_EnableObject(int* obj);
-extern void fn_80296D20(int playerObj, int* obj);
 
-extern f32 lbl_803E5270;
-extern f32 lbl_803E5274;
 
-typedef struct NwIceState
-{
-    int* linkedObj;
-} NwIceState;
 
-extern void fn_8014C66C(int* obj, int* target);
-extern f32 fn_8014C5D0(int* obj);
-extern int* ObjList_FindObjectById(int objId);
-extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
-extern void fn_80138920(int* obj, int a, int b);
-extern const f32 lbl_803E5260;
-extern f32 lbl_803E5264;
-extern f32 lbl_803E5268;
-extern int lbl_802C23E8[];
 
-typedef struct NwTrickyIds
-{
-    int ids[3];
-} NwTrickyIds;
 
-typedef struct NwObjPos
-{
-    u8 pad[0x18];
-    f32 pos[3];
-} NwObjPos;
 
 /*
  * --INFO--
@@ -180,7 +134,6 @@ typedef struct NwObjPos
  * PAL Size: TODO
  */
 #pragma opt_loop_invariants off
-void nw_tricky_update(int* obj);
 #pragma opt_loop_invariants reset
 
 
@@ -217,12 +170,9 @@ int nw_ice_getExtraSize(void);
 void nw_animice_free(int x) { ObjGroup_RemoveObject(x, 0x3d); }
 void nw_ice_free(int x);
 
-void nw_ice_update(int* obj);
 
 /* call(x, N) wrappers. */
-void nw_ice_init(int x);
 
-void nw_tricky_init(int* obj);
 
 void nw_animice_init(int* obj)
 {
