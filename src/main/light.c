@@ -1,3 +1,32 @@
+/* === merged from main/dll/VF/dll_021E_vfpblock1.c [801FB9AC-801FB9F4) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/VF/vf_shared.h"
+#include "main/effect_interfaces.h"
+#include "main/expgfx.h"
+
+/*
+ * DLL 0x021E (gVFP_Block1ObjDescriptor) fragment.
+ * Only getExtraSize/getObjectTypeId/free/render/hitDetect fall in this object's
+ * .text range here (0x801FB9AC-0x801FB9F4); update/init/release/initialise for
+ * this DLL live in the adjacent unit main/light.c (next .text range).
+ */
+
+int vfpblock1_getExtraSize(void) { return 0x2; }
+
+int vfpblock1_getObjectTypeId(void) { return 0x0; }
+
+void vfpblock1_render(void)
+{
+}
+
+void vfpblock1_hitDetect(void)
+{
+}
+
+void vfpblock1_free(int obj)
+{
+    (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
@@ -12,7 +41,6 @@
 #include "main/objlib.h"
 #include "main/resource.h"
 
-extern undefined4 FUN_80017698();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80041ff8();
 extern undefined4 FUN_80042b9c();
@@ -145,6 +173,7 @@ FUN_801fcccc(undefined8 param_1, double param_2, double param_3, undefined8 para
              , int param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,
              undefined4 param_15, undefined4 param_16)
 {
+    extern undefined4 FUN_80017698(); /* #57 */
     char cVar2;
     undefined4 uVar1;
     int iVar3;
@@ -358,10 +387,10 @@ void vfpplatform_init(int obj, int data)
 
 extern f32 lbl_803E6144;
 extern f32 lbl_803E6148;
-extern u32 GameBit_Get(int);
 
 void vfpcoreplat_init(int obj, int data)
 {
+    extern u32 GameBit_Get(int); /* #57 */
     int state = *(int*)&((GameObject*)obj)->extra;
     *(s16*)obj = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
     *(s16*)state = *(s16*)(data + 0x20);
@@ -382,8 +411,6 @@ void vfpcoreplat_init(int obj, int data)
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
-extern void GameBit_Set(int eventId, int value);
-extern u32 lbl_803DDCC8;
 extern f32 lbl_803E6150;
 
 typedef struct SpellStoneUseState
@@ -395,6 +422,9 @@ typedef struct SpellStoneUseState
 
 void spellStoneUseFn_801fd270(int obj)
 {
+    extern u32 lbl_803DDCC8; /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
+    extern u32 GameBit_Get(int); /* #57 */
     SpellStoneUseState* state = ((GameObject*)obj)->extra;
     s16 cond = 1;
     void* player = Obj_GetPlayerObject();
@@ -531,6 +561,7 @@ typedef struct
 
 void vfpdoorswitch_update(int obj)
 {
+    extern u32 GameBit_Get(int); /* #57 */
     VfpDoorSwitchState* state;
     if (((GameObject*)obj)->anim.seqId != 0x3e7)
     {
@@ -549,6 +580,7 @@ void vfpdoorswitch_update(int obj)
 
 void vfpdoorswitch_init(int obj, int data)
 {
+    extern u32 GameBit_Get(int); /* #57 */
     VfpDoorSwitchState* state = ((GameObject*)obj)->extra;
     *(s16*)obj = (s16)(((s32) * (s8*)(data + 0x18)) << 8);
     ((GameObject*)obj)->anim.rotZ = (s16)(((s32) * (s8*)(data + 0x19)) << 8);
@@ -581,6 +613,7 @@ extern f32 timeDelta;
 
 void vfpdoorswitch_updateExplodingVariant(int obj)
 {
+    extern u32 GameBit_Get(int); /* #57 */
     VfpDoorSwitchState* state = ((GameObject*)obj)->extra;
     int camView = Camera_GetCurrentViewSlot();
 
@@ -623,6 +656,8 @@ void dll_224_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (vi
 #pragma peephole on
 void seqpoint_update(int* obj)
 {
+    extern void GameBit_Set(int eventId, int value); /* #57 */
+    extern u32 GameBit_Get(int); /* #57 */
     void* player = Obj_GetPlayerObject();
     SeqPointState* self = ((GameObject*)obj)->extra;
     int key = self->disableBit;
@@ -687,7 +722,6 @@ void seqpoint_update(int* obj)
 }
 
 extern EffectInterface** gPartfxInterface;
-extern void Obj_FreeObject(int* obj);
 extern u32 randomGetRange(int min, int max);
 extern s16 lbl_803DDCC4;
 extern u8 lbl_803DDCC6;
@@ -695,6 +729,9 @@ extern u8 lbl_803DDCC6;
 #pragma peephole off
 void vfpdraghead_update(int* obj)
 {
+    extern void Obj_FreeObject(int* obj); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
+    extern u32 GameBit_Get(int); /* #57 */
     int state = *(s8*)(*(char**)&((GameObject*)obj)->anim.placementData + 0x19);
     VfpDragHeadState* self2;
 
@@ -751,13 +788,14 @@ void vfpdraghead_update(int* obj)
 }
 
 extern void unlockLevel(int, int, int);
-extern undefined4 lockLevel(undefined4, int);
 extern int mapGetDirIdx(int);
-extern undefined4 loadMapAndParent(int);
 extern void warpToMap(int, int);
 
 void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
 {
+    extern undefined4 loadMapAndParent(int); /* #57 */
+    extern undefined4 lockLevel(undefined4, int); /* #57 */
+    extern void GameBit_Set(int eventId, int value); /* #57 */
     SeqPointState* state = ((GameObject*)obj)->extra;
     int i;
 
@@ -808,6 +846,7 @@ extern f32 lbl_803E6108;
 
 void fn_801FBAC8(int obj)
 {
+    extern u32 GameBit_Get(int); /* #57 */
     int params = *(int*)&((GameObject*)obj)->anim.placementData;
     int state = *(int*)&((GameObject*)obj)->extra;
     if (GameBit_Get(*(s16*)state) != 0)
@@ -918,6 +957,7 @@ void fn_801FBAC8(int obj)
 
 void vfpplatform_update(int obj)
 {
+    extern u32 GameBit_Get(int); /* #57 */
     int params = *(int*)&((GameObject*)obj)->anim.placementData;
     int state = *(int*)&((GameObject*)obj)->extra;
     u8 s3 = *(u8*)(state + 3);
@@ -1115,3 +1155,233 @@ void vfpplatform_update(int obj)
         }
     }
 }
+
+/* segment pragma-stack balance (re-split): */
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+
+/* === moved from main/main.c [801FD398-801FD4A8) (TU re-split, docs/boundary_audit.md) === */
+#include "main/game_object.h"
+#include "main/obj_placement.h"
+#include "main/audio/sfx_ids.h"
+#include "main/dll/anim_internal.h"
+#include "main/effect_interfaces.h"
+#include "main/expgfx.h"
+#include "main/main.h"
+#include "main/objlib.h"
+#include "main/resource.h"
+
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801fd398
+ * EN v1.0 Address: 0x801FD398
+ * EN v1.0 Size: 852b
+ * EN v1.1 Address: 0x801FD3A4
+ * EN v1.1 Size: 720b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9);
+
+
+#pragma scheduling off
+#pragma peephole off
+#pragma peephole reset
+#pragma scheduling reset
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void dll_224_release_nop(void)
+{
+}
+
+void dll_224_initialise_nop(void)
+{
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* 8b "li r3, N; blr" returners. */
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+#pragma scheduling off
+#pragma scheduling reset
+
+/* plain forwarder. */
+
+/* fn_X(lbl); lbl = 0; */
+#pragma scheduling off
+#pragma scheduling reset
+
+/* dll_224_hitDetect: render iff obj->field_0x74 set. */
+
+void dll_224_hitDetect(void* obj)
+{
+    extern void objRenderFn_80041018(void* obj); /* #57 */
+    if (*(void**)((char*)obj + 0x74) != NULL)
+    {
+        objRenderFn_80041018(obj);
+    }
+}
+
+/* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
+#pragma scheduling off
+#pragma peephole off
+void dll_224_update(void* param_1)
+{
+    extern void spellStoneUseFn_801fd270(void* obj); /* #57 */
+    extern int lbl_803DDCC8; /* #57 */
+    void* obj = param_1;
+    int v;
+    v = (*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot);
+    v = (u8)v;
+    switch (v)
+    {
+    case 1:
+        lbl_803DDCC8 = 0x123;
+        break;
+    case 2:
+        lbl_803DDCC8 = 0x83b;
+        break;
+    case 3:
+        lbl_803DDCC8 = 0x83c;
+        break;
+    default:
+        lbl_803DDCC8 = 0x123;
+        break;
+    }
+    spellStoneUseFn_801fd270(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+typedef struct
+{
+    s16 showGameBit; /* 0x0 */
+    s16 checkGameBit; /* 0x2 */
+    s8 counter; /* 0x4 */
+    u8 done : 1; /* 0x5 bit 7 */
+    u8 noCheck : 1; /* 0x5 bit 6 */
+} VfpFlamePointData;
+
+/* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
+#pragma scheduling off
+int fn_801FD4A8(void* obj, int x);
+#pragma scheduling reset
+
+
+/* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
+#pragma scheduling off
+#pragma peephole off
+void dbegg_setupFromDef(int obj, u8* state);
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma peephole reset
+#pragma scheduling reset
+
+/* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
+#pragma scheduling off
+#pragma peephole off
+void dll_224_init(void* obj, void* other)
+{
+    s16* extra = ((GameObject*)obj)->extra;
+    s16 v = (s16)((s8) * ((s8*)other + 0x18) << 8);
+    u8 t;
+    *(s16*)obj = v;
+    *(s16*)((char*)extra + 0) = *(s16*)((char*)other + 0x1e);
+    *(s16*)((char*)extra + 2) = *(s16*)((char*)other + 0x20);
+    t = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = t;
+}
+
+#pragma peephole reset
+#pragma scheduling reset
+
+
+#pragma scheduling off
+#pragma scheduling reset
+
+/* ==== v1.0 recovered functions (drift additions) ==== */
+
+
+#pragma scheduling off
+#pragma peephole off
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+#pragma opt_loop_invariants off
+#pragma opt_loop_invariants reset
+#pragma opt_common_subs reset
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma scheduling reset

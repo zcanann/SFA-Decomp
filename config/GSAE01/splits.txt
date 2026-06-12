@@ -1226,23 +1226,17 @@ main/dll/VF/dll_021C_vfpladders.c:
 main/dll/VF/dll_021D_vfplift.c:
 	.text       start:0x801FB220 end:0x801FB9AC
 
-main/dll/VF/dll_021E_vfpblock1.c:
-	.text       start:0x801FB9AC end:0x801FB9F4
-
 main/light.c:
-	.text       start:0x801FB9F4 end:0x801FD398
+	.text       start:0x801FB9AC end:0x801FD4A8
 
 main/main.c:
-	.text       start:0x801FD398 end:0x801FEB30
+	.text       start:0x801FD4A8 end:0x801FE118
 
 main/dll/anim.c:
-	.text       start:0x801FEB30 end:0x8020637C
-
-main/dll/baddie/chuka.c:
-	.text       start:0x8020637C end:0x8020652C
+	.text       start:0x801FE118 end:0x80206474
 
 main/dll/baddie/chukachuck.c:
-	.text       start:0x8020652C end:0x80206968
+	.text       start:0x80206474 end:0x80206968
 	.data       start:0x80329A20 end:0x80329A68
 
 main/dll/tesla.c:

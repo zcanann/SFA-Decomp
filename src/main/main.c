@@ -112,93 +112,15 @@ void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
 
 #pragma scheduling off
 #pragma peephole off
-void dbegg_processMessages(int obj)
-{
-    extern int gameBitIncrement(int);
-    extern void Obj_RemoveFromUpdateList(int);
-    extern void vecRotateZXY(void*, int);
-    extern f32 lbl_803E61C8;
-    extern f32 lbl_803E61CC;
-
-    AnimBehaviorConfig* config;
-    int sub;
-    u32 msgType = 0;
-    int msgFlag = 0;
-    int msgArg;
-
-    sub = *(int*)&((GameObject*)obj)->extra;
-    config = (AnimBehaviorConfig*)((GameObject*)obj)->anim.placementData;
-
-    while (ObjMsg_Pop((void*)obj, &msgType, (uint*)&msgArg, (uint*)&msgFlag) != 0)
-    {
-        if (msgType == 17)
-        {
-            switch (msgFlag)
-            {
-            case 18:
-                if ((*(u8*)(sub + 0x119) & 0x20) == 0)
-                {
-                    ObjGroup_RemoveObject(obj, 36);
-                }
-                ObjHits_DisableObject(obj);
-                *(u8*)(sub + 0x118) = 11;
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
-                break;
-            case 17:
-                {
-                    f32 buf[6];
-                    s16* hbuf = (s16*)buf;
-                    f32 v;
-                    ((GameObject*)obj)->anim.velocityX = *(f32*)(sub + 0x10c);
-                    ((GameObject*)obj)->anim.velocityY = *(f32*)(sub + 0x110);
-                    ((GameObject*)obj)->anim.velocityZ = -*(f32*)(sub + 0x114);
-                    v = lbl_803E61C8;
-                    buf[3] = v;
-                    buf[4] = v;
-                    buf[5] = v;
-                    buf[2] = lbl_803E61CC;
-                    hbuf[2] = 0;
-                    hbuf[1] = 0;
-                    hbuf[0] = *(s16*)msgArg;
-                    vecRotateZXY(buf, obj + 0x24);
-                }
-            /* fallthrough */
-            case 16:
-                ObjGroup_AddObject(obj, 36);
-            /* fallthrough */
-            case 20:
-                *(u8*)(sub + 0x118) = 5;
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8);
-                ObjHits_EnableObject(obj);
-                break;
-            case 19:
-                GameBit_Set(config->secondaryConditionId, 1);
-                if (config->activationEventId > 0)
-                {
-                    gameBitIncrement(config->activationEventId);
-                }
-                Obj_RemoveFromUpdateList(obj);
-                ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-                ObjGroup_RemoveObject(obj, 36);
-                break;
-            }
-        }
-    }
-}
+void dbegg_processMessages(int obj);
 #pragma peephole reset
 #pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void dll_224_release_nop(void)
-{
-}
+void dll_224_release_nop(void);
 
-void dll_224_initialise_nop(void)
-{
-}
+void dll_224_initialise_nop(void);
 
 void VFP_lavapool_free_nop(void)
 {
@@ -253,12 +175,12 @@ int vfplavastar_getExtraSize(void) { return 0x14; }
 int vfplavastar_getObjectTypeId(void) { return 0x0; }
 int vfpspellplace_getExtraSize(void) { return 0x6; }
 int vfpspellplace_getObjectTypeId(void) { return 0x0; }
-int dbegg_getExtraSize(void) { return 0x124; }
-int dbegg_getObjectTypeId(void) { return 0x8; }
+int dbegg_getExtraSize(void);
+int dbegg_getObjectTypeId(void);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-void dbegg_free(int x) { ObjGroup_RemoveObject(x, 0x24); }
+void dbegg_free(int x);
 #pragma scheduling reset
 
 /* plain forwarder. */
@@ -278,42 +200,14 @@ void vfplavastar_release(void)
 /* dll_224_hitDetect: render iff obj->field_0x74 set. */
 extern void objRenderFn_80041018(void* obj);
 
-void dll_224_hitDetect(void* obj)
-{
-    if (*(void**)((char*)obj + 0x74) != NULL)
-    {
-        objRenderFn_80041018(obj);
-    }
-}
+void dll_224_hitDetect(void* obj);
 
 /* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
 extern int lbl_803DDCC8;
 extern void spellStoneUseFn_801fd270(void* obj);
 #pragma scheduling off
 #pragma peephole off
-void dll_224_update(void* param_1)
-{
-    void* obj = param_1;
-    int v;
-    v = (*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot);
-    v = (u8)v;
-    switch (v)
-    {
-    case 1:
-        lbl_803DDCC8 = 0x123;
-        break;
-    case 2:
-        lbl_803DDCC8 = 0x83b;
-        break;
-    case 3:
-        lbl_803DDCC8 = 0x83c;
-        break;
-    default:
-        lbl_803DDCC8 = 0x123;
-        break;
-    }
-    spellStoneUseFn_801fd270(obj);
-}
+void dll_224_update(void* param_1);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -341,11 +235,7 @@ int fn_801FD4A8(void* obj, int x)
 }
 #pragma scheduling reset
 
-int dbegg_setScale(int obj)
-{
-    u8* inner = ((GameObject*)obj)->extra;
-    return inner[0x118] != 3 ? 1 : 0;
-}
+int dbegg_setScale(int obj);
 
 /* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
 extern f32 lbl_803E61C8;
@@ -354,81 +244,12 @@ extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
 extern int Obj_SetActiveModelIndex(int obj, int idx);
 #pragma scheduling off
 #pragma peephole off
-void dbegg_setupFromDef(int obj, u8* state)
-{
-    AnimBehaviorConfig* config;
-    f32 local_unused;
-
-    config = (AnimBehaviorConfig*)((GameObject*)obj)->anim.placementData;
-    state[0x119] = 0;
-    *(s16*)obj = (s16)(config->facingAngleByte << 8);
-    ((GameObject*)obj)->anim.rotY = 0;
-    ((GameObject*)obj)->anim.rotZ = 0;
-    ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)
-    config->speedScaleByte * lbl_803E61D0;
-    ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * *(f32*)(*(int*)&((GameObject*)
-        obj)->anim.modelInstance + 4);
-    state[0x118] = (u8)(GameBit_Get(config->primaryConditionId) != 0 ? 3 : 1);
-    if (state[0x118] == 1)
-    {
-        if (fn_801FE560(obj, &local_unused, lbl_803E61C8, *(f32*)&lbl_803E61C8, 1) == 0)
-        {
-            state[0x118] = 2;
-        }
-    }
-    if (config->behaviorMode != 0)
-    {
-        state[0x119] |= 1;
-        if (config->behaviorMode == 2) state[0x119] |= 2;
-        if (config->behaviorMode == 3) state[0x118] = 10;
-        if (config->behaviorMode == 4)
-        {
-            state[0x119] |= 4;
-            state[0x119] = (u8)(state[0x119] & ~1);
-        }
-        if (config->behaviorMode == 5)
-        {
-            state[0x119] |= 8;
-            state[0x119] |= 16;
-        }
-        if (config->behaviorMode == 6)
-        {
-            Obj_SetActiveModelIndex(obj, 1);
-            state[0x119] |= 8;
-            state[0x119] |= 16;
-        }
-        if (config->behaviorMode == 7) state[0x119] |= 32;
-    }
-    state[0x118] = (u8)(GameBit_Get(config->readyConditionId) != 0 ? 5 : 12);
-    if (state[0x118] == 5)
-    {
-        ObjGroup_AddObject(obj, 36);
-    }
-    {
-        f32 fz = lbl_803E61C8;
-        ((GameObject*)obj)->anim.velocityX = fz;
-        ((GameObject*)obj)->anim.velocityY = fz;
-        ((GameObject*)obj)->anim.velocityZ = fz;
-        ((GameObject*)obj)->unkF8 = 0;
-        *(f32*)state = fz;
-    }
-}
+void dbegg_setupFromDef(int obj, u8* state);
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-int dbegg_func0B(int obj, f32* v)
-{
-    char* inner = ((GameObject*)obj)->extra;
-    if (*(u8*)(inner + 0x118) == 0xb)
-    {
-        *(f32*)(inner + 0x10c) = v[0];
-        *(f32*)(inner + 0x110) = v[1];
-        *(f32*)(inner + 0x114) = v[2];
-        return 1;
-    }
-    return 0;
-}
+int dbegg_func0B(int obj, f32* v);
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -466,35 +287,14 @@ void VFP_lavapool_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 extern f32 lbl_803E61CC;
 #pragma scheduling off
 #pragma peephole off
-void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
-{
-    u8* inner = ((GameObject*)obj)->extra;
-    if (visible != 0)
-    {
-        u32 t = inner[0x118];
-        if (t != 0xc && t != 4 && t != 0xb)
-        {
-            ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E61CC);
-        }
-    }
-}
+void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 #pragma peephole reset
 #pragma scheduling reset
 
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
 #pragma scheduling off
 #pragma peephole off
-void dll_224_init(void* obj, void* other)
-{
-    s16* extra = ((GameObject*)obj)->extra;
-    s16 v = (s16)((s8) * ((s8*)other + 0x18) << 8);
-    u8 t;
-    *(s16*)obj = v;
-    *(s16*)((char*)extra + 0) = *(s16*)((char*)other + 0x1e);
-    *(s16*)((char*)extra + 2) = *(s16*)((char*)other + 0x20);
-    t = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = t;
-}
+void dll_224_init(void* obj, void* other);
 
 void vfpflamepoint_init(int* obj, s8* def)
 {
@@ -514,37 +314,7 @@ extern f32 lbl_803E6218;
 extern f32 lbl_803E621C;
 
 #pragma scheduling off
-void dbegg_hitDetect(int obj)
-{
-    u8* state;
-    int hit;
-    hit = ObjHits_GetPriorityHit(obj, 0, 0, 0);
-    state = ((GameObject*)obj)->extra;
-    if (hit == 0x12)
-    {
-        if (state[0x118] != 4)
-        {
-            Obj_GetPlayerObject();
-        }
-    }
-    if (state[0x118] != 9)
-    {
-        void* hitFrom = (void*)&((GameObject*)obj)->anim.previousLocalPosX;
-        void* hitTo = (void*)&((GameObject*)obj)->anim.localPosX;
-        f32 hitRadius = lbl_803E6218;
-        if (objBboxFn_800640cc(hitFrom, hitTo, hitRadius, 1, NULL, obj, 8, -1, 0xff, 0) != 0)
-        {
-            f32 damping = lbl_803E621C;
-            f32 velocityX = ((GameObject*)obj)->anim.velocityX;
-            ((GameObject*)obj)->anim.velocityX = velocityX - damping * velocityX;
-            velocityX = ((GameObject*)obj)->anim.velocityZ;
-            ((GameObject*)obj)->anim.velocityZ = velocityX - damping * velocityX;
-        }
-    }
-    ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
-}
+void dbegg_hitDetect(int obj);
 #pragma scheduling reset
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
@@ -874,191 +644,12 @@ void vfpspellplace_init(int obj, s8* def)
 #pragma peephole off
 #pragma opt_common_subs off
 #pragma opt_loop_invariants off
-int fn_801FE560(int obj, f32* out, f32 a, f32 b, int flag)
-{
-    f32 water;
-    f32 ground;
-    f32 t;
-    f32 u;
-    f32 dy;
-    int n;
-    int i;
-    int** list;
-    int** cursor;
-    int* hit;
-
-    *out = lbl_803E61C8;
-    n = hitDetectFn_80065e50(((GameObject*)obj)->anim.localPosX + a, ((GameObject*)obj)->anim.localPosY,
-                             ((GameObject*)obj)->anim.localPosZ + b, obj, &list, 0, 0);
-    if (n != 0)
-    {
-        ground = lbl_803E61E0;
-        water = ground;
-        cursor = list;
-        for (i = 0; i < n; i++)
-        {
-            hit = *cursor;
-            dy = *(f32*)hit - ((GameObject*)obj)->anim.localPosY;
-            if (*(s8*)((u8*)hit + 0x14) == 0xe)
-            {
-                if (water >= lbl_803E61C8)
-                {
-                    t = water;
-                }
-                else
-                {
-                    t = -water;
-                }
-                if (dy >= lbl_803E61C8)
-                {
-                    u = dy;
-                }
-                else
-                {
-                    u = -dy;
-                }
-                if (u < t)
-                {
-                    water = dy;
-                }
-            }
-            else
-            {
-                if (ground >= lbl_803E61C8)
-                {
-                    t = ground;
-                }
-                else
-                {
-                    t = -ground;
-                }
-                if (dy >= lbl_803E61C8)
-                {
-                    u = dy;
-                }
-                else
-                {
-                    u = -dy;
-                }
-                if (u < t)
-                {
-                    ground = dy;
-                }
-            }
-            cursor++;
-        }
-        if (flag == 0)
-        {
-            if (lbl_803E61E0 != ground)
-            {
-                *out = ground;
-                return 0;
-            }
-            if (lbl_803E61E0 != water)
-            {
-                *out = water;
-                return 1;
-            }
-            *out = lbl_803E61E4;
-        }
-        else
-        {
-            if (lbl_803E61E0 != water)
-            {
-                if (ground >= lbl_803E61C8)
-                {
-                    t = ground;
-                }
-                else
-                {
-                    t = -ground;
-                }
-                if (water >= lbl_803E61C8)
-                {
-                    u = water;
-                }
-                else
-                {
-                    u = -water;
-                }
-                if (u <= t || water > lbl_803E61C8)
-                {
-                    *out = water;
-                    return 0;
-                }
-                *out = ground;
-                return 1;
-            }
-            if (lbl_803E61E0 != ground)
-            {
-                *out = ground;
-                return 1;
-            }
-            *out = lbl_803E61E4;
-        }
-    }
-    return 0;
-}
+int fn_801FE560(int obj, f32* out, f32 a, f32 b, int flag);
 #pragma opt_loop_invariants reset
 #pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-void fn_801FE774(int cam, f32* vel)
-{
-    f32 limit;
-    f32 force;
-    f32 sumX;
-    f32 sumZ;
-    int count;
-    int* objs;
-    u8* o;
-    int i;
-
-    sumZ = sumX = lbl_803E61C8;
-    objs = (int*)ObjGroup_GetObjects(0x14, &count);
-    limit = lbl_803E61E8;
-    for (i = 0; i < count; i++)
-    {
-        f32 dy;
-        o = (u8*)*objs;
-        dy = *(f32*)(o + 0x10) - *(f32*)(cam + 0x10);
-        if (dy <= limit && dy >= lbl_803E61EC)
-        {
-            f32 dx = *(f32*)(o + 0xc) - *(f32*)(cam + 0xc);
-            f32 dz = *(f32*)(o + 0x14) - *(f32*)(cam + 0x14);
-            f32 dist = sqrtf(dx * dx + dz * dz);
-            f32 radius = lbl_803E61F0 * (f32)(u32) * (u8*)(*(int*)(o + 0x4c) + 0x19);
-            if (dist < radius)
-            {
-                force = (radius - dist) / radius;
-                force = force * (lbl_803E61F4 * *(f32*)(o + 8));
-                sumX += force * mathSinf((lbl_803E61F8 * (f32)(int) * (s16*)o) / lbl_803E61FC);
-                sumZ += force * mathCosf((lbl_803E61F8 * (f32)(int) * (s16*)o) / lbl_803E61FC);
-            }
-        }
-        objs++;
-    }
-    if (count != 0)
-    {
-        f32 w;
-        f32 m;
-        sumX = sumX / (f32)count;
-        sumZ = sumZ / (f32)count;
-        vel[0] = -(sumX * (w = lbl_803E6200) - vel[0]);
-        vel[2] = -(w * sumZ - vel[2]);
-        vel[0] = vel[0] * (m = lbl_803E6204);
-        vel[2] = vel[2] * m;
-        {
-            f32 mag = sqrtf(vel[0] * vel[0] + vel[2] * vel[2]);
-            if (mag > lbl_803E6208)
-            {
-                f32 sc = lbl_803E6208 / mag;
-                vel[0] = vel[0] * sc;
-                vel[2] = vel[2] * sc;
-            }
-        }
-    }
-}
+void fn_801FE774(int cam, f32* vel);
 #pragma scheduling reset
