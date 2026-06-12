@@ -18,22 +18,22 @@ catch for the spellstone-in-prisonuncle content-drift class.
 
 | metric | count |
 |---|---|
-| dll-hosting units audited | 487 |
-| actionable (non-OK) | 202 |
-| verdict CANONICAL-OK | 242 |
-| verdict CONTAINER | 77 |
-| verdict MISLABELED | 4 |
-| verdict HELPER-TU | 146 |
+| dll-hosting units audited | 803 |
+| actionable (non-OK) | 359 |
+| verdict CANONICAL-OK | 401 |
+| verdict CONTAINER | 2 |
+| verdict MISLABELED | 221 |
+| verdict HELPER-TU | 161 |
 | verdict ENGINE-HOST | 18 |
 
 ### Effort-class counts (actionable only)
 
 | effort | count | meaning |
 |---|---|---|
-| CARVE | 77 | tool-ready container dissolution (`dll_boundary_resplit.py --carve`) |
+| CARVE | 2 | tool-ready container dissolution (`dll_boundary_resplit.py --carve`) |
 | CARVE-HARD | 0 | container with a known blocker (interleave / irreducible) |
 | FORENSIC | 22 | fn-prefix anomaly / appendix mislabel — human-grade content read |
-| RENAME-ONLY | 103 | clean filename↔content stem rename (no carve) |
+| RENAME-ONLY | 335 | clean filename↔content stem rename (no carve) |
 
 > **CARVE-HARD = 0**: the June-2026 `dll_boundary_resplit.py` campaign
 > (boundary_audit.md) TU-aligned every cutting boundary, so no resident
@@ -47,9 +47,10 @@ catch for the spellstone-in-prisonuncle content-drift class.
 
 | verdict | effort | count |
 |---|---|---|
-| CONTAINER | CARVE | 77 |
+| CONTAINER | CARVE | 2 |
 | MISLABELED | FORENSIC | 4 |
-| HELPER-TU | RENAME-ONLY | 103 |
+| MISLABELED | RENAME-ONLY | 217 |
+| HELPER-TU | RENAME-ONLY | 118 |
 | ENGINE-HOST | FORENSIC | 18 |
 
 ## Worst 10 files by content-anomaly fn count
@@ -61,26 +62,16 @@ families.)
 
 | rank | unit | #DLL | anomaly fns | families (count) | verdict/effort |
 |---|---|---|---|---|---|
-| 1 | `main/dll/gameplay.c` | 40 | 78 | save×40, carryable×14, screens×5, dummy58×3, dummy6c×3 | CONTAINER/CARVE |
-| 2 | `main/dll/modgfx.c` | 14 | 73 | projgfx×10, bone×8, player×5, partfx×5, effect1×5 | CONTAINER/CARVE |
-| 3 | `main/dll/df_partfx.c` | 3 | 70 | dummy04×38, player×24, screen×6, screenrectfn×1, screentransitionfn×1 | CONTAINER/CARVE |
-| 4 | `main/dll/objfsa.c` | 3 | 58 | rom×33, curves×15, ui×5, dummy12×2, walk×1 | CONTAINER/CARVE |
-| 5 | `main/dll/baddieControl.c` | 12 | 55 | camera×54, title×1 | CONTAINER/CARVE |
-| 6 | `main/dll/dim_partfx.c` | 8 | 52 | checkpoint×17, effect16×5, effect15×5, effect13×5, effect17×5 | CONTAINER/CARVE |
-| 7 | `main/dll/Tumbleweed.c` | 5 | 47 | titlescreen×9, credits×7, warpstoneui×6, tricky×6, debug×4 | CONTAINER/CARVE |
-| 8 | `main/dll/dll_0000_baby_snowworm.c` | 1 | 40 | gameui×15, pause×8, viewfn×2, pausemenufn×2, timelistfn×2 | MISLABELED/FORENSIC |
-| 9 | `main/dll/dll_66.c` | 11 | 33 | projdummy×3, projmagicstream×3, projmagicemmit1×3, projroombeam×3, projlightning1×3 | CONTAINER/CARVE |
-| 10 | `main/dll/tricky.c` | 0 | 30 | gameui×10, pause×3, game×2, hudfn×2, fear×2 | HELPER-TU/OK |
-
-**User-flagged `cfprisonuncle.c` — confirmed content:** a clean
-**6-DLL container** (anomaly fns = 0; its fn families ARE its own
-descriptors, so it does not rank by anomaly density — its drift is the
-FILENAME, not stray fns). Resident descriptors: 0x0FE:MagicPlant, 0x100:TrickyWarp, 0x101:TrickyGuard, 0x102:StayPoint, 0x103:CurveFish, 0x118:Duster. The
-`cfprisonuncle` name belongs to the unrelated real DLL 0x14F
-(`CF/dll_014F_cfprisonuncle.c`); carving this container into the six
-per-descriptor units above resolves the mislabel. (The original brief's
-"stray spellstone/babycloudrunner fns" was imprecise — the actual
-residents are MagicPlant/TrickyWarp/TrickyGuard/StayPoint/CurveFish/Duster.)
+| 1 | `main/dll/dll_0014_unk.c` | 1 | 55 | rom×33, curves×15, objfsa×4, walk×1, walkgroupfn×1 | MISLABELED/RENAME-ONLY |
+| 2 | `main/dll/dll_0000_baby_snowworm.c` | 1 | 40 | gameui×15, pause×8, viewfn×2, pausemenufn×2, timelistfn×2 | MISLABELED/FORENSIC |
+| 3 | `main/dll/tricky.c` | 0 | 30 | gameui×10, pause×3, game×2, hudfn×2, fear×2 | HELPER-TU/OK |
+| 4 | `main/dll/dll_000F_unk.c` | 1 | 24 | player×24 | MISLABELED/RENAME-ONLY |
+| 5 | `main/dll/dll_0285_spshop.c` | 1 | 23 | shop×23 | CANONICAL-OK/OK |
+| 6 | `main/dll/dll_02C0_frontfox.c` | 1 | 21 | titlescreen×9, title×3, titlescreenfn×3, credits×2, should×1 | MISLABELED/RENAME-ONLY |
+| 7 | `main/dll/dll_003C_TumbleweedBush.c` | 1 | 19 | link×16, linkdrawfn×2, titlescreenfn×1 | MISLABELED/FORENSIC |
+| 8 | `main/dll/dll_0001_camcontrol.c` | 1 | 18 | camera×18 | CANONICAL-OK/OK |
+| 9 | `main/dll/grenade.c` | 0 | 18 | trickyfn×12, trickyfoodfn×3, tricky×2, trickyflamefn×1 | HELPER-TU/OK |
+| 10 | `main/dll/player.c` | 0 | 18 | lightfoot×14, objfn×2, emission×1, camera×1 | HELPER-TU/OK |
 
 ## Severity-ordered queue
 
@@ -90,208 +81,365 @@ address. `[lo-hi)` is the splits.txt `.text` range (the partition unit).
 
 | # | unit | range | verdict | effort | resident DLLs / anomalies | proposed / carve plan |
 |---|---|---|---|---|---|---|
-| 1 | `main/dll/gameplay.c` | 800E8100-800F472C | CONTAINER | CARVE | 0x011,0x017,0x02F,0x058,0x059,0x05A,0x05B,0x05C,0x05D,0x05E,0x05F,0x060,0x061,0x062,0x063,0x064,0x065,0x066,0x067,0x068,0x069,0x06A,0x06B,0x06C,0x06D,0x06E,0x06F,0x070,0x071,0x072,0x073,0x074,0x075,0x076,0x077,0x078,0x079,0x07A,0x07B,0x0A3 anom:save,carryable,screens,dummy58 | 0x011→dll_0011_screens.c [800EA5CC-800EA758] ; 0x017→dll_0017_savegame.c [800E9CAC-800EA078] ; 0x02F→dll_002F_carryable.c [800EA84C-800EADC8] ; 0x058→dll_0058_dummy58.c [800EFD34-800EFD40] ; 0x059→dll_0059_gameplay.c [800EADCC-800EB094] ; 0x05A→dll_005A_staffcollision.c [800EB098-800EB098] ; 0x05B→dll_005B_modgfx.c [800EB618-800EB618] ; 0x05C→dll_005C_gameplay.c [800EC7BC-800ECADC] ; 0x05D→dll_005D_gameplay.c [800ECAE0-800ECE00] ; 0x05E→dll_005E_gameplay.c [800ECE04-800ED290] ; 0x05F→dll_005F_gameplay.c [800ED294-800ED5E0] ; 0x060→dll_0060_gameplay.c [800ED5E4-800EDA24] ; 0x061→dll_0061_gameplay.c [800EDA28-800EDE70] ; 0x062→dll_0062_gameplay.c [800EDE74-800EE258] ; 0x063→dll_0063_gameplay.c [800EE25C-800EE8F8] ; 0x064→dll_0064_gameplay.c [800EE8FC-800EEC30] ; 0x065→dll_0065_gameplay.c [800EEC34-800EEFE8] ; 0x066→dll_0066_gameplay.c [800EF3A0-800EF7B0] ; 0x067→dll_0067_gameplay.c [800EF7B4-800EFA2C] ; 0x068→dll_0068_gameplay.c [800EFA30-800EFD30] ; 0x069→dll_0069_gameplay.c [800EFD44-800F0228] ; 0x06A→dll_006A_gameplay.c [800F022C-800F0588] ; 0x06B→dll_006B_gameplay.c [800F058C-800F07D8] ; 0x06C→dll_006C_dummy6c.c [800F07DC-800F07E8] ; 0x06D→dll_006D_gameplay.c [800F07EC-800F0A48] ; 0x06E→dll_006E_gameplay.c [800F0A4C-800F0C98] ; 0x06F→dll_006F_gameplay.c [800F0C9C-800F11E0] ; 0x070→dll_0070_gameplay.c [800F11E4-800F16E0] ; 0x071→dll_0071_gameplay.c [800F16E4-800F1A54] ; 0x072→dll_0072_gameplay.c [800F1A58-800F1D60] ; 0x073→dll_0073_gameplay.c [800F1D64-800F2208] ; 0x074→dll_0074_gameplay.c [800F220C-800F2690] ; 0x075→dll_0075_gameplay.c [800F2694-800F2A88] ; 0x076→dll_0076_gameplay.c [800F2A8C-800F2CE8] ; 0x077→dll_0077_gameplay.c [800F2CEC-800F2F48] ; 0x078→dll_0078_gameplay.c [800F2F4C-800F33FC] ; 0x079→dll_0079_gameplay.c [800F3400-800F3CCC] ; 0x07A→dll_007A_gameplay.c [800F3CD0-800F4170] ; 0x07B→dll_007B_gameplay.c [800F4174-800F4728] ; 0x0A3→dll_00A3_gameplay.c [800EEFEC-800EF39C] |
-| 2 | `main/dll/foodbag.c` | 800F472C-800FA5D8 | CONTAINER | CARVE | 0x07C,0x07D,0x07E,0x07F,0x080,0x081,0x082,0x083,0x084,0x085,0x086,0x087,0x088,0x089,0x08A,0x08B,0x08C,0x08D,0x08E,0x08F,0x090 | 0x07C→dll_007C_foodbag.c [800F472C-800F4C6C] ; 0x07D→dll_007D_foodbag.c [800F4C70-800F4FA0] ; 0x07E→dll_007E_foodbag.c [800F4FA4-800F52DC] ; 0x07F→dll_007F_foodbag.c [800F52E0-800F57D4] ; 0x080→dll_0080_foodbag.c [800F57D8-800F5A88] ; 0x081→dll_0081_foodbag.c [800F5A8C-800F614C] ; 0x082→dll_0082_foodbag.c [800F6150-800F6530] ; 0x083→dll_0083_foodbag.c [800F6534-800F6984] ; 0x084→dll_0084_foodbag.c [800F6988-800F6DD8] ; 0x085→dll_0085_foodbag.c [800F6DDC-800F7430] ; 0x086→dll_0086_foodbag.c [800F7434-800F77B8] ; 0x087→dll_0087_foodbag.c [800F77BC-800F7ABC] ; 0x088→dll_0088_foodbag.c [800F7AC0-800F7D8C] ; 0x089→dll_0089_foodbag.c [800F7D90-800F8090] ; 0x08A→dll_008A_foodbag.c [800F8094-800F824C] ; 0x08B→dll_008B_foodbag.c [800F8250-800F87E4] ; 0x08C→dll_008C_foodbag.c [800F87E8-800F8D64] ; 0x08D→dll_008D_foodbag.c [800F8D68-800F9778] ; 0x08E→dll_008E_foodbag.c [800F977C-800F9E74] ; 0x08F→dll_008F_foodbag.c [800F9E78-800FA168] ; 0x090→dll_0090_foodbag.c [800FA16C-800FA5D4] |
-| 3 | `main/dll/genprops.c` | 8016B230-80171D14 | CONTAINER | CARVE | 0x0C6,0x0C7,0x0C8,0x0DB,0x0DC,0x0DD,0x0DE,0x0E2,0x0E3,0x0E4,0x0E5,0x0E6,0x0E8,0x0E9,0x0EA,0x0EB,0x0F7,0x125,0x25A anom:quakespellfn,superquakefn,quakespelltexturefn,player | 0x0C6→dll_00C6_animatedobj.c [8016BE70-8016C338] ; 0x0C7→dll_00C7_dim2roofrub.c [8016C750-8016CBE0] ; 0x0C8→dll_00C8_depthoffieldpoint.c [8016CE68-8016CEB0] ; 0x0DB→dll_00DB_mikabomb.c [8016B230-8016B70C] ; 0x0DC→dll_00DC_mikabombshadow.c [8016B710-8016B894] ; 0x0DD→dll_00DD_gcbaddieshield.c [8016B99C-8016BB0C] ; 0x0DE→dll_00DE_baddieinterestp.c [8016BB10-8016BE6C] ; 0x0E2→dll_00E2_staff.c [8016E8D0-8016F028] ; 0x0E3→dll_00E3_fireball.c [8016F54C-80170000] ; 0x0E4→dll_00E4_flamethrowerspe.c [80170004-801702D0] ; 0x0E5→dll_00E5_shield.c [80170A7C-801712FC] ; 0x0E6→dll_00E6_restartmarker.c [801713D8-801713D8] ; 0x0E8→dll_00E8_checkpoint4.c [801719E0-80171BA8] ; 0x0E9→dll_00E9_setuppoint.c [80171D10-80171D10] ; 0x0EA→dll_00EA_sideload.c [80171BAC-80171BAC] ; 0x0EB→dll_00EB_siderepel.c [80171C78-80171CA4] ; 0x0F7→dll_00F7_genprops.c [801713FC-801719DC] ; 0x125→dll_0125_curve.c [80171300-80171350] ; 0x25A→dll_025A_staticcamera.c [8016B898-8016B998] |
-| 4 | `main/dll/modgfx.c` | 8009FFF0-800C291C | CONTAINER | CARVE | 0x00B,0x00C,0x00D,0x00E,0x018,0x01A,0x01B,0x01C,0x01D,0x01E,0x01F,0x020,0x021,0x022 anom:projgfx,bone,player,partfx | 0x00B→dll_000B_modgfx.c [800A1250-800A3934] ; 0x00C→dll_000C_projgfx.c [800A3A40-800A3AEC] ; 0x00D→dll_000D_playershadow.c [800A4100-800A4334] ; 0x00E→dll_000E_partfx.c [800A4DF4-800AF64C] ; 0x018→dll_0018_boneparticleeffect.c [800A4338-800A4C38] ; 0x01A→dll_001A_effect1.c [800AF688-800B3198] ; 0x01B→dll_001B_effect2.c [800B319C-800B6EF4] ; 0x01C→dll_001C_effect3.c [800B6EF8-800B8D78] ; 0x01D→dll_001D_effect4.c [800B8D7C-800BC240] ; 0x01E→dll_001E_effect5.c [800BC244-800BD438] ; 0x01F→dll_001F_effect6.c [800BD43C-800BE030] ; 0x020→dll_0020_effect7.c [800BE034-800BF974] ; 0x021→dll_0021_effect8.c [800BF978-800C11C8] ; 0x022→dll_0022_effect9.c [800C11CC-800C2918] |
-| 5 | `main/dll/pickup.c` | 800FD744-80100550 | CONTAINER | CARVE | 0x09D,0x09E,0x09F,0x0A0,0x0A1,0x0A2,0x0A4,0x0A5,0x0A6,0x0A7,0x0A8,0x0A9,0x0AA anom:dummya4 | 0x09D→dll_009D_pickup.c [800FD744-800FDA94] ; 0x09E→dll_009E_pickup.c [800FDA98-800FDE14] ; 0x09F→dll_009F_pickup.c [800FDE18-800FE23C] ; 0x0A0→dll_00A0_pickup.c [800FE240-800FE5A4] ; 0x0A1→dll_00A1_pickup.c [800FE5A8-800FE924] ; 0x0A2→dll_00A2_pickup.c [800FE928-800FEC70] ; 0x0A4→dll_00A4_dummya4.c [800FEC74-800FEC80] ; 0x0A5→dll_00A5_pickup.c [800FEC84-800FF000] ; 0x0A6→dll_00A6_pickup.c [800FF004-800FF69C] ; 0x0A7→dll_00A7_pickup.c [800FF6A0-800FFB40] ; 0x0A8→dll_00A8_pickup.c [800FFB44-800FFF00] ; 0x0A9→dll_00A9_pickup.c [800FFF04-801002BC] ; 0x0AA→dll_00AA_pickup.c [801002C0-8010054C] |
-| 6 | `main/dll/baddieControl.c` | 8010DB7C-80113F8C | CONTAINER | CARVE | 0x019,0x04D,0x04E,0x04F,0x050,0x051,0x052,0x053,0x054,0x055,0x056,0x057 anom:camera,title | 0x019→dll_0019_baddieControl.c [80112D80-80113F88] ; 0x04D→dll_004D_cameramodenpcspeak.c [8010DD24-8010E518] ; 0x04E→dll_004E_cameramodeworldmap.c [8010E51C-8010F2F4] ; 0x04F→dll_004F_baddieControl.c [8010F2F8-8010F53C] ; 0x050→dll_0050_cameramodecrawl.c [8010F540-8010FA50] ; 0x051→dll_0051_cameramodecannon.c [8010FA54-8010FC70] ; 0x052→dll_0052_cameramodeforcebehind.c [8010FC74-801101E0] ; 0x053→dll_0053_cameramodecloudrunner.c [801101E4-801106B0] ; 0x054→dll_0054_baddieControl.c [801106B4-80110C7C] ; 0x055→dll_0055_cameramodeperv.c [80110C80-80110E2C] ; 0x056→dll_0056_cameramodearwing.c [80110E30-801115E0] ; 0x057→dll_0057_cameramodetitle.c [801115EC-80111D10] |
-| 7 | `main/dll/anim.c` | 801FE118-80206474 | CONTAINER | CARVE | 0x229,0x22A,0x22B,0x22C,0x22D,0x22E,0x230,0x23F,0x240,0x241,0x242,0x243 anom:chuka,doorswitch | 0x229→dll_0229_dfplevelcontrol.c [80204548-80204930] ; 0x22A→dll_022A_dfpobjcreator.c [80204970-80204B50] ; 0x22B→dll_022B_dfptorch.c [802057CC-80205F3C] ; 0x22C→dll_022C_anim.c [80204B5C-802050C0] ; 0x22D→dll_022D_dfpseqpoint.c [8020540C-802057C8] ; 0x22E→dll_022E_dfpdoorswitch.c [802050C4-80205164] ; 0x230→dll_0230_dfpwallbar.c [80205F48-80206470] ; 0x23F→dll_023F_dbegg.c [801FE118-801FF880] ; 0x240→dll_0240_gcrobotblast.c [801FF958-801FF9AC] ; 0x241→dll_0241_drakorenergy.c [801FF9B0-801FFE14] ; 0x242→dll_0242_dbstealerworm.c [8020338C-80203C58] ; 0x243→dll_0243_dbholecontrol1.c [80203F1C-80204094] |
-| 8 | `main/dll/dll_66.c` | 80100550-801007B8 | CONTAINER | CARVE | 0x0AB,0x0AC,0x0AD,0x0AE,0x0AF,0x0B0,0x0B1,0x0B3,0x0B8,0x0B9,0x0BA anom:projdummy,projmagicstream,projmagicemmit1,projroombeam | 0x0AB→dll_00AB_projdummy.c [80100550-80100584] ; 0x0AC→dll_00AC_projmagicstream.c [80100588-801005BC] ; 0x0AD→dll_00AD_projmagicemmit1.c [801005C0-801005F4] ; 0x0AE→dll_00AE_projroombeam.c [801005F8-8010062C] ; 0x0AF→dll_00AF_projlightning1.c [80100630-80100664] ; 0x0B0→dll_00B0_projlightning2.c [80100668-8010069C] ; 0x0B1→dll_00B1_projlightning3.c [801006A0-801006D4] ; 0x0B3→dll_00B3_projlightning4.c [801006D8-8010070C] ; 0x0B8→dll_00B8_projlightning5.c [80100710-80100744] ; 0x0B9→dll_00B9_projlightning7.c [80100748-8010077C] ; 0x0BA→dll_00BA_projlightning6.c [80100780-801007B4] |
-| 9 | `main/dll/TREX_trex.c` | 801E4288-801E67BC | CONTAINER | CARVE | 0x1ED,0x1EF,0x1F0,0x1F1,0x1F2,0x1F3,0x1F4,0x1F5,0x1F6,0x1F7,0x285 anom:shop | 0x1ED→dll_01ED_sbfireball.c [801E4288-801E45A8] ; 0x1EF→dll_01EF_sbcloudball.c [801E45AC-801E4ABC] ; 0x1F0→dll_01F0_sbkytecage.c [801E4B94-801E4F10] ; 0x1F1→dll_01F1_sbseqdoor.c [801E5084-801E5198] ; 0x1F2→dll_01F2_sbcagekyte.c [801E4F50-801E505C] ; 0x1F3→dll_01F3_sbminifire.c [801E519C-801E55B4] ; 0x1F4→dll_01F4_lamp.c [801E59AC-801E5D64] ; 0x1F5→dll_01F5_shipbattle.c [801E55B8-801E59A8] ; 0x1F6→dll_01F6_flag.c [801E5DC4-801E5F70] ; 0x1F7→dll_01F7_sbshipgunbroke.c [801E5F74-801E604C] ; 0x285→dll_0285_spshop.c [801E62F0-801E66D8] |
-| 10 | `main/dll/DIMcannon.c` | 801AE0EC-801B0670 | CONTAINER | CARVE | 0x16D,0x16E,0x16F,0x170,0x171,0x172,0x173,0x1BE,0x1BF anom:lavaball1be,lavaball1bf | 0x16D→dll_016D_imicepillar.c [801AE0EC-801AE140] ; 0x16E→dll_016E_imanimspacecraft.c [801AE144-801AE504] ; 0x16F→dll_016F_imspacethruster.c [801AE508-801AE980] ; 0x170→dll_0170_imspacering.c [801AE984-801AEAE0] ; 0x171→dll_0171_imspaceringgen.c [801AEAE4-801AEE28] ; 0x172→dll_0172_linkblevcontrol.c [801AEE2C-801AF38C] ; 0x173→dll_0173_linklevcontrol.c [801AF848-801AF978] ; 0x1BE→dll_01BE_dimlava.c [801AF9E4-801B02B8] ; 0x1BF→dll_01BF_dimlavaball.c [801B02BC-801B066C] |
-| 11 | `main/dll/savegame.c` | 800FA5D8-800FC5B8 | CONTAINER | CARVE | 0x091,0x092,0x093,0x094,0x095,0x096,0x097,0x098,0x099 | 0x091→dll_0091_savegame.c [800FA5D8-800FA9F4] ; 0x092→dll_0092_savegame.c [800FA9F8-800FADA4] ; 0x093→dll_0093_savegame.c [800FADA8-800FB074] ; 0x094→dll_0094_savegame.c [800FB078-800FB424] ; 0x095→dll_0095_savegame.c [800FB428-800FB71C] ; 0x096→dll_0096_savegame.c [800FB720-800FBA3C] ; 0x097→dll_0097_savegame.c [800FBA40-800FBDEC] ; 0x098→dll_0098_savegame.c [800FBDF0-800FC204] ; 0x099→dll_0099_savegame.c [800FC208-800FC5B4] |
-| 12 | `main/dll/dim_partfx.c` | 800C8008-800D7568 | CONTAINER | CARVE | 0x003,0x026,0x028,0x029,0x02A,0x02B,0x02C,0x02D anom:checkpoint,effect16,effect15,effect13 | 0x003→dll_0003_checkpoint.c [800D5530-800D7548] ; 0x026→dll_0026_effect13.c [800CA3CC-800CA92C] ; 0x028→dll_0028_effect15.c [800C9140-800CA3C8] ; 0x029→dll_0029_effect16.c [800C8008-800C913C] ; 0x02A→dll_002A_effect17.c [800CA930-800CB68C] ; 0x02B→dll_002B_effect18.c [800CB690-800CCF58] ; 0x02C→dll_002C_effect19.c [800CCF5C-800CD42C] ; 0x02D→dll_002D_effect20.c [800CD430-800D552C] |
-| 13 | `main/dll/DIM2snowball.c` | 801B63F4-801B8798 | CONTAINER | CARVE | 0x1CD,0x1CF,0x1D0,0x1D1,0x1D5,0x1D6,0x1D7,0x1D8 | 0x1CD→dll_01CD_dimlevelcontrol.c [801B63F4-801B69AC] ; 0x1CF→dll_01CF_DIM2snowball.c [801B6B44-801B6C28] ; 0x1D0→dll_01D0_dimtricky.c [801B6C2C-801B6D30] ; 0x1D1→dll_01D1_dimtruthhornice.c [801B6D6C-801B70C4] ; 0x1D5→dll_01D5_dim2conveyor.c [801B7154-801B75B4] ; 0x1D6→dll_01D6_DIM2snowball.c [801B75B8-801B7D44] ; 0x1D7→dll_01D7_dim2snowball.c [801B7D48-801B8378] ; 0x1D8→dll_01D8_dim2pathgenerator.c [801B837C-801B8794] |
-| 14 | `main/dll/cfprisonuncle.c` | 8017F4F4-801816F8 | CONTAINER | CARVE | 0x0FE,0x100,0x101,0x102,0x103,0x118 | 0x0FE→dll_00FE_magicplant.c [8017F8FC-8017FD84] ; 0x100→dll_0100_trickywarp.c [8017FF0C-80180218] ; 0x101→dll_0101_trickyguard.c [8018023C-80180314] ; 0x102→dll_0102_staypoint.c [80180338-801804B4] ; 0x103→dll_0103_curvefish.c [80180DC8-80181458] ; 0x118→dll_0118_duster.c [801804E4-80180CAC] |
-| 15 | `main/dll/IMicicle.c` | 801A39B4-801A57E8 | CONTAINER | CARVE | 0x15B,0x15D,0x15F,0x162,0x164,0x166 | 0x15B→dll_015B_cfforcefield.c [801A39B4-801A3E98] ; 0x15D→dll_015D_slidingdoor.c [801A4064-801A41D4] ; 0x15F→dll_015F_attractor.c [801A41D8-801A437C] ; 0x162→dll_0162_cfmagicwall.c [801A4380-801A4520] ; 0x164→dll_0164_cflevelcontrol.c [801A45C4-801A4DB4] ; 0x166→dll_0166_exploded.c [801A5238-801A57E4] |
-| 16 | `main/dll/DIMlavaball.c` | 801A6638-801A8F88 | CONTAINER | CARVE | 0x17E,0x17F,0x180,0x181,0x182,0x183 | 0x17E→dll_017E_mmplevelcontrol.c [801A66FC-801A6C24] ; 0x17F→dll_017F_moonseedbush.c [801A6D5C-801A6F48] ; 0x180→dll_0180_mmpasteroidre.c [801A70DC-801A78C4] ; 0x181→dll_0181_mmptrenchfx.c [801A8A40-801A8E20] ; 0x182→dll_0182_mmpmoonrock.c [801A8148-801A8A3C] ; 0x183→dll_0183_mmpgyservent.c [801A8E24-801A8F84] |
-| 17 | `main/dll/DIM2projrock.c` | 801B8798-801BA224 | CONTAINER | CARVE | 0x1DA,0x1DB,0x1DC,0x1DD,0x1DE,0x1DF | 0x1DA→dll_01DA_DIM2projrock.c [801B8798-801B8B6C] ; 0x1DB→dll_01DB_DIM2projrock.c [801B8B70-801B8F78] ; 0x1DC→dll_01DC_dim2icefloe.c [801B8F7C-801B93F8] ; 0x1DD→dll_01DD_dim2icicle.c [801B93FC-801B980C] ; 0x1DE→dll_01DE_dim2lavacontrol.c [801B9810-801B9B80] ; 0x1DF→dll_01DF_DIM2projrock.c [801B9CB4-801B9EC8] |
-| 18 | `main/dll/Tumbleweed.c` | 80132024-8013939C | CONTAINER | CARVE | 0x031,0x03F,0x040,0x041,0x2C0 anom:titlescreen,credits,warpstoneui,tricky | 0x031→dll_0031_minimap.c [80132024-80133F40] ; 0x03F→dll_003F_Tumbleweed.c [80133F70-80134070] ; 0x040→dll_0040_credits.c [80134098-80134388] ; 0x041→dll_0041_warpstoneui.c [801344F0-80134834] ; 0x2C0→dll_02C0_front.c [80135BC4-8013695C] |
-| 19 | `main/dll/MMP_asteroid.c` | 801948C0-801978A0 | CONTAINER | CARVE | 0x13C,0x13D,0x13E,0x13F,0x140 anom:objfn | 0x13C→dll_013C_xyzanimator.c [80194B5C-80196218] ; 0x13D→dll_013D_explodeanimator.c [801962C8-8019651C] ; 0x13E→dll_013E_dimbossicesmash.c [80196910-80197188] ; 0x13F→dll_013F_texframeanimator.c [8019718C-80197428] ; 0x140→dll_0140_fogcontrol.c [8019742C-801976FC] |
-| 20 | `main/dll/mmp_barrel.c` | 80192394-80194408 | CONTAINER | CARVE | 0x136,0x137,0x138,0x139,0x13A | 0x136→dll_0136_waveanimator.c [80192394-80192A64] ; 0x137→dll_0137_alphaanimator.c [80192A68-801930FC] ; 0x138→dll_0138_groundanimator.c [80193100-80193CBC] ; 0x139→dll_0139_hitanimator.c [80193F28-8019410C] ; 0x13A→dll_013A_visanimator.c [8019423C-80194404] |
-| 21 | `main/dll/DIMsnowball.c` | 801AA558-801AC248 | CONTAINER | CARVE | 0x187,0x188,0x189,0x18A,0x18B | 0x187→dll_0187_ccqueen.c [801AA558-801AA694] ; 0x188→dll_0188_cclightfoot.c [801AA810-801AB438] ; 0x189→dll_0189_ccsharpclawpad.c [801AB468-801AB6D4] ; 0x18A→dll_018A_ccpedstal.c [801AB6F8-801AB9B0] ; 0x18B→dll_018B_cclevcontrol.c [801ABAD4-801ABF48] |
-| 22 | `main/dll/modelfx.c` | 800C291C-800C8008 | CONTAINER | CARVE | 0x023,0x024,0x025,0x027 anom:effect10,effect11,effect12,effect14 | 0x023→dll_0023_effect10.c [800C291C-800C4860] ; 0x024→dll_0024_effect11.c [800C4864-800C56DC] ; 0x025→dll_0025_effect12.c [800C56E0-800C65B0] ; 0x027→dll_0027_effect14.c [800C65B4-800C8004] |
-| 23 | `main/dll/dimenu.c` | 8011CD54-8011D9B0 | CONTAINER | CARVE | 0x037,0x038,0x039,0x03A anom:options,weird,dummy39,dummy3a | 0x037→dll_0037_optionsscreen.c [8011CD54-8011D490] ; 0x038→dll_0038_weirdunusedmenu.c [8011D51C-8011D7A0] ; 0x039→dll_0039_dummy39.c [8011D854-8011D8F4] ; 0x03A→dll_003A_dummy3a.c [8011D900-8011D914] |
-| 24 | `main/dll/DIMlogfire.c` | 801A8F88-801AA558 | CONTAINER | CARVE | 0x184,0x185,0x186,0x25B anom:moon | 0x184→dll_0184_animsharpclaw.c [801A9090-801A9464] ; 0x185→dll_0185_ccgasvent.c [801A9E74-801A9F84] ; 0x186→dll_0186_ccgasventcontrol.c [801AA104-801AA4FC] ; 0x25B→dll_025B_msplantings.c [801A9484-801A9E70] |
-| 25 | `main/dll/scarab.c` | 8015DAE8-80161F0C | CONTAINER | CARVE | 0x0CB,0x0CC,0x0CD,0x0CE anom:grimble | 0x0CB→dll_00CB_scarab.c [80160CB4-801610A4] ; 0x0CC→dll_00CC_chukchuk.c [8015F6C4-8015FBE8] ; 0x0CD→dll_00CD_iceball.c [8015FF64-801601C0] ; 0x0CE→dll_00CE_scarab.c [8015EE98-8015F500] |
-| 26 | `main/dll/DIM2flameburst.c` | 801B3DE4-801B63F4 | CONTAINER | CARVE | 0x1CA,0x1CB,0x1CC,0x1CE anom:explosion | 0x1CA→dll_01CA_dimexplosion.c [801B42C8-801B56B8] ; 0x1CB→dll_01CB_dimwooddoor2.c [801B57BC-801B5A24] ; 0x1CC→dll_01CC_dimmagicbridge.c [801B6164-801B63F0] ; 0x1CE→dll_01CE_DIM2flameburst.c [801B5A28-801B5D44] |
-| 27 | `main/dll/cfguardian.c` | 8017AC2C-8017C294 | CONTAINER | CARVE | 0x0FB,0x10F,0x110,0x111 anom:lock | 0x0FB→dll_00FB_pressureswitchfb.c [8017AD88-8017B3F8] ; 0x10F→dll_010F_mmpbridge.c [8017BB80-8017BCF4] ; 0x110→dll_0110_door.c [8017B8DC-8017B9CC] ; 0x111→dll_0111_doorlock.c [8017BDAC-8017C178] |
-| 28 | `main/dll/dll_00F3_flameblast.c` | 80176FC4-80178338 | CONTAINER | CARVE | 0x0F0,0x0F1,0x0F2,0x0F3 | 0x0F0→dll_00F0_warppoint.c [80177030-801776C0] ; 0x0F1→dll_00F1_invhit.c [8017779C-80177E24] ; 0x0F2→dll_00F2_iceblast.c [80177E28-80178048] ; 0x0F3→dll_00F3_flameblast.c [80178194-801782C8] |
-| 29 | `main/dll/DIMboulder.c` | 801AC248-801AE0EC | CONTAINER | CARVE | 0x169,0x16A,0x16B,0x16C | 0x169→dll_0169_imicemountain.c [801AC748-801AC9C0] ; 0x16A→dll_016A_crrockfall.c [801ACDC8-801AD434] ; 0x16B→dll_016B_magiclight.c [801AD52C-801AD7E0] ; 0x16C→dll_016C_DIMboulder.c [801ADB70-801AE0E8] |
-| 30 | `main/dll/DIMExplosion.c` | 801B13E8-801B1FF4 | CONTAINER | CARVE | 0x1C2,0x1C3,0x1C4,0x1C5 | 0x1C2→dll_01C2_dimsnowball1c2.c [801B13E8-801B15D4] ; 0x1C3→dll_01C3_dimgate.c [801B15E0-801B17F0] ; 0x1C4→dll_01C4_dimicewall.c [801B1820-801B1AB8] ; 0x1C5→dll_01C5_dimbarrier.c [801B1B40-801B1D80] |
-| 31 | `main/dll/rope.c` | 801BF048-801C04B8 | CONTAINER | CARVE | 0x1E3,0x1E4,0x1E5,0x1E6 | 0x1E3→dll_01E3_dimbossgut2.c [801BF2D4-801BF8D4] ; 0x1E4→dll_01E4_magicmaker.c [801BFFF4-801C02B4] ; 0x1E5→dll_01E5_dimbossspit.c [801BFB60-801BFFF0] ; 0x1E6→dll_01E6_dimbosscrackpar.c [801C0364-801C04B4] |
-| 32 | `main/dll/DBstealerworm.c` | 801E1588-801E341C | CONTAINER | CARVE | 0x1E8,0x1E9,0x1EA,0x1EB | 0x1E8→dll_01E8_sbgalleon.c [801E1DF4-801E256C] ; 0x1E9→dll_01E9_sbpropeller.c [801E2578-801E2A88] ; 0x1EA→dll_01EA_sbshiphead.c [801E2B28-801E324C] ; 0x1EB→dll_01EB_sbshipmast.c [801E32BC-801E3418] |
-| 33 | `main/dll/df_partfx.c` | 800D7568-800D9DCC | CONTAINER | CARVE | 0x004,0x00F,0x016 anom:dummy04,player,screen,screenrectfn | 0x004→dll_0004_dummy04.c [800D7FB4-800D801C] ; 0x00F→dll_000F_player.c [800D8020-800D9DC8] ; 0x016→dll_0016_screentransition.c [800D7A7C-800D7C44] |
-| 34 | `main/dll/objfsa.c` | 800D9DCC-800E5434 | CONTAINER | CARVE | 0x010,0x012,0x014 anom:rom,curves,ui,dummy12 | 0x010→dll_0010_uicontroller.c [800D9DCC-800D9EB0] ; 0x012→dll_0012_dummy12.c [800D9EB4-800D9EE4] ; 0x014→dll_0014_romcurve.c [800E0134-800E5430] |
-| 35 | `main/dll/dll_5B.c` | 8010847C-8010A590 | CONTAINER | CARVE | 0x044,0x046,0x048 anom:camera,first | 0x044→dll_0044_cameramodeviewfinder.c [80108AD0-80109744] ; 0x046→dll_0046_cameramodedebug.c [80109748-80109B00] ; 0x048→dll_0048_cameramodestatic.c [80109C14-8010A100] |
-| 36 | `main/dll/screens.c` | 800FC5B8-800FD744 | CONTAINER | CARVE | 0x09A,0x09B,0x09C | 0x09A→dll_009A_screens.c [800FC5B8-800FCF38] ; 0x09B→dll_009B_screens.c [800FCF3C-800FD2B0] ; 0x09C→dll_009C_screens.c [800FD2B4-800FD740] |
-| 37 | `main/dll/xyzanimator.c` | 80169EF4-8016B230 | CONTAINER | CARVE | 0x0D8,0x0D9,0x0DA | 0x0D8→dll_00D8_pinponspike.c [8016A058-8016A3C4] ; 0x0D9→dll_00D9_pollen.c [8016A3C8-8016A8DC] ; 0x0DA→dll_00DA_pollenfragment.c [8016A8E0-8016B22C] |
-| 38 | `main/dll/alphaanim.c` | 8017C294-8017CF90 | CONTAINER | CARVE | 0x112,0x113,0x114 | 0x112→dll_0112_seqobject.c [8017C3F8-8017C6AC] ; 0x113→dll_0113_seqobj2.c [8017C87C-8017CBD8] ; 0x114→dll_0114_immultiseq.c [8017CCC0-8017CF8C] |
-| 39 | `main/dll/mmp_asteroid_re.c` | 80191A70-80191F2C | CONTAINER | CARVE | 0x12E,0x12F,0x131 | 0x12E→dll_012E_cflightwall.c [80191A70-80191B5C] ; 0x12F→dll_012F_barrelpad.c [80191B60-80191CFC] ; 0x131→dll_0131_cfdoorlight.c [80191D00-80191F28] |
-| 40 | `main/dll/MMP_moonrock.c` | 801978A0-80198FA4 | CONTAINER | CARVE | 0x132,0x133,0x141 | 0x132→dll_0132_waterfallspray.c [80197DA8-801980F0] ; 0x133→dll_0133_sfxplayer.c [80198194-80198954] ; 0x141→dll_0141_lightning.c [801978A0-80197C54] |
-| 41 | `main/dll/creator1C4.c` | 801C70F0-801C835C | CONTAINER | CARVE | 0x192,0x193,0x194 | 0x192→dll_0192_gpshshrine.c [801C75A8-801C8080] ; 0x193→dll_0193_gpshobjcreator.c [801C8084-801C82C4] ; 0x194→dll_0194_gpshscene.c [801C82C8-801C8358] |
-| 42 | `main/dll/shrine1CE.c` | 801CBA98-801CCFA4 | CONTAINER | CARVE | 0x19B,0x19C,0x19D | 0x19B→dll_019B_shrine1CE.c [801CBD14-801CC728] ; 0x19C→dll_019C_shrine1CE.c [801CC72C-801CC994] ; 0x19D→dll_019D_shrine1CE.c [801CC998-801CCFA0] |
-| 43 | `main/dll/creator1D6.c` | 801CF78C-801CFD68 | CONTAINER | CARVE | 0x1A2,0x1A3,0x1A4 | 0x1A2→dll_01A2_nwtricky.c [801CF7B8-801CFB04] ; 0x1A3→dll_01A3_nwanimice.c [801CFB2C-801CFBB0] ; 0x1A4→dll_01A4_nwice.c [801CFBB4-801CFD44] |
-| 44 | `main/dll/DRearthwalk.c` | 801D9B1C-801DAFA4 | CONTAINER | CARVE | 0x1B1,0x1B2,0x1B3 | 0x1B1→dll_01B1_shstaff.c [801D9B1C-801DA608] ; 0x1B2→dll_01B2_shstaffhaze.c [801DA8C4-801DA924] ; 0x1B3→dll_01B3_shbeacon.c [801DA9E0-801DAE90] |
-| 45 | `main/dll/DRcloudrunner.c` | 801DBFA0-801DD1A8 | CONTAINER | CARVE | 0x1B7,0x1B8,0x1B9 | 0x1B7→dll_01B7_scmusictree.c [801DC230-801DC8D0] ; 0x1B8→dll_01B8_sctotempole.c [801DC9E4-801DCC6C] ; 0x1B9→dll_01B9_sccloudrunnera.c [801DCC70-801DD16C] |
-| 46 | `main/dll/DBrockfall.c` | 801DF4AC-801DFA28 | CONTAINER | CARVE | 0x142,0x143,0x144 | 0x142→dll_0142_felevcontrol.c [801DF934-801DF9A8] ; 0x143→dll_0143_feseqobject.c [801DF84C-801DF930] ; 0x144→dll_0144_DBrockfall.c [801DF9BC-801DFA24] |
-| 47 | `main/dll/WClaser.c` | 801EFF7C-801F0AE4 | CONTAINER | CARVE | 0x1F8,0x1FA,0x1FB | 0x1F8→dll_01F8_wmgalleon.c [801F01BC-801F06D4] ; 0x1FA→dll_01FA_wmseqobject.c [801F0724-801F08FC] ; 0x1FB→dll_01FB_WClaser.c [801F0940-801F0AE0] |
-| 48 | `main/dll/dll_003E_dummy3e.c` | 80131540-80132024 | CONTAINER | CARVE | 0x03D,0x03E anom:title | 0x03D→dll_003D_titlemenuitem.c [80131570-80131FE0] ; 0x03E→dll_003E_dummy3e.c [80132008-80132020] |
-| 49 | `main/dll/camdrakor.c` | 8010BF08-8010D33C | CONTAINER | CARVE | 0x049,0x04A anom:camera | 0x049→dll_0049_cameramodecombat.c [8010C064-8010CEBC] ; 0x04A→dll_004A_cameramodeshipbattle.c [8010CEC0-8010D338] |
-| 50 | `main/dll/wallanimator.c` | 80169360-80169EF4 | CONTAINER | CARVE | 0x0D6,0x0D7 anom:kaldachompme | 0x0D6→dll_00D6_kaldachomme.c [8016958C-801696D0] ; 0x0D7→dll_00D7_kaldachompspit.c [8016980C-80169EF0] |
-| 51 | `main/dll/DRpushcart.c` | 801E76A0-801E8EA4 | CONTAINER | CARVE | 0x284,0x286 anom:shopkeeper,shopkeeperrotatefn | 0x284→dll_0284_shopitem.c [801E88A8-801E8EA0] ; 0x286→dll_0286_spshopkeeper.c [801E7FB4-801E82B4] |
-| 52 | `main/dll/TrickyCurve.c` | 8020718C-80208098 | CONTAINER | CARVE | 0x231,0x232 anom:sfxplayer | 0x231→dll_0231_dfpforceaw.c [8020756C-80207688] ; 0x232→dll_0232_dfprotatep.c [80207C24-80208094] |
-| 53 | `main/dll/crate2.c` | 802081F4-80208508 | CONTAINER | CARVE | 0x233,0x234 anom:dfperchwitch | 0x233→dll_0233_dfpstatue1.c [802083A8-80208488] ; 0x234→dll_0234_dfpperchsw.c [8020848C-80208504] |
-| 54 | `main/dll/projball1D8.c` | 801CFD68-801D083C | CONTAINER | CARVE | 0x1A5,0x1A6 anom:edible | 0x1A5→dll_01A5_nwlevcontrol.c [801CFEC4-801D04E0] ; 0x1A6→dll_01A6_shtricky.c [801D069C-801D07C0] |
-| 55 | `main/dll/pressureSwitch.c` | 8014E1DC-8014F620 | CONTAINER | CARVE | 0x0DF,0x0E0 | 0x0DF→dll_00DF_hagabon.c [8014E734-8014EE88] ; 0x0E0→dll_00E0_swarmbaddie.c [8014F1E4-8014F61C] |
-| 56 | `main/dll/barrel.c` | 80161F0C-801631C8 | CONTAINER | CARVE | 0x0CF,0x0D0 | 0x0CF→dll_00CF_cannonclaw.c [80163094-801631C4] ; 0x0D0→dll_00D0_grimble.c [80162AA0-80162FA0] |
-| 57 | `main/dll/lightning.c` | 80173224-80174A80 | CONTAINER | CARVE | 0x0EE,0x0FF | 0x0EE→dll_00EE_effectbox.c [80173F80-80174434] ; 0x0FF→dll_00FF_magicdust.c [80173224-80173AEC] |
-| 58 | `main/dll/tFrameAnimator.c` | 8017A00C-8017A350 | CONTAINER | CARVE | 0x0F6,0x0F8 | 0x0F6→dll_00F6_area.c [8017A00C-8017A044] ; 0x0F8→dll_00F8_levelname.c [8017A0C4-8017A34C] |
-| 59 | `main/dll/screenOverlay.c` | 8017A350-8017AC2C | CONTAINER | CARVE | 0x0F9,0x0FA | 0x0F9→dll_00F9_projectileswitch.c [8017A350-8017A8E8] ; 0x0FA→dll_00FA_invisiblehitswitch.c [8017A8EC-8017AB20] |
-| 60 | `main/dll/groundAnimator.c` | 8017CF90-8017D818 | CONTAINER | CARVE | 0x115,0x116 | 0x115→dll_0115_groundAnimator.c [8017D06C-8017D378] ; 0x116→dll_0116_wmcolumn.c [8017D37C-8017D814] |
-| 61 | `main/dll/texscroll_container.c` | 80191F2C-80192394 | CONTAINER | CARVE | 0x134,0x135 | 0x134→dll_0134_texscroll2.c [80191F2C-801922E0] ; 0x135→dll_0135_texscroll.c [801922E4-80192390] |
-| 62 | `main/dll/hightop.c` | 801993B0-8019AE3C | CONTAINER | CARVE | 0x126,0x145 | 0x126→dll_0126_trigger.c [8019A300-8019AA78] ; 0x145→dll_0145_cloudprisoncontrol.c [8019AA7C-8019AE30] |
-| 63 | `main/dll/IMspacecraft.c` | 801A57E8-801A6638 | CONTAINER | CARVE | 0x167,0x17D | 0x167→dll_0167_spiritdoorlock.c [801A57E8-801A5D84] ; 0x17D→dll_017D_rollingbarrel.c [801A5F70-801A662C] |
-| 64 | `main/dll/DIMlavasmash.c` | 801B0670-801B13E8 | CONTAINER | CARVE | 0x1C0,0x1C1 | 0x1C0→dll_01C0_dimlogfire.c [801B07B0-801B0BE8] ; 0x1C1→dll_01C1_dimsnowball.c [801B0DD4-801B13E4] |
-| 65 | `main/dll/DIMlevcontrol.c` | 801B2550-801B3768 | CONTAINER | CARVE | 0x1C6,0x1C7 | 0x1C6→dll_01C6_dimcannon.c [801B2B30-801B3340] ; 0x1C7→dll_01C7_dimlavasmash.c [801B3570-801B3764] |
-| 66 | `main/dll/DIM2conveyor.c` | 801B3768-801B3DE4 | CONTAINER | CARVE | 0x1C8,0x1C9 | 0x1C8→dll_01C8_dimbridgecogmai.c [801B37D0-801B3A64] ; 0x1C9→dll_01C9_dimdismountpoint.c [801B3A68-801B3DE0] |
-| 67 | `main/dll/DFcradle.c` | 801C04B8-801C0E60 | CONTAINER | CARVE | 0x174,0x1E7 | 0x174→dll_0174_ccriverflow.c [801C0A60-801C0B34] ; 0x1E7→dll_01E7_dimbossfire.c [801C04B8-801C0A5C] |
-| 68 | `main/dll/dll_017A_spiritprize.c` | 801C2914-801C3B68 | CONTAINER | CARVE | 0x178,0x17A | 0x178→dll_0178_dfshshrine.c [801C2DC4-801C3614] ; 0x17A→dll_017A_spiritprize.c [801C3618-801C3B64] |
-| 69 | `main/dll/shrine.c` | 801C53A0-801C5990 | CONTAINER | CARVE | 0x18D,0x18E | 0x18D→dll_018D_mmshscales.c [801C53A0-801C5788] ; 0x18E→dll_018E_mmshwaterspike.c [801C578C-801C598C] |
-| 70 | `main/dll/shrine1C2.c` | 801C5990-801C70F0 | CONTAINER | CARVE | 0x18F,0x191 | 0x18F→dll_018F_ecshshrine.c [801C5E78-801C6E08] ; 0x191→dll_0191_ecshcreator.c [801C6E0C-801C70EC] |
-| 71 | `main/dll/cup1C3.c` | 801C9660-801CA718 | CONTAINER | CARVE | 0x196,0x197 | 0x196→dll_0196_dbshsymbol.c [801C9C34-801C9DE4] ; 0x197→dll_0197_cup1C3.c [801C9E54-801CA714] |
-| 72 | `main/dll/dimmagicbridge.c` | 801CA9C0-801CBA98 | CONTAINER | CARVE | 0x199,0x19A | 0x199→dll_0199_dimmagicbridge.c [801CACD4-801CB7A4] ; 0x19A→dll_019A_dimmagicbridge.c [801CB7A8-801CBA94] |
-| 73 | `main/dll/SHrocketmushroom.c` | 801D3378-801D4364 | CONTAINER | CARVE | 0x1AA,0x1AB | 0x1AA→dll_01AA_bombplantspore.c [801D3378-801D3E2C] ; 0x1AB→dll_01AB_bombplantingspot.c [801D3FF4-801D4170] |
-| 74 | `main/dll/CRsnowbike.c` | 801DAFA4-801DBFA0 | CONTAINER | CARVE | 0x1B4,0x1B6 | 0x1B4→dll_01B4_shemptytumblew.c [801DAFA4-801DAFDC] ; 0x1B6→dll_01B6_sclevelcontrol.c [801DB1EC-801DBF9C] |
-| 75 | `main/dll/platform1.c` | 801DE430-801DF4AC | CONTAINER | CARVE | 0x1BC,0x1BD | 0x1BC→dll_01BC_sctotemstrength.c [801DEE54-801DF10C] ; 0x1BD→dll_01BD_paymentkiosk.c [801DF304-801DF4A8] |
-| 76 | `main/dll/TREX_levelcontrol.c` | 801E341C-801E4288 | CONTAINER | CARVE | 0x1EC,0x1EE | 0x1EC→dll_01EC_sbshipgun.c [801E341C-801E3D14] ; 0x1EE→dll_01EE_sbcannonball.c [801E3D30-801E4284] |
-| 77 | `main/dll/DRsimplehuman.c` | 801E9328-801E9C00 | CONTAINER | CARVE | 0x288,0x289 | 0x288→dll_0288_spdrape.c [801E9328-801E97D8] ; 0x289→dll_0289_spitembeam.c [801E97DC-801E9918] |
-| 78 | `main/dll/dll_0000_baby_snowworm.c` | 80128120-8012FECC | MISLABELED | FORENSIC | 0x000 anom:gameui,pause,viewfn,pausemenufn | dll_0000_gameui.c |
-| 79 | `main/dll/dll_003C_TumbleweedBush.c` | 80130124-80131540 | MISLABELED | FORENSIC | 0x03C anom:link,linkdrawfn,titlescreenfn | dll_003C_link.c |
-| 80 | `main/dll/dll_0034_n_filemenu.c` | 8011611C-8011730C | MISLABELED | FORENSIC | 0x034 anom:title | dll_0034_titlemenu.c |
-| 81 | `main/dll/dll_0032_n_rareware.c` | 801159E4-80115F20 | MISLABELED | FORENSIC | 0x032 anom:title | dll_0032_titlescreeninit.c |
-| 82 | `main/dll/cutCam.c` | 80103524-801046F4 | HELPER-TU | RENAME-ONLY | — anom:camcontrol,camerafn,cammovefn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 83 | `main/dll/dll_3B.c` | 8011730C-801175A4 | HELPER-TU | RENAME-ONLY | — anom:audio,pop,push,attract | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 84 | `main/dll/dll_BB.c` | 80101980-8010210C | HELPER-TU | RENAME-ONLY | — anom:camera,camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 85 | `main/dll/maybeTemplate.c` | 80121C4C-801242DC | HELPER-TU | RENAME-ONLY | — anom:hud,pause,minimapfn,trickybitfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 86 | `main/dll/dll_3E.c` | 8011846C-80118C88 | HELPER-TU | RENAME-ONLY | — anom:thp,prepare,play | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 87 | `main/dll/dll_223.c` | 801BDCF8-801BE19C | HELPER-TU | RENAME-ONLY | — anom:di | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 88 | `main/dll/DFbarrelanim.c` | 801C1238-801C1740 | HELPER-TU | RENAME-ONLY | — anom:dfropenode | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 89 | `main/dll/balloonBaddie.c` | 801242DC-80125424 | HELPER-TU | RENAME-ONLY | — anom:modelfn,cmenurenderfn,hud,cmenurotatefn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 90 | `main/dll/dll_44.c` | 80118C88-80119000 | HELPER-TU | RENAME-ONLY | — anom:attract | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 91 | `main/dll/dll_4E.c` | 8011BFC8-8011C5CC | HELPER-TU | RENAME-ONLY | — anom:options | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 92 | `main/dll/MMP_gyservent.c` | 80198FA4-801993B0 | HELPER-TU | RENAME-ONLY | — anom:objfn,objseqmovefn,objseqfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 93 | `main/dll/dll_1E7.c` | 801D4CD0-801D5174 | HELPER-TU | RENAME-ONLY | — anom:s | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 94 | `main/dll/dll_8B.c` | 80100A90-80100AA4 | HELPER-TU | RENAME-ONLY | — anom:camera | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 95 | `main/dll/dll_B6.c` | 801010B4-80101690 | HELPER-TU | RENAME-ONLY | — anom:camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 96 | `main/dll/dll_B8.c` | 801018A8-80101980 | HELPER-TU | RENAME-ONLY | — anom:first,camera | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 97 | `main/dll/dll_BC.c` | 8010210C-8010224C | HELPER-TU | RENAME-ONLY | — anom:camera,camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 98 | `main/dll/camshipbattle5C.c` | 8010A590-8010AEA8 | HELPER-TU | RENAME-ONLY | — anom:pathcam | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 99 | `main/dll/swarmBaddie.c` | 80125424-801262CC | HELPER-TU | RENAME-ONLY | — anom:gametextfn,pause | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 100 | `main/dll/wispBaddie.c` | 801262CC-80128120 | HELPER-TU | RENAME-ONLY | — anom:pause,pausemenudrawstatus | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 101 | `main/dll/dll_DF.c` | 8013B368-8013D8F0 | HELPER-TU | RENAME-ONLY | — anom:trickyfn,tricky | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 102 | `main/dll/animobjD2.c` | 8013E0D0-8013F100 | HELPER-TU | RENAME-ONLY | — anom:tricky | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 103 | `main/dll/DIM2lift.c` | 801BA224-801BB598 | HELPER-TU | RENAME-ONLY | — anom:dim2icicle | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 104 | `main/dll/dll_A6.c` | 80100AA4-80100C90 | HELPER-TU | RENAME-ONLY | — anom:camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 105 | `main/dll/dll_B3.c` | 80100DCC-80100FA0 | HELPER-TU | RENAME-ONLY | — anom:lock | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 106 | `main/dll/dll_B4.c` | 80100FA0-801010B4 | HELPER-TU | RENAME-ONLY | — anom:lock | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 107 | `main/dll/dll_B7.c` | 80101690-801018A8 | HELPER-TU | RENAME-ONLY | — anom:camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 108 | `main/dll/dll_43.c` | 80119FAC-8011A0DC | HELPER-TU | RENAME-ONLY | — anom:save | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 109 | `main/dll/dll_4D.c` | 8011C5CC-8011C7B4 | HELPER-TU | RENAME-ONLY | — anom:language | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 110 | `main/dll/MMP_cratercritter.c` | 8013D8F0-8013DB3C | HELPER-TU | RENAME-ONLY | — anom:trickyfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 111 | `main/dll/MMP_critterspit.c` | 8013DB3C-8013DC88 | HELPER-TU | RENAME-ONLY | — anom:trickyfoodfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 112 | `main/dll/DIM2icicle.c` | 801BB598-801BCB34 | HELPER-TU | RENAME-ONLY | — anom:warpdarkicemines | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 113 | `main/dll/SClantern.c` | 801D6C04-801D6D98 | HELPER-TU | RENAME-ONLY | — anom:playerfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 114 | `main/dll/DRhightop.c` | 801EAE4C-801EC1AC | HELPER-TU | RENAME-ONLY | — anom:snow | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 115 | `main/dll/BWalphaanim.c` | 801EE088-801EE0C0 | HELPER-TU | RENAME-ONLY | — anom:sb | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 116 | `main/dll/dll_8C.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 117 | `main/dll/dll_8D.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 118 | `main/dll/dll_8F.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 119 | `main/dll/dll_90.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 120 | `main/dll/dll_92.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 121 | `main/dll/dll_93.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 122 | `main/dll/dll_95.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 123 | `main/dll/dll_96.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 124 | `main/dll/dll_98.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 125 | `main/dll/dll_99.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 126 | `main/dll/dll_9B.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 127 | `main/dll/dll_9C.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 128 | `main/dll/dll_9E.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 129 | `main/dll/dll_9F.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 130 | `main/dll/dll_A1.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 131 | `main/dll/dll_A2.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 132 | `main/dll/dll_A4.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 133 | `main/dll/dll_A5.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 134 | `main/dll/dll_A7.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 135 | `main/dll/dll_A8.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 136 | `main/dll/dll_AA.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 137 | `main/dll/dll_AB.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 138 | `main/dll/dll_AD.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 139 | `main/dll/dll_AE.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 140 | `main/dll/dll_B1.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 141 | `main/dll/dll_B2.c` | 80100C90-80100DCC | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 142 | `main/dll/dll_BD.c` | 8010224C-8010224C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 143 | `main/dll/dll_BF.c` | 8010224C-8010224C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 144 | `main/dll/dll_C4.c` | 8010224C-8010224C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 145 | `main/dll/dll_53.c` | 80106654-80106654 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 146 | `main/dll/dll_60.c` | 8010BF08-8010BF08 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 147 | `main/dll/dll_40.c` | 80118C88-80118C88 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 148 | `main/dll/dll_48.c` | 8011B5D4-8011B5D4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 149 | `main/dll/dll_49.c` | 8011B5D4-8011B5D4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 150 | `main/dll/dll_4B.c` | 8011BFC8-8011BFC8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 151 | `main/dll/dll_D3.c` | 8013F100-8013F100 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 152 | `main/dll/weaponE6.c` | 8013F100-8013FFB8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 153 | `main/dll/newSeqObj.c` | 801504F8-801511E8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 154 | `main/dll/seqObj11D.c` | 801511E8-80152040 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 155 | `main/dll/seqObj11E.c` | 80152040-80152EC0 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 156 | `main/dll/magicPlant.c` | 80152EC0-801540A0 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 157 | `main/dll/fireflyLantern.c` | 80154870-8015536C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 158 | `main/dll/landedArwing.c` | 8016558C-801659B8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 159 | `main/dll/dll_147.c` | 8017AC2C-8017AC2C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 160 | `main/dll/holoPoint.c` | 80191F2C-80191F2C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 161 | `main/dll/DIMwooddoor.c` | 801B1FF4-801B2550 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 162 | `main/dll/DIMbossspit.c` | 801BE19C-801BE44C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 163 | `main/dll/DFpulley.c` | 801C0E60-801C0FD8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 164 | `main/dll/DFbarrel.c` | 801C0FD8-801C1238 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 165 | `main/dll/dll_1DC.c` | 801D1BFC-801D1BFC | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 166 | `main/dll/SHthorntail.c` | 801D5174-801D58E4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 167 | `main/dll/dll_1E8.c` | 801D5174-801D5174 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 168 | `main/dll/SCchieflightfoot.c` | 801D6914-801D6C04 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 169 | `main/dll/SPdrape.c` | 801D981C-801D981C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 170 | `main/dll/DBbullet.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 171 | `main/dll/DBlightgo.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 172 | `main/dll/DBpointmum.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 173 | `main/dll/DBprotection.c` | 801DFA28-801E1588 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 174 | `main/dll/DBwaterflow.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 175 | `main/dll/DBdustgeezer.c` | 801E1588-801E1588 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 176 | `main/dll/TREX_Lazerwall.c` | 801E67BC-801E6B10 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 177 | `main/dll/DRlaserturret.c` | 801E6B10-801E76A0 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 178 | `main/dll/DRcloudcage.c` | 801E9C00-801EA854 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 179 | `main/dll/DRshackle.c` | 801EA854-801EAE4C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 180 | `main/dll/DRpickup.c` | 801EC1AC-801EC7A0 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 181 | `main/dll/WCpushblock.c` | 801EE0C0-801EE668 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 182 | `main/dll/WCbeacon.c` | 801EF360-801EF360 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 183 | `main/dll/WCdial.c` | 801EFF7C-801EFF7C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 184 | `main/dll/LGTcontrollight.c` | 801F4C04-801F4ECC | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| 185 | `main/light.c` | 801FB9AC-801FD4A8 | ENGINE-HOST | FORENSIC | 0x21E,0x21F,0x220,0x221,0x222,0x223,0x224 anom:spellstoneusefn | engine/SDK host of DLL(s) 0x21E,0x21F,0x220,0x221,0x222,0x223,0x224 |
-| 186 | `main/main.c` | 801FD4A8-801FE118 | ENGINE-HOST | FORENSIC | 0x225,0x226,0x227,0x228 anom:return1 | engine/SDK host of DLL(s) 0x225,0x226,0x227,0x228 |
-| 187 | `main/sky.c` | 80088758-8008EE18 | ENGINE-HOST | FORENSIC | 0x005,0x006 anom:envfxfn,getskycolorfn,envfxactfn,playerenvfxfn | engine/SDK host of DLL(s) 0x005,0x006 |
-| 188 | `main/newclouds.c` | 8008EE18-80094494 | ENGINE-HOST | FORENSIC | 0x007 anom:snow,lightning,cloud,mm | engine/SDK host of DLL(s) 0x007 |
-| 189 | `main/objseq.c` | 80080DE8-80088758 | ENGINE-HOST | FORENSIC | 0x002 anom:rom,animated,seq | engine/SDK host of DLL(s) 0x002 |
-| 190 | `main/dfplightni.c` | 80209958-80209FE0 | ENGINE-HOST | FORENSIC | 0x23B anom:dfppowersl | engine/SDK host of DLL(s) 0x23B |
-| 191 | `dolphin/MSL_C/PPCEABI/bare/H/gamecube.c` | 80094494-800944A0 | ENGINE-HOST | FORENSIC | 0x009 | engine/SDK host of DLL(s) 0x009 |
-| 192 | `main/textblock.c` | 80209810-802098B4 | ENGINE-HOST | FORENSIC | 0x239 | engine/SDK host of DLL(s) 0x239 |
-| 193 | `main/platform1.c` | 802098B4-80209958 | ENGINE-HOST | FORENSIC | 0x23A | engine/SDK host of DLL(s) 0x23A |
-| 194 | `main/dfppowersl.c` | 80209FE0-8020A1C8 | ENGINE-HOST | FORENSIC | 0x23C | engine/SDK host of DLL(s) 0x23C |
-| 195 | `main/worldasteroids.c` | 8020C278-8020C5EC | ENGINE-HOST | FORENSIC | 0x1D4 | engine/SDK host of DLL(s) 0x1D4 |
-| 196 | `main/worldplanet.c` | 8020C964-8020D9E4 | ENGINE-HOST | FORENSIC | 0x1D2 | engine/SDK host of DLL(s) 0x1D2 |
-| 197 | `main/worldobj.c` | 8020D9E4-8020F214 | ENGINE-HOST | FORENSIC | 0x1D3 | engine/SDK host of DLL(s) 0x1D3 |
-| 198 | `main/snowclaw.c` | 8020F214-802106C0 | ENGINE-HOST | FORENSIC | 0x25C | engine/SDK host of DLL(s) 0x25C |
-| 199 | `main/crcloudrace.c` | 802106C0-80210BE8 | ENGINE-HOST | FORENSIC | 0x25D | engine/SDK host of DLL(s) 0x25D |
-| 200 | `main/spellstone.c` | 80210BF0-80210E8C | ENGINE-HOST | FORENSIC | 0x25E | engine/SDK host of DLL(s) 0x25E |
-| 201 | `main/crfueltank.c` | 80210E8C-802110F8 | ENGINE-HOST | FORENSIC | 0x25F | engine/SDK host of DLL(s) 0x25F |
-| 202 | `main/proximitymine_update.c` | 8021122C-80211C24 | ENGINE-HOST | FORENSIC | 0x260 | engine/SDK host of DLL(s) 0x260 |
+| 1 | `main/dll/dim2conveyor.c` | 801B3768-801B3DE4 | CONTAINER | CARVE | 0x1C8,0x1C9 | 0x1C8→dll_01C8_dimbridgecogmai.c [801B37D0-801B3A64] ; 0x1C9→dll_01C9_dimdismountpoint.c [801B3A68-801B3DE0] |
+| 2 | `main/dll/DRsimplehuman.c` | 801E9328-801E9C00 | CONTAINER | CARVE | 0x288,0x289 | 0x288→dll_0288_spdrape.c [801E9328-801E97D8] ; 0x289→dll_0289_spitembeam.c [801E97DC-801E9918] |
+| 3 | `main/dll/dll_0000_baby_snowworm.c` | 80128120-8012FECC | MISLABELED | FORENSIC | 0x000 anom:gameui,pause,viewfn,pausemenufn | dll_0000_gameui.c |
+| 4 | `main/dll/dll_003C_TumbleweedBush.c` | 80130124-80131540 | MISLABELED | FORENSIC | 0x03C anom:link,linkdrawfn,titlescreenfn | dll_003C_link.c |
+| 5 | `main/dll/dll_0034_n_filemenu.c` | 8011611C-8011730C | MISLABELED | FORENSIC | 0x034 anom:title | dll_0034_titlemenu.c |
+| 6 | `main/dll/dll_0032_n_rareware.c` | 801159E4-80115F20 | MISLABELED | FORENSIC | 0x032 anom:title | dll_0032_titlescreeninit.c |
+| 7 | `main/dll/dll_0014_unk.c` | 800D9EE8-800E5434 | MISLABELED | RENAME-ONLY | 0x014 anom:rom,curves,objfsa,walk | main/dll/dll_0014_romcurve.c |
+| 8 | `main/dll/dll_000F_unk.c` | 800D8020-800D9DCC | MISLABELED | RENAME-ONLY | 0x00F anom:player | main/dll/dll_000F_player.c |
+| 9 | `main/dll/dll_02C0_frontfox.c` | 80134870-80136A40 | MISLABELED | RENAME-ONLY | 0x2C0 anom:titlescreen,title,titlescreenfn,credits | main/dll/baddie/dll_02C0_front.c |
+| 10 | `main/dll/dll_01BE_dimlavaball.c` | 801AF9E4-801B02BC | MISLABELED | RENAME-ONLY | 0x1BE anom:lavaball1be | main/dll/DIM/dll_01BE_dimlava.c |
+| 11 | `main/dll/dll_0286_spshopkeepe.c` | 801E76A0-801E832C | MISLABELED | RENAME-ONLY | 0x286 anom:shopkeeper,shopkeeperrotatefn | main/dll/DR/dll_0286_spshopkeeper.c |
+| 12 | `main/dll/dll_01CA_dimexplosio.c` | 801B3DE4-801B57BC | MISLABELED | RENAME-ONLY | 0x1CA anom:explosion | main/dll/DIM/dll_01CA_dimexplosion.c |
+| 13 | `main/dll/dll_022E_dfpdoorswi.c` | 802050C4-80205168 | MISLABELED | RENAME-ONLY | 0x22E anom:doorswitch | main/dll/DF/dll_022E_dfpdoorswitch.c |
+| 14 | `main/dll/dll_00E2_sword.c` | 8016CEE8-8016F16C | MISLABELED | RENAME-ONLY | 0x0E2 anom:quakespellfn,superquakefn,quakespelltexturefn,player | main/dll/dll_00E2_staff.c |
+| 15 | `main/dll/dll_0012_unk.c` | 800D9EB4-800D9EE8 | MISLABELED | RENAME-ONLY | 0x012 anom:dummy12 | main/dll/dll_0012_dummy12.c |
+| 16 | `main/dll/dll_000B_dll0b.c` | 8009FFF0-800A3A40 | MISLABELED | RENAME-ONLY | 0x00B anom:modgfx | main/dll/dll_000B_modgfx.c |
+| 17 | `main/dll/dll_00E5_foxshield.c` | 801702D4-80171300 | MISLABELED | RENAME-ONLY | 0x0E5 anom:stafffn | main/dll/dll_00E5_shield.c |
+| 18 | `main/dll/dll_0111_cfpowerlock.c` | 8017BCF8-8017C294 | MISLABELED | RENAME-ONLY | 0x111 anom:lock | main/dll/dll_0111_doorlock.c |
+| 19 | `main/dll/dll_01BC_sctotemstr.c` | 801DE430-801DF110 | MISLABELED | RENAME-ONLY | 0x1BC anom:platform1 | main/dll/VF/dll_01BC_sctotemstrength.c |
+| 20 | `main/dll/dll_0059_dll59func0.c` | 800EADCC-800EB098 | MISLABELED | RENAME-ONLY | 0x059 | main/dll/dll_0059_gameplay.c |
+| 21 | `main/dll/dll_005A_staffcollisionfunc03.c` | 800EB098-800EB618 | MISLABELED | RENAME-ONLY | 0x05A | main/dll/dll_005A_staffcollision.c |
+| 22 | `main/dll/dll_005B_modgfxfunc03.c` | 800EB618-800EC7BC | MISLABELED | RENAME-ONLY | 0x05B | main/dll/dll_005B_modgfx.c |
+| 23 | `main/dll/dll_005C_dll5cfunc0.c` | 800EC7BC-800ECAE0 | MISLABELED | RENAME-ONLY | 0x05C | main/dll/dll_005C_gameplay.c |
+| 24 | `main/dll/dll_005D_dll5dfunc0.c` | 800ECAE0-800ECE04 | MISLABELED | RENAME-ONLY | 0x05D | main/dll/dll_005D_gameplay.c |
+| 25 | `main/dll/dll_005E_dll5efunc0.c` | 800ECE04-800ED294 | MISLABELED | RENAME-ONLY | 0x05E | main/dll/dll_005E_gameplay.c |
+| 26 | `main/dll/dll_005F_dll5ffunc0.c` | 800ED294-800ED5E4 | MISLABELED | RENAME-ONLY | 0x05F | main/dll/dll_005F_gameplay.c |
+| 27 | `main/dll/dll_0060_dll60func0.c` | 800ED5E4-800EDA28 | MISLABELED | RENAME-ONLY | 0x060 | main/dll/dll_0060_gameplay.c |
+| 28 | `main/dll/dll_0061_dll61func0.c` | 800EDA28-800EDE74 | MISLABELED | RENAME-ONLY | 0x061 | main/dll/dll_0061_gameplay.c |
+| 29 | `main/dll/dll_0062_dll62func0.c` | 800EDE74-800EE25C | MISLABELED | RENAME-ONLY | 0x062 | main/dll/dll_0062_gameplay.c |
+| 30 | `main/dll/dll_0063_dll63func0.c` | 800EE25C-800EE8FC | MISLABELED | RENAME-ONLY | 0x063 | main/dll/dll_0063_gameplay.c |
+| 31 | `main/dll/dll_0064_dll64func0.c` | 800EE8FC-800EEC34 | MISLABELED | RENAME-ONLY | 0x064 | main/dll/dll_0064_gameplay.c |
+| 32 | `main/dll/dll_0065_dll65func0.c` | 800EEC34-800EEFEC | MISLABELED | RENAME-ONLY | 0x065 | main/dll/dll_0065_gameplay.c |
+| 33 | `main/dll/dll_00A3_dlla3func0.c` | 800EEFEC-800EF3A0 | MISLABELED | RENAME-ONLY | 0x0A3 | main/dll/dll_00A3_gameplay.c |
+| 34 | `main/dll/dll_0066_dll66func0.c` | 800EF3A0-800EF7B4 | MISLABELED | RENAME-ONLY | 0x066 | main/dll/dll_0066_gameplay.c |
+| 35 | `main/dll/dll_0067_dll67func0.c` | 800EF7B4-800EFA30 | MISLABELED | RENAME-ONLY | 0x067 | main/dll/dll_0067_gameplay.c |
+| 36 | `main/dll/dll_0068_dll68func0.c` | 800EFA30-800EFD34 | MISLABELED | RENAME-ONLY | 0x068 | main/dll/dll_0068_gameplay.c |
+| 37 | `main/dll/dll_0069_dll69func0.c` | 800EFD44-800F022C | MISLABELED | RENAME-ONLY | 0x069 | main/dll/dll_0069_gameplay.c |
+| 38 | `main/dll/dll_006A_dll6afunc0.c` | 800F022C-800F058C | MISLABELED | RENAME-ONLY | 0x06A | main/dll/dll_006A_gameplay.c |
+| 39 | `main/dll/dll_006B_dll6bfunc0.c` | 800F058C-800F07DC | MISLABELED | RENAME-ONLY | 0x06B | main/dll/dll_006B_gameplay.c |
+| 40 | `main/dll/dll_006D_dll6dfunc0.c` | 800F07EC-800F0A4C | MISLABELED | RENAME-ONLY | 0x06D | main/dll/dll_006D_gameplay.c |
+| 41 | `main/dll/dll_006E_dll6efunc0.c` | 800F0A4C-800F0C9C | MISLABELED | RENAME-ONLY | 0x06E | main/dll/dll_006E_gameplay.c |
+| 42 | `main/dll/dll_006F_dll6ffunc0.c` | 800F0C9C-800F11E4 | MISLABELED | RENAME-ONLY | 0x06F | main/dll/dll_006F_gameplay.c |
+| 43 | `main/dll/dll_0070_dll70func0.c` | 800F11E4-800F16E4 | MISLABELED | RENAME-ONLY | 0x070 | main/dll/dll_0070_gameplay.c |
+| 44 | `main/dll/dll_0071_dll71func0.c` | 800F16E4-800F1A58 | MISLABELED | RENAME-ONLY | 0x071 | main/dll/dll_0071_gameplay.c |
+| 45 | `main/dll/dll_0072_dll72func0.c` | 800F1A58-800F1D64 | MISLABELED | RENAME-ONLY | 0x072 | main/dll/dll_0072_gameplay.c |
+| 46 | `main/dll/dll_0073_dll73func0.c` | 800F1D64-800F220C | MISLABELED | RENAME-ONLY | 0x073 | main/dll/dll_0073_gameplay.c |
+| 47 | `main/dll/dll_0074_dll74func0.c` | 800F220C-800F2694 | MISLABELED | RENAME-ONLY | 0x074 | main/dll/dll_0074_gameplay.c |
+| 48 | `main/dll/dll_0075_dll75func0.c` | 800F2694-800F2A8C | MISLABELED | RENAME-ONLY | 0x075 | main/dll/dll_0075_gameplay.c |
+| 49 | `main/dll/dll_0076_dll76func0.c` | 800F2A8C-800F2CEC | MISLABELED | RENAME-ONLY | 0x076 | main/dll/dll_0076_gameplay.c |
+| 50 | `main/dll/dll_0077_dll77func0.c` | 800F2CEC-800F2F4C | MISLABELED | RENAME-ONLY | 0x077 | main/dll/dll_0077_gameplay.c |
+| 51 | `main/dll/dll_0078_dll78func0.c` | 800F2F4C-800F3400 | MISLABELED | RENAME-ONLY | 0x078 | main/dll/dll_0078_gameplay.c |
+| 52 | `main/dll/dll_0079_dll79func0.c` | 800F3400-800F3CD0 | MISLABELED | RENAME-ONLY | 0x079 | main/dll/dll_0079_gameplay.c |
+| 53 | `main/dll/dll_007A_dll7afunc0.c` | 800F3CD0-800F4174 | MISLABELED | RENAME-ONLY | 0x07A | main/dll/dll_007A_gameplay.c |
+| 54 | `main/dll/dll_007B_dll7bfunc0.c` | 800F4174-800F472C | MISLABELED | RENAME-ONLY | 0x07B | main/dll/dll_007B_gameplay.c |
+| 55 | `main/dll/dll_007C_dll7cfunc0.c` | 800F472C-800F4C70 | MISLABELED | RENAME-ONLY | 0x07C | main/dll/dll_007C_foodbag.c |
+| 56 | `main/dll/dll_007D_dll7dfunc0.c` | 800F4C70-800F4FA4 | MISLABELED | RENAME-ONLY | 0x07D | main/dll/dll_007D_foodbag.c |
+| 57 | `main/dll/dll_007E_dll7efunc0.c` | 800F4FA4-800F52E0 | MISLABELED | RENAME-ONLY | 0x07E | main/dll/dll_007E_foodbag.c |
+| 58 | `main/dll/dll_007F_dll7ffunc0.c` | 800F52E0-800F57D8 | MISLABELED | RENAME-ONLY | 0x07F | main/dll/dll_007F_foodbag.c |
+| 59 | `main/dll/dll_0080_dll80func0.c` | 800F57D8-800F5A8C | MISLABELED | RENAME-ONLY | 0x080 | main/dll/dll_0080_foodbag.c |
+| 60 | `main/dll/dll_0081_dll81func0.c` | 800F5A8C-800F6150 | MISLABELED | RENAME-ONLY | 0x081 | main/dll/dll_0081_foodbag.c |
+| 61 | `main/dll/dll_0082_dll82func0.c` | 800F6150-800F6534 | MISLABELED | RENAME-ONLY | 0x082 | main/dll/dll_0082_foodbag.c |
+| 62 | `main/dll/dll_0083_dll83func0.c` | 800F6534-800F6988 | MISLABELED | RENAME-ONLY | 0x083 | main/dll/dll_0083_foodbag.c |
+| 63 | `main/dll/dll_0084_dll84func0.c` | 800F6988-800F6DDC | MISLABELED | RENAME-ONLY | 0x084 | main/dll/dll_0084_foodbag.c |
+| 64 | `main/dll/dll_0085_dll85func0.c` | 800F6DDC-800F7434 | MISLABELED | RENAME-ONLY | 0x085 | main/dll/dll_0085_foodbag.c |
+| 65 | `main/dll/dll_0086_dll86func0.c` | 800F7434-800F77BC | MISLABELED | RENAME-ONLY | 0x086 | main/dll/dll_0086_foodbag.c |
+| 66 | `main/dll/dll_0087_dll87func0.c` | 800F77BC-800F7AC0 | MISLABELED | RENAME-ONLY | 0x087 | main/dll/dll_0087_foodbag.c |
+| 67 | `main/dll/dll_0088_dll88func0.c` | 800F7AC0-800F7D90 | MISLABELED | RENAME-ONLY | 0x088 | main/dll/dll_0088_foodbag.c |
+| 68 | `main/dll/dll_0089_dll89func0.c` | 800F7D90-800F8094 | MISLABELED | RENAME-ONLY | 0x089 | main/dll/dll_0089_foodbag.c |
+| 69 | `main/dll/dll_008A_dll8afunc0.c` | 800F8094-800F8250 | MISLABELED | RENAME-ONLY | 0x08A | main/dll/dll_008A_foodbag.c |
+| 70 | `main/dll/dll_008B_dll8bfunc0.c` | 800F8250-800F87E8 | MISLABELED | RENAME-ONLY | 0x08B | main/dll/dll_008B_foodbag.c |
+| 71 | `main/dll/dll_008C_dll8cfunc0.c` | 800F87E8-800F8D68 | MISLABELED | RENAME-ONLY | 0x08C | main/dll/dll_008C_foodbag.c |
+| 72 | `main/dll/dll_008D_dll8dfunc0.c` | 800F8D68-800F977C | MISLABELED | RENAME-ONLY | 0x08D | main/dll/dll_008D_foodbag.c |
+| 73 | `main/dll/dll_008E_dll8efunc0.c` | 800F977C-800F9E78 | MISLABELED | RENAME-ONLY | 0x08E | main/dll/dll_008E_foodbag.c |
+| 74 | `main/dll/dll_008F_dll8ffunc0.c` | 800F9E78-800FA16C | MISLABELED | RENAME-ONLY | 0x08F | main/dll/dll_008F_foodbag.c |
+| 75 | `main/dll/dll_0090_dll90func0.c` | 800FA16C-800FA5D8 | MISLABELED | RENAME-ONLY | 0x090 | main/dll/dll_0090_foodbag.c |
+| 76 | `main/dll/dll_0091_dll91func0.c` | 800FA5D8-800FA9F8 | MISLABELED | RENAME-ONLY | 0x091 | main/dll/dll_0091_savegame.c |
+| 77 | `main/dll/dll_0092_dll92func0.c` | 800FA9F8-800FADA8 | MISLABELED | RENAME-ONLY | 0x092 | main/dll/dll_0092_savegame.c |
+| 78 | `main/dll/dll_0093_dll93func0.c` | 800FADA8-800FB078 | MISLABELED | RENAME-ONLY | 0x093 | main/dll/dll_0093_savegame.c |
+| 79 | `main/dll/dll_0094_dll94func0.c` | 800FB078-800FB428 | MISLABELED | RENAME-ONLY | 0x094 | main/dll/dll_0094_savegame.c |
+| 80 | `main/dll/dll_0095_dll95func0.c` | 800FB428-800FB720 | MISLABELED | RENAME-ONLY | 0x095 | main/dll/dll_0095_savegame.c |
+| 81 | `main/dll/dll_0096_dll96func0.c` | 800FB720-800FBA40 | MISLABELED | RENAME-ONLY | 0x096 | main/dll/dll_0096_savegame.c |
+| 82 | `main/dll/dll_0097_dll97func0.c` | 800FBA40-800FBDF0 | MISLABELED | RENAME-ONLY | 0x097 | main/dll/dll_0097_savegame.c |
+| 83 | `main/dll/dll_0098_dll98func0.c` | 800FBDF0-800FC208 | MISLABELED | RENAME-ONLY | 0x098 | main/dll/dll_0098_savegame.c |
+| 84 | `main/dll/dll_0099_dll99func0.c` | 800FC208-800FC5B8 | MISLABELED | RENAME-ONLY | 0x099 | main/dll/dll_0099_savegame.c |
+| 85 | `main/dll/dll_009A_dll9afunc0.c` | 800FC5B8-800FCF3C | MISLABELED | RENAME-ONLY | 0x09A | main/dll/dll_009A_screens.c |
+| 86 | `main/dll/dll_009B_dll9bfunc0.c` | 800FCF3C-800FD2B4 | MISLABELED | RENAME-ONLY | 0x09B | main/dll/dll_009B_screens.c |
+| 87 | `main/dll/dll_009C_dll9cfunc0.c` | 800FD2B4-800FD744 | MISLABELED | RENAME-ONLY | 0x09C | main/dll/dll_009C_screens.c |
+| 88 | `main/dll/dll_009D_dll9dfunc0.c` | 800FD744-800FDA98 | MISLABELED | RENAME-ONLY | 0x09D | main/dll/dll_009D_pickup.c |
+| 89 | `main/dll/dll_009E_dll9efunc0.c` | 800FDA98-800FDE18 | MISLABELED | RENAME-ONLY | 0x09E | main/dll/dll_009E_pickup.c |
+| 90 | `main/dll/dll_009F_dll9ffunc0.c` | 800FDE18-800FE240 | MISLABELED | RENAME-ONLY | 0x09F | main/dll/dll_009F_pickup.c |
+| 91 | `main/dll/dll_00A0_dlla0func0.c` | 800FE240-800FE5A8 | MISLABELED | RENAME-ONLY | 0x0A0 | main/dll/dll_00A0_pickup.c |
+| 92 | `main/dll/dll_00A1_dlla1func0.c` | 800FE5A8-800FE928 | MISLABELED | RENAME-ONLY | 0x0A1 | main/dll/dll_00A1_pickup.c |
+| 93 | `main/dll/dll_00A2_dlla2func0.c` | 800FE928-800FEC74 | MISLABELED | RENAME-ONLY | 0x0A2 | main/dll/dll_00A2_pickup.c |
+| 94 | `main/dll/dll_00A5_dlla5func0.c` | 800FEC84-800FF004 | MISLABELED | RENAME-ONLY | 0x0A5 | main/dll/dll_00A5_pickup.c |
+| 95 | `main/dll/dll_00A6_dlla6func0.c` | 800FF004-800FF6A0 | MISLABELED | RENAME-ONLY | 0x0A6 | main/dll/dll_00A6_pickup.c |
+| 96 | `main/dll/dll_00A7_dlla7func0.c` | 800FF6A0-800FFB44 | MISLABELED | RENAME-ONLY | 0x0A7 | main/dll/dll_00A7_pickup.c |
+| 97 | `main/dll/dll_00A8_dlla8func0.c` | 800FFB44-800FFF04 | MISLABELED | RENAME-ONLY | 0x0A8 | main/dll/dll_00A8_pickup.c |
+| 98 | `main/dll/dll_00A9_dlla9func0.c` | 800FFF04-801002C0 | MISLABELED | RENAME-ONLY | 0x0A9 | main/dll/dll_00A9_pickup.c |
+| 99 | `main/dll/dll_00AA_dllaafunc0.c` | 801002C0-80100550 | MISLABELED | RENAME-ONLY | 0x0AA | main/dll/dll_00AA_pickup.c |
+| 100 | `main/dll/dll_004F_dll4f.c` | 8010F2F8-8010F540 | MISLABELED | RENAME-ONLY | 0x04F | main/dll/dll_004F_baddieControl.c |
+| 101 | `main/dll/dll_0054_dll54.c` | 801106B4-80110C80 | MISLABELED | RENAME-ONLY | 0x054 | main/dll/dll_0054_baddieControl.c |
+| 102 | `main/dll/dll_0019_dll19func0.c` | 80111D14-80113F8C | MISLABELED | RENAME-ONLY | 0x019 | main/dll/dll_0019_baddieControl.c |
+| 103 | `main/dll/dll_003F_dll3f.c` | 80133F70-80134098 | MISLABELED | RENAME-ONLY | 0x03F | main/dll/baddie/dll_003F_Tumbleweed.c |
+| 104 | `main/dll/dll_00CE_dllce.c` | 8015DAE8-8015F5B0 | MISLABELED | RENAME-ONLY | 0x0CE | main/dll/dll_00CE_scarab.c |
+| 105 | `main/dll/dll_00CB_dllcb.c` | 801601C4-80161130 | MISLABELED | RENAME-ONLY | 0x0CB | main/dll/dll_00CB_scarab.c |
+| 106 | `main/dll/dll_00D7_kaldachomsp.c` | 801696D4-80169EF4 | MISLABELED | RENAME-ONLY | 0x0D7 | main/dll/dll_00D7_kaldachompspit.c |
+| 107 | `main/dll/dll_00DA_pollenfragm.c` | 8016A8E0-8016B230 | MISLABELED | RENAME-ONLY | 0x0DA | main/dll/dll_00DA_pollenfragment.c |
+| 108 | `main/dll/dll_00DC_mikabombsha.c` | 8016B710-8016B898 | MISLABELED | RENAME-ONLY | 0x0DC | main/dll/dll_00DC_mikabombshadow.c |
+| 109 | `main/dll/dll_025A_staticcamer.c` | 8016B898-8016B99C | MISLABELED | RENAME-ONLY | 0x25A | main/dll/dll_025A_staticcamera.c |
+| 110 | `main/dll/dll_00DD_gcbaddieshi.c` | 8016B99C-8016BB10 | MISLABELED | RENAME-ONLY | 0x0DD | main/dll/dll_00DD_gcbaddieshield.c |
+| 111 | `main/dll/dll_00DE_baddieinter.c` | 8016BB10-8016BE70 | MISLABELED | RENAME-ONLY | 0x0DE | main/dll/dll_00DE_baddieinterestp.c |
+| 112 | `main/dll/dll_00C6_animdummy.c` | 8016BE70-8016C4AC | MISLABELED | RENAME-ONLY | 0x0C6 | main/dll/dll_00C6_animatedobj.c |
+| 113 | `main/dll/dll_00C8_depthoffiel.c` | 8016CD48-8016CEE8 | MISLABELED | RENAME-ONLY | 0x0C8 | main/dll/dll_00C8_depthoffieldpoint.c |
+| 114 | `main/dll/dll_00E3_projball.c` | 8016F16C-80170004 | MISLABELED | RENAME-ONLY | 0x0E3 | main/dll/dll_00E3_fireball.c |
+| 115 | `main/dll/dll_00E4_flamethrowe.c` | 80170004-801702D4 | MISLABELED | RENAME-ONLY | 0x0E4 | main/dll/dll_00E4_flamethrowerspe.c |
+| 116 | `main/dll/dll_00E6_restartmark.c` | 801713D8-801713FC | MISLABELED | RENAME-ONLY | 0x0E6 | main/dll/dll_00E6_restartmarker.c |
+| 117 | `main/dll/dll_00F7_dllf7.c` | 801713FC-801719E0 | MISLABELED | RENAME-ONLY | 0x0F7 | main/dll/dll_00F7_genprops.c |
+| 118 | `main/dll/dll_00FF_magicdustsm.c` | 80173224-80173F80 | MISLABELED | RENAME-ONLY | 0x0FF | main/dll/dll_00FF_magicdust.c |
+| 119 | `main/dll/dll_00F0_mmpwarppoi.c` | 80176FC4-8017779C | MISLABELED | RENAME-ONLY | 0x0F0 | main/dll/dll_00F0_warppoint.c |
+| 120 | `main/dll/dll_00F9_drprojectil.c` | 8017A350-8017A8EC | MISLABELED | RENAME-ONLY | 0x0F9 | main/dll/dll_00F9_projectileswitch.c |
+| 121 | `main/dll/dll_00FA_invisiblehi.c` | 8017A8EC-8017AC2C | MISLABELED | RENAME-ONLY | 0x0FA | main/dll/dll_00FA_invisiblehitswitch.c |
+| 122 | `main/dll/dll_00FB_wctemplepre.c` | 8017AC2C-8017B5C8 | MISLABELED | RENAME-ONLY | 0x0FB | main/dll/dll_00FB_pressureswitchfb.c |
+| 123 | `main/dll/dll_0110_ktrexdoorp.c` | 8017B5C8-8017BB80 | MISLABELED | RENAME-ONLY | 0x110 | main/dll/dll_0110_door.c |
+| 124 | `main/dll/dll_0112_bossdrakor.c` | 8017C294-8017C7A4 | MISLABELED | RENAME-ONLY | 0x112 | main/dll/dll_0112_seqobject.c |
+| 125 | `main/dll/dll_0113_cameranewse.c` | 8017C7A4-8017CBDC | MISLABELED | RENAME-ONLY | 0x113 | main/dll/dll_0113_seqobj2.c |
+| 126 | `main/dll/dll_0115_dll115.c` | 8017CF90-8017D37C | MISLABELED | RENAME-ONLY | 0x115 | main/dll/dll_0115_groundAnimator.c |
+| 127 | `main/dll/dll_012E_laserturret.c` | 80191A70-80191B60 | MISLABELED | RENAME-ONLY | 0x12E | main/dll/CF/dll_012E_cflightwall.c |
+| 128 | `main/dll/dll_012F_nwcallofeld.c` | 80191B60-80191D00 | MISLABELED | RENAME-ONLY | 0x12F | main/dll/dll_012F_barrelpad.c |
+| 129 | `main/dll/dll_0131_cfdoorligh.c` | 80191D00-80191F2C | MISLABELED | RENAME-ONLY | 0x131 | main/dll/CF/dll_0131_cfdoorlight.c |
+| 130 | `main/dll/dll_0136_waveanimato.c` | 80192394-80192A68 | MISLABELED | RENAME-ONLY | 0x136 | main/dll/MMP/dll_0136_waveanimator.c |
+| 131 | `main/dll/dll_0137_alphaanimat.c` | 80192A68-80193100 | MISLABELED | RENAME-ONLY | 0x137 | main/dll/MMP/dll_0137_alphaanimator.c |
+| 132 | `main/dll/dll_0138_groundanima.c` | 80193100-80193DBC | MISLABELED | RENAME-ONLY | 0x138 | main/dll/MMP/dll_0138_groundanimator.c |
+| 133 | `main/dll/dll_013D_explodeanim.c` | 801962C8-80196520 | MISLABELED | RENAME-ONLY | 0x13D | main/dll/MMP/dll_013D_explodeanimator.c |
+| 134 | `main/dll/dll_013E_dimbossices.c` | 80196520-8019718C | MISLABELED | RENAME-ONLY | 0x13E | main/dll/MMP/dll_013E_dimbossicesmash.c |
+| 135 | `main/dll/dll_013F_texframeani.c` | 8019718C-8019742C | MISLABELED | RENAME-ONLY | 0x13F | main/dll/MMP/dll_013F_texframeanimator.c |
+| 136 | `main/dll/dll_0132_waterfallsp.c` | 80197DA8-80198194 | MISLABELED | RENAME-ONLY | 0x132 | main/dll/MMP/dll_0132_waterfallspray.c |
+| 137 | `main/dll/dll_0126_trigpnt.c` | 801993B0-8019AA7C | MISLABELED | RENAME-ONLY | 0x126 | main/dll/DR/dll_0126_trigger.c |
+| 138 | `main/dll/dll_0145_cloudprison.c` | 8019AA7C-8019AE3C | MISLABELED | RENAME-ONLY | 0x145 | main/dll/DR/dll_0145_cloudprisoncontrol.c |
+| 139 | `main/dll/dll_015B_cfforcefiel.c` | 801A39B4-801A3E9C | MISLABELED | RENAME-ONLY | 0x15B | main/dll/IM/dll_015B_cfforcefield.c |
+| 140 | `main/dll/dll_015D_cfslidedoor.c` | 801A3E9C-801A41D8 | MISLABELED | RENAME-ONLY | 0x15D | main/dll/IM/dll_015D_slidingdoor.c |
+| 141 | `main/dll/dll_015F_cfattractor.c` | 801A41D8-801A4380 | MISLABELED | RENAME-ONLY | 0x15F | main/dll/IM/dll_015F_attractor.c |
+| 142 | `main/dll/dll_0164_cflevelcont.c` | 801A4524-801A4DB8 | MISLABELED | RENAME-ONLY | 0x164 | main/dll/IM/dll_0164_cflevelcontrol.c |
+| 143 | `main/dll/dll_0166_cfbrokengra.c` | 801A4DB8-801A57E8 | MISLABELED | RENAME-ONLY | 0x166 | main/dll/IM/dll_0166_exploded.c |
+| 144 | `main/dll/dll_0167_spiritdoorl.c` | 801A57E8-801A5D88 | MISLABELED | RENAME-ONLY | 0x167 | main/dll/IM/dll_0167_spiritdoorlock.c |
+| 145 | `main/dll/dll_017D_dim2barrel.c` | 801A5D88-801A6638 | MISLABELED | RENAME-ONLY | 0x17D | main/dll/IM/dll_017D_rollingbarrel.c |
+| 146 | `main/dll/dll_017E_mmplevelco.c` | 801A6638-801A6C28 | MISLABELED | RENAME-ONLY | 0x17E | main/dll/DIM/dll_017E_mmplevelcontrol.c |
+| 147 | `main/dll/dll_017F_msbush.c` | 801A6C28-801A6F4C | MISLABELED | RENAME-ONLY | 0x17F | main/dll/DIM/dll_017F_moonseedbush.c |
+| 148 | `main/dll/dll_0180_mmpasteroi.c` | 801A6F4C-801A78C8 | MISLABELED | RENAME-ONLY | 0x180 | main/dll/DIM/dll_0180_mmpasteroidre.c |
+| 149 | `main/dll/dll_0182_mmpmoonroc.c` | 801A78C8-801A8A40 | MISLABELED | RENAME-ONLY | 0x182 | main/dll/DIM/dll_0182_mmpmoonrock.c |
+| 150 | `main/dll/dll_0181_mmptrenchf.c` | 801A8A40-801A8E24 | MISLABELED | RENAME-ONLY | 0x181 | main/dll/DIM/dll_0181_mmptrenchfx.c |
+| 151 | `main/dll/dll_0183_mmpgyserve.c` | 801A8E24-801A8F88 | MISLABELED | RENAME-ONLY | 0x183 | main/dll/DIM/dll_0183_mmpgyservent.c |
+| 152 | `main/dll/dll_0184_dimanimshar.c` | 801A8F88-801A9468 | MISLABELED | RENAME-ONLY | 0x184 | main/dll/DIM/dll_0184_animsharpclaw.c |
+| 153 | `main/dll/dll_0186_ccgasventco.c` | 801A9FA8-801AA558 | MISLABELED | RENAME-ONLY | 0x186 | main/dll/DIM/dll_0186_ccgasventcontrol.c |
+| 154 | `main/dll/dll_0189_ccsharpclaw.c` | 801AB468-801AB6F8 | MISLABELED | RENAME-ONLY | 0x189 | main/dll/DIM/dll_0189_ccsharpclawpad.c |
+| 155 | `main/dll/dll_018B_cclevcontro.c` | 801ABA84-801AC01C | MISLABELED | RENAME-ONLY | 0x18B | main/dll/DIM/dll_018B_cclevcontrol.c |
+| 156 | `main/dll/dll_0169_imicemounta.c` | 801AC248-801ACCFC | MISLABELED | RENAME-ONLY | 0x169 | main/dll/DIM/dll_0169_imicemountain.c |
+| 157 | `main/dll/dll_016B_dimmagiclig.c` | 801AD440-801AD7E4 | MISLABELED | RENAME-ONLY | 0x16B | main/dll/DIM/dll_016B_magiclight.c |
+| 158 | `main/dll/dll_016C_dll16c.c` | 801AD7E4-801AE0EC | MISLABELED | RENAME-ONLY | 0x16C | main/dll/DIM/dll_016C_DIMboulder.c |
+| 159 | `main/dll/dll_016E_imanimspace.c` | 801AE144-801AE508 | MISLABELED | RENAME-ONLY | 0x16E | main/dll/DIM/dll_016E_imanimspacecraft.c |
+| 160 | `main/dll/dll_016F_imspacethru.c` | 801AE508-801AE984 | MISLABELED | RENAME-ONLY | 0x16F | main/dll/DIM/dll_016F_imspacethruster.c |
+| 161 | `main/dll/dll_0171_imspacering.c` | 801AEAE4-801AEE2C | MISLABELED | RENAME-ONLY | 0x171 | main/dll/DIM/dll_0171_imspaceringgen.c |
+| 162 | `main/dll/dll_0172_linkblevco.c` | 801AEE2C-801AF568 | MISLABELED | RENAME-ONLY | 0x172 | main/dll/DIM/dll_0172_linkblevcontrol.c |
+| 163 | `main/dll/dll_0173_linklevcon.c` | 801AF568-801AF9E4 | MISLABELED | RENAME-ONLY | 0x173 | main/dll/DIM/dll_0173_linklevcontrol.c |
+| 164 | `main/dll/dll_01C2_dimsnowball.c` | 801B13E8-801B15D8 | MISLABELED | RENAME-ONLY | 0x1C2 | main/dll/DIM/dll_01C2_dimsnowball1c2.c |
+| 165 | `main/dll/dll_01C7_dimlavasmas.c` | 801B3344-801B3768 | MISLABELED | RENAME-ONLY | 0x1C7 | main/dll/DIM/dll_01C7_dimlavasmash.c |
+| 166 | `main/dll/dll_01CB_dimwooddoor.c` | 801B57BC-801B5A28 | MISLABELED | RENAME-ONLY | 0x1CB | main/dll/DIM/dll_01CB_dimwooddoor2.c |
+| 167 | `main/dll/dll_01CE_dll1ce.c` | 801B5A28-801B5D48 | MISLABELED | RENAME-ONLY | 0x1CE | main/dll/DIM/dll_01CE_DIM2flameburst.c |
+| 168 | `main/dll/dll_01CC_dimmagicbri.c` | 801B5D48-801B63F4 | MISLABELED | RENAME-ONLY | 0x1CC | main/dll/DIM/dll_01CC_dimmagicbridge.c |
+| 169 | `main/dll/dll_01CD_dimlevelco.c` | 801B63F4-801B6B44 | MISLABELED | RENAME-ONLY | 0x1CD | main/dll/DIM/dll_01CD_dimlevelcontrol.c |
+| 170 | `main/dll/dll_01CF_dll1cf.c` | 801B6B44-801B6C2C | MISLABELED | RENAME-ONLY | 0x1CF | main/dll/DIM/dll_01CF_DIM2snowball.c |
+| 171 | `main/dll/dll_01D1_dimtruthhor.c` | 801B6D40-801B7154 | MISLABELED | RENAME-ONLY | 0x1D1 | main/dll/DIM/dll_01D1_dimtruthhornice.c |
+| 172 | `main/dll/dll_01D5_dim2conveyo.c` | 801B7154-801B75B8 | MISLABELED | RENAME-ONLY | 0x1D5 | main/dll/DIM/dll_01D5_dim2conveyor.c |
+| 173 | `main/dll/dll_01D6_dll1d6.c` | 801B75B8-801B7D48 | MISLABELED | RENAME-ONLY | 0x1D6 | main/dll/DIM/dll_01D6_DIM2snowball.c |
+| 174 | `main/dll/dll_01D7_dim2snowbal.c` | 801B7D48-801B837C | MISLABELED | RENAME-ONLY | 0x1D7 | main/dll/DIM/dll_01D7_dim2snowball.c |
+| 175 | `main/dll/dll_01D8_dim2pathgen.c` | 801B837C-801B8798 | MISLABELED | RENAME-ONLY | 0x1D8 | main/dll/DIM/dll_01D8_dim2pathgenerator.c |
+| 176 | `main/dll/dll_01DA_dll1da.c` | 801B8798-801B8B70 | MISLABELED | RENAME-ONLY | 0x1DA | main/dll/DIM/dll_01DA_DIM2projrock.c |
+| 177 | `main/dll/dll_01DB_dll1db.c` | 801B8B70-801B8F7C | MISLABELED | RENAME-ONLY | 0x1DB | main/dll/DIM/dll_01DB_DIM2projrock.c |
+| 178 | `main/dll/dll_01DE_dim2lavacon.c` | 801B9810-801B9CB4 | MISLABELED | RENAME-ONLY | 0x1DE | main/dll/DIM/dll_01DE_dim2lavacontrol.c |
+| 179 | `main/dll/dll_01DF_dll1df.c` | 801B9CB4-801B9ECC | MISLABELED | RENAME-ONLY | 0x1DF | main/dll/DIM/dll_01DF_DIM2projrock.c |
+| 180 | `main/dll/dll_01E3_dimbossgut.c` | 801BF048-801BF8D8 | MISLABELED | RENAME-ONLY | 0x1E3 | main/dll/DF/dll_01E3_dimbossgut2.c |
+| 181 | `main/dll/dll_01E5_dimbossspi.c` | 801BF8D8-801BFFF4 | MISLABELED | RENAME-ONLY | 0x1E5 | main/dll/DF/dll_01E5_dimbossspit.c |
+| 182 | `main/dll/dll_01E6_dimbosscrac.c` | 801C02B8-801C04B8 | MISLABELED | RENAME-ONLY | 0x1E6 | main/dll/DF/dll_01E6_dimbosscrackpar.c |
+| 183 | `main/dll/dll_018E_mmshwaters.c` | 801C578C-801C5990 | MISLABELED | RENAME-ONLY | 0x18E | main/dll/mmshrine/dll_018E_mmshwaterspike.c |
+| 184 | `main/dll/dll_0191_ecshcreato.c` | 801C6E0C-801C70F0 | MISLABELED | RENAME-ONLY | 0x191 | main/dll/mmshrine/dll_0191_ecshcreator.c |
+| 185 | `main/dll/dll_0193_gpshobjcre.c` | 801C8084-801C82C8 | MISLABELED | RENAME-ONLY | 0x193 | main/dll/dll_0193_gpshobjcreator.c |
+| 186 | `main/dll/dll_0197_dll197.c` | 801C9E54-801CA718 | MISLABELED | RENAME-ONLY | 0x197 | main/dll/dll_0197_cup1C3.c |
+| 187 | `main/dll/dll_0199_dll199.c` | 801CA9C0-801CB7A8 | MISLABELED | RENAME-ONLY | 0x199 | main/dll/dll_0199_dimmagicbridge.c |
+| 188 | `main/dll/dll_019A_dll19a.c` | 801CB7A8-801CBA98 | MISLABELED | RENAME-ONLY | 0x19A | main/dll/dll_019A_dimmagicbridge.c |
+| 189 | `main/dll/dll_019B_dll19b.c` | 801CBA98-801CC72C | MISLABELED | RENAME-ONLY | 0x19B | main/dll/dll_019B_shrine1CE.c |
+| 190 | `main/dll/dll_019C_dll19c.c` | 801CC72C-801CC998 | MISLABELED | RENAME-ONLY | 0x19C | main/dll/dll_019C_shrine1CE.c |
+| 191 | `main/dll/dll_019D_dll19d.c` | 801CC998-801CCFA4 | MISLABELED | RENAME-ONLY | 0x19D | main/dll/dll_019D_shrine1CE.c |
+| 192 | `main/dll/dll_01A3_nwanimice1.c` | 801CFB24-801CFBB4 | MISLABELED | RENAME-ONLY | 0x1A3 | main/dll/NW/dll_01A3_nwanimice.c |
+| 193 | `main/dll/dll_01A4_nwice1.c` | 801CFBB4-801CFD68 | MISLABELED | RENAME-ONLY | 0x1A4 | main/dll/NW/dll_01A4_nwice.c |
+| 194 | `main/dll/dll_01A5_nwlevcontr.c` | 801CFD68-801D069C | MISLABELED | RENAME-ONLY | 0x1A5 | main/dll/NW/dll_01A5_nwlevcontrol.c |
+| 195 | `main/dll/dll_01AA_bombplantsp.c` | 801D3378-801D3FF4 | MISLABELED | RENAME-ONLY | 0x1AA | main/dll/SH/dll_01AA_bombplantspore.c |
+| 196 | `main/dll/dll_01AB_bombplantin.c` | 801D3FF4-801D4198 | MISLABELED | RENAME-ONLY | 0x1AB | main/dll/SH/dll_01AB_bombplantingspot.c |
+| 197 | `main/dll/dll_01B2_shstaffhaz.c` | 801DA8C4-801DA954 | MISLABELED | RENAME-ONLY | 0x1B2 | main/dll/DR/dll_01B2_shstaffhaze.c |
+| 198 | `main/dll/dll_01B4_shemptytum.c` | 801DAFA4-801DB098 | MISLABELED | RENAME-ONLY | 0x1B4 | main/dll/CR/dll_01B4_shemptytumblew.c |
+| 199 | `main/dll/dll_01B6_sclevelcon.c` | 801DB098-801DBFA0 | MISLABELED | RENAME-ONLY | 0x1B6 | main/dll/CR/dll_01B6_sclevelcontrol.c |
+| 200 | `main/dll/dll_01B7_scmusictre.c` | 801DBFA0-801DC8D4 | MISLABELED | RENAME-ONLY | 0x1B7 | main/dll/DR/dll_01B7_scmusictree.c |
+| 201 | `main/dll/dll_01B8_sctotempol.c` | 801DC8D4-801DCC70 | MISLABELED | RENAME-ONLY | 0x1B8 | main/dll/DR/dll_01B8_sctotempole.c |
+| 202 | `main/dll/dll_01B9_sccloudrun.c` | 801DCC70-801DD170 | MISLABELED | RENAME-ONLY | 0x1B9 | main/dll/DR/dll_01B9_sccloudrunnera.c |
+| 203 | `main/dll/dll_01BD_scpaypoint.c` | 801DF110-801DF4AC | MISLABELED | RENAME-ONLY | 0x1BD | main/dll/VF/dll_01BD_paymentkiosk.c |
+| 204 | `main/dll/dll_0142_felevcontro.c` | 801DF934-801DF9AC | MISLABELED | RENAME-ONLY | 0x142 | main/dll/DB/dll_0142_felevcontrol.c |
+| 205 | `main/dll/dll_0144_dll144.c` | 801DF9AC-801DFA28 | MISLABELED | RENAME-ONLY | 0x144 | main/dll/DB/dll_0144_DBrockfall.c |
+| 206 | `main/dll/dll_01E9_sbpropelle.c` | 801E2570-801E2B28 | MISLABELED | RENAME-ONLY | 0x1E9 | main/dll/DB/dll_01E9_sbpropeller.c |
+| 207 | `main/dll/dll_01EE_sbcannonba.c` | 801E3D30-801E4288 | MISLABELED | RENAME-ONLY | 0x1EE | main/dll/TREX/dll_01EE_sbcannonball.c |
+| 208 | `main/dll/dll_01EF_sbcloudbal.c` | 801E45AC-801E4AC0 | MISLABELED | RENAME-ONLY | 0x1EF | main/dll/TREX/dll_01EF_sbcloudball.c |
+| 209 | `main/dll/dll_01F5_generalscal.c` | 801E55B8-801E59AC | MISLABELED | RENAME-ONLY | 0x1F5 | main/dll/TREX/dll_01F5_shipbattle.c |
+| 210 | `main/dll/dll_01F4_cflamp.c` | 801E59AC-801E5DC4 | MISLABELED | RENAME-ONLY | 0x1F4 | main/dll/TREX/dll_01F4_lamp.c |
+| 211 | `main/dll/dll_01F6_dimflag.c` | 801E5DC4-801E5F74 | MISLABELED | RENAME-ONLY | 0x1F6 | main/dll/TREX/dll_01F6_flag.c |
+| 212 | `main/dll/dll_01F7_sbshipgunb.c` | 801E5F74-801E6050 | MISLABELED | RENAME-ONLY | 0x1F7 | main/dll/TREX/dll_01F7_sbshipgunbroke.c |
+| 213 | `main/dll/dll_0284_spfruitsmal.c` | 801E832C-801E8EA4 | MISLABELED | RENAME-ONLY | 0x284 | main/dll/DR/dll_0284_shopitem.c |
+| 214 | `main/dll/dll_01FA_wmseqobjec.c` | 801F06D8-801F0900 | MISLABELED | RENAME-ONLY | 0x1FA | main/dll/WC/dll_01FA_wmseqobject.c |
+| 215 | `main/dll/dll_01FB_dll1fb.c` | 801F0900-801F0AE4 | MISLABELED | RENAME-ONLY | 0x1FB | main/dll/WC/dll_01FB_WClaser.c |
+| 216 | `main/dll/dll_0240_gcrobotblas.c` | 801FF884-801FF9B0 | MISLABELED | RENAME-ONLY | 0x240 | main/dll/dll_0240_gcrobotblast.c |
+| 217 | `main/dll/dll_0241_drakorenerg.c` | 801FF9B0-801FFE18 | MISLABELED | RENAME-ONLY | 0x241 | main/dll/dll_0241_drakorenergy.c |
+| 218 | `main/dll/dll_0242_dbstealerwo.c` | 801FFE18-80203C78 | MISLABELED | RENAME-ONLY | 0x242 | main/dll/DB/dll_0242_dbstealerworm.c |
+| 219 | `main/dll/dll_0243_dbholecontr.c` | 80203C78-80204098 | MISLABELED | RENAME-ONLY | 0x243 | main/dll/DB/dll_0243_dbholecontrol1.c |
+| 220 | `main/dll/dll_0229_dfplevelco.c` | 80204098-80204970 | MISLABELED | RENAME-ONLY | 0x229 | main/dll/DF/dll_0229_dfplevelcontrol.c |
+| 221 | `main/dll/dll_022A_dfpobjcrea.c` | 80204970-80204B54 | MISLABELED | RENAME-ONLY | 0x22A | main/dll/DF/dll_022A_dfpobjcreator.c |
+| 222 | `main/dll/dll_022C_dll22c.c` | 80204B54-802050C4 | MISLABELED | RENAME-ONLY | 0x22C | main/dll/dll_022C_anim.c |
+| 223 | `main/dll/dll_022D_dfpseqpoin.c` | 80205168-802057CC | MISLABELED | RENAME-ONLY | 0x22D | main/dll/DF/dll_022D_dfpseqpoint.c |
+| 224 | `main/dll/dll_80161130.c` | 80161130-80161F0C | HELPER-TU | RENAME-ONLY | — anom:grimble,scarab | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 225 | `main/dll/dll_80136A40.c` | 80136A40-8013939C | HELPER-TU | RENAME-ONLY | — anom:tricky,debug,report,trickyfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 226 | `main/dll/cutCam.c` | 80103524-801046F4 | HELPER-TU | RENAME-ONLY | — anom:camcontrol,camerafn,cammovefn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 227 | `main/dll/dll_3B.c` | 8011730C-801175A4 | HELPER-TU | RENAME-ONLY | — anom:audio,pop,push,attract | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 228 | `main/dll/dll_BB.c` | 80101980-8010210C | HELPER-TU | RENAME-ONLY | — anom:camera,camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 229 | `main/dll/maybeTemplate.c` | 80121C4C-801242DC | HELPER-TU | RENAME-ONLY | — anom:hud,pause,minimapfn,trickybitfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 230 | `main/dll/dll_3E.c` | 8011846C-80118C88 | HELPER-TU | RENAME-ONLY | — anom:thp,prepare,play | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 231 | `main/dll/dll_223.c` | 801BDCF8-801BE19C | HELPER-TU | RENAME-ONLY | — anom:di | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 232 | `main/dll/DFbarrelanim.c` | 801C1238-801C1740 | HELPER-TU | RENAME-ONLY | — anom:dfropenode | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 233 | `main/dll/balloonBaddie.c` | 801242DC-80125424 | HELPER-TU | RENAME-ONLY | — anom:modelfn,cmenurenderfn,hud,cmenurotatefn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 234 | `main/dll/dll_44.c` | 80118C88-80119000 | HELPER-TU | RENAME-ONLY | — anom:attract | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 235 | `main/dll/dll_4E.c` | 8011BFC8-8011C5CC | HELPER-TU | RENAME-ONLY | — anom:options | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 236 | `main/dll/MMP_gyservent.c` | 80198FA4-801993B0 | HELPER-TU | RENAME-ONLY | — anom:objfn,objseqmovefn,objseqfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 237 | `main/dll/dll_1E7.c` | 801D4CD0-801D5174 | HELPER-TU | RENAME-ONLY | — anom:s | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 238 | `main/dll/dll_8B.c` | 80100A90-80100AA4 | HELPER-TU | RENAME-ONLY | — anom:camera | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 239 | `main/dll/dll_B6.c` | 801010B4-80101690 | HELPER-TU | RENAME-ONLY | — anom:camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 240 | `main/dll/dll_B8.c` | 801018A8-80101980 | HELPER-TU | RENAME-ONLY | — anom:first,camera | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 241 | `main/dll/dll_BC.c` | 8010210C-8010224C | HELPER-TU | RENAME-ONLY | — anom:camera,camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 242 | `main/dll/camshipbattle5C.c` | 8010A590-8010AEA8 | HELPER-TU | RENAME-ONLY | — anom:pathcam | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 243 | `main/dll/swarmBaddie.c` | 80125424-801262CC | HELPER-TU | RENAME-ONLY | — anom:gametextfn,pause | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 244 | `main/dll/wispBaddie.c` | 801262CC-80128120 | HELPER-TU | RENAME-ONLY | — anom:pause,pausemenudrawstatus | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 245 | `main/dll/dll_DF.c` | 8013B368-8013D8F0 | HELPER-TU | RENAME-ONLY | — anom:trickyfn,tricky | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 246 | `main/dll/animobjD2.c` | 8013E0D0-8013F100 | HELPER-TU | RENAME-ONLY | — anom:tricky | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 247 | `main/dll/DIM2lift.c` | 801BA224-801BB598 | HELPER-TU | RENAME-ONLY | — anom:dim2icicle | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 248 | `main/dll/dll_A6.c` | 80100AA4-80100C90 | HELPER-TU | RENAME-ONLY | — anom:camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 249 | `main/dll/dll_B3.c` | 80100DCC-80100FA0 | HELPER-TU | RENAME-ONLY | — anom:lock | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 250 | `main/dll/dll_B4.c` | 80100FA0-801010B4 | HELPER-TU | RENAME-ONLY | — anom:lock | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 251 | `main/dll/dll_B7.c` | 80101690-801018A8 | HELPER-TU | RENAME-ONLY | — anom:camcontrol | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 252 | `main/dll/dll_43.c` | 80119FAC-8011A0DC | HELPER-TU | RENAME-ONLY | — anom:save | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 253 | `main/dll/dll_4D.c` | 8011C5CC-8011C7B4 | HELPER-TU | RENAME-ONLY | — anom:language | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 254 | `main/dll/MMP_cratercritter.c` | 8013D8F0-8013DB3C | HELPER-TU | RENAME-ONLY | — anom:trickyfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 255 | `main/dll/MMP_critterspit.c` | 8013DB3C-8013DC88 | HELPER-TU | RENAME-ONLY | — anom:trickyfoodfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 256 | `main/dll/dll_801B1D84.c` | 801B1D84-801B1FF4 | HELPER-TU | RENAME-ONLY | — anom:di | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 257 | `main/dll/DIM2icicle.c` | 801BB598-801BCB34 | HELPER-TU | RENAME-ONLY | — anom:warpdarkicemines | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 258 | `main/dll/dll_801D0828.c` | 801D0828-801D083C | HELPER-TU | RENAME-ONLY | — anom:edible | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 259 | `main/dll/dll_801D4198.c` | 801D4198-801D4364 | HELPER-TU | RENAME-ONLY | — anom:sh | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 260 | `main/dll/SClantern.c` | 801D6C04-801D6D98 | HELPER-TU | RENAME-ONLY | — anom:playerfn | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 261 | `main/dll/DRhightop.c` | 801EAE4C-801EC1AC | HELPER-TU | RENAME-ONLY | — anom:snow | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 262 | `main/dll/BWalphaanim.c` | 801EE088-801EE0C0 | HELPER-TU | RENAME-ONLY | — anom:sb | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 263 | `main/dll/dll_8C.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 264 | `main/dll/dll_8D.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 265 | `main/dll/dll_8F.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 266 | `main/dll/dll_90.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 267 | `main/dll/dll_92.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 268 | `main/dll/dll_93.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 269 | `main/dll/dll_95.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 270 | `main/dll/dll_96.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 271 | `main/dll/dll_98.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 272 | `main/dll/dll_99.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 273 | `main/dll/dll_9B.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 274 | `main/dll/dll_9C.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 275 | `main/dll/dll_9E.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 276 | `main/dll/dll_9F.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 277 | `main/dll/dll_A1.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 278 | `main/dll/dll_A2.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 279 | `main/dll/dll_A4.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 280 | `main/dll/dll_A5.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 281 | `main/dll/dll_A7.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 282 | `main/dll/dll_A8.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 283 | `main/dll/dll_AA.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 284 | `main/dll/dll_AB.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 285 | `main/dll/dll_AD.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 286 | `main/dll/dll_AE.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 287 | `main/dll/dll_B1.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 288 | `main/dll/dll_B2.c` | 80100C90-80100DCC | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 289 | `main/dll/dll_BD.c` | 8010224C-8010224C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 290 | `main/dll/dll_BF.c` | 8010224C-8010224C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 291 | `main/dll/dll_C4.c` | 8010224C-8010224C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 292 | `main/dll/dll_53.c` | 80106654-80106654 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 293 | `main/dll/dll_8010A104.c` | 8010A104-8010A590 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 294 | `main/dll/dll_60.c` | 8010BF08-8010BF08 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 295 | `main/dll/dll_40.c` | 80118C88-80118C88 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 296 | `main/dll/dll_48.c` | 8011B5D4-8011B5D4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 297 | `main/dll/dll_49.c` | 8011B5D4-8011B5D4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 298 | `main/dll/dll_4B.c` | 8011BFC8-8011BFC8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 299 | `main/dll/dll_8011D918.c` | 8011D918-8011D9B0 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 300 | `main/dll/dll_D3.c` | 8013F100-8013F100 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 301 | `main/dll/weaponE6.c` | 8013F100-8013FFB8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 302 | `main/dll/newSeqObj.c` | 801504F8-801511E8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 303 | `main/dll/seqObj11D.c` | 801511E8-80152040 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 304 | `main/dll/seqObj11E.c` | 80152040-80152EC0 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 305 | `main/dll/magicPlant.c` | 80152EC0-801540A0 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 306 | `main/dll/fireflyLantern.c` | 80154870-8015536C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 307 | `main/dll/landedArwing.c` | 8016558C-801659B8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 308 | `main/dll/dll_80174438.c` | 80174438-80174A80 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 309 | `main/dll/dll_147.c` | 8017AC2C-8017AC2C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 310 | `main/dll/dll_801814D0.c` | 801814D0-801816F8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 311 | `main/dll/holoPoint.c` | 80191F2C-80191F2C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 312 | `main/dll/dll_80198A00.c` | 80198A00-80198FA4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 313 | `main/dll/dll_801AC01C.c` | 801AC01C-801AC248 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 314 | `main/dll/DIMwooddoor.c` | 801B1FF4-801B2550 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 315 | `main/dll/dll_801B9ECC.c` | 801B9ECC-801BA224 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 316 | `main/dll/DIMbossspit.c` | 801BE19C-801BE44C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 317 | `main/dll/dll_801C0BF8.c` | 801C0BF8-801C0E60 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 318 | `main/dll/DFpulley.c` | 801C0E60-801C0FD8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 319 | `main/dll/DFbarrel.c` | 801C0FD8-801C1238 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 320 | `main/dll/dll_1DC.c` | 801D1BFC-801D1BFC | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 321 | `main/dll/SHthorntail.c` | 801D5174-801D58E4 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 322 | `main/dll/dll_1E8.c` | 801D5174-801D5174 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 323 | `main/dll/SCchieflightfoot.c` | 801D6914-801D6C04 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 324 | `main/dll/SPdrape.c` | 801D981C-801D981C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 325 | `main/dll/dll_801DD170.c` | 801DD170-801DD1A8 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 326 | `main/dll/DBbullet.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 327 | `main/dll/DBlightgo.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 328 | `main/dll/DBpointmum.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 329 | `main/dll/DBprotection.c` | 801DFA28-801E1588 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 330 | `main/dll/DBwaterflow.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 331 | `main/dll/DBdustgeezer.c` | 801E1588-801E1588 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 332 | `main/dll/dll_801E66DC.c` | 801E66DC-801E67BC | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 333 | `main/dll/TREX_Lazerwall.c` | 801E67BC-801E6B10 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 334 | `main/dll/DRlaserturret.c` | 801E6B10-801E76A0 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 335 | `main/dll/DRcloudcage.c` | 801E9C00-801EA854 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 336 | `main/dll/DRshackle.c` | 801EA854-801EAE4C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 337 | `main/dll/DRpickup.c` | 801EC1AC-801EC7A0 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 338 | `main/dll/WCpushblock.c` | 801EE0C0-801EE668 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 339 | `main/dll/WCbeacon.c` | 801EF360-801EF360 | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 340 | `main/dll/WCdial.c` | 801EFF7C-801EFF7C | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 341 | `main/dll/LGTcontrollight.c` | 801F4C04-801F4ECC | HELPER-TU | RENAME-ONLY | — | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| 342 | `main/light.c` | 801FB9AC-801FD4A8 | ENGINE-HOST | FORENSIC | 0x21E,0x21F,0x220,0x221,0x222,0x223,0x224 anom:spellstoneusefn | engine/SDK host of DLL(s) 0x21E,0x21F,0x220,0x221,0x222,0x223,0x224 |
+| 343 | `main/main.c` | 801FD4A8-801FE118 | ENGINE-HOST | FORENSIC | 0x225,0x226,0x227,0x228 anom:return1 | engine/SDK host of DLL(s) 0x225,0x226,0x227,0x228 |
+| 344 | `main/sky.c` | 80088758-8008EE18 | ENGINE-HOST | FORENSIC | 0x005,0x006 anom:envfxfn,getskycolorfn,envfxactfn,playerenvfxfn | engine/SDK host of DLL(s) 0x005,0x006 |
+| 345 | `main/newclouds.c` | 8008EE18-80094494 | ENGINE-HOST | FORENSIC | 0x007 anom:snow,lightning,cloud,mm | engine/SDK host of DLL(s) 0x007 |
+| 346 | `main/objseq.c` | 80080DE8-80088758 | ENGINE-HOST | FORENSIC | 0x002 anom:rom,animated,seq | engine/SDK host of DLL(s) 0x002 |
+| 347 | `main/dfplightni.c` | 80209958-80209FE0 | ENGINE-HOST | FORENSIC | 0x23B anom:dfppowersl | engine/SDK host of DLL(s) 0x23B |
+| 348 | `dolphin/MSL_C/PPCEABI/bare/H/gamecube.c` | 80094494-800944A0 | ENGINE-HOST | FORENSIC | 0x009 | engine/SDK host of DLL(s) 0x009 |
+| 349 | `main/textblock.c` | 80209810-802098B4 | ENGINE-HOST | FORENSIC | 0x239 | engine/SDK host of DLL(s) 0x239 |
+| 350 | `main/platform1.c` | 802098B4-80209958 | ENGINE-HOST | FORENSIC | 0x23A | engine/SDK host of DLL(s) 0x23A |
+| 351 | `main/dfppowersl.c` | 80209FE0-8020A1C8 | ENGINE-HOST | FORENSIC | 0x23C | engine/SDK host of DLL(s) 0x23C |
+| 352 | `main/worldasteroids.c` | 8020C278-8020C5EC | ENGINE-HOST | FORENSIC | 0x1D4 | engine/SDK host of DLL(s) 0x1D4 |
+| 353 | `main/worldplanet.c` | 8020C964-8020D9E4 | ENGINE-HOST | FORENSIC | 0x1D2 | engine/SDK host of DLL(s) 0x1D2 |
+| 354 | `main/worldobj.c` | 8020D9E4-8020F214 | ENGINE-HOST | FORENSIC | 0x1D3 | engine/SDK host of DLL(s) 0x1D3 |
+| 355 | `main/snowclaw.c` | 8020F214-802106C0 | ENGINE-HOST | FORENSIC | 0x25C | engine/SDK host of DLL(s) 0x25C |
+| 356 | `main/crcloudrace.c` | 802106C0-80210BE8 | ENGINE-HOST | FORENSIC | 0x25D | engine/SDK host of DLL(s) 0x25D |
+| 357 | `main/spellstone.c` | 80210BF0-80210E8C | ENGINE-HOST | FORENSIC | 0x25E | engine/SDK host of DLL(s) 0x25E |
+| 358 | `main/crfueltank.c` | 80210E8C-802110F8 | ENGINE-HOST | FORENSIC | 0x25F | engine/SDK host of DLL(s) 0x25F |
+| 359 | `main/proximitymine_update.c` | 8021122C-80211C24 | ENGINE-HOST | FORENSIC | 0x260 | engine/SDK host of DLL(s) 0x260 |
 
 ## Partition plan (concurrent execution batches)
 
@@ -302,38 +450,57 @@ files without colliding — assign one batch per worktree, land
 address-edge-first within a batch (the resplit tool's linear-link-order
 rule). Batches are independent; run them in any order or all at once.
 
-Batches: 26. Region-disjoint: NO OVERLAP — verified (each batch owns a contiguous address interval; no item's footprint straddles a batch boundary).
+Batches: 45. Region-disjoint: NO OVERLAP — verified (each batch owns a contiguous address interval; no item's footprint straddles a batch boundary).
 
 | batch | items | footprint span | effort mix |
 |---|---|---|---|
-| B01 | 8 | 80080DE8-800D9DCC | CARVE×4,FORENSIC×4 |
-| B02 | 8 | 800D9DCC-80100AA4 | CARVE×7,RENAME-ONLY×1 |
-| B03 | 8 | 80100AA4-80100AA4 | RENAME-ONLY×8 |
-| B04 | 8 | 80100AA4-80100AA4 | RENAME-ONLY×8 |
-| B05 | 8 | 80100AA4-80100C90 | RENAME-ONLY×8 |
-| B06 | 8 | 80100C90-80101980 | RENAME-ONLY×8 |
-| B07 | 8 | 80101980-8010A590 | CARVE×1,RENAME-ONLY×7 |
-| B08 | 8 | 8010A590-80118C88 | CARVE×2,FORENSIC×2,RENAME-ONLY×4 |
-| B09 | 8 | 80118C88-8011C7B4 | RENAME-ONLY×8 |
-| B10 | 8 | 8011CD54-80132024 | CARVE×2,FORENSIC×2,RENAME-ONLY×4 |
-| B11 | 8 | 80132024-8014F620 | CARVE×2,RENAME-ONLY×6 |
-| B12 | 8 | 801504F8-801659B8 | CARVE×2,RENAME-ONLY×6 |
-| B13 | 8 | 80169360-8017AC2C | CARVE×7,RENAME-ONLY×1 |
-| B14 | 8 | 8017AC2C-80194408 | CARVE×7,RENAME-ONLY×1 |
-| B15 | 8 | 801948C0-801AA558 | CARVE×7,RENAME-ONLY×1 |
-| B16 | 8 | 801AA558-801B3DE4 | CARVE×7,RENAME-ONLY×1 |
-| B17 | 8 | 801B3DE4-801C04B8 | CARVE×4,RENAME-ONLY×4 |
-| B18 | 8 | 801C04B8-801C835C | CARVE×5,RENAME-ONLY×3 |
-| B19 | 8 | 801C9660-801D5174 | CARVE×6,RENAME-ONLY×2 |
-| B20 | 8 | 801D5174-801DD1A8 | CARVE×3,RENAME-ONLY×5 |
-| B21 | 8 | 801DE430-801E1588 | CARVE×2,RENAME-ONLY×6 |
-| B22 | 8 | 801E1588-801EA854 | CARVE×5,RENAME-ONLY×3 |
-| B23 | 8 | 801EA854-801F0AE4 | CARVE×1,RENAME-ONLY×7 |
-| B24 | 8 | 801F4C04-80209958 | CARVE×3,FORENSIC×4,RENAME-ONLY×1 |
-| B25 | 8 | 80209958-80210E8C | FORENSIC×8 |
-| B26 | 2 | 80210E8C-80211C24 | FORENSIC×2 |
+| B01 | 8 | 80080DE8-800E5434 | FORENSIC×4,RENAME-ONLY×4 |
+| B02 | 8 | 800EADCC-800EDA28 | RENAME-ONLY×8 |
+| B03 | 8 | 800EDA28-800EFA30 | RENAME-ONLY×8 |
+| B04 | 8 | 800EFA30-800F16E4 | RENAME-ONLY×8 |
+| B05 | 8 | 800F16E4-800F3400 | RENAME-ONLY×8 |
+| B06 | 8 | 800F3400-800F5A8C | RENAME-ONLY×8 |
+| B07 | 8 | 800F5A8C-800F7D90 | RENAME-ONLY×8 |
+| B08 | 8 | 800F7D90-800FA5D8 | RENAME-ONLY×8 |
+| B09 | 8 | 800FA5D8-800FC208 | RENAME-ONLY×8 |
+| B10 | 8 | 800FC208-800FE5A8 | RENAME-ONLY×8 |
+| B11 | 8 | 800FE5A8-80100550 | RENAME-ONLY×8 |
+| B12 | 8 | 80100A90-80100AA4 | RENAME-ONLY×8 |
+| B13 | 8 | 80100AA4-80100AA4 | RENAME-ONLY×8 |
+| B14 | 8 | 80100AA4-80100C90 | RENAME-ONLY×8 |
+| B15 | 8 | 80100C90-801018A8 | RENAME-ONLY×8 |
+| B16 | 8 | 801018A8-80106654 | RENAME-ONLY×8 |
+| B17 | 8 | 8010A104-8011730C | FORENSIC×2,RENAME-ONLY×6 |
+| B18 | 8 | 8011730C-8011BFC8 | RENAME-ONLY×8 |
+| B19 | 8 | 8011BFC8-8012FECC | FORENSIC×1,RENAME-ONLY×7 |
+| B20 | 8 | 80130124-8013F100 | FORENSIC×1,RENAME-ONLY×7 |
+| B21 | 8 | 8013F100-8015F5B0 | RENAME-ONLY×8 |
+| B22 | 8 | 801601C4-8016BB10 | RENAME-ONLY×8 |
+| B23 | 8 | 8016BB10-801713FC | RENAME-ONLY×8 |
+| B24 | 8 | 801713FC-8017B5C8 | RENAME-ONLY×8 |
+| B25 | 8 | 8017B5C8-80191D00 | RENAME-ONLY×8 |
+| B26 | 8 | 80191D00-8019742C | RENAME-ONLY×8 |
+| B27 | 8 | 80197DA8-801A4380 | RENAME-ONLY×8 |
+| B28 | 8 | 801A4524-801A8A40 | RENAME-ONLY×8 |
+| B29 | 8 | 801A8A40-801ACCFC | RENAME-ONLY×8 |
+| B30 | 8 | 801AD440-801B02BC | RENAME-ONLY×8 |
+| B31 | 8 | 801B13E8-801B5D48 | CARVE×1,RENAME-ONLY×7 |
+| B32 | 8 | 801B5D48-801B8798 | RENAME-ONLY×8 |
+| B33 | 8 | 801B8798-801BE19C | RENAME-ONLY×8 |
+| B34 | 8 | 801BE19C-801C1740 | RENAME-ONLY×8 |
+| B35 | 8 | 801C578C-801CC998 | RENAME-ONLY×8 |
+| B36 | 8 | 801CC998-801D4198 | RENAME-ONLY×8 |
+| B37 | 8 | 801D4198-801DA954 | RENAME-ONLY×8 |
+| B38 | 8 | 801DAFA4-801DF4AC | RENAME-ONLY×8 |
+| B39 | 8 | 801DF934-801E1588 | RENAME-ONLY×8 |
+| B40 | 8 | 801E2570-801E67BC | RENAME-ONLY×8 |
+| B41 | 8 | 801E67BC-801EC1AC | CARVE×1,RENAME-ONLY×7 |
+| B42 | 8 | 801EC1AC-801F4ECC | RENAME-ONLY×8 |
+| B43 | 8 | 801FB9AC-80204B54 | FORENSIC×2,RENAME-ONLY×6 |
+| B44 | 8 | 80204B54-8020C5EC | FORENSIC×5,RENAME-ONLY×3 |
+| B45 | 7 | 8020C964-80211C24 | FORENSIC×7 |
 
-### Batch B01 — `80080DE8-800D9DCC` (8 items)
+### Batch B01 — `80080DE8-800E5434` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
@@ -341,28 +508,146 @@ Batches: 26. Region-disjoint: NO OVERLAP — verified (each batch owns a contigu
 | `main/sky.c` | 80088758-8008EE18 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x005,0x006 |
 | `main/newclouds.c` | 8008EE18-80094494 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x007 |
 | `dolphin/MSL_C/PPCEABI/bare/H/gamecube.c` | 80094494-800944A0 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x009 |
-| `main/dll/modgfx.c` | 8009FFF0-800C291C | CONTAINER | CARVE | 0x00B→dll_000B_modgfx.c [800A1250-800A3934] ; 0x00C→dll_000C_projgfx.c [800A3A40-800A3AEC] ; 0x00D→dll_000D_playershadow.c [800A4100-800A4334] ; 0x00E→dll_000E_partfx.c [800A4DF4-800AF64C] ; 0x018→dll_0018_boneparticleeffect.c [800A4338-800A4C38] ; 0x01A→dll_001A_effect1.c [800AF688-800B3198] ; 0x01B→dll_001B_effect2.c [800B319C-800B6EF4] ; 0x01C→dll_001C_effect3.c [800B6EF8-800B8D78] ; 0x01D→dll_001D_effect4.c [800B8D7C-800BC240] ; 0x01E→dll_001E_effect5.c [800BC244-800BD438] ; 0x01F→dll_001F_effect6.c [800BD43C-800BE030] ; 0x020→dll_0020_effect7.c [800BE034-800BF974] ; 0x021→dll_0021_effect8.c [800BF978-800C11C8] ; 0x022→dll_0022_effect9.c [800C11CC-800C2918] |
-| `main/dll/modelfx.c` | 800C291C-800C8008 | CONTAINER | CARVE | 0x023→dll_0023_effect10.c [800C291C-800C4860] ; 0x024→dll_0024_effect11.c [800C4864-800C56DC] ; 0x025→dll_0025_effect12.c [800C56E0-800C65B0] ; 0x027→dll_0027_effect14.c [800C65B4-800C8004] |
-| `main/dll/dim_partfx.c` | 800C8008-800D7568 | CONTAINER | CARVE | 0x003→dll_0003_checkpoint.c [800D5530-800D7548] ; 0x026→dll_0026_effect13.c [800CA3CC-800CA92C] ; 0x028→dll_0028_effect15.c [800C9140-800CA3C8] ; 0x029→dll_0029_effect16.c [800C8008-800C913C] ; 0x02A→dll_002A_effect17.c [800CA930-800CB68C] ; 0x02B→dll_002B_effect18.c [800CB690-800CCF58] ; 0x02C→dll_002C_effect19.c [800CCF5C-800CD42C] ; 0x02D→dll_002D_effect20.c [800CD430-800D552C] |
-| `main/dll/df_partfx.c` | 800D7568-800D9DCC | CONTAINER | CARVE | 0x004→dll_0004_dummy04.c [800D7FB4-800D801C] ; 0x00F→dll_000F_player.c [800D8020-800D9DC8] ; 0x016→dll_0016_screentransition.c [800D7A7C-800D7C44] |
+| `main/dll/dll_000B_dll0b.c` | 8009FFF0-800A3A40 | MISLABELED | RENAME-ONLY | main/dll/dll_000B_modgfx.c |
+| `main/dll/dll_000F_unk.c` | 800D8020-800D9DCC | MISLABELED | RENAME-ONLY | main/dll/dll_000F_player.c |
+| `main/dll/dll_0012_unk.c` | 800D9EB4-800D9EE8 | MISLABELED | RENAME-ONLY | main/dll/dll_0012_dummy12.c |
+| `main/dll/dll_0014_unk.c` | 800D9EE8-800E5434 | MISLABELED | RENAME-ONLY | main/dll/dll_0014_romcurve.c |
 
-### Batch B02 — `800D9DCC-80100AA4` (8 items)
+### Batch B02 — `800EADCC-800EDA28` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
-| `main/dll/objfsa.c` | 800D9DCC-800E5434 | CONTAINER | CARVE | 0x010→dll_0010_uicontroller.c [800D9DCC-800D9EB0] ; 0x012→dll_0012_dummy12.c [800D9EB4-800D9EE4] ; 0x014→dll_0014_romcurve.c [800E0134-800E5430] |
-| `main/dll/gameplay.c` | 800E8100-800F472C | CONTAINER | CARVE | 0x011→dll_0011_screens.c [800EA5CC-800EA758] ; 0x017→dll_0017_savegame.c [800E9CAC-800EA078] ; 0x02F→dll_002F_carryable.c [800EA84C-800EADC8] ; 0x058→dll_0058_dummy58.c [800EFD34-800EFD40] ; 0x059→dll_0059_gameplay.c [800EADCC-800EB094] ; 0x05A→dll_005A_staffcollision.c [800EB098-800EB098] ; 0x05B→dll_005B_modgfx.c [800EB618-800EB618] ; 0x05C→dll_005C_gameplay.c [800EC7BC-800ECADC] ; 0x05D→dll_005D_gameplay.c [800ECAE0-800ECE00] ; 0x05E→dll_005E_gameplay.c [800ECE04-800ED290] ; 0x05F→dll_005F_gameplay.c [800ED294-800ED5E0] ; 0x060→dll_0060_gameplay.c [800ED5E4-800EDA24] ; 0x061→dll_0061_gameplay.c [800EDA28-800EDE70] ; 0x062→dll_0062_gameplay.c [800EDE74-800EE258] ; 0x063→dll_0063_gameplay.c [800EE25C-800EE8F8] ; 0x064→dll_0064_gameplay.c [800EE8FC-800EEC30] ; 0x065→dll_0065_gameplay.c [800EEC34-800EEFE8] ; 0x066→dll_0066_gameplay.c [800EF3A0-800EF7B0] ; 0x067→dll_0067_gameplay.c [800EF7B4-800EFA2C] ; 0x068→dll_0068_gameplay.c [800EFA30-800EFD30] ; 0x069→dll_0069_gameplay.c [800EFD44-800F0228] ; 0x06A→dll_006A_gameplay.c [800F022C-800F0588] ; 0x06B→dll_006B_gameplay.c [800F058C-800F07D8] ; 0x06C→dll_006C_dummy6c.c [800F07DC-800F07E8] ; 0x06D→dll_006D_gameplay.c [800F07EC-800F0A48] ; 0x06E→dll_006E_gameplay.c [800F0A4C-800F0C98] ; 0x06F→dll_006F_gameplay.c [800F0C9C-800F11E0] ; 0x070→dll_0070_gameplay.c [800F11E4-800F16E0] ; 0x071→dll_0071_gameplay.c [800F16E4-800F1A54] ; 0x072→dll_0072_gameplay.c [800F1A58-800F1D60] ; 0x073→dll_0073_gameplay.c [800F1D64-800F2208] ; 0x074→dll_0074_gameplay.c [800F220C-800F2690] ; 0x075→dll_0075_gameplay.c [800F2694-800F2A88] ; 0x076→dll_0076_gameplay.c [800F2A8C-800F2CE8] ; 0x077→dll_0077_gameplay.c [800F2CEC-800F2F48] ; 0x078→dll_0078_gameplay.c [800F2F4C-800F33FC] ; 0x079→dll_0079_gameplay.c [800F3400-800F3CCC] ; 0x07A→dll_007A_gameplay.c [800F3CD0-800F4170] ; 0x07B→dll_007B_gameplay.c [800F4174-800F4728] ; 0x0A3→dll_00A3_gameplay.c [800EEFEC-800EF39C] |
-| `main/dll/foodbag.c` | 800F472C-800FA5D8 | CONTAINER | CARVE | 0x07C→dll_007C_foodbag.c [800F472C-800F4C6C] ; 0x07D→dll_007D_foodbag.c [800F4C70-800F4FA0] ; 0x07E→dll_007E_foodbag.c [800F4FA4-800F52DC] ; 0x07F→dll_007F_foodbag.c [800F52E0-800F57D4] ; 0x080→dll_0080_foodbag.c [800F57D8-800F5A88] ; 0x081→dll_0081_foodbag.c [800F5A8C-800F614C] ; 0x082→dll_0082_foodbag.c [800F6150-800F6530] ; 0x083→dll_0083_foodbag.c [800F6534-800F6984] ; 0x084→dll_0084_foodbag.c [800F6988-800F6DD8] ; 0x085→dll_0085_foodbag.c [800F6DDC-800F7430] ; 0x086→dll_0086_foodbag.c [800F7434-800F77B8] ; 0x087→dll_0087_foodbag.c [800F77BC-800F7ABC] ; 0x088→dll_0088_foodbag.c [800F7AC0-800F7D8C] ; 0x089→dll_0089_foodbag.c [800F7D90-800F8090] ; 0x08A→dll_008A_foodbag.c [800F8094-800F824C] ; 0x08B→dll_008B_foodbag.c [800F8250-800F87E4] ; 0x08C→dll_008C_foodbag.c [800F87E8-800F8D64] ; 0x08D→dll_008D_foodbag.c [800F8D68-800F9778] ; 0x08E→dll_008E_foodbag.c [800F977C-800F9E74] ; 0x08F→dll_008F_foodbag.c [800F9E78-800FA168] ; 0x090→dll_0090_foodbag.c [800FA16C-800FA5D4] |
-| `main/dll/savegame.c` | 800FA5D8-800FC5B8 | CONTAINER | CARVE | 0x091→dll_0091_savegame.c [800FA5D8-800FA9F4] ; 0x092→dll_0092_savegame.c [800FA9F8-800FADA4] ; 0x093→dll_0093_savegame.c [800FADA8-800FB074] ; 0x094→dll_0094_savegame.c [800FB078-800FB424] ; 0x095→dll_0095_savegame.c [800FB428-800FB71C] ; 0x096→dll_0096_savegame.c [800FB720-800FBA3C] ; 0x097→dll_0097_savegame.c [800FBA40-800FBDEC] ; 0x098→dll_0098_savegame.c [800FBDF0-800FC204] ; 0x099→dll_0099_savegame.c [800FC208-800FC5B4] |
-| `main/dll/screens.c` | 800FC5B8-800FD744 | CONTAINER | CARVE | 0x09A→dll_009A_screens.c [800FC5B8-800FCF38] ; 0x09B→dll_009B_screens.c [800FCF3C-800FD2B0] ; 0x09C→dll_009C_screens.c [800FD2B4-800FD740] |
-| `main/dll/pickup.c` | 800FD744-80100550 | CONTAINER | CARVE | 0x09D→dll_009D_pickup.c [800FD744-800FDA94] ; 0x09E→dll_009E_pickup.c [800FDA98-800FDE14] ; 0x09F→dll_009F_pickup.c [800FDE18-800FE23C] ; 0x0A0→dll_00A0_pickup.c [800FE240-800FE5A4] ; 0x0A1→dll_00A1_pickup.c [800FE5A8-800FE924] ; 0x0A2→dll_00A2_pickup.c [800FE928-800FEC70] ; 0x0A4→dll_00A4_dummya4.c [800FEC74-800FEC80] ; 0x0A5→dll_00A5_pickup.c [800FEC84-800FF000] ; 0x0A6→dll_00A6_pickup.c [800FF004-800FF69C] ; 0x0A7→dll_00A7_pickup.c [800FF6A0-800FFB40] ; 0x0A8→dll_00A8_pickup.c [800FFB44-800FFF00] ; 0x0A9→dll_00A9_pickup.c [800FFF04-801002BC] ; 0x0AA→dll_00AA_pickup.c [801002C0-8010054C] |
-| `main/dll/dll_66.c` | 80100550-801007B8 | CONTAINER | CARVE | 0x0AB→dll_00AB_projdummy.c [80100550-80100584] ; 0x0AC→dll_00AC_projmagicstream.c [80100588-801005BC] ; 0x0AD→dll_00AD_projmagicemmit1.c [801005C0-801005F4] ; 0x0AE→dll_00AE_projroombeam.c [801005F8-8010062C] ; 0x0AF→dll_00AF_projlightning1.c [80100630-80100664] ; 0x0B0→dll_00B0_projlightning2.c [80100668-8010069C] ; 0x0B1→dll_00B1_projlightning3.c [801006A0-801006D4] ; 0x0B3→dll_00B3_projlightning4.c [801006D8-8010070C] ; 0x0B8→dll_00B8_projlightning5.c [80100710-80100744] ; 0x0B9→dll_00B9_projlightning7.c [80100748-8010077C] ; 0x0BA→dll_00BA_projlightning6.c [80100780-801007B4] |
+| `main/dll/dll_0059_dll59func0.c` | 800EADCC-800EB098 | MISLABELED | RENAME-ONLY | main/dll/dll_0059_gameplay.c |
+| `main/dll/dll_005A_staffcollisionfunc03.c` | 800EB098-800EB618 | MISLABELED | RENAME-ONLY | main/dll/dll_005A_staffcollision.c |
+| `main/dll/dll_005B_modgfxfunc03.c` | 800EB618-800EC7BC | MISLABELED | RENAME-ONLY | main/dll/dll_005B_modgfx.c |
+| `main/dll/dll_005C_dll5cfunc0.c` | 800EC7BC-800ECAE0 | MISLABELED | RENAME-ONLY | main/dll/dll_005C_gameplay.c |
+| `main/dll/dll_005D_dll5dfunc0.c` | 800ECAE0-800ECE04 | MISLABELED | RENAME-ONLY | main/dll/dll_005D_gameplay.c |
+| `main/dll/dll_005E_dll5efunc0.c` | 800ECE04-800ED294 | MISLABELED | RENAME-ONLY | main/dll/dll_005E_gameplay.c |
+| `main/dll/dll_005F_dll5ffunc0.c` | 800ED294-800ED5E4 | MISLABELED | RENAME-ONLY | main/dll/dll_005F_gameplay.c |
+| `main/dll/dll_0060_dll60func0.c` | 800ED5E4-800EDA28 | MISLABELED | RENAME-ONLY | main/dll/dll_0060_gameplay.c |
+
+### Batch B03 — `800EDA28-800EFA30` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
+| `main/dll/dll_0061_dll61func0.c` | 800EDA28-800EDE74 | MISLABELED | RENAME-ONLY | main/dll/dll_0061_gameplay.c |
+| `main/dll/dll_0062_dll62func0.c` | 800EDE74-800EE25C | MISLABELED | RENAME-ONLY | main/dll/dll_0062_gameplay.c |
+| `main/dll/dll_0063_dll63func0.c` | 800EE25C-800EE8FC | MISLABELED | RENAME-ONLY | main/dll/dll_0063_gameplay.c |
+| `main/dll/dll_0064_dll64func0.c` | 800EE8FC-800EEC34 | MISLABELED | RENAME-ONLY | main/dll/dll_0064_gameplay.c |
+| `main/dll/dll_0065_dll65func0.c` | 800EEC34-800EEFEC | MISLABELED | RENAME-ONLY | main/dll/dll_0065_gameplay.c |
+| `main/dll/dll_00A3_dlla3func0.c` | 800EEFEC-800EF3A0 | MISLABELED | RENAME-ONLY | main/dll/dll_00A3_gameplay.c |
+| `main/dll/dll_0066_dll66func0.c` | 800EF3A0-800EF7B4 | MISLABELED | RENAME-ONLY | main/dll/dll_0066_gameplay.c |
+| `main/dll/dll_0067_dll67func0.c` | 800EF7B4-800EFA30 | MISLABELED | RENAME-ONLY | main/dll/dll_0067_gameplay.c |
+
+### Batch B04 — `800EFA30-800F16E4` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
+| `main/dll/dll_0068_dll68func0.c` | 800EFA30-800EFD34 | MISLABELED | RENAME-ONLY | main/dll/dll_0068_gameplay.c |
+| `main/dll/dll_0069_dll69func0.c` | 800EFD44-800F022C | MISLABELED | RENAME-ONLY | main/dll/dll_0069_gameplay.c |
+| `main/dll/dll_006A_dll6afunc0.c` | 800F022C-800F058C | MISLABELED | RENAME-ONLY | main/dll/dll_006A_gameplay.c |
+| `main/dll/dll_006B_dll6bfunc0.c` | 800F058C-800F07DC | MISLABELED | RENAME-ONLY | main/dll/dll_006B_gameplay.c |
+| `main/dll/dll_006D_dll6dfunc0.c` | 800F07EC-800F0A4C | MISLABELED | RENAME-ONLY | main/dll/dll_006D_gameplay.c |
+| `main/dll/dll_006E_dll6efunc0.c` | 800F0A4C-800F0C9C | MISLABELED | RENAME-ONLY | main/dll/dll_006E_gameplay.c |
+| `main/dll/dll_006F_dll6ffunc0.c` | 800F0C9C-800F11E4 | MISLABELED | RENAME-ONLY | main/dll/dll_006F_gameplay.c |
+| `main/dll/dll_0070_dll70func0.c` | 800F11E4-800F16E4 | MISLABELED | RENAME-ONLY | main/dll/dll_0070_gameplay.c |
+
+### Batch B05 — `800F16E4-800F3400` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
+| `main/dll/dll_0071_dll71func0.c` | 800F16E4-800F1A58 | MISLABELED | RENAME-ONLY | main/dll/dll_0071_gameplay.c |
+| `main/dll/dll_0072_dll72func0.c` | 800F1A58-800F1D64 | MISLABELED | RENAME-ONLY | main/dll/dll_0072_gameplay.c |
+| `main/dll/dll_0073_dll73func0.c` | 800F1D64-800F220C | MISLABELED | RENAME-ONLY | main/dll/dll_0073_gameplay.c |
+| `main/dll/dll_0074_dll74func0.c` | 800F220C-800F2694 | MISLABELED | RENAME-ONLY | main/dll/dll_0074_gameplay.c |
+| `main/dll/dll_0075_dll75func0.c` | 800F2694-800F2A8C | MISLABELED | RENAME-ONLY | main/dll/dll_0075_gameplay.c |
+| `main/dll/dll_0076_dll76func0.c` | 800F2A8C-800F2CEC | MISLABELED | RENAME-ONLY | main/dll/dll_0076_gameplay.c |
+| `main/dll/dll_0077_dll77func0.c` | 800F2CEC-800F2F4C | MISLABELED | RENAME-ONLY | main/dll/dll_0077_gameplay.c |
+| `main/dll/dll_0078_dll78func0.c` | 800F2F4C-800F3400 | MISLABELED | RENAME-ONLY | main/dll/dll_0078_gameplay.c |
+
+### Batch B06 — `800F3400-800F5A8C` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
+| `main/dll/dll_0079_dll79func0.c` | 800F3400-800F3CD0 | MISLABELED | RENAME-ONLY | main/dll/dll_0079_gameplay.c |
+| `main/dll/dll_007A_dll7afunc0.c` | 800F3CD0-800F4174 | MISLABELED | RENAME-ONLY | main/dll/dll_007A_gameplay.c |
+| `main/dll/dll_007B_dll7bfunc0.c` | 800F4174-800F472C | MISLABELED | RENAME-ONLY | main/dll/dll_007B_gameplay.c |
+| `main/dll/dll_007C_dll7cfunc0.c` | 800F472C-800F4C70 | MISLABELED | RENAME-ONLY | main/dll/dll_007C_foodbag.c |
+| `main/dll/dll_007D_dll7dfunc0.c` | 800F4C70-800F4FA4 | MISLABELED | RENAME-ONLY | main/dll/dll_007D_foodbag.c |
+| `main/dll/dll_007E_dll7efunc0.c` | 800F4FA4-800F52E0 | MISLABELED | RENAME-ONLY | main/dll/dll_007E_foodbag.c |
+| `main/dll/dll_007F_dll7ffunc0.c` | 800F52E0-800F57D8 | MISLABELED | RENAME-ONLY | main/dll/dll_007F_foodbag.c |
+| `main/dll/dll_0080_dll80func0.c` | 800F57D8-800F5A8C | MISLABELED | RENAME-ONLY | main/dll/dll_0080_foodbag.c |
+
+### Batch B07 — `800F5A8C-800F7D90` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
+| `main/dll/dll_0081_dll81func0.c` | 800F5A8C-800F6150 | MISLABELED | RENAME-ONLY | main/dll/dll_0081_foodbag.c |
+| `main/dll/dll_0082_dll82func0.c` | 800F6150-800F6534 | MISLABELED | RENAME-ONLY | main/dll/dll_0082_foodbag.c |
+| `main/dll/dll_0083_dll83func0.c` | 800F6534-800F6988 | MISLABELED | RENAME-ONLY | main/dll/dll_0083_foodbag.c |
+| `main/dll/dll_0084_dll84func0.c` | 800F6988-800F6DDC | MISLABELED | RENAME-ONLY | main/dll/dll_0084_foodbag.c |
+| `main/dll/dll_0085_dll85func0.c` | 800F6DDC-800F7434 | MISLABELED | RENAME-ONLY | main/dll/dll_0085_foodbag.c |
+| `main/dll/dll_0086_dll86func0.c` | 800F7434-800F77BC | MISLABELED | RENAME-ONLY | main/dll/dll_0086_foodbag.c |
+| `main/dll/dll_0087_dll87func0.c` | 800F77BC-800F7AC0 | MISLABELED | RENAME-ONLY | main/dll/dll_0087_foodbag.c |
+| `main/dll/dll_0088_dll88func0.c` | 800F7AC0-800F7D90 | MISLABELED | RENAME-ONLY | main/dll/dll_0088_foodbag.c |
+
+### Batch B08 — `800F7D90-800FA5D8` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
+| `main/dll/dll_0089_dll89func0.c` | 800F7D90-800F8094 | MISLABELED | RENAME-ONLY | main/dll/dll_0089_foodbag.c |
+| `main/dll/dll_008A_dll8afunc0.c` | 800F8094-800F8250 | MISLABELED | RENAME-ONLY | main/dll/dll_008A_foodbag.c |
+| `main/dll/dll_008B_dll8bfunc0.c` | 800F8250-800F87E8 | MISLABELED | RENAME-ONLY | main/dll/dll_008B_foodbag.c |
+| `main/dll/dll_008C_dll8cfunc0.c` | 800F87E8-800F8D68 | MISLABELED | RENAME-ONLY | main/dll/dll_008C_foodbag.c |
+| `main/dll/dll_008D_dll8dfunc0.c` | 800F8D68-800F977C | MISLABELED | RENAME-ONLY | main/dll/dll_008D_foodbag.c |
+| `main/dll/dll_008E_dll8efunc0.c` | 800F977C-800F9E78 | MISLABELED | RENAME-ONLY | main/dll/dll_008E_foodbag.c |
+| `main/dll/dll_008F_dll8ffunc0.c` | 800F9E78-800FA16C | MISLABELED | RENAME-ONLY | main/dll/dll_008F_foodbag.c |
+| `main/dll/dll_0090_dll90func0.c` | 800FA16C-800FA5D8 | MISLABELED | RENAME-ONLY | main/dll/dll_0090_foodbag.c |
+
+### Batch B09 — `800FA5D8-800FC208` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
+| `main/dll/dll_0091_dll91func0.c` | 800FA5D8-800FA9F8 | MISLABELED | RENAME-ONLY | main/dll/dll_0091_savegame.c |
+| `main/dll/dll_0092_dll92func0.c` | 800FA9F8-800FADA8 | MISLABELED | RENAME-ONLY | main/dll/dll_0092_savegame.c |
+| `main/dll/dll_0093_dll93func0.c` | 800FADA8-800FB078 | MISLABELED | RENAME-ONLY | main/dll/dll_0093_savegame.c |
+| `main/dll/dll_0094_dll94func0.c` | 800FB078-800FB428 | MISLABELED | RENAME-ONLY | main/dll/dll_0094_savegame.c |
+| `main/dll/dll_0095_dll95func0.c` | 800FB428-800FB720 | MISLABELED | RENAME-ONLY | main/dll/dll_0095_savegame.c |
+| `main/dll/dll_0096_dll96func0.c` | 800FB720-800FBA40 | MISLABELED | RENAME-ONLY | main/dll/dll_0096_savegame.c |
+| `main/dll/dll_0097_dll97func0.c` | 800FBA40-800FBDF0 | MISLABELED | RENAME-ONLY | main/dll/dll_0097_savegame.c |
+| `main/dll/dll_0098_dll98func0.c` | 800FBDF0-800FC208 | MISLABELED | RENAME-ONLY | main/dll/dll_0098_savegame.c |
+
+### Batch B10 — `800FC208-800FE5A8` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
+| `main/dll/dll_0099_dll99func0.c` | 800FC208-800FC5B8 | MISLABELED | RENAME-ONLY | main/dll/dll_0099_savegame.c |
+| `main/dll/dll_009A_dll9afunc0.c` | 800FC5B8-800FCF3C | MISLABELED | RENAME-ONLY | main/dll/dll_009A_screens.c |
+| `main/dll/dll_009B_dll9bfunc0.c` | 800FCF3C-800FD2B4 | MISLABELED | RENAME-ONLY | main/dll/dll_009B_screens.c |
+| `main/dll/dll_009C_dll9cfunc0.c` | 800FD2B4-800FD744 | MISLABELED | RENAME-ONLY | main/dll/dll_009C_screens.c |
+| `main/dll/dll_009D_dll9dfunc0.c` | 800FD744-800FDA98 | MISLABELED | RENAME-ONLY | main/dll/dll_009D_pickup.c |
+| `main/dll/dll_009E_dll9efunc0.c` | 800FDA98-800FDE18 | MISLABELED | RENAME-ONLY | main/dll/dll_009E_pickup.c |
+| `main/dll/dll_009F_dll9ffunc0.c` | 800FDE18-800FE240 | MISLABELED | RENAME-ONLY | main/dll/dll_009F_pickup.c |
+| `main/dll/dll_00A0_dlla0func0.c` | 800FE240-800FE5A8 | MISLABELED | RENAME-ONLY | main/dll/dll_00A0_pickup.c |
+
+### Batch B11 — `800FE5A8-80100550` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
+| `main/dll/dll_00A1_dlla1func0.c` | 800FE5A8-800FE928 | MISLABELED | RENAME-ONLY | main/dll/dll_00A1_pickup.c |
+| `main/dll/dll_00A2_dlla2func0.c` | 800FE928-800FEC74 | MISLABELED | RENAME-ONLY | main/dll/dll_00A2_pickup.c |
+| `main/dll/dll_00A5_dlla5func0.c` | 800FEC84-800FF004 | MISLABELED | RENAME-ONLY | main/dll/dll_00A5_pickup.c |
+| `main/dll/dll_00A6_dlla6func0.c` | 800FF004-800FF6A0 | MISLABELED | RENAME-ONLY | main/dll/dll_00A6_pickup.c |
+| `main/dll/dll_00A7_dlla7func0.c` | 800FF6A0-800FFB44 | MISLABELED | RENAME-ONLY | main/dll/dll_00A7_pickup.c |
+| `main/dll/dll_00A8_dlla8func0.c` | 800FFB44-800FFF04 | MISLABELED | RENAME-ONLY | main/dll/dll_00A8_pickup.c |
+| `main/dll/dll_00A9_dlla9func0.c` | 800FFF04-801002C0 | MISLABELED | RENAME-ONLY | main/dll/dll_00A9_pickup.c |
+| `main/dll/dll_00AA_dllaafunc0.c` | 801002C0-80100550 | MISLABELED | RENAME-ONLY | main/dll/dll_00AA_pickup.c |
+
+### Batch B12 — `80100A90-80100AA4` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
 | `main/dll/dll_8B.c` | 80100A90-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-
-### Batch B03 — `80100AA4-80100AA4` (8 items)
-
-| unit | range | verdict | effort | plan |
-|---|---|---|---|---|
 | `main/dll/dll_8C.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_8D.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_8F.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
@@ -370,12 +655,12 @@ Batches: 26. Region-disjoint: NO OVERLAP — verified (each batch owns a contigu
 | `main/dll/dll_92.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_93.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_95.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/dll_96.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 
-### Batch B04 — `80100AA4-80100AA4` (8 items)
+### Batch B13 — `80100AA4-80100AA4` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
+| `main/dll/dll_96.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_98.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_99.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_9B.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
@@ -383,12 +668,12 @@ Batches: 26. Region-disjoint: NO OVERLAP — verified (each batch owns a contigu
 | `main/dll/dll_9E.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_9F.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_A1.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/dll_A2.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 
-### Batch B05 — `80100AA4-80100C90` (8 items)
+### Batch B14 — `80100AA4-80100C90` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
+| `main/dll/dll_A2.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_A4.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_A5.c` | 80100AA4-80100AA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_A6.c` | 80100AA4-80100C90 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
@@ -396,12 +681,12 @@ Batches: 26. Region-disjoint: NO OVERLAP — verified (each batch owns a contigu
 | `main/dll/dll_A8.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_AA.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_AB.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/dll_AD.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 
-### Batch B06 — `80100C90-80101980` (8 items)
+### Batch B15 — `80100C90-801018A8` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
+| `main/dll/dll_AD.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_AE.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_B1.c` | 80100C90-80100C90 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_B2.c` | 80100C90-80100DCC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
@@ -409,12 +694,12 @@ Batches: 26. Region-disjoint: NO OVERLAP — verified (each batch owns a contigu
 | `main/dll/dll_B4.c` | 80100FA0-801010B4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_B6.c` | 801010B4-80101690 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_B7.c` | 80101690-801018A8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/dll_B8.c` | 801018A8-80101980 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 
-### Batch B07 — `80101980-8010A590` (8 items)
+### Batch B16 — `801018A8-80106654` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
+| `main/dll/dll_B8.c` | 801018A8-80101980 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_BB.c` | 80101980-8010210C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_BC.c` | 8010210C-8010224C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_BD.c` | 8010224C-8010224C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
@@ -422,183 +707,299 @@ Batches: 26. Region-disjoint: NO OVERLAP — verified (each batch owns a contigu
 | `main/dll/dll_C4.c` | 8010224C-8010224C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/cutCam.c` | 80103524-801046F4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_53.c` | 80106654-80106654 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/dll_5B.c` | 8010847C-8010A590 | CONTAINER | CARVE | 0x044→dll_0044_cameramodeviewfinder.c [80108AD0-80109744] ; 0x046→dll_0046_cameramodedebug.c [80109748-80109B00] ; 0x048→dll_0048_cameramodestatic.c [80109C14-8010A100] |
 
-### Batch B08 — `8010A590-80118C88` (8 items)
+### Batch B17 — `8010A104-8011730C` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
+| `main/dll/dll_8010A104.c` | 8010A104-8010A590 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/camshipbattle5C.c` | 8010A590-8010AEA8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_60.c` | 8010BF08-8010BF08 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/camdrakor.c` | 8010BF08-8010D33C | CONTAINER | CARVE | 0x049→dll_0049_cameramodecombat.c [8010C064-8010CEBC] ; 0x04A→dll_004A_cameramodeshipbattle.c [8010CEC0-8010D338] |
-| `main/dll/baddieControl.c` | 8010DB7C-80113F8C | CONTAINER | CARVE | 0x019→dll_0019_baddieControl.c [80112D80-80113F88] ; 0x04D→dll_004D_cameramodenpcspeak.c [8010DD24-8010E518] ; 0x04E→dll_004E_cameramodeworldmap.c [8010E51C-8010F2F4] ; 0x04F→dll_004F_baddieControl.c [8010F2F8-8010F53C] ; 0x050→dll_0050_cameramodecrawl.c [8010F540-8010FA50] ; 0x051→dll_0051_cameramodecannon.c [8010FA54-8010FC70] ; 0x052→dll_0052_cameramodeforcebehind.c [8010FC74-801101E0] ; 0x053→dll_0053_cameramodecloudrunner.c [801101E4-801106B0] ; 0x054→dll_0054_baddieControl.c [801106B4-80110C7C] ; 0x055→dll_0055_cameramodeperv.c [80110C80-80110E2C] ; 0x056→dll_0056_cameramodearwing.c [80110E30-801115E0] ; 0x057→dll_0057_cameramodetitle.c [801115EC-80111D10] |
+| `main/dll/dll_004F_dll4f.c` | 8010F2F8-8010F540 | MISLABELED | RENAME-ONLY | main/dll/dll_004F_baddieControl.c |
+| `main/dll/dll_0054_dll54.c` | 801106B4-80110C80 | MISLABELED | RENAME-ONLY | main/dll/dll_0054_baddieControl.c |
+| `main/dll/dll_0019_dll19func0.c` | 80111D14-80113F8C | MISLABELED | RENAME-ONLY | main/dll/dll_0019_baddieControl.c |
 | `main/dll/dll_0032_n_rareware.c` | 801159E4-80115F20 | MISLABELED | FORENSIC | dll_0032_titlescreeninit.c |
 | `main/dll/dll_0034_n_filemenu.c` | 8011611C-8011730C | MISLABELED | FORENSIC | dll_0034_titlemenu.c |
-| `main/dll/dll_3B.c` | 8011730C-801175A4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/dll_3E.c` | 8011846C-80118C88 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 
-### Batch B09 — `80118C88-8011C7B4` (8 items)
+### Batch B18 — `8011730C-8011BFC8` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
+| `main/dll/dll_3B.c` | 8011730C-801175A4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| `main/dll/dll_3E.c` | 8011846C-80118C88 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_40.c` | 80118C88-80118C88 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_44.c` | 80118C88-80119000 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_43.c` | 80119FAC-8011A0DC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_48.c` | 8011B5D4-8011B5D4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_49.c` | 8011B5D4-8011B5D4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_4B.c` | 8011BFC8-8011BFC8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/dll_4E.c` | 8011BFC8-8011C5CC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/dll_4D.c` | 8011C5CC-8011C7B4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 
-### Batch B10 — `8011CD54-80132024` (8 items)
+### Batch B19 — `8011BFC8-8012FECC` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
-| `main/dll/dimenu.c` | 8011CD54-8011D9B0 | CONTAINER | CARVE | 0x037→dll_0037_optionsscreen.c [8011CD54-8011D490] ; 0x038→dll_0038_weirdunusedmenu.c [8011D51C-8011D7A0] ; 0x039→dll_0039_dummy39.c [8011D854-8011D8F4] ; 0x03A→dll_003A_dummy3a.c [8011D900-8011D914] |
+| `main/dll/dll_4E.c` | 8011BFC8-8011C5CC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| `main/dll/dll_4D.c` | 8011C5CC-8011C7B4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| `main/dll/dll_8011D918.c` | 8011D918-8011D9B0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/maybeTemplate.c` | 80121C4C-801242DC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/balloonBaddie.c` | 801242DC-80125424 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/swarmBaddie.c` | 80125424-801262CC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/wispBaddie.c` | 801262CC-80128120 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_0000_baby_snowworm.c` | 80128120-8012FECC | MISLABELED | FORENSIC | dll_0000_gameui.c |
-| `main/dll/dll_003C_TumbleweedBush.c` | 80130124-80131540 | MISLABELED | FORENSIC | dll_003C_link.c |
-| `main/dll/dll_003E_dummy3e.c` | 80131540-80132024 | CONTAINER | CARVE | 0x03D→dll_003D_titlemenuitem.c [80131570-80131FE0] ; 0x03E→dll_003E_dummy3e.c [80132008-80132020] |
 
-### Batch B11 — `80132024-8014F620` (8 items)
+### Batch B20 — `80130124-8013F100` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
-| `main/dll/Tumbleweed.c` | 80132024-8013939C | CONTAINER | CARVE | 0x031→dll_0031_minimap.c [80132024-80133F40] ; 0x03F→dll_003F_Tumbleweed.c [80133F70-80134070] ; 0x040→dll_0040_credits.c [80134098-80134388] ; 0x041→dll_0041_warpstoneui.c [801344F0-80134834] ; 0x2C0→dll_02C0_front.c [80135BC4-8013695C] |
+| `main/dll/dll_003C_TumbleweedBush.c` | 80130124-80131540 | MISLABELED | FORENSIC | dll_003C_link.c |
+| `main/dll/dll_003F_dll3f.c` | 80133F70-80134098 | MISLABELED | RENAME-ONLY | main/dll/baddie/dll_003F_Tumbleweed.c |
+| `main/dll/dll_02C0_frontfox.c` | 80134870-80136A40 | MISLABELED | RENAME-ONLY | main/dll/baddie/dll_02C0_front.c |
+| `main/dll/dll_80136A40.c` | 80136A40-8013939C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_DF.c` | 8013B368-8013D8F0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/MMP_cratercritter.c` | 8013D8F0-8013DB3C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/MMP_critterspit.c` | 8013DB3C-8013DC88 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/animobjD2.c` | 8013E0D0-8013F100 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/dll_D3.c` | 8013F100-8013F100 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/weaponE6.c` | 8013F100-8013FFB8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/pressureSwitch.c` | 8014E1DC-8014F620 | CONTAINER | CARVE | 0x0DF→dll_00DF_hagabon.c [8014E734-8014EE88] ; 0x0E0→dll_00E0_swarmbaddie.c [8014F1E4-8014F61C] |
 
-### Batch B12 — `801504F8-801659B8` (8 items)
+### Batch B21 — `8013F100-8015F5B0` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
+| `main/dll/dll_D3.c` | 8013F100-8013F100 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| `main/dll/weaponE6.c` | 8013F100-8013FFB8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/newSeqObj.c` | 801504F8-801511E8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/seqObj11D.c` | 801511E8-80152040 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/seqObj11E.c` | 80152040-80152EC0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/magicPlant.c` | 80152EC0-801540A0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/fireflyLantern.c` | 80154870-8015536C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/scarab.c` | 8015DAE8-80161F0C | CONTAINER | CARVE | 0x0CB→dll_00CB_scarab.c [80160CB4-801610A4] ; 0x0CC→dll_00CC_chukchuk.c [8015F6C4-8015FBE8] ; 0x0CD→dll_00CD_iceball.c [8015FF64-801601C0] ; 0x0CE→dll_00CE_scarab.c [8015EE98-8015F500] |
-| `main/dll/barrel.c` | 80161F0C-801631C8 | CONTAINER | CARVE | 0x0CF→dll_00CF_cannonclaw.c [80163094-801631C4] ; 0x0D0→dll_00D0_grimble.c [80162AA0-80162FA0] |
+| `main/dll/dll_00CE_dllce.c` | 8015DAE8-8015F5B0 | MISLABELED | RENAME-ONLY | main/dll/dll_00CE_scarab.c |
+
+### Batch B22 — `801601C4-8016BB10` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
+| `main/dll/dll_00CB_dllcb.c` | 801601C4-80161130 | MISLABELED | RENAME-ONLY | main/dll/dll_00CB_scarab.c |
+| `main/dll/dll_80161130.c` | 80161130-80161F0C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/landedArwing.c` | 8016558C-801659B8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| `main/dll/dll_00D7_kaldachomsp.c` | 801696D4-80169EF4 | MISLABELED | RENAME-ONLY | main/dll/dll_00D7_kaldachompspit.c |
+| `main/dll/dll_00DA_pollenfragm.c` | 8016A8E0-8016B230 | MISLABELED | RENAME-ONLY | main/dll/dll_00DA_pollenfragment.c |
+| `main/dll/dll_00DC_mikabombsha.c` | 8016B710-8016B898 | MISLABELED | RENAME-ONLY | main/dll/dll_00DC_mikabombshadow.c |
+| `main/dll/dll_025A_staticcamer.c` | 8016B898-8016B99C | MISLABELED | RENAME-ONLY | main/dll/dll_025A_staticcamera.c |
+| `main/dll/dll_00DD_gcbaddieshi.c` | 8016B99C-8016BB10 | MISLABELED | RENAME-ONLY | main/dll/dll_00DD_gcbaddieshield.c |
 
-### Batch B13 — `80169360-8017AC2C` (8 items)
+### Batch B23 — `8016BB10-801713FC` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
-| `main/dll/wallanimator.c` | 80169360-80169EF4 | CONTAINER | CARVE | 0x0D6→dll_00D6_kaldachomme.c [8016958C-801696D0] ; 0x0D7→dll_00D7_kaldachompspit.c [8016980C-80169EF0] |
-| `main/dll/xyzanimator.c` | 80169EF4-8016B230 | CONTAINER | CARVE | 0x0D8→dll_00D8_pinponspike.c [8016A058-8016A3C4] ; 0x0D9→dll_00D9_pollen.c [8016A3C8-8016A8DC] ; 0x0DA→dll_00DA_pollenfragment.c [8016A8E0-8016B22C] |
-| `main/dll/genprops.c` | 8016B230-80171D14 | CONTAINER | CARVE | 0x0C6→dll_00C6_animatedobj.c [8016BE70-8016C338] ; 0x0C7→dll_00C7_dim2roofrub.c [8016C750-8016CBE0] ; 0x0C8→dll_00C8_depthoffieldpoint.c [8016CE68-8016CEB0] ; 0x0DB→dll_00DB_mikabomb.c [8016B230-8016B70C] ; 0x0DC→dll_00DC_mikabombshadow.c [8016B710-8016B894] ; 0x0DD→dll_00DD_gcbaddieshield.c [8016B99C-8016BB0C] ; 0x0DE→dll_00DE_baddieinterestp.c [8016BB10-8016BE6C] ; 0x0E2→dll_00E2_staff.c [8016E8D0-8016F028] ; 0x0E3→dll_00E3_fireball.c [8016F54C-80170000] ; 0x0E4→dll_00E4_flamethrowerspe.c [80170004-801702D0] ; 0x0E5→dll_00E5_shield.c [80170A7C-801712FC] ; 0x0E6→dll_00E6_restartmarker.c [801713D8-801713D8] ; 0x0E8→dll_00E8_checkpoint4.c [801719E0-80171BA8] ; 0x0E9→dll_00E9_setuppoint.c [80171D10-80171D10] ; 0x0EA→dll_00EA_sideload.c [80171BAC-80171BAC] ; 0x0EB→dll_00EB_siderepel.c [80171C78-80171CA4] ; 0x0F7→dll_00F7_genprops.c [801713FC-801719DC] ; 0x125→dll_0125_curve.c [80171300-80171350] ; 0x25A→dll_025A_staticcamera.c [8016B898-8016B998] |
-| `main/dll/lightning.c` | 80173224-80174A80 | CONTAINER | CARVE | 0x0EE→dll_00EE_effectbox.c [80173F80-80174434] ; 0x0FF→dll_00FF_magicdust.c [80173224-80173AEC] |
-| `main/dll/dll_00F3_flameblast.c` | 80176FC4-80178338 | CONTAINER | CARVE | 0x0F0→dll_00F0_warppoint.c [80177030-801776C0] ; 0x0F1→dll_00F1_invhit.c [8017779C-80177E24] ; 0x0F2→dll_00F2_iceblast.c [80177E28-80178048] ; 0x0F3→dll_00F3_flameblast.c [80178194-801782C8] |
-| `main/dll/tFrameAnimator.c` | 8017A00C-8017A350 | CONTAINER | CARVE | 0x0F6→dll_00F6_area.c [8017A00C-8017A044] ; 0x0F8→dll_00F8_levelname.c [8017A0C4-8017A34C] |
-| `main/dll/screenOverlay.c` | 8017A350-8017AC2C | CONTAINER | CARVE | 0x0F9→dll_00F9_projectileswitch.c [8017A350-8017A8E8] ; 0x0FA→dll_00FA_invisiblehitswitch.c [8017A8EC-8017AB20] |
+| `main/dll/dll_00DE_baddieinter.c` | 8016BB10-8016BE70 | MISLABELED | RENAME-ONLY | main/dll/dll_00DE_baddieinterestp.c |
+| `main/dll/dll_00C6_animdummy.c` | 8016BE70-8016C4AC | MISLABELED | RENAME-ONLY | main/dll/dll_00C6_animatedobj.c |
+| `main/dll/dll_00C8_depthoffiel.c` | 8016CD48-8016CEE8 | MISLABELED | RENAME-ONLY | main/dll/dll_00C8_depthoffieldpoint.c |
+| `main/dll/dll_00E2_sword.c` | 8016CEE8-8016F16C | MISLABELED | RENAME-ONLY | main/dll/dll_00E2_staff.c |
+| `main/dll/dll_00E3_projball.c` | 8016F16C-80170004 | MISLABELED | RENAME-ONLY | main/dll/dll_00E3_fireball.c |
+| `main/dll/dll_00E4_flamethrowe.c` | 80170004-801702D4 | MISLABELED | RENAME-ONLY | main/dll/dll_00E4_flamethrowerspe.c |
+| `main/dll/dll_00E5_foxshield.c` | 801702D4-80171300 | MISLABELED | RENAME-ONLY | main/dll/dll_00E5_shield.c |
+| `main/dll/dll_00E6_restartmark.c` | 801713D8-801713FC | MISLABELED | RENAME-ONLY | main/dll/dll_00E6_restartmarker.c |
+
+### Batch B24 — `801713FC-8017B5C8` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
+| `main/dll/dll_00F7_dllf7.c` | 801713FC-801719E0 | MISLABELED | RENAME-ONLY | main/dll/dll_00F7_genprops.c |
+| `main/dll/dll_00FF_magicdustsm.c` | 80173224-80173F80 | MISLABELED | RENAME-ONLY | main/dll/dll_00FF_magicdust.c |
+| `main/dll/dll_80174438.c` | 80174438-80174A80 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| `main/dll/dll_00F0_mmpwarppoi.c` | 80176FC4-8017779C | MISLABELED | RENAME-ONLY | main/dll/dll_00F0_warppoint.c |
+| `main/dll/dll_00F9_drprojectil.c` | 8017A350-8017A8EC | MISLABELED | RENAME-ONLY | main/dll/dll_00F9_projectileswitch.c |
+| `main/dll/dll_00FA_invisiblehi.c` | 8017A8EC-8017AC2C | MISLABELED | RENAME-ONLY | main/dll/dll_00FA_invisiblehitswitch.c |
 | `main/dll/dll_147.c` | 8017AC2C-8017AC2C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| `main/dll/dll_00FB_wctemplepre.c` | 8017AC2C-8017B5C8 | MISLABELED | RENAME-ONLY | main/dll/dll_00FB_pressureswitchfb.c |
 
-### Batch B14 — `8017AC2C-80194408` (8 items)
+### Batch B25 — `8017B5C8-80191D00` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
-| `main/dll/cfguardian.c` | 8017AC2C-8017C294 | CONTAINER | CARVE | 0x0FB→dll_00FB_pressureswitchfb.c [8017AD88-8017B3F8] ; 0x10F→dll_010F_mmpbridge.c [8017BB80-8017BCF4] ; 0x110→dll_0110_door.c [8017B8DC-8017B9CC] ; 0x111→dll_0111_doorlock.c [8017BDAC-8017C178] |
-| `main/dll/alphaanim.c` | 8017C294-8017CF90 | CONTAINER | CARVE | 0x112→dll_0112_seqobject.c [8017C3F8-8017C6AC] ; 0x113→dll_0113_seqobj2.c [8017C87C-8017CBD8] ; 0x114→dll_0114_immultiseq.c [8017CCC0-8017CF8C] |
-| `main/dll/groundAnimator.c` | 8017CF90-8017D818 | CONTAINER | CARVE | 0x115→dll_0115_groundAnimator.c [8017D06C-8017D378] ; 0x116→dll_0116_wmcolumn.c [8017D37C-8017D814] |
-| `main/dll/cfprisonuncle.c` | 8017F4F4-801816F8 | CONTAINER | CARVE | 0x0FE→dll_00FE_magicplant.c [8017F8FC-8017FD84] ; 0x100→dll_0100_trickywarp.c [8017FF0C-80180218] ; 0x101→dll_0101_trickyguard.c [8018023C-80180314] ; 0x102→dll_0102_staypoint.c [80180338-801804B4] ; 0x103→dll_0103_curvefish.c [80180DC8-80181458] ; 0x118→dll_0118_duster.c [801804E4-80180CAC] |
-| `main/dll/mmp_asteroid_re.c` | 80191A70-80191F2C | CONTAINER | CARVE | 0x12E→dll_012E_cflightwall.c [80191A70-80191B5C] ; 0x12F→dll_012F_barrelpad.c [80191B60-80191CFC] ; 0x131→dll_0131_cfdoorlight.c [80191D00-80191F28] |
+| `main/dll/dll_0110_ktrexdoorp.c` | 8017B5C8-8017BB80 | MISLABELED | RENAME-ONLY | main/dll/dll_0110_door.c |
+| `main/dll/dll_0111_cfpowerlock.c` | 8017BCF8-8017C294 | MISLABELED | RENAME-ONLY | main/dll/dll_0111_doorlock.c |
+| `main/dll/dll_0112_bossdrakor.c` | 8017C294-8017C7A4 | MISLABELED | RENAME-ONLY | main/dll/dll_0112_seqobject.c |
+| `main/dll/dll_0113_cameranewse.c` | 8017C7A4-8017CBDC | MISLABELED | RENAME-ONLY | main/dll/dll_0113_seqobj2.c |
+| `main/dll/dll_0115_dll115.c` | 8017CF90-8017D37C | MISLABELED | RENAME-ONLY | main/dll/dll_0115_groundAnimator.c |
+| `main/dll/dll_801814D0.c` | 801814D0-801816F8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| `main/dll/dll_012E_laserturret.c` | 80191A70-80191B60 | MISLABELED | RENAME-ONLY | main/dll/CF/dll_012E_cflightwall.c |
+| `main/dll/dll_012F_nwcallofeld.c` | 80191B60-80191D00 | MISLABELED | RENAME-ONLY | main/dll/dll_012F_barrelpad.c |
+
+### Batch B26 — `80191D00-8019742C` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
+| `main/dll/dll_0131_cfdoorligh.c` | 80191D00-80191F2C | MISLABELED | RENAME-ONLY | main/dll/CF/dll_0131_cfdoorlight.c |
 | `main/dll/holoPoint.c` | 80191F2C-80191F2C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/texscroll_container.c` | 80191F2C-80192394 | CONTAINER | CARVE | 0x134→dll_0134_texscroll2.c [80191F2C-801922E0] ; 0x135→dll_0135_texscroll.c [801922E4-80192390] |
-| `main/dll/mmp_barrel.c` | 80192394-80194408 | CONTAINER | CARVE | 0x136→dll_0136_waveanimator.c [80192394-80192A64] ; 0x137→dll_0137_alphaanimator.c [80192A68-801930FC] ; 0x138→dll_0138_groundanimator.c [80193100-80193CBC] ; 0x139→dll_0139_hitanimator.c [80193F28-8019410C] ; 0x13A→dll_013A_visanimator.c [8019423C-80194404] |
+| `main/dll/dll_0136_waveanimato.c` | 80192394-80192A68 | MISLABELED | RENAME-ONLY | main/dll/MMP/dll_0136_waveanimator.c |
+| `main/dll/dll_0137_alphaanimat.c` | 80192A68-80193100 | MISLABELED | RENAME-ONLY | main/dll/MMP/dll_0137_alphaanimator.c |
+| `main/dll/dll_0138_groundanima.c` | 80193100-80193DBC | MISLABELED | RENAME-ONLY | main/dll/MMP/dll_0138_groundanimator.c |
+| `main/dll/dll_013D_explodeanim.c` | 801962C8-80196520 | MISLABELED | RENAME-ONLY | main/dll/MMP/dll_013D_explodeanimator.c |
+| `main/dll/dll_013E_dimbossices.c` | 80196520-8019718C | MISLABELED | RENAME-ONLY | main/dll/MMP/dll_013E_dimbossicesmash.c |
+| `main/dll/dll_013F_texframeani.c` | 8019718C-8019742C | MISLABELED | RENAME-ONLY | main/dll/MMP/dll_013F_texframeanimator.c |
 
-### Batch B15 — `801948C0-801AA558` (8 items)
+### Batch B27 — `80197DA8-801A4380` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
-| `main/dll/MMP_asteroid.c` | 801948C0-801978A0 | CONTAINER | CARVE | 0x13C→dll_013C_xyzanimator.c [80194B5C-80196218] ; 0x13D→dll_013D_explodeanimator.c [801962C8-8019651C] ; 0x13E→dll_013E_dimbossicesmash.c [80196910-80197188] ; 0x13F→dll_013F_texframeanimator.c [8019718C-80197428] ; 0x140→dll_0140_fogcontrol.c [8019742C-801976FC] |
-| `main/dll/MMP_moonrock.c` | 801978A0-80198FA4 | CONTAINER | CARVE | 0x132→dll_0132_waterfallspray.c [80197DA8-801980F0] ; 0x133→dll_0133_sfxplayer.c [80198194-80198954] ; 0x141→dll_0141_lightning.c [801978A0-80197C54] |
+| `main/dll/dll_0132_waterfallsp.c` | 80197DA8-80198194 | MISLABELED | RENAME-ONLY | main/dll/MMP/dll_0132_waterfallspray.c |
+| `main/dll/dll_80198A00.c` | 80198A00-80198FA4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/MMP_gyservent.c` | 80198FA4-801993B0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/hightop.c` | 801993B0-8019AE3C | CONTAINER | CARVE | 0x126→dll_0126_trigger.c [8019A300-8019AA78] ; 0x145→dll_0145_cloudprisoncontrol.c [8019AA7C-8019AE30] |
-| `main/dll/IMicicle.c` | 801A39B4-801A57E8 | CONTAINER | CARVE | 0x15B→dll_015B_cfforcefield.c [801A39B4-801A3E98] ; 0x15D→dll_015D_slidingdoor.c [801A4064-801A41D4] ; 0x15F→dll_015F_attractor.c [801A41D8-801A437C] ; 0x162→dll_0162_cfmagicwall.c [801A4380-801A4520] ; 0x164→dll_0164_cflevelcontrol.c [801A45C4-801A4DB4] ; 0x166→dll_0166_exploded.c [801A5238-801A57E4] |
-| `main/dll/IMspacecraft.c` | 801A57E8-801A6638 | CONTAINER | CARVE | 0x167→dll_0167_spiritdoorlock.c [801A57E8-801A5D84] ; 0x17D→dll_017D_rollingbarrel.c [801A5F70-801A662C] |
-| `main/dll/DIMlavaball.c` | 801A6638-801A8F88 | CONTAINER | CARVE | 0x17E→dll_017E_mmplevelcontrol.c [801A66FC-801A6C24] ; 0x17F→dll_017F_moonseedbush.c [801A6D5C-801A6F48] ; 0x180→dll_0180_mmpasteroidre.c [801A70DC-801A78C4] ; 0x181→dll_0181_mmptrenchfx.c [801A8A40-801A8E20] ; 0x182→dll_0182_mmpmoonrock.c [801A8148-801A8A3C] ; 0x183→dll_0183_mmpgyservent.c [801A8E24-801A8F84] |
-| `main/dll/DIMlogfire.c` | 801A8F88-801AA558 | CONTAINER | CARVE | 0x184→dll_0184_animsharpclaw.c [801A9090-801A9464] ; 0x185→dll_0185_ccgasvent.c [801A9E74-801A9F84] ; 0x186→dll_0186_ccgasventcontrol.c [801AA104-801AA4FC] ; 0x25B→dll_025B_msplantings.c [801A9484-801A9E70] |
+| `main/dll/dll_0126_trigpnt.c` | 801993B0-8019AA7C | MISLABELED | RENAME-ONLY | main/dll/DR/dll_0126_trigger.c |
+| `main/dll/dll_0145_cloudprison.c` | 8019AA7C-8019AE3C | MISLABELED | RENAME-ONLY | main/dll/DR/dll_0145_cloudprisoncontrol.c |
+| `main/dll/dll_015B_cfforcefiel.c` | 801A39B4-801A3E9C | MISLABELED | RENAME-ONLY | main/dll/IM/dll_015B_cfforcefield.c |
+| `main/dll/dll_015D_cfslidedoor.c` | 801A3E9C-801A41D8 | MISLABELED | RENAME-ONLY | main/dll/IM/dll_015D_slidingdoor.c |
+| `main/dll/dll_015F_cfattractor.c` | 801A41D8-801A4380 | MISLABELED | RENAME-ONLY | main/dll/IM/dll_015F_attractor.c |
 
-### Batch B16 — `801AA558-801B3DE4` (8 items)
+### Batch B28 — `801A4524-801A8A40` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
-| `main/dll/DIMsnowball.c` | 801AA558-801AC248 | CONTAINER | CARVE | 0x187→dll_0187_ccqueen.c [801AA558-801AA694] ; 0x188→dll_0188_cclightfoot.c [801AA810-801AB438] ; 0x189→dll_0189_ccsharpclawpad.c [801AB468-801AB6D4] ; 0x18A→dll_018A_ccpedstal.c [801AB6F8-801AB9B0] ; 0x18B→dll_018B_cclevcontrol.c [801ABAD4-801ABF48] |
-| `main/dll/DIMboulder.c` | 801AC248-801AE0EC | CONTAINER | CARVE | 0x169→dll_0169_imicemountain.c [801AC748-801AC9C0] ; 0x16A→dll_016A_crrockfall.c [801ACDC8-801AD434] ; 0x16B→dll_016B_magiclight.c [801AD52C-801AD7E0] ; 0x16C→dll_016C_DIMboulder.c [801ADB70-801AE0E8] |
-| `main/dll/DIMcannon.c` | 801AE0EC-801B0670 | CONTAINER | CARVE | 0x16D→dll_016D_imicepillar.c [801AE0EC-801AE140] ; 0x16E→dll_016E_imanimspacecraft.c [801AE144-801AE504] ; 0x16F→dll_016F_imspacethruster.c [801AE508-801AE980] ; 0x170→dll_0170_imspacering.c [801AE984-801AEAE0] ; 0x171→dll_0171_imspaceringgen.c [801AEAE4-801AEE28] ; 0x172→dll_0172_linkblevcontrol.c [801AEE2C-801AF38C] ; 0x173→dll_0173_linklevcontrol.c [801AF848-801AF978] ; 0x1BE→dll_01BE_dimlava.c [801AF9E4-801B02B8] ; 0x1BF→dll_01BF_dimlavaball.c [801B02BC-801B066C] |
-| `main/dll/DIMlavasmash.c` | 801B0670-801B13E8 | CONTAINER | CARVE | 0x1C0→dll_01C0_dimlogfire.c [801B07B0-801B0BE8] ; 0x1C1→dll_01C1_dimsnowball.c [801B0DD4-801B13E4] |
-| `main/dll/DIMExplosion.c` | 801B13E8-801B1FF4 | CONTAINER | CARVE | 0x1C2→dll_01C2_dimsnowball1c2.c [801B13E8-801B15D4] ; 0x1C3→dll_01C3_dimgate.c [801B15E0-801B17F0] ; 0x1C4→dll_01C4_dimicewall.c [801B1820-801B1AB8] ; 0x1C5→dll_01C5_dimbarrier.c [801B1B40-801B1D80] |
+| `main/dll/dll_0164_cflevelcont.c` | 801A4524-801A4DB8 | MISLABELED | RENAME-ONLY | main/dll/IM/dll_0164_cflevelcontrol.c |
+| `main/dll/dll_0166_cfbrokengra.c` | 801A4DB8-801A57E8 | MISLABELED | RENAME-ONLY | main/dll/IM/dll_0166_exploded.c |
+| `main/dll/dll_0167_spiritdoorl.c` | 801A57E8-801A5D88 | MISLABELED | RENAME-ONLY | main/dll/IM/dll_0167_spiritdoorlock.c |
+| `main/dll/dll_017D_dim2barrel.c` | 801A5D88-801A6638 | MISLABELED | RENAME-ONLY | main/dll/IM/dll_017D_rollingbarrel.c |
+| `main/dll/dll_017E_mmplevelco.c` | 801A6638-801A6C28 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_017E_mmplevelcontrol.c |
+| `main/dll/dll_017F_msbush.c` | 801A6C28-801A6F4C | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_017F_moonseedbush.c |
+| `main/dll/dll_0180_mmpasteroi.c` | 801A6F4C-801A78C8 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_0180_mmpasteroidre.c |
+| `main/dll/dll_0182_mmpmoonroc.c` | 801A78C8-801A8A40 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_0182_mmpmoonrock.c |
+
+### Batch B29 — `801A8A40-801ACCFC` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
+| `main/dll/dll_0181_mmptrenchf.c` | 801A8A40-801A8E24 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_0181_mmptrenchfx.c |
+| `main/dll/dll_0183_mmpgyserve.c` | 801A8E24-801A8F88 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_0183_mmpgyservent.c |
+| `main/dll/dll_0184_dimanimshar.c` | 801A8F88-801A9468 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_0184_animsharpclaw.c |
+| `main/dll/dll_0186_ccgasventco.c` | 801A9FA8-801AA558 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_0186_ccgasventcontrol.c |
+| `main/dll/dll_0189_ccsharpclaw.c` | 801AB468-801AB6F8 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_0189_ccsharpclawpad.c |
+| `main/dll/dll_018B_cclevcontro.c` | 801ABA84-801AC01C | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_018B_cclevcontrol.c |
+| `main/dll/dll_801AC01C.c` | 801AC01C-801AC248 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| `main/dll/dll_0169_imicemounta.c` | 801AC248-801ACCFC | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_0169_imicemountain.c |
+
+### Batch B30 — `801AD440-801B02BC` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
+| `main/dll/dll_016B_dimmagiclig.c` | 801AD440-801AD7E4 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_016B_magiclight.c |
+| `main/dll/dll_016C_dll16c.c` | 801AD7E4-801AE0EC | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_016C_DIMboulder.c |
+| `main/dll/dll_016E_imanimspace.c` | 801AE144-801AE508 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_016E_imanimspacecraft.c |
+| `main/dll/dll_016F_imspacethru.c` | 801AE508-801AE984 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_016F_imspacethruster.c |
+| `main/dll/dll_0171_imspacering.c` | 801AEAE4-801AEE2C | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_0171_imspaceringgen.c |
+| `main/dll/dll_0172_linkblevco.c` | 801AEE2C-801AF568 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_0172_linkblevcontrol.c |
+| `main/dll/dll_0173_linklevcon.c` | 801AF568-801AF9E4 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_0173_linklevcontrol.c |
+| `main/dll/dll_01BE_dimlavaball.c` | 801AF9E4-801B02BC | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_01BE_dimlava.c |
+
+### Batch B31 — `801B13E8-801B5D48` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
+| `main/dll/dll_01C2_dimsnowball.c` | 801B13E8-801B15D8 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_01C2_dimsnowball1c2.c |
+| `main/dll/dll_801B1D84.c` | 801B1D84-801B1FF4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/DIMwooddoor.c` | 801B1FF4-801B2550 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DIMlevcontrol.c` | 801B2550-801B3768 | CONTAINER | CARVE | 0x1C6→dll_01C6_dimcannon.c [801B2B30-801B3340] ; 0x1C7→dll_01C7_dimlavasmash.c [801B3570-801B3764] |
-| `main/dll/DIM2conveyor.c` | 801B3768-801B3DE4 | CONTAINER | CARVE | 0x1C8→dll_01C8_dimbridgecogmai.c [801B37D0-801B3A64] ; 0x1C9→dll_01C9_dimdismountpoint.c [801B3A68-801B3DE0] |
+| `main/dll/dll_01C7_dimlavasmas.c` | 801B3344-801B3768 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_01C7_dimlavasmash.c |
+| `main/dll/dim2conveyor.c` | 801B3768-801B3DE4 | CONTAINER | CARVE | 0x1C8→dll_01C8_dimbridgecogmai.c [801B37D0-801B3A64] ; 0x1C9→dll_01C9_dimdismountpoint.c [801B3A68-801B3DE0] |
+| `main/dll/dll_01CA_dimexplosio.c` | 801B3DE4-801B57BC | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_01CA_dimexplosion.c |
+| `main/dll/dll_01CB_dimwooddoor.c` | 801B57BC-801B5A28 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_01CB_dimwooddoor2.c |
+| `main/dll/dll_01CE_dll1ce.c` | 801B5A28-801B5D48 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_01CE_DIM2flameburst.c |
 
-### Batch B17 — `801B3DE4-801C04B8` (8 items)
+### Batch B32 — `801B5D48-801B8798` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
-| `main/dll/DIM2flameburst.c` | 801B3DE4-801B63F4 | CONTAINER | CARVE | 0x1CA→dll_01CA_dimexplosion.c [801B42C8-801B56B8] ; 0x1CB→dll_01CB_dimwooddoor2.c [801B57BC-801B5A24] ; 0x1CC→dll_01CC_dimmagicbridge.c [801B6164-801B63F0] ; 0x1CE→dll_01CE_DIM2flameburst.c [801B5A28-801B5D44] |
-| `main/dll/DIM2snowball.c` | 801B63F4-801B8798 | CONTAINER | CARVE | 0x1CD→dll_01CD_dimlevelcontrol.c [801B63F4-801B69AC] ; 0x1CF→dll_01CF_DIM2snowball.c [801B6B44-801B6C28] ; 0x1D0→dll_01D0_dimtricky.c [801B6C2C-801B6D30] ; 0x1D1→dll_01D1_dimtruthhornice.c [801B6D6C-801B70C4] ; 0x1D5→dll_01D5_dim2conveyor.c [801B7154-801B75B4] ; 0x1D6→dll_01D6_DIM2snowball.c [801B75B8-801B7D44] ; 0x1D7→dll_01D7_dim2snowball.c [801B7D48-801B8378] ; 0x1D8→dll_01D8_dim2pathgenerator.c [801B837C-801B8794] |
-| `main/dll/DIM2projrock.c` | 801B8798-801BA224 | CONTAINER | CARVE | 0x1DA→dll_01DA_DIM2projrock.c [801B8798-801B8B6C] ; 0x1DB→dll_01DB_DIM2projrock.c [801B8B70-801B8F78] ; 0x1DC→dll_01DC_dim2icefloe.c [801B8F7C-801B93F8] ; 0x1DD→dll_01DD_dim2icicle.c [801B93FC-801B980C] ; 0x1DE→dll_01DE_dim2lavacontrol.c [801B9810-801B9B80] ; 0x1DF→dll_01DF_DIM2projrock.c [801B9CB4-801B9EC8] |
+| `main/dll/dll_01CC_dimmagicbri.c` | 801B5D48-801B63F4 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_01CC_dimmagicbridge.c |
+| `main/dll/dll_01CD_dimlevelco.c` | 801B63F4-801B6B44 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_01CD_dimlevelcontrol.c |
+| `main/dll/dll_01CF_dll1cf.c` | 801B6B44-801B6C2C | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_01CF_DIM2snowball.c |
+| `main/dll/dll_01D1_dimtruthhor.c` | 801B6D40-801B7154 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_01D1_dimtruthhornice.c |
+| `main/dll/dll_01D5_dim2conveyo.c` | 801B7154-801B75B8 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_01D5_dim2conveyor.c |
+| `main/dll/dll_01D6_dll1d6.c` | 801B75B8-801B7D48 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_01D6_DIM2snowball.c |
+| `main/dll/dll_01D7_dim2snowbal.c` | 801B7D48-801B837C | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_01D7_dim2snowball.c |
+| `main/dll/dll_01D8_dim2pathgen.c` | 801B837C-801B8798 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_01D8_dim2pathgenerator.c |
+
+### Batch B33 — `801B8798-801BE19C` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
+| `main/dll/dll_01DA_dll1da.c` | 801B8798-801B8B70 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_01DA_DIM2projrock.c |
+| `main/dll/dll_01DB_dll1db.c` | 801B8B70-801B8F7C | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_01DB_DIM2projrock.c |
+| `main/dll/dll_01DE_dim2lavacon.c` | 801B9810-801B9CB4 | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_01DE_dim2lavacontrol.c |
+| `main/dll/dll_01DF_dll1df.c` | 801B9CB4-801B9ECC | MISLABELED | RENAME-ONLY | main/dll/DIM/dll_01DF_DIM2projrock.c |
+| `main/dll/dll_801B9ECC.c` | 801B9ECC-801BA224 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/DIM2lift.c` | 801BA224-801BB598 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/DIM2icicle.c` | 801BB598-801BCB34 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_223.c` | 801BDCF8-801BE19C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DIMbossspit.c` | 801BE19C-801BE44C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/rope.c` | 801BF048-801C04B8 | CONTAINER | CARVE | 0x1E3→dll_01E3_dimbossgut2.c [801BF2D4-801BF8D4] ; 0x1E4→dll_01E4_magicmaker.c [801BFFF4-801C02B4] ; 0x1E5→dll_01E5_dimbossspit.c [801BFB60-801BFFF0] ; 0x1E6→dll_01E6_dimbosscrackpar.c [801C0364-801C04B4] |
 
-### Batch B18 — `801C04B8-801C835C` (8 items)
+### Batch B34 — `801BE19C-801C1740` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
-| `main/dll/DFcradle.c` | 801C04B8-801C0E60 | CONTAINER | CARVE | 0x174→dll_0174_ccriverflow.c [801C0A60-801C0B34] ; 0x1E7→dll_01E7_dimbossfire.c [801C04B8-801C0A5C] |
+| `main/dll/DIMbossspit.c` | 801BE19C-801BE44C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| `main/dll/dll_01E3_dimbossgut.c` | 801BF048-801BF8D8 | MISLABELED | RENAME-ONLY | main/dll/DF/dll_01E3_dimbossgut2.c |
+| `main/dll/dll_01E5_dimbossspi.c` | 801BF8D8-801BFFF4 | MISLABELED | RENAME-ONLY | main/dll/DF/dll_01E5_dimbossspit.c |
+| `main/dll/dll_01E6_dimbosscrac.c` | 801C02B8-801C04B8 | MISLABELED | RENAME-ONLY | main/dll/DF/dll_01E6_dimbosscrackpar.c |
+| `main/dll/dll_801C0BF8.c` | 801C0BF8-801C0E60 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/DFpulley.c` | 801C0E60-801C0FD8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/DFbarrel.c` | 801C0FD8-801C1238 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/DFbarrelanim.c` | 801C1238-801C1740 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/dll_017A_spiritprize.c` | 801C2914-801C3B68 | CONTAINER | CARVE | 0x178→dll_0178_dfshshrine.c [801C2DC4-801C3614] ; 0x17A→dll_017A_spiritprize.c [801C3618-801C3B64] |
-| `main/dll/shrine.c` | 801C53A0-801C5990 | CONTAINER | CARVE | 0x18D→dll_018D_mmshscales.c [801C53A0-801C5788] ; 0x18E→dll_018E_mmshwaterspike.c [801C578C-801C598C] |
-| `main/dll/shrine1C2.c` | 801C5990-801C70F0 | CONTAINER | CARVE | 0x18F→dll_018F_ecshshrine.c [801C5E78-801C6E08] ; 0x191→dll_0191_ecshcreator.c [801C6E0C-801C70EC] |
-| `main/dll/creator1C4.c` | 801C70F0-801C835C | CONTAINER | CARVE | 0x192→dll_0192_gpshshrine.c [801C75A8-801C8080] ; 0x193→dll_0193_gpshobjcreator.c [801C8084-801C82C4] ; 0x194→dll_0194_gpshscene.c [801C82C8-801C8358] |
 
-### Batch B19 — `801C9660-801D5174` (8 items)
+### Batch B35 — `801C578C-801CC998` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
-| `main/dll/cup1C3.c` | 801C9660-801CA718 | CONTAINER | CARVE | 0x196→dll_0196_dbshsymbol.c [801C9C34-801C9DE4] ; 0x197→dll_0197_cup1C3.c [801C9E54-801CA714] |
-| `main/dll/dimmagicbridge.c` | 801CA9C0-801CBA98 | CONTAINER | CARVE | 0x199→dll_0199_dimmagicbridge.c [801CACD4-801CB7A4] ; 0x19A→dll_019A_dimmagicbridge.c [801CB7A8-801CBA94] |
-| `main/dll/shrine1CE.c` | 801CBA98-801CCFA4 | CONTAINER | CARVE | 0x19B→dll_019B_shrine1CE.c [801CBD14-801CC728] ; 0x19C→dll_019C_shrine1CE.c [801CC72C-801CC994] ; 0x19D→dll_019D_shrine1CE.c [801CC998-801CCFA0] |
-| `main/dll/creator1D6.c` | 801CF78C-801CFD68 | CONTAINER | CARVE | 0x1A2→dll_01A2_nwtricky.c [801CF7B8-801CFB04] ; 0x1A3→dll_01A3_nwanimice.c [801CFB2C-801CFBB0] ; 0x1A4→dll_01A4_nwice.c [801CFBB4-801CFD44] |
-| `main/dll/projball1D8.c` | 801CFD68-801D083C | CONTAINER | CARVE | 0x1A5→dll_01A5_nwlevcontrol.c [801CFEC4-801D04E0] ; 0x1A6→dll_01A6_shtricky.c [801D069C-801D07C0] |
+| `main/dll/dll_018E_mmshwaters.c` | 801C578C-801C5990 | MISLABELED | RENAME-ONLY | main/dll/mmshrine/dll_018E_mmshwaterspike.c |
+| `main/dll/dll_0191_ecshcreato.c` | 801C6E0C-801C70F0 | MISLABELED | RENAME-ONLY | main/dll/mmshrine/dll_0191_ecshcreator.c |
+| `main/dll/dll_0193_gpshobjcre.c` | 801C8084-801C82C8 | MISLABELED | RENAME-ONLY | main/dll/dll_0193_gpshobjcreator.c |
+| `main/dll/dll_0197_dll197.c` | 801C9E54-801CA718 | MISLABELED | RENAME-ONLY | main/dll/dll_0197_cup1C3.c |
+| `main/dll/dll_0199_dll199.c` | 801CA9C0-801CB7A8 | MISLABELED | RENAME-ONLY | main/dll/dll_0199_dimmagicbridge.c |
+| `main/dll/dll_019A_dll19a.c` | 801CB7A8-801CBA98 | MISLABELED | RENAME-ONLY | main/dll/dll_019A_dimmagicbridge.c |
+| `main/dll/dll_019B_dll19b.c` | 801CBA98-801CC72C | MISLABELED | RENAME-ONLY | main/dll/dll_019B_shrine1CE.c |
+| `main/dll/dll_019C_dll19c.c` | 801CC72C-801CC998 | MISLABELED | RENAME-ONLY | main/dll/dll_019C_shrine1CE.c |
+
+### Batch B36 — `801CC998-801D4198` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
+| `main/dll/dll_019D_dll19d.c` | 801CC998-801CCFA4 | MISLABELED | RENAME-ONLY | main/dll/dll_019D_shrine1CE.c |
+| `main/dll/dll_01A3_nwanimice1.c` | 801CFB24-801CFBB4 | MISLABELED | RENAME-ONLY | main/dll/NW/dll_01A3_nwanimice.c |
+| `main/dll/dll_01A4_nwice1.c` | 801CFBB4-801CFD68 | MISLABELED | RENAME-ONLY | main/dll/NW/dll_01A4_nwice.c |
+| `main/dll/dll_01A5_nwlevcontr.c` | 801CFD68-801D069C | MISLABELED | RENAME-ONLY | main/dll/NW/dll_01A5_nwlevcontrol.c |
+| `main/dll/dll_801D0828.c` | 801D0828-801D083C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_1DC.c` | 801D1BFC-801D1BFC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/SHrocketmushroom.c` | 801D3378-801D4364 | CONTAINER | CARVE | 0x1AA→dll_01AA_bombplantspore.c [801D3378-801D3E2C] ; 0x1AB→dll_01AB_bombplantingspot.c [801D3FF4-801D4170] |
-| `main/dll/dll_1E7.c` | 801D4CD0-801D5174 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| `main/dll/dll_01AA_bombplantsp.c` | 801D3378-801D3FF4 | MISLABELED | RENAME-ONLY | main/dll/SH/dll_01AA_bombplantspore.c |
+| `main/dll/dll_01AB_bombplantin.c` | 801D3FF4-801D4198 | MISLABELED | RENAME-ONLY | main/dll/SH/dll_01AB_bombplantingspot.c |
 
-### Batch B20 — `801D5174-801DD1A8` (8 items)
+### Batch B37 — `801D4198-801DA954` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
+| `main/dll/dll_801D4198.c` | 801D4198-801D4364 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| `main/dll/dll_1E7.c` | 801D4CD0-801D5174 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/dll_1E8.c` | 801D5174-801D5174 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/SHthorntail.c` | 801D5174-801D58E4 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/SCchieflightfoot.c` | 801D6914-801D6C04 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/SClantern.c` | 801D6C04-801D6D98 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/SPdrape.c` | 801D981C-801D981C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DRearthwalk.c` | 801D9B1C-801DAFA4 | CONTAINER | CARVE | 0x1B1→dll_01B1_shstaff.c [801D9B1C-801DA608] ; 0x1B2→dll_01B2_shstaffhaze.c [801DA8C4-801DA924] ; 0x1B3→dll_01B3_shbeacon.c [801DA9E0-801DAE90] |
-| `main/dll/CRsnowbike.c` | 801DAFA4-801DBFA0 | CONTAINER | CARVE | 0x1B4→dll_01B4_shemptytumblew.c [801DAFA4-801DAFDC] ; 0x1B6→dll_01B6_sclevelcontrol.c [801DB1EC-801DBF9C] |
-| `main/dll/DRcloudrunner.c` | 801DBFA0-801DD1A8 | CONTAINER | CARVE | 0x1B7→dll_01B7_scmusictree.c [801DC230-801DC8D0] ; 0x1B8→dll_01B8_sctotempole.c [801DC9E4-801DCC6C] ; 0x1B9→dll_01B9_sccloudrunnera.c [801DCC70-801DD16C] |
+| `main/dll/dll_01B2_shstaffhaz.c` | 801DA8C4-801DA954 | MISLABELED | RENAME-ONLY | main/dll/DR/dll_01B2_shstaffhaze.c |
 
-### Batch B21 — `801DE430-801E1588` (8 items)
+### Batch B38 — `801DAFA4-801DF4AC` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
-| `main/dll/platform1.c` | 801DE430-801DF4AC | CONTAINER | CARVE | 0x1BC→dll_01BC_sctotemstrength.c [801DEE54-801DF10C] ; 0x1BD→dll_01BD_paymentkiosk.c [801DF304-801DF4A8] |
-| `main/dll/DBrockfall.c` | 801DF4AC-801DFA28 | CONTAINER | CARVE | 0x142→dll_0142_felevcontrol.c [801DF934-801DF9A8] ; 0x143→dll_0143_feseqobject.c [801DF84C-801DF930] ; 0x144→dll_0144_DBrockfall.c [801DF9BC-801DFA24] |
+| `main/dll/dll_01B4_shemptytum.c` | 801DAFA4-801DB098 | MISLABELED | RENAME-ONLY | main/dll/CR/dll_01B4_shemptytumblew.c |
+| `main/dll/dll_01B6_sclevelcon.c` | 801DB098-801DBFA0 | MISLABELED | RENAME-ONLY | main/dll/CR/dll_01B6_sclevelcontrol.c |
+| `main/dll/dll_01B7_scmusictre.c` | 801DBFA0-801DC8D4 | MISLABELED | RENAME-ONLY | main/dll/DR/dll_01B7_scmusictree.c |
+| `main/dll/dll_01B8_sctotempol.c` | 801DC8D4-801DCC70 | MISLABELED | RENAME-ONLY | main/dll/DR/dll_01B8_sctotempole.c |
+| `main/dll/dll_01B9_sccloudrun.c` | 801DCC70-801DD170 | MISLABELED | RENAME-ONLY | main/dll/DR/dll_01B9_sccloudrunnera.c |
+| `main/dll/dll_801DD170.c` | 801DD170-801DD1A8 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| `main/dll/dll_01BC_sctotemstr.c` | 801DE430-801DF110 | MISLABELED | RENAME-ONLY | main/dll/VF/dll_01BC_sctotemstrength.c |
+| `main/dll/dll_01BD_scpaypoint.c` | 801DF110-801DF4AC | MISLABELED | RENAME-ONLY | main/dll/VF/dll_01BD_paymentkiosk.c |
+
+### Batch B39 — `801DF934-801E1588` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
+| `main/dll/dll_0142_felevcontro.c` | 801DF934-801DF9AC | MISLABELED | RENAME-ONLY | main/dll/DB/dll_0142_felevcontrol.c |
+| `main/dll/dll_0144_dll144.c` | 801DF9AC-801DFA28 | MISLABELED | RENAME-ONLY | main/dll/DB/dll_0144_DBrockfall.c |
 | `main/dll/DBbullet.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/DBlightgo.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/DBpointmum.c` | 801DFA28-801DFA28 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
@@ -606,62 +1007,80 @@ Batches: 26. Region-disjoint: NO OVERLAP — verified (each batch owns a contigu
 | `main/dll/DBprotection.c` | 801DFA28-801E1588 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/DBdustgeezer.c` | 801E1588-801E1588 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 
-### Batch B22 — `801E1588-801EA854` (8 items)
+### Batch B40 — `801E2570-801E67BC` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
-| `main/dll/DBstealerworm.c` | 801E1588-801E341C | CONTAINER | CARVE | 0x1E8→dll_01E8_sbgalleon.c [801E1DF4-801E256C] ; 0x1E9→dll_01E9_sbpropeller.c [801E2578-801E2A88] ; 0x1EA→dll_01EA_sbshiphead.c [801E2B28-801E324C] ; 0x1EB→dll_01EB_sbshipmast.c [801E32BC-801E3418] |
-| `main/dll/TREX_levelcontrol.c` | 801E341C-801E4288 | CONTAINER | CARVE | 0x1EC→dll_01EC_sbshipgun.c [801E341C-801E3D14] ; 0x1EE→dll_01EE_sbcannonball.c [801E3D30-801E4284] |
-| `main/dll/TREX_trex.c` | 801E4288-801E67BC | CONTAINER | CARVE | 0x1ED→dll_01ED_sbfireball.c [801E4288-801E45A8] ; 0x1EF→dll_01EF_sbcloudball.c [801E45AC-801E4ABC] ; 0x1F0→dll_01F0_sbkytecage.c [801E4B94-801E4F10] ; 0x1F1→dll_01F1_sbseqdoor.c [801E5084-801E5198] ; 0x1F2→dll_01F2_sbcagekyte.c [801E4F50-801E505C] ; 0x1F3→dll_01F3_sbminifire.c [801E519C-801E55B4] ; 0x1F4→dll_01F4_lamp.c [801E59AC-801E5D64] ; 0x1F5→dll_01F5_shipbattle.c [801E55B8-801E59A8] ; 0x1F6→dll_01F6_flag.c [801E5DC4-801E5F70] ; 0x1F7→dll_01F7_sbshipgunbroke.c [801E5F74-801E604C] ; 0x285→dll_0285_spshop.c [801E62F0-801E66D8] |
+| `main/dll/dll_01E9_sbpropelle.c` | 801E2570-801E2B28 | MISLABELED | RENAME-ONLY | main/dll/DB/dll_01E9_sbpropeller.c |
+| `main/dll/dll_01EE_sbcannonba.c` | 801E3D30-801E4288 | MISLABELED | RENAME-ONLY | main/dll/TREX/dll_01EE_sbcannonball.c |
+| `main/dll/dll_01EF_sbcloudbal.c` | 801E45AC-801E4AC0 | MISLABELED | RENAME-ONLY | main/dll/TREX/dll_01EF_sbcloudball.c |
+| `main/dll/dll_01F5_generalscal.c` | 801E55B8-801E59AC | MISLABELED | RENAME-ONLY | main/dll/TREX/dll_01F5_shipbattle.c |
+| `main/dll/dll_01F4_cflamp.c` | 801E59AC-801E5DC4 | MISLABELED | RENAME-ONLY | main/dll/TREX/dll_01F4_lamp.c |
+| `main/dll/dll_01F6_dimflag.c` | 801E5DC4-801E5F74 | MISLABELED | RENAME-ONLY | main/dll/TREX/dll_01F6_flag.c |
+| `main/dll/dll_01F7_sbshipgunb.c` | 801E5F74-801E6050 | MISLABELED | RENAME-ONLY | main/dll/TREX/dll_01F7_sbshipgunbroke.c |
+| `main/dll/dll_801E66DC.c` | 801E66DC-801E67BC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+
+### Batch B41 — `801E67BC-801EC1AC` (8 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
 | `main/dll/TREX_Lazerwall.c` | 801E67BC-801E6B10 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/DRlaserturret.c` | 801E6B10-801E76A0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DRpushcart.c` | 801E76A0-801E8EA4 | CONTAINER | CARVE | 0x284→dll_0284_shopitem.c [801E88A8-801E8EA0] ; 0x286→dll_0286_spshopkeeper.c [801E7FB4-801E82B4] |
+| `main/dll/dll_0286_spshopkeepe.c` | 801E76A0-801E832C | MISLABELED | RENAME-ONLY | main/dll/DR/dll_0286_spshopkeeper.c |
+| `main/dll/dll_0284_spfruitsmal.c` | 801E832C-801E8EA4 | MISLABELED | RENAME-ONLY | main/dll/DR/dll_0284_shopitem.c |
 | `main/dll/DRsimplehuman.c` | 801E9328-801E9C00 | CONTAINER | CARVE | 0x288→dll_0288_spdrape.c [801E9328-801E97D8] ; 0x289→dll_0289_spitembeam.c [801E97DC-801E9918] |
 | `main/dll/DRcloudcage.c` | 801E9C00-801EA854 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| `main/dll/DRshackle.c` | 801EA854-801EAE4C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
+| `main/dll/DRhightop.c` | 801EAE4C-801EC1AC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 
-### Batch B23 — `801EA854-801F0AE4` (8 items)
+### Batch B42 — `801EC1AC-801F4ECC` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
-| `main/dll/DRshackle.c` | 801EA854-801EAE4C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/DRhightop.c` | 801EAE4C-801EC1AC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/DRpickup.c` | 801EC1AC-801EC7A0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/BWalphaanim.c` | 801EE088-801EE0C0 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/WCpushblock.c` | 801EE0C0-801EE668 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/WCbeacon.c` | 801EF360-801EF360 | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/dll/WCdial.c` | 801EFF7C-801EFF7C | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
-| `main/dll/WClaser.c` | 801EFF7C-801F0AE4 | CONTAINER | CARVE | 0x1F8→dll_01F8_wmgalleon.c [801F01BC-801F06D4] ; 0x1FA→dll_01FA_wmseqobject.c [801F0724-801F08FC] ; 0x1FB→dll_01FB_WClaser.c [801F0940-801F0AE0] |
+| `main/dll/dll_01FA_wmseqobjec.c` | 801F06D8-801F0900 | MISLABELED | RENAME-ONLY | main/dll/WC/dll_01FA_wmseqobject.c |
+| `main/dll/dll_01FB_dll1fb.c` | 801F0900-801F0AE4 | MISLABELED | RENAME-ONLY | main/dll/WC/dll_01FB_WClaser.c |
+| `main/dll/LGTcontrollight.c` | 801F4C04-801F4ECC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 
-### Batch B24 — `801F4C04-80209958` (8 items)
+### Batch B43 — `801FB9AC-80204B54` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
-| `main/dll/LGTcontrollight.c` | 801F4C04-801F4ECC | HELPER-TU | RENAME-ONLY | no descriptor; violates helper-TU naming rule (must be lowercase, no dll_ prefix) |
 | `main/light.c` | 801FB9AC-801FD4A8 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x21E,0x21F,0x220,0x221,0x222,0x223,0x224 |
 | `main/main.c` | 801FD4A8-801FE118 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x225,0x226,0x227,0x228 |
-| `main/dll/anim.c` | 801FE118-80206474 | CONTAINER | CARVE | 0x229→dll_0229_dfplevelcontrol.c [80204548-80204930] ; 0x22A→dll_022A_dfpobjcreator.c [80204970-80204B50] ; 0x22B→dll_022B_dfptorch.c [802057CC-80205F3C] ; 0x22C→dll_022C_anim.c [80204B5C-802050C0] ; 0x22D→dll_022D_dfpseqpoint.c [8020540C-802057C8] ; 0x22E→dll_022E_dfpdoorswitch.c [802050C4-80205164] ; 0x230→dll_0230_dfpwallbar.c [80205F48-80206470] ; 0x23F→dll_023F_dbegg.c [801FE118-801FF880] ; 0x240→dll_0240_gcrobotblast.c [801FF958-801FF9AC] ; 0x241→dll_0241_drakorenergy.c [801FF9B0-801FFE14] ; 0x242→dll_0242_dbstealerworm.c [8020338C-80203C58] ; 0x243→dll_0243_dbholecontrol1.c [80203F1C-80204094] |
-| `main/dll/TrickyCurve.c` | 8020718C-80208098 | CONTAINER | CARVE | 0x231→dll_0231_dfpforceaw.c [8020756C-80207688] ; 0x232→dll_0232_dfprotatep.c [80207C24-80208094] |
-| `main/dll/crate2.c` | 802081F4-80208508 | CONTAINER | CARVE | 0x233→dll_0233_dfpstatue1.c [802083A8-80208488] ; 0x234→dll_0234_dfpperchsw.c [8020848C-80208504] |
-| `main/textblock.c` | 80209810-802098B4 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x239 |
-| `main/platform1.c` | 802098B4-80209958 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x23A |
+| `main/dll/dll_0240_gcrobotblas.c` | 801FF884-801FF9B0 | MISLABELED | RENAME-ONLY | main/dll/dll_0240_gcrobotblast.c |
+| `main/dll/dll_0241_drakorenerg.c` | 801FF9B0-801FFE18 | MISLABELED | RENAME-ONLY | main/dll/dll_0241_drakorenergy.c |
+| `main/dll/dll_0242_dbstealerwo.c` | 801FFE18-80203C78 | MISLABELED | RENAME-ONLY | main/dll/DB/dll_0242_dbstealerworm.c |
+| `main/dll/dll_0243_dbholecontr.c` | 80203C78-80204098 | MISLABELED | RENAME-ONLY | main/dll/DB/dll_0243_dbholecontrol1.c |
+| `main/dll/dll_0229_dfplevelco.c` | 80204098-80204970 | MISLABELED | RENAME-ONLY | main/dll/DF/dll_0229_dfplevelcontrol.c |
+| `main/dll/dll_022A_dfpobjcrea.c` | 80204970-80204B54 | MISLABELED | RENAME-ONLY | main/dll/DF/dll_022A_dfpobjcreator.c |
 
-### Batch B25 — `80209958-80210E8C` (8 items)
+### Batch B44 — `80204B54-8020C5EC` (8 items)
 
 | unit | range | verdict | effort | plan |
 |---|---|---|---|---|
+| `main/dll/dll_022C_dll22c.c` | 80204B54-802050C4 | MISLABELED | RENAME-ONLY | main/dll/dll_022C_anim.c |
+| `main/dll/dll_022E_dfpdoorswi.c` | 802050C4-80205168 | MISLABELED | RENAME-ONLY | main/dll/DF/dll_022E_dfpdoorswitch.c |
+| `main/dll/dll_022D_dfpseqpoin.c` | 80205168-802057CC | MISLABELED | RENAME-ONLY | main/dll/DF/dll_022D_dfpseqpoint.c |
+| `main/textblock.c` | 80209810-802098B4 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x239 |
+| `main/platform1.c` | 802098B4-80209958 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x23A |
 | `main/dfplightni.c` | 80209958-80209FE0 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x23B |
 | `main/dfppowersl.c` | 80209FE0-8020A1C8 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x23C |
 | `main/worldasteroids.c` | 8020C278-8020C5EC | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x1D4 |
+
+### Batch B45 — `8020C964-80211C24` (7 items)
+
+| unit | range | verdict | effort | plan |
+|---|---|---|---|---|
 | `main/worldplanet.c` | 8020C964-8020D9E4 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x1D2 |
 | `main/worldobj.c` | 8020D9E4-8020F214 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x1D3 |
 | `main/snowclaw.c` | 8020F214-802106C0 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x25C |
 | `main/crcloudrace.c` | 802106C0-80210BE8 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x25D |
 | `main/spellstone.c` | 80210BF0-80210E8C | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x25E |
-
-### Batch B26 — `80210E8C-80211C24` (2 items)
-
-| unit | range | verdict | effort | plan |
-|---|---|---|---|---|
 | `main/crfueltank.c` | 80210E8C-802110F8 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x25F |
 | `main/proximitymine_update.c` | 8021122C-80211C24 | ENGINE-HOST | FORENSIC | engine/SDK host of DLL(s) 0x260 |
 
