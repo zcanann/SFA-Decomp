@@ -62,7 +62,7 @@ extern int ObjHits_GetPriorityHitWithPosition(int obj, int* outHit, int* p3, int
 extern int objGetFlagsE5_2(int obj);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 extern void doRumble(f32 val);
-extern f32 lbl_803E5CB8;
+extern const f32 lbl_803E5CB8;
 extern f32 lbl_803E5C74;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
@@ -77,8 +77,8 @@ extern void* textureLoadAsset(int id);
 extern void setAButtonIcon(int idx);
 extern int padGetStickX(int controller);
 extern int padGetStickY(int controller);
-extern f32 lbl_803E5CBC;
-extern f32 lbl_803E5CC0;
+extern const f32 lbl_803E5CBC;
+extern const f32 lbl_803E5CC0;
 extern void WCPushBlock_UpdateRideTilt(int obj, int state);
 extern void WCPushBlock_UpdateCloudAction(int obj, int state);
 
@@ -532,12 +532,12 @@ void SB_CloudRunner_update(int obj)
     }
     *(f32*)(state + 0x5c) = *(f32*)(state + 0x5c) + (f32)(int)((GameObject*)obj)->anim.rotZ * timeDelta / lbl_803E5CBC;
     *(f32*)(state + 0x58) = *(f32*)(state + 0x58) + (f32)(int)((GameObject*)obj)->anim.rotY * timeDelta / lbl_803E5CBC;
-    *(f32*)(state + 0x5c) = *(f32*)(state + 0x5c) - timeDelta * (*(f32*)(state + 0x5c) * lbl_803E5CC0);
-    *(f32*)(state + 0x58) = *(f32*)(state + 0x58) - timeDelta * (*(f32*)(state + 0x58) * lbl_803E5CC0);
-    ((GameObject*)obj)->anim.rotY = (s16)(((GameObject*)obj)->anim.rotY - (int)(lbl_803E5CB8 * *(f32*)(state + 0x58)));
+    *(f32*)(state + 0x5c) -= timeDelta * (*(f32*)(state + 0x5c) * lbl_803E5CC0);
+    *(f32*)(state + 0x58) -= timeDelta * (*(f32*)(state + 0x58) * lbl_803E5CC0);
+    ((GameObject*)obj)->anim.rotY -= (s16)(lbl_803E5CB8 * *(f32*)(state + 0x58));
     ((GameObject*)obj)->anim.localPosY = lbl_803E5CB8 * *(f32*)(state + 0x58) + ((SBCloudRunnerState*)state)->unk50;
     ((GameObject*)obj)->anim.localPosZ = lbl_803E5CB8 * *(f32*)(state + 0x5c) + ((SBCloudRunnerState*)state)->unk54;
-    *(s16*)(state + 0x6c) = (s16)(*(s16*)(state + 0x6c) + framesThisStep);
+    *(s16*)(state + 0x6c) += framesThisStep;
     if (*(s8*)(state + 0x65) != prevKey)
     {
         *(s16*)(state + 0x6c) = 0;
