@@ -3,29 +3,11 @@
 
 extern undefined8 ObjGroup_RemoveObject();
 
-#define PRESSURESWITCHFB_STATE_IDLE 0
-#define PRESSURESWITCHFB_STATE_CAPTURE_POSITIONS 1
-#define PRESSURESWITCHFB_STATE_RESET 2
 
-#define PRESSURESWITCHFB_TRACKED_OBJECT_COUNT 10
-#define PRESSURESWITCHFB_TRACKED_OBJECT_BATCH 5
 
-#define PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET 0x04
-#define PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET 0x2c
-#define PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET 0x7c
-#define PRESSURESWITCHFB_EXTRA_SIZE 0x88
 
-#define PRESSURESWITCHFB_CONFIG_BASE_COORD_OFFSET 0x08
-#define PRESSURESWITCHFB_CONFIG_RESET_COORD_OFFSET 0x10
-#define PRESSURESWITCHFB_CONFIG_RAISED_GAMEBIT_OFFSET 0x1a
 
-#define PRESSURESWITCHFB_STATE_MODE_OFFSET 0x80
-#define PRESSURESWITCHFB_REMOVE_GROUP_ID 0x53
 
-#define PRESSURESWITCHFB_OBJ_LINK_SNOWPR 0x019f
-#define PRESSURESWITCHFB_OBJ_SH_PRESSURE 0x026c
-#define PRESSURESWITCHFB_OBJ_LINK_UNDERW 0x0274
-#define PRESSURESWITCHFB_OBJ_CC_PRESSURE 0x0545
 
 /*
  * --INFO--
@@ -40,7 +22,6 @@ extern undefined8 ObjGroup_RemoveObject();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 pressureswitchfb_updateStateMode(int obj, undefined4 param_2, int stateParam);
 
 /*
  * --INFO--
@@ -55,7 +36,6 @@ undefined4 pressureswitchfb_updateStateMode(int obj, undefined4 param_2, int sta
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int pressureswitchfb_getExtraSize(void);
 
 /*
  * --INFO--
@@ -70,7 +50,6 @@ int pressureswitchfb_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void pressureswitchfb_free(int obj);
 
 #include "main/dll/cfguardian_state.h"
 #include "main/audio/sfx_ids.h"
@@ -80,25 +59,8 @@ void pressureswitchfb_free(int obj);
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-typedef struct MmpBridgePlacement
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 pad7[0x18 - 0x7];
-    s8 unk18;
-    u8 pad19[0x1E - 0x19];
-    s16 unk1E;
-} MmpBridgePlacement;
 
 
-typedef struct PressureswitchfbState
-{
-    u8 pad0[0x68 - 0x0];
-    s32 unk68;
-    u8 pad6C[0x70 - 0x6C];
-} PressureswitchfbState;
 
 
 typedef struct DoorObjectDef
@@ -116,34 +78,8 @@ typedef struct DoorObjectDef
 } DoorObjectDef;
 
 
-typedef struct LockDoorLockPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    u8 pad1E[0x20 - 0x1E];
-    u8 unk20;
-    u8 unk21;
-    s16 unk22;
-    s16 unk24;
-    u8 pad26[0x28 - 0x26];
-} LockDoorLockPlacement;
 
 
-typedef struct PressureswitchfbPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    u8 unk1E;
-    u8 pad1F[0x20 - 0x1F];
-    s16 unk20;
-    s16 unk22;
-    s16 unk24;
-    u8 pad26[0x28 - 0x26];
-} PressureswitchfbPlacement;
 
 
 typedef struct DoorPlacement
@@ -161,29 +97,13 @@ typedef struct DoorPlacement
 } DoorPlacement;
 
 
-typedef struct DoorlockPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    s16 unk22;
-    s16 unk24;
-    s16 unk26;
-} DoorlockPlacement;
 
 
 
 
 extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
-extern int ObjGroup_FindNearestObject();
-extern undefined4 ObjGroup_AddObject();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f32 timeDelta;
 
 /*
  * --INFO--
@@ -198,42 +118,12 @@ extern f32 timeDelta;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct
-{
-    u8 pad[4];
-    u16 type;
-    u16 arg;
-    f32 w;
-    f32 x;
-    f32 y;
-    f32 z;
-} FxArgs;
 
-typedef struct
-{
-    u8 active : 1;
-    u8 playerOnly : 1;
-    u8 released : 1;
-    u8 latched : 1;
-    u8 rest : 4;
-} SwitchFlags;
 
-extern void* Obj_GetPlayerObject(void);
-extern int fn_80295C5C(void* player);
-extern void* getTrickyObject(void);
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern EffectInterface** gPartfxInterface;
 extern int* objFindTexture(int* obj, int a, int b);
 extern u32 GameBit_Get(int eventId);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
-extern f32 lbl_803E3758;
-extern f32 lbl_803E375C;
-extern f32 lbl_803E3760;
-extern f32 lbl_803E3764;
-extern f32 lbl_803E3768;
 
-void pressureswitchfb_update(int obj);
 
 
 /*
@@ -324,39 +214,18 @@ void pressureswitchfb_update(int obj);
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void mmp_bridge_free(void);
 
-void mmp_bridge_render(void);
 
-void mmp_bridge_hitDetect(void);
 
-void mmp_bridge_release(void);
 
-void mmp_bridge_initialise(void);
 
-extern f32 lbl_803E3778;
 __declspec(section ".sdata") extern char lbl_803DBD90[];
-extern void fn_80137948(char* fmt, ...);
 
-typedef struct PressureSwitchFbFlags
-{
-    u8 usePressedTexture : 1;
-    u8 startPressed : 1;
-    u8 canRelease : 1;
-    u8 autoPress : 1;
-    u8 unused4 : 1;
-    u8 unused5 : 1;
-    u8 unused6 : 1;
-    u8 unused7 : 1;
-} PressureSwitchFbFlags;
 
-void pressureswitchfb_init(u8* obj, u8* params);
 
 /* 8b "li r3, N; blr" returners. */
 int Door_getExtraSize(void) { return 0x8; }
 int mmp_bridge_getExtraSize(void);
-int mmp_bridge_getObjectTypeId(void);
-int doorlock_getExtraSize(void);
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3780;
@@ -366,12 +235,8 @@ void Door_render(void) { objRenderFn_8003b8f4(lbl_803E3780); }
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 void doorlock_free(int x);
 
-void mmp_bridge_init(int* obj);
 
-extern f32 lbl_803E3798;
-extern void objRenderFn_80041018(int* obj);
 
-void doorlock_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 extern f32 lbl_803E3784;
@@ -463,9 +328,6 @@ void mmp_bridge_update(int* obj);
 
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern int Sfx_StopFromObject(int obj, int sfxId);
-extern int ObjTrigger_IsSetById(int obj, int id);
-extern int ObjTrigger_IsSet(int obj);
-extern void buttonDisable(int index, int mask);
 
 /*
  * --INFO--
@@ -623,7 +485,6 @@ int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
  * EN v1.0 Address: 0x8017BE28
  * EN v1.0 Size: 848b
  */
-void doorlock_update(int obj);
 
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
@@ -649,10 +510,6 @@ void doorlock_update(int obj);
 extern uint GameBit_Get(int eventId);
 
 
-typedef struct DoorLockState
-{
-    u8 unlocked;
-} DoorLockState;
 
 
 
@@ -674,7 +531,6 @@ typedef struct DoorLockState
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void doorlock_init(short* obj, DoorLockPlacement* config);
 
 
 /*
@@ -704,7 +560,6 @@ void doorlock_init(short* obj, DoorLockPlacement* config);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8017c608(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10 , ObjAnimUpdateState* animUpdate, undefined4 param_12, int param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
 
 /*
  * --INFO--
