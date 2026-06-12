@@ -16,21 +16,9 @@ extern EffectInterface** gPartfxInterface;
 extern f64 DOUBLE_803e3d80;
 extern f32 lbl_803E3D78;
 extern f32 timeDelta;
-extern f32 lbl_803E30D0;
-extern f32 lbl_803E30D4;
-extern f32 lbl_803E30D8;
 extern f32 lbl_803E30E0;
 
-extern int ObjList_FindObjectById(int id);
 
-typedef struct KaldaChompMeState
-{
-    f32 progress;
-    f32 step;
-    f32 targetProgress;
-    u8 moveId;
-    u8 pad0D[3];
-} KaldaChompMeState;
 
 /*
  * --INFO--
@@ -39,7 +27,6 @@ typedef struct KaldaChompMeState
  * EN v1.0 Address: 0x80169360
  * EN v1.0 Size: 556b
  */
-void kaldachompme_setLinkedMouthMode(u8* obj, u8 mode);
 
 int kaldachompme_getExtraSize(void);
 
