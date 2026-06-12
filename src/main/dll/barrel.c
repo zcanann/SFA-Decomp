@@ -947,15 +947,6 @@ FUN_80162b78(undefined8 param_1, double param_2, double param_3, undefined8 para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void cannonclaw_release(int param_1)
-{
-    undefined4 state;
-
-    state = *(undefined4*)(param_1 + 0xb8);
-    ObjGroup_RemoveObject(param_1, 3);
-    (**(code**)(*DAT_803dd738 + 0x40))(param_1, state, 0);
-    return;
-}
 
 
 /* Trivial 4b 0-arg blr leaves. */
