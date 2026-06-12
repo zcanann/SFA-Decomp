@@ -107,134 +107,7 @@ typedef struct TrickyCurveBurstFxParams
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void TrickyCurve_updateBurstTrigger(int obj)
-{
-    u8* state;
-    int player;
-    f32 dx;
-    f32 dz;
-    f32 dy;
-    u8 insideCount;
-    u8 xSide;
-    u8 ySide;
-    u8 zSide;
-    TrickyCurveBurstFxParams fxParams;
-    int burstParticles;
-
-    state = ((GameObject*)obj)->extra;
-    player = Obj_GetPlayerObject();
-    insideCount = 0;
-    xSide = 0;
-    ySide = 0;
-    zSide = 0;
-    dx = *(f32*)(player + 0xc) - ((GameObject*)obj)->anim.localPosX;
-    dy = *(f32*)(player + 0x10) - ((GameObject*)obj)->anim.localPosY;
-    dz = *(f32*)(player + 0x14) - ((GameObject*)obj)->anim.localPosZ;
-
-    if ((((TrickyCurveObjState*)state)->unk8 != -1) && (GameBit_Get(((TrickyCurveObjState*)state)->unk8) != 0))
-    {
-        return;
-    }
-
-    if (GameBit_Get(((TrickyCurveObjState*)state)->unkA) != 0)
-    {
-        GameBit_Set(((TrickyCurveObjState*)state)->unkA, 0);
-    }
-
-    if (dx <= 0.0f)
-    {
-        if (dx > -(f32) * (s16*)state)
-        {
-            insideCount = 1;
-            xSide = 1;
-        }
-    }
-    if (dx > 0.0f)
-    {
-        if (dx < (f32) * (s16*)state)
-        {
-            insideCount++;
-            xSide--;
-        }
-    }
-    if (dz <= 0.0f)
-    {
-        if (dz > -(f32)((TrickyCurveObjState*)state)->unk2)
-        {
-            insideCount++;
-            zSide = 1;
-        }
-    }
-    if (dz > 0.0f)
-    {
-        if (dz < (f32)((TrickyCurveObjState*)state)->unk2)
-        {
-            insideCount++;
-            zSide--;
-        }
-    }
-    if (dy <= 0.0f)
-    {
-        if (dy > -(f32)((TrickyCurveObjState*)state)->unk4)
-        {
-            insideCount++;
-            ySide = 1;
-        }
-    }
-    if (dy > 0.0f)
-    {
-        if (dy < (f32)((TrickyCurveObjState*)state)->unk4)
-        {
-            insideCount++;
-            ySide--;
-        }
-    }
-
-    if (insideCount == 3)
-    {
-        fxParams.xOffset = dx;
-        fxParams.yOffset = dy;
-        fxParams.zOffset = dz;
-        fxParams.scale = lbl_803E70E0;
-        fxParams.rotZ = 0;
-        fxParams.rotY = 0;
-        fxParams.rotX = 0;
-        if (xSide != state[0x10])
-        {
-            fxParams.rotX = 0x3fff;
-        }
-
-        if (GameBit_Get(0x1d9) != 0)
-        {
-            GameBit_Set(0x468, 1);
-            ObjMsg_SendToObject(player, 0x60004, obj, 0);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x5ed, &fxParams, 2, -1, NULL);
-            burstParticles = 9;
-            do
-            {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x5fd, &fxParams, 2, -1, NULL);
-            }
-            while (burstParticles-- != 0);
-        }
-        else
-        {
-            ObjMsg_SendToObject(player, 0x60004, obj, 1);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x5ed, &fxParams, 2, -1, NULL);
-            burstParticles = 9;
-            do
-            {
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x5fd, &fxParams, 2, -1, NULL);
-            }
-            while (burstParticles-- != 0);
-        }
-        GameBit_Set(((TrickyCurveObjState*)state)->unkA, 1);
-        Sfx_PlayFromObject(obj, SFXfoot_water_walk_3);
-    }
-
-    state[0x10] = xSide;
-    state[0x11] = ySide;
-    state[0x12] = zSide;
-}
+void TrickyCurve_updateBurstTrigger(int obj);
 
 /*
  * --INFO--
@@ -876,21 +749,13 @@ void sfxplayer_free(int obj, int arg1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void TrickyCurve_render(void)
-{
-}
+void TrickyCurve_render(void);
 
-void TrickyCurve_hitDetect(void)
-{
-}
+void TrickyCurve_hitDetect(void);
 
-void TrickyCurve_release(void)
-{
-}
+void TrickyCurve_release(void);
 
-void TrickyCurve_initialise(void)
-{
-}
+void TrickyCurve_initialise(void);
 
 void sfxplayer_render(void)
 {
@@ -901,57 +766,19 @@ void sfxplayer_hitDetect(void)
 }
 
 /* 8b "li r3, N; blr" returners. */
-int TrickyCurve_getExtraSize(void) { return 0x14; }
-int TrickyCurve_getObjectTypeId(void) { return 0x0; }
+int TrickyCurve_getExtraSize(void);
+int TrickyCurve_getObjectTypeId(void);
 int sfxplayer_getExtraSize(void) { return 0xa; }
 int sfxplayer_getObjectTypeId(void) { return 0x0; }
 
 extern void fn_80206C18(int* obj);
 extern void fn_80206968(int* obj);
 
-void TrickyCurve_update(int* obj)
-{
-    u8* inner = ((GameObject*)obj)->extra;
-    u32 state = inner[0xe];
-    if (state == 0)
-    {
-        TrickyCurve_updateBurstTrigger((int)obj);
-    }
-    else if (state == 1)
-    {
-        TrickyCurve_updateCooldownTrigger((int)obj);
-    }
-    else if (state == 2)
-    {
-        fn_80206C18(obj);
-    }
-    else if (state == 3)
-    {
-        fn_80206968(obj);
-    }
-}
+void TrickyCurve_update(int* obj);
 
-void TrickyCurve_free(int obj)
-{
-    (*gExpgfxInterface)->freeSource2((u32)obj);
-}
+void TrickyCurve_free(int obj);
 
-void TrickyCurve_init(int* obj, u8* def)
-{
-    u8* state = ((GameObject*)obj)->extra;
-    state[0xc] = def[0x19];
-    ((TrickyCurveObjState*)state)->unk4 = (s16)((s32)((TrickyCurveObjectDef*)def)->unk18 << 2);
-    *(s16*)state = ((TrickyCurveObjectDef*)def)->unk1A;
-    ((TrickyCurveObjState*)state)->unk2 = ((TrickyCurveObjectDef*)def)->unk1C;
-    state[0xe] = def[0x19];
-    state[0x10] = 0;
-    state[0x11] = 0;
-    state[0x12] = 0;
-    ((TrickyCurveObjState*)state)->unk8 = ((TrickyCurveObjectDef*)def)->unk20;
-    ((TrickyCurveObjState*)state)->unkA = ((TrickyCurveObjectDef*)def)->unk1E;
-    ((TrickyCurveObjState*)state)->unk6 = 0;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
-}
+void TrickyCurve_init(int* obj, u8* def);
 
 /* === merged from main/dll/sfxplayer.c [80207CE4-80208098) (TU re-split, docs/boundary_audit.md) === */
 #include "main/mapEvent.h"

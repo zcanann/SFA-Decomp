@@ -2153,8 +2153,11 @@ main/dll/tesla.c:
 main/dll/infopoint.c:
 	.text       start:0x80206F30 end:0x8020718C
 
-main/dll/TrickyCurve.c:
-	.text       start:0x8020718C end:0x80208098
+main/dll/dll_0231_dfpforceaw.c:
+	.text       start:0x8020718C end:0x8020768C
+
+main/dll/dll_0232_dfprotatep.c:
+	.text       start:0x8020768C end:0x80208098
 
 main/dll/crate.c:
 	.text       start:0x80208098 end:0x802081F4
