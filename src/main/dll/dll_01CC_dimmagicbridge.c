@@ -93,7 +93,6 @@ extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017924();
 extern uint FUN_80017944();
 extern int FUN_80017a54();
-extern EffectInterface** gPartfxInterface;
 extern undefined4 FUN_8002fc3c();
 extern int FUN_80039520();
 extern undefined4 FUN_80242114();
@@ -267,7 +266,6 @@ LAB_801b44d4:
  * PAL Size: TODO
  */
 extern void textureFree(int tex);
-extern int lbl_803AC960[4];
 
 #pragma scheduling off
 #pragma peephole off
@@ -456,19 +454,12 @@ void FUN_801b5d00(int param_1, int param_2)
 /* Trivial 4b 0-arg blr leaves. */
 void explosion_hitDetect(void);
 
-void dimwooddoor2_free(void);
 
-void dimwooddoor2_hitDetect(void);
 
-void dimwooddoor2_release(void);
 
-void dimwooddoor2_initialise(void);
 
-void dll_1CE_hitDetect(void);
 
-void dll_1CE_release(void);
 
-void dll_1CE_initialise(void);
 
 void dimmagicbridge_free(void)
 {
@@ -569,23 +560,15 @@ void dimmagicbridge_init(u8* obj, u8* params)
 
 /* 8b "li r3, N; blr" returners. */
 int explosion_getExtraSize(void);
-int dimwooddoor2_getExtraSize(void);
-int dimwooddoor2_getObjectTypeId(void);
-int dll_1CE_getExtraSize(void);
-int dll_1CE_getObjectTypeId(void);
 int dimmagicbridge_getExtraSize(void) { return 0x68; }
 int dimmagicbridge_getObjectTypeId(void) { return 0x0; }
 int dim_levelcontrol_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E49D0;
 extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
-extern f32 lbl_803E49E8;
 extern f32 lbl_803E4A18;
 
-void dimwooddoor2_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -596,15 +579,12 @@ void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* conditional init/free pair. */
-extern void* lbl_803DDB78;
 #pragma scheduling on
 #pragma peephole on
-void dll_1CE_free(void);
 
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
 extern f32 lbl_803E49D4;
-extern f32 lbl_803E49F0;
 extern void* Obj_GetPlayerObject(void);
 extern void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
 extern void dimmagicbridge_updateVertexWave(int obj, u8* sub);
@@ -644,22 +624,16 @@ void dimmagicbridge_update(int obj)
 #pragma peephole off
 void dimwooddoor2_init(u8* obj, u8* params);
 
-void dll_1CE_init(u8* obj, u8* params);
 
 /* explosion_free: model-light release if present. */
-extern void ModelLightStruct_free(void*);
 #pragma scheduling on
 #pragma peephole on
-void explosion_free(int obj);
 
 /* explosion_getObjectTypeId: tile/index lookup capped by table count. */
 #pragma scheduling off
-int explosion_getObjectTypeId(int obj);
 
 /* dim_levelcontrol_free: gameplay music + time-of-day reset. */
-extern void Music_Trigger(s32 triggerId, s32 mode);
 
-void dim_levelcontrol_free(int p1);
 
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
@@ -740,31 +714,17 @@ int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpda
 }
 
 extern f32 timeDelta;
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern f32 lbl_803E49D8;
-extern f32 lbl_803E49DC;
-extern f32 lbl_803E49E0;
-extern f32 lbl_803E49E4;
 
 /* EN v1.0 0x801B5804  size: 380b  dimwooddoor2_update: advance the door's
  * shake anim and decay its wobble; while idle near map-cue 0x338 bleed off
  * alpha, otherwise scan the nearby objects and, if a key object is present,
  * snap the door open (reset wobble, ring the gamebit, play the open sfx). */
-void dimwooddoor2_update(int* obj);
 
-extern int Obj_IsLoadingLocked(void);
-extern int* Obj_AllocObjectSetup(int a, int b);
-extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);
-extern f32 lbl_803E49EC;
-extern f32 lbl_803E49F4;
-extern f32 lbl_803E49F8;
-extern f32 lbl_803E49FC;
 
 /* EN v1.0 0x801B5AA0  size: 496b  dll_1CE_update: hatch-door logic - coast
  * the lid open with clamped velocity while idle, and once a key object is
  * nearby, count down then ring the gamebit and (if the load isn't locked)
  * spawn the contents object seeded from the door's transform. */
-void dll_1CE_update(int* obj);
 
 
 
@@ -772,105 +732,21 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 
 
-extern f32 lbl_803E492C;
-extern f32 lbl_803E4930;
-extern f32 lbl_803E4934;
-extern f32 lbl_803E4938;
-extern f32 lbl_803E493C;
-extern f32 lbl_803E4940;
-extern f32 lbl_803E4950;
-extern f32 lbl_803E4954;
-extern f32 lbl_803E4958;
-extern f32 lbl_803E495C;
-extern f32 lbl_803E4960;
-extern f64 lbl_803E4968;
-extern f32 lbl_803E4970;
-extern f32 lbl_803E4974;
-extern f64 lbl_803E4978;
-extern f64 lbl_803E4980;
-extern f32 lbl_803E4988;
-extern f32 lbl_803E4998;
-extern f32 lbl_803E499C;
-extern f32 lbl_803E49A0;
-extern f32 lbl_803E49A4;
-extern f32 lbl_803E49A8;
-extern f32 lbl_803E49AC;
-extern f32 lbl_803E49B0;
-extern f32 lbl_803E49B4;
-extern f32 lbl_803E49B8;
-extern f32 lbl_803E49BC;
-extern f32 lbl_803E49C0;
-extern f32 lbl_803E49C4;
-extern f32 lbl_803E49C8;
-extern f32 lbl_803E49CC;
-extern int lbl_803E4928;
-extern int lbl_803E8468;
-extern u8 lbl_803DDB58;
-extern f32 lbl_803DDB5C;
-extern f32 lbl_803DDB60;
-extern f32 lbl_803DDB64;
-extern f32 lbl_803DDB68;
-extern f32 lbl_803DDB6C;
-extern f32 lbl_803DDB70;
-extern f32 lbl_803DCDD8;
-extern f32 lbl_803DCDDC;
-extern f32 lbl_80325528[];
-extern FbTexTbl lbl_802C2328;
 extern f32 lbl_803E4A00;
 extern f32 lbl_803E4A04;
 extern f32 lbl_803E4A08;
 extern f32 lbl_803E4A0C;
 extern int ObjModel_GetBaseVertexCoords(int mdl, int idx);
 
-extern f32 expf(f32 x);
-extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
-extern void Sfx_PlayFromObjectLimited(int obj, int id, int n);
-extern void GXClearVtxDesc(void);
-extern void GXSetVtxDesc(int attr, int type);
-extern void GXSetCurrentMtx(int id);
-extern void GXLoadPosMtxImm(f32* m, int id);
-extern void GXBegin(int prim, int fmt, int n);
-extern void PSMTXRotRad(f32* m, int axis, f32 rad);
-extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
-extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXMultVecSR(f32 * m, f32 * in, f32 * out);
-extern f32* Camera_GetViewMatrix(void);
-extern f32* Camera_GetInverseViewRotationMatrix(void);
-extern int fn_8000FA70(void);
-extern int fn_8000FA90(void);
-extern void fn_80073AAC(void* tex, u32* a, u32* b, int k);
-extern void Obj_BuildWorldTransformMatrix(int obj, f32* m, int p3);
-extern void renderResetFn_8003fc60(void);
-extern int textureLoadAsset(int id);
-extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern int hitDetectFn_800658a4(int obj, int out, int p3, f32 x, f32 y, f32 z);
-extern int objCreateLight(int a, int b);
-extern void modelLightStruct_setLightKind(int h, int v);
-extern void modelLightStruct_setPosition(int h, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setAffectsAabbLightSelection(int h, int v);
-extern void modelLightStruct_setEnabled(int h, int n, f32 v);
-extern void modelLightStruct_setDistanceAttenuation(int h, f32 a, f32 b);
-extern void modelLightStruct_setDiffuseColor(int h, int r, int g, int b, int a);
-extern void Obj_FreeObject(int obj);
 extern void DCStoreRange(void* p, int n);
-extern void* memcpy(void* dst, const void* src, unsigned long n);
 
-void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z);
-void fn_801B40B8(u8 mode, u8* out, f32 a, f32 b);
 
-void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z);
 
-void fn_801B40B8(u8 mode, u8* out, f32 a, f32 b);
 
-void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void explosion_update(int obj);
 
-void explosion_init(int obj, int p2);
 
-void explosion_initialise(void);
 
 void dimmagicbridge_updateVertexWave(int obj, u8* sub)
 {

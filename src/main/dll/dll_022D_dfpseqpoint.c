@@ -792,7 +792,6 @@ void fn_80204320(int obj);
 
 /* Trivial 4b 0-arg blr leaves. */
 
-extern u8 lbl_80329514[];
 
 void dfpseqpoint_free(void)
 {
@@ -860,7 +859,6 @@ void dfpobjcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 /* clear list-actions wrapper: notifies vtable[6] then resets getLActions */
 
 /* timed counter: decrement (p1->b8)->0 by timeDelta, then notify */
-extern f32 timeDelta;
 
 extern int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
 

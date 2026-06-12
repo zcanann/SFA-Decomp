@@ -228,7 +228,6 @@ extern void warpToMap(int mapId, int flags);
 
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int kind, int id);
-extern u8 lbl_802C2308[];
 
 
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
@@ -261,7 +260,6 @@ extern u8 framesThisStep;
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u8 lbl_803236B8[];
 
 /* crrockfall_init: derive the per-rock scale from the placement params, size the
  * capsule hitbox from the sub-object bounds, set up render flags, and pick the
@@ -786,7 +784,6 @@ extern void ModelLightStruct_free(void* light);
 
 
 
-extern int ObjList_FindObjectById(int id);
 
 
 

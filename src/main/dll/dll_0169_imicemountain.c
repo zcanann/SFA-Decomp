@@ -70,13 +70,10 @@ extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 FUN_800305f8();
-extern undefined4 ObjHitbox_SetCapsuleBounds();
-extern undefined4 ObjHits_DisableObject();
 
 extern undefined4 DAT_802c2a88;
 extern undefined4 DAT_802c2a8c;
 extern undefined4 DAT_802c2a90;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E53D0;
 extern f32 lbl_803E53E0;
 extern f32 lbl_803E53F0;
@@ -406,48 +403,30 @@ void imicemountain_init(int* obj)
 #undef MEVT_QUERY
 void crrockfall_free(void);
 
-void crrockfall_hitDetect(void);
 
-void magiclight_hitDetect(void);
 
-void magiclight_release(void);
 
-void magiclight_initialise(void);
 
-extern u32 randomGetRange(int min, int max);
-extern f32 lbl_803E4740;
-extern f32 lbl_803E4744;
 
 /* EN v1.0 0x801AD684  size: 344b  magiclight_init: seed header + update fn;
  * for the non-172 variants pick a random lifetime and, for type 0x16b, map
  * the spawn subtype to a light-pair / intensity preset. */
 #pragma scheduling off
 #pragma peephole off
-void magiclight_init(int* obj, u8* params);
 #pragma peephole reset
 #pragma scheduling reset
-void dll_16C_release(void);
 
-void dll_16C_initialise(void);
 
 
 /* 8b "li r3, N; blr" returners. */
 int imicemountain_getExtraSize(void) { return 0x14; }
 int imicemountain_getObjectTypeId(void) { return 0x0; }
 int crrockfall_getExtraSize(void);
-int crrockfall_getObjectTypeId(void);
-int magiclight_getObjectTypeId(void);
-int dll_16C_getExtraSize(void);
-int dll_16C_getObjectTypeId(void);
 
 /* Pattern wrappers. */
-extern void* lbl_803DDB40;
-void crrockfall_initialise(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E46D8;
-extern f32 lbl_803E4708;
-extern f32 lbl_803E473C;
 extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -460,50 +439,33 @@ void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole off
 void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 
-void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 #pragma peephole reset
 
 #pragma scheduling off
 #pragma peephole off
-extern int hitDetectFn_80065e50(int obj, int** listOut, int p3, int p4, f32 x, f32 y, f32 z);
-extern f32 lbl_803E4700;
-extern f32 lbl_803E4704;
 #pragma dont_inline on
-f32 fn_801ACCFC(int obj);
 #pragma dont_inline reset
 
-void magiclight_free(int obj);
 
-void magiclight_update(int obj);
 #pragma peephole reset
 #pragma scheduling reset
 
 /* if (o->_X == K) return A; else return B; */
 #pragma peephole off
-int magiclight_getExtraSize(int* obj);
 #pragma peephole reset
 
-extern void Obj_FreeObject(int*);
 
-void dll_16C_free(int* obj);
 
 /* conditional init/free pair. */
-void crrockfall_release(void);
 
 /* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, sync its transform into obj. */
-extern void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
 #pragma scheduling off
 #pragma peephole off
-void dll_16C_hitDetect(void* obj);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int objUpdateOpacity(int* obj);
-extern void ObjPath_GetPointWorldPosition(int* obj, int idx, f32* x, f32* y, f32* z, int e);
-extern f32 lbl_803E4758;
 #pragma scheduling off
 #pragma peephole off
-void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -529,11 +491,8 @@ int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate)
 void dll_16C_init(void* obj, void* arg2);
 #pragma scheduling reset
 
-extern float Vec_distance(float* a, float* b);
-extern f32 lbl_803E4738;
 #pragma scheduling off
 #pragma peephole off
-int magiclight_SeqFn(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -656,10 +615,6 @@ void imicemountain_updateEventState(int* obj)
 #undef MEVT_SET
 
 extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int kind, int id);
-extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
-extern f32 lbl_803E4748;
-extern u8 lbl_802C2308[];
 
 
 
@@ -667,7 +622,6 @@ extern u8 lbl_802C2308[];
  * from a small id table, then run the map-event sub-object state callbacks. */
 #pragma scheduling off
 #pragma peephole off
-int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -675,7 +629,6 @@ int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
  * extra block, optionally re-issuing a move on the sub-object first. */
 #pragma scheduling off
 #pragma peephole off
-void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -758,52 +711,28 @@ void imicemountain_update(int* obj)
 #pragma scheduling reset
 
 extern int* ObjGroup_GetObjects(int group, int* countOut);
-extern u8 framesThisStep;
-extern f32 lbl_803E474C;
-extern f32 lbl_803E475C;
-extern f32 lbl_803E4760;
-extern f32 lbl_803E4764;
 
 /* dll_16C_update: re-link the spawned sub-object, then while active/visible run
  * its move and fade opacity by distance to the player. */
 #pragma scheduling off
 #pragma peephole off
-void dll_16C_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u8 lbl_803236B8[];
-extern f32 lbl_803E4730;
 
 /* crrockfall_init: derive the per-rock scale from the placement params, size the
  * capsule hitbox from the sub-object bounds, set up render flags, and pick the
  * state-table variant by object type. */
 #pragma scheduling off
 #pragma peephole off
-void crrockfall_init(int* obj, u8* params);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void fn_800628CC(int* obj);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
-extern void Sfx_PlayFromObject(int* obj, int sfx);
-extern void Sfx_StopObjectChannel(int* obj, int channel);
-extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
-extern f32 lbl_803E46E8;
-extern f32 lbl_803E46EC;
-extern f32 lbl_803E46F0;
-extern f32 lbl_803E470C;
-extern f32 lbl_803E4710;
-extern f32 lbl_803E4714;
-extern f32 lbl_803E4718;
-extern f32 lbl_803E471C;
-extern f32 lbl_803E4720;
 
 /* crrockfall_update: drive the falling-rock state machine - fade-in opacity by
  * height/distance, trigger the fall when the player is in range, integrate the
  * fall, then shatter (sfx + explosion) on impact. */
 #pragma scheduling off
 #pragma peephole off
-void crrockfall_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset

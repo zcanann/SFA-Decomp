@@ -225,7 +225,6 @@ extern void warpToMap(int mapId, int flags);
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 
-extern u8 lbl_802C2308[];
 
 
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
@@ -259,7 +258,6 @@ extern f32 timeDelta;
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u8 lbl_803236B8[];
 
 /* crrockfall_init: derive the per-rock scale from the placement params, size the
  * capsule hitbox from the sub-object bounds, set up render flags, and pick the
@@ -881,7 +879,6 @@ extern f32 lbl_803E47C0;
 
 
 
-extern int ObjList_FindObjectById(int id);
 
 
 

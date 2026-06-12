@@ -567,7 +567,6 @@ void dim2conveyor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* dim2pathgenerator hitDetect: on hit type 0xE, scale velocity by const and SFX. */
 
-extern u8 lbl_803DBF20;
 
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if the signed result dropped to or below 0. */
@@ -594,7 +593,6 @@ extern f32 lbl_803E4A28;
 
 
 
-extern void* mmAlloc(int size, int a, int b);
 
 
 

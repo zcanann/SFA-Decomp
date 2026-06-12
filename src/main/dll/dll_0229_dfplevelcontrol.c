@@ -833,7 +833,6 @@ void dll_22C_init(int obj, char* p);
 
 /* Trivial 4b 0-arg blr leaves. */
 
-extern u8 lbl_80329514[];
 
 void dfplevelcontrol_render(void)
 {

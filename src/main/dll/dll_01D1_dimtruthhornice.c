@@ -545,7 +545,6 @@ int dim2conveyor_getExtraSize(void);
 
 /* dim2pathgenerator hitDetect: on hit type 0xE, scale velocity by const and SFX. */
 
-extern u8 lbl_803DBF20;
 extern int* getTrickyObject(void);
 
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
@@ -587,7 +586,6 @@ void dim2snowball_init(int* obj, int* def);
 
 
 
-extern void* mmAlloc(int size, int a, int b);
 
 
 extern f32 lbl_803E4A40;

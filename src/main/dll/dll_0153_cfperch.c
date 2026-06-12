@@ -916,7 +916,6 @@ int cfprisoncage_getExtraSize(void);
 
 /* state-transition: kicks player into mode 2 when sandworm not yet eaten. */
 #pragma peephole off
-int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 
 /* GameBit-gated byte write. */

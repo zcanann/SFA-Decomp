@@ -251,7 +251,6 @@ void dll_1DA_hitDetect(int obj)
 }
 
 extern int ObjList_FindObjectById(int id);
-extern u8 lbl_803DBF20;
 
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if the signed result dropped to or below 0. */
@@ -268,7 +267,6 @@ extern u8 lbl_803DBF20;
 
 
 
-extern void* mmAlloc(int size, int a, int b);
 
 
 

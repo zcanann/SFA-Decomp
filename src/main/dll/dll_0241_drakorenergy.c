@@ -840,7 +840,6 @@ void drakorenergy_init(int* obj, u8* init)
 
 void dbstealerworm_release(void);
 
-extern u8 lbl_80329514[];
 
 /* 8b "li r3, N; blr" returners. */
 int drakorenergy_getExtraSize(void) { return 0xc; }

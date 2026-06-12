@@ -775,7 +775,6 @@ void fn_80204320(int obj);
 
 /* Trivial 4b 0-arg blr leaves. */
 
-extern u8 lbl_80329514[];
 
 void DFP_Torch_hitDetect(void)
 {

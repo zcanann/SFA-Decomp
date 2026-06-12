@@ -831,7 +831,6 @@ void dbholecontrol1_update(int* obj)
 }
 
 extern void Stack_Free(int* stack);
-extern u8 lbl_80329514[];
 
 void dbholecontrol1_init(int* obj, u8* params)
 {
@@ -888,7 +887,6 @@ int dbstealerworm_stateHandlerB01(int p1, int p2);
 /* clear list-actions wrapper: notifies vtable[6] then resets getLActions */
 
 /* timed counter: decrement (p1->b8)->0 by timeDelta, then notify */
-extern f32 timeDelta;
 
 int dbstealerworm_stateHandlerA00(int obj, int p2);
 

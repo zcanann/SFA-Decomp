@@ -155,7 +155,6 @@ void fn_801E7DC8(int p1, int p2, int count);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void Stack_Free();
 
 #pragma scheduling off
 #pragma peephole off
@@ -407,10 +406,8 @@ void shopkeeper_initialise(void);
 extern void hudFn_8011f38c(int);
 extern void* Obj_GetPlayerObject(void);
 extern f32 timeDelta;
-extern void gameTextShow(int);
 extern u32 ObjGroup_FindNearestObject(int kind, int obj, f32* out);
 extern int playerGetMoney(void* player);
-extern void characterDoEyeAnims(int obj, int p2);
 
 
 

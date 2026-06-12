@@ -333,7 +333,6 @@ void sc_levelcontrol_hitDetect(void);
 
 
 
-extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
 
 
 
@@ -346,7 +345,6 @@ extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern u16 lbl_803DC060[4];
 
 /* EN v1.0 0x801DB3A8  size: 2732b  SnowBike Race level controller per-frame
  * driver: replays the env-fx set on map (re)entry, latches the race
