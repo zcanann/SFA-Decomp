@@ -179,6 +179,31 @@ typedef struct
  * collect the three pylon positions from messages, re-request missing ones,
  * emit the beam particles toward the crystal (and down from each pylon),
  * ramp the convergence charge, hum volume and per-beam chime timers. */
+/* beam-report protocol shared with cfpowerbase (dll_014A): probe each
+   pylon group (class 0xDA) with its message; the crystal itself answers
+   position probes (class 0xDC) with CFMAINCRYSTAL_MSG_CRYSTAL. */
+enum
+{
+    CFMAINCRYSTAL_MSG_PYLON_1 = 0x110001,
+    CFMAINCRYSTAL_MSG_PYLON_2 = 0x110002,
+    CFMAINCRYSTAL_MSG_PYLON_3 = 0x110003,
+    CFMAINCRYSTAL_MSG_CRYSTAL = 0x110004
+};
+
+/* game bits: the three base bits (see cfpowerbase) + 0x57 = the
+   convergence cutscene bit that pins everything fully charged */
+enum
+{
+    GAMEBIT_CFBASE_1 = 0x54,
+    GAMEBIT_CFBASE_2 = 0x55,
+    GAMEBIT_CFBASE_3 = 0x56,
+    GAMEBIT_CF_CONVERGENCE = 0x57
+};
+
+#define CFMAINCRYSTAL_PYLON_FRAMES 0x78  /* beam hold time once reported */
+#define CFMAINCRYSTAL_CHARGE_START 0x5A  /* charge frames granted by 0x57 */
+#define CFMAINCRYSTAL_CHARGE_FIRE 0x3C   /* charge at which the bolt fires */
+
 void fn_8019D9F0(int* obj)
 {
     char* p16;
@@ -226,19 +251,19 @@ void fn_8019D9F0(int* obj)
     }
     if (sub->crystalKnown == 0)
     {
-        ObjMsg_SendToObjects(0xdc, 5, obj, 0x110004, 0);
+        ObjMsg_SendToObjects(0xdc, 5, obj, CFMAINCRYSTAL_MSG_CRYSTAL, 0);
     }
     if (GameBit_Get(0x54) != 0 && sub->pylonTimer[0] == 0)
     {
-        ObjMsg_SendToObjects(0xda, 4, obj, 0x110001, 0);
+        ObjMsg_SendToObjects(0xda, 4, obj, CFMAINCRYSTAL_MSG_PYLON_1, 0);
     }
-    if (GameBit_Get(0x55) != 0 && sub->pylonTimer[1] == 0)
+    if (GameBit_Get(GAMEBIT_CFBASE_2) != 0 && sub->pylonTimer[1] == 0)
     {
-        ObjMsg_SendToObjects(0xda, 4, obj, 0x110002, 0);
+        ObjMsg_SendToObjects(0xda, 4, obj, CFMAINCRYSTAL_MSG_PYLON_2, 0);
     }
-    if (GameBit_Get(0x56) != 0 && sub->pylonTimer[2] == 0)
+    if (GameBit_Get(GAMEBIT_CFBASE_3) != 0 && sub->pylonTimer[2] == 0)
     {
-        ObjMsg_SendToObjects(0xda, 4, obj, 0x110003, 0);
+        ObjMsg_SendToObjects(0xda, 4, obj, CFMAINCRYSTAL_MSG_PYLON_3, 0);
     }
     sub->beams[0].b1b = 0;
     sub->beams[1].b1b = 0;
@@ -254,21 +279,21 @@ void fn_8019D9F0(int* obj)
     idx = 0;
     if (sub->crystalKnown != 0)
     {
-        if (GameBit_Get(0x57) != 0)
+        if (GameBit_Get(GAMEBIT_CF_CONVERGENCE) != 0)
         {
             if (sub->pylonTimer[0] != 0)
             {
-                sub->pylonTimer[0] = 0x78;
+                sub->pylonTimer[0] = CFMAINCRYSTAL_PYLON_FRAMES;
             }
             if (sub->pylonTimer[1] != 0)
             {
-                sub->pylonTimer[1] = 0x78;
+                sub->pylonTimer[1] = CFMAINCRYSTAL_PYLON_FRAMES;
             }
             if (sub->pylonTimer[2] != 0)
             {
-                sub->pylonTimer[2] = 0x78;
+                sub->pylonTimer[2] = CFMAINCRYSTAL_PYLON_FRAMES;
             }
-            sub->charge = 0x5a;
+            sub->charge = CFMAINCRYSTAL_CHARGE_START;
         }
         i = 0;
         p16 = (char*)sub;
@@ -359,6 +384,7 @@ void fn_8019D9F0(int* obj)
         }
         if (count == 3)
         {
+            /* all three beams landed: start (or continue) charging */
             if (sub->charge == 0)
             {
                 Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
@@ -366,7 +392,7 @@ void fn_8019D9F0(int* obj)
             }
             sub->charge += framesThisStep;
         }
-        if (sub->charge >= 0x3c)
+        if (sub->charge >= CFMAINCRYSTAL_CHARGE_FIRE)
         {
             f32 fr = (f32)(sub->charge - 0x3c);
             CrystalBeam* sl;
@@ -383,6 +409,7 @@ void fn_8019D9F0(int* obj)
             sl->fc = -(lbl_803E41F4 * fr - sl->f8);
             sl->f14 = sl->f10;
         }
+        /* spin faster for every landed beam */
         *(s16*)obj += framesThisStep * (count * 0x7e);
     }
     if (count != 0)
@@ -425,5 +452,6 @@ void fn_8019D9F0(int* obj)
         i++;
     }
     while (i < 3);
+    /* idle spin */
     *(s16*)obj += framesThisStep * 0x2a;
 }

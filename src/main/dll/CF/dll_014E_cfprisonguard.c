@@ -123,6 +123,7 @@ void cfprisonguard_init(int* obj, u8* params)
     ((GameObject*)obj)->animEventCallback = (void*)cfprisonguard_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     sub->capturedLatch = 1;
+    /* 0x4D: the player has been captured */
     if (GameBit_Get(0x4d) != 0)
     {
         sub->flags = (u8)(sub->flags | 4);
@@ -160,6 +161,7 @@ void cfprisonguard_update(int* obj)
         Obj_RemoveFromUpdateList(obj);
         return;
     }
+    /* 0x44: the caged-prisoner dialog bit (shared with cfprisoncage) */
     bit44 = GameBit_Get(0x44);
     dist = Vec_distance((char*)obj + 0x18, (char*)player + 0x18);
     if (sub->flags == 1)
@@ -261,8 +263,8 @@ int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         return 0;
     }
     ObjHits_EnableObject(obj);
-    gb50 = GameBit_Get(0x50);
-    gb48 = GameBit_Get(0x48);
+    gb50 = GameBit_Get(0x50); /* prisoners freed */
+    gb48 = GameBit_Get(0x48); /* guard alerted */
     if ((sub->flags & 2) != 0 && GameBit_Get(0x4d) != 0)
     {
         sub->flags &= ~0x2;

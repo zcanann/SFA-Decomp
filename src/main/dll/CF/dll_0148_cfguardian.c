@@ -585,9 +585,11 @@ int waterSpellStone1Fn_8019b4c8(int obj)
         return 0;
     }
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+    /* quest state machine: 0..3 the release, 4/6/7 the flight home,
+       8..11 the talk spots, 12..15 the endgame cutscene parks */
     switch (sub->questState)
     {
-    case 0:
+    case 0: /* dormant; wake once the quest starts (0x94f) */
         if (sub->chatterState == 2)
         {
             sub->chatterState = 1;
@@ -597,7 +599,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             sub->questState = 1;
         }
         break;
-    case 1:
+    case 1: /* wait for the release bit (0x4e); alert + take off */
         if (sub->chatterState == 2)
         {
             sub->chatterState = 1;
@@ -611,7 +613,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             sub->flagsA9B |= 1;
         }
         break;
-    case 2:
+    case 2: /* fly the escape curve; roost at the end */
         if (sub->chatterState == 2)
         {
             sub->chatterState = 1;
@@ -623,12 +625,12 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             sub->questState = 4;
         }
         break;
-    case 3:
+    case 3: /* play the release sequence once */
         (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
         GameBit_Set(0x60, 1);
         sub->questState = 2;
         break;
-    case 4:
+    case 4: /* roost until the convergence cutscene parks him */
         if (GameBit_Get(0x57) != 0)
         {
             if (*(s8*)(def + 0x19) != 1)
@@ -648,7 +650,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             sub->chatterAlt = (s8)((sub->chatterAlt + 1) % 2);
         }
         break;
-    case 6:
+    case 6: /* free-fall to the ground, then settle at the curve home */
         if (sub->landingPhase == 0)
         {
             if (sub->chatterState == 2)
@@ -743,7 +745,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             }
         }
         break;
-    case 7:
+    case 7: /* fly to the talk spot */
         if (sub->chatterState == 2)
         {
             sub->chatterState = 1;
@@ -755,7 +757,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
         }
         break;
-    case 8:
+    case 8: /* talk spot: greet and head-track the player; 0x43 advances */
         if ((void*)ObjGroup_FindNearestObject(3, obj, &nearDist) != NULL && nearDist < lbl_803E4158)
         {
             dll_2E_func04(sub);
@@ -798,7 +800,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             sub->chatterAlt = 0;
         }
         break;
-    case 9:
+    case 9: /* second talk loop; 0x4be sends him onward */
         if ((void*)ObjGroup_FindNearestObject(3, obj, &nearDist) != NULL && nearDist < lbl_803E4158)
         {
             dll_2E_func04(sub);
@@ -840,7 +842,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             ((GameObject*)obj)->unkF4 = 0;
         }
         break;
-    case 10:
+    case 10: /* final flight out */
         if (sub->chatterState == 2)
         {
             sub->chatterState = 1;
@@ -851,7 +853,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             sub->questState = 0xb;
         }
         break;
-    case 11:
+    case 11: /* vanish: fade out and stop updating */
         if (sub->chatterState == 2)
         {
             sub->chatterState = 1;
@@ -862,7 +864,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
         ((GameObject*)obj)->anim.flags |= 0x4000;
         sub->questState = 0xf;
         break;
-    case 12:
+    case 12: /* cutscene perch: sequence 0xB on demand (0x4b7) */
         if (sub->chatterState == 2)
         {
             sub->chatterState = 1;
@@ -878,7 +880,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             sub->questState = 0xd;
         }
         break;
-    case 13:
+    case 13: /* cutscene perch: sequence 0xA on demand (0x4b7) */
         if (sub->chatterState == 2)
         {
             sub->chatterState = 1;
@@ -894,13 +896,13 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             sub->questState = 0xe;
         }
         break;
-    case 14:
+    case 14: /* parked, idle chatter only */
         if (sub->chatterState == 2)
         {
             sub->chatterState = 1;
         }
         break;
-    case 15:
+    case 15: /* parked and hidden */
         ((GameObject*)obj)->anim.flags |= 0x4000;
         Obj_RemoveFromUpdateList((int*)obj);
         (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;

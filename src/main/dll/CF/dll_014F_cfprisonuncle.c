@@ -105,6 +105,7 @@ void cfprisonuncle_update(int* obj)
     int* objects;
     int i;
     if (sub == NULL) return;
+    /* 0x50: the prisoners are free - nothing left to do */
     if (GameBit_Get(0x50) != 0) return;
     if (ObjMsg_Pop(obj, &m1, &m2, &m3) != 0)
     {
@@ -115,6 +116,7 @@ void cfprisonuncle_update(int* obj)
         objects = ObjList_GetObjects(&objectIndex, &objectCount);
         for (i = objectIndex; i < objectCount; i++)
         {
+            /* find the guard (object class 0x3D) to glance at */
             if (*(s16*)((char*)objects[i] + 0x44) == 0x3d)
             {
                 sub->target = objects[i];
@@ -123,11 +125,13 @@ void cfprisonuncle_update(int* obj)
         }
     }
     ObjTrigger_UpdateIdBlockFlag((int)obj);
+    /* 0x4D: the player has been thrown into the cell */
     sub->captured = (s8)GameBit_Get(0x4d);
     if (sub->captured == 0)
     {
         player = Obj_GetPlayerObject();
         fn_8003ADC4(obj, player, (char*)((GameObject*)obj)->extra + 4, 0x41, 0, 3);
+        /* roughly every half second, mutter (sfx 0x297) */
         if ((int)randomGetRange(0, 0x1e) == 0)
         {
             objAudioFn_80039270((int)obj, (char*)sub + 0x34, 0x297);
@@ -136,6 +140,7 @@ void cfprisonuncle_update(int* obj)
         {
             s16* vec;
             fn_8003ADC4(obj, player, (char*)((GameObject*)obj)->extra + 4, 0x41, 0, 3);
+            /* tilt the head back for the talk animation */
             vec = (s16*)objModelGetVecFn_800395d8((int)obj, 1);
             *vec = -0xaaa;
             (*gObjectTriggerInterface)->runSequence(1, obj, -1);

@@ -50,19 +50,32 @@ void cfguardian_release(void);
  * lit/active state from gamebit 0x44 and notify on completion. */
 #pragma scheduling off
 #pragma peephole off
+/* placement type ids this DLL serves (anim.seqId carries the romlist
+   type): 0x128 reports object type 8 and runs sequence 1, 0x127 runs
+   sequence 0. */
+enum
+{
+    CFPRISONCAGE_TYPE_CAGE = 0x127,
+    CFPRISONCAGE_TYPE_CAGE_2 = 0x128
+};
+
+/* message granting the cage's open bit (sent by the prison guard) */
+#define CFPRISONCAGE_MSG_OPEN 0xA0005
+
 int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int msg;
     int v;
     int w = 0;
     u8* sub = *(u8**)&((GameObject*)obj)->anim.placementData;
+    /* placement +0x18 holds the cage's opened game bit */
     if (GameBit_Get(*(s16*)(sub + 0x18)) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
         animUpdate->sequenceControlFlags |= 4;
         return 0;
     }
-    if (((GameObject*)obj)->anim.seqId == 0x127)
+    if (((GameObject*)obj)->anim.seqId == CFPRISONCAGE_TYPE_CAGE)
     {
         return 0;
     }
@@ -70,11 +83,12 @@ int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         switch (msg)
         {
-        case 0xA0005:
+        case CFPRISONCAGE_MSG_OPEN:
             GameBit_Set(*(s16*)(sub + 0x18), 1);
             break;
         }
     }
+    /* 0x44: the caged-prisoner dialog bit (shared with cfprisonguard) */
     if (GameBit_Get(0x44) != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x10);
@@ -157,9 +171,9 @@ void cfprisoncage_update(int* obj)
     {
         switch (((GameObject*)obj)->anim.seqId)
         {
-        case 0x127: v = 0;
+        case CFPRISONCAGE_TYPE_CAGE: v = 0;
             break;
-        case 0x128:
+        case CFPRISONCAGE_TYPE_CAGE_2:
         default: v = 1;
             break;
         }
@@ -181,7 +195,7 @@ void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 int cfprisoncage_getObjectTypeId(int* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == 0x128) return 0x8;
+    if (((GameObject*)obj)->anim.seqId == CFPRISONCAGE_TYPE_CAGE_2) return 0x8;
     return 0x0;
 }
 

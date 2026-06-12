@@ -109,6 +109,7 @@ void cfperch_update(int* obj)
 {
     if (((GameObject*)obj)->unkF4 != 0)
     {
+        /* squawk at the player until the prisoners are freed (0x50) */
         if (GameBit_Get(0x50) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);

@@ -224,12 +224,15 @@ void cflevelcontrol_update(int obj)
         ((CfLevelControlFlags*)&state[0xc])->b3 = 0;
     }
 
+    /* advance the fortress map event once the intro bit (0x40) lands */
     if ((*gMapEventInterface)->getMode(0x1d) == 1 &&
         GameBit_Get(0x40) != 0)
     {
         (*gMapEventInterface)->setMode(0x1d, 2);
     }
 
+    /* sting on the first of the two fortress alarm bits, fanfare once
+       both are set; the flag byte remembers last tick's values */
     bit974 = (u8)GameBit_Get(0x974);
     bit975 = GameBit_Get(0x975);
     if (((CfLevelControlFlags*)&state[0xc])->b5 == 0 || ((CfLevelControlFlags*)&state[0xc])->b4 == 0)
@@ -253,6 +256,7 @@ void cflevelcontrol_update(int obj)
     if (((GameObject*)obj)->unkF4 == 0)
     {
         getEnvfxActImmediately((void*)obj, (void*)obj, 0x56, 0);
+        /* one-shot first-visit environment setup */
         if (GameBit_Get(0xd73) == 0)
         {
             getEnvfxActImmediately((void*)obj, (void*)obj, 0xd, 0);
@@ -262,6 +266,7 @@ void cflevelcontrol_update(int obj)
             GameBit_Set(0xd73, 1);
         }
 
+        /* returning after the fortress floods */
         if (GameBit_Get(0xdca) != 0)
         {
             getEnvfxActImmediately((void*)obj, (void*)obj, 0xd, 0);
@@ -275,6 +280,7 @@ void cflevelcontrol_update(int obj)
         ((GameObject*)obj)->unkF4 = 1;
     }
 
+    /* drop the disguise bit once the player is no longer disguised */
     if (GameBit_Get(0x94f) != 0 && (((GameObject*)player)->objectFlags & 0x1000) == 0)
     {
         GameBit_Set(0x94e, 0);
@@ -290,6 +296,7 @@ void cflevelcontrol_update(int obj)
         fn_80295CF4((int)Obj_GetPlayerObject(), 1);
     }
 
+    /* pending map-event trigger queued by another TU */
     if (GameBit_Get(0xd3d) != 0)
     {
         ((void (*)(int*, int, int, int))(*(int*)((u8*)*gMapEventInterface + 0x24)))(
@@ -303,7 +310,7 @@ void cflevelcontrol_update(int obj)
     cameraMode = (*gCameraInterface)->getMode();
     switch (cameraMode)
     {
-    case 0x47:
+    case 0x47: /* the cell camera mode */
         if ((s8)state[0xd] != 0x47)
         {
             GameBit_Set(0xc0, 1);

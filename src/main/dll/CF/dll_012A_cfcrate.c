@@ -69,6 +69,7 @@ void cfccrate_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     CfCcrateState* state;
 
     state = ((GameObject*)obj)->extra;
+    /* scalessword (0x1b8) and VFP_Spellstone (0x6bf) draw themselves */
     if ((s32)visible == 0 || (objectType = ((GameObject*)obj)->anim.seqId) == 0x1b8)
     {
         return;
@@ -94,17 +95,17 @@ int CFCrate_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     case 0x85:
     case 0x86:
         break;
-    case 0x8E:
+    case 0x8E: /* SB_Galleon */
         break;
     case 0xAB:
         break;
     case 0xAE:
         break;
-    case 0x10D:
+    case 0x10D: /* DIM2IceFloe */
         break;
     case 0x409:
         break;
-    case 0x2B7:
+    case 0x2B7: /* WM_largerock */
         if (GameBit_Get(state->gameBit2) != 0)
         {
             ((u8*)animUpdate)[0x90] = (u8)(((u8*)animUpdate)[0x90] | 4);
@@ -155,7 +156,7 @@ void cfccrate_update(int obj)
 
     switch (id)
     {
-    case 0x7de:
+    case 0x7de: /* LinkF_cog */
         if (GameBit_Get(state->gameBit) != 0)
         {
             ((GameObject*)obj)->anim.rotZ = (short)-(timeDelta * state->oscVelB - (f32)((GameObject*)obj)->anim.rotZ);
@@ -165,13 +166,13 @@ void cfccrate_update(int obj)
             ((GameObject*)obj)->anim.rotZ = (short)(timeDelta * state->oscVelB + (f32)((GameObject*)obj)->anim.rotZ);
         }
         break;
-    case 0x729:
+    case 0x729: /* VFP_Warding... */
         if (GameBit_Get(state->gameBit) == 0)
         {
             ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + framesThisStep * 100;
         }
         break;
-    case 0x71b:
+    case 0x71b: /* DFP_WaterHi... */
         state->lingerTimer -= framesThisStep;
         ObjHits_SetHitVolumeSlot(obj, 0x13, 1, 0);
         if (state->lingerTimer <= 0)
@@ -183,7 +184,7 @@ void cfccrate_update(int obj)
             ((GameObject*)obj)->anim.localPosY = (f32)-(lbl_803E3DE0 * timeDelta - ((GameObject*)obj)->anim.localPosY);
         }
         break;
-    case 0x6fc:
+    case 0x6fc: /* DFP_Water */
         if ((GameBit_Get(state->gameBit) != 0) &&
             (((GameObject*)obj)->anim.localPosY <= lbl_803E3DE8 + ((CfccratePlacement*)viewslot)->unkC))
         {
@@ -194,7 +195,7 @@ void cfccrate_update(int obj)
             }
         }
         break;
-    case 0x6fd:
+    case 0x6fd: /* DFP_InnerRing */
         if (GameBit_Get(state->gameBit) != 0)
         {
             ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + (s32)(lbl_803E3DF0 * timeDelta);
@@ -206,7 +207,7 @@ void cfccrate_update(int obj)
             ((GameObject*)obj)->anim.rotZ = ((GameObject*)obj)->anim.rotZ + (s32)(lbl_803E3DF4 * timeDelta);
         }
         break;
-    case 0x6fe:
+    case 0x6fe: /* DFP_OuterRing */
         if (GameBit_Get(state->gameBit) != 0)
         {
             ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + (s32)(lbl_803E3DF0 * timeDelta);
@@ -218,7 +219,7 @@ void cfccrate_update(int obj)
             ((GameObject*)obj)->anim.rotZ = ((GameObject*)obj)->anim.rotZ + (s32)(lbl_803E3DF4 * timeDelta);
         }
         break;
-    case 0x622:
+    case 0x622: /* VFP_locksym */
         {
             int* p = (int*)objFindTexture(obj, 0, 0);
             if ((p != NULL) && (GameBit_Get(state->gameBit) != 0) && (*p == 0))
@@ -233,10 +234,10 @@ void cfccrate_update(int obj)
     case 0x65d:
         ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E3DF8, timeDelta, NULL);
         break;
-    case 0x6b4:
+    case 0x6b4: /* MMP_Organic... */
         ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E3DF8, timeDelta, NULL);
         break;
-    case 0x708:
+    case 0x708: /* VFP_newball... */
         if (ObjHits_GetPriorityHit(obj, NULL, NULL, NULL) != 0)
         {
             GameBit_Set(state->gameBit, 1);
@@ -250,7 +251,7 @@ void cfccrate_update(int obj)
     case 0x409:
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         break;
-    case 0x6be:
+    case 0x6be: /* VFP_liftgra... */
         if ((GameBit_Get(state->gameBit2) != 0) && (state->latch3E == 0))
         {
             state->latch3E = 1;

@@ -214,6 +214,8 @@ void windlift_init(int* obj, u8* def)
     }
     ((GameObject*)obj)->anim.rootMotionScale = (*(f32*)(*(char**)&((GameObject*)obj)->anim.modelInstance + 4) * sub->
         liftHeight) / lbl_803E41CC;
+    /* skip the rise-in ramp after the convergence cutscene (0x57)
+       or for long lifts */
     if (GameBit_Get(0x57) != 0 || sub->duration >= 0xa)
     {
         sub->timer = 0x3c;
@@ -251,6 +253,8 @@ void windlift_init(int* obj, u8* def)
  * track the rider while above the lift and in range, send the lift/drop
  * messages on state edges, and integrate the rise speed with ramp-up,
  * oscillation damping and player-mode handoff. */
+/* per-rider spring model: pull a rider toward the lift column and lift
+   it with the wind; slot->b10 carries the rider's phase bits. */
 void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int pm, uint dur, f32 height)
 {
     char* player;
