@@ -187,6 +187,7 @@ void FUN_8015ad60(undefined8 param_1, double param_2, double param_3, undefined8
 {
     int iVar1;
     uint uVar2;
+    ObjHitsPriorityState* hitState;
     undefined4 in_r8;
     undefined4 in_r9;
     undefined4 in_r10;
@@ -195,8 +196,9 @@ void FUN_8015ad60(undefined8 param_1, double param_2, double param_3, undefined8
     double dVar5;
 
     puVar3 = (&PTR_DAT_80320998)[(uint) * (ushort*)(param_10 + 0x338) * 2];
-    *(undefined*)(*(int*)(param_9 + 0x2a) + 0x6e) = 10;
-    *(undefined*)(*(int*)(param_9 + 0x2a) + 0x6f) = 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
+    hitState->hitVolumePriority = 10;
+    hitState->hitVolumeId = 1;
     if (param_9[0x50] == 0)
     {
         *(byte*)((int)param_9 + 0xaf) = *(byte*)((int)param_9 + 0xaf) | 8;
