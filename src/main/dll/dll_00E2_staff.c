@@ -1901,16 +1901,16 @@ extern u8 lbl_803AC6B8[];
 void staff_init(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
-    int* r54;
+    ObjHitsPriorityState* hitState;
     int* p;
     int i;
     *(u8*)((char*)state + 0xaa) = 1;
     *(s16*)((char*)state + 0xb0) = 2;
     *(f32*)((char*)state + 0x50) = lbl_803E3328;
-    r54 = *(int**)&((GameObject*)obj)->anim.hitReactState;
-    if (r54 != NULL)
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    if (hitState != NULL)
     {
-        *(s16*)&((ObjHitsPriorityState*)r54)->trackContactMask = 0x109;
+        hitState->trackContactMask = 0x109;
     }
     i = 0;
     p = state;
