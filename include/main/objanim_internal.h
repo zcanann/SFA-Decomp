@@ -188,7 +188,10 @@ typedef struct ObjTextureRuntimeSlot {
   u8 pad04[4];
   s16 offsetS;
   s16 offsetT;
-  u8 pad0C[4];
+  u8 colorR;
+  u8 colorG;
+  u8 colorB;
+  u8 pad0F;
 } ObjTextureRuntimeSlot;
 
 /*

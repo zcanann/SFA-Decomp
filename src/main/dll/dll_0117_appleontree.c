@@ -5,6 +5,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
+#include "main/objtexture.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/crackanim_state.h"
 #include "main/dll/baddie_state.h"
@@ -96,7 +97,6 @@ extern undefined4 FUN_80039520();
 extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void ObjMsg_AllocQueue(int obj, int capacity);
-extern int* objFindTexture(int obj, int textureId, int modelIdx);
 extern undefined4* gSHthorntailAnimationInterface;
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E3828;
@@ -855,7 +855,7 @@ void appleontree_init(int obj, int def)
     f32 timeScale;
     f32 progress;
     int eventBit;
-    int* texture;
+    ObjTextureRuntimeSlot* texture;
 
     state = *(int*)&((GameObject*)obj)->extra;
 
@@ -916,8 +916,8 @@ void appleontree_init(int obj, int def)
             else
             {
                 state = *(int*)&((GameObject*)obj)->extra;
-                texture = objFindTexture(obj, 0, 0);
-                *texture = 0;
+                texture = objFindTexture((void*)obj, 0, 0);
+                texture->textureId = 0;
                 ((CrackAnimState*)state)->unk24 = lbl_803E37C8;
                 ((GameObject*)obj)->anim.rootMotionScale =
                     ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;

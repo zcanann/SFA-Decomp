@@ -15,6 +15,7 @@
  * poles of the tracking test).
  */
 #include "main/objlib.h"
+#include "main/objtexture.h"
 
 #define SC_TOTEMPUZZLE_OBJECT_TYPE 0x3c1
 #define SC_TOTEMPUZZLE_READY_FLAG 0x2
@@ -56,7 +57,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                   f32 scaleZ, void* args, int arg9);
-extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
 extern void objRenderFn_8003b8f4(f32);
 
 extern f32 lbl_803E55F0;
@@ -136,7 +136,7 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
         extern void objfx_spawnArcedBurst(SCTotemPuzzleObject* obj, int enabled, f32 radius, int particleKind,
                                           int particleCount, int lifetime, f32 speedA, f32 speedB, f32 scale,
                                           SCTotemPuzzleParticleBox* box, int flags);
-        extern int*objFindTexture(SCTotemPuzzleObject* obj, int textureIndex, int materialIndex);
+        ObjTextureRuntimeSlot* solvedTexture;
         particleBox.x = lbl_803E55F4;
         particleBox.y = lbl_803E55F8;
         particleBox.z = lbl_803E55F4;
@@ -148,10 +148,10 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
                                   *(f32*)&lbl_803E5604, lbl_803E5608, &particleBox, 0);
         }
 
-        objects = objFindTexture(obj, 0, 0);
-        if (objects != NULL)
+        solvedTexture = objFindTexture(obj, 0, 0);
+        if (solvedTexture != NULL)
         {
-            *objects = 0x100;
+            solvedTexture->textureId = 0x100;
         }
     }
 
@@ -237,7 +237,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
     int hitKind;
     int* objects;
     int other;
-    int* texture;
+    ObjTextureRuntimeSlot* texture;
     f32 lightArgs[6];
     f32 hitNx, hitNy, hitNz;
     int countA, startA;
@@ -296,14 +296,10 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
                 }
                 startB++;
             }
-            {
-                extern int* objFindTexture(ScTotemPuzzleObject* obj, int textureIndex,
-                                           int materialIndex);
-                texture = objFindTexture(obj, 0, 0);
-            }
+            texture = objFindTexture(obj, 0, 0);
             if (texture != NULL)
             {
-                *texture = 0;
+                texture->textureId = 0;
             }
         }
     }
@@ -381,7 +377,7 @@ extern int randomGetRange(int lo, int hi);
 void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
 {
     ScTotemPuzzleState* state;
-    int* tex;
+    ObjTextureRuntimeSlot* tex;
     int r;
     f32 fz;
 
@@ -393,10 +389,10 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
     }
     if (obj->puzzleIndex == 5)
     {
-        tex = (int*)objFindTexture((int)obj, 0, 0);
+        tex = objFindTexture(obj, 0, 0);
         if (tex != NULL)
         {
-            *tex = 0x100;
+            tex->textureId = 0x100;
         }
     }
     state->stepIndex = (s16)obj->puzzleIndex;
@@ -408,10 +404,10 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
     else
     {
         state->angle = lbl_803E562C;
-        tex = (int*)objFindTexture((int)obj, 0, 0);
+        tex = objFindTexture(obj, 0, 0);
         if (tex != NULL)
         {
-            *tex = 0x100;
+            tex->textureId = 0x100;
         }
     }
     obj->yaw = (s16)(s32)

@@ -26,6 +26,7 @@ ObjectDescriptor gSPScarabObjDescriptor = {
 };
 
 #include "main/objanim_internal.h"
+#include "main/objtexture.h"
 #include "main/game_object.h"
 #include "main/dll/DR/DRsimplehuman.h"
 
@@ -37,7 +38,6 @@ typedef struct SpitembeamPlacement
 } SpitembeamPlacement;
 
 extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
-extern int* objFindTexture(int* obj, int a, int b);
 extern f32 lbl_803E5AD8;
 extern f32 lbl_803E5AC0;
 
@@ -72,7 +72,7 @@ void spitembeam_update(int* obj)
 {
     int* target;
     u8* def;
-    int* tex;
+    ObjTextureRuntimeSlot* tex;
     f32 d;
 
     target = *(int**)&((GameObject*)obj)->unkF4;
@@ -94,10 +94,10 @@ void spitembeam_update(int* obj)
         tex = objFindTexture(obj, 0, 0);
         if (tex != NULL)
         {
-            *(s16*)((char*)tex + 8) += 8;
-            if (*(s16*)((char*)tex + 8) > 0x400)
+            tex->offsetS += 8;
+            if (tex->offsetS > 0x400)
             {
-                *(s16*)((char*)tex + 8) -= 0x400;
+                tex->offsetS -= 0x400;
             }
         }
     }

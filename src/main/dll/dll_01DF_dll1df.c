@@ -39,6 +39,7 @@ extern void* mmAlloc(int size, int a, int b);
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2projrock.h"
 #include "main/objanim_internal.h"
+#include "main/objtexture.h"
 
 typedef struct Dll1DFState
 {
@@ -159,9 +160,8 @@ void dim2lavacontrol_setScale(void* obj);
 
 void dll_1DF_update(void* obj)
 {
-    extern void* objFindTexture(void* obj, int a, int b);
     void* sub = ((GameObject*)obj)->extra;
-    void* tex;
+    ObjTextureRuntimeSlot* tex;
     void* player;
     f32 dist;
     f32 t;
@@ -172,16 +172,16 @@ void dll_1DF_update(void* obj)
         if (((GameObject*)obj)->anim.seqId == 209)
         {
             f32 v = lbl_803E4B9C;
-            *(u8*)((char*)tex + 0xC) = v;
-            *(u8*)((char*)tex + 0xD) = v;
-            *(u8*)((char*)tex + 0xE) = v;
+            tex->colorR = v;
+            tex->colorG = v;
+            tex->colorB = v;
         }
         else
         {
             f32 v = lbl_803E4B9C;
-            *(u8*)((char*)tex + 0xC) = v;
-            *(u8*)((char*)tex + 0xD) = v;
-            *(u8*)((char*)tex + 0xE) = v;
+            tex->colorR = v;
+            tex->colorG = v;
+            tex->colorB = v;
         }
     }
     player = Obj_GetPlayerObject();
