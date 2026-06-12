@@ -35,7 +35,6 @@ extern uint FUN_80286838();
 extern undefined4 FUN_80286884();
 extern undefined4 FUN_80294c40();
 
-extern MapEventInterface** gMapEventInterface;
 extern u8 gTrickyCurveBurstCounter;
 extern f64 DOUBLE_803e70d8;
 extern f64 DOUBLE_803e7108;
@@ -963,16 +962,10 @@ void TrickyCurve_init(int* obj, u8* def)
 #include "main/dll/sfxplayer.h"
 #include "main/game_object.h"
 
-extern void Obj_FreeObject(int obj);
 extern int ObjHits_GetPriorityHit(int obj, undefined4* outHitObject, int* outSphereIndex, uint* outHitVolume);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void GameBit_Set(int eventId, int value);
-extern void gameTimerStop(void);
 extern void gameTimerInit(int timerId, int frames);
-extern u32 GameBit_Get(int eventId);
 extern int isGameTimerDisabled(void);
 extern void timerSetToCountUp(void);
-extern MapEventInterface** gMapEventInterface;
 
 #define SFXPLAYER_OBJECT_FLAGS_OFFSET 0xB0
 #define SFXPLAYER_OBJECT_STATE_OFFSET 0xB8

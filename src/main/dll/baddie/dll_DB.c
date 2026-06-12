@@ -36,7 +36,6 @@ extern void textureFree(void* p);
 
 #pragma scheduling off
 #pragma peephole off
-void textureFreeFn_8012fcec(void);
 #pragma peephole reset
 #pragma scheduling reset
 

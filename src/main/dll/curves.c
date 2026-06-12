@@ -31,7 +31,6 @@ extern double SeekTwiceBeforeRead();
 extern undefined4 TRKNubMainLoop();
 extern f32 sqrtf(f32 x);
 extern uint countLeadingZeros();
-extern int __cntlzw(unsigned int value);
 
 /* Hcurves keeps the ROM curve definitions sorted by id for binary searches. */
 extern u32 sCurvesCachedHitCount;
@@ -183,7 +182,6 @@ undefined4 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curve
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance);
 
 /*
  * --INFO--
@@ -198,7 +196,6 @@ int curves_distFn15(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int curves_distanceToNearestOfType16(f32 x, f32 y, f32 z, int queryAll);
 
 /*
  * --INFO--
@@ -215,7 +212,6 @@ int curves_distanceToNearestOfType16(f32 x, f32 y, f32 z, int queryAll);
  */
 #define SQ(v) ((v) * (v))
 
-int RomCurve_func13(uint curveId, int typeFilter, uint maxDist, int* outLink);
 
 /*
  * --INFO--
@@ -231,7 +227,6 @@ int RomCurve_func13(uint curveId, int typeFilter, uint maxDist, int* outLink);
  * PAL Size: TODO
  */
 #pragma fp_contract off
-int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* outCurveId);
 #pragma fp_contract reset
 
 /*
@@ -247,7 +242,6 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCount, int* previousLinkId);
 
 /*
  * --INFO--
@@ -262,7 +256,6 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCoun
  * PAL Address: TODO
  * PAL Size: TODO
  */
-f32 curves_distXZ(f32 x, f32 z, uint curveId);
 
 /*
  * --INFO--
@@ -277,7 +270,6 @@ f32 curves_distXZ(f32 x, f32 z, uint curveId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-f32 curves_distFn0B(int obj, uint curveId);
 
 int curves_isNotPoint(RomCurveDef* curve);
 
@@ -296,7 +288,6 @@ int curves_isPoint(RomCurveDef* curve);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-f32 curves_find(int type, int action, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
 
 /*
  * --INFO--
@@ -311,7 +302,6 @@ f32 curves_find(int type, int action, f32 x, f32 y, f32 z, f32* outX, f32* outY,
  * PAL Address: TODO
  * PAL Size: TODO
  */
-RomCurveDef* RomCurve_findByIdWithIndex(uint curveId, int* outIndex);
 
 /*
  * --INFO--
@@ -362,7 +352,6 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
     return 1;
 }
 
-int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ, s8* outTypes);
 
 /*
  * --INFO--
@@ -377,7 +366,6 @@ int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int RomCurve_countRandomPoints(RomCurveDef* curve);
 
 /*
  * --INFO--
@@ -392,7 +380,6 @@ int RomCurve_countRandomPoints(RomCurveDef* curve);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int RomCurve_func1E(uint* curveIds, float* outX, float* outY, float* outZ);
 
 /*
  * --INFO--
@@ -407,7 +394,6 @@ int RomCurve_func1E(uint* curveIds, float* outX, float* outY, float* outZ);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds);
 
 /*
  * --INFO--
@@ -422,7 +408,6 @@ void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int excludeLinkId);
 
 /*
  * --INFO--
@@ -437,7 +422,6 @@ int RomCurve_getNearestAdjacentLink(f32 x, f32 y, f32 z, RomCurveDef* curve, int
  * PAL Address: TODO
  * PAL Size: TODO
  */
-f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* segment);
 
 /*
  * --INFO--
@@ -452,7 +436,6 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int RomCurve_getRandomBlockedLink(RomCurveDef* curve, int excludeLinkId);
 
 /*
  * --INFO--
@@ -467,7 +450,6 @@ int RomCurve_getRandomBlockedLink(RomCurveDef* curve, int excludeLinkId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int RomCurve_getLinkIds(RomCurveDef* curve, int excludeLinkId, int* outIds);
 
 /*
  * --INFO--
@@ -482,7 +464,6 @@ int RomCurve_getLinkIds(RomCurveDef* curve, int excludeLinkId, int* outIds);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int RomCurve_getRandomUnblockedLink(RomCurveDef* curve, int excludeLinkId);
 
 /*
  * --INFO--
@@ -497,7 +478,6 @@ int RomCurve_getRandomUnblockedLink(RomCurveDef* curve, int excludeLinkId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-RomCurveDef* RomCurve_getById(uint curveId);
 
 /*
  * --INFO--
@@ -512,7 +492,6 @@ RomCurveDef* RomCurve_getById(uint curveId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int RomCurve_find(int* types, int typeCount, f32 x, f32 y, f32 z, int action);
 
 /*
  * --INFO--
@@ -527,7 +506,6 @@ int RomCurve_find(int* types, int typeCount, f32 x, f32 y, f32 z, int action);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void curves_remove(RomCurveDef* curve);
 
 /*
  * --INFO--
@@ -544,7 +522,6 @@ void curves_remove(RomCurveDef* curve);
  *
  * Retail source-tag string: Hcurves.c: MAX_ROMCURVES exceeded!!
  */
-void curves_addCurveDef(RomCurveDef* curve);
 
 /*
  * --INFO--
@@ -2412,7 +2389,6 @@ void saveFileStruct_setCheatActive(uint optionIndex, u8 active)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void curves_release(void);
 
 void RomCurve_initialise(void);
 
@@ -2457,7 +2433,6 @@ void loadSaveSettings(void)
 }
 
 /* Pattern wrappers. */
-void curves_initialise(void);
 
 void RomCurve_func0D(RomCurveDef** startOut, RomCurveDef** endOut);
 
@@ -2551,9 +2526,7 @@ int saveFileStruct_isCheatActive(u8 idx)
 }
 
 /* curves_findByAction: scan romCurves for matching action curves, return curve id. */
-int curves_findByAction(int act);
 
 /* RomCurve_segmentIntersectsOriginRayXZ: 2D segment-intersection predicate.
  * Returns 1 if the segment between (x, z) and the origin in the xz-plane
  * crosses the segment between a and b. */
-int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef* a, RomCurveDef* b, f32 x, f32 unusedY, f32 z, f32 unusedW);

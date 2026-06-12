@@ -342,7 +342,6 @@ extern int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam)
 extern int ObjTrigger_IsSetById(void* obj, int triggerId);
 extern void objRenderFn_80041018(void* obj);
 extern void Sfx_StopObjectChannel(void* obj, int channel);
-extern void* Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(void* obj);
 extern void objMove(f32 x, f32 y, f32 z, void* obj);
 extern int fn_8003B500(void* obj, void* p2, f32 f1);
@@ -358,23 +357,11 @@ extern void ObjMsg_AllocQueue(void* obj, int count);
 extern void ObjMsg_SendToObject(void* dst, int msg, void* src, void* payload);
 extern void objfx_spawnDirectionalBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin,
                                         int flags, f32 f8val, f32 mult);
-extern int randomGetRange(int min, int max);
-extern void bombplantspore_startDriftBurst(void* obj, void* state);
-extern void bombplantspore_updateDrift(void* obj, void* state);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern EffectInterface** gPartfxInterface;
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern u8 lbl_80326D98[];
 extern u8 lbl_803DBFC0;
-extern f64 lbl_803E53A0;
 extern f32 lbl_803E5388;
 extern f32 lbl_803E538C;
-extern f32 lbl_803E5390;
-extern f32 lbl_803E5394;
-extern f32 lbl_803E53AC;
-extern f32 lbl_803E53B0;
 extern f32 lbl_803E53B8;
 extern f32 lbl_803E53BC;
 extern f32 lbl_803E53C0;

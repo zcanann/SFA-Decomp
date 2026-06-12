@@ -41,15 +41,7 @@ void vfpblock1_free(int obj)
 #include "main/objlib.h"
 #include "main/resource.h"
 
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80041ff8();
-extern undefined4 FUN_80042b9c();
-extern undefined4 FUN_80042bec();
-extern undefined4 FUN_80044404();
-extern undefined4 FUN_80053c98();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f64 DOUBLE_803e6d90;
 extern f64 DOUBLE_803e6da8;
 extern f64 DOUBLE_803e6dc8;
@@ -90,10 +82,7 @@ STATIC_ASSERT(sizeof(SeqPointState) == 0x10);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void* Obj_GetPlayerObject(void);
-extern f32 Vec_distance(void* a, void* b);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern f32 lbl_803E6100;
 
@@ -522,7 +511,6 @@ void seqpoint_init(int obj, int data)
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E6128;
-extern void objRenderFn_8003b8f4(f32);
 
 void seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -548,7 +536,6 @@ extern f32 lbl_803E6140;
 void vfpdoorswitch_render(void) { objRenderFn_8003b8f4(lbl_803E611C); }
 void vfpcoreplat_render(void) { objRenderFn_8003b8f4(lbl_803E6140); }
 
-extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void vfpdoorswitch_updateExplodingVariant(int obj);
 
 typedef struct
@@ -609,7 +596,6 @@ extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, i
 extern f32 lbl_803E6118;
 extern f32 lbl_803E6120;
 extern f32 lbl_803E6124;
-extern f32 timeDelta;
 
 void vfpdoorswitch_updateExplodingVariant(int obj)
 {
@@ -721,8 +707,6 @@ void seqpoint_update(int* obj)
     }
 }
 
-extern EffectInterface** gPartfxInterface;
-extern u32 randomGetRange(int min, int max);
 extern s16 lbl_803DDCC4;
 extern u8 lbl_803DDCC6;
 
@@ -787,9 +771,6 @@ void vfpdraghead_update(int* obj)
     }
 }
 
-extern void unlockLevel(int, int, int);
-extern int mapGetDirIdx(int);
-extern void warpToMap(int, int);
 
 void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
 {

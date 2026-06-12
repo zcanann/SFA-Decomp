@@ -105,7 +105,6 @@ extern f32 lbl_803E4F74;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* param_3);
 
 
 /*
@@ -504,7 +503,6 @@ STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 
 #pragma scheduling off
 #pragma peephole off
-void babycloudrunner_init(int* obj, u8* def);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -522,7 +520,6 @@ void babycloudrunner_init(int* obj, u8* def);
  * PAL Size: TODO
  */
 #pragma peephole off
-void babycloudrunner_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 #pragma peephole reset
 
 
@@ -539,7 +536,6 @@ void babycloudrunner_render(int param_1, int param_2, int param_3, int param_4, 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8019f1dc(void);
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -592,7 +588,6 @@ extern void playerAddRemoveMagic(void* player, int n);
  * tops the player back up. Returns 1 if the move was consumed. */
 #pragma scheduling off
 #pragma peephole off
-int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -619,7 +614,6 @@ void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d);
  * lit/active state from gamebit 0x44 and notify on completion. */
 #pragma scheduling off
 #pragma peephole off
-int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1122,7 +1116,6 @@ int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /* GameBit-gated byte write. */
 #pragma scheduling off
-int fn_801A04F4(int obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma scheduling reset
 
 /* plain forwarder. */
@@ -1145,7 +1138,6 @@ extern int ObjHits_GetPriorityHitWithPosition(int* obj, int a, int b, int c, f32
 #pragma scheduling off
 #pragma peephole off
 
-int babycloudrunner_getObjectTypeId(void);
 
 void spiritdoorspirit_init(int* obj);
 
@@ -1234,7 +1226,6 @@ void cfmaincrystal_update(int* obj);
 
 #pragma scheduling off
 #pragma peephole off
-int cfpowerbase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1434,7 +1425,6 @@ extern f32 lbl_803E4248;
  * then steer toward the player (or Tricky) per the current behaviour state. */
 #pragma scheduling off
 #pragma peephole off
-int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1447,7 +1437,6 @@ extern void Sfx_StopObjectChannel(int obj, int ch);
  * SFX and queued-message drain. */
 #pragma scheduling off
 #pragma peephole off
-int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 #pragma scheduling reset
 

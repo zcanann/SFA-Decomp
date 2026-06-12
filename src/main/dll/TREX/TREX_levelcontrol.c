@@ -84,7 +84,6 @@ extern f32 lbl_803E57F8;
 extern f32 lbl_803E5790;
 extern f32 timeDelta;
 
-int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /*
  * --INFO--
@@ -136,7 +135,6 @@ extern f32 lbl_803E57E0;
 extern f32 lbl_803E57F0;
 extern f32 lbl_803E5724;
 
-void fn_801E1588(int obj, int state);
 
 
 /*
@@ -163,7 +161,6 @@ extern f32 lbl_803E581C;
 extern f32 lbl_803E5820;
 extern f32 lbl_803E5824;
 
-void SB_Propeller_update(int obj);
 
 /*
  * --INFO--
@@ -178,7 +175,6 @@ void SB_Propeller_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SB_Propeller_init(int obj, int arg2);
 
 /*
  * --INFO--
@@ -193,7 +189,6 @@ void SB_Propeller_init(int obj, int arg2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SB_ShipHead_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible);
 
 /*
  * --INFO--
@@ -225,23 +220,15 @@ extern f32 lbl_803E5858;
 extern f32 lbl_803E585C;
 extern f32 sqrtf(f32);
 
-void SB_ShipHead_update(int obj);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void SB_Galleon_release(void);
 
-void SB_Galleon_initialise(void);
 
-void SB_ShipMast_free(void);
 
-void SB_ShipMast_hitDetect(void);
 
-void SB_ShipMast_init(void);
 
-void SB_ShipMast_release(void);
 
-void SB_ShipMast_initialise(void);
 
 extern f32 lbl_803E586C;
 extern f32 lbl_803E5870;
@@ -251,13 +238,6 @@ extern f32 lbl_803E5878;
 void SB_ShipMast_update(int* obj);
 
 /* 8b "li r3, N; blr" returners. */
-int SB_Galleon_getExtraSize(void);
-int SB_Galleon_getObjectTypeId(void);
-int SB_Propeller_getExtraSize(void);
-int SB_ShipHead_getExtraSize(void);
-int SB_ShipHead_getObjectTypeId(void);
-int SB_ShipMast_getExtraSize(void);
-int SB_ShipMast_getObjectTypeId(void);
 int SB_ShipGun_getExtraSize(void) { return 0x10; }
 
 /* sda21 accessors. */
@@ -267,24 +247,18 @@ u32 getSbGalleon(void);
 u32 fn_801E2570(void);
 
 /* Pattern wrappers. */
-u8 SB_Galleon_render2(int* obj);
 
 /* 16b chained patterns. */
-s32 SB_Galleon_func0B(int* obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5868;
 
-void SB_Propeller_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void SB_ShipMast_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void SB_ShipHead_free(int x);
 
 /* SB_Propeller_hitDetect: guard on 0x46 == 0x69c, copy halfword from sda21 ptr. */
-void SB_Propeller_hitDetect(int obj);
 
 /* SB_ShipGun_free: expgfx interface freeObject callback. */
 void SB_ShipGun_free(int param_1)
@@ -293,7 +267,6 @@ void SB_ShipGun_free(int param_1)
 }
 
 /* SB_Galleon_setScale: state machine; advance counter, optionally play sfx. */
-int SB_Galleon_setScale(int obj);
 
 /* SB_Galleon_hitDetect: per-step expgfx spawn loop. */
 extern f32 lbl_803E57FC;
@@ -304,9 +277,7 @@ extern f32 lbl_803E5738;
 extern f32 lbl_803E56F0;
 extern f32 lbl_803E56C8;
 
-void SB_Galleon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void SB_Galleon_hitDetect(int obj);
 
 
 /*
@@ -321,10 +292,8 @@ extern void lockLevel(int idx, int p2);
 extern void fn_801DFA28(int obj);
 extern void DBprotection_updateShield(int obj);
 extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
-extern MapEventInterface** gMapEventInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-void SB_Galleon_update(int obj);
 
 /*
  * --INFO--
@@ -339,20 +308,17 @@ extern int lbl_803DDC18;
 extern int lbl_803DDC1C;
 extern f32 lbl_803E580C;
 
-void SB_Galleon_init(int obj);
 
 
 /* SB_Galleon_free: textureFree manager textures, ObjGroup_RemoveObject, kill music, set bit. */
 extern void textureFree(void* tex);
 
-void SB_Galleon_free(int obj, int p2);
 
 /* SB_ShipHead_init: add to group, alloc msg queue, set state + bias positions. */
 extern void ObjMsg_AllocQueue(int obj, int n);
 extern f32 lbl_803E5830;
 extern f32 lbl_803E5838;
 
-void SB_ShipHead_init(int obj);
 
 /* SB_ShipGun_render: conditional render with multiple flag checks. */
 extern f32 lbl_803E5888;
@@ -374,10 +340,8 @@ void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 /* SB_Galleon_modelMtxFn: returns -2 / -1 / state byte depending on flags. */
-int SB_Galleon_modelMtxFn(int* obj);
 
 /* SB_Galleon_func0E: state byte == 1 -> compute from 0x7c; else return 0x640. */
-int SB_Galleon_func0E(int* obj);
 
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
@@ -429,9 +393,7 @@ typedef struct SBCannonBallState
 } SBCannonBallState;
 
 
-extern u32 randomGetRange(int min, int max);
 extern void ModelLightStruct_free(void* effect);
-extern int ObjHits_GetPriorityHit();
 
 extern f32 lbl_803E6520;
 extern f32 lbl_803E6524;
@@ -461,15 +423,10 @@ extern int ObjList_GetObjects(int* outIndex, int* outCount);
 extern void Obj_SetModelColorFadeRecursive(int obj, int p2, int p3, int p4, int p5, int p6);
 extern void Sfx_StopObjectChannel();
 extern s16 getAngle(f32 dx, f32 dz);
-extern f32 sqrtf(f32);
-extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_GetWorldPosition(int obj, float* x, float* y, float* z);
 extern void vecRotateZXY(void* a, void* b);
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
-extern u8 framesThisStep;
-extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E5888;
 extern f32 lbl_803E588C;
 extern f32 lbl_803E5890;
 extern f32 lbl_803E5894;
@@ -822,7 +779,6 @@ void SB_FireBall_free(int obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E58B0;
-extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E58D8;
 
 void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -833,7 +789,6 @@ void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-extern f32 timeDelta;
 extern f32 lbl_803E58BC;
 extern f64 lbl_803E58C0;
 extern void Obj_FreeObject(int* obj);

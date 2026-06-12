@@ -171,10 +171,6 @@ extern u8 framesThisStep;
 extern f32 timeDelta;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern TitleMenuControl* gTitleMenuLinkInterface;
-extern int lbl_803DD5F8;
-extern f32 lbl_803DD600;
-extern f32 lbl_803DD604;
-extern u8 lbl_803DD608;
 extern u8 lbl_803DD60A;
 extern u8 gTitleMenuSelectionFade;
 extern s32 gAttractMovieState;
@@ -302,7 +298,6 @@ void n_rareware_initialise(void)
  * PAL Size: TODO
  */
 #pragma dont_inline on
-void n_attractmode_releaseMovieBuffers(void);
 
 #pragma dont_inline reset
 
@@ -319,7 +314,6 @@ void n_attractmode_releaseMovieBuffers(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void n_attractmode_prepareMovie(void);
 
 /*
  * --INFO--
@@ -334,7 +328,5 @@ void n_attractmode_prepareMovie(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void TitleMenu_render(u8* param_1);
 
 /* Trivial 4b 0-arg blr leaves. */
-void TitleMenu_frameEnd(void);

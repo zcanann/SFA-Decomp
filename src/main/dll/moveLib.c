@@ -36,7 +36,6 @@ extern f32 lbl_803E294C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6);
 
 
 /*
@@ -919,9 +918,6 @@ extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern f32 sqrtf(f32 value);
 
-extern u8 framesThisStep;
-extern f32 lbl_803E1C8C;
-extern f32 lbl_803E1C90;
 extern f64 lbl_803E1C98;
 extern f32 lbl_803E1CA4;
 extern f32 lbl_803E1CD0;
@@ -1184,11 +1180,6 @@ void FUN_801150ac(void)
 #include "main/objanim.h"
 #include "main/objlib.h"
 
-extern f64 lbl_803E1C98;
-extern f32 lbl_803E1C90;
-extern f32 lbl_803E1CC4;
-extern f32 lbl_803E1CD0;
-extern f32 lbl_803E1CDC;
 extern f32 lbl_803E1CE0;
 
 /*

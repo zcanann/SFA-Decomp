@@ -91,7 +91,6 @@ extern void objRenderFn_80041018(int* obj);
 
 extern int lbl_803DBDA0;
 extern EffectInterface** gPartfxInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f64 DOUBLE_803e44f8;
 extern f64 DOUBLE_803e4500;
 extern f64 DOUBLE_803e4570;

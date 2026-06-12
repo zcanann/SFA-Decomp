@@ -44,7 +44,6 @@ typedef struct BabyCloudRunnerState
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_FC_init(int obj, int objDef);
 
 /*
  * --INFO--
@@ -111,7 +110,6 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
 extern void* Obj_GetPlayerObject(void);
 extern void Sfx_StopObjectChannel(int obj, int channel);
-extern void ObjLink_DetachChild(int obj, int childObj);
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
@@ -331,10 +329,7 @@ void dll_14D_initialise_nop(void)
 }
 
 extern void dll_14D_update();
-extern void dll_14D_hitDetect(int param_1);
 extern void dll_14D_free_nop();
-extern int dll_14D_getObjectTypeId(void);
-extern int dll_14D_getExtraSize_ret_8(void);
 
 ObjectDescriptor gDll14DObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

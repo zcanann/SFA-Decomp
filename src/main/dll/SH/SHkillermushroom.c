@@ -84,7 +84,6 @@ extern f32 lbl_803E5FD8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void enemymushroom_release(void);
 
 /*
  * --INFO--
@@ -99,7 +98,6 @@ void enemymushroom_release(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void enemymushroom_initialise(void);
 
 /*
  * --INFO--
@@ -369,7 +367,6 @@ typedef struct
 
 /* EN v1.0 0x801D1E24  size: 2452b  Mushroom enemy state machine: dormant ->
  * inflate -> chase -> deflate cycle, hit reaction, pop and respawn. */
-void enemymushroom_update(int* obj);
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -402,27 +399,15 @@ typedef struct BombplantsporeUpdateDriftPlacement
 #include "main/dll/bombplant_placement.h"
 
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068c4();
 extern void ModelLightStruct_free(void* light);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern double FUN_80017714();
 extern undefined4 FUN_80017a28();
-extern byte FUN_80017a34();
-extern undefined4 FUN_80017a3c();
 extern int FUN_80017a90();
-extern int FUN_80017a98();
-extern int FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
 extern undefined4 ObjHitbox_SetCapsuleBounds();
-extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_MarkObjectPositionDirty();
-extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80081120();
 extern undefined4 FUN_8008112c();
 extern undefined4 FUN_8013651c();
 extern u32 GameBit_Get(int eventId);
@@ -432,25 +417,17 @@ extern void Obj_SetModelColorFadeRecursive(void* obj, int a, int b, int c, int d
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 
-extern f32 lbl_803E5358;
-extern f32 lbl_803E535C;
 extern f64 lbl_803E5360;
 extern f32 lbl_803E5368;
-extern f32 lbl_803E536C;
 extern f32 lbl_803E537C;
 extern f32 lbl_803E5380;
 
 extern u8 lbl_80326D20[];
-extern EffectInterface** gPartfxInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 
 extern undefined4 DAT_80327960;
 extern undefined4 DAT_80327964;
 extern undefined4 DAT_80327968;
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern f64 DOUBLE_803e5ff8;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803dda58;
@@ -484,7 +461,6 @@ extern f32 lbl_803E53B4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int bombplantspore_getExtraSize(void);
 
 /*
  * --INFO--
@@ -499,7 +475,6 @@ int bombplantspore_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void bombplantspore_free(void* obj);
 
 /*
  * --INFO--
@@ -519,7 +494,6 @@ void bombplantspore_free(void* obj);
  * (SHrocketmushroom.c). Once they land there, dont_inline stops MWCC
  * auto-inlining them into bombplantspore_update. */
 #pragma dont_inline on
-void bombplantspore_startDriftBurst(void* obj, void* state);
 
 /*
  * --INFO--
@@ -534,7 +508,6 @@ void bombplantspore_startDriftBurst(void* obj, void* state);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void bombplantspore_updateDrift(void* obj, void* state);
 #pragma dont_inline reset
 
 /*

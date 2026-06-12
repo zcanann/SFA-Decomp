@@ -64,7 +64,6 @@ void fn_blasted_init_v11_unused(int param_1, int param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_801a2cb8(int param_1, uint param_2);
 
 
 /*
@@ -322,9 +321,7 @@ typedef struct SlidingdoorPlacement
 
 
 extern undefined8 FUN_80017698();
-extern u32 randomGetRange(int min, int max);
 extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
 extern int Obj_GetYawDeltaToObject();
 extern undefined4 FUN_80041ff8();
 extern undefined4 FUN_80042b9c();
@@ -334,8 +331,6 @@ extern undefined4 SH_LevelControl_runBloopEvent();
 extern uint countLeadingZeros();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern MapEventInterface** gMapEventInterface;
-extern f64 DOUBLE_803e5020;
 extern f64 DOUBLE_803e5048;
 extern f64 DOUBLE_803e5060;
 extern f64 DOUBLE_803e5078;
@@ -343,7 +338,6 @@ extern f64 DOUBLE_803e5090;
 extern f64 DOUBLE_803e50a8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DCAF8;
-extern f32 lbl_803E4FF4;
 extern f32 lbl_803E5028;
 extern f32 lbl_803E502C;
 extern f32 lbl_803E5030;

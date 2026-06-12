@@ -119,28 +119,19 @@ extern void audioStopByMask(int mask);
 extern int Music_Trigger(int id, int value);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E503C;
 extern f32 lbl_803E5040;
 
-void gpsh_shrine_update(int obj);
 
 
-void gpsh_shrine_init(int* obj, int* def);
 
 /* Trivial 4b 0-arg blr leaves. */
-void gpsh_shrine_release(void);
 
-void gpsh_shrine_initialise(void);
 
-void gpsh_objcreator_free(void);
 
-void gpsh_objcreator_hitDetect(void);
 
-void gpsh_objcreator_release(void);
 
-void gpsh_objcreator_initialise(void);
 
 extern u8 Obj_IsLoadingLocked(void);
 extern void hitDetectFn_80097070(int* obj, f32 e, int a, int b, int c, int d);
@@ -152,7 +143,6 @@ extern f32 lbl_803E5050;
 extern f32 lbl_803E5054;
 extern s16 lbl_803263B8[];
 
-void gpsh_objcreator_update(int* obj);
 
 void gpsh_scene_free(void);
 
@@ -169,8 +159,6 @@ void ecsh_cup_hitDetect(void)
 }
 
 /* 8b "li r3, N; blr" returners. */
-int gpsh_objcreator_getExtraSize(void);
-int gpsh_objcreator_getObjectTypeId(void);
 int gpsh_scene_getExtraSize(void);
 int gpsh_scene_getObjectTypeId(void);
 int ecsh_cup_getExtraSize(void) { return 0x30; }
@@ -182,7 +170,6 @@ extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5058;
 extern f32 lbl_803E5060;
 
-void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
@@ -199,7 +186,6 @@ void ecsh_cup_free(int* obj)
 
 void gpsh_scene_init(int* obj, int* def);
 
-void gpsh_objcreator_init(int* obj, int* def);
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -232,7 +218,6 @@ typedef struct EcshCupState
 extern undefined4 FUN_800067e8();
 extern void* FUN_80017624();
 extern undefined4 FUN_8001771c();
-extern int FUN_80017a98();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
@@ -247,7 +232,6 @@ extern undefined4 FUN_801c7390();
 extern undefined4 DAT_802c2b38;
 extern undefined4 DAT_802c2b3c;
 extern undefined4 DAT_802c2b40;
-extern f32 lbl_803DC074;
 
 extern f32 lbl_803E5064;
 extern f32 lbl_803E5068;
@@ -283,11 +267,8 @@ typedef struct
     f32 z;
 } CupVec3;
 
-extern void* Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern EffectInterface** gPartfxInterface;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f32 timeDelta;
 extern f32 lbl_802C23B8[];
 
 #pragma scheduling off

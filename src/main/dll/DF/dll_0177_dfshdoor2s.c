@@ -57,7 +57,6 @@ extern f64 lbl_803E4E48;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfropenode_update(DFropenodeObject* obj);
 
 /*
  * --INFO--
@@ -72,7 +71,6 @@ void dfropenode_update(DFropenodeObject* obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfropenode_init(DFropenodeObject* obj, u8* objDef);
 
 /*
  * --INFO--
@@ -87,7 +85,6 @@ void dfropenode_init(DFropenodeObject* obj, u8* objDef);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfropenode_release(void);
 
 /*
  * --INFO--
@@ -102,7 +99,6 @@ void dfropenode_release(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfropenode_initialise(void);
 
 /*
  * --INFO--
@@ -228,10 +224,8 @@ extern u8* Obj_GetPlayerObject(void);
 extern void fn_80296518(void* obj, int arg, int enable);
 extern f32 Vec_xzDistance(void* a, void* b);
 extern f32 mathSinf(f32 angle);
-extern MapEventInterface** gMapEventInterface;
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 
-extern f32 lbl_803E4E38;
 extern f32 timeDelta;
 extern f32 lbl_803E4E50;
 extern f32 lbl_803E4E54;
@@ -422,7 +416,6 @@ void dfsh_door2speci_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801C2914(int obj);
 
 /*
  * --INFO--
@@ -443,7 +436,6 @@ typedef struct LanternFlagBits
     u8 rest : 7;
 } LanternFlagBits;
 
-int dfsh_shrine_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /*
  * --INFO--
@@ -458,7 +450,6 @@ int dfsh_shrine_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dfsh_shrine_getExtraSize(void);
 
 /*
  * --INFO--
@@ -473,7 +464,6 @@ int dfsh_shrine_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dfsh_shrine_getObjectTypeId(void);
 
 /*
  * --INFO--
@@ -488,4 +478,3 @@ int dfsh_shrine_getObjectTypeId(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfsh_shrine_free(int obj);

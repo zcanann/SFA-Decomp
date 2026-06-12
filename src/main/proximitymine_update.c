@@ -99,7 +99,6 @@ void proximitymine_hitDetect(ProximityMineObject* obj)
 #include "main/objlib.h"
 
 extern void modelLightStruct_updateGlowAlpha(void* light);
-extern int fn_80080150(void* timer);
 extern int timerCountDown(void* timer);
 extern int objUpdateOpacity(void* obj);
 extern int hitDetectFn_800658a4(void* obj, f32 x, f32 y, f32 z, f32* out, int flag);
@@ -115,9 +114,6 @@ extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern f32 sqrtf(f32 x);
 extern void vecRotateZXY(void* params, f32* vec);
 extern void Obj_FreeObject(void* obj);
-extern void storeZeroToFloatParam(void* timer);
-extern void s16toFloat(void* timer, int duration);
-extern int objPosToMapBlockIdx(double x, double y, double z);
 extern EffectInterface** gPartfxInterface;
 
 extern f32 timeDelta;
@@ -128,8 +124,6 @@ extern f32 lbl_803DC23C;
 extern u8 lbl_803DC240;
 extern f32 lbl_803DC244;
 extern f32 lbl_803DC248;
-extern f32 lbl_803E6768;
-extern f32 lbl_803E6778;
 extern f32 lbl_803E677C;
 extern f32 lbl_803E6780;
 extern f32 lbl_803E6784;
@@ -365,8 +359,6 @@ void proximitymine_update(ProximityMineObject* obj)
 #include "main/objlib.h"
 
 extern void Obj_SetActiveModelIndex(void* obj, int modelIndex);
-extern void storeZeroToFloatParam(void* timer);
-extern void s16toFloat(void* timer, int duration);
 
 extern s32 lbl_803DC230;
 extern f32 lbl_803E6774;

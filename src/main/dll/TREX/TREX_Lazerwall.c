@@ -38,7 +38,6 @@ extern void hudFn_8011f38c(int x);
 
 extern undefined4* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-extern MapEventInterface** gMapEventInterface;
 
 extern f32 lbl_803E59DC;
 extern f32 lbl_803E59E0;

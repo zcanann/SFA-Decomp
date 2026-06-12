@@ -2,7 +2,6 @@
 
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/nubevent.h"
 
-extern TRKEventQueue gTRKEventQueue;
 DSError TRKInitializeEventQueue() {
     TRKInitializeMutex(&gTRKEventQueue);
     TRKAcquireMutex(&gTRKEventQueue);

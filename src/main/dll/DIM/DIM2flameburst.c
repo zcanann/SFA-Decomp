@@ -588,7 +588,6 @@ void dimmagicbridge_initialise(void)
 {
 }
 
-extern int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern int Obj_GetActiveModel(int obj);
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
 extern void fn_80065574(int a, int b, int c);

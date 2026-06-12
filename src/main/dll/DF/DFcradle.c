@@ -138,7 +138,6 @@ extern f32 lbl_803E4D1C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossgut2_updateTracking(int obj, int state);
 
 /*
  * --INFO--
@@ -153,7 +152,6 @@ void dimbossgut2_updateTracking(int obj, int state);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossgut2_free(int arg9);
 
 /*
  * --INFO--
@@ -168,7 +166,6 @@ void dimbossgut2_free(int arg9);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossgut2_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible);
 
 /*
  * --INFO--
@@ -183,7 +180,6 @@ void dimbossgut2_render(int obj, int param_2, int param_3, int param_4, int para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossgut2_update(int obj);
 
 /*
  * --INFO--
@@ -225,7 +221,6 @@ void dimbossgut2_init(int obj, int def, int p3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMbossspit_updateBurst(int obj);
 
 /*
  * --INFO--
@@ -240,7 +235,6 @@ void DIMbossspit_updateBurst(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMbossspit_free(int param_1);
 
 /*
  * --INFO--
@@ -255,7 +249,6 @@ void DIMbossspit_free(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMbossspit_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible);
 
 /*
  * --INFO--
@@ -270,7 +263,6 @@ void DIMbossspit_render(int obj, int param_2, int param_3, int param_4, int para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMbossspit_update(int obj);
 
 /*
  * --INFO--
@@ -297,7 +289,6 @@ extern f32 lbl_803E4D78;
 extern f32 lbl_803E4D7C;
 extern f32 lbl_803E4D80;
 
-void DIMbossspit_init(int obj);
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -441,23 +432,16 @@ extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int
 extern void lightSetFieldBC_8001db14(int light, int value);
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
-extern void ModelLightStruct_free(void* light);
 extern uint GameBit_Get(int eventId);
 extern f32 Vec_distance(float* posA, float* posB);
-extern int Obj_GetPlayerObject(void);
 extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern undefined4 ObjHitbox_SetSphereRadius();
-extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
 extern undefined8 ObjGroup_RemoveObject(int obj, int groupId);
 extern undefined4 ObjGroup_AddObject(int obj, int groupId);
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800810ec();
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
 
 extern undefined4 DAT_80326928;
 extern undefined4 DAT_8032692a;
@@ -466,10 +450,8 @@ extern undefined4 DAT_8032692e;
 extern undefined4 DAT_80326930;
 extern undefined4 DAT_80326932;
 extern f32 lbl_80325D68[];
-extern EffectInterface** gPartfxInterface;
 extern f64 DOUBLE_803e5a28;
 extern f64 lbl_803E4DC8;
-extern f32 timeDelta;
 extern f32 lbl_803E5A24;
 extern f32 lbl_803E4DA0;
 extern f32 lbl_803E4DA4;

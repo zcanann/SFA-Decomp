@@ -1376,7 +1376,6 @@ void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
 
 
 extern u8 lbl_803DBA94[8];
-extern MapEventInterface** gMapEventInterface;
 
 /* EN v1.0 0x8012D96C  size: 936b  World-map HUD voiceover scheduler: rate
  * limits, picks the quest-progress hint stream and starts it. */
@@ -4377,10 +4376,6 @@ void CMenu_SetShouldClose(int val)
 }
 
 extern u8 gameUiResourcesLoaded;
-extern void drawWorldMapHud(void);
-extern void gameTextFadeOut(void);
-extern void cMenuRun(void);
-extern void npcTalkFn_8012e880(void);
 
 /* EN v1.0 0x8012FB2C  size: 92b  Per-frame state advance dispatcher.
  * Gated on the gameUiResourcesLoaded enable flag; when zero, fast-returns 0.
@@ -4529,7 +4524,6 @@ void GameUI_release(void)
 extern int getScreenBlankFrameCount(void);
 extern void drawArwingHud(int a, int b, int c);
 extern void gameTextFn_80016c18(int text, int* arg);
-extern void mapScreenDrawHud(int a, int b, int c);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern int fn_8029605C(void* obj, f32* outX, f32* outY);
 extern void textureAnimFn_80053f2c(void* tex, int* a, int* b);
@@ -4539,7 +4533,6 @@ extern void drawTrickyHudOverlay(int a, int b, int c);
 extern void Camera_ApplyCurrentViewport(int a);
 extern void hudDrawAirMeter(void);
 extern void fearTestMeterDraw(void);
-extern void highScoreScreenDraw(int a, int b, int c);
 
 extern int lbl_803DD828;
 extern int lbl_803DD82C;
@@ -4655,8 +4648,6 @@ extern int cameraGetTargetType(void);
 extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 extern int trickyBitFn_801241cc(int bit, int x);
 extern int getHudHiddenFrameCount(void);
-extern void timeListFn_8012be84(void);
-extern void pauseMenuFn_80129ee0(void);
 extern void pauseMenuDrawStatus(void);
 extern void cMenuUpdateAnims(void);
 extern void minimapFn_8012310c(void);
@@ -5130,7 +5121,6 @@ void textureFreeFn_8012fcec(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8012fdac(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9);
 
 /*
  * --INFO--

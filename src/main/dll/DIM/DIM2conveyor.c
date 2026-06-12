@@ -65,7 +65,6 @@ extern void dimlavasmash_setBlockSurfaceFlags(int* block, int mode, int v);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern int* mapGetBlock(int idx);
 
-void dimlavasmash_init(s16* obj, s8* def);
 
 /* Trivial 4b 0-arg blr leaves. */
 void dimlavasmash_release(void);

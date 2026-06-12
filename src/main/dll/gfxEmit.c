@@ -638,7 +638,6 @@ extern void* PTR_DAT_803211ec;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void staticCamera_free(int param_1);
 
 /*
  * --INFO--
@@ -653,7 +652,6 @@ void staticCamera_free(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void staticCamera_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 
 /*
  * --INFO--
@@ -668,7 +666,6 @@ void staticCamera_render(int param_1, int param_2, int param_3, int param_4, int
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void staticCamera_init(short* param_1, int param_2, int param_3);
 
 
 /*
@@ -684,7 +681,6 @@ void staticCamera_init(short* param_1, int param_2, int param_3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016d188(int param_1, int param_2);
 
 /*
  * --INFO--
@@ -699,7 +695,6 @@ void FUN_8016d188(int param_1, int param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016d994(int param_1, undefined param_2, undefined param_3);
 
 
 /*
@@ -731,7 +726,6 @@ void FUN_8016e8cc(undefined8 param_1, undefined8 param_2, double param_3, undefi
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80170048(void);
 
 
 /*
@@ -749,7 +743,6 @@ void FUN_80170048(void);
  */
 extern f32 lbl_803E3420;
 
-void checkpoint4_render(int param_1);
 
 /*
  * --INFO--
@@ -764,7 +757,6 @@ void checkpoint4_render(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* placement);
 
 extern u8 Obj_IsLoadingLocked(void);
 extern void* getTrickyObject(void);
@@ -785,7 +777,6 @@ extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sideload_update(int obj2);
 
 
 extern f32 lbl_803E31D8;
@@ -798,7 +789,6 @@ void mikabombshadow_update(int* obj);
 extern f32 lbl_803E33F4;
 extern f32 lbl_803E33F8;
 
-void curve_init(ObjAnimComponent* obj, CurvePlacementParams* params);
 
 void siderepel_init(int obj, int param_2);
 
@@ -818,47 +808,27 @@ void siderepel_init(int obj, int param_2);
  */
 
 /* Trivial 4b 0-arg blr leaves. */
-void mikabomb_release(void);
 
-void mikabomb_initialise(void);
 
-void mikabombshadow_free(void);
 
-void mikabombshadow_hitDetect(void);
 
-void mikabombshadow_release(void);
 
-void mikabombshadow_initialise(void);
 
-void StaticCamera_hitDetect(void);
 
-void StaticCamera_update(void);
 
-void StaticCamera_release(void);
 
-void StaticCamera_initialise(void);
 
-void gcbaddieshield_free(void);
 
-void gcbaddieshield_hitDetect(void);
 
-void gcbaddieshield_release(void);
 
-void gcbaddieshield_initialise(void);
 
-void baddieinterestp_free(void);
 
-void baddieinterestp_hitDetect(void);
 
-void baddieinterestp_init(void);
 
-void baddieinterestp_release(void);
 
-void baddieinterestp_initialise(void);
 
 void staff_func0F(void);
 
-void staff_func0E(void);
 
 void staff_func0B(void);
 
@@ -893,39 +863,20 @@ extern int Sfx_StopFromObject(int obj, int sfxId);
 
 void shield_free(int obj);
 
-void curve_setScale(void);
 
-void curve_free(void);
 
-void dll_F7_hitDetect(void);
 
-void dll_F7_release(void);
 
-void dll_F7_initialise(void);
 
-void checkpoint4_setScale(void);
 
-void checkpoint4_free(void);
 
-void checkpoint4_hitDetect(void);
 
-void checkpoint4_update(void);
 
-void checkpoint4_release(void);
 
-void checkpoint4_initialise(void);
 
 void setuppoint_init(void);
 
 /* 8b "li r3, N; blr" returners. */
-int mikabombshadow_getExtraSize(void);
-int mikabombshadow_getObjectTypeId(void);
-int StaticCamera_getExtraSize(void);
-int StaticCamera_getObjectTypeId(void);
-int gcbaddieshield_getExtraSize(void);
-int gcbaddieshield_getObjectTypeId(void);
-int baddieinterestp_getExtraSize(void);
-int baddieinterestp_getObjectTypeId(void);
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void);
 int depthoffieldpoint_getExtraSize(void);
@@ -937,11 +888,6 @@ int flamethrowerspe_getExtraSize(void);
 int flamethrowerspe_getObjectTypeId(void);
 int shield_getExtraSize(void);
 int shield_getObjectTypeId(void);
-int curve_func11(void);
-int curve_getExtraSize(void);
-int curve_getObjectTypeId(void);
-int dll_F7_getExtraSize(void);
-int dll_F7_getObjectTypeId(void);
 
 extern void* lbl_803DDAB0;
 extern void* lbl_803DDAB4;
@@ -952,8 +898,6 @@ extern void Sfx_StopObjectChannel(int* obj, int channel);
 
 void dim2roofrub_free(int* obj);
 
-int checkpoint4_getExtraSize(void);
-int checkpoint4_getObjectTypeId(void);
 int siderepel_getExtraSize(void);
 
 extern void gcbaddieshield_update(int* obj);
@@ -1429,13 +1373,9 @@ extern f32 lbl_803E3220;
 extern f32 lbl_803E33F0;
 extern f32 lbl_803E31F8;
 
-void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void gcbaddieshield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3388;
@@ -1443,7 +1383,6 @@ void flamethrowerspe_render(void);
 void fn_801719F8(void);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void StaticCamera_free(int x);
 void siderepel_free(int x);
 
 /* misc 8b leaves */
@@ -1462,9 +1401,7 @@ void playerRenderQuakeSpell(int* obj);
 void staffSetGlow(int* obj, u8 a, u8 b);
 #pragma dont_inline reset
 
-void staff_func10(int* obj, s32 v);
 
-void staff_setHitReactValue(int* obj, s32 v);
 
 void collectible_func0E(int* obj, u32 v)
 {
@@ -1533,20 +1470,14 @@ extern int getHudHiddenFrameCount(void);
 
 void staff_modelMtxFn(int* obj, int p4, int p5);
 
-void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
 
-void staff_addHitReactValue(int* obj, s32 delta);
 
-void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
 
-void gcbaddieshield_init(int* obj, void* initData);
 
 extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
 extern u8 framesThisStep;
 
-void mikabombshadow_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
 
 
 int* fn_801702D4(int* obj, f32 fv);
@@ -1623,16 +1554,13 @@ extern f32 lbl_803E3324;
 
 void staffDoGrowShrinkAnim(int* obj, u8 grow, u8 flag2);
 
-extern MapEventInterface** gMapEventInterface;
 
 void dll_F7_init(int* obj, int* params);
 
-int depthoffieldpoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
 extern f32 lbl_803E3330;
 
-int Fireball_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 extern int cmbsrc_getColorIndex(int* p);
 extern void modelLightStruct_setDiffuseColor(int* light, int r, int g, int b, int a);
@@ -1678,7 +1606,6 @@ extern f32 lbl_803E31D4;
 extern void CameraShake_Start(f32 a, f32 b, f32 c);
 extern int loadObjectAtObject(int* obj, void* params);
 
-void mikabomb_update(int* obj);
 
 void mikabomb_init(int* obj);
 
@@ -1948,7 +1875,6 @@ extern void GXBegin(int type, int fmt, int n);
 extern f32 lbl_803E3294;
 
 #pragma opt_common_subs off
-void staffDrawSwipe(int* obj, int* swipe);
 
 extern int objGetAnimState80A(int obj);
 extern f32 lbl_803E330C;
@@ -2159,7 +2085,6 @@ extern f32 lbl_803E33C0;
 extern f32 lbl_803E33C8;
 extern f32 lbl_803E33CC;
 
-void staffFn_80170380(int* obj, int cmd);
 
 extern int objFn_80296700(int* obj);
 extern void objfx_spawnArcedBurst(int* obj, f32 a, int type, int ba, int one, int n, f32 b, f32 c, f32 d, int x, int y);
@@ -2208,19 +2133,13 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2);
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
-extern uint FUN_80017690();
-extern undefined8 FUN_80017698();
 extern undefined4 FUN_80017710();
 extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017a88();
-extern int FUN_80017a98();
-extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjMsg_SendToObject();
 extern int ObjTrigger_IsSet();
 extern undefined4 FUN_8003b56c();
-extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800810f4();
-extern undefined4 FUN_80081118();
 extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
@@ -2231,11 +2150,8 @@ extern int FUN_80294dbc();
 extern uint countLeadingZeros();
 
 extern undefined4 DAT_803dc070;
-extern EffectInterface** gPartfxInterface;
 extern f64 DOUBLE_803e40e0;
 extern f64 DOUBLE_803e4108;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E40EC;
 extern f32 lbl_803E40F0;
 extern f32 lbl_803E40F4;
 extern f32 lbl_803E40F8;
@@ -2424,12 +2340,8 @@ void collectible_hitDetect(void)
 }
 
 extern uint GameBit_Get(int);
-extern f32 mathCosf(f32 x);
 extern f32 mathSinf(f32 x);
-extern f32 lbl_803E3454;
 extern f32 lbl_803E3458;
-extern f32 lbl_803E345C;
-extern f32 lbl_803E3460;
 extern f32 lbl_803E3484;
 extern f32 lbl_803E3488;
 extern f32 lbl_803E348C;
@@ -2603,8 +2515,6 @@ void fn_80172824(int obj, u8* state)
     *(f32*)state = dist;
 }
 
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern f32 lbl_803E3478;
 extern f32 lbl_803E347C;
 extern f32 lbl_803E3480;
@@ -2613,7 +2523,6 @@ extern void fn_801723DC(int obj);
 
 
 extern int ObjMsg_Pop(int obj, int* outMessage, int* outParam, int* outSender);
-extern f32 lbl_803E3450;
 
 void collectible_update(int obj)
 {
@@ -2837,27 +2746,12 @@ void fn_801723DC(int obj)
 #include "main/objanim_internal.h"
 
 extern uint GameBit_Get(int eventId);
-extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
-extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_800810f4();
-extern undefined4 FUN_80081118();
-extern uint countLeadingZeros();
 
 extern undefined4 DAT_803218a8;
-extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803e40d8;
 extern undefined4 DAT_803e40dc;
-extern f64 DOUBLE_803e40e0;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E40E8;
-extern f32 lbl_803E40EC;
-extern f32 lbl_803E40F0;
-extern f32 lbl_803E40F4;
 extern f32 lbl_803E412C;
 extern f32 lbl_803E4130;
 extern f32 lbl_803E4134;
@@ -2865,7 +2759,6 @@ extern f32 lbl_803E4138;
 extern u8 lbl_80320C58[];
 extern u32 lbl_803E3440;
 extern u8 lbl_803E3444;
-extern f32 lbl_803E345C;
 extern f32 lbl_803E3494;
 extern f32 lbl_803E3498;
 extern f32 lbl_803E349C;
@@ -2983,7 +2876,6 @@ void collectible_init(int obj, int setup)
 }
 
 
-void magicdust_free(int param_1);
 
 
 /*
@@ -3021,10 +2913,8 @@ void collectible_initialise(void)
 }
 
 /* 8b "li r3, N; blr" returners. */
-int magicdust_getExtraSize(void);
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E34B0;
-void magicdust_render(void);
 #pragma scheduling reset
 #pragma peephole reset

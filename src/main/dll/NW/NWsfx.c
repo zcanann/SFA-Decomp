@@ -641,13 +641,10 @@ typedef struct EdiblemushroomPlacement
 #include "main/dll/NW/ediblemushroom_state.h"
 
 
-extern f32 lbl_803E52A8;
 
 extern u8* getTrickyObject(void);
 extern int objIsFrozen(u8 * self);
 extern void gameBitIncrement(s16 bit);
-extern void itemPickupDoParticleFx(u8* obj, f32 scale, int mode, int count);
-extern void Sfx_PlayFromObject(u8* obj, int sfxId);
 extern int ObjMsg_Pop(u8* obj, int* outMsg, int a, int b);
 extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 extern void Obj_StartModelFadeIn(u8* obj, int frames);
@@ -793,11 +790,9 @@ extern undefined4 FUN_800305f8();
 extern void ObjHits_EnableObject(int obj);
 extern void ObjHits_RefreshObjectState(int obj);
 extern int ObjHits_GetPriorityHit();
-extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_AllocQueue();
-extern u32 randomGetRange(int min, int max);
 extern int FUN_800620e8();
 extern int FUN_800632f4();
 extern undefined4 FUN_80081118();
@@ -821,9 +816,6 @@ extern f32 FLOAT_803e5f8c;
 extern u32 GameBit_Get(int bit);
 extern f32 Vec_distance(int a, int b);
 
-extern f32 lbl_803E5288;
-extern f32 lbl_803E52A0;
-extern f32 lbl_803E52A8;
 extern f64 lbl_803E52C0;
 extern f32 lbl_803E52E0;
 extern f32 lbl_803E52E4;
@@ -944,7 +936,6 @@ void ediblemushroom_init(int obj, int aux)
  * EnemyMushroom TU (dim_bossgut.c) alongside its callers, dont_inline stops
  * MWCC auto-inlining it into enemymushroom_init/update. */
 #pragma dont_inline on
-void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* state, int enableTimer);
 #pragma dont_inline reset
 
 /*
@@ -960,7 +951,6 @@ void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* st
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int enemymushroom_getExtraSize(void);
 
 /*
  * --INFO--
@@ -975,9 +965,7 @@ int enemymushroom_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int enemymushroom_getObjectTypeId(EnemyMushroomObject* obj);
 
-void enemymushroom_free(EnemyMushroomObject* obj);
 
 extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
@@ -998,4 +986,3 @@ void enemymushroom_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void enemymushroom_hitDetect(void);

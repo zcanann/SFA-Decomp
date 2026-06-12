@@ -278,10 +278,7 @@ void dfropenode_setScale(int* obj, f32* out)
 /* === merged from main/dll/DF/dll_196.c [801C1BF0-801C1EAC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/DF/dll_196.h"
 
-extern f32 sqrtf(f32 x);
 
-extern f64 lbl_803E4DF0;
-extern f32 lbl_803E4DFC;
 extern f32 lbl_803E4E20;
 extern f32 lbl_803E4E24;
 
@@ -529,8 +526,6 @@ extern u8 lbl_80325E00[];
 extern u8 lbl_80325E60[];
 extern u8 lbl_802C2358[];
 extern f32 lbl_803E4DF8;
-extern f32 lbl_803E4DFC;
-extern f32 lbl_803E4E18;
 
 /*
  * --INFO--
@@ -705,19 +700,13 @@ typedef struct DFDoorSpeciExtra
     u8 pad04[2];
 } DFDoorSpeciExtra;
 
-extern u32 GameBit_Get(int eventId);
 extern int* objFindTexture(int obj, int a, int b);
 extern void textureFree(void* resource);
 extern void* textureLoadAsset(int assetId);
-extern f32 sqrtf(f32 x);
 extern f32 mathCosf(f32 x);
-extern u8 framesThisStep;
 extern int lbl_803DBF40;
-extern void* lbl_803DBF48;
 extern f32 lbl_803DBF50;
 extern u8 lbl_803DBF58;
-extern f32 lbl_803E4DFC;
-extern f32 lbl_803E4E24;
 extern f32 lbl_803E4E28;
 extern f32 lbl_803E4E30;
 extern f32 lbl_803E4E34;
@@ -959,7 +948,6 @@ void dfropenode_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int DFSH_Door2Speci_SeqFn(int obj);
 
 /*
  * --INFO--
@@ -974,4 +962,3 @@ int DFSH_Door2Speci_SeqFn(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dfsh_door2speci_getExtraSize(void);

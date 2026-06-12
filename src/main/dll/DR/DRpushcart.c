@@ -91,7 +91,6 @@ extern void dll_2E_func06();
 extern uint countLeadingZeros();
 
 extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern MapEventInterface** gMapEventInterface;
 extern undefined4* gBoneParticleEffectInterface;
 extern f64 DOUBLE_803e6698;
 extern f64 DOUBLE_803e66f0;

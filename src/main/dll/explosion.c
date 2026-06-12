@@ -27,7 +27,6 @@ extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_8003b818();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f64 DOUBLE_803e5de0;
 extern f32 lbl_803E5DD0;
 extern f32 lbl_803E5DD4;
@@ -52,7 +51,6 @@ extern f32 lbl_803E5140;
 extern f32 lbl_803E5144;
 extern f64 lbl_803E5148;
 
-void dll_197_init(int obj, int data);
 
 
 /*
@@ -132,9 +130,7 @@ void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void dll_197_release(void);
 
-void dll_197_initialise(void);
 
 void nwsh_levcon_hitDetect(void)
 {
@@ -148,13 +144,10 @@ void nwsh_levcon_initialise(void)
 {
 }
 
-void dll_199_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 int nwsh_levcon_getExtraSize(void) { return 0x0; }
 int nwsh_levcon_getObjectTypeId(void) { return 0x0; }
-int dll_199_getExtraSize(void);
-int dll_199_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5150;
@@ -167,7 +160,6 @@ void nwsh_levcon_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E5150);
 }
 
-void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 extern void Music_Trigger(int track, int param);
 extern int GameBit_Set(int eventId, int value);

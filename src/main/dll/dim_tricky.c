@@ -128,7 +128,6 @@ extern f32 lbl_803E5E4C;
  */
 extern int ObjGroup_FindNearestObject(int group, int obj, f32* outDist);
 extern int ObjMsg_Pop(int obj, int* msg, int* a, int* b);
-extern uint GameBit_Get(int eventId);
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern void fn_80296B78(int obj, int a);
 extern void fn_80137948(char* fmt, ...);
@@ -145,40 +144,25 @@ extern f32 lbl_803E51A0;
 extern f32 timeDelta;
 extern u8 framesThisStep;
 
-void dll_19B_update(int obj);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void dll_19B_release(void);
 
-void dll_19B_initialise(void);
 
-void dll_19C_free(void);
 
-void dll_19C_hitDetect(void);
 
-void dll_19C_release(void);
 
-void dll_19C_initialise(void);
 
-void dll_19D_render(void);
 
-void dll_19D_release(void);
 
-void dll_19D_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int dll_19C_getExtraSize(void);
-int dll_19C_getObjectTypeId(void);
-int dll_19D_getExtraSize(void);
-int dll_19D_getObjectTypeId(void);
 int dll_19E_getExtraSize(void) { return 0x10; }
 int dll_19E_getObjectTypeId(void) { return 0x1; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E51B0;
 #pragma peephole off
-void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 #pragma peephole reset
 
 /* Stubs to align function set with v1.0 asm. */
@@ -190,11 +174,9 @@ extern void Obj_FreeObject(int obj);
 extern f32 lbl_803E51B4;
 
 #pragma peephole off
-void dll_19C_update(int* obj);
 #pragma peephole reset
 
 #pragma peephole off
-void dll_19B_init(u8* obj, u8* params);
 #pragma peephole reset
 
 /*
@@ -203,7 +185,6 @@ void dll_19B_init(u8* obj, u8* params);
  * EN v1.0 Size: 64b
  */
 #pragma peephole off
-void dll_19C_init(int obj, u8* initData);
 #pragma peephole reset
 
 /*
@@ -212,7 +193,6 @@ void dll_19C_init(int obj, u8* initData);
  * EN v1.0 Size: 132b
  */
 #pragma peephole off
-void dll_19D_free(int obj);
 #pragma peephole reset
 
 extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);
@@ -223,7 +203,6 @@ extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int ext
  * EN v1.0 Size: 208b
  */
 #pragma peephole off
-void dll_19D_init(int obj);
 #pragma peephole reset
 
 extern EffectInterface** gPartfxInterface;
@@ -236,7 +215,6 @@ extern f64 lbl_803E51C0;
  * EN v1.0 Size: 276b
  */
 #pragma peephole off
-void dll_19D_hitDetect(int obj);
 #pragma peephole reset
 
 /*
@@ -245,7 +223,6 @@ void dll_19D_hitDetect(int obj);
  * EN v1.0 Size: 904b
  */
 #pragma peephole off
-void dll_19D_update(int obj);
 #pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
@@ -265,9 +242,6 @@ extern int randomGetRange(int min, int max);
 extern void voxmaps_worldToGrid(void* world, void* grid);
 extern int voxmaps_traceLine(void* from, void* to, void* out, int param4, int param5);
 
-extern ModgfxInterface** gModgfxInterface;
-extern EffectInterface** gPartfxInterface;
-extern u8 framesThisStep;
 extern f32 lbl_803E51C8;
 extern f32 lbl_803E51CC;
 extern f32 lbl_803E51D0;
@@ -420,9 +394,6 @@ extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern void objUpdateOpacity(void* obj);
 extern int ObjHits_GetPriorityHit(void* obj, int a, int b, int c);
 
-extern u8 framesThisStep;
-extern ModgfxInterface** gModgfxInterface;
-extern EffectInterface** gPartfxInterface;
 extern s8 lbl_803DDBE8;
 extern undefined4 lbl_802C23D8[4];
 extern f32 lbl_803E51E0;

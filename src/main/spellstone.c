@@ -12,7 +12,6 @@ extern void objRenderFn_8003b8f4(void* obj, undefined4 param_2, undefined4 param
 extern int spellstone_idleCallback(void);
 
 extern s16 lbl_803DC228;
-extern MapEventInterface** gMapEventInterface;
 extern f32 lbl_803E6750;
 extern f32 lbl_803E6754;
 extern f32 lbl_803E6758;

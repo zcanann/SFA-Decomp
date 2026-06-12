@@ -66,7 +66,6 @@ extern f32 lbl_803E6958;
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_801ee668(ushort* param_1, int param_2);
 
 
 /*
@@ -293,7 +292,6 @@ extern void SB_CloudRunner_onSeqFree(void);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int p3);
 extern void fn_80295918(int player, int p2, f32 p3);
 
-int SB_CloudRunner_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 extern void textureFree(void* tex);
 
@@ -381,7 +379,6 @@ typedef struct WmGalleonState
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
 
-extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
 extern void* FUN_80017aa4();
@@ -392,7 +389,6 @@ extern undefined4 FUN_8028688c();
 
 extern undefined4 DAT_803dc070;
 extern u32 lbl_803DC0F0;
-extern u8 framesThisStep;
 extern s8 lbl_803DDC70;
 extern undefined4 DAT_803de8e8;
 extern int* gScreensInterface;
@@ -407,7 +403,6 @@ extern f32 lbl_803E696C;
 extern f32 lbl_803E6970;
 extern f32 lbl_803E6974;
 
-extern MapEventInterface** gMapEventInterface;
 
 #define WM_GALLEON_GAMEBIT_CUTSCENE_DONE 0x429
 #define WM_GALLEON_GAMEBIT_CLEAR_DOOR 0xD1
@@ -445,9 +440,7 @@ extern MapEventInterface** gMapEventInterface;
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern EffectInterface** gPartfxInterface;
 extern int lbl_803DDC68;
-extern f32 lbl_803E5CC8;
 extern f32 lbl_803E5CCC;
 extern f32 lbl_803E5CD0;
 extern f32 lbl_803E5CD4;
@@ -748,9 +741,7 @@ void WM_ObjCreator_initialise(void)
 
 void WM_Galleon_hitDetect(void);
 
-void WM_Galleon_free(int* obj, int leavingMap);
 
-void WM_Galleon_render(void* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 /* 8b "li r3, N; blr" returners. */
 int WM_Galleon_getExtraSize(void);
@@ -768,4 +759,3 @@ void WM_ObjCreator_init(int* obj, s8* def)
     placement->spawnJitter;
 }
 
-int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);

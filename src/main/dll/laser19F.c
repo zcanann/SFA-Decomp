@@ -33,7 +33,6 @@ extern undefined4 FUN_80294ccc();
 extern void fn_80296518(int obj, int arg, int enable);
 
 extern void* DAT_803de838;
-extern MapEventInterface** gMapEventInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f64 DOUBLE_803e5bd0;
 extern f64 lbl_803E4F38;
@@ -520,14 +519,9 @@ extern undefined4 SH_LevelControl_runBloopEvent();
 extern int objCreateLight(int param_1, int param_2);
 extern void Obj_FreeObject(void* obj);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-extern f64 DOUBLE_803e5bd0;
 extern f64 DOUBLE_803e5c08;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E5BD8;
-extern f32 lbl_803E5BE8;
 
 /*
  * --INFO--
@@ -583,7 +577,6 @@ void mmsh_shrine_init(undefined2* obj, int arg2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void mmsh_scales_free(int obj, int arg2);
 
 /*
  * --INFO--

@@ -89,7 +89,6 @@ extern void setAButtonIcon(int iconId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup);
 
 #pragma dont_inline on
 void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)

@@ -217,7 +217,6 @@ extern int FUN_800632f4();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ModgfxInterface** gModgfxInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E6A1C;
 extern f32 lbl_803E6A20;
@@ -237,7 +236,6 @@ extern f32 lbl_803E6A80;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void LaserBeam_update(int obj2);
 
 
 /*
@@ -418,13 +416,9 @@ void FUN_801f2b94(short* param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void pressureswitch_free(void);
 
-void pressureswitch_hitDetect(void);
 
-void pressureswitch_release(void);
 
-void pressureswitch_initialise(void);
 
 extern f32 lbl_803E5D78;
 
@@ -435,7 +429,6 @@ typedef struct PressureSwitchFlags
     u8 otherFlags : 6;
 } PressureSwitchFlags;
 
-void pressureswitch_init(int* obj, u8* init);
 
 void dll_1FF_free_nop(void);
 
@@ -552,8 +545,6 @@ void LaserBeam_initialise(void);
 void lightsource_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
-int pressureswitch_getExtraSize(void);
-int pressureswitch_getObjectTypeId(void);
 int dll_1FF_getExtraSize_ret_8(void);
 int wmlasertarget_getExtraSize(void) { return 0x4; }
 int wmlasertarget_getObjectTypeId(void) { return 0x0; }
@@ -574,7 +565,6 @@ extern f32 lbl_803E5DC8;
 extern f32 lbl_803E5E08;
 extern void queueGlowRender(void* light);
 
-void pressureswitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void wmlasertarget_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -584,15 +574,12 @@ void wmlasertarget_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void lightsource_render(void* obj, int p1, int p2, int p3, int p4, s8 visible);
 
 /* if (o->_X == K) return A; else return B; */
 int dll_1FF_getObjectTypeId(int* obj);
 
 /* init pattern: short=-1; byte=0; return 0; */
-int PressureSwitch_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
-int WM_colrise_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /* fn_X(lbl); lbl = 0; */
 void LaserBeam_release(void);
@@ -655,10 +642,8 @@ extern void GameBit_Set(int slot, int val);
 int fn_801F2974(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3);
 
 #pragma opt_strength_reduction off
-int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int arg3);
 
 #pragma opt_strength_reduction off
-int fn_801F2974(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3);
 
 extern int textureLoadAsset(int id);
 extern f32 lbl_803E5D10;
@@ -699,7 +684,6 @@ typedef struct PswFlags
 } PswFlags;
 
 #pragma opt_common_subs off
-void pressureswitch_update(int obj);
 #pragma opt_common_subs reset
 
 typedef struct IntVec3
@@ -718,4 +702,3 @@ typedef struct ArwAttachTarget
     f32 speed;
 } ArwAttachTarget;
 
-void fn_801F2290(int obj);

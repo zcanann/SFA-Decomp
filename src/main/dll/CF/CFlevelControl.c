@@ -62,7 +62,6 @@ extern f64 lbl_803E3DB8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_127_update(int obj);
 
 
 /*
@@ -78,7 +77,6 @@ void dll_127_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_127_init(short* param_1, int param_2);
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -145,25 +143,14 @@ extern f32 lbl_803E3DC8;
  */
 void kt_torch_init(int obj, int p2);
 
-void campfire_free(int obj);
 
-void campfire_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible);
 
-void kt_torch_free(void);
 
-void kt_torch_hitDetect(void);
 
-void kt_torch_release(void);
 
-void kt_torch_initialise(void);
 
-void kt_torch_update(int obj);
 
 /* 8b "li r3, N; blr" returners. */
-int campfire_getExtraSize(void);
-int campfire_getObjectTypeId(void);
-int kt_torch_getExtraSize(void);
-int kt_torch_getObjectTypeId(void);
 int cfccrate_getExtraSize(void) { return 0x4c; }
 int cfccrate_getObjectTypeId(void) { return 0x1; }
 
@@ -173,7 +160,6 @@ void cfccrate_free(int obj)
 }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-void kt_torch_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* === merged from main/dll/CF/dll_179.c [8018D728-8018D8DC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/CF/dll_179.h"
@@ -270,7 +256,6 @@ typedef struct CfccratePlacement
 
 
 extern void* Camera_GetCurrentViewSlot(void);
-extern u32 GameBit_Get(int bit);
 extern u32 GameBit_Set(int bit, int value);
 extern int ObjHits_GetPriorityHit(int obj, undefined4* outHit, int* outIdx, u32* outVol);
 extern void Obj_FreeObject(int obj);
@@ -278,8 +263,6 @@ extern int objFindTexture(int p1, int p2, int p3);
 extern void getLActions(int p1, int p2, int p3, int p4, int p5, int p6);
 extern float sqrtf(float x);
 
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 extern f64 lbl_803E3DE0;
@@ -516,7 +499,6 @@ void cfccrate_update(int obj)
 extern undefined4 FUN_80017a78();
 extern undefined4 FUN_800305f8();
 
-extern u32 GameBit_Get(int bit);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 
 extern undefined4 gCameraInterface;
@@ -534,17 +516,10 @@ extern f32 FLOAT_803e4ae0;
 
 extern void* lbl_803DBDE8;
 extern ModgfxInterface** gModgfxInterface;
-extern EffectInterface** gPartfxInterface;
-extern u8 framesThisStep;
 extern f32 lbl_803E3E48;
 extern char sCFTreasSharpyDebugFormat[];
 extern void fn_80137948(char* fmt, ...);
 
-extern f32 lbl_803E3DD8;
-extern f32 lbl_803E3DEC;
-extern f32 lbl_803E3DF4;
-extern f32 lbl_803E3DFC;
-extern f64 lbl_803E3E28;
 extern f32 lbl_803E3E30;
 extern f32 lbl_803E3E34;
 extern f32 lbl_803E3E38;
@@ -747,11 +722,9 @@ typedef struct CFTreasSharpyFxSpawnArgs
 #define CFTREAS_PARTFX_SPAWN(obj, id, data, flags, model, arg) \
     (*gPartfxInterface)->spawnObject((void *)(obj), id, data, flags, model, (void *)(arg))
 
-void fxemit_emitEffect(FxEmitObject* obj);
 
 #undef CFTREAS_PARTFX_SPAWN
 
-int fxemit_SeqFn(FxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /*
  * --INFO--
@@ -800,7 +773,6 @@ void cfccrate_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int fxemit_getExtraSize(void);
 
 /*
  * --INFO--
@@ -815,9 +787,7 @@ int fxemit_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int fxemit_getObjectTypeId(void);
 
-void fxemit_free(FxEmitObject* obj);
 
 /*
  * --INFO--
@@ -832,12 +802,9 @@ void fxemit_free(FxEmitObject* obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fxemit_hitDetect(void);
 
 void fxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-extern f32 timeDelta;
 extern f32 sqrtf(f32);
 extern f32 lbl_803E3E4C;
 
-void fxemit_update(FxEmitObject* obj);

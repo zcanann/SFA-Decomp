@@ -572,18 +572,13 @@ typedef struct PollenfragmentState
 
 
 extern undefined4 FUN_800067e8();
-extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHitbox_SetSphereRadius();
-extern undefined4 ObjHits_DisableObject();
 extern void ObjHits_SetTargetMask(int obj, u8 mask);
 extern int ObjHits_GetPriorityHit();
 extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8005fe14();
 extern uint FUN_8007f6c8();
 extern undefined4 FUN_8007f718();
-extern undefined4 FUN_8008112c();
 extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
@@ -620,7 +615,6 @@ typedef struct PollenFragmentExtra
 
 extern void storeZeroToFloatParam(void* timer);
 
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E3DF4;
 extern f32 lbl_803E3DF8;
 extern f32 lbl_803E3198;
@@ -665,8 +659,6 @@ extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far
 extern void lightSetField4D(int light, int v);
 extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
-extern f32 lbl_803E30E0;
-extern f32 lbl_803E30F8;
 extern f32 lbl_803E3108;
 extern f32 lbl_803E310C;
 
@@ -738,7 +730,6 @@ void fn_8016A660(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void pollenfragment_init(int obj, int config);
 
 
 /*
@@ -754,7 +745,6 @@ void pollenfragment_init(int obj, int config);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9);
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -766,46 +756,27 @@ void kaldachompspit_initialise(void)
 {
 }
 
-void pinponspike_render(void);
 
-void pinponspike_hitDetect(void);
 
-void pinponspike_release(void);
 
-void pinponspike_initialise(void);
 
-void pollen_release(void);
 
-void pollen_initialise(void);
 
-void pollenfragment_release(void);
 
-void pollenfragment_initialise(void);
 
 void mikabomb_hitDetect(void);
 
 extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E313C;
 
-void pinponspike_free(int obj);
 
-void pollen_free(int obj);
 
-void pinponspike_init(int obj);
 
-void pollen_hitDetect(int obj);
 
-void pollenfragment_free(int obj);
 
 void mikabomb_free(int obj, int mode);
 
 /* 8b "li r3, N; blr" returners. */
-int pinponspike_getExtraSize(void);
-int pinponspike_getObjectTypeId(void);
-int pollen_getExtraSize(void);
-int pollen_getObjectTypeId(void);
-int pollenfragment_getExtraSize(void);
-int pollenfragment_getObjectTypeId(void);
 int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
@@ -813,12 +784,9 @@ int mikabomb_getObjectTypeId(void);
 extern f32 lbl_803E3138;
 extern f32 lbl_803E31C0;
 
-void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-extern int kaldachompspit_getObjectTypeId(void);
-extern int kaldachompspit_getExtraSize(void);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -942,7 +910,6 @@ PollenFragmentConfig* lbl_8032059C[] = {
 extern int fn_80080150(int p);
 extern f32 lbl_803E3158;
 
-void pollenfragment_render(int* obj, int p2, int p3, int p4, int p5);
 
 ObjectDescriptor gPollenFragmentObjDescriptor = {
     0,
@@ -963,7 +930,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 
 extern f32 lbl_803E3148;
 
-void pollen_init(int* obj);
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
 
@@ -973,7 +939,6 @@ typedef struct
     f32 x, y, z;
 } XyzVec;
 
-extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803DBD48;
 extern f32 lbl_803DBD4C;
@@ -996,8 +961,6 @@ extern f32 lbl_803E3174;
 extern f32 lbl_803E3178;
 extern f32 lbl_803E317C;
 extern f32 lbl_803E3180;
-extern f32 sqrtf(f32 x);
-extern int getAngle(f32 a, f32 b);
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
 extern int getCurSeqNo(void);
@@ -1013,10 +976,6 @@ extern void PSVECAdd(void* a, void* b, void* out);
 
 int fn_80169EF4(f32 speed, f32 grav, f32* from, f32* to, u8 flag);
 
-void pinponspike_update(int obj);
 
-void pollen_update(int obj);
 
-void pollenfragment_hitDetect(int obj);
 
-void pollenfragment_update(int obj);

@@ -231,10 +231,6 @@ extern undefined4 FUN_80286888();
 extern f32 sqrtf(f32);
 extern void* memset(void* p, int c, int n);
 extern u8 framesThisStep;
-extern CamCannonState* lbl_803DD560;
-extern f64 lbl_803E18A0;
-extern f32 lbl_803E1888;
-extern f32 lbl_803E188C;
 extern f32 lbl_803E18BC;
 
 /*
@@ -578,7 +574,6 @@ extern CameraModeCombatState* lbl_803DD568;
 extern f32 lbl_803E18C0;
 extern f32 lbl_803E18C4;
 extern f32 lbl_803E18C8;
-extern f32 timeDelta;
 extern void Rcp_DisableBlurFilter(void);
 
 /*

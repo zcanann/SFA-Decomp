@@ -184,16 +184,12 @@ extern uint fn_8029630C(int obj);
 extern int objAnimFn_80296328(int obj);
 extern undefined4 cameraGetPrevPos2();
 
-extern CameraModeCombatState* lbl_803DD568;
 extern s32 lbl_803DD56C;
 extern CameraModeShipBattleState* lbl_803DD570;
 extern CameraModeClimbState* lbl_803DD578;
 extern f64 lbl_803E1918;
 extern f64 lbl_803E1938;
 extern f64 lbl_803E1988;
-extern f32 timeDelta;
-extern f32 lbl_803E18C0;
-extern f32 lbl_803E18C4;
 extern f32 lbl_803E18CC;
 extern f32 lbl_803E18D0;
 extern f32 lbl_803E18D4;

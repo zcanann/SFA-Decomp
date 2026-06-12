@@ -309,6 +309,4 @@ void TitleScreenInit_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void n_rareware_render(void);
 
-void n_rareware_frameEnd(void);

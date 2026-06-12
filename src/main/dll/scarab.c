@@ -178,7 +178,6 @@ extern f32 lbl_803E3B94;
  */
 #pragma scheduling off
 #pragma peephole off
-void dll_CA_update(int obj, int p2, int p3);
 
 /*
  * --INFO--

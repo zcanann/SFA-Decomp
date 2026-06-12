@@ -511,7 +511,6 @@ extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefi
 extern void fn_801E991C(void* obj, void* path);
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
 
-extern f32 lbl_803E5AEC;
 
 /*
  * --INFO--
@@ -571,16 +570,11 @@ extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* o
 extern s16 lbl_8032855C[];
 extern char lbl_803DC0E4;
 extern f32 oneOverTimeDelta;
-extern f32 lbl_803E5AE8;
-extern f32 lbl_803E5AEC;
-extern f32 lbl_803E5AF8;
 extern f32 lbl_803E5B28;
 extern f32 lbl_803E5B88;
-extern f32 lbl_803E5B8C;
 extern f32 lbl_803E5BA4;
 extern f32 lbl_803E5BBC;
 extern f32 lbl_803E5BC4;
-extern f32 lbl_803E5C00;
 extern f32 lbl_803E5C4C;
 
 typedef struct
@@ -848,18 +842,10 @@ extern void ObjGroup_AddObject(int obj, int group);
 extern f32 lbl_803DC0B8;
 extern f32 lbl_803DC0C0;
 extern f32 lbl_803DC0C4;
-extern f32 lbl_803E5AE8;
-extern f32 lbl_803E5AEC;
 extern f32 lbl_803E5AF0;
 extern f32 lbl_803E5B14;
 extern f32 lbl_803E5B1C;
 extern f32 lbl_803E5B48;
-extern f32 lbl_803E5B74;
-extern f32 lbl_803E5B90;
-extern f32 lbl_803E5B94;
-extern f32 lbl_803E5B98;
-extern f32 lbl_803E5BC4;
-extern f32 lbl_803E5C48;
 extern f32 lbl_803E5C50;
 extern f32 lbl_803E5C54;
 extern f32 lbl_803E5C58;
@@ -1072,7 +1058,6 @@ extern int Rcp_GetMotionBlurEnabled(void);
 extern void setMotionBlur(int a, f32 b);
 extern void PSVECScale(f32* src, f32* dst, f32 scale);
 extern void PSVECAdd(f32 * a, f32 * b, f32 * dst);
-extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 powfBitEstimate(f32 x, f32 y);
 extern void setAButtonIcon(int icon);
 extern void setBButtonIcon(int icon);
@@ -1084,7 +1069,6 @@ extern u32 getButtonsJustPressedIfNotBusy(int pad);
 extern int getAngle(f32 dx, f32 dz);
 extern f32 timeDelta;
 extern f32 lbl_803E5B6C;
-extern f32 lbl_803E5B70;
 extern f32 lbl_803E5BA0;
 extern f32 lbl_803E5C18;
 

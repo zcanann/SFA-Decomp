@@ -43,7 +43,6 @@ extern void Music_Trigger(int musicId, int value);
 extern void audioStopByMask(int mask);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E50DC;
 extern f64 lbl_803E50D0;
@@ -181,7 +180,6 @@ extern undefined4 FUN_80017710();
 extern uint FUN_80017730();
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
-extern int Obj_GetPlayerObject(void);
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_EnableObject();
@@ -200,7 +198,6 @@ extern void fn_80296518(int obj, int param_2, int param_3);
 extern undefined4 FUN_80293f90();
 
 extern undefined4 DAT_803de848;
-extern MapEventInterface** gMapEventInterface;
 extern f64 DOUBLE_803e5d28;
 extern f64 DOUBLE_803e5d68;
 extern f32 lbl_803DC074;
@@ -417,7 +414,6 @@ void dbsh_shrine_hitDetect(void)
 
 extern void ObjMsg_AllocQueue(DbshShrineObject* obj, int capacity);
 extern void* objCreateLight(int obj, int lightType);
-extern MapEventInterface** gMapEventInterface;
 
 #define MAP_EVENT_GET_ANIM(mapId, eventId) \
     (*gMapEventInterface)->getAnimEvent((mapId), (eventId))

@@ -458,7 +458,6 @@ int CCGasVentControl_SeqFn(int obj)
 extern int* ObjGroup_GetObjects(int group, int* count);
 extern f32 lbl_803E4618;
 extern f32 timeDelta;
-extern MapEventInterface** gMapEventInterface;
 extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int id);
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);

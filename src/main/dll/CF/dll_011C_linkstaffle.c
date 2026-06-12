@@ -263,15 +263,11 @@ extern void ObjHitbox_SetSphereRadius(int obj, int radius);
 extern f32 mathSinf(f32 angle);
 extern f32 mathCosf(f32 angle);
 
-extern f32 lbl_803E3BBC;
-extern f32 lbl_803E3BF4;
-extern f32 lbl_803E3BF8;
 extern f32 lbl_803E3C08;
 extern f32 lbl_803E3C0C;
 extern f32 lbl_803E3C10;
 extern f32 lbl_803E3C14;
 extern f32 lbl_803E3C18;
-extern f64 lbl_803E3BD0;
 
 STATIC_ASSERT(sizeof(TreasureChestSetup) == 0x24);
 STATIC_ASSERT(offsetof(TreasureChestSetup, type) == 0x18);
@@ -431,7 +427,6 @@ void staffactivated_init(int obj, int setup)
  * EN v1.0 Address: 0x8018A8BC
  * EN v1.0 Size: 248b
  */
-int treasurechest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /*
  * --INFO--
@@ -446,7 +441,6 @@ int treasurechest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int treasurechest_getExtraSize(void);
 
 /*
  * --INFO--
@@ -461,17 +455,12 @@ int treasurechest_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int treasurechest_getObjectTypeId(void);
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3C20;
-extern void objRenderFn_8003b8f4(f32);
-void treasurechest_render(void);
 
 extern void* lbl_803DDAE0;
-void treasurechest_free(void);
 
 extern f32 lbl_803E3C24;
 extern void hitDetectFn_80097070(f32 radius, int obj, int a, int b, int c, int d);
 
-void treasurechest_hitDetect(int obj);

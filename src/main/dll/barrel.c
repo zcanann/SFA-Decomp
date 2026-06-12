@@ -82,7 +82,6 @@ extern void* Obj_GetPlayerObject(void);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 extern void* gPlayerInterface;
 extern void* gBaddieControlInterface;
-extern MapEventInterface** gMapEventInterface;
 extern int* gBoneParticleEffectInterface;
 extern int lbl_803200E0[];
 extern int lbl_80320158[];
@@ -1067,14 +1066,10 @@ typedef struct TumbleweedbushState
 extern uint GameBit_Get(int eventId);
 extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern undefined4 ObjHits_DisableObject();
-extern void* ObjGroup_GetObjects();
 extern int ObjHits_PollPriorityHitWithCooldown();
 extern undefined4 FUN_8003b818();
 
-extern f64 DOUBLE_803e3ba8;
 extern f32 lbl_803DC074;
-extern f32 lbl_803E3B50;
-extern f32 lbl_803E3B54;
 extern f32 lbl_803E3BC0;
 extern f32 lbl_803E3BCC;
 extern f32 lbl_803E3BD0;
@@ -1155,7 +1150,6 @@ void cannonclaw_update(u8* obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801638bc(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 
 /*
  * --INFO--
@@ -1226,7 +1220,6 @@ int tumbleweedbush_getObjectTypeId(void);
 
 extern u8 lbl_803DDA80;
 extern void* gSHthorntailAnimationInterface;
-extern void* Obj_GetPlayerObject(void);
 extern void objfx_spawnHitEmitterAtPos(int* p, int a, int b, int c, int d);
 extern s8 fn_801631C8(int* obj);
 
@@ -1252,7 +1245,6 @@ void fn_80163980(int* obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E2F44;
-extern void objRenderFn_8003b8f4(f32);
 
 void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 

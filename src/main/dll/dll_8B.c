@@ -14,7 +14,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void projdfp1r_initialise(void);
 
 /*
  * --INFO--

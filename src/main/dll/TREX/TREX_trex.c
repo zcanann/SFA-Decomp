@@ -102,7 +102,6 @@ extern f32 lbl_803E58A4;
 extern f32 lbl_803E58A8;
 extern f32 lbl_803E58AC;
 
-void SB_ShipGun_update(int obj);
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -301,11 +300,8 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
 
 extern undefined4 getLActions();
-extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
-extern undefined4 ObjPath_GetPointWorldPosition();
-extern MapEventInterface** gMapEventInterface;
 extern void playerAddMoney(int player, int amount);
 extern void playerAddHealth(int player, int amount);
 extern int gameBitIncrement(int bit);
@@ -385,7 +381,6 @@ extern f32 lbl_803E6648;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern EffectInterface** gPartfxInterface;
 
 void SB_FireBall_hitDetect(int* obj)
 {
@@ -694,7 +689,6 @@ s32 shop_setScale(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x0)
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E58E8;
-extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5920;
 extern f32 lbl_803E5978;
 extern f32 lbl_803E59A8;
@@ -703,7 +697,6 @@ extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern int GameBit_Get(int);
 extern void GameBit_Set(int slot, int val);
-extern u8 framesThisStep;
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(int obj, int group);
 extern void Music_Trigger(int a, int b);
@@ -720,7 +713,6 @@ extern f32 lbl_803E5960;
 extern f32 lbl_803E5918;
 extern f32 lbl_803E59D8;
 extern f32 lbl_803E59DC;
-extern f32 timeDelta;
 extern u8 lbl_803DB411;
 extern f32 lbl_803DDC50;
 extern int* gBoneParticleEffectInterface;

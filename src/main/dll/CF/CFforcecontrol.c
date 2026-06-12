@@ -59,7 +59,6 @@ extern int ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f64 DOUBLE_803e4908;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803dda58;
@@ -139,7 +138,6 @@ extern f32 FLOAT_803e4904;
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void trickyguardspot_render(void);
 
 extern int* getTrickyObject(void);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
@@ -149,21 +147,14 @@ extern u8 framesThisStep;
 #define TRICKY_GUARD_SPOT_VTABLE(tricky) \
     (*(TrickyGuardSpotInterfaceVTable **)((tricky)->dll))
 
-void trickyguardspot_update(TrickyGuardSpotObject* obj);
 
 /* 8b "li r3, N; blr" returners. */
-int magiccavetop_getExtraSize(void);
-int trickyguardspot_getExtraSize(void);
-int infotext_getExtraSize(void);
-int cctestinfot_getExtraSize(void);
 int deathgas_getExtraSize(void) { return 0x10; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void trickyguardspot_free(TrickyGuardSpotObject* obj);
 
 extern void objSetHintTextIdx(int obj, int idx);
 
-void trickyguardspot_init(TrickyGuardSpotObject* obj, TrickyGuardSpotPlacement* def);
 
 void infotext_init(int obj, s8* def);
 
@@ -198,7 +189,6 @@ extern void Music_Trigger(int a, int b);
 extern void setAButtonIcon(int idx);
 extern void warpToMap(int mapId, int b);
 
-void magiccavebottom_update(int* obj);
 
 extern f32 lbl_803E3C80;
 extern f32 lbl_803E3C84;
@@ -249,7 +239,6 @@ void magiccavetop_update(int* obj);
 #include "main/screen_transition.h"
 
 
-extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_RecordObjectHit();
 extern void* ObjGroup_GetObjects();
@@ -257,7 +246,6 @@ extern undefined8 ObjGroup_RemoveObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
-extern int ObjTrigger_IsSet();
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 extern void gxSetPeControl_ZCompLoc_();
@@ -266,8 +254,6 @@ extern void gxSetZMode_();
 extern f64 DOUBLE_803e4910;
 extern f64 DOUBLE_803e4950;
 extern f64 DOUBLE_803e4998;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e48e4;
 extern f32 FLOAT_803e4918;
 extern f32 FLOAT_803e491c;
 extern f32 FLOAT_803e4920;
@@ -511,10 +497,8 @@ void deathgas_free(int* obj)
     }
 }
 
-extern int playerIsDisguised(void);
 extern f32 Vec_distance(void* a, void* b);
 extern void enableHeavyFog(f32 top, f32 bottom, f32 r, f32 g, f32 b, int p6);
-extern f32 timeDelta;
 extern f32 lbl_803E3C90;
 extern f32 lbl_803E3C94;
 extern f32 lbl_803E3C98;

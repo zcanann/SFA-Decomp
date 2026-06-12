@@ -20,7 +20,6 @@ typedef struct WaveanimatorState
 
 extern uint GameBit_Get(int eventId);
 
-void texscroll2_setScale(TexScroll2Object* obj, s8 scale);
 
 extern void* mapGetBlock(int idx);
 extern int* getTablesBinEntry(int id);
@@ -57,7 +56,6 @@ void texscroll2_release(void);
 void texscroll2_initialise(void);
 
 
-void texscroll2_update(TexScroll2Object* obj);
 
 void texscroll_free(void);
 
@@ -85,9 +83,7 @@ void waveanimator_modelMtxFn(int obj, int a, int b, int c)
     ((WaveanimatorState*)state)->unk38 = (u8)c;
 }
 
-void texscroll2_init(TexScroll2Object* obj, TexScrollPlacement* placement, int loadFlags);
 
-void texscroll_init(TexScrollObject* obj, TexScrollPlacement* placement, int loadFlags);
 
 extern f32 lbl_803E3F30;
 extern void objRenderFn_8003b8f4(f32);
@@ -213,7 +209,6 @@ typedef struct VisAnimatorState
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
 extern undefined4 FUN_80006824();
-extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017814();
 extern int FUN_80017830();
@@ -312,7 +307,6 @@ void waveanimator_func0B(int* obj)
     p->flags |= 2;
 }
 
-u8 wallanimator_func0B(int* obj);
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -484,7 +478,6 @@ void alphaanimator_init(int* obj)
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3F70;
-extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3F78;
 extern f32 lbl_803E3FC4;
 #pragma peephole off
@@ -531,7 +524,6 @@ u8 groundanimator_func0B(int* obj)
 }
 #pragma scheduling reset
 
-extern void* mapGetBlock(int idx);
 extern void fn_801923F8(int* cfg);
 extern void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* vstate,
                                    HitAnimatorPlacement* desc);

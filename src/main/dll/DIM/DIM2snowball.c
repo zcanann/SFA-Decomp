@@ -208,7 +208,6 @@ extern f32 lbl_803E569C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801b3de4(undefined4 param_1, uint param_2);
 
 
 /*
@@ -224,7 +223,6 @@ void FUN_801b3de4(undefined4 param_1, uint param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801b40f0(undefined8 param_1, double param_2, double param_3, double param_4);
 
 
 /*
@@ -245,7 +243,6 @@ extern int lbl_803AC960[4];
 
 #pragma scheduling off
 #pragma peephole off
-void explosion_release(uint obj);
 
 #pragma scheduling on
 #pragma peephole on
@@ -265,7 +262,6 @@ void fn_explosion_release_v11_unused(uint param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801b5b8c(void);
 
 /*
  * --INFO--
@@ -280,51 +276,29 @@ void FUN_801b5b8c(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801b5d00(int param_1, int param_2);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void explosion_hitDetect(void);
 
-void dimwooddoor2_free(void);
 
-void dimwooddoor2_hitDetect(void);
 
-void dimwooddoor2_release(void);
 
-void dimwooddoor2_initialise(void);
 
-void dll_1CE_hitDetect(void);
 
-void dll_1CE_release(void);
 
-void dll_1CE_initialise(void);
 
-void dimmagicbridge_free(void);
 
-void dimmagicbridge_hitDetect(void);
 
-void dimmagicbridge_release(void);
 
-void dimmagicbridge_initialise(void);
 
-extern int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern int Obj_GetActiveModel(int obj);
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
 extern void fn_80065574(int a, int b, int c);
 
 #pragma scheduling off
 #pragma peephole off
-void dimmagicbridge_init(u8* obj, u8* params);
 
 /* 8b "li r3, N; blr" returners. */
-int explosion_getExtraSize(void);
-int dimwooddoor2_getExtraSize(void);
-int dimwooddoor2_getObjectTypeId(void);
-int dll_1CE_getExtraSize(void);
-int dll_1CE_getObjectTypeId(void);
-int dimmagicbridge_getExtraSize(void);
-int dimmagicbridge_getObjectTypeId(void);
 int dim_levelcontrol_getExtraSize(void) { return 0x10; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
@@ -333,11 +307,8 @@ extern f32 lbl_803E49E8;
 extern f32 lbl_803E4A18;
 extern f32 lbl_803E4A20;
 
-void dimwooddoor2_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -350,7 +321,6 @@ void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 extern void* lbl_803DDB78;
 #pragma scheduling on
 #pragma peephole on
-void dll_1CE_free(void);
 
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
@@ -366,24 +336,19 @@ extern int EmissionController_IsLingering(void* player);
  * when GameBit 0x1ef is on and the player's emission controller is lingering,
  * latch GameBit 0x1e8. */
 #pragma scheduling off
-void dimmagicbridge_update(int obj);
 
 /* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
  * and using mask 0x6000 + initial state byte 3 at +0. */
 #pragma peephole off
-void dimwooddoor2_init(u8* obj, u8* params);
 
-void dll_1CE_init(u8* obj, u8* params);
 
 /* explosion_free: model-light release if present. */
 extern void ModelLightStruct_free(void*);
 #pragma scheduling on
 #pragma peephole on
-void explosion_free(int obj);
 
 /* explosion_getObjectTypeId: tile/index lookup capped by table count. */
 #pragma scheduling off
-int explosion_getObjectTypeId(int obj);
 
 /* dim_levelcontrol_free: gameplay music + time-of-day reset. */
 extern void timeOfDayFn_80055000(void);
@@ -407,7 +372,6 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj);
  * every 16 frames, and ramp each active slot's alpha toward full; then update
  * the animated bridge mesh. */
 #pragma peephole off
-int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 extern f32 timeDelta;
 extern f32 lbl_803E49D8;
@@ -419,7 +383,6 @@ extern f32 lbl_803E49E4;
  * shake anim and decay its wobble; while idle near map-cue 0x338 bleed off
  * alpha, otherwise scan the nearby objects and, if a key object is present,
  * snap the door open (reset wobble, ring the gamebit, play the open sfx). */
-void dimwooddoor2_update(int* obj);
 
 extern f32 lbl_803E49EC;
 extern f32 lbl_803E49F4;
@@ -536,17 +499,11 @@ extern void* memcpy(void* dst, const void* src, unsigned long n);
 void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z);
 void fn_801B40B8(u8 mode, u8* out, f32 a, f32 b);
 
-void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z);
 
-void fn_801B40B8(u8 mode, u8* out, f32 a, f32 b);
 
-void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void explosion_update(int obj);
 
-void explosion_init(int obj, int p2);
 
-void explosion_initialise(void);
 
 void dimmagicbridge_updateVertexWave(int obj, u8* sub);
 #pragma scheduling reset
@@ -750,9 +707,6 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
 }
 
 extern undefined4 FUN_800067c0();
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_RecordObjectHit();
 extern undefined8 ObjGroup_RemoveObject();
@@ -760,13 +714,10 @@ extern undefined4 ObjGroup_AddObject();
 extern undefined4 SH_LevelControl_runBloopEvent();
 extern uint countLeadingZeros();
 
-extern EffectInterface** gPartfxInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f64 DOUBLE_803e56e8;
 extern f64 DOUBLE_803e5708;
 extern f64 DOUBLE_803e5730;
 extern f64 DOUBLE_803e5760;
-extern f32 lbl_803DC074;
 extern f32 lbl_803DC078;
 extern f32 lbl_803E56BC;
 extern f32 lbl_803E56C0;
@@ -829,7 +780,6 @@ extern void gameTextShow(int id);
 extern void SCGameBitLatch_Update(int* state, int mask, int a, int b, int bit, int value);
 extern int* gSHthorntailAnimationInterface;
 extern f32 lbl_803E4A24;
-extern f32 timeDelta;
 
 void dim_levelcontrol_update(int obj)
 {
@@ -1209,7 +1159,6 @@ void dim2pathgenerator_initialise(void)
 {
 }
 
-void dll_1DA_free(void);
 
 /* 8b "li r3, N; blr" returners. */
 int dll_1CF_getExtraSize(void) { return 0x0; }
@@ -1225,8 +1174,6 @@ int dim2snowball_getExtraSize(void) { return 0xb0; }
 int dim2snowball_getObjectTypeId(void) { return 0x0; }
 int dim2pathgenerator_getExtraSize(void) { return 0x9a8; }
 int dim2pathgenerator_getObjectTypeId(void) { return 0x0; }
-int dll_1DA_getExtraSize(void);
-int dll_1DA_getObjectTypeId(void);
 
 /* 16b chained patterns. */
 void dim_tricky_init(int* obj)
@@ -1270,7 +1217,6 @@ void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4AA0);
 }
 
-void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E4A38;
@@ -1327,11 +1273,9 @@ void dim2conveyor_setScale(int* obj, int unused, f32* outX, f32* outY)
 
 extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, uint* outHitVolume);
 extern float Vec_distance(float* a, float* b);
-extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803E4ADC;
 
 /* dim2pathgenerator hitDetect: on hit type 0xE, scale velocity by const and SFX. */
-void dll_1DA_hitDetect(int obj);
 
 extern int ObjList_FindObjectById(int id);
 extern void mm_free(void* p);
@@ -1511,7 +1455,6 @@ void dim_tricky_update(int* obj)
 }
 
 extern f32 mathCosf(f32 x);
-extern f32 mathSinf(f32 x);
 extern f32 lbl_803E4A5C;
 extern f32 lbl_803E4A60;
 extern f32 lbl_803E4A64;
@@ -1714,7 +1657,6 @@ void dimtruthhornice_update(int* obj)
 }
 
 extern int** ObjGroup_GetObjects(int group, int* countOut);
-extern u8 framesThisStep;
 
 void dim2pathgenerator_update(int* obj)
 {

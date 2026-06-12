@@ -113,19 +113,15 @@ extern void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f
                                   f32* outMaxH, int glyphLang);
 extern void gplayNewGame(char* name, u8 slot);
 
-extern u16 lbl_8031A880[];
 extern s32 lbl_803A8730[];
 extern u8 saveFileSelect_currentSlotIndex;
 
 extern f32 lbl_803DD6D0;
 extern f32 lbl_803DD6D4;
 extern u8 lbl_803DD6DA;
-extern u32 lbl_803DD6DC;
-extern f32 lbl_803DD6E0;
 extern u32 lbl_803DD6E8;
 extern u8 lbl_803DD6EC;
 extern u8 lbl_803DD6ED;
-extern u8 lbl_803DD6F4;
 
 
 /*

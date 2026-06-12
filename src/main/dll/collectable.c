@@ -161,7 +161,6 @@ extern undefined4 DAT_803e3058;
 extern char sSidekickCommandDebugTextBlock[];
 extern undefined4 lbl_803DDA48;
 extern int lbl_803DDA54;
-extern MapEventInterface** gMapEventInterface;
 extern undefined4 lbl_803DBC40;
 extern undefined4 lbl_803DBC48;
 extern f32 lbl_803DC074;

@@ -51,7 +51,6 @@ extern const f32 lbl_803E3BDC;
 extern const f32 lbl_803E3BE0;
 extern f64 lbl_803E3BE8;
 extern s16 lbl_803DBDE0[4];
-extern MapEventInterface** gMapEventInterface;
 
 #define STAFFACTIVATED_ACTIVE 0x80
 #define STAFFACTIVATED_LOCKED 0x40

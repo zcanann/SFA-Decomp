@@ -38,7 +38,6 @@ typedef struct AppleontreeObjectDef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void appleontree_update(int param_1);
 
 /*
  * --INFO--
@@ -53,7 +52,6 @@ void appleontree_update(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void appleontree_init(int obj, int def);
 
 /* Trivial 4b 0-arg blr leaves. */
 void dll_FC_free_nop(void)
@@ -283,7 +281,6 @@ void dll_FC_init(int obj, int objDef)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_14D_hitDetect(int param_1);
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -295,13 +292,10 @@ void dll_FC_initialise_nop(void)
 {
 }
 
-void dll_14D_free_nop(void);
 
 /* 8b "li r3, N; blr" returners. */
-int dll_14D_getExtraSize_ret_8(void);
 int dll_14D_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3850;
 
-void dll_14D_render(int p1, int p2, int p3, int p4, int p5, s8 visible);

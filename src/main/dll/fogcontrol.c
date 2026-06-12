@@ -138,22 +138,16 @@ void FUN_80178338(undefined4 param_1);
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void doorf4_hitDetect(void);
 
-void doorf4_release(void);
 
-void doorf4_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int doorf4_getExtraSize(void);
-int doorf4_getObjectTypeId(void);
 int sidekickball_getExtraSize(void) { return 0x2cc; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3680;
 extern void objRenderFn_8003b8f4(f32);
 
-void doorf4_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 int fn_801793A4(int* obj) { return *((u8*)((int**)obj)[0xb8 / 4] + 0x274) == 0; }
 
@@ -162,7 +156,6 @@ void sidekickball_free(int obj) { GameBit_Set(0x3F8, 1); }
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 
-void doorf4_free(int obj);
 
 extern f32 lbl_803E36A0;
 
@@ -331,7 +324,6 @@ end:
 
 extern u32 GameBit_Get(int eventId);
 
-void doorf4_update(int* obj);
 
 extern f32 lbl_803E3654;
 extern f32 lbl_803E3684;
@@ -340,7 +332,6 @@ extern f32 lbl_803E3650;
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 
-void doorf4_init(int* obj, int* params);
 
 
 extern f32 sqrtf(f32 x);
@@ -356,7 +347,6 @@ extern f32 lbl_803E366C;
 extern f32 lbl_803E3670;
 extern f32 lbl_803E3674;
 
-int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /* === merged from main/dll/sidekickball.c [801797A4-80179A2C) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/sidekickball.h"
@@ -364,8 +354,6 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 #include "main/dll/path_control_interface.h"
 
 extern f32 timeDelta;
-extern f32 lbl_803E369C;
-extern f32 lbl_803E36A4;
 extern f32 lbl_803E36A8;
 extern f32 lbl_803E36AC;
 
@@ -495,23 +483,15 @@ extern void OSReport(const char* msg, ...);
 extern uint FUN_80006ba0();
 extern uint GameBit_Get(int eventId);
 extern int FUN_80017a90();
-extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_8003b818();
 extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
 extern void fn_8002A5DC(int obj);
 extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
 extern void PSVECNormalize(f32 * src, f32 * dst);
 extern void PSVECScale(f32* src, f32* dst, f32 scale);
-extern f32 sqrtf(f32 x);
 extern void fn_80137948(const char* fmt, ...);
 extern undefined4 sidekickball_init();
-extern uint countLeadingZeros();
 
-extern f32 timeDelta;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E369C;
-extern f32 lbl_803E36A0;
 extern f32 lbl_803E36B0;
 extern f32 lbl_803E36B4;
 extern f32 lbl_803E36B8;
@@ -731,9 +711,7 @@ extern u32 GameBit_Get(int gameBit);
 extern int* gameTextGet(int textId);
 
 extern u8 lbl_80320F30[];
-extern f32 lbl_803E369C;
 
-int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /*
  * --INFO--
@@ -816,7 +794,6 @@ extern f32 lbl_803E36E8;
 
 void levelname_update(int* obj);
 
-void levelname_init(int obj, int objDef);
 
 void ProjectileSwitch_free(void);
 
@@ -827,7 +804,6 @@ int ProjectileSwitch_getExtraSize(void);
 
 int ProjectileSwitch_getObjectTypeId(int* obj);
 
-int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 ObjectDescriptor gAreaObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

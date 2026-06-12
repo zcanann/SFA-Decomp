@@ -222,7 +222,6 @@ void treebird_update(int obj)
 #include "main/dll/ped.h"
 #include "main/dll/dimtruthhornice.h"
 
-extern uint GameBit_Get(int eventId);
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
@@ -232,7 +231,6 @@ extern void GameBit_Set(int eventId, int value);
 extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points,
                                 void* scratch, f32 scaleX, f32 scaleZ);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E520C;
 extern f32 lbl_803E5210;
 
@@ -283,23 +281,18 @@ void treebird_init(int obj, int setup)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void nw_geyser_init(int obj);
 
 char* fn_801CDE70(int* obj);
 
-extern MapEventInterface** gMapEventInterface;
 
 void nw_geyser_free(int* obj);
 
-void nw_geyser_update(int obj);
 
 extern int objFindTexture(int* obj, int idx, int p3);
 extern f32 lbl_803E5200;
 extern f32 timeDelta;
 
-int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
-int fn_801CDE7C(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 extern void fn_8003A168(int obj, void* p);
 extern void fn_8003B228(int obj, void* p);
@@ -308,4 +301,3 @@ extern void characterDoEyeAnims(int obj, void* p);
 extern u8 lbl_803268B4[];
 extern f32 lbl_803E5214;
 
-void fn_801CDF94(int obj, int state, int flag);

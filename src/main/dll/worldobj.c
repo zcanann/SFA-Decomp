@@ -24,7 +24,6 @@ extern uint countLeadingZeros();
 extern undefined4 DAT_803274f4;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern EffectInterface** gPartfxInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f64 DOUBLE_803e5eb8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5E98;
@@ -785,8 +784,6 @@ void nw_mammoth_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, u
 
 extern undefined4 ObjGroup_AddObject();
 extern int ObjTrigger_IsSetById();
-extern int ObjTrigger_IsSet();
-extern undefined4 objAudioFn_8006ef38();
 
 extern void fn_8003A168(int obj, void* p);
 extern void characterDoEyeAnims(int obj, void* p);
@@ -802,19 +799,10 @@ extern ObjHitReactEntry DAT_80327400;
 extern ObjHitReactEntry DAT_80327414;
 extern undefined4 DAT_80327468;
 extern undefined4 DAT_80327498;
-extern undefined4 DAT_803274f4;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern NwMammothPathControlInterface** gPathControlInterface;
-extern f32 timeDelta;
-extern f32 lbl_803DC074;
 extern u32 lbl_803E5208;
-extern f32 lbl_803E520C;
-extern f32 lbl_803E5210;
-extern f32 lbl_803E524C;
 extern f32 lbl_803E5254;
 extern f32 lbl_803E5258;
-extern f32 lbl_803E5EA4;
-extern f32 lbl_803E5EA8;
 
 #define gNwMammothNormalHitReactEntry DAT_80327400
 #define gNwMammothHeavyHitReactEntry DAT_80327414
@@ -1127,7 +1115,6 @@ void nw_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
  */
 #pragma scheduling off
 #pragma peephole off
-int nw_tricky_getExtraSize(void);
 
 /*
  * --INFO--

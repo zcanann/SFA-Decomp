@@ -1909,9 +1909,7 @@ typedef struct EnemyPlacement
 } EnemyPlacement;
 
 
-extern uint FUN_80017730();
 extern undefined4 FUN_800305f8();
-extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern uint ObjGroup_ContainsObject();
 extern undefined8 ObjGroup_RemoveObject();
@@ -1922,12 +1920,8 @@ extern void rachnopInit(undefined4 param_1, int param_2);
 extern void baddieInit_80156188(undefined4 param_1, int param_2);
 extern void wbInit(undefined4 param_1, int param_2);
 
-extern f64 DOUBLE_803e3218;
-extern f64 DOUBLE_803e3278;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DC078;
-extern f32 lbl_803E31FC;
-extern f32 lbl_803E3200;
 extern f32 lbl_803E3204;
 extern f32 lbl_803E3208;
 extern f32 lbl_803E324C;
@@ -2129,7 +2123,6 @@ void enemy_release(void)
 
 void enemy_initialise(void) { if (lbl_803DDA50 == NULL) lbl_803DDA50 = Resource_Acquire(0x5a, 1); }
 
-extern f32 lbl_803E256C;
 extern f32 lbl_803E25F8;
 extern f32 lbl_803E25FC;
 extern void objRenderFn_8003b8f4(f32 f);
@@ -2286,9 +2279,6 @@ extern int isInBounds(f32 x, f32 z);
 extern int objIsFrozen(int obj);
 extern void baddie_updateWhileFrozen(int obj, u8* state, int flag);
 extern void hudFn_8011f38c(int a);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern MapEventInterface** gMapEventInterface;
-extern f32 lbl_803E2574;
 extern f32 lbl_803E2600;
 
 
@@ -2543,7 +2533,6 @@ extern f32 lbl_803DBC64;
 extern f32 lbl_803DBC68;
 extern u8 lbl_8031DBD8[];
 extern u8 lbl_8031DBE4[];
-extern f32 lbl_803E257C;
 extern f32 lbl_803E25B0;
 
 void enemy_init(int obj, u8* setup, int flag)

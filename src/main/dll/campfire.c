@@ -53,7 +53,6 @@ extern void* gKaldaChomStateHandlersB[];
 extern void* gKaldaChomStateHandlersA[];
 extern EffectInterface** gPartfxInterface;
 extern undefined4* gPlayerInterface;
-extern MapEventInterface** gMapEventInterface;
 extern undefined4* gBaddieControlInterface;
 extern void* lbl_803DDA90;
 extern f64 DOUBLE_803e3d00;

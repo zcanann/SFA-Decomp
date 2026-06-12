@@ -679,7 +679,6 @@ static inline int* Transporter_GetActiveModel(void* obj)
 }
 
 extern undefined4 FUN_80017748();
-extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a90();
 extern undefined8 FUN_80017ac8();
 extern undefined4 ObjHits_SetTargetMask();
@@ -865,19 +864,12 @@ FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void invhit_hitDetect(void);
 
-void invhit_release(void);
 
-void invhit_initialise(void);
 
-void iceblast_free(void);
 
-void iceblast_hitDetect(void);
 
-void iceblast_release(void);
 
-void iceblast_initialise(void);
 
 extern int lbl_803DDAB8;
 extern int lbl_803AC6E0[];
@@ -922,13 +914,6 @@ void pushable_free(int* obj)
 /* 8b "li r3, N; blr" returners. */
 int pushable_getExtraSize(void) { return 0x148; }
 int pushable_getObjectTypeId(void) { return 0x48; }
-int WarpPoint_getExtraSize(void);
-int WarpPoint_getObjectTypeId(void);
-int invhit_getExtraSize(void);
-int invhit_getObjectTypeId(void);
-int iceblast_getExtraSize(void);
-int iceblast_getObjectTypeId(void);
-int flameblast_getExtraSize(void);
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern f32 lbl_803E3618;
@@ -945,8 +930,6 @@ void objSetAnimSpeedTo1(int* obj);
 extern f32 lbl_803E35E8;
 extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
 extern f32 lbl_803E3600;
-void invhit_render(int* obj, int a, int b, int c, int d);
-void iceblast_render(int* obj, int a, int b, int c, int d);
 
 #pragma peephole off
 void WarpPoint_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
@@ -959,9 +942,7 @@ void iceblast_init(int obj, s16* p);
 extern void warpToMap(int mapId, int flag);
 
 #pragma peephole off
-int WarpPoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
-extern f32 timeDelta;
 extern f32 lbl_803E3630;
 extern f32 lbl_803E3634;
 extern int fn_8017805C(int* obj, f32* state);
@@ -1008,7 +989,6 @@ extern void pushable_savePos(int* obj);
 extern int fn_80174668(int* obj, PushableState* state);
 extern void fn_80174438(int* obj, PushableState* state);
 extern void Obj_RemoveFromUpdateList(int* obj);
-extern f32 lbl_803E3528;
 extern f64 lbl_803E3530;
 extern f64 lbl_803E3538;
 
@@ -1103,7 +1083,6 @@ void pushable_update(int* obj)
     }
 }
 
-extern f32 sqrtf(f32 x);
 extern u32 fn_80296118(void);
 extern f32 lbl_803AC780[];
 extern u8 framesThisStep;
@@ -1113,10 +1092,8 @@ extern f32 lbl_803E35EC;
 extern f32 lbl_803E35F0;
 extern f32 lbl_803E35F4;
 
-void invhit_update(int* obj);
 
 extern int getCurMapLayer(void);
-extern MapEventInterface** gMapEventInterface;
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
@@ -1130,14 +1107,11 @@ extern int modelFileHeaderGetCullDistance(int hdr);
 extern void Model_GetVertexPosition(int* model, int idx, f32* out);
 extern void debugPrintf(char* fmt, ...);
 extern char sPushPullObjectHitpointOverflow[];
-extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
 extern int arrayIndexOf(int* array, int count, int value);
 extern void fn_8007FE04(int* array, int* count, int value);
-extern f32 lbl_803E358C;
 extern f32 lbl_803E35CC;
 extern f32 lbl_803E3558;
 extern f32 lbl_803E3540;
-extern f32 lbl_803E3588;
 
 void pushable_init(s16* obj, char* def)
 {
@@ -1599,8 +1573,6 @@ void pushable_hitDetect(int* obj)
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern int hitDetectFn_80067958(int a, f32* start, f32* end, int b, void* buf, int c);
-extern f32 lbl_803E3590;
-extern f32 lbl_803E3594;
 extern f32 lbl_803E359C;
 extern f32 lbl_803E35A0;
 extern f32 lbl_803E35A4;

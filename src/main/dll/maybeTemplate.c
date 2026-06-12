@@ -400,7 +400,6 @@ void hudDrawCounter(int idx, s16 value, s16 target, u8 alpha, int timer, int* yP
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern MapEventInterface** gMapEventInterface;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern int lbl_803A87F0[];
 extern f32 lbl_803DD83C;

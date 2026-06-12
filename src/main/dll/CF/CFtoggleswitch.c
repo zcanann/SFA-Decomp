@@ -61,7 +61,6 @@ extern f32 lbl_803E3C2C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void treasurechest_update(int obj);
 
 /*
  * --INFO--
@@ -76,7 +75,6 @@ void treasurechest_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void treasurechest_release(void);
 
 /*
  * --INFO--
@@ -91,7 +89,6 @@ void treasurechest_release(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void treasurechest_initialise(void);
 
 /*
  * --INFO--
@@ -175,13 +172,10 @@ typedef struct MagiccavetopState
 } MagiccavetopState;
 
 
-extern uint GameBit_Get(int eventId);
 extern int ObjHits_GetPriorityHitWithPosition();
 extern int ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f64 DOUBLE_803e4908;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803dda58;
@@ -327,7 +321,6 @@ int magiccavetop_getExtraSize(void) { return 0xc; }
 int trickyguardspot_getExtraSize(void) { return 0x8; }
 int infotext_getExtraSize(void) { return 0x4; }
 int cctestinfot_getExtraSize(void) { return 0x8; }
-int deathgas_getExtraSize(void);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 void trickyguardspot_free(TrickyGuardSpotObject* obj) { ObjGroup_RemoveObject(obj, TRICKY_GUARD_SPOT_GROUP); }
@@ -440,7 +433,6 @@ void magiccavetop_init(int* obj, s8* def)
 }
 
 extern void stopRumble2(void);
-extern void* Obj_GetPlayerObject(void);
 extern void* fn_802966CC(void* player);
 extern void staffSetGlow(void* a, int b, int c);
 extern int mapGetDirIdx(int mapId);

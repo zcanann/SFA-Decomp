@@ -27,7 +27,6 @@ extern int* gameTextGet(int textId);
 extern u8 lbl_80320F30[];
 extern f32 lbl_803E369C;
 
-int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /*
  * --INFO--
@@ -42,7 +41,6 @@ int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 sidekickball_init(int obj);
 
 
 int area_getExtraSize(void);
@@ -83,7 +81,6 @@ extern f32 lbl_803E36E8;
 
 void levelname_update(int* obj);
 
-void levelname_init(int obj, int objDef);
 
 void ProjectileSwitch_free(void)
 {
@@ -106,7 +103,6 @@ int ProjectileSwitch_getObjectTypeId(int* obj)
     return ((u32)v << 11) | 0x400;
 }
 
-int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 ObjectDescriptor gAreaObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
@@ -184,14 +180,12 @@ typedef struct InvisibleHitSwitchState
 
 
 extern void GameBit_Set(int eventId, int value);
-extern int ObjHits_GetPriorityHit(int obj, int* outArr, int* outA, uint* outB);
 extern void Sfx_PlayFromObject(int obj, int soundId);
 extern void* objFindTexture(int obj, int a, int b);
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, float arg);
 extern int seqStreamLookupFn_8007fff8(void* table, int mode, int seq);
 extern void fn_8003B608(u32 a, u32 b, u32 c);
 
-extern u8 framesThisStep;
 extern f32 timeDelta;
 extern u8 lbl_80321008[];
 extern f32 lbl_803E3700;

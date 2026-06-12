@@ -143,7 +143,6 @@ void dbegg_free(int x) { ObjGroup_RemoveObject(x, 0x24); }
 
 /* dll_224_hitDetect: render iff obj->field_0x74 set. */
 
-void dll_224_hitDetect(void* obj);
 
 /* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
 #pragma scheduling off
@@ -992,7 +991,6 @@ extern undefined4 DAT_8032a290;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ModgfxInterface** gModgfxInterface;
 extern EffectInterface** gPartfxInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f64 DOUBLE_803e6ea8;
 extern f64 DOUBLE_803e6f78;
 extern f64 DOUBLE_803e7000;
@@ -6375,7 +6373,6 @@ void chuka_init(int obj, int params)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfpfloorbar_free(int* obj);
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 
@@ -6428,7 +6425,6 @@ void chuka_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dfpfloorbar_getExtraSize(void);
 
 extern f32 lbl_803E6408;
 

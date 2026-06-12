@@ -356,8 +356,6 @@ extern int lbl_803AC6E0[];
 void pushable_free(int* obj);
 
 /* 8b "li r3, N; blr" returners. */
-int pushable_getExtraSize(void);
-int pushable_getObjectTypeId(void);
 int WarpPoint_getExtraSize(void) { return 0x10; }
 int WarpPoint_getObjectTypeId(void) { return 0x1; }
 int invhit_getExtraSize(void) { return 0xc; }
@@ -915,7 +913,6 @@ void invhit_update(int* obj)
 }
 
 extern int getCurMapLayer(void);
-extern MapEventInterface** gMapEventInterface;
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
@@ -1116,7 +1113,6 @@ typedef struct
     f32 vz;
 } PushableObjPos;
 
-void pushable_hitDetect(int* obj);
 
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
@@ -1139,8 +1135,6 @@ typedef struct
     s16 pad3;
 } SetScaleParams;
 
-int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz);
 
 extern void fn_8003B5E0(int a, int b, int c, int d);
 
-void pushable_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);

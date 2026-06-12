@@ -23,7 +23,6 @@ extern void textureFree(void* p);
 
 #pragma scheduling off
 #pragma peephole off
-void textureFreeFn_8012fcec(void);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -40,7 +39,6 @@ void textureFreeFn_8012fcec(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8012fdac(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9);
 
 /*
  * --INFO--

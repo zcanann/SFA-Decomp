@@ -18,7 +18,6 @@ extern void fn_80296518(void* obj, int arg, int enable);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern f32 Vec_xzDistance(void* a, void* b);
 extern f32 mathSinf(f32 angle);
-extern MapEventInterface** gMapEventInterface;
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 
 extern f32 lbl_803E4E38;
@@ -60,7 +59,6 @@ typedef struct DFlanternShrineState
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfsh_door2speci_free(void);
 
 /*
  * --INFO--
@@ -75,7 +73,6 @@ void dfsh_door2speci_free(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfsh_door2speci_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /*
  * --INFO--
@@ -90,7 +87,6 @@ void dfsh_door2speci_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfsh_door2speci_hitDetect(void);
 
 /*
  * --INFO--
@@ -105,7 +101,6 @@ void dfsh_door2speci_hitDetect(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfsh_door2speci_update(void);
 
 /*
  * --INFO--
@@ -120,7 +115,6 @@ void dfsh_door2speci_update(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfsh_door2speci_init(int obj, int def);
 
 /*
  * --INFO--
@@ -135,7 +129,6 @@ void dfsh_door2speci_init(int obj, int def);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfsh_door2speci_release(void);
 
 /*
  * --INFO--
@@ -150,7 +143,6 @@ void dfsh_door2speci_release(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfsh_door2speci_initialise(void);
 
 /*
  * --INFO--
@@ -398,7 +390,6 @@ extern undefined4 SH_LevelControl_runBloopEvent();
 
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f64 DOUBLE_803e5b18;
 extern f64 DOUBLE_803e5b28;
 extern f32 lbl_803DC074;
@@ -414,11 +405,9 @@ extern f32 lbl_803E5B10;
 extern f32 lbl_803E5B20;
 extern f32 lbl_803E5B24;
 extern f32 lbl_803E5B30;
-extern f32 lbl_803E4E88;
 extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
-extern f32 timeDelta;
 extern u8 lbl_803DBF60;
 extern f64 lbl_803E4E80;
 extern f64 lbl_803E4E90;
@@ -430,11 +419,9 @@ extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetB
                                           int value);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit, int value);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void GameBit_Set(int bit, int value);
 extern void Music_Trigger(int musicId, int mode);
 extern void gameTimerInit(int timerId, int value);
 extern void timerSetToCountUp(void);
-extern void gameTimerStop(void);
 extern int isGameTimerDisabled(void);
 extern int ObjList_FindObjectById(int objId);
 extern void fn_8014C5C0(int obj);
@@ -828,7 +815,6 @@ void SpiritPrize_initialise(void)
 {
 }
 
-extern void ModelLightStruct_free(void* light);
 
 typedef struct SpiritPrizeState
 {

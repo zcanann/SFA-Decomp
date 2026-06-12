@@ -1382,7 +1382,6 @@ typedef struct DllD3Placement
 } DllD3Placement;
 
 
-extern u32 randomGetRange(int min, int max);
 extern void* Obj_GetPlayerObject(void);
 extern int ObjContact_AddCallback(int* obj, int p2, void* cb);
 extern int ObjList_FindNearestObjectByDefNo(int* obj, int defNo, f32* radius);
@@ -1392,7 +1391,6 @@ extern f32 sqrtf(f32);
 extern void* memset(void* dst, int val, u32 size);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern int* gBaddieControlInterface;
 extern int* gPlayerInterface;
 
 extern int lbl_803202E8[];
@@ -1401,15 +1399,11 @@ extern int lbl_803AC638[];
 extern void* gLandedArwingStateHandlers[];
 extern void* gLandedArwingDefaultStateHandler;
 
-extern f32 timeDelta;
 extern double lbl_803E3040;
-extern f32 lbl_803E3030;
 extern f32 lbl_803E3034;
 extern f32 lbl_803E3038;
 extern f32 lbl_803E3048;
 extern f32 lbl_803E3058;
-extern f32 lbl_803E2FDC;
-extern f32 lbl_803E2FF4;
 
 extern void LandedArwing_UpdateRetreatChase(void);
 extern void LandedArwing_UpdateBounceFade(void);

@@ -224,20 +224,17 @@ void ccgasventcontrol_init(int obj, u8* p);
 
 #pragma scheduling off
 #pragma peephole off
-int MoonSeedPlantingSpot_SeqFn(int obj);
 #pragma peephole reset
 #pragma scheduling reset
 
 /* CCGasVentControl_SeqFn: trampoline to CCGasVentControlFn_801a9fd0 passing (obj, obj->extra), returns 0. */
 extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
 #pragma scheduling off
-int CCGasVentControl_SeqFn(int obj);
 #pragma scheduling reset
 
 extern int* ObjGroup_GetObjects(int group, int* count);
 extern f32 lbl_803E4618;
 extern f32 timeDelta;
-extern MapEventInterface** gMapEventInterface;
 extern void Sfx_PlayFromObject(int obj, int id);
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
 extern f32 lbl_803E4624;
@@ -346,21 +343,14 @@ void animsharpclaw_update(int* obj);
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMsnowball.h"
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_DisableObject();
-extern int ObjHits_GetPriorityHit();
 extern int ObjHits_PollPriorityHitWithCooldown();
-extern undefined4 ObjLink_AttachChild();
 extern int ObjTrigger_IsSetById();
 extern int ObjTrigger_IsSet();
-extern void objRenderFn_8003b8f4(f32);
 extern undefined4 FUN_8008112c();
 extern undefined4 dll_2E_func03();
 extern void dll_2E_func06(int* obj, void* state, int flags);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E4660;
 extern f32 lbl_803E530C;
 extern f32 lbl_803E5310;
@@ -550,7 +540,6 @@ extern void fn_80088870(void* a, void* b, void* c, void* d);
 extern int getSaveGameLoadStatus(void);
 extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
 extern void getEnvfxAct(int obj, int target, int id, int p);
-extern MapEventInterface** gMapEventInterface;
 extern int lbl_80323548[];
 extern f32 lbl_803E46D4;
 extern void ccpedstal_updateGameBitGate(int obj, u8* state2);
@@ -767,7 +756,6 @@ void ccqueen_init(int* obj, u8* init)
 
 extern f32 lbl_803E4664;
 extern f32 lbl_803E4668;
-extern f32 timeDelta;
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
 extern void characterDoEyeAnims(int obj, void* p);
 

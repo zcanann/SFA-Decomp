@@ -121,7 +121,6 @@ extern f32 lbl_803E30F8;
 extern f32 lbl_803E3108;
 extern f32 lbl_803E310C;
 
-void kaldachompspit_init(int obj);
 
 
 #pragma dont_inline on
@@ -306,9 +305,7 @@ void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void kaldachompspit_release(void);
 
-void kaldachompspit_initialise(void);
 
 void pinponspike_render(void)
 {

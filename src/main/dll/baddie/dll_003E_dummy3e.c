@@ -180,7 +180,6 @@ extern f32 FLOAT_803e2e88;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 Link_update(void);
 
 
 /* ===== EN v1.0 retargeted leaves ========================================= */

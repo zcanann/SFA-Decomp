@@ -42,7 +42,6 @@ typedef struct WarpstoneFlags
     u8 lo : 4;
 } WarpstoneFlags;
 
-void warpstone_update(int obj);
 
 /*
  * --INFO--
@@ -57,7 +56,6 @@ void warpstone_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void warpstone_release(void);
 
 /*
  * --INFO--
@@ -72,7 +70,6 @@ void warpstone_release(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void warpstone_initialise(void);
 
 
 /*
@@ -120,7 +117,6 @@ extern int mapUnload(int id, int flags);
 #define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE 1
 #define SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS 0x20000000
 
-extern MapEventInterface** gMapEventInterface;
 
 /*
  * --INFO--

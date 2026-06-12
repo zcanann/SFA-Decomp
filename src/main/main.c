@@ -15,7 +15,6 @@ extern undefined4 FUN_80017ac8();
 
 extern ModgfxInterface** gModgfxInterface;
 extern EffectInterface** gPartfxInterface;
-extern MapEventInterface** gMapEventInterface;
 extern undefined4 DAT_803de944;
 extern undefined4 DAT_803de946;
 extern f32 lbl_803DC074;
@@ -200,7 +199,6 @@ void vfplavastar_release(void)
 /* dll_224_hitDetect: render iff obj->field_0x74 set. */
 extern void objRenderFn_80041018(void* obj);
 
-void dll_224_hitDetect(void* obj);
 
 /* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
 extern int lbl_803DDCC8;

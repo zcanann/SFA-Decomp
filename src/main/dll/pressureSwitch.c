@@ -34,7 +34,6 @@ extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined8 ObjGroup_RemoveObject();
 
-extern MapEventInterface** gMapEventInterface;
 extern undefined4 DAT_803de6d0;
 extern f64 DOUBLE_803e32d8;
 extern f64 DOUBLE_803e32e0;

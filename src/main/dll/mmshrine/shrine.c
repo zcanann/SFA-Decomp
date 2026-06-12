@@ -71,7 +71,6 @@ extern f32 lbl_803E5BE8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void mmsh_shrine_init(undefined2* obj, int arg2);
 
 /*
  * --INFO--

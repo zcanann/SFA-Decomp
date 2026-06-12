@@ -365,7 +365,6 @@ extern undefined4 FUN_80286888();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294ccc();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f64 DOUBLE_803e5c58;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5C28;
@@ -379,7 +378,6 @@ extern f32 lbl_803E5C4C;
 extern f32 lbl_803E5C50;
 extern f32 lbl_803E5C60;
 
-extern s16 lbl_80326238[];
 
 void ecsh_shrine_func0B(u8 idx, f32* out1, f32* out2)
 {
@@ -479,7 +477,6 @@ void ecsh_shrine_hitDetect(void)
 
 extern void Music_Trigger(int trackId, int restart);
 extern void ModelLightStruct_free(void* p);
-extern f32 lbl_803E4FC8;
 
 void ecsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -547,16 +544,12 @@ extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
 extern uint FUN_80017690();
-extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017830();
-extern uint FUN_80017ae8();
-extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_AllocQueue();
 
 extern undefined4 DAT_803dc070;
-extern MapEventInterface** gMapEventInterface;
 
 /*
  * --INFO--
@@ -583,12 +576,8 @@ extern void Sfx_KeepAliveLoopedObjectSound(s16* obj, int sfxId);
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
 extern void Music_Trigger(int id, int restart);
 extern int GameBit_Get(int bit);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern int lbl_803E8470;
-extern f32 timeDelta;
-extern f32 lbl_803E4FA8;
-extern f32 lbl_803E4FB0;
 extern f32 lbl_803E4FCC;
 extern f32 lbl_803E4FD0;
 extern f32 lbl_803E4FD4;
@@ -1151,9 +1140,7 @@ extern void ModelLightStruct_free(void* light);
 extern void gameTimerStop(void);
 extern f32 lbl_803E5038;
 
-void gpsh_shrine_free(int* obj);
 
-void gpsh_shrine_render(void* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4FF8;
@@ -1179,7 +1166,6 @@ void ecsh_creator_init(s16* obj, s8* def)
     inner[4] += (u8)def[0x20];
 }
 
-extern int fn_801C5CE4(void* objArg, int unused, void* eventListArg);
 extern int objCreateLight(int a, int b);
 extern int lbl_803DDBC0;
 
@@ -1189,7 +1175,6 @@ typedef struct EcshShrineByte15
     u8 rest : 7;
 } EcshShrineByte15;
 
-int gpsh_shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 void ecsh_shrine_init(s16* obj, s8* def)
 {
@@ -1298,7 +1283,6 @@ void ecsh_creator_update(s16* obj)
     }
 }
 
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern f32 lbl_803E5000;
 extern f32 lbl_803E5004;
 extern f32 lbl_803E5008;

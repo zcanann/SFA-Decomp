@@ -27,7 +27,6 @@ extern int* gameTextGet(int textId);
 extern u8 lbl_80320F30[];
 extern f32 lbl_803E369C;
 
-int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /*
  * --INFO--
@@ -42,7 +41,6 @@ int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 sidekickball_init(int obj);
 
 
 int area_getExtraSize(void) { return 0x0; }

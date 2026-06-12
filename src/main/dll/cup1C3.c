@@ -763,10 +763,7 @@ typedef struct Dll197State
 
 
 extern int ObjHits_GetPriorityHit();
-extern undefined4 FUN_8003b818();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f64 DOUBLE_803e5de0;
 extern f32 lbl_803E5DD0;
 extern f32 lbl_803E5DD4;
@@ -786,7 +783,6 @@ extern f32 lbl_803E5DDC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern f32 lbl_803E513C;
 extern f32 lbl_803E5140;
 extern f32 lbl_803E5144;
 extern f64 lbl_803E5148;
@@ -921,22 +917,17 @@ void nwsh_levcon_release(void);
 
 void nwsh_levcon_initialise(void);
 
-void dll_199_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 int nwsh_levcon_getExtraSize(void);
 int nwsh_levcon_getObjectTypeId(void);
-int dll_199_getExtraSize(void);
-int dll_199_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5150;
-extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5158;
 
 void nwsh_levcon_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 extern void Music_Trigger(int track, int param);
 
@@ -951,7 +942,6 @@ void nwsh_levcon_update(int* obj);
 
 void nwsh_levcon_init(int* obj);
 
-extern ModgfxInterface** gModgfxInterface;
 extern void* gTitleMenuControlInterface;
 
 void dll_199_free(int* obj);
@@ -962,6 +952,5 @@ extern int return0_8005669C(int p);
 extern int lbl_803DB610;
 extern u32 lbl_803DDBD8;
 
-int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate);

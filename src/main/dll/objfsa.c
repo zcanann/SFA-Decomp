@@ -224,7 +224,6 @@ typedef struct PlayerMoveBuf
 
 #pragma scheduling off
 #pragma peephole off
-void player_setScale(f32 dt, short* moveState, uint* obj, uint flags);
 
 /*
  * --INFO--
@@ -4284,7 +4283,6 @@ void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval);
 
 
 extern f32 vec3f_distanceSquared(f32 * posA, f32 * posB);
-extern int __cntlzw(unsigned int value);
 
 /* Hcurves keeps the ROM curve definitions sorted by id for binary searches. */
 extern f32 gFloatHalf;
@@ -6364,7 +6362,6 @@ void curves_addCurveDef(RomCurveDef* curve)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void curves_countRandomPoints(int obj, uint* curve);
 
 
 
@@ -6381,7 +6378,6 @@ void curves_countRandomPoints(int obj, uint* curve);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_800E58FC(int obj, f32* state);
 
 /*
  * --INFO--
@@ -6397,7 +6393,6 @@ void fn_800E58FC(int obj, f32* state);
  * PAL Size: TODO
  */
 #pragma dont_inline on
-void fn_800E5CBC(short* obj, int state);
 #pragma dont_inline reset
 
 /*
@@ -6414,7 +6409,6 @@ void fn_800E5CBC(short* obj, int state);
  * PAL Size: TODO
  */
 #pragma dont_inline on
-void fn_800E5E38(int obj, f32* state);
 #pragma dont_inline reset
 
 /*
@@ -6430,7 +6424,6 @@ void fn_800E5E38(int obj, f32* state);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_800E5F1C(int obj, f32* state);
 
 
 /*
@@ -6446,7 +6439,6 @@ void fn_800E5F1C(int obj, f32* state);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void curves_updateLocalPointCollision(int obj, f32* state);
 
 /*
  * --INFO--
@@ -6461,7 +6453,6 @@ void curves_updateLocalPointCollision(int obj, f32* state);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void curves_preparePointCollisionFrame(int obj, u32* state);
 
 /*
  * --INFO--
@@ -6476,7 +6467,6 @@ void curves_preparePointCollisionFrame(int obj, u32* state);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void curves_updateLocalPointTransforms(int obj, u32* state);
 
 /*
  * --INFO--
@@ -6491,7 +6481,6 @@ void curves_updateLocalPointTransforms(int obj, u32* state);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_15_func0A(int obj, u32* state);
 
 /*
  * --INFO--
@@ -6506,7 +6495,6 @@ void dll_15_func0A(int obj, u32* state);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-f32 dll_15_func0B(int obj, f32 x, f32 baseY, f32 z, f32 height);
 
 
 /*
@@ -6522,7 +6510,6 @@ f32 dll_15_func0B(int obj, f32 x, f32 baseY, f32 z, f32 height);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-RomCurvePoint* curves_getCurves(int obj, f32 x, f32 z, u32* outCount, int queryAll);
 
 /*
  * --INFO--
@@ -6538,7 +6525,6 @@ RomCurvePoint* curves_getCurves(int obj, f32 x, f32 z, u32* outCount, int queryA
  * PAL Size: TODO
  */
 
-void dll_15_func08(short* curveObj, int* state, uint updateValue, f32 step);
 
 
 /*
@@ -6555,7 +6541,6 @@ void dll_15_func08(short* curveObj, int* state, uint updateValue, f32 step);
  * PAL Size: TODO
  */
 
-void dll_15_func06(short* curveObj, int* state);
 
 /*
  * --INFO--
@@ -6570,7 +6555,6 @@ void dll_15_func06(short* curveObj, int* state);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoints, f32* radii, s8* types);
 
 
 /* Forward active hit-segment bounds to ObjHits with the state-derived target mask. */
@@ -6593,7 +6577,6 @@ void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoin
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void curves_clear(CurvesCollisionState* state, int updateMode, uint flags, int subtype);
 
 /*
  * --INFO--
@@ -6608,7 +6591,6 @@ void curves_clear(CurvesCollisionState* state, int updateMode, uint flags, int s
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint playerHasKrazoaSpirit(u8 checkStoryBits, uint bit);
 
 /*
  * --INFO--
@@ -6644,7 +6626,6 @@ typedef struct SaveData
 
 extern SaveData saveData;
 
-void saveFileStruct_setCheatActive(uint optionIndex, u8 active);
 
 
 /* Trivial 4b 0-arg blr leaves. */

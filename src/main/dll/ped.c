@@ -44,7 +44,6 @@ typedef struct TreeBirdState
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void treebird_init(int obj, int setup);
 
 /*
  * --INFO--
@@ -67,7 +66,6 @@ void nw_geyser_init(int obj)
 
 char* fn_801CDE70(int* obj) { return *(char**)&((GameObject*)obj)->extra + 0xc; }
 
-extern MapEventInterface** gMapEventInterface;
 
 void nw_geyser_free(int* obj)
 {

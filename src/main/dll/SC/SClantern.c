@@ -10,7 +10,6 @@ extern undefined4 FUN_8028683c();
 extern undefined4 Obj_GetPlayerObject();
 
 extern ObjAnimEventList gSClanternObjAnimEvents;
-extern MapEventInterface** gMapEventInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E5498;
 

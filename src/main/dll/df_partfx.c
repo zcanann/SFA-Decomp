@@ -81,7 +81,6 @@ extern f32 lbl_803E0518;
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-int Checkpoint_func07(int* obj, int* state);
 #pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
@@ -1375,7 +1374,6 @@ undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800da594(double param_1, float* param_2);
 
 /*
  * --INFO--
@@ -1390,7 +1388,6 @@ void FUN_800da594(double param_1, float* param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-bool FUN_800da5e8(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, float* param_9, float param_10, float param_11, float param_12, undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
 
 
 /*
@@ -1406,7 +1403,6 @@ bool FUN_800da5e8(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800da700(undefined4 param_1, undefined4 param_2, int param_3);
 
 /*
  * --INFO--
@@ -1421,7 +1417,6 @@ void FUN_800da700(undefined4 param_1, undefined4 param_2, int param_3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800da850(uint param_1, undefined* param_2);
 
 
 /*
@@ -1453,7 +1448,6 @@ undefined2 FUN_800db110(float* param_1, int param_2, undefined4 param_3, undefin
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800db47c(float* param_1, undefined* param_2);
 
 /*
  * --INFO--
@@ -1468,7 +1462,6 @@ void FUN_800db47c(float* param_1, undefined* param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-ushort FUN_800db690(float* param_1);
 
 /*
  * --INFO--
@@ -1483,7 +1476,6 @@ ushort FUN_800db690(float* param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800db820(float* param_1);
 
 
 /*
@@ -1577,7 +1569,6 @@ undefined4 FUN_800de998(double param_1, undefined8 param_2, double param_3, unde
  * PAL Size: TODO
  */
 #pragma scheduling off
-int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char bboxMode);
 
 /*
  * --INFO--
@@ -1611,7 +1602,6 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
  */
 #pragma scheduling off
 #pragma peephole off
-f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2);
 
 /*
  * --INFO--
@@ -2230,9 +2220,7 @@ void RomCurve_setA4(void* a, void* b);
 
 
 
-int RomCurve_findProjectedCurveFromStart(f32 x, f32 y, f32 z, int curve, float* outPhase);
 
-void curves_getPos(f32 phase, int curve, float* outX, float* outY, float* outZ);
 
 
 

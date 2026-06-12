@@ -79,7 +79,6 @@ void projdfp1r_initialise(void)
  * EN v1.0 Address: 0x80100A90
  * EN v1.0 Size: 12b
  */
-u8 cameraGetTargetType(void);
 
 /*
  * --INFO--
@@ -88,4 +87,3 @@ u8 cameraGetTargetType(void);
  * EN v1.0 Address: 0x80100A9C
  * EN v1.0 Size: 8b
  */
-s16 Camera_getMinimapInfoText(void);

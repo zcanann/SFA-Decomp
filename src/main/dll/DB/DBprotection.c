@@ -152,7 +152,6 @@ extern f32 lbl_803E57E0;
  * PAL Size: TODO
  */
 extern u8 framesThisStep;
-extern MapEventInterface** gMapEventInterface;
 extern f32 sqrtf(f32 x);
 extern f32 mathCosf(f32 x);
 extern int getAngle(f32 dx, f32 dz);

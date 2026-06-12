@@ -96,7 +96,6 @@ enum NwMammothRuntimeFlag
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void nw_mammoth_update(NwMammothObject* obj, int param_2);
 
 
 /*
@@ -106,7 +105,6 @@ void nw_mammoth_update(NwMammothObject* obj, int param_2);
  * EN v1.0 Address: 0x801CF4F0
  * EN v1.0 Size: 668b
  */
-void nw_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isReload);
 
 
 /*
@@ -215,7 +213,6 @@ typedef struct NwTrickyState
 
 extern undefined4 FUN_8000680c();
 extern int FUN_80017a90();
-extern undefined4 ObjGroup_AddObject();
 extern int ObjGroup_FindNearestObjectForObject(int group, int* obj, f32* maxDistance);
 extern int** ObjGroup_GetObjects(int group, int* countOut);
 extern void ObjHits_DisableObject(int* obj);
@@ -238,17 +235,14 @@ typedef struct NwIceState
     int* linkedObj;
 } NwIceState;
 
-extern u32 GameBit_Get(int eventId);
 extern void fn_8014C66C(int* obj, int* target);
 extern f32 fn_8014C5D0(int* obj);
 extern int* ObjList_FindObjectById(int objId);
 extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 extern void fn_80138920(int* obj, int a, int b);
-extern f32 timeDelta;
 extern const f32 lbl_803E5260;
 extern f32 lbl_803E5264;
 extern f32 lbl_803E5268;
-extern MapEventInterface** gMapEventInterface;
 extern int lbl_802C23E8[];
 
 typedef struct NwTrickyIds

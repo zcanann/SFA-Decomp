@@ -51,7 +51,6 @@ extern undefined4 DAT_803dcc40;
 extern undefined4 DAT_803dcc44;
 extern undefined4 DAT_803dcc54;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern MapEventInterface** gMapEventInterface;
 extern u8 lbl_803DBFC8;
 extern u8 lbl_803DBFCC;
 extern u8 lbl_803DBFD0;

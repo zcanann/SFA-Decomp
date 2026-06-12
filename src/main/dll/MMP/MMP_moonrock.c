@@ -194,7 +194,6 @@ extern void fn_80194C40(u8* setup, u8* state, int block);
 extern f32 timeDelta;
 extern f32 lbl_803E4018;
 
-void xyzanimator_update(int obj);
 
 /*
  * --INFO--
@@ -332,9 +331,7 @@ extern int* return0_80056694(int* block, int textureSlot);
 extern int* mapTextureOverrideGetEntry(int idx);
 extern void fn_80137948(char* fmt, ...);
 
-void texframeanimator_update(int* obj);
 
-void texframeanimator_init(int* obj, u8* params);
 
 /* 8b "li r3, N; blr" returners. */
 int explodeanimator_getExtraSize(void);
@@ -496,16 +493,10 @@ typedef struct WaterFallSprayState
 extern undefined4 FUN_80006810();
 extern undefined4 FUN_80006820();
 extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068c4();
 extern undefined4 FUN_800068cc();
 extern undefined4 FUN_800068d0();
-extern uint GameBit_Get(int eventId);
-extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017814();
 extern int FUN_80017a98();
 extern void* ObjGroup_GetObjects();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_80048000();
 extern undefined4 FUN_8004800c();
 extern int FUN_8007f7c0();
@@ -516,18 +507,13 @@ extern undefined4 FUN_800810f4();
 extern undefined4 objInterpretSeq();
 extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
-extern double FUN_80293900();
 
-extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd71c;
 extern f64 DOUBLE_803e4d18;
 extern f64 DOUBLE_803e4d30;
 extern f64 DOUBLE_803e4d40;
 extern f64 DOUBLE_803e4d48;
 extern f64 DOUBLE_803e4d58;
-extern f32 lbl_803DC074;
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern f32 lbl_803E4088;
 extern f32 lbl_803E408C;
 extern f32 lbl_803E4090;
@@ -551,7 +537,6 @@ extern f32 lbl_803E4D38;
 extern f32 lbl_803E4D50;
 extern f32 lbl_803E4D54;
 
-extern EffectInterface** gPartfxInterface;
 extern u8* Obj_GetPlayerObject(void);
 extern f32 sqrtf(f32 value);
 extern f32 mathSinf(f32 angle);

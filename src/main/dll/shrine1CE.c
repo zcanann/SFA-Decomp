@@ -274,7 +274,6 @@ extern void fn_80296B78(int obj, int a);
 extern void fn_80137948(char* fmt, ...);
 extern char sShrineTimeFormat[];
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E518C;
 extern f32 lbl_803E5190;
 extern f32 lbl_803E5194;
@@ -546,12 +545,9 @@ int dll_19C_getExtraSize(void) { return 0x8; }
 int dll_19C_getObjectTypeId(void) { return 0x0; }
 int dll_19D_getExtraSize(void) { return 0x38; }
 int dll_19D_getObjectTypeId(void) { return 0x0; }
-int dll_19E_getExtraSize(void);
-int dll_19E_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E51B0;
-extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

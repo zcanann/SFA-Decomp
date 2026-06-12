@@ -74,7 +74,6 @@ extern f64 lbl_803E5308;
  * EN v1.0 Address: 0x801D1978
  * EN v1.0 Size: 644b
  */
-void ediblemushroom_init(int obj, int aux);
 
 /* Keep the cross-TU bl: target calls this; once it lands in the
  * EnemyMushroom TU (dim_bossgut.c) alongside its callers, dont_inline stops
@@ -217,25 +216,13 @@ typedef struct EnemymushroomPlacement
 } EnemymushroomPlacement;
 
 
-extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
-extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 FUN_8001771c();
-extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017a30();
-extern byte FUN_80017a34();
-extern undefined4 FUN_80017a3c();
 extern undefined4 FUN_80017a68();
-extern int FUN_80017a98();
-extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_RecordObjectHit();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined4 FUN_80081120();
-extern undefined4 FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern double FUN_80293900();
 extern double FUN_80294c4c();
 extern byte FUN_80294ca8();
 extern int FUN_80294cb0();
@@ -309,7 +296,6 @@ void enemymushroom_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int bombplant_getExtraSize(void);
 
 /*
  * --INFO--
@@ -324,7 +310,6 @@ int bombplant_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int bombplant_getObjectTypeId(void);
 
 /*
  * --INFO--
@@ -339,7 +324,6 @@ int bombplant_getObjectTypeId(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void bombplant_free(void);
 
 /*
  * --INFO--
@@ -354,7 +338,6 @@ void bombplant_free(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void bombplant_hitDetect(void);
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E5370;
@@ -368,7 +351,6 @@ extern f32 lbl_803E5378;
 
 void fn_801D2B70(int* obj, int unused, int* p3);
 
-extern f32 lbl_803E52FC;
 extern f32 lbl_803E5350;
 
 /* EN v1.0 0x801D27B8  size: 172b  Mushroom enemy constructor: seeds the state
@@ -427,7 +409,6 @@ extern f32 lbl_803E535C;
 /* EN v1.0 0x801D286C  size: 376b  Bombplant per-tick sequencer: on the armed
  * frame snaps the model to the spawn pose and refreshes hits; otherwise keeps
  * the loop sfx alive, jitters the fuse, and fires the spark particle. */
-int bombplant_SeqFn(int* obj);
 
 extern int objIsFrozen(int* obj);
 extern int EmissionController_IsLingering(u8 * player);
@@ -444,7 +425,6 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern s16 lbl_80326C78[];
 extern f32 lbl_80326C90[];
-extern f32 lbl_803E52F8;
 extern f32 lbl_803E5314;
 extern f32 lbl_803E5318;
 extern f32 lbl_803E531C;

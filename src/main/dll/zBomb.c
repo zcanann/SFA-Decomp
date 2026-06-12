@@ -28,7 +28,6 @@ extern f32 lbl_803E6490;
 #define DFPTARGETBLOCK_POINT_OFFSET_Z 0x0C
 #define DFPTARGETBLOCK_POINT_STRIDE 0x0C
 
-void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetBlockCollisionPoints* collisionPoints);
 
 /*
  * --INFO--
@@ -134,17 +133,13 @@ typedef struct DfpTargetBlockPartfxArgs
 
 extern int ObjHits_GetPriorityHit(DfpTargetBlockObject* obj, DfpTargetBlockObject** hitObj,
                                   int* priority, int flags);
-extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject* obj, u16 sfxId);
 extern f32 sqrtf(f32 value);
 
-extern MapEventInterface** gMapEventInterface;
 extern EffectInterface** gPartfxInterface;
 extern f32 timeDelta;
 extern f32 lbl_803DDCF8;
 extern f32 lbl_803DDCFC;
-extern f32 lbl_803E648C;
-extern f32 lbl_803E6490;
 extern f32 lbl_803E6494;
 extern f32 lbl_803E6498;
 extern f32 lbl_803E649C;
@@ -367,11 +362,6 @@ extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particle
                                   f32 scaleZ, void* args, int arg9);
 
 extern s32 lbl_80329B78[];
-extern f32 timeDelta;
-extern f32 lbl_803E648C;
-extern f32 lbl_803E6494;
-extern f32 lbl_803E64AC;
-extern f32 lbl_803E64B0;
 extern f32 lbl_803E64C4;
 extern f32 lbl_803E64C8;
 extern f32 lbl_803E64CC;

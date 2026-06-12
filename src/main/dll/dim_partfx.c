@@ -599,9 +599,7 @@ extern WaterfxCfg lbl_8039C440;
 
 extern f32 lbl_803DB850;
 extern f32 lbl_803DB854;
-extern f32 lbl_803E01C0;
 extern f32 lbl_803E01C4;
-extern f32 lbl_803E01C8;
 extern f32 lbl_803E01CC;
 extern f32 lbl_803E01D0;
 extern f32 lbl_803E01D4;
@@ -684,9 +682,7 @@ extern f32 lbl_803E0348;
 
 extern f32 lbl_803DB860;
 extern f32 lbl_803DB864;
-extern f32 lbl_803E0228;
 extern f32 lbl_803E022C;
-extern f32 lbl_803E0230;
 extern f32 lbl_803E0234;
 extern f32 lbl_803E0238;
 extern f32 lbl_803E023C;
@@ -6550,7 +6546,6 @@ int Checkpoint_func07(int* obj, int* state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800d7780(undefined param_1);
 
 
 /* Trivial 4b 0-arg blr leaves. */

@@ -215,7 +215,6 @@ extern undefined4 DAT_803dc798;
 extern undefined4 DAT_803dc79c;
 extern undefined4 DAT_803dc7a0;
 extern undefined4 DAT_803dc7a8;
-extern MapEventInterface** gMapEventInterface;
 extern undefined4 DAT_803de3b0;
 extern undefined4 DAT_803de3c0;
 extern undefined4 DAT_803de3da;

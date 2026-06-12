@@ -62,7 +62,6 @@ extern f32 lbl_803E34A0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void collectible_init(int obj, int setup);
 
 
 void magicdust_free(int param_1)
@@ -89,7 +88,6 @@ void magicdust_free(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void collectible_release(void);
 
 /*
  * --INFO--
@@ -104,7 +102,6 @@ void collectible_release(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void collectible_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
 int magicdust_getExtraSize(void) { return 0x288; }
@@ -166,7 +163,6 @@ extern f32 lbl_803E34F8;
 extern f32 lbl_803E34FC;
 extern EffectInterface** gPartfxInterface;
 extern f32 timeDelta;
-extern f32 lbl_803E34B0;
 extern f32 lbl_803E34B4;
 extern f32 lbl_803E34B8;
 extern f32 lbl_803E34BC;
@@ -179,13 +175,9 @@ extern f32 lbl_803E34D4;
 extern f32 lbl_803E34D8;
 extern f32 lbl_803E34DC;
 extern f32 lbl_803E34E0;
-extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern void* ObjGroup_GetObjects();
-extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_SendToObject();
-extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 fn_80174BFC();
 extern u8* Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
@@ -197,7 +189,6 @@ extern f64 DOUBLE_803e41b0;
 extern f64 DOUBLE_803e41b8;
 extern f64 DOUBLE_803e41c8;
 extern f64 DOUBLE_803e41d0;
-extern f32 lbl_803DC074;
 extern f32 lbl_803E4148;
 extern f32 lbl_803E414C;
 extern f32 lbl_803E4150;
@@ -710,7 +701,6 @@ int effectbox_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3508;
-extern void objRenderFn_8003b8f4(f32);
 
 void effectbox_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

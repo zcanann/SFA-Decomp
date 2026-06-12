@@ -253,8 +253,6 @@ extern f32 FLOAT_803e62c8;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 timeDelta;
-extern f32 lbl_803E55F0;
-extern f32 lbl_803E55F4;
 extern f64 lbl_803E5610;
 extern f32 lbl_803E5618;
 extern f32 lbl_803E561C;
@@ -262,9 +260,7 @@ extern f32 lbl_803E5620;
 extern f32 lbl_803E5624;
 extern f32 lbl_803E5628;
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
-extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_GetPlayerObject(void);
 extern u8* Obj_AllocObjectSetup(int size, int objectId);
@@ -275,7 +271,6 @@ extern f32 mathSinf(f32 angle);
 extern f32 mathCosf(f32 angle);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern MapEventInterface** gMapEventInterface;
 extern u16 lbl_80327A60[];
 extern u16 lbl_80327A70[];
 extern f32 lbl_803E5640;
@@ -467,7 +462,6 @@ void sc_totempuzzle_initialise(void)
 }
 
 extern s16 lbl_80327A18[];
-extern f32 lbl_803E55FC;
 extern f32 lbl_803E562C;
 extern f32 lbl_803E5630;
 extern void fn_801DD170(int obj);

@@ -52,7 +52,6 @@ extern f32 lbl_803E3E40;
  * EN v1.0 Address: 0x8018E0A4
  * EN v1.0 Size: 1560b
  */
-void cfccrate_init(int obj, int aux);
 
 typedef struct CFTreasSharpyFxSpawnArgs
 {
@@ -301,7 +300,6 @@ int fxemit_SeqFn(FxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void cfccrate_release(void);
 
 /*
  * --INFO--
@@ -316,7 +314,6 @@ void cfccrate_release(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void cfccrate_initialise(void);
 
 /*
  * --INFO--
@@ -538,7 +535,6 @@ extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017748();
 extern void vecRotateZXY(s16 * in, f32 * out);
-extern u32 randomGetRange(int min, int max);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern void Obj_FreeObject(int obj);
@@ -554,12 +550,9 @@ extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern f32 sqrtf(f32 value);
 
-extern EffectInterface** gPartfxInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern u8 lbl_803DCDE0;
 extern s16 lbl_803DCEB8;
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern f64 DOUBLE_803e4af8;
 extern f32 FLOAT_803e4b00;
 extern f32 lbl_803E3E50;
@@ -644,7 +637,6 @@ void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
 }
 
 #pragma dont_inline on
-void areafxemit_emitBurst(AreaFxEmitObject* obj, int count);
 #pragma dont_inline reset
 
 /*
@@ -711,7 +703,6 @@ void areafxemit_emitBurst(AreaFxEmitObject* obj, int count);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018f650(void);
 
 
 /*
@@ -831,7 +822,6 @@ void FUN_8018f650(void);
  */
 #pragma scheduling off
 #pragma peephole off
-void warpPadFn_8019042c(int obj);
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern u8 lbl_803AC7B0[];
@@ -879,33 +869,20 @@ typedef struct CFEmitterFxArgs
         (args)->pos[2] += (obj)->objAnim.localPosZ;               \
     } while (0)
 
-void areafxemit_emitEffect(AreaFxEmitObject* obj);
 
 int areafxemit_SeqFn(AreaFxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 
-void areafxemit_update(AreaFxEmitObject* obj);
 
-void areafxemit_init(AreaFxEmitObject* obj, AreaFxEmitPlacement* setup);
 
-void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup);
 
-int lfxemitter_setScale(void);
 
-void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void lfxemitter_initialise(void);
 
-int lfxemitter_func0B(LfxEmitterObject* obj);
 
-void fn_8018FF48(undefined2* src, undefined2* dst);
 
-void lfxemitter_update(LfxEmitterObject* obj);
 
-void warpPadPlayerStandingOn(int obj);
 
-void areafxemit_free(AreaFxEmitObject* obj);
 
-void lfxemitter_free(LfxEmitterObject* obj);
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -917,20 +894,10 @@ void fxemit_initialise(void)
 {
 }
 
-void areafxemit_hitDetect(void);
 
-void areafxemit_release(void);
 
-void areafxemit_initialise(void);
 
-void lfxemitter_render(void);
 
-void lfxemitter_hitDetect(void);
 
-void lfxemitter_release(void);
 
 /* 8b "li r3, N; blr" returners. */
-int areafxemit_getExtraSize(void);
-int areafxemit_getObjectTypeId(void);
-int lfxemitter_getExtraSize(void);
-int lfxemitter_getObjectTypeId(void);

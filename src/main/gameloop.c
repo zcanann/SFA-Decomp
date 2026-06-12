@@ -853,7 +853,6 @@ extern void* gScreensInterface;
 extern WaterfxInterface** gWaterfxInterface;
 extern void* gTitleMenuLinkInterface;
 extern void* gPathControlInterface;
-extern MapEventInterface** gMapEventInterface;
 extern void* gBaddieControlInterface;
 extern void* gMinimapInterface;
 extern void* gCarryableInterface;

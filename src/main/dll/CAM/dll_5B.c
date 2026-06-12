@@ -393,7 +393,6 @@ void CameraModeViewfinder_free(int camObj)
     return;
 }
 
-extern void Rcp_SetViewFinderHudEnabled(int on);
 extern void buttonDisable(int port, int mask);
 extern void firstPersonZoomOutOnExit(int a, int b);
 extern void fn_80137948(char* fmt, ...);

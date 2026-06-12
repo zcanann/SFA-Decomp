@@ -14,7 +14,6 @@ extern f32 lbl_803E6618;
 extern u32 GameBit_Get(int id);
 extern int GameBit_Set(int id, int value);
 extern void unlockLevel(int a, int b, int c);
-extern MapEventInterface** gMapEventInterface;
 extern int lbl_8032A1B4[5];
 extern u8 lbl_803DC1B8[8];
 extern u8 lbl_803DC1C0[8];

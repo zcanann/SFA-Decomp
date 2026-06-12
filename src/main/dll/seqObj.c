@@ -35,7 +35,6 @@ extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined8 ObjGroup_RemoveObject();
 
-extern MapEventInterface** gMapEventInterface;
 extern undefined4 DAT_803de6d0;
 extern f64 DOUBLE_803e32d8;
 extern f64 DOUBLE_803e32e0;
@@ -96,7 +95,6 @@ extern f32 lbl_803E3364;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void pressureSwitch_freeSharedResource(void);
 
 /*
  * --INFO--
@@ -111,7 +109,6 @@ void pressureSwitch_freeSharedResource(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void pressureSwitch_ensureSharedResource(void);
 
 
 /*
@@ -543,14 +540,7 @@ extern void* mmAlloc(int size, int tag, int flags);
 extern void* memset(void* dst, int value, uint size);
 extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_800305c4();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHitWithPosition();
-extern int Obj_GetPlayerObject(void);
-extern undefined8 ObjGroup_RemoveObject();
 extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void doRumble(f32 duration);
 extern void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude);
 extern undefined4 FUN_8014d3d0();
@@ -564,9 +554,7 @@ extern undefined4 DAT_8031e980;
 extern undefined4 DAT_8031feac;
 extern undefined4 DAT_8031fead;
 extern f64 DOUBLE_803e3398;
-extern f64 lbl_803E2700;
 extern f64 DOUBLE_803e33f0;
-extern f32 lbl_803DC074;
 extern f32 lbl_803E3368;
 extern f32 lbl_803E336C;
 extern f32 lbl_803E3370;
@@ -611,16 +599,9 @@ extern f32 lbl_803E2750;
 extern f32 lbl_803E2754;
 extern f32 lbl_803E2760;
 extern f32 lbl_803E2764;
-extern f32 timeDelta;
-extern EffectInterface** gPartfxInterface;
-extern int lbl_803DBC80;
 extern void* PTR_DAT_8031fdc4;
-extern f32 sqrtf(f32 x);
 
-extern void wispbaddie_hitDetect(void);
 extern void wispbaddie_init(int obj, int setup, int initialised);
-extern int wispbaddie_getObjectTypeId(void);
-extern int wispbaddie_getExtraSize(void);
 
 void wispbaddie_update(int obj)
 {

@@ -28,7 +28,6 @@ extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_8003b818();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f64 DOUBLE_803e5de0;
 extern f32 lbl_803E5DD0;
 extern f32 lbl_803E5DD4;
@@ -53,7 +52,6 @@ extern f32 lbl_803E5140;
 extern f32 lbl_803E5144;
 extern f64 lbl_803E5148;
 
-void dll_197_init(int obj, int data);
 
 
 /*
@@ -126,9 +124,7 @@ void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void dll_197_release(void);
 
-void dll_197_initialise(void);
 
 void nwsh_levcon_hitDetect(void);
 
@@ -189,7 +185,6 @@ extern int return0_8005669C(int p);
 extern int lbl_803DB610;
 extern u32 lbl_803DDBD8;
 
-int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {
@@ -354,15 +349,11 @@ typedef struct Dll199State
 
 
 extern u32 GameBit_Get(int eventId);
-extern int GameBit_Set(int eventId, int value);
 extern int ObjMsg_Pop(int obj, int* msgOut, int* paramOut, int* flagsOut);
 extern char* ObjGroup_FindNearestObject(int group, char* from, f32* distInOut);
 extern void Obj_FreeObject(char* obj);
 extern f32 Vec_distance(f32 * a, f32 * b);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern ModgfxInterface** gModgfxInterface;
-extern MapEventInterface** gMapEventInterface;
 
 extern byte framesThisStep;
 
@@ -801,7 +792,6 @@ void dll_19A_init(int obj, s8* def)
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5180;
-extern void objRenderFn_8003b8f4(f32);
 
 void dll_19A_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

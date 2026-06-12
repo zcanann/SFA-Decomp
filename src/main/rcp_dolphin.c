@@ -50,7 +50,6 @@ extern undefined4 DAT_8030dac8;
 extern undefined4 DAT_8030dacc;
 extern undefined4 DAT_80378600;
 extern undefined4 DAT_803dc070;
-extern MapEventInterface** gMapEventInterface;
 extern undefined4 DAT_803dd9b0;
 extern undefined4 DAT_803dd9c8;
 extern undefined4 DAT_803dd9c9;

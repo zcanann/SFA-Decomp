@@ -170,7 +170,6 @@ void doorf4_initialise(void)
 /* 8b "li r3, N; blr" returners. */
 int doorf4_getExtraSize(void) { return 0x24; }
 int doorf4_getObjectTypeId(void) { return 0x1; }
-int sidekickball_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3680;
@@ -184,7 +183,6 @@ void doorf4_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 int fn_801793A4(int* obj);
 
-void sidekickball_free(int obj);
 
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
@@ -204,7 +202,6 @@ void doorf4_free(int obj)
 
 extern f32 lbl_803E36A0;
 
-void sidekickball_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
 extern f32 lbl_803E369C;
 extern void ObjHits_DisableObject(int* obj);

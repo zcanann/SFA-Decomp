@@ -52,7 +52,6 @@ static f32 CameraModeStaffAnim_angleToRadians(int angle);
  */
 #pragma scheduling off
 #pragma peephole off
-void CameraModeStaffAnim_init(CameraObject* camera, undefined4 param_2, u8* settings);
 
 void CameraModeBike_copyToCurrent(f32* param_1)
 {
@@ -64,9 +63,7 @@ void CameraModeBike_copyToCurrent(f32* param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void CameraModeStaffAnim_release(void);
 
-void CameraModeStaffAnim_initialise(void);
 
 /* fn_X(lbl); lbl = 0; */
 void CameraModeBike_free(void)
@@ -98,16 +95,13 @@ extern undefined4 setMatrixFromObjectPos();
 extern void Matrix_TransformPoint(void* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
-extern int getAngle(f32 dx, f32 dz);
 extern GameObject* getSbGalleon(void);
 extern int DBprotection_getCameraState(GameObject * obj);
 extern double FUN_80293900();
 extern f32 mathSinf(f32);
-extern f32 sqrtf(f32 value);
 extern f32 mathCosf(f32);
 extern void cameraGetPrevPos2(int obj, float* x, float* y, float* z);
 
-extern CameraModeBikeState* lbl_803DD540;
 extern ViewfinderState* lbl_803DD548;
 extern f64 lbl_803E17B8;
 extern f64 DOUBLE_803e2458;

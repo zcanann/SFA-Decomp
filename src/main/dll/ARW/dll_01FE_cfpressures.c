@@ -217,7 +217,6 @@ extern int FUN_800632f4();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ModgfxInterface** gModgfxInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E6A1C;
 extern f32 lbl_803E6A20;
@@ -237,7 +236,6 @@ extern f32 lbl_803E6A80;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void LaserBeam_update(int obj2);
 
 
 /*
@@ -489,17 +487,12 @@ void dll_1FF_release_nop(void);
 
 void dll_1FF_initialise_nop(void);
 
-void wmlasertarget_free(void);
 
-void wmlasertarget_hitDetect(void);
 
-void wmlasertarget_release(void);
 
-void wmlasertarget_initialise(void);
 
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
 
-void wmlasertarget_update(int* obj);
 
 void dll_200_free_nop(void);
 
@@ -554,8 +547,6 @@ void lightsource_hitDetect(void);
 int pressureswitch_getExtraSize(void) { return 0x8; }
 int pressureswitch_getObjectTypeId(void) { return 0x0; }
 int dll_1FF_getExtraSize_ret_8(void);
-int wmlasertarget_getExtraSize(void);
-int wmlasertarget_getObjectTypeId(void);
 int dll_200_getExtraSize_ret_40(void);
 int dll_200_getObjectTypeId(void);
 int WM_colrise_getExtraSize(void);
@@ -579,11 +570,9 @@ void pressureswitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E5D58);
 }
 
-void wmlasertarget_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void lightsource_render(void* obj, int p1, int p2, int p3, int p4, s8 visible);
 
 /* if (o->_X == K) return A; else return B; */
 int dll_1FF_getObjectTypeId(int* obj);
@@ -596,7 +585,6 @@ int PressureSwitch_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-int WM_colrise_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /* fn_X(lbl); lbl = 0; */
 void LaserBeam_release(void);
@@ -608,7 +596,6 @@ void WM_colrise_init(s16* a, s8* b);
 
 extern int GameBit_Get(int id);
 
-void wmlasertarget_init(char* obj, s8* p);
 
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
@@ -653,10 +640,8 @@ extern void GameBit_Set(int slot, int val);
 int fn_801F2974(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3);
 
 #pragma opt_strength_reduction off
-int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int arg3);
 
 #pragma opt_strength_reduction off
-int fn_801F2974(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3);
 
 extern int textureLoadAsset(int id);
 extern f32 lbl_803E5D10;
@@ -901,4 +886,3 @@ typedef struct ArwAttachTarget
     f32 speed;
 } ArwAttachTarget;
 
-void fn_801F2290(int obj);

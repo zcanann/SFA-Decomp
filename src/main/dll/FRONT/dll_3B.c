@@ -62,7 +62,6 @@ extern f32 lbl_803E1D18;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void TitleMenu_initialise(void);
 
 void* PopDecodedAudioBuffer(int flags)
 {

@@ -611,7 +611,6 @@ void smallbasket_free(int param_1)
     ObjGroup_RemoveObject(param_1, 0x10);
 }
 
-extern MapEventInterface** gMapEventInterface;
 extern f32 lbl_803E3974;
 extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4,
                                  undefined4 p5, double scale);
@@ -750,8 +749,6 @@ extern undefined4 FUN_80006ba8();
 extern uint FUN_80006c00();
 extern double FUN_80017708();
 extern undefined4 FUN_8001771c();
-extern undefined4 FUN_80017748();
-extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
@@ -768,13 +765,8 @@ extern uint FUN_80294db4();
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803de740;
-extern f64 DOUBLE_803e4600;
 extern f64 DOUBLE_803e4638;
 extern f32 lbl_803DC074;
-extern f32 lbl_803E45C8;
-extern f32 lbl_803E45D0;
-extern f32 lbl_803E45E8;
-extern f32 lbl_803E45F0;
 extern f32 lbl_803E460C;
 extern f32 lbl_803E4610;
 extern f32 lbl_803E4614;
@@ -786,7 +778,6 @@ extern f32 lbl_803E4628;
 extern f32 lbl_803E462C;
 extern f32 lbl_803E4630;
 
-extern void* Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern int GameBit_Get(int id);
 extern void Sfx_PlayFromObject(int obj, int sfx);
@@ -801,7 +792,6 @@ extern f64 lbl_803E39C8;
 f32 fn_80183204(int obj);
 
 extern void ObjGroup_AddObject(int obj, int group);
-extern void* lbl_803DDAC0;
 
 void smallbasket_init(int obj, int def)
 {
@@ -884,14 +874,8 @@ extern f32 getXZDistance(f32 * a, f32 * b);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern int* gSHthorntailAnimationInterface;
-extern MapEventInterface** gMapEventInterface;
-extern f32 lbl_803E3930;
 extern f32 lbl_803E3934;
-extern f32 lbl_803E3938;
-extern f32 lbl_803E3950;
-extern f32 lbl_803E3958;
 extern f64 lbl_803E3968;
-extern f32 lbl_803E3974;
 extern f32 lbl_803E3978;
 extern f32 lbl_803E397C;
 extern f32 lbl_803E3980;

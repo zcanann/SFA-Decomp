@@ -114,7 +114,6 @@ extern undefined4 FUN_8028687c();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern EffectInterface** gPartfxInterface;
-extern MapEventInterface** gMapEventInterface;
 
 extern void imicepillar_free(void);
 extern int imicepillar_getObjectTypeId(void);
@@ -150,7 +149,6 @@ void FUN_801ae0_dropped_old_imicepillar_render(undefined8 param_1, undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, char param_6);
 
 
 /*
@@ -285,88 +283,48 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
     imicepillar_getExtraSize,
 };
 
-void imanimspacecraft_modelMtxFn(void);
 
-void imanimspacecraft_hitDetect(void);
 
-void imanimspacecraft_release(void);
 
-void imanimspacecraft_initialise(void);
 
-void imspacethruster_hitDetect(void);
 
-void imspacethruster_release(void);
 
-void imspacethruster_initialise(void);
 
-void imspacering_free(void);
 
-void imspacering_hitDetect(void);
 
-void imspacering_release(void);
 
-void imspacering_initialise(void);
 
-void imspaceringgen_hitDetect(void);
 
-void imspaceringgen_release(void);
 
-void imspaceringgen_initialise(void);
 
-void lavaball1be_hitDetect(void);
 
-void lavaball1be_release(void);
 
-void lavaball1be_initialise(void);
 
-void lavaball1bf_hitDetect(void);
 
-void lavaball1bf_release(void);
 
-void lavaball1bf_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int imanimspacecraft_getExtraSize(void);
-int imanimspacecraft_getObjectTypeId(void);
-int imspacethruster_getExtraSize(void);
-int imspacethruster_getObjectTypeId(void);
-int imspacering_getExtraSize(void);
-int imspacering_getObjectTypeId(void);
-int imspaceringgen_getExtraSize(void);
-int imspaceringgen_getObjectTypeId(void);
-int linkb_levcontrol_getExtraSize(void);
-int link_levcontrol_getExtraSize(void);
-int lavaball1bf_getExtraSize(void);
-int lavaball1bf_getObjectTypeId(void);
 int dimlogfire_getExtraSize(void) { return 0x24; }
 int dimlogfire_getObjectTypeId(void) { return 0x1; }
 
 /* Pattern wrappers. */
 extern u32 lbl_803DDB48;
-void imspaceringgen_free(void);
 
 /* Init: clear obj->_F4 and record obj globally in lbl_803DDB48. */
-void imspaceringgen_init(int* obj);
 
 /* If obj->_F4 == 0, set it to 1; else early-return. */
-void imanimspacecraft_update(int* obj);
 
 /* Free: call vtable[6] on obj through global dll-services pointer. */
-void imanimspacecraft_free(int* obj);
 
 extern f32 lbl_803E4784;
 extern char lbl_803AC948[];
 
-void imanimspacecraft_init(int* obj);
 
 /* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
-int imanimspacecraft_setScale(int* obj, int bitIdx);
 
 /* lavaball1bf "consume" hook: only clear pending flag if both gates set. */
-void lavaball1bf_func11(int* obj);
 
 /* lavaball1bf "request" hook: set pending if gated, return success. */
-int lavaball1bf_setScale(int* obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4768;
@@ -376,24 +334,15 @@ extern f32 lbl_803E4788;
 extern f32 lbl_803E47B8;
 extern f32 lbl_803E4810;
 
-void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void imanimspacecraft_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void imspacethruster_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void imspacering_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* if (o->_X == K) return A; else return B;  pattern. */
-int lavaball1be_getExtraSize(int* obj);
 
-int lavaball1be_getObjectTypeId(int* obj);
 
 /* chained byte mask. */
-u32 imanimspacecraft_func0B(int* obj);
-u32 lavaball1be_func11(int* obj);
 
 int fn_801B0784(int obj, int delta)
 {
@@ -406,30 +355,24 @@ extern void Music_Trigger(int id, int p2);
 extern int getSaveGameLoadStatus(void);
 extern int coordsToMapCell(f32 x, f32 z);
 
-void link_levcontrol_free(int obj);
 
-void link_levcontrol_update(int* obj);
 
 extern void* gSHthorntailAnimationInterface;
 extern void SCGameBitLatch_Update(void* p, int a, int b, int c, int d, int e);
 
-void link_levcontrol_updateAreaMusic(int* obj);
 
 extern void fn_80088870(u8 * a, u8 * b, u8 * c, u8 * d);
 extern void envFxActFn_800887f8(int id);
 extern void getEnvfxAct(int a, int b, int c, int d);
 extern u8 lbl_803239F0[];
 
-void link_levcontrol_applyEnterAreaEffects(int* obj);
 
 extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
 extern void ObjModel_SetBlendChannelWeight(int* model, int channel, f32 weight);
 extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4, lbl_803E4798, lbl_803E4788;
 extern s16 lbl_80323818[], lbl_80323824[];
 
-void imspacethruster_init(int* obj, u8* param2);
 
-void link_levcontrol_init(int* obj);
 
 extern u8 lbl_803238D8[];
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
@@ -450,9 +393,7 @@ typedef struct
     s16 music;
 } LinkbLevState;
 
-void linkb_levcontrol_init(int* obj);
 
-void linkb_levcontrol_update(int* obj);
 
 extern f32 lbl_803E47C0;
 extern u8 framesThisStep;
@@ -470,26 +411,18 @@ typedef struct
     u8 visible;
 } RingGenState;
 
-void imspacering_init(s16* obj, s8* p);
 
-void imspacering_update(s16* obj);
 
-void imspaceringgen_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 
-void imspaceringgen_update(s16* obj);
 
 extern void ModelLightStruct_free(void* light);
 extern void mm_free(void* p);
 
 extern f32 lbl_803E4814;
 
-void lavaball1bf_init(s16* obj, u8* p);
 
-void lavaball1bf_free(int obj, int mode);
 
-void lavaball1be_free(int obj);
 
-void imspacethruster_free(int obj);
 
 void dimlogfire_free(int* obj, int mode)
 {
@@ -582,7 +515,6 @@ void dimlogfire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 extern int modelLightStruct_getActiveState(int* p);
 extern f32 lbl_803E47F0;
 
-void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5);
 
 extern void spawnExplosion(s16* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern void modelLightStruct_updateGlowAlpha(int p);
@@ -599,23 +531,17 @@ typedef struct
     f32 x, y, z;
 } LavaVec;
 
-void lavaball1be_init(s16* obj, u8* p);
 
-void lavaball1be_update(s16* obj);
 
 extern int* objFindTexture(int* obj, int a, int b);
 extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C;
 
-int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;
 
-void imspacethruster_update(int* obj);
 
 
-void lavaball1bf_update(int* obj);
 
-void lavaball1be_setScale(s16* obj, int p2, int p3);
 
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
@@ -670,11 +596,7 @@ typedef struct DimsnowballState
 } DimsnowballState;
 
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_DisableObject();
 extern void fn_80098B18(int obj, f32 scale, int type, int param_4, int param_5, int param_6);
 extern undefined4 ObjGroup_AddObject();
 extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
@@ -683,16 +605,12 @@ extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_startColorFade(int light, int param_2, int param_3);
 extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
 
-extern EffectInterface** gPartfxInterface;
 extern f64 DOUBLE_803e54b0;
 extern f64 DOUBLE_803e54d8;
-extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
-extern u8 framesThisStep;
 extern s16 lbl_803DBEE8;
 extern f32 lbl_803DC074;
 extern s16 gDimSnowballCoords[];
-extern f32 lbl_803E4820;
 extern f32 lbl_803E4824;
 extern f32 lbl_803E4828;
 extern f32 lbl_803E482C;
@@ -977,7 +895,6 @@ void dimsnowball_free(void)
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4848;
-extern void objRenderFn_8003b8f4(f32);
 
 void dimsnowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

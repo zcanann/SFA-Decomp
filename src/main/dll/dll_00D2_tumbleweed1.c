@@ -372,13 +372,7 @@ extern void fn_80166444(int obj, int state);
 extern void updateConstrainedChaseVelocity(int obj, f32 x, f32 y, f32 z, f32 scale);
 
 extern void* gSHthorntailAnimationInterface;
-extern f32 timeDelta;
 extern u8 framesThisStep;
-extern f32 lbl_803E2F5C;
-extern f32 lbl_803E2F84;
-extern f32 lbl_803E2F68;
-extern f32 lbl_803E2F98;
-extern f32 lbl_803E2F9C;
 extern f32 lbl_803E2FA0;
 extern f32 lbl_803E2FA4;
 extern f32 lbl_803E2FA8;
@@ -388,7 +382,6 @@ extern f32 lbl_803E2FB8;
 extern f32 lbl_803E2FBC;
 extern f32 lbl_803E2FC0;
 extern f32 lbl_803E2FC4;
-extern f64 lbl_803E2F90;
 extern f32 lbl_803E2FD8;
 extern f32 lbl_803E2FDC;
 extern f32 lbl_803E2FE0;
@@ -424,7 +417,6 @@ void tumbleweed_update(int obj)
 }
 
 /* 8b "li r3, N; blr" returners. */
-int LandedArwing_ReturnZero(void);
 
 /*
  * --INFO--
@@ -809,7 +801,6 @@ void tumbleweed_updateEffects(int obj)
  * EN v1.0 Address: 0x801650D8
  * EN v1.0 Size: 176b
  */
-int LandedArwing_TriggerLaunchTarget(int obj, int target);
 
 /*
  * --INFO--
@@ -818,7 +809,6 @@ int LandedArwing_TriggerLaunchTarget(int obj, int target);
  * EN v1.0 Address: 0x80165188
  * EN v1.0 Size: 592b
  */
-int LandedArwing_UpdateBounceFade(int obj, u32* stateWord);
 
 /*
  * --INFO--
@@ -827,7 +817,6 @@ int LandedArwing_UpdateBounceFade(int obj, u32* stateWord);
  * EN v1.0 Address: 0x801653D8
  * EN v1.0 Size: 436b
  */
-int LandedArwing_UpdateRetreatChase(int obj, int stateWord);
 
 /*
  * --INFO--

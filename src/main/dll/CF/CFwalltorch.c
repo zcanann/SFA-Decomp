@@ -48,7 +48,6 @@ extern void setDrawCloudsAndLights(int v);
 extern void skyFn_80088c94(int a, int b);
 extern void skyFn_80088e54(int mode, f32 brightness);
 extern void timeOfDayFn_80055000(void);
-extern MapEventInterface** gMapEventInterface;
 extern f32 lbl_803E3E98;
 
 int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
@@ -390,10 +389,7 @@ typedef struct CfDoorlightObjectDef
 } CfDoorlightObjectDef;
 
 
-extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_800400b0();
-extern void warpPadFn_8019042c(int obj);
-extern void warpPadPlayerStandingOn(int obj);
 extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                   f32 scaleZ, void* args, int arg9);
@@ -563,41 +559,21 @@ void transporter_init(int obj, u8* params)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void cflightwall_free(void);
 
-void cflightwall_hitDetect(void);
 
-void cflightwall_update(void);
 
-void cflightwall_release(void);
 
-void cflightwall_initialise(void);
 
-void barrelpad_free(void);
 
-void barrelpad_hitDetect(void);
 
-void barrelpad_release(void);
 
-void barrelpad_initialise(void);
 
-void cf_doorlight_free(void);
 
-void cf_doorlight_render(void);
 
-void cf_doorlight_hitDetect(void);
 
-void cf_doorlight_release(void);
 
-void cf_doorlight_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int cflightwall_getExtraSize(void);
-int cflightwall_getObjectTypeId(void);
-int barrelpad_getExtraSize(void);
-int barrelpad_getObjectTypeId(void);
-int cf_doorlight_getExtraSize(void);
-int cf_doorlight_getObjectTypeId(void);
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3EE8;
@@ -612,18 +588,11 @@ extern f32 lbl_803E3F18;
 extern f32 lbl_803E3F1C;
 extern f32 lbl_803E3F20;
 extern f32 lbl_803E3F24;
-void cflightwall_render(void);
-void barrelpad_render(void);
 
-void barrelpad_update(s16* obj);
 
-void barrelpad_init(s16* obj, u8* def);
 
 extern f32 lbl_803E3EEC;
 extern f32 lbl_803E3EF0;
 
-void cflightwall_init(s16* obj, u8* def);
 
-void cf_doorlight_update(int obj);
 
-void cf_doorlight_init(int* obj, s8* def);

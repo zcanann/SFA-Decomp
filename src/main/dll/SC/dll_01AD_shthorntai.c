@@ -416,7 +416,6 @@ extern u8 gSHthorntailPathData[0x4AC];
 extern undefined4 lbl_803E5410;
 extern EffectInterface** gPartfxInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern MapEventInterface** gMapEventInterface;
 extern SHthorntailPathControlInterface** gPathControlInterface;
 extern f64 lbl_803E5440;
 extern f32 lbl_803E544C;
@@ -813,4 +812,3 @@ void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SHthorntail_updateDustEffects(SHthorntailObject* obj);

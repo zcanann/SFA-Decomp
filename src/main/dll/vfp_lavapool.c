@@ -17,7 +17,6 @@ extern void doRumble(f32 strength);
 extern void ObjGroup_RemoveObject(void* obj, int group);
 extern void ModelLightStruct_free(void* light);
 
-extern MapEventInterface** gMapEventInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 timeDelta;
 extern f32 lbl_803DDB9C;
@@ -310,12 +309,9 @@ extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* 
 extern void* Obj_GetPlayerObject(void);
 extern void modelLightStruct_getSpecularColor(void* light, void* p1, void* p2, void* p3, void* p4);
 extern void modelLightStruct_setGlowColor(void* p1, u8 a, u8 b, u8 c, int d);
-extern int randomGetRange(int min, int max);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803DDBA4;
 extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E4CB8;
 extern f32 lbl_803E4CC8;
 
 /*
@@ -479,10 +475,6 @@ extern void DIMbosstonsil_chooseHitReaction(void);
 extern void DIMbosstonsil_startIdleHitReaction(void);
 
 extern f32 lbl_803DDB98;
-extern f32 lbl_803DDB9C;
-extern f32 lbl_803DDBA0;
-extern f32 lbl_803DDBA4;
-extern f32 lbl_803E4C90;
 extern f32 lbl_803E4C9C;
 extern f32 lbl_803E4CA0;
 extern f32 lbl_803E4CCC;

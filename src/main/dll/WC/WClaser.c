@@ -74,7 +74,6 @@ extern f32 lbl_803E696C;
 extern f32 lbl_803E6970;
 extern f32 lbl_803E6974;
 
-extern MapEventInterface** gMapEventInterface;
 
 #define WM_GALLEON_GAMEBIT_CUTSCENE_DONE 0x429
 #define WM_GALLEON_GAMEBIT_CLEAR_DOOR 0xD1
@@ -121,7 +120,6 @@ extern f32 lbl_803E5CD4;
 extern f32 lbl_803E5CD8;
 extern f32 lbl_803E5CDC;
 
-void WM_ObjCreator_update(int obj);
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -249,7 +247,6 @@ int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-extern uint GameBit_Get(int eventId);
 extern int Obj_GetPlayerObject(void);
 extern void objSetSlot(int* obj, int slot);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);
@@ -258,7 +255,6 @@ extern void fn_80296BBC(int player);
 extern void buttonDisable(int controller, int mask);
 extern void textureFree(void* resource);
 
-extern MapEventInterface** gMapEventInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern ModgfxInterface** gModgfxInterface;
@@ -674,11 +670,6 @@ void dll_1FB_initialise_nop(void)
 {
 }
 
-int LaserBeam_getExtraSize(void);
-int LaserBeam_getObjectTypeId(void);
 
-void LaserBeam_init(int* obj);
 
-void LaserBeam_render(void);
 
-void LaserBeam_hitDetect(void);

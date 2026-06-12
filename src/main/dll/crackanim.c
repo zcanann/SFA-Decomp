@@ -78,7 +78,6 @@ typedef struct
     u8 id40;
 } Dll115MapRow;
 
-void dll_115_update(int obj);
 
 /*
  * --INFO--
@@ -93,7 +92,6 @@ void dll_115_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_115_init(short* obj, int mapData);
 
 /*
  * --INFO--
@@ -108,7 +106,6 @@ void dll_115_init(short* obj, int mapData);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_115_release_nop(void);
 
 /*
  * --INFO--
@@ -123,7 +120,6 @@ void dll_115_release_nop(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_115_initialise_nop(void);
 
 /*
  * --INFO--
@@ -138,7 +134,6 @@ void dll_115_initialise_nop(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int wm_column_getExtraSize(void);
 
 /*
  * --INFO--
@@ -153,7 +148,6 @@ int wm_column_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int wm_column_getObjectTypeId(void);
 
 /*
  * --INFO--
@@ -168,7 +162,6 @@ int wm_column_getObjectTypeId(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void wm_column_free(int obj);
 
 /*
  * --INFO--
@@ -183,7 +176,6 @@ void wm_column_free(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void wm_column_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 
 /*
  * --INFO--
@@ -198,7 +190,6 @@ void wm_column_render(int param_1, int param_2, int param_3, int param_4, int pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void wm_column_hitDetect(void);
 
 /*
  * --INFO--
@@ -213,7 +204,6 @@ void wm_column_hitDetect(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void wm_column_update(int obj);
 
 /*
  * --INFO--
@@ -228,7 +218,6 @@ void wm_column_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void wm_column_init(short* obj, int mapData);
 
 /*
  * --INFO--
@@ -243,7 +232,6 @@ void wm_column_init(short* obj, int mapData);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void wm_column_release(void);
 
 /*
  * --INFO--
@@ -258,7 +246,6 @@ void wm_column_release(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void wm_column_initialise(void);
 
 ObjectDescriptor gWM_ColumnObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

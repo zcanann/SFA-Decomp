@@ -172,7 +172,6 @@ void deathgas_init(int* obj);
 
 int fuelcell_func0B(int* obj);
 
-void fuelcell_modelMtxFn(u8* model);
 
 void fuelcell_free(int* obj);
 
@@ -180,7 +179,6 @@ void fuelcell_init(int* obj);
 
 extern void disableHeavyFog(void);
 
-void deathgas_free(int* obj);
 
 extern int playerIsDisguised(void);
 extern f32 Vec_distance(void* a, void* b);
@@ -298,19 +296,15 @@ typedef struct KtTorchPlacement
 } KtTorchPlacement;
 
 
-extern u32 randomGetRange(int min, int max);
 extern void ModelLightStruct_free(void* effect);
 extern u32 GameBit_Get(int bit);
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern void objRenderFn_8003b8f4(f32);
 extern void queueGlowRender(void* effect);
 extern void* SUB42();
 
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern u8 framesThisStep;
 extern f64 DOUBLE_803e4a08;
-extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803e49b0;
 extern f32 FLOAT_803e49b4;
 extern f32 FLOAT_803e49b8;
@@ -326,7 +320,6 @@ extern f32 FLOAT_803e4a00;
 extern f32 FLOAT_803e4a10;
 extern f32 FLOAT_803e4a14;
 extern f32 FLOAT_803e4a18;
-extern f32 timeDelta;
 extern f32 lbl_803E3D64;
 extern f32 lbl_803E3D68;
 extern f64 lbl_803E3D70;
@@ -760,10 +753,7 @@ int campfire_getExtraSize(void) { return 0x14; }
 int campfire_getObjectTypeId(void) { return 0x1; }
 int kt_torch_getExtraSize(void) { return 0x0; }
 int kt_torch_getObjectTypeId(void) { return 0x0; }
-int cfccrate_getExtraSize(void);
-int cfccrate_getObjectTypeId(void);
 
-void cfccrate_free(int obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 void kt_torch_render(int p1, int p2, int p3, int p4, int p5, s8 visible)

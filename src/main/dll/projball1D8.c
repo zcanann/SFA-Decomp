@@ -22,7 +22,6 @@ extern void gameTextShow(int p);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
-extern MapEventInterface** gMapEventInterface;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5F10;
 extern f32 lbl_803E5F14;
@@ -362,7 +361,6 @@ void nw_levcontrol_init(int* obj)
 extern int ObjList_FindObjectById(int objectId);
 extern int ObjTrigger_IsSetById();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 /*
  * --INFO--
@@ -424,7 +422,6 @@ int nw_levcontrol_getExtraSize(void)
     return 0x14;
 }
 
-extern MapEventInterface** gMapEventInterface;
 extern void gameTimerStop(void);
 
 /* EN v1.0 0x801CFECC  size: 84b  nw_levcontrol_free: dispatches the object's

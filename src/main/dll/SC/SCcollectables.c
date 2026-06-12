@@ -180,7 +180,6 @@ extern void unlockLevel(int a, int b, int c);
 extern int mapGetDirIdx(int mapId);
 extern void lockLevel(int dirIdx, int locked);
 extern void mapUnload(int dirIdx, int flags);
-extern MapEventInterface** gMapEventInterface;
 
 #define WARPSTONE_MAP_EVENT_SET(mapId, value) \
     (*gMapEventInterface)->setMode((mapId), (value))
@@ -456,7 +455,6 @@ typedef struct WarpstoneState
 } WarpstoneState;
 
 
-extern int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj);
 
 extern u32 GameBit_Get(int eventId);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32* outDistance);
@@ -739,4 +737,3 @@ void warpstone_init(int obj, u8* setup)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int sh_levelcontrol_getExtraSize(void);

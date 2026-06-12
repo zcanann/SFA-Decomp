@@ -22,7 +22,6 @@ extern undefined4 SH_LevelControl_runBloopEvent();
 
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f64 DOUBLE_803e5b18;
 extern f64 DOUBLE_803e5b28;
 extern f32 lbl_803DC074;
@@ -115,7 +114,6 @@ STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
 #define DFSH_REWARD_BIT(idx) (base[(idx)])
 #define DFSH_REWARD_DELAY(idx) (base[10 + (idx)])
@@ -125,7 +123,6 @@ void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 #define DFSH_SHRINE_FLAG_SUCCESS 0x40
 #define DFSH_SHRINE_FLAG_OPENED_BY_SEQUENCE 0x80
 
-void dfsh_shrine_update(int obj);
 
 /*
  * --INFO--
@@ -234,7 +231,6 @@ typedef struct SpiritPrizeState
     f32 sfxTimer;
 } SpiritPrizeState;
 
-void SpiritPrize_free(int obj);
 
 extern void modelLightStruct_setLightKind(void* light, int v);
 extern void modelLightStruct_setDiffuseColor(void* light, int a, int b, int c, int d);
@@ -270,7 +266,6 @@ void dfsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void SpiritPrize_update(int obj);
 
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
@@ -297,7 +292,6 @@ extern undefined4 FUN_8001759c();
 extern undefined4 FUN_800175b0();
 extern undefined4 FUN_800175d0();
 extern void* FUN_80017624();
-extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
@@ -307,18 +301,14 @@ extern undefined4 FUN_80017b00();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80053754();
 extern int FUN_8005b024();
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int objectId);
 extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, int parent);
-extern f32 timeDelta;
 
 extern undefined4 DAT_803dc071;
 extern void* DAT_803de838;
 extern f64 DOUBLE_803e5b38;
 extern f64 DOUBLE_803e5b40;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E5B30;
 extern f32 lbl_803E5B34;
 extern f32 lbl_803E5B48;
 extern f32 lbl_803E5B4C;
@@ -428,7 +418,6 @@ extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDBB8;
 extern void textureFree(void* tex);
 
-void DFSH_LaserBeam_init(int* obj);
 
 /*
  * --INFO--
@@ -495,10 +484,6 @@ void dfsh_objcreator_init(int obj, s8* def)
 }
 
 /* Trivial 4b 0-arg blr leaves. */
-void DFSH_LaserBeam_render(void);
 
-void DFSH_LaserBeam_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
-int DFSH_LaserBeam_getExtraSize(void);
-int DFSH_LaserBeam_getObjectTypeId(void);

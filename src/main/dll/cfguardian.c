@@ -718,7 +718,6 @@ void mmp_bridge_initialise(void)
 }
 
 extern f32 lbl_803E3778;
-extern undefined4 pressureswitchfb_updateStateMode(int obj, undefined4 param_2, int stateParam);
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 extern void fn_80137948(char* fmt, ...);
 
@@ -1391,7 +1390,6 @@ void doorlock_init(short* obj, DoorLockPlacement* config)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017c5c4(int param_1);
 
 /*
  * --INFO--
@@ -1421,7 +1419,6 @@ undefined4 FUN_8017c608(undefined8 param_1, double param_2, double param_3, unde
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void seqObject_free(int obj);
 
 /*
  * --INFO--
@@ -1436,7 +1433,6 @@ void seqObject_free(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void seqObject_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 
 /*
  * --INFO--
@@ -1451,7 +1447,6 @@ void seqObject_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void seqObject_update(int obj);
 
 /*
  * --INFO--
@@ -1466,7 +1461,6 @@ void seqObject_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void seqObject_init(short* param_1, int param_2);
 
 
 /*
@@ -1482,7 +1476,6 @@ void seqObject_init(short* param_1, int param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void seqObj2_free(int obj);
 
 /*
  * --INFO--
@@ -1497,7 +1490,6 @@ void seqObj2_free(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void seqObj2_update(int obj);
 
 /*
  * --INFO--
@@ -1512,7 +1504,6 @@ void seqObj2_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void seqObj2_init(short* param_1, int param_2);
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -1543,4 +1534,3 @@ void seqObj2_init(short* param_1, int param_2);
  * its GameBit, compare against the def[0x30] mask bit for that slot, and
  * if the polarity flips (GameBit != mask bit) end the current sequence.
  * Always latches state[1] bit 0 before returning 0. */
-int immultiseq_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate);

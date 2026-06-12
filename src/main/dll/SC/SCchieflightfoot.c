@@ -34,7 +34,6 @@ extern u8 gSHthorntailPathData[0x4AC];
 extern undefined4 lbl_803E5410;
 extern EffectInterface** gPartfxInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern MapEventInterface** gMapEventInterface;
 extern SHthorntailPathControlInterface** gPathControlInterface;
 extern f32 timeDelta;
 extern f64 lbl_803E5428;
@@ -111,7 +110,6 @@ typedef struct SHthorntailTailSwingEffectScratch
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SHthorntail_update(SHthorntailObject* obj);
 
 /*
  * --INFO--
@@ -126,7 +124,6 @@ void SHthorntail_update(SHthorntailObject* obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config);
 
 /*
  * --INFO--

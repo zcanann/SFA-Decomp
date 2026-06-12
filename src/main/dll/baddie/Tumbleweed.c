@@ -60,7 +60,6 @@ extern undefined4 FUN_80246dcc();
 extern undefined4 DAT_803dc818;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern EffectInterface** gPartfxInterface;
-extern MapEventInterface** gMapEventInterface;
 extern undefined4 DAT_803de5a8;
 extern undefined4 DAT_803de5c4;
 extern undefined4 DAT_803de62b;

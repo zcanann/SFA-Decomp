@@ -1660,7 +1660,6 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void* gTitleMenuControlInterface;
 extern void* gModgfxInterface;
 extern WaterfxInterface** gWaterfxInterface;
-extern MapEventInterface** gMapEventInterface;
 
 
 extern void fn_802B4DE0(u8* obj, int flag);

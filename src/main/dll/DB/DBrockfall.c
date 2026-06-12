@@ -26,7 +26,6 @@ extern uint countLeadingZeros();
 extern undefined4 DAT_80328730;
 extern undefined4 DAT_80328734;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern MapEventInterface** gMapEventInterface;
 extern undefined4 DAT_803de890;
 extern f32 lbl_803E6310;
 extern EffectInterface** gPartfxInterface;
@@ -46,7 +45,6 @@ extern f32 lbl_803E56B4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void paymentkiosk_init(int obj, PaymentKioskMapData* initData);
 
 typedef struct FEseqobjectEffectParams
 {
@@ -231,9 +229,7 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void paymentkiosk_release(void);
 
-void paymentkiosk_initialise(void);
 
 void FEseqobject_free(void)
 {

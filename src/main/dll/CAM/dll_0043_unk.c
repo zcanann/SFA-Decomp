@@ -259,10 +259,7 @@ extern f32 mathCosf(f32 angle);
 
 extern CameraModeBikeState* lbl_803DD540;
 extern f64 lbl_803E1750;
-extern f32 lbl_803E1740;
 extern f32 lbl_803E1744;
-extern f32 lbl_803E1758;
-extern f32 lbl_803E175C;
 extern f32 lbl_803E1760;
 extern f32 lbl_803E1764;
 extern f32 lbl_803E1768;
@@ -493,7 +490,6 @@ void CameraModeStaffAnim_init(CameraObject* camera, undefined4 param_2, u8* sett
     }
 }
 
-void CameraModeBike_copyToCurrent(f32* param_1);
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -506,4 +502,3 @@ void CameraModeStaffAnim_initialise(void)
 }
 
 /* fn_X(lbl); lbl = 0; */
-void CameraModeBike_free(void);

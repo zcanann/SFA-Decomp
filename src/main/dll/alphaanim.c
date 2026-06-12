@@ -100,7 +100,6 @@ STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void doorlock_init(short* obj, DoorLockPlacement* config);
 
 
 /*

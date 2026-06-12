@@ -124,7 +124,6 @@ extern undefined4 DAT_802c2a88;
 extern undefined4 DAT_802c2a8c;
 extern undefined4 DAT_802c2a90;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f32 lbl_803E53D0;
 extern f32 lbl_803E53E0;
 extern f32 lbl_803E53F0;
@@ -537,7 +536,6 @@ void dll_16C_initialise(void)
 {
 }
 
-void imicepillar_free(void);
 
 /* 8b "li r3, N; blr" returners. */
 int imicemountain_getExtraSize(void) { return 0x14; }
@@ -547,8 +545,6 @@ int crrockfall_getObjectTypeId(void) { return 0x0; }
 int magiclight_getObjectTypeId(void) { return 0x0; }
 int dll_16C_getExtraSize(void) { return 0x24; }
 int dll_16C_getObjectTypeId(void) { return 0x3; }
-int imicepillar_getExtraSize(void);
-int imicepillar_getObjectTypeId(void);
 
 /* Pattern wrappers. */
 extern void* lbl_803DDB40;

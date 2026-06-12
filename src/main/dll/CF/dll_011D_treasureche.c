@@ -53,7 +53,6 @@ typedef struct
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void staffactivated_init(int obj, int setup);
 
 /*
  * --INFO--
@@ -167,9 +166,7 @@ void treasurechest_hitDetect(int obj)
 #include "main/objseq.h"
 #include "main/resource.h"
 
-extern uint GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
-extern void ObjHits_DisableObject(int obj);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32* maxDistance);
 extern void fn_802967E0(void* obj, int enabled);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
@@ -202,11 +199,9 @@ typedef struct ChestHitBlock
 } ChestHitBlock;
 
 extern ChestHitParams lbl_802C22B0;
-extern void* lbl_803DDAE0;
 extern int lbl_803DDAE4;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f32 lbl_803E3C20;
 extern f32 lbl_803E3C28;
 extern f32 lbl_803E3C2C;
 
@@ -341,7 +336,6 @@ void treasurechest_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int magiccavebottom_getExtraSize(void);
 
 void magiccavebottom_free(int obj);
 

@@ -181,7 +181,6 @@ extern f32 getXZDistance(f32 * a, f32 * b);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern int* gSHthorntailAnimationInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f32 lbl_803E3930;
 extern f32 lbl_803E3934;
 extern f32 lbl_803E3938;
@@ -218,4 +217,3 @@ typedef struct
  * EN v1.0 Address: 0x801826E8
  * EN v1.0 Size: 2476b
  */
-void smallbasket_update(int obj);

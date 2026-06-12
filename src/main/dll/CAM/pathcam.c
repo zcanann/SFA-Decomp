@@ -40,11 +40,8 @@ extern f32 lbl_803E1748;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void pathcam_loadSettings(CameraObject* cam, int mode, u8* data);
 
-void camcontrol_releaseModeSettings(void);
 
-void camcontrol_initialiseModeSettings(void);
 
 void camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, undefined4 param_4, int param_5)
 {

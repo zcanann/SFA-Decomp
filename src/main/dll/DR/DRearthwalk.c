@@ -33,7 +33,6 @@ typedef struct ShLevelcontrolState
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sh_levelcontrol_update(int obj);
 
 
 /* Trivial 4b 0-arg blr leaves. */

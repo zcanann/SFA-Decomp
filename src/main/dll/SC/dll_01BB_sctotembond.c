@@ -82,7 +82,6 @@ extern f32 mathSinf(f32 angle);
 extern f32 mathCosf(f32 angle);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern MapEventInterface** gMapEventInterface;
 extern u16 lbl_80327A60[];
 extern u16 lbl_80327A70[];
 extern f32 lbl_803E5640;

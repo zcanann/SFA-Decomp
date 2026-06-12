@@ -19,7 +19,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void chuka_init(int obj, int params);
 
 /*
  * --INFO--
@@ -63,7 +62,6 @@ int dfpfloorbar_getObjectTypeId(void) { return 0; }
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void chuka_release(void);
 
 /*
  * --INFO--
@@ -78,7 +76,6 @@ void chuka_release(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void chuka_initialise(void);
 
 /*
  * --INFO--
@@ -152,7 +149,6 @@ u8 gDfpfloorbarModeTable[DFPFLOORBAR_MODE_TABLE_STORAGE] = {
     0, 0, 0, 0,
     0, 0, 0, 0,
 };
-extern MapEventInterface** gMapEventInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E640C;
 extern f32 lbl_803E6410;

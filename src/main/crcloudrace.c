@@ -14,7 +14,6 @@ extern f32 lbl_803E6748;
 extern void loadMapAndParent(int mapId);
 extern int lockLevel(int mapDir, int flags);
 extern int mapGetDirIdx(int mapId);
-extern MapEventInterface** gMapEventInterface;
 extern int Obj_GetPlayerObject(void);
 extern void setMotionBlur(int mode, f32 amount);
 extern u32 fn_802972A8(int obj);

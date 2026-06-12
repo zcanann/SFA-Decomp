@@ -86,7 +86,6 @@ extern f32 sqrtf(f32 x);
  * EN v1.0 Address: 0x80164EE4
  * EN v1.0 Size: 72b
  */
-void tumbleweed_update(int obj);
 
 /* 8b "li r3, N; blr" returners. */
 int LandedArwing_ReturnZero(void) { return 0x0; }
@@ -98,7 +97,6 @@ int LandedArwing_ReturnZero(void) { return 0x0; }
  * EN v1.0 Address: 0x801641B0
  * EN v1.0 Size: 1936b
  */
-void tumbleweed_updateStateMachine(int obj);
 
 /*
  * --INFO--
@@ -107,7 +105,6 @@ void tumbleweed_updateStateMachine(int obj);
  * EN v1.0 Address: 0x80164F2C
  * EN v1.0 Size: 420b
  */
-void tumbleweed_init(int obj, int defData);
 
 /*
  * --INFO--
@@ -116,7 +113,6 @@ void tumbleweed_init(int obj, int defData);
  * EN v1.0 Address: 0x80164C44
  * EN v1.0 Size: 672b
  */
-void tumbleweed_updateEffects(int obj);
 
 /*
  * --INFO--
@@ -321,4 +317,3 @@ update_action:
  * EN v1.0 Address: 0x80164940
  * EN v1.0 Size: 772b
  */
-void tumbleweed_updateTargetedStateMachine(int obj);

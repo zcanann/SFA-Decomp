@@ -53,7 +53,6 @@ extern f32 timeDelta;
 extern f32 lbl_803E2F34;
 extern f32 lbl_803E2F38;
 
-void cannonclaw_update(u8* obj);
 
 
 /*

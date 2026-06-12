@@ -189,7 +189,6 @@ extern undefined4 SH_LevelControl_runBloopEvent();
 extern uint countLeadingZeros();
 
 extern EffectInterface** gPartfxInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f64 DOUBLE_803e56e8;
 extern f64 DOUBLE_803e5708;
 extern f64 DOUBLE_803e5730;
@@ -259,7 +258,6 @@ extern int* gSHthorntailAnimationInterface;
 extern f32 lbl_803E4A24;
 extern f32 timeDelta;
 
-void dim_levelcontrol_update(int obj);
 
 /*
  * --INFO--
@@ -365,39 +363,22 @@ void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void dll_1CF_free(void);
 
-void dll_1CF_hitDetect(void);
 
-void dll_1CF_update(void);
 
-void dll_1CF_release(void);
 
-void dll_1CF_initialise(void);
 
-void dim_tricky_free(void);
 
-void dim_tricky_hitDetect(void);
 
-void dim2conveyor_hitDetect(void);
 
-void dim2conveyor_release(void);
 
-void dim2conveyor_initialise(void);
 
-void dll_1D6_hitDetect(void);
 
-void dll_1D6_release(void);
 
-void dll_1D6_initialise(void);
 
-void dim2snowball_free(void);
 
-void dim2snowball_hitDetect(void);
 
-void dim2snowball_release(void);
 
-void dim2snowball_initialise(void);
 
 void dim2pathgenerator_free(void);
 
@@ -414,24 +395,13 @@ void dll_1DA_free(void)
 }
 
 /* 8b "li r3, N; blr" returners. */
-int dll_1CF_getExtraSize(void);
-int dll_1CF_getObjectTypeId(void);
-int dim_tricky_getExtraSize(void);
-int dim_tricky_getObjectTypeId(void);
 int dimtruthhornice_getExtraSize(void);
-int dim2conveyor_getExtraSize(void);
-int dim2conveyor_getObjectTypeId(void);
-int dll_1D6_getExtraSize(void);
-int dll_1D6_getObjectTypeId(void);
-int dim2snowball_getExtraSize(void);
-int dim2snowball_getObjectTypeId(void);
 int dim2pathgenerator_getExtraSize(void);
 int dim2pathgenerator_getObjectTypeId(void);
 int dll_1DA_getExtraSize(void) { return 0x8; }
 int dll_1DA_getObjectTypeId(void) { return 0x0; }
 
 /* 16b chained patterns. */
-void dim_tricky_init(int* obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4A30;
@@ -441,13 +411,9 @@ extern f32 lbl_803E4A78;
 extern f32 lbl_803E4AA0;
 extern f32 lbl_803E4AD8;
 
-void dll_1CF_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dim2conveyor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -457,15 +423,12 @@ void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E4A38;
-void dim_tricky_render(void);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void dim2conveyor_free(int x);
 
 /* dim2conveyor_setScale: per-area scale/sign + music latch for two specific map ids. */
 extern void Music_Trigger(int trackId, int restart);
 
-void dim2conveyor_setScale(int* obj, int unused, f32* outX, f32* outY);
 
 extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, uint* outHitVolume);
 extern float Vec_distance(float* a, float* b);
@@ -507,7 +470,6 @@ void dim2pathgenerator_init(int* obj, int* def);
 
 void dimtruthhornice_init(int* obj, int* def);
 
-void dim2snowball_init(int* obj, int* def);
 
 void dll_1CF_init(int* obj, int* def);
 
@@ -517,7 +479,6 @@ extern void unlockLevel(int a, int b, int c);
 
 void dim_levelcontrol_init(int obj);
 
-void dim_tricky_update(int* obj);
 
 extern f32 mathCosf(f32 x);
 extern f32 mathSinf(f32 x);
@@ -527,9 +488,7 @@ extern f32 lbl_803E4A64;
 extern f32 lbl_803E4A68;
 extern f32 lbl_803E4A6C;
 
-void dim2conveyor_init(int* obj, u8* params);
 
-void dim2conveyor_update(int* obj);
 
 extern void* mmAlloc(int size, int a, int b);
 extern void ObjModel_SetBlendChannelTargets(int* model, int a, int b, int c, f32 w, int d);
@@ -579,7 +538,6 @@ extern f32 lbl_803E4AC0;
 extern f64 lbl_803E4AC8;
 extern f32 lbl_803E4AD0;
 
-void dim2snowball_update(int* obj);
 
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
@@ -689,21 +647,13 @@ typedef struct Dll1DBState
 } Dll1DBState;
 
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_AddContactObject();
 extern int ObjHits_GetPriorityHit();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 SH_LevelControl_runBloopEvent();
 
-extern EffectInterface** gPartfxInterface;
 extern f64 DOUBLE_803e57c0;
 extern f64 DOUBLE_803e57d8;
 extern f64 DOUBLE_803e57f8;
 extern f64 DOUBLE_803e5820;
-extern f32 lbl_803DC074;
 extern f32 lbl_803E5770;
 extern f32 lbl_803E5774;
 extern f32 lbl_803E5778;
@@ -911,12 +861,8 @@ typedef struct
     u8 rest : 7;
 } IceFloeFlags;
 
-extern int ObjList_FindObjectById(int id);
 extern void Curve_BuildHermiteCoeffs();
 extern void fn_80296D20(void* player, int obj);
-extern u8 framesThisStep;
-extern f32 timeDelta;
-extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803E4B34;
 extern f32 lbl_803E4B38;
 extern f32 lbl_803E4B3C;
@@ -1288,8 +1234,6 @@ void dll_1DB_update(int obj)
  * fall, land on contact object, clamp to floor height. */
 extern f32 sqrtf(f32 x);
 extern void saveGame_saveObjectPos(int obj);
-extern f32 lbl_803E4AD8;
-extern f32 lbl_803E4ADC;
 extern f32 lbl_803E4AE0;
 extern f32 lbl_803E4AE4;
 extern f32 lbl_803E4AE8;
@@ -1536,7 +1480,6 @@ int dll_1DF_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4B08;
-extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4B30;
 extern f32 lbl_803E4B68;
 extern f32 lbl_803E4B90;
@@ -1634,7 +1577,6 @@ void dim2lavacontrol_setScale(void* obj)
 
 /* dim2lavacontrol_free: stop lava sfx, kill the lava music track, refresh time-of-day. */
 extern void fn_8004C1E4(int sfxId, f32 vol);
-extern void Music_Trigger(int trackId, int restart);
 extern void timeOfDayFn_80055000(void);
 
 void dim2lavacontrol_free(void)
@@ -1651,7 +1593,6 @@ void dim2lavacontrol_free(void)
  *   - Then if (distance^2 from player to obj position < lbl_803E4BA0) and sub.f24
  *     decremented by timeDelta is < lbl_803E4B9C, call gPartfxInterface->vt[2] with
  *     (obj, 525, 0, 2, -1, 0) and reset sub.f24 to lbl_803E4BA4. */
-extern void* Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4;
 
@@ -1714,7 +1655,6 @@ void dll_1DB_init(void* obj, void* p)
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
-extern int getSaveGameLoadStatus(void);
 extern void envFxActFn_800887f8(int a);
 extern u8 lbl_803DBF28[8];
 
@@ -1766,8 +1706,6 @@ void dim2lavacontrol_init(int obj, int param2)
     envFxActFn_800887f8(0);
 }
 
-extern void getEnvfxActImmediately(int a, int b, int id, int d);
-extern void getEnvfxAct(int a, int b, int id, int d);
 extern int fn_802966D4(void* obj, f32* out);
 extern void SCGameBitLatch_UpdateInverted(void* p, int mask, int a, int b, int e1, int e2);
 

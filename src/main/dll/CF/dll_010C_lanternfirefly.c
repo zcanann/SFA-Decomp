@@ -314,13 +314,9 @@ extern undefined4 FUN_80017620();
 extern void* FUN_80017624();
 extern undefined4 FUN_80017680();
 extern undefined4 FUN_80017688();
-extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_8001771c();
 extern undefined4 FUN_80017748();
-extern u32 randomGetRange(int min, int max);
-extern int Obj_GetPlayerObject(void);
 extern undefined4 FUN_80017ac8();
-extern void Obj_FreeObject(int obj);
 extern void gameBitDecrement(int eventId);
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80061a80();
@@ -331,7 +327,6 @@ extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803de758;
 extern f64 DOUBLE_803e4748;
 extern f32 FLOAT_803dca40;
-extern f32 timeDelta;
 extern f32 FLOAT_803e4724;
 extern f32 FLOAT_803e4728;
 extern f32 FLOAT_803e4730;
@@ -345,28 +340,20 @@ extern f32 FLOAT_803e4758;
 extern f32 FLOAT_803e475c;
 extern f32 FLOAT_803e4760;
 extern f32 FLOAT_803e476c;
-extern f32 lbl_803E3AA0;
 extern f32 lbl_803E3A98;
 extern f32 lbl_803E3A9C;
-extern f32 lbl_803E3AA8;
 extern f64 lbl_803E3AB0;
-extern f32 lbl_803E3AC0;
-extern f32 lbl_803E3AC4;
 extern f32 lbl_803E3AC8;
 extern f32 lbl_803E3ACC;
 extern f32 lbl_803E3AD0;
 extern f32 lbl_803E3AD4;
-extern f32 lbl_803E3AB8;
 extern f32 lbl_803E3AD8;
 extern f32 lbl_803E3ADC;
 extern f32 lbl_803E3AE0;
 extern f32 lbl_803E3AEC;
 extern f32 lbl_803DBDD8;
-extern u8 framesThisStep;
-extern u8 lbl_803DDAD8;
 extern EffectInterface** gPartfxInterface;
 extern f32 Curve_EvalBSpline(f32* control, f32 t, f32* out);
-extern f32 Vec_distance(void* a, void* b);
 extern int objCreateLight(int obj, int type);
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
@@ -396,8 +383,6 @@ void LanternFireFly_hitDetect(void)
 #define LANTERN_FIREFLY_MODE(state) (((u32)(state)->modeFlags >> 6) & 3)
 #define LANTERN_FIREFLY_IS_ACTIVE(state) (LANTERN_FIREFLY_MODE(state) == 1u)
 
-extern void fn_801868D0(int obj);
-extern void fn_801869DC(int obj);
 
 void LanternFireFly_update(int obj)
 {

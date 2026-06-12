@@ -113,7 +113,6 @@ extern f32 lbl_803E30F8;
 extern f32 lbl_803E3108;
 extern f32 lbl_803E310C;
 
-void kaldachompspit_init(int obj);
 
 
 #pragma dont_inline on
@@ -134,7 +133,6 @@ void fn_8016A660(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void pollenfragment_init(int obj, int config);
 
 
 /*
@@ -150,29 +148,18 @@ void pollenfragment_init(int obj, int config);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void kaldachompspit_release(void);
 
-void kaldachompspit_initialise(void);
 
-void pinponspike_render(void);
 
-void pinponspike_hitDetect(void);
 
-void pinponspike_release(void);
 
-void pinponspike_initialise(void);
 
-void pollen_release(void);
 
-void pollen_initialise(void);
 
-void pollenfragment_release(void);
 
-void pollenfragment_initialise(void);
 
 void mikabomb_hitDetect(void)
 {
@@ -181,15 +168,10 @@ void mikabomb_hitDetect(void)
 extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E313C;
 
-void pinponspike_free(int obj);
 
-void pollen_free(int obj);
 
-void pinponspike_init(int obj);
 
-void pollen_hitDetect(int obj);
 
-void pollenfragment_free(int obj);
 
 void mikabomb_free(int obj, int mode)
 {
@@ -203,12 +185,6 @@ void mikabomb_free(int obj, int mode)
 }
 
 /* 8b "li r3, N; blr" returners. */
-int pinponspike_getExtraSize(void);
-int pinponspike_getObjectTypeId(void);
-int pollen_getExtraSize(void);
-int pollen_getObjectTypeId(void);
-int pollenfragment_getExtraSize(void);
-int pollenfragment_getObjectTypeId(void);
 int mikabomb_getExtraSize(void) { return 0x10; }
 int mikabomb_getObjectTypeId(void) { return 0x0; }
 
@@ -217,7 +193,6 @@ extern f32 lbl_803E3138;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E31C0;
 
-void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -352,7 +327,6 @@ PollenFragmentConfig* lbl_8032059C[] = {
 extern int fn_80080150(int p);
 extern f32 lbl_803E3158;
 
-void pollenfragment_render(int* obj, int p2, int p3, int p4, int p5);
 
 ObjectDescriptor gPollenFragmentObjDescriptor = {
     0,
@@ -373,7 +347,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 
 extern f32 lbl_803E3148;
 
-void pollen_init(int* obj);
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
 
@@ -424,13 +397,9 @@ extern void PSVECAdd(void* a, void* b, void* out);
 
 int fn_80169EF4(f32 speed, f32 grav, f32* from, f32* to, u8 flag);
 
-void pinponspike_update(int obj);
 
-void pollen_update(int obj);
 
-void pollenfragment_hitDetect(int obj);
 
-void pollenfragment_update(int obj);
 
 #include "ghidra_import.h"
 #include "main/obj_placement.h"
@@ -871,9 +840,7 @@ extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
 extern undefined8 FUN_8002fc3c();
-extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_SetHitVolumeSlot();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
@@ -881,7 +848,6 @@ extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
 extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
-extern undefined4 FUN_8003b818();
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
 extern undefined4 FUN_800810f8();
@@ -909,8 +875,6 @@ extern undefined4 DAT_803ad330;
 extern undefined4 DAT_803ad334;
 extern undefined4 DAT_803ad338;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern ModgfxInterface** gModgfxInterface;
-extern EffectInterface** gPartfxInterface;
 extern void** gTitleMenuControlInterfaceCopy;
 extern f64 DOUBLE_803e3e28;
 extern f64 DOUBLE_803e3e50;
@@ -1831,7 +1795,6 @@ void FUN_80170048(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3420;
 
 void checkpoint4_render(int param_1)
@@ -1898,8 +1861,6 @@ void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* place
 }
 
 extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_GetPlayerObject(void);
-extern void* getTrickyObject(void);
 extern u32 GameBit_Get(int eventId);
 extern void* Obj_AllocObjectSetup(int size, int type);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
@@ -3033,7 +2994,6 @@ void gcbaddieshield_init(int* obj, void* initData)
 }
 
 extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
-extern u8 framesThisStep;
 
 void mikabombshadow_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -3100,7 +3060,6 @@ extern f32 lbl_803E3204;
 extern f32 lbl_803E3208;
 extern f32 lbl_803E320C;
 extern f32 lbl_803E3210;
-extern f32 timeDelta;
 
 void gcbaddieshield_update(int* obj)
 {
@@ -3369,7 +3328,6 @@ void staffDoGrowShrinkAnim(int* obj, u8 grow, u8 flag2)
     }
 }
 
-extern MapEventInterface** gMapEventInterface;
 
 void dll_F7_init(int* obj, int* params)
 {
@@ -4343,7 +4301,6 @@ void dim2roofrub_update(int* obj)
     }
 }
 
-extern void lightSetField4D(int light, int v);
 extern void lightSetFieldBC_8001db14(int light, int v);
 extern void modelLightStruct_setPosition(int light, f32 a, f32 b, f32 c);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
@@ -4656,8 +4613,6 @@ void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-extern int getAngle(f32 a, f32 b);
-extern f32 sqrtf(f32 x);
 extern f32 lbl_803E3340;
 
 void fn_8016F260(int* obj, int* state, int* other)
@@ -5817,8 +5772,6 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
 }
 
 extern int* fn_802966CC(int* player);
-extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
 extern f32 lbl_803E33B0;
 extern f32 lbl_803E33B4;

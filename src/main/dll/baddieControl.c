@@ -814,7 +814,6 @@ void CameraModeArwing_free(void)
 {
 }
 
-extern void* mmAlloc(int size, int heap, int flags);
 extern void* memset(void* dst, int val, u32 n);
 extern void audioSetVolumes(int volume, int p1, int p2, int p3, int p4);
 extern f32 lbl_803E1A88;
@@ -1194,7 +1193,6 @@ void dll_19_func12(int* p1, int* p2, u8 flag)
 }
 
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
-extern s16 getAngle(f32 dx, f32 dz);
 
 void CameraModeCloudRunner_init(int* p1, int p2, f32* p3)
 {
@@ -1517,7 +1515,6 @@ extern f32 lbl_803E1B1C;
 extern f32 lbl_803DB9C8;
 extern f32 lbl_803DD5AC;
 extern f32 lbl_803DD5B0;
-extern f32 sqrtf(f32 x);
 
 extern f32 lbl_803DD5A8;
 extern f32 interpolate(f32 cur, f32 target, f32 t);
@@ -1921,7 +1918,6 @@ int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
     return obj;
 }
 
-extern MapEventInterface** gMapEventInterface;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803E1C30;
@@ -2695,10 +2691,8 @@ void dll_54_update(u8* obj)
 extern int getFocusedNpc(void);
 extern int randomGetRange(int lo, int hi);
 extern void fn_8010DB7C(GameObject * target, f32 * a, f32 * b, f32 * c);
-extern CameraModeNpcSpeakState* lbl_803DD584;
 extern f32 lbl_803E19E8;
 extern f32 lbl_803E19EC;
-extern f32 lbl_803E19DC;
 extern f32 lbl_803E19F0;
 extern f32 lbl_803E19F4;
 extern f32 lbl_803E19F8;
@@ -3624,7 +3618,6 @@ void CameraModeNpcSpeak_update(u8* obj)
 #include "main/dll/dll19_state.h"
 
 
-extern undefined4 GameBit_Set(int eventId, int value);
 
 
 /*
@@ -3834,7 +3827,6 @@ int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6)
 #pragma peephole on
 
 
-extern f32 sqrtf(f32 x);
 
 #pragma scheduling off
 #pragma peephole off
@@ -3979,9 +3971,7 @@ u16 dll_19_func0A(int obj)
  * caller's record and aims its angle at the nearest group-8 object (falling
  * back to the point's packed angle). */
 
-extern f32 timeDelta;
 extern f32 lbl_803E1C78;
-extern f32 lbl_803E1C2C;
 extern f32 lbl_803E1C7C;
 
 /* EN v1.0 0x80113864  size: 248b  Steps the movement blend factors toward the
@@ -4081,11 +4071,9 @@ void dll_19_func07(int obj, int target, int div, u16* outYaw, u16* outDelta, u16
 }
 
 extern void voxmaps_worldToGrid(f32* world, int* grid);
-extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern const f32 lbl_803E1C80;
 extern const f32 lbl_803E1C84;
-extern f32 lbl_803E1C48;
 
 /* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
  * the object for walkable space, returning a bitmask of clear directions. */
@@ -4161,7 +4149,6 @@ extern u8 framesThisStep;
 /* EN v1.0 0x80114BB0  size: 572b  Object-sequence scripted-move step: phase 4
  * arms the move, phase 5 walks the setup/playback sub-phases. */
 
-extern f32 lbl_803E1C40;
 
 /* EN v1.0 0x8011395C  size: 628b  Constrains a follow point against the
  * object's facing plane and returns the lateral offset of the result. */

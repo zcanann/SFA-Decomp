@@ -100,7 +100,6 @@ extern f64 lbl_803E3FF0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-f32 wallanimator_setScale(int obj, int target);
 
 /*
  * --INFO--
@@ -173,7 +172,6 @@ f32 objFn_801948c0(u8* obj, u8 coord)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-double FUN_80194a70(int param_1, byte param_2);
 
 /*
  * --INFO--
@@ -385,7 +383,6 @@ void fn_80194C40(undefined4 def, int state, int block)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int wallanimator_getExtraSize(void);
 
 /*
  * --INFO--
@@ -444,7 +441,6 @@ extern f32 lbl_803E3FF8;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4004;
 
-void wallanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -452,11 +448,8 @@ void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4004);
 }
 
-void wallanimator_free(int obj);
 
-void wallanimator_update(int obj);
 
-void wallanimator_init(s16* obj, s16* p2);
 
 /* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
@@ -587,24 +580,12 @@ typedef struct ExplodeanimatorPlacement
 
 
 extern undefined4 FUN_800068c4();
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017814();
 extern int FUN_80017830();
 extern undefined4 FUN_80017ac8();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 FUN_8003b818();
 extern int FUN_800480a0();
 extern int fn_80056800();
 extern undefined4 FUN_80055ee8();
-extern int FUN_8005af70();
-extern int FUN_8005b398();
-extern uint FUN_80060058();
-extern undefined4 FUN_800600b4();
-extern undefined4 FUN_800600c4();
-extern int FUN_800600d4();
 extern int FUN_800600e4();
 extern undefined4 FUN_8006069c();
 extern undefined4 FUN_80135814();
@@ -618,13 +599,11 @@ extern double FUN_80293900();
 extern undefined4 DAT_80322fb8;
 extern undefined4 DAT_803dc070;
 extern undefined4 gNewCloudsInterface;
-extern EffectInterface** gPartfxInterface;
 extern undefined4 DAT_803de780;
 extern f64 DOUBLE_803e4ca8;
 extern f64 DOUBLE_803e4cc0;
 extern f64 DOUBLE_803e4cd8;
 extern f32 lbl_803DC074;
-extern f32 lbl_803E4C98;
 extern f32 lbl_803E4CA0;
 extern f32 lbl_803E4CB0;
 extern f32 lbl_803E4CB8;
@@ -1393,7 +1372,6 @@ int lightning_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4048;
-extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4060;
 
 void dimbossicesmash_render(int p1, int p2, int p3, int p4, int p5, s8 visible)

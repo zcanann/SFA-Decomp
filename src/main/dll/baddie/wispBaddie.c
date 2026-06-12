@@ -62,7 +62,6 @@ extern void hudDrawMagicBar(int a, int b, int c);
 extern f32 hudElementOpacity;
 extern f32 timeDelta;
 extern u8 pauseMenuState;
-extern MapEventInterface** gMapEventInterface;
 
 extern u8 pauseMenuTextDrawFn[];
 extern u8 lbl_8031AE20[];

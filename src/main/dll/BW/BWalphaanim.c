@@ -140,4 +140,3 @@ extern f32 lbl_803E5B70;
 extern f32 lbl_803E5BA0;
 extern f32 lbl_803E5C18;
 
-void SnowBike_update(int obj);

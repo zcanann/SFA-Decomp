@@ -66,7 +66,6 @@ typedef struct BarrelPadParticleArgs
  * 0x10 directly. Tail: if state->flags & 0x40 (which 0x68 includes), set
  * obj->_af |= 8 (redundant with the unconditional prologue store).
  */
-void transporter_init(int obj, u8* params);
 
 /*
  * --INFO--

@@ -61,7 +61,6 @@ extern int spscarab_getExtraSize(void);
  * EN v1.0 Address: 0x801E8EE0
  * EN v1.0 Size: 588b
  */
-void spscarab_update(int obj);
 
 /*
  * --INFO--
@@ -70,7 +69,6 @@ void spscarab_update(int obj);
  * EN v1.0 Address: 0x801E912C
  * EN v1.0 Size: 500b
  */
-void spscarab_init(int obj, int param_2);
 
 /*
  * --INFO--
@@ -79,7 +77,6 @@ void spscarab_init(int obj, int param_2);
  * EN v1.0 Address: 0x801E9320
  * EN v1.0 Size: 4b
  */
-void spscarab_release(void);
 
 /*
  * --INFO--
@@ -88,7 +85,6 @@ void spscarab_release(void);
  * EN v1.0 Address: 0x801E9324
  * EN v1.0 Size: 4b
  */
-void spscarab_initialise(void);
 
 ObjectDescriptor gSPScarabObjDescriptor = {
     0,
@@ -234,7 +230,6 @@ extern void Camera_GetCurrentViewSlot(void);
 extern f32 lbl_803DC0B0;
 extern f32 lbl_803DC0B4;
 extern byte framesThisStep;
-extern f32 timeDelta;
 extern f32 lbl_803E5AA0;
 extern f32 lbl_803E5AA4;
 extern f32 lbl_803E5AA8;

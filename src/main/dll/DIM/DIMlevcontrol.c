@@ -1052,9 +1052,6 @@ typedef struct DimdismountpointState
 } DimdismountpointState;
 
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 
 /*
@@ -1070,7 +1067,6 @@ extern undefined4 ObjGroup_AddObject();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 
 void dimlavasmash_init(s16* obj, s8* def)
 {
@@ -1114,21 +1110,15 @@ void dimlavasmash_initialise(void)
 {
 }
 
-void dimbridgecogmai_hitDetect(void);
 
-void dimbridgecogmai_initialise(void);
 
-void dimdismountpoint_hitDetect(void);
 
-void dimdismountpoint_release(void);
 
-void dimdismountpoint_initialise(void);
 
 extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
 extern void objRenderFn_80041018(int obj);
 extern f32 lbl_803E4910;
 
-void dimdismountpoint_update(int* obj);
 
 extern f32 lbl_803E4908;
 extern f32 lbl_803E4914;
@@ -1137,40 +1127,26 @@ extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern unsigned long GameBit_Set(int eventId, int value);
 
-void dimdismountpoint_init(u8* obj, u8* params);
 
 /* 8b "li r3, N; blr" returners. */
-int dimbridgecogmai_getExtraSize(void);
-int dimbridgecogmai_getObjectTypeId(void);
-int dimdismountpoint_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4900;
 extern void objRenderFn_8003b8f4(f32);
 
-void dimbridgecogmai_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void dimbridgecogmai_free(int x);
-void dimdismountpoint_free(int x);
 
 void dimbridgecogmai_release(void);
 
 int dimdismountpoint_getObjectTypeId(void);
 
-void dimbridgecogmai_init(int* obj, int* def);
 
 extern f32 lbl_803E490C;
 
-void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
-
-int dimbridgecogmai_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
-void dimbridgecogmai_update(int* obj);
-
-void dimdismountpoint_func11(int obj, int flag);
 
 
-int dimdismountpoint_setScale(int obj);
+
+
+
+

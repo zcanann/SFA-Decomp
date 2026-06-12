@@ -815,7 +815,6 @@ extern void playerAddRemoveMagic(void* player, int n);
  * tops the player back up. Returns 1 if the move was consumed. */
 #pragma scheduling off
 #pragma peephole off
-int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -882,7 +881,6 @@ void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
  * lit/active state from gamebit 0x44 and notify on completion. */
 #pragma scheduling off
 #pragma peephole off
-int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1421,7 +1419,6 @@ int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /* GameBit-gated byte write. */
 #pragma scheduling off
-int fn_801A04F4(int obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma scheduling reset
 
 /* plain forwarder. */
@@ -1533,7 +1530,6 @@ void cfmaincrystal_update(int* obj);
 
 #pragma scheduling off
 #pragma peephole off
-int cfpowerbase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1836,7 +1832,6 @@ extern void Sfx_StopObjectChannel(int obj, int ch);
  * SFX and queued-message drain. */
 #pragma scheduling off
 #pragma peephole off
-int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 #pragma scheduling reset
 

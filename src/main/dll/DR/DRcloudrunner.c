@@ -79,7 +79,6 @@ typedef struct ScLevelControlState
  * PAL Size: TODO
  */
 
-void sh_emptytumblew_init(s16* p1, int p2);
 
 
 /*
@@ -112,7 +111,6 @@ void sh_emptytumblew_init(s16* p1, int p2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 sc_levelcontrol_processAnimEvents(int obj, undefined4 arg2, ObjAnimUpdateState* animUpdate);
 
 /*
  * --INFO--
@@ -127,7 +125,6 @@ undefined4 sc_levelcontrol_processAnimEvents(int obj, undefined4 arg2, ObjAnimUp
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sc_levelcontrol_setAnimEventState(int obj, undefined value);
 
 /*
  * --INFO--
@@ -178,7 +175,6 @@ void sc_musictree_hitDetect(void)
 }
 
 /* 8b "li r3, N; blr" returners. */
-int sc_levelcontrol_getExtraSize(void);
 int sc_musictree_getExtraSize(void) { return 0x50; }
 int sc_musictree_getObjectTypeId(void) { return 0x0; }
 
@@ -395,7 +391,6 @@ extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void* vec, f32 f, 
 extern void vecRotateZXY(int obj, void* vec);
 extern f32 sqrtf(f32 x);
 extern f32 fn_8001461C(void);
-extern void sc_musictree_handleHitObject(int obj, int inner, int effectType);
 
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;

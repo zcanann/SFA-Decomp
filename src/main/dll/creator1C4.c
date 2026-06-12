@@ -28,7 +28,6 @@ extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_AllocQueue();
 
 extern undefined4 DAT_803dc070;
-extern MapEventInterface** gMapEventInterface;
 
 /*
  * --INFO--
@@ -81,7 +80,6 @@ typedef struct EcshIntPair
 } EcshIntPair;
 
 #pragma opt_strength_reduction off
-void ecsh_shrine_update(s16* obj);
 #pragma opt_strength_reduction reset
 
 
@@ -98,13 +96,10 @@ void ecsh_shrine_update(s16* obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c6e04(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, undefined2* param_9);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void ecsh_shrine_release(void);
 
-void ecsh_shrine_initialise(void);
 
 void ecsh_creator_free(void);
 
@@ -249,7 +244,6 @@ int gpsh_shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void ecsh_shrine_init(s16* obj, s8* def);
 
 extern u8* mmAlloc(int size, int tag, int p);
 extern u8 Obj_IsLoadingLocked(void);
@@ -383,14 +377,11 @@ typedef struct GpshShrineState
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_80006770();
 extern undefined4 FUN_800067c0();
-extern undefined4 FUN_80006824();
 extern byte FUN_80006b44();
 extern undefined4 FUN_80006b4c();
 extern undefined4 FUN_80006b50();
 extern undefined4 FUN_80006b54();
-extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
-extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern void* ObjGroup_GetObjects();
@@ -433,19 +424,12 @@ typedef struct
     u8 b01 : 1;
 } GpshShrineFlags;
 
-extern void skyFn_80088c94(int a, int b);
 extern int mapGetDirIdx(int a);
 extern int unlockLevel(int a, int b, int c);
 extern void gameTimerInit(int a, int b);
 extern void timerSetToCountUp(void);
-extern void gameTimerStop(void);
 extern int isGameTimerDisabled(void);
 extern int Obj_FreeObject(int obj);
-extern void audioStopByMask(int mask);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern MapEventInterface** gMapEventInterface;
-extern f32 timeDelta;
 extern f32 lbl_803E503C;
 extern f32 lbl_803E5040;
 
@@ -744,7 +728,6 @@ void gpsh_objcreator_initialise(void)
 {
 }
 
-extern u8 Obj_IsLoadingLocked(void);
 extern void hitDetectFn_80097070(int* obj, f32 e, int a, int b, int c, int d);
 extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int v);
 extern void* Obj_AllocObjectSetup(int size, int type);
@@ -831,7 +814,6 @@ int ecsh_cup_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5048;
-extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5058;
 extern f32 lbl_803E5060;
 

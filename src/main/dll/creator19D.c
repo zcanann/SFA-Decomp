@@ -58,7 +58,6 @@ typedef struct DfshObjCreatorState
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfsh_objcreator_update(int obj);
 
 /*
  * --INFO--
@@ -122,7 +121,6 @@ void DFSH_LaserBeam_init(int* obj)
  */
 #pragma scheduling off
 #pragma peephole off
-void dfsh_objcreator_release(void);
 
 /*
  * --INFO--
@@ -137,7 +135,6 @@ void dfsh_objcreator_release(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfsh_objcreator_initialise(void);
 
 void dfsh_objcreator_init(int obj, s8* def);
 
@@ -170,8 +167,6 @@ int DFSH_LaserBeam_getObjectTypeId(void) { return 0x0; }
 
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006814();
-extern undefined4 FUN_80006824();
-extern int FUN_80017a98();
 extern undefined4 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern void* Obj_GetPlayerObject(void);
@@ -184,7 +179,6 @@ extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern void fn_8011F6D4(int enable);
 extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
 extern int padGetStickX(int controller);
-extern u32 randomGetRange(int min, int max);
 extern void* textureLoadAsset(int id);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
@@ -195,12 +189,8 @@ extern int FUN_80294d6c();
 
 extern undefined4 DAT_803dc070;
 extern u8 framesThisStep;
-extern f32 timeDelta;
-extern ModgfxInterface** gModgfxInterface;
 extern EffectInterface** gPartfxInterface;
-extern void* lbl_803DDBB8;
 extern f64 DOUBLE_803e5b98;
-extern f32 lbl_803DC074;
 extern f32 lbl_803E4EC0;
 extern f32 lbl_803E4EC4;
 extern f32 lbl_803E4EC8;

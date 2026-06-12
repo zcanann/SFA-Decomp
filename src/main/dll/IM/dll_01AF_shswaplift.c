@@ -36,7 +36,6 @@ extern void SH_LevelControl_doThornTailEvents(int param_1, uint* param_2);
 extern void SH_LevelControl_doEarlyScenes(int param_1, uint* param_2);
 extern void objRenderFn_8003b8f4(f32);
 
-extern MapEventInterface** gMapEventInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E54B4;
 extern f32 lbl_803E54C8;
@@ -56,7 +55,6 @@ extern u8 lbl_80327618[0x104];
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sh_levelcontrol_update(int obj);
 
 
 /* Trivial 4b 0-arg blr leaves. */

@@ -181,7 +181,6 @@ extern void* Obj_GetPlayerObject(void);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern EffectInterface** gPartfxInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f32 FLOAT_803e4830;
 extern f32 FLOAT_803e4840;
 extern f32 FLOAT_803e4844;

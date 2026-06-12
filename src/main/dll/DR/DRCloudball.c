@@ -91,7 +91,6 @@ extern void dll_2E_func06();
 extern uint countLeadingZeros();
 
 extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern MapEventInterface** gMapEventInterface;
 extern undefined4* gBoneParticleEffectInterface;
 extern f64 DOUBLE_803e6698;
 extern f64 DOUBLE_803e66f0;
@@ -131,7 +130,6 @@ extern void** gTitleMenuControlInterfaceCopy;
  */
 #pragma scheduling on
 #pragma peephole on
-undefined4 FUN_801e76a0(int param_1);
 
 
 /*
@@ -206,7 +204,6 @@ extern void Stack_Free();
 
 #pragma scheduling off
 #pragma peephole off
-void shopkeeper_free(int obj);
 
 /*
  * --INFO--
@@ -221,7 +218,6 @@ void shopkeeper_free(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void shopkeeper_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible);
 
 /*
  * --INFO--
@@ -535,7 +531,6 @@ typedef struct SpscarabState
 } SpscarabState;
 
 
-extern f32 sqrtf(f32 x);
 extern f32 mathCosf(double x);
 extern f32 mathSinf(double x); /* cos-like */
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -548,7 +543,6 @@ extern f32 getXZDistance(int* p1, int* p2);
 extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
 extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
 
-extern f32 timeDelta;
 extern u16 lbl_803E5A70;
 extern u8 lbl_803E5A72;
 extern f32 lbl_803E5A74;
@@ -562,11 +556,6 @@ extern f32 lbl_803E5A90;
 extern f32 lbl_803E5A94;
 extern f64 lbl_803E5A98; /* int->float magic 0x4330000000000000 */
 
-extern void spscarab_hitDetect(void);
-extern void spscarab_render(void);
-extern void spscarab_free(int x);
-extern int spscarab_getObjectTypeId(void);
-extern int spscarab_getExtraSize(void);
 
 /*
  * --INFO--
@@ -756,7 +745,6 @@ ObjectDescriptor gSPScarabObjDescriptor = {
  * EN v1.0 Address: 0x801E9328
  * EN v1.0 Size: 8b
  */
-int spdrape_getExtraSize(void);
 
 /*
  * --INFO--
@@ -765,7 +753,6 @@ int spdrape_getExtraSize(void);
  * EN v1.0 Address: 0x801E9330
  * EN v1.0 Size: 8b
  */
-int spdrape_getObjectTypeId(void);
 
 /*
  * --INFO--
@@ -774,7 +761,6 @@ int spdrape_getObjectTypeId(void);
  * EN v1.0 Address: 0x801E9338
  * EN v1.0 Size: 4b
  */
-void spdrape_free(void);
 
 /*
  * --INFO--
@@ -783,7 +769,6 @@ void spdrape_free(void);
  * EN v1.0 Address: 0x801E933C
  * EN v1.0 Size: 4b
  */
-void spdrape_render(void);
 
 /*
  * --INFO--
@@ -792,4 +777,3 @@ void spdrape_render(void);
  * EN v1.0 Address: 0x801E9340
  * EN v1.0 Size: 4b
  */
-void spdrape_hitDetect(void);

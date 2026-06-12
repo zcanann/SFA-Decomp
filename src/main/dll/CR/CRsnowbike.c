@@ -65,7 +65,6 @@ typedef struct ShBeaconState
  * PAL Size: TODO
  */
 
-void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
 
 /* 8b "li r3, N; blr" returners. */
@@ -196,7 +195,6 @@ extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern undefined4 SH_LevelControl_runBloopEvent();
 
 extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E61C0;
 extern f32 lbl_803E61C8;
@@ -438,15 +436,11 @@ void sc_levelcontrol_initialise(void)
 {
 }
 
-void sc_musictree_free(void);
 
-void sc_musictree_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 int sc_levelcontrol_getExtraSize(void) { return 0x24; }
 int sc_levelcontrol_getObjectTypeId(void) { return 0x0; }
-int sc_musictree_getExtraSize(void);
-int sc_musictree_getObjectTypeId(void);
 
 /* Pattern wrappers. */
 u8 sc_levelcontrol_getAnimEventState(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x1d); }
@@ -481,7 +475,6 @@ typedef struct SCMusicTreeState
     u8 pad4D[0x50 - 0x4D];
 } SCMusicTreeState;
 
-void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
 extern void gameTimerStop(void);
 extern void disableHeavyFog(void);
@@ -656,13 +649,11 @@ extern int randomGetRange(int lo, int hi);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 
 #pragma dont_inline on
-void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx);
 #pragma dont_inline reset
 
 extern f32 lbl_803E5588;
 
 #pragma dont_inline on
-void sc_musictree_handleHitObject(int p1, int p2, int effectType);
 #pragma dont_inline reset
 
 extern void skyFn_80088c94(int a, int b);

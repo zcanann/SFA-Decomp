@@ -33,7 +33,6 @@ extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
-extern MapEventInterface** gMapEventInterface;
 extern int* gSHthorntailAnimationInterface;
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
@@ -571,7 +570,6 @@ int LargeCrate_SeqFn(int* obj)
 
 
 extern uint GameBit_Get(int eventId);
-extern u32 randomGetRange(int min, int max);
 extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f32* endPoints, f32* radii,
                                             int pointCount);
 extern void hitDetectFn_800691c0(int obj, void* bounds, uint mask, int flags);
@@ -579,7 +577,6 @@ extern u8 hitDetectFn_80067958(int obj, f32* startPoints, f32* endPoints, int po
                                void* outHits, int flags);
 
 extern f32 lbl_803AC7A0[4];
-extern f32 lbl_803E39AC;
 extern f32 lbl_803E39E8;
 extern f32 lbl_803E39F4;
 

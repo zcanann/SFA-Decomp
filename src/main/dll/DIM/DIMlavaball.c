@@ -81,33 +81,22 @@ extern f32 lbl_803DDB28;
 extern int lbl_803DDB2C;
 
 /* Trivial 4b 0-arg blr leaves. */
-void SpiritDoorLock_hitDetect(void);
 
-void SpiritDoorLock_release(void);
 
-void SpiritDoorLock_initialise(void);
 
-void RollingBarrel_hitDetect(void);
 
-void RollingBarrel_release(void);
 
 void MMP_levelcontrol_hitDetect(void)
 {
 }
 
 /* 8b "li r3, N; blr" returners. */
-int SpiritDoorLock_getExtraSize(void);
-int SpiritDoorLock_getObjectTypeId(void);
-int RollingBarrel_getExtraSize(void);
-int RollingBarrel_getObjectTypeId(void);
 int MMP_levelcontrol_getExtraSize(void) { return 0x0; }
 int MMP_levelcontrol_getObjectTypeId(void) { return 0x0; }
 
 /* Pattern wrappers. */
-void RollingBarrel_initialise(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -115,9 +104,7 @@ void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E44C4);
 }
 
-void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 
-void SpiritDoorLock_free(int obj);
 
 void MMP_levelcontrol_free(int obj)
 {
@@ -126,16 +113,11 @@ void MMP_levelcontrol_free(int obj)
     Music_Trigger(0xd5, 0);
 }
 
-void RollingBarrel_free(int obj);
 
-void RollingBarrel_init(int obj, RollingBarrelMapData* params);
 
-void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode);
 
-void SpiritDoorLock_update(int obj);
 
 #pragma peephole on
-void RollingBarrel_update(int obj);
 
 #pragma peephole off
 int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -163,7 +145,6 @@ int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void fn_801A5D88(int obj, int explosionVariant);
 #pragma scheduling reset
 #pragma peephole reset
 /* segment pragma-stack balance (re-split): */
@@ -276,15 +257,12 @@ STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
 
 extern undefined8 FUN_80006728();
 extern uint GameBit_Get(int eventId);
-extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_8005d0ac();
 extern undefined4 SH_LevelControl_runBloopEvent();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern EffectInterface** gPartfxInterface;
-extern f32 timeDelta;
 extern f64 DOUBLE_803e5120;
 extern f64 DOUBLE_803e5178;
 extern f64 DOUBLE_803e5188;
@@ -339,9 +317,6 @@ extern f32 lbl_803E5224;
 extern f32 lbl_803E5228;
 extern f32 lbl_803E522C;
 extern f32 lbl_803E5238;
-extern f32 lbl_803DDB28;
-extern int lbl_803DDB2C;
-extern f32 lbl_803E44C0;
 
 extern void gameTextShow(int textId);
 extern void envFxActFn_800887f8(int value);
@@ -731,12 +706,9 @@ void MoonSeedBush_update(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int getSaveGameLoadStatus(void);
 extern int mapGetDirIdx(int);
 extern void unlockLevel(int, int, int);
 extern f32 lbl_803E44C8;
-extern u8 framesThisStep;
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 #pragma scheduling off
 #pragma peephole off
 void mmp_gyservent_update(int obj)
@@ -1679,9 +1651,7 @@ void mmp_asteroid_re_update(int obj)
 
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
 extern void objParticleFn_80099d84(int obj, f32 a, int c, f32 b, int d);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern u32 playerGetStateFlag310(int player);
-extern MapEventInterface** gMapEventInterface;
 extern char lbl_803AC918[];
 extern f32 lbl_803E4584;
 extern f32 lbl_803E4588;

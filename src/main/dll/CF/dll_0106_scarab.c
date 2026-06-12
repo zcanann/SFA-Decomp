@@ -184,7 +184,6 @@ extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int p5,
 extern int hitDetect_calcSweptSphereBounds(void* bounds, void* start, void* end, void* sphere, int n);
 extern int hitDetectFn_800691c0(int obj, void* p2, int p3, int p4);
 extern int hitDetectFn_80067958(int obj, void* p2, void* p3, int p4, void* p5, int p6);
-extern void fn_801845FC(u8* obj, f32* p2, u8 mode, f32* p3);
 /*
  * --INFO--
  *
@@ -768,7 +767,6 @@ extern f32 FLOAT_803e468c;
 extern f32 FLOAT_803e4690;
 extern f32 FLOAT_803e4694;
 extern f32 FLOAT_803e4698;
-extern f32 lbl_803E3A00;
 extern f32 lbl_803E3A04;
 
 typedef struct GuardianAngleParams

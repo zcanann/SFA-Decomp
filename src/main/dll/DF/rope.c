@@ -964,9 +964,7 @@ void dimbossfire_hitDetect(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossfire_free(int obj);
 
-void dimbossfire_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* 8b "li r3, N; blr" returners. */
 int dimbossgut2_setScale(void) { return 0x0; }

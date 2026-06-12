@@ -187,8 +187,6 @@ extern f32 lbl_803E168C;
 extern f32 lbl_803E1690;
 extern f32 lbl_803E1694;
 extern f32 lbl_803E16A4;
-extern f32 lbl_803E16AC;
-extern f32 lbl_803E16B4;
 extern f32 lbl_803E16B8;
 extern f32 lbl_803E16D8;
 extern f32 lbl_803E16DC;
@@ -550,10 +548,6 @@ static inline f64 FirstPerson_S32AsDouble(s32 value)
  * PAL Size: TODO
  */
 extern f32 PSVECMag(f32 * vec);
-extern f32 timeDelta;
-extern f32 lbl_803E16AC;
-extern f32 lbl_803E1694;
-extern f32 lbl_803E16A4;
 extern f32 lbl_803E1700;
 extern f32 lbl_803E1704;
 extern f32 lbl_803E1708;
@@ -798,11 +792,6 @@ extern void cameraGetPrevPos2(int obj, float* x, float* y, float* z);
 extern f64 lbl_803E1698;
 extern f64 lbl_803E16F8;
 extern f32 lbl_803DD52C;
-extern f32 lbl_803E1688;
-extern f32 lbl_803E16A4;
-extern f32 lbl_803E16AC;
-extern f32 lbl_803E16DC;
-extern f32 lbl_803E1708;
 extern f32 lbl_803E1718;
 extern f32 lbl_803E171C;
 extern f32 lbl_803E1720;
@@ -810,7 +799,6 @@ extern f32 lbl_803E1724;
 extern f32 lbl_803E1728;
 extern f32 lbl_803E172C;
 extern f32 lbl_803E1730;
-extern f32 timeDelta;
 
 #define gCamcontrolModeSettings cameraMtxVar57
 
@@ -1039,16 +1027,7 @@ void camstatic_update(CameraObject* camera)
 #include "string.h"
 
 
-extern undefined4 camcontrol_getTargetPosition();
 
-extern f64 DOUBLE_803e1698;
-extern f64 DOUBLE_803e16f8;
-extern f32 lbl_803E16D0;
-extern f32 lbl_803E16D4;
-extern f32 lbl_803E16DC;
-extern f32 lbl_803E16F0;
-extern f32 lbl_803E1710;
-extern f32 lbl_803E1714;
 extern f32 lbl_803E1734;
 extern f32 lbl_803E1738;
 extern f32 lbl_803E1740;
@@ -1298,4 +1277,3 @@ void camcontrol_initialiseModeSettings(void)
     return;
 }
 
-void camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, undefined4 param_4, int param_5);

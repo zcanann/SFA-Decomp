@@ -32,7 +32,6 @@ extern void gameTextShow(int textId);
 extern uint GameBit_Get(int eventId);
 extern int getCurSeqNo(void);
 
-extern MapEventInterface** gMapEventInterface;
 extern f64 DOUBLE_803e6b00;
 extern f32 lbl_803E5E70;
 extern f32 timeDelta;

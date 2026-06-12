@@ -1344,7 +1344,6 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4);
 
 extern CloudActionInterface** gCloudActionInterface;
 extern int* gPlayerShadowInterface;
-extern MapEventInterface** gMapEventInterface;
 extern void OSReport(const char* fmt, ...);
 extern int Obj_GetPlayerObject(void);
 extern void fn_80295918(f32 a, int obj, int b);

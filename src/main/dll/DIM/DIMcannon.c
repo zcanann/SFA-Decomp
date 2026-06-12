@@ -126,7 +126,6 @@ extern undefined4 DAT_802c2a88;
 extern undefined4 DAT_802c2a8c;
 extern undefined4 DAT_802c2a90;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern MapEventInterface** gMapEventInterface;
 extern f32 lbl_803E53D0;
 extern f32 lbl_803E53E0;
 extern f32 lbl_803E53F0;
@@ -196,9 +195,7 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void imicemountain_free(void);
 
-void imicemountain_hitDetect(void);
 
 extern void gameBitFn_800ea2e0(int idx);
 extern void unlockLevel(int a, int b, int c);
@@ -212,21 +209,15 @@ extern f32 lbl_803E46E0;
  * gamebit block, arm the map-event triggers, then branch on the queried level
  * state to set the boulder's start state and fire the appropriate triggers. */
 #pragma scheduling off
-void imicemountain_init(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 #undef MEVT_QUERY
-void crrockfall_free(void);
 
-void crrockfall_hitDetect(void);
 
-void magiclight_hitDetect(void);
 
-void magiclight_release(void);
 
-void magiclight_initialise(void);
 
 extern u32 randomGetRange(int min, int max);
 extern f32 lbl_803E4740;
@@ -237,31 +228,20 @@ extern f32 lbl_803E4744;
  * the spawn subtype to a light-pair / intensity preset. */
 #pragma scheduling off
 #pragma peephole off
-void magiclight_init(int* obj, u8* params);
 #pragma peephole reset
 #pragma scheduling reset
-void dll_16C_release(void);
 
-void dll_16C_initialise(void);
 
 void imicepillar_free(void)
 {
 }
 
 /* 8b "li r3, N; blr" returners. */
-int imicemountain_getExtraSize(void);
-int imicemountain_getObjectTypeId(void);
-int crrockfall_getExtraSize(void);
-int crrockfall_getObjectTypeId(void);
-int magiclight_getObjectTypeId(void);
-int dll_16C_getExtraSize(void);
-int dll_16C_getObjectTypeId(void);
 int imicepillar_getExtraSize(void) { return 0x4; }
 int imicepillar_getObjectTypeId(void) { return 0x0; }
 
 /* Pattern wrappers. */
 extern void* lbl_803DDB40;
-void crrockfall_initialise(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E46D8;
@@ -269,13 +249,10 @@ extern f32 lbl_803E4708;
 extern f32 lbl_803E473C;
 extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
-void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 #pragma peephole reset
 
 #pragma peephole off
-void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 
-void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 #pragma peephole reset
 
 #pragma scheduling off
@@ -287,28 +264,22 @@ extern f32 lbl_803E4704;
 f32 fn_801ACCFC(int obj);
 #pragma dont_inline reset
 
-void magiclight_free(int obj);
 
-void magiclight_update(int obj);
 #pragma peephole reset
 #pragma scheduling reset
 
 /* if (o->_X == K) return A; else return B; */
 #pragma peephole off
-int magiclight_getExtraSize(int* obj);
 #pragma peephole reset
 
 
-void dll_16C_free(int* obj);
 
 /* conditional init/free pair. */
-void crrockfall_release(void);
 
 /* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, sync its transform into obj. */
 extern void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
 #pragma scheduling off
 #pragma peephole off
-void dll_16C_hitDetect(void* obj);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -321,19 +292,16 @@ void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
 #pragma scheduling reset
 
 #pragma scheduling off
-int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma scheduling reset
 
 /* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
 #pragma scheduling off
-void dll_16C_init(void* obj, void* arg2);
 #pragma scheduling reset
 
 extern float Vec_distance(float* a, float* b);
 extern f32 lbl_803E4738;
 #pragma scheduling off
 #pragma peephole off
-int magiclight_SeqFn(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -348,7 +316,6 @@ extern void warpToMap(int mapId, int flags);
  * through jumptable_80323698 (states 1..7; state 0 idles). */
 #pragma scheduling off
 #pragma peephole off
-void imicemountain_updateEventState(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 #undef MEVT_TRIGGER
@@ -368,7 +335,6 @@ typedef struct
  * from a small id table, then run the map-event sub-object state callbacks. */
 #pragma scheduling off
 #pragma peephole off
-int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -391,7 +357,6 @@ extern f32 lbl_803E46DC;
 /* imicemountain_update: lazy-spawn the ambient effects, run the active state,
  * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
 #pragma scheduling off
-void imicemountain_update(int* obj);
 #pragma scheduling reset
 
 extern int* ObjGroup_GetObjects(int group, int* countOut);
@@ -417,7 +382,6 @@ extern f32 lbl_803E4730;
  * state-table variant by object type. */
 #pragma scheduling off
 #pragma peephole off
-void crrockfall_init(int* obj, u8* params);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -439,7 +403,6 @@ extern f32 lbl_803E4720;
  * fall, then shatter (sfx + explosion) on impact. */
 #pragma scheduling off
 #pragma peephole off
-void crrockfall_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling reset
@@ -548,23 +511,14 @@ static inline int* DIMcannon_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-extern uint GameBit_Get(int eventId);
-extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017ac8();
-extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern EffectInterface** gPartfxInterface;
-extern MapEventInterface** gMapEventInterface;
 
-extern void imicepillar_free(void);
-extern int imicepillar_getObjectTypeId(void);
-extern int imicepillar_getExtraSize(void);
 
 /*
  * --INFO--
@@ -993,7 +947,6 @@ int lavaball1bf_setScale(int* obj)
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4768;
 extern f32 lbl_803E4780;
-extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4788;
 extern f32 lbl_803E47B8;
 extern f32 lbl_803E4810;
@@ -1264,7 +1217,6 @@ extern u8 lbl_803238D8[];
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern int* getTrickyObject(void);
 extern void fn_80138908(int* tricky, int mode);
-extern f32 timeDelta;
 extern f32 lbl_803E47C8;
 
 typedef struct
@@ -1483,10 +1435,8 @@ void linkb_levcontrol_update(int* obj)
 }
 
 extern f32 lbl_803E47C0;
-extern u8 framesThisStep;
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
-extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int extraSize, int id);
 extern f32 lbl_803E47C4;
 
@@ -1672,9 +1622,7 @@ void imspacethruster_free(int obj)
 
 void dimlogfire_free(int* obj, int mode);
 
-extern void Sfx_StopObjectChannel(int* obj, int channel);
 
-int dimlogfire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 extern void queueGlowRender(int* obj);
 extern f32 lbl_803E4820;

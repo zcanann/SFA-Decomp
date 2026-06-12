@@ -44,7 +44,6 @@ typedef struct LightColorTable
  * EN v1.0 Address: 0x801F37CC
  * EN v1.0 Size: 1112b
  */
-void lightsource_init(GameObject* obj, LightSourceSetup* setup);
 
 /* Trivial 4b 0-arg blr leaves. */
 void lightsource_release(void);
@@ -140,7 +139,6 @@ extern undefined4 DAT_802c2c34;
 extern undefined4 DAT_803dc070;
 extern f64 DOUBLE_803e6ae0;
 extern f64 DOUBLE_803e6ae8;
-extern MapEventInterface** gMapEventInterface;
 extern f32 timeDelta;
 extern f32 lbl_803DC074;
 extern u8 lbl_803DC110;

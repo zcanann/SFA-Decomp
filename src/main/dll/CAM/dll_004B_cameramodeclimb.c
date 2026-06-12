@@ -121,7 +121,6 @@ extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 
 extern u8 framesThisStep;
-extern CameraModeClimbState* lbl_803DD578;
 extern f64 lbl_803E1990;
 extern f64 lbl_803E1998;
 extern f32 timeDelta;
@@ -268,7 +267,6 @@ void CameraModeClimb_update(short* camObj)
 
 extern void memset(void* dst, int val, int size);
 
-extern CameraModeClimbState* lbl_803DD578;
 
 extern f32 lbl_803E19B8;
 extern f32 lbl_803E19BC;
