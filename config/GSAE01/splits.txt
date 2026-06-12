@@ -777,28 +777,28 @@ main/dll/DR/dll_0149_cfwindlift.c:
 main/dll/DR/dll_014A_cfpowerbase.c:
 	.text       start:0x8019D578 end:0x8019D9F0
 
-main/dll/DR/dll_014B_cfmaincryst.c:
+main/dll/DR/dll_014B_cfmaincrystal.c:
 	.text       start:0x8019D9F0 end:0x8019E3F4
 
-main/dll/DR/dll_014C_cfcloudbaby.c:
+main/dll/DR/dll_014C_babycloudrunner.c:
 	.text       start:0x8019E3F4 end:0x8019F540
 
-main/dll/DR/dll_014E_cfprisongua.c:
+main/dll/DR/dll_014E_cfprisonguard.c:
 	.text       start:0x8019F540 end:0x8019FC84
 
-main/dll/DR/dll_014F_cfprisonunc.c:
+main/dll/DR/dll_014F_cfprisonuncle.c:
 	.text       start:0x8019FC84 end:0x801A0174
 
-main/dll/DR/dll_0150_gcrobotligh.c:
+main/dll/DR/dll_0150_gcrobotlightbea.c:
 	.text       start:0x801A0174 end:0x801A04F4
 
 main/dll/DR/dll_0153_cfperch.c:
 	.text       start:0x801A04F4 end:0x801A0614
 
-main/dll/DR/dll_0154_cfprisoncag.c:
+main/dll/DR/dll_0154_cfprisoncage.c:
 	.text       start:0x801A0614 end:0x801A0994
 
-main/dll/DR/dll_0157_spiritdoors.c:
+main/dll/DR/dll_0157_spiritdoorspirit.c:
 	.text       start:0x801A0994 end:0x801A0B14
 
 main/dll/DR/dll_0158_gunpowderbarrel.c:
@@ -807,7 +807,7 @@ main/dll/DR/dll_0158_gunpowderbarrel.c:
 main/dll/DR/dll_0159_blasted.c:
 	.text       start:0x801A27B8 end:0x801A2BDC
 
-main/dll/DR/gasventControl.c:
+main/dll/DR/dll_015A_explodable.c:
 	.text       start:0x801A2BDC end:0x801A39B4
 
 main/dll/IM/IMicicle.c:
@@ -1290,7 +1290,7 @@ main/dfppowersl.c:
 main/dll/DR/dll_024D_bossdrakor.c:
 	.text       start:0x8020A1C8 end:0x8020BAB4
 
-main/dll/DR/dll_024E_drakord_thornbush.c:
+main/dll/DR/dll_024E_drakordthornbush.c:
 	.text       start:0x8020BAB4 end:0x8020C278
 
 main/worldasteroids.c:
@@ -1330,22 +1330,22 @@ main/proximitymine_reset.c:
 main/proximitymine_update.c:
 	.text       start:0x8021122C end:0x80211C24
 
-main/dll/DR/dll_024F_kt_rexlevel.c:
+main/dll/DR/dll_024F_ktrexlevel.c:
 	.text       start:0x80211C24 end:0x80211F38
 
-main/dll/DR/obj_008A_kt_rex.c:
+main/dll/DR/dll_0250_ktrex.c:
 	.text       start:0x80211F38 end:0x80215A3C
 
-main/dll/DR/dll_0251_kt_rexfloorswitch.c:
+main/dll/DR/dll_0251_ktrexfloorswitch.c:
 	.text       start:0x80215A3C end:0x80216620
 
-main/dll/DR/dll_0252_kt_lazerwall.c:
+main/dll/DR/dll_0252_ktlazerwall.c:
 	.text       start:0x80216620 end:0x80216B48
 
-main/dll/DR/dll_0253_kt_lazerlight.c:
+main/dll/DR/dll_0253_ktlazerlight.c:
 	.text       start:0x80216B48 end:0x80216D18
 
-main/dll/DR/dll_0254_kt_fallingrocks.c:
+main/dll/DR/dll_0254_ktfallingrocks.c:
 	.text       start:0x80216D18 end:0x80216EAC
 
 main/dll/DR/dll_0261_dr_lasercannon.c:
@@ -2560,8 +2560,8 @@ main/dll/DIM/dll_0256_dimsnowhorn1.c:
 main/dll/DIM/dll_01D9_dim2prisonmammoth.c:
 	.text       start:0x802BC0D0 end:0x802BC7C0
 
-main/dll/DR/dll_0077_DR_EarthWarrior.c:
+main/dll/DR/dll_0257_drearthwarrior.c:
 	.text       start:0x802BC7C0 end:0x802BF0C8
 
-main/dll/DR/dll_0078_DR_CloudRunner.c:
+main/dll/DR/dll_0258_drcloudrunner.c:
 	.text       start:0x802BF0C8 end:0x802C187C

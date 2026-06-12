@@ -1,4 +1,4 @@
-#include "main/dll/DR/gasventControl.h"
+#include "main/dll/DR/dll_015A_explodable.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 
