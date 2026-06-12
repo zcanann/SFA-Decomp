@@ -64,7 +64,7 @@ main/dll/CF/CFcrystal.c
 main/dll/CF/CFforcecontrol.c
 main/dll/CF/CFguardian.c
 main/dll/CF/CFlevelControl.c
-main/dll/CF/CFPrisonGuard.c
+main/dll/CF/staffactivated_helpers.c
 main/dll/CF/CFtoggleswitch.c
 main/dll/CF/CFTreasSharpy.c
 main/dll/CF/CFwalltorch.c

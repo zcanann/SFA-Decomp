@@ -20,6 +20,24 @@ prefix (`WM_`->WM/ etc; `CC`/`SB` dirs do not exist yet —
 create-listed, do not create until the first rename lands); names
 with no lane prefix stay at `main/dll/` root.
 
+No-descriptor helper-TU naming rule: some split units are HELPER
+SLIVERS that own no `gResourceDescriptors` entry of their own — they
+are the front/middle portion of a neighbouring DLL's TU (helpers
+precede their own descriptor fns; see the TU model in CLAUDE.md's
+Retail-ISO forensics section), carved off as a separate split unit. A
+sliver has NO dll id, so it canNOT take a `dll_XXXX_*` name. Its
+filename MUST be: **lowercase, NO `dll_` prefix, descriptive of the
+sliver's CONTENT, and never colliding (case-insensitively) with any
+canonical `dll_XXXX_<stem>.c` name.** Derive the stem from the
+sliver's dominant fn-prefix / the DLL whose TU it belongs to — e.g.
+the staffactivated (0x11C) DLL's front sliver is
+`staffactivated_helpers.c` (NOT `CFPrisonGuard.c`, which CamelCase-
+collided with the unrelated real `dll_014E_cfprisonguard.c` 0x14E
+DLL). A same-stem header moves/renames with the `.c` in the same
+commit (and every `#include` updates). Conforming exemplars:
+`CF/warppad.c` (warp-pad head-helper sliver, no descriptor) and now
+`CF/staffactivated_helpers.c`.
+
 ## Summary
 
 | metric | count |
@@ -855,7 +873,7 @@ fortress map (24 KB romlist) carries the real CF placement signal.
 
 | unit | dll id(s) | canonical retail name | placements (tot/CF/other) | top non-CF maps | verdict | rationale |
 |---|---|---|---|---|---|---|
-| `CFPrisonGuard.c` | — | — (helper, no descriptor) | 0 / 0 / 0 | — | **STAY** | CF* name; `cfPrisonGuard_*` helper sliver in CF address-lane, no own descriptor |
+| `staffactivated_helpers.c` (was `CFPrisonGuard.c`) | — | — (helper, no descriptor) | 0 / 0 / 0 | — | **STAY** | front sliver of the staffactivated (0x11C) DLL TU `[801899B4-80189F5C]` — bulk `staffactivated_*` fns + the player.c-facing `cfPrisonGuard_*` lift/gamebit API; no own descriptor. RENAMED off the CamelCase `CFPrisonGuard.c` that collided with the unrelated real `dll_014E_cfprisonguard.c` (per the no-descriptor helper-TU rule) |
 | `dll_00E7_flammablevine.c` | 0xE7 | CCeyeVines (2 defs) | 6 / 0 / 6 | capeclaw×2, wallcity×2, linkj×1 | **MOVE → dll/** | CCeyeVines/BurnableVin vine; #1 map capeclaw — no CF placement |
 | `dll_00EC_infopoint.c` | 0xEC | InfoPoint (1 defs) | 0 / 0 / 0 | — | **MOVE → dll/** | InfoPoint generic marker, 0 placements (runtime/global) |
 | `dll_0106_scarab.c` | 0x106 | GreenScarab (5 defs) | 0 / 0 / 0 | — | **MOVE → dll/** | Scarab family runtime-spawned globals, 0 placements — flagship donor case |
@@ -895,7 +913,8 @@ fortress map (24 KB romlist) carries the real CF placement signal.
 
 STAY (genuinely CF): `dll_010A_fallladders` (fortress-only),
 `dll_0124_deathgas` (fortress top), `dll_012A_cfcrate` (CFCrate name),
-`CFPrisonGuard` (CF* helper), `dll_0107_unused` / `dll_0109_unk` /
+`staffactivated_helpers` (was `CFPrisonGuard`; staffactivated 0x11C
+front helper sliver), `dll_0107_unused` / `dll_0109_unk` /
 `dll_0127_dll127` / `warppad` (no-name CF address-lane orphans).
 
 The MOVE set includes every mission-named runtime global — Scarab (0x106),
@@ -1010,9 +1029,10 @@ single-DLL `dll_014X_*` units moved above.)
 
 ### Final `src/main/dll/CF/` listing (after inbound moves)
 
-8 prior residents (`CFPrisonGuard.c`, `dll_0107_unused.c`,
-`dll_0109_unk.c`, `dll_010A_fallladders.c`, `dll_0124_deathgas.c`,
-`dll_0127_dll127.c`, `dll_012A_cfcrate.c`, `warppad.c`) + 8 inbound
+8 prior residents (`staffactivated_helpers.c` [was `CFPrisonGuard.c`],
+`dll_0107_unused.c`, `dll_0109_unk.c`, `dll_010A_fallladders.c`,
+`dll_0124_deathgas.c`, `dll_0127_dll127.c`, `dll_012A_cfcrate.c`,
+`warppad.c`) + 8 inbound
 (`dll_0148_cfguardian.c`, `dll_0149_cfwindlift.c`,
 `dll_014A_cfpowerbase.c`, `dll_014B_cfmaincrystal.c`,
 `dll_014E_cfprisonguard.c`, `dll_014F_cfprisonuncle.c`,
@@ -1045,3 +1065,55 @@ the address-lane-vs-placement question for the multi-DLL containers
 (`tools/cf_lane_homing.py --all` lists all 77). This inbound pass moves
 only the 8 CF cases; the table above is the documented roadmap, not yet
 executed.
+
+## Appendix: name-collision census (helper/donor `.c` vs canonical `dll_XXXX_<stem>.c`)
+
+Every `src/main/dll/**/*.c` whose stem (CamelCase or lowercase, no
+`dll_` prefix) matches a canonical `dll_XXXX_<stem>.c` case-insensitively.
+The mission distinguishes the GENUINE helper-vs-real-DLL collision (a
+NO-descriptor sliver named after an UNRELATED real DLL — rename now) from
+the much larger content-mislabel / donor-inheritance class (a deferred
+project-wide forensic homing pass). 23 collisions found; **1 renamed, 22
+deferred** (rationale per class below).
+
+**RENAMED (genuine no-descriptor helper collision):**
+- `CF/CFPrisonGuard.c` → `CF/staffactivated_helpers.c` — no descriptor;
+  content is the staffactivated (0x11C) DLL's front sliver; collided with
+  the unrelated real `CF/dll_014E_cfprisonguard.c` (0x14E). The
+  `cfPrisonGuard_*` fn prefix is KEPT (CONFIRMED-grade: genuine
+  player.c-facing prison-guard-lift API, not drift).
+
+**DEFERRED — content-mislabeled donor files (own a descriptor; the FILENAME
+contradicts the file's CONTENT; need per-file forensic content homing +
+descriptor renumber — the manifest's deferred project-wide homing pass,
+NOT a style-only rename):**
+- `cfguardian.c` (content `pressureswitchfb_*`/`mmp_bridge_*`, DLL 0xFB) —
+  vs real `CF/dll_0148_cfguardian.c`
+- `cfprisonuncle.c` (content `MagicPlant_*`/`duster_*`) — vs real
+  `CF/dll_014F_cfprisonuncle.c`
+- `DR/hightop.c` (content `cloudprisoncontrol_*`/`Trigger_*`) — vs real
+  `DR/dll_0272_hightop.c`
+- `DR/DRcloudrunner.c` (content `sc_*`) — vs real `DR/dll_0258_drcloudrunner.c`
+- `pressureSwitch.c` (content `hagabon_*`/`swarmbaddie_*`) — vs real
+  `ARW/dll_01FE_pressureswitch.c`
+- `wallanimator.c` (content `kaldachompspit_*`/`kaldachompme_*`) — vs real
+  `MMP/dll_013B_wallanimator.c`
+- `scarab.c` (descriptor-owning, donor-named) — vs real `dll_0106_scarab.c`
+- `baddie/Tumbleweed.c` (multi-DLL container, `titlescreen_*` etc.) — vs
+  real `dll_00D2_tumbleweed.c`
+
+**DEFERRED — donor/sliver files matching a same-themed canonical DLL
+(likely the same DLL's other-address portion or a same-family donor; honest
+content name + STAY/MOVE verdict each needs its own evidence, low style-only
+ROI):** `cfperch.c`, `DR/DRshackle.c`, `LGT/LGTcontrollight.c`,
+`SH/SHthorntail.c` (note: collides with `SC/dll_01AD_shthorntail.c` — a
+lane-dir cross-match too), `WC/WCbeacon.c`, `WC/WCpushblock.c`,
+`baddie/wispBaddie.c`, `blasted.c`, `fireflyLantern.c`, `infopoint.c`,
+`landedArwing.c`, `smallbasket.c`, `tricky.c`, `tumbleweedbush.c`.
+
+`CF/warppad.c` was checked and ALREADY CONFORMS to the no-descriptor
+helper-TU rule (lowercase, no `dll_` prefix, descriptive `warppad` stem,
+no collision) — no rename. The 22 deferred entries are tracked here as the
+documented follow-up; renaming them requires the forensic content verdict
++ descriptor-renumber work the manifest defers project-wide, not a
+mechanical style fix.

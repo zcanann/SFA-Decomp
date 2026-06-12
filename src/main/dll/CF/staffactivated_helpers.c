@@ -1,6 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
-#include "main/dll/CF/CFPrisonGuard.h"
+#include "main/dll/CF/staffactivated_helpers.h"
 #include "main/mapEventTypes.h"
 
 extern undefined4 FUN_80006824();

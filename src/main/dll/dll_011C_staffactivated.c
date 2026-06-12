@@ -1,6 +1,6 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/dll/CF/CFPrisonGuard.h"
+#include "main/dll/CF/staffactivated_helpers.h"
 #include "main/objseq.h"
 
 extern undefined8 ObjGroup_RemoveObject();

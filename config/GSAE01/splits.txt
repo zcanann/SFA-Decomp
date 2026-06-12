@@ -723,7 +723,7 @@ main/dll/dll_011A_decoration11a.c:
 main/dll/dll_011B_landedarwing.c:
 	.text       start:0x801889C8 end:0x801899B4
 
-main/dll/CF/CFPrisonGuard.c:
+main/dll/CF/staffactivated_helpers.c:
 	.text       start:0x801899B4 end:0x80189F5C
 
 main/dll/dll_011C_staffactivated.c:
