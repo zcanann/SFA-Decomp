@@ -110,17 +110,15 @@ void RollingBarrel_release(void)
 {
 }
 
-void MMP_levelcontrol_hitDetect(void)
-{
-}
+void MMP_levelcontrol_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 int SpiritDoorLock_getExtraSize(void) { return SPIRITDOORLOCK_EXTRA_SIZE; }
 int SpiritDoorLock_getObjectTypeId(void) { return 0x0; }
 int RollingBarrel_getExtraSize(void) { return ROLLINGBARREL_EXTRA_SIZE; }
 int RollingBarrel_getObjectTypeId(void) { return 0x0; }
-int MMP_levelcontrol_getExtraSize(void) { return 0x0; }
-int MMP_levelcontrol_getObjectTypeId(void) { return 0x0; }
+int MMP_levelcontrol_getExtraSize(void);
+int MMP_levelcontrol_getObjectTypeId(void);
 
 /* Pattern wrappers. */
 void RollingBarrel_initialise(void) { lbl_803DDB20 = 0x0; }
@@ -132,11 +130,7 @@ void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4440);
 }
 
-void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E44C4);
-}
+void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
@@ -156,12 +150,7 @@ void SpiritDoorLock_free(int obj)
     }
 }
 
-void MMP_levelcontrol_free(int obj)
-{
-    lbl_803DDB28 = lbl_803E44C0;
-    lbl_803DDB2C = 0;
-    Music_Trigger(0xd5, 0);
-}
+void MMP_levelcontrol_free(int obj);
 
 void RollingBarrel_free(int obj)
 {
@@ -547,29 +536,7 @@ void RollingBarrel_update(int obj)
 }
 
 #pragma peephole off
-int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    int player;
-    int i;
-
-    player = Obj_GetPlayerObject();
-    animUpdate->sequenceEventActive = 0;
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        u8 v = animUpdate->eventIds[i];
-        switch (v)
-        {
-        case 1:
-            getEnvfxAct(obj, player, 315, 0);
-            break;
-        case 2:
-            getEnvfxAct(obj, player, 312, 0);
-            break;
-        }
-    }
-    MMP_levelcontrol_update(obj);
-    return 0;
-}
+int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 void fn_801A5D88(int obj, int explosionVariant)
 {

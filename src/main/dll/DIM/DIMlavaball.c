@@ -1,3 +1,175 @@
+/* === moved from main/dll/IM/IMspacecraft.c [801A6638-801A6778) (TU re-split, docs/boundary_audit.md) === */
+#pragma scheduling off
+#pragma peephole off
+#include "main/audio/sfx_ids.h"
+#include "main/camera_interface.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/game_object.h"
+#include "main/objseq.h"
+#include "main/dll/IM/IMspacecraft.h"
+
+/* SDK / engine externs */
+extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern u32 randomGetRange(int min, int max);
+extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int p3);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern u32 GameBit_Get(int eventId);
+
+extern int modelLightStruct_createPointLight(int obj, int a, int b, int c, int d);
+extern void modelLightStruct_freeSlot(void* p);
+extern void modelLightStruct_setDistanceAttenuation(void* p, f32 a, f32 b);
+extern f32 Curve_AdvanceAlongPath(void* state, f32 t);
+extern s16 getAngle(f32 dx, f32 dz);
+
+extern void ObjHitbox_SetSphereRadius(int obj, int r);
+extern int ObjHits_GetPriorityHit(int obj, int* outHitObj, int* outB, u32* outC);
+extern int* objFindTexture(int obj, int a, int b);
+extern void Obj_TransformLocalVectorByWorldMatrix(int obj, f32* in, f32* out);
+extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
+extern void Obj_FreeObject(int obj);
+
+extern void doRumble(f32 v);
+
+extern void objRenderFn_8003b8f4(f32 v);
+extern void Music_Trigger(int id, int p2);
+extern int getSaveGameLoadStatus(void);
+extern int getEnvfxAct(int obj, int player, int id, int p);
+extern void MMP_levelcontrol_update(int obj);
+
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern int lbl_802C22F8[4];
+extern s16 lbl_803DBED0;
+extern s32 lbl_803DBED4;
+extern s32 lbl_803DBED8;
+extern s16 lbl_803DDB20;
+
+extern f32 lbl_803E4430;
+extern f32 lbl_803E4440;
+extern f32 lbl_803E4444;
+extern f32 lbl_803E4448;
+extern f32 lbl_803E444C;
+extern f32 lbl_803E4450;
+extern f32 lbl_803E4454;
+extern f32 lbl_803E4458;
+extern int lbl_803E4460;
+extern int lbl_803E4464;
+extern f32 lbl_803E4468;
+extern f32 lbl_803E446C;
+extern f32 lbl_803E4470;
+extern f32 lbl_803E4474;
+extern f32 lbl_803E4478;
+extern f32 lbl_803E447C;
+extern f32 lbl_803E4480;
+extern f32 lbl_803E4484;
+extern f32 lbl_803E4494;
+extern f32 lbl_803E4498;
+extern f32 lbl_803E449C;
+extern f32 lbl_803E44A0;
+extern f32 lbl_803E44A4;
+extern f32 lbl_803E44A8;
+extern f32 lbl_803E44AC;
+extern f32 lbl_803E44B0;
+extern f32 lbl_803E44B4;
+extern f32 lbl_803E44B8;
+extern f32 lbl_803E44C0;
+extern f32 lbl_803E44C4;
+
+extern f32 lbl_803DDB28;
+extern int lbl_803DDB2C;
+
+/* Trivial 4b 0-arg blr leaves. */
+void SpiritDoorLock_hitDetect(void);
+
+void SpiritDoorLock_release(void);
+
+void SpiritDoorLock_initialise(void);
+
+void RollingBarrel_hitDetect(void);
+
+void RollingBarrel_release(void);
+
+void MMP_levelcontrol_hitDetect(void)
+{
+}
+
+/* 8b "li r3, N; blr" returners. */
+int SpiritDoorLock_getExtraSize(void);
+int SpiritDoorLock_getObjectTypeId(void);
+int RollingBarrel_getExtraSize(void);
+int RollingBarrel_getObjectTypeId(void);
+int MMP_levelcontrol_getExtraSize(void) { return 0x0; }
+int MMP_levelcontrol_getObjectTypeId(void) { return 0x0; }
+
+/* Pattern wrappers. */
+void RollingBarrel_initialise(void);
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E44C4);
+}
+
+void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
+
+void SpiritDoorLock_free(int obj);
+
+void MMP_levelcontrol_free(int obj)
+{
+    lbl_803DDB28 = lbl_803E44C0;
+    lbl_803DDB2C = 0;
+    Music_Trigger(0xd5, 0);
+}
+
+void RollingBarrel_free(int obj);
+
+void RollingBarrel_init(int obj, RollingBarrelMapData* params);
+
+void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode);
+
+void SpiritDoorLock_update(int obj);
+
+#pragma peephole on
+void RollingBarrel_update(int obj);
+
+#pragma peephole off
+int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    extern int Obj_GetPlayerObject(void);
+    int player;
+    int i;
+
+    player = Obj_GetPlayerObject();
+    animUpdate->sequenceEventActive = 0;
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
+        u8 v = animUpdate->eventIds[i];
+        switch (v)
+        {
+        case 1:
+            getEnvfxAct(obj, player, 315, 0);
+            break;
+        case 2:
+            getEnvfxAct(obj, player, 312, 0);
+            break;
+        }
+    }
+    MMP_levelcontrol_update(obj);
+    return 0;
+}
+
+void fn_801A5D88(int obj, int explosionVariant);
+#pragma scheduling reset
+#pragma peephole reset
+/* segment pragma-stack balance (re-split): */
+#pragma peephole reset
+#pragma peephole reset
+
 #include "main/dll/MMP/mmp_asteroid_re_state.h"
 #include "main/dll/MMP/mmp_moonrock_state.h"
 #include "ghidra_import.h"
@@ -104,16 +276,9 @@ STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
 
 extern undefined8 FUN_80006728();
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
-extern void* ObjGroup_GetObjects();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_8005d0ac();
 extern undefined4 SH_LevelControl_runBloopEvent();
 
@@ -178,7 +343,6 @@ extern f32 lbl_803DDB28;
 extern int lbl_803DDB2C;
 extern f32 lbl_803E44C0;
 
-extern void* Obj_GetPlayerObject(void);
 extern void gameTextShow(int textId);
 extern void envFxActFn_800887f8(int value);
 extern void skyFn_80088c94(int flags, int mode);
@@ -205,6 +369,7 @@ extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int 
 #pragma scheduling off
 void MMP_levelcontrol_update(int obj)
 {
+    extern void* Obj_GetPlayerObject(void);
     int playerForMap;
     int playerForFx;
 
@@ -366,6 +531,7 @@ FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 para
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9,
              undefined4 param_10, ObjAnimUpdateState* animUpdate)
 {
+    extern undefined4 GameBit_Set(int eventId, int value);
     byte bVar1;
     uint uVar2;
     int iVar3;
@@ -602,6 +768,7 @@ void mmp_gyservent_update(int obj)
 #pragma peephole off
 int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
+    extern undefined4 GameBit_Set(int eventId, int value);
     MoonSeedBushState* state = ((GameObject*)obj)->extra;
     int def = *(int*)&((GameObject*)obj)->anim.placementData;
     int i;
@@ -642,6 +809,7 @@ int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 #pragma peephole off
 void MMP_levelcontrol_init(int obj)
 {
+    extern undefined4 GameBit_Set(int eventId, int value);
     ((GameObject*)obj)->objectFlags |= 0x6000;
     if (getSaveGameLoadStatus() != 0)
     {
@@ -682,6 +850,8 @@ extern f32 lbl_803E4568;
 #pragma peephole off
 void fn_801A7B10(int obj)
 {
+    extern undefined4 ObjHits_EnableObject();
+    extern undefined4 ObjHits_SetHitVolumeSlot();
     extern int fn_801A78C8(int obj, f32 x, f32 y, f32 z, f32 y2, f32* out1, int* out2);
     MmpMoonrockState * state = ((GameObject*)obj)->extra;
     int auStack_14[1];
@@ -780,6 +950,7 @@ void fn_801A7B10(int obj)
 #pragma peephole off
 int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
+    extern undefined4 GameBit_Set(int eventId, int value);
     MmpAsteroidReState * state = ((GameObject*)obj)->extra;
     int i;
     animUpdate->sequenceEventActive = 0;
@@ -900,7 +1071,6 @@ extern void saveGame_saveObjectPos(int obj);
 
 extern int objBboxFn_800640cc(int* from, int* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
                               int p10);
-extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern f32 lbl_803E454C;
 extern f32 lbl_803E4550;
 extern f32 lbl_803E4558;
@@ -910,6 +1080,7 @@ extern f32 lbl_803E4558;
 #pragma peephole off
 void fn_801A79E0(int obj)
 {
+    extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
     int auStack_14[21];
     int local_18;
     MmpMoonrockState * state;
@@ -984,6 +1155,7 @@ extern int* gCarryableInterface;
 #pragma scheduling off
 void mmp_moonrock_free(int obj)
 {
+    extern undefined8 ObjGroup_RemoveObject();
     ObjGroup_RemoveObject((uint)obj, 4);
     (*(void (*)(int))(*(int*)(*gCarryableInterface + 0x10)))(obj);
 }
@@ -1012,6 +1184,7 @@ extern f32 lbl_803E4578;
 #pragma peephole off
 void fn_801A7CC4(int obj)
 {
+    extern void* Obj_GetPlayerObject(void);
     MmpMoonrockState * state = ((GameObject*)obj)->extra;
     struct
     {
@@ -1112,6 +1285,8 @@ int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32* out1, int* out2)
 #pragma scheduling off
 void mmp_moonrock_init(int obj, int param2)
 {
+    extern undefined4 ObjGroup_AddObject();
+    extern undefined4 ObjHits_DisableObject();
     MmpMoonrockState * state = ((GameObject*)obj)->extra;
     u8 kind;
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
@@ -1148,8 +1323,6 @@ void mmp_moonrock_init(int obj, int param2)
 #pragma scheduling reset
 
 extern int* ObjList_GetObjects(int* idx, int* count);
-extern f32 Vec_distance(void* a, void* b);
-extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern void setAButtonIcon(int icon);
 extern f32 lbl_803E4580;
 
@@ -1157,6 +1330,9 @@ extern f32 lbl_803E4580;
 #pragma peephole off
 void fn_801A7D74(int obj, u8 a, u8 b)
 {
+    extern void Sfx_PlayFromObject(int obj, u16 sfxId);
+    extern f32 Vec_distance(void* a, void* b);
+    extern undefined4 GameBit_Set(int eventId, int value);
     int i;
     int count;
     int* list;
@@ -1349,7 +1525,6 @@ void mmp_trenchfx_update(int obj)
 
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
 extern f32 mathSinf(f32);
-extern void CameraShake_Start(f32 a, f32 b, f32 c);
 extern void doRumble(f32 duration);
 extern char lbl_803231D0[];
 extern char lbl_803AC900[];
@@ -1376,6 +1551,9 @@ extern f32 lbl_803E453C;
 #pragma peephole off
 void mmp_asteroid_re_update(int obj)
 {
+    extern void CameraShake_Start(f32 a, f32 b, f32 c);
+    extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+    extern undefined4 GameBit_Set(int eventId, int value);
     MmpAsteroidReState * state = ((GameObject*)obj)->extra;
     if ((state->eventFlags & 0x80) == 0)
     {
@@ -1518,6 +1696,10 @@ extern f32 lbl_803E45A0;
 #pragma peephole off
 void mmp_moonrock_update(int obj)
 {
+    extern void Sfx_PlayFromObject(int obj, u16 sfxId);
+    extern void* Obj_GetPlayerObject(void);
+    extern void* ObjGroup_GetObjects();
+    extern undefined4 ObjHits_DisableObject();
     MmpMoonrockState * state = ((GameObject*)obj)->extra;
     int def = *(int*)&((GameObject*)obj)->anim.placementData;
     u8 grabbed;
