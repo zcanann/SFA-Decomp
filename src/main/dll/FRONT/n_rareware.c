@@ -16,7 +16,7 @@ extern void drawTexture(double x, double y, int texture, uint alpha, uint flags)
 extern void gameTextSetColor(u8 red, u8 green, u8 blue, u8 alpha);
 extern undefined4 gameTextGetStr(int id);
 extern void gameTextShowStr(undefined4 text, int font, int x, int y);
-extern void mapUnload(int mapId, int flags);
+extern void mapUnload(int mapId, uint flags);
 extern void setForceLoadImmediately(void);
 extern void loadMapAndParent(int param_1);
 extern void clearForceLoadImmediately(void);
@@ -24,7 +24,7 @@ extern void loadSunAndMoon(void);
 extern void gameUiLoadResources(void);
 extern void lockIconInit(void);
 extern void warpToMap(int mapId, int param_2);
-extern void loadUiDll(int dllNo);
+extern void loadUiDll(int id);
 
 extern int lbl_803A4438[];
 extern u8 gDvdErrorPauseActive;

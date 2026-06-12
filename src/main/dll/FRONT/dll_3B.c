@@ -12,7 +12,7 @@ extern void gameTimerStop(void);
 extern void gameTextLoadDir(int dirId);
 extern void setDrawLights(int arg);
 extern void setIsOvercast(int arg);
-extern void saveFn_8007d960(int arg);
+extern void saveFn_8007d960(int);
 extern void envFxActFn_800887f8(int arg);
 extern void Movie_SetVolumeFade(int volume, int fadeFrames);
 extern void setLinkIsRotated(void);

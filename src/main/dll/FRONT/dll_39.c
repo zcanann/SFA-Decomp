@@ -7,7 +7,7 @@
 extern void Movie_SetVolumeFade(int volume, int fadeFrames);
 extern bool prepareAttractMode();
 extern void fn_8001404C(int param_1);
-extern void loadUiDll(int dllNo);
+extern void loadUiDll(int id);
 extern void gameTextSetDrawFunc(void* callback);
 extern void GameBit_Set(int eventId, int value);
 extern u8 shouldShowCredits(u8 * obj);
@@ -21,7 +21,7 @@ extern char sNAttractModeStringBlock[];
 static char sNRarewareReportTag[] = "n_rareware\n";
 
 extern void* mmAlloc(int size, int heap, int flags);
-extern int mmSetFreeDelay(int delay);
+extern uint mmSetFreeDelay(uint delay);
 extern void mm_free(void* ptr);
 extern void printHeapStats(int param_1);
 extern void defragMemory(int param_1);
@@ -55,7 +55,7 @@ extern int gAttractMovieOffsetY;
 extern int gAttractMovieOffsetX;
 extern u8 gAttractMovieRetraceCountdown;
 extern u8 gAttractMoviePlaybackEnabled;
-extern int gAttractMovieIdleFrameCount;
+extern s32 gAttractMovieIdleFrameCount;
 extern u16* gRenderModeObj;
 extern f32 lbl_803E1D10;
 extern f32 lbl_803E1D14;
