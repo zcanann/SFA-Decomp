@@ -1033,7 +1033,7 @@ void arwarwing_handlePathDamage(int obj, int state)
 #pragma scheduling off
 void arwarwing_handleObjectDamage(int obj, int state)
 {
-    int hitVol;
+    uint hitVol;
     int hitObj;
 
     if (objGetFlagsE5_2(obj) != 0)

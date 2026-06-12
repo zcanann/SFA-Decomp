@@ -1,6 +1,8 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objanim_internal.h"
+#include "main/objhits.h"
 
 
 #define ARW_SQUADRON_STATE_WAITING 0
@@ -466,12 +468,14 @@ void arwsquadron_handleDamage(int obj, int state)
 {
     ArwSquadronState* squad = (ArwSquadronState*)state;
     SquadCmdFlags* flags = &squad->flags.cmd;
+    ObjHitsPriorityState* hitState;
     int hitObj;
-    int hitVol;
+    uint hitVol;
     int arwing;
 
     if (((GameObject*)obj)->anim.hitReactState == NULL)
         return;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     if (squad->hitFlashActive != 0)
     {
         squad->hitFlashTimer -= timeDelta;
@@ -484,7 +488,7 @@ void arwsquadron_handleDamage(int obj, int state)
         }
     }
     if (ObjHits_GetPriorityHit(obj, &hitObj, 0, &hitVol) != 0 ||
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0)
+        hitState->lastHitObject != 0)
     {
         if (flags->f10)
         {

@@ -1,5 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
+#include "main/obj_placement.h"
 
 #define BROKENPIPE_OBJECT_FLAGS_INIT 0x4000
 
@@ -19,7 +21,7 @@ STATIC_ASSERT(sizeof(BrokenPipeSetup) == 0x20);
 
 typedef struct BrokenPipeState
 {
-    int hitEffectCooldown;
+    f32 hitEffectCooldown;
 } BrokenPipeState;
 
 STATIC_ASSERT(sizeof(BrokenPipeState) == 4);
@@ -55,5 +57,5 @@ void brokenpipe_update(int obj)
     BrokenPipeState* state = ((GameObject*)obj)->extra;
 
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
-                                              (int)&state->hitEffectCooldown);
+                                              &state->hitEffectCooldown);
 }

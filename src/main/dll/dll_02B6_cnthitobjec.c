@@ -45,7 +45,7 @@ void cnthitobjec_hitDetect(int obj)
     CntHitObjectSetup* setup = (CntHitObjectSetup*)((GameObject*)obj)->anim.placementData;
     CntHitObjectState* state = ((GameObject*)obj)->extra;
     int hit;
-    int dmg;
+    uint dmg;
     int amount;
     int model;
 
@@ -117,7 +117,7 @@ void cnthitobjec_init(int obj, int setup)
     state->allowedHitSourceCount = lbl_803DC42C[setupData->hitSourceProfile];
     if ((void*)state->allowedHitSources == (void*)&lbl_803DC428)
     {
-        ObjHits_ClearSourceMask(8);
+        ObjHits_ClearSourceMask(obj, 8);
     }
     if (setupData->mode == CNTHIT_MODE_VISIBLE_OBJECT)
     {

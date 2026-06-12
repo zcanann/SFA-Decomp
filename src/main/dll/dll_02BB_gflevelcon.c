@@ -368,7 +368,7 @@ typedef struct GfHitState
 void fn_8023A3E4(int p1, int p2)
 {
     u8 i;
-    int hitVol;
+    uint hitVol;
     int hitType;
     int hitObj;
     int got;

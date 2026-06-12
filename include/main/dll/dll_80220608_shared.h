@@ -177,8 +177,8 @@ extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern void objfx_spawnBoxBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
                                 int flags, f32 f8val, f32 mulX, f32 mulY, f32 mulZ);
-extern void ObjHits_DisableObject(int obj);
-extern void ObjHits_EnableObject(int obj);
+extern void ObjHits_DisableObject(u32 obj);
+extern void ObjHits_EnableObject(u32 obj);
 extern int gameBitIncrement(int id);
 extern f32 lbl_803E6D58;
 extern f32 lbl_803E6D5C;
@@ -322,7 +322,7 @@ extern f32 lbl_803E6E90;
 
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
 extern int ObjModel_GetBaseVertexCoords(int model, int idx);
-extern void ObjHits_DisableObject(int obj);
+extern void ObjHits_DisableObject(u32 obj);
 extern int wctemplebri_interactCallback(int obj, int p2, ObjAnimUpdateState *animUpdate);
 extern f32 lbl_803E6E70;
 extern f32 lbl_803E6E74;
@@ -662,8 +662,8 @@ typedef struct CntHitFlags {
 
 extern f32 lbl_803E7430;
 extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
-extern void ObjHits_DisableObject(int obj);
-extern void ObjHits_EnableObject(int obj);
+extern void ObjHits_DisableObject(u32 obj);
+extern void ObjHits_EnableObject(u32 obj);
 extern void ObjHitbox_SetSphereRadius(int obj, int radius);
 
 
@@ -673,9 +673,10 @@ extern void ObjHitbox_SetSphereRadius(int obj, int radius);
 extern int lbl_8032BEF8[];
 extern u8 lbl_803DC42C[];
 extern int lbl_803DC428;
-extern void ObjHits_ClearSourceMask(int mask);
+extern void ObjHits_ClearSourceMask(int obj, int sourceMask);
 extern int arrayIndexOf(int array, int count, int value);
-extern int ObjHits_GetPriorityHit(int obj, int *outHit, int *outIdx, int *outVol);
+extern int ObjHits_GetPriorityHit(int obj, int *outHitObject, int *outSphereIndex,
+                                  uint *outHitVolume);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 
 
@@ -699,7 +700,9 @@ extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particle
 extern f32 lbl_803E7338;
 extern f32 lbl_803E733C;
 extern f32 lbl_803E7340;
-extern int ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d, int e, int state);
+extern int ObjHits_PollPriorityHitEffectWithCooldown(int obj, uint hitFxMode, uint colorR,
+                                                     uint colorG, uint colorB, uint sfxId,
+                                                     float *cooldown);
 
 
 
@@ -782,7 +785,8 @@ extern void Music_Trigger(int id, int p2);
 
 
 extern int getArwing(void);
-extern int ObjHits_GetPriorityHit(int obj, int *outHit, int *outIdx, int *outVol);
+extern int ObjHits_GetPriorityHit(int obj, int *outHitObject, int *outSphereIndex,
+                                  uint *outHitVolume);
 extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
 extern int getAngle(f32 dx, f32 dz);
 extern f32 mathCosf(f32 x);
@@ -808,7 +812,7 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E70EC;
 extern f32 lbl_803E70F0;
 extern f32 lbl_803E70F4;
-extern void ObjHits_SetTargetMask(int obj, int mask);
+extern void ObjHits_SetTargetMask(int obj, u8 targetMask);
 extern void setMatrixFromObjectPos(void *mtx, void *src);
 extern void Matrix_TransformPoint(void *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
 extern void gameTextFn_80125ba4(int id);
@@ -851,7 +855,7 @@ extern f32 lbl_803DC3D0;
 extern f32 lbl_803DC3D4;
 extern f32 lbl_803DC3D8;
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern void ObjHits_SetHitVolumeSlot(int obj, int p2, int p3, int p4);
+extern void ObjHits_SetHitVolumeSlot(u32 obj, int hitVolume, int hitType, int sourceSlot);
 extern void projectileParticleFxFn_80099660(int obj, f32 p2, int p3);
 extern int ObjModel_GetTexture(int p1, int p2);
 extern void fn_800541A4(int p1, int p2);
@@ -959,7 +963,8 @@ extern f32 lbl_803E7598;
 
 
 
-extern int ObjHits_GetPriorityHit(int obj, int *outHit, int *outIdx, int *outVol);
+extern int ObjHits_GetPriorityHit(int obj, int *outHitObject, int *outSphereIndex,
+                                  uint *outHitVolume);
 extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32 *x, f32 *y, f32 *z, int p6);
 extern void DIMexplosionFn_8009a96c(int obj, f32 a, f32 b, f32 c, f32 d, int e, int f,
                                     int g, int h, int i, int j, int k);
@@ -1060,7 +1065,7 @@ extern f32 interpolate(f32 a, f32 b, f32 c);
 extern void objfx_spawnLightPulse(int obj, f32 brightness, int b, int c, int d, f32 e, int f);
 extern void fn_80098B18(int obj, f32 brightness, int b, int c, int d, void *vec);
 extern void lightSetField4D(void *light, int v);
-extern void ObjHits_SyncObjectPositionIfDirty(int obj);
+extern void ObjHits_SyncObjectPositionIfDirty(u32 obj);
 extern f32 lbl_8032BD10[];
 extern f32 lbl_803E73A8;
 extern f32 lbl_803E73AC;
@@ -1088,8 +1093,11 @@ extern f32 lbl_803E7308;
 extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
 extern void vecRotateZXY(int obj, f32 *vec);
 extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void *vec, f32 f, int flag);
-extern int ObjHits_GetPriorityHitWithPosition(int obj, f32 *a, f32 *b, f32 *c, f32 *x, f32 *y, f32 *z);
-extern void ObjHits_RecordObjectHit(int handle, int obj, int a, int b, int c);
+extern int ObjHits_GetPriorityHitWithPosition(int obj, int *outHitObject, int *outSphereIndex,
+                                              uint *outHitVolume, float *outHitPosX,
+                                              float *outHitPosY, float *outHitPosZ);
+extern int ObjHits_RecordObjectHit(int obj, int hitObj, char priority, u8 hitVolume,
+                                   u8 sphereIndex);
 extern int Obj_GetPlayerObject(void);
 extern f32 sqrtf(f32 x);
 extern f32 gTreeEffectColors[];

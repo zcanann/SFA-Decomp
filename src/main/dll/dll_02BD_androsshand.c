@@ -335,7 +335,7 @@ void androsshand_setState(int obj, int newState, u8 force)
 void androsshand_handleDamage(int obj, int hand)
 {
     AndrossHandState* state = (AndrossHandState*)hand;
-    int hitVol;
+    uint hitVol;
     int sphereIdx;
     int hitObj;
     f32 x;

@@ -85,7 +85,7 @@ void arwingandrossstuff_hitDetect(int obj)
     if (((GameObject*)obj)->anim.seqId == 0x80d)
     {
         int hit;
-        int vol;
+        uint vol;
 
         if (ObjHits_GetPriorityHit(obj, &hit, 0, &vol) != 0)
         {

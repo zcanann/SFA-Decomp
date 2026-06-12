@@ -51,7 +51,7 @@ typedef struct TreeState
     f32 swayTimer;
     f32 scale;
     f32 hitCooldownTimer;
-    int hitEffectCooldown;
+    f32 hitEffectCooldown;
     u16 proximityRadius;
     u16 lastPlayerDistance;
     u16 flags;
@@ -268,7 +268,9 @@ void tree_update(int obj)
     int player;
     int i;
     f32 dx, dz, dist;
-    f32 out8, outc, out10;
+    int hitObject;
+    int hitSphereIndex;
+    uint hitVolume;
     f32 vec14[3];
     f32 colorVec[3];
     f32 intensity;
@@ -294,13 +296,13 @@ void tree_update(int obj)
         {
             if (state->flags & TREE_FLAG_HIT_WITH_POSITION)
             {
-                hit = ObjHits_GetPriorityHitWithPosition(obj, &out10, &outc, &out8,
+                hit = ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &hitSphereIndex, &hitVolume,
                                                          &colorVec[0], &colorVec[1], &colorVec[2]);
             }
             else
             {
                 hit = ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129,
-                                                                (int)&state->hitEffectCooldown);
+                                                                &state->hitEffectCooldown);
             }
             if (state->hitCooldownTimer >= lbl_803E72F8)
             {

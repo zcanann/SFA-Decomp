@@ -80,7 +80,7 @@ void androssbrain_update(int obj)
     u8 flag = 0;
     int hitObj;
     int sphereIdx;
-    int hitVol;
+    uint hitVol;
     int hit;
     int t;
     u8 currentState;
