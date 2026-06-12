@@ -1186,7 +1186,6 @@ config.libs = [
             Object(NonMatching, "main/dll/ARW/dll_0200_dll200.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/ARW/dll_0201_wmcolrise.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/ARW/dll_0204_wmtorch.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/ARW/dll_801F33B4.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/LGT/LGTpointlight.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/LGT/LGTdirectionallight.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/WM/dll_0209_wmlevelcontrol.c", cflags=cflags_dll_noopt),

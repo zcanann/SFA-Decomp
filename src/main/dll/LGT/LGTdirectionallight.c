@@ -1,3 +1,71 @@
+/* === moved from main/dll/LGT/LGTpointlight.c [801F3C2C-801F3C7C) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/LGT/LGTpointlight.h"
+#include "main/effect_interfaces.h"
+#include "main/expgfx.h"
+#include "main/game_object.h"
+
+
+extern void* objCreateLight(void* obj, int);
+extern void modelLightStruct_setLightKind(void*, int);
+extern void modelLightStruct_setPosition(f32, f32, f32);
+extern void modelLightStruct_setDiffuseColor(void*, u8, u8, u8, int);
+extern void modelLightStruct_setSpecularColor(void*, u8, u8, u8, int);
+extern void modelLightStruct_setDistanceAttenuation(void*, f32, f32);
+extern void modelLightStruct_setEnabled(void*, int, f32);
+extern void modelLightStruct_startColorFade(void*, int, int);
+extern void modelLightStruct_setDiffuseTargetColor(void*, int, int, int, int);
+extern void lightSetField4D(void*, int);
+extern void modelLightStruct_setupGlow(void*, int, u8, u8, u8, int, f32);
+extern void modelLightStruct_setGlowProjectionRadius(void*, f32);
+
+extern u8 lbl_802C2488[];
+extern f32 lbl_803E5E08;
+extern f32 lbl_803E5E0C;
+extern f32 lbl_803E5E10;
+extern f32 lbl_803E5E20;
+extern f32 lbl_803E5E24;
+extern f32 lbl_803E5E28;
+extern f32 lbl_803E5E2C;
+extern f32 lbl_803E5E30;
+extern f32 lbl_803E5E34;
+extern f32 lbl_803E5E38;
+extern f32 lbl_803E5E3C;
+extern f32 lbl_803E5E40;
+
+typedef struct LightColorTable
+{
+    u8 c[45];
+} LightColorTable;
+
+/*
+ * --INFO--
+ *
+ * Function: lightsource_init
+ * EN v1.0 Address: 0x801F37CC
+ * EN v1.0 Size: 1112b
+ */
+void lightsource_init(GameObject* obj, LightSourceSetup* setup);
+
+/* Trivial 4b 0-arg blr leaves. */
+void lightsource_release(void);
+
+void lightsource_initialise(void);
+
+void wmworm_hitDetect(void)
+{
+}
+
+/* 8b "li r3, N; blr" returners. */
+int wmworm_getExtraSize(void) { return 0x1c; }
+int wmworm_getObjectTypeId(void) { return 0x0; }
+
+void wmworm_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+
+void wmworm_free(int obj)
+{
+    (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
 #include "main/mapEvent.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -228,4 +296,3 @@ void wmworm_release(void)
 void wmworm_initialise(void)
 {
 }
-
