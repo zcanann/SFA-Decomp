@@ -1562,6 +1562,18 @@ alloc call = a dropped argument riding the alloc result. METHOD: after 2-3
 failed coloring spellings on such an mr, grep SIBLING units for the same
 callee (in-tree oracle — DRearthwalk.c showed `loadObjectAtObject(obj,
 setup)` 2-arg) instead of continuing the spelling battery.
+COMPARE-OPERAND-IN-ARG-REG tell (cfguardian, 2 finds): a value loaded/
+copied into r4+ FOR A COMPARE (`mr r4,r3; cmplwi r4,0` after a call, or
+`lbz r4,off(rN); cmplw r4,r3`) where your compile uses r3/r0, AND a
+seemingly-short-of-args `bl` follows inside the guarded arm with rN
+untouched = the compare operand IS that call's next argument. Looks
+exactly like a #66/#107 volatile-homing residual and resists every
+naming/embed/fn-scope mover (the value is an ARG web, not a named
+local) — read the rN liveness into the bl BEFORE spelling batteries.
+Recovered `dll_2E_func04(sub, found)` ×2 (head-track target; callee defn
+in moveLib proved the 2-arg form) and `GameBit_Set(0x4b, sub->questState)`
+(an import comment had even excused the one-arg call as "(sic) matches
+retail") — all three real behavioral bugs, 99.31→99.54.
 
 ### 99.5%+ tier sweep findings (task #142) — category triage table
 
