@@ -7,7 +7,6 @@
 #include "main/objlib.h"
 
 extern uint GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
 
 
 /*
@@ -27,7 +26,6 @@ extern void GameBit_Set(int eventId, int value);
 
 #pragma scheduling off
 #pragma peephole off
-void dbegg_processMessages(int obj);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -47,12 +45,9 @@ void dbegg_processMessages(int obj);
 
 
 /* 8b "li r3, N; blr" returners. */
-int dbegg_getExtraSize(void);
-int dbegg_getObjectTypeId(void);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-void dbegg_free(int x);
 #pragma scheduling reset
 
 /* plain forwarder. */
@@ -67,7 +62,6 @@ void dbegg_free(int x);
 /* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
 #pragma scheduling off
 #pragma peephole off
-void dll_224_update(void* param_1);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -76,21 +70,15 @@ void dll_224_update(void* param_1);
 #pragma scheduling off
 #pragma scheduling reset
 
-int dbegg_setScale(int obj);
 
 /* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
-extern f32 lbl_803E61C8;
-extern f32 lbl_803E61D0;
-extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
 extern int Obj_SetActiveModelIndex(int obj, int idx);
 #pragma scheduling off
 #pragma peephole off
-void dbegg_setupFromDef(int obj, u8* state);
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-int dbegg_func0B(int obj, f32* v);
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -99,53 +87,29 @@ int dbegg_func0B(int obj, f32* v);
 #pragma scheduling off
 #pragma scheduling reset
 
-extern void objRenderFn_8003b8f4(f32);
 #pragma scheduling off
 #pragma peephole off
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803E61CC;
 #pragma scheduling off
 #pragma peephole off
-void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 #pragma peephole reset
 #pragma scheduling reset
 
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
 #pragma scheduling off
 #pragma peephole off
-void dll_224_init(void* obj, void* other);
 
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
-                              int p10);
-extern f32 lbl_803E6218;
-extern f32 lbl_803E621C;
 
 #pragma scheduling off
-void dbegg_hitDetect(int obj);
 #pragma scheduling reset
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
 
-extern f32 lbl_803E61E0;
-extern f32 lbl_803E61E4;
-extern f32 lbl_803E61E8;
-extern f32 lbl_803E61EC;
-extern f32 lbl_803E61F0;
-extern f32 lbl_803E61F4;
-extern f32 lbl_803E61F8;
-extern f32 lbl_803E61FC;
-extern f32 lbl_803E6200;
-extern f32 lbl_803E6204;
-extern f32 lbl_803E6208;
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern f32 sqrtf(f32 x);
-extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int*** listOut, int p6, int p7);
 
 #pragma scheduling off
 #pragma peephole off
@@ -184,14 +148,12 @@ extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int*** listOut, in
 #pragma peephole off
 #pragma opt_common_subs off
 #pragma opt_loop_invariants off
-int fn_801FE560(int obj, f32* out, f32 a, f32 b, int flag);
 #pragma opt_loop_invariants reset
 #pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-void fn_801FE774(int cam, f32* vel);
 #pragma scheduling reset
 #pragma scheduling reset
 #pragma peephole reset
@@ -364,84 +326,14 @@ STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 /* chuka extra block (extraSize 0xC). */
 #include "main/dll/baddie/chuka.h"
 
-typedef struct DfpseqpointPlacement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    s32 unk14;
-    u8 pad18[0x19 - 0x18];
-    u8 unk19;
-    u8 pad1A[0x1E - 0x1A];
-    s8 unk1E;
-    u8 pad1F[0x24 - 0x1F];
-    s16 unk24;
-    u8 pad26[0x2B - 0x26];
-    u8 unk2B;
-    u8 pad2C[0x2E - 0x2C];
-    s8 unk2E;
-    u8 pad2F[0x30 - 0x2F];
-} DfpseqpointPlacement;
-
-
-typedef struct DrakorenergyPlacement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    s32 unk14;
-    u8 pad18[0x19 - 0x18];
-    u8 unk19;
-    u8 pad1A[0x1E - 0x1A];
-    s8 unk1E;
-    u8 pad1F[0x20 - 0x1F];
-    s16 gameBitId;
-    u8 pad22[0x24 - 0x22];
-    s16 unk24;
-    u8 pad26[0x2B - 0x26];
-    u8 unk2B;
-    u8 pad2C[0x2E - 0x2C];
-    s8 unk2E;
-    u8 pad2F[0x30 - 0x2F];
-} DrakorenergyPlacement;
 
 
 
 
-typedef struct DfpobjcreatorObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s16 gameBit;
-    u8 pad1A[0x1C - 0x1A];
-    s16 spawnPeriod;
-    u8 pad1E[0x24 - 0x1E];
-    s16 unk24;
-    u8 pad26[0x28 - 0x26];
-} DfpobjcreatorObjectDef;
 
 
-typedef struct Dbholecontrol1Placement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    s32 unk14;
-    s16 unk18;
-    u8 pad1A[0x1C - 0x1A];
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x24 - 0x22];
-    s16 unk24;
-    u8 pad26[0x2B - 0x26];
-    u8 unk2B;
-    u8 pad2C[0x2E - 0x2C];
-    s8 unk2E;
-    u8 pad2F[0x30 - 0x2F];
-} Dbholecontrol1Placement;
+
+
 
 
 typedef struct ChukaPlacement
@@ -467,83 +359,10 @@ typedef struct ChukaPlacement
 } ChukaPlacement;
 
 
-typedef struct DfpobjcreatorPlacement
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
-    f32 posX;
-    f32 posY;
-    f32 posZ;
-    s32 unk14;
-    u8 pad18[0x19 - 0x18];
-    u8 unk19;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x24 - 0x22];
-    s16 unk24;
-    u8 pad26[0x2B - 0x26];
-    u8 unk2B;
-    u8 pad2C[0x2E - 0x2C];
-    s8 unk2E;
-    u8 pad2F[0x30 - 0x2F];
-} DfpobjcreatorPlacement;
 
 
-typedef struct DbstealerwormPlacement
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u32 eventConfigId;
-    s16 incrementGameBit;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x24 - 0x22];
-    s16 unk24;
-    u8 pad26[0x2B - 0x26];
-    u8 unk2B;
-    s16 unk2C;
-    s8 unk2E;
-    u8 pad2F[0x30 - 0x2F];
-} DbstealerwormPlacement;
 
 
-typedef struct DbeggPlacement
-{
-    u8 pad0[0x4 - 0x0];
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
-    f32 targetPosX;
-    f32 targetPosY;
-    f32 targetPosZ;
-    u32 unk14;
-    s16 unk18;
-    s16 unk1A;
-    s16 triggerGameBit;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x24 - 0x22];
-    s16 unk24;
-    u8 pad26[0x2B - 0x26];
-    u8 unk2B;
-    s16 unk2C;
-    s8 unk2E;
-    u8 pad2F[0x30 - 0x2F];
-} DbeggPlacement;
 
 
 /* GCRobotBlast extra block (extraSize 0x8). */
@@ -566,26 +385,18 @@ typedef struct DbHoleControl1State
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
-extern undefined4 getLActions();
 extern undefined4 FUN_80006824();
 extern uint FUN_80006ab8();
 extern undefined8 FUN_80006ac4();
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined8 FUN_800305f8();
-extern int ObjHits_GetPriorityHit();
-extern uint ObjGroup_ContainsObject();
-extern int ObjGroup_FindNearestObjectForObject();
-extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjMsg_SendToObject();
 extern int Obj_GetYawDeltaToObject();
 extern undefined4 FUN_8003b818();
 extern double FUN_80293900();
 
 extern undefined4 DAT_8032a290;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern ModgfxInterface** gModgfxInterface;
-extern EffectInterface** gPartfxInterface;
 extern f64 DOUBLE_803e6f78;
 extern f64 DOUBLE_803e7000;
 extern f32 lbl_803DC074;
@@ -607,12 +418,9 @@ extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 
 
-int GCRobotBlast_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 
-int dbstealerworm_stateHandlerB04(int obj, int p);
 
-int dbstealerworm_stateHandlerB02(int obj, int p);
 
 
 /*
@@ -1124,10 +932,8 @@ FUN_80202130(double param_1, double param_2, undefined8 param_3, double param_4,
 int dbstealerworm_stateHandlerA05(int obj, int p);
 
 
-int dbstealerworm_stateHandlerA03(int obj, int p);
 
 
-int dbstealerworm_stateHandlerA01(int obj, int p);
 
 
 /*
@@ -1155,109 +961,55 @@ void FUN_80204320(int param_1, int param_2, int param_3, int param_4, int param_
 void fn_80204320(int obj);
 
 
-void dll_22C_init(int obj, char* p);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void dbegg_release(void);
 
-void dbegg_initialise(void);
 
-void GCRobotBlast_free(void);
 
-void GCRobotBlast_render(void);
 
-void GCRobotBlast_hitDetect(void);
 
-void GCRobotBlast_update(void);
 
-void GCRobotBlast_release(void);
 
-void GCRobotBlast_initialise(void);
 
-void DrakorEnergy_func0B_nop(void);
 
-void drakorenergy_free(void);
 
-void drakorenergy_hitDetect(void);
 
-void drakorenergy_release(void);
 
-void drakorenergy_initialise(void);
 
-extern f32 lbl_803E627C;
-extern f32 lbl_803E62A0;
 
-void drakorenergy_init(int* obj, u8* init);
 
-void dbstealerworm_release(void);
 
-void dbholecontrol1_hitDetect(void);
 
-void dbholecontrol1_release(void);
 
-void dbholecontrol1_initialise(void);
 
-extern void Obj_RemoveFromUpdateList(int* obj);
 
-void dbholecontrol1_update(int* obj);
 
-extern void Stack_Free(int* stack);
-extern void Obj_FreeObject(int obj);
-extern void** gBaddieControlInterface;
-extern int* gPlayerInterface;
-extern f32 lbl_803E62A8;
-extern f32 lbl_803E62FC;
 extern u8 lbl_80329514[];
-extern void* memset(void* dst, int v, int n);
 
-void dbstealerworm_init(int* obj, u8* def, int param3);
 
-void dbstealerworm_free(int* obj);
 
-void dbholecontrol1_init(int* obj, u8* params);
 
-void dfplevelcontrol_render(void);
 
-void dfplevelcontrol_hitDetect(void);
 
-void dfplevelcontrol_release(void);
 
-void dfpobjcreator_hitDetect(void);
 
-void dfpobjcreator_release(void);
 
-void dfpobjcreator_initialise(void);
 
-void dll_22C_hitDetect_nop(void);
 
-void dll_22C_release_nop(void);
 
-void dll_22C_initialise_nop(void);
 
-void doorswitch_render(void);
 
-void doorswitch_hitDetect(void);
 
-void doorswitch_release(void);
 
-void doorswitch_initialise(void);
 
-void dfpseqpoint_free(void);
 
-void dfpseqpoint_hitDetect(void);
 
-void dfpseqpoint_release(void);
 
-void dfpseqpoint_initialise(void);
 
-void dfpseqpoint_init(int* obj, u8* init);
 
-void DFP_Torch_hitDetect(void);
 
-void DFP_Torch_release(void);
 
-void DFP_Torch_initialise(void);
 
 void chuka_render(void)
 {
@@ -1265,26 +1017,6 @@ void chuka_render(void)
 
 /* 8b "li r3, N; blr" returners. */
 int GCRobotBlast_getExtraSize(void);
-int GCRobotBlast_getObjectTypeId(void);
-int drakorenergy_getExtraSize(void);
-int drakorenergy_getObjectTypeId(void);
-int dbstealerworm_getExtraSize(void);
-int dbstealerworm_getObjectTypeId(void);
-int dbholecontrol1_getExtraSize(void);
-int dbholecontrol1_getObjectTypeId(void);
-int dfplevelcontrol_getExtraSize(void);
-int dfplevelcontrol_getObjectTypeId(void);
-int dfpobjcreator_getExtraSize(void);
-int dfpobjcreator_getObjectTypeId(void);
-int dll_22C_SeqFn(void);
-int dll_22C_getExtraSize_ret_16(void);
-int dll_22C_getObjectTypeId(void);
-int doorswitch_getExtraSize(void);
-int doorswitch_getObjectTypeId(void);
-int dfpseqpoint_getExtraSize(void);
-int dfpseqpoint_getObjectTypeId(void);
-int DFP_Torch_getExtraSize(void);
-int DFP_Torch_getObjectTypeId(void);
 int chuka_SeqFn(void) { return 0x0; }
 int chuka_getExtraSize(void) { return 0xc; }
 int chuka_getObjectTypeId(void) { return 0x0; }
@@ -1293,23 +1025,13 @@ int chuka_getObjectTypeId(void) { return 0x0; }
 s16 DBstealerworm_setScale(int* obj);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E6390;
-extern f32 lbl_803E6398;
-extern f32 lbl_803E63B8;
 
-void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dfpobjcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-extern f32 lbl_803E6278;
 
-void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 
-extern int gDBStealerWormStateHandlersA[];
 
 void chuka_free(int obj)
 {
@@ -1328,166 +1050,82 @@ void chuka_hitDetect(int obj)
 
 void dbstealerworm_hitDetect(int obj);
 
-void GCRobotBlast_init(int obj, s8* p);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void dbholecontrol1_free(int x);
-void dfplevelcontrol_free(int x);
 
 /* plain forwarder. */
-extern void DBstealerwo_setFuncPtrs_80203c78(void);
-void dbstealerworm_initialise(void);
 
 /* OSReport(string) wrappers. */
-extern void OSReport(const char* fmt, ...);
-void doorswitch_free(void);
-void doorswitch_update(void);
-void doorswitch_init(void);
 
-int DrakorEnergy_setScale(int* obj);
 
 /* alpha-flag predicate: returns 7 on fire/clear, 0 on idle */
-int dbstealerworm_stateHandlerB00(int p1, int p2);
 
 /* baddie anim update: fires vtable[0x13] when flag set */
-int dbstealerworm_stateHandlerB03(int p1, int p2);
 
 /* anim progress accumulator */
-extern f32 lbl_803E62BC;
 
-int dbstealerworm_stateHandlerB01(int p1, int p2);
 
 /* clear list-actions wrapper: notifies vtable[6] then resets getLActions */
-void fn_80204B6C(int p1);
 
 /* timed counter: decrement (p1->b8)->0 by timeDelta, then notify */
-extern void fn_802960E8(void* playerObj, int p2);
 extern f32 timeDelta;
 
-int dfplevelcontrol_SeqFn(int p1);
-
-extern s16 lbl_80329848[];
-
-void dfplevelcontrol_initialise(void);
-
-void dfpobjcreator_free(int obj, int flag);
 
 
-void dbegg_init(int obj);
 
-void DFP_Torch_free(int obj);
 
-void dfpobjcreator_init(int obj, s8* def);
 
-void dfplevelcontrol_setScale(int unused, u8* out);
 
-int dbstealerworm_stateHandlerA00(int obj, int p2);
 
-int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
-int dbstealerworm_func0B(int obj, u8 msg, int* out);
 
-extern int gDBStealerWormStateHandlersB[];
-extern int dbstealerworm_stateHandlerA02();
-extern int dbstealerworm_stateHandlerA04();
-extern int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerA0A();
-extern int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerA0D();
-extern int dbstealerworm_stateHandlerA0E();
-extern int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerB05();
-extern int dbstealerworm_stateHandlerB06();
 
-void DBstealerwo_setFuncPtrs_80203c78(void);
 
-extern void fn_80202EF0(int obj, int p2);
+
+
+
 
 #pragma dont_inline on
-void fn_80203000(int obj, int param2);
 #pragma dont_inline reset
 
-extern void unlockLevel(int a, int b, int c);
-extern void Music_Trigger(int a, int b);
 
 
-void dfplevelcontrol_init(int obj, int param2);
 
-extern f32 lbl_803E62F4;
 
-int dbstealerworm_stateHandlerA04(int obj, int param2);
 
-extern f32 lbl_803E62E8;
-extern f32 lbl_803E62EC;
 
-int dbstealerworm_stateHandlerA0E(int obj, int param2);
 
-extern f64 lbl_803E63F0;
-extern f32 lbl_803E63E4;
-extern f32 lbl_803E63E8;
-extern f32 lbl_803E63E0;
 
-void DFP_Torch_init(int obj, int param2);
 
-void fn_80202EF0(int obj, int p2);
 
 #pragma opt_common_subs off
 #pragma dont_inline on
-int fn_80202C78(int obj, int p6, f32 p1, f32 p2, f32 p3, f32 p4);
 #pragma dont_inline reset
 #pragma opt_common_subs reset
 
 #pragma dont_inline on
-int fn_80202DA4(u8* obj, u8* p6, f32 p1, f32 p2, f32 p3, f32 p4);
 
-void dfpobjcreator_update(int obj);
 #pragma dont_inline reset
 
-int dbstealerworm_stateHandlerA02(int obj, int p2);
 
-void dbstealerworm_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-int dbstealerworm_stateHandlerA0D(int obj, int p2);
 
-typedef struct
-{
-    u8 flag80 : 1;
-    u8 flag40 : 1;
-    u8 flag20 : 1;
-    u8 flag10 : 1;
-} AnimFlags44;
 
-int dbstealerworm_stateHandlerB05(int obj, int p2);
 
-void fn_80203144(int obj, int p2, int p3);
 
-void dfplevelcontrol_update(int obj);
 
-int fn_80202A2C(int obj, int* objs, f32* weights, int n, f32 limit);
 
-void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void fn_80204098(int obj);
 
-int dbstealerworm_stateHandlerB06(int obj, int p2);
 
-int dbstealerworm_stateHandlerA0A(int obj, int p2);
 
-int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t);
 
-int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t);
 
 #pragma opt_loop_invariants off
-void dbstealerworm_update(u8* objp);
 #pragma opt_loop_invariants reset
 
-int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t);
 
-void fn_80204BF8(int obj);
 
-int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t);
 
 void chuka_update(int obj)
 {
@@ -1637,15 +1275,10 @@ void chuka_update(int obj)
 
 void DFP_Torch_update(int obj);
 
-void drakorenergy_update(int obj);
 
-int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate);
 
-void dfpseqpoint_update(int obj);
 
-int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
 
-void dbegg_update(int obj);
 
 /* === moved from main/dll/baddie/chuka.c [8020637C-80206474) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/baddie/chuka.h"
