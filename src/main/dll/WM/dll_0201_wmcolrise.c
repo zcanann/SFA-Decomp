@@ -228,7 +228,7 @@ void WM_colrise_initialise(void)
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern f32 timeDelta;
-extern f32 lbl_803E5DCC;
+extern const f32 lbl_803E5DCC;
 extern f32 lbl_803E5DD0;
 extern f32 lbl_803E5DD4;
 extern f32 lbl_803E5DD8;
@@ -240,7 +240,6 @@ void WM_colrise_update(int* obj)
     u8* def;
     WMColriseState* sub;
     s32 reached;
-    f32 detectDistance;
     f32 target;
     int i;
 
@@ -250,11 +249,10 @@ void WM_colrise_update(int* obj)
     if ((s8)sub->raiseTimer < 0) sub->raiseTimer = 0;
     if ((s8)*(s8*)((char*)*(int**)((char*)obj + 0x58) + 0x10f) > 0)
     {
-        detectDistance = lbl_803E5DCC;
         for (i = 0; i < (s8)*(s8*)((char*)*(int**)((char*)obj + 0x58) + 0x10f); i++)
         {
             int* p = *(int**)((char*)*(int**)((char*)obj + 0x58) + 0x100 + i * 4);
-            if (*(f32*)((char*)p + 0x10) - ((GameObject*)obj)->anim.localPosY > detectDistance)
+            if (*(f32*)((char*)p + 0x10) - ((GameObject*)obj)->anim.localPosY > lbl_803E5DCC)
             {
                 sub->raiseTimer = 0x3c;
             }
