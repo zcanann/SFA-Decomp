@@ -952,42 +952,20 @@ void grimble_release(void)
 {
 }
 
-void cannonclaw_free(void)
-{
-}
+void cannonclaw_free(void);
 
-void cannonclaw_hitDetect(void)
-{
-}
+void cannonclaw_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 int grimble_animEventCallback(void) { return 0x0; }
 int grimble_getExtraSize(void) { return 0x46c; }
 int grimble_getObjectTypeId(void) { return 0x59; }
-int cannonclaw_getExtraSize(void) { return 0x0; }
-int cannonclaw_getObjectTypeId(void) { return 0x0; }
+int cannonclaw_getExtraSize(void);
+int cannonclaw_getObjectTypeId(void);
 
 #pragma dont_inline on
 #pragma scheduling off
-void grimble_initialiseStateHandlerTables(void)
-{
-    gGrimbleStateHandlersA[0] = (void*)grimble_stateHandlerA00;
-    gGrimbleStateHandlersA[1] = (void*)grimble_stateHandlerA01;
-    gGrimbleStateHandlersA[2] = (void*)grimble_stateHandlerA02;
-    gGrimbleStateHandlersA[3] = (void*)grimble_stateHandlerA03;
-    gGrimbleStateHandlersA[4] = (void*)grimble_stateHandlerA04;
-    gGrimbleStateHandlersA[5] = (void*)grimble_stateHandlerA05;
-    gGrimbleStateHandlersA[6] = (void*)grimble_stateHandlerA06;
-    gGrimbleStateHandlersA[7] = (void*)grimble_stateHandlerA07;
-    gGrimbleStateHandlersA[8] = (void*)grimble_stateHandlerA08;
-    gGrimbleStateHandlersA[9] = (void*)grimble_stateHandlerA09;
-    gGrimbleStateHandlersB[0] = (void*)grimble_stateHandlerB00;
-    gGrimbleStateHandlersB[1] = (void*)grimble_stateHandlerB01;
-    gGrimbleStateHandlersB[2] = (void*)scarab_updateProximityGate;
-    gGrimbleStateHandlersB[3] = (void*)grimble_stateHandlerB03;
-    gGrimbleStateHandlersB[4] = (void*)grimble_stateHandlerB04;
-    gGrimbleStateHandlersB[5] = (void*)grimble_stateHandlerB05;
-}
+void grimble_initialiseStateHandlerTables(void);
 #pragma dont_inline reset
 void grimble_initialise(void) { grimble_initialiseStateHandlerTables(); }
 
@@ -1007,16 +985,7 @@ void grimble_hitDetect(int obj)
         obj, ((GameObject*)obj)->extra, gGrimbleStateHandlersA);
 }
 
-void cannonclaw_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    if (visible != 0)
-    {
-        if (((GameObject*)obj)->unkF4 == 0)
-        {
-            ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E2F30);
-        }
-    }
-}
+void cannonclaw_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
 ObjectDescriptor gGrimbleObjDescriptor = {
     0,
@@ -1077,23 +1046,7 @@ extern f32 timeDelta;
 extern f32 lbl_803E2F34;
 extern f32 lbl_803E2F38;
 
-void cannonclaw_update(u8* obj)
-{
-    u8* trickyState;
-    getTrickyObject();
-    trickyState = (u8*)ObjList_FindObjectById(0x1723);
-    if (((GameObject*)obj)->unkF4 != 0) return;
-    if (((GameObject*)obj)->anim.currentMove != 0x208)
-    {
-        ObjAnim_SetCurrentMove((int)obj, 0x208, lbl_803E2F34, 0);
-    }
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E2F38, timeDelta, NULL);
-    if (trickyState == NULL) return;
-    if (GameBit_Get(*(s16*)(*(u8**)(trickyState + 0x4c) + 0x1a)) == 0) return;
-    ((GameObject*)obj)->unkF4 = 1;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
-    ObjHits_DisableObject(obj);
-}
+void cannonclaw_update(u8* obj);
 
 
 /*
@@ -1164,13 +1117,9 @@ void cannonclaw_update(u8* obj)
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void cannonclaw_release(void)
-{
-}
+void cannonclaw_release(void);
 
-void cannonclaw_initialise(void)
-{
-}
+void cannonclaw_initialise(void);
 
 void tumbleweedbush_free(void);
 
@@ -1198,12 +1147,7 @@ void tumbleweedbush_update(int* obj);
 void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* byte-to-short shift8 pattern. */
-void cannonclaw_init(s16* dst, void* src)
-{
-    s8 v = *((s8*)src + 0x28);
-    s16 t = v << 8;
-    *dst = t;
-}
+void cannonclaw_init(s16* dst, void* src);
 
 /* tumbleweedbush_findNearestActive: scan all type-0x31 objects, pick the closest one whose
  * obj->_46 == 0x3fb and obj->_b8->_278 > 1 (by vec3f_distanceSquared from
