@@ -53,7 +53,7 @@ typedef struct ObjHitsPriorityState {
   f32 hitPosX[OBJHITS_PRIORITY_HIT_COUNT];
   f32 hitPosY[OBJHITS_PRIORITY_HIT_COUNT];
   f32 hitPosZ[OBJHITS_PRIORITY_HIT_COUNT];
-  u8 contactHitVolume;
+  s8 contactHitVolume;
   s8 contactFlags;
   u8 activeHitboxMode;
   u8 resetHitboxMode;
