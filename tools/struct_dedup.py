@@ -144,6 +144,28 @@ def cmd_hoist(args):
             break
     assert deftext is not None
 
+    # SELF-CONTAINMENT GUARD: a struct that references an identifier defined
+    # only in its .c (a #define array bound, a local-only type) cannot be
+    # hoisted — moving it to a shared header breaks every OTHER file that
+    # includes the header for a sibling struct (the bound is no longer in
+    # scope). Refuse unless every UPPER_CASE identifier the body uses (the
+    # macro-bound risk) is already present in the header's include closure.
+    body_idents = set(re.findall(r'\b([A-Z][A-Z0-9_]{2,})\b', deftext))
+    # identifiers already safe: those defined in the target header, or in any
+    # header it includes (shallow check on include/ tree).
+    hdr_dir = os.path.join(ROOT, 'include')
+    safe = set()
+    if os.path.exists(header_path):
+        safe |= set(re.findall(r'#define\s+([A-Z][A-Z0-9_]+)', read(header_path)))
+    # scan the donor .c's #defines: if the macro is LOCAL to the .c, it's a
+    # blocker (it won't be in the shared header's scope for other consumers).
+    donor_defines = set(re.findall(r'#define\s+([A-Z][A-Z0-9_]+)', read(first)))
+    risky = (body_idents & donor_defines) - safe
+    if risky:
+        print(f'{name}: SKIP (references TU-local macro(s) {sorted(risky)}; '
+              f'hoisting would break sibling consumers)')
+        return
+
     # Write/append header (idempotent guard).
     guard = re.sub(r'\W', '_', header_rel).upper() + '_'
     if os.path.exists(header_path):
@@ -157,46 +179,185 @@ def cmd_hoist(args):
 
     inc_line = f'#include "{header_rel}"\n'
     tus = discover_tus()
-    kept = reverted = 0
-    for rel in files:
+    # Snapshot: which consumers ALREADY include this header (siblings from a
+    # prior hoist) — their .o must also stay byte-identical, so capture their
+    # baselines too.
+    edits = []  # (cpath, ofile, orig, base_md5)
+    header_consumers = []
+    for rel, ofile in tus.items():
+        cpath = os.path.join(ROOT, rel)
+        if not os.path.exists(cpath):
+            continue
+        if header_rel in read(cpath):
+            header_consumers.append((rel, ofile))
+    targets = list(dict.fromkeys(files + [r for r, _ in header_consumers]))
+    for rel in targets:
         cpath = os.path.join(ROOT, rel)
         ofile = tus.get(rel)
         if not ofile:
             continue
         opath = os.path.join(ROOT, ofile)
         base = md5(opath)
-        if base is None:
-            continue
         orig = read(cpath)
-        # Remove this TU's local def of `name`.
         new = orig
         for nm, span, s, e in find_typedefs(orig):
             if nm == name:
                 new = orig[:s] + orig[e:]
                 break
-        if new == orig:
-            continue  # not found (already hoisted?)
-        # Add include if absent.
         if inc_line.strip() not in new:
-            # place after the first #include block
-            m = re.search(r'(#include[^\n]*\n)(?!.*#include)', new)
             insert_at = new.find('#include')
             if insert_at >= 0:
-                # after first include line
                 nl = new.find('\n', insert_at) + 1
                 new = new[:nl] + inc_line + new[nl:]
             else:
                 new = inc_line + new
-        write(cpath, new)
+        if new != orig:
+            write(cpath, new)
+        edits.append((cpath, ofile, orig, base))
+    # Build EVERY edited .o; if any fails or byte-changes, revert the WHOLE
+    # struct (all edits) — a cross-contamination on one consumer poisons all.
+    ok = True
+    for cpath, ofile, orig, base in edits:
         r = subprocess.run(['ninja', ofile], cwd=ROOT, capture_output=True,
                            text=True)
-        if r.returncode != 0 or md5(opath) != base:
+        opath = os.path.join(ROOT, ofile)
+        if r.returncode != 0 or (base is not None and md5(opath) != base):
+            ok = False
+            break
+    if not ok:
+        for cpath, ofile, orig, base in edits:
             write(cpath, orig)
             subprocess.run(['ninja', ofile], cwd=ROOT, capture_output=True)
-            reverted += 1
-        else:
-            kept += 1
-    print(f'{name}: hoisted into {kept} TUs, reverted {reverted}')
+        # If this hoist authored a brand-new header that now has no consumer,
+        # drop it so we don't leave an orphan.
+        if os.path.exists(header_path):
+            h = read(header_path)
+            consumed = subprocess.run(['grep', '-rl', header_rel, 'src/'],
+                                      cwd=ROOT, capture_output=True, text=True)
+            if not consumed.stdout.strip():
+                os.remove(header_path)
+        print(f'{name}: REVERTED all {len(edits)} edits (a consumer .o broke)')
+        return
+    print(f'{name}: hoisted into {len(files)} TUs '
+          f'({len(edits)} consumers gated, all conserved)')
+
+
+def cmd_hoist_cluster(args):
+    """Hoist a whole set of mutually-referencing IDENTICAL-layout structs into
+    one header in dependency order, gated on every consumer .o staying
+    byte-identical. Reverts the WHOLE cluster on any break (a struct that
+    references a TU-local macro/sibling not in the cluster poisons it)."""
+    names = args.names
+    header_rel = args.header
+    header_path = os.path.join(ROOT, 'include', header_rel)
+    identical, _, by_name = census()
+    ident_names = dict(identical)
+
+    # Recover each struct's exact def text + the union of consumer files.
+    defs = {}
+    consumers = set()
+    for name in names:
+        if name not in by_name:
+            print(f'{name}: not found; skipping cluster')
+            return
+        variants = by_name[name]
+        files = [f for v in variants.values() for f in v]
+        consumers.update(files)
+        first = os.path.join(ROOT, files[0])
+        for nm, span, _, _ in find_typedefs(read(first)):
+            if nm == name:
+                defs[name] = span
+                break
+    # Topological order: a struct that references another cluster member must
+    # come AFTER it in the header.
+    order = []
+    remaining = list(names)
+    guard_iter = 0
+    while remaining and guard_iter < len(names) ** 2 + 5:
+        guard_iter += 1
+        for n in list(remaining):
+            body = defs[n]
+            deps = [m for m in remaining if m != n and re.search(r'\b' + re.escape(m) + r'\b', body)]
+            if not deps:
+                order.append(n)
+                remaining.remove(n)
+    order += remaining  # any cycle: append as-is
+
+    # MACRO self-containment guard across the whole cluster.
+    for n in names:
+        donor_first = None
+        for v in by_name[n].values():
+            donor_first = v[0]
+            break
+        donor_defines = set(re.findall(r'#define\s+([A-Z][A-Z0-9_]+)',
+                                       read(os.path.join(ROOT, donor_first))))
+        body_macros = set(re.findall(r'\b([A-Z][A-Z0-9_]{2,})\b', defs[n]))
+        risky = body_macros & donor_defines
+        if risky:
+            print(f'cluster {header_rel}: SKIP — {n} uses TU-local macro '
+                  f'{sorted(risky)}')
+            return
+
+    # Write the header with all defs in dependency order.
+    guard = re.sub(r'\W', '_', header_rel).upper() + '_'
+    htext = f'#ifndef {guard}\n#define {guard}\n\n#include "types.h"\n\n'
+    for n in order:
+        htext += defs[n] + '\n\n'
+    htext += '#endif\n'
+    os.makedirs(os.path.dirname(header_path), exist_ok=True)
+    write(header_path, htext)
+
+    inc_line = f'#include "{header_rel}"\n'
+    tus = discover_tus()
+    edits = []
+    for rel in sorted(consumers):
+        cpath = os.path.join(ROOT, rel)
+        ofile = tus.get(rel)
+        if not ofile or not os.path.exists(cpath):
+            continue
+        opath = os.path.join(ROOT, ofile)
+        base = md5(opath)
+        orig = read(cpath)
+        new = orig
+        # remove every cluster struct's local def
+        changed = True
+        while changed:
+            changed = False
+            for nm, span, s, e in find_typedefs(new):
+                if nm in names:
+                    new = new[:s] + new[e:]
+                    changed = True
+                    break
+        if inc_line.strip() not in new:
+            ins = new.find('#include')
+            if ins >= 0:
+                nl = new.find('\n', ins) + 1
+                new = new[:nl] + inc_line + new[nl:]
+            else:
+                new = inc_line + new
+        if new != orig:
+            write(cpath, new)
+        edits.append((cpath, ofile, orig, base))
+
+    ok = True
+    for cpath, ofile, orig, base in edits:
+        r = subprocess.run(['ninja', ofile], cwd=ROOT, capture_output=True,
+                           text=True)
+        if r.returncode != 0 or (base is not None and
+                                 md5(os.path.join(ROOT, ofile)) != base):
+            ok = False
+            break
+    if not ok:
+        for cpath, ofile, orig, base in edits:
+            write(cpath, orig)
+            subprocess.run(['ninja', ofile], cwd=ROOT, capture_output=True)
+        if os.path.exists(header_path):
+            os.remove(header_path)
+        print(f'cluster {header_rel}: REVERTED ({len(names)} structs, '
+              f'{len(edits)} consumers — a .o broke)')
+        return
+    print(f'cluster {header_rel}: hoisted {len(names)} structs into '
+          f'{len(edits)} consumers (all .o conserved)')
 
 
 def main():
@@ -210,6 +371,10 @@ def main():
     h.add_argument('--name', required=True)
     h.add_argument('--header', required=True)
     h.set_defaults(func=cmd_hoist)
+    hc = sub.add_parser('hoist-cluster')
+    hc.add_argument('--names', required=True, nargs='+')
+    hc.add_argument('--header', required=True)
+    hc.set_defaults(func=cmd_hoist_cluster)
     args = ap.parse_args()
     args.func(args)
 
