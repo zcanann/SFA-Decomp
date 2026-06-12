@@ -99,11 +99,11 @@ int SB_CageKyte_getExtraSize(void);
 int SB_KyteCage_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
-    int i;
     int state;
+    int i;
 
-    i = 0;
     state = *(int*)&((GameObject*)obj)->extra;
+    i = 0;
     while (i < animUpdate->eventCount)
     {
         u8 seqCode;
