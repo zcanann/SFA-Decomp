@@ -366,35 +366,26 @@ main/dll/CAM/camshipbattle5C.c:
 main/dll/CAM/attentioncam.c:
 	.text       start:0x8010AEA8 end:0x8010AEA8
 
-main/dll/CAM/camcannon.c:
-	.text       start:0x8010AEA8 end:0x8010B424
-
-main/dll/CAM/dll_5F.c:
-	.text       start:0x8010B424 end:0x8010C0D8
+main/dll/CAM/dll_0047_cameramodeteststrength.c:
+	.text       start:0x8010AEA8 end:0x8010BF08
 
 main/dll/CAM/dll_60.c:
-	.text       start:0x8010C0D8 end:0x8010C0D8
+	.text       start:0x8010BF08 end:0x8010BF08
 
 main/dll/CAM/camdrakor.c:
-	.text       start:0x8010C0D8 end:0x8010D36C
+	.text       start:0x8010BF08 end:0x8010D33C
 
-main/dll/CAM/dll_62.c:
-	.text       start:0x8010D36C end:0x8010D810
+main/dll/CAM/dll_004B_cameramodeclimb.c:
+	.text       start:0x8010D33C end:0x8010DAD4
 
 main/dll/CAM/camDebug.c:
-	.text       start:0x8010D810 end:0x8010DD58
+	.text       start:0x8010DAD4 end:0x8010DB7C
 
 main/dll/baddieControl.c:
-	.text       start:0x8010DD58 end:0x80113504
+	.text       start:0x8010DB7C end:0x80113F8C
 
 main/dll/moveLib.c:
-	.text       start:0x80113504 end:0x80115094
-
-main/dll/projLib.c:
-	.text       start:0x80115094 end:0x80115650
-
-main/dll/FRONT/POST.c:
-	.text       start:0x80115650 end:0x801159E4
+	.text       start:0x80113F8C end:0x801159E4
 
 main/dll/FRONT/n_rareware.c:
 	.text       start:0x801159E4 end:0x80115F20

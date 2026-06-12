@@ -1,3 +1,155 @@
+/* === moved from main/dll/CAM/dll_5F.c [8010BF08-8010C0D8) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/CAM/dll_5F.h"
+#include "main/camera_interface.h"
+#include "main/camera_object.h"
+#include "main/dll/CAM/camcannon_state.h"
+#include "main/dll/CAM/camcombat_state.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/game_object.h"
+#include "main/mm.h"
+#include "main/object_transform.h"
+#include "main/pad.h"
+
+
+
+/*
+ * --INFO--
+ *
+ * Function: CameraModeTestStrength_update
+ * EN v1.0 Address: 0x8010B424
+ * EN v1.0 Size: 2392b
+ * EN v1.1 Address: 0x8010B6C0
+ * EN v1.1 Size: 1652b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+/*
+ * --INFO--
+ *
+ * Function: CameraModeTestStrength_init
+ * EN v1.0 Address: 0x8010BD7C
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8010BD34
+ * EN v1.1 Size: 1128b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+
+/* Trivial 4b 0-arg blr leaves. */
+
+
+void CameraModeCombat_copyToCurrent_nop(void)
+{
+}
+
+extern CameraModeCombatState* lbl_803DD568;
+extern f32 lbl_803E18C0;
+extern f32 lbl_803E18C4;
+extern f32 lbl_803E18C8;
+extern f32 timeDelta;
+extern void Rcp_DisableBlurFilter(void);
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8010BF08
+ * EN v1.0 Address: 0x8010BF08
+ * EN v1.0 Size: 348b
+ */
+typedef struct
+{
+    u8 pad[0xc];
+    f32 x;
+    f32 y;
+    f32 z;
+} CamPathEntry;
+
+void fn_8010BF08(int control, float* outX, float* outY, float* outZ, void* inFloatPtr)
+{
+    int cameraObj;
+    CamPathEntry* paths;
+    int settings;
+    u8 curIdx;
+    float t;
+    float lim;
+
+    settings = *(int*)(control + 0x11c);
+    cameraObj = *(int*)(control + 0xa4);
+    paths = *(CamPathEntry**)(settings + 0x74);
+    curIdx = *(u8*)(settings + 0xe4);
+    if ((u32)curIdx != (u32)lbl_803DD568->pathBlendTargetIndex)
+    {
+        lbl_803DD568->pathBlendStartIndex = lbl_803DD568->pathBlendTargetIndex;
+        lbl_803DD568->pathBlendWeight = lbl_803E18C0;
+    }
+    t = lbl_803DD568->pathBlendWeight;
+    lim = lbl_803E18C4;
+    if (t > lim)
+    {
+        lbl_803DD568->pathBlendWeight = t - lbl_803E18C8 * timeDelta;
+        t = lbl_803DD568->pathBlendWeight;
+        if (lbl_803DD568->pathBlendWeight < lim)
+        {
+            lbl_803DD568->pathBlendWeight = lim;
+            lbl_803DD568->pathBlendStartIndex = *(u8*)(settings + 0xe4);
+        }
+        {
+            u8 ci = lbl_803DD568->pathBlendStartIndex;
+            u8 ti = *(u8*)(settings + 0xe4);
+            float dx = paths[ci].x - paths[ti].x;
+            float dy = paths[ci].y - paths[ti].y;
+            float dz = paths[ci].z - paths[ti].z;
+            float w = lbl_803DD568->pathBlendWeight;
+            dx *= w;
+            dy *= w;
+            dz *= w;
+            dx += paths[ti].x;
+            dy += paths[ti].y;
+            dz += paths[ti].z;
+            *outX = dx - *(float*)(cameraObj + 0x18);
+            *outY = dy - *(float*)inFloatPtr;
+            *outZ = dz - *(float*)(cameraObj + 0x20);
+        }
+    }
+    else
+    {
+        *outX = paths[*(u8*)(settings + 0xe4)].x - *(float*)(cameraObj + 0x18);
+        *outY = paths[*(u8*)(settings + 0xe4)].y - *(float*)inFloatPtr;
+        *outZ = paths[*(u8*)(settings + 0xe4)].z - *(float*)(cameraObj + 0x20);
+    }
+    lbl_803DD568->pathBlendTargetIndex = *(u8*)(settings + 0xe4);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: CameraModeCombat_free
+ * EN v1.0 Address: 0x8010C068
+ * EN v1.0 Size: 112b
+ */
+typedef struct
+{
+    u8 flag80 : 1;
+} CamByte143;
+
+void CameraModeCombat_free(int obj)
+{
+    if (*(void**)(obj + 0x11c) != NULL)
+    {
+        (*gCameraInterface)->setTarget(0);
+    }
+    mm_free(lbl_803DD568);
+    lbl_803DD568 = 0;
+    Rcp_DisableBlurFilter();
+    ((CamByte143*)(obj + 0x143))->flag80 = 0;
+}
+
 #include "main/dll/CAM/camdrakor.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
@@ -120,10 +272,10 @@ extern void PSVECNormalize(f32 * v, f32 * out);
 extern void PSVECScale(f32* v, f32* out, f32 s);
 extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
 extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
-extern void fn_8010BF08(int cam, f32* dx, f32* dy, f32* dz, f32* ty);
 
 void CameraModeCombat_update(short* cam)
 {
+    extern void fn_8010BF08(int cam, f32* dx, f32* dy, f32* dz, f32* ty); /* #57 */
     f32 nz;
     f32 ny;
     f32 nx;
@@ -706,9 +858,7 @@ void CameraModeShipBattle_initialise(void)
 {
 }
 
-void CameraModeClimb_copyToCurrent_nop(void)
-{
-}
+void CameraModeClimb_copyToCurrent_nop(void);
 
 /* fn_X(lbl); lbl = 0; */
 void CameraModeShipBattle_free(void)
@@ -717,8 +867,4 @@ void CameraModeShipBattle_free(void)
     lbl_803DD570 = 0;
 }
 
-void CameraModeClimb_free(void)
-{
-    mm_free(lbl_803DD578);
-    lbl_803DD578 = 0;
-}
+void CameraModeClimb_free(void);

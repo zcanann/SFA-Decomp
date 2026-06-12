@@ -1,3 +1,113 @@
+/* === moved from main/dll/CAM/camdrakor.c [8010D33C-8010D36C) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/CAM/camdrakor.h"
+#include "main/camera_interface.h"
+#include "main/camera_object.h"
+#include "main/dll/CAM/camclimb_state.h"
+#include "main/dll/CAM/camcombat_state.h"
+#include "main/dll/CAM/camshipbattle_state.h"
+#include "main/game_object.h"
+#include "main/mm.h"
+#include "main/object_transform.h"
+#include "main/pad.h"
+
+
+
+extern CameraModeClimbState* lbl_803DD578;
+
+/*
+ * --INFO--
+ *
+ * Function: CameraModeCombat_update
+ * EN v1.0 Address: 0x8010C0D8
+ * EN v1.0 Size: 3352b
+ * EN v1.1 Address: 0x8010C374
+ * EN v1.1 Size: 3204b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+typedef struct
+{
+    f32 pad0;
+    f32 pad4;
+    f32 pad8;
+    f32 x;
+    f32 y;
+    f32 z;
+} CombatPathPoint;
+
+typedef struct
+{
+    u8 b80 : 1;
+    u8 rest : 7;
+} CombatCamFlags;
+
+
+
+/*
+ * --INFO--
+ *
+ * Function: CameraModeCombat_init
+ * EN v1.0 Address: 0x8010CDF0
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8010CFF8
+ * EN v1.1 Size: 360b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+
+/*
+ * --INFO--
+ *
+ * Function: CameraModeShipBattle_update
+ * EN v1.0 Address: 0x8010CE20
+ * EN v1.0 Size: 1580b
+ * EN v1.1 Address: 0x8010D18C
+ * EN v1.1 Size: 936b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+
+/*
+ * --INFO--
+ *
+ * Function: CameraModeShipBattle_init
+ * EN v1.0 Address: 0x8010D44C
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8010D534
+ * EN v1.1 Size: 168b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+
+/* Trivial 4b 0-arg blr leaves. */
+
+
+
+
+
+void CameraModeClimb_copyToCurrent_nop(void)
+{
+}
+
+/* fn_X(lbl); lbl = 0; */
+
+void CameraModeClimb_free(void)
+{
+    mm_free(lbl_803DD578);
+    lbl_803DD578 = 0;
+}
+
 #include "main/dll/CAM/dll_62.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camclimb_state.h"
@@ -144,4 +254,93 @@ void CameraModeClimb_update(short* camObj)
                                    *(f32*)(camObj + 0x10), (f32*)(camObj + 6), (f32*)(camObj + 8),
                                    (f32*)(camObj + 10),
                                    *(int*)(camObj + 0x18));
+}
+
+/* === moved from main/dll/CAM/camDebug.c [8010D810-8010DAD4) (TU re-split, docs/boundary_audit.md) === */
+#include "ghidra_import.h"
+#include "main/camera_interface.h"
+#include "main/camera_object.h"
+#include "main/dll/CAM/camclimb_state.h"
+#include "main/dll/CAM/camnpcspeak_state.h"
+#include "main/game_object.h"
+#include "main/mm.h"
+#include "main/object_transform.h"
+
+extern void memset(void* dst, int val, int size);
+
+extern CameraModeClimbState* lbl_803DD578;
+
+extern f32 lbl_803E19B8;
+extern f32 lbl_803E19BC;
+extern f32 lbl_803E19C0;
+extern f32 lbl_803E19C4;
+extern f32 lbl_803E19C8;
+
+void CameraModeClimb_init(undefined4 arg1, int mode, s8* args)
+{
+    undefined4 local_28[1];
+    undefined4 local_24[1];
+    undefined4 local_20[1];
+    undefined4 outA[1];
+    f32 vE;
+    f32 vD;
+    f32 vC;
+    f32 vB;
+    f32 vA;
+    int handler;
+
+    if (lbl_803DD578 == NULL)
+    {
+        lbl_803DD578 = (CameraModeClimbState*)mmAlloc(sizeof(CameraModeClimbState), 0xf, 0);
+    }
+    switch (mode)
+    {
+    case 2:
+        lbl_803DD578->startRelativePosition = lbl_803DD578->relativePosition;
+        lbl_803DD578->startMinHeight = lbl_803DD578->minHeight;
+        lbl_803DD578->startMaxHeight = lbl_803DD578->maxHeight;
+        lbl_803DD578->startDistance = lbl_803DD578->targetDistance;
+        lbl_803DD578->targetRelativePosition = (u16)(int)(lbl_803E19B8 * (f32)(s8)args[3]);
+        lbl_803DD578->endMinHeight = (f32)(s8)
+        args[5];
+        lbl_803DD578->endMaxHeight = (f32)(s8)
+        args[4];
+        lbl_803DD578->endDistance = (f32)(s8)
+        args[2];
+        lbl_803DD578->transitionTimer = (s16)(s8)
+        args[1];
+        lbl_803DD578->transitionDuration = (s16)(s8)
+        args[1];
+        break;
+    case 1:
+    default:
+        memset(lbl_803DD578, 0, sizeof(CameraModeClimbState));
+        handler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
+        ((code)(*(undefined4**)((undefined4*)handler)[1])[8])(&vE, &vD, &vC, &vB, &vA);
+        (*gCameraInterface)->getRelativePosition((f32)(u16)lbl_803DD578->relativePosition,
+                                                 (int)arg1, (f32*)local_28,
+                                                 (f32*)local_24, (f32*)local_20,
+                                                 (f32*)outA, 0);
+        lbl_803DD578->startRelativePosition = (s16)vA;
+        lbl_803DD578->startMinHeight = vC;
+        lbl_803DD578->startMaxHeight = vB;
+        lbl_803DD578->startDistance = *(f32*)outA;
+        lbl_803DD578->targetRelativePosition = 30;
+        lbl_803DD578->endMinHeight = lbl_803E19BC;
+        lbl_803DD578->endMaxHeight = lbl_803E19C0;
+        lbl_803DD578->endDistance = lbl_803E19C4 * (vD + vE);
+        lbl_803DD578->transitionTimer = 60;
+        lbl_803DD578->transitionDuration = 60;
+        lbl_803DD578->smoothedDistance = *(f32*)outA;
+        lbl_803DD578->heightAdjustRate = lbl_803E19C8;
+        break;
+    }
+}
+
+void CameraModeClimb_release(void)
+{
+}
+
+void CameraModeClimb_initialise(void)
+{
 }

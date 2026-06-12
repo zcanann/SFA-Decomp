@@ -1,3 +1,48 @@
+/* === moved from main/dll/CAM/camDebug.c [8010DB7C-8010DD58) (TU re-split, docs/boundary_audit.md) === */
+#include "ghidra_import.h"
+#include "main/camera_interface.h"
+#include "main/camera_object.h"
+#include "main/dll/CAM/camclimb_state.h"
+#include "main/dll/CAM/camnpcspeak_state.h"
+#include "main/game_object.h"
+#include "main/mm.h"
+#include "main/object_transform.h"
+
+extern s16 getAngle(f32 dx, f32 dz);
+extern f32 sqrtf(f32 x);
+extern f32 mathSinf(f32 x);
+extern float mathCosf(float x);
+extern void Rcp_DisableBlurFilter(void);
+
+extern CameraModeNpcSpeakState* lbl_803DD584;
+
+extern f32 lbl_803E19D0;
+extern f32 lbl_803E19D4;
+extern f32 lbl_803E19D8;
+extern f32 lbl_803E19DC;
+
+
+
+
+
+
+
+
+
+
+void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
+
+void CameraModeNpcSpeak_copyToCurrent_nop(void)
+{
+}
+
+void CameraModeNpcSpeak_free(void)
+{
+    mm_free(lbl_803DD584);
+    lbl_803DD584 = 0;
+    Rcp_DisableBlurFilter();
+}
+
 #include "ghidra_import.h"
 #include "main/dll/baddieControl.h"
 #include "main/camera_object.h"
@@ -1121,10 +1166,10 @@ int dll_19_func1B(int p)
 
 extern void Sfx_StopObjectChannel(int* p1, int channel);
 extern void voxmaps_freeRouteWork(void* p);
-extern void mm_free(u32);
 
 void dll_19_func12(int* p1, int* p2, u8 flag)
 {
+    extern void mm_free(u32); /* #57 */
     Sfx_StopObjectChannel(p1, 127);
     if ((*(u8*)((char*)p2 + 1028) & flag) == 0)
     {
@@ -1221,48 +1266,56 @@ f32 titleScreenGetCamProgress(void) { return titleScreenCamProgress; }
 /* fn_X(lbl); lbl = 0; */
 void CameraModeWorldMap_free(void)
 {
+    extern void mm_free(u32); /* #57 */
     mm_free((u32)lbl_803DD588);
     lbl_803DD588 = NULL;
 }
 
 void dll_4F_func05(void)
 {
+    extern void mm_free(u32); /* #57 */
     mm_free((u32)lbl_803DD590);
     lbl_803DD590 = NULL;
 }
 
 void CameraModeCrawl_free(void)
 {
+    extern void mm_free(u32); /* #57 */
     mm_free((u32)lbl_803DD598);
     lbl_803DD598 = NULL;
 }
 
 void CameraModeCannon_free(void)
 {
+    extern void mm_free(u32); /* #57 */
     mm_free((u32)lbl_803DD5A0);
     lbl_803DD5A0 = NULL;
 }
 
 void fn_801101E8(void)
 {
+    extern void mm_free(u32); /* #57 */
     mm_free((u32)lbl_803DD5B8);
     lbl_803DD5B8 = NULL;
 }
 
 void CameraModeCloudRunner_free(void)
 {
+    extern void mm_free(u32); /* #57 */
     mm_free((u32)lbl_803DD5B8);
     lbl_803DD5B8 = NULL;
 }
 
 void dll_54_func05(void)
 {
+    extern void mm_free(u32); /* #57 */
     mm_free((u32)lbl_803DD5C0);
     lbl_803DD5C0 = NULL;
 }
 
 void CameraModePerv_free(void)
 {
+    extern void mm_free(u32); /* #57 */
     mm_free((u32)lbl_803DD5C8);
     lbl_803DD5C8 = NULL;
 }
@@ -1467,7 +1520,6 @@ extern f32 lbl_803DD5B0;
 extern f32 sqrtf(f32 x);
 
 extern f32 lbl_803DD5A8;
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx);
 extern f32 interpolate(f32 cur, f32 target, f32 t);
 extern void fn_8029697C(int state, s16* a, s16* b);
 extern f32 lbl_803E1B18;
@@ -1514,13 +1566,13 @@ void CameraModeForceBehind_init(u8* obj, int p2, f32* p3)
 extern int Obj_GetPlayerObject(void);
 extern int fn_80295A04(int obj, int a);
 extern int fn_80296AE8(int obj);
-extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, f32* out, int d, int e, int g, int h, int i);
-extern f32 lbl_803E1C68;
 extern f32 lbl_803E1C48;
 
 /* dll_19_func13  addr=0x8011313C  size=0x13C  linkage=global */
 int dll_19_func13(int p1, u8* p2, f32 f, int p4)
 {
+    extern f32 lbl_803E1C68; /* #57 */
+    extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, f32* out, int d, int e, int g, int h, int i); /* #57 */
     int player = Obj_GetPlayerObject();
     int result = 0;
 
@@ -1567,6 +1619,7 @@ extern f32 lbl_803E1C6C;
 /* dll_19_func10  addr=0x80113398  size=0x16C  linkage=global */
 int dll_19_func10(int p1, u8* p2, int p3, int p4, s16 p5, f32* p6, f32* p7, int* p8)
 {
+    extern f32 lbl_803E1C68; /* #57 */
     f32 dx, dz, dist;
     f32 zero;
 
@@ -1616,6 +1669,7 @@ extern f32 lbl_803E1AC4;
 /* CameraModeCrawl_copyToCurrent  addr=0x8010F540  size=0x1E0  linkage=global */
 void CameraModeCrawl_copyToCurrent(void* param1, int param2)
 {
+    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx); /* #57 */
     int obj;
     GameObject* target;
     int yaw;
@@ -1753,12 +1807,14 @@ void CameraModeCannon_update(u8* obj)
 
 extern f32 fn_8029610C(int obj);
 extern void voxmaps_worldToGrid(f32* pos, int* grid);
-extern int voxmaps_traceLine(int* a, int* b, int c, u8* out, int e);
 extern f32 lbl_803E1C64;
 
 /* dll_19_func14  addr=0x80112E94  size=0x2A8  linkage=global */
 int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
 {
+    extern f32 lbl_803E1C68; /* #57 */
+    extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, f32* out, int d, int e, int g, int h, int i); /* #57 */
+    extern int voxmaps_traceLine(int* a, int* b, int c, u8* out, int e); /* #57 */
     f32 bboxOut[20];
     int objs[2];
     f32 diff[3];
@@ -2291,6 +2347,7 @@ extern f32 lbl_803E1ADC;
 /* CameraModeCrawl_update  addr=0x8010F74C  size=0x2B8  linkage=global */
 void CameraModeCrawl_update(u8* obj)
 {
+    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx); /* #57 */
     CameraObject* camera = (CameraObject*)obj;
     GameObject* target = (GameObject*)camera->anim.targetObj;
     int delta;
@@ -2352,6 +2409,7 @@ extern int lbl_803DB9D4;
 /* CameraModeCloudRunner_update  addr=0x80110214  size=0x36C  linkage=global */
 void CameraModeCloudRunner_update(u8* obj)
 {
+    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx); /* #57 */
     CameraObject* camera = (CameraObject*)obj;
     GameObject* target = (GameObject*)camera->anim.targetObj;
     u8* curve;
@@ -2441,6 +2499,7 @@ void CameraModeCloudRunner_update(u8* obj)
 /* CameraModeForceBehind_update  addr=0x8010FC7C  size=0x43C  linkage=global */
 void CameraModeForceBehind_update(u8* obj)
 {
+    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx); /* #57 */
     CameraObject* camera = (CameraObject*)obj;
     GameObject* target = (GameObject*)camera->anim.targetObj;
     s16 extra;
@@ -2524,6 +2583,7 @@ extern f32 lbl_803E1B68;
 /* dll_54_update  addr=0x801106E4  size=0x490  linkage=global */
 void dll_54_update(u8* obj)
 {
+    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx); /* #57 */
     CameraObject* camera = (CameraObject*)obj;
     int i;
     int count;
@@ -2991,6 +3051,7 @@ extern f32 lbl_803E1BB0;
 /* CameraModeArwing_update  addr=0x80110EC4  size=0x5FC  linkage=global */
 void CameraModeArwing_update(u8* obj)
 {
+    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx); /* #57 */
     u8* state = *(u8**)&((GameObject*)obj)->anim.targetObj;
     int yaw0, pitch0;
     int d;
@@ -3133,6 +3194,7 @@ extern f32 lbl_803E1A6C;
 /* CameraModeWorldMap_update  addr=0x8010E5B4  size=0xC8C  linkage=global */
 void CameraModeWorldMap_update(u8* obj)
 {
+    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx); /* #57 */
     GameObject* camera = (GameObject*)obj;
     GameObject* focus;
     GameObject *objA, *objB;
@@ -3439,6 +3501,7 @@ extern f32 lbl_803DB9C4;
 /* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
 void CameraModeNpcSpeak_update(u8* obj)
 {
+    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx); /* #57 */
     CameraObject* camera = (CameraObject*)obj;
     CameraModeNpcSpeakState* speakState;
     GameObject* target = (GameObject*)camera->anim.targetObj;
@@ -3494,4 +3557,707 @@ void CameraModeNpcSpeak_update(u8* obj)
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int*)&camera->anim.parent);
+}
+
+/* segment pragma-stack balance (re-split): */
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+
+/* === moved from main/dll/moveLib.c [80113504-80113F8C) (TU re-split, docs/boundary_audit.md) === */
+#include "main/objanim.h"
+#include "main/camera_interface.h"
+#include "main/game_object.h"
+#include "main/dll/baddie_state.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/dll/moveLib.h"
+
+#include "main/dll/dll19_state.h"
+
+
+extern undefined4 GameBit_Set(int eventId, int value);
+
+
+/*
+ * --INFO--
+ *
+ * Function: dll_19_func0F
+ * EN v1.0 Address: 0x80113504
+ * EN v1.0 Size: 188b
+ * EN v1.1 Address: 0x80113590
+ * EN v1.1 Size: 164b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6)
+{
+    extern int* gPlayerInterface;
+    extern f32 lbl_803DD5D8;
+    extern s8 lbl_803DD5DC;
+    extern f32 lbl_803E1C2C;
+    extern f32 lbl_803E1C70;
+    extern f32 lbl_803E1C74;
+    extern f32 lbl_803E1C6C;
+    extern f32 lbl_803E1C5C;
+    extern f32 timeDelta;
+    extern f32 sqrtf(f32 x);
+    extern u8 framesThisStep;
+    f32 dist;
+    f32 nx;
+    f32 nz;
+    char* t;
+
+    *(int*)&((BaddieState*)st)->unk318 = 0;
+    *(int*)&((BaddieState*)st)->unk31C = 0;
+    ((BaddieState*)st)->cameraYaw = 0;
+    {
+        f32 rest = lbl_803E1C2C;
+        ((BaddieState*)st)->moveInputX = rest;
+        ((BaddieState*)st)->moveInputZ = rest;
+    }
+    if ((s8) * (u8*)(state + 0x56) != 1)
+    {
+        *(f32*)(state + 0x40) = ((GameObject*)obj)->anim.localPosX;
+        *(f32*)(state + 0x44) = ((GameObject*)obj)->anim.localPosY;
+        *(f32*)(state + 0x48) = ((GameObject*)obj)->anim.localPosZ;
+        lbl_803DD5D8 = lbl_803E1C70;
+        lbl_803DD5DC = 0;
+    }
+    *(s16*)(state + 0x6e) = 0;
+    *(u8*)(state + 0x56) = 1;
+    {
+        f32 ex = *(f32*)(state + 0x40) - ((GameObject*)obj)->anim.localPosX;
+        f32 ez = *(f32*)(state + 0x48) - ((GameObject*)obj)->anim.localPosZ;
+        dist = sqrtf(ex * ex + ez * ez);
+    }
+    t = *(char**)&((BaddieState*)st)->targetObj;
+    if (t == NULL)
+    {
+        return 0;
+    }
+    nx = *(f32*)(t + 0xc) - *(f32*)(state + 0x40);
+    nz = *(f32*)(t + 0x14) - *(f32*)(state + 0x48);
+    {
+        f32 total = sqrtf(nx * nx + nz * nz);
+        f32 step = timeDelta * (total - dist) * lbl_803E1C74;
+        f32 td;
+        if (step > lbl_803E1C6C)
+        {
+            step = lbl_803E1C6C;
+        }
+        else if (step < lbl_803E1C5C)
+        {
+            step = lbl_803E1C5C;
+        }
+        if (dist <= lbl_803DD5D8)
+        {
+            lbl_803DD5DC = lbl_803DD5DC + 1;
+        }
+        if (dist >= total || (s8)lbl_803DD5DC > 9)
+        {
+            char* t2 = *(char**)&((BaddieState*)st)->targetObj;
+            int delta = ((GameObject*)obj)->anim.rotX - (u16) * (s16*)t2;
+            if (delta > 0x8000)
+            {
+                delta -= 0xffff;
+            }
+            if (delta < -0x8000)
+            {
+                delta += 0xffff;
+            }
+            if (delta > 0x2000)
+            {
+                delta = 0x2000;
+            }
+            if (delta < -0x2000)
+            {
+                delta = -0x2000;
+            }
+            ((GameObject*)obj)->anim.rotX -= (s16)((delta * framesThisStep) >> 3);
+            if ((s8)lbl_803DD5DC > 10)
+            {
+                delta = 0;
+            }
+            if (delta < 0x100 && delta > -0x100)
+            {
+                *(u8*)(state + 0x56) = 0;
+                *(s16*)(state + 0x5a) = (s16)(*(s16*)(state + 0x58) - 1);
+            }
+            else
+            {
+                td = timeDelta;
+                (*(void (**)(int, char*, f32, f32, int, int))(*gPlayerInterface + 0x8))(
+                    obj, st, td, td, p4, p5);
+            }
+        }
+        else
+        {
+            nx = nx / total;
+            nz = nz / total;
+            ((BaddieState*)st)->moveInputX = -nx * step;
+            ((BaddieState*)st)->moveInputZ = nz * step;
+            ((GameObject*)obj)->anim.localPosX = dist * nx + *(f32*)(state + 0x40);
+            ((GameObject*)obj)->anim.localPosZ = dist * nz + *(f32*)(state + 0x48);
+            td = timeDelta;
+            (*(void (**)(int, char*, f32, f32, int, int))(*gPlayerInterface + 0x8))(
+                obj, st, td, td, p4, p5);
+        }
+    }
+    lbl_803DD5D8 = dist;
+    if ((s8) * (u8*)(state + 0x56) == 0)
+    {
+        *(u8*)(st + 0x405) = 0;
+        ((BaddieState*)st)->controlMode = p6;
+        *(int*)&((BaddieState*)st)->targetObj = 0;
+        *(s16*)(state + 0x6e) = -1;
+        *(s16*)(state + 0x6e) = *(s16*)(state + 0x6e) & ~0x60;
+        ((BaddieState*)st)->physicsActive = 0;
+        GameBit_Set(*(s16*)(st + 0x3f4), 0);
+    }
+    return 1;
+}
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801135c0
+ * EN v1.0 Address: 0x801135C0
+ * EN v1.0 Size: 408b
+ * EN v1.1 Address: 0x80113634
+ * EN v1.1 Size: 364b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801141dc
+ * EN v1.0 Address: 0x801141DC
+ * EN v1.0 Size: 12b
+ * EN v1.1 Address: 0x80114230
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801141e8
+ * EN v1.0 Address: 0x801141E8
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80114238
+ * EN v1.1 Size: 124b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801141ec
+ * EN v1.0 Address: 0x801141EC
+ * EN v1.0 Size: 136b
+ * EN v1.1 Address: 0x801142B4
+ * EN v1.1 Size: 108b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+extern f32 sqrtf(f32 x);
+
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801143e8
+ * EN v1.0 Address: 0x801143E8
+ * EN v1.0 Size: 448b
+ * EN v1.1 Address: 0x801144C0
+ * EN v1.1 Size: 484b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801145a8
+ * EN v1.0 Address: 0x801145A8
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801146A4
+ * EN v1.1 Size: 436b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801145b0
+ * EN v1.0 Address: 0x801145B0
+ * EN v1.0 Size: 880b
+ * EN v1.1 Address: 0x80114A58
+ * EN v1.1 Size: 864b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801149b8
+ * EN v1.0 Address: 0x801149B8
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80114E4C
+ * EN v1.1 Size: 572b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801149bc
+ * EN v1.0 Address: 0x801149BC
+ * EN v1.0 Size: 340b
+ * EN v1.1 Address: 0x80115088
+ * EN v1.1 Size: 376b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_80114b10
+ * EN v1.0 Address: 0x80114B10
+ * EN v1.0 Size: 316b
+ * EN v1.1 Address: 0x80115200
+ * EN v1.1 Size: 280b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+
+/* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
+void dll_19_func04_nop(void)
+{
+}
+
+void dll_19_func03_nop(void)
+{
+}
+
+/* 8b "li r3, N; blr" returners. */
+int dll_19_func09_ret_0(void) { return 0x0; }
+
+/* 12b chained getters. */
+f32 dll_19_func0B(int* obj) { return *(f32*)((char*)((int**)obj)[0xb8 / 4] + 0x3e4); }
+
+/* misc 8b leaves */
+
+
+u16 dll_19_func0A(int obj)
+{
+    void* p = ((GameObject*)obj)->anim.placementData;
+    if (p != NULL) return *(u16*)((char*)p + 0x34);
+    return 0xd2;
+}
+
+
+
+
+
+
+
+/* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
+ * angle into the caller's record. */
+
+
+/* EN v1.0 0x80114084  size: 256b  Copies a curve point's position into the
+ * caller's record and aims its angle at the nearest group-8 object (falling
+ * back to the point's packed angle). */
+
+extern f32 timeDelta;
+extern f32 lbl_803E1C78;
+extern f32 lbl_803E1C2C;
+extern f32 lbl_803E1C7C;
+
+/* EN v1.0 0x80113864  size: 248b  Steps the movement blend factors toward the
+ * current target and turns the yaw by the buffered turn rate. */
+void dll_19_func06(s16* yaw, char* st, f32 cap, f32 speed)
+{
+    if (*(f32*)(st + 0x298) < lbl_803E1C78)
+    {
+        f32 rest;
+        *(s16*)(st + 0x334) = 0;
+        ((BaddieState*)st)->turnRate = 0;
+        rest = lbl_803E1C2C;
+        *(f32*)(st + 0x298) = rest;
+        ((BaddieState*)st)->animSpeedA = rest;
+    }
+    ((BaddieState*)st)->animSpeedB = lbl_803E1C2C;
+    *yaw = lbl_803E1C7C * ((f32)((BaddieState*)st)->turnRate * timeDelta / speed) + (f32) * yaw;
+    ((BaddieState*)st)->animSpeedC +=
+        timeDelta * ((*(f32*)(st + 0x298) - ((BaddieState*)st)->animSpeedC) / *(f32*)(st + 0x2b8));
+    ((BaddieState*)st)->animSpeedA +=
+        timeDelta * ((*(f32*)(st + 0x298) - ((BaddieState*)st)->animSpeedA) / *(f32*)(st + 0x2b8));
+    if (((BaddieState*)st)->animSpeedC > cap)
+    {
+        ((BaddieState*)st)->animSpeedC = cap;
+    }
+    if (((BaddieState*)st)->animSpeedA > cap)
+    {
+        ((BaddieState*)st)->animSpeedA = cap;
+    }
+}
+
+
+/* EN v1.0 0x80114F64  size: 280b  Initializes the movement-state block and
+ * primes the animation channel tables. */
+
+
+/* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
+ * first use and refreshes the current path point position. */
+
+extern s16 getAngle(f32 x, f32 z);
+
+/* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
+ * distance from an object to its target, updating the wide-turn flag. */
+void dll_19_func07(int obj, int target, int div, u16* outYaw, u16* outDelta, u16* outDist)
+{
+    char* st = ((GameObject*)obj)->extra;
+    f32 d[3];
+    f32* dp = d;
+    s16* ovr;
+    u16 ang;
+    int cur;
+    int delta;
+
+    if ((void*)obj == NULL || (void*)target == NULL)
+    {
+        *outYaw = 0;
+        *outDelta = 0;
+        *outDist = 0;
+    }
+    else
+    {
+        dp[0] = *(f32*)(target + 0x18) - ((GameObject*)obj)->anim.worldPosX;
+        dp[1] = *(f32*)(target + 0x1c) - ((GameObject*)obj)->anim.worldPosY;
+        dp[2] = *(f32*)(target + 0x20) - ((GameObject*)obj)->anim.worldPosZ;
+        ang = getAngle(-dp[0], -dp[2]);
+        ovr = *(s16**)&((GameObject*)obj)->anim.parent;
+        if (ovr != NULL)
+        {
+            cur = (s16)(((GameObject*)obj)->anim.rotX + *ovr);
+        }
+        else
+        {
+            cur = ((GameObject*)obj)->anim.rotX;
+        }
+        delta = ang - (u16)(s16)
+        cur;
+        if (delta > 0x8000)
+        {
+            delta -= 0xffff;
+        }
+        if (delta < -0x8000)
+        {
+            delta += 0xffff;
+        }
+        *outDelta = (u16)delta;
+        if ((u16)delta < 0x31c4 || (u16)delta > 0xce3b)
+        {
+            ((Dll19State*)st)->unk400 &= ~0x10;
+        }
+        else
+        {
+            ((Dll19State*)st)->unk400 |= 0x10;
+        }
+        *outYaw = (u16)delta / (0x10000 / (u8)div);
+        *outDist = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
+    }
+}
+
+extern void voxmaps_worldToGrid(f32* world, int* grid);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern const f32 lbl_803E1C80;
+extern const f32 lbl_803E1C84;
+extern f32 lbl_803E1C48;
+
+/* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
+ * the object for walkable space, returning a bitmask of clear directions. */
+u8 dll_19_func08(int obj, char* st, f32 dist)
+{
+    extern const f32 lbl_803E1C68; /* #57 */
+    extern int objBboxFn_800640cc(void* pos, f32* world, f32 rad, int a, void* out, int obj, int b, int c, int d, int e); /* #57 */
+    extern u8 voxmaps_traceLine(int* from, int* to, int a, u8* outFlag, int b); /* #57 */
+    u16 i;
+    u8 mask;
+    u8 hitFlag;
+    int grid1[2];
+    int grid0[2];
+    f32 world[3];
+    u8 bboxOut[0x54];
+    int cur;
+    s16* ovr;
+    u8 ok;
+    f32 a;
+
+    mask = 0;
+    world[0] = ((GameObject*)obj)->anim.localPosX;
+    world[1] = lbl_803E1C68 + ((GameObject*)obj)->anim.localPosY;
+    world[2] = ((GameObject*)obj)->anim.localPosZ;
+    voxmaps_worldToGrid(world, grid0);
+    ovr = *(s16**)&((GameObject*)obj)->anim.parent;
+    if (ovr != NULL)
+    {
+        cur = (s16)(((GameObject*)obj)->anim.rotX + *ovr);
+    }
+    else
+    {
+        cur = ((GameObject*)obj)->anim.rotX;
+    }
+    for (i = 0; i < 4; i++)
+    {
+        a = lbl_803E1C80 * (f32)((s16)cur + (i << 14)) / lbl_803E1C84;
+        world[0] = ((GameObject*)obj)->anim.localPosX - dist * mathSinf(a);
+        world[1] = lbl_803E1C68 + ((GameObject*)obj)->anim.localPosY;
+        world[2] = ((GameObject*)obj)->anim.localPosZ - dist * mathCosf(a);
+        voxmaps_worldToGrid(world, grid1);
+        if (((GameObject*)obj)->anim.parent != NULL)
+        {
+            ok = 1;
+        }
+        else
+        {
+            ok = (u8)voxmaps_traceLine(grid1, grid0, 0, &hitFlag, 0);
+            if (hitFlag == 1)
+            {
+                ok = 1;
+            }
+        }
+        if (ok != 0)
+        {
+            if (objBboxFn_800640cc((char*)(obj + 0xc), world, lbl_803E1C48, 0, bboxOut, obj,
+                                   *(u8*)(st + 0x261), -1, 0, 0) != 0)
+            {
+                ok = 0;
+            }
+        }
+        mask |= ok << i;
+    }
+    return mask;
+}
+
+
+/* EN v1.0 0x801145BC  size: 512b  Advances the object along its movement
+ * curve, snapping to ground and easing the yaw toward the path direction. */
+
+extern u8 framesThisStep;
+
+/* EN v1.0 0x80114BB0  size: 572b  Object-sequence scripted-move step: phase 4
+ * arms the move, phase 5 walks the setup/playback sub-phases. */
+
+extern f32 lbl_803E1C40;
+
+/* EN v1.0 0x8011395C  size: 628b  Constrains a follow point against the
+ * object's facing plane and returns the lateral offset of the result. */
+f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char* st)
+{
+    extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj); /* #57 */
+    f32 dist;
+    f32 fz;
+    f32 fx;
+    f32 c;
+    f32 s;
+    f32 dx;
+    f32 dz;
+
+    dx = *(f32*)(st + 0x18) - px;
+    dz = *(f32*)(st + 0x20) - pz;
+    dist = sqrtf(dx * dx + dz * dz);
+    if (dist < range)
+    {
+        f32 base;
+        f32 d1;
+        f32 d2;
+        c = mathSinf(lbl_803E1C80 * (f32)((GameObject*)obj)->anim.rotX / lbl_803E1C84);
+        s = mathCosf(lbl_803E1C80 * (f32)((GameObject*)obj)->anim.rotX / lbl_803E1C84);
+        base = -(c * (px - c) + s * (pz - s));
+        d1 = base + (c * *(f32*)(st + 0x18) + s * *(f32*)(st + 0x20));
+        d2 = base + (c * *(f32*)(st + 0x8c) + s * *(f32*)(st + 0x94));
+        if (d1 > lbl_803E1C2C && d2 <= lbl_803E1C48)
+        {
+            *(f32*)(st + 0x18) = *(f32*)(st + 0x18) - c * d1;
+            *(f32*)(st + 0x20) = *(f32*)(st + 0x20) - s * d1;
+            Obj_TransformWorldPointToLocal(*(f32*)(st + 0x18), *(f32*)(st + 0x1c),
+                                           *(f32*)(st + 0x20), (f32*)(st + 0xc),
+                                           (f32*)(st + 0x10), (f32*)(st + 0x14),
+                                           *(u32*)(st + 0x30));
+        }
+        else if (d2 > lbl_803E1C48)
+        {
+            dist = lbl_803E1C40 * range;
+        }
+    }
+    if (dist < range)
+    {
+        fx = *(f32*)(st + 0x18);
+        fz = *(f32*)(st + 0x20);
+    }
+    else
+    {
+        fx = px;
+        fz = pz;
+    }
+    c = mathSinf(lbl_803E1C80 * (f32)(((GameObject*)obj)->anim.rotX + 0x4000) / lbl_803E1C84);
+    s = mathCosf(lbl_803E1C80 * (f32)(((GameObject*)obj)->anim.rotX + 0x4000) / lbl_803E1C84);
+    return -(-(((GameObject*)obj)->anim.localPosX * c + ((GameObject*)obj)->anim.localPosZ * s) + (c * fx + s * fz));
+}
+
+
+/* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
+ * given speed, snapping when close, easing yaw and pacing the walk anim. */
+
+
+/* === helper-last relocation (re-split inline suppression; defs moved below their callers to suppress cross-TU-merge auto-inlining) === */
+void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ)
+{
+    CameraModeNpcSpeakState* state = lbl_803DD584;
+    f32 dx;
+    f32 dz;
+    f32 dist;
+    u16 angle;
+    f32 cosVal;
+    f32 sinVal;
+
+    dx = target->anim.worldPosX - state->anchorX;
+    dz = target->anim.worldPosZ - state->anchorZ;
+    dist = sqrtf(dx * dx + dz * dz);
+    angle = (u16)getAngle(dx, dz);
+
+    {
+        f32 scale = state->anchorLerpScale;
+        dx *= scale;
+        dz *= scale;
+    }
+    dx += state->anchorX;
+    dz += state->anchorZ;
+
+    cosVal = mathSinf(lbl_803E19D0 * (f32)(s32)(angle + state->orbitAngleOffset) / lbl_803E19D4);
+    sinVal = mathCosf(lbl_803E19D0 * (f32)(s32)(angle + state->orbitAngleOffset) / lbl_803E19D4);
+
+    if (dist < state->minDistance)
+    {
+        dist = state->minDistance;
+    }
+    dist += state->distanceOffset;
+
+    *outX = cosVal * dist + dx;
+    *outY = (target->anim.worldPosY + state->targetHeightOffset) - lbl_803E19D8 * ((lbl_803E19DC + target->anim.
+        worldPosY) - state->anchorY);
+    *outZ = sinVal * dist + dz;
 }
