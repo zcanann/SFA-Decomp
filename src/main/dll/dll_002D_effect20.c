@@ -493,177 +493,23 @@ undefined4 FUN_800c9030(uint param_1, int* param_2)
 extern s16 lbl_803DD414;
 extern s16 lbl_803DD416;
 
-typedef struct PartFxKV
-{
-    u32 key;
-    u32 value;
-} PartFxKV;
 
-extern f32 lbl_803E04E8;
-extern f32 lbl_803E0500;
 
 /* Globals for tick functions Effect16_func05 / Effect17_func05 / Effect18_func05 / Effect19_func05 / Effect20_func05. */
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 mathSinf(f32 x);
 
-extern f32 lbl_803DB848;
-extern f32 lbl_803DB84C;
-extern f32 lbl_803E00A8;
-extern f32 lbl_803E00AC;
-extern f32 lbl_803E00B0;
-extern f32 lbl_803E00B8;
-extern s32 lbl_803DD3C0;
-extern s32 lbl_803DD3C4;
-extern f32 lbl_803DD3C8;
-extern f32 lbl_803DD3CC;
-extern f32 lbl_803E0108;
-extern f32 lbl_803E010C;
 
-extern f32 lbl_803DB858;
-extern f32 lbl_803DB85C;
-extern f32 lbl_803E01B8;
-extern f32 lbl_803E01BC;
-extern f32 lbl_803E01C8;
-extern s32 lbl_803DD3D0;
-extern s32 lbl_803DD3D4;
-extern f32 lbl_803DD3D8;
-extern f32 lbl_803DD3DC;
-extern f32 lbl_803E0218;
-extern f32 lbl_803E021C;
 
-extern f32 lbl_803DB868;
-extern f32 lbl_803DB86C;
-extern f32 lbl_803E0220;
-extern f32 lbl_803E0224;
-extern f32 lbl_803E0228;
-extern f32 lbl_803E0230;
-extern s32 lbl_803DD3E0;
-extern s32 lbl_803DD3E4;
-extern f32 lbl_803DD3E8;
-extern f32 lbl_803DD3EC;
-extern f32 lbl_803E02D0;
-extern f32 lbl_803E02D4;
 
-extern f32 lbl_803DB878;
-extern f32 lbl_803DB87C;
-extern f32 lbl_803E02D8;
-extern f32 lbl_803E02DC;
-extern f32 lbl_803E02E8;
-extern s32 lbl_803DD3F0;
-extern s32 lbl_803DD3F4;
-extern f32 lbl_803DD3F8;
-extern f32 lbl_803DD3FC;
-extern f32 lbl_803E0308;
-extern f32 lbl_803E030C;
 
-extern f32 lbl_803DB870;
-extern f32 lbl_803DB874;
-extern f32 lbl_803E02E4;
-extern f32 lbl_803E02EC;
-extern f32 lbl_803E02F0;
-extern f32 lbl_803E02F4;
-extern f32 lbl_803E02F8;
-extern f32 lbl_803E02FC;
 
-extern f32 lbl_803E0180;
-extern f32 lbl_803E0184;
-extern f32 lbl_803E0188;
-extern f32 lbl_803E018C;
-extern f32 lbl_803E0190;
-extern f32 lbl_803E0194;
-extern f32 lbl_803E0198;
-extern f32 lbl_803E019C;
-extern f32 lbl_803E01A0;
-extern f32 lbl_803E01A4;
-extern f32 lbl_803E01A8;
-extern f32 lbl_803E01AC;
-extern WaterfxInterface** gWaterfxInterface;
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-typedef struct WaterfxCfg
-{
-    s16 x;
-    s16 y;
-    s16 z;
-    u8 pad6[2];
-    f32 f8;
-    f32 fc;
-    f32 f10;
-    f32 f14;
-} WaterfxCfg;
 
-extern WaterfxCfg lbl_8039C440;
 
-extern f32 lbl_803DB850;
-extern f32 lbl_803DB854;
-extern f32 lbl_803E01C4;
-extern f32 lbl_803E01CC;
-extern f32 lbl_803E01D0;
-extern f32 lbl_803E01D4;
-extern f32 lbl_803E01D8;
-extern f32 lbl_803E01DC;
-extern f32 lbl_803E01E0;
-extern f32 lbl_803E01E4;
-extern f32 lbl_803E01E8;
-extern f32 lbl_803E01EC;
-extern f32 lbl_803E01F0;
-extern f32 lbl_803E01F4;
-extern f32 lbl_803E01F8;
-extern f32 lbl_803E01FC;
-extern f32 lbl_803E0200;
-extern f32 lbl_803E0204;
-extern f32 lbl_803E0208;
-extern f32 lbl_803E020C;
 
-extern f32 lbl_803E0110;
-extern f32 lbl_803E0114;
-extern f32 lbl_803E0118;
-extern f32 lbl_803E011C;
-extern f32 lbl_803E0120;
-extern f32 lbl_803E0124;
-extern f32 lbl_803E0128;
-extern f32 lbl_803E012C;
-extern f32 lbl_803E0130;
-extern f32 lbl_803E0134;
-extern f32 lbl_803E0138;
-extern f32 lbl_803E013C;
-extern f32 lbl_803E0140;
-extern f32 lbl_803E0144;
-extern f32 lbl_803E0148;
-extern f32 lbl_803E014C;
-extern f32 lbl_803E0150;
-extern f32 lbl_803E0154;
-extern f32 lbl_803E0158;
-extern f32 lbl_803E015C;
-extern f32 lbl_803E0160;
-extern f32 lbl_803E0164;
-extern f32 lbl_803E0168;
-extern f32 lbl_803E016C;
-extern f32 lbl_803E0170;
-extern f32 lbl_803E0174;
-extern WaterfxCfg lbl_8039C428;
 
-extern f32 lbl_803DB840;
-extern f32 lbl_803DB844;
-extern f32 lbl_803E00B4;
-extern f32 lbl_803E00BC;
-extern f32 lbl_803E00C0;
-extern f32 lbl_803E00C4;
-extern f32 lbl_803E00C8;
-extern f32 lbl_803E00CC;
-extern f32 lbl_803E00D0;
-extern f32 lbl_803E00D4;
-extern f32 lbl_803E00D8;
-extern f32 lbl_803E00DC;
-extern f32 lbl_803E00E0;
-extern f32 lbl_803E00E4;
-extern f32 lbl_803E00E8;
-extern f32 lbl_803E00EC;
-extern f32 lbl_803E00F0;
-extern f32 lbl_803E00F4;
-extern f32 lbl_803E00F8;
-extern WaterfxCfg lbl_8039C410;
 
 extern f32 lbl_803DB888;
 extern f32 lbl_803DB88C;
@@ -678,73 +524,18 @@ extern f32 lbl_803DD40C;
 extern f32 lbl_803E0344;
 extern f32 lbl_803E0348;
 
-extern f32 lbl_803DB860;
-extern f32 lbl_803DB864;
-extern f32 lbl_803E022C;
-extern f32 lbl_803E0234;
-extern f32 lbl_803E0238;
-extern f32 lbl_803E023C;
-extern f32 lbl_803E0240;
-extern f32 lbl_803E0244;
-extern f32 lbl_803E0248;
-extern f32 lbl_803E024C;
-extern f32 lbl_803E0250;
-extern f32 lbl_803E0254;
-extern f32 lbl_803E0258;
-extern f32 lbl_803E025C;
-extern f32 lbl_803E0260;
-extern f32 lbl_803E0264;
-extern f32 lbl_803E0268;
-extern f32 lbl_803E026C;
-extern f32 lbl_803E0270;
-extern f32 lbl_803E0274;
-extern f32 lbl_803E0278;
-extern f32 lbl_803E027C;
-extern f32 lbl_803E0280;
-extern f32 lbl_803E0284;
-extern f32 lbl_803E0288;
-extern f32 lbl_803E028C;
-extern f32 lbl_803E0290;
-extern f32 lbl_803E0294;
-extern f32 lbl_803E0298;
-extern f32 lbl_803E029C;
-extern f32 lbl_803E02A0;
-extern f32 lbl_803E02A4;
-extern f32 lbl_803E02A8;
-extern f32 lbl_803E02AC;
-extern f32 lbl_803E02B0;
-extern f32 lbl_803E02B4;
-extern f32 lbl_803E02B8;
-extern f32 sqrtf(f32);
 
-typedef struct PartFxNode
-{
-    u8 _pad0[0xc];
-    f32 _0xc;
-    s32 _0x10;
-    u8 _pad14[4];
-    s32 _0x18;
-    s32 _0x1c;
-    s32 _0x20;
-} PartFxNode;
 
 /* Binary search for key in lbl_8039C458 (count = lbl_803DD410). */
 #pragma dont_inline on
-u32 Checkpoint_find(s32 key, s32* idx_out);
 
-extern f32 lbl_803E04D8;
-extern f32 lbl_803E04DC;
-extern f32 lbl_803E04E0;
-extern f32 lbl_803E04E4;
 extern f32 mathCosf(f32 x);
 
 
 /* Build particle quad positions from a checkpoint pair. */
 #pragma dont_inline off
-s32 fn_800D55BC(u8* p, s32 idx, f32* out1, f32* out2, f32* out3, u8 mode, f32 fa, f32 fb);
 
 /* Set *p to lbl_803DD414 (sign-extended) and return lbl_803DD418. */
-u32 Checkpoint_func0E(s32* p);
 
 /* Swap lbl_803DD418 with lbl_803DD41C; copy 416 into 414 then clear 416. */
 void fn_800D6584(void)
@@ -759,36 +550,21 @@ void fn_800D6584(void)
 }
 
 /* Rank object r3 against array at lbl_803DD418 by (int@0x1c, float@0xc) descending. */
-typedef struct PartFxItem
-{
-    u8 _pad0[0xc];
-    f32 _0xc;
-    u8 _pad10[0xc];
-    s32 _0x1c;
-} PartFxItem;
 
 /* NOTE: 96.8% ? register choice differs (r5 vs r7 for rank). */
-s32 Checkpoint_func0F(PartFxItem* p);
 
 /* Find item in lbl_803DD418 array whose rank equals target_rank. */
-PartFxItem* Checkpoint_func10(s32 target_rank);
 
 /* Init random offsets / chain advance with lookup. */
-void Checkpoint_func0A(s32 key, f32* out_vec, u8* flag_byte);
 
 /* Walk a chain via Checkpoint_find lookups starting from o->_0x10. */
-void Checkpoint_func0C(PartFxNode* o);
 
 /* Append v to array pointed to by lbl_803DD41C, capped at 10 entries.
  * NOTE: stuck at ~78% ? instruction scheduling differs. */
-void Checkpoint_func0D(u32 v);
 
 /* Tick: counter1, counter2 + rate*timeDelta; clamp; periodic sin. */
-void Effect16_func05(void);
 
-void Effect17_func05(void);
 
-void Effect18_func05(void);
 
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
@@ -834,19 +610,12 @@ typedef struct PartFxSpawn
     u8 modelIdByte;
 } PartFxSpawn;
 
-int Effect19_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, f32* extraArgs);
 
-int Effect13_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId);
 
-int Effect17_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
 
-int Effect16_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
 
-int Effect15_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, f32* extraArgs);
 
-int Effect18_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, void* extraArgs);
 
-void Effect19_func05(void);
 
 /* ---- Effect20_func04 (FUN_800cd430, v1.0) ---- */
 extern f32 lbl_803DB880;
@@ -3958,43 +3727,24 @@ void Effect20_func05(void)
 /* Trivial 4b 0-arg blr leaves. */
 void Effect16_func03_nop(void);
 
-void Effect16_release(void);
 
-void Effect16_initialise(void);
 
-void Effect15_func05_nop(void);
 
-void Effect15_func03_nop(void);
 
-void Effect15_release(void);
 
-void Effect15_initialise(void);
 
-void Effect13_func05_nop(void);
 
-void Effect13_func03_nop(void);
 
-void Effect13_release(void);
 
-void Effect13_initialise(void);
 
-void Effect17_func03_nop(void);
 
-void Effect17_release(void);
 
-void Effect17_initialise(void);
 
-void Effect18_func03_nop(void);
 
-void Effect18_release(void);
 
-void Effect18_initialise(void);
 
-void Effect19_func03_nop(void);
 
-void Effect19_release(void);
 
-void Effect19_initialise(void);
 
 void Effect20_func03_nop(void)
 {
@@ -4011,14 +3761,9 @@ void Effect20_initialise(void)
 /* 8b "li r3, N; blr" returners. */
 int Checkpoint_func09_ret_1(void);
 
-extern f32 lbl_803E0504;
-extern f32 lbl_803E0508;
-extern f32 Curve_EvalHermite(f32* values, f32 t, f32* outTangent);
 
 /* Advance along the checkpoint curve by dist; write position/angles to out. */
-s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag);
 
-void Checkpoint_onGameLoop(void);
 
 /* segment pragma-stack balance (re-split): */
 #pragma dont_inline reset
@@ -4046,16 +3791,10 @@ void Checkpoint_onGameLoop(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern f32 sqrtf(f32 x);
-extern f32 lbl_803E050C;
-extern f32 lbl_803E0510;
-extern f32 lbl_803E0514;
-extern f32 lbl_803E0518;
 
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-int Checkpoint_func07(int* obj, int* state);
 #pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
@@ -4077,7 +3816,6 @@ int Checkpoint_func07(int* obj, int* state);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void Checkpoint_release(void);
 
 
 
@@ -4112,7 +3850,6 @@ void Checkpoint_release(void);
 /* sda21 accessors. */
 
 /* Pattern wrappers. */
-void Checkpoint_reset(void);
 
 /* 12b 3-insn patterns. */
 
@@ -4131,7 +3868,6 @@ void Checkpoint_reset(void);
 
 
 /* Checkpoint table initialiser. */
-extern u32 lbl_8039CA98[];
 
 #pragma scheduling off
 #pragma peephole off
@@ -4169,20 +3905,13 @@ extern u32 lbl_8039CA98[];
 #pragma scheduling reset
 
 #pragma scheduling off
-void Checkpoint_initialise(void);
 #pragma scheduling reset
 
 /* Checkpoint_Add: sorted insertion of (entry->_14 as key, entry as pointer) into lbl_8039C458 table. */
-typedef struct CheckpointSlot
-{
-    u32 key;
-    void* entry;
-} CheckpointSlot;
 
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-void Checkpoint_Add(int* entry);
 #pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
@@ -4197,7 +3926,6 @@ void Checkpoint_Add(int* entry);
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-void Checkpoint_remove(int* obj);
 #pragma opt_common_subs reset
 #pragma scheduling off
 #pragma peephole off
@@ -4223,14 +3951,6 @@ void Checkpoint_remove(int* obj);
 
 
 
-extern f64 lbl_803E0520;
-extern f32 lbl_803E051C;
-extern f32 lbl_803E0528;
-extern f32 lbl_803E052C;
-extern f32 lbl_803E0530;
-extern f32 lbl_803E0534;
-extern f32 lbl_803E0538;
 
-void Checkpoint_func06(int* obj, int* state, int filter);
 #pragma scheduling reset
 #pragma peephole reset
