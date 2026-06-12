@@ -6,6 +6,7 @@
 #include "main/dll/texscroll2.h"
 #include "main/mapEventTypes.h"
 #include "main/objfx.h"
+#include "main/objtexture.h"
 #include "main/resource.h"
 
 typedef struct KaldachomPlacement
@@ -32,7 +33,6 @@ extern undefined4 Obj_GetPlayerObject();
 extern undefined4 ObjHits_DisableObject();
 extern void ObjGroup_RemoveObject(int obj, int group);
 extern undefined4 ObjPath_GetPointWorldPosition();
-extern int objFindTexture();
 extern undefined4 fn_8003B5E0();
 extern undefined4 objRenderFn_8003b8f4();
 extern undefined4 objParticleFn_80099d84();
@@ -391,7 +391,7 @@ void kaldachom_update(int obj)
     int cond;
     uint ua;
     undefined4 player;
-    int* texPtr;
+    ObjTextureRuntimeSlot* texture;
     undefined4 ub;
     int ref;
     int state;
@@ -454,12 +454,12 @@ void kaldachom_update(int obj)
             else
             {
                 control = ((CampfireState*)state)->control;
-                texPtr = (int*)objFindTexture(obj, 0, 0);
+                texture = objFindTexture((void*)obj, 0, 0);
                 control->textureScrollAngle += 0x1000;
                 scrollPhase = mathSinf((lbl_803E30B4 * (f32)(s32)control->textureScrollAngle) / lbl_803E30B8
                 )
                 ;
-                *texPtr = (int)(lbl_803E30B0 * (lbl_803E3078 + scrollPhase));
+                texture->textureId = (int)(lbl_803E30B0 * (lbl_803E3078 + scrollPhase));
                 player = Obj_GetPlayerObject();
                 *(undefined4*)(state + 0x2d0) = player;
                 kaldachom_handleAnimEvents(obj, state, state);

@@ -7,6 +7,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
+#include "main/objtexture.h"
 
 extern undefined8 FUN_80003494();
 extern undefined8 FUN_80006824();
@@ -850,7 +851,6 @@ void fn_8015F5B0(short* obj)
 void chukchuk_update(short* obj)
 {
     extern void objParticleFn_80099d84(f32, short*, int, f32, int);
-    extern int*objFindTexture(short* obj, int a, int b);
     extern int Obj_GetPlayerObject(void);
     extern int getAngle(f32 deltaX, f32 deltaZ);
     extern f32 sqrtf(f32);
@@ -867,7 +867,7 @@ void chukchuk_update(short* obj)
     ChukChukState* v;
     u16 di;
     int pl;
-    int* tex;
+    ObjTextureRuntimeSlot* tex;
     int ang;
     int r;
     f32 ph;
@@ -895,14 +895,14 @@ void chukchuk_update(short* obj)
     }
     if ((v->flags & 2) == 0)
     {
-        tex = objFindTexture(obj, 0, 0);
+        tex = objFindTexture((void*)obj, 0, 0);
         if (v->glowPhase < lbl_803E2E3C)
         {
             if ((int)v->glowPhase == 10)
             {
                 v->flags |= 1;
             }
-            *tex = lbl_8031FF80[(int)v->glowPhase] << 8;
+            tex->textureId = lbl_8031FF80[(int)v->glowPhase] << 8;
             lim = lbl_803E2E3C;
             nv = v->glowPhase + lbl_803E2E30;
             v->glowPhase = nv;
@@ -922,7 +922,7 @@ void chukchuk_update(short* obj)
             {
                 v->glowPhase = lbl_803E2E34;
             }
-            *tex = 0;
+            tex->textureId = 0;
         }
         pl = Obj_GetPlayerObject();
         dx = *(f32*)(pl + 0xc) - ((GameObject*)obj)->anim.localPosX;

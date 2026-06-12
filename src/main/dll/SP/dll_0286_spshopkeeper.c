@@ -5,6 +5,7 @@
 #include "main/mapEvent.h"
 #include "main/dll/DR/DRpushcart.h"
 #include "main/objseq.h"
+#include "main/objtexture.h"
 #include "main/screen_transition.h"
 
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
@@ -63,7 +64,6 @@ extern void warpToMap(int mapId, int flag);
 extern int getCurUiDll(void);
 extern int* getDLL16(void);
 extern void playerAddMoney(void* player, int amount);
-extern void* objFindTexture(int obj, int target, int p3);
 extern int dll_2E_func07(int obj, u8* data, int p3, int p4, int p5);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E5A24;
@@ -263,7 +263,8 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
     int i;
     int digit;
     int hundreds;
-    int* tex;
+    ObjTextureRuntimeSlot* tex;
+    int* uiDll;
     f32 range;
     f32 speed;
 
@@ -310,17 +311,17 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
                 ((ShopkeeperState*)state)->priceShown = ((ShopkeeperState*)state)->price;
                 ((ShopkeeperState*)state)->unk9D2 = 0;
                 digit = ((ShopkeeperState*)state)->price;
-                tex = (int*)objFindTexture(obj, 8, 0);
-                *tex = (digit % 10) * 0x100;
-                tex = (int*)objFindTexture(obj, 7, 0);
-                *tex = ((digit / 10) % 10) * 0x100;
+                tex = objFindTexture((void*)obj, 8, 0);
+                tex->textureId = (digit % 10) * 0x100;
+                tex = objFindTexture((void*)obj, 7, 0);
+                tex->textureId = ((digit / 10) % 10) * 0x100;
                 hundreds = digit / 100;
                 if (hundreds > 9)
                 {
                     hundreds = 9;
                 }
-                tex = (int*)objFindTexture(obj, 6, 0);
-                *tex = hundreds << 8;
+                tex = objFindTexture((void*)obj, 6, 0);
+                tex->textureId = hundreds << 8;
             }
             seq->movementState = 0;
             seq->conditionCallback = (ObjAnimSequenceConditionCallback)DRlaserturret_handlePromptChoice;
@@ -363,22 +364,22 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
         case 5:
             if (getCurUiDll() == 0x10)
             {
-                tex = getDLL16();
-                (*(void (**)(int))(*tex + 0x10))(0);
+                uiDll = getDLL16();
+                (*(void (**)(int))(*uiDll + 0x10))(0);
             }
             break;
         case 6:
             if (getCurUiDll() == 0x10)
             {
-                tex = getDLL16();
-                (*(void (**)(int))(*tex + 0x10))(2);
+                uiDll = getDLL16();
+                (*(void (**)(int))(*uiDll + 0x10))(2);
             }
             break;
         case 7:
             if (getCurUiDll() == 0x10)
             {
-                tex = getDLL16();
-                (*(void (**)(int))(*tex + 0x10))(4);
+                uiDll = getDLL16();
+                (*(void (**)(int))(*uiDll + 0x10))(4);
             }
             break;
         case 9:
@@ -393,17 +394,17 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
         case 0xC:
             ((ShopkeeperState*)state)->amount = 1;
             digit = ((ShopkeeperState*)state)->amount;
-            tex = (int*)objFindTexture(obj, 8, 0);
-            *tex = (digit % 10) * 0x100;
-            tex = (int*)objFindTexture(obj, 7, 0);
-            *tex = ((digit / 10) % 10) * 0x100;
+            tex = objFindTexture((void*)obj, 8, 0);
+            tex->textureId = (digit % 10) * 0x100;
+            tex = objFindTexture((void*)obj, 7, 0);
+            tex->textureId = ((digit / 10) % 10) * 0x100;
             digit = digit / 100;
             if (digit > 9)
             {
                 digit = 9;
             }
-            tex = (int*)objFindTexture(obj, 6, 0);
-            *tex = digit << 8;
+            tex = objFindTexture((void*)obj, 6, 0);
+            tex->textureId = digit << 8;
             break;
         }
     }
