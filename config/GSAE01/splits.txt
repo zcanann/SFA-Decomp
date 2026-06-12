@@ -397,16 +397,16 @@ main/dll/FRONT/POST.c:
 	.text       start:0x80115650 end:0x801159E4
 
 main/dll/FRONT/n_rareware.c:
-	.text       start:0x801159E4 end:0x80115FBC
+	.text       start:0x801159E4 end:0x80115F20
 
-main/dll/FRONT/dll_39.c:
-	.text       start:0x80115FBC end:0x801166C8
+main/dll/FRONT/dll_0033_nrareware.c:
+	.text       start:0x80115F20 end:0x8011611C
 
 main/dll/FRONT/n_filemenu.c:
-	.text       start:0x801166C8 end:0x80116F84
+	.text       start:0x8011611C end:0x8011730C
 
 main/dll/FRONT/dll_3B.c:
-	.text       start:0x80116F84 end:0x801175A4
+	.text       start:0x8011730C end:0x801175A4
 
 main/audio_decode_thread.c:
 	.text       start:0x801175A4 end:0x80117668

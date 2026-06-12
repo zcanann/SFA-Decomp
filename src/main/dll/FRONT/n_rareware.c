@@ -309,32 +309,6 @@ void TitleScreenInit_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void n_rareware_render(void)
-{
-    int frame;
+void n_rareware_render(void);
 
-    if (((s8)lbl_803DD608 != 0) && ((s8)lbl_803DD609 <= 10))
-    {
-        return;
-    }
-
-    frame = lbl_803DD5F8;
-    if ((frame > 40) && ((s8)lbl_803DD5FC == 0))
-    {
-        lbl_803DD5FC = 1;
-        lbl_803DD604 = lbl_803E1D08;
-    }
-    if ((frame > 50) && ((s8)lbl_803DD5FC == 1))
-    {
-        lbl_803DD5FC = 2;
-    }
-    if ((frame > 285) && ((s8)lbl_803DD5FC == 2))
-    {
-        lbl_803DD5FC = 3;
-        lbl_803DD600 = lbl_803E1D0C;
-    }
-}
-
-void n_rareware_frameEnd(void)
-{
-}
+void n_rareware_frameEnd(void);

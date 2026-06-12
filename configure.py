@@ -931,7 +931,7 @@ config.libs = [
             Object(NonMatching, "main/dll/projLib.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/FRONT/POST.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/FRONT/n_rareware.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/FRONT/dll_39.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/FRONT/dll_0033_nrareware.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/FRONT/dll_3B.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/FRONT/n_options.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/FRONT/n_pausemenu.c"),
