@@ -29,6 +29,45 @@ extern f32 timeDelta;
 
 #pragma scheduling on
 #pragma peephole on
+extern void ObjGroup_AddObject(int obj, int group);
+extern int mapGetDirIdx(int mapId);
+extern void unlockLevel(int a, int b, int c);
+extern void lockLevel(int idx, int p2);
+extern f32 lbl_803E5E90;
+extern void setDrawLights(int mode);
+extern int getSkyColorFn_80088e08(int slot);
+extern void skySetOverrideLightColorEnabled(u8 enabled);
+extern void skySetOverrideLightColor(u8 red, u8 green, u8 blue);
+extern void skyFn_80089710(int flags, u32 enabled, int startComplete);
+extern f32 fn_8008ED88(void);
+extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
+extern void fn_80089510(int flags, u8 red, u8 green, u8 blue);
+extern void fn_80089578(int flags, u8 red, u8 green, u8 blue);
+extern void skySetOverrideLightDirectionEnabled(u8 enabled);
+extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
+extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
+extern void ObjGroup_RemoveObject(int obj, int group);
+extern void Music_Trigger(int musicId, int param);
+extern f32 lbl_802C24B8[];
+extern u8 lbl_803DC110;
+extern u8 lbl_803DC114;
+extern u8 lbl_803DC118;
+extern u8 lbl_803DC11C;
+extern u8 lbl_803DC120;
+extern u8 lbl_803DC124;
+extern f32 lbl_803DDC88;
+extern f32 lbl_803DDC8C;
+extern u8 lbl_803DDC90;
+extern u8 lbl_803DDC94;
+extern u8 lbl_803DDC98;
+extern u8 lbl_803DDC9C;
+extern f32 lbl_803E5E74;
+extern f32 lbl_803E5E78;
+extern f32 lbl_803E5E7C;
+extern f32 lbl_803E5E80;
+extern f32 lbl_803E5E84;
+extern void objRenderFn_8003b8f4(f32);
+
 void wmlevelcontrol_readParams(undefined2* param_1, int param_2)
 {
     float* pfVar1;
@@ -98,12 +137,6 @@ void wmlevelcontrol_update(int obj)
     *(uint*)(state + 6) = *(uint*)(state + 6) + 1;
     return;
 }
-
-extern void ObjGroup_AddObject(int obj, int group);
-extern int mapGetDirIdx(int mapId);
-extern void unlockLevel(int a, int b, int c);
-extern void lockLevel(int idx, int p2);
-extern f32 lbl_803E5E90;
 
 void wmlevelcontrol_init(int obj)
 {
@@ -184,20 +217,6 @@ void wmlevelcontrol_initialise(void)
 
 /* Head of the TU (0x801F3F18..0x801F44B4), formerly the tail of
  * LGTdirectionallight.c. */
-extern void setDrawLights(int mode);
-extern int getSkyColorFn_80088e08(int slot);
-extern void skySetOverrideLightColorEnabled(u8 enabled);
-extern void skySetOverrideLightColor(u8 red, u8 green, u8 blue);
-extern void skyFn_80089710(int flags, u32 enabled, int startComplete);
-extern f32 fn_8008ED88(void);
-extern void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2);
-extern void fn_80089510(int flags, u8 red, u8 green, u8 blue);
-extern void fn_80089578(int flags, u8 red, u8 green, u8 blue);
-extern void skySetOverrideLightDirectionEnabled(u8 enabled);
-extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
-extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
-extern void ObjGroup_RemoveObject(int obj, int group);
-extern void Music_Trigger(int musicId, int param);
 
 typedef struct
 {
@@ -211,25 +230,6 @@ typedef struct
     LightVec3 fog;
 } LightVecSet;
 
-extern f32 lbl_802C24B8[];
-extern u8 lbl_803DC110;
-extern u8 lbl_803DC114;
-extern u8 lbl_803DC118;
-extern u8 lbl_803DC11C;
-extern u8 lbl_803DC120;
-extern u8 lbl_803DC124;
-extern f32 lbl_803DDC88;
-extern f32 lbl_803DDC8C;
-extern u8 lbl_803DDC90;
-extern u8 lbl_803DDC94;
-extern u8 lbl_803DDC98;
-extern u8 lbl_803DDC9C;
-extern f32 lbl_803E5E74;
-extern f32 lbl_803E5E78;
-extern f32 lbl_803E5E7C;
-extern f32 lbl_803E5E80;
-extern f32 lbl_803E5E84;
-
 int wmlevelcontrol_getExtraSize(void) { return 0x1c; }
 int wmlevelcontrol_getObjectTypeId(void) { return 0x0; }
 
@@ -241,8 +241,6 @@ void wmlevelcontrol_free(int obj)
     GameBit_Set(0x372, 1);
     GameBit_Set(0x390, 1);
 }
-
-extern void objRenderFn_8003b8f4(f32);
 
 void wmlevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

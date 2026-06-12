@@ -47,6 +47,50 @@ extern f32 lbl_803DCB70;
 
 #pragma scheduling on
 #pragma peephole on
+extern void objRenderFn_8003b8f4(f32 x);
+extern f32 lbl_803E48E8;
+STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
+extern int ObjHits_GetPriorityHit(int obj, int* out, int* a, int* b);
+extern void Sfx_PlayFromObject(int obj, int sfx);
+extern void* lbl_803DDB50;
+extern void ObjMsg_AllocQueue(int* obj, int n);
+extern int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate);
+extern f32 lbl_803E48B8;
+extern void DIMwooddoor_updateFallingDebris(int* obj);
+extern void DIMwooddoor_updateShardAim(int* obj, f32 a, f32 b, f32 c, f32 d);
+extern void DIMwooddoor_spawnShard(int* obj, int p2);
+extern f32 getXZDistance(f32 * a, f32 * b);
+extern void* fn_802972A8(void* player);
+extern void buttonDisable(int chan, int mask);
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern int lbl_803DBF10;
+extern int lbl_803DBF0C;
+extern f32 lbl_803E48EC;
+extern f32 lbl_803E48F0;
+extern f32 lbl_803DBEF4;
+extern void setAButtonIcon(int icon);
+extern void setBButtonIcon(int icon);
+extern void hudFn_8011f38c(int v);
+extern s16* objModelGetVecFn_800395d8(int* obj, int p2);
+extern s8 padGetStickX(int chan);
+extern int fn_80296A14(void* player);
+extern void playerAddRemoveMagic(void* player, int amount);
+extern u32 getButtonsJustPressed(int chan);
+extern u32 getButtonsHeld(int chan);
+extern u32 getButtonsJustPressedIfNotBusy(int chan);
+extern int Sfx_IsPlayingFromObjectChannel(int* obj, int channel);
+extern void Sfx_StopObjectChannel(int* obj, int channel);
+extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
+extern u8 lbl_803DBF00;
+extern s16 lbl_803DBF02;
+extern s16 lbl_803DBF04;
+extern f32 lbl_803DBF08;
+extern f32 lbl_803DBEF8;
+extern f32 lbl_803DBEFC;
+extern unsigned long GameBit_Set(int eventId, int value);
+extern void objRenderFn_8003b8f4(f32);
+
 void FUN_801b2550(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined4 param_9, undefined4 param_10, int param_11)
@@ -278,9 +322,6 @@ void dimcannon_initialise(void)
 {
 }
 
-extern void objRenderFn_8003b8f4(f32 x);
-extern f32 lbl_803E48E8;
-
 void dimcannon_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     u8* def;
@@ -334,7 +375,6 @@ typedef struct DimcannonState
 
 /* dimcannon extra block (0xb4); the head is the per-cannonball column
  * arrays walked via state + i*4 (kept raw), this names the scalar tail. */
-STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 
 int dimcannon_getExtraSize(int* obj)
 {
@@ -348,13 +388,8 @@ int dimcannon_getObjectTypeId(int* obj)
     return 0x0;
 }
 
-extern int ObjHits_GetPriorityHit(int obj, int* out, int* a, int* b);
-extern void Sfx_PlayFromObject(int obj, int sfx);
-
 #pragma dont_inline on
 #pragma dont_inline reset
-
-extern void* lbl_803DDB50;
 
 void dimcannon_free(int* obj)
 {
@@ -366,10 +401,6 @@ void dimcannon_free(int* obj)
     }
     ObjGroup_RemoveObject(obj, 3);
 }
-
-extern void ObjMsg_AllocQueue(int* obj, int n);
-extern int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate);
-extern f32 lbl_803E48B8;
 
 /* EN v1.0 0x801B30C8  size: 628b  Dimcannon constructor: handles the 0x1d6
  * sub-variant, else seeds the 10-slot trail particle array, installs the
@@ -454,20 +485,6 @@ void dimcannon_init(int* obj, int* arg)
 
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
-
-extern void DIMwooddoor_updateFallingDebris(int* obj);
-extern void DIMwooddoor_updateShardAim(int* obj, f32 a, f32 b, f32 c, f32 d);
-extern void DIMwooddoor_spawnShard(int* obj, int p2);
-extern f32 getXZDistance(f32 * a, f32 * b);
-extern void* fn_802972A8(void* player);
-extern void buttonDisable(int chan, int mask);
-extern u8 framesThisStep;
-extern f32 timeDelta;
-extern int lbl_803DBF10;
-extern int lbl_803DBF0C;
-extern f32 lbl_803E48EC;
-extern f32 lbl_803E48F0;
-extern f32 lbl_803DBEF4;
 
 /* EN v1.0 0x801B2C68  size: 1120b  Dimcannon per-frame state machine: idle ->
  * tracking -> firing -> spent, plus the 0x1d6 falling-debris sub-variant. */
@@ -625,27 +642,6 @@ void dimcannon_update(int* obj)
     lbl_803DBEF4 = lbl_803E48F0;
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E48F0, timeDelta, NULL);
 }
-
-extern void setAButtonIcon(int icon);
-extern void setBButtonIcon(int icon);
-extern void hudFn_8011f38c(int v);
-extern s16* objModelGetVecFn_800395d8(int* obj, int p2);
-extern s8 padGetStickX(int chan);
-extern int fn_80296A14(void* player);
-extern void playerAddRemoveMagic(void* player, int amount);
-extern u32 getButtonsJustPressed(int chan);
-extern u32 getButtonsHeld(int chan);
-extern u32 getButtonsJustPressedIfNotBusy(int chan);
-extern int Sfx_IsPlayingFromObjectChannel(int* obj, int channel);
-extern void Sfx_StopObjectChannel(int* obj, int channel);
-extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
-
-extern u8 lbl_803DBF00;
-extern s16 lbl_803DBF02;
-extern s16 lbl_803DBF04;
-extern f32 lbl_803DBF08;
-extern f32 lbl_803DBEF8;
-extern f32 lbl_803DBEFC;
 
 /* EN v1.0 0x801B2550  size: 1504b  Dimcannon manned-control sequence: aims the
  * turret with the stick, charges with A, fires on release/full charge, and
@@ -828,11 +824,3 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 
     return 0;
 }
-
-#include "main/dll/DIM/DIMlevcontrol.h"
-#include "main/game_object.h"
-#include "main/objseq.h"
-
-extern unsigned long GameBit_Set(int eventId, int value);
-
-extern void objRenderFn_8003b8f4(f32);

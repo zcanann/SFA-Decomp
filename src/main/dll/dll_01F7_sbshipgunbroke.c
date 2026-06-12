@@ -55,6 +55,9 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
+extern int GameBit_Get(int);
+extern f32 lbl_803E59C0;
+
 void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined2* param_9, int param_10)
@@ -89,8 +92,6 @@ int SB_ShipGunBroke_getExtraSize(void) { return 0x1; }
 int SB_ShipGunBroke_getObjectTypeId(void) { return 0x0; }
 int shop_getExtraSize(void);
 
-extern int GameBit_Get(int);
-
 /* Stubs added to align function set with v1.0 asm. Source had Ghidra FUN_xxx
  * splits at wrong addresses; these stubs ensure every asm symbol has a src
  * definition so future hunters can fill bodies one at a time. */
@@ -100,8 +101,6 @@ extern int GameBit_Get(int);
 
 /* EN v1.0 0x801E4BA4  size: 48b  When obj->_b8->[0] is non-null,
  * call ObjLink_DetachChild(obj). */
-
-extern f32 lbl_803E59C0;
 
 void SB_ShipGunBroke_render(int* obj, int p2, int p3, int p4, int p5)
 {

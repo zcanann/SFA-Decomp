@@ -52,6 +52,13 @@ typedef struct Dll1DFState
 
 #pragma scheduling on
 #pragma peephole on
+extern f32 lbl_803E4B08;
+extern f32 lbl_803E4B98;
+extern f32 lbl_803E4BA8;
+extern f32 lbl_803E4BAC;
+extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
+extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4;
+
 void FUN_801b9cc4(int param_1)
 {
     char* pcVar1;
@@ -100,9 +107,6 @@ int dll_1DB_getExtraSize(void);
 int dll_1DF_getExtraSize(void) { return 0x28; }
 int dll_1DF_getObjectTypeId(void) { return 0x0; }
 
-extern f32 lbl_803E4B08;
-extern f32 lbl_803E4B98;
-
 void dll_1DF_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -116,8 +120,6 @@ void dll_1DA_init(void* obj);
  *              magic-2^52 trick using a 2^52 constant) to scale obj[0x50]->f4 into
  *              obj[8]. Also sets obj[0xB8]->f10 from a constant and OR-merges flags
  *              into obj[0x64]->u32_30 (0x810) and obj[0xB0]'s u16 (0x2000). */
-extern f32 lbl_803E4BA8;
-extern f32 lbl_803E4BAC;
 
 void dll_1DF_init(void* obj, void* p)
 {
@@ -154,8 +156,6 @@ void dim2lavacontrol_setScale(void* obj);
  *   - Then if (distance^2 from player to obj position < lbl_803E4BA0) and sub.f24
  *     decremented by timeDelta is < lbl_803E4B9C, call gPartfxInterface->vt[2] with
  *     (obj, 525, 0, 2, -1, 0) and reset sub.f24 to lbl_803E4BA4. */
-extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
-extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4;
 
 void dll_1DF_update(void* obj)
 {

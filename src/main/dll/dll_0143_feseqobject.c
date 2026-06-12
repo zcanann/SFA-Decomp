@@ -14,6 +14,8 @@ extern f32 lbl_803E56B4;
 
 #pragma scheduling on
 #pragma peephole on
+extern void objRenderFn_8003b8f4(f32);
+
 static void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams* params)
 {
     (*gPartfxInterface)->spawnObject((void*)obj, 0x85, params, 1, -1, NULL);
@@ -159,8 +161,6 @@ int FEseqobject_getExtraSize(void) { return 0x1; }
 int FEseqobject_getObjectTypeId(void) { return 0x0; }
 int FElevControl_getExtraSize(void);
 int FElevControl_getObjectTypeId(void);
-
-extern void objRenderFn_8003b8f4(f32);
 
 void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

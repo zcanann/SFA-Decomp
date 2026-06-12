@@ -13,6 +13,14 @@ extern undefined4 DAT_803de3a8;
 extern void loadUiDll(int id);
 extern u8 framesThisStep;
 
+extern u8 lbl_803DD728;
+extern u32 lbl_803DD72C;
+extern void textureFree(u32);
+extern u32 lbl_803DD714, lbl_803DD718, lbl_803DD71C;
+extern void warpToMap(int mapId, int spawnId);
+extern int Obj_GetPlayerObject(void);
+extern s16 lbl_803DD8C2;
+
 void FUN_8011daf8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined4 param_9, undefined4 param_10, undefined4 param_11, undefined4 param_12,
@@ -56,17 +64,9 @@ void Dummy39_frameEnd(void)
 
 void Dummy3A_render(void);
 
-extern u8 lbl_803DD728;
 void Dummy39_initialise(void) { lbl_803DD728 = 0x28; }
 
-extern u32 lbl_803DD72C;
-extern void textureFree(u32);
 void Dummy39_release(void) { textureFree(lbl_803DD72C); }
-
-extern u32 lbl_803DD714, lbl_803DD718, lbl_803DD71C;
-extern void warpToMap(int mapId, int spawnId);
-
-extern int Obj_GetPlayerObject(void);
 
 #pragma scheduling off
 #pragma peephole off
@@ -92,5 +92,3 @@ int Dummy39_run(void)
     }
     return 0;
 }
-
-extern s16 lbl_803DD8C2;

@@ -31,6 +31,23 @@ extern undefined4 FUN_80044404();
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 timeDelta;
 
+extern f32 lbl_803E43BC;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E43F4;
+extern u8 framesThisStep;
+extern f32 lbl_803E43B8;
+extern f32 lbl_803E4428;
+extern void Obj_TransformLocalPointByWorldMatrix(void* obj, void* state, f32* out, int flags);
+extern void fn_80065684(double x, double y, double z, void* obj, f32* out, int flags);
+extern f32 lbl_803E43F0;
+extern f32 lbl_803E4400;
+extern f32 lbl_803E4404;
+extern f32 lbl_803E4408;
+extern f32 lbl_803E4418;
+extern f32 lbl_803E441C;
+extern f32 lbl_803E4420;
+extern f32 lbl_803E4424;
+
 void FUN_801a4520(int param_1)
 {
     int iVar1;
@@ -105,10 +122,6 @@ int exploded_getExtraSize(void) { return 0x6c; }
 
 u8 exploded_setScale(int* obj) { return ((ExplodedObjectState*)((int**)obj)[0xb8 / 4])->explodePhase; }
 
-extern f32 lbl_803E43BC;
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E43F4;
-
 void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -120,8 +133,6 @@ void cfmagicwall_update(int obj);
 u32 exploded_getObjectTypeId(ExplodedObject* obj) { return (obj->mapData->objectTypeTag << 11) | 0x400; }
 
 void cfmagicwall_init(s16* dst, void* src);
-
-extern u8 framesThisStep;
 
 void exploded_update(int* obj)
 {
@@ -171,9 +182,6 @@ void exploded_update(int* obj)
     }
 }
 
-extern f32 lbl_803E43B8;
-extern f32 lbl_803E4428;
-
 /* slidingdoor_SeqFn: slidingdoor "think" routine. Tracks whether the player or
  * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
  * (state[0] bits 5..7) through the door's open/close machine. Returns 1
@@ -222,17 +230,6 @@ void attractor_func0B(u8* obj, void** out);
  * slidingdoor_SeqFn as obj->thinkRoutine; convert data[0x21] to f32, scale by
  * lbl_803E43C0 and obj->_50->[4], stash at obj+0x8; then clear bits 5..7 of
  * obj->_b8->_0. */
-
-extern void Obj_TransformLocalPointByWorldMatrix(void* obj, void* state, f32* out, int flags);
-extern void fn_80065684(double x, double y, double z, void* obj, f32* out, int flags);
-extern f32 lbl_803E43F0;
-extern f32 lbl_803E4400;
-extern f32 lbl_803E4404;
-extern f32 lbl_803E4408;
-extern f32 lbl_803E4418;
-extern f32 lbl_803E441C;
-extern f32 lbl_803E4420;
-extern f32 lbl_803E4424;
 
 void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data,
                               int computeModelCenter, ExplodedObjectState* state)

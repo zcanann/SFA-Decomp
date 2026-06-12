@@ -46,6 +46,33 @@ extern void vecRotateZXY(void* rotation, f32* outVec);
 extern int gameBitIncrement(int eventId);
 extern f32 Vec_distance(void* a, void* b);
 
+extern void ModelLightStruct_free(void* p);
+extern u8 lbl_803DDAD8;
+extern undefined4 FUN_800068c4();
+extern void gameBitDecrement(int eventId);
+extern f32 lbl_803E3A98;
+extern f32 lbl_803E3A9C;
+extern f32 lbl_803E3AC8;
+extern f32 lbl_803E3ACC;
+extern f32 lbl_803E3AD0;
+extern f32 lbl_803E3AD4;
+extern f32 lbl_803E3AD8;
+extern f32 lbl_803E3ADC;
+extern f32 lbl_803E3AE0;
+extern f32 lbl_803DBDD8;
+extern EffectInterface** gPartfxInterface;
+extern f32 Curve_EvalBSpline(f32* control, f32 t, f32* out);
+extern int objCreateLight(int obj, int type);
+extern void modelLightStruct_setLightKind(int light, int value);
+extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
+extern void lightSetFieldBC_8001db14(int light, int value);
+extern void modelLightStruct_setAffectsAabbLightSelection(int light, int value);
+extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern f32 sqrtf(f32 value);
+extern f32 mathSinf(f32 value);
+extern void objRenderFn_8003b8f4(f32);
+
 int LanternFireFly_getExtraSize(void) { return 0x74; }
 int LanternFireFly_getObjectTypeId(void) { return 0x0; }
 
@@ -131,8 +158,6 @@ void LanternFireFly_setScale(u8* obj, f32* vec)
  * (when p2==0 and the freshly-cleared sub[0] is NULL and mode bits 6..7
  * aren't 1) reset lbl_803DDAD8 to 0; finally ObjGroup_RemoveObject(obj, 0x30)
  * and dispatch vtable[6] of *gExpgfxInterface. */
-extern void ModelLightStruct_free(void* p);
-extern u8 lbl_803DDAD8;
 
 void LanternFireFly_free(u8* obj, int p2)
 {
@@ -149,33 +174,6 @@ void LanternFireFly_free(u8* obj, int p2)
     ObjGroup_RemoveObject(obj, 0x30);
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-
-extern undefined4 FUN_800068c4();
-extern void gameBitDecrement(int eventId);
-
-extern f32 lbl_803E3A98;
-extern f32 lbl_803E3A9C;
-extern f32 lbl_803E3AC8;
-extern f32 lbl_803E3ACC;
-extern f32 lbl_803E3AD0;
-extern f32 lbl_803E3AD4;
-extern f32 lbl_803E3AD8;
-extern f32 lbl_803E3ADC;
-extern f32 lbl_803E3AE0;
-extern f32 lbl_803DBDD8;
-extern EffectInterface** gPartfxInterface;
-extern f32 Curve_EvalBSpline(f32* control, f32 t, f32* out);
-extern int objCreateLight(int obj, int type);
-extern void modelLightStruct_setLightKind(int light, int value);
-extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
-extern void lightSetFieldBC_8001db14(int light, int value);
-extern void modelLightStruct_setAffectsAabbLightSelection(int light, int value);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
-extern f32 sqrtf(f32 value);
-extern f32 mathSinf(f32 value);
-
-extern void objRenderFn_8003b8f4(f32);
 
 void LanternFireFly_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

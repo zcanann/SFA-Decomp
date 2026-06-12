@@ -2,6 +2,8 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/resource.h"
+#include "main/audio/sfx_ids.h"
+#include "main/dll/dll_017B_dfshlaserbeam.h"
 
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
@@ -10,40 +12,6 @@ extern f32 timeDelta;
 extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDBB8;
 extern void textureFree(void* tex);
-
-void DFSH_LaserBeam_init(int* obj)
-{
-    int* state = ((GameObject*)obj)->extra;
-    (*gModgfxInterface)->detachSource(obj);
-    Resource_Release(lbl_803DDBB8);
-    lbl_803DDBB8 = NULL;
-    if (*(void**)state != NULL)
-    {
-        textureFree(*(void**)state);
-    }
-    *(void**)state = NULL;
-}
-
-void dfsh_objcreator_init(int obj, s8* def);
-
-void DFSH_LaserBeam_render(void)
-{
-}
-
-void DFSH_LaserBeam_hitDetect(void)
-{
-}
-
-int DFSH_LaserBeam_getExtraSize(void) { return 0x4c; }
-int DFSH_LaserBeam_getObjectTypeId(void) { return 0x0; }
-
-/* segment pragma-stack balance (re-split): */
-
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/dll/dll_017B_dfshlaserbeam.h"
-#include "main/resource.h"
 
 extern undefined4 FUN_8000680c();
 extern undefined4 ObjMsg_SendToObject();
@@ -62,7 +30,6 @@ extern void* textureLoadAsset(int id);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern int objGetAnimState80A(void* obj);
-
 extern u8 framesThisStep;
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E4EC0;
@@ -96,6 +63,34 @@ extern f32 lbl_803E4F40;
 extern f32 lbl_803E4F44;
 extern f32 lbl_803E4F48;
 extern f32 lbl_803E4F4C;
+
+void DFSH_LaserBeam_init(int* obj)
+{
+    int* state = ((GameObject*)obj)->extra;
+    (*gModgfxInterface)->detachSource(obj);
+    Resource_Release(lbl_803DDBB8);
+    lbl_803DDBB8 = NULL;
+    if (*(void**)state != NULL)
+    {
+        textureFree(*(void**)state);
+    }
+    *(void**)state = NULL;
+}
+
+void dfsh_objcreator_init(int obj, s8* def);
+
+void DFSH_LaserBeam_render(void)
+{
+}
+
+void DFSH_LaserBeam_hitDetect(void)
+{
+}
+
+int DFSH_LaserBeam_getExtraSize(void) { return 0x4c; }
+int DFSH_LaserBeam_getObjectTypeId(void) { return 0x0; }
+
+/* segment pragma-stack balance (re-split): */
 
 typedef struct DFSHLaserBeamConfig
 {

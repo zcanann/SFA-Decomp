@@ -55,6 +55,14 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803E5248;
 extern f32 lbl_803E524C;
 
+extern f32 lbl_803E45C8;
+extern void objRenderFn_8003b8f4(f32);
+extern int Obj_AllocObjectSetup(int size, int type);
+extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
+extern f32 lbl_803E4610;
+extern void objSetSlot(void* obj, int slot);
+extern u8 framesThisStep;
+
 void FUN_801a8f88(void)
 {
     int iVar1;
@@ -176,8 +184,6 @@ int animsharpclaw_getExtraSize(void) { return 0x140; }
 int animsharpclaw_getObjectTypeId(void) { return 0xb; }
 int MoonSeedPlantingSpot_render2(void);
 
-extern f32 lbl_803E45C8;
-extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -203,9 +209,6 @@ void animsharpclaw_free(int obj)
     (*(void (*)(int, int, int, int, int))(*(int*)(*gTitleMenuControlInterface + 0x8)))(obj, 0xffff, 0, 0, 0);
     Sfx_StopObjectChannel(obj, 0x7f);
 }
-
-extern int Obj_AllocObjectSetup(int size, int type);
-extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 
 #pragma dont_inline on
 #pragma peephole on
@@ -247,10 +250,6 @@ int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
 }
 #pragma dont_inline reset
 
-extern f32 lbl_803E4610;
-
-extern void objSetSlot(void* obj, int slot);
-
 #pragma peephole off
 void animsharpclaw_init(int* obj, u8* init)
 {
@@ -291,8 +290,6 @@ void animsharpclaw_init(int* obj, u8* init)
         ((GameObject*)obj)->anim.modelState->shadowTintB = 0x96;
     }
 }
-
-extern u8 framesThisStep;
 
 void animsharpclaw_update(int* obj)
 {

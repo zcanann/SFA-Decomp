@@ -28,6 +28,8 @@ extern float mathCosf(float x);
 #include "main/screen_transition.h"
 
 #include "main/dll/dll19_state.h"
+#include "main/objanim.h"
+#include "main/dll/baddie_state.h"
 
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
@@ -50,6 +52,42 @@ extern f32 lbl_803E265C;
 
 #pragma scheduling on
 #pragma peephole on
+extern f32 mathCosf(f32);
+extern f32 mathSinf(f32);
+extern CameraModeWorldMapState* lbl_803DD588;
+extern f32 lbl_803E1A40;
+extern f32 lbl_803E1A28;
+extern f32 lbl_803E1A80;
+extern f32 lbl_803A43C0[];
+extern CameraModeCloudRunnerState* lbl_803DD5B8;
+extern int ObjList_FindObjectById(int id);
+extern int getButtonsHeld(int pad);
+extern int getButtonsJustPressed(int pad);
+extern int padGetCX(int pad);
+extern int padGetCY(int pad);
+extern int isWidescreen(void);
+extern void fn_8012DDB8(int mode);
+extern f32 lbl_80319DF8[];
+extern f32 lbl_803E1A2C;
+extern f32 lbl_803E1A30;
+extern f32 lbl_803E1A34;
+extern f32 lbl_803E1A38;
+extern f32 lbl_803E1A3C;
+extern f32 lbl_803E1A44;
+extern f32 lbl_803E1A48;
+extern f32 lbl_803E1A4C;
+extern f32 lbl_803E1A50;
+extern f32 lbl_803E1A54;
+extern f32 lbl_803E1A58;
+extern f32 lbl_803E1A5C;
+extern f32 lbl_803E1A60;
+extern f32 lbl_803E1A64;
+extern f32 lbl_803E1A68;
+extern f32 lbl_803E1A6C;
+extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
+extern s16 getAngle(f32 x, f32 z);
+extern f32 mathCosf(f32 x);
+
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
 {
     float fVar1;
@@ -178,15 +216,6 @@ void fn_80110EC0(void)
 
 void CameraModeArwing_release(void);
 
-extern f32 mathCosf(f32);
-extern f32 mathSinf(f32);
-
-extern CameraModeWorldMapState* lbl_803DD588;
-
-extern f32 lbl_803E1A40;
-extern f32 lbl_803E1A28;
-extern f32 lbl_803E1A80;
-
 void CameraModeWorldMap_init(int* obj)
 {
     register u32 bitval;
@@ -231,12 +260,8 @@ void CameraModeWorldMap_copyToCurrent(int* p1, int kind)
     }
 }
 
-extern f32 lbl_803A43C0[];
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
 void CameraModeWorldMap_free(void)
 {
@@ -258,31 +283,6 @@ void CameraModeCloudRunner_free(void);
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
-extern int ObjList_FindObjectById(int id);
-extern int getButtonsHeld(int pad);
-extern int getButtonsJustPressed(int pad);
-extern int padGetCX(int pad);
-extern int padGetCY(int pad);
-extern int isWidescreen(void);
-extern void fn_8012DDB8(int mode);
-extern f32 lbl_80319DF8[];
-extern f32 lbl_803E1A2C;
-extern f32 lbl_803E1A30;
-extern f32 lbl_803E1A34;
-extern f32 lbl_803E1A38;
-extern f32 lbl_803E1A3C;
-extern f32 lbl_803E1A44;
-extern f32 lbl_803E1A48;
-extern f32 lbl_803E1A4C;
-extern f32 lbl_803E1A50;
-extern f32 lbl_803E1A54;
-extern f32 lbl_803E1A58;
-extern f32 lbl_803E1A5C;
-extern f32 lbl_803E1A60;
-extern f32 lbl_803E1A64;
-extern f32 lbl_803E1A68;
-extern f32 lbl_803E1A6C;
 
 void CameraModeWorldMap_update(u8* obj)
 {
@@ -587,19 +587,9 @@ void CameraModeWorldMap_update(u8* obj)
                                    *(int*)&camera->anim.parent);
 }
 
-extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
-
 /* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/objanim.h"
-#include "main/camera_interface.h"
-#include "main/game_object.h"
-#include "main/dll/baddie_state.h"
-#include "main/dll/rom_curve_interface.h"
-
-#include "main/dll/dll19_state.h"
 
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */
@@ -617,12 +607,8 @@ extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
 /* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
  * first use and refreshes the current path point position. */
 
-extern s16 getAngle(f32 x, f32 z);
-
 /* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
  * distance from an object to its target, updating the wide-turn flag. */
-
-extern f32 mathCosf(f32 x);
 
 /* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
  * the object for walkable space, returning a bitmask of clear directions. */

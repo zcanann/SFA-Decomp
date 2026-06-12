@@ -19,6 +19,19 @@ typedef struct BarrelPadParticleArgs
  * obj->_af |= 8 (redundant with the unconditional prologue store).
  */
 
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E3F00;
+extern f32 lbl_803E3F04;
+extern f32 lbl_803E3F08;
+extern f32 lbl_803E3F0C;
+extern f32 lbl_803E3F10;
+extern f32 lbl_803E3F14;
+extern f32 lbl_803E3F18;
+extern f32 lbl_803E3F1C;
+extern f32 lbl_803E3F20;
+extern f32 lbl_803E3F24;
+extern f32 lbl_803E3EEC;
+
 void barrelpad_free(void)
 {
 }
@@ -41,17 +54,6 @@ int barrelpad_getExtraSize(void) { return 0x0; }
 int barrelpad_getObjectTypeId(void) { return 0x0; }
 int cf_doorlight_getExtraSize(void);
 
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E3F00;
-extern f32 lbl_803E3F04;
-extern f32 lbl_803E3F08;
-extern f32 lbl_803E3F0C;
-extern f32 lbl_803E3F10;
-extern f32 lbl_803E3F14;
-extern f32 lbl_803E3F18;
-extern f32 lbl_803E3F1C;
-extern f32 lbl_803E3F20;
-extern f32 lbl_803E3F24;
 void barrelpad_render(void) { objRenderFn_8003b8f4(lbl_803E3F00); }
 
 void barrelpad_update(s16* obj)
@@ -94,5 +96,3 @@ void barrelpad_init(s16* obj, u8* def)
     }
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
-
-extern f32 lbl_803E3EEC;

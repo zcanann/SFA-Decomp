@@ -68,6 +68,18 @@ extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
 extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 f);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 f);
 
+extern void modelLightStruct_setSpecularColor(int light, int a, int b, int c, int d);
+extern void lightSetField4D(int light, int v);
+extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
+extern int Obj_GetActiveModel(int obj);
+extern void ObjModel_SetPostRenderCallback(int model, void* cb);
+extern void postRenderSetAlphaBlendState(void);
+extern f32 lbl_803E4D70;
+extern f32 lbl_803E4D74;
+extern f32 lbl_803E4D78;
+extern f32 lbl_803E4D7C;
+extern f32 lbl_803E4D80;
+
 void DIMbossspit_updateBurst(int obj)
 {
     int state;
@@ -247,18 +259,6 @@ void DIMbossspit_update(int obj)
     }
     return;
 }
-
-extern void modelLightStruct_setSpecularColor(int light, int a, int b, int c, int d);
-extern void lightSetField4D(int light, int v);
-extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
-extern int Obj_GetActiveModel(int obj);
-extern void ObjModel_SetPostRenderCallback(int model, void* cb);
-extern void postRenderSetAlphaBlendState(void);
-extern f32 lbl_803E4D70;
-extern f32 lbl_803E4D74;
-extern f32 lbl_803E4D78;
-extern f32 lbl_803E4D7C;
-extern f32 lbl_803E4D80;
 
 void DIMbossspit_init(int obj)
 {

@@ -1,6 +1,9 @@
 #include "main/game_object.h"
 #include "main/dll/DF/DFbarrelanim.h"
 #include "main/dll/DF/dfropenode.h"
+#include "main/objlib.h"
+#include "main/dll/DF/DFcradle.h"
+#include "main/dll/DF/dll_196.h"
 
 extern f32 sqrtf(f32 x);
 
@@ -8,6 +11,37 @@ extern f64 lbl_803E4DF0;
 extern f32 lbl_803E4DFC;
 extern f32 lbl_803E4E18;
 extern f32 lbl_803E4E1C;
+
+extern f32 lbl_803E4E20;
+extern f32 lbl_803E4E24;
+extern void mm_free(void* p);
+extern u32 GameBit_Get(int eventId);
+extern void Sfx_PlayFromObject(int obj, int soundId);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int soundId);
+extern void Camera_LoadModelViewMatrix(int param_1, int param_2, int obj, f32 scale, f32 unused,
+                                       int param_6);
+extern void textureSetupFn_800799c0(void);
+extern void textRenderSetupFn_800795e8(void);
+extern void textRenderSetupFn_80079804(void);
+extern void getAmbientColor(int param_1, u8* blue, u8* green, u8* red);
+extern void gxBlendFn_80078b4c(void);
+extern void fn_80078740(void);
+extern void selectTexture(void* texture, int param_2);
+extern void setTextColor(undefined4* objAndParam, u8 blue, u8 green, u8 red, int alpha);
+extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
+extern int randomGetRange(int min, int max);
+extern u8 framesThisStep;
+extern void* lbl_803DBF48;
+extern u8 lbl_80325E00[];
+extern u8 lbl_80325E60[];
+extern u8 lbl_802C2358[];
+extern f32 lbl_803E4DF8;
+extern void textureFree(void* resource);
+extern void* textureLoadAsset(int assetId);
+extern int lbl_803DBF40;
+extern f32 lbl_803DBF50;
+extern u8 lbl_803DBF58;
+extern f32 lbl_803E4E28;
 
 static inline f32 DFRope_S32AsFloat(s32 value)
 {
@@ -207,9 +241,6 @@ void dfropenode_setScale(int* obj, f32* out)
     out[3] = *(f32*)((char*)p + 0x28);
 }
 
-extern f32 lbl_803E4E20;
-extern f32 lbl_803E4E24;
-
 #pragma scheduling off
 #pragma peephole off
 int dfropenode_syncRopeToEndpoints(DFropenodeObject* obj)
@@ -329,11 +360,6 @@ int dfropenode_getObjectTypeId(void)
     return 0;
 }
 
-#include "main/game_object.h"
-#include "main/objlib.h"
-
-extern void mm_free(void* p);
-
 void dfropenode_free(void* obj)
 {
     void* node;
@@ -361,10 +387,6 @@ void dfropenode_free(void* obj)
     }
 }
 
-#include "main/dll/DF/DFcradle.h"
-#include "main/game_object.h"
-#include "main/dll/DF/dfropenode.h"
-
 typedef struct DfropenodePlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -382,29 +404,6 @@ typedef struct DFWhirlpoolRenderState
     u8 green;
     u8 blue;
 } DFWhirlpoolRenderState;
-
-extern u32 GameBit_Get(int eventId);
-extern void Sfx_PlayFromObject(int obj, int soundId);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int soundId);
-extern void Camera_LoadModelViewMatrix(int param_1, int param_2, int obj, f32 scale, f32 unused,
-                                       int param_6);
-extern void textureSetupFn_800799c0(void);
-extern void textRenderSetupFn_800795e8(void);
-extern void textRenderSetupFn_80079804(void);
-extern void getAmbientColor(int param_1, u8* blue, u8* green, u8* red);
-extern void gxBlendFn_80078b4c(void);
-extern void fn_80078740(void);
-extern void selectTexture(void* texture, int param_2);
-extern void setTextColor(undefined4* objAndParam, u8 blue, u8 green, u8 red, int alpha);
-extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
-extern int randomGetRange(int min, int max);
-
-extern u8 framesThisStep;
-extern void* lbl_803DBF48;
-extern u8 lbl_80325E00[];
-extern u8 lbl_80325E60[];
-extern u8 lbl_802C2358[];
-extern f32 lbl_803E4DF8;
 
 void dfropenode_render(int obj, int param_2, int param_3)
 {
@@ -528,17 +527,6 @@ void dfropenode_render(int obj, int param_2, int param_3)
 void dfropenode_hitDetect(void)
 {
 }
-
-#include "main/dll/DF/DFbarrelanim.h"
-#include "main/game_object.h"
-#include "main/dll/DF/dll_196.h"
-
-extern void textureFree(void* resource);
-extern void* textureLoadAsset(int assetId);
-extern int lbl_803DBF40;
-extern f32 lbl_803DBF50;
-extern u8 lbl_803DBF58;
-extern f32 lbl_803E4E28;
 
 void dfropenode_update(DFropenodeObject* obj)
 {

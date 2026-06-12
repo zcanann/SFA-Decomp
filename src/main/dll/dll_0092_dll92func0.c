@@ -12,19 +12,6 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-void dll_92_func01_nop(void)
-{
-}
-
-void dll_92_func00_nop(void)
-{
-}
-
-void dll_93_func01_nop(void);
-
-/* Stubs to align function set with v1.0 asm. The dll_xx_func03 stubs follow
- * the same large-struct + vtable-call pattern as foodbag's func03s; matching
- * bodies needs proper struct recovery as follow-up. */
 extern u8 lbl_803171C0[];
 extern u8 lbl_803DB930[8];
 extern f32 lbl_803E1210;
@@ -38,6 +25,21 @@ extern f32 lbl_803E122C;
 extern f32 lbl_803E1230;
 extern f32 lbl_803E1234;
 extern f32 lbl_803E1238;
+extern u8 lbl_80317260[];
+
+void dll_92_func01_nop(void)
+{
+}
+
+void dll_92_func00_nop(void)
+{
+}
+
+void dll_93_func01_nop(void);
+
+/* Stubs to align function set with v1.0 asm. The dll_xx_func03 stubs follow
+ * the same large-struct + vtable-call pattern as foodbag's func03s; matching
+ * bodies needs proper struct recovery as follow-up. */
 
 typedef struct
 {
@@ -194,5 +196,3 @@ void dll_92_func03(int sourceObj, int variant, int posSource, uint flags, undefi
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 6, base, 4, base + 0x3c, 0x3c, 0);
 }
-
-extern u8 lbl_80317260[];

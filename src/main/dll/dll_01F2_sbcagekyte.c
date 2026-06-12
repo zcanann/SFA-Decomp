@@ -57,6 +57,8 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
+extern int GameBit_Get(int);
+
 void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined2* param_9, int param_10)
@@ -87,7 +89,6 @@ int SB_CageKyte_getExtraSize(void) { return 0x2; }
 int SB_CageKyte_getObjectTypeId(void) { return 0x1; }
 int SB_SeqDoor_getExtraSize(void);
 
-extern int GameBit_Get(int);
 int SB_SeqDoor_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /* Stubs added to align function set with v1.0 asm. Source had Ghidra FUN_xxx

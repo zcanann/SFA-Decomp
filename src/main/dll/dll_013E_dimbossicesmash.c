@@ -48,6 +48,25 @@ typedef struct DimbossicesmashPlacement
 
 extern f32 timeDelta;
 
+extern u8 framesThisStep;
+extern f32 lbl_803E4048;
+extern void disableHeavyFog(void);
+extern f32 sqrtf(f32);
+extern void Obj_FreeObject(u8 * obj);
+extern u8 lbl_803DDB00;
+extern f32 lbl_803E4034;
+extern f32 lbl_803E404C;
+extern f32 lbl_803E4050;
+extern f32 lbl_803E4054;
+extern f32 lbl_803E4058;
+extern f32 lbl_803E405C;
+extern f32 lbl_803E4030;
+extern f32 lbl_803E4038;
+extern f32 lbl_803E403C;
+extern u8 lbl_80322368[0xC];
+extern u8 lbl_803DBDF8[8];
+extern f32 lbl_803E4068;
+
 void dimbossicesmash_hitDetect(void)
 {
 }
@@ -62,12 +81,8 @@ void dimbossicesmash_initialise(void)
 
 void texframeanimator_free(void);
 
-extern u8 framesThisStep;
-
 int dimbossicesmash_getExtraSize(void) { return 0x2a0; }
 int texframeanimator_getExtraSize(void);
-
-extern f32 lbl_803E4048;
 
 void dimbossicesmash_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -79,24 +94,12 @@ void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 u32 dimbossicesmash_getObjectTypeId(int* obj) { return (*((u8*)((int**)obj)[0x4c / 4] + 0x18) << 11) | 0x400; }
 
-extern void disableHeavyFog(void);
-
 void dimbossicesmash_free(int* obj)
 {
     (*gExpgfxInterface)->freeSource((u32)obj);
 }
 
 void fogcontrol_free(int* obj);
-
-extern f32 sqrtf(f32);
-extern void Obj_FreeObject(u8 * obj);
-extern u8 lbl_803DDB00;
-extern f32 lbl_803E4034;
-extern f32 lbl_803E404C;
-extern f32 lbl_803E4050;
-extern f32 lbl_803E4054;
-extern f32 lbl_803E4058;
-extern f32 lbl_803E405C;
 
 /* EN v1.0 0x80196990  size: 1752b  dimbossicesmash_update: gate on the
  * trigger gamebit, integrate velocity/rotation with per-axis gravity
@@ -310,12 +313,6 @@ void dimbossicesmash_update(u8* obj)
     }
 }
 
-extern f32 lbl_803E4030;
-extern f32 lbl_803E4038;
-extern f32 lbl_803E403C;
-extern u8 lbl_80322368[0xC];
-extern u8 lbl_803DBDF8[8];
-
 /* EN v1.0 0x80196520  size: 1008b  fn_80196520: seed the icesmash launch
  * state from the setup record: spawn position/rotation, launch velocity
  * (optionally homing on the target point), rotation velocities and the
@@ -422,5 +419,3 @@ void dimbossicesmash_init(u8* obj, u8* params)
         (*gPathControlInterface)->attachObject(obj, state);
     }
 }
-
-extern f32 lbl_803E4068;

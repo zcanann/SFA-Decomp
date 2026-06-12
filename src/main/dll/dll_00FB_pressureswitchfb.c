@@ -1,4 +1,11 @@
 #include "main/game_object.h"
+#include "main/dll/cfguardian_state.h"
+#include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
+#include "main/dll/cfguardian.h"
+#include "main/objseq.h"
+#include "main/dll/alphaanim.h"
+#include "main/objanim_internal.h"
 
 extern undefined8 ObjGroup_RemoveObject();
 
@@ -25,6 +32,26 @@ extern undefined8 ObjGroup_RemoveObject();
 #define PRESSURESWITCHFB_OBJ_SH_PRESSURE 0x026c
 #define PRESSURESWITCHFB_OBJ_LINK_UNDERW 0x0274
 #define PRESSURESWITCHFB_OBJ_CC_PRESSURE 0x0545
+
+extern int ObjGroup_FindNearestObject();
+extern undefined4 ObjGroup_AddObject();
+extern f32 timeDelta;
+extern void* Obj_GetPlayerObject(void);
+extern int fn_80295C5C(void* player);
+extern void* getTrickyObject(void);
+extern f32 Vec_distance(f32 * a, f32 * b);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern EffectInterface** gPartfxInterface;
+extern int* objFindTexture(int* obj, int a, int b);
+extern u32 GameBit_Get(int eventId);
+extern int Sfx_PlayFromObject(int obj, int sfxId);
+extern f32 lbl_803E3758;
+extern f32 lbl_803E375C;
+extern f32 lbl_803E3760;
+extern f32 lbl_803E3764;
+extern f32 lbl_803E3768;
+extern f32 lbl_803E3778;
+extern uint GameBit_Get(int eventId);
 
 undefined4 pressureswitchfb_updateStateMode(int obj, undefined4 param_2, int stateParam)
 {
@@ -98,14 +125,6 @@ void pressureswitchfb_free(int obj)
     ObjGroup_RemoveObject(obj,PRESSURESWITCHFB_REMOVE_GROUP_ID);
 }
 
-#include "main/dll/cfguardian_state.h"
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/dll/cfguardian.h"
-#include "main/game_object.h"
-#include "main/objseq.h"
-
 typedef struct PressureswitchfbState
 {
     u8 pad0[0x68 - 0x0];
@@ -127,11 +146,6 @@ typedef struct PressureswitchfbPlacement
     u8 pad26[0x28 - 0x26];
 } PressureswitchfbPlacement;
 
-extern int ObjGroup_FindNearestObject();
-extern undefined4 ObjGroup_AddObject();
-
-extern f32 timeDelta;
-
 typedef struct
 {
     u8 pad[4];
@@ -151,21 +165,6 @@ typedef struct
     u8 latched : 1;
     u8 rest : 4;
 } SwitchFlags;
-
-extern void* Obj_GetPlayerObject(void);
-extern int fn_80295C5C(void* player);
-extern void* getTrickyObject(void);
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern EffectInterface** gPartfxInterface;
-extern int* objFindTexture(int* obj, int a, int b);
-extern u32 GameBit_Get(int eventId);
-extern int Sfx_PlayFromObject(int obj, int sfxId);
-extern f32 lbl_803E3758;
-extern f32 lbl_803E375C;
-extern f32 lbl_803E3760;
-extern f32 lbl_803E3764;
-extern f32 lbl_803E3768;
 
 void pressureswitchfb_update(int obj)
 {
@@ -439,7 +438,6 @@ void pressureswitchfb_update(int obj)
 
 void mmp_bridge_free(void);
 
-extern f32 lbl_803E3778;
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 
 typedef struct PressureSwitchFbFlags
@@ -533,13 +531,6 @@ int Door_getExtraSize(void);
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/dll/alphaanim.h"
-#include "main/game_object.h"
-#include "main/objanim_internal.h"
-#include "main/objseq.h"
-
-extern uint GameBit_Get(int eventId);
 
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read

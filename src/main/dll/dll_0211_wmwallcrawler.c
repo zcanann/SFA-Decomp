@@ -98,18 +98,6 @@ enum
     WMWALLCRAWLER_MODE_DIE = 6      /* death anim, then free/hide */
 };
 
-int wmwallcrawler_getExtraSize(void) { return sizeof(WmwallcrawlerState); }
-
-int wmwallcrawler_getObjectTypeId(void) { return 0x0; }
-
-void wmwallcrawler_release(void)
-{
-}
-
-void wmwallcrawler_initialise(void)
-{
-}
-
 extern int getTrickyObject(void);
 extern void Obj_RemoveFromUpdateList(int obj);
 extern void Sfx_StopObjectChannel(int obj, int channel);
@@ -146,6 +134,25 @@ extern f32 lbl_803E6010;
 extern f32 lbl_803E6014;
 extern f32 lbl_803E6018;
 extern void wmwallcrawler_alignToFloorNormal(int obj, f32* floorData);
+extern void vecRotateZXY(void* mtx, f32* vec);
+extern f32 lbl_803E5FB8;
+extern u16 lbl_80328DD0[];
+extern u8 lbl_80328DE0[];
+extern u8 lbl_803DC134;
+extern f32 lbl_803E6030;
+extern f32 lbl_803E6034;
+
+int wmwallcrawler_getExtraSize(void) { return sizeof(WmwallcrawlerState); }
+
+int wmwallcrawler_getObjectTypeId(void) { return 0x0; }
+
+void wmwallcrawler_release(void)
+{
+}
+
+void wmwallcrawler_initialise(void)
+{
+}
 
 /* overlay of state->hitBits; the bitfield assign emits the rlwimi form (#12) */
 typedef struct
@@ -650,8 +657,6 @@ void wmwallcrawler_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
     }
 }
 
-extern void vecRotateZXY(void* mtx, f32* vec);
-
 typedef struct
 {
     s16 r0, r1, r2;
@@ -679,8 +684,6 @@ void wmwallcrawler_alignToFloorNormal(int obj, f32* floorData)
     ((GameObject*)obj)->anim.rotY = (s16)ang2;
     ((GameObject*)obj)->anim.rotZ = (s16)ang;
 }
-
-extern f32 lbl_803E5FB8;
 
 void wmwallcrawler_hitDetect(int obj)
 {
@@ -721,12 +724,6 @@ void wmwallcrawler_hitDetect(int obj)
         ((WcHitBits*)&state->hitBits)->hit = 0;
     }
 }
-
-extern u16 lbl_80328DD0[];
-extern u8 lbl_80328DE0[];
-extern u8 lbl_803DC134;
-extern f32 lbl_803E6030;
-extern f32 lbl_803E6034;
 
 void wmwallcrawler_init(int obj, int spawn)
 {

@@ -1,5 +1,16 @@
 #include "main/game_object.h"
 #include "main/screen_transition.h"
+#include "main/dll/CF/treasureRelated0177.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/objanim_internal.h"
+
+extern f32 lbl_803E3D60;
+extern void objRenderFn_8003b8f4(f32);
+extern void setPendingMapLoad(int v);
+extern u8 framesThisStep;
+extern f32 lbl_803E3D64;
+extern f32 lbl_803E3D68;
+extern int* gSHthorntailAnimationInterface;
 
 void dll_127_free_nop(void)
 {
@@ -13,26 +24,11 @@ int fuelcell_getExtraSize(void);
 int dll_127_getExtraSize_ret_0(void) { return 0x0; }
 int dll_127_getObjectTypeId(void) { return 0x13; }
 
-extern f32 lbl_803E3D60;
-extern void objRenderFn_8003b8f4(f32);
-
 void dll_127_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E3D60);
 }
-
-extern void setPendingMapLoad(int v);
-
-#include "main/dll/CF/treasureRelated0177.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-#include "main/objanim_internal.h"
-#include "main/screen_transition.h"
-
-extern u8 framesThisStep;
-extern f32 lbl_803E3D64;
-extern f32 lbl_803E3D68;
 
 void dll_127_update(int obj)
 {
@@ -100,5 +96,3 @@ void dll_127_release_nop(void)
 void dll_127_initialise_nop(void)
 {
 }
-
-extern int* gSHthorntailAnimationInterface;

@@ -69,6 +69,26 @@ extern f32 lbl_803E53D0;
 extern f32 lbl_803E53E0;
 extern f32 lbl_803E53F0;
 
+extern void gameBitFn_800ea2e0(int idx);
+extern void unlockLevel(int a, int b, int c);
+extern f32 lbl_803E46E0;
+extern f32 lbl_803E46D8;
+extern void objRenderFn_8003b8f4(f32);
+extern void getEnvfxAct(int* obj, int* target, int id, int p);
+extern void fn_801AC108(int* obj, int* extra);
+extern CloudActionInterface** gCloudActionInterface;
+extern void warpToMap(int mapId, int flags);
+extern u8 Obj_IsLoadingLocked(void);
+extern void fn_801AC01C(int* obj);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void gameTextShow(int id);
+extern void Music_Trigger(int track, int flag);
+extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
+extern int* gSHthorntailAnimationInterface;
+extern f32 timeDelta;
+extern f32 lbl_803E46DC;
+extern int* ObjGroup_GetObjects(int group, int* countOut);
+
 void FUN_801ac248(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9)
@@ -248,10 +268,6 @@ void imicemountain_hitDetect(void)
 {
 }
 
-extern void gameBitFn_800ea2e0(int idx);
-extern void unlockLevel(int a, int b, int c);
-extern f32 lbl_803E46E0;
-
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
 #define MEVT_QUERY(a)         (*gMapEventInterface)->getMode((a))
@@ -340,8 +356,6 @@ int imicemountain_getExtraSize(void) { return 0x14; }
 int imicemountain_getObjectTypeId(void) { return 0x0; }
 int crrockfall_getExtraSize(void);
 
-extern f32 lbl_803E46D8;
-extern void objRenderFn_8003b8f4(f32);
 #pragma scheduling on
 #pragma peephole off
 void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -366,11 +380,6 @@ int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-extern void getEnvfxAct(int* obj, int* target, int id, int p);
-extern void fn_801AC108(int* obj, int* extra);
-extern CloudActionInterface** gCloudActionInterface;
-extern void warpToMap(int mapId, int flags);
 
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
@@ -482,17 +491,6 @@ void imicemountain_updateEventState(int* obj)
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 
-extern u8 Obj_IsLoadingLocked(void);
-
-extern void fn_801AC01C(int* obj);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShow(int id);
-extern void Music_Trigger(int track, int flag);
-extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
-extern int* gSHthorntailAnimationInterface;
-extern f32 timeDelta;
-extern f32 lbl_803E46DC;
-
 /* imicemountain_update: lazy-spawn the ambient effects, run the active state,
  * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
 #pragma peephole on
@@ -559,5 +557,3 @@ void imicemountain_update(int* obj)
     SCGameBitLatch_Update((char*)extra + 4, 4, -1, -1, 928, 233);
     SCGameBitLatch_Update((char*)extra + 4, 8, -1, -1, 929, extra->musicTrack);
 }
-
-extern int* ObjGroup_GetObjects(int group, int* countOut);

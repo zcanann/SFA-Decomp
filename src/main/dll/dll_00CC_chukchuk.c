@@ -55,6 +55,15 @@ extern f32 lbl_803E3B8C;
 extern f32 lbl_803E3B90;
 extern f32 lbl_803E3B94;
 
+extern int Obj_GetPlayerObject(void);
+extern f32 timeDelta;
+extern uint GameBit_Get(int eventId);
+extern int getAngle(f32 a, f32 b);
+extern f32 lbl_803E2E30;
+extern void objRenderFn_8003b8f4(f32);
+extern void GameBit_Set(int eventId, int value);
+extern f32 sqrtf(f32);
+
 undefined4
 FUN_8015e0d0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -423,9 +432,6 @@ static inline u8 scarab_isObjectInList(void* o)
 
 void fn_8015FCCC(int obj);
 
-extern int Obj_GetPlayerObject(void);
-extern f32 timeDelta;
-
 void iceball_update(undefined2* param_1, int param_2);
 
 #pragma dont_inline on
@@ -734,8 +740,6 @@ void chukchuk_initialise(void)
 {
 }
 
-extern uint GameBit_Get(int eventId);
-
 /*
  * Per-object extra state for the ChukChuk ice-spitter
  * (chukchuk_getExtraSize == 0x18).
@@ -774,15 +778,10 @@ void iceball_release(void);
 
 void iceball_initialise(void);
 
-extern int getAngle(f32 a, f32 b);
-
 int chukchuk_getExtraSize(void) { return 0x18; }
 int chukchuk_getObjectTypeId(void) { return 0x0; }
 int iceball_getExtraSize(void);
 int iceball_getObjectTypeId(void);
-
-extern f32 lbl_803E2E30;
-extern void objRenderFn_8003b8f4(f32);
 
 void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -998,8 +997,6 @@ void chukchuk_setScale(int obj, int v)
 
 void iceball_init(void* obj);
 
-extern void GameBit_Set(int eventId, int value);
-
 ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
     {
         0,
@@ -1037,8 +1034,6 @@ ObjectDescriptor gIceBallObjDescriptor = {
     (ObjectDescriptorCallback)iceball_getObjectTypeId,
     iceball_getExtraSize,
 };
-
-extern f32 sqrtf(f32);
 
 /* scarab_updateProximityGate: scarab AI proximity gate. If no current target, dispatches
  * vtable[5](obj, state, 0) and returns 1. Else (unless state mode 6 means

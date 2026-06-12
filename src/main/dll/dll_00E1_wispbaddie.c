@@ -5,6 +5,9 @@
 #include "main/dll/pressureSwitch.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/audio/sfx_ids.h"
+#include "main/dll/dll_00E1_wispbaddie.h"
+#include "main/objanim.h"
 
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
@@ -23,10 +26,6 @@ void swarmbaddie_hitDetect(void);
 void swarmbaddie_release(void);
 
 void swarmbaddie_initialise(void);
-
-void wispbaddie_hitDetect(void)
-{
-}
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void mm_free(void* p);
@@ -53,10 +52,62 @@ extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
-
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
+extern void* mmAlloc(int size, int tag, int flags);
+extern void* memset(void* dst, int value, uint size);
+extern u32 randomGetRange(int min, int max);
+extern undefined4 FUN_800305c4();
+extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
+extern void doRumble(f32 duration);
+extern void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude);
+extern undefined4 FUN_8014d3d0();
+extern undefined4 FUN_8014d4c8();
+extern undefined4 FUN_80151844();
+extern void fn_801513AC(int obj, int state);
+extern undefined8 FUN_80286840();
+extern undefined4 FUN_8028688c();
+extern undefined4 DAT_8031e980;
+extern undefined4 DAT_8031feac;
+extern undefined4 DAT_8031fead;
+extern f32 lbl_803E33D8;
+extern f32 lbl_803E33DC;
+extern f32 lbl_803E33E0;
+extern f32 lbl_803E33E4;
+extern f32 lbl_803E33E8;
+extern f32 lbl_803E33EC;
+extern f32 lbl_803E2708;
+extern f32 lbl_803E270C;
+extern f32 lbl_803E2710;
+extern f32 lbl_803E2714;
+extern f32 lbl_803E2718;
+extern f32 lbl_803E271C;
+extern f32 lbl_803E2720;
+extern f32 lbl_803E2740;
+extern f32 lbl_803E2744;
+extern f32 lbl_803E2748;
+extern f32 lbl_803E274C;
+extern f32 lbl_803E2750;
+extern f32 lbl_803E2754;
+extern f32 lbl_803E2760;
+extern f32 lbl_803E2764;
+extern void* PTR_DAT_8031fdc4;
+extern void wispbaddie_init(int obj, int setup, int initialised);
+extern void fn_8014CF7C(int a, int b, f32 e, f32 f, int c, int d);
+extern f32 lbl_803E2728;
+extern f32 lbl_803E272C;
+extern f32 lbl_803E2730;
+extern f32 lbl_803E2734;
+extern f32 lbl_803E2738;
+extern f32 lbl_803E273C;
+extern char lbl_8031F16C[];
+extern u8 lbl_8031DD30[];
+extern void fn_8014D08C(int obj, int state, int moveId, f32 speed, int p5, int flags);
+
+void wispbaddie_hitDetect(void)
+{
+}
 
 void hagabon_hitDetect(int obj);
 
@@ -222,57 +273,8 @@ ObjectDescriptor gSwarmBaddieObjDescriptor = {
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/dll/dll_00E1_wispbaddie.h"
-#include "main/objanim.h"
-
 #define SEQOBJ_ANIM_BLEND_ACTIVE_FLAG 0x40
 #define SEQOBJ_ANIM_EVENT_HOLD_FLAG 0x40000000
-
-extern void* mmAlloc(int size, int tag, int flags);
-extern void* memset(void* dst, int value, uint size);
-extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_800305c4();
-extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
-extern void doRumble(f32 duration);
-extern void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude);
-extern undefined4 FUN_8014d3d0();
-extern undefined4 FUN_8014d4c8();
-extern undefined4 FUN_80151844();
-extern void fn_801513AC(int obj, int state);
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028688c();
-
-extern undefined4 DAT_8031e980;
-extern undefined4 DAT_8031feac;
-extern undefined4 DAT_8031fead;
-extern f32 lbl_803E33D8;
-extern f32 lbl_803E33DC;
-extern f32 lbl_803E33E0;
-extern f32 lbl_803E33E4;
-extern f32 lbl_803E33E8;
-extern f32 lbl_803E33EC;
-extern f32 lbl_803E2708;
-extern f32 lbl_803E270C;
-extern f32 lbl_803E2710;
-extern f32 lbl_803E2714;
-extern f32 lbl_803E2718;
-extern f32 lbl_803E271C;
-extern f32 lbl_803E2720;
-extern f32 lbl_803E2740;
-extern f32 lbl_803E2744;
-extern f32 lbl_803E2748;
-extern f32 lbl_803E274C;
-extern f32 lbl_803E2750;
-extern f32 lbl_803E2754;
-extern f32 lbl_803E2760;
-extern f32 lbl_803E2764;
-extern void* PTR_DAT_8031fdc4;
-
-extern void wispbaddie_init(int obj, int setup, int initialised);
 
 void wispbaddie_update(int obj)
 {
@@ -612,20 +614,11 @@ void fn_8014FEF8(int p1, int* p2, int p3, int code)
     }
 }
 
-extern void fn_8014CF7C(int a, int b, f32 e, f32 f, int c, int d);
-
 void fn_8014FF24(int a, int b)
 {
     f32* p = *(f32**)((char*)b + 0x29c);
     fn_8014CF7C(a, b, p[3], p[5], 0xf, 0);
 }
-
-extern f32 lbl_803E2728;
-extern f32 lbl_803E272C;
-extern f32 lbl_803E2730;
-extern f32 lbl_803E2734;
-extern f32 lbl_803E2738;
-extern f32 lbl_803E273C;
 
 void fn_8014FF58(int unused, char* p)
 {
@@ -644,11 +637,6 @@ void fn_8014FF58(int unused, char* p)
     *(u8*)(p + 0x322) = 0;
     *(f32*)(p + 0x31c) = v1c;
 }
-
-extern char lbl_8031F16C[];
-extern u8 lbl_8031DD30[];
-
-extern void fn_8014D08C(int obj, int state, int moveId, f32 speed, int p5, int flags);
 
 u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
 {

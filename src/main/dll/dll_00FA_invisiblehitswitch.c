@@ -75,6 +75,8 @@ extern f32 lbl_803E3734;
 extern f32 lbl_803E3738;
 extern f32 lbl_803E373C;
 
+extern f32 lbl_803E3750;
+
 int InvisibleHitSwitch_getExtraSize(void) { return 0xc; }
 
 void InvisibleHitSwitch_update(int obj)
@@ -164,10 +166,6 @@ void InvisibleHitSwitch_update(int obj)
         }
     }
 }
-
-#include "main/game_object.h"
-
-extern f32 lbl_803E3750;
 
 void InvisibleHitSwitch_init(int obj, u8* param_2)
 {

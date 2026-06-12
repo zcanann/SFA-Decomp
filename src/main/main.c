@@ -15,6 +15,40 @@ extern undefined4 DAT_803de944;
 extern undefined4 DAT_803de946;
 extern f32 lbl_803DC074;
 
+extern void fn_801FD6B4(int obj);
+extern void* lbl_803DDCD8;
+extern void objRenderFn_80041018(void* obj);
+extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
+extern void fn_8003B608(int r, int g, int b);
+extern f32 lbl_803E6168;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E61CC;
+extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
+                              int p10);
+extern f32 timeDelta;
+extern f32 lbl_803DDCD0;
+extern f32 lbl_803E6158;
+extern f32 lbl_803E6160;
+extern f32 lbl_803E6164;
+extern f32 lbl_803E616C;
+extern f32 lbl_803E6170;
+extern f32 lbl_803E6174;
+extern f32 lbl_803E6178;
+extern f32 lbl_803E617C;
+extern f32 lbl_803E6180;
+extern f32 lbl_803E6184;
+extern f32 lbl_803E6188;
+extern f32 lbl_803E618C;
+extern f32 lbl_803E6190;
+extern f32 lbl_803E6194;
+extern f32 lbl_803E6198;
+extern f32 lbl_803E61B0;
+extern f32 lbl_803E61B4;
+extern void* getTrickyObject(void);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int* objFindTexture(int obj, int idx, int p3);
+extern f32 mathSinf(f32 x);
+
 void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9)
@@ -145,18 +179,14 @@ int vfpspellplace_getExtraSize(void) { return 0x6; }
 int vfpspellplace_getObjectTypeId(void) { return 0x0; }
 int dbegg_getExtraSize(void);
 
-extern void fn_801FD6B4(int obj);
 void VFP_lavapool_update(int obj) { fn_801FD6B4(obj); }
 
-extern void* lbl_803DDCD8;
 #pragma scheduling off
 void vfplavastar_release(void)
 {
     Resource_Release(lbl_803DDCD8);
     lbl_803DDCD8 = NULL;
 }
-
-extern void objRenderFn_80041018(void* obj);
 
 typedef struct
 {
@@ -181,8 +211,6 @@ int fn_801FD4A8(void* obj, int x)
 
 int dbegg_setScale(int obj);
 
-extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
-
 void vfplavastar_initialise(void)
 {
     lbl_803DDCD8 = NULL;
@@ -195,9 +223,6 @@ void vfplavastar_free(int obj)
     (*gModgfxInterface)->freeSourceEffects((void*)obj);
 }
 
-extern void fn_8003B608(int r, int g, int b);
-extern f32 lbl_803E6168;
-extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void VFP_lavapool_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
@@ -208,8 +233,6 @@ void VFP_lavapool_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-extern f32 lbl_803E61CC;
-
 void vfpflamepoint_init(int* obj, s8* def)
 {
     VfpFlamePointData* d = (VfpFlamePointData*)obj[0xb8 / 4];
@@ -219,33 +242,6 @@ void vfpflamepoint_init(int* obj, s8* def)
     d->checkGameBit = *(s16*)(def + 0x20);
     ((GameObject*)obj)->objectFlags |= 0x6000;
 }
-
-extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
-                              int p10);
-
-extern f32 timeDelta;
-extern f32 lbl_803DDCD0;
-extern f32 lbl_803E6158;
-extern f32 lbl_803E6160;
-extern f32 lbl_803E6164;
-extern f32 lbl_803E616C;
-extern f32 lbl_803E6170;
-extern f32 lbl_803E6174;
-extern f32 lbl_803E6178;
-extern f32 lbl_803E617C;
-extern f32 lbl_803E6180;
-extern f32 lbl_803E6184;
-extern f32 lbl_803E6188;
-extern f32 lbl_803E618C;
-extern f32 lbl_803E6190;
-extern f32 lbl_803E6194;
-extern f32 lbl_803E6198;
-extern f32 lbl_803E61B0;
-extern f32 lbl_803E61B4;
-extern void* getTrickyObject(void);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int* objFindTexture(int obj, int idx, int p3);
-extern f32 mathSinf(f32 x);
 
 void vfpflamepoint_update(int obj)
 {

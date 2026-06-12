@@ -7,6 +7,8 @@
 #include "main/dll/LGT/dll_0206_lightsource.h"
 #include "main/objHitReact.h"
 #include "main/objseq.h"
+#include "main/effect_interfaces.h"
+#include "main/game_object.h"
 
 typedef struct LightsourceState
 {
@@ -42,6 +44,43 @@ extern f32 lbl_803E6A1C;
 extern f32 lbl_803E6A20;
 extern f32 lbl_803E6A24;
 extern f32 lbl_803E6A80;
+
+extern f32 lbl_803E5D78;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern f32 timeDelta;
+extern f32 lbl_803E5D58;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E5E08;
+extern void queueGlowRender(void* light);
+extern int GameBit_Get(int id);
+extern int Obj_GetPlayerObject(void);
+extern void ModelLightStruct_free(void* light);
+extern f32 lbl_803E5D80;
+extern void GameBit_Set(int slot, int val);
+extern void* objCreateLight(void* obj, int);
+extern void modelLightStruct_setLightKind(void*, int);
+extern void modelLightStruct_setPosition(f32, f32, f32);
+extern void modelLightStruct_setDiffuseColor(void*, u8, u8, u8, int);
+extern void modelLightStruct_setSpecularColor(void*, u8, u8, u8, int);
+extern void modelLightStruct_setDistanceAttenuation(void*, f32, f32);
+extern void modelLightStruct_setEnabled(void*, int, f32);
+extern void modelLightStruct_startColorFade(void*, int, int);
+extern void modelLightStruct_setDiffuseTargetColor(void*, int, int, int, int);
+extern void lightSetField4D(void*, int);
+extern void modelLightStruct_setupGlow(void*, int, u8, u8, u8, int, f32);
+extern void modelLightStruct_setGlowProjectionRadius(void*, f32);
+extern u8 lbl_802C2488[];
+extern f32 lbl_803E5E0C;
+extern f32 lbl_803E5E10;
+extern f32 lbl_803E5E20;
+extern f32 lbl_803E5E24;
+extern f32 lbl_803E5E28;
+extern f32 lbl_803E5E2C;
+extern f32 lbl_803E5E30;
+extern f32 lbl_803E5E34;
+extern f32 lbl_803E5E38;
+extern f32 lbl_803E5E3C;
+extern f32 lbl_803E5E40;
 
 void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
@@ -182,11 +221,6 @@ void FUN_801f2b94(short* param_1)
     return;
 }
 
-extern f32 lbl_803E5D78;
-
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern f32 timeDelta;
-
 void lightsource_hitDetect(void)
 {
 }
@@ -194,11 +228,6 @@ void lightsource_hitDetect(void)
 int dll_1FF_getExtraSize_ret_8(void);
 int lightsource_getExtraSize(void) { return 0x1c; }
 int lightsource_getObjectTypeId(void) { return 0x1; }
-
-extern f32 lbl_803E5D58;
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E5E08;
-extern void queueGlowRender(void* light);
 
 void lightsource_render(void* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
@@ -216,12 +245,6 @@ void lightsource_render(void* obj, int p1, int p2, int p3, int p4, s8 visible)
 
 int dll_1FF_getObjectTypeId(int* obj);
 
-extern int GameBit_Get(int id);
-
-extern int Obj_GetPlayerObject(void);
-
-extern void ModelLightStruct_free(void* light);
-
 void lightsource_free(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
@@ -235,7 +258,6 @@ void lightsource_free(int obj)
 /* dll_1FF_render: when obj->_f8 implies
  * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
  * based on obj->_b4 == -1, then call objRenderFn_8003b8f4. */
-extern f32 lbl_803E5D80;
 
 void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
 
@@ -247,8 +269,6 @@ void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
  * (dll_200_SeqFn) into obj->_bc and prime obj->_b8 (the body block) with
  * fixed bytes, the three float position-quaternion from arg+8/c/10,
  * GameBit_Get(0xd0) latched into b->_24, plus several literal latches. */
-
-extern void GameBit_Set(int slot, int val);
 
 #pragma opt_strength_reduction off
 
@@ -399,37 +419,6 @@ void lightsource_update(int obj)
 
 #pragma opt_strength_reduction reset
 #pragma opt_strength_reduction reset
-
-#include "main/dll/LGT/dll_0206_lightsource.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-
-extern void* objCreateLight(void* obj, int);
-extern void modelLightStruct_setLightKind(void*, int);
-extern void modelLightStruct_setPosition(f32, f32, f32);
-extern void modelLightStruct_setDiffuseColor(void*, u8, u8, u8, int);
-extern void modelLightStruct_setSpecularColor(void*, u8, u8, u8, int);
-extern void modelLightStruct_setDistanceAttenuation(void*, f32, f32);
-extern void modelLightStruct_setEnabled(void*, int, f32);
-extern void modelLightStruct_startColorFade(void*, int, int);
-extern void modelLightStruct_setDiffuseTargetColor(void*, int, int, int, int);
-extern void lightSetField4D(void*, int);
-extern void modelLightStruct_setupGlow(void*, int, u8, u8, u8, int, f32);
-extern void modelLightStruct_setGlowProjectionRadius(void*, f32);
-
-extern u8 lbl_802C2488[];
-extern f32 lbl_803E5E0C;
-extern f32 lbl_803E5E10;
-extern f32 lbl_803E5E20;
-extern f32 lbl_803E5E24;
-extern f32 lbl_803E5E28;
-extern f32 lbl_803E5E2C;
-extern f32 lbl_803E5E30;
-extern f32 lbl_803E5E34;
-extern f32 lbl_803E5E38;
-extern f32 lbl_803E5E3C;
-extern f32 lbl_803E5E40;
 
 typedef struct LightColorTable
 {

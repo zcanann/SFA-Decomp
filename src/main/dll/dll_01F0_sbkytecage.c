@@ -55,6 +55,13 @@ extern undefined4 ObjLink_AttachChild();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
+extern int GameBit_Get(int);
+extern void GameBit_Set(int slot, int val);
+extern f32 lbl_803E5918;
+extern void buttonDisable(int controller, int mask);
+extern int* objModelGetVecFn_800395d8(int obj, int idx);
+extern f32 lbl_803E591C;
+
 void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined2* param_9, int param_10)
@@ -84,10 +91,6 @@ void SB_CageKyte_free(void);
 int SB_KyteCage_getExtraSize(void) { return 0x8; }
 int SB_KyteCage_getObjectTypeId(void) { return 0x0; }
 int SB_CageKyte_getExtraSize(void);
-
-extern int GameBit_Get(int);
-extern void GameBit_Set(int slot, int val);
-extern f32 lbl_803E5918;
 
 /* Stubs added to align function set with v1.0 asm. Source had Ghidra FUN_xxx
  * splits at wrong addresses; these stubs ensure every asm symbol has a src
@@ -160,10 +163,6 @@ void SB_KyteCage_init(int* obj, int* params)
         getLActions(obj, obj, 109, 0, 0, 0);
     }
 }
-
-extern void buttonDisable(int controller, int mask);
-extern int* objModelGetVecFn_800395d8(int obj, int idx);
-extern f32 lbl_803E591C;
 
 void SB_KyteCage_update(int obj)
 {

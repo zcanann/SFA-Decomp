@@ -1,6 +1,15 @@
 /* DLL 0x00FF — magic-dust / collectible objects [80173224-801732A4) */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/magicduststate_struct.h"
+#include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
+#include "main/obj_placement.h"
+#include "main/dll/lightning.h"
+#include "main/dll/path_control_interface.h"
+#include "main/dll/pushable.h"
+#include "main/objanim_internal.h"
+#include "main/game_object.h"
+#include "main/resource.h"
 /* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
  * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
  * verified). File rename parked as a repo-owner proposal. */
@@ -11,33 +20,8 @@ extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 ObjLink_DetachChild();
 
-void magicdust_free(int param_1)
-{
-    if (*(uint*)(param_1 + 0xc4) != 0)
-    {
-        ObjLink_DetachChild(*(int*)(param_1 + 0xc4), param_1);
-    }
-    (*gExpgfxInterface)->freeSource2((u32)param_1);
-    return;
-}
-
-int magicdust_getExtraSize(void) { return 0x288; }
-
 extern f32 lbl_803E34B0;
 extern void objRenderFn_8003b8f4(f32);
-void magicdust_render(void) { objRenderFn_8003b8f4(lbl_803E34B0); }
-
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/obj_placement.h"
-#include "main/dll/lightning.h"
-#include "main/dll/path_control_interface.h"
-#include "main/dll/pushable.h"
-#include "main/objanim_internal.h"
-#include "main/game_object.h"
-#include "main/resource.h"
-
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
@@ -80,8 +64,22 @@ extern u8* Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32 x);
 extern void objMove(f32 a, f32 b, f32 c, int obj);
-
 STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
+extern void fn_8002B758(void);
+
+void magicdust_free(int param_1)
+{
+    if (*(uint*)(param_1 + 0xc4) != 0)
+    {
+        ObjLink_DetachChild(*(int*)(param_1 + 0xc4), param_1);
+    }
+    (*gExpgfxInterface)->freeSource2((u32)param_1);
+    return;
+}
+
+int magicdust_getExtraSize(void) { return 0x288; }
+
+void magicdust_render(void) { objRenderFn_8003b8f4(lbl_803E34B0); }
 
 void magicdust_update(int obj)
 {
@@ -456,5 +454,3 @@ void magicdust_init(int obj, int placement)
     ObjMsg_AllocQueue(obj, 1);
     return;
 }
-
-extern void fn_8002B758(void);

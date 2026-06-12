@@ -41,6 +41,19 @@ extern u8 lbl_803DD704;
 extern u8 lbl_803DD705;
 extern u8* lbl_803DD708;
 
+extern int optionsMenu_openAudioPanel(void);
+extern int optionsMenu_openGeneralPanel(void);
+extern int languageMenuInit(void);
+extern int* gTitleMenuLinkInterface;
+extern f32 lbl_803E1DD0;
+extern s8 lbl_803DBA28;
+extern void setWidescreen(u8 enabled);
+extern void stopRumble2(void);
+extern void setRumbleEnabled(u8 value);
+extern void doRumble(f32 val);
+extern void creditsStart(void);
+extern void Rcp_SetColorFilterEnabled(int enabled);
+
 void optionsMenu_applyAudioSetting(int p1, int p2)
 {
     int value;
@@ -107,19 +120,6 @@ void optionsMenu_applyAudioSetting(int p1, int p2)
         Sfx_PlayFromObject(0, 0x418);
     }
 }
-
-extern int optionsMenu_openAudioPanel(void);
-extern int optionsMenu_openGeneralPanel(void);
-extern int languageMenuInit(void);
-extern int* gTitleMenuLinkInterface;
-extern f32 lbl_803E1DD0;
-extern s8 lbl_803DBA28;
-extern void setWidescreen(u8 enabled);
-extern void stopRumble2(void);
-extern void setRumbleEnabled(u8 value);
-extern void doRumble(f32 val);
-extern void creditsStart(void);
-extern void Rcp_SetColorFilterEnabled(int enabled);
 
 void optionsMenu_applyGameplaySetting(int p1, int p2)
 {

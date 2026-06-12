@@ -67,6 +67,15 @@ extern f32 lbl_803E4F6C;
 extern f32 lbl_803E4F70;
 extern f32 lbl_803E4F74;
 
+extern f32 lbl_803E422C;
+extern uint GameBit_Get(int eventId);
+extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
+extern f32 Vec_distance(void* a, void* b);
+extern f32 lbl_803E42B0;
+extern f32 lbl_803E4280;
+extern void objfx_spawnHitEmitterAtPos(f32* p, int a, int b, int c, int d);
+extern f32 lbl_803E42B4;
+
 void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* param_3)
 {
     uint uVar1;
@@ -388,9 +397,6 @@ void babycloudrunner_init_OLD_v1_1(int obj)
     return;
 }
 
-extern f32 lbl_803E422C;
-extern uint GameBit_Get(int eventId);
-
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
 typedef struct BabyCloudRunnerState
@@ -539,8 +545,6 @@ void cfguardian_release(void);
  * (cfguardian_getExtraSize == 0xa9c). */
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
-
 /* EN v1.0 0x801A0614  size: 368b  cfprisoncage_SeqFn: drain the object's message
  * queue (re-arming its gamebit on the keyed message), then sync the
  * lit/active state from gamebit 0x44 and notify on completion. */
@@ -588,8 +592,6 @@ int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-extern f32 Vec_distance(void* a, void* b);
 
 /* Per-object extra state for the CloudRunner main crystal
  * (cfmaincrystal_getExtraSize == 0x160). */
@@ -673,16 +675,12 @@ void spiritdoorspirit_hitDetect(void);
 int cfprisoncage_getExtraSize(void) { return 0x0; }
 int spiritdoorspirit_getExtraSize(void);
 
-extern f32 lbl_803E42B0;
-
 #pragma scheduling on
 void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E42B0);
 }
-
-extern f32 lbl_803E4280;
 
 int cfprisoncage_getObjectTypeId(int* obj)
 {
@@ -692,7 +690,6 @@ int cfprisoncage_getObjectTypeId(int* obj)
 
 u32 fn_801A0174(int* obj);
 
-extern void objfx_spawnHitEmitterAtPos(f32* p, int a, int b, int c, int d);
 extern int ObjHits_GetPriorityHitWithPosition(int* obj, int a, int b, int c, f32* out_x, f32* out_y, f32* out_z);
 
 #pragma scheduling off
@@ -704,8 +701,6 @@ void cfprisoncage_hitDetect(int* obj)
         objfx_spawnHitEmitterAtPos(&pos_x, 8, 200, 128, 0);
     }
 }
-
-extern f32 lbl_803E42B4;
 
 void cfprisoncage_init(int* obj, u8* def)
 {

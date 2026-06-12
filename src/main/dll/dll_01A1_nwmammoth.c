@@ -5,6 +5,11 @@
 #include "main/dll/dll_01A1_nwmammoth.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
+#include "main/dll/creator1D4.h"
+#include "main/dll/dim2conveyor.h"
+#include "main/dll/dll_01A0_nwgeyser.h"
+#include "main/gameplay_runtime.h"
+#include "main/objanim.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 ObjHits_DisableObject();
@@ -36,6 +41,71 @@ extern f32 lbl_803E5ED0;
 
 #pragma scheduling on
 #pragma peephole on
+extern f32 timeDelta;
+extern f32 lbl_803E520C;
+extern f32 lbl_803E5218;
+extern void Sfx_PlayFromObject(int* obj, int sfx);
+extern void* gSHthorntailAnimationInterface;
+extern f32 oneOverTimeDelta;
+extern f32 lbl_803E523C;
+extern f32 lbl_803E5240;
+extern f32 lbl_803E5244;
+extern f32 lbl_803E5248;
+extern f32 lbl_803E524C;
+extern f32 lbl_803E5250;
+extern int lbl_803DBF80;
+extern int lbl_803DBF84;
+extern int lbl_803DBF88;
+extern int lbl_803DBF8C;
+extern int lbl_803DBF90;
+extern int lbl_803DBF94;
+extern int lbl_803DBF98;
+extern int lbl_803DBF9C;
+extern int lbl_803DBFA0;
+extern int lbl_803DBFA4;
+extern int Curve_AdvanceAlongPath(u8* cv, f32 t);
+extern int getAngle(f32 a, f32 b);
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803E5228;
+extern f32 lbl_803E522C;
+extern f32 lbl_803E5230;
+extern f32 lbl_803E5234;
+extern f32 lbl_803E5238;
+extern int lbl_803DBFA8;
+extern int lbl_803DBFAC;
+extern int lbl_803DBFB0;
+extern int lbl_803268CC[];
+extern int lbl_803268DC[];
+extern int* ObjList_FindObjectById(int id);
+extern int* fn_80296118(int p);
+extern void fn_8014C66C(int* o, int* target);
+extern int* tumbleweedbush_findNearestActive(void* pos);
+extern f32 getXZDistance(void* a, void* b);
+extern int Sfx_IsPlayingFromObjectChannel(int* obj, int ch);
+extern void fn_80163980(int o);
+extern void Obj_FreeObject(int o);
+extern ScreenTransitionInterface** gScreenTransitionInterface;
+extern f32 lbl_803E5210;
+extern undefined4 ObjGroup_AddObject();
+extern int ObjTrigger_IsSetById();
+extern void fn_8003A168(int obj, void* p);
+extern void characterDoEyeAnims(int obj, void* p);
+extern int cMenuGetSelectedItem(void);
+extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
+extern void fn_801CDF94(int obj, void* state, int flag);
+extern void Sfx_StopObjectChannel(void* obj, int channel);
+extern u8 lbl_803267C0[];
+extern u8 lbl_803267E8[];
+extern u8 lbl_80326818[];
+extern ObjHitReactEntry DAT_80327400;
+extern ObjHitReactEntry DAT_80327414;
+extern undefined4 DAT_80327468;
+extern undefined4 DAT_80327498;
+extern NwMammothPathControlInterface** gPathControlInterface;
+extern u32 lbl_803E5208;
+extern f32 lbl_803E5254;
+extern f32 lbl_803E5258;
+
 void FUN_801ce078(undefined2* param_1, int param_2)
 {
 }
@@ -178,12 +248,6 @@ void fn_801CED2C(int p1, int p2)
     }
 }
 
-extern f32 timeDelta;
-extern f32 lbl_803E520C;
-extern f32 lbl_803E5218;
-extern void Sfx_PlayFromObject(int* obj, int sfx);
-extern void* gSHthorntailAnimationInterface;
-
 typedef struct
 {
     u8 pad[0xc];
@@ -276,27 +340,6 @@ int fn_801CE078(int* obj, u8* st)
     }
     return 1;
 }
-
-extern f32 oneOverTimeDelta;
-extern f32 lbl_803E523C;
-extern f32 lbl_803E5240;
-extern f32 lbl_803E5244;
-extern f32 lbl_803E5248;
-extern f32 lbl_803E524C;
-extern f32 lbl_803E5250;
-extern int lbl_803DBF80;
-extern int lbl_803DBF84;
-extern int lbl_803DBF88;
-extern int lbl_803DBF8C;
-extern int lbl_803DBF90;
-extern int lbl_803DBF94;
-extern int lbl_803DBF98;
-extern int lbl_803DBF9C;
-extern int lbl_803DBFA0;
-extern int lbl_803DBFA4;
-extern int Curve_AdvanceAlongPath(u8* cv, f32 t);
-extern int getAngle(f32 a, f32 b);
-extern f32 sqrtf(f32 x);
 
 void fn_801CEA14(short* obj, u8* st, u8* p3)
 {
@@ -408,26 +451,6 @@ void fn_801CEA14(short* obj, u8* st, u8* p3)
         }
     }
 }
-
-extern f32 lbl_803E5228;
-extern f32 lbl_803E522C;
-extern f32 lbl_803E5230;
-extern f32 lbl_803E5234;
-extern f32 lbl_803E5238;
-extern int lbl_803DBFA8;
-extern int lbl_803DBFAC;
-extern int lbl_803DBFB0;
-extern int lbl_803268CC[];
-extern int lbl_803268DC[];
-extern int* ObjList_FindObjectById(int id);
-extern int* fn_80296118(int p);
-extern void fn_8014C66C(int* o, int* target);
-extern int* tumbleweedbush_findNearestActive(void* pos);
-extern f32 getXZDistance(void* a, void* b);
-extern int Sfx_IsPlayingFromObjectChannel(int* obj, int ch);
-extern void fn_80163980(int o);
-extern void Obj_FreeObject(int o);
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 
 void fn_801CE2BC(int* obj, u8* st, short* p3)
 {
@@ -663,11 +686,6 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/game_object.h"
-#include "main/game_ui_interface.h"
-
-extern f32 lbl_803E5210;
-
 void nw_mammoth_free(void* obj)
 {
     extern void ObjGroup_RemoveObject(void* obj, int group); /* #57 */
@@ -704,36 +722,6 @@ void nw_mammoth_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, u
                                   (char*)node + 0x14,
                                   0);
 }
-
-#include "main/dll/creator1D4.h"
-#include "main/game_object.h"
-#include "main/game_ui_interface.h"
-#include "main/dll/dim2conveyor.h"
-#include "main/dll/dll_01A0_nwgeyser.h"
-#include "main/gameplay_runtime.h"
-#include "main/objanim.h"
-
-extern undefined4 ObjGroup_AddObject();
-extern int ObjTrigger_IsSetById();
-
-extern void fn_8003A168(int obj, void* p);
-extern void characterDoEyeAnims(int obj, void* p);
-extern int cMenuGetSelectedItem(void);
-extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
-extern void fn_801CDF94(int obj, void* state, int flag);
-extern void Sfx_StopObjectChannel(void* obj, int channel);
-
-extern u8 lbl_803267C0[];
-extern u8 lbl_803267E8[];
-extern u8 lbl_80326818[];
-extern ObjHitReactEntry DAT_80327400;
-extern ObjHitReactEntry DAT_80327414;
-extern undefined4 DAT_80327468;
-extern undefined4 DAT_80327498;
-extern NwMammothPathControlInterface** gPathControlInterface;
-extern u32 lbl_803E5208;
-extern f32 lbl_803E5254;
-extern f32 lbl_803E5258;
 
 #define gNwMammothNormalHitReactEntry DAT_80327400
 #define gNwMammothHeavyHitReactEntry DAT_80327414

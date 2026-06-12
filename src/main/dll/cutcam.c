@@ -34,6 +34,19 @@ extern f32 lbl_803E16A4;
 extern f32 lbl_803E16AC;
 
 #pragma dont_inline on
+extern u32 OSGetTick(void);
+extern f32 lbl_803E16A0;
+extern f32 lbl_803E16A8;
+extern f32 lbl_803E16B0;
+extern f32 lbl_803E16B4;
+extern f32 lbl_803E16B8;
+extern f32 lbl_803E16BC;
+extern f32 lbl_803E16C0;
+extern f32 lbl_803E16C4;
+extern f32 lbl_803E16C8;
+extern f32 lbl_803E16CC;
+extern f32 lbl_803DD52C;
+
 int
 camcontrol_traceMove(float* startPos, float* targetPos, float* endPosOut, u8* trace,
                      char channel, u8 doSweep, u8 doBboxTest, float radius)
@@ -224,19 +237,6 @@ void camcontrol_updateTargetAction(int camState, int targetObj)
     }
     return;
 }
-
-extern u32 OSGetTick(void);
-extern f32 lbl_803E16A0;
-extern f32 lbl_803E16A8;
-extern f32 lbl_803E16B0;
-extern f32 lbl_803E16B4;
-extern f32 lbl_803E16B8;
-extern f32 lbl_803E16BC;
-extern f32 lbl_803E16C0;
-extern f32 lbl_803E16C4;
-extern f32 lbl_803E16C8;
-extern f32 lbl_803E16CC;
-extern f32 lbl_803DD52C;
 
 int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
 {

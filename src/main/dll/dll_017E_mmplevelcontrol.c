@@ -3,6 +3,12 @@
 #include "main/dll/mmptrenchfxstate_struct.h"
 #include "main/dll/moonseedbushstate_struct.h"
 #include "main/dll/IM/IMspacecraft.h"
+#include "main/dll/MMP/mmp_asteroid_re_state.h"
+#include "main/dll/MMP/mmp_moonrock_state.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/game_object.h"
+#include "main/dll/DIM/DIMlavaball.h"
+#include "main/mapEventTypes.h"
 
 extern u32 randomGetRange(int min, int max);
 extern u32 GameBit_Get(int eventId);
@@ -20,6 +26,30 @@ extern f32 lbl_803E44C4;
 
 extern f32 lbl_803DDB28;
 extern int lbl_803DDB2C;
+
+STATIC_ASSERT(sizeof(MoonSeedBushState) == 0x2);
+STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
+STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
+STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
+extern undefined8 FUN_80006728();
+extern uint GameBit_Get(int eventId);
+extern int FUN_80017a98();
+extern undefined4 FUN_8005d0ac();
+extern f32 lbl_803E5180;
+extern void gameTextShow(int textId);
+extern void envFxActFn_800887f8(int value);
+extern void skyFn_80088c94(int flags, int mode);
+extern int getEnvfxActImmediately(int obj, int target, int actId, int flags);
+extern int getEnvfxAct(int obj, int target, int actId, int flags);
+extern int coordsToMapCell(f32 x, f32 z);
+extern void Music_Trigger(int id, int mode);
+extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit,
+                                  int setBit, int textId);
+extern void objRenderFn_8003b8f4(f32);
+extern int mapGetDirIdx(int);
+extern void unlockLevel(int, int, int);
+extern f32 lbl_803E44C8;
+extern void setDrawLights(int v);
 
 void MMP_levelcontrol_hitDetect(void)
 {
@@ -68,60 +98,26 @@ int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/dll/MMP/mmp_asteroid_re_state.h"
-#include "main/dll/MMP/mmp_moonrock_state.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-#include "main/dll/DIM/DIMlavaball.h"
-#include "main/dll/IM/IMspacecraft.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
-
 /*
  * Per-object extra state for the MoonSeedBush plant spot
  * (MoonSeedBush_getExtraSize == 0x2).
  */
-
-STATIC_ASSERT(sizeof(MoonSeedBushState) == 0x2);
 
 /*
  * Per-object extra state for the mmp asteroid set piece
  * (mmp_asteroid_re_getExtraSize == 0x1C).
  */
 
-STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
-
 /*
  * Per-object extra state for the mmp trench fx emitter
  * (mmp_trenchfx_getExtraSize == 0x30).
  */
-
-STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 
 /*
  * Per-object extra state for the mmp moonrock carryable
  * (mmp_moonrock_getExtraSize == 0x30). The leading bytes belong to the
  * gCarryableInterface record (the state pointer itself is handed to it).
  */
-
-STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
-
-extern undefined8 FUN_80006728();
-extern uint GameBit_Get(int eventId);
-extern int FUN_80017a98();
-extern undefined4 FUN_8005d0ac();
-
-extern f32 lbl_803E5180;
-
-extern void gameTextShow(int textId);
-extern void envFxActFn_800887f8(int value);
-extern void skyFn_80088c94(int flags, int mode);
-extern int getEnvfxActImmediately(int obj, int target, int actId, int flags);
-extern int getEnvfxAct(int obj, int target, int actId, int flags);
-extern int coordsToMapCell(f32 x, f32 z);
-extern void Music_Trigger(int id, int mode);
-extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit,
-                                  int setBit, int textId);
 
 #pragma peephole on
 void MMP_levelcontrol_update(int obj)
@@ -323,12 +319,6 @@ void MMP_levelcontrol_initialise(void)
 
 void MoonSeedBush_free(void);
 
-extern void objRenderFn_8003b8f4(f32);
-
-extern int mapGetDirIdx(int);
-extern void unlockLevel(int, int, int);
-extern f32 lbl_803E44C8;
-
 #pragma scheduling off
 #pragma peephole off
 void MMP_levelcontrol_init(int obj)
@@ -355,5 +345,3 @@ void MMP_levelcontrol_init(int obj)
     Music_Trigger(0xC2, 0);
     GameBit_Set(0xDCF, 0);
 }
-
-extern void setDrawLights(int v);

@@ -44,6 +44,14 @@ extern undefined4 getLActions();
 extern f32 timeDelta;
 extern u8 framesThisStep;
 
+extern f32 lbl_803E51B0;
+extern void ObjHits_ClearHitVolumes(int obj);
+extern void Obj_FreeObject(int obj);
+extern void Sfx_PlayFromObject(int obj, int sfx);
+extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);
+extern EffectInterface** gPartfxInterface;
+extern f32 lbl_803E51B8;
+
 void dll_19D_render(void)
 {
 }
@@ -59,12 +67,6 @@ void dll_19D_initialise(void)
 int dll_19C_getExtraSize(void);
 int dll_19D_getExtraSize(void) { return 0x38; }
 int dll_19D_getObjectTypeId(void) { return 0x0; }
-
-extern f32 lbl_803E51B0;
-
-extern void ObjHits_ClearHitVolumes(int obj);
-extern void Obj_FreeObject(int obj);
-extern void Sfx_PlayFromObject(int obj, int sfx);
 
 /*
  * Function: dll_19C_init
@@ -88,8 +90,6 @@ void dll_19D_free(int obj)
     }
     (*gExpgfxInterface)->freeSource2((u32)self);
 }
-
-extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);
 
 /*
  * Function: dll_19D_init
@@ -125,9 +125,6 @@ void dll_19D_init(int obj)
         getLActions(self, self, 0x201, 0, 0, 0);
     }
 }
-
-extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E51B8;
 
 /*
  * Function: dll_19D_hitDetect

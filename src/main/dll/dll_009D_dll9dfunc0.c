@@ -40,6 +40,8 @@ extern f32 lbl_803E140C;
 extern f32 lbl_803E1410;
 extern f32 lbl_803E1414;
 
+extern u8 lbl_80318260[];
+
 void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     GfxBuf buf;
@@ -186,8 +188,6 @@ void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, tab, 0x18, &tab[212], 0x46c, 0);
 }
-
-extern u8 lbl_80318260[];
 
 void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
 

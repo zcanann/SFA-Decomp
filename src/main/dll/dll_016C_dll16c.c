@@ -68,6 +68,30 @@ extern f32 lbl_803E53D0;
 extern f32 lbl_803E53E0;
 extern f32 lbl_803E53F0;
 
+extern void* lbl_803DDB40;
+extern void objRenderFn_8003b8f4(f32);
+extern void Obj_FreeObject(int*);
+extern void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
+extern int objUpdateOpacity(int* obj);
+extern void ObjPath_GetPointWorldPosition(int* obj, int idx, f32* x, f32* y, f32* z, int e);
+extern f32 lbl_803E4758;
+extern float Vec_distance(float* a, float* b);
+extern void warpToMap(int mapId, int flags);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int kind, int id);
+extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
+extern f32 lbl_803E4748;
+extern u8 lbl_802C2308[];
+extern void fn_801AC01C(int* obj);
+extern void Music_Trigger(int track, int flag);
+extern int* ObjGroup_GetObjects(int group, int* countOut);
+extern u8 framesThisStep;
+extern f32 lbl_803E474C;
+extern f32 lbl_803E475C;
+extern f32 lbl_803E4760;
+extern f32 lbl_803E4764;
+extern u8 lbl_803236B8[];
+
 void FUN_801ac248(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9)
@@ -261,12 +285,6 @@ int imicemountain_getExtraSize(void);
 int dll_16C_getExtraSize(void) { return 0x24; }
 int dll_16C_getObjectTypeId(void) { return 0x3; }
 
-extern void* lbl_803DDB40;
-
-extern void objRenderFn_8003b8f4(f32);
-
-extern void Obj_FreeObject(int*);
-
 void dll_16C_free(int* obj)
 {
     int* p = (int*)obj[0xc8 / 4];
@@ -275,7 +293,6 @@ void dll_16C_free(int* obj)
 
 void crrockfall_release(void);
 
-extern void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
 #pragma scheduling off
 #pragma peephole off
 void dll_16C_hitDetect(void* obj)
@@ -291,9 +308,6 @@ void dll_16C_hitDetect(void* obj)
     }
 }
 
-extern int objUpdateOpacity(int* obj);
-extern void ObjPath_GetPointWorldPosition(int* obj, int idx, f32* x, f32* y, f32* z, int e);
-extern f32 lbl_803E4758;
 void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     Dll16CState* extra;
@@ -361,21 +375,11 @@ void dll_16C_init(void* obj, void* arg2)
     extra->opacity = 0xff;
 }
 
-extern float Vec_distance(float* a, float* b);
-
-extern void warpToMap(int mapId, int flags);
-
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
 
 #undef MEVT_TRIGGER
 #undef MEVT_SET
-
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int kind, int id);
-extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
-extern f32 lbl_803E4748;
-extern u8 lbl_802C2308[];
 
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
  * from a small id table, then run the map-event sub-object state callbacks. */
@@ -489,16 +493,6 @@ void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f
     ((GameObject*)a)->anim.velocityZ = ((GameObject*)b)->anim.velocityZ;
 }
 
-extern void fn_801AC01C(int* obj);
-extern void Music_Trigger(int track, int flag);
-
-extern int* ObjGroup_GetObjects(int group, int* countOut);
-extern u8 framesThisStep;
-extern f32 lbl_803E474C;
-extern f32 lbl_803E475C;
-extern f32 lbl_803E4760;
-extern f32 lbl_803E4764;
-
 /* dll_16C_update: re-link the spawned sub-object, then while active/visible run
  * its move and fade opacity by distance to the player. */
 void dll_16C_update(int* obj)
@@ -604,5 +598,3 @@ void dll_16C_update(int* obj)
         }
     }
 }
-
-extern u8 lbl_803236B8[];

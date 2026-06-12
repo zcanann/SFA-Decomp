@@ -32,6 +32,9 @@ STATIC_ASSERT(sizeof(DoorF4State) == 0x24);
  * fields are named.
  */
 #include "main/dll/sidekickball_state.h"
+#include "main/dll/path_control_interface.h"
+#include "main/dll/dll_00F5_sidekickball.h"
+#include "main/dll/tframeanimator_state.h"
 
 typedef struct Doorf4State
 {
@@ -82,19 +85,94 @@ extern f32 lbl_803E431C;
 
 void FUN_80178338(undefined4 param_1);
 
-int sidekickball_getExtraSize(void) { return 0x2cc; }
-
 extern f32 lbl_803E3680;
 extern void objRenderFn_8003b8f4(f32);
+extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
+extern void Sfx_StopFromObject(int obj, int sfxId);
+extern f32 lbl_803E36A0;
+extern f32 lbl_803E369C;
+extern void getYButtonItem(s16 * out);
+extern u32 getButtonsJustPressed(int controller);
+extern int fn_80295BF0(int* player);
+extern int fn_8029669C(int* player);
+extern void vecRotateZXY(void* inParams, f32* outVec);
+extern f32 lbl_803E3688;
+extern f32 lbl_803E368C;
+extern f32 lbl_803E3690;
+extern f32 lbl_803E3694;
+extern f32 lbl_803E3698;
+extern f32 lbl_803E36A4;
+extern u32 GameBit_Get(int eventId);
+extern f32 lbl_803E3654;
+extern f32 lbl_803E3684;
+extern f32 lbl_803E364C;
+extern f32 lbl_803E3650;
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern f32 sqrtf(f32 x);
+extern f32* Camera_GetCurrentViewSlot(void);
+extern void getEnvfxAct(int obj, int target, int id, int p);
+extern f32 lbl_803E3648;
+extern f32 lbl_803E3658;
+extern f32 lbl_803E365C;
+extern f32 lbl_803E3660;
+extern f32 lbl_803E3664;
+extern f32 lbl_803E3668;
+extern f32 lbl_803E366C;
+extern f32 lbl_803E3670;
+extern f32 lbl_803E3674;
+extern f32 timeDelta;
+extern f32 lbl_803E36A8;
+extern f32 lbl_803E36AC;
+extern u8* getTrickyObject(void);
+extern u32 GameBit_Get(int bit);
+extern void Obj_FreeObject(u8 * obj);
+extern u8 trickyBallMove(u8 * obj);
+extern int buttonGetDisabled(int unused);
+extern void OSReport(const char* msg, ...);
+extern uint FUN_80006ba0();
+extern uint GameBit_Get(int eventId);
+extern int FUN_80017a90();
+extern undefined4 FUN_80017ac8();
+extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
+extern void fn_8002A5DC(int obj);
+extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
+extern void PSVECNormalize(f32 * src, f32 * dst);
+extern void PSVECScale(f32* src, f32* dst, f32 scale);
+extern void fn_80137948(const char* fmt, ...);
+extern undefined4 sidekickball_init();
+extern f32 lbl_803E36B0;
+extern f32 lbl_803E36B4;
+extern f32 lbl_803E36B8;
+extern f32 lbl_803E36BC;
+extern f32 lbl_803E36C0;
+extern f32 lbl_803E36C4;
+extern f32 lbl_803E36C8;
+extern f32 lbl_803E36CC;
+extern f32 lbl_803E36D0;
+extern f32 lbl_803E36D4;
+extern f32 lbl_803E4334;
+extern f32 lbl_803E433C;
+extern f32 lbl_803E4340;
+extern f32 lbl_803E4344;
+extern char sSidekickBallYVelDepthFormat[];
+extern char sSidekickBallDotFormat[];
+extern void* memset(void* dest, int value, u32 size);
+extern u32 GameBit_Get(int gameBit);
+extern int* gameTextGet(int textId);
+extern u8 lbl_80320F30[];
+extern u8 framesThisStep;
+extern f32 Vec_distance(f32 * a, f32 * b);
+extern f32 mathSinf(f32 v);
+extern f32 lbl_803E36E0;
+extern f32 lbl_803E36E4;
+extern f32 lbl_803E36E8;
+
+int sidekickball_getExtraSize(void) { return 0x2cc; }
 
 int fn_801793A4(int* obj) { return *((u8*)((int**)obj)[0xb8 / 4] + 0x274) == 0; }
 
 void sidekickball_free(int obj) { GameBit_Set(0x3F8, 1); }
-
-extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
-extern void Sfx_StopFromObject(int obj, int sfxId);
-
-extern f32 lbl_803E36A0;
 
 void sidekickball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -103,8 +181,6 @@ void sidekickball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         objRenderFn_8003b8f4(lbl_803E36A0);
     }
 }
-
-extern f32 lbl_803E369C;
 
 void fn_8017962C(int* obj)
 {
@@ -149,18 +225,6 @@ void fn_801796BC(int* obj, f32 a, f32 b, f32 c)
     state->launchY = ((GameObject*)obj)->anim.localPosY;
     state->launchZ = ((GameObject*)obj)->anim.localPosZ;
 }
-
-extern void getYButtonItem(s16 * out);
-extern u32 getButtonsJustPressed(int controller);
-extern int fn_80295BF0(int* player);
-extern int fn_8029669C(int* player);
-extern void vecRotateZXY(void* inParams, f32* outVec);
-extern f32 lbl_803E3688;
-extern f32 lbl_803E368C;
-extern f32 lbl_803E3690;
-extern f32 lbl_803E3694;
-extern f32 lbl_803E3698;
-extern f32 lbl_803E36A4;
 
 void trickyBallFn_801793b8(int* obj, u8* params)
 {
@@ -258,41 +322,6 @@ end:
     }
 }
 
-extern u32 GameBit_Get(int eventId);
-
-extern f32 lbl_803E3654;
-extern f32 lbl_803E3684;
-extern f32 lbl_803E364C;
-extern f32 lbl_803E3650;
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-
-extern f32 sqrtf(f32 x);
-extern f32* Camera_GetCurrentViewSlot(void);
-extern void getEnvfxAct(int obj, int target, int id, int p);
-extern f32 lbl_803E3648;
-extern f32 lbl_803E3658;
-extern f32 lbl_803E365C;
-extern f32 lbl_803E3660;
-extern f32 lbl_803E3664;
-extern f32 lbl_803E3668;
-extern f32 lbl_803E366C;
-extern f32 lbl_803E3670;
-extern f32 lbl_803E3674;
-
-#include "main/game_object.h"
-#include "main/dll/path_control_interface.h"
-
-extern f32 timeDelta;
-extern f32 lbl_803E36A8;
-extern f32 lbl_803E36AC;
-
-extern u8* getTrickyObject(void);
-extern u32 GameBit_Get(int bit);
-extern void Obj_FreeObject(u8 * obj);
-extern u8 trickyBallMove(u8 * obj);
-extern int buttonGetDisabled(int unused);
-
 enum SidekickBallMode
 {
     SIDEKICK_BALL_IDLE = 0,
@@ -301,8 +330,6 @@ enum SidekickBallMode
     SIDEKICK_BALL_THROWN = 3,
     SIDEKICK_BALL_FADING = 5,
 };
-
-#include "main/dll/sidekickball_state.h"
 
 void sidekickball_update(u8* self)
 {
@@ -395,40 +422,6 @@ void sidekickball_update(u8* self)
     (*gPathControlInterface)->apply(self, state);
     (*gPathControlInterface)->advance(self, state, timeDelta);
 }
-
-#include "main/dll/dll_00F5_sidekickball.h"
-#include "main/game_object.h"
-#include "main/dll/path_control_interface.h"
-
-extern void OSReport(const char* msg, ...);
-extern uint FUN_80006ba0();
-extern uint GameBit_Get(int eventId);
-extern int FUN_80017a90();
-extern undefined4 FUN_80017ac8();
-extern void objMove(int obj, f32 dx, f32 dy, f32 dz);
-extern void fn_8002A5DC(int obj);
-extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
-extern void PSVECNormalize(f32 * src, f32 * dst);
-extern void PSVECScale(f32* src, f32* dst, f32 scale);
-extern void fn_80137948(const char* fmt, ...);
-extern undefined4 sidekickball_init();
-
-extern f32 lbl_803E36B0;
-extern f32 lbl_803E36B4;
-extern f32 lbl_803E36B8;
-extern f32 lbl_803E36BC;
-extern f32 lbl_803E36C0;
-extern f32 lbl_803E36C4;
-extern f32 lbl_803E36C8;
-extern f32 lbl_803E36CC;
-extern f32 lbl_803E36D0;
-extern f32 lbl_803E36D4;
-extern f32 lbl_803E4334;
-extern f32 lbl_803E433C;
-extern f32 lbl_803E4340;
-extern f32 lbl_803E4344;
-extern char sSidekickBallYVelDepthFormat[];
-extern char sSidekickBallDotFormat[];
 
 typedef struct TrickyBallState
 {
@@ -593,10 +586,6 @@ u8 trickyBallMove(u8* obj)
     return 3;
 }
 
-#include "main/game_object.h"
-#include "main/dll/path_control_interface.h"
-#include "main/dll/tframeanimator_state.h"
-
 typedef struct LevelnameState
 {
     u8 pad0[0x8 - 0x0];
@@ -607,12 +596,6 @@ typedef struct LevelnameState
     s16 unk12;
     u8 pad14[0x18 - 0x14];
 } LevelnameState;
-
-extern void* memset(void* dest, int value, u32 size);
-extern u32 GameBit_Get(int gameBit);
-extern int* gameTextGet(int textId);
-
-extern u8 lbl_80320F30[];
 
 undefined4 sidekickball_init(int obj)
 {
@@ -669,13 +652,6 @@ void levelname_hitDetect(void);
 void levelname_release(void);
 
 void levelname_initialise(void);
-
-extern u8 framesThisStep;
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern f32 mathSinf(f32 v);
-extern f32 lbl_803E36E0;
-extern f32 lbl_803E36E4;
-extern f32 lbl_803E36E8;
 
 void levelname_update(int* obj);
 

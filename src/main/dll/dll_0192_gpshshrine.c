@@ -6,6 +6,8 @@
 #include "main/dll/mmshrine/shrine1C2.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
+#include "main/audio/sfx_ids.h"
+#include "main/dll/creator1C4.h"
 
 extern u32 randomGetRange(int min, int max);
 extern undefined8 ObjGroup_RemoveObject();
@@ -16,6 +18,39 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern f32 timeDelta;
 
+extern void ModelLightStruct_free(void* light);
+extern void gameTimerStop(void);
+extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
+extern void objRenderFn_8003b8f4(f32);
+extern void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void* light);
+extern f32 lbl_803E5038;
+extern f32 lbl_803E4FF8;
+extern void fn_80296518(int* player, int a, int b);
+extern u8* mmAlloc(int size, int tag, int p);
+extern int getAngle(f32 dx, f32 dz);
+extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern f32 lbl_803E5000;
+extern f32 lbl_803E5004;
+extern f32 lbl_803E5008;
+extern f32 lbl_803E500C;
+extern f32 lbl_803E5010;
+extern f32 lbl_803E5014;
+extern f32 lbl_803E5018;
+extern f32 lbl_803E501C;
+extern f32 lbl_803E5020;
+extern f32 lbl_803E5024;
+extern f32 lbl_803E5028;
+extern f32 mathSinf(f32 angle);
+extern void* ObjGroup_GetObjects();
+extern int mapGetDirIdx(int a);
+extern int unlockLevel(int a, int b, int c);
+extern void gameTimerInit(int a, int b);
+extern void timerSetToCountUp(void);
+extern int isGameTimerDisabled(void);
+extern int Obj_FreeObject(int obj);
+extern f32 lbl_803E503C;
+extern f32 lbl_803E5040;
+
 void gpsh_shrine_hitDetect(void)
 {
 }
@@ -23,13 +58,6 @@ void gpsh_shrine_hitDetect(void)
 int ecsh_creator_getExtraSize(void);
 int gpsh_shrine_getExtraSize(void) { return 0x18; }
 int gpsh_shrine_getObjectTypeId(void) { return 0x0; }
-
-extern void ModelLightStruct_free(void* light);
-extern void gameTimerStop(void);
-extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
-extern void objRenderFn_8003b8f4(f32);
-extern void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void* light);
-extern f32 lbl_803E5038;
 
 void gpsh_shrine_free(int* obj)
 {
@@ -77,10 +105,6 @@ void gpsh_shrine_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
         objParticleFn_80099d84(obj, lbl_803E5038, 7, *(f32*)&lbl_803E5038, state[0]);
     }
 }
-
-extern f32 lbl_803E4FF8;
-
-extern void fn_80296518(int* player, int a, int b);
 
 typedef struct EcshShrineByte15
 {
@@ -140,23 +164,6 @@ int gpsh_shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-extern u8* mmAlloc(int size, int tag, int p);
-
-extern int getAngle(f32 dx, f32 dz);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
-extern f32 lbl_803E5000;
-extern f32 lbl_803E5004;
-extern f32 lbl_803E5008;
-extern f32 lbl_803E500C;
-extern f32 lbl_803E5010;
-extern f32 lbl_803E5014;
-extern f32 lbl_803E5018;
-extern f32 lbl_803E501C;
-extern f32 lbl_803E5020;
-extern f32 lbl_803E5024;
-extern f32 lbl_803E5028;
-extern f32 mathSinf(f32 angle);
 
 void fn_801C70F0(s16* obj)
 {
@@ -223,14 +230,6 @@ void fn_801C70F0(s16* obj)
     }
 }
 
-#include "main/audio/sfx_ids.h"
-#include "main/obj_placement.h"
-#include "main/game_object.h"
-#include "main/dll/creator1C4.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
-#include "main/screen_transition.h"
-
 typedef struct GpshShrineState
 {
     u8 pad0[0x4 - 0x0];
@@ -242,17 +241,6 @@ typedef struct GpshShrineState
     u8 unk14;
     u8 pad15[0x18 - 0x15];
 } GpshShrineState;
-
-extern void* ObjGroup_GetObjects();
-
-extern int mapGetDirIdx(int a);
-extern int unlockLevel(int a, int b, int c);
-extern void gameTimerInit(int a, int b);
-extern void timerSetToCountUp(void);
-extern int isGameTimerDisabled(void);
-extern int Obj_FreeObject(int obj);
-extern f32 lbl_803E503C;
-extern f32 lbl_803E5040;
 
 void gpsh_shrine_update(int obj)
 {

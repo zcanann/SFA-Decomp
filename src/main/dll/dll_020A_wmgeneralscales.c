@@ -20,6 +20,9 @@ extern f32 lbl_803E5EA0;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void ObjLink_DetachChild(int* parent, int* child);
 
+extern f32 lbl_803E5EA4;
+extern void objRenderFn_8003b8f4(f32);
+
 int wmgeneralscales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     f32* state;
@@ -137,9 +140,6 @@ void wmgeneralscales_free(int* obj)
     int* p = (int*)obj[0xc8 / 4];
     if (p != NULL) ObjLink_DetachChild(obj, p);
 }
-
-extern f32 lbl_803E5EA4;
-extern void objRenderFn_8003b8f4(f32);
 
 void wmgeneralscales_init(int* obj)
 {

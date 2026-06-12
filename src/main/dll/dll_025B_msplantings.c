@@ -64,6 +64,30 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803E5248;
 extern f32 lbl_803E524C;
 
+extern void objRenderFn_8003b8f4(f32);
+extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
+extern f32 timeDelta;
+extern int Obj_GetPlayerObject(void);
+extern void Sfx_PlayFromObject(int obj, int id);
+extern f32 getXZDistance(f32 * a, f32 * b);
+extern int getTrickyObject(void);
+extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
+extern f32 lbl_803E45DC;
+extern f32 lbl_803E45F0;
+extern f32 lbl_803E45F4;
+extern f32 lbl_803E45F8;
+extern f32 lbl_803E45FC;
+extern f32 lbl_803E4600;
+extern f32 lbl_803E4604;
+extern f32 lbl_803E4608;
+extern int Obj_AllocObjectSetup(int size, int type);
+extern f32 lbl_803E45D8;
+extern f32 lbl_803E45E0;
+extern f32 lbl_803E45E4;
+extern f32 mathSinf(f32 x);
+extern void fn_8003B608(int r, int g, int b);
+extern void objSetSlot(void* obj, int slot);
+
 void FUN_801a8f88(void)
 {
     int iVar1;
@@ -252,8 +276,6 @@ int MoonSeedPlantingSpot_getExtraSize(void) { return 0x18; }
 int MoonSeedPlantingSpot_getObjectTypeId(void) { return 0x1; }
 int ccgasvent_getExtraSize(void);
 
-extern void objRenderFn_8003b8f4(f32);
-
 void MoonSeedPlantingSpot_free(int x) { ObjGroup_RemoveObject(x, 0x2e); }
 void ccgasvent_free(int x);
 
@@ -263,25 +285,6 @@ int MoonSeedPlantingSpot_SeqFn(int obj)
     *(u8*)(obj + 1) = (u8)((uint) * (u8*)(obj + 1) | 1);
     return 0;
 }
-
-extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
-
-extern f32 timeDelta;
-extern int Obj_GetPlayerObject(void);
-extern void Sfx_PlayFromObject(int obj, int id);
-
-extern f32 getXZDistance(f32 * a, f32 * b);
-
-extern int getTrickyObject(void);
-extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
-extern f32 lbl_803E45DC;
-extern f32 lbl_803E45F0;
-extern f32 lbl_803E45F4;
-extern f32 lbl_803E45F8;
-extern f32 lbl_803E45FC;
-extern f32 lbl_803E4600;
-extern f32 lbl_803E4604;
-extern f32 lbl_803E4608;
 
 void MoonSeedPlantingSpot_update(int obj)
 {
@@ -436,8 +439,6 @@ void MoonSeedPlantingSpot_update(int obj)
     }
 }
 
-extern int Obj_AllocObjectSetup(int size, int type);
-
 int MoonSeedPlantingSpot_setScale(int* obj, int arg)
 {
     int* sub;
@@ -477,12 +478,6 @@ int MoonSeedPlantingSpot_setScale(int* obj, int arg)
     return ret;
 }
 
-extern f32 lbl_803E45D8;
-extern f32 lbl_803E45E0;
-extern f32 lbl_803E45E4;
-extern f32 mathSinf(f32 x);
-extern void fn_8003B608(int r, int g, int b);
-
 void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     u8* inner = ((GameObject*)p1)->extra;
@@ -516,5 +511,3 @@ void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visi
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E45DC);
     }
 }
-
-extern void objSetSlot(void* obj, int slot);

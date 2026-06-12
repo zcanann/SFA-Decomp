@@ -7,6 +7,19 @@
 extern void objRenderFn_8003b8f4(f32 alpha);
 extern f32 lbl_803E4348;
 
+extern int* gCarryableInterface; /* carryable-object interface singleton */
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+extern u8* mapGetBlock(int idx);
+extern u8* mapBlockFn_800606ec(void* block, int idx);
+extern int mapBlockFn_80060678(void* entry);
+extern u8* fn_8006070C(void* block, int idx);
+extern int GameBit_Get(int bit);
+extern void GameBit_Set(int bit, int val);
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern int lbl_803DDB18;
+extern int timerCountDown(void* p);
+extern void objSetSlot(int* obj, int slot);
+
 int blasted_getExtraSize(void)
 {
     return 0x14;
@@ -33,14 +46,6 @@ void blasted_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         objRenderFn_8003b8f4(lbl_803E4348);
     }
 }
-
-extern int* gCarryableInterface; /* carryable-object interface singleton */
-
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
-extern u8* mapGetBlock(int idx);
-extern u8* mapBlockFn_800606ec(void* block, int idx);
-extern int mapBlockFn_80060678(void* entry);
-extern u8* fn_8006070C(void* block, int idx);
 
 /* EN v1.0 0x801A27B8  size: 280b  Flags every trigger/volume in the map
  * block under the object that carries the given event id: sets bits 0..1
@@ -88,11 +93,6 @@ int fn_801A27B8(int obj, int id)
     return 1;
 }
 #pragma dont_inline reset
-
-extern int GameBit_Get(int bit);
-extern void GameBit_Set(int bit, int val);
-extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern int lbl_803DDB18;
 
 typedef struct BlastedTargetSetup
 {
@@ -206,8 +206,6 @@ void blasted_update(int obj)
     }
 }
 
-extern int timerCountDown(void* p);
-
 /* Tail of the TU (0x801A2AF8..0x801A2BDC) - formerly the head of
  * gasventControl.c. */
 
@@ -220,8 +218,6 @@ typedef struct BlastedState
     u8 unk6E4;
     u8 pad6E5[0x6E8 - 0x6E5];
 } BlastedState;
-
-extern void objSetSlot(int* obj, int slot);
 
 void blasted_init(int obj, int placement)
 {

@@ -22,6 +22,14 @@ extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 
+extern int Sfx_PlayFromObject(int obj, int sfx);
+extern int* getTrickyObject(void);
+extern void objRenderFn_80041018(int* obj);
+extern EffectInterface** gPartfxInterface;
+extern f32 lbl_803E4880;
+extern f32 lbl_803E4884;
+extern f32 lbl_803E4888;
+
 int dimicewall_getExtraSize(void) { return 0x2; }
 int dimbarrier_getExtraSize(void);
 
@@ -50,8 +58,6 @@ int fn_801B17F4(int obj, int delta)
  * present in the trigger list, latching the gamebit. */
 void dimgate_update(int* obj);
 
-extern int Sfx_PlayFromObject(int obj, int sfx);
-
 /* dimbarrier_update: while a live type-470 object is in the list, count down the
  * arm timer; on expiry fade the barrier out and latch its gamebit. */
 
@@ -60,13 +66,6 @@ extern int Sfx_PlayFromObject(int obj, int sfx);
 
 /* DIMwooddoor_updateFallingDebris: integrate the falling debris under gravity, spin it, and on
  * contact (or scripted trigger) fire the explosion and start the despawn timer. */
-
-extern int* getTrickyObject(void);
-extern void objRenderFn_80041018(int* obj);
-extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E4880;
-extern f32 lbl_803E4884;
-extern f32 lbl_803E4888;
 
 /* dimicewall_update: on shatter, emit two snow particle bursts and latch the
  * gamebit; otherwise let Tricky push through it. */

@@ -1,6 +1,9 @@
 /* DLL 0x288 — SP drape object [801E9328-801E9344) */
 #include "main/dll/DR/dll_0287_spscarab.h"
 #include "main/dll/shwgpipe_struct.h"
+#include "main/objanim_internal.h"
+#include "main/game_object.h"
+#include "main/dll/DR/DRsimplehuman.h"
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
@@ -29,6 +32,25 @@ ObjectDescriptor gSPScarabObjDescriptor = {
     spscarab_getExtraSize,
 };
 
+extern void Sfx_PlayFromObject(int obj, int sfx);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern void Camera_GetCurrentViewSlot(void);
+extern f32 lbl_803DC0B0;
+extern f32 lbl_803DC0B4;
+extern byte framesThisStep;
+extern f32 lbl_803E5AA0;
+extern f32 lbl_803E5AA4;
+extern f32 lbl_803E5AA8;
+extern f32 lbl_803E5AAC;
+extern f32 lbl_803E5AB0;
+extern f32 lbl_803E5AB4;
+extern f32 lbl_803E5AB8;
+extern f32 lbl_803E5ABC;
+extern f32 lbl_803E5AC0;
+extern f32 lbl_803E5AC4;
+extern f32 lbl_803E5AC8;
+extern f32 lbl_803E5ACC;
+
 int spdrape_getExtraSize(void)
 {
     return 0x18;
@@ -51,10 +73,6 @@ void spdrape_hitDetect(void)
 {
 }
 
-#include "main/objanim_internal.h"
-#include "main/game_object.h"
-#include "main/dll/DR/DRsimplehuman.h"
-
 typedef struct SpdrapeObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -72,21 +90,6 @@ typedef struct SpdrapeState
     u8 unk16;
     u8 pad17[0x18 - 0x17];
 } SpdrapeState;
-
-extern void Sfx_PlayFromObject(int obj, int sfx);
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern void Camera_GetCurrentViewSlot(void);
-extern f32 lbl_803DC0B0;
-extern f32 lbl_803DC0B4;
-extern byte framesThisStep;
-extern f32 lbl_803E5AA0;
-extern f32 lbl_803E5AA4;
-extern f32 lbl_803E5AA8;
-extern f32 lbl_803E5AAC;
-extern f32 lbl_803E5AB0;
-extern f32 lbl_803E5AB4;
-extern f32 lbl_803E5AB8;
-extern f32 lbl_803E5ABC;
 
 void spdrape_update(int obj)
 {
@@ -196,11 +199,6 @@ void spdrape_initialise(void)
 }
 
 void spitembeam_free(void);
-
-extern f32 lbl_803E5AC0;
-extern f32 lbl_803E5AC4;
-extern f32 lbl_803E5AC8;
-extern f32 lbl_803E5ACC;
 
 void spdrape_init(int* obj, u8* def)
 {

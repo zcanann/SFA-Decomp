@@ -67,6 +67,15 @@ extern f32 lbl_803E6A20;
 extern f32 lbl_803E6A24;
 extern f32 lbl_803E6A80;
 
+extern f32 lbl_803E5D78;
+extern void Obj_SetActiveModelIndex(int* obj, int idx);
+extern f32 timeDelta;
+extern void objRenderFn_8003b8f4(f32);
+extern int GameBit_Get(int id);
+extern int Obj_GetPlayerObject(void);
+extern f32 lbl_803E5D80;
+extern f32 lbl_803E5DC0;
+
 void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
@@ -206,8 +215,6 @@ void FUN_801f2b94(short* param_1)
     return;
 }
 
-extern f32 lbl_803E5D78;
-
 void dll_1FF_free_nop(void)
 {
 }
@@ -224,14 +231,8 @@ void dll_1FF_initialise_nop(void)
 {
 }
 
-extern void Obj_SetActiveModelIndex(int* obj, int idx);
-
-extern f32 timeDelta;
-
 int dll_1FF_getExtraSize_ret_8(void) { return 0x8; }
 int dll_200_getExtraSize_ret_40(void);
-
-extern void objRenderFn_8003b8f4(f32);
 
 int dll_1FF_getObjectTypeId(int* obj)
 {
@@ -249,14 +250,9 @@ void dll_1FF_init(s16* a, s8* b)
 
 void WM_colrise_init(s16* a, s8* b);
 
-extern int GameBit_Get(int id);
-
-extern int Obj_GetPlayerObject(void);
-
 /* dll_1FF_render: when obj->_f8 implies
  * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
  * based on obj->_b4 == -1, then call objRenderFn_8003b8f4. */
-extern f32 lbl_803E5D80;
 
 void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
@@ -289,7 +285,6 @@ void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 /* dll_200_render: when visible != 0 and
  * gMapEventInterface vtable[0x40] applied to obj->_ac returns 4, gate on
  * GameBit_Get(0x2bd); else render directly via objRenderFn_8003b8f4. */
-extern f32 lbl_803E5DC0;
 
 void dll_200_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
 

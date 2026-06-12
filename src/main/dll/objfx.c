@@ -6,6 +6,11 @@ extern f32 lbl_8030F9D8[];
 extern s16 lbl_803DB788[4];
 extern f32 fcos16(u16 angle);
 
+extern u8 lbl_8030FA30[];
+extern f32 lbl_803DF39C;
+extern f32 lbl_803DF388;
+extern f32 lbl_803DF38C;
+
 void WM_newcrystalFn_800969b0(void* obj, s16* state, u8 flags, f32 period, f32 xMul, f32 yMul, f32 xOff, f32 yOff)
 {
     PartfxParams params;
@@ -983,9 +988,6 @@ void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 fextra, void* li
     }
 }
 
-extern u8 lbl_8030FA30[];
-extern f32 lbl_803DF39C;
-
 void objLightFn_8009a1dc(void* obj, f32 scale, void* origin, u8 type, void* light)
 {
     u8 args[40];
@@ -1236,10 +1238,6 @@ void spawnExplosion(u8* src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 d
         Obj_SetupObject(obj, 5, ((ObjAnimComponent*)src)->mapEventSlot, -1, 0);
     }
 }
-
-
-extern f32 lbl_803DF388;
-extern f32 lbl_803DF38C;
 
 void fn_80098B18(void* obj, f32 scale, int type, int count, int mode, f32* vec)
 {

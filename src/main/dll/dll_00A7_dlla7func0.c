@@ -21,6 +21,8 @@ extern f32 lbl_803E1580;
 extern f32 lbl_803E1584;
 extern f32 lbl_803E1588;
 
+extern u32 randomGetRange(int min, int max);
+
 void dll_A7_func03(short* sourceObj, int variant, u8* posSource, uint flags, undefined4 arg5,
                    uint* extraArgs)
 {
@@ -210,8 +212,6 @@ void dll_A7_func03(short* sourceObj, int variant, u8* posSource, uint flags, und
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 8, tab, 4, &tab[0x50], 0x5e0, 0);
 }
-
-extern u32 randomGetRange(int min, int max);
 
 void dll_A6_func03(short* sourceObj, int variant, u8* posSource, uint flags);
 

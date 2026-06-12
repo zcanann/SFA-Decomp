@@ -45,6 +45,8 @@ typedef struct ExplodeanimatorPlacement
     u8 pad36[0x38 - 0x36];
 } ExplodeanimatorPlacement;
 
+extern f32 lbl_803E4020;
+
 void explodeanimator_render(void)
 {
 }
@@ -60,8 +62,6 @@ void explodeanimator_release(void)
 void explodeanimator_initialise(void)
 {
 }
-
-extern f32 lbl_803E4020;
 
 void explodeanimator_update(int* obj)
 {

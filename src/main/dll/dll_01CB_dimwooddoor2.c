@@ -90,6 +90,19 @@ extern f32 lbl_803E5678;
 extern f32 lbl_803E567C;
 extern f32 lbl_803E569C;
 
+extern void textureFree(int tex);
+extern f32 lbl_803E49D0;
+extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
+extern f32 lbl_803E49D4;
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern f32 lbl_803E49D8;
+extern f32 lbl_803E49DC;
+extern f32 lbl_803E49E0;
+extern f32 lbl_803E49E4;
+extern int Obj_IsLoadingLocked(void);
+
 void FUN_801b3de4(undefined4 param_1, uint param_2)
 {
     (*gObjectTriggerInterface)->runSequence((param_2 ^ 1) + 2, (void*)param_1, -1);
@@ -192,8 +205,6 @@ LAB_801b44d4:
     FUN_80286888();
     return;
 }
-
-extern void textureFree(int tex);
 
 void explosion_release(uint obj);
 
@@ -371,9 +382,6 @@ int dimwooddoor2_getExtraSize(void) { return 0xc; }
 int dimwooddoor2_getObjectTypeId(void) { return 0x0; }
 int dll_1CE_getExtraSize(void);
 
-extern f32 lbl_803E49D0;
-extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
-
 #pragma scheduling off
 #pragma peephole off
 void dimwooddoor2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -386,7 +394,6 @@ void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
-extern f32 lbl_803E49D4;
 
 /* dimmagicbridge_update: advance texture phase and bridge vertex wave, then
  * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
@@ -420,20 +427,12 @@ void dll_1CE_init(u8* obj, u8* params);
 
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
-extern u8 framesThisStep;
 #pragma dont_inline on
 #pragma dont_inline reset
 
 /* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
  * every 16 frames, and ramp each active slot's alpha toward full; then update
  * the animated bridge mesh. */
-
-extern f32 timeDelta;
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern f32 lbl_803E49D8;
-extern f32 lbl_803E49DC;
-extern f32 lbl_803E49E0;
-extern f32 lbl_803E49E4;
 
 /* EN v1.0 0x801B5804  size: 380b  dimwooddoor2_update: advance the door's
  * shake anim and decay its wobble; while idle near map-cue 0x338 bleed off
@@ -486,7 +485,5 @@ void dimwooddoor2_update(int* obj)
         }
     }
 }
-
-extern int Obj_IsLoadingLocked(void);
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);

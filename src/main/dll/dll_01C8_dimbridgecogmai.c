@@ -25,6 +25,12 @@ extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 
+extern unsigned long GameBit_Set(int eventId, int value);
+extern f32 lbl_803E4900;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E490C;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+
 void dimbridgecogmai_hitDetect(void)
 {
 }
@@ -35,14 +41,9 @@ void dimbridgecogmai_initialise(void)
 
 void dimdismountpoint_hitDetect(void);
 
-extern unsigned long GameBit_Set(int eventId, int value);
-
 int dimbridgecogmai_getExtraSize(void) { return 0x1; }
 int dimbridgecogmai_getObjectTypeId(void) { return 0x0; }
 int dimdismountpoint_getExtraSize(void);
-
-extern f32 lbl_803E4900;
-extern void objRenderFn_8003b8f4(f32);
 
 void dimbridgecogmai_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -72,8 +73,6 @@ void dimbridgecogmai_init(int* obj, int* def)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
 }
 
-extern f32 lbl_803E490C;
-
 int dimbridgecogmai_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     char* param = *(char**)&((GameObject*)obj)->anim.placementData;
@@ -85,8 +84,6 @@ int dimbridgecogmai_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 void dimbridgecogmai_update(int* obj)
 {

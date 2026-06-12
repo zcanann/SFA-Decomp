@@ -82,6 +82,37 @@ typedef struct HightopFlags3
     u8 lo : 3;
 } HightopFlags3;
 
+extern f32 lbl_803E5B9C;
+extern f32 lbl_803E5B74;
+extern f32 lbl_803E5AF4;
+extern f32 lbl_803E5BA8;
+extern f32 lbl_803E5BAC;
+extern f32 lbl_803E5BB0;
+extern int lbl_803DC0D0;
+extern f32 lbl_803DC0C8;
+extern int lbl_803DC0CC;
+extern int lbl_803DC0D4;
+extern int lbl_8032852C[];
+extern void PSVECNormalize(void* src, void* dst);
+extern f32 PSVECDotProduct(void* a, void* b);
+extern void setMotionBlur(double amount, int p2);
+extern void fn_8009A8C8();
+extern int arrayIndexOf();
+extern f32 lbl_803E5BB4;
+extern f32 lbl_803E5BB8;
+extern f32 lbl_803E5BC0;
+extern f32 lbl_803E5B40;
+extern f32 lbl_803E5BC8;
+extern f32 lbl_803E5BCC;
+extern f32 lbl_803E5BD0;
+extern f32 lbl_803E5BD4;
+extern void Camera_EnableViewYOffset(void);
+extern void CameraShake_SetAllMagnitudes(f32 mag);
+extern void Sfx_SetObjectSfxVolume(f32 ratio, s16* obj, int sfx, int vol);
+extern f32 powfBitEstimate(f32 base, f32 exp);
+extern f32 mathSinf(f32 x);
+extern f32 sqrtf(f32);
+
 void fn_801EAE4C(short* obj, int stateRaw)
 {
     float tickDir;
@@ -257,9 +288,6 @@ void fn_801EB0D4(uint obj, int stateRaw)
     return;
 }
 
-extern f32 lbl_803E5B9C;
-extern f32 lbl_803E5B74;
-
 typedef struct HightopFlags
 {
     u8 resetLatch : 1;
@@ -375,21 +403,6 @@ undefined4 SnowBike_animEventCallback(short* obj, undefined4 arg2, ObjSeqState* 
     return 0;
 }
 
-extern f32 lbl_803E5AF4;
-extern f32 lbl_803E5BA8;
-extern f32 lbl_803E5BAC;
-extern f32 lbl_803E5BB0;
-extern int lbl_803DC0D0;
-extern f32 lbl_803DC0C8;
-extern int lbl_803DC0CC;
-extern int lbl_803DC0D4;
-extern int lbl_8032852C[];
-extern void PSVECNormalize(void* src, void* dst);
-extern f32 PSVECDotProduct(void* a, void* b);
-extern void setMotionBlur(double amount, int p2);
-extern void fn_8009A8C8();
-extern int arrayIndexOf();
-
 void fn_801EB634(int obj, int stateRaw)
 {
     SnowBikeState* st = (SnowBikeState*)stateRaw;
@@ -480,20 +493,6 @@ typedef struct HightopFlagsB
     u8 resetLatch : 1;
     u8 flags : 7;
 } HightopFlagsB;
-
-extern f32 lbl_803E5BB4;
-extern f32 lbl_803E5BB8;
-extern f32 lbl_803E5BC0;
-extern f32 lbl_803E5B40;
-extern f32 lbl_803E5BC8;
-extern f32 lbl_803E5BCC;
-extern f32 lbl_803E5BD0;
-extern f32 lbl_803E5BD4;
-extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 mag);
-extern void Sfx_SetObjectSfxVolume(f32 ratio, s16* obj, int sfx, int vol);
-extern f32 powfBitEstimate(f32 base, f32 exp);
-extern f32 mathSinf(f32 x);
 
 void fn_801EB940(short* obj, int stateRaw)
 {
@@ -610,8 +609,6 @@ void fn_801EB940(short* obj, int stateRaw)
     obj[2] = rotClamped;
     return;
 }
-
-extern f32 sqrtf(f32);
 
 void fn_801EBD60(int obj, int stateRaw)
 {

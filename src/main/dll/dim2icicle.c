@@ -7,22 +7,14 @@
 
 #pragma scheduling on
 #pragma peephole on
-static inline int* DIM2Icicle_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined8 GameBit_Set(int eventId, int value);
 extern int randomGetRange(int min, int max);
 extern uint ObjPath_GetPointModelMtx();
 extern undefined4 ObjPath_GetPointWorldPosition();
-
 extern undefined4 gDIMbossAnimTable[];
 extern undefined4 gDIMbossHitDetectAnimTable[];
 extern void DIM2icicle_spawnBlueWhiteEffect(int* sourceObj, f32* velocity);
 extern void DIM2icicle_createStateLight(int obj, u8 isGreen);
-
 extern int getTrickyObject(void);
 extern undefined4* gBaddieControlInterface;
 extern int gPlayerInterface;
@@ -35,6 +27,61 @@ extern f32 lbl_803E4C44;
 extern f32 lbl_803E4C70;
 extern f32 lbl_803E4C74;
 extern u8 lbl_803259E0[];
+extern void PSMTXMultVec(f32 * mtx, f32 * src, f32 * dst);
+extern void memcpy(void* dst, void* src, int n);
+extern EffectInterface** gPartfxInterface;
+extern const f32 lbl_803E4BCC;
+extern const f32 lbl_803E4C34;
+extern const f32 lbl_803E4C38;
+extern f32 lbl_803E4C3C;
+extern f32 lbl_803E4C40;
+extern f32 lbl_803E4C48;
+extern u8 lbl_803AC97C[];
+extern f32 gDIMbossAnimScratchBase[];
+extern void setShowWorldMapHud(int show);
+extern void warpToMap(int map, int p2);
+extern void getEnvfxAct(int a, int b, int c, int d);
+extern void skyFn_80089710(int id, int enabled, int arg);
+extern void skyFn_800894a8(int id, f32 x, f32 y, f32 z);
+extern void skyFn_800895e0(int id, int red, int green, int blue, int alpha, int arg);
+extern void Sfx_PlayFromObject(int obj, u16 sfxId);
+extern void doRumble(f32 v);
+extern void Camera_EnableViewYOffset(void);
+extern void CameraShake_Start(f32 a, f32 b, f32 c);
+extern void CameraShake_SetAllMagnitudes(f32 mag);
+extern void* gBoneParticleEffectInterface;
+extern int lbl_80325AB8[];
+extern f32 lbl_803E4BC4;
+extern f32 lbl_803E4BF4;
+extern f32 lbl_803E4BF8;
+extern f32 lbl_803E4C4C;
+extern f32 lbl_803E4C50;
+extern f32 lbl_803E4C54;
+extern const f32 lbl_803E4C58;
+extern const f32 lbl_803E4C5C;
+extern f32 lbl_803E4C60;
+extern f32 lbl_803E4C64;
+extern f32 lbl_803E4C68;
+extern f32 lbl_803E4C6C;
+extern int Obj_GetPlayerObject(void);
+extern int fn_80295A04(int player, int p2);
+extern void ObjHits_EnableObject(int obj);
+extern int ObjHits_GetPriorityHit(int obj, int* outId, int* outType, int* outUnk);
+extern void ObjMsg_SendToObject(int to, int msg, int obj, int data);
+extern int* gTitleMenuControlInterfaceCopy;
+extern int* gDIMbossHitEffectResource;
+extern int lbl_803DDB8C;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803E4C10;
+extern u8 lbl_802C2348[];
+extern u8 lbl_803AC994[];
+
+static inline int* DIM2Icicle_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (int*)objAnim->banks[objAnim->bankIndex];
+}
 
 typedef struct IcicleEntry
 {
@@ -52,18 +99,6 @@ typedef struct IcicleState
     u8 pad2[9];
     u8 index;
 } IcicleState;
-
-extern void PSMTXMultVec(f32 * mtx, f32 * src, f32 * dst);
-extern void memcpy(void* dst, void* src, int n);
-extern EffectInterface** gPartfxInterface;
-extern const f32 lbl_803E4BCC;
-extern const f32 lbl_803E4C34;
-extern const f32 lbl_803E4C38;
-extern f32 lbl_803E4C3C;
-extern f32 lbl_803E4C40;
-extern f32 lbl_803E4C48;
-extern u8 lbl_803AC97C[];
-extern f32 gDIMbossAnimScratchBase[];
 
 typedef struct IcicleFxPos
 {
@@ -228,32 +263,6 @@ void fn_801BB598(DIMbossObject* obj, DIMbossRuntime* runtime)
     *(f32*)(state + 0x24) = zero;
     gDIMbossSequenceFlags = gDIMbossSequenceFlags & 0xffffe1ef;
 }
-
-extern void setShowWorldMapHud(int show);
-extern void warpToMap(int map, int p2);
-extern void getEnvfxAct(int a, int b, int c, int d);
-extern void skyFn_80089710(int id, int enabled, int arg);
-extern void skyFn_800894a8(int id, f32 x, f32 y, f32 z);
-extern void skyFn_800895e0(int id, int red, int green, int blue, int alpha, int arg);
-extern void Sfx_PlayFromObject(int obj, u16 sfxId);
-extern void doRumble(f32 v);
-extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_Start(f32 a, f32 b, f32 c);
-extern void CameraShake_SetAllMagnitudes(f32 mag);
-extern void* gBoneParticleEffectInterface;
-extern int lbl_80325AB8[];
-extern f32 lbl_803E4BC4;
-extern f32 lbl_803E4BF4;
-extern f32 lbl_803E4BF8;
-extern f32 lbl_803E4C4C;
-extern f32 lbl_803E4C50;
-extern f32 lbl_803E4C54;
-extern const f32 lbl_803E4C58;
-extern const f32 lbl_803E4C5C;
-extern f32 lbl_803E4C60;
-extern f32 lbl_803E4C64;
-extern f32 lbl_803E4C68;
-extern f32 lbl_803E4C6C;
 
 typedef struct IcicleWarpFlags
 {
@@ -440,20 +449,6 @@ void warpDarkIceMines_801bbb44(int obj, int stateRaw)
     }
     gDIMbossSequenceFlags = gDIMbossSequenceFlags & 0xa1ff0;
 }
-
-extern int Obj_GetPlayerObject(void);
-extern int fn_80295A04(int player, int p2);
-extern void ObjHits_EnableObject(int obj);
-extern int ObjHits_GetPriorityHit(int obj, int* outId, int* outType, int* outUnk);
-extern void ObjMsg_SendToObject(int to, int msg, int obj, int data);
-extern int* gTitleMenuControlInterfaceCopy;
-extern int* gDIMbossHitEffectResource;
-extern int lbl_803DDB8C;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern f32 lbl_803E4C10;
-extern u8 lbl_802C2348[];
-extern u8 lbl_803AC994[];
 
 typedef struct IcicleHitDesc
 {

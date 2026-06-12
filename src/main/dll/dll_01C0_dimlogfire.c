@@ -10,6 +10,9 @@
 #include "main/dll/DIM/DIMcannon.h"
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/objseq.h"
+#include "main/effect_interfaces.h"
+#include "main/dll/DIM/DIMlavasmash.h"
+#include "main/objanim_internal.h"
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
@@ -61,12 +64,33 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
     imicepillar_getExtraSize,
 };
 
+extern u32 lbl_803DDB48;
+extern void objRenderFn_8003b8f4(f32);
+extern void Music_Trigger(int id, int p2);
+extern f32 timeDelta;
+extern void ModelLightStruct_free(void* light);
+extern void Sfx_StopObjectChannel(int* obj, int channel);
+extern void queueGlowRender(int* obj);
+extern f32 lbl_803E4820;
+extern int modelLightStruct_getActiveState(int* p);
+extern undefined4 ObjHits_SetHitVolumeSlot();
+extern void fn_80098B18(int obj, f32 scale, int type, int param_4, int param_5, int param_6);
+extern undefined4 ObjGroup_AddObject();
+extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
+extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
+extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
+extern void modelLightStruct_startColorFade(int light, int param_2, int param_3);
+extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
+extern f32 lbl_803E4824;
+extern f32 lbl_803E4828;
+extern f32 lbl_803E482C;
+extern f32 lbl_803E4830;
+extern f32 lbl_803E4834;
+extern f32 lbl_803E4838;
+extern f32 lbl_803E483C;
+
 int dimlogfire_getExtraSize(void) { return 0x24; }
 int dimlogfire_getObjectTypeId(void) { return 0x1; }
-
-extern u32 lbl_803DDB48;
-
-extern void objRenderFn_8003b8f4(f32);
 
 int fn_801B0784(int obj, int delta)
 {
@@ -74,12 +98,6 @@ int fn_801B0784(int obj, int delta)
     inner[0x1c] = (s8)(inner[0x1c] - delta);
     return inner[0x1c] <= 0;
 }
-
-extern void Music_Trigger(int id, int p2);
-
-extern f32 timeDelta;
-
-extern void ModelLightStruct_free(void* light);
 
 void dimlogfire_free(int* obj, int mode)
 {
@@ -96,8 +114,6 @@ void dimlogfire_free(int* obj, int mode)
         ModelLightStruct_free((void*)inner->light);
     }
 }
-
-extern void Sfx_StopObjectChannel(int* obj, int channel);
 
 int dimlogfire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -136,9 +152,6 @@ int dimlogfire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-extern void queueGlowRender(int* obj);
-extern f32 lbl_803E4820;
-
 void dimlogfire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     DimLogFireState* state;
@@ -169,17 +182,7 @@ void dimlogfire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-extern int modelLightStruct_getActiveState(int* p);
-
 /* segment pragma-stack balance (re-split): */
-
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-#include "main/dll/DIM/DIMlavasmash.h"
-#include "main/dll/DIM/dimlogfire.h"
-#include "main/objanim_internal.h"
 
 typedef struct DimlogfirePlacement
 {
@@ -197,23 +200,6 @@ typedef struct DimlogfireObjectDef
     s16 strengthInit;
     s16 unk1E;
 } DimlogfireObjectDef;
-
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern void fn_80098B18(int obj, f32 scale, int type, int param_4, int param_5, int param_6);
-extern undefined4 ObjGroup_AddObject();
-extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
-extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
-extern void modelLightStruct_startColorFade(int light, int param_2, int param_3);
-extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
-
-extern f32 lbl_803E4824;
-extern f32 lbl_803E4828;
-extern f32 lbl_803E482C;
-extern f32 lbl_803E4830;
-extern f32 lbl_803E4834;
-extern f32 lbl_803E4838;
-extern f32 lbl_803E483C;
 
 void dimlogfire_update(int obj)
 {

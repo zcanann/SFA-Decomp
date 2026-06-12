@@ -1,6 +1,9 @@
 /* DLL 0x1AD - SHThorntail [801D58E4-801D5ED4) */
 #include "main/dll/SH/SHroot.h"
 #include "main/dll/SH/SHthorntail.h"
+#include "main/effect_interfaces.h"
+#include "main/mapEventTypes.h"
+#include "main/objseq.h"
 
 extern void Sfx_PlayFromObject(SHthorntailObject* obj, u16 volumeId);
 extern void Sfx_StopObjectChannel(int obj, u16 volumeId);
@@ -29,6 +32,32 @@ extern SHthorntailDataTables gSHthorntailDataTables;
 #define SHTHORNTAIL_LEVEL_MODE0_LOCOMOTION2_GAMEBIT 0x09E
 #define SHTHORNTAIL_LEVELCONTROL_AUDIO_CHANNEL 0x7F
 #define SHTHORNTAIL_LEVELCONTROL_COLLISION_FLAG 0x40
+
+extern void ObjPath_GetPointWorldPosition(SHthorntailObject* obj, int pointIndex, f32* x, f32* y, f32* z, int param_6);
+extern void objRenderFn_8003b8f4(f32 scale);
+extern void dll_2E_func06(SHthorntailObject* obj, SHthorntailRuntime* runtime, int param_3);
+extern s16 getAngle(f32 deltaX, f32 deltaZ);
+extern undefined4 Obj_GetActiveModel();
+extern undefined4 modelInitBones();
+extern undefined4 ObjGroup_AddObject();
+extern void fn_8003B228(int obj, int collisionShapeState);
+extern int ViewFrustum_IsSphereVisible(f32* pos, f32 radius);
+extern undefined4 dll_2E_func05();
+extern undefined4 dll_2E_func08();
+extern void dll_2E_func03(SHthorntailObject * obj, SHthorntailRuntime * runtime);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern u8 gSHthorntailPathHeaders[0x30];
+extern u8 gSHthorntailPathData[0x4AC];
+extern undefined4 lbl_803E5410;
+extern EffectInterface** gPartfxInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern SHthorntailPathControlInterface** gPathControlInterface;
+extern f32 lbl_803E544C;
+extern f32 lbl_803E5450;
+extern f32 lbl_803E5454;
+extern f32 lbl_803E5458;
+extern f32 lbl_803E545C;
 
 void SHthorntail_updateLevelControlMode1(uint objectId, SHthorntailRuntime* runtime,
                                          SHthorntailConfig* config)
@@ -284,10 +313,6 @@ void SHthorntail_free(SHthorntailObject* obj)
     ObjGroup_RemoveObject((int)obj, 0x4d);
 }
 
-extern void ObjPath_GetPointWorldPosition(SHthorntailObject* obj, int pointIndex, f32* x, f32* y, f32* z, int param_6);
-extern void objRenderFn_8003b8f4(f32 scale);
-extern void dll_2E_func06(SHthorntailObject* obj, SHthorntailRuntime* runtime, int param_3);
-
 void SHthorntail_render(SHthorntailObject* obj)
 {
     SHthorntailRuntime* runtime;
@@ -306,35 +331,6 @@ void SHthorntail_render(SHthorntailObject* obj)
     }
     while (pointIndex < SHTHORNTAIL_RENDER_PATH_POINT_COUNT);
 }
-
-#include "main/dll/SH/SHroot.h"
-#include "main/effect_interfaces.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
-
-extern s16 getAngle(f32 deltaX, f32 deltaZ);
-extern undefined4 Obj_GetActiveModel();
-extern undefined4 modelInitBones();
-extern undefined4 ObjGroup_AddObject();
-extern void fn_8003B228(int obj, int collisionShapeState);
-extern int ViewFrustum_IsSphereVisible(f32* pos, f32 radius);
-extern undefined4 dll_2E_func05();
-extern undefined4 dll_2E_func08();
-extern void dll_2E_func03(SHthorntailObject * obj, SHthorntailRuntime * runtime);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-
-extern u8 gSHthorntailPathHeaders[0x30];
-extern u8 gSHthorntailPathData[0x4AC];
-extern undefined4 lbl_803E5410;
-extern EffectInterface** gPartfxInterface;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern SHthorntailPathControlInterface** gPathControlInterface;
-extern f32 lbl_803E544C;
-extern f32 lbl_803E5450;
-extern f32 lbl_803E5454;
-extern f32 lbl_803E5458;
-extern f32 lbl_803E545C;
 
 #define gSHthorntailPathControlInterface gPathControlInterface
 

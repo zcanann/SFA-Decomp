@@ -26,6 +26,11 @@ extern undefined4 GameBit_Set(int eventId, int value);
 extern u8 framesThisStep;
 
 extern int Obj_GetPlayerObject(void);
+extern f32 lbl_803E3A8C;
+extern f32 lbl_803E3A90;
+extern f32 lbl_803E3A88;
+extern void objRenderFn_8003b8f4(f32);
+
 void portalspelldoor_update(int obj)
 {
     extern int playerHasSpell(int player, int spell);
@@ -113,8 +118,6 @@ int portalspelldoor_getObjectTypeId(void) { return 0x0; }
  * obj+8 with lbl_803E3A8C, derive sub+4 = obj->_a8 * obj+8 * lbl_803E3A90,
  * GameBit-gated bit-set on obj+6 (0x4000) and obj+b0 (0xe000), then
  * latch sub+8 = -1. */
-extern f32 lbl_803E3A8C;
-extern f32 lbl_803E3A90;
 
 void portalspelldoor_init(u8* obj, u8* data)
 {
@@ -133,9 +136,6 @@ void portalspelldoor_init(u8* obj, u8* data)
     }
     sub->openTimer = -1;
 }
-
-extern f32 lbl_803E3A88;
-extern void objRenderFn_8003b8f4(f32);
 
 void portalspelldoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

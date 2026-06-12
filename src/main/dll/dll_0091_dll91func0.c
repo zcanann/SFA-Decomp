@@ -12,6 +12,22 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
+extern u8 lbl_80316FF8[];
+extern u8 lbl_803DB928[8];
+extern f32 lbl_803E11D8;
+extern f32 lbl_803E11DC;
+extern f32 lbl_803E11E0;
+extern f32 lbl_803E11E4;
+extern f32 lbl_803E11E8;
+extern f32 lbl_803E11EC;
+extern f32 lbl_803E11F0;
+extern f32 lbl_803E11F4;
+extern f32 lbl_803E11F8;
+extern f32 lbl_803E11FC;
+extern f32 lbl_803E1200;
+extern f32 lbl_803E1204;
+extern f32 lbl_803E1208;
+
 void dll_91_func01_nop(void)
 {
 }
@@ -44,22 +60,6 @@ typedef struct
     u8 pad1[2]; /* +0x5e */
     GfxCmd entries[32]; /* +0x60 */
 } GfxBuf;
-
-extern u8 lbl_80316FF8[];
-extern u8 lbl_803DB928[8];
-extern f32 lbl_803E11D8;
-extern f32 lbl_803E11DC;
-extern f32 lbl_803E11E0;
-extern f32 lbl_803E11E4;
-extern f32 lbl_803E11E8;
-extern f32 lbl_803E11EC;
-extern f32 lbl_803E11F0;
-extern f32 lbl_803E11F4;
-extern f32 lbl_803E11F8;
-extern f32 lbl_803E11FC;
-extern f32 lbl_803E1200;
-extern f32 lbl_803E1204;
-extern f32 lbl_803E1208;
 
 void dll_91_func03(int sourceObj, int variant, int posSource, uint flags)
 {

@@ -119,6 +119,26 @@ int dbstealerworm_stateHandlerB04(int obj, int p);
 
 int dbstealerworm_stateHandlerB02(int obj, int p);
 
+extern void Obj_RemoveFromUpdateList(int* obj);
+extern void Stack_Free(int* stack);
+extern f32 lbl_803E6390;
+extern int gDBStealerWormStateHandlersA[];
+extern void DBstealerwo_setFuncPtrs_80203c78(void);
+extern int gDBStealerWormStateHandlersB[];
+extern int dbstealerworm_stateHandlerA02();
+extern int dbstealerworm_stateHandlerA04();
+extern int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t);
+extern int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t);
+extern int dbstealerworm_stateHandlerA0A();
+extern int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t);
+extern int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t);
+extern int dbstealerworm_stateHandlerA0D();
+extern int dbstealerworm_stateHandlerA0E();
+extern int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
+extern int dbstealerworm_stateHandlerB05();
+extern int dbstealerworm_stateHandlerB06();
+extern void fn_80202EF0(int obj, int p2);
+
 undefined4
 FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -547,8 +567,6 @@ void dbholecontrol1_initialise(void)
 {
 }
 
-extern void Obj_RemoveFromUpdateList(int* obj);
-
 void dbholecontrol1_update(int* obj)
 {
     extern uint GameBit_Get(int);
@@ -564,8 +582,6 @@ void dbholecontrol1_update(int* obj)
         (*gObjectTriggerInterface)->runSequence(*(s8*)(def + 0x19), obj, -1);
     }
 }
-
-extern void Stack_Free(int* stack);
 
 void dbholecontrol1_init(int* obj, u8* params)
 {
@@ -584,8 +600,6 @@ int dbholecontrol1_getExtraSize(void) { return 0xc; }
 int dbholecontrol1_getObjectTypeId(void) { return 0x0; }
 int dfplevelcontrol_getExtraSize(void);
 
-extern f32 lbl_803E6390;
-
 void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -594,12 +608,8 @@ void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-extern int gDBStealerWormStateHandlersA[];
-
 void dbholecontrol1_free(int x) { extern undefined8 ObjGroup_RemoveObject(); /* #57 */ ObjGroup_RemoveObject(x, 0x1e); }
 void dfplevelcontrol_free(int x);
-
-extern void DBstealerwo_setFuncPtrs_80203c78(void);
 
 int dbstealerworm_stateHandlerB00(int p1, int p2);
 
@@ -660,20 +670,6 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 int dbstealerworm_func0B(int obj, u8 msg, int* out);
 
-extern int gDBStealerWormStateHandlersB[];
-extern int dbstealerworm_stateHandlerA02();
-extern int dbstealerworm_stateHandlerA04();
-extern int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerA0A();
-extern int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerA0D();
-extern int dbstealerworm_stateHandlerA0E();
-extern int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerB05();
-extern int dbstealerworm_stateHandlerB06();
-
 void DBstealerwo_setFuncPtrs_80203c78(void)
 {
     gDBStealerWormStateHandlersA[0] = (int)dbstealerworm_stateHandlerA00;
@@ -701,8 +697,6 @@ void DBstealerwo_setFuncPtrs_80203c78(void)
     gDBStealerWormStateHandlersB[6] = (int)dbstealerworm_stateHandlerB06;
 }
 
-extern void fn_80202EF0(int obj, int p2);
-
 int dbstealerworm_stateHandlerA04(int obj, int param2);
 
 int dbstealerworm_stateHandlerA0E(int obj, int param2);
@@ -728,11 +722,6 @@ int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t);
 int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t);
 
 int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
-
-#include "main/dll/baddie/chuka.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 

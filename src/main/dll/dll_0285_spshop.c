@@ -82,6 +82,14 @@ extern void getEnvfxAct(int obj, int target, int effectId, int flags);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
+extern f32 lbl_803E58E8;
+extern f32 lbl_803E59C8;
+extern int GameBit_Get(int);
+extern void GameBit_Set(int slot, int val);
+extern void ObjGroup_RemoveObject(int* obj, int group);
+extern void ObjGroup_AddObject(int obj, int group);
+extern void Music_Trigger(int a, int b);
+
 void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined2* param_9, int param_10)
@@ -109,14 +117,6 @@ int fn_801E66DC(void);
 
 s32 shop_getStateField1(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x1); }
 s32 shop_setScale(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x0); }
-
-extern f32 lbl_803E58E8;
-extern f32 lbl_803E59C8;
-extern int GameBit_Get(int);
-extern void GameBit_Set(int slot, int val);
-extern void ObjGroup_RemoveObject(int* obj, int group);
-extern void ObjGroup_AddObject(int obj, int group);
-extern void Music_Trigger(int a, int b);
 
 void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

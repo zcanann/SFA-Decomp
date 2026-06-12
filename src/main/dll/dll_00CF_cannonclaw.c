@@ -4,6 +4,7 @@
 #include "main/dll/barrel.h"
 #include "main/dll/scarab.h"
 #include "main/mapEventTypes.h"
+#include "main/objanim.h"
 
 extern undefined4 FUN_80006824();
 extern int FUN_80017730();
@@ -46,6 +47,16 @@ void grimble_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void grimble_update(int obj);
 
 void grimble_init(int obj, int p2, int p3);
+
+extern f32 lbl_803E2F30;
+extern uint GameBit_Get(int eventId);
+extern undefined4 ObjHits_DisableObject();
+extern void getTrickyObject(void);
+extern void* ObjList_FindObjectById(int id);
+extern f32 timeDelta;
+extern f32 lbl_803E2F34;
+extern f32 lbl_803E2F38;
+extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
 
 undefined4
 FUN_801620c0(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
@@ -429,8 +440,6 @@ void grimble_initialiseStateHandlerTables(void)
 #pragma dont_inline reset
 void grimble_initialise(void);
 
-extern f32 lbl_803E2F30;
-
 void grimble_free(int obj);
 
 void grimble_hitDetect(int obj);
@@ -466,20 +475,8 @@ ObjectDescriptor gGrimbleObjDescriptor = {
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/audio/sfx_ids.h"
-#include "main/game_object.h"
-#include "main/objanim.h"
-
-extern uint GameBit_Get(int eventId);
-extern undefined4 ObjHits_DisableObject();
-
 /* Actual cannonclaw_update is 188b -- trigger-once cannon-arm awakener.
  * The 668b "Ghidra body" was misattributed; replaced with the right one. */
-extern void getTrickyObject(void);
-extern void* ObjList_FindObjectById(int id);
-extern f32 timeDelta;
-extern f32 lbl_803E2F34;
-extern f32 lbl_803E2F38;
 
 void cannonclaw_update(u8* obj)
 {
@@ -535,7 +532,6 @@ void cannonclaw_init(s16* dst, void* src)
  * obj->_46 == 0x3fb and obj->_b8->_278 > 1 (by vec3f_distanceSquared from
  * the supplied position vector). Returns NULL if no match. */
 extern void* ObjGroup_GetObjects(int type, int* outCount);
-extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
 
 void* tumbleweedbush_findNearestActive(f32* p_pos);
 

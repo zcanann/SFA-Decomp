@@ -116,6 +116,61 @@ extern f32 lbl_803E4D9C;
 
 #pragma scheduling on
 #pragma peephole on
+extern void Sfx_StopFromObject(void* obj, int sfxId);
+extern void objSetSlot(void* obj, int slot);
+extern int GameBit_Get(int eventId);
+extern f32 lbl_803E40F8;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern CloudActionInterface** gCloudActionInterface;
+extern int* gPlayerShadowInterface;
+extern void OSReport(const char* fmt, ...);
+extern int Obj_GetPlayerObject(void);
+extern void fn_80295918(f32 a, int obj, int b);
+extern void setDrawCloudsAndLights(int v);
+extern void gameFlagFn_8005ce6c(int v);
+extern void setDrawLights(int v);
+extern void fn_8006FC00(int v);
+extern void skyFn_80088c94(int a, int b);
+extern void gameFlagFn_8005cd24(int v);
+extern void timeOfDayFn_80055000(void);
+extern void timeOfDayFn_80055038(void);
+extern int getSkyStructField24C(void);
+extern void skyFn_80088e54(f32 a, int b);
+extern void getEnvfxAct(int obj, int target, int effectId, int flags);
+extern int ObjList_GetObjects(int* first, int* count);
+extern int getTablesBinEntry(int idx);
+extern int getLoadedTexture(int idx);
+extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
+extern void textureFree(int tex);
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern void GameBit_Set(int bit, int val);
+extern int getCurMapLayer(void);
+extern int getTrickyObject(void);
+extern void mapLoadDataFiles(int map);
+extern void loadModelAndAnimTabs(void);
+extern void mapUnload(int map, int flags);
+extern void lockLevel(int a, int b);
+extern void unlockLevel(int a, int b, int c);
+extern void gameTextFn_80125ba4(int id);
+extern int getArwing(void);
+extern void defragMemory(int v);
+extern void timer_addDuration(int timer, int dur);
+extern void envFxFn_800887cc(void);
+extern void goToNextMapLayer(void);
+extern void goToPrevMapLayer(void);
+extern f32 lbl_803E40D8;
+extern f32 lbl_803E40FC;
+extern f32 lbl_803E4100;
+extern int fn_802972A8(void);
+extern int return1_800202BC(void);
+extern int fn_80198B68(int obj, int p2);
+extern void objSeqFn_801992ec(int obj, int target);
+extern void fn_80198DE8(int obj, int target);
+extern void fn_80198A00(int obj, int target);
+extern void objSeqMoveFn_80199188(int obj, int target);
+extern f32 lbl_803E4104;
+extern u8 framesThisStep;
+
 undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                                       undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                                       undefined4 param_9, undefined4 param_10, undefined4 param_11, int param_12,
@@ -1067,11 +1122,6 @@ void Trigger_initialise(void)
 {
 }
 
-extern void Sfx_StopFromObject(void* obj, int sfxId);
-extern void objSetSlot(void* obj, int slot);
-extern int GameBit_Get(int eventId);
-extern f32 lbl_803E40F8;
-
 void Trigger_free(void* obj)
 {
     u8 i;
@@ -1153,8 +1203,6 @@ int Trigger_getExtraSize(void) { return 0xac; }
 int Trigger_getObjectTypeId(void) { return 0x0; }
 int cloudprisoncontrol_getExtraSize(void);
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-
 /* cloudprisoncontrol map-event tables (recovered layout; kept raw int[] - the
  * struct-field form flips MWCC's variable-index/walker addressing, banked).
  * lbl_803AC7D8: registered-target list, 8-byte entries (count lbl_803DDB09):
@@ -1162,47 +1210,7 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
  * lbl_803AC878: deferred-message queue, 12-byte entries (count lbl_803DDB08):
  *   s32 message @0; s32 target @4; s32 data @8. */
 
-extern CloudActionInterface** gCloudActionInterface;
-extern int* gPlayerShadowInterface;
-extern void OSReport(const char* fmt, ...);
-extern int Obj_GetPlayerObject(void);
-extern void fn_80295918(f32 a, int obj, int b);
-extern void setDrawCloudsAndLights(int v);
-extern void gameFlagFn_8005ce6c(int v);
-extern void setDrawLights(int v);
-extern void fn_8006FC00(int v);
-extern void skyFn_80088c94(int a, int b);
-extern void gameFlagFn_8005cd24(int v);
-extern void timeOfDayFn_80055000(void);
-extern void timeOfDayFn_80055038(void);
-extern int getSkyStructField24C(void);
-extern void skyFn_80088e54(f32 a, int b);
-extern void getEnvfxAct(int obj, int target, int effectId, int flags);
 extern int ObjGroup_FindNearestObject(int group, int obj, int p3);
-extern int ObjList_GetObjects(int* first, int* count);
-extern int getTablesBinEntry(int idx);
-extern int getLoadedTexture(int idx);
-extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
-extern void textureFree(int tex);
-extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern void GameBit_Set(int bit, int val);
-extern int getCurMapLayer(void);
-extern int getTrickyObject(void);
-extern void mapLoadDataFiles(int map);
-extern void loadModelAndAnimTabs(void);
-extern void mapUnload(int map, int flags);
-extern void lockLevel(int a, int b);
-extern void unlockLevel(int a, int b, int c);
-extern void gameTextFn_80125ba4(int id);
-extern int getArwing(void);
-extern void defragMemory(int v);
-extern void timer_addDuration(int timer, int dur);
-extern void envFxFn_800887cc(void);
-extern void goToNextMapLayer(void);
-extern void goToPrevMapLayer(void);
-extern f32 lbl_803E40D8;
-extern f32 lbl_803E40FC;
-extern f32 lbl_803E4100;
 
 void objInterpretSeq(int obj, int p2, int p3, int p4)
 {
@@ -1756,16 +1764,6 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
         GameBit_Set(((TriggerState*)state)->unk80, 1);
     }
 }
-
-extern int fn_802972A8(void);
-extern int return1_800202BC(void);
-extern int fn_80198B68(int obj, int p2);
-extern void objSeqFn_801992ec(int obj, int target);
-extern void fn_80198DE8(int obj, int target);
-extern void fn_80198A00(int obj, int target);
-extern void objSeqMoveFn_80199188(int obj, int target);
-extern f32 lbl_803E4104;
-extern u8 framesThisStep;
 
 void Trigger_hitDetect(int obj)
 {

@@ -123,17 +123,26 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
-static inline int* DIMcannon_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
+extern f32 lbl_803E4788;
+extern void Music_Trigger(int id, int p2);
+extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
+extern void ObjModel_SetBlendChannelWeight(int* model, int channel, f32 weight);
+extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4, lbl_803E4798, lbl_803E4788;
+extern s16 lbl_80323818[], lbl_80323824[];
+extern void mm_free(void* p);
+extern int* objFindTexture(int* obj, int a, int b);
+extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;
+
+static inline int* DIMcannon_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (int*)objAnim->banks[objAnim->bankIndex];
+}
 
 #pragma scheduling on
 #pragma peephole on
@@ -261,8 +270,6 @@ int imspacethruster_getExtraSize(void) { return 0xc; }
 int imspacethruster_getObjectTypeId(void) { return 0x0; }
 int imspacering_getExtraSize(void);
 
-extern f32 lbl_803E4788;
-
 void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void imspacethruster_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -272,13 +279,6 @@ void imspacethruster_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void imspacering_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern void Music_Trigger(int id, int p2);
-
-extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
-extern void ObjModel_SetBlendChannelWeight(int* model, int channel, f32 weight);
-extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4, lbl_803E4798, lbl_803E4788;
-extern s16 lbl_80323818[], lbl_80323824[];
 
 void imspacethruster_init(int* obj, u8* param2)
 {
@@ -326,8 +326,6 @@ void imspacethruster_init(int* obj, u8* param2)
 
 void link_levcontrol_init(int* obj);
 
-extern void mm_free(void* p);
-
 void imspacethruster_free(int obj)
 {
     ImSpaceThrusterState* inner = ((GameObject*)obj)->extra;
@@ -336,10 +334,6 @@ void imspacethruster_free(int obj)
 }
 
 void dimlogfire_free(int* obj, int mode);
-
-extern int* objFindTexture(int* obj, int a, int b);
-
-extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;
 
 void imspacethruster_update(int* obj)
 {

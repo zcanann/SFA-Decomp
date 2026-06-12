@@ -16,6 +16,13 @@ typedef struct DimbarrierPlacement
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 
+extern f32 lbl_803E4860;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E4898;
+extern int Sfx_PlayFromObject(int obj, int sfx);
+extern u8 framesThisStep;
+extern u8 Obj_IsLoadingLocked(void);
+
 void dimbarrier_free(void)
 {
 }
@@ -35,10 +42,6 @@ void dimbarrier_initialise(void)
 int dimsnowball1c2_getObjectTypeId(void);
 int dimbarrier_getExtraSize(void) { return 0x4; }
 int dimbarrier_getObjectTypeId(void) { return 0x0; }
-
-extern f32 lbl_803E4860;
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E4898;
 
 void dimbarrier_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -71,9 +74,6 @@ int fn_801B17F4(int obj, int delta);
 
 /* dimgate_update: open the gate (hitbox state 1->2) once a type-399 object is
  * present in the trigger list, latching the gamebit. */
-
-extern int Sfx_PlayFromObject(int obj, int sfx);
-extern u8 framesThisStep;
 
 /* dimbarrier_update: while a live type-470 object is in the list, count down the
  * arm timer; on expiry fade the barrier out and latch its gamebit. */
@@ -134,8 +134,6 @@ void dimbarrier_update(int* obj)
         }
     }
 }
-
-extern u8 Obj_IsLoadingLocked(void);
 
 /* dimsnowball1c2_update: on a timer, if loading allows and the player is clear,
  * spawn a rolling snowball seeded from the placement params. */

@@ -50,6 +50,11 @@ extern void fn_80296124(int player, void* pos, void* obj, int arg);
 #define SC_TOTEMBOND_EVENT_ORBS_ACTIVE 0x02
 #define SC_TOTEMBOND_EVENT_SET_MAP_MODE 0x10
 
+extern f32 lbl_803E5650;
+extern void objRenderFn_8003b8f4(f32);
+extern void Music_Trigger(int track, int param);
+extern void fn_8011F6D4(int p);
+
 void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* state, f32 radius)
 {
     u8* setup;
@@ -173,17 +178,11 @@ void sc_totembond_initialise(void)
 int sc_totembond_getExtraSize(void) { return 0x28; }
 int sc_totembond_getObjectTypeId(void) { return 0x0; }
 
-extern f32 lbl_803E5650;
-extern void objRenderFn_8003b8f4(f32);
-
 void sc_totembond_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E5650);
 }
-
-extern void Music_Trigger(int track, int param);
-extern void fn_8011F6D4(int p);
 
 void sc_totembond_free(int obj)
 {

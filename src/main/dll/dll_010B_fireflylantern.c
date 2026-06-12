@@ -15,6 +15,14 @@ extern void gameBitDecrement(int eventId);
 extern void GameBit_Set(int eventId, int value);
 
 extern void objRenderFn_8003b8f4(f32);
+extern void* getTrickyObject(void);
+extern void trickyImpress(void* trickyObj);
+extern f32 lbl_803E3AF0;
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int size, int type);
+extern int loadObjectAtObject(int* obj, void* setup);
+extern f32 lbl_803E3AE8;
+
 int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     FireFlyLanternState* state;
@@ -61,9 +69,6 @@ int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 int FireFlyLantern_getExtraSize(void) { return 0x24; }
 int FireFlyLantern_getObjectTypeId(void) { return 0x8; }
 
-extern void* getTrickyObject(void);
-extern void trickyImpress(void* trickyObj);
-
 void FireFlyLantern_free(int obj)
 {
     void* tricky = getTrickyObject();
@@ -74,7 +79,6 @@ void FireFlyLantern_free(int obj)
     ObjGroup_RemoveObject(obj, 15);
 }
 
-extern f32 lbl_803E3AF0;
 void FireFlyLantern_render(void) { objRenderFn_8003b8f4(lbl_803E3AF0); }
 
 void FireFlyLantern_update(int obj)
@@ -168,11 +172,6 @@ void FireFlyLantern_init(int obj, int def)
         }
     }
 }
-
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int size, int type);
-extern int loadObjectAtObject(int* obj, void* setup);
-extern f32 lbl_803E3AE8;
 
 int FireFlyLantern_spawnFireFly(int* obj)
 {

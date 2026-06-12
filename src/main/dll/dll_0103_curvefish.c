@@ -51,8 +51,6 @@ void MagicPlant_update(int obj);
 int MagicPlant_getExtraSize(void);
 int trickywarp_getExtraSize(void);
 int duster_getExtraSize(void);
-int curvefish_getExtraSize(void) { return 0x120; }
-
 STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
 STATIC_ASSERT(sizeof(DusterState) == 0x20);
 STATIC_ASSERT(offsetof(DusterState, moveStepScale) == 0x00);
@@ -69,6 +67,9 @@ STATIC_ASSERT(offsetof(DusterState, active) == 0x1b);
 STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
 STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
 STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
+extern f32 lbl_803E3928;
+
+int curvefish_getExtraSize(void) { return 0x120; }
 
 u32 MagicPlant_getObjectTypeId(MagicPlantObject* obj);
 
@@ -93,8 +94,6 @@ void duster_init(int obj, u8* params);
 void duster_update(int obj);
 
 void MagicPlant_init(int obj, MagicPlantSetup* setup);
-
-extern f32 lbl_803E3928;
 
 typedef struct CurveFishSetup
 {

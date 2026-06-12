@@ -17,6 +17,34 @@ extern f32 lbl_803E3D1C;
 extern f32 lbl_803E3D58;
 extern f32 lbl_803E3D2C;
 
+extern void setPendingMapLoad(int v);
+extern void removeButtonObject(int* obj);
+extern int fn_80296C5C(void);
+extern void fn_80296C6C(int* player, int v);
+extern void AudioStream_StopCurrent(void);
+extern void AudioStream_StartPrepared(void);
+extern void AudioStream_Play(int streamId, void* cb);
+extern int* objFindTexture(int* obj, int idx, int p3);
+extern void cutsceneFadeInOut(int v);
+extern void Obj_FreeObject(int* obj);
+extern void showDeathMenu(void);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern f32 interpolate(f32 cur, f32 target, f32 t);
+extern void Camera_SetFovY(f32 fov);
+extern void Rcp_SetViewFinderHudEnabled(int v);
+extern f32 lbl_803E3D18;
+extern f32 lbl_803E3D20;
+extern f32 lbl_803E3D24;
+extern f32 lbl_803E3D28;
+extern f32 lbl_803E3D30;
+extern f32 lbl_803E3D34;
+extern f32 lbl_803E3D38;
+extern f32 lbl_803E3D3C;
+extern f32 lbl_803E3D40;
+extern f32 lbl_803E3D44;
+extern f32 lbl_803E3D48;
+
 void deathseq_init(int* obj)
 {
     f32* state = ((GameObject*)obj)->extra;
@@ -61,9 +89,6 @@ int deathseq_getExtraSize(void) { return 0x24; }
 int deathseq_getObjectTypeId(void) { return 0x0; }
 int dll_127_getExtraSize_ret_0(void);
 
-extern void setPendingMapLoad(int v);
-extern void removeButtonObject(int* obj);
-
 void deathseq_free(int* obj)
 {
     setScreenTransitionPause(0);
@@ -87,32 +112,6 @@ typedef struct
     u8 camActive : 1; // bit 6
     u8 transitionStarted : 1; // bit 5
 } DeathSeqState;
-
-extern int fn_80296C5C(void);
-extern void fn_80296C6C(int* player, int v);
-extern void AudioStream_StopCurrent(void);
-extern void AudioStream_StartPrepared(void);
-extern void AudioStream_Play(int streamId, void* cb);
-extern int* objFindTexture(int* obj, int idx, int p3);
-extern void cutsceneFadeInOut(int v);
-extern void Obj_FreeObject(int* obj);
-extern void showDeathMenu(void);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern f32 interpolate(f32 cur, f32 target, f32 t);
-extern void Camera_SetFovY(f32 fov);
-extern void Rcp_SetViewFinderHudEnabled(int v);
-extern f32 lbl_803E3D18;
-extern f32 lbl_803E3D20;
-extern f32 lbl_803E3D24;
-extern f32 lbl_803E3D28;
-extern f32 lbl_803E3D30;
-extern f32 lbl_803E3D34;
-extern f32 lbl_803E3D38;
-extern f32 lbl_803E3D3C;
-extern f32 lbl_803E3D40;
-extern f32 lbl_803E3D44;
-extern f32 lbl_803E3D48;
 
 void deathseq_update(int* obj)
 {

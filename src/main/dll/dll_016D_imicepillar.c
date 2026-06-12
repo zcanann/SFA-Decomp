@@ -9,6 +9,13 @@
 #include "main/dll/magiclightstate_struct.h"
 #include "main/dll/crrockfall_types.h"
 #include "main/objseq.h"
+#include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/game_object.h"
+#include "main/mapEvent.h"
+#include "main/dll/DIM/DIMcannon.h"
+#include "main/objanim_internal.h"
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
@@ -64,6 +71,26 @@ extern undefined4 FUN_80017ac8();
 #undef MEVT_QUERY
 
 #pragma scheduling on
+extern void* lbl_803DDB40;
+extern void objRenderFn_8003b8f4(f32);
+extern void warpToMap(int mapId, int flags);
+extern u8 lbl_802C2308[];
+extern void Music_Trigger(int track, int flag);
+extern u8 lbl_803236B8[];
+STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
+STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
+STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
+STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
+STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
+extern undefined4 ObjHits_EnableObject();
+extern undefined4 FUN_8003b818();
+extern undefined4 FUN_80057690();
+extern undefined8 FUN_80286830();
+extern undefined4 FUN_8028687c();
+extern f32 lbl_803E4768;
+extern void Music_Trigger(int id, int p2);
+extern int ObjList_FindObjectById(int id);
+
 void imicepillar_free(void)
 {
 }
@@ -71,14 +98,8 @@ void imicepillar_free(void)
 int imicepillar_getExtraSize(void) { return 0x4; }
 int imicepillar_getObjectTypeId(void) { return 0x0; }
 
-extern void* lbl_803DDB40;
-
-extern void objRenderFn_8003b8f4(f32);
-
 #pragma dont_inline on
 #pragma dont_inline reset
-
-extern void warpToMap(int mapId, int flags);
 
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
@@ -88,23 +109,17 @@ extern void warpToMap(int mapId, int flags);
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 
-extern u8 lbl_802C2308[];
-
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
  * from a small id table, then run the map-event sub-object state callbacks. */
 
 /* dll_16C_syncSubObjectTransform: snapshot the map-event sub-object's transform into the boulder
  * extra block, optionally re-issuing a move on the sub-object first. */
 
-extern void Music_Trigger(int track, int flag);
-
 /* imicemountain_update: lazy-spawn the ambient effects, run the active state,
  * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
 
 /* dll_16C_update: re-link the spawned sub-object, then while active/visible run
  * its move and fade opacity by distance to the player. */
-
-extern u8 lbl_803236B8[];
 
 /* crrockfall_init: derive the per-rock scale from the placement params, size the
  * capsule hitbox from the sub-object bounds, set up render flags, and pick the
@@ -114,38 +129,12 @@ extern u8 lbl_803236B8[];
  * height/distance, trigger the fall when the player is in range, integrate the
  * fall, then shatter (sfx + explosion) on impact. */
 
-#include "main/audio/sfx_ids.h"
-#include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-#include "main/mapEvent.h"
-#include "main/dll/DIM/DIMcannon.h"
-#include "main/objanim_internal.h"
-#include "main/objseq.h"
-
-STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
-
-STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
-
-STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
-
-STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
-
-STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
-
 #pragma scheduling off
 static inline int* DIMcannon_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
-
-extern undefined4 ObjHits_EnableObject();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80057690();
-extern undefined8 FUN_80286830();
-extern undefined4 FUN_8028687c();
 
 #pragma scheduling on
 #pragma peephole on
@@ -265,8 +254,6 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
     imicepillar_getExtraSize,
 };
 
-extern f32 lbl_803E4768;
-
 void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -274,7 +261,3 @@ void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void imanimspacecraft_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern void Music_Trigger(int id, int p2);
-
-extern int ObjList_FindObjectById(int id);

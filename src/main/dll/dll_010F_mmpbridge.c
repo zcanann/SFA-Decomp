@@ -8,6 +8,8 @@
 #include "main/dll/cfguardian.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
+#include "main/dll/alphaanim.h"
+#include "main/objanim_internal.h"
 
 typedef struct MmpBridgePlacement
 {
@@ -29,6 +31,12 @@ extern f32 timeDelta;
 extern int* objFindTexture(int* obj, int a, int b);
 extern u32 GameBit_Get(int eventId);
 
+extern f32 lbl_803E3778;
+extern void fn_80137948(char* fmt, ...);
+extern f32 lbl_803E3798;
+extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
+extern uint GameBit_Get(int eventId);
+
 void mmp_bridge_free(void)
 {
 }
@@ -49,9 +57,7 @@ void mmp_bridge_initialise(void)
 {
 }
 
-extern f32 lbl_803E3778;
 __declspec(section ".sdata") extern char lbl_803DBD90[];
-extern void fn_80137948(char* fmt, ...);
 
 int mmp_bridge_getExtraSize(void) { return 0x0; }
 int mmp_bridge_getObjectTypeId(void) { return 0x0; }
@@ -73,8 +79,6 @@ void mmp_bridge_init(int* obj)
         ObjHits_EnableObject((int)obj);
     }
 }
-
-extern f32 lbl_803E3798;
 
 void mmp_bridge_update(int* obj)
 {
@@ -99,16 +103,7 @@ void mmp_bridge_update(int* obj)
     }
 }
 
-extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
-
 /* segment pragma-stack balance (re-split): */
-
-#include "main/dll/alphaanim.h"
-#include "main/game_object.h"
-#include "main/objanim_internal.h"
-#include "main/objseq.h"
-
-extern uint GameBit_Get(int eventId);
 
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read

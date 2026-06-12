@@ -25,6 +25,12 @@ extern f32 FLOAT_803e4840;
 extern f32 FLOAT_803e4844;
 extern f32 FLOAT_803e4848;
 
+extern f32 timeDelta;
+extern f32 lbl_803E3B68;
+extern f32 lbl_803E3B6C;
+extern int fn_80295C40(int obj);
+extern void Obj_FreeObject(int obj);
+
 undefined4
 FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -303,11 +309,6 @@ void flammablevine_release(void);
 int coldwatercontrol_getExtraSize(void) { return 0x8; }
 int infopoint_getExtraSize(void);
 
-extern f32 timeDelta;
-
-extern f32 lbl_803E3B68;
-extern f32 lbl_803E3B6C;
-extern int fn_80295C40(int obj);
 #pragma scheduling off
 #pragma peephole off
 void coldwatercontrol_update(int obj)
@@ -357,7 +358,6 @@ void coldwatercontrol_init(int obj)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
 }
 
-extern void Obj_FreeObject(int obj);
 void landed_arwing_free(int obj);
 
 #pragma dont_inline on

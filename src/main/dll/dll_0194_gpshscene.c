@@ -18,6 +18,8 @@ extern void objRenderFn_8003b8f4(f32);
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
+extern f32 lbl_803E5058;
+
 void gpsh_scene_free(void)
 {
 }
@@ -43,8 +45,6 @@ void ecsh_cup_hitDetect(void);
 int gpsh_scene_getExtraSize(void) { return 0x0; }
 int gpsh_scene_getObjectTypeId(void) { return 0x0; }
 int ecsh_cup_getExtraSize(void);
-
-extern f32 lbl_803E5058;
 
 void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

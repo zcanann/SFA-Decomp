@@ -16,6 +16,7 @@ extern undefined4 GameBit_Set(int eventId, int value);
 #include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMsnowball.h"
+#include "main/dll/SC/SCtotemlogpuz.h"
 
 extern undefined4 FUN_8008112c();
 
@@ -23,6 +24,11 @@ extern f32 lbl_803E530C;
 extern f32 lbl_803E5310;
 extern f32 lbl_803E5314;
 extern f32 lbl_803E5360;
+
+extern void* fn_802972A8(void* obj);
+extern int mapGetDirIdx(int a);
+extern void lockLevel(int idx, int flag);
+extern f32 lbl_803E46A8;
 
 void FUN_801aaa6c(double param_1, int param_2, int param_3)
 {
@@ -84,10 +90,6 @@ int cclightfoot_getExtraSize(void);
  * id=1, increments gbit 0xa9, and latches state2[0x6] bit 0. Mirrors
  * the no-mark branches into a shared r0=0/cmpwi end-check via goto to
  * match target's layout. */
-
-extern void* fn_802972A8(void* obj);
-extern int mapGetDirIdx(int a);
-extern void lockLevel(int idx, int flag);
 
 #pragma scheduling off
 void fn_801AC01C(int obj)
@@ -159,7 +161,3 @@ void fn_801AC108(int obj, int param2)
         }
     }
 }
-
-extern f32 lbl_803E46A8;
-
-#include "main/dll/SC/SCtotemlogpuz.h"

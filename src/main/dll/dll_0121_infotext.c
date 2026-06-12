@@ -12,10 +12,16 @@ extern int ObjTrigger_IsSet();
 
 extern void objRenderFn_80041018(int obj);
 
+extern void objSetHintTextIdx(int obj, int idx);
+extern u8 fn_801334E0(void);
+extern void showHelpText(s16 id);
+extern f32 timeDelta;
+extern f32 lbl_803E3C80;
+extern f32 lbl_803E3C84;
+extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
+
 int infotext_getExtraSize(void) { return 0x4; }
 int cctestinfot_getExtraSize(void);
-
-extern void objSetHintTextIdx(int obj, int idx);
 
 void infotext_init(int obj, s8* def)
 {
@@ -27,13 +33,6 @@ void infotext_init(int obj, s8* def)
 }
 
 void cctestinfot_init(int obj, s8* def);
-
-extern u8 fn_801334E0(void);
-extern void showHelpText(s16 id);
-extern f32 timeDelta;
-
-extern f32 lbl_803E3C80;
-extern f32 lbl_803E3C84;
 
 void infotext_update(int obj)
 {
@@ -61,5 +60,3 @@ void infotext_update(int obj)
         objRenderFn_80041018(obj);
     }
 }
-
-extern f32 vec3f_distanceSquared(f32 * a, f32 * b);

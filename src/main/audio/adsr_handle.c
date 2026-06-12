@@ -7,6 +7,8 @@ extern int fn_8027A660(int state);
 extern u8 voiceAdsrDecayTable[];
 extern f32 lbl_803E7848;
 
+extern u16 lbl_8032F618[];
+
 int adsrStartRelease(int state, u32 divisor)
 {
     ADSR_VARS* adsr = (ADSR_VARS*)state;
@@ -60,8 +62,6 @@ int adsrRelease(int state)
     }
     return 0;
 }
-
-extern u16 lbl_8032F618[];
 
 int adsrHandle(int state, u16* out1, u16* out2)
 {

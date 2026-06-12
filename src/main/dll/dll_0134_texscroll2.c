@@ -1,9 +1,19 @@
 #include "main/map_block.h"
 #include "main/dll/mmp_moonrock.h"
 
-
-
 extern uint GameBit_Get(int eventId);
+
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+extern void* mapGetBlock(int idx);
+extern int* getTablesBinEntry(int id);
+extern void* getLoadedTexture(int id);
+extern void* fn_8006070C(void* block, int idx);
+extern void mapTextureScrollSetStep(int slot, int xStep, int yStep, int texWidthFixed, int texHeightFixed,
+                                    int unusedXStep, int unusedYStep, int unusedWidthFixed, int unusedHeightFixed);
+extern int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeightFixed, int unusedXStep,
+                                   int unusedYStep, int unusedWidthFixed, int unusedHeightFixed);
+extern f32 lbl_803E3F30;
+extern void objRenderFn_8003b8f4(f32);
 
 void texscroll2_setScale(TexScroll2Object* obj, s8 scale)
 {
@@ -17,22 +27,11 @@ void texscroll2_setScale(TexScroll2Object* obj, s8 scale)
     state->needsApply = 1;
 }
 
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
-extern void* mapGetBlock(int idx);
-extern int* getTablesBinEntry(int id);
-extern void* getLoadedTexture(int id);
-extern void* fn_8006070C(void* block, int idx);
-extern void mapTextureScrollSetStep(int slot, int xStep, int yStep, int texWidthFixed, int texHeightFixed,
-                                    int unusedXStep, int unusedYStep, int unusedWidthFixed, int unusedHeightFixed);
-extern int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeightFixed, int unusedXStep,
-                                   int unusedYStep, int unusedWidthFixed, int unusedHeightFixed);
-
 typedef struct TexScrollMapBlock
 {
     u8 pad00[0xA2];
     u8 layerCount;
 } TexScrollMapBlock;
-
 
 void texscroll2_applyMapTextureScroll(int obj, TexScroll2State* state)
 {
@@ -131,7 +130,6 @@ void texscroll2_initialise(void)
 {
 }
 
-
 void texscroll2_update(TexScroll2Object* obj)
 {
     TexScroll2State* state;
@@ -171,14 +169,9 @@ void texscroll2_update(TexScroll2Object* obj)
 
 void texscroll_free(void);
 
-
-
-
-
 int texscroll2_getExtraSize(void) { return 0x18; }
 int texscroll2_getObjectTypeId(void) { return 0x0; }
 int texscroll_getExtraSize(void);
-
 
 void texscroll2_init(TexScroll2Object* obj, TexScrollPlacement* placement, int loadFlags)
 {
@@ -196,9 +189,6 @@ void texscroll2_init(TexScroll2Object* obj, TexScrollPlacement* placement, int l
 }
 
 void texscroll_init(TexScrollObject* obj, TexScrollPlacement* placement, int loadFlags);
-
-extern f32 lbl_803E3F30;
-extern void objRenderFn_8003b8f4(f32);
 
 void texscroll2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

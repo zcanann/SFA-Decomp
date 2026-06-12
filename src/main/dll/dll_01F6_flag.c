@@ -51,6 +51,12 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
+extern f32 lbl_803E59A8;
+extern f32 lbl_803E5998;
+extern f32 lbl_803E599C;
+extern f32 lbl_803E59AC;
+extern f32 lbl_803E59B0;
+
 void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined2* param_9, int param_10)
@@ -80,12 +86,6 @@ void SB_ShipGunBroke_free(void);
 int Flag_getExtraSize(void) { return 0x0; }
 int Flag_getObjectTypeId(void) { return 0x0; }
 int SB_ShipGunBroke_getExtraSize(void);
-
-extern f32 lbl_803E59A8;
-extern f32 lbl_803E5998;
-extern f32 lbl_803E599C;
-extern f32 lbl_803E59AC;
-extern f32 lbl_803E59B0;
 
 void Flag_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

@@ -2,6 +2,9 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 
+extern f32 lbl_803E60D0;
+extern f32 lbl_803E60D4;
+
 int dll_21B_getExtraSize_ret_4(void) { return 0x4; }
 
 int dll_21B_getObjectTypeId(void) { return 0x0; }
@@ -21,9 +24,6 @@ void dll_21B_hitDetect_nop(void)
 #define DLL_21B_RESET_BIT 0x4ea
 #define DLL_21B_BIT_SET(bit) ((u32)GameBit_Get(bit) != 0u)
 #define DLL_21B_BIT_CLEAR(bit) ((u32)GameBit_Get(bit) == 0u)
-
-extern f32 lbl_803E60D0;
-extern f32 lbl_803E60D4;
 
 typedef struct Dll21BState
 {

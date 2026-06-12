@@ -54,6 +54,46 @@ extern f32 lbl_803E2050;
 extern f32 lbl_803E2054;
 extern f32 lbl_803E2058;
 
+extern void Obj_FreeObject(int* obj);
+extern u8 lbl_803DD7A9;
+extern u8 lbl_803DD8C8;
+extern s16 lbl_803DD8CA;
+extern f32 lbl_803DD8CC;
+extern u16 lbl_803DD8D0;
+extern u16 curGameText;
+extern u8 lbl_803A9440[];
+extern u8 AudioStream_IsPreparing(void);
+extern void AudioStream_StartPrepared(void);
+extern void AudioStream_Play(int stream, void (*cb)(void));
+extern void gameTextGetBox(int box);
+extern void gameTextFreePhrase(u8 * phrase);
+extern int lbl_8031BF90[];
+extern u8* Obj_AllocObjectSetup(int size, int def);
+extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
+extern f32 lbl_803E1E5C;
+extern f32 lbl_803E205C;
+extern int* getArwing(void);
+extern int arwarwing_getShield(int* arwing);
+extern int arwarwing_getMaxShield(int* arwing);
+extern int arwarwing_getBombCount(int* arwing);
+extern int arwarwing_getCollectedRingCount(int* arwing);
+extern int arwarwing_getRequiredRingCount(int* arwing);
+extern int arwarwing_getScore(int* arwing);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void gameTextShowStr(char* str, int x, int y, int z);
+extern void sprintf(char* buf, char* fmt, ...);
+extern u8 arwingHudVisible;
+extern s16 arwingHudAlpha;
+extern char lbl_803DBB60;
+extern int lbl_803E1E08;
+extern u8 lbl_803E1E0C;
+extern f32 lbl_803E1FA0;
+extern f32 lbl_803E1FAC;
+extern f32 lbl_803E1F9C;
+extern f32 lbl_803E2060;
+extern f32 lbl_803E2064;
+extern f32 lbl_803E2068;
+
 void drawFn_80125424(void)
 {
     s16 alpha;
@@ -220,8 +260,6 @@ void drawFn_80125424(void)
     }
 }
 
-extern void Obj_FreeObject(int* obj);
-
 void fn_80125D04(void)
 {
     int* ptr;
@@ -242,19 +280,6 @@ void fn_80125D04(void)
         ptr++;
     }
 }
-
-extern u8 lbl_803DD7A9;
-extern u8 lbl_803DD8C8;
-extern s16 lbl_803DD8CA;
-extern f32 lbl_803DD8CC;
-extern u16 lbl_803DD8D0;
-extern u16 curGameText;
-extern u8 lbl_803A9440[];
-extern u8 AudioStream_IsPreparing(void);
-extern void AudioStream_StartPrepared(void);
-extern void AudioStream_Play(int stream, void (*cb)(void));
-extern void gameTextGetBox(int box);
-extern void gameTextFreePhrase(u8 * phrase);
 
 #pragma opt_common_subs off
 void gameTextFn_80125ba4(int idx)
@@ -307,12 +332,6 @@ void gameTextFn_80125ba4(int idx)
 }
 #pragma opt_common_subs reset
 
-extern int lbl_8031BF90[];
-extern u8* Obj_AllocObjectSetup(int size, int def);
-extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
-extern f32 lbl_803E1E5C;
-extern f32 lbl_803E205C;
-
 void pauseMenuCreateHeads(void)
 {
     int i;
@@ -351,28 +370,6 @@ void pauseMenuCreateHeads(void)
         defs = defs + 1;
     }
 }
-
-extern int* getArwing(void);
-extern int arwarwing_getShield(int* arwing);
-extern int arwarwing_getMaxShield(int* arwing);
-extern int arwarwing_getBombCount(int* arwing);
-extern int arwarwing_getCollectedRingCount(int* arwing);
-extern int arwarwing_getRequiredRingCount(int* arwing);
-extern int arwarwing_getScore(int* arwing);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShowStr(char* str, int x, int y, int z);
-extern void sprintf(char* buf, char* fmt, ...);
-extern u8 arwingHudVisible;
-extern s16 arwingHudAlpha;
-extern char lbl_803DBB60;
-extern int lbl_803E1E08;
-extern u8 lbl_803E1E0C;
-extern f32 lbl_803E1FA0;
-extern f32 lbl_803E1FAC;
-extern f32 lbl_803E1F9C;
-extern f32 lbl_803E2060;
-extern f32 lbl_803E2064;
-extern f32 lbl_803E2068;
 
 void drawArwingHud(void)
 {

@@ -58,6 +58,17 @@ extern int ObjHits_GetPriorityHit();
 
 #pragma scheduling on
 #pragma peephole on
+extern u32 GameBit_Get(int id);
+extern f32 lbl_803E4B80;
+extern WaterfxInterface** gWaterfxInterface;
+extern f32 lbl_803E4B6C;
+extern f32 lbl_803E4B70;
+extern f32 lbl_803E4B74;
+extern f32 lbl_803E4B78;
+extern f32 lbl_803E4B7C;
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern f32 lbl_803E4B68;
+
 void FUN_801b9cc4(int param_1)
 {
     char* pcVar1;
@@ -96,9 +107,6 @@ void dim2icicle_initialise(void)
 {
 }
 
-extern u32 GameBit_Get(int id);
-extern f32 lbl_803E4B80;
-
 void dim2icicle_init(int obj, s8* p)
 {
     char* inner = ((GameObject*)obj)->extra;
@@ -116,13 +124,6 @@ void dim2icicle_init(int obj, s8* p)
     ((GameObject*)obj)->anim.velocityY = lbl_803E4B80;
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
-
-extern WaterfxInterface** gWaterfxInterface;
-extern f32 lbl_803E4B6C;
-extern f32 lbl_803E4B70;
-extern f32 lbl_803E4B74;
-extern f32 lbl_803E4B78;
-extern f32 lbl_803E4B7C;
 
 void dim2icicle_update(int obj)
 {
@@ -234,8 +235,6 @@ void dim2icicle_update(int obj)
     }
 }
 
-extern void Sfx_StopObjectChannel(int obj, int channel);
-
 void dll_1DB_update(int obj);
 
 /* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
@@ -247,8 +246,6 @@ void dll_1DB_update(int obj);
 int dim2icicle_getExtraSize(void) { return 0xc; }
 int dim2icicle_getObjectTypeId(void) { return 0x0; }
 int dim2lavacontrol_getExtraSize(void);
-
-extern f32 lbl_803E4B68;
 
 void dim2icicle_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

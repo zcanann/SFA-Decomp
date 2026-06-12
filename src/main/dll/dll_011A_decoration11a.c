@@ -22,6 +22,16 @@ extern f32 FLOAT_803e4840;
 extern f32 FLOAT_803e4844;
 extern f32 FLOAT_803e4848;
 
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E3B78;
+extern f32 lbl_803E3B7C;
+extern f32 lbl_803E3B88;
+extern f32 Vec_distance(f32 * a, f32 * b);
+extern void objWorldToLocalPos(f32* out, int obj, f32* pos);
+extern void Model_GetVertexPosition(int* model, int idx, f32* out);
+extern void PSVECScale(f32* dst, f32* src, f32 s);
+extern f32 PSVECMag(f32 * v);
+
 undefined4
 FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -309,9 +319,6 @@ int flammablevine_getExtraSize(void);
 int decoration11a_getExtraSize(void) { return 0x1c; }
 int landed_arwing_getExtraSize(void);
 
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E3B78;
-
 #pragma scheduling off
 #pragma peephole off
 void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -340,14 +347,6 @@ void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut)
 #pragma dont_inline reset
 
 int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-
-extern f32 lbl_803E3B7C;
-extern f32 lbl_803E3B88;
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern void objWorldToLocalPos(f32* out, int obj, f32* pos);
-extern void Model_GetVertexPosition(int* model, int idx, f32* out);
-extern void PSVECScale(f32* dst, f32* src, f32 s);
-extern f32 PSVECMag(f32 * v);
 
 #pragma peephole off
 void decoration11a_hitDetect(int obj)

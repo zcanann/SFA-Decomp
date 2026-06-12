@@ -3,7 +3,6 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 
-
 extern void* fn_80296118(void* p);
 extern f32 Vec_xzDistance(void* a, void* b);
 extern int atan2_8002178c(f32 dx, f32 dz);
@@ -20,6 +19,35 @@ extern const char sTrickyShouldNeverStopCirclingError[];
 
 #pragma dont_inline on
 #pragma opt_common_subs off
+extern void trickyDebugPrint(char* fmt, ...);
+extern void* trickyFindNearestUsableBaddie(void* p, f32 r, int p3);
+extern void objAnimFn_8013a3f0(int* obj, int anim, f32 p3, int p4);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int size, int id);
+extern int Obj_SetupObject(int o, int p2, int p3, int p4, int p5);
+extern void Sfx_PlayFromObject(int* obj, int sfx);
+extern void Sfx_AddLoopedObjectSound(int* obj, int sfx);
+extern void Sfx_RemoveLoopedObjectSound(int* obj, int sfx);
+extern void objSetAnimSpeedTo1(int o);
+extern int Sfx_IsPlayingFromObjectChannel(int* obj, int ch);
+extern void objAudioFn_800393f8(int* obj, void* p2, int sfx, int p4, int p5, int p6);
+extern f32 getXZDistance(void* a, void* b);
+extern char lbl_8031D2E8[];
+extern f32 timeDelta;
+extern f32 lbl_803E23DC;
+extern f32 lbl_803E2410;
+extern f32 lbl_803E2414;
+extern f32 lbl_803E2418;
+extern f32 lbl_803E243C;
+extern f32 lbl_803E2440;
+extern f32 lbl_803E2444;
+extern f32 lbl_803E24A8;
+extern f32 lbl_803E24D8;
+extern f32 lbl_803E24DC;
+extern f32 lbl_803E24E0;
+extern f32 lbl_803E24E4;
+extern f32 lbl_803E24E8;
+
 void* trickyFindCirclingTarget(void* obj, void* arg2)
 {
     void* target;
@@ -114,35 +142,6 @@ void trickyUpdateCirclingTargetPosition(void* p1, void* p2)
         trickyReportError(sTrickyShouldNeverStopCirclingError);
     }
 }
-
-extern void trickyDebugPrint(char* fmt, ...);
-extern void* trickyFindNearestUsableBaddie(void* p, f32 r, int p3);
-extern void objAnimFn_8013a3f0(int* obj, int anim, f32 p3, int p4);
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int size, int id);
-extern int Obj_SetupObject(int o, int p2, int p3, int p4, int p5);
-extern void Sfx_PlayFromObject(int* obj, int sfx);
-extern void Sfx_AddLoopedObjectSound(int* obj, int sfx);
-extern void Sfx_RemoveLoopedObjectSound(int* obj, int sfx);
-extern void objSetAnimSpeedTo1(int o);
-extern int Sfx_IsPlayingFromObjectChannel(int* obj, int ch);
-extern void objAudioFn_800393f8(int* obj, void* p2, int sfx, int p4, int p5, int p6);
-extern f32 getXZDistance(void* a, void* b);
-extern char lbl_8031D2E8[];
-extern f32 timeDelta;
-extern f32 lbl_803E23DC;
-extern f32 lbl_803E2410;
-extern f32 lbl_803E2414;
-extern f32 lbl_803E2418;
-extern f32 lbl_803E243C;
-extern f32 lbl_803E2440;
-extern f32 lbl_803E2444;
-extern f32 lbl_803E24A8;
-extern f32 lbl_803E24D8;
-extern f32 lbl_803E24DC;
-extern f32 lbl_803E24E0;
-extern f32 lbl_803E24E4;
-extern f32 lbl_803E24E8;
 
 typedef struct
 {

@@ -33,39 +33,6 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 DAT_803de6d0;
 extern f32 lbl_803DDA58;
 
-void pressureSwitch_freeSharedResource(void)
-{
-    if (DAT_803de6d0 != 0)
-    {
-        FUN_80006b0c(DAT_803de6d0);
-        DAT_803de6d0 = 0;
-    }
-    return;
-}
-
-void pressureSwitch_ensureSharedResource(void)
-{
-    if (DAT_803de6d0 == 0)
-    {
-        DAT_803de6d0 = FUN_80006b14(0x5a);
-    }
-    return;
-}
-
-void hagabon_release(void)
-{
-}
-
-void hagabon_initialise(void)
-{
-}
-
-void swarmbaddie_hitDetect(void);
-
-void swarmbaddie_release(void);
-
-void swarmbaddie_initialise(void);
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
@@ -109,16 +76,48 @@ extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern int getAngle(f32 dx, f32 dz);
+STATIC_ASSERT(sizeof(HagabonState) == 0x28);
+STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
+STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
+
+void pressureSwitch_freeSharedResource(void)
+{
+    if (DAT_803de6d0 != 0)
+    {
+        FUN_80006b0c(DAT_803de6d0);
+        DAT_803de6d0 = 0;
+    }
+    return;
+}
+
+void pressureSwitch_ensureSharedResource(void)
+{
+    if (DAT_803de6d0 == 0)
+    {
+        DAT_803de6d0 = FUN_80006b14(0x5a);
+    }
+    return;
+}
+
+void hagabon_release(void)
+{
+}
+
+void hagabon_initialise(void)
+{
+}
+
+void swarmbaddie_hitDetect(void);
+
+void swarmbaddie_release(void);
+
+void swarmbaddie_initialise(void);
 
 typedef union PressureSwitchIntToDouble
 {
     u64 bits;
     f64 value;
 } PressureSwitchIntToDouble;
-
-STATIC_ASSERT(sizeof(HagabonState) == 0x28);
-STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
-STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 
 void fn_8014E1DC(int obj, HagabonState* state)
 {

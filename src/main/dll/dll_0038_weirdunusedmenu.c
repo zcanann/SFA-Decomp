@@ -27,6 +27,21 @@ extern void loadUiDll(int id);
 extern u8 framesThisStep;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
+extern void textureFree(u32);
+extern u32 lbl_803DD714, lbl_803DD718, lbl_803DD71C;
+extern void warpToMap(int mapId, int spawnId);
+extern void cutsceneExit(void);
+extern void buttonDisable(int index, int flags);
+extern f32 timeDelta;
+extern f32 lbl_803E1DF0;
+extern s8 lbl_803DD712;
+extern s16 lbl_803DD710;
+extern u8 lbl_803DD713;
+extern u32 lbl_8031AD20[];
+extern u32 lbl_803DD720;
+extern u32 lbl_8031AD98[];
+extern u32 textureLoadAsset(int);
+
 void FUN_8011daf8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined4 param_9, undefined4 param_10, undefined4 param_11, undefined4 param_12,
@@ -70,18 +85,6 @@ void WeirdUnusedMenu_frameEnd(void)
 
 void Dummy39_render(void);
 
-extern void textureFree(u32);
-
-extern u32 lbl_803DD714, lbl_803DD718, lbl_803DD71C;
-extern void warpToMap(int mapId, int spawnId);
-extern void cutsceneExit(void);
-extern void buttonDisable(int index, int flags);
-extern f32 timeDelta;
-extern f32 lbl_803E1DF0;
-extern s8 lbl_803DD712;
-extern s16 lbl_803DD710;
-extern u8 lbl_803DD713;
-extern u32 lbl_8031AD20[];
 #pragma scheduling off
 #pragma peephole off
 int WeirdUnusedMenu_run(void)
@@ -162,10 +165,6 @@ void WeirdUnusedMenu_release(void)
     warpToMap(0, 1);
     (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + 0x8)))();
 }
-
-extern u32 lbl_803DD720;
-extern u32 lbl_8031AD98[];
-extern u32 textureLoadAsset(int);
 
 #pragma peephole on
 void WeirdUnusedMenu_initialise(void)

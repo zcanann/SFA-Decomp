@@ -17,12 +17,6 @@ typedef struct IceblastPlacement
     u8 unk1F;
 } IceblastPlacement;
 
-static inline int* Transporter_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 FUN_80017748();
 extern int FUN_80017a90();
 extern undefined8 FUN_80017ac8();
@@ -34,11 +28,27 @@ extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_80053c98();
 extern int FUN_801365ac();
 extern undefined4 FUN_801365b8();
-
 extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E42BC;
+extern unsigned long GameBit_Set(int eventId, int value);
+extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
+extern f32 lbl_803E3600;
+extern void warpToMap(int mapId, int flag);
+extern f32 timeDelta;
+extern f32 lbl_803E3604;
+extern f32 lbl_803E3608;
+extern f32 lbl_803E360C;
+extern void* Obj_GetPlayerObject(void);
+extern void vecRotateZXY(void* in, void* out);
+extern s16* getTrickyObject(void);
+
+static inline int* Transporter_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (int*)objAnim->banks[objAnim->bankIndex];
+}
 
 undefined4
 FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
@@ -146,14 +156,10 @@ void iceblast_initialise(void)
 {
 }
 
-extern unsigned long GameBit_Set(int eventId, int value);
-
 int iceblast_getExtraSize(void) { return 0x4; }
 int iceblast_getObjectTypeId(void) { return 0x0; }
 int flameblast_getExtraSize(void);
 
-extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
-extern f32 lbl_803E3600;
 void iceblast_render(int* obj, int a, int b, int c, int d) { objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E3600); }
 
 void WarpPoint_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
@@ -164,16 +170,6 @@ void iceblast_init(int obj, s16* p)
     *(f32*)((GameObject*)obj)->extra = (f32) * (s16*)((char*)p + 0x1a);
     ObjHits_SetTargetMask(obj, 1);
 }
-
-extern void warpToMap(int mapId, int flag);
-
-extern f32 timeDelta;
-
-extern f32 lbl_803E3604;
-extern f32 lbl_803E3608;
-extern f32 lbl_803E360C;
-extern void* Obj_GetPlayerObject(void);
-extern void vecRotateZXY(void* in, void* out);
 
 #pragma peephole off
 void iceblast_update(int* obj)
@@ -233,8 +229,6 @@ void iceblast_update(int* obj)
     ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.
         localPosZ;
 }
-
-extern s16* getTrickyObject(void);
 
 #pragma opt_common_subs off
 #pragma opt_common_subs reset

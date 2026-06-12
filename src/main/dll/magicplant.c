@@ -66,6 +66,68 @@ extern f32 lbl_803E35A4;
 
 #pragma scheduling on
 #pragma peephole on
+extern f32 lbl_803E28B0;
+extern f32 lbl_803E28BC;
+extern f32 lbl_803E28D0;
+extern f32 lbl_803E28DC;
+extern f32 lbl_803E28E0;
+extern f32 lbl_803E28E4;
+extern f32 lbl_803E28E8;
+extern f32 lbl_803E286C;
+extern f32 lbl_803E2894;
+extern f32 lbl_803E28B4;
+extern f32 lbl_803E28B8;
+extern f32 lbl_803E28C0;
+extern f32 lbl_803E28C4;
+extern f32 lbl_803E28C8;
+extern f32 lbl_803E28CC;
+extern int lbl_803DBCB8;
+extern f32 timeDelta;
+extern int Curve_AdvanceAlongPath(int* curve, f32 t);
+extern void fn_8014CF7C(int obj, int state, int p3, int p4, f32 f1, f32 f2);
+extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
+extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
+extern f32 lbl_803E28A0;
+extern f32 lbl_803E28A4;
+extern f32 lbl_803E28A8;
+extern f32 lbl_803E28F4;
+extern f32 lbl_803E290C;
+extern f32 lbl_803E2910;
+extern f32 lbl_803E2924;
+extern f32 lbl_803E2928;
+extern f32 lbl_803E292C;
+extern f32 lbl_803E2930;
+extern void fn_80293018(int idx, f32* outA, f32* outB);
+extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int prio);
+extern void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c);
+extern void fn_8015355C(int obj, int p2);
+extern f32 lbl_803E28D4;
+extern f32 lbl_803E28D8;
+extern f32 lbl_803E28F0;
+extern f32 lbl_803E2900;
+extern f32 lbl_803E2904;
+extern f32 lbl_803E2908;
+extern f64 lbl_803E2918;
+extern f64 lbl_803E2938;
+extern f32 lbl_803E2940;
+extern f32 lbl_803E2944;
+extern f32 lbl_803E2948;
+extern f32 lbl_803E2920;
+extern f32 lbl_803E294C;
+extern f32 lbl_803E2950;
+extern f32 lbl_803E2954;
+extern f32 lbl_803E2958;
+extern u8 lbl_803DBCC0[8];
+extern int lbl_803DBCC8;
+extern uint countLeadingZeros(uint x);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int size, int type);
+extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
+extern void voxmaps_worldToGrid(f32* pos, int* grid);
+extern int voxmaps_traceLine(int* a, int* b, int c, u8* out, int e);
+extern f32 PSVECMag(f32 * v);
+extern s16 getAngle(f32 dx, f32 dz);
+
 void FUN_80152ec0(uint param_1, int param_2)
 {
     float fVar1;
@@ -383,14 +445,6 @@ void FUN_801544a4(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-extern f32 lbl_803E28B0;
-extern f32 lbl_803E28BC;
-extern f32 lbl_803E28D0;
-extern f32 lbl_803E28DC;
-extern f32 lbl_803E28E0;
-extern f32 lbl_803E28E4;
-extern f32 lbl_803E28E8;
-
 #pragma scheduling off
 #pragma peephole off
 void fn_80153790(int obj, int state, int p3, int msgFlag, int p5, int p6)
@@ -456,21 +510,6 @@ void fn_801534D8(int obj, int state)
     }
 }
 
-extern f32 lbl_803E286C;
-extern f32 lbl_803E2894;
-extern f32 lbl_803E28B4;
-extern f32 lbl_803E28B8;
-extern f32 lbl_803E28C0;
-extern f32 lbl_803E28C4;
-extern f32 lbl_803E28C8;
-extern f32 lbl_803E28CC;
-extern int lbl_803DBCB8;
-extern f32 timeDelta;
-extern int Curve_AdvanceAlongPath(int* curve, f32 t);
-extern void fn_8014CF7C(int obj, int state, int p3, int p4, f32 f1, f32 f2);
-extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
-extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
-
 void fn_80153040(int obj, int state)
 {
     int* curve;
@@ -526,19 +565,6 @@ void fn_80153040(int obj, int state)
     *(f32*)(state + 0x32c) = lbl_803E28B0;
 }
 
-extern f32 lbl_803E28A0;
-extern f32 lbl_803E28A4;
-extern f32 lbl_803E28A8;
-extern f32 lbl_803E28F4;
-extern f32 lbl_803E290C;
-extern f32 lbl_803E2910;
-extern f32 lbl_803E2924;
-extern f32 lbl_803E2928;
-extern f32 lbl_803E292C;
-extern f32 lbl_803E2930;
-
-extern void fn_80293018(int idx, f32* outA, f32* outB);
-
 void fn_80152EC0(int obj, int state)
 {
     f32 zero;
@@ -572,10 +598,6 @@ void fn_80152EC0(int obj, int state)
     ((GameObject*)obj)->anim.localPosX = a * ((BaddieState*)state)->unk2A8 + *(f32*)(state + 0x324);
     ((GameObject*)obj)->anim.localPosZ = b * ((BaddieState*)state)->unk2A8 + *(f32*)(state + 0x32c);
 }
-
-extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int prio);
-extern void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c);
-extern void fn_8015355C(int obj, int p2);
 
 #pragma dont_inline on
 void fn_8015355C(int obj, int p2)
@@ -672,33 +694,6 @@ void fn_80152FA8(int obj, int p2, int unused, int msgFlag)
         }
     }
 }
-
-extern f32 lbl_803E28D4;
-extern f32 lbl_803E28D8;
-extern f32 lbl_803E28F0;
-extern f32 lbl_803E2900;
-extern f32 lbl_803E2904;
-extern f32 lbl_803E2908;
-extern f64 lbl_803E2918;
-extern f64 lbl_803E2938;
-extern f32 lbl_803E2940;
-extern f32 lbl_803E2944;
-extern f32 lbl_803E2948;
-extern f32 lbl_803E2920;
-extern f32 lbl_803E294C;
-extern f32 lbl_803E2950;
-extern f32 lbl_803E2954;
-extern f32 lbl_803E2958;
-extern u8 lbl_803DBCC0[8];
-extern int lbl_803DBCC8;
-extern uint countLeadingZeros(uint x);
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int size, int type);
-extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
-extern void voxmaps_worldToGrid(f32* pos, int* grid);
-extern int voxmaps_traceLine(int* a, int* b, int c, u8* out, int e);
-extern f32 PSVECMag(f32 * v);
-extern s16 getAngle(f32 dx, f32 dz);
 
 void fn_80153248(int obj, int state)
 {

@@ -10,6 +10,8 @@ extern undefined8 ObjGroup_RemoveObject();
 #include "main/dll/cfguardian.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
+#include "main/dll/alphaanim.h"
+#include "main/objanim_internal.h"
 
 typedef struct DoorObjectDef
 {
@@ -49,19 +51,23 @@ extern int Sfx_PlayFromObject(int obj, int sfxId);
 
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 
+extern f32 lbl_803E3780;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E3784;
+extern f32 lbl_803E3788;
+extern f32 lbl_803E3790;
+extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
+extern int Sfx_StopFromObject(int obj, int sfxId);
+extern uint GameBit_Get(int eventId);
+
 int Door_getExtraSize(void) { return 0x8; }
 int mmp_bridge_getExtraSize(void);
 
-extern f32 lbl_803E3780;
-extern void objRenderFn_8003b8f4(f32);
 void Door_render(void) { objRenderFn_8003b8f4(lbl_803E3780); }
 
 void doorlock_free(int x);
 
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-extern f32 lbl_803E3784;
-extern f32 lbl_803E3788;
-extern f32 lbl_803E3790;
 
 void Door_init(int* obj, u8* def)
 {
@@ -145,9 +151,6 @@ void Door_update(int obj)
 }
 
 void mmp_bridge_update(int* obj);
-
-extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
-extern int Sfx_StopFromObject(int obj, int sfxId);
 
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -285,13 +288,6 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/dll/alphaanim.h"
-#include "main/game_object.h"
-#include "main/objanim_internal.h"
-#include "main/objseq.h"
-
-extern uint GameBit_Get(int eventId);
 
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read

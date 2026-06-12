@@ -39,6 +39,15 @@ typedef struct GpshObjcreatorObjectDef
     u8 pad1F[0x20 - 0x1F];
 } GpshObjcreatorObjectDef;
 
+extern void hitDetectFn_80097070(int* obj, f32 e, int a, int b, int c, int d);
+extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int v);
+extern void* Obj_AllocObjectSetup(int size, int type);
+extern f32 lbl_803E504C;
+extern f32 lbl_803E5050;
+extern f32 lbl_803E5054;
+extern s16 lbl_803263B8[];
+extern f32 lbl_803E5048;
+
 void gpsh_objcreator_free(void)
 {
 }
@@ -54,14 +63,6 @@ void gpsh_objcreator_release(void)
 void gpsh_objcreator_initialise(void)
 {
 }
-
-extern void hitDetectFn_80097070(int* obj, f32 e, int a, int b, int c, int d);
-extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int v);
-extern void* Obj_AllocObjectSetup(int size, int type);
-extern f32 lbl_803E504C;
-extern f32 lbl_803E5050;
-extern f32 lbl_803E5054;
-extern s16 lbl_803263B8[];
 
 void gpsh_objcreator_update(int* obj)
 {
@@ -114,8 +115,6 @@ void gpsh_scene_free(void);
 int gpsh_objcreator_getExtraSize(void) { return 0x8; }
 int gpsh_objcreator_getObjectTypeId(void) { return 0x0; }
 int gpsh_scene_getExtraSize(void);
-
-extern f32 lbl_803E5048;
 
 void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

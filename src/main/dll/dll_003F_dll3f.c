@@ -27,6 +27,21 @@ extern f32 FLOAT_803e3098;
 
 extern void* Obj_GetPlayerObject(void);
 
+extern u8 warpstoneUIState;
+extern void titlescreen_free(u8 * obj);
+extern void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+extern void titlescreen_update(u8 * obj);
+extern void titlescreen_init(u8 * obj, u8 * p);
+extern void titlescreen_release(void);
+extern void titlescreen_initialise(void);
+extern void* lbl_803DD974;
+extern u8 gameTimerIsRunning(void);
+extern void gameTimerRun(void* obj);
+extern int sprintf(char* buf, const char* fmt, ...);
+extern f32 lbl_803E22A0;
+extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
+extern void* lbl_803DD960;
+
 void FUN_80132034(void)
 {
     bool bVar1;
@@ -98,8 +113,6 @@ void FUN_8013651c(int param_1)
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
-extern u8 warpstoneUIState;
-
 void dll_3F_frameEnd_nop(void)
 {
 }
@@ -128,13 +141,6 @@ void titlescreen_hitDetect(void);
 
 int titlescreen_getObjectTypeId(u8* obj);
 
-extern void titlescreen_free(u8 * obj);
-extern void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-extern void titlescreen_update(u8 * obj);
-extern void titlescreen_init(u8 * obj, u8 * p);
-extern void titlescreen_release(void);
-extern void titlescreen_initialise(void);
-
 ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
     {
         0,
@@ -155,12 +161,6 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
     0,
 };
 
-extern void* lbl_803DD974;
-
-extern u8 gameTimerIsRunning(void);
-extern void gameTimerRun(void* obj);
-extern int sprintf(char* buf, const char* fmt, ...);
-extern f32 lbl_803E22A0;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
 #pragma scheduling off
@@ -197,15 +197,11 @@ void fn_80133F70(void* obj)
     sprintf(buf, lbl_803DBBF0, b);
 }
 
-extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
-
 /* EN v1.0 0x80133EA4  size: 156b  Two-step shutdown helper. Releases
  * the buffers at minimapTexture and lbl_803DD940 (the first only if
  * non-null), then walks the 2-slot live-objects table at lbl_803DBBC8
  * tearing down each non-null entry via Obj_FreeObject. Both buffer
  * pointers are zeroed at the end. */
-
-extern void* lbl_803DD960;
 
 /* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960
  * via textureFree. */

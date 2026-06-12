@@ -2,19 +2,6 @@
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
-static inline void GXPos3f32(f32 x, f32 y, f32 z)
-{
-    GXWGFifo.f32 = x;
-    GXWGFifo.f32 = y;
-    GXWGFifo.f32 = z;
-}
-
-static inline void GXTex2f32(f32 s, f32 t)
-{
-    GXWGFifo.f32 = s;
-    GXWGFifo.f32 = t;
-}
-
 extern u8* Camera_GetCurrentViewSlot(void);
 extern void fn_8008DAE8(int obj);
 extern u8* Obj_GetActiveModel(int obj);
@@ -40,7 +27,6 @@ extern int fn_8008912C(void);
 extern void selectTexture(int tex, int a);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 extern int getHudHiddenFrameCount(void);
-
 extern f32 lbl_803DD1E0;
 extern f32 lbl_803DD1E4;
 extern f32 lbl_803DD1E8;
@@ -54,6 +40,19 @@ extern const f32 lbl_803DF2CC;
 extern const f32 lbl_803DF2D0;
 extern const f32 lbl_803DF2D4;
 extern const f32 lbl_803DF2D8;
+
+static inline void GXPos3f32(f32 x, f32 y, f32 z)
+{
+    GXWGFifo.f32 = x;
+    GXWGFifo.f32 = y;
+    GXWGFifo.f32 = z;
+}
+
+static inline void GXTex2f32(f32 s, f32 t)
+{
+    GXWGFifo.f32 = s;
+    GXWGFifo.f32 = t;
+}
 
 void cloudaction_func08_nop(void)
 {
@@ -406,4 +405,3 @@ void cloudaction_initialise(void)
     lbl_803DB618[1] = -1;
     lbl_803DD1F0 = 0;
 }
-

@@ -43,6 +43,19 @@ extern void Curve_BuildHermiteCoeffs(void);
 
 #pragma scheduling on
 #pragma peephole on
+extern void Curve_BuildHermiteCoeffs();
+extern void fn_80296D20(void* player, int obj);
+extern f32 lbl_803E4B34;
+extern f32 lbl_803E4B38;
+extern f32 lbl_803E4B3C;
+extern f32 lbl_803E4B48;
+extern f32 lbl_803E4B4C;
+extern f32 lbl_803E4B50;
+extern f32 lbl_803E4B54;
+extern f32 lbl_803E4B58;
+extern WaterfxInterface** gWaterfxInterface;
+extern f32 lbl_803E4B30;
+
 void FUN_801b9cc4(int param_1)
 {
     char* pcVar1;
@@ -89,12 +102,6 @@ typedef struct
     u8 finished : 1;
     u8 rest : 7;
 } IceFloeFlags;
-
-extern void Curve_BuildHermiteCoeffs();
-extern void fn_80296D20(void* player, int obj);
-extern f32 lbl_803E4B34;
-extern f32 lbl_803E4B38;
-extern f32 lbl_803E4B3C;
 
 void dim2icefloe_update(int obj)
 {
@@ -165,12 +172,6 @@ void dim2icefloe_update(int obj)
     }
 }
 
-extern f32 lbl_803E4B48;
-extern f32 lbl_803E4B4C;
-extern f32 lbl_803E4B50;
-extern f32 lbl_803E4B54;
-extern f32 lbl_803E4B58;
-
 void dim2icefloe_init(int obj, int p)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -206,8 +207,6 @@ void dim2icefloe_init(int obj, int p)
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
-extern WaterfxInterface** gWaterfxInterface;
-
 void dim2icicle_update(int obj);
 
 /* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
@@ -219,8 +218,6 @@ void dim2icicle_update(int obj);
 int dim2icefloe_getExtraSize(void) { return 0xbc; }
 int dim2icefloe_getObjectTypeId(void) { return 0x0; }
 int dim2icicle_getExtraSize(void);
-
-extern f32 lbl_803E4B30;
 
 void dim2icefloe_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

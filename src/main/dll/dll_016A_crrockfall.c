@@ -70,6 +70,36 @@ extern f32 lbl_803E53D0;
 extern f32 lbl_803E53E0;
 extern f32 lbl_803E53F0;
 
+extern void* lbl_803DDB40;
+extern f32 lbl_803E46D8;
+extern f32 lbl_803E4708;
+extern void objRenderFn_8003b8f4(f32);
+extern int hitDetectFn_80065e50(int obj, int** listOut, int p3, int p4, f32 x, f32 y, f32 z);
+extern f32 lbl_803E4700;
+extern f32 lbl_803E4704;
+extern void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
+extern float Vec_distance(float* a, float* b);
+extern void warpToMap(int mapId, int flags);
+extern void Music_Trigger(int track, int flag);
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern u8 lbl_803236B8[];
+extern f32 lbl_803E4730;
+extern void fn_800628CC(int* obj);
+extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern void Sfx_PlayFromObject(int* obj, int sfx);
+extern void Sfx_StopObjectChannel(int* obj, int channel);
+extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
+extern f32 lbl_803E46E8;
+extern f32 lbl_803E46EC;
+extern f32 lbl_803E46F0;
+extern f32 lbl_803E470C;
+extern f32 lbl_803E4710;
+extern f32 lbl_803E4714;
+extern f32 lbl_803E4718;
+extern f32 lbl_803E471C;
+extern f32 lbl_803E4720;
+
 void FUN_801ac248(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9)
@@ -264,12 +294,7 @@ int crrockfall_getExtraSize(void) { return 0x14; }
 int crrockfall_getObjectTypeId(void) { return 0x0; }
 int magiclight_getObjectTypeId(void);
 
-extern void* lbl_803DDB40;
 void crrockfall_initialise(void) { lbl_803DDB40 = NULL; }
-
-extern f32 lbl_803E46D8;
-extern f32 lbl_803E4708;
-extern void objRenderFn_8003b8f4(f32);
 
 #pragma peephole off
 void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
@@ -283,9 +308,6 @@ void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 
 void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 
-extern int hitDetectFn_80065e50(int obj, int** listOut, int p3, int p4, f32 x, f32 y, f32 z);
-extern f32 lbl_803E4700;
-extern f32 lbl_803E4704;
 #pragma dont_inline on
 #pragma scheduling off
 f32 fn_801ACCFC(int obj)
@@ -335,25 +357,11 @@ void crrockfall_release(void)
     lbl_803DDB40 = NULL;
 }
 
-extern void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
-
-extern float Vec_distance(float* a, float* b);
-
-extern void warpToMap(int mapId, int flags);
-
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
 
 #undef MEVT_TRIGGER
 #undef MEVT_SET
-
-extern void Music_Trigger(int track, int flag);
-extern f32 timeDelta;
-
-extern u8 framesThisStep;
-
-extern u8 lbl_803236B8[];
-extern f32 lbl_803E4730;
 
 /* crrockfall_init: derive the per-rock scale from the placement params, size the
  * capsule hitbox from the sub-object bounds, set up render flags, and pick the
@@ -402,21 +410,6 @@ void crrockfall_init(int* obj, u8* params)
         extra->cfg = (CrRockfallCfgEntry*)lbl_803236B8;
     }
 }
-
-extern void fn_800628CC(int* obj);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
-extern void Sfx_PlayFromObject(int* obj, int sfx);
-extern void Sfx_StopObjectChannel(int* obj, int channel);
-extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
-extern f32 lbl_803E46E8;
-extern f32 lbl_803E46EC;
-extern f32 lbl_803E46F0;
-extern f32 lbl_803E470C;
-extern f32 lbl_803E4710;
-extern f32 lbl_803E4714;
-extern f32 lbl_803E4718;
-extern f32 lbl_803E471C;
-extern f32 lbl_803E4720;
 
 /* crrockfall_update: drive the falling-rock state machine - fade-in opacity by
  * height/distance, trigger the fall when the player is in range, integrate the

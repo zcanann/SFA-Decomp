@@ -25,6 +25,50 @@ extern void objRenderFn_8003b8f4(f32);
 
 #pragma scheduling on
 #pragma peephole on
+extern void Stack_Free();
+extern void* lbl_803AD068[8];
+extern void* lbl_803DDC58;
+extern void DRlaserturret_startLinkedTarget(int);
+extern void DRlaserturret_updateTracking(int);
+extern void DRlaserturret_updateIdle(int);
+extern void TREX_Lazerwall_updateTimedChallenge(int);
+extern void TREX_Lazerwall_waitForStartBit(int);
+extern void TREX_Lazerwall_popQueuedState(int);
+extern void fn_801E66EC(int);
+extern void fn_801E66E4(int);
+extern void fn_801E66DC(int);
+extern void hudFn_8011f38c(int);
+extern void* Obj_GetPlayerObject(void);
+extern f32 lbl_803E5A20;
+extern f32 timeDelta;
+extern f32 lbl_803E59DC;
+extern void gameTextShow(int);
+extern u32 ObjGroup_FindNearestObject(int kind, int obj, f32* out);
+extern int playerGetMoney(void* player);
+extern void characterDoEyeAnims(int obj, int p2);
+extern void dll_2E_func03(int, int);
+extern f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode);
+extern int* gPlayerInterface;
+extern f32 lbl_803E59F0;
+extern f32 lbl_803E5A28;
+extern void* allocModelStruct_800139e8(int, int);
+extern void dll_2E_func05(int, int, int, int, int);
+extern int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance);
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern void DRlaserturret_startTimedChallenge(int);
+extern void DRlaserturret_handlePromptChoice(int);
+extern void setAButtonIcon(int icon);
+extern void setBButtonIcon(int icon);
+extern void warpToMap(int mapId, int flag);
+extern int getCurUiDll(void);
+extern int* getDLL16(void);
+extern void playerAddMoney(void* player, int amount);
+extern void* objFindTexture(int obj, int target, int p3);
+extern int dll_2E_func07(int obj, u8* data, int p3, int p4, int p5);
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803E5A24;
+extern f32 lbl_803E5A34;
+
 undefined4 FUN_801e76a0(int param_1)
 {
     uint uVar1;
@@ -107,8 +151,6 @@ void fn_801E7DC8(int p1, int p2, int count)
     }
 }
 
-extern void Stack_Free();
-
 void shopkeeper_free(int obj)
 {
     Stack_Free(*(undefined4*)(*(int*)&((GameObject*)obj)->extra + 0x9b0));
@@ -149,18 +191,6 @@ int shopkeeper_getExtraSize(void) { return 0x9d8; }
 int shopkeeper_getObjectTypeId(void) { return 0x0; }
 int shopitem_getExtraSize(void);
 
-extern void* lbl_803AD068[8];
-extern void* lbl_803DDC58;
-extern void DRlaserturret_startLinkedTarget(int);
-extern void DRlaserturret_updateTracking(int);
-extern void DRlaserturret_updateIdle(int);
-extern void TREX_Lazerwall_updateTimedChallenge(int);
-extern void TREX_Lazerwall_waitForStartBit(int);
-extern void TREX_Lazerwall_popQueuedState(int);
-extern void fn_801E66EC(int);
-extern void fn_801E66E4(int);
-extern void fn_801E66DC(int);
-
 void shopkeeper_initialise(void)
 {
     lbl_803AD068[0] = (void*)DRlaserturret_startLinkedTarget;
@@ -173,19 +203,6 @@ void shopkeeper_initialise(void)
     lbl_803AD068[7] = (void*)fn_801E66E4;
     lbl_803DDC58 = (void*)fn_801E66DC;
 }
-
-extern void hudFn_8011f38c(int);
-extern void* Obj_GetPlayerObject(void);
-extern f32 lbl_803E5A20;
-extern f32 timeDelta;
-extern f32 lbl_803E59DC;
-extern void gameTextShow(int);
-extern u32 ObjGroup_FindNearestObject(int kind, int obj, f32* out);
-extern int playerGetMoney(void* player);
-extern void characterDoEyeAnims(int obj, int p2);
-extern void dll_2E_func03(int, int);
-extern f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode);
-extern int* gPlayerInterface;
 
 void shopkeeper_update(int obj)
 {
@@ -222,12 +239,6 @@ void shopkeeper_update(int obj)
     ((GameObject*)obj)->anim.alpha = ((ShopkeeperState*)state)->opacity;
 }
 
-extern f32 lbl_803E59F0;
-extern f32 lbl_803E5A28;
-extern void* allocModelStruct_800139e8(int, int);
-extern void dll_2E_func05(int, int, int, int, int);
-extern int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance);
-
 void shopkeeper_init(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
@@ -242,19 +253,6 @@ void shopkeeper_init(int obj)
     dll_2E_func05(obj, state + 0x35C, -0x1C71, 0x3555, 2);
     ((ShopkeeperState*)state)->unk96D |= 0x12;
 }
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
-extern void DRlaserturret_startTimedChallenge(int);
-extern void DRlaserturret_handlePromptChoice(int);
-extern void setAButtonIcon(int icon);
-extern void setBButtonIcon(int icon);
-extern void warpToMap(int mapId, int flag);
-extern int getCurUiDll(void);
-extern int* getDLL16(void);
-extern void playerAddMoney(void* player, int amount);
-extern void* objFindTexture(int obj, int target, int p3);
-extern int dll_2E_func07(int obj, u8* data, int p3, int p4, int p5);
 
 int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
 {
@@ -413,9 +411,6 @@ int fn_801E76A0(int obj, int p2, ObjSeqState* seq, s8 advance)
     return 0;
 }
 
-extern f32 sqrtf(f32 x);
-extern f32 lbl_803E5A24;
-
 f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode)
 {
     f32 dist;
@@ -467,5 +462,3 @@ f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode)
     }
     return dist;
 }
-
-extern f32 lbl_803E5A34;

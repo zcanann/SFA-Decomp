@@ -54,6 +54,20 @@ extern f32 lbl_803E4D14;
 extern f32 lbl_803E4D18;
 extern f32 lbl_803E4D1C;
 
+extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int** out, int a, int b);
+extern void lightSetFieldBC_8001db14(int light, int v);
+extern void* objCreateLight(int obj, int n);
+extern void modelLightStruct_setLightKind(int light, int v);
+extern void modelLightStruct_setDiffuseColor(int light, int a, int b, int c, int d);
+extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
+extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 f);
+extern void modelLightStruct_setGlowProjectionRadius(int light, f32 f);
+extern f32 lbl_803E4D24;
+extern f32 lbl_803E4D28;
+extern f32 lbl_803E4D2C;
+extern f32 lbl_803E4D30;
+extern f32 lbl_803E4D04;
+
 void dimbossgut2_updateTracking(int obj, int state)
 {
     int curve;
@@ -257,20 +271,6 @@ void dimbossgut2_update(int obj)
     }
     return;
 }
-
-extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int** out, int a, int b);
-extern void lightSetFieldBC_8001db14(int light, int v);
-extern void* objCreateLight(int obj, int n);
-extern void modelLightStruct_setLightKind(int light, int v);
-extern void modelLightStruct_setDiffuseColor(int light, int a, int b, int c, int d);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
-extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 f);
-extern void modelLightStruct_setGlowProjectionRadius(int light, f32 f);
-extern f32 lbl_803E4D24;
-extern f32 lbl_803E4D28;
-extern f32 lbl_803E4D2C;
-extern f32 lbl_803E4D30;
-extern f32 lbl_803E4D04;
 
 void dimbossgut2_init(int obj, int def, int p3)
 {

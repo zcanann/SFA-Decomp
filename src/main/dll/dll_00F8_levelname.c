@@ -25,6 +25,13 @@ void area_release(void);
 
 void area_initialise(void);
 
+extern u8 framesThisStep;
+extern f32 Vec_distance(f32 * a, f32 * b);
+extern f32 mathSinf(f32 v);
+extern f32 lbl_803E36E0;
+extern f32 lbl_803E36E4;
+extern f32 lbl_803E36E8;
+
 void levelname_free(void)
 {
 }
@@ -44,13 +51,6 @@ void levelname_release(void)
 void levelname_initialise(void)
 {
 }
-
-extern u8 framesThisStep;
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern f32 mathSinf(f32 v);
-extern f32 lbl_803E36E0;
-extern f32 lbl_803E36E4;
-extern f32 lbl_803E36E8;
 
 void levelname_update(int* obj)
 {

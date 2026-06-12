@@ -76,6 +76,8 @@ extern undefined4 FUN_8005d0ac();
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E5180;
 
+extern f32 lbl_803E44D0;
+
 undefined4
 FUN_801a68b8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -189,7 +191,6 @@ int MoonSeedBush_getExtraSize(void);
 int mmp_gyservent_getExtraSize(void) { return 0x0; }
 int mmp_gyservent_getObjectTypeId(void) { return 0x0; }
 
-extern f32 lbl_803E44D0;
 extern void objRenderFn_8003b8f4(f32);
 
 #pragma scheduling off

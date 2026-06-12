@@ -26,6 +26,8 @@ extern float mathCosf(float x);
 #include "main/screen_transition.h"
 
 #include "main/dll/dll19_state.h"
+#include "main/objanim.h"
+#include "main/dll/baddie_state.h"
 
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
@@ -47,6 +49,20 @@ extern f32 lbl_803E265C;
 
 #pragma scheduling on
 #pragma peephole on
+extern f32 mathCosf(f32);
+extern f32 mathSinf(f32);
+extern CameraModeCannonState* lbl_803DD5A0;
+extern f32 lbl_803E1A40;
+extern CameraModeCloudRunnerState* lbl_803DD5B8;
+extern s16* objModelGetVecFn_800395d8(int obj, int idx);
+extern f32 lbl_803E1AE0;
+extern f32 lbl_803E1AE4;
+extern f32 lbl_803E1AE8;
+extern f32 lbl_803E1AEC;
+extern f32 lbl_803E1AF0;
+extern f32 fn_8029610C(int obj);
+extern f32 mathCosf(f32 x);
+
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
 {
     float fVar1;
@@ -177,11 +193,6 @@ void fn_80110EC0(void)
 
 void CameraModeArwing_release(void);
 
-extern f32 mathCosf(f32);
-extern f32 mathSinf(f32);
-
-extern CameraModeCannonState* lbl_803DD5A0;
-
 void CameraModeCannon_init(int* p1, int unused, int* p3)
 {
     CameraObject* camera = (CameraObject*)p1;
@@ -201,12 +212,8 @@ void CameraModeCannon_init(int* p1, int unused, int* p3)
     camera->anim.rotY = 2800;
 }
 
-extern f32 lbl_803E1A40;
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
 void CameraModeCannon_free(void)
 {
@@ -226,13 +233,6 @@ void CameraModeCloudRunner_free(void);
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
-extern s16* objModelGetVecFn_800395d8(int obj, int idx);
-extern f32 lbl_803E1AE0;
-extern f32 lbl_803E1AE4;
-extern f32 lbl_803E1AE8;
-extern f32 lbl_803E1AEC;
-extern f32 lbl_803E1AF0;
 
 void CameraModeCannon_update(u8* obj)
 {
@@ -257,8 +257,6 @@ void CameraModeCannon_update(u8* obj)
         lbl_803DD5A0->target->anim.worldPosZ -
         lbl_803E1AE4 * mathCosf(lbl_803E1AE8 * (f32)(s32)(-camera->anim.rotX) / lbl_803E1AEC);
 }
-
-extern f32 fn_8029610C(int obj);
 
 /* dll_19_func14  addr=0x80112E94  size=0x2A8  linkage=global */
 
@@ -288,14 +286,6 @@ extern f32 fn_8029610C(int obj);
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/objanim.h"
-#include "main/camera_interface.h"
-#include "main/game_object.h"
-#include "main/dll/baddie_state.h"
-#include "main/dll/rom_curve_interface.h"
-
-#include "main/dll/dll19_state.h"
-
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */
 
@@ -314,8 +304,6 @@ extern f32 fn_8029610C(int obj);
 
 /* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
  * distance from an object to its target, updating the wide-turn flag. */
-
-extern f32 mathCosf(f32 x);
 
 /* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
  * the object for walkable space, returning a bitmask of clear directions. */

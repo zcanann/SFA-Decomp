@@ -53,6 +53,12 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
+extern f32 lbl_803E59D8;
+extern f32 lbl_803E59DC;
+extern int* gBoneParticleEffectInterface;
+extern int Stack_IsEmpty(int stack);
+extern int Stack_Pop(int stack, int* out);
+
 void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined2* param_9, int param_10)
@@ -65,12 +71,6 @@ int fn_801E66DC(void) { return 0x0; }
 int fn_801E66E4(void) { return 0x0; }
 
 s32 shop_getStateField1(int* obj);
-
-extern f32 lbl_803E59D8;
-extern f32 lbl_803E59DC;
-extern int* gBoneParticleEffectInterface;
-extern int Stack_IsEmpty(int stack);
-extern int Stack_Pop(int stack, int* out);
 
 /* Stubs added to align function set with v1.0 asm. Source had Ghidra FUN_xxx
  * splits at wrong addresses; these stubs ensure every asm symbol has a src

@@ -1,6 +1,11 @@
 /* DLL 0x0045 — camera talk / NPC-speak mode [80107AEC-80107B4C) */
 #include "main/dll/CAM/cambike_state.h"
 #include "main/mm.h"
+#include "main/dll/CAM/dll_0045_camTalk.h"
+#include "main/camera_interface.h"
+#include "main/dll/CAM/viewfinder_state.h"
+#include "main/game_object.h"
+#include "main/object_transform.h"
 
 extern int getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 value);
@@ -11,30 +16,6 @@ extern CameraModeBikeState* lbl_803DD540;
 
 static f32 CameraModeStaffAnim_angleToRadians(int angle);
 
-void CameraModeBike_copyToCurrent(f32* param_1)
-{
-    lbl_803DD540->turnInput = param_1[0];
-    lbl_803DD540->heightInput = param_1[1];
-    lbl_803DD540->rollInput = param_1[2];
-    lbl_803DD540->pitchTarget = param_1[3];
-}
-
-void CameraModeBike_free(void)
-{
-    mm_free(lbl_803DD540);
-    lbl_803DD540 = 0;
-}
-
-/* segment pragma-stack balance (re-split): */
-
-#include "main/dll/CAM/dll_0045_camTalk.h"
-#include "main/camera_interface.h"
-#include "main/dll/CAM/cambike_state.h"
-#include "main/dll/CAM/viewfinder_state.h"
-#include "main/game_object.h"
-#include "main/mm.h"
-#include "main/object_transform.h"
-
 extern undefined4 FUN_80006a1c();
 extern void vecRotateZXY(void* param_1, void* outVec);
 extern undefined4 setMatrixFromObjectPos();
@@ -44,7 +25,6 @@ extern int DBprotection_getCameraState(GameObject * obj);
 extern f32 mathSinf(f32);
 extern f32 mathCosf(f32);
 extern void cameraGetPrevPos2(int obj, float* x, float* y, float* z);
-
 extern ViewfinderState* lbl_803DD548;
 extern f32 timeDelta;
 extern f32 lbl_803E1780;
@@ -66,6 +46,22 @@ extern f32 lbl_803E17C4;
 extern f32 lbl_803E17C8;
 extern f32 lbl_803E17CC;
 extern f32 lbl_803E17D0;
+
+void CameraModeBike_copyToCurrent(f32* param_1)
+{
+    lbl_803DD540->turnInput = param_1[0];
+    lbl_803DD540->heightInput = param_1[1];
+    lbl_803DD540->rollInput = param_1[2];
+    lbl_803DD540->pitchTarget = param_1[3];
+}
+
+void CameraModeBike_free(void)
+{
+    mm_free(lbl_803DD540);
+    lbl_803DD540 = 0;
+}
+
+/* segment pragma-stack balance (re-split): */
 
 #pragma peephole on
 void CameraModeBike_update(CameraObject* camera)

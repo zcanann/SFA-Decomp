@@ -1,14 +1,41 @@
 /* DLL 0x19E - DIM Tricky [801CCFA4-801CCFB4) */
 #include "main/effect_interfaces.h"
 #include "main/objseq.h"
+#include "main/game_object.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/audio/sfx_ids.h"
+#include "main/dll/dll_019E_dim_tricky.h"
+#include "main/gameplay_runtime.h"
+#include "main/obj_placement.h"
+#include "main/resource.h"
 
 extern ModgfxInterface** gModgfxInterface;
 extern u8 framesThisStep;
 
+extern f32 lbl_803E51B0;
+extern EffectInterface** gPartfxInterface;
+extern void* Camera_GetCurrentViewSlot(void);
+extern float sqrtf(float x);
+extern int randomGetRange(int min, int max);
+extern void voxmaps_worldToGrid(void* world, void* grid);
+extern int voxmaps_traceLine(void* from, void* to, void* out, int param4, int param5);
+extern f32 lbl_803E51C8;
+extern f32 lbl_803E51CC;
+extern f32 lbl_803E51D0;
+extern f32 lbl_803E51D4;
+extern f32 lbl_803E51D8;
+extern f32 lbl_803E51DC;
+extern void Sfx_StopObjectChannel(void* obj, int channel);
+extern void objUpdateOpacity(void* obj);
+extern int ObjHits_GetPriorityHit(void* obj, int a, int b, int c);
+extern s8 lbl_803DDBE8;
+extern undefined4 lbl_802C23D8[4];
+extern f32 lbl_803E51E0;
+extern f32 lbl_803E51E4;
+extern f32 lbl_803E51E8;
+
 int dll_19E_getExtraSize(void) { return 0x10; }
 int dll_19E_getObjectTypeId(void) { return 0x1; }
-
-extern f32 lbl_803E51B0;
 
 /*
  * Function: dll_19C_init
@@ -28,8 +55,6 @@ extern f32 lbl_803E51B0;
  * EN v1.0 Size: 208b
  */
 
-extern EffectInterface** gPartfxInterface;
-
 /*
  * Function: dll_19D_hitDetect
  * EN v1.0 Address: 0x801CCA30
@@ -42,23 +67,6 @@ extern EffectInterface** gPartfxInterface;
  * EN v1.0 Size: 904b
  */
 /* segment pragma-stack balance (re-split): */
-
-#include "main/game_object.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-
-extern void* Camera_GetCurrentViewSlot(void);
-extern float sqrtf(float x);
-extern int randomGetRange(int min, int max);
-extern void voxmaps_worldToGrid(void* world, void* grid);
-extern int voxmaps_traceLine(void* from, void* to, void* out, int param4, int param5);
-
-extern f32 lbl_803E51C8;
-extern f32 lbl_803E51CC;
-extern f32 lbl_803E51D0;
-extern f32 lbl_803E51D4;
-extern f32 lbl_803E51D8;
-extern f32 lbl_803E51DC;
 
 void dll_19E_free(int param_1)
 {
@@ -162,25 +170,6 @@ void dll_19E_render(int obj, int param_2, int param_3, int param_4,
 void dll_19E_hitDetect(void)
 {
 }
-
-#include "main/audio/sfx_ids.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-#include "main/dll/dll_019E_dim_tricky.h"
-#include "main/effect_interfaces.h"
-#include "main/gameplay_runtime.h"
-#include "main/obj_placement.h"
-#include "main/resource.h"
-
-extern void Sfx_StopObjectChannel(void* obj, int channel);
-extern void objUpdateOpacity(void* obj);
-extern int ObjHits_GetPriorityHit(void* obj, int a, int b, int c);
-
-extern s8 lbl_803DDBE8;
-extern undefined4 lbl_802C23D8[4];
-extern f32 lbl_803E51E0;
-extern f32 lbl_803E51E4;
-extern f32 lbl_803E51E8;
 
 typedef struct Dll19EState
 {

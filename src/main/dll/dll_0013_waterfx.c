@@ -2,6 +2,28 @@
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
+extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
+extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
+extern void PSMTXConcat(void* a, void* b, void* ab);
+extern void DCStoreRange(void* p, int n);
+extern void GXCallDisplayList(void* list, int n);
+extern u16 lbl_803DD204;
+extern f32 lbl_803DF2E0;
+extern f32 lbl_803DF2E4;
+extern f32 lbl_803DF2F0;
+extern f32 lbl_803DF2F4;
+extern f32 lbl_803DF2F8;
+extern f32 lbl_803DF304;
+extern void GXSetMisc(int token, int val);
+extern void DCInvalidateRange(void* p, int n);
+extern void GXBeginDisplayList(void* p, int n);
+extern int GXEndDisplayList(void);
+extern void GXResetWriteGatherPipe(void);
+extern f32 fn_802942EC(f32);
+extern f32 fn_80293F7C(f32);
+extern f32 lbl_803DF310;
+extern f32 lbl_803DF314;
+
 void waterfx_setupSplashDropPointRender(void)
 {
     u8 col[4];
@@ -618,20 +640,6 @@ void waterfx_initialise(void)
     waterfx_drawFn_800953fc();
 }
 
-
-extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXConcat(void* a, void* b, void* ab);
-extern void DCStoreRange(void* p, int n);
-extern void GXCallDisplayList(void* list, int n);
-extern u16 lbl_803DD204;
-extern f32 lbl_803DF2E0;
-extern f32 lbl_803DF2E4;
-extern f32 lbl_803DF2F0;
-extern f32 lbl_803DF2F4;
-extern f32 lbl_803DF2F8;
-extern f32 lbl_803DF304;
-
 void fn_80095164(WaterParticle* s)
 {
     f32 mtxD[12];
@@ -700,16 +708,6 @@ void fn_80095164(WaterParticle* s)
     GXSetCullMode(2);
     GXCallDisplayList(lbl_803DD208, lbl_803DD204);
 }
-
-extern void GXSetMisc(int token, int val);
-extern void DCInvalidateRange(void* p, int n);
-extern void GXBeginDisplayList(void* p, int n);
-extern int GXEndDisplayList(void);
-extern void GXResetWriteGatherPipe(void);
-extern f32 fn_802942EC(f32);
-extern f32 fn_80293F7C(f32);
-extern f32 lbl_803DF310;
-extern f32 lbl_803DF314;
 
 void waterfx_drawFn_800953fc(void)
 {

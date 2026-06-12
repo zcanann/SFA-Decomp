@@ -2,11 +2,59 @@
 #include "main/dll/appleontreestate_struct.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
+#include "main/dll/groundanimator_state.h"
+#include "main/audio/sfx_ids.h"
+#include "main/dll/groundAnimator.h"
+#include "main/effect_interfaces.h"
+#include "main/objanim_internal.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined8 ObjGroup_RemoveObject();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
+
+extern f32 lbl_803E37B0;
+extern undefined8 FUN_80006824();
+extern undefined4 FUN_80017710();
+extern undefined4 FUN_8001771c();
+extern u32 randomGetRange(int min, int max);
+extern int FUN_80017a98();
+extern undefined4 FUN_80017ac8();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjGroup_AddObject();
+extern undefined4 ObjMsg_SendToObject();
+extern int FUN_800632d8();
+extern undefined4 FUN_80081118();
+extern double FUN_80293900();
+extern undefined4 FUN_80294d60();
+extern void GameBit_Set(int eventId, int value);
+extern undefined4* DAT_803dd718;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E4460;
+extern f32 lbl_803E446C;
+extern f32 lbl_803E4470;
+extern f32 lbl_803E4474;
+extern f32 lbl_803E4478;
+extern f32 lbl_803E447C;
+extern f32 lbl_803E4480;
+extern f32 lbl_803E4484;
+extern f32 lbl_803E4488;
+extern f32 lbl_803E448C;
+extern f32 lbl_803E4490;
+extern f32 lbl_803E4494;
+extern f32 lbl_803E4498;
+extern void appleontree_init();
+extern void appleontree_update();
+extern void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
+extern void appleontree_free(int* obj);
+extern int appleontree_getExtraSize(void);
+extern void appleontree_setScale(void);
+extern u8 appleontree_modelMtxFn(int* obj);
+STATIC_ASSERT(offsetof(AppleOnTreeState, healthRestore) == 0x38);
+STATIC_ASSERT(offsetof(AppleOnTreeState, unk50) == 0x50);
+STATIC_ASSERT(offsetof(AppleOnTreeState, unk60) == 0x60);
+STATIC_ASSERT(sizeof(AppleOnTreeState) == 0x64);
+extern f32 Vec_xzDistance(float* a, float* b);
 
 void dll_115_hitDetect_nop(void)
 {
@@ -14,8 +62,6 @@ void dll_115_hitDetect_nop(void)
 
 int dll_115_getExtraSize_ret_2(void) { return 0x2; }
 int dll_115_getObjectTypeId(void) { return 0x0; }
-
-extern f32 lbl_803E37B0;
 
 void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -65,14 +111,6 @@ int dll_115_seqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-#include "main/dll/groundanimator_state.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/groundAnimator.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/objanim_internal.h"
-#include "main/objseq.h"
-
 typedef struct Dll115Placement
 {
     u8 pad0[0x18 - 0x0];
@@ -86,37 +124,6 @@ typedef struct Dll115Placement
     s16 unk3C;
     u8 pad3E[0x40 - 0x3E];
 } Dll115Placement;
-
-extern undefined8 FUN_80006824();
-extern undefined4 FUN_80017710();
-extern undefined4 FUN_8001771c();
-extern u32 randomGetRange(int min, int max);
-extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 ObjMsg_SendToObject();
-extern int FUN_800632d8();
-extern undefined4 FUN_80081118();
-extern double FUN_80293900();
-extern undefined4 FUN_80294d60();
-extern void GameBit_Set(int eventId, int value);
-
-extern undefined4* DAT_803dd718;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E4460;
-extern f32 lbl_803E446C;
-extern f32 lbl_803E4470;
-extern f32 lbl_803E4474;
-extern f32 lbl_803E4478;
-extern f32 lbl_803E447C;
-extern f32 lbl_803E4480;
-extern f32 lbl_803E4484;
-extern f32 lbl_803E4488;
-extern f32 lbl_803E448C;
-extern f32 lbl_803E4490;
-extern f32 lbl_803E4494;
-extern f32 lbl_803E4498;
 
 typedef struct
 {
@@ -264,14 +271,6 @@ ObjectDescriptor gWM_ColumnObjDescriptor = {
     wm_column_getExtraSize,
 };
 
-extern void appleontree_init();
-extern void appleontree_update();
-extern void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
-extern void appleontree_free(int* obj);
-extern int appleontree_getExtraSize(void);
-extern void appleontree_setScale(void);
-extern u8 appleontree_modelMtxFn(int* obj);
-
 ObjectDescriptor13 gAppleOnTreeObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_13_SLOTS,
     0,
@@ -298,11 +297,6 @@ u32 jumptable_803214DC[] = {
     (u32)((u8*)appleontree_update + 0x6C8),
     (u32)((u8*)appleontree_update + 0x71C),
 };
-
-STATIC_ASSERT(offsetof(AppleOnTreeState, healthRestore) == 0x38);
-STATIC_ASSERT(offsetof(AppleOnTreeState, unk50) == 0x50);
-STATIC_ASSERT(offsetof(AppleOnTreeState, unk60) == 0x60);
-STATIC_ASSERT(sizeof(AppleOnTreeState) == 0x64);
 
 #pragma scheduling on
 #pragma peephole on
@@ -503,7 +497,6 @@ void FUN_8017de58(undefined8 param_1, double param_2, double param_3, undefined8
 /* appleontree_handleCollectableHit: ground-animator collectable hit handler. When player is in
  * range, either send a trigger event (first contact) or apply healing +
  * particle FX + sfx + free-or-disable. */
-extern f32 Vec_xzDistance(float* a, float* b);
 void appleontree_handleCollectableHit(int obj);
 
 undefined4 FUN_8017e15c(double param_1, undefined2* param_2, int param_3)

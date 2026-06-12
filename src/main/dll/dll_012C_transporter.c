@@ -19,6 +19,11 @@ extern void skyFn_80088e54(int mode, f32 brightness);
 extern void timeOfDayFn_80055000(void);
 extern f32 lbl_803E3E98;
 
+extern void objRenderFn_80041018(int obj);
+extern uint GameBit_Get(int eventId);
+extern short lbl_803DCEB8;
+extern f32 lbl_803E3EE8;
+
 int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 {
     extern undefined8 GameBit_Set(int eventId, int value);
@@ -217,10 +222,6 @@ int transporter_getExtraSize(void)
     return 0x10;
 }
 
-extern void objRenderFn_80041018(int obj);
-extern uint GameBit_Get(int eventId);
-extern short lbl_803DCEB8;
-
 void transporter_update(int obj)
 {
     register int self = obj;
@@ -299,10 +300,6 @@ void transporter_hitDetect(int obj)
 void transporter_render(void)
 {
 }
-
-#include "main/dll/CF/dll_012C_transporter.h"
-#include "main/dll/CF/warp_pad.h"
-#include "main/game_object.h"
 
 /*
  * Recovered: large switch on params[20] (32-bit id) that sets bits in
@@ -395,5 +392,3 @@ void transporter_init(int obj, u8* params)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
     }
 }
-
-extern f32 lbl_803E3EE8;

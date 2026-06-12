@@ -3,6 +3,8 @@
 #include "main/game_object.h"
 #include "main/dll/CF/staffactivated_helpers.h"
 #include "main/objseq.h"
+#include "main/dll/CF/dll_165.h"
+#include "main/dll/CF/dll_163.h"
 
 extern undefined8 ObjGroup_RemoveObject();
 extern f32 lbl_803E3BBC;
@@ -48,6 +50,34 @@ STATIC_ASSERT(offsetof(StaffActivatedSetup, debrisCount) == 0x1f);
 STATIC_ASSERT(offsetof(StaffActivatedSetup, timedEventSeconds) == 0x20);
 STATIC_ASSERT(offsetof(StaffActivatedSetup, activeGameBit) == 0x22);
 STATIC_ASSERT(offsetof(StaffActivatedSetup, lockGameBit) == 0x24);
+
+extern void Obj_GetPlayerObject(void);
+extern int fn_80295CE4(void);
+extern u32 GameBit_Get(int eventId);
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern EffectInterface** gPartfxInterface;
+extern f32 lbl_803E3BDC;
+extern f32 lbl_803E3C00;
+extern f32 lbl_803E3C04;
+extern void landed_arwing_updateHitReaction(int obj, int state);
+extern void landed_arwing_updateDamageTexture(int obj, int state);
+extern uint GameBit_Get(int eventId);
+extern void ObjGroup_AddObject(int obj, int group);
+extern void ObjHitbox_SetSphereRadius(int obj, int radius);
+extern f32 mathSinf(f32 angle);
+extern f32 mathCosf(f32 angle);
+extern f32 lbl_803E3C08;
+extern f32 lbl_803E3C0C;
+extern f32 lbl_803E3C10;
+extern f32 lbl_803E3C14;
+extern f32 lbl_803E3C18;
+STATIC_ASSERT(sizeof(TreasureChestSetup) == 0x24);
+STATIC_ASSERT(offsetof(TreasureChestSetup, type) == 0x18);
+STATIC_ASSERT(offsetof(TreasureChestSetup, hitboxKind) == 0x19);
+STATIC_ASSERT(offsetof(TreasureChestSetup, triggerObjectId) == 0x1a);
+STATIC_ASSERT(offsetof(TreasureChestSetup, dialogueId) == 0x1c);
+STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
+extern f32 lbl_803E3C20;
 
 void staffactivated_calcInteractionTargetXZ(int obj, f32* outX, f32* outZ)
 {
@@ -120,17 +150,6 @@ int staffactivated_getObjectTypeId(void)
 void staffactivated_free(int x) { ObjGroup_RemoveObject(x, 0x41); }
 
 void staffactivated_render(void) { objRenderFn_8003b8f4(lbl_803E3BBC); }
-
-extern void Obj_GetPlayerObject(void);
-extern int fn_80295CE4(void);
-extern u32 GameBit_Get(int eventId);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E3BDC;
-extern f32 lbl_803E3C00;
-extern f32 lbl_803E3C04;
-extern void landed_arwing_updateHitReaction(int obj, int state);
-extern void landed_arwing_updateDamageTexture(int obj, int state);
 
 typedef struct StaffActivatedFlagsBits {
     u8 active : 1;
@@ -241,29 +260,6 @@ void staffactivated_update(int obj)
         break;
     }
 }
-
-#include "main/dll/CF/dll_165.h"
-#include "main/dll/CF/dll_163.h"
-#include "main/game_object.h"
-
-extern uint GameBit_Get(int eventId);
-extern void ObjGroup_AddObject(int obj, int group);
-extern void ObjHitbox_SetSphereRadius(int obj, int radius);
-extern f32 mathSinf(f32 angle);
-extern f32 mathCosf(f32 angle);
-
-extern f32 lbl_803E3C08;
-extern f32 lbl_803E3C0C;
-extern f32 lbl_803E3C10;
-extern f32 lbl_803E3C14;
-extern f32 lbl_803E3C18;
-
-STATIC_ASSERT(sizeof(TreasureChestSetup) == 0x24);
-STATIC_ASSERT(offsetof(TreasureChestSetup, type) == 0x18);
-STATIC_ASSERT(offsetof(TreasureChestSetup, hitboxKind) == 0x19);
-STATIC_ASSERT(offsetof(TreasureChestSetup, triggerObjectId) == 0x1a);
-STATIC_ASSERT(offsetof(TreasureChestSetup, dialogueId) == 0x1c);
-STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
 
 void staffactivated_init(int obj, int setup)
 {
@@ -386,5 +382,3 @@ void staffactivated_init(int obj, int setup)
         }
     }
 }
-
-extern f32 lbl_803E3C20;

@@ -5,8 +5,13 @@
 #include "main/dll/baddie_state.h"
 #include "main/resource.h"
 #include "main/screen_transition.h"
+#include "main/dll/path_control_interface.h"
+#include "main/objanim.h"
 
 extern undefined4 DAT_803de0af;
+
+extern u8 lbl_803DD42D;
+extern u8 screenTransitionPause;
 
 void FUN_800d7780(undefined param_1)
 {
@@ -137,21 +142,11 @@ int Dummy04_func0B_ret_0(void) { return 0x0; }
 int Dummy04_func0A_ret_0(void) { return 0x0; }
 int Dummy04_func05_ret_0(void) { return 0x0; }
 
-extern u8 lbl_803DD42D;
-
 int Dummy04_func03_ret_m1(void) { return -0x1; }
-
-extern u8 screenTransitionPause;
 
 /* fcmp-eq-to-bool. */
 
 /* multi-store leaf (single float broadcast). */
-
-#include "main/dll/baddie_state.h"
-#include "main/dll/path_control_interface.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/game_object.h"
-#include "main/objanim.h"
 
 /* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
  * deref-cleanup wave; curves.h re-exports it). */

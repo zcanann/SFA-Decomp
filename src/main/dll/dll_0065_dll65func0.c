@@ -15,12 +15,6 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-static inline u8* Gameplay_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 FUN_800033a8();
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_80006768();
@@ -48,7 +42,6 @@ extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286880();
 extern undefined4 FUN_8028688c();
-
 extern undefined4 DAT_802c28f0;
 extern undefined4 DAT_802c28f4;
 extern undefined4 DAT_802c28f8;
@@ -125,6 +118,25 @@ extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
+extern int maybeTryLoadSave(int a);
+extern u8 lbl_80312E58[];
+extern f32 lbl_803E0930;
+extern f32 lbl_803E0934;
+extern f32 lbl_803E0938;
+extern f32 lbl_803E093C;
+extern f32 lbl_803E0940;
+extern f32 lbl_803E0944;
+extern f32 lbl_803E0948;
+extern f32 lbl_803E094C;
+extern f32 lbl_803E0950;
+extern f32 lbl_803E0954;
+extern f32 lbl_803E0958;
+
+static inline u8* Gameplay_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (u8*)objAnim->banks[objAnim->bankIndex];
+}
 
 void saveFileStruct_unlockCheat(uint cheatId)
 {
@@ -232,8 +244,6 @@ undefined4* FUN_800e87a8(void)
 {
     return &DAT_803a45b0;
 }
-
-extern int maybeTryLoadSave(int a);
 
 int saveFn_800e8508(void);
 
@@ -696,19 +706,6 @@ enum
     SAVEGAME_EMPTY_TASK_HINT = -1,
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
-
-extern u8 lbl_80312E58[];
-extern f32 lbl_803E0930;
-extern f32 lbl_803E0934;
-extern f32 lbl_803E0938;
-extern f32 lbl_803E093C;
-extern f32 lbl_803E0940;
-extern f32 lbl_803E0944;
-extern f32 lbl_803E0948;
-extern f32 lbl_803E094C;
-extern f32 lbl_803E0950;
-extern f32 lbl_803E0954;
-extern f32 lbl_803E0958;
 
 void dll_65_func03(int sourceObj, int variant, int posSource, uint flags)
 {

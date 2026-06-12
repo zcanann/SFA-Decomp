@@ -72,6 +72,26 @@ extern f32 lbl_803E4F6C;
 extern f32 lbl_803E4F70;
 extern f32 lbl_803E4F74;
 
+extern f32 lbl_803E422C;
+extern void* Obj_GetPlayerObject(void);
+extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
+extern f32 lbl_803E4298;
+extern void modelLightStruct_freeSlot(int* p);
+extern f32 lbl_803E42A0;
+extern f32 lbl_803E42A4;
+extern f32 lbl_80322C38[];
+extern f32 lbl_803DBE58;
+extern f32 lbl_803DBE5C;
+extern void* modelLightStruct_createPointLight(int a, int b, int c, int d);
+extern void modelLightStruct_setDistanceAttenuation(void* light, f32 a, f32 b);
+extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
+extern void Obj_TransformLocalVectorByWorldMatrix(int* obj, void* out, void* in);
+extern void voxmaps_traceScaledVectorEnd(f32* dst, void* posA, f32* dir, f32 factor);
+extern f32 PSVECDistance(void* a, void* b);
+extern void PSVECScale(void* in, void* out, f32 scale);
+extern void getAmbientColor(int mode, u8* r, u8* g, u8* b);
+extern void modelLightStruct_setDiffuseColor(void* p, int r, int g, int b, int a);
+
 void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* param_3)
 {
     uint uVar1;
@@ -393,8 +413,6 @@ void babycloudrunner_init_OLD_v1_1(int obj)
     return;
 }
 
-extern f32 lbl_803E422C;
-
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
 typedef struct BabyCloudRunnerState
@@ -543,10 +561,6 @@ void cfguardian_release(void);
  * (cfguardian_getExtraSize == 0xa9c). */
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
-extern void* Obj_GetPlayerObject(void);
-
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
-
 /* Per-object extra state for the CloudRunner main crystal
  * (cfmaincrystal_getExtraSize == 0x160). */
 
@@ -583,8 +597,6 @@ void gcrobotlightbea_release(void)
 void gcrobotlightbea_initialise(void)
 {
 }
-
-extern f32 lbl_803E4298;
 
 /* EN v1.0 0x801A01E8  size: 296b  gcrobotlightbea_hitDetect: clear the hit
  * flag, then re-set it only if the priority hit is the (undisguised) player
@@ -624,8 +636,6 @@ int cfperch_getExtraSize(void);
 
 u32 fn_801A0174(int* obj) { return (((GcRobotLightBeaState*)((int**)obj)[0xb8 / 4])->hitFlags >> 7) & 1; }
 
-extern void modelLightStruct_freeSlot(int* p);
-
 void gcrobotlightbea_init(int* obj)
 {
     GcRobotLightBeaState* state = ((GameObject*)obj)->extra;
@@ -634,21 +644,6 @@ void gcrobotlightbea_init(int* obj)
     ObjHits_EnableObject(obj);
     ((GameObject*)obj)->anim.alpha = 0x80;
 }
-
-extern f32 lbl_803E42A0;
-extern f32 lbl_803E42A4;
-extern f32 lbl_80322C38[];
-extern f32 lbl_803DBE58;
-extern f32 lbl_803DBE5C;
-extern void* modelLightStruct_createPointLight(int a, int b, int c, int d);
-extern void modelLightStruct_setDistanceAttenuation(void* light, f32 a, f32 b);
-extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
-extern void Obj_TransformLocalVectorByWorldMatrix(int* obj, void* out, void* in);
-extern void voxmaps_traceScaledVectorEnd(f32* dst, void* posA, f32* dir, f32 factor);
-extern f32 PSVECDistance(void* a, void* b);
-extern void PSVECScale(void* in, void* out, f32 scale);
-extern void getAmbientColor(int mode, u8* r, u8* g, u8* b);
-extern void modelLightStruct_setDiffuseColor(void* p, int r, int g, int b, int a);
 
 void gcrobotlightbea_update(int* obj)
 {

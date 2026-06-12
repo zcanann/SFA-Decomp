@@ -15,12 +15,6 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-static inline u8* Gameplay_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 FUN_800033a8();
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_80006768();
@@ -49,7 +43,6 @@ extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286880();
 extern undefined4 FUN_8028688c();
-
 extern undefined4 DAT_802c28f0;
 extern undefined4 DAT_802c28f4;
 extern undefined4 DAT_802c28f8;
@@ -126,6 +119,18 @@ extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
+extern int maybeTryLoadSave(int a);
+extern void vecRotateZXY(void* p, f32* v);
+extern u8 lbl_80311DA8[];
+extern u8 lbl_803DB898, lbl_803DB8A0, lbl_803DB8A8;
+extern const f32 lbl_803E0710, lbl_803E0714, lbl_803E0718, lbl_803E071C, lbl_803E0720;
+extern u8 lbl_80312340[];
+
+static inline u8* Gameplay_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (u8*)objAnim->banks[objAnim->bankIndex];
+}
 
 void saveFileStruct_unlockCheat(uint cheatId)
 {
@@ -233,8 +238,6 @@ undefined4* FUN_800e87a8(void)
 {
     return &DAT_803a45b0;
 }
-
-extern int maybeTryLoadSave(int a);
 
 int saveFn_800e8508(void);
 
@@ -690,11 +693,6 @@ enum
 
 void dll_60_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
 
-extern void vecRotateZXY(void* p, f32* v);
-extern u8 lbl_80311DA8[];
-extern u8 lbl_803DB898, lbl_803DB8A0, lbl_803DB8A8;
-extern const f32 lbl_803E0710, lbl_803E0714, lbl_803E0718, lbl_803E071C, lbl_803E0720;
-
 void StaffCollision_func03(u8* sourceObj, int variant, u8* spawnParams, uint spawnFlags, int modelId, int* colorArgs)
 {
     struct
@@ -863,5 +861,3 @@ void StaffCollision_func03(u8* sourceObj, int variant, u8* spawnParams, uint spa
                                          variant != 0 ? (u8*)&base[0x48] : &lbl_803DB898, 0, 0);
     }
 }
-
-extern u8 lbl_80312340[];

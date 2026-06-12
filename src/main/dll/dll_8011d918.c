@@ -10,6 +10,9 @@ extern undefined4 FUN_80053c98();
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803de3a8;
 
+extern s16 lbl_803DD8C2;
+extern void Sfx_PlayFromObjectLimited(int obj, u16 sfx, int);
+
 void FUN_8011daf8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined4 param_9, undefined4 param_10, undefined4 param_11, undefined4 param_12,
@@ -43,8 +46,6 @@ FUN_8011dafc(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 void OptionsScreen_frameEnd(void);
 
-extern s16 lbl_803DD8C2;
-extern void Sfx_PlayFromObjectLimited(int obj, u16 sfx, int);
 #pragma scheduling off
 void cMenuPlaySelectedItemSfx(int obj)
 {

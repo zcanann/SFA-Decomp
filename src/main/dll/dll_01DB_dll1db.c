@@ -67,6 +67,19 @@ typedef struct Dll1DBState
 
 #pragma scheduling on
 #pragma peephole on
+extern u32 GameBit_Get(int id);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern f32 lbl_803E4B0C;
+extern f32 lbl_803E4B10;
+extern f32 lbl_803E4B14;
+extern f32 lbl_803E4B18;
+extern f32 lbl_803E4B1C;
+extern f32 lbl_803E4B20;
+extern f32 lbl_803E4B24;
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803E4B08;
+extern void envFxActFn_800887f8(int a);
+
 void FUN_801b9cc4(int param_1)
 {
     char* pcVar1;
@@ -106,17 +119,6 @@ void dll_1DB_initialise(void)
 }
 
 void dim2icefloe_free(void);
-
-extern u32 GameBit_Get(int id);
-
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern f32 lbl_803E4B0C;
-extern f32 lbl_803E4B10;
-extern f32 lbl_803E4B14;
-extern f32 lbl_803E4B18;
-extern f32 lbl_803E4B1C;
-extern f32 lbl_803E4B20;
-extern f32 lbl_803E4B24;
 
 void dll_1DB_update(int obj)
 {
@@ -245,7 +247,6 @@ void dll_1DB_update(int obj)
 
 /* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
  * fall, land on contact object, clamp to floor height. */
-extern f32 sqrtf(f32 x);
 
 void dll_1DA_update(int obj);
 
@@ -255,8 +256,6 @@ void dll_1DA_update(int obj);
 int dll_1DB_getExtraSize(void) { return 0x8; }
 int dll_1DB_getObjectTypeId(void) { return 0x0; }
 int dim2icefloe_getExtraSize(void);
-
-extern f32 lbl_803E4B08;
 
 void dll_1DB_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -301,5 +300,3 @@ void dll_1DB_init(void* obj, void* p)
     }
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
-
-extern void envFxActFn_800887f8(int a);

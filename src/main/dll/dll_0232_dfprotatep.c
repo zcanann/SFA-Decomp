@@ -72,6 +72,12 @@ void TrickyCurve_updateBurstTrigger(int obj);
 
 #pragma scheduling on
 #pragma peephole on
+extern void fn_80206C18(int* obj);
+extern int ObjHits_GetPriorityHit(int obj, undefined4* outHitObject, int* outSphereIndex, uint* outHitVolume);
+extern void gameTimerInit(int timerId, int frames);
+extern int isGameTimerDisabled(void);
+extern void timerSetToCountUp(void);
+
 void TrickyCurve_updateBoundsTrigger(int obj)
 {
     float dx;
@@ -650,18 +656,6 @@ void sfxplayer_hitDetect(void)
 int TrickyCurve_getExtraSize(void);
 int sfxplayer_getExtraSize(void) { return 0xa; }
 int sfxplayer_getObjectTypeId(void) { return 0x0; }
-
-extern void fn_80206C18(int* obj);
-
-#include "main/mapEvent.h"
-#include "main/dll/TrickyCurve.h"
-#include "main/dll/sfxplayer.h"
-#include "main/game_object.h"
-
-extern int ObjHits_GetPriorityHit(int obj, undefined4* outHitObject, int* outSphereIndex, uint* outHitVolume);
-extern void gameTimerInit(int timerId, int frames);
-extern int isGameTimerDisabled(void);
-extern void timerSetToCountUp(void);
 
 #define SFXPLAYER_OBJECT_FLAGS_OFFSET 0xB0
 #define SFXPLAYER_OBJECT_STATE_OFFSET 0xB8

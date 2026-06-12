@@ -39,6 +39,30 @@ extern int Obj_GetPlayerObject(void);
 extern u8 framesThisStep;
 extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int p);
 
+extern u32 getSbGalleon(void);
+extern f32 Vec_distance(void* a, void* b);
+extern void Sfx_StopObjectChannel(int obj, int ch);
+extern u8 Obj_IsLoadingLocked(void);
+extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
+extern u8* Obj_AllocObjectSetup(int size, int objId);
+extern int Obj_SetupObject(u8* setup, int a, int b, int c, int d);
+extern u8 lbl_803DC090;
+extern int lbl_803DDC48;
+extern f32 lbl_803E5834;
+extern f32 lbl_803E5840;
+extern f32 lbl_803E5844;
+extern f32 lbl_803E5848;
+extern f32 lbl_803E584C;
+extern f32 lbl_803E5850;
+extern f32 lbl_803E5854;
+extern f32 lbl_803E5858;
+extern f32 lbl_803E585C;
+extern f32 sqrtf(f32);
+extern void ObjMsg_AllocQueue(int obj, int n);
+extern f32 lbl_803E5830;
+extern f32 lbl_803E5838;
+extern f32 lbl_803E5888;
+
 void SB_ShipHead_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     int ref;
@@ -83,26 +107,6 @@ void SB_ShipHead_render(int obj, int param_2, int param_3, int param_4, int para
     }
     return;
 }
-
-extern u32 getSbGalleon(void);
-extern f32 Vec_distance(void* a, void* b);
-extern void Sfx_StopObjectChannel(int obj, int ch);
-extern u8 Obj_IsLoadingLocked(void);
-extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
-extern u8* Obj_AllocObjectSetup(int size, int objId);
-extern int Obj_SetupObject(u8* setup, int a, int b, int c, int d);
-extern u8 lbl_803DC090;
-extern int lbl_803DDC48;
-extern f32 lbl_803E5834;
-extern f32 lbl_803E5840;
-extern f32 lbl_803E5844;
-extern f32 lbl_803E5848;
-extern f32 lbl_803E584C;
-extern f32 lbl_803E5850;
-extern f32 lbl_803E5854;
-extern f32 lbl_803E5858;
-extern f32 lbl_803E585C;
-extern f32 sqrtf(f32);
 
 void SB_ShipHead_update(int obj)
 {
@@ -276,10 +280,6 @@ void SB_ShipHead_free(int x) { ObjGroup_RemoveObject(x, 0x3); }
 
 void SB_Propeller_hitDetect(int obj);
 
-extern void ObjMsg_AllocQueue(int obj, int n);
-extern f32 lbl_803E5830;
-extern f32 lbl_803E5838;
-
 void SB_ShipHead_init(int obj)
 {
     f32* p = (f32*)((int**)obj)[0xb8 / 4];
@@ -289,7 +289,5 @@ void SB_ShipHead_init(int obj)
     ((SBShipHeadState*)p)->swayB = ((SBShipHeadState*)p)->swayB + lbl_803E5830;
     ((SBShipHeadState*)p)->swayA = ((SBShipHeadState*)p)->swayA + lbl_803E5838;
 }
-
-extern f32 lbl_803E5888;
 
 void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible);

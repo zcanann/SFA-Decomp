@@ -6,6 +6,9 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
+#include "main/dll/DB/DBrockfall.h"
+#include "main/effect_interfaces.h"
+#include "main/objanim_internal.h"
 
 extern undefined4 Sfx_SetObjectSfxVolume();
 extern undefined4 Sfx_PlayFromObject();
@@ -58,6 +61,10 @@ extern f32 lbl_803E56A4;
  * frame works the rope position from A-press mashing, runs both pull anims
  * and grunt/creak sfx, and ends the game through the screen transition
  * when either side wins. */
+extern void objRenderFn_8003b8f4(f32);
+extern u32 GameBit_Get(int eventId);
+extern uint GameBit_Get(int eventId);
+
 int platform1_control(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     GameObject* self;
@@ -378,7 +385,6 @@ int sc_totemstrength_getExtraSize(void) { return 0x34; }
 int sc_totemstrength_getObjectTypeId(void) { return 0x0; }
 int paymentkiosk_getExtraSize(void);
 
-extern void objRenderFn_8003b8f4(f32);
 void sc_totemstrength_render(void) { objRenderFn_8003b8f4(lbl_803E567C); }
 void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
@@ -396,8 +402,6 @@ void sc_totemstrength_init(int* obj)
     st->savedPosY = self->anim.localPosY;
     st->savedPosZ = self->anim.localPosZ;
 }
-
-extern u32 GameBit_Get(int eventId);
 
 /* EN v1.0 0x801DEE90  size: 548b  sc_totemstrength_update: drive the
  * tug-of-war intro/outro sequencing once map event 0xe reaches state 6. */
@@ -486,17 +490,6 @@ u32 PaymentKiosk_testEvent(int obj, int p2, int ev);
 /* EN v1.0 0x801DF1EC  size: 280b  PaymentKiosk_SeqFn. */
 
 /* EN v1.0 0x801DF328  size: 276b  paymentkiosk_update. */
-
-#include "main/dll/paymentkiosk.h"
-#include "main/dll/DB/DBrockfall.h"
-#include "main/dll/VF/platform1.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/mapEventTypes.h"
-#include "main/objanim_internal.h"
-#include "main/objseq.h"
-
-extern uint GameBit_Get(int eventId);
 
 static void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams* params);
 

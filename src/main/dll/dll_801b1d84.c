@@ -49,6 +49,8 @@ extern f32 lbl_803DBEF0;
 
 /* DIMwooddoor_updateFallingDebris: integrate the falling debris under gravity, spin it, and on
  * contact (or scripted trigger) fire the explosion and start the despawn timer. */
+extern int* getTrickyObject(void);
+
 void DIMwooddoor_updateFallingDebris(int* obj)
 {
     int* extra = ((GameObject*)obj)->extra;
@@ -110,8 +112,6 @@ void DIMwooddoor_updateFallingDebris(int* obj)
         *(s8*)&((DIMwooddoorUpdateFallingDebrisState*)extra)->unk7 = 0;
     }
 }
-
-extern int* getTrickyObject(void);
 
 /* dimicewall_update: on shatter, emit two snow particle bursts and latch the
  * gamebit; otherwise let Tricky push through it. */

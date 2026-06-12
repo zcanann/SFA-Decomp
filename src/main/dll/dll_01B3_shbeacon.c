@@ -31,14 +31,29 @@ extern uint GameBit_Get(int eventId);
 
 extern f32 timeDelta;
 
-int sh_beacon_getExtraSize(void) { return 0x18; }
-
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 extern void Obj_FreeObject(int obj);
 extern void ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d,
                                                       int e, void* f);
 extern f32 lbl_803E5528;
 extern f32 lbl_803E552C;
+extern u8 Obj_IsLoadingLocked(void);
+extern int* Obj_AllocObjectSetup(int a, int b);
+extern int loadObjectAtObject(int obj, int* setup);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
+extern int GameBit_Set(int eventId, int value);
+extern void gameBitDecrement(int eventId);
+extern void* getTrickyObject(void);
+extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
+extern f32 lbl_803E5530;
+extern f32 lbl_803E5534;
+extern f32 lbl_803E5538;
+extern f32 lbl_803E553C;
+extern int lbl_803DDBF8;
+
+int sh_beacon_getExtraSize(void) { return 0x18; }
 
 int sh_beacon_SeqFn(int obj)
 {
@@ -79,12 +94,6 @@ void sh_emptytumblew_update(int obj);
 
 /* TODO stubs to align function set with v1.0 asm. Bodies are large
  * state-machine and animation logic; filling them is a follow-up task. */
-extern u8 Obj_IsLoadingLocked(void);
-extern int* Obj_AllocObjectSetup(int a, int b);
-extern int loadObjectAtObject(int obj, int* setup);
-
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 void sh_beacon_init(int obj, int defData)
 {
@@ -118,17 +127,6 @@ void sh_beacon_init(int obj, int defData)
 
     ((GameObject*)obj)->animEventCallback = (void*)sh_beacon_SeqFn;
 }
-
-extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
-extern int GameBit_Set(int eventId, int value);
-extern void gameBitDecrement(int eventId);
-extern void* getTrickyObject(void);
-extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
-extern f32 lbl_803E5530;
-extern f32 lbl_803E5534;
-extern f32 lbl_803E5538;
-extern f32 lbl_803E553C;
-extern int lbl_803DDBF8;
 
 void sh_beacon_update(int obj)
 {

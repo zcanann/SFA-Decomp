@@ -2,6 +2,9 @@
 #include "main/dll/path_control_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/objhits_types.h"
+#include "main/dll/BW/BWalphaanim.h"
+#include "main/dll/dll_0015_curves.h"
 
 typedef struct SnowBikeMountState
 {
@@ -75,40 +78,6 @@ typedef struct SnowBikeSetTypeState
     u8 pad4C4[0x4C8 - 0x4C4];
 } SnowBikeSetTypeState;
 
-void SnowBike_func17(void)
-{
-}
-
-void SnowBike_func16(void)
-{
-}
-
-int SnowBike_func0E(void) { return 0x2; }
-int SnowBike_render2(void) { return 0x0; }
-int SnowBike_getExtraSize(void) { return 0x59c; }
-int SnowBike_getObjectTypeId(void) { return 0x3; }
-
-u8 SnowBike_func0B(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x420); }
-
-void SnowBike_mount(int obj, f32* x, f32* y, f32* z)
-{
-    int t = *(int*)&((GameObject*)obj)->extra;
-    ((SnowBikeMountState*)t)->unk400 = ((GameObject*)obj)->anim.localPosX;
-    ((SnowBikeMountState*)t)->unk404 = ((GameObject*)obj)->anim.localPosY;
-    ((SnowBikeMountState*)t)->unk408 = ((GameObject*)obj)->anim.localPosZ;
-    *x = ((SnowBikeMountState*)t)->unk400;
-    *y = ((SnowBikeMountState*)t)->unk404;
-    *z = ((SnowBikeMountState*)t)->unk408;
-}
-
-void SnowBike_modelMtxFn(int obj, f32* x, f32* y, f32* z)
-{
-    int t = *(int*)&((GameObject*)obj)->extra;
-    *x = *(f32*)(t + 0x3e8);
-    *y = *(f32*)(t + 0x3ec);
-    *z = *(f32*)(t + 0x3f0);
-}
-
 extern void ObjGroup_RemoveObject(int obj, int group);
 extern void mm_free(void* p);
 extern void* gCheckpointInterface;
@@ -142,6 +111,117 @@ extern f32 lbl_803E5B98;
 extern int GameBit_Set(int bit, int val);
 extern void* mapRomListFindItem(int a, int b, int c, int d, int e);
 extern int lbl_80328590[];
+extern void setMatrixFromObjectPos(void* mtx, s16* vec);
+extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
+extern void fn_801E991C(void* obj, void* path);
+extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
+extern void fn_801EB940(int obj, u8* state);
+extern f32 PSVECMag(f32 * v);
+extern void doRumble(f32 f);
+extern int arrayIndexOf(s16* arr, int n, int value);
+extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
+extern void Sfx_PlayFromObject(int obj, int sfx);
+extern void Sfx_SetObjectSfxVolume(int obj, int sfx, u8 vol, f32 v);
+extern void Camera_EnableViewYOffset(void);
+extern void CameraShake_SetAllMagnitudes(f32 f);
+extern void OSReport(char* fmt, ...);
+extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern s16 lbl_8032855C[];
+extern char lbl_803DC0E4;
+extern f32 oneOverTimeDelta;
+extern f32 lbl_803E5B28;
+extern f32 lbl_803E5B88;
+extern f32 lbl_803E5BA4;
+extern f32 lbl_803E5BBC;
+extern f32 lbl_803E5BC4;
+extern f32 lbl_803E5C4C;
+extern undefined4 FUN_8000680c();
+extern uint GameBit_Get(int eventId);
+extern undefined4 fn_801EAE4C();
+extern undefined4 fn_801EB0D4();
+extern undefined4 fn_801EB634();
+extern void fn_801EC1AC(int obj, int state);
+extern void textureFree(u32);
+extern u32 textureLoadAsset(int);
+extern u32 lbl_803DDC60;
+extern char lbl_803284E0[];
+extern u32 lbl_803E5AE0;
+extern u8* mmAlloc(int size, int tag, int a);
+extern void* memcpy(void* dst, const void* src, int n);
+extern void Obj_ClearModelSlotIndex(int obj);
+extern void SnowBike_animEventCallback();
+extern void ObjGroup_AddObject(int obj, int group);
+extern f32 lbl_803DC0B8;
+extern f32 lbl_803DC0C0;
+extern f32 lbl_803DC0C4;
+extern f32 lbl_803E5AF0;
+extern f32 lbl_803E5B14;
+extern f32 lbl_803E5B1C;
+extern f32 lbl_803E5B48;
+extern f32 lbl_803E5C50;
+extern f32 lbl_803E5C54;
+extern f32 lbl_803E5C58;
+extern f32 lbl_803E5C5C;
+extern f32 lbl_803E5C60;
+extern f32 lbl_803E5C64;
+extern f32 lbl_803E5C68;
+extern void Obj_SetModelSlotIndex(int obj, int slot);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern int drshackle_updateAttachedPosition(int obj, u8* state);
+extern void fn_801EBD60(int obj, u8* state);
+extern void fn_801EA240(int obj, u8* state, f32 speed, int val, u8* p, int n);
+extern void objApplyVelocity(int obj);
+extern int Rcp_GetMotionBlurEnabled(void);
+extern void setMotionBlur(int a, f32 b);
+extern void PSVECScale(f32* src, f32* dst, f32 scale);
+extern void PSVECAdd(f32 * a, f32 * b, f32 * dst);
+extern f32 powfBitEstimate(f32 x, f32 y);
+extern void setAButtonIcon(int icon);
+extern void setBButtonIcon(int icon);
+extern char padGetStickX(int pad);
+extern char padGetStickY(int pad);
+extern u32 getButtonsHeld(int pad);
+extern u32 getButtonsJustPressed(int pad);
+extern u32 getButtonsJustPressedIfNotBusy(int pad);
+extern int getAngle(f32 dx, f32 dz);
+extern f32 timeDelta;
+extern f32 lbl_803E5B6C;
+extern f32 lbl_803E5BA0;
+extern f32 lbl_803E5C18;
+
+void SnowBike_func17(void)
+{
+}
+
+void SnowBike_func16(void)
+{
+}
+
+int SnowBike_func0E(void) { return 0x2; }
+int SnowBike_render2(void) { return 0x0; }
+int SnowBike_getExtraSize(void) { return 0x59c; }
+int SnowBike_getObjectTypeId(void) { return 0x3; }
+
+u8 SnowBike_func0B(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x420); }
+
+void SnowBike_mount(int obj, f32* x, f32* y, f32* z)
+{
+    int t = *(int*)&((GameObject*)obj)->extra;
+    ((SnowBikeMountState*)t)->unk400 = ((GameObject*)obj)->anim.localPosX;
+    ((SnowBikeMountState*)t)->unk404 = ((GameObject*)obj)->anim.localPosY;
+    ((SnowBikeMountState*)t)->unk408 = ((GameObject*)obj)->anim.localPosZ;
+    *x = ((SnowBikeMountState*)t)->unk400;
+    *y = ((SnowBikeMountState*)t)->unk404;
+    *z = ((SnowBikeMountState*)t)->unk408;
+}
+
+void SnowBike_modelMtxFn(int obj, f32* x, f32* y, f32* z)
+{
+    int t = *(int*)&((GameObject*)obj)->extra;
+    *x = *(f32*)(t + 0x3e8);
+    *y = *(f32*)(t + 0x3ec);
+    *z = *(f32*)(t + 0x3f0);
+}
 
 void SnowBike_func15(int obj)
 {
@@ -183,8 +263,6 @@ void SnowBike_func15(int obj)
         *(s8*)(t + 0x3d3) = 1;
     }
 }
-
-extern void setMatrixFromObjectPos(void* mtx, s16* vec);
 
 typedef struct DRcradleSnowBikeFlags
 {
@@ -404,12 +482,6 @@ void SnowBike_free(int obj)
 s32 SnowBike_func14(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x422); }
 s32 SnowBike_getType(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x421); }
 
-#include "main/game_object.h"
-
-extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
-extern void fn_801E991C(void* obj, void* path);
-extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
-
 void SnowBike_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
     void* path;
@@ -427,31 +499,6 @@ void SnowBike_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, und
         ObjPath_GetPointWorldPosition(obj, 0, (char*)path + 0x3e8, (char*)path + 0x3ec, (char*)path + 0x3f0, 0);
     }
 }
-
-#include "main/game_object.h"
-#include "main/objhits_types.h"
-#include "main/dll/BW/BWalphaanim.h"
-
-extern void fn_801EB940(int obj, u8* state);
-extern f32 PSVECMag(f32 * v);
-extern void doRumble(f32 f);
-extern int arrayIndexOf(s16* arr, int n, int value);
-extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
-extern void Sfx_PlayFromObject(int obj, int sfx);
-extern void Sfx_SetObjectSfxVolume(int obj, int sfx, u8 vol, f32 v);
-extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 f);
-extern void OSReport(char* fmt, ...);
-extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern s16 lbl_8032855C[];
-extern char lbl_803DC0E4;
-extern f32 oneOverTimeDelta;
-extern f32 lbl_803E5B28;
-extern f32 lbl_803E5B88;
-extern f32 lbl_803E5BA4;
-extern f32 lbl_803E5BBC;
-extern f32 lbl_803E5BC4;
-extern f32 lbl_803E5C4C;
 
 typedef struct
 {
@@ -643,23 +690,6 @@ clamp:
     state->unk42C = 0;
 }
 
-#include "main/dll/BW/BWalphaanim.h"
-#include "main/game_ui_interface.h"
-#include "main/game_object.h"
-#include "main/dll/dll_0015_curves.h"
-#include "main/dll/path_control_interface.h"
-
-extern undefined4 FUN_8000680c();
-extern uint GameBit_Get(int eventId);
-extern undefined4 fn_801EAE4C();
-extern undefined4 fn_801EB0D4();
-extern undefined4 fn_801EB634();
-extern void fn_801EC1AC(int obj, int state);
-
-extern void textureFree(u32);
-extern u32 textureLoadAsset(int);
-extern u32 lbl_803DDC60;
-
 void SnowBike_release(void)
 {
     if (lbl_803DDC60 != 0)
@@ -678,28 +708,6 @@ void SnowBike_initialise(void)
 }
 
 void SB_CloudRunner_onSeqFree(int* obj);
-
-extern char lbl_803284E0[];
-extern u32 lbl_803E5AE0;
-extern u8* mmAlloc(int size, int tag, int a);
-extern void* memcpy(void* dst, const void* src, int n);
-extern void Obj_ClearModelSlotIndex(int obj);
-extern void SnowBike_animEventCallback();
-extern void ObjGroup_AddObject(int obj, int group);
-extern f32 lbl_803DC0B8;
-extern f32 lbl_803DC0C0;
-extern f32 lbl_803DC0C4;
-extern f32 lbl_803E5AF0;
-extern f32 lbl_803E5B14;
-extern f32 lbl_803E5B1C;
-extern f32 lbl_803E5B48;
-extern f32 lbl_803E5C50;
-extern f32 lbl_803E5C54;
-extern f32 lbl_803E5C58;
-extern f32 lbl_803E5C5C;
-extern f32 lbl_803E5C60;
-extern f32 lbl_803E5C64;
-extern f32 lbl_803E5C68;
 
 typedef struct
 {
@@ -887,36 +895,11 @@ void SnowBike_init(int obj, u8* params, int flag)
     (*gPathControlInterface)->attachObject((void*)obj, path);
 }
 
-extern void Obj_SetModelSlotIndex(int obj, int slot);
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern int drshackle_updateAttachedPosition(int obj, u8* state);
-extern void fn_801EBD60(int obj, u8* state);
-extern void fn_801EA240(int obj, u8* state, f32 speed, int val, u8* p, int n);
-
 typedef struct
 {
     s16 rot[3];
     f32 quad[4];
 } SBRotQuad;
-
-extern void objApplyVelocity(int obj);
-extern int Rcp_GetMotionBlurEnabled(void);
-extern void setMotionBlur(int a, f32 b);
-extern void PSVECScale(f32* src, f32* dst, f32 scale);
-extern void PSVECAdd(f32 * a, f32 * b, f32 * dst);
-extern f32 powfBitEstimate(f32 x, f32 y);
-extern void setAButtonIcon(int icon);
-extern void setBButtonIcon(int icon);
-extern char padGetStickX(int pad);
-extern char padGetStickY(int pad);
-extern u32 getButtonsHeld(int pad);
-extern u32 getButtonsJustPressed(int pad);
-extern u32 getButtonsJustPressedIfNotBusy(int pad);
-extern int getAngle(f32 dx, f32 dz);
-extern f32 timeDelta;
-extern f32 lbl_803E5B6C;
-extern f32 lbl_803E5BA0;
-extern f32 lbl_803E5C18;
 
 void SnowBike_update(int obj)
 {

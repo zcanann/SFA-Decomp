@@ -6,6 +6,7 @@
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/effect_interfaces.h"
 
 #define DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG OBJ_MODEL_STATE_SHADOW_VISIBLE
 
@@ -46,6 +47,9 @@ extern f32 lbl_803E5108;
 STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
 STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);
 STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
+
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E5118;
 
 int DBSH_Symbol_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate)
 {
@@ -290,16 +294,12 @@ void dbsh_symbol_free(void)
     gameTimerStop();
 }
 
-extern void objRenderFn_8003b8f4(f32);
-
 void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     objRenderFn_8003b8f4(lbl_803E5104);
 }
 
 void dll_197_hitDetect(void);
-
-extern f32 lbl_803E5118;
 
 void dbsh_symbol_init(int* obj)
 {
@@ -318,8 +318,3 @@ void dbsh_symbol_init(int* obj)
 
     ((GameObject*)obj)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
 }
-
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/objseq.h"
-#include "main/resource.h"

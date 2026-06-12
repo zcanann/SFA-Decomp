@@ -37,7 +37,6 @@ typedef struct
     u8 b; // 0x3
 } SynthChanPatch; // size 0x4
 
-
 typedef struct
 {
     u32 time; // 0x0
@@ -118,6 +117,12 @@ typedef struct
  * Dispatch a queued voice/MIDI channel event by type, then pull the next
  * event for the channel.
  */
+extern int fn_8026CF78(u8 voice);
+extern f32 floorf(f32 x);
+extern f32 lbl_803E7780;
+extern f32 lbl_803E7784;
+extern f32 lbl_803E7788;
+
 int fn_8026E0E4(int event, u8 voice, u32* flag)
 {
     SynthMidiCtrlBlock* base = (SynthMidiCtrlBlock*)lbl_803AF550;
@@ -515,13 +520,6 @@ void fn_8026E90C(u8 voice)
         }
     }
 }
-
-extern int fn_8026CF78(u8 voice);
-
-extern f32 floorf(f32 x);
-extern f32 lbl_803E7780;
-extern f32 lbl_803E7784;
-extern f32 lbl_803E7788;
 
 #pragma fp_contract off
 int fn_8026E9D0(u8 voice, u32 param)

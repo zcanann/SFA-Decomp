@@ -139,19 +139,40 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
-static inline int* DIMcannon_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
-
 extern EffectInterface** gPartfxInterface;
+extern void Music_Trigger(int id, int p2);
+extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern void ModelLightStruct_free(void* light);
+extern void queueGlowRender(int* obj);
+extern int modelLightStruct_getActiveState(int* p);
+extern f32 lbl_803E47F0;
+extern void modelLightStruct_updateGlowAlpha(int p);
+extern f32 lbl_803E47D0, lbl_803E47F4, lbl_803E47F8, lbl_803E47FC;
+extern f32 lbl_803E47D4, lbl_803E47D8, lbl_803E47DC, lbl_803E47E0;
+extern f32 lbl_803E4800, lbl_803E4804, lbl_803E4808;
+extern u8 lbl_802C2318[];
+extern void vecRotateZXY(void* in, void* out);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern int ObjList_FindObjectById(int id);
+extern u8* objCreateLight(s16* obj, int b);
+extern void modelLightStruct_setLightKind(u8* light, int value);
+extern void modelLightStruct_setDiffuseColor(u8* light, int r, int g, int b, int a);
+extern void modelLightStruct_setDistanceAttenuation(u8* light, f32 a, f32 b);
+extern void modelLightStruct_setupGlow(u8* light, int p3, int p4, int p5, int p6, int p7, f32 a);
+extern void modelLightStruct_setGlowProjectionRadius(u8* light, f32 a);
+extern int* objFindTexture(int* obj, int a, int b);
+
+static inline int* DIMcannon_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (int*)objAnim->banks[objAnim->bankIndex];
+}
 
 #pragma scheduling on
 #pragma peephole on
@@ -294,12 +315,6 @@ u32 lavaball1be_func11(int* obj) { return *((u8*)((int**)obj)[0xb8 / 4] + 0x10) 
 
 int fn_801B0784(int obj, int delta);
 
-extern void Music_Trigger(int id, int p2);
-
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-
-extern void ModelLightStruct_free(void* light);
-
 void lavaball1be_free(int obj)
 {
     Lavaball1beState* inner = ((GameObject*)obj)->extra;
@@ -311,11 +326,6 @@ void lavaball1be_free(int obj)
 }
 
 void imspacethruster_free(int obj);
-
-extern void queueGlowRender(int* obj);
-
-extern int modelLightStruct_getActiveState(int* p);
-extern f32 lbl_803E47F0;
 
 void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5)
 {
@@ -329,22 +339,6 @@ void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5)
     }
     ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E47F0);
 }
-
-extern void modelLightStruct_updateGlowAlpha(int p);
-extern f32 lbl_803E47D0, lbl_803E47F4, lbl_803E47F8, lbl_803E47FC;
-extern f32 lbl_803E47D4, lbl_803E47D8, lbl_803E47DC, lbl_803E47E0;
-extern f32 lbl_803E4800, lbl_803E4804, lbl_803E4808;
-extern u8 lbl_802C2318[];
-extern void vecRotateZXY(void* in, void* out);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern int ObjList_FindObjectById(int id);
-extern u8* objCreateLight(s16* obj, int b);
-extern void modelLightStruct_setLightKind(u8* light, int value);
-extern void modelLightStruct_setDiffuseColor(u8* light, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(u8* light, f32 a, f32 b);
-extern void modelLightStruct_setupGlow(u8* light, int p3, int p4, int p5, int p6, int p7, f32 a);
-extern void modelLightStruct_setGlowProjectionRadius(u8* light, f32 a);
 
 typedef struct
 {
@@ -523,8 +517,6 @@ void lavaball1be_update(s16* obj)
         }
     }
 }
-
-extern int* objFindTexture(int* obj, int a, int b);
 
 void lavaball1be_setScale(s16* obj, int p2, int p3)
 {

@@ -48,6 +48,10 @@ extern f32 lbl_803E77A8;
         gSynthFadeMask |= 1 << (fadeIndex);                \
     } while (0)
 
+extern void sndBegin(void);
+extern void sndEnd(void);
+extern void salFree(void* ptr);
+
 void synthInit(u32 sampleRate, u32 voiceCount)
 {
     u8* state;
@@ -403,10 +407,6 @@ void synthSetFadeAction(u32 fadeIndex, u8 action)
 }
 
 #undef SYNTH_APPLY_FADE
-
-extern void sndBegin(void);
-extern void sndEnd(void);
-extern void salFree(void* ptr);
 
 void synthExit(void)
 {

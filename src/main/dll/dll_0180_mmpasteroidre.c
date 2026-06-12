@@ -70,6 +70,35 @@ extern undefined4 FUN_8005d0ac();
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E5180;
 
+extern f32 lbl_803E44F8;
+extern f32 lbl_803E44D4;
+extern void setDrawLights(int v);
+extern f32 lbl_803E44E8;
+extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
+extern f32 mathSinf(f32);
+extern char lbl_803231D0[];
+extern char lbl_803AC900[];
+extern int lbl_803DDB30;
+extern f32 lbl_803E44FC;
+extern f32 lbl_803E4500;
+extern f32 lbl_803E4504;
+extern f32 lbl_803E4508;
+extern f32 lbl_803E450C;
+extern f32 lbl_803E4510;
+extern f32 lbl_803E4514;
+extern f32 lbl_803E4518;
+extern f32 lbl_803E451C;
+extern f32 lbl_803E4520;
+extern f32 lbl_803E4524;
+extern f32 lbl_803E4528;
+extern f32 lbl_803E452C;
+extern f32 lbl_803E4530;
+extern f32 lbl_803E4534;
+extern f32 lbl_803E4538;
+extern f32 lbl_803E453C;
+extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
+
 undefined4
 FUN_801a68b8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -182,7 +211,6 @@ int mmp_asteroid_re_getObjectTypeId(void) { return 0x0; }
 int mmp_moonrock_getExtraSize(void);
 
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E44F8;
 
 #pragma peephole off
 void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -190,13 +218,6 @@ void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E44F8);
 }
-
-extern f32 lbl_803E44D4;
-
-extern void setDrawLights(int v);
-extern f32 lbl_803E44E8;
-
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 
 #pragma scheduling off
 int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -284,29 +305,7 @@ void mmp_asteroid_re_init(int obj)
     }
 }
 
-extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
-extern f32 mathSinf(f32);
 extern void doRumble(f32 duration);
-extern char lbl_803231D0[];
-extern char lbl_803AC900[];
-extern int lbl_803DDB30;
-extern f32 lbl_803E44FC;
-extern f32 lbl_803E4500;
-extern f32 lbl_803E4504;
-extern f32 lbl_803E4508;
-extern f32 lbl_803E450C;
-extern f32 lbl_803E4510;
-extern f32 lbl_803E4514;
-extern f32 lbl_803E4518;
-extern f32 lbl_803E451C;
-extern f32 lbl_803E4520;
-extern f32 lbl_803E4524;
-extern f32 lbl_803E4528;
-extern f32 lbl_803E452C;
-extern f32 lbl_803E4530;
-extern f32 lbl_803E4534;
-extern f32 lbl_803E4538;
-extern f32 lbl_803E453C;
 
 void mmp_asteroid_re_update(int obj)
 {
@@ -433,5 +432,3 @@ void mmp_asteroid_re_update(int obj)
     }
     state->eventFlags &= ~0x80;
 }
-
-extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);

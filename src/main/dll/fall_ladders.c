@@ -31,31 +31,6 @@ extern f32 lbl_803E360C;
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_801540a0(undefined4 param_1, int param_2)
-{
-    float fVar1;
-    float fVar2;
-
-    *(float*)(param_2 + 0x2ac) = lbl_803E35BC;
-    *(undefined4*)(param_2 + 0x2e4) = 1;
-    *(float*)(param_2 + 0x308) = lbl_803E358C;
-    *(float*)(param_2 + 0x300) = lbl_803E35C0;
-    *(float*)(param_2 + 0x304) = lbl_803E35C4;
-    *(undefined*)(param_2 + 800) = 0;
-    fVar2 = lbl_803E35A8;
-    *(float*)(param_2 + 0x314) = lbl_803E35A8;
-    *(undefined*)(param_2 + 0x321) = 7;
-    fVar1 = lbl_803E35A4;
-    *(float*)(param_2 + 0x318) = lbl_803E35A4;
-    *(undefined*)(param_2 + 0x322) = 0;
-    *(float*)(param_2 + 0x31c) = fVar2;
-    *(undefined*)(param_2 + 0x33a) = 0;
-    *(undefined*)(param_2 + 0x33b) = 0;
-    *(float*)(param_2 + 0x324) = lbl_803E35C8;
-    *(float*)(param_2 + 0x2fc) = fVar1;
-    return;
-}
-
 extern f32 lbl_803E294C;
 extern f32 lbl_803E2958;
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
@@ -89,6 +64,38 @@ extern f32 lbl_803E29C4;
 extern f64 lbl_803E29C8;
 extern f32 lbl_803E29D0;
 extern f32 lbl_803E29D4;
+extern f32 lbl_803E2978;
+extern f32 lbl_803E297C;
+extern f32 lbl_803E2954;
+extern f32 lbl_803E2980;
+extern f32 lbl_803E2984;
+extern f32 lbl_803E2988;
+extern f32 lbl_803E298C;
+
+void FUN_801540a0(undefined4 param_1, int param_2)
+{
+    float fVar1;
+    float fVar2;
+
+    *(float*)(param_2 + 0x2ac) = lbl_803E35BC;
+    *(undefined4*)(param_2 + 0x2e4) = 1;
+    *(float*)(param_2 + 0x308) = lbl_803E358C;
+    *(float*)(param_2 + 0x300) = lbl_803E35C0;
+    *(float*)(param_2 + 0x304) = lbl_803E35C4;
+    *(undefined*)(param_2 + 800) = 0;
+    fVar2 = lbl_803E35A8;
+    *(float*)(param_2 + 0x314) = lbl_803E35A8;
+    *(undefined*)(param_2 + 0x321) = 7;
+    fVar1 = lbl_803E35A4;
+    *(float*)(param_2 + 0x318) = lbl_803E35A4;
+    *(undefined*)(param_2 + 0x322) = 0;
+    *(float*)(param_2 + 0x31c) = fVar2;
+    *(undefined*)(param_2 + 0x33a) = 0;
+    *(undefined*)(param_2 + 0x33b) = 0;
+    *(float*)(param_2 + 0x324) = lbl_803E35C8;
+    *(float*)(param_2 + 0x2fc) = fVar1;
+    return;
+}
 
 #pragma scheduling off
 #pragma peephole off
@@ -331,14 +338,6 @@ void FUN_80154724(undefined8 param_1, double param_2, double param_3, undefined8
     }
     return;
 }
-
-extern f32 lbl_803E2978;
-extern f32 lbl_803E297C;
-extern f32 lbl_803E2954;
-extern f32 lbl_803E2980;
-extern f32 lbl_803E2984;
-extern f32 lbl_803E2988;
-extern f32 lbl_803E298C;
 
 #pragma scheduling off
 void fn_801544E8(int* obj, u8* state, int p3, int p4)

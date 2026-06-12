@@ -1,25 +1,35 @@
 /* DLL 0x0124 — death-gas objects [8018BC48-8018BC50) */
 #include "main/objseq.h"
-
-extern uint GameBit_Get(int eventId);
-
-int deathgas_getExtraSize(void) { return 0x10; }
-
-extern void objSetHintTextIdx(int obj, int idx);
-
-extern int playerIsDisguised(void);
-extern f32 timeDelta;
-
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/dll/CF/CFforcecontrol.h"
 #include "main/screen_transition.h"
 
+extern uint GameBit_Get(int eventId);
+
+extern void objSetHintTextIdx(int obj, int idx);
+extern int playerIsDisguised(void);
+extern f32 timeDelta;
 extern undefined4 ObjHits_RecordObjectHit();
 extern undefined8 ObjGroup_RemoveObject();
-
 extern f32 lbl_803E3CC0;
+extern void disableHeavyFog(void);
+extern f32 Vec_distance(void* a, void* b);
+extern void enableHeavyFog(f32 top, f32 bottom, f32 r, f32 g, f32 b, int p6);
+extern f32 lbl_803E3C90;
+extern f32 lbl_803E3C94;
+extern f32 lbl_803E3C98;
+extern f32 lbl_803E3C9C;
+extern f32 lbl_803E3CA0;
+extern f32 lbl_803E3CA4;
+extern f32 lbl_803E3CA8;
+extern f32 lbl_803E3CAC;
+extern f32 lbl_803E3CB0;
+extern f32 lbl_803E3CB4;
+extern void gameBitIncrement(int eventId);
+
+int deathgas_getExtraSize(void) { return 0x10; }
 
 typedef struct
 {
@@ -51,8 +61,6 @@ void deathgas_init(int* obj)
 
 int fuelcell_func0B(int* obj);
 
-extern void disableHeavyFog(void);
-
 void deathgas_free(int* obj)
 {
     u8* state = ((GameObject*)obj)->extra;
@@ -69,19 +77,6 @@ void deathgas_free(int* obj)
         (*gGameUIInterface)->airMeterSetShutdown();
     }
 }
-
-extern f32 Vec_distance(void* a, void* b);
-extern void enableHeavyFog(f32 top, f32 bottom, f32 r, f32 g, f32 b, int p6);
-extern f32 lbl_803E3C90;
-extern f32 lbl_803E3C94;
-extern f32 lbl_803E3C98;
-extern f32 lbl_803E3C9C;
-extern f32 lbl_803E3CA0;
-extern f32 lbl_803E3CA4;
-extern f32 lbl_803E3CA8;
-extern f32 lbl_803E3CAC;
-extern f32 lbl_803E3CB0;
-extern f32 lbl_803E3CB4;
 
 void deathgas_update(int* obj)
 {
@@ -170,5 +165,3 @@ void deathgas_update(int* obj)
         (*gGameUIInterface)->runAirMeter((int)state->timer);
     }
 }
-
-extern void gameBitIncrement(int eventId);

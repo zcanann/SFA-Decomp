@@ -31,6 +31,13 @@ typedef struct Dll19CPlacement
 extern uint GameBit_Get(int eventId);
 extern u8 framesThisStep;
 
+extern f32 lbl_803E51B0;
+extern u8 Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int type);
+extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
+extern void Sfx_PlayFromObject(int obj, int sfx);
+extern f32 lbl_803E51B4;
+
 void dll_19C_free(void)
 {
 }
@@ -53,18 +60,11 @@ int dll_19C_getExtraSize(void) { return 0x8; }
 int dll_19C_getObjectTypeId(void) { return 0x0; }
 int dll_19D_getExtraSize(void);
 
-extern f32 lbl_803E51B0;
 void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E51B0);
 }
-
-extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_AllocObjectSetup(int size, int type);
-extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
-extern void Sfx_PlayFromObject(int obj, int sfx);
-extern f32 lbl_803E51B4;
 
 void dll_19C_update(int* obj)
 {

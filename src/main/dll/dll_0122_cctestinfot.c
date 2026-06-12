@@ -12,11 +12,19 @@ extern void* Obj_GetPlayerObject(void);
 
 extern int ObjTrigger_IsSet();
 
+extern void objSetHintTextIdx(int obj, int idx);
+extern int playerIsDisguised(void);
+extern void Obj_SetActiveModelIndex(int* obj, int idx);
+extern u8 fn_801334E0(void);
+extern void showHelpText(s16 id);
+extern f32 timeDelta;
+extern f32 lbl_803E3C88;
+extern f32 lbl_803E3C8C;
+extern int Obj_GetActiveModel(int* obj);
+
 int cctestinfot_getExtraSize(void) { return 0x8; }
 
 void trickyguardspot_free(TrickyGuardSpotObject* obj);
-
-extern void objSetHintTextIdx(int obj, int idx);
 
 void cctestinfot_init(int obj, s8* def)
 {
@@ -27,14 +35,6 @@ void cctestinfot_init(int obj, s8* def)
     ((GameObject*)obj)->anim.rotY = (s16)((s32)(u8)def[0x19] << 8);
     ((GameObject*)obj)->anim.rotZ = (s16)((s32)(u8)def[0x18] << 8);
 }
-
-extern int playerIsDisguised(void);
-extern void Obj_SetActiveModelIndex(int* obj, int idx);
-extern u8 fn_801334E0(void);
-extern void showHelpText(s16 id);
-extern f32 timeDelta;
-extern f32 lbl_803E3C88;
-extern f32 lbl_803E3C8C;
 
 void cctestinfot_update(int* obj)
 {
@@ -74,5 +74,3 @@ void cctestinfot_update(int* obj)
         }
     }
 }
-
-extern int Obj_GetActiveModel(int* obj);

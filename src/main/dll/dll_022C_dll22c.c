@@ -94,6 +94,12 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 
+extern u8 lbl_80329514[];
+extern f32 lbl_803E6398;
+extern void fn_802960E8(void* playerObj, int p2);
+extern f32 timeDelta;
+extern int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t);
+
 undefined4
 FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -525,8 +531,6 @@ void dll_22C_init(int obj, char* p)
 
 void dbegg_release(void);
 
-extern u8 lbl_80329514[];
-
 void dll_22C_hitDetect_nop(void)
 {
 }
@@ -546,8 +550,6 @@ int dll_22C_getExtraSize_ret_16(void) { return 0x10; }
 int dll_22C_getObjectTypeId(void) { return 0x0; }
 int doorswitch_getExtraSize(void);
 
-extern f32 lbl_803E6398;
-
 void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -561,11 +563,6 @@ void fn_80204B6C(int p1)
     (*gExpgfxInterface)->freeSource2((u32)p1);
     getLActions(p1, p1, 0, 0, 0, 0);
 }
-
-extern void fn_802960E8(void* playerObj, int p2);
-extern f32 timeDelta;
-
-extern int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t);
 
 void fn_80204BF8(int obj)
 {
@@ -740,11 +737,6 @@ void fn_80204BF8(int obj)
 }
 
 int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t);
-
-#include "main/dll/baddie/chuka.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 

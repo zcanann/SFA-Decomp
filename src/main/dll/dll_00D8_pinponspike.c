@@ -21,6 +21,25 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 void pollenfragment_init(int obj, int config);
 
+extern void kaldachompspit_free(void);
+extern void kaldachompspit_update(void);
+extern int kaldachompspit_getObjectTypeId(void);
+extern int kaldachompspit_getExtraSize(void);
+extern f32 timeDelta;
+extern f32 lbl_803E3110;
+extern f32 lbl_803E3114;
+extern f32 lbl_803E3118;
+extern f32 lbl_803E311C;
+extern f32 lbl_803E3120;
+extern f32 lbl_803E3124;
+extern f32 lbl_803E3128;
+extern f32 lbl_803E312C;
+extern f32 sqrtf(f32 x);
+extern int getAngle(f32 a, f32 b);
+extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern void* Obj_GetPlayerObject(void);
+extern void* getTrickyObject(void);
+
 void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
@@ -114,11 +133,6 @@ int pollenfragment_getExtraSize(void);
 int pollenfragment_getObjectTypeId(void);
 
 void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern void kaldachompspit_free(void);
-extern void kaldachompspit_update(void);
-extern int kaldachompspit_getObjectTypeId(void);
-extern int kaldachompspit_getExtraSize(void);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -259,21 +273,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 };
 
 void pollen_init(int* obj);
-
-extern f32 timeDelta;
-extern f32 lbl_803E3110;
-extern f32 lbl_803E3114;
-extern f32 lbl_803E3118;
-extern f32 lbl_803E311C;
-extern f32 lbl_803E3120;
-extern f32 lbl_803E3124;
-extern f32 lbl_803E3128;
-extern f32 lbl_803E312C;
-extern f32 sqrtf(f32 x);
-extern int getAngle(f32 a, f32 b);
-extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern void* Obj_GetPlayerObject(void);
-extern void* getTrickyObject(void);
 
 int fn_80169EF4(f32 speed, f32 grav, f32* from, f32* to, u8 flag)
 {

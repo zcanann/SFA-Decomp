@@ -15,12 +15,6 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-static inline u8* Gameplay_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 FUN_800033a8();
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_80006768();
@@ -49,7 +43,6 @@ extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286880();
 extern undefined4 FUN_8028688c();
-
 extern undefined4 DAT_802c28f0;
 extern undefined4 DAT_802c28f4;
 extern undefined4 DAT_802c28f8;
@@ -126,6 +119,22 @@ extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
+extern int maybeTryLoadSave(int a);
+extern u8 lbl_80314BD0[];
+extern f32 lbl_803E0D08;
+extern f32 lbl_803E0D0C;
+extern f32 lbl_803E0D10;
+extern f32 lbl_803E0D14;
+extern f32 lbl_803E0D18;
+extern f32 lbl_803E0D1C;
+extern f32 lbl_803E0D08, lbl_803E0D0C, lbl_803E0D10, lbl_803E0D14, lbl_803E0D18, lbl_803E0D1C;
+extern f32 lbl_803E0D20, lbl_803E0D24, lbl_803E0D28, lbl_803E0D2C;
+
+static inline u8* Gameplay_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (u8*)objAnim->banks[objAnim->bankIndex];
+}
 
 void saveFileStruct_unlockCheat(uint cheatId)
 {
@@ -233,8 +242,6 @@ undefined4* FUN_800e87a8(void)
 {
     return &DAT_803a45b0;
 }
-
-extern int maybeTryLoadSave(int a);
 
 int saveFn_800e8508(void);
 
@@ -697,17 +704,6 @@ enum
     SAVEGAME_EMPTY_TASK_HINT = -1,
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
-
-extern u8 lbl_80314BD0[];
-extern f32 lbl_803E0D08;
-extern f32 lbl_803E0D0C;
-extern f32 lbl_803E0D10;
-extern f32 lbl_803E0D14;
-extern f32 lbl_803E0D18;
-extern f32 lbl_803E0D1C;
-
-extern f32 lbl_803E0D08, lbl_803E0D0C, lbl_803E0D10, lbl_803E0D14, lbl_803E0D18, lbl_803E0D1C;
-extern f32 lbl_803E0D20, lbl_803E0D24, lbl_803E0D28, lbl_803E0D2C;
 
 int dll_7A_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {

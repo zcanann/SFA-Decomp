@@ -64,6 +64,123 @@ extern s8 lbl_803DD944;
 
 #pragma scheduling on
 #pragma peephole on
+extern u8 warpstoneUIState;
+extern u8 showCredits;
+extern void titlescreen_free(u8 * obj);
+extern void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+extern void titlescreen_update(u8 * obj);
+extern void titlescreen_init(u8 * obj, u8 * p);
+extern void titlescreen_release(void);
+extern void titlescreen_initialise(void);
+extern f32 lbl_803DD968;
+extern f32 lbl_803E23E8;
+extern f32 lbl_803E2344;
+extern void* lbl_803DBBC8[2];
+extern void Obj_FreeObject(void*);
+extern f32 lbl_803E23B8;
+extern f32 lbl_803DD9D8;
+extern f32 lbl_803DD9DC;
+extern u8 lbl_803DD9E0;
+extern u8 lbl_803DD9E1;
+extern void* lbl_803DDA1C;
+extern void* lbl_803DDA20;
+extern void* lbl_803DDA24;
+extern void* debugLogEnd;
+extern u8 debugLogBuffer[0x1100];
+extern u32 getScreenResolution(void);
+extern int vsprintf(char* s, const char* format, va_list arg);
+extern int lbl_803DD9E4;
+extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
+extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
+extern int Obj_AllocObjectSetup(int a, int b);
+extern u8 gameTimerIsRunning(void);
+extern void gameTimerRun(void* obj);
+extern int sprintf(char* buf, const char* fmt, ...);
+extern f32 lbl_803E22A0;
+extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
+extern int* Obj_GetActiveModel(void* obj);
+extern f32 lbl_803E2408;
+extern void* lbl_803DD984;
+extern f32 timeDelta;
+extern u32 lbl_803DDA00;
+extern u32 lbl_803DDA08;
+extern u16 debugPrintXpos;
+extern u16 debugPrintYpos;
+extern void Music_Trigger(s32 triggerId, s32 mode);
+extern u8 lbl_803AB118[];
+extern s16 lbl_803DDA40;
+extern u32 lbl_803DDA3C;
+extern u32 lbl_803DDA38;
+extern u32 lbl_803DDA34;
+extern void OSResumeThread(u8 * thread);
+extern void OSSetErrorHandler(int kind, void* handler);
+extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
+extern void fn_80137DF8(void);
+extern u8 lbl_803AB428[];
+extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
+extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);
+extern f32 lbl_803E23DC;
+extern f32 lbl_803E23E0;
+extern f32 lbl_803E23E4;
+extern f32 lbl_803E23EC;
+extern f32 lbl_803E23F0;
+extern f32 lbl_803E23F4;
+extern f32 lbl_803E23F8;
+extern f32 lbl_803DD99C;
+extern u16 lbl_803DBC0A;
+extern u8 enableDebugText;
+extern u16* debugDrawFrameBuffer;
+extern void DCStoreRange(void* p, u32 nBytes);
+extern u16* externalFrameBuffer1;
+extern u16* externalFrameBuffer0;
+extern u8 lbl_8031D060[];
+extern void selectTexture(char* tex, int slot);
+extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
+extern void gxDebugTextureFn_80078c1c(void);
+extern u32 lbl_803DD9F8;
+extern int lbl_803DDA0C;
+extern f32 lbl_803DD9E8;
+extern f32 lbl_803DD9EC;
+extern u8 lbl_8031CFA0[];
+extern f32 lbl_803E2390;
+extern f32 lbl_803E2394;
+extern f32 lbl_803E2398;
+extern f32 lbl_803E239C;
+extern f32 lbl_803E23A0;
+extern f32 lbl_803E23A4;
+extern int getButtonsHeld(int p);
+extern void GXSetTevColor(int id, int* color);
+extern void setTextColor(int p);
+extern u16 lbl_803DDA14;
+extern u16 lbl_803DDA16;
+extern u16 lbl_803DBC10;
+extern u8 lbl_803DD9F0;
+extern u8 lbl_803DD9F1;
+extern u8 lbl_803DD9F2;
+extern u8 lbl_803DD9F3;
+extern u16 lbl_803DD9F6;
+extern int lbl_803DDA10;
+extern void drawScaledTexture(char* tex, f32 x, f32 y, int alpha, int s, int w, int h, int mode);
+extern u16* debugFrameBuffer;
+extern char lbl_803DBC18;
+extern char lbl_803DBC1C;
+extern char lbl_803DBC20;
+extern char lbl_803DBC28;
+extern char lbl_803DBC30;
+extern char lbl_803DBC34;
+extern int OSDisableInterrupts(void);
+extern void OSRestoreInterrupts(int level);
+extern void VISetPreRetraceCallback(void* cb);
+extern void VISetPostRetraceCallback(void* cb);
+extern void GXSetBreakPtCallback(void* cb);
+extern void __GXAbortWaitPECopyDone(void);
+extern void VISetNextFrameBuffer(void* fb);
+extern void VIFlush(void);
+extern void VIWaitForRetrace(void);
+extern u16 lbl_803DD9F4;
+extern u32 lbl_803DDA04;
+extern u32 lbl_803DD9FC;
+
 void FUN_80132034(void)
 {
     bool bVar1;
@@ -135,9 +252,6 @@ void FUN_8013651c(int param_1)
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
-extern u8 warpstoneUIState;
-extern u8 showCredits;
-
 void reportAllocFail(void)
 {
 }
@@ -167,13 +281,6 @@ void titlescreen_hitDetect(void);
 
 int titlescreen_getObjectTypeId(u8* obj);
 
-extern void titlescreen_free(u8 * obj);
-extern void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-extern void titlescreen_update(u8 * obj);
-extern void titlescreen_init(u8 * obj, u8 * p);
-extern void titlescreen_release(void);
-extern void titlescreen_initialise(void);
-
 ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
     {
         0,
@@ -193,10 +300,6 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
     },
     0,
 };
-
-extern f32 lbl_803DD968;
-
-extern f32 lbl_803E23E8;
 
 /* EN v1.0 0x80139164  size: 252b  Tricky_emitQueuedPathParticles: when b->_54 carries the
  * spawn flag, build a particle descriptor on the stack from a's heading
@@ -316,24 +419,6 @@ int trickyFn_80138f14(u8* obj)
     return 0;
 }
 
-extern f32 lbl_803E2344;
-
-extern void* lbl_803DBBC8[2];
-extern void Obj_FreeObject(void*);
-
-extern f32 lbl_803E23B8;
-extern f32 lbl_803DD9D8;
-extern f32 lbl_803DD9DC;
-extern u8 lbl_803DD9E0;
-extern u8 lbl_803DD9E1;
-extern void* lbl_803DDA1C;
-extern void* lbl_803DDA20;
-extern void* lbl_803DDA24;
-extern void* debugLogEnd;
-extern u8 debugLogBuffer[0x1100];
-extern u32 getScreenResolution(void);
-extern int vsprintf(char* s, const char* format, va_list arg);
-
 /* EN v1.0 0x80137998  size: 104b  Title-screen system init. Calls
  * getScreenResolution, primes the two float counters, clears two state bytes,
  * acquires three sized buffers (605/1/2 bytes) and primes the
@@ -355,7 +440,6 @@ void fn_80137998(void)
 /* EN v1.0 0x80137520  size: 128b  Emit a SetColor record (tag 0x81 +
  * 4 RGBA bytes + 0 terminator) into the debug log; aborts when the
  * record counter at lbl_803DD9E4 has already exceeded 0xFA. */
-extern int lbl_803DD9E4;
 void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
 {
     int n;
@@ -383,9 +467,6 @@ void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
     *p = 0;
 }
 
-extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
-extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
-
 /* EN v1.0 0x80138920  size: 192b  Drop-anim trigger guard. Returns 1
  * (and dispatches the drop anim via objAudioFn_800393f8) only when:
  *   - bit 0x40 of obj->_b8->_58 is clear,
@@ -410,12 +491,6 @@ int fn_80138920(u8* obj, int arg1, int arg2)
     return 1;
 }
 
-extern int Obj_AllocObjectSetup(int a, int b);
-
-extern u8 gameTimerIsRunning(void);
-extern void gameTimerRun(void* obj);
-extern int sprintf(char* buf, const char* fmt, ...);
-extern f32 lbl_803E22A0;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
 void fn_80133F70(void* obj)
@@ -450,9 +525,6 @@ void fn_80133F70(void* obj)
     sprintf(buf, lbl_803DBBF0, b);
 }
 
-extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
-extern int* Obj_GetActiveModel(void* obj);
-
 #pragma peephole on
 void debugPrintf(char* fmt, ...)
 {
@@ -477,8 +549,6 @@ void fn_80137948(char* fmt, ...)
  * pointers are zeroed at the end. */
 void Minimap_release(void);
 
-extern f32 lbl_803E2408;
-
 /* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960
  * via textureFree. */
 
@@ -499,15 +569,12 @@ void trickyImpress(u8* obj)
     ((TrickyImpressState*)b)->unk808 = lbl_803E2408;
 }
 
-extern void* lbl_803DD984;
-
 /* EN v1.0 0x80134808  size: 44b  Release two buffer slots in sequence:
  * textureFree(lbl_803DD984) then textureFree(lbl_803DD980). */
 
 /* EN v1.0 0x801347A4  size: 100b  Per-frame integrator with clamp.
  * Adds (or subtracts, when warpstoneUIState != 0) lbl_803E22D8*timeDelta
  * to lbl_803DD97C, then clamps to [lbl_803E22E0, lbl_803E22DC]. */
-extern f32 timeDelta;
 
 /* EN v1.0 0x80134BE8  size: 60b  Predicate. Returns 1 when the value
  * from getCurUiDll is in {2..6} or equals 7, else 0. */
@@ -519,10 +586,6 @@ extern f32 timeDelta;
 /* EN v1.0 0x801375A0  size: 40b  Reset debug log/print state: rewind
  * debugLogEnd to the start of the buffer and reload the print x/y
  * coordinates from saved values. */
-extern u32 lbl_803DDA00;
-extern u32 lbl_803DDA08;
-extern u16 debugPrintXpos;
-extern u16 debugPrintYpos;
 #pragma scheduling off
 #pragma peephole off
 void fn_801375A0(void)
@@ -548,18 +611,10 @@ void fn_80138908(int* obj, u8 v)
     *(u8*)(x + 0x58) = (u8)((b & ~0x40) | ((v & 1) << 6));
 }
 
-extern void Music_Trigger(s32 triggerId, s32 mode);
-
 void titlescreen_free(u8* obj);
 
 /* EN v1.0 0x801388D0  size: 56b  Stash 4 args to four globals and resume
  * the thread at &lbl_803AB118. */
-extern u8 lbl_803AB118[];
-extern s16 lbl_803DDA40;
-extern u32 lbl_803DDA3C;
-extern u32 lbl_803DDA38;
-extern u32 lbl_803DDA34;
-extern void OSResumeThread(u8 * thread);
 #pragma scheduling off
 void fn_801388D0(s16 a, u32 b, u32 c, u32 d)
 {
@@ -570,10 +625,6 @@ void fn_801388D0(s16 a, u32 b, u32 c, u32 d)
     OSResumeThread(lbl_803AB118);
 }
 
-extern void OSSetErrorHandler(int kind, void* handler);
-extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
-extern void fn_80137DF8(void);
-extern u8 lbl_803AB428[];
 void fn_80137D28(void)
 {
     OSSetErrorHandler(0, (void*)fn_801388D0);
@@ -730,16 +781,6 @@ int fn_80138D7C(int obj, int p2)
     return 0;
 }
 
-extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
-extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);
-extern f32 lbl_803E23DC;
-extern f32 lbl_803E23E0;
-extern f32 lbl_803E23E4;
-extern f32 lbl_803E23EC;
-extern f32 lbl_803E23F0;
-extern f32 lbl_803E23F4;
-extern f32 lbl_803E23F8;
-
 #define TUMBLEWEED_BLEND_FLAGS_OFFSET 0x82e
 #define TUMBLEWEED_BLEND_WEIGHT_OFFSET 0x830
 #define TUMBLEWEED_BLEND_VELOCITY_OFFSET 0x834
@@ -833,8 +874,6 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
     }
 }
 
-extern f32 lbl_803DD99C;
-
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
 typedef struct
@@ -898,12 +937,6 @@ void objAnimFreeChildren(int a, int b, void** c)
     }
 }
 
-extern u16 lbl_803DBC0A;
-
-extern u8 enableDebugText;
-extern u16* debugDrawFrameBuffer;
-extern void DCStoreRange(void* p, u32 nBytes);
-
 void fn_80137A00(int p1, int p2, u8* grid, int p4)
 {
     int i;
@@ -953,10 +986,6 @@ void fn_80137A00(int p1, int p2, u8* grid, int p4)
         }
     }
 }
-
-extern u16* externalFrameBuffer1;
-extern u16* externalFrameBuffer0;
-extern u8 lbl_8031D060[];
 
 #pragma peephole on
 void debugPrintfxy(int x, int y, char* fmt, ...)
@@ -1012,21 +1041,6 @@ void debugPrintfxy(int x, int y, char* fmt, ...)
         debugDrawFrameBuffer = saved;
     }
 }
-
-extern void selectTexture(char* tex, int slot);
-extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
-extern void gxDebugTextureFn_80078c1c(void);
-extern u32 lbl_803DD9F8;
-extern int lbl_803DDA0C;
-extern f32 lbl_803DD9E8;
-extern f32 lbl_803DD9EC;
-extern u8 lbl_8031CFA0[];
-extern f32 lbl_803E2390;
-extern f32 lbl_803E2394;
-extern f32 lbl_803E2398;
-extern f32 lbl_803E239C;
-extern f32 lbl_803E23A0;
-extern f32 lbl_803E23A4;
 
 int fn_80136A40(int p1, int c)
 {
@@ -1098,20 +1112,7 @@ int fn_80136A40(int p1, int c)
     return c;
 }
 
-extern int getButtonsHeld(int p);
 extern int ObjGroup_FindNearestObject(int type, int obj, f32* distOut);
-
-extern void GXSetTevColor(int id, int* color);
-extern void setTextColor(int p);
-extern u16 lbl_803DDA14;
-extern u16 lbl_803DDA16;
-extern u16 lbl_803DBC10;
-extern u8 lbl_803DD9F0;
-extern u8 lbl_803DD9F1;
-extern u8 lbl_803DD9F2;
-extern u8 lbl_803DD9F3;
-extern u16 lbl_803DD9F6;
-extern int lbl_803DDA10;
 
 #pragma peephole off
 int fn_80136E00(int p1, u8* p)
@@ -1318,25 +1319,6 @@ int fn_80136E00(int p1, u8* p)
     }
     return p - start;
 }
-
-extern void drawScaledTexture(char* tex, f32 x, f32 y, int alpha, int s, int w, int h, int mode);
-
-extern u16* debugFrameBuffer;
-extern char lbl_803DBC18;
-extern char lbl_803DBC1C;
-extern char lbl_803DBC20;
-extern char lbl_803DBC28;
-extern char lbl_803DBC30;
-extern char lbl_803DBC34;
-extern int OSDisableInterrupts(void);
-extern void OSRestoreInterrupts(int level);
-extern void VISetPreRetraceCallback(void* cb);
-extern void VISetPostRetraceCallback(void* cb);
-extern void GXSetBreakPtCallback(void* cb);
-extern void __GXAbortWaitPECopyDone(void);
-extern void VISetNextFrameBuffer(void* fb);
-extern void VIFlush(void);
-extern void VIWaitForRetrace(void);
 
 /* EN v1.0 0x80137DF8  size: 2776b  fn_80137DF8: error display thread.
  * Clears the debug framebuffer, prints the exception type, DSISR/SRR0,
@@ -1582,10 +1564,6 @@ void fn_80137DF8(void)
         }
     }
 }
-
-extern u16 lbl_803DD9F4;
-extern u32 lbl_803DDA04;
-extern u32 lbl_803DD9FC;
 
 /* EN v1.0 0x801375C8  size: 736b  debugPrintDraw: lay out the debug log
  * twice (measure pass then draw pass), drawing the backing rect between

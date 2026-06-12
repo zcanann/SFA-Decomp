@@ -38,6 +38,16 @@ STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, spawnParam) == 0x1F);
 STATIC_ASSERT(offsetof(VfpObjCreatorPlacement, spawnRadius) == 0x20);
 STATIC_ASSERT(sizeof(VfpObjCreatorPlacement) == 0x24);
 
+extern u8 Obj_IsLoadingLocked(void);
+extern u8* Obj_AllocObjectSetup(int size, int typeId);
+extern char* Obj_SetupObject(u8* setup, int a, int b, int c, int d);
+extern void vecRotateZXY(s16 * angles, f32 * vec);
+extern f32 lbl_803E6068;
+extern f32 lbl_803E606C;
+extern f32 lbl_803E6070;
+extern f32 lbl_803E6074;
+extern f32 lbl_803E6078;
+
 int vfpobjcreator_getExtraSize(void) { return 0xa; }
 
 int vfpobjcreator_getObjectTypeId(void) { return 0x0; }
@@ -75,16 +85,6 @@ void vfpobjcreator_init(int* obj, u8* init)
     state->spawnRadius = placement->spawnRadius;
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
-
-extern u8 Obj_IsLoadingLocked(void);
-extern u8* Obj_AllocObjectSetup(int size, int typeId);
-extern char* Obj_SetupObject(u8* setup, int a, int b, int c, int d);
-extern void vecRotateZXY(s16 * angles, f32 * vec);
-extern f32 lbl_803E6068;
-extern f32 lbl_803E606C;
-extern f32 lbl_803E6070;
-extern f32 lbl_803E6074;
-extern f32 lbl_803E6078;
 
 /* EN v1.0 0x801F9D78  size: 1068b  Periodically spawns falling-object setups
  * (mode 1) or projectile bursts (mode 6) while loading is locked. */

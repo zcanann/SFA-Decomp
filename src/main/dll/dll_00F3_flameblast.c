@@ -14,12 +14,6 @@ typedef struct FlameblastState
     u8 pad12[0x14 - 0x12];
 } FlameblastState;
 
-static inline int* Transporter_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 FUN_80017748();
 extern int FUN_80017a90();
 extern undefined8 FUN_80017ac8();
@@ -29,11 +23,34 @@ extern void Obj_FreeObject(int* obj);
 extern undefined4 FUN_80053c98();
 extern int FUN_801365ac();
 extern undefined4 FUN_801365b8();
-
 extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E42BC;
+extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
+extern f32 lbl_803E3618;
+extern f32 lbl_803E3620;
+extern f32 lbl_803E3628;
+extern f32 lbl_803E362C;
+extern f32 lbl_803E35E8;
+extern f32 timeDelta;
+extern f32 lbl_803E3630;
+extern f32 lbl_803E3634;
+extern int fn_8017805C(int* obj, f32* state);
+extern f32 lbl_803E3604;
+extern void vecRotateZXY(void* in, void* out);
+extern f32 lbl_803E3638;
+extern s16* getTrickyObject(void);
+extern int fn_80138F90(void);
+extern f32* trickyGetQueuedPathParticlePos(s16 * tricky);
+extern f32 lbl_803E361C;
+extern f32 lbl_803E3624;
+
+static inline int* Transporter_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (int*)objAnim->banks[objAnim->bankIndex];
+}
 
 undefined4
 FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
@@ -127,11 +144,6 @@ void invhit_hitDetect(void);
 
 int flameblast_getExtraSize(void) { return 0x14; }
 
-extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
-extern f32 lbl_803E3618;
-extern f32 lbl_803E3620;
-extern f32 lbl_803E3628;
-extern f32 lbl_803E362C;
 #pragma scheduling off
 void flameblast_render(int* obj)
 {
@@ -148,13 +160,6 @@ void objSetAnimSpeedTo1(int* obj)
     u8 v = 0x1;
     *((u8*)((int**)obj)[0xb8 / 4] + 0x10) = v;
 }
-
-extern f32 lbl_803E35E8;
-
-extern f32 timeDelta;
-extern f32 lbl_803E3630;
-extern f32 lbl_803E3634;
-extern int fn_8017805C(int* obj, f32* state);
 
 #pragma peephole off
 void flameblast_update(int* obj)
@@ -184,10 +189,6 @@ void flameblast_update(int* obj)
     ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.velocityZ * state[0] + state[3];
 }
 
-extern f32 lbl_803E3604;
-extern void vecRotateZXY(void* in, void* out);
-extern f32 lbl_803E3638;
-
 void flameblast_init(int* obj, u8* def)
 {
     f32* state = ((GameObject*)obj)->extra;
@@ -197,12 +198,6 @@ void flameblast_init(int* obj, u8* def)
 }
 
 void WarpPoint_init(int* obj, u8* def);
-
-extern s16* getTrickyObject(void);
-extern int fn_80138F90(void);
-extern f32* trickyGetQueuedPathParticlePos(s16 * tricky);
-extern f32 lbl_803E361C;
-extern f32 lbl_803E3624;
 
 #pragma opt_common_subs off
 int fn_8017805C(int* obj, f32* state)

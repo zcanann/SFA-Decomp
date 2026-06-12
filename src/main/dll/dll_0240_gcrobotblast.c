@@ -107,6 +107,9 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 
+extern u8 lbl_80329514[];
+extern f32 timeDelta;
+
 int GCRobotBlast_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern void objfx_spawnDirectionalBurst(int, int, f32, int, int, int, f32, int, int);
@@ -574,8 +577,6 @@ void GCRobotBlast_initialise(void)
 
 void DrakorEnergy_func0B_nop(void);
 
-extern u8 lbl_80329514[];
-
 int GCRobotBlast_getExtraSize(void) { return 0x8; }
 int GCRobotBlast_getObjectTypeId(void) { return 0x0; }
 int drakorenergy_getExtraSize(void);
@@ -590,13 +591,6 @@ void GCRobotBlast_init(int obj, s8* p)
 }
 
 void dbholecontrol1_free(int x);
-
-extern f32 timeDelta;
-
-#include "main/dll/baddie/chuka.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 

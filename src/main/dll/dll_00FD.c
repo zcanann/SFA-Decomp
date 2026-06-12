@@ -2,8 +2,34 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/obj_placement.h"
+#include "main/dll/dll_00FD.h"
+#include "main/game_ui_interface.h"
+#include "main/objseq.h"
 
 extern void objRenderFn_80041018(void);
+
+extern f32 lbl_803E3850;
+extern void objRenderFn_8003b8f4(f32);
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
+extern u32 randomGetRange(int min, int max);
+extern void* Obj_GetPlayerObject(void);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern s16 getAngle(f32 dx, f32 dz);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern void Sfx_PlayFromObject(int obj, u16 sfxId);
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern f32 lbl_803E3854;
+extern f32 lbl_803E3858;
+extern f32 lbl_803E385C;
+extern f32 lbl_803E3870;
+extern f32 lbl_803E3874;
+extern f32 lbl_803E3878;
+extern f32 lbl_803E387C;
+extern f32 lbl_803E3880;
+extern void dll_14D_update();
+extern void dll_14D_free_nop();
 
 void dll_14D_hitDetect(int param_1)
 {
@@ -21,45 +47,17 @@ void dll_14D_free_nop(void)
 int dll_14D_getExtraSize_ret_8(void) { return 0x8; }
 int dll_14D_getObjectTypeId(void) { return 0x0; }
 
-extern f32 lbl_803E3850;
-extern void objRenderFn_8003b8f4(f32);
-
 void dll_14D_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E3850);
 }
 
-#include "main/dll/dll_00FD.h"
-#include "main/game_ui_interface.h"
-#include "main/game_object.h"
-#include "main/objseq.h"
-
 typedef struct Dll14DState
 {
     u8 pad0[0x4 - 0x0];
     u32 unk4;
 } Dll14DState;
-
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
-extern void* Obj_GetPlayerObject(void);
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern s16 getAngle(f32 dx, f32 dz);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern void Sfx_PlayFromObject(int obj, u16 sfxId);
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f32 lbl_803E3854;
-extern f32 lbl_803E3858;
-extern f32 lbl_803E385C;
-extern f32 lbl_803E3870;
-extern f32 lbl_803E3874;
-extern f32 lbl_803E3878;
-extern f32 lbl_803E387C;
-extern f32 lbl_803E3880;
 
 typedef struct MagicPlantBridgeState
 {
@@ -233,9 +231,6 @@ void dll_14D_release_nop(void)
 void dll_14D_initialise_nop(void)
 {
 }
-
-extern void dll_14D_update();
-extern void dll_14D_free_nop();
 
 ObjectDescriptor gDll14DObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

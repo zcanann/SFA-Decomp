@@ -4,6 +4,14 @@
 #include "main/objseq.h"
 
 #include "main/dll/mmshrine/ecsh_shrine_state.h"
+#include "main/audio/sfx_ids.h"
+#include "main/game_ui_interface.h"
+#include "main/obj_placement.h"
+#include "main/objanim.h"
+#include "main/dll/mmshrine/shrine1C2.h"
+#include "main/dll/mmshrine/torch1C1.h"
+#include "main/resource.h"
+#include "main/screen_transition.h"
 
 extern u32 randomGetRange(int min, int max);
 extern void* FUN_80017aa4();
@@ -53,6 +61,50 @@ typedef struct MmShrineAnimEvents
 
 #pragma scheduling on
 #pragma peephole on
+extern s16 lbl_80326238[];
+extern undefined4 FUN_800067c0();
+extern undefined8 ObjGroup_RemoveObject();
+extern void Music_Trigger(int trackId, int restart);
+extern void ModelLightStruct_free(void* p);
+extern undefined4 FUN_80006824();
+extern undefined4 FUN_80006b0c();
+extern undefined4 FUN_80006b14();
+extern uint FUN_80017690();
+extern undefined4 FUN_80017830();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
+extern undefined4 ObjMsg_AllocQueue();
+extern undefined4 DAT_803dc070;
+extern void skyFn_80088c94(int a, int b);
+extern void getEnvfxAct(s16* obj, int* target, int id, int p);
+extern int objIsCurModelNotZero(int* player);
+extern void fn_80295CF4(int* player, int a);
+extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
+extern void SCGameBitLatch_UpdateInverted(u8* latch, int mask, int a, int b, int bit, int c);
+extern void audioStopByMask(int mask);
+extern int objGetAnimStateFlags(int* player, int flags);
+extern void Sfx_KeepAliveLoopedObjectSound(s16* obj, int sfxId);
+extern void Sfx_PlayFromObject(s16* obj, int sfxId);
+extern void Music_Trigger(int id, int restart);
+extern int GameBit_Get(int bit);
+extern ScreenTransitionInterface** gScreenTransitionInterface;
+extern int lbl_803E8470;
+extern f32 lbl_803E4FCC;
+extern f32 lbl_803E4FD0;
+extern f32 lbl_803E4FD4;
+extern f32 lbl_803E4FD8;
+extern f32 lbl_803E4FDC;
+extern f32 lbl_803E4FE0;
+extern f32 lbl_803E4FE4;
+extern f32 lbl_803E4FE8;
+extern f32 lbl_803E4FEC;
+extern f32 lbl_803E4FF0;
+extern void ModelLightStruct_free(void* light);
+extern int objCreateLight(int a, int b);
+extern int lbl_803DDBC0;
+extern u8* mmAlloc(int size, int tag, int p);
+extern f32 mathSinf(f32 angle);
+
 void FUN_801c5990(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9, int param_10)
@@ -277,8 +329,6 @@ void ecsh_shrine_func0E(u8 v)
     }
 }
 
-extern s16 lbl_80326238[];
-
 typedef struct EcshRenderPair
 {
     f32 a;
@@ -297,12 +347,6 @@ void ecsh_shrine_render2(u8 idx, f32 a, f32 b)
 }
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/game_object.h"
-#include "main/objseq.h"
-
-extern undefined4 FUN_800067c0();
-extern undefined8 ObjGroup_RemoveObject();
 
 void ecsh_shrine_func0B(u8 idx, f32* out1, f32* out2)
 {
@@ -341,9 +385,6 @@ int ecsh_shrine_getObjectTypeId(void)
 void ecsh_shrine_hitDetect(void)
 {
 }
-
-extern void Music_Trigger(int trackId, int restart);
-extern void ModelLightStruct_free(void* p);
 
 void ecsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -387,55 +428,6 @@ void ecsh_shrine_free(int* obj)
 }
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/audio/sfx_ids.h"
-#include "main/game_ui_interface.h"
-#include "main/obj_placement.h"
-#include "main/game_object.h"
-#include "main/objanim.h"
-#include "main/dll/mmshrine/shrine1C2.h"
-#include "main/dll/mmshrine/torch1C1.h"
-#include "main/objseq.h"
-#include "main/resource.h"
-#include "main/screen_transition.h"
-
-#include "main/dll/mmshrine/ecsh_shrine_state.h"
-
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017830();
-extern undefined4 ObjGroup_AddObject();
-extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_AllocQueue();
-
-extern undefined4 DAT_803dc070;
-
-extern void skyFn_80088c94(int a, int b);
-extern void getEnvfxAct(s16* obj, int* target, int id, int p);
-extern int objIsCurModelNotZero(int* player);
-extern void fn_80295CF4(int* player, int a);
-extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
-extern void SCGameBitLatch_UpdateInverted(u8* latch, int mask, int a, int b, int bit, int c);
-extern void audioStopByMask(int mask);
-extern int objGetAnimStateFlags(int* player, int flags);
-extern void Sfx_KeepAliveLoopedObjectSound(s16* obj, int sfxId);
-extern void Sfx_PlayFromObject(s16* obj, int sfxId);
-extern void Music_Trigger(int id, int restart);
-extern int GameBit_Get(int bit);
-extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern int lbl_803E8470;
-extern f32 lbl_803E4FCC;
-extern f32 lbl_803E4FD0;
-extern f32 lbl_803E4FD4;
-extern f32 lbl_803E4FD8;
-extern f32 lbl_803E4FDC;
-extern f32 lbl_803E4FE0;
-extern f32 lbl_803E4FE4;
-extern f32 lbl_803E4FE8;
-extern f32 lbl_803E4FEC;
-extern f32 lbl_803E4FF0;
 
 typedef struct EcshPuzzleState
 {
@@ -946,11 +938,6 @@ void ecsh_shrine_initialise(void)
 
 void ecsh_creator_free(void);
 
-extern void ModelLightStruct_free(void* light);
-
-extern int objCreateLight(int a, int b);
-extern int lbl_803DDBC0;
-
 void ecsh_shrine_init(s16* obj, s8* def)
 {
     extern s16* lbl_803DDBC4; /* #57 */
@@ -990,7 +977,3 @@ void ecsh_shrine_init(s16* obj, s8* def)
     }
     GameBit_Set(0xefa, 1);
 }
-
-extern u8* mmAlloc(int size, int tag, int p);
-
-extern f32 mathSinf(f32 angle);

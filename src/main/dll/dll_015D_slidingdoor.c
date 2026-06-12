@@ -40,6 +40,15 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 
+extern f32 lbl_803E43BC;
+extern void objRenderFn_8003b8f4(f32);
+extern void* Obj_GetPlayerObject(void);
+extern f32 lbl_803E43B8;
+extern f32 lbl_803E43C0;
+extern void* getTrickyObject(void);
+extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern void loadMapAndParent(int mapId);
+
 void FUN_801a4520(int param_1)
 {
     int iVar1;
@@ -115,10 +124,6 @@ int slidingdoor_getExtraSize(void) { return 0x1; }
 int slidingdoor_getObjectTypeId(void) { return 0x0; }
 int attractor_getExtraSize(void);
 
-extern f32 lbl_803E43BC;
-extern void objRenderFn_8003b8f4(f32);
-extern void* Obj_GetPlayerObject(void);
-
 void slidingdoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -126,11 +131,6 @@ void slidingdoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void attractor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern f32 lbl_803E43B8;
-extern f32 lbl_803E43C0;
-extern void* getTrickyObject(void);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
 
 /* slidingdoor_SeqFn: slidingdoor "think" routine. Tracks whether the player or
  * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
@@ -294,8 +294,6 @@ void slidingdoor_init(u8* obj, u8* data)
     sub = ((GameObject*)obj)->extra;
     ((SlidingDoorSubFlags*)sub)->doorState = doorState;
 }
-
-extern void loadMapAndParent(int mapId);
 
 /* Exploded debris setup: seed object angles, linear velocity, angular velocity,
  * ground clearance, and the randomized lifetime countdown. */

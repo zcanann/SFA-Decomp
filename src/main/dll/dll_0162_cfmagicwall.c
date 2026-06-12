@@ -37,6 +37,14 @@ extern undefined4 FUN_80044404();
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern uint GameBit_Get(int eventId);
 
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E43D8;
+extern f32 lbl_803E43DC;
+extern void* Obj_GetPlayerObject(void);
+extern f32 Vec_distance(void* a, void* b);
+extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
+extern int ObjList_FindObjectById(int objectId);
+
 void FUN_801a4520(int param_1)
 {
     int iVar1;
@@ -112,13 +120,6 @@ int cfmagicwall_getExtraSize(void) { return 0x0; }
 int cfmagicwall_getObjectTypeId(void) { return 0x0; }
 int cflevelcontrol_getExtraSize(void);
 
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E43D8;
-extern f32 lbl_803E43DC;
-extern void* Obj_GetPlayerObject(void);
-extern f32 Vec_distance(void* a, void* b);
-extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
-
 void cfmagicwall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -178,8 +179,6 @@ void cfmagicwall_update(int obj)
         }
     }
 }
-
-extern int ObjList_FindObjectById(int objectId);
 
 void cfmagicwall_init(s16* dst, void* src)
 {

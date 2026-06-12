@@ -128,17 +128,25 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
-static inline int* DIMcannon_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
+extern u32 lbl_803DDB48;
+extern void Music_Trigger(int id, int p2);
+extern f32 lbl_803E47C0;
+extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
+extern int Obj_AllocObjectSetup(int extraSize, int id);
+extern f32 lbl_803E47C4;
+extern void ModelLightStruct_free(void* light);
+
+static inline int* DIMcannon_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (int*)objAnim->banks[objAnim->bankIndex];
+}
 
 #pragma scheduling on
 #pragma peephole on
@@ -266,7 +274,6 @@ int imspaceringgen_getExtraSize(void) { return 0xc; }
 int imspaceringgen_getObjectTypeId(void) { return 0x0; }
 int linkb_levcontrol_getExtraSize(void);
 
-extern u32 lbl_803DDB48;
 void imspaceringgen_free(void) { lbl_803DDB48 = 0x0; }
 
 void imspaceringgen_init(int* obj)
@@ -278,14 +285,6 @@ void imspaceringgen_init(int* obj)
 void imanimspacecraft_update(int* obj);
 
 void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern void Music_Trigger(int id, int p2);
-
-extern f32 lbl_803E47C0;
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
-extern int Obj_AllocObjectSetup(int extraSize, int id);
-extern f32 lbl_803E47C4;
 
 typedef struct
 {
@@ -390,5 +389,3 @@ void imspaceringgen_update(s16* obj)
         *(int*)&((GameObject*)obj)->anim.parent = 0;
     }
 }
-
-extern void ModelLightStruct_free(void* light);

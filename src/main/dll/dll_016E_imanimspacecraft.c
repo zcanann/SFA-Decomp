@@ -128,19 +128,28 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
-static inline int* DIMcannon_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
-
 extern EffectInterface** gPartfxInterface;
+extern f32 lbl_803E4784;
+extern char lbl_803AC948[];
+extern f32 lbl_803E4780;
+extern f32 lbl_803E4788;
+extern void Music_Trigger(int id, int p2);
+extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4, lbl_803E4798, lbl_803E4788;
+extern int ObjList_FindObjectById(int id);
+extern int* objFindTexture(int* obj, int a, int b);
+extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C;
+extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;
+
+static inline int* DIMcannon_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (int*)objAnim->banks[objAnim->bankIndex];
+}
 
 #pragma scheduling on
 #pragma peephole on
@@ -283,9 +292,6 @@ void imanimspacecraft_free(int* obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-extern f32 lbl_803E4784;
-extern char lbl_803AC948[];
-
 void imanimspacecraft_init(int* obj)
 {
     extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
@@ -316,9 +322,6 @@ int imanimspacecraft_setScale(int* obj, int bitIdx)
 
 void lavaball1bf_func11(int* obj);
 
-extern f32 lbl_803E4780;
-extern f32 lbl_803E4788;
-
 void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void imanimspacecraft_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -331,15 +334,6 @@ void imspacethruster_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 u32 imanimspacecraft_func0B(int* obj) { return *((u8*)((int**)obj)[0xb8 / 4] + 0x3) & 0x4; }
 u32 lavaball1be_func11(int* obj);
-
-extern void Music_Trigger(int id, int p2);
-
-extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4, lbl_803E4798, lbl_803E4788;
-
-extern int ObjList_FindObjectById(int id);
-
-extern int* objFindTexture(int* obj, int a, int b);
-extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C;
 
 int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -405,5 +399,3 @@ int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;

@@ -24,6 +24,8 @@
 #include "main/screen_transition.h"
 
 #include "main/dll/dll19_state.h"
+#include "main/objanim.h"
+#include "main/dll/baddie_state.h"
 
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
@@ -47,6 +49,28 @@ extern f32 lbl_803E265C;
 
 #pragma scheduling on
 #pragma peephole on
+extern void audioSetVolumes(int volume, int p1, int p2, int p3, int p4);
+extern CameraModeTitlePose lbl_80319FB8[];
+extern u8 lbl_803DD5D2;
+extern u8 lbl_803DD5D1;
+extern u8 lbl_803DD5D0;
+extern f32 lbl_803E1BE0;
+extern f32 titleScreenCamProgress;
+extern CameraMode54State* lbl_803DD5C0;
+extern CameraModeCloudRunnerState* lbl_803DD5B8;
+extern f32 lbl_803E1BE4;
+extern void Movie_SetVolumeFade(int p1, int p2);
+extern void Music_Trigger(int id, int mode);
+extern CameraModeTitlePose lbl_803A4420;
+extern f32 lbl_803E1BE8;
+extern f32 lbl_803E1BEC;
+extern f32 lbl_803E1BF0;
+extern f32 lbl_803E1BF4;
+extern f32 lbl_803E1BF8;
+extern f32 lbl_803E1BFC;
+extern f32 lbl_803E1C00;
+extern int arwarwing_isDead(int state);
+
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
 {
     float fVar1;
@@ -175,8 +199,6 @@ void CameraModeTitle_initialise(void)
 
 void CameraModeForceBehind_copyToCurrent(void);
 
-extern void audioSetVolumes(int volume, int p1, int p2, int p3, int p4);
-
 void CameraModeTitle_loadVolumes(void)
 {
     u8* save = getSaveFileStruct();
@@ -187,13 +209,6 @@ void dll_4F_init(void);
 
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-
-extern CameraModeTitlePose lbl_80319FB8[];
-extern u8 lbl_803DD5D2;
-extern u8 lbl_803DD5D1;
-extern u8 lbl_803DD5D0;
-extern f32 lbl_803E1BE0;
-extern f32 titleScreenCamProgress;
 
 void CameraModeTitle_init(CameraObject* camera)
 {
@@ -209,14 +224,6 @@ void CameraModeTitle_init(CameraObject* camera)
     camera->anim.rotY = lbl_80319FB8[lbl_803DD5D2].pitch;
     camera->anim.rotZ = lbl_80319FB8[lbl_803DD5D2].roll;
 }
-
-extern CameraMode54State* lbl_803DD5C0;
-
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
-
-extern f32 lbl_803E1BE4;
-extern void Movie_SetVolumeFade(int p1, int p2);
-extern void Music_Trigger(int id, int mode);
 
 void CameraModeTitle_moveCam(u8 newCam)
 {
@@ -256,15 +263,6 @@ void CameraModeCloudRunner_free(void);
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
-extern CameraModeTitlePose lbl_803A4420;
-extern f32 lbl_803E1BE8;
-extern f32 lbl_803E1BEC;
-extern f32 lbl_803E1BF0;
-extern f32 lbl_803E1BF4;
-extern f32 lbl_803E1BF8;
-extern f32 lbl_803E1BFC;
-extern f32 lbl_803E1C00;
 
 void CameraModeTitle_update(CameraObject* camera)
 {
@@ -382,8 +380,6 @@ void CameraModeTitle_update(CameraObject* camera)
     }
 }
 
-extern int arwarwing_isDead(int state);
-
 /* CameraModeArwing_update  addr=0x80110EC4  size=0x5FC  linkage=global */
 
 /* CameraModeWorldMap_update  addr=0x8010E5B4  size=0xC8C  linkage=global */
@@ -391,14 +387,6 @@ extern int arwarwing_isDead(int state);
 /* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/objanim.h"
-#include "main/camera_interface.h"
-#include "main/game_object.h"
-#include "main/dll/baddie_state.h"
-#include "main/dll/rom_curve_interface.h"
-
-#include "main/dll/dll19_state.h"
 
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */

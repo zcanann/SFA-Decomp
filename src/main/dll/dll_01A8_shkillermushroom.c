@@ -2,6 +2,9 @@
 #include "main/dll/ediblemushroom.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/effect_interfaces.h"
+#include "main/objfx.h"
+#include "main/dll/dll_01A8_shkillermushroom.h"
 
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 ObjHits_DisableObject();
@@ -20,6 +23,44 @@ extern f32 lbl_803E5304;
  * EnemyMushroom TU (dim_bossgut.c) alongside its callers, dont_inline stops
  * MWCC auto-inlining it into enemymushroom_init/update. */
 #pragma dont_inline on
+extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
+extern f32 lbl_803E5310;
+extern undefined4 ObjHits_ClearHitVolumes();
+extern undefined4 ObjHits_RecordObjectHit();
+extern int ObjHits_GetPriorityHitWithPosition();
+extern f32 lbl_803E5370;
+extern f32 lbl_803E5350;
+extern u8 Obj_IsLoadingLocked(void);
+extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
+extern EffectInterface** gPartfxInterface;
+extern int objIsFrozen(int* obj);
+extern int EmissionController_IsLingering(u8 * player);
+extern int fn_80296448(u8 * player);
+extern f32 fn_8029610C(u8 * player);
+extern void objFn_8002b67c(int* obj);
+extern void Obj_StartModelFadeIn(int* obj, int frames);
+extern void Obj_ResetModelColorState(int* obj);
+extern int Sfx_PlayFromObject(int* obj, int id);
+extern f32 sqrtf(f32 x);
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern s16 lbl_80326C78[];
+extern f32 lbl_80326C90[];
+extern f32 lbl_803E5314;
+extern f32 lbl_803E5318;
+extern f32 lbl_803E531C;
+extern f32 lbl_803E5320;
+extern f32 lbl_803E5324;
+extern f32 lbl_803E5328;
+extern f32 lbl_803E532C;
+extern f32 lbl_803E5330;
+extern f32 lbl_803E5334;
+extern f32 lbl_803E5338;
+extern f32 lbl_803E533C;
+extern f32 lbl_803E5340;
+
 void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* state, int enableTimer)
 {
     extern void ObjHits_RefreshObjectState(int obj); /* #57 */
@@ -73,9 +114,6 @@ void enemymushroom_free(EnemyMushroomObject* obj)
     ObjGroup_RemoveObject((int)obj, 3);
 }
 
-extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
-extern f32 lbl_803E5310;
-
 void enemymushroom_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
     extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale); /* #57 */
@@ -91,13 +129,6 @@ void enemymushroom_hitDetect(void)
 {
 }
 
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-#include "main/objfx.h"
-#include "main/dll/dll_01A8_shkillermushroom.h"
-#include "main/dll/ediblemushroom.h"
-
 typedef struct EnemymushroomPlacement
 {
     u8 pad0[0x8 - 0x0];
@@ -112,10 +143,6 @@ typedef struct EnemymushroomPlacement
     u8 pad1F[0x20 - 0x1F];
 } EnemymushroomPlacement;
 
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_RecordObjectHit();
-extern int ObjHits_GetPriorityHitWithPosition();
-
 void enemymushroom_release(void)
 {
 }
@@ -123,10 +150,6 @@ void enemymushroom_release(void)
 void enemymushroom_initialise(void)
 {
 }
-
-extern f32 lbl_803E5370;
-
-extern f32 lbl_803E5350;
 
 /* EN v1.0 0x801D27B8  size: 172b  Mushroom enemy constructor: seeds the state
  * block, clamps the spin period, offsets the spawn height, flags the model,
@@ -157,45 +180,12 @@ void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int
     ObjGroup_AddObject((int*)obj, 3);
 }
 
-extern u8 Obj_IsLoadingLocked(void);
-
 /* EN v1.0 0x801D29E4  size: 336b  Spawns a spore object: builds a matrix from
  * the parent's grid pos, transforms a unit offset, and seeds the new object. */
-
-extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
-extern EffectInterface** gPartfxInterface;
 
 /* EN v1.0 0x801D286C  size: 376b  Bombplant per-tick sequencer: on the armed
  * frame snaps the model to the spawn pose and refreshes hits; otherwise keeps
  * the loop sfx alive, jitters the fuse, and fires the spark particle. */
-
-extern int objIsFrozen(int* obj);
-extern int EmissionController_IsLingering(u8 * player);
-extern int fn_80296448(u8 * player);
-extern f32 fn_8029610C(u8 * player);
-extern void objFn_8002b67c(int* obj);
-extern void Obj_StartModelFadeIn(int* obj, int frames);
-extern void Obj_ResetModelColorState(int* obj);
-extern int Sfx_PlayFromObject(int* obj, int id);
-extern f32 sqrtf(f32 x);
-extern u8 framesThisStep;
-extern f32 timeDelta;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern s16 lbl_80326C78[];
-extern f32 lbl_80326C90[];
-extern f32 lbl_803E5314;
-extern f32 lbl_803E5318;
-extern f32 lbl_803E531C;
-extern f32 lbl_803E5320;
-extern f32 lbl_803E5324;
-extern f32 lbl_803E5328;
-extern f32 lbl_803E532C;
-extern f32 lbl_803E5330;
-extern f32 lbl_803E5334;
-extern f32 lbl_803E5338;
-extern f32 lbl_803E533C;
-extern f32 lbl_803E5340;
 
 typedef struct
 {

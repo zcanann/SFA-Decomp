@@ -25,6 +25,8 @@ extern s16 getAngle(f32 dx, f32 dz);
 #include "main/screen_transition.h"
 
 #include "main/dll/dll19_state.h"
+#include "main/objanim.h"
+#include "main/dll/baddie_state.h"
 
 typedef struct CameraArwingWork
 {
@@ -76,6 +78,29 @@ extern f32 lbl_803E265C;
 
 #pragma scheduling on
 #pragma peephole on
+extern void* memset(void* dst, int val, u32 n);
+extern f32 timeDelta;
+extern f32 lbl_803A43C0[];
+extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
+extern f32 lbl_803E1BA4;
+extern f32 lbl_803E1BC0;
+extern f32 lbl_803E1BC4;
+extern f32 lbl_803E1BC8;
+extern f32 lbl_803E1BCC;
+extern f32 lbl_803E1BD0;
+extern f32 lbl_803E1BD4;
+extern f32 lbl_803E1BD8;
+extern f32 lbl_803E1BDC;
+extern CameraModeCloudRunnerState* lbl_803DD5B8;
+extern int arwarwing_isDead(int state);
+extern int arwarwing_isExplodingOrWarping(int state);
+extern f32 lbl_803E1BA0;
+extern f32 lbl_803E1BA8;
+extern f32 lbl_803E1BAC;
+extern f32 lbl_803E1BB0;
+extern int ObjList_FindObjectById(int id);
+extern s16 getAngle(f32 x, f32 z);
+
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
 {
     float fVar1;
@@ -206,12 +231,6 @@ void CameraModeArwing_free(void)
 {
 }
 
-extern void* memset(void* dst, int val, u32 n);
-
-extern f32 timeDelta;
-
-extern f32 lbl_803A43C0[];
-
 void CameraModeArwing_copyToCurrent(void* p1, u32 kind)
 {
     if (kind == 12)
@@ -237,16 +256,6 @@ void CameraModeArwing_copyToCurrent(void* p1, u32 kind)
     ((CameraArwingWork*)lbl_803A43C0)->unk40 = ((f32*)p1)[1];
 }
 
-extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
-extern f32 lbl_803E1BA4;
-extern f32 lbl_803E1BC0;
-extern f32 lbl_803E1BC4;
-extern f32 lbl_803E1BC8;
-extern f32 lbl_803E1BCC;
-extern f32 lbl_803E1BD0;
-extern f32 lbl_803E1BD4;
-extern f32 lbl_803E1BD8;
-extern f32 lbl_803E1BDC;
 #pragma opt_common_subs off
 void CameraModeArwing_init(int* obj, int mode, int unused)
 {
@@ -289,8 +298,6 @@ void CameraModeArwing_init(int* obj, int mode, int unused)
 }
 #pragma opt_common_subs reset
 
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
-
 void fn_801101E8(void)
 {
     extern void mm_free(u32); /* #57 */
@@ -302,13 +309,6 @@ void CameraModeCloudRunner_free(void);
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
-extern int arwarwing_isDead(int state);
-extern int arwarwing_isExplodingOrWarping(int state);
-extern f32 lbl_803E1BA0;
-extern f32 lbl_803E1BA8;
-extern f32 lbl_803E1BAC;
-extern f32 lbl_803E1BB0;
 
 void CameraModeArwing_update(u8* obj)
 {
@@ -427,21 +427,11 @@ void CameraModeArwing_update(u8* obj)
                                    *(int*)&((GameObject*)obj)->anim.parent);
 }
 
-extern int ObjList_FindObjectById(int id);
-
 /* CameraModeWorldMap_update  addr=0x8010E5B4  size=0xC8C  linkage=global */
 
 /* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/objanim.h"
-#include "main/camera_interface.h"
-#include "main/game_object.h"
-#include "main/dll/baddie_state.h"
-#include "main/dll/rom_curve_interface.h"
-
-#include "main/dll/dll19_state.h"
 
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */
@@ -458,8 +448,6 @@ extern int ObjList_FindObjectById(int id);
 
 /* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
  * first use and refreshes the current path point position. */
-
-extern s16 getAngle(f32 x, f32 z);
 
 /* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
  * distance from an object to its target, updating the wide-turn flag. */

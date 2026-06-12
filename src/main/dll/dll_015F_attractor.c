@@ -28,6 +28,13 @@ extern undefined4 FUN_80044404();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E43D0;
+extern void* Obj_GetPlayerObject(void);
+extern u8 framesThisStep;
+extern f32 lbl_803E43C0;
+extern int atan2i(int y, int x);
+
 void FUN_801a4520(int param_1)
 {
     int iVar1;
@@ -103,10 +110,6 @@ int attractor_getExtraSize(void) { return 0x0; }
 int attractor_getObjectTypeId(void) { return 0x0; }
 int cfmagicwall_getExtraSize(void);
 
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E43D0;
-extern void* Obj_GetPlayerObject(void);
-
 void attractor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -138,11 +141,6 @@ void attractor_init(s16* obj, void* data)
         *obj = t;
     }
 }
-
-extern u8 framesThisStep;
-
-extern f32 lbl_803E43C0;
-extern int atan2i(int y, int x);
 
 /* slidingdoor_SeqFn: slidingdoor "think" routine. Tracks whether the player or
  * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field

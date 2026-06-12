@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
+#include "main/effect_interfaces.h"
 
 extern void Music_Trigger(s32 triggerId, s32 mode);
 extern void modelLightStruct_getSpecularColor(void* light, void* red, void* green, void* blue, void* alpha);
@@ -25,6 +26,37 @@ extern f32 lbl_803E4CB8;
 extern f32 lbl_803E4CBC;
 extern f32 lbl_803E4CC0;
 extern f32 lbl_803E4CC4;
+
+extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
+extern void modelLightStruct_setPosition(f32 x, f32 y, f32 z);
+extern void queueGlowRender(void* p);
+extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
+extern void* Obj_GetPlayerObject(void);
+extern void modelLightStruct_getSpecularColor(void* light, void* p1, void* p2, void* p3, void* p4);
+extern void modelLightStruct_setGlowColor(void* p1, u8 a, u8 b, u8 c, int d);
+extern f32 lbl_803DDBA4;
+extern EffectInterface** gPartfxInterface;
+extern f32 lbl_803E4CC8;
+extern void* objCreateLight(int param_1, int param_2);
+extern void modelLightStruct_setLightKind(void* handle, int param_2);
+extern void modelLightStruct_setDiffuseColor(void* handle, int r, int g, int b, int a);
+extern void modelLightStruct_setSpecularColor(void* handle, int r, int g, int b, int a);
+extern void modelLightStruct_setDistanceAttenuation(void* handle, f32 param_2, f32 param_3);
+extern void lightSetField4D(void* handle, int param_2);
+extern void modelLightStruct_setGlowProjectionRadius(void* handle, f32 param_2);
+extern void modelLightStruct_setDiffuseTargetColor(void* handle, int r, int g, int b, int a);
+extern void modelLightStruct_setSpecularTargetColor(void* handle, int r, int g, int b, int a);
+extern void modelLightStruct_startColorFade(void* handle, int param_2, int param_3);
+extern void modelLightStruct_setAffectsAabbLightSelection(void* handle, int param_2);
+extern void modelLightStruct_setupGlow(void* handle, f32 param_2, int param_3, int r, int g, int b, int a);
+extern void DIMbosstonsil_updateHitReaction(void);
+extern void DIMbosstonsil_enableHitReaction(void);
+extern void DIMbosstonsil_chooseHitReaction(void);
+extern void DIMbosstonsil_startIdleHitReaction(void);
+extern f32 lbl_803DDB98;
+extern f32 lbl_803E4C9C;
+extern f32 lbl_803E4CA0;
+extern f32 lbl_803E4CCC;
 
 int dll_DIM_BossGutSpik_update(void* obj, undefined4 param_2, ObjAnimUpdateState* animUpdate)
 {
@@ -217,22 +249,6 @@ void DIMbosstonsil_free(void* obj)
     }
 }
 
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/objseq.h"
-
-extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
-extern void modelLightStruct_setPosition(f32 x, f32 y, f32 z);
-extern void queueGlowRender(void* p);
-extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
-extern void* Obj_GetPlayerObject(void);
-extern void modelLightStruct_getSpecularColor(void* light, void* p1, void* p2, void* p3, void* p4);
-extern void modelLightStruct_setGlowColor(void* p1, u8 a, u8 b, u8 c, int d);
-
-extern f32 lbl_803DDBA4;
-extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E4CC8;
-
 void DIMbosstonsil_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
     struct
@@ -350,31 +366,6 @@ void DIMbosstonsil_update(void* obj)
         gDIMbosstonsilLight->glowIntensity = (u8)r30_local;
     }
 }
-
-#include "main/dll/DIM/DIMbosstonsil.h"
-#include "main/game_object.h"
-
-extern void* objCreateLight(int param_1, int param_2);
-extern void modelLightStruct_setLightKind(void* handle, int param_2);
-extern void modelLightStruct_setDiffuseColor(void* handle, int r, int g, int b, int a);
-extern void modelLightStruct_setSpecularColor(void* handle, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(void* handle, f32 param_2, f32 param_3);
-extern void lightSetField4D(void* handle, int param_2);
-extern void modelLightStruct_setGlowProjectionRadius(void* handle, f32 param_2);
-extern void modelLightStruct_setDiffuseTargetColor(void* handle, int r, int g, int b, int a);
-extern void modelLightStruct_setSpecularTargetColor(void* handle, int r, int g, int b, int a);
-extern void modelLightStruct_startColorFade(void* handle, int param_2, int param_3);
-extern void modelLightStruct_setAffectsAabbLightSelection(void* handle, int param_2);
-extern void modelLightStruct_setupGlow(void* handle, f32 param_2, int param_3, int r, int g, int b, int a);
-extern void DIMbosstonsil_updateHitReaction(void);
-extern void DIMbosstonsil_enableHitReaction(void);
-extern void DIMbosstonsil_chooseHitReaction(void);
-extern void DIMbosstonsil_startIdleHitReaction(void);
-
-extern f32 lbl_803DDB98;
-extern f32 lbl_803E4C9C;
-extern f32 lbl_803E4CA0;
-extern f32 lbl_803E4CCC;
 
 void DIMbosstonsil_init(int obj, undefined4 param_2, int isAltVariant)
 {

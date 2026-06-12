@@ -20,6 +20,9 @@ extern f32 lbl_803E39BC;
 extern f32 lbl_803E39C0;
 extern f32 lbl_803E39C4;
 
+extern void ObjGroup_AddObject(int obj, int group);
+extern void ObjHits_ClearHitVolumes(int obj);
+
 f32 fn_80183204(int obj)
 {
     u8* state = ((GameObject*)obj)->extra;
@@ -27,8 +30,6 @@ f32 fn_80183204(int obj)
     state[0x13] / (f32)(u32)
     state[0x28];
 }
-
-extern void ObjGroup_AddObject(int obj, int group);
 
 void fn_80183250(int obj, int def)
 {
@@ -88,5 +89,3 @@ void fn_80183250(int obj, int def)
         }
     }
 }
-
-extern void ObjHits_ClearHitVolumes(int obj);

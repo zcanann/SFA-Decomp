@@ -1,5 +1,8 @@
 #include "main/engine_shared.h"
 
+extern f32 floorf(f32);
+extern f32 lbl_803DE544;
+
 int getLActions(int a, int b, u16 idx)
 {
     void* buf = mmAlloc(0x28, -1, NULL);
@@ -199,9 +202,6 @@ int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int co
     return ((u8*)src->instrs)[(src->bit >> 3) + 1];
 }
 
-extern f32 floorf(f32);
-extern f32 lbl_803DE544;
-
 /* Refill the two parallel 64-bit bitstream windows from the next
    byte-aligned position once the consumed bit count overruns 64. */
 #define RENDER_BITS_REFILL(nb)                       \
@@ -347,7 +347,6 @@ void fn_80007F78(u8* anim, u16* dst, u16* out)
     )
     ;
 }
-
 
 int return0xFFFF_80008B6C(void) { return -0x1; }
 

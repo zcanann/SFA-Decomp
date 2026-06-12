@@ -46,6 +46,42 @@ extern f32 lbl_803E6930;
 
 #pragma scheduling on
 #pragma peephole on
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E5C70;
+extern void objSetMtxFn_800412d4();
+extern u32 getButtonsHeld(int pad);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern f32 lbl_803E5C98;
+extern f32 lbl_803E5CA8;
+extern f32 lbl_803E5CAC;
+extern f32 lbl_803E5CB0;
+extern f32 lbl_803E5CB4;
+extern int ObjHits_GetPriorityHitWithPosition(int obj, int* outHit, int* p3, int* p4, f32* outX, f32* outY, f32* outZ);
+extern int objGetFlagsE5_2(int obj);
+extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
+extern void doRumble(f32 val);
+extern f32 lbl_803E5CB8;
+extern f32 lbl_803E5C74;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern void Obj_BuildInverseWorldTransformMatrix(int obj, f32* mtx);
+extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
+extern int Obj_GetPlayerObject(void);
+extern void SB_CloudRunner_onSeqFree(void);
+extern void objHitDetectFn_80062e84(int player, int hitObj, int p3);
+extern void fn_80295918(int player, int p2, f32 p3);
+extern void textureFree(void* tex);
+extern void* textureLoadAsset(int id);
+extern void setAButtonIcon(int idx);
+extern int padGetStickX(int controller);
+extern int padGetStickY(int controller);
+extern f32 lbl_803E5CBC;
+extern f32 lbl_803E5CC0;
+extern void WCPushBlock_UpdateRideTilt(int obj, int state);
+extern void WCPushBlock_UpdateCloudAction(int obj, int state);
+
 void FUN_801ee668(ushort* param_1, int param_2)
 {
     float fVar1;
@@ -117,10 +153,6 @@ int SB_CloudRunner_getExtraSize(void) { return 0x84; }
 int SB_CloudRunner_getObjectTypeId(void) { return 0x43; }
 int WM_ObjCreator_getExtraSize(void);
 
-extern void objRenderFn_8003b8f4(f32);
-
-extern f32 lbl_803E5C70;
-
 f32 fn_801EEDB4(int unused, f32* p)
 {
     f32 v = lbl_803E5C70;
@@ -151,8 +183,6 @@ void fn_801EED5C(int* obj, f32* x, f32* y, f32* z)
     *z = *(f32*)(p + 0x54);
 }
 
-extern void objSetMtxFn_800412d4();
-
 void fn_801EED80(void* obj)
 {
     objSetMtxFn_800412d4(ObjPath_GetPointModelMtx((int)obj, 3));
@@ -174,15 +204,6 @@ void fn_801EEE0C(int* obj, f32* x, f32* y, f32* z)
 
 /* Path-follow steering update for the cloudrunner block (target 0x801EE668;
  * Ghidra split this body as FUN_801eeafc). */
-extern u32 getButtonsHeld(int pad);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern u8 framesThisStep;
-extern f32 timeDelta;
-extern f32 lbl_803E5C98;
-extern f32 lbl_803E5CA8;
-extern f32 lbl_803E5CAC;
-extern f32 lbl_803E5CB0;
-extern f32 lbl_803E5CB4;
 
 typedef struct
 {
@@ -310,12 +331,6 @@ void fn_801EE668(s16* obj, u8* state)
  * type isn't 281 and isn't currently in fade state, fade it red, rumble,
  * play SFX, gate further damage on a GameBit, then if the hit type is 154
  * emit 3 partfx of effect 168 followed by a 10-shot burst of effect 169. */
-extern int ObjHits_GetPriorityHitWithPosition(int obj, int* outHit, int* p3, int* p4, f32* outX, f32* outY, f32* outZ);
-extern int objGetFlagsE5_2(int obj);
-extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
-extern void doRumble(f32 val);
-extern f32 lbl_803E5CB8;
-extern f32 lbl_803E5C74;
 
 struct WCPartfxArgs
 {
@@ -370,11 +385,6 @@ void SB_CloudRunner_HandlePriorityHit(int obj, u8* state)
     }
 }
 
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern void Obj_BuildInverseWorldTransformMatrix(int obj, f32* mtx);
-extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
-
 void SB_CloudRunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     f32* state = ((GameObject*)obj)->extra;
@@ -411,11 +421,6 @@ void SB_CloudRunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-extern int Obj_GetPlayerObject(void);
-extern void SB_CloudRunner_onSeqFree(void);
-extern void objHitDetectFn_80062e84(int player, int hitObj, int p3);
-extern void fn_80295918(int player, int p2, f32 p3);
-
 int SB_CloudRunner_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int* state = ((GameObject*)obj)->extra;
@@ -441,8 +446,6 @@ int SB_CloudRunner_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-extern void textureFree(void* tex);
-
 void SB_CloudRunner_free(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
@@ -462,8 +465,6 @@ void SB_CloudRunner_free(int* obj)
     ObjGroup_RemoveObject(obj, 10);
 }
 
-extern void* textureLoadAsset(int id);
-
 void SB_CloudRunner_init(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
@@ -479,14 +480,6 @@ void SB_CloudRunner_init(int* obj)
     ObjHits_SetTargetMask(obj, 1);
     ObjGroup_AddObject(obj, 10);
 }
-
-extern void setAButtonIcon(int idx);
-extern int padGetStickX(int controller);
-extern int padGetStickY(int controller);
-extern f32 lbl_803E5CBC;
-extern f32 lbl_803E5CC0;
-extern void WCPushBlock_UpdateRideTilt(int obj, int state);
-extern void WCPushBlock_UpdateCloudAction(int obj, int state);
 
 void SB_CloudRunner_update(int obj)
 {

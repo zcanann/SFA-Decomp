@@ -21,6 +21,8 @@
 /* EN v1.0 0x80131940  size: 948b  Update title menu item input state. */
 
 /* EN v1.0 0x80132008  size: 8b   Trivial 1-returner. */
+extern u8 linkTextures[0x30];
+
 int Dummy3E_func05_ret_1(void) { return 1; }
 
 /* EN v1.0 0x80132010  size: 4b   Empty no-op. */
@@ -40,8 +42,6 @@ void Dummy3E_release(void)
 void Dummy3E_initialise(void)
 {
 }
-
-extern u8 linkTextures[0x30];
 
 /* EN v1.0 0x80131540  size: 48b  Toggle A-button bit of item->flags. */
 

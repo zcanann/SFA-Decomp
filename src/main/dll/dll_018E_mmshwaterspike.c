@@ -24,6 +24,20 @@ typedef struct MmshWaterspikeObjectDef
 
 extern u32 randomGetRange(int min, int max);
 
+extern f32 lbl_803E4F68;
+extern void objRenderFn_8003b8f4(f32);
+extern void* ObjList_FindObjectById(int id);
+extern f32 objFn_801948c0(void* obj, int param_2);
+extern void fn_80137948(char* fmt, ...);
+extern char sWaterSpikeInvalidXyzAnimIdWarning[];
+extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int** out, int a, int b);
+extern u8 framesThisStep;
+extern WaterfxInterface** gWaterfxInterface;
+extern f32 lbl_803E4F80;
+extern f32 lbl_803E4F84;
+extern f32 lbl_803E4F88;
+extern f32 lbl_803E4F78;
+
 void mmsh_waterspike_free(void)
 {
 }
@@ -44,20 +58,6 @@ int mmsh_scales_getExtraSize(void);
 int mmsh_waterspike_getExtraSize(void) { return 0x0; }
 int mmsh_waterspike_getObjectTypeId(void) { return 0x0; }
 void mmsh_waterspike_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
-
-extern f32 lbl_803E4F68;
-extern void objRenderFn_8003b8f4(f32);
-
-extern void* ObjList_FindObjectById(int id);
-extern f32 objFn_801948c0(void* obj, int param_2);
-extern void fn_80137948(char* fmt, ...);
-extern char sWaterSpikeInvalidXyzAnimIdWarning[];
-extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int** out, int a, int b);
-extern u8 framesThisStep;
-extern WaterfxInterface** gWaterfxInterface;
-extern f32 lbl_803E4F80;
-extern f32 lbl_803E4F84;
-extern f32 lbl_803E4F88;
 
 void mmsh_waterspike_update(int obj)
 {
@@ -141,5 +141,3 @@ void mmsh_waterspike_init(int obj, s16* def)
     packedEventIds |= lowEventId;
     *(u32*)&((GameObject*)obj)->unkF8 = packedEventIds;
 }
-
-extern f32 lbl_803E4F78;

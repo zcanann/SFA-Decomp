@@ -26,6 +26,8 @@ extern float mathCosf(float x);
 #include "main/screen_transition.h"
 
 #include "main/dll/dll19_state.h"
+#include "main/objanim.h"
+#include "main/dll/baddie_state.h"
 
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
@@ -48,6 +50,24 @@ extern f32 lbl_803E265C;
 
 #pragma scheduling on
 #pragma peephole on
+extern void* memset(void* dst, int val, u32 n);
+extern CameraModeCrawlState* lbl_803DD598;
+extern f32 mathCosf(f32);
+extern f32 mathSinf(f32);
+extern f32 timeDelta;
+extern CameraModeCannonState* lbl_803DD5A0;
+extern CameraModeCloudRunnerState* lbl_803DD5B8;
+extern f32 interpolate(f32 cur, f32 target, f32 t);
+extern f32 lbl_803E1AC0;
+extern f32 lbl_803E1AC4;
+extern f32 lbl_803E1AD0;
+extern f32 lbl_803E1AD4;
+extern f32 lbl_803E1AD8;
+extern f32 lbl_803E1ADC;
+extern int fn_802972A8(int state);
+extern s16 getAngle(f32 x, f32 z);
+extern f32 mathCosf(f32 x);
+
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
 {
     float fVar1;
@@ -176,13 +196,6 @@ void fn_80110EC0(void)
 
 void CameraModeArwing_release(void);
 
-extern void* memset(void* dst, int val, u32 n);
-extern CameraModeCrawlState* lbl_803DD598;
-
-extern f32 mathCosf(f32);
-extern f32 mathSinf(f32);
-extern f32 timeDelta;
-
 void CameraModeCrawl_init(void)
 {
     if (lbl_803DD598 == NULL)
@@ -192,12 +205,8 @@ void CameraModeCrawl_init(void)
     }
 }
 
-extern CameraModeCannonState* lbl_803DD5A0;
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
 void CameraModeCrawl_free(void)
 {
@@ -219,11 +228,6 @@ void CameraModeCloudRunner_free(void);
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
-extern f32 interpolate(f32 cur, f32 target, f32 t);
-
-extern f32 lbl_803E1AC0;
-extern f32 lbl_803E1AC4;
 
 void CameraModeCrawl_copyToCurrent(void* param1, int param2)
 {
@@ -282,11 +286,6 @@ void CameraModeCrawl_copyToCurrent(void* param1, int param2)
 
 int dll_19_func17(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, s16 p8);
 
-extern f32 lbl_803E1AD0;
-extern f32 lbl_803E1AD4;
-extern f32 lbl_803E1AD8;
-extern f32 lbl_803E1ADC;
-
 void CameraModeCrawl_update(u8* obj)
 {
     extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx); /* #57 */
@@ -336,8 +335,6 @@ void CameraModeCrawl_update(u8* obj)
                                    *(int*)&camera->anim.parent);
 }
 
-extern int fn_802972A8(int state);
-
 /* CameraModeCloudRunner_update  addr=0x80110214  size=0x36C  linkage=global */
 
 /* CameraModeForceBehind_update  addr=0x8010FC7C  size=0x43C  linkage=global */
@@ -356,14 +353,6 @@ extern int fn_802972A8(int state);
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/objanim.h"
-#include "main/camera_interface.h"
-#include "main/game_object.h"
-#include "main/dll/baddie_state.h"
-#include "main/dll/rom_curve_interface.h"
-
-#include "main/dll/dll19_state.h"
-
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */
 
@@ -380,12 +369,8 @@ extern int fn_802972A8(int state);
 /* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
  * first use and refreshes the current path point position. */
 
-extern s16 getAngle(f32 x, f32 z);
-
 /* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
  * distance from an object to its target, updating the wide-turn flag. */
-
-extern f32 mathCosf(f32 x);
 
 /* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
  * the object for walkable space, returning a bitmask of clear directions. */

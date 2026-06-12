@@ -14,6 +14,18 @@ extern ModgfxInterface** gModgfxInterface;
 
 extern u32 randomGetRange(int min, int max);
 
+extern f32 lbl_803E1318;
+extern f32 lbl_803E131C;
+extern f32 lbl_803E1320;
+extern f32 lbl_803E1324;
+extern f32 lbl_803E1328;
+extern f32 lbl_803E132C;
+extern f32 lbl_803E1330;
+extern f32 lbl_803E1334;
+extern f32 lbl_803E1338;
+extern f32 lbl_803E133C;
+extern u8 lbl_803178B0[];
+
 void dll_98_func01_nop(void)
 {
 }
@@ -46,19 +58,6 @@ typedef struct
     u8 pad1[2]; /* +0x5e */
     GfxCmd entries[32]; /* +0x60 */
 } GfxBuf;
-
-extern f32 lbl_803E1318;
-extern f32 lbl_803E131C;
-extern f32 lbl_803E1320;
-extern f32 lbl_803E1324;
-extern f32 lbl_803E1328;
-extern f32 lbl_803E132C;
-extern f32 lbl_803E1330;
-extern f32 lbl_803E1334;
-extern f32 lbl_803E1338;
-extern f32 lbl_803E133C;
-
-extern u8 lbl_803178B0[];
 
 void dll_98_func03(int sourceObj, int variant, int posSource, uint flags, int arg5, int extraArgs)
 {

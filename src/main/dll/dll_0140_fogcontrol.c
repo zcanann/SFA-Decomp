@@ -43,6 +43,15 @@ typedef struct FogcontrolPlacement
 
 extern f32 timeDelta;
 
+extern void disableHeavyFog(void);
+extern f32 lbl_803E4070;
+extern f32 lbl_803E4074;
+extern f32 lbl_803E4078;
+extern f32 lbl_803E407C;
+extern void enableHeavyFog(u8 mode, f32 a, f32 b, f32 c, f32 d, f32 e);
+extern f32 lbl_803E4068;
+extern f32 lbl_803E406C;
+
 void fogcontrol_hitDetect(void)
 {
 }
@@ -50,8 +59,6 @@ void fogcontrol_hitDetect(void)
 int fogcontrol_getExtraSize(void) { return 0x8; }
 int fogcontrol_getObjectTypeId(void) { return 0x0; }
 int lightning_getExtraSize(void);
-
-extern void disableHeavyFog(void);
 
 void fogcontrol_free(int* obj)
 {
@@ -61,12 +68,6 @@ void fogcontrol_free(int* obj)
         disableHeavyFog();
     }
 }
-
-extern f32 lbl_803E4070;
-extern f32 lbl_803E4074;
-extern f32 lbl_803E4078;
-extern f32 lbl_803E407C;
-extern void enableHeavyFog(u8 mode, f32 a, f32 b, f32 c, f32 d, f32 e);
 
 typedef struct FogControlState
 {
@@ -117,9 +118,6 @@ void fogcontrol_init(u8* obj, u8* params)
 void explodeanimator_init(int* obj, int* def);
 
 /* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
-
-extern f32 lbl_803E4068;
-extern f32 lbl_803E406C;
 
 /* EN v1.0 0x80197474  size: 648b  fogcontrol_update: ramp the fog blend
  * toward the gamebit-selected target and feed the heavy fog params. */

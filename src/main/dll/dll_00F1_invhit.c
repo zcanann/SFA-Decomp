@@ -21,12 +21,6 @@ typedef struct InvhitObjectDef
     void* unk1C;
 } InvhitObjectDef;
 
-static inline int* Transporter_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 FUN_80017748();
 extern int FUN_80017a90();
 extern undefined8 FUN_80017ac8();
@@ -36,11 +30,32 @@ extern int ObjList_ContainsObject();
 extern undefined4 FUN_80053c98();
 extern int FUN_801365ac();
 extern undefined4 FUN_801365b8();
-
 extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E42BC;
+extern f32 lbl_803E35E8;
+extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
+extern f32 timeDelta;
+extern void* Obj_GetPlayerObject(void);
+extern s16* getTrickyObject(void);
+extern int playerIsDisguised(void* player);
+extern f32 sqrtf(f32 x);
+extern u32 fn_80296118(void);
+extern f32 lbl_803AC780[];
+extern u8 framesThisStep;
+extern EffectInterface** gPartfxInterface;
+extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
+extern f32 lbl_803E35EC;
+extern f32 lbl_803E35F0;
+extern f32 lbl_803E35F4;
+extern int getCurMapLayer(void);
+
+static inline int* Transporter_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (int*)objAnim->banks[objAnim->bankIndex];
+}
 
 undefined4
 FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
@@ -148,8 +163,6 @@ int invhit_getExtraSize(void) { return 0xc; }
 int invhit_getObjectTypeId(void) { return 0x0; }
 int iceblast_getExtraSize(void);
 
-extern f32 lbl_803E35E8;
-extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
 void invhit_render(int* obj, int a, int b, int c, int d) { objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E35E8); }
 void iceblast_render(int* obj, int a, int b, int c, int d);
 
@@ -167,12 +180,6 @@ void invhit_free(int obj)
 }
 
 void iceblast_init(int obj, s16* p);
-
-extern f32 timeDelta;
-
-extern void* Obj_GetPlayerObject(void);
-
-extern s16* getTrickyObject(void);
 
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
@@ -275,18 +282,6 @@ void invhit_init(int* obj, u8* def)
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x6000;
 }
 #pragma opt_common_subs reset
-
-extern int playerIsDisguised(void* player);
-
-extern f32 sqrtf(f32 x);
-extern u32 fn_80296118(void);
-extern f32 lbl_803AC780[];
-extern u8 framesThisStep;
-extern EffectInterface** gPartfxInterface;
-extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
-extern f32 lbl_803E35EC;
-extern f32 lbl_803E35F0;
-extern f32 lbl_803E35F4;
 
 void invhit_update(int* obj)
 {
@@ -436,5 +431,3 @@ void invhit_update(int* obj)
         }
     }
 }
-
-extern int getCurMapLayer(void);

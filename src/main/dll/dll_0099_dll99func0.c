@@ -12,6 +12,21 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
+extern u8 lbl_803171C0[];
+extern u8 lbl_803DB950[8];
+extern f32 lbl_803E1340;
+extern f32 lbl_803E1344;
+extern f32 lbl_803E1348;
+extern f32 lbl_803E1350;
+extern f32 lbl_803E1358;
+extern f32 lbl_803E1368;
+extern u8 lbl_80317AF8[];
+extern f32 lbl_803E134C;
+extern f32 lbl_803E1354;
+extern f32 lbl_803E135C;
+extern f32 lbl_803E1360;
+extern f32 lbl_803E1364;
+
 void dll_99_func01_nop(void)
 {
 }
@@ -23,14 +38,6 @@ void dll_99_func00_nop(void)
 /* Stubs to align function set with v1.0 asm. The dll_xx_func03 stubs follow
  * the same large-struct + vtable-call pattern as foodbag's func03s; matching
  * bodies needs proper struct recovery as follow-up. */
-extern u8 lbl_803171C0[];
-extern u8 lbl_803DB950[8];
-extern f32 lbl_803E1340;
-extern f32 lbl_803E1344;
-extern f32 lbl_803E1348;
-extern f32 lbl_803E1350;
-extern f32 lbl_803E1358;
-extern f32 lbl_803E1368;
 
 typedef struct
 {
@@ -50,13 +57,6 @@ typedef struct
     u8 pad1[2]; /* +0x5e */
     GfxCmd entries[32]; /* +0x60 */
 } GfxBuf;
-
-extern u8 lbl_80317AF8[];
-extern f32 lbl_803E134C;
-extern f32 lbl_803E1354;
-extern f32 lbl_803E135C;
-extern f32 lbl_803E1360;
-extern f32 lbl_803E1364;
 
 void dll_99_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5, f32* extraArgs
 )

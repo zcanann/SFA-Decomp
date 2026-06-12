@@ -55,6 +55,8 @@ extern void inpResetChannelDefaults(u8 a, u8 b);
  *
  * EN v1.0 Address: 0x8026C488, size 2800b
  */
+extern void voiceKillById(int p);
+
 u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* para, u8 studio, u16 sgid)
 {
     SynthArrangement* arr;
@@ -372,8 +374,6 @@ void synthQueueVoice(SynthVoice* voice)
     gSynthAllocatedVoices = voice;
     voice->state = 2;
 }
-
-extern void voiceKillById(int p);
 
 /*
  * Move a queued handle to the allocated list after a delayed fade completes.

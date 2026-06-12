@@ -125,17 +125,28 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
-static inline int* DIMcannon_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
+extern void Music_Trigger(int id, int p2);
+extern int getSaveGameLoadStatus(void);
+extern void* Obj_GetPlayerObject(void);
+extern int coordsToMapCell(f32 x, f32 z);
+extern void SCGameBitLatch_Update(void* p, int a, int b, int c, int d, int e);
+extern void fn_80088870(u8 * a, u8 * b, u8 * c, u8 * d);
+extern void envFxActFn_800887f8(int id);
+extern u8 lbl_803239F0[];
+extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
+extern u8 lbl_803238D8[];
+extern int ObjList_FindObjectById(int id);
+
+static inline int* DIMcannon_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (int*)objAnim->banks[objAnim->bankIndex];
+}
 
 #pragma scheduling on
 #pragma peephole on
@@ -248,11 +259,6 @@ int lavaball1bf_getExtraSize(void);
 
 void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-extern void Music_Trigger(int id, int p2);
-extern int getSaveGameLoadStatus(void);
-extern void* Obj_GetPlayerObject(void);
-extern int coordsToMapCell(f32 x, f32 z);
-
 #pragma scheduling off
 #pragma peephole off
 void link_levcontrol_free(int obj)
@@ -290,8 +296,6 @@ void link_levcontrol_update(int* obj)
     }
     inner->areaCell = (s8)coordsToMapCell(player[3], player[5]);
 }
-
-extern void SCGameBitLatch_Update(void* p, int a, int b, int c, int d, int e);
 
 void link_levcontrol_updateAreaMusic(int* obj)
 {
@@ -350,10 +354,6 @@ void link_levcontrol_updateAreaMusic(int* obj)
     }
 }
 
-extern void fn_80088870(u8 * a, u8 * b, u8 * c, u8 * d);
-extern void envFxActFn_800887f8(int id);
-extern u8 lbl_803239F0[];
-
 void link_levcontrol_applyEnterAreaEffects(int* obj)
 {
     extern void getEnvfxAct(int a, int b, int c, int d); /* #57 */
@@ -397,8 +397,6 @@ void link_levcontrol_applyEnterAreaEffects(int* obj)
     }
 }
 
-extern void ObjModel_SetBlendChannelTargets(int* model, int channel, int p3, int p4, f32 weight, int p6);
-
 void link_levcontrol_init(int* obj)
 {
     LinkLevControlState* inner = ((GameObject*)obj)->extra;
@@ -415,7 +413,3 @@ void link_levcontrol_init(int* obj)
         ((GameObject*)obj)->unkF4 = 1;
     }
 }
-
-extern u8 lbl_803238D8[];
-
-extern int ObjList_FindObjectById(int id);

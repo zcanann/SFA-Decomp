@@ -56,6 +56,17 @@ extern f32 lbl_803E3B8C;
 extern f32 lbl_803E3B90;
 extern f32 lbl_803E3B94;
 
+extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern int getTrickyObject(void);
+extern int Obj_GetPlayerObject(void);
+extern void Obj_FreeObject(int* obj);
+extern f32 timeDelta;
+extern f32 lbl_803E2E54;
+extern f32 lbl_803E2E58;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E2E50;
+extern void Camera_DisableViewYOffset(void);
+
 undefined4
 FUN_8015e0d0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -511,14 +522,6 @@ void fn_8015FCCC(int obj)
     }
 }
 
-extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern int getTrickyObject(void);
-extern int Obj_GetPlayerObject(void);
-extern void Obj_FreeObject(int* obj);
-extern f32 timeDelta;
-extern f32 lbl_803E2E54;
-extern f32 lbl_803E2E58;
-
 void iceball_update(undefined2* param_1, int param_2)
 {
     int p;
@@ -891,9 +894,6 @@ int iceball_getExtraSize(void) { return 0x2; }
 int iceball_getObjectTypeId(void) { return 0x0; }
 int fn_8016052C(void);
 
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E2E50;
-
 void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 #pragma scheduling off
@@ -904,7 +904,6 @@ void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E2E50);
 }
 
-extern void Camera_DisableViewYOffset(void);
 void iceball_free(void) { Camera_DisableViewYOffset(); }
 
 void fn_8015F5B0(short* obj);

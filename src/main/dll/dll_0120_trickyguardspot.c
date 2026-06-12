@@ -16,14 +16,15 @@ typedef struct TrickyguardspotPlacement
     s16 unk1E;
 } TrickyguardspotPlacement;
 
-void trickyguardspot_render(void)
-{
-}
-
 extern int* getTrickyObject(void);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern void objRenderFn_80041018(int obj);
 extern u8 framesThisStep;
+extern void ObjGroup_AddObject(int obj, int g);
+
+void trickyguardspot_render(void)
+{
+}
 
 #define TRICKY_GUARD_SPOT_VTABLE(tricky) \
     (*(TrickyGuardSpotInterfaceVTable **)((tricky)->dll))
@@ -82,8 +83,6 @@ int trickyguardspot_getExtraSize(void) { return 0x8; }
 int infotext_getExtraSize(void);
 
 void trickyguardspot_free(TrickyGuardSpotObject* obj) { ObjGroup_RemoveObject(obj, TRICKY_GUARD_SPOT_GROUP); }
-
-extern void ObjGroup_AddObject(int obj, int g);
 
 void trickyguardspot_init(TrickyGuardSpotObject* obj, TrickyGuardSpotPlacement* def)
 {

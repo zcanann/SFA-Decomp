@@ -14,6 +14,20 @@ extern uint GameBit_Get(int eventId);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 
+extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
+extern void objRenderFn_80041018(int obj);
+extern f32 lbl_803E4910;
+extern f32 lbl_803E4908;
+extern f32 lbl_803E4914;
+extern f32 lbl_803E4918;
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern f32 lbl_803E4900;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E490C;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern int Obj_GetPlayerObject(void);
+
 void dimdismountpoint_hitDetect(void)
 {
 }
@@ -25,10 +39,6 @@ void dimdismountpoint_release(void)
 void dimdismountpoint_initialise(void)
 {
 }
-
-extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
-extern void objRenderFn_80041018(int obj);
-extern f32 lbl_803E4910;
 
 void dimdismountpoint_update(int* obj)
 {
@@ -66,12 +76,6 @@ void dimdismountpoint_update(int* obj)
     }
 }
 
-extern f32 lbl_803E4908;
-extern f32 lbl_803E4914;
-extern f32 lbl_803E4918;
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-
 void dimdismountpoint_init(u8* obj, u8* params)
 {
     f32* sub;
@@ -90,9 +94,6 @@ void dimdismountpoint_init(u8* obj, u8* params)
 int dimbridgecogmai_getExtraSize(void);
 int dimdismountpoint_getExtraSize(void) { return 0x10; }
 
-extern f32 lbl_803E4900;
-extern void objRenderFn_8003b8f4(f32);
-
 void dimdismountpoint_free(int x) { ObjGroup_RemoveObject(x, 0x13); }
 
 void dimbridgecogmai_release(void);
@@ -100,8 +101,6 @@ void dimbridgecogmai_release(void);
 int dimdismountpoint_getObjectTypeId(void) { return 0; }
 
 void dimbridgecogmai_init(int* obj, int* def);
-
-extern f32 lbl_803E490C;
 
 void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
@@ -120,14 +119,10 @@ void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible
 
 int dimbridgecogmai_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 void dimdismountpoint_func11(int obj, int flag)
 {
     (*gObjectTriggerInterface)->runSequence((flag ^ 1) + 2, (void*)obj, -1);
 }
-
-extern int Obj_GetPlayerObject(void);
 
 int dimdismountpoint_setScale(int obj)
 {

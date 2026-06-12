@@ -37,6 +37,19 @@ extern f32 lbl_803DFF1C;
 extern f32 lbl_803DFF20;
 extern f32 lbl_803DFF24;
 
+extern EffectSrcParams lbl_8039C3C8;
+extern f32 lbl_803DB838;
+extern f32 lbl_803DB83C;
+extern s32 lbl_803DD3B0;
+extern s32 lbl_803DD3B4;
+extern f32 lbl_803DD3B8;
+extern f32 lbl_803DD3BC;
+extern f32 lbl_803DFF30;
+extern f32 lbl_803DFF34;
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern f32 mathSinf(f32 x);
+
 int Effect10_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte, f32* p6)
 {
   EffectSpawnParams p;
@@ -555,20 +568,6 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
   }
   return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
-
-extern EffectSrcParams lbl_8039C3C8;
-
-extern f32 lbl_803DB838;
-extern f32 lbl_803DB83C;
-extern s32 lbl_803DD3B0;
-extern s32 lbl_803DD3B4;
-extern f32 lbl_803DD3B8;
-extern f32 lbl_803DD3BC;
-extern f32 lbl_803DFF30;
-extern f32 lbl_803DFF34;
-extern f32 timeDelta;
-extern u8 framesThisStep;
-extern f32 mathSinf(f32 x);
 
 void Effect10_func05(void)
 {

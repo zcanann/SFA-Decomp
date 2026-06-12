@@ -1,6 +1,12 @@
 /* DLL 0x0141 (lightning) — MMP lightning object [0x801978A0-0x80197DA8). */
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/effect_interfaces.h"
+#include "main/dll/MMP/mmp_moonrock_state.h"
+#include "main/dll/MMP/MMP_moonrock.h"
+#include "main/camera_interface.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/game_object.h"
 
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
@@ -9,10 +15,23 @@ extern undefined4 ObjGroup_AddObject();
 
 extern f32 timeDelta;
 
-int lightning_getExtraSize(void) { return 0x28; }
-
 extern f32 lbl_803E4048;
 extern void objRenderFn_8003b8f4(f32);
+extern void* ObjGroup_GetObjects();
+extern f32 lbl_803E4088;
+extern f32 lbl_803E408C;
+extern f32 lbl_803E4090;
+extern f32 lbl_803E40A0;
+extern void mm_free(void* p);
+extern void lightningRender(u32 handle);
+extern int lightningCreate(float* start, float* end, f32 radiusX, f32 radiusY, int delay,
+                           int param_6, int param_7);
+extern void hitDetectFn_80097070(u8* obj, double radius, int param_3, int param_4, int param_5,
+                                 int param_6);
+extern void objfx_spawnDirectionalBurst(u8* obj, int param_2, double radius, int param_4, int param_5,
+                                        int param_6, double scale, int param_8, int param_9);
+
+int lightning_getExtraSize(void) { return 0x28; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
@@ -24,14 +43,6 @@ extern void objRenderFn_8003b8f4(f32);
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/dll/MMP/mmp_moonrock_state.h"
-#include "main/dll/MMP/MMP_moonrock.h"
-#include "main/camera_interface.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-
 typedef struct LightningPlacement
 {
     u8 pad0[0x14 - 0x0];
@@ -42,15 +53,6 @@ typedef struct LightningPlacement
     s16 unk24;
     u8 pad26[0x28 - 0x26];
 } LightningPlacement;
-
-extern void* ObjGroup_GetObjects();
-
-extern f32 lbl_803E4088;
-extern f32 lbl_803E408C;
-extern f32 lbl_803E4090;
-extern f32 lbl_803E40A0;
-
-extern void mm_free(void* p);
 
 void lightning_free(u8* obj, int p2)
 {
@@ -66,7 +68,6 @@ void lightning_free(u8* obj, int p2)
 
 /* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
  * lightningRender(handle). */
-extern void lightningRender(u32 handle);
 
 void lightning_render(u8* obj)
 {
@@ -76,13 +77,6 @@ void lightning_render(u8* obj)
         lightningRender(handle);
     }
 }
-
-extern int lightningCreate(float* start, float* end, f32 radiusX, f32 radiusY, int delay,
-                           int param_6, int param_7);
-extern void hitDetectFn_80097070(u8* obj, double radius, int param_3, int param_4, int param_5,
-                                 int param_6);
-extern void objfx_spawnDirectionalBurst(u8* obj, int param_2, double radius, int param_4, int param_5,
-                                        int param_6, double scale, int param_8, int param_9);
 
 typedef struct LightningFlags
 {

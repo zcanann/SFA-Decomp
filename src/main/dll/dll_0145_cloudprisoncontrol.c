@@ -80,6 +80,16 @@ extern f32 lbl_803E4D9C;
 
 #pragma scheduling on
 #pragma peephole on
+extern s8 lbl_803DBE08;
+extern f32 lbl_803E4108;
+extern void objRenderFn_8003b8f4(f32);
+extern s8 lbl_803DDB08;
+extern s8 lbl_803DDB09;
+extern int lbl_803DDB0C;
+extern int lbl_803AC7D8[];
+extern int lbl_803AC878[];
+extern int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
+
 undefined4 objInterpretSeq_v11_unused(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                                       undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                                       undefined4 param_9, undefined4 param_10, undefined4 param_11, int param_12,
@@ -1033,11 +1043,7 @@ int Trigger_getExtraSize(void);
 int cloudprisoncontrol_getExtraSize(void) { return 0x0; }
 int cloudprisoncontrol_getObjectTypeId(void) { return 0x0; }
 
-extern s8 lbl_803DBE08;
 void cloudprisoncontrol_initialise(void) { lbl_803DBE08 = 0x1; }
-
-extern f32 lbl_803E4108;
-extern void objRenderFn_8003b8f4(f32);
 
 void cloudprisoncontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -1049,17 +1055,12 @@ void cloudprisoncontrol_init(int x) { ObjMsg_AllocQueue(x, 0xa); }
 
 int cfguardian_setScale(int* obj);
 
-extern s8 lbl_803DDB08;
-extern s8 lbl_803DDB09;
-extern int lbl_803DDB0C;
 /* cloudprisoncontrol map-event tables (recovered layout; kept raw int[] - the
  * struct-field form flips MWCC's variable-index/walker addressing, banked).
  * lbl_803AC7D8: registered-target list, 8-byte entries (count lbl_803DDB09):
  *   s32 target @0; s16 data @4; u8 unk6 @6 (zeroed on add); u8 pad @7.
  * lbl_803AC878: deferred-message queue, 12-byte entries (count lbl_803DDB08):
  *   s32 message @0; s32 target @4; s32 data @8. */
-extern int lbl_803AC7D8[];
-extern int lbl_803AC878[];
 
 void cloudprisoncontrol_update(int obj)
 {
@@ -1147,7 +1148,5 @@ void cloudprisoncontrol_update(int obj)
         }
     }
 }
-
-extern int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
 
 extern int ObjGroup_FindNearestObject(int group, int obj, int p3);

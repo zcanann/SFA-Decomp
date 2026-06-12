@@ -19,6 +19,16 @@ extern f32 lbl_803E5210;
 
 void fn_801CDF94(int obj, int state, int flag);
 
+extern int objFindTexture(int* obj, int idx, int p3);
+extern f32 lbl_803E5200;
+extern f32 timeDelta;
+extern void fn_8003A168(int obj, void* p);
+extern void fn_8003B228(int obj, void* p);
+extern void fn_8003A230(int obj, void* p, f32 f);
+extern void characterDoEyeAnims(int obj, void* p);
+extern u8 lbl_803268B4[];
+extern f32 lbl_803E5214;
+
 void nw_geyser_init(int obj)
 {
     ((GameObject*)obj)->objectFlags = (ushort)(((GameObject*)obj)->objectFlags | 0x6000);
@@ -51,10 +61,6 @@ void nw_geyser_update(int obj)
         ObjHits_EnableObject(obj);
     }
 }
-
-extern int objFindTexture(int* obj, int idx, int p3);
-extern f32 lbl_803E5200;
-extern f32 timeDelta;
 
 int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -112,13 +118,6 @@ int fn_801CDE7C(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-extern void fn_8003A168(int obj, void* p);
-extern void fn_8003B228(int obj, void* p);
-extern void fn_8003A230(int obj, void* p, f32 f);
-extern void characterDoEyeAnims(int obj, void* p);
-extern u8 lbl_803268B4[];
-extern f32 lbl_803E5214;
 
 void fn_801CDF94(int obj, int state, int flag)
 {

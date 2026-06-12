@@ -28,12 +28,6 @@ typedef struct WarpPointState
     u8 pad12[0x18 - 0x12];
 } WarpPointState;
 
-static inline int* Transporter_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 FUN_80017748();
 extern int FUN_80017a90();
 extern undefined8 FUN_80017ac8();
@@ -41,12 +35,31 @@ extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 FUN_80053c98();
 extern int FUN_801365ac();
 extern undefined4 FUN_801365b8();
-
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E42BC;
+extern unsigned long GameBit_Set(int eventId, int value);
+extern void warpToMap(int mapId, int flag);
+extern f32 timeDelta;
+extern void* Obj_GetPlayerObject(void);
+extern u32 GameBit_Get(int eventId);
+extern f32 sqrtf(f32 x);
+extern u8 framesThisStep;
+extern int getCurMapLayer(void);
+extern f32 Vec_distance(f32 * a, f32 * b);
+extern s16 lbl_803DCEB8;
+extern u8 lbl_803DCDE0;
+extern f32 lbl_803E35D8;
+extern f32 lbl_803E35DC;
+extern void objSetSlot(s16* obj, int slot);
+
+static inline int* Transporter_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (int*)objAnim->banks[objAnim->bankIndex];
+}
 
 undefined4
 FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
@@ -138,8 +151,6 @@ FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 
 void invhit_hitDetect(void);
 
-extern unsigned long GameBit_Set(int eventId, int value);
-
 int WarpPoint_getExtraSize(void) { return 0x10; }
 int WarpPoint_getObjectTypeId(void) { return 0x1; }
 int invhit_getExtraSize(void);
@@ -154,8 +165,6 @@ void WarpPoint_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 }
 
 void invhit_free(int obj);
-
-extern void warpToMap(int mapId, int flag);
 
 int WarpPoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -174,10 +183,6 @@ int WarpPoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-extern f32 timeDelta;
-
-extern void* Obj_GetPlayerObject(void);
 
 void WarpPoint_init(int* obj, u8* def)
 {
@@ -218,18 +223,6 @@ void iceblast_update(int* obj);
 #pragma opt_common_subs off
 
 #pragma opt_common_subs reset
-
-extern u32 GameBit_Get(int eventId);
-
-extern f32 sqrtf(f32 x);
-extern u8 framesThisStep;
-
-extern int getCurMapLayer(void);
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern s16 lbl_803DCEB8;
-extern u8 lbl_803DCDE0;
-extern f32 lbl_803E35D8;
-extern f32 lbl_803E35DC;
 
 void WarpPoint_update(int* obj)
 {
@@ -376,5 +369,3 @@ void WarpPoint_update(int* obj)
         break;
     }
 }
-
-extern void objSetSlot(s16* obj, int slot);

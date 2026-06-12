@@ -22,10 +22,6 @@ extern int ViewFrustum_IsSphereVisible(f32* pos, f32 radius);
 void MagicPlant_update(int obj);
 
 int MagicPlant_getExtraSize(void);
-int trickywarp_getExtraSize(void) { return 0x64; }
-int duster_getExtraSize(void);
-int curvefish_getExtraSize(void);
-
 STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
 STATIC_ASSERT(sizeof(DusterState) == 0x20);
 STATIC_ASSERT(offsetof(DusterState, moveStepScale) == 0x00);
@@ -42,6 +38,10 @@ STATIC_ASSERT(offsetof(DusterState, active) == 0x1b);
 STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
 STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
 STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
+
+int trickywarp_getExtraSize(void) { return 0x64; }
+int duster_getExtraSize(void);
+int curvefish_getExtraSize(void);
 
 u32 MagicPlant_getObjectTypeId(MagicPlantObject* obj);
 

@@ -3,6 +3,9 @@
 #include "main/dll/alphaanimatorstate_struct.h"
 #include "main/dll/visanimatorstate_struct.h"
 #include "main/dll/MMP/mmp_barrel.h"
+#include "main/effect_interfaces.h"
+#include "main/game_object.h"
+#include "main/dll/MMP/dll_013B_wallanimator.h"
 
 /* waveanimator_getExtraSize == 0x3c (also the shared wave-grid config fed
  * to fn_801923F8; the grid/color/phase tables live in the lbl_803DDAEC/F0/F4
@@ -22,25 +25,34 @@ extern int ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 
+extern void mm_free(void* p);
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E3F98;
+extern void vecRotateZXY(void* in, void* out);
+extern u32 randomGetRange(int min, int max);
+extern void mm_free(void* ptr);
+extern EffectInterface** gPartfxInterface;
+extern f32 lbl_803E4C98;
+extern f32 lbl_803E3FFC;
+extern f32 lbl_803E3FD0;
+extern f32 lbl_803E3FD4;
+extern f32 lbl_803E3FD8;
+extern f32 lbl_803E3FDC;
+extern f32 lbl_803E3FE0;
+extern f32 lbl_803E3FE4;
+extern f32 lbl_803E3FE8;
+extern f32 lbl_803E3FEC;
+extern f32 lbl_803E3FF8;
+
 u8 wallanimator_func0B(int* obj)
 {
     int* p = ((int**)obj)[0xb8 / 4];
     return *p >= WALLANIMATOR_DONE_TIMER;
 }
 
-extern void mm_free(void* p);
-
-extern void objRenderFn_8003b8f4(f32);
-
 u8 wallanimator_modelMtxFn(int* obj) { return (u8) * (s16*)((char*)((int**)obj)[0x4c / 4] + 0x1c); }
 
-extern f32 lbl_803E3F98;
-
 /* segment pragma-stack balance (re-split): */
-
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/dll/MMP/dll_013B_wallanimator.h"
 
 typedef struct WallanimatorPlacement
 {
@@ -55,22 +67,6 @@ typedef struct WallanimatorState
     u8 unk4;
     u8 pad5[0x8 - 0x5];
 } WallanimatorState;
-
-extern void vecRotateZXY(void* in, void* out);
-extern u32 randomGetRange(int min, int max);
-extern void mm_free(void* ptr);
-
-extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E4C98;
-extern f32 lbl_803E3FFC;
-extern f32 lbl_803E3FD0;
-extern f32 lbl_803E3FD4;
-extern f32 lbl_803E3FD8;
-extern f32 lbl_803E3FDC;
-extern f32 lbl_803E3FE0;
-extern f32 lbl_803E3FE4;
-extern f32 lbl_803E3FE8;
-extern f32 lbl_803E3FEC;
 
 f32 wallanimator_setScale(int obj, int target)
 {
@@ -190,8 +186,6 @@ int wallanimator_getExtraSize(void)
 {
     return 8;
 }
-
-extern f32 lbl_803E3FF8;
 
 void wallanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

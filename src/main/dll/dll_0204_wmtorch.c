@@ -67,6 +67,20 @@ extern f32 lbl_803E6A20;
 extern f32 lbl_803E6A24;
 extern f32 lbl_803E6A80;
 
+extern f32 lbl_803E5D78;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern f32 lbl_803E5DEC;
+extern f32 lbl_803E5DF0;
+extern f32 lbl_803E5DF4;
+extern f32 lbl_803E5DF8;
+extern void* lbl_803DDC80;
+extern int Obj_GetPlayerObject(void);
+extern f32 Vec_distance(f32* a, f32* b);
+extern f32 lbl_803E5DE8;
+extern void Obj_FreeObject(void* o);
+extern void ModelLightStruct_free(void* light);
+
 void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
@@ -206,11 +220,6 @@ void FUN_801f2b94(short* param_1)
     return;
 }
 
-extern f32 lbl_803E5D78;
-
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void Sfx_StopObjectChannel(int obj, int channel);
-
 void wmtorch_hitDetect(void)
 {
 }
@@ -222,11 +231,6 @@ void wmtorch_release(void)
 void wmtorch_initialise(void)
 {
 }
-
-extern f32 lbl_803E5DEC;
-extern f32 lbl_803E5DF0;
-extern f32 lbl_803E5DF4;
-extern f32 lbl_803E5DF8;
 
 void wmtorch_init(u8* obj, u8* params)
 {
@@ -281,15 +285,9 @@ void wmtorch_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
     if (visible == 0) return;
 }
 
-extern void* lbl_803DDC80;
-
 int wmtorch_getExtraSize(void) { return 0x10; }
 int wmtorch_getObjectTypeId(void) { return 0x1; }
 int lightsource_getExtraSize(void);
-
-extern int Obj_GetPlayerObject(void);
-extern f32 Vec_distance(f32* a, f32* b);
-extern f32 lbl_803E5DE8;
 
 void wmtorch_update(int obj)
 {
@@ -308,8 +306,6 @@ void wmtorch_update(int obj)
     }
 }
 
-extern void Obj_FreeObject(void* o);
-
 void wmtorch_free(int obj, int mode)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
@@ -320,8 +316,6 @@ void wmtorch_free(int obj, int mode)
     (*gModgfxInterface)->detachSource((void*)obj);
     (*gExpgfxInterface)->freeSource(obj);
 }
-
-extern void ModelLightStruct_free(void* light);
 
 /* dll_1FF_render: when obj->_f8 implies
  * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30

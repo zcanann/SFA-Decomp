@@ -14,6 +14,16 @@ extern ModgfxInterface** gModgfxInterface;
 
 extern u32 randomGetRange(int min, int max);
 
+extern u8 lbl_80317260[];
+extern f32 lbl_803E1240;
+extern f32 lbl_803E1244;
+extern f32 lbl_803E1248;
+extern f32 lbl_803E124C;
+extern f32 lbl_803E1250;
+extern f32 lbl_803E1254;
+extern f32 lbl_803E1258;
+extern u8 lbl_80317488[];
+
 void dll_93_func01_nop(void)
 {
 }
@@ -46,15 +56,6 @@ typedef struct
     u8 pad1[2]; /* +0x5e */
     GfxCmd entries[32]; /* +0x60 */
 } GfxBuf;
-
-extern u8 lbl_80317260[];
-extern f32 lbl_803E1240;
-extern f32 lbl_803E1244;
-extern f32 lbl_803E1248;
-extern f32 lbl_803E124C;
-extern f32 lbl_803E1250;
-extern f32 lbl_803E1254;
-extern f32 lbl_803E1258;
 
 void dll_93_func03(int sourceObj, int variant, int posSource, uint flags)
 {
@@ -150,5 +151,3 @@ void dll_93_func03(int sourceObj, int variant, int posSource, uint flags)
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80317260, 0x18, base + 0xd4, 0x89, 0);
 }
-
-extern u8 lbl_80317488[];

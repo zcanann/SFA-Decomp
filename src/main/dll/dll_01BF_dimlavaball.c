@@ -139,17 +139,22 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
-static inline int* DIMcannon_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
+extern f32 lbl_803E4768;
+extern f32 lbl_803E4810;
+extern void Music_Trigger(int id, int p2);
+extern int Obj_AllocObjectSetup(int extraSize, int id);
+extern f32 lbl_803E4814;
+
+static inline int* DIMcannon_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (int*)objAnim->banks[objAnim->bankIndex];
+}
 
 #pragma scheduling on
 #pragma peephole on
@@ -298,9 +303,6 @@ int lavaball1bf_setScale(int* obj)
     return 0;
 }
 
-extern f32 lbl_803E4768;
-extern f32 lbl_803E4810;
-
 void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -310,12 +312,6 @@ void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 int lavaball1be_getExtraSize(int* obj);
-
-extern void Music_Trigger(int id, int p2);
-
-extern int Obj_AllocObjectSetup(int extraSize, int id);
-
-extern f32 lbl_803E4814;
 
 void lavaball1bf_init(s16* obj, u8* p)
 {

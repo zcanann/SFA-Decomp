@@ -115,6 +115,12 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 
+extern f32 lbl_803E627C;
+extern f32 lbl_803E62A0;
+extern f32 lbl_803E6278;
+extern int gDBStealerWormStateHandlersA[];
+extern f32 timeDelta;
+
 undefined4
 FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -547,9 +553,6 @@ void drakorenergy_initialise(void)
 {
 }
 
-extern f32 lbl_803E627C;
-extern f32 lbl_803E62A0;
-
 void drakorenergy_init(int* obj, u8* init)
 {
     extern uint GameBit_Get(int);
@@ -577,8 +580,6 @@ int drakorenergy_getExtraSize(void) { return 0xc; }
 int drakorenergy_getObjectTypeId(void) { return 0x0; }
 int dbstealerworm_getExtraSize(void);
 
-extern f32 lbl_803E6278;
-
 void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     DrakorEnergyState* inner = ((GameObject*)obj)->extra;
@@ -589,13 +590,9 @@ void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-extern int gDBStealerWormStateHandlersA[];
-
 int DrakorEnergy_setScale(int* obj) { return ((DrakorEnergyState*)((int**)obj)[0xb8 / 4])->mode == 0; }
 
 int dbstealerworm_stateHandlerB00(int p1, int p2);
-
-extern f32 timeDelta;
 
 void drakorenergy_update(int obj)
 {
@@ -717,11 +714,6 @@ void drakorenergy_update(int obj)
 }
 
 int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate);
-
-#include "main/dll/baddie/chuka.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 

@@ -5,6 +5,14 @@
 #include "main/dll/path_control_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/objseq.h"
+#include "main/audio/sfx_ids.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/dll/gfxemit_state.h"
+#include "main/dll/dll_00ED_collectible.h"
+#include "main/objanim_internal.h"
+#include "main/objhits_types.h"
+#include "main/obj_placement.h"
+#include "main/dll/collectible_state.h"
 
 extern undefined4 ObjHits_EnableObject();
 extern undefined8 ObjGroup_RemoveObject();
@@ -503,6 +511,67 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
 };
 
 s16 staff_getHitReactValue(int* obj);
+extern void saveGame_saveObjectPos(int obj);
+extern void staff_setupSwipe(int p1, int p2, int p3, int p4);
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern void objMove(int* obj, f32 x, f32 y, f32 z);
+extern void GameBit_Set(int eventId, int value);
+extern f32 mathSinf(f32 v);
+extern f32 mathCosf(f32 x);
+extern f32 sqrtf(f32 x);
+extern void playerAddHealth(void* player, int amount);
+extern void gameBitIncrement(int eventId);
+extern void saveGame_unsaveObjectPos(int* obj);
+extern f32 lbl_803E3450;
+extern f32 lbl_803E3454;
+extern f32 lbl_803E345C;
+extern f32 lbl_803E3460;
+extern f32 lbl_803E3464;
+extern f32 lbl_803E3468;
+extern f32 lbl_803E346C;
+extern f32 fastFloorf(f32 v);
+extern u32 randomGetRange(int min, int max);
+extern undefined4 FUN_80017a88();
+extern undefined4 ObjMsg_SendToObject();
+extern int ObjTrigger_IsSet();
+extern double FUN_80293900();
+extern undefined4 DAT_803dc070;
+extern f64 DOUBLE_803e4108;
+extern f32 lbl_803E40F4;
+extern f32 lbl_803E40F8;
+extern f32 lbl_803E40FC;
+extern f32 lbl_803E4100;
+extern f32 lbl_803E4104;
+extern uint GameBit_Get(int);
+extern f32 mathSinf(f32 x);
+extern f32 lbl_803E3458;
+extern f32 lbl_803E3484;
+extern f32 lbl_803E3488;
+extern f32 lbl_803E348C;
+extern void fn_8003B608(s16 a, s16 b, s16 c);
+extern u8* fn_802972A8(void);
+extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern int fn_8029622C(u8 * player);
+extern void GameBit_Set(int bit, int value);
+extern f32 lbl_803E3490;
+extern f32 lbl_803E3478;
+extern f32 lbl_803E347C;
+extern f32 lbl_803E3480;
+extern void fn_801723DC(int obj);
+extern int ObjMsg_Pop(int obj, int* outMessage, int* outParam, int* outSender);
+extern uint GameBit_Get(int eventId);
+extern int ObjMsg_Pop();
+extern undefined4 ObjMsg_AllocQueue();
+extern u8 lbl_80320C58[];
+extern u32 lbl_803E3440;
+extern u8 lbl_803E3444;
+extern f32 lbl_803E3494;
+extern f32 lbl_803E3498;
+extern f32 lbl_803E349C;
+extern f32 lbl_803E34A0;
+extern f32 lbl_803E34B0;
+
 u8 collectible_func0F(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x1e); }
 
 s32 staff_func16(int* obj);
@@ -528,8 +597,6 @@ void collectible_render2(int* obj, f32 f1, f32 f2, f32 f3)
     ((GameObject*)obj)->anim.velocityY = f2;
     ((GameObject*)obj)->anim.velocityZ = f3;
 }
-
-extern void saveGame_saveObjectPos(int obj);
 
 void collectible_func10(int* obj, f32 f1, f32 f2, f32 f3)
 {
@@ -577,13 +644,7 @@ int collectible_modelMtxFn(int* obj)
     return *(int*)((char*)inner + 0x18);
 }
 
-extern void staff_setupSwipe(int p1, int p2, int p3, int p4);
-
 void staff_modelMtxFn(int* obj, int p4, int p5);
-
-extern u8 framesThisStep;
-
-extern f32 timeDelta;
 
 void gcbaddieshield_update(int* obj);
 
@@ -617,13 +678,9 @@ void dim2roofrub_init(int* obj, int* params);
 
 void animatedobj_init(int* obj, int* params);
 
-extern void objMove(int* obj, f32 x, f32 y, f32 z);
-
 void flamethrowerspe_update(int* obj);
 
 void mikabomb_init(int* obj);
-
-extern void GameBit_Set(int eventId, int value);
 
 void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
@@ -633,14 +690,9 @@ void dim2roofrub_update(int* obj);
 
 void fireball_init(int* obj);
 
-extern f32 mathSinf(f32 v);
-extern f32 mathCosf(f32 x);
-
 void fireball_update(int* obj);
 
 void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-extern f32 sqrtf(f32 x);
 
 void shield_update(int* obj);
 
@@ -663,12 +715,6 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t);
 #pragma opt_common_subs off
 
 void staff_update(int* obj);
-
-extern void playerAddHealth(void* player, int amount);
-extern void gameBitIncrement(int eventId);
-extern void saveGame_unsaveObjectPos(int* obj);
-extern f32 lbl_803E3450;
-extern f32 lbl_803E3454;
 
 void fn_80171E5C(int* obj)
 {
@@ -770,12 +816,6 @@ void fn_80171E5C(int* obj)
     ((GameObject*)obj)->unkF4 = 1;
 }
 
-extern f32 lbl_803E345C;
-extern f32 lbl_803E3460;
-extern f32 lbl_803E3464;
-extern f32 lbl_803E3468;
-extern f32 lbl_803E346C;
-
 void fn_80172144(int* obj)
 {
     u8* state = ((GameObject*)obj)->extra;
@@ -840,35 +880,9 @@ void fn_80172144(int* obj)
     }
 }
 
-extern f32 fastFloorf(f32 v);
-
 void staff_setupSwipe(int p1, int p2, int p3, int p4);
 
 #pragma opt_common_subs reset
-
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-#include "main/dll/path_control_interface.h"
-#include "main/dll/gfxemit_state.h"
-#include "main/dll/dll_00ED_collectible.h"
-#include "main/objanim_internal.h"
-#include "main/objhits_types.h"
-
-extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017a88();
-extern undefined4 ObjMsg_SendToObject();
-extern int ObjTrigger_IsSet();
-extern double FUN_80293900();
-
-extern undefined4 DAT_803dc070;
-extern f64 DOUBLE_803e4108;
-extern f32 lbl_803E40F4;
-extern f32 lbl_803E40F8;
-extern f32 lbl_803E40FC;
-extern f32 lbl_803E4100;
-extern f32 lbl_803E4104;
 
 #pragma scheduling on
 #pragma peephole on
@@ -979,13 +993,6 @@ void collectible_hitDetect(void)
 {
 }
 
-extern uint GameBit_Get(int);
-extern f32 mathSinf(f32 x);
-extern f32 lbl_803E3458;
-extern f32 lbl_803E3484;
-extern f32 lbl_803E3488;
-extern f32 lbl_803E348C;
-
 #pragma scheduling off
 #pragma peephole off
 int collectible_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -1051,13 +1058,6 @@ int collectible_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-extern void fn_8003B608(s16 a, s16 b, s16 c);
-extern u8* fn_802972A8(void);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
-extern int fn_8029622C(u8 * player);
-extern void GameBit_Set(int bit, int value);
-extern f32 lbl_803E3490;
 
 void fn_80172824(int obj, u8* state)
 {
@@ -1154,14 +1154,6 @@ void fn_80172824(int obj, u8* state)
     }
     *(f32*)state = dist;
 }
-
-extern f32 lbl_803E3478;
-extern f32 lbl_803E347C;
-extern f32 lbl_803E3480;
-
-extern void fn_801723DC(int obj);
-
-extern int ObjMsg_Pop(int obj, int* outMessage, int* outParam, int* outSender);
 
 void collectible_update(int obj)
 {
@@ -1366,29 +1358,9 @@ void fn_801723DC(int obj)
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
 /* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
  * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
  * verified). File rename parked as a repo-owner proposal. */
-#include "main/game_object.h"
-#include "main/dll/collectible_state.h"
-#include "main/dll/dll_00ED_collectible.h"
-#include "main/dll/path_control_interface.h"
-#include "main/objanim_internal.h"
-
-extern uint GameBit_Get(int eventId);
-extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_AllocQueue();
-
-extern u8 lbl_80320C58[];
-extern u32 lbl_803E3440;
-extern u8 lbl_803E3444;
-extern f32 lbl_803E3494;
-extern f32 lbl_803E3498;
-extern f32 lbl_803E349C;
-extern f32 lbl_803E34A0;
 
 void collectible_init(int obj, int setup)
 {
@@ -1495,5 +1467,3 @@ void collectible_release(void)
 void collectible_initialise(void)
 {
 }
-
-extern f32 lbl_803E34B0;

@@ -16,6 +16,29 @@ extern u32 getButtonsJustPressed(int pad);
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
 /* EN v1.0 0x80131570  size: 12b  Read changed bit from item->flags. */
+extern s16 lbl_803DD918;
+extern f32 lbl_803DD91C;
+extern s8 lbl_803DD920;
+extern void* lbl_803A9DB8[6];
+extern f32 lbl_803E21F0;
+extern f32 lbl_803E21F4;
+extern f32 lbl_803E21F8;
+extern s8 padGetStickX(int port);
+extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
+extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u32 sfxId);
+extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
+extern void Music_PlayTrackByIndex(int index);
+extern void drawTexture(void* texture, u8 alpha, f32 x, f32 y, u16 scale);
+extern void* gameTextGetPhrase(int textId, int variant);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void gameTextSetWindowStrPos(int windowId, int x, int y);
+extern void gameTextAppendStr(void* str, int windowId);
+extern s16 lbl_8031C2A8[6];
+extern void mm_free(void);
+extern void* textureLoadAsset(int id);
+extern void textureFree(void* p);
+extern void* mmAlloc(int size, int heap, int flags);
+
 int TitleMenuItem_isChanged(TitleMenuItem* item)
 {
     return item->flags & TITLE_MENU_FLAG_CHANGED;
@@ -36,24 +59,6 @@ s16 TitleMenuItem_getVal(TitleMenuItem* item)
 {
     return item->value;
 }
-
-extern s16 lbl_803DD918;
-extern f32 lbl_803DD91C;
-extern s8 lbl_803DD920;
-extern void* lbl_803A9DB8[6];
-extern f32 lbl_803E21F0;
-extern f32 lbl_803E21F4;
-extern f32 lbl_803E21F8;
-extern s8 padGetStickX(int port);
-extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
-extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u32 sfxId);
-extern void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
-extern void Music_PlayTrackByIndex(int index);
-extern void drawTexture(void* texture, u8 alpha, f32 x, f32 y, u16 scale);
-extern void* gameTextGetPhrase(int textId, int variant);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextSetWindowStrPos(int windowId, int x, int y);
-extern void gameTextAppendStr(void* str, int windowId);
 
 /* EN v1.0 0x80131598  size: 116b  Toggle enabled bit on item->flags. */
 void TitleMenuItem_setEnabled(TitleMenuItem* item, int flag)
@@ -308,9 +313,6 @@ int Dummy3E_func05_ret_1(void);
 
 /* EN v1.0 0x80132020  size: 4b   Empty no-op. */
 
-extern s16 lbl_8031C2A8[6];
-extern void mm_free(void);
-
 /* EN v1.0 0x80131540  size: 48b  Toggle A-button bit of item->flags. */
 void TitleMenuItem_setAButtonToggle(TitleMenuItem* item, int flag)
 {
@@ -341,10 +343,6 @@ void TitleMenuItem_initialise(void)
     slots[4] = 0;
     slots[5] = 0;
 }
-
-extern void* textureLoadAsset(int id);
-extern void textureFree(void* p);
-extern void* mmAlloc(int size, int heap, int flags);
 
 /* EN v1.0 0x80131D14  size: 168b  Create text-window title menu item. */
 TitleMenuItem* TitleMenuItem_createWithWindow(int phraseId, int windowId, s16 minValue,

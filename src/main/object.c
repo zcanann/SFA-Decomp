@@ -17,6 +17,121 @@
 
 extern void mm_free(void* ptr);
 
+extern f32 timeDelta;
+extern int* gBoneParticleEffectInterface;
+extern u8 framesThisStep;
+extern f32 lbl_803DE88C;
+extern f32 lbl_803DE89C;
+extern f32 lbl_803DE8A0;
+extern void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags);
+extern void* mmAlloc(int size, int type, int flag);
+extern void* memset(void* dst, int val, int n);
+extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
+extern void PSMTXMultVecSR(f32 * mtx, f32 * in, f32 * out);
+extern void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag);
+extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
+extern void Obj_BuildInverseWorldTransformMatrix(u8 * obj, f32 * out);
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern void textureFree(void* tex);
+extern int getLoadedFileFlags(int);
+extern s8 lbl_803DCB74;
+extern int lbl_803408A8[];
+extern void objList_remove(void* list, void* item);
+extern int lbl_803DCBAC;
+extern int* lbl_803DCBB0;
+extern u8* lbl_803DCBB4;
+extern int lbl_803DCB7C;
+extern f32 sqrtf(f32 x);
+extern int lbl_803DCB84;
+extern void* lbl_803DCB88;
+extern void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused);
+extern f32 lbl_803DE890;
+extern void mtxRotateByVec3s(f32* mtx, void* transform);
+extern void mtx44Transpose(f32 * src, f32 * dst);
+extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
+extern void OSReport(char* fmt, ...);
+extern void* memcpy(void* dst, const void* src, int n);
+extern f32 lbl_803DE8B8;
+extern void objFreeObjDef(void* def, int flags);
+extern int lbl_803DCB94;
+extern void** lbl_803DCB98;
+extern void Obj_RegisterObject(u8* obj, int b);
+extern char sObjSetupObjectLoadingLockedWarning[];
+extern char lbl_802CAC54[];
+extern void objLoadPlayerFromSave(u8 * obj);
+extern s16 lbl_803DCBC4;
+extern int lbl_803DCB9C;
+extern s16* lbl_803DCBA0;
+extern char sObjUnknownTypeUsingDummyObjectWarning[];
+extern f32 lbl_803DE8CC;
+extern f32 lbl_803DE8D0;
+extern u8* loadObjectFile(int id);
+extern int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags);
+extern void modelInitBones(f32 scale, void* model);
+extern int shadowInit(void* obj, int cursor, int arg);
+extern void debugPrintf(char* fmt, ...);
+extern int objCallback_80074d04();
+extern int modelCb_80073d04();
+extern int modelCb_80074518();
+extern void Obj_InitObjectSystem(void);
+extern int getDataFileSize(int id);
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern void* gTitleMenuControlInterface;
+extern void* gModgfxInterface;
+extern WaterfxInterface** gWaterfxInterface;
+extern void fn_802B4DE0(u8* obj, int flag);
+extern void Obj_FreeObject(u8 * obj);
+extern void fn_80059A50(int arg);
+extern void setShadowFlag_803db658(int v);
+extern void* textureFn_8006c5c4(void);
+extern u8* lbl_803DCBA4;
+extern u8* lbl_803DCBA8;
+extern char sObjFreeObjdefError[];
+extern void playerUpdateWhileTimeStopped(u8 * obj);
+extern void playerRenderQuakeSpell(void);
+extern void playerUpdate(u8 * obj);
+extern void Sfx_PlayFromObject(u8* obj, int sfx);
+extern void Obj_GetWorldPosition(u8* obj, void* x, void* y, void* z);
+extern u32 lbl_803DCB78;
+extern void objFn_80065604(void);
+extern void Obj_UpdateModelBlendStates(void);
+extern int Obj_BuildTransformMatrixSlot(int obj);
+extern void playerDoHitDetection(int obj);
+extern int getCurMapType(void);
+extern void Obj_ResetObjectSystem(void);
+extern u8 lbl_802CABF8[];
+extern s16 lbl_803DB44C[2];
+extern f32 lbl_803DE8BC;
+extern f32 lbl_803DE8C0;
+extern f32 lbl_803DE8C4;
+extern f32 lbl_803DE8C8;
+extern f32 mathSinf(f32);
+extern f32 mathCosf(f32);
+extern int getCurUiDll(void);
+extern u8* Camera_GetCurrentViewSlot(void);
+extern int lbl_803DCB70;
+extern void playerUpdateFn_8005649c(void);
+extern void fn_80013B6C(int* p, int n);
+extern void AudioStream_StopAll(void);
+extern int lbl_803DB448;
+extern int lbl_803DCB8C;
+extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, void* ox, void* oy, void* oz);
+extern void mapLoadForObject(int id, void* obj);
+extern void Sfx_RemoveLoopedObjectSoundForObject(u8 * obj);
+extern void Sfx_StopObjectChannel(u8* obj, int ch);
+extern char sObjFreeNonExistentObjectWarning[];
+extern void* lbl_803DCB90;
+extern void* lbl_803DCBC0;
+extern int* lbl_803DCBBC;
+extern int lbl_803DCBB8;
+extern int loadModLines(int n, s16* out);
+extern void intersectModLineBuild(u8 * buf);
+extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * out);
+extern void PSMTXRotAxisRad(f32* m, f32* axis, f32 angle);
+extern f32 lbl_803DCED0;
+extern f32 lbl_803DCECC;
+
 undefined2*
 FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -34,8 +149,6 @@ FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 {
     return 0;
 }
-
-extern f32 timeDelta;
 
 undefined4
 FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
@@ -126,13 +239,6 @@ void* Obj_GetActiveModel(u8* obj)
     objAnim = (ObjAnimComponent*)obj;
     return objAnim->banks[objAnim->bankIndex];
 }
-
-extern int* gBoneParticleEffectInterface;
-extern u8 framesThisStep;
-extern f32 lbl_803DE88C;
-extern f32 lbl_803DE89C;
-extern f32 lbl_803DE8A0;
-extern void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags);
 
 void Obj_ClearModelColorFadeRecursive(u8* obj)
 {
@@ -331,17 +437,6 @@ int roundUpTo8(int x);
 
 int roundUpTo32(int x);
 
-extern void* mmAlloc(int size, int type, int flag);
-extern void* memset(void* dst, int val, int n);
-extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
-extern void PSMTXMultVecSR(f32 * mtx, f32 * in, f32 * out);
-extern void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag);
-extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
-extern void Obj_BuildInverseWorldTransformMatrix(u8 * obj, f32 * out);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern void textureFree(void* tex);
-
 #pragma scheduling off
 #pragma peephole off
 void objSetHintTextIdx(u8* obj, u16 idx)
@@ -352,10 +447,6 @@ void objSetHintTextIdx(u8* obj, u16 idx)
     }
     ((GameObject*)obj)->paletteIndex = (u8)idx;
 }
-
-extern int getLoadedFileFlags(int);
-extern s8 lbl_803DCB74;
-extern int lbl_803408A8[];
 
 int Obj_IsLoadingLocked(void)
 {
@@ -406,12 +497,6 @@ void fn_8002B860(void* v)
     lbl_803408A8[i] = (int)v;
 }
 
-extern void objList_remove(void* list, void* item);
-extern int lbl_803DCBAC;
-extern int* lbl_803DCBB0;
-extern u8* lbl_803DCBB4;
-extern int lbl_803DCB7C;
-
 void mm_free(void* p);
 
 #pragma peephole off
@@ -459,12 +544,6 @@ void* Obj_GetPlayerObject(void)
     }
     return NULL;
 }
-
-extern f32 sqrtf(f32 x);
-extern int lbl_803DCB84;
-extern void* lbl_803DCB88;
-
-extern void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused);
 
 void* ObjList_GetObjects(int* outA, int* outB)
 {
@@ -556,8 +635,6 @@ void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst)
     PSMTXMultVecSR(mtx, src, dst);
 }
 
-extern f32 lbl_803DE890;
-
 void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag)
 {
     f32 savedZ;
@@ -576,9 +653,6 @@ void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag)
     dst[0] += playerMapOffsetX;
     dst[2] += playerMapOffsetZ;
 }
-
-extern void mtxRotateByVec3s(f32* mtx, void* transform);
-extern void mtx44Transpose(f32 * src, f32 * dst);
 
 void objWorldToLocalPos(f32* out, u8* transform, f32* in)
 {
@@ -622,8 +696,6 @@ void objWorldToLocalPos(f32* out, u8* transform, f32* in)
 #undef rotMtx
 }
 
-extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
-
 void* Obj_AllocObjectSetup(int size, int b)
 {
     u8* p = mmAlloc(size, 0xe, 0);
@@ -639,10 +711,6 @@ void* Obj_AllocObjectSetup(int size, int b)
 }
 
 void ObjModel_LoadRenderOpTextures(u8* model, int arg);
-
-extern void OSReport(char* fmt, ...);
-
-extern void* memcpy(void* dst, const void* src, int n);
 
 int objMove(u8* obj, f32 dx, f32 dy, f32 dz)
 {
@@ -684,8 +752,6 @@ void objFn_8002b67c(u8* obj)
     dst[4] = src[0x10];
 }
 
-extern f32 lbl_803DE8B8;
-
 int objApplyVelocity(u8* obj)
 {
     ((GameObject*)obj)->anim.localPosX += timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelX + ((GameObject*)
@@ -715,10 +781,6 @@ void Obj_ApplyPendingParentLinks(void)
         }
     }
 }
-
-extern void objFreeObjDef(void* def, int flags);
-extern int lbl_803DCB94;
-extern void** lbl_803DCB98;
 
 void Obj_FlushDeferredFreeList(void)
 {
@@ -776,10 +838,6 @@ void* ObjModel_LoadAnimData(u8* p, int b, int c);
 
 void* ObjModel_Load(int id, int arg2, int* outSize);
 
-extern void Obj_RegisterObject(u8* obj, int b);
-extern char sObjSetupObjectLoadingLockedWarning[];
-extern char lbl_802CAC54[];
-
 void* Obj_SetupObject(int a, int b, int c, int d, int e)
 {
     void* obj;
@@ -822,8 +880,6 @@ void* loadObjectAtObject(u8* src, int arg1)
 }
 
 void ObjModel_Release(u8 * model);
-
-extern void objLoadPlayerFromSave(u8 * obj);
 
 void Obj_RunInitCallback(u8* obj, int cb, int unused)
 {
@@ -967,8 +1023,6 @@ void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out)
     }
 }
 
-extern s16 lbl_803DCBC4;
-
 void ObjList_PartitionForRender(int* out)
 {
     void** arr;
@@ -1064,20 +1118,6 @@ void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags)
 }
 
 void mtxRotateByVec3s(f32* mtx, void* transform);
-
-extern int lbl_803DCB9C;
-extern s16* lbl_803DCBA0;
-extern char sObjUnknownTypeUsingDummyObjectWarning[];
-extern f32 lbl_803DE8CC;
-extern f32 lbl_803DE8D0;
-extern u8* loadObjectFile(int id);
-extern int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags);
-extern void modelInitBones(f32 scale, void* model);
-extern int shadowInit(void* obj, int cursor, int arg);
-extern void debugPrintf(char* fmt, ...);
-extern int objCallback_80074d04();
-extern int modelCb_80073d04();
-extern int modelCb_80074518();
 
 typedef struct LoadedObj
 {
@@ -1487,22 +1527,6 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     return obj;
 }
 
-extern void Obj_InitObjectSystem(void);
-extern int getDataFileSize(int id);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern void* gTitleMenuControlInterface;
-extern void* gModgfxInterface;
-extern WaterfxInterface** gWaterfxInterface;
-
-extern void fn_802B4DE0(u8* obj, int flag);
-extern void Obj_FreeObject(u8 * obj);
-extern void fn_80059A50(int arg);
-extern void setShadowFlag_803db658(int v);
-extern void* textureFn_8006c5c4(void);
-extern u8* lbl_803DCBA4;
-extern u8* lbl_803DCBA8;
-extern char sObjFreeObjdefError[];
-
 #pragma dont_inline off
 void objFreeObjDef(void* objp, int flag)
 {
@@ -1705,13 +1729,6 @@ void objFreeObjDef(void* objp, int flag)
     mm_free(obj);
 }
 
-extern void playerUpdateWhileTimeStopped(u8 * obj);
-extern void playerRenderQuakeSpell(void);
-extern void playerUpdate(u8 * obj);
-extern void Sfx_PlayFromObject(u8* obj, int sfx);
-extern void Obj_GetWorldPosition(u8* obj, void* x, void* y, void* z);
-extern u32 lbl_803DCB78;
-
 void Obj_UpdateObject(u8* obj)
 {
     ObjAnimComponent* object;
@@ -1845,11 +1862,6 @@ skip:
         *(u8*)(*(u8**)(obj + 0x58) + 0x10f) = 0;
     }
 }
-
-extern void objFn_80065604(void);
-extern void Obj_UpdateModelBlendStates(void);
-extern int Obj_BuildTransformMatrixSlot(int obj);
-extern void playerDoHitDetection(int obj);
 
 void Obj_UpdateAllObjects(u8 flags)
 {
@@ -2007,21 +2019,6 @@ void Obj_UpdateAllObjects(u8 flags)
     }
 }
 
-extern int getCurMapType(void);
-extern void Obj_ResetObjectSystem(void);
-extern u8 lbl_802CABF8[];
-extern s16 lbl_803DB44C[2];
-extern f32 lbl_803DE8BC;
-extern f32 lbl_803DE8C0;
-extern f32 lbl_803DE8C4;
-extern f32 lbl_803DE8C8;
-extern f32 mathSinf(f32);
-extern f32 mathCosf(f32);
-extern int getCurUiDll(void);
-extern u8* Camera_GetCurrentViewSlot(void);
-extern int lbl_803DCB70;
-extern void playerUpdateFn_8005649c(void);
-
 typedef struct CharSpawn
 {
     s16 id;
@@ -2124,11 +2121,6 @@ void mapSetupPlayer(void)
         playerUpdateFn_8005649c();
     }
 }
-
-extern void fn_80013B6C(int* p, int n);
-extern void AudioStream_StopAll(void);
-extern int lbl_803DB448;
-extern int lbl_803DCB8C;
 
 void Obj_ResetObjectSystem(void)
 {
@@ -2269,9 +2261,6 @@ void Obj_UpdateModelBlendStates(void)
     }
 }
 
-extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, void* ox, void* oy, void* oz);
-extern void mapLoadForObject(int id, void* obj);
-
 #pragma dont_inline on
 void Obj_RegisterObject(u8* obj, int flags)
 {
@@ -2358,11 +2347,6 @@ void Obj_RegisterObject(u8* obj, int flags)
         lbl_803DCBC4 = 0;
     }
 }
-
-extern void Sfx_RemoveLoopedObjectSoundForObject(u8 * obj);
-extern void Sfx_StopObjectChannel(u8* obj, int ch);
-extern char sObjFreeNonExistentObjectWarning[];
-extern void* lbl_803DCB90;
 
 #pragma dont_inline off
 void Obj_FreeObject(u8* obj)
@@ -2476,10 +2460,6 @@ void Obj_FreeObject(u8* obj)
     }
 }
 
-extern void* lbl_803DCBC0;
-extern int* lbl_803DCBBC;
-extern int lbl_803DCBB8;
-
 void Obj_InitObjectSystem(void)
 {
     s16* p;
@@ -2529,9 +2509,6 @@ void Obj_InitObjectSystem(void)
     ObjGroup_ClearAll();
     ObjHits_ResetWorkBuffers();
 }
-
-extern int loadModLines(int n, s16* out);
-extern void intersectModLineBuild(u8 * buf);
 
 u8* loadObjectFile(int id)
 {
@@ -2687,11 +2664,7 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
 
 void* mmAlloc(int size, int type, int flag);
 
-extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * out);
-
 void fn_800213D0(f32 * a, f32 * b, s16 * out0, s16 * out1, s16 * out2);
-
-extern void PSMTXRotAxisRad(f32* m, f32* axis, f32 angle);
 
 void fn_8002A5DC(u8* obj)
 {
@@ -2861,6 +2834,3 @@ int loadModLines(int idx, s16* outCount)
     *outCount = (u32)size / 20;
     return result;
 }
-
-extern f32 lbl_803DCED0;
-extern f32 lbl_803DCECC;

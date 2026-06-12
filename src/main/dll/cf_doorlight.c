@@ -10,7 +10,6 @@ typedef struct KaldachomPlacement
     u8 unk2F;
 } KaldachomPlacement;
 
-
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_DisableObject();
 
@@ -20,6 +19,8 @@ extern void GameBit_Set(int bit, int value);
 extern f32 timeDelta;
 extern f32 lbl_803E3060;
 extern int* gBaddieControlInterface;
+
+extern f32 lbl_803E3080;
 
 int kaldachom_stateHandlerB05(int obj, int p)
 {
@@ -148,8 +149,6 @@ int kaldachom_stateHandlerA07(int obj, int p)
         (lbl_803E3078 - ((GameObject*)obj)->anim.currentMoveProgress) * lbl_803E308C;
     return 0;
 }
-
-extern f32 lbl_803E3080;
 
 int kaldachom_stateHandlerB01(int* obj, GroundBaddieState* state)
 {

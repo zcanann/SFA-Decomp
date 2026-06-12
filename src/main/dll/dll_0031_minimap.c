@@ -121,6 +121,69 @@ extern f32 lbl_803E224C;
 
 #pragma scheduling off
 #pragma peephole off
+extern u8 warpstoneUIState;
+extern void titlescreen_free(u8 * obj);
+extern void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+extern void titlescreen_update(u8 * obj);
+extern void titlescreen_init(u8 * obj, u8 * p);
+extern void titlescreen_release(void);
+extern void titlescreen_initialise(void);
+extern u8 lbl_803A9FE4[0x34];
+extern void* lbl_803DBBC8[2];
+extern void Obj_FreeObject(void*);
+extern void* debugLogEnd;
+extern int Obj_AllocObjectSetup(int a, int b);
+extern int Obj_SetupObject(int obj, int b, int c, int d, int e);
+extern f32 lbl_803E2284;
+extern f32 lbl_803E2288;
+extern f32 lbl_803E228C;
+extern f32 lbl_803E2290;
+extern u8 gameTimerIsRunning(void);
+extern void gameTimerRun(void* obj);
+extern int sprintf(char* buf, const char* fmt, ...);
+extern f32 lbl_803E22A0;
+extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
+extern void viewFn_80129c74(void);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void objRender(int a, int b, int c, int d, void* obj, int f);
+extern int* Obj_GetActiveModel(void* obj);
+extern u8 lbl_803DD92A;
+extern f32 lbl_803E2278;
+extern f32 lbl_803E227C;
+extern f32 lbl_803E2280;
+extern void* lbl_803DD960;
+extern f32 timeDelta;
+extern u32 lbl_803DDA00;
+extern void OSSetErrorHandler(int kind, void* handler);
+extern void Sfx_StopFromObject(int obj, int id);
+extern u32 lbl_803E2200;
+extern f32 lbl_803DD94C;
+extern f32 lbl_803E2260;
+extern f32 lbl_803E2264;
+extern f32 lbl_803E2268;
+extern f32 lbl_803E226C;
+extern f32 lbl_803E2270;
+extern f32 lbl_803E2274;
+extern u8 enableDebugText;
+extern int getButtonsHeld(int p);
+extern int getButtonsJustPressed(int p);
+extern f32 powfCoreFast(f32 base, f32 exp);
+extern s16* Camera_GetCurrentViewSlot(void);
+extern int getAngle(f32 dx, f32 dz);
+extern u8 lbl_803DD945;
+extern u8 lbl_803DD929;
+extern s8 lbl_803DBBB1;
+extern int lbl_803DBBE8;
+extern f32 lbl_803DBBD4;
+extern f32 lbl_803DBBD8;
+extern f32 lbl_803DBBDC;
+extern f32 lbl_803DBBE0;
+extern f32 lbl_803DBBE4;
+extern f32 lbl_803E2294;
+extern f32 lbl_803E2298;
+extern f32 lbl_803E229C;
+extern void GXSetTevColor(int id, int* color);
+
 int Minimap_update(void)
 {
     u8* player;
@@ -659,8 +722,6 @@ void FUN_8013651c(int param_1)
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
-extern u8 warpstoneUIState;
-
 /* EN v1.0 0x801334D4  size: 12b  u16-narrow getter for lbl_803DD938. */
 u16 getMinimapY(void) { return (u16)lbl_803DD938; }
 
@@ -681,13 +742,6 @@ void titlescreen_hitDetect(void);
 
 int titlescreen_getObjectTypeId(u8* obj);
 
-extern void titlescreen_free(u8 * obj);
-extern void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-extern void titlescreen_update(u8 * obj);
-extern void titlescreen_init(u8 * obj, u8 * p);
-extern void titlescreen_release(void);
-extern void titlescreen_initialise(void);
-
 ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
     {
         0,
@@ -707,20 +761,6 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
     },
     0,
 };
-
-extern u8 lbl_803A9FE4[0x34];
-
-extern void* lbl_803DBBC8[2];
-extern void Obj_FreeObject(void*);
-
-extern void* debugLogEnd;
-
-extern int Obj_AllocObjectSetup(int a, int b);
-extern int Obj_SetupObject(int obj, int b, int c, int d, int e);
-extern f32 lbl_803E2284;
-extern f32 lbl_803E2288;
-extern f32 lbl_803E228C;
-extern f32 lbl_803E2290;
 
 #pragma dont_inline on
 #pragma scheduling off
@@ -755,10 +795,6 @@ void fn_80133818(void)
 }
 #pragma dont_inline reset
 
-extern u8 gameTimerIsRunning(void);
-extern void gameTimerRun(void* obj);
-extern int sprintf(char* buf, const char* fmt, ...);
-extern f32 lbl_803E22A0;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
 void fn_80133F70(void* obj)
@@ -792,16 +828,6 @@ void fn_80133F70(void* obj)
     }
     sprintf(buf, lbl_803DBBF0, b);
 }
-
-extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
-extern void viewFn_80129c74(void);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void objRender(int a, int b, int c, int d, void* obj, int f);
-extern int* Obj_GetActiveModel(void* obj);
-extern u8 lbl_803DD92A;
-extern f32 lbl_803E2278;
-extern f32 lbl_803E227C;
-extern f32 lbl_803E2280;
 
 void fn_80133718(void)
 {
@@ -863,8 +889,6 @@ void Minimap_release(void)
     lbl_803DD940 = NULL;
 }
 
-extern void* lbl_803DD960;
-
 /* EN v1.0 0x80133F40  size: 48b  Acquire a 0xBE5-byte buffer via
  * textureLoadAsset into lbl_803DD940; reset frame counter at lbl_803DD938. */
 #pragma scheduling off
@@ -895,7 +919,6 @@ void dll_3F_release(void);
 /* EN v1.0 0x801347A4  size: 100b  Per-frame integrator with clamp.
  * Adds (or subtracts, when warpstoneUIState != 0) lbl_803E22D8*timeDelta
  * to lbl_803DD97C, then clamps to [lbl_803E22E0, lbl_803E22DC]. */
-extern f32 timeDelta;
 
 /* EN v1.0 0x80134BE8  size: 60b  Predicate. Returns 1 when the value
  * from getCurUiDll is in {2..6} or equals 7, else 0. */
@@ -917,7 +940,6 @@ void fn_80133934(void)
 /* EN v1.0 0x801375A0  size: 40b  Reset debug log/print state: rewind
  * debugLogEnd to the start of the buffer and reload the print x/y
  * coordinates from saved values. */
-extern u32 lbl_803DDA00;
 
 /* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58.
  * 83% -- target has a leading `clrlwi r4,r4,24` that MWCC elides since
@@ -940,20 +962,7 @@ u8 fn_801334E0(void)
     return (u8)act;
 }
 
-extern void OSSetErrorHandler(int kind, void* handler);
-
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
-
-extern void Sfx_StopFromObject(int obj, int id);
-
-extern u32 lbl_803E2200;
-extern f32 lbl_803DD94C;
-extern f32 lbl_803E2260;
-extern f32 lbl_803E2264;
-extern f32 lbl_803E2268;
-extern f32 lbl_803E226C;
-extern f32 lbl_803E2270;
-extern f32 lbl_803E2274;
 
 void fn_8013351C(void)
 {
@@ -987,26 +996,7 @@ void fn_8013351C(void)
                     lbl_803E2278 - cc2, (f32)y - s2, &c2);
 }
 
-extern u8 enableDebugText;
-
-extern int getButtonsHeld(int p);
-extern int getButtonsJustPressed(int p);
-extern f32 powfCoreFast(f32 base, f32 exp);
 extern int ObjGroup_FindNearestObject(int type, int obj, f32* distOut);
-extern s16* Camera_GetCurrentViewSlot(void);
-extern int getAngle(f32 dx, f32 dz);
-extern u8 lbl_803DD945;
-extern u8 lbl_803DD929;
-extern s8 lbl_803DBBB1;
-extern int lbl_803DBBE8;
-extern f32 lbl_803DBBD4;
-extern f32 lbl_803DBBD8;
-extern f32 lbl_803DBBDC;
-extern f32 lbl_803DBBE0;
-extern f32 lbl_803DBBE4;
-extern f32 lbl_803E2294;
-extern f32 lbl_803E2298;
-extern f32 lbl_803E229C;
 
 void fn_8013396C(void)
 {
@@ -1233,5 +1223,3 @@ void fn_8013396C(void)
         }
     }
 }
-
-extern void GXSetTevColor(int id, int* color);

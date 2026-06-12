@@ -16,6 +16,9 @@ typedef struct DimbosscrackparPlacement
 
 extern EffectInterface** gPartfxInterface;
 
+extern u8 Obj_IsLoadingLocked(void);
+extern f32 lbl_803E4D98;
+
 void dimbosscrackpar_hitDetect(void)
 {
 }
@@ -28,11 +31,7 @@ void dimbosscrackpar_initialise(void)
 {
 }
 
-extern u8 Obj_IsLoadingLocked(void);
-
 void magicmaker_update(int obj);
-
-extern f32 lbl_803E4D98;
 
 int dimbosscrackpar_SeqFn(int* obj)
 {

@@ -53,6 +53,46 @@ extern f32 lbl_803E4EC4;
 extern f32 lbl_803E4EC8;
 extern f32 lbl_803E4ECC;
 
+extern uint GameBit_Get(int eventId);
+extern void* Obj_GetPlayerObject(void);
+extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern f32 lbl_803E4190;
+extern f32 lbl_803E416C;
+extern f32 fn_80296214(void* p);
+extern void Music_Trigger(int a, int b);
+extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
+extern u8 lbl_80322A48[];
+extern u8 lbl_80322A68[];
+extern f32 lbl_803E41C8;
+extern f32 lbl_803E41CC;
+extern f32 lbl_803E4168;
+extern f32 lbl_803E42E0;
+extern f32 Vec_xzDistance(void* a, void* b);
+extern void fn_80296220(int* rider, f32 v);
+extern f32 lbl_803E4170;
+extern f32 lbl_803E4174;
+extern f32 lbl_803E4178;
+extern f32 lbl_803E417C;
+extern f32 lbl_803E4180;
+extern f32 lbl_803E4184;
+extern f32 lbl_803E4188;
+extern f32 lbl_803E418C;
+extern f32 lbl_803E4194;
+extern f32 lbl_803E4198;
+extern f32 lbl_803E419C;
+extern f32 lbl_803E41A0;
+extern f32 lbl_803E41A4;
+extern f32 lbl_803E41A8;
+extern f32 lbl_803E41AC;
+extern f32 lbl_803E41B0;
+extern f32 lbl_803E41B4;
+extern f32 lbl_803E41B8;
+extern int Obj_SetActiveModelIndex(int* obj, int idx);
+extern f32 lbl_803E41BC;
+extern int fn_80080150(void* p);
+
 undefined4
 FUN_8019b2e0(double param_1, short* param_2, short* param_3, float* param_4, undefined4 param_5,
              undefined4 param_6, undefined4 param_7, undefined4 param_8, undefined4 param_9)
@@ -314,8 +354,6 @@ FUN_8019d238(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 void babycloudrunner_init_OLD_v1_1(int obj);
 
-extern uint GameBit_Get(int eventId);
-
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
 typedef struct BabyCloudRunnerState
@@ -355,11 +393,6 @@ STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 /* Per-object extra state for the CloudRunner guardian
  * (cfguardian_getExtraSize == 0xa9c). */
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
-
-extern void* Obj_GetPlayerObject(void);
-
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
-extern f32 timeDelta;
 
 void windlift_hitDetect(void)
 {
@@ -432,13 +465,10 @@ typedef struct WindliftObjectDef
     u8 pad24[0x28 - 0x24];
 } WindliftObjectDef;
 
-extern u8 framesThisStep;
-
 int windlift_getExtraSize(void) { return 0x178; }
 int windlift_getObjectTypeId(void) { return 0x0; }
 int cfpowerbase_getExtraSize(void);
 
-extern f32 lbl_803E4190;
 #pragma peephole off
 void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -447,10 +477,6 @@ void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern f32 lbl_803E416C;
-extern f32 fn_80296214(void* p);
-extern void Music_Trigger(int a, int b);
 
 #pragma scheduling off
 void windlift_free(int* obj)
@@ -464,13 +490,6 @@ void windlift_free(int* obj)
 }
 
 void cfguardian_free(int* obj, int p2);
-
-extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
-extern u8 lbl_80322A48[];
-extern u8 lbl_80322A68[];
-extern f32 lbl_803E41C8;
-extern f32 lbl_803E41CC;
-extern f32 lbl_803E4168;
 
 typedef struct
 {
@@ -564,29 +583,6 @@ void windlift_init(int* obj, u8* def)
     }
     ObjGroup_AddObject(obj, 0x49);
 }
-
-extern f32 lbl_803E42E0;
-
-extern f32 Vec_xzDistance(void* a, void* b);
-extern void fn_80296220(int* rider, f32 v);
-extern f32 lbl_803E4170;
-extern f32 lbl_803E4174;
-extern f32 lbl_803E4178;
-extern f32 lbl_803E417C;
-extern f32 lbl_803E4180;
-extern f32 lbl_803E4184;
-extern f32 lbl_803E4188;
-extern f32 lbl_803E418C;
-extern f32 lbl_803E4194;
-extern f32 lbl_803E4198;
-extern f32 lbl_803E419C;
-extern f32 lbl_803E41A0;
-extern f32 lbl_803E41A4;
-extern f32 lbl_803E41A8;
-extern f32 lbl_803E41AC;
-extern f32 lbl_803E41B0;
-extern f32 lbl_803E41B4;
-extern f32 lbl_803E41B8;
 
 /* EN v1.0 0x8019C784  size: 1396b  fn_8019C784: per-rider wind lift physics -
  * track the rider while above the lift and in range, send the lift/drop
@@ -793,9 +789,6 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
     }
 }
 
-extern int Obj_SetActiveModelIndex(int* obj, int idx);
-extern f32 lbl_803E41BC;
-
 /* EN v1.0 0x8019CD98  size: 1300b  windlift_update: fade the lift opacity
  * with its gamebit, spin up over the first second, then assign every nearby
  * group-0x16 object (and the player) to a rider slot and run the lift
@@ -947,5 +940,3 @@ void windlift_update(int* obj)
         }
     }
 }
-
-extern int fn_80080150(void* p);

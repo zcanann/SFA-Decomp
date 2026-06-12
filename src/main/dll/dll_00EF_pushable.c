@@ -3,6 +3,10 @@
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/pushable.h"
+#include "main/effect_interfaces.h"
+#include "main/obj_placement.h"
+#include "main/dll/dll_00EF_pushable.h"
+#include "main/objseq.h"
 
 extern uint GameBit_Get(int bit);
 extern u32 randomGetRange(int min, int max);
@@ -18,6 +22,82 @@ extern f32 lbl_803E3564;
 extern f32 lbl_803E356C;
 extern f32 lbl_803E3580;
 extern f32 lbl_803E3584;
+
+extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
+extern int getAngle(f32 a, f32 b);
+extern f32 mathSinf(f32);
+extern f32 mathCosf(f32);
+extern void memcpy(void* dst, void* src, int n);
+extern f32 lbl_803E358C;
+extern f32 lbl_803E3590;
+extern f32 lbl_803E3594;
+extern undefined4 FUN_80017748();
+extern int FUN_80017a90();
+extern undefined8 FUN_80017ac8();
+extern undefined4 ObjHits_ClearHitVolumes();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
+extern undefined4 ObjHits_AddContactObject();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern undefined4 ObjMsg_AllocQueue();
+extern undefined4 FUN_80053c98();
+extern int FUN_801365ac();
+extern undefined4 FUN_801365b8();
+extern undefined4 fn_8017510C();
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern f32 lbl_803E42B0;
+extern f32 lbl_803E42B4;
+extern f32 lbl_803E42B8;
+extern f32 lbl_803E42BC;
+extern int lbl_803DDAB8;
+extern int lbl_803AC6E0[];
+extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
+extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
+extern int playerIsDisguised(void* player);
+extern u32 GameBit_Get(int eventId);
+extern int fn_80295A04(void* player, int a);
+extern void pushable_savePos(int* obj);
+extern int fn_80174668(int* obj, PushableState* state);
+extern void fn_80174438(int* obj, PushableState* state);
+extern void Obj_RemoveFromUpdateList(int* obj);
+extern f64 lbl_803E3530;
+extern f64 lbl_803E3538;
+extern u32 fn_80296118(void);
+extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
+extern void objSetSlot(s16* obj, int slot);
+extern int modelFileHeaderGetCullDistance(int hdr);
+extern void Model_GetVertexPosition(int* model, int idx, f32* out);
+extern void debugPrintf(char* fmt, ...);
+extern char sPushPullObjectHitpointOverflow[];
+extern int arrayIndexOf(int* array, int count, int value);
+extern void fn_8007FE04(int* array, int* count, int value);
+extern f32 lbl_803E35CC;
+extern f32 lbl_803E3558;
+extern f32 lbl_803E3540;
+extern int lbl_802C2270[];
+extern int fn_802969F0(void);
+extern void objMove(int* obj, f32 x, f32 y, f32 z);
+extern void Obj_BuildTransformMatrices(int* obj);
+extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int* obj);
+extern void hitDetect_calcSweptSphereBounds(int* boundsOut, f32* startPoints, f32* endPoints, int* box, int count);
+extern void hitDetectFn_800691c0(int* obj, int* bounds, int a, int b);
+extern f32 lbl_803E35A8;
+extern f32 lbl_803E35AC;
+extern f32 lbl_803E35B0;
+extern f32 lbl_803E35B4;
+extern f32 lbl_803E35B8;
+extern f32 lbl_803E35BC;
+extern f32 lbl_803E35C0;
+extern f32 lbl_803E35C4;
+extern f32 lbl_803E35C8;
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern int hitDetectFn_80067958(int a, f32* start, f32* end, int b, void* buf, int c);
+extern f32 lbl_803E359C;
+extern f32 lbl_803E35A0;
+extern f32 lbl_803E35A4;
+extern void fn_8003B5E0(int a, int b, int c, int d);
 
 void fn_80174A80(int obj, PushableState* ext)
 {
@@ -94,15 +174,6 @@ typedef struct Dll138HitInfo
     s8 id;
     u8 pad3[2];
 } Dll138HitInfo;
-
-extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
-extern int getAngle(f32 a, f32 b);
-extern f32 mathSinf(f32);
-extern f32 mathCosf(f32);
-extern void memcpy(void* dst, void* src, int n);
-extern f32 lbl_803E358C;
-extern f32 lbl_803E3590;
-extern f32 lbl_803E3594;
 
 void fn_80174BFC(int obj, int ext)
 {
@@ -426,14 +497,6 @@ int pushable_func0B(int obj, int other)
         *(f32*)(state + 0xc);
 }
 
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/obj_placement.h"
-#include "main/game_object.h"
-#include "main/dll/pushable.h"
-#include "main/dll/dll_00EF_pushable.h"
-#include "main/objseq.h"
-
 typedef struct PushablePlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -467,27 +530,6 @@ static inline int* Transporter_GetActiveModel(void* obj)
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
-
-extern undefined4 FUN_80017748();
-extern int FUN_80017a90();
-extern undefined8 FUN_80017ac8();
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
-extern undefined4 ObjHits_AddContactObject();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 ObjMsg_AllocQueue();
-extern undefined4 FUN_80053c98();
-extern int FUN_801365ac();
-extern undefined4 FUN_801365b8();
-extern undefined4 fn_8017510C();
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f32 lbl_803E42B0;
-extern f32 lbl_803E42B4;
-extern f32 lbl_803E42B8;
-extern f32 lbl_803E42BC;
 
 undefined4
 FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
@@ -577,9 +619,6 @@ FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return uVar3;
 }
 
-extern int lbl_803DDAB8;
-extern int lbl_803AC6E0[];
-
 #pragma scheduling off
 #pragma peephole off
 void pushable_free(int* obj)
@@ -620,26 +659,12 @@ void pushable_free(int* obj)
 int pushable_getExtraSize(void) { return 0x148; }
 int pushable_getObjectTypeId(void) { return 0x48; }
 
-extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
-
-extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
 #pragma opt_common_subs off
 
 #pragma opt_common_subs reset
-
-extern int playerIsDisguised(void* player);
-extern u32 GameBit_Get(int eventId);
-extern int fn_80295A04(void* player, int a);
-extern void pushable_savePos(int* obj);
-extern int fn_80174668(int* obj, PushableState* state);
-extern void fn_80174438(int* obj, PushableState* state);
-extern void Obj_RemoveFromUpdateList(int* obj);
-extern f64 lbl_803E3530;
-extern f64 lbl_803E3538;
 
 void pushable_update(int* obj)
 {
@@ -731,20 +756,6 @@ void pushable_update(int* obj)
         }
     }
 }
-
-extern u32 fn_80296118(void);
-extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
-
-extern void objSetSlot(s16* obj, int slot);
-extern int modelFileHeaderGetCullDistance(int hdr);
-extern void Model_GetVertexPosition(int* model, int idx, f32* out);
-extern void debugPrintf(char* fmt, ...);
-extern char sPushPullObjectHitpointOverflow[];
-extern int arrayIndexOf(int* array, int count, int value);
-extern void fn_8007FE04(int* array, int* count, int value);
-extern f32 lbl_803E35CC;
-extern f32 lbl_803E3558;
-extern f32 lbl_803E3540;
 
 void pushable_init(s16* obj, char* def)
 {
@@ -951,23 +962,6 @@ void pushable_init(s16* obj, char* def)
         fn_8007FE04(lbl_803AC6E0, &lbl_803DDAB8, ((ObjPlacement*)def)->mapId);
     }
 }
-
-extern int lbl_802C2270[];
-extern int fn_802969F0(void);
-extern void objMove(int* obj, f32 x, f32 y, f32 z);
-extern void Obj_BuildTransformMatrices(int* obj);
-extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int* obj);
-extern void hitDetect_calcSweptSphereBounds(int* boundsOut, f32* startPoints, f32* endPoints, int* box, int count);
-extern void hitDetectFn_800691c0(int* obj, int* bounds, int a, int b);
-extern f32 lbl_803E35A8;
-extern f32 lbl_803E35AC;
-extern f32 lbl_803E35B0;
-extern f32 lbl_803E35B4;
-extern f32 lbl_803E35B8;
-extern f32 lbl_803E35BC;
-extern f32 lbl_803E35C0;
-extern f32 lbl_803E35C4;
-extern f32 lbl_803E35C8;
 
 typedef struct
 {
@@ -1201,13 +1195,6 @@ void pushable_hitDetect(int* obj)
         e += 0xc;
     }
 }
-
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern int hitDetectFn_80067958(int a, f32* start, f32* end, int b, void* buf, int c);
-extern f32 lbl_803E359C;
-extern f32 lbl_803E35A0;
-extern f32 lbl_803E35A4;
 
 typedef struct
 {
@@ -1495,8 +1482,6 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
     }
     return ret;
 }
-
-extern void fn_8003B5E0(int a, int b, int c, int d);
 
 void pushable_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 {

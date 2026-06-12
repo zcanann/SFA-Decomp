@@ -60,6 +60,11 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
+extern f32 lbl_803E5920;
+extern int GameBit_Get(int);
+extern f32 lbl_803E597C;
+extern f32 lbl_803E59C0;
+
 void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined2* param_9, int param_10)
@@ -90,8 +95,6 @@ int SB_SeqDoor_getExtraSize(void) { return 0x0; }
 int SB_SeqDoor_getObjectTypeId(void) { return 0x0; }
 int SB_MiniFire_getExtraSize(void);
 
-extern f32 lbl_803E5920;
-extern int GameBit_Get(int);
 int SB_SeqDoor_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 void SB_SeqDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -118,8 +121,6 @@ int SB_SeqDoor_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     animUpdate->sequenceEventActive = 0;
     return 0;
 }
-
-extern f32 lbl_803E597C;
 
 /* EN v1.0 0x801E4BA4  size: 48b  When obj->_b8->[0] is non-null,
  * call ObjLink_DetachChild(obj). */
@@ -149,8 +150,6 @@ void SB_SeqDoor_update(int* obj)
     }
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
 }
-
-extern f32 lbl_803E59C0;
 
 /* EN v1.0 0x801E60A4  size: 28b  shop state reset/seed: zero obj->_b8[2]
  * and obj->_b8[3], stash (s8)v in obj->_b8[4]. */

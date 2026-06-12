@@ -5,9 +5,30 @@
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
+#include "ghidra_import.h"
+#include "main/game_object.h"
+#include "main/audio/sfx_ids.h"
+#include "main/mapEvent.h"
+#include "main/dll/TREX/TREX_trex.h"
+#include "main/effect_interfaces.h"
+#include "main/objhits_types.h"
+#include "main/objseq.h"
+#include "main/resource.h"
 
 extern u8 framesThisStep;
 extern EffectInterface** gPartfxInterface;
+
+extern f32 lbl_803E58B0;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E58D8;
+extern f32 timeDelta;
+STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
+STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
+STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
+STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
+extern undefined4 ObjLink_DetachChild();
+extern f32 lbl_803E58DC;
+extern f32 lbl_803E58E0;
 
 int SB_FireBall_getExtraSize(void) { return SB_FIREBALL_EXTRA_SIZE; }
 int SB_FireBall_getObjectTypeId(void) { return 0x0; }
@@ -17,49 +38,26 @@ void SB_FireBall_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-extern f32 lbl_803E58B0;
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E58D8;
-
 void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E58D8);
 }
 
-extern f32 timeDelta;
-
-#include "ghidra_import.h"
-#include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/mapEvent.h"
-#include "main/dll/TREX/TREX_trex.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/objhits_types.h"
-#include "main/objseq.h"
-#include "main/resource.h"
-
 /*
  * Per-object extra state for the ShipBattle cloud-ball projectile
  * (SB_CloudBall_getExtraSize == 0x24).
  */
-
-STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
 
 /*
  * Per-object extra state for the ShipBattle fireball projectile
  * (SB_FireBall_getExtraSize == SB_FIREBALL_EXTRA_SIZE == 0x18).
  */
 
-STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
-
 /*
  * Per-object extra state for the ShipBattle kyte cage
  * (SB_KyteCage_getExtraSize == 0x8).
  */
-
-STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 
 /*
  * Per-object extra state for the ShipBattle chain segment
@@ -67,10 +65,6 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
  * gObjectTriggerInterface (+0x1C/+0x24) - interface-owned record;
  * only the locally-evidenced fields are named.
  */
-
-STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
-
-extern undefined4 ObjLink_DetachChild();
 
 void SB_FireBall_hitDetect(int* obj)
 {
@@ -110,9 +104,6 @@ void SB_CloudBall_release(void);
 
 /* EN v1.0 0x801E4F14  size: 60b  Decrement obj->_f4 if > 0, OR in bit 0x8
  * of obj->_af, latch state->_6e = -2 and state->_56 = 0; return 0. */
-
-extern f32 lbl_803E58DC;
-extern f32 lbl_803E58E0;
 
 void SB_FireBall_init(int p)
 {

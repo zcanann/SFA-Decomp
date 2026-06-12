@@ -123,17 +123,29 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
-static inline int* DIMcannon_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
+extern void Music_Trigger(int id, int p2);
+extern int getSaveGameLoadStatus(void);
+extern void* Obj_GetPlayerObject(void);
+extern void SCGameBitLatch_Update(void* p, int a, int b, int c, int d, int e);
+extern void fn_80088870(u8 * a, u8 * b, u8 * c, u8 * d);
+extern void envFxActFn_800887f8(int id);
+extern u8 lbl_803238D8[];
+extern void getEnvfxActImmediately(int a, int b, int c, int d);
+extern int* getTrickyObject(void);
+extern void fn_80138908(int* tricky, int mode);
+extern f32 lbl_803E47C8;
+extern f32 lbl_803E47C0;
+
+static inline int* DIMcannon_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (int*)objAnim->banks[objAnim->bankIndex];
+}
 
 #pragma scheduling on
 #pragma peephole on
@@ -245,21 +257,6 @@ int linkb_levcontrol_getExtraSize(void) { return 0x10; }
 int link_levcontrol_getExtraSize(void);
 
 void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern void Music_Trigger(int id, int p2);
-extern int getSaveGameLoadStatus(void);
-extern void* Obj_GetPlayerObject(void);
-
-extern void SCGameBitLatch_Update(void* p, int a, int b, int c, int d, int e);
-
-extern void fn_80088870(u8 * a, u8 * b, u8 * c, u8 * d);
-extern void envFxActFn_800887f8(int id);
-
-extern u8 lbl_803238D8[];
-extern void getEnvfxActImmediately(int a, int b, int c, int d);
-extern int* getTrickyObject(void);
-extern void fn_80138908(int* tricky, int mode);
-extern f32 lbl_803E47C8;
 
 typedef struct
 {
@@ -477,5 +474,3 @@ void linkb_levcontrol_update(int* obj)
         }
     }
 }
-
-extern f32 lbl_803E47C0;

@@ -75,6 +75,21 @@ extern f32 lbl_803E4F6C;
 extern f32 lbl_803E4F70;
 extern f32 lbl_803E4F74;
 
+extern f32 lbl_803E422C;
+extern uint GameBit_Get(int eventId);
+extern void* Obj_GetPlayerObject(void);
+extern void playerAddRemoveMagic(void* player, int n);
+extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
+extern int objModelGetVecFn_800395d8(int obj, int idx);
+extern void objAudioFn_80039270(int obj, void* p, int id);
+extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
+extern u8 framesThisStep;
+extern f32 lbl_803E428C;
+extern int waterSpellStone1Fn_8019b4c8();
+extern int objUpdateOpacity(int sub);
+extern f32 lbl_803E4288;
+extern f32 sqrtf(f32 x);
+
 void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* param_3)
 {
     uint uVar1;
@@ -396,9 +411,6 @@ void babycloudrunner_init_OLD_v1_1(int obj)
     return;
 }
 
-extern f32 lbl_803E422C;
-extern uint GameBit_Get(int eventId);
-
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
 typedef struct BabyCloudRunnerState
@@ -547,11 +559,6 @@ void cfguardian_release(void);
  * (cfguardian_getExtraSize == 0xa9c). */
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
-extern void* Obj_GetPlayerObject(void);
-extern void playerAddRemoveMagic(void* player, int n);
-
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
-
 /* Per-object extra state for the CloudRunner main crystal
  * (cfmaincrystal_getExtraSize == 0x160). */
 
@@ -592,12 +599,6 @@ void cfprisonuncle_release(void)
 void cfprisonuncle_initialise(void)
 {
 }
-
-extern int objModelGetVecFn_800395d8(int obj, int idx);
-extern void objAudioFn_80039270(int obj, void* p, int id);
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
-extern u8 framesThisStep;
-extern f32 lbl_803E428C;
 
 /* EN v1.0 0x8019FEDC  size: 536b  cfprisonuncle_update: while not captured,
  * drain pending messages, re-acquire the keyed target object, then either
@@ -681,8 +682,6 @@ int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-extern int waterSpellStone1Fn_8019b4c8();
-
 #pragma scheduling off
 void cfprisonuncle_init(int* obj)
 {
@@ -701,9 +700,6 @@ void cfprisonuncle_init(int* obj)
 }
 
 void cfguardian_hitDetect(int* obj);
-
-extern int objUpdateOpacity(int sub);
-extern f32 lbl_803E4288;
 
 /* EN v1.0 0x8019FCF4  size: 484b  cfprisonuncle_render: render the uncle and/or
  * his held model depending on the rescue gamebits, opacity and visibility;
@@ -756,5 +752,3 @@ void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 }
-
-extern f32 sqrtf(f32 x);

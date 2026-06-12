@@ -68,6 +68,8 @@ extern f32 lbl_803E30C8;
 extern f32 lbl_803E30CC;
 
 #pragma dont_inline on
+extern u8 lbl_803AC668[0x18];
+
 void kaldaChomFn_8016821c(int obj, KaldaChomControl* control)
 {
     u8 loadLocked;
@@ -224,8 +226,6 @@ typedef struct KaldaCombatStack
     f32 dz;
     KaldaCombatParams p;
 } KaldaCombatStack;
-
-extern u8 lbl_803AC668[0x18];
 
 void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
 {

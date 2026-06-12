@@ -34,6 +34,20 @@ extern f32 FLOAT_803e4840;
 extern f32 FLOAT_803e4844;
 extern f32 FLOAT_803e4848;
 
+extern int* gCarryableInterface;
+extern f32 timeDelta;
+extern f32 lbl_803E3B44;
+extern f32 lbl_803E3B48;
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int size, int type);
+extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int ViewFrustum_IsSphereVisible(f32* pos, f32 radius);
+extern f32 lbl_803E3AF8;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E3B40;
+extern void Obj_SetActiveModelIndex(int* obj, int idx);
+
 undefined4
 FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -335,16 +349,6 @@ typedef struct CarryableBreakRespawnState
     f32 timer;
 } CarryableBreakRespawnState;
 
-extern int* gCarryableInterface;
-extern f32 timeDelta;
-extern f32 lbl_803E3B44;
-extern f32 lbl_803E3B48;
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int size, int type);
-extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int ViewFrustum_IsSphereVisible(f32* pos, f32 radius);
-
 #pragma scheduling off
 #pragma peephole off
 void carryable_break_respawn_update(int obj)
@@ -407,9 +411,6 @@ void carryable_break_respawn_update(int obj)
     }
 }
 
-extern f32 lbl_803E3AF8;
-extern void objRenderFn_8003b8f4(f32);
-
 void dll_109_init(int obj, u8* p)
 {
     *(s16*)obj = (s16)((s32)p[0x1a] << 8);
@@ -429,7 +430,6 @@ void dll_109_free(int obj)
     (*(void (*)(int))(*(int*)(*gCarryableInterface + 0x10)))(obj);
 }
 
-extern f32 lbl_803E3B40;
 #pragma scheduling off
 #pragma peephole off
 void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
@@ -443,5 +443,3 @@ void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
         }
     }
 }
-
-extern void Obj_SetActiveModelIndex(int* obj, int idx);

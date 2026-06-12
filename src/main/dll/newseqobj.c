@@ -4,7 +4,6 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/newSeqObj.h"
 
-
 extern int GameBit_Set(int bit, int value);
 extern int Sfx_PlayFromObject(void* obj, int sfxId);
 extern void fn_8001FEA8(void);
@@ -26,7 +25,6 @@ typedef struct
     u32 extra; /* 0xc */
 } SeqRow16;
 
-
 extern f32 timeDelta;
 extern f32 lbl_803E2740;
 extern f32 lbl_803E274C;
@@ -35,6 +33,24 @@ extern f32 lbl_803E276C;
 extern f32 lbl_803E27A0;
 
 extern u8 lbl_8031F16C[];
+
+extern void sidekickToy_updateCurveTargetLatch(int* obj);
+extern int Curve_AdvanceAlongPath(u8* curve, f32 t);
+extern f32 sqrtf(f32 x);
+extern int getAngle(f32 a, f32 b);
+extern u32 randomGetRange(int min, int max);
+extern f32 lbl_803E2748;
+extern f32 lbl_803E2754;
+extern f32 lbl_803E2778;
+extern f32 lbl_803E277C;
+extern f32 lbl_803E2780;
+extern f32 lbl_803E2784;
+extern f32 lbl_803E2788;
+extern f32 lbl_803E278C;
+extern f32 lbl_803E2790;
+extern f32 lbl_803E2794;
+extern f32 lbl_803E2798;
+extern f32 lbl_803E279C;
 
 int fn_801504F8(int* obj, u8* state, int* p3, int msgId, int arrIdx, int p6)
 {
@@ -302,24 +318,6 @@ void fn_80150EDC(void* p1, void* p2)
 
 /* EN v1.0 0x80150910  size: 1484b  sidekick-toy main update: timer-driven
  * 16-stride anim chain, curve chase with speed/turn shaping, idle anims. */
-
-extern void sidekickToy_updateCurveTargetLatch(int* obj);
-extern int Curve_AdvanceAlongPath(u8* curve, f32 t);
-extern f32 sqrtf(f32 x);
-extern int getAngle(f32 a, f32 b);
-extern u32 randomGetRange(int min, int max);
-extern f32 lbl_803E2748;
-extern f32 lbl_803E2754;
-extern f32 lbl_803E2778;
-extern f32 lbl_803E277C;
-extern f32 lbl_803E2780;
-extern f32 lbl_803E2784;
-extern f32 lbl_803E2788;
-extern f32 lbl_803E278C;
-extern f32 lbl_803E2790;
-extern f32 lbl_803E2794;
-extern f32 lbl_803E2798;
-extern f32 lbl_803E279C;
 
 void fn_80150910(int* obj, u8* state)
 {

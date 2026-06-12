@@ -55,6 +55,39 @@ extern f32 lbl_803E3DF8;
 extern f32 lbl_803E3198;
 extern f32 lbl_803E319C;
 
+extern void objRenderFn_8003b8f4(f32);
+extern void kaldachompspit_free(void);
+extern void kaldachompspit_update(void);
+extern int kaldachompspit_getObjectTypeId(void);
+extern int kaldachompspit_getExtraSize(void);
+extern int fn_80080150(int p);
+extern f32 lbl_803E3158;
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern f32 lbl_803DBD48;
+extern f32 lbl_803DBD4C;
+extern f32 lbl_803E315C;
+extern f32 lbl_803E3160;
+extern f32 lbl_803E3164;
+extern f32 lbl_803E3168;
+extern f32 lbl_803E316C;
+extern f32 lbl_803E3170;
+extern f32 lbl_803E3174;
+extern f32 lbl_803E3178;
+extern f32 lbl_803E317C;
+extern f32 lbl_803E3180;
+extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern int getCurSeqNo(void);
+extern int timerCountDown(int timer);
+extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+extern void Obj_SmoothTurnAnglesTowardVelocity(int obj, void* vel, int rate, f32 a, f32 b);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern void PSVECSubtract(void* a, void* b, void* out);
+extern f32 PSVECMag(void* v);
+extern void PSVECNormalize(void* src, void* dst);
+extern void PSVECScale(void* src, void* dst, f32 scale);
+extern void PSVECAdd(void* a, void* b, void* out);
+
 void pollenfragment_init(int obj, int config)
 {
     bool keepSpawning;
@@ -200,14 +233,7 @@ int pollenfragment_getExtraSize(void) { return 0x28; }
 int pollenfragment_getObjectTypeId(void) { return 0x0; }
 int mikabomb_getExtraSize(void);
 
-extern void objRenderFn_8003b8f4(f32);
-
 void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern void kaldachompspit_free(void);
-extern void kaldachompspit_update(void);
-extern int kaldachompspit_getObjectTypeId(void);
-extern int kaldachompspit_getExtraSize(void);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -328,9 +354,6 @@ PollenFragmentConfig* lbl_8032059C[] = {
     &lbl_80320588,
 };
 
-extern int fn_80080150(int p);
-extern f32 lbl_803E3158;
-
 void pollenfragment_render(int* obj, int p2, int p3, int p4, int p5)
 {
     int* state = ((GameObject*)obj)->extra;
@@ -363,32 +386,6 @@ typedef struct
 {
     f32 x, y, z;
 } XyzVec;
-
-extern f32 timeDelta;
-extern u8 framesThisStep;
-extern f32 lbl_803DBD48;
-extern f32 lbl_803DBD4C;
-extern f32 lbl_803E315C;
-extern f32 lbl_803E3160;
-extern f32 lbl_803E3164;
-extern f32 lbl_803E3168;
-extern f32 lbl_803E316C;
-extern f32 lbl_803E3170;
-extern f32 lbl_803E3174;
-extern f32 lbl_803E3178;
-extern f32 lbl_803E317C;
-extern f32 lbl_803E3180;
-extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern int getCurSeqNo(void);
-extern int timerCountDown(int timer);
-extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-extern void Obj_SmoothTurnAnglesTowardVelocity(int obj, void* vel, int rate, f32 a, f32 b);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
-extern void PSVECSubtract(void* a, void* b, void* out);
-extern f32 PSVECMag(void* v);
-extern void PSVECNormalize(void* src, void* dst);
-extern void PSVECScale(void* src, void* dst, f32 scale);
-extern void PSVECAdd(void* a, void* b, void* out);
 
 void pinponspike_update(int obj);
 

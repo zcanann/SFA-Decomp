@@ -6,12 +6,6 @@
 
 extern ModgfxInterface** gModgfxInterface;
 
-static inline u8* Gameplay_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 FUN_800033a8();
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_80006768();
@@ -39,7 +33,6 @@ extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286880();
 extern undefined4 FUN_8028688c();
-
 extern undefined4 DAT_802c28f0;
 extern undefined4 DAT_802c28f4;
 extern undefined4 DAT_802c28f8;
@@ -116,6 +109,18 @@ extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
+extern int maybeTryLoadSave(int a);
+extern u8 lbl_80312340[];
+extern f32 lbl_803E07C0, lbl_803E07C4, lbl_803E07C8, lbl_803E07CC, lbl_803E07D0, lbl_803E07D4;
+extern f32 lbl_803E07D8, lbl_803E07DC, lbl_803E07E0, lbl_803E07E4, lbl_803E07E8, lbl_803E07EC;
+extern f32 lbl_803E07F0, lbl_803E07F4, lbl_803E07F8;
+extern s16 lbl_80314920[8];
+
+static inline u8* Gameplay_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (u8*)objAnim->banks[objAnim->bankIndex];
+}
 
 void saveFileStruct_unlockCheat(uint cheatId)
 {
@@ -223,8 +228,6 @@ undefined4* FUN_800e87a8(void)
 {
     return &DAT_803a45b0;
 }
-
-extern int maybeTryLoadSave(int a);
 
 int saveFn_800e8508(void);
 
@@ -690,11 +693,6 @@ enum
 
 void dll_60_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
 
-extern u8 lbl_80312340[];
-extern f32 lbl_803E07C0, lbl_803E07C4, lbl_803E07C8, lbl_803E07CC, lbl_803E07D0, lbl_803E07D4;
-extern f32 lbl_803E07D8, lbl_803E07DC, lbl_803E07E0, lbl_803E07E4, lbl_803E07E8, lbl_803E07EC;
-extern f32 lbl_803E07F0, lbl_803E07F4, lbl_803E07F8;
-
 void dll_5E_func03(int sourceObj, int variant, u8* posSource, uint flags)
 {
     u8* base = (u8*)(int)lbl_80312340;
@@ -728,5 +726,3 @@ void dll_5E_func03(int sourceObj, int variant, u8* posSource, uint flags)
     (*gModgfxInterface)->spawnSequence(posSource, (u8*)(int)lbl_80312340, 0x24, &base[0x168], 0x10, 0x120, 0);
     (*gModgfxInterface)->getLastSpawnHandle();
 }
-
-extern s16 lbl_80314920[8];

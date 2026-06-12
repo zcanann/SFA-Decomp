@@ -96,6 +96,12 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 
+extern f32 timeDelta;
+extern void fn_80202EF0(int obj, int p2);
+extern f32 lbl_803E63E4;
+extern f32 lbl_803E63E8;
+extern f32 lbl_803E63E0;
+
 undefined4
 FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -526,8 +532,6 @@ int DFP_Torch_getExtraSize(void) { return 0x10; }
 int DFP_Torch_getObjectTypeId(void) { return 0x1; }
 int chuka_SeqFn(void);
 
-extern f32 timeDelta;
-
 void DFP_Torch_free(int obj)
 {
     (*gModgfxInterface)->detachSource((void*)obj);
@@ -535,12 +539,6 @@ void DFP_Torch_free(int obj)
 }
 
 void dfpobjcreator_init(int obj, s8* def);
-
-extern void fn_80202EF0(int obj, int p2);
-
-extern f32 lbl_803E63E4;
-extern f32 lbl_803E63E8;
-extern f32 lbl_803E63E0;
 
 void DFP_Torch_init(int obj, int param2)
 {
@@ -796,11 +794,6 @@ void DFP_Torch_update(int obj)
 }
 
 void drakorenergy_update(int obj);
-
-#include "main/dll/baddie/chuka.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 

@@ -36,6 +36,46 @@ extern int padGetStickX(int controller);
 extern int padGetStickY(int controller);
 extern int getLoadedFileFlags(int file);
 
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int a, int b);
+extern void Obj_SetupObject(int setup, int a, int b, int c, int d);
+extern void worldplanet_updateMapLighting(int obj);
+extern void setFrameCountdown_800202c4(int frames);
+extern int ObjList_FindObjectById(int id);
+extern void AudioStream_StopCurrent(void);
+extern void getEnvfxAct(int a, int b, int c, int d);
+extern void setIsOvercast(int mode);
+extern u32 getButtonsJustPressed(int controller);
+extern EffectInterface** gPartfxInterface;
+extern void pauseMenuSetupTitle(int strId, int p2, int p3, int p4);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern f32 lbl_803DDD00;
+extern s16 lbl_803DDD0C;
+extern int lbl_803DDD10;
+extern int lbl_8032A178[];
+extern u8 lbl_803DC1C8[8];
+extern u8 lbl_803DC1D0[8];
+extern u8 lbl_803DC1E8[8];
+extern u8 lbl_803DC1E0[6];
+extern u8 lbl_803DC1D8[6];
+extern s16 getAngle(f32 a, f32 b);
+extern u8 fn_8012DDAC(void);
+extern void Pause_ResetMenuFrameCounter(void);
+extern int loadMapAndParent(int mapId);
+extern void lockLevel(int idx, int p2);
+extern void loadModelAndAnimTabs(void);
+extern void streamFn_8000a380(int a, int b, int c);
+extern void warpToMap(int map, int p2);
+extern void Sfx_KeepAliveLoopedObjectSound(s16* obj, int sound);
+extern f32 fsin16Approx(int angle);
+extern f32 fcos16Approx(int angle);
+extern f32 lbl_803E661C;
+extern f32 lbl_803E6620;
+extern f32 lbl_803E6624;
+extern f32 lbl_803E6628;
+extern f32 lbl_803E662C;
+extern f32 lbl_803E6630;
+
 int worldplanet_getExtraSize(void)
 {
     return sizeof(WorldPlanetState);
@@ -222,47 +262,6 @@ void worldplanet_readMapInput(int obj, u8* outX, u8* outY)
         *outY = 0;
     }
 }
-
-
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int a, int b);
-extern void Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern void worldplanet_updateMapLighting(int obj);
-extern void setFrameCountdown_800202c4(int frames);
-extern int ObjList_FindObjectById(int id);
-extern void AudioStream_StopCurrent(void);
-extern void getEnvfxAct(int a, int b, int c, int d);
-extern void setIsOvercast(int mode);
-extern u32 getButtonsJustPressed(int controller);
-extern EffectInterface** gPartfxInterface;
-extern void pauseMenuSetupTitle(int strId, int p2, int p3, int p4);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern f32 lbl_803DDD00;
-extern s16 lbl_803DDD0C;
-extern int lbl_803DDD10;
-extern int lbl_8032A178[];
-extern u8 lbl_803DC1C8[8];
-extern u8 lbl_803DC1D0[8];
-extern u8 lbl_803DC1E8[8];
-extern u8 lbl_803DC1E0[6];
-extern u8 lbl_803DC1D8[6];
-extern s16 getAngle(f32 a, f32 b);
-extern u8 fn_8012DDAC(void);
-extern void Pause_ResetMenuFrameCounter(void);
-extern int loadMapAndParent(int mapId);
-extern void lockLevel(int idx, int p2);
-extern void loadModelAndAnimTabs(void);
-extern void streamFn_8000a380(int a, int b, int c);
-extern void warpToMap(int map, int p2);
-extern void Sfx_KeepAliveLoopedObjectSound(s16* obj, int sound);
-extern f32 fsin16Approx(int angle);
-extern f32 fcos16Approx(int angle);
-extern f32 lbl_803E661C;
-extern f32 lbl_803E6620;
-extern f32 lbl_803E6624;
-extern f32 lbl_803E6628;
-extern f32 lbl_803E662C;
-extern f32 lbl_803E6630;
 
 void worldplanet_update(int obj)
 {

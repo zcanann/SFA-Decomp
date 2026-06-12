@@ -109,13 +109,15 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
+extern undefined4 FUN_800067c0();
+extern f32 lbl_803E4A30;
+extern f32 lbl_803E4A28;
+
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
-
-extern undefined4 FUN_800067c0();
 
 #pragma scheduling on
 #pragma peephole on
@@ -198,8 +200,6 @@ int dll_1CF_getExtraSize(void) { return 0x0; }
 int dll_1CF_getObjectTypeId(void) { return 0x0; }
 int dim_tricky_getExtraSize(void);
 
-extern f32 lbl_803E4A30;
-
 void dll_1CF_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objRenderFn_8003b8f4(f32);
@@ -221,5 +221,3 @@ void dll_1CF_init(int* obj, int* def)
     *(s16*)obj = (s16)((s32)((Dll1CFObjectDef*)def)->unk18 << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0xe000);
 }
-
-extern f32 lbl_803E4A28;

@@ -15,12 +15,6 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-static inline u8* Gameplay_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 FUN_800033a8();
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_80006768();
@@ -49,7 +43,6 @@ extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286880();
 extern undefined4 FUN_8028688c();
-
 extern undefined4 DAT_802c28f0;
 extern undefined4 DAT_802c28f4;
 extern undefined4 DAT_802c28f8;
@@ -127,6 +120,21 @@ extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
+extern int maybeTryLoadSave(int a);
+extern void vecRotateZXY(void* p, f32* v);
+extern void* textureIdxToPtr(int idx);
+extern void debugPrintf(char* fmt, ...);
+extern u8 lbl_80311E30[];
+extern u8 lbl_803DB8B0, lbl_803DB8B4;
+extern u32 lbl_803E0730;
+extern const f32 lbl_803E0734, lbl_803E0738, lbl_803E073C, lbl_803E0740, lbl_803E0744;
+extern const f32 lbl_803E0748, lbl_803E074C, lbl_803E0750, lbl_803E0754;
+
+static inline u8* Gameplay_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (u8*)objAnim->banks[objAnim->bankIndex];
+}
 
 void saveFileStruct_unlockCheat(uint cheatId)
 {
@@ -234,8 +242,6 @@ undefined4* FUN_800e87a8(void)
 {
     return &DAT_803a45b0;
 }
-
-extern int maybeTryLoadSave(int a);
 
 int saveFn_800e8508(void);
 
@@ -690,16 +696,6 @@ enum
 };
 
 void dll_60_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
-
-extern void vecRotateZXY(void* p, f32* v);
-
-extern void* textureIdxToPtr(int idx);
-extern void debugPrintf(char* fmt, ...);
-extern u8 lbl_80311E30[];
-extern u8 lbl_803DB8B0, lbl_803DB8B4;
-extern u32 lbl_803E0730;
-extern const f32 lbl_803E0734, lbl_803E0738, lbl_803E073C, lbl_803E0740, lbl_803E0744;
-extern const f32 lbl_803E0748, lbl_803E074C, lbl_803E0750, lbl_803E0754;
 
 int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, uint spawnFlags, int modelId, s16* countRange)
 {

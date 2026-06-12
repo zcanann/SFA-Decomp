@@ -43,6 +43,12 @@ extern int getCurSeqNo(void);
  * scaled by lbl_803E40BC as f32; cases 1 and >=3 are no-ops. */
 extern f32 lbl_803E40BC;
 
+extern void Sfx_RemoveLoopedObjectSound(u8* obj, u16 sfx);
+extern void Sfx_StopFromObject(u8* obj, u16 sfx);
+extern void Sfx_AddLoopedObjectSound(u8* obj, u16 sfx);
+extern void Sfx_PlayFromObject(u8* obj, u16 sfx);
+extern void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u8* obj, u16 sfx);
+
 void sfxplayerObj_init(u8* obj, u8* data)
 {
     u8* sub = ((GameObject*)obj)->extra;
@@ -74,11 +80,6 @@ void sfxplayerObj_init(u8* obj, u8* data)
 /* sfxplayerObj_free: bit-0 of obj->_b8->_4 gates teardown. When set, clear
  * it and stop two sfx loops (data->_1a and data->_22). Mode depends on
  * data->_1d: 1 → Sfx_RemoveLoopedObjectSound, else Sfx_StopFromObject. */
-extern void Sfx_RemoveLoopedObjectSound(u8* obj, u16 sfx);
-extern void Sfx_StopFromObject(u8* obj, u16 sfx);
-extern void Sfx_AddLoopedObjectSound(u8* obj, u16 sfx);
-extern void Sfx_PlayFromObject(u8* obj, u16 sfx);
-extern void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u8* obj, u16 sfx);
 
 void sfxplayerObj_free(u8* obj)
 {

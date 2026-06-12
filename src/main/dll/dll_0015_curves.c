@@ -63,6 +63,17 @@ typedef struct CurvesTransformScratch
     f32 z;
 } CurvesTransformScratch;
 
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
+extern f32 lbl_803E06C0;
+extern void hitDetectFn_800691c0(void* a, void* b, u8 mask, int e);
+extern SaveData saveData;
+extern void setWidescreen(u8 enabled);
+extern void setSubtitlesEnabled(u8 enabled);
+extern void setRumbleEnabled(u8 value);
+extern void audioSetSoundMode(u8 mode, u8 secondary);
+extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
+extern u8 gSaveGameData[];
+
 static inline u32 RomCurve_GetId(RomCurveDef* curve)
 {
     return curve->id;
@@ -1089,8 +1100,6 @@ curves_getCurves(int obj, f32 x, f32 z, u32* outCount, int queryAll)
     return sCurvesHitPoints;
 }
 
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
-
 void dll_15_func08(short* curveObj, int* state, uint updateValue, f32 step)
 {
     int flags;
@@ -1469,8 +1478,6 @@ void dll_15_func08(short* curveObj, int* state, uint updateValue, f32 step)
     }
 }
 
-extern f32 lbl_803E06C0;
-
 void dll_15_func06(short* curveObj, int* state)
 {
     CurvesCollisionState* collision;
@@ -1667,8 +1674,6 @@ void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoin
     state->flags |= CURVES_COLLISION_STATE_HIT_SEGMENTS;
 }
 
-extern void hitDetectFn_800691c0(void* a, void* b, u8 mask, int e);
-
 void dll_15_func07(void* arg1, CurvesCollisionState* state)
 {
     u32 flags;
@@ -1738,8 +1743,6 @@ uint playerHasKrazoaSpirit(u8 checkStoryBits, uint bit)
     return 0;
 }
 
-extern SaveData saveData;
-
 void saveFileStruct_setCheatActive(uint optionIndex, u8 active)
 {
     volatile SaveData* save;
@@ -1769,12 +1772,6 @@ void dll_15_initialise_nop(void)
 {
 }
 
-extern void setWidescreen(u8 enabled);
-extern void setSubtitlesEnabled(u8 enabled);
-extern void setRumbleEnabled(u8 value);
-extern void audioSetSoundMode(u8 mode, u8 secondary);
-extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
-
 void loadSaveSettings(void)
 {
     setWidescreen(saveData.widescreenEnabled);
@@ -1792,7 +1789,6 @@ void RomCurve_func0D(RomCurveDef** startOut, RomCurveDef** endOut);
 
 void* getSaveFileStruct(void) { return &saveData; }
 
-extern u8 gSaveGameData[];
 void* getLastSavedGameTexts(void) { return gSaveGameData + 0x558; }
 
 #define SAVEGAME_OBJECT_POSITION_COUNT 0x3f

@@ -15,12 +15,6 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-static inline u8* Gameplay_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 FUN_800033a8();
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_80006768();
@@ -49,7 +43,6 @@ extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286880();
 extern undefined4 FUN_8028688c();
-
 extern undefined4 DAT_802c28f0;
 extern undefined4 DAT_802c28f4;
 extern undefined4 DAT_802c28f8;
@@ -126,6 +119,20 @@ extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
+extern int maybeTryLoadSave(int a);
+extern u8 lbl_80314AF0[];
+extern u8 lbl_803DB8D8;
+extern f32 lbl_803E0CB0, lbl_803E0CB4, lbl_803E0CB8, lbl_803E0CBC, lbl_803E0CC0, lbl_803E0CC4;
+extern f32 lbl_803E0CC8, lbl_803E0CCC, lbl_803E0CD0, lbl_803E0CD4, lbl_803E0CD8, lbl_803E0CDC;
+extern f32 lbl_803E0CE0, lbl_803E0CE4, lbl_803E0CE8, lbl_803E0CEC, lbl_803E0CF0, lbl_803E0CF4;
+extern f32 lbl_803E0CF8, lbl_803E0CFC;
+extern u8 lbl_80314CB0[];
+
+static inline u8* Gameplay_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (u8*)objAnim->banks[objAnim->bankIndex];
+}
 
 void saveFileStruct_unlockCheat(uint cheatId)
 {
@@ -233,8 +240,6 @@ undefined4* FUN_800e87a8(void)
 {
     return &DAT_803a45b0;
 }
-
-extern int maybeTryLoadSave(int a);
 
 int saveFn_800e8508(void);
 
@@ -700,13 +705,6 @@ enum
 
 void dll_60_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
 
-extern u8 lbl_80314AF0[];
-extern u8 lbl_803DB8D8;
-extern f32 lbl_803E0CB0, lbl_803E0CB4, lbl_803E0CB8, lbl_803E0CBC, lbl_803E0CC0, lbl_803E0CC4;
-extern f32 lbl_803E0CC8, lbl_803E0CCC, lbl_803E0CD0, lbl_803E0CD4, lbl_803E0CD8, lbl_803E0CDC;
-extern f32 lbl_803E0CE0, lbl_803E0CE4, lbl_803E0CE8, lbl_803E0CEC, lbl_803E0CF0, lbl_803E0CF4;
-extern f32 lbl_803E0CF8, lbl_803E0CFC;
-
 int dll_79_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
@@ -1043,5 +1041,3 @@ int dll_79_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     }
     return ret;
 }
-
-extern u8 lbl_80314CB0[];

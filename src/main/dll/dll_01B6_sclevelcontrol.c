@@ -32,6 +32,50 @@ extern f32 lbl_803E61E8;
 
 #pragma scheduling on
 #pragma peephole on
+extern f32 lbl_803E5554;
+extern void objRenderFn_8003b8f4(f32);
+extern void fn_8003B608(int a, int b, int c);
+extern void gameTimerStop(void);
+extern void disableHeavyFog(void);
+extern void Music_Trigger(int track, int param);
+extern void GameBit_Set(int bit, int val);
+extern int GameBit_Get(int bit);
+extern void gameTimerInit(int a, int b);
+extern void timerSetToCountUp(void);
+extern int isGameTimerDisabled(void);
+extern u8* Obj_GetPlayerObject(void);
+extern void Sfx_PlayFromObject(int a, int b);
+extern f32 lbl_803E5550;
+extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
+extern int mapGetDirIdx(int idx);
+extern void unlockLevel(int a, int b, int c);
+extern int getSaveGameLoadStatus(void);
+extern f32 lbl_803E5580;
+extern f32 lbl_803E5564;
+extern f32 lbl_803E5568;
+extern f32 lbl_803E5570;
+extern f32 lbl_803E5574;
+extern f32 lbl_803E5578;
+extern f32 lbl_803E557C;
+extern u8 Obj_IsLoadingLocked(void);
+extern void skyFn_80088c94(int a, int b);
+extern void envFxActFn_800887f8(int arg);
+extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
+extern void getEnvfxAct(void* obj, void* source, int effectId, int arg);
+extern int coordsToMapCell(f32 x, f32 z);
+extern void gameTextShow(int id);
+extern void skyFn_80088e54(int mode, f32 brightness);
+extern void warpToMap(int mapId, int flag);
+extern void timeListFn_8012df14(void);
+extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
+extern int* gSHthorntailAnimationInterface;
+extern u16 lbl_803DC060[4];
+extern f32 timeDelta;
+extern const f32 lbl_803E5558;
+extern f32 lbl_803E555C;
+extern f32 lbl_803E5560;
+extern f32 lbl_803E556C;
+
 undefined4 sc_levelcontrol_processAnimEvents(int obj, undefined4 arg2, ObjAnimUpdateState* animUpdate)
 {
     byte bval;
@@ -148,20 +192,11 @@ int sc_levelcontrol_getObjectTypeId(void) { return 0x0; }
 
 u8 sc_levelcontrol_getAnimEventState(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x1d); }
 
-extern f32 lbl_803E5554;
-extern void objRenderFn_8003b8f4(f32);
-
 void sc_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E5554);
 }
-
-extern void fn_8003B608(int a, int b, int c);
-
-extern void gameTimerStop(void);
-extern void disableHeavyFog(void);
-extern void Music_Trigger(int track, int param);
 
 void sc_levelcontrol_free(int obj)
 {
@@ -173,15 +208,6 @@ void sc_levelcontrol_free(int obj)
     Music_Trigger(34, 0);
     Music_Trigger(199, 0);
 }
-
-extern void GameBit_Set(int bit, int val);
-extern int GameBit_Get(int bit);
-extern void gameTimerInit(int a, int b);
-extern void timerSetToCountUp(void);
-extern int isGameTimerDisabled(void);
-extern u8* Obj_GetPlayerObject(void);
-extern void Sfx_PlayFromObject(int a, int b);
-extern f32 lbl_803E5550;
 
 int sc_levelcontrol_processAnimEventsCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -269,18 +295,6 @@ void sc_levelcontrol_applyAnimEventState(int obj, u8 scale)
     }
 }
 
-extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
-extern int mapGetDirIdx(int idx);
-extern void unlockLevel(int a, int b, int c);
-extern int getSaveGameLoadStatus(void);
-extern f32 lbl_803E5580;
-extern f32 lbl_803E5564;
-extern f32 lbl_803E5568;
-extern f32 lbl_803E5570;
-extern f32 lbl_803E5574;
-extern f32 lbl_803E5578;
-extern f32 lbl_803E557C;
-
 void sc_levelcontrol_init(int obj)
 {
     ScLevelControlState* st = ((GameObject*)obj)->extra;
@@ -320,31 +334,11 @@ void sc_levelcontrol_init(int obj)
     ((GameObject*)obj)->unkF8 = 1;
 }
 
-extern u8 Obj_IsLoadingLocked(void);
-
 #pragma dont_inline on
 #pragma dont_inline reset
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
-extern void skyFn_80088c94(int a, int b);
-extern void envFxActFn_800887f8(int arg);
-extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
-extern void getEnvfxAct(void* obj, void* source, int effectId, int arg);
-extern int coordsToMapCell(f32 x, f32 z);
-extern void gameTextShow(int id);
-extern void skyFn_80088e54(int mode, f32 brightness);
-extern void warpToMap(int mapId, int flag);
-extern void timeListFn_8012df14(void);
-extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
-extern int* gSHthorntailAnimationInterface;
-extern u16 lbl_803DC060[4];
-extern f32 timeDelta;
-extern const f32 lbl_803E5558;
-extern f32 lbl_803E555C;
-extern f32 lbl_803E5560;
-extern f32 lbl_803E556C;
 
 /* EN v1.0 0x801DB3A8  size: 2732b  SnowBike Race level controller per-frame
  * driver: replays the env-fx set on map (re)entry, latches the race

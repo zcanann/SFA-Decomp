@@ -1,8 +1,30 @@
 #include "main/camera_object.h"
 #include "main/dll/CAM/camclimb_state.h"
 #include "main/mm.h"
+#include "main/camera_interface.h"
+#include "main/object_transform.h"
+#include "main/game_object.h"
 
 extern CameraModeClimbState* lbl_803DD578;
+
+extern uint getAngle(f32 dx, f32 dz);
+extern void camcontrol_traceMove(f32* from, void* to, f32* out, void* work, int a, int b, int c, f32 radius);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern f32 lbl_803E19A0;
+extern f32 lbl_803E19A4;
+extern f32 lbl_803E19A8;
+extern f32 lbl_803E19AC;
+extern f32 lbl_803E19B0;
+extern f32 lbl_803E19B4;
+extern void memset(void* dst, int val, int size);
+extern f32 lbl_803E19B8;
+extern f32 lbl_803E19BC;
+extern f32 lbl_803E19C0;
+extern f32 lbl_803E19C4;
+extern f32 lbl_803E19C8;
 
 void CameraModeClimb_copyToCurrent_nop(void)
 {
@@ -13,25 +35,6 @@ void CameraModeClimb_free(void)
     mm_free(lbl_803DD578);
     lbl_803DD578 = 0;
 }
-
-#include "main/camera_interface.h"
-#include "main/dll/CAM/camclimb_state.h"
-#include "main/object_transform.h"
-
-extern uint getAngle(f32 dx, f32 dz);
-extern void camcontrol_traceMove(f32* from, void* to, f32* out, void* work, int a, int b, int c, f32 radius);
-
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-
-extern u8 framesThisStep;
-extern f32 timeDelta;
-extern f32 lbl_803E19A0;
-extern f32 lbl_803E19A4;
-extern f32 lbl_803E19A8;
-extern f32 lbl_803E19AC;
-extern f32 lbl_803E19B0;
-extern f32 lbl_803E19B4;
 
 void CameraModeClimb_update(short* camObj)
 {
@@ -143,21 +146,6 @@ void CameraModeClimb_update(short* camObj)
                                    (f32*)(camObj + 10),
                                    *(int*)(camObj + 0x18));
 }
-
-#include "main/camera_interface.h"
-#include "main/camera_object.h"
-#include "main/dll/CAM/camclimb_state.h"
-#include "main/game_object.h"
-#include "main/mm.h"
-#include "main/object_transform.h"
-
-extern void memset(void* dst, int val, int size);
-
-extern f32 lbl_803E19B8;
-extern f32 lbl_803E19BC;
-extern f32 lbl_803E19C0;
-extern f32 lbl_803E19C4;
-extern f32 lbl_803E19C8;
 
 void CameraModeClimb_init(undefined4 arg1, int mode, s8* args)
 {

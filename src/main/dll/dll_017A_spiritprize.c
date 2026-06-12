@@ -49,6 +49,13 @@ STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
 
 extern void* objCreateLight(int* obj, int v);
 
+extern void modelLightStruct_setLightKind(void* light, int v);
+extern void modelLightStruct_setDiffuseColor(void* light, int a, int b, int c, int d);
+extern void modelLightStruct_setDistanceAttenuation(void* light, f32 a, f32 b);
+extern f32 lbl_803E4E98;
+extern f32 lbl_803E4EB0;
+extern f32 lbl_803E4EB4;
+
 void SpiritPrize_hitDetect(void)
 {
 }
@@ -97,13 +104,6 @@ void SpiritPrize_free(int obj)
     }
     (*gObjectTriggerInterface)->freeState((u8*)state);
 }
-
-extern void modelLightStruct_setLightKind(void* light, int v);
-extern void modelLightStruct_setDiffuseColor(void* light, int a, int b, int c, int d);
-extern void modelLightStruct_setDistanceAttenuation(void* light, f32 a, f32 b);
-extern f32 lbl_803E4E98;
-extern f32 lbl_803E4EB0;
-extern f32 lbl_803E4EB4;
 
 void SpiritPrize_init(int* obj, u8* init)
 {

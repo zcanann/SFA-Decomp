@@ -30,6 +30,26 @@ extern f32 lbl_803E1D94;
 extern f32 lbl_803E1D98;
 extern f32 lbl_803E1D9C;
 
+extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
+extern void set_uiDllIdx_803dc8f0(int idx);
+extern void loadUiDll(int index);
+extern void buttonDisable(int port, u32 mask);
+extern void padClearAnalogInputX(int port);
+extern s8 padGetStickX(int port);
+extern int getButtonsJustPressed(int port);
+extern void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv,
+                                  f32* outMaxH, int glyphLang);
+extern void gplayNewGame(char* name, u8 slot);
+extern s32 lbl_803A8730[];
+extern u8 saveFileSelect_currentSlotIndex;
+extern f32 lbl_803DD6D0;
+extern f32 lbl_803DD6D4;
+extern u8 lbl_803DD6DA;
+extern u32 lbl_803DD6E8;
+extern u8 lbl_803DD6EC;
+extern u8 lbl_803DD6ED;
+extern int* gTitleMenuLinkInterface;
+
 void EnterSaveNameScreen_render(void)
 {
     extern u8 lbl_803DD6F0;
@@ -84,27 +104,6 @@ void EnterSaveNameScreen_frameEnd(void)
 #define ENTER_SAVE_NAME_SFX_CONFIRM 0x418
 #define ENTER_SAVE_NAME_SFX_DELETE 0x419
 #define ENTER_SAVE_NAME_SFX_TYPE 0x41A
-
-extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
-extern void set_uiDllIdx_803dc8f0(int idx);
-extern void loadUiDll(int index);
-extern void buttonDisable(int port, u32 mask);
-extern void padClearAnalogInputX(int port);
-extern s8 padGetStickX(int port);
-extern int getButtonsJustPressed(int port);
-extern void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv,
-                                  f32* outMaxH, int glyphLang);
-extern void gplayNewGame(char* name, u8 slot);
-
-extern s32 lbl_803A8730[];
-extern u8 saveFileSelect_currentSlotIndex;
-
-extern f32 lbl_803DD6D0;
-extern f32 lbl_803DD6D4;
-extern u8 lbl_803DD6DA;
-extern u32 lbl_803DD6E8;
-extern u8 lbl_803DD6EC;
-extern u8 lbl_803DD6ED;
 
 undefined4
 EnterSaveNameScreen_run(undefined4 param_1, undefined4 param_2, int param_3, undefined4 param_4, undefined4 param_5
@@ -294,8 +293,6 @@ EnterSaveNameScreen_run(undefined4 param_1, undefined4 param_2, int param_3, und
     }
     return 0;
 }
-
-extern int* gTitleMenuLinkInterface;
 
 void EnterSaveNameScreen_release(void)
 {

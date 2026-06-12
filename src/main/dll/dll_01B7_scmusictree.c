@@ -3,6 +3,9 @@
 #include "main/dll/scmusictreesetup_struct.h"
 #include "main/dll/sclevelcontrolstate_types.h"
 #include "main/game_object.h"
+#include "main/dll/DR/cloudrunner_state.h"
+#include "main/objfx.h"
+#include "main/objseq.h"
 
 typedef struct ScMusictreePlacement
 {
@@ -27,6 +30,55 @@ typedef struct ScMusictreeSpawnAmbientEffectPlacement
     u8 pad23[0x28 - 0x23];
 } ScMusictreeSpawnAmbientEffectPlacement;
 
+extern void objRenderFn_8003b8f4(f32);
+extern void fn_8003B608(int a, int b, int c);
+extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int p6);
+extern f32 lbl_803E558C;
+extern void GameBit_Set(int bit, int val);
+extern void Sfx_PlayFromObject(int a, int b);
+extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int a, int b);
+extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
+extern f32 lbl_803E5588;
+extern u16 lbl_803DC060[4];
+extern void GameBit_Set(int id, int value);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
+extern int ObjHits_GetPriorityHitWithPosition(int obj, int* type, int* a, int* b, f32* x, f32* y, f32* z);
+extern int ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d, int e, int* state);
+extern void ObjHits_RecordObjectHit(int target, int src, int a, int b, int c);
+extern int Obj_SetupObject(int s, int a, int b, int c, int d);
+extern void* Obj_GetPlayerObject(void);
+extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
+extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void* vec, f32 f, int flag);
+extern void vecRotateZXY(int obj, void* vec);
+extern f32 sqrtf(f32 x);
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803E5590;
+extern f32 lbl_803E5594;
+extern f32 lbl_803E5598;
+extern f32 lbl_803E559C;
+extern f32 lbl_803E55A0;
+extern f32 lbl_803E55A4;
+extern f32 lbl_803E55A8;
+extern f32 lbl_803E55AC;
+extern f32 lbl_803E55B0;
+extern f32 lbl_803E55B4;
+extern f32 lbl_803E55B8;
+extern f32 lbl_803E55BC;
+extern f32 lbl_803E55C0;
+STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
+STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);
+STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotZByte) == 0x19);
+STATIC_ASSERT(offsetof(SCMusicTreeSetup, yawByte) == 0x1A);
+STATIC_ASSERT(offsetof(SCMusicTreeSetup, hearRadiusHalf) == 0x1B);
+STATIC_ASSERT(offsetof(SCMusicTreeSetup, scale) == 0x1C);
+STATIC_ASSERT(offsetof(SCMusicTreeSetup, flags) == 0x23);
+
 void sc_musictree_free(void)
 {
 }
@@ -37,12 +89,6 @@ void sc_musictree_hitDetect(void)
 
 int sc_musictree_getExtraSize(void) { return 0x50; }
 int sc_musictree_getObjectTypeId(void) { return 0x0; }
-
-extern void objRenderFn_8003b8f4(f32);
-
-extern void fn_8003B608(int a, int b, int c);
-extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int p6);
-extern f32 lbl_803E558C;
 
 typedef struct SCMusicTreeState
 {
@@ -84,15 +130,6 @@ void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     ((GameObject*)obj)->unkF8 = 1;
 }
 
-extern void GameBit_Set(int bit, int val);
-extern void Sfx_PlayFromObject(int a, int b);
-
-extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
-
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int a, int b);
-extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-
 #pragma dont_inline on
 void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
 {
@@ -125,8 +162,6 @@ void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
     }
 }
 #pragma dont_inline reset
-
-extern f32 lbl_803E5588;
 
 #pragma dont_inline on
 void sc_musictree_handleHitObject(int p1, int p2, int effectType)
@@ -170,8 +205,6 @@ void sc_musictree_handleHitObject(int p1, int p2, int effectType)
 }
 #pragma dont_inline reset
 
-extern u16 lbl_803DC060[4];
-
 /* EN v1.0 0x801DB3A8  size: 2732b  SnowBike Race level controller per-frame
  * driver: replays the env-fx set on map (re)entry, latches the race
  * GameBits, runs the two race countdown timers, eases the heavy fog level,
@@ -179,12 +212,6 @@ extern u16 lbl_803DC060[4];
  * in sync with the Thorntail animation state. */
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/dll/DR/cloudrunner_state.h"
-#include "main/game_object.h"
-#include "main/obj_placement.h"
-#include "main/objfx.h"
-#include "main/objseq.h"
 
 typedef struct ScMusictreeState
 {
@@ -197,46 +224,6 @@ typedef struct ScMusictreeState
     u8 unk4C;
     u8 pad4D[0x50 - 0x4D];
 } ScMusictreeState;
-
-extern void GameBit_Set(int id, int value);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
-extern int ObjHits_GetPriorityHitWithPosition(int obj, int* type, int* a, int* b, f32* x, f32* y, f32* z);
-extern int ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d, int e, int* state);
-extern void ObjHits_RecordObjectHit(int target, int src, int a, int b, int c);
-extern int Obj_SetupObject(int s, int a, int b, int c, int d);
-extern void* Obj_GetPlayerObject(void);
-extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
-extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void* vec, f32 f, int flag);
-extern void vecRotateZXY(int obj, void* vec);
-extern f32 sqrtf(f32 x);
-
-extern f32 timeDelta;
-extern u8 framesThisStep;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-
-extern f32 lbl_803E5590;
-extern f32 lbl_803E5594;
-extern f32 lbl_803E5598;
-extern f32 lbl_803E559C;
-extern f32 lbl_803E55A0;
-extern f32 lbl_803E55A4;
-extern f32 lbl_803E55A8;
-extern f32 lbl_803E55AC;
-extern f32 lbl_803E55B0;
-extern f32 lbl_803E55B4;
-extern f32 lbl_803E55B8;
-extern f32 lbl_803E55BC;
-extern f32 lbl_803E55C0;
-
-STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
-STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);
-STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotZByte) == 0x19);
-STATIC_ASSERT(offsetof(SCMusicTreeSetup, yawByte) == 0x1A);
-STATIC_ASSERT(offsetof(SCMusicTreeSetup, hearRadiusHalf) == 0x1B);
-STATIC_ASSERT(offsetof(SCMusicTreeSetup, scale) == 0x1C);
-STATIC_ASSERT(offsetof(SCMusicTreeSetup, flags) == 0x23);
 
 void sc_musictree_update(int obj)
 {

@@ -79,6 +79,39 @@ void worldobj_spawnGreatFoxEffects(int obj);
 void worldobj_spawnAsteroidBatch(int obj, int xMin, int xMax, int yMin, int yMax, int count, int dispatchId);
 void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
+extern f32 mathCosf(f32 x);
+extern f32 sqrtf(f32 x);
+extern f32 mathSinf(f32 x);
+extern int getAngle(f32 dx, f32 dz);
+extern f32 timeDelta;
+extern f32 oneOverTimeDelta;
+extern int gAudioStreamCurrentId;
+extern void Obj_FreeObject(int obj);
+extern void modelLightStruct_setEnabled(int light, int a, f32 b);
+extern void modelLightStruct_updateGlowAlpha(int light);
+extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
+extern void modelLightStruct_startColorFade(int light, int a, int b);
+extern void modelLightStruct_setDirection(int light, f32 a, f32 b, f32 c);
+extern void objfx_spawnFlaggedTrailBurst(int obj, f32 scale, int a, int b, int c, void* vec);
+extern void ObjLink_AttachChild(int obj, int child, int slot);
+extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int flag);
+extern int objFindTexture(int obj, int a, int b);
+extern u8* Camera_GetCurrentViewSlot(void);
+extern f32 lbl_8032A200[];
+extern f32 lbl_803E667C;
+extern f32 lbl_803E6680;
+extern f32 lbl_803E6684;
+extern f32 lbl_803E6688;
+extern f32 lbl_803E668C;
+extern f32 lbl_803E6690;
+extern f32 lbl_803E6694;
+extern f32 lbl_803E6698;
+extern f32 lbl_803E669C;
+extern f32 lbl_803E66A4;
+extern f32 lbl_803E66A8;
+extern f32 lbl_803E66B0;
+extern f32 lbl_803E66B8;
+
 int worldobj_getExtraSize(void) { return 0x284; }
 
 void worldobj_hitDetect(void)
@@ -238,39 +271,6 @@ void worldobj_init(int obj, int arg)
         break;
     }
 }
-
-extern f32 mathCosf(f32 x);
-extern f32 sqrtf(f32 x);
-extern f32 mathSinf(f32 x);
-extern int getAngle(f32 dx, f32 dz);
-extern f32 timeDelta;
-extern f32 oneOverTimeDelta;
-extern int gAudioStreamCurrentId;
-extern void Obj_FreeObject(int obj);
-extern void modelLightStruct_setEnabled(int light, int a, f32 b);
-extern void modelLightStruct_updateGlowAlpha(int light);
-extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_startColorFade(int light, int a, int b);
-extern void modelLightStruct_setDirection(int light, f32 a, f32 b, f32 c);
-extern void objfx_spawnFlaggedTrailBurst(int obj, f32 scale, int a, int b, int c, void* vec);
-extern void ObjLink_AttachChild(int obj, int child, int slot);
-extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int flag);
-extern int objFindTexture(int obj, int a, int b);
-extern u8* Camera_GetCurrentViewSlot(void);
-extern f32 lbl_8032A200[];
-extern f32 lbl_803E667C;
-extern f32 lbl_803E6680;
-extern f32 lbl_803E6684;
-extern f32 lbl_803E6688;
-extern f32 lbl_803E668C;
-extern f32 lbl_803E6690;
-extern f32 lbl_803E6694;
-extern f32 lbl_803E6698;
-extern f32 lbl_803E669C;
-extern f32 lbl_803E66A4;
-extern f32 lbl_803E66A8;
-extern f32 lbl_803E66B0;
-extern f32 lbl_803E66B8;
 
 void worldobj_update(int obj)
 {

@@ -61,6 +61,56 @@ ObjectDescriptor14 expgfx_funcs = {
     (ObjectDescriptorCallback)expgfx_updateSourceFrameFlags,
 };
 
+extern f32 fn_80138F78(void* tricky);
+extern f32 fn_8029610C(void* player);
+extern void vecRotateZXY(void* params, void* vec);
+extern u8 framesThisStep;
+extern WaterfxInterface** gWaterfxInterface;
+extern u16 gExpgfxPhaseAngleA;
+extern u16 gExpgfxPhaseAngleB;
+extern f32 lbl_803DF38C;
+extern f32 lbl_803DF390;
+extern f32 lbl_803DF3B0;
+extern f32 lbl_803DF3C8;
+extern f32 lbl_803DF3CC;
+extern f32 lbl_803DF3D0;
+extern f32 lbl_803DF3D4;
+extern f32 lbl_803DF3D8;
+extern f32 lbl_803DF3DC;
+extern f32 lbl_803DF3E0;
+extern f32 lbl_803DF3E4;
+extern f32 lbl_803DF3E8;
+extern f32 lbl_803DF3EC;
+extern f32 lbl_803DF3F0;
+extern f32 lbl_803DF3F4;
+extern f32 lbl_803DF3F8;
+extern f32 lbl_803DF3FC;
+extern f32 lbl_803DF400;
+extern f32 lbl_803DF404;
+extern f32 lbl_803DF408;
+extern f32 lbl_803DF40C;
+extern f32 lbl_803DF410;
+extern int getHudHiddenFrameCount(void);
+extern int Camera_GetProjectionMatrix(void);
+extern void Camera_ApplyFullViewport(void);
+extern void _textSetColor(int reg, u8 r, u8 g, u8 b, u8 a);
+extern void fn_8000F83C(void);
+extern s16 getAngle(f32 deltaX, f32 deltaZ);
+extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
+extern void selectTexture(int handle, int slot);
+extern void fn_8007C3D0(u32 flag);
+extern f32 lbl_803967C0[3][4];
+extern f32 lbl_803DF414;
+extern f32 lbl_803DB790;
+extern f32 lbl_803DF350;
+extern f32 lbl_803DF41C;
+extern f32 lbl_803DF420;
+extern f32 lbl_803DF424;
+extern f32 lbl_803DF428;
+extern int lbl_803DD270;
+extern int lbl_803DD274;
+extern int lbl_803DD278;
+
 static inline ExpgfxTableEntry* Expgfx_GetTableEntry(int tableIndex)
 {
     return &gExpgfxTableEntries[tableIndex];
@@ -501,36 +551,6 @@ void expgfx_initSlotQuad(void* slotPtr)
     quad[3].texS = texS0;
     quad[3].texT = texT1;
 }
-
-extern f32 fn_80138F78(void* tricky);
-extern f32 fn_8029610C(void* player);
-extern void vecRotateZXY(void* params, void* vec);
-extern u8 framesThisStep;
-extern WaterfxInterface** gWaterfxInterface;
-extern u16 gExpgfxPhaseAngleA;
-extern u16 gExpgfxPhaseAngleB;
-extern f32 lbl_803DF38C;
-extern f32 lbl_803DF390;
-extern f32 lbl_803DF3B0;
-extern f32 lbl_803DF3C8;
-extern f32 lbl_803DF3CC;
-extern f32 lbl_803DF3D0;
-extern f32 lbl_803DF3D4;
-extern f32 lbl_803DF3D8;
-extern f32 lbl_803DF3DC;
-extern f32 lbl_803DF3E0;
-extern f32 lbl_803DF3E4;
-extern f32 lbl_803DF3E8;
-extern f32 lbl_803DF3EC;
-extern f32 lbl_803DF3F0;
-extern f32 lbl_803DF3F4;
-extern f32 lbl_803DF3F8;
-extern f32 lbl_803DF3FC;
-extern f32 lbl_803DF400;
-extern f32 lbl_803DF404;
-extern f32 lbl_803DF408;
-extern f32 lbl_803DF40C;
-extern f32 lbl_803DF410;
 
 typedef struct ExpgfxRotateParams
 {
@@ -2015,20 +2035,6 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
     }
 }
 
-extern int getHudHiddenFrameCount(void);
-extern int Camera_GetProjectionMatrix(void);
-extern void Camera_ApplyFullViewport(void);
-extern void _textSetColor(int reg, u8 r, u8 g, u8 b, u8 a);
-extern void fn_8000F83C(void);
-extern s16 getAngle(f32 deltaX, f32 deltaZ);
-extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
-extern void selectTexture(int handle, int slot);
-extern void fn_8007C3D0(u32 flag);
-
-extern f32 lbl_803967C0[3][4];
-extern f32 lbl_803DF414;
-extern f32 lbl_803DB790;
-
 void drawGlow(uint slotPoolBase, int poolIndex)
 {
     void* dstBuf;
@@ -2741,15 +2747,6 @@ void expgfx_updateFrameState(int sourceMode, int sourceId)
     }
     return;
 }
-
-extern f32 lbl_803DF350;
-extern f32 lbl_803DF41C;
-extern f32 lbl_803DF420;
-extern f32 lbl_803DF424;
-extern f32 lbl_803DF428;
-extern int lbl_803DD270;
-extern int lbl_803DD274;
-extern int lbl_803DD278;
 
 int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, short slotType,
                      u8 boundsTemplateId)

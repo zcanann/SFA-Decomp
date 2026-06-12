@@ -5,11 +5,53 @@
 #include "main/dll/ediblemushroom.h"
 
 #include "main/dll/bombplant_placement.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/dll/dll_01A8_shkillermushroom.h"
+#include "main/dll/SH/dll_01A9_bombplant.h"
+#include "main/objanim.h"
+#include "main/objfx.h"
+#include "main/objseq.h"
 
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
+
+extern f32 lbl_803E5370;
+extern void objRenderFn_8003b8f4(f32);
+extern void* getTrickyObject(void);
+extern void trickyImpress(void* trickyObj);
+extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+extern void fn_801D29E4(int* obj, int* p2);
+extern f32 lbl_803E5378;
+extern void ObjGroup_AddObject(int* obj, int group);
+extern u8 Obj_IsLoadingLocked(void);
+extern int* Obj_AllocObjectSetup(int a, int b);
+extern void setMatrixFromObjectPos(void* mtx, void* build);
+extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);
+extern f32 lbl_803E536C;
+extern f32 lbl_803E5374;
+extern EffectInterface** gPartfxInterface;
+extern f32 lbl_803E5358;
+extern f32 lbl_803E535C;
+extern int objIsFrozen(int* obj);
+extern f32 timeDelta;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern undefined4 ObjHitbox_SetCapsuleBounds();
+extern undefined4 ObjHits_SetHitVolumeSlot();
+extern undefined4 ObjHits_MarkObjectPositionDirty();
+extern undefined4 ObjHits_EnableObject();
+extern u32 GameBit_Get(int eventId);
+extern void* Obj_GetPlayerObject(void);
+extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
+extern void Obj_SetModelColorFadeRecursive(void* obj, int a, int b, int c, int d, int e);
+extern f32 lbl_803E5368;
+extern f32 lbl_803E537C;
+extern f32 lbl_803E5380;
+extern u8 lbl_80326D20[];
+extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 int bombplant_getExtraSize(void)
 {
@@ -29,15 +71,7 @@ void bombplant_hitDetect(void)
 {
 }
 
-extern f32 lbl_803E5370;
-extern void objRenderFn_8003b8f4(f32);
 void bombplant_render(void) { objRenderFn_8003b8f4(lbl_803E5370); }
-
-extern void* getTrickyObject(void);
-extern void trickyImpress(void* trickyObj);
-extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-extern void fn_801D29E4(int* obj, int* p2);
-extern f32 lbl_803E5378;
 
 void fn_801D2B70(int* obj, int unused, int* p3)
 {
@@ -71,19 +105,9 @@ void fn_801D2B70(int* obj, int unused, int* p3)
     }
 }
 
-extern void ObjGroup_AddObject(int* obj, int group);
-
 /* EN v1.0 0x801D27B8  size: 172b  Mushroom enemy constructor: seeds the state
  * block, clamps the spin period, offsets the spawn height, flags the model,
  * optionally resets to spawn, and registers in object group 3. */
-
-extern u8 Obj_IsLoadingLocked(void);
-extern int* Obj_AllocObjectSetup(int a, int b);
-extern void setMatrixFromObjectPos(void* mtx, void* build);
-extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);
-extern f32 lbl_803E536C;
-extern f32 lbl_803E5374;
 
 typedef struct
 {
@@ -130,10 +154,6 @@ void fn_801D29E4(int* obj, int* p2)
         Obj_SetupObject(spore, 5, -1, -1, 0);
     }
 }
-
-extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E5358;
-extern f32 lbl_803E535C;
 
 /* EN v1.0 0x801D286C  size: 376b  Bombplant per-tick sequencer: on the armed
  * frame snaps the model to the spawn pose and refreshes hits; otherwise keeps
@@ -187,41 +207,8 @@ int bombplant_SeqFn(int* obj)
     return 0;
 }
 
-extern int objIsFrozen(int* obj);
-extern f32 timeDelta;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-
 /* EN v1.0 0x801D1E24  size: 2452b  Mushroom enemy state machine: dormant ->
  * inflate -> chase -> deflate cycle, hit reaction, pop and respawn. */
-
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-#include "main/dll/dll_01A8_shkillermushroom.h"
-#include "main/dll/SH/dll_01A9_bombplant.h"
-#include "main/objanim.h"
-#include "main/objfx.h"
-#include "main/objseq.h"
-
-#include "main/dll/bombplant_placement.h"
-
-extern undefined4 ObjHitbox_SetCapsuleBounds();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_MarkObjectPositionDirty();
-extern undefined4 ObjHits_EnableObject();
-extern u32 GameBit_Get(int eventId);
-extern void* Obj_GetPlayerObject(void);
-extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
-extern void Obj_SetModelColorFadeRecursive(void* obj, int a, int b, int c, int d, int e);
-
-extern f32 lbl_803E5368;
-extern f32 lbl_803E537C;
-extern f32 lbl_803E5380;
-
-extern u8 lbl_80326D20[];
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 void bombplant_init(void* obj, void* param, int flag)
 {

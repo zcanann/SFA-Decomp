@@ -27,6 +27,8 @@ extern float mathCosf(float x);
 #include "main/screen_transition.h"
 
 #include "main/dll/dll19_state.h"
+#include "main/objanim.h"
+#include "main/dll/baddie_state.h"
 
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
@@ -49,6 +51,25 @@ extern f32 lbl_803E265C;
 
 #pragma scheduling on
 #pragma peephole on
+extern f32 mathCosf(f32);
+extern f32 mathSinf(f32);
+extern f32 timeDelta;
+extern CameraModeCloudRunnerState* lbl_803DD5B8;
+extern f32 lbl_803E1B00;
+extern f32 lbl_803E1B04;
+extern f32 lbl_803E1B08;
+extern f32 lbl_803E1B1C;
+extern f32 lbl_803DB9C8;
+extern f32 lbl_803DD5AC;
+extern f32 lbl_803DD5B0;
+extern f32 lbl_803DD5A8;
+extern f32 interpolate(f32 cur, f32 target, f32 t);
+extern void fn_8029697C(int state, s16* a, s16* b);
+extern f32 lbl_803E1B18;
+extern int Obj_GetPlayerObject(void);
+extern int ObjList_GetObjects(int* idx, int* count);
+extern f32 mathCosf(f32 x);
+
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
 {
     float fVar1;
@@ -183,14 +204,8 @@ void CameraModeForceBehind_free(void)
 
 void CameraModeCloudRunner_copyToCurrent(void);
 
-extern f32 mathCosf(f32);
-extern f32 mathSinf(f32);
-extern f32 timeDelta;
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
 void fn_801101E8(void)
 {
@@ -203,19 +218,6 @@ void CameraModeCloudRunner_free(void);
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
-extern f32 lbl_803E1B00;
-extern f32 lbl_803E1B04;
-extern f32 lbl_803E1B08;
-extern f32 lbl_803E1B1C;
-extern f32 lbl_803DB9C8;
-extern f32 lbl_803DD5AC;
-extern f32 lbl_803DD5B0;
-
-extern f32 lbl_803DD5A8;
-extern f32 interpolate(f32 cur, f32 target, f32 t);
-extern void fn_8029697C(int state, s16* a, s16* b);
-extern f32 lbl_803E1B18;
 
 void CameraModeForceBehind_init(u8* obj, int p2, f32* p3)
 {
@@ -253,8 +255,6 @@ void CameraModeForceBehind_init(u8* obj, int p2, f32* p3)
         lbl_803DD5AC = lbl_803E1B08;
     }
 }
-
-extern int Obj_GetPlayerObject(void);
 
 void CameraModeForceBehind_update(u8* obj)
 {
@@ -327,8 +327,6 @@ void CameraModeForceBehind_update(u8* obj)
                                    *(int*)&camera->anim.parent);
 }
 
-extern int ObjList_GetObjects(int* idx, int* count);
-
 /* dll_54_update  addr=0x801106E4  size=0x490  linkage=global */
 
 /* CameraModeNpcSpeak_init  addr=0x8010DFF0  size=0x524  linkage=global */
@@ -342,14 +340,6 @@ extern int ObjList_GetObjects(int* idx, int* count);
 /* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/objanim.h"
-#include "main/camera_interface.h"
-#include "main/game_object.h"
-#include "main/dll/baddie_state.h"
-#include "main/dll/rom_curve_interface.h"
-
-#include "main/dll/dll19_state.h"
 
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */
@@ -369,8 +359,6 @@ extern int ObjList_GetObjects(int* idx, int* count);
 
 /* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
  * distance from an object to its target, updating the wide-turn flag. */
-
-extern f32 mathCosf(f32 x);
 
 /* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
  * the object for walkable space, returning a bitmask of clear directions. */

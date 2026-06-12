@@ -37,6 +37,8 @@ extern int FUN_800600e4();
 extern undefined8 FUN_8028682c();
 extern undefined4 FUN_80286878();
 
+extern void* lbl_803DDAEC;
+
 void FUN_80192488(void)
 {
     int iVar1;
@@ -198,5 +200,3 @@ void visanimator_update(int* obj)
         }
     }
 }
-
-extern void* lbl_803DDAEC;

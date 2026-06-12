@@ -3,6 +3,10 @@
 #include "main/game_object.h"
 #include "main/dll/door.h"
 #include "main/dll/fruit.h"
+#include "main/mapEvent.h"
+#include "main/effect_interfaces.h"
+#include "main/dll/path_control_interface.h"
+#include "main/dll/dll_0235_dfptargetblock.h"
 
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
                               DfpTargetBlockObject* obj, int flags, int mask, int arg9, int arg10);
@@ -17,6 +21,40 @@ extern f32 lbl_803E6490;
 #define DFPTARGETBLOCK_POINT_OFFSET_Y 0x08
 #define DFPTARGETBLOCK_POINT_OFFSET_Z 0x0C
 #define DFPTARGETBLOCK_POINT_STRIDE 0x0C
+
+extern int ObjHits_GetPriorityHit(DfpTargetBlockObject* obj, DfpTargetBlockObject** hitObj,
+                                  int* priority, int flags);
+extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject* obj, u16 sfxId);
+extern f32 sqrtf(f32 value);
+extern EffectInterface** gPartfxInterface;
+extern f32 timeDelta;
+extern f32 lbl_803DDCF8;
+extern f32 lbl_803DDCFC;
+extern f32 lbl_803E6494;
+extern f32 lbl_803E6498;
+extern f32 lbl_803E649C;
+extern f32 lbl_803E64A0;
+extern f32 lbl_803E64A4;
+extern f32 lbl_803E64A8;
+extern f32 lbl_803E64AC;
+extern f32 lbl_803E64B0;
+extern f32 lbl_803E64B4;
+extern f32 lbl_803E64B8;
+extern f32 lbl_803E64BC;
+extern f32 lbl_803E64C0;
+extern undefined4 streamFn_8000a380();
+extern u32 GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId, int value);
+extern void Model_GetVertexPosition(int modelData, int vertexIndex, float* outPosition);
+extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
+                                  int particleId, int lifetime, f32 scaleX, f32 scaleY,
+                                  f32 scaleZ, void* args, int arg9);
+extern s32 lbl_80329B78[];
+extern f32 lbl_803E64C4;
+extern f32 lbl_803E64C8;
+extern f32 lbl_803E64CC;
+extern f32 lbl_803E64D0;
+extern f32 lbl_803E64D4;
 
 int dfptargetblock_getExtraSize(void)
 {
@@ -49,11 +87,6 @@ void dfptargetblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-#include "main/mapEvent.h"
-#include "main/effect_interfaces.h"
-#include "main/dll/door.h"
-#include "main/dll/fruit.h"
-
 typedef struct DfpTargetBlockPartfxArgs
 {
     s16 rotX;
@@ -65,28 +98,6 @@ typedef struct DfpTargetBlockPartfxArgs
     f32 y;
     f32 z;
 } DfpTargetBlockPartfxArgs;
-
-extern int ObjHits_GetPriorityHit(DfpTargetBlockObject* obj, DfpTargetBlockObject** hitObj,
-                                  int* priority, int flags);
-extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject* obj, u16 sfxId);
-extern f32 sqrtf(f32 value);
-
-extern EffectInterface** gPartfxInterface;
-extern f32 timeDelta;
-extern f32 lbl_803DDCF8;
-extern f32 lbl_803DDCFC;
-extern f32 lbl_803E6494;
-extern f32 lbl_803E6498;
-extern f32 lbl_803E649C;
-extern f32 lbl_803E64A0;
-extern f32 lbl_803E64A4;
-extern f32 lbl_803E64A8;
-extern f32 lbl_803E64AC;
-extern f32 lbl_803E64B0;
-extern f32 lbl_803E64B4;
-extern f32 lbl_803E64B8;
-extern f32 lbl_803E64BC;
-extern f32 lbl_803E64C0;
 
 static inline void dfptargetblock_resetToHome(DfpTargetBlockObject* obj, DfpTargetBlockHome* home,
                                               DfpTargetBlockAudioState* state)
@@ -263,31 +274,11 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
     }
 }
 
-#include "main/game_object.h"
-#include "main/dll/fruit.h"
-#include "main/dll/path_control_interface.h"
-#include "main/dll/dll_0235_dfptargetblock.h"
-
 static inline int* ZBomb_GetActiveModel(DfpTargetBlockObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
-
-extern undefined4 streamFn_8000a380();
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
-extern void Model_GetVertexPosition(int modelData, int vertexIndex, float* outPosition);
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
-                                  int particleId, int lifetime, f32 scaleX, f32 scaleY,
-                                  f32 scaleZ, void* args, int arg9);
-
-extern s32 lbl_80329B78[];
-extern f32 lbl_803E64C4;
-extern f32 lbl_803E64C8;
-extern f32 lbl_803E64CC;
-extern f32 lbl_803E64D0;
-extern f32 lbl_803E64D4;
 
 void dfptargetblock_update(DfpTargetBlockObject* obj)
 {

@@ -28,6 +28,158 @@ extern f32 lbl_803E3954;
 
 #pragma scheduling on
 #pragma peephole on
+extern f32 lbl_803E2CC0;
+extern f32 lbl_803E2CC4;
+extern f32 lbl_803E2CC8;
+extern f32 lbl_803E2CCC;
+extern f32 lbl_803E2CD0;
+extern f32 lbl_803E2CD4;
+extern u8 Obj_IsLoadingLocked(void);
+extern int* Obj_AllocObjectSetup(int p1, int p2);
+extern int* Obj_SetupObject(int* obj, int p1, int p2, int p3, int p4);
+extern void firepipe_setLinkedUpdateFlag(int* obj);
+extern f32 lbl_803E2B18;
+extern f32 lbl_803E2B38;
+extern f32 lbl_803E2B40;
+extern f32 lbl_803E2B4C;
+extern f32 lbl_803E2B64;
+extern f32 lbl_803E2B68;
+extern f32 lbl_803E2B6C;
+extern f32 lbl_803E2B70;
+extern f32 lbl_803E2B74;
+extern f32 lbl_803E2B78;
+extern f32 lbl_803E2C3C;
+extern f32 lbl_803E2C58;
+extern f32 lbl_803E2C7C;
+extern f32 lbl_803E2C80;
+extern f32 lbl_803E2C84;
+extern f32 lbl_803E2C88;
+extern f32 lbl_803E2C8C;
+extern f32 lbl_803E2C90;
+extern f32 lbl_803E2C94;
+extern u8 lbl_8031FB70[];
+extern u8 lbl_8031FC2C[];
+extern int fn_8014D08C(int* obj, int* st, int p3, f32 f, int p5, int p6);
+extern int* allocModelStruct2(int p1, int p2);
+extern void tailFn_80026c38(int* p, f32 a, f32 b, f32 c);
+extern int baddieAfterUpdateBonesCb(void);
+extern f32 lbl_803E2CBC;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern u8 lbl_8031FD48[];
+extern void smallbasket_playReactionEffects(int* obj, int* st);
+extern f32 lbl_803E2CB8;
+extern f32 lbl_803E2C1C;
+extern f32 lbl_803E2C20;
+extern f32 lbl_803E2C24;
+extern f32 fn_802943F4(f32 a);
+extern void PSMTXRotRad(f32* mtx, int axis, f32 angle);
+extern void PSMTXMultVecSR(f32 * mtx, f32 * in, f32 * out);
+extern f32 lbl_803E2B98;
+extern f32 lbl_803E2BB8;
+extern f32 lbl_803E2BD4;
+extern f32 lbl_803E2BE4;
+extern f32 lbl_803E2BE8;
+extern f32 lbl_803E2BEC;
+extern f32 lbl_803E2BF0;
+extern f32 lbl_803E2BF4;
+extern f32 lbl_803E2BF8;
+extern f32 lbl_803E2BFC;
+extern f32 lbl_803E2C00;
+extern f32 lbl_803E2C04;
+extern f32 lbl_803E2C08;
+extern f32 lbl_803E2C0C;
+extern int fn_8014C11C(int obj, f32 dist, u8 flag, int maxCount, void* buf);
+extern int lbl_803AC4A8[];
+extern f32 lbl_803E2B80;
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern f32 lbl_803E2C98;
+extern f32 lbl_803E2C9C;
+extern f32 lbl_803E2CA0;
+extern f32 lbl_803E2CA4;
+extern f32 lbl_803E2CA8;
+extern f32 lbl_803E2B84;
+extern f32 lbl_803E2B88;
+extern void fn_8014CF7C(int* obj, u8* state, f32 x, f32 z, int p5, int p6);
+extern u8 lbl_803DBD28[4];
+extern u8 lbl_803DBD2C[4];
+extern u8 lbl_803DBD30[4];
+extern u32 getAngle(f32 dx, f32 dz);
+extern f32 timeDelta;
+extern f32 lbl_803E2B2C;
+extern f32 lbl_803E2B28;
+extern f32 lbl_803E2B34;
+extern f32 lbl_803E2B30;
+extern f32 lbl_803E2B44;
+extern f32 lbl_803E2B60;
+extern f32 lbl_803DBCE0;
+extern f32 lbl_803DBCE4;
+extern f32 lbl_803DBCEC;
+extern void fn_8001FE90(void);
+extern f32 lbl_803E2BA8;
+extern int objCreateLight(int a, int b);
+extern void modelLightStruct_setLightKind();
+extern void modelLightStruct_setPosition();
+extern void modelLightStruct_setDiffuseColor();
+extern void modelLightStruct_setSpecularColor();
+extern void modelLightStruct_setDistanceAttenuation();
+extern void lightSetField4D();
+extern void modelLightStruct_setEnabled();
+extern void modelLightStruct_startColorFade();
+extern void modelLightStruct_setAffectsAabbLightSelection();
+extern void sidekickToy_accelerateTowardTarget3D(s16* obj, f32 x, f32 y, f32 z, f32 a, f32 b, f32 c, f32 spd);
+extern f32 powfBitEstimate(f32 base, f32 exp);
+extern f32 sqrtf(f32 x);
+extern void Sfx_SetObjectSfxVolume(f32 ratio, s16* obj, int sfx, int vol);
+extern f32 lbl_803E2C74;
+extern f32 lbl_803E2C30;
+extern f32 lbl_803E2C34;
+extern f32 lbl_803E2C10;
+extern f32 lbl_803E2C14;
+extern f32 lbl_803E2C18;
+extern f32 lbl_803E2C48;
+extern f32 lbl_803E2C78;
+extern f32 lbl_803E2C50;
+extern f32 lbl_803E2C70;
+extern f32 lbl_803E2C54;
+extern f32 lbl_803E2C38;
+extern f32 lbl_803E2C40;
+extern f32 lbl_803E2C6C;
+extern void fn_80292E20(u32 angle, f32* s, f32* c);
+extern int objBboxFn_800640cc(f32* from, f32* to, f32 h, int n, void* buf, s16* obj, u8 p7, int p8, int p9, int p10);
+extern int fn_80295C88(void* player);
+extern void* Obj_GetPlayerObject(void);
+extern f32 lbl_803E2B3C;
+extern f32 lbl_803E2B48;
+extern f32 lbl_803E2B50;
+extern f32 lbl_803DBCE8;
+extern f32 lbl_803DDA70;
+extern f32 lbl_803E2BAC;
+extern f32 lbl_803E2BB0;
+extern f32 lbl_803E2BB4;
+extern char lbl_803DBCF0;
+extern int Curve_AdvanceAlongPath(int p, f32 v);
+extern u8 lbl_8031FB48[];
+extern f32 lbl_803E2BA0;
+extern f32 lbl_803E2BA4;
+extern f32 lbl_803E2BBC;
+extern f32 lbl_803E2BC0;
+extern f32 lbl_803E2BC4;
+extern f32 lbl_803E2BC8;
+extern f32 lbl_803E2BCC;
+extern f32 lbl_803E2BD0;
+extern f32 lbl_803E2BD8;
+extern f32 lbl_803E2BDC;
+extern f32 lbl_803E2BE0;
+extern f32 lbl_803E2C44;
+extern f32 lbl_803E2C4C;
+extern f32 lbl_803E2C5C;
+extern f32 lbl_803E2C60;
+extern f32 lbl_803E2C64;
+extern f32 lbl_803E2C68;
+extern char lbl_803DBCF8;
+extern void fn_8014CD1C(s16* obj, u8* state, int p3, f32 a, f32 b, int p6);
+
 void FUN_80157004(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9, int param_10)
@@ -151,17 +303,6 @@ void smallbasket_nop(void)
 
 void smallbasket_stopLoopSfx(int x) { Sfx_StopFromObject(x, 0x3e8); }
 
-extern f32 lbl_803E2CC0;
-extern f32 lbl_803E2CC4;
-extern f32 lbl_803E2CC8;
-extern f32 lbl_803E2CCC;
-extern f32 lbl_803E2CD0;
-extern f32 lbl_803E2CD4;
-extern u8 Obj_IsLoadingLocked(void);
-extern int* Obj_AllocObjectSetup(int p1, int p2);
-extern int* Obj_SetupObject(int* obj, int p1, int p2, int p3, int p4);
-extern void firepipe_setLinkedUpdateFlag(int* obj);
-
 void smallbasket_spawnLinkedFirepipe(int* obj)
 {
     int* child;
@@ -190,39 +331,6 @@ void smallbasket_spawnLinkedFirepipe(int* obj)
         }
     }
 }
-
-extern f32 lbl_803E2B18;
-extern f32 lbl_803E2B38;
-extern f32 lbl_803E2B40;
-extern f32 lbl_803E2B4C;
-extern f32 lbl_803E2B64;
-extern f32 lbl_803E2B68;
-extern f32 lbl_803E2B6C;
-extern f32 lbl_803E2B70;
-extern f32 lbl_803E2B74;
-extern f32 lbl_803E2B78;
-extern f32 lbl_803E2C3C;
-extern f32 lbl_803E2C58;
-extern f32 lbl_803E2C7C;
-extern f32 lbl_803E2C80;
-extern f32 lbl_803E2C84;
-extern f32 lbl_803E2C88;
-extern f32 lbl_803E2C8C;
-extern f32 lbl_803E2C90;
-extern f32 lbl_803E2C94;
-extern u8 lbl_8031FB70[];
-extern u8 lbl_8031FC2C[];
-extern int fn_8014D08C(int* obj, int* st, int p3, f32 f, int p5, int p6);
-extern int* allocModelStruct2(int p1, int p2);
-extern void tailFn_80026c38(int* p, f32 a, f32 b, f32 c);
-extern int baddieAfterUpdateBonesCb(void);
-extern f32 lbl_803E2CBC;
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern u8 lbl_8031FD48[];
-
-extern void smallbasket_playReactionEffects(int* obj, int* st);
-
-extern f32 lbl_803E2CB8;
 
 void smallbasket_handleReactionEvent(int obj, int* st, int p3, int cmd, int p5, int sub)
 {
@@ -446,13 +554,6 @@ void smallbasket_initScaledVariantState(int* obj, int* st)
     ObjHits_EnableObject((int)obj);
 }
 
-extern f32 lbl_803E2C1C;
-extern f32 lbl_803E2C20;
-extern f32 lbl_803E2C24;
-extern f32 fn_802943F4(f32 a);
-extern void PSMTXRotRad(f32* mtx, int axis, f32 angle);
-extern void PSMTXMultVecSR(f32 * mtx, f32 * in, f32 * out);
-
 void smallbasket_rotateVectorYaw(int p1, int p2, f32* vec, f32 f1, int p5, u32 int_deg)
 {
     f32 mtx[12];
@@ -590,21 +691,6 @@ void fn_80157CDC(int obj, int p2)
     }
 }
 
-extern f32 lbl_803E2B98;
-extern f32 lbl_803E2BB8;
-extern f32 lbl_803E2BD4;
-extern f32 lbl_803E2BE4;
-extern f32 lbl_803E2BE8;
-extern f32 lbl_803E2BEC;
-extern f32 lbl_803E2BF0;
-extern f32 lbl_803E2BF4;
-extern f32 lbl_803E2BF8;
-extern f32 lbl_803E2BFC;
-extern f32 lbl_803E2C00;
-extern f32 lbl_803E2C04;
-extern f32 lbl_803E2C08;
-extern f32 lbl_803E2C0C;
-
 /* smallbasket_initModelVariantState: smallbasket variant init. Dispatches on obj->modelType
  * (offset 0x46): values 0x6a2/0x6a3/0x6a4 each pick a different float +
  * byte tuple to seed state[0x2a8..0x322]. The trailing block sets
@@ -671,10 +757,6 @@ void smallbasket_initModelVariantState(s16* obj, u8* state)
     ;
 }
 
-extern int fn_8014C11C(int obj, f32 dist, u8 flag, int maxCount, void* buf);
-extern int lbl_803AC4A8[];
-extern f32 lbl_803E2B80;
-
 /* Nearby-object scan. Asks fn_8014C11C for up to 40 objects
  * within lbl_803E2B80, walks the result array of (obj, ?) pairs, and if
  * any entry's modelType is 0x6a3 with state[0x2dc] bit 0x20000000 set
@@ -710,14 +792,6 @@ void smallbasket_checkNearbyActiveBasket(int obj, u8* state)
 }
 #pragma dont_inline reset
 
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern f32 lbl_803E2C98;
-extern f32 lbl_803E2C9C;
-extern f32 lbl_803E2CA0;
-extern f32 lbl_803E2CA4;
-extern f32 lbl_803E2CA8;
-
 #pragma dont_inline on
 void fn_8015A52C(s16* obj)
 {
@@ -743,9 +817,6 @@ void fn_8015A52C(s16* obj)
     }
 }
 #pragma dont_inline reset
-
-extern f32 lbl_803E2B84;
-extern f32 lbl_803E2B88;
 
 void fn_80157B58(int* obj, u8* state)
 {
@@ -781,11 +852,6 @@ void fn_80157B58(int* obj, u8* state)
         Sfx_PlayFromObject((int)obj, 0x4ae);
     }
 }
-
-extern void fn_8014CF7C(int* obj, u8* state, f32 x, f32 z, int p5, int p6);
-extern u8 lbl_803DBD28[4];
-extern u8 lbl_803DBD2C[4];
-extern u8 lbl_803DBD30[4];
 
 void fn_8015A924(int* obj, u8* state)
 {
@@ -857,18 +923,6 @@ void fn_8015A924(int* obj, u8* state)
                 *(f32*)(*(int*)&((BaddieState*)state)->trackedObj + 0x14), lbl_803DBD30[*(u16*)(state + 0x338)], 0);
     smallbasket_playReactionEffects(obj, (int*)state);
 }
-
-extern u32 getAngle(f32 dx, f32 dz);
-extern f32 timeDelta;
-extern f32 lbl_803E2B2C;
-extern f32 lbl_803E2B28;
-extern f32 lbl_803E2B34;
-extern f32 lbl_803E2B30;
-extern f32 lbl_803E2B44;
-extern f32 lbl_803E2B60;
-extern f32 lbl_803DBCE0;
-extern f32 lbl_803DBCE4;
-extern f32 lbl_803DBCEC;
 
 void fn_80157558(s16* obj, u8* state)
 {
@@ -976,9 +1030,6 @@ void fn_80157558(s16* obj, u8* state)
         }
     }
 }
-
-extern void fn_8001FE90(void);
-extern f32 lbl_803E2BA8;
 
 typedef struct
 {
@@ -1137,35 +1188,6 @@ void fn_80159284(int* obj, u8* state)
     fn_80157CDC((int)obj, (int)state);
 }
 
-extern int objCreateLight(int a, int b);
-extern void modelLightStruct_setLightKind();
-extern void modelLightStruct_setPosition();
-extern void modelLightStruct_setDiffuseColor();
-extern void modelLightStruct_setSpecularColor();
-extern void modelLightStruct_setDistanceAttenuation();
-extern void lightSetField4D();
-extern void modelLightStruct_setEnabled();
-extern void modelLightStruct_startColorFade();
-extern void modelLightStruct_setAffectsAabbLightSelection();
-extern void sidekickToy_accelerateTowardTarget3D(s16* obj, f32 x, f32 y, f32 z, f32 a, f32 b, f32 c, f32 spd);
-extern f32 powfBitEstimate(f32 base, f32 exp);
-extern f32 sqrtf(f32 x);
-extern void Sfx_SetObjectSfxVolume(f32 ratio, s16* obj, int sfx, int vol);
-extern f32 lbl_803E2C74;
-extern f32 lbl_803E2C30;
-extern f32 lbl_803E2C34;
-extern f32 lbl_803E2C10;
-extern f32 lbl_803E2C14;
-extern f32 lbl_803E2C18;
-extern f32 lbl_803E2C48;
-extern f32 lbl_803E2C78;
-extern f32 lbl_803E2C50;
-extern f32 lbl_803E2C70;
-extern f32 lbl_803E2C54;
-extern f32 lbl_803E2C38;
-extern f32 lbl_803E2C40;
-extern f32 lbl_803E2C6C;
-
 typedef struct
 {
     u8 pad[6];
@@ -1285,15 +1307,6 @@ void fn_80159FCC(s16* obj, u8* state)
         Sfx_PlayFromObject((int)obj, 0x23d);
     }
 }
-
-extern void fn_80292E20(u32 angle, f32* s, f32* c);
-extern int objBboxFn_800640cc(f32* from, f32* to, f32 h, int n, void* buf, s16* obj, u8 p7, int p8, int p9, int p10);
-extern int fn_80295C88(void* player);
-extern void* Obj_GetPlayerObject(void);
-extern f32 lbl_803E2B3C;
-extern f32 lbl_803E2B48;
-extern f32 lbl_803E2B50;
-extern f32 lbl_803DBCE8;
 
 void fn_80157004(s16* obj, u8* state)
 {
@@ -1473,11 +1486,6 @@ void fn_80157004(s16* obj, u8* state)
         ((GameObject*)obj)->anim.rotZ = ((BaddieState*)state)->spawnRotZ;
     }
 }
-
-extern f32 lbl_803DDA70;
-extern f32 lbl_803E2BAC;
-extern f32 lbl_803E2BB0;
-extern f32 lbl_803E2BB4;
 
 void fn_80157EBC(int obj, u8* state, u8* attacker, int cmd, int p5, int damage)
 {
@@ -1715,20 +1723,6 @@ typedef struct
     u8 pad1C[4];
 } BasketDescriptor;
 
-extern char lbl_803DBCF0;
-extern int Curve_AdvanceAlongPath(int p, f32 v);
-extern u8 lbl_8031FB48[];
-extern f32 lbl_803E2BA0;
-extern f32 lbl_803E2BA4;
-extern f32 lbl_803E2BBC;
-extern f32 lbl_803E2BC0;
-extern f32 lbl_803E2BC4;
-extern f32 lbl_803E2BC8;
-extern f32 lbl_803E2BCC;
-extern f32 lbl_803E2BD0;
-extern f32 lbl_803E2BD8;
-extern f32 lbl_803E2BDC;
-
 void fn_80158494(s16* obj, u8* state)
 {
     extern char lbl_8031FAE8[];
@@ -1949,8 +1943,6 @@ void fn_80158494(s16* obj, u8* state)
     fn_80157CDC((int)obj, (int)state);
 }
 
-extern f32 lbl_803E2BE0;
-
 void fn_80158C2C(s16* obj, u8* state)
 {
     extern char lbl_8031FAE8[];
@@ -2166,15 +2158,6 @@ void fn_80158C2C(s16* obj, u8* state)
     }
     fn_80157CDC((int)obj, (int)state);
 }
-
-extern f32 lbl_803E2C44;
-extern f32 lbl_803E2C4C;
-extern f32 lbl_803E2C5C;
-extern f32 lbl_803E2C60;
-extern f32 lbl_803E2C64;
-extern f32 lbl_803E2C68;
-extern char lbl_803DBCF8;
-extern void fn_8014CD1C(s16* obj, u8* state, int p3, f32 a, f32 b, int p6);
 
 void fn_80159958(s16* obj, u8* state)
 {

@@ -107,6 +107,10 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 
+extern u8 lbl_80329514[];
+extern void OSReport(const char* fmt, ...);
+extern f32 timeDelta;
+
 undefined4
 FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -519,8 +523,6 @@ void FUN_80204320(int param_1, int param_2, int param_3, int param_4, int param_
 
 void fn_80204320(int obj);
 
-extern u8 lbl_80329514[];
-
 void doorswitch_render(void)
 {
 }
@@ -543,19 +545,11 @@ int doorswitch_getExtraSize(void) { return 0x0; }
 int doorswitch_getObjectTypeId(void) { return 0x0; }
 int dfpseqpoint_getExtraSize(void);
 
-extern void OSReport(const char* fmt, ...);
 void doorswitch_free(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 void doorswitch_update(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 void doorswitch_init(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 
 int DrakorEnergy_setScale(int* obj);
-
-extern f32 timeDelta;
-
-#include "main/dll/baddie/chuka.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 

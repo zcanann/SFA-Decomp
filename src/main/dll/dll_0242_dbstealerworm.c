@@ -125,6 +125,40 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 
+extern void Stack_Free(int* stack);
+extern void Obj_FreeObject(int obj);
+extern void** gBaddieControlInterface;
+extern int* gPlayerInterface;
+extern f32 lbl_803E62A8;
+extern f32 lbl_803E62FC;
+extern u8 lbl_80329514[];
+extern void* memset(void* dst, int v, int n);
+extern f32 lbl_803E6390;
+extern int gDBStealerWormStateHandlersA[];
+extern void DBstealerwo_setFuncPtrs_80203c78(void);
+extern void OSReport(const char* fmt, ...);
+extern f32 lbl_803E62BC;
+extern f32 timeDelta;
+extern int gDBStealerWormStateHandlersB[];
+extern int dbstealerworm_stateHandlerA02();
+extern int dbstealerworm_stateHandlerA04();
+extern int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t);
+extern int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t);
+extern int dbstealerworm_stateHandlerA0A();
+extern int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t);
+extern int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t);
+extern int dbstealerworm_stateHandlerA0D();
+extern int dbstealerworm_stateHandlerA0E();
+extern int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
+extern int dbstealerworm_stateHandlerB05();
+extern int dbstealerworm_stateHandlerB06();
+extern void fn_80202EF0(int obj, int p2);
+extern void unlockLevel(int a, int b, int c);
+extern f32 lbl_803E62F4;
+extern f32 lbl_803E62E8;
+extern f32 lbl_803E62EC;
+extern f64 lbl_803E63F0;
+
 int dbstealerworm_stateHandlerB04(int obj, int p)
 {
     extern int* gPlayerInterface;
@@ -885,15 +919,6 @@ void dbstealerworm_release(void)
 
 void dbholecontrol1_hitDetect(void);
 
-extern void Stack_Free(int* stack);
-extern void Obj_FreeObject(int obj);
-extern void** gBaddieControlInterface;
-extern int* gPlayerInterface;
-extern f32 lbl_803E62A8;
-extern f32 lbl_803E62FC;
-extern u8 lbl_80329514[];
-extern void* memset(void* dst, int v, int n);
-
 void dbstealerworm_init(int* obj, u8* def, int param3)
 {
     extern undefined4 ObjMsg_AllocQueue(); /* #57 */
@@ -961,10 +986,6 @@ int dbholecontrol1_getExtraSize(void);
 
 s16 DBstealerworm_setScale(int* obj) { return ((BaddieState*)((int**)obj)[0xb8 / 4])->controlMode; }
 
-extern f32 lbl_803E6390;
-
-extern int gDBStealerWormStateHandlersA[];
-
 void dbstealerworm_hitDetect(int obj)
 {
     int* inner = ((GameObject*)obj)->extra;
@@ -973,10 +994,7 @@ void dbstealerworm_hitDetect(int obj)
 
 void GCRobotBlast_init(int obj, s8* p);
 
-extern void DBstealerwo_setFuncPtrs_80203c78(void);
 void dbstealerworm_initialise(void) { DBstealerwo_setFuncPtrs_80203c78(); }
-
-extern void OSReport(const char* fmt, ...);
 
 int dbstealerworm_stateHandlerB00(int p1, int p2)
 {
@@ -1007,8 +1025,6 @@ int dbstealerworm_stateHandlerB03(int p1, int p2)
     return 0;
 }
 
-extern f32 lbl_803E62BC;
-
 int dbstealerworm_stateHandlerB01(int p1, int p2)
 {
     GroundBaddieState* state = ((GameObject*)p1)->extra;
@@ -1022,8 +1038,6 @@ int dbstealerworm_stateHandlerB01(int p1, int p2)
 }
 
 void fn_80204B6C(int p1);
-
-extern f32 timeDelta;
 
 int dbstealerworm_stateHandlerA00(int obj, int p2)
 {
@@ -1122,23 +1136,7 @@ int dbstealerworm_func0B(int obj, u8 msg, int* out)
     return result;
 }
 
-extern int gDBStealerWormStateHandlersB[];
-extern int dbstealerworm_stateHandlerA02();
-extern int dbstealerworm_stateHandlerA04();
-extern int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerA0A();
-extern int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerA0D();
-extern int dbstealerworm_stateHandlerA0E();
-extern int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
-extern int dbstealerworm_stateHandlerB05();
-extern int dbstealerworm_stateHandlerB06();
-
 void DBstealerwo_setFuncPtrs_80203c78(void);
-
-extern void fn_80202EF0(int obj, int p2);
 
 #pragma dont_inline on
 void fn_80203000(int obj, int param2)
@@ -1165,10 +1163,6 @@ void fn_80203000(int obj, int param2)
     *(u8*)(state + 0x14) = 0;
 }
 #pragma dont_inline reset
-
-extern void unlockLevel(int a, int b, int c);
-
-extern f32 lbl_803E62F4;
 
 int dbstealerworm_stateHandlerA04(int obj, int param2)
 {
@@ -1205,9 +1199,6 @@ int dbstealerworm_stateHandlerA04(int obj, int param2)
     return 0;
 }
 
-extern f32 lbl_803E62E8;
-extern f32 lbl_803E62EC;
-
 int dbstealerworm_stateHandlerA0E(int obj, int param2)
 {
     DbStealerwormControl* sub = (DbStealerwormControl*)(*(GroundBaddieState**)&((GameObject*)obj)->extra)->control;
@@ -1235,8 +1226,6 @@ int dbstealerworm_stateHandlerA0E(int obj, int param2)
     }
     return 0;
 }
-
-extern f64 lbl_803E63F0;
 
 void fn_80202EF0(int obj, int p2)
 {
@@ -3125,11 +3114,6 @@ int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t)
 }
 
 void dbegg_update(int obj);
-
-#include "main/dll/baddie/chuka.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 

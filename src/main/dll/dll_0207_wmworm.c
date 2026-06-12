@@ -1,5 +1,18 @@
 /* DLL 0x0207 — wmworm (WarpZone Module worm enemy). TU: 0x801F3C2C–0x801F3F18. */
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
+#include "main/game_object.h"
+#include "main/dll/LGT/dll_0207_wmworm.h"
+
+extern undefined4 FUN_8001753c();
+extern void* Obj_GetPlayerObject(void);
+extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern EffectInterface** gPartfxInterface;
+extern byte framesThisStep;
+extern f32 lbl_803E5E58;
+extern f32 lbl_803E5E5C;
+extern f32 lbl_803E5E60;
+extern f32 timeDelta;
 
 void wmworm_hitDetect(void)
 {
@@ -14,21 +27,6 @@ void wmworm_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/dll/LGT/dll_0207_wmworm.h"
-
-extern undefined4 FUN_8001753c();
-
-extern void* Obj_GetPlayerObject(void);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
-extern EffectInterface** gPartfxInterface;
-extern byte framesThisStep;
-extern f32 lbl_803E5E58;
-extern f32 lbl_803E5E5C;
-extern f32 lbl_803E5E60;
-extern f32 timeDelta;
 
 #pragma peephole on
 void wmworm_update(GameObject* obj)

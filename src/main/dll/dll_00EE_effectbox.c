@@ -43,6 +43,14 @@ STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
 
 extern void fn_8002B758(void);
 
+extern void fn_8002B860(int obj);
+extern f32 lbl_803E3508;
+extern void* getTrickyObject(void);
+extern void fn_80295918(f32 amount, int obj, int p3);
+extern f32 lbl_803E350C;
+extern f32 lbl_803E3510;
+extern f32 lbl_803E3514;
+
 void effectbox_free(void)
 {
     fn_8002B758();
@@ -59,8 +67,6 @@ void effectbox_release(void)
 void effectbox_initialise(void)
 {
 }
-
-extern void fn_8002B860(int obj);
 
 void effectbox_init(int obj, int* def)
 {
@@ -87,8 +93,6 @@ void effectbox_init(int obj, int* def)
 int effectbox_getExtraSize(void) { return 0x0; }
 int effectbox_getObjectTypeId(void) { return 0x0; }
 
-extern f32 lbl_803E3508;
-
 void effectbox_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -96,12 +100,6 @@ void effectbox_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void fn_80174588(int obj, PushableState* p2);
-
-extern void* getTrickyObject(void);
-extern void fn_80295918(f32 amount, int obj, int p3);
-extern f32 lbl_803E350C;
-extern f32 lbl_803E3510;
-extern f32 lbl_803E3514;
 
 void effectbox_update(int obj)
 {

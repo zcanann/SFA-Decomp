@@ -28,6 +28,12 @@ typedef struct VFPLevelControlSetup
     s16 areaMode;
 } VFPLevelControlSetup;
 
+extern int coordsToMapCell(f32 x, f32 z);
+extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit,
+                                  int latchBit, int musicId);
+extern void skyFn_80088e54(int mode, f32 brightness);
+extern f32 lbl_803E6060;
+
 int vfplevelcontrol_getExtraSize(void) { return 0x1c; }
 
 int vfplevelcontrol_getObjectTypeId(void) { return 0x0; }
@@ -39,12 +45,6 @@ void vfplevelcontrol_render(void)
 void vfplevelcontrol_hitDetect(void)
 {
 }
-
-extern int coordsToMapCell(f32 x, f32 z);
-extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit,
-                                  int latchBit, int musicId);
-extern void skyFn_80088e54(int mode, f32 brightness);
-extern f32 lbl_803E6060;
 
 void fn_801F9804(int obj);
 

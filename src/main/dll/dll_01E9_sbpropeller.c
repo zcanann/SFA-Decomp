@@ -39,6 +39,9 @@ extern f32 lbl_803E581C;
 extern f32 lbl_803E5820;
 extern f32 lbl_803E5824;
 
+extern u32 lbl_803DDC40;
+extern void objRenderFn_8003b8f4(f32);
+
 void SB_Propeller_update(int obj)
 {
     ObjAnimComponent* objAnim;
@@ -184,12 +187,9 @@ void SB_ShipHead_render(int obj, int param_2, int param_3, int param_4, int para
 int SB_Propeller_getExtraSize(void) { return 0x10; }
 int SB_ShipHead_getExtraSize(void);
 
-extern u32 lbl_803DDC40;
 u32 fn_801E2570(void) { return lbl_803DDC40; }
 
 u8 SB_Galleon_render2(int* obj);
-
-extern void objRenderFn_8003b8f4(f32);
 
 void SB_Propeller_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

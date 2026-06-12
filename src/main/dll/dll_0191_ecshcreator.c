@@ -4,6 +4,14 @@
 #include "main/objseq.h"
 
 #include "main/dll/mmshrine/ecsh_shrine_state.h"
+#include "main/audio/sfx_ids.h"
+#include "main/game_ui_interface.h"
+#include "main/obj_placement.h"
+#include "main/objanim.h"
+#include "main/dll/mmshrine/shrine1C2.h"
+#include "main/dll/mmshrine/torch1C1.h"
+#include "main/resource.h"
+#include "main/screen_transition.h"
 
 extern void* FUN_80017aa4();
 extern uint FUN_80017ae8();
@@ -15,6 +23,22 @@ extern f32 lbl_803E5C10;
 
 #pragma scheduling on
 #pragma peephole on
+extern undefined4 FUN_80006824();
+extern undefined4 FUN_80006b0c();
+extern undefined4 FUN_80006b14();
+extern uint FUN_80017690();
+extern undefined4 FUN_80017830();
+extern undefined4 DAT_803dc070;
+extern void Sfx_PlayFromObject(s16* obj, int sfxId);
+extern int GameBit_Get(int bit);
+extern f32 lbl_803E4FF8;
+extern int objCreateLight(int a, int b);
+extern u8* mmAlloc(int size, int tag, int p);
+extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
+extern u8 Obj_IsLoadingLocked(void);
+extern u8 framesThisStep;
+extern f32 lbl_803E5000;
+
 void FUN_801c5990(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9, int param_10)
@@ -78,33 +102,6 @@ void FUN_801c5990(undefined8 param_1, undefined8 param_2, double param_3, undefi
 void fn_801C5990(MmShrineAnimObj* obj);
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/game_object.h"
-#include "main/objseq.h"
-
-#include "main/audio/sfx_ids.h"
-#include "main/game_ui_interface.h"
-#include "main/obj_placement.h"
-#include "main/game_object.h"
-#include "main/objanim.h"
-#include "main/dll/mmshrine/shrine1C2.h"
-#include "main/dll/mmshrine/torch1C1.h"
-#include "main/objseq.h"
-#include "main/resource.h"
-#include "main/screen_transition.h"
-
-#include "main/dll/mmshrine/ecsh_shrine_state.h"
-
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017830();
-
-extern undefined4 DAT_803dc070;
-
-extern void Sfx_PlayFromObject(s16* obj, int sfxId);
-extern int GameBit_Get(int bit);
 
 #pragma scheduling off
 #pragma peephole off
@@ -206,8 +203,6 @@ int ecsh_creator_getExtraSize(void) { return 0xa; }
 int ecsh_creator_getObjectTypeId(void) { return 0x0; }
 int gpsh_shrine_getExtraSize(void);
 
-extern f32 lbl_803E4FF8;
-
 void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objRenderFn_8003b8f4(f32); /* #57 */
@@ -228,13 +223,6 @@ void ecsh_creator_init(s16* obj, s8* def)
     inner[4] = 2;
     inner[4] += (u8)def[0x20];
 }
-
-extern int objCreateLight(int a, int b);
-
-extern u8* mmAlloc(int size, int tag, int p);
-extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
-extern u8 Obj_IsLoadingLocked(void);
-extern u8 framesThisStep;
 
 void ecsh_creator_update(s16* obj)
 {
@@ -297,5 +285,3 @@ void ecsh_creator_update(s16* obj)
         sub[1] = 0;
     }
 }
-
-extern f32 lbl_803E5000;

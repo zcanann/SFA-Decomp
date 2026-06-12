@@ -66,6 +66,10 @@ typedef struct TrickyCurveBurstFxParams
     f32 zOffset;
 } TrickyCurveBurstFxParams;
 
+extern void fn_80206C18(int* obj);
+extern void fn_80206968(int* obj);
+extern int ObjHits_GetPriorityHit(int obj, undefined4* outHitObject, int* outSphereIndex, uint* outHitVolume);
+
 void TrickyCurve_updateBurstTrigger(int obj)
 {
     u8* state;
@@ -599,9 +603,6 @@ int TrickyCurve_getExtraSize(void) { return 0x14; }
 int TrickyCurve_getObjectTypeId(void) { return 0x0; }
 int sfxplayer_getExtraSize(void);
 
-extern void fn_80206C18(int* obj);
-extern void fn_80206968(int* obj);
-
 void TrickyCurve_update(int* obj)
 {
     u8* inner = ((GameObject*)obj)->extra;
@@ -645,10 +646,3 @@ void TrickyCurve_init(int* obj, u8* def)
     ((TrickyCurveObjState*)state)->unk6 = 0;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
 }
-
-#include "main/mapEvent.h"
-#include "main/dll/TrickyCurve.h"
-#include "main/dll/sfxplayer.h"
-#include "main/game_object.h"
-
-extern int ObjHits_GetPriorityHit(int obj, undefined4* outHitObject, int* outSphereIndex, uint* outHitVolume);

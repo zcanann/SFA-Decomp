@@ -18,6 +18,17 @@ typedef struct MagicmakerPlacement
 extern int randomGetRange(int min, int max);
 extern void objRenderFn_8003b8f4(f32 scale);
 
+extern u8 Obj_IsLoadingLocked(void);
+extern void GameBit_Set(int eventId, int value);
+extern int* ObjGroup_GetObjects(int group, int* countOut);
+extern char* Obj_AllocObjectSetup(int size, int typeId);
+extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
+extern void hitDetectFn_80097070(char* obj, f32 f, int a, int b, int c, int d);
+extern u16 lbl_80325CE8[];
+extern f32 lbl_803E4D8C;
+extern f32 lbl_803E4D88;
+extern f32 lbl_803E4D98;
+
 void magicmaker_free(void)
 {
 }
@@ -39,16 +50,6 @@ void magicmaker_initialise(void)
 }
 
 void dimbosscrackpar_hitDetect(void);
-
-extern u8 Obj_IsLoadingLocked(void);
-extern void GameBit_Set(int eventId, int value);
-extern int* ObjGroup_GetObjects(int group, int* countOut);
-extern char* Obj_AllocObjectSetup(int size, int typeId);
-extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
-extern void hitDetectFn_80097070(char* obj, f32 f, int a, int b, int c, int d);
-extern u16 lbl_80325CE8[];
-extern f32 lbl_803E4D8C;
-extern f32 lbl_803E4D88;
 
 void magicmaker_update(int obj)
 {
@@ -118,8 +119,6 @@ void magicmaker_update(int obj)
         }
     }
 }
-
-extern f32 lbl_803E4D98;
 
 int magicmaker_getExtraSize(void) { return 0x0; }
 int magicmaker_getObjectTypeId(void) { return 0x0; }

@@ -8,6 +8,18 @@ extern undefined4 FUN_8003b818();
 
 #pragma scheduling on
 #pragma peephole on
+extern f32 lbl_803E5150;
+extern void objRenderFn_8003b8f4(f32);
+extern void Music_Trigger(int track, int param);
+extern int GameBit_Set(int eventId, int value);
+extern int mapGetDirIdx(int mapId);
+extern void unlockLevel(int a, int b, int c);
+extern void skyFn_80088c94(int a, int b);
+extern void getEnvfxAct(int a, int b, int c, int d);
+extern ModgfxInterface** gModgfxInterface;
+extern void* Obj_GetPlayerObject(void);
+extern void fn_80296518(void* player, int a, int b);
+
 void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     if (visible != 0)
@@ -34,28 +46,17 @@ void nwsh_levcon_initialise(void)
 int nwsh_levcon_getExtraSize(void) { return 0x0; }
 int nwsh_levcon_getObjectTypeId(void) { return 0x0; }
 
-extern f32 lbl_803E5150;
-extern void objRenderFn_8003b8f4(f32);
-
 void nwsh_levcon_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E5150);
 }
 
-extern void Music_Trigger(int track, int param);
-extern int GameBit_Set(int eventId, int value);
-
 void nwsh_levcon_free(int obj)
 {
     Music_Trigger(6, 0);
     GameBit_Set(3837, 0);
 }
-
-extern int mapGetDirIdx(int mapId);
-extern void unlockLevel(int a, int b, int c);
-extern void skyFn_80088c94(int a, int b);
-extern void getEnvfxAct(int a, int b, int c, int d);
 
 void nwsh_levcon_update(int* obj)
 {
@@ -81,11 +82,6 @@ void nwsh_levcon_init(int* obj)
     GameBit_Set(0xea2, 1);
     GameBit_Set(0xefd, 1);
 }
-
-extern ModgfxInterface** gModgfxInterface;
-
-extern void* Obj_GetPlayerObject(void);
-extern void fn_80296518(void* player, int a, int b);
 
 int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

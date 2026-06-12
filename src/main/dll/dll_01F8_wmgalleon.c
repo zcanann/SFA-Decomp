@@ -5,6 +5,10 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
+#include "main/dll/WC/WClaser.h"
+#include "main/objlib.h"
+#include "main/objseq.h"
+#include "main/screen_transition.h"
 
 /* WM_ObjCreator per-object extra state (four s16 slots). */
 typedef struct WmObjCreatorState
@@ -76,6 +80,16 @@ extern f32 lbl_803E5CE8;
 #define OBJ_U8(obj, offset) (*(u8 *)((u8 *)(obj) + (offset)))
 #define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
 #define OBJ_S32(obj, offset) (*(s32 *)((u8 *)(obj) + (offset)))
+
+extern int Obj_GetPlayerObject(void);
+extern void objSetSlot(int* obj, int slot);
+extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);
+extern void fn_80065574(int a, int* obj, int b);
+extern void fn_80296BBC(int player);
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern f32 lbl_803E5CEC;
+extern f32 lbl_803E5CF0;
+extern f32 lbl_803E5CF4;
 
 void WM_Galleon_hitDetect(void)
 {
@@ -184,28 +198,6 @@ int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-#include "main/dll/WC/WClaser.h"
-#include "main/dll/WC/dll_01F9_wmobjcreator.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/mapEventTypes.h"
-#include "main/obj_placement.h"
-#include "main/objlib.h"
-#include "main/objseq.h"
-#include "main/screen_transition.h"
-
-extern int Obj_GetPlayerObject(void);
-extern void objSetSlot(int* obj, int slot);
-extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);
-extern void fn_80065574(int a, int* obj, int b);
-extern void fn_80296BBC(int player);
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
-extern f32 lbl_803E5CEC;
-extern f32 lbl_803E5CF0;
-extern f32 lbl_803E5CF4;
 
 #define OBJ_U8(obj, offset) (*(u8 *)((u8 *)(obj) + (offset)))
 #define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))

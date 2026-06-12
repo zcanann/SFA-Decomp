@@ -5,6 +5,14 @@
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/dll/dll_00CA_mediumbasket.h"
 #include "main/dll/tricky_state.h"
+#include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/dll/enemy_state.h"
+#include "main/dll/path_control_interface.h"
+#include "main/dll/projswitch.h"
+#include "main/mapEventTypes.h"
+#include "main/resource.h"
 
 typedef struct BaddieAfterUpdateBonesCbState
 {
@@ -121,6 +129,94 @@ extern f32 lbl_803E25D0;
 extern f32 lbl_803E25D4;
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
+
+extern f32 lbl_803E2598;
+extern void playerTailFn_80026b3c(int* p1, int p2, int p3, void* p4);
+extern void fn_8015983C(void);
+extern u8 baddieTargetFn_8014a150(int obj, u8* state, f32* pos, void* dataOffset);
+extern f32 lbl_803E25DC;
+extern int getAngle(f32 x, f32 z);
+extern uint lbl_8031DBF0[];
+extern uint lbl_8031DC10[];
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern void fn_80026C30(int* obj, int flag);
+extern f32 lbl_803E25B8;
+extern f32 lbl_803E25EC;
+extern f32 lbl_803E25F0;
+extern f32 lbl_803E25F4;
+extern int playerIsDisguised(int* p);
+extern void baddieFn_8014a304(int* a, int* s, f32 v);
+extern f32 lbl_803E25D8;
+extern f32 PSVECMag(f32 * v);
+extern void PSVECNormalize(f32 * src, f32 * dst);
+extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * c);
+extern f32 PSVECDotProduct(f32 * a, f32 * b);
+extern f32 fn_80291FF4(f32 v);
+extern void PSMTXRotAxisRad(void* mtx, f32* axis, f32 angle);
+extern void PSMTXMultVecSR(void* mtx, f32* src, f32* dst);
+extern f32 lbl_803E25C4;
+extern f32 lbl_803E25E8;
+extern undefined4 FUN_800305f8();
+extern undefined4 ObjHits_EnableObject();
+extern uint ObjGroup_ContainsObject();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern undefined8 ObjLink_DetachChild();
+extern undefined4 fn_80154C24();
+extern void rachnopInit(undefined4 param_1, int param_2);
+extern void baddieInit_80156188(undefined4 param_1, int param_2);
+extern void wbInit(undefined4 param_1, int param_2);
+extern f32 lbl_803DC074;
+extern f32 lbl_803DC078;
+extern f32 lbl_803E3204;
+extern f32 lbl_803E3208;
+extern f32 lbl_803E324C;
+extern f32 lbl_803E3284;
+extern f32 lbl_803E3288;
+extern f32 lbl_803E328C;
+extern void* lbl_803DDA50;
+extern f32 lbl_803E25F8;
+extern f32 lbl_803E25FC;
+extern void objRenderFn_8003b8f4(f32 f);
+extern int objCreateLight(int a, int b);
+extern void objParticleFn_80099d84(int* obj, f32 f, int kind, f32 scale, int light);
+extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
+extern int modelLightStruct_getActiveState(int light);
+extern void ModelLightStruct_free(int light);
+extern void fn_80026C54(int p);
+extern void fn_80026C88(int p);
+extern void mm_free(int p);
+extern void smallbasket_stopLoopSfx(int obj, u8* state);
+extern void Obj_FreeObject(int obj);
+extern uint GameBit_Get(int bit);
+extern int getCurUiDll(void);
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+extern int isInBounds(f32 x, f32 z);
+extern int objIsFrozen(int obj);
+extern void baddie_updateWhileFrozen(int obj, u8* state, int flag);
+extern void hudFn_8011f38c(int a);
+extern f32 lbl_803E2600;
+extern void fn_80151954(int obj, u8* state);
+extern void fn_801522E0(int obj, u8* state);
+extern void fn_80152A94(int obj, u8* state);
+extern void fn_80152EC0(int obj, u8* state);
+extern void fn_801534D8(int obj, u8* state);
+extern void fn_80153C90(int obj, u8* state);
+extern void fn_801542AC(int obj, u8* state);
+extern void mutatedEbaInit(int obj, u8* state);
+extern void mediumbasket_initWhirlpoolState(int obj, u8* state);
+extern void smallbasket_initVariantState(int obj, u8* state);
+extern void smallbasket_initScaledVariantState(int obj, u8* state);
+extern void fn_8014FF58(int obj, u8* state);
+extern void smallbasket_initModelVariantState(int obj, u8* state);
+extern void smallbasket_initTailModelState(int obj, u8* state);
+extern void* memset(void* p, int c, int n);
+extern f32 lbl_803DBC60;
+extern f32 lbl_803DBC64;
+extern f32 lbl_803DBC68;
+extern u8 lbl_8031DBD8[];
+extern u8 lbl_8031DBE4[];
+extern f32 lbl_803E25B0;
 
 void objAnimFn_8014a9f0(short* obj, int state)
 {
@@ -847,8 +943,6 @@ int enemy_getObjectTypeId(void) { return 0x14b; }
 
 void fn_8014C66C(int* obj, int x) { *(int*)((char*)((int**)obj)[0xb8 / 4] + 0x29c) = x; }
 
-extern f32 lbl_803E2598;
-
 #pragma scheduling off
 #pragma peephole off
 void fn_8014C5C0(int* obj)
@@ -901,9 +995,6 @@ void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c)
         ((ObjHitsPriorityState*)sub)->suppressOutgoingHits = 0;
     }
 }
-
-extern void playerTailFn_80026b3c(int* p1, int p2, int p3, void* p4);
-extern void fn_8015983C(void);
 
 void baddieAfterUpdateBonesCb(int obj, int* p2)
 {
@@ -1072,9 +1163,6 @@ f32 sidekickToy_accelerateTowardTarget3D(int obj, f32 tx, f32 ty, f32 tz, f32 ac
     return dy;
 }
 
-extern u8 baddieTargetFn_8014a150(int obj, u8* state, f32* pos, void* dataOffset);
-extern f32 lbl_803E25DC;
-
 /* sidekickToy_updateCurveTargetLatch: pre-curve probe + state-bit gate. If state's 0x2000 bit is
  * set, ask baddieTargetFn_8014a150 whether the target is locked on; on hit,
  * leave state[0x2dc] alone. Otherwise initialise the rom-curve walker with
@@ -1113,10 +1201,6 @@ typedef struct
     short* obj;
     s16 dist;
 } TrickyTargetRec;
-
-extern int getAngle(f32 x, f32 z);
-extern uint lbl_8031DBF0[];
-extern uint lbl_8031DC10[];
 
 int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
 {
@@ -1261,9 +1345,6 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
     return n;
 }
 
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern void fn_80026C30(int* obj, int flag);
-
 int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern void fn_8014B878(int* node, int* sub);
@@ -1344,15 +1425,6 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
     }
     return 0;
 }
-
-extern f32 lbl_803E25B8;
-extern f32 lbl_803E25EC;
-extern f32 lbl_803E25F0;
-extern f32 lbl_803E25F4;
-
-extern int playerIsDisguised(int* p);
-extern void baddieFn_8014a304(int* a, int* s, f32 v);
-extern f32 lbl_803E25D8;
 
 void fn_8014B878(int* arg1, int* sub)
 {
@@ -1487,16 +1559,6 @@ void fn_8014B878(int* arg1, int* sub)
         ((TrickyState*)sub)->flags2DC |= 0x800;
     }
 }
-
-extern f32 PSVECMag(f32 * v);
-extern void PSVECNormalize(f32 * src, f32 * dst);
-extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * c);
-extern f32 PSVECDotProduct(f32 * a, f32 * b);
-extern f32 fn_80291FF4(f32 v);
-extern void PSMTXRotAxisRad(void* mtx, f32* axis, f32 angle);
-extern void PSMTXMultVecSR(void* mtx, f32* src, f32* dst);
-extern f32 lbl_803E25C4;
-extern f32 lbl_803E25E8;
 
 void fn_8014C678(int* obj1, int* obj2, f32* vec3, u8 flag, f32 fa, f32 fb, f32 fc)
 {
@@ -1717,18 +1779,6 @@ void fn_8014CF7C(int* node, int p2, u16 p3, int p4, f32 fa, f32 fb)
     *(s16*)node = newVal;
 }
 
-#include "main/audio/sfx_ids.h"
-#include "main/obj_placement.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-#include "main/dll/enemy_state.h"
-#include "main/dll/path_control_interface.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/dll/projswitch.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
-#include "main/resource.h"
-
 typedef struct EnemyPlacement
 {
     u8 pad0[0x8 - 0x0];
@@ -1749,26 +1799,6 @@ typedef struct EnemyPlacement
     u16 unk34;
     u8 pad36[0x38 - 0x36];
 } EnemyPlacement;
-
-extern undefined4 FUN_800305f8();
-extern undefined4 ObjHits_EnableObject();
-extern uint ObjGroup_ContainsObject();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined8 ObjLink_DetachChild();
-extern undefined4 fn_80154C24();
-extern void rachnopInit(undefined4 param_1, int param_2);
-extern void baddieInit_80156188(undefined4 param_1, int param_2);
-extern void wbInit(undefined4 param_1, int param_2);
-
-extern f32 lbl_803DC074;
-extern f32 lbl_803DC078;
-extern f32 lbl_803E3204;
-extern f32 lbl_803E3208;
-extern f32 lbl_803E324C;
-extern f32 lbl_803E3284;
-extern f32 lbl_803E3288;
-extern f32 lbl_803E328C;
 
 void FUN_8014d164(double param_1, double param_2, ushort* param_3, int param_4, uint param_5,
                   char param_6)
@@ -1895,8 +1925,6 @@ void FUN_8014d4c8(double param_1, double param_2, double param_3, undefined8 par
     return;
 }
 
-extern void* lbl_803DDA50;
-
 void enemy_release(void)
 {
     if (lbl_803DDA50 != NULL)
@@ -1907,13 +1935,6 @@ void enemy_release(void)
 }
 
 void enemy_initialise(void) { if (lbl_803DDA50 == NULL) lbl_803DDA50 = Resource_Acquire(0x5a, 1); }
-
-extern f32 lbl_803E25F8;
-extern f32 lbl_803E25FC;
-extern void objRenderFn_8003b8f4(f32 f);
-extern int objCreateLight(int a, int b);
-extern void objParticleFn_80099d84(int* obj, f32 f, int kind, f32 scale, int light);
-extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
 
 void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -1967,10 +1988,6 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-extern int modelLightStruct_getActiveState(int light);
-extern void ModelLightStruct_free(int light);
-extern void fn_80026C54(int p);
-
 void enemy_hitDetect(int obj)
 {
     u8* state = ((GameObject*)obj)->extra;
@@ -1997,11 +2014,6 @@ void enemy_hitDetect(int obj)
         fn_80026C54(((EnemyState*)state)->tailSimHandle);
     }
 }
-
-extern void fn_80026C88(int p);
-extern void mm_free(int p);
-extern void smallbasket_stopLoopSfx(int obj, u8* state);
-extern void Obj_FreeObject(int obj);
 
 void enemy_free(int obj, int flag)
 {
@@ -2054,15 +2066,6 @@ void enemy_free(int obj, int flag)
     (*gExpgfxInterface)->freeSource(obj);
     ObjGroup_RemoveObject(obj, 3);
 }
-
-extern uint GameBit_Get(int bit);
-extern int getCurUiDll(void);
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
-extern int isInBounds(f32 x, f32 z);
-extern int objIsFrozen(int obj);
-extern void baddie_updateWhileFrozen(int obj, u8* state, int flag);
-extern void hudFn_8011f38c(int a);
-extern f32 lbl_803E2600;
 
 void enemy_update(int obj)
 {
@@ -2294,28 +2297,6 @@ void enemy_update(int obj)
     }
     objAnimFn_8014a9f0(obj, state);
 }
-
-extern void fn_80151954(int obj, u8* state);
-extern void fn_801522E0(int obj, u8* state);
-extern void fn_80152A94(int obj, u8* state);
-extern void fn_80152EC0(int obj, u8* state);
-extern void fn_801534D8(int obj, u8* state);
-extern void fn_80153C90(int obj, u8* state);
-extern void fn_801542AC(int obj, u8* state);
-extern void mutatedEbaInit(int obj, u8* state);
-extern void mediumbasket_initWhirlpoolState(int obj, u8* state);
-extern void smallbasket_initVariantState(int obj, u8* state);
-extern void smallbasket_initScaledVariantState(int obj, u8* state);
-extern void fn_8014FF58(int obj, u8* state);
-extern void smallbasket_initModelVariantState(int obj, u8* state);
-extern void smallbasket_initTailModelState(int obj, u8* state);
-extern void* memset(void* p, int c, int n);
-extern f32 lbl_803DBC60;
-extern f32 lbl_803DBC64;
-extern f32 lbl_803DBC68;
-extern u8 lbl_8031DBD8[];
-extern u8 lbl_8031DBE4[];
-extern f32 lbl_803E25B0;
 
 void enemy_init(int obj, u8* setup, int flag)
 {

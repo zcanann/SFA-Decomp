@@ -67,6 +67,26 @@ typedef struct MagicPlantChildSetup
 
 extern void fn_8017F334(int obj, MagicPlantSetup* setup, MagicPlantState* state);
 
+STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
+STATIC_ASSERT(sizeof(DusterState) == 0x20);
+STATIC_ASSERT(offsetof(DusterState, moveStepScale) == 0x00);
+STATIC_ASSERT(offsetof(DusterState, floorY) == 0x04);
+STATIC_ASSERT(offsetof(DusterState, settleTimer) == 0x08);
+STATIC_ASSERT(offsetof(DusterState, hitReactTimer) == 0x0a);
+STATIC_ASSERT(offsetof(DusterState, completeGameBit) == 0x0c);
+STATIC_ASSERT(offsetof(DusterState, activeGameBit) == 0x0e);
+STATIC_ASSERT(offsetof(DusterState, heldObjectId) == 0x10);
+STATIC_ASSERT(offsetof(DusterState, driftDir) == 0x18);
+STATIC_ASSERT(offsetof(DusterState, hitReactActive) == 0x19);
+STATIC_ASSERT(offsetof(DusterState, priorityHit) == 0x1a);
+STATIC_ASSERT(offsetof(DusterState, active) == 0x1b);
+STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
+STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
+STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
+extern void* gCameraInterface;
+extern void objRenderFn_8003b8f4(int obj, float arg);
+extern f32 lbl_803E3928;
+
 void fn_8017F4F4(int obj, MagicPlantSetup* setupParam, MagicPlantState* stateParam)
 {
     int hitObj;
@@ -325,25 +345,6 @@ int trickywarp_getExtraSize(void);
 int duster_getExtraSize(void);
 int curvefish_getExtraSize(void);
 
-STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
-STATIC_ASSERT(sizeof(DusterState) == 0x20);
-STATIC_ASSERT(offsetof(DusterState, moveStepScale) == 0x00);
-STATIC_ASSERT(offsetof(DusterState, floorY) == 0x04);
-STATIC_ASSERT(offsetof(DusterState, settleTimer) == 0x08);
-STATIC_ASSERT(offsetof(DusterState, hitReactTimer) == 0x0a);
-STATIC_ASSERT(offsetof(DusterState, completeGameBit) == 0x0c);
-STATIC_ASSERT(offsetof(DusterState, activeGameBit) == 0x0e);
-STATIC_ASSERT(offsetof(DusterState, heldObjectId) == 0x10);
-STATIC_ASSERT(offsetof(DusterState, driftDir) == 0x18);
-STATIC_ASSERT(offsetof(DusterState, hitReactActive) == 0x19);
-STATIC_ASSERT(offsetof(DusterState, priorityHit) == 0x1a);
-STATIC_ASSERT(offsetof(DusterState, active) == 0x1b);
-STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
-STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
-STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
-
-extern void* gCameraInterface;
-
 int MagicPlant_SeqFn(u8* obj)
 {
     (*(void (***)(u8*))gCameraInterface)[0x13](obj);
@@ -358,8 +359,6 @@ u32 MagicPlant_getObjectTypeId(MagicPlantObject* obj)
 }
 
 void StayPoint_init(u16* obj);
-
-extern void objRenderFn_8003b8f4(int obj, float arg);
 
 void MagicPlant_free(int obj, int param_2)
 {
@@ -470,8 +469,6 @@ void MagicPlant_init(int obj, MagicPlantSetup* setup)
     }
     plant->seqCallback = (void*)MagicPlant_SeqFn;
 }
-
-extern f32 lbl_803E3928;
 
 void trickywarp_update(int param_1);
 

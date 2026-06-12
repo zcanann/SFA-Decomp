@@ -1,6 +1,10 @@
 #include "main/obj_placement.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
+#include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
+#include "main/game_object.h"
+#include "main/resource.h"
 
 extern void objRenderFn_8003b8f4(f32 scale);
 extern f32 timeDelta;
@@ -19,6 +23,12 @@ STATIC_ASSERT(sizeof(DfshShrinePlacement) == 0x24);
 STATIC_ASSERT(offsetof(DfshShrinePlacement, initialYaw) == 0x18);
 STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
 
+extern f32 lbl_803E4EB8;
+extern u8 Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int objectId);
+extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, int parent);
+extern ModgfxInterface** gModgfxInterface;
+
 void dfsh_objcreator_free(void)
 {
 }
@@ -31,8 +41,6 @@ int SpiritPrize_getExtraSize(void);
 int dfsh_objcreator_getExtraSize(void) { return 0x4; }
 int dfsh_objcreator_getObjectTypeId(void) { return 0x0; }
 
-extern f32 lbl_803E4EB8;
-
 void dfsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -42,16 +50,6 @@ void dfsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/audio/sfx_ids.h"
-#include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/resource.h"
-
-extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_AllocObjectSetup(int size, int objectId);
-extern void* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, int parent);
 
 typedef struct DfshObjCreatorState
 {
@@ -127,8 +125,6 @@ void dfsh_objcreator_update(int obj)
         state->spawnTimerStep = 0;
     }
 }
-
-extern ModgfxInterface** gModgfxInterface;
 
 void dfsh_objcreator_release(void)
 {

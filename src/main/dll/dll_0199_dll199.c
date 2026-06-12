@@ -5,8 +5,40 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
+#include "main/obj_placement.h"
+#include "main/dll/dimmagicbridge.h"
+#include "main/mapEventTypes.h"
+#include "main/resource.h"
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
+
+extern f32 lbl_803E5150;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E5158;
+extern void Music_Trigger(int track, int param);
+extern int GameBit_Set(int eventId, int value);
+extern void getEnvfxAct(int a, int b, int c, int d);
+extern ModgfxInterface** gModgfxInterface;
+extern void fn_80296518(void* player, int a, int b);
+extern int getButtonsHeld(int pad);
+extern int return0_8005669C(int p);
+extern int lbl_803DB610;
+extern u32 lbl_803DDBD8;
+extern u32 GameBit_Get(int eventId);
+extern int ObjMsg_Pop(int obj, int* msgOut, int* paramOut, int* flagsOut);
+extern char* ObjGroup_FindNearestObject(int group, char* from, f32* distInOut);
+extern void Obj_FreeObject(char* obj);
+extern f32 Vec_distance(f32 * a, f32 * b);
+extern byte framesThisStep;
+extern f32 lbl_803E515C;
+extern f32 lbl_803E5160;
+extern f32 lbl_803E5164;
+extern f32 lbl_803E5168;
+extern f32 lbl_803E516C;
+extern f32 lbl_803E5170;
+extern f32 lbl_803E5174;
+extern void ObjMsg_AllocQueue(int obj, int n);
+extern u8 Obj_IsLoadingLocked(void);
 
 void dll_199_hitDetect(void)
 {
@@ -16,22 +48,11 @@ int nwsh_levcon_getExtraSize(void);
 int dll_199_getExtraSize(void) { return 0x14; }
 int dll_199_getObjectTypeId(void) { return 0x0; }
 
-extern f32 lbl_803E5150;
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E5158;
-
 void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E5158);
 }
-
-extern void Music_Trigger(int track, int param);
-extern int GameBit_Set(int eventId, int value);
-
-extern void getEnvfxAct(int a, int b, int c, int d);
-
-extern ModgfxInterface** gModgfxInterface;
 
 void dll_199_free(int* obj)
 {
@@ -40,12 +61,6 @@ void dll_199_free(int* obj)
     ((void(*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(3, 0);
     ((void(*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(2, 0);
 }
-
-extern void fn_80296518(void* player, int a, int b);
-extern int getButtonsHeld(int pad);
-extern int return0_8005669C(int p);
-extern int lbl_803DB610;
-extern u32 lbl_803DDBD8;
 
 int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {
@@ -155,36 +170,12 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-#include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/dll/dimmagicbridge.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
-#include "main/resource.h"
-
 typedef struct Dll199ObjectDef
 {
     u8 pad0[0x1A - 0x0];
     s16 unk1A;
     u8 pad1C[0x20 - 0x1C];
 } Dll199ObjectDef;
-
-extern u32 GameBit_Get(int eventId);
-extern int ObjMsg_Pop(int obj, int* msgOut, int* paramOut, int* flagsOut);
-extern char* ObjGroup_FindNearestObject(int group, char* from, f32* distInOut);
-extern void Obj_FreeObject(char* obj);
-extern f32 Vec_distance(f32 * a, f32 * b);
-
-extern byte framesThisStep;
-
-extern f32 lbl_803E515C;
-extern f32 lbl_803E5160;
-extern f32 lbl_803E5164;
-extern f32 lbl_803E5168;
-extern f32 lbl_803E516C;
-extern f32 lbl_803E5170;
-extern f32 lbl_803E5174;
 
 void dll_199_update(int obj)
 {
@@ -429,8 +420,6 @@ void dll_199_update(int obj)
     }
 }
 
-extern void ObjMsg_AllocQueue(int obj, int n);
-
 void dll_199_init(int obj, int def)
 {
     extern int* gTitleMenuControlInterface;
@@ -469,8 +458,6 @@ void dll_199_init(int obj, int def)
     state[6] = id;
     Resource_Release(res);
 }
-
-extern u8 Obj_IsLoadingLocked(void);
 
 void dll_199_release(void)
 {

@@ -12,6 +12,18 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
+extern u8 lbl_80317528[];
+extern u8 lbl_803DB940[8];
+extern f32 lbl_803E1298;
+extern f32 lbl_803E129C;
+extern f32 lbl_803E12A0;
+extern f32 lbl_803E12A4;
+extern f32 lbl_803E12A8;
+extern f32 lbl_803E12AC;
+extern f32 lbl_803E12B0;
+extern f32 lbl_803E12B4;
+extern f32 lbl_803E12B8;
+
 void dll_95_func01_nop(void)
 {
 }
@@ -44,18 +56,6 @@ typedef struct
     u8 pad1[2]; /* +0x5e */
     GfxCmd entries[32]; /* +0x60 */
 } GfxBuf;
-
-extern u8 lbl_80317528[];
-extern u8 lbl_803DB940[8];
-extern f32 lbl_803E1298;
-extern f32 lbl_803E129C;
-extern f32 lbl_803E12A0;
-extern f32 lbl_803E12A4;
-extern f32 lbl_803E12A8;
-extern f32 lbl_803E12AC;
-extern f32 lbl_803E12B0;
-extern f32 lbl_803E12B4;
-extern f32 lbl_803E12B8;
 
 void dll_95_func03(int sourceObj, int variant, int posSource)
 {

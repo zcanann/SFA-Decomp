@@ -15,6 +15,8 @@ extern f32 lbl_803E13BC;
 extern f32 lbl_803E13C0;
 extern f32 lbl_803E13C4;
 
+extern u8 lbl_80317E00[];
+
 void dll_9B_func03(int a, int b, int p, uint flags)
 {
     ScreenFxHdr hdr;
@@ -165,8 +167,6 @@ void dll_9B_func03(int a, int b, int p, uint flags)
     }
     (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, base, 0x18, base + 0xd4, 0x156, 0);
 }
-
-extern u8 lbl_80317E00[];
 
 void dll_9C_func03(int a, int b, int p, uint flags);
 

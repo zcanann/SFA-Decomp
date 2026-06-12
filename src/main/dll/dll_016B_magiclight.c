@@ -68,6 +68,19 @@ extern f32 lbl_803E53D0;
 extern f32 lbl_803E53E0;
 extern f32 lbl_803E53F0;
 
+extern u32 randomGetRange(int min, int max);
+extern f32 lbl_803E4740;
+extern f32 lbl_803E4744;
+extern f32 lbl_803E473C;
+extern void objRenderFn_8003b8f4(f32);
+extern int hitDetectFn_80065e50(int obj, int** listOut, int p3, int p4, f32 x, f32 y, f32 z);
+extern void Obj_FreeObject(int*);
+extern float Vec_distance(float* a, float* b);
+extern f32 lbl_803E4738;
+extern void getEnvfxAct(int* obj, int* target, int id, int p);
+extern void warpToMap(int mapId, int flags);
+extern void Music_Trigger(int track, int flag);
+
 void FUN_801ac248(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9)
@@ -261,10 +274,6 @@ void magiclight_initialise(void)
 {
 }
 
-extern u32 randomGetRange(int min, int max);
-extern f32 lbl_803E4740;
-extern f32 lbl_803E4744;
-
 /* EN v1.0 0x801AD684  size: 344b  magiclight_init: seed header + update fn;
  * for the non-172 variants pick a random lifetime and, for type 0x16b, map
  * the spawn subtype to a light-pair / intensity preset. */
@@ -321,9 +330,6 @@ void dll_16C_release(void);
 int magiclight_getObjectTypeId(void) { return 0x0; }
 int dll_16C_getExtraSize(void);
 
-extern f32 lbl_803E473C;
-extern void objRenderFn_8003b8f4(f32);
-
 #pragma scheduling on
 void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
@@ -333,7 +339,6 @@ void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-extern int hitDetectFn_80065e50(int obj, int** listOut, int p3, int p4, f32 x, f32 y, f32 z);
 #pragma dont_inline on
 #pragma dont_inline reset
 
@@ -370,10 +375,6 @@ int magiclight_getExtraSize(int* obj)
     return 0x14;
 }
 
-extern void Obj_FreeObject(int*);
-
-extern float Vec_distance(float* a, float* b);
-extern f32 lbl_803E4738;
 #pragma scheduling off
 int magiclight_SeqFn(int* obj)
 {
@@ -400,13 +401,8 @@ int magiclight_SeqFn(int* obj)
     return 0;
 }
 
-extern void getEnvfxAct(int* obj, int* target, int id, int p);
-extern void warpToMap(int mapId, int flags);
-
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
 
 #undef MEVT_TRIGGER
 #undef MEVT_SET
-
-extern void Music_Trigger(int track, int flag);

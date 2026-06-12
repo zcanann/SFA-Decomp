@@ -70,6 +70,38 @@ extern int saveSelect_getInfo(void);
 extern int sprintf(char* dst, const char* fmt, ...);
 
 #pragma dont_inline on
+extern void gameTextSetDrawFunc(void* fn);
+extern void titleScreenTextDrawFunc(void);
+extern void titleScreenPositionElements(f32 a, f32 b);
+extern void gameTextBoxFn_80134d40(u8 a, u8 b, int c);
+extern void gameTextSetColor(int r, int g, int b, u8 a);
+extern void gameTextAppendStr(char* str, int textId);
+extern void gameTextShow(int textId);
+extern void titleScreenShowCopyright(int arg);
+extern u8 lbl_803DB9F8;
+extern u16 lbl_803DB9F0[4];
+extern char sFrontendPercentFormat;
+extern f32 lbl_803E1D64;
+extern f32 lbl_803E1D68;
+extern f32 lbl_803E1D6C;
+extern f32 lbl_803E1D70;
+extern f32 lbl_803E1D74;
+extern u8 framesThisStep;
+extern uint getButtonsJustPressed(int arg);
+extern int mmSetFreeDelay(int delay);
+extern void mapUnload(int mapId, u32 flags);
+extern void Music_Trigger(int id, int arg);
+extern void trySaveGame(int slot);
+extern void gplayNewGame(char* name, int slot);
+extern char* loadFileByPath(char* path, int a, int b);
+extern void* memcpy(void* dst, void* src, int n);
+extern void fn_80296B70(int arg);
+extern void titleScreenFn_801368d4(void);
+extern TitleMenuControl* gMapEventInterface;
+extern void* lbl_803DD498;
+extern char sFrontendFoxName;
+extern char sSaveGameBinPathFormat[];
+
 void saveSelectOpenFile(int sel, int slot)
 {
     TitleMenuTextEntry** pp;
@@ -424,37 +456,6 @@ void saveSelectScreenFree(int param_1)
     }
 }
 #pragma dont_inline reset
-extern void gameTextSetDrawFunc(void* fn);
-extern void titleScreenTextDrawFunc(void);
-extern void titleScreenPositionElements(f32 a, f32 b);
-extern void gameTextBoxFn_80134d40(u8 a, u8 b, int c);
-extern void gameTextSetColor(int r, int g, int b, u8 a);
-extern void gameTextAppendStr(char* str, int textId);
-extern void gameTextShow(int textId);
-extern void titleScreenShowCopyright(int arg);
-extern u8 lbl_803DB9F8;
-extern u16 lbl_803DB9F0[4];
-extern char sFrontendPercentFormat;
-extern f32 lbl_803E1D64;
-extern f32 lbl_803E1D68;
-extern f32 lbl_803E1D6C;
-extern f32 lbl_803E1D70;
-extern f32 lbl_803E1D74;
-extern u8 framesThisStep;
-extern uint getButtonsJustPressed(int arg);
-extern int mmSetFreeDelay(int delay);
-extern void mapUnload(int mapId, u32 flags);
-extern void Music_Trigger(int id, int arg);
-extern void trySaveGame(int slot);
-extern void gplayNewGame(char* name, int slot);
-extern char* loadFileByPath(char* path, int a, int b);
-extern void* memcpy(void* dst, void* src, int n);
-extern void fn_80296B70(int arg);
-extern void titleScreenFn_801368d4(void);
-extern TitleMenuControl* gMapEventInterface;
-extern void* lbl_803DD498;
-extern char sFrontendFoxName;
-extern char sSaveGameBinPathFormat[];
 
 void SaveSelectScreen_render(int param)
 {

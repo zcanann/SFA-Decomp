@@ -4,6 +4,9 @@
 #include "main/dll/pushcartstate97_types.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
+#include "main/dll/DR/dll_0287_spscarab.h"
+#include "main/game_object.h"
+#include "main/objanim_internal.h"
 
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 
@@ -11,6 +14,36 @@ STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
 extern void Stack_Free();
+
+extern void Sfx_RemoveLoopedObjectSound(int x, int y);
+extern f32 lbl_803E5A30;
+extern f32 timeDelta;
+extern void gameTextShow(int);
+extern void characterDoEyeAnims(int obj, int p2);
+extern f32 sqrtf(f32 x);
+extern void objfx_spawnDirectionalBurst(int obj, int a, f32 radius, int c, int d, int e, f32 scale, int g, int h);
+extern f32 mathCosf(double x);
+extern f32 mathSinf(double x); /* cos-like */
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
+extern s16 getAngle(f32 dx, f32 dz);
+extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
+extern void Vec3_ReflectAgainstNormal(int normal, int velocity, int out);
+extern f32 getXZDistance(int* p1, int* p2);
+extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
+extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
+extern u16 lbl_803E5A70;
+extern u8 lbl_803E5A72;
+extern f32 lbl_803E5A74;
+extern f32 lbl_803E5A78;
+extern f32 lbl_803E5A7C;
+extern f32 lbl_803E5A80;
+extern f32 lbl_803E5A84;
+extern f32 lbl_803E5A88;
+extern f32 lbl_803E5A8C;
+extern f32 lbl_803E5A90;
+extern f32 lbl_803E5A94;
 
 void spscarab_render(void)
 {
@@ -24,24 +57,9 @@ int shopkeeper_getExtraSize(void);
 int spscarab_getExtraSize(void) { return 0x14; }
 int spscarab_getObjectTypeId(void) { return 0x0; }
 
-extern void Sfx_RemoveLoopedObjectSound(int x, int y);
 void spscarab_free(int x) { Sfx_RemoveLoopedObjectSound(x, 0x406); }
 
-extern f32 lbl_803E5A30;
-
-extern f32 timeDelta;
-extern void gameTextShow(int);
-extern void characterDoEyeAnims(int obj, int p2);
-
-extern f32 sqrtf(f32 x);
-
-extern void objfx_spawnDirectionalBurst(int obj, int a, f32 radius, int c, int d, int e, f32 scale, int g, int h);
-
 /* segment pragma-stack balance (re-split): */
-
-#include "main/dll/DR/dll_0287_spscarab.h"
-#include "main/game_object.h"
-#include "main/objanim_internal.h"
 
 typedef struct SpscarabPlacement
 {
@@ -60,30 +78,6 @@ typedef struct SpscarabState
     s16 unk10;
     u8 pad12[0x18 - 0x12];
 } SpscarabState;
-
-extern f32 mathCosf(double x);
-extern f32 mathSinf(double x); /* cos-like */
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
-extern s16 getAngle(f32 dx, f32 dz);
-extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
-extern void Vec3_ReflectAgainstNormal(int normal, int velocity, int out);
-extern f32 getXZDistance(int* p1, int* p2);
-extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
-extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
-
-extern u16 lbl_803E5A70;
-extern u8 lbl_803E5A72;
-extern f32 lbl_803E5A74;
-extern f32 lbl_803E5A78;
-extern f32 lbl_803E5A7C;
-extern f32 lbl_803E5A80;
-extern f32 lbl_803E5A84;
-extern f32 lbl_803E5A88;
-extern f32 lbl_803E5A8C;
-extern f32 lbl_803E5A90;
-extern f32 lbl_803E5A94;
 
 void spscarab_update(int obj)
 {

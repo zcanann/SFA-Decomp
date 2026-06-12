@@ -38,6 +38,25 @@ extern void titleScreenShowCopyright(int arg);
 extern s8 lbl_803DD706;
 #pragma scheduling off
 #pragma peephole off
+extern void gameTextLoadDir(int);
+extern s8 lbl_803DD70C;
+extern u32 lbl_803DD708;
+extern s8 lbl_803DD705;
+extern u8 lbl_803DD6F9;
+extern u8 lbl_803DD6F8;
+extern void fn_8011CA74(void);
+extern void fn_8011C7B4(void);
+extern s8 lbl_803DD704;
+extern int lbl_803DD700;
+extern void loadUiDll(int id);
+extern void titleScreenFn_8005cdd4(int v);
+extern void setDrawCloudsAndLights(int v);
+extern void setWidescreen(u8 enabled);
+extern void setRumbleEnabled(u8 enabled);
+extern void setSubtitlesEnabled(u8 enabled);
+extern u8 framesThisStep;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+
 void OptionsScreen_render(int arg)
 {
     int alpha;
@@ -99,24 +118,6 @@ void OptionsScreen_render(int arg)
     }
 }
 
-extern void gameTextLoadDir(int);
-extern s8 lbl_803DD70C;
-extern u32 lbl_803DD708;
-extern s8 lbl_803DD705;
-extern u8 lbl_803DD6F9;
-extern u8 lbl_803DD6F8;
-extern void fn_8011CA74(void);
-extern void fn_8011C7B4(void);
-extern s8 lbl_803DD704;
-extern int lbl_803DD700;
-extern void loadUiDll(int id);
-extern void titleScreenFn_8005cdd4(int v);
-extern void setDrawCloudsAndLights(int v);
-extern void setWidescreen(u8 enabled);
-extern void setRumbleEnabled(u8 enabled);
-extern void setSubtitlesEnabled(u8 enabled);
-extern u8 framesThisStep;
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 #pragma peephole on
 void OptionsScreen_initialise(void)
 {

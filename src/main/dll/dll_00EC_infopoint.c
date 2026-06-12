@@ -33,6 +33,15 @@ extern f32 FLOAT_803e4840;
 extern f32 FLOAT_803e4844;
 extern f32 FLOAT_803e4848;
 
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E3B70;
+extern void buttonDisable(int p1, int mask);
+extern int textureLoadAsset(int id);
+extern int* gameTextGet(int id);
+extern int lbl_803219A0[];
+extern int lbl_80321990[];
+extern f32 lbl_803E3B7C;
+
 void infopoint_hitDetect(void)
 {
 }
@@ -330,9 +339,6 @@ int infopoint_getExtraSize(void) { return 0x20; }
 int infopoint_getObjectTypeId(void) { return 0x0; }
 int decoration11a_getExtraSize(void);
 
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E3B70;
-
 #pragma scheduling off
 #pragma peephole off
 void infopoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -342,8 +348,6 @@ void infopoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern void buttonDisable(int p1, int mask);
 
 void infopoint_update(int obj)
 {
@@ -380,11 +384,6 @@ int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 void dll_109_free(int obj);
 
-extern int textureLoadAsset(int id);
-extern int* gameTextGet(int id);
-extern int lbl_803219A0[];
-extern int lbl_80321990[];
-
 void infopoint_init(int* obj, u8* def)
 {
     u8* state = ((GameObject*)obj)->extra;
@@ -405,5 +404,3 @@ void infopoint_init(int* obj, u8* def)
     *(s16*)(state + 0x16) = 0;
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
-
-extern f32 lbl_803E3B7C;

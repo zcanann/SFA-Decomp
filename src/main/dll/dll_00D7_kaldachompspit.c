@@ -2,6 +2,9 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/wallanimator.h"
+#include "ghidra_import.h"
+#include "main/dll/xyzanimator.h"
+#include "main/objhits_types.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800175cc();
@@ -51,6 +54,34 @@ ObjectDescriptor gKaldaChompMeObjDescriptor = {
 
 #pragma scheduling on
 #pragma peephole on
+extern void ModelLightStruct_free(void* p);
+extern void modelLightStruct_setEnabled(int light, int onoff, f32 intensity);
+extern void spawnExplosion(int obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 vol, f32 scale);
+extern int Obj_FreeObject(int obj);
+extern int getAngle(f32 a, f32 b);
+extern f32 sqrtf(f32 x);
+extern void fn_80098B18(int obj, f32 scale, int a, int b, int c, int d);
+extern f32 lbl_803E30F0;
+extern f32 lbl_803E30F4;
+extern f32 lbl_803E30F8;
+extern f32 lbl_803E30FC;
+extern void* objCreateLight(int obj, int kind);
+extern void modelLightStruct_setLightKind(int light, int value);
+extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
+extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
+extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
+extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
+extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
+extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
+extern void lightSetField4D(int light, int v);
+extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
+extern void modelLightStruct_startColorFade(int light, int a, int b);
+extern f32 lbl_803E3108;
+extern f32 lbl_803E310C;
+extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+
 void FUN_8016980c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     if (visible != 0)
@@ -105,8 +136,6 @@ void kaldachompspit_hitDetect(void)
 int kaldachompspit_getExtraSize(void) { return 0x4; }
 int kaldachompspit_getObjectTypeId(void) { return 0x0; }
 
-extern void ModelLightStruct_free(void* p);
-
 void kaldachompspit_free(int* obj)
 {
     void* p = *(void**)((GameObject*)obj)->extra;
@@ -130,18 +159,6 @@ void kaldachompspit_render(void* obj, int p2, int p3, int p4, int p5, s8 visible
     }
 }
 
-extern void modelLightStruct_setEnabled(int light, int onoff, f32 intensity);
-extern void spawnExplosion(int obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 vol, f32 scale);
-extern int Obj_FreeObject(int obj);
-extern int getAngle(f32 a, f32 b);
-extern f32 sqrtf(f32 x);
-extern void fn_80098B18(int obj, f32 scale, int a, int b, int c, int d);
-extern f32 lbl_803E30F0;
-extern f32 lbl_803E30F4;
-extern f32 lbl_803E30F8;
-extern f32 lbl_803E30FC;
 void kaldachompspit_burst(int obj);
 
 void kaldachompspit_update(int obj)
@@ -290,27 +307,6 @@ void kaldachompspit_burst(int obj)
 }
 
 /* segment pragma-stack balance (re-split): */
-
-#include "ghidra_import.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/xyzanimator.h"
-#include "main/effect_interfaces.h"
-#include "main/objhits_types.h"
-#include "main/game_object.h"
-
-extern void* objCreateLight(int obj, int kind);
-extern void modelLightStruct_setLightKind(int light, int value);
-extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
-extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
-extern void lightSetField4D(int light, int v);
-extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
-extern void modelLightStruct_startColorFade(int light, int a, int b);
-extern f32 lbl_803E3108;
-extern f32 lbl_803E310C;
 
 void kaldachompspit_init(int obj)
 {
@@ -506,5 +502,3 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     (ObjectDescriptorCallback)pollenfragment_getObjectTypeId,
     pollenfragment_getExtraSize,
 };
-
-extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);

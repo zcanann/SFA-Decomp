@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/objseq.h"
+#include "main/effect_interfaces.h"
 
 typedef struct MmshShrineState
 {
@@ -86,6 +87,19 @@ typedef struct MMSHShrineObject
     u8 padBC[MMSH_SHRINE_LOAD_TRIGGER_TIMER - 0xBC];
     s32 loadTriggerTimer;
 } MMSHShrineObject;
+
+extern void ModelLightStruct_free(void* p);
+extern void Music_Trigger(int id, int p2);
+extern void objParticleFn_80099d84(int p1, f32 f1, int p2, f32 f2, int p3);
+extern void skyFn_80088c94(int skyId, int enable);
+extern void getEnvfxAct(int obj, int target, int effectId, int flags);
+extern int mapGetDirIdx(int mapDir);
+extern void unlockLevel(int mapDir, int mode, int flags);
+extern int Sfx_PlayFromObject(int obj, int sfxId);
+extern int objGetAnimStateFlags(int obj, u32 mask);
+extern void audioStopByMask(int mask);
+extern int objCreateLight(int param_1, int param_2);
+extern u8 lbl_803DB411;
 
 int MMSH_Shrine_SeqFn(int objArg, undefined4 unused, MMSHShrineSequenceState* seq)
 {
@@ -191,17 +205,6 @@ int mmsh_shrine_getObjectTypeId(void)
 void mmsh_shrine_hitDetect(void)
 {
 }
-
-extern void ModelLightStruct_free(void* p);
-extern void Music_Trigger(int id, int p2);
-extern void objParticleFn_80099d84(int p1, f32 f1, int p2, f32 f2, int p3);
-extern void skyFn_80088c94(int skyId, int enable);
-extern void getEnvfxAct(int obj, int target, int effectId, int flags);
-extern int mapGetDirIdx(int mapDir);
-extern void unlockLevel(int mapDir, int mode, int flags);
-extern int Sfx_PlayFromObject(int obj, int sfxId);
-extern int objGetAnimStateFlags(int obj, u32 mask);
-extern void audioStopByMask(int mask);
 
 void mmsh_shrine_free(int obj)
 {
@@ -359,13 +362,6 @@ void mmsh_shrine_update(int objArg)
     }
 }
 
-#include "main/dll/dll_018C_mmshshrine.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/objseq.h"
-
-extern int objCreateLight(int param_1, int param_2);
-
 void mmsh_shrine_init(undefined2* obj, int arg2)
 {
     extern void GameBit_Set(int eventId, int value);
@@ -393,8 +389,6 @@ void mmsh_shrine_init(undefined2* obj, int arg2)
     GameBit_Set(0xefa, 1);
     return;
 }
-
-extern u8 lbl_803DB411;
 
 void mmsh_scales_update(int objArg);
 

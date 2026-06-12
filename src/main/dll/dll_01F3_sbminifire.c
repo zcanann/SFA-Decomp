@@ -57,6 +57,20 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
 extern ModgfxInterface** gModgfxInterface;
 
+extern int lbl_803DC098;
+extern f32 lbl_803E592C;
+extern f32 lbl_803E5948;
+extern f32 lbl_803E594C;
+extern f32 lbl_803E5950;
+extern void fn_80053ED0(int);
+extern void fn_80053EBC(int);
+extern f32 lbl_803E5928;
+extern f64 lbl_803E5940;
+extern f32 lbl_803E5930;
+extern f32 lbl_803E5934;
+extern f32 lbl_803E5938;
+extern f32 lbl_803E593C;
+
 void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined2* param_9, int param_10)
@@ -99,12 +113,6 @@ void SB_MiniFire_free(int* obj)
     (*gModgfxInterface)->detachSource(obj);
 }
 
-extern int lbl_803DC098;
-extern f32 lbl_803E592C;
-extern f32 lbl_803E5948;
-extern f32 lbl_803E594C;
-extern f32 lbl_803E5950;
-
 void SB_MiniFire_init(int obj)
 {
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
@@ -132,10 +140,6 @@ void SB_MiniFire_init(int obj)
     Sfx_PlayFromObject((int*)obj, SFXbaddie_crater_call);
 }
 
-extern void fn_80053ED0(int);
-extern void fn_80053EBC(int);
-extern f32 lbl_803E5928;
-
 void SB_MiniFire_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -146,12 +150,6 @@ void SB_MiniFire_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         fn_80053EBC(8);
     }
 }
-
-extern f64 lbl_803E5940;
-extern f32 lbl_803E5930;
-extern f32 lbl_803E5934;
-extern f32 lbl_803E5938;
-extern f32 lbl_803E593C;
 
 void SB_MiniFire_update(int obj)
 {

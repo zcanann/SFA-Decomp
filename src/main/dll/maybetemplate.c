@@ -52,6 +52,97 @@ extern int lbl_803DBAD8;
 extern int lbl_803DBADC;
 extern u8 lbl_803DD7B3;
 
+extern int gameTextGetCharset(void);
+extern void gameTextSetCharset(int charset, int arg);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void gameTextShowStr(char* str, int box, int x, int y);
+extern void sprintf(char* buf, const char* fmt, ...);
+extern char sTemplateProgressCounterFormat[];
+extern char lbl_803DBB48;
+extern char lbl_803DBB50;
+extern char lbl_803DBB58;
+extern u32 lbl_803E1E1C;
+extern u32 lbl_803E1E24;
+extern f32 lbl_803E1E68;
+extern f32 lbl_803E1E70;
+extern f32 lbl_803E1F9C;
+extern f32 lbl_803E1FA8;
+extern f32 lbl_803E1FB8;
+extern ScreenTransitionInterface** gScreenTransitionInterface;
+extern int lbl_803A87F0[];
+extern f32 lbl_803DD83C;
+extern u8 lbl_803DD75B;
+extern u8 lbl_803DD792;
+extern u8 lbl_803DD840;
+extern f32 lbl_803DD844;
+extern u8 pauseMenuState;
+extern u8 cMenuEnabled;
+extern int airMeter;
+extern f32 hudElementOpacity;
+extern f32 timeDelta;
+extern f32 lbl_803E1E3C;
+extern f32 lbl_803E1FA0;
+extern f32 lbl_803E1FBC;
+extern f32 lbl_803E1FC0;
+extern f32 lbl_803E1FC4;
+extern f32 lbl_803E1FC8;
+extern void GXSetScissor(int x, int y, int w, int h);
+extern void hudDrawCMenu(int a, int b, int c);
+extern int gameTextGet();
+extern void gameTextMeasureFn_800163c4(char* str, int n, int a, int b, int* x0, int* x1, int* y0, int* y1);
+extern void textureFree(int texture);
+extern int textureLoadAsset(int id);
+extern void fn_8005D118(int a, int b, int c, int d, int e);
+extern int lbl_803DD8B0;
+extern s16 lbl_803DD8B4;
+extern s8 lbl_803DD8B6;
+extern u8 lbl_803DD848[7];
+extern u8 lbl_803DD8D4;
+extern int hudYButtonItemIconTexture;
+extern s16 yButtonItemTextureId;
+extern s16 lbl_803DD876;
+extern s16 aButtonIcon;
+extern s16 prevAButtonIcon;
+extern u8 bButtonIcon;
+extern u8 lbl_803DD7B0;
+extern u8 lbl_803DD7B1;
+extern u8 lbl_803DD7B2;
+extern u8 lbl_803DD87C;
+extern f32 lbl_803DD878;
+extern f32 lbl_803DD7E8;
+extern f32 lbl_803DBA74;
+extern f32 lbl_803DBA78;
+extern f32 lbl_803DBA7C;
+extern f32 lbl_803DBA80;
+extern f32 lbl_803DBA84;
+extern s16 lbl_803DBACC;
+extern s16 lbl_803DBACE;
+extern u8 gHudButtonIcons[];
+extern char lbl_803DBB5C;
+extern u32 lbl_803E1E18;
+extern f64 lbl_803E1EA8;
+extern f32 lbl_803E1FB4;
+extern f32 lbl_803E1FCC;
+extern f32 lbl_803E1FD0;
+extern f32 lbl_803E1FD4;
+extern f32 lbl_803E1FD8;
+extern f32 lbl_803E1FDC;
+extern f32 lbl_803E1FE0;
+extern f32 lbl_803E1FE4;
+extern f32 lbl_803E1FE8;
+extern f32 lbl_803E1FEC;
+extern f32 lbl_803E1FF0;
+extern f32 lbl_803E1FF4;
+extern f32 lbl_803E1FF8;
+extern f32 lbl_803E1FFC;
+extern f32 lbl_803E2000;
+extern f32 lbl_803E2004;
+extern f32 lbl_803E200C;
+extern f32 lbl_803E2008;
+extern f32 lbl_803E2010;
+extern f32 lbl_803E2014;
+extern f32 lbl_803E2018;
+
 void hudDrawMagicBar(int p1, int p2, uint p3)
 {
     int total;
@@ -272,23 +363,6 @@ void hudDrawMagicBar(int p1, int p2, uint p3)
     }
 }
 
-extern int gameTextGetCharset(void);
-extern void gameTextSetCharset(int charset, int arg);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShowStr(char* str, int box, int x, int y);
-extern void sprintf(char* buf, const char* fmt, ...);
-extern char sTemplateProgressCounterFormat[];
-extern char lbl_803DBB48;
-extern char lbl_803DBB50;
-extern char lbl_803DBB58;
-extern u32 lbl_803E1E1C;
-extern u32 lbl_803E1E24;
-extern f32 lbl_803E1E68;
-extern f32 lbl_803E1E70;
-extern f32 lbl_803E1F9C;
-extern f32 lbl_803E1FA8;
-extern f32 lbl_803E1FB8;
-
 typedef struct CounterText
 {
     u32 a;
@@ -357,25 +431,6 @@ void hudDrawCounter(int idx, s16 value, s16 target, u8 alpha, int timer, int* yP
         *yPos = *yPos + 0x28;
     }
 }
-
-extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern int lbl_803A87F0[];
-extern f32 lbl_803DD83C;
-extern u8 lbl_803DD75B;
-extern u8 lbl_803DD792;
-extern u8 lbl_803DD840;
-extern f32 lbl_803DD844;
-extern u8 pauseMenuState;
-extern u8 cMenuEnabled;
-extern int airMeter;
-extern f32 hudElementOpacity;
-extern f32 timeDelta;
-extern f32 lbl_803E1E3C;
-extern f32 lbl_803E1FA0;
-extern f32 lbl_803E1FBC;
-extern f32 lbl_803E1FC0;
-extern f32 lbl_803E1FC4;
-extern f32 lbl_803E1FC8;
 
 #define PMDS_MAP_EVENT_GET_STATUS() \
   (*gMapEventInterface)->getProgressPtr()
@@ -700,63 +755,6 @@ void minimapFn_8012310c(void)
     lbl_803DBA6E = 0xffff;
     return;
 }
-
-extern void GXSetScissor(int x, int y, int w, int h);
-extern void hudDrawCMenu(int a, int b, int c);
-extern int gameTextGet();
-extern void gameTextMeasureFn_800163c4(char* str, int n, int a, int b, int* x0, int* x1, int* y0, int* y1);
-extern void textureFree(int texture);
-extern int textureLoadAsset(int id);
-extern void fn_8005D118(int a, int b, int c, int d, int e);
-extern int lbl_803DD8B0;
-extern s16 lbl_803DD8B4;
-extern s8 lbl_803DD8B6;
-extern u8 lbl_803DD848[7];
-extern u8 lbl_803DD8D4;
-extern int hudYButtonItemIconTexture;
-extern s16 yButtonItemTextureId;
-extern s16 lbl_803DD876;
-extern s16 aButtonIcon;
-extern s16 prevAButtonIcon;
-extern u8 bButtonIcon;
-extern u8 lbl_803DD7B0;
-extern u8 lbl_803DD7B1;
-extern u8 lbl_803DD7B2;
-extern u8 lbl_803DD87C;
-extern f32 lbl_803DD878;
-extern f32 lbl_803DD7E8;
-extern f32 lbl_803DBA74;
-extern f32 lbl_803DBA78;
-extern f32 lbl_803DBA7C;
-extern f32 lbl_803DBA80;
-extern f32 lbl_803DBA84;
-extern s16 lbl_803DBACC;
-extern s16 lbl_803DBACE;
-extern u8 gHudButtonIcons[];
-extern char lbl_803DBB5C;
-extern u32 lbl_803E1E18;
-extern f64 lbl_803E1EA8;
-extern f32 lbl_803E1FB4;
-extern f32 lbl_803E1FCC;
-extern f32 lbl_803E1FD0;
-extern f32 lbl_803E1FD4;
-extern f32 lbl_803E1FD8;
-extern f32 lbl_803E1FDC;
-extern f32 lbl_803E1FE0;
-extern f32 lbl_803E1FE4;
-extern f32 lbl_803E1FE8;
-extern f32 lbl_803E1FEC;
-extern f32 lbl_803E1FF0;
-extern f32 lbl_803E1FF4;
-extern f32 lbl_803E1FF8;
-extern f32 lbl_803E1FFC;
-extern f32 lbl_803E2000;
-extern f32 lbl_803E2004;
-extern f32 lbl_803E200C;
-extern f32 lbl_803E2008;
-extern f32 lbl_803E2010;
-extern f32 lbl_803E2014;
-extern f32 lbl_803E2018;
 
 void hudDrawButtons(int param1, int param2, int param3)
 {

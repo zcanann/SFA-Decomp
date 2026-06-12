@@ -4,6 +4,8 @@
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/resource.h"
+#include "main/dll/cfperch_state.h"
+#include "main/objfx.h"
 
 typedef struct SmallbasketState
 {
@@ -42,6 +44,62 @@ extern f32 lbl_803E3958;
 extern f32 lbl_803E395C;
 extern f32 lbl_803E3960;
 extern f32 lbl_803E3964;
+
+extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj,
+                              int p7, int p8, int p9, int p10);
+extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f32* endPoints,
+                                            f32* radii, int pointCount);
+extern void hitDetectFn_800691c0(u8* obj, void* bounds, uint mask, int flags);
+extern u8 hitDetectFn_80067958(u8* obj, f32* startPoints, f32* endPoints, int pointCount,
+                               void* outHits, int flags);
+extern f32 lbl_803E3970;
+extern void smallbasket_init();
+extern void smallbasket_update();
+extern void smallbasket_render(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
+                               undefined4 param_5, char param_6);
+extern ModgfxInterface** gModgfxInterface;
+extern void* lbl_803DDAC0;
+extern void ObjGroup_RemoveObject(int obj, int flag);
+extern f32 lbl_803E3974;
+extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4,
+                                 undefined4 p5, double scale);
+extern void* Obj_GetPlayerObject(void);
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
+extern f32 Vec_distance(f32 * a, f32 * b);
+extern int GameBit_Get(int id);
+extern void Sfx_PlayFromObject(int obj, int sfx);
+extern void ObjGroup_AddObject(int obj, int group);
+extern void ObjHits_ClearHitVolumes(int obj);
+extern void ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);
+extern void ObjHits_SyncObjectPositionIfDirty(int obj);
+extern u32 buttonGetDisabled(int pad);
+extern u32 getButtonsJustPressed(int pad);
+extern void buttonDisable(int pad, int mask);
+extern int ObjTrigger_IsSet(int obj);
+extern int playerIsDisguised(int player);
+extern u32 playerGetStateFlag310(int player);
+extern void setAButtonIcon(int icon);
+extern int fn_80295BF0(int player);
+extern int fn_8029669C(int player);
+extern int fn_802966B4(int player);
+extern void vecRotateZXY(void* p, void* v);
+extern void ObjMsg_SendToObject(int target, int msg, int obj, u32 value);
+extern void fn_801814D0(int obj, int player, int state);
+extern f32 getXZDistance(f32 * a, f32 * b);
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern int* gSHthorntailAnimationInterface;
+extern f32 lbl_803E3934;
+extern f32 lbl_803E3978;
+extern f32 lbl_803E397C;
+extern f32 lbl_803E3980;
+extern f32 lbl_803E3984;
+extern f32 lbl_803E3988;
+extern f32 lbl_803E398C;
+extern f32 lbl_803E3990;
+extern f32 lbl_803E3994;
+extern f32 lbl_803E3998;
 
 int fn_801816F8(u8* obj, u8* player, u8* dataIn)
 {
@@ -403,15 +461,6 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     return 1;
 }
 
-extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj,
-                              int p7, int p8, int p9, int p10);
-extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f32* endPoints,
-                                            f32* radii, int pointCount);
-extern void hitDetectFn_800691c0(u8* obj, void* bounds, uint mask, int flags);
-extern u8 hitDetectFn_80067958(u8* obj, f32* startPoints, f32* endPoints, int pointCount,
-                               void* outHits, int flags);
-extern f32 lbl_803E3970;
-
 int fn_801821FC(u8* obj)
 {
     typedef struct
@@ -533,25 +582,12 @@ int smallbasket_getExtraSize(void)
     return 0x24;
 }
 
-extern void smallbasket_init();
-extern void smallbasket_update();
-extern void smallbasket_render(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
-                               undefined4 param_5, char param_6);
-extern ModgfxInterface** gModgfxInterface;
-extern void* lbl_803DDAC0;
-extern void ObjGroup_RemoveObject(int obj, int flag);
-
 void smallbasket_free(int param_1)
 {
     (*gModgfxInterface)->detachSource((void*)param_1);
     Resource_Release(lbl_803DDAC0);
     ObjGroup_RemoveObject(param_1, 0x10);
 }
-
-extern f32 lbl_803E3974;
-extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4,
-                                 undefined4 p5, double scale);
-extern void* Obj_GetPlayerObject(void);
 
 void objThrowFn_80182504(int obj)
 {
@@ -631,12 +667,6 @@ ObjectDescriptor gSmallBasketObjDescriptor = {
     smallbasket_getExtraSize,
 };
 
-#include "main/obj_placement.h"
-#include "main/game_object.h"
-#include "main/dll/cfperch_state.h"
-#include "main/objfx.h"
-#include "main/resource.h"
-
 typedef struct SmallbasketObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -648,15 +678,6 @@ typedef struct SmallbasketObjectDef
     u8 pad22[0x24 - 0x22];
     f32 unk24;
 } SmallbasketObjectDef;
-
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
-
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern int GameBit_Get(int id);
-extern void Sfx_PlayFromObject(int obj, int sfx);
-
-extern void ObjGroup_AddObject(int obj, int group);
 
 void smallbasket_init(int obj, int def)
 {
@@ -718,37 +739,6 @@ void smallbasket_init(int obj, int def)
 }
 
 void fn_80183250(int obj, int def);
-
-extern void ObjHits_ClearHitVolumes(int obj);
-extern void ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);
-extern void ObjHits_SyncObjectPositionIfDirty(int obj);
-extern u32 buttonGetDisabled(int pad);
-extern u32 getButtonsJustPressed(int pad);
-extern void buttonDisable(int pad, int mask);
-extern int ObjTrigger_IsSet(int obj);
-extern int playerIsDisguised(int player);
-extern u32 playerGetStateFlag310(int player);
-extern void setAButtonIcon(int icon);
-extern int fn_80295BF0(int player);
-extern int fn_8029669C(int player);
-extern int fn_802966B4(int player);
-extern void vecRotateZXY(void* p, void* v);
-extern void ObjMsg_SendToObject(int target, int msg, int obj, u32 value);
-extern void fn_801814D0(int obj, int player, int state);
-extern f32 getXZDistance(f32 * a, f32 * b);
-extern u8 framesThisStep;
-extern f32 timeDelta;
-extern int* gSHthorntailAnimationInterface;
-extern f32 lbl_803E3934;
-extern f32 lbl_803E3978;
-extern f32 lbl_803E397C;
-extern f32 lbl_803E3980;
-extern f32 lbl_803E3984;
-extern f32 lbl_803E3988;
-extern f32 lbl_803E398C;
-extern f32 lbl_803E3990;
-extern f32 lbl_803E3994;
-extern f32 lbl_803E3998;
 
 typedef struct
 {

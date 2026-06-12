@@ -43,6 +43,31 @@ extern f32 lbl_803E524C;
 
 #pragma scheduling on
 #pragma peephole on
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E4620;
+extern void disableHeavyFog(void);
+extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
+extern int* ObjGroup_GetObjects(int group, int* count);
+extern f32 lbl_803E4618;
+extern f32 timeDelta;
+extern int Obj_GetPlayerObject(void);
+extern void Sfx_PlayFromObject(int obj, int id);
+extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
+extern f32 lbl_803E4624;
+extern f32 lbl_803E4628;
+extern f32 lbl_803E462C;
+extern f32 lbl_803E4630;
+extern f32 lbl_803E4634;
+extern f32 lbl_803E4638;
+extern f32 lbl_803E463C;
+extern f32 lbl_803E4640;
+extern f32 getXZDistance(f32 * a, f32 * b);
+extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_SetObjectSfxVolume(int obj, int sound, int vol, f32 v);
+extern f32 lbl_803E461C;
+extern int getTrickyObject(void);
+
 void FUN_801a8f88(void)
 {
     int iVar1;
@@ -151,9 +176,6 @@ void animsharpclaw_hitDetect(void);
 int ccgasventcontrol_getExtraSize(void) { return 0x10; }
 int ccqueen_getExtraSize(void);
 
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E4620;
-
 #pragma peephole off
 void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -161,7 +183,6 @@ void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4620);
 }
 
-extern void disableHeavyFog(void);
 #pragma scheduling off
 void ccgasventcontrol_free(int obj)
 {
@@ -185,28 +206,12 @@ void ccgasventcontrol_init(int obj, u8* p)
     }
 }
 
-extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
 #pragma peephole on
 int CCGasVentControl_SeqFn(int obj)
 {
     CCGasVentControlFn_801a9fd0(obj, *(int*)&((GameObject*)obj)->extra);
     return 0;
 }
-
-extern int* ObjGroup_GetObjects(int group, int* count);
-extern f32 lbl_803E4618;
-extern f32 timeDelta;
-extern int Obj_GetPlayerObject(void);
-extern void Sfx_PlayFromObject(int obj, int id);
-extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
-extern f32 lbl_803E4624;
-extern f32 lbl_803E4628;
-extern f32 lbl_803E462C;
-extern f32 lbl_803E4630;
-extern f32 lbl_803E4634;
-extern f32 lbl_803E4638;
-extern f32 lbl_803E463C;
-extern f32 lbl_803E4640;
 
 #pragma peephole off
 void ccgasventcontrol_update(int obj)
@@ -312,12 +317,6 @@ void ccgasventcontrol_update(int obj)
     }
 }
 
-extern f32 getXZDistance(f32 * a, f32 * b);
-extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
-extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
-extern void Sfx_SetObjectSfxVolume(int obj, int sound, int vol, f32 v);
-extern f32 lbl_803E461C;
-
 u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
 {
     u8 i;
@@ -357,5 +356,3 @@ u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
     }
     return count;
 }
-
-extern int getTrickyObject(void);

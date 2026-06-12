@@ -3,6 +3,11 @@
 #include "main/game_object.h"
 #include "main/dll/SH/dll_01A9_bombplant.h"
 #include "main/objseq.h"
+#include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
+#include "main/dll/path_control_interface.h"
+#include "main/dll/SH/SHrocketmushroom.h"
+#include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
 
 typedef struct BombplantsporeStartDriftBurstPlacement
 {
@@ -39,6 +44,40 @@ extern f32 lbl_803E53A8;
 extern f32 lbl_803E53AC;
 extern f32 lbl_803E53B0;
 extern f32 lbl_803E53B4;
+
+extern int gameBitIncrement(int bit);
+extern void Sfx_PlayFromObject(void* obj, int id);
+extern void* ObjHits_GetPriorityHit(void* obj, void* pos, int p3, int p4);
+extern int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
+extern void Obj_FreeObject(void* obj);
+extern void objMove(f32 x, f32 y, f32 z, void* obj);
+extern void* objCreateLight(void* obj, int arg);
+extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
+extern void modelLightStruct_setLightKind(void* light, int value);
+extern void modelLightStruct_setDiffuseColor(void* light, int r, int g, int b, int a);
+extern void lightSetFieldBC_8001db14(void* light, int value);
+extern void modelLightStruct_setDistanceAttenuation(void* light, f32 min, f32 max);
+extern void ObjMsg_AllocQueue(void* obj, int count);
+extern void ObjMsg_SendToObject(void* dst, int msg, void* src, void* payload);
+extern void objfx_spawnDirectionalBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin,
+                                        int flags, f32 f8val, f32 mult);
+extern u8 lbl_80326D98[];
+extern u8 lbl_803DBFC0;
+extern f32 lbl_803E5388;
+extern f32 lbl_803E538C;
+extern f32 lbl_803E53B8;
+extern f32 lbl_803E53BC;
+extern f32 lbl_803E53C0;
+extern f32 lbl_803E53C4;
+extern f32 lbl_803E53C8;
+extern f64 lbl_803E53D0;
+extern f64 lbl_803E53D8;
+extern f32 lbl_803E53E0;
+extern f32 lbl_803E53E4;
+extern f32 lbl_803E53E8;
+extern f32 lbl_803E53EC;
+extern f32 lbl_803E53F0;
+extern f32 lbl_803E53F4;
 
 int bombplantspore_getExtraSize(void)
 {
@@ -193,50 +232,6 @@ void bombplantspore_updateDrift(void* obj, void* state)
 #pragma dont_inline reset
 
 void bombplant_init(void* obj, void* param, int flag);
-
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-#include "main/dll/path_control_interface.h"
-#include "main/objseq.h"
-#include "main/dll/SH/SHrocketmushroom.h"
-#include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
-
-extern int gameBitIncrement(int bit);
-extern void Sfx_PlayFromObject(void* obj, int id);
-extern void* ObjHits_GetPriorityHit(void* obj, void* pos, int p3, int p4);
-extern int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
-extern void Obj_FreeObject(void* obj);
-extern void objMove(f32 x, f32 y, f32 z, void* obj);
-extern void* objCreateLight(void* obj, int arg);
-extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
-extern void modelLightStruct_setLightKind(void* light, int value);
-extern void modelLightStruct_setDiffuseColor(void* light, int r, int g, int b, int a);
-extern void lightSetFieldBC_8001db14(void* light, int value);
-extern void modelLightStruct_setDistanceAttenuation(void* light, f32 min, f32 max);
-extern void ObjMsg_AllocQueue(void* obj, int count);
-extern void ObjMsg_SendToObject(void* dst, int msg, void* src, void* payload);
-extern void objfx_spawnDirectionalBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin,
-                                        int flags, f32 f8val, f32 mult);
-
-extern u8 lbl_80326D98[];
-extern u8 lbl_803DBFC0;
-extern f32 lbl_803E5388;
-extern f32 lbl_803E538C;
-extern f32 lbl_803E53B8;
-extern f32 lbl_803E53BC;
-extern f32 lbl_803E53C0;
-extern f32 lbl_803E53C4;
-extern f32 lbl_803E53C8;
-extern f64 lbl_803E53D0;
-extern f64 lbl_803E53D8;
-extern f32 lbl_803E53E0;
-extern f32 lbl_803E53E4;
-extern f32 lbl_803E53E8;
-extern f32 lbl_803E53EC;
-extern f32 lbl_803E53F0;
-extern f32 lbl_803E53F4;
 
 #define BOMBPLANT_GAME_BIT_AVAILABLE_SPORES 0x66c
 #define BOMBPLANTSPORE_MSG_DETONATE 0x7000b

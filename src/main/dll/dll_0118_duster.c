@@ -41,9 +41,6 @@ void MagicPlant_update(int obj);
 
 int MagicPlant_getExtraSize(void);
 int trickywarp_getExtraSize(void);
-int duster_getExtraSize(void) { return 0x20; }
-int curvefish_getExtraSize(void);
-
 STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
 STATIC_ASSERT(sizeof(DusterState) == 0x20);
 STATIC_ASSERT(offsetof(DusterState, moveStepScale) == 0x00);
@@ -60,6 +57,14 @@ STATIC_ASSERT(offsetof(DusterState, active) == 0x1b);
 STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
 STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
 STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
+extern void* gCameraInterface;
+extern void objRenderFn_8003b8f4(int obj, float arg);
+extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
+                              void* obj, int flags, int mask, int arg9, int arg10);
+extern f32 lbl_803E38B4;
+
+int duster_getExtraSize(void) { return 0x20; }
+int curvefish_getExtraSize(void);
 
 int duster_SeqFn(u8* obj)
 {
@@ -68,13 +73,9 @@ int duster_SeqFn(u8* obj)
     return 0;
 }
 
-extern void* gCameraInterface;
-
 u32 MagicPlant_getObjectTypeId(MagicPlantObject* obj);
 
 void StayPoint_init(u16* obj);
-
-extern void objRenderFn_8003b8f4(int obj, float arg);
 
 void MagicPlant_free(int obj, int param_2);
 
@@ -100,10 +101,6 @@ void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 }
-
-extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
-                              void* obj, int flags, int mask, int arg9, int arg10);
-extern f32 lbl_803E38B4;
 
 void duster_hitDetect(int param_1)
 {

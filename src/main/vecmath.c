@@ -2,6 +2,32 @@
 
 extern f32 powfBitEstimate(f32 x, f32 y);
 
+extern f32 timeDelta;
+extern int randomGetRange(int lo, int hi);
+extern float fn_802924B4(float y, float x);
+extern double lbl_803DE7D8;
+extern f32 fcos16(int angle);
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803DE7D0;
+extern f32 lbl_803DE808;
+extern f32 lbl_803DE80C;
+extern f32 lbl_803DE7C0;
+extern f32 lbl_803DE7C4;
+extern void mtxRotateByVec3s(f32* mtx, void* transform);
+extern void mtx44Transpose(f32* src, f32* dst);
+extern void setMatrixFromObjectPos(f32* mtx, u8* obj);
+extern f32 lbl_803DE810;
+extern int rand(void);
+extern f32 lbl_803DE7F8;
+extern f32 fsin16(int angle);
+extern f32 lbl_803DE7F0;
+extern f32 mathSinf(f32);
+extern f32 mathCosf(f32);
+extern f32 lbl_803DE7E8;
+extern f32 lbl_803DE7EC;
+extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
+extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
+
 undefined2*
 FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -19,8 +45,6 @@ FUN_80017468(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 {
     return 0;
 }
-
-extern f32 timeDelta;
 
 undefined4
 FUN_80017500(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
@@ -44,8 +68,6 @@ FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 {
     return 0;
 }
-
-extern int randomGetRange(int lo, int hi);
 
 #pragma scheduling off
 #pragma peephole off
@@ -71,9 +93,6 @@ void Vec3_ScaleAdd(f32* a, f32 s, f32* b, f32* out)
     out[2] = s * b[2] + a[2];
 }
 
-extern float fn_802924B4(float y, float x);
-extern double lbl_803DE7D8;
-
 int getAngle(float y, float x)
 {
     return (int)(lbl_803DE7D8 * fn_802924B4(y, x));
@@ -83,10 +102,6 @@ int atan2_8002178c(float y, float x)
 {
     return (int)(lbl_803DE7D8 * fn_802924B4(y, x));
 }
-
-extern f32 fcos16(int angle);
-extern f32 sqrtf(f32 x);
-extern f32 lbl_803DE7D0;
 
 void mtx44ScaleRow1(u8* p, f32 s)
 {
@@ -127,9 +142,6 @@ void Vec3_Cross(f32* a, f32* b, f32* out)
     out[2] = a[0] * b[1] - a[1] * b[0];
 }
 
-extern f32 lbl_803DE808;
-extern f32 lbl_803DE80C;
-
 void Vec3_ReflectAgainstNormal(f32* a, f32* n, f32* out)
 {
     f32 yy = a[1] * n[1];
@@ -156,11 +168,6 @@ void Vec3_ReflectAgainstNormal(f32* a, f32* n, f32* out)
 }
 
 typedef f32 Mtx[3][4];
-extern f32 lbl_803DE7C0;
-extern f32 lbl_803DE7C4;
-
-extern void mtxRotateByVec3s(f32* mtx, void* transform);
-extern void mtx44Transpose(f32* src, f32* dst);
 
 void initRotationMtx(f32* m, f32 a, f32 b, f32 c)
 {
@@ -216,8 +223,6 @@ void mtx44Transpose(f32* src, f32* dst)
     dst[11] = src[14];
 }
 
-extern void setMatrixFromObjectPos(f32* mtx, u8* obj);
-
 void setMatrixFromObjectTransposed(void* obj, f32* out)
 {
     f32 m[16];
@@ -242,8 +247,6 @@ void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* o
     *oy = m[13] + (m[1] * x + m[5] * y + m[9] * z);
     *oz = m[14] + (m[2] * x + m[6] * y + m[10] * z);
 }
-
-extern f32 lbl_803DE810;
 
 void Matrix_TransformVector(f32* m, f32* v, f32* out)
 {
@@ -281,9 +284,6 @@ void Matrix_TransformVector(f32* m, f32* v, f32* out)
     m0 = m0 + m1;
     out[2] = m0 + m2;
 }
-
-extern int rand(void);
-extern f32 lbl_803DE7F8;
 
 int randomGetRange(int lo, int hi)
 {
@@ -334,9 +334,6 @@ void Vec3_Normalize(f32* v)
         v[2] *= s;
     }
 }
-
-extern f32 fsin16(int angle);
-extern f32 lbl_803DE7F0;
 
 #pragma fp_contract off
 void mtxRotateByVec3s(f32* mtx, void* transform)
@@ -411,9 +408,6 @@ void mtxRotateByVec3s(f32* mtx, void* transform)
     mtx[14] = t;
     mtx[15] = lbl_803DE7C4;
 }
-
-extern f32 mathSinf(f32);
-extern f32 mathCosf(f32);
 
 /* Tail residual: a1/a2/b0 FP volatile rotation (f1/f2/f3) resists decl-order
    and fresh-web restructures -- recipe #82 named-local cap. */
@@ -541,9 +535,6 @@ void mtx44_multSafe(int a, int b, f32* out)
     }
 }
 
-extern f32 lbl_803DE7E8;
-extern f32 lbl_803DE7EC;
-
 #pragma opt_strength_reduction on
 void vecRotateYXZ(s16* a, f32* v)
 {
@@ -587,8 +578,6 @@ void vecRotateYXZ(s16* a, f32* v)
     v[2] = z;
 }
 
-extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
-
 #pragma peephole on
 void setMatrixFromObjectPos(f32* m, u8* p)
 {
@@ -623,8 +612,6 @@ void setMatrixFromObjectPos(f32* m, u8* p)
     m[14] = *(f32*)(p + 0x14);
     m[15] = lbl_803DE7C4;
 }
-
-extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 
 #pragma dont_inline on
 #pragma peephole off

@@ -2,10 +2,49 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
+#include "main/dll/dll_0190_ecshcup.h"
+#include "main/effect_interfaces.h"
+#include "main/game_object.h"
 
 extern void* Obj_GetPlayerObject(void);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 timeDelta;
+
+extern f32 lbl_803E5048;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E5060;
+extern undefined4 ObjHits_SetHitVolumeSlot();
+extern undefined4 ObjHits_SyncObjectPositionIfDirty();
+extern undefined4 ObjHits_EnableObject();
+extern undefined4 ObjGroup_FindNearestObject();
+extern f32 lbl_803E5064;
+extern f32 lbl_803E5068;
+extern f32 lbl_803E506C;
+extern f32 lbl_803E5070;
+extern f32 lbl_803E5074;
+extern f32 lbl_803E5078;
+extern f32 lbl_803E507C;
+extern f32 lbl_803E5080;
+extern f32 lbl_803E5084;
+extern f32 lbl_803E5088;
+extern undefined4 lbl_803DDBC8;
+extern f32 Vec_distance(f32 * a, f32 * b);
+extern EffectInterface** gPartfxInterface;
+extern f32 lbl_802C23B8[];
+extern f32 mathSinf(f32 v);
+extern int getAngle(f32 dx, f32 dz);
+extern f32 Vec_xzDistance(float* a, float* b);
+extern f32 lbl_803E50A0;
+extern f32 lbl_803E50A4;
+extern f32 lbl_803E50A8;
+extern f32 lbl_803E50AC;
+extern f32 lbl_803E50B0;
+extern f32 lbl_803E50B4;
+extern f32 lbl_803E50B8;
+extern f32 lbl_803E50BC;
+extern f32 lbl_803E50C0;
+extern f32 lbl_803E50C4;
+extern f32 lbl_803E50C8;
 
 void ecsh_cup_hitDetect(void)
 {
@@ -14,10 +53,6 @@ void ecsh_cup_hitDetect(void)
 int gpsh_scene_getExtraSize(void);
 int ecsh_cup_getExtraSize(void) { return 0x30; }
 int ecsh_cup_getObjectTypeId(void) { return 0x0; }
-
-extern f32 lbl_803E5048;
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E5060;
 
 void ecsh_cup_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -31,12 +66,6 @@ void ecsh_cup_free(int* obj)
 }
 
 void gpsh_scene_init(int* obj, int* def);
-
-#include "main/dll/dll_0190_ecshcup.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-#include "main/objseq.h"
 
 typedef struct EcshCupState
 {
@@ -56,33 +85,12 @@ typedef struct EcshCupState
     u8 pad2F[0x30 - 0x2F];
 } EcshCupState;
 
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_SyncObjectPositionIfDirty();
-extern undefined4 ObjHits_EnableObject();
-extern undefined4 ObjGroup_FindNearestObject();
-
-extern f32 lbl_803E5064;
-extern f32 lbl_803E5068;
-extern f32 lbl_803E506C;
-extern f32 lbl_803E5070;
-extern f32 lbl_803E5074;
-extern f32 lbl_803E5078;
-extern f32 lbl_803E507C;
-extern f32 lbl_803E5080;
-extern f32 lbl_803E5084;
-extern f32 lbl_803E5088;
-extern undefined4 lbl_803DDBC8;
-
 typedef struct
 {
     f32 x;
     f32 y;
     f32 z;
 } CupVec3;
-
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern EffectInterface** gPartfxInterface;
-extern f32 lbl_802C23B8[];
 
 #pragma peephole on
 void ecsh_cup_update(short* obj)
@@ -305,21 +313,6 @@ void ecsh_cup_init(int obj, int p2)
 void ecsh_cup_initialise(void)
 {
 }
-
-extern f32 mathSinf(f32 v);
-extern int getAngle(f32 dx, f32 dz);
-extern f32 Vec_xzDistance(float* a, float* b);
-extern f32 lbl_803E50A0;
-extern f32 lbl_803E50A4;
-extern f32 lbl_803E50A8;
-extern f32 lbl_803E50AC;
-extern f32 lbl_803E50B0;
-extern f32 lbl_803E50B4;
-extern f32 lbl_803E50B8;
-extern f32 lbl_803E50BC;
-extern f32 lbl_803E50C0;
-extern f32 lbl_803E50C4;
-extern f32 lbl_803E50C8;
 
 #pragma scheduling off
 #pragma peephole off

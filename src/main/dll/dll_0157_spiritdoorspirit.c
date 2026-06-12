@@ -71,6 +71,14 @@ extern f32 lbl_803E4F6C;
 extern f32 lbl_803E4F70;
 extern f32 lbl_803E4F74;
 
+extern f32 lbl_803E422C;
+extern uint GameBit_Get(int eventId);
+extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
+extern f32 lbl_803E4190;
+extern f32 lbl_803E42B8;
+extern f32 lbl_803DBE78;
+extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
+
 void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* param_3)
 {
     uint uVar1;
@@ -392,9 +400,6 @@ void babycloudrunner_init_OLD_v1_1(int obj)
     return;
 }
 
-extern f32 lbl_803E422C;
-extern uint GameBit_Get(int eventId);
-
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
 typedef struct BabyCloudRunnerState
@@ -543,8 +548,6 @@ void cfguardian_release(void);
  * (cfguardian_getExtraSize == 0xa9c). */
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
-
 /* Per-object extra state for the CloudRunner main crystal
  * (cfmaincrystal_getExtraSize == 0x160). */
 
@@ -608,13 +611,9 @@ int cfguardian_getExtraSize(void);
 int spiritdoorspirit_getExtraSize(void) { return 0x1; }
 int spiritdoorspirit_getObjectTypeId(void) { return 0x0; }
 
-extern f32 lbl_803E4190;
-
 #pragma scheduling off
 void spiritdoorspirit_free(int x) { ObjGroup_RemoveObject(x, 0x4e); }
 #pragma scheduling reset
-
-extern f32 lbl_803E42B8;
 
 #pragma scheduling off
 #pragma peephole off
@@ -625,9 +624,6 @@ void spiritdoorspirit_init(int* obj)
     state->active = 0;
     *(s8*)&((GameObject*)obj)->anim.alpha = 0;
 }
-
-extern f32 lbl_803DBE78;
-extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 
 void spiritdoorspirit_update(int* obj)
 {

@@ -19,6 +19,7 @@ extern void Sfx_PlayFromObject(int obj, int id);
 #include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMsnowball.h"
+#include "main/dll/SC/SCtotemlogpuz.h"
 
 extern undefined4 FUN_8008112c();
 
@@ -29,6 +30,25 @@ extern f32 lbl_803E5360;
 
 #pragma scheduling on
 #pragma peephole on
+extern f32 lbl_803E46CC;
+extern void envFxActFn_800887f8(int a);
+extern void Music_Trigger(int a, int b);
+extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+extern f32 lbl_803E46C8;
+extern void fn_80088870(void* a, void* b, void* c, void* d);
+extern int getSaveGameLoadStatus(void);
+extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
+extern void getEnvfxAct(int obj, int target, int id, int p);
+extern int lbl_80323548[];
+extern f32 lbl_803E46D4;
+extern f32 lbl_803E4674;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern f32 lbl_803E46D0;
+extern void gameTextShow(int textId);
+extern int* gSHthorntailAnimationInterface;
+extern f32 lbl_803E4680;
+extern int Obj_FreeObject(int o);
+
 void FUN_801aaa6c(double param_1, int param_2, int param_3)
 {
     if ((double)lbl_803E530C == param_1)
@@ -76,13 +96,7 @@ FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 para
 int cclightfoot_getExtraSize(void);
 int cclevcontrol_getExtraSize(void) { return 0x10; }
 
-extern f32 lbl_803E46CC;
 void cclevcontrol_render(void) { objRenderFn_8003b8f4(lbl_803E46CC); }
-
-extern void envFxActFn_800887f8(int a);
-extern void Music_Trigger(int a, int b);
-extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-extern f32 lbl_803E46C8;
 
 #pragma scheduling off
 #pragma peephole off
@@ -104,13 +118,6 @@ int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 }
 
 void cclightfoot_free(int* obj, int p2);
-
-extern void fn_80088870(void* a, void* b, void* c, void* d);
-extern int getSaveGameLoadStatus(void);
-extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
-extern void getEnvfxAct(int obj, int target, int id, int p);
-extern int lbl_80323548[];
-extern f32 lbl_803E46D4;
 
 void cclevcontrol_init(int* obj)
 {
@@ -135,8 +142,6 @@ void cclevcontrol_init(int* obj)
     state[3] = (u32)(u8)(*gMapEventInterface)->getMode(((GameObject*)obj)->anim.mapEventSlot);
 }
 
-extern f32 lbl_803E4674;
-
 #pragma dont_inline on
 #pragma dont_inline reset
 
@@ -154,14 +159,6 @@ extern f32 lbl_803E4674;
  * id=1, increments gbit 0xa9, and latches state2[0x6] bit 0. Mirrors
  * the no-mark branches into a shared r0=0/cmpwi end-check via goto to
  * match target's layout. */
-
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-
-#include "main/dll/SC/SCtotemlogpuz.h"
-
-extern f32 lbl_803E46D0;
-extern void gameTextShow(int textId);
-extern int* gSHthorntailAnimationInterface;
 
 void cclevcontrol_update(int obj)
 {
@@ -254,6 +251,3 @@ void cclevcontrol_update(int obj)
         GameBit_Set(0xf26, 1);
     }
 }
-
-extern f32 lbl_803E4680;
-extern int Obj_FreeObject(int o);

@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/dll/DF/dll_198.h"
 
 typedef struct DFSHDoor2SpeciPlacement
 {
@@ -26,6 +27,10 @@ extern f32 lbl_803E4E34;
 extern f32 lbl_803E4E38;
 extern f32 lbl_803E4E3C;
 extern f32 lbl_803E4E40;
+
+extern uint GameBit_Get(int eventId);
+extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
+extern void objRenderFn_8003b8f4(f32);
 
 int DFSH_Door2Speci_SeqFn(int obj)
 {
@@ -85,13 +90,6 @@ int dfsh_door2speci_getObjectTypeId(void)
 {
     return 0;
 }
-
-#include "main/game_object.h"
-#include "main/dll/DF/dll_198.h"
-
-extern uint GameBit_Get(int eventId);
-extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
-extern void objRenderFn_8003b8f4(f32);
 
 #pragma scheduling off
 #pragma peephole off

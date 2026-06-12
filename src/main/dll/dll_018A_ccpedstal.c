@@ -18,6 +18,7 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 #include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMsnowball.h"
+#include "main/dll/SC/SCtotemlogpuz.h"
 
 extern int ObjTrigger_IsSetById();
 extern int ObjTrigger_IsSet();
@@ -30,6 +31,16 @@ extern f32 lbl_803E5360;
 
 #pragma scheduling on
 #pragma peephole on
+extern void ccpedstal_updateGameBitGate(int obj, u8* state2);
+extern void ccpedstal_updateAltVariant(int obj, u8* state2);
+extern void fn_8002B6D8(void* obj, int p2, int p3, int p4, int p5, int p6);
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern void gameBitDecrement(int id);
+extern int ObjTrigger_IsSet(int obj);
+extern void gameBitIncrement(int id);
+extern WaterfxInterface** gWaterfxInterface;
+extern void* fn_802972A8(void* obj);
+
 void FUN_801aaa6c(double param_1, int param_2, int param_3)
 {
     if ((double)lbl_803E530C == param_1)
@@ -78,10 +89,6 @@ int cclightfoot_getExtraSize(void);
 int ccpedstal_getExtraSize(void) { return 0x8; }
 int cclevcontrol_getExtraSize(void);
 
-extern void ccpedstal_updateGameBitGate(int obj, u8* state2);
-extern void ccpedstal_updateAltVariant(int obj, u8* state2);
-extern void fn_8002B6D8(void* obj, int p2, int p3, int p4, int p5, int p6);
-
 #pragma scheduling off
 #pragma peephole off
 void ccpedstal_init(int* obj, u8* params)
@@ -111,9 +118,6 @@ void cclevcontrol_init(int* obj);
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
-extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern void gameBitDecrement(int id);
 
 /* ccpedstal_updateGameBitGate: state2-driven model + trigger gate. If state2's gamebit at
  * +0x4 is set, latches obj[0xaf] bit 8 and selects model index 1.
@@ -158,9 +162,6 @@ void ccpedstal_updateGameBitGate(int obj, u8* state2)
     }
 }
 
-extern int ObjTrigger_IsSet(int obj);
-extern void gameBitIncrement(int id);
-
 /* ccpedstal_updateAltVariant: ccpedstal alt-variant think-routine. Toggles obj[0xaf]
  * bit 8 from gbit 0xdc5, then reads state2's gamebit at +0x4: if set,
  * sets bit 8 again and selects model 0; if clear, selects model 1 and
@@ -203,8 +204,6 @@ void ccpedstal_updateAltVariant(int obj, u8* state2)
     }
 }
 
-extern WaterfxInterface** gWaterfxInterface;
-
 void ccpedstal_update(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
@@ -226,7 +225,3 @@ void ccpedstal_update(int obj)
     }
     (*(void (*)(int, int))*(int*)state)(obj, state);
 }
-
-extern void* fn_802972A8(void* obj);
-
-#include "main/dll/SC/SCtotemlogpuz.h"

@@ -75,6 +75,14 @@ extern f32 lbl_803E6A20;
 extern f32 lbl_803E6A24;
 extern f32 lbl_803E6A80;
 
+extern f32 lbl_803E5D78;
+extern void Obj_SetActiveModelIndex(int* obj, int idx);
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E5D90;
+extern int GameBit_Get(int id);
+extern int Obj_GetPlayerObject(void);
+extern void GameBit_Set(int slot, int val);
+
 void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
@@ -214,8 +222,6 @@ void FUN_801f2b94(short* param_1)
     return;
 }
 
-extern f32 lbl_803E5D78;
-
 void wmlasertarget_free(void)
 {
 }
@@ -231,8 +237,6 @@ void wmlasertarget_release(void)
 void wmlasertarget_initialise(void)
 {
 }
-
-extern void Obj_SetActiveModelIndex(int* obj, int idx);
 
 void wmlasertarget_update(int* obj)
 {
@@ -279,9 +283,6 @@ int wmlasertarget_getExtraSize(void) { return 0x4; }
 int wmlasertarget_getObjectTypeId(void) { return 0x0; }
 int dll_200_getExtraSize_ret_40(void);
 
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E5D90;
-
 void wmlasertarget_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -290,8 +291,6 @@ void wmlasertarget_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-extern int GameBit_Get(int id);
-
 void wmlasertarget_init(char* obj, s8* p)
 {
     WmLaserTargetState* inner = ((GameObject*)obj)->extra;
@@ -299,8 +298,6 @@ void wmlasertarget_init(char* obj, s8* p)
     inner->cooldown = *(s16*)(p + 0x1a);
     inner->toggleQueued = 0;
 }
-
-extern int Obj_GetPlayerObject(void);
 
 /* dll_1FF_render: when obj->_f8 implies
  * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
@@ -314,8 +311,6 @@ extern int Obj_GetPlayerObject(void);
  * (dll_200_SeqFn) into obj->_bc and prime obj->_b8 (the body block) with
  * fixed bytes, the three float position-quaternion from arg+8/c/10,
  * GameBit_Get(0xd0) latched into b->_24, plus several literal latches. */
-
-extern void GameBit_Set(int slot, int val);
 
 #pragma opt_strength_reduction off
 

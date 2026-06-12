@@ -67,6 +67,24 @@ extern f32 lbl_803E3B8C;
 extern f32 lbl_803E3B90;
 extern f32 lbl_803E3B94;
 
+extern void Obj_FreeObject(int* obj);
+extern f32 timeDelta;
+extern int getAngle(f32 a, f32 b);
+extern void GameBit_Set(int eventId, int value);
+extern undefined4* gBaddieControlInterface;
+extern undefined4* gPlayerInterface;
+extern f32 lbl_803E2EB8;
+extern f32 lbl_803E2EE8;
+extern void* lbl_803AC5D0[];
+extern f32 sqrtf(f32);
+extern f32 lbl_803E2EB0;
+extern f32 lbl_803E2EB4;
+extern f32 lbl_803E2EBC;
+extern f32 lbl_803E2EC0;
+extern f32 lbl_803E2EC4;
+extern f32 lbl_803E2EC8;
+extern f32 lbl_803E2ECC;
+
 undefined4
 FUN_8015e0d0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -435,9 +453,6 @@ static inline u8 scarab_isObjectInList(void* o)
 
 void fn_8015FCCC(int obj);
 
-extern void Obj_FreeObject(int* obj);
-extern f32 timeDelta;
-
 void iceball_update(undefined2* param_1, int param_2);
 
 #pragma dont_inline on
@@ -753,8 +768,6 @@ void iceball_release(void);
 
 void iceball_initialise(void);
 
-extern int getAngle(f32 a, f32 b);
-
 int chukchuk_getExtraSize(void);
 int chukchuk_getObjectTypeId(void);
 int iceball_getExtraSize(void);
@@ -781,7 +794,6 @@ int grimble_stateHandlerB03(int p1, u8* obj)
 
 int fn_8015E00C(int p1, u8* obj);
 
-extern void GameBit_Set(int eventId, int value);
 #pragma scheduling off
 int grimble_stateHandlerB05(int* obj, u8* obj2)
 {
@@ -795,14 +807,7 @@ int grimble_stateHandlerB05(int* obj, u8* obj2)
     return 0;
 }
 
-extern undefined4* gBaddieControlInterface;
-
 int fn_801603E8(int* obj, u8* obj2);
-
-extern undefined4* gPlayerInterface;
-
-extern f32 lbl_803E2EB8;
-extern f32 lbl_803E2EE8;
 
 int grimble_stateHandlerA08(int* obj, GroundBaddieState* state)
 {
@@ -846,8 +851,6 @@ int grimble_stateHandlerB04(int* obj, GroundBaddieState* state)
     }
     return 0;
 }
-
-extern void* lbl_803AC5D0[];
 
 int grimble_stateHandlerB01(int* obj, GroundBaddieState* state)
 {
@@ -1227,15 +1230,6 @@ ObjectDescriptor gIceBallObjDescriptor = {
     (ObjectDescriptorCallback)iceball_getObjectTypeId,
     iceball_getExtraSize,
 };
-
-extern f32 sqrtf(f32);
-extern f32 lbl_803E2EB0;
-extern f32 lbl_803E2EB4;
-extern f32 lbl_803E2EBC;
-extern f32 lbl_803E2EC0;
-extern f32 lbl_803E2EC4;
-extern f32 lbl_803E2EC8;
-extern f32 lbl_803E2ECC;
 
 /* scarab_updateProximityGate: scarab AI proximity gate. If no current target, dispatches
  * vtable[5](obj, state, 0) and returns 1. Else (unless state mode 6 means

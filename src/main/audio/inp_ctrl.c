@@ -10,6 +10,12 @@ extern s16 sndSintab[];
  *
  * EN v1.1 Address: 0x802827C8, size 72b
  */
+extern u8 lbl_803BDA74[];
+extern u8 lbl_803BDEF4[];
+extern u32 lbl_803D3CA0[];
+extern u32 lbl_8032FFE0[];
+extern u32 lbl_8032FFF0[];
+
 u16 inpGetPostAuxB(McmdVoiceState* state)
 {
     u32 flags = state->inputDirtyFlags;
@@ -36,13 +42,6 @@ u16 inpGetTremolo(McmdVoiceState* state)
     state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_TREMOLO;
     return _GetInputValue(state, &state->tremoloInput, state->midiSlot, state->midiEvent);
 }
-
-extern u8 lbl_803BDA74[];
-extern u8 lbl_803BDEF4[];
-extern u32 lbl_803D3CA0[];
-extern u32 lbl_8032FFE0[];
-extern u32 lbl_8032FFF0[];
-
 
 /*
  * Cached aux A input getter for a studio/channel/slot.

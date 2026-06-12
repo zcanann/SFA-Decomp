@@ -67,6 +67,35 @@ extern f32 lbl_803E4F6C;
 extern f32 lbl_803E4F70;
 extern f32 lbl_803E4F74;
 
+extern f32 lbl_803E422C;
+extern uint GameBit_Get(int eventId);
+extern void* Obj_GetPlayerObject(void);
+extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern u8 framesThisStep;
+extern f32 lbl_803E4210;
+extern void fn_8019D9F0(int* obj);
+extern int* lbl_803DDB10;
+extern void vecRotateZXY(s16 * rotIn, f32 * outVec);
+extern void getEnvfxAct(int a, int b, int c, int d);
+extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
+extern void Sfx_SetObjectChannelVolume(int obj, int ch, int max, f32 vol);
+extern void PSVECNormalize(f32 * out, f32 * in);
+extern f32 lbl_803E41D8;
+extern f32 lbl_803E41DC;
+extern f32 lbl_803E41E0;
+extern f32 lbl_803E41E4;
+extern f32 lbl_803E41E8;
+extern f32 lbl_803E41EC;
+extern f32 lbl_803E41F0;
+extern f32 lbl_803E41F4;
+extern f32 lbl_803E41F8;
+extern f32 lbl_803E41FC;
+extern f32 lbl_803E4200;
+extern f32 lbl_803E4204;
+extern void Camera_EnableViewYOffset(void);
+extern int fn_8019AF64(int* obj, void* path, f32 f, int phase, void* spd);
+
 void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* param_3)
 {
     uint uVar1;
@@ -388,9 +417,6 @@ void babycloudrunner_init_OLD_v1_1(int obj)
     return;
 }
 
-extern f32 lbl_803E422C;
-extern uint GameBit_Get(int eventId);
-
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
 typedef struct BabyCloudRunnerState
@@ -539,12 +565,6 @@ void cfguardian_release(void);
  * (cfguardian_getExtraSize == 0xa9c). */
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
-extern void* Obj_GetPlayerObject(void);
-
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
-
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-
 /* Per-object extra state for the CloudRunner main crystal
  * (cfmaincrystal_getExtraSize == 0x160). */
 
@@ -584,13 +604,9 @@ void cfmaincrystal_initialise(void)
 
 void babycloudrunner_hitDetect(void);
 
-extern u8 framesThisStep;
-
 int cfmaincrystal_getExtraSize(void) { return 0x160; }
 int cfmaincrystal_getObjectTypeId(void) { return 0x1; }
 int babycloudrunner_getExtraSize(void);
-
-extern f32 lbl_803E4210;
 
 #pragma peephole off
 void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -609,8 +625,6 @@ void cfmaincrystal_free(int* obj)
 
 void cfperch_free(int* obj);
 
-extern void fn_8019D9F0(int* obj);
-extern int* lbl_803DDB10;
 void cfmaincrystal_update(int* obj)
 {
     uint payload;
@@ -653,27 +667,6 @@ void cfmaincrystal_init(int* obj, u8* def)
     }
     ObjMsg_AllocQueue(obj, 2);
 }
-
-extern void vecRotateZXY(s16 * rotIn, f32 * outVec);
-
-extern void getEnvfxAct(int a, int b, int c, int d);
-extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
-extern void Sfx_SetObjectChannelVolume(int obj, int ch, int max, f32 vol);
-extern void PSVECNormalize(f32 * out, f32 * in);
-extern f32 lbl_803E41D8;
-extern f32 lbl_803E41DC;
-extern f32 lbl_803E41E0;
-extern f32 lbl_803E41E4;
-extern f32 lbl_803E41E8;
-extern f32 lbl_803E41EC;
-extern f32 lbl_803E41F0;
-extern f32 lbl_803E41F4;
-extern f32 lbl_803E41F8;
-extern f32 lbl_803E41FC;
-extern f32 lbl_803E4200;
-extern f32 lbl_803E4204;
-
-extern void Camera_EnableViewYOffset(void);
 
 typedef struct
 {
@@ -930,5 +923,3 @@ void fn_8019D9F0(int* obj)
     while (i < 3);
     *(s16*)obj += framesThisStep * 0x2a;
 }
-
-extern int fn_8019AF64(int* obj, void* path, f32 f, int phase, void* spd);

@@ -9,6 +9,11 @@
  * obj->_af |= 8 (redundant with the unconditional prologue store).
  */
 
+extern f32 lbl_803E3EE8;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E3EEC;
+extern f32 lbl_803E3EF0;
+
 void cflightwall_free(void)
 {
 }
@@ -35,13 +40,8 @@ int cflightwall_getExtraSize(void) { return 0x0; }
 int cflightwall_getObjectTypeId(void) { return 0x0; }
 int barrelpad_getExtraSize(void);
 
-extern f32 lbl_803E3EE8;
-extern void objRenderFn_8003b8f4(f32);
 void cflightwall_render(void) { objRenderFn_8003b8f4(lbl_803E3EE8); }
 void barrelpad_render(void);
-
-extern f32 lbl_803E3EEC;
-extern f32 lbl_803E3EF0;
 
 void cflightwall_init(s16* obj, u8* def)
 {

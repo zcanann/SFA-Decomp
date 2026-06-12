@@ -49,7 +49,6 @@ typedef struct SalStudio
     u8 padAC[0x10];
 } SalStudio;
 
-
 /* ================= MusyX hardware DSP control (hw_dspctrl.c) =================
  * salBuildCommandList (was fn_8027C48C) (EN v1.0 0x8027C48C, 10828b).
  * Recovered against the public MusyX runtime source (hw_dspctrl.c,
@@ -91,6 +90,9 @@ extern void DCFlushRange(void* addr, u32 len);
 extern void* memset(void* dst, int c, u32 n);
 int salSynthSendMessage(int synth, int msg);
 void salDeactivateVoice(SalVoice* voice);
+
+extern int (*salMessageCallback)(int msg, int arg);
+extern void salDeactivateVoice(SalVoice* voice);
 
 static void sal_setup_dspvol(u16* dsp_delta, u16* last_vol, u16 vol)
 {
@@ -1080,9 +1082,6 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
     }
     DCStoreRangeNoSync(dspCmdCurBase, (u32)dspCmdPtr - (u32)dspCmdCurBase);
 }
-
-extern int (*salMessageCallback)(int msg, int arg);
-extern void salDeactivateVoice(SalVoice* voice);
 
 int salSynthSendMessage(int synth, int msg)
 {

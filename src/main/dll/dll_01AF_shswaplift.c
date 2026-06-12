@@ -7,6 +7,13 @@ extern void objRenderFn_8003b8f4(f32);
 
 extern f32 lbl_803E54C8;
 
+extern s32 lbl_803DC058[2];
+extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
+extern void getYButtonItem(s16 * out);
+extern int cMenuGetSelectedItem(void);
+extern int ObjTrigger_IsSetById(int obj, int id);
+extern int ObjTrigger_IsSet(int obj);
+
 void warpstonelift_free(void)
 {
 }
@@ -26,9 +33,6 @@ void warpstonelift_initialise(void)
 int warpstonelift_getExtraSize(void) { return 0x1; }
 int warpstonelift_getObjectTypeId(void) { return 0x0; }
 int sh_staff_getExtraSize(void);
-
-extern s32 lbl_803DC058[2];
-extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
 
 void warpstonelift_init(int obj, s8* def)
 {
@@ -54,11 +58,6 @@ void warpstonelift_init(int obj, s8* def)
         break;
     }
 }
-
-extern void getYButtonItem(s16 * out);
-extern int cMenuGetSelectedItem(void);
-extern int ObjTrigger_IsSetById(int obj, int id);
-extern int ObjTrigger_IsSet(int obj);
 
 void warpstonelift_update(u8* obj)
 {

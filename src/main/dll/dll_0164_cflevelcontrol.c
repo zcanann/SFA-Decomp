@@ -40,6 +40,29 @@ extern void GameBit_Set(int eventId, int value);
 extern void s16toFloat(void* p, int duration);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
+extern void storeZeroToFloatParam(void* p);
+extern s16 lbl_80323008[];
+extern void objRenderFn_8003b8f4(f32);
+extern void* Obj_GetPlayerObject(void);
+extern f32 lbl_803E43E8;
+extern int ObjList_FindObjectById(int objectId);
+extern void fn_8017C294(int obj);
+extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
+extern void skyFn_80088e54(int mode, f32 brightness);
+extern void unlockLevel(int a, int b, int c);
+extern int playerIsDisguised(int player);
+extern void fn_80295CF4(int player, int mode);
+extern int getCurMapLayer(void);
+extern int lbl_802C22E8[];
+extern f32 lbl_803E43EC;
+extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit,
+                                  int latchBit, int musicId);
+extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit,
+                                          int clearIfClearBit, int latchBit, int musicId);
+extern void loadMapAndParent(int mapId);
+extern int mapGetDirIdx(int mapId);
+extern void lockLevel(int dirIdx, int b);
+
 void FUN_801a4520(int param_1)
 {
     int iVar1;
@@ -107,9 +130,6 @@ void cflevelcontrol_initialise(void)
 {
 }
 
-extern void storeZeroToFloatParam(void* p);
-extern s16 lbl_80323008[];
-
 void cflevelcontrol_init(u8* obj, u8* params)
 {
     extern void objSetSlot(void* obj, int resourceId); /* #57 */
@@ -156,10 +176,6 @@ int cflevelcontrol_getExtraSize(void) { return 0x10; }
 int cflevelcontrol_getObjectTypeId(void) { return 0x0; }
 int exploded_getExtraSize(void);
 
-extern void objRenderFn_8003b8f4(f32);
-extern void* Obj_GetPlayerObject(void);
-extern f32 lbl_803E43E8;
-
 void cflevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -167,21 +183,6 @@ void cflevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern int ObjList_FindObjectById(int objectId);
-extern void fn_8017C294(int obj);
-extern void getEnvfxActImmediately(void* obj, void* target, int animId, int flags);
-extern void skyFn_80088e54(int mode, f32 brightness);
-extern void unlockLevel(int a, int b, int c);
-extern int playerIsDisguised(int player);
-extern void fn_80295CF4(int player, int mode);
-extern int getCurMapLayer(void);
-extern int lbl_802C22E8[];
-extern f32 lbl_803E43EC;
-extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit,
-                                  int latchBit, int musicId);
-extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit,
-                                          int clearIfClearBit, int latchBit, int musicId);
 
 void cflevelcontrol_update(int obj)
 {
@@ -356,10 +357,6 @@ void attractor_free(int x);
  * slidingdoor_SeqFn as obj->thinkRoutine; convert data[0x21] to f32, scale by
  * lbl_803E43C0 and obj->_50->[4], stash at obj+0x8; then clear bits 5..7 of
  * obj->_b8->_0. */
-
-extern void loadMapAndParent(int mapId);
-extern int mapGetDirIdx(int mapId);
-extern void lockLevel(int dirIdx, int b);
 
 int CFLevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

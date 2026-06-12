@@ -9,6 +9,8 @@
 #include "main/dll/curve_walker.h"
 
 #include "main/dll/rom_curve_segment_projection.h"
+#include "main/dll/dll_0015_curves.h"
+#include "main/objlib.h"
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006a10();
@@ -86,6 +88,14 @@ extern ObjfsaPatch lbl_8039CAE8[];
 extern ObjfsaWalkGroup lbl_8039FAE8[];
 extern u8 lbl_803A1730[];
 
+extern u8 lbl_803DD440;
+extern u32 playerOverride;
+extern u32 lbl_803DD458;
+extern void* memset(void* dst, int val, u32 n);
+extern f32 lbl_803E05D0;
+extern f32 lbl_803E05D4;
+extern f32 lbl_803E05D8;
+
 static inline ObjfsaPatch* Objfsa_GetPatch(int patchIndex)
 {
     return &lbl_8039CAE8[patchIndex];
@@ -159,8 +169,6 @@ static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, uint currentWalkGr
     }
     return patchGroupId & 0xff;
 }
-
-extern u8 lbl_803DD440;
 
 undefined4
 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
@@ -1269,17 +1277,9 @@ void doNothing_onTrickyFree(void);
 
 int dll_12_func06_ret_0(void) { return 0x0; }
 
-extern u32 playerOverride;
-
-extern u32 lbl_803DD458;
 void dll_12_func09(void) { lbl_803DD458 = 0x3; }
 
-extern void* memset(void* dst, int val, u32 n);
 void player_init(int unused, void* obj, int a, int b);
-
-extern f32 lbl_803E05D0;
-extern f32 lbl_803E05D4;
-extern f32 lbl_803E05D8;
 
 static inline f32 RomCurveNode_GetHermiteTangent(void* node, int angleOffset, int useSin)
 {
@@ -1315,11 +1315,6 @@ int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
 /* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/dll/dll_0015_curves.h"
-#include "main/game_ui_interface.h"
-#include "main/objlib.h"
-#include "main/game_object.h"
 
 static inline u32 RomCurve_GetId(RomCurveDef* curve);
 

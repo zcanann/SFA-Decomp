@@ -45,14 +45,44 @@ typedef struct MagiccavetopState
     u8 pad8[0xC - 0x8];
 } MagiccavetopState;
 
-int magiccavetop_getExtraSize(void) { return 0xc; }
-int trickyguardspot_getExtraSize(void);
-
 extern f32 timeDelta;
-
 extern int Obj_GetActiveModel(int* obj);
 extern int* ObjModel_GetRenderOpTextureRefs(int model, int idx);
 extern f32 lbl_803E3C4C;
+extern void stopRumble2(void);
+extern void* fn_802966CC(void* player);
+extern void staffSetGlow(void* a, int b, int c);
+extern int mapGetDirIdx(int mapId);
+extern void mapUnload(int idx, int flags);
+extern void envFxActFn_800887f8(int a);
+extern void warpToMap(int mapId, int b);
+extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
+extern int loadMapAndParent(int mapId);
+extern void unlockLevel(int a, int b, int c);
+extern void lockLevel(int idx, int b);
+extern void stopRumble(void);
+extern void doRumble(f32 v);
+extern void Sfx_PlayFromObject(int* obj, int sfxId);
+extern void objfx_spawnArcedBurst(int* obj, int enabled, f32 radius, int particleKind,
+                                  int particleId, int lifetime, f32 sx, f32 sy, f32 sz,
+                                  void* args, int a);
+extern f32 lbl_803E3C30;
+extern f32 lbl_803E3C34;
+extern f32 lbl_803E3C38;
+extern f32 lbl_803E3C3C;
+extern f32 lbl_803E3C40;
+extern f32 lbl_803E3C44;
+extern f32 lbl_803E3C48;
+extern f32 lbl_803E3C50;
+extern f32 lbl_803E3C54;
+extern f32 lbl_803E3C58;
+extern f32 lbl_803E3C5C;
+extern f32 lbl_803E3C60;
+extern f32 lbl_803E3C64;
+extern f32 lbl_803E3C68;
+
+int magiccavetop_getExtraSize(void) { return 0xc; }
+int trickyguardspot_getExtraSize(void);
 
 void magiccavetop_init(int* obj, s8* def)
 {
@@ -79,12 +109,6 @@ void magiccavetop_init(int* obj, s8* def)
     }
 }
 
-extern void stopRumble2(void);
-extern void* fn_802966CC(void* player);
-extern void staffSetGlow(void* a, int b, int c);
-extern int mapGetDirIdx(int mapId);
-extern void mapUnload(int idx, int flags);
-
 void magiccavetop_free(int* obj)
 {
     u8* state = ((GameObject*)obj)->extra;
@@ -109,34 +133,6 @@ void magiccavetop_free(int* obj)
         }
     }
 }
-
-extern void envFxActFn_800887f8(int a);
-extern void warpToMap(int mapId, int b);
-
-extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
-extern int loadMapAndParent(int mapId);
-extern void unlockLevel(int a, int b, int c);
-extern void lockLevel(int idx, int b);
-extern void stopRumble(void);
-extern void doRumble(f32 v);
-extern void Sfx_PlayFromObject(int* obj, int sfxId);
-extern void objfx_spawnArcedBurst(int* obj, int enabled, f32 radius, int particleKind,
-                                  int particleId, int lifetime, f32 sx, f32 sy, f32 sz,
-                                  void* args, int a);
-extern f32 lbl_803E3C30;
-extern f32 lbl_803E3C34;
-extern f32 lbl_803E3C38;
-extern f32 lbl_803E3C3C;
-extern f32 lbl_803E3C40;
-extern f32 lbl_803E3C44;
-extern f32 lbl_803E3C48;
-extern f32 lbl_803E3C50;
-extern f32 lbl_803E3C54;
-extern f32 lbl_803E3C58;
-extern f32 lbl_803E3C5C;
-extern f32 lbl_803E3C60;
-extern f32 lbl_803E3C64;
-extern f32 lbl_803E3C68;
 
 typedef struct MagicCaveTopFxArgs
 {

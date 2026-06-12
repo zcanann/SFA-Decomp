@@ -63,6 +63,14 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
+extern f32 lbl_803E5958;
+extern f32 lbl_803E595C;
+extern f32 lbl_803E5970;
+extern f32 lbl_803E5974;
+extern f32 lbl_803E5960;
+extern u8 lbl_803DB411;
+extern f32 lbl_803DDC50;
+
 void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined2* param_9, int param_10)
@@ -88,14 +96,6 @@ void Flag_free(void);
 int ShipBattle_getExtraSize(void) { return 0x140; }
 int ShipBattle_getObjectTypeId(void) { return 0xb; }
 int Lamp_getExtraSize(void);
-
-extern f32 lbl_803E5958;
-extern f32 lbl_803E595C;
-extern f32 lbl_803E5970;
-extern f32 lbl_803E5974;
-extern f32 lbl_803E5960;
-extern u8 lbl_803DB411;
-extern f32 lbl_803DDC50;
 
 /* Stubs added to align function set with v1.0 asm. Source had Ghidra FUN_xxx
  * splits at wrong addresses; these stubs ensure every asm symbol has a src

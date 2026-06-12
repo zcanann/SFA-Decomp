@@ -79,6 +79,53 @@ extern f32 lbl_803E4F6C;
 extern f32 lbl_803E4F70;
 extern f32 lbl_803E4F74;
 
+extern f32 lbl_803E422C;
+extern f32 lbl_803E4244;
+extern f32 lbl_803E4258;
+extern u8 lbl_803DBE28;
+extern u8 lbl_803DBE30;
+extern void storeZeroToFloatParam(void* p);
+extern uint GameBit_Get(int eventId);
+extern int Obj_RemoveFromUpdateList(int* obj);
+extern void* Obj_GetPlayerObject(void);
+extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
+extern f32 lbl_803E4218;
+extern f32 lbl_803E423C;
+extern f32 lbl_803E4240;
+extern f32 timeDelta;
+extern f32 Vec_distance(void* a, void* b);
+extern f32 s16toFloat(int a, int b);
+extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
+extern void gameBitIncrement(int bit);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void objAudioFn_80039270(int obj, void* p, int id);
+extern f32 lbl_803E4230;
+extern f32 lbl_803E4234;
+extern f32 lbl_803DBE4C;
+extern int objUpdateOpacity(int sub);
+extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern void* getTrickyObject(void);
+extern f32 lbl_803E4248;
+extern void Sfx_StopObjectChannel(int obj, int ch);
+extern int fn_80080150(void* p);
+extern int timerCountDown(void* p);
+extern int randFn_80080100(int n);
+extern void Obj_UpdateRomCurveFollowVelocity(int* obj, void* p, f32 a, f32 b, f32 c, int d);
+extern void Obj_SmoothTurnAnglesTowardVelocity(int* obj, void* p, int n, f32 a, f32 b);
+extern void fn_8014C66C(int* a, void* b);
+extern int dll_2E_func0D(int* obj, void* p, f32 f, int c, f32* a, f32* b);
+extern int lbl_80322B28[];
+extern f32 lbl_803DBE38;
+extern f32 lbl_803DBE3C;
+extern f32 lbl_803DBE40;
+extern f32 lbl_803DBE44;
+extern f32 lbl_803DBE48;
+extern f32 lbl_803E4238;
+extern f32 lbl_803E424C;
+extern f32 lbl_803E4250;
+extern f32 lbl_803E4254;
+extern void getEnvfxAct(int a, int b, int c, int d);
+
 void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* param_3)
 {
     uint uVar1;
@@ -400,15 +447,6 @@ void babycloudrunner_init_OLD_v1_1(int obj)
     return;
 }
 
-extern f32 lbl_803E422C;
-extern f32 lbl_803E4244;
-extern f32 lbl_803E4258;
-extern u8 lbl_803DBE28;
-extern u8 lbl_803DBE30;
-extern void storeZeroToFloatParam(void* p);
-extern uint GameBit_Get(int eventId);
-extern int Obj_RemoveFromUpdateList(int* obj);
-
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
 typedef struct BabyCloudRunnerState
@@ -627,14 +665,6 @@ void cfguardian_release(void);
  * (cfguardian_getExtraSize == 0xa9c). */
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
-extern void* Obj_GetPlayerObject(void);
-
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
-extern f32 lbl_803E4218;
-extern f32 lbl_803E423C;
-extern f32 lbl_803E4240;
-extern f32 timeDelta;
-
 /* EN v1.0 0x8019E568  size: 352b  sandworm_turnTowardTargetAnim: turn toward the target by
  * a fraction of the yaw delta; when roughly aligned play/advance the idle
  * move, otherwise start or speed-scale the turn move by the delta. */
@@ -683,12 +713,6 @@ void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
     }
 }
 #pragma dont_inline reset
-
-extern f32 Vec_distance(void* a, void* b);
-extern f32 s16toFloat(int a, int b);
-extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
-extern void gameBitIncrement(int bit);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 /* EN v1.0 0x8019E6C8  size: 316b  babycloudrunner_func0B: when the player
  * gets within the trigger radius and the runner is in state 3, fire its
@@ -778,8 +802,6 @@ void babycloudrunner_initialise(void)
 
 void cfprisonguard_free(void);
 
-extern void objAudioFn_80039270(int obj, void* p, int id);
-
 int babycloudrunner_getExtraSize(void) { return 0x248; }
 int cfprisonguard_getExtraSize(void);
 
@@ -804,10 +826,6 @@ void babycloudrunner_free(int* obj)
 }
 
 void gcrobotlightbea_init(int* obj);
-
-extern f32 lbl_803E4230;
-extern f32 lbl_803E4234;
-extern f32 lbl_803DBE4C;
 
 /* EN v1.0 0x8019E3F4  size: 372b  fn_8019E3F4: pick the burrow/surface move
  * from the vertical speed, clamp the playback rate, latch the spit SFX
@@ -860,13 +878,6 @@ int fn_8019E3F4(int* obj)
 }
 #pragma opt_common_subs reset
 #pragma dont_inline reset
-
-extern int objUpdateOpacity(int sub);
-
-extern void objMove(int obj, f32 x, f32 y, f32 z);
-
-extern void* getTrickyObject(void);
-extern f32 lbl_803E4248;
 
 /* EN v1.0 0x8019E81C  size: 920b  babycloudrunner_SeqFn: range-check the
  * runner against the player and its trigger radii, chirp for queued cues,
@@ -978,26 +989,6 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-extern void Sfx_StopObjectChannel(int obj, int ch);
-
-extern int fn_80080150(void* p);
-extern int timerCountDown(void* p);
-extern int randFn_80080100(int n);
-extern void Obj_UpdateRomCurveFollowVelocity(int* obj, void* p, f32 a, f32 b, f32 c, int d);
-extern void Obj_SmoothTurnAnglesTowardVelocity(int* obj, void* p, int n, f32 a, f32 b);
-extern void fn_8014C66C(int* a, void* b);
-extern int dll_2E_func0D(int* obj, void* p, f32 f, int c, f32* a, f32* b);
-extern int lbl_80322B28[];
-extern f32 lbl_803DBE38;
-extern f32 lbl_803DBE3C;
-extern f32 lbl_803DBE40;
-extern f32 lbl_803DBE44;
-extern f32 lbl_803DBE48;
-extern f32 lbl_803E4238;
-extern f32 lbl_803E424C;
-extern f32 lbl_803E4250;
-extern f32 lbl_803E4254;
 
 typedef struct
 {
@@ -1227,5 +1218,3 @@ void babycloudrunner_update(int* obj)
         }
     }
 }
-
-extern void getEnvfxAct(int a, int b, int c, int d);

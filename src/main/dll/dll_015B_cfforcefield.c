@@ -2,35 +2,6 @@
 #include "main/dll/DR/dll_015A_explodable.h"
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
-
-extern u32 randomGetRange(int min, int max);
-
-#pragma scheduling on
-#pragma peephole on
-void cfforcefield_free(void)
-{
-}
-
-void cfforcefield_render(void)
-{
-}
-
-void cfforcefield_hitDetect(void)
-{
-}
-
-STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
-
-STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
-STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
-
-int cfforcefield_getExtraSize(void) { return 0x8; }
-int cfforcefield_getObjectTypeId(void) { return 0x0; }
-
-extern void Obj_FreeObject(int obj);
-
-/* segment pragma-stack balance (re-split): */
-
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
 #include "main/mapEvent.h"
@@ -39,22 +10,19 @@ extern void Obj_FreeObject(int obj);
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-typedef struct CfforcefieldPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} CfforcefieldPlacement;
+extern u32 randomGetRange(int min, int max);
 
+#pragma scheduling on
+#pragma peephole on
+STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
+STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
+STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
+extern void Obj_FreeObject(int obj);
 extern undefined8 FUN_80017698();
 extern undefined4 FUN_80041ff8();
 extern undefined4 FUN_80042b9c();
 extern undefined4 FUN_80042bec();
 extern undefined4 FUN_80044404();
-
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern uint GameBit_Get(int eventId);
 extern void Obj_BuildWorldTransformMatrix(void* obj, f32* mtx, int flags);
@@ -79,6 +47,35 @@ extern f32 lbl_803E43A0;
 extern f32 lbl_803E43A4;
 extern f32 lbl_803E43A8;
 extern f32 lbl_803E43AC;
+extern void storeZeroToFloatParam(void* p);
+extern void Obj_TransformLocalPointByWorldMatrix(void* obj, void* state, f32* out, int flags);
+
+void cfforcefield_free(void)
+{
+}
+
+void cfforcefield_render(void)
+{
+}
+
+void cfforcefield_hitDetect(void)
+{
+}
+
+int cfforcefield_getExtraSize(void) { return 0x8; }
+int cfforcefield_getObjectTypeId(void) { return 0x0; }
+
+/* segment pragma-stack balance (re-split): */
+
+typedef struct CfforcefieldPlacement
+{
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} CfforcefieldPlacement;
 
 #pragma scheduling off
 #pragma peephole off
@@ -265,8 +262,6 @@ void cfforcefield_initialise(void)
 
 void slidingdoor_free(void);
 
-extern void storeZeroToFloatParam(void* p);
-
 /* slidingdoor_SeqFn: slidingdoor "think" routine. Tracks whether the player or
  * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
  * (state[0] bits 5..7) through the door's open/close machine. Returns 1
@@ -306,8 +301,6 @@ void cfforcefield_init(s16* obj, void* data)
     ((ForceFieldInitFlags*)flagPtr)->disabled = (u8)GameBit_Get(*(s16*)((char*)data + 0x20));
     storeZeroToFloatParam(flagPtr + 4);
 }
-
-extern void Obj_TransformLocalPointByWorldMatrix(void* obj, void* state, f32* out, int flags);
 
 /* Exploded debris setup: seed object angles, linear velocity, angular velocity,
  * ground clearance, and the randomized lifetime countdown. */

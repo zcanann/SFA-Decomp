@@ -25,6 +25,8 @@ extern f32 lbl_803E14A8;
 extern f32 lbl_803E14AC;
 extern f32 lbl_803E14B0;
 
+extern u8 lbl_803188D8[];
+
 void dll_A0_func03(u8* sourceObj, int variant, int posSource, uint flags)
 {
     struct
@@ -181,8 +183,6 @@ void dll_A0_func03(u8* sourceObj, int variant, int posSource, uint flags)
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, tab, 0x18, &tab[0xd4], 0x1d9, 0);
 }
-
-extern u8 lbl_803188D8[];
 
 void dll_A1_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
 

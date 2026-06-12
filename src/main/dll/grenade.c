@@ -56,6 +56,43 @@ extern void trickyTurnTowardYaw(u8* obj, int yaw);
 extern f32 Vec_xzDistance(void* a, void* b);
 extern u32 lbl_803E23D0;
 
+extern void* Objfsa_FindNearestEnabledCurveType24(void* pos, int a, int b);
+extern float getXZDistance(float* a, float* b);
+extern float sqrtf(float x);
+extern u32 lbl_803E23CC;
+extern f32 lbl_803E2418;
+extern f32 lbl_803E2514;
+extern f32 lbl_803E24F8;
+extern void fn_80144B50(u8 * obj, u8 * state);
+extern void objPosFn_80039510(int obj, int flags, float* out);
+extern f32 lbl_803E24C8;
+extern u8 Obj_IsLoadingLocked(void);
+extern u8* Obj_AllocObjectSetup(int size, int id);
+extern u8* Obj_SetupObject(u8* e, int a, int b, int c, void* d);
+extern void objSetAnimSpeedTo1(u8 * e);
+extern f32 lbl_803E24AC;
+extern f32 lbl_803E23E4;
+extern u32 lbl_802C21DC[];
+extern f32 lbl_803E23F0;
+extern f32 lbl_803E249C;
+extern EffectInterface** gPartfxInterface;
+extern f32 lbl_803E2520;
+extern f32 lbl_803E23F8;
+extern int* gSHthorntailAnimationInterface;
+extern int cMenuGetSelectedItem(void);
+extern uint GameBit_Get(int bit);
+extern f32 mathSinf(f64 x);
+extern f64 mathCosf(f64 x);
+extern f64 lbl_803E2528;
+extern f32 lbl_803E2454;
+extern f32 lbl_803E2458;
+extern f32 lbl_803E2484;
+extern f32 lbl_803E2530;
+extern int ObjHits_GetPriorityHit(int obj, int* out, int a, int b);
+extern f32 lbl_803E2534;
+extern f32 lbl_803E24A8;
+extern f32 lbl_803E24EC;
+
 void trickyDigTunnel(u8* obj, u8* state)
 {
     u32 sfxTable;
@@ -277,14 +314,6 @@ void trickyDigTunnel(u8* obj, u8* state)
     }
 }
 
-extern void* Objfsa_FindNearestEnabledCurveType24(void* pos, int a, int b);
-extern float getXZDistance(float* a, float* b);
-extern float sqrtf(float x);
-extern u32 lbl_803E23CC;
-extern f32 lbl_803E2418;
-extern f32 lbl_803E2514;
-extern f32 lbl_803E24F8;
-
 void trickyFn_80141fec(u8* obj, u8* state)
 {
     u32 sfxTable;
@@ -428,8 +457,6 @@ void trickyFn_80141fec(u8* obj, u8* state)
         break;
     }
 }
-
-extern void fn_80144B50(u8 * obj, u8 * state);
 
 typedef struct TrickyFnRow
 {
@@ -614,9 +641,6 @@ void trickyFn_80142524(u8* obj, u8* state)
     }
 }
 
-extern void objPosFn_80039510(int obj, int flags, float* out);
-extern f32 lbl_803E24C8;
-
 int trickyFn_80142a14(int obj, int state)
 {
     int tex;
@@ -660,13 +684,6 @@ int trickyFn_80142a14(int obj, int state)
     }
     return 0;
 }
-
-extern u8 Obj_IsLoadingLocked(void);
-extern u8* Obj_AllocObjectSetup(int size, int id);
-extern u8* Obj_SetupObject(u8* e, int a, int b, int c, void* d);
-extern void objSetAnimSpeedTo1(u8 * e);
-extern f32 lbl_803E24AC;
-extern f32 lbl_803E23E4;
 
 int trickyFlameFn_80142b6c(u8* obj, u8* state)
 {
@@ -729,8 +746,6 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
     return 1;
 }
 
-extern u32 lbl_802C21DC[];
-
 int trickyFoodFn_80142d2c(int obj, int state)
 {
     int tex;
@@ -782,10 +797,6 @@ skip:
     }
     return (u8)trickyFn_8013b368(lbl_803E2408, obj, state) == 1;
 }
-
-extern f32 lbl_803E23F0;
-extern f32 lbl_803E249C;
-extern EffectInterface** gPartfxInterface;
 
 int trickyFn_80142eb0(int obj, int state)
 {
@@ -999,10 +1010,6 @@ undefined4 trickyFn_80143388(int obj, int* trickyState)
     return 1;
 }
 
-extern f32 lbl_803E2520;
-extern f32 lbl_803E23F8;
-extern int* gSHthorntailAnimationInterface;
-
 int trickyFn_801434b0(int obj, int* trickyState)
 {
     char bval;
@@ -1117,9 +1124,6 @@ typedef struct TrickyPackedSlots
     u8 c : 2;
     u8 d : 2;
 } TrickyPackedSlots;
-
-extern int cMenuGetSelectedItem(void);
-extern uint GameBit_Get(int bit);
 
 int trickyFoodFn_801437d4(u8* obj, u8* state)
 {
@@ -1456,14 +1460,6 @@ undefined4 fn_80143DD4(int obj, int* trickyState)
     return 1;
 }
 
-extern f32 mathSinf(f64 x);
-extern f64 mathCosf(f64 x);
-extern f64 lbl_803E2528;
-extern f32 lbl_803E2454;
-extern f32 lbl_803E2458;
-extern f32 lbl_803E2484;
-extern f32 lbl_803E2530;
-
 void objAnimFn_801441c0(u8* obj, u8* state)
 {
     f32 arr[2];
@@ -1771,11 +1767,6 @@ int trickyFoodFn_8014460c(int objArg, int* trickyState)
     }
     return 0;
 }
-
-extern int ObjHits_GetPriorityHit(int obj, int* out, int a, int b);
-extern f32 lbl_803E2534;
-extern f32 lbl_803E24A8;
-extern f32 lbl_803E24EC;
 
 void fn_80144B50(u8* obj, u8* state)
 {

@@ -115,6 +115,10 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 
+extern f32 lbl_803E63B8;
+extern int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
+extern void unlockLevel(int a, int b, int c);
+
 undefined4
 FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -564,8 +568,6 @@ int dfpseqpoint_getExtraSize(void) { return 0x10; }
 int dfpseqpoint_getObjectTypeId(void) { return 0x0; }
 int DFP_Torch_getExtraSize(void);
 
-extern f32 lbl_803E63B8;
-
 void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -573,10 +575,6 @@ void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void dfpobjcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
-
-extern void unlockLevel(int a, int b, int c);
 
 int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate)
 {
@@ -744,11 +742,6 @@ void dfpseqpoint_update(int obj)
 }
 
 int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
-
-#include "main/dll/baddie/chuka.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 

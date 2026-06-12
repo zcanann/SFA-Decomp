@@ -67,6 +67,15 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
+extern f32 lbl_803E5978;
+extern void Sfx_StopObjectChannel(int* obj, int channel);
+extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
+extern f32 lbl_803E597C;
+extern f32 lbl_803E5980;
+extern f32 lbl_803E5984;
+extern f32 lbl_803E5988;
+extern f32 lbl_803E598C;
+
 void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined2* param_9, int param_10)
@@ -78,9 +87,6 @@ void SB_FireBall_release(void);
 int Lamp_getExtraSize(void) { return 0x1; }
 int Flag_getExtraSize(void);
 
-extern f32 lbl_803E5978;
-extern void Sfx_StopObjectChannel(int* obj, int channel);
-extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 int Lamp_SeqFn(int obj, int unused, int state);
 
 void Lamp_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -97,12 +103,6 @@ void Flag_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* EN v1.0 0x801E4F14  size: 60b  Decrement obj->_f4 if > 0, OR in bit 0x8
  * of obj->_af, latch state->_6e = -2 and state->_56 = 0; return 0. */
-
-extern f32 lbl_803E597C;
-extern f32 lbl_803E5980;
-extern f32 lbl_803E5984;
-extern f32 lbl_803E5988;
-extern f32 lbl_803E598C;
 
 int Lamp_SeqFn(int obj, int unused, int state)
 {

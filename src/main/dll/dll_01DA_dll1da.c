@@ -7,6 +7,8 @@
 #include "main/dll/dll1d6state_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/dll/DIM/DIM2projrock.h"
+#include "main/objanim_internal.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
@@ -27,6 +29,32 @@ extern undefined4 GameBit_Set(int eventId, int value);
 
 extern f32 timeDelta;
 
+extern f32 lbl_803E4A30;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E4AD8;
+extern f32 lbl_803E4A38;
+extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, uint* outHitVolume);
+extern float Vec_distance(float* a, float* b);
+extern void* Obj_GetPlayerObject(void);
+extern f32 lbl_803E4ADC;
+extern int ObjList_FindObjectById(int id);
+extern undefined4 ObjHits_AddContactObject();
+extern int ObjHits_GetPriorityHit();
+extern f32 sqrtf(f32 x);
+extern void saveGame_saveObjectPos(int obj);
+extern f32 lbl_803E4AE0;
+extern f32 lbl_803E4AE4;
+extern f32 lbl_803E4AE8;
+extern f32 lbl_803E4AEC;
+extern f32 lbl_803E4AF0;
+extern f32 lbl_803E4AF4;
+extern f32 lbl_803E4AF8;
+extern f32 lbl_803E4AFC;
+extern f32 lbl_803E4B00;
+extern const f32 lbl_803E4B04;
+extern int* gBaddieControlInterface;
+extern f32 lbl_803E4BA8;
+
 void dll_1DA_free(void)
 {
 }
@@ -35,22 +63,11 @@ int dimtruthhornice_getExtraSize(void);
 int dll_1DA_getExtraSize(void) { return 0x8; }
 int dll_1DA_getObjectTypeId(void) { return 0x0; }
 
-extern f32 lbl_803E4A30;
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E4AD8;
-
 void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4AD8);
 }
-
-extern f32 lbl_803E4A38;
-
-extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, uint* outHitVolume);
-extern float Vec_distance(float* a, float* b);
-extern void* Obj_GetPlayerObject(void);
-extern f32 lbl_803E4ADC;
 
 void dll_1DA_hitDetect(int obj)
 {
@@ -69,18 +86,10 @@ void dll_1DA_hitDetect(int obj)
     }
 }
 
-extern int ObjList_FindObjectById(int id);
-
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if the signed result dropped to or below 0. */
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/DIM/DIM2projrock.h"
-#include "main/objanim_internal.h"
 
 typedef struct Dll1DAState
 {
@@ -90,9 +99,6 @@ typedef struct Dll1DAState
     u8 unk6;
     u8 pad7[0x8 - 0x7];
 } Dll1DAState;
-
-extern undefined4 ObjHits_AddContactObject();
-extern int ObjHits_GetPriorityHit();
 
 #pragma scheduling on
 #pragma peephole on
@@ -128,18 +134,6 @@ void dll_1DB_free(void);
 
 /* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
  * fall, land on contact object, clamp to floor height. */
-extern f32 sqrtf(f32 x);
-extern void saveGame_saveObjectPos(int obj);
-extern f32 lbl_803E4AE0;
-extern f32 lbl_803E4AE4;
-extern f32 lbl_803E4AE8;
-extern f32 lbl_803E4AEC;
-extern f32 lbl_803E4AF0;
-extern f32 lbl_803E4AF4;
-extern f32 lbl_803E4AF8;
-extern f32 lbl_803E4AFC;
-extern f32 lbl_803E4B00;
-extern const f32 lbl_803E4B04;
 
 typedef struct
 {
@@ -244,7 +238,6 @@ void dll_1DA_update(int obj)
 
 /* fn_801B9ECC: DIM boss player-vs-baddie reaction dispatcher -- picks a player anim
  * from distance/anim-state via the interface vtables. */
-extern int* gBaddieControlInterface;
 
 int fn_801B9ECC(int a, int obj);
 
@@ -259,7 +252,6 @@ void dll_1DA_init(void* obj)
  *              magic-2^52 trick using a 2^52 constant) to scale obj[0x50]->f4 into
  *              obj[8]. Also sets obj[0xB8]->f10 from a constant and OR-merges flags
  *              into obj[0x64]->u32_30 (0x810) and obj[0xB0]'s u16 (0x2000). */
-extern f32 lbl_803E4BA8;
 
 void dll_1DF_init(void* obj, void* p);
 

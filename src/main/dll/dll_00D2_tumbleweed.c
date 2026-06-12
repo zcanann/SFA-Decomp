@@ -1,6 +1,12 @@
 /* DLL 0x00D2 (tumbleweed) — Tumbleweed and tumbleweed bush objects [0x80163BBC-0x801650D0). */
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
+#include "main/effect_interfaces.h"
+#include "main/gameplay_runtime.h"
+#include "main/dll/backpack_state.h"
+#include "main/dll/backpack.h"
+#include "main/dll/path_control_interface.h"
+#include "main/objlib.h"
 
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hitsOut, int pointCount,
                                 int mask);
@@ -19,6 +25,32 @@ extern f32 lbl_803E2F98;
 extern f32 lbl_803E2F9C;
 
 #pragma peephole on
+extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
+extern EffectInterface** gPartfxInterface;
+extern f32 lbl_803E2FC8;
+extern f32 lbl_803E2FCC;
+extern f32 lbl_803E2FD0;
+extern f32 lbl_803E2FB4;
+extern u8 lbl_803DBD40[8];
+extern u8 lbl_80320288[0xc];
+extern void Obj_FreeObject(int obj);
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern f32 getXZDistance(f32 * p1, f32 * p2);
+extern void gameBitIncrement(int eventId);
+extern void fn_80163990(int obj, int aux);
+extern void* gSHthorntailAnimationInterface;
+extern f32 lbl_803E2FA0;
+extern f32 lbl_803E2FA4;
+extern f32 lbl_803E2FA8;
+extern f32 lbl_803E2FAC;
+extern f32 lbl_803E2FB0;
+extern f32 lbl_803E2FB8;
+extern f32 lbl_803E2FBC;
+extern f32 lbl_803E2FC0;
+extern f32 lbl_803E2FC4;
+extern f32 sqrtf(f32 x);
+
 void tumbleweed_updateRollingMotion(short* obj, int state)
 {
     extern u32 randomGetRange(int min, int max); /* #57 */
@@ -241,45 +273,6 @@ void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if ((s32)visible >= 1) objRenderFn_8003b8f4(lbl_803E2F80);
 }
 /* segment pragma-stack balance (re-split): */
-
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/gameplay_runtime.h"
-#include "main/dll/backpack_state.h"
-#include "main/dll/backpack.h"
-#include "main/dll/path_control_interface.h"
-#include "main/objlib.h"
-
-extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
-
-extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E2FC8;
-extern f32 lbl_803E2FCC;
-extern f32 lbl_803E2FD0;
-extern f32 lbl_803E2FB4;
-extern u8 lbl_803DBD40[8];
-extern u8 lbl_80320288[0xc];
-
-extern void Obj_FreeObject(int obj);
-extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern f32 getXZDistance(f32 * p1, f32 * p2);
-extern void gameBitIncrement(int eventId);
-extern void fn_80163990(int obj, int aux);
-
-extern void* gSHthorntailAnimationInterface;
-extern f32 lbl_803E2FA0;
-extern f32 lbl_803E2FA4;
-extern f32 lbl_803E2FA8;
-extern f32 lbl_803E2FAC;
-extern f32 lbl_803E2FB0;
-extern f32 lbl_803E2FB8;
-extern f32 lbl_803E2FBC;
-extern f32 lbl_803E2FC0;
-extern f32 lbl_803E2FC4;
-
-extern f32 sqrtf(f32 x);
 
 void tumbleweed_update(int obj)
 {

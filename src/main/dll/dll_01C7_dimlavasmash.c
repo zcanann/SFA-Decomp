@@ -45,6 +45,21 @@ extern f32 lbl_803DCB70;
 
 #pragma scheduling on
 #pragma peephole on
+extern void objRenderFn_8003b8f4(f32 x);
+extern f32 lbl_803E48F8;
+STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
+extern int ObjHits_GetPriorityHit(int obj, int* out, int* a, int* b);
+extern void Sfx_PlayFromObject(int obj, int sfx);
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+extern int mapBlockFn_800606ec(int arg1, int idx);
+extern int mapBlockFn_80060678(void);
+extern int fn_8006070C(int arg1, int idx);
+extern int Shader_getLayer(int layer, int idx);
+extern void* lbl_803DDB50;
+extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
+extern unsigned long GameBit_Set(int eventId, int value);
+extern void objRenderFn_8003b8f4(f32);
+
 void FUN_801b2550(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined4 param_9, undefined4 param_10, int param_11)
@@ -264,9 +279,6 @@ void FUN_801b2550(undefined8 param_1, undefined8 param_2, double param_3, undefi
 
 void dimcannon_hitDetect(void);
 
-extern void objRenderFn_8003b8f4(f32 x);
-extern f32 lbl_803E48F8;
-
 #pragma scheduling off
 #pragma peephole off
 void dimlavasmash_free(void)
@@ -336,15 +348,6 @@ typedef struct DimlavasmashState
 
 /* dimcannon extra block (0xb4); the head is the per-cannonball column
  * arrays walked via state + i*4 (kept raw), this names the scalar tail. */
-STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
-
-extern int ObjHits_GetPriorityHit(int obj, int* out, int* a, int* b);
-extern void Sfx_PlayFromObject(int obj, int sfx);
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
-extern int mapBlockFn_800606ec(int arg1, int idx);
-extern int mapBlockFn_80060678(void);
-extern int fn_8006070C(int arg1, int idx);
-extern int Shader_getLayer(int layer, int idx);
 
 #pragma dont_inline on
 void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
@@ -433,8 +436,6 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return ((DimlavasmashState*)state)->state == 0;
 }
 
-extern void* lbl_803DDB50;
-
 /* EN v1.0 0x801B30C8  size: 628b  Dimcannon constructor: handles the 0x1d6
  * sub-variant, else seeds the 10-slot trail particle array, installs the
  * sequence fn, acquires its model resource and applies map flags. */
@@ -445,10 +446,6 @@ extern void* lbl_803DDB50;
 /* EN v1.0 0x801B2550  size: 1504b  Dimcannon manned-control sequence: aims the
  * turret with the stick, charges with A, fires on release/full charge, and
  * exits on B or after the post-completion delay. */
-
-#include "main/dll/DIM/DIMlevcontrol.h"
-#include "main/game_object.h"
-#include "main/objseq.h"
 
 typedef struct DimlavasmashObjectDef
 {
@@ -499,9 +496,3 @@ void dimlavasmash_release(void)
 void dimlavasmash_initialise(void)
 {
 }
-
-extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
-
-extern unsigned long GameBit_Set(int eventId, int value);
-
-extern void objRenderFn_8003b8f4(f32);

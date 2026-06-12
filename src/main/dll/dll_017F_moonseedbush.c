@@ -78,6 +78,12 @@ extern undefined4 FUN_8005d0ac();
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E5180;
 
+extern f32 lbl_803E44D0;
+extern f32 lbl_803E44D4;
+extern f32 lbl_803E44D8;
+extern int mapGetDirIdx(int);
+extern void saveGame_saveObjectPos(int obj);
+
 undefined4
 FUN_801a68b8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -189,7 +195,6 @@ int MoonSeedBush_getExtraSize(void) { return 0x2; }
 int MoonSeedBush_getObjectTypeId(void) { return 0x0; }
 int mmp_asteroid_re_getExtraSize(void);
 
-extern f32 lbl_803E44D0;
 extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -199,9 +204,6 @@ void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern f32 lbl_803E44D4;
-extern f32 lbl_803E44D8;
 
 #pragma scheduling off
 void MoonSeedBush_update(int obj)
@@ -228,8 +230,6 @@ void MoonSeedBush_update(int obj)
     }
     state->flags &= ~1;
 }
-
-extern int mapGetDirIdx(int);
 
 int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -291,5 +291,3 @@ void MoonSeedBush_init(int obj, int data)
         state->seedState = 0;
     }
 }
-
-extern void saveGame_saveObjectPos(int obj);

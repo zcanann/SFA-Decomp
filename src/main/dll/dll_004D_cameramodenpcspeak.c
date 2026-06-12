@@ -3,6 +3,25 @@
 #include "main/dll/cameramodetitlepose_struct.h"
 #include "main/game_object.h"
 #include "main/mm.h"
+#include "ghidra_import.h"
+#include "main/dll/baddieControl.h"
+#include "main/camera_object.h"
+#include "main/camera_interface.h"
+#include "main/dll/CAM/camera_mode_54_state.h"
+#include "main/dll/CAM/camera_mode_4f_state.h"
+#include "main/dll/CAM/camcloudrunner_state.h"
+#include "main/dll/CAM/camcrawl_state.h"
+#include "main/dll/CAM/camera_mode_cannon_state.h"
+#include "main/dll/CAM/camperv_state.h"
+#include "main/dll/CAM/camworldmap_state.h"
+#include "main/obj_placement.h"
+#include "main/mapEvent.h"
+#include "main/dll/path_control_interface.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/screen_transition.h"
+#include "main/dll/dll19_state.h"
+#include "main/objanim.h"
+#include "main/dll/baddie_state.h"
 
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
@@ -19,38 +38,6 @@ extern f32 lbl_803E19DC;
 
 void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
 
-void CameraModeNpcSpeak_copyToCurrent_nop(void)
-{
-}
-
-void CameraModeNpcSpeak_free(void)
-{
-    mm_free(lbl_803DD584);
-    lbl_803DD584 = 0;
-    Rcp_DisableBlurFilter();
-}
-
-#include "ghidra_import.h"
-#include "main/dll/baddieControl.h"
-#include "main/camera_object.h"
-#include "main/camera_interface.h"
-#include "main/dll/CAM/camera_mode_54_state.h"
-#include "main/dll/CAM/camera_mode_4f_state.h"
-#include "main/dll/CAM/camcloudrunner_state.h"
-#include "main/dll/CAM/camcrawl_state.h"
-#include "main/dll/CAM/camera_mode_cannon_state.h"
-#include "main/dll/CAM/camnpcspeak_state.h"
-#include "main/dll/CAM/camperv_state.h"
-#include "main/dll/CAM/camworldmap_state.h"
-#include "main/game_object.h"
-#include "main/obj_placement.h"
-#include "main/mapEvent.h"
-#include "main/dll/path_control_interface.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/screen_transition.h"
-
-#include "main/dll/dll19_state.h"
-
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
@@ -63,13 +50,58 @@ extern undefined4 FUN_80286888();
 extern double FUN_80293900();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
-
 extern undefined4 DAT_802c2910;
 extern undefined4 DAT_802c2914;
 extern undefined4 DAT_802c2918;
 extern float* DAT_803de1fc;
 extern f32 lbl_803E2658;
 extern f32 lbl_803E265C;
+extern f32 mathCosf(f32);
+extern f32 mathSinf(f32);
+extern f32 timeDelta;
+extern CameraModeCloudRunnerState* lbl_803DD5B8;
+extern int getFocusedNpc(void);
+extern int randomGetRange(int lo, int hi);
+extern void fn_8010DB7C(GameObject * target, f32 * a, f32 * b, f32 * c);
+extern f32 lbl_803E19E8;
+extern f32 lbl_803E19EC;
+extern f32 lbl_803E19F0;
+extern f32 lbl_803E19F4;
+extern f32 lbl_803E19F8;
+extern f32 lbl_803E19FC;
+extern f32 lbl_803E1A00;
+extern f32 lbl_803E1A04;
+extern f32 lbl_803E1A08;
+extern f32 lbl_803E1A0C;
+extern f32 lbl_803E1A10;
+extern f32 lbl_803E1A14;
+extern f32 lbl_803E1A18;
+extern f32 lbl_803E1A1C;
+extern f32 lbl_803E1A20;
+extern f32 lbl_803DB9C0;
+extern f32 lbl_803DB9A8;
+extern f32 lbl_803DB9AC;
+extern f32 lbl_803DB9B0;
+extern f32 lbl_803DB9B4;
+extern f32 lbl_803DB9B8;
+extern int lbl_803DB9BC;
+extern f32 lbl_803DD580;
+extern CameraModeTitlePose lbl_803A4420;
+extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
+extern f32 lbl_803DB9C4;
+extern s16 getAngle(f32 x, f32 z);
+extern f32 mathCosf(f32 x);
+
+void CameraModeNpcSpeak_copyToCurrent_nop(void)
+{
+}
+
+void CameraModeNpcSpeak_free(void)
+{
+    mm_free(lbl_803DD584);
+    lbl_803DD584 = 0;
+    Rcp_DisableBlurFilter();
+}
 
 #pragma scheduling on
 #pragma peephole on
@@ -199,14 +231,8 @@ void fn_80110EC0(void)
 
 void CameraModeArwing_release(void);
 
-extern f32 mathCosf(f32);
-extern f32 mathSinf(f32);
-extern f32 timeDelta;
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
 void fn_801101E8(void)
 {
@@ -219,33 +245,6 @@ void CameraModeCloudRunner_free(void);
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
-extern int getFocusedNpc(void);
-extern int randomGetRange(int lo, int hi);
-extern void fn_8010DB7C(GameObject * target, f32 * a, f32 * b, f32 * c);
-extern f32 lbl_803E19E8;
-extern f32 lbl_803E19EC;
-extern f32 lbl_803E19F0;
-extern f32 lbl_803E19F4;
-extern f32 lbl_803E19F8;
-extern f32 lbl_803E19FC;
-extern f32 lbl_803E1A00;
-extern f32 lbl_803E1A04;
-extern f32 lbl_803E1A08;
-extern f32 lbl_803E1A0C;
-extern f32 lbl_803E1A10;
-extern f32 lbl_803E1A14;
-extern f32 lbl_803E1A18;
-extern f32 lbl_803E1A1C;
-extern f32 lbl_803E1A20;
-extern f32 lbl_803DB9C0;
-extern f32 lbl_803DB9A8;
-extern f32 lbl_803DB9AC;
-extern f32 lbl_803DB9B0;
-extern f32 lbl_803DB9B4;
-extern f32 lbl_803DB9B8;
-extern int lbl_803DB9BC;
-extern f32 lbl_803DD580;
 
 typedef struct CameraModeNpcSpeakInitParams
 {
@@ -440,11 +439,6 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* p3)
                          lbl_803E1A20);
 }
 
-extern CameraModeTitlePose lbl_803A4420;
-
-extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
-extern f32 lbl_803DB9C4;
-
 void CameraModeNpcSpeak_update(u8* obj)
 {
     extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx); /* #57 */
@@ -507,14 +501,6 @@ void CameraModeNpcSpeak_update(u8* obj)
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/objanim.h"
-#include "main/camera_interface.h"
-#include "main/game_object.h"
-#include "main/dll/baddie_state.h"
-#include "main/dll/rom_curve_interface.h"
-
-#include "main/dll/dll19_state.h"
-
 int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6);
 
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
@@ -533,12 +519,8 @@ int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6);
 /* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
  * first use and refreshes the current path point position. */
 
-extern s16 getAngle(f32 x, f32 z);
-
 /* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
  * distance from an object to its target, updating the wide-turn flag. */
-
-extern f32 mathCosf(f32 x);
 
 /* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
  * the object for walkable space, returning a bitmask of clear directions. */

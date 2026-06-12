@@ -40,6 +40,8 @@ typedef struct CfDoorLightDef
  * obj->_af |= 8 (redundant with the unconditional prologue store).
  */
 
+extern f32 lbl_803E3EE8;
+
 void cf_doorlight_free(void)
 {
 }
@@ -63,8 +65,6 @@ void cf_doorlight_initialise(void)
 int cflightwall_getExtraSize(void);
 int cf_doorlight_getExtraSize(void) { return 0x18; }
 int cf_doorlight_getObjectTypeId(void) { return 0x0; }
-
-extern f32 lbl_803E3EE8;
 
 void cf_doorlight_update(int obj)
 {

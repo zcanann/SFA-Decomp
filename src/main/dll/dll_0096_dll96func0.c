@@ -15,6 +15,15 @@ extern ModgfxInterface** gModgfxInterface;
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 
+extern f32 lbl_803E12C0;
+extern f32 lbl_803E12C4;
+extern f32 lbl_803E12C8;
+extern f32 lbl_803E12CC;
+extern f32 lbl_803E12D0;
+extern f32 lbl_803E12D4;
+extern f32 lbl_803E12D8;
+extern u8 lbl_803175E8[];
+
 void dll_96_func01_nop(void)
 {
 }
@@ -47,16 +56,6 @@ typedef struct
     u8 pad1[2]; /* +0x5e */
     GfxCmd entries[32]; /* +0x60 */
 } GfxBuf;
-
-extern f32 lbl_803E12C0;
-extern f32 lbl_803E12C4;
-extern f32 lbl_803E12C8;
-extern f32 lbl_803E12CC;
-extern f32 lbl_803E12D0;
-extern f32 lbl_803E12D4;
-extern f32 lbl_803E12D8;
-
-extern u8 lbl_803175E8[];
 
 int dll_96_func03(int sourceObj, int variant, int posSource, uint flags)
 {

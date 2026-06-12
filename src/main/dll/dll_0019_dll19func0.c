@@ -30,6 +30,8 @@ void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
 #include "main/screen_transition.h"
 
 #include "main/dll/dll19_state.h"
+#include "main/objanim.h"
+#include "main/dll/baddie_state.h"
 
 typedef struct Dll19Placement
 {
@@ -76,6 +78,68 @@ extern f32 lbl_803E265C;
 
 #pragma scheduling on
 #pragma peephole on
+extern void* memset(void* dst, int val, u32 n);
+extern f32 mathCosf(f32);
+extern f32 mathSinf(f32);
+extern f32 timeDelta;
+extern void Sfx_StopObjectChannel(int* p1, int channel);
+extern void voxmaps_freeRouteWork(void* p);
+extern CameraModeCloudRunnerState* lbl_803DD5B8;
+extern int objPosToMapBlockIdx(double x, double y, double z);
+extern f32 lbl_803E1C2C;
+extern void ObjHits_SetHitVolumeSlot(void* obj, int animObjId, int frame, int flags);
+extern void Obj_FreeObject(void* obj);
+extern u8 Obj_IsLoadingLocked(void);
+extern ObjPlacement* Obj_AllocObjectSetup(int size, int id);
+extern GameObject* Obj_SetupObject(ObjPlacement* setup, int mode, int mapLayer, int objIndex, int parent);
+extern u8 lbl_802C2190[];
+extern int* gPlayerInterface;
+extern f32 lbl_803E1B78;
+extern int Obj_GetPlayerObject(void);
+extern int fn_80295A04(int obj, int a);
+extern int fn_80296AE8(int obj);
+extern f32 lbl_803E1C48;
+extern f32 lbl_803E1C6C;
+extern f32 lbl_803E1AC0;
+extern s16* objModelGetVecFn_800395d8(int obj, int idx);
+extern f32 fn_8029610C(int obj);
+extern void voxmaps_worldToGrid(f32* pos, int* grid);
+extern f32 lbl_803E1C64;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803E1C30;
+extern f32 lbl_803E1C40;
+extern f32 lbl_803E1C44;
+extern f32 lbl_803E1C4C;
+extern f32 lbl_803E1C50;
+extern u32 lbl_803E1C18;
+extern u32 lbl_803E1C1C;
+extern u32 lbl_803E1C20;
+extern u32 lbl_803E1C24;
+extern f32 lbl_803E1C54;
+extern f32 lbl_803E1C58;
+extern f32 lbl_803E1C5C;
+extern f32 lbl_803E1C60;
+extern GameObject* lbl_803DD5E4;
+extern int GameBit_Get(int bit);
+extern void voxmaps_allocRouteWork(u8 * work);
+extern u32 lbl_803E1C28;
+extern f32 lbl_803E1C38;
+extern u8 lbl_8031A054[];
+extern u8 lbl_8031A048[];
+extern u32 lbl_803DB9E0;
+extern u32 lbl_803DD5E0;
+extern f32 lbl_803E1AD0;
+extern void fn_8010DB7C(GameObject * target, f32 * a, f32 * b, f32 * c);
+extern f32 lbl_803E1C78;
+extern f32 lbl_803E1C7C;
+extern s16 getAngle(f32 x, f32 z);
+extern void voxmaps_worldToGrid(f32* world, int* grid);
+extern f32 mathCosf(f32 x);
+extern const f32 lbl_803E1C80;
+extern const f32 lbl_803E1C84;
+extern u8 framesThisStep;
+
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
 {
     float fVar1;
@@ -194,12 +258,6 @@ void fn_80110EC0(void)
 
 void CameraModeArwing_release(void);
 
-extern void* memset(void* dst, int val, u32 n);
-
-extern f32 mathCosf(f32);
-extern f32 mathSinf(f32);
-extern f32 timeDelta;
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
@@ -238,9 +296,6 @@ int dll_19_func1B(int p)
     return 0;
 }
 
-extern void Sfx_StopObjectChannel(int* p1, int channel);
-extern void voxmaps_freeRouteWork(void* p);
-
 void dll_19_func12(int* p1, int* p2, u8 flag)
 {
     extern void mm_free(u32); /* #57 */
@@ -267,8 +322,6 @@ void dll_19_func12(int* p1, int* p2, u8 flag)
     }
 }
 
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
-
 void fn_801101E8(void)
 {
     extern void mm_free(u32); /* #57 */
@@ -282,8 +335,6 @@ void dll_19_func11(void)
 {
     (void)(*gCameraInterface)->getOverrideTarget();
 }
-
-extern int objPosToMapBlockIdx(double x, double y, double z);
 
 int dll_19_func0E(int p1, int p2, u8 b)
 {
@@ -303,8 +354,6 @@ int dll_19_func0E(int p1, int p2, u8 b)
     return 1;
 }
 
-extern f32 lbl_803E1C2C;
-
 f32 dll_19_func1A(int obj)
 {
     int p_b8 = *(int*)&((GameObject*)obj)->extra;
@@ -320,8 +369,6 @@ f32 dll_19_func1A(int obj)
     }
     return lbl_803E1C2C;
 }
-
-extern void ObjHits_SetHitVolumeSlot(void* obj, int animObjId, int frame, int flags);
 
 void dll_19_func0D(int p1, int p2, f32 fval, s8 b)
 {
@@ -343,12 +390,6 @@ void dll_19_func0D(int p1, int p2, f32 fval, s8 b)
     *(int*)(p2 + 0x31c) = 0;
     *(int*)(p2 + 0x318) = 0;
 }
-
-extern void Obj_FreeObject(void* obj);
-extern u8 Obj_IsLoadingLocked(void);
-extern ObjPlacement* Obj_AllocObjectSetup(int size, int id);
-extern GameObject* Obj_SetupObject(ObjPlacement* setup, int mode, int mapLayer, int objIndex, int parent);
-extern u8 lbl_802C2190[];
 
 void dll_19_func19(u8* cam, u8* ctx)
 {
@@ -392,8 +433,6 @@ void dll_19_func19(u8* cam, u8* ctx)
     }
 }
 
-extern int* gPlayerInterface;
-
 #pragma dont_inline on
 void dll_19_func0C(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, int p8, s8 p9)
 {
@@ -432,13 +471,6 @@ void dll_19_func0C(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, int p
     }
 }
 #pragma dont_inline reset
-
-extern f32 lbl_803E1B78;
-
-extern int Obj_GetPlayerObject(void);
-extern int fn_80295A04(int obj, int a);
-extern int fn_80296AE8(int obj);
-extern f32 lbl_803E1C48;
 
 int dll_19_func13(int p1, u8* p2, f32 f, int p4)
 {
@@ -485,8 +517,6 @@ int dll_19_func13(int p1, u8* p2, f32 f, int p4)
     return result;
 }
 
-extern f32 lbl_803E1C6C;
-
 int dll_19_func10(int p1, u8* p2, int p3, int p4, s16 p5, f32* p6, f32* p7, int* p8)
 {
     extern f32 lbl_803E1C68; /* #57 */
@@ -532,8 +562,6 @@ int dll_19_func10(int p1, u8* p2, int p3, int p4, s16 p5, f32* p6, f32* p7, int*
     }
     return 0;
 }
-
-extern f32 lbl_803E1AC0;
 
 int dll_19_func17(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, s16 p8)
 {
@@ -584,12 +612,6 @@ int dll_19_func17(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, s16 p8
     }
     return 0;
 }
-
-extern s16* objModelGetVecFn_800395d8(int obj, int idx);
-
-extern f32 fn_8029610C(int obj);
-extern void voxmaps_worldToGrid(f32* pos, int* grid);
-extern f32 lbl_803E1C64;
 
 int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
 {
@@ -701,14 +723,6 @@ int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
     }
     return obj;
 }
-
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern f32 lbl_803E1C30;
-extern f32 lbl_803E1C40;
-extern f32 lbl_803E1C44;
-extern f32 lbl_803E1C4C;
-extern f32 lbl_803E1C50;
 
 int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p8)
 {
@@ -830,16 +844,6 @@ int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p
     }
     return hit;
 }
-
-extern u32 lbl_803E1C18;
-extern u32 lbl_803E1C1C;
-extern u32 lbl_803E1C20;
-extern u32 lbl_803E1C24;
-extern f32 lbl_803E1C54;
-extern f32 lbl_803E1C58;
-extern f32 lbl_803E1C5C;
-extern f32 lbl_803E1C60;
-extern GameObject* lbl_803DD5E4;
 
 int dll_19_func15(u8* p1, int p2, int p3, int p4)
 {
@@ -964,15 +968,6 @@ int dll_19_func15(u8* p1, int p2, int p3, int p4)
     lbl_803DD5E4 = Obj_SetupObject(setup, 5, (s8)p1[172], -1, *(int*)&source->anim.parent);
     return (int)lbl_803DD5E4;
 }
-
-extern int GameBit_Get(int bit);
-extern void voxmaps_allocRouteWork(u8 * work);
-extern u32 lbl_803E1C28;
-extern f32 lbl_803E1C38;
-extern u8 lbl_8031A054[];
-extern u8 lbl_8031A048[];
-extern u32 lbl_803DB9E0;
-extern u32 lbl_803DD5E0;
 
 void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, int p7)
 {
@@ -1116,10 +1111,6 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
     }
 }
 
-extern f32 lbl_803E1AD0;
-
-extern void fn_8010DB7C(GameObject * target, f32 * a, f32 * b, f32 * c);
-
 /* CameraModeNpcSpeak_init  addr=0x8010DFF0  size=0x524  linkage=global */
 
 /* CameraModeTitle_update  addr=0x801116E0  size=0x58C  linkage=global */
@@ -1131,14 +1122,6 @@ extern void fn_8010DB7C(GameObject * target, f32 * a, f32 * b, f32 * c);
 /* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/objanim.h"
-#include "main/camera_interface.h"
-#include "main/game_object.h"
-#include "main/dll/baddie_state.h"
-#include "main/dll/rom_curve_interface.h"
-
-#include "main/dll/dll19_state.h"
 
 int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6)
 {
@@ -1294,9 +1277,6 @@ u16 dll_19_func0A(int obj)
  * caller's record and aims its angle at the nearest group-8 object (falling
  * back to the point's packed angle). */
 
-extern f32 lbl_803E1C78;
-extern f32 lbl_803E1C7C;
-
 /* EN v1.0 0x80113864  size: 248b  Steps the movement blend factors toward the
  * current target and turns the yaw by the buffered turn rate. */
 void dll_19_func06(s16* yaw, char* st, f32 cap, f32 speed)
@@ -1331,8 +1311,6 @@ void dll_19_func06(s16* yaw, char* st, f32 cap, f32 speed)
 
 /* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
  * first use and refreshes the current path point position. */
-
-extern s16 getAngle(f32 x, f32 z);
 
 /* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
  * distance from an object to its target, updating the wide-turn flag. */
@@ -1390,11 +1368,6 @@ void dll_19_func07(int obj, int target, int div, u16* outYaw, u16* outDelta, u16
         *outDist = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
     }
 }
-
-extern void voxmaps_worldToGrid(f32* world, int* grid);
-extern f32 mathCosf(f32 x);
-extern const f32 lbl_803E1C80;
-extern const f32 lbl_803E1C84;
 
 /* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
  * the object for walkable space, returning a bitmask of clear directions. */
@@ -1463,8 +1436,6 @@ u8 dll_19_func08(int obj, char* st, f32 dist)
 
 /* EN v1.0 0x801145BC  size: 512b  Advances the object along its movement
  * curve, snapping to ground and easing the yaw toward the path direction. */
-
-extern u8 framesThisStep;
 
 /* EN v1.0 0x80114BB0  size: 572b  Object-sequence scripted-move step: phase 4
  * arms the move, phase 5 walks the setup/playback sub-phases. */

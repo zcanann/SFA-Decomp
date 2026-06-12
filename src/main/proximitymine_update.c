@@ -1,6 +1,7 @@
 /* proximitymine_update - ProximityMine object update/render handlers [8021122C-802113F8) */
 #include "main/proximitymine.h"
 #include "main/objlib.h"
+#include "main/effect_interfaces.h"
 
 extern void modelLightStruct_freeSlot(void* handle);
 extern void objRenderFn_8003b8f4(void* obj, undefined4 param_2, undefined4 param_3, undefined4 param_4,
@@ -13,6 +14,41 @@ extern void s16toFloat(void* timer, int duration);
 
 extern f32 lbl_803E6768;
 extern f32 lbl_803E6778;
+
+extern void modelLightStruct_updateGlowAlpha(void* light);
+extern int timerCountDown(void* timer);
+extern int objUpdateOpacity(void* obj);
+extern int hitDetectFn_800658a4(void* obj, f32 x, f32 y, f32 z, f32* out, int flag);
+extern void Sfx_PlayFromObject(void* obj, u16 sfxId);
+extern void Sfx_StopObjectChannel(void* obj, int channel);
+extern ProximityMineEffect* modelLightStruct_createPointLight(void* obj, int r, int g, int b, int a);
+extern int* objFindTexture(void* obj, int a, int b);
+extern void modelLightStruct_setupGlow(void* light, int a, int b, int c, int d, u8 e, f32 f);
+extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
+extern void* Obj_GetPlayerObject(void);
+extern f32 Vec_distance(f32 * a, f32 * b);
+extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern f32 sqrtf(f32 x);
+extern void vecRotateZXY(void* params, f32* vec);
+extern void Obj_FreeObject(void* obj);
+extern EffectInterface** gPartfxInterface;
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern f32 lbl_803DC234;
+extern u8 lbl_803DC238;
+extern f32 lbl_803DC23C;
+extern u8 lbl_803DC240;
+extern f32 lbl_803DC244;
+extern f32 lbl_803DC248;
+extern f32 lbl_803E677C;
+extern f32 lbl_803E6780;
+extern f32 lbl_803E6784;
+extern f32 lbl_803E6788;
+extern void Obj_SetActiveModelIndex(void* obj, int modelIndex);
+extern s32 lbl_803DC230;
+extern f32 lbl_803E6774;
+extern f32 lbl_803E6798;
+extern f32 lbl_803E679C;
 
 int proximitymine_getExtraSize(void)
 {
@@ -93,41 +129,6 @@ void proximitymine_hitDetect(ProximityMineObject* obj)
     }
     return;
 }
-
-#include "main/proximitymine.h"
-#include "main/effect_interfaces.h"
-#include "main/objlib.h"
-
-extern void modelLightStruct_updateGlowAlpha(void* light);
-extern int timerCountDown(void* timer);
-extern int objUpdateOpacity(void* obj);
-extern int hitDetectFn_800658a4(void* obj, f32 x, f32 y, f32 z, f32* out, int flag);
-extern void Sfx_PlayFromObject(void* obj, u16 sfxId);
-extern void Sfx_StopObjectChannel(void* obj, int channel);
-extern ProximityMineEffect* modelLightStruct_createPointLight(void* obj, int r, int g, int b, int a);
-extern int* objFindTexture(void* obj, int a, int b);
-extern void modelLightStruct_setupGlow(void* light, int a, int b, int c, int d, u8 e, f32 f);
-extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
-extern void* Obj_GetPlayerObject(void);
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern f32 Vec_xzDistance(f32 * a, f32 * b);
-extern f32 sqrtf(f32 x);
-extern void vecRotateZXY(void* params, f32* vec);
-extern void Obj_FreeObject(void* obj);
-extern EffectInterface** gPartfxInterface;
-
-extern f32 timeDelta;
-extern u8 framesThisStep;
-extern f32 lbl_803DC234;
-extern u8 lbl_803DC238;
-extern f32 lbl_803DC23C;
-extern u8 lbl_803DC240;
-extern f32 lbl_803DC244;
-extern f32 lbl_803DC248;
-extern f32 lbl_803E677C;
-extern f32 lbl_803E6780;
-extern f32 lbl_803E6784;
-extern f32 lbl_803E6788;
 
 typedef struct MineLaunchParams
 {
@@ -353,16 +354,6 @@ void proximitymine_update(ProximityMineObject* obj)
         }
     }
 }
-
-#include "main/proximitymine.h"
-#include "main/objlib.h"
-
-extern void Obj_SetActiveModelIndex(void* obj, int modelIndex);
-
-extern s32 lbl_803DC230;
-extern f32 lbl_803E6774;
-extern f32 lbl_803E6798;
-extern f32 lbl_803E679C;
 
 void proximitymine_init(ProximityMineObject* obj, ProximityMineDef* def)
 {

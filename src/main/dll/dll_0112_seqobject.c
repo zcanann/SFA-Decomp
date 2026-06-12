@@ -59,6 +59,11 @@ STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
 #define SEQOBJECT_FLAG_USE_TRIGGER_PARAM 0x10
 #define SEQOBJECT_FLAG_UNUSED_20 0x20
 
+extern f32 lbl_803E37A0;
+extern void objRenderFn_8003b8f4(f32);
+extern int GameBit_Set(int eventId, int value);
+extern int warpToMap(int id, int flags);
+
 void FUN_8017c5c4(int param_1)
 {
     if (param_1 != 0)
@@ -324,9 +329,6 @@ int seqobject_getExtraSize(void) { return 0x3; }
 int seqobject_getObjectTypeId(void) { return 0x0; }
 int seqobj2_getExtraSize(void);
 
-extern f32 lbl_803E37A0;
-extern void objRenderFn_8003b8f4(f32);
-
 void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -337,9 +339,6 @@ void immultiseq_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void seqobject_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 void seqobj2_free(int x);
-
-extern int GameBit_Set(int eventId, int value);
-extern int warpToMap(int id, int flags);
 
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read

@@ -3,6 +3,8 @@
 #include "main/dll/baddie_state.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/dll_002E_moveLib.h"
+#include "main/dll/FRONT/POST.h"
+#include "main/objanim.h"
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80017748();
@@ -18,12 +20,51 @@ extern f32 lbl_803E2910;
 extern f32 lbl_803E2948;
 extern f32 lbl_803E294C;
 
+extern f32 Curve_EvalHermite(f32* points, f32 t, int unused);
+extern f32 sqrtf(f32 x);
+extern void* memcpy(void* dst, const void* src, u32 n);
+extern u8 lbl_8031A0E0[];
+extern f32 lbl_803E1C88;
+extern s16 atan2i(int x, int z);
+extern f32 lbl_803E1C8C;
+extern f32 timeDelta;
+extern f32 lbl_803E1C90;
+extern void vecRotateZXY(s16 * angles, f32 * vec);
+extern f32 lbl_803E1CC8;
+extern f32 lbl_803E1CCC;
+extern s16 getAngle(f32 x, f32 z);
+extern f32 mathCosf(f32 x);
+extern int Curve_AdvanceAlongPath(int curve);
+extern int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* out, int flag);
+extern f32 lbl_803E1CB0;
+extern s16* objModelGetVecFn_800395d8(int obj, int idx);
+extern u8 framesThisStep;
+extern f32 lbl_803E1CC4;
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ,
+                                           u32 obj);
+extern void normalize(f32 * x, f32 * y, f32 * z);
+extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern f32 lbl_803E1CB4;
+extern f32 lbl_803E1CB8;
+extern f32 lbl_803E1CBC;
+extern f32 lbl_803E1CC0;
+extern f32 Vec_distance(f32 * a, f32 * b);
+extern u32 randomGetRange(int min, int max);
+extern int ObjGroup_FindNearestObject();
+extern int Obj_GetYawDeltaToObject();
+extern undefined8 FUN_80286840();
+extern undefined4 FUN_8028688c();
+extern f32 sqrtf(f32 value);
+extern f32 lbl_803E1CA4;
+extern f32 lbl_803E1CD0;
+extern f32 lbl_803E1CD4;
+extern f32 lbl_803E1CD8;
+extern f32 lbl_803E1CDC;
+extern f32 lbl_803E1CE0;
+
 void FUN_801141e8(int param_1, wchar_t* param_2, wchar_t* param_3)
 {
 }
-
-extern f32 Curve_EvalHermite(f32* points, f32 t, int unused);
-extern f32 sqrtf(f32 x);
 
 f32 fn_80114224(int p1, int p2, int p3, int p4, int n)
 {
@@ -239,9 +280,6 @@ void dll_2E_func08(int obj, int v1, int v2)
 
 u16 dll_19_func0A(int obj);
 
-extern void* memcpy(void* dst, const void* src, u32 n);
-extern u8 lbl_8031A0E0[];
-
 void dll_2E_func09(int obj, void* src1, void* src2)
 {
     if (src1 == NULL) src1 = lbl_8031A0E0;
@@ -249,8 +287,6 @@ void dll_2E_func09(int obj, void* src1, void* src2)
     memcpy((char*)obj + 0x5bc, src1, (u32) * (u8*)(obj + 0x610) * 2);
     memcpy((char*)obj + 0x5da, src2, (u32) * (u8*)(obj + 0x610) * 2);
 }
-
-extern f32 lbl_803E1C88;
 
 f32 dll_2E_func0B(int obj, int arg)
 {
@@ -304,9 +340,6 @@ int dll_2E_func0A(int idx, char* out)
     return 0;
 }
 
-extern s16 atan2i(int x, int z);
-extern f32 lbl_803E1C8C;
-
 /* EN v1.0 0x80114084  size: 256b  Copies a curve point's position into the
  * caller's record and aims its angle at the nearest group-8 object (falling
  * back to the point's packed angle). */
@@ -339,12 +372,8 @@ int dll_2E_func0C(int idx, char* out)
     return 0;
 }
 
-extern f32 timeDelta;
-
 /* EN v1.0 0x80113864  size: 248b  Steps the movement blend factors toward the
  * current target and turns the yaw by the buffered turn rate. */
-
-extern f32 lbl_803E1C90;
 
 /* EN v1.0 0x80114F64  size: 280b  Initializes the movement-state block and
  * primes the animation channel tables. */
@@ -377,10 +406,6 @@ void dll_2E_func05(int obj, char* st, s16 a, s16 b, int count)
     fn_8003A9C0(st + 0x1c, *(u8*)(st + 0x610), 0, 0);
     dll_2E_func09((int)st, lbl_8031A0E0, lbl_8031A0E0);
 }
-
-extern void vecRotateZXY(s16 * angles, f32 * vec);
-extern f32 lbl_803E1CC8;
-extern f32 lbl_803E1CCC;
 
 /* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
  * first use and refreshes the current path point position. */
@@ -421,19 +446,11 @@ void dll_2E_func06(int obj, char* st, int point)
     *(f32*)(st + 0x18) = v.z0;
 }
 
-extern s16 getAngle(f32 x, f32 z);
-
 /* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
  * distance from an object to its target, updating the wide-turn flag. */
 
-extern f32 mathCosf(f32 x);
-
 /* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
  * the object for walkable space, returning a bitmask of clear directions. */
-
-extern int Curve_AdvanceAlongPath(int curve);
-extern int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* out, int flag);
-extern f32 lbl_803E1CB0;
 
 /* EN v1.0 0x801145BC  size: 512b  Advances the object along its movement
  * curve, snapping to ground and easing the yaw toward the path direction. */
@@ -499,10 +516,6 @@ int dll_2E_func0E(int obj, int curve, f32 phase, int p4, int c, f32* d, int* fla
     }
     return hit;
 }
-
-extern s16* objModelGetVecFn_800395d8(int obj, int idx);
-extern u8 framesThisStep;
-extern f32 lbl_803E1CC4;
 
 /* EN v1.0 0x80114BB0  size: 572b  Object-sequence scripted-move step: phase 4
  * arms the move, phase 5 walks the setup/playback sub-phases. */
@@ -584,18 +597,8 @@ int dll_2E_func07(int obj, char* state, char* st, s16 a, s16 b)
     return 0;
 }
 
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ,
-                                           u32 obj);
-
 /* EN v1.0 0x8011395C  size: 628b  Constrains a follow point against the
  * object's facing plane and returns the lateral offset of the result. */
-
-extern void normalize(f32 * x, f32 * y, f32 * z);
-extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern f32 lbl_803E1CB4;
-extern f32 lbl_803E1CB8;
-extern f32 lbl_803E1CBC;
-extern f32 lbl_803E1CC0;
 
 /* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
  * given speed, snapping when close, easing yaw and pacing the walk anim. */
@@ -680,20 +683,6 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
     }
     return 0;
 }
-
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern u32 randomGetRange(int min, int max);
-extern int ObjGroup_FindNearestObject();
-extern int Obj_GetYawDeltaToObject();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern f32 sqrtf(f32 value);
-
-extern f32 lbl_803E1CA4;
-extern f32 lbl_803E1CD0;
-extern f32 lbl_803E1CD4;
-extern f32 lbl_803E1CD8;
-extern f32 lbl_803E1CDC;
 
 typedef struct ProjNearSearch
 {
@@ -930,11 +919,6 @@ void FUN_801150ac(void)
     FUN_8028688c();
     return;
 }
-
-#include "main/dll/FRONT/POST.h"
-#include "main/objanim.h"
-
-extern f32 lbl_803E1CE0;
 
 int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turning,
                        PostControl* control, float* turnSpeed, s16* moves)

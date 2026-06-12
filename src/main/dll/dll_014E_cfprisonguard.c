@@ -75,6 +75,25 @@ extern f32 lbl_803E4F6C;
 extern f32 lbl_803E4F70;
 extern f32 lbl_803E4F74;
 
+extern f32 lbl_803E422C;
+extern uint GameBit_Get(int eventId);
+extern int Obj_RemoveFromUpdateList(int* obj);
+extern void* Obj_GetPlayerObject(void);
+extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
+extern f32 Vec_distance(void* a, void* b);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern f32 lbl_803E4268;
+extern int waterfx_consumePendingImpactNearPoint(f32* vec, f32 r);
+extern int objGetAnimState80A(void* obj);
+extern u8 framesThisStep;
+extern f32 lbl_803E4280;
+extern f32 lbl_803E4260;
+extern f32 lbl_803E4264;
+extern f32 lbl_803E4284;
+extern void objParticleFn_80099d84(int obj, f32 f, int a, int b);
+extern void Sfx_StopObjectChannel(int obj, int ch);
+extern f32 Vec_xzDistance(void* a, void* b);
+
 void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* param_3)
 {
     uint uVar1;
@@ -396,10 +415,6 @@ void babycloudrunner_init_OLD_v1_1(int obj)
     return;
 }
 
-extern f32 lbl_803E422C;
-extern uint GameBit_Get(int eventId);
-extern int Obj_RemoveFromUpdateList(int* obj);
-
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
 typedef struct BabyCloudRunnerState
@@ -548,13 +563,6 @@ void cfguardian_release(void);
  * (cfguardian_getExtraSize == 0xa9c). */
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
-extern void* Obj_GetPlayerObject(void);
-
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
-
-extern f32 Vec_distance(void* a, void* b);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-
 /* Per-object extra state for the CloudRunner main crystal
  * (cfmaincrystal_getExtraSize == 0x160). */
 
@@ -631,10 +639,6 @@ void cfprisonguard_init(int* obj, u8* params)
     ((Bit80*)&sub->flags39)->top = 1;
 }
 
-extern f32 lbl_803E4268;
-extern int waterfx_consumePendingImpactNearPoint(f32* vec, f32 r);
-extern int objGetAnimState80A(void* obj);
-
 void cfprisonguard_update(int* obj)
 {
     CfPrisonGuardState* sub;
@@ -684,17 +688,9 @@ void cfprisonguard_update(int* obj)
 }
 void cfprisonuncle_free(void);
 
-extern u8 framesThisStep;
-
 int cfprisonguard_getExtraSize(void) { return 0x3c; }
 int cfprisonguard_getObjectTypeId(void) { return 0x49; }
 int cfprisonuncle_getExtraSize(void);
-
-extern f32 lbl_803E4280;
-extern f32 lbl_803E4260;
-extern f32 lbl_803E4264;
-extern f32 lbl_803E4284;
-extern void objParticleFn_80099d84(int obj, f32 f, int a, int b);
 
 /* EN v1.0 0x8019F93C  size: 188b  cfprisonguard_render: render the guard
  * model when visible, ramp its alarm timer at sub->_30 each frame, and
@@ -731,8 +727,6 @@ void cfprisonguard_hitDetect(int* obj)
 }
 
 void gcrobotlightbea_free(int* obj);
-
-extern void Sfx_StopObjectChannel(int obj, int ch);
 
 /* EN v1.0 0x8019F540  size: 1000b  cfprisonguard_SeqFn: drive the guard state
  * machine - ramp/reset the alarm on cues, bail when captured or freed, watch
@@ -879,5 +873,3 @@ int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-extern f32 Vec_xzDistance(void* a, void* b);

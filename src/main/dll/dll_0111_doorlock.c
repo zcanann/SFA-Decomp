@@ -11,6 +11,8 @@ extern undefined8 ObjGroup_RemoveObject();
 #include "main/dll/cfguardian.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
+#include "main/dll/alphaanim.h"
+#include "main/objanim_internal.h"
 
 typedef struct LockDoorLockPlacement
 {
@@ -47,17 +49,20 @@ extern u32 GameBit_Get(int eventId);
 
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 
-int doorlock_getExtraSize(void) { return 0x1; }
-
 extern f32 lbl_803E3780;
 extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E3798;
+extern void objRenderFn_80041018(int* obj);
+extern int ObjTrigger_IsSetById(int obj, int id);
+extern int ObjTrigger_IsSet(int obj);
+extern void buttonDisable(int index, int mask);
+extern uint GameBit_Get(int eventId);
+
+int doorlock_getExtraSize(void) { return 0x1; }
 
 void doorlock_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 
 void mmp_bridge_init(int* obj);
-
-extern f32 lbl_803E3798;
-extern void objRenderFn_80041018(int* obj);
 
 void doorlock_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -80,10 +85,6 @@ render_basic:
 }
 
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-
-extern int ObjTrigger_IsSetById(int obj, int id);
-extern int ObjTrigger_IsSet(int obj);
-extern void buttonDisable(int index, int mask);
 
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
@@ -222,13 +223,6 @@ void doorlock_update(int obj)
 }
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/dll/alphaanim.h"
-#include "main/game_object.h"
-#include "main/objanim_internal.h"
-#include "main/objseq.h"
-
-extern uint GameBit_Get(int eventId);
 
 void doorlock_init(short* obj, DoorLockPlacement* config)
 {

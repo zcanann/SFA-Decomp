@@ -66,6 +66,17 @@ typedef struct Dim2lavacontrolState
 
 #pragma scheduling on
 #pragma peephole on
+extern u32 GameBit_Get(int id);
+extern f32 lbl_803E4B90;
+extern void fn_8004C1E4(int sfxId, f32 vol);
+extern void timeOfDayFn_80055000(void);
+extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
+extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4;
+extern void envFxActFn_800887f8(int a);
+extern u8 lbl_803DBF28[8];
+extern int fn_802966D4(void* obj, f32* out);
+extern void SCGameBitLatch_UpdateInverted(void* p, int mask, int a, int b, int e1, int e2);
+
 void FUN_801b9cc4(int param_1)
 {
     char* pcVar1;
@@ -86,8 +97,6 @@ void FUN_801b9cc4(int param_1)
 
 void dll_1DA_release(void);
 
-extern u32 GameBit_Get(int id);
-
 /* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
  * fall, land on contact object, clamp to floor height. */
 
@@ -96,8 +105,6 @@ extern u32 GameBit_Get(int id);
 
 int dim2lavacontrol_getExtraSize(void) { return 0x10; }
 int dll_1DF_getExtraSize(void);
-
-extern f32 lbl_803E4B90;
 
 #pragma scheduling off
 #pragma peephole off
@@ -137,9 +144,6 @@ void dim2lavacontrol_setScale(void* obj)
     }
 }
 
-extern void fn_8004C1E4(int sfxId, f32 vol);
-extern void timeOfDayFn_80055000(void);
-
 void dim2lavacontrol_free(void)
 {
     fn_8004C1E4(0xC0, lbl_803E4B90);
@@ -154,16 +158,11 @@ void dim2lavacontrol_free(void)
  *   - Then if (distance^2 from player to obj position < lbl_803E4BA0) and sub.f24
  *     decremented by timeDelta is < lbl_803E4B9C, call gPartfxInterface->vt[2] with
  *     (obj, 525, 0, 2, -1, 0) and reset sub.f24 to lbl_803E4BA4. */
-extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
-extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4;
 
 void dll_1DF_update(void* obj);
 
 /* dll_1DB_init: read romlist params, set s16 at obj[0] and a u8 flag on obj->sub_B8
  *              from a GameBit, and OR-set bit 0x2000 in obj->flags_B0. */
-
-extern void envFxActFn_800887f8(int a);
-extern u8 lbl_803DBF28[8];
 
 void dim2lavacontrol_init(int obj, int param2)
 {
@@ -212,9 +211,6 @@ void dim2lavacontrol_init(int obj, int param2)
     Music_Trigger(0xdd, 1);
     envFxActFn_800887f8(0);
 }
-
-extern int fn_802966D4(void* obj, f32* out);
-extern void SCGameBitLatch_UpdateInverted(void* p, int mask, int a, int b, int e1, int e2);
 
 void dim2lavacontrol_update(int obj)
 {

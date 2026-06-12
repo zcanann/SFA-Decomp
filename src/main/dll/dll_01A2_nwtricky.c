@@ -1,11 +1,25 @@
 /* DLL 0x01A2 (nwtricky) — NW Tricky and mammoth objects [0x801CF78C-0x801CFB24). */
 #include "main/dll/dim2conveyor.h"
 #include "main/gameplay_runtime.h"
+#include "main/dll/creator1D6.h"
+#include "main/game_object.h"
+#include "main/mapEventTypes.h"
 
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
 extern void Sfx_StopObjectChannel(void* obj, int channel);
 
 extern f32 timeDelta;
+
+extern int** ObjGroup_GetObjects(int group, int* countOut);
+extern void fn_8014C66C(int* obj, int* target);
+extern f32 fn_8014C5D0(int* obj);
+extern int* ObjList_FindObjectById(int objId);
+extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
+extern void fn_80138920(int* obj, int a, int b);
+extern const f32 lbl_803E5260;
+extern f32 lbl_803E5264;
+extern f32 lbl_803E5268;
+extern int lbl_802C23E8[];
 
 int nw_tricky_getExtraSize(void)
 {
@@ -26,27 +40,11 @@ void nw_tricky_free(int obj)
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/dll/creator1D6.h"
-#include "main/game_object.h"
-#include "main/mapEventTypes.h"
-
 typedef struct NwTrickyState
 {
     u8 pad0[0x4 - 0x0];
     f32 unk4;
 } NwTrickyState;
-
-extern int** ObjGroup_GetObjects(int group, int* countOut);
-
-extern void fn_8014C66C(int* obj, int* target);
-extern f32 fn_8014C5D0(int* obj);
-extern int* ObjList_FindObjectById(int objId);
-extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
-extern void fn_80138920(int* obj, int a, int b);
-extern const f32 lbl_803E5260;
-extern f32 lbl_803E5264;
-extern f32 lbl_803E5268;
-extern int lbl_802C23E8[];
 
 typedef struct NwTrickyIds
 {

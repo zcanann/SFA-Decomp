@@ -1,5 +1,9 @@
 /* DLL 0x1E7 - DIMBossFire [801C04B8-801C053C) */
 #include "main/dll_000A_expgfx.h"
+#include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
+#include "main/dll/DF/DFcradle.h"
+#include "main/effect_interfaces.h"
 
 extern void ModelLightStruct_free(void* light);
 extern undefined4 ObjHitbox_SetSphereRadius();
@@ -17,6 +21,27 @@ extern int Obj_GetPlayerObject(void);
 extern void lightSetFieldBC_8001db14(int light, int v);
 extern void modelLightStruct_setLightKind(int light, int v);
 extern void modelLightStruct_setDiffuseColor(int light, int a, int b, int c, int d);
+
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void CameraShake_Start(f32 magnitude, f32 duration, f32 param_3);
+extern void doRumble(f32 val);
+extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
+extern void lightSetFieldBC_8001db14(int light, int value);
+extern void modelLightStruct_setLightKind(int light, int value);
+extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
+extern uint GameBit_Get(int eventId);
+extern f32 Vec_distance(float* posA, float* posB);
+extern undefined4 ObjHits_DisableObject();
+extern f32 lbl_80325D68[];
+extern f32 lbl_803E4DA0;
+extern f32 lbl_803E4DA4;
+extern f32 lbl_803E4DA8;
+extern f32 lbl_803E4DAC;
+extern f32 lbl_803E4DB0;
+extern f32 lbl_803E4DB4;
+extern f32 lbl_803E4DB8;
+extern f32 lbl_803E4DBC;
+extern f32 lbl_803E4DC0;
 
 void dimbossfire_hitDetect(void)
 {
@@ -46,11 +71,6 @@ int dimbossfire_getObjectTypeId(void) { return 0x0; }
 
 void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-#include "main/audio/sfx_ids.h"
-#include "main/game_object.h"
-#include "main/dll/DF/DFcradle.h"
-#include "main/effect_interfaces.h"
-
 typedef struct DimbossfireState
 {
     u8 pad0[0x4 - 0x0];
@@ -60,28 +80,6 @@ typedef struct DimbossfireState
     s32 light;
     u8 pad14[0x18 - 0x14];
 } DimbossfireState;
-
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void CameraShake_Start(f32 magnitude, f32 duration, f32 param_3);
-extern void doRumble(f32 val);
-extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
-extern void lightSetFieldBC_8001db14(int light, int value);
-extern void modelLightStruct_setLightKind(int light, int value);
-extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
-extern uint GameBit_Get(int eventId);
-extern f32 Vec_distance(float* posA, float* posB);
-extern undefined4 ObjHits_DisableObject();
-
-extern f32 lbl_80325D68[];
-extern f32 lbl_803E4DA0;
-extern f32 lbl_803E4DA4;
-extern f32 lbl_803E4DA8;
-extern f32 lbl_803E4DAC;
-extern f32 lbl_803E4DB0;
-extern f32 lbl_803E4DB4;
-extern f32 lbl_803E4DB8;
-extern f32 lbl_803E4DBC;
-extern f32 lbl_803E4DC0;
 
 void dimbossfire_update(int obj)
 {

@@ -99,14 +99,20 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
+extern undefined4 FUN_800067c0();
+extern undefined8 ObjGroup_RemoveObject();
+extern f32 lbl_803E4A30;
+extern f32 lbl_803E4A38;
+extern u8 lbl_803DBF20;
+extern int* getTrickyObject(void);
+extern f32 mathCosf(f32 x);
+extern void* mmAlloc(int size, int a, int b);
+
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
-
-extern undefined4 FUN_800067c0();
-extern undefined8 ObjGroup_RemoveObject();
 
 #pragma scheduling on
 #pragma peephole on
@@ -185,15 +191,9 @@ void dim_tricky_init(int* obj)
     *((u8*)((int**)obj)[0xb8 / 4] + 0x0) = v;
 }
 
-extern f32 lbl_803E4A30;
-
-extern f32 lbl_803E4A38;
 void dim_tricky_render(void) { extern void objRenderFn_8003b8f4(f32); objRenderFn_8003b8f4(lbl_803E4A38); }
 
 void dim2conveyor_free(int x);
-
-extern u8 lbl_803DBF20;
-extern int* getTrickyObject(void);
 
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if the signed result dropped to or below 0. */
@@ -224,7 +224,3 @@ void dim_tricky_update(int* obj)
         break;
     }
 }
-
-extern f32 mathCosf(f32 x);
-
-extern void* mmAlloc(int size, int a, int b);

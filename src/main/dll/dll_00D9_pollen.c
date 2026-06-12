@@ -22,6 +22,22 @@ extern f32 lbl_803E3DF8;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 #pragma dont_inline on
+extern f32 lbl_803E313C;
+extern f32 lbl_803E3138;
+extern void objRenderFn_8003b8f4(f32);
+extern void kaldachompspit_free(void);
+extern void kaldachompspit_update(void);
+extern int kaldachompspit_getObjectTypeId(void);
+extern int kaldachompspit_getExtraSize(void);
+extern f32 lbl_803E3148;
+extern f32 timeDelta;
+extern f32 lbl_803E3140;
+extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern void* Obj_GetPlayerObject(void);
+extern void* getTrickyObject(void);
+extern void Camera_EnableViewYOffset(void);
+extern void CameraShake_SetAllMagnitudes(f32 mag);
+
 void fn_8016A660(int obj)
 {
     extern u8 Obj_IsLoadingLocked(void);
@@ -142,8 +158,6 @@ void pollenfragment_release(void);
 
 void pollenfragment_initialise(void);
 
-extern f32 lbl_803E313C;
-
 void pinponspike_free(int obj);
 
 void pollen_free(int obj)
@@ -183,9 +197,6 @@ int pollen_getObjectTypeId(void) { return 0x0; }
 int pollenfragment_getExtraSize(void);
 int pollenfragment_getObjectTypeId(void);
 
-extern f32 lbl_803E3138;
-extern void objRenderFn_8003b8f4(f32);
-
 void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -193,11 +204,6 @@ void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern void kaldachompspit_free(void);
-extern void kaldachompspit_update(void);
-extern int kaldachompspit_getObjectTypeId(void);
-extern int kaldachompspit_getExtraSize(void);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -337,8 +343,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     pollenfragment_getExtraSize,
 };
 
-extern f32 lbl_803E3148;
-
 void pollen_init(int* obj)
 {
     s16* state = ((GameObject*)obj)->extra;
@@ -360,14 +364,6 @@ void pollen_init(int* obj)
         }
     }
 }
-
-extern f32 timeDelta;
-extern f32 lbl_803E3140;
-extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern void* Obj_GetPlayerObject(void);
-extern void* getTrickyObject(void);
-extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 mag);
 
 void pinponspike_update(int obj);
 

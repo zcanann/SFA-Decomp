@@ -15,12 +15,6 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-static inline u8* Gameplay_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 FUN_800033a8();
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_80006768();
@@ -48,7 +42,6 @@ extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286880();
 extern undefined4 FUN_8028688c();
-
 extern undefined4 DAT_802c28f0;
 extern undefined4 DAT_802c28f4;
 extern undefined4 DAT_802c28f8;
@@ -125,6 +118,17 @@ extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
+extern int maybeTryLoadSave(int a);
+extern u8 lbl_803146D8[];
+extern f32 lbl_803E0BB8, lbl_803E0BBC, lbl_803E0BC0, lbl_803E0BC4, lbl_803E0BC8, lbl_803E0BCC;
+extern f32 lbl_803E0BD0, lbl_803E0BD4, lbl_803E0BD8, lbl_803E0BDC, lbl_803E0BE0, lbl_803E0BE4;
+extern u8 lbl_80312BD8[];
+
+static inline u8* Gameplay_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (u8*)objAnim->banks[objAnim->bankIndex];
+}
 
 void saveFileStruct_unlockCheat(uint cheatId)
 {
@@ -232,8 +236,6 @@ undefined4* FUN_800e87a8(void)
 {
     return &DAT_803a45b0;
 }
-
-extern int maybeTryLoadSave(int a);
 
 int saveFn_800e8508(void);
 
@@ -699,10 +701,6 @@ enum
 
 void dll_60_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
 
-extern u8 lbl_803146D8[];
-extern f32 lbl_803E0BB8, lbl_803E0BBC, lbl_803E0BC0, lbl_803E0BC4, lbl_803E0BC8, lbl_803E0BCC;
-extern f32 lbl_803E0BD0, lbl_803E0BD4, lbl_803E0BD8, lbl_803E0BDC, lbl_803E0BE0, lbl_803E0BE4;
-
 void dll_74_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
@@ -906,5 +904,3 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
         (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, base, 0x18, &base[0xd4], 0xd9, 0);
     }
 }
-
-extern u8 lbl_80312BD8[];

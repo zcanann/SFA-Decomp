@@ -61,6 +61,37 @@ extern void mm_free(void* p);
 
 #pragma scheduling on
 #pragma peephole on
+extern f32 lbl_803E3FC4;
+extern f32 lbl_803E3F98;
+extern void fn_801923F8(int* cfg);
+extern f32 lbl_803E3FB8;
+extern void* mapBlockFn_800606ec(void* block, int idx);
+extern int mapBlockFn_80060678(void* entry);
+extern void* fn_800606DC(void* block, int idx);
+extern void fn_800605F0(void* cell, void* out);
+extern void fn_8006058C(void* cell, void* in);
+extern f32 lbl_803E3FA8;
+extern f32 lbl_803E3FAC;
+extern f32 lbl_803E3FB0;
+extern f32 lbl_803E3FB4;
+extern f32 lbl_803E3FBC;
+extern f32 timeDelta;
+extern void fn_801A80F0(int* e, int arg);
+extern float fastFloorf(float x);
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803E3FC0;
+extern int* Obj_GetPlayerObject(void);
+extern int fn_80060688(void* block, int v);
+extern void fn_801A80C4(void* o, f32 x, f32 y, f32 z);
+extern void Sfx_PlayFromObject(int* obj, int id);
+extern void* getTrickyObject(void);
+extern void objRenderFn_80041018(int* obj);
+extern void DCStoreRangeNoSync(void* addr, int len);
+extern void* mmAlloc(int size, int align, int tag);
+extern u16 lbl_803DBDF0[];
+extern f32 lbl_803E3F7C;
+
 void FUN_80192488(void)
 {
     int iVar1;
@@ -144,8 +175,6 @@ int hitanimator_getExtraSize(void);
 
 u8 groundanimator_modelMtxFn(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x2b); }
 
-extern f32 lbl_803E3FC4;
-
 #pragma peephole off
 void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -153,7 +182,6 @@ void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E3FC4);
 }
 
-extern f32 lbl_803E3F98;
 #pragma scheduling off
 #pragma peephole on
 u8 groundanimator_func0B(int* obj)
@@ -165,9 +193,6 @@ u8 groundanimator_func0B(int* obj)
     return v > lbl_803E3F98 * (f32)byte;
 }
 
-extern void fn_801923F8(int* cfg);
-
-extern f32 lbl_803E3FB8;
 #pragma peephole off
 void groundanimator_init(int* obj, int* desc)
 {
@@ -191,11 +216,6 @@ void groundanimator_init(int* obj, int* desc)
     }
 }
 
-extern void* mapBlockFn_800606ec(void* block, int idx);
-extern int mapBlockFn_80060678(void* entry);
-extern void* fn_800606DC(void* block, int idx);
-extern void fn_800605F0(void* cell, void* out);
-extern void fn_8006058C(void* cell, void* in);
 void groundanimator_free(int* obj, int flag)
 {
     extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
@@ -259,13 +279,6 @@ void groundanimator_free(int* obj, int flag)
     ObjGroup_RemoveObject(obj, 0x31);
 }
 
-extern f32 lbl_803E3FA8;
-extern f32 lbl_803E3FAC;
-extern f32 lbl_803E3FB0;
-extern f32 lbl_803E3FB4;
-extern f32 lbl_803E3FBC;
-extern f32 timeDelta;
-extern void fn_801A80F0(int* e, int arg);
 f32 groundanimator_setScale(int* obj, int* target)
 {
     GroundAnimatorState * g;
@@ -310,10 +323,6 @@ f32 groundanimator_setScale(int* obj, int* target)
         (g->sinkDepth / (lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r31)->unk20));
 }
 
-extern float fastFloorf(float x);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern f32 lbl_803E3FC0;
 void fn_801932C8(int* obj, GroundAnimatorState* p2, int* p3)
 {
     extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
@@ -385,15 +394,6 @@ void fn_801932C8(int* obj, GroundAnimatorState* p2, int* p3)
     }
 }
 
-extern int* Obj_GetPlayerObject(void);
-extern int fn_80060688(void* block, int v);
-extern void fn_801A80C4(void* o, f32 x, f32 y, f32 z);
-extern void Sfx_PlayFromObject(int* obj, int id);
-extern void* getTrickyObject(void);
-extern void objRenderFn_80041018(int* obj);
-extern void DCStoreRangeNoSync(void* addr, int len);
-extern void* mmAlloc(int size, int align, int tag);
-extern u16 lbl_803DBDF0[];
 void groundanimator_update(int* obj)
 {
     extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
@@ -607,7 +607,5 @@ void groundanimator_update(int* obj)
     }
     objRenderFn_80041018(obj);
 }
-
-extern f32 lbl_803E3F7C;
 
 void fn_801923F8(int* cfgArg);

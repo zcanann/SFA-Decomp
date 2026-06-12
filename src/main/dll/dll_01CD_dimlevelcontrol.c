@@ -12,6 +12,14 @@
 #include "main/dll/explosion_state.h"
 #include "main/effect_interfaces.h"
 #include "main/objseq.h"
+#include "main/audio/sfx_ids.h"
+#include "main/asset_load.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/game_ui_interface.h"
+#include "main/game_object.h"
+#include "main/mapEvent.h"
+#include "main/dll/DIM/DIM2snowball.h"
+#include "main/objanim_internal.h"
 
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
@@ -58,10 +66,34 @@ extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 
-int dim_levelcontrol_getExtraSize(void) { return 0x10; }
-
 extern f32 lbl_803E49D0;
 extern f32 lbl_803E4A20;
+extern void* lbl_803DDB78;
+extern void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
+extern void timeOfDayFn_80055000(void);
+extern u8 framesThisStep;
+extern f32 timeDelta;
+STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
+STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
+STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
+STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
+STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
+extern undefined4 FUN_800067c0();
+extern void getEnvfxActImmediately(int a, int b, int id, int d);
+extern void getEnvfxAct(int a, int b, int id, int d);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void gameTextShow(int id);
+extern void SCGameBitLatch_Update(int* state, int mask, int a, int b, int bit, int value);
+extern int* gSHthorntailAnimationInterface;
+extern f32 lbl_803E4A24;
+extern u8 lbl_803DBF20;
+extern f32 lbl_803E4A28;
+extern int getSaveGameLoadStatus(void);
+extern void gameBitFn_800ea2e0(u8 n);
+extern void unlockLevel(int a, int b, int c);
+extern void* mmAlloc(int size, int a, int b);
+
+int dim_levelcontrol_getExtraSize(void) { return 0x10; }
 
 void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -70,11 +102,8 @@ void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E4A20);
 }
 
-extern void* lbl_803DDB78;
-
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
-extern void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
 
 /* dimmagicbridge_update: advance texture phase and bridge vertex wave, then
  * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
@@ -83,8 +112,6 @@ extern void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
 
 /* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
  * and using mask 0x6000 + initial state byte 3 at +0. */
-
-extern void timeOfDayFn_80055000(void);
 
 #pragma peephole on
 void dim_levelcontrol_free(int p1)
@@ -97,7 +124,6 @@ void dim_levelcontrol_free(int p1)
 
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
-extern u8 framesThisStep;
 #pragma dont_inline on
 void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj);
 #pragma dont_inline reset
@@ -106,34 +132,12 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj);
  * every 16 frames, and ramp each active slot's alpha toward full; then update
  * the animated bridge mesh. */
 
-extern f32 timeDelta;
-
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/audio/sfx_ids.h"
-#include "main/asset_load.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/effect_interfaces.h"
-#include "main/game_ui_interface.h"
-#include "main/game_object.h"
-#include "main/mapEvent.h"
-#include "main/dll/DIM/DIM2snowball.h"
-#include "main/objanim_internal.h"
-
-STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
-
-STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
-
-STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
-
-STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
-
 /* dim2pathgenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
  * tables filled by the RomCurve interface). */
-
-STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 #pragma peephole off
 static inline int* DIM2snowball_GetActiveModel(void* obj)
@@ -141,8 +145,6 @@ static inline int* DIM2snowball_GetActiveModel(void* obj)
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
-
-extern undefined4 FUN_800067c0();
 
 typedef struct DimLevelControlState
 {
@@ -159,14 +161,6 @@ typedef struct DimLevelControlState
     u8 b4 : 1;
     u8 b3 : 1;
 } DimLevelControlState;
-
-extern void getEnvfxActImmediately(int a, int b, int id, int d);
-extern void getEnvfxAct(int a, int b, int id, int d);
-extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShow(int id);
-extern void SCGameBitLatch_Update(int* state, int mask, int a, int b, int bit, int value);
-extern int* gSHthorntailAnimationInterface;
-extern f32 lbl_803E4A24;
 
 void dim_levelcontrol_update(int obj)
 {
@@ -360,15 +354,8 @@ void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_
 
 void dll_1CF_free(void);
 
-extern u8 lbl_803DBF20;
-
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if the signed result dropped to or below 0. */
-
-extern f32 lbl_803E4A28;
-extern int getSaveGameLoadStatus(void);
-extern void gameBitFn_800ea2e0(u8 n);
-extern void unlockLevel(int a, int b, int c);
 
 #pragma scheduling off
 #pragma peephole off
@@ -410,5 +397,3 @@ void dim_levelcontrol_init(int obj)
 }
 
 void dim_tricky_update(int* obj);
-
-extern void* mmAlloc(int size, int a, int b);

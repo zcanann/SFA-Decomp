@@ -31,6 +31,30 @@ extern u8* Obj_GetPlayerObject(void);
 
 STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
 
+extern void* getTrickyObject(void);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern int fn_80295A04(void* player, int p2);
+extern int ObjGroup_FindNearestObject(int group, int obj, f32* dist);
+extern int* objFindTexture(int obj, int a, int b);
+extern void fn_80175428(int obj, int p2);
+extern f32 lbl_803E352C;
+extern f64 lbl_803E3530;
+extern f64 lbl_803E3538;
+extern f32 lbl_803E3540;
+extern f32 lbl_803E3544;
+extern f32 lbl_803E3548;
+extern f32 lbl_803E354C;
+extern f32 lbl_803E3550;
+extern f32 lbl_803E3554;
+extern f32 lbl_803E3558;
+extern f32 lbl_803E355C;
+extern f32 lbl_803E3560;
+extern f32 lbl_803E3564;
+extern f32 lbl_803E3568;
+extern f32 lbl_803E356C;
+extern f32 lbl_803E3570;
+extern f32 lbl_803E3528;
+
 void fn_80174588(int obj, PushableState* p2)
 {
     extern int*objFindTexture(int, int, int);
@@ -62,30 +86,6 @@ void fn_80174588(int obj, PushableState* p2)
         }
     }
 }
-
-extern void* getTrickyObject(void);
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern int fn_80295A04(void* player, int p2);
-extern int ObjGroup_FindNearestObject(int group, int obj, f32* dist);
-extern int* objFindTexture(int obj, int a, int b);
-extern void fn_80175428(int obj, int p2);
-extern f32 lbl_803E352C;
-extern f64 lbl_803E3530;
-extern f64 lbl_803E3538;
-extern f32 lbl_803E3540;
-extern f32 lbl_803E3544;
-extern f32 lbl_803E3548;
-extern f32 lbl_803E354C;
-extern f32 lbl_803E3550;
-extern f32 lbl_803E3554;
-extern f32 lbl_803E3558;
-extern f32 lbl_803E355C;
-extern f32 lbl_803E3560;
-extern f32 lbl_803E3564;
-extern f32 lbl_803E3568;
-extern f32 lbl_803E356C;
-extern f32 lbl_803E3570;
-extern f32 lbl_803E3528;
 
 int fn_80174438(int obj, PushableState* state)
 {

@@ -62,6 +62,22 @@ typedef struct SBCannonBallState
 
 extern void ModelLightStruct_free(void* effect);
 
+extern f32 lbl_803E58B0;
+extern f32 lbl_803E58BC;
+extern f64 lbl_803E58C0;
+extern void Obj_FreeObject(int* obj);
+extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, int d);
+extern f32 lbl_803E58B4;
+extern f32 lbl_803E58B8;
+extern u8* objCreateLight(int* obj, int v);
+extern void modelLightStruct_setLightKind(u8* p, int v);
+extern void modelLightStruct_setDiffuseColor(u8* p, int a, int b, int c, int d);
+extern void lightSetFieldBC_8001db14(u8* p, int v);
+extern void modelLightStruct_setDistanceAttenuation(u8* p, f32 a, f32 b);
+extern f32 lbl_803E58C8;
+extern f32 lbl_803E58CC;
+extern f32 lbl_803E58D0;
+
 void SB_CannonBall_release(void)
 {
 }
@@ -90,8 +106,6 @@ void SB_CannonBall_free(int obj)
 
 int SB_FireBall_getExtraSize(void);
 
-extern f32 lbl_803E58B0;
-
 void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -99,11 +113,6 @@ void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern f32 lbl_803E58BC;
-extern f64 lbl_803E58C0;
-extern void Obj_FreeObject(int* obj);
-extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, int d);
 
 void SB_CannonBall_update(int* obj)
 {
@@ -173,9 +182,6 @@ void SB_CannonBall_update(int* obj)
     ((SBCannonBallState*)state)->unk18 += framesThisStep;
 }
 
-extern f32 lbl_803E58B4;
-extern f32 lbl_803E58B8;
-
 void SB_CannonBall_hitDetect(int* obj)
 {
     extern int Sfx_PlayFromObject();
@@ -230,15 +236,6 @@ void SB_CannonBall_hitDetect(int* obj)
         }
     }
 }
-
-extern u8* objCreateLight(int* obj, int v);
-extern void modelLightStruct_setLightKind(u8* p, int v);
-extern void modelLightStruct_setDiffuseColor(u8* p, int a, int b, int c, int d);
-extern void lightSetFieldBC_8001db14(u8* p, int v);
-extern void modelLightStruct_setDistanceAttenuation(u8* p, f32 a, f32 b);
-extern f32 lbl_803E58C8;
-extern f32 lbl_803E58CC;
-extern f32 lbl_803E58D0;
 
 void SB_CannonBall_init(int* obj)
 {

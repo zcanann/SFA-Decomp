@@ -319,6 +319,83 @@ extern f32 lbl_803E4064;
 extern f32 lbl_803E40E8;
 extern f32 lbl_803E40EC;
 
+extern f32 lbl_803E3420;
+extern u8 Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int type);
+extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
+extern void ModelLightStruct_free(void* p);
+extern int Sfx_StopFromObject(int obj, int sfxId);
+extern void gcbaddieshield_update(int* obj);
+extern void animatedobj_free();
+extern void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+extern void animatedobj_update(int* obj);
+extern void animatedobj_init();
+extern void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
+extern void dim2roofrub_update(int* obj);
+extern void dim2roofrub_init();
+extern void depthoffieldpoint_update();
+extern void depthoffieldpoint_init();
+extern void staff_free(int* obj);
+extern void staff_update();
+extern void staff_init();
+extern void staff_release();
+extern void staff_initialise();
+extern void staff_modelMtxFn(int* obj, int p4, int p5);
+extern void staff_hitDetectGeometry();
+extern s16 staff_getHitReactValue(int* obj);
+extern s32 staff_func16(int* obj);
+extern void fireball_free();
+extern void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+extern void fireball_hitDetect();
+extern void fireball_update();
+extern void fireball_init();
+extern void flamethrowerspe_func0B(int* obj);
+extern void flamethrowerspe_render(void);
+extern void flamethrowerspe_update();
+extern void flamethrowerspe_init();
+extern void shield_free();
+extern void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+extern void shield_update();
+extern void dll_F7_free();
+extern void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+extern void dll_F7_update();
+extern void dll_F7_init();
+extern int* Obj_GetActiveModel(int obj);
+extern void postRenderSetAlphaBlendState(void);
+extern void ObjModel_SetPostRenderCallback(int* model, void* callback);
+extern int getHudHiddenFrameCount(void);
+extern void mm_free(int* p);
+extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
+extern void vecRotateZXY(int* obj, f32* p);
+extern void modelLightStruct_setPosition(int light, f32 a, f32 b, f32 c);
+extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
+extern void modelLightStruct_setLightKind(int light, int v);
+extern f32 fcos16(u16 angle);
+extern void Sfx_SetObjectSfxVolume(f32 ratio, s16* obj, int sfx, int vol);
+extern f32 lbl_803E33A8;
+extern f32 lbl_803E33AC;
+extern f32 lbl_803E33C4;
+extern f32 lbl_803E33E8;
+extern f32 lbl_803E33EC;
+extern s16 lbl_803DBD70[4];
+extern s16 lbl_803DBD78[4];
+extern s16 lbl_803DBD80[4];
+extern s16 lbl_803DBD88[4];
+extern f32 lbl_803E33D8;
+extern f32 lbl_803E33DC;
+extern void quakeSpellTextureFn_8007366c(int param);
+extern void selectTexture(void* tex, int x);
+extern int* fn_802966CC(int* player);
+extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
+extern f32 lbl_803E33B0;
+extern f32 lbl_803E33B4;
+extern f32 lbl_803E33B8;
+extern f32 lbl_803E33BC;
+extern f32 lbl_803E33C0;
+extern f32 lbl_803E33C8;
+extern f32 lbl_803E33CC;
+extern int objFn_80296700(int* obj);
+
 void staticCamera_free(int param_1)
 {
     ObjGroup_RemoveObject(param_1, 7);
@@ -987,15 +1064,9 @@ void FUN_80170048(void)
     return;
 }
 
-extern f32 lbl_803E3420;
-
 void checkpoint4_render(int param_1);
 
 void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* placement);
-
-extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_AllocObjectSetup(int size, int type);
-extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 
 void mikabombshadow_update(int* obj);
 
@@ -1204,9 +1275,6 @@ void shield_initialise(void)
 {
 }
 
-extern void ModelLightStruct_free(void* p);
-extern int Sfx_StopFromObject(int obj, int sfxId);
-
 void shield_free(int obj)
 {
     void** state = ((GameObject*)obj)->extra;
@@ -1273,54 +1341,16 @@ void dim2roofrub_free(int* obj);
 int checkpoint4_getExtraSize(void);
 int checkpoint4_getObjectTypeId(void);
 
-extern void gcbaddieshield_update(int* obj);
-extern void animatedobj_free();
-extern void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void animatedobj_update(int* obj);
-extern void animatedobj_init();
-extern void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
-extern void dim2roofrub_update(int* obj);
-extern void dim2roofrub_init();
-extern void depthoffieldpoint_update();
-extern void depthoffieldpoint_init();
-extern void staff_free(int* obj);
-extern void staff_update();
-extern void staff_init();
-extern void staff_release();
-extern void staff_initialise();
-extern void staff_modelMtxFn(int* obj, int p4, int p5);
-extern void staff_hitDetectGeometry();
 void staff_func10(int* obj, s32 v);
 void staff_setHitReactValue(int* obj, s32 v);
 void staff_addHitReactValue(int* obj, s32 delta);
-extern s16 staff_getHitReactValue(int* obj);
 void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
 void staff_func15(int* obj, s16 idx, f32 f1, f32 f2);
-extern s32 staff_func16(int* obj);
-extern void fireball_free();
-extern void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void fireball_hitDetect();
-extern void fireball_update();
-extern void fireball_init();
 void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
-extern void flamethrowerspe_func0B(int* obj);
-extern void flamethrowerspe_render(void);
-extern void flamethrowerspe_update();
-extern void flamethrowerspe_init();
-extern void shield_free();
-extern void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void shield_update();
 
 void restartmarker_init(int* obj, int* state);
 
-extern void dll_F7_free();
-extern void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void dll_F7_update();
-extern void dll_F7_init();
 void staffFn_80170380(int* obj, int cmd);
-extern int* Obj_GetActiveModel(int obj);
-extern void postRenderSetAlphaBlendState(void);
-extern void ObjModel_SetPostRenderCallback(int* model, void* callback);
 
 void shield_init(int* obj, void* initData)
 {
@@ -1747,8 +1777,6 @@ void staff_func10(int* obj, s32 v);
 
 void staff_setHitReactValue(int* obj, s32 v);
 
-extern int getHudHiddenFrameCount(void);
-
 void staff_modelMtxFn(int* obj, int p4, int p5);
 
 void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
@@ -1783,8 +1811,6 @@ int* fn_801702D4(int* obj, f32 fv)
     return new_obj;
 }
 
-extern void mm_free(int* p);
-
 void gcbaddieshield_update(int* obj);
 
 void staff_free(int* obj);
@@ -1811,15 +1837,11 @@ void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 void dll_F7_init(int* obj, int* params);
 
-extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
-
 void fireball_hitDetect(int* obj);
 
 void dim2roofrub_init(int* obj, int* params);
 
 void animatedobj_init(int* obj, int* params);
-
-extern void vecRotateZXY(int* obj, f32* p);
 
 void flamethrowerspe_update(int* obj);
 
@@ -1837,23 +1859,11 @@ void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
 
 void dim2roofrub_update(int* obj);
 
-extern void modelLightStruct_setPosition(int light, f32 a, f32 b, f32 c);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
-extern void modelLightStruct_setLightKind(int light, int v);
-
 void fireball_init(int* obj);
 
 void fireball_update(int* obj);
 
 void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-extern f32 fcos16(u16 angle);
-extern void Sfx_SetObjectSfxVolume(f32 ratio, s16* obj, int sfx, int vol);
-extern f32 lbl_803E33A8;
-extern f32 lbl_803E33AC;
-extern f32 lbl_803E33C4;
-extern f32 lbl_803E33E8;
-extern f32 lbl_803E33EC;
 
 void shield_update(int* obj)
 {
@@ -1943,13 +1953,6 @@ typedef struct ShieldFxVec
     f32 a;
     f32 v[3];
 } ShieldFxVec;
-
-extern s16 lbl_803DBD70[4];
-extern s16 lbl_803DBD78[4];
-extern s16 lbl_803DBD80[4];
-extern s16 lbl_803DBD88[4];
-extern f32 lbl_803E33D8;
-extern f32 lbl_803E33DC;
 
 void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -2057,8 +2060,6 @@ void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-extern void quakeSpellTextureFn_8007366c(int param);
-
 void staff_hitDetectGeometry(int* obj);
 #pragma opt_common_subs reset
 
@@ -2085,21 +2086,9 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = t;
 }
 
-extern void selectTexture(void* tex, int x);
-
 #pragma opt_common_subs off
 
 void staff_update(int* obj);
-
-extern int* fn_802966CC(int* player);
-extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
-extern f32 lbl_803E33B0;
-extern f32 lbl_803E33B4;
-extern f32 lbl_803E33B8;
-extern f32 lbl_803E33BC;
-extern f32 lbl_803E33C0;
-extern f32 lbl_803E33C8;
-extern f32 lbl_803E33CC;
 
 void staffFn_80170380(int* obj, int cmd)
 {
@@ -2395,5 +2384,3 @@ void staffFn_80170380(int* obj, int cmd)
         }
     }
 }
-
-extern int objFn_80296700(int* obj);

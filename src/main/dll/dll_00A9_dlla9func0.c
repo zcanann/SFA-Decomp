@@ -26,6 +26,8 @@ extern f32 lbl_803E15F4;
 extern f32 lbl_803E15F8;
 extern f32 lbl_803E15FC;
 
+extern u8 lbl_80319168[];
+
 void dll_A9_func03(u8* sourceObj, int variant, u8* posSource, uint flags, undefined4 arg5,
                    u8* extraArgs)
 {
@@ -207,8 +209,6 @@ void dll_A9_func03(u8* sourceObj, int variant, u8* posSource, uint flags, undefi
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, tab, 0xc, &tab[0x8c], 0x586, 0);
 }
-
-extern u8 lbl_80319168[];
 
 void dll_A9_func01_nop(void)
 {

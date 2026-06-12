@@ -32,6 +32,24 @@ extern f32 lbl_803E3D84;
 
 typedef int (*ThorntailQueryFn)(u8*);
 
+extern void ObjHitbox_SetCapsuleBounds(int obj, int x, int y, int z);
+extern int objCreateLight(int a, int b);
+extern void modelLightStruct_setLightKind(int h, int v);
+extern void modelLightStruct_setDiffuseColor(int h, int r, int g, int b, int a);
+extern void modelLightStruct_setSpecularColor(int h, int r, int g, int b, int a);
+extern void modelLightStruct_setDistanceAttenuation(int light, f32 min, f32 max);
+extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
+extern void modelLightStruct_startColorFade(int light, int a, int b);
+extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
+extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int c, f32 scale);
+extern void modelLightStruct_setGlowProjectionRadius(int light, f32 v);
+extern f32 lbl_803E3D88;
+extern f32 lbl_803E3D8C;
+extern f32 lbl_803E3D90;
+extern f32 lbl_803E3D94;
+extern f32 lbl_803E3D98;
+extern f32 lbl_803E3DC0;
+
 void campfire_update(int obj)
 {
     extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
@@ -125,23 +143,6 @@ void campfire_update(int obj)
     }
 }
 
-extern void ObjHitbox_SetCapsuleBounds(int obj, int x, int y, int z);
-extern int objCreateLight(int a, int b);
-extern void modelLightStruct_setLightKind(int h, int v);
-extern void modelLightStruct_setDiffuseColor(int h, int r, int g, int b, int a);
-extern void modelLightStruct_setSpecularColor(int h, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 min, f32 max);
-extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
-extern void modelLightStruct_startColorFade(int light, int a, int b);
-extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int c, f32 scale);
-extern void modelLightStruct_setGlowProjectionRadius(int light, f32 v);
-extern f32 lbl_803E3D88;
-extern f32 lbl_803E3D8C;
-extern f32 lbl_803E3D90;
-extern f32 lbl_803E3D94;
-extern f32 lbl_803E3D98;
-
 void campfire_init(int obj, int p2)
 {
     int* state;
@@ -205,8 +206,6 @@ void campfire_init(int obj, int p2)
         modelLightStruct_setGlowProjectionRadius(*state, lbl_803E3D90);
     }
 }
-
-extern f32 lbl_803E3DC0;
 
 void campfire_free(int obj)
 {

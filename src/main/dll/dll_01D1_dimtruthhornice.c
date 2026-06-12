@@ -111,14 +111,18 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
+extern undefined4 FUN_800067c0();
+extern undefined4 ObjHits_DisableObject();
+extern int* getTrickyObject(void);
+extern f32 lbl_803E4A40;
+extern f32 lbl_803E4A44;
+extern int** ObjGroup_GetObjects(int group, int* countOut);
+
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
-
-extern undefined4 FUN_800067c0();
-extern undefined4 ObjHits_DisableObject();
 
 #pragma scheduling on
 #pragma peephole on
@@ -178,8 +182,6 @@ void dll_1CF_free(void);
 int dimtruthhornice_getExtraSize(void) { return 0x8; }
 int dim2conveyor_getExtraSize(void);
 
-extern int* getTrickyObject(void);
-
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if the signed result dropped to or below 0. */
 #pragma scheduling off
@@ -211,9 +213,6 @@ void dimtruthhornice_init(int* obj, int* def)
 }
 
 void dim2snowball_init(int* obj, int* def);
-
-extern f32 lbl_803E4A40;
-extern f32 lbl_803E4A44;
 
 void dimtruthhornice_update(int* obj)
 {
@@ -285,5 +284,3 @@ void dimtruthhornice_update(int* obj)
         break;
     }
 }
-
-extern int** ObjGroup_GetObjects(int group, int* countOut);

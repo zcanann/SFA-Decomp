@@ -2,6 +2,9 @@
 #include "main/dll/tFrameAnimator.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
+#include "main/audio/sfx_ids.h"
+#include "main/dll/screenOverlay.h"
+#include "main/objanim_internal.h"
 
 extern void GameBit_Set(int gameBit, int value);
 
@@ -23,6 +26,19 @@ void area_release(void);
 void area_initialise(void);
 
 extern u8 framesThisStep;
+
+extern void GameBit_Set(int eventId, int value);
+extern void Sfx_PlayFromObject(int obj, int soundId);
+extern void* objFindTexture(int obj, int a, int b);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, float arg);
+extern int seqStreamLookupFn_8007fff8(void* table, int mode, int seq);
+extern void fn_8003B608(u32 a, u32 b, u32 c);
+extern u8 lbl_80321008[];
+extern f32 lbl_803E3700;
+extern f32 lbl_803E3704;
+extern f32 lbl_803E3708;
+extern f32 lbl_803E3718;
+extern f32 lbl_803E3728;
 
 void ProjectileSwitch_free(void)
 {
@@ -57,11 +73,6 @@ ObjectDescriptor gAreaObjDescriptor = {
     area_getExtraSize,
 };
 
-#include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/screenOverlay.h"
-#include "main/objanim_internal.h"
-
 typedef struct ProjectileSwitchPlacement
 {
     u8 pad0[0x1A - 0x0];
@@ -87,20 +98,6 @@ typedef struct ProjectileSwitchState
     u8 unk23;
     u8 pad24[0x28 - 0x24];
 } ProjectileSwitchState;
-
-extern void GameBit_Set(int eventId, int value);
-extern void Sfx_PlayFromObject(int obj, int soundId);
-extern void* objFindTexture(int obj, int a, int b);
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, float arg);
-extern int seqStreamLookupFn_8007fff8(void* table, int mode, int seq);
-extern void fn_8003B608(u32 a, u32 b, u32 c);
-
-extern u8 lbl_80321008[];
-extern f32 lbl_803E3700;
-extern f32 lbl_803E3704;
-extern f32 lbl_803E3708;
-extern f32 lbl_803E3718;
-extern f32 lbl_803E3728;
 
 void ProjectileSwitch_render(int obj, int p2, int p3, int p4, int p5, char flag)
 {
@@ -312,5 +309,3 @@ void ProjectileSwitch_initialise(void)
 }
 
 int InvisibleHitSwitch_getExtraSize(void);
-
-#include "main/game_object.h"

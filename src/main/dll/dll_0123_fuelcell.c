@@ -24,13 +24,40 @@ extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
 
-int fuelcell_getExtraSize(void) { return 0x60; }
-int deathseq_getExtraSize(void);
-
 extern void objRenderFn_8003b8f4(f32);
-
 extern void ObjModel_SetPostRenderCallback(void* model, void* cb);
 extern void mm_free_(void* ptr);
+extern void disableHeavyFog(void);
+extern f32 Vec_distance(void* a, void* b);
+extern void gameBitIncrement(int eventId);
+extern void Sfx_AddLoopedObjectSound(int* obj, int soundId);
+extern void Sfx_RemoveLoopedObjectSound(int* obj, int soundId);
+extern void Sfx_PlayFromObject(int* obj, int soundId);
+extern f32 getXZDistance(void* a, void* b);
+extern f32 lbl_803E3D08;
+extern f32 lbl_803E3D0C;
+extern f32 lbl_803E3D10;
+extern void objfx_spawnDirectionalBurst(int* obj, int idx, f32 scale, int b, int c, int d, f32 speed, int e, int f);
+extern int ObjModel_GetRenderOp(int model, int idx);
+extern void lightningRender(void* particle);
+extern int getHudHiddenFrameCount(void);
+extern int lightningCreate(float* start, float* end, f32 radiusX, f32 radiusY, int param_5, int param_6, int param_7);
+extern f32 lbl_803E3CC8;
+extern f32 lbl_803E3CCC;
+extern f32 lbl_803E3CD0;
+extern f32 lbl_803E3CD4;
+extern f32 lbl_803E3CD8;
+extern f32 lbl_803E3CDC;
+extern f32 lbl_803E3CE0;
+extern f32 lbl_803E3CE4;
+extern f32 lbl_803E3CE8;
+extern f32 lbl_803E3CEC;
+extern f32 lbl_803E3CF0;
+extern f32 lbl_803E3CF4;
+extern f32 lbl_803E3CF8;
+
+int fuelcell_getExtraSize(void) { return 0x60; }
+int deathseq_getExtraSize(void);
 
 typedef struct
 {
@@ -104,19 +131,6 @@ void fuelcell_init(int* obj)
     ObjMsg_AllocQueue(obj, 2);
 }
 
-extern void disableHeavyFog(void);
-
-extern f32 Vec_distance(void* a, void* b);
-
-extern void gameBitIncrement(int eventId);
-extern void Sfx_AddLoopedObjectSound(int* obj, int soundId);
-extern void Sfx_RemoveLoopedObjectSound(int* obj, int soundId);
-extern void Sfx_PlayFromObject(int* obj, int soundId);
-extern f32 getXZDistance(void* a, void* b);
-extern f32 lbl_803E3D08;
-extern f32 lbl_803E3D0C;
-extern f32 lbl_803E3D10;
-
 void fuelcell_update(int* obj)
 {
     extern int* Obj_GetPlayerObject(void);
@@ -186,25 +200,6 @@ void fuelcell_update(int* obj)
         }
     }
 }
-
-extern void objfx_spawnDirectionalBurst(int* obj, int idx, f32 scale, int b, int c, int d, f32 speed, int e, int f);
-extern int ObjModel_GetRenderOp(int model, int idx);
-extern void lightningRender(void* particle);
-extern int getHudHiddenFrameCount(void);
-extern int lightningCreate(float* start, float* end, f32 radiusX, f32 radiusY, int param_5, int param_6, int param_7);
-extern f32 lbl_803E3CC8;
-extern f32 lbl_803E3CCC;
-extern f32 lbl_803E3CD0;
-extern f32 lbl_803E3CD4;
-extern f32 lbl_803E3CD8;
-extern f32 lbl_803E3CDC;
-extern f32 lbl_803E3CE0;
-extern f32 lbl_803E3CE4;
-extern f32 lbl_803E3CE8;
-extern f32 lbl_803E3CEC;
-extern f32 lbl_803E3CF0;
-extern f32 lbl_803E3CF4;
-extern f32 lbl_803E3CF8;
 
 typedef struct
 {

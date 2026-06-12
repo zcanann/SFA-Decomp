@@ -13,6 +13,20 @@ extern undefined4 DAT_803de3fe;
 extern undefined4 DAT_803de413;
 extern undefined4 DAT_803de445;
 
+extern u8 pauseDisabled;
+extern s8 lbl_803DD8F0;
+extern s16 lbl_803DD8F2;
+extern s8 lbl_803DD8F4;
+extern s8 lbl_803DD8F5;
+extern s8 lbl_803DD8E8;
+extern int getScreenResolution(void);
+extern int getHudHiddenFrameCount(void);
+extern void padGetAnalogInput(int pad, s8* y, s8* x);
+extern int getButtonsJustPressed(int pad);
+extern f32 lbl_803DD8EC;
+extern f32 lbl_803E21D8;
+extern f32 timeDelta;
+
 void FUN_8012fdac(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   int param_9)
@@ -72,14 +86,6 @@ FUN_8012fe70(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
-extern u8 pauseDisabled;
-extern s8 lbl_803DD8F0;
-extern s16 lbl_803DD8F2;
-extern s8 lbl_803DD8F4;
-extern s8 lbl_803DD8F5;
-extern s8 lbl_803DD8E8;
-extern int getScreenResolution(void);
-
 s32 Menu_func0B(void) { return lbl_803DD8F0; }
 #pragma peephole off
 void Menu_func0A(int v) { lbl_803DD8E8 = (s8)v; }
@@ -106,12 +112,6 @@ void Menu_release(void)
 
 void titleScreenFn_80130464(u8 v);
 
-extern int getHudHiddenFrameCount(void);
-extern void padGetAnalogInput(int pad, s8* y, s8* x);
-extern int getButtonsJustPressed(int pad);
-extern f32 lbl_803DD8EC;
-extern f32 lbl_803E21D8;
-extern f32 timeDelta;
 #pragma scheduling off
 #pragma peephole off
 int Menu_func08(int* sel)

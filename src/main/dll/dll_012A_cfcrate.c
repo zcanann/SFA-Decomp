@@ -1,10 +1,53 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/screen_transition.h"
+#include "main/game_object.h"
+#include "main/dll/CF/dll_012B_fxemit.h"
+#include "main/effect_interfaces.h"
+#include "main/dll/CF/dll_012A_cfcrate.h"
+#include "main/objseq.h"
+#include "main/dll/CF/dll_179.h"
+#include "main/objanim_internal.h"
 
 extern u32 GameBit_Get(int bit);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
+
+extern uint GameBit_Get(int eventId);
+extern EffectInterface** gPartfxInterface;
+extern f32 lbl_803E3DD8;
+extern void* Camera_GetCurrentViewSlot(void);
+extern u32 GameBit_Set(int bit, int value);
+extern int ObjHits_GetPriorityHit(int obj, undefined4* outHit, int* outIdx, u32* outVol);
+extern void Obj_FreeObject(int obj);
+extern int objFindTexture(int p1, int p2, int p3);
+extern void getLActions(int p1, int p2, int p3, int p4, int p5, int p6);
+extern float sqrtf(float x);
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern f64 lbl_803E3DE0;
+extern const f32 lbl_803E3DE8;
+extern f32 lbl_803E3DEC;
+extern f32 lbl_803E3DF0;
+extern f32 lbl_803E3DF4;
+extern f32 lbl_803E3DF8;
+extern f32 lbl_803E3DFC;
+extern f32 lbl_803E3E00;
+extern f32 lbl_803E3E04;
+extern f32 lbl_803E3E08;
+extern f32 lbl_803E3E0C;
+extern f32 lbl_803E3E10;
+extern f32 lbl_803E3E14;
+extern f64 lbl_803E3E18;
+extern f32 lbl_803E3E20;
+extern undefined4 FUN_80017a78();
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern void* lbl_803DBDE8;
+extern f32 lbl_803E3E30;
+extern f32 lbl_803E3E34;
+extern f32 lbl_803E3E38;
+extern f32 lbl_803E3E3C;
+extern f32 lbl_803E3E40;
+extern f32 sqrtf(f32);
 
 int cfccrate_getExtraSize(void) { return 0x4c; }
 int cfccrate_getObjectTypeId(void) { return 0x1; }
@@ -15,15 +58,6 @@ void cfccrate_free(int obj)
 }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-#include "main/game_object.h"
-#include "main/dll/CF/dll_012B_fxemit.h"
-#include "main/effect_interfaces.h"
-
-extern uint GameBit_Get(int eventId);
-
-extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E3DD8;
 
 #define PARTFX_SPAWN(obj, fxId, a, b, c, d) \
   (*gPartfxInterface)->spawnObject((void *)(obj), (fxId), (void *)(a), (b), (c), (void *)(d))
@@ -92,11 +126,6 @@ void cfccrate_hitDetect(void)
 {
 }
 
-#include "main/dll/CF/dll_012A_cfcrate.h"
-#include "main/game_object.h"
-#include "main/dll/CF/dll_012B_fxemit.h"
-#include "main/objseq.h"
-
 typedef struct CfccratePlacement
 {
     u8 pad0[0xC - 0x0];
@@ -105,32 +134,6 @@ typedef struct CfccratePlacement
     s8 unk18;
     u8 pad19[0x20 - 0x19];
 } CfccratePlacement;
-
-extern void* Camera_GetCurrentViewSlot(void);
-extern u32 GameBit_Set(int bit, int value);
-extern int ObjHits_GetPriorityHit(int obj, undefined4* outHit, int* outIdx, u32* outVol);
-extern void Obj_FreeObject(int obj);
-extern int objFindTexture(int p1, int p2, int p3);
-extern void getLActions(int p1, int p2, int p3, int p4, int p5, int p6);
-extern float sqrtf(float x);
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
-extern f64 lbl_803E3DE0;
-extern const f32 lbl_803E3DE8;
-extern f32 lbl_803E3DEC;
-extern f32 lbl_803E3DF0;
-extern f32 lbl_803E3DF4;
-extern f32 lbl_803E3DF8;
-extern f32 lbl_803E3DFC;
-extern f32 lbl_803E3E00;
-extern f32 lbl_803E3E04;
-extern f32 lbl_803E3E08;
-extern f32 lbl_803E3E0C;
-extern f32 lbl_803E3E10;
-extern f32 lbl_803E3E14;
-extern f64 lbl_803E3E18;
-extern f32 lbl_803E3E20;
 
 void cfccrate_update(int obj)
 {
@@ -330,25 +333,6 @@ void cfccrate_update(int obj)
     }
 }
 
-#include "main/dll/CF/dll_012B_fxemit.h"
-#include "main/dll/CF/dll_179.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-#include "main/objanim_internal.h"
-
-extern undefined4 FUN_80017a78();
-
-extern void Obj_SetActiveModelIndex(int obj, int idx);
-
-extern void* lbl_803DBDE8;
-
-extern f32 lbl_803E3E30;
-extern f32 lbl_803E3E34;
-extern f32 lbl_803E3E38;
-extern f32 lbl_803E3E3C;
-extern f32 lbl_803E3E40;
-
 void cfccrate_init(int obj, int aux)
 {
     extern u32 randomGetRange(int min, int max);
@@ -538,5 +522,3 @@ void cfccrate_initialise(void)
 }
 
 void fxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern f32 sqrtf(f32);

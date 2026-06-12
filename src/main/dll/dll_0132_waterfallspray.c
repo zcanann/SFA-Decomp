@@ -30,6 +30,8 @@ extern f32 sqrtf(f32 value);
 /* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
  * lightningRender(handle). */
 
+extern f32 lbl_803E40BC;
+
 void WaterFallSpray_free(u8* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -166,7 +168,6 @@ void WaterFallSpray_init(u8* obj, u8* data)
  * on (s8)data->_1d: gamebit mode stores GameBit_Get(data->_18) at sub[0] if the
  * event id is positive; random-delay mode computes randomGetRange(data->_1e, data->_1f)
  * scaled by lbl_803E40BC as f32; cases 1 and >=3 are no-ops. */
-extern f32 lbl_803E40BC;
 
 void sfxplayerObj_init(u8* obj, u8* data);
 

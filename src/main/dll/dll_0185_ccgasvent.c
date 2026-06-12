@@ -31,6 +31,10 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803E5248;
 extern f32 lbl_803E524C;
 
+extern void disableHeavyFog(void);
+extern f32 lbl_803E4610;
+extern f32 lbl_803E4614;
+
 void FUN_801a8f88(void)
 {
     int iVar1;
@@ -151,11 +155,6 @@ void ccgasvent_free(int x) { ObjGroup_RemoveObject(x, 0x3f); }
 #pragma scheduling off
 void ccgasvent_init(int x) { ObjGroup_AddObject(x, 0x3f); }
 #pragma scheduling reset
-
-extern void disableHeavyFog(void);
-
-extern f32 lbl_803E4610;
-extern f32 lbl_803E4614;
 
 #pragma scheduling off
 #pragma peephole off

@@ -55,6 +55,16 @@ extern f32 Camera_GetFovY(void);
 extern void viewFinderSetZoom(f32 fov);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 
+extern int fn_802966D4(int obj, int* out);
+extern void Rcp_SetViewFinderHudEnabled(int on);
+extern void buttonDisable(int port, int mask);
+extern void firstPersonZoomOutOnExit(int a, int b);
+extern void fn_80137948(char* fmt, ...);
+extern char sCam5BYDebugFormat;
+extern u32 GameBit_Get(int bit);
+extern void* memset(void* dst, int v, int n);
+extern f32 lbl_803E1834;
+
 void firstPersonDoControls(short* obj)
 {
     short pitchDelta;
@@ -142,8 +152,6 @@ void firstPersonDoControls(short* obj)
         *(f32*)(obj + 0x5a) = fovTarget;
     }
 }
-
-extern int fn_802966D4(int obj, int* out);
 
 int firstPersonEnter(u8* cam, s16* p2)
 {
@@ -243,8 +251,6 @@ void CameraModeViewfinder_copyToCurrent(undefined2* camObj)
     }
 }
 
-extern void Rcp_SetViewFinderHudEnabled(int on);
-
 void CameraModeViewfinder_free(int camObj)
 {
     int player;
@@ -277,11 +283,6 @@ void CameraModeViewfinder_free(int camObj)
     viewFinderSetZoom((double)lbl_803E17E0);
     return;
 }
-
-extern void buttonDisable(int port, int mask);
-extern void firstPersonZoomOutOnExit(int a, int b);
-extern void fn_80137948(char* fmt, ...);
-extern char sCam5BYDebugFormat;
 
 void CameraModeViewfinder_update(s16* obj)
 {
@@ -457,10 +458,6 @@ void CameraModeViewfinder_update(s16* obj)
                                    (f32*)(obj + 6), (f32*)(obj + 8), (f32*)(obj + 10),
                                    *(int*)(obj + 0x18));
 }
-
-extern u32 GameBit_Get(int bit);
-extern void* memset(void* dst, int v, int n);
-extern f32 lbl_803E1834;
 
 void CameraModeViewfinder_init(s16* obj, int mode, int* args)
 {

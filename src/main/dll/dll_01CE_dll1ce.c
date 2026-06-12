@@ -90,6 +90,22 @@ extern f32 lbl_803E5678;
 extern f32 lbl_803E567C;
 extern f32 lbl_803E569C;
 
+extern void textureFree(int tex);
+extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
+extern f32 lbl_803E49E8;
+extern void* lbl_803DDB78;
+extern f32 lbl_803E49D4;
+extern f32 lbl_803E49F0;
+extern void ModelLightStruct_free(void*);
+extern f32 timeDelta;
+extern int Obj_IsLoadingLocked(void);
+extern int* Obj_AllocObjectSetup(int a, int b);
+extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);
+extern f32 lbl_803E49EC;
+extern f32 lbl_803E49F4;
+extern f32 lbl_803E49F8;
+extern f32 lbl_803E49FC;
+
 void FUN_801b3de4(undefined4 param_1, uint param_2)
 {
     (*gObjectTriggerInterface)->runSequence((param_2 ^ 1) + 2, (void*)param_1, -1);
@@ -192,8 +208,6 @@ LAB_801b44d4:
     FUN_80286888();
     return;
 }
-
-extern void textureFree(int tex);
 
 void explosion_release(uint obj);
 
@@ -367,9 +381,6 @@ int dll_1CE_getExtraSize(void) { return 0xc; }
 int dll_1CE_getObjectTypeId(void) { return 0x0; }
 int dimmagicbridge_getExtraSize(void);
 
-extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
-extern f32 lbl_803E49E8;
-
 #pragma scheduling off
 #pragma peephole off
 void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -380,7 +391,6 @@ void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-extern void* lbl_803DDB78;
 #pragma scheduling on
 #pragma peephole on
 void dll_1CE_free(void)
@@ -394,8 +404,6 @@ void dll_1CE_free(void)
 
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
-extern f32 lbl_803E49D4;
-extern f32 lbl_803E49F0;
 
 /* dimmagicbridge_update: advance texture phase and bridge vertex wave, then
  * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
@@ -425,7 +433,6 @@ void dll_1CE_init(u8* obj, u8* params)
     sub->openVelocity = lbl_803E49F0;
 }
 
-extern void ModelLightStruct_free(void*);
 void explosion_free(int obj);
 
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
@@ -436,16 +443,6 @@ void explosion_free(int obj);
 /* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
  * every 16 frames, and ramp each active slot's alpha toward full; then update
  * the animated bridge mesh. */
-
-extern f32 timeDelta;
-
-extern int Obj_IsLoadingLocked(void);
-extern int* Obj_AllocObjectSetup(int a, int b);
-extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);
-extern f32 lbl_803E49EC;
-extern f32 lbl_803E49F4;
-extern f32 lbl_803E49F8;
-extern f32 lbl_803E49FC;
 
 /* EN v1.0 0x801B5AA0  size: 496b  dll_1CE_update: hatch-door logic - coast
  * the lid open with clamped velocity while idle, and once a key object is

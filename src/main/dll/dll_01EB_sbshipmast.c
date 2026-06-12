@@ -17,6 +17,13 @@ extern undefined8 ObjGroup_RemoveObject();
 
 extern u8 framesThisStep;
 
+extern f32 lbl_803E586C;
+extern f32 lbl_803E5870;
+extern f32 lbl_803E5874;
+extern f32 lbl_803E5878;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E5868;
+
 void SB_ShipMast_free(void)
 {
 }
@@ -36,11 +43,6 @@ void SB_ShipMast_release(void)
 void SB_ShipMast_initialise(void)
 {
 }
-
-extern f32 lbl_803E586C;
-extern f32 lbl_803E5870;
-extern f32 lbl_803E5874;
-extern f32 lbl_803E5878;
 
 void SB_ShipMast_update(int* obj)
 {
@@ -96,9 +98,6 @@ int SB_Galleon_getExtraSize(void);
 int SB_ShipMast_getExtraSize(void) { return 0x0; }
 int SB_ShipMast_getObjectTypeId(void) { return 0x0; }
 int SB_ShipGun_getExtraSize(void);
-
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E5868;
 
 void SB_ShipMast_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

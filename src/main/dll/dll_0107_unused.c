@@ -37,6 +37,10 @@ extern void vecRotateZXY(void* rotation, f32* outVec);
 extern f32 Vec_distance(void* a, void* b);
 
 #pragma dont_inline on
+extern ModgfxInterface** gModgfxInterface;
+extern void* lbl_803DDAD0;
+extern void* lbl_803DDAD4;
+
 void fn_80185868(int obj, f32 arg)
 {
     extern void* lbl_803DDAD0;
@@ -501,10 +505,6 @@ void dll_107_initialise_nop(void)
 
 int dll_107_getExtraSize_ret_44(void) { return 0x2c; }
 int dll_107_getObjectTypeId(void) { return 0x0; }
-
-extern ModgfxInterface** gModgfxInterface;
-extern void* lbl_803DDAD0;
-extern void* lbl_803DDAD4;
 
 void fn_801859D4(int* obj)
 {

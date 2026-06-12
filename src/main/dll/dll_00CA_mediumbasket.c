@@ -3,6 +3,14 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/dll_00CA_mediumbasket.h"
 #include "main/effect_interfaces.h"
+#include "ghidra_import.h"
+#include "main/obj_placement.h"
+#include "main/dll/scarab.h"
+#include "main/dll/baddie_state.h"
+#include "main/mapEventTypes.h"
+#include "main/objanim.h"
+#include "main/objhits_types.h"
+#include "main/objseq.h"
 
 typedef struct MediumbasketUpdateDropStateState
 {
@@ -101,6 +109,82 @@ extern void* PTR_DAT_80320998;
 
 #pragma scheduling on
 #pragma peephole on
+extern f32 lbl_803E2CD8;
+extern f32 lbl_803E2D00;
+extern f32 lbl_803E2D14;
+extern f32 lbl_803E2D10;
+extern f32 lbl_803E2D18;
+extern f32 lbl_803E2D1C;
+extern f32 lbl_803E2D20;
+extern f32 lbl_803E2D24;
+extern f32 lbl_803E2D28;
+extern f32 lbl_803E2D2C;
+extern f32 lbl_803E2D30;
+extern f32 lbl_803E2D34;
+extern f32 lbl_803E2D38;
+extern f32 lbl_803E2D3C;
+extern f32 lbl_803E2D40;
+extern f32 lbl_803E2D44;
+extern f32 lbl_803E2D48;
+extern f32 lbl_803E2D4C;
+extern f32 lbl_803E2D50;
+extern f32 lbl_803E2D54;
+extern f32 lbl_803E2D58;
+extern f32 lbl_803E2D5C;
+extern f32 lbl_803E2D60;
+extern f32 lbl_803E2D84;
+extern f32 lbl_803E2D88;
+extern f32 lbl_803E2D8C;
+extern f32 lbl_803E2D90;
+extern f32 lbl_803E2D94;
+extern f32 lbl_803E2D98;
+extern f32 lbl_803E2D9C;
+extern f32 lbl_803E2DA0;
+extern f32 lbl_803E2DA4;
+extern f32 lbl_803E2DA8;
+extern f32 lbl_803E2DAC;
+extern f32 lbl_803E2DB0;
+extern f32 lbl_803E2DB4;
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern f32 lbl_803E2CE8;
+extern f32 lbl_803E2CEC;
+extern f32 lbl_803E2CF0;
+extern f32 lbl_803E2CF4;
+extern f32 lbl_803E2CF8;
+extern f32 lbl_803E2CFC;
+extern int* Obj_GetActiveModel(int* obj);
+extern void ObjModel_SetRenderCallback(int* model, void* cb);
+extern void renderWhirlpool(void);
+extern void Camera_DisableViewYOffset(void);
+extern void fn_8003B5E0(int arg0, int arg1, int arg2, int arg3);
+extern void fn_8015CE68(int obj, int state);
+extern u8 gMediumBasketStateHandlersA[];
+extern u8 gMediumBasketStateHandlersB[];
+extern int Obj_GetPlayerObject(void);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern f32 sqrtf(f32 value);
+extern u8 lbl_8031FDA0[];
+extern u8 lbl_8031FE18[];
+extern s16 lbl_8031FD80[];
+extern s16 lbl_8031FD90[];
+extern u8 lbl_8031FE38[];
+extern u8 lbl_8031FE48[];
+extern void Camera_EnableViewYOffset(void);
+extern void CameraShake_SetAllMagnitudes(f32 magnitude);
+extern void* memcpy(void* dst, const void* src, u32 size);
+extern f32 mathSinf(f32 angle);
+extern f32 mathCosf(f32 angle);
+extern void Matrix_TransformPoint(void* mtx, f32* x, f32* y, f32* z);
+extern void voxmaps_updateRoutePath(void* from, void* to);
+extern u8 Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int type);
+extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
+STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
+extern f32 sqrtf(f32);
+
 void FUN_8015ad60(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   short* param_9, int param_10)
@@ -1040,74 +1124,6 @@ FUN_8015d6ec(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-extern f32 lbl_803E2CD8;
-extern f32 lbl_803E2D00;
-extern f32 lbl_803E2D14;
-extern f32 lbl_803E2D10;
-extern f32 lbl_803E2D18;
-extern f32 lbl_803E2D1C;
-extern f32 lbl_803E2D20;
-extern f32 lbl_803E2D24;
-extern f32 lbl_803E2D28;
-extern f32 lbl_803E2D2C;
-extern f32 lbl_803E2D30;
-extern f32 lbl_803E2D34;
-extern f32 lbl_803E2D38;
-extern f32 lbl_803E2D3C;
-extern f32 lbl_803E2D40;
-extern f32 lbl_803E2D44;
-extern f32 lbl_803E2D48;
-extern f32 lbl_803E2D4C;
-extern f32 lbl_803E2D50;
-extern f32 lbl_803E2D54;
-extern f32 lbl_803E2D58;
-extern f32 lbl_803E2D5C;
-extern f32 lbl_803E2D60;
-extern f32 lbl_803E2D84;
-extern f32 lbl_803E2D88;
-extern f32 lbl_803E2D8C;
-extern f32 lbl_803E2D90;
-extern f32 lbl_803E2D94;
-extern f32 lbl_803E2D98;
-extern f32 lbl_803E2D9C;
-extern f32 lbl_803E2DA0;
-extern f32 lbl_803E2DA4;
-extern f32 lbl_803E2DA8;
-extern f32 lbl_803E2DAC;
-extern f32 lbl_803E2DB0;
-extern f32 lbl_803E2DB4;
-extern f32 timeDelta;
-extern u8 framesThisStep;
-extern f32 lbl_803E2CE8;
-extern f32 lbl_803E2CEC;
-extern f32 lbl_803E2CF0;
-extern f32 lbl_803E2CF4;
-extern f32 lbl_803E2CF8;
-extern f32 lbl_803E2CFC;
-extern int* Obj_GetActiveModel(int* obj);
-extern void ObjModel_SetRenderCallback(int* model, void* cb);
-extern void renderWhirlpool(void);
-extern void Camera_DisableViewYOffset(void);
-extern void fn_8003B5E0(int arg0, int arg1, int arg2, int arg3);
-extern void fn_8015CE68(int obj, int state);
-extern u8 gMediumBasketStateHandlersA[];
-extern u8 gMediumBasketStateHandlersB[];
-extern int Obj_GetPlayerObject(void);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern f32 sqrtf(f32 value);
-extern u8 lbl_8031FDA0[];
-extern u8 lbl_8031FE18[];
-extern s16 lbl_8031FD80[];
-extern s16 lbl_8031FD90[];
-extern u8 lbl_8031FE38[];
-extern u8 lbl_8031FE48[];
-extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 magnitude);
-extern void* memcpy(void* dst, const void* src, u32 size);
-extern f32 mathSinf(f32 angle);
-extern f32 mathCosf(f32 angle);
-extern void Matrix_TransformPoint(void* mtx, f32* x, f32* y, f32* z);
-extern void voxmaps_updateRoutePath(void* from, void* to);
 void mediumbasket_spawnContactObject(int* obj, int* state);
 
 #pragma scheduling off
@@ -2068,10 +2084,6 @@ void mediumbasket_initWhirlpoolState(int* obj, GroundBaddieState* state)
     ObjModel_SetRenderCallback(Obj_GetActiveModel(obj), (void*)renderWhirlpool);
 }
 
-extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_AllocObjectSetup(int size, int type);
-extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
-
 #pragma peephole off
 void mediumbasket_spawnContactObject(int* obj, int* state)
 {
@@ -2296,20 +2308,6 @@ return0:
 
 /* segment pragma-stack balance (re-split): */
 
-#include "ghidra_import.h"
-#include "main/obj_placement.h"
-#include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/dll/scarab.h"
-#include "main/dll/baddie_state.h"
-#include "main/mapEventTypes.h"
-#include "main/objanim.h"
-#include "main/objhits_types.h"
-#include "main/objseq.h"
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 void dll_CA_update(int obj, int p2, int p3)
 {
     extern void Sfx_PlayFromObject(int obj, int sfx);
@@ -2455,9 +2453,6 @@ void chukchuk_initialise(void);
  * (chukchuk_getExtraSize == 0x18).
  */
 
-STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
-STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
-
 void chukchuk_init(u8* obj, u8* params);
 void iceball_hitDetect(void);
 
@@ -2520,8 +2515,6 @@ ObjectDescriptor gIceBallObjDescriptor = {
     (ObjectDescriptorCallback)iceball_getObjectTypeId,
     iceball_getExtraSize,
 };
-
-extern f32 sqrtf(f32);
 
 /* scarab_updateProximityGate: scarab AI proximity gate. If no current target, dispatches
  * vtable[5](obj, state, 0) and returns 1. Else (unless state mode 6 means

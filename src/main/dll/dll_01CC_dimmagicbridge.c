@@ -104,6 +104,28 @@ extern f32 lbl_803E5678;
 extern f32 lbl_803E567C;
 extern f32 lbl_803E569C;
 
+extern void textureFree(int tex);
+extern int Obj_GetActiveModel(int obj);
+extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
+extern void fn_80065574(int a, int b, int c);
+extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
+extern f32 lbl_803E4A18;
+extern f32 lbl_803E49D4;
+extern void* Obj_GetPlayerObject(void);
+extern void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
+extern void dimmagicbridge_updateVertexWave(int obj, u8* sub);
+extern int EmissionController_IsLingering(void* player);
+extern void* objFindTexture(int obj, int a, int b);
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern f32 lbl_803E4A00;
+extern f32 lbl_803E4A04;
+extern f32 lbl_803E4A08;
+extern f32 lbl_803E4A0C;
+extern int ObjModel_GetBaseVertexCoords(int mdl, int idx);
+extern f32 mathSinf(f32 x);
+extern void DCStoreRange(void* p, int n);
+
 void FUN_801b3de4(undefined4 param_1, uint param_2)
 {
     (*gObjectTriggerInterface)->runSequence((param_2 ^ 1) + 2, (void*)param_1, -1);
@@ -206,8 +228,6 @@ LAB_801b44d4:
     FUN_80286888();
     return;
 }
-
-extern void textureFree(int tex);
 
 void explosion_release(uint obj);
 
@@ -379,10 +399,6 @@ void dimmagicbridge_initialise(void)
 {
 }
 
-extern int Obj_GetActiveModel(int obj);
-extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
-extern void fn_80065574(int a, int b, int c);
-
 #pragma scheduling off
 #pragma peephole off
 void dimmagicbridge_init(u8* obj, u8* params)
@@ -465,9 +481,6 @@ int dimmagicbridge_getExtraSize(void) { return 0x68; }
 int dimmagicbridge_getObjectTypeId(void) { return 0x0; }
 int dim_levelcontrol_getExtraSize(void);
 
-extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
-extern f32 lbl_803E4A18;
-
 void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -478,11 +491,6 @@ void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
-extern f32 lbl_803E49D4;
-extern void* Obj_GetPlayerObject(void);
-extern void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
-extern void dimmagicbridge_updateVertexWave(int obj, u8* sub);
-extern int EmissionController_IsLingering(void* player);
 
 /* dimmagicbridge_update: advance texture phase and bridge vertex wave, then
  * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
@@ -519,8 +527,6 @@ void dimwooddoor2_init(u8* obj, u8* params);
 
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
-extern void* objFindTexture(int obj, int a, int b);
-extern u8 framesThisStep;
 #pragma dont_inline on
 void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
 {
@@ -595,18 +601,7 @@ int dimmagicbridge_flameSeqFn(int* obj, int unused, ObjAnimUpdateState* animUpda
     return 0;
 }
 
-extern f32 timeDelta;
-
 volatile FbWGPipe GXWGFifo : (0xCC008000);
-
-extern f32 lbl_803E4A00;
-extern f32 lbl_803E4A04;
-extern f32 lbl_803E4A08;
-extern f32 lbl_803E4A0C;
-extern int ObjModel_GetBaseVertexCoords(int mdl, int idx);
-
-extern f32 mathSinf(f32 x);
-extern void DCStoreRange(void* p, int n);
 
 void dimmagicbridge_updateVertexWave(int obj, u8* sub)
 {

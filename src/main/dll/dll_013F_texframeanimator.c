@@ -32,6 +32,13 @@ typedef struct TexframeanimatorPlacement
     s16 unk3E;
 } TexframeanimatorPlacement;
 
+extern u8 framesThisStep;
+extern char sTexFrameAnimDebugFormat[];
+extern int* return0_80056694(int* block, int textureSlot);
+extern int* mapTextureOverrideGetEntry(int idx);
+extern void fn_80137948(char* fmt, ...);
+extern f32 lbl_803E4060;
+
 void texframeanimator_free(void)
 {
 }
@@ -63,12 +70,6 @@ typedef struct TexFrameAnimatorState
     u8 active : 1;
     u8 flagLow : 5;
 } TexFrameAnimatorState;
-
-extern u8 framesThisStep;
-extern char sTexFrameAnimDebugFormat[];
-extern int* return0_80056694(int* block, int textureSlot);
-extern int* mapTextureOverrideGetEntry(int idx);
-extern void fn_80137948(char* fmt, ...);
 
 void texframeanimator_update(int* obj)
 {
@@ -152,8 +153,6 @@ int explodeanimator_getExtraSize(void);
 int texframeanimator_getExtraSize(void) { return 0x18; }
 int texframeanimator_getObjectTypeId(void) { return 0x0; }
 int fogcontrol_getExtraSize(void);
-
-extern f32 lbl_803E4060;
 
 void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

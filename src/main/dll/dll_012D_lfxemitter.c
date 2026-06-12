@@ -34,6 +34,9 @@ extern f32 lbl_803E3E88;
 
 #pragma scheduling on
 #pragma peephole on
+extern u8 lbl_803AC7B0[];
+extern void mm_free(void* p);
+
 void FUN_8018f650(void)
 {
     byte bVar1;
@@ -262,9 +265,6 @@ void FUN_8018f650(void)
 }
 
 void warpPadFn_8019042c(int obj);
-
-extern u8 lbl_803AC7B0[];
-extern void mm_free(void* p);
 
 #pragma scheduling off
 #pragma peephole off

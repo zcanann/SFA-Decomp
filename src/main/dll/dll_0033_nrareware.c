@@ -1,5 +1,7 @@
 /* DLL 0x0033 (nrareware) — Rareware logo / loading screen front-end [0x80115F20-0x8011611C). */
 #include "main/dll/FRONT/dll_0032_n_rareware.h"
+#include "main/dll/FRONT/dll_39.h"
+#include "main/screen_transition.h"
 
 extern int lbl_803DD5F8;
 extern f32 lbl_803DD600;
@@ -7,6 +9,16 @@ extern f32 lbl_803DD604;
 extern u8 lbl_803DD608;
 extern f32 lbl_803E1D08;
 extern f32 lbl_803E1D0C;
+
+extern void Movie_SetVolumeFade(int volume, int fadeFrames);
+extern void fn_8001404C(int param_1);
+extern void loadUiDll(int id);
+extern void GameBit_Set(int eventId, int value);
+extern void OSReport(const char* fmt, ...);
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern ScreenTransitionInterface** gScreenTransitionInterface;
+extern u8 lbl_803DD60A;
 
 void n_rareware_render(void)
 {
@@ -40,22 +52,7 @@ void n_rareware_frameEnd(void)
 {
 }
 
-#include "main/dll/FRONT/dll_39.h"
-#include "main/screen_transition.h"
-
-extern void Movie_SetVolumeFade(int volume, int fadeFrames);
-extern void fn_8001404C(int param_1);
-extern void loadUiDll(int id);
-extern void GameBit_Set(int eventId, int value);
-
 static char sNRarewareReportTag[] = "n_rareware\n";
-
-extern void OSReport(const char* fmt, ...);
-
-extern u8 framesThisStep;
-extern f32 timeDelta;
-extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern u8 lbl_803DD60A;
 
 int n_rareware_frameStart(void)
 {

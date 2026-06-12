@@ -38,6 +38,56 @@ extern void* PTR_DAT_8031fdd8;
 
 #pragma scheduling on
 #pragma peephole on
+extern void Sfx_PlayFromObject(int obj, int sfx);
+extern void fn_8014D08C(int obj, u8* state, int a, int b, int c, f32 f);
+extern char lbl_8031F16C[];
+extern char lbl_8031DD30[];
+extern f32 lbl_803E27A4;
+extern f32 lbl_803E27A8;
+extern int fn_8014C11C(int obj, int a, int b, u8* tbl, f32 f);
+extern int getAngle(f32 dx, f32 dz);
+extern u8 lbl_803AC428[];
+extern u8 lbl_803DBC88[8];
+extern f32 lbl_803E27AC;
+extern void fn_8001FEA8(void);
+extern u8* Obj_GetPlayerObject(void);
+extern void fn_8015039C(int obj, u8* state);
+extern u8 fn_8014FFB4(int obj, u8* state, int a);
+extern uint fn_80296118(u8 * player);
+extern void fn_8014CF7C(int obj, u8* state, f32 x, f32 z, int a, int b);
+extern f32 lbl_803E2740;
+extern f32 timeDelta;
+extern int allocModelStruct2(f32* p, int n);
+extern void tailFn_80026c38(int p, f32 a, f32 b, f32 c);
+extern void fn_80026C30(int p, int n);
+extern void baddieAfterUpdateBonesCb();
+extern f32 lbl_803DBC98;
+extern f32 lbl_803E2748;
+extern f32 lbl_803E2754;
+extern f32 lbl_803E27B0;
+extern f32 lbl_803E27B4;
+extern f32 lbl_803E27B8;
+extern f32 lbl_803E27BC;
+extern f32 lbl_803E27C0;
+extern f32 lbl_803E27C4;
+extern f32 lbl_803E27C8;
+extern f32 lbl_803E27CC;
+extern f32 lbl_803E27D0;
+extern int playerGetMoney(u8 * player);
+extern void playerAddMoney(u8* player, int amount);
+extern void hudFn_8011f38c(int a);
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern u16 lbl_803DBCA0[4];
+extern f32 mathCosf(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 sqrtf(f32 x);
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, int mtx);
+extern f32 lbl_803E27D8;
+extern f32 lbl_803E27DC;
+extern f32 lbl_803E27E0;
+extern f32 lbl_803E27E4;
+extern f32 lbl_803E27E8;
+
 void FUN_801511e8(undefined8 param_1, undefined8 param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
 {
@@ -249,8 +299,6 @@ void FUN_80151844(undefined8 param_1, undefined8 param_2, double param_3, undefi
     return;
 }
 
-extern void Sfx_PlayFromObject(int obj, int sfx);
-
 #pragma scheduling off
 #pragma peephole off
 void fn_80152004(int obj, int* state)
@@ -258,12 +306,6 @@ void fn_80152004(int obj, int* state)
     Sfx_PlayFromObject(obj, SFXen_cavedirt22);
     ((GroundBaddieState*)state)->baddie.reactionFlags |= 0x10;
 }
-
-extern void fn_8014D08C(int obj, u8* state, int a, int b, int c, f32 f);
-extern char lbl_8031F16C[];
-extern char lbl_8031DD30[];
-extern f32 lbl_803E27A4;
-extern f32 lbl_803E27A8;
 
 typedef struct
 {
@@ -318,12 +360,6 @@ void fn_801511E8(int obj, u8* state)
     }
 }
 #pragma dont_inline reset
-
-extern int fn_8014C11C(int obj, int a, int b, u8* tbl, f32 f);
-extern int getAngle(f32 dx, f32 dz);
-extern u8 lbl_803AC428[];
-extern u8 lbl_803DBC88[8];
-extern f32 lbl_803E27AC;
 
 void fn_801513AC(int obj, u8* state)
 {
@@ -389,15 +425,6 @@ void fn_801513AC(int obj, u8* state)
         state[0x33a] = 1;
     }
 }
-
-extern void fn_8001FEA8(void);
-extern u8* Obj_GetPlayerObject(void);
-extern void fn_8015039C(int obj, u8* state);
-extern u8 fn_8014FFB4(int obj, u8* state, int a);
-extern uint fn_80296118(u8 * player);
-extern void fn_8014CF7C(int obj, u8* state, f32 x, f32 z, int a, int b);
-extern f32 lbl_803E2740;
-extern f32 timeDelta;
 
 void fn_8015165C(int obj, u8* state)
 {
@@ -490,23 +517,6 @@ void fn_8015165C(int obj, u8* state)
         }
     }
 }
-
-extern int allocModelStruct2(f32* p, int n);
-extern void tailFn_80026c38(int p, f32 a, f32 b, f32 c);
-extern void fn_80026C30(int p, int n);
-extern void baddieAfterUpdateBonesCb();
-extern f32 lbl_803DBC98;
-extern f32 lbl_803E2748;
-extern f32 lbl_803E2754;
-extern f32 lbl_803E27B0;
-extern f32 lbl_803E27B4;
-extern f32 lbl_803E27B8;
-extern f32 lbl_803E27BC;
-extern f32 lbl_803E27C0;
-extern f32 lbl_803E27C4;
-extern f32 lbl_803E27C8;
-extern f32 lbl_803E27CC;
-extern f32 lbl_803E27D0;
 
 void fn_80151954(int obj, u8* state)
 {
@@ -613,12 +623,6 @@ void fn_80151954(int obj, u8* state)
     }
 }
 
-extern int playerGetMoney(u8 * player);
-extern void playerAddMoney(u8* player, int amount);
-extern void hudFn_8011f38c(int a);
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern u16 lbl_803DBCA0[4];
-
 void fn_80151C68(int obj, u8* state)
 {
     u8* player;
@@ -651,16 +655,6 @@ void fn_80151C68(int obj, u8* state)
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
     }
 }
-
-extern f32 mathCosf(f32 x);
-extern f32 mathSinf(f32 x);
-extern f32 sqrtf(f32 x);
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, int mtx);
-extern f32 lbl_803E27D8;
-extern f32 lbl_803E27DC;
-extern f32 lbl_803E27E0;
-extern f32 lbl_803E27E4;
-extern f32 lbl_803E27E8;
 
 void fn_80151DB8(int obj, u8* state)
 {

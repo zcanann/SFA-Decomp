@@ -26,6 +26,8 @@ extern f32 sqrtf(f32 x);
 #include "main/screen_transition.h"
 
 #include "main/dll/dll19_state.h"
+#include "main/objanim.h"
+#include "main/dll/baddie_state.h"
 
 extern int FUN_80017730();
 extern void* FUN_80017aa4();
@@ -47,6 +49,26 @@ extern f32 lbl_803E265C;
 
 #pragma scheduling on
 #pragma peephole on
+extern void* memset(void* dst, int val, u32 n);
+extern f32 timeDelta;
+extern CameraMode54State* lbl_803DD5C0;
+extern f32 lbl_803E1B5C;
+extern CameraModeCloudRunnerState* lbl_803DD5B8;
+extern int Obj_GetPlayerObject(void);
+extern int ObjList_GetObjects(int* idx, int* count);
+extern f32 lbl_803E1B40;
+extern f32 lbl_803E1B44;
+extern f32 lbl_803E1B48;
+extern f32 lbl_803E1B4C;
+extern f32 lbl_803E1B50;
+extern f32 lbl_803E1B54;
+extern f32 lbl_803E1B58;
+extern f32 lbl_803E1B60;
+extern f32 lbl_803E1B64;
+extern f32 lbl_803E1B68;
+extern int getFocusedNpc(void);
+extern s16 getAngle(f32 x, f32 z);
+
 void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param_3, float* param_4)
 {
     float fVar1;
@@ -177,15 +199,8 @@ void fn_80110EC0(void)
 
 void CameraModeArwing_release(void);
 
-extern void* memset(void* dst, int val, u32 n);
-
-extern f32 timeDelta;
-
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-
-extern CameraMode54State* lbl_803DD5C0;
-extern f32 lbl_803E1B5C;
 
 void dll_54_init(int* p1, int unused, int* p3)
 {
@@ -219,8 +234,6 @@ void dll_54_init(int* p1, int unused, int* p3)
 
 int dll_19_func1B(int p);
 
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
-
 void fn_801101E8(void)
 {
     extern void mm_free(u32); /* #57 */
@@ -241,20 +254,6 @@ void CameraModePerv_free(void);
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
-extern int Obj_GetPlayerObject(void);
-
-extern int ObjList_GetObjects(int* idx, int* count);
-extern f32 lbl_803E1B40;
-extern f32 lbl_803E1B44;
-extern f32 lbl_803E1B48;
-extern f32 lbl_803E1B4C;
-extern f32 lbl_803E1B50;
-extern f32 lbl_803E1B54;
-extern f32 lbl_803E1B58;
-extern f32 lbl_803E1B60;
-extern f32 lbl_803E1B64;
-extern f32 lbl_803E1B68;
 
 void dll_54_update(u8* obj)
 {
@@ -367,8 +366,6 @@ void dll_54_update(u8* obj)
     }
 }
 
-extern int getFocusedNpc(void);
-
 /* CameraModeNpcSpeak_init  addr=0x8010DFF0  size=0x524  linkage=global */
 
 /* CameraModeTitle_update  addr=0x801116E0  size=0x58C  linkage=global */
@@ -380,14 +377,6 @@ extern int getFocusedNpc(void);
 /* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/objanim.h"
-#include "main/camera_interface.h"
-#include "main/game_object.h"
-#include "main/dll/baddie_state.h"
-#include "main/dll/rom_curve_interface.h"
-
-#include "main/dll/dll19_state.h"
 
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */
@@ -404,8 +393,6 @@ extern int getFocusedNpc(void);
 
 /* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
  * first use and refreshes the current path point position. */
-
-extern s16 getAngle(f32 x, f32 z);
 
 /* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
  * distance from an object to its target, updating the wide-turn flag. */

@@ -1,9 +1,28 @@
 /* DLL 0x1F9 - WMObjCreator [801EF360-801EF3A8) */
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/WC/dll_01F9_wmobjcreator.h"
+#include "main/effect_interfaces.h"
+#include "main/obj_placement.h"
+#include "main/game_object.h"
+#include "main/resource.h"
 
 extern uint GameBit_Get(int eventId);
 
 extern EffectInterface** gPartfxInterface;
+
+extern f32 lbl_803E5CC8;
+extern f32 lbl_803E5C70;
+extern u8 framesThisStep;
+extern u32 randomGetRange(int min, int max);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int a, int b);
+extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
+extern int lbl_803DDC68;
+extern f32 lbl_803E5CCC;
+extern f32 lbl_803E5CD0;
+extern f32 lbl_803E5CD4;
+extern f32 lbl_803E5CD8;
+extern f32 lbl_803E5CDC;
 
 void WM_ObjCreator_free(void)
 {
@@ -17,8 +36,6 @@ int fn_801EEDAC(void);
 int WM_ObjCreator_getExtraSize(void) { return 0x8; }
 int WM_ObjCreator_getObjectTypeId(void) { return 0x0; }
 
-extern f32 lbl_803E5CC8;
-
 void WM_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objRenderFn_8003b8f4(f32); /* #57 */
@@ -26,11 +43,8 @@ void WM_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E5CC8);
 }
 
-extern f32 lbl_803E5C70;
-
 /* Path-follow steering update for the cloudrunner block (target 0x801EE668;
  * Ghidra split this body as FUN_801eeafc). */
-extern u8 framesThisStep;
 
 /* SB_CloudRunner_HandlePriorityHit: when the laser hits an object whose
  * type isn't 281 and isn't currently in fade state, fade it red, rumble,
@@ -38,12 +52,6 @@ extern u8 framesThisStep;
  * emit 3 partfx of effect 168 followed by a 10-shot burst of effect 169. */
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/dll/WC/dll_01F9_wmobjcreator.h"
-#include "main/effect_interfaces.h"
-#include "main/obj_placement.h"
-#include "main/game_object.h"
-#include "main/resource.h"
 
 /* WM_ObjCreator per-object extra state (four s16 slots). */
 typedef struct WmObjCreatorState
@@ -83,18 +91,6 @@ typedef struct WmGalleonState
 } WmGalleonState;
 
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
-
-extern u32 randomGetRange(int min, int max);
-
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int a, int b);
-extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-extern int lbl_803DDC68;
-extern f32 lbl_803E5CCC;
-extern f32 lbl_803E5CD0;
-extern f32 lbl_803E5CD4;
-extern f32 lbl_803E5CD8;
-extern f32 lbl_803E5CDC;
 
 void WM_ObjCreator_update(int obj)
 {

@@ -6,6 +6,11 @@ extern f32 lbl_803E1894;
 extern f32 lbl_803E1898;
 extern f32 lbl_803E1888;
 
+extern char sPathCamNeedTwoControlPointsError[];
+extern void debugPrintf(const char* fmt, ...);
+extern float sqrtf(float x);
+extern f32 lbl_803E18A8;
+
 void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
                                 f32* o5, f32* o6, f32* o7)
 {
@@ -155,9 +160,6 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4,
     }
 }
 
-extern char sPathCamNeedTwoControlPointsError[];
-extern void debugPrintf(const char* fmt, ...);
-
 void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
 {
     int i;
@@ -244,9 +246,6 @@ void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
         debugPrintf(sPathCamNeedTwoControlPointsError);
     }
 }
-
-extern float sqrtf(float x);
-extern f32 lbl_803E18A8;
 
 f32 fn_8010AC48(int* obj, f32 px, f32 py, f32 pz)
 {

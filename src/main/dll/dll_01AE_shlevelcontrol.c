@@ -1,13 +1,53 @@
 /* DLL 0x1AE - SHLevelControl [801D7BA8-801D7C14) */
 #include "main/game_ui_interface.h"
 #include "main/dll/SC/SClantern.h"
+#include "main/dll/SC/SCtotemlogpuz.h"
+#include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
+#include "main/objseq.h"
+#include "main/screen_transition.h"
+#include "main/mapEvent.h"
+#include "main/dll/SP/SPshopkeeper.h"
+#include "main/dll/IM/dll_01AE_shlevelcontrol.h"
+
+extern void envFxActFn_800887f8(int);
+extern int mapUnload(int id, int flags);
+extern undefined4 FUN_800067c0();
+extern undefined8 FUN_80286838();
+extern undefined4 FUN_80286884();
+extern uint countLeadingZeros();
+extern ScreenTransitionInterface** gScreenTransitionInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern char sSPShopNumBloopsFormat[];
+extern f32 lbl_803E54B0;
+extern f32 lbl_803E54B4;
+extern f32 timeDelta;
+extern void fn_80137948(char* fmt, ...);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int ObjList_FindObjectById(int objectId);
+extern int isScreenTransitionActive(void);
+extern void padClearAnalogInputX(int controller);
+extern void padClearAnalogInputY(int controller);
+extern void buttonDisable(int controller, int flags);
+extern int playerHasSpell(int obj, int spell);
+extern void buttonDisable(int a, int b);
+extern void padClearAnalogInputY(int a);
+extern void padClearAnalogInputX(int a);
+extern void gameTextShow(int a);
+extern void fn_80088870(void* a, void* b, void* c, void* d);
+extern void envFxActFn_800887f8(int a);
+extern void skyFn_80088e54(int a, f32 b);
+extern void getEnvfxAct(int a, int b, int c, int d);
+extern void getEnvfxActImmediately(int a, int b, int c, int d);
+extern int getSaveGameLoadStatus(void);
+extern void timeOfDayFn_80055000(void);
+extern f32 lbl_803E54C0;
+extern s16 lbl_80327618_ids[];
 
 int sh_levelcontrol_getExtraSize(void)
 {
     return 0x14;
 }
-
-extern void envFxActFn_800887f8(int);
 
 void sh_levelcontrol_free(void)
 {
@@ -23,10 +63,6 @@ void sh_levelcontrol_free(void)
         GameBit_Set(0x194, 0);
     }
 }
-
-#include "main/dll/SC/SCtotemlogpuz.h"
-
-extern int mapUnload(int id, int flags);
 
 #define SCTOTEMLOGPUZ_RESET_GAMEBIT 0xBF8
 #define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET 5
@@ -165,8 +201,6 @@ void SCGameBitLatch_UpdateInverted(SCGameBitLatchState* state, int mask, s16 cle
     GameBit_Set(latchBit, !GameBit_Get(latchBit));
 }
 
-#include "main/dll/SC/SCtotemlogpuz.h"
-
 #pragma dont_inline on
 void SH_LevelControl_setMusic(short* obj)
 {
@@ -230,27 +264,6 @@ void SH_LevelControl_setMusic(short* obj)
     }
 }
 #pragma dont_inline reset
-
-#include "main/audio/sfx_ids.h"
-#include "main/game_object.h"
-#include "main/game_ui_interface.h"
-#include "main/objseq.h"
-#include "main/screen_transition.h"
-
-extern undefined4 FUN_800067c0();
-extern undefined8 FUN_80286838();
-extern undefined4 FUN_80286884();
-extern uint countLeadingZeros();
-
-extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern char sSPShopNumBloopsFormat[];
-extern f32 lbl_803E54B0;
-extern f32 lbl_803E54B4;
-extern f32 timeDelta;
-
-extern void fn_80137948(char* fmt, ...);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 #pragma dont_inline on
 void SH_LevelControl_runBloopEvent(int obj, int state)
@@ -421,11 +434,6 @@ void FUN_801d8480(undefined4 param_1, undefined4 param_2, short param_3, short p
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/mapEvent.h"
-#include "main/dll/SP/SPshopkeeper.h"
-#include "main/objseq.h"
-#include "main/screen_transition.h"
-
 #define SHOPKEEPER_THORNTAIL_OBJECT_ID 0x442ff
 #define SHOPKEEPER_OBJFLAG_REFRESH_MAP 0x2
 #define SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED 0x40
@@ -439,13 +447,6 @@ typedef struct ShopkeeperObject
     u8 unkAD[3];
     u16 flagsB0;
 } ShopkeeperObject;
-
-extern int ObjList_FindObjectById(int objectId);
-extern int isScreenTransitionActive(void);
-extern void padClearAnalogInputX(int controller);
-extern void padClearAnalogInputY(int controller);
-extern void buttonDisable(int controller, int flags);
-extern int playerHasSpell(int obj, int spell);
 
 #define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg) \
     (*gObjectTriggerInterface)->runSequence((triggerId), (void *)(obj), (arg))
@@ -621,13 +622,6 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
     }
 }
 
-#include "main/audio/sfx_ids.h"
-#include "main/game_object.h"
-#include "main/mapEvent.h"
-#include "main/objseq.h"
-#include "main/dll/IM/dll_01AE_shlevelcontrol.h"
-#include "main/dll/SC/SCtotemlogpuz.h"
-
 typedef struct ShLevelcontrolState
 {
     u8 pad0[0x5 - 0x0];
@@ -638,16 +632,6 @@ typedef struct ShLevelcontrolState
     s16 unk12;
     u8 pad14[0x18 - 0x14];
 } ShLevelcontrolState;
-
-extern void buttonDisable(int a, int b);
-extern void padClearAnalogInputY(int a);
-extern void padClearAnalogInputX(int a);
-extern void gameTextShow(int a);
-extern void fn_80088870(void* a, void* b, void* c, void* d);
-extern void envFxActFn_800887f8(int a);
-extern void skyFn_80088e54(int a, f32 b);
-extern void getEnvfxAct(int a, int b, int c, int d);
-extern void getEnvfxActImmediately(int a, int b, int c, int d);
 
 void sh_levelcontrol_update(int obj)
 {
@@ -967,11 +951,6 @@ void sh_levelcontrol_update(int obj)
 }
 
 void warpstonelift_free(void);
-
-extern int getSaveGameLoadStatus(void);
-extern void timeOfDayFn_80055000(void);
-extern f32 lbl_803E54C0;
-extern s16 lbl_80327618_ids[];
 
 void sh_levelcontrol_init(int obj)
 {

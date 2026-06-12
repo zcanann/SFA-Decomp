@@ -57,6 +57,17 @@ extern undefined4 FUN_80286878();
 
 extern void mm_free(void* p);
 
+extern f32 lbl_803E3F70;
+extern f32 lbl_803E3F78;
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern void Sfx_PlayFromObject(int* obj, int id);
+extern void* mmAlloc(int size, int align, int tag);
+extern f32 lbl_803E3F7C;
+extern f32 lbl_803E3F80;
+extern f32 lbl_803E3F84;
+extern f32 lbl_803E3F40;
+
 void alphaanimator_free(int* obj)
 {
     AlphaAnimatorState* o = (AlphaAnimatorState*)((int**)obj)[0xb8 / 4];
@@ -167,9 +178,6 @@ void alphaanimator_init(int* obj)
     *(s8*)&((AlphaAnimatorState*)((int**)obj)[0xb8 / 4])->prevGate = v;
 }
 
-extern f32 lbl_803E3F70;
-extern f32 lbl_803E3F78;
-
 #pragma scheduling on
 #pragma peephole off
 void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -179,17 +187,6 @@ void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern u8 framesThisStep;
-
-extern f32 timeDelta;
-
-extern void Sfx_PlayFromObject(int* obj, int id);
-extern void* mmAlloc(int size, int align, int tag);
-
-extern f32 lbl_803E3F7C;
-extern f32 lbl_803E3F80;
-extern f32 lbl_803E3F84;
 
 #pragma scheduling off
 void alphaanimator_update(int* obj)
@@ -423,5 +420,3 @@ void alphaanimator_update(int* obj)
         s->fadeB = s->fadeA - lbl_803E3F84;
     }
 }
-
-extern f32 lbl_803E3F40;

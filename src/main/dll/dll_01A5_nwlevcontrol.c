@@ -25,6 +25,16 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803E5F10;
 extern f32 lbl_803E5F14;
 
+extern uint GameBit_Get(int id);
+extern f32 lbl_803E5280;
+extern void fn_80088870(char* a, char* b, char* c, char* d);
+extern int getSaveGameLoadStatus(void);
+extern void getEnvfxActImmediately(int a, int b, int c, int d);
+extern void getEnvfxAct(int a, int b, int c, int d);
+extern int ObjList_FindObjectById(int objectId);
+extern int ObjTrigger_IsSetById();
+extern void gameTimerStop(void);
+
 void nw_levcontrol_update(int param_1)
 {
     int obj;
@@ -200,14 +210,6 @@ void nw_levcontrol_update(int param_1)
 
 int sh_tricky_getExtraSize(void);
 
-extern uint GameBit_Get(int id);
-
-extern f32 lbl_803E5280;
-extern void fn_80088870(char* a, char* b, char* c, char* d);
-extern int getSaveGameLoadStatus(void);
-extern void getEnvfxActImmediately(int a, int b, int c, int d);
-extern void getEnvfxAct(int a, int b, int c, int d);
-
 void nw_levcontrol_init(int* obj)
 {
     extern void envFxActFn_800887f8(int id);
@@ -254,14 +256,6 @@ void nw_levcontrol_init(int* obj)
     (*gMapEventInterface)->setAnimEvent(7, 9, 1);
 }
 
-#include "main/mapEvent.h"
-#include "main/dll/flybaddie1D7.h"
-#include "main/game_object.h"
-#include "main/objseq.h"
-
-extern int ObjList_FindObjectById(int objectId);
-extern int ObjTrigger_IsSetById();
-
 int fn_801CFD68(u8* state)
 {
     extern s32 lbl_803269F8[];
@@ -301,8 +295,6 @@ int nw_levcontrol_getExtraSize(void)
 {
     return 0x14;
 }
-
-extern void gameTimerStop(void);
 
 /* EN v1.0 0x801CFECC  size: 84b  nw_levcontrol_free: dispatches the object's
  * map event slot through gMapEventInterface; when the call returns 0 also fires

@@ -36,6 +36,11 @@ typedef struct SpitembeamPlacement
     u8 pad1C[0x20 - 0x1C];
 } SpitembeamPlacement;
 
+extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
+extern int* objFindTexture(int* obj, int a, int b);
+extern f32 lbl_803E5AD8;
+extern f32 lbl_803E5AC0;
+
 void spitembeam_init(int obj)
 {
     ((GameObject*)obj)->objectFlags = (ushort)(((GameObject*)obj)->objectFlags | 0x6000);
@@ -62,10 +67,6 @@ void spitembeam_release(void)
 void spitembeam_initialise(void)
 {
 }
-
-extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
-extern int* objFindTexture(int* obj, int a, int b);
-extern f32 lbl_803E5AD8;
 
 void spitembeam_update(int* obj)
 {
@@ -104,8 +105,6 @@ void spitembeam_update(int* obj)
 
 int spitembeam_getExtraSize(void) { return 0x0; }
 int spitembeam_getObjectTypeId(void) { return 0x0; }
-
-extern f32 lbl_803E5AC0;
 
 volatile ShWGPipe GXWGFifo : (0xCC008000);
 

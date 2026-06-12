@@ -4,6 +4,11 @@
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/dll/alphaanimatorstate_struct.h"
 #include "main/dll/visanimatorstate_struct.h"
+#include "main/map_block.h"
+#include "main/dll/groundanimator_state.h"
+#include "main/dll/MMP/mmp_barrel.h"
+#include "main/game_object.h"
+#include "global.h"
 
 typedef struct WaveanimatorState
 {
@@ -18,38 +23,12 @@ typedef struct WaveanimatorState
 
 extern uint GameBit_Get(int eventId);
 
-void waveanimator_modelMtxFn(int obj, int a, int b, int c)
-{
-    int* state = ((GameObject*)obj)->extra;
-    u32 v;
-    v = (u32)((WaveanimatorState*)state)->unk34 | 4;
-    ((WaveanimatorState*)state)->unk34 = (u8)v;
-    ((WaveanimatorState*)state)->unk36 = (u8)a;
-    ((WaveanimatorState*)state)->unk37 = (u8)b;
-    ((WaveanimatorState*)state)->unk38 = (u8)c;
-}
-
 extern f32 lbl_803E3F30;
 extern void objRenderFn_8003b8f4(f32);
-
-#include "main/map_block.h"
-#include "main/dll/groundanimator_state.h"
-#include "main/dll/MMP/mmp_barrel.h"
-#include "main/game_object.h"
-#include "global.h"
-
-/* waveanimator_getExtraSize == 0x3c (also the shared wave-grid config fed
- * to fn_801923F8; the grid/color/phase tables live in the lbl_803DDAEC/F0/F4
- * globals). */
-
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
-
 STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
-
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
-
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
-
 extern int FUN_80017af0();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
@@ -61,14 +40,51 @@ extern int FUN_8005b398();
 extern int FUN_800600e4();
 extern undefined8 FUN_8028682c();
 extern undefined4 FUN_80286878();
+extern void mm_free(void* p);
+extern f32 lbl_803E3F70;
+extern f32 lbl_803E3F98;
+extern void fn_801923F8(int* cfg);
+extern u8 lbl_803DDAE8;
+extern void* lbl_803DDAEC;
+extern void* lbl_803DDAF0;
+extern void* lbl_803DDAF4;
+extern u8 lbl_803DDAF8;
+extern u8 framesThisStep;
+extern void* mapBlockFn_800606ec(void* block, int idx);
+extern void* mmAlloc(int size, int align, int tag);
+extern f32 lbl_803E3F40;
+extern f32 lbl_803E3F44;
+extern f32 lbl_803E3F48;
+extern f32 lbl_803E3F4C;
+extern f32 lbl_803E3F50;
+extern f32 lbl_803E3F54;
+extern f32 lbl_803E3F58;
+extern f32 lbl_803E3F5C;
+extern f32 lbl_803E3F60;
+extern f32 lbl_803E3F64;
+extern f32 mathSinf(f32);
+extern u8* Shader_getLayer(char* s, int layer);
+
+void waveanimator_modelMtxFn(int obj, int a, int b, int c)
+{
+    int* state = ((GameObject*)obj)->extra;
+    u32 v;
+    v = (u32)((WaveanimatorState*)state)->unk34 | 4;
+    ((WaveanimatorState*)state)->unk34 = (u8)v;
+    ((WaveanimatorState*)state)->unk36 = (u8)a;
+    ((WaveanimatorState*)state)->unk37 = (u8)b;
+    ((WaveanimatorState*)state)->unk38 = (u8)c;
+}
+
+/* waveanimator_getExtraSize == 0x3c (also the shared wave-grid config fed
+ * to fn_801923F8; the grid/color/phase tables live in the lbl_803DDAEC/F0/F4
+ * globals). */
 
 void waveanimator_func0B(int* obj)
 {
     WaveAnimatorState* p = (WaveAnimatorState*)((int**)obj)[0xb8 / 4];
     p->flags |= 2;
 }
-
-extern void mm_free(void* p);
 
 #pragma scheduling on
 #pragma peephole on
@@ -166,7 +182,6 @@ int waveanimator_getExtraSize(void) { return 0x3c; }
 int waveanimator_getObjectTypeId(void) { return 0x0; }
 int alphaanimator_getExtraSize(void);
 
-extern f32 lbl_803E3F70;
 #pragma peephole off
 void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -183,10 +198,6 @@ void waveanimator_setScale(int* obj, f32 fval)
     p->scaleB = fval;
 }
 
-extern f32 lbl_803E3F98;
-
-extern void fn_801923F8(int* cfg);
-extern u8 lbl_803DDAE8;
 #pragma scheduling off
 void waveanimator_init(int* obj, int* desc)
 {
@@ -212,9 +223,6 @@ void waveanimator_init(int* obj, int* desc)
     lbl_803DDAE8++;
 }
 
-extern void* lbl_803DDAEC;
-extern void* lbl_803DDAF0;
-extern void* lbl_803DDAF4;
 void waveanimator_free(int* obj)
 {
     if (--lbl_803DDAE8 == 0)
@@ -225,8 +233,6 @@ void waveanimator_free(int* obj)
     }
     ObjGroup_RemoveObject(obj, 27);
 }
-extern u8 lbl_803DDAF8;
-extern u8 framesThisStep;
 void waveanimator_hitDetect(int* obj)
 {
     int i;
@@ -258,22 +264,6 @@ void waveanimator_hitDetect(int* obj)
     }
     lbl_803DDAF8 = 1;
 }
-
-extern void* mapBlockFn_800606ec(void* block, int idx);
-
-extern void* mmAlloc(int size, int align, int tag);
-
-extern f32 lbl_803E3F40;
-extern f32 lbl_803E3F44;
-extern f32 lbl_803E3F48;
-extern f32 lbl_803E3F4C;
-extern f32 lbl_803E3F50;
-extern f32 lbl_803E3F54;
-extern f32 lbl_803E3F58;
-extern f32 lbl_803E3F5C;
-extern f32 lbl_803E3F60;
-extern f32 lbl_803E3F64;
-extern f32 mathSinf(f32);
 
 void fn_801923F8(int* cfgArg)
 {
@@ -372,5 +362,3 @@ void fn_801923F8(int* cfgArg)
         }
     }
 }
-
-extern u8* Shader_getLayer(char* s, int layer);

@@ -2,10 +2,13 @@
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcombat_state.h"
 #include "main/mm.h"
-
-void CameraModeCombat_copyToCurrent_nop(void)
-{
-}
+#include "main/dll/CAM/camdrakor.h"
+#include "main/camera_object.h"
+#include "main/dll/CAM/camclimb_state.h"
+#include "main/dll/CAM/camshipbattle_state.h"
+#include "main/game_object.h"
+#include "main/object_transform.h"
+#include "main/pad.h"
 
 extern CameraModeCombatState* lbl_803DD568;
 extern f32 lbl_803E18C0;
@@ -13,6 +16,56 @@ extern f32 lbl_803E18C4;
 extern f32 lbl_803E18C8;
 extern f32 timeDelta;
 extern void Rcp_DisableBlurFilter(void);
+extern void* FUN_800069a8();
+extern void camcontrol_traceMove(f32 radius, f32* from, void* to, f32* out, void* work, int a,
+                                 int b, int c);
+extern undefined4 Camera_GetCurrentViewSlot();
+extern f32 sqrtf(f32 x);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern uint fn_8029630C(int obj);
+extern int objAnimFn_80296328(int obj);
+extern undefined4 cameraGetPrevPos2();
+extern s32 lbl_803DD56C;
+extern f64 lbl_803E1918;
+extern f32 lbl_803E18CC;
+extern f32 lbl_803E18D0;
+extern f32 lbl_803E18D4;
+extern f32 lbl_803E18D8;
+extern f32 lbl_803E18DC;
+extern f32 lbl_803E18E0;
+extern f32 lbl_803E18E4;
+extern f32 lbl_803E18E8;
+extern f32 lbl_803E18EC;
+extern f32 lbl_803E18F0;
+extern f32 lbl_803E18F4;
+extern f32 lbl_803E18F8;
+extern f32 lbl_803E18FC;
+extern f32 lbl_803E1900;
+extern f32 lbl_803E1904;
+extern f32 lbl_803E1908;
+extern f32 lbl_803E190C;
+extern f32 lbl_803E1910;
+extern f32 lbl_803E1920;
+extern f32 lbl_803E1924;
+extern f32 lbl_803E1928;
+extern f32 lbl_803E192C;
+extern f32 lbl_803E1930;
+extern f32 lbl_803E1940;
+extern int getAngle(f32 dx, f32 dz);
+extern f32 interpolate(f32 cur, f32 target, f32 t);
+extern f32 powfBitEstimate(f32 a, f32 b);
+extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
+extern f32 PSVECMag(f32 * v);
+extern void PSVECNormalize(f32 * v, f32 * out);
+extern void PSVECScale(f32* v, f32* out, f32 s);
+extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
+extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
+extern int shipBattleFn_801eed24(int focus);
+
+void CameraModeCombat_copyToCurrent_nop(void)
+{
+}
 
 typedef struct
 {
@@ -95,55 +148,6 @@ void CameraModeCombat_free(int obj)
     ((CamByte143*)(obj + 0x143))->flag80 = 0;
 }
 
-#include "main/dll/CAM/camdrakor.h"
-#include "main/camera_interface.h"
-#include "main/camera_object.h"
-#include "main/dll/CAM/camclimb_state.h"
-#include "main/dll/CAM/camcombat_state.h"
-#include "main/dll/CAM/camshipbattle_state.h"
-#include "main/game_object.h"
-#include "main/mm.h"
-#include "main/object_transform.h"
-#include "main/pad.h"
-
-extern void* FUN_800069a8();
-extern void camcontrol_traceMove(f32 radius, f32* from, void* to, f32* out, void* work, int a,
-                                 int b, int c);
-extern undefined4 Camera_GetCurrentViewSlot();
-extern f32 sqrtf(f32 x);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern uint fn_8029630C(int obj);
-extern int objAnimFn_80296328(int obj);
-extern undefined4 cameraGetPrevPos2();
-
-extern s32 lbl_803DD56C;
-extern f64 lbl_803E1918;
-extern f32 lbl_803E18CC;
-extern f32 lbl_803E18D0;
-extern f32 lbl_803E18D4;
-extern f32 lbl_803E18D8;
-extern f32 lbl_803E18DC;
-extern f32 lbl_803E18E0;
-extern f32 lbl_803E18E4;
-extern f32 lbl_803E18E8;
-extern f32 lbl_803E18EC;
-extern f32 lbl_803E18F0;
-extern f32 lbl_803E18F4;
-extern f32 lbl_803E18F8;
-extern f32 lbl_803E18FC;
-extern f32 lbl_803E1900;
-extern f32 lbl_803E1904;
-extern f32 lbl_803E1908;
-extern f32 lbl_803E190C;
-extern f32 lbl_803E1910;
-extern f32 lbl_803E1920;
-extern f32 lbl_803E1924;
-extern f32 lbl_803E1928;
-extern f32 lbl_803E192C;
-extern f32 lbl_803E1930;
-extern f32 lbl_803E1940;
-
 typedef struct
 {
     f32 pad0;
@@ -159,16 +163,6 @@ typedef struct
     u8 b80 : 1;
     u8 rest : 7;
 } CombatCamFlags;
-
-extern int getAngle(f32 dx, f32 dz);
-extern f32 interpolate(f32 cur, f32 target, f32 t);
-extern f32 powfBitEstimate(f32 a, f32 b);
-extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
-extern f32 PSVECMag(f32 * v);
-extern void PSVECNormalize(f32 * v, f32 * out);
-extern void PSVECScale(f32* v, f32* out, f32 s);
-extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
-extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
 
 void CameraModeCombat_update(short* cam)
 {
@@ -561,8 +555,6 @@ void CameraModeCombat_init(int camObj, undefined4 arg2, undefined4* args)
     }
     return;
 }
-
-extern int shipBattleFn_801eed24(int focus);
 
 void CameraModeShipBattle_update(short* cam);
 

@@ -12,9 +12,92 @@
 #include "main/dll/anim_internal.h"
 #include "main/main.h"
 #include "main/objlib.h"
+#include "main/obj_placement.h"
+#include "main/audio/sfx_ids.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/effect_interfaces.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/dll/anim.h"
+#include "main/dll/baddie_state.h"
+#include "main/objseq.h"
+#include "main/objfx.h"
+#include "main/resource.h"
+#include "main/dll/baddie/chuka.h"
 
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
+
+extern f32 lbl_803E61C8;
+extern f32 lbl_803E61D0;
+extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
+extern int Obj_SetActiveModelIndex(int obj, int idx);
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E61CC;
+extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
+                              int p10);
+extern f32 lbl_803E6218;
+extern f32 lbl_803E621C;
+extern f32 lbl_803E61E0;
+extern f32 lbl_803E61E4;
+extern f32 lbl_803E61E8;
+extern f32 lbl_803E61EC;
+extern f32 lbl_803E61F0;
+extern f32 lbl_803E61F4;
+extern f32 lbl_803E61F8;
+extern f32 lbl_803E61FC;
+extern f32 lbl_803E6200;
+extern f32 lbl_803E6204;
+extern f32 lbl_803E6208;
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern f32 sqrtf(f32 x);
+extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int*** listOut, int p6, int p7);
+STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
+STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
+STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
+STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
+STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
+STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
+STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
+STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
+STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
+STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
+extern undefined4 FUN_80006824();
+extern uint FUN_80006ab8();
+extern undefined8 FUN_80006ac4();
+extern u32 randomGetRange(int min, int max);
+extern int FUN_80017a98();
+extern undefined8 FUN_800305f8();
+extern int ObjHits_GetPriorityHit();
+extern undefined4 ObjMsg_SendToObject();
+extern int Obj_GetYawDeltaToObject();
+extern undefined4 FUN_8003b818();
+extern double FUN_80293900();
+extern undefined4 DAT_8032a290;
+extern EffectInterface** gPartfxInterface;
+extern f64 DOUBLE_803e6f78;
+extern f64 DOUBLE_803e7000;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E6F40;
+extern f32 lbl_803E6F50;
+extern f32 lbl_803E6F60;
+extern f32 lbl_803E6F80;
+extern f32 lbl_803E6F84;
+extern f32 lbl_803E6F88;
+extern f32 lbl_803E6F8C;
+extern f32 lbl_803E6F90;
+extern f32 lbl_803E6F94;
+extern f32 lbl_803E6FD8;
+extern f32 lbl_803E6FDC;
+extern f32 lbl_803E6FE0;
+extern f32 lbl_803E6FE4;
+extern f32 lbl_803E7008;
+extern f32 lbl_803E700C;
+extern f32 lbl_803E7010;
+extern void Obj_RemoveFromUpdateList(int* obj);
+extern u8 lbl_80329514[];
+extern f32 timeDelta;
+extern u8 gChukaModeTable[9];
 
 void dbegg_processMessages(int obj)
 {
@@ -105,10 +188,6 @@ int dbegg_setScale(int obj)
     return inner[0x118] != 3 ? 1 : 0;
 }
 
-extern f32 lbl_803E61C8;
-extern f32 lbl_803E61D0;
-extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
-extern int Obj_SetActiveModelIndex(int obj, int idx);
 #pragma scheduling off
 #pragma peephole off
 void dbegg_setupFromDef(int obj, u8* state)
@@ -185,9 +264,6 @@ int dbegg_func0B(int obj, f32* v)
     return 0;
 }
 
-extern void objRenderFn_8003b8f4(f32);
-
-extern f32 lbl_803E61CC;
 #pragma peephole off
 void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
@@ -203,11 +279,6 @@ void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 }
 
 void dll_224_init(void* obj, void* other);
-
-extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
-                              int p10);
-extern f32 lbl_803E6218;
-extern f32 lbl_803E621C;
 
 #pragma peephole on
 void dbegg_hitDetect(int obj)
@@ -241,22 +312,6 @@ void dbegg_hitDetect(int obj)
     ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
 }
-
-extern f32 lbl_803E61E0;
-extern f32 lbl_803E61E4;
-extern f32 lbl_803E61E8;
-extern f32 lbl_803E61EC;
-extern f32 lbl_803E61F0;
-extern f32 lbl_803E61F4;
-extern f32 lbl_803E61F8;
-extern f32 lbl_803E61FC;
-extern f32 lbl_803E6200;
-extern f32 lbl_803E6204;
-extern f32 lbl_803E6208;
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern f32 sqrtf(f32 x);
-extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int*** listOut, int p6, int p7);
 
 #pragma opt_common_subs off
 #pragma opt_loop_invariants off
@@ -447,18 +502,6 @@ void fn_801FE774(int cam, f32* vel)
     }
 }
 
-#include "main/obj_placement.h"
-#include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/dll/anim.h"
-#include "main/dll/baddie_state.h"
-#include "main/objseq.h"
-#include "main/objfx.h"
-#include "main/resource.h"
-
 /*
  * DbStealerwormControl - the per-family control record hung off
  * GroundBaddieState.control (state+0x40C) for dbstealerworm
@@ -466,24 +509,7 @@ void fn_801FE774(int cam, f32* vel)
  * the control record itself is memset(0x50) in dbstealerworm_init).
  */
 
-STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
-
-STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
-
-STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
-
-STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
-
-STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
-
-STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
-
-STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
-
-STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
-
 /* chuka extra block (extraSize 0xC). */
-#include "main/dll/baddie/chuka.h"
 
 typedef struct DbeggPlacement
 {
@@ -509,44 +535,6 @@ typedef struct DbeggPlacement
     s8 unk2E;
     u8 pad2F[0x30 - 0x2F];
 } DbeggPlacement;
-
-STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
-
-STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
-
-extern undefined4 FUN_80006824();
-extern uint FUN_80006ab8();
-extern undefined8 FUN_80006ac4();
-extern u32 randomGetRange(int min, int max);
-extern int FUN_80017a98();
-extern undefined8 FUN_800305f8();
-extern int ObjHits_GetPriorityHit();
-extern undefined4 ObjMsg_SendToObject();
-extern int Obj_GetYawDeltaToObject();
-extern undefined4 FUN_8003b818();
-extern double FUN_80293900();
-
-extern undefined4 DAT_8032a290;
-extern EffectInterface** gPartfxInterface;
-extern f64 DOUBLE_803e6f78;
-extern f64 DOUBLE_803e7000;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E6F40;
-extern f32 lbl_803E6F50;
-extern f32 lbl_803E6F60;
-extern f32 lbl_803E6F80;
-extern f32 lbl_803E6F84;
-extern f32 lbl_803E6F88;
-extern f32 lbl_803E6F8C;
-extern f32 lbl_803E6F90;
-extern f32 lbl_803E6F94;
-extern f32 lbl_803E6FD8;
-extern f32 lbl_803E6FDC;
-extern f32 lbl_803E6FE0;
-extern f32 lbl_803E6FE4;
-extern f32 lbl_803E7008;
-extern f32 lbl_803E700C;
-extern f32 lbl_803E7010;
 
 undefined4
 #pragma peephole off
@@ -970,12 +958,6 @@ void dbegg_initialise(void)
 }
 
 void GCRobotBlast_free(void);
-
-extern void Obj_RemoveFromUpdateList(int* obj);
-
-extern u8 lbl_80329514[];
-
-extern f32 timeDelta;
 
 void dbegg_init(int obj)
 {
@@ -1426,13 +1408,6 @@ void dbegg_update(int obj)
         }
     }
 }
-
-#include "main/dll/baddie/chuka.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-
-extern u8 gChukaModeTable[9];
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 

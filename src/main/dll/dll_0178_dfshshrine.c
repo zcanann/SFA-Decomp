@@ -3,6 +3,8 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/DF/DFlantern.h"
+#include "main/objseq.h"
+#include "main/screen_transition.h"
 
 extern void objRenderFn_8003b8f4(f32);
 extern void ModelLightStruct_free(void* light);
@@ -41,6 +43,30 @@ typedef struct DFlanternShrineState
     u8 pad1a[0x1c - 0x1a];
     u8 flags;
 } DFlanternShrineState;
+
+extern u32 randomGetRange(int min, int max);
+extern undefined4 ObjMsg_AllocQueue();
+extern ScreenTransitionInterface** gScreenTransitionInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
+extern u8 lbl_803DBF60;
+extern u16 lbl_80325F88[];
+extern void skyFn_80088c94(int skyId, int enable);
+extern void getEnvfxAct(int obj, int target, int effectId, int flags);
+extern void playerAddRemoveMagic(int player, int amount);
+extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit,
+                                          int value);
+extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit, int value);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void gameTimerInit(int timerId, int value);
+extern void timerSetToCountUp(void);
+extern int isGameTimerDisabled(void);
+extern int ObjList_FindObjectById(int objId);
+extern void fn_8014C5C0(int obj);
+extern int objGetAnimStateFlags(int obj, int flag);
+extern void audioStopByMask(int mask);
+extern f32 lbl_803E4E8C;
+extern void* objCreateLight(int* obj, int v);
 
 void fn_801C2914(int obj)
 {
@@ -200,38 +226,9 @@ void dfsh_shrine_free(int obj)
     GameBit_Set(0xcbb, 1);
 }
 
-#include "main/dll/DF/DFlantern.h"
-#include "main/game_object.h"
-#include "main/obj_placement.h"
-#include "main/objseq.h"
-#include "main/screen_transition.h"
-
-extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjMsg_AllocQueue();
-
-extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern void objRenderFn_8003b8f4(f32 scale);
-extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
-extern u8 lbl_803DBF60;
-extern u16 lbl_80325F88[];
-extern void skyFn_80088c94(int skyId, int enable);
-extern void getEnvfxAct(int obj, int target, int effectId, int flags);
-extern void playerAddRemoveMagic(int player, int amount);
-extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit,
-                                          int value);
-extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit, int value);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Music_Trigger(int musicId, int mode);
-extern void gameTimerInit(int timerId, int value);
-extern void timerSetToCountUp(void);
-extern int isGameTimerDisabled(void);
-extern int ObjList_FindObjectById(int objId);
-extern void fn_8014C5C0(int obj);
-extern int objGetAnimStateFlags(int obj, int flag);
-extern void audioStopByMask(int mask);
-extern f32 lbl_803E4E8C;
 
 typedef struct DfshShrineState
 {
@@ -490,7 +487,6 @@ void dfsh_shrine_initialise(void)
 
 extern int mapGetDirIdx(int id);
 extern void unlockLevel(int idx, int a, int b);
-extern void* objCreateLight(int* obj, int v);
 
 typedef struct DfshShrineFlags
 {

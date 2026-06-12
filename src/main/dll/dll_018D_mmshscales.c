@@ -26,6 +26,15 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
+extern u8 lbl_803DB411;
+extern f32 lbl_803E4F68;
+extern void objRenderFn_8003b8f4(f32);
+extern void* ObjList_FindObjectById(int id);
+extern f32 lbl_803E4F78;
+extern u8 Obj_IsLoadingLocked(void);
+extern u8* Obj_AllocObjectSetup(int size, int type);
+extern u8* Obj_SetupObject(u8* no, int a, int b, int c, int d);
+
 void mmsh_scales_free(int obj, int arg2)
 {
     void* child;
@@ -38,8 +47,6 @@ void mmsh_scales_free(int obj, int arg2)
     }
     return;
 }
-
-extern u8 lbl_803DB411;
 
 void mmsh_scales_update(int objArg)
 {
@@ -108,23 +115,13 @@ int mmsh_scales_getExtraSize(void) { return 0x140; }
 int mmsh_scales_getObjectTypeId(void) { return 0xb; }
 int mmsh_waterspike_getExtraSize(void);
 
-extern f32 lbl_803E4F68;
-extern void objRenderFn_8003b8f4(f32);
-
 void mmsh_scales_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4F68);
 }
 
-extern void* ObjList_FindObjectById(int id);
-
 void mmsh_waterspike_update(int obj);
-
-extern f32 lbl_803E4F78;
-extern u8 Obj_IsLoadingLocked(void);
-extern u8* Obj_AllocObjectSetup(int size, int type);
-extern u8* Obj_SetupObject(u8* no, int a, int b, int c, int d);
 
 void mmsh_scales_init(int* obj, s16* def)
 {

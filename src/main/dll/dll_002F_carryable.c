@@ -16,12 +16,6 @@ typedef struct CarryableUpdateHeldState
     u8 pad9[0x10 - 0x9];
 } CarryableUpdateHeldState;
 
-static inline u8* Gameplay_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 FUN_800033a8();
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_80006768();
@@ -54,7 +48,6 @@ extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286880();
 extern undefined4 FUN_8028688c();
-
 extern undefined4 DAT_802c28f0;
 extern undefined4 DAT_802c28f4;
 extern undefined4 DAT_802c28f8;
@@ -131,6 +124,26 @@ extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
+extern int maybeTryLoadSave(int a);
+extern void mm_free(u32);
+extern void* Obj_GetPlayerObject(void);
+extern int fn_802966D4(int obj, int* out);
+extern void playerSetHeldObject(void* player, int held);
+extern f32 lbl_803E06D8;
+extern uint buttonGetDisabled(int idx);
+extern void buttonDisable(int index, uint flags);
+extern uint getButtonsJustPressed(int idx);
+extern int fn_80295BF0(void* player);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int hitDetectFn_80065e50(u8* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
+extern f32 timeDelta;
+extern const f32 lbl_803E06DC, lbl_803E06E0, lbl_803E06E4, lbl_803E06E8;
+
+static inline u8* Gameplay_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (u8*)objAnim->banks[objAnim->bankIndex];
+}
 
 void saveFileStruct_unlockCheat(uint cheatId)
 {
@@ -238,8 +251,6 @@ undefined4* FUN_800e87a8(void)
 {
     return &DAT_803a45b0;
 }
-
-extern int maybeTryLoadSave(int a);
 
 int saveFn_800e8508(void);
 
@@ -740,27 +751,13 @@ void Carryable_setFlag02Inverted(u8* state, u8 clear)
 
 u8 Carryable_getSurfaceType(u8* state) { return state[8]; }
 
-extern void mm_free(u32);
-
 enum
 {
     SAVEGAME_EMPTY_TASK_HINT = -1,
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
 
-extern void* Obj_GetPlayerObject(void);
-extern int fn_802966D4(int obj, int* out);
-extern void playerSetHeldObject(void* player, int held);
-extern f32 lbl_803E06D8;
-extern uint buttonGetDisabled(int idx);
-extern void buttonDisable(int index, uint flags);
-extern uint getButtonsJustPressed(int idx);
-extern int fn_80295BF0(void* player);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int hitDetectFn_80065e50(u8* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
-extern f32 timeDelta;
 void saveGame_saveObjectPos(int* obj);
-extern const f32 lbl_803E06DC, lbl_803E06E0, lbl_803E06E4, lbl_803E06E8;
 
 int Carryable_updateHeld(u8* obj)
 {

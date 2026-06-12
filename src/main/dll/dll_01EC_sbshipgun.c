@@ -3,6 +3,10 @@
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/objseq.h"
+#include "ghidra_import.h"
+#include "main/effect_interfaces.h"
+#include "main/dll/TREX/TREX_levelcontrol.h"
+#include "main/objhits_types.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
@@ -23,20 +27,34 @@ extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
 extern f32 sqrtf(f32);
 
-int SB_ShipGun_getExtraSize(void) { return 0x10; }
-
 extern u32 gSbGalleon;
-
 extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E57FC;
+extern f32 lbl_803E5888;
+extern int ObjList_GetObjects(int* outIndex, int* outCount);
+extern void Obj_SetModelColorFadeRecursive(int obj, int p2, int p3, int p4, int p5, int p6);
+extern void Sfx_StopObjectChannel();
+extern s16 getAngle(f32 dx, f32 dz);
+extern void Obj_GetWorldPosition(int obj, float* x, float* y, float* z);
+extern void vecRotateZXY(void* a, void* b);
+extern void Camera_EnableViewYOffset(void);
+extern void CameraShake_SetAllMagnitudes(f32 mag);
+extern f32 lbl_803E588C;
+extern f32 lbl_803E5890;
+extern f32 lbl_803E5894;
+extern f32 lbl_803E5898;
+extern f32 lbl_803E589C;
+extern f32 lbl_803E58A0;
+extern f32 lbl_803E58A4;
+extern f32 lbl_803E58A8;
+extern f32 lbl_803E58AC;
+
+int SB_ShipGun_getExtraSize(void) { return 0x10; }
 
 void SB_ShipGun_free(int param_1)
 {
     (*gExpgfxInterface)->freeSource2((u32)param_1);
 }
-
-extern f32 lbl_803E57FC;
-
-extern f32 lbl_803E5888;
 
 void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -57,13 +75,6 @@ void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 /* SB_Galleon_modelMtxFn: returns -2 / -1 / state byte depending on flags. */
 
 /* SB_Galleon_func0E: state byte == 1 -> compute from 0x7c; else return 0x640. */
-
-#include "ghidra_import.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-#include "main/dll/TREX/TREX_levelcontrol.h"
-#include "main/objhits_types.h"
 
 typedef struct SBShipGunPlacement
 {
@@ -88,24 +99,6 @@ typedef struct SBShipGunState
     u8 unkE;
     u8 padF[0x10 - 0xF];
 } SBShipGunState;
-
-extern int ObjList_GetObjects(int* outIndex, int* outCount);
-extern void Obj_SetModelColorFadeRecursive(int obj, int p2, int p3, int p4, int p5, int p6);
-extern void Sfx_StopObjectChannel();
-extern s16 getAngle(f32 dx, f32 dz);
-extern void Obj_GetWorldPosition(int obj, float* x, float* y, float* z);
-extern void vecRotateZXY(void* a, void* b);
-extern void Camera_EnableViewYOffset(void);
-extern void CameraShake_SetAllMagnitudes(f32 mag);
-extern f32 lbl_803E588C;
-extern f32 lbl_803E5890;
-extern f32 lbl_803E5894;
-extern f32 lbl_803E5898;
-extern f32 lbl_803E589C;
-extern f32 lbl_803E58A0;
-extern f32 lbl_803E58A4;
-extern f32 lbl_803E58A8;
-extern f32 lbl_803E58AC;
 
 void SB_ShipGun_update(int obj)
 {

@@ -116,13 +116,37 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
+extern undefined4 FUN_800067c0();
+extern f32 lbl_803E4AA0;
+extern f32 lbl_803E4A38;
+extern int ObjList_FindObjectById(int id);
+extern int Curve_AdvanceAlongPath(int* extra, f32 t);
+extern void Curve_BuildHermiteCoeffs(void);
+extern void Curve_EvalHermite(void);
+extern void curvesMove(int* extra);
+extern int** ObjList_GetObjects(int* startOut, int* countOut);
+extern void objMove(int* obj, f32 dx, f32 dy, f32 dz);
+extern int objBboxFn_800640cc(void* a, void* b, f32 c, int d, int e, int* f, int g, int h, int i, int j);
+extern int getAngle(f32 a, f32 b);
+extern int hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, int*** listOut, int p3, int p4);
+extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int sfx);
+extern f32 oneOverTimeDelta;
+extern f32 lbl_803E4AA4;
+extern f32 lbl_803E4AA8;
+extern f32 lbl_803E4AAC;
+extern f32 lbl_803E4AB0;
+extern f32 lbl_803E4AB4;
+extern f32 lbl_803E4AB8;
+extern f32 lbl_803E4ABC;
+extern f32 lbl_803E4AC0;
+extern f64 lbl_803E4AC8;
+extern f32 lbl_803E4AD0;
+
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
-
-extern undefined4 FUN_800067c0();
 
 #pragma scheduling on
 #pragma peephole on
@@ -203,18 +227,12 @@ int dim2snowball_getExtraSize(void) { return 0xb0; }
 int dim2snowball_getObjectTypeId(void) { return 0x0; }
 int dim2pathgenerator_getExtraSize(void);
 
-extern f32 lbl_803E4AA0;
-
 void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objRenderFn_8003b8f4(f32);
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4AA0);
 }
-
-extern f32 lbl_803E4A38;
-
-extern int ObjList_FindObjectById(int id);
 
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if the signed result dropped to or below 0. */
@@ -239,28 +257,6 @@ void dim2snowball_init(int* obj, int* def)
 }
 
 void dll_1CF_init(int* obj, int* def);
-
-extern int Curve_AdvanceAlongPath(int* extra, f32 t);
-extern void Curve_BuildHermiteCoeffs(void);
-extern void Curve_EvalHermite(void);
-extern void curvesMove(int* extra);
-extern int** ObjList_GetObjects(int* startOut, int* countOut);
-extern void objMove(int* obj, f32 dx, f32 dy, f32 dz);
-extern int objBboxFn_800640cc(void* a, void* b, f32 c, int d, int e, int* f, int g, int h, int i, int j);
-extern int getAngle(f32 a, f32 b);
-extern int hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, int*** listOut, int p3, int p4);
-extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int sfx);
-extern f32 oneOverTimeDelta;
-extern f32 lbl_803E4AA4;
-extern f32 lbl_803E4AA8;
-extern f32 lbl_803E4AAC;
-extern f32 lbl_803E4AB0;
-extern f32 lbl_803E4AB4;
-extern f32 lbl_803E4AB8;
-extern f32 lbl_803E4ABC;
-extern f32 lbl_803E4AC0;
-extern f64 lbl_803E4AC8;
-extern f32 lbl_803E4AD0;
 
 void dim2snowball_update(int* obj)
 {

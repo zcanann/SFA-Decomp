@@ -1,5 +1,10 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/map_block.h"
+#include "main/dll/MMP/MMP_asteroid.h"
+#include "main/obj_placement.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/dll/path_control_interface.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -15,6 +20,15 @@ extern void* Shader_getLayer(void* shader, int idx);
 
 extern f32 lbl_803E4000;
 extern f32 lbl_803E4008;
+
+extern f32 lbl_803E3FF8;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E4004;
+extern int mmAlloc(int size, int pool, int tag);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj);
+extern f32 timeDelta;
+extern f32 lbl_803E4018;
+extern f32 sqrtf(f32);
 
 f32 objFn_801948c0(u8* obj, u8 coord)
 {
@@ -259,10 +273,6 @@ void xyzanimator_free(int obj, int param_2)
     return;
 }
 
-extern f32 lbl_803E3FF8;
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E4004;
-
 void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -270,19 +280,6 @@ void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/map_block.h"
-#include "main/dll/MMP/MMP_asteroid.h"
-#include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/dll/path_control_interface.h"
-#include "main/game_object.h"
-
-extern int mmAlloc(int size, int pool, int tag);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj);
-extern f32 timeDelta;
-extern f32 lbl_803E4018;
 
 void xyzanimator_update(int obj)
 {
@@ -763,7 +760,5 @@ void xyzanimator_init(int obj)
         break;
     }
 }
-
-extern f32 sqrtf(f32);
 
 /* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */

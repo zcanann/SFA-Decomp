@@ -34,6 +34,16 @@ extern f32 FLOAT_803e4840;
 extern f32 FLOAT_803e4844;
 extern f32 FLOAT_803e4848;
 
+extern f32 timeDelta;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern f32 lbl_803E3B68;
+extern void Obj_SetActiveModelIndex(int* obj, int idx);
+extern f32 lbl_803E3B50;
+extern f32 lbl_803E3B54;
+extern f32 lbl_803E3B58;
+extern f32 lbl_803E3B5C;
+extern int textureLoadAsset(int id);
+
 undefined4
 FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
@@ -342,23 +352,12 @@ typedef struct FallLaddersState
     s16 delay;
 } FallLaddersState;
 
-extern f32 timeDelta;
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-
 void Fall_Ladders_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-extern f32 lbl_803E3B68;
-
 void coldwatercontrol_init(int obj);
-
-extern void Obj_SetActiveModelIndex(int* obj, int idx);
-extern f32 lbl_803E3B50;
-extern f32 lbl_803E3B54;
-extern f32 lbl_803E3B58;
-extern f32 lbl_803E3B5C;
 
 #pragma scheduling off
 #pragma peephole off
@@ -438,5 +437,3 @@ void Fall_Ladders_init(int* obj, s8* def)
         ((FallLaddersState*)state)->playStartSound = 1;
     }
 }
-
-extern int textureLoadAsset(int id);

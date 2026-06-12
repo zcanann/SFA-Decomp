@@ -2,6 +2,23 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/baddie/dll_022F_dfpfloorbar.h"
+#include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
+#include "main/mapEvent.h"
+#include "main/objlib.h"
+#include "main/dll/baddie/chuka.h"
+
+extern f32 lbl_803E6408;
+extern void objRenderFn_8003b8f4(f32);
+extern u32 GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId, int value);
+extern u8* Obj_GetPlayerObject(void);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern f32 timeDelta;
+extern f32 lbl_803E640C;
+extern f32 lbl_803E6410;
+extern f32 lbl_803E6414;
+extern f32 lbl_803E642C;
 
 void dfpfloorbar_free(int* obj)
 {
@@ -23,9 +40,6 @@ int dfpfloorbar_getExtraSize(void)
 {
     return 0xc;
 }
-
-extern f32 lbl_803E6408;
-extern void objRenderFn_8003b8f4(f32);
 
 /* EN v1.0 0x802064D0  size: 48b   if (p6) objRenderFn_8003b8f4(lbl_803E6408).
  * Logic-only (~91%): retail uses extsb+cmpwi, MWCC -O4,p folds to extsb.
@@ -53,35 +67,17 @@ void dfpfloorbar_hitDetect(int* obj)
     b[2] = NULL;
 }
 
-#include "main/audio/sfx_ids.h"
-#include "main/obj_placement.h"
-#include "main/game_object.h"
-#include "main/mapEvent.h"
-#include "main/objlib.h"
-#include "main/dll/baddie/chuka.h"
-#include "main/dll/baddie/dll_022F_dfpfloorbar.h"
-
 typedef struct DfpfloorbarPlacement
 {
     u8 pad0[0xC - 0x0];
     f32 unkC;
 } DfpfloorbarPlacement;
 
-extern u32 GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
-extern u8* Obj_GetPlayerObject(void);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
-
 u8 gDfpfloorbarModeTable[DFPFLOORBAR_MODE_TABLE_STORAGE] = {
     0, 0, 0, 0,
     0, 0, 0, 0,
     0, 0, 0, 0,
 };
-extern f32 timeDelta;
-extern f32 lbl_803E640C;
-extern f32 lbl_803E6410;
-extern f32 lbl_803E6414;
-extern f32 lbl_803E642C;
 
 void dfpfloorbar_update(int obj)
 {

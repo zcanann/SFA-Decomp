@@ -5,6 +5,8 @@
 #include "main/dll/baddie_state.h"
 #include "main/resource.h"
 #include "main/screen_transition.h"
+#include "main/dll/path_control_interface.h"
+#include "main/objanim.h"
 
 extern EffectInterface** gPartfxInterface;
 extern undefined4 DAT_803de0af;
@@ -14,6 +16,53 @@ extern f32 sqrtf(f32 x);
 
 #pragma scheduling on
 #pragma peephole on
+extern u32 lbl_803DD43C;
+extern u32 lbl_803DD438;
+extern f32 screenTransitionAlpha;
+extern f32 lbl_803E0570;
+extern u32 lbl_8039CA98[];
+extern void Sfx_PlayFromObject(int* obj, int sfxId);
+extern f32 lbl_803E0588;
+extern void player_followCurve(int* obj, int* state, f32 a, f32 b, f32 t, int p5);
+extern f32 lbl_803E05B4;
+extern f32 lbl_803E05B8;
+extern f32 lbl_803E0574;
+extern f32 lbl_803E0578;
+extern f32 lbl_803E057C;
+extern f32 lbl_803E0580;
+extern f32 lbl_803E0584;
+extern u8 lbl_803DD434;
+extern f32 lbl_803E05A4;
+extern f32 lbl_803E05A8;
+extern f32 lbl_803E05AC;
+extern f32 lbl_803E05B0;
+extern f32 timeDelta;
+extern f32 lbl_803E058C;
+extern void setMatrixFromObjectPos(f32* mtx, void* desc);
+extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern void objMove(int* obj, f32 vx, f32 vy, f32 vz);
+extern f32 lbl_803E0590;
+extern f32 lbl_803E0594;
+extern s16 lbl_803DD44C;
+extern f32 lbl_803E05A0;
+extern u8 lbl_803DD440;
+extern u32 playerOverride;
+extern void* memset(void* dst, int val, u32 n);
+extern f32 lbl_803E05BC;
+extern u8 lbl_803DD44E;
+extern u8 lbl_803DD44F;
+extern u8 lbl_803DD450;
+extern f64 lbl_803E0598;
+extern f32 lbl_803E05C0;
+extern f32 lbl_803E05C4;
+extern f32 lbl_803DD444;
+extern f32 lbl_803DD448;
+extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
+extern void setMatrixFromObjectPos(f32* matrix, void* objpos);
+extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+extern f32 lbl_803E0610;
+
 void FUN_800d7780(undefined param_1)
 {
     DAT_803de0af = param_1;
@@ -28,18 +77,11 @@ void dll_0F_func19_nop(void)
 
 int Dummy04_func24_ret_0(void);
 
-extern u32 lbl_803DD43C;
-extern u32 lbl_803DD438;
-
 void player_setAnimIds(int unused1, int unused2, u32 a, u32 b)
 {
     lbl_803DD43C = a;
     lbl_803DD438 = b;
 }
-
-extern f32 screenTransitionAlpha;
-
-extern f32 lbl_803E0570;
 
 void player_clearXZvel(int* obj, int* state)
 {
@@ -50,13 +92,6 @@ void player_clearXZvel(int* obj, int* state)
     ((BaddieState*)state)->animSpeedA = z;
     ((BaddieState*)state)->animSpeedB = z;
 }
-
-extern u32 lbl_8039CA98[];
-extern void Sfx_PlayFromObject(int* obj, int sfxId);
-extern f32 lbl_803E0588;
-extern void player_followCurve(int* obj, int* state, f32 a, f32 b, f32 t, int p5);
-extern f32 lbl_803E05B4;
-extern f32 lbl_803E05B8;
 
 #pragma scheduling off
 #pragma peephole off
@@ -171,12 +206,6 @@ void player_updateCurve(int* obj, int* state, f32 t)
     }
 }
 
-extern f32 lbl_803E0574;
-extern f32 lbl_803E0578;
-extern f32 lbl_803E057C;
-extern f32 lbl_803E0580;
-extern f32 lbl_803E0584;
-
 #pragma opt_common_subs off
 void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5)
 {
@@ -221,12 +250,6 @@ void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5)
     }
 }
 #pragma opt_common_subs reset
-
-extern u8 lbl_803DD434;
-extern f32 lbl_803E05A4;
-extern f32 lbl_803E05A8;
-extern f32 lbl_803E05AC;
-extern f32 lbl_803E05B0;
 
 #pragma opt_common_subs off
 void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
@@ -320,7 +343,6 @@ void player_doProjGfx(int* p1, int p2, int p3, int count, int p5, int mode)
 #pragma opt_common_subs off
 void Checkpoint_remove(int* obj);
 #pragma opt_common_subs reset
-extern f32 timeDelta;
 #pragma opt_common_subs off
 #pragma peephole off
 void player_rotateTowardEnemy(int* obj, int* ctx, int spd)
@@ -357,10 +379,6 @@ void player_rotateTowardEnemy(int* obj, int* ctx, int spd)
     }
 }
 #pragma opt_common_subs reset
-extern f32 lbl_803E058C;
-extern void setMatrixFromObjectPos(f32* mtx, void* desc);
-extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern void objMove(int* obj, f32 vx, f32 vy, f32 vz);
 
 struct PartDesc
 {
@@ -416,9 +434,6 @@ void player_applyVelocityStep(int* p, int* ctx, f32 t)
             ((GameObject*)p)->anim.velocityZ * t);
 }
 
-extern f32 lbl_803E0590;
-extern f32 lbl_803E0594;
-extern s16 lbl_803DD44C;
 void fn_800D8414(int* obj, int* ctx)
 {
     int diff;
@@ -514,7 +529,6 @@ void player_getExtraSize(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 s
     }
 }
 #pragma opt_common_subs reset
-extern f32 lbl_803E05A0;
 #pragma opt_common_subs off
 void player_animFn16(int* obj, int* ctx, int moveA, int moveB)
 {
@@ -575,18 +589,10 @@ void player_animFn16(int* obj, int* ctx, int moveA, int moveB)
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/dll/baddie_state.h"
-#include "main/dll/path_control_interface.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/game_object.h"
-#include "main/objanim.h"
-
 /* RomCurveWalker now lives in main/dll/curve_walker.h (lifted per the
  * deref-cleanup wave; curves.h re-exports it). */
 
 static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
-
-extern u8 lbl_803DD440;
 
 typedef struct PlayerMoveBuf
 {
@@ -686,11 +692,8 @@ void player_initialise(void)
 {
 }
 
-extern u32 playerOverride;
 void player_setOverride(u32 x) { playerOverride = x; }
 
-extern void* memset(void* dst, int val, u32 n);
-extern f32 lbl_803E05BC;
 #pragma scheduling off
 #pragma peephole off
 void player_init(int unused, void* obj, int a, int b)
@@ -707,19 +710,6 @@ void player_init(int unused, void* obj, int a, int b)
 }
 
 int fn_800D9F38(void* a, void* b);
-
-extern u8 lbl_803DD44E;
-extern u8 lbl_803DD44F;
-extern u8 lbl_803DD450;
-extern f64 lbl_803E0598;
-extern f32 lbl_803E05C0;
-extern f32 lbl_803E05C4;
-extern f32 lbl_803DD444;
-extern f32 lbl_803DD448;
-extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
-extern void setMatrixFromObjectPos(f32* matrix, void* objpos);
-extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 
 void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
 {
@@ -1043,8 +1033,6 @@ void player_updateVel(char* p, char* obj, int unused)
         playerRunStateMachine(p, obj, timeDelta, unused);
     }
 }
-
-extern f32 lbl_803E0610;
 
 void RomCurve_setA4(void* a, void* b);
 

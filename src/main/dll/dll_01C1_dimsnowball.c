@@ -82,6 +82,8 @@ extern f32 lbl_803E484C;
 extern f32 lbl_803E4850;
 extern f32 lbl_803E4854;
 
+extern f32 lbl_803E4848;
+
 int dimsnowball_getExtraSize(void)
 {
     return 0x10;
@@ -95,8 +97,6 @@ int dimsnowball_getObjectTypeId(void)
 void dimsnowball_free(void)
 {
 }
-
-extern f32 lbl_803E4848;
 
 void dimsnowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

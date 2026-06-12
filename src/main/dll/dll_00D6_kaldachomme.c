@@ -2,6 +2,9 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/wallanimator.h"
+#include "ghidra_import.h"
+#include "main/dll/xyzanimator.h"
+#include "main/objhits_types.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800175cc();
@@ -260,13 +263,6 @@ void kaldachompspit_render(void* obj, int p2, int p3, int p4, int p5, s8 visible
 void kaldachompspit_update(int obj);
 
 /* segment pragma-stack balance (re-split): */
-
-#include "ghidra_import.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/xyzanimator.h"
-#include "main/effect_interfaces.h"
-#include "main/objhits_types.h"
-#include "main/game_object.h"
 
 void kaldachompspit_init(int obj);
 

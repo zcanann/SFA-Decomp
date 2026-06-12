@@ -37,6 +37,81 @@ extern int getLoadedFileFlags(int flags);
 extern void textureFree();
 extern void* textureLoadAsset(int idx);
 
+extern u32 lbl_803E1E14;
+extern int ObjModel_GetRenderOp(int model, int p);
+extern void resetLotsOfRenderVars(void);
+extern void* textureIdxToPtr(int idx);
+extern void gxFn_80051fb8(void* a, int b, int c, void* d, int e, int f);
+extern void textureFn_800528bc(void);
+extern void GXSetBlendMode(int a, int b, int c, int d);
+extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
+extern void* Obj_GetPlayerObject(void);
+extern void GXSetScissor(int a, int b, int c, int d);
+extern void hudDrawTimedElement(int obj, void* p);
+extern void drawViewFinderHud(void);
+extern int getHudHiddenFrameCount(void);
+extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
+extern u8 pauseMenuState;
+extern int hudTextures[];
+extern u8 lbl_803A9398[];
+extern s16 gTrickyHudIconTextureIds[];
+extern s16 gTrickyHudCachedIconIndex;
+extern void* gTrickyHudCachedIconTexture;
+extern f32 lbl_803E2018;
+extern f32 lbl_803E2038;
+extern f32 lbl_803E203C;
+extern u32 lbl_803E1E10;
+extern void* lbl_803A93C4[7];
+extern int lbl_803A93A8[7];
+extern f32 lbl_803E2010;
+extern void gxColorFn_80052764(void* p);
+extern int Camera_GetCurrentViewSlot(void);
+extern void Camera_SetCurrentViewIndex(int idx);
+extern void Camera_SetCurrentViewRotation(int a, int b, int c);
+extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
+extern void Camera_UpdateViewMatrices(void);
+extern void Camera_ApplyFullViewport(void);
+extern int Camera_IsViewYOffsetEnabled(void);
+extern void Camera_DisableViewYOffset(void);
+extern void Camera_EnableViewYOffset(void);
+extern void Camera_RebuildProjectionMatrix(void);
+extern f32 Camera_GetFovY(void);
+extern void Camera_SetFovY(f32 fov);
+extern int Obj_GetActiveModel(int obj);
+extern void objRender(int p1, int p2, int p3, int p4, int obj, int p6);
+extern void GXSetViewport(f32 x, f32 y, f32 w, f32 h, f32 nearz, f32 farz);
+extern f32 mathCosf(f32 x);
+extern s8 cMenuState;
+extern u8 framesThisStep;
+extern s16 lbl_803DD796;
+extern s16 cMenuFadeCounter;
+extern s16 lbl_803DD79A;
+extern s16 lbl_803DD79C;
+extern s16 lbl_803DD79E;
+extern u16 lbl_803DBA30;
+extern int gRenderModeObj;
+extern int lbl_803DD7E0;
+extern u8 lbl_803DD8B6;
+extern u8 lbl_803DD8B7;
+extern u8 lbl_803DD8D4;
+extern f32 lbl_803DBAA4;
+extern f32 lbl_803DBAC4;
+extern f32 lbl_803DBAC8;
+extern int lbl_803A93E0[3];
+extern int lbl_803A93EC[3];
+extern f32 lbl_803E1E3C;
+extern f32 lbl_803E1E40;
+extern f32 lbl_803E1E68;
+extern f32 lbl_803E1E94;
+extern f32 lbl_803E1EC4;
+extern f32 lbl_803E1EC8;
+extern f32 lbl_803E1F34;
+extern f32 lbl_803E201C;
+extern f32 lbl_803E2020;
+extern f32 lbl_803E2024;
+extern f64 lbl_803E2028;
+extern f64 lbl_803E2030;
+
 int cMenuSetItems(s16* itemsIn, char useTricky)
 {
     int count;
@@ -375,16 +450,8 @@ undefined4 fn_80124B38(int shader, int* block, int idx)
     return 1;
 }
 
-extern u32 lbl_803E1E14;
-extern int ObjModel_GetRenderOp(int model, int p);
-extern void resetLotsOfRenderVars(void);
-extern void* textureIdxToPtr(int idx);
-extern void gxFn_80051fb8(void* a, int b, int c, void* d, int e, int f);
-extern void textureFn_800528bc(void);
-extern void GXSetBlendMode(int a, int b, int c, int d);
 extern void gxSetZMode_(int a, int b, int c);
 extern void gxSetPeControl_ZCompLoc_(int a);
-extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
 
 #pragma scheduling off
 #pragma peephole off
@@ -405,22 +472,7 @@ int modelFn_80124794(int obj, int param2, int param3)
     return 1;
 }
 
-extern void* Obj_GetPlayerObject(void);
-extern void GXSetScissor(int a, int b, int c, int d);
-extern void hudDrawTimedElement(int obj, void* p);
-extern void drawViewFinderHud(void);
-extern int getHudHiddenFrameCount(void);
 extern void textureFree(void);
-extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
-extern u8 pauseMenuState;
-extern int hudTextures[];
-extern u8 lbl_803A9398[];
-extern s16 gTrickyHudIconTextureIds[];
-extern s16 gTrickyHudCachedIconIndex;
-extern void* gTrickyHudCachedIconTexture;
-extern f32 lbl_803E2018;
-extern f32 lbl_803E2038;
-extern f32 lbl_803E203C;
 
 void drawTrickyHudOverlay(int obj)
 {
@@ -477,12 +529,6 @@ void drawTrickyHudOverlay(int obj)
     }
 }
 
-extern u32 lbl_803E1E10;
-extern void* lbl_803A93C4[7];
-extern int lbl_803A93A8[7];
-extern f32 lbl_803E2010;
-extern void gxColorFn_80052764(void* p);
-
 #pragma peephole on
 int cMenuRenderFn_80124854(int obj, int param2, int param3)
 {
@@ -517,53 +563,6 @@ int cMenuRenderFn_80124854(int obj, int param2, int param3)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
     return 1;
 }
-
-extern int Camera_GetCurrentViewSlot(void);
-extern void Camera_SetCurrentViewIndex(int idx);
-extern void Camera_SetCurrentViewRotation(int a, int b, int c);
-extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
-extern void Camera_UpdateViewMatrices(void);
-extern void Camera_ApplyFullViewport(void);
-extern int Camera_IsViewYOffsetEnabled(void);
-extern void Camera_DisableViewYOffset(void);
-extern void Camera_EnableViewYOffset(void);
-extern void Camera_RebuildProjectionMatrix(void);
-extern f32 Camera_GetFovY(void);
-extern void Camera_SetFovY(f32 fov);
-extern int Obj_GetActiveModel(int obj);
-extern void objRender(int p1, int p2, int p3, int p4, int obj, int p6);
-extern void GXSetViewport(f32 x, f32 y, f32 w, f32 h, f32 nearz, f32 farz);
-extern f32 mathCosf(f32 x);
-extern s8 cMenuState;
-extern u8 framesThisStep;
-extern s16 lbl_803DD796;
-extern s16 cMenuFadeCounter;
-extern s16 lbl_803DD79A;
-extern s16 lbl_803DD79C;
-extern s16 lbl_803DD79E;
-extern u16 lbl_803DBA30;
-extern int gRenderModeObj;
-extern int lbl_803DD7E0;
-extern u8 lbl_803DD8B6;
-extern u8 lbl_803DD8B7;
-extern u8 lbl_803DD8D4;
-extern f32 lbl_803DBAA4;
-extern f32 lbl_803DBAC4;
-extern f32 lbl_803DBAC8;
-extern int lbl_803A93E0[3];
-extern int lbl_803A93EC[3];
-extern f32 lbl_803E1E3C;
-extern f32 lbl_803E1E40;
-extern f32 lbl_803E1E68;
-extern f32 lbl_803E1E94;
-extern f32 lbl_803E1EC4;
-extern f32 lbl_803E1EC8;
-extern f32 lbl_803E1F34;
-extern f32 lbl_803E201C;
-extern f32 lbl_803E2020;
-extern f32 lbl_803E2024;
-extern f64 lbl_803E2028;
-extern f64 lbl_803E2030;
 
 #pragma peephole off
 void hudDrawCMenu(int p1, int p2, int p3)

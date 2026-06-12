@@ -4,6 +4,10 @@
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/SH/SHthorntail_internal.h"
+#include "main/audio/sfx_ids.h"
+#include "main/dll/NW/ediblemushroom_state.h"
+#include "main/dll/ediblemushroom.h"
+#include "main/effect_interfaces.h"
 
 extern undefined8 ObjGroup_RemoveObject();
 extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, int p6, int p7);
@@ -83,6 +87,30 @@ STATIC_ASSERT(offsetof(EdibleMushroomState, unk140) == 0x140);
 STATIC_ASSERT(sizeof(EdibleMushroomState) == 0x144);
 
 s16 fn_801D129C(u8* obj, u8* player, u8* state, f32 dist);
+
+extern u8* getTrickyObject(void);
+extern int objIsFrozen(u8 * self);
+extern void gameBitIncrement(s16 bit);
+extern int ObjMsg_Pop(u8* obj, int* outMsg, int a, int b);
+extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
+extern void Obj_StartModelFadeIn(u8* obj, int frames);
+extern void Obj_SetModelColorFadeRecursive(u8* obj, int a, int b, int c, int d, int e);
+extern int ObjHits_GetPriorityHit(u8* obj, int* outOther, int a, int b);
+extern f32 sqrtf(f32 x);
+extern undefined4 FUN_80006824();
+extern int ObjHits_GetPriorityHit();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
+extern undefined4 ObjMsg_AllocQueue();
+extern u32 GameBit_Get(int bit);
+extern f32 Vec_distance(int a, int b);
+extern f32 lbl_803E52E0;
+extern f32 lbl_803E52E4;
+extern f32 lbl_803E52E8;
+extern f32 lbl_803E52EC;
+extern f32 lbl_803E52F0;
+extern f32 lbl_803E52F4;
+extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
 
 void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
 {
@@ -585,9 +613,6 @@ void ediblemushroom_hitDetect(u8* obj)
     }
 }
 
-#include "main/audio/sfx_ids.h"
-#include "main/game_object.h"
-
 typedef struct EdiblemushroomPlacement
 {
     u8 pad0[0x8 - 0x0];
@@ -596,18 +621,6 @@ typedef struct EdiblemushroomPlacement
     f32 unk10;
     u8 pad14[0x18 - 0x14];
 } EdiblemushroomPlacement;
-
-#include "main/dll/NW/ediblemushroom_state.h"
-
-extern u8* getTrickyObject(void);
-extern int objIsFrozen(u8 * self);
-extern void gameBitIncrement(s16 bit);
-extern int ObjMsg_Pop(u8* obj, int* outMsg, int a, int b);
-extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
-extern void Obj_StartModelFadeIn(u8* obj, int frames);
-extern void Obj_SetModelColorFadeRecursive(u8* obj, int a, int b, int c, int d, int e);
-extern int ObjHits_GetPriorityHit(u8* obj, int* outOther, int a, int b);
-extern f32 sqrtf(f32 x);
 
 void ediblemushroom_update(u8* self)
 {
@@ -714,30 +727,6 @@ end:
     ;
 }
 
-#include "main/dll/ediblemushroom.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-#include "main/dll/rom_curve_interface.h"
-
-#include "main/dll/NW/ediblemushroom_state.h"
-
-extern undefined4 FUN_80006824();
-extern int ObjHits_GetPriorityHit();
-extern undefined4 ObjGroup_AddObject();
-extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_AllocQueue();
-
-extern u32 GameBit_Get(int bit);
-extern f32 Vec_distance(int a, int b);
-
-extern f32 lbl_803E52E0;
-extern f32 lbl_803E52E4;
-extern f32 lbl_803E52E8;
-extern f32 lbl_803E52EC;
-extern f32 lbl_803E52F0;
-extern f32 lbl_803E52F4;
-
 void ediblemushroom_init(int obj, int aux)
 {
     extern undefined4 ObjHits_DisableObject(); /* #57 */
@@ -833,5 +822,3 @@ void ediblemushroom_init(int obj, int aux)
         *(short*)(state + 0x134) = 0xc1;
     }
 }
-
-extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);

@@ -11,6 +11,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/baddie/skeetla.h"
 #include "main/objfx.h"
+#include "ghidra_import.h"
 
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
@@ -37,6 +38,84 @@ extern int ObjHits_PollPriorityHitWithCooldown(u8* obj, f32* cooldown, void** ou
 extern int trickyDebugPrint(const char* fmt, ...);
 
 #pragma peephole off
+extern f32 lbl_803E244C;
+extern f32 lbl_803E2448;
+extern f32 lbl_803E23F8;
+extern f32 lbl_803E2450;
+extern f32 getXZDistance(f32 * a, f32 * b);
+extern void RomCurve_stepClamped(int state, f32 dt);
+extern f32 lbl_803E23E8;
+extern f32 lbl_803E2418;
+extern f32 lbl_803E2420;
+extern f32 lbl_803E243C;
+extern f32 lbl_803E2440;
+extern f32 lbl_803E2454;
+extern f32 lbl_803E2458;
+extern f32 lbl_803E2468;
+extern f32 lbl_803E246C;
+extern f32 lbl_803E2470;
+extern f32 lbl_803E2474;
+extern f32 lbl_803E247C;
+extern f32 lbl_803E2478;
+extern f32 lbl_803E2480;
+extern f32 lbl_803E2484;
+extern f32 oneOverTimeDelta;
+extern char lbl_803DBC4C;
+extern char lbl_8031D2E8[];
+extern u32 lbl_803E23D4;
+extern u16 lbl_803E23D8;
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern f32 sqrtf(f32 x);
+extern s16 getAngle(f32 x, f32 z);
+extern int Sfx_IsPlayingFromObjectChannel(u8* obj, int channel);
+extern void objAudioFn_800393f8(u8* obj, void* audio, int sfxId, int volume, int param5, int param6);
+extern int objAnimFn_8013a3f0(f32 speed, int obj, int newState, u32 flags);
+extern void trickyApplyObjectAvoidanceToStep(f32 * start, f32 * end, f32 * guardPoint);
+extern u32 GameBit_Get(int bit);
+extern u32 randomGetRange(int min, int max);
+extern void* fn_8004B118(void* search);
+extern void fn_8004B148(void* search);
+extern int fn_8004B218(void* search, int timeout);
+extern void fn_8004B31C(void* search, u32 route, int objId, int pathId, int routeFlags);
+extern EffectInterface** gPartfxInterface;
+extern void** ObjList_GetObjects(int* startIndex, int* objectCount);
+extern undefined4 FUN_80006824();
+extern uint FUN_80017690();
+extern double FUN_80017708();
+extern double FUN_80017714();
+extern int FUN_80017a98();
+extern undefined4 FUN_800469d0();
+extern undefined4 FUN_80046a00();
+extern int fn_8004B394();
+extern undefined4 FUN_80046cd0();
+extern int FUN_8005b024();
+extern int FUN_8005b398();
+extern undefined4 FUN_800632e8();
+extern undefined4 FUN_800810e8();
+extern undefined4 FUN_80081120();
+extern undefined8 FUN_80286834();
+extern undefined8 FUN_80286840();
+extern undefined4 FUN_80286880();
+extern undefined4 FUN_8028688c();
+extern double FUN_80293900();
+extern undefined4* DAT_803dd71c;
+extern f32 FLOAT_803dc074;
+extern f32 FLOAT_803e306c;
+extern f32 FLOAT_803e3070;
+extern f32 FLOAT_803e3078;
+extern f32 FLOAT_803e307c;
+extern f32 FLOAT_803e30a0;
+extern f32 FLOAT_803e30a4;
+extern f32 FLOAT_803e30b4;
+extern f32 FLOAT_803e30b8;
+extern f32 FLOAT_803e30bc;
+extern f32 FLOAT_803e30c0;
+extern f32 FLOAT_803e30c8;
+extern f32 FLOAT_803e30e0;
+extern f32 FLOAT_803e310c;
+extern f32 FLOAT_803e3110;
+
 void trickyUpdateCollisionAndPathState(u8* obj)
 {
     TrickyState* state;
@@ -222,13 +301,6 @@ void trickyUpdateCollisionAndPathState(u8* obj)
     ((GameObject*)obj)->anim.rotZ = state->pathRotZ;
 }
 
-extern f32 lbl_803E244C;
-extern f32 lbl_803E2448;
-extern f32 lbl_803E23F8;
-extern f32 lbl_803E2450;
-extern f32 getXZDistance(f32 * a, f32 * b);
-extern void RomCurve_stepClamped(int state, f32 dt);
-
 #pragma peephole on
 int trickyAdvanceRouteTargetAhead(f32 param_1, int param_2, int param_3)
 {
@@ -330,37 +402,6 @@ int trickyTurnTowardYaw(u8* obj, s16 targetYaw)
 
     return delta;
 }
-
-extern f32 lbl_803E23E8;
-extern f32 lbl_803E2418;
-extern f32 lbl_803E2420;
-extern f32 lbl_803E243C;
-extern f32 lbl_803E2440;
-extern f32 lbl_803E2454;
-extern f32 lbl_803E2458;
-extern f32 lbl_803E2468;
-extern f32 lbl_803E246C;
-extern f32 lbl_803E2470;
-extern f32 lbl_803E2474;
-extern f32 lbl_803E247C;
-extern f32 lbl_803E2478;
-extern f32 lbl_803E2480;
-extern f32 lbl_803E2484;
-extern f32 oneOverTimeDelta;
-extern char lbl_803DBC4C;
-extern char lbl_8031D2E8[];
-extern u32 lbl_803E23D4;
-extern u16 lbl_803E23D8;
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern f32 sqrtf(f32 x);
-extern s16 getAngle(f32 x, f32 z);
-extern int Sfx_IsPlayingFromObjectChannel(u8* obj, int channel);
-extern void objAudioFn_800393f8(u8* obj, void* audio, int sfxId, int volume, int param5, int param6);
-extern int objAnimFn_8013a3f0(f32 speed, int obj, int newState, u32 flags);
-extern void trickyApplyObjectAvoidanceToStep(f32 * start, f32 * end, f32 * guardPoint);
-extern u32 GameBit_Get(int bit);
-extern u32 randomGetRange(int min, int max);
 
 #pragma scheduling on
 #pragma peephole on
@@ -790,11 +831,6 @@ void* trickyFindNearestLinkedRouteEntry(u8* context, u8* routeDef, int linkSelec
     return NULL;
 }
 
-extern void* fn_8004B118(void* search);
-extern void fn_8004B148(void* search);
-extern int fn_8004B218(void* search, int timeout);
-extern void fn_8004B31C(void* search, u32 route, int objId, int pathId, int routeFlags);
-
 #pragma dont_inline on
 void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId)
 {
@@ -1105,8 +1141,6 @@ typedef struct SkeetlaParticleSpawnArgs
 #define SKEETLA_PARTICLE_SPAWN_FLAGS 0x200001
 #define SKEETLA_PARTICLE_RANDOM_RATE 4
 
-extern EffectInterface** gPartfxInterface;
-
 void skeetla_spawnLinkedSparks(u8* obj)
 {
     u8* state;
@@ -1249,7 +1283,6 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
 }
 
 extern void** ObjGroup_GetObjects(int group, int* countOut);
-extern void** ObjList_GetObjects(int* startIndex, int* objectCount);
 
 void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint)
 {
@@ -1294,48 +1327,10 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint)
 
 /* ===== LEGACY src kept for mining; remove after restructure ===== */
 #if 0
-#include "ghidra_import.h"
-#include "main/dll/baddie/skeetla.h"
 
-extern undefined4 FUN_80006824();
-extern uint FUN_80017690();
-extern double FUN_80017708();
-extern double FUN_80017714();
-extern int FUN_80017a98();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern int ObjHits_PollPriorityHitWithCooldown();
-extern undefined4 FUN_800469d0();
-extern undefined4 FUN_80046a00();
-extern int fn_8004B394();
-extern undefined4 FUN_80046cd0();
-extern int FUN_8005b024();
-extern int FUN_8005b398();
-extern undefined4 FUN_800632e8();
-extern undefined4 FUN_800810e8();
-extern undefined4 FUN_80081120();
-extern undefined8 FUN_80286834();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_8028688c();
-extern double FUN_80293900();
-
-extern undefined4* DAT_803dd71c;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e306c;
-extern f32 FLOAT_803e3070;
-extern f32 FLOAT_803e3078;
-extern f32 FLOAT_803e307c;
-extern f32 FLOAT_803e30a0;
-extern f32 FLOAT_803e30a4;
-extern f32 FLOAT_803e30b4;
-extern f32 FLOAT_803e30b8;
-extern f32 FLOAT_803e30bc;
-extern f32 FLOAT_803e30c0;
-extern f32 FLOAT_803e30c8;
-extern f32 FLOAT_803e30e0;
-extern f32 FLOAT_803e310c;
-extern f32 FLOAT_803e3110;
 
 void FUN_8013939c(uint param_1)
 {

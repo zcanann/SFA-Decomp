@@ -4,12 +4,6 @@
 #include "main/dll/gameplay.h"
 #include "main/mapEventTypes.h"
 
-static inline u8* Gameplay_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 FUN_800033a8();
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_80006768();
@@ -37,7 +31,6 @@ extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286880();
 extern undefined4 FUN_8028688c();
-
 extern undefined4 DAT_802c28f0;
 extern undefined4 DAT_802c28f4;
 extern undefined4 DAT_802c28f8;
@@ -114,9 +107,30 @@ extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
-
 extern void GameBit_Set(int eventId, int value);
 extern u32 GameBit_Get(int eventId);
+extern int maybeTryLoadSave(int a);
+extern void mm_free(u32);
+extern void* getLastSavedGameTexts(void);
+extern u32 lbl_803DD4A0;
+extern u32 lbl_803DD4A4;
+extern u32 lbl_803DD4A8;
+extern u32 lbl_803DD4AC;
+extern void* gameTextGet(int idx);
+extern void* mmAlloc(int size, int heap, int flags);
+extern char* sMapDirectoryNameTable[];
+extern u8 lbl_803A4218[];
+extern s16 lbl_803119E0[];
+extern int getCurGameText(void);
+extern void gameTextLoadDir(int dirId);
+extern void loadAssetFileById(void** out, int id);
+extern u8 lbl_80313A40[];
+
+static inline u8* Gameplay_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (u8*)objAnim->banks[objAnim->bankIndex];
+}
 
 void saveFileStruct_unlockCheat(uint cheatId)
 {
@@ -224,8 +238,6 @@ undefined4* FUN_800e87a8(void)
 {
     return &DAT_803a45b0;
 }
-
-extern int maybeTryLoadSave(int a);
 
 int saveFn_800e8508(void);
 
@@ -665,15 +677,11 @@ void screens_release(void)
 
 void Carryable_release(void);
 
-extern void mm_free(u32);
-
 enum
 {
     SAVEGAME_EMPTY_TASK_HINT = -1,
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
-
-extern void* getLastSavedGameTexts(void);
 
 u8 getNextTaskHintText(void)
 {
@@ -682,11 +690,6 @@ u8 getNextTaskHintText(void)
 }
 
 void SaveGame_gplayClearRestartPoint(void);
-
-extern u32 lbl_803DD4A0;
-extern u32 lbl_803DD4A4;
-extern u32 lbl_803DD4A8;
-extern u32 lbl_803DD4AC;
 
 void screens_initialise(void)
 {
@@ -698,19 +701,12 @@ void screens_initialise(void)
 
 void updateSavedHealth(void);
 
-extern void* gameTextGet(int idx);
-
 void* saveGameGetCurHint(void)
 {
     return gameTextGet((s32) * (u8*)((char*)getLastSavedGameTexts() + 0x5) + 0xf4);
 }
 
 u32 SaveGame_mapGetObjGroups(int idx);
-
-extern void* mmAlloc(int size, int heap, int flags);
-
-extern char* sMapDirectoryNameTable[];
-extern u8 lbl_803A4218[];
 
 void loadTaskTexts(void)
 {
@@ -740,8 +736,6 @@ void loadTaskTexts(void)
 
 void SaveGame_updateTransientMapBits(void);
 
-extern s16 lbl_803119E0[];
-
 u8 getCurTaskHintTextMap(void)
 {
     return (u8)(s32)
@@ -758,9 +752,6 @@ void hintTextFn_800ea174(u8* out)
     }
     out[lbl_803119E0[texts[5]]] = 1;
 }
-
-extern int getCurGameText(void);
-extern void gameTextLoadDir(int dirId);
 
 int hintTextMapFn_800ea264(void)
 {
@@ -878,8 +869,6 @@ void screens_remove2(void)
     }
 }
 
-extern void loadAssetFileById(void** out, int id);
-
 void screens_show(int id)
 {
     int* asset = NULL;
@@ -909,7 +898,5 @@ void screens_show(int id)
     }
     lbl_803DD4A8 = 1;
 }
-
-extern u8 lbl_80313A40[];
 
 void dll_60_func03(u8* sourceObj, int variant, u8* posSource, uint flags);

@@ -2,6 +2,7 @@
 #pragma peephole on
 #include "main/dll/baddie/dll_003B_menu.h"
 #include "main/dll/titlemenuitem_struct.h"
+#include "main/dll/baddie/dll_003C_TumbleweedBush.h"
 
 extern u32 randomGetRange(int min, int max);
 
@@ -58,6 +59,44 @@ typedef struct LinkMenuItemDB
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void OSReport(const char* fmt, ...);
+extern char lbl_8031C234[];
+extern int getCurLanguage(void);
+extern u8 lbl_802C8680[];
+extern void drawTexture(void* texture, u8 alpha, f32 x, f32 y, u16 scale);
+extern void gameTextFn_80016810(int textId, int arg1, int arg2);
+extern void* gameTextGetBox(int boxId);
+extern void gameTextSetColor(int red, int green, int blue, int alpha);
+extern void gameTextShow(int textId);
+extern void gameTextShowStr(void* text, int boxId, int arg2, int arg3);
+extern void MWTRACE(int boxId);
+extern void* saveFileSelect_saveSlots;
+extern s16 lbl_803DD8FA;
+extern s16 lbl_803DD8FC;
+extern s16 lbl_803DD8FE;
+extern s16 lbl_803DD900;
+extern s16 lbl_803DD902;
+extern s16 lbl_803DD904;
+extern uint GameBit_Get(int eventId);
+extern int getHudHiddenFrameCount(void);
+extern void padGetAnalogInput(int pad, s8* x, s8* y);
+extern void padClearAnalogInputY(int pad);
+extern void padClearAnalogInputX(int pad);
+extern u32 getButtonsJustPressed(int pad);
+extern void buttonDisable(int pad, int mask);
+extern void linkDrawFn_801302c0(void);
+extern void linkDrawFn_80130484(void);
+extern u8 framesThisStep;
+extern s8 lbl_803DD910;
+extern s8 lbl_803DD913;
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void fn_8001BDD4(int);
+extern void fn_8001BE2C(int mode);
+extern void* memcpy(void* dst, const void* src, int size);
+extern void padFn_80014b18(int value);
+extern const char* lbl_803DD908;
+extern char lbl_8031C1A8[];
+
 void titleScreenFn_80130464(u8 v) { linkFlag_803dd8f8 = v; }
 void setLinkNotRotated(void) { linkIsRotated = 0; }
 void setLinkIsRotated(void) { linkIsRotated = 1; }
@@ -97,8 +136,6 @@ u16 fn_80130124(void)
     return lbl_803A9458[linkSelected].itemId;
 }
 #pragma scheduling reset
-extern void OSReport(const char* fmt, ...);
-extern char lbl_8031C234[];
 #pragma scheduling off
 #pragma peephole off
 void linkInitTextures(LinkMenuItemDB* item)
@@ -140,8 +177,6 @@ void linkInitTextures(LinkMenuItemDB* item)
 }
 #pragma peephole reset
 #pragma scheduling reset
-extern int getCurLanguage(void);
-extern u8 lbl_802C8680[];
 #pragma scheduling off
 #pragma peephole off
 void linkDrawFn_801302c0(void);
@@ -256,22 +291,6 @@ typedef struct LinkMenuItemDA
     s8 timer;
     u8 pad39[3];
 } LinkMenuItemDA;
-
-extern void drawTexture(void* texture, u8 alpha, f32 x, f32 y, u16 scale);
-extern void gameTextFn_80016810(int textId, int arg1, int arg2);
-extern void* gameTextGetBox(int boxId);
-extern void gameTextSetColor(int red, int green, int blue, int alpha);
-extern void gameTextShow(int textId);
-extern void gameTextShowStr(void* text, int boxId, int arg2, int arg3);
-extern void MWTRACE(int boxId);
-
-extern void* saveFileSelect_saveSlots;
-extern s16 lbl_803DD8FA;
-extern s16 lbl_803DD8FC;
-extern s16 lbl_803DD8FE;
-extern s16 lbl_803DD900;
-extern s16 lbl_803DD902;
-extern s16 lbl_803DD904;
 
 #define LINK_FLAG_DRAW_SLOTS       0x0004
 #define LINK_FLAG_DRAW_BLACK_SHADOW 0x0100
@@ -443,8 +462,6 @@ void Link_render(void)
     MWTRACE(0xff);
 }
 
-#include "main/dll/baddie/dll_003C_TumbleweedBush.h"
-
 typedef struct LinkTextureSlot
 {
     void* texture;
@@ -486,19 +503,6 @@ typedef struct LinkMenuItem
 #define LINK_FLAG_DISABLE_NAV_TO 0x1000
 #define LINK_FLAG_NO_ACCEPT      0x0020
 #define LINK_IS_NAVIGABLE(index) ((lbl_803A9458[(index)].flags & LINK_FLAG_DISABLE_NAV_TO) == 0)
-
-extern uint GameBit_Get(int eventId);
-extern int getHudHiddenFrameCount(void);
-extern void padGetAnalogInput(int pad, s8* x, s8* y);
-extern void padClearAnalogInputY(int pad);
-extern void padClearAnalogInputX(int pad);
-extern u32 getButtonsJustPressed(int pad);
-extern void buttonDisable(int pad, int mask);
-extern void linkDrawFn_801302c0(void);
-extern void linkDrawFn_80130484(void);
-extern u8 framesThisStep;
-extern s8 lbl_803DD910;
-extern s8 lbl_803DD913;
 
 undefined4 Link_update(void)
 {
@@ -652,8 +656,6 @@ int TitleMenuItem_isChanged(TitleMenuItem* item);
 
 /* EN v1.0 0x80131590  size: 8b   Getter for item->value. */
 
-extern void gameTextSetColor(int r, int g, int b, int a);
-
 /* EN v1.0 0x80131598  size: 116b  Toggle enabled bit on item->flags. */
 
 /* EN v1.0 0x8013160C  size: 12b  Read enabled bit from item->flags. */
@@ -672,19 +674,11 @@ extern void gameTextSetColor(int r, int g, int b, int a);
 
 /* EN v1.0 0x80132020  size: 4b   Empty no-op. */
 
-extern void fn_8001BDD4(int);
-
 /* EN v1.0 0x80131540  size: 48b  Toggle A-button bit of item->flags. */
 
 /* EN v1.0 0x80131CF4  size: 32b  Wrapper for mm_free. */
 
 /* EN v1.0 0x80131FE0  size: 40b  Zero 6 u32s at lbl_803A9DB8. */
-
-extern void fn_8001BE2C(int mode);
-extern void* memcpy(void* dst, const void* src, int size);
-extern void padFn_80014b18(int value);
-extern const char* lbl_803DD908;
-extern char lbl_8031C1A8[];
 
 /* EN v1.0 0x80131D14  size: 168b  Create text-window title menu item. */
 

@@ -115,14 +115,31 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
+extern undefined4 FUN_800067c0();
+extern undefined4 ObjHits_RecordObjectHit();
+extern f32 lbl_803E4A78;
+extern void mm_free(void* p);
+extern u8 lbl_803DBF20;
+extern void* mmAlloc(int size, int a, int b);
+extern void ObjModel_SetBlendChannelTargets(int* model, int a, int b, int c, f32 w, int d);
+extern void ObjModel_SetBlendChannelWeight(int* model, int a, f32 w);
+extern s16 lbl_803DBF18;
+extern f32 lbl_803E4A88;
+extern f32 lbl_803E4A40;
+extern void mtxRotateByVec3s(f32 * mtx, s16 * ang);
+extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
+extern f32 lbl_803E4A7C;
+extern f32 lbl_803E4A80;
+extern f32 lbl_803E4A84;
+extern f32 lbl_803E4A8C;
+extern f32 lbl_803E4A90;
+extern int Curve_AdvanceAlongPath(int* extra, f32 t);
+
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
-
-extern undefined4 FUN_800067c0();
-extern undefined4 ObjHits_RecordObjectHit();
 
 #pragma scheduling on
 #pragma peephole on
@@ -199,8 +216,6 @@ int dll_1D6_getExtraSize(void) { return 0x20; }
 int dll_1D6_getObjectTypeId(void) { return 0x0; }
 int dim2snowball_getExtraSize(void);
 
-extern f32 lbl_803E4A78;
-
 void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objRenderFn_8003b8f4(f32);
@@ -209,9 +224,6 @@ void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern void mm_free(void* p);
-extern u8 lbl_803DBF20;
 
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if the signed result dropped to or below 0. */
@@ -229,12 +241,6 @@ void dll_1D6_free(int* obj)
 }
 
 void dim2pathgenerator_init(int* obj, int* def);
-
-extern void* mmAlloc(int size, int a, int b);
-extern void ObjModel_SetBlendChannelTargets(int* model, int a, int b, int c, f32 w, int d);
-extern void ObjModel_SetBlendChannelWeight(int* model, int a, f32 w);
-extern s16 lbl_803DBF18;
-extern f32 lbl_803E4A88;
 
 void dll_1D6_init(int* obj, u8* params)
 {
@@ -281,16 +287,6 @@ void dll_1D6_init(int* obj, u8* params)
                 ((&lbl_803DBF18)[extra->slot] + 1) * 40, 40);
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
-
-extern f32 lbl_803E4A40;
-
-extern void mtxRotateByVec3s(f32 * mtx, s16 * ang);
-extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern f32 lbl_803E4A7C;
-extern f32 lbl_803E4A80;
-extern f32 lbl_803E4A84;
-extern f32 lbl_803E4A8C;
-extern f32 lbl_803E4A90;
 
 void dll_1D6_update(int* obj)
 {
@@ -440,5 +436,3 @@ void dll_1D6_update(int* obj)
         extra->flags1D &= ~2;
     }
 }
-
-extern int Curve_AdvanceAlongPath(int* extra, f32 t);

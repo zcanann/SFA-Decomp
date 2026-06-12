@@ -62,6 +62,40 @@ extern f32 lbl_803E58B4;
 extern f32 lbl_803E58B8;
 extern f32 lbl_803E58BC;
 
+extern f32 lbl_803E4BD8;
+extern f32 lbl_803E4C24;
+extern u8 Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int type);
+extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
+extern void** gPlayerInterface;
+extern f32 lbl_803E4C00;
+extern int lbl_80325AA0[6];
+extern int* gBaddieControlInterface;
+extern int lbl_80325960[16];
+extern f32 lbl_803259A0[16];
+extern f32 lbl_803E4C04;
+extern u32 gDIMbossSequenceFlags;
+extern int lbl_803DBF30;
+extern f32 lbl_803E4BC4;
+extern f32 lbl_803E4BC8;
+extern f32 lbl_803E4BCC;
+extern f32 lbl_803E4BD0;
+extern f32 lbl_803E4BE8;
+extern f32 lbl_803E4BEC;
+extern f32 lbl_803E4BC0;
+extern f32 lbl_803E4BD4;
+extern f32 lbl_803E4C08;
+extern f32 lbl_803E4C0C;
+extern f32 lbl_803E4C10;
+extern f32 lbl_803E4C14;
+extern f32 lbl_803E4C18;
+extern f32 lbl_803E4C1C;
+extern f32 lbl_803E4C20;
+extern f32 lbl_803E4BBC;
+extern s16 lbl_80325AC8[30];
+extern s16 lbl_803DBF38[4];
+extern u8 gDIMbossAnimController[];
+
 void FUN_801ba224(short* param_1, int param_2)
 {
     int iVar1;
@@ -803,13 +837,6 @@ FUN_801bbea0(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 int fn_801BA590(int unused, int* p) { return *(s8*)((char*)p + 0x346) != 0; }
 
-extern f32 lbl_803E4BD8;
-extern f32 lbl_803E4C24;
-extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_AllocObjectSetup(int size, int type);
-extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
-extern void** gPlayerInterface;
-
 #pragma scheduling off
 #pragma peephole off
 int fn_801BB1EC(int* obj, u8* state, f32 weight)
@@ -965,9 +992,6 @@ int fn_801BA5A8(int obj, int param2)
     return 0;
 }
 
-extern f32 lbl_803E4C00;
-extern int lbl_80325AA0[6];
-
 int fn_801BA958(int obj, int param2)
 {
     if (*(s8*)&((BaddieState*)param2)->moveJustStartedA != 0)
@@ -1000,10 +1024,6 @@ int fn_801BA958(int obj, int param2)
     return 0;
 }
 
-extern int* gBaddieControlInterface;
-extern int lbl_80325960[16];
-extern f32 lbl_803259A0[16];
-
 int fn_801BB0D8(int obj, int param2, f32 fParam)
 {
     u16 local_c;
@@ -1022,8 +1042,6 @@ int fn_801BB0D8(int obj, int param2, f32 fParam)
     (*(int (**)(int, int, int, f32))(*(int*)gPlayerInterface + 0x20))(obj, param2, 8, fParam);
     return 0;
 }
-
-extern f32 lbl_803E4C04;
 
 int fn_801BAA84(int obj, int param2, f32 fParam)
 {
@@ -1046,15 +1064,6 @@ int fn_801BAA84(int obj, int param2, f32 fParam)
     (*(int (**)(int, int, int, f32))(*(int*)gPlayerInterface + 0x30))(obj, param2, 0xf0, fParam);
     return 0;
 }
-
-extern u32 gDIMbossSequenceFlags;
-extern int lbl_803DBF30;
-extern f32 lbl_803E4BC4;
-extern f32 lbl_803E4BC8;
-extern f32 lbl_803E4BCC;
-extern f32 lbl_803E4BD0;
-extern f32 lbl_803E4BE8;
-extern f32 lbl_803E4BEC;
 
 int fn_801BA780(int obj, int param2)
 {
@@ -1085,9 +1094,6 @@ int fn_801BA780(int obj, int param2)
     return 0;
 }
 
-extern f32 lbl_803E4BC0;
-extern f32 lbl_803E4BD4;
-
 int fn_801BA654(int obj, int param2)
 {
     f32 v;
@@ -1115,10 +1121,6 @@ int fn_801BA654(int obj, int param2)
     (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))(obj, param2, 0, 0, &lbl_803DBF30);
     return 0;
 }
-
-extern f32 lbl_803E4C08;
-extern f32 lbl_803E4C0C;
-extern f32 lbl_803E4C10;
 
 int fn_801BAB88(int obj, int param2, f32 arg)
 {
@@ -1150,10 +1152,6 @@ int fn_801BAB88(int obj, int param2, f32 arg)
     (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, param2, arg, 0xf0);
     return 0;
 }
-
-extern f32 lbl_803E4C14;
-extern f32 lbl_803E4C18;
-extern f32 lbl_803E4C1C;
 
 int fn_801BACB8(int obj, int param2, f32 arg)
 {
@@ -1189,8 +1187,6 @@ int fn_801BACB8(int obj, int param2, f32 arg)
     (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, param2, arg, 0xf0);
     return 0;
 }
-
-extern f32 lbl_803E4C20;
 
 int fn_801BAE00(int obj, int param2, f32 arg)
 {
@@ -1269,11 +1265,6 @@ int fn_801BAF58(int obj, int param2, f32 arg)
     (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, param2, arg, 0xf0);
     return 0;
 }
-
-extern f32 lbl_803E4BBC;
-extern s16 lbl_80325AC8[30];
-extern s16 lbl_803DBF38[4];
-extern u8 gDIMbossAnimController[];
 
 int fn_801BA224(int obj, int param2)
 {

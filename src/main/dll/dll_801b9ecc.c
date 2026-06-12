@@ -34,6 +34,14 @@ extern u32 randomGetRange(int min, int max);
 #include "main/dll/DIM/DIM2projrock.h"
 #include "main/objanim_internal.h"
 
+extern int* gBaddieControlInterface;
+extern int* gPlayerInterface;
+extern u8 lbl_803DDB84;
+extern u8 lbl_80325960[];
+extern u8 gDIMbossAnimController[];
+extern int fn_801BC2D8(int a, int obj);
+extern f32 lbl_803E4BB8;
+
 void FUN_801b9cc4(int param_1)
 {
     char* pcVar1;
@@ -59,13 +67,6 @@ void dll_1DA_release(void);
 
 /* fn_801B9ECC: DIM boss player-vs-baddie reaction dispatcher -- picks a player anim
  * from distance/anim-state via the interface vtables. */
-extern int* gBaddieControlInterface;
-extern int* gPlayerInterface;
-extern u8 lbl_803DDB84;
-extern u8 lbl_80325960[];
-extern u8 gDIMbossAnimController[];
-extern int fn_801BC2D8(int a, int obj);
-extern f32 lbl_803E4BB8;
 
 typedef void (*BaddieQueryFn)(int a, int objId, int n, u16* anim, u16* pad, u16* dist);
 typedef u8 (*BaddieCheckFn)(int a, int obj, f32 d);

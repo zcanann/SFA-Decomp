@@ -69,6 +69,11 @@ extern f32 lbl_803E4F6C;
 extern f32 lbl_803E4F70;
 extern f32 lbl_803E4F74;
 
+extern f32 lbl_803E422C;
+extern uint GameBit_Get(int eventId);
+extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
+extern int waterSpellStone1Fn_8019b4c8();
+
 void FUN_8019b1d8(undefined4 param_1, undefined4 param_2, ushort* param_3)
 {
     uint uVar1;
@@ -390,9 +395,6 @@ void babycloudrunner_init_OLD_v1_1(int obj)
     return;
 }
 
-extern f32 lbl_803E422C;
-extern uint GameBit_Get(int eventId);
-
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
 typedef struct BabyCloudRunnerState
@@ -541,8 +543,6 @@ void cfguardian_release(void);
  * (cfguardian_getExtraSize == 0xa9c). */
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
-
 /* Per-object extra state for the CloudRunner main crystal
  * (cfmaincrystal_getExtraSize == 0x160). */
 
@@ -599,8 +599,6 @@ int fn_801A04F4(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-extern int waterSpellStone1Fn_8019b4c8();
 
 #pragma peephole off
 void cfperch_init(int* obj)

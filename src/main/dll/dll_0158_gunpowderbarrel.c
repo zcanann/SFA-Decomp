@@ -76,6 +76,91 @@ extern f32 lbl_803E4F58;
 extern f32 lbl_803E4F5C;
 extern f32 lbl_803E4FA0;
 
+extern undefined4* gCarryableInterface;
+extern int Obj_IsObjectAlive();
+extern undefined4 ObjLink_DetachChild();
+extern f32 lbl_803E42DC;
+extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 e);
+extern int barrelgener_getLinkId();
+extern void saveGame_saveObjectPos();
+extern void Sfx_PlayFromObject();
+extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
+extern u8* getTrickyObject(void);
+extern void trickyImpress(u8 * tricky);
+extern void timer_clearManualFlags();
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+extern void objMove(int* obj, f32 x, f32 y, f32 z);
+extern int fn_80062D60(int* obj, f32 x, f32 top, f32 z, f32 bottom, f32* outY, int** outObj);
+extern void ObjHits_AddContactObject(int* contact, int* obj);
+extern void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer);
+extern void fn_801A0F58(int* obj, s16 a, s16 b);
+extern f32 timeDelta;
+extern f32 lbl_803E42C0;
+extern f32 lbl_803E42C4;
+extern f32 lbl_803E4308;
+extern f32 lbl_803E430C;
+extern f32 lbl_803E4310;
+extern f32 lbl_803E4314;
+extern f32 lbl_803E4318;
+extern f32 lbl_803E431C;
+extern f32 lbl_803E4320;
+extern f32 lbl_803DBE88;
+extern undefined4 ObjHits_ClearHitVolumes();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_RefreshObjectState();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
+extern undefined4 ObjLink_AttachChild();
+extern int fn_80080150(void* p1);
+extern int objHitDetectFn_80062e84(int p1, int p2, int p3);
+extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
+extern void Vec3_ReflectAgainstNormal(void* normal, void* velocity, void* out);
+extern f32 PSVECMag(f32 * v);
+extern f32 oneOverTimeDelta;
+extern f32 lbl_803DBE84;
+extern f32 lbl_803E4324;
+extern f32 lbl_803E4328;
+extern f32 lbl_803E432C;
+extern f32 lbl_803E4330;
+extern f32 lbl_803E4334;
+extern void ObjMsg_AllocQueue(int obj, int capacity);
+extern void storeZeroToFloatParam(void* p);
+extern int timerCountDown(void* p);
+extern void s16toFloat(void* p, int v);
+extern void memset(void* p, int c, int n);
+extern int playerIsDisguised(u8 * player);
+extern int timer_isEffectMode(int obj);
+extern void timer_forceStart(int obj);
+extern int timer_hasExpired(int obj);
+extern void barrelgener_queueObjectRelease(int gen, int obj, int code);
+extern void Obj_RemoveFromUpdateList(int obj);
+extern u32 playerGetStateFlag310(u8 * player);
+extern void setAButtonIcon(int kind);
+extern int fn_802966B4(u8 * player);
+extern int fn_8029669C(u8 * player);
+extern f32 fn_80296214(u8 * player);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern void fn_801A1230(int obj);
+extern void* Obj_GetPlayerObject(void);
+extern u8 framesThisStep;
+extern f32 lbl_803E4338;
+extern f32 lbl_803E433C;
+extern f32 lbl_803E4340;
+extern f32 lbl_803DBE80;
+extern void gunpowderbarrel_launchAtTarget(int obj, u8 flag);
+extern void vecRotateZXY(s16 * rotIn, f32 * outVec);
+extern f32 lbl_803E42C8;
+extern f32 lbl_803E42CC;
+extern f32 lbl_803E42D0;
+extern f32 lbl_803E42D4;
+extern f32 lbl_803E42D8;
+extern f32 lbl_803E42E0;
+extern f32 lbl_803E42E4;
+extern const f32 lbl_803E42E8;
+extern f32 lbl_803E42EC;
+extern f32 lbl_803E42F0;
+
 void FUN_801a1230(int param_1, char param_2)
 {
     int iVar1;
@@ -240,10 +325,6 @@ int gunpowderbarrel_getExtraSize(void)
     return 0x58;
 }
 
-extern undefined4* gCarryableInterface;
-extern int Obj_IsObjectAlive();
-extern undefined4 ObjLink_DetachChild();
-
 void gunpowderbarrel_free(int obj, int param_2)
 {
     int extra;
@@ -267,8 +348,6 @@ void gunpowderbarrel_free(int obj, int param_2)
     }
 }
 
-extern f32 lbl_803E42DC;
-
 typedef struct
 {
     u8 playerHeld_ : 1;
@@ -276,8 +355,6 @@ typedef struct
     u8 held_ : 1;
     u8 rest_ : 5;
 } GpbHeld4A;
-
-extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 e);
 
 void gunpowderbarrel_render(int* obj, int param_2, int param_3, int param_4, int param_5,
                             s8 visFlag)
@@ -329,31 +406,6 @@ typedef struct
     u8 returnHome : 1; /* 0x40 */
     u8 unkRest : 6;
 } GpbFlags48;
-
-extern int barrelgener_getLinkId();
-extern void saveGame_saveObjectPos();
-extern void Sfx_PlayFromObject();
-extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
-extern u8* getTrickyObject(void);
-extern void trickyImpress(u8 * tricky);
-extern void timer_clearManualFlags();
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
-extern void objMove(int* obj, f32 x, f32 y, f32 z);
-extern int fn_80062D60(int* obj, f32 x, f32 top, f32 z, f32 bottom, f32* outY, int** outObj);
-extern void ObjHits_AddContactObject(int* contact, int* obj);
-extern void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer);
-extern void fn_801A0F58(int* obj, s16 a, s16 b);
-extern f32 timeDelta;
-extern f32 lbl_803E42C0;
-extern f32 lbl_803E42C4;
-extern f32 lbl_803E4308;
-extern f32 lbl_803E430C;
-extern f32 lbl_803E4310;
-extern f32 lbl_803E4314;
-extern f32 lbl_803E4318;
-extern f32 lbl_803E431C;
-extern f32 lbl_803E4320;
-extern f32 lbl_803DBE88;
 
 /* EN v1.0 0x801A1230  size: 708b  gunpowderbarrel_triggerExplosion: when hit
  * (or touched while resting on a damage source) blow the barrel up, optionally
@@ -614,25 +666,6 @@ typedef struct GunpowderbarrelPlacement
     u8 pad1E[0x20 - 0x1E];
 } GunpowderbarrelPlacement;
 
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_RefreshObjectState();
-extern undefined4 ObjGroup_AddObject();
-extern int ObjMsg_Pop();
-extern undefined4 ObjLink_AttachChild();
-extern int fn_80080150(void* p1);
-extern int objHitDetectFn_80062e84(int p1, int p2, int p3);
-extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
-extern void Vec3_ReflectAgainstNormal(void* normal, void* velocity, void* out);
-extern f32 PSVECMag(f32 * v);
-extern f32 oneOverTimeDelta;
-extern f32 lbl_803DBE84;
-extern f32 lbl_803E4324;
-extern f32 lbl_803E4328;
-extern f32 lbl_803E432C;
-extern f32 lbl_803E4330;
-extern f32 lbl_803E4334;
-
 void gunpowderbarrel_hitDetect(int param_1)
 {
     GameObject* barrel;
@@ -749,9 +782,6 @@ copy_end:
     return;
 }
 
-extern void ObjMsg_AllocQueue(int obj, int capacity);
-extern void storeZeroToFloatParam(void* p);
-
 typedef struct
 {
     u8 b7 : 1;
@@ -830,31 +860,6 @@ void gunpowderbarrel_init(int obj, u8* def)
         ((BarrelBits*)&state->heldFlags)->b1 = 1;
     }
 }
-
-extern int timerCountDown(void* p);
-extern void s16toFloat(void* p, int v);
-extern void memset(void* p, int c, int n);
-extern int playerIsDisguised(u8 * player);
-extern int timer_isEffectMode(int obj);
-extern void timer_forceStart(int obj);
-extern int timer_hasExpired(int obj);
-extern void barrelgener_queueObjectRelease(int gen, int obj, int code);
-extern void Obj_RemoveFromUpdateList(int obj);
-extern u32 playerGetStateFlag310(u8 * player);
-extern void setAButtonIcon(int kind);
-extern int fn_802966B4(u8 * player);
-extern int fn_8029669C(u8 * player);
-extern f32 fn_80296214(u8 * player);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern void fn_801A1230(int obj);
-extern void* Obj_GetPlayerObject(void);
-extern u8 framesThisStep;
-extern f32 lbl_803E4338;
-extern f32 lbl_803E433C;
-extern f32 lbl_803E4340;
-extern f32 lbl_803DBE80;
-extern void gunpowderbarrel_launchAtTarget(int obj, u8 flag);
 
 /* EN v1.0 0x801A1D48  size: 2208b  Gunpowder-barrel per-frame driver: runs
  * the fuse/respawn timers, manages the cannon attach link, drains the
@@ -1224,13 +1229,6 @@ int gunpowderbarrel_canBeGrabbed(int* obj)
     return result;
 }
 
-extern void vecRotateZXY(s16 * rotIn, f32 * outVec);
-extern f32 lbl_803E42C8;
-extern f32 lbl_803E42CC;
-extern f32 lbl_803E42D0;
-extern f32 lbl_803E42D4;
-extern f32 lbl_803E42D8;
-
 typedef struct GunpowderbarrelLaunchAtTargetPlacement
 {
     u8 pad0[0x1A - 0x0];
@@ -1320,12 +1318,6 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
         }
     }
 }
-
-extern f32 lbl_803E42E0;
-extern f32 lbl_803E42E4;
-extern const f32 lbl_803E42E8;
-extern f32 lbl_803E42EC;
-extern f32 lbl_803E42F0;
 
 /* EN v1.0 0x801A0F58  size: 728b  fn_801A0F58: home the object on the nearest
  * group-0x1e object above it, scaling velocity and the two heading words by

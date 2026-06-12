@@ -4,12 +4,40 @@
 #include "main/game_object.h"
 #include "main/dll/torch1cd_state.h"
 #include "main/effect_interfaces.h"
+#include "main/obj_placement.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/audio/sfx_ids.h"
+#include "main/dll/shrine1CE.h"
+#include "main/objseq.h"
+#include "main/resource.h"
 
 extern void getEnvfxAct(int obj, int target, int id, int p);
 extern void* return0_8005669C(int);
 
 extern int lbl_803DB610;
 extern void* lbl_803DDBE0;
+
+extern f32 lbl_803E5188;
+extern void objRenderFn_8003b8f4(f32);
+extern ModgfxInterface** gModgfxInterface;
+extern undefined4 ObjMsg_AllocQueue();
+extern int Obj_GetPlayerObject(void);
+extern int ObjGroup_FindNearestObject(int group, int obj, f32* outDist);
+extern int ObjMsg_Pop(int obj, int* msg, int* a, int* b);
+extern uint GameBit_Get(int eventId);
+extern f32 Vec_distance(f32 * a, f32 * b);
+extern void fn_80296B78(int obj, int a);
+extern void fn_80137948(char* fmt, ...);
+extern char sShrineTimeFormat[];
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern f32 lbl_803E518C;
+extern f32 lbl_803E5190;
+extern f32 lbl_803E5194;
+extern f32 lbl_803E5198;
+extern f32 lbl_803E519C;
+extern f32 lbl_803E51A0;
+extern f32 timeDelta;
+extern u8 framesThisStep;
 
 int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -111,31 +139,16 @@ void dll_19B_hitDetect(void)
 int dll_19B_getExtraSize(void) { return 0x18; }
 int dll_19B_getObjectTypeId(void) { return 0x0; }
 
-extern f32 lbl_803E5188;
-extern void objRenderFn_8003b8f4(f32);
-
 void dll_19B_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E5188);
 }
 
-extern ModgfxInterface** gModgfxInterface;
-
 void dll_19B_free(int* obj)
 {
     (*gModgfxInterface)->detachSource(obj);
 }
-
-#include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/shrine1CE.h"
-#include "main/dll/torch1CD.h"
-#include "main/objseq.h"
-#include "main/resource.h"
 
 typedef struct Dll19BState
 {
@@ -147,26 +160,6 @@ typedef struct Dll19BState
     u8 unk16;
     u8 pad17[0x18 - 0x17];
 } Dll19BState;
-
-extern undefined4 ObjMsg_AllocQueue();
-
-extern int Obj_GetPlayerObject(void);
-extern int ObjGroup_FindNearestObject(int group, int obj, f32* outDist);
-extern int ObjMsg_Pop(int obj, int* msg, int* a, int* b);
-extern uint GameBit_Get(int eventId);
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern void fn_80296B78(int obj, int a);
-extern void fn_80137948(char* fmt, ...);
-extern char sShrineTimeFormat[];
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f32 lbl_803E518C;
-extern f32 lbl_803E5190;
-extern f32 lbl_803E5194;
-extern f32 lbl_803E5198;
-extern f32 lbl_803E519C;
-extern f32 lbl_803E51A0;
-extern f32 timeDelta;
-extern u8 framesThisStep;
 
 void dll_19B_update(int obj)
 {

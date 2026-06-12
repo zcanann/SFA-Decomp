@@ -1,8 +1,21 @@
 /* DLL 0x011E (magiccavebottom) — Magic Cave bottom area objects [0x8018ADB4-0x8018AFC8). */
 #include "main/objseq.h"
+#include "main/dll/CF/CFtoggleswitch.h"
+#include "main/camera_interface.h"
+#include "main/dll/cannon.h"
+#include "main/game_object.h"
+#include "main/mapEventTypes.h"
 
 extern uint GameBit_Get(int eventId);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
+
+extern int ObjTrigger_IsSet();
+extern void objRenderFn_80041018(int obj);
+extern void envFxActFn_800887f8(int a);
+extern void getEnvfxAct(int* obj, int* target, int id, int p);
+extern void setAButtonIcon(int idx);
+extern void warpToMap(int mapId, int b);
+extern f32 lbl_803E3C80;
 
 int magiccavebottom_getExtraSize(void)
 {
@@ -19,22 +32,6 @@ void magiccavebottom_free(int obj)
 }
 
 void treasurechest_init(int* obj);
-
-#include "main/dll/CF/CFtoggleswitch.h"
-#include "main/camera_interface.h"
-#include "main/dll/cannon.h"
-#include "main/game_object.h"
-#include "main/mapEventTypes.h"
-#include "main/objseq.h"
-
-extern int ObjTrigger_IsSet();
-
-extern void objRenderFn_80041018(int obj);
-
-extern void envFxActFn_800887f8(int a);
-extern void getEnvfxAct(int* obj, int* target, int id, int p);
-extern void setAButtonIcon(int idx);
-extern void warpToMap(int mapId, int b);
 
 void magiccavebottom_update(int* obj)
 {
@@ -93,5 +90,3 @@ void magiccavebottom_update(int* obj)
         break;
     }
 }
-
-extern f32 lbl_803E3C80;

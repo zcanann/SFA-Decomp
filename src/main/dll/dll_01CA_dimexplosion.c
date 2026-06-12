@@ -91,6 +91,92 @@ extern f32 lbl_803E5678;
 extern f32 lbl_803E567C;
 extern f32 lbl_803E569C;
 
+extern void textureFree(int tex);
+extern int lbl_803AC960[4];
+extern int Obj_GetActiveModel(int obj);
+extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
+extern void dimmagicbridge_updateVertexWave(int obj, u8* sub);
+extern void ModelLightStruct_free(void*);
+extern void Music_Trigger(s32 triggerId, s32 mode);
+extern u8 framesThisStep;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern f32 lbl_803E492C;
+extern f32 lbl_803E4930;
+extern f32 lbl_803E4934;
+extern f32 lbl_803E4938;
+extern f32 lbl_803E493C;
+extern f32 lbl_803E4940;
+extern f32 lbl_803E4950;
+extern f32 lbl_803E4954;
+extern f32 lbl_803E4958;
+extern f32 lbl_803E495C;
+extern f32 lbl_803E4960;
+extern f64 lbl_803E4968;
+extern f32 lbl_803E4970;
+extern f32 lbl_803E4974;
+extern f64 lbl_803E4978;
+extern f64 lbl_803E4980;
+extern f32 lbl_803E4988;
+extern f32 lbl_803E4998;
+extern f32 lbl_803E499C;
+extern f32 lbl_803E49A0;
+extern f32 lbl_803E49A4;
+extern f32 lbl_803E49A8;
+extern f32 lbl_803E49AC;
+extern f32 lbl_803E49B0;
+extern f32 lbl_803E49B4;
+extern f32 lbl_803E49B8;
+extern f32 lbl_803E49BC;
+extern f32 lbl_803E49C0;
+extern f32 lbl_803E49C4;
+extern f32 lbl_803E49C8;
+extern f32 lbl_803E49CC;
+extern int lbl_803E4928;
+extern int lbl_803E8468;
+extern u8 lbl_803DDB58;
+extern f32 lbl_803DDB5C;
+extern f32 lbl_803DDB60;
+extern f32 lbl_803DDB64;
+extern f32 lbl_803DDB68;
+extern f32 lbl_803DDB6C;
+extern f32 lbl_803DDB70;
+extern f32 lbl_803DCDD8;
+extern f32 lbl_803DCDDC;
+extern f32 lbl_80325528[];
+extern FbTexTbl lbl_802C2328;
+extern f32 expf(f32 x);
+extern f32 sqrtf(f32 x);
+extern void Sfx_PlayFromObjectLimited(int obj, int id, int n);
+extern void GXClearVtxDesc(void);
+extern void GXSetVtxDesc(int attr, int type);
+extern void GXSetCurrentMtx(int id);
+extern void GXLoadPosMtxImm(f32* m, int id);
+extern void GXBegin(int prim, int fmt, int n);
+extern void PSMTXRotRad(f32* m, int axis, f32 rad);
+extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
+extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
+extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
+extern void PSMTXMultVecSR(f32 * m, f32 * in, f32 * out);
+extern f32* Camera_GetViewMatrix(void);
+extern f32* Camera_GetInverseViewRotationMatrix(void);
+extern int fn_8000FA70(void);
+extern int fn_8000FA90(void);
+extern void fn_80073AAC(void* tex, u32* a, u32* b, int k);
+extern void Obj_BuildWorldTransformMatrix(int obj, f32* m, int p3);
+extern void renderResetFn_8003fc60(void);
+extern int textureLoadAsset(int id);
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern int hitDetectFn_800658a4(int obj, int out, int p3, f32 x, f32 y, f32 z);
+extern int objCreateLight(int a, int b);
+extern void modelLightStruct_setLightKind(int h, int v);
+extern void modelLightStruct_setPosition(int h, f32 x, f32 y, f32 z);
+extern void modelLightStruct_setAffectsAabbLightSelection(int h, int v);
+extern void modelLightStruct_setEnabled(int h, int n, f32 v);
+extern void modelLightStruct_setDistanceAttenuation(int h, f32 a, f32 b);
+extern void modelLightStruct_setDiffuseColor(int h, int r, int g, int b, int a);
+extern void Obj_FreeObject(int obj);
+extern void* memcpy(void* dst, const void* src, unsigned long n);
+
 void FUN_801b3de4(undefined4 param_1, uint param_2)
 {
     (*gObjectTriggerInterface)->runSequence((param_2 ^ 1) + 2, (void*)param_1, -1);
@@ -193,9 +279,6 @@ LAB_801b44d4:
     FUN_80286888();
     return;
 }
-
-extern void textureFree(int tex);
-extern int lbl_803AC960[4];
 
 #pragma scheduling off
 #pragma peephole off
@@ -375,16 +458,11 @@ void explosion_hitDetect(void)
 
 void dimwooddoor2_free(void);
 
-extern int Obj_GetActiveModel(int obj);
-
 int explosion_getExtraSize(void) { return 0xa60; }
 int dimwooddoor2_getExtraSize(void);
 
-extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
-
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
-extern void dimmagicbridge_updateVertexWave(int obj, u8* sub);
 
 /* dimmagicbridge_update: advance texture phase and bridge vertex wave, then
  * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
@@ -394,7 +472,6 @@ extern void dimmagicbridge_updateVertexWave(int obj, u8* sub);
 /* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
  * and using mask 0x6000 + initial state byte 3 at +0. */
 
-extern void ModelLightStruct_free(void*);
 void explosion_free(int obj)
 {
     void* p = *(void**)(*(int*)&((GameObject*)obj)->extra + 0xa40);
@@ -416,13 +493,10 @@ int explosion_getObjectTypeId(int obj)
     return (idx << 11) | 0x400;
 }
 
-extern void Music_Trigger(s32 triggerId, s32 mode);
-
 void dim_levelcontrol_free(int p1);
 
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
-extern u8 framesThisStep;
 #pragma dont_inline on
 #pragma dont_inline reset
 
@@ -430,87 +504,7 @@ extern u8 framesThisStep;
  * every 16 frames, and ramp each active slot's alpha toward full; then update
  * the animated bridge mesh. */
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-
 volatile FbWGPipe GXWGFifo : (0xCC008000);
-
-extern f32 lbl_803E492C;
-extern f32 lbl_803E4930;
-extern f32 lbl_803E4934;
-extern f32 lbl_803E4938;
-extern f32 lbl_803E493C;
-extern f32 lbl_803E4940;
-extern f32 lbl_803E4950;
-extern f32 lbl_803E4954;
-extern f32 lbl_803E4958;
-extern f32 lbl_803E495C;
-extern f32 lbl_803E4960;
-extern f64 lbl_803E4968;
-extern f32 lbl_803E4970;
-extern f32 lbl_803E4974;
-extern f64 lbl_803E4978;
-extern f64 lbl_803E4980;
-extern f32 lbl_803E4988;
-extern f32 lbl_803E4998;
-extern f32 lbl_803E499C;
-extern f32 lbl_803E49A0;
-extern f32 lbl_803E49A4;
-extern f32 lbl_803E49A8;
-extern f32 lbl_803E49AC;
-extern f32 lbl_803E49B0;
-extern f32 lbl_803E49B4;
-extern f32 lbl_803E49B8;
-extern f32 lbl_803E49BC;
-extern f32 lbl_803E49C0;
-extern f32 lbl_803E49C4;
-extern f32 lbl_803E49C8;
-extern f32 lbl_803E49CC;
-extern int lbl_803E4928;
-extern int lbl_803E8468;
-extern u8 lbl_803DDB58;
-extern f32 lbl_803DDB5C;
-extern f32 lbl_803DDB60;
-extern f32 lbl_803DDB64;
-extern f32 lbl_803DDB68;
-extern f32 lbl_803DDB6C;
-extern f32 lbl_803DDB70;
-extern f32 lbl_803DCDD8;
-extern f32 lbl_803DCDDC;
-extern f32 lbl_80325528[];
-extern FbTexTbl lbl_802C2328;
-
-extern f32 expf(f32 x);
-extern f32 sqrtf(f32 x);
-extern void Sfx_PlayFromObjectLimited(int obj, int id, int n);
-extern void GXClearVtxDesc(void);
-extern void GXSetVtxDesc(int attr, int type);
-extern void GXSetCurrentMtx(int id);
-extern void GXLoadPosMtxImm(f32* m, int id);
-extern void GXBegin(int prim, int fmt, int n);
-extern void PSMTXRotRad(f32* m, int axis, f32 rad);
-extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
-extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXMultVecSR(f32 * m, f32 * in, f32 * out);
-extern f32* Camera_GetViewMatrix(void);
-extern f32* Camera_GetInverseViewRotationMatrix(void);
-extern int fn_8000FA70(void);
-extern int fn_8000FA90(void);
-extern void fn_80073AAC(void* tex, u32* a, u32* b, int k);
-extern void Obj_BuildWorldTransformMatrix(int obj, f32* m, int p3);
-extern void renderResetFn_8003fc60(void);
-extern int textureLoadAsset(int id);
-extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern int hitDetectFn_800658a4(int obj, int out, int p3, f32 x, f32 y, f32 z);
-extern int objCreateLight(int a, int b);
-extern void modelLightStruct_setLightKind(int h, int v);
-extern void modelLightStruct_setPosition(int h, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setAffectsAabbLightSelection(int h, int v);
-extern void modelLightStruct_setEnabled(int h, int n, f32 v);
-extern void modelLightStruct_setDistanceAttenuation(int h, f32 a, f32 b);
-extern void modelLightStruct_setDiffuseColor(int h, int r, int g, int b, int a);
-extern void Obj_FreeObject(int obj);
-extern void* memcpy(void* dst, const void* src, unsigned long n);
 
 void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z);
 void fn_801B40B8(u8 mode, u8* out, f32 a, f32 b);

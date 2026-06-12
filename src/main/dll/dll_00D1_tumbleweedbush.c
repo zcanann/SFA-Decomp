@@ -20,6 +20,36 @@ extern f32 timeDelta;
 
 #pragma scheduling on
 #pragma peephole on
+extern f32 lbl_803E2F48;
+extern f32 lbl_803E2F4C;
+extern f32 lbl_803E2F50;
+extern f32 lbl_803E2F54;
+extern u8 lbl_803201E8[];
+extern void vecRotateZXY(void* obj, void* p);
+extern void* memcpy(void* dst, const void* src, int n);
+extern u8 lbl_803DDA80;
+extern void* gSHthorntailAnimationInterface;
+extern void* Obj_GetPlayerObject(void);
+extern void objfx_spawnHitEmitterAtPos(int* p, int a, int b, int c, int d);
+extern int Sfx_PlayFromObject(int* obj, int sfx);
+extern s8 fn_801631C8(int* obj);
+extern float sqrtf(float x);
+extern f32 lbl_803E2F44;
+extern void objRenderFn_8003b8f4(f32);
+extern void* ObjGroup_GetObjects(int type, int* outCount);
+extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
+extern f32 lbl_803E2F58;
+extern u8 Obj_IsLoadingLocked(void);
+extern int* Obj_AllocObjectSetup(int size, int type);
+extern int* Obj_SetupObject(int* obj, int a, s8 b, int c, void* d);
+extern int** ObjList_GetObjects(int* idx, int* count);
+extern f32 lbl_803E2F40;
+extern int fn_80065684(int obj, f32 a, f32 b, f32 c, f32* out, int flag);
+extern f32 lbl_803E2F5C;
+extern f32 lbl_803E2F60;
+extern f32 lbl_803E2F64;
+extern f32 lbl_803E2F68;
+
 void FUN_801638bc(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     if (visible != 0)
@@ -48,14 +78,6 @@ void tumbleweedbush_release(void)
 void tumbleweedbush_initialise(void)
 {
 }
-
-extern f32 lbl_803E2F48;
-extern f32 lbl_803E2F4C;
-extern f32 lbl_803E2F50;
-extern f32 lbl_803E2F54;
-extern u8 lbl_803201E8[];
-extern void vecRotateZXY(void* obj, void* p);
-extern void* memcpy(void* dst, const void* src, int n);
 
 void tumbleweedbush_init(u8* obj, u8* params, int param3)
 {
@@ -115,14 +137,6 @@ void tumbleweedbush_init(u8* obj, u8* params, int param3)
 
 int tumbleweedbush_getExtraSize(void) { return 0x54; }
 int tumbleweedbush_getObjectTypeId(void) { return 0x0; }
-
-extern u8 lbl_803DDA80;
-extern void* gSHthorntailAnimationInterface;
-extern void* Obj_GetPlayerObject(void);
-extern void objfx_spawnHitEmitterAtPos(int* p, int a, int b, int c, int d);
-extern int Sfx_PlayFromObject(int* obj, int sfx);
-extern s8 fn_801631C8(int* obj);
-extern float sqrtf(float x);
 
 typedef struct TumbleweedBushState
 {
@@ -202,9 +216,6 @@ void fn_80163980(int* obj)
     *((u8*)((int**)obj)[0xb8 / 4] + 0x278) = v;
 }
 
-extern f32 lbl_803E2F44;
-extern void objRenderFn_8003b8f4(f32);
-
 void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -216,9 +227,6 @@ void cannonclaw_init(s16* dst, void* src);
 /* tumbleweedbush_findNearestActive: scan all type-0x31 objects, pick the closest one whose
  * obj->_46 == 0x3fb and obj->_b8->_278 > 1 (by vec3f_distanceSquared from
  * the supplied position vector). Returns NULL if no match. */
-extern void* ObjGroup_GetObjects(int type, int* outCount);
-extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
-extern f32 lbl_803E2F58;
 
 void* tumbleweedbush_findNearestActive(f32* p_pos)
 {
@@ -271,12 +279,6 @@ void tumbleweedbush_setScale(u8* obj, void* match)
         i++;
     }
 }
-
-extern u8 Obj_IsLoadingLocked(void);
-extern int* Obj_AllocObjectSetup(int size, int type);
-extern int* Obj_SetupObject(int* obj, int a, s8 b, int c, void* d);
-extern int** ObjList_GetObjects(int* idx, int* count);
-extern f32 lbl_803E2F40;
 
 s8 fn_801631C8(int* obj)
 {
@@ -373,12 +375,6 @@ s8 fn_801631C8(int* obj)
     *(u16*)(state + 0x4e) = *(u16*)(state + 0x4e) + 1;
     return (s8)freeSlot;
 }
-
-extern int fn_80065684(int obj, f32 a, f32 b, f32 c, f32* out, int flag);
-extern f32 lbl_803E2F5C;
-extern f32 lbl_803E2F60;
-extern f32 lbl_803E2F64;
-extern f32 lbl_803E2F68;
 
 void fn_80163990(int* piece, u8* state)
 {

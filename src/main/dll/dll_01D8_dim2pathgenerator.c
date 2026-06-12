@@ -133,14 +133,16 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
+extern undefined4 FUN_800067c0();
+extern undefined8 ObjGroup_RemoveObject();
+extern int** ObjGroup_GetObjects(int group, int* countOut);
+extern void mtxRotateByVec3s(f32 * mtx, s16 * ang);
+
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
-
-extern undefined4 FUN_800067c0();
-extern undefined8 ObjGroup_RemoveObject();
 
 #pragma scheduling on
 #pragma peephole on
@@ -268,8 +270,6 @@ void dim2pathgenerator_init(int* obj, int* def)
 
 void dimtruthhornice_init(int* obj, int* def);
 
-extern int** ObjGroup_GetObjects(int group, int* countOut);
-
 void dim2pathgenerator_update(int* obj)
 {
     extern u8 Obj_IsLoadingLocked(void);
@@ -370,5 +370,3 @@ void dim2pathgenerator_update(int* obj)
         ((Dim2PathGeneratorState*)extra)->flags |= (toggle ^ 1) & 1;
     }
 }
-
-extern void mtxRotateByVec3s(f32 * mtx, s16 * ang);

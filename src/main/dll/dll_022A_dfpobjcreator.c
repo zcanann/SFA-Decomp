@@ -146,6 +146,12 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 
+extern void Obj_FreeObject(int obj);
+extern u8 lbl_80329514[];
+extern f32 lbl_803E6278;
+extern f32 timeDelta;
+extern int dbstealerworm_stateHandlerA02();
+
 undefined4
 FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -558,9 +564,6 @@ void FUN_80204320(int param_1, int param_2, int param_3, int param_4, int param_
 
 void fn_80204320(int obj);
 
-extern void Obj_FreeObject(int obj);
-extern u8 lbl_80329514[];
-
 void dfpobjcreator_hitDetect(void)
 {
 }
@@ -580,10 +583,6 @@ int dfpobjcreator_getObjectTypeId(void) { return 0x0; }
 int dll_22C_SeqFn(void);
 
 void dfpobjcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
-
-extern f32 lbl_803E6278;
-
-extern f32 timeDelta;
 
 void dfpobjcreator_free(int obj, int flag)
 {
@@ -614,8 +613,6 @@ void dfpobjcreator_init(int obj, s8* def)
 }
 
 void dfplevelcontrol_setScale(int unused, u8* out);
-
-extern int dbstealerworm_stateHandlerA02();
 
 #pragma dont_inline on
 
@@ -662,11 +659,6 @@ void dfpobjcreator_update(int obj)
 #pragma dont_inline reset
 
 int dbstealerworm_stateHandlerA02(int obj, int p2);
-
-#include "main/dll/baddie/chuka.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 

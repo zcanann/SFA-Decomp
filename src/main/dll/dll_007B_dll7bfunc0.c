@@ -15,12 +15,6 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-static inline u8* Gameplay_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 FUN_800033a8();
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_80006768();
@@ -49,7 +43,6 @@ extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286880();
 extern undefined4 FUN_8028688c();
-
 extern undefined4 DAT_802c28f0;
 extern undefined4 DAT_802c28f4;
 extern undefined4 DAT_802c28f8;
@@ -126,6 +119,18 @@ extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
+extern int maybeTryLoadSave(int a);
+extern u8 lbl_80314CB0[];
+extern f32 lbl_803E0D38, lbl_803E0D3C, lbl_803E0D40, lbl_803E0D44, lbl_803E0D48, lbl_803E0D4C;
+extern f32 lbl_803E0D50, lbl_803E0D54, lbl_803E0D58, lbl_803E0D5C, lbl_803E0D60, lbl_803E0D64;
+extern f32 lbl_803E0D68, lbl_803E0D6C, lbl_803E0D70, lbl_803E0D74, lbl_803E0D78;
+extern void vecRotateZXY(void* p, f32* v);
+
+static inline u8* Gameplay_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (u8*)objAnim->banks[objAnim->bankIndex];
+}
 
 void saveFileStruct_unlockCheat(uint cheatId)
 {
@@ -233,8 +238,6 @@ undefined4* FUN_800e87a8(void)
 {
     return &DAT_803a45b0;
 }
-
-extern int maybeTryLoadSave(int a);
 
 int saveFn_800e8508(void);
 
@@ -698,11 +701,6 @@ enum
 
 void dll_60_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
 
-extern u8 lbl_80314CB0[];
-extern f32 lbl_803E0D38, lbl_803E0D3C, lbl_803E0D40, lbl_803E0D44, lbl_803E0D48, lbl_803E0D4C;
-extern f32 lbl_803E0D50, lbl_803E0D54, lbl_803E0D58, lbl_803E0D5C, lbl_803E0D60, lbl_803E0D64;
-extern f32 lbl_803E0D68, lbl_803E0D6C, lbl_803E0D70, lbl_803E0D74, lbl_803E0D78;
-
 void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
 {
     struct
@@ -913,5 +911,3 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, uint flags)
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, base, 0xc, &base[0x8c], 0x8e, 0);
 }
-
-extern void vecRotateZXY(void* p, f32* v);

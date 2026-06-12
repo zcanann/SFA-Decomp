@@ -87,6 +87,19 @@ typedef int (*GroundAnimatorAnimStateFn)(int obj, int state);
 typedef void (*GroundAnimatorSetVisibleFn)(int state, int visible);
 typedef void (*GroundAnimatorInitAnimFn)(void* obj, undefined4 state, int param_3);
 
+extern void appleontree_init();
+extern void appleontree_update();
+extern void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
+extern void appleontree_free(int* obj);
+extern int appleontree_getExtraSize(void);
+extern void appleontree_setScale(void);
+extern u8 appleontree_modelMtxFn(int* obj);
+STATIC_ASSERT(offsetof(AppleOnTreeState, healthRestore) == 0x38);
+STATIC_ASSERT(offsetof(AppleOnTreeState, unk50) == 0x50);
+STATIC_ASSERT(offsetof(AppleOnTreeState, unk60) == 0x60);
+STATIC_ASSERT(sizeof(AppleOnTreeState) == 0x64);
+extern f32 Vec_xzDistance(float* a, float* b);
+
 int wm_column_getExtraSize(void)
 {
     return 0xa;
@@ -244,14 +257,6 @@ ObjectDescriptor gWM_ColumnObjDescriptor = {
     wm_column_getExtraSize,
 };
 
-extern void appleontree_init();
-extern void appleontree_update();
-extern void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
-extern void appleontree_free(int* obj);
-extern int appleontree_getExtraSize(void);
-extern void appleontree_setScale(void);
-extern u8 appleontree_modelMtxFn(int* obj);
-
 ObjectDescriptor13 gAppleOnTreeObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_13_SLOTS,
     0,
@@ -278,11 +283,6 @@ u32 jumptable_803214DC[] = {
     (u32)((u8*)appleontree_update + 0x6C8),
     (u32)((u8*)appleontree_update + 0x71C),
 };
-
-STATIC_ASSERT(offsetof(AppleOnTreeState, healthRestore) == 0x38);
-STATIC_ASSERT(offsetof(AppleOnTreeState, unk50) == 0x50);
-STATIC_ASSERT(offsetof(AppleOnTreeState, unk60) == 0x60);
-STATIC_ASSERT(sizeof(AppleOnTreeState) == 0x64);
 
 #pragma scheduling on
 #pragma peephole on
@@ -483,7 +483,6 @@ void FUN_8017de58(undefined8 param_1, double param_2, double param_3, undefined8
 /* appleontree_handleCollectableHit: ground-animator collectable hit handler. When player is in
  * range, either send a trigger event (first contact) or apply healing +
  * particle FX + sfx + free-or-disable. */
-extern f32 Vec_xzDistance(float* a, float* b);
 void appleontree_handleCollectableHit(int obj);
 
 undefined4 FUN_8017e15c(double param_1, undefined2* param_2, int param_3)

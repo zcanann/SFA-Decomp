@@ -1,5 +1,15 @@
 /* Light functions and VFP block 1 object [0x801FB9AC-0x801FD4A8). */
 #include "main/dll/VF/vf_shared.h"
+#include "main/game_object.h"
+#include "main/obj_placement.h"
+#include "main/audio/sfx_ids.h"
+#include "main/game_ui_interface.h"
+#include "main/effect_interfaces.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/light.h"
+#include "main/objanim_update.h"
+#include "main/objlib.h"
+#include "main/resource.h"
 
 /*
  * DLL 0x021E (gVFP_Block1ObjDescriptor) fragment.
@@ -7,6 +17,35 @@
  * .text range here (0x801FB9AC-0x801FB9F4); update/init/release/initialise for
  * this DLL live in the adjacent unit main/light.c (next .text range).
  */
+
+extern f64 DOUBLE_803e6d90;
+extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern f32 lbl_803E6100;
+extern f32 lbl_803E6144;
+extern f32 lbl_803E6148;
+extern f32 lbl_803E6150;
+extern ModgfxInterface** gModgfxInterface;
+extern void* lbl_803DDCC0;
+extern f32 lbl_803E6138;
+extern void fn_801FC6F4(int, int, ObjAnimUpdateState*);
+extern f32 lbl_803E6128;
+extern f32 lbl_803E610C;
+extern f32 lbl_803E611C;
+extern f32 lbl_803E6140;
+extern void vfpdoorswitch_updateExplodingVariant(int obj);
+extern int Camera_GetCurrentViewSlot(void);
+extern void PSVECSubtract(void* a, void* b, void* ab);
+extern void PSVECNormalize(void* in, void* out);
+extern void PSVECScale(void* in, void* out, f32 scale);
+extern void PSVECAdd(void* a, void* b, void* ab);
+extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+extern f32 lbl_803E6118;
+extern f32 lbl_803E6120;
+extern f32 lbl_803E6124;
+extern s16 lbl_803DDCC4;
+extern u8 lbl_803DDCC6;
+extern f32 lbl_803E6108;
 
 int vfpblock1_getExtraSize(void) { return 0x2; }
 
@@ -25,19 +64,6 @@ void vfpblock1_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-#include "main/game_object.h"
-#include "main/obj_placement.h"
-#include "main/audio/sfx_ids.h"
-#include "main/game_ui_interface.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/light.h"
-#include "main/objanim_update.h"
-#include "main/objlib.h"
-#include "main/resource.h"
-
-extern f64 DOUBLE_803e6d90;
-
 /* Per-object extra state for SeqPoint (seqpoint_getExtraSize == 0x10). */
 typedef struct SeqPointState
 {
@@ -52,10 +78,6 @@ typedef struct SeqPointState
 } SeqPointState;
 
 STATIC_ASSERT(sizeof(SeqPointState) == 0x10);
-
-extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern f32 lbl_803E6100;
 
 #pragma scheduling off
 void vfpblock1_update(int obj)
@@ -298,9 +320,6 @@ void vfpplatform_init(int obj, int data)
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
-extern f32 lbl_803E6144;
-extern f32 lbl_803E6148;
-
 void vfpcoreplat_init(int obj, int data)
 {
     extern u32 GameBit_Get(int); /* #57 */
@@ -323,8 +342,6 @@ void vfpcoreplat_init(int obj, int data)
     }
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
-
-extern f32 lbl_803E6150;
 
 typedef struct SpellStoneUseState
 {
@@ -361,8 +378,6 @@ void spellStoneUseFn_801fd270(int obj)
     }
 }
 
-extern ModgfxInterface** gModgfxInterface;
-extern void* lbl_803DDCC0;
 #pragma peephole on
 void vfpdraghead_free(int obj)
 {
@@ -374,8 +389,6 @@ void vfpdraghead_free(int obj)
     }
     lbl_803DDCC0 = NULL;
 }
-
-extern f32 lbl_803E6138;
 
 /* Per-object extra state for VFPDragHead (vfpdraghead_getExtraSize == 0xC). */
 typedef struct VfpDragHeadState
@@ -418,8 +431,6 @@ void vfpdraghead_init(int obj, int data)
     lbl_803DDCC0 = Resource_Acquire(0xA5, 1);
 }
 
-extern void fn_801FC6F4(int, int, ObjAnimUpdateState*);
-
 void seqpoint_init(int obj, int data)
 {
     SeqPointState* state = ((GameObject*)obj)->extra;
@@ -433,15 +444,11 @@ void seqpoint_init(int obj, int data)
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
-extern f32 lbl_803E6128;
-
 void seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E6128);
 }
-
-extern f32 lbl_803E610C;
 
 void vfpplatform_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -453,12 +460,8 @@ void vfpplatform_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-extern f32 lbl_803E611C;
-extern f32 lbl_803E6140;
 void vfpdoorswitch_render(void) { objRenderFn_8003b8f4(lbl_803E611C); }
 void vfpcoreplat_render(void) { objRenderFn_8003b8f4(lbl_803E6140); }
-
-extern void vfpdoorswitch_updateExplodingVariant(int obj);
 
 typedef struct
 {
@@ -508,16 +511,6 @@ void vfpdoorswitch_init(int obj, int data)
     }
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
-
-extern int Camera_GetCurrentViewSlot(void);
-extern void PSVECSubtract(void* a, void* b, void* ab);
-extern void PSVECNormalize(void* in, void* out);
-extern void PSVECScale(void* in, void* out, f32 scale);
-extern void PSVECAdd(void* a, void* b, void* ab);
-extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-extern f32 lbl_803E6118;
-extern f32 lbl_803E6120;
-extern f32 lbl_803E6124;
 
 void vfpdoorswitch_updateExplodingVariant(int obj)
 {
@@ -627,9 +620,6 @@ void seqpoint_update(int* obj)
         break;
     }
 }
-
-extern s16 lbl_803DDCC4;
-extern u8 lbl_803DDCC6;
 
 #pragma peephole off
 void vfpdraghead_update(int* obj)
@@ -742,8 +732,6 @@ void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState* ctx)
         ctx->eventIds[i] = 0;
     }
 }
-
-extern f32 lbl_803E6108;
 
 void fn_801FBAC8(int obj)
 {
@@ -1057,14 +1045,6 @@ void vfpplatform_update(int obj)
 }
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/game_object.h"
-#include "main/obj_placement.h"
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/objlib.h"
-#include "main/resource.h"
 
 void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9);
 

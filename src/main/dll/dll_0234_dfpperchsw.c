@@ -17,6 +17,8 @@ void dfpstatue1_release(void);
 
 void dfpstatue1_initialise(void);
 
+extern void OSReport(const char* fmt, ...);
+
 int dfperchwitch_getExtraSize(void) { return 0x0; }
 int dfperchwitch_getObjectTypeId(void) { return 0x0; }
 
@@ -32,7 +34,6 @@ void dfperchwitch_hitDetect(void)
 {
 }
 
-extern void OSReport(const char* fmt, ...);
 void dfperchwitch_update(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
 void dfperchwitch_init(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
 

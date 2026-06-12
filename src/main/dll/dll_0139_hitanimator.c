@@ -38,6 +38,15 @@ extern undefined4 FUN_80286878();
 
 #pragma scheduling on
 #pragma peephole on
+extern void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* vstate,
+                                   HitAnimatorPlacement* desc);
+extern int fn_80065640(void);
+extern void fn_80065574(int a, int b, int c);
+extern f32 lbl_803E3FB8;
+extern void* mapBlockFn_800606ec(void* block, int idx);
+extern int mapBlockFn_80060678(void* entry);
+extern u8* Shader_getLayer(char* s, int layer);
+
 void FUN_80192488(void)
 {
     int iVar1;
@@ -119,11 +128,6 @@ void waveanimator_update(void);
 int hitanimator_getExtraSize(void) { return 0x4; }
 int visanimator_getExtraSize(void);
 
-extern void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* vstate,
-                                   HitAnimatorPlacement* desc);
-extern int fn_80065640(void);
-extern void fn_80065574(int a, int b, int c);
-
 #pragma scheduling off
 #pragma peephole off
 void hitanimator_update(HitAnimatorObject* obj)
@@ -188,8 +192,6 @@ void hitanimator_update(HitAnimatorObject* obj)
     }
 }
 
-extern f32 lbl_803E3FB8;
-
 void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
 {
     extern int objPosToMapBlockIdx(double x, double y, double z); /* #57 */
@@ -229,11 +231,6 @@ void hitanimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
     state->previousGameBitValue = g;
     obj->objectFlags |= HITANIMATOR_OBJECT_FLAGS_ENABLED;
 }
-
-extern void* mapBlockFn_800606ec(void* block, int idx);
-extern int mapBlockFn_80060678(void* entry);
-
-extern u8* Shader_getLayer(char* s, int layer);
 
 void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* vstate, HitAnimatorPlacement* desc)
 {

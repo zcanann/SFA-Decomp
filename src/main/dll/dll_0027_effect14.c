@@ -46,6 +46,8 @@ extern f64 lbl_803E0088;
 extern f32 lbl_803E0090;
 extern f32 lbl_803E0094;
 
+extern f32 lbl_803DB838;
+
 int Effect14_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte, u16* p6)
 {
   EffectSrcParams local;
@@ -556,8 +558,6 @@ int Effect14_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
   }
   return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
-
-extern f32 lbl_803DB838;
 
 void Effect10_func05(void);
 

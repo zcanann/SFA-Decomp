@@ -4,6 +4,7 @@
 #include "main/dll/barrel.h"
 #include "main/dll/scarab.h"
 #include "main/mapEventTypes.h"
+#include "main/objanim.h"
 
 typedef struct GrimblePlacement
 {
@@ -87,6 +88,9 @@ extern f32 lbl_803E2F1C;
 extern f32 lbl_803E2F20;
 extern f32 lbl_803E2F24;
 extern f32 lbl_803E2F28;
+
+extern f32 lbl_803E2F30;
+extern void* ObjGroup_GetObjects(int type, int* outCount);
 
 int grimble_stateHandlerA02(int obj, char* state, f32 arg)
 {
@@ -877,8 +881,6 @@ void grimble_initialiseStateHandlerTables(void);
 #pragma dont_inline reset
 void grimble_initialise(void) { grimble_initialiseStateHandlerTables(); }
 
-extern f32 lbl_803E2F30;
-
 #pragma scheduling off
 #pragma peephole off
 void grimble_free(int obj)
@@ -915,10 +917,6 @@ ObjectDescriptor gGrimbleObjDescriptor = {
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/audio/sfx_ids.h"
-#include "main/game_object.h"
-#include "main/objanim.h"
-
 /* Actual cannonclaw_update is 188b -- trigger-once cannon-arm awakener.
  * The 668b "Ghidra body" was misattributed; replaced with the right one. */
 
@@ -942,7 +940,6 @@ void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 /* tumbleweedbush_findNearestActive: scan all type-0x31 objects, pick the closest one whose
  * obj->_46 == 0x3fb and obj->_b8->_278 > 1 (by vec3f_distanceSquared from
  * the supplied position vector). Returns NULL if no match. */
-extern void* ObjGroup_GetObjects(int type, int* outCount);
 
 /* tumbleweedbush_setScale: scan the sub-array at obj->_b8 (sub[0x50] entries
  * of 4 bytes each), zeroing every slot whose +0xc word matches `match`. */

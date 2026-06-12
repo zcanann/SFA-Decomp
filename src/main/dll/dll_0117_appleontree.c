@@ -5,6 +5,10 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
+#include "main/effect_interfaces.h"
+#include "main/dll/crackanim_state.h"
+#include "main/dll/baddie_state.h"
+#include "main/dll/dll_0117_appleontree.h"
 
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjMsg_SendToObject();
@@ -63,6 +67,57 @@ u32 jumptable_803214DC[] = {
     (u32)((u8*)appleontree_update + 0x71C),
 };
 
+extern f32 Vec_xzDistance(float* a, float* b);
+extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Obj_FreeObject(int obj);
+extern f32 lbl_803E37C8;
+extern f32 lbl_803E37EC;
+extern f32 lbl_803E37F0;
+extern f32 timeDelta;
+extern f32 sqrtf(f32);
+extern int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* out, int flag);
+extern WaterfxInterface** gWaterfxInterface;
+extern f32 lbl_803E37D4;
+extern f32 lbl_803E37D8;
+extern f32 lbl_803E37DC;
+extern f32 lbl_803E37E0;
+extern f32 lbl_803E37E4;
+extern f32 lbl_803E37E8;
+extern f32 lbl_803E37F4;
+extern f32 lbl_803E37F8;
+extern f32 lbl_803E37FC;
+extern f32 lbl_803E3800;
+extern undefined4 FUN_80017a78();
+extern undefined4 FUN_8002fc3c();
+extern int ObjHits_GetPriorityHit();
+extern int ObjMsg_Pop();
+extern undefined4 FUN_80039520();
+extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern void ObjMsg_AllocQueue(int obj, int capacity);
+extern int* objFindTexture(int obj, int textureId, int modelIdx);
+extern undefined4* gSHthorntailAnimationInterface;
+extern EffectInterface** gPartfxInterface;
+extern f32 lbl_803E3828;
+extern f32 lbl_803E382C;
+extern f32 lbl_803E3830;
+extern f32 lbl_803E3834;
+extern f32 lbl_803E3838;
+extern f32 lbl_803E37CC;
+extern f32 lbl_803E37D0;
+extern f32 lbl_803E3804;
+extern f32 lbl_803E3808;
+extern f32 lbl_803E380C;
+extern f32 lbl_803E3810;
+extern f32 lbl_803E3814;
+extern f32 lbl_803E3818;
+extern void dll_FC_initialise_nop(void);
+extern void dll_FC_release_nop(void);
+extern void dll_FC_init(int obj, int objDef);
+extern void dll_FC_update(int obj);
+extern void dll_FC_hitDetect(int* obj);
+
 void appleontree_func0B(int obj, float* pos)
 {
     AppleOnTreeState* state = ((GameObject*)obj)->extra;
@@ -87,13 +142,6 @@ void appleontree_func0B(int obj, float* pos)
 /* appleontree_handleCollectableHit: ground-animator collectable hit handler. When player is in
  * range, either send a trigger event (first contact) or apply healing +
  * particle FX + sfx + free-or-disable. */
-extern f32 Vec_xzDistance(float* a, float* b);
-extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void Obj_FreeObject(int obj);
-extern f32 lbl_803E37C8;
-extern f32 lbl_803E37EC;
-extern f32 lbl_803E37F0;
 void appleontree_handleCollectableHit(int obj)
 {
     extern void playerAddHealth(int player, u16 amount); /* #57 */
@@ -158,21 +206,6 @@ void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
         objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E37C8);
     }
 }
-
-extern f32 timeDelta;
-extern f32 sqrtf(f32);
-extern int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* out, int flag);
-extern WaterfxInterface** gWaterfxInterface;
-extern f32 lbl_803E37D4;
-extern f32 lbl_803E37D8;
-extern f32 lbl_803E37DC;
-extern f32 lbl_803E37E0;
-extern f32 lbl_803E37E4;
-extern f32 lbl_803E37E8;
-extern f32 lbl_803E37F4;
-extern f32 lbl_803E37F8;
-extern f32 lbl_803E37FC;
-extern f32 lbl_803E3800;
 
 void fn_8017D854(int obj, int msg)
 {
@@ -506,13 +539,6 @@ int fn_8017DF34(int p, int state, f32 y)
 
 /* segment pragma-stack balance (re-split): */
 
-#include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/dll/crackanim_state.h"
-#include "main/dll/baddie_state.h"
-#include "main/dll/dll_0117_appleontree.h"
-
 typedef struct AppleontreeObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -527,33 +553,6 @@ typedef struct AppleontreeObjectDef
     s8 unk25;
     s16 unk26;
 } AppleontreeObjectDef;
-
-extern undefined4 FUN_80017a78();
-extern undefined4 FUN_8002fc3c();
-extern int ObjHits_GetPriorityHit();
-extern int ObjMsg_Pop();
-extern undefined4 FUN_80039520();
-
-extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
-extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern void ObjMsg_AllocQueue(int obj, int capacity);
-extern int* objFindTexture(int obj, int textureId, int modelIdx);
-
-extern undefined4* gSHthorntailAnimationInterface;
-extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E3828;
-extern f32 lbl_803E382C;
-extern f32 lbl_803E3830;
-extern f32 lbl_803E3834;
-extern f32 lbl_803E3838;
-extern f32 lbl_803E37CC;
-extern f32 lbl_803E37D0;
-extern f32 lbl_803E3804;
-extern f32 lbl_803E3808;
-extern f32 lbl_803E380C;
-extern f32 lbl_803E3810;
-extern f32 lbl_803E3814;
-extern f32 lbl_803E3818;
 
 void appleontree_update(int param_1)
 {
@@ -935,12 +934,6 @@ int dll_FC_getExtraSize_ret_8(void);
 int dll_FC_getObjectTypeId(void);
 
 void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-extern void dll_FC_initialise_nop(void);
-extern void dll_FC_release_nop(void);
-extern void dll_FC_init(int obj, int objDef);
-extern void dll_FC_update(int obj);
-extern void dll_FC_hitDetect(int* obj);
 
 void dll_FC_hitDetect(int* obj);
 

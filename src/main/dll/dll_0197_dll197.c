@@ -7,6 +7,7 @@
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/effect_interfaces.h"
 
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
@@ -46,6 +47,21 @@ typedef struct Cup197State
 STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
 STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);
 STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
+
+extern f32 lbl_803E5120;
+extern f32 lbl_803E5124;
+extern f32 lbl_803E5128;
+extern f32 lbl_803E512C;
+extern f32 lbl_803E5130;
+extern f32 lbl_803E5134;
+extern void* Camera_GetCurrentViewSlot(void);
+extern f32 sqrtf(f32 x);
+extern void voxmaps_worldToGrid(void* world, void* grid);
+extern int voxmaps_traceLine(void* from, void* to, void* out, int p4, int p5);
+extern f32 lbl_803E5118;
+extern int ObjHits_GetPriorityHit();
+extern f32 lbl_803E5140;
+extern f32 lbl_803E5144;
 
 void dll_197_hitDetect(void)
 {
@@ -207,17 +223,6 @@ void dll_197_update(int obj)
 int dll_197_getExtraSize(void) { return 0x10; }
 int dll_197_getObjectTypeId(void) { return 0x1; }
 
-extern f32 lbl_803E5120;
-extern f32 lbl_803E5124;
-extern f32 lbl_803E5128;
-extern f32 lbl_803E512C;
-extern f32 lbl_803E5130;
-extern f32 lbl_803E5134;
-extern void* Camera_GetCurrentViewSlot(void);
-extern f32 sqrtf(f32 x);
-extern void voxmaps_worldToGrid(void* world, void* grid);
-extern int voxmaps_traceLine(void* from, void* to, void* out, int p4, int p5);
-
 void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     struct
@@ -308,18 +313,6 @@ void dll_197_free(int obj)
     (*gModgfxInterface)->detachSource((void*)obj);
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-
-extern f32 lbl_803E5118;
-
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/objseq.h"
-#include "main/resource.h"
-
-extern int ObjHits_GetPriorityHit();
-
-extern f32 lbl_803E5140;
-extern f32 lbl_803E5144;
 
 void dll_197_init(int obj, int data)
 {

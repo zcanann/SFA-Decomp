@@ -4,6 +4,8 @@
 #include "main/dll/FRONT/picmenu.h"
 #include "main/camera_interface.h"
 #include "main/screen_transition.h"
+#include "main/audio/sfx_ids.h"
+#include "main/dll/FRONT/dll_0034_n_filemenu.h"
 
 extern void Movie_SetVolumeFade(int volume, int fadeFrames);
 extern bool prepareAttractMode();
@@ -54,6 +56,56 @@ extern f32 lbl_803E1D18;
 #define NATTRACTMODE_FAIL_TO_PREPARE_OFFSET 0x1C4
 
 #pragma dont_inline on
+extern void Sfx_PlayFromObject(uint obj, ushort sfxId);
+extern void buttonDisable(int controller, uint buttons);
+extern void padClearAnalogInputY(int controller);
+extern void padClearAnalogInputX(int controller);
+extern void padGetAnalogInput(int controller, s8* dpad, s8* face);
+extern uint getButtonsJustPressed(int controller);
+extern void loadUiDll(int id);
+extern void doNothing_onSaveSelectScreenExit(void);
+extern void mapUnload(int mapId, uint flags);
+extern void titleScreenFn_8005cdd4(int arg);
+extern void setDrawLights(int arg);
+extern void setIsOvercast(int arg);
+extern void memCardFn_8007dd04(u8 retry);
+extern void loadSaveSettings(void);
+extern int saveFn_800e8508(void);
+extern void titleDoLoadSave(void);
+extern float titleScreenGetCamProgress(void);
+extern void titleScreenFn_80130464(u8 v);
+extern void setLinkNotRotated(void);
+extern void titleScreenFn_801368a4(u8 arg);
+extern void titleScreenFn_801368c4(s8 arg);
+extern void titleScreenFn_801368d4(void);
+extern void saveFn_8007d960(int);
+extern u8 framesThisStep;
+extern u8 lbl_803DB424;
+extern TitleMenuTextEntry lbl_8031A214[4];
+extern u8 gTitleMenuPreviousSelection;
+extern s8 gTitleMenuSelectionFadeStep;
+extern u8 lbl_803DD618;
+extern u8 gAttractMovieAutoplayEnabled;
+extern s32 gTitleMenuInputCooldown;
+extern u8 gAttractMovieReplayCountdown;
+extern u8 gTitleMenuReadyForInput;
+extern s8 gTitleMenuNextDllId;
+extern s8 gTitleMenuLoadDelay;
+extern u8 gTitleMenuPanelOpen;
+extern u8 gAttractMovieLoopCompleted;
+extern u8 lbl_803DD6F8;
+extern f32 lbl_803E1D28;
+extern void audioSetVolumes(int channel, int volume, int frames, int arg3, int arg4);
+extern void audioStopByMask(int mask);
+extern void audioFn_8000b694(int arg);
+extern int getUiDllFn_80014930(void);
+extern void gameTimerStop(void);
+extern void gameTextLoadDir(int dirId);
+extern void envFxActFn_800887f8(int arg);
+extern void setLinkIsRotated(void);
+extern void titleScreenPositionElements(f32 x, f32 y);
+extern u8* lbl_803DD498;
+
 void n_attractmode_releaseMovieBuffers(void)
 {
     int freeDelay;
@@ -277,52 +329,6 @@ void TitleMenu_render(u8* param_1)
 void TitleMenu_frameEnd(void)
 {
 }
-
-#include "main/audio/sfx_ids.h"
-#include "main/camera_interface.h"
-#include "main/dll/FRONT/dll_0034_n_filemenu.h"
-#include "main/dll/FRONT/dll_39.h"
-
-extern void Sfx_PlayFromObject(uint obj, ushort sfxId);
-extern void buttonDisable(int controller, uint buttons);
-extern void padClearAnalogInputY(int controller);
-extern void padClearAnalogInputX(int controller);
-extern void padGetAnalogInput(int controller, s8* dpad, s8* face);
-extern uint getButtonsJustPressed(int controller);
-extern void loadUiDll(int id);
-extern void doNothing_onSaveSelectScreenExit(void);
-extern void mapUnload(int mapId, uint flags);
-extern void titleScreenFn_8005cdd4(int arg);
-extern void setDrawLights(int arg);
-extern void setIsOvercast(int arg);
-extern void memCardFn_8007dd04(u8 retry);
-extern void loadSaveSettings(void);
-extern int saveFn_800e8508(void);
-extern void titleDoLoadSave(void);
-extern float titleScreenGetCamProgress(void);
-extern void titleScreenFn_80130464(u8 v);
-extern void setLinkNotRotated(void);
-extern void titleScreenFn_801368a4(u8 arg);
-extern void titleScreenFn_801368c4(s8 arg);
-extern void titleScreenFn_801368d4(void);
-extern void saveFn_8007d960(int);
-
-extern u8 framesThisStep;
-extern u8 lbl_803DB424;
-extern TitleMenuTextEntry lbl_8031A214[4];
-extern u8 gTitleMenuPreviousSelection;
-extern s8 gTitleMenuSelectionFadeStep;
-extern u8 lbl_803DD618;
-extern u8 gAttractMovieAutoplayEnabled;
-extern s32 gTitleMenuInputCooldown;
-extern u8 gAttractMovieReplayCountdown;
-extern u8 gTitleMenuReadyForInput;
-extern s8 gTitleMenuNextDllId;
-extern s8 gTitleMenuLoadDelay;
-extern u8 gTitleMenuPanelOpen;
-extern u8 gAttractMovieLoopCompleted;
-extern u8 lbl_803DD6F8;
-extern f32 lbl_803E1D28;
 
 #define TitleMenu_GetMenuId() (*(int (**)(void))((int)*gCameraInterface + 0x10))()
 #define TitleMenu_SetMenuState(state, arg) (*(void (**)(int, int))((int)*gCameraInterface + 0x60))(state,arg)
@@ -617,21 +623,6 @@ void TitleMenu_setSelection(int selection)
     gTitleMenuPreviousSelection = TITLE_MENU_SELECTION_INVALID;
     (*(*(void (**)(int))((int)gTitleMenuLinkInterface->vtable + 0x18)))(v);
 }
-
-#include "main/dll/FRONT/dll_39.h"
-#include "main/screen_transition.h"
-
-extern void audioSetVolumes(int channel, int volume, int frames, int arg3, int arg4);
-extern void audioStopByMask(int mask);
-extern void audioFn_8000b694(int arg);
-extern int getUiDllFn_80014930(void);
-extern void gameTimerStop(void);
-extern void gameTextLoadDir(int dirId);
-extern void envFxActFn_800887f8(int arg);
-extern void setLinkIsRotated(void);
-extern void titleScreenPositionElements(f32 x, f32 y);
-
-extern u8* lbl_803DD498;
 
 void TitleMenu_initialise(void)
 {

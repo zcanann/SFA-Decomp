@@ -54,6 +54,34 @@ extern f32 lbl_803E42B8;
 
 #pragma scheduling on
 #pragma peephole on
+extern f32 lbl_803E3680;
+extern void objRenderFn_8003b8f4(f32);
+extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
+extern void Sfx_StopFromObject(int obj, int sfxId);
+extern f32 lbl_803E36A0;
+extern int* Obj_GetPlayerObject(void);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern u32 GameBit_Get(int eventId);
+extern f32 lbl_803E3654;
+extern f32 lbl_803E3684;
+extern f32 lbl_803E364C;
+extern f32 lbl_803E3650;
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
+extern f32 sqrtf(f32 x);
+extern f32* Camera_GetCurrentViewSlot(void);
+extern void getEnvfxAct(int obj, int target, int id, int p);
+extern f32 lbl_803E3648;
+extern f32 lbl_803E3658;
+extern f32 lbl_803E365C;
+extern f32 lbl_803E3660;
+extern f32 lbl_803E3664;
+extern f32 lbl_803E3668;
+extern f32 lbl_803E366C;
+extern f32 lbl_803E3670;
+extern f32 lbl_803E3674;
+
 void FUN_80178338(undefined4 param_1)
 {
     float local_18;
@@ -84,9 +112,6 @@ void doorf4_initialise(void)
 int doorf4_getExtraSize(void) { return 0x24; }
 int doorf4_getObjectTypeId(void) { return 0x1; }
 
-extern f32 lbl_803E3680;
-extern void objRenderFn_8003b8f4(f32);
-
 void doorf4_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -94,9 +119,6 @@ void doorf4_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 int fn_801793A4(int* obj);
-
-extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
-extern void Sfx_StopFromObject(int obj, int sfxId);
 
 void doorf4_free(int obj)
 {
@@ -110,13 +132,6 @@ void doorf4_free(int obj)
     }
     ObjGroup_RemoveObject(obj, 14);
 }
-
-extern f32 lbl_803E36A0;
-
-extern int* Obj_GetPlayerObject(void);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-
-extern u32 GameBit_Get(int eventId);
 
 void doorf4_update(int* obj)
 {
@@ -156,13 +171,6 @@ void doorf4_update(int* obj)
         ((GameObject*)obj)->unkF4 = 1;
     }
 }
-
-extern f32 lbl_803E3654;
-extern f32 lbl_803E3684;
-extern f32 lbl_803E364C;
-extern f32 lbl_803E3650;
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
 
 void doorf4_init(int* obj, int* params)
 {
@@ -207,20 +215,6 @@ void doorf4_init(int* obj, int* params)
     state->planeD = -(state->cosYaw * ((GameObject*)obj)->anim.localPosX +
         state->sinYaw * ((GameObject*)obj)->anim.localPosZ);
 }
-
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
-extern f32 sqrtf(f32 x);
-extern f32* Camera_GetCurrentViewSlot(void);
-extern void getEnvfxAct(int obj, int target, int id, int p);
-extern f32 lbl_803E3648;
-extern f32 lbl_803E3658;
-extern f32 lbl_803E365C;
-extern f32 lbl_803E3660;
-extern f32 lbl_803E3664;
-extern f32 lbl_803E3668;
-extern f32 lbl_803E366C;
-extern f32 lbl_803E3670;
-extern f32 lbl_803E3674;
 
 int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {

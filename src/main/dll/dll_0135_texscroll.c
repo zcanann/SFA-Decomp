@@ -1,19 +1,9 @@
 #include "main/map_block.h"
 #include "main/dll/mmp_moonrock.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+extern f32 lbl_803E3F30;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E3F38;
 
 void texscroll_free(void)
 {
@@ -41,7 +31,6 @@ int texscroll_getObjectTypeId(void) { return 0x0; }
 
 void waveanimator_modelMtxFn(int obj, int a, int b, int c);
 
-
 void texscroll_init(TexScrollObject* obj, TexScrollPlacement* placement, int loadFlags)
 {
     TexScrollState* state = obj->state;
@@ -61,11 +50,6 @@ void texscroll_init(TexScrollObject* obj, TexScrollPlacement* placement, int loa
     }
     state->initLock = 0;
 }
-
-extern f32 lbl_803E3F30;
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E3F38;
-
 
 void texscroll_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

@@ -15,12 +15,6 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-static inline u8* Gameplay_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (u8*)objAnim->banks[objAnim->bankIndex];
-}
-
 extern undefined4 FUN_800033a8();
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_80006768();
@@ -48,7 +42,6 @@ extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286880();
 extern undefined4 FUN_8028688c();
-
 extern undefined4 DAT_802c28f0;
 extern undefined4 DAT_802c28f4;
 extern undefined4 DAT_802c28f8;
@@ -125,6 +118,29 @@ extern undefined4 DAT_803de10c;
 extern undefined4* DAT_803de110;
 extern f32 lbl_803E1348;
 extern undefined4 uRam803de108;
+extern int maybeTryLoadSave(int a);
+extern u8 lbl_80313CC0[];
+extern f32 lbl_803E0AB8;
+extern f32 lbl_803E0ABC;
+extern f32 lbl_803E0AC0;
+extern f32 lbl_803E0AC4;
+extern f32 lbl_803E0AC8;
+extern f32 lbl_803E0ACC;
+extern f32 lbl_803E0AD0;
+extern f32 lbl_803E0AD4;
+extern f32 lbl_803E0AD8;
+extern f32 lbl_803E0ADC;
+extern f32 lbl_803E0AE0;
+extern f32 lbl_803E0AE4;
+extern f32 lbl_803E0AE8;
+extern f32 lbl_803E0AEC;
+extern f32 lbl_803E0AF0;
+
+static inline u8* Gameplay_GetActiveModel(void* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (u8*)objAnim->banks[objAnim->bankIndex];
+}
 
 void saveFileStruct_unlockCheat(uint cheatId)
 {
@@ -232,8 +248,6 @@ undefined4* FUN_800e87a8(void)
 {
     return &DAT_803a45b0;
 }
-
-extern int maybeTryLoadSave(int a);
 
 int saveFn_800e8508(void);
 
@@ -696,23 +710,6 @@ enum
     SAVEGAME_EMPTY_TASK_HINT = -1,
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
-
-extern u8 lbl_80313CC0[];
-extern f32 lbl_803E0AB8;
-extern f32 lbl_803E0ABC;
-extern f32 lbl_803E0AC0;
-extern f32 lbl_803E0AC4;
-extern f32 lbl_803E0AC8;
-extern f32 lbl_803E0ACC;
-extern f32 lbl_803E0AD0;
-extern f32 lbl_803E0AD4;
-extern f32 lbl_803E0AD8;
-extern f32 lbl_803E0ADC;
-extern f32 lbl_803E0AE0;
-extern f32 lbl_803E0AE4;
-extern f32 lbl_803E0AE8;
-extern f32 lbl_803E0AEC;
-extern f32 lbl_803E0AF0;
 
 void dll_6F_func03(int sourceObj, int variant, int posSource, uint flags)
 {

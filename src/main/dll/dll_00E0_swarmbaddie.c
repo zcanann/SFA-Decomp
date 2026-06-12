@@ -17,6 +17,44 @@ extern undefined8 ObjGroup_RemoveObject();
 
 extern undefined4 DAT_803de6d0;
 
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void mm_free(void* p);
+extern f32 lbl_803E2678;
+extern f32 lbl_803E267C;
+extern f32 lbl_803E2680;
+extern f32 lbl_803E2684;
+extern f32 lbl_803E2688;
+extern f32 lbl_803E268C;
+extern f32 lbl_803E2690;
+extern f32 lbl_803E2694;
+extern f32 lbl_803E2698;
+extern f32 lbl_803E269C;
+extern f32 lbl_803E26A0;
+extern f32 lbl_803E26A4;
+extern f32 lbl_803E26B0;
+extern f32 lbl_803E26B4;
+extern f32 lbl_803E26B8;
+extern f32 lbl_803E26BC;
+extern f32 lbl_803E26C0;
+extern f32 lbl_803E26C4;
+extern f32 lbl_803E26C8;
+extern f32 lbl_803E26CC;
+extern int lbl_803DBC78;
+extern void* mmAlloc(int size, int heap, int flags);
+extern void* memset(void* dst, int val, u32 n);
+extern EffectInterface** gPartfxInterface;
+extern int lbl_803DDA60;
+extern f32 timeDelta;
+extern int Obj_GetPlayerObject(void);
+extern int Curve_AdvanceAlongPath(int curve, f32 t);
+extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern f32 sqrtf(f32 x);
+extern f32 mathSinf(f32 x);
+extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
+STATIC_ASSERT(sizeof(HagabonState) == 0x28);
+STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
+STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
+
 void pressureSwitch_freeSharedResource(void)
 {
     if (DAT_803de6d0 != 0)
@@ -54,47 +92,8 @@ void swarmbaddie_initialise(void)
 
 void wispbaddie_hitDetect(void);
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void mm_free(void* p);
-extern f32 lbl_803E2678;
-extern f32 lbl_803E267C;
-extern f32 lbl_803E2680;
-extern f32 lbl_803E2684;
-extern f32 lbl_803E2688;
-extern f32 lbl_803E268C;
-extern f32 lbl_803E2690;
-extern f32 lbl_803E2694;
-extern f32 lbl_803E2698;
-extern f32 lbl_803E269C;
-extern f32 lbl_803E26A0;
-extern f32 lbl_803E26A4;
-extern f32 lbl_803E26B0;
-extern f32 lbl_803E26B4;
-extern f32 lbl_803E26B8;
-extern f32 lbl_803E26BC;
-extern f32 lbl_803E26C0;
-extern f32 lbl_803E26C4;
-extern f32 lbl_803E26C8;
-extern f32 lbl_803E26CC;
-extern int lbl_803DBC78;
-extern void* mmAlloc(int size, int heap, int flags);
-extern void* memset(void* dst, int val, u32 n);
-extern EffectInterface** gPartfxInterface;
-extern int lbl_803DDA60;
-extern f32 timeDelta;
-extern int Obj_GetPlayerObject(void);
-extern int Curve_AdvanceAlongPath(int curve, f32 t);
-extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern f32 sqrtf(f32 x);
-extern f32 mathSinf(f32 x);
-extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
-
 #define SWARMBADDIE_FLAG_PATH_NEEDS_LINK 0x01
 #define SWARMBADDIE_FLAG_CHASE_PLAYER 0x02
-
-STATIC_ASSERT(sizeof(HagabonState) == 0x28);
-STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
-STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 
 void hagabon_hitDetect(int obj);
 

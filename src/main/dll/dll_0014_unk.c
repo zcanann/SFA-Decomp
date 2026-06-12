@@ -12,6 +12,8 @@ extern void OSReport(const char* fmt, ...);
 #include "main/dll/curve_walker.h"
 
 #include "main/dll/rom_curve_segment_projection.h"
+#include "main/dll/dll_0015_curves.h"
+#include "main/objlib.h"
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006a10();
@@ -118,6 +120,50 @@ extern u8 lbl_803A1730[];
 
 #pragma scheduling on
 #pragma peephole on
+extern u8 lbl_803DD440;
+extern void* memset(void* dst, int val, u32 n);
+extern f32 lbl_803E05C8;
+extern f32 lbl_803E05CC;
+extern f32 lbl_803E05F4;
+extern int Curve_AdvanceAlongPath(float* p, f32 dt);
+extern f32 lbl_803E05D0;
+extern f32 lbl_803E05D4;
+extern f32 lbl_803E05D8;
+extern f32 lbl_803E05A4;
+extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
+extern f32 lbl_803E0610;
+extern f32 lbl_803E0614;
+extern f32 lbl_803E0618;
+extern void Curve_BuildHermiteCoeffs(void);
+extern void Curve_EvalHermite(void);
+extern void curvesMove(float* state);
+extern void curvesSetupMoveNetworkCurve(float* state);
+extern f32 gFloatZero;
+extern f32 gFloatNegOne;
+extern void* memcpy(void* dst, const void* src, u32 n);
+extern f32 lbl_803E0648;
+extern f32 lbl_803E064C;
+extern f32 lbl_803E0650;
+extern f32 lbl_803E0654;
+extern int curveFn_800da23c(float* state, void* targetCurve);
+extern f32 lbl_803E05F8;
+extern void mapBlockFn_80059c2c(u8 * outFlags);
+extern f32 lbl_803E0600;
+extern f32 lbl_803E0604;
+extern f32 lbl_803E05FC;
+extern f32 lbl_803E0608;
+extern f32 lbl_803E060C;
+extern char sObjfsaMissingPatchExitPoint0[];
+extern char sObjfsaMissingPatchExitPoint1[];
+extern u8 gameTimerIsRunning(void* p, int a, int b);
+extern f32 vec3f_distanceSquared(f32 * posA, f32 * posB);
+extern f32 gFloatHalf;
+extern f32 lbl_803E12B8;
+extern f32 lbl_803E065C;
+extern f32 lbl_803E0660;
+extern f32 lbl_803E0664;
+extern SaveData saveData;
+
 static inline ObjfsaPatch* Objfsa_GetPatch(int patchIndex)
 {
     return &lbl_8039CAE8[patchIndex];
@@ -191,8 +237,6 @@ static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, uint currentWalkGr
     }
     return patchGroupId & 0xff;
 }
-
-extern u8 lbl_803DD440;
 
 undefined4
 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
@@ -1980,16 +2024,6 @@ void doNothing_onTrickyInit(void)
 
 int dll_12_func06_ret_0(void);
 
-extern void* memset(void* dst, int val, u32 n);
-extern f32 lbl_803E05C8;
-extern f32 lbl_803E05CC;
-extern f32 lbl_803E05F4;
-extern int Curve_AdvanceAlongPath(float* p, f32 dt);
-
-extern f32 lbl_803E05D0;
-extern f32 lbl_803E05D4;
-extern f32 lbl_803E05D8;
-
 #pragma scheduling off
 #pragma peephole off
 int fn_800D9F38(void* a, void* b)
@@ -2035,14 +2069,7 @@ int fn_800D9F38(void* a, void* b)
     return 0;
 }
 
-extern f32 lbl_803E05A4;
-extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
-
 void player_updateVel(char* p, char* obj, int unused);
-
-extern f32 lbl_803E0610;
-extern f32 lbl_803E0614;
-extern f32 lbl_803E0618;
 
 void RomCurve_setA4(void* a, void* b)
 {
@@ -2067,14 +2094,6 @@ void RomCurve_setA4(void* a, void* b)
         *(f32*)(A + 0x104) = lbl_803E0610 * t;
     }
 }
-
-extern void Curve_BuildHermiteCoeffs(void);
-extern void Curve_EvalHermite(void);
-extern void curvesMove(float* state);
-extern void curvesSetupMoveNetworkCurve(float* state);
-extern f32 gFloatZero;
-extern f32 gFloatNegOne;
-extern void* memcpy(void* dst, const void* src, u32 n);
 
 int RomCurve_setClosed(float* state, int closed)
 {
@@ -2475,11 +2494,6 @@ int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx)
     }
     return -1;
 }
-
-extern f32 lbl_803E0648;
-extern f32 lbl_803E064C;
-extern f32 lbl_803E0650;
-extern f32 lbl_803E0654;
 
 int RomCurve_findProjectedCurveFromStart(f32 x, f32 y, f32 z, int curve, float* outPhase)
 {
@@ -2946,8 +2960,6 @@ void RomCurve_stepClamped(float* state, f32 dt)
     Curve_AdvanceAlongPath(state, dt);
 }
 
-extern int curveFn_800da23c(float* state, void* targetCurve);
-
 #pragma peephole off
 int curveFn_800da23c(float* state, void* targetCurve)
 {
@@ -3100,8 +3112,6 @@ int fn_800DA980(float* state, void* fromCurve, void* toCurve, void* targetCurve)
     return 0;
 }
 
-extern f32 lbl_803E05F8;
-
 #pragma peephole off
 void* Objfsa_FindNearestCurveType24(int pos, int p4_filter, int p5_filter)
 {
@@ -3185,16 +3195,6 @@ void* Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
     }
     return bestHit;
 }
-
-extern void mapBlockFn_80059c2c(u8 * outFlags);
-extern f32 lbl_803E0600;
-extern f32 lbl_803E0604;
-extern f32 lbl_803E05FC;
-
-extern f32 lbl_803E0608;
-extern f32 lbl_803E060C;
-extern char sObjfsaMissingPatchExitPoint0[];
-extern char sObjfsaMissingPatchExitPoint1[];
 
 #define OBJFSA_CORNER(BASE, OFF, POSOFF)                                        \
     (f32)((f32)*(s8 *)(OFF) * scale + *(f32 *)((BASE) + (POSOFF)))
@@ -3664,8 +3664,6 @@ int RomCurve_func16(double x, double y, double z)
     return -1;
 }
 
-extern u8 gameTimerIsRunning(void* p, int a, int b);
-
 void walkPath_writeU16LE(u32 v, u8* dst)
 {
     v = v & 0xffff;
@@ -3723,19 +3721,6 @@ int fn_800DB240(int p1, f32* outVec, u16 id)
 void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval);
 
 /* segment pragma-stack balance (re-split): */
-
-#include "main/dll/dll_0015_curves.h"
-#include "main/game_ui_interface.h"
-#include "main/objlib.h"
-#include "main/game_object.h"
-
-extern f32 vec3f_distanceSquared(f32 * posA, f32 * posB);
-
-extern f32 gFloatHalf;
-extern f32 lbl_803E12B8;
-extern f32 lbl_803E065C;
-extern f32 lbl_803E0660;
-extern f32 lbl_803E0664;
 
 static inline u32 RomCurve_GetId(RomCurveDef* curve);
 
@@ -5481,8 +5466,6 @@ void curves_addCurveDef(RomCurveDef* curve)
 
 #pragma dont_inline on
 #pragma dont_inline reset
-
-extern SaveData saveData;
 
 void curves_release(void)
 {

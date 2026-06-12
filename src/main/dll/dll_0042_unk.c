@@ -2,6 +2,13 @@
 #include "main/dll/CAM/attention.h"
 #include "main/dll/CAM/camcontrol_mode_settings.h"
 #include "main/object_transform.h"
+#include "main/dll/CAM/camslide.h"
+#include "main/camera_interface.h"
+#include "main/camera_object.h"
+#include "main/dll/CAM/firstperson.h"
+#include "main/game_object.h"
+#include "main/mm.h"
+#include "string.h"
 
 extern int objBboxFn_800640cc(f32* startPoints, f32* endPoints, int radii, int hitOut, int objOut,
                               int pointCount, int mask, int flags, int mode);
@@ -17,6 +24,53 @@ extern f32 lbl_803E16AC;
 extern f32 lbl_803E16B4;
 extern f32 lbl_803E16D0;
 extern f32 lbl_803E16D4;
+
+extern void mtxRotateByVec3s(void* matrix, void* angles);
+extern void Matrix_TransformPoint(void* matrix, f64 x, f64 y, f64 z, f32* outX, f32* outY, f32* outZ);
+extern f32 mathSinf(f32 x);
+extern f32 fn_802966F4(GameObject * obj);
+extern u8 framesThisStep;
+extern f32 lbl_803E168C;
+extern f32 lbl_803E1690;
+extern f32 lbl_803E1694;
+extern f32 lbl_803E16A4;
+extern f32 lbl_803E16B8;
+extern f32 lbl_803E16D8;
+extern f32 lbl_803E16DC;
+extern f32 lbl_803E16E0;
+extern f32 lbl_803E16E4;
+extern f32 lbl_803E16E8;
+extern f32 lbl_803E16EC;
+extern f32 lbl_803E16F0;
+extern f32 lbl_803E16F4;
+extern f32 timeDelta;
+extern undefined4 FUN_800068f4();
+extern undefined4 camcontrol_getTargetPosition();
+extern f32 lbl_803E1710;
+extern f32 lbl_803E1714;
+extern f32 PSVECMag(f32 * vec);
+extern f32 lbl_803E1700;
+extern f32 lbl_803E1704;
+extern f32 lbl_803E1708;
+extern f32 lbl_803E170C;
+extern void camcontrol_traceMove(f32 radius, f32* from, void* to, f32* out, void* work, int a,
+                                 int b, int c);
+extern void camcontrol_updateTargetAction(int camera, int obj);
+extern void camMoveFn_80104040(int camera, int obj);
+extern void camcontrol_updateModeSettings(int camera);
+extern int EmissionController_IsLingering(int obj);
+extern void fn_8029656C(int obj, float* out);
+extern void cameraGetPrevPos2(int obj, float* x, float* y, float* z);
+extern f32 lbl_803DD52C;
+extern f32 lbl_803E1718;
+extern f32 lbl_803E171C;
+extern f32 lbl_803E1720;
+extern f32 lbl_803E1724;
+extern f32 lbl_803E1728;
+extern f32 lbl_803E172C;
+extern f32 lbl_803E1730;
+extern f32 lbl_803E1734;
+extern f32 lbl_803E1738;
 
 void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int param_3, float* upperBound,
                                      float* lowerBound)
@@ -142,31 +196,6 @@ void CameraModeNormal_func0A(float* minDistanceOut, float* maxDistanceOut,
     }
     return;
 }
-
-#include "main/dll/CAM/camslide.h"
-#include "main/camera_interface.h"
-#include "main/dll/CAM/camcontrol_mode_settings.h"
-
-extern void mtxRotateByVec3s(void* matrix, void* angles);
-extern void Matrix_TransformPoint(void* matrix, f64 x, f64 y, f64 z, f32* outX, f32* outY, f32* outZ);
-extern f32 mathSinf(f32 x);
-extern f32 fn_802966F4(GameObject * obj);
-
-extern u8 framesThisStep;
-extern f32 lbl_803E168C;
-extern f32 lbl_803E1690;
-extern f32 lbl_803E1694;
-extern f32 lbl_803E16A4;
-extern f32 lbl_803E16B8;
-extern f32 lbl_803E16D8;
-extern f32 lbl_803E16DC;
-extern f32 lbl_803E16E0;
-extern f32 lbl_803E16E4;
-extern f32 lbl_803E16E8;
-extern f32 lbl_803E16EC;
-extern f32 lbl_803E16F0;
-extern f32 lbl_803E16F4;
-extern f32 timeDelta;
 
 #define gCamcontrolModeSettings cameraMtxVar57
 
@@ -443,15 +472,6 @@ void firstperson_updatePitch(f32 targetY, CameraObject* camera)
     camera->anim.rotY = (s16)((int)d + camera->anim.rotY);
 }
 
-#include "main/camera_interface.h"
-#include "main/object_transform.h"
-
-extern undefined4 FUN_800068f4();
-extern undefined4 camcontrol_getTargetPosition();
-
-extern f32 lbl_803E1710;
-extern f32 lbl_803E1714;
-
 #define gCamcontrolModeSettings cameraMtxVar57
 
 static inline f64 FirstPerson_U32AsDouble(u32 value)
@@ -465,12 +485,6 @@ static inline f64 FirstPerson_S32AsDouble(s32 value)
     u64 bits = CONCAT44(0x43300000, (u32)value ^ 0x80000000);
     return *(f64*)&bits;
 }
-
-extern f32 PSVECMag(f32 * vec);
-extern f32 lbl_803E1700;
-extern f32 lbl_803E1704;
-extern f32 lbl_803E1708;
-extern f32 lbl_803E170C;
 
 void firstperson_updatePosition(CameraObject* camera, ObjAnimComponent* target)
 {
@@ -676,32 +690,6 @@ void CameraModeNormal_free(CameraObject* camera)
     cameraMtxVar57->wallAvoidanceFlags.b6 = 0;
 }
 
-#include "main/camera_interface.h"
-#include "main/camera_object.h"
-#include "main/dll/CAM/attention.h"
-#include "main/dll/CAM/camcontrol_mode_settings.h"
-#include "main/dll/CAM/camslide.h"
-#include "main/dll/CAM/firstperson.h"
-#include "main/object_transform.h"
-
-extern void camcontrol_traceMove(f32 radius, f32* from, void* to, f32* out, void* work, int a,
-                                 int b, int c);
-extern void camcontrol_updateTargetAction(int camera, int obj);
-extern void camMoveFn_80104040(int camera, int obj);
-extern void camcontrol_updateModeSettings(int camera);
-extern int EmissionController_IsLingering(int obj);
-extern void fn_8029656C(int obj, float* out);
-extern void cameraGetPrevPos2(int obj, float* x, float* y, float* z);
-
-extern f32 lbl_803DD52C;
-extern f32 lbl_803E1718;
-extern f32 lbl_803E171C;
-extern f32 lbl_803E1720;
-extern f32 lbl_803E1724;
-extern f32 lbl_803E1728;
-extern f32 lbl_803E172C;
-extern f32 lbl_803E1730;
-
 #define gCamcontrolModeSettings cameraMtxVar57
 
 void camstatic_update(CameraObject* camera)
@@ -904,17 +892,6 @@ void camstatic_update(CameraObject* camera)
                                    &camera->anim.localPosY, &camera->anim.localPosZ,
                                    (u32)camera->anim.parent);
 }
-
-#include "main/camera_interface.h"
-#include "main/camera_object.h"
-#include "main/dll/CAM/camcontrol_mode_settings.h"
-#include "main/game_object.h"
-#include "main/mm.h"
-#include "main/object_transform.h"
-#include "string.h"
-
-extern f32 lbl_803E1734;
-extern f32 lbl_803E1738;
 
 #define gCamcontrolModeSettings cameraMtxVar57
 void pathcam_loadSettings(CameraObject* cam, int mode, u8* data)

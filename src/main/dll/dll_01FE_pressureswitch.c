@@ -83,6 +83,17 @@ extern f32 lbl_803E6A20;
 extern f32 lbl_803E6A24;
 extern f32 lbl_803E6A80;
 
+extern f32 lbl_803E5D78;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern f32 timeDelta;
+extern f32 lbl_803E5D58;
+extern void objRenderFn_8003b8f4(f32);
+extern int GameBit_Get(int id);
+extern int Obj_GetPlayerObject(void);
+extern f32 Vec_distance(f32* a, f32* b);
+extern void GameBit_Set(int slot, int val);
+
 void FUN_801f1634(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9)
@@ -238,8 +249,6 @@ void pressureswitch_initialise(void)
 {
 }
 
-extern f32 lbl_803E5D78;
-
 typedef struct PressureSwitchFlags
 {
     u8 unusedHighBit : 1;
@@ -287,16 +296,9 @@ void pressureswitch_init(int* obj, u8* init)
 
 void dll_1FF_free_nop(void);
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern f32 timeDelta;
-
 int pressureswitch_getExtraSize(void) { return 0x8; }
 int pressureswitch_getObjectTypeId(void) { return 0x0; }
 int dll_1FF_getExtraSize_ret_8(void);
-
-extern f32 lbl_803E5D58;
-extern void objRenderFn_8003b8f4(f32);
 
 void pressureswitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -315,11 +317,6 @@ int PressureSwitch_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 void LaserBeam_release(void);
 
-extern int GameBit_Get(int id);
-
-extern int Obj_GetPlayerObject(void);
-extern f32 Vec_distance(f32* a, f32* b);
-
 /* dll_1FF_render: when obj->_f8 implies
  * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
  * based on obj->_b4 == -1, then call objRenderFn_8003b8f4. */
@@ -332,8 +329,6 @@ extern f32 Vec_distance(f32* a, f32* b);
  * (dll_200_SeqFn) into obj->_bc and prime obj->_b8 (the body block) with
  * fixed bytes, the three float position-quaternion from arg+8/c/10,
  * GameBit_Get(0xd0) latched into b->_24, plus several literal latches. */
-
-extern void GameBit_Set(int slot, int val);
 
 #pragma opt_strength_reduction off
 

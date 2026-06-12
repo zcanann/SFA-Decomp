@@ -109,6 +109,15 @@ extern f32 lbl_803E7008;
 extern f32 lbl_803E700C;
 extern f32 lbl_803E7010;
 
+extern void DBstealerwo_setFuncPtrs_80203c78(void);
+extern void fn_802960E8(void* playerObj, int p2);
+extern f32 timeDelta;
+extern s16 lbl_80329848[];
+extern int dbstealerworm_stateHandlerB06();
+extern void unlockLevel(int a, int b, int c);
+extern void Music_Trigger(int a, int b);
+extern f32 lbl_803E62F4;
+
 undefined4
 FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
@@ -605,11 +614,6 @@ int dfpobjcreator_getExtraSize(void);
 
 void dfplevelcontrol_free(int x) { extern undefined8 ObjGroup_RemoveObject(); /* #57 */ ObjGroup_RemoveObject(x, 0x9); }
 
-extern void DBstealerwo_setFuncPtrs_80203c78(void);
-
-extern void fn_802960E8(void* playerObj, int p2);
-extern f32 timeDelta;
-
 int dfplevelcontrol_SeqFn(int p1)
 {
     extern void* Obj_GetPlayerObject(void); /* #57 */
@@ -623,8 +627,6 @@ int dfplevelcontrol_SeqFn(int p1)
     }
     return 0;
 }
-
-extern s16 lbl_80329848[];
 
 void dfplevelcontrol_initialise(void)
 {
@@ -657,12 +659,7 @@ void dfplevelcontrol_setScale(int unused, u8* out)
 
 int dbstealerworm_stateHandlerA00(int obj, int p2);
 
-extern int dbstealerworm_stateHandlerB06();
-
 void DBstealerwo_setFuncPtrs_80203c78(void);
-
-extern void unlockLevel(int a, int b, int c);
-extern void Music_Trigger(int a, int b);
 
 void dfplevelcontrol_init(int obj, int param2)
 {
@@ -693,8 +690,6 @@ void dfplevelcontrol_init(int obj, int param2)
         Music_Trigger(0xe4, 0);
     }
 }
-
-extern f32 lbl_803E62F4;
 
 void dfplevelcontrol_update(int obj)
 {
@@ -838,11 +833,6 @@ void fn_80204098(int obj)
 }
 
 int dbstealerworm_stateHandlerB06(int obj, int p2);
-
-#include "main/dll/baddie/chuka.h"
-#include "main/effect_interfaces.h"
-#include "main/dll_000A_expgfx.h"
-#include "main/game_object.h"
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 

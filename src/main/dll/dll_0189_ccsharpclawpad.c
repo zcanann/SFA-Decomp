@@ -17,6 +17,7 @@ extern void Sfx_PlayFromObject(int obj, int id);
 #include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMsnowball.h"
+#include "main/dll/SC/SCtotemlogpuz.h"
 
 extern int ObjTrigger_IsSet();
 extern undefined4 FUN_8008112c();
@@ -25,6 +26,25 @@ extern f32 lbl_803E530C;
 extern f32 lbl_803E5310;
 extern f32 lbl_803E5314;
 extern f32 lbl_803E5360;
+
+extern int ObjTrigger_IsSet(int obj);
+extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
+extern f32 lbl_803E46A8;
+extern f32 lbl_803E46AC;
+extern f32 lbl_803E46B0;
+extern f32 lbl_803E46B4;
+extern f32 lbl_803E46B8;
+extern f32 lbl_803E46BC;
+extern f32 lbl_803E46C0;
+extern f32 lbl_803E46C4;
+extern u8 fn_801334E0(void);
+extern void showHelpText(int textId);
+extern int playerIsDisguised(int obj);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
+                                  int particleId, int lifetime, f32 scaleX, f32 scaleY,
+                                  f32 scaleZ, void* args, int arg9);
+extern f32 lbl_803E46D0;
 
 void FUN_801aaa6c(double param_1, int param_2, int param_3)
 {
@@ -94,8 +114,6 @@ void cclevcontrol_free(void);
  * decrements the gamebit, and flags state2[0x6] bit 0. If gbit 0xa9 is
  * clear, sets the obj[0xaf] 0x10 flag instead. */
 
-extern int ObjTrigger_IsSet(int obj);
-
 /* ccpedstal_updateAltVariant: ccpedstal alt-variant think-routine. Toggles obj[0xaf]
  * bit 8 from gbit 0xdc5, then reads state2's gamebit at +0x4: if set,
  * sets bit 8 again and selects model 0; if clear, selects model 1 and
@@ -103,24 +121,6 @@ extern int ObjTrigger_IsSet(int obj);
  * id=1, increments gbit 0xa9, and latches state2[0x6] bit 0. Mirrors
  * the no-mark branches into a shared r0=0/cmpwi end-check via goto to
  * match target's layout. */
-
-extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
-
-extern f32 lbl_803E46A8;
-extern f32 lbl_803E46AC;
-extern f32 lbl_803E46B0;
-extern f32 lbl_803E46B4;
-extern f32 lbl_803E46B8;
-extern f32 lbl_803E46BC;
-extern f32 lbl_803E46C0;
-extern f32 lbl_803E46C4;
-extern u8 fn_801334E0(void);
-extern void showHelpText(int textId);
-extern int playerIsDisguised(int obj);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
-                                  int particleId, int lifetime, f32 scaleX, f32 scaleY,
-                                  f32 scaleZ, void* args, int arg9);
 
 typedef struct SharpClawPadParticleArgs
 {
@@ -194,7 +194,3 @@ void ccsharpclawpad_update(int obj)
                               *(f32*)&lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
     }
 }
-
-#include "main/dll/SC/SCtotemlogpuz.h"
-
-extern f32 lbl_803E46D0;

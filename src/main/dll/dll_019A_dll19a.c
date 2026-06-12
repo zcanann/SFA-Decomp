@@ -34,6 +34,8 @@ extern int Obj_AllocObjectSetup(int size, int typeId);
 extern char* Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern void Sfx_PlayFromObject(int obj, int sfx);
 
+extern f32 lbl_803E5180;
+
 void dll_19A_update(int obj)
 {
     int setup;
@@ -140,8 +142,6 @@ void dll_19A_init(int obj, s8* def)
     *(u8*)((char*)obj + 0x37) = 0xFF;
     ((GameObject*)obj)->anim.alpha = 0xFF;
 }
-
-extern f32 lbl_803E5180;
 
 void dll_19A_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {

@@ -2,6 +2,13 @@
 #include "main/dll/CAM/camcannon.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcannon_state.h"
+#include "main/camera_object.h"
+#include "main/dll/CAM/camcombat_state.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/game_object.h"
+#include "main/mm.h"
+#include "main/object_transform.h"
+#include "main/pad.h"
 
 extern f32 Curve_EvalLinear(f32 param_1, float* param_2, float* param_3);
 extern f32 Curve_EvalHermite(f32 param_1, float* param_2, float* param_3);
@@ -18,6 +25,19 @@ extern f32 lbl_803E18AC;
 extern f32 lbl_803E18B0;
 extern f32 lbl_803E18B4;
 extern f32 lbl_803E18B8;
+
+extern undefined4 FUN_800033a8();
+extern f32 Curve_EvalCatmullRom(f32* samples, f32 t, f32* out);
+extern f32 Curve_EvalBSpline(f32* samples, f32 t, f32* out);
+extern void fn_8010A104(int* nextNodeId, int* prevNodeId, f32 x, f32 y, f32 z, int tag);
+extern void pathcam_buildWindowSamples(int* window, f32* x, f32* y, f32* z, f32* pitch, f32* yaw, f32* roll, f32* fov);
+extern void pathcam_findTaggedNodeWindow(int node, int* window, int p3);
+extern f32 fn_8010AC48(f32 x, f32 y, f32 z, int* window);
+extern int getAngle(f32 a, f32 b);
+extern f32 sqrtf(f32);
+extern void* memset(void* p, int c, int n);
+extern u8 framesThisStep;
+extern f32 lbl_803E18BC;
 
 uint fn_8010AEA8(CameraObject* camera, uint flagsIn)
 {
@@ -168,29 +188,6 @@ void CameraModeTestStrength_free(void)
     mm_free((u32)lbl_803DD560);
     lbl_803DD560 = 0;
 }
-
-#include "main/camera_interface.h"
-#include "main/camera_object.h"
-#include "main/dll/CAM/camcannon_state.h"
-#include "main/dll/CAM/camcombat_state.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/game_object.h"
-#include "main/mm.h"
-#include "main/object_transform.h"
-#include "main/pad.h"
-
-extern undefined4 FUN_800033a8();
-extern f32 Curve_EvalCatmullRom(f32* samples, f32 t, f32* out);
-extern f32 Curve_EvalBSpline(f32* samples, f32 t, f32* out);
-extern void fn_8010A104(int* nextNodeId, int* prevNodeId, f32 x, f32 y, f32 z, int tag);
-extern void pathcam_buildWindowSamples(int* window, f32* x, f32* y, f32* z, f32* pitch, f32* yaw, f32* roll, f32* fov);
-extern void pathcam_findTaggedNodeWindow(int node, int* window, int p3);
-extern f32 fn_8010AC48(f32 x, f32 y, f32 z, int* window);
-extern int getAngle(f32 a, f32 b);
-extern f32 sqrtf(f32);
-extern void* memset(void* p, int c, int n);
-extern u8 framesThisStep;
-extern f32 lbl_803E18BC;
 
 void CameraModeTestStrength_update(short* cam)
 {

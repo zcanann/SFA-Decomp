@@ -8,12 +8,14 @@
 extern uint GameBit_Get();
 extern undefined4 GameBit_Set();
 
+extern int* getTrickyObject(void);
+extern uint GameBit_Get(int id);
+extern f32 lbl_803E5280;
+
 int sh_tricky_getExtraSize(void)
 {
     return 1;
 }
-
-extern int* getTrickyObject(void);
 
 void sh_tricky_update(int* obj)
 {
@@ -63,8 +65,6 @@ void sh_tricky_update(int* obj)
 
 int EdibleMushroom_SeqFn(int* obj);
 
-extern uint GameBit_Get(int id);
-
 void sh_tricky_init(int* obj)
 {
     u8* state = ((GameObject*)obj)->extra;
@@ -78,10 +78,3 @@ void sh_tricky_init(int* obj)
     }
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
 }
-
-extern f32 lbl_803E5280;
-
-#include "main/mapEvent.h"
-#include "main/dll/flybaddie1D7.h"
-#include "main/game_object.h"
-#include "main/objseq.h"

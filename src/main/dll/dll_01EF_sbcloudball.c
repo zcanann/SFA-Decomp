@@ -56,6 +56,18 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
+extern f32 lbl_803E58E8;
+extern f32 lbl_803E58EC;
+extern f32 lbl_803E58F0;
+extern void projectileParticleFxFn_80099660(int* obj, f32 scale, int type);
+extern f32 lbl_803E5910;
+extern f32 lbl_803E5914;
+extern f32 lbl_803E58F4;
+extern f32 lbl_803E58F8;
+extern f32 lbl_803E58FC;
+extern f32 lbl_803E5900;
+extern f32 lbl_803E5904;
+
 void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined2* param_9, int param_10)
@@ -77,8 +89,6 @@ void SB_KyteCage_render(void);
 int SB_CloudBall_getExtraSize(void) { return 0x24; }
 int SB_CloudBall_getObjectTypeId(void) { return 0x0; }
 int SB_KyteCage_getExtraSize(void);
-
-extern f32 lbl_803E58E8;
 
 void SB_CloudBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -110,10 +120,6 @@ void SB_CloudBall_free(int* obj)
     }
 }
 
-extern f32 lbl_803E58EC;
-extern f32 lbl_803E58F0;
-extern void projectileParticleFxFn_80099660(int* obj, f32 scale, int type);
-
 void SB_CloudBall_hitDetect(int* obj)
 {
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
@@ -133,9 +139,6 @@ void SB_CloudBall_hitDetect(int* obj)
     ((GameObject*)obj)->anim.alpha = 0;
     projectileParticleFxFn_80099660(obj, lbl_803E58E8, 2);
 }
-
-extern f32 lbl_803E5910;
-extern f32 lbl_803E5914;
 
 void SB_CloudBall_init(int* obj)
 {
@@ -162,12 +165,6 @@ void SB_CloudBall_init(int* obj)
         }
     }
 }
-
-extern f32 lbl_803E58F4;
-extern f32 lbl_803E58F8;
-extern f32 lbl_803E58FC;
-extern f32 lbl_803E5900;
-extern f32 lbl_803E5904;
 
 void SB_CloudBall_update(int obj)
 {
