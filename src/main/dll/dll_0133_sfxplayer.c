@@ -14,10 +14,7 @@
 
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
 
-extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803DC074;
 
 /*
@@ -33,7 +30,6 @@ extern f32 lbl_803DC074;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern f32 timeDelta;
 
 
 /*
@@ -139,16 +135,12 @@ extern f32 timeDelta;
 
 
 
-extern u8 framesThisStep;
 
 
 
 /* 8b "li r3, N; blr" returners. */
-int lightning_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E4048;
-extern void objRenderFn_8003b8f4(f32);
 
 
 
@@ -168,7 +160,6 @@ extern void objRenderFn_8003b8f4(f32);
 
 
 
-extern f32 sqrtf(f32);
 
 /* EN v1.0 0x80196990  size: 1752b  dimbossicesmash_update: gate on the
  * trigger gamebit, integrate velocity/rotation with per-axis gravity
@@ -211,16 +202,6 @@ extern f32 sqrtf(f32);
 
 
 
-typedef struct LightningPlacement
-{
-    u8 pad0[0x14 - 0x0];
-    u32 unk14;
-    u32 unk18;
-    u8 pad1C[0x22 - 0x1C];
-    u16 unk22;
-    s16 unk24;
-    u8 pad26[0x28 - 0x26];
-} LightningPlacement;
 
 
 typedef struct SfxplayerObjPlacement
@@ -235,35 +216,14 @@ typedef struct SfxplayerObjPlacement
 } SfxplayerObjPlacement;
 
 
-typedef struct WaterFallSprayState
-{
-    u32 unk0;
-    u32 unk4;
-} WaterFallSprayState;
 
 
-extern void* ObjGroup_GetObjects();
-extern undefined4 objInterpretSeq();
 
-extern f32 lbl_803E4088;
-extern f32 lbl_803E408C;
-extern f32 lbl_803E4090;
-extern f32 lbl_803E40A0;
 extern f32 lbl_803E40B8;
-extern f32 lbl_803E40C8;
-extern f32 lbl_803E40CC;
-extern f32 lbl_803E40D8;
 
 extern u8* Obj_GetPlayerObject(void);
-extern f32 sqrtf(f32 value);
-extern f32 mathSinf(f32 angle);
-extern f32 mathCosf(f32 angle);
 extern int getCurSeqNo(void);
-extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
-extern void OSReport(const char* fmt, ...);
-extern const char sMoonrockTriggerIdentFormat[];
 
-#define MOONROCK_ANGLE_TO_RADIANS(angle) ((lbl_803E40C8 * (f32)(s32)(-(angle))) / lbl_803E40CC)
 
 /*
  * --INFO--
@@ -279,63 +239,24 @@ extern const char sMoonrockTriggerIdentFormat[];
  * PAL Size: TODO
  */
 /* lightning_free: ObjGroup_RemoveObject + free of obj->_b8->_0 if non-null. */
-extern void mm_free(void* p);
 
-void lightning_free(u8* obj, int p2);
 
 /* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
  * lightningRender(handle). */
-extern void lightningRender(u32 handle);
 
-void lightning_render(u8* obj);
 
-extern int lightningCreate(float* start, float* end, f32 radiusX, f32 radiusY, int delay,
-                           int param_6, int param_7);
-extern void hitDetectFn_80097070(u8* obj, double radius, int param_3, int param_4, int param_5,
-                                 int param_6);
-extern void objfx_spawnDirectionalBurst(u8* obj, int param_2, double radius, int param_4, int param_5,
-                                        int param_6, double scale, int param_8, int param_9);
 
-typedef struct LightningFlags
-{
-    u8 enabled : 1; /* 0x80 */
-    u8 noAge : 1; /* 0x40 */
-    u8 style : 1; /* 0x20 */
-    u8 pad : 5;
-} LightningFlags;
 
-typedef struct LightningMode
-{
-    u8 pad : 4;
-    u8 mode : 4; /* 0x0f */
-} LightningMode;
 
-void lightning_update(u8* obj);
 
-void lightning_init(u8* obj, u8* data);
 
-void WaterFallSpray_free(u8* obj);
 
-typedef struct WaterFallSprayPartfxArgs
-{
-    u32 pad0;
-    u32 pad1;
-    u32 pad2;
-    f32 xOffset;
-    f32 yOffset;
-    f32 zOffset;
-} WaterFallSprayPartfxArgs;
 
-#define WATERFALLSPRAY_SPAWN_PARTICLE(obj, id, args) \
-    (*gPartfxInterface)->spawnObject( \
-        (obj), (id), (args), 4, -1, 0)
 
-void WaterFallSpray_update(int* objParam);
 
 /* WaterFallSpray_init: stash 3 signed-byte<<8 fields at obj+0..+4, clear
  * obj+0xf4, install WaterFallSpray_SeqFn as the think routine at obj+0xbc, then
  * pick one of two SFX-id pairs based on the range of obj->_4c->_14. */
-void WaterFallSpray_init(u8* obj, u8* data);
 
 /* sfxplayerObj_init: prime obj->_b0 with SFXPLAYER_OBJECT_FLAGS, then dispatch
  * on (s8)data->_1d: gamebit mode stores GameBit_Get(data->_18) at sub[0] if the
@@ -560,9 +481,7 @@ void sfxplayerObj_update(u8* obj)
 
 void fn_80198A00(u8* obj, int seqArg);
 
-int fn_80198B68(u8* obj, f32* point);
 
-void fn_80198DE8(u8* obj, int seqArg);
 
 /*
  * --INFO--
@@ -652,10 +571,8 @@ void fn_80198DE8(u8* obj, int seqArg);
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void WaterFallSpray_render(void);
 
 /* 8b "li r3, N; blr" returners. */
-int WaterFallSpray_getExtraSize(void);
 int sfxplayerObj_getExtraSize(void) { return 0x8; }
 
 int WaterFallSpray_SeqFn(int* obj);

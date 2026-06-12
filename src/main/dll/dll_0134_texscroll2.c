@@ -171,20 +171,14 @@ void texscroll2_update(TexScroll2Object* obj)
 
 void texscroll_free(void);
 
-void texscroll_hitDetect(void);
 
-void texscroll_update(void);
 
-void texscroll_release(void);
 
-void texscroll_initialise(void);
 
 int texscroll2_getExtraSize(void) { return 0x18; }
 int texscroll2_getObjectTypeId(void) { return 0x0; }
 int texscroll_getExtraSize(void);
-int texscroll_getObjectTypeId(void);
 
-void waveanimator_modelMtxFn(int obj, int a, int b, int c);
 
 void texscroll2_init(TexScroll2Object* obj, TexScrollPlacement* placement, int loadFlags)
 {
@@ -205,7 +199,6 @@ void texscroll_init(TexScrollObject* obj, TexScrollPlacement* placement, int loa
 
 extern f32 lbl_803E3F30;
 extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E3F38;
 
 void texscroll2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
