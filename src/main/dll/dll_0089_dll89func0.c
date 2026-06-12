@@ -1,4 +1,5 @@
 #include "main/effect_interfaces.h"
+#include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
 
@@ -16,14 +17,7 @@ extern f32 lbl_803E1040;
 extern f32 lbl_803E1044;
 extern f32 lbl_803E1048;
 
-typedef struct
-{
-    u32 mode;
-    f32 x, y, z;
-    void* tex;
-    u16 flags;
-    u8 layer;
-} FbCmd;
+
 
 
 /*
