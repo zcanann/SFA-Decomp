@@ -7,7 +7,6 @@
 #include "main/screen_transition.h"
 
 
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern EffectInterface** gPartfxInterface;
 extern undefined4 DAT_803de0af;
 
@@ -58,59 +57,32 @@ void FUN_800d7780(undefined param_1)
 /* Trivial 4b 0-arg blr leaves. */
 void Checkpoint_release(void);
 
-void Dummy04_func14_nop(void);
 
-void Dummy04_func26_nop(void);
 
-void Dummy04_func25_nop(void);
 
-void Dummy04_func23_nop(void);
 
-void Dummy04_func20_nop(void);
 
-void Dummy04_func1F_nop(void);
 
-void Dummy04_func1E_nop(void);
 
-void Dummy04_func1C_nop(void);
 
-void Dummy04_func1B_nop(void);
 
-void Dummy04_func1A_nop(void);
 
-void Dummy04_func19_nop(void);
 
-void Dummy04_func18_nop(void);
 
-void Dummy04_func17_nop(void);
 
-void Dummy04_func16_nop(void);
 
-void Dummy04_onSetupPlayer(void);
 
-void Dummy04_func15_nop(void);
 
-void Dummy04_func13_nop(void);
 
-void Dummy04_func12_nop(void);
 
-void Dummy04_func10_nop(void);
 
-void Dummy04_func0E_nop(void);
 
-void Dummy04_func0C_nop(void);
 
-void Dummy04_onSelectSave(void);
 
-void Dummy04_func08_nop(void);
 
-void Dummy04_func07_nop(void);
 
-void Dummy04_func04_nop(void);
 
-void Dummy04_release(void);
 
-void Dummy04_initialise(void);
 
 void dll_0F_func19_nop(void)
 {
@@ -118,22 +90,10 @@ void dll_0F_func19_nop(void)
 
 /* 8b "li r3, N; blr" returners. */
 int Dummy04_func24_ret_0(void);
-int Dummy04_func22_ret_127(void);
-int Dummy04_func21_ret_0(void);
-int Dummy04_func1D_ret_0(void);
-int Dummy04_func11_ret_0(void);
-int Dummy04_func0F_ret_0(void);
-int Dummy04_func0D_ret_0(void);
-int Dummy04_func0B_ret_0(void);
-int Dummy04_func0A_ret_0(void);
-int Dummy04_func05_ret_0(void);
 
 /* sda21 accessors. */
-extern u8 lbl_803DD42D;
-u8 screenTransition_func07(void);
 
 /* Pattern wrappers. */
-extern u32 lbl_803DD410;
 
 /* 12b 3-insn patterns. */
 extern u32 lbl_803DD43C;
@@ -147,20 +107,14 @@ void player_setAnimIds(int unused1, int unused2, u32 a, u32 b)
 
 /* misc 8b leaves */
 extern f32 screenTransitionAlpha;
-f32 screenTransition_getAlpha(void);
 
 /* Pattern wrappers. */
-int Dummy04_func03_ret_m1(void);
 
 /* sda21 writers. */
-extern u8 screenTransitionPause;
 #pragma peephole off
-void setScreenTransitionPause(u32 pause);
 #pragma peephole reset
 
 /* fcmp-eq-to-bool. */
-extern f32 lbl_803E0558;
-u32 isScreenTransitionActive(void);
 
 /* multi-store leaf (single float broadcast). */
 extern f32 lbl_803E0570;
@@ -179,13 +133,6 @@ void player_clearXZvel(int* obj, int* state)
 extern u32 lbl_8039CA98[];
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern f32 lbl_803E0588;
-extern f32 lbl_803E0564;
-extern f32 lbl_803E0560;
-extern f32 lbl_803E055C;
-extern f32 lbl_803DD424;
-extern f32 lbl_803DD428;
-extern u8 lbl_803DD42C;
-extern u8 lbl_803DD42E;
 extern void player_followCurve(int* obj, int* state, f32 a, f32 b, f32 t, int p5);
 extern f32 lbl_803E05B4;
 extern f32 lbl_803E05B8;
@@ -267,14 +214,11 @@ void player_findCurve(int* obj, int* state, int p3)
 
 void screenTransitionFn_800d7b04(int duration, int type);
 
-void screenTransition_fadeFrom(int duration, int type, f32 from);
 
 #pragma opt_common_subs off
-void screenTransition_screenFade(int duration, int type);
 #pragma opt_common_subs reset
 
 #pragma opt_common_subs off
-void screenTransition_Do(int duration, int type);
 #pragma opt_common_subs reset
 
 void dll_0F_func0B(int* obj, int* state, f32 f1, f32 f2, f32 f3)
@@ -743,33 +687,12 @@ void player_animFn16(int* obj, int* ctx, int moveA, int moveB)
     }
 }
 #pragma opt_common_subs reset
-typedef struct
-{
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
-} HudColor;
 
-extern u8 gDvdErrorPauseActive;
-extern f32 lbl_803E0568;
-extern void GXGetScissor(int* x, int* y, int* w, int* h);
-extern void GXSetScissor(int x, int y, int w, int h);
-extern void hudDrawRect(int x, int y, int w, int h, HudColor col);
-extern void setHudOpacity(int op);
-extern void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b);
 #pragma opt_common_subs off
-void screenTransition_do2(int p1, int p2, int p3);
 #pragma opt_common_subs reset
 
-extern f32 lbl_803E0540;
-extern f32 lbl_803E0544;
-extern f32 lbl_803E0548;
-extern void Camera_GetCurrentViewport(int* x1, int* y1, int* x2, int* y2);
 
-void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b);
 
-extern f64 lbl_803E0520;
 
 
 /* segment pragma-stack balance (re-split): */

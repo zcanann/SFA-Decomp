@@ -8,7 +8,6 @@
 
 
 extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern EffectInterface** gPartfxInterface;
 extern undefined4 DAT_803de0af;
 
 /*
@@ -24,8 +23,6 @@ extern undefined4 DAT_803de0af;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int getAngle(f32 dx, f32 dz);
-extern f32 sqrtf(f32 x);
 
 #pragma scheduling off
 #pragma peephole off
@@ -58,73 +55,35 @@ void FUN_800d7780(undefined param_1)
 /* Trivial 4b 0-arg blr leaves. */
 void Checkpoint_release(void);
 
-void Dummy04_func14_nop(void);
 
-void Dummy04_func26_nop(void);
 
-void Dummy04_func25_nop(void);
 
-void Dummy04_func23_nop(void);
 
-void Dummy04_func20_nop(void);
 
-void Dummy04_func1F_nop(void);
 
-void Dummy04_func1E_nop(void);
 
-void Dummy04_func1C_nop(void);
 
-void Dummy04_func1B_nop(void);
 
-void Dummy04_func1A_nop(void);
 
-void Dummy04_func19_nop(void);
 
-void Dummy04_func18_nop(void);
 
-void Dummy04_func17_nop(void);
 
-void Dummy04_func16_nop(void);
 
-void Dummy04_onSetupPlayer(void);
 
-void Dummy04_func15_nop(void);
 
-void Dummy04_func13_nop(void);
 
-void Dummy04_func12_nop(void);
 
-void Dummy04_func10_nop(void);
 
-void Dummy04_func0E_nop(void);
 
-void Dummy04_func0C_nop(void);
 
-void Dummy04_onSelectSave(void);
 
-void Dummy04_func08_nop(void);
 
-void Dummy04_func07_nop(void);
 
-void Dummy04_func04_nop(void);
 
-void Dummy04_release(void);
 
-void Dummy04_initialise(void);
 
-void dll_0F_func19_nop(void);
 
 /* 8b "li r3, N; blr" returners. */
-int Dummy04_func24_ret_0(void);
-int Dummy04_func22_ret_127(void);
-int Dummy04_func21_ret_0(void);
-int Dummy04_func1D_ret_0(void);
-int Dummy04_func11_ret_0(void);
-int Dummy04_func0F_ret_0(void);
-int Dummy04_func0D_ret_0(void);
-int Dummy04_func0B_ret_0(void);
-int Dummy04_func0A_ret_0(void);
-int Dummy04_func05_ret_0(void);
 
 /* sda21 accessors. */
 extern u8 lbl_803DD42D;
@@ -134,10 +93,7 @@ u8 screenTransition_func07(void) { return lbl_803DD42D; }
 extern u32 lbl_803DD410;
 
 /* 12b 3-insn patterns. */
-extern u32 lbl_803DD43C;
-extern u32 lbl_803DD438;
 
-void player_setAnimIds(int unused1, int unused2, u32 a, u32 b);
 
 /* misc 8b leaves */
 extern f32 screenTransitionAlpha;
@@ -159,12 +115,8 @@ u32 isScreenTransitionActive(void) { return lbl_803E0558 == screenTransitionAlph
 /* multi-store leaf (single float broadcast). */
 extern f32 lbl_803E0570;
 
-void player_clearXZvel(int* obj, int* state);
 
 /* Checkpoint table initialiser. */
-extern u32 lbl_8039CA98[];
-extern void Sfx_PlayFromObject(int* obj, int sfxId);
-extern f32 lbl_803E0588;
 extern f32 lbl_803E0564;
 extern f32 lbl_803E0560;
 extern f32 lbl_803E055C;
@@ -172,21 +124,13 @@ extern f32 lbl_803DD424;
 extern f32 lbl_803DD428;
 extern u8 lbl_803DD42C;
 extern u8 lbl_803DD42E;
-extern void player_followCurve(int* obj, int* state, f32 a, f32 b, f32 t, int p5);
-extern f32 lbl_803E05B4;
-extern f32 lbl_803E05B8;
 
 #pragma scheduling off
 #pragma peephole off
-void player_playSoundFn0F(int* obj, int* state, int bit, int idx, int* sfxTable);
 
-void player_playSoundFn10(int* obj, int* state, int bit, int idx, int* sfxTable);
 
-void player_render2(s16* obj, int* state, f32 f1, f32 f2);
 
-void player_modelMtxFn(f32* mtx, int* state, f32 f1, f32 f2);
 
-void player_findCurve(int* obj, int* state, int p3);
 
 void screenTransitionFn_800d7b04(int duration, int type)
 {
@@ -236,40 +180,26 @@ void screenTransition_Do(int duration, int type)
 
 void dll_0F_func0B(int* obj, int* state, f32 f1, f32 f2, f32 f3);
 
-void player_updateCurve(int* obj, int* state, f32 t);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803E0574;
-extern f32 lbl_803E0578;
-extern f32 lbl_803E057C;
-extern f32 lbl_803E0580;
-extern f32 lbl_803E0584;
 
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5);
 #pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u8 lbl_803DD434;
-extern f32 lbl_803E05A4;
-extern f32 lbl_803E05A8;
-extern f32 lbl_803E05AC;
-extern f32 lbl_803E05B0;
 
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale);
 #pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-void Checkpoint_initialise(void);
 #pragma scheduling reset
 
 /* Checkpoint_Add: sorted insertion of (entry->_14 as key, entry as pointer) into lbl_8039C458 table. */
@@ -282,55 +212,34 @@ void Checkpoint_initialise(void);
 #pragma scheduling reset
 
 #pragma scheduling off
-void player_updateParticles(int* p1, int p2, int p3, int count, int mode);
 
 #pragma scheduling reset
 
 #pragma scheduling off
-void player_doProjGfx(int* p1, int p2, int p3, int count, int p5, int mode);
 #pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-void Checkpoint_remove(int* obj);
 #pragma opt_common_subs reset
 extern f32 timeDelta;
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-void player_rotateTowardEnemy(int* obj, int* ctx, int spd);
 #pragma opt_common_subs reset
-extern f32 lbl_803E058C;
-extern void setMatrixFromObjectPos(f32* mtx, void* desc);
-extern void Matrix_TransformPoint(f32* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern void objMove(int* obj, f32 vx, f32 vy, f32 vz);
 
-struct PartDesc
-{
-    s16 ang[3];
-    f32 sc[4];
-};
 #pragma scheduling off
 #pragma peephole off
-void player_applyVelocityStep(int* p, int* ctx, f32 t);
 
-extern f32 lbl_803E0590;
-extern f32 lbl_803E0594;
-extern s16 lbl_803DD44C;
 #pragma scheduling off
 #pragma peephole off
-void fn_800D8414(int* obj, int* ctx);
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-void player_getExtraSize(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 spd);
 #pragma opt_common_subs reset
-extern f32 lbl_803E05A0;
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-void player_animFn16(int* obj, int* ctx, int moveA, int moveB);
 #pragma opt_common_subs reset
 typedef struct
 {
@@ -625,24 +534,10 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern u8 lbl_803DD440;
 
-typedef struct PlayerMoveBuf
-{
-    f32 a;
-    f32 b;
-    f32 c;
-    u8 padC[2];
-    s16 angleDelta;
-    u8 pad10[2];
-    u8 flag;
-    s8 ids[8];
-    s8 count;
-} PlayerMoveBuf;
 
 #pragma scheduling off
 #pragma peephole off
-void player_setScale(f32 dt, short* moveState, uint* obj, uint flags);
 
 /*
  * --INFO--
@@ -674,7 +569,6 @@ void player_setScale(f32 dt, short* moveState, uint* obj, uint flags);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, float* param_9, float param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
 
 /*
  * --INFO--
@@ -1045,9 +939,7 @@ undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling on
 #pragma peephole on
-void player_release(void);
 
-void player_initialise(void);
 
 
 
@@ -1064,47 +956,24 @@ void player_initialise(void);
 /* 8b "li r3, N; blr" returners. */
 
 /* sda21 accessors. */
-extern u32 playerOverride;
-void player_setOverride(u32 x);
 
 /* Pattern wrappers. */
 
 /* player_init: memset constructor */
-extern void* memset(void* dst, int val, u32 n);
-extern f32 lbl_803E05BC;
 #pragma scheduling off
 #pragma peephole off
-void player_init(int unused, void* obj, int a, int b);
 
 /* fn_800D9F38 ? large init updating multiple float fields based on b's bytes */
 
-int fn_800D9F38(void* a, void* b);
 
 /* player_updateVel */
-extern u8 lbl_803DD44E;
-extern u8 lbl_803DD44F;
-extern u8 lbl_803DD450;
-extern f64 lbl_803E0598;
-extern f32 lbl_803E05C0;
-extern f32 lbl_803E05C4;
-extern f32 lbl_803DD444;
-extern f32 lbl_803DD448;
-extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
-extern void setMatrixFromObjectPos(f32* matrix, void* objpos);
-extern void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 
-void playerRunStateMachine(char* pos, char* state, float dt, int stateFns);
 
-void player_update(char* pos, char* state, float dt, float pathDt, int stateFns, int auxStateFns);
 
-void player_updateVel(char* p, char* obj, int unused);
 
 
 /* RomCurve_setA4: similar to fn_800D9F38 branch2 with different consts */
-extern f32 lbl_803E0610;
 
-void RomCurve_setA4(void* a, void* b);
 
 
 
@@ -1162,10 +1031,8 @@ void RomCurve_setA4(void* a, void* b);
 #pragma peephole off
 
 /* player_setState */
-void player_setState(void* ctx, void* p, int new_state);
 
 /* walkPath_writeU16LE: split a path id into two little-endian bytes. */
-void walkPath_writeU16LE(u32 v, u8* dst);
 
 /* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
 #pragma scheduling on
@@ -1173,4 +1040,3 @@ void walkPath_writeU16LE(u32 v, u8* dst);
 
 #pragma scheduling off
 
-void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval);
