@@ -51,6 +51,7 @@ void softbody_init(int obj, int setup)
 {
     GameObject* object = (GameObject*)obj;
     SoftBodySetup* setupData = (SoftBodySetup*)setup;
+    ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)object->anim.hitReactState;
 
     object->anim.rotZ = (s16)(setupData->rotZ << 8);
     object->anim.rotY = (s16)(setupData->rotY << 8);
@@ -70,8 +71,7 @@ void softbody_init(int obj, int setup)
     if (object->anim.hitReactState != NULL)
     {
         ObjHitbox_SetSphereRadius(obj,
-                                  (s16)((f32)((ObjHitsPriorityState*)object->anim.hitReactState)->primaryRadius *
-                                      object->anim.rootMotionScale));
+                                  (s16)((f32)hitState->primaryRadius * object->anim.rootMotionScale));
     }
 }
 
