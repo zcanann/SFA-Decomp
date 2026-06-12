@@ -5,7 +5,6 @@
 
 
 extern void Music_Trigger(s32 triggerId, s32 mode);
-extern uint GameBit_Get(int eventId);
 extern void modelLightStruct_getSpecularColor(void* light, void* red, void* green, void* blue, void* alpha);
 extern void modelLightStruct_setGlowColor(void* light, u8 red, u8 green, u8 blue, int alpha);
 extern int randomGetRange(int min, int max);
@@ -15,20 +14,12 @@ extern void skyFn_800895e0(int id, int red, int green, int blue, int alpha, int 
 extern void getEnvfxAct(void* obj, void* source, int effectId, int arg);
 extern void Sfx_PlayFromObject(void* obj, int sfxId);
 extern void doRumble(f32 strength);
-extern void modelLightStruct_setEnabled(void* light, int enabled, f32 value);
-extern int dimBossTonsil_newState_hitFightMain(void* obj, ObjAnimUpdateState* animUpdate,
-                                               DIMbosstonsilState* state,
-                                               DIMbosstonsilState* updateState);
 extern void ObjGroup_RemoveObject(void* obj, int group);
 extern void ModelLightStruct_free(void* light);
 
 extern MapEventInterface** gMapEventInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern void* gBaddieControlInterface;
-extern void* gPlayerInterface;
 extern f32 timeDelta;
-extern u8 lbl_803DDBA8;
-extern u8 lbl_803DDBB0;
 extern f32 lbl_803DDB9C;
 extern f32 lbl_803DDBA0;
 extern f32 lbl_803E4C90;
@@ -52,6 +43,13 @@ extern f32 lbl_803E4CC4;
  */
 int dll_DIM_BossGutSpik_update(void* obj, undefined4 param_2, ObjAnimUpdateState* animUpdate)
 {
+    extern u8 lbl_803DDBA8;
+    extern void* gBaddieControlInterface;
+    extern void* gPlayerInterface;
+    extern void modelLightStruct_setEnabled(void* light, int enabled, f32 value);
+    extern uint GameBit_Get(int eventId);
+    extern u8 lbl_803DDBB0;
+    extern int dimBossTonsil_newState_hitFightMain(void* obj, ObjAnimUpdateState* animUpdate, DIMbosstonsilState* state, DIMbosstonsilState* updateState);
     DIMbosstonsilState* state;
     DIMbosstonsilConfig* config;
     u8 red;
@@ -287,6 +285,7 @@ int DIMbosstonsil_getObjectTypeId(void)
  */
 void DIMbosstonsil_free(void* obj)
 {
+    extern void* gBaddieControlInterface;
     DIMbosstonsilState* state;
 
     state = ((GameObject*)obj)->extra;
@@ -296,4 +295,285 @@ void DIMbosstonsil_free(void* obj)
     {
         ModelLightStruct_free(gDIMbosstonsilLight);
     }
+}
+
+/* === merged from main/dll/vfp_lavastar.c [801BE8F8-801BEC70) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/DIM/DIMbossspit.h"
+#include "main/effect_interfaces.h"
+#include "main/game_object.h"
+#include "main/objseq.h"
+
+extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
+extern void modelLightStruct_setPosition(f32 x, f32 y, f32 z);
+extern void queueGlowRender(void* p);
+extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
+extern void* Obj_GetPlayerObject(void);
+extern void modelLightStruct_getSpecularColor(void* light, void* p1, void* p2, void* p3, void* p4);
+extern void modelLightStruct_setGlowColor(void* p1, u8 a, u8 b, u8 c, int d);
+extern int randomGetRange(int min, int max);
+
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern f32 lbl_803DDBA4;
+extern EffectInterface** gPartfxInterface;
+extern f32 lbl_803E4CB8;
+extern f32 lbl_803E4CC8;
+
+/*
+ * --INFO--
+ *
+ * Function: DIMbosstonsil_render
+ * EN v1.0 Address: 0x801BE8F8
+ * EN v1.0 Size: 324b
+ */
+void DIMbosstonsil_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
+{
+    struct
+    {
+        f32 x;
+        f32 y;
+        f32 z;
+    } pathPoint;
+    int partfxArgs[3];
+    f32* outXPtr;
+    f32* outYPtr;
+    f32* outZPtr;
+
+    if (visible != 0)
+    {
+        switch (((GameObject*)obj)->unkF4)
+        {
+        case 0:
+            {
+                objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E4CB8);
+
+                outXPtr = &pathPoint.x;
+                outYPtr = &pathPoint.y;
+                outZPtr = &pathPoint.z;
+                ObjPath_GetPointWorldPosition(obj, 1, outXPtr, outYPtr, outZPtr, 0);
+                (*gPartfxInterface)->spawnObject(obj, 0x4bd, partfxArgs, 0x200001, -1, NULL);
+
+                ObjPath_GetPointWorldPosition(obj, 0, outXPtr, outYPtr, outZPtr, 0);
+                (*gPartfxInterface)->spawnObject(obj, 0x4bd, partfxArgs, 0x200001, -1, NULL);
+
+                if (gDIMbosstonsilLight != 0 && gDIMbosstonsilLight->active != 0 && gDIMbosstonsilLight->visible != 0)
+                {
+                    modelLightStruct_setPosition(*outXPtr, *outYPtr, *outZPtr);
+                    queueGlowRender(gDIMbosstonsilLight);
+                }
+                break;
+            }
+        }
+    }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: DIMbosstonsil_hitDetect
+ * EN v1.0 Address: 0x801BEA3C
+ * EN v1.0 Size: 56b
+ */
+void DIMbosstonsil_hitDetect(void* obj)
+{
+    extern void* gPlayerInterface;
+    extern int lbl_803DDBB0;
+    (*(void (***)(void*, DIMbosstonsilState*, int*))gPlayerInterface)[3](
+        obj, ((GameObject*)obj)->extra, &lbl_803DDBB0);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: DIMbosstonsil_update
+ * EN v1.0 Address: 0x801BEA74
+ * EN v1.0 Size: 0x1FC
+ */
+void DIMbosstonsil_update(void* obj)
+{
+    extern void* gBaddieControlInterface;
+    extern int dimBossTonsil_newState_hitFightMain(void* obj, ObjAnimUpdateState* animUpdate, DIMbosstonsilState* state, DIMbosstonsilState* updateState);
+    DIMbosstonsilState* state;
+    DIMbosstonsilConfig* config;
+    u8 b1, b2, b3, b4;
+
+    state = ((GameObject*)obj)->extra;
+    config = *(DIMbosstonsilConfig**)&((GameObject*)obj)->anim.placementData;
+
+    if (((GameObject*)obj)->unkF4 != 0) return;
+
+    if (((GameObject*)obj)->unkF8 == 0)
+    {
+        ((GameObject*)obj)->anim.localPosX = config->spawnX;
+        ((GameObject*)obj)->anim.localPosY = config->spawnY;
+        ((GameObject*)obj)->anim.localPosZ = config->spawnZ;
+        (*gObjectTriggerInterface)->runSequence((int)config->animObjId, obj, -1);
+        ((GameObject*)obj)->unkF8 = 1;
+        return;
+    }
+
+    if ((state->stateFlags & DIMBOSSTONSIL_STATE_FLAG_START_MOVE) != 0)
+    {
+        lbl_803DDBA4 = lbl_803E4CC8;
+        (*(void (***)(void*, DIMbosstonsilState*, u8*, int, u8*, int, int, int, int))gBaddieControlInterface)[0xa](
+            obj, state, state->animPoints, state->animFrame, &state->hitReactMode, 0, 0, 0, 1);
+        state->stateFlags &= ~DIMBOSSTONSIL_STATE_FLAG_START_MOVE;
+    }
+
+    if ((*(int (***)(void*, DIMbosstonsilState*, int))gBaddieControlInterface)[0xc](obj, state, 1) == 0) return;
+
+    state->targetObject = Obj_GetPlayerObject();
+    dimBossTonsil_newState_hitFightMain(obj, NULL, state, state);
+
+    if (gDIMbosstonsilLight == 0) return;
+
+    modelLightStruct_getSpecularColor(gDIMbosstonsilLight, &b1, &b2, &b3, &b4);
+    modelLightStruct_setGlowColor(gDIMbosstonsilLight, b1, b2, b3, 0xc0);
+
+    if (gDIMbosstonsilLight->active == 0) return;
+    if (gDIMbosstonsilLight->visible == 0) return;
+
+    {
+        s16 r30_local;
+        int sum;
+        sum = (int)gDIMbosstonsilLight->glowIntensity +
+            (int)gDIMbosstonsilLight->glowIntensityStep;
+        r30_local = (s16)sum;
+        if (r30_local < 0)
+        {
+            r30_local = 0;
+            gDIMbosstonsilLight->glowIntensityStep = 0;
+        }
+        else if (r30_local > 0xc)
+        {
+            int rnd = randomGetRange(-0xc, 0xc);
+            r30_local = (s16)(r30_local + rnd);
+            if (r30_local > 0xff)
+            {
+                r30_local = 0xff;
+                gDIMbosstonsilLight->glowIntensityStep = 0;
+            }
+        }
+        gDIMbosstonsilLight->glowIntensity = (u8)r30_local;
+    }
+}
+
+/* === merged from main/dll/riverFlowRelated018D.c [801BEC70-801BEEA0) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/DIM/DIMbosstonsil.h"
+#include "main/game_object.h"
+
+extern void* objCreateLight(int param_1, int param_2);
+extern void modelLightStruct_setLightKind(void* handle, int param_2);
+extern void modelLightStruct_setDiffuseColor(void* handle, int r, int g, int b, int a);
+extern void modelLightStruct_setSpecularColor(void* handle, int r, int g, int b, int a);
+extern void modelLightStruct_setDistanceAttenuation(void* handle, f32 param_2, f32 param_3);
+extern void lightSetField4D(void* handle, int param_2);
+extern void modelLightStruct_setGlowProjectionRadius(void* handle, f32 param_2);
+extern void modelLightStruct_setDiffuseTargetColor(void* handle, int r, int g, int b, int a);
+extern void modelLightStruct_setSpecularTargetColor(void* handle, int r, int g, int b, int a);
+extern void modelLightStruct_startColorFade(void* handle, int param_2, int param_3);
+extern void modelLightStruct_setAffectsAabbLightSelection(void* handle, int param_2);
+extern void modelLightStruct_setupGlow(void* handle, f32 param_2, int param_3, int r, int g, int b, int a);
+extern void DIMbosstonsil_updateHitReaction(void);
+extern void DIMbosstonsil_enableHitReaction(void);
+extern void DIMbosstonsil_chooseHitReaction(void);
+extern void DIMbosstonsil_startIdleHitReaction(void);
+
+extern f32 lbl_803DDB98;
+extern f32 lbl_803DDB9C;
+extern f32 lbl_803DDBA0;
+extern f32 lbl_803DDBA4;
+extern f32 lbl_803E4C90;
+extern f32 lbl_803E4C9C;
+extern f32 lbl_803E4CA0;
+extern f32 lbl_803E4CCC;
+
+/*
+ * --INFO--
+ *
+ * Function: DIMbosstonsil_init
+ * EN v1.0 Address: 0x801BEC70
+ * EN v1.0 Size: 496b
+ * EN v1.1 Address: 0x801BEE40
+ * EN v1.1 Size: 108b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void DIMbosstonsil_init(int obj, undefined4 param_2, int isAltVariant)
+{
+    extern undefined4* gBaddieControlInterface;
+    extern undefined4* gPlayerInterface;
+    extern void modelLightStruct_setEnabled(void* handle, f32 param_2, int param_3);
+    extern int GameBit_Get(int eventId);
+    u32 variant;
+    int state;
+
+    state = *(int*)&((GameObject*)obj)->extra;
+    variant = 6;
+    if (isAltVariant != 0)
+    {
+        variant = variant | 1;
+    }
+    (*(code*)(*gBaddieControlInterface + 0x58))(lbl_803E4CCC, obj, param_2, state, 2, 2, 0x102, variant);
+    ((GameObject*)obj)->animEventCallback = (void*)dll_DIM_BossGutSpik_update;
+    (*(code*)(*gPlayerInterface + 0x14))(obj, state, 0);
+    *(s16*)(state + 0x270) = 0;
+    gDIMbosstonsilRoutePhase = (s8)GameBit_Get(0x20c);
+    if (gDIMbosstonsilRoutePhase < 3)
+    {
+        *(s8*)(state + DIMBOSSTONSIL_HEALTH_PHASE_OFFSET) = 3 - gDIMbosstonsilRoutePhase;
+    }
+    else
+    {
+        *(s8*)(state + DIMBOSSTONSIL_HEALTH_PHASE_OFFSET) = 7 - gDIMbosstonsilRoutePhase;
+    }
+    lbl_803DDBA4 = lbl_803E4C90;
+    lbl_803DDBA0 = lbl_803E4C90;
+    lbl_803DDB98 = lbl_803E4C90;
+    lbl_803DDB9C = lbl_803E4C9C;
+    gDIMbosstonsilLight = objCreateLight(0, 1);
+    if (gDIMbosstonsilLight != 0)
+    {
+        modelLightStruct_setLightKind(gDIMbosstonsilLight, 2);
+        modelLightStruct_setDiffuseColor(gDIMbosstonsilLight, 0xff, 0, 0, 0x7f);
+        modelLightStruct_setSpecularColor(gDIMbosstonsilLight, 0xff, 0, 0, 0x7f);
+        modelLightStruct_setDistanceAttenuation(gDIMbosstonsilLight, lbl_803E4C9C, lbl_803E4CA0);
+        lightSetField4D(gDIMbosstonsilLight, 1);
+        modelLightStruct_setEnabled(gDIMbosstonsilLight, lbl_803E4C90, 1);
+        modelLightStruct_setGlowProjectionRadius(gDIMbosstonsilLight, lbl_803E4CA0);
+        modelLightStruct_setDiffuseTargetColor(gDIMbosstonsilLight, 0xff, 0x7f, 0, 0x40);
+        modelLightStruct_setSpecularTargetColor(gDIMbosstonsilLight, 0xff, 0x7f, 0, 0x40);
+        modelLightStruct_startColorFade(gDIMbosstonsilLight, 2, 0x3c);
+        modelLightStruct_setAffectsAabbLightSelection(gDIMbosstonsilLight, 1);
+        modelLightStruct_setupGlow(gDIMbosstonsilLight, lbl_803E4CA0, 0, 0xff, 0, 0, 0x7f);
+    }
+    return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: DIMbosstonsil_release
+ * EN v1.0 Address: 0x801BEE60
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void DIMbosstonsil_release(void)
+{
+}
+
+void DIMbosstonsil_initialise(void)
+{
+    extern void (*lbl_803DDBA8[2])(void);
+    extern void (*lbl_803DDBB0[2])(void);
+    lbl_803DDBB0[0] = DIMbosstonsil_startIdleHitReaction;
+    lbl_803DDBB0[1] = DIMbosstonsil_chooseHitReaction;
+    lbl_803DDBA8[0] = DIMbosstonsil_enableHitReaction;
+    lbl_803DDBA8[1] = DIMbosstonsil_updateHitReaction;
 }

@@ -910,13 +910,7 @@ main/dll/DIM/DIMbossspit.c:
 	.text       start:0x801BE19C end:0x801BE44C
 
 main/dll/vfp_lavapool.c:
-	.text       start:0x801BE44C end:0x801BE8F8
-
-main/dll/vfp_lavastar.c:
-	.text       start:0x801BE8F8 end:0x801BEC70
-
-main/dll/riverFlowRelated018D.c:
-	.text       start:0x801BEC70 end:0x801BEEA0
+	.text       start:0x801BE44C end:0x801BEEA0
 
 main/dll/mmsh_waterspike.c:
 	.text       start:0x801BEEA0 end:0x801BF048
