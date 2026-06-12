@@ -5,33 +5,8 @@
 #include "main/dll/scarab.h"
 #include "main/mapEventTypes.h"
 
-typedef struct GrimblePlacement
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-} GrimblePlacement;
 
 
-typedef struct GrimbleState
-{
-    u8 pad0[0x27A - 0x0];
-    s8 unk27A;
-    u8 pad27B[0x2A0 - 0x27B];
-    f32 unk2A0;
-    u8 pad2A4[0x314 - 0x2A4];
-    s32 unk314;
-    u8 pad318[0x346 - 0x318];
-    u8 unk346;
-    u8 pad347[0x3E8 - 0x347];
-    f32 unk3E8;
-    u8 pad3EC[0x400 - 0x3EC];
-    u16 unk400;
-    u8 pad402[0x405 - 0x402];
-    u8 unk405;
-    u8 pad406[0x40C - 0x406];
-    void* unk40C;
-    u8 pad410[0x46C - 0x410];
-} GrimbleState;
 
 
 extern undefined4 FUN_80006824();
@@ -39,7 +14,6 @@ extern int FUN_80017730();
 extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_800305f8();
 extern void* ObjGroup_GetObjects();
-extern undefined8 ObjGroup_RemoveObject();
 extern double FUN_80293900();
 extern uint countLeadingZeros();
 
@@ -73,35 +47,11 @@ extern f32 lbl_803E3BB4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int getAngle(f32 dx, f32 dz);
-extern void* Obj_GetPlayerObject(void);
-extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
-extern void* gPlayerInterface;
-extern void* gBaddieControlInterface;
-extern int* gBoneParticleEffectInterface;
-extern int lbl_803200E0[];
-extern int lbl_80320158[];
 extern void objRenderFn_8003b8f4(f32);
 extern void* gGrimbleStateHandlersA[11];
 extern void* gGrimbleStateHandlersB[6];
 int grimble_animEventCallback(void);
-void fn_801627F4(int obj);
 
-extern f32 lbl_803E2EB8;
-extern f32 lbl_803E2EBC;
-extern f32 lbl_803E2EF0;
-extern f32 lbl_803E2EF4;
-extern f32 lbl_803E2EF8;
-extern f32 lbl_803E2EFC;
-extern f32 lbl_803E2F00;
-extern f32 lbl_803E2F04;
-extern f32 lbl_803E2F08;
-extern f32 lbl_803E2F0C;
-extern f32 lbl_803E2F18;
-extern f32 lbl_803E2F1C;
-extern f32 lbl_803E2F20;
-extern f32 lbl_803E2F24;
-extern f32 lbl_803E2F28;
 
 #pragma scheduling off
 #pragma peephole off
@@ -111,7 +61,6 @@ int grimble_stateHandlerA01(int obj, char* state, f32 arg);
 
 int grimble_stateHandlerA00(int obj, char* state, f32 arg);
 
-void fn_801627F4(int obj);
 
 void grimble_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 

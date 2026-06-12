@@ -954,14 +954,12 @@ void grimble_release(void)
 
 void cannonclaw_free(void);
 
-void cannonclaw_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 int grimble_animEventCallback(void) { return 0x0; }
 int grimble_getExtraSize(void) { return 0x46c; }
 int grimble_getObjectTypeId(void) { return 0x59; }
 int cannonclaw_getExtraSize(void);
-int cannonclaw_getObjectTypeId(void);
 
 #pragma dont_inline on
 #pragma scheduling off
@@ -1021,8 +1019,6 @@ ObjectDescriptor gGrimbleObjDescriptor = {
 
 
 
-extern uint GameBit_Get(int eventId);
-extern undefined4 ObjHits_DisableObject();
 
 
 /*
@@ -1040,13 +1036,7 @@ extern undefined4 ObjHits_DisableObject();
  */
 /* Actual cannonclaw_update is 188b -- trigger-once cannon-arm awakener.
  * The 668b "Ghidra body" was misattributed; replaced with the right one. */
-extern void getTrickyObject(void);
-extern void* ObjList_FindObjectById(int id);
-extern f32 timeDelta;
-extern f32 lbl_803E2F34;
-extern f32 lbl_803E2F38;
 
-void cannonclaw_update(u8* obj);
 
 
 /*
@@ -1117,9 +1107,7 @@ void cannonclaw_update(u8* obj);
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void cannonclaw_release(void);
 
-void cannonclaw_initialise(void);
 
 void tumbleweedbush_free(void);
 
@@ -1147,15 +1135,12 @@ void tumbleweedbush_update(int* obj);
 void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* byte-to-short shift8 pattern. */
-void cannonclaw_init(s16* dst, void* src);
 
 /* tumbleweedbush_findNearestActive: scan all type-0x31 objects, pick the closest one whose
  * obj->_46 == 0x3fb and obj->_b8->_278 > 1 (by vec3f_distanceSquared from
  * the supplied position vector). Returns NULL if no match. */
 extern void* ObjGroup_GetObjects(int type, int* outCount);
-extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
 
-void* tumbleweedbush_findNearestActive(f32* p_pos);
 
 /* tumbleweedbush_setScale: scan the sub-array at obj->_b8 (sub[0x50] entries
  * of 4 bytes each), zeroing every slot whose +0xc word matches `match`. */
