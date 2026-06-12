@@ -394,8 +394,6 @@ extern s16 Obj_GetYawDeltaToObject(int obj, int target, int flags);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void objAnimFn_80038f38(int obj, int* animState);
 extern void characterDoEyeAnims(int obj, void* state);
-extern void ObjHits_EnableObject(int obj);
-
 extern s16 lbl_803DC044;
 extern s16 lbl_803DDBF0;
 extern s16 lbl_803DDBF2;
@@ -602,7 +600,7 @@ void warpstone_init(int obj, u8* setup)
     ((GameObject*)obj)->animEventCallback = warpstone_updateMenuAnimObj;
     ((WarpstoneState*)state)->unkE = 0x15a;
     ((WarpstoneState*)state)->unk10 = 0x886;
-    ObjHits_EnableObject(obj);
+    ObjHits_EnableObject((u32)obj);
     if (GameBit_Get(0x887) != 0 && GameBit_Get(0x15a) != 0)
     {
         ((WarpstoneState*)state)->unkC = 1;

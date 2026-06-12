@@ -1,6 +1,7 @@
 /* DLL 0x00F5 (sidekickball) — Sidekick ball and auto-transporter objects [0x801793A4-0x8017A00C). */
 #include "main/dll/dll_00F4_doorf4.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 
 /*
@@ -200,26 +201,23 @@ int fn_80179650(int* obj)
 
 void fn_80179678(int* obj)
 {
-    extern void ObjHits_DisableObject(int* obj);
     SidekickBallState* state = ((GameObject*)obj)->extra;
     state->fadeTimer = lbl_803E369C;
     state->ballMode = 0;
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((u32)obj);
     state->unk25B = 0;
 }
 
 void fn_801796BC(int* obj, f32 a, f32 b, f32 c)
 {
-    extern void ObjHits_EnableObject(int* obj);
-    extern void ObjHits_SyncObjectPositionIfDirty(int* obj);
     SidekickBallState* state = ((GameObject*)obj)->extra;
     state->ballMode = 3;
     state->fadeTimer = lbl_803E369C;
     *(f32*)((char*)obj + 36) = a;
     ((GameObject*)obj)->anim.velocityY = b;
     ((GameObject*)obj)->anim.velocityZ = c;
-    ObjHits_EnableObject(obj);
-    ObjHits_SyncObjectPositionIfDirty(obj);
+    ObjHits_EnableObject((u32)obj);
+    ObjHits_SyncObjectPositionIfDirty((u32)obj);
     state->unk25B = 1;
     state->launchX = ((GameObject*)obj)->anim.localPosX;
     state->launchY = ((GameObject*)obj)->anim.localPosY;
@@ -229,7 +227,6 @@ void fn_801796BC(int* obj, f32 a, f32 b, f32 c)
 void trickyBallFn_801793b8(int* obj, u8* params)
 {
     extern void Sfx_PlayFromObject(int obj, int sfxId);
-    extern void ObjHits_DisableObject(int* obj);
     extern int* Obj_GetPlayerObject(void);
     int* player;
     int* playerState;
@@ -250,7 +247,7 @@ void trickyBallFn_801793b8(int* obj, u8* params)
         goto end;
     }
 
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((u32)obj);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
 
     getYButtonItem(&yItem);
@@ -335,7 +332,6 @@ void sidekickball_update(u8* self)
 {
     extern int ObjTrigger_IsSet(u8 * obj);
     extern void trickyBallFn_801793b8(u8 * obj, u8 * state);
-    extern void ObjHits_DisableObject(u8 * obj);
     extern u8* Obj_GetPlayerObject(void);
     SidekickBallState* state;
     u8* player;
@@ -388,7 +384,7 @@ void sidekickball_update(u8* self)
             && ((GameObject*)self)->unkF8 == 0
             && ObjTrigger_IsSet(self) != 0)
         {
-            ObjHits_DisableObject(self);
+            ObjHits_DisableObject((u32)self);
             gotHit = 1;
         }
         state->triggerHit = (u8)gotHit;
@@ -443,7 +439,6 @@ typedef struct TrickyBallState
 u8 trickyBallMove(u8* obj)
 {
     extern void Sfx_PlayFromObject(int obj, u16 sfxId);
-    extern undefined4 ObjHits_EnableObject();
     TrickyBallState* state;
     f32 collisionNormal[3];
     f32 dx;
@@ -464,7 +459,7 @@ u8 trickyBallMove(u8* obj)
     movedFromCache = 0;
     speed = lbl_803E36B0;
 
-    ObjHits_EnableObject(obj);
+    ObjHits_EnableObject((u32)obj);
 
     dy = state->prevPos[1] - ((GameObject*)obj)->anim.localPosY;
     dy = (dy >= lbl_803E369C) ? dy : -dy;
@@ -601,7 +596,6 @@ undefined4 sidekickball_init(int obj)
 {
     extern undefined4 ObjMsg_AllocQueue();
     extern void GameBit_Set(int gameBit, int value);
-    extern undefined4 ObjHits_DisableObject();
     extern int* Obj_GetPlayerObject(void);
     u8 pathFlag;
     u8* state;
@@ -620,7 +614,7 @@ undefined4 sidekickball_init(int obj)
     (*gPathControlInterface)->setLocalPointCollision(state, 1, lbl_80320F30, state + 0x268, 1);
     (*gPathControlInterface)->setup(state, 1, lbl_80320F30, state + 0x268, &pathFlag);
     (*gPathControlInterface)->attachObject((void*)obj, state);
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((u32)obj);
     state[0x25b] = 0;
     ObjMsg_AllocQueue((void*)obj, 1);
     GameBit_Set(0x3f8, 0);

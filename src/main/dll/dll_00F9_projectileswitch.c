@@ -2,6 +2,7 @@
 #include "main/dll/tFrameAnimator.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
+#include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/screenOverlay.h"
 #include "main/objanim_internal.h"

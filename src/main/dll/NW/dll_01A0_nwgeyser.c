@@ -1,5 +1,6 @@
 #include "main/mapEvent.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/dll/dll_01A0_nwgeyser.h"
 
@@ -7,8 +8,6 @@ extern uint GameBit_Get(int eventId);
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
-extern void ObjHits_DisableObject(int obj);
-extern void ObjHits_EnableObject(int obj);
 extern void GameBit_Set(int eventId, int value);
 extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points,
                                 void* scratch, f32 scaleX, f32 scaleZ);
@@ -50,7 +49,7 @@ void nw_geyser_update(int obj)
         ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
         Sfx_RemoveLoopedObjectSound(obj, 0x372);
         Sfx_RemoveLoopedObjectSound(obj, 0x373);
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((u32)obj);
         GameBit_Set(0x398, 1);
     }
     else
@@ -58,7 +57,7 @@ void nw_geyser_update(int obj)
         Sfx_AddLoopedObjectSound(obj, 0x372);
         Sfx_AddLoopedObjectSound(obj, 0x373);
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((u32)obj);
     }
 }
 

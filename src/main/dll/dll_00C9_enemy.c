@@ -16,6 +16,7 @@
 #include "main/dll/tricky_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
+#include "main/objhits.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/enemy_state.h"
 #include "main/dll/path_control_interface.h"
@@ -42,7 +43,6 @@ typedef struct BaddieAfterUpdateBonesCbState
 extern undefined4 ABS();
 extern double FUN_80017714();
 extern uint FUN_80017730();
-extern undefined4 ObjHits_DisableObject();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern undefined4 fn_80154870();
@@ -166,7 +166,6 @@ extern void PSMTXMultVecSR(void* mtx, f32* src, f32* dst);
 extern f32 lbl_803E25C4;
 extern f32 lbl_803E25E8;
 extern undefined4 FUN_800305f8();
-extern undefined4 ObjHits_EnableObject();
 extern uint ObjGroup_ContainsObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
@@ -1416,7 +1415,7 @@ int enemy_animEventCallback(int* node, int unused, ObjAnimUpdateState* animUpdat
     if (((GameObject*)node)->seqIndex == -1)
     {
         ((TrickyState*)sub)->unk2E8 &= ~3;
-        ObjHits_DisableObject(node);
+        ObjHits_DisableObject((u32)node);
         return 0;
     }
     if ((((TrickyState*)sub)->flags2DC & 0x1800) == 0)
@@ -2527,11 +2526,11 @@ void enemy_init(int obj, u8* setup, int flag)
         {
             ((EnemyState*)state)->controlFlags |= 0x1000;
             ((EnemyState*)state)->initialFlags = ((EnemyState*)state)->initialFlags & -4097;
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((u32)obj);
         }
         else if ((((EnemyState*)state)->flags2E4 & 1) != 0)
         {
-            ObjHits_EnableObject(obj);
+            ObjHits_EnableObject((u32)obj);
         }
     }
     ((EnemyState*)state)->unk2D8 = lbl_803E2574;

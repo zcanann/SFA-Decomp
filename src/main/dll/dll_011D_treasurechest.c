@@ -3,10 +3,10 @@
 #include "main/dll/staffflags_struct.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/resource.h"
 
 extern uint GameBit_Get(int eventId);
-extern void ObjHits_DisableObject(int obj);
 
 STATIC_ASSERT(sizeof(TreasureChestSetup) == 0x24);
 STATIC_ASSERT(offsetof(TreasureChestSetup, type) == 0x18);
@@ -44,7 +44,7 @@ int treasurechest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         case 4:
             ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((u32)obj);
             break;
         }
         i++;
@@ -170,7 +170,7 @@ void treasurechest_update(int obj)
             }
             GameBit_Set(setup->openGameBit, 1);
             flags->open = 1;
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((u32)obj);
         }
         flags->trigger = 0;
         blk.params = lbl_802C22B0;
@@ -230,7 +230,7 @@ void treasurechest_init(int* obj)
     if (state->open != 0)
     {
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject((u32)obj);
     }
     lbl_803DDAE0 = Resource_Acquire(90, 1);
     state->trigger = 1;
