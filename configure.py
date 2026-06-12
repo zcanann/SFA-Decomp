@@ -1215,7 +1215,6 @@ config.libs = [
             Object(NonMatching, "main/dll/tesla.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/infopoint.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/TrickyCurve.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/sfxplayer.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/crate.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/crate2.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/door.c", cflags=cflags_dll_noopt),
