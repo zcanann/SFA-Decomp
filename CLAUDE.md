@@ -1604,7 +1604,12 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   launders, register-keyword drop, separate local, comma-init, peephole-on).
   Classify by recipient reg: saved → apply #80; volatile with a matching
   twin → open vreg-numbering case, bank the 1-instr partial and re-attack when
-  a vreg-numbering lever lands.
+  a vreg-numbering lever lands. DECREMENT-SPELLING sub-case (fuelcell_render
+  → 100): a via-r0 on a `value±K` CALL ARG of a call that REASSIGNS the same
+  variable = move the arithmetic onto the variable (`pickCount--; pickCount =
+  randomGetRange(0, pickCount);`) — copy-prop then folds the compound update
+  into the arg position in-place (#20 applied to call args; named-temp/mask/
+  conversion spellings all kept the arithmetic inside the arg = the miss).
 - **OPEN — player_SeqFn (98.10) top-pair allocation order (the cache-inline
   fix is a settled negative — try a different axis).** Eliminating the
   (int)inner cast-copy web (savegpr
@@ -2227,12 +2232,22 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       bank it, recognize the signature, and re-attack when a lever for
       unnamed expression-temp coloring lands (the #114 conversion-node
       splitter is the closest existing tool to try).
-      RANK-MODEL DIAGNOSTIC (CFBaby decoration11a, banked 99.66): our
-      FP volatile assignment behaves as use-count-descending with
-      decl-order tie-break, first-fit from f0 — target's block wants the
-      2-use bMax BELOW the 4-use px (a queue-jump no known lever
-      produces; 30+ spellings probed across two campaigns). Recognize the
-      inversion signature before grinding.
+      ⚠️ CLASS-MOVE MODEL (decoration11a → 100, superseding the earlier
+      "use-count rank" diagnostic — that model was WRONG): FP-volatile
+      coloring is WEB-CREATION-ORDER first-fit from f0, and queue-jumps
+      are produced by moving values BETWEEN classes, never by reordering
+      within one: an EMBEDDED DEF in the condition (`if ((px =
+      localPos[0]) < bMin)`) moves a value temp→named (a plain named init
+      from a STACK SLOT is #94 value-tracked/copy-propagated away — which
+      is why entire decl matrices test byte-identical: every "named
+      arrangement" silently degenerates to the temp form; CHECK FOR THIS
+      before trusting any inert battery); un-naming an if/else result
+      into a TERNARY JOIN moves it named→temp (the join temp ranks in the
+      temp class and the arm value coalesces into it). decoration11a
+      needed both, plus fn-scope bMax (block-scope regresses the
+      coalesce). LIMIT: class-moving levers are verified INERT for the
+      SAVED-FP pool (deathseq_update banked 99.785 — within-class order
+      there is the #108 IR-internal frontier).
       4th member — NAMED-WEB PRIORITY INVERSION (mtxRotateByVec3s,
       probe-characterized via probe_battery): target gives the NAMED
       multi-def temps (u, zero) the LOWEST volatiles (f0) and the unnamed
@@ -3352,7 +3367,15 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
     than ours → bank the partial and keep it on the rotation retry list
     (the zero-cost levers above are spent; spend new budget on a new axis).
     The 1-2 instr "half" states (one rank off) are the same open class,
-    not a separate bug.
+    not a separate bug. SCARAB CONFIRMATION (windlift scarab_update banked
+    99.931, direction (b)): #115 callee-width flips x4, #126 param read,
+    copy-init/chain spellings at every position, stack-tracked reads, and
+    #114 sandwiches x4 are ALL verified insufficient — every front-end
+    path to the zero folds to the constant before allocation; per-fn O1 is
+    size-gated out at ~1000 instrs. The lever must make the reaching def
+    opaque WITHOUT changing its li emission, or alter the priority-fn
+    inputs streamlessly — MP4-oracle hunt for matched li;mr zero-chains at
+    O4 is the open research route.
     (Why target differs at byte-identical streams is not yet explained —
     plausibly fixed-point rounding in a fn-globally-normalized priority
     function reacting to upstream-IR differences; MWCC source is lost, so
@@ -3976,7 +3999,11 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     PARAM reassignment is the strongest form (t/axial in
     CalcSkeletonResponseXZ: `t = lbl + (one - t) * lbl2;` reproduced the
     separate factor statement where every fresh-local spelling folded into
-    the next expression). Diagnostic order: when a single-use local's
+    the next expression). BYTE-INVISIBILITY caveat (CF final maverick):
+    web construction SPLITS disjoint def-use chains regardless of naming —
+    recycling a dead variable is byte-identical unless the dying value's
+    web actually CONNECTS to the new def (liveness overlap at the
+    allocation decision, per the wmsun guard). Diagnostic order: when a single-use local's
     statement keeps folding into its consumer against target, FIRST check
     whether target's result reg was home to a dead earlier variable --
     cheaper than #94's phi tricks and plausibly the original source (tight
