@@ -2095,7 +2095,7 @@ void RomCurve_setA4(void* a, void* b)
     }
 }
 
-int RomCurve_setClosed(float* state, int closed)
+int RomCurve_setClosed(RomCurveWalker* state, int closed)
 {
     extern float mathCosf(double x); /* #57 */
     extern float mathSinf(double angle); /* #57 */
@@ -2103,71 +2103,71 @@ int RomCurve_setClosed(float* state, int closed)
     float t;
     void* tmpCurve;
 
-    if (closed == ((RomCurveWalker*)state)->reverse)
+    if (closed == state->reverse)
     {
         return 0;
     }
-    if (((RomCurveWalker*)state)->nodeA0 == 0 || ((RomCurveWalker*)state)->node9C == 0)
+    if (state->nodeA0 == 0 || state->node9C == 0)
     {
         return 1;
     }
 
-    savedPhase = state[0];
-    ((RomCurveWalker*)state)->reverse = closed;
-    tmpCurve = ((RomCurveWalker*)state)->node9C;
-    ((RomCurveWalker*)state)->node9C = ((RomCurveWalker*)state)->nodeA4;
-    ((RomCurveWalker*)state)->nodeA4 = tmpCurve;
+    savedPhase = state->phase;
+    state->reverse = closed;
+    tmpCurve = state->node9C;
+    state->node9C = state->nodeA4;
+    state->nodeA4 = tmpCurve;
 
-    ((RomCurveWalker*)state)->hermX2[0] = *(f32*)((char*)((RomCurveWalker*)state)->nodeA0 + 0x8);
-    ((RomCurveWalker*)state)->hermX2[1] = *(f32*)((char*)((RomCurveWalker*)state)->nodeA4 + 0x8);
-    t = (float)(u32) * (u8*)((char*)((RomCurveWalker*)state)->nodeA0 + 0x2e) *
+    state->hermX2[0] = *(f32*)((char*)state->nodeA0 + 0x8);
+    state->hermX2[1] = *(f32*)((char*)state->nodeA4 + 0x8);
+    t = (float)(u32) * (u8*)((char*)state->nodeA0 + 0x2e) *
         mathSinf(lbl_803E0614 *
-            (float)((s32)((s8) * ((char*)((RomCurveWalker*)state)->nodeA0 + 0x2c)) << 8) /
+            (float)((s32)((s8) * ((char*)state->nodeA0 + 0x2c)) << 8) /
             lbl_803E0618);
-    ((RomCurveWalker*)state)->hermX2[2] = lbl_803E0610 * t;
-    t = (float)(u32) * (u8*)((char*)((RomCurveWalker*)state)->nodeA4 + 0x2e) *
+    state->hermX2[2] = lbl_803E0610 * t;
+    t = (float)(u32) * (u8*)((char*)state->nodeA4 + 0x2e) *
         mathSinf(lbl_803E0614 *
-            (float)((s32)((s8) * ((char*)((RomCurveWalker*)state)->nodeA4 + 0x2c)) << 8) /
+            (float)((s32)((s8) * ((char*)state->nodeA4 + 0x2c)) << 8) /
             lbl_803E0618);
-    ((RomCurveWalker*)state)->hermX2[3] = lbl_803E0610 * t;
+    state->hermX2[3] = lbl_803E0610 * t;
 
-    ((RomCurveWalker*)state)->hermY2[0] = *(f32*)((char*)((RomCurveWalker*)state)->nodeA0 + 0xc);
-    ((RomCurveWalker*)state)->hermY2[1] = *(f32*)((char*)((RomCurveWalker*)state)->nodeA4 + 0xc);
-    t = (float)(u32) * (u8*)((char*)((RomCurveWalker*)state)->nodeA0 + 0x2e) *
+    state->hermY2[0] = *(f32*)((char*)state->nodeA0 + 0xc);
+    state->hermY2[1] = *(f32*)((char*)state->nodeA4 + 0xc);
+    t = (float)(u32) * (u8*)((char*)state->nodeA0 + 0x2e) *
         mathSinf(lbl_803E0614 *
-            (float)((s32)((s8) * ((char*)((RomCurveWalker*)state)->nodeA0 + 0x2d)) << 8) /
+            (float)((s32)((s8) * ((char*)state->nodeA0 + 0x2d)) << 8) /
             lbl_803E0618);
-    ((RomCurveWalker*)state)->hermY2[2] = lbl_803E0610 * t;
-    t = (float)(u32) * (u8*)((char*)((RomCurveWalker*)state)->nodeA4 + 0x2e) *
+    state->hermY2[2] = lbl_803E0610 * t;
+    t = (float)(u32) * (u8*)((char*)state->nodeA4 + 0x2e) *
         mathSinf(lbl_803E0614 *
-            (float)((s32)((s8) * ((char*)((RomCurveWalker*)state)->nodeA4 + 0x2d)) << 8) /
+            (float)((s32)((s8) * ((char*)state->nodeA4 + 0x2d)) << 8) /
             lbl_803E0618);
-    ((RomCurveWalker*)state)->hermY2[3] = lbl_803E0610 * t;
+    state->hermY2[3] = lbl_803E0610 * t;
 
-    ((RomCurveWalker*)state)->hermZ2[0] = *(f32*)((char*)((RomCurveWalker*)state)->nodeA0 + 0x10);
-    ((RomCurveWalker*)state)->hermZ2[1] = *(f32*)((char*)((RomCurveWalker*)state)->nodeA4 + 0x10);
-    t = (float)(u32) * (u8*)((char*)((RomCurveWalker*)state)->nodeA0 + 0x2e) *
+    state->hermZ2[0] = *(f32*)((char*)state->nodeA0 + 0x10);
+    state->hermZ2[1] = *(f32*)((char*)state->nodeA4 + 0x10);
+    t = (float)(u32) * (u8*)((char*)state->nodeA0 + 0x2e) *
         mathCosf(lbl_803E0614 *
-            (float)((s32)((s8) * ((char*)((RomCurveWalker*)state)->nodeA0 + 0x2c)) << 8) / lbl_803E0618);
-    ((RomCurveWalker*)state)->hermZ2[2] = lbl_803E0610 * t;
-    t = (float)(u32) * (u8*)((char*)((RomCurveWalker*)state)->nodeA4 + 0x2e) *
+            (float)((s32)((s8) * ((char*)state->nodeA0 + 0x2c)) << 8) / lbl_803E0618);
+    state->hermZ2[2] = lbl_803E0610 * t;
+    t = (float)(u32) * (u8*)((char*)state->nodeA4 + 0x2e) *
         mathCosf(lbl_803E0614 *
-            (float)((s32)((s8) * ((char*)((RomCurveWalker*)state)->nodeA4 + 0x2c)) << 8) / lbl_803E0618);
-    ((RomCurveWalker*)state)->hermZ2[3] = lbl_803E0610 * t;
+            (float)((s32)((s8) * ((char*)state->nodeA4 + 0x2c)) << 8) / lbl_803E0618);
+    state->hermZ2[3] = lbl_803E0610 * t;
 
     if (RomCurve_goNextPoint(state) != 0)
     {
         return 1;
     }
 
-    ((RomCurveWalker*)state)->node94 = Curve_EvalHermite;
-    ((RomCurveWalker*)state)->node98 = Curve_BuildHermiteCoeffs;
-    *(float**)(state + 0x21) = state + 0x2a;
-    *(float**)(state + 0x22) = state + 0x32;
-    *(float**)(state + 0x23) = state + 0x3a;
-    *(s32*)(state + 0x24) = 8;
-    curvesMove(state);
-    state[0] = savedPhase;
+    state->node94 = Curve_EvalHermite;
+    state->node98 = Curve_BuildHermiteCoeffs;
+    state->unk84 = state->hermX;
+    state->unk88 = state->hermY;
+    state->unk8C = state->hermZ;
+    state->moveNetwork = 8;
+    curvesMove((float*)state);
+    state->phase = savedPhase;
     return 0;
 }
 
@@ -2215,7 +2215,7 @@ int RomCurve_setClosed(float* state, int closed)
             lbl_803E0618);                                                        \
     *(f32 *)(stateBytes + 0x104) = lbl_803E0610 * t
 
-u8 RomCurve_goNextPoint(float* state)
+u8 RomCurve_goNextPoint(RomCurveWalker* state)
 {
     char* stateBytes;
     int candidateIds[4];
@@ -2324,15 +2324,15 @@ u8 RomCurve_goNextPoint(float* state)
 
     if (((RomCurveWalker*)stateBytes)->moveNetwork != 0)
     {
-        curvesSetupMoveNetworkCurve(state);
+        curvesSetupMoveNetworkCurve((float*)state);
     }
     if (((RomCurveWalker*)stateBytes)->reverse == 0)
     {
-        ((void (*)(float*, double))Curve_AdvanceAlongPath)(state, gFloatOne);
+        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatOne);
     }
     else
     {
-        ((void (*)(float*, double))Curve_AdvanceAlongPath)(state, gFloatNegOne);
+        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatNegOne);
     }
     return 0;
 }
@@ -2665,7 +2665,7 @@ int RomCurve_func2C(float* state, int unused, int startCurveId)
     }
 
     ROMCURVE_REFRESH_CONTROL(0xa4);
-    if (RomCurve_goNextPoint(state) != 0)
+    if (RomCurve_goNextPoint((RomCurveWalker*)state) != 0)
     {
         return 1;
     }
@@ -2768,7 +2768,7 @@ int RomCurve_get(float* state, int obj, int* curveTypes, int curveType, f32 maxD
     }
 
     ROMCURVE_REFRESH_CONTROL(0xa4);
-    if (RomCurve_goNextPoint(state) != 0)
+    if (RomCurve_goNextPoint((RomCurveWalker*)state) != 0)
     {
         return 1;
     }
