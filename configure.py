@@ -1006,7 +1006,6 @@ config.libs = [
             Object(NonMatching, "main/dll/fogcontrol.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/tFrameAnimator.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/screenOverlay.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/texScroll.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_147.c"),
             Object(NonMatching, "main/dll/cfguardian.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/alphaanim.c", cflags=cflags_dll_noopt),

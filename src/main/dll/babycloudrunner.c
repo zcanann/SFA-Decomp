@@ -1,10 +1,115 @@
+/* === moved from main/dll/crackanim.c [8017EC10-8017EC94) (TU re-split, docs/boundary_audit.md) === */
+#include "main/audio/sfx_ids.h"
+#include "main/effect_interfaces.h"
+#include "main/game_object.h"
+#include "main/dll/crackanim_state.h"
+#include "main/dll/baddie_state.h"
+#include "main/dll/crackanim.h"
+
+typedef struct AppleontreeObjectDef
+{
+    u8 pad0[0x18 - 0x0];
+    u32 unk18;
+    u16 duration;
+    u16 elapsed;
+    u8 unk20;
+    u8 unk21;
+    u8 unk22;
+    u8 unk23;
+    u8 unk24;
+    s8 unk25;
+    s16 unk26;
+} AppleontreeObjectDef;
+
+
+
+
+
+/*
+ * --INFO--
+ *
+ * Function: appleontree_update
+ * EN v1.0 Address: 0x8017E1A0
+ * EN v1.0 Size: 2460b
+ * EN v1.1 Address: 0x8017E6F8
+ * EN v1.1 Size: 1988b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void appleontree_update(int param_1);
+
+/*
+ * --INFO--
+ *
+ * Function: appleontree_init
+ * EN v1.0 Address: 0x8017E964
+ * EN v1.0 Size: 684b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void appleontree_init(int obj, int def);
+
+/* Trivial 4b 0-arg blr leaves. */
+void dll_FC_free_nop(void)
+{
+}
+
+/* 8b "li r3, N; blr" returners. */
+int dll_FC_getExtraSize_ret_8(void) { return 0x8; }
+int dll_FC_getObjectTypeId(void) { return 0x0; }
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E3848;
+extern void objRenderFn_8003b8f4(f32);
+
+void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E3848);
+}
+
+extern void dll_FC_initialise_nop(void);
+extern void dll_FC_release_nop(void);
+extern void dll_FC_init(int obj, int objDef);
+extern void dll_FC_update(int obj);
+extern void dll_FC_hitDetect(int* obj);
+
+
+void dll_FC_hitDetect(int* obj)
+{
+    extern void objRenderFn_80041018(int* obj); /* #57 */
+    int* state = (int*)obj[0x50 / 4];
+    if (((u32)state[0x44 / 4] & 1u) == 0u) return;
+    if (*(void**)((char*)obj + 0x74) == NULL) return;
+    objRenderFn_80041018(obj);
+}
+
+ObjectDescriptor gDllFCObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_FC_initialise_nop,
+    (ObjectDescriptorCallback)dll_FC_release_nop,
+    0,
+    (ObjectDescriptorCallback)dll_FC_init,
+    (ObjectDescriptorCallback)dll_FC_update,
+    (ObjectDescriptorCallback)dll_FC_hitDetect,
+    (ObjectDescriptorCallback)dll_FC_render,
+    (ObjectDescriptorCallback)dll_FC_free_nop,
+    (ObjectDescriptorCallback)dll_FC_getObjectTypeId,
+    dll_FC_getExtraSize_ret_8,
+};
+
 #include "main/dll/babycloudrunner.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/obj_placement.h"
 #include "main/objseq.h"
 
-extern void objRenderFn_80041018(void);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
@@ -178,14 +283,7 @@ void dll_FC_init(int obj, int objDef)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_14D_hitDetect(int param_1)
-{
-    if (((((ObjAnimComponent*)param_1)->modelInstance->flags & 1) != 0) && (*(uint*)(param_1 + 0x74) != 0))
-    {
-        objRenderFn_80041018();
-    }
-    return;
-}
+void dll_14D_hitDetect(int param_1);
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -197,20 +295,13 @@ void dll_FC_initialise_nop(void)
 {
 }
 
-void dll_14D_free_nop(void)
-{
-}
+void dll_14D_free_nop(void);
 
 /* 8b "li r3, N; blr" returners. */
-int dll_14D_getExtraSize_ret_8(void) { return 0x8; }
-int dll_14D_getObjectTypeId(void) { return 0x0; }
+int dll_14D_getExtraSize_ret_8(void);
+int dll_14D_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3850;
-extern void objRenderFn_8003b8f4(f32);
 
-void dll_14D_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E3850);
-}
+void dll_14D_render(int p1, int p2, int p3, int p4, int p5, s8 visible);

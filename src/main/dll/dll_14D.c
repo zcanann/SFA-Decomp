@@ -1,3 +1,95 @@
+/* === moved from main/dll/babycloudrunner.c [8017EF6C-8017EFF0) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/babycloudrunner.h"
+#include "main/game_object.h"
+#include "main/objlib.h"
+#include "main/obj_placement.h"
+#include "main/objseq.h"
+
+extern void objRenderFn_80041018(void);
+
+
+typedef struct BabyCloudRunnerPlacement
+{
+    ObjPlacement base;
+    s16 gateGameBit;
+    s16 rememberedGameBit;
+    u8 targetGroup;
+    u8 triggerIdMin;
+    u8 triggerIdMax;
+    u8 flags;
+    u8 pad20[0x24 - 0x20];
+} BabyCloudRunnerPlacement;
+
+typedef struct BabyCloudRunnerState
+{
+    u8 mode;
+    u8 triggerId;
+    u8 rememberedGameBitValue;
+    u8 pad03;
+    GameObject* target;
+} BabyCloudRunnerState;
+
+
+
+/*
+ * --INFO--
+ *
+ * Function: dll_FC_init
+ * EN v1.0 Address: 0x8017EF3C
+ * EN v1.0 Size: 40b
+ * EN v1.1 Address: 0x8017F17C
+ * EN v1.1 Size: 48b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dll_FC_init(int obj, int objDef);
+
+/*
+ * --INFO--
+ *
+ * Function: dll_14D_hitDetect
+ * EN v1.0 Address: 0x8017EFB0
+ * EN v1.0 Size: 64b
+ * EN v1.1 Address: 0x8017F1AC
+ * EN v1.1 Size: 64b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dll_14D_hitDetect(int param_1)
+{
+    if (((((ObjAnimComponent*)param_1)->modelInstance->flags & 1) != 0) && (*(uint*)(param_1 + 0x74) != 0))
+    {
+        objRenderFn_80041018();
+    }
+    return;
+}
+
+
+/* Trivial 4b 0-arg blr leaves. */
+
+
+void dll_14D_free_nop(void)
+{
+}
+
+/* 8b "li r3, N; blr" returners. */
+int dll_14D_getExtraSize_ret_8(void) { return 0x8; }
+int dll_14D_getObjectTypeId(void) { return 0x0; }
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E3850;
+extern void objRenderFn_8003b8f4(f32);
+
+void dll_14D_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E3850);
+}
+
 #include "main/dll/dll_14D.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -15,7 +107,6 @@ typedef struct Dll14DState
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjGroup_FindNearestObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
 extern void* Obj_GetPlayerObject(void);
@@ -63,6 +154,7 @@ typedef struct MagicPlantBridgeState
  */
 void dll_14D_update(undefined2* obj)
 {
+    extern undefined4 ObjGroup_FindNearestObject(); /* #57 */
     byte mode;
     undefined4 found;
     uint bitVal;
@@ -240,7 +332,6 @@ void dll_14D_initialise_nop(void)
 
 extern void dll_14D_update();
 extern void dll_14D_hitDetect(int param_1);
-extern void dll_14D_render(int p1, int p2, int p3, int p4, s8 visible);
 extern void dll_14D_free_nop();
 extern int dll_14D_getObjectTypeId(void);
 extern int dll_14D_getExtraSize_ret_8(void);

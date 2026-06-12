@@ -1,3 +1,144 @@
+/* === merged from main/dll/texScroll.c [8017AC2C-8017ADB4) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/texScroll.h"
+#include "main/game_object.h"
+
+extern undefined8 ObjGroup_RemoveObject();
+
+#define PRESSURESWITCHFB_STATE_IDLE 0
+#define PRESSURESWITCHFB_STATE_CAPTURE_POSITIONS 1
+#define PRESSURESWITCHFB_STATE_RESET 2
+
+#define PRESSURESWITCHFB_TRACKED_OBJECT_COUNT 10
+#define PRESSURESWITCHFB_TRACKED_OBJECT_BATCH 5
+
+#define PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET 0x04
+#define PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET 0x2c
+#define PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET 0x7c
+#define PRESSURESWITCHFB_EXTRA_SIZE 0x88
+
+#define PRESSURESWITCHFB_CONFIG_BASE_COORD_OFFSET 0x08
+#define PRESSURESWITCHFB_CONFIG_RESET_COORD_OFFSET 0x10
+#define PRESSURESWITCHFB_CONFIG_RAISED_GAMEBIT_OFFSET 0x1a
+
+#define PRESSURESWITCHFB_STATE_MODE_OFFSET 0x80
+#define PRESSURESWITCHFB_REMOVE_GROUP_ID 0x53
+
+#define PRESSURESWITCHFB_OBJ_LINK_SNOWPR 0x019f
+#define PRESSURESWITCHFB_OBJ_SH_PRESSURE 0x026c
+#define PRESSURESWITCHFB_OBJ_LINK_UNDERW 0x0274
+#define PRESSURESWITCHFB_OBJ_CC_PRESSURE 0x0545
+
+/*
+ * --INFO--
+ *
+ * Function: pressureswitchfb_updateStateMode
+ * EN v1.0 Address: 0x8017AC2C
+ * EN v1.0 Size: 348b
+ * EN v1.1 Address: 0x8017AC40
+ * EN v1.1 Size: 388b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4 pressureswitchfb_updateStateMode(int obj, undefined4 param_2, int stateParam)
+{
+    extern void GameBit_Set(int eventId, int value); /* #57 */
+    s16 objType;
+    int config;
+    u32 handle;
+    u32 offset;
+    int runtime;
+    int trackedObjectSlot;
+    u8 i;
+
+    runtime = *(int*)&((GameObject*)obj)->extra;
+    config = *(int*)&((GameObject*)obj)->anim.placementData;
+    if (*(u8*)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) ==
+        PRESSURESWITCHFB_STATE_CAPTURE_POSITIONS)
+    {
+        for (i = 0; i < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT; i++)
+        {
+            offset = (u32)i * 4 + PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET;
+            handle = *(u32*)(runtime + offset);
+            if (handle != 0)
+            {
+                *(f32*)(runtime + (u32)i * 8 + PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET) =
+                    *(f32*)(handle + 0xc);
+                *(f32*)(runtime + (u32)i * 8 + (PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET + 4)) =
+                    *(f32*)(*(int*)(runtime + offset) + 0x14);
+            }
+        }
+        *(u8*)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) =
+            PRESSURESWITCHFB_STATE_IDLE;
+    }
+    else if (*(u8*)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) ==
+        PRESSURESWITCHFB_STATE_RESET)
+    {
+        for (i = 0; i < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT;
+             i += PRESSURESWITCHFB_TRACKED_OBJECT_BATCH)
+        {
+            trackedObjectSlot = runtime + (u32)i * 4 + PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET;
+            *(undefined4*)(trackedObjectSlot + 0x0) = 0;
+            *(undefined4*)(trackedObjectSlot + 0x4) = 0;
+            *(undefined4*)(trackedObjectSlot + 0x8) = 0;
+            *(undefined4*)(trackedObjectSlot + 0xc) = 0;
+            *(undefined4*)(trackedObjectSlot + 0x10) = 0;
+        }
+        ((GameObject*)obj)->anim.localPosZ = *(f32*)(config + PRESSURESWITCHFB_CONFIG_BASE_COORD_OFFSET);
+        ((GameObject*)obj)->anim.localPosY = *(f32*)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET);
+        ((GameObject*)obj)->anim.localPosZ = *(f32*)(config + PRESSURESWITCHFB_CONFIG_RESET_COORD_OFFSET);
+        GameBit_Set(*(s16*)(config + PRESSURESWITCHFB_CONFIG_RAISED_GAMEBIT_OFFSET), 0);
+        *(u8*)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) =
+            PRESSURESWITCHFB_STATE_IDLE;
+    }
+    objType = ((GameObject*)obj)->anim.seqId;
+    if ((((objType != PRESSURESWITCHFB_OBJ_LINK_SNOWPR) &&
+                (objType != PRESSURESWITCHFB_OBJ_SH_PRESSURE)) &&
+            (objType != PRESSURESWITCHFB_OBJ_LINK_UNDERW)) &&
+        (objType != PRESSURESWITCHFB_OBJ_CC_PRESSURE))
+    {
+        *(f32*)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET) = ((GameObject*)obj)->anim.localPosY;
+    }
+    return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: pressureswitchfb_getExtraSize
+ * EN v1.0 Address: 0x8017AD88
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x8017ADC4
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int pressureswitchfb_getExtraSize(void)
+{
+    return PRESSURESWITCHFB_EXTRA_SIZE;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: pressureswitchfb_free
+ * EN v1.0 Address: 0x8017AD90
+ * EN v1.0 Size: 36b
+ * EN v1.1 Address: 0x8017ADCC
+ * EN v1.1 Size: 36b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void pressureswitchfb_free(int obj)
+{
+    ObjGroup_RemoveObject(obj,PRESSURESWITCHFB_REMOVE_GROUP_ID);
+}
+
 #include "main/dll/cfguardian_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -190,7 +331,6 @@ extern void Sfx_StopObjectChannel(int obj, int channel);
 extern EffectInterface** gPartfxInterface;
 extern int* objFindTexture(int* obj, int a, int b);
 extern u32 GameBit_Get(int eventId);
-extern int GameBit_Set(int eventId, int value);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 lbl_803E3758;
 extern f32 lbl_803E375C;
@@ -200,6 +340,7 @@ extern f32 lbl_803E3768;
 
 void pressureswitchfb_update(int obj)
 {
+    extern int GameBit_Set(int eventId, int value); /* #57 */
     uint nearest;
     int off;
     uint other;
@@ -843,6 +984,7 @@ extern void buttonDisable(int index, int mask);
  */
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
+    extern int GameBit_Set(int eventId, int value); /* #57 */
     int i;
     int state;
     int def;
@@ -982,6 +1124,7 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
  */
 int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
+    extern int GameBit_Set(int eventId, int value); /* #57 */
     int def;
 
     def = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -1010,6 +1153,7 @@ int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
  */
 void doorlock_update(int obj)
 {
+    extern int GameBit_Set(int eventId, int value); /* #57 */
     int state;
     int def;
     int flags;
@@ -1118,3 +1262,285 @@ void doorlock_update(int obj)
         }
     }
 }
+
+/* segment pragma-stack balance (re-split): */
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+
+/* === moved from main/dll/alphaanim.c [8017C178-8017C294) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/alphaanim.h"
+#include "main/obj_placement.h"
+#include "main/game_object.h"
+#include "main/objanim_internal.h"
+#include "main/objseq.h"
+
+
+extern uint GameBit_Get(int eventId);
+
+
+typedef struct DoorLockState
+{
+    u8 unlocked;
+} DoorLockState;
+
+typedef struct SeqObjectState
+{
+    u8 flags;
+    s8 triggerBitState;
+    u8 pad02;
+} SeqObjectState;
+
+typedef struct SeqObj2State
+{
+    u8 flags;
+} SeqObj2State;
+
+typedef struct IMMultiSeqState
+{
+    u8 step;
+    u8 flags;
+} IMMultiSeqState;
+
+
+#define SEQOBJECT_STATE_OPEN 0x01
+#define SEQOBJECT_STATE_TRIGGER_SEQUENCE 0x02
+#define SEQOBJECT_STATE_SEQUENCE_DONE 0x04
+
+#define SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR 0x01
+#define SEQOBJECT_FLAG_SET_SOURCE_ON_SEQUENCE 0x02
+#define SEQOBJECT_FLAG_CLEAR_TARGET_ON_DONE 0x04
+#define SEQOBJECT_FLAG_SET_SOURCE_ON_DONE 0x08
+#define SEQOBJECT_FLAG_USE_TRIGGER_PARAM 0x10
+#define SEQOBJECT_FLAG_UNUSED_20 0x20
+
+#define IMMULTISEQ_LATCH_ADVANCE_BIT 0x01
+
+/*
+ * --INFO--
+ *
+ * Function: doorlock_init
+ * EN v1.0 Address: 0x8017C178
+ * EN v1.0 Size: 184b
+ * EN v1.1 Address: 0x8017C250
+ * EN v1.1 Size: 188b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void doorlock_init(short* obj, DoorLockPlacement* config)
+{
+    ObjAnimComponent* objAnim;
+    DoorLockState* state;
+
+    objAnim = (ObjAnimComponent*)obj;
+    *obj = (short)((byte)config->rotXByte << 8);
+    ((GameObject*)obj)->anim.rotY = (short)((byte)config->rotYByte << 8);
+    ((GameObject*)obj)->anim.rotZ = (short)((byte)config->rotZByte << 8);
+    ((GameObject*)obj)->animEventCallback = (void*)Lock_DoorLock_SeqFn;
+    *(u8*)&objAnim->bankIndex = config->modelBankIndex;
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
+    {
+        objAnim->bankIndex = 0;
+    }
+    state = ((GameObject*)obj)->extra;
+    state->unlocked = (byte)GameBit_Get(config->lockGameBit);
+    ObjGroup_AddObject(obj, 0xf);
+    if ((config->flags & 1) != 0)
+    {
+        if (state->unlocked != 0)
+        {
+            objAnim->alpha = 0;
+        }
+    }
+    else if ((config->modeFlags & 1) != 0)
+    {
+        if (state->unlocked != 0)
+        {
+            ((GameObject*)obj)->unkF8 = 0;
+        }
+        else
+        {
+            ((GameObject*)obj)->unkF8 = 1;
+        }
+    }
+    return;
+}
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8017c5c4
+ * EN v1.0 Address: 0x8017C5C4
+ * EN v1.0 Size: 68b
+ * EN v1.1 Address: 0x8017C7EC
+ * EN v1.1 Size: 64b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_8017c5c4(int param_1);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8017c608
+ * EN v1.0 Address: 0x8017C608
+ * EN v1.0 Size: 456b
+ * EN v1.1 Address: 0x8017C82C
+ * EN v1.1 Size: 308b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4 FUN_8017c608(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10 , ObjAnimUpdateState* animUpdate, undefined4 param_12, int param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
+
+/*
+ * --INFO--
+ *
+ * Function: seqObject_free
+ * EN v1.0 Address: 0x8017C7D0
+ * EN v1.0 Size: 36b
+ * EN v1.1 Address: 0x8017C960
+ * EN v1.1 Size: 36b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void seqObject_free(int obj);
+
+/*
+ * --INFO--
+ *
+ * Function: seqObject_render
+ * EN v1.0 Address: 0x8017C7F4
+ * EN v1.0 Size: 40b
+ * EN v1.1 Address: 0x8017C984
+ * EN v1.1 Size: 48b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void seqObject_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
+
+/*
+ * --INFO--
+ *
+ * Function: seqObject_update
+ * EN v1.0 Address: 0x8017C81C
+ * EN v1.0 Size: 548b
+ * EN v1.1 Address: 0x8017C9B4
+ * EN v1.1 Size: 592b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void seqObject_update(int obj);
+
+/*
+ * --INFO--
+ *
+ * Function: seqObject_init
+ * EN v1.0 Address: 0x8017CA40
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8017CC04
+ * EN v1.1 Size: 248b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void seqObject_init(short* param_1, int param_2);
+
+
+/*
+ * --INFO--
+ *
+ * Function: seqObj2_free
+ * EN v1.0 Address: 0x8017CAF4
+ * EN v1.0 Size: 36b
+ * EN v1.1 Address: 0x8017CDE4
+ * EN v1.1 Size: 44b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void seqObj2_free(int obj);
+
+/*
+ * --INFO--
+ *
+ * Function: seqObj2_update
+ * EN v1.0 Address: 0x8017CB18
+ * EN v1.0 Size: 460b
+ * EN v1.1 Address: 0x8017CE10
+ * EN v1.1 Size: 596b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void seqObj2_update(int obj);
+
+/*
+ * --INFO--
+ *
+ * Function: seqObj2_init
+ * EN v1.0 Address: 0x8017CCE4
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8017D064
+ * EN v1.1 Size: 200b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void seqObj2_init(short* param_1, int param_2);
+
+
+/* Trivial 4b 0-arg blr leaves. */
+
+
+
+
+
+
+
+
+
+
+/* 8b "li r3, N; blr" returners. */
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+
+
+
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+
+/* Drift-recovery: add new fns with v1.0 names. */
+
+
+/* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
+ * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read
+ * its GameBit, compare against the def[0x30] mask bit for that slot, and
+ * if the polarity flips (GameBit != mask bit) end the current sequence.
+ * Always latches state[1] bit 0 before returning 0. */
+int immultiseq_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate);

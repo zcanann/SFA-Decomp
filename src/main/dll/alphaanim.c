@@ -100,44 +100,7 @@ STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void doorlock_init(short* obj, DoorLockPlacement* config)
-{
-    ObjAnimComponent* objAnim;
-    DoorLockState* state;
-
-    objAnim = (ObjAnimComponent*)obj;
-    *obj = (short)((byte)config->rotXByte << 8);
-    ((GameObject*)obj)->anim.rotY = (short)((byte)config->rotYByte << 8);
-    ((GameObject*)obj)->anim.rotZ = (short)((byte)config->rotZByte << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)Lock_DoorLock_SeqFn;
-    *(u8*)&objAnim->bankIndex = config->modelBankIndex;
-    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
-    {
-        objAnim->bankIndex = 0;
-    }
-    state = ((GameObject*)obj)->extra;
-    state->unlocked = (byte)GameBit_Get(config->lockGameBit);
-    ObjGroup_AddObject(obj, 0xf);
-    if ((config->flags & 1) != 0)
-    {
-        if (state->unlocked != 0)
-        {
-            objAnim->alpha = 0;
-        }
-    }
-    else if ((config->modeFlags & 1) != 0)
-    {
-        if (state->unlocked != 0)
-        {
-            ((GameObject*)obj)->unkF8 = 0;
-        }
-        else
-        {
-            ((GameObject*)obj)->unkF8 = 1;
-        }
-    }
-    return;
-}
+void doorlock_init(short* obj, DoorLockPlacement* config);
 
 
 /*
@@ -574,9 +537,7 @@ void immultiseq_init(int* obj, IMMultiSeqPlacement* params)
     state->step = (u8)i;
 }
 
-void dll_115_hitDetect_nop(void)
-{
-}
+void dll_115_hitDetect_nop(void);
 
 /* 8b "li r3, N; blr" returners. */
 int seqobject_getExtraSize(void) { return 0x3; }
@@ -585,8 +546,8 @@ int seqobj2_getExtraSize(void) { return 0x1; }
 int seqobj2_getObjectTypeId(void) { return 0x0; }
 int immultiseq_getExtraSize(void) { return 0x2; }
 int immultiseq_getObjectTypeId(void) { return 0x0; }
-int dll_115_getExtraSize_ret_2(void) { return 0x2; }
-int dll_115_getObjectTypeId(void) { return 0x0; }
+int dll_115_getExtraSize_ret_2(void);
+int dll_115_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E37A0;
@@ -606,17 +567,13 @@ void immultiseq_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E37A8);
 }
 
-void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E37B0);
-}
+void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 void seqobject_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 void seqobj2_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 void immultiseq_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
-void dll_115_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
+void dll_115_free(int x);
 
 /* Drift-recovery: add new fns with v1.0 names. */
 
@@ -960,36 +917,5 @@ void immultiseq_update(int* obj)
     }
 }
 
-int dll_115_seqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
-{
-    int v;
-    u8* state = ((GameObject*)obj)->extra;
-    s16* def = *(s16**)&((GameObject*)obj)->anim.placementData;
-    animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
-    animUpdate->sequenceEventActive = 0;
-    if (((GameObject*)obj)->seqIndex == -1)
-    {
-        return 0;
-    }
-    {
-        v = state[0];
-        if (v >= 10 || v < 8)
-        {
-            int n = v + 1;
-            if (n < 8)
-            {
-                s16 newId = (def + n)[0x14];
-                if (newId != -1 && newId != (def + v)[0x14])
-                {
-                    if (GameBit_Get(newId) != 0)
-                    {
-                        (*gObjectTriggerInterface)->endSequence(((GameObject*)obj)->seqIndex);
-                    }
-                }
-            }
-        }
-    }
-    state[1] = (u8)(state[1] | 1);
-    return 0;
-}
+int dll_115_seqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate);
 
