@@ -211,7 +211,6 @@ typedef struct LinkMenuItemDB
     u8 pad39[3];
 } LinkMenuItemDB;
 
-extern LinkMenuItemDB lbl_803A9458[40];
 
 void Pause_SetDisabled(u8 v) { pauseDisabled = v; }
 void Pause_ResetMenuFrameCounter(void) { pauseMenuFrameCounter = 60; }
@@ -244,8 +243,8 @@ void titleScreenFn_80130464(u8 v) { linkFlag_803dd8f8 = v; }
 void setLinkNotRotated(void) { linkIsRotated = 0; }
 void setLinkIsRotated(void) { linkIsRotated = 1; }
 u8 Link_func0C(void) { return (u8)linkCount_803dd90e; }
-void Link_func0A(int idx, int v) { lbl_803A9458[idx].state = (s8)v; }
-s32 Link_func09(int idx) { return lbl_803A9458[idx].state; }
+void Link_func0A(int idx, int v) { extern LinkMenuItemDB lbl_803A9458[40];  lbl_803A9458[idx].state = (s8)v; }
+s32 Link_func09(int idx) { extern LinkMenuItemDB lbl_803A9458[40];  return lbl_803A9458[idx].state; }
 void Link_setOpacity(u8 v) { linkItemOpacity = v; }
 #pragma peephole off
 void Link_setSelected(int v) { linkSelected = (s8)v; }
@@ -400,6 +399,7 @@ void Menu_initialise(void)
 #pragma scheduling off
 u16 fn_80130124(void)
 {
+    extern LinkMenuItemDB lbl_803A9458[40];
     return lbl_803A9458[linkSelected].itemId;
 }
 #pragma scheduling reset
@@ -453,6 +453,7 @@ extern u8 lbl_803DD911;
 #pragma peephole off
 void linkDrawFn_801302c0(void)
 {
+    extern LinkMenuItemDB lbl_803A9458[40];
     LinkMenuItemDB* sel;
     LinkMenuItemDB* p;
     void* tex;
@@ -536,6 +537,7 @@ void linkDrawFn_801302c0(void)
 #pragma peephole off
 void linkDrawFn_80130484(void)
 {
+    extern LinkMenuItemDB lbl_803A9458[40];
     LinkMenuItemDB* p;
     void* tex;
     int minX;
@@ -593,6 +595,7 @@ void linkDrawFn_80130484(void)
 #pragma peephole off
 void Link_func0F(void)
 {
+    extern LinkMenuItemDB lbl_803A9458[40];
     int i;
 
     for (i = 0; i < (s8)lbl_803DD911; i++)
@@ -606,6 +609,7 @@ void Link_func0F(void)
 #pragma scheduling off
 void Link_copy(u8* srcArg)
 {
+    extern LinkMenuItemDB lbl_803A9458[40];
     LinkMenuItemDB* dst;
     LinkMenuItemDB* src;
     int i;
@@ -642,6 +646,7 @@ void Link_copy(u8* srcArg)
 #pragma peephole off
 void Link_func0B(u8* srcArg)
 {
+    extern LinkMenuItemDB lbl_803A9458[40];
     LinkMenuItemDB* src;
     int i;
 
