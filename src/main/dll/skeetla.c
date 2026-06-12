@@ -1344,11 +1344,13 @@ void FUN_8013939c(uint param_1)
     double dVar4;
     float local_38;
     int local_34;
+    ObjHitsPriorityState* hitState;
     float local_30;
     u8 auStack_2c[12];
     float afStack_20[5];
 
     iVar3 = *(int*)&((GameObject*)param_1)->extra;
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_1)->anim.hitReactState;
     bVar1 = false;
     local_38 = FLOAT_803e30b4;
     iVar2 = FUN_8005b398((double)((GameObject*)param_1)->anim.worldPosX,
@@ -1418,8 +1420,8 @@ void FUN_8013939c(uint param_1)
                 ((GameObject*)param_1)->anim.velocityY * FLOAT_803dc074 + ((GameObject*)param_1)->anim.localPosY;
         }
     }
-    local_34 = (*(ObjHitsPriorityState**)&((GameObject*)param_1)->anim.hitReactState)->lastHitObject;
-    if (((*(ObjHitsPriorityState**)&((GameObject*)param_1)->anim.hitReactState)->flags & 8) == 0 ||
+    local_34 = hitState->lastHitObject;
+    if ((hitState->flags & 8) == 0 ||
         (*(short*)(local_34 + 0x46) == 0x1f))
     {
         local_34 = 0;
