@@ -16,7 +16,7 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern void Obj_FreeObject(int obj);
 extern int Obj_GetPlayerObject(void);
-extern int Curve_AdvanceAlongPath(int curve, f32 progress);
+extern int Curve_AdvanceAlongPath(RomCurveWalker *curve, f32 progress);
 extern void* mmAlloc(int size, int heap, int flags);
 extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286888();
@@ -301,7 +301,7 @@ void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup)
     {
         state->flags = state->flags | LFXEMITTER_FLAG_FOLLOW_CURVE;
         state->curveSpeed = (f32)setup->curveSpeed / lbl_803E3E84;
-        (*gRomCurveInterface)->initCurve(state, obj, lbl_803E3E88, &curveFlags, -1);
+        (*gRomCurveInterface)->initCurve(&state->curve, obj, lbl_803E3E88, &curveFlags, -1);
     }
     ObjGroup_AddObject((int)obj, LFXEMITTER_OBJ_GROUP);
 }
@@ -370,14 +370,14 @@ void lfxemitter_update(LfxEmitterObject* obj)
 
     if ((state->flags & LFXEMITTER_FLAG_FOLLOW_CURVE) != 0)
     {
-        if ((Curve_AdvanceAlongPath((int)state, state->curveSpeed) != 0) ||
-            (state->curveIdx != 0))
+        if ((Curve_AdvanceAlongPath(&state->curve, state->curveSpeed) != 0) ||
+            (state->curve.atSegmentEnd != 0))
         {
-            (*gRomCurveInterface)->goNextPoint(state);
+            (*gRomCurveInterface)->goNextPoint(&state->curve);
         }
-        obj->objAnim.localPosX = state->curveSample[0];
-        obj->objAnim.localPosY = state->curveSample[1];
-        obj->objAnim.localPosZ = state->curveSample[2];
+        obj->objAnim.localPosX = state->curve.posX;
+        obj->objAnim.localPosY = state->curve.posY;
+        obj->objAnim.localPosZ = state->curve.posZ;
     }
     else
     {

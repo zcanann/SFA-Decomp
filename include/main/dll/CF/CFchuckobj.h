@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/dll/CF/dll_012B_fxemit.h"
+#include "main/dll/curve_walker.h"
 #include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 
@@ -136,11 +137,7 @@ typedef struct LfxEmitterPlacement {
  * rom-curve walker record handed to Curve_AdvanceAlongPath / gRomCurveInterface.
  */
 typedef struct LfxEmitterState {
-    u8 curve00[0x10];
-    int curveIdx; /* Curve.idx */
-    u8 curve14[0x68 - 0x14];
-    f32 curveSample[3]; /* Curve.sample -- walked world position */
-    u8 curve74[LFXEMITTER_CURVE_RECORD_BYTES - 0x74];
+    RomCurveWalker curve;
     void *config; /* mmAlloc(0x28) copy of the lbl_803AC7B0-format record */
     f32 curveSpeed; /* placement curveSpeed / lbl_803E3E84 */
     s16 lifeTimer; /* frames until Obj_FreeObject when armed */
@@ -174,6 +171,9 @@ STATIC_ASSERT(offsetof(LfxEmitterPlacement, enableBit) == 0x22);
 STATIC_ASSERT(offsetof(LfxEmitterPlacement, followCurve) == 0x24);
 STATIC_ASSERT(offsetof(LfxEmitterPlacement, curveSpeed) == 0x25);
 STATIC_ASSERT(sizeof(LfxEmitterState) == LFXEMITTER_EXTRA_STATE_BYTES);
+STATIC_ASSERT(offsetof(LfxEmitterState, curve) == 0x00);
+STATIC_ASSERT(offsetof(LfxEmitterState, curve.atSegmentEnd) == 0x10);
+STATIC_ASSERT(offsetof(LfxEmitterState, curve.posX) == 0x68);
 STATIC_ASSERT(offsetof(LfxEmitterState, config) == 0x108);
 STATIC_ASSERT(offsetof(LfxEmitterState, curveSpeed) == 0x10C);
 STATIC_ASSERT(offsetof(LfxEmitterState, flags) == 0x120);
