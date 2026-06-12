@@ -8,6 +8,7 @@
 #include "main/dll/backpack_state.h"
 #include "main/dll/backpack.h"
 #include "main/dll/path_control_interface.h"
+#include "main/objhits.h"
 #include "main/objlib.h"
 
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hitsOut, int pointCount,
@@ -187,21 +188,19 @@ int tumbleweed_func0E(int obj)
 
 void tumbleweed_render2(int* obj, int p2)
 {
-    extern void ObjHits_DisableObject(int obj); /* #57 */
     int* state = ((GameObject*)obj)->extra;
     *(u8*)((char*)state + 0x278) = 6;
     *(int*)((char*)state + 0x290) = p2;
     *(f32*)((char*)state + 0x294) = timeDelta * lbl_803E2F98;
-    ObjHits_DisableObject((int)obj);
+    ObjHits_DisableObject((u32)obj);
 }
 
 void tumbleweed_modelMtxFn(int obj)
 {
-    extern void ObjHits_EnableObject(int obj); /* #57 */
     int state = *(int*)&((GameObject*)obj)->extra;
     if (*(u8*)(state + 0x278) == 1)
     {
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((u32)obj);
         *(u8*)(state + 0x278) = 2;
         *(u8*)(state + 0x27a) |= 3;
         if (((GameObject*)obj)->anim.seqId == 0x4c1)
@@ -291,7 +290,6 @@ void tumbleweed_update(int obj)
 void tumbleweed_updateStateMachine(int obj)
 {
     extern void tumbleweed_updateRollingMotion(int obj, int aux); /* #57 */
-    extern void ObjHits_EnableObject(int obj); /* #57 */
     int aux;
     int sphereIndex;
     u32 hitVolume;
@@ -319,7 +317,7 @@ void tumbleweed_updateStateMachine(int obj)
         {
             if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0)
             {
-                ObjHits_EnableObject(obj);
+                ObjHits_EnableObject((u32)obj);
                 ((BackpackState*)aux)->phase = 2;
                 ((BackpackState*)aux)->unk27A = (u8)(((BackpackState*)aux)->unk27A | 3);
                 if (((GameObject*)obj)->anim.seqId == TUMBLEWEED_TYPE_4)
@@ -522,7 +520,6 @@ void tumbleweed_updateStateMachine(int obj)
 
 void tumbleweed_init(int obj, int defData)
 {
-    extern void ObjHits_DisableObject(int obj); /* #57 */
     extern u32 randomGetRange(int min, int max); /* #57 */
     int aux = *(int*)&((GameObject*)obj)->extra;
 
@@ -543,7 +540,7 @@ void tumbleweed_init(int obj, int defData)
     randomGetRange(-0x12c, 0x12c);
     ObjGroup_AddObject(obj, 3);
     ObjGroup_AddObject(obj, 0x31);
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((u32)obj);
     ObjMsg_AllocQueue((void*)obj, 1);
     if (((GameObject*)obj)->anim.seqId == TUMBLEWEED_TYPE_3)
     {
@@ -553,7 +550,6 @@ void tumbleweed_init(int obj, int defData)
 
 void tumbleweed_updateEffects(int obj)
 {
-    extern void ObjHits_DisableObject(int obj); /* #57 */
     TumbleweedState* state = ((GameObject*)obj)->extra;
     int i;
     s16 type;
@@ -616,7 +612,7 @@ void tumbleweed_updateEffects(int obj)
         ((GameObject*)obj)->anim.alpha = 0;
         state->mode = 5;
         state->despawnTimer = lbl_803E2FC8;
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((u32)obj);
         state->effectFlags = (u8)(state->effectFlags & ~TUMBLEWEED_EFFECT_FLAG_DESPAWN);
     }
 
@@ -624,7 +620,7 @@ void tumbleweed_updateEffects(int obj)
         (((GameObject*)obj)->objectFlags & 0x800) != 0)
     {
         u32 r;
-        ObjHits_SetHitVolumeSlot(obj, TUMBLEWEED_HIT_PULSE_VOLUME_SLOT, 1, 0);
+        ObjHits_SetHitVolumeSlot((u32)obj, TUMBLEWEED_HIT_PULSE_VOLUME_SLOT, 1, 0);
         r = state->hitPulseCounter;
         r = r + 1;
         state->hitPulseCounter = r;
@@ -644,7 +640,6 @@ void tumbleweed_updateEffects(int obj)
 void tumbleweed_updateTargetedStateMachine(int obj)
 {
     extern void tumbleweed_updateRollingMotion(int obj, int aux); /* #57 */
-    extern void ObjHits_EnableObject(int obj); /* #57 */
     int sphereIndex;
     u32 hitVolume;
     int hitObject;
@@ -686,7 +681,7 @@ void tumbleweed_updateTargetedStateMachine(int obj)
                 ((BackpackState*)aux)->phase = 2;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8);
-                ObjHits_EnableObject(obj);
+                ObjHits_EnableObject((u32)obj);
             }
         }
     }

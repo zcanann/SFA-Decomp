@@ -4,6 +4,8 @@
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/wallanimator.h"
+#include "main/objanim.h"
+#include "main/objhits.h"
 #include "main/dll/texscroll2.h"
 
 typedef struct KaldachomState
@@ -56,13 +58,12 @@ int kaldachom_stateHandlerA06(int obj, int p2)
 
 int kaldachom_stateHandlerA03(int obj, int p2)
 {
-    extern void ObjHits_EnableObject(int);
     extern f32 lbl_803E3060;
     extern f32 lbl_803E3094;
 
     if ((s32)(s8)((GroundBaddieState*)p2)->baddie.moveJustStartedA != 0)
     {
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((u32)obj);
         if ((s32)(s8)((GroundBaddieState*)p2)->baddie.moveJustStartedA != 0)
         {
             ObjAnim_SetCurrentMove(obj, randomGetRange(6, 7), lbl_803E3060, 0);
@@ -97,7 +98,6 @@ int kaldachom_stateHandlerA05(int obj, int p2)
 
 int kaldachom_stateHandlerA02(int obj, int p2)
 {
-    extern void ObjHits_EnableObject(int);
     extern s16 lbl_803203F8[];
     extern f32 lbl_80320404[];
     extern f32 lbl_803E3060;
@@ -110,7 +110,7 @@ int kaldachom_stateHandlerA02(int obj, int p2)
             ObjAnim_SetCurrentMove(obj, lbl_803203F8[(s32)randomGetRange(0, 4)], lbl_803E3060, 0);
             ((GroundBaddieState*)p2)->baddie.moveDone = 0;
         }
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((u32)obj);
         ((KaldachomState*)sub)->unk4A = 4;
     }
     ((GroundBaddieState*)p2)->baddie.moveSpeed = lbl_80320404[(u32)((KaldachomState*)sub)->unk4A];
@@ -120,7 +120,6 @@ int kaldachom_stateHandlerA02(int obj, int p2)
 
 int kaldachom_stateHandlerA01(int obj, int p2)
 {
-    extern void ObjHits_DisableObject(int);
     extern f32 lbl_803E3060;
     extern f32 lbl_803E307C;
     GroundBaddieState* state = ((GameObject*)obj)->extra;
@@ -132,7 +131,7 @@ int kaldachom_stateHandlerA01(int obj, int p2)
             ObjAnim_SetCurrentMove(obj, 5, lbl_803E3060, 0);
             ((GroundBaddieState*)p2)->baddie.moveDone = 0;
         }
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((u32)obj);
         ((GroundBaddieState*)p2)->baddie.moveSpeed = lbl_803E307C;
         ((GroundBaddieState*)p2)->baddie.animSpeedA = lbl_803E3060;
     }
@@ -156,7 +155,6 @@ int kaldachom_stateHandlerA01(int obj, int p2)
 
 int kaldachom_stateHandlerA00(int obj, int p2)
 {
-    extern void ObjHits_EnableObject(int);
     extern f32 lbl_803E3060;
     extern f32 lbl_803E3098;
     extern f32 lbl_803E309C;
@@ -180,7 +178,7 @@ int kaldachom_stateHandlerA00(int obj, int p2)
         state->aggression / lbl_803E309C
         )
         ;
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((u32)obj);
     }
     else if ((s32)(s8)((GroundBaddieState*)p2)->baddie.moveDone != 0)
     {
