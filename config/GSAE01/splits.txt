@@ -889,16 +889,16 @@ main/dll/DR/hightop.c:
 	.text       start:0x801993B0 end:0x8019B1D8
 
 main/dll/DR/sandwormBoss.c:
-	.text       start:0x8019B1D8 end:0x801A1230
+	.text       start:0x8019B1D8 end:0x801A0B14
 
-main/dll/DR/gasvent.c:
-	.text       start:0x801A1230 end:0x801A1A60
+main/dll/DR/dll_0158_gunpowderbarrel.c:
+	.text       start:0x801A0B14 end:0x801A27B8
 
-main/dll/DR/cannontargetControl.c:
-	.text       start:0x801A1A60 end:0x801A2AF8
+main/dll/DR/dll_0159_blasted.c:
+	.text       start:0x801A27B8 end:0x801A2BDC
 
 main/dll/DR/gasventControl.c:
-	.text       start:0x801A2AF8 end:0x801A39D0
+	.text       start:0x801A2BDC end:0x801A39D0
 
 main/dll/IM/IMicicle.c:
 	.text       start:0x801A39D0 end:0x801A57E8

@@ -1,0 +1,519 @@
+/*
+ * Blasted (DLL 0x159) - CFBlastedRock/Wall/Tunnel + DRBlastedWall targets.
+ * Re-split (descriptor forensics, docs/boundary_audit.md): dll 0x159's TU
+ * is 0x801A27B8..0x801A2BDC (helper fn_801A27B8 + blasted_*). It was
+ * previously cut at 0x801A2AF8 across cannontargetControl.c |
+ * gasventControl.c; this file is the former cannontargetControl.c minus
+ * the gunpowderbarrel fns (dll 0x158, now dll_0158_gunpowderbarrel.c).
+ */
+#include "main/dll/DR/cannontargetControl.h"
+#include "main/expgfx.h"
+#include "main/game_object.h"
+#include "main/dll/DR/gasvent.h"
+#include "main/dll/DR/gunpowderbarrel_state.h"
+#include "main/objhits_types.h"
+
+typedef struct GunpowderbarrelPlacement
+{
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    u8 pad1E[0x20 - 0x1E];
+} GunpowderbarrelPlacement;
+
+
+extern undefined4 ObjHitbox_SetCapsuleBounds();
+extern undefined4 ObjHits_ClearHitVolumes();
+extern undefined4 ObjHits_SetHitVolumeSlot();
+extern undefined4 ObjHits_MarkObjectPositionDirty();
+extern undefined4 ObjHits_SyncObjectPositionIfDirty();
+extern undefined4 ObjHits_DisableObject();
+extern undefined8 ObjHits_EnableObject();
+extern undefined4 ObjHits_RefreshObjectState();
+extern undefined4 ObjHits_AddContactObject();
+extern int ObjGroup_FindNearestObject();
+extern void* ObjGroup_GetObjects();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
+extern int Obj_IsObjectAlive();
+extern undefined4 ObjLink_DetachChild();
+extern undefined4 ObjLink_AttachChild();
+extern double SeekTwiceBeforeRead();
+
+extern f64 DOUBLE_803e4f90;
+extern f32 lbl_803DC074;
+extern f32 lbl_803DC078;
+extern f32 lbl_803DCAE8;
+extern f32 lbl_803DCAEC;
+extern f32 lbl_803DCAF0;
+extern f32 lbl_803E4F58;
+extern f32 lbl_803E4F74;
+extern f32 lbl_803E4FA4;
+extern f32 lbl_803E4FA8;
+extern f32 lbl_803E4FAC;
+extern f32 lbl_803E4FB0;
+extern f32 lbl_803E4FB4;
+extern f32 lbl_803E4FB8;
+extern f32 lbl_803E4FBC;
+extern f32 lbl_803E4FC0;
+extern f32 lbl_803E4FC8;
+extern f32 lbl_803E4FCC;
+extern f32 lbl_803E4FD0;
+
+extern f32 oneOverTimeDelta;
+extern f32 lbl_803DBE84;
+extern f32 lbl_803E42C0;
+extern f32 lbl_803E4324;
+extern f32 lbl_803E4328;
+extern f32 lbl_803E432C;
+extern f32 lbl_803E4330;
+extern f32 lbl_803E4334;
+
+extern int fn_80080150(void* p1);
+extern int objHitDetectFn_80062e84(int p1, int p2, int p3);
+extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
+extern void Vec3_ReflectAgainstNormal(void* normal, void* velocity, void* out);
+extern f32 PSVECMag(f32 * v);
+extern int gunpowderbarrel_setPlayerHeldState(int p1, int p2);
+extern void Sfx_PlayFromObject(int obj, int sfx);
+extern void objRenderFn_8003b8f4(f32 alpha);
+extern f32 lbl_803E4348;
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801a1df8
+ * EN v1.0 Address: 0x801A1DF8
+ * EN v1.0 Size: 204b
+ * EN v1.1 Address: 0x801A1E50
+ * EN v1.1 Size: 196b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: blasted_getExtraSize
+ * EN v1.0 Address: 0x801A24A8
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x801A2690
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+int blasted_getExtraSize(void)
+{
+    return 0x14;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: blasted_getObjectTypeId
+ * EN v1.0 Address: 0x801A24B0
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x801A2698
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int blasted_getObjectTypeId(void)
+{
+    return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: blasted_free
+ * EN v1.0 Address: 0x801A24B8
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801A26A0
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void blasted_free(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: blasted_hitDetect
+ * EN v1.0 Address: 0x801A24FC
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801A26E4
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void blasted_hitDetect(void)
+{
+}
+
+void blasted_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int* state = ((GameObject*)obj)->extra;
+    if (visible != 0 && state[3] == 0)
+    {
+        objRenderFn_8003b8f4(lbl_803E4348);
+    }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_801a1fb8
+ * EN v1.0 Address: 0x801A1FB8
+ * EN v1.0 Size: 920b
+ * EN v1.1 Address: 0x801A2014
+ * EN v1.1 Size: 744b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+extern int* gCarryableInterface; /* carryable-object interface singleton */
+extern void ObjMsg_AllocQueue(int obj, int capacity);
+extern void storeZeroToFloatParam(void* p);
+
+typedef struct
+{
+    u8 b7 : 1;
+    u8 b6 : 1;
+    u8 b5 : 1;
+    u8 b4 : 1;
+    u8 b3 : 1;
+    u8 b2 : 1;
+    u8 b1 : 1;
+    u8 b0 : 1;
+} BarrelBits;
+
+#pragma scheduling off
+#pragma peephole off
+
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+extern u8* mapGetBlock(int idx);
+extern u8* mapBlockFn_800606ec(void* block, int idx);
+extern int mapBlockFn_80060678(void* entry);
+extern u8* fn_8006070C(void* block, int idx);
+
+/* EN v1.0 0x801A27B8  size: 280b  Flags every trigger/volume in the map
+ * block under the object that carries the given event id: sets bits 0..1
+ * on matching block entries and bit 1 on matching group records. Returns 0
+ * when the block is missing or not trigger-enabled. */
+#pragma dont_inline on
+int fn_801A27B8(int obj, int id)
+{
+    u8* block;
+
+    block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                            ((GameObject*)obj)->anim.localPosZ));
+    if (block == NULL || (*(u16*)(block + 4) & 0x8) == 0)
+    {
+        return 0;
+    }
+    {
+        int j;
+        int i;
+        for (i = 0; i < *(u16*)(block + 0x9a); i++)
+        {
+            u8* e = mapBlockFn_800606ec(block, i);
+            if (id == mapBlockFn_80060678(e))
+            {
+                *(int*)(e + 0x10) |= 3;
+            }
+        }
+        for (j = 0; j < *(u8*)(block + 0xa2); j++)
+        {
+            u8* g = fn_8006070C(block, j);
+            u8* p;
+            int k;
+            k = 0;
+            p = g;
+            for (; k < *(u8*)(g + 0x41); k++)
+            {
+                if (*(u8*)(p + 0x29) == id)
+                {
+                    *(int*)(g + 0x3c) |= 2;
+                }
+                p += 8;
+            }
+        }
+    }
+    return 1;
+}
+#pragma dont_inline reset
+
+extern int GameBit_Get(int bit);
+extern void GameBit_Set(int bit, int val);
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern int lbl_803DDB18;
+
+typedef struct BlastedTargetSetup
+{
+    u8 pad00[0x1A];
+    s16 pieceCount;
+    s16 triggerId;
+    s16 completedGameBit;
+    s16 progressGameBit;
+} BlastedTargetSetup;
+
+typedef struct BlastedTargetState
+{
+    u32 destroyedHitObjects[3];
+    int triggerFired;
+    u8 pad10;
+    u8 damageStep;
+    u8 pad12[2];
+} BlastedTargetState;
+
+STATIC_ASSERT (offsetof
+(BlastedTargetSetup
+,
+pieceCount
+)
+==
+0x1A
+);
+STATIC_ASSERT (offsetof
+(BlastedTargetSetup
+,
+triggerId
+)
+==
+0x1C
+);
+STATIC_ASSERT (offsetof
+(BlastedTargetSetup
+,
+completedGameBit
+)
+==
+0x1E
+);
+STATIC_ASSERT (offsetof
+(BlastedTargetSetup
+,
+progressGameBit
+)
+==
+0x20
+);
+STATIC_ASSERT (offsetof
+(BlastedTargetState
+,
+triggerFired
+)
+==
+0x0C
+);
+STATIC_ASSERT (offsetof
+(BlastedTargetState
+,
+damageStep
+)
+==
+0x11
+);
+STATIC_ASSERT (
+sizeof
+(BlastedTargetState)
+==
+0x14
+);
+
+/* EN v1.0 0x801A2928  size: 464b  Blasted-target update: once the target's
+ * GameBit is latched, fires the map trigger; otherwise scans the model's
+ * hit nodes for newly-destroyed (state 5) pieces, records each unique piece,
+ * advances the damage model index, and on the final piece latches the
+ * GameBit, fires the trigger, and swaps to the destroyed model. */
+void blasted_update(int obj)
+{
+    BlastedTargetSetup* setup = (BlastedTargetSetup*)((GameObject*)obj)->anim.placementData;
+    BlastedTargetState* state = ((GameObject*)obj)->extra;
+    s16 total = setup->pieceCount;
+
+    if (state->triggerFired != 0)
+    {
+        return;
+    }
+    if ((u32)GameBit_Get(setup->completedGameBit) != 0)
+    {
+        state->triggerFired = fn_801A27B8(obj, setup->triggerId);
+        return;
+    }
+    {
+        int i;
+        for (i = 0; i < (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->priorityHitCount; i++)
+        {
+            u32 v;
+            s8 m;
+            int found;
+            m = *(u8*)&(*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->priorities[i];
+            v = (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->hitObjects[i];
+            found = 0;
+            if (m != 5)
+            {
+                continue;
+            }
+            if (total == 0)
+            {
+                GameBit_Set(setup->completedGameBit, 1);
+                return;
+            }
+            if (m == 5)
+            {
+                int k = 0;
+                int cnt = state->damageStep;
+                while (k != cnt)
+                {
+                    if (v == state->destroyedHitObjects[k++])
+                    {
+                        k = cnt;
+                        found = 1;
+                    }
+                }
+            }
+            if (found == 0)
+            {
+                state->destroyedHitObjects[state->damageStep] = v;
+                GameBit_Set(state->damageStep + 0x2de, 0);
+                GameBit_Set(state->damageStep + 0x2df, 1);
+                if (setup->progressGameBit != -1)
+                {
+                    GameBit_Set(setup->progressGameBit, state->damageStep + 1);
+                }
+                lbl_803DDB18 = 0x12c;
+                if (state->damageStep + 1 > total)
+                {
+                    int n;
+                    int lim;
+                    lim = total + 1;
+                    for (n = 0; n < lim; n++)
+                    {
+                        GameBit_Set(n + 0x2de, 0);
+                    }
+                    GameBit_Set(setup->completedGameBit, 1);
+                    fn_801A27B8(obj, setup->triggerId);
+                    Obj_SetActiveModelIndex(obj, 2);
+                    state->triggerFired = 1;
+                }
+                else
+                {
+                    state->damageStep = state->damageStep + 1;
+                    Obj_SetActiveModelIndex(obj, state->damageStep);
+                }
+            }
+        }
+    }
+}
+
+extern int timerCountDown(void* p);
+extern void s16toFloat(void* p, int v);
+extern void memset(void* p, int c, int n);
+extern int playerIsDisguised(u8 * player);
+extern int timer_isEffectMode(int obj);
+extern void timer_clearManualFlags(int obj);
+extern void timer_forceStart(int obj);
+extern int timer_hasExpired(int obj);
+extern int barrelgener_getLinkId(int gen);
+extern void barrelgener_queueObjectRelease(int gen, int obj, int code);
+extern void Obj_RemoveFromUpdateList(int obj);
+extern u32 playerGetStateFlag310(u8 * player);
+extern void setAButtonIcon(int kind);
+extern void saveGame_saveObjectPos(int obj);
+extern int fn_802966B4(u8 * player);
+extern int fn_8029669C(u8 * player);
+extern f32 fn_80296214(u8 * player);
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern void gunpowderbarrel_updatePhysics(int obj);
+extern void fn_801A1230(int obj);
+extern u8* Obj_GetPlayerObject(void);
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern f32 lbl_803E4338;
+extern f32 lbl_803E42DC;
+extern f32 lbl_803E433C;
+extern f32 lbl_803E4340;
+extern f32 lbl_803DBE80;
+
+
+/* ================================================================ */
+/* Tail of the TU (0x801A2AF8..0x801A2BDC) - formerly the head of
+ * gasventControl.c. */
+
+typedef struct BlastedState
+{
+    u8 pad0[0x10 - 0x0];
+    u8 unk10;
+    u8 unk11;
+    u8 pad12[0x6E4 - 0x12];
+    u8 unk6E4;
+    u8 pad6E5[0x6E8 - 0x6E5];
+} BlastedState;
+
+extern void objSetSlot(int* obj, int slot);
+
+void blasted_init(int obj, int placement)
+{
+    int* state = ((GameObject*)obj)->extra;
+    int* targ;
+    s16 gbid;
+    u8 v;
+
+    state[0xc / 4] = 0;
+    objSetSlot((int*)obj, 0x51);
+    targ = *(int**)&((GameObject*)obj)->anim.hitReactState;
+    ((ObjHitsPriorityState*)targ)->flags = (s16)(((ObjHitsPriorityState*)targ)->flags | 1);
+    ((BlastedState*)state)->unk10 = (u8) * (s16*)(placement + 0x1a);
+    gbid = *(s16*)(placement + 0x20);
+    if (gbid != -1)
+    {
+        v = (u8)GameBit_Get(gbid);
+        ((BlastedState*)state)->unk11 = v;
+        if (v != 0)
+        {
+            Obj_SetActiveModelIndex(obj, (int)((BlastedState*)state)->unk11);
+        }
+    }
+    GameBit_Set(0x2de, 1);
+    *(s16*)obj = (s16)((s32) * (s8*)(placement + 0x18) << 8);
+    if ((u32)GameBit_Get(*(s16*)(placement + 0x1e)) != 0)
+    {
+        state[0xc / 4] = fn_801A27B8(obj, (int)*(s16*)(placement + 0x1c));
+    }
+}
+
+/* Trivial 4b 0-arg blr leaves. */
+void blasted_release(void)
+{
+}
+
+void blasted_initialise(void)
+{
+}

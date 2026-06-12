@@ -1873,7 +1873,6 @@ int cfprisoncage_getObjectTypeId(int* obj)
 
 /* chained byte bit-extract. */
 u32 fn_801A0174(int* obj) { return (((GcRobotLightBeaState*)((int**)obj)[0xb8 / 4])->hitFlags >> 7) & 1; }
-u32 gunpowderbarrel_isHeld(int* obj) { return (((GunpowderBarrelState*)((int**)obj)[0xb8 / 4])->heldFlags >> 5) & 1; }
 
 typedef struct
 {
@@ -1885,65 +1884,6 @@ typedef struct
 
 extern f32 lbl_803E42C0;
 
-/* EN v1.0 0x801A0BDC  size: 56b  gunpowderbarrel_setHeldState: flag the
- * barrel as held, mark obj active, and clear its physics-sleep bit. */
-#pragma scheduling off
-#pragma peephole off
-void gunpowderbarrel_setHeldState(int* obj)
-{
-    GunpowderBarrelState* sub = ((GameObject*)obj)->extra;
-    ((GpbHeldByte*)&sub->heldFlags)->held = 1;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
-    sub->motionFlags = (u8)(sub->motionFlags & ~2);
-}
-
-/* EN v1.0 0x801A0B90  size: 76b  gunpowderbarrel_clearHeldState: zero the
- * barrel's velocity/throw vectors, mark it sleeping, clear obj-active and
- * the held flag. */
-void gunpowderbarrel_clearHeldState(int* obj)
-{
-    GunpowderBarrelState* sub = ((GameObject*)obj)->extra;
-    f32 z = lbl_803E42C0;
-    sub->throwVelY = z;
-    sub->throwVelX = z;
-    sub->throwVelZ = z;
-    sub->motionFlags = (u8)(sub->motionFlags | 1);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8);
-    sub->unk38 = z;
-    ((GpbHeldByte*)&sub->heldFlags)->held = 0;
-}
-
-/* EN v1.0 0x801A0E04  size: 244b  gunpowderbarrel_setPlayerHeldState: when
- * grabbed by the player, copy the held-pose and enable hit reactions; when
- * released, restore the default pose and clear them. */
-void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer)
-{
-    GunpowderBarrelState* sub = ((GameObject*)obj)->extra;
-    u8* h = *(u8**)&((GameObject*)obj)->anim.hitReactState;
-    if (heldByPlayer != 0)
-    {
-        h[0x6a] = 1;
-        h[0x6b] = 1;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
-        ((GpbHeldByte*)&sub->heldFlags)->playerHeld = 1;
-        sub->motionFlags = (u8)(sub->motionFlags & ~2);
-        ObjHits_SetFlags((int)obj, 0x480);
-        ObjHits_ClearSourceMask((int)obj, 1);
-        ObjHits_EnableObject((int)obj);
-        ObjHits_SyncObjectPositionIfDirty((int)obj);
-    }
-    else
-    {
-        h[0x6a] = (*(u8**)&((GameObject*)obj)->anim.modelInstance)[0x63];
-        h[0x6b] = (*(u8**)&((GameObject*)obj)->anim.modelInstance)[0x64];
-        ((GpbHeldByte*)&sub->heldFlags)->playerHeld = 0;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8);
-        ObjHits_ClearFlags((int)obj, 0x400);
-        sub->motionFlags = (u8)(sub->motionFlags | 1);
-    }
-}
-#pragma peephole reset
-#pragma scheduling reset
 
 /* state-transition: kicks player into mode 2 when sandworm not yet eaten. */
 #pragma peephole off
@@ -2235,29 +2175,6 @@ void cfguardian_free(int* obj, int p2)
     }
 }
 
-void gunpowderbarrel_setScale(int* obj, f32* params)
-{
-    int* state = ((GameObject*)obj)->extra;
-    if (((GunpowderBarrelState*)state)->heldByCarryInterface != 0) return;
-    if (((GunpowderBarrelState*)state)->fuseFrames != 0) return;
-    ((GunpowderBarrelState*)state)->throwVelY = ((GunpowderBarrelState*)state)->throwVelY + params[1];
-    ((GunpowderBarrelState*)state)->throwVelX = ((GunpowderBarrelState*)state)->throwVelX + params[0];
-    ((GunpowderBarrelState*)state)->throwVelZ = ((GunpowderBarrelState*)state)->throwVelZ + params[2];
-    ((GunpowderBarrelState*)state)->motionFlags = (u8)(((GunpowderBarrelState*)state)->motionFlags | 1);
-}
-
-int gunpowderbarrel_canBeGrabbed(int* obj)
-{
-    GunpowderBarrelState* state = ((GameObject*)obj)->extra;
-    int result = 0;
-    if (state->heldByCarryInterface == 0 &&
-        state->respawnTimer == lbl_803E42C0 &&
-        ((int(*)(GunpowderBarrelState*))(*(*(void****)&gCarryableInterface))[5])(state) == 0)
-    {
-        result = 1;
-    }
-    return result;
-}
 
 void cfprisonuncle_init(int* obj)
 {
@@ -2460,91 +2377,6 @@ extern f32 lbl_803E42D4;
 extern f32 lbl_803E42D8;
 extern f32 lbl_803E42DC;
 
-/* gunpowderbarrel_launchAtTarget: gunpowder-barrel "throw at target" launch. Seeds state's
- * launch velocity (state+0x20..28) from a per-axis pair scaled by the
- * player's strength (player_state[0x298]), or a fixed pair when the flag
- * is clear. Builds a rotation-vec from state[0x50], runs the 3-vec rotor
- * via vecRotateZXY, sets thrown/inflight flags, plays sfx 0xd3. When
- * state[0x48] bit 0x40 is set, looks up the linked barrel by data[0x1a]
- * (or the nearest one if 0), temporarily moves obj to that barrel's
- * position so saveGame_saveObjectPos latches the target slot, then
- * restores. */
-#pragma scheduling off
-#pragma peephole off
-void gunpowderbarrel_launchAtTarget(int obj, u8 flag)
-{
-    GunpowderBarrelState* state = ((GameObject*)obj)->extra;
-    u8* playerState;
-    s16 stk[8];
-    f32 fz;
-    int target;
-    f32 sx, sy, sz;
-
-    playerState = *(u8**)((u8*)Obj_GetPlayerObject() + 0xb8);
-    state->throwVelX = lbl_803E42C0;
-    if (flag != 0)
-    {
-        state->throwVelY = lbl_803E42C8 * *(f32*)(playerState + 0x298) + lbl_803E42C4;
-        state->throwVelZ = lbl_803E42D0 * *(f32*)(playerState + 0x298) + lbl_803E42CC;
-    }
-    else
-    {
-        state->throwVelY = lbl_803E42D4;
-        state->throwVelZ = lbl_803E42D8;
-    }
-    fz = lbl_803E42C0;
-    *(f32*)((u8*)stk + 0xc) = fz;
-    *(f32*)((u8*)stk + 0x10) = fz;
-    *(f32*)((u8*)stk + 0x14) = fz;
-    *(f32*)((u8*)stk + 0x8) = lbl_803E42DC;
-    stk[2] = 0;
-    stk[1] = 0;
-    stk[0] = state->launchYaw;
-    vecRotateZXY(stk, &state->throwVelX);
-    state->motionFlags = (u8)(state->motionFlags | 1);
-    Sfx_PlayFromObject(obj, SFXsk_baptr6_c);
-    state->motionFlags = (u8)(state->motionFlags | 2);
-    if ((state->configFlags & 0x40) != 0)
-    {
-        u8* params = *(u8**)&((GameObject*)obj)->anim.placementData;
-        target = 0;
-        if (*(s16*)(params + 0x1a) != 0)
-        {
-            int count;
-            int* barrels = (int*)ObjGroup_GetObjects(0x3a, &count);
-            int i;
-            int* p = barrels;
-            for (i = 0; i < count; i++)
-            {
-                if (((GunpowderbarrelLaunchAtTargetPlacement*)params)->unk1A == barrelgener_getLinkId(*p))
-                {
-                    target = barrels[i];
-                    break;
-                }
-                p++;
-            }
-        }
-        else
-        {
-            target = ObjGroup_FindNearestObject(0x3a, obj, (f32*)0);
-        }
-        if (target != 0)
-        {
-            sx = ((GameObject*)obj)->anim.localPosX;
-            sy = ((GameObject*)obj)->anim.localPosY;
-            sz = ((GameObject*)obj)->anim.localPosZ;
-            ((GameObject*)obj)->anim.localPosX = ((GameObject*)target)->anim.localPosX;
-            ((GameObject*)obj)->anim.localPosY = ((GameObject*)target)->anim.localPosY;
-            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)target)->anim.localPosZ;
-            saveGame_saveObjectPos(obj);
-            ((GameObject*)obj)->anim.localPosX = sx;
-            ((GameObject*)obj)->anim.localPosY = sy;
-            ((GameObject*)obj)->anim.localPosZ = sz;
-        }
-    }
-}
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E4230;
 extern f32 lbl_803E4234;
@@ -2841,96 +2673,6 @@ extern const f32 lbl_803E42E8;
 extern f32 lbl_803E42EC;
 extern f32 lbl_803E42F0;
 
-/* EN v1.0 0x801A0F58  size: 728b  fn_801A0F58: home the object on the nearest
- * group-0x1e object above it, scaling velocity and the two heading words by
- * approach rate; on a steep approach play the dive cue and bump the target's
- * cycle phase. */
-#pragma scheduling off
-#pragma peephole off
-void fn_801A0F58(int* obj, s16 a, s16 b)
-{
-    f32 dx;
-    f32 dz;
-    f32 dy2;
-    f32 scale;
-    f32 rate;
-    f32 dy;
-    int v;
-    int w;
-    char* player;
-    char* near;
-    f32 radius = lbl_803E42E0;
-    player = (char*)Obj_GetPlayerObject();
-    near = (char*)ObjGroup_FindNearestObject(0x1e, obj, &radius);
-    if (near == NULL)
-    {
-        return;
-    }
-    dy = *(f32*)(near + 0x10) - *(f32*)(player + 0x10);
-    dy = (dy >= 0.0f) ? dy : -dy;
-    if (dy < lbl_803E42E4)
-    {
-        return;
-    }
-    dx = *(f32*)(near + 0xc) - ((GameObject*)obj)->anim.localPosX;
-    dy2 = *(f32*)(near + 0x10) - ((GameObject*)obj)->anim.localPosY;
-    scale = 0.0f;
-    if (dy2 > scale)
-    {
-        return;
-    }
-    dz = *(f32*)(near + 0x14) - ((GameObject*)obj)->anim.localPosZ;
-    rate = (dy2 != scale) ? ((GameObject*)obj)->anim.velocityY / dy2 : scale;
-    if (rate >= lbl_803E42DC)
-    {
-        Sfx_PlayFromObject((int)obj, 0xd2);
-        rate = lbl_803E42DC;
-        ((GameObject*)obj)->anim.velocityY = dy2;
-        *(f32*)(near + 0xc) += lbl_803E42E8;
-        *(f32*)(near + 0x2c) += lbl_803E42E8;
-        if (*(f32*)(near + 0x2c) > lbl_803E42EC)
-        {
-            *(f32*)(near + 0xc) -= *(f32*)(near + 0x2c);
-            *(f32*)(near + 0x2c) = 0.0f;
-        }
-        ((GameObject*)obj)->anim.rotY = 0;
-        ((GameObject*)obj)->anim.rotZ = 0;
-        a = 0;
-        b = 0;
-    }
-    ((GameObject*)obj)->anim.velocityX = dx * rate;
-    ((GameObject*)obj)->anim.velocityZ = dz * rate;
-    v = a;
-    if (v != 0)
-    {
-        f32 t;
-        if (v == 1)
-        {
-            t = (lbl_803E42F0 - (f32)(u16)((GameObject*)obj)->anim.rotY) * rate;
-        }
-        else
-        {
-            t = (f32)(u16)((GameObject*)obj)->anim.rotY * (rate * (f32)v);
-        }
-        ((GameObject*)obj)->anim.rotY = (f32)((GameObject*)obj)->anim.rotY + t;
-    }
-    w = b;
-    if (w != 0)
-    {
-        f32 t;
-        if (w == 1)
-        {
-            t = 0.0f;
-        }
-        else
-        {
-            t = (f32)(u16)((GameObject*)obj)->anim.rotZ * (rate * (f32)w);
-        }
-        ((GameObject*)obj)->anim.rotZ = (f32)((GameObject*)obj)->anim.rotZ + t;
-    }
-}
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void* getTrickyObject(void);
 extern f32 lbl_803E4248;

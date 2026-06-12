@@ -237,13 +237,7 @@ FUN_801a32d4(undefined8 param_1, undefined8 param_2, double param_3, undefined8 
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void blasted_release(void)
-{
-}
 
-void blasted_initialise(void)
-{
-}
 
 void explodable_render(void)
 {
@@ -416,35 +410,6 @@ extern void objSetSlot(int* obj, int slot);
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
 extern int fn_801A27B8(int* obj, int v);
 
-void blasted_init(int obj, int placement)
-{
-    int* state = ((GameObject*)obj)->extra;
-    int* targ;
-    s16 gbid;
-    u8 v;
-
-    state[0xc / 4] = 0;
-    objSetSlot((int*)obj, 0x51);
-    targ = *(int**)&((GameObject*)obj)->anim.hitReactState;
-    ((ObjHitsPriorityState*)targ)->flags = (s16)(((ObjHitsPriorityState*)targ)->flags | 1);
-    ((BlastedState*)state)->unk10 = (u8) * (s16*)(placement + 0x1a);
-    gbid = *(s16*)(placement + 0x20);
-    if (gbid != -1)
-    {
-        v = (u8)GameBit_Get(gbid);
-        ((BlastedState*)state)->unk11 = v;
-        if (v != 0)
-        {
-            Obj_SetActiveModelIndex((int*)obj, (int)((BlastedState*)state)->unk11);
-        }
-    }
-    GameBit_Set(0x2de, 1);
-    *(s16*)obj = (s16)((s32) * (s8*)(placement + 0x18) << 8);
-    if ((u32)GameBit_Get(*(s16*)(placement + 0x1e)) != 0)
-    {
-        state[0xc / 4] = fn_801A27B8((int*)obj, (int)*(s16*)(placement + 0x1c));
-    }
-}
 
 extern void fn_801A2E80(int obj, int def, int p3, int state);
 
