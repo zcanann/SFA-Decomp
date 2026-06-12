@@ -8,7 +8,7 @@ extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hitsOut, int 
 extern u32 randomGetRange(int min, int max);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void ObjHits_EnableObject(int obj);
-extern void ObjHits_DisableObject(int* obj);
+extern void ObjHits_DisableObject(int obj);
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void objRenderFn_8003b8f4(f32);
@@ -195,7 +195,7 @@ void tumbleweed_render2(int* obj, int p2)
     *(u8*)((char*)state + 0x278) = 6;
     *(int*)((char*)state + 0x290) = p2;
     *(f32*)((char*)state + 0x294) = timeDelta * lbl_803E2F98;
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((int)obj);
 }
 
 /*
