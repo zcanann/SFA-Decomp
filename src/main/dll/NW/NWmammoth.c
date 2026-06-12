@@ -171,6 +171,10 @@ void ediblemushroom_init(int obj, int aux)
     }
 }
 
+/* Keep the cross-TU bl: target calls this; once it lands in the
+ * EnemyMushroom TU (dim_bossgut.c) alongside its callers, dont_inline stops
+ * MWCC auto-inlining it into enemymushroom_init/update. */
+#pragma dont_inline on
 void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* state, int enableTimer)
 {
     EnemyMushroomMapData* mapData;
@@ -205,6 +209,7 @@ void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* st
     ObjHits_EnableObject((int)obj);
     ObjHits_RefreshObjectState((int)obj);
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
