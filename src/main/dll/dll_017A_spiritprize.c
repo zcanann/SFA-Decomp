@@ -6,41 +6,9 @@
 
 extern void objRenderFn_8003b8f4(f32);
 extern void ModelLightStruct_free(void* light);
-extern void gameTimerStop(void);
-extern int mapGetDirIdx(int mapId);
-extern void unlockLevel(int mapDir, int mode, int flags);
-extern void Music_Trigger(int trackId, int mode);
-extern void GameBit_Set(int bit, int value);
-extern void fn_80296518(void* obj, int arg, int enable);
-extern s16 getAngle(f32 deltaX, f32 deltaZ);
-extern f32 Vec_xzDistance(void* a, void* b);
-extern f32 mathSinf(f32 angle);
-extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 
 extern f32 timeDelta;
-extern f32 lbl_803E4E50;
-extern f32 lbl_803E4E54;
-extern f32 lbl_803E4E58;
-extern f32 lbl_803E4E5C;
-extern f32 lbl_803E4E60;
-extern f32 lbl_803E4E64;
-extern f32 lbl_803E4E68;
-extern f32 lbl_803E4E6C;
-extern f32 lbl_803E4E70;
-extern f32 lbl_803E4E74;
-extern f32 lbl_803E4E78;
-extern f32 lbl_803E4E88;
 
-typedef struct DFlanternShrineState
-{
-    void* light;
-    u8 pad04[0x14 - 0x04];
-    s16 orbitA;
-    s16 orbitB;
-    s16 orbitC;
-    u8 pad1a[0x1c - 0x1a];
-    u8 flags;
-} DFlanternShrineState;
 
 /*
  * --INFO--
@@ -153,7 +121,6 @@ typedef struct DFlanternShrineState
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801C2914(int obj);
 
 /*
  * --INFO--
@@ -168,13 +135,7 @@ void fn_801C2914(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct LanternFlagBits
-{
-    u8 on : 1;
-    u8 rest : 7;
-} LanternFlagBits;
 
-int dfsh_shrine_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /*
  * --INFO--
@@ -189,7 +150,6 @@ int dfsh_shrine_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dfsh_shrine_getExtraSize(void);
 
 /*
  * --INFO--
@@ -204,7 +164,6 @@ int dfsh_shrine_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dfsh_shrine_getObjectTypeId(void);
 
 /*
  * --INFO--
@@ -219,7 +178,6 @@ int dfsh_shrine_getObjectTypeId(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfsh_shrine_free(int obj);
 
 #include "main/dll/DF/DFlantern.h"
 #include "main/game_object.h"
@@ -237,51 +195,17 @@ typedef struct SpiritPrizePlacement
 
 
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjMsg_AllocQueue();
 
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
-extern u8 lbl_803DBF60;
-extern u16 lbl_80325F88[];
-extern void skyFn_80088c94(int skyId, int enable);
-extern void getEnvfxAct(int obj, int target, int effectId, int flags);
-extern void playerAddRemoveMagic(int player, int amount);
-extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit,
-                                          int value);
-extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit, int value);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void Music_Trigger(int musicId, int mode);
-extern void gameTimerInit(int timerId, int value);
-extern void timerSetToCountUp(void);
-extern int isGameTimerDisabled(void);
-extern int ObjList_FindObjectById(int objId);
-extern void fn_8014C5C0(int obj);
-extern int objGetAnimStateFlags(int obj, int flag);
-extern void audioStopByMask(int mask);
-extern f32 lbl_803E4E8C;
 extern u8 lbl_803DB411;
 extern f32 lbl_803E4E9C;
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern void Obj_FreeObject(int obj);
 extern int coordsToMapCell(f32 x, f32 z);
 
-typedef struct DfshShrineState
-{
-    void* light;
-    f32 rewardTimer;
-    f32 idleChimeTimer;
-    u8 musicLatch[4];
-    s16 startDelayFrames;
-    s16 transitionTimer;
-    u8 pad14[0x1A - 0x14];
-    u8 mode;
-    u8 rewardIndex;
-    u8 flags;
-    u8 pad1D[0x20 - 0x1D];
-} DfshShrineState;
 
 typedef struct DfshShrinePlacement
 {
@@ -309,17 +233,9 @@ STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-#define DFSH_REWARD_BIT(idx) (base[(idx)])
-#define DFSH_REWARD_DELAY(idx) (base[10 + (idx)])
-#define DFSH_REQUIRED_BIT(idx) (base[20 + (idx)])
-#define DFSH_TARGET_OBJECT(idx) (((int *)((u8 *)base + 0x3c))[(idx)])
 
-#define DFSH_SHRINE_FLAG_SUCCESS 0x40
-#define DFSH_SHRINE_FLAG_OPENED_BY_SEQUENCE 0x80
 
-void dfsh_shrine_update(int obj);
 
 /*
  * --INFO--
@@ -375,29 +291,12 @@ void dfsh_shrine_update(int obj);
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void dfsh_shrine_hitDetect(void);
 
-void dfsh_shrine_release(void);
 
-void dfsh_shrine_initialise(void);
 
-extern int mapGetDirIdx(int id);
-extern void unlockLevel(int idx, int a, int b);
 extern void* objCreateLight(int* obj, int v);
 
-typedef struct DfshShrineFlags
-{
-    u8 openedBySequence : 1;
-    u8 unused1 : 1;
-    u8 unused2 : 1;
-    u8 unused3 : 1;
-    u8 unused4 : 1;
-    u8 unused5 : 1;
-    u8 unused6 : 1;
-    u8 unused7 : 1;
-} DfshShrineFlags;
 
-void dfsh_shrine_init(int* obj, DfshShrinePlacement* init);
 
 void SpiritPrize_hitDetect(void)
 {

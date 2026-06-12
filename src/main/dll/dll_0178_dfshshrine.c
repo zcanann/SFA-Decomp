@@ -369,13 +369,6 @@ void dfsh_shrine_free(int obj)
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-typedef struct SpiritPrizePlacement
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    s16 unk18;
-    u8 pad1A[0x20 - 0x1A];
-} SpiritPrizePlacement;
 
 
 extern u32 randomGetRange(int min, int max);
@@ -404,11 +397,6 @@ extern void fn_8014C5C0(int obj);
 extern int objGetAnimStateFlags(int obj, int flag);
 extern void audioStopByMask(int mask);
 extern f32 lbl_803E4E8C;
-extern u8 lbl_803DB411;
-extern f32 lbl_803E4E9C;
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
-extern void Obj_FreeObject(int obj);
-extern int coordsToMapCell(f32 x, f32 z);
 
 typedef struct DfshShrineState
 {
@@ -779,54 +767,18 @@ void dfsh_shrine_init(int* obj, DfshShrinePlacement* init)
 
 void SpiritPrize_hitDetect(void);
 
-void SpiritPrize_release(void);
-
-void SpiritPrize_initialise(void);
 
 
-typedef struct SpiritPrizeState
-{
-    u8 pad00[0x24];
-    f32 spawnScale;
-    s32 triggerHandle;
-    u8 pad2C[0x57 - 0x2C];
-    u8 prizeId;
-    u8 pad58[0x6A - 0x58];
-    s16 mapParam1A;
-    u8 pad6C[0x6E - 0x6C];
-    s16 targetObjectId;
-    u8 pad70[0x81 - 0x70];
-    u8 queuedActions[0x8B - 0x81];
-    u8 queuedActionCount;
-    u8 pad8C[0x140 - 0x8C];
-    void* light;
-    u8 useDetachedLight;
-    u8 pad145[0x148 - 0x145];
-    f32 sfxTimer;
-} SpiritPrizeState;
 
-void SpiritPrize_free(int obj);
 
-extern void modelLightStruct_setLightKind(void* light, int v);
-extern void modelLightStruct_setDiffuseColor(void* light, int a, int b, int c, int d);
-extern void modelLightStruct_setDistanceAttenuation(void* light, f32 a, f32 b);
-extern f32 lbl_803E4E98;
-extern f32 lbl_803E4EB0;
-extern f32 lbl_803E4EB4;
 
-void SpiritPrize_init(int* obj, u8* init);
 
-void dfsh_objcreator_free(void);
+
 
 
 /* 8b "li r3, N; blr" returners. */
-int SpiritPrize_getExtraSize(void);
-int SpiritPrize_getObjectTypeId(void);
-int dfsh_objcreator_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 
-void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void SpiritPrize_update(int obj);
