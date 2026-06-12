@@ -6,7 +6,6 @@
 #include "main/dll/duster.h"
 #include "main/objanim.h"
 #include "main/objhits.h"
-#include "main/objhits_types.h"
 
 #pragma dont_inline on
 
@@ -611,12 +610,14 @@ void fn_8015625C(uint obj, int state)
     uint randVal;
     int tracked;
     f32 moveSpeed;
+    ObjHitsPriorityState* hitState;
 
     if (*(float*)(state + 0x328) > lbl_803E2AA8)
     {
         *(float*)(state + 0x328) = lbl_803E2AAC;
     }
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState->suppressOutgoingHits = 0;
     ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
     if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
@@ -707,10 +708,12 @@ void fn_8015652C(uint obj, int state)
     float* curveState;
     int placement;
     f32 moveSpeed;
+    ObjHitsPriorityState* hitState;
 
     curveState = *(float**)state;
     placement = *(int*)&((GameObject*)obj)->anim.placementData;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState->suppressOutgoingHits = 0;
     ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
     if ((((BaddieState*)state)->controlFlags & 0x40000000) != 0)
     {
@@ -918,9 +921,11 @@ void mutatedEbaUpdateWhileFrozen(uint obj, int state, undefined4 param_11, int e
 void fn_80156B0C(uint obj, int state)
 {
     int tblOff;
+    ObjHitsPriorityState* hitState;
 
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 10;
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState->hitVolumePriority = 10;
+    hitState->hitVolumeId = 1;
     if (((((BaddieState*)state)->controlFlags & 0x80000000) != 0) && (((BaddieState*)state)->seqEntryIndex <= 1))
     {
         ((BaddieState*)state)->seqEntryIndex = 1;
