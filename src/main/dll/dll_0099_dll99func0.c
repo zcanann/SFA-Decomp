@@ -12,8 +12,6 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-extern uint GameBit_Get(int eventId);
-extern u32 randomGetRange(int min, int max);
 
 
 /*
@@ -32,37 +30,21 @@ extern u32 randomGetRange(int min, int max);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void dll_91_func01_nop(void);
 
-void dll_91_func00_nop(void);
 
-void dll_92_func01_nop(void);
 
-void dll_92_func00_nop(void);
 
-void dll_93_func01_nop(void);
 
-void dll_93_func00_nop(void);
 
-void dll_94_func01_nop(void);
 
-void dll_94_func00_nop(void);
 
-void dll_95_func01_nop(void);
 
-void dll_95_func00_nop(void);
 
-void dll_96_func01_nop(void);
 
-void dll_96_func00_nop(void);
 
-void dll_97_func01_nop(void);
 
-void dll_97_func00_nop(void);
 
-void dll_98_func01_nop(void);
 
-void dll_98_func00_nop(void);
 
 void dll_99_func01_nop(void)
 {
@@ -76,31 +58,13 @@ void dll_99_func00_nop(void)
  * the same large-struct + vtable-call pattern as foodbag's func03s; matching
  * bodies needs proper struct recovery as follow-up. */
 extern u8 lbl_803171C0[];
-extern u8 lbl_803DB930[8];
-extern u8 lbl_803DB938[8];
-extern u8 lbl_803DB948[8];
 extern u8 lbl_803DB950[8];
-extern f32 lbl_803E1270;
-extern f32 lbl_803E1278;
-extern f32 lbl_803E12F0;
-extern f32 lbl_803E12F8;
 extern f32 lbl_803E1340;
 extern f32 lbl_803E1344;
 extern f32 lbl_803E1348;
 extern f32 lbl_803E1350;
 extern f32 lbl_803E1358;
 extern f32 lbl_803E1368;
-extern f32 lbl_803E1210;
-extern f32 lbl_803E1214;
-extern f32 lbl_803E1218;
-extern f32 lbl_803E121C;
-extern f32 lbl_803E1220;
-extern f32 lbl_803E1224;
-extern f32 lbl_803E1228;
-extern f32 lbl_803E122C;
-extern f32 lbl_803E1230;
-extern f32 lbl_803E1234;
-extern f32 lbl_803E1238;
 
 typedef struct
 {
@@ -121,106 +85,25 @@ typedef struct
     GfxCmd entries[32]; /* +0x60 */
 } GfxBuf;
 
-extern u8 lbl_80316FF8[];
-extern u8 lbl_80317528[];
-extern u8 lbl_803DB928[8];
-extern u8 lbl_803DB940[8];
-extern f32 lbl_803E11D8;
-extern f32 lbl_803E11DC;
-extern f32 lbl_803E11E0;
-extern f32 lbl_803E11E4;
-extern f32 lbl_803E11E8;
-extern f32 lbl_803E11EC;
-extern f32 lbl_803E11F0;
-extern f32 lbl_803E11F4;
-extern f32 lbl_803E11F8;
-extern f32 lbl_803E11FC;
-extern f32 lbl_803E1200;
-extern f32 lbl_803E1204;
-extern f32 lbl_803E1208;
-extern f32 lbl_803E1298;
-extern f32 lbl_803E129C;
-extern f32 lbl_803E12A0;
-extern f32 lbl_803E12A4;
-extern f32 lbl_803E12A8;
-extern f32 lbl_803E12AC;
-extern f32 lbl_803E12B0;
-extern f32 lbl_803E12B4;
-extern f32 lbl_803E12B8;
-extern f32 lbl_803E12C0;
-extern f32 lbl_803E12C4;
-extern f32 lbl_803E12C8;
-extern f32 lbl_803E12CC;
-extern f32 lbl_803E12D0;
-extern f32 lbl_803E12D4;
-extern f32 lbl_803E12D8;
-extern f32 lbl_803E1318;
-extern f32 lbl_803E131C;
-extern f32 lbl_803E1320;
-extern f32 lbl_803E1324;
-extern f32 lbl_803E1328;
-extern f32 lbl_803E132C;
-extern f32 lbl_803E1330;
-extern f32 lbl_803E1334;
-extern f32 lbl_803E1338;
-extern f32 lbl_803E133C;
-
-void dll_91_func03(int sourceObj, int variant, int posSource, uint flags);
 
 
-void dll_92_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5, f32* extraArgs );
-
-extern u8 lbl_80317260[];
-extern f32 lbl_803E1240;
-extern f32 lbl_803E1244;
-extern f32 lbl_803E1248;
-extern f32 lbl_803E124C;
-extern f32 lbl_803E1250;
-extern f32 lbl_803E1254;
-extern f32 lbl_803E1258;
 
 
-void dll_93_func03(int sourceObj, int variant, int posSource, uint flags);
 
-extern u8 lbl_80317488[];
-extern u8 lbl_80317810[];
-extern u8 lbl_803178B0[];
+
+
 extern u8 lbl_80317AF8[];
-extern f32 lbl_803E1268;
-extern f32 lbl_803E126C;
-extern f32 lbl_803E1274;
-extern f32 lbl_803E127C;
-extern f32 lbl_803E1280;
-extern f32 lbl_803E1284;
-extern f32 lbl_803E1288;
-extern f32 lbl_803E128C;
-extern f32 lbl_803E1290;
-extern f32 lbl_803E12E8;
-extern f32 lbl_803E12EC;
-extern f32 lbl_803E12F4;
-extern f32 lbl_803E12FC;
-extern f32 lbl_803E1300;
-extern f32 lbl_803E1304;
-extern f32 lbl_803E1308;
-extern f32 lbl_803E130C;
-extern f32 lbl_803E1310;
 extern f32 lbl_803E134C;
 extern f32 lbl_803E1354;
 extern f32 lbl_803E135C;
 extern f32 lbl_803E1360;
 extern f32 lbl_803E1364;
 
-void dll_94_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5, f32* extraArgs );
 
-extern u8 lbl_803175E8[];
 
-void dll_95_func03(int sourceObj, int variant, int posSource);
 
-int dll_96_func03(int sourceObj, int variant, int posSource, uint flags);
 
-void dll_97_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5, f32* extraArgs );
 
-void dll_98_func03(int sourceObj, int variant, int posSource, uint flags, int arg5, int extraArgs);
 
 void dll_99_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5, f32* extraArgs
 )
