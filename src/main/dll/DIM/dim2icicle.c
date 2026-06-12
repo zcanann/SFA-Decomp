@@ -492,7 +492,6 @@ void warpDarkIceMines_801bbb44(int obj, int runtime)
 
 extern int Obj_GetPlayerObject(void);
 extern int fn_80295A04(int player, int p2);
-extern void ObjHits_EnableObject(int obj);
 extern void ObjMsg_SendToObject(int to, int msg, int obj, int data);
 extern int *gTitleMenuControlInterfaceCopy;
 extern int *gDIMbossHitEffectResource;

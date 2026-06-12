@@ -12,7 +12,6 @@
 #include "main/objseq.h"
 
 extern int randomGetRange(int min, int max);
-extern undefined4 ObjHits_SyncObjectPosition();
 extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjLink_AttachChild();
 extern undefined4 objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);

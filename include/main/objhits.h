@@ -286,6 +286,14 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
                                void *scratchD,void *scratchE,int depth);
 void ObjHits_CheckTrackContact(int objA,int objB);
 void ObjHits_Update(int objectCount);
+void ObjHits_ClearHitVolumes(int obj);
+void ObjHits_SetHitVolumeSlot(u32 obj,int hitVolume,int hitType,int sourceSlot);
+void ObjHits_MarkObjectPositionDirty(int obj);
+void ObjHits_SyncObjectPositionIfDirty(u32 obj);
+void ObjHits_DisableObject(u32 obj);
+void ObjHits_EnableObject(u32 obj);
+ushort ObjHits_IsObjectEnabled(int obj);
+void ObjHits_SyncObjectPosition(u32 obj);
 int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sphereIndex);
 int ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hitObj,
                               char priority,u8 hitVolume,u8 sphereIndex);
