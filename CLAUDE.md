@@ -33,6 +33,18 @@ every partial when a new recipe lands):
   flag the function so it gets revisited with the next playbook recipe (this
   exact framing is how the cracked caps got cracked). Never asm.
 
+**FRESH-EYES PROTOCOL for stale banks: re-attack WITHOUT reading the previous
+attempt's negative map.** A documented "probed inert ×N" list anchors the next
+attacker onto the same axes; three banked residuals fell in ONE day to
+attackers told only the score and "the playbook may be wrong" (SB_Galleon_func0E
+95.9→100 — the "unproducible at O4" verdict was a wrong axis; SB_ShipGun_update
+99.42→100 — every spelling battery missed that the LOOP-ELEMENT VARIABLE
+IDENTITY was the lever; cfprisonguard's "retail-anomaly, permanently
+unmatchable" census verdict — a dropped argument). Negative maps stay valuable
+for the SAME axis (don't re-run them); the protocol is for finding the axis
+nobody tried: derive the hypothesis from the target asm as if the function were
+new, and only afterwards check the bank for overlap.
+
 ## Pragma states: what they are and where they come from (read before #1)
 
 **Our per-fn `#pragma peephole/scheduling` wrappers are a MATCHING
@@ -2455,6 +2467,19 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       flush — branches are emitted but the pool keeps growing. Verified
       oracle: lightning_init (100%) has branch-separated fresh slots from
       `(x & N) ? 1 : 0` materializations and lives in our own tree.
+      ⚠️ FLUSH TRIGGER SHARPENED (fn_801EE668 re-characterization, ~70
+      probes): the pool is flushed by a conditional arm containing a
+      LIVE-IN VARIABLE REDEFINITION or a MEMORY STORE — NOT by the join
+      itself. Arms defining only fresh locals, EMPTY arms, and arms
+      containing conversions do NOT flush. Classify the arm contents
+      before assuming "if = flush".
+      Related micro-law from the same dig: MWCC hoists a FIRST-USE FP
+      constant load UP past exactly ONE assigned-ternary region (with N
+      consecutive assigned ternaries the lfs lands after ternary N-1) —
+      a no-flush ternary form there hit 280/280 instructions + exact
+      frame with ONLY this 2-lfs hoist left, but objdiff priced the 2
+      transpositions below the baseline's 17 same-slot operand diffs;
+      measure before swapping forms.
     - So "target slots fresh-ascending but if-shaped clamps sit between
       conversions" => the ORIGINAL spelled those clamps as ternary
       ASSIGNMENTS. Constant-arm nested clamps
@@ -3518,6 +3543,19 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
     player,mode,galleon,hs,state → r31..r27 = target). Decl-reorder alone
     was inert until the class move. Recognize: a rotation where ONE
     multi-def var's first def is a branch-consumed call result.**
+    **The MIRROR move — LAST/EARLY-def MERGE into a different variable —
+    cracked SB_ShipGun_update's "banked" state/ref2 pair (99.42→100,
+    blank-canvas re-attack after decl perms ×11, launders, #115, per-fn O2
+    all tested inert): the import used `ref2` as a scan-loop element
+    (`ref2 = arr[i]; if (*(s16*)(ref2+0x46) == K) ...`) BEFORE ref2's real
+    role (a vcall result), so ref2's web was CREATED at the loop and
+    outranked `state`. The ORIGINAL reused a DIFFERENT later temp
+    (`hitKind`) as the loop element; with that one substitution ref2's web
+    is created at the vcall and the pair colors to target. When a 2-web
+    rank battle resists every spelling, audit WHICH VARIABLE the import
+    chose for each disposable temp (loop elements, scratch) — variable
+    IDENTITY sets web creation points, and Ghidra's choices are arbitrary
+    (#119's naming-side principle applied to rank, not just placement).**
     **CROSS-CLASS INTERLEAVE — characterized as an IR-internal residual,
     OPEN for a fresh lever (task #12 round 3, ~75-probe battery; minimal
     repro harness in the commit). The phenomenology below is hard-won
@@ -3938,23 +3976,25 @@ still #92-open. Pairs with #21 (snd ternary invert), #58 (u32 clamp cmplwi),
     redundant clrlwi-before-stb) + decl order in target's creation-order
     coloring landed it exactly. Same tells: small call-free loop fn,
     li;mr in target where all C gives li;li.
-    **#110 EXTENDS to VALUE-DIAMOND else-arm copies (SB_Galleon_func0E
-    87.4→95.9): target `cmpwi; blt Lmr; addi r0,rX,-K; b Lj; Lmr: mr r0,rX;
-    Lj: <consume r0>` — a 2-arm if/else (`w = x-K` / `w = x`) whose identity
-    else-arm survives as a real `mr` — is UNPRODUCIBLE at O4: the front-end
-    if-converts EVERY spelling to the in-place conditional `blt; addi rX,rX,-K`
-    (~27 probes: named/self-assign/embedded-in-consumer ternaries, split vars,
-    goto diamond, switch-on-bool, #114 (int)(long) sandwiches, w5 srawi forms,
-    AND the #92 static-inline two-return helper — it inlines but the value
-    join still coalesces: #92's join-edge crack applies to BRANCH folds, not
-    value-coalesce if-conversion).
-    The per-fn O1 wrap keeps the else arm.** O1 sub-tells for this shape: type
-    the value local `int` with NO cast when the field is already s8 (the (s8)
-    cast at O1 routes `extsb r0,r0; mr rX,r0`; the cast-free s8-field load
-    gives `lbz rX; extsb rX,rX` — 1 digit off target's `lbz r0; extsb rX,r0`,
-    open); the O1 tail emits `b <shared blr>` where O4/target duplicate the
-    inline `blr` (peephole-on would fold it but also fuses the extsb compares —
-    net worse here, A/B). Banked residuals: the lbz dest digit + the tail b.
+    **VALUE-DIAMOND else-arm copies (`cmpwi; blt Lmr; addi r0,rX,-K; b Lj;
+    Lmr: mr r0,rX; Lj: <consume r0>`) ARE O4-producible — an "UNPRODUCIBLE
+    at O4, needs per-fn O1" verdict here was OVERTURNED the same day by a
+    blank-canvas re-attack (SB_Galleon_func0E 95.9→100, no pragma).** The
+    O4 form that keeps the else-arm `mr`: the diamond's INPUT is a REPEATED
+    LAUNDERED EXPRESSION (CSE'd multi-use temp), the RESULT a NAMED local
+    assigned per-arm in an if/else —
+    `if ((s8)*(u8*)&p->f >= 5) w = (s8)*(u8*)&p->f - 5;
+     else w = (s8)*(u8*)&p->f;` — the 3 occurrences CSE to ONE
+    `lbz r0; extsb r3,r0` (also landing the two-register load shape) and
+    `w`'s per-arm defs join in r0 with the real `mr r0,r3` else-arm. The
+    if-conversion that folds ~27 other spellings (ternaries, self-assign,
+    embedded-in-consumer, split vars, goto diamond, switch-on-bool, #114
+    sandwiches, #92 inline helper, NAMED-local input + if/else) keys on the
+    input being a NAMED variable — an expression-temp input + named per-arm
+    result is the combination that survives. The earlier O1-wrap reading of
+    this fn was a COMPENSATING INSTRUMENT (re-audit any O1 wrap kept for a
+    value-diamond before calling it original). Model case for the
+    fresh-eyes protocol (Prime Directive section).
 
 111. **Member-address reassociation cap CRACKED (the audio memmove NAMED
     cap) — MWCC's address-sum association is keyed on the constant's
