@@ -90,9 +90,9 @@ typedef struct CfprisonguardPlacement
     f32 unk10;
     u8 pad14[0x18 - 0x14];
     s16 unk18;
-    s16 unk1A;
+    s16 watchRadius; /* 0x1A: distance the guard reacts within */
     s16 unk1C;
-    s16 unk1E;
+    s16 disableEvent; /* 0x1E: game bit retiring the guard */
     u8 pad20[0x22 - 0x20];
     s16 unk22;
     u8 pad24[0x28 - 0x24];
@@ -128,7 +128,7 @@ void cfprisonguard_init(int* obj, u8* params)
     {
         sub->flags = (u8)(sub->flags | 4);
     }
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x10);
+    ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
     ((Bit80*)&sub->flags39)->top = 1;
 }
 
@@ -153,9 +153,9 @@ void cfprisonguard_update(int* obj)
     {
         ((CfPrisonGuardFlags39*)&sub->flags39)->pulse = 0;
     }
-    if (GameBit_Get(((CfprisonguardPlacement*)def)->unk1E) != 0)
+    if (GameBit_Get(((CfprisonguardPlacement*)def)->disableEvent) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | 0x4000);
         ObjHits_DisableObject(obj);
         Obj_RemoveFromUpdateList(obj);
@@ -174,7 +174,7 @@ void cfprisonguard_update(int* obj)
     {
         if (sub->guardState != 4)
         {
-            if (dist < (f32)(s32)((CfprisonguardPlacement*)def)->unk1A)
+            if (dist < (f32)(s32)((CfprisonguardPlacement*)def)->watchRadius)
             {
             }
             else if (waterfx_consumePendingImpactNearPoint(&((GameObject*)obj)->anim.localPosX, lbl_803E4268) == 0)
@@ -287,7 +287,7 @@ int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         dist = Vec_distance((char*)obj + 0x18, player + 0x18);
         if (gb48 == 0)
         {
-            if (dist < (f32)((CfprisonguardPlacement*)def)->unk1A
+            if (dist < (f32)((CfprisonguardPlacement*)def)->watchRadius
                 || waterfx_consumePendingImpactNearPoint(&((GameObject*)obj)->anim.localPosX, lbl_803E4268) != 0)
             {
                 if (objGetAnimState80A(player) != 0x40)
@@ -297,7 +297,7 @@ int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                 }
                 else
                 {
-                    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+                    ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
                     sub->guardState = 5;
                     sub->stateTimer = 0x14;
                     (*gObjectTriggerInterface)->runSequence(2, obj, -1);
@@ -317,7 +317,7 @@ int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         dist = Vec_distance((char*)obj + 0x18, player + 0x18);
         if (gb48 == 0)
         {
-            if (dist < (f32)((CfprisonguardPlacement*)def)->unk1A)
+            if (dist < (f32)((CfprisonguardPlacement*)def)->watchRadius)
             {
                 if (objGetAnimState80A(player) != 0x40)
                 {

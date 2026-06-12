@@ -117,7 +117,7 @@ void cfprisonuncle_update(int* obj)
         for (i = objectIndex; i < objectCount; i++)
         {
             /* find the guard (object class 0x3D) to glance at */
-            if (*(s16*)((char*)objects[i] + 0x44) == 0x3d)
+            if (((GameObject*)objects[i])->anim.classId == 0x3d)
             {
                 sub->target = objects[i];
                 i = objectCount;
@@ -154,7 +154,7 @@ void cfprisonuncle_update(int* obj)
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
         if (((GameObject*)obj)->seqIndex == -1)
         {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);

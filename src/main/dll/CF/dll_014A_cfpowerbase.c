@@ -148,11 +148,11 @@ void cfpowerbase_update(int* obj)
     CfPowerBaseState* sub = ((GameObject*)obj)->extra;
     if (GameBit_Get(sub->litBit) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x10);
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x10);
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
     if (((GameObject*)obj)->unkF4 != 0)
     {
@@ -160,12 +160,12 @@ void cfpowerbase_update(int* obj)
         (*gObjectTriggerInterface)->runSequence(sub->typeIndex, obj, 3);
         ((GameObject*)obj)->unkF4 = 0;
     }
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
+    if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
     {
         if ((*gGameUIInterface)->isEventReady(sub->litBit) != 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
+            ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(
+                ((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
             GameBit_Set(sub->litBit, 0);
             GameBit_Set(0x973, 0);
             (*gObjectTriggerInterface)->runSequence(sub->typeIndex, obj, -1);
@@ -204,15 +204,15 @@ void cfpowerbase_init(int* obj, u8* params)
     ObjMsg_AllocQueue(obj, 2);
     if (GameBit_Get(sub->litBit) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x10);
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x10);
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
     if (GameBit_Get(sub->typeBit) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
         ((GameObject*)obj)->unkF4 = 1;
     }
 }

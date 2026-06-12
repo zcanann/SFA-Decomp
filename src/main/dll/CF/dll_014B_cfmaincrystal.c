@@ -12,6 +12,31 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 
+/* beam-report protocol shared with cfpowerbase (dll_014A): probe each
+   pylon group (class 0xDA) with its message; the crystal itself answers
+   position probes (class 0xDC) with CFMAINCRYSTAL_MSG_CRYSTAL. */
+enum
+{
+    CFMAINCRYSTAL_MSG_PYLON_1 = 0x110001,
+    CFMAINCRYSTAL_MSG_PYLON_2 = 0x110002,
+    CFMAINCRYSTAL_MSG_PYLON_3 = 0x110003,
+    CFMAINCRYSTAL_MSG_CRYSTAL = 0x110004
+};
+
+/* game bits: the three base bits (see cfpowerbase) + 0x57 = the
+   convergence cutscene bit that pins everything fully charged */
+enum
+{
+    GAMEBIT_CFBASE_1 = 0x54,
+    GAMEBIT_CFBASE_2 = 0x55,
+    GAMEBIT_CFBASE_3 = 0x56,
+    GAMEBIT_CF_CONVERGENCE = 0x57
+};
+
+#define CFMAINCRYSTAL_PYLON_FRAMES 0x78  /* beam hold time once reported */
+#define CFMAINCRYSTAL_CHARGE_START 0x5A  /* charge frames granted by 0x57 */
+#define CFMAINCRYSTAL_CHARGE_FIRE 0x3C   /* charge at which the bolt fires */
+
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_EnableObject();
 extern int ObjMsg_Pop();
@@ -129,7 +154,7 @@ void cfmaincrystal_update(int* obj)
     uint msgType;
     uint srcObjId;
     s8 t;
-    t = ((s8*)*(int*)&((GameObject*)obj)->anim.placementData)[0x19];
+    t = ((s8*)((GameObject*)obj)->anim.placement)[0x19];
     switch (t)
     {
     case 0:
@@ -141,8 +166,8 @@ void cfmaincrystal_update(int* obj)
         {
             switch (msgType)
             {
-            case 0x110004:
-                ObjMsg_SendToObject((void*)srcObjId, 0x110004, obj, 0);
+            case CFMAINCRYSTAL_MSG_CRYSTAL:
+                ObjMsg_SendToObject((void*)srcObjId, CFMAINCRYSTAL_MSG_CRYSTAL, obj, 0);
                 break;
             }
         }
@@ -179,30 +204,6 @@ typedef struct
  * collect the three pylon positions from messages, re-request missing ones,
  * emit the beam particles toward the crystal (and down from each pylon),
  * ramp the convergence charge, hum volume and per-beam chime timers. */
-/* beam-report protocol shared with cfpowerbase (dll_014A): probe each
-   pylon group (class 0xDA) with its message; the crystal itself answers
-   position probes (class 0xDC) with CFMAINCRYSTAL_MSG_CRYSTAL. */
-enum
-{
-    CFMAINCRYSTAL_MSG_PYLON_1 = 0x110001,
-    CFMAINCRYSTAL_MSG_PYLON_2 = 0x110002,
-    CFMAINCRYSTAL_MSG_PYLON_3 = 0x110003,
-    CFMAINCRYSTAL_MSG_CRYSTAL = 0x110004
-};
-
-/* game bits: the three base bits (see cfpowerbase) + 0x57 = the
-   convergence cutscene bit that pins everything fully charged */
-enum
-{
-    GAMEBIT_CFBASE_1 = 0x54,
-    GAMEBIT_CFBASE_2 = 0x55,
-    GAMEBIT_CFBASE_3 = 0x56,
-    GAMEBIT_CF_CONVERGENCE = 0x57
-};
-
-#define CFMAINCRYSTAL_PYLON_FRAMES 0x78  /* beam hold time once reported */
-#define CFMAINCRYSTAL_CHARGE_START 0x5A  /* charge frames granted by 0x57 */
-#define CFMAINCRYSTAL_CHARGE_FIRE 0x3C   /* charge at which the bolt fires */
 
 void fn_8019D9F0(int* obj)
 {
@@ -223,28 +224,28 @@ void fn_8019D9F0(int* obj)
     {
         switch (msgType)
         {
-        case 0x110001:
-            sub->pylonX[0] = *(f32*)((char*)msgSrc + 0xc);
+        case CFMAINCRYSTAL_MSG_PYLON_1:
+            sub->pylonX[0] = ((GameObject*)msgSrc)->anim.localPosX;
             sub->pylonY[0] = lbl_803E41D8;
-            sub->pylonZ[0] = *(f32*)((char*)msgSrc + 0x14);
+            sub->pylonZ[0] = ((GameObject*)msgSrc)->anim.localPosZ;
             sub->pylonTimer[0] = 1;
             break;
-        case 0x110002:
-            sub->pylonX[1] = *(f32*)((char*)msgSrc + 0xc);
+        case CFMAINCRYSTAL_MSG_PYLON_2:
+            sub->pylonX[1] = ((GameObject*)msgSrc)->anim.localPosX;
             sub->pylonY[1] = lbl_803E41D8;
-            sub->pylonZ[1] = *(f32*)((char*)msgSrc + 0x14);
+            sub->pylonZ[1] = ((GameObject*)msgSrc)->anim.localPosZ;
             sub->pylonTimer[1] = 1;
             break;
-        case 0x110003:
-            sub->pylonX[2] = *(f32*)((char*)msgSrc + 0xc);
+        case CFMAINCRYSTAL_MSG_PYLON_3:
+            sub->pylonX[2] = ((GameObject*)msgSrc)->anim.localPosX;
             sub->pylonY[2] = lbl_803E41D8;
-            sub->pylonZ[2] = *(f32*)((char*)msgSrc + 0x14);
+            sub->pylonZ[2] = ((GameObject*)msgSrc)->anim.localPosZ;
             sub->pylonTimer[2] = 1;
             break;
-        case 0x110004:
-            sub->crystalX = *(f32*)((char*)msgSrc + 0xc);
-            sub->crystalY = *(f32*)((char*)msgSrc + 0x10);
-            sub->crystalZ = *(f32*)((char*)msgSrc + 0x14);
+        case CFMAINCRYSTAL_MSG_CRYSTAL:
+            sub->crystalX = ((GameObject*)msgSrc)->anim.localPosX;
+            sub->crystalY = ((GameObject*)msgSrc)->anim.localPosY;
+            sub->crystalZ = ((GameObject*)msgSrc)->anim.localPosZ;
             sub->crystalKnown = 1;
             break;
         }

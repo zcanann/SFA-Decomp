@@ -120,7 +120,8 @@ typedef struct WindliftObjectDef
     f32 unkC;
     f32 unk10;
     u8 pad14[0x18 - 0x14];
-    s16 unk18;
+    s8 unk18;
+    s8 heightByte; /* 0x19: lift height in lbl_803E41C8 units (0 = default) */
     s16 unk1A;
     s16 delay;
     s16 seqId;
@@ -204,9 +205,9 @@ void windlift_init(int* obj, u8* def)
     }
     sub->delay = ((WindliftObjectDef*)def)->delay;
     sub->timer = 0;
-    if (*(s8*)(def + 0x19) != 0)
+    if (((WindliftObjectDef*)def)->heightByte != 0)
     {
-        sub->liftHeight = lbl_803E41C8 * (f32) * (s8*)(def + 0x19);
+        sub->liftHeight = lbl_803E41C8 * (f32)((WindliftObjectDef*)def)->heightByte;
     }
     else
     {
@@ -473,7 +474,7 @@ void windlift_update(int* obj)
     int count;
     int** objs;
     int gb2;
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
+    def = (u8*)((GameObject*)obj)->anim.placement;
     if (sub->active)
     {
         level = (int)(lbl_803E41BC * timeDelta + (f32)(int)((GameObject*)obj)->anim.alpha);

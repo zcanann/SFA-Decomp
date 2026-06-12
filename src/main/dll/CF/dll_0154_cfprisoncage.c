@@ -8,6 +8,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
@@ -50,6 +51,14 @@ void cfguardian_release(void);
  * lit/active state from gamebit 0x44 and notify on completion. */
 #pragma scheduling off
 #pragma peephole off
+typedef struct CfPrisonCageMapData
+{
+    ObjPlacement base;
+    s16 openedBit; /* 0x18: game bit set once the cage is opened */
+} CfPrisonCageMapData;
+
+STATIC_ASSERT(offsetof(CfPrisonCageMapData, openedBit) == 0x18);
+
 /* placement type ids this DLL serves (anim.seqId carries the romlist
    type): 0x128 reports object type 8 and runs sequence 1, 0x127 runs
    sequence 0. */
@@ -67,11 +76,10 @@ int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     int msg;
     int v;
     int w = 0;
-    u8* sub = *(u8**)&((GameObject*)obj)->anim.placementData;
-    /* placement +0x18 holds the cage's opened game bit */
-    if (GameBit_Get(*(s16*)(sub + 0x18)) != 0)
+    CfPrisonCageMapData* data = (CfPrisonCageMapData*)((GameObject*)obj)->anim.placement;
+    if (GameBit_Get(data->openedBit) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
         animUpdate->sequenceControlFlags |= 4;
         return 0;
     }
@@ -84,25 +92,25 @@ int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         switch (msg)
         {
         case CFPRISONCAGE_MSG_OPEN:
-            GameBit_Set(*(s16*)(sub + 0x18), 1);
+            GameBit_Set(data->openedBit, 1);
             break;
         }
     }
     /* 0x44: the caged-prisoner dialog bit (shared with cfprisonguard) */
     if (GameBit_Get(0x44) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x10);
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x10);
+        ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
+    if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
     {
         if ((*gGameUIInterface)->isEventReady(0x44) != 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 0x8);
+            ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(
+                ((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
     }

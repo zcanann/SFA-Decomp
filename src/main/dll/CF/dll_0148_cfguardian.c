@@ -9,6 +9,8 @@
  */
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/dll/dll_0015_curves.h"
+#include "main/obj_placement.h"
 
 int cfguardian_setScale(int* obj)
 {
@@ -110,10 +112,10 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
     {
         sel = p3;
         pt = (int)findRomCurvePointNearObject((int*)obj, sel, 0, 2);
-        tgt.x = *(f32*)(pt + 8);
-        tgt.y = *(f32*)(pt + 0xc);
-        tgt.z = *(f32*)(pt + 0x10);
-        tgt.angle = *(s8*)(pt + 0x2c) << 8;
+        tgt.x = ((RomCurvePlacementDef*)pt)->base.x;
+        tgt.y = ((RomCurvePlacementDef*)pt)->base.y;
+        tgt.z = ((RomCurvePlacementDef*)pt)->base.z;
+        tgt.angle = ((RomCurvePlacementDef*)pt)->rotZ << 8;
         if (fn_8019B1D8((int*)obj, (int*)&tgt.angle, t, p4) != 0)
         {
             cmd[0] = 0x19;
@@ -545,6 +547,15 @@ extern f32 lbl_803E412C;
  * brain - sixteen-state quest progression for the CloudRunner guardian, with
  * sandworm avoidance, path flights, landing physics, sequenced triggers and
  * idle chatter. */
+typedef struct CfGuardianMapData
+{
+    ObjPlacement base;
+    s8 unk18;
+    s8 variant; /* 0x19: 1 = the convergence-gated guardian */
+} CfGuardianMapData;
+
+STATIC_ASSERT(offsetof(CfGuardianMapData, variant) == 0x19);
+
 /* BANKED at ~94.5: whole-fn saved-quad rotation (T: obj=r28 param-pool,
    def=r29, player=r30, sub=r31; ours reversed) - #108 cross-class
    interleave. Probe-battery discrimination (#115 method): a standalone
@@ -572,19 +583,19 @@ int waterSpellStone1Fn_8019b4c8(int obj)
     f32 k;
     f32 nearDist = lbl_803E412C;
     f32 ground = lbl_803E4130;
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
+    def = (u8*)((GameObject*)obj)->anim.placement;
     stk.evbuf[0x1b] = 0;
     sub = ((GameObject*)obj)->extra;
     sub->flagsA9B &= ~0x2;
     sub->moveSpeed = lbl_803E4134;
     player = (char*)Obj_GetPlayerObject();
     ObjTrigger_UpdateIdBlockFlag((int)obj);
-    if (*(s8*)(def + 0x19) == 1 && GameBit_Get(0x57) == 0)
+    if (((CfGuardianMapData*)def)->variant == 1 && GameBit_Get(0x57) == 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
+        ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         return 0;
     }
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
+    ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
     /* quest state machine: 0..3 the release, 4/6/7 the flight home,
        8..11 the talk spots, 12..15 the endgame cutscene parks */
     switch (sub->questState)
@@ -619,7 +630,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             sub->chatterState = 1;
         }
         sub->flagsA9B |= 2;
-        if (fn_8019AF64((int*)obj, (u8*)sub + 0x6bc, lbl_803E4138, 0, (u8*)sub + 0x7fc) != 0)
+        if (fn_8019AF64((int*)obj, sub->pathBlock, lbl_803E4138, 0, &sub->moveSpeed) != 0)
         {
             sub->flagsA9B &= ~1;
             sub->questState = 4;
@@ -633,7 +644,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
     case 4: /* roost until the convergence cutscene parks him */
         if (GameBit_Get(0x57) != 0)
         {
-            if (*(s8*)(def + 0x19) != 1)
+            if (((CfGuardianMapData*)def)->variant != 1)
             {
                 sub->questState = 0xf;
                 sub->chatterAlt = 0;
@@ -678,12 +689,12 @@ int waterSpellStone1Fn_8019b4c8(int obj)
                     ((GameObject*)obj)->unkF4 = 0;
                     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4110, 0);
                     {
-                        char* pt = (char*)findRomCurvePointNearObject((int*)obj, 0, 0, 2);
+                        RomCurvePlacementDef* pt = (RomCurvePlacementDef*)findRomCurvePointNearObject((int*)obj, 0, 0, 2);
                         f32 d;
-                        sub->homeX = *(f32*)(pt + 8);
-                        sub->homeY = *(f32*)(pt + 0xc);
-                        sub->homeZ = *(f32*)(pt + 0x10);
-                        sub->homeYaw = (s16)(*(s8*)(pt + 0x2c) << 8);
+                        sub->homeX = pt->base.x;
+                        sub->homeY = pt->base.y;
+                        sub->homeZ = pt->base.z;
+                        sub->homeYaw = (s16)(pt->rotZ << 8);
                         d = sub->homeY - ((GameObject*)obj)->anim.localPosY;
                         d = (d >= lbl_803E4110) ? d : -d;
                         if (d < lbl_803E413C)
@@ -751,7 +762,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             sub->chatterState = 1;
         }
         sub->flagsA9B |= 2;
-        if (fn_8019AF64((int*)obj, (u8*)sub + 0x6bc, lbl_803E4138, 1, (u8*)sub + 0x7fc) != 0)
+        if (fn_8019AF64((int*)obj, sub->pathBlock, lbl_803E4138, 1, &sub->moveSpeed) != 0)
         {
             sub->questState = 8;
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
@@ -761,14 +772,14 @@ int waterSpellStone1Fn_8019b4c8(int obj)
         if ((void*)ObjGroup_FindNearestObject(3, obj, &nearDist) != NULL && nearDist < lbl_803E4158)
         {
             dll_2E_func04(sub);
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
+            ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         if (nearDist > lbl_803E4158 && Vec_xzDistance(player + 0x18, (char*)obj + 0x18) < lbl_803E413C)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
+            ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
             if ((sub->flagsA9B & 4) == 0 && lbl_80322954[sub->questState] != 0)
             {
-                dll_2E_func0C(0xf, (u8*)sub + 0xa68);
+                dll_2E_func0C(0xf, (u8*)&sub->homeYaw);
                 sub->flagsA9B |= 5;
                 lbl_80322954[sub->questState] = 0;
             }
@@ -784,12 +795,12 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             {
                 sub->chatterState = 2;
                 sub->flagsA9B |= 5;
-                dll_2E_func0A(0xe, (int*)((u8*)sub + 0xa68));
+                dll_2E_func0A(0xe, (int*)&sub->homeYaw);
                 lbl_80322954[sub->questState] = 0xe;
             }
         }
         if ((sub->flagsA9B & 4) != 0
-            && fn_8019B1D8((int*)obj, (int*)((u8*)sub + 0xa68), lbl_803E4128, (int)((u8*)sub + 0x7fc)) != 0)
+            && fn_8019B1D8((int*)obj, (int*)&sub->homeYaw, lbl_803E4128, (int)&sub->moveSpeed) != 0)
         {
             ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
             sub->flagsA9B &= ~0x5;
@@ -809,7 +820,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
         {
             if ((sub->flagsA9B & 4) == 0 && lbl_80322954[sub->questState] != 0)
             {
-                dll_2E_func0C(0xf, (u8*)sub + 0xa68);
+                dll_2E_func0C(0xf, (u8*)&sub->homeYaw);
                 sub->flagsA9B |= 5;
                 lbl_80322954[sub->questState] = 0;
             }
@@ -825,12 +836,12 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             {
                 sub->chatterState = 2;
                 sub->flagsA9B |= 5;
-                dll_2E_func0A(0xe, (int*)((u8*)sub + 0xa68));
+                dll_2E_func0A(0xe, (int*)&sub->homeYaw);
                 lbl_80322954[sub->questState] = 0xe;
             }
         }
         if ((sub->flagsA9B & 4) != 0
-            && fn_8019B1D8((int*)obj, (int*)((u8*)sub + 0xa68), lbl_803E4128, (int)((u8*)sub + 0x7fc)) != 0)
+            && fn_8019B1D8((int*)obj, (int*)&sub->homeYaw, lbl_803E4128, (int)&sub->moveSpeed) != 0)
         {
             ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
             sub->flagsA9B &= ~0x5;
@@ -848,7 +859,7 @@ int waterSpellStone1Fn_8019b4c8(int obj)
             sub->chatterState = 1;
         }
         sub->flagsA9B |= 2;
-        if (fn_8019AF64((int*)obj, (u8*)sub + 0x6bc, lbl_803E415C, 2, (u8*)sub + 0x7fc) != 0)
+        if (fn_8019AF64((int*)obj, sub->pathBlock, lbl_803E415C, 2, &sub->moveSpeed) != 0)
         {
             sub->questState = 0xb;
         }
