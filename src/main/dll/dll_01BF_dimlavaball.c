@@ -11,7 +11,6 @@
 #include "main/objseq.h"
 
 
-
 /*
  * Per-object extra state for the IM ice-mountain event controller
  * (imicemountain_getExtraSize == 0x14).
@@ -51,8 +50,6 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
  * Per-object extra state for the crrockfall falling rock
  * (crrockfall_getExtraSize == 0x14).
  */
-
-
 
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
@@ -124,7 +121,6 @@ extern undefined4 FUN_80017ac8();
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
 #define MEVT_QUERY(a)         (*gMapEventInterface)->getMode((a))
@@ -135,9 +131,6 @@ extern undefined4 FUN_80017ac8();
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 #undef MEVT_QUERY
-
-
-
 
 
 extern u32 randomGetRange(int min, int max);
@@ -159,20 +152,12 @@ int imicepillar_getObjectTypeId(void);
 extern void objRenderFn_8003b8f4(f32);
 
 
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
-
 /* if (o->_X == K) return A; else return B; */
-
 
 
 /* conditional init/free pair. */
 
 /* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, sync its transform into obj. */
-
 
 
 /* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
@@ -229,7 +214,6 @@ extern f32 timeDelta;
 #include "main/objseq.h"
 
 
-
 typedef struct Lavaball1bfPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -278,7 +262,6 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
 extern undefined8 FUN_80286830();
 extern undefined4 FUN_8028687c();
-
 
 
 /*
@@ -506,22 +489,6 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #pragma scheduling off
 #pragma peephole off
 void lavaball1bf_hitDetect(void)
@@ -549,7 +516,6 @@ int dimlogfire_getExtraSize(void);
 /* If obj->_F4 == 0, set it to 1; else early-return. */
 
 /* Free: call vtable[6] on obj through global dll-services pointer. */
-
 
 
 /* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
@@ -585,8 +551,6 @@ extern f32 lbl_803E4810;
 void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 
-
-
 void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -603,24 +567,7 @@ int lavaball1be_getExtraSize(int* obj);
 extern void Music_Trigger(int id, int p2);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 extern int Obj_AllocObjectSetup(int extraSize, int id);
-
-
-
-
-
 
 
 extern f32 lbl_803E4814;
@@ -652,22 +599,6 @@ void lavaball1bf_free(int obj, int mode)
 }
 
 void lavaball1be_free(int obj);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 void lavaball1bf_update(int* obj)

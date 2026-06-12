@@ -3,11 +3,6 @@
 #include "main/dll/shwgpipe_struct.h"
 
 
-
-
-
-
-
 extern void spscarab_hitDetect(void);
 extern void spscarab_render(void);
 extern void spscarab_free(int x);
@@ -115,12 +110,6 @@ typedef struct SpitembeamPlacement
 } SpitembeamPlacement;
 
 
-
-
-
-
-
-
 /*
  * --INFO--
  *
@@ -134,7 +123,6 @@ typedef struct SpitembeamPlacement
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 
 /*
@@ -256,8 +244,6 @@ int spitembeam_getObjectTypeId(void) { return 0x0; }
 extern f32 lbl_803E5AC0;
 
 
-
-
 volatile ShWGPipe GXWGFifo : (0xCC008000);
 
 static inline void shPos3f32(const f32 x, const f32 y, const f32 z)
@@ -281,14 +267,3 @@ static inline void shTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = t;
 }
 
-
-
-/*
- * --INFO--
- *
- * Function: fn_801E991C
- * EN v1.0 Address: 0x801E991C
- * EN v1.0 Size: 740b
- */
-#pragma opt_common_subs off
-#pragma opt_common_subs reset

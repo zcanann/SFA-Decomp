@@ -14,14 +14,6 @@
 #include "main/objseq.h"
 
 
-
-
-
-
-
-
-
-
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
  * (dimwooddoor2_getExtraSize == 0xC).
@@ -45,7 +37,6 @@ STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
  */
 
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
-
 
 
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
@@ -119,8 +110,6 @@ extern EffectInterface** gPartfxInterface;
  */
 
 
-
-
 /*
  * --INFO--
  *
@@ -153,24 +142,9 @@ extern EffectInterface** gPartfxInterface;
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
 
 
 /* conditional init/free pair. */
@@ -194,11 +168,6 @@ extern EffectInterface** gPartfxInterface;
 /* dim_levelcontrol_free: gameplay music + time-of-day reset. */
 
 
-/* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
- * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
-#pragma dont_inline on
-#pragma dont_inline reset
-
 /* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
  * every 16 frames, and ramp each active slot's alpha toward full; then update
  * the animated bridge mesh. */
@@ -217,17 +186,7 @@ extern f32 timeDelta;
  * spawn the contents object seeded from the door's transform. */
 
 
-
 volatile FbWGPipe GXWGFifo : (0xCC008000);
-
-
-
-
-
-
-
-
-
 
 
 /* segment pragma-stack balance (re-split): */
@@ -243,7 +202,6 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/objanim_internal.h"
 
 
-
 typedef struct DimtruthhorniceObjectDef
 {
     u8 pad0[0x1A - 0x0];
@@ -251,14 +209,6 @@ typedef struct DimtruthhorniceObjectDef
     s16 unk1C;
     s16 gameBit;
 } DimtruthhorniceObjectDef;
-
-
-
-
-
-
-
-
 
 
 /* dim2conveyor_getExtraSize == 0x14. */
@@ -310,7 +260,6 @@ extern undefined4 ObjHits_DisableObject();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 
 /*
@@ -459,27 +408,6 @@ void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_
 void dll_1CF_free(void);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int dimtruthhornice_getExtraSize(void) { return 0x8; }
 int dim2conveyor_getExtraSize(void);
@@ -489,16 +417,11 @@ int dim2conveyor_getExtraSize(void);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 
-
-
-
-
 /* render-with-fn(lbl) (no visibility check). */
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
 /* dim2conveyor_setScale: per-area scale/sign + music latch for two specific map ids. */
-
 
 
 /* dim2pathgenerator hitDetect: on hit type 0xE, scale velocity by const and SFX. */
@@ -519,7 +442,6 @@ int fn_801B6D40(int* obj, int v)
 u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** p4);
 
 
-
 void dimtruthhornice_init(int* obj, int* def)
 {
     TruthHornIceState* state = ((GameObject*)obj)->extra;
@@ -538,14 +460,6 @@ void dimtruthhornice_init(int* obj, int* def)
 }
 
 void dim2snowball_init(int* obj, int* def);
-
-
-
-
-
-
-
-
 
 
 extern f32 lbl_803E4A40;
@@ -623,8 +537,4 @@ void dimtruthhornice_update(int* obj)
 }
 
 extern int** ObjGroup_GetObjects(int group, int* countOut);
-
-
-
-
 

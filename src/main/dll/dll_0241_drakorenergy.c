@@ -48,30 +48,15 @@ extern uint GameBit_Get(int eventId);
 /* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
 
 
-
-
 extern void objRenderFn_8003b8f4(f32);
 
 
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
 
 
-
 /* ==== v1.0 recovered functions (drift additions) ==== */
 
 extern f32 mathSinf(f32 x);
-
-
-
-
-
-
-
-
-#pragma opt_common_subs off
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
-#pragma opt_common_subs reset
 
 
 #include "main/obj_placement.h"

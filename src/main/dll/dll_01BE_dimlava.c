@@ -11,7 +11,6 @@
 #include "main/objseq.h"
 
 
-
 /*
  * Per-object extra state for the IM ice-mountain event controller
  * (imicemountain_getExtraSize == 0x14).
@@ -51,8 +50,6 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
  * Per-object extra state for the crrockfall falling rock
  * (crrockfall_getExtraSize == 0x14).
  */
-
-
 
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
@@ -125,7 +122,6 @@ extern undefined4 ObjHits_DisableObject();
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
 #define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
 #define MEVT_QUERY(a)         (*gMapEventInterface)->getMode((a))
@@ -136,9 +132,6 @@ extern undefined4 ObjHits_DisableObject();
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 #undef MEVT_QUERY
-
-
-
 
 
 extern u32 randomGetRange(int min, int max);
@@ -160,20 +153,12 @@ int imicepillar_getObjectTypeId(void);
 extern void objRenderFn_8003b8f4(f32);
 
 
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
-
 /* if (o->_X == K) return A; else return B; */
-
 
 
 /* conditional init/free pair. */
 
 /* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, sync its transform into obj. */
-
 
 
 /* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
@@ -236,8 +221,6 @@ typedef struct Lavaball1bePlacement
     s8 unk18;
     u8 pad19[0x20 - 0x19];
 } Lavaball1bePlacement;
-
-
 
 
 /* imanimspacecraft_getExtraSize == 0x4. */
@@ -505,19 +488,6 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 #pragma scheduling off
 #pragma peephole off
 void lavaball1be_hitDetect(void)
@@ -535,7 +505,6 @@ void lavaball1be_initialise(void)
 void lavaball1bf_hitDetect(void);
 
 
-
 /* 8b "li r3, N; blr" returners. */
 
 /* Pattern wrappers. */
@@ -547,7 +516,6 @@ void lavaball1bf_hitDetect(void);
 /* Free: call vtable[6] on obj through global dll-services pointer. */
 
 
-
 /* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
 
 /* lavaball1bf "consume" hook: only clear pending flag if both gates set. */
@@ -557,9 +525,6 @@ void lavaball1bf_hitDetect(void);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-
-
 
 
 /* if (o->_X == K) return A; else return B;  pattern. */
@@ -584,28 +549,10 @@ int fn_801B0784(int obj, int delta);
 extern void Music_Trigger(int id, int p2);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 
 
-
-
-
-
 extern void ModelLightStruct_free(void* light);
-
-
 
 
 void lavaball1be_free(int obj)
@@ -619,8 +566,6 @@ void lavaball1be_free(int obj)
 }
 
 void imspacethruster_free(int obj);
-
-
 
 
 extern void queueGlowRender(int* obj);
@@ -837,10 +782,6 @@ void lavaball1be_update(s16* obj)
 }
 
 extern int* objFindTexture(int* obj, int a, int b);
-
-
-
-
 
 
 void lavaball1be_setScale(s16* obj, int p2, int p3)

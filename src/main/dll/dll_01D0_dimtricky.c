@@ -14,14 +14,6 @@
 #include "main/objseq.h"
 
 
-
-
-
-
-
-
-
-
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
  * (dimwooddoor2_getExtraSize == 0xC).
@@ -45,7 +37,6 @@ STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
  */
 
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
-
 
 
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
@@ -117,8 +108,6 @@ extern undefined4 GameBit_Set(int eventId, int value);
  */
 
 
-
-
 /*
  * --INFO--
  *
@@ -151,24 +140,9 @@ extern undefined4 GameBit_Set(int eventId, int value);
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
 
 
 /* conditional init/free pair. */
@@ -192,11 +166,6 @@ extern undefined4 GameBit_Set(int eventId, int value);
 /* dim_levelcontrol_free: gameplay music + time-of-day reset. */
 
 
-/* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
- * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
-#pragma dont_inline on
-#pragma dont_inline reset
-
 /* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
  * every 16 frames, and ramp each active slot's alpha toward full; then update
  * the animated bridge mesh. */
@@ -214,17 +183,7 @@ extern undefined4 GameBit_Set(int eventId, int value);
  * spawn the contents object seeded from the door's transform. */
 
 
-
 volatile FbWGPipe GXWGFifo : (0xCC008000);
-
-
-
-
-
-
-
-
-
 
 
 /* segment pragma-stack balance (re-split): */
@@ -238,17 +197,6 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIM2snowball.h"
 #include "main/objanim_internal.h"
-
-
-
-
-
-
-
-
-
-
-
 
 
 /* dim2conveyor_getExtraSize == 0x14. */
@@ -300,7 +248,6 @@ extern undefined8 ObjGroup_RemoveObject();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 
 /*
@@ -449,9 +396,6 @@ void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_
 void dll_1CF_free(void);
 
 
-
-
-
 #pragma scheduling off
 #pragma peephole off
 void dim_tricky_free(void)
@@ -463,20 +407,6 @@ void dim_tricky_hitDetect(void)
 }
 
 void dim2conveyor_hitDetect(void);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /* 8b "li r3, N; blr" returners. */
@@ -495,10 +425,6 @@ void dim_tricky_init(int* obj)
 extern f32 lbl_803E4A30;
 
 
-
-
-
-
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E4A38;
 void dim_tricky_render(void) { extern void objRenderFn_8003b8f4(f32); objRenderFn_8003b8f4(lbl_803E4A38); }
@@ -509,7 +435,6 @@ void dim2conveyor_free(int x);
 /* dim2conveyor_setScale: per-area scale/sign + music latch for two specific map ids. */
 
 
-
 /* dim2pathgenerator hitDetect: on hit type 0xE, scale velocity by const and SFX. */
 
 extern u8 lbl_803DBF20;
@@ -517,13 +442,6 @@ extern int* getTrickyObject(void);
 
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if the signed result dropped to or below 0. */
-
-
-
-
-
-
-
 
 
 void dim_tricky_update(int* obj)
@@ -556,14 +474,5 @@ void dim_tricky_update(int* obj)
 extern f32 mathCosf(f32 x);
 
 
-
 extern void* mmAlloc(int size, int a, int b);
-
-
-
-
-
-
-
-
 

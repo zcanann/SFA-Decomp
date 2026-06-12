@@ -13,14 +13,6 @@
 #include "main/objseq.h"
 
 
-
-
-
-
-
-
-
-
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
  * (dimwooddoor2_getExtraSize == 0xC).
@@ -44,7 +36,6 @@ STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
  */
 
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
-
 
 
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
@@ -116,8 +107,6 @@ extern undefined4 GameBit_Set(int eventId, int value);
  */
 
 
-
-
 /*
  * --INFO--
  *
@@ -150,24 +139,9 @@ extern undefined4 GameBit_Set(int eventId, int value);
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
 
 
 /* conditional init/free pair. */
@@ -194,8 +168,6 @@ extern undefined4 GameBit_Set(int eventId, int value);
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
 extern u8 framesThisStep;
-#pragma dont_inline on
-#pragma dont_inline reset
 
 /* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
  * every 16 frames, and ramp each active slot's alpha toward full; then update
@@ -214,17 +186,7 @@ extern u8 framesThisStep;
  * spawn the contents object seeded from the door's transform. */
 
 
-
 volatile FbWGPipe GXWGFifo : (0xCC008000);
-
-
-
-
-
-
-
-
-
 
 
 /* segment pragma-stack balance (re-split): */
@@ -238,13 +200,6 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIM2snowball.h"
 #include "main/objanim_internal.h"
-
-
-
-
-
-
-
 
 
 typedef struct Dim2pathgeneratorObjectDef
@@ -329,7 +284,6 @@ extern undefined8 ObjGroup_RemoveObject();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 
 /*
@@ -478,21 +432,6 @@ void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_
 void dll_1CF_free(void);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #pragma scheduling off
 #pragma peephole off
 void dim2pathgenerator_free(void)
@@ -527,16 +466,11 @@ void dim_tricky_init(int* obj);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 
-
-
-
-
 /* render-with-fn(lbl) (no visibility check). */
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
 /* dim2conveyor_setScale: per-area scale/sign + music latch for two specific map ids. */
-
 
 
 /* dim2pathgenerator hitDetect: on hit type 0xE, scale velocity by const and SFX. */
@@ -584,17 +518,6 @@ void dim2pathgenerator_init(int* obj, int* def)
 }
 
 void dimtruthhornice_init(int* obj, int* def);
-
-
-
-
-
-
-
-
-
-
-
 
 
 extern int** ObjGroup_GetObjects(int group, int* countOut);
@@ -701,6 +624,4 @@ void dim2pathgenerator_update(int* obj)
 }
 
 extern void mtxRotateByVec3s(f32 * mtx, s16 * ang);
-
-
 

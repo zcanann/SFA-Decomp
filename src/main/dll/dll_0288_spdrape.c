@@ -3,9 +3,6 @@
 #include "main/dll/shwgpipe_struct.h"
 
 
-
-
-
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 extern f32 timeDelta;
@@ -127,7 +124,6 @@ void spdrape_hitDetect(void)
 #include "main/dll/DR/DRsimplehuman.h"
 
 
-
 typedef struct SpdrapeObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -146,8 +142,6 @@ typedef struct SpdrapeState
     u8 unk16;
     u8 pad17[0x18 - 0x17];
 } SpdrapeState;
-
-
 
 
 /*
@@ -334,11 +328,6 @@ void spdrape_initialise(void)
 void spitembeam_free(void);
 
 
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 extern f32 lbl_803E5AC0;
@@ -384,7 +373,6 @@ void spdrape_init(int* obj, u8* def)
 }
 
 
-
 volatile ShWGPipe GXWGFifo : (0xCC008000);
 
 static inline void shPos3f32(const f32 x, const f32 y, const f32 z)
@@ -408,14 +396,3 @@ static inline void shTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = t;
 }
 
-
-
-/*
- * --INFO--
- *
- * Function: fn_801E991C
- * EN v1.0 Address: 0x801E991C
- * EN v1.0 Size: 740b
- */
-#pragma opt_common_subs off
-#pragma opt_common_subs reset

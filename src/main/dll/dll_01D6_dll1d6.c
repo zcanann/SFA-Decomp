@@ -14,14 +14,6 @@
 #include "main/objseq.h"
 
 
-
-
-
-
-
-
-
-
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
  * (dimwooddoor2_getExtraSize == 0xC).
@@ -45,7 +37,6 @@ STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
  */
 
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
-
 
 
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
@@ -118,8 +109,6 @@ extern u32 randomGetRange(int min, int max);
  */
 
 
-
-
 /*
  * --INFO--
  *
@@ -152,24 +141,9 @@ extern u32 randomGetRange(int min, int max);
 /* Trivial 4b 0-arg blr leaves. */
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
 
 
 /* conditional init/free pair. */
@@ -197,8 +171,6 @@ extern void* Obj_GetPlayerObject(void);
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
 extern u8 framesThisStep;
-#pragma dont_inline on
-#pragma dont_inline reset
 
 /* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
  * every 16 frames, and ramp each active slot's alpha toward full; then update
@@ -218,17 +190,7 @@ extern f32 timeDelta;
  * spawn the contents object seeded from the door's transform. */
 
 
-
 volatile FbWGPipe GXWGFifo : (0xCC008000);
-
-
-
-
-
-
-
-
-
 
 
 /* segment pragma-stack balance (re-split): */
@@ -250,16 +212,6 @@ typedef struct Dll1D6Placement
     s16 downTimer;
     u8 pad1E[0x20 - 0x1E];
 } Dll1D6Placement;
-
-
-
-
-
-
-
-
-
-
 
 
 /* dim2conveyor_getExtraSize == 0x14. */
@@ -311,7 +263,6 @@ extern undefined4 ObjHits_RecordObjectHit();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 
 /*
@@ -460,14 +411,6 @@ void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_
 void dll_1CF_free(void);
 
 
-
-
-
-
-
-
-
-
 #pragma scheduling off
 #pragma peephole off
 void dll_1D6_hitDetect(void)
@@ -485,14 +428,6 @@ void dll_1D6_initialise(void)
 void dim2snowball_free(void);
 
 
-
-
-
-
-
-
-
-
 /* 8b "li r3, N; blr" returners. */
 int dll_1D6_getExtraSize(void) { return 0x20; }
 int dll_1D6_getObjectTypeId(void) { return 0x0; }
@@ -502,7 +437,6 @@ int dim2snowball_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4A78;
-
 
 
 void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -520,7 +454,6 @@ void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 
 /* dim2conveyor_setScale: per-area scale/sign + music latch for two specific map ids. */
-
 
 
 /* dim2pathgenerator hitDetect: on hit type 0xE, scale velocity by const and SFX. */
@@ -545,14 +478,6 @@ void dll_1D6_free(int* obj)
 }
 
 void dim2pathgenerator_init(int* obj, int* def);
-
-
-
-
-
-
-
-
 
 
 extern void* mmAlloc(int size, int a, int b);
@@ -608,8 +533,6 @@ void dll_1D6_init(int* obj, u8* params)
 }
 
 extern f32 lbl_803E4A40;
-
-
 
 
 extern void mtxRotateByVec3s(f32 * mtx, s16 * ang);

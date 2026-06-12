@@ -166,15 +166,6 @@ int cclightfoot_getExtraSize(void);
 /* Drift-recovery: add new fns with v1.0 names. */
 
 
-
-
-/* ObjLink_DetachChild and Obj_FreeObject already declared in earlier extern blocks */
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
 /* ccpedstal_updateGameBitGate: state2-driven model + trigger gate. If state2's gamebit at
  * +0x4 is set, latches obj[0xaf] bit 8 and selects model index 1.
  * Otherwise selects model 0, then consults gbit 0xa9: if set, clears the
@@ -268,7 +259,6 @@ void fn_801AC108(int obj, int param2)
 }
 
 extern f32 lbl_803E46A8;
-
 
 
 #include "main/dll/SC/SCtotemlogpuz.h"

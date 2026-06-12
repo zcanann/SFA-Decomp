@@ -9,9 +9,6 @@
 #include "main/objseq.h"
 
 
-
-
-
 typedef struct GrimbleState
 {
     u8 pad0[0x38 - 0x0];
@@ -99,7 +96,6 @@ extern f32 lbl_803E3B94;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
 
 
 /*
@@ -310,15 +306,6 @@ FUN_8015e488(undefined8 param_1, double param_2, double param_3, undefined8 para
 }
 
 int fn_8015DC04(int obj, GroundBaddieState* p);
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-
-
-
-
-
 
 
 /*
@@ -581,26 +568,6 @@ void fn_8015ED1C(int p1, int p2, int p3);
  */
 
 
-
-
-/*
- * --INFO--
- *
- * Function: FUN_8015f068
- * EN v1.0 Address: 0x8015F068
- * EN v1.0 Size: 444b
- * EN v1.1 Address: 0x8015EEF4
- * EN v1.1 Size: 292b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
 #pragma scheduling off
 #pragma peephole off
 static inline u8 scarab_isObjectInList(void* o)
@@ -653,7 +620,6 @@ extern f32 timeDelta;
  * PAL Size: TODO
  */
 void iceball_update(undefined2* param_1, int param_2);
-
 
 
 #pragma dont_inline on
@@ -1076,7 +1042,6 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
 void dll_CA_release_nop(void);
 
 
-
 void chukchuk_free(void);
 
 void chukchuk_hitDetect(void);
@@ -1103,10 +1068,6 @@ void iceball_release(void);
 void iceball_initialise(void);
 
 
-
-
-
-
 extern int getAngle(f32 a, f32 b);
 
 
@@ -1126,7 +1087,6 @@ void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* plain forwarder. */
 void iceball_free(void);
-
 
 
 void chukchuk_update(short* obj);
@@ -1183,8 +1143,6 @@ extern undefined4* gPlayerInterface;
 /* Drift-recovery: add new fns with v1.0 names to capture asm symbols. */
 
 
-
-
 extern f32 lbl_803E2EB8;
 extern f32 lbl_803E2EE8;
 
@@ -1233,11 +1191,6 @@ int grimble_stateHandlerB04(int* obj, GroundBaddieState* state)
 }
 
 extern void* lbl_803AC5D0[];
-
-
-
-
-
 
 
 int grimble_stateHandlerB01(int* obj, GroundBaddieState* state)
@@ -1580,7 +1533,6 @@ int grimble_stateHandlerA03(short* obj, GroundBaddieState* p)
 }
 
 void dll_CB_free(int* obj);
-
 
 
 ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
