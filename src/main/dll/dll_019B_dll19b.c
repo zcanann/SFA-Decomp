@@ -150,41 +150,10 @@ void dll_19B_free(int* obj)
 #include "main/objseq.h"
 #include "main/resource.h"
 
-typedef struct Dll19CPlacement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 posX;
-    f32 unkC;
-    f32 posZ;
-    u8 pad14[0x19 - 0x14];
-    u8 unk19;
-    u8 pad1A[0x20 - 0x1A];
-} Dll19CPlacement;
 
 
-typedef struct Dll19DPlacement
-{
-    u8 pad0[0x19 - 0x0];
-    u8 unk19;
-    u8 pad1A[0x20 - 0x1A];
-} Dll19DPlacement;
 
 
-typedef struct Dll19DState
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x2C - 0x14];
-    s16 unk2C;
-    s16 unk2E;
-    s16 unk30;
-    s16 unk32;
-    u16 unk34;
-    u8 unk36;
-    u8 pad37[0x38 - 0x37];
-} Dll19DState;
 
 
 typedef struct Dll19CState
@@ -221,7 +190,6 @@ typedef struct Dll19BState
 
 #pragma peephole off
 #pragma scheduling off
-extern undefined4 getLActions();
 extern undefined4 ObjMsg_AllocQueue();
 
 
@@ -487,41 +455,21 @@ void dll_19B_initialise(void)
 
 void dll_19C_free(void);
 
-void dll_19C_hitDetect(void);
 
-void dll_19C_release(void);
 
-void dll_19C_initialise(void);
 
-void dll_19D_render(void);
 
-void dll_19D_release(void);
 
-void dll_19D_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int dll_19C_getExtraSize(void);
-int dll_19C_getObjectTypeId(void);
-int dll_19D_getExtraSize(void);
-int dll_19D_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E51B0;
 #pragma peephole off
-void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 #pragma peephole reset
 
 /* Stubs to align function set with v1.0 asm. */
-extern u8 Obj_IsLoadingLocked(void);
-extern void* Obj_AllocObjectSetup(int size, int type);
-extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
-extern void ObjHits_ClearHitVolumes(int obj);
-extern void Obj_FreeObject(int obj);
-extern void Sfx_PlayFromObject(int obj, int sfx);
-extern f32 lbl_803E51B4;
 
 #pragma peephole off
-void dll_19C_update(int* obj);
 #pragma peephole reset
 
 #pragma peephole off
@@ -586,10 +534,8 @@ void dll_19C_init(int obj, u8* initData);
  * EN v1.0 Size: 132b
  */
 #pragma peephole off
-void dll_19D_free(int obj);
 #pragma peephole reset
 
-extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);
 
 /*
  * Function: dll_19D_init
@@ -597,11 +543,8 @@ extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int ext
  * EN v1.0 Size: 208b
  */
 #pragma peephole off
-void dll_19D_init(int obj);
 #pragma peephole reset
 
-extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E51B8;
 
 /*
  * Function: dll_19D_hitDetect
@@ -609,7 +552,6 @@ extern f32 lbl_803E51B8;
  * EN v1.0 Size: 276b
  */
 #pragma peephole off
-void dll_19D_hitDetect(int obj);
 #pragma peephole reset
 
 /*
@@ -618,5 +560,4 @@ void dll_19D_hitDetect(int obj);
  * EN v1.0 Size: 904b
  */
 #pragma peephole off
-void dll_19D_update(int obj);
 #pragma peephole reset

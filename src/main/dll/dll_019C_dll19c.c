@@ -6,11 +6,7 @@
 #include "main/dll/torch1cd_state.h"
 #include "main/effect_interfaces.h"
 
-extern void getEnvfxAct(int obj, int target, int id, int p);
-extern void* return0_8005669C(int);
 
-extern int lbl_803DB610;
-extern void* lbl_803DDBE0;
 
 /*
  * --INFO--
@@ -19,24 +15,16 @@ extern void* lbl_803DDBE0;
  * EN v1.0 Address: 0x801CBA98
  * EN v1.0 Size: 636b
  */
-int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /* Trivial 4b 0-arg blr leaves. */
-void dll_19B_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
-int dll_19B_getExtraSize(void);
-int dll_19B_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E5188;
 extern void objRenderFn_8003b8f4(f32);
 
-void dll_19B_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-extern ModgfxInterface** gModgfxInterface;
 
-void dll_19B_free(int* obj);
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -62,29 +50,8 @@ typedef struct Dll19CPlacement
 } Dll19CPlacement;
 
 
-typedef struct Dll19DPlacement
-{
-    u8 pad0[0x19 - 0x0];
-    u8 unk19;
-    u8 pad1A[0x20 - 0x1A];
-} Dll19DPlacement;
 
 
-typedef struct Dll19DState
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x2C - 0x14];
-    s16 unk2C;
-    s16 unk2E;
-    s16 unk30;
-    s16 unk32;
-    u16 unk34;
-    u8 unk36;
-    u8 pad37[0x38 - 0x37];
-} Dll19DState;
 
 
 typedef struct Dll19CState
@@ -107,22 +74,10 @@ typedef struct Dll19CState
 } Dll19CState;
 
 
-typedef struct Dll19BState
-{
-    u8 pad0[0x12 - 0x0];
-    u8 unk12;
-    u8 unk13;
-    u8 unk14;
-    u8 pad15[0x16 - 0x15];
-    u8 unk16;
-    u8 pad17[0x18 - 0x17];
-} Dll19BState;
 
 
 #pragma peephole off
 #pragma scheduling off
-extern undefined4 getLActions();
-extern undefined4 ObjMsg_AllocQueue();
 
 
 /*
@@ -138,31 +93,13 @@ extern undefined4 ObjMsg_AllocQueue();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int Obj_GetPlayerObject(void);
-extern int ObjGroup_FindNearestObject(int group, int obj, f32* outDist);
-extern int ObjMsg_Pop(int obj, int* msg, int* a, int* b);
 extern uint GameBit_Get(int eventId);
-extern f32 Vec_distance(f32 * a, f32 * b);
-extern void fn_80296B78(int obj, int a);
-extern void fn_80137948(char* fmt, ...);
-extern char sShrineTimeFormat[];
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f32 lbl_803E518C;
-extern f32 lbl_803E5190;
-extern f32 lbl_803E5194;
-extern f32 lbl_803E5198;
-extern f32 lbl_803E519C;
-extern f32 lbl_803E51A0;
-extern f32 timeDelta;
 extern u8 framesThisStep;
 
-void dll_19B_update(int obj);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void dll_19B_release(void);
 
-void dll_19B_initialise(void);
 
 void dll_19C_free(void)
 {
@@ -182,15 +119,12 @@ void dll_19C_initialise(void)
 
 void dll_19D_render(void);
 
-void dll_19D_release(void);
 
-void dll_19D_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
 int dll_19C_getExtraSize(void) { return 0x8; }
 int dll_19C_getObjectTypeId(void) { return 0x0; }
 int dll_19D_getExtraSize(void);
-int dll_19D_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E51B0;
@@ -206,8 +140,6 @@ void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int type);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
-extern void ObjHits_ClearHitVolumes(int obj);
-extern void Obj_FreeObject(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern f32 lbl_803E51B4;
 
@@ -298,7 +230,6 @@ void dll_19C_init(int obj, u8* initData)
 void dll_19D_free(int obj);
 #pragma peephole reset
 
-extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);
 
 /*
  * Function: dll_19D_init
@@ -306,11 +237,8 @@ extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int ext
  * EN v1.0 Size: 208b
  */
 #pragma peephole off
-void dll_19D_init(int obj);
 #pragma peephole reset
 
-extern EffectInterface** gPartfxInterface;
-extern f32 lbl_803E51B8;
 
 /*
  * Function: dll_19D_hitDetect
@@ -318,7 +246,6 @@ extern f32 lbl_803E51B8;
  * EN v1.0 Size: 276b
  */
 #pragma peephole off
-void dll_19D_hitDetect(int obj);
 #pragma peephole reset
 
 /*
@@ -327,5 +254,4 @@ void dll_19D_hitDetect(int obj);
  * EN v1.0 Size: 904b
  */
 #pragma peephole off
-void dll_19D_update(int obj);
 #pragma peephole reset
