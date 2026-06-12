@@ -41,7 +41,6 @@ int cfperch_getExtraSize(void) { return 0x0; }
 int cfperch_getObjectTypeId(void) { return 0x0; }
 int cfprisoncage_getExtraSize(void);
 
-#pragma scheduling off
 int fn_801A04F4(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     if (GameBit_Get(0x4d) != 0)
@@ -51,7 +50,6 @@ int fn_801A04F4(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-#pragma peephole off
 void cfperch_init(int* obj)
 {
     ((GameObject*)obj)->unkF4 = 1;

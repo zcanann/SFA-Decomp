@@ -191,9 +191,6 @@ extern int dll_2E_func03();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-#pragma scheduling on
-#pragma peephole on
-
 
 extern uint GameBit_Get(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
@@ -223,8 +220,6 @@ extern void objSeqInitFn_80080078(u8* p, int n);
 
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
-#pragma scheduling off
-#pragma peephole off
 void cfguardian_init(int* obj, u8* params)
 {
     CfGuardianState* sub;
@@ -368,8 +363,6 @@ void cfguardian_free(int* obj, int p2)
 }
 
 
-#pragma scheduling on
-#pragma peephole on
 void cfguardian_hitDetect(int* obj)
 {
     ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
@@ -378,7 +371,6 @@ void cfguardian_hitDetect(int* obj)
 }
 
 #pragma dont_inline on
-#pragma scheduling off
 int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4)
 {
     int* result = NULL;
@@ -428,7 +420,6 @@ extern f32 lbl_803E4128;
  * speed over distance, move it and keep the chase move playing. Returns 1
  * when already within the closing threshold. */
 #pragma dont_inline on
-#pragma peephole off
 int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
 {
     f32 dist;

@@ -93,7 +93,6 @@ int cfmaincrystal_getExtraSize(void) { return 0x160; }
 int cfmaincrystal_getObjectTypeId(void) { return 0x1; }
 int babycloudrunner_getExtraSize(void);
 
-#pragma peephole off
 void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -101,7 +100,6 @@ void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 
-#pragma scheduling off
 void cfmaincrystal_free(int* obj)
 {
     (*gExpgfxInterface)->freeSource((u32)obj);

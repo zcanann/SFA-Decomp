@@ -74,8 +74,6 @@ void cfprisonguard_initialise(void)
 /* cfprisonguard_init: set up the guard's
  * substate (update fn cfprisonguard_SeqFn, message queue), seed its header from
  * the spawn params, and apply the alarm-active gating bits. */
-#pragma scheduling off
-#pragma peephole off
 void cfprisonguard_init(int* obj, u8* params)
 {
     CfPrisonGuardState* sub = ((GameObject*)obj)->extra;

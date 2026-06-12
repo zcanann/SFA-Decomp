@@ -65,8 +65,6 @@ extern f32 lbl_803E41D0;
 int cfpowerbase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate);
 void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-#pragma scheduling off
-#pragma peephole off
 int cfpowerbase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern int ObjMsg_Pop(int, int*, int*, int*);
@@ -128,14 +126,12 @@ void cfpowerbase_free(void)
 {
 }
 
-#pragma scheduling on
 void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E41D0);
 }
 
-#pragma scheduling off
 void cfpowerbase_hitDetect(void)
 {
 }

@@ -51,8 +51,6 @@ enum
 /* message granting the cage's open bit (sent by the prison guard) */
 #define CFPRISONCAGE_MSG_OPEN 0xA0005
 
-#pragma scheduling off
-#pragma peephole off
 int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int msg;
@@ -115,8 +113,6 @@ typedef struct CfprisoncageObjectDef
     u8 pad24[0x28 - 0x24];
 } CfprisoncageObjectDef;
 
-#pragma scheduling on
-#pragma peephole on
 void cfprisoncage_free(void)
 {
 }
@@ -129,8 +125,6 @@ void cfprisoncage_initialise(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void cfprisoncage_update(int* obj)
 {
     extern ObjectTriggerInterface** gObjectTriggerInterface;
@@ -152,7 +146,6 @@ void cfprisoncage_update(int* obj)
 
 int cfprisoncage_getExtraSize(void) { return 0x0; }
 
-#pragma scheduling on
 void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -169,7 +162,6 @@ u32 fn_801A0174(int* obj);
 
 extern int ObjHits_GetPriorityHitWithPosition(int* obj, int a, int b, int c, f32* out_x, f32* out_y, f32* out_z);
 
-#pragma scheduling off
 void cfprisoncage_hitDetect(int* obj)
 {
     f32 pos_z, pos_y, pos_x;

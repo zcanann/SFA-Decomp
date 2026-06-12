@@ -58,8 +58,6 @@ void cfprisonuncle_initialise(void)
  * drain pending messages, re-acquire the keyed target object, then either
  * track/animate toward the player (firing the alert trigger) or, once
  * captured, raise the done flag and notify. */
-#pragma scheduling off
-#pragma peephole off
 void cfprisonuncle_update(int* obj)
 {
     CfPrisonUncleState* sub = ((GameObject*)obj)->extra;
@@ -128,7 +126,6 @@ void cfprisonuncle_update(int* obj)
 int cfprisonuncle_getExtraSize(void) { return 0xa8; }
 int cfprisonuncle_getObjectTypeId(void) { return 0x9; }
 
-#pragma scheduling on
 int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     CfPrisonUncleState* p = ((GameObject*)obj)->extra;
@@ -141,7 +138,6 @@ int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-#pragma scheduling off
 void cfprisonuncle_init(int* obj)
 {
     CfPrisonUncleState* state;

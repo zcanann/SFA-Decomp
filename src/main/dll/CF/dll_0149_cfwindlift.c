@@ -104,7 +104,6 @@ typedef struct WindliftObjectDef
 int windlift_getExtraSize(void) { return 0x178; }
 int windlift_getObjectTypeId(void) { return 0x0; }
 
-#pragma peephole off
 void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -113,7 +112,6 @@ void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-#pragma scheduling off
 void windlift_free(int* obj)
 {
     void* p = Obj_GetPlayerObject();
