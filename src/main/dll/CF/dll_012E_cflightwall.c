@@ -1,13 +1,9 @@
-#include "main/dll/mmp_asteroid_re.h"
-#include "main/game_object.h"
-
 /*
- * Recovered: large switch on params[20] (32-bit id) that sets bits in
- * state->flags per map/area id. Six GameBit-guarded cases set bit 0x20 only
- * when any of 3 listed event bits is set; the rest set 0x68, 0x08, 0x30, or
- * 0x10 directly. Tail: if state->flags & 0x40 (which 0x68 includes), set
- * obj->_af |= 8 (redundant with the unconditional prologue store).
+ * cflightwall (DLL 0x12E) - static light-wall prop at CF (CloudRunner
+ * Fortress). init seeds the three rotation bytes and optional uniform
+ * scale from the placement; render just draws the model.
  */
+#include "main/game_object.h"
 
 extern f32 lbl_803E3EE8;
 extern void objRenderFn_8003b8f4(f32);
@@ -34,14 +30,10 @@ void cflightwall_initialise(void)
 {
 }
 
-void barrelpad_free(void);
-
 int cflightwall_getExtraSize(void) { return 0x0; }
 int cflightwall_getObjectTypeId(void) { return 0x0; }
-int barrelpad_getExtraSize(void);
 
 void cflightwall_render(void) { objRenderFn_8003b8f4(lbl_803E3EE8); }
-void barrelpad_render(void);
 
 void cflightwall_init(s16* obj, u8* def)
 {
@@ -62,4 +54,3 @@ void cflightwall_init(s16* obj, u8* def)
     ((GameObject*)obj)->objectFlags |= 0xA000;
 }
 
-void cf_doorlight_update(int obj);
