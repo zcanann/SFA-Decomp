@@ -1,8 +1,4 @@
 #include "main/game_object.h"
-#include "main/obj_placement.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/anim_internal.h"
-#include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/main.h"
 #include "main/objlib.h"

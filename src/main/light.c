@@ -1,7 +1,5 @@
 /* === merged from main/dll/VF/dll_021E_vfpblock1.c [801FB9AC-801FB9F4) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/VF/vf_shared.h"
-#include "main/effect_interfaces.h"
-#include "main/expgfx.h"
 
 /*
  * DLL 0x021E (gVFP_Block1ObjDescriptor) fragment.
@@ -31,13 +29,10 @@ void vfpblock1_free(int obj)
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
 #include "main/game_ui_interface.h"
-#include "main/mapEvent.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/light.h"
-#include "main/objanim_internal.h"
 #include "main/objanim_update.h"
-#include "main/objseq.h"
 #include "main/objlib.h"
 #include "main/resource.h"
 
@@ -1151,10 +1146,8 @@ void vfpplatform_update(int obj)
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/anim_internal.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
-#include "main/main.h"
 #include "main/objlib.h"
 #include "main/resource.h"
 
