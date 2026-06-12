@@ -36,41 +36,23 @@ extern int* gameTextGet(int textId);
  */
 
 
-int area_getExtraSize(void) { return 0x0; }
-int area_getObjectTypeId(void) { return 0x0; }
+int area_getExtraSize(void);
+int area_getObjectTypeId(void);
 
-void area_free(void)
-{
-}
+void area_free(void);
 
-void area_render(void)
-{
-}
+void area_render(void);
 
-void area_hitDetect(void)
-{
-}
+void area_hitDetect(void);
 
-void area_update(void)
-{
-}
+void area_update(void);
 
 /* obj->u16_X |= MASK */
-void area_init(u16* obj)
-{
-    u32 v;
-    v = ((GameObject*)obj)->objectFlags;
-    v |= 0xa000;
-    ((GameObject*)obj)->objectFlags = (u16)v;
-}
+void area_init(u16* obj);
 
-void area_release(void)
-{
-}
+void area_release(void);
 
-void area_initialise(void)
-{
-}
+void area_initialise(void);
 
 /* Trivial 4b 0-arg blr leaves. */
 void levelname_free(void)

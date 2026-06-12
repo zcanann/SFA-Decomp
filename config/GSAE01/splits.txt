@@ -1152,9 +1152,11 @@ main/dll/dll_00F4_doorf4.c:
 main/dll/dll_00F5_sidekickball.c:
 	.text       start:0x801793A4 end:0x8017A00C
 
-main/dll/tFrameAnimator.c:
-	.text       start:0x8017A00C end:0x8017A350
-	.data       start:0x80320F98 end:0x80320FD0
+main/dll/dll_00F6_area.c:
+	.text       start:0x8017A00C end:0x8017A048
+
+main/dll/dll_00F8_levelname.c:
+	.text       start:0x8017A048 end:0x8017A350
 
 main/dll/screenOverlay.c:
 	.text       start:0x8017A350 end:0x8017AC2C
