@@ -241,11 +241,11 @@ void WCPushBlock_UpdateRideTilt(WCPushBlockObject* obj, WCPushBlockState* state)
     pitchDelta = targetPitch - (u16)obj->pitch;
     if (pitchDelta > 0x8000)
     {
-        pitchDelta -= 0xffff;
+        pitchDelta = (pitchDelta - 0x10000) + 1;
     }
     if (pitchDelta < -0x8000)
     {
-        pitchDelta += 0xffff;
+        pitchDelta = (pitchDelta + 0x10000) - 1;
     }
 
     obj->pitch = (s16)(lbl_803E5CA8 * ((f32)pitchDelta * timeDelta) + (f32) * (s16*)(int)&obj->pitch);
@@ -253,11 +253,11 @@ void WCPushBlock_UpdateRideTilt(WCPushBlockObject* obj, WCPushBlockState* state)
     rollDelta = targetRoll - (u16)state->pushRoll;
     if (rollDelta > 0x8000)
     {
-        rollDelta -= 0xffff;
+        rollDelta = (rollDelta - 0x10000) + 1;
     }
     if (rollDelta < -0x8000)
     {
-        rollDelta += 0xffff;
+        rollDelta = (rollDelta + 0x10000) - 1;
     }
 
     state->pushRoll =

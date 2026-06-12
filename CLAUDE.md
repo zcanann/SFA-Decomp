@@ -35,12 +35,14 @@ every partial when a new recipe lands):
 
 **FRESH-EYES PROTOCOL for stale banks: re-attack WITHOUT reading the previous
 attempt's negative map.** A documented "probed inert ×N" list anchors the next
-attacker onto the same axes; three banked residuals fell in ONE day to
+attacker onto the same axes; FOUR banked residuals fell in ONE day to
 attackers told only the score and "the playbook may be wrong" (SB_Galleon_func0E
 95.9→100 — the "unproducible at O4" verdict was a wrong axis; SB_ShipGun_update
 99.42→100 — every spelling battery missed that the LOOP-ELEMENT VARIABLE
-IDENTITY was the lever; cfprisonguard's "retail-anomaly, permanently
-unmatchable" census verdict — a dropped argument). Negative maps stay valuable
+IDENTITY was the lever; fn_801EE668 99.87→100 — the "#83 open allocator
+threshold" was a clamp-arithmetic SPELLING, found via the in-repo oracle;
+cfprisonguard's "retail-anomaly, permanently unmatchable" census verdict — a
+dropped argument). Negative maps stay valuable
 for the SAME axis (don't re-run them); the protocol is for finding the axis
 nobody tried: derive the hypothesis from the target asm as if the function were
 new, and only afterwards check the bank for overlap.
@@ -2473,13 +2475,26 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       itself. Arms defining only fresh locals, EMPTY arms, and arms
       containing conversions do NOT flush. Classify the arm contents
       before assuming "if = flush".
+      ⚠️⚠️ AND THEN CRACKED OUTRIGHT (fn_801EE668 99.87→100, unit →
+      100.0; the SAME edit took WCPushBlock_UpdateRideTilt 99.86→100):
+      the ARM'S ARITHMETIC SPELLING flips the allocator between
+      LIFO-recycle and BUMP mode. The 16-bit wraparound clamp written
+      compound (`d -= 0xFFFF;` / `d += 0xFFFF;`) lets the pool recycle
+      at the join; the TWO-OPERATION form `d = (d - 0x10000) + 1;` /
+      `d = (d + 0x10000) - 1;` — same value, and exactly target's
+      `addis rX,rX,-1; addi rX,rX,1` decomposition — keeps the pool in
+      bump mode: every conversion gets a fresh ascending slot, the frame
+      grows to target's, all sp-offset immediates align, clamp
+      instructions unchanged. Found via the in-repo oracle: sibling
+      fn_801BEEA0 (mmsh_waterspike.c) spells its identical angle clamp
+      `(turnDelta - 0x10000) + 1`. When target shows fresh-ascending
+      slots around if-shaped wrap-clamps, try the two-op spelling BEFORE
+      any ternary restructure (the ternary forms pay join taxes this
+      form avoids). The "open #67(c)/#83 threshold" framing of this case
+      is retired.
       Related micro-law from the same dig: MWCC hoists a FIRST-USE FP
       constant load UP past exactly ONE assigned-ternary region (with N
-      consecutive assigned ternaries the lfs lands after ternary N-1) —
-      a no-flush ternary form there hit 280/280 instructions + exact
-      frame with ONLY this 2-lfs hoist left, but objdiff priced the 2
-      transpositions below the baseline's 17 same-slot operand diffs;
-      measure before swapping forms.
+      consecutive assigned ternaries the lfs lands after ternary N-1).
     - So "target slots fresh-ascending but if-shaped clamps sit between
       conversions" => the ORIGINAL spelled those clamps as ternary
       ASSIGNMENTS. Constant-arm nested clamps
