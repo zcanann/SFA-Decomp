@@ -1,3 +1,245 @@
+/* === moved from main/dll/CF/CFtoggleswitch.c [8018BC48-8018BC50) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/CF/CFtoggleswitch.h"
+#include "main/camera_interface.h"
+#include "main/dll/cannon.h"
+#include "main/game_object.h"
+#include "main/mapEventTypes.h"
+#include "main/objanim_internal.h"
+#include "main/objseq.h"
+
+typedef struct TrickyguardspotPlacement
+{
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    s16 unk1E;
+} TrickyguardspotPlacement;
+
+
+typedef struct MagiccavetopPlacement
+{
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s8 unk20;
+    s8 unk21;
+    u8 pad22[0x28 - 0x22];
+} MagiccavetopPlacement;
+
+
+typedef struct MagiccavetopObjectDef
+{
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s8 unk20;
+    s8 unk21;
+    u8 pad22[0x24 - 0x22];
+    s16 unk24;
+    u8 pad26[0x28 - 0x26];
+} MagiccavetopObjectDef;
+
+
+typedef struct MagiccavetopState
+{
+    u8 pad0[0x1 - 0x0];
+    u8 unk1;
+    u8 pad2[0x4 - 0x2];
+    f32 unk4;
+    u8 pad8[0xC - 0x8];
+} MagiccavetopState;
+
+
+extern uint GameBit_Get(int eventId);
+extern undefined4 ObjHits_DisableObject();
+extern int ObjHits_GetPriorityHitWithPosition();
+extern int ObjGroup_FindNearestObject();
+extern int ObjTrigger_IsSet();
+
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern MapEventInterface** gMapEventInterface;
+extern f64 DOUBLE_803e4908;
+extern f32 FLOAT_803dc074;
+extern f32 FLOAT_803dda58;
+extern f32 FLOAT_803dda5c;
+extern f32 FLOAT_803e48b8;
+extern f32 FLOAT_803e48c0;
+extern f32 FLOAT_803e48c4;
+extern f32 FLOAT_803e48c8;
+extern f32 FLOAT_803e48cc;
+extern f32 FLOAT_803e48d0;
+extern f32 FLOAT_803e48d4;
+extern f32 FLOAT_803e48d8;
+extern f32 FLOAT_803e48dc;
+extern f32 FLOAT_803e48e0;
+extern f32 FLOAT_803e48e4;
+extern f32 FLOAT_803e48e8;
+extern f32 FLOAT_803e48ec;
+extern f32 FLOAT_803e48f0;
+extern f32 FLOAT_803e48f4;
+extern f32 FLOAT_803e48f8;
+extern f32 FLOAT_803e48fc;
+extern f32 FLOAT_803e4900;
+extern f32 FLOAT_803e4904;
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8018af28
+ * EN v1.0 Address: 0x8018AF28
+ * EN v1.0 Size: 76b
+ * EN v1.1 Address: 0x8018AF64
+ * EN v1.1 Size: 84b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8018b220
+ * EN v1.0 Address: 0x8018B220
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8018B230
+ * EN v1.1 Size: 228b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8018b224
+ * EN v1.0 Address: 0x8018B224
+ * EN v1.0 Size: 52b
+ * EN v1.1 Address: 0x8018B314
+ * EN v1.1 Size: 52b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
+void trickyguardspot_render(void);
+
+extern int* getTrickyObject(void);
+extern f32 Vec_xzDistance(f32 * a, f32 * b);
+extern void objRenderFn_80041018(int obj);
+extern u8 framesThisStep;
+
+#define TRICKY_GUARD_SPOT_VTABLE(tricky) \
+    (*(TrickyGuardSpotInterfaceVTable **)((tricky)->dll))
+
+void trickyguardspot_update(TrickyGuardSpotObject* obj);
+
+/* 8b "li r3, N; blr" returners. */
+int magiccavetop_getExtraSize(void);
+int trickyguardspot_getExtraSize(void);
+int infotext_getExtraSize(void);
+int cctestinfot_getExtraSize(void);
+int deathgas_getExtraSize(void) { return 0x10; }
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+void trickyguardspot_free(TrickyGuardSpotObject* obj);
+
+extern void objSetHintTextIdx(int obj, int idx);
+
+void trickyguardspot_init(TrickyGuardSpotObject* obj, TrickyGuardSpotPlacement* def);
+
+void infotext_init(int obj, s8* def);
+
+void cctestinfot_init(int obj, s8* def);
+
+extern int playerIsDisguised(void);
+extern void Obj_SetActiveModelIndex(int* obj, int idx);
+extern u8 fn_801334E0(void);
+extern void showHelpText(s16 id);
+extern f32 timeDelta;
+extern f32 lbl_803E3C88;
+extern f32 lbl_803E3C8C;
+
+void cctestinfot_update(int* obj);
+
+extern int* ObjModel_GetRenderOpTextureRefs(int model, int idx);
+extern f32 lbl_803E3C4C;
+
+void magiccavetop_init(int* obj, s8* def);
+
+extern void stopRumble2(void);
+extern void* fn_802966CC(void* player);
+extern void staffSetGlow(void* a, int b, int c);
+extern int mapGetDirIdx(int mapId);
+extern void mapUnload(int idx, int flags);
+
+void magiccavetop_free(int* obj);
+
+extern void envFxActFn_800887f8(int a);
+extern void getEnvfxAct(int* obj, int* target, int id, int p);
+extern void Music_Trigger(int a, int b);
+extern void setAButtonIcon(int idx);
+extern void warpToMap(int mapId, int b);
+
+void magiccavebottom_update(int* obj);
+
+extern f32 lbl_803E3C80;
+extern f32 lbl_803E3C84;
+
+void infotext_update(int obj);
+
+extern int loadMapAndParent(int mapId);
+extern void unlockLevel(int a, int b, int c);
+extern void lockLevel(int idx, int b);
+extern void stopRumble(void);
+extern void doRumble(f32 v);
+extern void Sfx_PlayFromObject(int* obj, int sfxId);
+extern void objfx_spawnArcedBurst(int* obj, int enabled, f32 radius, int particleKind,
+                                  int particleId, int lifetime, f32 sx, f32 sy, f32 sz,
+                                  void* args, int a);
+extern f32 lbl_803E3C30;
+extern f32 lbl_803E3C34;
+extern f32 lbl_803E3C38;
+extern f32 lbl_803E3C3C;
+extern f32 lbl_803E3C40;
+extern f32 lbl_803E3C44;
+extern f32 lbl_803E3C48;
+extern f32 lbl_803E3C50;
+extern f32 lbl_803E3C54;
+extern f32 lbl_803E3C58;
+extern f32 lbl_803E3C5C;
+extern f32 lbl_803E3C60;
+extern f32 lbl_803E3C64;
+extern f32 lbl_803E3C68;
+extern f32 lbl_803E3C6C;
+
+typedef struct MagicCaveTopFxArgs
+{
+    u8 pad[12];
+    f32 x;
+    f32 y;
+    f32 z;
+} MagicCaveTopFxArgs;
+
+void magiccavetop_update(int* obj);
+
 #include "main/audio/sfx_ids.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -8,12 +250,10 @@
 
 
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_RecordObjectHit();
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
@@ -120,35 +360,26 @@ void deathseq_initialise(void)
 {
 }
 
-void dll_127_free_nop(void)
-{
-}
+void dll_127_free_nop(void);
 
-void dll_127_hitDetect_nop(void)
-{
-}
+void dll_127_hitDetect_nop(void);
 
 /* 8b "li r3, N; blr" returners. */
 int fuelcell_getExtraSize(void) { return 0x60; }
 int deathseq_getExtraSize(void) { return 0x24; }
 int deathseq_getObjectTypeId(void) { return 0x0; }
-int dll_127_getExtraSize_ret_0(void) { return 0x0; }
-int dll_127_getObjectTypeId(void) { return 0x13; }
+int dll_127_getExtraSize_ret_0(void);
+int dll_127_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3D60;
 extern void objRenderFn_8003b8f4(f32);
 
-void dll_127_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E3D60);
-}
+void dll_127_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern void setPendingMapLoad(int v);
 extern void removeButtonObject(int* obj);
-extern void* Obj_GetActiveModel(int* obj);
 extern void ObjModel_SetPostRenderCallback(void* model, void* cb);
 extern f32 lbl_803E3CC0;
 extern void mm_free_(void* ptr);
@@ -255,6 +486,7 @@ void fuelcell_free(int* obj)
 
 void fuelcell_init(int* obj)
 {
+    extern void* Obj_GetActiveModel(int* obj);
     ((GameObject*)obj)->animEventCallback = (void*)fuelcell_func0B;
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), (void*)fuelcell_modelMtxFn);
     ObjMsg_AllocQueue(obj, 2);
@@ -279,7 +511,6 @@ void deathgas_free(int* obj)
     }
 }
 
-extern int* Obj_GetPlayerObject(void);
 extern int playerIsDisguised(void);
 extern f32 Vec_distance(void* a, void* b);
 extern void enableHeavyFog(f32 top, f32 bottom, f32 r, f32 g, f32 b, int p6);
@@ -297,6 +528,7 @@ extern f32 lbl_803E3CB4;
 
 void deathgas_update(int* obj)
 {
+    extern int* Obj_GetPlayerObject(void);
     DeathGasSetup* setup = *(DeathGasSetup**)&((GameObject*)obj)->anim.placementData;
     DeathGasState* state = ((GameObject*)obj)->extra;
     int* player;
@@ -393,6 +625,9 @@ extern f32 lbl_803E3D10;
 
 void fuelcell_update(int* obj)
 {
+    extern int* Obj_GetPlayerObject(void);
+    extern undefined4 ObjGroup_AddObject();
+    extern undefined4 GameBit_Set(int eventId, int value);
     FuelcellSetup* setup = *(FuelcellSetup**)&((GameObject*)obj)->anim.placementData;
     FuelcellState* state = ((GameObject*)obj)->extra;
     int* player;
@@ -462,7 +697,6 @@ extern void objfx_spawnDirectionalBurst(int* obj, int idx, f32 scale, int b, int
 extern int ObjModel_GetRenderOp(int model, int idx);
 extern void lightningRender(void* particle);
 extern int getHudHiddenFrameCount(void);
-extern f32 vec3f_distanceSquared(void* a, void* b);
 extern int lightningCreate(float* start, float* end, f32 radiusX, f32 radiusY, int param_5, int param_6, int param_7);
 extern f32 lbl_803E3CC8;
 extern f32 lbl_803E3CCC;
@@ -488,6 +722,8 @@ typedef struct
 #pragma opt_loop_invariants off
 void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
 {
+    extern f32 vec3f_distanceSquared(void* a, void* b);
+    extern void* Obj_GetActiveModel(int* obj);
     int** list;
     u8* slot;
     FuelcellState* state;
@@ -653,6 +889,7 @@ extern f32 lbl_803E3D48;
 
 void deathseq_update(int* obj)
 {
+    extern int* Obj_GetPlayerObject(void);
     s16* cam = Camera_GetCurrentViewSlot();
     DeathSeqState* state = ((GameObject*)obj)->extra;
     int ready;
@@ -774,4 +1011,3 @@ void deathseq_update(int* obj)
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | 0x4000;
     }
 }
-

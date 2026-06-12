@@ -1,3 +1,258 @@
+/* === moved from main/dll/CF/treasureRelated0177.c [8018D6E8-8018D728) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/CF/treasureRelated0177.h"
+#include "main/effect_interfaces.h"
+#include "main/expgfx.h"
+#include "main/game_object.h"
+#include "main/objanim_internal.h"
+#include "main/objhits_types.h"
+#include "main/screen_transition.h"
+
+typedef struct KtTorchPlacement
+{
+    u8 pad0[0x1B - 0x0];
+    u8 unk1B;
+    u8 pad1C[0x20 - 0x1C];
+} KtTorchPlacement;
+
+
+extern void ModelLightStruct_free(void* effect);
+extern u32 GameBit_Get(int bit);
+extern undefined4 ObjHits_ClearHitVolumes();
+extern void queueGlowRender(void* effect);
+extern void* SUB42();
+
+extern ScreenTransitionInterface** gScreenTransitionInterface;
+extern u8 framesThisStep;
+extern f64 DOUBLE_803e4a08;
+extern f32 FLOAT_803dc074;
+extern f32 FLOAT_803e49b0;
+extern f32 FLOAT_803e49b4;
+extern f32 FLOAT_803e49b8;
+extern f32 FLOAT_803e49bc;
+extern f32 FLOAT_803e49c0;
+extern f32 FLOAT_803e49c4;
+extern f32 FLOAT_803e49d0;
+extern f32 FLOAT_803e49dc;
+extern f32 FLOAT_803e49e0;
+extern f32 FLOAT_803e49f0;
+extern f32 FLOAT_803e49fc;
+extern f32 FLOAT_803e4a00;
+extern f32 FLOAT_803e4a10;
+extern f32 FLOAT_803e4a14;
+extern f32 FLOAT_803e4a18;
+extern f32 timeDelta;
+extern f32 lbl_803E3D64;
+extern f32 lbl_803E3D68;
+extern f64 lbl_803E3D70;
+extern f32 lbl_803E3D78;
+extern f32 lbl_803E3DB0;
+extern f32 lbl_803E3DB4;
+extern f64 lbl_803E3DB8;
+
+/*
+ * --INFO--
+ *
+ * Function: dll_127_update
+ * EN v1.0 Address: 0x8018CDAC
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8018CDAC
+ * EN v1.1 Size: 1116b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dll_127_update(int obj);
+
+
+/*
+ * --INFO--
+ *
+ * Function: dll_127_init
+ * EN v1.0 Address: 0x8018CF80
+ * EN v1.0 Size: 228b
+ * EN v1.1 Address: 0x8018D378
+ * EN v1.1 Size: 248b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dll_127_init(short* param_1, int param_2);
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void dll_127_release_nop(void);
+
+void dll_127_initialise_nop(void);
+
+extern int* gSHthorntailAnimationInterface;
+extern void modelLightStruct_setEnabled(int light, int arg, f32 f);
+extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
+extern void fn_80098B18(int obj, f32 scale, int type, int mode, int arg5, f32* vec);
+extern f32 lbl_803E3D7C;
+extern f32 lbl_803E3D80;
+extern f32 lbl_803E3D84;
+
+typedef int (*ThorntailQueryFn)(u8*);
+
+/*
+ * --INFO--
+ *
+ * Function: campfire_update
+ * EN v1.0 Address: 0x8018CFA4
+ * EN v1.0 Size: 556b
+ */
+void campfire_update(int obj);
+
+extern void ObjHitbox_SetCapsuleBounds(int obj, int x, int y, int z);
+extern int objCreateLight(int a, int b);
+extern void modelLightStruct_setLightKind(int h, int v);
+extern void modelLightStruct_setDiffuseColor(int h, int r, int g, int b, int a);
+extern void modelLightStruct_setSpecularColor(int h, int r, int g, int b, int a);
+extern void modelLightStruct_setDistanceAttenuation(int light, f32 min, f32 max);
+extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
+extern void modelLightStruct_startColorFade(int light, int a, int b);
+extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
+extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int c, f32 scale);
+extern void modelLightStruct_setGlowProjectionRadius(int light, f32 v);
+extern f32 lbl_803E3D88;
+extern f32 lbl_803E3D8C;
+extern f32 lbl_803E3D90;
+extern f32 lbl_803E3D94;
+extern f32 lbl_803E3D98;
+
+/*
+ * --INFO--
+ *
+ * Function: campfire_init
+ * EN v1.0 Address: 0x8018D1D0
+ * EN v1.0 Size: 732b
+ */
+void campfire_init(int obj, int p2);
+
+extern f32 lbl_803E3DC0;
+extern f32 lbl_803E3DC4;
+extern f32 lbl_803E3DC8;
+
+/*
+ * --INFO--
+ *
+ * Function: kt_torch_init
+ * EN v1.0 Address: 0x8018D584
+ * EN v1.0 Size: 348b
+ */
+void kt_torch_init(int obj, int p2);
+
+void campfire_free(int obj);
+
+void campfire_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible);
+
+void kt_torch_free(void);
+
+void kt_torch_hitDetect(void);
+
+void kt_torch_release(void);
+
+void kt_torch_initialise(void);
+
+void kt_torch_update(int obj);
+
+/* 8b "li r3, N; blr" returners. */
+int campfire_getExtraSize(void);
+int campfire_getObjectTypeId(void);
+int kt_torch_getExtraSize(void);
+int kt_torch_getObjectTypeId(void);
+int cfccrate_getExtraSize(void) { return 0x4c; }
+int cfccrate_getObjectTypeId(void) { return 0x1; }
+
+void cfccrate_free(int obj)
+{
+    (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+void kt_torch_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+/* === merged from main/dll/CF/dll_179.c [8018D728-8018D8DC) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/CF/dll_179.h"
+#include "main/game_object.h"
+#include "main/dll/CF/CFTreasSharpy.h"
+#include "main/effect_interfaces.h"
+
+extern uint GameBit_Get(int eventId);
+
+extern EffectInterface** gPartfxInterface;
+extern f32 lbl_803E3DD8;
+
+#define PARTFX_SPAWN(obj, fxId, a, b, c, d) \
+  (*gPartfxInterface)->spawnObject((void *)(obj), (fxId), (void *)(a), (b), (c), (void *)(d))
+
+void cfccrate_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+    int objectType;
+    CfCcrateState* state;
+
+    state = ((GameObject*)obj)->extra;
+    if ((s32)visible == 0 || (objectType = ((GameObject*)obj)->anim.seqId) == 0x1b8)
+    {
+        return;
+    }
+    if (visible == 0 || objectType == 0x6bf)
+    {
+        if (GameBit_Get(state->gameBit2) == 0)
+        {
+            return;
+        }
+    }
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3DD8);
+}
+
+int CFCrate_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    CfCcrateState* state;
+    int i;
+
+    state = ((GameObject*)obj)->extra;
+    switch (((GameObject*)obj)->anim.seqId)
+    {
+    case 0x85:
+    case 0x86:
+        break;
+    case 0x8E:
+        break;
+    case 0xAB:
+        break;
+    case 0xAE:
+        break;
+    case 0x10D:
+        break;
+    case 0x409:
+        break;
+    case 0x2B7:
+        if (GameBit_Get(state->gameBit2) != 0)
+        {
+            ((u8*)animUpdate)[0x90] = (u8)(((u8*)animUpdate)[0x90] | 4);
+        }
+        for (i = 0; i < (int)animUpdate->eventCount; i++)
+        {
+            if (animUpdate->eventIds[i] == 1)
+            {
+                PARTFX_SPAWN(obj, 0x44, 0, 2, -1, 0);
+            }
+            animUpdate->eventIds[i] = 0;
+        }
+        break;
+    }
+    return 0;
+}
+
+void cfccrate_hitDetect(void)
+{
+}
+
 #include "main/dll/CF/CFlevelControl.h"
 #include "main/game_object.h"
 #include "main/dll/CF/CFTreasSharpy.h"
@@ -14,15 +269,11 @@ typedef struct CfccratePlacement
 } CfccratePlacement;
 
 
-extern void* Obj_GetPlayerObject(void);
 extern void* Camera_GetCurrentViewSlot(void);
 extern u32 GameBit_Get(int bit);
 extern u32 GameBit_Set(int bit, int value);
-extern void ObjHits_SetHitVolumeSlot(int obj, int p2, int p3, int p4);
 extern int ObjHits_GetPriorityHit(int obj, undefined4* outHit, int* outIdx, u32* outVol);
 extern void Obj_FreeObject(int obj);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int randomGetRange(int lo, int hi);
 extern int objFindTexture(int p1, int p2, int p3);
 extern void getLActions(int p1, int p2, int p3, int p4, int p5, int p6);
 extern float sqrtf(float x);
@@ -57,6 +308,10 @@ extern f64 lbl_803E3E28;
  */
 void cfccrate_update(int obj)
 {
+    extern void Sfx_PlayFromObject(int obj, int sfxId);
+    extern int randomGetRange(int lo, int hi);
+    extern void ObjHits_SetHitVolumeSlot(int obj, int p2, int p3, int p4);
+    extern void* Obj_GetPlayerObject(void);
     CfCcrateState* state; /* r31 = obj->b8 */
     int viewslot; /* r29 = obj->4c */
     int cam;
@@ -248,3 +503,341 @@ void cfccrate_update(int obj)
         }
     }
 }
+
+/* === moved from main/dll/CF/CFTreasSharpy.c [8018E0A4-8018E6C4) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/CF/CFTreasSharpy.h"
+#include "main/dll/CF/dll_179.h"
+#include "main/effect_interfaces.h"
+#include "main/expgfx.h"
+#include "main/game_object.h"
+#include "main/objanim_internal.h"
+#include "main/resource.h"
+
+extern undefined4 FUN_80017a78();
+extern undefined4 FUN_800305f8();
+
+extern u32 GameBit_Get(int bit);
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+
+extern undefined4 gCameraInterface;
+extern f64 DOUBLE_803e4ac0;
+extern f32 FLOAT_803e4a70;
+extern f32 FLOAT_803e4a84;
+extern f32 FLOAT_803e4a8c;
+extern f32 FLOAT_803e4a94;
+extern f32 FLOAT_803e4ac8;
+extern f32 FLOAT_803e4acc;
+extern f32 FLOAT_803e4ad0;
+extern f32 FLOAT_803e4ad4;
+extern f32 FLOAT_803e4ad8;
+extern f32 FLOAT_803e4ae0;
+
+extern void* lbl_803DBDE8;
+extern ModgfxInterface** gModgfxInterface;
+extern EffectInterface** gPartfxInterface;
+extern u8 framesThisStep;
+extern f32 lbl_803E3E48;
+extern char sCFTreasSharpyDebugFormat[];
+extern void fn_80137948(char* fmt, ...);
+
+extern f32 lbl_803E3DD8;
+extern f32 lbl_803E3DEC;
+extern f32 lbl_803E3DF4;
+extern f32 lbl_803E3DFC;
+extern f64 lbl_803E3E28;
+extern f32 lbl_803E3E30;
+extern f32 lbl_803E3E34;
+extern f32 lbl_803E3E38;
+extern f32 lbl_803E3E3C;
+extern f32 lbl_803E3E40;
+
+/*
+ * --INFO--
+ *
+ * Function: cfccrate_init
+ * EN v1.0 Address: 0x8018E0A4
+ * EN v1.0 Size: 1560b
+ */
+void cfccrate_init(int obj, int aux)
+{
+    extern u32 randomGetRange(int min, int max);
+    ObjAnimComponent* objAnim;
+    CfCcrateState* state;
+    short id;
+    f32 zeroF;
+
+    objAnim = (ObjAnimComponent*)obj;
+    id = *(short*)(aux + 0x0);
+    state = ((GameObject*)obj)->extra;
+    zeroF = lbl_803E3DD8;
+    state->unk2C = zeroF;
+
+    switch (id)
+    {
+    case 0x2bb:
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotY = *(short*)(aux + 0x1a);
+        ((GameObject*)obj)->anim.rotZ = *(short*)(aux + 0x1c);
+        ((GameObject*)obj)->anim.rootMotionScale = zeroF;
+        break;
+    case 0x1d0:
+    case 0x1d1:
+    case 0x1d7:
+    case 0x1e6:
+    case 0x201:
+    case 0x23b:
+    case 0x492:
+    case 0x78b:
+    case 0x78c:
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        break;
+    case 0x726:
+        ((GameObject*)obj)->animEventCallback = (void*)CFCrate_SeqFn;
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        break;
+    case 0x71b:
+        state->lingerTimer = *(short*)(aux + 0x1a);
+        break;
+    case 0x6be:
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        state->latch3E = 0;
+        state->gameBit2 = *(short*)(aux + 0x20);
+        break;
+    case 0x828:
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        state->latch3E = 0;
+        state->gameBit2 = *(short*)(aux + 0x20);
+        if ((GameBit_Get(state->gameBit2) != 0) && (state->latch3E == 0))
+        {
+            ((GameObject*)obj)->anim.rotZ = 0x7fff;
+            state->latch3E = 1;
+        }
+        break;
+    case 0x6bf:
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotY = *(short*)(aux + 0x1a);
+        state->gameBit2 = *(short*)(aux + 0x20);
+        break;
+    case 0x708:
+        objAnim->bankIndex = (s8) * (short*)(aux + 0x1a);
+        state->gameBit = *(short*)(aux + 0x20);
+        if (objAnim->bankIndex >= 3)
+        {
+            objAnim->bankIndex = 0;
+        }
+        Obj_SetActiveModelIndex(obj, objAnim->bankIndex);
+        break;
+    case 0x6fc:
+        state->gameBit = *(short*)(aux + 0x20);
+        break;
+    case 0x622:
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        state->gameBit = *(short*)(aux + 0x20);
+        break;
+    case 0x6b4:
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotY = *(short*)(aux + 0x1a);
+        ObjAnim_SetCurrentMove(obj, 0, lbl_803E3E30, 0);
+        break;
+    case 0x66c:
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        state->gameBit = *(short*)(aux + 0x20);
+        break;
+    case 0x216:
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotY = *(short*)(aux + 0x1a);
+        break;
+    case 0x4bf:
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        *(u8*)&objAnim->bankIndex = *(u8*)(aux + 0x19);
+        state->gameBit = *(short*)(aux + 0x20);
+        if (GameBit_Get(state->gameBit) != 0)
+        {
+            ((GameObject*)obj)->anim.localPosY = lbl_803E3DFC + *(f32*)(aux + 0xc);
+        }
+        break;
+    case 0x8e:
+        ((GameObject*)obj)->anim.rotX = 0;
+        ((GameObject*)obj)->anim.rotY = 0;
+        if (*(short*)(aux + 0x1c) >= 0x3e8)
+        {
+            ((GameObject*)obj)->anim.rootMotionScale = zeroF / ((f32)(s32) * (short*)(aux + 0x1c) / lbl_803E3DF4);
+        }
+        else
+        {
+            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3E34;
+        }
+        state->latch3E = 0;
+        state->homeX = *(f32*)(aux + 0x8);
+        state->homeY = *(f32*)(aux + 0xc);
+        state->homeZ = *(f32*)(aux + 0x10);
+        state->oscPosA = state->oscPosB = lbl_803E3E30;
+        state->unk28 = lbl_803E3DF4;
+        state->unk20 = lbl_803E3E38;
+        state->oscVelA = state->oscVelB = lbl_803E3DEC;
+        ((GameObject*)obj)->anim.rotZ = 0;
+        ((GameObject*)obj)->animEventCallback = (void*)CFCrate_SeqFn;
+        break;
+    case 0x7de:
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rotY = 0;
+        if (*(short*)(aux + 0x1c) >= 0x3e8)
+        {
+            ((GameObject*)obj)->anim.rootMotionScale = zeroF / ((f32)(s32) * (short*)(aux + 0x1c) / lbl_803E3DF4);
+        }
+        else
+        {
+            ((GameObject*)obj)->anim.rootMotionScale = zeroF;
+        }
+        state->oscVelB = (f32)(s32) * (short*)(aux + 0x1a);
+        state->gameBit = *(short*)(aux + 0x20);
+        if (GameBit_Get(state->gameBit) != 0)
+        {
+            state->oscVelB = state->oscVelB * lbl_803E3E3C;
+        }
+        break;
+    case 0xd7:
+        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
+        ((GameObject*)obj)->anim.rootMotionScale = zeroF;
+        state->latch3E = 0;
+        state->homeX = *(f32*)(aux + 0x8);
+        state->homeY = *(f32*)(aux + 0xc);
+        state->homeZ = *(f32*)(aux + 0x10);
+        state->oscVelA = state->oscVelB = state->unk20 = state->unk28 = state->oscPosA = state->oscPosB = lbl_803E3E30;
+        ((GameObject*)obj)->animEventCallback = (void*)CFCrate_SeqFn;
+        break;
+    case 0x125:
+        ((GameObject*)obj)->anim.rotX = 0;
+        ((GameObject*)obj)->anim.rotY = 0;
+        ((GameObject*)obj)->anim.rotZ = 0;
+        ((GameObject*)obj)->anim.rootMotionScale = zeroF;
+        ((GameObject*)obj)->unkF4 = 0;
+        ((GameObject*)obj)->unkF8 = 0;
+        state->oscVelB = lbl_803E3E40;
+        state->oscVelA = lbl_803E3DEC;
+        state->unk32 = 0;
+        state->unk34 = (short)randomGetRange(0x3e8, 0x1388);
+        state->proximityLatch = 1;
+        ((GameObject*)obj)->animEventCallback = (void*)CFCrate_SeqFn;
+        break;
+    case 0x10d:
+        *(int*)&((GameObject*)obj)->anim.hitReactState = 0;
+        if (*(short*)(aux + 0x1a) == 0)
+        {
+            state->sfxTable = (u16*)&lbl_803DBDE8;
+            state->sfxCount = 1;
+        }
+        state->sfxPeriod = (u16) * (short*)(aux + 0x1c);
+        state->sfxTimer = (short)state->sfxPeriod;
+        break;
+    }
+}
+
+typedef struct CFTreasSharpyFxSpawnArgs
+{
+    s16 yaw;
+    s16 pitch;
+    s16 roll;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} CFTreasSharpyFxSpawnArgs;
+
+#define CFTREAS_PARTFX_SPAWN(obj, id, data, flags, model, arg) \
+    (*gPartfxInterface)->spawnObject((void *)(obj), id, data, flags, model, (void *)(arg))
+
+void fxemit_emitEffect(FxEmitObject* obj);
+
+#undef CFTREAS_PARTFX_SPAWN
+
+int fxemit_SeqFn(FxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+
+/*
+ * --INFO--
+ *
+ * Function: cfccrate_release
+ * EN v1.0 Address: 0x8018E6BC
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8018E69C
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void cfccrate_release(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: cfccrate_initialise
+ * EN v1.0 Address: 0x8018E6C0
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8018E6A0
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void cfccrate_initialise(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fxemit_getExtraSize
+ * EN v1.0 Address: 0x8018EC20
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x8018ED50
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int fxemit_getExtraSize(void);
+
+/*
+ * --INFO--
+ *
+ * Function: fxemit_getObjectTypeId
+ * EN v1.0 Address: 0x8018EC28
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x8018ED58
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int fxemit_getObjectTypeId(void);
+
+void fxemit_free(FxEmitObject* obj);
+
+/*
+ * --INFO--
+ *
+ * Function: fxemit_hitDetect
+ * EN v1.0 Address: 0x8018EC90
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8018EDC0
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fxemit_hitDetect(void);
+
+void fxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+extern f32 timeDelta;
+extern f32 sqrtf(f32);
+extern f32 lbl_803E3E4C;
+
+void fxemit_update(FxEmitObject* obj);

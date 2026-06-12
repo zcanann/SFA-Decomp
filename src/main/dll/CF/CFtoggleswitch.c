@@ -1,3 +1,127 @@
+/* === moved from main/dll/CF/dll_166.c [8018ADB4-8018ADF0) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/CF/dll_166.h"
+#include "main/dll/CF/dll_165.h"
+#include "main/game_object.h"
+#include "main/objanim.h"
+#include "main/objhits.h"
+#include "main/objseq.h"
+#include "main/resource.h"
+
+extern uint GameBit_Get(int eventId);
+extern void* Obj_GetPlayerObject(void);
+extern int ObjGroup_FindNearestObject(int group, int obj, f32* maxDistance);
+extern void fn_802967E0(void* obj, int enabled);
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+
+typedef struct ChestHitParams
+{
+    u32 a;
+    u32 b;
+    u32 c;
+    u32 d;
+} ChestHitParams;
+
+typedef struct ChestFlags
+{
+    u8 open : 1;
+    u8 trigger : 1;
+} ChestFlags;
+
+typedef struct ChestHitBlock
+{
+    ChestHitParams params;
+    u16 a;
+    u16 b;
+    u16 c;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z[1];
+} ChestHitBlock;
+
+extern ChestHitParams lbl_802C22B0;
+extern void* lbl_803DDAE0;
+extern int lbl_803DDAE4;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803E3C20;
+extern f32 lbl_803E3C28;
+extern f32 lbl_803E3C2C;
+
+/*
+ * --INFO--
+ *
+ * Function: treasurechest_update
+ * EN v1.0 Address: 0x8018AA60
+ * EN v1.0 Size: 632b
+ * EN v1.1 Address: 0x8018AA94
+ * EN v1.1 Size: 896b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void treasurechest_update(int obj);
+
+/*
+ * --INFO--
+ *
+ * Function: treasurechest_release
+ * EN v1.0 Address: 0x8018ADB4
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8018AF9C
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void treasurechest_release(void);
+
+/*
+ * --INFO--
+ *
+ * Function: treasurechest_initialise
+ * EN v1.0 Address: 0x8018ADB8
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8018AFA0
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void treasurechest_initialise(void);
+
+/*
+ * --INFO--
+ *
+ * Function: magiccavebottom_getExtraSize
+ * EN v1.0 Address: 0x8018ADBC
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x8018AFA4
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int magiccavebottom_getExtraSize(void)
+{
+    return 1;
+}
+
+void magiccavebottom_free(int obj)
+{
+    extern void Music_Trigger(s32 triggerId, s32 mode);
+    extern void GameBit_Set(int eventId, int value);
+    (void)obj;
+    GameBit_Set(0xefb, 0);
+    Music_Trigger(0x2f, 0);
+}
+
+void treasurechest_init(int* obj);
+
 #include "main/dll/CF/CFtoggleswitch.h"
 #include "main/camera_interface.h"
 #include "main/dll/cannon.h"
@@ -52,8 +176,6 @@ typedef struct MagiccavetopState
 
 
 extern uint GameBit_Get(int eventId);
-extern undefined8 GameBit_Set(int eventId, int value);
-extern undefined4 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern int ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
@@ -153,6 +275,7 @@ extern u8 framesThisStep;
 
 void trickyguardspot_update(TrickyGuardSpotObject* obj)
 {
+    extern undefined8 GameBit_Set(int eventId, int value);
     u8* sub;
     u8* def;
     ObjAnimComponent* tricky;
@@ -204,7 +327,7 @@ int magiccavetop_getExtraSize(void) { return 0xc; }
 int trickyguardspot_getExtraSize(void) { return 0x8; }
 int infotext_getExtraSize(void) { return 0x4; }
 int cctestinfot_getExtraSize(void) { return 0x8; }
-int deathgas_getExtraSize(void) { return 0x10; }
+int deathgas_getExtraSize(void);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 void trickyguardspot_free(TrickyGuardSpotObject* obj) { ObjGroup_RemoveObject(obj, TRICKY_GUARD_SPOT_GROUP); }
@@ -350,12 +473,13 @@ void magiccavetop_free(int* obj)
 
 extern void envFxActFn_800887f8(int a);
 extern void getEnvfxAct(int* obj, int* target, int id, int p);
-extern void Music_Trigger(int a, int b);
 extern void setAButtonIcon(int idx);
 extern void warpToMap(int mapId, int b);
 
 void magiccavebottom_update(int* obj)
 {
+    extern void Music_Trigger(int a, int b);
+    extern undefined8 GameBit_Set(int eventId, int value);
     u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
     u8* sub = ((GameObject*)obj)->extra;
 
@@ -476,6 +600,7 @@ typedef struct MagicCaveTopFxArgs
 
 void magiccavetop_update(int* obj)
 {
+    extern undefined8 GameBit_Set(int eventId, int value);
     MagicCaveTopFxArgs fx;
     int* player;
     u8* sub;

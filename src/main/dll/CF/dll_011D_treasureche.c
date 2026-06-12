@@ -1,3 +1,164 @@
+/* === moved from main/dll/CF/dll_165.c [8018A8BC-8018AA60) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/CF/dll_165.h"
+#include "main/dll/CF/dll_163.h"
+#include "main/game_ui_interface.h"
+#include "main/game_object.h"
+#include "main/objanim.h"
+#include "main/objhits_types.h"
+#include "main/resource.h"
+
+extern uint GameBit_Get(int eventId);
+extern void ObjHits_DisableObject(int obj);
+extern void ObjGroup_AddObject(int obj, int group);
+extern void ObjHitbox_SetSphereRadius(int obj, int radius);
+extern f32 mathSinf(f32 angle);
+extern f32 mathCosf(f32 angle);
+
+extern f32 lbl_803E3BBC;
+extern f32 lbl_803E3BF4;
+extern f32 lbl_803E3BF8;
+extern f32 lbl_803E3C08;
+extern f32 lbl_803E3C0C;
+extern f32 lbl_803E3C10;
+extern f32 lbl_803E3C14;
+extern f32 lbl_803E3C18;
+extern f64 lbl_803E3BD0;
+
+STATIC_ASSERT(sizeof(TreasureChestSetup) == 0x24);
+STATIC_ASSERT(offsetof(TreasureChestSetup, type) == 0x18);
+STATIC_ASSERT(offsetof(TreasureChestSetup, hitboxKind) == 0x19);
+STATIC_ASSERT(offsetof(TreasureChestSetup, triggerObjectId) == 0x1a);
+STATIC_ASSERT(offsetof(TreasureChestSetup, dialogueId) == 0x1c);
+STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
+
+typedef struct
+{
+    u8 b7 : 1;
+    u8 b6 : 1;
+    u8 b5 : 1;
+    u8 b4 : 1;
+    u8 rest : 4;
+} StaffFlags;
+
+/*
+ * --INFO--
+ *
+ * Function: staffactivated_init
+ * EN v1.0 Address: 0x8018A53C
+ * EN v1.0 Size: 684b
+ * EN v1.1 Address: 0x8018A7DC
+ * EN v1.1 Size: 696b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void staffactivated_init(int obj, int setup);
+
+/*
+ * --INFO--
+ *
+ * Function: treasurechest_SeqFn
+ * EN v1.0 Address: 0x8018A8BC
+ * EN v1.0 Size: 248b
+ */
+int treasurechest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    int i;
+    TreasureChestSetup * setup;
+    u8* state;
+    u8 eventId;
+
+    setup = (TreasureChestSetup*)((GameObject*)obj)->anim.placementData;
+    state = ((GameObject*)obj)->extra;
+    i = 0;
+    while (i < animUpdate->eventCount)
+    {
+        eventId = animUpdate->eventIds[i];
+        switch (eventId)
+        {
+        case 1:
+            if (setup->dialogueId != 0)
+            {
+                (*gGameUIInterface)->showNpcDialogue(setup->dialogueId, 0xc8, 0x8c, 0);
+            }
+            break;
+        case 2:
+            ((StaffFlags*)state)->b5 = 1;
+            break;
+        case 3:
+            ((StaffFlags*)state)->b5 = 0;
+            break;
+        case 4:
+            ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
+            ObjHits_DisableObject(obj);
+            break;
+        }
+        i++;
+    }
+    return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: treasurechest_getExtraSize
+ * EN v1.0 Address: 0x8018A9B4
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x8018ABD4
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int treasurechest_getExtraSize(void)
+{
+    return 1;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: treasurechest_getObjectTypeId
+ * EN v1.0 Address: 0x8018A9BC
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x8018ABDC
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int treasurechest_getObjectTypeId(void)
+{
+    return 0;
+}
+
+/* render-with-fn(lbl) (no visibility check). */
+extern f32 lbl_803E3C20;
+extern void objRenderFn_8003b8f4(f32);
+void treasurechest_render(void) { objRenderFn_8003b8f4(lbl_803E3C20); }
+
+extern void* lbl_803DDAE0;
+void treasurechest_free(void) { Resource_Release(lbl_803DDAE0); }
+
+extern f32 lbl_803E3C24;
+extern void hitDetectFn_80097070(f32 radius, int obj, int a, int b, int c, int d);
+
+void treasurechest_hitDetect(int obj)
+{
+    u8* state;
+    TreasureChestSetup * setup;
+
+    setup = (TreasureChestSetup*)((GameObject*)obj)->anim.placementData;
+    state = ((GameObject*)obj)->extra;
+    if (((u32)state[0] >> 5 & 1) != 0)
+    {
+        hitDetectFn_80097070(lbl_803E3C24, obj, 2, (u8)(setup->hitboxKind + 6), 4, 0);
+    }
+}
+
 #include "main/dll/CF/dll_166.h"
 #include "main/dll/CF/dll_165.h"
 #include "main/game_object.h"
@@ -7,7 +168,6 @@
 #include "main/resource.h"
 
 extern uint GameBit_Get(int eventId);
-extern void GameBit_Set(int eventId, int value);
 extern void* Obj_GetPlayerObject(void);
 extern void ObjHits_DisableObject(int obj);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32* maxDistance);
@@ -65,6 +225,7 @@ extern f32 lbl_803E3C2C;
  */
 void treasurechest_update(int obj)
 {
+    extern void GameBit_Set(int eventId, int value);
     ChestFlags* flags;
     TreasureChestSetup* setup;
     uint iVar2;
@@ -180,17 +341,9 @@ void treasurechest_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int magiccavebottom_getExtraSize(void)
-{
-    return 1;
-}
+int magiccavebottom_getExtraSize(void);
 
-void magiccavebottom_free(int obj)
-{
-    (void)obj;
-    GameBit_Set(0xefb, 0);
-    Music_Trigger(0x2f, 0);
-}
+void magiccavebottom_free(int obj);
 
 void treasurechest_init(int* obj)
 {

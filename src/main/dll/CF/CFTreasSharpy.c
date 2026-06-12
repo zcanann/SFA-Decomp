@@ -52,179 +52,7 @@ extern f32 lbl_803E3E40;
  * EN v1.0 Address: 0x8018E0A4
  * EN v1.0 Size: 1560b
  */
-void cfccrate_init(int obj, int aux)
-{
-    ObjAnimComponent* objAnim;
-    CfCcrateState* state;
-    short id;
-    f32 zeroF;
-
-    objAnim = (ObjAnimComponent*)obj;
-    id = *(short*)(aux + 0x0);
-    state = ((GameObject*)obj)->extra;
-    zeroF = lbl_803E3DD8;
-    state->unk2C = zeroF;
-
-    switch (id)
-    {
-    case 0x2bb:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
-        ((GameObject*)obj)->anim.rotY = *(short*)(aux + 0x1a);
-        ((GameObject*)obj)->anim.rotZ = *(short*)(aux + 0x1c);
-        ((GameObject*)obj)->anim.rootMotionScale = zeroF;
-        break;
-    case 0x1d0:
-    case 0x1d1:
-    case 0x1d7:
-    case 0x1e6:
-    case 0x201:
-    case 0x23b:
-    case 0x492:
-    case 0x78b:
-    case 0x78c:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
-        break;
-    case 0x726:
-        ((GameObject*)obj)->animEventCallback = (void*)CFCrate_SeqFn;
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
-        break;
-    case 0x71b:
-        state->lingerTimer = *(short*)(aux + 0x1a);
-        break;
-    case 0x6be:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
-        state->latch3E = 0;
-        state->gameBit2 = *(short*)(aux + 0x20);
-        break;
-    case 0x828:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
-        state->latch3E = 0;
-        state->gameBit2 = *(short*)(aux + 0x20);
-        if ((GameBit_Get(state->gameBit2) != 0) && (state->latch3E == 0))
-        {
-            ((GameObject*)obj)->anim.rotZ = 0x7fff;
-            state->latch3E = 1;
-        }
-        break;
-    case 0x6bf:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
-        ((GameObject*)obj)->anim.rotY = *(short*)(aux + 0x1a);
-        state->gameBit2 = *(short*)(aux + 0x20);
-        break;
-    case 0x708:
-        objAnim->bankIndex = (s8) * (short*)(aux + 0x1a);
-        state->gameBit = *(short*)(aux + 0x20);
-        if (objAnim->bankIndex >= 3)
-        {
-            objAnim->bankIndex = 0;
-        }
-        Obj_SetActiveModelIndex(obj, objAnim->bankIndex);
-        break;
-    case 0x6fc:
-        state->gameBit = *(short*)(aux + 0x20);
-        break;
-    case 0x622:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
-        state->gameBit = *(short*)(aux + 0x20);
-        break;
-    case 0x6b4:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
-        ((GameObject*)obj)->anim.rotY = *(short*)(aux + 0x1a);
-        ObjAnim_SetCurrentMove(obj, 0, lbl_803E3E30, 0);
-        break;
-    case 0x66c:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
-        state->gameBit = *(short*)(aux + 0x20);
-        break;
-    case 0x216:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
-        ((GameObject*)obj)->anim.rotY = *(short*)(aux + 0x1a);
-        break;
-    case 0x4bf:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
-        *(u8*)&objAnim->bankIndex = *(u8*)(aux + 0x19);
-        state->gameBit = *(short*)(aux + 0x20);
-        if (GameBit_Get(state->gameBit) != 0)
-        {
-            ((GameObject*)obj)->anim.localPosY = lbl_803E3DFC + *(f32*)(aux + 0xc);
-        }
-        break;
-    case 0x8e:
-        ((GameObject*)obj)->anim.rotX = 0;
-        ((GameObject*)obj)->anim.rotY = 0;
-        if (*(short*)(aux + 0x1c) >= 0x3e8)
-        {
-            ((GameObject*)obj)->anim.rootMotionScale = zeroF / ((f32)(s32) * (short*)(aux + 0x1c) / lbl_803E3DF4);
-        }
-        else
-        {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3E34;
-        }
-        state->latch3E = 0;
-        state->homeX = *(f32*)(aux + 0x8);
-        state->homeY = *(f32*)(aux + 0xc);
-        state->homeZ = *(f32*)(aux + 0x10);
-        state->oscPosA = state->oscPosB = lbl_803E3E30;
-        state->unk28 = lbl_803E3DF4;
-        state->unk20 = lbl_803E3E38;
-        state->oscVelA = state->oscVelB = lbl_803E3DEC;
-        ((GameObject*)obj)->anim.rotZ = 0;
-        ((GameObject*)obj)->animEventCallback = (void*)CFCrate_SeqFn;
-        break;
-    case 0x7de:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
-        ((GameObject*)obj)->anim.rotY = 0;
-        if (*(short*)(aux + 0x1c) >= 0x3e8)
-        {
-            ((GameObject*)obj)->anim.rootMotionScale = zeroF / ((f32)(s32) * (short*)(aux + 0x1c) / lbl_803E3DF4);
-        }
-        else
-        {
-            ((GameObject*)obj)->anim.rootMotionScale = zeroF;
-        }
-        state->oscVelB = (f32)(s32) * (short*)(aux + 0x1a);
-        state->gameBit = *(short*)(aux + 0x20);
-        if (GameBit_Get(state->gameBit) != 0)
-        {
-            state->oscVelB = state->oscVelB * lbl_803E3E3C;
-        }
-        break;
-    case 0xd7:
-        ((GameObject*)obj)->anim.rotX = (short)((s8) * (u8*)(aux + 0x18) << 8);
-        ((GameObject*)obj)->anim.rootMotionScale = zeroF;
-        state->latch3E = 0;
-        state->homeX = *(f32*)(aux + 0x8);
-        state->homeY = *(f32*)(aux + 0xc);
-        state->homeZ = *(f32*)(aux + 0x10);
-        state->oscVelA = state->oscVelB = state->unk20 = state->unk28 = state->oscPosA = state->oscPosB = lbl_803E3E30;
-        ((GameObject*)obj)->animEventCallback = (void*)CFCrate_SeqFn;
-        break;
-    case 0x125:
-        ((GameObject*)obj)->anim.rotX = 0;
-        ((GameObject*)obj)->anim.rotY = 0;
-        ((GameObject*)obj)->anim.rotZ = 0;
-        ((GameObject*)obj)->anim.rootMotionScale = zeroF;
-        ((GameObject*)obj)->unkF4 = 0;
-        ((GameObject*)obj)->unkF8 = 0;
-        state->oscVelB = lbl_803E3E40;
-        state->oscVelA = lbl_803E3DEC;
-        state->unk32 = 0;
-        state->unk34 = (short)randomGetRange(0x3e8, 0x1388);
-        state->proximityLatch = 1;
-        ((GameObject*)obj)->animEventCallback = (void*)CFCrate_SeqFn;
-        break;
-    case 0x10d:
-        *(int*)&((GameObject*)obj)->anim.hitReactState = 0;
-        if (*(short*)(aux + 0x1a) == 0)
-        {
-            state->sfxTable = (u16*)&lbl_803DBDE8;
-            state->sfxCount = 1;
-        }
-        state->sfxPeriod = (u16) * (short*)(aux + 0x1c);
-        state->sfxTimer = (short)state->sfxPeriod;
-        break;
-    }
-}
+void cfccrate_init(int obj, int aux);
 
 typedef struct CFTreasSharpyFxSpawnArgs
 {
@@ -473,9 +301,7 @@ int fxemit_SeqFn(FxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void cfccrate_release(void)
-{
-}
+void cfccrate_release(void);
 
 /*
  * --INFO--
@@ -490,9 +316,7 @@ void cfccrate_release(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void cfccrate_initialise(void)
-{
-}
+void cfccrate_initialise(void);
 
 /*
  * --INFO--
@@ -557,12 +381,12 @@ void fxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (vis
 
 extern f32 timeDelta;
 extern f32 sqrtf(f32);
-extern ObjAnimComponent* Obj_GetPlayerObject(void);
 extern int Sfx_PlayFromObject(int obj, int sfx);
 extern f32 lbl_803E3E4C;
 
 void fxemit_update(FxEmitObject* obj)
 {
+    extern ObjAnimComponent* Obj_GetPlayerObject(void);
     FxEmitState* state;
     FxEmitPlacement* def;
     ObjAnimComponent* player;
@@ -687,3 +511,426 @@ void fxemit_update(FxEmitObject* obj)
         }
     }
 }
+
+/* === moved from main/dll/CF/CFchuckobj.c [8018EFE0-8018F148) (TU re-split, docs/boundary_audit.md) === */
+#include "main/asset_load.h"
+#include "main/dll/CF/CFchuckobj.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/effect_interfaces.h"
+#include "main/expgfx.h"
+#include "main/game_object.h"
+#include "main/dll/CF/CFTreasSharpy.h"
+#include "main/dll/CF/warp_pad.h"
+#include "main/objseq.h"
+#include "main/resource.h"
+
+typedef struct WarpPadPlayerStandingOnPlacement
+{
+    u8 pad0[0x20 - 0x0];
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} WarpPadPlayerStandingOnPlacement;
+
+
+extern undefined4 FUN_80006b0c();
+extern undefined4 FUN_80006b14();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
+extern undefined4 FUN_80017748();
+extern void vecRotateZXY(s16 * in, f32 * out);
+extern u32 randomGetRange(int min, int max);
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern void Obj_FreeObject(int obj);
+extern int ObjTrigger_IsSet();
+extern f32 Vec_xzDistance(f32 * posA, f32 * posB);
+extern f32 vec3f_distanceSquared(f32 * posA, f32 * posB);
+extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
+                                  int particleId, int lifetime, f32 scaleX, f32 scaleY,
+                                  f32 scaleZ, void* args, int arg9);
+extern int Curve_AdvanceAlongPath(int curve, f32 progress);
+extern void* mmAlloc(int size, int heap, int flags);
+extern undefined8 FUN_8028683c();
+extern undefined4 FUN_80286888();
+extern f32 sqrtf(f32 value);
+
+extern EffectInterface** gPartfxInterface;
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern u8 lbl_803DCDE0;
+extern s16 lbl_803DCEB8;
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern f64 DOUBLE_803e4af8;
+extern f32 FLOAT_803e4b00;
+extern f32 lbl_803E3E50;
+extern f32 lbl_803E3E68;
+extern f32 lbl_803E3E6C;
+extern f32 lbl_803E3E70;
+extern f32 lbl_803E3E78;
+extern f32 lbl_803E3E7C;
+extern f32 lbl_803E3E80;
+extern f32 lbl_803E3E84;
+extern f32 lbl_803E3E88;
+extern f32 lbl_803E3E98;
+extern f32 lbl_803E3E9C;
+extern f32 lbl_803E3EA0;
+extern f32 lbl_803E3EA4;
+extern f32 lbl_803E3EA8;
+extern f32 lbl_803E3EAC;
+extern f32 lbl_803E3EB0;
+extern f32 lbl_803E3EB4;
+extern f32 lbl_803E3EB8;
+extern f32 lbl_803E3EBC;
+extern f32 lbl_803E3EC0;
+extern f32 lbl_803E3EC4;
+extern f32 lbl_803E3EC8;
+extern f32 lbl_803E3ECC;
+extern f32 lbl_803E3ED0;
+extern f32 lbl_803E3EE0;
+
+extern void setAButtonIcon(int iconId);
+
+/*
+ * --INFO--
+ *
+ * Function: fxemit_init
+ * EN v1.0 Address: 0x8018EFE0
+ * EN v1.0 Size: 376b
+ * EN v1.1 Address: 0x8018F020
+ * EN v1.1 Size: 400b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
+{
+    FxEmitState* state;
+
+    obj->objAnim.rotX = 0;
+    obj->seqCallback = fxemit_SeqFn;
+    state = obj->state;
+
+    state->triggerRadius = (f32)((s32)setup->triggerRadius << 2);
+    state->effectMode = setup->effectMode;
+    state->effectId = setup->effectId;
+    state->emitCount = setup->emitCount;
+    obj->objAnim.rootMotionScale = lbl_803E3E50;
+    state->enableBit = setup->enableBit;
+    state->stopBit = setup->stopBit;
+    state->suppressed = 0;
+
+    if (state->emitCount < 1)
+    {
+        obj->emitCooldown = state->emitCount;
+    }
+    else
+    {
+        obj->emitCooldown = 0;
+    }
+
+    if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0)
+    {
+        state->suppressed = 1;
+    }
+
+    obj->objAnim.rotX = (s16)(setup->initialYaw << 8);
+    obj->objAnim.rotY = (s16)(setup->initialPitch << 8);
+    obj->objAnim.rotZ = (s16)(setup->initialRoll << 8);
+    state->sfxTimer = (s16)(setup->sfxPeriod * 100);
+    state->initialX = obj->objAnim.localPosX;
+    state->startDelay = (s16)randomGetRange(0, 10);
+    state->altEffectId = 0;
+}
+
+#pragma dont_inline on
+void areafxemit_emitBurst(AreaFxEmitObject* obj, int count);
+#pragma dont_inline reset
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8018f158
+ * EN v1.0 Address: 0x8018F158
+ * EN v1.0 Size: 92b
+ * EN v1.1 Address: 0x8018F1B0
+ * EN v1.1 Size: 100b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8018f4fc
+ * EN v1.0 Address: 0x8018F4FC
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8018F55C
+ * EN v1.1 Size: 360b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8018f500
+ * EN v1.0 Address: 0x8018F500
+ * EN v1.0 Size: 336b
+ * EN v1.1 Address: 0x8018F6C4
+ * EN v1.1 Size: 400b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8018f650
+ * EN v1.0 Address: 0x8018F650
+ * EN v1.0 Size: 1620b
+ * EN v1.1 Address: 0x8018F854
+ * EN v1.1 Size: 2220b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void FUN_8018f650(void);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8018fd14
+ * EN v1.0 Address: 0x8018FD14
+ * EN v1.0 Size: 52b
+ * EN v1.1 Address: 0x8019018C
+ * EN v1.1 Size: 64b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8018fd48
+ * EN v1.0 Address: 0x8018FD48
+ * EN v1.0 Size: 380b
+ * EN v1.1 Address: 0x801901CC
+ * EN v1.1 Size: 392b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8018fec4
+ * EN v1.0 Address: 0x8018FEC4
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80190354
+ * EN v1.1 Size: 368b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8018ffbc
+ * EN v1.0 Address: 0x8018FFBC
+ * EN v1.0 Size: 72b
+ * EN v1.1 Address: 0x801905C8
+ * EN v1.1 Size: 80b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_80190004
+ * EN v1.0 Address: 0x80190004
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80190618
+ * EN v1.1 Size: 580b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_80190008
+ * EN v1.0 Address: 0x80190008
+ * EN v1.0 Size: 320b
+ * EN v1.1 Address: 0x8019085C
+ * EN v1.1 Size: 332b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: warpPadFn_8019042c
+ * EN v1.0 Address: 0x80190148
+ * EN v1.0 Size: 1148b
+ * EN v1.1 Address: 0x801909A8
+ * EN v1.1 Size: 1376b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+void warpPadFn_8019042c(int obj);
+
+/* Drift-recovery: add new fns with v1.0 names. */
+extern u8 lbl_803AC7B0[];
+extern void mm_free(void* p);
+
+
+typedef struct CFEmitterFxArgs
+{
+    u32 unk0;
+    u32 unk4;
+    f32 scale;
+    f32 pos[3];
+} CFEmitterFxArgs;
+
+#define CF_EMITTER_RANDOMIZE_OFFSET(state, pos)               \
+    do {                                                      \
+        u16 range;                                            \
+        range = (state)->extentX;                      \
+        (pos)[0] = (f32)(s32)randomGetRange(-range, range);   \
+        range = (state)->extentY;                      \
+        (pos)[1] = (f32)(s32)randomGetRange(-range, range);   \
+        range = (state)->extentZ;                      \
+        (pos)[2] = (f32)(s32)randomGetRange(-range, range);   \
+    } while (0)
+
+#define CF_EMITTER_SPAWN_PARTFX(obj, effectId, args, flags, modelId, arg6) \
+    (*gPartfxInterface)->spawnObject((void *)(obj), (effectId), (args), (flags), (modelId), \
+        (void *)(arg6))
+
+#define CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, args)            \
+    do {                                                          \
+        rot[0] = (state)->emitAngles[0];                         \
+        rot[1] = (state)->emitAngles[1];                         \
+        rot[2] = (state)->emitAngles[2];                         \
+        if ((obj)->objAnim.parent != NULL) {                      \
+            rot[2] += ((ObjAnimComponent *)(obj)->objAnim.parent)->rotZ; \
+        }                                                         \
+        vecRotateZXY(rot, (args)->pos);                        \
+    } while (0)
+
+#define CF_EMITTER_ADD_OBJECT_POSITION(obj, args)                 \
+    do {                                                          \
+        (args)->pos[0] += (obj)->objAnim.localPosX;               \
+        (args)->pos[1] += (obj)->objAnim.localPosY;               \
+        (args)->pos[2] += (obj)->objAnim.localPosZ;               \
+    } while (0)
+
+void areafxemit_emitEffect(AreaFxEmitObject* obj);
+
+int areafxemit_SeqFn(AreaFxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+
+void areafxemit_update(AreaFxEmitObject* obj);
+
+void areafxemit_init(AreaFxEmitObject* obj, AreaFxEmitPlacement* setup);
+
+void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup);
+
+int lfxemitter_setScale(void);
+
+void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void lfxemitter_initialise(void);
+
+int lfxemitter_func0B(LfxEmitterObject* obj);
+
+void fn_8018FF48(undefined2* src, undefined2* dst);
+
+void lfxemitter_update(LfxEmitterObject* obj);
+
+void warpPadPlayerStandingOn(int obj);
+
+void areafxemit_free(AreaFxEmitObject* obj);
+
+void lfxemitter_free(LfxEmitterObject* obj);
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fxemit_release(void)
+{
+}
+
+void fxemit_initialise(void)
+{
+}
+
+void areafxemit_hitDetect(void);
+
+void areafxemit_release(void);
+
+void areafxemit_initialise(void);
+
+void lfxemitter_render(void);
+
+void lfxemitter_hitDetect(void);
+
+void lfxemitter_release(void);
+
+/* 8b "li r3, N; blr" returners. */
+int areafxemit_getExtraSize(void);
+int areafxemit_getObjectTypeId(void);
+int lfxemitter_getExtraSize(void);
+int lfxemitter_getObjectTypeId(void);

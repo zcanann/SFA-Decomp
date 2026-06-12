@@ -89,45 +89,7 @@ extern void setAButtonIcon(int iconId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup)
-{
-    FxEmitState* state;
-
-    obj->objAnim.rotX = 0;
-    obj->seqCallback = fxemit_SeqFn;
-    state = obj->state;
-
-    state->triggerRadius = (f32)((s32)setup->triggerRadius << 2);
-    state->effectMode = setup->effectMode;
-    state->effectId = setup->effectId;
-    state->emitCount = setup->emitCount;
-    obj->objAnim.rootMotionScale = lbl_803E3E50;
-    state->enableBit = setup->enableBit;
-    state->stopBit = setup->stopBit;
-    state->suppressed = 0;
-
-    if (state->emitCount < 1)
-    {
-        obj->emitCooldown = state->emitCount;
-    }
-    else
-    {
-        obj->emitCooldown = 0;
-    }
-
-    if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0)
-    {
-        state->suppressed = 1;
-    }
-
-    obj->objAnim.rotX = (s16)(setup->initialYaw << 8);
-    obj->objAnim.rotY = (s16)(setup->initialPitch << 8);
-    obj->objAnim.rotZ = (s16)(setup->initialRoll << 8);
-    state->sfxTimer = (s16)(setup->sfxPeriod * 100);
-    state->initialX = obj->objAnim.localPosX;
-    state->startDelay = (s16)randomGetRange(0, 10);
-    state->altEffectId = 0;
-}
+void fxemit_init(FxEmitObject* obj, FxEmitPlacement* setup);
 
 #pragma dont_inline on
 void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
@@ -1283,13 +1245,9 @@ void lfxemitter_free(LfxEmitterObject* obj)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fxemit_release(void)
-{
-}
+void fxemit_release(void);
 
-void fxemit_initialise(void)
-{
-}
+void fxemit_initialise(void);
 
 void areafxemit_hitDetect(void)
 {
