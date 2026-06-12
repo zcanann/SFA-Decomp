@@ -5,130 +5,6 @@
 extern u32 randomGetRange(int min, int max);
 
 extern ModgfxInterface** gModgfxInterface;
-extern u8 lbl_80314E08[];
-extern f32 lbl_803E0D88;
-extern f32 lbl_803E0D8C;
-extern f32 lbl_803E0D90;
-extern f32 lbl_803E0D94;
-extern f32 lbl_803E0D98;
-extern f32 lbl_803E0D9C;
-extern f32 lbl_803E0DA0;
-extern f32 lbl_803E0DA4;
-extern f32 lbl_803E0DA8;
-extern f32 lbl_803E0DAC;
-extern f32 lbl_803E0DB0;
-extern f32 lbl_803E0DB4;
-extern f32 lbl_803E0DB8;
-extern f32 lbl_803E0DBC;
-extern f32 lbl_803E0DC0;
-extern f32 lbl_803E0DC4;
-extern f32 lbl_803E0DC8;
-extern f32 lbl_803E0DCC;
-extern f32 lbl_803E0DD0;
-extern u8 lbl_80315030[];
-extern int lbl_803DD4B0;
-extern f32 lbl_803E0DD8;
-extern f32 lbl_803E0DDC;
-extern f32 lbl_803E0DE0;
-extern f32 lbl_803E0DE4;
-extern f32 lbl_803E0DE8;
-extern f32 lbl_803E0DEC;
-extern f32 lbl_803E0DF0;
-extern f32 lbl_803E0DF4;
-extern f32 lbl_803E0DF8;
-extern u8 lbl_80315258[];
-extern u8 lbl_803DB8E0;
-extern f32 lbl_803E0E00;
-extern f32 lbl_803E0E04;
-extern f32 lbl_803E0E08;
-extern f32 lbl_803E0E0C;
-extern f32 lbl_803E0E10;
-extern f32 lbl_803E0E14;
-extern f32 lbl_803E0E18;
-extern f32 lbl_803E0E1C;
-extern u8 lbl_80315328[];
-extern u8 lbl_803DB8E8;
-extern f32 lbl_803E0E20;
-extern f32 lbl_803E0E24;
-extern f32 lbl_803E0E28;
-extern f32 lbl_803E0E2C;
-extern f32 lbl_803E0E30;
-extern f32 lbl_803E0E34;
-extern f32 lbl_803E0E38;
-extern f32 lbl_803E0E3C;
-extern f32 lbl_803E0E40;
-extern f32 lbl_803E0E44;
-extern f32 lbl_803E0E48;
-extern f32 lbl_803E0E4C;
-extern f32 lbl_803E0E50;
-extern f32 lbl_803E0E54;
-extern u8 lbl_80315548[];
-extern f32 lbl_803E0E78;
-extern f32 lbl_803E0E7C;
-extern f32 lbl_803E0E80;
-extern f32 lbl_803E0E84;
-extern f32 lbl_803E0E88;
-extern f32 lbl_803E0E8C;
-extern f32 lbl_803E0E90;
-extern f32 lbl_803E0E94;
-extern f32 lbl_803E0E98;
-extern f32 lbl_803E0E9C;
-extern f32 lbl_803E0EA0;
-extern f32 lbl_803E0EA4;
-extern f32 lbl_803E0EA8;
-extern u8 lbl_80315770[];
-extern f32 lbl_803E0EB0;
-extern f32 lbl_803E0EB4;
-extern f32 lbl_803E0EB8;
-extern f32 lbl_803E0EBC;
-extern f32 lbl_803E0EC0;
-extern f32 lbl_803E0EC4;
-extern f32 lbl_803E0EC8;
-extern f32 lbl_803E0ECC;
-extern f32 lbl_803E0ED0;
-extern f32 lbl_803E0ED8;
-extern f32 lbl_803E0EDC;
-extern f32 lbl_803E0EE0;
-extern f32 lbl_803E0EE4;
-extern f32 lbl_803E0EE8;
-extern f32 lbl_803E0EEC;
-extern f32 lbl_803E0EF0;
-extern f32 lbl_803E0EF4;
-extern f32 lbl_803E0EF8;
-extern f32 lbl_803E0EFC;
-extern f32 lbl_803E0F00;
-extern f32 lbl_803E0F04;
-extern f32 lbl_803E0F08;
-extern f32 lbl_803E0F0C;
-extern f32 lbl_803E0F10;
-extern f32 lbl_803E0F14;
-extern f32 lbl_803E0F18;
-extern u8 lbl_80315998[];
-extern u8 lbl_80315CA8[];
-extern f32 lbl_803E0F20;
-extern f32 lbl_803E0F24;
-extern f32 lbl_803E0F28;
-extern f32 lbl_803E0F2C;
-extern f32 lbl_803E0F30;
-extern f32 lbl_803E0F34;
-extern f32 lbl_803E0F38;
-extern f32 lbl_803E0F3C;
-extern f32 lbl_803E0F40;
-extern f32 lbl_803E0F44;
-extern f32 lbl_803E0F48;
-extern f32 lbl_803E0F4C;
-extern f32 lbl_803E0F50;
-extern f32 lbl_803E0F54;
-extern f32 lbl_803E0F58;
-extern f32 lbl_803E0F5C;
-extern f32 lbl_803E0F60;
-extern f32 lbl_803E0F64;
-extern f32 lbl_803E0F68;
-extern f32 lbl_803E0F6C;
-extern u8 lbl_80316650[];
-extern f32 lbl_803E1050;
-extern f32 lbl_803E1054;
-extern f32 lbl_803E1058;
 extern u8 lbl_80316020[];
 extern f32 lbl_803E0FB0;
 extern f32 lbl_803E0FB4;
@@ -141,156 +17,6 @@ extern f32 lbl_803E0FCC;
 extern f32 lbl_803E0FD0;
 extern f32 lbl_803E0FD4;
 extern f32 lbl_803E0FD8;
-extern u8 lbl_80316E30[];
-extern u8 lbl_803DB920;
-extern f32 lbl_803E11A0;
-extern f32 lbl_803E11A4;
-extern f32 lbl_803E11A8;
-extern f32 lbl_803E11AC;
-extern f32 lbl_803E11B0;
-extern f32 lbl_803E11B4;
-extern f32 lbl_803E11B8;
-extern f32 lbl_803E11BC;
-extern f32 lbl_803E11C0;
-extern f32 lbl_803E11C4;
-extern f32 lbl_803E11C8;
-extern f32 lbl_803E11CC;
-extern f32 lbl_803E11D0;
-extern f32 lbl_803E11D4;
-extern u8 lbl_80316950[];
-extern f32 lbl_803E10B0;
-extern f32 lbl_803E10B4;
-extern f32 lbl_803E10B8;
-extern f32 lbl_803E10BC;
-extern f32 lbl_803E10C0;
-extern f32 lbl_803E10C4;
-extern f32 lbl_803E10C8;
-extern f32 lbl_803E10CC;
-extern f32 lbl_803E10D0;
-extern f32 lbl_803E10D4;
-extern u8 lbl_80316728[];
-extern f32 lbl_803E1060;
-extern f32 lbl_803E1064;
-extern f32 lbl_803E1068;
-extern f32 lbl_803E106C;
-extern f32 lbl_803E1070;
-extern f32 lbl_803E1074;
-extern f32 lbl_803E1078;
-extern f32 lbl_803E107C;
-extern f32 lbl_803E1080;
-extern f32 lbl_803E1084;
-extern f32 lbl_803E1088;
-extern f32 lbl_803E108C;
-extern f32 lbl_803E1090;
-extern f32 lbl_803E1094;
-extern f32 lbl_803E1098;
-extern f32 lbl_803E109C;
-extern f32 lbl_803E10A0;
-extern f32 lbl_803E10A4;
-extern u8 lbl_80315FA8[];
-extern u8 lbl_803DB8F0;
-extern u8 lbl_803DB8F4;
-extern u8 lbl_803DB8FC;
-extern f32 lbl_803E0F70;
-extern f32 lbl_803E0F74;
-extern f32 lbl_803E0F78;
-extern f32 lbl_803E0F7C;
-extern f32 lbl_803E0F80;
-extern f32 lbl_803E0F84;
-extern f32 lbl_803E0F88;
-extern f32 lbl_803E0F8C;
-extern f32 lbl_803E0F90;
-extern f32 lbl_803E0F94;
-extern f32 lbl_803E0F98;
-extern f32 lbl_803E0F9C;
-extern f32 lbl_803E0FA0;
-extern u8 lbl_80316C60[];
-extern u8 lbl_80316C40[];
-extern u8 lbl_803DB918;
-extern u8 lbl_803DB910;
-extern f32 lbl_803E1138;
-extern f32 lbl_803E113C;
-extern f32 lbl_803E1140;
-extern f32 lbl_803E1144;
-extern f32 lbl_803E1148;
-extern f32 lbl_803E114C;
-extern f32 lbl_803E1150;
-extern f32 lbl_803E1154;
-extern f32 lbl_803E1158;
-extern f32 lbl_803E115C;
-extern f32 lbl_803E1160;
-extern f32 lbl_803E1164;
-extern f32 lbl_803E1168;
-extern f32 lbl_803E116C;
-extern u8 lbl_80316B60[];
-extern f32 lbl_803E10E0;
-extern f32 lbl_803E10E4;
-extern f32 lbl_803E10E8;
-extern f32 lbl_803E10EC;
-extern f32 lbl_803E10F0;
-extern f32 lbl_803E10F4;
-extern f32 lbl_803E10F8;
-extern f32 lbl_803E10FC;
-extern f32 lbl_803E1100;
-extern f32 lbl_803E1104;
-extern f32 lbl_803E1108;
-extern f32 lbl_803E110C;
-extern f32 lbl_803E1110;
-extern f32 lbl_803E1114;
-extern f32 lbl_803E1118;
-extern f32 lbl_803E111C;
-extern f32 lbl_803E1120;
-extern f32 lbl_803E1124;
-extern f32 lbl_803E1128;
-extern u8 lbl_80315468[];
-extern u8 lbl_80316240[];
-extern f32 lbl_803E1010;
-extern f32 lbl_803E1014;
-extern f32 lbl_803E1018;
-extern f32 lbl_803E101C;
-extern f32 lbl_803E1020;
-extern f32 lbl_803E1024;
-extern u8 lbl_80316460[];
-extern u8 lbl_803DB908;
-extern f32 lbl_803E1028;
-extern f32 lbl_803E102C;
-extern f32 lbl_803E1030;
-extern f32 lbl_803E1034;
-extern f32 lbl_803E1038;
-extern f32 lbl_803E103C;
-extern f32 lbl_803E1040;
-extern f32 lbl_803E1044;
-extern f32 lbl_803E1048;
-extern u8 lbl_80316050[];
-extern u8 lbl_803DB900;
-extern f32 lbl_803E0FE8;
-extern f32 lbl_803E0FEC;
-extern f32 lbl_803E0FF0;
-extern f32 lbl_803E0FF4;
-extern f32 lbl_803E0FF8;
-extern f32 lbl_803E0FFC;
-extern f32 lbl_803E1000;
-extern f32 lbl_803E1004;
-extern f32 lbl_803E1008;
-extern u8 lbl_80316C90[];
-extern f32 lbl_803E1178;
-extern f32 lbl_803E117C;
-extern f32 lbl_803E1180;
-extern f32 lbl_803E1184;
-extern f32 lbl_803E1188;
-extern f32 lbl_803E118C;
-extern f32 lbl_803E1190;
-extern f32 lbl_803E1194;
-extern f32 lbl_803E1198;
-extern f32 lbl_803E119C;
-extern f32 lbl_803E0E58;
-extern f32 lbl_803E0E5C;
-extern f32 lbl_803E0E60;
-extern f32 lbl_803E0E64;
-extern f32 lbl_803E0E68;
-extern f32 lbl_803E0E6C;
-extern f32 lbl_803E0E70;
-extern f32 lbl_803E0E74;
 
 typedef struct
 {
@@ -333,7 +59,6 @@ typedef struct
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_7C_func03(int sourceObj, int variant, int posSource, uint flags);
 
 /*
  * --INFO--
@@ -348,7 +73,6 @@ void dll_7C_func03(int sourceObj, int variant, int posSource, uint flags);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dll_7D_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5, f32* arg6);
 
 /*
  * --INFO--
@@ -363,7 +87,6 @@ int dll_7D_func03(int sourceObj, int variant, int posSource, uint flags, undefin
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_7E_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5, f32* arg6 );
 
 /*
  * --INFO--
@@ -378,7 +101,6 @@ void dll_7E_func03(int sourceObj, int variant, int posSource, uint flags, undefi
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_7F_func03(int sourceObj, int variant, int posSource, uint flags);
 
 /*
  * --INFO--
@@ -393,7 +115,6 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, uint flags);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_80_func03(int sourceObj, int variant, int posSource, uint flags);
 
 /*
  * --INFO--
@@ -408,7 +129,6 @@ void dll_80_func03(int sourceObj, int variant, int posSource, uint flags);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_81_func03(int sourceObj, int variant, int posSource, uint flags);
 
 /*
  * --INFO--
@@ -423,7 +143,6 @@ void dll_81_func03(int sourceObj, int variant, int posSource, uint flags);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_82_func03(int sourceObj, int variant, int posSource, uint flags);
 
 /*
  * --INFO--
@@ -438,7 +157,6 @@ void dll_82_func03(int sourceObj, int variant, int posSource, uint flags);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_83_func03(int sourceObj, int variant, int posSource, uint flags);
 
 /*
  * --INFO--
@@ -453,7 +171,6 @@ void dll_83_func03(int sourceObj, int variant, int posSource, uint flags);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_84_func03(int sourceObj, int variant, int posSource, uint flags);
 
 /*
  * --INFO--
@@ -468,7 +185,6 @@ void dll_84_func03(int sourceObj, int variant, int posSource, uint flags);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_85_func03(int sourceObj, int variant, int posSource, uint flags);
 
 /*
  * --INFO--
@@ -632,7 +348,6 @@ void dll_87_func03(int sourceObj, int variant, int posSource, uint flags);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_88_func03(int sourceObj, int variant, int posSource, uint flags);
 
 /*
  * --INFO--
@@ -647,7 +362,6 @@ void dll_88_func03(int sourceObj, int variant, int posSource, uint flags);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_89_func03(int sourceObj, int variant, int posSource, uint flags);
 
 /*
  * --INFO--
@@ -662,7 +376,6 @@ void dll_89_func03(int sourceObj, int variant, int posSource, uint flags);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_8A_func03(int sourceObj, int variant, int posSource, uint flags);
 
 /*
  * --INFO--
@@ -677,7 +390,6 @@ void dll_8A_func03(int sourceObj, int variant, int posSource, uint flags);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_8B_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5, f32* arg6);
 
 /*
  * --INFO--
@@ -692,7 +404,6 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, uint flags, undefi
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_8C_func03(int sourceObj, int variant, int posSource, uint flags);
 
 /*
  * --INFO--
@@ -707,7 +418,6 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, uint flags);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags);
 
 /*
  * --INFO--
@@ -722,7 +432,6 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, uint flags);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_8E_func03(int sourceObj, int variant, int posSource, uint flags);
 
 /*
  * --INFO--
@@ -737,7 +446,6 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, uint flags);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_8F_func03(int sourceObj, int variant, int posSource, uint flags);
 
 /*
  * --INFO--
@@ -752,49 +460,28 @@ void dll_8F_func03(int sourceObj, int variant, int posSource, uint flags);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_90_func03(int sourceObj, int variant, int posSource, uint flags);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void dll_7C_func01_nop(void);
 
-void dll_7C_func00_nop(void);
 
-void dll_7D_func01_nop(void);
 
-void dll_7D_func00_nop(void);
 
-void dll_7E_func01_nop(void);
 
-void dll_7E_func00_nop(void);
 
-void dll_7F_func01_nop(void);
 
-void dll_7F_func00_nop(void);
 
-void dll_80_func01_nop(void);
 
-void dll_80_func00_nop(void);
 
-void dll_81_func01_nop(void);
 
-void dll_81_func00_nop(void);
 
-void dll_82_func01_nop(void);
 
-void dll_82_func00_nop(void);
 
-void dll_83_func01_nop(void);
 
-void dll_83_func00_nop(void);
 
-void dll_84_func01_nop(void);
 
-void dll_84_func00_nop(void);
 
-void dll_85_func01_nop(void);
 
-void dll_85_func00_nop(void);
 
 void dll_86_func01_nop(void)
 {
@@ -806,40 +493,21 @@ void dll_86_func00_nop(void)
 
 void dll_87_func01_nop(void);
 
-void dll_87_func00_nop(void);
 
-void dll_88_func01_nop(void);
 
-void dll_88_func00_nop(void);
 
-void dll_89_func01_nop(void);
 
-void dll_89_func00_nop(void);
 
-void dll_8A_func01_nop(void);
 
-void dll_8A_func00_nop(void);
 
-void dll_8B_func01_nop(void);
 
-void dll_8B_func00_nop(void);
 
-void dll_8C_func01_nop(void);
 
-void dll_8C_func00_nop(void);
 
-void dll_8D_func01_nop(void);
 
-void dll_8D_func00_nop(void);
 
-void dll_8E_func01_nop(void);
 
-void dll_8E_func00_nop(void);
 
-void dll_8F_func01_nop(void);
 
-void dll_8F_func00_nop(void);
 
-void dll_90_func01_nop(void);
 
-void dll_90_func00_nop(void);
