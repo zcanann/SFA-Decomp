@@ -295,7 +295,6 @@ void dimcannon_initialise(void)
 
 extern void objRenderFn_8003b8f4(f32 x);
 extern f32 lbl_803E48E8;
-extern f32 lbl_803E48F8;
 
 void dimcannon_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -321,25 +320,13 @@ void dimcannon_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void dimlavasmash_free(void);
 
-void dimlavasmash_hitDetect(void);
 
-void dimlavasmash_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void dimlavasmash_update(int* obj);
 
 /* 8b "li r3, N; blr" returners. */
-int dimlavasmash_getExtraSize(void);
-int dimlavasmash_getObjectTypeId(void);
 
 /* if (o->_X == K) return A; else return B; */
 
-typedef struct DimlavasmashPlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} DimlavasmashPlacement;
 
 
 typedef struct DimcannonPlacement
@@ -367,19 +354,6 @@ typedef struct DimcannonState
 } DimcannonState;
 
 
-typedef struct DimlavasmashState
-{
-    u8 pad0[0x1 - 0x0];
-    u8 unk1;
-    u8 state;
-    u8 pad3[0x7 - 0x3];
-    u8 unk7;
-    u8 pad8[0x9 - 0x8];
-    s8 unk9;
-    s8 unkA;
-    s8 unkB;
-    u8 padC[0x10 - 0xC];
-} DimlavasmashState;
 
 
 /* dimcannon extra block (0xb4); the head is the per-cannonball column
@@ -400,18 +374,11 @@ int dimcannon_getObjectTypeId(int* obj)
 
 extern int ObjHits_GetPriorityHit(int obj, int* out, int* a, int* b);
 extern void Sfx_PlayFromObject(int obj, int sfx);
-extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
-extern int mapBlockFn_800606ec(int arg1, int idx);
-extern int mapBlockFn_80060678(void);
-extern int fn_8006070C(int arg1, int idx);
-extern int Shader_getLayer(int layer, int idx);
 
 #pragma dont_inline on
 /* Toggle collision/render surface flags for matching block polys and layers. */
-void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3);
 #pragma dont_inline reset
 
-int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 extern void* lbl_803DDB50;
 
@@ -895,14 +862,6 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 
 
 
-typedef struct DimlavasmashObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-} DimlavasmashObjectDef;
 
 
 
@@ -924,19 +883,15 @@ typedef struct DimlavasmashObjectDef
  * PAL Size: TODO
  */
 
-void dimlavasmash_init(s16* obj, s8* def);
 
 /* Trivial 4b 0-arg blr leaves. */
-void dimlavasmash_release(void);
-
-void dimlavasmash_initialise(void);
 
 
 
 
 
 
-extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
+
 
 
 extern unsigned long GameBit_Set(int eventId, int value);

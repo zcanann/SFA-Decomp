@@ -20,8 +20,6 @@ extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjPath_GetPointWorldPosition();
 extern int FUN_8003964c();
 extern undefined4 FUN_8011e800();
 extern undefined4 FUN_8011e844();
@@ -283,15 +281,11 @@ void FUN_801b2550(undefined8 param_1, undefined8 param_2, double param_3, undefi
 #pragma peephole off
 void dimcannon_hitDetect(void);
 
-void dimcannon_release(void);
 
-void dimcannon_initialise(void);
 
 extern void objRenderFn_8003b8f4(f32 x);
-extern f32 lbl_803E48E8;
 extern f32 lbl_803E48F8;
 
-void dimcannon_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 void dimlavasmash_free(void)
 {
@@ -346,29 +340,8 @@ typedef struct DimlavasmashPlacement
 } DimlavasmashPlacement;
 
 
-typedef struct DimcannonPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    u8 pad20[0x26 - 0x20];
-    s16 unk26;
-    s8 unk28;
-    u8 pad29[0x30 - 0x29];
-} DimcannonPlacement;
 
 
-typedef struct DimcannonState
-{
-    u8 pad0[0x7 - 0x0];
-    u8 unk7;
-    u8 pad8[0x9 - 0x8];
-    s8 unk9;
-    s8 unkA;
-    s8 unkB;
-    u8 padC[0x10 - 0xC];
-} DimcannonState;
 
 
 typedef struct DimlavasmashState
@@ -390,9 +363,7 @@ typedef struct DimlavasmashState
  * arrays walked via state + i*4 (kept raw), this names the scalar tail. */
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 
-int dimcannon_getExtraSize(int* obj);
 
-int dimcannon_getObjectTypeId(int* obj);
 
 extern int ObjHits_GetPriorityHit(int obj, int* out, int* a, int* b);
 extern void Sfx_PlayFromObject(int obj, int sfx);
@@ -492,60 +463,21 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 extern void* lbl_803DDB50;
 
-void dimcannon_free(int* obj);
 
-extern void ObjMsg_AllocQueue(int* obj, int n);
-extern int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate);
-extern f32 lbl_803E48B8;
 
 /* EN v1.0 0x801B30C8  size: 628b  Dimcannon constructor: handles the 0x1d6
  * sub-variant, else seeds the 10-slot trail particle array, installs the
  * sequence fn, acquires its model resource and applies map flags. */
-void dimcannon_init(int* obj, int* arg);
 
-extern void DIMwooddoor_updateFallingDebris(int* obj);
-extern void DIMwooddoor_updateShardAim(int* obj, f32 a, f32 b, f32 c, f32 d);
-extern void DIMwooddoor_spawnShard(int* obj, int p2);
-extern f32 getXZDistance(f32 * a, f32 * b);
-extern void* fn_802972A8(void* player);
-extern void buttonDisable(int chan, int mask);
-extern u8 framesThisStep;
-extern f32 timeDelta;
-extern int lbl_803DBF10;
-extern int lbl_803DBF0C;
-extern f32 lbl_803E48EC;
-extern f32 lbl_803E48F0;
-extern f32 lbl_803DBEF4;
 
 /* EN v1.0 0x801B2C68  size: 1120b  Dimcannon per-frame state machine: idle ->
  * tracking -> firing -> spent, plus the 0x1d6 falling-debris sub-variant. */
-void dimcannon_update(int* obj);
 
-extern void setAButtonIcon(int icon);
-extern void setBButtonIcon(int icon);
-extern void hudFn_8011f38c(int v);
-extern s16* objModelGetVecFn_800395d8(int* obj, int p2);
-extern s8 padGetStickX(int chan);
-extern int fn_80296A14(void* player);
-extern void playerAddRemoveMagic(void* player, int amount);
-extern u32 getButtonsJustPressed(int chan);
-extern u32 getButtonsHeld(int chan);
-extern u32 getButtonsJustPressedIfNotBusy(int chan);
-extern int Sfx_IsPlayingFromObjectChannel(int* obj, int channel);
-extern void Sfx_StopObjectChannel(int* obj, int channel);
-extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
 
-extern u8 lbl_803DBF00;
-extern s16 lbl_803DBF02;
-extern s16 lbl_803DBF04;
-extern f32 lbl_803DBF08;
-extern f32 lbl_803DBEF8;
-extern f32 lbl_803DBEFC;
 
 /* EN v1.0 0x801B2550  size: 1504b  Dimcannon manned-control sequence: aims the
  * turret with the stick, charges with A, fires on release/full charge, and
  * exits on B or after the post-completion delay. */
-int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate);
 
 /* === moved from main/dll/DIM/DIM2conveyor.c [801B3658-801B3768) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/DIM/DIMlevcontrol.h"
