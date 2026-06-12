@@ -2441,7 +2441,9 @@ addend lands mid-function (not at a symbol boundary) before adding a range.
     SINGLE-use value or an expression operand outside arg lists.
     (modellight setSpecularAttenuation probes, task #163.)
     **SAFETY: NEVER flip the callee's DEFINITION — cast at the CALL SITE
-    only.** Flipping modelWalkAnimFn_800248b8's def regressed the callee
+    only.** The fn-ptr cast also preserves caller-side u8-RETURN masking
+    when a same-TU DEFINITION conflicts with a donor's u8 extern after a
+    TU merge (sc_totempuzzle_checkSolvedSequence, re-split campaign). Flipping modelWalkAnimFn_800248b8's def regressed the callee
     230 instrs (param homing order matters in the body); the
     fn-pointer-cast call form gets the caller win with zero callee risk.
     **Cross-caller arbitration: when 3+ other call sites agree on an arg
@@ -4830,6 +4832,16 @@ session, every carve byte-exact first try. (alpha-35, task #134.)
   file that already exists (e.g. 8020C9CC's worldplanet/crcloudrace slivers). To
   preserve a caller's `bl` when caller+callee land in one TU, **append the merged
   fns AFTER the sliver defs** (source order ⇒ MWCC can't inline upward).
+  ⚠️ SIZE CORRECTION (re-split campaign): fns up to ~0x100 bytes DO get
+  auto-inlined — apply helper-last placement for ANY newly co-resident
+  callee, not just small leaves (dll_010C: two 0x100B helpers inlined into
+  LanternFireFly_update, 100→65.86, caught by the conservation gate;
+  helper-after-caller restored 100.0).
+- **MWCC ERRORS (not warns) on implicit int→pointer args in PROTOTYPED
+  calls** — drift code compiles only because its externs are UNPROTOTYPED.
+  When merging TUs, keep the donor's unprototyped extern forms (or cast at
+  call sites); with that understood, #57 block-scope overrides are often
+  unnecessary.
 - **DROP dead v1.1 `FUN_xxx` phantoms during the carve** (unreferenced, not in
   symbols.txt ⇒ objdiff never scored them). Conservation-neutral, gives clean real
   files. 800066E0 shed 236.
@@ -5229,6 +5241,19 @@ WM = Krazoa Palace). Verified facts + offsets (v1.0 USA):
 Use for: naming units/objects from retail truth, cut-content checks
 (zero romlist placements), MapData field verification, and unit-boundary
 audits (descriptor fns straddling a file boundary = wrong split).
+THE TU MODEL (boundary-audit campaign, validated on descriptor-carved
+units): a DLL's descriptor fns sit in REVERSE slot order ascending
+(getExtraSize lowest → initialise highest); the DLL's TU spans
+(previous DLL's initialise end)..(own initialise end); helpers precede
+their own descriptor fns. Tools: `tools/dll_boundary_audit.py`
+(--census / --map LO HI --syms / --md) + the full 132-cut table in
+docs/boundary_audit.md (audit found 132 of 653 DLLs cut by unit
+boundaries across 129 container files; 5 carved so far, see the doc's
+status section for the deferred campaign: sandwormBoss 10-DLL container,
+ARWarwingattachment 8 WM DLLs, modgfx micro-units, CAM lane).
+NonMatching boundary moves are dol-safe BY CONSTRUCTION (dtk re-splits
+on splits.txt edits; the link stayed byte-identical across all five
+carves) — the conservation gate, not the dol, is what catches mistakes.
 
 ### MP4 as a "what C makes this asm?" oracle
 
