@@ -6,6 +6,7 @@
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/objhits.h"
 
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006824();
@@ -17,7 +18,6 @@ extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a5c();
 extern void* FUN_80017aa4();
 extern uint FUN_80017ae8();
-extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_8014ccb8();
 extern void enemy_free(double param_1, double param_2, ushort* param_3, int param_4, uint param_5,
                        char param_6);
