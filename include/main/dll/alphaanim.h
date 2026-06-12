@@ -75,7 +75,7 @@ void seqObj2_init(short *param_1,int param_2);
 int seqobj2_SeqFn(int *obj, int *anim, ObjAnimUpdateState *animUpdate);
 
 int doorlock_getExtraSize(void);
-void doorlock_free(void);
+void doorlock_free(int x);
 void doorlock_render(void);
 void doorlock_update(void);
 
