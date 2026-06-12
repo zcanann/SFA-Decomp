@@ -288,7 +288,7 @@ LAB_80102ab4:
 
 int Camera_isZooming(void)
 {
-    return CAMCONTROL_CAMERA->zoomDistance > lbl_803E1630;
+    return CAMCONTROL_CAMERA->blendProgress > lbl_803E1630;
 }
 
 void Camera_setTargetReticleOverride(int target)
@@ -405,7 +405,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType, int actionNo, int trigge
     case CAMCONTROL_TRIGGER_KIND_QUEUE_TYPE1:
         triggerType1Param.actionIndex = actionNo & CAMCONTROL_ACTION_INDEX_MASK;
         triggerType1Param.noBlendFlag = actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND;
-        CAMCONTROL_CAMERA->triggerType1Pending = 1;
+        CAMCONTROL_CAMERA->blendCurveMode = 1;
         if (triggerType1Param.noBlendFlag != 0)
         {
             blendFrames = 0;
@@ -772,7 +772,7 @@ void Camera_init(void* focus, f32 x, f32 y, f32 z)
     CAMCONTROL_CAMERA->prevWorldY = y;
     CAMCONTROL_CAMERA->prevWorldZ = z;
     CAMCONTROL_CAMERA->focusObj = focus;
-    CAMCONTROL_CAMERA->focusHeight = lbl_803E1684;
+    CAMCONTROL_CAMERA->fovY = lbl_803E1684;
     gCamcontrolTargetState = CAMCONTROL_TARGET_RETICLE_STATE_INACTIVE;
 }
 

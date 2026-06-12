@@ -70,7 +70,10 @@ typedef struct CameraViewSlot {
 } CameraViewSlot;
 
 typedef struct CamcontrolCameraState {
-  u8 pad00[0x0C];
+  s16 yaw;
+  s16 pitch;
+  s16 roll;
+  u8 pad06[0x0C - 0x06];
   f32 localX;
   f32 localY;
   f32 localZ;
@@ -84,7 +87,7 @@ typedef struct CamcontrolCameraState {
   f32 prevLocalX;
   f32 prevLocalY;
   f32 prevLocalZ;
-  f32 focusHeight;
+  f32 fovY;
   f32 prevWorldX;
   f32 prevWorldY;
   f32 prevWorldZ;
@@ -93,8 +96,19 @@ typedef struct CamcontrolCameraState {
   f32 overrideWorldY;
   f32 overrideWorldZ;
   u8 padE8[0xF4 - 0xE8];
-  f32 zoomDistance;
-  u8 padF8[0x11C - 0xF8];
+  f32 blendProgress;
+  f32 blendStep;
+  u8 padFC[0x100 - 0xFC];
+  s16 blendDeltaYaw;
+  s16 blendDeltaPitch;
+  s16 blendDeltaRoll;
+  s16 blendStartYaw;
+  s16 blendStartPitch;
+  s16 blendStartRoll;
+  f32 blendStartX;
+  f32 blendStartY;
+  f32 blendStartZ;
+  f32 blendStartFovY;
   int overrideTarget;
   int targetReticleOverride;
   int currentTarget;
@@ -102,16 +116,39 @@ typedef struct CamcontrolCameraState {
   u8 pad12C[0x134 - 0x12C];
   f32 targetDistance;
   u8 targetKind;
-  u8 triggerType1Pending;
-  u8 pad13A[0x13D - 0x13A];
+  u8 blendCurveMode;
+  u8 pad13A;
+  s8 letterboxTargetOffset;
+  s8 letterboxStep;
   u8 overrideWorldPosPending;
-  u8 pad13E[0x140 - 0x13E];
+  u8 pad13E;
+  u8 queuedBlendFlags;
   u8 frameFlags;
   u8 targetFlags;
-  u8 pad142[0x144 - 0x142];
+  u8 pad142;
+  u8 smoothingFlags;
 } CamcontrolCameraState;
 
 STATIC_ASSERT(sizeof(CamcontrolCameraState) == 0x144);
+STATIC_ASSERT(offsetof(CamcontrolCameraState, localX) == 0x0C);
+STATIC_ASSERT(offsetof(CamcontrolCameraState, focusObj) == 0xA4);
+STATIC_ASSERT(offsetof(CamcontrolCameraState, fovY) == 0xB4);
+STATIC_ASSERT(offsetof(CamcontrolCameraState, blendProgress) == 0xF4);
+STATIC_ASSERT(offsetof(CamcontrolCameraState, blendDeltaYaw) == 0x100);
+STATIC_ASSERT(offsetof(CamcontrolCameraState, blendStartYaw) == 0x106);
+STATIC_ASSERT(offsetof(CamcontrolCameraState, blendStartX) == 0x10C);
+STATIC_ASSERT(offsetof(CamcontrolCameraState, blendStartFovY) == 0x118);
+STATIC_ASSERT(offsetof(CamcontrolCameraState, blendCurveMode) == 0x139);
+STATIC_ASSERT(offsetof(CamcontrolCameraState, letterboxTargetOffset) == 0x13B);
+STATIC_ASSERT(offsetof(CamcontrolCameraState, queuedBlendFlags) == 0x13F);
+STATIC_ASSERT(offsetof(CamcontrolCameraState, smoothingFlags) == 0x143);
+
+#define CAMCONTROL_BLEND_YAW 0x01
+#define CAMCONTROL_BLEND_PITCH 0x02
+#define CAMCONTROL_BLEND_ROLL 0x04
+#define CAMCONTROL_BLEND_X 0x08
+#define CAMCONTROL_BLEND_Y 0x10
+#define CAMCONTROL_BLEND_Z 0x20
 
 typedef struct CamcontrolHandlerVTable {
   void (*func00)();

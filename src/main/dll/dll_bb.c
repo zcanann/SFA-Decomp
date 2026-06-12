@@ -1,25 +1,26 @@
 #include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/dll_BB.h"
 
-extern void Obj_UpdateWorldTransform(void* obj);
+extern void Obj_UpdateWorldTransform(void *obj);
 extern void Camera_SetCurrentViewIndex(s32 index);
 extern void Camera_UpdateViewMatrices(void);
 extern s32 Camera_GetViewportYOffset(void);
 extern void Camera_SetFovY(f32 fovY);
-extern f32 interpolate(f32 cur, f32 target, f32 t);
-extern void loadMapForCameraPos(f32 x, f32 y, f32 z);
-extern void OSReport(const char* fmt, ...);
-extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
-extern void PSVECNormalize(f32 * src, f32 * dst);
-extern f32 PSVECMag(f32 * v);
-extern CameraViewSlot* Camera_GetCurrentViewSlot(void);
+extern f32 interpolate(f32 cur,f32 target,f32 t);
+extern void loadMapForCameraPos(f32 x,f32 y,f32 z);
+extern void OSReport(const char *fmt,...);
+extern void PSVECSubtract(f32 *a,f32 *b,f32 *out);
+extern void PSVECNormalize(f32 *src,f32 *dst);
+extern f32 PSVECMag(f32 *v);
+extern CameraViewSlot *Camera_GetCurrentViewSlot(void);
 extern f32 Camera_GetFovY(void);
 extern void Camera_SetViewportYOffset(s32 yOffset);
-extern void mm_free(void* ptr);
-extern void camcontrol_activateHandler(u32 actionId, void* actionData);
+extern void mm_free(void *ptr);
+extern void camcontrol_activateHandler(u32 actionId,void *actionData);
 
 extern s16 lbl_803DD4C0;
 extern char sDllBBTimeDebugFormat[];
+extern f64 lbl_803E1650;
 extern f32 timeDelta;
 extern f32 lbl_803DD4D0;
 extern f32 lbl_803E162C;
@@ -27,246 +28,223 @@ extern f32 lbl_803E1630;
 extern f32 lbl_803E1668;
 extern f32 lbl_803E166C;
 
-void camcontrol_applyState(short* camObj)
+/*
+ * --INFO--
+ *
+ * Function: camcontrol_applyState
+ * EN v1.0 Address: 0x80101980
+ * EN v1.0 Size: 1332b
+ * EN v1.1 Address: 0x80101C1C
+ * EN v1.1 Size: 1340b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void camcontrol_applyState(CamcontrolCameraState *camera)
 {
-    float fa;
-    float fb;
-    short* viewSlot;
-    int val;
-    float dist;
-    float step;
-    float delta[3];
+  float fVar1;
+  float fVar2;
+  CameraViewSlot *view;
+  int iVar4;
+  float fVar5;
+  float fVar6;
+  float delta[3];
 
-    Camera_SetCurrentViewIndex(0);
-    viewSlot = (short*)Camera_GetCurrentViewSlot();
-    *viewSlot = *camObj;
-    viewSlot[1] = camObj[1];
-    viewSlot[2] = camObj[2];
-    if ((*(byte*)((int)camObj + 0x143) >> 7 & 1) != 0u)
-    {
-        PSVECSubtract((float*)(camObj + 0xc), (float*)(viewSlot + 6), delta);
-        dist = PSVECMag(delta);
-        if (dist > lbl_803E1630)
-        {
-            PSVECNormalize(delta, delta);
-        }
-        step = interpolate(dist, lbl_803E1668, timeDelta);
-        dist = (step < lbl_803E1630)
-                    ? lbl_803E1630
-                    : ((step > lbl_803E166C * timeDelta) ? lbl_803E166C * timeDelta : step);
-        *(float*)(viewSlot + 6) = dist * delta[0] + *(float*)(viewSlot + 6);
-        *(float*)(viewSlot + 8) = dist * delta[1] + *(float*)(viewSlot + 8);
-        *(float*)(viewSlot + 10) = dist * delta[2] + *(float*)(viewSlot + 10);
+  Camera_SetCurrentViewIndex(0);
+  view = Camera_GetCurrentViewSlot();
+  view->yaw = camera->yaw;
+  view->pitch = camera->pitch;
+  view->roll = camera->roll;
+  if ((camera->smoothingFlags & 0x80) != 0) {
+    PSVECSubtract(&camera->localX,&view->x,delta);
+    fVar5 = PSVECMag(delta);
+    if (fVar5 > lbl_803E1630) {
+      PSVECNormalize(delta,delta);
     }
-    else
-    {
-        *(float*)(viewSlot + 6) = *(float*)(camObj + 0xc);
-        *(float*)(viewSlot + 8) = *(float*)(camObj + 0xe);
-        *(float*)(viewSlot + 10) = *(float*)(camObj + 0x10);
+    fVar6 = interpolate(fVar5,lbl_803E1668,timeDelta);
+    fVar5 = (fVar6 < lbl_803E1630) ? lbl_803E1630 : ((fVar6 > lbl_803E166C * timeDelta) ? lbl_803E166C * timeDelta : fVar6);
+    view->x = fVar5 * delta[0] + view->x;
+    view->y = fVar5 * delta[1] + view->y;
+    view->z = fVar5 * delta[2] + view->z;
+  }
+  else {
+    view->x = camera->localX;
+    view->y = camera->localY;
+    view->z = camera->localZ;
+  }
+  fVar2 = lbl_803E1630;
+  lbl_803DD4D0 = camera->fovY;
+  if (lbl_803E1630 < camera->blendProgress) {
+    camera->blendProgress = -(camera->blendStep * timeDelta - camera->blendProgress);
+    fVar1 = camera->blendProgress;
+    fVar2 = (fVar1 < fVar2) ? fVar2 : ((fVar1 > lbl_803E162C) ? lbl_803E162C : fVar1);
+    camera->blendProgress = fVar2;
+    if (camera->blendCurveMode == 2) {
+      fVar2 = camera->blendProgress;
+      fVar5 = lbl_803E162C - fVar2 * fVar2 * fVar2;
     }
-    fb = lbl_803E1630;
-    lbl_803DD4D0 = *(float*)(camObj + 0x5a);
-    if (lbl_803E1630 < *(float*)(camObj + 0x7a))
-    {
-        *(float*)(camObj + 0x7a) =
-            -(*(float*)(camObj + 0x7c) * timeDelta - *(float*)(camObj + 0x7a));
-        fa = *(float*)(camObj + 0x7a);
-        fb = (fa < fb) ? fb : ((fa > lbl_803E162C) ? lbl_803E162C : fa);
-        *(float*)(camObj + 0x7a) = fb;
-        if (pCamera[0x139] == '\x02')
-        {
-            fb = *(float*)(camObj + 0x7a);
-            dist = lbl_803E162C - fb * fb * fb;
-        }
-        else if (pCamera[0x139] == '\x01')
-        {
-            dist = lbl_803E162C - *(float*)(camObj + 0x7a) * *(float*)(camObj + 0x7a);
-        }
-        else
-        {
-            dist = lbl_803E162C - *(float*)(camObj + 0x7a);
-        }
-        step = (dist < lbl_803E1630) ? lbl_803E1630 : ((dist > lbl_803E162C) ? lbl_803E162C : dist);
-        if ((*(byte*)((int)camObj + 0x13f) & 8) != 0)
-        {
-            *(float*)(viewSlot + 6) =
-                step * (*(float*)(viewSlot + 6) - *(float*)(camObj + 0x86)) +
-                *(float*)(camObj + 0x86);
-        }
-        if ((*(byte*)((int)camObj + 0x13f) & 0x10) != 0)
-        {
-            *(float*)(viewSlot + 8) =
-                step * (*(float*)(viewSlot + 8) - *(float*)(camObj + 0x88)) +
-                *(float*)(camObj + 0x88);
-        }
-        if ((*(byte*)((int)camObj + 0x13f) & 0x20) != 0)
-        {
-            *(float*)(viewSlot + 10) =
-                step * (*(float*)(viewSlot + 10) - *(float*)(camObj + 0x8a)) +
-                *(float*)(camObj + 0x8a);
-        }
-        OSReport(sDllBBTimeDebugFormat, step);
-        if ((*(byte*)((int)camObj + 0x13f) & 1) != 0)
-        {
-            camObj[0x80] = camObj[0x83] - *viewSlot;
-            if (0x8000 < camObj[0x80])
-            {
-                camObj[0x80] = camObj[0x80] + 1;
-            }
-            if (camObj[0x80] < -0x8000)
-            {
-                camObj[0x80] = camObj[0x80] + -1;
-            }
-            val = (int)((float)camObj[0x80] * step);
-            *viewSlot = camObj[0x83] - (short)val;
-        }
-        if ((*(byte*)((int)camObj + 0x13f) & 2) != 0)
-        {
-            camObj[0x81] = camObj[0x84] - viewSlot[1];
-            if (0x8000 < camObj[0x81])
-            {
-                camObj[0x81] = camObj[0x81] + 1;
-            }
-            if (camObj[0x81] < -0x8000)
-            {
-                camObj[0x81] = camObj[0x81] + -1;
-            }
-            val = (int)((float)camObj[0x81] * step);
-            viewSlot[1] = camObj[0x84] - (short)val;
-        }
-        if ((*(byte*)((int)camObj + 0x13f) & 4) != 0)
-        {
-            camObj[0x82] = camObj[0x85] - viewSlot[2];
-            if (0x8000 < camObj[0x82])
-            {
-                camObj[0x82] = camObj[0x82] + 1;
-            }
-            if (camObj[0x82] < -0x8000)
-            {
-                camObj[0x82] = camObj[0x82] + -1;
-            }
-            val = (int)((float)camObj[0x82] * step);
-            viewSlot[2] = camObj[0x85] - (short)val;
-        }
+    else if (camera->blendCurveMode == 1) {
+      fVar5 = lbl_803E162C - camera->blendProgress * camera->blendProgress;
     }
-    Camera_SetFovY(lbl_803DD4D0);
-    Obj_UpdateWorldTransform(viewSlot);
-    loadMapForCameraPos(*(float*)(camObj + 0xc), *(float*)(camObj + 0xe),
-                        *(float*)(camObj + 0x10));
-    val = Camera_GetViewportYOffset();
-    lbl_803DD4C0 = (short)val;
-    if ((int)lbl_803DD4C0 != (int)*(char*)((int)camObj + 0x13b))
-    {
-        if ((int)lbl_803DD4C0 < (int)*(char*)((int)camObj + 0x13b))
-        {
-            lbl_803DD4C0 = lbl_803DD4C0 + (short)*(char*)(camObj + 0x9e) * (short)(int)timeDelta;
-            if ((int)*(char*)((int)camObj + 0x13b) < (int)lbl_803DD4C0)
-            {
-                lbl_803DD4C0 = (short)*(char*)((int)camObj + 0x13b);
-            }
-        }
-        else
-        {
-            lbl_803DD4C0 = lbl_803DD4C0 - (short)*(char*)(camObj + 0x9e) * (short)(int)timeDelta;
-            if ((int)lbl_803DD4C0 < (int)*(char*)((int)camObj + 0x13b))
-            {
-                lbl_803DD4C0 = (short)*(char*)((int)camObj + 0x13b);
-            }
-        }
-        Camera_SetViewportYOffset(lbl_803DD4C0);
+    else {
+      fVar5 = lbl_803E162C - camera->blendProgress;
     }
-    *(undefined*)((int)camObj + 0x13b) = 0;
-    Camera_UpdateViewMatrices();
-    return;
+    fVar6 = (fVar5 < lbl_803E1630) ? lbl_803E1630 : ((fVar5 > lbl_803E162C) ? lbl_803E162C : fVar5);
+    if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_X) != 0) {
+      view->x = fVar6 * (view->x - camera->blendStartX) + camera->blendStartX;
+    }
+    if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_Y) != 0) {
+      view->y = fVar6 * (view->y - camera->blendStartY) + camera->blendStartY;
+    }
+    if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_Z) != 0) {
+      view->z = fVar6 * (view->z - camera->blendStartZ) + camera->blendStartZ;
+    }
+    OSReport(sDllBBTimeDebugFormat,fVar6);
+    if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_YAW) != 0) {
+      camera->blendDeltaYaw = camera->blendStartYaw - view->yaw;
+      if (0x8000 < camera->blendDeltaYaw) {
+        camera->blendDeltaYaw = camera->blendDeltaYaw + 1;
+      }
+      if (camera->blendDeltaYaw < -0x8000) {
+        camera->blendDeltaYaw = camera->blendDeltaYaw + -1;
+      }
+      iVar4 = (int)((float)camera->blendDeltaYaw * fVar6);
+      view->yaw = camera->blendStartYaw - (short)iVar4;
+    }
+    if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_PITCH) != 0) {
+      camera->blendDeltaPitch = camera->blendStartPitch - view->pitch;
+      if (0x8000 < camera->blendDeltaPitch) {
+        camera->blendDeltaPitch = camera->blendDeltaPitch + 1;
+      }
+      if (camera->blendDeltaPitch < -0x8000) {
+        camera->blendDeltaPitch = camera->blendDeltaPitch + -1;
+      }
+      iVar4 = (int)((float)camera->blendDeltaPitch * fVar6);
+      view->pitch = camera->blendStartPitch - (short)iVar4;
+    }
+    if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_ROLL) != 0) {
+      camera->blendDeltaRoll = camera->blendStartRoll - view->roll;
+      if (0x8000 < camera->blendDeltaRoll) {
+        camera->blendDeltaRoll = camera->blendDeltaRoll + 1;
+      }
+      if (camera->blendDeltaRoll < -0x8000) {
+        camera->blendDeltaRoll = camera->blendDeltaRoll + -1;
+      }
+      iVar4 = (int)((float)camera->blendDeltaRoll * fVar6);
+      view->roll = camera->blendStartRoll - (short)iVar4;
+    }
+  }
+  Camera_SetFovY(lbl_803DD4D0);
+  Obj_UpdateWorldTransform(view);
+  loadMapForCameraPos(camera->localX,camera->localY,camera->localZ);
+  iVar4 = Camera_GetViewportYOffset();
+  lbl_803DD4C0 = (short)iVar4;
+  if ((int)lbl_803DD4C0 != (int)camera->letterboxTargetOffset) {
+    if ((int)lbl_803DD4C0 < (int)camera->letterboxTargetOffset) {
+      lbl_803DD4C0 = lbl_803DD4C0 + (short)camera->letterboxStep * (short)(int)timeDelta;
+      if ((int)camera->letterboxTargetOffset < (int)lbl_803DD4C0) {
+        lbl_803DD4C0 = (short)camera->letterboxTargetOffset;
+      }
+    }
+    else {
+      lbl_803DD4C0 = lbl_803DD4C0 - (short)camera->letterboxStep * (short)(int)timeDelta;
+      if ((int)lbl_803DD4C0 < (int)camera->letterboxTargetOffset) {
+        lbl_803DD4C0 = (short)camera->letterboxTargetOffset;
+      }
+    }
+    Camera_SetViewportYOffset(lbl_803DD4C0);
+  }
+  camera->letterboxTargetOffset = 0;
+  Camera_UpdateViewMatrices();
+  return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: camcontrol_applyQueuedAction
+ * EN v1.0 Address: 0x80101EBC
+ * EN v1.0 Size: 400b
+ */
 void camcontrol_applyQueuedAction(void)
 {
-    CameraViewSlot* view;
-    float blendStep;
+  CamcontrolCameraState *camera;
+  CameraViewSlot *view;
+  float blendStep;
 
-    if (gCamcontrolQueuedActionPending != '\0')
-    {
-        if (gCamcontrolQueuedActionBlendFrames > 1)
-        {
-            blendStep = lbl_803E162C / (float)gCamcontrolQueuedActionBlendFrames;
-            if ((blendStep <= lbl_803E1630) || (blendStep > lbl_803E162C))
-            {
-                blendStep = lbl_803E162C;
-            }
-            *(float*)(pCamera + 0xf4) = lbl_803E162C;
-            *(float*)(pCamera + 0xf8) = blendStep;
-            pCamera[0x13f] = gCamcontrolQueuedActionMode;
-        }
-        else
-        {
-            *(float*)(pCamera + 0xf4) = lbl_803E1630;
-            pCamera[0x13f] = 0;
-        }
-        view = Camera_GetCurrentViewSlot();
-        if (lbl_803E162C == *(float*)(pCamera + 0xf4))
-        {
-            *(float*)(pCamera + 0x10c) = view->x;
-            *(float*)(pCamera + 0x110) = view->y;
-            *(float*)(pCamera + 0x114) = view->z;
-            *(short*)(pCamera + 0x106) = view->yaw;
-            *(short*)(pCamera + 0x108) = view->pitch;
-            *(short*)(pCamera + 0x10a) = view->roll;
-            *(float*)(pCamera + 0x118) = Camera_GetFovY();
-        }
-        else
-        {
-            *(short*)pCamera = view->yaw;
-            *(short*)(pCamera + 2) = view->pitch;
-            *(short*)(pCamera + 4) = view->roll;
-            *(float*)(pCamera + 0xb4) = Camera_GetFovY();
-        }
-        gCamcontrolSavedActionId = gCamcontrolActiveActionId;
-        gCamcontrolSavedActionPriority = gCamcontrolActiveActionPriority;
-        gCamcontrolSavedActionStartFlags = gCamcontrolActiveActionStartFlags;
-        camcontrol_activateHandler((u16)gCamcontrolQueuedActionId, gCamcontrolQueuedActionData);
-        gCamcontrolQueuedActionPending = '\0';
-        if (gCamcontrolQueuedActionData != (void*)0x0)
-        {
-            mm_free(gCamcontrolQueuedActionData);
-            gCamcontrolQueuedActionData = (void*)0x0;
-        }
+  if (gCamcontrolQueuedActionPending != '\0') {
+    camera = CAMCONTROL_CAMERA;
+    if (gCamcontrolQueuedActionBlendFrames > 1) {
+      blendStep = lbl_803E162C / (float)gCamcontrolQueuedActionBlendFrames;
+      if ((blendStep <= lbl_803E1630) || (blendStep > lbl_803E162C)) {
+        blendStep = lbl_803E162C;
+      }
+      camera->blendProgress = lbl_803E162C;
+      camera->blendStep = blendStep;
+      camera->queuedBlendFlags = gCamcontrolQueuedActionMode;
     }
-    return;
+    else {
+      camera->blendProgress = lbl_803E1630;
+      camera->queuedBlendFlags = 0;
+    }
+    view = Camera_GetCurrentViewSlot();
+    if (lbl_803E162C == camera->blendProgress) {
+      camera->blendStartX = view->x;
+      camera->blendStartY = view->y;
+      camera->blendStartZ = view->z;
+      camera->blendStartYaw = view->yaw;
+      camera->blendStartPitch = view->pitch;
+      camera->blendStartRoll = view->roll;
+      camera->blendStartFovY = Camera_GetFovY();
+    }
+    else {
+      camera->yaw = view->yaw;
+      camera->pitch = view->pitch;
+      camera->roll = view->roll;
+      camera->fovY = Camera_GetFovY();
+    }
+    gCamcontrolSavedActionId = gCamcontrolActiveActionId;
+    gCamcontrolSavedActionPriority = gCamcontrolActiveActionPriority;
+    gCamcontrolSavedActionStartFlags = gCamcontrolActiveActionStartFlags;
+    camcontrol_activateHandler((u16)gCamcontrolQueuedActionId,gCamcontrolQueuedActionData);
+    gCamcontrolQueuedActionPending = '\0';
+    if (gCamcontrolQueuedActionData != (void *)0x0) {
+      mm_free(gCamcontrolQueuedActionData);
+      gCamcontrolQueuedActionData = (void *)0x0;
+    }
+  }
+  return;
 }
 
-void Camera_func1D(int param_1)
+void Camera_func1D(int targetFlagMode)
 {
-    pCamera[0x141] = (u8)(pCamera[0x141] | ((param_1 << 3) & 0x18));
+  CAMCONTROL_CAMERA->targetFlags = (u8)(CAMCONTROL_CAMERA->targetFlags | ((targetFlagMode << 3) & 0x18));
 }
 
 void Camera_func13(int enable)
 {
-    if (enable != 0)
-    {
-        pCamera[0x141] = (u8)(pCamera[0x141] | 2);
-    }
-    else
-    {
-        pCamera[0x141] = (u8)(pCamera[0x141] & ~2);
-    }
+  if (enable != 0) {
+    CAMCONTROL_CAMERA->targetFlags = (u8)(CAMCONTROL_CAMERA->targetFlags | 2);
+  }
+  else {
+    CAMCONTROL_CAMERA->targetFlags = (u8)(CAMCONTROL_CAMERA->targetFlags & ~2);
+  }
 }
 
 void Camera_func1C(int flags)
 {
-    pCamera[0x140] = (u8)(pCamera[0x140] | flags);
+  CAMCONTROL_CAMERA->frameFlags = (u8)(CAMCONTROL_CAMERA->frameFlags | flags);
 }
 
-void Camera_setLetterbox(int yOffset, int applyNow)
+void Camera_setLetterbox(int yOffset,int applyNow)
 {
-    if (yOffset > (int)(s8)pCamera[0x13b])
-    {
-        ((s8*)pCamera)[0x13b] = yOffset;
-        pCamera[0x13c] = 2;
-        if (applyNow != 0)
-        {
-            Camera_SetViewportYOffset((s16)yOffset);
-        }
+  if (yOffset > (int)CAMCONTROL_CAMERA->letterboxTargetOffset) {
+    CAMCONTROL_CAMERA->letterboxTargetOffset = yOffset;
+    CAMCONTROL_CAMERA->letterboxStep = 2;
+    if (applyNow != 0) {
+      Camera_SetViewportYOffset((s16)yOffset);
     }
-    return;
+  }
+  return;
 }
