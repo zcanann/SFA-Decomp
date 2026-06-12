@@ -1334,20 +1334,20 @@ void FUN_800400b0(void)
     float* pfVar3;
     int iVar4;
     int iVar5;
-    short* psVar6;
+    ObjDefHitVolume* psVar6;
     float* pfVar7;
-    short* psVar8;
+    ObjDefHitVolume* psVar8;
 
     puVar1 = (ushort*)FUN_80286838();
-    psVar6 = *(short**)(*(int*)(puVar1 + 0x28) + 0x40);
+    psVar6 = ((GameObject*)puVar1)->anim.modelInstance->hitVolumes;
     pfVar7 = *(float**)(puVar1 + 0x3a);
     if ((*(byte*)((int)puVar1 + 0xaf) & 0x28) == 0)
     {
         piVar2 = (int*)FUN_80017a54((int)puVar1);
         psVar8 = psVar6;
-        for (iVar5 = 0; iVar5 < (int)(uint) * (byte*)(*(int*)(puVar1 + 0x28) + 0x72); iVar5 = iVar5 + 1)
+        for (iVar5 = 0; iVar5 < (int)(uint)((GameObject*)puVar1)->anim.modelInstance->hitVolumeCount; iVar5 = iVar5 + 1)
         {
-            iVar4 = (int)*(char*)((int)psVar8 + *(char*)((int)puVar1 + 0xad) + 0x12);
+            iVar4 = (int)psVar8->jointIndices[((GameObject*)puVar1)->anim.bankIndex];
             if (iVar4 < 0)
             {
                 pfVar3 = (float*)0x0;
@@ -1356,9 +1356,9 @@ void FUN_800400b0(void)
             {
                 pfVar3 = (float*)FUN_80017970(piVar2, iVar4);
             }
-            FUN_800401a0((float*)0x0, pfVar7 + 3, psVar8 + 3, *(byte*)(psVar6 + 8) & 0x10, puVar1, 0);
-            FUN_800401a0(pfVar3, pfVar7, psVar8, *(byte*)(psVar6 + 8) & 0x10, puVar1, 1);
-            psVar8 = psVar8 + 0xc;
+            FUN_800401a0((float*)0x0, pfVar7 + 3, &psVar8->posX, psVar6->flags & 0x10, puVar1, 0);
+            FUN_800401a0(pfVar3, pfVar7, &psVar8->rotX, psVar6->flags & 0x10, puVar1, 1);
+            psVar8++;
             pfVar7 = pfVar7 + 6;
         }
     }
@@ -2728,21 +2728,21 @@ void objRenderFuzz(int* obj)
 
 void objRenderFn_80041018(int* obj)
 {
-    u8* p;
+    ObjDefHitVolume* p;
     u8* q;
     int* model;
-    u8* base;
+    ObjDefHitVolume* base;
     int i;
-    base = *(u8**)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x40);
+    base = ((GameObject*)obj)->anim.modelInstance->hitVolumes;
     q = *(u8**)((char*)obj + 0x74);
     if (!(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x28))
     {
         model = Obj_GetActiveModel(obj);
         i = 0;
         p = base;
-        for (; i < *(u8*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x72); i++)
+        for (; i < ((GameObject*)obj)->anim.modelInstance->hitVolumeCount; i++)
         {
-            int j = *(s8*)(p + OBJPRINT_ACTIVE_BANK_INDEX(obj) + 0x12);
+            int j = p->jointIndices[OBJPRINT_ACTIVE_BANK_INDEX(obj)];
             ObjModelJointMatrix* mtx;
             if (j >= 0)
             {
@@ -2752,9 +2752,9 @@ void objRenderFn_80041018(int* obj)
             {
                 mtx = NULL;
             }
-            objMtxFn_80041104(NULL, (f32*)(q + 0xc), (s16*)(p + 6), *(u8*)(base + 0x10) & 0x10, obj, 0);
-            objMtxFn_80041104((f32*)mtx, (f32*)q, (s16*)p, *(u8*)(base + 0x10) & 0x10, obj, 1);
-            p += 0x18;
+            objMtxFn_80041104(NULL, (f32*)(q + 0xc), &p->posX, base->flags & 0x10, obj, 0);
+            objMtxFn_80041104((f32*)mtx, (f32*)q, &p->rotX, base->flags & 0x10, obj, 1);
+            p++;
             q += 0x18;
         }
     }

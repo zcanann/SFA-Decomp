@@ -150,6 +150,20 @@ typedef struct ObjAnimRootCurve {
 
 #define OBJMODEL_FLAG_SKIP_RESET_UPDATE 0x40
 
+typedef struct ObjDefHitVolume {
+  s16 rotX;
+  s16 rotY;
+  s16 rotZ;
+  s16 posX;
+  s16 posY;
+  s16 posZ;
+  u8 bounds[4];
+  u8 flags;
+  s8 priority;
+  s8 jointIndices[2];
+  u8 pad14[0x18 - 0x14];
+} ObjDefHitVolume;
+
 /*
  * Minimal recovered shape of the model pointer carried by ObjAnimComponent.
  * The named fields below are shared by root-motion sampling and hit-reaction
@@ -164,7 +178,8 @@ typedef struct ObjDef {
   s16 *eventMoveTable;
   ObjHitReactMoveEntry *hitReactMoveTable;
   s16 *weaponDaTable;
-  u8 pad2C[0x44 - 0x2C];
+  u8 pad2C[0x40 - 0x2C];
+  ObjDefHitVolume *hitVolumes;
   u32 flags;
   s16 shadowType;
   s16 shadowTextureId;
@@ -192,7 +207,8 @@ typedef struct ObjDef {
   s16 secondaryCapsuleOffsetB;
   u8 sourceHitMask;
   u8 runtimeSourceHitMask;
-  u8 pad72[0x77 - 0x72];
+  u8 hitVolumeCount;
+  u8 pad73[0x77 - 0x73];
   u8 secondaryHitboxRadius;
   s16 mapLoadObjectId;
   u8 pad7A[0x90 - 0x7A];
@@ -382,12 +398,19 @@ STATIC_ASSERT(offsetof(ObjAnimState, blendToggle) == 0x62);
 STATIC_ASSERT(offsetof(ObjAnimState, moveControlFlags) == 0x63);
 STATIC_ASSERT(offsetof(ObjAnimState, lastBlendMoveIndex) == 0x64);
 
+STATIC_ASSERT(sizeof(ObjDefHitVolume) == 0x18);
+STATIC_ASSERT(offsetof(ObjDefHitVolume, bounds) == 0x0C);
+STATIC_ASSERT(offsetof(ObjDefHitVolume, flags) == 0x10);
+STATIC_ASSERT(offsetof(ObjDefHitVolume, priority) == 0x11);
+STATIC_ASSERT(offsetof(ObjDefHitVolume, jointIndices) == 0x12);
+
 STATIC_ASSERT(sizeof(ObjDef) == 0x94);
 STATIC_ASSERT(offsetof(ObjDef, rootMotionScaleBase) == 0x04);
 STATIC_ASSERT(offsetof(ObjDef, jointData) == 0x10);
 STATIC_ASSERT(offsetof(ObjDef, eventMoveTable) == 0x20);
 STATIC_ASSERT(offsetof(ObjDef, hitReactMoveTable) == 0x24);
 STATIC_ASSERT(offsetof(ObjDef, weaponDaTable) == 0x28);
+STATIC_ASSERT(offsetof(ObjDef, hitVolumes) == 0x40);
 STATIC_ASSERT(offsetof(ObjDef, flags) == 0x44);
 STATIC_ASSERT(offsetof(ObjDef, shadowType) == 0x48);
 STATIC_ASSERT(offsetof(ObjDef, shadowTextureId) == 0x4A);
@@ -408,6 +431,7 @@ STATIC_ASSERT(offsetof(ObjDef, secondaryCapsuleOffsetA) == 0x6C);
 STATIC_ASSERT(offsetof(ObjDef, secondaryCapsuleOffsetB) == 0x6E);
 STATIC_ASSERT(offsetof(ObjDef, sourceHitMask) == 0x70);
 STATIC_ASSERT(offsetof(ObjDef, runtimeSourceHitMask) == 0x71);
+STATIC_ASSERT(offsetof(ObjDef, hitVolumeCount) == 0x72);
 STATIC_ASSERT(offsetof(ObjDef, secondaryHitboxRadius) == 0x77);
 STATIC_ASSERT(offsetof(ObjDef, mapLoadObjectId) == 0x78);
 STATIC_ASSERT(offsetof(ObjDef, secondaryHitboxShapeFlags) == 0x90);

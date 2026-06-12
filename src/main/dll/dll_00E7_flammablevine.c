@@ -1,6 +1,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/objanim_internal.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/objseq.h"
@@ -495,11 +496,11 @@ checked_vine_use:
         {
             if (cMenuGetSelectedItem() == -1)
             {
-                *(u8*)(*(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x40) + 0x11) = 0;
+                ((GameObject*)obj)->anim.modelInstance->hitVolumes[0].priority = 0;
             }
             else
             {
-                *(u8*)(*(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x40) + 0x11) = 0x10;
+                ((GameObject*)obj)->anim.modelInstance->hitVolumes[0].priority = 0x10;
             }
         }
 

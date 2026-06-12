@@ -726,7 +726,7 @@ void setMatrixFromObjectTransposed(void* obj, f32* out);
 void objFn_8002b67c(u8* obj)
 {
     u8* dst;
-    u8* src;
+    ObjDefHitVolume *src;
     int idx;
 
     if (obj == NULL)
@@ -738,15 +738,15 @@ void objFn_8002b67c(u8* obj)
     {
         return;
     }
-    src = *(u8**)((u8*)((GameObject*)obj)->anim.modelInstance + 0x40);
-    idx = ((GameObject*)obj)->unkE4;
-    src += idx * 0x18;
+    src = ((GameObject *)obj)->anim.modelInstance->hitVolumes;
+    idx = ((GameObject *)obj)->unkE4;
+    src += idx;
     dst += idx * 5;
-    dst[0] = src[0xc];
-    dst[1] = src[0xd];
-    dst[2] = src[0xe];
-    dst[3] = src[0xf];
-    dst[4] = src[0x10];
+    dst[0] = src->bounds[0];
+    dst[1] = src->bounds[1];
+    dst[2] = src->bounds[2];
+    dst[3] = src->bounds[3];
+    dst[4] = src->flags;
 }
 
 int objApplyVelocity(u8* obj)
@@ -1491,11 +1491,11 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         obj->f70 = tmp;
         cursor = tmp + *(u8*)(def + 0x59) * 0x10;
     }
-    if (*(u8*)(def + 0x72) != 0)
+    if (modelDef->hitVolumeCount != 0)
     {
         tmp = roundUpTo4(cursor);
         obj->f74 = tmp;
-        cursor = tmp + *(u8*)(def + 0x72) * 0x18;
+        cursor = tmp + modelDef->hitVolumeCount * 0x18;
     }
     if (*(u8*)(def + 0x61) != 0 && *(u8*)(def + 0x66) != 0)
     {
@@ -1503,20 +1503,21 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         cursor = ObjHitReact_InitState(obj->seqId, (ObjAnimBank*)*(u8**)obj->models,
                                        obj->hitReactState, tmp, (ObjAnimComponent*)obj);
     }
-    if (*(u8*)(def + 0x72) != 0)
+    if (modelDef->hitVolumeCount != 0)
     {
+        ObjDefHitVolume *hitVolume;
         obj->f78 = roundUpTo4(cursor);
         i = 0;
-        k = 0;
         j = 0;
-        for (; i < *(u8*)(def + 0x72); i++)
+        hitVolume = modelDef->hitVolumes;
+        for (; i < modelDef->hitVolumeCount; i++)
         {
-            ((u8*)obj->f78)[j + 4] = ((u8*)*(int*)(def + 0x40))[k + 0x10];
-            ((u8*)obj->f78)[j] = ((u8*)*(int*)(def + 0x40))[k + 0xc];
-            ((u8*)obj->f78)[j + 3] = ((u8*)*(int*)(def + 0x40))[k + 0xf];
-            ((u8*)obj->f78)[j + 1] = ((u8*)*(int*)(def + 0x40))[k + 0xd];
-            ((u8*)obj->f78)[j + 2] = ((u8*)*(int*)(def + 0x40))[k + 0xe];
-            k += 0x18;
+            ((u8*)obj->f78)[j + 4] = hitVolume->flags;
+            ((u8*)obj->f78)[j] = hitVolume->bounds[0];
+            ((u8*)obj->f78)[j + 3] = hitVolume->bounds[3];
+            ((u8*)obj->f78)[j + 1] = hitVolume->bounds[1];
+            ((u8*)obj->f78)[j + 2] = hitVolume->bounds[2];
+            hitVolume++;
             j += 5;
         }
     }
@@ -2640,19 +2641,19 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
         r = roundUpTo4(size);
         size = r + *(u8*)(def + 0x59) * 0x10;
     }
-    if (*(u8*)(def + 0x72) != 0)
+    if (modelDef->hitVolumeCount != 0)
     {
         r = roundUpTo4(size);
-        size = r + *(u8*)(def + 0x72) * 0x18;
+        size = r + modelDef->hitVolumeCount * 0x18;
     }
     if (*(u8*)(def + 0x61) != 0 && *(u8*)(def + 0x66) != 0)
     {
         size = roundUpTo8(size) + 0x12c;
     }
-    if (*(u8*)(def + 0x72) != 0)
+    if (modelDef->hitVolumeCount != 0)
     {
         r = roundUpTo4(size);
-        size = r + *(u8*)(def + 0x72) * 5;
+        size = r + modelDef->hitVolumeCount * 5;
     }
     return roundUpTo32(size);
 }

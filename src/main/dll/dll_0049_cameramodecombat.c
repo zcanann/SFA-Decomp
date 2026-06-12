@@ -7,6 +7,7 @@
 #include "main/dll/CAM/camclimb_state.h"
 #include "main/dll/CAM/camshipbattle_state.h"
 #include "main/game_object.h"
+#include "main/objanim_internal.h"
 #include "main/object_transform.h"
 #include "main/pad.h"
 
@@ -253,8 +254,7 @@ void CameraModeCombat_update(short* cam)
                 path = *(CombatPathPoint**)(tgt + 0x74);
                 if (path != NULL)
                 {
-                    range = (f32)(s32)(
-                        (u32) * (u8*)(*(int*)(*(int*)&((GameObject*)tgt)->anim.modelInstance + 0x40) + 0xd) << 2);
+                    range = (f32)(s32)((u32)((GameObject*)tgt)->anim.modelInstance->hitVolumes[0].bounds[1] << 2);
                     if (((u16)getButtonsJustPressed(0) & 0x200) && (int)fn_8029630C(focus) != 0)
                     {
                         if (((CameraObject*)cam)->targetObj != NULL)
@@ -278,7 +278,7 @@ void CameraModeCombat_update(short* cam)
                             {
                                 ty = ty + lbl_803E18D0;
                             }
-                            if (*(u8*)(*(int*)&((GameObject*)tgt)->anim.modelInstance + 0x72) <= 1)
+                            if (((GameObject*)tgt)->anim.modelInstance->hitVolumeCount <= 1)
                             {
                                 dx = path[((GameObject*)tgt)->unkE4].x - ((GameObject*)focus)->anim.worldPosX;
                                 dy = path[((GameObject*)tgt)->unkE4].y - ty;

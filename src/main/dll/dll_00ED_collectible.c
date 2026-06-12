@@ -1426,10 +1426,10 @@ void collectible_init(int obj, int setup)
         {
             ((CollectibleState*)state)->scale = lbl_803E3494;
         }
-        data = *(u8**)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x40);
+        data = (u8*)((GameObject*)obj)->anim.modelInstance->hitVolumes;
         if (data != 0)
         {
-            ((CollectibleState*)state)->scale = (f32)(s32)(*(u8*)(data + 0xc) << 2);
+            ((CollectibleState*)state)->scale = (f32)(s32)(((ObjDefHitVolume*)data)->bounds[0] << 2);
         }
         if (((((ObjAnimComponent*)obj)->modelInstance->flags & 0x10000) != 0) &&
             (((CollectibleState*)state)->unk36 != 0))

@@ -1,6 +1,7 @@
 #include "main/obj_placement.h"
 #include "main/dll/dusterstate_types.h"
 #include "main/game_object.h"
+#include "main/objanim_internal.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cfprisonuncle.h"
 #include "main/dll/rom_curve_interface.h"
@@ -118,11 +119,11 @@ void StayPoint_update(int obj)
             }
             if (cMenuGetSelectedItem() == -1)
             {
-                *(u8*)(*(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x40) + 0x11) = 0;
+                ((GameObject*)obj)->anim.modelInstance->hitVolumes[0].priority = 0;
             }
             else
             {
-                *(u8*)(*(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x40) + 0x11) = 0x10;
+                ((GameObject*)obj)->anim.modelInstance->hitVolumes[0].priority = 0x10;
             }
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (
                 u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8);

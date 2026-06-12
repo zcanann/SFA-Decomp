@@ -1,5 +1,6 @@
 #include "main/dll/dll_B6.h"
 #include "main/game_object.h"
+#include "main/objanim_internal.h"
 #include "main/objlib.h"
 
 extern void* Obj_GetPlayerObject(void);
@@ -39,8 +40,7 @@ void* camcontrol_findBestTarget(int param_1, u8* focus)
     u8 canTarget;
     u8* data;
     u8* entry;
-    u8* pp;
-    u8* row;
+    ObjDefHitVolume *hitVolume;
     u8* src;
     u8* best;
     int i;
@@ -81,8 +81,7 @@ void* camcontrol_findBestTarget(int param_1, u8* focus)
         {
             continue;
         }
-        if ((int)*(u8*)(*(u8**)(*(u8**)&((GameObject*)obj)->anim.modelInstance + 0x40) + ((GameObject*)obj)->unkE4 *
-            0x18 + 0x11) < bestPri)
+        if ((int)((GameObject*)obj)->anim.modelInstance->hitVolumes[((GameObject*)obj)->unkE4].priority < bestPri)
         {
             continue;
         }
@@ -121,12 +120,11 @@ void* camcontrol_findBestTarget(int param_1, u8* focus)
         {
             continue;
         }
-        bestPri = *(u8*)(*(u8**)(*(u8**)&((GameObject*)obj)->anim.modelInstance + 0x40) + ((GameObject*)obj)->unkE4 *
-            0x18 + 0x11);
+        bestPri = ((GameObject*)obj)->anim.modelInstance->hitVolumes[((GameObject*)obj)->unkE4].priority;
         i = 0;
         pa = arr;
         while (i < count
-            && (int)*(u8*)(*(u8**)(*(u8**)(*pa + 0x50) + 0x40) + *(u8*)(*pa + 0xe4) * 0x18 + 0x11) > bestPri)
+            && (int)((GameObject*)*pa)->anim.modelInstance->hitVolumes[((GameObject*)*pa)->unkE4].priority > bestPri)
         {
             pa++;
             i++;
@@ -134,7 +132,7 @@ void* camcontrol_findBestTarget(int param_1, u8* focus)
         pd = dist + i;
         pa = arr + i;
         while (i < count && *pd < distsq
-            && bestPri == (int)*(u8*)(*(u8**)(*(u8**)(*pa + 0x50) + 0x40) + *(u8*)(*pa + 0xe4) * 0x18 + 0x11))
+            && bestPri == (int)((GameObject*)*pa)->anim.modelInstance->hitVolumes[((GameObject*)*pa)->unkE4].priority)
         {
             pd++;
             pa++;
@@ -156,10 +154,9 @@ void* camcontrol_findBestTarget(int param_1, u8* focus)
     if (count > 0)
     {
         best = arr[0];
-        pp = *(u8**)(*(u8**)(best + 0x50) + 0x40);
         t = *(u8*)(best + 0xe4) * 0x18;
-        row = pp + t;
-        if (row[0x10] & 0x20)
+        hitVolume = &((GameObject*)best)->anim.modelInstance->hitVolumes[((GameObject*)best)->unkE4];
+        if (hitVolume->flags & 0x20)
         {
             v1[0] = *(f32*)(f + 0x18);
             v1[1] = lbl_803E1648 + *(f32*)(f + 0x1c);
