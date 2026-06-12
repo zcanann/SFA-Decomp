@@ -20,7 +20,8 @@ Per file, two passes maximise cleanup while staying byte-exact:
   If B still changes bytes, revert the file and report it.
 
 Usage:
-  python3 tools/tombstone_clean.py [--apply] [--filter SUBSTR] [--list]
+  python3 tools/tombstone_clean.py [--apply] [--filter SUBSTR] [--only FILE] [--list]
+  --only FILE : newline-separated src/ paths to restrict to (a worker partition)
 Without --apply: dry-run (count blocks per file, no edits, no build).
 """
 from __future__ import annotations
@@ -176,11 +177,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--apply', action='store_true')
     ap.add_argument('--filter', default='')
+    ap.add_argument('--only', default='')
     ap.add_argument('--list', action='store_true')
     args = ap.parse_args()
 
     files = sorted((REPO / 'src').rglob('*.c'))
     files = [f for f in files if args.filter in str(f)]
+    if args.only:
+        allow = {l.strip() for l in Path(args.only).read_text().splitlines() if l.strip()}
+        files = [f for f in files if str(f.relative_to(REPO)) in allow]
     total = 0
     for f in files:
         r = process(f, args.apply)
