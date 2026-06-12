@@ -1,8 +1,7 @@
 /*
  * EndObject (DLL 0x108) - dummy descriptor whose every callback is a stub.
- * Re-split (descriptor forensics, docs/boundary_audit.md): TU =
- * 0x8018646C..0x80186498 plus the gDummy108ObjDescriptor .data object at
- * 0x803217C0 (both formerly inside windlift.c).
+ * TU = 0x8018646C..0x80186498 plus the gDummy108ObjDescriptor .data object
+ * at 0x803217C0.
  */
 #include "main/dll_000A_expgfx.h"
 

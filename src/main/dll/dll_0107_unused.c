@@ -1,8 +1,6 @@
 /*
  * DLL 0x107 - unreachable wind-lift/blow-vent object (no OBJECTS.bin def
- * references it: retail cut content). Re-split (descriptor forensics,
- * docs/boundary_audit.md): TU = 0x80185868..0x8018646C, formerly the
- * middle of windlift.c (the real CFWindLift DLL is 0x149).
+ * references it: retail cut content). TU = 0x80185868..0x8018646C.
  */
 #include "main/camera_interface.h"
 #include "main/dll/windlift107state_struct.h"

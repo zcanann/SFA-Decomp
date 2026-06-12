@@ -1,7 +1,6 @@
 /*
  * PortalSpellStone (DLL 0x10D, descriptor gPortalSpellDoorObjDescriptor).
- * Re-split (descriptor forensics, docs/boundary_audit.md): TU =
- * 0x80186498..0x80186704, formerly inside windlift.c.
+ * TU = 0x80186498..0x80186704.
  */
 #include "main/game_object.h"
 #include "main/dll/windlift107state_struct.h"

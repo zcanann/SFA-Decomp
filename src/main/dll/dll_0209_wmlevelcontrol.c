@@ -1,13 +1,10 @@
 /*
  * WM_LevelControl (DLL 0x209) - Krazoa Palace level control.
- * Re-split (descriptor forensics, docs/boundary_audit.md): dll 0x209's TU
- * is 0x801F3F18..0x801F48C0 (helper fn_801F3F18 + wmlevelcontrol_*,
- * reverse slot order ascending). It was previously cut at 0x801F44B4
- * across LGTdirectionallight.c | LGTprojectedlight.c (both drift-era
- * mislabels - the real light DLLs are dll_02A9..dll_02AC).
+ * TU = 0x801F3F18..0x801F48C0 (helper fn_801F3F18 + wmlevelcontrol_*,
+ * reverse slot order ascending).
  * fn_801F3F18 (the sky/light override helper called by update) is placed
  * LAST in this file so MWCC cannot inline it into wmlevelcontrol_update
- * (it was an extern call before the re-split).
+ * (the target keeps it as an extern call).
  */
 #include "main/dll/LGT/dll_0207_wmworm.h"
 #include "main/dll/SC/SCtotemlogpuz.h"

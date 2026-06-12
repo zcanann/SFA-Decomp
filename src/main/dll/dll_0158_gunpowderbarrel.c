@@ -1,11 +1,7 @@
 /*
  * GunPowderBarrel (DLL 0x158) - carryable gunpowder barrel (+ MetalBarrel).
- * Re-split (descriptor forensics, docs/boundary_audit.md): dll 0x158's TU
- * is 0x801A0B14..0x801A27B8. It was previously cut into three units:
- * sandwormBoss.c tail (helper group 801A0B14-801A1230), ALL of gasvent.c
- * (801A1230-801A1A60, this file's original content - a pure mislabel:
- * it held only the middle of the barrel DLL), and the head of
- * cannontargetControl.c (801A1A60-801A27B8).
+ * TU = 0x801A0B14..0x801A27B8 (helper group at the head, then the barrel
+ * descriptor fns).
  */
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"

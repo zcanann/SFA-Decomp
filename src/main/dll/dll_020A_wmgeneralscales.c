@@ -1,9 +1,6 @@
 /*
  * WM_GeneralScales (DLL 0x20A) - General Scales (Krazoa Palace).
- * Re-split (descriptor forensics, docs/boundary_audit.md): dll 0x20A's TU
- * is 0x801F48C0..0x801F4C04 (wmgeneralscales_SeqFn + wmgeneralscales_*).
- * Formerly the middle of LGTprojectedlight.c (a drift-era mislabel - the
- * real projected-light DLL is dll_02AB).
+ * TU = 0x801F48C0..0x801F4C04 (wmgeneralscales_SeqFn + wmgeneralscales_*).
  */
 #include "main/dll/LGT/LGTprojectedlight.h"
 #include "main/obj_placement.h"

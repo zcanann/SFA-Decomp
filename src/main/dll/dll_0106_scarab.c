@@ -1,12 +1,7 @@
 /*
  * Scarab (DLL 0x106) - GreenScarab/RedScarab/GoldScarab/RainScarab money
- * beetles. Re-split (descriptor forensics, docs/boundary_audit.md): dll
- * 0x106's TU is 0x801843C0..0x80185868. It was previously cut across
- * cfforcefield.c tail (objHitboxFn_801843c0) | CFguardian.c (helper
- * fn_801845FC + scarab head fns - that whole unit was scarab content;
- * the real CFGuardian DLL is 0x148) | windlift.c head (scarab
- * update/init). Helper defs sit after their callers where they were
- * extern bls before the re-split.
+ * beetles. TU = 0x801843C0..0x80185868. Helper defs sit after their callers
+ * so MWCC keeps them as extern bls (the target does not inline them).
  */
 #include "main/dll/CF/CFguardian.h"
 #include "main/dll/windlift107state_struct.h"

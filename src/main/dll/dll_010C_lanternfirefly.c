@@ -1,7 +1,5 @@
 /*
- * LanternFireFly (DLL 0x10C). Re-split (descriptor forensics,
- * docs/boundary_audit.md): TU = 0x80186704..0x801871C8, previously cut at
- * 0x80186B94 across windlift.c | CFcrystal.c (both drift mislabels).
+ * LanternFireFly (DLL 0x10C). TU = 0x80186704..0x801871C8.
  */
 #include "main/dll/CF/CFcrystal.h"
 #include "main/dll/windlift107state_struct.h"

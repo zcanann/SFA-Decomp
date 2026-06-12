@@ -1,14 +1,10 @@
 /*
  * sctotempuzzle (DLL 0x1BA) - head of the SC totem-pole puzzle pair.
- * Formerly misnamed deaddino.c: the WM_deaddino OBJECT is an instance
- * of the earthwalker DLL (0x28A) and has no unit of its own; this
- * address range holds sc_totempuzzle code (descriptor gResourceDescriptors
- * [0x1BA]). Boundary fixed (docs/boundary_audit.md): the unit now ends at
- * 0x801DDA28 (initialise end), so all of dll 0x1BA's descriptor fns live
- * here. sc_totempuzzle_processAnimEvents (0x801DDC20) stays in the 01BB
- * unit - it sits in dll 0x1BB's helper gap, interleaved with
- * sc_totembond_spawnGameBitOrbs (evidence both DLLs shared one original
- * TU).
+ * Holds dll 0x1BA's descriptor fns (gResourceDescriptors[0x1BA]); the unit
+ * ends at 0x801DDA28 (initialise end). sc_totempuzzle_processAnimEvents
+ * (0x801DDC20) lives in the 01BB unit - it sits in dll 0x1BB's helper gap,
+ * interleaved with sc_totembond_spawnGameBitOrbs (both DLLs shared one
+ * original TU).
  */
 #include "main/objlib.h"
 

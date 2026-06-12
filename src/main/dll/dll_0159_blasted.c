@@ -1,10 +1,6 @@
 /*
  * Blasted (DLL 0x159) - CFBlastedRock/Wall/Tunnel + DRBlastedWall targets.
- * Re-split (descriptor forensics, docs/boundary_audit.md): dll 0x159's TU
- * is 0x801A27B8..0x801A2BDC (helper fn_801A27B8 + blasted_*). It was
- * previously cut at 0x801A2AF8 across cannontargetControl.c |
- * gasventControl.c; this file is the former cannontargetControl.c minus
- * the gunpowderbarrel fns (dll 0x158, now dll_0158_gunpowderbarrel.c).
+ * TU = 0x801A27B8..0x801A2BDC (helper fn_801A27B8 + blasted_*).
  */
 #include "main/game_object.h"
 
