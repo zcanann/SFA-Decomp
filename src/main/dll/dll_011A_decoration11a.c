@@ -1,6 +1,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/objseq.h"
@@ -361,6 +362,7 @@ void decoration11a_hitDetect(int obj)
     f32 sum;
     f32 delta;
     f32 term;
+    ObjHitsPriorityState* hitState;
 
     modelId = ((GameObject*)obj)->anim.seqId;
     if (modelId == 0x7a1)
@@ -446,8 +448,9 @@ check_decor_objects:
 
                 if (sum < radius * radius)
                 {
-                    (*(ObjHitsPriorityState**)(*objects + 0x54))->lastHitObject = obj;
-                    (*(ObjHitsPriorityState**)(*objects + 0x54))->contactFlags = 1;
+                    hitState = (ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState;
+                    hitState->lastHitObject = obj;
+                    hitState->contactFlags = 1;
                 }
             }
         }
