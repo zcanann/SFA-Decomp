@@ -13,6 +13,21 @@ extern f32 lbl_803E5EC4;
 extern f32 lbl_803E5EC8;
 extern f64 lbl_803E5ED0;
 
+extern void FireFlyFn_801f4f88(int* obj);
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801F4C04
+ * EN v1.0 Address: 0x801F4C04
+ * EN v1.0 Size: 36b
+ */
+int fn_801F4C04(int* obj)
+{
+    FireFlyFn_801f4f88(obj);
+    return 0;
+}
+
 
 /*
  * --INFO--

@@ -1311,13 +1311,16 @@ main/dll/LGT/LGTpointlight.c:
 	.text       start:0x801F37CC end:0x801F3C7C
 
 main/dll/LGT/LGTdirectionallight.c:
-	.text       start:0x801F3C7C end:0x801F44B4
+	.text       start:0x801F3C7C end:0x801F3F18
 
-main/dll/LGT/LGTprojectedlight.c:
-	.text       start:0x801F44B4 end:0x801F4C28
+main/dll/WM/dll_0209_wmlevelcontrol.c:
+	.text       start:0x801F3F18 end:0x801F48C0
+
+main/dll/WM/dll_020A_wmgeneralscales.c:
+	.text       start:0x801F48C0 end:0x801F4C04
 
 main/dll/LGT/LGTcontrollight.c:
-	.text       start:0x801F4C28 end:0x801F4ECC
+	.text       start:0x801F4C04 end:0x801F4ECC
 
 main/dll/boulder.c:
 	.text       start:0x801F4ECC end:0x801F4F88
