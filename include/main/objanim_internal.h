@@ -178,6 +178,19 @@ typedef struct ObjHitVolumeRuntimeBounds {
   u8 flags;
 } ObjHitVolumeRuntimeBounds;
 
+typedef struct ObjTextureSlotDef {
+  u8 tag;
+  u8 materialIndex;
+} ObjTextureSlotDef;
+
+typedef struct ObjTextureRuntimeSlot {
+  s32 textureId;
+  u8 pad04[4];
+  s16 offsetS;
+  s16 offsetT;
+  u8 pad0C[4];
+} ObjTextureRuntimeSlot;
+
 /*
  * Minimal recovered shape of the model pointer carried by ObjAnimComponent.
  * The named fields below are shared by root-motion sampling and hit-reaction
@@ -186,7 +199,8 @@ typedef struct ObjHitVolumeRuntimeBounds {
 typedef struct ObjDef {
   u8 pad00[4];
   f32 rootMotionScaleBase;
-  u8 pad08[0x10 - 0x08];
+  u8 pad08[0x0C - 0x08];
+  ObjTextureSlotDef *textureSlotDefs;
   s8 *jointData;
   u8 pad14[0x18 - 0x14];
   u8 *extraSetupData;
@@ -205,7 +219,7 @@ typedef struct ObjDef {
   s8 modelCount;
   s8 group8RegistrationCount;
   u8 pad57[0x59 - 0x57];
-  u8 unk59;
+  u8 textureSlotCount;
   u8 jointCount;
   u8 pad5B[0x5E - 0x5B];
   u8 sequenceCount;
@@ -318,7 +332,7 @@ typedef struct ObjAnimComponent {
   ObjModelState *modelState;
   int **dll;
   u8 *jointPoseData;
-  u8 pad70[0x74 - 0x70];
+  ObjTextureRuntimeSlot *textureSlots;
   ObjHitVolumeRuntimeTransform *hitVolumeTransforms;
   ObjHitVolumeRuntimeBounds *hitVolumeBounds;
   ObjAnimBank **banks;
@@ -430,9 +444,12 @@ STATIC_ASSERT(offsetof(ObjDefHitVolume, priority) == 0x11);
 STATIC_ASSERT(offsetof(ObjDefHitVolume, jointIndices) == 0x12);
 STATIC_ASSERT(sizeof(ObjHitVolumeRuntimeTransform) == 0x18);
 STATIC_ASSERT(sizeof(ObjHitVolumeRuntimeBounds) == 0x05);
+STATIC_ASSERT(sizeof(ObjTextureSlotDef) == 0x02);
+STATIC_ASSERT(sizeof(ObjTextureRuntimeSlot) == 0x10);
 
 STATIC_ASSERT(sizeof(ObjDef) == 0x94);
 STATIC_ASSERT(offsetof(ObjDef, rootMotionScaleBase) == 0x04);
+STATIC_ASSERT(offsetof(ObjDef, textureSlotDefs) == 0x0C);
 STATIC_ASSERT(offsetof(ObjDef, jointData) == 0x10);
 STATIC_ASSERT(offsetof(ObjDef, extraSetupData) == 0x18);
 STATIC_ASSERT(offsetof(ObjDef, sequenceMap) == 0x1C);
@@ -446,6 +463,7 @@ STATIC_ASSERT(offsetof(ObjDef, shadowTextureId) == 0x4A);
 STATIC_ASSERT(offsetof(ObjDef, hitboxFlags) == 0x4E);
 STATIC_ASSERT(offsetof(ObjDef, modelCount) == 0x55);
 STATIC_ASSERT(offsetof(ObjDef, group8RegistrationCount) == 0x56);
+STATIC_ASSERT(offsetof(ObjDef, textureSlotCount) == 0x59);
 STATIC_ASSERT(offsetof(ObjDef, jointCount) == 0x5A);
 STATIC_ASSERT(offsetof(ObjDef, sequenceCount) == 0x5E);
 STATIC_ASSERT(offsetof(ObjDef, renderFlags) == 0x5F);
@@ -482,6 +500,7 @@ STATIC_ASSERT(offsetof(ObjAnimBank, currentState) == 0x2C);
 STATIC_ASSERT(offsetof(ObjAnimBank, activeState) == 0x30);
 
 STATIC_ASSERT(sizeof(ObjAnimComponent) == 0xB0);
+STATIC_ASSERT(offsetof(ObjAnimComponent, textureSlots) == 0x70);
 STATIC_ASSERT(offsetof(ObjAnimComponent, hitVolumeTransforms) == 0x74);
 STATIC_ASSERT(offsetof(ObjAnimComponent, hitVolumeBounds) == 0x78);
 STATIC_ASSERT(offsetof(ObjAnimComponent, targetObj) == 0xA4);

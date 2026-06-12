@@ -502,36 +502,37 @@ char fn_8003EA84(undefined4 param_1, undefined4 param_2, int* node, uint phaseMa
                 {
                     boneEntry = *(int*)(*(int*)(modelData + 0x50) + 0xc);
                     boneIndex = 0;
-                    for (boneCount = (uint) * (byte*)(*(int*)(modelData + 0x50) + 0x59); boneCount != 0; boneCount = boneCount - 1
-                    )
+                    for (boneCount = ((GameObject*)modelData)->anim.modelInstance->textureSlotCount; boneCount != 0;
+                         boneCount = boneCount - 1)
                     {
-                        if (*(char*)((int)entry + 5) == *(char*)(boneEntry + 1))
+                        if (*(char*)((int)entry + 5) == ((ObjTextureSlotDef*)boneEntry)->materialIndex)
                         {
-                            texId = FUN_8005375c(texId, *(int*)(*(int*)(modelData + 0x70) + boneIndex * 0x10));
+                            texId = FUN_8005375c(texId, ((GameObject*)modelData)->anim.textureSlots[boneIndex].textureId);
                             break;
                         }
-                        boneEntry = boneEntry + 2;
+                        boneEntry = (int)((ObjTextureSlotDef*)boneEntry + 1);
                         boneIndex = boneIndex + 1;
                     }
                     boneEntry = *(int*)(*(int*)(modelData + 0x50) + 0xc);
                     boneIndex = 0;
-                    for (boneCount = (uint) * (byte*)(*(int*)(modelData + 0x50) + 0x59); boneCount != 0; boneCount = boneCount - 1
-                    )
+                    for (boneCount = ((GameObject*)modelData)->anim.modelInstance->textureSlotCount; boneCount != 0;
+                         boneCount = boneCount - 1)
                     {
-                        if (*(char*)((int)entry + 5) == *(char*)(boneEntry + 1))
+                        if (*(char*)((int)entry + 5) == ((ObjTextureSlotDef*)boneEntry)->materialIndex)
                         {
-                            boneEntry = *(int*)(modelData + 0x70) + boneIndex * 0x10;
-                            convLo0 = (int)*(short*)(boneEntry + 8) ^ 0x80000000;
+                            ObjTextureRuntimeSlot* slot =
+                                &((GameObject*)modelData)->anim.textureSlots[boneIndex];
+                            convLo0 = (int)slot->offsetS ^ 0x80000000;
                             convHi0 = 0x43300000;
                             u = (double)(lbl_803DF6C8 *
                                 (float)((double)CONCAT44(0x43300000, convLo0) - DOUBLE_803df6c0));
-                            convLo1 = (int)*(short*)(boneEntry + 10) ^ 0x80000000;
+                            convLo1 = (int)slot->offsetT ^ 0x80000000;
                             convHi1 = 0x43300000;
                             v = (double)(lbl_803DF6C8 *
                                 (float)((double)CONCAT44(0x43300000, convLo1) - DOUBLE_803df6c0));
                             goto LAB_8003eca4;
                         }
-                        boneEntry = boneEntry + 2;
+                        boneEntry = (int)((ObjTextureSlotDef*)boneEntry + 1);
                         boneIndex = boneIndex + 1;
                     }
                     u = (double)lbl_803DF684;
@@ -4799,38 +4800,38 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                         u32 jid = layer[5];
                         if (jid != 0)
                         {
-                            int* tbl = *(int**)(obj + 0x70);
-                            u8* m50 = *(u8**)&((GameObject*)obj)->anim.modelInstance;
-                            u8* q = *(u8**)(m50 + 0xc);
-                            int n = m50[0x59];
+                            ObjTextureRuntimeSlot* slots = ((GameObject*)obj)->anim.textureSlots;
+                            ObjDef* modelDef = ((GameObject*)obj)->anim.modelInstance;
+                            ObjTextureSlotDef* q = modelDef->textureSlotDefs;
+                            int n = modelDef->textureSlotCount;
                             int k;
                             for (k = 0; k < n; k++)
                             {
-                                if ((int)jid == q[1])
+                                if ((int)jid == q->materialIndex)
                                 {
-                                    tex = textureCrazyPointerFollowFn_80054c30(tex, *(int*)((char*)tbl + (k << 4)));
+                                    tex = textureCrazyPointerFollowFn_80054c30(tex, slots[k].textureId);
                                     break;
                                 }
-                                q += 2;
+                                q++;
                             }
                             {
                                 f32 tx;
                                 f32 ty;
                                 u32 jid2 = layer[5];
-                                int* tbl2 = *(int**)(obj + 0x70);
-                                u8* n50 = *(u8**)&((GameObject*)obj)->anim.modelInstance;
-                                u8* q2 = *(u8**)(n50 + 0xc);
-                                int n2 = n50[0x59];
+                                ObjTextureRuntimeSlot* slots2 = ((GameObject*)obj)->anim.textureSlots;
+                                ObjDef* modelDef2 = ((GameObject*)obj)->anim.modelInstance;
+                                ObjTextureSlotDef* q2 = modelDef2->textureSlotDefs;
+                                int n2 = modelDef2->textureSlotCount;
                                 int k2;
                                 for (k2 = 0; k2 < n2; k2++)
                                 {
-                                    if ((int)jid2 == q2[1])
+                                    if ((int)jid2 == q2->materialIndex)
                                     {
-                                        tx = lbl_803DEA48 * (f32) * (s16*)((char*)tbl2 + (k2 << 4) + 8);
-                                        ty = lbl_803DEA48 * (f32) * (s16*)((char*)tbl2 + (k2 << 4) + 10);
+                                        tx = lbl_803DEA48 * (f32)slots2[k2].offsetS;
+                                        ty = lbl_803DEA48 * (f32)slots2[k2].offsetT;
                                         goto trans;
                                     }
-                                    q2 += 2;
+                                    q2++;
                                 }
                                 ty = tx = lbl_803DEA04;
                             trans:
@@ -5113,20 +5114,20 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                 f32 tx;
                 f32 ty;
                 u32 jid = l1[5];
-                int* tbl = *(int**)(obj + 0x70);
-                u8* m50 = *(u8**)&((GameObject*)obj)->anim.modelInstance;
-                u8* q = *(u8**)(m50 + 0xc);
-                int n = m50[0x59];
+                ObjTextureRuntimeSlot* slots = ((GameObject*)obj)->anim.textureSlots;
+                ObjDef* modelDef = ((GameObject*)obj)->anim.modelInstance;
+                ObjTextureSlotDef* q = modelDef->textureSlotDefs;
+                int n = modelDef->textureSlotCount;
                 int k;
                 for (k = 0; k < n; k++)
                 {
-                    if ((int)jid == q[1])
+                    if ((int)jid == q->materialIndex)
                     {
-                        tx = lbl_803DEA48 * (f32) * (s16*)((char*)tbl + (k << 4) + 8);
-                        ty = lbl_803DEA48 * (f32) * (s16*)((char*)tbl + (k << 4) + 10);
+                        tx = lbl_803DEA48 * (f32)slots[k].offsetS;
+                        ty = lbl_803DEA48 * (f32)slots[k].offsetT;
                         goto trans2;
                     }
-                    q += 2;
+                    q++;
                 }
                 ty = tx = lbl_803DEA04;
             trans2:

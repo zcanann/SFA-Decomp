@@ -1326,24 +1326,21 @@ void fn_8003B5E0(int a, int b, int c, u8 d)
 void* objFindTexture(void* obj, int target)
 {
     void* result = NULL;
-    void* p50 = *(void**)&((GameObject*)obj)->anim.modelInstance;
-    if (p50 != NULL)
+    ObjDef* modelDef = ((GameObject*)obj)->anim.modelInstance;
+    if (modelDef != NULL)
     {
-        u8* entries = *(u8**)((char*)p50 + 0xC);
+        ObjTextureSlotDef* entries = modelDef->textureSlotDefs;
         if (entries == NULL) return NULL;
         {
-            u8 count = ((ObjDef*)p50)->unk59;
-            int offset = 0;
+            u8 count = modelDef->textureSlotCount;
             int i;
             for (i = 0; i < count; i++)
             {
-                if (target == entries[0])
+                if (target == entries->tag)
                 {
-                    char* base = *(char**)((char*)obj + 0x70);
-                    result = base + offset;
+                    result = &((GameObject*)obj)->anim.textureSlots[i];
                 }
-                entries += 2;
-                offset += 0x10;
+                entries++;
             }
         }
     }
@@ -1647,33 +1644,31 @@ void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
 
 extern u8 framesThisStep;
 
-static inline int* characterFindEyeJoint(int obj, int kind)
+static inline ObjTextureRuntimeSlot* characterFindEyeJoint(int obj, int kind)
 {
-    int i;
-    u8* list;
+    ObjTextureSlotDef* list;
     int n;
     int k;
-    int* table;
-    int* found;
+    ObjDef* modelDef;
+    ObjTextureRuntimeSlot* found;
+
     found = NULL;
-    table = (void*)((GameObject*)obj)->anim.modelInstance;
-    if (table != NULL)
+    modelDef = ((GameObject*)obj)->anim.modelInstance;
+    if (modelDef != NULL)
     {
-        list = *(u8**)((char*)table + 0xc);
+        list = modelDef->textureSlotDefs;
         if (list == NULL)
         {
             return NULL;
         }
-        n = (s32)(u32)((ObjDef*)table)->unk59;
-        i = 0;
+        n = (s32)(u32)modelDef->textureSlotCount;
         for (k = 0; k < n; k++)
         {
-            if (list[0] == kind)
+            if (list->tag == kind)
             {
-                found = (int*)((char*)*(void**)(obj + 0x70) + i);
+                found = &((GameObject*)obj)->anim.textureSlots[k];
             }
-            list += 2;
-            i += 0x10;
+            list++;
         }
     }
     return found;
@@ -1683,8 +1678,8 @@ void characterDoEyeMovements(int obj, int p4, f32 unused);
 
 void fn_8003B228(int obj, int p2)
 {
-    int* foundA;
-    int* foundB;
+    ObjTextureRuntimeSlot* foundA;
+    ObjTextureRuntimeSlot* foundB;
     int val;
 
     foundA = characterFindEyeJoint(obj, 5);
@@ -1693,14 +1688,14 @@ void fn_8003B228(int obj, int p2)
     {
         return;
     }
-    val = *foundB;
+    val = foundB->textureId;
     val += framesThisStep * 0x30;
     if (val >= 0x200)
     {
         val = 0x200;
     }
-    *foundA = val;
-    *foundB = val;
+    foundA->textureId = val;
+    foundB->textureId = val;
     *(u8*)(p2 + 0x1e) = 1;
 }
 
@@ -2788,8 +2783,8 @@ void characterDoEyeAnims(int obj, int p2)
 {
     extern f32 lbl_803DE9A4;
     extern u8 framesThisStep;
-    int* a;
-    int* b;
+    ObjTextureRuntimeSlot* a;
+    ObjTextureRuntimeSlot* b;
 
     a = characterFindEyeJoint(obj, 5);
     b = characterFindEyeJoint(obj, 4);
@@ -2803,7 +2798,7 @@ void characterDoEyeAnims(int obj, int p2)
     }
     else
     {
-        int v = *b;
+        int v = b->textureId;
         int st = (s8) * (s8*)(p2 + 0x1e);
 
         switch (st & 0xf)
@@ -2851,8 +2846,8 @@ void characterDoEyeAnims(int obj, int p2)
                     *(u8*)(p2 + 0x1f) = 0x28;
                 }
             }
-            *a = v;
-            *b = v;
+            a->textureId = v;
+            b->textureId = v;
             break;
         }
         characterDoEyeMovements(obj, p2, lbl_803DE9A4);
@@ -2861,8 +2856,8 @@ void characterDoEyeAnims(int obj, int p2)
 
 void characterDoEyeMovements(int obj, int p4, f32 unused)
 {
-    int* foundA;
-    int* foundB;
+    ObjTextureRuntimeSlot* foundA;
+    ObjTextureRuntimeSlot* foundB;
     s16 t;
     int flag;
     s8 timer;
@@ -2882,14 +2877,14 @@ void characterDoEyeMovements(int obj, int p4, f32 unused)
     }
     if (t > 0)
     {
-        if (*(s16*)((char*)foundA + 8) >= *(int*)(p4 + 0x24))
+        if (foundA->offsetS >= *(int*)(p4 + 0x24))
         {
             flag = 1;
         }
     }
     if (t < 0)
     {
-        if (*(s16*)((char*)foundA + 8) <= *(int*)(p4 + 0x24))
+        if (foundA->offsetS <= *(int*)(p4 + 0x24))
         {
             flag = 1;
         }
@@ -2897,7 +2892,7 @@ void characterDoEyeMovements(int obj, int p4, f32 unused)
     if (flag != 0)
     {
         *(int*)(p4 + 0x24) = randomGetRange(-0x3e8, 0x3e8);
-        *(s16*)(p4 + 0x22) = (*(int*)(p4 + 0x24) < *(s16*)((char*)foundA + 8)) ? -0x96 : 0x96;
+        *(s16*)(p4 + 0x22) = (*(int*)(p4 + 0x24) < foundA->offsetS) ? -0x96 : 0x96;
         *(s8*)(p4 + 0x20) = (s8)randomGetRange(0x1e, 0x64);
     }
     timer = *(s8*)(p4 + 0x20);
@@ -2907,11 +2902,10 @@ void characterDoEyeMovements(int obj, int p4, f32 unused)
     }
     else
     {
-        *(s16*)((char*)foundA + 8) =
-            (s16)(*(s16*)((char*)foundA + 8) + *(s16*)(p4 + 0x22) * framesThisStep);
-        *(s16*)((char*)foundA + 0xa) = 0;
-        *(s16*)((char*)foundB + 8) = *(s16*)((char*)foundA + 8);
-        *(s16*)((char*)foundB + 0xa) = 0;
+        foundA->offsetS = (s16)(foundA->offsetS + *(s16*)(p4 + 0x22) * framesThisStep);
+        foundA->offsetT = 0;
+        foundB->offsetS = foundA->offsetS;
+        foundB->offsetT = 0;
     }
 }
 

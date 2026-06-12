@@ -1144,7 +1144,7 @@ typedef struct LoadedObj
     u8 pad64[0x4];
     int** dll;
     int f6c;
-    int f70;
+    ObjTextureRuntimeSlot* textureSlots;
     ObjHitVolumeRuntimeTransform* hitVolumeTransforms;
     ObjHitVolumeRuntimeBounds* hitVolumeBounds;
     u8** models;
@@ -1483,11 +1483,11 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         obj->f6c = tmp;
         cursor = tmp + modelDef->jointCount * 0x12;
     }
-    if (*(u8*)(def + 0x59) != 0)
+    if (modelDef->textureSlotCount != 0)
     {
         tmp = roundUpTo4(cursor);
-        obj->f70 = tmp;
-        cursor = tmp + *(u8*)(def + 0x59) * 0x10;
+        obj->textureSlots = (ObjTextureRuntimeSlot*)tmp;
+        cursor = tmp + modelDef->textureSlotCount * sizeof(ObjTextureRuntimeSlot);
     }
     if (modelDef->hitVolumeCount != 0)
     {
@@ -2632,10 +2632,10 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
         r = roundUpTo4(size);
         size = r + modelDef->jointCount * 0x12;
     }
-    if (*(u8*)(def + 0x59) != 0)
+    if (modelDef->textureSlotCount != 0)
     {
         r = roundUpTo4(size);
-        size = r + *(u8*)(def + 0x59) * 0x10;
+        size = r + modelDef->textureSlotCount * sizeof(ObjTextureRuntimeSlot);
     }
     if (modelDef->hitVolumeCount != 0)
     {
