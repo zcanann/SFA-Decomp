@@ -65,41 +65,9 @@ typedef struct EffectSpawnParams
   u8 srcFlag;
 } EffectSpawnParams;
 
-extern EffectSrcParams lbl_8039C3F8;
 extern void vecRotateZXY(void* params, f32* vec);
 
-extern f32 lbl_803DFEB8;
-extern f32 lbl_803DFEBC;
-extern f32 lbl_803DFEC8;
-extern EffectSrcParams lbl_8039C3B0;
-extern f32 lbl_803DB830;
-extern f32 lbl_803DB834;
-extern f32 lbl_803DFEC4;
-extern f32 lbl_803DFECC;
-extern f32 lbl_803DFED0;
-extern f32 lbl_803DFED4;
-extern f32 lbl_803DFED8;
-extern f32 lbl_803DFEDC;
-extern f32 lbl_803DFEE0;
-extern f32 lbl_803DFEE4;
-extern f32 lbl_803DFEE8;
-extern f32 lbl_803DFEEC;
-extern f32 lbl_803DFEF0;
-extern f32 lbl_803DFEF4;
-extern f32 lbl_803DFEF8;
-extern f32 lbl_803DFEFC;
-extern f32 lbl_803DFF00;
-extern f32 lbl_803DFF04;
-extern f32 lbl_803DFF08;
-extern f32 lbl_803DFF0C;
-extern f32 lbl_803DFF10;
-extern f32 lbl_803DFF14;
-extern f32 lbl_803DFF18;
-extern f32 lbl_803DFF1C;
-extern f32 lbl_803DFF20;
-extern f32 lbl_803DFF24;
 
-int Effect10_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte, f32* p6);
 
 /*
  * --INFO--
@@ -468,27 +436,7 @@ int Effect11_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
 
 
 extern EffectSrcParams lbl_8039C3E0;
-extern f32 lbl_803DFFA8;
-extern f32 lbl_803DFFAC;
-extern f32 lbl_803DFFB0;
-extern f32 lbl_803DFFB4;
-extern f32 lbl_803DFFB8;
-extern f32 lbl_803DFFBC;
-extern f32 lbl_803DFFC0;
-extern f32 lbl_803DFFC4;
-extern f32 lbl_803DFFC8;
-extern f32 lbl_803DFFCC;
-extern f32 lbl_803DFFD0;
-extern f32 lbl_803DFFD4;
-extern f32 lbl_803DFFD8;
-extern f32 lbl_803DFFDC;
-extern f32 lbl_803DFFE0;
-extern f32 lbl_803DFFE4;
-extern f32 lbl_803DFFE8;
-extern f32 lbl_803DFFEC;
-extern f32 lbl_803DFFF0;
 
-int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte, f32* p6);
 
 
 /*
@@ -505,67 +453,15 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
  * PAL Size: TODO
  */
 
-extern f32 lbl_803E0000;
-extern f32 lbl_803E0004;
-extern f32 lbl_803E0008;
-extern f32 lbl_803E000C;
-extern f32 lbl_803E0010;
-extern f32 lbl_803E0014;
-extern f32 lbl_803E0018;
-extern f32 lbl_803E001C;
-extern f32 lbl_803E0020;
-extern f32 lbl_803E0024;
-extern f32 lbl_803E0028;
-extern f32 lbl_803E002C;
-extern f32 lbl_803E0030;
-extern f32 lbl_803E0034;
-extern f32 lbl_803E0038;
-extern f32 lbl_803E003C;
-extern f32 lbl_803E0040;
-extern f32 lbl_803E0044;
-extern f32 lbl_803E0048;
-extern f32 lbl_803E004C;
-extern f32 lbl_803E0050;
-extern f32 lbl_803E0054;
-extern f32 lbl_803E0058;
-extern f32 lbl_803E005C;
-extern f32 lbl_803E0060;
-extern f32 lbl_803E0064;
-extern f32 lbl_803E0068;
-extern f32 lbl_803E006C;
-extern f32 lbl_803E0070;
-extern f32 lbl_803E0074;
-extern f32 lbl_803E0078;
-extern f32 lbl_803E007C;
-extern f32 lbl_803E0080;
-extern f64 lbl_803E0088;
-extern f32 lbl_803E0090;
-extern f32 lbl_803E0094;
 
-int Effect14_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte, u16* p6);
 
 /* sda21 externs for Effect10_func05 tick. */
-extern f32 lbl_803DB838;
-extern f32 lbl_803DB83C;
-extern s32 lbl_803DD3B0;
-extern s32 lbl_803DD3B4;
-extern f32 lbl_803DD3B8;
-extern f32 lbl_803DD3BC;
-extern f32 lbl_803DFF30;
-extern f32 lbl_803DFF34;
-extern f32 timeDelta;
-extern u8 framesThisStep;
-extern f32 mathSinf(f32 x);
 
 /* Advance two periodic counters; compute sin of phase. */
-void Effect10_func05(void);
 
 /* Trivial 4b 0-arg blr leaves. */
-void Effect10_func03_nop(void);
 
-void Effect10_release(void);
 
-void Effect10_initialise(void);
 
 void Effect11_func05_nop(void)
 {
@@ -585,16 +481,9 @@ void Effect11_initialise(void)
 
 void Effect12_func05_nop(void);
 
-void Effect12_func03_nop(void);
 
-void Effect12_release(void);
 
-void Effect12_initialise(void);
 
-void Effect14_func05_nop(void);
 
-void Effect14_func03_nop(void);
 
-void Effect14_release(void);
 
-void Effect14_initialise(void);

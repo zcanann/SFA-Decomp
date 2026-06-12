@@ -65,8 +65,6 @@ typedef struct EffectSpawnParams
   u8 srcFlag;
 } EffectSpawnParams;
 
-extern EffectSrcParams lbl_8039C3F8;
-extern void vecRotateZXY(void* params, f32* vec);
 
 extern f32 lbl_803DFEB8;
 extern f32 lbl_803DFEBC;
@@ -636,59 +634,12 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
 
 
 extern EffectSrcParams lbl_8039C3C8;
-extern f32 lbl_803DFF3C;
-extern f32 lbl_803DFF40;
-extern f32 lbl_803DFF44;
-extern f32 lbl_803DFF48;
-extern f32 lbl_803DFF4C;
-extern f32 lbl_803DFF50;
-extern f32 lbl_803DFF54;
-extern f32 lbl_803DFF58;
-extern f32 lbl_803DFF5C;
-extern f32 lbl_803DFF60;
-extern f32 lbl_803DFF64;
-extern f32 lbl_803DFF68;
-extern f32 lbl_803DFF6C;
-extern f32 lbl_803DFF70;
-extern f32 lbl_803DFF74;
-extern f32 lbl_803DFF78;
-extern f32 lbl_803DFF7C;
-extern f32 lbl_803DFF80;
-extern f32 lbl_803DFF84;
-extern f32 lbl_803DFF88;
-extern f32 lbl_803DFF8C;
-extern f32 lbl_803DFF90;
-extern f32 lbl_803DFF94;
-extern f32 lbl_803DFF98;
-extern f32 lbl_803DFF9C;
 
 #pragma scheduling off
 #pragma peephole off
-int Effect11_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte);
 
 
-extern EffectSrcParams lbl_8039C3E0;
-extern f32 lbl_803DFFA8;
-extern f32 lbl_803DFFAC;
-extern f32 lbl_803DFFB0;
-extern f32 lbl_803DFFB4;
-extern f32 lbl_803DFFB8;
-extern f32 lbl_803DFFBC;
-extern f32 lbl_803DFFC0;
-extern f32 lbl_803DFFC4;
-extern f32 lbl_803DFFC8;
-extern f32 lbl_803DFFCC;
-extern f32 lbl_803DFFD0;
-extern f32 lbl_803DFFD4;
-extern f32 lbl_803DFFD8;
-extern f32 lbl_803DFFDC;
-extern f32 lbl_803DFFE0;
-extern f32 lbl_803DFFE4;
-extern f32 lbl_803DFFE8;
-extern f32 lbl_803DFFEC;
-extern f32 lbl_803DFFF0;
 
-int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte, f32* p6);
 
 
 /*
@@ -705,44 +656,7 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
  * PAL Size: TODO
  */
 
-extern f32 lbl_803E0000;
-extern f32 lbl_803E0004;
-extern f32 lbl_803E0008;
-extern f32 lbl_803E000C;
-extern f32 lbl_803E0010;
-extern f32 lbl_803E0014;
-extern f32 lbl_803E0018;
-extern f32 lbl_803E001C;
-extern f32 lbl_803E0020;
-extern f32 lbl_803E0024;
-extern f32 lbl_803E0028;
-extern f32 lbl_803E002C;
-extern f32 lbl_803E0030;
-extern f32 lbl_803E0034;
-extern f32 lbl_803E0038;
-extern f32 lbl_803E003C;
-extern f32 lbl_803E0040;
-extern f32 lbl_803E0044;
-extern f32 lbl_803E0048;
-extern f32 lbl_803E004C;
-extern f32 lbl_803E0050;
-extern f32 lbl_803E0054;
-extern f32 lbl_803E0058;
-extern f32 lbl_803E005C;
-extern f32 lbl_803E0060;
-extern f32 lbl_803E0064;
-extern f32 lbl_803E0068;
-extern f32 lbl_803E006C;
-extern f32 lbl_803E0070;
-extern f32 lbl_803E0074;
-extern f32 lbl_803E0078;
-extern f32 lbl_803E007C;
-extern f32 lbl_803E0080;
-extern f64 lbl_803E0088;
-extern f32 lbl_803E0090;
-extern f32 lbl_803E0094;
 
-int Effect14_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte, u16* p6);
 
 /* sda21 externs for Effect10_func05 tick. */
 extern f32 lbl_803DB838;
@@ -803,24 +717,13 @@ void Effect10_initialise(void)
 
 void Effect11_func05_nop(void);
 
-void Effect11_func03_nop(void);
 
-void Effect11_release(void);
 
-void Effect11_initialise(void);
 
-void Effect12_func05_nop(void);
 
-void Effect12_func03_nop(void);
 
-void Effect12_release(void);
 
-void Effect12_initialise(void);
 
-void Effect14_func05_nop(void);
 
-void Effect14_func03_nop(void);
 
-void Effect14_release(void);
 
-void Effect14_initialise(void);
