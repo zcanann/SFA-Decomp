@@ -1,6 +1,9 @@
 #include "main/audio/sfx_ids.h"
+#include "main/gamebits.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
+#include "main/objanim.h"
 #include "main/dll/DIM/DIM2lift.h"
 #include "main/dll/baddie_state.h"
 
@@ -8,13 +11,10 @@ extern undefined4 FUN_80006824();
 extern undefined4 FUN_8000691c();
 extern undefined4 FUN_800069bc();
 extern undefined4 FUN_80006b94();
-extern undefined8 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
+extern void Obj_FreeObject(int obj);
 extern undefined4 FUN_800305f8();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined8 ObjHits_DisableObject();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 fn_801BC2D8();
 
@@ -304,7 +304,6 @@ FUN_801ba9ec(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 {
     int iVar1;
     int iVar2;
-    undefined8 uVar3;
 
     FUN_80017a98();
     iVar2 = *(int*)&((GameObject*)param_9)->extra;
@@ -313,20 +312,18 @@ FUN_801ba9ec(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
         *(undefined4*)(param_10 + 0x2d0) = 0;
         *(u8*)(param_10 + 0x25f) = 0;
         *(u8*)(param_10 + 0x349) = 0;
-        uVar3 = ObjHits_DisableObject(param_9);
+        ObjHits_DisableObject(param_9);
         *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode |
             8;
         *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode &
             0x7f;
         iVar1 = FUN_80017a98();
-        ObjMsg_SendToObject(uVar3, param_2, param_3, param_4, param_5, param_6, param_7, param_8, iVar1, 0xe0000,
-                            param_9
-                            , 0, param_13, param_14, param_15, param_16);
+        ObjMsg_SendToObject(iVar1, 0xe0000, param_9, 0);
         GameBit_Set((int)*(short*)(iVar2 + 0x3f4), 0);
-        uVar3 = GameBit_Set((int)*(short*)(iVar2 + 0x3f2), 1);
+        GameBit_Set((int)*(short*)(iVar2 + 0x3f2), 1);
         if (*(int*)&((GameObject*)param_9)->anim.placementData == 0)
         {
-            FUN_80017ac8(uVar3, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9);
+            Obj_FreeObject((int)param_9);
         }
     }
     return 0;
@@ -917,8 +914,6 @@ int fn_801BA5F0(int* obj)
 int fn_801BA4B8(int obj, int p2)
 {
     extern void*Obj_GetPlayerObject(void);
-    extern void ObjHits_DisableObject(int);
-    extern void Obj_FreeObject(int);
     int sub;
 
     Obj_GetPlayerObject();
@@ -947,7 +942,6 @@ int fn_801BA4B8(int obj, int p2)
 int fn_801BA880(int obj, int p2)
 {
     f32 zeroProgress;
-    extern void ObjHits_SetHitVolumeSlot(int, int, int, int);
     extern void Camera_EnableViewYOffset(void);
     extern void CameraShake_Start(f32, f32, f32);
     extern void doRumble(f32);
