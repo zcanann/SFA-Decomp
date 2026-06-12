@@ -1512,8 +1512,20 @@ main/dll/DIMlavasmash.c:
 dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c:
 	.text       start:0x801B13E8 end:0x801B13E8
 
-main/dll/DIMExplosion.c:
-	.text       start:0x801B13E8 end:0x801B1FF4
+main/dll/dll_01C2_dimsnowball.c:
+	.text       start:0x801B13E8 end:0x801B15D8
+
+main/dll/dll_01C3_dimgate.c:
+	.text       start:0x801B15D8 end:0x801B17F4
+
+main/dll/dll_01C4_dimicewall.c:
+	.text       start:0x801B17F4 end:0x801B1B40
+
+main/dll/dll_01C5_dimbarrier.c:
+	.text       start:0x801B1B40 end:0x801B1D84
+
+main/dll/dll_801B1D84.c:
+	.text       start:0x801B1D84 end:0x801B1FF4
 
 main/dll/DIMwooddoor.c:
 	.text       start:0x801B1FF4 end:0x801B2550
