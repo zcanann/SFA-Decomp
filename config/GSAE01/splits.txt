@@ -714,8 +714,20 @@ main/dll/CF/dll_011C_staffactivated.c:
 main/dll/CF/dll_011D_treasurechest.c:
 	.text       start:0x8018A8BC end:0x8018ADB4
 
-main/dll/CF/CFtoggleswitch.c:
-	.text       start:0x8018ADB4 end:0x8018BC48
+main/dll/CF/dll_011E_magiccavebo.c:
+	.text       start:0x8018ADB4 end:0x8018AFC8
+
+main/dll/CF/dll_011F_magiccaveto.c:
+	.text       start:0x8018AFC8 end:0x8018B7B0
+
+main/dll/CF/dll_0120_trickyguard.c:
+	.text       start:0x8018B7B0 end:0x8018B9F0
+
+main/dll/CF/dll_0121_linkfinfot.c:
+	.text       start:0x8018B9F0 end:0x8018BB00
+
+main/dll/CF/dll_0122_cctestinfot.c:
+	.text       start:0x8018BB00 end:0x8018BC48
 
 main/dll/CF/dll_0124_deathgas.c:
 	.text       start:0x8018BC48 end:0x8018C000

@@ -97,19 +97,9 @@ extern f32 lbl_803E3C2C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int magiccavebottom_getExtraSize(void)
-{
-    return 1;
-}
+int magiccavebottom_getExtraSize(void);
 
-void magiccavebottom_free(int obj)
-{
-    extern void Music_Trigger(s32 triggerId, s32 mode);
-    extern void GameBit_Set(int eventId, int value);
-    (void)obj;
-    GameBit_Set(0xefb, 0);
-    Music_Trigger(0x2f, 0);
-}
+void magiccavebottom_free(int obj);
 
 void treasurechest_init(int* obj);
 
@@ -248,9 +238,7 @@ extern f32 FLOAT_803e4904;
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void trickyguardspot_render(void)
-{
-}
+void trickyguardspot_render(void);
 
 extern int* getTrickyObject(void);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
@@ -260,94 +248,25 @@ extern u8 framesThisStep;
 #define TRICKY_GUARD_SPOT_VTABLE(tricky) \
     (*(TrickyGuardSpotInterfaceVTable **)((tricky)->dll))
 
-void trickyguardspot_update(TrickyGuardSpotObject* obj)
-{
-    extern undefined8 GameBit_Set(int eventId, int value);
-    u8* sub;
-    u8* def;
-    ObjAnimComponent* tricky;
-    TrickyGuardSpotStateFlags* flags;
-
-    sub = ((GameObject*)obj)->extra;
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    tricky = (ObjAnimComponent*)getTrickyObject();
-    flags = (TrickyGuardSpotStateFlags*)(sub + 4);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-        (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | TRICKY_GUARD_SPOT_ACTIVE_HITBOX_FLAG);
-    flags->trickyInRange = 0;
-    if (tricky != NULL)
-    {
-        if ((u8)TRICKY_GUARD_SPOT_VTABLE(tricky)->isGuardSpotActionReady(tricky) != 0)
-        {
-            if (Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX,
-                               (f32*)((char*)tricky + 0x18)) < (f32)(s32)((TrickyguardspotPlacement*)def)->unk1A)
-            {
-                *(int*)sub = *(int*)sub - framesThisStep;
-                flags->trickyInRange = 1;
-            }
-        }
-    }
-    if (*(u32*)sub != 0)
-    {
-        if (tricky != NULL && (u8)TRICKY_GUARD_SPOT_VTABLE(tricky)->isGuardSpotActionReady(tricky) == 0)
-        {
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & TRICKY_GUARD_SPOT_VISIBLE_HITBOX_FLAG) != 0)
-            {
-                TRICKY_GUARD_SPOT_VTABLE(tricky)->setGuardSpotAction(
-                    tricky, obj, TRICKY_GUARD_SPOT_ACTION, TRICKY_GUARD_SPOT_ACTION_PARAM);
-            }
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~TRICKY_GUARD_SPOT_ACTIVE_HITBOX_FLAG);
-            objRenderFn_80041018((int)obj);
-        }
-    }
-    else if (tricky != NULL)
-    {
-        TRICKY_GUARD_SPOT_VTABLE(tricky)->resetGuardSpotAction(tricky);
-        *(int*)sub = def[0x19] * 0x3c;
-    }
-    GameBit_Set(((TrickyguardspotPlacement*)def)->unk1E, flags->trickyInRange);
-}
+void trickyguardspot_update(TrickyGuardSpotObject* obj);
 
 /* 8b "li r3, N; blr" returners. */
 int magiccavetop_getExtraSize(void) { return 0xc; }
-int trickyguardspot_getExtraSize(void) { return 0x8; }
-int infotext_getExtraSize(void) { return 0x4; }
-int cctestinfot_getExtraSize(void) { return 0x8; }
+int trickyguardspot_getExtraSize(void);
+int infotext_getExtraSize(void);
+int cctestinfot_getExtraSize(void);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void trickyguardspot_free(TrickyGuardSpotObject* obj) { ObjGroup_RemoveObject(obj, TRICKY_GUARD_SPOT_GROUP); }
+void trickyguardspot_free(TrickyGuardSpotObject* obj);
 
 extern void ObjGroup_AddObject(int obj, int g);
 extern void objSetHintTextIdx(int obj, int idx);
 
-void trickyguardspot_init(TrickyGuardSpotObject* obj, TrickyGuardSpotPlacement* def)
-{
-    TrickyGuardSpotState* state = obj->state;
-    ObjGroup_AddObject((int)obj, TRICKY_GUARD_SPOT_GROUP);
-    state->resetTimer = (int)def->resetSeconds * 60;
-    obj->objAnim.rotX = (s16)(s32)
-    def->initialYaw;
-}
+void trickyguardspot_init(TrickyGuardSpotObject* obj, TrickyGuardSpotPlacement* def);
 
-void infotext_init(int obj, s8* def)
-{
-    u32 v;
-    v = (u32)((GameObject*)obj)->objectFlags | 0x6000;
-    ((GameObject*)obj)->objectFlags = (u16)v;
-    *(s16*)obj = (s16)((s32)(u8)def[0x18] << 8);
-    objSetHintTextIdx(obj, (int)(u8)def[0x19]);
-}
+void infotext_init(int obj, s8* def);
 
-void cctestinfot_init(int obj, s8* def)
-{
-    u32 v;
-    v = (u32)((GameObject*)obj)->objectFlags | 0x6000;
-    ((GameObject*)obj)->objectFlags = (u16)v;
-    *(s16*)obj = (s16)((s32)(u8)def[0x1A] << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)((s32)(u8)def[0x19] << 8);
-    ((GameObject*)obj)->anim.rotZ = (s16)((s32)(u8)def[0x18] << 8);
-}
+void cctestinfot_init(int obj, s8* def);
 
 extern int playerIsDisguised(void);
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
@@ -357,44 +276,7 @@ extern f32 timeDelta;
 extern f32 lbl_803E3C88;
 extern f32 lbl_803E3C8C;
 
-void cctestinfot_update(int* obj)
-{
-    extern void*Obj_GetPlayerObject(void);
-    u8* sub = ((GameObject*)obj)->extra;
-    Obj_GetPlayerObject();
-    if (sub[4] != 0)
-    {
-        if (playerIsDisguised() == 0)
-        {
-            sub[4] = 0;
-        }
-    }
-    else
-    {
-        if (playerIsDisguised() != 0)
-        {
-            sub[4] = 1;
-        }
-    }
-    objSetHintTextIdx((int)obj, sub[4]);
-    Obj_SetActiveModelIndex(obj, sub[4]);
-    if (ObjTrigger_IsSet((int)obj) != 0 && fn_801334E0() == 0)
-    {
-        *(f32*)sub = lbl_803E3C88;
-    }
-    if (*(f32*)sub > lbl_803E3C8C)
-    {
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) == 0)
-        {
-            *(f32*)sub = lbl_803E3C8C;
-        }
-        else
-        {
-            *(f32*)sub = *(f32*)sub - timeDelta;
-            showHelpText(((s16*)((char*)*(int**)&((GameObject*)obj)->anim.modelInstance + 0x7c))[sub[4]]);
-        }
-    }
-}
+void cctestinfot_update(int* obj);
 
 extern int Obj_GetActiveModel(int* obj);
 extern int* ObjModel_GetRenderOpTextureRefs(int model, int idx);
@@ -461,93 +343,12 @@ extern void getEnvfxAct(int* obj, int* target, int id, int p);
 extern void setAButtonIcon(int idx);
 extern void warpToMap(int mapId, int b);
 
-void magiccavebottom_update(int* obj)
-{
-    extern void Music_Trigger(int a, int b);
-    extern undefined8 GameBit_Set(int eventId, int value);
-    u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    u8* sub = ((GameObject*)obj)->extra;
-
-    *(s16*)obj = (s16)((s32)def[0x1a] << 8);
-    switch (*sub)
-    {
-    case 0:
-        GameBit_Set(0xefb, 1);
-        envFxActFn_800887f8(0);
-        getEnvfxAct(obj, obj, 0x2c, 0);
-        getEnvfxAct(obj, obj, 0x2d, 0);
-        *sub = 1;
-        if (def[0x1b] != 0)
-        {
-            (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-        }
-        else
-        {
-            (*gObjectTriggerInterface)->runSequence(2, obj, -1);
-        }
-        break;
-    case 1:
-        Music_Trigger(0x2f, 1);
-        *sub = 2;
-        break;
-    case 2:
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) != 0)
-        {
-            setAButtonIcon(0x19);
-        }
-        if (ObjTrigger_IsSet((int)obj) != 0)
-        {
-            *sub = 3;
-            if (def[0x1b] != 0)
-            {
-                (*gObjectTriggerInterface)->runSequence(1, obj, -1);
-            }
-            else
-            {
-                (*gObjectTriggerInterface)->runSequence(3, obj, -1);
-            }
-        }
-        else
-        {
-            objRenderFn_80041018((int)obj);
-        }
-        break;
-    case 3:
-        GameBit_Set(0x91e, 1);
-        warpToMap(GameBit_Get(0x1b8), 0);
-        break;
-    }
-}
+void magiccavebottom_update(int* obj);
 
 extern f32 lbl_803E3C80;
 extern f32 lbl_803E3C84;
 
-void infotext_update(int obj)
-{
-    f32* sub = ((GameObject*)obj)->extra;
-    if (ObjTrigger_IsSet(obj) != 0 && fn_801334E0() == 0)
-    {
-        *sub = lbl_803E3C80;
-    }
-    if (*sub > lbl_803E3C84)
-    {
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 4) == 0)
-        {
-            *sub = lbl_803E3C84;
-        }
-        else
-        {
-            *sub = *sub - timeDelta;
-            showHelpText(
-                ((s16*)((char*)*(int**)&((GameObject*)obj)->anim.modelInstance + 0x7c))[(*(u8**)&((GameObject*)obj)->
-                    anim.placementData)[0x19]]);
-        }
-    }
-    if ((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0)
-    {
-        objRenderFn_80041018(obj);
-    }
-}
+void infotext_update(int obj);
 
 extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
 extern int loadMapAndParent(int mapId);
