@@ -501,7 +501,7 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5);
 #pragma peephole reset
 #pragma peephole reset
 
-#include "main/dll/DR/DRCloudball.h"
+#include "main/dll/DR/dll_0287_spscarab.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 

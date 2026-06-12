@@ -1087,7 +1087,7 @@ main/dll/DR/DRlaserturret.c:
 main/dll/DR/DRpushcart.c:
 	.text       start:0x801E76A0 end:0x801E8EA4
 
-main/dll/DR/DRCloudball.c:
+main/dll/DR/dll_0287_spscarab.c:
 	.text       start:0x801E8EA4 end:0x801E9328
 	.data       start:0x80328418 end:0x80328450
 
@@ -1348,19 +1348,19 @@ main/dll/DR/dll_0253_ktlazerlight.c:
 main/dll/DR/dll_0254_ktfallingrocks.c:
 	.text       start:0x80216D18 end:0x80216EAC
 
-main/dll/DR/dll_0261_dr_lasercannon.c:
+main/dll/DR/dll_0261_drlasercannon.c:
 	.text       start:0x80216EAC end:0x80217F24
 
 main/dll/DR/dll_0262_drakormissile.c:
 	.text       start:0x80217F24 end:0x80218B24
 
-main/dll/DR/dll_0263_gm_mazewell.c:
+main/dll/DR/dll_0263_gmmazewell.c:
 	.text       start:0x80218B24 end:0x80218EE8
 
 main/dll/DR/dll_0266_kytesmum.c:
 	.text       start:0x80218EE8 end:0x80219A88
 
-main/dll/DR/dll_0265_dr_creator.c:
+main/dll/DR/dll_0265_drcreator.c:
 	.text       start:0x80219A88 end:0x8021A008
 
 main/dll/DR/dll_0268_dr_cagecontrol.c:
@@ -1369,13 +1369,13 @@ main/dll/DR/dll_0268_dr_cagecontrol.c:
 main/dll/DR/dll_0269_explodeplan.c:
 	.text       start:0x8021A13C end:0x8021A42C
 
-main/dll/DR/dll_026B_dr_chimmey.c:
+main/dll/DR/dll_026B_drchimmey.c:
 	.text       start:0x8021A42C end:0x8021A62C
 
-main/dll/DR/dll_026C_dr_cagewith.c:
+main/dll/DR/dll_026C_drcagewith.c:
 	.text       start:0x8021A62C end:0x8021ACE8
 
-main/dll/DR/dll_026E_dr_shackle.c:
+main/dll/DR/dll_026E_drshackle.c:
 	.text       start:0x8021ACE8 end:0x8021B358
 
 main/dll/DR/dll_0271_drakorhoverpad.c:
@@ -1384,32 +1384,32 @@ main/dll/DR/dll_0271_drakorhoverpad.c:
 main/dll/DR/dll_0272_hightop.c:
 	.text       start:0x8021CF60 end:0x8021F34C
 
-main/dll/DR/dll_026F_dr_generator.c:
+main/dll/DR/dll_026F_drgenerator.c:
 	.text       start:0x8021F34C end:0x8021F8CC
 
 main/dll/firepipe.c:
 	.text       start:0x8021F8CC end:0x80220608
 	.data       start:0x8032AC90 end:0x8032ACC8
 
-main/dll/DR/dll_0279_dr_energydisc.c:
+main/dll/DR/dll_0279_drenergydisc.c:
 	.text       start:0x80220608 end:0x80220808
 
-main/dll/DR/dll_027C_dr_lightbea.c:
+main/dll/DR/dll_027C_drlightbea.c:
 	.text       start:0x80220808 end:0x80220AD0
 
 main/dll/DR/dll_027E_drmusiccont.c:
 	.text       start:0x80220AD0 end:0x80221178
 
-main/dll/DR/dll_0280_dr_cloudper.c:
+main/dll/DR/dll_0280_drcloudper.c:
 	.text       start:0x80221178 end:0x80221430
 
-main/dll/DR/dll_0281_dr_earthcal.c:
+main/dll/DR/dll_0281_drearthcal.c:
 	.text       start:0x80221430 end:0x80221670
 
 main/dll/barrelgener.c:
 	.text       start:0x80221670 end:0x802227EC
 
-main/dll/DR/dll_0283_dr_barrelgr.c:
+main/dll/DR/dll_0283_drbarrelgr.c:
 	.text       start:0x802227EC end:0x80223004
 
 main/dll/earthwalker.c:
