@@ -1,11 +1,4 @@
 #include "main/game_object.h"
-#include "main/dll/wormspitbyte_struct.h"
-#include "main/dll/cfprisonunclestate_struct.h"
-#include "main/dll/babycloudrunnerflags_struct.h"
-#include "main/dll/gcrobotlightbeastate_struct.h"
-#include "main/dll/cfprisonguardstate_struct.h"
-#include "main/dll/cfpowerbasestate_struct.h"
-#include "main/dll/cfmaincrystalstate_types.h"
 #include "main/dll/rom_curve_interface.h"
 
 int cfguardian_setScale(int* obj)
@@ -183,55 +176,21 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
 #include "main/dll/rom_curve_interface.h"
 #include "main/objseq.h"
 
-extern undefined4 getLActions();
-extern undefined8 FUN_80006824();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
-extern undefined4 FUN_80017a88();
-extern int FUN_80017a98();
-extern undefined4 FUN_8002f6ac();
-extern int FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern int ObjMsg_Pop();
-extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
 extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
 extern int ObjTrigger_IsSet();
 extern undefined4 objAnimFn_80038f38();
 extern void objRenderFn_8003b8f4(f32);
-extern undefined4 FUN_8006f7a0();
-extern int FUN_8007f924();
-extern undefined4 FUN_800e8630();
-extern int FUN_801149b8();
 extern undefined4 dll_2E_func03();
-extern double FUN_80293900();
-extern undefined4 FUN_80294d40();
 
-extern undefined4 DAT_802c2a58;
-extern undefined4 DAT_802c2a5c;
-extern undefined4 DAT_802c2a60;
-extern undefined4 DAT_802c2a64;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern f64 DOUBLE_803e4db0;
-extern f32 lbl_803DC074;
-extern f32 gBoneParticleEffectInterface;
-extern f32 lbl_803E4DA8;
-extern f32 lbl_803E4DBC;
-extern f32 lbl_803E4DC0;
-extern f32 lbl_803E4EB0;
-extern f32 lbl_803E4EC4;
-extern f32 lbl_803E4EC8;
-extern f32 lbl_803E4ECC;
 
 #pragma scheduling on
 #pragma peephole on
-
-
-
 
 
 void babycloudrunner_init_OLD_v1_1(int obj);
@@ -239,41 +198,6 @@ void babycloudrunner_init_OLD_v1_1(int obj);
 extern uint GameBit_Get(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 
-/* Per-object extra state for the baby CloudRunner
- * (babycloudrunner_getExtraSize == 0x248). */
-typedef struct BabyCloudRunnerState
-{
-    f32 unk00;
-    u8 pad04[0x38]; /* 0x18: position used for the sandworm handoff */
-    u8 lookBlock[0x30]; /* 0x3c: fn_8003ADC4 head-track block */
-    u8 audioBlock[0x3c]; /* 0x6c: objAudioFn block */
-    f32 animSpeed;
-    f32 scale; /* 0xac: copied to the linked object's scale */
-    int unkB0;
-    int unkB4;
-    int unkB8;
-    int unkBC;
-    int turnLatch; /* 0xc0: sandworm_turnTowardTargetAnim turn/idle move latch */
-    int behaviourState; /* 0xc4: def[0x1c]; SeqFn 0..0xb dispatch */
-    u8 padC8[4];
-    int unkCC;
-    s16 roostYaw; /* 0xd0: heading captured at init */
-    u8 padD2[0x42];
-    void* linkedObj; /* 0x114 */
-    u8 pad118[0xc];
-    u8 curveWalker[0x108]; /* 0x124: rom-curve follow block */
-    u8 flags22C; /* 1 = alive/active */
-    u8 pad22D[3];
-    int runnerState; /* 0x230: 0 curve-seek, 1 follow, 2 chased, 3 freed */
-    int runnerIndex; /* 0x234: gamebit base index, -1 keyed off */
-    f32 countdownTimer; /* 0x238 */
-    f32 curveSpeed; /* 0x23c */
-    void* mutterSfxTable; /* 0x240 */
-    u8 spitFlags; /* 0x244: BabyCloudrunnerFlags / WormSpitByte overlay */
-    u8 pad245[3];
-} BabyCloudRunnerState;
-
-STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 
 void cfguardian_release(void)
 {
@@ -405,27 +329,22 @@ extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
 /* Per-object extra state for the CloudRunner main crystal
  * (cfmaincrystal_getExtraSize == 0x160). */
 
-STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
 
 /* Per-object extra state for the CloudRunner power base
  * (cfpowerbase_getExtraSize == 0x6). */
 
-STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
 
 /* Per-object extra state for the CloudRunner prison guard
  * (cfprisonguard_getExtraSize == 0x3c). */
 
-STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
 
 /* Per-object extra state for the CloudRunner prison uncle
  * (cfprisonuncle_getExtraSize == 0xa8). */
 
-STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
 /* Per-object extra state for the robot light beacon
  * (gcrobotlightbea_getExtraSize == 0xc). */
 
-STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 
 /* spiritdoorspirit_getExtraSize == 0x1. */
 
@@ -445,7 +364,6 @@ int windlift_getExtraSize(void);
 extern int waterSpellStone1Fn_8019b4c8();
 void cfguardian_update(void) { waterSpellStone1Fn_8019b4c8(); }
 
-extern f32 lbl_803E42B8;
 extern f32 lbl_803E4130;
 extern void dll_2E_func06(int* a, int* b, int c);
 
@@ -530,7 +448,6 @@ int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4)
 }
 #pragma dont_inline reset
 
-extern void fn_8019D9F0(int* obj);
 
 extern f32 sqrtf(f32 x);
 extern void normalize(f32 * x, f32 * y, f32 * z);
