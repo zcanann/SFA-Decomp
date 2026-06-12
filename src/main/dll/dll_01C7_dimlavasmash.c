@@ -276,13 +276,13 @@ void FUN_801b2550(undefined8 param_1, undefined8 param_2, double param_3, undefi
 }
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void dimcannon_hitDetect(void);
 
 extern void objRenderFn_8003b8f4(f32 x);
 extern f32 lbl_803E48F8;
 
+#pragma scheduling off
+#pragma peephole off
 void dimlavasmash_free(void)
 {
 }

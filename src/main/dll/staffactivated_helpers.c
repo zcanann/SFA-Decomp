@@ -256,8 +256,6 @@ void staffactivated_spawnMapEventDebris(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -273,8 +271,6 @@ void staffactivated_spawnMapEventDebris(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*

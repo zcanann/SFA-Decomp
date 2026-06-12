@@ -42,6 +42,8 @@ extern f32 lbl_803E360C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801540a0(undefined4 param_1, int param_2)
 {
     float fVar1;

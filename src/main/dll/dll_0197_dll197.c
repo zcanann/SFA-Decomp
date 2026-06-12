@@ -465,8 +465,6 @@ void dll_197_init(int obj, int data)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -496,8 +494,6 @@ void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -512,12 +508,8 @@ void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void dll_197_release(void)
 {
 }

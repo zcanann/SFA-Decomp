@@ -267,11 +267,9 @@ extern f32 lbl_803E5E80;
 extern f32 lbl_803E5E84;
 
 /* 8b "li r3, N; blr" returners. */
-#pragma peephole on
 int wmlevelcontrol_getExtraSize(void) { return 0x1c; }
 int wmlevelcontrol_getObjectTypeId(void) { return 0x0; }
 
-#pragma peephole off
 void wmlevelcontrol_free(int obj)
 {
     ObjGroup_RemoveObject(obj, 9);

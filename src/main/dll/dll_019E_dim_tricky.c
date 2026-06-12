@@ -1,11 +1,7 @@
 /* DLL 0x19E - DIM Tricky [801CCFA4-801CCFB4) */
-#pragma scheduling on
-#pragma peephole on
 #include "main/effect_interfaces.h"
 #include "main/objseq.h"
 
-#pragma peephole off
-#pragma scheduling off
 
 /*
  * --INFO--
@@ -31,40 +27,28 @@ int dll_19E_getObjectTypeId(void) { return 0x1; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E51B0;
-#pragma peephole off
-#pragma peephole reset
 
 /* Stubs to align function set with v1.0 asm. */
 
-#pragma peephole off
-#pragma peephole reset
 
-#pragma peephole off
-#pragma peephole reset
 
 /*
  * Function: dll_19C_init
  * EN v1.0 Address: 0x801CC950
  * EN v1.0 Size: 64b
  */
-#pragma peephole off
-#pragma peephole reset
 
 /*
  * Function: dll_19D_free
  * EN v1.0 Address: 0x801CC9A8
  * EN v1.0 Size: 132b
  */
-#pragma peephole off
-#pragma peephole reset
 
 /*
  * Function: dll_19D_init
  * EN v1.0 Address: 0x801CCECC
  * EN v1.0 Size: 208b
  */
-#pragma peephole off
-#pragma peephole reset
 
 extern EffectInterface** gPartfxInterface;
 
@@ -73,21 +57,13 @@ extern EffectInterface** gPartfxInterface;
  * EN v1.0 Address: 0x801CCA30
  * EN v1.0 Size: 276b
  */
-#pragma peephole off
-#pragma peephole reset
 
 /*
  * Function: dll_19D_update
  * EN v1.0 Address: 0x801CCB44
  * EN v1.0 Size: 904b
  */
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma peephole reset
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma peephole reset
 
 #include "main/game_object.h"
 #include "main/effect_interfaces.h"

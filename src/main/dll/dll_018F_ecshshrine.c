@@ -310,10 +310,6 @@ void ecsh_shrine_render2(u8 idx, f32 a, f32 b)
 }
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/game_object.h"
 #include "main/objseq.h"
@@ -358,8 +354,6 @@ void ecsh_shrine_setScale(s16* out)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -374,8 +368,6 @@ void ecsh_shrine_setScale(s16* out)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int ecsh_shrine_getExtraSize(void)
 {
     return 0x38;
@@ -461,10 +453,6 @@ void ecsh_shrine_free(int* obj)
 }
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/audio/sfx_ids.h"
 #include "main/game_ui_interface.h"

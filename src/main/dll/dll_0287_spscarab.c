@@ -36,8 +36,6 @@ STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -53,8 +51,6 @@ STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -70,12 +66,8 @@ STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -90,8 +82,6 @@ STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -109,8 +99,6 @@ STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
  */
 extern void Stack_Free();
 
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -139,8 +127,6 @@ extern void Stack_Free();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -156,8 +142,6 @@ extern void Stack_Free();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -173,8 +157,6 @@ extern void Stack_Free();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -190,8 +172,6 @@ extern void Stack_Free();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -207,12 +187,8 @@ extern void Stack_Free();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
-#pragma scheduling off
-#pragma peephole off
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -271,30 +247,6 @@ extern void objfx_spawnDirectionalBurst(int obj, int a, f32 radius, int c, int d
 
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/dll/DR/dll_0287_spscarab.h"
 #include "main/game_object.h"

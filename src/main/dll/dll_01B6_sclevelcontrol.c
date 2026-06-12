@@ -127,8 +127,6 @@ extern f32 lbl_803E61E8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -144,6 +142,8 @@ extern f32 lbl_803E61E8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 undefined4 sc_levelcontrol_processAnimEvents(int obj, undefined4 arg2, ObjAnimUpdateState* animUpdate)
 {
     byte bval;
@@ -267,8 +267,6 @@ void sc_levelcontrol_setAnimEventState(int obj, undefined value)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -284,8 +282,6 @@ void sc_levelcontrol_setAnimEventState(int obj, undefined value)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */

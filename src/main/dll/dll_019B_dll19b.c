@@ -1,6 +1,4 @@
 /* DLL 0x019B — torch / fire-effect objects [801CBA98-801CBD88) */
-#pragma scheduling off
-#pragma peephole off
 #include "main/dll/torch1CD.h"
 #include "main/dll/dll19cstate_struct.h"
 #include "main/game_object.h"
@@ -138,8 +136,6 @@ void dll_19B_free(int* obj)
 {
     (*gModgfxInterface)->detachSource(obj);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -172,8 +168,6 @@ typedef struct Dll19BState
 } Dll19BState;
 
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined4 ObjMsg_AllocQueue();
 
 
@@ -448,15 +442,10 @@ void dll_19C_free(void);
 /* 8b "li r3, N; blr" returners. */
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-#pragma peephole off
-#pragma peephole reset
 
 /* Stubs to align function set with v1.0 asm. */
 
-#pragma peephole off
-#pragma peephole reset
 
-#pragma peephole off
 void dll_19B_init(u8* obj, u8* params)
 {
     extern void* gTitleMenuControlInterface;
@@ -501,24 +490,19 @@ void dll_19B_init(u8* obj, u8* params)
     ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
 }
-#pragma peephole reset
 
 /*
  * Function: dll_19C_init
  * EN v1.0 Address: 0x801CC950
  * EN v1.0 Size: 64b
  */
-#pragma peephole off
 void dll_19C_init(int obj, u8* initData);
-#pragma peephole reset
 
 /*
  * Function: dll_19D_free
  * EN v1.0 Address: 0x801CC9A8
  * EN v1.0 Size: 132b
  */
-#pragma peephole off
-#pragma peephole reset
 
 
 /*
@@ -526,8 +510,6 @@ void dll_19C_init(int obj, u8* initData);
  * EN v1.0 Address: 0x801CCECC
  * EN v1.0 Size: 208b
  */
-#pragma peephole off
-#pragma peephole reset
 
 
 /*
@@ -535,13 +517,9 @@ void dll_19C_init(int obj, u8* initData);
  * EN v1.0 Address: 0x801CCA30
  * EN v1.0 Size: 276b
  */
-#pragma peephole off
-#pragma peephole reset
 
 /*
  * Function: dll_19D_update
  * EN v1.0 Address: 0x801CCB44
  * EN v1.0 Size: 904b
  */
-#pragma peephole off
-#pragma peephole reset

@@ -547,14 +547,8 @@ void FUN_801d8480(undefined4 param_1, undefined4 param_2, short param_3, short p
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/mapEvent.h"
 #include "main/dll/SP/SPshopkeeper.h"
@@ -618,6 +612,8 @@ extern int playerHasSpell(int obj, int spell);
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState* state)
 {
     extern int Obj_GetPlayerObject(void); /* #57 */

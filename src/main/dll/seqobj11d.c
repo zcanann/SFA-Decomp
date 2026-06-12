@@ -291,12 +291,12 @@ void FUN_80151844(undefined8 param_1, undefined8 param_2, double param_3, undefi
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 extern void Sfx_PlayFromObject(int obj, int sfx);
 
+#pragma scheduling off
+#pragma peephole off
 void fn_80152004(int obj, int* state)
 {
     Sfx_PlayFromObject(obj, SFXen_cavedirt22);

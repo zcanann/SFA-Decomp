@@ -148,8 +148,6 @@ void sh_emptytumblew_init(s16* p1, int p2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -165,6 +163,8 @@ void sh_emptytumblew_init(s16* p1, int p2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 undefined4 sc_levelcontrol_processAnimEvents(int obj, undefined4 arg2, ObjAnimUpdateState* animUpdate)
 {
     byte bval;
@@ -288,8 +288,6 @@ void sc_levelcontrol_setAnimEventState(int obj, undefined value)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -305,13 +303,9 @@ void sc_levelcontrol_setAnimEventState(int obj, undefined value)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void sc_levelcontrol_hitDetect(void);
 
 

@@ -1,6 +1,4 @@
 /* DLL 0x190 - ECSHCup [801C835C-801C83D0) */
-#pragma scheduling off
-#pragma peephole off
 #include "main/dll_000A_expgfx.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
@@ -77,8 +75,6 @@ void ecsh_cup_free(int* obj)
 
 void gpsh_scene_init(int* obj, int* def);
 
-#pragma scheduling reset
-#pragma peephole reset
 
 #include "main/dll/dll_0190_ecshcup.h"
 #include "main/effect_interfaces.h"
@@ -147,7 +143,7 @@ extern f32 Vec_distance(f32 * a, f32 * b);
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_802C23B8[];
 
-#pragma scheduling off
+#pragma peephole on
 void ecsh_cup_update(short* obj)
 {
     f32 dist;
@@ -333,7 +329,6 @@ void ecsh_cup_update(short* obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
 
 
 /*
@@ -349,6 +344,7 @@ void ecsh_cup_update(short* obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
 void ecsh_cup_release(void)
 {
 }

@@ -473,8 +473,6 @@ void dimwooddoor2_free(void);
 
 extern int Obj_GetActiveModel(int obj);
 
-#pragma scheduling off
-#pragma peephole off
 
 /* 8b "li r3, N; blr" returners. */
 int explosion_getExtraSize(void) { return 0xa60; }
@@ -488,8 +486,6 @@ extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
 
 
 /* conditional init/free pair. */
-#pragma scheduling on
-#pragma peephole on
 
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
@@ -499,17 +495,13 @@ extern void dimmagicbridge_updateVertexWave(int obj, u8* sub);
  * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
  * when GameBit 0x1ef is on and the player's emission controller is lingering,
  * latch GameBit 0x1e8. */
-#pragma scheduling off
 
 /* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
  * and using mask 0x6000 + initial state byte 3 at +0. */
-#pragma peephole off
 
 
 /* explosion_free: model-light release if present. */
 extern void ModelLightStruct_free(void*);
-#pragma scheduling on
-#pragma peephole on
 void explosion_free(int obj)
 {
     void* p = *(void**)(*(int*)&((GameObject*)obj)->extra + 0xa40);
@@ -546,7 +538,6 @@ extern u8 framesThisStep;
 /* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
  * every 16 frames, and ramp each active slot's alpha toward full; then update
  * the animated bridge mesh. */
-#pragma peephole off
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
@@ -648,6 +639,7 @@ extern void* memcpy(void* dst, const void* src, unsigned long n);
 void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z);
 void fn_801B40B8(u8 mode, u8* out, f32 a, f32 b);
 
+#pragma peephole off
 void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
 {
     int p4c = *(int*)&((GameObject*)obj)->anim.placementData;

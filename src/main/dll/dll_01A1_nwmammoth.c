@@ -47,6 +47,8 @@ extern f32 lbl_803E5ED0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801ce078(undefined2* param_1, int param_2)
 {
 }
@@ -699,11 +701,7 @@ void fn_801CE2BC(int* obj, u8* st, short* p3)
 }
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 #include "main/game_object.h"
 #include "main/game_ui_interface.h"
 
@@ -759,11 +757,7 @@ void nw_mammoth_render(void* obj, undefined4 p2, undefined4 p3, undefined4 p4, u
                                   (char*)node + 0x14,
                                   0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 #include "main/dll/creator1D4.h"
 #include "main/game_object.h"
 #include "main/game_ui_interface.h"
@@ -1084,8 +1078,6 @@ void nw_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -1100,8 +1092,6 @@ void nw_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -1125,11 +1115,5 @@ int nw_tricky_SeqFn(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
-#pragma scheduling off
-#pragma peephole off
 void nw_tricky_free(int obj);
-#pragma scheduling reset
-#pragma peephole reset

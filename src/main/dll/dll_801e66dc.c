@@ -135,8 +135,6 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -152,8 +150,6 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -169,8 +165,6 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -186,8 +180,6 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -203,8 +195,6 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -220,8 +210,6 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined2* param_9, int param_10)
@@ -241,13 +229,9 @@ void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void SB_FireBall_release(void);
 
 

@@ -1,6 +1,4 @@
 /* DLL 0x01CD — DIM level-control objects [801B63F4-801B6464) */
-#pragma scheduling on
-#pragma peephole on
 #include "main/dll/dimmagicbridge_state.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
@@ -119,11 +117,7 @@ extern u32 randomGetRange(int min, int max);
  * PAL Size: TODO
  */
 
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -169,8 +163,6 @@ extern u32 randomGetRange(int min, int max);
 
 
 
-#pragma scheduling off
-#pragma peephole off
 
 /* 8b "li r3, N; blr" returners. */
 int dim_levelcontrol_getExtraSize(void) { return 0x10; }
@@ -191,8 +183,6 @@ void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 /* conditional init/free pair. */
 extern void* lbl_803DDB78;
-#pragma scheduling on
-#pragma peephole on
 
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
@@ -202,23 +192,19 @@ extern void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
  * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
  * when GameBit 0x1ef is on and the player's emission controller is lingering,
  * latch GameBit 0x1e8. */
-#pragma scheduling off
 
 /* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
  * and using mask 0x6000 + initial state byte 3 at +0. */
-#pragma peephole off
 
 
 /* explosion_free: model-light release if present. */
-#pragma scheduling on
-#pragma peephole on
 
 /* explosion_getObjectTypeId: tile/index lookup capped by table count. */
-#pragma scheduling off
 
 /* dim_levelcontrol_free: gameplay music + time-of-day reset. */
 extern void timeOfDayFn_80055000(void);
 
+#pragma peephole on
 void dim_levelcontrol_free(int p1)
 {
     extern void Music_Trigger(s32 triggerId, s32 mode);
@@ -237,7 +223,6 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj);
 /* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
  * every 16 frames, and ramp each active slot's alpha toward full; then update
  * the animated bridge mesh. */
-#pragma peephole off
 
 extern f32 timeDelta;
 
@@ -266,23 +251,7 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 
 
-#pragma scheduling reset
-#pragma peephole reset
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/audio/sfx_ids.h"
 #include "main/asset_load.h"
@@ -332,6 +301,7 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
+#pragma peephole off
 static inline int* DIM2snowball_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -528,8 +498,6 @@ void dim_levelcontrol_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -545,8 +513,6 @@ void dim_levelcontrol_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -562,8 +528,6 @@ void dim_levelcontrol_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -579,6 +543,8 @@ void dim_levelcontrol_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_4)
 {
     uint uVar1;
@@ -644,8 +610,6 @@ void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -661,13 +625,9 @@ void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void dll_1CF_free(void);
 
 
@@ -729,6 +689,8 @@ extern int getSaveGameLoadStatus(void);
 extern void gameBitFn_800ea2e0(u8 n);
 extern void unlockLevel(int a, int b, int c);
 
+#pragma scheduling off
+#pragma peephole off
 void dim_levelcontrol_init(int obj)
 {
     DimLevelControlState* st;

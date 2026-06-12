@@ -144,8 +144,6 @@ ObjectDescriptor gSPScarabObjDescriptor = {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -161,8 +159,6 @@ ObjectDescriptor gSPScarabObjDescriptor = {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*

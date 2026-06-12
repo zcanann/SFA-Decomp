@@ -57,8 +57,6 @@ extern int imicepillar_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -87,8 +85,6 @@ extern int imicepillar_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -103,8 +99,6 @@ extern int imicepillar_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -119,8 +113,6 @@ extern int imicepillar_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -135,8 +127,6 @@ extern int imicepillar_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -151,8 +141,6 @@ extern int imicepillar_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -167,12 +155,8 @@ extern int imicepillar_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void imicepillar_hitDetect(void);
 
 void imicepillar_update(void);
@@ -330,22 +314,6 @@ void dimlogfire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 extern int modelLightStruct_getActiveState(int* p);
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -530,8 +498,6 @@ void dimlogfire_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -546,8 +512,6 @@ void dimlogfire_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void dimlogfire_init(int obj, int def)
 {
     extern void modelLightStruct_setGlowProjectionRadius(int light, f32 radius); /* #57 */
@@ -641,8 +605,4 @@ int dimsnowball_getExtraSize(void);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
 

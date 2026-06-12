@@ -100,8 +100,6 @@ undefined4 FUN_801e76a0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -117,12 +115,8 @@ undefined4 FUN_801e76a0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801E7DC8(int p1, int p2, int count);
 
 /*
@@ -138,8 +132,6 @@ void fn_801E7DC8(int p1, int p2, int count);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -156,8 +148,6 @@ void fn_801E7DC8(int p1, int p2, int count);
  * PAL Size: TODO
  */
 
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -186,8 +176,6 @@ void fn_801E7DC8(int p1, int p2, int count);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -203,8 +191,6 @@ void fn_801E7DC8(int p1, int p2, int count);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -220,8 +206,6 @@ void fn_801E7DC8(int p1, int p2, int count);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -237,8 +221,6 @@ void fn_801E7DC8(int p1, int p2, int count);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -254,8 +236,6 @@ void fn_801E7DC8(int p1, int p2, int count);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 #pragma scheduling off

@@ -88,19 +88,19 @@ STATIC_ASSERT(offsetof(WmSunState, renderEnabled) == 0x0D);
 STATIC_ASSERT(sizeof(WmSunState) == 0x10);
 
 /* the anim-event callback (all variants) */
-#pragma scheduling off
+#pragma peephole on
 int wmsun_SeqFn(int p1, int p2, ObjAnimUpdateState* actor)
 {
     actor->hitVolumePair = -1;
     actor->sequenceEventActive = 0;
     return 0;
 }
-#pragma scheduling reset
 
 int wmsun_getExtraSize(void) { return 0x10; }
 
 int wmsun_getObjectTypeId(void) { return 0x0; }
 
+#pragma scheduling on
 void wmsun_hitDetect(void)
 {
 }

@@ -80,8 +80,6 @@ extern u8 modelFn_80124794[];
 extern u8 cMenuRenderFn_80124854[];
 extern int fn_8011E0D8();
 
-#pragma scheduling off
-#pragma peephole off
 void gameUiLoadResources(void)
 {
     char* base = lbl_803A87F0;
@@ -190,8 +188,6 @@ void gameUiLoadResources(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -207,6 +203,8 @@ void gameUiLoadResources(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8011daf8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
 {

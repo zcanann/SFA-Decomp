@@ -49,8 +49,6 @@ extern f32 timeDelta;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -66,8 +64,6 @@ extern f32 timeDelta;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int nw_tricky_getExtraSize(void)
 {
     return 8;
@@ -99,12 +95,8 @@ int nw_tricky_SeqFn(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
-#pragma scheduling off
-#pragma peephole off
 void nw_tricky_free(int obj)
 {
     (void)obj;
@@ -112,14 +104,6 @@ void nw_tricky_free(int obj)
 }
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/dll/creator1D6.h"
 #include "main/game_object.h"

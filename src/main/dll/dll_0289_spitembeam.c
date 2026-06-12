@@ -150,8 +150,6 @@ typedef struct SpitembeamPlacement
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -167,8 +165,6 @@ typedef struct SpitembeamPlacement
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*

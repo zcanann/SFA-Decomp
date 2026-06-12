@@ -79,6 +79,8 @@ extern undefined4 uRam803dc90c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80152040(int param_1, int param_2)
 {
     int iVar1;
@@ -528,8 +530,6 @@ int fn_80152370(int obj, int p2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -545,6 +545,8 @@ int fn_80152370(int obj, int p2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801523f8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   uint param_9, int param_10)
@@ -756,7 +758,6 @@ void fn_80152B2C(int obj, int p, int param3, int msg)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
 
 
 /*
@@ -772,6 +773,7 @@ void fn_80152B2C(int obj, int p, int param3, int msg)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
 void FUN_80152cf0(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8)
 {

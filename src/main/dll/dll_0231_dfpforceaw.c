@@ -497,8 +497,6 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1, undefined8 param_2,
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -513,8 +511,6 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1, undefined8 param_2,
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void TrickyCurve_updateState(undefined8 param_1, undefined8 param_2, undefined8 param_3,
                              undefined8 param_4, undefined8 param_5, undefined8 param_6,
                              undefined8 param_7, undefined8 param_8, int obj)
@@ -656,12 +652,12 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
         } \
     } while (0)
 
-#pragma scheduling off
-#pragma peephole off
 
 #undef SFXPLAYER_UPDATE_EFFECT_HANDLE_POS
 
 /* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
 void TrickyCurve_render(void)
 {
 }

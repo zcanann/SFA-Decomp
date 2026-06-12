@@ -267,12 +267,8 @@ LAB_801b44d4:
  */
 extern void textureFree(int tex);
 
-#pragma scheduling off
-#pragma peephole off
 void explosion_release(uint obj);
 
-#pragma scheduling on
-#pragma peephole on
 void fn_explosion_release_v11_unused(uint param_1)
 {
     short sVar1;
@@ -579,8 +575,6 @@ void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* conditional init/free pair. */
-#pragma scheduling on
-#pragma peephole on
 
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
@@ -594,7 +588,7 @@ extern int EmissionController_IsLingering(void* player);
  * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
  * when GameBit 0x1ef is on and the player's emission controller is lingering,
  * latch GameBit 0x1e8. */
-#pragma scheduling off
+#pragma peephole on
 void dimmagicbridge_update(int obj)
 {
     DimMagicBridgeState * sub;
@@ -621,16 +615,12 @@ void dimmagicbridge_update(int obj)
 
 /* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
  * and using mask 0x6000 + initial state byte 3 at +0. */
-#pragma peephole off
 void dimwooddoor2_init(u8* obj, u8* params);
 
 
 /* explosion_free: model-light release if present. */
-#pragma scheduling on
-#pragma peephole on
 
 /* explosion_getObjectTypeId: tile/index lookup capped by table count. */
-#pragma scheduling off
 
 /* dim_levelcontrol_free: gameplay music + time-of-day reset. */
 

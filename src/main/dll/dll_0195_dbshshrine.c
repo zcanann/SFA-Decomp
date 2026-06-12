@@ -268,8 +268,6 @@ int fn_801C8EBC(int obj, undefined4 unused, ObjAnimUpdateState* animUpdate)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -284,8 +282,6 @@ int fn_801C8EBC(int obj, undefined4 unused, ObjAnimUpdateState* animUpdate)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int dbsh_shrine_getExtraSize(void)
 {
     return 0x18;

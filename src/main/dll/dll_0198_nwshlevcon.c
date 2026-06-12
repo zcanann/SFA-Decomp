@@ -38,8 +38,6 @@ extern undefined4 FUN_8003b818();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -55,6 +53,8 @@ extern undefined4 FUN_8003b818();
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
     if (visible != 0)
@@ -78,8 +78,6 @@ void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -95,15 +93,13 @@ void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */
+
+
 #pragma scheduling off
 #pragma peephole off
-
-
 void nwsh_levcon_hitDetect(void)
 {
 }

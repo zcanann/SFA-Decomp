@@ -1,6 +1,4 @@
 /* DLL 0x019D — dll19d / torch1CD group. TU: 0x801CBA98–0x801CBD88. */
-#pragma scheduling off
-#pragma peephole off
 #include "main/dll/torch1CD.h"
 #include "main/game_object.h"
 #include "main/dll/torch1cd_state.h"
@@ -25,8 +23,6 @@ extern void objRenderFn_8003b8f4(f32);
 
 
 
-#pragma scheduling reset
-#pragma peephole reset
 
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -69,8 +65,6 @@ typedef struct Dll19DState
 
 
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined4 getLActions();
 
 
@@ -118,34 +112,25 @@ int dll_19D_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E51B0;
-#pragma peephole off
-#pragma peephole reset
 
 /* Stubs to align function set with v1.0 asm. */
 extern void ObjHits_ClearHitVolumes(int obj);
 extern void Obj_FreeObject(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfx);
 
-#pragma peephole off
-#pragma peephole reset
 
-#pragma peephole off
-#pragma peephole reset
 
 /*
  * Function: dll_19C_init
  * EN v1.0 Address: 0x801CC950
  * EN v1.0 Size: 64b
  */
-#pragma peephole off
-#pragma peephole reset
 
 /*
  * Function: dll_19D_free
  * EN v1.0 Address: 0x801CC9A8
  * EN v1.0 Size: 132b
  */
-#pragma peephole off
 void dll_19D_free(int obj)
 {
     register int self = obj;
@@ -157,7 +142,6 @@ void dll_19D_free(int obj)
     }
     (*gExpgfxInterface)->freeSource2((u32)self);
 }
-#pragma peephole reset
 
 extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);
 
@@ -166,7 +150,6 @@ extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int ext
  * EN v1.0 Address: 0x801CCECC
  * EN v1.0 Size: 208b
  */
-#pragma peephole off
 void dll_19D_init(int obj)
 {
     register int self = obj;
@@ -196,7 +179,6 @@ void dll_19D_init(int obj)
         getLActions(self, self, 0x201, 0, 0, 0);
     }
 }
-#pragma peephole reset
 
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E51B8;
@@ -206,7 +188,6 @@ extern f32 lbl_803E51B8;
  * EN v1.0 Address: 0x801CCA30
  * EN v1.0 Size: 276b
  */
-#pragma peephole off
 void dll_19D_hitDetect(int obj)
 {
     register int self = obj;
@@ -231,14 +212,12 @@ void dll_19D_hitDetect(int obj)
     (*gPartfxInterface)->spawnObject((void*)self, 0x2a0, vec, 1, -1, NULL);
     ((Dll19DState*)state)->unk32 = 0x32;
 }
-#pragma peephole reset
 
 /*
  * Function: dll_19D_update
  * EN v1.0 Address: 0x801CCB44
  * EN v1.0 Size: 904b
  */
-#pragma peephole off
 void dll_19D_update(int obj)
 {
     register int self = obj;
@@ -327,4 +306,3 @@ void dll_19D_update(int obj)
         }
     }
 }
-#pragma peephole reset

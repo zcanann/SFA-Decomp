@@ -103,8 +103,6 @@ void FUN_8015853c(undefined8 param_1, double param_2, double param_3, double par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -120,8 +118,6 @@ void FUN_8015853c(undefined8 param_1, double param_2, double param_3, double par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -137,8 +133,6 @@ void FUN_8015853c(undefined8 param_1, double param_2, double param_3, double par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -154,8 +148,6 @@ void FUN_8015853c(undefined8 param_1, double param_2, double param_3, double par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void FUN_80159cdc(undefined8 param_1, undefined8 param_2, double param_3, double param_4, double param_5
                   , double param_6, double param_7, undefined8 param_8, ushort* param_9,
                   undefined4* param_10)
@@ -175,8 +167,6 @@ void FUN_80159cdc(undefined8 param_1, undefined8 param_2, double param_3, double
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -192,8 +182,6 @@ void FUN_80159cdc(undefined8 param_1, undefined8 param_2, double param_3, double
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -209,8 +197,6 @@ void FUN_80159cdc(undefined8 param_1, undefined8 param_2, double param_3, double
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -226,6 +212,8 @@ void FUN_80159cdc(undefined8 param_1, undefined8 param_2, double param_3, double
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8015a6c0(uint param_1, int param_2)
 {
     bool bVar1;

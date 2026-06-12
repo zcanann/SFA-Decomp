@@ -1,6 +1,4 @@
 /* DLL 0x1D1 - DIMTruthHornIce [801B63F4-801B6464) */
-#pragma scheduling on
-#pragma peephole on
 #include "main/dll/dimmagicbridge_state.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
@@ -120,11 +118,7 @@ extern EffectInterface** gPartfxInterface;
  * PAL Size: TODO
  */
 
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -170,8 +164,6 @@ extern EffectInterface** gPartfxInterface;
 
 
 
-#pragma scheduling off
-#pragma peephole off
 
 /* 8b "li r3, N; blr" returners. */
 
@@ -182,8 +174,6 @@ extern EffectInterface** gPartfxInterface;
 
 
 /* conditional init/free pair. */
-#pragma scheduling on
-#pragma peephole on
 
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
@@ -192,19 +182,14 @@ extern EffectInterface** gPartfxInterface;
  * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
  * when GameBit 0x1ef is on and the player's emission controller is lingering,
  * latch GameBit 0x1e8. */
-#pragma scheduling off
 
 /* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
  * and using mask 0x6000 + initial state byte 3 at +0. */
-#pragma peephole off
 
 
 /* explosion_free: model-light release if present. */
-#pragma scheduling on
-#pragma peephole on
 
 /* explosion_getObjectTypeId: tile/index lookup capped by table count. */
-#pragma scheduling off
 
 /* dim_levelcontrol_free: gameplay music + time-of-day reset. */
 
@@ -217,7 +202,6 @@ extern EffectInterface** gPartfxInterface;
 /* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
  * every 16 frames, and ramp each active slot's alpha toward full; then update
  * the animated bridge mesh. */
-#pragma peephole off
 
 extern f32 timeDelta;
 
@@ -246,23 +230,7 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 
 
-#pragma scheduling reset
-#pragma peephole reset
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/audio/sfx_ids.h"
 #include "main/asset_load.h"
@@ -358,8 +326,6 @@ extern undefined4 ObjHits_DisableObject();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -375,8 +341,6 @@ extern undefined4 ObjHits_DisableObject();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -392,8 +356,6 @@ extern undefined4 ObjHits_DisableObject();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -409,6 +371,8 @@ extern undefined4 ObjHits_DisableObject();
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_4)
 {
     uint uVar1;
@@ -474,8 +438,6 @@ void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -491,13 +453,9 @@ void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void dll_1CF_free(void);
 
 
@@ -549,6 +507,8 @@ extern int* getTrickyObject(void);
 
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if the signed result dropped to or below 0. */
+#pragma scheduling off
+#pragma peephole off
 int fn_801B6D40(int* obj, int v)
 {
     u8* state = ((GameObject*)obj)->extra;

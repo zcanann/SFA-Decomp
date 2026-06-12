@@ -7,8 +7,6 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-#pragma scheduling off
-#pragma peephole off
 
 
 extern void Obj_SetModelRenderOpAlpha(int obj, int alpha);

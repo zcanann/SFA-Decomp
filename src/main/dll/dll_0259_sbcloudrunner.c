@@ -107,8 +107,6 @@ void FUN_801ee668(ushort* param_1, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -124,8 +122,6 @@ void FUN_801ee668(ushort* param_1, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -141,8 +137,6 @@ void FUN_801ee668(ushort* param_1, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -158,8 +152,6 @@ void FUN_801ee668(ushort* param_1, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -175,8 +167,6 @@ void FUN_801ee668(ushort* param_1, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -192,8 +182,6 @@ void FUN_801ee668(ushort* param_1, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */

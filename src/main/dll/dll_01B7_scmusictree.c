@@ -68,8 +68,6 @@ typedef struct ScMusictreeSpawnAmbientEffectPlacement
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -113,8 +111,6 @@ typedef struct ScMusictreeSpawnAmbientEffectPlacement
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -130,13 +126,9 @@ typedef struct ScMusictreeSpawnAmbientEffectPlacement
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -304,14 +296,6 @@ extern u16 lbl_803DC060[4];
  * in sync with the Thorntail animation state. */
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/dll/DR/cloudrunner_state.h"
 #include "main/game_object.h"

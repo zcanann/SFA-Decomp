@@ -41,8 +41,6 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -73,8 +71,6 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -90,13 +86,9 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 
 
 

@@ -230,14 +230,10 @@ void paymentkiosk_init(int obj, PaymentKioskMapData* initData)
     state->textVariant = (u8)secondaryFlag;
 }
 
-#pragma scheduling on
-#pragma peephole on
 static void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams* params);
 
 static int FEseqobject_findControlObject(void);
 
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -252,8 +248,6 @@ static int FEseqobject_findControlObject(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -268,8 +262,6 @@ static int FEseqobject_findControlObject(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -284,12 +276,8 @@ static int FEseqobject_findControlObject(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void paymentkiosk_release(void)
 {
 }

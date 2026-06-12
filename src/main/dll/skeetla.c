@@ -38,7 +38,6 @@ extern int ObjHits_PollPriorityHitWithCooldown(u8* obj, f32* cooldown, void** ou
 extern int trickyDebugPrint(const char* fmt, ...);
 
 /* trickyUpdateCollisionAndPathState  addr=0x8013939C  size=0x498  linkage=global */
-#pragma scheduling off
 #pragma peephole off
 void trickyUpdateCollisionAndPathState(u8* obj)
 {

@@ -428,7 +428,6 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
     }
 }
 
-#pragma peephole off
 int fn_80221C18(int obj, f32 dt, int p3, int p4)
 {
     f32 vel[3];

@@ -191,8 +191,6 @@ void PlayControl(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -208,8 +206,6 @@ void PlayControl(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 void THPPlayerStop(void)

@@ -252,12 +252,8 @@ LAB_801b44d4:
  */
 extern void textureFree(int tex);
 
-#pragma scheduling off
-#pragma peephole off
 void explosion_release(uint obj);
 
-#pragma scheduling on
-#pragma peephole on
 void fn_explosion_release_v11_unused(uint param_1)
 {
     short sVar1;
@@ -461,8 +457,6 @@ void dimmagicbridge_free(void);
 
 
 
-#pragma scheduling off
-#pragma peephole off
 
 /* 8b "li r3, N; blr" returners. */
 int dll_1CE_getExtraSize(void) { return 0xc; }
@@ -474,6 +468,8 @@ extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
 extern f32 lbl_803E49E8;
 
 
+#pragma scheduling off
+#pragma peephole off
 void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -505,12 +501,12 @@ extern f32 lbl_803E49F0;
  * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
  * when GameBit 0x1ef is on and the player's emission controller is lingering,
  * latch GameBit 0x1e8. */
-#pragma scheduling off
 
 /* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
  * and using mask 0x6000 + initial state byte 3 at +0. */
-#pragma peephole off
 
+#pragma scheduling off
+#pragma peephole off
 void dll_1CE_init(u8* obj, u8* params)
 {
     Dll1CEState* sub;
@@ -531,12 +527,9 @@ void dll_1CE_init(u8* obj, u8* params)
 
 /* explosion_free: model-light release if present. */
 extern void ModelLightStruct_free(void*);
-#pragma scheduling on
-#pragma peephole on
 void explosion_free(int obj);
 
 /* explosion_getObjectTypeId: tile/index lookup capped by table count. */
-#pragma scheduling off
 
 /* dim_levelcontrol_free: gameplay music + time-of-day reset. */
 
@@ -549,7 +542,6 @@ void explosion_free(int obj);
 /* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
  * every 16 frames, and ramp each active slot's alpha toward full; then update
  * the animated bridge mesh. */
-#pragma peephole off
 
 extern f32 timeDelta;
 

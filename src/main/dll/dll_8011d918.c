@@ -25,10 +25,7 @@ extern undefined4 DAT_803de3a8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
-#pragma peephole on
 
 /*
  * --INFO--
@@ -43,7 +40,6 @@ extern undefined4 DAT_803de3a8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 
 /*
  * --INFO--
@@ -58,8 +54,6 @@ extern undefined4 DAT_803de3a8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -137,15 +131,13 @@ void OptionsScreen_frameEnd(void);
 /* Pattern wrappers. */
 
 
-#pragma scheduling off
-#pragma peephole off
 
 
 
 
 extern s16 lbl_803DD8C2;
 extern void Sfx_PlayFromObjectLimited(int obj, u16 sfx, int);
-#pragma peephole on
+#pragma scheduling off
 void cMenuPlaySelectedItemSfx(int obj)
 {
     int sfx = 0;

@@ -1,6 +1,4 @@
 /* DLL 0x19C — torch / flame controller objects [801CBA98-801CBD88) */
-#pragma scheduling off
-#pragma peephole off
 #include "main/dll/torch1CD.h"
 #include "main/dll/dll19cstate_struct.h"
 #include "main/game_object.h"
@@ -26,8 +24,6 @@ extern void objRenderFn_8003b8f4(f32);
 
 
 
-#pragma scheduling reset
-#pragma peephole reset
 
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -60,8 +56,6 @@ typedef struct Dll19CPlacement
 
 
 
-#pragma peephole off
-#pragma scheduling off
 
 
 /*
@@ -112,13 +106,11 @@ int dll_19D_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E51B0;
-#pragma peephole off
 void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E51B0);
 }
-#pragma peephole reset
 
 /* Stubs to align function set with v1.0 asm. */
 extern u8 Obj_IsLoadingLocked(void);
@@ -127,7 +119,6 @@ extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern f32 lbl_803E51B4;
 
-#pragma peephole off
 void dll_19C_update(int* obj)
 {
     extern uint GameBit_Get(int);
@@ -179,18 +170,14 @@ void dll_19C_update(int* obj)
         ((Dll19CState*)sub)->unk6 = 0;
     }
 }
-#pragma peephole reset
 
-#pragma peephole off
 void dll_19B_init(u8* obj, u8* params);
-#pragma peephole reset
 
 /*
  * Function: dll_19C_init
  * EN v1.0 Address: 0x801CC950
  * EN v1.0 Size: 64b
  */
-#pragma peephole off
 void dll_19C_init(int obj, u8* initData)
 {
     register int self = obj;
@@ -203,16 +190,13 @@ void dll_19C_init(int obj, u8* initData)
     *(u8*)(self + 0x37) = 0xff;
     ((GameObject*)self)->anim.alpha = 0xff;
 }
-#pragma peephole reset
 
 /*
  * Function: dll_19D_free
  * EN v1.0 Address: 0x801CC9A8
  * EN v1.0 Size: 132b
  */
-#pragma peephole off
 void dll_19D_free(int obj);
-#pragma peephole reset
 
 
 /*
@@ -220,8 +204,6 @@ void dll_19D_free(int obj);
  * EN v1.0 Address: 0x801CCECC
  * EN v1.0 Size: 208b
  */
-#pragma peephole off
-#pragma peephole reset
 
 
 /*
@@ -229,13 +211,9 @@ void dll_19D_free(int obj);
  * EN v1.0 Address: 0x801CCA30
  * EN v1.0 Size: 276b
  */
-#pragma peephole off
-#pragma peephole reset
 
 /*
  * Function: dll_19D_update
  * EN v1.0 Address: 0x801CCB44
  * EN v1.0 Size: 904b
  */
-#pragma peephole off
-#pragma peephole reset

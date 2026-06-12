@@ -124,6 +124,8 @@ int dim2prisonmammoth_getExtraSize(void) { return 0x604; }
 
 int dim2prisonmammoth_getObjectTypeId(void) { return 0; }
 
+#pragma scheduling on
+#pragma peephole on
 void dim2prisonmammoth_free(void)
 {
 }

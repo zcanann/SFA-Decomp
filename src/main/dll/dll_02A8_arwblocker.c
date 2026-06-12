@@ -39,12 +39,12 @@ int arwblocker_getBlockState(int obj)
     }
     return 0;
 }
-#pragma peephole reset
 
 int arwblocker_getExtraSize(void) { return 2; }
 
 int arwblocker_getObjectTypeId(void) { return 0; }
 
+#pragma peephole on
 void arwblocker_free(void)
 {
 }
