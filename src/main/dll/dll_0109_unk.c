@@ -51,8 +51,8 @@ extern void Obj_SetActiveModelIndex(int* obj, int idx);
 undefined4
 FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
-             , int param_11, int param_12, undefined4 param_13, undefined4 param_14, undefined4 param_15,
-             undefined4 param_16)
+             , ObjAnimUpdateState* animUpdate, int param_12, undefined4 param_13, undefined4 param_14,
+             undefined4 param_15, undefined4 param_16)
 {
     undefined4 uVar1;
     char cVar2;
@@ -71,14 +71,14 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     iVar6 = *(int*)&((GameObject*)param_9)->anim.placementData;
     iVar5 = *(int*)&((GameObject*)param_9)->extra;
     iVar7 = 0;
-    iVar4 = param_11;
+    iVar4 = (int)animUpdate;
     do
     {
-        if ((int)(uint) * (byte*)(param_11 + 0x8b) <= iVar7)
+        if ((int)(uint)animUpdate->eventCount <= iVar7)
         {
             return 0;
         }
-        switch (*(u8*)(param_11 + iVar7 + 0x81))
+        switch (animUpdate->eventIds[iVar7])
         {
         case 2:
         case 0x65:
