@@ -5,6 +5,7 @@
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/ARW/ARWarwingattachment.h"
+#include "main/dll/LGT/LGTpointlight.h"
 #include "main/objHitReact.h"
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
@@ -147,25 +148,9 @@ typedef struct WmTorchState
     u8 pad0D[3];
 } WmTorchState;
 
-/* lightsource_getExtraSize == 0x1c. */
-typedef struct LightSourceState
-{
-    void* light;
-    f32 fxTimer;
-    u8 pad08[4];
-    f32 sparkTimer;
-    int gameBit; /* 0x10: -1 none */
-    u8 mode; /* 0x14: 1 = hit-toggleable */
-    u8 fxType;
-    u8 fxArg;
-    u8 lit; /* 0x17 */
-    u8 litPrev;
-    u8 sparks; /* 0x19 */
-    u8 loopFlags; /* 0x1a: LightSourceFlagByte */
-    u8 pad1B;
-} LightSourceState;
-
-STATIC_ASSERT(sizeof(LightSourceState) == 0x1c);
+/* lightsource_getExtraSize == 0x1c.  LightSourceState lives in the shared
+ * LGTpointlight header (same 0x206 DLL); this fragment's 0x0C timer is the
+ * header's unk0C field. */
 
 /* dll_1FF_getExtraSize == 0x8 (grabbable hook). */
 typedef struct Dll1FFState
@@ -731,12 +716,12 @@ void lightsource_update(int obj)
         }
         if (b->sparks != 0)
         {
-            b->sparkTimer = b->sparkTimer - timeDelta;
-            if (b->sparkTimer <= lbl_803E5E0C)
+            b->unk0C = b->unk0C - timeDelta;
+            if (b->unk0C <= lbl_803E5E0C)
             {
                 fx.scale = lbl_803E5E08;
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x7cb, &fx, 2, -1, NULL);
-                b->sparkTimer = b->sparkTimer + lbl_803E5E1C;
+                b->unk0C = b->unk0C + lbl_803E5E1C;
             }
         }
     }
