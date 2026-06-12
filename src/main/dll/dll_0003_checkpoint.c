@@ -1,0 +1,2020 @@
+#include "main/audio/sfx_ids.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/dll/dim_partfx.h"
+
+
+extern u32 randomGetRange(int min, int max);
+
+extern undefined4 DAT_8039d0b8;
+extern undefined4 DAT_8039d0bc;
+extern undefined4 DAT_803de090;
+extern f32 lbl_803DC4B0;
+extern f32 lbl_803DC4B4;
+extern f32 lbl_803E0E38;
+extern f32 lbl_803E0E3C;
+extern f32 lbl_803E0E40;
+extern f32 lbl_803E0E44;
+extern f32 lbl_803E0E48;
+extern f32 lbl_803E0E4C;
+extern f32 lbl_803E0E50;
+extern f32 lbl_803E0E54;
+extern f32 lbl_803E0E58;
+extern f32 lbl_803E0E5C;
+extern f32 lbl_803E0E60;
+extern f32 lbl_803E0E64;
+extern f32 lbl_803E0E68;
+extern f32 lbl_803E0E6C;
+extern f32 lbl_803E0E70;
+extern f32 lbl_803E0E74;
+extern f32 lbl_803E0E78;
+extern f32 lbl_803E0E7C;
+extern f32 lbl_803E0E80;
+extern f32 lbl_803E0E84;
+extern f32 lbl_803E0E88;
+extern f32 lbl_803E0E8C;
+
+/*
+ * --INFO--
+ *
+ * Function: Effect16_func04
+ * EN v1.0 Address: 0x800C8008
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x800C8294
+ * EN v1.1 Size: 4100b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+/* Effect16_func04 is defined further below (full recovered body). */
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800c8110
+ * EN v1.0 Address: 0x800C8110
+ * EN v1.0 Size: 904b
+ * EN v1.1 Address: 0x800CABBC
+ * EN v1.1 Size: 3116b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4
+FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4, u8 param_5,
+             int param_6)
+{
+    undefined4 uVar1;
+    uint uVar2;
+    int local_98[3];
+    undefined2 local_8c;
+    undefined2 local_8a;
+    undefined2 local_88;
+    undefined4 local_84;
+    float local_80;
+    float local_7c;
+    float local_78;
+    float local_74;
+    float local_70;
+    float local_6c;
+    float local_68;
+    float local_64;
+    float local_60;
+    float local_5c;
+    undefined2 local_58;
+    undefined2 local_56;
+    uint local_54;
+    undefined4 local_50;
+    undefined4 local_4c;
+    uint local_48;
+    uint local_44;
+    undefined2 local_40;
+    undefined2 local_3e;
+    undefined2 local_3c;
+    u8 local_3a;
+    u8 local_38;
+    u8 local_37;
+    u8 local_36;
+    undefined4 local_30;
+    uint uStack_2c;
+    undefined4 local_28;
+    uint uStack_24;
+    undefined4 local_20;
+    uint uStack_1c;
+    undefined4 local_18;
+    uint uStack_14;
+
+    lbl_803DC4B0 = lbl_803DC4B0 + lbl_803E0E38;
+    if (lbl_803E0E40 < lbl_803DC4B0)
+    {
+        lbl_803DC4B0 = lbl_803E0E3C;
+    }
+    lbl_803DC4B4 = lbl_803DC4B4 + lbl_803E0E44;
+    if (lbl_803E0E40 < lbl_803DC4B4)
+    {
+        lbl_803DC4B4 = lbl_803E0E48;
+    }
+    if (param_1 == 0)
+    {
+        uVar1 = 0xffffffff;
+    }
+    else
+    {
+        if ((param_4 & 0x200000) != 0)
+        {
+            if (param_3 == (undefined2*)0x0)
+            {
+                return 0xffffffff;
+            }
+            local_80 = ((PartFxSpawnParams*)param_3)->unkC;
+            local_7c = ((PartFxSpawnParams*)param_3)->unk10;
+            local_78 = ((PartFxSpawnParams*)param_3)->unk14;
+            local_84 = *(undefined4*)&((PartFxSpawnParams*)param_3)->unk8;
+            local_88 = ((PartFxSpawnParams*)param_3)->unk4;
+            local_8a = ((PartFxSpawnParams*)param_3)->unk2;
+            local_8c = *param_3;
+            local_36 = param_5;
+        }
+        local_54 = 0;
+        local_50 = 0;
+        local_3a = (undefined)param_2;
+        local_68 = lbl_803E0E4C;
+        local_64 = lbl_803E0E4C;
+        local_60 = lbl_803E0E4C;
+        local_74 = lbl_803E0E4C;
+        local_70 = lbl_803E0E4C;
+        local_6c = lbl_803E0E4C;
+        local_5c = lbl_803E0E4C;
+        local_98[2] = 0;
+        local_98[1] = 0xffffffff;
+        local_38 = 0xff;
+        local_37 = 0;
+        local_56 = 0;
+        local_40 = 0xffff;
+        local_3e = 0xffff;
+        local_3c = 0xffff;
+        local_4c = 0xffff;
+        local_48 = 0xffff;
+        local_44 = 0xffff;
+        local_58 = 0;
+        local_98[0] = param_1;
+        switch (param_2)
+        {
+        case 0x73a:
+            uStack_2c = randomGetRange(8, 10);
+            local_70 = lbl_803E0E50 * (f32)(s32)
+            uStack_2c;
+            uVar2 = randomGetRange(0, 0x28);
+            if (uVar2 == 0)
+            {
+                uStack_2c = randomGetRange(0x15, 0x29);
+                local_5c = lbl_803E0E38 *
+                    (f32)(s32)
+                uStack_2c;
+                local_98[2] = 0x1cc;
+            }
+            else
+            {
+                uStack_2c = randomGetRange(8, 0x14);
+                local_5c = lbl_803E0E38 *
+                    (f32)(s32)
+                uStack_2c;
+                local_98[2] = randomGetRange(0x5a, 0x78);
+            }
+            local_54 = 0x80180200;
+            local_50 = 0x1000020;
+            local_56 = 0xc0b;
+            local_38 = 0x7f;
+            local_3c = 0x3fff;
+            local_3e = 0x3fff;
+            local_40 = 0x3fff;
+            local_44 = 0xffff;
+            local_48 = 0xffff;
+            local_4c = 0xffff;
+            local_64 = lbl_803E0E54;
+            break;
+        case 0x73b:
+            uStack_2c = randomGetRange(0xffffffec, 0x14);
+            local_74 = lbl_803E0E50 * (f32)(s32)
+            uStack_2c;
+            uStack_24 = randomGetRange(8, 0x14);
+            local_70 = lbl_803E0E50 * (f32)(s32)
+            uStack_24;
+            uStack_1c = randomGetRange(0xffffffec, 0x14);
+            local_6c = lbl_803E0E50 * (f32)(s32)
+            uStack_1c;
+            local_5c = lbl_803E0E58;
+            local_98[2] = 0x32;
+            local_54 = 0x3000200;
+            local_50 = 0x200020;
+            local_56 = 0x33;
+            local_38 = 0xff;
+            local_40 = 0xffff;
+            local_3e = 0xffff;
+            local_3c = 0xffff;
+            local_4c = 0xffff;
+            local_48 = randomGetRange(0, 0x8000);
+            local_64 = lbl_803E0E5C;
+            local_44 = local_48;
+            break;
+        default:
+            return 0xffffffff;
+        case 0x73d:
+            uStack_1c = randomGetRange(0xfffffff6, 10);
+            local_68 = lbl_803E0E3C * (f32)(s32)
+            uStack_1c;
+            uStack_24 = randomGetRange(0xfffffff6, 100);
+            local_64 = lbl_803E0E50 * (f32)(s32)
+            uStack_24;
+            uStack_2c = randomGetRange(0xfffffff6, 10);
+            local_60 = lbl_803E0E3C * (f32)(s32)
+            uStack_2c;
+            uStack_14 = randomGetRange(7, 9);
+            local_5c = lbl_803E0E60 *
+                lbl_803E0E64 * (f32)(s32)
+            uStack_14;
+            local_98[2] = 0x3c;
+            local_54 = 0x80100;
+            local_37 = 0x10;
+            local_56 = 0xde;
+            break;
+        case 0x73e:
+            uStack_14 = randomGetRange(0xfffffff6, 10);
+            local_68 = lbl_803E0E3C * (f32)(s32)
+            uStack_14;
+            uStack_1c = randomGetRange(0xfffffff6, 100);
+            local_64 = lbl_803E0E50 * (f32)(s32)
+            uStack_1c;
+            uStack_24 = randomGetRange(0xfffffff6, 10);
+            local_60 = lbl_803E0E3C * (f32)(s32)
+            uStack_24;
+            uStack_2c = randomGetRange(7, 9);
+            local_5c = lbl_803E0E60 *
+                lbl_803E0E64 * (f32)(s32)
+            uStack_2c;
+            local_98[2] = 0x3c;
+            local_54 = 0x80100;
+            local_37 = 0x10;
+            local_56 = 0xdf;
+            break;
+        case 0x73f:
+            if (param_6 == 0)
+            {
+                uStack_14 = randomGetRange(0xfffffff6, 10);
+                local_68 = lbl_803E0E3C *
+                    (f32)(s32)
+                uStack_14;
+                uStack_1c = randomGetRange(0xfffffff6, 100);
+                local_64 = lbl_803E0E50 *
+                    (f32)(s32)
+                uStack_1c;
+                uStack_24 = randomGetRange(0xfffffff6, 10);
+                uStack_24 = uStack_24 ^ 0x80000000;
+                local_60 = lbl_803E0E3C *
+                    (f32)(s32)
+                uStack_24;
+            }
+            else
+            {
+                uStack_14 = randomGetRange(0xfffffff6, 10);
+                local_68 = lbl_803E0E3C *
+                    (f32)(s32)
+                uStack_14 +
+                    lbl_803E0E68;
+                uStack_1c = randomGetRange(0xfffffff6, 100);
+                local_64 = lbl_803E0E50 *
+                    (f32)(s32)
+                uStack_1c +
+                    lbl_803E0E6C;
+                uStack_24 = randomGetRange(0xfffffff6, 10);
+                uStack_24 = uStack_24 ^ 0x80000000;
+                local_60 = lbl_803E0E3C *
+                    (f32)(s32)
+                uStack_24 +
+                    lbl_803E0E70;
+            }
+            local_28 = 0x43300000;
+            uStack_14 = randomGetRange(7, 9);
+            local_5c = lbl_803E0E74 *
+                lbl_803E0E64 * (f32)(s32)
+            uStack_14;
+            local_98[2] = 0x3c;
+            local_54 = 0x80100;
+            local_37 = 0x10;
+            local_56 = 0xde;
+            break;
+        case 0x740:
+            if (param_6 == 0)
+            {
+                uStack_14 = randomGetRange(0xfffffff6, 10);
+                local_68 = lbl_803E0E3C *
+                    (f32)(s32)
+                uStack_14;
+                uStack_1c = randomGetRange(0xfffffff6, 100);
+                local_64 = lbl_803E0E50 *
+                    (f32)(s32)
+                uStack_1c;
+                uStack_24 = randomGetRange(0xfffffff6, 10);
+                uStack_24 = uStack_24 ^ 0x80000000;
+                local_60 = lbl_803E0E3C *
+                    (f32)(s32)
+                uStack_24;
+            }
+            else
+            {
+                uStack_14 = randomGetRange(0xfffffff6, 10);
+                local_68 = lbl_803E0E3C *
+                    (f32)(s32)
+                uStack_14 +
+                    lbl_803E0E68;
+                uStack_1c = randomGetRange(0xfffffff6, 100);
+                local_64 = lbl_803E0E50 *
+                    (f32)(s32)
+                uStack_1c +
+                    lbl_803E0E6C;
+                uStack_24 = randomGetRange(0xfffffff6, 10);
+                uStack_24 = uStack_24 ^ 0x80000000;
+                local_60 = lbl_803E0E3C *
+                    (f32)(s32)
+                uStack_24 +
+                    lbl_803E0E70;
+            }
+            local_28 = 0x43300000;
+            uStack_14 = randomGetRange(7, 9);
+            local_5c = lbl_803E0E74 *
+                lbl_803E0E64 * (f32)(s32)
+            uStack_14;
+            local_98[2] = 0x3c;
+            local_54 = 0x80100;
+            local_37 = 0x10;
+            local_56 = 0xdf;
+            break;
+        case 0x741:
+            if (param_3 != (undefined2*)0x0)
+            {
+                local_64 = ((PartFxSpawnParams*)param_3)->unk10;
+            }
+            local_5c = lbl_803E0E78;
+            local_98[2] = randomGetRange(0, 0x1e);
+            local_98[2] = local_98[2] + 0x50;
+            local_38 = 0x60;
+            local_54 = 0x80110;
+            local_56 = 0x7b;
+            local_37 = 0x20;
+            break;
+        case 0x742:
+            local_6c = lbl_803E0E7C;
+            uStack_14 = randomGetRange(0xffffffec, 0x14);
+            local_74 = lbl_803E0E80 * (f32)(s32)
+            uStack_14;
+            uStack_1c = randomGetRange(0xffffffec, 0x14);
+            local_70 = lbl_803E0E80 * (f32)(s32)
+            uStack_1c;
+            local_5c = lbl_803E0E84;
+            local_98[2] = randomGetRange(0x46, 0x50);
+            local_38 = 0xff;
+            local_54 = 0x82000104;
+            local_50 = 0x400;
+            local_56 = 0x3f4;
+            break;
+        case 0x743:
+            local_6c = lbl_803E0E7C;
+            uStack_14 = randomGetRange(0xffffffec, 0x14);
+            local_74 = lbl_803E0E80 * (f32)(s32)
+            uStack_14;
+            uStack_1c = randomGetRange(0xffffffec, 0x14);
+            local_70 = lbl_803E0E80 * (f32)(s32)
+            uStack_1c;
+            local_5c = lbl_803E0E84;
+            local_98[2] = randomGetRange(0x46, 0x50);
+            local_38 = 0xff;
+            local_54 = 0x82000104;
+            local_50 = 0x400;
+            local_56 = 0x500;
+            break;
+        case 0x744:
+            uVar2 = randomGetRange(0, 4);
+            if (uVar2 == 4)
+            {
+                local_5c = lbl_803E0E88;
+                local_38 = 0x9b;
+                local_54 = 0x480000;
+                local_98[2] = randomGetRange(0x1e, 0x28);
+            }
+            else
+            {
+                local_5c = lbl_803E0E8C;
+                local_38 = 0x7d;
+                local_54 = 0x180000;
+                local_98[2] = 0x50;
+            }
+            local_50 = 0x2000000;
+            local_56 = 0x88;
+        }
+        local_54 = local_54 | param_4;
+        if (((local_54 & 1) != 0) && ((local_54 & 2) != 0))
+        {
+            local_54 = local_54 ^ 2;
+        }
+        if ((local_54 & 1) != 0)
+        {
+            if ((param_4 & 0x200000) == 0)
+            {
+                if (local_98[0] != 0)
+                {
+                    local_68 = local_68 + *(float*)(local_98[0] + 0x18);
+                    local_64 = local_64 + *(float*)(local_98[0] + 0x1c);
+                    local_60 = local_60 + *(float*)(local_98[0] + 0x20);
+                }
+            }
+            else
+            {
+                local_68 = local_68 + local_80;
+                local_64 = local_64 + local_7c;
+                local_60 = local_60 + local_78;
+            }
+        }
+        uVar1 = (*gExpgfxInterface)->spawnEffect(local_98, 0xffffffff, param_2, 0);
+    }
+    return uVar1;
+}
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800c9030
+ * EN v1.0 Address: 0x800C9030
+ * EN v1.0 Size: 128b
+ * EN v1.1 Address: 0x800D57BC
+ * EN v1.1 Size: 140b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4 FUN_800c9030(uint param_1, int* param_2)
+{
+    int iVar1;
+    int iVar2;
+    int iVar3;
+
+    *param_2 = -1;
+    if ((int)param_1 < 0)
+    {
+        return 0;
+    }
+    iVar1 = DAT_803de090 + -1;
+    iVar2 = 0;
+    while (true)
+    {
+        while (true)
+        {
+            if (iVar1 < iVar2)
+            {
+                *param_2 = -1;
+                return 0;
+            }
+            iVar3 = iVar1 + iVar2 >> 1;
+            if (param_1 <= (uint)(&DAT_8039d0b8)[iVar3 * 2]) break;
+            iVar2 = iVar3 + 1;
+        }
+        if ((uint)(&DAT_8039d0b8)[iVar3 * 2] <= param_1) break;
+        iVar1 = iVar3 + -1;
+    }
+    *param_2 = iVar3;
+    return (&DAT_8039d0bc)[iVar3 * 2];
+}
+
+
+/* sda21 globals used by leaf accessors below. */
+extern s16 lbl_803DD414;
+extern s16 lbl_803DD416;
+
+typedef struct PartFxKV
+{
+    u32 key;
+    u32 value;
+} PartFxKV;
+
+extern f32 lbl_803E04E8;
+extern f32 lbl_803E0500;
+
+/* Globals for tick functions Effect16_func05 / Effect17_func05 / Effect18_func05 / Effect19_func05 / Effect20_func05. */
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern f32 mathSinf(f32 x);
+
+extern f32 lbl_803DB848;
+extern f32 lbl_803DB84C;
+extern f32 lbl_803E00A8;
+extern f32 lbl_803E00AC;
+extern f32 lbl_803E00B0;
+extern f32 lbl_803E00B8;
+extern s32 lbl_803DD3C0;
+extern s32 lbl_803DD3C4;
+extern f32 lbl_803DD3C8;
+extern f32 lbl_803DD3CC;
+extern f32 lbl_803E0108;
+extern f32 lbl_803E010C;
+
+extern f32 lbl_803DB858;
+extern f32 lbl_803DB85C;
+extern f32 lbl_803E01B8;
+extern f32 lbl_803E01BC;
+extern f32 lbl_803E01C8;
+extern s32 lbl_803DD3D0;
+extern s32 lbl_803DD3D4;
+extern f32 lbl_803DD3D8;
+extern f32 lbl_803DD3DC;
+extern f32 lbl_803E0218;
+extern f32 lbl_803E021C;
+
+extern f32 lbl_803DB868;
+extern f32 lbl_803DB86C;
+extern f32 lbl_803E0220;
+extern f32 lbl_803E0224;
+extern f32 lbl_803E0228;
+extern f32 lbl_803E0230;
+extern s32 lbl_803DD3E0;
+extern s32 lbl_803DD3E4;
+extern f32 lbl_803DD3E8;
+extern f32 lbl_803DD3EC;
+extern f32 lbl_803E02D0;
+extern f32 lbl_803E02D4;
+
+extern f32 lbl_803DB878;
+extern f32 lbl_803DB87C;
+extern f32 lbl_803E02D8;
+extern f32 lbl_803E02DC;
+extern f32 lbl_803E02E8;
+extern s32 lbl_803DD3F0;
+extern s32 lbl_803DD3F4;
+extern f32 lbl_803DD3F8;
+extern f32 lbl_803DD3FC;
+extern f32 lbl_803E0308;
+extern f32 lbl_803E030C;
+
+extern f32 lbl_803DB870;
+extern f32 lbl_803DB874;
+extern f32 lbl_803E02E4;
+extern f32 lbl_803E02EC;
+extern f32 lbl_803E02F0;
+extern f32 lbl_803E02F4;
+extern f32 lbl_803E02F8;
+extern f32 lbl_803E02FC;
+
+extern f32 lbl_803E0180;
+extern f32 lbl_803E0184;
+extern f32 lbl_803E0188;
+extern f32 lbl_803E018C;
+extern f32 lbl_803E0190;
+extern f32 lbl_803E0194;
+extern f32 lbl_803E0198;
+extern f32 lbl_803E019C;
+extern f32 lbl_803E01A0;
+extern f32 lbl_803E01A4;
+extern f32 lbl_803E01A8;
+extern f32 lbl_803E01AC;
+extern WaterfxInterface** gWaterfxInterface;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+
+typedef struct WaterfxCfg
+{
+    s16 x;
+    s16 y;
+    s16 z;
+    u8 pad6[2];
+    f32 f8;
+    f32 fc;
+    f32 f10;
+    f32 f14;
+} WaterfxCfg;
+
+extern WaterfxCfg lbl_8039C440;
+
+extern f32 lbl_803DB850;
+extern f32 lbl_803DB854;
+extern f32 lbl_803E01C4;
+extern f32 lbl_803E01CC;
+extern f32 lbl_803E01D0;
+extern f32 lbl_803E01D4;
+extern f32 lbl_803E01D8;
+extern f32 lbl_803E01DC;
+extern f32 lbl_803E01E0;
+extern f32 lbl_803E01E4;
+extern f32 lbl_803E01E8;
+extern f32 lbl_803E01EC;
+extern f32 lbl_803E01F0;
+extern f32 lbl_803E01F4;
+extern f32 lbl_803E01F8;
+extern f32 lbl_803E01FC;
+extern f32 lbl_803E0200;
+extern f32 lbl_803E0204;
+extern f32 lbl_803E0208;
+extern f32 lbl_803E020C;
+
+extern f32 lbl_803E0110;
+extern f32 lbl_803E0114;
+extern f32 lbl_803E0118;
+extern f32 lbl_803E011C;
+extern f32 lbl_803E0120;
+extern f32 lbl_803E0124;
+extern f32 lbl_803E0128;
+extern f32 lbl_803E012C;
+extern f32 lbl_803E0130;
+extern f32 lbl_803E0134;
+extern f32 lbl_803E0138;
+extern f32 lbl_803E013C;
+extern f32 lbl_803E0140;
+extern f32 lbl_803E0144;
+extern f32 lbl_803E0148;
+extern f32 lbl_803E014C;
+extern f32 lbl_803E0150;
+extern f32 lbl_803E0154;
+extern f32 lbl_803E0158;
+extern f32 lbl_803E015C;
+extern f32 lbl_803E0160;
+extern f32 lbl_803E0164;
+extern f32 lbl_803E0168;
+extern f32 lbl_803E016C;
+extern f32 lbl_803E0170;
+extern f32 lbl_803E0174;
+extern WaterfxCfg lbl_8039C428;
+
+extern f32 lbl_803DB840;
+extern f32 lbl_803DB844;
+extern f32 lbl_803E00B4;
+extern f32 lbl_803E00BC;
+extern f32 lbl_803E00C0;
+extern f32 lbl_803E00C4;
+extern f32 lbl_803E00C8;
+extern f32 lbl_803E00CC;
+extern f32 lbl_803E00D0;
+extern f32 lbl_803E00D4;
+extern f32 lbl_803E00D8;
+extern f32 lbl_803E00DC;
+extern f32 lbl_803E00E0;
+extern f32 lbl_803E00E4;
+extern f32 lbl_803E00E8;
+extern f32 lbl_803E00EC;
+extern f32 lbl_803E00F0;
+extern f32 lbl_803E00F4;
+extern f32 lbl_803E00F8;
+extern WaterfxCfg lbl_8039C410;
+
+extern f32 lbl_803DB888;
+extern f32 lbl_803DB88C;
+extern f32 lbl_803E0310;
+extern f32 lbl_803E0314;
+extern f32 lbl_803E0318;
+extern f32 lbl_803E0320;
+extern s32 lbl_803DD400;
+extern s32 lbl_803DD404;
+extern f32 lbl_803DD408;
+extern f32 lbl_803DD40C;
+extern f32 lbl_803E0344;
+extern f32 lbl_803E0348;
+
+extern f32 lbl_803DB860;
+extern f32 lbl_803DB864;
+extern f32 lbl_803E022C;
+extern f32 lbl_803E0234;
+extern f32 lbl_803E0238;
+extern f32 lbl_803E023C;
+extern f32 lbl_803E0240;
+extern f32 lbl_803E0244;
+extern f32 lbl_803E0248;
+extern f32 lbl_803E024C;
+extern f32 lbl_803E0250;
+extern f32 lbl_803E0254;
+extern f32 lbl_803E0258;
+extern f32 lbl_803E025C;
+extern f32 lbl_803E0260;
+extern f32 lbl_803E0264;
+extern f32 lbl_803E0268;
+extern f32 lbl_803E026C;
+extern f32 lbl_803E0270;
+extern f32 lbl_803E0274;
+extern f32 lbl_803E0278;
+extern f32 lbl_803E027C;
+extern f32 lbl_803E0280;
+extern f32 lbl_803E0284;
+extern f32 lbl_803E0288;
+extern f32 lbl_803E028C;
+extern f32 lbl_803E0290;
+extern f32 lbl_803E0294;
+extern f32 lbl_803E0298;
+extern f32 lbl_803E029C;
+extern f32 lbl_803E02A0;
+extern f32 lbl_803E02A4;
+extern f32 lbl_803E02A8;
+extern f32 lbl_803E02AC;
+extern f32 lbl_803E02B0;
+extern f32 lbl_803E02B4;
+extern f32 lbl_803E02B8;
+extern f32 sqrtf(f32);
+
+typedef struct PartFxNode
+{
+    u8 _pad0[0xc];
+    f32 _0xc;
+    s32 _0x10;
+    u8 _pad14[4];
+    s32 _0x18;
+    s32 _0x1c;
+    s32 _0x20;
+} PartFxNode;
+
+/* Binary search for key in lbl_8039C458 (count = lbl_803DD410). */
+#pragma dont_inline on
+u32 Checkpoint_find(s32 key, s32* idx_out)
+{
+    extern PartFxKV lbl_8039C458[]; /* #57 */
+    extern s32 lbl_803DD410; /* #57 */
+    s32 high;
+    s32 low;
+    s32 mid;
+    *idx_out = -1;
+    if (key < 0) return 0;
+    high = lbl_803DD410 - 1;
+    low = 0;
+    while (high >= low)
+    {
+        mid = (high + low) >> 1;
+        if ((u32)key > lbl_8039C458[mid].key)
+        {
+            low = mid + 1;
+        }
+        else if ((u32)key < lbl_8039C458[mid].key)
+        {
+            high = mid - 1;
+        }
+        else
+        {
+            *idx_out = mid;
+            return lbl_8039C458[mid].value;
+        }
+    }
+    *idx_out = -1;
+    return 0;
+}
+
+extern f32 lbl_803E04D8;
+extern f32 lbl_803E04DC;
+extern f32 lbl_803E04E0;
+extern f32 lbl_803E04E4;
+extern f32 mathCosf(f32 x);
+
+
+/* Build particle quad positions from a checkpoint pair. */
+#pragma dont_inline off
+s32 fn_800D55BC(u8* p, s32 idx, f32* out1, f32* out2, f32* out3, u8 mode, f32 fa, f32 fb)
+{
+    s32 ret;
+    s32 local_idx;
+    u8* q;
+    f32 cosA;
+    f32 sinA;
+    f32 cosB;
+    f32 sinB;
+    f32 sclA;
+    f32 sclB;
+    s32 i;
+    s32 j;
+    f32* v3;
+
+    ret = 1;
+    if (p == NULL)
+    {
+        return 0;
+    }
+    q = (u8*)Checkpoint_find(((s32*)(p + 0x20))[idx], &local_idx);
+    if (q == NULL)
+    {
+        q = (u8*)Checkpoint_find(((s32*)(p + 0x20))[1 - idx], &local_idx);
+        ret = 2;
+    }
+    if (q == NULL)
+    {
+        return 0;
+    }
+
+    cosA = -mathSinf(lbl_803E04D8 * (f32)(*(u8*)(p + 0x29) << 8) / lbl_803E04DC);
+    sinA = -mathCosf(lbl_803E04D8 * (f32)(*(u8*)(p + 0x29) << 8) / lbl_803E04DC);
+    cosB = -mathSinf(lbl_803E04D8 * (f32)(*(u8*)(q + 0x29) << 8) / lbl_803E04DC);
+    sinB = -mathCosf(lbl_803E04D8 * (f32)(*(u8*)(q + 0x29) << 8) / lbl_803E04DC);
+    sclA = lbl_803E04E0 * (f32)(u32) * (u8*)(p + 0x2a);
+    sclB = lbl_803E04E0 * (f32)(u32) * (u8*)(q + 0x2a);
+
+    if (mode == 1)
+    {
+        f32 prodA;
+        f32 prodB;
+        f32 prodC;
+        f32 prodD;
+        j = 0;
+        i = 0;
+        v3 = out3;
+        prodA = sclA * sinA;
+        prodB = sclB * sinB;
+        prodC = sclA * -cosA;
+        prodD = sclB * -cosB;
+        do
+        {
+            u8* pp;
+            u8* qq;
+            pp = p + i;
+            out1[0] = (f32) * (s8*)(pp + 0x2d) * prodA + *(f32*)(p + 8);
+            qq = q + i;
+            out1[1] = (f32) * (s8*)(qq + 0x2d) * prodB + *(f32*)(q + 8);
+            out1[2] = 2.0f * ((f32)(u32) * (u8*)(p + 0x3d) *
+                mathSinf(3.1415927f * (f32)(*(u8*)(p + 0x3e) << 8) / 32768.0f));
+            out1[3] = 2.0f * ((f32)(u32) * (u8*)(q + 0x3d) *
+                mathSinf(3.1415927f * (f32)(*(u8*)(q + 0x3e) << 8) / 32768.0f));
+            out2[0] = sclA * (f32) * (s8*)(pp + 0x31) + *(f32*)(p + 0xc);
+            out2[1] = sclB * (f32) * (s8*)(qq + 0x31) + *(f32*)(q + 0xc);
+            out2[2] = 0.0f;
+            out2[3] = 0.0f;
+            v3[0] = (f32) * (s8*)(pp + 0x2d) * prodC + *(f32*)(p + 0x10);
+            v3[1] = (f32) * (s8*)(qq + 0x2d) * prodD + *(f32*)(q + 0x10);
+            v3[2] = 2.0f * ((f32)(u32) * (u8*)(p + 0x3d) *
+                mathCosf(3.1415927f * (f32)(*(u8*)(p + 0x3e) << 8) / 32768.0f));
+            v3[3] = 2.0f * ((f32)(u32) * (u8*)(q + 0x3d) *
+                mathCosf(3.1415927f * (f32)(*(u8*)(q + 0x3e) << 8) / 32768.0f));
+            i += 1;
+            out1 += 4;
+            out2 += 4;
+            v3 += 4;
+            j += 4;
+        }
+        while (j < 0x10);
+    }
+    else if (mode == 0)
+    {
+        out1[0] = fa * (sclA * sinA) + *(f32*)(p + 8);
+        out1[1] = fa * (sclB * sinB) + *(f32*)(q + 8);
+        out1[2] = lbl_803E04E4 * ((f32)(u32) * (u8*)(p + 0x3d) *
+            mathSinf(lbl_803E04D8 * (f32)(*(u8*)(p + 0x3e) << 8) / lbl_803E04DC));
+        out1[3] = lbl_803E04E4 * ((f32)(u32) * (u8*)(q + 0x3d) *
+            mathSinf(lbl_803E04D8 * (f32)(*(u8*)(q + 0x3e) << 8) / lbl_803E04DC));
+        out2[0] = sclA * fb + *(f32*)(p + 0xc);
+        out2[1] = sclB * fb + *(f32*)(q + 0xc);
+        {
+            f32 e8 = lbl_803E04E8;
+            out2[2] = e8;
+            out2[3] = e8;
+        }
+        out3[0] = fa * (sclA * -cosA) + *(f32*)(p + 0x10);
+        out3[1] = fa * (sclB * -cosB) + *(f32*)(q + 0x10);
+        out3[2] = lbl_803E04E4 * ((f32)(u32) * (u8*)(p + 0x3d) *
+            mathCosf(lbl_803E04D8 * (f32)(*(u8*)(p + 0x3e) << 8) / lbl_803E04DC));
+        out3[3] = lbl_803E04E4 * ((f32)(u32) * (u8*)(q + 0x3d) *
+            mathCosf(lbl_803E04D8 * (f32)(*(u8*)(q + 0x3e) << 8) / lbl_803E04DC));
+    }
+    else
+    {
+        u8* pp;
+        u8* qq;
+        pp = p + (mode - 2);
+        out1[0] = (f32) * (s8*)(pp + 0x2d) * (sclA * sinA) + *(f32*)(p + 8);
+        qq = q + (mode - 2);
+        out1[1] = (f32) * (s8*)(qq + 0x2d) * (sclB * sinB) + *(f32*)(q + 8);
+        out1[2] = lbl_803E04E4 * ((f32)(u32) * (u8*)(p + 0x3d) *
+            mathSinf(lbl_803E04D8 * (f32)(*(u8*)(p + 0x3e) << 8) / lbl_803E04DC));
+        out1[3] = lbl_803E04E4 * ((f32)(u32) * (u8*)(q + 0x3d) *
+            mathSinf(lbl_803E04D8 * (f32)(*(u8*)(q + 0x3e) << 8) / lbl_803E04DC));
+        out2[0] = sclA * (f32) * (s8*)(pp + 0x31) + *(f32*)(p + 0xc);
+        out2[1] = sclB * (f32) * (s8*)(qq + 0x31) + *(f32*)(q + 0xc);
+        {
+            f32 e8 = lbl_803E04E8;
+            out2[2] = e8;
+            out2[3] = e8;
+        }
+        out3[0] = (f32) * (s8*)(pp + 0x2d) * (sclA * -cosA) + *(f32*)(p + 0x10);
+        out3[1] = (f32) * (s8*)(qq + 0x2d) * (sclB * -cosB) + *(f32*)(q + 0x10);
+        out3[2] = lbl_803E04E4 * ((f32)(u32) * (u8*)(p + 0x3d) *
+            mathCosf(lbl_803E04D8 * (f32)(*(u8*)(p + 0x3e) << 8) / lbl_803E04DC));
+        out3[3] = lbl_803E04E4 * ((f32)(u32) * (u8*)(q + 0x3d) *
+            mathCosf(lbl_803E04D8 * (f32)(*(u8*)(q + 0x3e) << 8) / lbl_803E04DC));
+    }
+    return ret;
+}
+
+/* Set *p to lbl_803DD414 (sign-extended) and return lbl_803DD418. */
+u32 Checkpoint_func0E(s32* p)
+{
+    extern u32 lbl_803DD418; /* #57 */
+    *p = lbl_803DD414;
+    return lbl_803DD418;
+}
+
+/* Swap lbl_803DD418 with lbl_803DD41C; copy 416 into 414 then clear 416. */
+void fn_800D6584(void)
+{
+    extern u32 lbl_803DD418; /* #57 */
+    extern u32 lbl_803DD41C; /* #57 */
+    u32 tmp = lbl_803DD418;
+    lbl_803DD418 = lbl_803DD41C;
+    lbl_803DD41C = tmp;
+    lbl_803DD414 = lbl_803DD416;
+    lbl_803DD416 = 0;
+}
+
+/* Rank object r3 against array at lbl_803DD418 by (int@0x1c, float@0xc) descending. */
+typedef struct PartFxItem
+{
+    u8 _pad0[0xc];
+    f32 _0xc;
+    u8 _pad10[0xc];
+    s32 _0x1c;
+} PartFxItem;
+
+/* NOTE: 96.8% ? register choice differs (r5 vs r7 for rank). */
+s32 Checkpoint_func0F(PartFxItem* p)
+{
+    extern u32 lbl_803DD418; /* #57 */
+    PartFxItem* q;
+    s32 rank = 1;
+    PartFxItem** arr = (PartFxItem**)lbl_803DD418;
+    s32 i;
+    for (i = 0; i < lbl_803DD414; i++)
+    {
+        q = arr[i];
+        if (q != p)
+        {
+            if (q->_0x1c > p->_0x1c)
+            {
+                rank++;
+            }
+            else if (q->_0x1c == p->_0x1c)
+            {
+                if (q->_0xc > p->_0xc)
+                {
+                    rank++;
+                }
+            }
+        }
+    }
+    return rank;
+}
+
+/* Find item in lbl_803DD418 array whose rank equals target_rank. */
+PartFxItem* Checkpoint_func10(s32 target_rank)
+{
+    extern u32 lbl_803DD418; /* #57 */
+    s32 i = 0;
+    PartFxItem** outer = (PartFxItem**)lbl_803DD418;
+    PartFxItem** base = outer;
+    s32 n = lbl_803DD414;
+    for (; i < n; i++)
+    {
+        PartFxItem* cur = *outer;
+        s32 rank = 1;
+        PartFxItem** inner = base;
+        s32 j;
+        for (j = 0; j < n; j++)
+        {
+            PartFxItem* other = *inner;
+            if (other != cur)
+            {
+                if (other->_0x1c > cur->_0x1c)
+                {
+                    rank++;
+                }
+                else if (other->_0x1c == cur->_0x1c)
+                {
+                    if (other->_0xc > cur->_0xc)
+                    {
+                        rank++;
+                    }
+                }
+            }
+            inner++;
+        }
+        if (rank == target_rank)
+        {
+            return cur;
+        }
+        outer++;
+    }
+    return 0;
+}
+
+/* Init random offsets / chain advance with lookup. */
+void Checkpoint_func0A(s32 key, f32* out_vec, u8* flag_byte)
+{
+    s32 local_idx;
+    PartFxNode* n;
+    s32 alt_found;
+    n = (PartFxNode*)Checkpoint_find(key, &local_idx);
+    if (n == 0) return;
+    out_vec[0] = (f32)(s32)
+    randomGetRange(-0x63, 0x63) / lbl_803E0500;
+    out_vec[1] = (f32)(s32)
+    randomGetRange(-0x63, 0x63) / lbl_803E0500;
+    out_vec[2] = (f32)(s32)
+    randomGetRange(0, 0x63) / lbl_803E0500;
+    alt_found = 0;
+    {
+        s32 v = n->_0x20;
+        if (v != 0)
+        {
+            PartFxNode* m = (PartFxNode*)Checkpoint_find(v, &local_idx);
+            if (m->_0x20 > -1)
+            {
+                alt_found = 1;
+            }
+        }
+    }
+    if ((s8) * flag_byte == 0)
+    {
+        if (alt_found != 0)
+        {
+            *(s32*)(out_vec + 4) = n->_0x20;
+        }
+        else
+        {
+            s32 v = n->_0x18;
+            if (v > -1)
+            {
+                *(s32*)(out_vec + 4) = v;
+                *flag_byte = 1;
+            }
+        }
+    }
+    else
+    {
+        s32 v = n->_0x18;
+        if (v != 0)
+        {
+            *(s32*)(out_vec + 4) = v;
+        }
+        else if (alt_found != 0)
+        {
+            *(s32*)(out_vec + 4) = n->_0x20;
+            *flag_byte = 0;
+        }
+    }
+}
+
+/* Walk a chain via Checkpoint_find lookups starting from o->_0x10. */
+void Checkpoint_func0C(PartFxNode* o)
+{
+    s32 local_idx;
+    PartFxNode* ret;
+    s32 nxt;
+    ret = (PartFxNode*)Checkpoint_find(o->_0x10, &local_idx);
+    if (ret == 0)
+    {
+        o->_0x18 = 0;
+        o->_0xc = lbl_803E04E8;
+    }
+    else
+    {
+        while ((nxt = ret->_0x18) > -1)
+        {
+            ret = (PartFxNode*)Checkpoint_find(nxt, &local_idx);
+            o->_0x1c = o->_0x1c + 1;
+        }
+        o->_0x18 = o->_0x10;
+        o->_0xc = lbl_803E04E8;
+    }
+}
+
+/* Append v to array pointed to by lbl_803DD41C, capped at 10 entries.
+ * NOTE: stuck at ~78% ? instruction scheduling differs. */
+void Checkpoint_func0D(u32 v)
+{
+    extern u32 lbl_803DD41C; /* #57 */
+    if (lbl_803DD416 >= 10) return;
+    ((u32*)lbl_803DD41C)[lbl_803DD416++] = v;
+}
+
+/* Tick: counter1, counter2 + rate*timeDelta; clamp; periodic sin. */
+void Effect16_func05(void);
+
+void Effect17_func05(void);
+
+void Effect18_func05(void);
+
+/*
+ * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
+ * the consumer-side definition of this 0x64-byte spawn request consumed by
+ * gExpgfxInterface->spawnEffect (expgfx_addremove). Widths kept as written here
+ * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
+ * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
+ */
+typedef struct PartFxSpawn
+{
+    void* attachedSource;
+    int quadVertex3Pad06;
+    int lifetimeFrames;
+    s16 sourceVecX;
+    s16 sourceVecY;
+    s16 sourceVecZ;
+    u8 pad12[2];
+    f32 sourcePosX;
+    f32 sourcePosY;
+    f32 sourcePosZ;
+    f32 sourcePosW;
+    f32 velocityX;
+    f32 velocityY;
+    f32 velocityZ;
+    f32 startPosX;
+    f32 startPosY;
+    f32 startPosZ;
+    f32 scale;
+    s16 textureSetupFlags;
+    s16 textureId;
+    u32 behaviorFlags;
+    u32 renderFlags;
+    u32 overrideColor0;
+    u32 overrideColor1;
+    u32 overrideColor2;
+    u16 colorWord0;
+    u16 colorWord1;
+    u16 colorWord2;
+    u8 effectIdByte;
+    u8 pad5f[1];
+    u8 initialAlpha;
+    u8 linkGroup;
+    u8 modelIdByte;
+} PartFxSpawn;
+
+int Effect19_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, f32* extraArgs);
+
+int Effect13_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId);
+
+int Effect17_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
+
+int Effect16_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
+
+int Effect15_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, f32* extraArgs);
+
+int Effect18_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, void* extraArgs);
+
+void Effect19_func05(void);
+
+/* ---- Effect20_func04 (FUN_800cd430, v1.0) ---- */
+extern f32 lbl_803DB880;
+extern f32 lbl_803DB884;
+extern f32 lbl_803E031C;
+extern f32 lbl_803E0324;
+extern f32 lbl_803E0328;
+extern f32 lbl_803E032C;
+extern f32 lbl_803E0330;
+extern f32 lbl_803E0334;
+extern f32 lbl_803E0338;
+extern f32 lbl_803E033C;
+extern f32 lbl_803E0340;
+extern f32 lbl_803E034C;
+extern f32 lbl_803E0350;
+extern f32 lbl_803E0354;
+extern f32 lbl_803E0358;
+extern f32 lbl_803E035C;
+extern f32 lbl_803E0360;
+extern f32 lbl_803E0364;
+extern f32 lbl_803E0368;
+extern f32 lbl_803E036C;
+extern f32 lbl_803E0370;
+extern f32 lbl_803E0374;
+extern f32 lbl_803E0378;
+extern f32 lbl_803E037C;
+extern f32 lbl_803E0380;
+extern f32 lbl_803E0384;
+extern f32 lbl_803E0388;
+extern f32 lbl_803E038C;
+extern f32 lbl_803E0390;
+extern f32 lbl_803E0394;
+extern f32 lbl_803E0398;
+extern f32 lbl_803E039C;
+extern f32 lbl_803E03A0;
+extern f32 lbl_803E03A4;
+extern f32 lbl_803E03A8;
+extern f32 lbl_803E03AC;
+extern f32 lbl_803E03B0;
+extern f32 lbl_803E03B4;
+extern f32 lbl_803E03B8;
+extern f32 lbl_803E03BC;
+extern f32 lbl_803E03C0;
+extern f32 lbl_803E03C4;
+extern f32 lbl_803E03C8;
+extern f32 lbl_803E03CC;
+extern f32 lbl_803E03D0;
+extern f32 lbl_803E03D4;
+extern f32 lbl_803E03D8;
+extern f32 lbl_803E03DC;
+extern f32 lbl_803E03E0;
+extern f32 lbl_803E03E4;
+extern f32 lbl_803E03E8;
+extern f32 lbl_803E03EC;
+extern f32 lbl_803E03F0;
+extern f32 lbl_803E03F4;
+extern f32 lbl_803E03F8;
+extern f32 lbl_803E03FC;
+extern f32 lbl_803E0400;
+extern f32 lbl_803E0404;
+extern f32 lbl_803E0408;
+extern f32 lbl_803E040C;
+extern f32 lbl_803E0410;
+extern f32 lbl_803E0414;
+extern f32 lbl_803E0418;
+extern f32 lbl_803E041C;
+extern f32 lbl_803E0420;
+extern f32 lbl_803E0424;
+extern f32 lbl_803E0428;
+extern f32 lbl_803E042C;
+extern f32 lbl_803E0430;
+extern f32 lbl_803E0434;
+extern f32 lbl_803E0438;
+extern f32 lbl_803E043C;
+extern f32 lbl_803E0440;
+extern f32 lbl_803E0444;
+extern f32 lbl_803E0448;
+extern f32 lbl_803E044C;
+extern f32 lbl_803E0450;
+extern f32 lbl_803E0454;
+extern f32 lbl_803E0458;
+extern f32 lbl_803E045C;
+extern f64 lbl_803E0460;
+extern f32 lbl_803E0468;
+extern f32 lbl_803E046C;
+extern f32 lbl_803E0470;
+extern f32 lbl_803E0474;
+extern f32 lbl_803E0478;
+extern f32 lbl_803E047C;
+extern f32 lbl_803E0480;
+extern f32 lbl_803E0484;
+extern f32 lbl_803E0488;
+extern f32 lbl_803E048C;
+extern f32 lbl_803E0490;
+extern f32 lbl_803E0494;
+extern f32 lbl_803E0498;
+extern f32 lbl_803E049C;
+extern f32 lbl_803E04A0;
+extern f32 lbl_803E04A4;
+extern f32 lbl_803E04A8;
+extern f32 lbl_803E04AC;
+extern f32 lbl_803E04B0;
+extern f32 lbl_803E04B4;
+extern f32 lbl_803E04B8;
+extern f32 lbl_803E04BC;
+extern f32 lbl_803E04C0;
+extern f32 lbl_803E04C4;
+extern f32 lbl_803E04C8;
+extern void vecRotateZXY(void* params, f32* vec);
+extern int randFn_80080100(int range);
+
+int Effect20_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, f32* extraArgs);
+
+
+void Effect20_func05(void);
+
+/* Trivial 4b 0-arg blr leaves. */
+void Effect16_func03_nop(void);
+
+void Effect16_release(void);
+
+void Effect16_initialise(void);
+
+void Effect15_func05_nop(void);
+
+void Effect15_func03_nop(void);
+
+void Effect15_release(void);
+
+void Effect15_initialise(void);
+
+void Effect13_func05_nop(void);
+
+void Effect13_func03_nop(void);
+
+void Effect13_release(void);
+
+void Effect13_initialise(void);
+
+void Effect17_func03_nop(void);
+
+void Effect17_release(void);
+
+void Effect17_initialise(void);
+
+void Effect18_func03_nop(void);
+
+void Effect18_release(void);
+
+void Effect18_initialise(void);
+
+void Effect19_func03_nop(void);
+
+void Effect19_release(void);
+
+void Effect19_initialise(void);
+
+void Effect20_func03_nop(void);
+
+void Effect20_release(void);
+
+void Effect20_initialise(void);
+
+/* 8b "li r3, N; blr" returners. */
+int Checkpoint_func09_ret_1(void) { return 0x1; }
+
+extern f32 lbl_803E0504;
+extern f32 lbl_803E0508;
+extern f32 Curve_EvalHermite(f32* values, f32 t, f32* outTangent);
+
+/* Advance along the checkpoint curve by dist; write position/angles to out. */
+s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag)
+{
+    extern u16 getAngle(f32 a, f32 b); /* #57 */
+    f32 v1[4];
+    f32 v2[4];
+    f32 v3[4];
+    f32 outX;
+    f32 outY;
+    f32 outZ;
+    s32 local_idx;
+    s32 mode;
+    s32 alt;
+    u8* n;
+    s32 i;
+    s8 clamp;
+    s32 ang1;
+    s32 ang2;
+    f32 kMax;
+    f32 kMin;
+    f32 t;
+    f32 seg;
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 len;
+
+    i = 0;
+    mode = p3 + 2;
+    kMin = lbl_803E04E8;
+    kMax = lbl_803E0504;
+    do
+    {
+        if (*(s32*)(o + 0x10) < 0)
+        {
+            return 1;
+        }
+        n = (u8*)Checkpoint_find(*(s32*)(o + 0x10), &local_idx);
+        if (n == NULL)
+        {
+            return 1;
+        }
+        if (*(s32*)(n + 0x20) < 0)
+        {
+            *(s32*)(o + 0x10) = -1;
+            return 1;
+        }
+        alt = 0;
+        if (*(s32*)(n + 0x24) > -1 && *(u8*)(o + 0x30) != 0)
+        {
+            alt = 1;
+        }
+        if (fn_800D55BC(n, alt, v1, v2, v3, mode, lbl_803E04E8, *(f32*)&lbl_803E04E8) == 0)
+        {
+            return 1;
+        }
+        len = sqrtf((v3[0] - v3[1]) * (v3[0] - v3[1]) +
+            ((v1[0] - v1[1]) * (v1[0] - v1[1]) + (v2[0] - v2[1]) * (v2[0] - v2[1])));
+        t = *(f32*)(o + 8) + dist / len;
+        clamp = 0;
+        if (t < kMin)
+        {
+            t = kMin;
+            clamp = -1;
+        }
+        if (t > kMax)
+        {
+            t = kMax;
+            clamp = 1;
+        }
+        x = Curve_EvalHermite(v1, t, &outX);
+        y = Curve_EvalHermite(v2, t, &outY);
+        z = Curve_EvalHermite(v3, t, &outZ);
+        ang1 = getAngle(outX, outZ) + 0x8000;
+        if (flag != 0)
+        {
+            f32 xd;
+            f32 zd;
+            ang2 = getAngle(sqrtf(outX * outX + outZ * outZ), outY) - 0x4000;
+            xd = x - *(f32*)(out + 0xc);
+            zd = z - *(f32*)(out + 0x14);
+            seg = sqrtf(xd * xd + zd * zd);
+        }
+        else
+        {
+            f32 xd;
+            f32 zd;
+            xd = x - *(f32*)(out + 0xc);
+            zd = z - *(f32*)(out + 0x14);
+            seg = sqrtf(xd * xd + zd * zd);
+        }
+        if (dist < kMin)
+        {
+            seg = -seg;
+        }
+        if (clamp == -1 && seg < dist)
+        {
+            *(s32*)(o + 0x10) = *(s32*)(n + alt * 4 + 0x18);
+            *(f32*)(o + 8) = lbl_803E0508;
+            if (alt != 0 && *(s32*)(o + 0x10) < 0)
+            {
+                *(s32*)(o + 0x10) = *(s32*)(n + 0x18);
+            }
+        }
+        else if (clamp == 1 && seg < dist)
+        {
+            *(s32*)(o + 0x10) = *(s32*)(n + alt * 4 + 0x20);
+            *(f32*)(o + 8) = lbl_803E04E8;
+            if (alt != 0 && *(s32*)(o + 0x10) < 0)
+            {
+                *(s32*)(o + 0x10) = *(s32*)(n + 0x20);
+            }
+        }
+        else
+        {
+            *(f32*)(o + 8) = t;
+        }
+        dist -= seg;
+        *(f32*)(out + 0xc) = x;
+        if (flag != 0)
+        {
+            *(f32*)(out + 0x10) = y;
+        }
+        *(f32*)(out + 0x14) = z;
+        i += 1;
+    }
+    while (i < 3);
+    *(s16*)(out + 0) = (s16)ang1;
+    if (flag != 0)
+    {
+        *(s16*)(out + 2) = (s16)ang2;
+    }
+    return 0;
+}
+
+void Checkpoint_onGameLoop(void)
+{
+    extern u32 lbl_803DD418; /* #57 */
+    extern u32 lbl_803DD41C; /* #57 */
+    u32 tmp = lbl_803DD418;
+    lbl_803DD418 = lbl_803DD41C;
+    lbl_803DD41C = tmp;
+    lbl_803DD414 = lbl_803DD416;
+    lbl_803DD416 = 0;
+}
+
+/* segment pragma-stack balance (re-split): */
+#pragma dont_inline reset
+#pragma dont_inline reset
+
+/* === moved from main/dll/df_partfx.c [800D6660-800D7568) (TU re-split, docs/boundary_audit.md) === */
+#pragma scheduling on
+#pragma peephole on
+#include "main/effect_interfaces.h"
+#include "main/game_object.h"
+#include "main/dll/baddie_state.h"
+
+
+
+/*
+ * --INFO--
+ *
+ * Function: Checkpoint_func07
+ * EN v1.0 Address: 0x800D6660
+ * EN v1.0 Size: 132b
+ * EN v1.1 Address: 0x800D6844
+ * EN v1.1 Size: 168b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803E050C;
+extern f32 lbl_803E0510;
+extern f32 lbl_803E0514;
+extern f32 lbl_803E0518;
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+int Checkpoint_func07(int* obj, int* state)
+{
+    extern int getAngle(f32 dx, f32 dz); /* #57 */
+    extern int* Checkpoint_find(int id, int* slot); /* #57 */
+    int slotC;
+    int slot8;
+    char* cp;
+    char* cp2;
+    short ang;
+    f32 cosv, sinv, cos2, sin2;
+    f32 dist, dist2, nx, nz, offs, dz;
+    f32 offs2, distA, distB, dx, dy, len, q, proj, proj2, t0, sum, frac, zero;
+
+    if (*(int*)&((BaddieState*)state)->posY < 0)
+    {
+        *(int*)&((BaddieState*)state)->posZ = 0;
+        *(f32*)((char*)state + 0xc) = lbl_803E04E8;
+        if (*(int*)((char*)state + 0x10) < 0)
+        {
+            return 0;
+        }
+        *(int*)&((BaddieState*)state)->posY = *(int*)((char*)state + 0x10);
+    }
+    cp = (char*)Checkpoint_find(*(int*)&((BaddieState*)state)->posY, &slot8);
+    if (cp == NULL)
+    {
+        *(int*)&((BaddieState*)state)->posY = -1;
+        return 0;
+    }
+    cosv = mathSinf((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
+    sinv = mathCosf((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
+    offs = -(*(f32*)(cp + 8) * cosv + *(f32*)(cp + 0x10) * sinv);
+    dist = offs + (cosv * ((GameObject*)obj)->anim.localPosX + sinv * ((GameObject*)obj)->anim.localPosZ);
+    if (*(int*)(cp + 0x18) > -1 && dist >= lbl_803E04E8)
+    {
+        *(int*)&((BaddieState*)state)->posY = *(int*)(cp + 0x18);
+        *(f32*)((char*)state + 0xc) = lbl_803E050C;
+        *(int*)&((BaddieState*)state)->posZ = *(int*)&((BaddieState*)state)->posZ - 1;
+        return *(u8*)(cp + 0x29);
+    }
+    if (*(int*)(cp + 0x20) < 0)
+    {
+        return *(u8*)(cp + 0x29);
+    }
+    cp2 = (char*)Checkpoint_find(*(int*)(cp + 0x20), &slotC);
+    ang = getAngle(*(f32*)(cp2 + 8) - *(f32*)(cp + 8), *(f32*)(cp2 + 0x10) - *(f32*)(cp + 0x10));
+    cos2 = mathSinf((lbl_803E04D8 * (f32)(*(u8*)(cp2 + 0x29) << 8)) / lbl_803E04DC);
+    sin2 = mathCosf((lbl_803E04D8 * (f32)(*(u8*)(cp2 + 0x29) << 8)) / lbl_803E04DC);
+    offs2 = -(*(f32*)(cp2 + 8) * cos2 + *(f32*)(cp2 + 0x10) * sin2);
+    dist2 = offs2 + (cos2 * ((GameObject*)obj)->anim.localPosX + sin2 * ((GameObject*)obj)->anim.localPosZ);
+    zero = lbl_803E04E8;
+    if (dist2 < zero)
+    {
+        *(int*)&((BaddieState*)state)->posY = *(int*)(cp + 0x20);
+        *(f32*)((char*)state + 0xc) = zero;
+        *(int*)&((BaddieState*)state)->posZ = *(int*)&((BaddieState*)state)->posZ + 1;
+        return ang;
+    }
+    distA = offs + (cosv * *(f32*)(cp2 + 8) + sinv * *(f32*)(cp2 + 0x10));
+    distB = offs2 + (cos2 * *(f32*)(cp + 8) + sin2 * *(f32*)(cp + 0x10));
+    if (((distA < zero && dist < zero) || (distA >= lbl_803E04E8 && dist >= lbl_803E04E8)) &&
+        ((distB <= lbl_803E04E8 && dist2 <= lbl_803E04E8) || (distB > lbl_803E04E8 && dist2 > lbl_803E04E8)))
+    {
+        dx = *(f32*)(cp + 8) - *(f32*)(cp2 + 8);
+        dy = *(f32*)(cp + 0xc) - *(f32*)(cp2 + 0xc);
+        dz = *(f32*)(cp + 0x10) - *(f32*)(cp2 + 0x10);
+        len = sqrtf(dz * dz + (dx * dx + dy * dy));
+        if (len > lbl_803E04E8)
+        {
+            q = lbl_803E0504 / len;
+            nx = dx * q;
+            nz = dz * q;
+        }
+        proj = cosv * nx + sinv * nz;
+        if (proj > lbl_803E0510 && proj < lbl_803E0514)
+        {
+            return ang;
+        }
+        t0 = -dist / proj;
+        proj2 = cos2 * nx + sin2 * nz;
+        if (proj2 > lbl_803E0510 && proj2 < lbl_803E0514)
+        {
+            return ang;
+        }
+        sum = t0 + dist2 / proj2;
+        frac = lbl_803E04E8;
+        if (lbl_803E04E8 != sum)
+        {
+            frac = t0 / sum;
+        }
+        *(f32*)((char*)state + 0xc) = frac;
+        if (*(f32*)((char*)state + 0xc) < lbl_803E04E8)
+        {
+            *(f32*)((char*)state + 0xc) = lbl_803E04E8;
+        }
+        if (*(f32*)((char*)state + 0xc) >= lbl_803E0518)
+        {
+            *(f32*)((char*)state + 0xc) = lbl_803E0518;
+        }
+    }
+    return ang;
+}
+#pragma opt_common_subs reset
+#pragma peephole reset
+#pragma scheduling reset
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_800d7780
+ * EN v1.0 Address: 0x800D7780
+ * EN v1.0 Size: 12b
+ * EN v1.1 Address: 0x800D7CFC
+ * EN v1.1 Size: 28b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void Checkpoint_release(void)
+{
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 8b "li r3, N; blr" returners. */
+
+/* sda21 accessors. */
+
+/* Pattern wrappers. */
+void Checkpoint_reset(void) { extern u32 lbl_803DD410; /* #57 */ lbl_803DD410 = 0x0; }
+
+/* 12b 3-insn patterns. */
+
+
+/* misc 8b leaves */
+
+/* Pattern wrappers. */
+
+/* sda21 writers. */
+#pragma peephole off
+#pragma peephole reset
+
+/* fcmp-eq-to-bool. */
+
+/* multi-store leaf (single float broadcast). */
+
+
+/* Checkpoint table initialiser. */
+extern u32 lbl_8039CA98[];
+
+#pragma scheduling off
+#pragma peephole off
+
+
+
+
+
+
+
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
+
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
+
+
+#pragma peephole reset
+#pragma scheduling reset
+
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
+#pragma peephole reset
+#pragma scheduling reset
+
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+void Checkpoint_initialise(void)
+{
+    extern void* lbl_803DD418; /* #57 */
+    extern void* lbl_803DD41C; /* #57 */
+    extern u32 lbl_803DD410; /* #57 */
+    lbl_803DD410 = 0;
+    lbl_803DD41C = lbl_8039CA98;
+    lbl_803DD418 = (void*)((u8*)lbl_8039CA98 + 0x28);
+}
+#pragma scheduling reset
+
+/* Checkpoint_Add: sorted insertion of (entry->_14 as key, entry as pointer) into lbl_8039C458 table. */
+typedef struct CheckpointSlot
+{
+    u32 key;
+    void* entry;
+} CheckpointSlot;
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+void Checkpoint_Add(int* entry)
+{
+    extern CheckpointSlot lbl_8039C458[]; /* #57 */
+    extern u32 lbl_803DD410; /* #57 */
+    int i = 0;
+    CheckpointSlot* p = lbl_8039C458;
+    int count = lbl_803DD410;
+    while (i < count && (u32)entry[5] > p[i].key)
+    {
+        i++;
+    }
+    {
+        CheckpointSlot* end = &lbl_8039C458[count];
+        while (count > i)
+        {
+            end->entry = (end - 1)->entry;
+            end->key = (end - 1)->key;
+            end--;
+            count--;
+        }
+    }
+    lbl_803DD410 = lbl_803DD410 + 1;
+    lbl_8039C458[i].entry = entry;
+    lbl_8039C458[i].key = entry[5];
+}
+#pragma opt_common_subs reset
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+void Checkpoint_remove(int* obj)
+{
+    extern CheckpointSlot lbl_8039C458[]; /* #57 */
+    extern u32 lbl_803DD410; /* #57 */
+    int count;
+    int i = 0;
+    CheckpointSlot* p = lbl_8039C458;
+    CheckpointSlot* e;
+
+    count = lbl_803DD410;
+
+    while (i < count && (u32) * (int*)&((GameObject*)obj)->anim.localPosZ != p[i].key)
+    {
+        i++;
+    }
+    if (i >= count) return;
+    count = lbl_803DD410 - 1;
+    lbl_803DD410 = count;
+    e = &lbl_8039C458[i];
+    while (i < count)
+    {
+        e->entry = (e + 1)->entry;
+        e->key = (e + 1)->key;
+        e++;
+        i++;
+    }
+}
+#pragma opt_common_subs reset
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
+
+#pragma scheduling off
+#pragma peephole off
+
+#pragma scheduling off
+#pragma peephole off
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
+
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
+
+
+
+extern f64 lbl_803E0520;
+extern f32 lbl_803E051C;
+extern f32 lbl_803E0528;
+extern f32 lbl_803E052C;
+extern f32 lbl_803E0530;
+extern f32 lbl_803E0534;
+extern f32 lbl_803E0538;
+
+void Checkpoint_func06(int* obj, int* state, int filter)
+{
+    extern CheckpointSlot lbl_8039C458[]; /* #57 */
+    extern u32 lbl_803DD410; /* #57 */
+    extern int* Checkpoint_find(int id, int* slot); /* #57 */
+    int stack[64];
+    char visited[200];
+    int cur;
+    int slot;
+    int k, count, i, j;
+    char* cp;
+    char* p;
+    char* n;
+    char* e;
+    f32 cos1, sin1, cos2, sin2;
+    f32 dist1, dist2, nx, nz, offs1, dz;
+    f32 offs2, distA, distB, dx, dy, len, q, t0, sum, frac, b1, width;
+    f32 px, py, pz, outX, outY;
+    f32 ddx, ddy, ddz;
+
+    count = 0;
+    for (i = 0; i < (int)lbl_803DD410; i++)
+    {
+        visited[i] = 0;
+    }
+    cp = (char*)Checkpoint_find(*(int*)((char*)state + 0x10), &cur);
+    if (cp != NULL)
+    {
+        stack[count++] = cur;
+    }
+    else
+    {
+        for (i = 0; i < (int)lbl_803DD410; i++)
+        {
+            e = (char*)lbl_8039C458[i].entry;
+            if (visited[i] == 0 && (filter == -1 || *(s8*)(e + 0x28) == filter))
+            {
+                ddx = *(f32*)(e + 8) - ((GameObject*)obj)->anim.localPosX;
+                ddy = *(f32*)(e + 0xc) - ((GameObject*)obj)->anim.localPosY;
+                ddz = *(f32*)(e + 0x10) - ((GameObject*)obj)->anim.localPosZ;
+                if (ddz * ddz + (ddx * ddx + ddy * ddy) < lbl_803E051C)
+                {
+                    stack[count++] = i;
+                    for (j = i; j < (int)lbl_803DD410; j++)
+                    {
+                        if (filter == *(s8*)((char*)lbl_8039C458[j].entry + 0x28))
+                        {
+                            visited[j] = 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    for (i = 0; i < (int)lbl_803DD410; i++)
+    {
+        visited[i] = 0;
+    }
+    for (;;)
+    {
+        if (count > 0)
+        {
+            count--;
+            cur = stack[count];
+            cp = (char*)lbl_8039C458[cur].entry;
+        }
+        else
+        {
+            *(int*)((char*)state + 0x10) = -1;
+            return;
+        }
+        if (cp == NULL)
+        {
+            return;
+        }
+        p = cp;
+        for (k = 0; k < 2; k++)
+        {
+            n = (char*)Checkpoint_find(*(int*)(p + 0x20), &slot);
+            if (n != NULL)
+            {
+                cos1 = mathSinf((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
+                sin1 = mathCosf((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
+                offs1 = -(*(f32*)(cp + 8) * cos1 + *(f32*)(cp + 0x10) * sin1);
+                cos2 = mathSinf((lbl_803E04D8 * (f32)(*(u8*)(n + 0x29) << 8)) / lbl_803E04DC);
+                sin2 = mathCosf((lbl_803E04D8 * (f32)(*(u8*)(n + 0x29) << 8)) / lbl_803E04DC);
+                offs2 = -(*(f32*)(n + 8) * cos2 + *(f32*)(n + 0x10) * sin2);
+                dist1 = offs1 + (cos1 * ((GameObject*)obj)->anim.localPosX + sin1 * ((GameObject*)obj)->anim.localPosZ);
+                dist2 = offs2 + (cos2 * ((GameObject*)obj)->anim.localPosX + sin2 * ((GameObject*)obj)->anim.localPosZ);
+                distA = offs1 + (cos1 * *(f32*)(n + 8) + sin1 * *(f32*)(n + 0x10));
+                distB = offs2 + (cos2 * *(f32*)(cp + 8) + sin2 * *(f32*)(cp + 0x10));
+                if (((distA <= lbl_803E04E8 && dist1 <= lbl_803E04E8) || (distA > lbl_803E04E8 && dist1 > lbl_803E04E8))
+                    &&
+                    ((distB <= lbl_803E04E8 && dist2 <= lbl_803E04E8) || (distB > lbl_803E04E8 && dist2 >
+                        lbl_803E04E8)))
+                {
+                    dx = *(f32*)(cp + 8) - *(f32*)(n + 8);
+                    dy = *(f32*)(cp + 0xc) - *(f32*)(n + 0xc);
+                    dz = *(f32*)(cp + 0x10) - *(f32*)(n + 0x10);
+                    len = sqrtf(dz * dz + (dx * dx + dy * dy));
+                    if (len > lbl_803E0520)
+                    {
+                        q = lbl_803E0504 / len;
+                        nx = dx * q;
+                        nz = dz * q;
+                    }
+                    q = cos1 * nx + sin1 * nz;
+                    t0 = -dist1 / q;
+                    sum = t0 + dist2 / (cos2 * nx + sin2 * nz);
+                    if (sum > lbl_803E0528 || sum < lbl_803E052C)
+                    {
+                        frac = t0 / sum;
+                    }
+                    else
+                    {
+                        frac = lbl_803E04E8;
+                    }
+                    if (frac < lbl_803E04E8)
+                    {
+                        frac = lbl_803E04E8;
+                    }
+                    if (frac >= lbl_803E0518)
+                    {
+                        frac = lbl_803E0518;
+                    }
+                    b1 = (f32) * (u8*)(cp + 0x2a);
+                    width = frac * ((f32) * (u8*)(n + 0x2a) - b1) + b1;
+                    px = -(dx * frac - *(f32*)(cp + 8));
+                    py = -(dy * frac - *(f32*)(cp + 0xc));
+                    pz = -(dz * frac - *(f32*)(cp + 0x10));
+                    outY = (((GameObject*)obj)->anim.localPosY - py) / width;
+                    outX = (-(px * nz - pz * nx) + (((GameObject*)obj)->anim.localPosX * nz - ((GameObject*)obj)->anim.
+                        localPosZ * nx)) / width;
+                    if (outX < lbl_803E0530 || outX > lbl_803E0534 || outY < lbl_803E0538 || outY > lbl_803E0534)
+                    {
+                    }
+                    else
+                    {
+                        *(int*)((char*)state + 0x10) = *(int*)(cp + 0x14);
+                        *(int*)&((BaddieState*)state)->posX = *(int*)(cp + 0x14);
+                        *(f32*)((char*)state + 0) = outX;
+                        *(f32*)((char*)state + 4) = outY;
+                        *(f32*)((char*)state + 8) = frac;
+                        *(s16*)((char*)state + 0x20) = *(s8*)(cp + 0x28);
+                        return;
+                    }
+                }
+            }
+            p += 4;
+        }
+        if (visited[cur] == 0)
+        {
+            p = cp + 4;
+            for (k = 1; k >= 0; k--)
+            {
+                n = (char*)Checkpoint_find(*(int*)(p + 0x18), &slot);
+                if (n != NULL && visited[slot] == 0 && count < 0x3c)
+                {
+                    stack[count++] = slot;
+                }
+                n = (char*)Checkpoint_find(*(int*)(p + 0x20), &slot);
+                if (n != NULL && visited[slot] == 0 && count < 0x3c)
+                {
+                    stack[count++] = slot;
+                }
+                p -= 4;
+            }
+            visited[cur] = 1;
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset

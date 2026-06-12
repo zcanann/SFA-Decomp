@@ -185,8 +185,29 @@ main/dll/dll_0022_effect9.c:
 main/dll/modelfx.c:
 	.text       start:0x800C291C end:0x800C8008
 
-main/dll/dim_partfx.c:
-	.text       start:0x800C8008 end:0x800D7568
+main/dll/dll_0029_effect16.c:
+	.text       start:0x800C8008 end:0x800C9140
+
+main/dll/dll_0028_effect15.c:
+	.text       start:0x800C9140 end:0x800CA3CC
+
+main/dll/dll_0026_effect13.c:
+	.text       start:0x800CA3CC end:0x800CA930
+
+main/dll/dll_002A_effect17.c:
+	.text       start:0x800CA930 end:0x800CB690
+
+main/dll/dll_002B_effect18.c:
+	.text       start:0x800CB690 end:0x800CCF5C
+
+main/dll/dll_002C_effect19.c:
+	.text       start:0x800CCF5C end:0x800CD430
+
+main/dll/dll_002D_effect20.c:
+	.text       start:0x800CD430 end:0x800D5530
+
+main/dll/dll_0003_checkpoint.c:
+	.text       start:0x800D5530 end:0x800D7568
 
 main/dll/df_partfx.c:
 	.text       start:0x800D7568 end:0x800D9DCC
