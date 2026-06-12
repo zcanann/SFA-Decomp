@@ -588,14 +588,10 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 extern EffectSrcParams lbl_8039C3C8;
 
-#pragma scheduling off
-#pragma peephole off
 
 
 

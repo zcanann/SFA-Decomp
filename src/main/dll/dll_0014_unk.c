@@ -116,6 +116,8 @@ extern ObjfsaPatch lbl_8039CAE8[];
 extern ObjfsaWalkGroup lbl_8039FAE8[];
 extern u8 lbl_803A1730[];
 
+#pragma scheduling on
+#pragma peephole on
 static inline ObjfsaPatch* Objfsa_GetPatch(int patchIndex)
 {
     return &lbl_8039CAE8[patchIndex];
@@ -205,8 +207,6 @@ static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, uint currentWalkGr
  */
 extern u8 lbl_803DD440;
 
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -221,8 +221,6 @@ extern u8 lbl_803DD440;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -1552,8 +1550,8 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
 
+#pragma scheduling on
 static inline int Objfsa_FindRomCurveById(int curveId)
 {
     int lo;
@@ -2338,10 +2336,10 @@ int mathFn_800dbff0(float* point)
  */
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling on
-#pragma peephole on
 void player_release(void);
 
+#pragma scheduling on
+#pragma peephole on
 void doNothing_onTrickyFree(void)
 {
 }
@@ -2363,14 +2361,14 @@ extern f32 lbl_803E05C8;
 extern f32 lbl_803E05CC;
 extern f32 lbl_803E05F4;
 extern int Curve_AdvanceAlongPath(float* p, f32 dt);
-#pragma scheduling off
-#pragma peephole off
 
 /* fn_800D9F38 ? large init updating multiple float fields based on b's bytes */
 extern f32 lbl_803E05D0;
 extern f32 lbl_803E05D4;
 extern f32 lbl_803E05D8;
 
+#pragma scheduling off
+#pragma peephole off
 int fn_800D9F38(void* a, void* b)
 {
     extern float mathCosf(double x); /* #57 */
@@ -4050,11 +4048,7 @@ int RomCurve_func16(double x, double y, double z)
 
 /* UIController dispatch through the shared GameUI interface. */
 extern u8 gameTimerIsRunning(void* p, int a, int b);
-#pragma scheduling on
-#pragma peephole on
 
-#pragma scheduling off
-#pragma peephole off
 
 /* player_setState */
 
@@ -4117,37 +4111,7 @@ int fn_800DB240(int p1, f32* outVec, u16 id)
 void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval);
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 #include "main/dll/dll_0015_curves.h"
 #include "main/game_ui_interface.h"
 #include "main/objlib.h"
@@ -6548,5 +6512,3 @@ int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef* a, RomCurveDef* b, f32 x,
         return 0;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

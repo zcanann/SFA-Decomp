@@ -25,10 +25,7 @@ extern undefined4 DAT_803de3a8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
-#pragma peephole on
 
 /*
  * --INFO--
@@ -43,7 +40,6 @@ extern undefined4 DAT_803de3a8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 
 /*
  * --INFO--
@@ -58,8 +54,6 @@ extern undefined4 DAT_803de3a8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -151,11 +145,8 @@ int Dummy3A_frameStart(void) { return 0x0; }
 extern u8 lbl_803DD728;
 
 
-#pragma scheduling off
-#pragma peephole off
 
 
 
 
-#pragma peephole on
 

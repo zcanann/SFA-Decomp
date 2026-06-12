@@ -1084,8 +1084,6 @@ void Effect19_func03_nop(void);
 #pragma dont_inline reset
 #pragma dont_inline reset
 
-#pragma scheduling on
-#pragma peephole on
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
@@ -1105,12 +1103,8 @@ void Effect19_func03_nop(void);
  */
 extern f32 sqrtf(f32 x);
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1141,8 +1135,6 @@ extern f32 sqrtf(f32 x);
 /* Pattern wrappers. */
 
 /* sda21 writers. */
-#pragma peephole off
-#pragma peephole reset
 
 /* fcmp-eq-to-bool. */
 
@@ -1150,8 +1142,6 @@ extern f32 sqrtf(f32 x);
 
 /* Checkpoint table initialiser. */
 
-#pragma scheduling off
-#pragma peephole off
 
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
@@ -1159,67 +1149,33 @@ extern f32 sqrtf(f32 x);
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
 
 /* Checkpoint_Add: sorted insertion of (entry->_14 as key, entry as pointer) into lbl_8039C458 table. */
 
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling off
-#pragma peephole off
-#pragma scheduling off
-#pragma peephole off
+
+
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-#pragma scheduling off
-#pragma peephole off
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
+
+
+#pragma opt_common_subs off
+#pragma opt_common_subs reset
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
-#pragma scheduling reset
-#pragma peephole reset

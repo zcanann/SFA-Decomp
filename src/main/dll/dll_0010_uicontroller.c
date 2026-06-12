@@ -175,8 +175,6 @@ static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, uint currentWalkGr
  */
 extern u8 lbl_803DD440;
 
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -191,8 +189,6 @@ extern u8 lbl_803DD440;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -1419,7 +1415,6 @@ FUN_800de998(double param_1, undefined8 param_2, double param_3, undefined8 para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char bboxMode);
 
 /*
@@ -1435,7 +1430,6 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
 
 static inline int Objfsa_FindRomCurveById(int curveId)
 {
@@ -1487,8 +1481,6 @@ static inline int Objfsa_FindRomCurveById(int curveId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2);
 
 /*
@@ -1560,7 +1552,6 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole on
 
 /*
  * --INFO--
@@ -1575,7 +1566,6 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 
 /*
  * --INFO--
@@ -1620,8 +1610,6 @@ f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2);
  */
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling on
-#pragma peephole on
 
 void UIController_release(void)
 {
@@ -1640,8 +1628,6 @@ void dll_12_func0A_nop(void);
 /* Pattern wrappers. */
 
 /* player_init: memset constructor */
-#pragma scheduling off
-#pragma peephole off
 
 /* fn_800D9F38 ? large init updating multiple float fields based on b's bytes */
 extern f32 lbl_803E05D0;
@@ -1652,8 +1638,6 @@ extern f32 lbl_803E05D8;
 
 /* RomCurve_setA4: similar to fn_800D9F38 branch2 with different consts */
 
-#pragma scheduling on
-#pragma peephole on
 static inline f32 RomCurveNode_GetHermiteTangent(void* node, int angleOffset, int useSin)
 {
     extern float mathCosf(double x); /* #57 */
@@ -1675,26 +1659,18 @@ static inline f32 RomCurveNode_GetHermiteTangent(void* node, int angleOffset, in
 
 int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
 
-#pragma scheduling off
-#pragma peephole off
 
 int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
 
 /* RomCurve_stepClamped: keep the curve phase just inside the endpoints, then advance it. */
-#pragma peephole on
 
-#pragma peephole off
 
-#pragma peephole on
 
-#pragma peephole off
 
 /* UIController dispatch through the shared GameUI interface. */
 extern u8 gameTimerIsRunning(void* p, int a, int b);
 extern void hudNumberFn_80014060(void* p);
 extern void gameTimerRun(void* p);
-#pragma scheduling on
-#pragma peephole on
 void UIController_frameStart(void)
 {
     (*gGameUIInterface)->frameStart();
@@ -1722,42 +1698,10 @@ void player_setState(void* ctx, void* p, int new_state);
 /* walkPath_writeU16LE: split a path id into two little-endian bytes. */
 
 /* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
-#pragma scheduling on
 
-#pragma scheduling off
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 #include "main/dll/dll_0015_curves.h"
 #include "main/game_ui_interface.h"
 #include "main/objlib.h"
@@ -2382,5 +2326,3 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve);
 /* RomCurve_segmentIntersectsOriginRayXZ: 2D segment-intersection predicate.
  * Returns 1 if the segment between (x, z) and the origin in the xz-plane
  * crosses the segment between a and b. */
-#pragma scheduling reset
-#pragma peephole reset

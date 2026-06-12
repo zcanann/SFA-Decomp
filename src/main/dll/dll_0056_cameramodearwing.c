@@ -138,8 +138,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -154,8 +152,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -170,8 +166,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -186,8 +180,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -202,8 +194,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -218,8 +208,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -234,8 +222,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -250,8 +236,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -266,8 +250,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -282,8 +264,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -298,8 +278,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -314,8 +292,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -330,8 +306,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -346,8 +320,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -362,8 +334,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -378,8 +348,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -394,8 +362,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -410,8 +376,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -426,8 +390,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -442,8 +404,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -458,8 +418,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -474,8 +432,6 @@ void FUN_8010de18_v11_drift(undefined4 param_1, undefined4 param_2, float* param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -553,8 +509,6 @@ void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -569,14 +523,12 @@ void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void CameraModeNpcSpeak_release(void);
 
+#pragma scheduling off
+#pragma peephole off
 void CameraModeForceBehind_func06_nop(void)
 {
 }
@@ -893,58 +845,6 @@ extern int ObjList_FindObjectById(int id);
 /* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/objanim.h"
 #include "main/camera_interface.h"
@@ -981,8 +881,6 @@ extern int ObjList_FindObjectById(int id);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -997,8 +895,6 @@ extern int ObjList_FindObjectById(int id);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -1027,11 +923,7 @@ extern int ObjList_FindObjectById(int id);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -1046,8 +938,6 @@ extern int ObjList_FindObjectById(int id);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -1062,8 +952,6 @@ extern int ObjList_FindObjectById(int id);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -1078,8 +966,6 @@ extern int ObjList_FindObjectById(int id);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -1094,8 +980,6 @@ extern int ObjList_FindObjectById(int id);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -1110,8 +994,6 @@ extern int ObjList_FindObjectById(int id);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -1128,8 +1010,6 @@ extern int ObjList_FindObjectById(int id);
  */
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 
 /* 8b "li r3, N; blr" returners. */
 

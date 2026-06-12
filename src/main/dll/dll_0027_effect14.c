@@ -42,13 +42,9 @@ extern void vecRotateZXY(void* params, f32* vec);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 
-#pragma scheduling off
-#pragma peephole off
 
 
 

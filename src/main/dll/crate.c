@@ -83,5 +83,4 @@ undefined4 sfxplayer_updateState(int obj, undefined4 unused, ObjAnimUpdateState*
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
 

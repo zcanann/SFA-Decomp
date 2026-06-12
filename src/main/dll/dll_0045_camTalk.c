@@ -9,8 +9,6 @@ extern f32 mathCosf(f32 angle);
 
 extern CameraModeBikeState* lbl_803DD540;
 
-#pragma scheduling on
-#pragma peephole on
 static f32 CameraModeStaffAnim_angleToRadians(int angle);
 
 /*
@@ -26,8 +24,6 @@ static f32 CameraModeStaffAnim_angleToRadians(int angle);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 void CameraModeBike_copyToCurrent(f32* param_1)
 {
@@ -49,10 +45,6 @@ void CameraModeBike_free(void)
 }
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/dll/CAM/dll_0045_camTalk.h"
 #include "main/camera_interface.h"

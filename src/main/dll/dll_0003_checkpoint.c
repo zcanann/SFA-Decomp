@@ -1051,8 +1051,6 @@ void Checkpoint_onGameLoop(void)
 #pragma dont_inline reset
 #pragma dont_inline reset
 
-#pragma scheduling on
-#pragma peephole on
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
@@ -1076,8 +1074,6 @@ extern f32 lbl_803E0510;
 extern f32 lbl_803E0514;
 extern f32 lbl_803E0518;
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 int Checkpoint_func07(int* obj, int* state)
 {
@@ -1182,8 +1178,6 @@ int Checkpoint_func07(int* obj, int* state)
     return ang;
 }
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1200,6 +1194,8 @@ int Checkpoint_func07(int* obj, int* state)
  */
 
 /* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling on
+#pragma peephole on
 void Checkpoint_release(void)
 {
 }
@@ -1218,8 +1214,6 @@ void Checkpoint_reset(void) { extern u32 lbl_803DD410; /* #57 */ lbl_803DD410 = 
 /* Pattern wrappers. */
 
 /* sda21 writers. */
-#pragma peephole off
-#pragma peephole reset
 
 /* fcmp-eq-to-bool. */
 
@@ -1228,8 +1222,6 @@ void Checkpoint_reset(void) { extern u32 lbl_803DD410; /* #57 */ lbl_803DD410 = 
 /* Checkpoint table initialiser. */
 extern u32 lbl_8039CA98[];
 
-#pragma scheduling off
-#pragma peephole off
 
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
@@ -1237,22 +1229,12 @@ extern u32 lbl_8039CA98[];
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 void Checkpoint_initialise(void)
@@ -1264,7 +1246,6 @@ void Checkpoint_initialise(void)
     lbl_803DD41C = lbl_8039CA98;
     lbl_803DD418 = (void*)((u8*)lbl_8039CA98 + 0x28);
 }
-#pragma scheduling reset
 
 /* Checkpoint_Add: sorted insertion of (entry->_14 as key, entry as pointer) into lbl_8039C458 table. */
 typedef struct CheckpointSlot
@@ -1273,9 +1254,8 @@ typedef struct CheckpointSlot
     void* entry;
 } CheckpointSlot;
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
+#pragma peephole off
 void Checkpoint_Add(int* entry)
 {
     extern CheckpointSlot lbl_8039C458[]; /* #57 */
@@ -1302,18 +1282,10 @@ void Checkpoint_Add(int* entry)
     lbl_8039C458[i].key = entry[5];
 }
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 void Checkpoint_remove(int* obj)
 {
@@ -1343,22 +1315,12 @@ void Checkpoint_remove(int* obj)
     }
 }
 #pragma opt_common_subs reset
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling off
-#pragma peephole off
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
@@ -1544,5 +1506,3 @@ void Checkpoint_func06(int* obj, int* state, int filter)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

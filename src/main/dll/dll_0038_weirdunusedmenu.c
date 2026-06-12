@@ -36,13 +36,10 @@ extern undefined4 DAT_803de3a8;
  */
 extern int* gTitleMenuLinkInterface;
 extern u32 gameTextGet(int textId);
-#pragma scheduling off
-#pragma peephole off
 
 extern void loadUiDll(int id);
 extern u8 framesThisStep;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-#pragma peephole on
 
 /*
  * --INFO--
@@ -57,7 +54,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 
 /*
  * --INFO--
@@ -72,8 +68,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -255,8 +249,8 @@ extern u32 lbl_8031AD98[];
 extern u32 textureLoadAsset(int);
 
 
-#pragma peephole on
 
+#pragma peephole on
 void WeirdUnusedMenu_initialise(void)
 {
     lbl_803DD71C = textureLoadAsset(0x31e);

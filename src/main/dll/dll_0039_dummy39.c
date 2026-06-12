@@ -25,12 +25,9 @@ extern undefined4 DAT_803de3a8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 extern void loadUiDll(int id);
 extern u8 framesThisStep;
-#pragma peephole on
 
 /*
  * --INFO--
@@ -45,7 +42,6 @@ extern u8 framesThisStep;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 
 /*
  * --INFO--
@@ -60,8 +56,6 @@ extern u8 framesThisStep;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -153,12 +147,12 @@ void Dummy39_release(void) { textureFree(lbl_803DD72C); }
 
 extern u32 lbl_803DD714, lbl_803DD718, lbl_803DD71C;
 extern void warpToMap(int mapId, int spawnId);
-#pragma scheduling off
-#pragma peephole off
 
 
 extern int Obj_GetPlayerObject(void);
 
+#pragma scheduling off
+#pragma peephole off
 int Dummy39_run(void)
 {
     s32 v;
@@ -183,5 +177,4 @@ int Dummy39_run(void)
 }
 
 extern s16 lbl_803DD8C2;
-#pragma peephole on
 

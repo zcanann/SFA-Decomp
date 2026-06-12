@@ -45,8 +45,6 @@ extern f32 lbl_803E294C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -61,8 +59,6 @@ extern f32 lbl_803E294C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -94,14 +90,10 @@ void FUN_801141e8(int param_1, wchar_t* param_2, wchar_t* param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 extern f32 Curve_EvalHermite(f32* points, f32 t, int unused);
 extern f32 sqrtf(f32 x);
 
-#pragma scheduling off
-#pragma peephole off
 f32 fn_80114224(int p1, int p2, int p3, int p4, int n)
 {
     extern f32 lbl_803E1C90;
@@ -226,8 +218,6 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -242,8 +232,6 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -258,8 +246,6 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -274,8 +260,6 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void FUN_801149b8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined4 param_9, undefined4 param_10, float* param_11, short param_12,
@@ -386,8 +370,6 @@ void FUN_80114b10(int param_1, undefined4* param_2, undefined2 param_3, undefine
 }
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void dll_19_func04_nop(void);
 
 /* 8b "li r3, N; blr" returners. */
@@ -400,6 +382,8 @@ f32 dll_19_func0B(int* obj);
 void fn_80113F94(int* p, f32 v) { *(f32*)((char*)p + 0x614) = v; }
 void dll_2E_func04(int* p, int v) { *(int*)((char*)p + 0x608) = v; }
 
+#pragma scheduling off
+#pragma peephole off
 void dll_2E_func08(int obj, int v1, int v2)
 {
     *(int*)(obj + 0x618) = v1;
@@ -852,26 +836,6 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
 }
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern u32 randomGetRange(int min, int max);

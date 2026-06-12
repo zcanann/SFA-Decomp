@@ -325,8 +325,6 @@ int OptionsScreen_run(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -342,6 +340,8 @@ int OptionsScreen_run(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8011daf8(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined4 param_9, undefined4 param_10, undefined4 param_11, undefined4 param_12,
@@ -410,11 +410,8 @@ void WeirdUnusedMenu_render(void);
 /* Pattern wrappers. */
 
 
-#pragma scheduling off
-#pragma peephole off
 
 
 
 
-#pragma peephole on
 

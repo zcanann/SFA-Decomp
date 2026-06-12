@@ -453,8 +453,6 @@ undefined4 fn_80124B38(int shader, int* block, int idx)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -470,8 +468,6 @@ undefined4 fn_80124B38(int shader, int* block, int idx)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 extern u32 lbl_803E1E14;

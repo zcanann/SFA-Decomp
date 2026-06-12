@@ -41,8 +41,6 @@ extern void vecRotateZXY(void* params, f32* vec);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 extern EffectSrcParams lbl_8039C3C8;
@@ -72,8 +70,6 @@ extern f32 lbl_803DFF94;
 extern f32 lbl_803DFF98;
 extern f32 lbl_803DFF9C;
 
-#pragma scheduling off
-#pragma peephole off
 int Effect11_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcByte)
 {
   EffectSpawnParams p;

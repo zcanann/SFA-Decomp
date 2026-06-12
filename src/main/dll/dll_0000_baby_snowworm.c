@@ -62,17 +62,9 @@ extern void fn_8000FB20(void);
 extern void fn_8000F7A0(void);
 extern undefined4 DAT_803de3f6;
 
-#pragma scheduling on
-#pragma peephole on
 
-#pragma scheduling off
-#pragma peephole off
 
-#pragma scheduling on
-#pragma peephole on
 
-#pragma scheduling off
-#pragma peephole off
 
 void fn_80129FB0(void)
 {
@@ -118,21 +110,13 @@ int fn_8012B9F8(void)
     return 1;
 }
 
-#pragma scheduling on
-#pragma peephole on
 
-#pragma scheduling off
-#pragma peephole off
 
 void FUN_8012c894()
 {
 }
 
-#pragma scheduling on
-#pragma peephole on
 
-#pragma scheduling off
-#pragma peephole off
 
 void FUN_8012dab8()
 {
@@ -3940,22 +3924,6 @@ void fn_8012C000(void)
 }
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
@@ -4080,8 +4048,6 @@ void FUN_8012eb7c(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -4096,8 +4062,6 @@ void FUN_8012eb7c(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -5002,21 +4966,7 @@ void GameUI_update(void)
 }
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
-#pragma peephole reset
 
-#pragma scheduling on
-#pragma peephole on
 
 /*
  * --INFO--
@@ -5033,8 +4983,6 @@ void GameUI_update(void)
  */
 extern void textureFree(void* p);
 
-#pragma scheduling off
-#pragma peephole off
 void textureFreeFn_8012fcec(void)
 {
     u8 i;
@@ -5062,8 +5010,6 @@ void textureFreeFn_8012fcec(void)
     gTrickyHudCachedIconIndex = -1;
     gTrickyHudCachedIconTexture = NULL;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5108,23 +5054,11 @@ extern int airMeter;
 void Pause_SetDisabled(u8 v) { pauseDisabled = v; }
 void Pause_ResetMenuFrameCounter(void) { pauseMenuFrameCounter = 60; }
 void CMenu_SetFadeCounter(s16 v) { cMenuFadeCounter = v; }
-#pragma peephole off
-#pragma peephole reset
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma peephole reset
 
 /* Stubs added to align function set with v1.0 asm. Source had many Ghidra
  * FUN_xxx splits at wrong addresses; these stubs (no body yet) ensure the
  * asm symbol set is fully present so future hunters can fill bodies. */
-#pragma scheduling off
-#pragma peephole off
 void GameUI_initialise(void)
 {
     extern s16 yButtonState; /* #57 */
@@ -5166,45 +5100,5 @@ void GameUI_initialise(void)
     yButtonState = 0;
     airMeter = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
 
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
