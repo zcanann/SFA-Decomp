@@ -3,6 +3,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/effect_interfaces.h"
+#include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/dll/dll_01A8_shkillermushroom.h"
 
@@ -26,8 +27,6 @@ extern f32 lbl_803E5304;
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
 extern f32 lbl_803E5310;
 extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_RecordObjectHit();
-extern int ObjHits_GetPriorityHitWithPosition();
 extern f32 lbl_803E5370;
 extern f32 lbl_803E5350;
 extern u8 Obj_IsLoadingLocked(void);
@@ -202,7 +201,9 @@ void enemymushroom_update(int* obj)
     u8* player;
     int* src;
     MushHitInfo hv;
-    f32 o1, o2, o3;
+    int hitObject;
+    int hitSphereIndex;
+    uint hitVolume;
     int hitType;
 
     player = (u8*)Obj_GetPlayerObject();
@@ -213,7 +214,8 @@ void enemymushroom_update(int* obj)
 
     if (objIsFrozen(obj))
     {
-        hitType = ObjHits_GetPriorityHitWithPosition(obj, &o1, &o2, &o3, &hv.x, &hv.y, &hv.z);
+        hitType = ObjHits_GetPriorityHitWithPosition((int)obj, &hitObject, &hitSphereIndex, &hitVolume,
+                                                     &hv.x, &hv.y, &hv.z);
         if (hitType != 0 && hitType != 0x10)
         {
             hv.x += playerMapOffsetX;
@@ -247,7 +249,7 @@ void enemymushroom_update(int* obj)
                 !EmissionController_IsLingering(player) && !fn_80296448(player) &&
                 !(((GameObject*)player)->objectFlags & 0x1000))
             {
-                ObjHits_RecordObjectHit(player, obj, 0x16, 1, 0);
+                ObjHits_RecordObjectHit((int)player, (int)obj, 0x16, 1, 0);
                 ((EnemyMushroomState*)state)->stateFlags |= 0x1;
             }
         }
@@ -307,7 +309,7 @@ void enemymushroom_update(int* obj)
                 !EmissionController_IsLingering(player) && !fn_80296448(player) &&
                 !(((GameObject*)player)->objectFlags & 0x1000))
             {
-                ObjHits_RecordObjectHit(player, obj, 0x16, 1, 0);
+                ObjHits_RecordObjectHit((int)player, (int)obj, 0x16, 1, 0);
                 ((EnemyMushroomState*)state)->stateFlags |= 0x1;
             }
         }
@@ -436,7 +438,8 @@ void enemymushroom_update(int* obj)
         break;
     }
 
-    hitType = ObjHits_GetPriorityHitWithPosition(obj, &o1, &o2, &o3, &hv.x, &hv.y, &hv.z);
+    hitType = ObjHits_GetPriorityHitWithPosition((int)obj, &hitObject, &hitSphereIndex, &hitVolume,
+                                                 &hv.x, &hv.y, &hv.z);
     hv.x += playerMapOffsetX;
     hv.z += playerMapOffsetZ;
     if (hitType != 0)
