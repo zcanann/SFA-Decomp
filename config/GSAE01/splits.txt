@@ -204,14 +204,8 @@ main/dll/dll_00BC_projquakeshock.c:
 main/dll/dll_00BD_projsunshock.c:
 	.text       start:0x80100940 end:0x80100978
 
-main/dll/dll_7D.c:
-	.text       start:0x80100978 end:0x801009A8
-
-main/dll/dll_7E.c:
-	.text       start:0x801009A8 end:0x801009AC
-
-main/dll/dll_7F.c:
-	.text       start:0x801009AC end:0x801009B0
+main/dll/dll_00BE_projtesla.c:
+	.text       start:0x80100978 end:0x801009B0
 
 main/dll/dll_80.c:
 	.text       start:0x801009B0 end:0x801009E0
