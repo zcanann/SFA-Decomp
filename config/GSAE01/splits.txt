@@ -967,9 +967,20 @@ main/dll/smallbasket.c:
 main/dll/dll_00CA_mediumbasket.c:
 	.text       start:0x8015AD60 end:0x8015DAE8
 
-main/dll/scarab.c:
-	.text       start:0x8015DAE8 end:0x80161F0C
-	.data       start:0x8031FF90 end:0x80320008
+main/dll/dll_00CE_dllce.c:
+	.text       start:0x8015DAE8 end:0x8015F5B0
+
+main/dll/dll_00CC_chukchuk.c:
+	.text       start:0x8015F5B0 end:0x8015FBEC
+
+main/dll/dll_00CD_iceball.c:
+	.text       start:0x8015FBEC end:0x801601C4
+
+main/dll/dll_00CB_dllcb.c:
+	.text       start:0x801601C4 end:0x80161130
+
+main/dll/dll_80161130.c:
+	.text       start:0x80161130 end:0x80161F0C
 
 main/dll/dll_00D0_grimble.c:
 	.text       start:0x80161F0C end:0x80162FC0
