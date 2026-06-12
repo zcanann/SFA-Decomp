@@ -893,7 +893,7 @@ int SB_ShipHead_getExtraSize(void) { return 0x10; }
 int SB_ShipHead_getObjectTypeId(void) { return 0x1; }
 int SB_ShipMast_getExtraSize(void) { return 0x0; }
 int SB_ShipMast_getObjectTypeId(void) { return 0x0; }
-int SB_ShipGun_getExtraSize(void) { return 0x10; }
+int SB_ShipGun_getExtraSize(void);
 
 /* sda21 accessors. */
 extern u32 gSbGalleon;
@@ -934,10 +934,7 @@ void SB_Propeller_hitDetect(int obj)
 }
 
 /* SB_ShipGun_free: expgfx interface freeObject callback. */
-void SB_ShipGun_free(int param_1)
-{
-    (*gExpgfxInterface)->freeSource2((u32)param_1);
-}
+void SB_ShipGun_free(int param_1);
 
 /* SB_Galleon_setScale: state machine; advance counter, optionally play sfx. */
 int SB_Galleon_setScale(int obj)
@@ -1191,21 +1188,7 @@ void SB_ShipHead_init(int obj)
 /* SB_ShipGun_render: conditional render with multiple flag checks. */
 extern f32 lbl_803E5888;
 
-void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    void* o30 = *(void**)&((GameObject*)obj)->anim.parent;
-    s8* p = ((GameObject*)obj)->extra;
-    s32 v;
-    if (o30 != NULL)
-    {
-        if (((GameObject*)o30)->anim.seqId == 0x139) return;
-    }
-    v = visible;
-    if (v != 0 && p[0xc] != 0 && ((u8*)p)[0xd] != 0)
-    {
-        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5888);
-    }
-}
+void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
 /* SB_Galleon_modelMtxFn: returns -2 / -1 / state byte depending on flags. */
 int SB_Galleon_modelMtxFn(int* obj)

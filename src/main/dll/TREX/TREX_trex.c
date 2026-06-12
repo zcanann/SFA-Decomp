@@ -1,3 +1,161 @@
+/* === moved from main/dll/TREX/TREX_levelcontrol.c [801E4288-801E42F8) (TU re-split, docs/boundary_audit.md) === */
+#include "ghidra_import.h"
+#include "main/effect_interfaces.h"
+#include "main/expgfx.h"
+#include "main/game_object.h"
+#include "main/dll/TREX/TREX_levelcontrol.h"
+#include "main/objhits_types.h"
+
+typedef struct SBShipGunPlacement
+{
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    f32 unk18;
+    f32 unk1C;
+    f32 unk20;
+    u8 pad24[0x28 - 0x24];
+} SBShipGunPlacement;
+
+
+typedef struct SBShipGunState
+{
+    u8 pad0[0x3 - 0x0];
+    s8 unk3;
+    u8 pad4[0xC - 0x4];
+    u8 unkC;
+    u8 unkD;
+    u8 unkE;
+    u8 padF[0x10 - 0xF];
+} SBShipGunState;
+
+
+typedef struct SBCannonBallState
+{
+    u8 pad0[0x4 - 0x0];
+    f32 velocityY;
+    f32 velocityZ;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    s16 unk18;
+    s8 flags;
+    u8 pad1B[0x1C - 0x1B];
+    f32 impactCooldown;
+    void* modelLight;
+    u8 pad24[0x28 - 0x24];
+} SBCannonBallState;
+
+
+extern u32 randomGetRange(int min, int max);
+extern int ObjHits_GetPriorityHit();
+extern undefined4 ObjPath_GetPointWorldPosition();
+
+extern f32 lbl_803E6520;
+extern f32 lbl_803E6524;
+extern f32 lbl_803E6528;
+extern f32 lbl_803E652C;
+extern f32 lbl_803E6530;
+extern f32 lbl_803E6534;
+extern f32 lbl_803E6538;
+extern f32 lbl_803E653C;
+extern f32 lbl_803E6540;
+extern f32 lbl_803E6544;
+
+/*
+ * --INFO--
+ *
+ * Function: SB_ShipGun_update
+ * EN v1.0 Address: 0x801E34C0
+ * EN v1.0 Size: 2312b
+ * EN v1.1 Address: 0x801E3AB0
+ * EN v1.1 Size: 2132b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern void spawnExplosion(double scale, int obj, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+extern void Obj_SetModelColorFadeRecursive(int obj, int p2, int p3, int p4, int p5, int p6);
+extern void Sfx_StopObjectChannel();
+extern s16 getAngle(f32 dx, f32 dz);
+extern f32 sqrtf(f32);
+extern u8 Obj_IsLoadingLocked(void);
+extern void Obj_GetWorldPosition(int obj, float* x, float* y, float* z);
+extern void vecRotateZXY(void* a, void* b);
+extern void* Obj_AllocObjectSetup(int size, int objType);
+extern u16* Obj_SetupObject(void* setup, int p2, int p3, int p4, int p5);
+extern void Camera_EnableViewYOffset(void);
+extern void CameraShake_SetAllMagnitudes(f32 mag);
+extern u8 framesThisStep;
+extern EffectInterface** gPartfxInterface;
+extern f32 lbl_803E5888;
+extern f32 lbl_803E588C;
+extern f32 lbl_803E5890;
+extern f32 lbl_803E5894;
+extern f32 lbl_803E5898;
+extern f32 lbl_803E589C;
+extern f32 lbl_803E58A0;
+extern f32 lbl_803E58A4;
+extern f32 lbl_803E58A8;
+extern f32 lbl_803E58AC;
+
+void SB_ShipGun_update(int obj);
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void SB_CannonBall_release(void);
+
+void SB_CannonBall_initialise(void);
+
+void SB_ShipGun_init(int obj);
+
+/* 8b "li r3, N; blr" returners. */
+int SB_CannonBall_getExtraSize(void);
+int SB_CannonBall_getObjectTypeId(void);
+
+void SB_CannonBall_free(int obj);
+
+int SB_FireBall_getExtraSize(void) { return SB_FIREBALL_EXTRA_SIZE; }
+int SB_FireBall_getObjectTypeId(void) { return 0x0; }
+
+void SB_FireBall_free(int obj)
+{
+    (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E58B0;
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E58D8;
+
+void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) objRenderFn_8003b8f4(lbl_803E58D8);
+}
+
+extern f32 timeDelta;
+extern f32 lbl_803E58BC;
+extern f64 lbl_803E58C0;
+
+void SB_CannonBall_update(int* obj);
+
+extern f32 lbl_803E58B4;
+extern f32 lbl_803E58B8;
+
+void SB_CannonBall_hitDetect(int* obj);
+
+extern f32 lbl_803E58C8;
+extern f32 lbl_803E58CC;
+extern f32 lbl_803E58D0;
+
+void SB_CannonBall_init(int* obj);
+
 #include "ghidra_import.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -542,18 +700,13 @@ extern f32 lbl_803E5978;
 extern f32 lbl_803E59A8;
 extern f32 lbl_803E59C8;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
-extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern int GameBit_Get(int);
 extern void GameBit_Set(int slot, int val);
 extern u8 framesThisStep;
-extern void* Obj_GetPlayerObject(void);
-extern f32 Vec_distance(void* a, void* b);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(int obj, int group);
-extern void ModelLightStruct_free(int* p);
 extern void Music_Trigger(int a, int b);
-extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
 extern f32 lbl_803E5998;
 extern f32 lbl_803E599C;
 extern f32 lbl_803E59AC;
@@ -620,6 +773,7 @@ void Flag_init(int* obj, int* def)
 
 void Flag_update(int obj)
 {
+    extern void* Obj_GetPlayerObject(void);
     int linkedObj;
 
     if (((GameObject*)obj)->anim.seqId == 0x187)
@@ -653,6 +807,7 @@ void Flag_update(int obj)
 
 int SB_KyteCage_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
+    extern void Sfx_PlayFromObject(int* obj, int sfxId);
     int i;
     int state;
 
@@ -723,6 +878,7 @@ extern f64 lbl_803E5990;
 
 int Lamp_SeqFn(int obj, int unused, int state)
 {
+    extern void* Obj_GetPlayerObject(void);
     u8 effectArgs[0x18];
     int i;
 
@@ -817,6 +973,9 @@ void Lamp_init(int* obj, int* def)
 
 void Lamp_update(int obj)
 {
+    extern f32 Vec_distance(void* a, void* b);
+    extern void* Obj_GetPlayerObject(void);
+    extern void Sfx_PlayFromObject(int* obj, int sfxId);
     u8 effectArgs[0x18];
     f32 distance;
     int i;
@@ -884,6 +1043,9 @@ void SB_CageKyte_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if
 
 void SB_CageKyte_update(int obj)
 {
+    extern f32 Vec_distance(void* a, void* b);
+    extern void* Obj_GetPlayerObject(void);
+    extern void Sfx_PlayFromObject(int* obj, int sfxId);
     s16* state;
     int player;
 
@@ -911,6 +1073,7 @@ void SB_CageKyte_update(int obj)
 
 void SB_CloudBall_free(int* obj)
 {
+    extern void ModelLightStruct_free(int* p);
     SBCloudBallState* state = ((GameObject*)obj)->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);
     {
@@ -929,6 +1092,7 @@ extern void projectileParticleFxFn_80099660(int* obj, f32 scale, int type);
 
 void SB_CloudBall_hitDetect(int* obj)
 {
+    extern void Sfx_PlayFromObject(int* obj, int sfxId);
     SBCloudBallState* state = ((GameObject*)obj)->extra;
     int* params = *(int**)&((GameObject*)obj)->anim.hitReactState;
     int* target = *(int**)&((ObjHitsPriorityState*)params)->lastHitObject;
@@ -946,16 +1110,16 @@ void SB_CloudBall_hitDetect(int* obj)
     projectileParticleFxFn_80099660(obj, lbl_803E58E8, 2);
 }
 
-extern int objCreateLight(int* obj, int mode);
-extern void modelLightStruct_setLightKind(int light, int v);
-extern void modelLightStruct_setDiffuseColor(int light, int p, int r, int g, int p2);
-extern void lightSetFieldBC_8001db14(int light, int v);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
 extern f32 lbl_803E5910;
 extern f32 lbl_803E5914;
 
 void SB_CloudBall_init(int* obj)
 {
+    extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
+    extern void lightSetFieldBC_8001db14(int light, int v);
+    extern void modelLightStruct_setDiffuseColor(int light, int p, int r, int g, int p2);
+    extern void modelLightStruct_setLightKind(int light, int v);
+    extern int objCreateLight(int* obj, int mode);
     SBCloudBallState* state = ((GameObject*)obj)->extra;
     int* params = *(int**)&((GameObject*)obj)->anim.hitReactState;
 
@@ -982,12 +1146,14 @@ extern f32 lbl_803E5900;
 extern f32 lbl_803E5904;
 extern f64 lbl_803E5908;
 extern f32 lbl_803E58E8_; // dummy to avoid duplicate
-extern void Obj_FreeObject(int obj);
 extern f32 lbl_803E58DC;
 extern f32 lbl_803E58E0;
 
 void SB_CloudBall_update(int obj)
 {
+    extern void Obj_FreeObject(int obj);
+    extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
+    extern void* Obj_GetPlayerObject(void);
     SBCloudBallState* state = ((GameObject*)obj)->extra;
     void* player = Obj_GetPlayerObject();
     f32 timer = state->fadeTimer;
@@ -1069,6 +1235,8 @@ void SB_FireBall_init(int p)
 
 void SB_FireBall_update(int obj)
 {
+    extern void Obj_FreeObject(int obj);
+    extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
     SBFireBallState* state;
     f32 particleArgs[7];
 
@@ -1151,13 +1319,14 @@ void SB_KyteCage_init(int* obj, int* params)
     }
 }
 
-extern int* ObjList_GetObjects(int* out_head, int* out_count);
 extern void buttonDisable(int controller, int mask);
 extern int* objModelGetVecFn_800395d8(int obj, int idx);
 extern f32 lbl_803E591C;
 
 void SB_KyteCage_update(int obj)
 {
+    extern int* ObjList_GetObjects(int* out_head, int* out_count);
+    extern void Sfx_PlayFromObject(int* obj, int sfxId);
     extern uint GameBit_Get(int);
     SBKyteCageState* state = ((GameObject*)obj)->extra;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~0x8);
@@ -1239,6 +1408,7 @@ extern f32 lbl_803E5950;
 
 void SB_MiniFire_init(int obj)
 {
+    extern void Sfx_PlayFromObject(int* obj, int sfxId);
     void* resource;
 
     ((GameObject*)obj)->unkF4 = 180;
@@ -1286,6 +1456,7 @@ extern f32 lbl_803E593C;
 
 void SB_MiniFire_update(int obj)
 {
+    extern void Obj_FreeObject(int obj);
     f32 buf[6];
     f32 dx;
     f32 dy;
@@ -1370,6 +1541,7 @@ void SB_ShipGunBroke_render(int* obj, int p2, int p3, int p4, int p5)
 
 void SB_ShipGunBroke_update(int* obj)
 {
+    extern void Sfx_PlayFromObject(int* obj, int sfxId);
     int* p = *(int**)&((GameObject*)obj)->anim.placementData;
     if ((u32)GameBit_Get(((SBShipGunBrokePlacement*)p)->unk1E) != 0u)
     {
@@ -1379,6 +1551,7 @@ void SB_ShipGunBroke_update(int* obj)
 
 void ShipBattle_free(int* obj)
 {
+    extern void ModelLightStruct_free(int* p);
     int* state = ((GameObject*)obj)->extra;
     (*gObjectTriggerInterface)->freeState((u8*)state);
     ((void(*)(int*, int, int, int, int))((void**)*gTitleMenuControlInterface)[2])(obj, 0xffff, 0, 0, 0);
@@ -1393,6 +1566,10 @@ void ShipBattle_free(int* obj)
 
 void ShipBattle_init(int obj, int def)
 {
+    extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
+    extern void modelLightStruct_setDiffuseColor(int light, int p, int r, int g, int p2);
+    extern void modelLightStruct_setLightKind(int light, int v);
+    extern int objCreateLight(int* obj, int mode);
     ShipBattleState* state;
     int light;
     int chainIndex;
@@ -1447,6 +1624,7 @@ light_setup:
 
 void ShipBattle_render(int* obj)
 {
+    extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
     objRenderFn_8003b8f4(lbl_803E595C);
     if (((GameObject*)obj)->anim.seqId == 369)
     {
@@ -1456,6 +1634,8 @@ void ShipBattle_render(int* obj)
 
 void ShipBattle_update(int obj)
 {
+    extern int* ObjList_GetObjects(int* out_head, int* out_count);
+    extern void Obj_FreeObject(int obj);
     int* objects;
     int objectCount;
     int triggerResult;
@@ -1507,6 +1687,7 @@ void ShipBattle_update(int obj)
 
 void shop_buyItem(int obj, int price)
 {
+    extern void* Obj_GetPlayerObject(void);
     int player;
     int state;
     int mapEventState;
@@ -1670,6 +1851,7 @@ void shop_init(int obj, int objDef)
  * unset.  (i.e. open by default, gated when slot != -1.) */
 int shop_isItemAvailable(int p, int idx)
 {
+    extern void* Obj_GetPlayerObject(void);
     s16 slot;
     int result;
     Obj_GetPlayerObject();
@@ -1686,6 +1868,7 @@ int shop_isItemAvailable(int p, int idx)
  * GameBit (slot at lbl_80327FD0[idx*12 + 8]) is set; else 0. */
 int shop_isItemBought(int p, int idx)
 {
+    extern void* Obj_GetPlayerObject(void);
     s16 slot;
     int result;
     Obj_GetPlayerObject();
@@ -1706,6 +1889,7 @@ void shop_setStateField1(int* obj, int v)
 
 void shop_update(int obj)
 {
+    extern void* Obj_GetPlayerObject(void);
     int player;
 
     player = (int)Obj_GetPlayerObject();
