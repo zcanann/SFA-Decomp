@@ -183,14 +183,8 @@ main/dll/dll_66.c:
 main/dll/dll_00B4_projenergise1.c:
 	.text       start:0x801007B8 end:0x801007F0
 
-main/dll/dll_6A.c:
-	.text       start:0x801007F0 end:0x80100820
-
-main/dll/dll_6B.c:
-	.text       start:0x80100820 end:0x80100824
-
-main/dll/dll_6C.c:
-	.text       start:0x80100824 end:0x80100828
+main/dll/dll_00B5_projenergise2.c:
+	.text       start:0x801007F0 end:0x80100828
 
 main/dll/dll_6D.c:
 	.text       start:0x80100828 end:0x80100858
