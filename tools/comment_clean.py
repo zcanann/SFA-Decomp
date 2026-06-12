@@ -1,4 +1,4 @@
-"""Strip import-era / re-split comment cruft from src/main:
+"""Strip import-era / re-split comment cruft from src (.c/.cp/.cpp):
   (1) every Ghidra `--INFO--` boilerplate block (Function/EN/JP/PAL Address+Size
       + TODO placeholders), but ONLY when every interior line is a known
       boilerplate field -- a block carrying unexpected prose is kept and flagged.
@@ -131,7 +131,7 @@ def main():
     ap.add_argument('--apply', action='store_true')
     ap.add_argument('--filter', default='')
     args = ap.parse_args()
-    files = sorted((REPO / 'src').rglob('*.c'))
+    files = sorted(list((REPO / 'src').rglob('*.c')) + list((REPO / 'src').rglob('*.cp')) + list((REPO / 'src').rglob('*.cpp')))
     files = [f for f in files if args.filter in str(f)]
     t_info = t_orphan = t_nonstd = t_files = 0
     for f in files:

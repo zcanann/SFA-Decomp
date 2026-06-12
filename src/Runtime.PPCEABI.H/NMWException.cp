@@ -41,15 +41,6 @@ extern void terminate() { thandler(); }
 extern void unexpected() { uhandler(); }
 } // namespace std
 
-/*
- * --INFO--
- * PAL Address: TODO
- * PAL Size: TODO
- * EN Address: TODO
- * EN Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- */
 class __partial_array_destructor;
 
 /**
@@ -180,15 +171,6 @@ public:
 	}
 };
 
-/*
- * --INFO--
- * PAL Address: TODO
- * PAL Size: TODO
- * EN Address: TODO
- * EN Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- */
 extern "C" void* __construct_new_array(void* block, ConstructorDestructor ctor, ConstructorDestructor dtor, size_t size, size_t n)
 {
 	char* ptr;
@@ -213,15 +195,6 @@ extern "C" void* __construct_new_array(void* block, ConstructorDestructor ctor, 
 	return ptr;
 }
 
-/*
- * --INFO--
- * PAL Address: TODO
- * PAL Size: TODO
- * EN Address: TODO
- * EN Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- */
 extern "C" void __construct_array(void* ptr, ConstructorDestructor ctor, ConstructorDestructor dtor, size_t size, size_t n)
 {
 	__partial_array_destructor pad(ptr, size, n, dtor);

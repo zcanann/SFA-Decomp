@@ -5,15 +5,6 @@ extern void __OSPSInit(void);
 extern void __OSFPRInit(void);
 extern void __OSCacheInit(void);
 
-/*
- * --INFO--
- * PAL Address: TODO
- * PAL Size: TODO
- * EN Address: TODO
- * EN Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- */
 SECTION_INIT asm void __init_hardware(void)
 {
     // clang-format off
@@ -31,15 +22,6 @@ SECTION_INIT asm void __init_hardware(void)
     // clang-format on
 }
 
-/*
- * --INFO--
- * PAL Address: TODO
- * PAL Size: TODO
- * EN Address: TODO
- * EN Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- */
 SECTION_INIT asm void __flush_cache(void* addr, unsigned int size)
 {
     // clang-format off
