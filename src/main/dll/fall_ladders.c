@@ -7,7 +7,6 @@
 #include "main/dll/fall_ladders.h"
 #include "main/objhits.h"
 #include "main/vecmath.h"
-#include "main/objhits_types.h"
 
 extern undefined4 FUN_80006824();
 extern u32 randomGetRange(int min, int max);
@@ -161,13 +160,15 @@ void fn_801540A0(int obj, void* pp)
 
 void fn_80154584(int obj, int p)
 {
+    ObjHitsPriorityState* hitState;
     int curve;
     u8 rnd;
     f32 vec[3];
 
     curve = *(int*)p;
     *(u8*)(p + 0x33b) = 0;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState->suppressOutgoingHits = 0;
     if ((*(u32*)(p + 0x2dc) & 0x2000) != 0)
     {
         if ((Curve_AdvanceAlongPath(curve, *(f32*)(p + 0x2fc)) != 0 || *(int*)(curve + 0x10) != 0) &&

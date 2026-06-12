@@ -512,13 +512,15 @@ void fn_801534D8(int obj, int state)
 
 void fn_80153040(int obj, int state)
 {
+    ObjHitsPriorityState* hitState;
     int* curve;
     f32 vec[3];
 
     curve = *(int**)state;
     if (((GameObject*)obj)->anim.hitReactState != NULL)
     {
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
+        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState->suppressOutgoingHits = 0;
     }
     if (((BaddieState*)state)->inWhirlpoolGroup != 0)
     {
