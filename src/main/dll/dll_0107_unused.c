@@ -189,6 +189,7 @@ void fn_80185B74(int obj)
     WindLift107State* state;
     int sub;
     f32 dist;
+    ObjHitsPriorityState* hitState;
     u8 ph;
     char on;
     u8 held;
@@ -292,9 +293,10 @@ void fn_80185B74(int obj)
         {
             u8 st21;
             ObjHits_DisableObject(obj);
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosX = ((GameObject*)obj)->anim.localPosX;
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosY = ((GameObject*)obj)->anim.localPosY;
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosZ = ((GameObject*)obj)->anim.localPosZ;
+            hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+            hitState->localPosX = ((GameObject*)obj)->anim.localPosX;
+            hitState->localPosY = ((GameObject*)obj)->anim.localPosY;
+            hitState->localPosZ = ((GameObject*)obj)->anim.localPosZ;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
             if ((getButtonsJustPressed(0) & 0x100) != 0)
             {
@@ -369,7 +371,8 @@ void fn_80185B74(int obj)
             }
             ObjHits_EnableObject(obj);
         }
-        held = ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags;
+        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        held = hitState->contactFlags;
         if ((s8)held != 0 && *(s8*)&state->launchPhase == 1)
         {
             ((GameObject*)obj)->anim.velocityY = lbl_803E3A58;
