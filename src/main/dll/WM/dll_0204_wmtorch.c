@@ -1,3 +1,11 @@
+/*
+ * wmtorch (DLL 0x0204) - the lightable torch at Krazoa Palace.
+ *
+ * NOTE: FUN_801f1634 / FUN_801f2b94 are v1.1-drift bodies of the
+ * shared platform rider/eggy helpers, duplicated into this file by the
+ * re-split (the documented copy lives in dll_0201_wmcolrise.c). The
+ * neighbor-state typedefs up top belong to the same pending family.
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/laserbeamstate_struct.h"
 #include "main/dll/dll200state_struct.h"
