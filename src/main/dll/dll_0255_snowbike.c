@@ -522,9 +522,11 @@ void SnowBike_hitDetect(int obj)
     f32 c;
     f32 lim;
     f32 dummy;
+    ObjHitsPriorityState* hitState;
 
     state = ((GameObject*)obj)->extra;
-    other = *(u8**)(*(int*)&((GameObject*)obj)->anim.hitReactState);
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    other = *(u8**)hitState;
     if (((GameObject*)obj)->pendingParentObj != NULL)
     {
         return;
@@ -545,8 +547,7 @@ void SnowBike_hitDetect(int obj)
     }
     if (state->unk3D6 == 0)
     {
-        if (((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags & 8) != 0
-            && arrayIndexOf(lbl_8032855C, 10, *(s16*)(other + 0x46)) == -1)
+        if ((hitState->flags & 8) != 0 && arrayIndexOf(lbl_8032855C, 10, *(s16*)(other + 0x46)) == -1)
         {
         }
         else
