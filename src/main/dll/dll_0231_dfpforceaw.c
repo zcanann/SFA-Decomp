@@ -45,42 +45,16 @@ extern f32 lbl_803E70F8;
 extern f32 lbl_803E70FC;
 extern f32 lbl_803E7100;
 
-extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int extraSize, int objType);
-extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
-extern void Obj_FreeObject(int obj);
-extern void gameTimerStop(void);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void vecRotateZXY(s16 * rotation, f32 * outVec);
 extern EffectInterface** gPartfxInterface;
 
-extern u32 lbl_803E6450;
-extern u32 lbl_803E6454;
-extern f32 timeDelta;
-extern f32 lbl_803E6458;
-extern f32 lbl_803E645C;
 extern f32 lbl_803E6460;
 extern f32 lbl_803E6464;
 extern f32 lbl_803E6468;
-extern f32 lbl_803E6478;
 
-#define SFXPLAYER_OBJECT_FLAGS_OFFSET 0xB0
-#define SFXPLAYER_OBJECT_STATE_OFFSET 0xB8
-#define SFXPLAYER_EFFECT_RING_COUNT 4
-#define SFXPLAYER_EFFECT_HANDLES_PER_RING 2
-#define SFXPLAYER_MODE_SEQUENCE 2
-#define SFXPLAYER_RING_START_SFX 0x459
-#define SFXPLAYER_TIMEOUT_RESET_SFX 0x1CE
-#define SFXPLAYER_GAMEBIT_RING_ACTIVE 0xEDF
-#define SFXPLAYER_RING_VISUAL_SETUP_SIZE 0x2C
-#define SFXPLAYER_RING_VISUAL_OBJECT_ID 0x6E8
-#define SFXPLAYER_RING_HIT_SETUP_SIZE 4
-#define SFXPLAYER_RING_HIT_OBJECT_ID 0x71C
-#define SFXPLAYER_RING_SETUP_MODE 5
-#define SFXPLAYER_EFFECT_RING_ROT_STEP 0x3FFF
 
 typedef struct TrickyCurveBurstFxParams
 {
@@ -687,13 +661,9 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
 
 #pragma scheduling off
 #pragma peephole off
-void TrickyCurve_updateEffectHandleRing(int obj);
 
-int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex);
 
-int TrickyCurve_activateEffectHandleRing(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
-void sfxplayer_free(int obj, int arg1);
 
 #undef SFXPLAYER_UPDATE_EFFECT_HANDLE_POS
 
@@ -717,13 +687,11 @@ void TrickyCurve_initialise(void)
 
 void sfxplayer_render(void);
 
-void sfxplayer_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 int TrickyCurve_getExtraSize(void) { return 0x14; }
 int TrickyCurve_getObjectTypeId(void) { return 0x0; }
 int sfxplayer_getExtraSize(void);
-int sfxplayer_getObjectTypeId(void);
 
 extern void fn_80206C18(int* obj);
 extern void fn_80206968(int* obj);
@@ -779,31 +747,7 @@ void TrickyCurve_init(int* obj, u8* def)
 #include "main/game_object.h"
 
 extern int ObjHits_GetPriorityHit(int obj, undefined4* outHitObject, int* outSphereIndex, uint* outHitVolume);
-extern void gameTimerInit(int timerId, int frames);
-extern int isGameTimerDisabled(void);
-extern void timerSetToCountUp(void);
 
-#define SFXPLAYER_OBJECT_FLAGS_OFFSET 0xB0
-#define SFXPLAYER_OBJECT_STATE_OFFSET 0xB8
-#define SFXPLAYER_OBJECT_CALLBACK_OFFSET 0xBC
-#define SFXPLAYER_CONFIG_MAP_ID_OFFSET 0x18
-#define SFXPLAYER_CONFIG_MODE_OFFSET 0x19
-#define SFXPLAYER_CONFIG_EVENT_ID_OFFSET 0x1E
-#define SFXPLAYER_CONFIG_FIELD20_OFFSET 0x20
-#define SFXPLAYER_EFFECT_RING_COUNT 4
-#define SFXPLAYER_EFFECT_HANDLES_PER_RING 2
-#define SFXPLAYER_COMPLETE_RING_COUNT 4
-#define SFXPLAYER_TIMER_ID 0x1D
-#define SFXPLAYER_TIMER_SHORT_FRAMES 0x96
-#define SFXPLAYER_TIMER_LONG_FRAMES 0xB4
-#define SFXPLAYER_MODE_SINGLE 1
-#define SFXPLAYER_GAMEBIT_RING_ACTIVE 0xEDF
-#define SFXPLAYER_GAMEBIT_SINGLE_COMPLETE 0x9F7
-#define SFXPLAYER_SFX_COMPLETE 0x7E
-#define SFXPLAYER_SFX_TIMEOUT_RESET 0x1CE
-#define SFXPLAYER_SFX_RING_HIT 0x409
-#define SFXPLAYER_HIT_TYPE_RING_TARGET 0x13
-#define SFXPLAYER_OBJECT_FLAGS 0x6000
 
 /*
  * --INFO--
@@ -818,7 +762,6 @@ extern void timerSetToCountUp(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sfxplayer_update(int obj);
 
 /*
  * --INFO--
@@ -833,7 +776,6 @@ void sfxplayer_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sfxplayer_init(int obj, int config);
 
 /*
  * --INFO--
@@ -848,7 +790,6 @@ void sfxplayer_init(int obj, int config);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sfxplayer_release(void);
 
 /*
  * --INFO--
@@ -863,4 +804,3 @@ void sfxplayer_release(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sfxplayer_initialise(void);

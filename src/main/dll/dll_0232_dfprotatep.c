@@ -7,17 +7,6 @@
 #include "main/dll/TrickyCurve.h"
 #include "main/dll/sfxplayer.h"
 
-typedef struct TrickyCurveObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s8 unk18;
-    u8 pad19[0x1A - 0x19];
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x28 - 0x22];
-} TrickyCurveObjectDef;
 
 
 extern undefined4 FUN_80006824();
@@ -27,7 +16,6 @@ extern undefined8 FUN_80017698();
 extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
-extern int Obj_GetPlayerObject(void);
 extern undefined4 ObjMsg_SendToObject();
 extern void TrickyCurve_updateCooldownTrigger(int obj);
 extern uint FUN_80286838();
@@ -82,17 +70,6 @@ extern f32 lbl_803E6478;
 #define SFXPLAYER_RING_SETUP_MODE 5
 #define SFXPLAYER_EFFECT_RING_ROT_STEP 0x3FFF
 
-typedef struct TrickyCurveBurstFxParams
-{
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    s16 pad;
-    f32 scale;
-    f32 xOffset;
-    f32 yOffset;
-    f32 zOffset;
-} TrickyCurveBurstFxParams;
 
 /*
  * --INFO--
@@ -751,11 +728,8 @@ void sfxplayer_free(int obj, int arg1)
 /* Trivial 4b 0-arg blr leaves. */
 void TrickyCurve_render(void);
 
-void TrickyCurve_hitDetect(void);
 
-void TrickyCurve_release(void);
 
-void TrickyCurve_initialise(void);
 
 void sfxplayer_render(void)
 {
@@ -767,18 +741,13 @@ void sfxplayer_hitDetect(void)
 
 /* 8b "li r3, N; blr" returners. */
 int TrickyCurve_getExtraSize(void);
-int TrickyCurve_getObjectTypeId(void);
 int sfxplayer_getExtraSize(void) { return 0xa; }
 int sfxplayer_getObjectTypeId(void) { return 0x0; }
 
 extern void fn_80206C18(int* obj);
-extern void fn_80206968(int* obj);
 
-void TrickyCurve_update(int* obj);
 
-void TrickyCurve_free(int obj);
 
-void TrickyCurve_init(int* obj, u8* def);
 
 /* === merged from main/dll/sfxplayer.c [80207CE4-80208098) (TU re-split, docs/boundary_audit.md) === */
 #include "main/mapEvent.h"
