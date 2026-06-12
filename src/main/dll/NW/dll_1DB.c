@@ -12,15 +12,7 @@ typedef struct EdiblemushroomPlacement
 } EdiblemushroomPlacement;
 
 
-typedef struct EdiblemushroomState
-{
-    u8 pad0[0x108 - 0x0];
-    f32 unk108;
-    f32 unk10C;
-    u8 pad110[0x134 - 0x110];
-    s16 eventId;
-    u8 pad136[0x138 - 0x136];
-} EdiblemushroomState;
+#include "main/dll/NW/ediblemushroom_state.h"
 
 
 extern f32 lbl_803E52A8;
