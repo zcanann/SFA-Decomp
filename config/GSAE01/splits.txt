@@ -804,20 +804,29 @@ main/dll/explodable.c:
 	.text       start:0x801833E4 end:0x80184180
 
 main/dll/cfforcefield.c:
-	.text       start:0x80184180 end:0x801845FC
+	.text       start:0x80184180 end:0x801843C0
 
-main/dll/CF/CFguardian.c:
-	.text       start:0x801845FC end:0x80184930
+main/dll/CF/dll_0106_scarab.c:
+	.text       start:0x801843C0 end:0x80185868
 
-main/dll/CF/windlift.c:
-	.text       start:0x80184930 end:0x80186B94
+main/dll/CF/dll_0107_unused.c:
+	.text       start:0x80185868 end:0x8018646C
+
+main/dll/CF/dll_0108_endobject.c:
+	.text       start:0x8018646C end:0x80186498
 	.data       start:0x803217C0 end:0x803217F8
 
-main/dll/CF/CFcrystal.c:
-	.text       start:0x80186B94 end:0x80187524
+main/dll/CF/dll_010D_portalspelldoor.c:
+	.text       start:0x80186498 end:0x80186704
+
+main/dll/CF/dll_010C_lanternfirefly.c:
+	.text       start:0x80186704 end:0x801871C8
+
+main/dll/CF/dll_010B_fireflylantern.c:
+	.text       start:0x801871C8 end:0x80187640
 
 main/dll/CF/CFBaby.c:
-	.text       start:0x80187524 end:0x801899B4
+	.text       start:0x80187640 end:0x801899B4
 
 main/dll/CF/CFPrisonGuard.c:
 	.text       start:0x801899B4 end:0x80189F5C

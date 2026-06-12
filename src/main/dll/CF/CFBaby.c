@@ -187,67 +187,6 @@ extern f32 FLOAT_803e4840;
 extern f32 FLOAT_803e4844;
 extern f32 FLOAT_803e4848;
 
-/*
- * --INFO--
- *
- * Function: FireFlyLantern_init
- * EN v1.0 Address: 0x80187524
- * EN v1.0 Size: 320b
- * EN v1.1 Address: 0x80187608
- * EN v1.1 Size: 280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-#pragma scheduling off
-#pragma peephole off
-void FireFlyLantern_init(int obj, int def)
-{
-    void* player;
-    u8* childSlot;
-    u8* state;
-    int i;
-    u32 childCount;
-
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = (void*)FireFlyLantern_SeqFn;
-    player = Obj_GetPlayerObject();
-    if (((GameObject*)player)->anim.seqId != 0)
-    {
-        *(s16*)(state + 0x20) = 0x13d;
-    }
-    else
-    {
-        *(s16*)(state + 0x20) = 0x5d6;
-    }
-
-    *(u8*)(state + 0x1c) = 0;
-    *(u8*)(state + 0x1d) = GameBit_Get(*(s16*)(state + 0x20));
-
-    if (*(s8*)(def + 0x19) == 1)
-    {
-        if (*(u8*)(state + 0x1d) != 0)
-        {
-            *(u8*)(state + 0x1c) = 1;
-            *(int*)state = FireFlyLantern_spawnFireFly((int*)obj);
-        }
-        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
-    }
-    else
-    {
-        *(u8*)(state + 0x1c) = (*(u8*)(state + 0x1d) < 6) ? *(u8*)(state + 0x1d) : 6;
-
-        i = 0;
-        childSlot = state;
-        while (i < *(u8*)(state + 0x1c))
-        {
-            *(int*)childSlot = FireFlyLantern_spawnFireFly((int*)obj);
-            childSlot += 4;
-            i++;
-        }
-    }
-}
 
 /*
  * --INFO--
