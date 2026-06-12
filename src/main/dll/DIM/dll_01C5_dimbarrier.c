@@ -125,12 +125,14 @@ void dimbarrier_update(int obj)
         }
     case 1:
         {
+            ObjHitsPriorityState* hitState;
             int v = ((GameObject*)obj)->anim.alpha - framesThisStep * 16;
             if (v < 0)
             {
                 v = 0;
             }
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+            hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+            hitState->flags &= ~1;
             ((GameObject*)obj)->anim.alpha = v;
             *(s16*)extra -= framesThisStep;
             if (*(s16*)extra <= 0)
