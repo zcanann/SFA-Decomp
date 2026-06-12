@@ -192,14 +192,8 @@ main/dll/dll_00B2_projrobotfire.c:
 main/dll/dll_00B6_projsquirt1.c:
 	.text       start:0x80100860 end:0x80100898
 
-main/dll/dll_72.c:
-	.text       start:0x80100898 end:0x801008C8
-
-main/dll/dll_73.c:
-	.text       start:0x801008C8 end:0x801008CC
-
-main/dll/dll_74.c:
-	.text       start:0x801008CC end:0x801008D0
+main/dll/dll_00B7_projship1.c:
+	.text       start:0x80100898 end:0x801008D0
 
 main/dll/dll_64.c:
 	.text       start:0x801008D0 end:0x80100900
