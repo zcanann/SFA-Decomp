@@ -41,3 +41,43 @@ int projcore3_doUnsupported(void)
     OSReport(sProjcore3DoNoLongerSupported);
     return PROJECTILE_UNSUPPORTED_RETURN;
 }
+
+/* === merged from main/dll/dll_87.c [80100A50-80100A54) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/dll_87.h"
+
+/*
+ * --INFO--
+ *
+ * Function: projcore3_release
+ * EN v1.0 Address: 0x80100A50
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80100A50
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void projcore3_release(void)
+{
+}
+
+/* === merged from main/dll/dll_88.c [80100A54-80100A58) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/dll_88.h"
+
+/*
+ * --INFO--
+ *
+ * Function: projcore3_initialise
+ * EN v1.0 Address: 0x80100A54
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80100A54
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void projcore3_initialise(void)
+{
+}

@@ -213,14 +213,8 @@ main/dll/dll_00BF_projcore1.c:
 main/dll/dll_00C0_projcore2.c:
 	.text       start:0x801009E8 end:0x80100A20
 
-main/dll/modcloudrunner2.c:
-	.text       start:0x80100A20 end:0x80100A50
-
-main/dll/dll_87.c:
-	.text       start:0x80100A50 end:0x80100A54
-
-main/dll/dll_88.c:
-	.text       start:0x80100A54 end:0x80100A58
+main/dll/dll_00C1_projcore3.c:
+	.text       start:0x80100A20 end:0x80100A58
 
 main/dll/dll_89.c:
 	.text       start:0x80100A58 end:0x80100A88
