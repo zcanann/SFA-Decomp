@@ -2,26 +2,10 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-typedef struct DimbridgecogmaiObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    u8 pad1A[0x1C - 0x1A];
-    u8 unk1C;
-    u8 pad1D[0x20 - 0x1D];
-} DimbridgecogmaiObjectDef;
 
 
 
 
-typedef struct DimbridgecogmaiPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-} DimbridgecogmaiPlacement;
 
 
 typedef struct DimdismountpointState
@@ -34,7 +18,6 @@ typedef struct DimdismountpointState
 
 
 extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 
@@ -56,9 +39,7 @@ extern undefined4 ObjGroup_AddObject();
 /* Trivial 4b 0-arg blr leaves. */
 
 
-void dimbridgecogmai_hitDetect(void);
 
-void dimbridgecogmai_initialise(void);
 
 void dimdismountpoint_hitDetect(void)
 {
@@ -117,7 +98,6 @@ extern f32 lbl_803E4914;
 extern f32 lbl_803E4918;
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
-extern unsigned long GameBit_Set(int eventId, int value);
 
 void dimdismountpoint_init(u8* obj, u8* params)
 {
@@ -136,17 +116,14 @@ void dimdismountpoint_init(u8* obj, u8* params)
 
 /* 8b "li r3, N; blr" returners. */
 int dimbridgecogmai_getExtraSize(void);
-int dimbridgecogmai_getObjectTypeId(void);
 int dimdismountpoint_getExtraSize(void) { return 0x10; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4900;
 extern void objRenderFn_8003b8f4(f32);
 
-void dimbridgecogmai_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void dimbridgecogmai_free(int x);
 void dimdismountpoint_free(int x) { ObjGroup_RemoveObject(x, 0x13); }
 
 void dimbridgecogmai_release(void);
@@ -176,7 +153,6 @@ int dimbridgecogmai_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-void dimbridgecogmai_update(int* obj);
 
 void dimdismountpoint_func11(int obj, int flag)
 {

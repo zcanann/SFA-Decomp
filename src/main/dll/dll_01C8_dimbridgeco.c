@@ -24,13 +24,6 @@ typedef struct DimbridgecogmaiPlacement
 } DimbridgecogmaiPlacement;
 
 
-typedef struct DimdismountpointState
-{
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-} DimdismountpointState;
 
 
 extern uint GameBit_Get(int eventId);
@@ -66,24 +59,12 @@ void dimbridgecogmai_initialise(void)
 
 void dimdismountpoint_hitDetect(void);
 
-void dimdismountpoint_release(void);
 
-void dimdismountpoint_initialise(void);
 
-extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
-extern void objRenderFn_80041018(int obj);
-extern f32 lbl_803E4910;
 
-void dimdismountpoint_update(int* obj);
 
-extern f32 lbl_803E4908;
-extern f32 lbl_803E4914;
-extern f32 lbl_803E4918;
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
 extern unsigned long GameBit_Set(int eventId, int value);
 
-void dimdismountpoint_init(u8* obj, u8* params);
 
 /* 8b "li r3, N; blr" returners. */
 int dimbridgecogmai_getExtraSize(void) { return 0x1; }
@@ -125,7 +106,6 @@ void dimbridgecogmai_init(int* obj, int* def)
 
 extern f32 lbl_803E490C;
 
-void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 
 int dimbridgecogmai_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -209,6 +189,4 @@ void dimbridgecogmai_update(int* obj)
 
 void dimdismountpoint_func11(int obj, int flag);
 
-extern int Obj_GetPlayerObject(void);
 
-int dimdismountpoint_setScale(int obj);

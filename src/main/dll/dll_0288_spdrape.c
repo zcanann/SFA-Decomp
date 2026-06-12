@@ -125,12 +125,6 @@ void spdrape_hitDetect(void)
 #include "main/game_object.h"
 #include "main/dll/DR/DRsimplehuman.h"
 
-typedef struct SpitembeamPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    u8 pad1C[0x20 - 0x1C];
-} SpitembeamPlacement;
 
 
 typedef struct SpdrapeObjectDef
@@ -342,23 +336,13 @@ void spdrape_initialise(void)
 
 void spitembeam_free(void);
 
-void spitembeam_render(void);
 
-void spitembeam_hitDetect(void);
 
-void spitembeam_release(void);
 
-void spitembeam_initialise(void);
 
-extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
-extern int* objFindTexture(int* obj, int a, int b);
-extern f32 lbl_803E5AD8;
 
-void spitembeam_update(int* obj);
 
 /* 8b "li r3, N; blr" returners. */
-int spitembeam_getExtraSize(void);
-int spitembeam_getObjectTypeId(void);
 
 extern f32 lbl_803E5AC0;
 extern f32 lbl_803E5AC4;
@@ -435,34 +419,7 @@ static inline void shTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = t;
 }
 
-typedef struct
-{
-    u8 r, g, b, a;
-} ShColor;
 
-extern void selectTexture(int tex, int p);
-extern void textureSetupFn_800799c0(void);
-extern void geomDrawFn_800796f0(void);
-extern void textRenderSetupFn_80079804(void);
-extern void GXSetTevColor(int reg, ShColor color);
-extern void gxSetZMode_(int a, int b, int c);
-extern void GXSetBlendMode(int a, int b, int c, int d);
-extern void gxSetPeControl_ZCompLoc_(int a);
-extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
-extern void GXSetCullMode(int mode);
-extern void GXClearVtxDesc(void);
-extern void GXSetVtxDesc(int attr, int type);
-extern f32* Camera_GetViewMatrix(void);
-extern void GXLoadPosMtxImm(f32* m, int id);
-extern void GXSetCurrentMtx(int id);
-extern void getAmbientColor(int mode, u8* r, u8* g, u8* b);
-extern void GXBegin(int prim, int fmt, int n);
-extern int lbl_803DDC60;
-extern ShColor lbl_803E5AE4;
-extern f32 lbl_803E5AE8;
-extern f32 lbl_803E5AEC;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 
 /*
  * --INFO--
@@ -472,5 +429,4 @@ extern f32 playerMapOffsetZ;
  * EN v1.0 Size: 740b
  */
 #pragma opt_common_subs off
-void fn_801E991C(int p1, char* table);
 #pragma opt_common_subs reset

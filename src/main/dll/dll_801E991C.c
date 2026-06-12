@@ -5,9 +5,7 @@
 
 
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-extern f32 timeDelta;
 
 extern void spscarab_hitDetect(void);
 extern void spscarab_render(void);
@@ -71,7 +69,6 @@ ObjectDescriptor gSPScarabObjDescriptor = {
  * EN v1.0 Address: 0x801E9328
  * EN v1.0 Size: 8b
  */
-int spdrape_getExtraSize(void);
 
 /*
  * --INFO--
@@ -80,7 +77,6 @@ int spdrape_getExtraSize(void);
  * EN v1.0 Address: 0x801E9330
  * EN v1.0 Size: 8b
  */
-int spdrape_getObjectTypeId(void);
 
 /*
  * --INFO--
@@ -89,7 +85,6 @@ int spdrape_getObjectTypeId(void);
  * EN v1.0 Address: 0x801E9338
  * EN v1.0 Size: 4b
  */
-void spdrape_free(void);
 
 /*
  * --INFO--
@@ -98,7 +93,6 @@ void spdrape_free(void);
  * EN v1.0 Address: 0x801E933C
  * EN v1.0 Size: 4b
  */
-void spdrape_render(void);
 
 /*
  * --INFO--
@@ -107,38 +101,15 @@ void spdrape_render(void);
  * EN v1.0 Address: 0x801E9340
  * EN v1.0 Size: 4b
  */
-void spdrape_hitDetect(void);
 
 #include "main/objanim_internal.h"
 #include "main/game_object.h"
 #include "main/dll/DR/DRsimplehuman.h"
 
-typedef struct SpitembeamPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    u8 pad1C[0x20 - 0x1C];
-} SpitembeamPlacement;
 
 
-typedef struct SpdrapeObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s8 unk18;
-    u8 pad19[0x1A - 0x19];
-    s16 unk1A;
-    u8 pad1C[0x20 - 0x1C];
-} SpdrapeObjectDef;
 
 
-typedef struct SpdrapeState
-{
-    u8 pad0[0x10 - 0x0];
-    s32 unk10;
-    s16 unk14;
-    u8 unk16;
-    u8 pad17[0x18 - 0x17];
-} SpdrapeState;
 
 
 
@@ -156,22 +127,7 @@ typedef struct SpdrapeState
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void Sfx_PlayFromObject(int obj, int sfx);
-extern void Sfx_StopObjectChannel(int obj, int channel);
-extern void Camera_GetCurrentViewSlot(void);
-extern f32 lbl_803DC0B0;
-extern f32 lbl_803DC0B4;
-extern byte framesThisStep;
-extern f32 lbl_803E5AA0;
-extern f32 lbl_803E5AA4;
-extern f32 lbl_803E5AA8;
-extern f32 lbl_803E5AAC;
-extern f32 lbl_803E5AB0;
-extern f32 lbl_803E5AB4;
-extern f32 lbl_803E5AB8;
-extern f32 lbl_803E5ABC;
 
-void spdrape_update(int obj);
 
 
 /*
@@ -221,40 +177,21 @@ void spdrape_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void spitembeam_init(int obj);
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void spdrape_release(void);
 
-void spdrape_initialise(void);
 
-void spitembeam_free(void);
 
-void spitembeam_render(void);
 
-void spitembeam_hitDetect(void);
 
-void spitembeam_release(void);
 
-void spitembeam_initialise(void);
 
-extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
-extern int* objFindTexture(int* obj, int a, int b);
-extern f32 lbl_803E5AD8;
 
-void spitembeam_update(int* obj);
 
 /* 8b "li r3, N; blr" returners. */
-int spitembeam_getExtraSize(void);
-int spitembeam_getObjectTypeId(void);
 
-extern f32 lbl_803E5AC0;
-extern f32 lbl_803E5AC4;
-extern f32 lbl_803E5AC8;
-extern f32 lbl_803E5ACC;
 
-void spdrape_init(int* obj, u8* def);
 
 typedef union
 {
