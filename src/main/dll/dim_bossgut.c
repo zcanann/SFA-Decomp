@@ -7,18 +7,7 @@
 #include "main/dll/dim_bossgut.h"
 #include "main/dll/ediblemushroom.h"
 
-typedef struct BombplantPlacement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x1A - 0x14];
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    s8 unk1E;
-    u8 pad1F[0x20 - 0x1F];
-} BombplantPlacement;
+#include "main/dll/bombplant_placement.h"
 
 
 typedef struct EnemymushroomPlacement

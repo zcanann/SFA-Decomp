@@ -26,18 +26,7 @@ typedef struct BombplantsporeUpdateDriftPlacement
 } BombplantsporeUpdateDriftPlacement;
 
 
-typedef struct BombplantPlacement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x18 - 0x14];
-    s16 growTimer;
-    s16 unk1A;
-    s16 unk1C;
-    u8 pad1E[0x20 - 0x1E];
-} BombplantPlacement;
+#include "main/dll/bombplant_placement.h"
 
 
 extern undefined4 FUN_80006824();
