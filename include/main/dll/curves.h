@@ -84,17 +84,7 @@ extern RomCurveDef *gRomCurveLastFindEnd;
 extern RomCurvePoint sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
 extern char sCurvesMaxRomCurvesExceeded[];
 
-typedef struct RomCurveSegmentProjection {
-  f32 startX;
-  f32 startY;
-  f32 startZ;
-  f32 endX;
-  f32 endY;
-  f32 endZ;
-  f32 nearestX;
-  f32 nearestY;
-  f32 nearestZ;
-} RomCurveSegmentProjection;
+#include "main/dll/rom_curve_segment_projection.h"
 
 typedef struct CurvesCollisionState {
   u32 flags;

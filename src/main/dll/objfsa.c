@@ -13,18 +13,7 @@ extern void OSReport(const char* fmt, ...);
  * deref-cleanup wave; curves.h re-exports it). */
 #include "main/dll/curve_walker.h"
 
-typedef struct RomCurveSegmentProjection
-{
-    f32 startX;
-    f32 startY;
-    f32 startZ;
-    f32 endX;
-    f32 endY;
-    f32 endZ;
-    f32 nearestX;
-    f32 nearestY;
-    f32 nearestZ;
-} RomCurveSegmentProjection;
+#include "main/dll/rom_curve_segment_projection.h"
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006a10();
