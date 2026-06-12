@@ -3,15 +3,7 @@
 #include "main/objanim.h"
 #include "main/objseq.h"
 
-typedef struct EcshShrineState
-{
-    u8 pad0[0x24 - 0x0];
-    s16 unk24;
-    s16 unk26;
-    u8 pad28[0x2E - 0x28];
-    u8 unk2E;
-    u8 pad2F[0x30 - 0x2F];
-} EcshShrineState;
+#include "main/dll/mmshrine/ecsh_shrine_state.h"
 
 
 extern u32 randomGetRange(int min, int max);
