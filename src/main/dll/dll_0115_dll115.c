@@ -265,21 +265,6 @@ typedef struct Dll115Placement
 } Dll115Placement;
 
 
-typedef struct WmColumnPlacement
-{
-    u8 pad0[0x18 - 0x0];
-    u8 unk18;
-    u8 unk19;
-    u8 pad1A[0x1E - 0x1A];
-    s16 unk1E;
-    u8 pad20[0x38 - 0x20];
-    u8 unk38;
-    u8 unk39;
-    u8 unk3A;
-    u8 unk3B;
-    s16 unk3C;
-    u8 pad3E[0x40 - 0x3E];
-} WmColumnPlacement;
 
 
 extern undefined8 FUN_80006824();
@@ -289,7 +274,6 @@ extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjGroup_FindNearestObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 ObjMsg_SendToObject();
 extern int FUN_800632d8();
@@ -297,19 +281,9 @@ extern undefined4 FUN_80081118();
 extern double FUN_80293900();
 extern undefined4 FUN_80294d60();
 extern void GameBit_Set(int eventId, int value);
-extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
-extern f32 Vec_distance(float* posA, float* posB);
-extern int Obj_GetPlayerObject(void);
-extern uint playerGetStateFlag310(int obj);
-extern void setAButtonIcon(int param_1);
 
-extern undefined4* gCarryableInterface;
 extern undefined4* DAT_803dd718;
 extern f32 lbl_803DC074;
-extern f32 lbl_803E37B8;
-extern f32 lbl_803E37BC;
-extern f32 lbl_803E37C0;
-extern f32 lbl_803E37C4;
 extern f32 lbl_803E4460;
 extern f32 lbl_803E446C;
 extern f32 lbl_803E4470;
@@ -324,11 +298,6 @@ extern f32 lbl_803E4490;
 extern f32 lbl_803E4494;
 extern f32 lbl_803E4498;
 
-typedef void (*GroundAnimatorFreeFn)(int obj);
-typedef int (*GroundAnimatorVisibleFn)(int obj, int visible);
-typedef int (*GroundAnimatorAnimStateFn)(int obj, int state);
-typedef void (*GroundAnimatorSetVisibleFn)(int state, int visible);
-typedef void (*GroundAnimatorInitAnimFn)(void* obj, undefined4 state, int param_3);
 
 /*
  * --INFO--

@@ -170,21 +170,15 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 
 
-void dll_115_hitDetect_nop(void);
 
 /* 8b "li r3, N; blr" returners. */
-int dll_115_getExtraSize_ret_2(void);
-int dll_115_getObjectTypeId(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E37B0;
 
 
 
-void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-void dll_115_free(int x);
 
 /* Drift-recovery: add new fns with v1.0 names. */
 
@@ -202,7 +196,6 @@ void dll_115_free(int x);
 
 
 
-int dll_115_seqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate);
 
 #include "main/dll/groundanimator_state.h"
 #include "main/audio/sfx_ids.h"
@@ -212,19 +205,6 @@ int dll_115_seqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate);
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
-typedef struct Dll115Placement
-{
-    u8 pad0[0x18 - 0x0];
-    u8 unk18;
-    s8 unk19;
-    u8 pad1A[0x38 - 0x1A];
-    u8 unk38;
-    u8 unk39;
-    u8 unk3A;
-    u8 unk3B;
-    s16 unk3C;
-    u8 pad3E[0x40 - 0x3E];
-} Dll115Placement;
 
 
 typedef struct WmColumnPlacement
@@ -305,17 +285,7 @@ typedef void (*GroundAnimatorInitAnimFn)(void* obj, undefined4 state, int param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct
-{
-    s16 pad0[12];
-    s16 ev18;
-    s16 pad1a[7];
-    s16 ev28;
-    u8 pad2a[0x16];
-    u8 id40;
-} Dll115MapRow;
 
-void dll_115_update(int obj);
 
 /*
  * --INFO--
@@ -330,7 +300,6 @@ void dll_115_update(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_115_init(short* obj, int mapData);
 
 /*
  * --INFO--
@@ -345,7 +314,6 @@ void dll_115_init(short* obj, int mapData);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_115_release_nop(void);
 
 /*
  * --INFO--
@@ -360,7 +328,6 @@ void dll_115_release_nop(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_115_initialise_nop(void);
 
 /*
  * --INFO--
