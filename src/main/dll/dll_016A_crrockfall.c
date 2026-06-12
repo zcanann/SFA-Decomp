@@ -352,13 +352,9 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void imicemountain_free(void)
-{
-}
+void imicemountain_free(void);
 
-void imicemountain_hitDetect(void)
-{
-}
+void imicemountain_hitDetect(void);
 
 extern void gameBitFn_800ea2e0(int idx);
 extern void unlockLevel(int a, int b, int c);
@@ -372,77 +368,7 @@ extern f32 lbl_803E46E0;
  * gamebit block, arm the map-event triggers, then branch on the queried level
  * state to set the boulder's start state and fire the appropriate triggers. */
 #pragma scheduling off
-void imicemountain_init(int* obj)
-{
-    IMIceMountainState* sub = ((GameObject*)obj)->extra;
-    int i;
-    ((GameObject*)obj)->animEventCallback = (void*)IMIceMountain_SeqFn;
-    for (i = 1; (u8)i <= 0xd; i++)
-    {
-        gameBitFn_800ea2e0(i);
-    }
-    sub->warningTextTimer = lbl_803E46E0;
-    MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 1, 0);
-    MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 5, 1);
-    unlockLevel(0, 0, 1);
-    if (GameBit_Get(0x379) != 0)
-    {
-        MEVT_SET(((GameObject *)obj)->anim.mapEventSlot, 2);
-    }
-    sub->mapEventState = MEVT_QUERY(((GameObject *)obj)->anim.mapEventSlot);
-    switch (sub->mapEventState)
-    {
-    case 1:
-        if (GameBit_Get(0x72) != 0)
-        {
-            if (GameBit_Get(0x379) != 0)
-            {
-                sub->eventState = 5;
-            }
-            else
-            {
-                GameBit_Set(0x3a3, 0);
-                GameBit_Set(0x3a2, 0);
-                GameBit_Set(0xcb, 0);
-                GameBit_Set(0x379, 0);
-                sub->eventState = 3;
-            }
-        }
-        else
-        {
-            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 0, 1);
-            if (GameBit_Get(0xadc) != 0 && GameBit_Get(0xadd) != 0)
-            {
-                MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 0xb, 1);
-            }
-            if (GameBit_Get(0x6e) != 0)
-            {
-                sub->eventState = 1;
-            }
-            else
-            {
-                MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 2, 1);
-                sub->eventState = 7;
-            }
-        }
-        MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 3, 1);
-        MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 4, 1);
-        MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 7, 1);
-        break;
-    case 2:
-        GameBit_Set(0x3a3, 0);
-        GameBit_Set(0x3a2, 0);
-        GameBit_Set(0xce, 0);
-        GameBit_Set(0x37b, 0);
-        GameBit_Set(0xc8, 0);
-        GameBit_Set(0x374, 0);
-        GameBit_Set(0x37c, 0);
-        MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 2, 0);
-        break;
-    case 5:
-        break;
-    }
-}
+void imicemountain_init(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 #undef MEVT_TRIGGER
@@ -456,17 +382,11 @@ void crrockfall_hitDetect(void)
 {
 }
 
-void magiclight_hitDetect(void)
-{
-}
+void magiclight_hitDetect(void);
 
-void magiclight_release(void)
-{
-}
+void magiclight_release(void);
 
-void magiclight_initialise(void)
-{
-}
+void magiclight_initialise(void);
 
 extern u32 randomGetRange(int min, int max);
 extern f32 lbl_803E4740;
@@ -477,71 +397,22 @@ extern f32 lbl_803E4744;
  * the spawn subtype to a light-pair / intensity preset. */
 #pragma scheduling off
 #pragma peephole off
-void magiclight_init(int* obj, u8* params)
-{
-    MagicLightState* sub;
-    ((GameObject*)obj)->unkF4 = 0;
-    *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)magiclight_SeqFn;
-    if (((GameObject*)obj)->anim.seqId == 0x172)
-    {
-        return;
-    }
-    sub = ((GameObject*)obj)->extra;
-    sub->lifetime = (s16)randomGetRange(0xc8, 0x258);
-    sub->subtype = (s8) * (s16*)(params + 0x1a);
-    sub->inRange = 0;
-    if (((GameObject*)obj)->anim.seqId == 0x16b)
-    {
-        switch (sub->subtype)
-        {
-        case 0:
-            sub->enterAction = 0x90;
-            sub->leaveAction = 0x91;
-            sub->triggerRadius = lbl_803E4740;
-            break;
-        case 1:
-            sub->enterAction = 0x92;
-            sub->leaveAction = 0x93;
-            sub->triggerRadius = lbl_803E4740;
-            break;
-        default:
-            sub->enterAction = 0x94;
-            sub->leaveAction = 0x95;
-            sub->triggerRadius = lbl_803E4744;
-            break;
-        case 3:
-            sub->enterAction = 0x187;
-            sub->leaveAction = 0x5;
-            sub->triggerRadius = lbl_803E4740;
-            break;
-        }
-        sub->unk10 = 0x12d;
-    }
-    else
-    {
-        sub->unk10 = 0x12d;
-    }
-}
+void magiclight_init(int* obj, u8* params);
 #pragma peephole reset
 #pragma scheduling reset
-void dll_16C_release(void)
-{
-}
+void dll_16C_release(void);
 
-void dll_16C_initialise(void)
-{
-}
+void dll_16C_initialise(void);
 
 
 /* 8b "li r3, N; blr" returners. */
-int imicemountain_getExtraSize(void) { return 0x14; }
-int imicemountain_getObjectTypeId(void) { return 0x0; }
+int imicemountain_getExtraSize(void);
+int imicemountain_getObjectTypeId(void);
 int crrockfall_getExtraSize(void) { return 0x14; }
 int crrockfall_getObjectTypeId(void) { return 0x0; }
-int magiclight_getObjectTypeId(void) { return 0x0; }
-int dll_16C_getExtraSize(void) { return 0x24; }
-int dll_16C_getObjectTypeId(void) { return 0x3; }
+int magiclight_getObjectTypeId(void);
+int dll_16C_getExtraSize(void);
+int dll_16C_getObjectTypeId(void);
 
 /* Pattern wrappers. */
 extern void* lbl_803DDB40;
@@ -553,11 +424,7 @@ extern f32 lbl_803E4708;
 extern f32 lbl_803E473C;
 extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
-void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E46D8);
-}
+void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 #pragma peephole reset
 
 #pragma peephole off
@@ -570,13 +437,7 @@ void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
-{
-    if (((GameObject*)obj)->anim.seqId == 0x172 && visible != 0)
-    {
-        objRenderFn_8003b8f4(lbl_803E473C);
-    }
-}
+void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 #pragma peephole reset
 
 #pragma scheduling off
@@ -619,49 +480,20 @@ f32 fn_801ACCFC(int obj)
 }
 #pragma dont_inline reset
 
-void magiclight_free(int obj)
-{
-    MagicLightState* inner = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->anim.seqId != 0x172)
-    {
-        if ((s8)inner->inRange != 0)
-        {
-            getLActions(obj, obj, (u16)inner->leaveAction, 0, 0, 0);
-        }
-        (*gExpgfxInterface)->freeSource2((u32)obj);
-    }
-}
+void magiclight_free(int obj);
 
-void magiclight_update(int obj)
-{
-    if (((GameObject*)obj)->anim.seqId != 0x172 && ((GameObject*)obj)->unkF4 == 0)
-    {
-        *(s16*)obj = 0;
-        ((GameObject*)obj)->anim.rotY = 0;
-        ((GameObject*)obj)->anim.rotZ = 0;
-        (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-        ((GameObject*)obj)->unkF4 = 1;
-    }
-}
+void magiclight_update(int obj);
 #pragma peephole reset
 #pragma scheduling reset
 
 /* if (o->_X == K) return A; else return B; */
 #pragma peephole off
-int magiclight_getExtraSize(int* obj)
-{
-    if (((GameObject*)obj)->anim.seqId == 0x172) return 0x0;
-    return 0x14;
-}
+int magiclight_getExtraSize(int* obj);
 #pragma peephole reset
 
 extern void Obj_FreeObject(int*);
 
-void dll_16C_free(int* obj)
-{
-    int* p = (int*)obj[0xc8 / 4];
-    if (p != NULL) Obj_FreeObject(p);
-}
+void dll_16C_free(int* obj);
 
 /* conditional init/free pair. */
 void crrockfall_release(void)
@@ -677,18 +509,7 @@ void crrockfall_release(void)
 extern void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
 #pragma scheduling off
 #pragma peephole off
-void dll_16C_hitDetect(void* obj)
-{
-    Dll16CState* extra = ((GameObject*)obj)->extra;
-    void* p = extra->linkedObj;
-    if (p != NULL)
-    {
-        if ((*(int (**)(void*))(**(int**)((char*)p + 0x68) + 0x38))(p) == 2)
-        {
-            dll_16C_syncSubObjectTransform(obj, extra->linkedObj, 0, 0, 0, 0, 0, 0, 0);
-        }
-    }
-}
+void dll_16C_hitDetect(void* obj);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -697,122 +518,24 @@ extern void ObjPath_GetPointWorldPosition(int* obj, int idx, f32* x, f32* y, f32
 extern f32 lbl_803E4758;
 #pragma scheduling off
 #pragma peephole off
-void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
-{
-    Dll16CState* extra;
-    int* p;
-    int hit;
-
-    if (((GameObject*)obj)->anim.seqId != 883)
-    {
-        if (GameBit_Get(110) != 0)
-        {
-            if (GameBit_Get(898) == 0) return;
-        }
-        extra = ((GameObject*)obj)->extra;
-        p = (int*)extra->linkedObj;
-        hit = 0;
-        if (p != NULL)
-        {
-            if ((*(int (**)(int*))(**(int**)((char*)p + 0x68) + 0x38))(p) == 2)
-            {
-                hit = 1;
-            }
-        }
-        if (hit != 0)
-        {
-            ((GameObject*)obj)->anim.flags |= 8;
-            visible = (s8)objUpdateOpacity(p);
-            dll_16C_syncSubObjectTransform(obj, p, p1, p2, p3, p4, visible, extra->opacity, 1);
-        }
-        else
-        {
-            ((GameObject*)obj)->anim.flags &= ~8;
-        }
-        if ((s8)visible != 0 && extra->opacity != 0)
-        {
-            u8 saved = *(u8*)((char*)obj + 0x37);
-            if (hit != 0)
-            {
-                *(u8*)((char*)obj + 0x37) = extra->opacity;
-            }
-            ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4758);
-            ObjPath_GetPointWorldPosition(obj, 1, &extra->pathPointX, &extra->pathPointY, &extra->pathPointZ, 0);
-            *(u8*)((char*)obj + 0x37) = saved;
-        }
-    }
-    else
-    {
-        ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4758);
-    }
-}
+void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    int i;
-    *(u32*)((char*)((GameObject*)obj)->extra + 4) |= 1;
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        if (animUpdate->eventIds[i] == 2)
-        {
-            GameBit_Set(888, 0);
-            GameBit_Set(953, 0);
-        }
-    }
-    return 0;
-}
+int IMIceMountain_SeqFn(void* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma scheduling reset
 
 /* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
 #pragma scheduling off
-void dll_16C_init(void* obj, void* arg2)
-{
-    Dll16CState* extra;
-    ((GameObject*)obj)->animEventCallback = (void*)dll_16C_SeqFn;
-    if (((GameObject*)obj)->anim.modelState != NULL)
-    {
-        ((GameObject*)obj)->anim.modelState->flags |= 0x4000;
-        ((GameObject*)obj)->anim.modelState->shadowTintA = 100;
-        ((GameObject*)obj)->anim.modelState->shadowTintB = 150;
-    }
-    extra = ((GameObject*)obj)->extra;
-    extra->linkedObj = NULL;
-    *(u8*)&extra->subObjIndex = *(u8*)((char*)arg2 + 0x27);
-    extra->opacity = 0xff;
-}
+void dll_16C_init(void* obj, void* arg2);
 #pragma scheduling reset
 
 extern float Vec_distance(float* a, float* b);
 extern f32 lbl_803E4738;
 #pragma scheduling off
 #pragma peephole off
-int magiclight_SeqFn(int* obj)
-{
-    MagicLightState* state;
-    int* player;
-    f32 dist;
-
-    if (((GameObject*)obj)->anim.seqId == 370) return 0;
-
-    state = ((GameObject*)obj)->extra;
-    player = (int*)Obj_GetPlayerObject();
-    dist = Vec_distance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
-
-    if (dist < state->triggerRadius && state->inRange == 0)
-    {
-        state->inRange = 1;
-        getLActions(obj, obj, (u16)state->enterAction, 0, 0, 0);
-    }
-    else if (dist > lbl_803E4738 + state->triggerRadius && state->inRange != 0)
-    {
-        state->inRange = 0;
-        getLActions(obj, obj, (u16)state->leaveAction, 0, 0, 0);
-    }
-    return 0;
-}
+int magiclight_SeqFn(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -828,107 +551,7 @@ extern void warpToMap(int mapId, int flags);
  * through jumptable_80323698 (states 1..7; state 0 idles). */
 #pragma scheduling off
 #pragma peephole off
-void imicemountain_updateEventState(int* obj)
-{
-    IMIceMountainState* extra = ((GameObject*)obj)->extra;
-    switch (extra->eventState)
-    {
-    case 7:
-        if (GameBit_Get(0x6e) != 0)
-        {
-            extra->eventState = 1;
-            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 2, 0);
-        }
-        break;
-    case 1:
-        if (GameBit_Get(0xadc) != 0 && GameBit_Get(0xadd) != 0)
-        {
-            GameBit_Set(0xade, 1);
-            extra->eventState = 2;
-            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 11, 1);
-        }
-        else if (GameBit_Get(0x70) != 0)
-        {
-            extra->eventState = 2;
-            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 11, 1);
-        }
-        break;
-    case 2:
-        if (GameBit_Get(0x70) != 0)
-        {
-            extra->eventState = 3;
-            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 6, 1);
-        }
-        break;
-    case 3:
-        if (GameBit_Get(0x72) != 0)
-        {
-            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 0, 0);
-        }
-        if (GameBit_Get(0x3a2) != 0)
-        {
-            extra->eventState = 4;
-            GameBit_Set(0xe5d, 1);
-            GameBit_Set(0xe5e, 1);
-            GameBit_Set(0xe5f, 1);
-            GameBit_Set(0xe60, 1);
-            GameBit_Set(0xe61, 1);
-            GameBit_Set(0xe62, 1);
-            GameBit_Set(0xe63, 1);
-            GameBit_Set(0xe64, 1);
-            GameBit_Set(0xe65, 1);
-            GameBit_Set(0xe66, 1);
-            GameBit_Set(0xe67, 1);
-            GameBit_Set(0xe68, 1);
-            GameBit_Set(0xe69, 1);
-            GameBit_Set(0xe6a, 1);
-            GameBit_Set(0xe6b, 1);
-        }
-        if (((GameObject*)obj)->unkF4 == 0)
-        {
-            getEnvfxAct(obj, obj, 0xa3, 0);
-            getEnvfxAct(obj, obj, 0x9e, 0);
-            getEnvfxAct(obj, obj, 0x119, 0);
-            getLActions(obj, obj, 0x15b, 0, 0, 0);
-            getLActions(obj, obj, 0x15c, 0, 0, 0);
-            getLActions(obj, obj, 0x17c, 0, 0, 0);
-            getLActions(obj, obj, 0x17b, 0, 0, 0);
-            (*gCloudActionInterface)->func09Nop(1);
-            ((GameObject*)obj)->unkF4 = 1;
-        }
-        break;
-    case 4:
-        fn_801AC108(obj, (int*)extra);
-        break;
-    case 5:
-        if ((extra->latchFlags & 1) != 0)
-        {
-            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 3, 0);
-            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 4, 0);
-            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 6, 0);
-            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 7, 0);
-            extra->eventState = 0;
-            MEVT_SET(((GameObject *)obj)->anim.mapEventSlot, 2);
-        }
-        break;
-    case 6:
-        if ((extra->latchFlags & 1) != 0)
-        {
-            extra->warpCountdown = 2;
-        }
-        if (extra->warpCountdown > 0)
-        {
-            s8 cnt = extra->warpCountdown - 1;
-            extra->warpCountdown = cnt;
-            if (cnt == 0)
-            {
-                GameBit_Set(0x4e5, 0);
-                warpToMap(0x1a, 0);
-            }
-        }
-        break;
-    }
-}
+void imicemountain_updateEventState(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 #undef MEVT_TRIGGER
@@ -949,79 +572,7 @@ typedef struct
  * from a small id table, then run the map-event sub-object state callbacks. */
 #pragma scheduling off
 #pragma peephole off
-int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    int* p;
-    int* extra = ((GameObject*)obj)->extra;
-    s16 ids[5];
-
-    ((Dll16CState*)extra)->opacity = 0xff;
-    p = (int*)*extra;
-    if (animUpdate->triggerCommand == 3)
-    {
-        ((Dll16CState*)extra)->subObjIndex = -1;
-        animUpdate->triggerCommand = 0;
-    }
-    *(Blob10*)ids = *(Blob10*)lbl_802C2308;
-
-    if (((Dll16CState*)extra)->subObjIndex != ((Dll16CState*)extra)->subObjIndexApplied)
-    {
-        if (((GameObject*)obj)->childObjs[0] != NULL)
-        {
-            Obj_FreeObject(((GameObject*)obj)->childObjs[0]);
-            *(int*)&((GameObject*)obj)->childObjs[0] = 0;
-            ((GameObject*)obj)->childCount = 0;
-        }
-        if (Obj_IsLoadingLocked())
-        {
-            s8 idx = ((Dll16CState*)extra)->subObjIndex;
-            if (idx > 0)
-            {
-                *(int*)&((GameObject*)obj)->childObjs[0] =
-                    Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1,
-                                    *(int*)&((GameObject*)obj)->anim.parent);
-                ((GameObject*)obj)->childCount = 1;
-            }
-            ((Dll16CState*)extra)->subObjIndexApplied = ((Dll16CState*)extra)->subObjIndex;
-        }
-        else
-        {
-            ((Dll16CState*)extra)->subObjIndexApplied = 0;
-        }
-    }
-
-    animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
-
-    if (p != NULL && animUpdate->triggerCommand == 2)
-    {
-        ((Dll16CState*)extra)->unk04 = lbl_803E4758;
-        ((Dll16CState*)extra)->snapX = ((Dll16CState*)extra)->pathPointX;
-        ((Dll16CState*)extra)->snapY = ((Dll16CState*)extra)->pathPointY;
-        ((Dll16CState*)extra)->snapZ = ((Dll16CState*)extra)->pathPointZ;
-        (*(void (**)(int*, int))(**(int**)((char*)p + 0x68) + 0x3c))(p, 2);
-        ObjAnim_SetCurrentMove((int)obj, 0x100, lbl_803E4748, 1);
-        if (((GameObject*)obj)->anim.modelState != NULL)
-        {
-            ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
-        }
-        animUpdate->hitVolumePair &= ~4;
-        animUpdate->triggerCommand = 0;
-    }
-    else if (p != NULL && animUpdate->triggerCommand == 1)
-    {
-        (*(void (**)(int*, int))(**(int**)((char*)p + 0x68) + 0x3c))(p, 0);
-        animUpdate->triggerCommand = 0;
-    }
-
-    if (p != NULL)
-    {
-        if ((*(int (**)(int*))(**(int**)((char*)p + 0x68) + 0x38))(p) == 2)
-        {
-            animUpdate->hitVolumePair &= ~3;
-        }
-    }
-    return 0;
-}
+int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1029,38 +580,7 @@ int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
  * extra block, optionally re-issuing a move on the sub-object first. */
 #pragma scheduling off
 #pragma peephole off
-void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i)
-{
-    if (i != 0 && (s8)g != 0 && h > 0)
-    {
-        u8 saved = *(u8*)((char*)b + 0x37);
-        *(u8*)((char*)b + 0x37) = h;
-        (*(void (**)(void*, int, int, int, int, int))(**(int**)&((GameObject*)b)->anim.dll + 0x10))(b, c, d, e, f, -1);
-        *(u8*)((char*)b + 0x37) = saved;
-    }
-    ((GameObject*)a)->anim.previousWorldPosX = ((GameObject*)a)->anim.worldPosX;
-    ((GameObject*)a)->anim.previousWorldPosY = ((GameObject*)a)->anim.worldPosY;
-    ((GameObject*)a)->anim.previousWorldPosZ = ((GameObject*)a)->anim.worldPosZ;
-    ((GameObject*)a)->anim.previousLocalPosX = ((GameObject*)a)->anim.localPosX;
-    ((GameObject*)a)->anim.previousLocalPosY = ((GameObject*)a)->anim.localPosY;
-    ((GameObject*)a)->anim.previousLocalPosZ = ((GameObject*)a)->anim.localPosZ;
-    {
-        f32 x, y, z;
-        (*(void (**)(void*, f32*, f32*, f32*))(**(int**)&((GameObject*)b)->anim.dll + 0x28))(b, &x, &y, &z);
-        ((GameObject*)a)->anim.localPosX = x;
-        ((GameObject*)a)->anim.localPosY = y;
-        ((GameObject*)a)->anim.localPosZ = z;
-    }
-    ((GameObject*)a)->anim.rotX = ((GameObject*)b)->anim.rotX;
-    ((GameObject*)a)->anim.rotY = ((GameObject*)b)->anim.rotY;
-    ((GameObject*)a)->anim.rotZ = ((GameObject*)b)->anim.rotZ;
-    ((GameObject*)a)->anim.worldPosX = ((GameObject*)a)->anim.localPosX;
-    ((GameObject*)a)->anim.worldPosY = ((GameObject*)a)->anim.localPosY;
-    ((GameObject*)a)->anim.worldPosZ = ((GameObject*)a)->anim.localPosZ;
-    ((GameObject*)a)->anim.velocityX = ((GameObject*)b)->anim.velocityX;
-    ((GameObject*)a)->anim.velocityY = ((GameObject*)b)->anim.velocityY;
-    ((GameObject*)a)->anim.velocityZ = ((GameObject*)b)->anim.velocityZ;
-}
+void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1076,69 +596,7 @@ extern f32 lbl_803E46DC;
 /* imicemountain_update: lazy-spawn the ambient effects, run the active state,
  * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
 #pragma scheduling off
-void imicemountain_update(int* obj)
-{
-    IMIceMountainState* extra = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->unkF4 == 0)
-    {
-        getEnvfxAct(obj, obj, 0xa3, 0);
-        getEnvfxAct(obj, obj, 0x9e, 0);
-        getEnvfxAct(obj, obj, 0x104, 0);
-        (*gCloudActionInterface)->func09Nop(1);
-        ((GameObject*)obj)->unkF4 = 1;
-    }
-    switch (extra->mapEventState)
-    {
-    case 1:
-        imicemountain_updateEventState(obj);
-        break;
-    case 2:
-        if (GameBit_Get(0x3a3) != 0)
-        {
-            fn_801AC01C(obj);
-        }
-        break;
-    case 5:
-        break;
-    }
-    extra->latchFlags &= ~1;
-    if (extra->warningTextTimer > lbl_803E46DC)
-    {
-        gameTextSetColor(255, 255, 255, 255);
-        gameTextShow(0x351);
-        extra->warningTextTimer = extra->warningTextTimer - timeDelta;
-        if (extra->warningTextTimer < *(f32*)&lbl_803E46DC)
-        {
-            extra->warningTextTimer = lbl_803E46DC;
-        }
-    }
-    if (((int (*)(int))((int*)*gSHthorntailAnimationInterface)[0x24 / 4])(0) != 0)
-    {
-        if (extra->musicTrack != -1)
-        {
-            extra->musicTrack = -1;
-            if ((extra->latchFlags & 8) != 0)
-            {
-                Music_Trigger(26, 0);
-            }
-        }
-    }
-    else
-    {
-        if (extra->musicTrack != 26)
-        {
-            extra->musicTrack = 26;
-            if ((extra->latchFlags & 8) != 0)
-            {
-                Music_Trigger(26, 1);
-            }
-        }
-    }
-    SCGameBitLatch_Update((char*)extra + 4, 2, 705, 568, 493, 178);
-    SCGameBitLatch_Update((char*)extra + 4, 16, 442, 441, 470, 180);
-    SCGameBitLatch_Update((char*)extra + 4, 4, -1, -1, 928, 233);
-    SCGameBitLatch_Update((char*)extra + 4, 8, -1, -1, 929, extra->musicTrack);
-}
+void imicemountain_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1153,109 +611,7 @@ extern f32 lbl_803E4764;
  * its move and fade opacity by distance to the player. */
 #pragma scheduling off
 #pragma peephole off
-void dll_16C_update(int* obj)
-{
-    Dll16CState* extra = ((GameObject*)obj)->extra;
-    s16 ids[5];
-
-    *(Blob10*)ids = *(Blob10*)lbl_802C2308;
-    if (extra->subObjIndex != extra->subObjIndexApplied)
-    {
-        if (((GameObject*)obj)->childObjs[0] != NULL)
-        {
-            Obj_FreeObject(((GameObject*)obj)->childObjs[0]);
-            *(int*)&((GameObject*)obj)->childObjs[0] = 0;
-            ((GameObject*)obj)->childCount = 0;
-        }
-        if (Obj_IsLoadingLocked())
-        {
-            s8 idx = extra->subObjIndex;
-            if (idx > 0)
-            {
-                *(int*)&((GameObject*)obj)->childObjs[0] =
-                    Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1,
-                                    *(int*)&((GameObject*)obj)->anim.parent);
-                ((GameObject*)obj)->childCount = 1;
-            }
-            extra->subObjIndexApplied = extra->subObjIndex;
-        }
-        else
-        {
-            extra->subObjIndexApplied = 0;
-        }
-    }
-
-    if (extra->linkedObj == NULL)
-    {
-        int* objs;
-        int count;
-        int i;
-        int sel;
-        objs = ObjGroup_GetObjects(10, &count);
-        switch (((GameObject*)obj)->anim.seqId)
-        {
-        case 365:
-        case 883:
-        default:
-            sel = 364;
-            break;
-        case 368:
-            sel = 367;
-            break;
-        }
-        for (i = 0; i < count; i++)
-        {
-            if (sel == *(s16*)((char*)objs[i] + 0x46))
-            {
-                extra->linkedObj = (void*)objs[i];
-                i = count;
-            }
-        }
-    }
-
-    if (((GameObject*)obj)->anim.seqId == 883 || GameBit_Get(0x3a2) != 0)
-    {
-        int* sub = (int*)extra->linkedObj;
-        f32 blend;
-        f32 a, b;
-        if (((GameObject*)obj)->anim.currentMove != 0x100)
-        {
-            ObjAnim_SetCurrentMove((int)obj, 0x100, lbl_803E4748, 0);
-        }
-        (*(void (**)(int*, f32*))(**(int**)((char*)sub + 0x68) + 0x44))(sub, &blend);
-        blend = lbl_803E474C;
-        (*(void (**)(int*, f32*, f32*))(**(int**)((char*)sub + 0x68) + 0x40))(sub, &a, &b);
-        ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, blend, (f32)(u32)framesThisStep, NULL);
-        if (extra->linkedObj != NULL)
-        {
-            f32 t;
-            int* player = (int*)Obj_GetPlayerObject();
-            t = Vec_distance((f32*)((char*)extra->linkedObj + 0x18), &((GameObject*)player)->anim.worldPosX);
-            t = (t - lbl_803E475C) / lbl_803E4760;
-            if (t < lbl_803E4748)
-            {
-                t = lbl_803E4748;
-            }
-            else if (t > lbl_803E4758)
-            {
-                t = lbl_803E4758;
-            }
-            extra->opacity = (int)(lbl_803E4764 * (lbl_803E4758 - t));
-            if (((GameObject*)obj)->anim.modelState != NULL)
-            {
-                ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
-            }
-        }
-        else
-        {
-            extra->opacity = 0xff;
-            if (((GameObject*)obj)->anim.modelState != NULL)
-            {
-                ((GameObject*)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
-            }
-        }
-    }
-}
+void dll_16C_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 

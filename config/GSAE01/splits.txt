@@ -1467,8 +1467,17 @@ main/dll/dll_018B_cclevcontro.c:
 main/dll/dll_801AC01C.c:
 	.text       start:0x801AC01C end:0x801AC248
 
-main/dll/DIMboulder.c:
-	.text       start:0x801AC248 end:0x801AE0EC
+main/dll/dll_0169_imicemounta.c:
+	.text       start:0x801AC248 end:0x801ACCFC
+
+main/dll/dll_016A_crrockfall.c:
+	.text       start:0x801ACCFC end:0x801AD440
+
+main/dll/dll_016B_dimmagiclig.c:
+	.text       start:0x801AD440 end:0x801AD7E4
+
+main/dll/dll_016C_dll16c.c:
+	.text       start:0x801AD7E4 end:0x801AE0EC
 
 main/dll/dll_016D_imicepillar.c:
 	.text       start:0x801AE0EC end:0x801AE144
