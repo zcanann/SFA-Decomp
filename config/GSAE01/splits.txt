@@ -1092,9 +1092,26 @@ main/dll/dll_00FD.c:
 	.text       start:0x8017EF6C end:0x8017F4F4
 	.data       start:0x80321530 end:0x80321568
 
-main/dll/cfprisonuncle.c:
-	.text       start:0x8017F4F4 end:0x801816F8
-	.data       start:0x80321568 end:0x803216B8
+main/dll/dll_00FE_magicplant.c:
+	.text       start:0x8017F4F4 end:0x8017FF0C
+
+main/dll/dll_0100_trickywarp.c:
+	.text       start:0x8017FF0C end:0x8018023C
+
+main/dll/dll_0101_trickyguard.c:
+	.text       start:0x8018023C end:0x80180338
+
+main/dll/dll_0102_staypoint.c:
+	.text       start:0x80180338 end:0x801804C8
+
+main/dll/dll_0118_duster.c:
+	.text       start:0x801804C8 end:0x80180DC8
+
+main/dll/dll_0103_curvefish.c:
+	.text       start:0x80180DC8 end:0x801814D0
+
+main/dll/dll_801814D0.c:
+	.text       start:0x801814D0 end:0x801816F8
 
 main/dll/dll_0104_smallbasket.c:
 	.text       start:0x801816F8 end:0x80183204
