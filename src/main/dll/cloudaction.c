@@ -108,23 +108,23 @@ void renderClouds(int a, int b, int c, int d)
     (*(void (**)(u8*, u8*, u8*, u8*, u8*, u8*))(*(char**)gSHthorntailAnimationInterface + 0x40))(
         &p0, &p1, &p2, &p3, &p4, &p5);
 
-    if (*(void**)&lbl_803DD1F0 != NULL)
+    if (gCloudOverrideObject != NULL)
     {
-        fn_8008DAE8(lbl_803DD1F0);
-        model = Obj_GetActiveModel(lbl_803DD1F0);
+        fn_8008DAE8((int)gCloudOverrideObject);
+        model = Obj_GetActiveModel((int)gCloudOverrideObject);
         *(u16*)(model + 0x18) = *(u16*)(model + 0x18) & ~8;
-        *(u8*)(lbl_803DD1F0 + 0x37) = 0xff;
+        gCloudOverrideObject->anim.alpha = 0xff;
         v = *(f32*)(view + 0xc);
-        *(f32*)(lbl_803DD1F0 + 0x18) = v;
-        *(f32*)(lbl_803DD1F0 + 0xc) = v;
+        gCloudOverrideObject->anim.worldPosX = v;
+        gCloudOverrideObject->anim.localPosX = v;
         v = *(f32*)(view + 0x10);
-        *(f32*)(lbl_803DD1F0 + 0x1c) = v;
-        *(f32*)(lbl_803DD1F0 + 0x10) = v;
+        gCloudOverrideObject->anim.worldPosY = v;
+        gCloudOverrideObject->anim.localPosY = v;
         v = *(f32*)(view + 0x14);
-        *(f32*)(lbl_803DD1F0 + 0x20) = v;
-        *(f32*)(lbl_803DD1F0 + 0x14) = v;
+        gCloudOverrideObject->anim.worldPosZ = v;
+        gCloudOverrideObject->anim.localPosZ = v;
         fn_800412B8(p0, p1, p2);
-        objRender(a, b, c, d, lbl_803DD1F0, 1);
+        objRender(a, b, c, d, (int)gCloudOverrideObject, 1);
         return;
     }
 
@@ -399,5 +399,5 @@ void cloudaction_initialise(void)
 {
     lbl_803DB618[0] = -1;
     lbl_803DB618[1] = -1;
-    lbl_803DD1F0 = 0;
+    gCloudOverrideObject = NULL;
 }

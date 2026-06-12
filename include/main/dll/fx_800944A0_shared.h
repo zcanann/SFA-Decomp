@@ -163,7 +163,6 @@ extern f32 lbl_803DF34C;
 extern f32 lbl_803DB790;
 extern f32 lbl_803DD20C;
 extern int lbl_803DB618[2];
-extern int lbl_803DD1F0;
 extern u8 gWaterfxPendingImpactPositionValid;
 extern f32 gWaterfxPendingImpactPosition[];
 extern f32 PSVECSquareDistance(f32 *a, f32 *b);
