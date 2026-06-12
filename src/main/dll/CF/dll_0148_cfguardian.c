@@ -643,9 +643,12 @@ int waterSpellStone1Fn_8019b4c8(int obj)
                     ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
                     ((GameObject*)obj)->anim.velocityY = lbl_803E4110;
                     ObjGroup_RemoveObject(obj, 0x16);
-                    ((GameObject*)obj)->anim.velocityX = lbl_803E4110;
-                    ((GameObject*)obj)->anim.velocityY = lbl_803E414C;
-                    ((GameObject*)obj)->anim.velocityZ = lbl_803E4110;
+                    {
+                        f32 fz = lbl_803E4110;
+                        ((GameObject*)obj)->anim.velocityX = fz;
+                        ((GameObject*)obj)->anim.velocityY = lbl_803E414C;
+                        ((GameObject*)obj)->anim.velocityZ = fz;
+                    }
                     sub->landingPhase = 2;
                     sub->flagsA9B &= ~1;
                 }
