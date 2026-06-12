@@ -4,47 +4,6 @@
 #include "main/dll/modgfx.h"
 #include "main/resource.h"
 
-typedef struct ModgfxEffectSlot
-{
-    u8 pad0[0x4 - 0x0];
-    void* sourceObj;
-    u8 pad8[0xC - 0x8];
-    s16 unkC;
-    u8 padE[0x18 - 0xE];
-    f32 posOffsetX;
-    f32 posOffsetY;
-    f32 posOffsetZ;
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
-    u8 pad30[0x60 - 0x30];
-    f32 unk60;
-    f32 unk64;
-    f32 unk68;
-    u8 pad6C[0x9C - 0x6C];
-    void* unk9C;
-    u8 padA0[0xA4 - 0xA0];
-    s32 sourceFlags;
-    u8 padA8[0xBC - 0xA8];
-    f32 alphaDelta;
-    f32 alphaCurrent;
-    u8 padC4[0xFC - 0xC4];
-    s16 frameIndex;
-    s16 frameDuration;
-    u8 pad100[0x106 - 0x100];
-    s16 unk106;
-    s16 unk108;
-    s16 unk10A;
-    s16 animSlotId;
-    u8 pad10E[0x139 - 0x10E];
-    s8 emitterCount;
-    u8 unk13A;
-    u8 pad13B[0x13C - 0x13B];
-    u8 pendingFrameIdx;
-    u8 pad13D[0x13E - 0x13D];
-    u8 unk13E;
-    u8 pad13F[0x140 - 0x13F];
-} ModgfxEffectSlot;
 
 
 typedef struct ModgfxVertexData
@@ -145,7 +104,6 @@ static inline int* Modgfx_GetActiveModel(void* obj)
 
 #define MODGFX_ACTIVE_EFFECT_COUNT 0x32
 #define PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE 0x200000
-#define PARTFX_ACTIVE_EFFECT_COUNT 0x32
 #define PARTFX_STAGE_COUNT 7
 
 typedef struct ModgfxActiveEffect
@@ -328,14 +286,10 @@ static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
 }
 
 extern undefined4 FUN_800033a8();
-extern void* memcpy(void* dst, const void* src, u32 n);
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017814();
 extern uint FUN_80017830();
-extern void* mmAlloc(int size, int heap, int flags);
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80053754();
 extern undefined4 FUN_802420e0();
@@ -343,7 +297,6 @@ extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
 
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
-extern EffectInterface** gPartfxInterface;
 extern f64 DOUBLE_803e00c0;
 extern f64 DOUBLE_803e00c8;
 extern f32 lbl_803DC450;
@@ -1747,59 +1700,32 @@ void projgfx_onMapSetup(void);
 
 void projgfx_initialise(void);
 
-void playerShadow_func03_nop(void);
 
-void playerShadow_release_nop(void);
 
-void playerShadow_initialise_nop(void);
 
-void boneParticleEffect_func08_nop(void);
 
-void boneParticleEffect_func06_nop(void);
 
-void boneParticleEffect_func04_nop(void);
 
-void boneParticleEffect_func03_nop(void);
 
-void partfx_onMapSetup(void);
 
-void Effect1_func03_nop(void);
 
-void Effect1_release(void);
 
-void Effect1_initialise(void);
 
-void Effect2_func03_nop(void);
 
-void Effect2_release(void);
 
-void Effect2_initialise(void);
 
-void Effect3_func05_nop(void);
 
-void Effect3_func03_nop(void);
 
-void Effect3_release(void);
 
-void Effect3_initialise(void);
 
-void Effect4_func03_nop(void);
 
-void Effect4_release(void);
 
-void Effect4_initialise(void);
 
-void Effect5_func03_nop(void);
 
-void Effect5_release(void);
 
-void Effect5_initialise(void);
 
-void Effect6_func03_nop(void);
 
-void Effect6_release(void);
 
-void Effect6_initialise(void);
 
 void Effect7_func03_nop(void)
 {
@@ -1815,56 +1741,34 @@ void Effect7_initialise(void)
 
 void Effect8_func03_nop(void);
 
-void Effect8_release(void);
 
-void Effect8_initialise(void);
 
-void Effect9_func03_nop(void);
 
-void Effect9_release(void);
 
-void Effect9_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
 int projgfx_getObjectTypeId(void);
 
 /* sda21 accessors. */
-extern u8 lbl_8039BE98[];
-extern ModgfxPendingSpawn gModgfxPendingSpawnQueue[];
-extern s16 gModgfxLastSpawnHandle;
-extern s16 gModgfxSequenceParamIndex;
-extern ModgfxPendingSpawn* gModgfxPendingSpawnWriteCursor;
-extern ModgfxPendingSpawn* gModgfxPendingSpawnStartCursor;
-#define gModgfxSpawnContext (*(ModgfxSpawnContext *)lbl_8039BE98)
 #pragma scheduling off
 #pragma peephole off
-s16 dll_0B_func18(void);
 
-void dll_0B_func17(u32 flags);
 
-void dll_0B_func15(void* params);
 
-void dll_0B_func14(s16 value);
 
-void dll_0B_func13(s16 x);
 
-void dll_0B_func12(void);
 
-void dll_0B_func11(int modelOrResource, float posX, float posY, float posZ, s16 param14, int param10);
 
-void dll_0B_func10(void);
 #pragma peephole reset
 #pragma scheduling reset
 
 /* OSReport(literal) wrapper. */
-extern void OSReport(const char* fmt, ...);
 #pragma scheduling off
 void projgfx_release_doUnsupported(void);
 #pragma scheduling reset
 
 /* OSReport-stub returns. */
 
-#define PROJGFX_UNSUPPORTED_FALSE_RETURN 0
 
 #pragma scheduling off
 int projgfx_rayhit_doUnsupported(void);
@@ -1901,168 +1805,63 @@ char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer suppo
 static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
 /* Small stub recoveries (drifted unit, add-as-new). */
-extern u8 lbl_803DD282;
-extern u8 gPlayerShadowMode;
-extern u8 gPartfxCachedResourceCount;
-extern void fn_800A1040(s16 a, int b);
-extern s16 gPartfxResourceTimeouts[];
-extern u32 lbl_802C2160[];
-extern f32 lbl_803DF46C;
-extern f32 lbl_803DF488;
-extern f32 lbl_803DF48C;
-extern f32 lbl_803DF490;
-extern f32 lbl_803DF494;
-extern f32 lbl_803DF498;
-extern f32 lbl_803DF49C;
-extern f32 lbl_803DF4A0;
-extern f32 lbl_803DF4A4;
-extern void hitDetect_calcSweptSphereBounds(void* out, void* top, void* bottom, void* params, int count);
-extern void hitDetectFn_800691c0(void* obj, void* hitData, int flags, int arg3);
-extern void fn_80069968(int* outA, int* outB);
-extern void fn_80069958(int** out);
-void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b);
 
-void dll_0B_func0B(void);
 
 #pragma scheduling off
-void dll_0B_func06(void);
 
-void dll_0B_release(void);
 #pragma scheduling reset
 
 #pragma peephole off
-void playerShadow_setMode(u8 v);
 #pragma peephole reset
 
 #pragma scheduling off
 #pragma peephole off
-void playerShadow_renderObject(void* obj);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803DF430;
-extern f32 lbl_803DF434;
-#define BONE_PARTICLE_EFFECT_BUFFER_COUNT 7
-#define BONE_PARTICLE_EFFECT_BUFFER_BYTES 0x140
-#define BONE_PARTICLE_EFFECT_SLOT_COUNT 20
-extern void*gBoneParticleEffectBuffers[];
-extern void* lbl_803DD2A4;
-extern void* lbl_803DD2A8;
-extern void mm_free(void* p);
-extern void textureFree(void* resource);
-extern void*gPartfxActiveEffects[];
-extern void Obj_FreeObject(void* obj);
 #pragma peephole off
 #pragma scheduling off
-void dll_0B_initialise(void);
 
-void dll_0B_func0F(int p1, int p2, int p3, int p4, int p5);
 
-void dll_0B_func0A(s16* p);
 
-void dll_0B_func0C(void* p1, char p2);
 
-void dll_0B_func0D(void* p1);
 
-void dll_0B_func07(void* p1);
 
 #pragma dont_inline on
-void fn_800A1040(s16 p1, int p2);
 #pragma dont_inline reset
 
-void boneParticleEffect_release(void);
 
-extern void Sfx_PlayFromObject(void* obj, int id);
-extern f32 lbl_8030FE38[];
-extern s16 lbl_803DD2BC;
-extern s16 lbl_803DD2B4;
-extern s32 lbl_803DD2B0;
-extern s32 lbl_803DD2B8;
-extern f32 lbl_803DD2AC;
-extern f32 lbl_803DB798;
-extern s32 lbl_803DD2A0;
-extern f32 lbl_803DF4A8;
-extern f32 lbl_803DF4AC;
-extern f32 lbl_803DF4B0;
-extern f32 lbl_803DF4B4;
-extern f32 lbl_803DF4B8;
-extern f32 lbl_803DF4C0;
-extern f32 lbl_803DF4C4;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 timeDelta;
 extern u8 framesThisStep;
-typedef u8 BoneFxJRow[16];
 
-typedef struct BoneFxVtx
-{
-    u16 e0;
-    u16 de;
-    u16 dc;
-    u16 pad;
-    f32 w;
-    f32 vx;
-    f32 vy;
-    f32 vz;
-} BoneFxVtx;
 
-extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
-extern void Camera_LoadModelViewMatrix(void* a, int b, void* c, f32 e, f32 f, int d);
-extern void GXSetCullMode(int mode);
-extern void setTextColor(void* ctx, int r, int g, int b, int a);
-extern void _textSetColor(void* ctx, int r, int g, int b, int a);
-extern void textureFn_800541ac(void* ctx, void* tex, int a, int b, int c, int d, int e);
-extern void textureSetupFn_800799c0(void);
-extern void geomDrawFn_800796f0(void);
-extern void gxTexColorFn_80079254(void);
-extern void textRenderSetupFn_80079804(void);
-extern void gxBlendFn_80078b4c(void);
-extern void drawFn_8005cf8c(void* a, void* b, int count);
 
 /* EN v1.0 0x800A433C  size: 1764b  per-bone particle vertex update + draw. */
-void boneParticleEffect_update(void* ctx, int p2, u8* o);
 
-typedef struct
-{
-    s16 a, b, c;
-    u16 pad;
-    s16 d, e;
-    u8 f, g, h, alpha;
-} ParticleSlot;
 
-extern ParticleSlot gBoneParticleInitData[];
-extern void* textureLoadAsset(int id);
-extern void* mmAlloc(int size, int align, int flag);
 
-void boneParticleEffect_initialise(void);
 #pragma scheduling reset
 #pragma peephole reset
 
-extern f32 lbl_803DF438;
 
 #pragma peephole off
 #pragma scheduling off
-void fn_800A02DC(ModgfxState* state, f32* in);
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma scheduling off
-void fn_800A0FD0(ModgfxState* state);
 
-void fn_800A0478(ModgfxState* state);
 #pragma scheduling reset
 
 
 #pragma peephole off
 #pragma scheduling off
-void partfx_initialise(void);
 #pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma scheduling off
 #pragma peephole off
-void fn_800A081C(int p1, int p2, int mode);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -2071,7 +1870,6 @@ void fn_800A081C(int p1, int p2, int mode);
  * toward the rounded params, then advance it by the per-step delta. */
 #pragma scheduling off
 #pragma peephole off
-void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -2079,50 +1877,16 @@ void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode);
  * whose owner object has the 0x800 state bit by setting its byte _13e. */
 #pragma scheduling off
 #pragma peephole off
-void dll_0B_func0E(void);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void*gPartfxResourceModule00;
-extern void*gPartfxResourceModule01;
-extern void*gPartfxResourceModule02;
-extern void*gPartfxResourceModule03;
-extern void*gPartfxResourceModule04;
-extern void*gPartfxResourceModule05;
-extern void*gPartfxResourceModule16;
-extern void*gPartfxResourceModule06;
-extern void*gPartfxResourceModule07;
-extern void*gPartfxResourceModule08;
-extern void*gPartfxResourceModule09;
-extern void*gPartfxResourceModule10;
-extern void*gPartfxResourceModule11;
-extern void*gPartfxResourceModule12;
-extern void*gPartfxResourceModule13;
-extern void*gPartfxResourceModule14;
-extern void*gPartfxResourceModule15;
-extern void*gPartfxResourceModule17;
-extern void*gPartfxResourceModule18;
-extern void*gPartfxResourceModule19;
 
-extern f32 lbl_803DB7A8;
-extern f32 lbl_803DB7AC;
-extern f32 lbl_803DF4C8;
-extern f32 lbl_803DF4CC;
-extern f32 lbl_803DF4D0;
-extern f32 lbl_803DF4D8;
-extern s32 lbl_803DD318;
-extern s32 lbl_803DD31C;
-extern f32 lbl_803DD320;
-extern f32 lbl_803DD324;
-extern f32 lbl_803DF718;
-extern f32 lbl_803DF71C;
 extern f32 mathSinf(f32);
 
 /* EN v1.0 0x800AEC50  size: 1992b  tick global effect phases and expire
  * the 20 cached particle resource slots. */
 #pragma scheduling off
 #pragma peephole off
-void partfx_updateFrameState(void);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -2130,116 +1894,31 @@ void partfx_updateFrameState(void);
  * effect-id table and free all 20 cached particle resources. */
 #pragma scheduling off
 #pragma peephole off
-void partfx_release(void);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803DF720;
-extern f32 lbl_803DF724;
-extern f32 lbl_803DF730;
-extern f32 lbl_803DF868;
-extern f32 lbl_803DF86C;
-extern f32 lbl_803DB7B8;
-extern f32 lbl_803DB7BC;
-extern int lbl_803DD328;
-extern int lbl_803DD32C;
-extern f32 lbl_803DD330;
-extern f32 lbl_803DD334;
-extern f32 lbl_803DD284;
 
 #pragma scheduling off
-void Effect1_func05(void);
 #pragma scheduling reset
 
-extern f32 lbl_803DB7C8;
-extern f32 lbl_803DB7CC;
-extern f32 lbl_803DB7D8;
-extern f32 lbl_803DB7DC;
-extern f32 lbl_803DB7E8;
-extern f32 lbl_803DB7EC;
-extern f32 lbl_803DB7F8;
-extern f32 lbl_803DB7FC;
 extern f32 lbl_803DB808;
 extern f32 lbl_803DB80C;
-extern f32 lbl_803DB818;
-extern f32 lbl_803DB81C;
-extern f32 lbl_803DB828;
-extern f32 lbl_803DB82C;
-extern int lbl_803DD338;
-extern int lbl_803DD33C;
-extern f32 lbl_803DD340;
-extern f32 lbl_803DD344;
-extern int lbl_803DD350;
-extern int lbl_803DD354;
-extern f32 lbl_803DD358;
-extern f32 lbl_803DD35C;
-extern int lbl_803DD360;
-extern int lbl_803DD364;
-extern f32 lbl_803DD368;
-extern f32 lbl_803DD36C;
-extern int lbl_803DD370;
-extern int lbl_803DD374;
-extern f32 lbl_803DD378;
-extern f32 lbl_803DD37C;
 extern int lbl_803DD380;
 extern int lbl_803DD384;
 extern f32 lbl_803DD388;
 extern f32 lbl_803DD38C;
-extern int lbl_803DD390;
-extern int lbl_803DD394;
-extern f32 lbl_803DD398;
-extern f32 lbl_803DD39C;
-extern int lbl_803DD3A0;
-extern int lbl_803DD3A4;
-extern f32 lbl_803DD3A8;
-extern f32 lbl_803DD3AC;
-extern f32 lbl_803DF870;
-extern f32 lbl_803DF874;
 extern f32 lbl_803DF878;
-extern f32 lbl_803DF880;
-extern f32 lbl_803DF9C8;
-extern f32 lbl_803DF9CC;
-extern f32 lbl_803DFA88;
-extern f32 lbl_803DFA8C;
-extern f32 lbl_803DFA90;
-extern f32 lbl_803DFA98;
-extern f32 lbl_803DFBD8;
-extern f32 lbl_803DFBDC;
-extern f32 lbl_803DFBE0;
-extern f32 lbl_803DFBE4;
-extern f32 lbl_803DFBE8;
-extern f32 lbl_803DFBF0;
-extern f32 lbl_803DFC78;
-extern f32 lbl_803DFC7C;
-extern f32 lbl_803DFC80;
-extern f32 lbl_803DFC84;
-extern f32 lbl_803DFC90;
-extern f32 lbl_803DFCD0;
-extern f32 lbl_803DFCD4;
 extern f32 lbl_803DFCD8;
 extern f32 lbl_803DFCDC;
 extern f32 lbl_803DFCE0;
 extern f32 lbl_803DFCE8;
 extern f32 lbl_803DFD90;
 extern f32 lbl_803DFD94;
-extern f32 lbl_803DFD98;
-extern f32 lbl_803DFD9C;
-extern f32 lbl_803DFDA8;
-extern f32 lbl_803DFE20;
-extern f32 lbl_803DFE24;
-extern f32 lbl_803DFE28;
-extern f32 lbl_803DFE2C;
-extern f32 lbl_803DFE38;
-extern f32 lbl_803DFEB0;
-extern f32 lbl_803DFEB4;
 
 #pragma scheduling off
 #pragma peephole off
-void Effect2_func05(void);
 
-void Effect4_func05(void);
 
-void Effect5_func05(void);
 
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
@@ -2285,26 +1964,8 @@ typedef struct PartFxSpawn
     u8 modelIdByte;
 } PartFxSpawn;
 
-extern f32 lbl_803DB7F0;
-extern f32 lbl_803DB7F4;
-extern f32 lbl_803DFC8C;
-extern f32 lbl_803DFC94;
-extern f32 lbl_803DFC98;
-extern f32 lbl_803DFC9C;
-extern f32 lbl_803DFCA0;
-extern f32 lbl_803DFCA4;
-extern f32 lbl_803DFCA8;
-extern f32 lbl_803DFCAC;
-extern f32 lbl_803DFCB0;
-extern f32 lbl_803DFCB4;
-extern f32 lbl_803DFCB8;
-extern f32 lbl_803DFCBC;
-extern f32 lbl_803DFCC0;
-extern f32 lbl_803DFCC4;
 
-int Effect6_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
 
-void Effect6_func05(void);
 
 void Effect7_func05(void)
 {
@@ -2349,35 +2010,6 @@ typedef struct FxNode9
 } FxNode9;
 
 extern FxNode9 lbl_8039C398;
-extern f32 lbl_803DB820;
-extern f32 lbl_803DB824;
-extern f32 lbl_803DFE34;
-extern f32 lbl_803DFE40;
-extern f32 lbl_803DFE44;
-extern f32 lbl_803DFE48;
-extern f32 lbl_803DFE4C;
-extern f32 lbl_803DFE50;
-extern f32 lbl_803DFE54;
-extern f32 lbl_803DFE58;
-extern f32 lbl_803DFE5C;
-extern f32 lbl_803DFE60;
-extern f32 lbl_803DFE64;
-extern f32 lbl_803DFE68;
-extern f32 lbl_803DFE6C;
-extern f32 lbl_803DFE70;
-extern f32 lbl_803DFE74;
-extern f32 lbl_803DFE78;
-extern f32 lbl_803DFE7C;
-extern f32 lbl_803DFE80;
-extern f32 lbl_803DFE84;
-extern f32 lbl_803DFE88;
-extern f32 lbl_803DFE8C;
-extern f32 lbl_803DFE90;
-extern f32 lbl_803DFE94;
-extern f32 lbl_803DFE98;
-extern f32 lbl_803DFE9C;
-extern f32 lbl_803DFEA0;
-extern f32 lbl_803DFEA4;
 
 #define FILL9() do {                            \
     lbl_8039C398.fc = 0.0f;             \
@@ -2390,39 +2022,10 @@ extern f32 lbl_803DFEA4;
     spawnParams = (s16 *)&lbl_8039C398;             \
   } while (0)
 
-int Effect9_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
 #undef FILL9
 
 extern FxNode9 lbl_8039C380;
 extern void randFn_80080100();
-extern f32 lbl_803DB810;
-extern f32 lbl_803DB814;
-extern f32 lbl_803DFDA4;
-extern f32 lbl_803DFDB0;
-extern f32 lbl_803DFDB4;
-extern f32 lbl_803DFDB8;
-extern f32 lbl_803DFDBC;
-extern f32 lbl_803DFDC0;
-extern f32 lbl_803DFDC4;
-extern f32 lbl_803DFDC8;
-extern f32 lbl_803DFDCC;
-extern f32 lbl_803DFDD0;
-extern f32 lbl_803DFDD4;
-extern f32 lbl_803DFDD8;
-extern f32 lbl_803DFDDC;
-extern f32 lbl_803DFDE0;
-extern f32 lbl_803DFDE4;
-extern f32 lbl_803DFDE8;
-extern f32 lbl_803DFDEC;
-extern f32 lbl_803DFDF0;
-extern f32 lbl_803DFDF4;
-extern f32 lbl_803DFDF8;
-extern f32 lbl_803DFDFC;
-extern f32 lbl_803DFE00;
-extern f32 lbl_803DFE04;
-extern f32 lbl_803DFE08;
-extern f32 lbl_803DFE0C;
-extern f32 lbl_803DFE10;
 
 #define FILL8() do {                            \
     lbl_8039C380.fc = 0.0f;             \
@@ -2435,108 +2038,11 @@ extern f32 lbl_803DFE10;
     spawnParams = (s16 *)&lbl_8039C380;             \
   } while (0)
 
-int Effect8_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
 #undef FILL8
 
-typedef struct EmitterCfg
-{
-    f32 vel[7][3];
-    f32 g08[3];
-    f32 f60;
-    int emit[6];
-    int sub[6];
-    u16 col[6];
-    u8 b_a0;
-    u8 b_a1;
-    u8 pad[2];
-} EmitterCfg;
 
-extern EmitterCfg lbl_80310560;
 extern FxNode9 lbl_8039C338;
-extern int lbl_803DD2C4;
-extern int lbl_803DD348;
-extern f32 lbl_803DB7C0;
-extern f32 lbl_803DB7C4;
-extern f32 lbl_803DF87C;
 extern f32 lbl_803DF884;
-extern f32 lbl_803DF888;
-extern f32 lbl_803DF88C;
-extern f32 lbl_803DF890;
-extern f32 lbl_803DF894;
-extern f32 lbl_803DF898;
-extern f32 lbl_803DF89C;
-extern f32 lbl_803DF8A0;
-extern f32 lbl_803DF8A4;
-extern f32 lbl_803DF8A8;
-extern f32 lbl_803DF8AC;
-extern f32 lbl_803DF8B0;
-extern f32 lbl_803DF8B4;
-extern f32 lbl_803DF8B8;
-extern f32 lbl_803DF8BC;
-extern f32 lbl_803DF8C0;
-extern f32 lbl_803DF8C4;
-extern f32 lbl_803DF8C8;
-extern f32 lbl_803DF8CC;
-extern f32 lbl_803DF8D0;
-extern f32 lbl_803DF8D4;
-extern f32 lbl_803DF8D8;
-extern f32 lbl_803DF8DC;
-extern f32 lbl_803DF8E0;
-extern f32 lbl_803DF8E4;
-extern f32 lbl_803DF8E8;
-extern f32 lbl_803DF8EC;
-extern f32 lbl_803DF8F0;
-extern f32 lbl_803DF8F4;
-extern f32 lbl_803DF8F8;
-extern f32 lbl_803DF8FC;
-extern f32 lbl_803DF900;
-extern f32 lbl_803DF904;
-extern f32 lbl_803DF908;
-extern f32 lbl_803DF90C;
-extern f32 lbl_803DF910;
-extern f32 lbl_803DF914;
-extern f32 lbl_803DF918;
-extern f32 lbl_803DF91C;
-extern f32 lbl_803DF920;
-extern f32 lbl_803DF924;
-extern f32 lbl_803DF928;
-extern f32 lbl_803DF92C;
-extern f32 lbl_803DF930;
-extern f32 lbl_803DF934;
-extern f32 lbl_803DF938;
-extern f32 lbl_803DF93C;
-extern f32 lbl_803DF940;
-extern f32 lbl_803DF944;
-extern f32 lbl_803DF948;
-extern f32 lbl_803DF94C;
-extern f32 lbl_803DF950;
-extern f32 lbl_803DF954;
-extern f32 lbl_803DF958;
-extern f32 lbl_803DF95C;
-extern f32 lbl_803DF960;
-extern f32 lbl_803DF964;
-extern f32 lbl_803DF968;
-extern f32 lbl_803DF96C;
-extern f32 lbl_803DF970;
-extern f32 lbl_803DF974;
-extern f32 lbl_803DF978;
-extern f32 lbl_803DF97C;
-extern f32 lbl_803DF980;
-extern f32 lbl_803DF984;
-extern f32 lbl_803DF988;
-extern f32 lbl_803DF98C;
-extern f32 lbl_803DF990;
-extern f32 lbl_803DF994;
-extern f32 lbl_803DF998;
-extern f32 lbl_803DF99C;
-extern f32 lbl_803DF9A0;
-extern f32 lbl_803DF9A4;
-extern f32 lbl_803DF9A8;
-extern f32 lbl_803DF9AC;
-extern f32 lbl_803DF9B0;
-extern f32 lbl_803DF9B4;
-extern f32 lbl_803DF9B8;
-extern f32 lbl_803DF9BC;
 
 #define FILL338() do {                          \
     lbl_8039C338.fc = lbl_803DF884;             \
@@ -2549,162 +2055,11 @@ extern f32 lbl_803DF9BC;
     spawnParams = (s16 *)&lbl_8039C338;             \
   } while (0)
 
-extern s32 lbl_80310660[];
 
 /* ---- partfx_spawnObject (FUN_800a4df4, v1.0) ---- */
-extern f32 lbl_803DB7A0;
-extern f32 lbl_803DB7A4;
-extern f32 lbl_803DF4D4;
-extern f32 lbl_803DF4DC;
-extern f32 lbl_803DF4E0;
-extern f32 lbl_803DF4E4;
-extern f32 lbl_803DF4E8;
-extern f32 lbl_803DF4EC;
-extern f32 lbl_803DF4F0;
-extern f32 lbl_803DF4F4;
-extern f32 lbl_803DF4F8;
-extern f32 lbl_803DF4FC;
-extern f32 lbl_803DF500;
-extern f32 lbl_803DF504;
-extern f32 lbl_803DF508;
-extern f32 lbl_803DF50C;
-extern f32 lbl_803DF510;
-extern f32 lbl_803DF514;
-extern f32 lbl_803DF518;
-extern f32 lbl_803DF51C;
-extern f32 lbl_803DF520;
-extern f32 lbl_803DF524;
-extern f32 lbl_803DF528;
-extern f32 lbl_803DF52C;
-extern f32 lbl_803DF530;
-extern f32 lbl_803DF534;
-extern f32 lbl_803DF538;
-extern f32 lbl_803DF53C;
-extern f32 lbl_803DF540;
-extern f32 lbl_803DF544;
-extern f32 lbl_803DF548;
-extern f32 lbl_803DF54C;
-extern f32 lbl_803DF550;
-extern f32 lbl_803DF554;
-extern f32 lbl_803DF558;
-extern f32 lbl_803DF55C;
-extern f32 lbl_803DF560;
-extern f32 lbl_803DF564;
-extern f32 lbl_803DF568;
-extern f32 lbl_803DF56C;
-extern f32 lbl_803DF570;
-extern f32 lbl_803DF574;
-extern f32 lbl_803DF578;
-extern f32 lbl_803DF57C;
-extern f32 lbl_803DF580;
-extern f32 lbl_803DF584;
-extern f32 lbl_803DF588;
-extern f32 lbl_803DF58C;
-extern f32 lbl_803DF590;
-extern f32 lbl_803DF594;
-extern f32 lbl_803DF598;
-extern f32 lbl_803DF59C;
-extern f32 lbl_803DF5A0;
-extern f32 lbl_803DF5A4;
-extern f32 lbl_803DF5A8;
-extern f32 lbl_803DF5AC;
-extern f32 lbl_803DF5B0;
-extern f32 lbl_803DF5B4;
-extern f32 lbl_803DF5B8;
-extern f32 lbl_803DF5BC;
-extern f32 lbl_803DF5C0;
-extern f32 lbl_803DF5C4;
-extern f32 lbl_803DF5C8;
-extern f32 lbl_803DF5CC;
-extern f32 lbl_803DF5D0;
-extern f32 lbl_803DF5D4;
-extern f32 lbl_803DF5D8;
-extern f32 lbl_803DF5DC;
-extern f32 lbl_803DF5E0;
-extern f32 lbl_803DF5E4;
-extern f32 lbl_803DF5E8;
-extern f32 lbl_803DF5EC;
-extern f32 lbl_803DF5F0;
-extern f32 lbl_803DF5F8;
-extern f32 lbl_803DF5FC;
-extern f32 lbl_803DF600;
-extern f32 lbl_803DF604;
-extern f32 lbl_803DF608;
-extern f32 lbl_803DF60C;
-extern f32 lbl_803DF610;
-extern f32 lbl_803DF614;
-extern f32 lbl_803DF618;
-extern f32 lbl_803DF61C;
-extern f32 lbl_803DF620;
-extern f32 lbl_803DF624;
-extern f32 lbl_803DF628;
-extern f32 lbl_803DF62C;
-extern f32 lbl_803DF630;
-extern f32 lbl_803DF634;
-extern f32 lbl_803DF638;
-extern f32 lbl_803DF63C;
-extern f32 lbl_803DF640;
-extern f32 lbl_803DF644;
-extern f32 lbl_803DF648;
-extern f32 lbl_803DF64C;
-extern f32 lbl_803DF650;
-extern f32 lbl_803DF654;
-extern f32 lbl_803DF658;
-extern f32 lbl_803DF65C;
-extern f32 lbl_803DF660;
-extern f32 lbl_803DF664;
-extern f32 lbl_803DF668;
-extern f32 lbl_803DF66C;
-extern f32 lbl_803DF670;
-extern f32 lbl_803DF674;
-extern f32 lbl_803DF678;
-extern f32 lbl_803DF67C;
-extern f32 lbl_803DF680;
-extern f32 lbl_803DF684;
-extern f32 lbl_803DF688;
-extern f32 lbl_803DF68C;
-extern f32 lbl_803DF690;
-extern f32 lbl_803DF694;
-extern f32 lbl_803DF698;
-extern f32 lbl_803DF69C;
-extern f32 lbl_803DF6A0;
-extern f32 lbl_803DF6A4;
-extern f32 lbl_803DF6A8;
-extern f32 lbl_803DF6AC;
-extern f32 lbl_803DF6B0;
-extern f32 lbl_803DF6B4;
-extern f32 lbl_803DF6B8;
-extern f32 lbl_803DF6BC;
-extern f32 lbl_803DF6C0;
-extern f32 lbl_803DF6C4;
-extern f32 lbl_803DF6C8;
-extern f32 lbl_803DF6CC;
-extern f32 lbl_803DF6D0;
-extern f32 lbl_803DF6D4;
-extern f32 lbl_803DF6D8;
-extern f32 lbl_803DF6DC;
-extern f32 lbl_803DF6E0;
-extern f32 lbl_803DF6E4;
-extern f32 lbl_803DF6E8;
-extern f32 lbl_803DF6EC;
-extern f32 lbl_803DF6F0;
-extern f32 lbl_803DF6F4;
-extern f32 lbl_803DF6F8;
-extern f32 lbl_803DF6FC;
-extern f32 lbl_803DF700;
-extern f32 lbl_803DF704;
-extern f32 lbl_803DF708;
-extern s16 gPartfxResourceTimeouts[20];
-extern s16 lbl_8039C308[12];
-extern void srand(int seed);
-extern void vecRotateZXY(void* obj, f32* vec);
-extern char sModgfxAlphaDebugFormat[];
-extern void fn_80137948(char* fmt, ...);
-
-int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 spawnFlags, u32 modelIdArg, void* extraArgsArg);
 
 
-int Effect2_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
+
 #undef FILL338
 
 extern void* Obj_GetPlayerObject();
@@ -3214,99 +2569,12 @@ int Effect7_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
 }
 #undef FILL368
 
-typedef struct MtxBuildArg
-{
-    s16 rx;
-    s16 ry;
-    s16 rz;
-    u8 pad6[2];
-    f32 w;
-    f32 a;
-    f32 b;
-    f32 c;
-} MtxBuildArg;
 
-extern f32 lbl_803DB7E0;
-extern f32 lbl_803DB7E4;
-extern f32 lbl_803DFBEC;
-extern f32 lbl_803DFBF4;
-extern f32 lbl_803DFBF8;
-extern f32 lbl_803DFBFC;
-extern f32 lbl_803DFC00;
-extern f32 lbl_803DFC04;
-extern f32 lbl_803DFC08;
-extern f32 lbl_803DFC0C;
-extern f32 lbl_803DFC10;
-extern f32 lbl_803DFC14;
-extern f32 lbl_803DFC18;
-extern f32 lbl_803DFC1C;
-extern f32 lbl_803DFC20;
-extern f32 lbl_803DFC24;
-extern f32 lbl_803DFC28;
-extern f32 lbl_803DFC2C;
-extern f32 lbl_803DFC30;
-extern f32 lbl_803DFC34;
-extern f32 lbl_803DFC38;
-extern f32 lbl_803DFC3C;
-extern f32 lbl_803DFC40;
-extern f32 lbl_803DFC44;
-extern f32 lbl_803DFC48;
-extern f32 lbl_803DFC4C;
-extern f32 lbl_803DFC50;
-extern f32 lbl_803DFC54;
-extern f32 lbl_803DFC58;
-extern f32 lbl_803DFC5C;
-extern f32 lbl_803DFC60;
-extern f32 lbl_803DFC64;
-extern f32 lbl_803DFC68;
 
-int Effect5_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
 
-extern f32 mathCosf(f32);
 extern FxNode9 lbl_8039C350;
 extern f32 lbl_803DF9D0;
 extern f32 lbl_803DF9D4;
-extern f32 lbl_803DF9D8;
-extern f32 lbl_803DF9DC;
-extern f32 lbl_803DF9E0;
-extern f32 lbl_803DF9E4;
-extern f32 lbl_803DF9E8;
-extern f32 lbl_803DF9EC;
-extern f32 lbl_803DF9F0;
-extern f32 lbl_803DF9F4;
-extern f32 lbl_803DF9F8;
-extern f32 lbl_803DF9FC;
-extern f32 lbl_803DFA00;
-extern f32 lbl_803DFA04;
-extern f32 lbl_803DFA08;
-extern f32 lbl_803DFA0C;
-extern f32 lbl_803DFA10;
-extern f32 lbl_803DFA14;
-extern f32 lbl_803DFA18;
-extern f32 lbl_803DFA1C;
-extern f32 lbl_803DFA20;
-extern f32 lbl_803DFA24;
-extern f32 lbl_803DFA28;
-extern f32 lbl_803DFA2C;
-extern f32 lbl_803DFA30;
-extern f32 lbl_803DFA34;
-extern f32 lbl_803DFA38;
-extern f32 lbl_803DFA3C;
-extern f32 lbl_803DFA40;
-extern f32 lbl_803DFA44;
-extern f32 lbl_803DFA48;
-extern f32 lbl_803DFA4C;
-extern f32 lbl_803DFA50;
-extern f32 lbl_803DFA54;
-extern f32 lbl_803DFA58;
-extern f32 lbl_803DFA5C;
-extern f32 lbl_803DFA60;
-extern f32 lbl_803DFA64;
-extern f32 lbl_803DFA68;
-extern f32 lbl_803DFA6C;
-extern f32 lbl_803DFA70;
-extern f32 lbl_803DFA74;
-extern f32 lbl_803DFA78;
 
 #define FILL350() do {                          \
     lbl_8039C350.fc = lbl_803DF9D0;             \
@@ -3319,174 +2587,16 @@ extern f32 lbl_803DFA78;
     spawnParams = (s16 *)&lbl_8039C350;             \
   } while (0)
 
-int Effect3_func04(void* sourceObj, int effectId, void* spawnParamsRaw, u32 spawnFlags, u8 modelId, void* param_6v);
 #undef FILL350
 
-extern f32 lbl_803DB7D0;
-extern f32 lbl_803DB7D4;
-extern f32 lbl_803DFA94;
-extern f32 lbl_803DFA9C;
-extern f32 lbl_803DFAA0;
-extern f32 lbl_803DFAA4;
-extern f32 lbl_803DFAA8;
-extern f32 lbl_803DFAAC;
-extern f32 lbl_803DFAB0;
-extern f32 lbl_803DFAB4;
-extern f32 lbl_803DFAB8;
-extern f32 lbl_803DFABC;
-extern f32 lbl_803DFAC0;
-extern f32 lbl_803DFAC4;
-extern f32 lbl_803DFAC8;
-extern f32 lbl_803DFACC;
-extern f32 lbl_803DFAD0;
-extern f32 lbl_803DFAD4;
-extern f32 lbl_803DFAD8;
-extern f32 lbl_803DFADC;
-extern f32 lbl_803DFAE0;
-extern f32 lbl_803DFAE4;
-extern f32 lbl_803DFAE8;
-extern f32 lbl_803DFAEC;
-extern f32 lbl_803DFAF0;
-extern f32 lbl_803DFAF4;
-extern f32 lbl_803DFAF8;
-extern f32 lbl_803DFAFC;
-extern f32 lbl_803DFB00;
-extern f32 lbl_803DFB04;
-extern f32 lbl_803DFB08;
-extern f32 lbl_803DFB0C;
-extern f32 lbl_803DFB10;
-extern f32 lbl_803DFB14;
-extern f32 lbl_803DFB18;
-extern f32 lbl_803DFB1C;
-extern f32 lbl_803DFB20;
-extern f32 lbl_803DFB24;
-extern f32 lbl_803DFB28;
-extern f32 lbl_803DFB2C;
-extern f32 lbl_803DFB30;
-extern f32 lbl_803DFB34;
-extern f32 lbl_803DFB38;
-extern f32 lbl_803DFB3C;
-extern f32 lbl_803DFB40;
-extern f32 lbl_803DFB44;
-extern f32 lbl_803DFB48;
-extern f32 lbl_803DFB4C;
-extern f32 lbl_803DFB50;
-extern f32 lbl_803DFB54;
-extern f32 lbl_803DFB58;
-extern f32 lbl_803DFB5C;
-extern f32 lbl_803DFB60;
-extern f32 lbl_803DFB64;
-extern f32 lbl_803DFB68;
-extern f32 lbl_803DFB6C;
-extern f32 lbl_803DFB70;
-extern f32 lbl_803DFB74;
-extern f32 lbl_803DFB78;
-extern f32 lbl_803DFB7C;
-extern f32 lbl_803DFB80;
-extern f32 lbl_803DFB84;
-extern f32 lbl_803DFB88;
-extern f32 lbl_803DFB8C;
-extern f32 lbl_803DFB90;
-extern f32 lbl_803DFB94;
-extern f32 lbl_803DFB98;
-extern f32 lbl_803DFB9C;
-extern f32 lbl_803DFBA0;
-extern f32 lbl_803DFBA4;
-extern f32 lbl_803DFBA8;
-extern f32 lbl_803DFBAC;
-extern f32 lbl_803DFBB0;
-extern f32 lbl_803DFBB4;
-extern f32 lbl_803DFBB8;
-extern f32 lbl_803DFBBC;
-extern f32 lbl_803DFBC0;
-extern f32 lbl_803DFBC4;
-extern f32 lbl_803DFBC8;
 
-int Effect4_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
 
 /* ===== (1) extern declarations needed by Effect1_func04 ===== */
 /* lbl_803DF720/724/728/730 already declared in modgfx.c; the rest are new. */
-extern f32 lbl_803DB7B0;
-extern f32 lbl_803DB7B4;
 // VERIFY lbl_803DF720 may already exist in modgfx.c
 // VERIFY lbl_803DF724 may already exist in modgfx.c
 // VERIFY lbl_803DF728 may already exist in modgfx.c
-extern f32 lbl_803DF72C;
 // VERIFY lbl_803DF730 may already exist in modgfx.c
-extern f32 lbl_803DF734;
-extern f32 lbl_803DF738;
-extern f32 lbl_803DF73C;
-extern f32 lbl_803DF740;
-extern f32 lbl_803DF744;
-extern f32 lbl_803DF748;
-extern f32 lbl_803DF74C;
-extern f32 lbl_803DF750;
-extern f32 lbl_803DF754;
-extern f32 lbl_803DF758;
-extern f32 lbl_803DF75C;
-extern f32 lbl_803DF760;
-extern f32 lbl_803DF764;
-extern f32 lbl_803DF768;
-extern f32 lbl_803DF76C;
-extern f32 lbl_803DF770;
-extern f32 lbl_803DF774;
-extern f32 lbl_803DF778;
-extern f32 lbl_803DF77C;
-extern f32 lbl_803DF780;
-extern f32 lbl_803DF784;
-extern f32 lbl_803DF788;
-extern f32 lbl_803DF78C;
-extern f32 lbl_803DF790;
-extern f32 lbl_803DF794;
-extern f32 lbl_803DF798;
-extern f32 lbl_803DF79C;
-extern f32 lbl_803DF7A0;
-extern f32 lbl_803DF7A4;
-extern f32 lbl_803DF7A8;
-extern f32 lbl_803DF7AC;
-extern f32 lbl_803DF7B0;
-extern f32 lbl_803DF7B4;
-extern f32 lbl_803DF7B8;
-extern f32 lbl_803DF7BC;
-extern f32 lbl_803DF7C0;
-extern f32 lbl_803DF7C4;
-extern f32 lbl_803DF7C8;
-extern f32 lbl_803DF7CC;
-extern f32 lbl_803DF7D0;
-extern f32 lbl_803DF7D4;
-extern f32 lbl_803DF7D8;
-extern f32 lbl_803DF7DC;
-extern f32 lbl_803DF7E0;
-extern f32 lbl_803DF7E4;
-extern f32 lbl_803DF7E8;
-extern f32 lbl_803DF7EC;
-extern f32 lbl_803DF7F0;
-extern f32 lbl_803DF7F4;
-extern f32 lbl_803DF7F8;
-extern f32 lbl_803DF7FC;
-extern f32 lbl_803DF800;
-extern f32 lbl_803DF804;
-extern f32 lbl_803DF808;
-extern f32 lbl_803DF80C;
-extern f32 lbl_803DF810;
-extern f32 lbl_803DF814;
-extern f32 lbl_803DF818;
-extern f32 lbl_803DF81C;
-extern f32 lbl_803DF820;
-extern f32 lbl_803DF824;
-extern f32 lbl_803DF828;
-extern f32 lbl_803DF82C;
-extern f32 lbl_803DF830;
-extern f32 lbl_803DF834;
-extern f32 lbl_803DF838;
-extern f32 lbl_803DF83C;
-extern f32 lbl_803DF840;
-extern f32 lbl_803DF844;
-extern f32 lbl_803DF848;
-extern f32 lbl_803DF84C;
-extern f32 lbl_803DF850;
-extern f32 lbl_803DF854;
-extern f32 lbl_803DF858;
 extern FxNode9 lbl_8039C320;
 /* lbl_803DF860 = int->f64 magic bias (.sdata2), auto-emitted; do NOT declare. */
 /* MtxBuildArg, vecRotateZXY, randFn_80080100, gExpgfxInterface, randomGetRange
@@ -3505,145 +2615,70 @@ extern FxNode9 lbl_8039C320;
   } while (0)
 
 /* ===== (3) function ===== */
-int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags, u8 modelId, s16* extraArgs);
 #undef FILL320
 
-void Effect9_func05(void);
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
-void dll_0B_onMapSetup(void);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void* Obj_GetActiveModel(void);
-extern void* ObjModel_GetJointMatrix(void* model, int joint);
-extern void PSMTXMultVec(void* m, void* src, void* dst);
 
-typedef struct BoneSpawnData
-{
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} BoneSpawnData;
 
 #pragma scheduling off
-void boneParticleEffect_spawnAtBones(void* obj, int effectId, void* extraArg, u8 prob, short* src);
 #pragma scheduling reset
 
-extern void* Camera_GetCurrentViewSlot(void);
-extern f32 sqrtf(f32 x);
-extern f32 lbl_8030FDE8[];
-extern s16 lbl_803DD29A;
-extern s16 lbl_803DD29C;
-extern f32 lbl_803DF468;
-extern f32 lbl_803DF470;
-extern f32 lbl_803DF474;
-extern f32 lbl_803DF478;
 
 #pragma scheduling off
 #pragma peephole off
-void fn_800A3AF0(void* table, int count, void* ctx, f32 a, f32 b);
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
-void dll_0B_func08(void* param);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g);
 
 #pragma scheduling off
 #pragma peephole off
-void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803DF460;
-extern s16 lbl_803DD280;
 
 #pragma scheduling off
 #pragma peephole off
-int dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern s16 renderModeSetOrGet(int mode);
-extern void* Camera_GetViewMatrix(void);
-extern void GXLoadPosMtxImm(void* mtx, int id);
-extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
-extern void selectTexture(void* tex, int slot);
-extern int getAngle(f32 dx, f32 dz);
-extern void Obj_RotateLocalOffsetByYaw(f32* local, f32* out, s8 yawIndex);
-extern void setMatrixFromObjectPos(f32 * mtx, s16 * src);
-extern void mtx44Transpose(f32 * src, f32 * dst);
-extern void gxTevAddTextureFrameBlendStages(void);
-extern void fn_80078DFC(void);
-extern void fn_80078ED0(void);
-extern void textBlendSetupFn_80078a7c(void);
-extern void fn_800542F4(void);
-extern f32 lbl_803DF450;
-extern f32 lbl_803DF454;
-extern f32 lbl_803DF458;
-extern f32 lbl_803DF45C;
 
-typedef struct
-{
-    s16 ang[3];
-    s16 pad;
-    f32 scale;
-    f32 pos[3];
-} EffXform;
 
 #pragma scheduling off
 #pragma peephole off
-int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4);
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
-void fn_800A0AB4(void* state, void* p, int mode, u8 idx);
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
-void fn_800A0524(void* state, void* p, int mode);
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
-void fn_800A0C78(void* state, void* p, int mode, u8 idx);
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int Obj_IsLoadingLocked(void);
-extern int* Obj_AllocObjectSetup(int size, int type);
-extern int* Obj_SetupObject(int* obj, int a, int b, int c, int d);
-extern void ObjList_GetObjects(int* idx, int* count);
-extern void Sfx_StopObjectChannel(void* obj, int ch);
-extern f32 lbl_803DF43C;
 
-typedef void (*ExpFn2)(void*, int);
-typedef void (*ExpFn3)(void*, void*, int);
-typedef void (*ExpFn4)(void*, void*, int, int);
-typedef void (*ExpResFn6)(void*, int, void*, int, int, void*);
 
-#define E9 ((char *)*(int **)((char *)eff + 0x9c))
 
 #pragma scheduling off
 #pragma peephole off
-void dll_0B_func05(void);
 #pragma peephole reset
 #pragma scheduling reset
