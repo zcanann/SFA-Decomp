@@ -5,6 +5,7 @@
  * and the crystal, charges up once all three pylons are lit and fires
  * the convergence beam. Carved from the sandwormBoss container.
  */
+
 #include "main/dll/cfmaincrystalstate_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -33,9 +34,14 @@ enum
     GAMEBIT_CF_CONVERGENCE = 0x57
 };
 
-#define CFMAINCRYSTAL_PYLON_FRAMES 0x78  /* beam hold time once reported */
-#define CFMAINCRYSTAL_CHARGE_START 0x5A  /* charge frames granted by 0x57 */
-#define CFMAINCRYSTAL_CHARGE_FIRE 0x3C   /* charge at which the bolt fires */
+typedef struct
+{
+    s16 a, b, c, d; /* per-effect s16 params; c/d carry the beam index */
+    u8 pad[4];
+    f32 x, y, z;
+} PartPayload;
+
+STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
 
 extern u32 randomGetRange(int min, int max);
 extern int ObjHits_EnableObject();
@@ -44,9 +50,7 @@ extern int ObjMsg_SendToObjects();
 extern int ObjMsg_SendToObject();
 extern int ObjMsg_AllocQueue();
 extern void objRenderFn_8003b8f4(f32);
-
 extern EffectInterface** gPartfxInterface;
-
 extern uint GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
 extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
@@ -73,8 +77,13 @@ extern f32 lbl_803E4200;
 extern f32 lbl_803E4204;
 extern void Camera_EnableViewYOffset(void);
 
+int babycloudrunner_getExtraSize(void);
 
-STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
+#define CFMAINCRYSTAL_PYLON_FRAMES 0x78  /* beam hold time once reported */
+
+#define CFMAINCRYSTAL_CHARGE_START 0x5A  /* charge frames granted by 0x57 */
+
+#define CFMAINCRYSTAL_CHARGE_FIRE 0x3C   /* charge at which the bolt fires */
 
 void cfmaincrystal_hitDetect(void)
 {
@@ -88,10 +97,9 @@ void cfmaincrystal_initialise(void)
 {
 }
 
-
 int cfmaincrystal_getExtraSize(void) { return 0x160; }
+
 int cfmaincrystal_getObjectTypeId(void) { return 0x1; }
-int babycloudrunner_getExtraSize(void);
 
 void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -99,12 +107,10 @@ void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4210);
 }
 
-
 void cfmaincrystal_free(int* obj)
 {
     (*gExpgfxInterface)->freeSource((u32)obj);
 }
-
 
 void cfmaincrystal_update(int* obj)
 {
@@ -151,18 +157,10 @@ void cfmaincrystal_init(int* obj, u8* def)
     ObjMsg_AllocQueue(obj, 2);
 }
 
-typedef struct
-{
-    s16 a, b, c, d; /* per-effect s16 params; c/d carry the beam index */
-    u8 pad[4];
-    f32 x, y, z;
-} PartPayload;
-
 /* fn_8019D9F0: main crystal beam update -
  * collect the three pylon positions from messages, re-request missing ones,
  * emit the beam particles toward the crystal (and down from each pylon),
  * ramp the convergence charge, hum volume and per-beam chime timers. */
-
 void fn_8019D9F0(int* obj)
 {
     char* p16;

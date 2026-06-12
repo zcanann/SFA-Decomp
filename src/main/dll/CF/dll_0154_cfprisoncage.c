@@ -5,6 +5,7 @@
  * into the prompt bits and runs sequence 0 when the caged dialog event
  * is ready. Carved from the sandwormBoss 10-DLL container.
  */
+
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -12,21 +13,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
-
-extern int ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHitWithPosition();
-extern int ObjMsg_Pop();
-extern int ObjMsg_AllocQueue();
-extern void objRenderFn_8003b8f4(f32);
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
-extern uint GameBit_Get(int eventId);
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
-extern f32 lbl_803E42B0;
-extern void objfx_spawnHitEmitterAtPos(f32* p, int a, int b, int c, int d);
-extern f32 lbl_803E42B4;
-
 
 /* cfprisoncage_SeqFn: drain the object's message
  * queue (re-arming its gamebit on the keyed message), then sync the
@@ -37,8 +23,6 @@ typedef struct CfPrisonCageMapData
     s16 openedBit; /* 0x18: game bit set once the cage is opened */
 } CfPrisonCageMapData;
 
-STATIC_ASSERT(offsetof(CfPrisonCageMapData, openedBit) == 0x18);
-
 /* placement type ids this DLL serves (anim.seqId carries the romlist
    type): 0x128 reports object type 8 and runs sequence 1, 0x127 runs
    sequence 0. */
@@ -47,6 +31,40 @@ enum
     CFPRISONCAGE_TYPE_CAGE = 0x127,
     CFPRISONCAGE_TYPE_CAGE_2 = 0x128
 };
+
+typedef struct CfprisoncageObjectDef
+{
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    s16 unk18;
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    s16 unk1E;
+    u8 pad20[0x22 - 0x20];
+    s16 unk22;
+    u8 pad24[0x28 - 0x24];
+} CfprisoncageObjectDef;
+
+STATIC_ASSERT(offsetof(CfPrisonCageMapData, openedBit) == 0x18);
+
+extern int ObjHits_EnableObject();
+extern int ObjHits_GetPriorityHitWithPosition();
+extern int ObjMsg_Pop();
+extern int ObjMsg_AllocQueue();
+extern void objRenderFn_8003b8f4(f32);
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern uint GameBit_Get(int eventId);
+extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
+extern f32 lbl_803E42B0;
+extern void objfx_spawnHitEmitterAtPos(f32* p, int a, int b, int c, int d);
+extern f32 lbl_803E42B4;
+extern int ObjHits_GetPriorityHitWithPosition(int* obj, int a, int b, int c, f32* out_x, f32* out_y, f32* out_z);
+
+u32 fn_801A0174(int* obj);
+void windlift_free(int* obj);
 
 /* message granting the cage's open bit (sent by the prison guard) */
 #define CFPRISONCAGE_MSG_OPEN 0xA0005
@@ -97,22 +115,6 @@ int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-typedef struct CfprisoncageObjectDef
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x18 - 0x14];
-    s16 unk18;
-    s16 unk1A;
-    u8 pad1C[0x1E - 0x1C];
-    s16 unk1E;
-    u8 pad20[0x22 - 0x20];
-    s16 unk22;
-    u8 pad24[0x28 - 0x24];
-} CfprisoncageObjectDef;
-
 void cfprisoncage_free(void)
 {
 }
@@ -158,10 +160,6 @@ int cfprisoncage_getObjectTypeId(int* obj)
     return 0x0;
 }
 
-u32 fn_801A0174(int* obj);
-
-extern int ObjHits_GetPriorityHitWithPosition(int* obj, int a, int b, int c, f32* out_x, f32* out_y, f32* out_z);
-
 void cfprisoncage_hitDetect(int* obj)
 {
     f32 pos_z, pos_y, pos_x;
@@ -196,5 +194,3 @@ void cfprisoncage_init(int* obj, u8* def)
         }
     }
 }
-
-void windlift_free(int* obj);

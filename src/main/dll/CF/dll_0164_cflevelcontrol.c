@@ -1,14 +1,8 @@
 /* DLL 0x0164 - cflevelcontrol (CloudRunner Fortress level controller). TU: 0x801A4524-0x801A4DB8. */
+
 #include "main/dll/DR/dll_015A_explodable.h"
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
-
-STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
-
-STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
-STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
-
-
 #include "main/audio/sfx_ids.h"
 #include "main/camera_interface.h"
 #include "main/mapEvent.h"
@@ -26,12 +20,29 @@ typedef struct CflevelcontrolState
     u8 padE[0x10 - 0xE];
 } CflevelcontrolState;
 
+typedef struct CfTriggerPos
+{
+    int x, y, z;
+} CfTriggerPos;
+
+typedef struct CfLevelControlFlags
+{
+    u8 b7 : 1;
+    u8 b6 : 1;
+    u8 b5 : 1; /* 0x20: last GameBit 0x974 */
+    u8 b4 : 1; /* 0x10: last GameBit 0x975 */
+    u8 b3 : 1; /* 0x08: pending fn_8017C294 sweep */
+    u8 rest : 3;
+} CfLevelControlFlags;
+
+STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
+STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
+STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void s16toFloat(void* p, int duration);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-
 extern void storeZeroToFloatParam(void* p);
 extern s16 lbl_80323008[];
 extern void objRenderFn_8003b8f4(f32);
@@ -55,11 +66,13 @@ extern void loadMapAndParent(int mapId);
 extern int mapGetDirIdx(int mapId);
 extern void lockLevel(int dirIdx, int b);
 
+void exploded_free(void);
+int exploded_getExtraSize(void);
+void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void cflevelcontrol_free(int param_1)
 {
 }
-
 
 void cflevelcontrol_hitDetect(void)
 {
@@ -113,34 +126,15 @@ void cflevelcontrol_init(u8* obj, u8* params)
     ((LevelControlFlags*)(sub + 0xc))->b3 = 1;
 }
 
-void exploded_free(void);
-
 int cflevelcontrol_getExtraSize(void) { return 0x10; }
+
 int cflevelcontrol_getObjectTypeId(void) { return 0x0; }
-int exploded_getExtraSize(void);
 
 void cflevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E43E8);
 }
-
-void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-typedef struct CfTriggerPos
-{
-    int x, y, z;
-} CfTriggerPos;
-
-typedef struct CfLevelControlFlags
-{
-    u8 b7 : 1;
-    u8 b6 : 1;
-    u8 b5 : 1; /* 0x20: last GameBit 0x974 */
-    u8 b4 : 1; /* 0x10: last GameBit 0x975 */
-    u8 b3 : 1; /* 0x08: pending fn_8017C294 sweep */
-    u8 rest : 3;
-} CfLevelControlFlags;
 
 void cflevelcontrol_update(int obj)
 {
@@ -294,7 +288,6 @@ void cflevelcontrol_update(int obj)
     SCGameBitLatch_Update(state + 8, 0x800, -1, -1, 0xcbb, 0xc4);
 }
 
-
 int CFLevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
@@ -314,5 +307,3 @@ int CFLevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-

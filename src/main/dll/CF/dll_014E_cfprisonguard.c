@@ -5,6 +5,7 @@
  * render ramps the alarm particle. Carved from the sandwormBoss
  * 10-DLL container.
  */
+
 #include "main/dll/bit80_struct.h"
 #include "main/dll/cfprisonguardstate_struct.h"
 #include "main/effect_interfaces.h"
@@ -13,6 +14,30 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 
+typedef struct CfPrisonGuardMapData
+{
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    s16 unk18;
+    s16 watchRadius; /* 0x1A: distance the guard reacts within */
+    s16 unk1C;
+    s16 disableEvent; /* 0x1E: game bit retiring the guard */
+    u8 pad20[0x22 - 0x20];
+    s16 unk22;
+    u8 pad24[0x28 - 0x24];
+} CfPrisonGuardMapData;
+
+typedef struct CfPrisonGuardFlags39
+{
+    u8 pulse : 1; /* 0x80: cleared every update */
+    u8 rest : 7;
+} CfPrisonGuardFlags39;
+
+STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
+
 extern int getLActions();
 extern int ObjHits_DisableObject();
 extern int ObjHits_EnableObject();
@@ -20,9 +45,7 @@ extern int ObjHits_GetPriorityHit();
 extern int ObjMsg_Pop();
 extern int ObjMsg_AllocQueue();
 extern void objRenderFn_8003b8f4(f32);
-
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-
 extern uint GameBit_Get(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern void* Obj_GetPlayerObject(void);
@@ -40,24 +63,7 @@ extern f32 lbl_803E4284;
 extern void objParticleFn_80099d84(int obj, f32 f, int a, int b);
 extern void Sfx_StopObjectChannel(int obj, int ch);
 
-
-STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
-
-typedef struct CfPrisonGuardMapData
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x18 - 0x14];
-    s16 unk18;
-    s16 watchRadius; /* 0x1A: distance the guard reacts within */
-    s16 unk1C;
-    s16 disableEvent; /* 0x1E: game bit retiring the guard */
-    u8 pad20[0x22 - 0x20];
-    s16 unk22;
-    u8 pad24[0x28 - 0x24];
-} CfPrisonGuardMapData;
+void gcrobotlightbea_free(int* obj);
 
 void cfprisonguard_free(void)
 {
@@ -90,12 +96,6 @@ void cfprisonguard_init(int* obj, u8* params)
     ((GameObject*)obj)->anim.resetHitboxFlags = (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
     ((Bit80*)&sub->flags39)->top = 1;
 }
-
-typedef struct CfPrisonGuardFlags39
-{
-    u8 pulse : 1; /* 0x80: cleared every update */
-    u8 rest : 7;
-} CfPrisonGuardFlags39;
 
 void cfprisonguard_update(int* obj)
 {
@@ -149,6 +149,7 @@ void cfprisonguard_update(int* obj)
 }
 
 int cfprisonguard_getExtraSize(void) { return 0x3c; }
+
 int cfprisonguard_getObjectTypeId(void) { return 0x49; }
 
 /* cfprisonguard_render: render the guard
@@ -183,8 +184,6 @@ void cfprisonguard_hitDetect(int* obj)
         state->guardState = 7;
     }
 }
-
-void gcrobotlightbea_free(int* obj);
 
 /* cfprisonguard_SeqFn: drive the guard state
  * machine - ramp/reset the alarm on cues, bail when captured or freed, watch

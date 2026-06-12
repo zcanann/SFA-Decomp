@@ -7,6 +7,15 @@
 #include "main/objseq.h"
 #include "main/dll/CF/dll_179.h"
 #include "main/objanim_internal.h"
+typedef struct CfccratePlacement
+{
+    u8 pad0[0xC - 0x0];
+    f32 unkC;
+    u8 pad10[0x18 - 0x10];
+    s8 unk18;
+    u8 pad19[0x20 - 0x19];
+} CfccratePlacement;
+
 
 extern u32 GameBit_Get(int bit);
 
@@ -126,14 +135,6 @@ void cfccrate_hitDetect(void)
 {
 }
 
-typedef struct CfccratePlacement
-{
-    u8 pad0[0xC - 0x0];
-    f32 unkC;
-    u8 pad10[0x18 - 0x10];
-    s8 unk18;
-    u8 pad19[0x20 - 0x19];
-} CfccratePlacement;
 
 void cfccrate_update(int obj)
 {

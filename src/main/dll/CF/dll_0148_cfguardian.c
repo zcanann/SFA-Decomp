@@ -7,17 +7,135 @@
  * sandwormBoss container; the 0x148 TU truly starts in DR/hightop.c
  * (documented cut in docs/boundary_audit.md).
  */
+
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/dll_0015_curves.h"
 #include "main/obj_placement.h"
+#include "main/dll/cfguardian_state.h"
+#include "main/camera_interface.h"
+#include "main/effect_interfaces.h"
+#include "main/game_ui_interface.h"
+#include "main/audio/sfx_ids.h"
+#include "main/dll/DR/sandwormBoss.h"
+#include "main/objseq.h"
+
+typedef struct
+{
+    s16 angle;
+    s16 pad[5];
+    f32 x;
+    f32 y;
+    f32 z;
+} RomCurveTarget;
+
+typedef struct
+{
+    s16 v[5];
+} GuardianVec;
+
+typedef struct
+{
+    int a, b, c, d;
+} GuardianMsg;
+
+/* waterSpellStone1Fn_8019b4c8: cfguardian
+ * brain - sixteen-state quest progression for the CloudRunner guardian, with
+ * sandworm avoidance, path flights, landing physics, sequenced triggers and
+ * idle chatter. */
+typedef struct CfGuardianMapData
+{
+    ObjPlacement base;
+    s8 unk18;
+    s8 variant; /* 0x19: 1 = the convergence-gated guardian */
+} CfGuardianMapData;
+
+STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
+STATIC_ASSERT(offsetof(CfGuardianMapData, variant) == 0x19);
+
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+/* cloudprisoncontrol map-event tables (recovered layout; kept raw int[] - the
+ * struct-field form flips MWCC's variable-index/walker addressing, banked).
+ * lbl_803AC7D8: registered-target list, 8-byte entries (count lbl_803DDB09):
+ *   s32 target @0; s16 data @4; u8 unk6 @6 (zeroed on add); u8 pad @7.
+ * lbl_803AC878: deferred-message queue, 12-byte entries (count lbl_803DDB08):
+ *   s32 message @0; s32 target @4; s32 data @8. */
+extern int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
+extern int fn_8019B1D8(int* obj, int* target, f32 speed, int p4);
+extern int Curve_AdvanceAlongPath(int p1);
+extern s16 getAngle(f32 a, f32 b);
+extern f32 lbl_803E4110;
+extern f32 lbl_803E4120;
+extern int ObjHits_EnableObject();
+extern int ObjGroup_FindNearestObject();
+extern int ObjGroup_RemoveObject();
+extern int ObjGroup_AddObject();
+extern int ObjMsg_AllocQueue();
+extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
+extern int ObjTrigger_IsSet();
+extern int objAnimFn_80038f38();
+extern void objRenderFn_8003b8f4(f32);
+extern int dll_2E_func03();
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+extern uint GameBit_Get(int eventId);
+extern int Obj_RemoveFromUpdateList(int* obj);
+extern GuardianVec lbl_802C22C0;
+extern GuardianVec lbl_802C22CC;
+extern u8 lbl_8032284C[];
+extern void dll_2E_func0A(int a, int* obj);
+extern void dll_2E_func05(int* obj, u8* sub, int c, int d, int e);
+extern void dll_2E_func08(u8* sub, int b, int c);
+extern void dll_2E_func09(u8* sub, void* a, void* b, int c);
+extern void objSeqInitFn_80080078(u8* p, int n);
+extern GuardianMsg lbl_802C22D8;
+extern int dll_2E_func07(int* obj, ObjAnimUpdateState* animUpdate, u8* sub, int x, int y);
+extern int animatedObjGetSeqId(int* p);
+extern void saveGame_saveObjectPos(int obj);
+extern void* Obj_GetPlayerObject(void);
+extern void playerAddRemoveMagic(void* player, int n);
+extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
+extern f32 timeDelta;
+extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
+extern u8 framesThisStep;
+extern int waterSpellStone1Fn_8019b4c8();
+extern f32 lbl_803E4130;
+extern void dll_2E_func06(int* a, int* b, int c);
+extern f32 sqrtf(f32 x);
+extern void normalize(f32 * x, f32 * y, f32 * z);
+extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern f32 lbl_803E4124;
+extern f32 lbl_803E4128;
+extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
+extern f32 Vec_xzDistance(void* a, void* b);
+extern int randFn_80080100(int n);
+extern int fn_80296A14(int p);
+extern void dll_2E_func04(void* sub);
+extern void dll_2E_func0C(int a, void* p);
+extern void buttonDisable(int a, int b);
+extern void characterDoEyeAnims(int* obj, void* p);
+extern int lbl_80322954[];
+extern u8 lbl_803DBE20;
+extern f32 oneOverTimeDelta;
+extern f32 lbl_803E4134;
+extern f32 lbl_803E4138;
+extern f32 lbl_803E413C;
+extern f32 lbl_803E4140;
+extern f32 lbl_803E4144;
+extern f32 lbl_803E4148;
+extern f32 lbl_803E414C;
+extern f32 lbl_803E4150;
+extern f32 lbl_803E4154;
+extern f32 lbl_803E4158;
+extern f32 lbl_803E415C;
+extern f32 lbl_803E412C;
+
+int windlift_getExtraSize(void);
+void cfprisoncage_hitDetect(int* obj);
 
 int cfguardian_setScale(int* obj)
 {
     return (*(u8*)(*(int*)&((GameObject*)obj)->extra + 0xa9b) & 0x2) == 0;
 }
-
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 int fn_8019AE3C(int p1, int p2, s16* p3)
 {
@@ -65,29 +183,6 @@ int fn_8019AE3C(int p1, int p2, s16* p3)
     }
     return v;
 }
-
-/* cloudprisoncontrol map-event tables (recovered layout; kept raw int[] - the
- * struct-field form flips MWCC's variable-index/walker addressing, banked).
- * lbl_803AC7D8: registered-target list, 8-byte entries (count lbl_803DDB09):
- *   s32 target @0; s16 data @4; u8 unk6 @6 (zeroed on add); u8 pad @7.
- * lbl_803AC878: deferred-message queue, 12-byte entries (count lbl_803DDB08):
- *   s32 message @0; s32 target @4; s32 data @8. */
-
-extern int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
-extern int fn_8019B1D8(int* obj, int* target, f32 speed, int p4);
-extern int Curve_AdvanceAlongPath(int p1);
-extern s16 getAngle(f32 a, f32 b);
-extern f32 lbl_803E4110;
-extern f32 lbl_803E4120;
-
-typedef struct
-{
-    s16 angle;
-    s16 pad[5];
-    f32 x;
-    f32 y;
-    f32 z;
-} RomCurveTarget;
 
 int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
 {
@@ -168,34 +263,6 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
     return ret;
 }
 
-#include "main/dll/cfguardian_state.h"
-#include "main/camera_interface.h"
-#include "main/effect_interfaces.h"
-#include "main/game_ui_interface.h"
-#include "main/game_object.h"
-#include "main/audio/sfx_ids.h"
-#include "main/dll/DR/sandwormBoss.h"
-#include "main/dll/rom_curve_interface.h"
-#include "main/objseq.h"
-
-extern int ObjHits_EnableObject();
-extern int ObjGroup_FindNearestObject();
-extern int ObjGroup_RemoveObject();
-extern int ObjGroup_AddObject();
-extern int ObjMsg_AllocQueue();
-extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
-extern int ObjTrigger_IsSet();
-extern int objAnimFn_80038f38();
-extern void objRenderFn_8003b8f4(f32);
-extern int dll_2E_func03();
-
-extern ObjectTriggerInterface** gObjectTriggerInterface;
-
-
-extern uint GameBit_Get(int eventId);
-extern int Obj_RemoveFromUpdateList(int* obj);
-
-
 void cfguardian_release(void)
 {
 }
@@ -203,22 +270,6 @@ void cfguardian_release(void)
 void cfguardian_initialise(void)
 {
 }
-
-typedef struct
-{
-    s16 v[5];
-} GuardianVec;
-
-extern GuardianVec lbl_802C22C0;
-extern GuardianVec lbl_802C22CC;
-extern u8 lbl_8032284C[];
-extern void dll_2E_func0A(int a, int* obj);
-extern void dll_2E_func05(int* obj, u8* sub, int c, int d, int e);
-extern void dll_2E_func08(u8* sub, int b, int c);
-extern void dll_2E_func09(u8* sub, void* a, void* b, int c);
-extern void objSeqInitFn_80080078(u8* p, int n);
-
-STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
 void cfguardian_init(int* obj, u8* params)
 {
@@ -265,18 +316,6 @@ void cfguardian_init(int* obj, u8* params)
     sub->flags611 = (u8)(sub->flags611 | 0x2);
 }
 
-typedef struct
-{
-    int a, b, c, d;
-} GuardianMsg;
-
-extern GuardianMsg lbl_802C22D8;
-extern int dll_2E_func07(int* obj, ObjAnimUpdateState* animUpdate, u8* sub, int x, int y);
-extern int animatedObjGetSeqId(int* p);
-extern void saveGame_saveObjectPos(int obj);
-extern void* Obj_GetPlayerObject(void);
-extern void playerAddRemoveMagic(void* player, int n);
-
 /* cfguardian_SeqFn: guardian message handler.
  * Persists position on a negative cue, otherwise picks the active/idle
  * heading pair and routes a move request; on the magic-grant message it
@@ -314,22 +353,11 @@ int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
-extern f32 timeDelta;
-
-extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
-
-extern u8 framesThisStep;
-
 int cfguardian_getExtraSize(void) { return 0xa9c; }
+
 int cfguardian_getObjectTypeId(void) { return 0x41; }
-int windlift_getExtraSize(void);
 
-extern int waterSpellStone1Fn_8019b4c8();
 void cfguardian_update(void) { waterSpellStone1Fn_8019b4c8(); }
-
-extern f32 lbl_803E4130;
-extern void dll_2E_func06(int* a, int* b, int c);
 
 void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -340,8 +368,6 @@ void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         dll_2E_func06(obj, sub, 0);
     }
 }
-
-void cfprisoncage_hitDetect(int* obj);
 
 void cfguardian_free(int* obj, int p2)
 {
@@ -362,7 +388,6 @@ void cfguardian_free(int* obj, int p2)
     }
 }
 
-
 void cfguardian_hitDetect(int* obj)
 {
     ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
@@ -371,6 +396,7 @@ void cfguardian_hitDetect(int* obj)
 }
 
 #pragma dont_inline on
+
 int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4)
 {
     int* result = NULL;
@@ -406,20 +432,15 @@ int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4)
     }
     return result;
 }
+
 #pragma dont_inline reset
-
-
-extern f32 sqrtf(f32 x);
-extern void normalize(f32 * x, f32 * y, f32 * z);
-extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern f32 lbl_803E4124;
-extern f32 lbl_803E4128;
 
 /* fn_8019B1D8: steer the object toward the
  * target: scale its velocity along the normalized delta, blend the yaw by
  * speed over distance, move it and keep the chase move playing. Returns 1
  * when already within the closing threshold. */
 #pragma dont_inline on
+
 int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
 {
     f32 dist;
@@ -462,47 +483,8 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
     ((int(*)(int*, f32, int))ObjAnim_SampleRootCurvePhase)(obj, speed, p4);
     return 0;
 }
+
 #pragma dont_inline reset
-
-extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
-
-extern f32 Vec_xzDistance(void* a, void* b);
-
-extern int randFn_80080100(int n);
-
-extern int fn_80296A14(int p);
-extern void dll_2E_func04(void* sub);
-extern void dll_2E_func0C(int a, void* p);
-extern void buttonDisable(int a, int b);
-extern void characterDoEyeAnims(int* obj, void* p);
-extern int lbl_80322954[];
-extern u8 lbl_803DBE20;
-extern f32 oneOverTimeDelta;
-extern f32 lbl_803E4134;
-extern f32 lbl_803E4138;
-extern f32 lbl_803E413C;
-extern f32 lbl_803E4140;
-extern f32 lbl_803E4144;
-extern f32 lbl_803E4148;
-extern f32 lbl_803E414C;
-extern f32 lbl_803E4150;
-extern f32 lbl_803E4154;
-extern f32 lbl_803E4158;
-extern f32 lbl_803E415C;
-extern f32 lbl_803E412C;
-
-/* waterSpellStone1Fn_8019b4c8: cfguardian
- * brain - sixteen-state quest progression for the CloudRunner guardian, with
- * sandworm avoidance, path flights, landing physics, sequenced triggers and
- * idle chatter. */
-typedef struct CfGuardianMapData
-{
-    ObjPlacement base;
-    s8 unk18;
-    s8 variant; /* 0x19: 1 = the convergence-gated guardian */
-} CfGuardianMapData;
-
-STATIC_ASSERT(offsetof(CfGuardianMapData, variant) == 0x19);
 
 /* BANKED at ~94.5: whole-fn saved-quad rotation (T: obj=r28 param-pool,
    def=r29, player=r30, sub=r31; ours reversed) - #108 cross-class

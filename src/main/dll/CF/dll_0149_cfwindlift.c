@@ -5,19 +5,78 @@
  * (riders get pulled by fn_8019C784's per-slot spring model).
  * TU = 0x8019C784..0x8019D578.
  */
+
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 
+typedef struct WindliftPlacement
+{
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    s16 unk18;
+    s16 unk1A;
+    u8 pad1C[0x22 - 0x1C];
+    s16 unk22;
+    u8 pad24[0x28 - 0x24];
+} WindliftPlacement;
+
+typedef struct WindliftObjectDef
+{
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    s8 unk18;
+    s8 heightByte; /* 0x19: lift height in lbl_803E41C8 units (0 = default) */
+    s16 unk1A;
+    s16 delay;
+    s16 seqId;
+    u8 pad20[0x22 - 0x20];
+    s16 unk22;
+    u8 pad24[0x28 - 0x24];
+} WindliftObjectDef;
+
+typedef struct
+{
+    int i0;
+    f32 f4;
+    f32 f8;
+    f32 fc;
+    u8 b10;
+    u8 b11;
+    u8 pad12[2];
+    int link14;
+} WindLiftSlot;
+
+typedef struct
+{
+    int duration;
+    int seqId;
+    int delay;
+    int gamebit;
+    int pad10;
+    int timer;
+    WindLiftSlot slots[14];
+    int pad168;
+    int pad16c;
+    f32 liftHeight;
+    u8 musicOn : 1;
+    u8 active : 1;
+    u8 _f2 : 6;
+} WindLiftSub;
+
 extern void* ObjGroup_GetObjects();
 extern int ObjGroup_RemoveObject();
 extern int ObjGroup_AddObject();
 extern int ObjMsg_SendToObject();
 extern void objRenderFn_8003b8f4(f32);
-
-
 extern uint GameBit_Get(int eventId);
 extern void* Obj_GetPlayerObject(void);
 extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
@@ -56,6 +115,8 @@ extern f32 lbl_803E41B8;
 extern int Obj_SetActiveModelIndex(int* obj, int idx);
 extern f32 lbl_803E41BC;
 
+void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void cfguardian_free(int* obj, int p2);
 
 void windlift_hitDetect(void)
 {
@@ -69,40 +130,11 @@ void windlift_initialise(void)
 {
 }
 
-
-typedef struct WindliftPlacement
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x18 - 0x14];
-    s16 unk18;
-    s16 unk1A;
-    u8 pad1C[0x22 - 0x1C];
-    s16 unk22;
-    u8 pad24[0x28 - 0x24];
-} WindliftPlacement;
-
-typedef struct WindliftObjectDef
-{
-    u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x18 - 0x14];
-    s8 unk18;
-    s8 heightByte; /* 0x19: lift height in lbl_803E41C8 units (0 = default) */
-    s16 unk1A;
-    s16 delay;
-    s16 seqId;
-    u8 pad20[0x22 - 0x20];
-    s16 unk22;
-    u8 pad24[0x28 - 0x24];
-} WindliftObjectDef;
-
 int windlift_getExtraSize(void) { return 0x178; }
+
 int windlift_getObjectTypeId(void) { return 0x0; }
+
+#pragma peephole off
 
 void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -110,7 +142,7 @@ void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4190);
 }
 
-void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+#pragma scheduling off
 
 void windlift_free(int* obj)
 {
@@ -121,37 +153,6 @@ void windlift_free(int* obj)
     }
     ObjGroup_RemoveObject(obj, 73);
 }
-
-void cfguardian_free(int* obj, int p2);
-
-typedef struct
-{
-    int i0;
-    f32 f4;
-    f32 f8;
-    f32 fc;
-    u8 b10;
-    u8 b11;
-    u8 pad12[2];
-    int link14;
-} WindLiftSlot;
-
-typedef struct
-{
-    int duration;
-    int seqId;
-    int delay;
-    int gamebit;
-    int pad10;
-    int timer;
-    WindLiftSlot slots[14];
-    int pad168;
-    int pad16c;
-    f32 liftHeight;
-    u8 musicOn : 1;
-    u8 active : 1;
-    u8 _f2 : 6;
-} WindLiftSub;
 
 /* windlift_init: look up the lift's sequence
  * timings, scale its rise height from the def byte, arm it from the
@@ -221,9 +222,9 @@ void windlift_init(int* obj, u8* def)
 /* fn_8019C784: per-rider wind lift physics -
  * track the rider while above the lift and in range, send the lift/drop
  * messages on state edges, and integrate the rise speed with ramp-up,
- * oscillation damping and player-mode handoff. */
-/* per-rider spring model: pull a rider toward the lift column and lift
-   it with the wind; slot->b10 carries the rider's phase bits. */
+ * oscillation damping and player-mode handoff.
+ * per-rider spring model: pull a rider toward the lift column and lift
+ * it with the wind; slot->b10 carries the rider's phase bits. */
 void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int pm, uint dur, f32 height)
 {
     char* player;
