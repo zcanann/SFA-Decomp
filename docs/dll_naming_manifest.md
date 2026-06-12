@@ -20,24 +20,6 @@ prefix (`WM_`->WM/ etc; `CC`/`SB` dirs do not exist yet —
 create-listed, do not create until the first rename lands); names
 with no lane prefix stay at `main/dll/` root.
 
-No-descriptor helper-TU naming rule: some split units are HELPER
-SLIVERS that own no `gResourceDescriptors` entry of their own — they
-are the front/middle portion of a neighbouring DLL's TU (helpers
-precede their own descriptor fns; see the TU model in CLAUDE.md's
-Retail-ISO forensics section), carved off as a separate split unit. A
-sliver has NO dll id, so it canNOT take a `dll_XXXX_*` name. Its
-filename MUST be: **lowercase, NO `dll_` prefix, descriptive of the
-sliver's CONTENT, and never colliding (case-insensitively) with any
-canonical `dll_XXXX_<stem>.c` name.** Derive the stem from the
-sliver's dominant fn-prefix / the DLL whose TU it belongs to — e.g.
-the staffactivated (0x11C) DLL's front sliver is
-`staffactivated_helpers.c` (NOT `CFPrisonGuard.c`, which CamelCase-
-collided with the unrelated real `dll_014E_cfprisonguard.c` 0x14E
-DLL). A same-stem header moves/renames with the `.c` in the same
-commit (and every `#include` updates). Conforming exemplars:
-`CF/warppad.c` (warp-pad head-helper sliver, no descriptor) and now
-`CF/staffactivated_helpers.c`.
-
 ## Summary
 
 | metric | count |
@@ -45,17 +27,17 @@ commit (and every `#include` updates). Conforming exemplars:
 | descriptors (non-null) | 704 |
 | with retail def name(s) | 448 |
 | no retail name (infrastructure) | 256 |
-| already-canonical | 245 |
+| already-canonical | 358 |
 | canonical-variant (case/punct only) | 0 |
-| clean-rename-ready | 0 |
-| blocked-on-carve (multi-dll container) | 380 |
+| clean-rename-ready | 267 |
+| blocked-on-carve (multi-dll container) | 0 |
 | blocked-on-cut (boundary splits the dll) | 1 |
 | blocked-on-extraction (engine/SDK host) | 27 |
 | no-text-fns (data-only descriptor) | 51 |
 | name-conflicts (disambiguated) | 0 |
 | naming contradictions (appendix) | 20 |
-| same-stem headers gating ready renames | 0 |
-| same-stem headers across all dll hosts | 156 |
+| same-stem headers gating ready renames | 20 |
+| same-stem headers across all dll hosts | 78 |
 
 Expansion status over the 448 named dlls: COMPLETE 116, CONFIRMED 276, GUESSED 31, RAW 25
 
@@ -63,193 +45,193 @@ Expansion status over the 448 named dlls: COMPLETE 116, CONFIRMED 276, GUESSED 3
 
 | dll | retail name(s) | expansion | current file | proposed file | blocker |
 |---|---|---|---|---|---|
-| 0x000 | — | NO-RETAIL-NAME | main/dll/baddie/dll_0000_baby_snowworm.c | = (canonical) | — |
-| 0x001 | — | NO-RETAIL-NAME | main/dll/CAM/dll_0001_camcontrol.c | = (canonical) | — |
+| 0x000 | — | NO-RETAIL-NAME | main/dll/dll_0000_baby_snowworm.c | = (canonical) | — |
+| 0x001 | — | NO-RETAIL-NAME | main/dll/dll_0001_camcontrol.c | = (canonical) | — |
 | 0x002 | — | NO-RETAIL-NAME | main/objseq.c | main/dll/dll_0002_objseq.c | engine/SDK host: main/objseq.c |
-| 0x003 | — | NO-RETAIL-NAME | main/dll/dim_partfx.c | main/dll/dll_0003_checkpoint.c | container w/ 0x026,0x028,0x029,0x02A,0x02B,0x02C,+1 more; stem from fn prefix `Checkpoint_*` |
-| 0x004 | — | NO-RETAIL-NAME | main/dll/df_partfx.c | main/dll/dll_0004_dummy04.c | container w/ 0x00F,0x016; stem from fn prefix `Dummy04_*` |
+| 0x003 | — | NO-RETAIL-NAME | main/dll/dll_0003_checkpoint.c | = (canonical) | — |
+| 0x004 | — | NO-RETAIL-NAME | main/dll/dll_0004_dummy04.c | = (canonical) | — |
 | 0x005 | — | NO-RETAIL-NAME | main/sky.c | main/dll/dll_0005_rendersky.c | engine/SDK host: main/sky.c; stem from fn prefix `renderSky_*` |
 | 0x006 | — | NO-RETAIL-NAME | main/sky.c | main/dll/dll_0006_sky2.c | engine/SDK host: main/sky.c; stem from fn prefix `sky2_*` |
 | 0x007 | — | NO-RETAIL-NAME | main/newclouds.c | main/dll/dll_0007_newclouds.c | engine/SDK host: main/newclouds.c |
 | 0x008 | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
 | 0x009 | — | NO-RETAIL-NAME | main/dll/cloudaction.c \| dolphin/MSL_C/PPCEABI/bare/H/gamecube.c | main/dll/dll_0009_cloudaction.c | cut across: main/dll/cloudaction.c \| dolphin/MSL_C/PPCEABI/bare/H/gamecube.c; stem from fn prefix `cloudaction_*` |
 | 0x00A | — | NO-RETAIL-NAME | main/dll/dll_000A_expgfx.c | = (canonical) | — |
-| 0x00B | — | NO-RETAIL-NAME | main/dll/modgfx.c | main/dll/dll_000B_modgfx.c | container w/ 0x00C,0x00D,0x00E,0x018,0x01A,0x01B,+7 more; container stem, tentative |
-| 0x00C | — | NO-RETAIL-NAME | main/dll/modgfx.c | main/dll/dll_000C_projgfx.c | container w/ 0x00B,0x00D,0x00E,0x018,0x01A,0x01B,+7 more; stem from fn prefix `projgfx_*` |
-| 0x00D | — | NO-RETAIL-NAME | main/dll/modgfx.c | main/dll/dll_000D_playershadow.c | container w/ 0x00B,0x00C,0x00E,0x018,0x01A,0x01B,+7 more; stem from fn prefix `playerShadow_*` |
-| 0x00E | — | NO-RETAIL-NAME | main/dll/modgfx.c | main/dll/dll_000E_partfx.c | container w/ 0x00B,0x00C,0x00D,0x018,0x01A,0x01B,+7 more; stem from fn prefix `partfx_*` |
-| 0x00F | — | NO-RETAIL-NAME | main/dll/df_partfx.c | main/dll/dll_000F_player.c | container w/ 0x004,0x016; stem from fn prefix `player_*` |
-| 0x010 | — | NO-RETAIL-NAME | main/dll/objfsa.c | main/dll/dll_0010_uicontroller.c | container w/ 0x012,0x014; stem from fn prefix `UIController_*` |
-| 0x011 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0011_screens.c | container w/ 0x017,0x02F,0x058,0x059,0x05A,0x05B,+33 more; stem from fn prefix `screens_*` |
-| 0x012 | — | NO-RETAIL-NAME | main/dll/objfsa.c | main/dll/dll_0012_dummy12.c | container w/ 0x010,0x014; stem from fn prefix `Dummy12_*` |
+| 0x00B | — | NO-RETAIL-NAME | main/dll/dll_000B_dll0b.c | = (canonical) | — |
+| 0x00C | — | NO-RETAIL-NAME | main/dll/dll_000C_projgfx.c | = (canonical) | — |
+| 0x00D | — | NO-RETAIL-NAME | main/dll/dll_000D_playershadow.c | = (canonical) | — |
+| 0x00E | — | NO-RETAIL-NAME | main/dll/dll_000E_partfx.c | = (canonical) | — |
+| 0x00F | — | NO-RETAIL-NAME | main/dll/dll_000F_unk.c | = (canonical) | — |
+| 0x010 | — | NO-RETAIL-NAME | main/dll/dll_0010_uicontroller.c | = (canonical) | — |
+| 0x011 | — | NO-RETAIL-NAME | main/dll/dll_0011_screens.c | = (canonical) | — |
+| 0x012 | — | NO-RETAIL-NAME | main/dll/dll_0012_unk.c | = (canonical) | — |
 | 0x013 | — | NO-RETAIL-NAME | main/dll/dll_0013_waterfx.c | = (canonical) | — |
-| 0x014 | — | NO-RETAIL-NAME | main/dll/objfsa.c | main/dll/dll_0014_romcurve.c | container w/ 0x010,0x012; stem from fn prefix `RomCurve_*` |
+| 0x014 | — | NO-RETAIL-NAME | main/dll/dll_0014_unk.c | = (canonical) | — |
 | 0x015 | — | NO-RETAIL-NAME | main/dll/dll_0015_curves.c | = (canonical) | — |
-| 0x016 | — | NO-RETAIL-NAME | main/dll/df_partfx.c | main/dll/dll_0016_screentransition.c | container w/ 0x004,0x00F; stem from fn prefix `screenTransition_*` |
-| 0x017 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0017_savegame.c | container w/ 0x011,0x02F,0x058,0x059,0x05A,0x05B,+33 more; stem from fn prefix `SaveGame_*` |
-| 0x018 | — | NO-RETAIL-NAME | main/dll/modgfx.c | main/dll/dll_0018_boneparticleeffect.c | container w/ 0x00B,0x00C,0x00D,0x00E,0x01A,0x01B,+7 more; stem from fn prefix `boneParticleEffect_*` |
-| 0x019 | — | NO-RETAIL-NAME | main/dll/baddieControl.c | main/dll/dll_0019_baddieControl.c | container w/ 0x04D,0x04E,0x04F,0x050,0x051,0x052,+5 more; container stem, tentative |
-| 0x01A | — | NO-RETAIL-NAME | main/dll/modgfx.c | main/dll/dll_001A_effect1.c | container w/ 0x00B,0x00C,0x00D,0x00E,0x018,0x01B,+7 more; stem from fn prefix `Effect1_*` |
-| 0x01B | — | NO-RETAIL-NAME | main/dll/modgfx.c | main/dll/dll_001B_effect2.c | container w/ 0x00B,0x00C,0x00D,0x00E,0x018,0x01A,+7 more; stem from fn prefix `Effect2_*` |
-| 0x01C | — | NO-RETAIL-NAME | main/dll/modgfx.c | main/dll/dll_001C_effect3.c | container w/ 0x00B,0x00C,0x00D,0x00E,0x018,0x01A,+7 more; stem from fn prefix `Effect3_*` |
-| 0x01D | — | NO-RETAIL-NAME | main/dll/modgfx.c | main/dll/dll_001D_effect4.c | container w/ 0x00B,0x00C,0x00D,0x00E,0x018,0x01A,+7 more; stem from fn prefix `Effect4_*` |
-| 0x01E | — | NO-RETAIL-NAME | main/dll/modgfx.c | main/dll/dll_001E_effect5.c | container w/ 0x00B,0x00C,0x00D,0x00E,0x018,0x01A,+7 more; stem from fn prefix `Effect5_*` |
-| 0x01F | — | NO-RETAIL-NAME | main/dll/modgfx.c | main/dll/dll_001F_effect6.c | container w/ 0x00B,0x00C,0x00D,0x00E,0x018,0x01A,+7 more; stem from fn prefix `Effect6_*` |
-| 0x020 | — | NO-RETAIL-NAME | main/dll/modgfx.c | main/dll/dll_0020_effect7.c | container w/ 0x00B,0x00C,0x00D,0x00E,0x018,0x01A,+7 more; stem from fn prefix `Effect7_*` |
-| 0x021 | — | NO-RETAIL-NAME | main/dll/modgfx.c | main/dll/dll_0021_effect8.c | container w/ 0x00B,0x00C,0x00D,0x00E,0x018,0x01A,+7 more; stem from fn prefix `Effect8_*` |
-| 0x022 | — | NO-RETAIL-NAME | main/dll/modgfx.c | main/dll/dll_0022_effect9.c | container w/ 0x00B,0x00C,0x00D,0x00E,0x018,0x01A,+7 more; stem from fn prefix `Effect9_*` |
-| 0x023 | — | NO-RETAIL-NAME | main/dll/modelfx.c | main/dll/dll_0023_effect10.c | container w/ 0x024,0x025,0x027; stem from fn prefix `Effect10_*` |
-| 0x024 | — | NO-RETAIL-NAME | main/dll/modelfx.c | main/dll/dll_0024_effect11.c | container w/ 0x023,0x025,0x027; stem from fn prefix `Effect11_*` |
-| 0x025 | — | NO-RETAIL-NAME | main/dll/modelfx.c | main/dll/dll_0025_effect12.c | container w/ 0x023,0x024,0x027; stem from fn prefix `Effect12_*` |
-| 0x026 | — | NO-RETAIL-NAME | main/dll/dim_partfx.c | main/dll/dll_0026_effect13.c | container w/ 0x003,0x028,0x029,0x02A,0x02B,0x02C,+1 more; stem from fn prefix `Effect13_*` |
-| 0x027 | — | NO-RETAIL-NAME | main/dll/modelfx.c | main/dll/dll_0027_effect14.c | container w/ 0x023,0x024,0x025; stem from fn prefix `Effect14_*` |
-| 0x028 | — | NO-RETAIL-NAME | main/dll/dim_partfx.c | main/dll/dll_0028_effect15.c | container w/ 0x003,0x026,0x029,0x02A,0x02B,0x02C,+1 more; stem from fn prefix `Effect15_*` |
-| 0x029 | — | NO-RETAIL-NAME | main/dll/dim_partfx.c | main/dll/dll_0029_effect16.c | container w/ 0x003,0x026,0x028,0x02A,0x02B,0x02C,+1 more; stem from fn prefix `Effect16_*` |
-| 0x02A | — | NO-RETAIL-NAME | main/dll/dim_partfx.c | main/dll/dll_002A_effect17.c | container w/ 0x003,0x026,0x028,0x029,0x02B,0x02C,+1 more; stem from fn prefix `Effect17_*` |
-| 0x02B | — | NO-RETAIL-NAME | main/dll/dim_partfx.c | main/dll/dll_002B_effect18.c | container w/ 0x003,0x026,0x028,0x029,0x02A,0x02C,+1 more; stem from fn prefix `Effect18_*` |
-| 0x02C | — | NO-RETAIL-NAME | main/dll/dim_partfx.c | main/dll/dll_002C_effect19.c | container w/ 0x003,0x026,0x028,0x029,0x02A,0x02B,+1 more; stem from fn prefix `Effect19_*` |
-| 0x02D | — | NO-RETAIL-NAME | main/dll/dim_partfx.c | main/dll/dll_002D_effect20.c | container w/ 0x003,0x026,0x028,0x029,0x02A,0x02B,+1 more; stem from fn prefix `Effect20_*` |
+| 0x016 | — | NO-RETAIL-NAME | main/dll/dll_0016_screentransition.c | = (canonical) | — |
+| 0x017 | — | NO-RETAIL-NAME | main/dll/dll_0017_savegame.c | = (canonical) | — |
+| 0x018 | — | NO-RETAIL-NAME | main/dll/dll_0018_boneparticleeffect.c | = (canonical) | — |
+| 0x019 | — | NO-RETAIL-NAME | main/dll/dll_0019_dll19func0.c | = (canonical) | — |
+| 0x01A | — | NO-RETAIL-NAME | main/dll/dll_001A_effect1.c | = (canonical) | — |
+| 0x01B | — | NO-RETAIL-NAME | main/dll/dll_001B_effect2.c | = (canonical) | — |
+| 0x01C | — | NO-RETAIL-NAME | main/dll/dll_001C_effect3.c | = (canonical) | — |
+| 0x01D | — | NO-RETAIL-NAME | main/dll/dll_001D_effect4.c | = (canonical) | — |
+| 0x01E | — | NO-RETAIL-NAME | main/dll/dll_001E_effect5.c | = (canonical) | — |
+| 0x01F | — | NO-RETAIL-NAME | main/dll/dll_001F_effect6.c | = (canonical) | — |
+| 0x020 | — | NO-RETAIL-NAME | main/dll/dll_0020_effect7.c | = (canonical) | — |
+| 0x021 | — | NO-RETAIL-NAME | main/dll/dll_0021_effect8.c | = (canonical) | — |
+| 0x022 | — | NO-RETAIL-NAME | main/dll/dll_0022_effect9.c | = (canonical) | — |
+| 0x023 | — | NO-RETAIL-NAME | main/dll/dll_0023_effect10.c | = (canonical) | — |
+| 0x024 | — | NO-RETAIL-NAME | main/dll/dll_0024_effect11.c | = (canonical) | — |
+| 0x025 | — | NO-RETAIL-NAME | main/dll/dll_0025_effect12.c | = (canonical) | — |
+| 0x026 | — | NO-RETAIL-NAME | main/dll/dll_0026_effect13.c | = (canonical) | — |
+| 0x027 | — | NO-RETAIL-NAME | main/dll/dll_0027_effect14.c | = (canonical) | — |
+| 0x028 | — | NO-RETAIL-NAME | main/dll/dll_0028_effect15.c | = (canonical) | — |
+| 0x029 | — | NO-RETAIL-NAME | main/dll/dll_0029_effect16.c | = (canonical) | — |
+| 0x02A | — | NO-RETAIL-NAME | main/dll/dll_002A_effect17.c | = (canonical) | — |
+| 0x02B | — | NO-RETAIL-NAME | main/dll/dll_002B_effect18.c | = (canonical) | — |
+| 0x02C | — | NO-RETAIL-NAME | main/dll/dll_002C_effect19.c | = (canonical) | — |
+| 0x02D | — | NO-RETAIL-NAME | main/dll/dll_002D_effect20.c | = (canonical) | — |
 | 0x02E | — | NO-RETAIL-NAME | main/dll/dll_002E_moveLib.c | = (canonical) | — |
-| 0x02F | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_002F_carryable.c | container w/ 0x011,0x017,0x058,0x059,0x05A,0x05B,+33 more; stem from fn prefix `Carryable_*` |
+| 0x02F | — | NO-RETAIL-NAME | main/dll/dll_002F_carryable.c | = (canonical) | — |
 | 0x030 | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
-| 0x031 | — | NO-RETAIL-NAME | main/dll/baddie/Tumbleweed.c | main/dll/baddie/dll_0031_minimap.c | container w/ 0x03F,0x040,0x041,0x2C0; stem from fn prefix `Minimap_*` |
-| 0x032 | — | NO-RETAIL-NAME | main/dll/FRONT/dll_0032_n_rareware.c | = (canonical) | — |
-| 0x033 | — | NO-RETAIL-NAME | main/dll/FRONT/dll_0033_nrareware.c | = (canonical) | — |
-| 0x034 | — | NO-RETAIL-NAME | main/dll/FRONT/dll_0034_n_filemenu.c | = (canonical) | — |
+| 0x031 | — | NO-RETAIL-NAME | main/dll/dll_0031_minimap.c | = (canonical) | — |
+| 0x032 | — | NO-RETAIL-NAME | main/dll/dll_0032_n_rareware.c | = (canonical) | — |
+| 0x033 | — | NO-RETAIL-NAME | main/dll/dll_0033_nrareware.c | = (canonical) | — |
+| 0x034 | — | NO-RETAIL-NAME | main/dll/dll_0034_n_filemenu.c | = (canonical) | — |
 | 0x035 | — | NO-RETAIL-NAME | main/dll/dll_0035_saveselectscreen.c | = (canonical) | — |
 | 0x036 | — | NO-RETAIL-NAME | main/dll/dll_0036_entersavenamescreen.c | = (canonical) | — |
-| 0x037 | — | NO-RETAIL-NAME | main/dll/debug/dimenu.c | main/dll/debug/dll_0037_optionsscreen.c | container w/ 0x038,0x039,0x03A; stem from fn prefix `OptionsScreen_*` |
-| 0x038 | — | NO-RETAIL-NAME | main/dll/debug/dimenu.c | main/dll/debug/dll_0038_weirdunusedmenu.c | container w/ 0x037,0x039,0x03A; stem from fn prefix `WeirdUnusedMenu_*` |
-| 0x039 | — | NO-RETAIL-NAME | main/dll/debug/dimenu.c | main/dll/debug/dll_0039_dummy39.c | container w/ 0x037,0x038,0x03A; stem from fn prefix `Dummy39_*` |
-| 0x03A | — | NO-RETAIL-NAME | main/dll/debug/dimenu.c | main/dll/debug/dll_003A_dummy3a.c | container w/ 0x037,0x038,0x039; stem from fn prefix `Dummy3A_*` |
-| 0x03B | — | NO-RETAIL-NAME | main/dll/baddie/dll_003B_menu.c | = (canonical) | — |
-| 0x03C | — | NO-RETAIL-NAME | main/dll/baddie/dll_003C_TumbleweedBush.c | = (canonical) | — |
-| 0x03D | — | NO-RETAIL-NAME | main/dll/baddie/dll_003E_dummy3e.c | main/dll/baddie/dll_003D_titlemenuitem.c | container w/ 0x03E; stem from fn prefix `TitleMenuItem_*`; current file id 0x03E != descriptor id 0x03D |
-| 0x03E | — | NO-RETAIL-NAME | main/dll/baddie/dll_003E_dummy3e.c | main/dll/baddie/dll_003E_dummy3e.c | container w/ 0x03D; stem from fn prefix `Dummy3E_*` |
-| 0x03F | — | NO-RETAIL-NAME | main/dll/baddie/Tumbleweed.c | main/dll/baddie/dll_003F_Tumbleweed.c | container w/ 0x031,0x040,0x041,0x2C0; container stem, tentative |
-| 0x040 | — | NO-RETAIL-NAME | main/dll/baddie/Tumbleweed.c | main/dll/baddie/dll_0040_credits.c | container w/ 0x031,0x03F,0x041,0x2C0; stem from fn prefix `Credits_*` |
-| 0x041 | — | NO-RETAIL-NAME | main/dll/baddie/Tumbleweed.c | main/dll/baddie/dll_0041_warpstoneui.c | container w/ 0x031,0x03F,0x040,0x2C0; stem from fn prefix `WarpstoneUI_*` |
-| 0x042 | — | NO-RETAIL-NAME | main/dll/CAM/dll_0042_unk.c | = (canonical) | — |
-| 0x043 | — | NO-RETAIL-NAME | main/dll/CAM/dll_0043_unk.c | = (canonical) | — |
-| 0x044 | — | NO-RETAIL-NAME | main/dll/CAM/dll_5B.c | main/dll/CAM/dll_0044_cameramodeviewfinder.c | container w/ 0x046,0x048; stem from fn prefix `CameraModeViewfinder_*`; current file id 0x05B != descriptor id 0x044 |
-| 0x045 | — | NO-RETAIL-NAME | main/dll/CAM/dll_0045_camTalk.c | = (canonical) | — |
-| 0x046 | — | NO-RETAIL-NAME | main/dll/CAM/dll_5B.c | main/dll/CAM/dll_0046_cameramodedebug.c | container w/ 0x044,0x048; stem from fn prefix `CameraModeDebug_*`; current file id 0x05B != descriptor id 0x046 |
-| 0x047 | — | NO-RETAIL-NAME | main/dll/CAM/dll_0047_cameramodeteststrength.c | = (canonical) | — |
-| 0x048 | — | NO-RETAIL-NAME | main/dll/CAM/dll_5B.c | main/dll/CAM/dll_0048_cameramodestatic.c | container w/ 0x044,0x046; stem from fn prefix `CameraModeStatic_*`; current file id 0x05B != descriptor id 0x048 |
-| 0x049 | — | NO-RETAIL-NAME | main/dll/CAM/camdrakor.c | main/dll/CAM/dll_0049_cameramodecombat.c | container w/ 0x04A; stem from fn prefix `CameraModeCombat_*` |
-| 0x04A | — | NO-RETAIL-NAME | main/dll/CAM/camdrakor.c | main/dll/CAM/dll_004A_cameramodeshipbattle.c | container w/ 0x049; stem from fn prefix `CameraModeShipBattle_*` |
-| 0x04B | — | NO-RETAIL-NAME | main/dll/CAM/dll_004B_cameramodeclimb.c | = (canonical) | — |
-| 0x04C | — | NO-RETAIL-NAME | main/dll/CAM/dll_004C_camDebug.c | = (canonical) | — |
-| 0x04D | — | NO-RETAIL-NAME | main/dll/baddieControl.c | main/dll/dll_004D_cameramodenpcspeak.c | container w/ 0x019,0x04E,0x04F,0x050,0x051,0x052,+5 more; stem from fn prefix `CameraModeNpcSpeak_*` |
-| 0x04E | — | NO-RETAIL-NAME | main/dll/baddieControl.c | main/dll/dll_004E_cameramodeworldmap.c | container w/ 0x019,0x04D,0x04F,0x050,0x051,0x052,+5 more; stem from fn prefix `CameraModeWorldMap_*` |
-| 0x04F | — | NO-RETAIL-NAME | main/dll/baddieControl.c | main/dll/dll_004F_baddieControl.c | container w/ 0x019,0x04D,0x04E,0x050,0x051,0x052,+5 more; container stem, tentative |
-| 0x050 | — | NO-RETAIL-NAME | main/dll/baddieControl.c | main/dll/dll_0050_cameramodecrawl.c | container w/ 0x019,0x04D,0x04E,0x04F,0x051,0x052,+5 more; stem from fn prefix `CameraModeCrawl_*` |
-| 0x051 | — | NO-RETAIL-NAME | main/dll/baddieControl.c | main/dll/dll_0051_cameramodecannon.c | container w/ 0x019,0x04D,0x04E,0x04F,0x050,0x052,+5 more; stem from fn prefix `CameraModeCannon_*` |
-| 0x052 | — | NO-RETAIL-NAME | main/dll/baddieControl.c | main/dll/dll_0052_cameramodeforcebehind.c | container w/ 0x019,0x04D,0x04E,0x04F,0x050,0x051,+5 more; stem from fn prefix `CameraModeForceBehind_*` |
-| 0x053 | — | NO-RETAIL-NAME | main/dll/baddieControl.c | main/dll/dll_0053_cameramodecloudrunner.c | container w/ 0x019,0x04D,0x04E,0x04F,0x050,0x051,+5 more; stem from fn prefix `CameraModeCloudRunner_*` |
-| 0x054 | — | NO-RETAIL-NAME | main/dll/baddieControl.c | main/dll/dll_0054_baddieControl.c | container w/ 0x019,0x04D,0x04E,0x04F,0x050,0x051,+5 more; container stem, tentative |
-| 0x055 | — | NO-RETAIL-NAME | main/dll/baddieControl.c | main/dll/dll_0055_cameramodeperv.c | container w/ 0x019,0x04D,0x04E,0x04F,0x050,0x051,+5 more; stem from fn prefix `CameraModePerv_*` |
-| 0x056 | — | NO-RETAIL-NAME | main/dll/baddieControl.c | main/dll/dll_0056_cameramodearwing.c | container w/ 0x019,0x04D,0x04E,0x04F,0x050,0x051,+5 more; stem from fn prefix `CameraModeArwing_*` |
-| 0x057 | — | NO-RETAIL-NAME | main/dll/baddieControl.c | main/dll/dll_0057_cameramodetitle.c | container w/ 0x019,0x04D,0x04E,0x04F,0x050,0x051,+5 more; stem from fn prefix `CameraModeTitle_*` |
-| 0x058 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0058_dummy58.c | container w/ 0x011,0x017,0x02F,0x059,0x05A,0x05B,+33 more; stem from fn prefix `Dummy58_*` |
-| 0x059 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0059_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x05A,0x05B,+33 more; container stem, tentative |
-| 0x05A | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_005A_staffcollision.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05B,+33 more; stem from fn prefix `StaffCollision_*` |
-| 0x05B | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_005B_modgfx.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; stem from fn prefix `modgfx_*` |
-| 0x05C | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_005C_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x05D | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_005D_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x05E | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_005E_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x05F | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_005F_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x060 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0060_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x061 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0061_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x062 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0062_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x063 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0063_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x064 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0064_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x065 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0065_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x066 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0066_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x067 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0067_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x068 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0068_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x069 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0069_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x06A | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_006A_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x06B | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_006B_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x06C | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_006C_dummy6c.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; stem from fn prefix `Dummy6C_*` |
-| 0x06D | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_006D_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x06E | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_006E_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x06F | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_006F_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x070 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0070_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x071 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0071_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x072 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0072_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x073 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0073_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x074 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0074_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x075 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0075_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x076 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0076_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x077 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0077_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x078 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0078_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x079 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_0079_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x07A | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_007A_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x07B | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_007B_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x07C | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_007C_foodbag.c | container w/ 0x07D,0x07E,0x07F,0x080,0x081,0x082,+14 more; container stem, tentative |
-| 0x07D | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_007D_foodbag.c | container w/ 0x07C,0x07E,0x07F,0x080,0x081,0x082,+14 more; container stem, tentative |
-| 0x07E | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_007E_foodbag.c | container w/ 0x07C,0x07D,0x07F,0x080,0x081,0x082,+14 more; container stem, tentative |
-| 0x07F | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_007F_foodbag.c | container w/ 0x07C,0x07D,0x07E,0x080,0x081,0x082,+14 more; container stem, tentative |
-| 0x080 | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_0080_foodbag.c | container w/ 0x07C,0x07D,0x07E,0x07F,0x081,0x082,+14 more; container stem, tentative |
-| 0x081 | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_0081_foodbag.c | container w/ 0x07C,0x07D,0x07E,0x07F,0x080,0x082,+14 more; container stem, tentative |
-| 0x082 | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_0082_foodbag.c | container w/ 0x07C,0x07D,0x07E,0x07F,0x080,0x081,+14 more; container stem, tentative |
-| 0x083 | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_0083_foodbag.c | container w/ 0x07C,0x07D,0x07E,0x07F,0x080,0x081,+14 more; container stem, tentative |
-| 0x084 | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_0084_foodbag.c | container w/ 0x07C,0x07D,0x07E,0x07F,0x080,0x081,+14 more; container stem, tentative |
-| 0x085 | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_0085_foodbag.c | container w/ 0x07C,0x07D,0x07E,0x07F,0x080,0x081,+14 more; container stem, tentative |
-| 0x086 | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_0086_foodbag.c | container w/ 0x07C,0x07D,0x07E,0x07F,0x080,0x081,+14 more; container stem, tentative |
-| 0x087 | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_0087_foodbag.c | container w/ 0x07C,0x07D,0x07E,0x07F,0x080,0x081,+14 more; container stem, tentative |
-| 0x088 | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_0088_foodbag.c | container w/ 0x07C,0x07D,0x07E,0x07F,0x080,0x081,+14 more; container stem, tentative |
-| 0x089 | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_0089_foodbag.c | container w/ 0x07C,0x07D,0x07E,0x07F,0x080,0x081,+14 more; container stem, tentative |
-| 0x08A | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_008A_foodbag.c | container w/ 0x07C,0x07D,0x07E,0x07F,0x080,0x081,+14 more; container stem, tentative |
-| 0x08B | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_008B_foodbag.c | container w/ 0x07C,0x07D,0x07E,0x07F,0x080,0x081,+14 more; container stem, tentative |
-| 0x08C | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_008C_foodbag.c | container w/ 0x07C,0x07D,0x07E,0x07F,0x080,0x081,+14 more; container stem, tentative |
-| 0x08D | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_008D_foodbag.c | container w/ 0x07C,0x07D,0x07E,0x07F,0x080,0x081,+14 more; container stem, tentative |
-| 0x08E | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_008E_foodbag.c | container w/ 0x07C,0x07D,0x07E,0x07F,0x080,0x081,+14 more; container stem, tentative |
-| 0x08F | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_008F_foodbag.c | container w/ 0x07C,0x07D,0x07E,0x07F,0x080,0x081,+14 more; container stem, tentative |
-| 0x090 | — | NO-RETAIL-NAME | main/dll/foodbag.c | main/dll/dll_0090_foodbag.c | container w/ 0x07C,0x07D,0x07E,0x07F,0x080,0x081,+14 more; container stem, tentative |
-| 0x091 | — | NO-RETAIL-NAME | main/dll/savegame.c | main/dll/dll_0091_savegame.c | container w/ 0x092,0x093,0x094,0x095,0x096,0x097,+2 more; container stem, tentative |
-| 0x092 | — | NO-RETAIL-NAME | main/dll/savegame.c | main/dll/dll_0092_savegame.c | container w/ 0x091,0x093,0x094,0x095,0x096,0x097,+2 more; container stem, tentative |
-| 0x093 | — | NO-RETAIL-NAME | main/dll/savegame.c | main/dll/dll_0093_savegame.c | container w/ 0x091,0x092,0x094,0x095,0x096,0x097,+2 more; container stem, tentative |
-| 0x094 | — | NO-RETAIL-NAME | main/dll/savegame.c | main/dll/dll_0094_savegame.c | container w/ 0x091,0x092,0x093,0x095,0x096,0x097,+2 more; container stem, tentative |
-| 0x095 | — | NO-RETAIL-NAME | main/dll/savegame.c | main/dll/dll_0095_savegame.c | container w/ 0x091,0x092,0x093,0x094,0x096,0x097,+2 more; container stem, tentative |
-| 0x096 | — | NO-RETAIL-NAME | main/dll/savegame.c | main/dll/dll_0096_savegame.c | container w/ 0x091,0x092,0x093,0x094,0x095,0x097,+2 more; container stem, tentative |
-| 0x097 | — | NO-RETAIL-NAME | main/dll/savegame.c | main/dll/dll_0097_savegame.c | container w/ 0x091,0x092,0x093,0x094,0x095,0x096,+2 more; container stem, tentative |
-| 0x098 | — | NO-RETAIL-NAME | main/dll/savegame.c | main/dll/dll_0098_savegame.c | container w/ 0x091,0x092,0x093,0x094,0x095,0x096,+2 more; container stem, tentative |
-| 0x099 | — | NO-RETAIL-NAME | main/dll/savegame.c | main/dll/dll_0099_savegame.c | container w/ 0x091,0x092,0x093,0x094,0x095,0x096,+2 more; container stem, tentative |
-| 0x09A | — | NO-RETAIL-NAME | main/dll/screens.c | main/dll/dll_009A_screens.c | container w/ 0x09B,0x09C; container stem, tentative |
-| 0x09B | — | NO-RETAIL-NAME | main/dll/screens.c | main/dll/dll_009B_screens.c | container w/ 0x09A,0x09C; container stem, tentative |
-| 0x09C | — | NO-RETAIL-NAME | main/dll/screens.c | main/dll/dll_009C_screens.c | container w/ 0x09A,0x09B; container stem, tentative |
-| 0x09D | — | NO-RETAIL-NAME | main/dll/pickup.c | main/dll/dll_009D_pickup.c | container w/ 0x09E,0x09F,0x0A0,0x0A1,0x0A2,0x0A4,+6 more; container stem, tentative |
-| 0x09E | — | NO-RETAIL-NAME | main/dll/pickup.c | main/dll/dll_009E_pickup.c | container w/ 0x09D,0x09F,0x0A0,0x0A1,0x0A2,0x0A4,+6 more; container stem, tentative |
-| 0x09F | — | NO-RETAIL-NAME | main/dll/pickup.c | main/dll/dll_009F_pickup.c | container w/ 0x09D,0x09E,0x0A0,0x0A1,0x0A2,0x0A4,+6 more; container stem, tentative |
-| 0x0A0 | — | NO-RETAIL-NAME | main/dll/pickup.c | main/dll/dll_00A0_pickup.c | container w/ 0x09D,0x09E,0x09F,0x0A1,0x0A2,0x0A4,+6 more; container stem, tentative |
-| 0x0A1 | — | NO-RETAIL-NAME | main/dll/pickup.c | main/dll/dll_00A1_pickup.c | container w/ 0x09D,0x09E,0x09F,0x0A0,0x0A2,0x0A4,+6 more; container stem, tentative |
-| 0x0A2 | — | NO-RETAIL-NAME | main/dll/pickup.c | main/dll/dll_00A2_pickup.c | container w/ 0x09D,0x09E,0x09F,0x0A0,0x0A1,0x0A4,+6 more; container stem, tentative |
-| 0x0A3 | — | NO-RETAIL-NAME | main/dll/gameplay.c | main/dll/dll_00A3_gameplay.c | container w/ 0x011,0x017,0x02F,0x058,0x059,0x05A,+33 more; container stem, tentative |
-| 0x0A4 | — | NO-RETAIL-NAME | main/dll/pickup.c | main/dll/dll_00A4_dummya4.c | container w/ 0x09D,0x09E,0x09F,0x0A0,0x0A1,0x0A2,+6 more; stem from fn prefix `DummyA4_*` |
-| 0x0A5 | — | NO-RETAIL-NAME | main/dll/pickup.c | main/dll/dll_00A5_pickup.c | container w/ 0x09D,0x09E,0x09F,0x0A0,0x0A1,0x0A2,+6 more; container stem, tentative |
-| 0x0A6 | — | NO-RETAIL-NAME | main/dll/pickup.c | main/dll/dll_00A6_pickup.c | container w/ 0x09D,0x09E,0x09F,0x0A0,0x0A1,0x0A2,+6 more; container stem, tentative |
-| 0x0A7 | — | NO-RETAIL-NAME | main/dll/pickup.c | main/dll/dll_00A7_pickup.c | container w/ 0x09D,0x09E,0x09F,0x0A0,0x0A1,0x0A2,+6 more; container stem, tentative |
-| 0x0A8 | — | NO-RETAIL-NAME | main/dll/pickup.c | main/dll/dll_00A8_pickup.c | container w/ 0x09D,0x09E,0x09F,0x0A0,0x0A1,0x0A2,+6 more; container stem, tentative |
-| 0x0A9 | — | NO-RETAIL-NAME | main/dll/pickup.c | main/dll/dll_00A9_pickup.c | container w/ 0x09D,0x09E,0x09F,0x0A0,0x0A1,0x0A2,+6 more; container stem, tentative |
-| 0x0AA | — | NO-RETAIL-NAME | main/dll/pickup.c | main/dll/dll_00AA_pickup.c | container w/ 0x09D,0x09E,0x09F,0x0A0,0x0A1,0x0A2,+6 more; container stem, tentative |
-| 0x0AB | — | NO-RETAIL-NAME | main/dll/dll_66.c | main/dll/dll_00AB_projdummy.c | container w/ 0x0AC,0x0AD,0x0AE,0x0AF,0x0B0,0x0B1,+4 more; stem from fn prefix `projdummy_*`; current file id 0x066 != descriptor id 0x0AB |
-| 0x0AC | — | NO-RETAIL-NAME | main/dll/dll_66.c | main/dll/dll_00AC_projmagicstream.c | container w/ 0x0AB,0x0AD,0x0AE,0x0AF,0x0B0,0x0B1,+4 more; stem from fn prefix `projmagicstream_*`; current file id 0x066 != descriptor id 0x0AC |
-| 0x0AD | — | NO-RETAIL-NAME | main/dll/dll_66.c | main/dll/dll_00AD_projmagicemmit1.c | container w/ 0x0AB,0x0AC,0x0AE,0x0AF,0x0B0,0x0B1,+4 more; stem from fn prefix `projmagicemmit1_*`; current file id 0x066 != descriptor id 0x0AD |
-| 0x0AE | — | NO-RETAIL-NAME | main/dll/dll_66.c | main/dll/dll_00AE_projroombeam.c | container w/ 0x0AB,0x0AC,0x0AD,0x0AF,0x0B0,0x0B1,+4 more; stem from fn prefix `projroombeam_*`; current file id 0x066 != descriptor id 0x0AE |
-| 0x0AF | — | NO-RETAIL-NAME | main/dll/dll_66.c | main/dll/dll_00AF_projlightning1.c | container w/ 0x0AB,0x0AC,0x0AD,0x0AE,0x0B0,0x0B1,+4 more; stem from fn prefix `projlightning1_*`; current file id 0x066 != descriptor id 0x0AF |
-| 0x0B0 | — | NO-RETAIL-NAME | main/dll/dll_66.c | main/dll/dll_00B0_projlightning2.c | container w/ 0x0AB,0x0AC,0x0AD,0x0AE,0x0AF,0x0B1,+4 more; stem from fn prefix `projlightning2_*`; current file id 0x066 != descriptor id 0x0B0 |
-| 0x0B1 | — | NO-RETAIL-NAME | main/dll/dll_66.c | main/dll/dll_00B1_projlightning3.c | container w/ 0x0AB,0x0AC,0x0AD,0x0AE,0x0AF,0x0B0,+4 more; stem from fn prefix `projlightning3_*`; current file id 0x066 != descriptor id 0x0B1 |
+| 0x037 | — | NO-RETAIL-NAME | main/dll/dll_0037_optionsscreen.c | = (canonical) | — |
+| 0x038 | — | NO-RETAIL-NAME | main/dll/dll_0038_weirdunusedmenu.c | = (canonical) | — |
+| 0x039 | — | NO-RETAIL-NAME | main/dll/dll_0039_dummy39.c | = (canonical) | — |
+| 0x03A | — | NO-RETAIL-NAME | main/dll/dll_003A_dummy3a.c | = (canonical) | — |
+| 0x03B | — | NO-RETAIL-NAME | main/dll/dll_003B_menu.c | = (canonical) | — |
+| 0x03C | — | NO-RETAIL-NAME | main/dll/dll_003C_TumbleweedBush.c | = (canonical) | — |
+| 0x03D | — | NO-RETAIL-NAME | main/dll/dll_003D_titlemenuitem.c | = (canonical) | — |
+| 0x03E | — | NO-RETAIL-NAME | main/dll/dll_003E_dummy3e.c | = (canonical) | — |
+| 0x03F | — | NO-RETAIL-NAME | main/dll/dll_003F_dll3f.c | = (canonical) | — |
+| 0x040 | — | NO-RETAIL-NAME | main/dll/dll_0040_credits.c | = (canonical) | — |
+| 0x041 | — | NO-RETAIL-NAME | main/dll/dll_0041_warpstoneui.c | = (canonical) | — |
+| 0x042 | — | NO-RETAIL-NAME | main/dll/dll_0042_unk.c | = (canonical) | — |
+| 0x043 | — | NO-RETAIL-NAME | main/dll/dll_0043_unk.c | = (canonical) | — |
+| 0x044 | — | NO-RETAIL-NAME | main/dll/dll_0044_cameramodeviewfinder.c | = (canonical) | — |
+| 0x045 | — | NO-RETAIL-NAME | main/dll/dll_0045_camTalk.c | = (canonical) | — |
+| 0x046 | — | NO-RETAIL-NAME | main/dll/dll_0046_cameramodedebug.c | = (canonical) | — |
+| 0x047 | — | NO-RETAIL-NAME | main/dll/dll_0047_cameramodeteststrength.c | = (canonical) | — |
+| 0x048 | — | NO-RETAIL-NAME | main/dll/dll_0048_cameramodestatic.c | = (canonical) | — |
+| 0x049 | — | NO-RETAIL-NAME | main/dll/dll_0049_cameramodecombat.c | = (canonical) | — |
+| 0x04A | — | NO-RETAIL-NAME | main/dll/dll_004A_cameramodeshipbattle.c | = (canonical) | — |
+| 0x04B | — | NO-RETAIL-NAME | main/dll/dll_004B_cameramodeclimb.c | = (canonical) | — |
+| 0x04C | — | NO-RETAIL-NAME | main/dll/dll_004C_camDebug.c | = (canonical) | — |
+| 0x04D | — | NO-RETAIL-NAME | main/dll/dll_004D_cameramodenpcspeak.c | = (canonical) | — |
+| 0x04E | — | NO-RETAIL-NAME | main/dll/dll_004E_cameramodeworldmap.c | = (canonical) | — |
+| 0x04F | — | NO-RETAIL-NAME | main/dll/dll_004F_dll4f.c | = (canonical) | — |
+| 0x050 | — | NO-RETAIL-NAME | main/dll/dll_0050_cameramodecrawl.c | = (canonical) | — |
+| 0x051 | — | NO-RETAIL-NAME | main/dll/dll_0051_cameramodecannon.c | = (canonical) | — |
+| 0x052 | — | NO-RETAIL-NAME | main/dll/dll_0052_cameramodeforcebehind.c | = (canonical) | — |
+| 0x053 | — | NO-RETAIL-NAME | main/dll/dll_0053_cameramodecloudrunner.c | = (canonical) | — |
+| 0x054 | — | NO-RETAIL-NAME | main/dll/dll_0054_dll54.c | = (canonical) | — |
+| 0x055 | — | NO-RETAIL-NAME | main/dll/dll_0055_cameramodeperv.c | = (canonical) | — |
+| 0x056 | — | NO-RETAIL-NAME | main/dll/dll_0056_cameramodearwing.c | = (canonical) | — |
+| 0x057 | — | NO-RETAIL-NAME | main/dll/dll_0057_cameramodetitle.c | = (canonical) | — |
+| 0x058 | — | NO-RETAIL-NAME | main/dll/dll_0058_dummy58.c | = (canonical) | — |
+| 0x059 | — | NO-RETAIL-NAME | main/dll/dll_0059_dll59func0.c | = (canonical) | — |
+| 0x05A | — | NO-RETAIL-NAME | main/dll/dll_005A_staffcollisionfunc03.c | = (canonical) | — |
+| 0x05B | — | NO-RETAIL-NAME | main/dll/dll_005B_modgfxfunc03.c | = (canonical) | — |
+| 0x05C | — | NO-RETAIL-NAME | main/dll/dll_005C_dll5cfunc0.c | = (canonical) | — |
+| 0x05D | — | NO-RETAIL-NAME | main/dll/dll_005D_dll5dfunc0.c | = (canonical) | — |
+| 0x05E | — | NO-RETAIL-NAME | main/dll/dll_005E_dll5efunc0.c | = (canonical) | — |
+| 0x05F | — | NO-RETAIL-NAME | main/dll/dll_005F_dll5ffunc0.c | = (canonical) | — |
+| 0x060 | — | NO-RETAIL-NAME | main/dll/dll_0060_dll60func0.c | = (canonical) | — |
+| 0x061 | — | NO-RETAIL-NAME | main/dll/dll_0061_dll61func0.c | = (canonical) | — |
+| 0x062 | — | NO-RETAIL-NAME | main/dll/dll_0062_dll62func0.c | = (canonical) | — |
+| 0x063 | — | NO-RETAIL-NAME | main/dll/dll_0063_dll63func0.c | = (canonical) | — |
+| 0x064 | — | NO-RETAIL-NAME | main/dll/dll_0064_dll64func0.c | = (canonical) | — |
+| 0x065 | — | NO-RETAIL-NAME | main/dll/dll_0065_dll65func0.c | = (canonical) | — |
+| 0x066 | — | NO-RETAIL-NAME | main/dll/dll_0066_dll66func0.c | = (canonical) | — |
+| 0x067 | — | NO-RETAIL-NAME | main/dll/dll_0067_dll67func0.c | = (canonical) | — |
+| 0x068 | — | NO-RETAIL-NAME | main/dll/dll_0068_dll68func0.c | = (canonical) | — |
+| 0x069 | — | NO-RETAIL-NAME | main/dll/dll_0069_dll69func0.c | = (canonical) | — |
+| 0x06A | — | NO-RETAIL-NAME | main/dll/dll_006A_dll6afunc0.c | = (canonical) | — |
+| 0x06B | — | NO-RETAIL-NAME | main/dll/dll_006B_dll6bfunc0.c | = (canonical) | — |
+| 0x06C | — | NO-RETAIL-NAME | main/dll/dll_006C_dummy6c.c | = (canonical) | — |
+| 0x06D | — | NO-RETAIL-NAME | main/dll/dll_006D_dll6dfunc0.c | = (canonical) | — |
+| 0x06E | — | NO-RETAIL-NAME | main/dll/dll_006E_dll6efunc0.c | = (canonical) | — |
+| 0x06F | — | NO-RETAIL-NAME | main/dll/dll_006F_dll6ffunc0.c | = (canonical) | — |
+| 0x070 | — | NO-RETAIL-NAME | main/dll/dll_0070_dll70func0.c | = (canonical) | — |
+| 0x071 | — | NO-RETAIL-NAME | main/dll/dll_0071_dll71func0.c | = (canonical) | — |
+| 0x072 | — | NO-RETAIL-NAME | main/dll/dll_0072_dll72func0.c | = (canonical) | — |
+| 0x073 | — | NO-RETAIL-NAME | main/dll/dll_0073_dll73func0.c | = (canonical) | — |
+| 0x074 | — | NO-RETAIL-NAME | main/dll/dll_0074_dll74func0.c | = (canonical) | — |
+| 0x075 | — | NO-RETAIL-NAME | main/dll/dll_0075_dll75func0.c | = (canonical) | — |
+| 0x076 | — | NO-RETAIL-NAME | main/dll/dll_0076_dll76func0.c | = (canonical) | — |
+| 0x077 | — | NO-RETAIL-NAME | main/dll/dll_0077_dll77func0.c | = (canonical) | — |
+| 0x078 | — | NO-RETAIL-NAME | main/dll/dll_0078_dll78func0.c | = (canonical) | — |
+| 0x079 | — | NO-RETAIL-NAME | main/dll/dll_0079_dll79func0.c | = (canonical) | — |
+| 0x07A | — | NO-RETAIL-NAME | main/dll/dll_007A_dll7afunc0.c | = (canonical) | — |
+| 0x07B | — | NO-RETAIL-NAME | main/dll/dll_007B_dll7bfunc0.c | = (canonical) | — |
+| 0x07C | — | NO-RETAIL-NAME | main/dll/dll_007C_dll7cfunc0.c | = (canonical) | — |
+| 0x07D | — | NO-RETAIL-NAME | main/dll/dll_007D_dll7dfunc0.c | = (canonical) | — |
+| 0x07E | — | NO-RETAIL-NAME | main/dll/dll_007E_dll7efunc0.c | = (canonical) | — |
+| 0x07F | — | NO-RETAIL-NAME | main/dll/dll_007F_dll7ffunc0.c | = (canonical) | — |
+| 0x080 | — | NO-RETAIL-NAME | main/dll/dll_0080_dll80func0.c | = (canonical) | — |
+| 0x081 | — | NO-RETAIL-NAME | main/dll/dll_0081_dll81func0.c | = (canonical) | — |
+| 0x082 | — | NO-RETAIL-NAME | main/dll/dll_0082_dll82func0.c | = (canonical) | — |
+| 0x083 | — | NO-RETAIL-NAME | main/dll/dll_0083_dll83func0.c | = (canonical) | — |
+| 0x084 | — | NO-RETAIL-NAME | main/dll/dll_0084_dll84func0.c | = (canonical) | — |
+| 0x085 | — | NO-RETAIL-NAME | main/dll/dll_0085_dll85func0.c | = (canonical) | — |
+| 0x086 | — | NO-RETAIL-NAME | main/dll/dll_0086_dll86func0.c | = (canonical) | — |
+| 0x087 | — | NO-RETAIL-NAME | main/dll/dll_0087_dll87func0.c | = (canonical) | — |
+| 0x088 | — | NO-RETAIL-NAME | main/dll/dll_0088_dll88func0.c | = (canonical) | — |
+| 0x089 | — | NO-RETAIL-NAME | main/dll/dll_0089_dll89func0.c | = (canonical) | — |
+| 0x08A | — | NO-RETAIL-NAME | main/dll/dll_008A_dll8afunc0.c | = (canonical) | — |
+| 0x08B | — | NO-RETAIL-NAME | main/dll/dll_008B_dll8bfunc0.c | = (canonical) | — |
+| 0x08C | — | NO-RETAIL-NAME | main/dll/dll_008C_dll8cfunc0.c | = (canonical) | — |
+| 0x08D | — | NO-RETAIL-NAME | main/dll/dll_008D_dll8dfunc0.c | = (canonical) | — |
+| 0x08E | — | NO-RETAIL-NAME | main/dll/dll_008E_dll8efunc0.c | = (canonical) | — |
+| 0x08F | — | NO-RETAIL-NAME | main/dll/dll_008F_dll8ffunc0.c | = (canonical) | — |
+| 0x090 | — | NO-RETAIL-NAME | main/dll/dll_0090_dll90func0.c | = (canonical) | — |
+| 0x091 | — | NO-RETAIL-NAME | main/dll/dll_0091_dll91func0.c | = (canonical) | — |
+| 0x092 | — | NO-RETAIL-NAME | main/dll/dll_0092_dll92func0.c | = (canonical) | — |
+| 0x093 | — | NO-RETAIL-NAME | main/dll/dll_0093_dll93func0.c | = (canonical) | — |
+| 0x094 | — | NO-RETAIL-NAME | main/dll/dll_0094_dll94func0.c | = (canonical) | — |
+| 0x095 | — | NO-RETAIL-NAME | main/dll/dll_0095_dll95func0.c | = (canonical) | — |
+| 0x096 | — | NO-RETAIL-NAME | main/dll/dll_0096_dll96func0.c | = (canonical) | — |
+| 0x097 | — | NO-RETAIL-NAME | main/dll/dll_0097_dll97func0.c | = (canonical) | — |
+| 0x098 | — | NO-RETAIL-NAME | main/dll/dll_0098_dll98func0.c | = (canonical) | — |
+| 0x099 | — | NO-RETAIL-NAME | main/dll/dll_0099_dll99func0.c | = (canonical) | — |
+| 0x09A | — | NO-RETAIL-NAME | main/dll/dll_009A_dll9afunc0.c | = (canonical) | — |
+| 0x09B | — | NO-RETAIL-NAME | main/dll/dll_009B_dll9bfunc0.c | = (canonical) | — |
+| 0x09C | — | NO-RETAIL-NAME | main/dll/dll_009C_dll9cfunc0.c | = (canonical) | — |
+| 0x09D | — | NO-RETAIL-NAME | main/dll/dll_009D_dll9dfunc0.c | = (canonical) | — |
+| 0x09E | — | NO-RETAIL-NAME | main/dll/dll_009E_dll9efunc0.c | = (canonical) | — |
+| 0x09F | — | NO-RETAIL-NAME | main/dll/dll_009F_dll9ffunc0.c | = (canonical) | — |
+| 0x0A0 | — | NO-RETAIL-NAME | main/dll/dll_00A0_dlla0func0.c | = (canonical) | — |
+| 0x0A1 | — | NO-RETAIL-NAME | main/dll/dll_00A1_dlla1func0.c | = (canonical) | — |
+| 0x0A2 | — | NO-RETAIL-NAME | main/dll/dll_00A2_dlla2func0.c | = (canonical) | — |
+| 0x0A3 | — | NO-RETAIL-NAME | main/dll/dll_00A3_dlla3func0.c | = (canonical) | — |
+| 0x0A4 | — | NO-RETAIL-NAME | main/dll/dll_00A4_dummya4.c | = (canonical) | — |
+| 0x0A5 | — | NO-RETAIL-NAME | main/dll/dll_00A5_dlla5func0.c | = (canonical) | — |
+| 0x0A6 | — | NO-RETAIL-NAME | main/dll/dll_00A6_dlla6func0.c | = (canonical) | — |
+| 0x0A7 | — | NO-RETAIL-NAME | main/dll/dll_00A7_dlla7func0.c | = (canonical) | — |
+| 0x0A8 | — | NO-RETAIL-NAME | main/dll/dll_00A8_dlla8func0.c | = (canonical) | — |
+| 0x0A9 | — | NO-RETAIL-NAME | main/dll/dll_00A9_dlla9func0.c | = (canonical) | — |
+| 0x0AA | — | NO-RETAIL-NAME | main/dll/dll_00AA_dllaafunc0.c | = (canonical) | — |
+| 0x0AB | — | NO-RETAIL-NAME | main/dll/dll_00AB_projdummy.c | = (canonical) | — |
+| 0x0AC | — | NO-RETAIL-NAME | main/dll/dll_00AC_projmagicstream.c | = (canonical) | — |
+| 0x0AD | — | NO-RETAIL-NAME | main/dll/dll_00AD_projmagicemmit1.c | = (canonical) | — |
+| 0x0AE | — | NO-RETAIL-NAME | main/dll/dll_00AE_projroombeam.c | = (canonical) | — |
+| 0x0AF | — | NO-RETAIL-NAME | main/dll/dll_00AF_projlightning1.c | = (canonical) | — |
+| 0x0B0 | — | NO-RETAIL-NAME | main/dll/dll_00B0_projlightning2.c | = (canonical) | — |
+| 0x0B1 | — | NO-RETAIL-NAME | main/dll/dll_00B1_projlightning3.c | = (canonical) | — |
 | 0x0B2 | — | NO-RETAIL-NAME | main/dll/dll_00B2_projrobotfire.c | = (canonical) | — |
-| 0x0B3 | — | NO-RETAIL-NAME | main/dll/dll_66.c | main/dll/dll_00B3_projlightning4.c | container w/ 0x0AB,0x0AC,0x0AD,0x0AE,0x0AF,0x0B0,+4 more; stem from fn prefix `projlightning4_*`; current file id 0x066 != descriptor id 0x0B3 |
+| 0x0B3 | — | NO-RETAIL-NAME | main/dll/dll_00B3_projlightning4.c | = (canonical) | — |
 | 0x0B4 | — | NO-RETAIL-NAME | main/dll/dll_00B4_projenergise1.c | = (canonical) | — |
 | 0x0B5 | — | NO-RETAIL-NAME | main/dll/dll_00B5_projenergise2.c | = (canonical) | — |
 | 0x0B6 | — | NO-RETAIL-NAME | main/dll/dll_00B6_projsquirt1.c | = (canonical) | — |
 | 0x0B7 | — | NO-RETAIL-NAME | main/dll/dll_00B7_projship1.c | = (canonical) | — |
-| 0x0B8 | — | NO-RETAIL-NAME | main/dll/dll_66.c | main/dll/dll_00B8_projlightning5.c | container w/ 0x0AB,0x0AC,0x0AD,0x0AE,0x0AF,0x0B0,+4 more; stem from fn prefix `projlightning5_*`; current file id 0x066 != descriptor id 0x0B8 |
-| 0x0B9 | — | NO-RETAIL-NAME | main/dll/dll_66.c | main/dll/dll_00B9_projlightning7.c | container w/ 0x0AB,0x0AC,0x0AD,0x0AE,0x0AF,0x0B0,+4 more; stem from fn prefix `projlightning7_*`; current file id 0x066 != descriptor id 0x0B9 |
-| 0x0BA | — | NO-RETAIL-NAME | main/dll/dll_66.c | main/dll/dll_00BA_projlightning6.c | container w/ 0x0AB,0x0AC,0x0AD,0x0AE,0x0AF,0x0B0,+4 more; stem from fn prefix `projlightning6_*`; current file id 0x066 != descriptor id 0x0BA |
+| 0x0B8 | — | NO-RETAIL-NAME | main/dll/dll_00B8_projlightning5.c | = (canonical) | — |
+| 0x0B9 | — | NO-RETAIL-NAME | main/dll/dll_00B9_projlightning7.c | = (canonical) | — |
+| 0x0BA | — | NO-RETAIL-NAME | main/dll/dll_00BA_projlightning6.c | = (canonical) | — |
 | 0x0BB | — | NO-RETAIL-NAME | main/dll/dll_00BB_projwallpower.c | = (canonical) | — |
 | 0x0BC | — | NO-RETAIL-NAME | main/dll/dll_00BC_projquakeshock.c | = (canonical) | — |
 | 0x0BD | — | NO-RETAIL-NAME | main/dll/dll_00BD_projsunshock.c | = (canonical) | — |
@@ -260,350 +242,350 @@ Expansion status over the 448 named dlls: COMPLETE 116, CONFIRMED 276, GUESSED 3
 | 0x0C2 | — | NO-RETAIL-NAME | main/dll/dll_00C2_projdfp1r.c | = (canonical) | — |
 | 0x0C4 | Tricky | COMPLETE | main/dll/dll_00C4_tricky.c | = (canonical) | — |
 | 0x0C5 | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
-| 0x0C6 | animatedobj (+AnimDummy, AnimTrickyB, AnimTricky, AnimKyte, staffAnim, AnimStandar, animSCweapo, WBAnim, AnimSnowCla, AnimSharpcl, DIMSpellsto, AnimDrakor, KT_AnimSpel, AnimKytesMu, AnimGuardCl, steggy, Nutter, Krazoa, CFAnimCloud, CFPrisonCag, AnimCFGuard, AnimSpell, CFAnimSnowB, CFPowerDoor, AnimSpaceCr, CFPowerCrys, CFSmallPowe, CFAnimBaby, CF_RockPiec, AnimCFTreas, CFAnimPower, CFPowerRoom, AnimRobotPa, CFMainDoorB, CFBrokenPil, AnimSpellst, AnimKingEar, WCAnimSilve, WCAnimGoldT, WCAnimSunSt, WCAnimMoonS, WCAnimGener, DIMafterbos, DIMBridgeCo, DIMAlpineRo, DIMicefloor, DIMTruthHor, Blacksquare, SpaceShip, IMSpaceTrac, CCOceanDoor, CCAnimCanno, CCAnimgoldb, WORLDcomm, communicato, commCube, commCubeFro, commRobHead, commPepperH, commPeppyHe, commSlippyH, commMemoryC, commQuitObj, AnimARWArwi, AnimWhiteSp, HazeSphere2, AnimWhitePl, AnimConcuss, WORLDanimpl, WORLDanimcl, WORLDanimdr, WORLDanimwa, WORLDanimda, AnimFalco, Animpeppy, GF_PepperHe, GF_planet, Animrob, AnimPilotse, AnimPlanet, Animspanner, GF_DoorRigh, MMP_asteroi, MMP_Krazoa, NW_AnimGeys, NW_AnimBoul, NW_alpinero, AnimGoldRoo, NW_guardian, NW_animmamm, SH_AnimMap, SH_krystalH, SH_thorntai, SH_whitemus, SH_AnimBoul, AnimSwapGif, SHAnimBaby, KP_AnimKraz, KP_RedKrazo, AnimKrystal, ScalesBelt, SC_animligh, SC_animchie, SC_animbaby, SC_animmusc, MMP_Key, VFP_mocklaz, VFP_corepla, VFP_Door2B, DFP_transla, DFP_BigDoor, DFPSplstneA, VFPSplstneA, WM_Cloudrun, WM_BossDrak, WM_Krazoa1, WM_Krazoa2, WM_thorntai, WM_Spellboo, WM_Door2, WM_Door3, WM_Door4, WM_PlanDoor, WM_Animcolr, WM_Animspir, Rarelogo, N64logo, DFSH_Spirit, DFSH_Door2, DFSH_Door3, DFSH_Door4, AnimShadowH, AnimShadowC, ECSH_Door2, ECSH_Door3, ECSH_Door4, DBSH_PushCl, Animscaless, DBAnimThief, DB_AnimEgg, DR_AnimEart, AnimHightop, GM_Token, DR_LiftLeve, DR_ShieldIn, DR_AnimColl, DR_CloudDoo, DR_HighDoor, DR_James2Bo, DR_LandSqua, AnimFox, AnimFoxLink, SB_Cloudrun, PortalDoorA, Arwingsteps, AnimCamera, Override, DepthOfFiel, VariableObj, ExplodingWa, hologrambas, hologramhaz, hazesphere, RipplePlain, SidekickBal, animbubble, BlueMushroo, EnergyEggAn, AppleAnim, MagicDustSm, MagicDustMi, MagicDustLa, MagicDustHu, RedScarabAn, GoldScarabA, BombPlantSp, animMoonSee, ARWArwingFo, ARWBlockerD, ARWAnimSmal, ARWAnimBigA, ARWDarkIceP, ARWDragonRo, ARWCloudRun, ARWWalledCi, ARWDinoPlan, ARWAnimBomb, AnimFish, beanAnim, WarpCigar, WarpGasCyli) | GUESSED | main/dll/genprops.c | main/dll/dll_00C6_animatedobj.c | container w/ 0x0C7,0x0C8,0x0DB,0x0DC,0x0DD,0x0DE,+12 more |
-| 0x0C7 | DIM2RoofRub (+CCfireCryst, AnimGreatfo, GreenScarab) | CONFIRMED | main/dll/genprops.c | main/dll/DIM/dll_00C7_dim2roofrub.c | container w/ 0x0C6,0x0C8,0x0DB,0x0DC,0x0DD,0x0DE,+12 more |
-| 0x0C8 | DepthOfFieldpoint | CONFIRMED | main/dll/genprops.c | main/dll/dll_00C8_depthoffieldpoint.c | container w/ 0x0C6,0x0C7,0x0DB,0x0DC,0x0DD,0x0DE,+12 more |
+| 0x0C6 | animatedobj (+AnimDummy, AnimTrickyB, AnimTricky, AnimKyte, staffAnim, AnimStandar, animSCweapo, WBAnim, AnimSnowCla, AnimSharpcl, DIMSpellsto, AnimDrakor, KT_AnimSpel, AnimKytesMu, AnimGuardCl, steggy, Nutter, Krazoa, CFAnimCloud, CFPrisonCag, AnimCFGuard, AnimSpell, CFAnimSnowB, CFPowerDoor, AnimSpaceCr, CFPowerCrys, CFSmallPowe, CFAnimBaby, CF_RockPiec, AnimCFTreas, CFAnimPower, CFPowerRoom, AnimRobotPa, CFMainDoorB, CFBrokenPil, AnimSpellst, AnimKingEar, WCAnimSilve, WCAnimGoldT, WCAnimSunSt, WCAnimMoonS, WCAnimGener, DIMafterbos, DIMBridgeCo, DIMAlpineRo, DIMicefloor, DIMTruthHor, Blacksquare, SpaceShip, IMSpaceTrac, CCOceanDoor, CCAnimCanno, CCAnimgoldb, WORLDcomm, communicato, commCube, commCubeFro, commRobHead, commPepperH, commPeppyHe, commSlippyH, commMemoryC, commQuitObj, AnimARWArwi, AnimWhiteSp, HazeSphere2, AnimWhitePl, AnimConcuss, WORLDanimpl, WORLDanimcl, WORLDanimdr, WORLDanimwa, WORLDanimda, AnimFalco, Animpeppy, GF_PepperHe, GF_planet, Animrob, AnimPilotse, AnimPlanet, Animspanner, GF_DoorRigh, MMP_asteroi, MMP_Krazoa, NW_AnimGeys, NW_AnimBoul, NW_alpinero, AnimGoldRoo, NW_guardian, NW_animmamm, SH_AnimMap, SH_krystalH, SH_thorntai, SH_whitemus, SH_AnimBoul, AnimSwapGif, SHAnimBaby, KP_AnimKraz, KP_RedKrazo, AnimKrystal, ScalesBelt, SC_animligh, SC_animchie, SC_animbaby, SC_animmusc, MMP_Key, VFP_mocklaz, VFP_corepla, VFP_Door2B, DFP_transla, DFP_BigDoor, DFPSplstneA, VFPSplstneA, WM_Cloudrun, WM_BossDrak, WM_Krazoa1, WM_Krazoa2, WM_thorntai, WM_Spellboo, WM_Door2, WM_Door3, WM_Door4, WM_PlanDoor, WM_Animcolr, WM_Animspir, Rarelogo, N64logo, DFSH_Spirit, DFSH_Door2, DFSH_Door3, DFSH_Door4, AnimShadowH, AnimShadowC, ECSH_Door2, ECSH_Door3, ECSH_Door4, DBSH_PushCl, Animscaless, DBAnimThief, DB_AnimEgg, DR_AnimEart, AnimHightop, GM_Token, DR_LiftLeve, DR_ShieldIn, DR_AnimColl, DR_CloudDoo, DR_HighDoor, DR_James2Bo, DR_LandSqua, AnimFox, AnimFoxLink, SB_Cloudrun, PortalDoorA, Arwingsteps, AnimCamera, Override, DepthOfFiel, VariableObj, ExplodingWa, hologrambas, hologramhaz, hazesphere, RipplePlain, SidekickBal, animbubble, BlueMushroo, EnergyEggAn, AppleAnim, MagicDustSm, MagicDustMi, MagicDustLa, MagicDustHu, RedScarabAn, GoldScarabA, BombPlantSp, animMoonSee, ARWArwingFo, ARWBlockerD, ARWAnimSmal, ARWAnimBigA, ARWDarkIceP, ARWDragonRo, ARWCloudRun, ARWWalledCi, ARWDinoPlan, ARWAnimBomb, AnimFish, beanAnim, WarpCigar, WarpGasCyli) | GUESSED | main/dll/dll_00C6_animdummy.c | main/dll/dll_00C6_animatedobj.c | — |
+| 0x0C7 | DIM2RoofRub (+CCfireCryst, AnimGreatfo, GreenScarab) | CONFIRMED | main/dll/dll_00C7_dim2roofrub.c | main/dll/DIM/dll_00C7_dim2roofrub.c | — |
+| 0x0C8 | DepthOfFieldpoint | CONFIRMED | main/dll/dll_00C8_depthoffiel.c | main/dll/dll_00C8_depthoffieldpoint.c | — |
 | 0x0C9 | enemy (+GuardClaw, GCRobotPatr, Vambat, Firebat, HagabonMK2, Mikaladon, SpittingEba, MutatedEba, snowworm, snowworm_ba, Whirlpool, Rachnop, PinPon, WB, Weevil, BattleDroid, Kooshy, HoodedZyck, FireCrawler, RedEye, ShadowHunte, SwampStride, sharpclawSn, sharpclawGr, sharpclawSo, sharpclawCo, sharpclawAs, sharpclawSh, BossGeneral) | GUESSED | main/dll/dll_00C9_enemy.c | = (canonical) | — |
 | 0x0CA | — | NO-RETAIL-NAME | main/dll/dll_00CA_mediumbasket.c | = (canonical) | — |
-| 0x0CB | — | NO-RETAIL-NAME | main/dll/scarab.c | main/dll/dll_00CB_scarab.c | container w/ 0x0CC,0x0CD,0x0CE; container stem, tentative |
-| 0x0CC | ChukChuk | COMPLETE | main/dll/scarab.c | main/dll/dll_00CC_chukchuk.c | container w/ 0x0CB,0x0CD,0x0CE |
-| 0x0CD | IceBall (+IceBallSmal, ChukaChuck) | COMPLETE | main/dll/scarab.c | main/dll/dll_00CD_iceball.c | container w/ 0x0CB,0x0CC,0x0CE |
-| 0x0CE | — | NO-RETAIL-NAME | main/dll/scarab.c | main/dll/dll_00CE_scarab.c | container w/ 0x0CB,0x0CC,0x0CD; container stem, tentative |
-| 0x0CF | CannonClaw (+CannonClawO) | COMPLETE | main/dll/barrel.c | main/dll/dll_00CF_cannonclaw.c | container w/ 0x0D0 |
-| 0x0D0 | Grimble | COMPLETE | main/dll/barrel.c | main/dll/dll_00D0_grimble.c | container w/ 0x0CF |
+| 0x0CB | — | NO-RETAIL-NAME | main/dll/dll_00CB_dllcb.c | = (canonical) | — |
+| 0x0CC | ChukChuk | COMPLETE | main/dll/dll_00CC_chukchuk.c | = (canonical) | — |
+| 0x0CD | IceBall (+IceBallSmal, ChukaChuck) | COMPLETE | main/dll/dll_00CD_iceball.c | = (canonical) | — |
+| 0x0CE | — | NO-RETAIL-NAME | main/dll/dll_00CE_dllce.c | = (canonical) | — |
+| 0x0CF | CannonClaw (+CannonClawO) | COMPLETE | main/dll/dll_00CF_cannonclaw.c | = (canonical) | — |
+| 0x0D0 | Grimble | COMPLETE | main/dll/dll_00D0_grimble.c | = (canonical) | — |
 | 0x0D1 | TumbleWeedBush | CONFIRMED | main/dll/dll_00D1_tumbleweedbush.c | = (canonical) | — |
 | 0x0D2 | Tumbleweed (+Tumbleweed1, Tumbleweed2, Tumbleweed3, Tumbleweed4) | CONFIRMED | main/dll/dll_00D2_tumbleweed.c | = (canonical) | — |
 | 0x0D3 | — | NO-RETAIL-NAME | main/dll/dll_00D3_staffAction.c | = (canonical) | — |
 | 0x0D4 | SkeetlaWall | CONFIRMED | main/dll/dll_00D4_skeetlawall.c | = (canonical) | — |
 | 0x0D5 | Kaldachom | COMPLETE | main/dll/dll_00D5_kaldachom.c | = (canonical) | — |
-| 0x0D6 | KaldachomMe | RAW | main/dll/wallanimator.c | main/dll/dll_00D6_kaldachomme.c | container w/ 0x0D7 |
-| 0x0D7 | kaldachompspit (+KaldachomSp, FireCrawler) | GUESSED | main/dll/wallanimator.c | main/dll/dll_00D7_kaldachompspit.c | container w/ 0x0D6 |
-| 0x0D8 | PinPonSpike | CONFIRMED | main/dll/xyzanimator.c | main/dll/dll_00D8_pinponspike.c | container w/ 0x0D9,0x0DA |
-| 0x0D9 | Pollen | COMPLETE | main/dll/xyzanimator.c | main/dll/dll_00D9_pollen.c | container w/ 0x0D8,0x0DA |
-| 0x0DA | PollenFragment (+DRHomingMis) | CONFIRMED | main/dll/xyzanimator.c | main/dll/dll_00DA_pollenfragment.c | container w/ 0x0D8,0x0D9 |
-| 0x0DB | MikaBomb | COMPLETE | main/dll/genprops.c | main/dll/dll_00DB_mikabomb.c | container w/ 0x0C6,0x0C7,0x0C8,0x0DC,0x0DD,0x0DE,+12 more |
-| 0x0DC | MikaBombShadow | CONFIRMED | main/dll/genprops.c | main/dll/dll_00DC_mikabombshadow.c | container w/ 0x0C6,0x0C7,0x0C8,0x0DB,0x0DD,0x0DE,+12 more |
-| 0x0DD | GCbaddieShield | CONFIRMED | main/dll/genprops.c | main/dll/dll_00DD_gcbaddieshield.c | container w/ 0x0C6,0x0C7,0x0C8,0x0DB,0x0DC,0x0DE,+12 more |
-| 0x0DE | baddieInterestp | CONFIRMED | main/dll/genprops.c | main/dll/dll_00DE_baddieinterestp.c | container w/ 0x0C6,0x0C7,0x0C8,0x0DB,0x0DC,0x0DD,+12 more |
-| 0x0DF | Hagabon | COMPLETE | main/dll/pressureSwitch.c | main/dll/dll_00DF_hagabon.c | container w/ 0x0E0 |
-| 0x0E0 | SwarmBaddie | CONFIRMED | main/dll/pressureSwitch.c | main/dll/dll_00E0_swarmbaddie.c | container w/ 0x0DF |
+| 0x0D6 | KaldachomMe | RAW | main/dll/dll_00D6_kaldachomme.c | = (canonical) | — |
+| 0x0D7 | kaldachompspit (+KaldachomSp, FireCrawler) | GUESSED | main/dll/dll_00D7_kaldachomsp.c | main/dll/dll_00D7_kaldachompspit.c | — |
+| 0x0D8 | PinPonSpike | CONFIRMED | main/dll/dll_00D8_pinponspike.c | = (canonical) | — |
+| 0x0D9 | Pollen | COMPLETE | main/dll/dll_00D9_pollen.c | = (canonical) | — |
+| 0x0DA | PollenFragment (+DRHomingMis) | CONFIRMED | main/dll/dll_00DA_pollenfragm.c | main/dll/dll_00DA_pollenfragment.c | — |
+| 0x0DB | MikaBomb | COMPLETE | main/dll/dll_00DB_mikabomb.c | = (canonical) | — |
+| 0x0DC | MikaBombShadow | CONFIRMED | main/dll/dll_00DC_mikabombsha.c | main/dll/dll_00DC_mikabombshadow.c | — |
+| 0x0DD | GCbaddieShield | CONFIRMED | main/dll/dll_00DD_gcbaddieshi.c | main/dll/dll_00DD_gcbaddieshield.c | — |
+| 0x0DE | baddieInterestp | CONFIRMED | main/dll/dll_00DE_baddieinter.c | main/dll/dll_00DE_baddieinterestp.c | — |
+| 0x0DF | Hagabon | COMPLETE | main/dll/dll_00DF_hagabon.c | = (canonical) | — |
+| 0x0E0 | SwarmBaddie | CONFIRMED | main/dll/dll_00E0_swarmbaddie.c | = (canonical) | — |
 | 0x0E1 | WispBaddie | COMPLETE | main/dll/dll_00E1_wispbaddie.c | = (canonical) | — |
-| 0x0E2 | staff (+sword) | COMPLETE | main/dll/genprops.c | main/dll/dll_00E2_staff.c | container w/ 0x0C6,0x0C7,0x0C8,0x0DB,0x0DC,0x0DD,+12 more |
-| 0x0E3 | fireball (+projball, AnimProjBal) | GUESSED | main/dll/genprops.c | main/dll/dll_00E3_fireball.c | container w/ 0x0C6,0x0C7,0x0C8,0x0DB,0x0DC,0x0DD,+12 more |
-| 0x0E4 | FlameThrowerspe (+FlameBall, BossDarkorF) | CONFIRMED | main/dll/genprops.c | main/dll/dll_00E4_flamethrowerspe.c | container w/ 0x0C6,0x0C7,0x0C8,0x0DB,0x0DC,0x0DD,+12 more |
-| 0x0E5 | shield (+fox_shield, omni_shield) | CONFIRMED | main/dll/genprops.c | main/dll/dll_00E5_shield.c | container w/ 0x0C6,0x0C7,0x0C8,0x0DB,0x0DC,0x0DD,+12 more |
-| 0x0E6 | ReStartMarker | CONFIRMED | main/dll/genprops.c | main/dll/dll_00E6_restartmarker.c | container w/ 0x0C6,0x0C7,0x0C8,0x0DB,0x0DC,0x0DD,+12 more |
-| 0x0E7 | flammablevine (+CCeyeVines, BurnableVin) | GUESSED | main/dll/CF/dll_00E7_flammablevine.c | = (canonical) | — |
-| 0x0E8 | checkpoint4 | CONFIRMED | main/dll/genprops.c | main/dll/dll_00E8_checkpoint4.c | container w/ 0x0C6,0x0C7,0x0C8,0x0DB,0x0DC,0x0DD,+12 more |
-| 0x0E9 | setuppoint | COMPLETE | main/dll/genprops.c | main/dll/dll_00E9_setuppoint.c | container w/ 0x0C6,0x0C7,0x0C8,0x0DB,0x0DC,0x0DD,+12 more |
-| 0x0EA | sideload | COMPLETE | main/dll/genprops.c | main/dll/dll_00EA_sideload.c | container w/ 0x0C6,0x0C7,0x0C8,0x0DB,0x0DC,0x0DD,+12 more |
-| 0x0EB | siderepel (+siderepelWi) | COMPLETE | main/dll/genprops.c | main/dll/dll_00EB_siderepel.c | container w/ 0x0C6,0x0C7,0x0C8,0x0DB,0x0DC,0x0DD,+12 more |
-| 0x0EC | InfoPoint | COMPLETE | main/dll/CF/dll_00EC_infopoint.c | = (canonical) | — |
+| 0x0E2 | staff (+sword) | COMPLETE | main/dll/dll_00E2_sword.c | main/dll/dll_00E2_staff.c | — |
+| 0x0E3 | fireball (+projball, AnimProjBal) | GUESSED | main/dll/dll_00E3_projball.c | main/dll/dll_00E3_fireball.c | — |
+| 0x0E4 | FlameThrowerspe (+FlameBall, BossDarkorF) | CONFIRMED | main/dll/dll_00E4_flamethrowe.c | main/dll/dll_00E4_flamethrowerspe.c | — |
+| 0x0E5 | shield (+fox_shield, omni_shield) | CONFIRMED | main/dll/dll_00E5_foxshield.c | main/dll/dll_00E5_shield.c | — |
+| 0x0E6 | ReStartMarker | CONFIRMED | main/dll/dll_00E6_restartmark.c | main/dll/dll_00E6_restartmarker.c | — |
+| 0x0E7 | flammablevine (+CCeyeVines, BurnableVin) | GUESSED | main/dll/dll_00E7_flammablevine.c | = (canonical) | — |
+| 0x0E8 | checkpoint4 | CONFIRMED | main/dll/dll_00E8_checkpoint4.c | = (canonical) | — |
+| 0x0E9 | setuppoint | COMPLETE | main/dll/dll_00E9_setuppoint.c | = (canonical) | — |
+| 0x0EA | sideload | COMPLETE | main/dll/dll_00EA_sideload.c | = (canonical) | — |
+| 0x0EB | siderepel (+siderepelWi) | COMPLETE | main/dll/dll_00EB_siderepel.c | = (canonical) | — |
+| 0x0EC | InfoPoint | COMPLETE | main/dll/dll_00EC_infopoint.c | = (canonical) | — |
 | 0x0ED | collectible (+CFCloudCalP, CFPickKryst, CFPowerCrys, CFPowerRoom, CFExplosive, CF_ChestSpe, WCSunStone, WCMoonStone, WCGoldTrexT, WCSilverTre, DIMBridgeCo, DIMShackleK, DIMAlpineRo, DIMTruthHor, DIM2CellKey, DIM2SilverK, DIM2GoldKey, CCfireCryst, CCgoldbar, NW_SmallSca, NW_trickyba, NW_alpinero, SH_MediumSc, SH_LargeSca, SH_MMPkey, SH_NWkey, SC_block_tr, SC_block_sq, SC_block_ci, SB_Key, SB_Spellsto, WM_MediumSc, WM_consoles, GM_TokenPic, PadlockKey, GuardPass, Spellstone, EnergyEgg, Apple, MoonSeedCol, WM_PureMagi) | GUESSED | main/dll/dll_00ED_collectible.c | = (canonical) | — |
-| 0x0EE | EffectBox | COMPLETE | main/dll/lightning.c | main/dll/dll_00EE_effectbox.c | container w/ 0x0FF |
+| 0x0EE | EffectBox | COMPLETE | main/dll/dll_00EE_effectbox.c | = (canonical) | — |
 | 0x0EF | pushable (+WCPushBlock, DIMPushBloc, DIM2IceBloc, CCboulder, NW_boulder, SH_boulder, VFP_Block2, WM_5pushcra, DR_Platform, CFDungeonBl, MetalPushBl) | GUESSED | main/dll/dll_00EF_pushable.c | = (canonical) | — |
-| 0x0F0 | WarpPoint (+MMP_WarpPoi, SC_warppoin, WM_WarpPoin, RestartPoin) | COMPLETE | main/dll/dll_00F3_flameblast.c | main/dll/dll_00F0_warppoint.c | container w/ 0x0F1,0x0F2,0x0F3; current file id 0x0F3 != descriptor id 0x0F0 |
-| 0x0F1 | InvHit | COMPLETE | main/dll/dll_00F3_flameblast.c | main/dll/dll_00F1_invhit.c | container w/ 0x0F0,0x0F2,0x0F3; current file id 0x0F3 != descriptor id 0x0F1 |
-| 0x0F2 | iceblast | COMPLETE | main/dll/dll_00F3_flameblast.c | main/dll/dll_00F2_iceblast.c | container w/ 0x0F0,0x0F1,0x0F3; current file id 0x0F3 != descriptor id 0x0F2 |
-| 0x0F3 | flameblast | COMPLETE | main/dll/dll_00F3_flameblast.c | main/dll/dll_00F3_flameblast.c | container w/ 0x0F0,0x0F1,0x0F2 |
+| 0x0F0 | WarpPoint (+MMP_WarpPoi, SC_warppoin, WM_WarpPoin, RestartPoin) | COMPLETE | main/dll/dll_00F0_mmpwarppoi.c | main/dll/dll_00F0_warppoint.c | — |
+| 0x0F1 | InvHit | COMPLETE | main/dll/dll_00F1_invhit.c | = (canonical) | — |
+| 0x0F2 | iceblast | COMPLETE | main/dll/dll_00F2_iceblast.c | = (canonical) | — |
+| 0x0F3 | flameblast | COMPLETE | main/dll/dll_00F3_flameblast.c | = (canonical) | — |
 | 0x0F4 | doorf4 (+CFPowerDoor, VFP_SmallRo, VFP_RoundDo, VFP_Door2, DFP_SmallBr, DFP_ToLinkD, DFP_PerchBa, DFP_BigDoor, DFP_SmallDo, DFP_SmallTu, WM_PlanDoor, WM_WarpDoor, DFSH_Door1, ECSH_Door1) | GUESSED | main/dll/dll_00F4_doorf4.c | = (canonical) | — |
 | 0x0F5 | SidekickBall | CONFIRMED | main/dll/dll_00F5_sidekickball.c | = (canonical) | — |
-| 0x0F6 | Area | COMPLETE | main/dll/tFrameAnimator.c | main/dll/dll_00F6_area.c | container w/ 0x0F8 |
-| 0x0F7 | — | NO-RETAIL-NAME | main/dll/genprops.c | main/dll/dll_00F7_genprops.c | container w/ 0x0C6,0x0C7,0x0C8,0x0DB,0x0DC,0x0DD,+12 more; container stem, tentative |
-| 0x0F8 | LevelName | COMPLETE | main/dll/tFrameAnimator.c | main/dll/dll_00F8_levelname.c | container w/ 0x0F6 |
-| 0x0F9 | ProjectileSwitch (+DRProjectil) | CONFIRMED | main/dll/screenOverlay.c | main/dll/dll_00F9_projectileswitch.c | container w/ 0x0FA |
-| 0x0FA | InvisibleHitSwitch | CONFIRMED | main/dll/screenOverlay.c | main/dll/dll_00FA_invisiblehitswitch.c | container w/ 0x0F9 |
-| 0x0FB | Pressureswitchfb (+WCTemplePre, LINK_SnowPr, LINK_UnderW, CC_Pressure, SH_Pressure, SC_Pressure, VFP_PuzzleP, GroundQuake) | CONFIRMED | main/dll/cfguardian.c | main/dll/dll_00FB_pressureswitchfb.c | container w/ 0x10F,0x110,0x111 |
+| 0x0F6 | Area | COMPLETE | main/dll/dll_00F6_area.c | = (canonical) | — |
+| 0x0F7 | — | NO-RETAIL-NAME | main/dll/dll_00F7_dllf7.c | = (canonical) | — |
+| 0x0F8 | LevelName | COMPLETE | main/dll/dll_00F8_levelname.c | = (canonical) | — |
+| 0x0F9 | ProjectileSwitch (+DRProjectil) | CONFIRMED | main/dll/dll_00F9_drprojectil.c | main/dll/dll_00F9_projectileswitch.c | — |
+| 0x0FA | InvisibleHitSwitch | CONFIRMED | main/dll/dll_00FA_invisiblehi.c | main/dll/dll_00FA_invisiblehitswitch.c | — |
+| 0x0FB | Pressureswitchfb (+WCTemplePre, LINK_SnowPr, LINK_UnderW, CC_Pressure, SH_Pressure, SC_Pressure, VFP_PuzzleP, GroundQuake) | CONFIRMED | main/dll/dll_00FB_wctemplepre.c | main/dll/dll_00FB_pressureswitchfb.c | — |
 | 0x0FC | — | NO-RETAIL-NAME | main/dll/dll_00FC_babycloudrunner.c | = (canonical) | — |
 | 0x0FD | — | NO-RETAIL-NAME | main/dll/dll_00FD.c | = (canonical) | — |
-| 0x0FE | MagicPlant | COMPLETE | main/dll/cfprisonuncle.c | main/dll/dll_00FE_magicplant.c | container w/ 0x100,0x101,0x102,0x103,0x118 |
-| 0x0FF | MagicDust (+MagicDustSm, MagicDustMi, MagicDustLa, MagicDustHu) | CONFIRMED | main/dll/lightning.c | main/dll/dll_00FF_magicdust.c | container w/ 0x0EE |
-| 0x100 | TrickyWarp | COMPLETE | main/dll/cfprisonuncle.c | main/dll/dll_0100_trickywarp.c | container w/ 0x0FE,0x101,0x102,0x103,0x118 |
-| 0x101 | TrickyGuard | CONFIRMED | main/dll/cfprisonuncle.c | main/dll/dll_0101_trickyguard.c | container w/ 0x0FE,0x100,0x102,0x103,0x118 |
-| 0x102 | StayPoint | COMPLETE | main/dll/cfprisonuncle.c | main/dll/dll_0102_staypoint.c | container w/ 0x0FE,0x100,0x101,0x103,0x118 |
-| 0x103 | CurveFish | COMPLETE | main/dll/cfprisonuncle.c | main/dll/dll_0103_curvefish.c | container w/ 0x0FE,0x100,0x101,0x102,0x118 |
+| 0x0FE | MagicPlant | COMPLETE | main/dll/dll_00FE_magicplant.c | = (canonical) | — |
+| 0x0FF | MagicDust (+MagicDustSm, MagicDustMi, MagicDustLa, MagicDustHu) | CONFIRMED | main/dll/dll_00FF_magicdustsm.c | main/dll/dll_00FF_magicdust.c | — |
+| 0x100 | TrickyWarp | COMPLETE | main/dll/dll_0100_trickywarp.c | = (canonical) | — |
+| 0x101 | TrickyGuard | CONFIRMED | main/dll/dll_0101_trickyguard.c | = (canonical) | — |
+| 0x102 | StayPoint | COMPLETE | main/dll/dll_0102_staypoint.c | = (canonical) | — |
+| 0x103 | CurveFish | COMPLETE | main/dll/dll_0103_curvefish.c | = (canonical) | — |
 | 0x104 | SmallBasket (+ReinforcedC) | CONFIRMED | main/dll/dll_0104_smallbasket.c | = (canonical) | — |
 | 0x105 | LargeCrate (+DrakorCrate, LargeBasket, LargeCrateL) | COMPLETE | main/dll/dll_0105_largecrate.c | = (canonical) | — |
-| 0x106 | Scarab (+GreenScarab, RedScarab, GoldScarab, RainScarab, Blue_bean) | CONFIRMED | main/dll/CF/dll_0106_scarab.c | = (canonical) | — |
-| 0x107 | — | NO-RETAIL-NAME | main/dll/CF/dll_0107_unused.c | = (canonical) | — |
-| 0x108 | EndObject | COMPLETE | main/dll/CF/dll_0108_endobject.c | = (canonical) | — |
-| 0x109 | — | NO-RETAIL-NAME | main/dll/CF/dll_0109_unk.c | = (canonical) | — |
-| 0x10A | Fall_Ladders | CONFIRMED | main/dll/CF/dll_010A_fallladders.c | = (canonical) | — |
-| 0x10B | FireFlyLantern | CONFIRMED | main/dll/CF/dll_010B_fireflylantern.c | = (canonical) | — |
-| 0x10C | LanternFireFly | CONFIRMED | main/dll/CF/dll_010C_lanternfirefly.c | = (canonical) | — |
-| 0x10D | PortalSpelldoor | CONFIRMED | main/dll/CF/dll_010D_portalspelldoor.c | = (canonical) | — |
-| 0x10E | deathseq (+DieDuster, DieFox, DieKrystal) | GUESSED | main/dll/CF/dll_010E_deathseq.c | = (canonical) | — |
-| 0x10F | MMP_Bridge | COMPLETE | main/dll/cfguardian.c | main/dll/MMP/dll_010F_mmpbridge.c | container w/ 0x0FB,0x110,0x111 |
-| 0x110 | Door (+KT_RexDoorP, KT_RexDoorT, CFPrisonDoo, CFWinPrison, CF_MovDeckD, CFTreasureD, CFExplosive, CFMainDoorA, CFBrokenPil, WCTempleDoo, WCSunTemple, WCMoonTempl, WCSlabDoor, WCBossDoor, WCGeneralDo, WCSunInside, WCMoonInsid, WCTempleTop, DIM_Portcul, DIMWoodDoor, DIM2IcePlat, DIM2TrapDoo, DIM2CellDoo, DIM2PuzzleD, DIM2IceGrat, IMPrisonGat, IMFence, LINK_Portcu, CCwaterShut, CCOceanDoor, CCskullDoor, CCclawOnlyD, CCprisonDoo, CCclawdoor, GF_DoorLeft, MMP_MagicCa, NW_Portcull, SH_MagicCav, SH_QueensDo, SH_Portcull, KP_SectionD, KP_FinDoor, SC_Shrine_d, SC_mounddoo, SC_settelme, BossTRexPor, SC_capeclaw, SC_stepping, SC_hutdoor, VFP_Doorloc, OFPclawOnly, DFP_Bridge, DFP_RoundDo, WM_Door1, WMFinalDoor, SPDoor, EC_Shrine_d, DR_EarthDoo, DR_Shield, DR_CloudDoo, DR_HighDoor, DR_James1Bo, DR_DrakorDo, MCProjDoor) | CONFIRMED | main/dll/cfguardian.c | main/dll/dll_0110_door.c | container w/ 0x0FB,0x10F,0x111 |
-| 0x111 | doorlock (+CFPowerLock, CFDoubleSwi, WCTeethBowl, DIMLever, DIMSnowHorn, DIMUseObjec, DIM2UseObje, DIM2CellKey, MMP_padlock, SC_blockpla, VFP_PitSwit, VFP_PodiumP, VFP_LiftSwi, DFP_PitSwit, DFP_ForceSw, WM_padlock, DRearthwalk) | GUESSED | main/dll/cfguardian.c | main/dll/dll_0111_doorlock.c | container w/ 0x0FB,0x10F,0x110 |
-| 0x112 | seqobject (+BossDrakor_, KT_RexSeque, CFGoldenPer, LINKIseqobj, CFseqobject, CFRaceSeqob, CAMERAseqob, WCSeqObject, WCTempleBlo, DIMBridge, DIMSeqObjec, DIM2SeqObje, DIM2Mammoth, DIM2CellLoc, DIM2StonePi, IMSeqObject, LINKE_stone, linkB_Stone, ANDSeqObjec, GF_sequence, MMP_seqobje, SH_seqobjec, KP_sequence, SC_sequence, VFPSeqObj, VFP_Bobbing, SPSeqObj, FrontSeq, NWSH_Seqobj, DR_Seqobj, FireHoleCon, DR_SeqobjBo, DR_TrackDoo, KPLandingPa, CF_BobbingC, CFLandingPa, LandingPad_, WC_LandingP, SH_NT_Landi, MSSeqObject, ARWSeqObjec, DFsequences) | CONFIRMED | main/dll/alphaanim.c | main/dll/dll_0112_seqobject.c | container w/ 0x113,0x114 |
-| 0x113 | SeqObj2 (+CAMERAnewse, LINKJseqobj, LINKB_seqob, LINKC_seqob, CCBridge, CCseqobj, NWSteppingS, NW_seqobjec, SH_newseqob, SH_BottomSe) | GUESSED | main/dll/alphaanim.c | main/dll/dll_0113_seqobj2.c | container w/ 0x112,0x114 |
-| 0x114 | IMMultiSeq | COMPLETE | main/dll/alphaanim.c | main/dll/IM/dll_0114_immultiseq.c | container w/ 0x112,0x113 |
-| 0x115 | — | NO-RETAIL-NAME | main/dll/groundAnimator.c | main/dll/dll_0115_groundAnimator.c | container w/ 0x116; container stem, tentative |
-| 0x116 | WM_Column (+WM_Column_T, GPSHpickobj) | COMPLETE | main/dll/groundAnimator.c | main/dll/WM/dll_0116_wmcolumn.c | container w/ 0x115 |
+| 0x106 | Scarab (+GreenScarab, RedScarab, GoldScarab, RainScarab, Blue_bean) | CONFIRMED | main/dll/dll_0106_scarab.c | = (canonical) | — |
+| 0x107 | — | NO-RETAIL-NAME | main/dll/dll_0107_unused.c | = (canonical) | — |
+| 0x108 | EndObject | COMPLETE | main/dll/dll_0108_endobject.c | = (canonical) | — |
+| 0x109 | — | NO-RETAIL-NAME | main/dll/dll_0109_unk.c | = (canonical) | — |
+| 0x10A | Fall_Ladders | CONFIRMED | main/dll/dll_010A_fallladders.c | = (canonical) | — |
+| 0x10B | FireFlyLantern | CONFIRMED | main/dll/dll_010B_fireflylantern.c | = (canonical) | — |
+| 0x10C | LanternFireFly | CONFIRMED | main/dll/dll_010C_lanternfirefly.c | = (canonical) | — |
+| 0x10D | PortalSpelldoor | CONFIRMED | main/dll/dll_010D_portalspelldoor.c | = (canonical) | — |
+| 0x10E | deathseq (+DieDuster, DieFox, DieKrystal) | GUESSED | main/dll/dll_010E_deathseq.c | = (canonical) | — |
+| 0x10F | MMP_Bridge | COMPLETE | main/dll/dll_010F_mmpbridge.c | main/dll/MMP/dll_010F_mmpbridge.c | — |
+| 0x110 | Door (+KT_RexDoorP, KT_RexDoorT, CFPrisonDoo, CFWinPrison, CF_MovDeckD, CFTreasureD, CFExplosive, CFMainDoorA, CFBrokenPil, WCTempleDoo, WCSunTemple, WCMoonTempl, WCSlabDoor, WCBossDoor, WCGeneralDo, WCSunInside, WCMoonInsid, WCTempleTop, DIM_Portcul, DIMWoodDoor, DIM2IcePlat, DIM2TrapDoo, DIM2CellDoo, DIM2PuzzleD, DIM2IceGrat, IMPrisonGat, IMFence, LINK_Portcu, CCwaterShut, CCOceanDoor, CCskullDoor, CCclawOnlyD, CCprisonDoo, CCclawdoor, GF_DoorLeft, MMP_MagicCa, NW_Portcull, SH_MagicCav, SH_QueensDo, SH_Portcull, KP_SectionD, KP_FinDoor, SC_Shrine_d, SC_mounddoo, SC_settelme, BossTRexPor, SC_capeclaw, SC_stepping, SC_hutdoor, VFP_Doorloc, OFPclawOnly, DFP_Bridge, DFP_RoundDo, WM_Door1, WMFinalDoor, SPDoor, EC_Shrine_d, DR_EarthDoo, DR_Shield, DR_CloudDoo, DR_HighDoor, DR_James1Bo, DR_DrakorDo, MCProjDoor) | CONFIRMED | main/dll/dll_0110_ktrexdoorp.c | main/dll/dll_0110_door.c | — |
+| 0x111 | doorlock (+CFPowerLock, CFDoubleSwi, WCTeethBowl, DIMLever, DIMSnowHorn, DIMUseObjec, DIM2UseObje, DIM2CellKey, MMP_padlock, SC_blockpla, VFP_PitSwit, VFP_PodiumP, VFP_LiftSwi, DFP_PitSwit, DFP_ForceSw, WM_padlock, DRearthwalk) | GUESSED | main/dll/dll_0111_cfpowerlock.c | main/dll/dll_0111_doorlock.c | — |
+| 0x112 | seqobject (+BossDrakor_, KT_RexSeque, CFGoldenPer, LINKIseqobj, CFseqobject, CFRaceSeqob, CAMERAseqob, WCSeqObject, WCTempleBlo, DIMBridge, DIMSeqObjec, DIM2SeqObje, DIM2Mammoth, DIM2CellLoc, DIM2StonePi, IMSeqObject, LINKE_stone, linkB_Stone, ANDSeqObjec, GF_sequence, MMP_seqobje, SH_seqobjec, KP_sequence, SC_sequence, VFPSeqObj, VFP_Bobbing, SPSeqObj, FrontSeq, NWSH_Seqobj, DR_Seqobj, FireHoleCon, DR_SeqobjBo, DR_TrackDoo, KPLandingPa, CF_BobbingC, CFLandingPa, LandingPad_, WC_LandingP, SH_NT_Landi, MSSeqObject, ARWSeqObjec, DFsequences) | CONFIRMED | main/dll/dll_0112_bossdrakor.c | main/dll/dll_0112_seqobject.c | — |
+| 0x113 | SeqObj2 (+CAMERAnewse, LINKJseqobj, LINKB_seqob, LINKC_seqob, CCBridge, CCseqobj, NWSteppingS, NW_seqobjec, SH_newseqob, SH_BottomSe) | GUESSED | main/dll/dll_0113_cameranewse.c | main/dll/dll_0113_seqobj2.c | — |
+| 0x114 | IMMultiSeq | COMPLETE | main/dll/dll_0114_immultiseq.c | main/dll/IM/dll_0114_immultiseq.c | — |
+| 0x115 | — | NO-RETAIL-NAME | main/dll/dll_0115_dll115.c | = (canonical) | — |
+| 0x116 | WM_Column (+WM_Column_T, GPSHpickobj) | COMPLETE | main/dll/dll_0116_wmcolumn.c | main/dll/WM/dll_0116_wmcolumn.c | — |
 | 0x117 | AppleOnTree | CONFIRMED | main/dll/dll_0117_appleontree.c | = (canonical) | — |
-| 0x118 | Duster | COMPLETE | main/dll/cfprisonuncle.c | main/dll/dll_0118_duster.c | container w/ 0x0FE,0x100,0x101,0x102,0x103 |
-| 0x119 | coldWaterControl | CONFIRMED | main/dll/CF/dll_0119_coldwatercontrol.c | = (canonical) | — |
-| 0x11A | decoration11a (+DRDebrisGir, DRDebrisPip, LINKSnowTre, LINKSnowLog, nw_testobj, SC_DummyTri, SC_DummySqu, SC_DummyCir, SC_throne, AlienTreePa, SnowBush, SnowLog, SulphurCrys, CobwebCorne, CobwebCeili, CobwebEdge, GrassWeedCl, GrassSupaCh, FernBush, FernCurly, WaterLillyF) | GUESSED | main/dll/CF/dll_011A_decoration11a.c | = (canonical) | — |
-| 0x11B | Landed_Arwing | CONFIRMED | main/dll/CF/dll_011B_landedarwing.c | = (canonical) | — |
-| 0x11C | staffactivated (+LINKStaffLe, StaffAction, StaffBoostP, StaffBoulde, StaffLeverO, StaffLeverT) | GUESSED | main/dll/CF/dll_011C_staffactivated.c | = (canonical) | — |
-| 0x11D | TreasureChest (+MapTreasure) | CONFIRMED | main/dll/CF/dll_011D_treasurechest.c | = (canonical) | — |
-| 0x11E | MagicCaveBottom | CONFIRMED | main/dll/CF/dll_011E_magiccavebottom.c | = (canonical) | — |
-| 0x11F | MagicCaveTop | CONFIRMED | main/dll/CF/dll_011F_magiccavetop.c | = (canonical) | — |
-| 0x120 | TrickyGuardspot | CONFIRMED | main/dll/CF/dll_0120_trickyguardspot.c | = (canonical) | — |
-| 0x121 | InfoText (+LINKF_InfoT, LinkG_InfoT, MMPass_Info, DIM_InfoTex, NW_InfoText, SH_InfoPoin, SH_FireWeed, VFP_InfoTex) | CONFIRMED | main/dll/CF/dll_0121_infotext.c | = (canonical) | — |
-| 0x122 | CCTestInfot | CONFIRMED | main/dll/CF/dll_0122_cctestinfot.c | = (canonical) | — |
-| 0x123 | fuelCell | COMPLETE | main/dll/CF/dll_0123_fuelcell.c | = (canonical) | — |
-| 0x124 | deathGas (+deathGasNoF) | COMPLETE | main/dll/CF/dll_0124_deathgas.c | = (canonical) | — |
-| 0x125 | curve | COMPLETE | main/dll/genprops.c | main/dll/dll_0125_curve.c | container w/ 0x0C6,0x0C7,0x0C8,0x0DB,0x0DC,0x0DD,+12 more |
-| 0x126 | Trigger (+TrigPnt, TrigCyl, TrigPln, TrigArea, TrigTime, TrigButt, TriggSetp, TrigBits, TrigCrve) | CONFIRMED | main/dll/DR/hightop.c | main/dll/DR/dll_0126_trigger.c | container w/ 0x145 |
-| 0x127 | — | NO-RETAIL-NAME | main/dll/CF/dll_0127_dll127.c | = (canonical) | — |
-| 0x128 | KT_Torch (+Trex1, WCApertures, WCAperturem, DIMBridgeCo, DIMHutDoor, DIMDoorBrid, DIM2Mammoth, DIM2TrapDoo, DIM2CellDoo) | COMPLETE | main/dll/CF/dll_0128_kttorch.c | = (canonical) | — |
-| 0x129 | CampFire | COMPLETE | main/dll/CF/dll_0129_campfire.c | = (canonical) | — |
-| 0x12A | CFCrate (+LinkF_liftg, LinkF_cog, MMP_Organic, VFP_newball, VFP_liftgra, VFP_PowerBo, VFP_Spellst, VFP_locksym, DFPSpSG, DFP_WaterHi, DFP_FireHit, DFP_InnerRi, DFP_OuterRi, DFP_PlacePl, DFP_Water, DFP_PowerBo, DFP_blockwa, DFP_dish, DFPSpDB, WM_dummyfox, WM_krazoast, WM_rock, WM_fallenco, WM_largeroc, WM_Walkway1, WM_Walkway2, WM_NoPassVi, WM_NoPassHo, WM_MoonSeed, WM_Column_l, WM_Planet, WM_PlanetMo, DFSHcol, scalessword, ECSHcol, EnergyGem1) | COMPLETE | main/dll/CF/dll_012A_cfcrate.c | = (canonical) | — |
-| 0x12B | FXEmit | COMPLETE | main/dll/CF/dll_012B_fxemit.c | = (canonical) | — |
-| 0x12C | Transporter (+KP_Transpor) | CONFIRMED | main/dll/CF/dll_012C_transporter.c | = (canonical) | — |
-| 0x12D | LFXEmitter | COMPLETE | main/dll/CF/dll_012D_lfxemitter.c | = (canonical) | — |
-| 0x12E | CFLightWall (+LaserTurret, DIMSpellsto, InfoTablet, CFrunnersta, CFLightPill, CFDungeonLi, CFGCrubble1, CFGCrubble2, CFGCrubble3, CFGCrubble4, CFGCpillbre, CFGCsmallbl, SkyDome, WCSunDoor, WCMoonDoor, DIM2Torch, CCdarkness, WORLDshield, GFRONT_Asse, LINKH_Asset, LINKC_Asset, LINKE_Asset, LINKJ_Asset, LINKF_Asset, AndrossSpir, GF_Pilotsea, GF_JukeBox, MMP_defenDo, NWCellLock, SH_BeaconTw, KP_console_, VFP_Warding, VFP_Maindoo, DFPSplstne, VFPSplstne, WM_Explosiv, DBprotectZo, KillerSpike, DR_Tower, DR_TestWall, DR_IonCanno, DR_TrackDoo, DR_CloudCal, DieSeqObjec, ARWArwingTa, ARWStarFiel, DirectionSi, FirePole, DragonFly) | CONFIRMED | main/dll/mmp_asteroid_re.c | main/dll/CF/dll_012E_cflightwall.c | container w/ 0x12F,0x131 |
-| 0x12F | BarrelPad (+NWCallOFEld) | COMPLETE | main/dll/mmp_asteroid_re.c | main/dll/dll_012F_barrelpad.c | container w/ 0x12E,0x131 |
-| 0x130 | AreaFXEmit (+TAreaFXEmit) | COMPLETE | main/dll/CF/dll_0130_areafxemit.c | = (canonical) | — |
-| 0x131 | CF_DoorLight (+DR_LightPol) | CONFIRMED | main/dll/mmp_asteroid_re.c | main/dll/CF/dll_0131_cfdoorlight.c | container w/ 0x12E,0x12F |
-| 0x132 | WaterFallSpray | CONFIRMED | main/dll/MMP/MMP_moonrock.c | main/dll/MMP/dll_0132_waterfallspray.c | container w/ 0x133,0x141 |
-| 0x133 | sfxPlayer | COMPLETE | main/dll/MMP/MMP_moonrock.c | main/dll/MMP/dll_0133_sfxplayer.c | container w/ 0x132,0x141 |
-| 0x134 | texscroll2 | COMPLETE | main/dll/mmp_moonrock.c | main/dll/dll_0134_texscroll2.c | container w/ 0x135 |
-| 0x135 | texscroll | COMPLETE | main/dll/mmp_moonrock.c | main/dll/dll_0135_texscroll.c | container w/ 0x134 |
-| 0x136 | WaveAnimator | CONFIRMED | main/dll/MMP/mmp_barrel.c | main/dll/MMP/dll_0136_waveanimator.c | container w/ 0x137,0x138,0x139,0x13A |
-| 0x137 | AlphaAnimator | CONFIRMED | main/dll/MMP/mmp_barrel.c | main/dll/MMP/dll_0137_alphaanimator.c | container w/ 0x136,0x138,0x139,0x13A |
-| 0x138 | GroundAnimator | CONFIRMED | main/dll/MMP/mmp_barrel.c | main/dll/MMP/dll_0138_groundanimator.c | container w/ 0x136,0x137,0x139,0x13A |
-| 0x139 | HitAnimator | CONFIRMED | main/dll/MMP/mmp_barrel.c | main/dll/MMP/dll_0139_hitanimator.c | container w/ 0x136,0x137,0x138,0x13A |
-| 0x13A | VisAnimator | CONFIRMED | main/dll/MMP/mmp_barrel.c | main/dll/MMP/dll_013A_visanimator.c | container w/ 0x136,0x137,0x138,0x139 |
-| 0x13B | WallAnimator | CONFIRMED | main/dll/MMP/dll_013B_wallanimator.c | = (canonical) | — |
-| 0x13C | XYZAnimator | CONFIRMED | main/dll/MMP/MMP_asteroid.c | main/dll/MMP/dll_013C_xyzanimator.c | container w/ 0x13D,0x13E,0x13F,0x140 |
-| 0x13D | ExplodeAnimator | CONFIRMED | main/dll/MMP/MMP_asteroid.c | main/dll/MMP/dll_013D_explodeanimator.c | container w/ 0x13C,0x13E,0x13F,0x140 |
-| 0x13E | DIMBossIceSmash (+DIM2Explode) | CONFIRMED | main/dll/MMP/MMP_asteroid.c | main/dll/MMP/dll_013E_dimbossicesmash.c | container w/ 0x13C,0x13D,0x13F,0x140 |
-| 0x13F | TexFrameAnimator | CONFIRMED | main/dll/MMP/MMP_asteroid.c | main/dll/MMP/dll_013F_texframeanimator.c | container w/ 0x13C,0x13D,0x13E,0x140 |
-| 0x140 | fogControl | COMPLETE | main/dll/MMP/MMP_asteroid.c | main/dll/MMP/dll_0140_fogcontrol.c | container w/ 0x13C,0x13D,0x13E,0x13F |
-| 0x141 | Lightning | COMPLETE | main/dll/MMP/MMP_moonrock.c | main/dll/MMP/dll_0141_lightning.c | container w/ 0x132,0x133 |
-| 0x142 | FElevControl | CONFIRMED | main/dll/DB/DBrockfall.c | main/dll/DB/dll_0142_felevcontrol.c | container w/ 0x143,0x144 |
-| 0x143 | FEseqobject | CONFIRMED | main/dll/DB/DBrockfall.c | main/dll/DB/dll_0143_feseqobject.c | container w/ 0x142,0x144 |
-| 0x144 | — | NO-RETAIL-NAME | main/dll/DB/DBrockfall.c | main/dll/DB/dll_0144_DBrockfall.c | container w/ 0x142,0x143; container stem, tentative |
-| 0x145 | CloudPrisoncontrol | CONFIRMED | main/dll/DR/hightop.c | main/dll/DR/dll_0145_cloudprisoncontrol.c | container w/ 0x126 |
+| 0x118 | Duster | COMPLETE | main/dll/dll_0118_duster.c | = (canonical) | — |
+| 0x119 | coldWaterControl | CONFIRMED | main/dll/dll_0119_coldwatercontrol.c | = (canonical) | — |
+| 0x11A | decoration11a (+DRDebrisGir, DRDebrisPip, LINKSnowTre, LINKSnowLog, nw_testobj, SC_DummyTri, SC_DummySqu, SC_DummyCir, SC_throne, AlienTreePa, SnowBush, SnowLog, SulphurCrys, CobwebCorne, CobwebCeili, CobwebEdge, GrassWeedCl, GrassSupaCh, FernBush, FernCurly, WaterLillyF) | GUESSED | main/dll/dll_011A_decoration11a.c | = (canonical) | — |
+| 0x11B | Landed_Arwing | CONFIRMED | main/dll/dll_011B_landedarwing.c | = (canonical) | — |
+| 0x11C | staffactivated (+LINKStaffLe, StaffAction, StaffBoostP, StaffBoulde, StaffLeverO, StaffLeverT) | GUESSED | main/dll/dll_011C_staffactivated.c | = (canonical) | — |
+| 0x11D | TreasureChest (+MapTreasure) | CONFIRMED | main/dll/dll_011D_treasurechest.c | = (canonical) | — |
+| 0x11E | MagicCaveBottom | CONFIRMED | main/dll/dll_011E_magiccavebottom.c | = (canonical) | — |
+| 0x11F | MagicCaveTop | CONFIRMED | main/dll/dll_011F_magiccavetop.c | = (canonical) | — |
+| 0x120 | TrickyGuardspot | CONFIRMED | main/dll/dll_0120_trickyguardspot.c | = (canonical) | — |
+| 0x121 | InfoText (+LINKF_InfoT, LinkG_InfoT, MMPass_Info, DIM_InfoTex, NW_InfoText, SH_InfoPoin, SH_FireWeed, VFP_InfoTex) | CONFIRMED | main/dll/dll_0121_infotext.c | = (canonical) | — |
+| 0x122 | CCTestInfot | CONFIRMED | main/dll/dll_0122_cctestinfot.c | main/dll/CC/dll_0122_cctestinfot.c | — |
+| 0x123 | fuelCell | COMPLETE | main/dll/dll_0123_fuelcell.c | = (canonical) | — |
+| 0x124 | deathGas (+deathGasNoF) | COMPLETE | main/dll/dll_0124_deathgas.c | = (canonical) | — |
+| 0x125 | curve | COMPLETE | main/dll/dll_0125_curve.c | = (canonical) | — |
+| 0x126 | Trigger (+TrigPnt, TrigCyl, TrigPln, TrigArea, TrigTime, TrigButt, TriggSetp, TrigBits, TrigCrve) | CONFIRMED | main/dll/dll_0126_trigpnt.c | main/dll/dll_0126_trigger.c | — |
+| 0x127 | — | NO-RETAIL-NAME | main/dll/dll_0127_dll127.c | = (canonical) | — |
+| 0x128 | KT_Torch (+Trex1, WCApertures, WCAperturem, DIMBridgeCo, DIMHutDoor, DIMDoorBrid, DIM2Mammoth, DIM2TrapDoo, DIM2CellDoo) | COMPLETE | main/dll/dll_0128_kttorch.c | main/dll/DR/dll_0128_kttorch.c | — |
+| 0x129 | CampFire | COMPLETE | main/dll/dll_0129_campfire.c | = (canonical) | — |
+| 0x12A | CFCrate (+LinkF_liftg, LinkF_cog, MMP_Organic, VFP_newball, VFP_liftgra, VFP_PowerBo, VFP_Spellst, VFP_locksym, DFPSpSG, DFP_WaterHi, DFP_FireHit, DFP_InnerRi, DFP_OuterRi, DFP_PlacePl, DFP_Water, DFP_PowerBo, DFP_blockwa, DFP_dish, DFPSpDB, WM_dummyfox, WM_krazoast, WM_rock, WM_fallenco, WM_largeroc, WM_Walkway1, WM_Walkway2, WM_NoPassVi, WM_NoPassHo, WM_MoonSeed, WM_Column_l, WM_Planet, WM_PlanetMo, DFSHcol, scalessword, ECSHcol, EnergyGem1) | COMPLETE | main/dll/dll_012A_cfcrate.c | main/dll/CF/dll_012A_cfcrate.c | — |
+| 0x12B | FXEmit | COMPLETE | main/dll/dll_012B_fxemit.c | = (canonical) | — |
+| 0x12C | Transporter (+KP_Transpor) | CONFIRMED | main/dll/dll_012C_transporter.c | = (canonical) | — |
+| 0x12D | LFXEmitter | COMPLETE | main/dll/dll_012D_lfxemitter.c | = (canonical) | — |
+| 0x12E | CFLightWall (+LaserTurret, DIMSpellsto, InfoTablet, CFrunnersta, CFLightPill, CFDungeonLi, CFGCrubble1, CFGCrubble2, CFGCrubble3, CFGCrubble4, CFGCpillbre, CFGCsmallbl, SkyDome, WCSunDoor, WCMoonDoor, DIM2Torch, CCdarkness, WORLDshield, GFRONT_Asse, LINKH_Asset, LINKC_Asset, LINKE_Asset, LINKJ_Asset, LINKF_Asset, AndrossSpir, GF_Pilotsea, GF_JukeBox, MMP_defenDo, NWCellLock, SH_BeaconTw, KP_console_, VFP_Warding, VFP_Maindoo, DFPSplstne, VFPSplstne, WM_Explosiv, DBprotectZo, KillerSpike, DR_Tower, DR_TestWall, DR_IonCanno, DR_TrackDoo, DR_CloudCal, DieSeqObjec, ARWArwingTa, ARWStarFiel, DirectionSi, FirePole, DragonFly) | CONFIRMED | main/dll/dll_012E_laserturret.c | main/dll/CF/dll_012E_cflightwall.c | — |
+| 0x12F | BarrelPad (+NWCallOFEld) | COMPLETE | main/dll/dll_012F_nwcallofeld.c | main/dll/dll_012F_barrelpad.c | — |
+| 0x130 | AreaFXEmit (+TAreaFXEmit) | COMPLETE | main/dll/dll_0130_areafxemit.c | = (canonical) | — |
+| 0x131 | CF_DoorLight (+DR_LightPol) | CONFIRMED | main/dll/dll_0131_cfdoorligh.c | main/dll/CF/dll_0131_cfdoorlight.c | — |
+| 0x132 | WaterFallSpray | CONFIRMED | main/dll/dll_0132_waterfallsp.c | main/dll/dll_0132_waterfallspray.c | — |
+| 0x133 | sfxPlayer | COMPLETE | main/dll/dll_0133_sfxplayer.c | = (canonical) | — |
+| 0x134 | texscroll2 | COMPLETE | main/dll/dll_0134_texscroll2.c | = (canonical) | — |
+| 0x135 | texscroll | COMPLETE | main/dll/dll_0135_texscroll.c | = (canonical) | — |
+| 0x136 | WaveAnimator | CONFIRMED | main/dll/dll_0136_waveanimato.c | main/dll/dll_0136_waveanimator.c | — |
+| 0x137 | AlphaAnimator | CONFIRMED | main/dll/dll_0137_alphaanimat.c | main/dll/dll_0137_alphaanimator.c | — |
+| 0x138 | GroundAnimator | CONFIRMED | main/dll/dll_0138_groundanima.c | main/dll/dll_0138_groundanimator.c | — |
+| 0x139 | HitAnimator | CONFIRMED | main/dll/dll_0139_hitanimator.c | = (canonical) | — |
+| 0x13A | VisAnimator | CONFIRMED | main/dll/dll_013A_visanimator.c | = (canonical) | — |
+| 0x13B | WallAnimator | CONFIRMED | main/dll/dll_013B_wallanimator.c | = (canonical) | — |
+| 0x13C | XYZAnimator | CONFIRMED | main/dll/dll_013C_xyzanimator.c | = (canonical) | — |
+| 0x13D | ExplodeAnimator | CONFIRMED | main/dll/dll_013D_explodeanim.c | main/dll/dll_013D_explodeanimator.c | — |
+| 0x13E | DIMBossIceSmash (+DIM2Explode) | CONFIRMED | main/dll/dll_013E_dimbossices.c | main/dll/DIM/dll_013E_dimbossicesmash.c | — |
+| 0x13F | TexFrameAnimator | CONFIRMED | main/dll/dll_013F_texframeani.c | main/dll/dll_013F_texframeanimator.c | — |
+| 0x140 | fogControl | COMPLETE | main/dll/dll_0140_fogcontrol.c | = (canonical) | — |
+| 0x141 | Lightning | COMPLETE | main/dll/dll_0141_lightning.c | = (canonical) | — |
+| 0x142 | FElevControl | CONFIRMED | main/dll/dll_0142_felevcontro.c | main/dll/dll_0142_felevcontrol.c | — |
+| 0x143 | FEseqobject | CONFIRMED | main/dll/dll_0143_feseqobject.c | = (canonical) | — |
+| 0x144 | — | NO-RETAIL-NAME | main/dll/dll_0144_dll144.c | = (canonical) | — |
+| 0x145 | CloudPrisoncontrol | CONFIRMED | main/dll/dll_0145_cloudprison.c | main/dll/dll_0145_cloudprisoncontrol.c | — |
 | 0x146 | CloudShipCo | RAW | *(none)* | — | no .text fns (descriptor data only) |
 | 0x147 | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
-| 0x148 | CFGuardian | COMPLETE | main/dll/DR/dll_0148_cfguardian.c | = (canonical) | — |
-| 0x149 | CFWindLift (+CFTreasWind) | CONFIRMED | main/dll/DR/dll_0149_cfwindlift.c | = (canonical) | — |
-| 0x14A | CFPowerBase | CONFIRMED | main/dll/DR/dll_014A_cfpowerbase.c | = (canonical) | — |
-| 0x14B | CFMainCrystal | CONFIRMED | main/dll/DR/dll_014B_cfmaincrystal.c | = (canonical) | — |
-| 0x14C | babycloudrunner (+CFCloudBaby, CFAmbientCl, SHCloudBaby) | GUESSED | main/dll/DR/dll_014C_babycloudrunner.c | = (canonical) | — |
+| 0x148 | CFGuardian | COMPLETE | main/dll/dll_0148_cfguardian.c | main/dll/CF/dll_0148_cfguardian.c | — |
+| 0x149 | CFWindLift (+CFTreasWind) | CONFIRMED | main/dll/dll_0149_cfwindlift.c | main/dll/CF/dll_0149_cfwindlift.c | — |
+| 0x14A | CFPowerBase | CONFIRMED | main/dll/dll_014A_cfpowerbase.c | main/dll/CF/dll_014A_cfpowerbase.c | — |
+| 0x14B | CFMainCrystal | CONFIRMED | main/dll/dll_014B_cfmaincrystal.c | main/dll/CF/dll_014B_cfmaincrystal.c | — |
+| 0x14C | babycloudrunner (+CFCloudBaby, CFAmbientCl, SHCloudBaby) | GUESSED | main/dll/dll_014C_babycloudrunner.c | = (canonical) | — |
 | 0x14D | LaserBeam | COMPLETE | *(none)* | — | no .text fns (descriptor data only) |
-| 0x14E | CFPrisonGuard | CONFIRMED | main/dll/DR/dll_014E_cfprisonguard.c | = (canonical) | — |
-| 0x14F | CFPrisonUncle | CONFIRMED | main/dll/DR/dll_014F_cfprisonuncle.c | = (canonical) | — |
-| 0x150 | GCRobotLightbea | CONFIRMED | main/dll/DR/dll_0150_gcrobotlightbea.c | = (canonical) | — |
+| 0x14E | CFPrisonGuard | CONFIRMED | main/dll/dll_014E_cfprisonguard.c | main/dll/CF/dll_014E_cfprisonguard.c | — |
+| 0x14F | CFPrisonUncle | CONFIRMED | main/dll/dll_014F_cfprisonuncle.c | main/dll/CF/dll_014F_cfprisonuncle.c | — |
+| 0x150 | GCRobotLightbea | CONFIRMED | main/dll/dll_0150_gcrobotlightbea.c | = (canonical) | — |
 | 0x151 | CFScalesGal | RAW | *(none)* | — | no .text fns (descriptor data only) |
 | 0x152 | CF_ObjCreat | RAW | *(none)* | — | no .text fns (descriptor data only) |
-| 0x153 | CFPerch | COMPLETE | main/dll/DR/dll_0153_cfperch.c | = (canonical) | — |
-| 0x154 | CFPrisonCage (+CFCageSwitc) | CONFIRMED | main/dll/DR/dll_0154_cfprisoncage.c | = (canonical) | — |
+| 0x153 | CFPerch | COMPLETE | main/dll/dll_0153_cfperch.c | main/dll/CF/dll_0153_cfperch.c | — |
+| 0x154 | CFPrisonCage (+CFCageSwitc) | CONFIRMED | main/dll/dll_0154_cfprisoncage.c | main/dll/CF/dll_0154_cfprisoncage.c | — |
 | 0x155 | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
 | 0x156 | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
-| 0x157 | SpiritDoorSpirit | CONFIRMED | main/dll/DR/dll_0157_spiritdoorspirit.c | = (canonical) | — |
-| 0x158 | GunPowderBarrel (+MetalBarrel) | CONFIRMED | main/dll/DR/dll_0158_gunpowderbarrel.c | = (canonical) | — |
-| 0x159 | Blasted (+CFBlastedRo, CFBlastedWa, CFBlastedTu, DRBlastedWa) | CONFIRMED | main/dll/DR/dll_0159_blasted.c | = (canonical) | — |
-| 0x15A | explodable (+CFbrokenGra, CFbrokenWal, CFExplodeWa, CFExplodeFl, DIM2_WallEx, LINKE_Explo, CCExploding, NW_IcePriso, SH_BombWall, DRSmallExpl, ExplodeWall, ExplodePlan) | GUESSED | main/dll/DR/dll_015A_explodable.c | = (canonical) | — |
-| 0x15B | CFForceField | CONFIRMED | main/dll/IM/IMicicle.c | main/dll/IM/dll_015B_cfforcefield.c | container w/ 0x15D,0x15F,0x162,0x164,0x166 |
+| 0x157 | SpiritDoorSpirit | CONFIRMED | main/dll/dll_0157_spiritdoorspirit.c | = (canonical) | — |
+| 0x158 | GunPowderBarrel (+MetalBarrel) | CONFIRMED | main/dll/dll_0158_gunpowderbarrel.c | = (canonical) | — |
+| 0x159 | Blasted (+CFBlastedRo, CFBlastedWa, CFBlastedTu, DRBlastedWa) | CONFIRMED | main/dll/dll_0159_blasted.c | = (canonical) | — |
+| 0x15A | explodable (+CFbrokenGra, CFbrokenWal, CFExplodeWa, CFExplodeFl, DIM2_WallEx, LINKE_Explo, CCExploding, NW_IcePriso, SH_BombWall, DRSmallExpl, ExplodeWall, ExplodePlan) | GUESSED | main/dll/dll_015A_explodable.c | = (canonical) | — |
+| 0x15B | CFForceField | CONFIRMED | main/dll/dll_015B_cfforcefiel.c | main/dll/CF/dll_015B_cfforcefield.c | — |
 | 0x15C | CFForceField | CONFIRMED | *(none)* | — | no .text fns (descriptor data only) |
-| 0x15D | slidingdoor (+CFSlideDoor, CFMainSlide) | GUESSED | main/dll/IM/IMicicle.c | main/dll/IM/dll_015D_slidingdoor.c | container w/ 0x15B,0x15F,0x162,0x164,0x166 |
+| 0x15D | slidingdoor (+CFSlideDoor, CFMainSlide) | GUESSED | main/dll/dll_015D_cfslidedoor.c | main/dll/dll_015D_slidingdoor.c | — |
 | 0x15E | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
-| 0x15F | Attractor (+CFAttractor, DBAttractor) | CONFIRMED | main/dll/IM/IMicicle.c | main/dll/IM/dll_015F_attractor.c | container w/ 0x15B,0x15D,0x162,0x164,0x166 |
+| 0x15F | Attractor (+CFAttractor, DBAttractor) | CONFIRMED | main/dll/dll_015F_cfattractor.c | main/dll/dll_015F_attractor.c | — |
 | 0x160 | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
 | 0x161 | CFTreasRobo | RAW | *(none)* | — | no .text fns (descriptor data only) |
-| 0x162 | CFMagicWall | CONFIRMED | main/dll/IM/IMicicle.c | main/dll/IM/dll_0162_cfmagicwall.c | container w/ 0x15B,0x15D,0x15F,0x164,0x166 |
+| 0x162 | CFMagicWall | CONFIRMED | main/dll/dll_0162_cfmagicwall.c | main/dll/CF/dll_0162_cfmagicwall.c | — |
 | 0x163 | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
-| 0x164 | CFLevelControl | CONFIRMED | main/dll/IM/IMicicle.c | main/dll/IM/dll_0164_cflevelcontrol.c | container w/ 0x15B,0x15D,0x15F,0x162,0x166 |
+| 0x164 | CFLevelControl | CONFIRMED | main/dll/dll_0164_cflevelcont.c | main/dll/CF/dll_0164_cflevelcontrol.c | — |
 | 0x165 | CFRemovalSh | RAW | *(none)* | — | no .text fns (descriptor data only) |
-| 0x166 | exploded (+CFbrokenGra, CFbrokenWal, CFWallPieac, CFExplodePi, DIM2_WallEx, LINKE_Explo, CCExploding, NW_IcePriso, SH_BombWall, DRExplodePi, ExplodePlan, DRSmallExpl) | GUESSED | main/dll/IM/IMicicle.c | main/dll/IM/dll_0166_exploded.c | container w/ 0x15B,0x15D,0x15F,0x162,0x164 |
-| 0x167 | SpiritDoorLock | CONFIRMED | main/dll/IM/IMspacecraft.c | main/dll/IM/dll_0167_spiritdoorlock.c | container w/ 0x17D |
+| 0x166 | exploded (+CFbrokenGra, CFbrokenWal, CFWallPieac, CFExplodePi, DIM2_WallEx, LINKE_Explo, CCExploding, NW_IcePriso, SH_BombWall, DRExplodePi, ExplodePlan, DRSmallExpl) | GUESSED | main/dll/dll_0166_cfbrokengra.c | main/dll/dll_0166_exploded.c | — |
+| 0x167 | SpiritDoorLock | CONFIRMED | main/dll/dll_0167_spiritdoorl.c | main/dll/dll_0167_spiritdoorlock.c | — |
 | 0x168 | HoloPoint | COMPLETE | *(none)* | — | no .text fns (descriptor data only) |
-| 0x169 | IMIceMountain | CONFIRMED | main/dll/DIM/DIMboulder.c | main/dll/DIM/dll_0169_imicemountain.c | container w/ 0x16A,0x16B,0x16C |
-| 0x16A | CRrockfall (+IMIcicle) | COMPLETE | main/dll/DIM/DIMboulder.c | main/dll/DIM/dll_016A_crrockfall.c | container w/ 0x169,0x16B,0x16C |
-| 0x16B | MagicLight (+DIMMagicLig, IMMagicLigh) | CONFIRMED | main/dll/DIM/DIMboulder.c | main/dll/DIM/dll_016B_magiclight.c | container w/ 0x169,0x16A,0x16C |
-| 0x16C | — | NO-RETAIL-NAME | main/dll/DIM/DIMboulder.c | main/dll/DIM/dll_016C_DIMboulder.c | container w/ 0x169,0x16A,0x16B; container stem, tentative |
-| 0x16D | IMIcePillar | CONFIRMED | main/dll/DIM/DIMcannon.c | main/dll/DIM/dll_016D_imicepillar.c | container w/ 0x16E,0x16F,0x170,0x171,0x172,0x173,+2 more |
-| 0x16E | IMAnimSpacecraft | CONFIRMED | main/dll/DIM/DIMcannon.c | main/dll/DIM/dll_016E_imanimspacecraft.c | container w/ 0x16D,0x16F,0x170,0x171,0x172,0x173,+2 more |
-| 0x16F | IMSpaceThruster | CONFIRMED | main/dll/DIM/DIMcannon.c | main/dll/DIM/dll_016F_imspacethruster.c | container w/ 0x16D,0x16E,0x170,0x171,0x172,0x173,+2 more |
-| 0x170 | IMSpaceRing | CONFIRMED | main/dll/DIM/DIMcannon.c | main/dll/DIM/dll_0170_imspacering.c | container w/ 0x16D,0x16E,0x16F,0x171,0x172,0x173,+2 more |
-| 0x171 | IMSpaceRinggen | CONFIRMED | main/dll/DIM/DIMcannon.c | main/dll/DIM/dll_0171_imspaceringgen.c | container w/ 0x16D,0x16E,0x16F,0x170,0x172,0x173,+2 more |
-| 0x172 | LINKB_levcontrol | CONFIRMED | main/dll/DIM/DIMcannon.c | main/dll/DIM/dll_0172_linkblevcontrol.c | container w/ 0x16D,0x16E,0x16F,0x170,0x171,0x173,+2 more |
-| 0x173 | LINK_levcontrol | CONFIRMED | main/dll/DIM/DIMcannon.c | main/dll/DIM/dll_0173_linklevcontrol.c | container w/ 0x16D,0x16E,0x16F,0x170,0x171,0x172,+2 more |
-| 0x174 | CCriverflow | CONFIRMED | main/dll/DF/DFcradle.c | main/dll/DF/dll_0174_ccriverflow.c | container w/ 0x1E7 |
-| 0x175 | DFropenode | COMPLETE | main/dll/DF/dll_0175_dfropenode.c | = (canonical) | — |
+| 0x169 | IMIceMountain | CONFIRMED | main/dll/dll_0169_imicemounta.c | main/dll/IM/dll_0169_imicemountain.c | — |
+| 0x16A | CRrockfall (+IMIcicle) | COMPLETE | main/dll/dll_016A_crrockfall.c | main/dll/CR/dll_016A_crrockfall.c | — |
+| 0x16B | MagicLight (+DIMMagicLig, IMMagicLigh) | CONFIRMED | main/dll/dll_016B_dimmagiclig.c | main/dll/dll_016B_magiclight.c | — |
+| 0x16C | — | NO-RETAIL-NAME | main/dll/dll_016C_dll16c.c | = (canonical) | — |
+| 0x16D | IMIcePillar | CONFIRMED | main/dll/dll_016D_imicepillar.c | main/dll/IM/dll_016D_imicepillar.c | — |
+| 0x16E | IMAnimSpacecraft | CONFIRMED | main/dll/dll_016E_imanimspace.c | main/dll/IM/dll_016E_imanimspacecraft.c | — |
+| 0x16F | IMSpaceThruster | CONFIRMED | main/dll/dll_016F_imspacethru.c | main/dll/IM/dll_016F_imspacethruster.c | — |
+| 0x170 | IMSpaceRing | CONFIRMED | main/dll/dll_0170_imspacering.c | main/dll/IM/dll_0170_imspacering.c | — |
+| 0x171 | IMSpaceRinggen | CONFIRMED | main/dll/dll_0171_imspacering.c | main/dll/IM/dll_0171_imspaceringgen.c | — |
+| 0x172 | LINKB_levcontrol | CONFIRMED | main/dll/dll_0172_linkblevco.c | main/dll/dll_0172_linkblevcontrol.c | — |
+| 0x173 | LINK_levcontrol | CONFIRMED | main/dll/dll_0173_linklevcon.c | main/dll/dll_0173_linklevcontrol.c | — |
+| 0x174 | CCriverflow | CONFIRMED | main/dll/dll_0174_ccriverflow.c | main/dll/CC/dll_0174_ccriverflow.c | — |
+| 0x175 | DFropenode | COMPLETE | main/dll/dll_0175_dfropenode.c | main/dll/DF/dll_0175_dfropenode.c | — |
 | 0x176 | DFSH_Door1S | RAW | *(none)* | — | no .text fns (descriptor data only) |
-| 0x177 | DFSH_Door2Speci (+DFSH_Door3S, DFSH_Door4S) | CONFIRMED | main/dll/DF/dll_0177_dfshdoor2speci.c | = (canonical) | — |
-| 0x178 | DFSH_Shrine | CONFIRMED | main/dll/dll_017A_spiritprize.c | main/dll/DF/dll_0178_dfshshrine.c | container w/ 0x17A; current file id 0x17A != descriptor id 0x178 |
-| 0x179 | DFSH_ObjCreator | CONFIRMED | main/dll/DF/dll_0179_dfshobjcreator.c | = (canonical) | — |
-| 0x17A | SpiritPrize (+ECSH_Spirit) | CONFIRMED | main/dll/dll_017A_spiritprize.c | main/dll/dll_017A_spiritprize.c | container w/ 0x178 |
-| 0x17B | DFSH_LaserBeam | CONFIRMED | main/dll/DF/dll_017B_dfshlaserbeam.c | = (canonical) | — |
+| 0x177 | DFSH_Door2Speci (+DFSH_Door3S, DFSH_Door4S) | CONFIRMED | main/dll/dll_0177_dfshdoor2speci.c | main/dll/DF/dll_0177_dfshdoor2speci.c | — |
+| 0x178 | DFSH_Shrine | CONFIRMED | main/dll/dll_0178_dfshshrine.c | main/dll/DF/dll_0178_dfshshrine.c | — |
+| 0x179 | DFSH_ObjCreator | CONFIRMED | main/dll/dll_0179_dfshobjcreator.c | main/dll/DF/dll_0179_dfshobjcreator.c | — |
+| 0x17A | SpiritPrize (+ECSH_Spirit) | CONFIRMED | main/dll/dll_017A_spiritprize.c | = (canonical) | — |
+| 0x17B | DFSH_LaserBeam | CONFIRMED | main/dll/dll_017B_dfshlaserbeam.c | main/dll/DF/dll_017B_dfshlaserbeam.c | — |
 | 0x17C | GCRobotPatr | RAW | *(none)* | — | no .text fns (descriptor data only) |
-| 0x17D | RollingBarrel (+DIM2_barrel, MMP_barrel) | GUESSED | main/dll/IM/IMspacecraft.c | main/dll/IM/dll_017D_rollingbarrel.c | container w/ 0x167 |
-| 0x17E | MMP_levelcontrol | CONFIRMED | main/dll/DIM/DIMlavaball.c | main/dll/DIM/dll_017E_mmplevelcontrol.c | container w/ 0x17F,0x180,0x181,0x182,0x183 |
-| 0x17F | MoonSeedBush (+MSBush, MSVine) | GUESSED | main/dll/DIM/DIMlavaball.c | main/dll/DIM/dll_017F_moonseedbush.c | container w/ 0x17E,0x180,0x181,0x182,0x183 |
-| 0x180 | MMP_asteroid_re | CONFIRMED | main/dll/DIM/DIMlavaball.c | main/dll/DIM/dll_0180_mmpasteroidre.c | container w/ 0x17E,0x17F,0x181,0x182,0x183 |
-| 0x181 | MMP_trenchFx | CONFIRMED | main/dll/DIM/DIMlavaball.c | main/dll/DIM/dll_0181_mmptrenchfx.c | container w/ 0x17E,0x17F,0x180,0x182,0x183 |
-| 0x182 | MMP_moonrock | CONFIRMED | main/dll/DIM/DIMlavaball.c | main/dll/DIM/dll_0182_mmpmoonrock.c | container w/ 0x17E,0x17F,0x180,0x181,0x183 |
-| 0x183 | MMP_gyservent | CONFIRMED | main/dll/DIM/DIMlavaball.c | main/dll/DIM/dll_0183_mmpgyservent.c | container w/ 0x17E,0x17F,0x180,0x181,0x182 |
-| 0x184 | AnimSharpclaw (+DIMAnimShar, MMPAnimShar) | CONFIRMED | main/dll/DIM/DIMlogfire.c | main/dll/DIM/dll_0184_animsharpclaw.c | container w/ 0x185,0x186,0x25B |
-| 0x185 | CCgasvent | COMPLETE | main/dll/DIM/DIMlogfire.c | main/dll/DIM/dll_0185_ccgasvent.c | container w/ 0x184,0x186,0x25B |
-| 0x186 | CCgasventControl | CONFIRMED | main/dll/DIM/DIMlogfire.c | main/dll/DIM/dll_0186_ccgasventcontrol.c | container w/ 0x184,0x185,0x25B |
-| 0x187 | CCqueen | COMPLETE | main/dll/DIM/DIMsnowball.c | main/dll/DIM/dll_0187_ccqueen.c | container w/ 0x188,0x189,0x18A,0x18B |
-| 0x188 | CClightfoot | CONFIRMED | main/dll/DIM/DIMsnowball.c | main/dll/DIM/dll_0188_cclightfoot.c | container w/ 0x187,0x189,0x18A,0x18B |
-| 0x189 | CCSharpclawpad | CONFIRMED | main/dll/DIM/DIMsnowball.c | main/dll/DIM/dll_0189_ccsharpclawpad.c | container w/ 0x187,0x188,0x18A,0x18B |
-| 0x18A | CCpedstal | COMPLETE | main/dll/DIM/DIMsnowball.c | main/dll/DIM/dll_018A_ccpedstal.c | container w/ 0x187,0x188,0x189,0x18B |
-| 0x18B | CClevcontrol | CONFIRMED | main/dll/DIM/DIMsnowball.c | main/dll/DIM/dll_018B_cclevcontrol.c | container w/ 0x187,0x188,0x189,0x18A |
-| 0x18C | MMSH_Shrine | CONFIRMED | main/dll/mmshrine/dll_018C_mmshshrine.c | = (canonical) | — |
-| 0x18D | MMSH_Scales | CONFIRMED | main/dll/mmshrine/shrine.c | main/dll/mmshrine/dll_018D_mmshscales.c | container w/ 0x18E |
-| 0x18E | MMSH_WaterSpike | CONFIRMED | main/dll/mmshrine/shrine.c | main/dll/mmshrine/dll_018E_mmshwaterspike.c | container w/ 0x18D |
-| 0x18F | ECSH_Shrine | CONFIRMED | main/dll/mmshrine/shrine1C2.c | main/dll/mmshrine/dll_018F_ecshshrine.c | container w/ 0x191 |
+| 0x17D | RollingBarrel (+DIM2_barrel, MMP_barrel) | GUESSED | main/dll/dll_017D_dim2barrel.c | main/dll/dll_017D_rollingbarrel.c | — |
+| 0x17E | MMP_levelcontrol | CONFIRMED | main/dll/dll_017E_mmplevelco.c | main/dll/MMP/dll_017E_mmplevelcontrol.c | — |
+| 0x17F | MoonSeedBush (+MSBush, MSVine) | GUESSED | main/dll/dll_017F_msbush.c | main/dll/dll_017F_moonseedbush.c | — |
+| 0x180 | MMP_asteroid_re | CONFIRMED | main/dll/dll_0180_mmpasteroi.c | main/dll/MMP/dll_0180_mmpasteroidre.c | — |
+| 0x181 | MMP_trenchFx | CONFIRMED | main/dll/dll_0181_mmptrenchf.c | main/dll/MMP/dll_0181_mmptrenchfx.c | — |
+| 0x182 | MMP_moonrock | CONFIRMED | main/dll/dll_0182_mmpmoonroc.c | main/dll/MMP/dll_0182_mmpmoonrock.c | — |
+| 0x183 | MMP_gyservent | CONFIRMED | main/dll/dll_0183_mmpgyserve.c | main/dll/MMP/dll_0183_mmpgyservent.c | — |
+| 0x184 | AnimSharpclaw (+DIMAnimShar, MMPAnimShar) | CONFIRMED | main/dll/dll_0184_dimanimshar.c | main/dll/dll_0184_animsharpclaw.c | — |
+| 0x185 | CCgasvent | COMPLETE | main/dll/dll_0185_ccgasvent.c | main/dll/CC/dll_0185_ccgasvent.c | — |
+| 0x186 | CCgasventControl | CONFIRMED | main/dll/dll_0186_ccgasventco.c | main/dll/CC/dll_0186_ccgasventcontrol.c | — |
+| 0x187 | CCqueen | COMPLETE | main/dll/dll_0187_ccqueen.c | main/dll/CC/dll_0187_ccqueen.c | — |
+| 0x188 | CClightfoot | CONFIRMED | main/dll/dll_0188_cclightfoot.c | main/dll/CC/dll_0188_cclightfoot.c | — |
+| 0x189 | CCSharpclawpad | CONFIRMED | main/dll/dll_0189_ccsharpclaw.c | main/dll/CC/dll_0189_ccsharpclawpad.c | — |
+| 0x18A | CCpedstal | COMPLETE | main/dll/dll_018A_ccpedstal.c | main/dll/CC/dll_018A_ccpedstal.c | — |
+| 0x18B | CClevcontrol | CONFIRMED | main/dll/dll_018B_cclevcontro.c | main/dll/CC/dll_018B_cclevcontrol.c | — |
+| 0x18C | MMSH_Shrine | CONFIRMED | main/dll/dll_018C_mmshshrine.c | main/dll/mmshrine/dll_018C_mmshshrine.c | — |
+| 0x18D | MMSH_Scales | CONFIRMED | main/dll/dll_018D_mmshscales.c | main/dll/mmshrine/dll_018D_mmshscales.c | — |
+| 0x18E | MMSH_WaterSpike | CONFIRMED | main/dll/dll_018E_mmshwaters.c | main/dll/mmshrine/dll_018E_mmshwaterspike.c | — |
+| 0x18F | ECSH_Shrine | CONFIRMED | main/dll/dll_018F_ecshshrine.c | = (canonical) | — |
 | 0x190 | ECSH_Cup | COMPLETE | main/dll/dll_0190_ecshcup.c | = (canonical) | — |
-| 0x191 | ECSH_Creator | CONFIRMED | main/dll/mmshrine/shrine1C2.c | main/dll/mmshrine/dll_0191_ecshcreator.c | container w/ 0x18F |
-| 0x192 | GPSH_Shrine | CONFIRMED | main/dll/creator1C4.c | main/dll/dll_0192_gpshshrine.c | container w/ 0x193,0x194 |
-| 0x193 | GPSH_ObjCreator | CONFIRMED | main/dll/creator1C4.c | main/dll/dll_0193_gpshobjcreator.c | container w/ 0x192,0x194 |
-| 0x194 | GPSH_Scene | COMPLETE | main/dll/creator1C4.c | main/dll/dll_0194_gpshscene.c | container w/ 0x192,0x193 |
+| 0x191 | ECSH_Creator | CONFIRMED | main/dll/dll_0191_ecshcreato.c | main/dll/dll_0191_ecshcreator.c | — |
+| 0x192 | GPSH_Shrine | CONFIRMED | main/dll/dll_0192_gpshshrine.c | = (canonical) | — |
+| 0x193 | GPSH_ObjCreator | CONFIRMED | main/dll/dll_0193_gpshobjcre.c | main/dll/dll_0193_gpshobjcreator.c | — |
+| 0x194 | GPSH_Scene | COMPLETE | main/dll/dll_0194_gpshscene.c | = (canonical) | — |
 | 0x195 | DBSH_Shrine | CONFIRMED | main/dll/dll_0195_dbshshrine.c | = (canonical) | — |
-| 0x196 | DBSH_Symbol | CONFIRMED | main/dll/cup1C3.c | main/dll/dll_0196_dbshsymbol.c | container w/ 0x197 |
-| 0x197 | — | NO-RETAIL-NAME | main/dll/cup1C3.c | main/dll/dll_0197_cup1C3.c | container w/ 0x196; container stem, tentative |
-| 0x198 | NWSH_levcon | CONFIRMED | main/dll/NW/dll_0198_nwshlevcon.c | = (canonical) | — |
-| 0x199 | — | NO-RETAIL-NAME | main/dll/dimmagicbridge.c | main/dll/dll_0199_dimmagicbridge.c | container w/ 0x19A; container stem, tentative |
-| 0x19A | — | NO-RETAIL-NAME | main/dll/dimmagicbridge.c | main/dll/dll_019A_dimmagicbridge.c | container w/ 0x199; container stem, tentative |
-| 0x19B | — | NO-RETAIL-NAME | main/dll/shrine1CE.c | main/dll/dll_019B_shrine1CE.c | container w/ 0x19C,0x19D; container stem, tentative |
-| 0x19C | — | NO-RETAIL-NAME | main/dll/shrine1CE.c | main/dll/dll_019C_shrine1CE.c | container w/ 0x19B,0x19D; container stem, tentative |
-| 0x19D | — | NO-RETAIL-NAME | main/dll/shrine1CE.c | main/dll/dll_019D_shrine1CE.c | container w/ 0x19B,0x19C; container stem, tentative |
+| 0x196 | DBSH_Symbol | CONFIRMED | main/dll/dll_0196_dbshsymbol.c | = (canonical) | — |
+| 0x197 | — | NO-RETAIL-NAME | main/dll/dll_0197_dll197.c | = (canonical) | — |
+| 0x198 | NWSH_levcon | CONFIRMED | main/dll/dll_0198_nwshlevcon.c | main/dll/NW/dll_0198_nwshlevcon.c | — |
+| 0x199 | — | NO-RETAIL-NAME | main/dll/dll_0199_dll199.c | = (canonical) | — |
+| 0x19A | — | NO-RETAIL-NAME | main/dll/dll_019A_dll19a.c | = (canonical) | — |
+| 0x19B | — | NO-RETAIL-NAME | main/dll/dll_019B_dll19b.c | = (canonical) | — |
+| 0x19C | — | NO-RETAIL-NAME | main/dll/dll_019C_dll19c.c | = (canonical) | — |
+| 0x19D | — | NO-RETAIL-NAME | main/dll/dll_019D_dll19d.c | = (canonical) | — |
 | 0x19E | — | NO-RETAIL-NAME | main/dll/dll_019E_dim_tricky.c | = (canonical) | — |
-| 0x19F | NW_treebrid | RAW | main/dll/NW/dll_019F_nwtreebrid.c | = (canonical) | — |
-| 0x1A0 | NW_geyser | COMPLETE | main/dll/NW/dll_01A0_nwgeyser.c | = (canonical) | — |
-| 0x1A1 | NW_mammoth (+NW_mammothh, NW_mammothb, NW_mammothw, NW_mammothg) | CONFIRMED | main/dll/NW/dll_01A1_nwmammoth.c | = (canonical) | — |
-| 0x1A2 | NW_tricky | COMPLETE | main/dll/creator1D6.c | main/dll/NW/dll_01A2_nwtricky.c | container w/ 0x1A3,0x1A4 |
-| 0x1A3 | NW_animice (+NW_animice1, NW_animice2, NW_animice3) | CONFIRMED | main/dll/creator1D6.c | main/dll/NW/dll_01A3_nwanimice.c | container w/ 0x1A2,0x1A4 |
-| 0x1A4 | NW_ice (+NW_ice1, NW_ice2, NW_ice3) | CONFIRMED | main/dll/creator1D6.c | main/dll/NW/dll_01A4_nwice.c | container w/ 0x1A2,0x1A3 |
-| 0x1A5 | NW_levcontrol | CONFIRMED | main/dll/projball1D8.c | main/dll/NW/dll_01A5_nwlevcontrol.c | container w/ 0x1A6 |
-| 0x1A6 | SH_tricky | COMPLETE | main/dll/projball1D8.c | main/dll/SH/dll_01A6_shtricky.c | container w/ 0x1A5 |
-| 0x1A7 | ediblemushroom (+LINK_BlueMu, SH_whitemus, BlueMushroo) | GUESSED | main/dll/NW/dll_01A7_ediblemushroom.c | = (canonical) | — |
-| 0x1A8 | SH_killermushroom | GUESSED | main/dll/SH/dll_01A8_shkillermushroom.c | = (canonical) | — |
-| 0x1A9 | BombPlant | COMPLETE | main/dll/SH/dll_01A9_bombplant.c | = (canonical) | — |
-| 0x1AA | BombPlantSpore | CONFIRMED | main/dll/SH/SHrocketmushroom.c | main/dll/SH/dll_01AA_bombplantspore.c | container w/ 0x1AB |
-| 0x1AB | BombPlantingspot | CONFIRMED | main/dll/SH/SHrocketmushroom.c | main/dll/SH/dll_01AB_bombplantingspot.c | container w/ 0x1AA |
-| 0x1AC | SH_queenearthwalker | CONFIRMED | main/dll/SH/dll_01AC_shqueenearthwalker.c | = (canonical) | — |
-| 0x1AD | SH_thorntail | CONFIRMED | main/dll/SC/dll_01AD_shthorntail.c | = (canonical) | — |
-| 0x1AE | SH_LevelControl | CONFIRMED | main/dll/IM/dll_01AE_shlevelcontrol.c | = (canonical) | — |
-| 0x1AF | SH_swaplift | RAW | main/dll/IM/dll_01AF_shswaplift.c | = (canonical) | — |
-| 0x1B0 | SH_swapston | RAW | main/dll/SC/dll_01B0_shswapston.c | = (canonical) | — |
-| 0x1B1 | SH_staff | COMPLETE | main/dll/DR/DRearthwalk.c | main/dll/DR/dll_01B1_shstaff.c | container w/ 0x1B2,0x1B3 |
-| 0x1B2 | SH_staffHaze | CONFIRMED | main/dll/DR/DRearthwalk.c | main/dll/DR/dll_01B2_shstaffhaze.c | container w/ 0x1B1,0x1B3 |
-| 0x1B3 | SH_Beacon | COMPLETE | main/dll/DR/DRearthwalk.c | main/dll/DR/dll_01B3_shbeacon.c | container w/ 0x1B1,0x1B2 |
-| 0x1B4 | SH_EmptyTumblew | CONFIRMED | main/dll/CR/CRsnowbike.c | main/dll/CR/dll_01B4_shemptytumblew.c | container w/ 0x1B6 |
+| 0x19F | NW_treebrid | RAW | main/dll/dll_019F_nwtreebrid.c | main/dll/NW/dll_019F_nwtreebrid.c | — |
+| 0x1A0 | NW_geyser | COMPLETE | main/dll/dll_01A0_nwgeyser.c | main/dll/NW/dll_01A0_nwgeyser.c | — |
+| 0x1A1 | NW_mammoth (+NW_mammothh, NW_mammothb, NW_mammothw, NW_mammothg) | CONFIRMED | main/dll/dll_01A1_nwmammoth.c | main/dll/NW/dll_01A1_nwmammoth.c | — |
+| 0x1A2 | NW_tricky | COMPLETE | main/dll/dll_01A2_nwtricky.c | main/dll/NW/dll_01A2_nwtricky.c | — |
+| 0x1A3 | NW_animice (+NW_animice1, NW_animice2, NW_animice3) | CONFIRMED | main/dll/dll_01A3_nwanimice1.c | main/dll/NW/dll_01A3_nwanimice.c | — |
+| 0x1A4 | NW_ice (+NW_ice1, NW_ice2, NW_ice3) | CONFIRMED | main/dll/dll_01A4_nwice1.c | main/dll/NW/dll_01A4_nwice.c | — |
+| 0x1A5 | NW_levcontrol | CONFIRMED | main/dll/dll_01A5_nwlevcontr.c | main/dll/NW/dll_01A5_nwlevcontrol.c | — |
+| 0x1A6 | SH_tricky | COMPLETE | main/dll/dll_01A6_shtricky.c | main/dll/SH/dll_01A6_shtricky.c | — |
+| 0x1A7 | ediblemushroom (+LINK_BlueMu, SH_whitemus, BlueMushroo) | GUESSED | main/dll/dll_01A7_ediblemushroom.c | = (canonical) | — |
+| 0x1A8 | SH_killermushroom | GUESSED | main/dll/dll_01A8_shkillermushroom.c | main/dll/SH/dll_01A8_shkillermushroom.c | — |
+| 0x1A9 | BombPlant | COMPLETE | main/dll/dll_01A9_bombplant.c | = (canonical) | — |
+| 0x1AA | BombPlantSpore | CONFIRMED | main/dll/dll_01AA_bombplantsp.c | main/dll/dll_01AA_bombplantspore.c | — |
+| 0x1AB | BombPlantingspot | CONFIRMED | main/dll/dll_01AB_bombplantin.c | main/dll/dll_01AB_bombplantingspot.c | — |
+| 0x1AC | SH_queenearthwalker | CONFIRMED | main/dll/dll_01AC_shqueenearthwalker.c | main/dll/SH/dll_01AC_shqueenearthwalker.c | — |
+| 0x1AD | SH_thorntail | CONFIRMED | main/dll/dll_01AD_shthorntail.c | main/dll/SH/dll_01AD_shthorntail.c | — |
+| 0x1AE | SH_LevelControl | CONFIRMED | main/dll/dll_01AE_shlevelcontrol.c | main/dll/SH/dll_01AE_shlevelcontrol.c | — |
+| 0x1AF | SH_swaplift | RAW | main/dll/dll_01AF_shswaplift.c | main/dll/SH/dll_01AF_shswaplift.c | — |
+| 0x1B0 | SH_swapston | RAW | main/dll/dll_01B0_shswapston.c | main/dll/SH/dll_01B0_shswapston.c | — |
+| 0x1B1 | SH_staff | COMPLETE | main/dll/dll_01B1_shstaff.c | main/dll/SH/dll_01B1_shstaff.c | — |
+| 0x1B2 | SH_staffHaze | CONFIRMED | main/dll/dll_01B2_shstaffhaz.c | main/dll/SH/dll_01B2_shstaffhaze.c | — |
+| 0x1B3 | SH_Beacon | COMPLETE | main/dll/dll_01B3_shbeacon.c | main/dll/SH/dll_01B3_shbeacon.c | — |
+| 0x1B4 | SH_EmptyTumblew | CONFIRMED | main/dll/dll_01B4_shemptytum.c | main/dll/SH/dll_01B4_shemptytumblew.c | — |
 | 0x1B5 | lightfoot (+SC_chieflig, SC_lightfoo, SC_babyligh, SC_blTarget, SC_muscleli) | CONFIRMED | main/dll/dll_01B5_lightfoot.c | = (canonical) | — |
-| 0x1B6 | SC_levelcontrol | CONFIRMED | main/dll/CR/CRsnowbike.c | main/dll/CR/dll_01B6_sclevelcontrol.c | container w/ 0x1B4 |
-| 0x1B7 | SC_MusicTree (+SC_BirchTre) | CONFIRMED | main/dll/DR/DRcloudrunner.c | main/dll/DR/dll_01B7_scmusictree.c | container w/ 0x1B8,0x1B9 |
-| 0x1B8 | SC_totempole | CONFIRMED | main/dll/DR/DRcloudrunner.c | main/dll/DR/dll_01B8_sctotempole.c | container w/ 0x1B7,0x1B9 |
-| 0x1B9 | SC_Cloudrunnera | CONFIRMED | main/dll/DR/DRcloudrunner.c | main/dll/DR/dll_01B9_sccloudrunnera.c | container w/ 0x1B7,0x1B8 |
-| 0x1BA | SC_totempuzzle | CONFIRMED | main/dll/SC/dll_01BA_sctotempuzzle.c | = (canonical) | — |
-| 0x1BB | SC_totembond | CONFIRMED | main/dll/SC/dll_01BB_sctotembond.c | = (canonical) | — |
-| 0x1BC | SC_totemstrength | CONFIRMED | main/dll/VF/platform1.c | main/dll/VF/dll_01BC_sctotemstrength.c | container w/ 0x1BD |
-| 0x1BD | paymentkiosk (+SC_paypoint, SPWell) | GUESSED | main/dll/VF/platform1.c | main/dll/VF/dll_01BD_paymentkiosk.c | container w/ 0x1BC |
-| 0x1BE | DIMLava (+DIMLavaBall, DIMLavaDebr) | GUESSED | main/dll/DIM/DIMcannon.c | main/dll/DIM/dll_01BE_dimlava.c | container w/ 0x16D,0x16E,0x16F,0x170,0x171,0x172,+2 more |
-| 0x1BF | DIMLavaBall | RAW | main/dll/DIM/DIMcannon.c | main/dll/DIM/dll_01BF_dimlavaball.c | container w/ 0x16D,0x16E,0x16F,0x170,0x171,0x172,+2 more |
-| 0x1C0 | DIMLogFire (+DIMLogFireR) | COMPLETE | main/dll/DIM/DIMlavasmash.c | main/dll/DIM/dll_01C0_dimlogfire.c | container w/ 0x1C1 |
-| 0x1C1 | DIMSnowBall | CONFIRMED | main/dll/DIM/DIMlavasmash.c | main/dll/DIM/dll_01C1_dimsnowball.c | container w/ 0x1C0 |
-| 0x1C2 | DIMSnowBall1c2 | CONFIRMED | main/dll/DIM/DIMExplosion.c | main/dll/DIM/dll_01C2_dimsnowball1c2.c | container w/ 0x1C3,0x1C4,0x1C5 |
-| 0x1C3 | DIMGate (+DIM2BossDoo) | COMPLETE | main/dll/DIM/DIMExplosion.c | main/dll/DIM/dll_01C3_dimgate.c | container w/ 0x1C2,0x1C4,0x1C5 |
-| 0x1C4 | DIMIceWall | COMPLETE | main/dll/DIM/DIMExplosion.c | main/dll/DIM/dll_01C4_dimicewall.c | container w/ 0x1C2,0x1C3,0x1C5 |
-| 0x1C5 | DIMBarrier (+DIM2CannonT) | COMPLETE | main/dll/DIM/DIMExplosion.c | main/dll/DIM/dll_01C5_dimbarrier.c | container w/ 0x1C2,0x1C3,0x1C4 |
-| 0x1C6 | DIMCannon (+DIMCannonBa) | COMPLETE | main/dll/DIM/DIMlevcontrol.c | main/dll/DIM/dll_01C6_dimcannon.c | container w/ 0x1C7 |
-| 0x1C7 | DIMLavaSmash | CONFIRMED | main/dll/DIM/DIMlevcontrol.c | main/dll/DIM/dll_01C7_dimlavasmash.c | container w/ 0x1C6 |
-| 0x1C8 | DIMBridgeCogmai | CONFIRMED | main/dll/DIM/DIM2conveyor.c | main/dll/DIM/dll_01C8_dimbridgecogmai.c | container w/ 0x1C9 |
-| 0x1C9 | DIMDismountpoint | CONFIRMED | main/dll/DIM/DIM2conveyor.c | main/dll/DIM/dll_01C9_dimdismountpoint.c | container w/ 0x1C8 |
-| 0x1CA | DIMExplosion | CONFIRMED | main/dll/DIM/DIM2flameburst.c | main/dll/DIM/dll_01CA_dimexplosion.c | container w/ 0x1CB,0x1CC,0x1CE |
-| 0x1CB | DIMWoodDoor2 | CONFIRMED | main/dll/DIM/DIM2flameburst.c | main/dll/DIM/dll_01CB_dimwooddoor2.c | container w/ 0x1CA,0x1CC,0x1CE |
-| 0x1CC | DIMMagicBridge | CONFIRMED | main/dll/DIM/DIM2flameburst.c | main/dll/DIM/dll_01CC_dimmagicbridge.c | container w/ 0x1CA,0x1CB,0x1CE |
-| 0x1CD | DIM_LevelControl | CONFIRMED | main/dll/DIM/DIM2snowball.c | main/dll/DIM/dll_01CD_dimlevelcontrol.c | container w/ 0x1CF,0x1D0,0x1D1,0x1D5,0x1D6,0x1D7,+1 more |
-| 0x1CE | — | NO-RETAIL-NAME | main/dll/DIM/DIM2flameburst.c | main/dll/DIM/dll_01CE_DIM2flameburst.c | container w/ 0x1CA,0x1CB,0x1CC; container stem, tentative |
-| 0x1CF | — | NO-RETAIL-NAME | main/dll/DIM/DIM2snowball.c | main/dll/DIM/dll_01CF_DIM2snowball.c | container w/ 0x1CD,0x1D0,0x1D1,0x1D5,0x1D6,0x1D7,+1 more; container stem, tentative |
-| 0x1D0 | DIM_tricky | COMPLETE | main/dll/DIM/DIM2snowball.c | main/dll/DIM/dll_01D0_dimtricky.c | container w/ 0x1CD,0x1CF,0x1D1,0x1D5,0x1D6,0x1D7,+1 more |
-| 0x1D1 | DIMTruthHornice | CONFIRMED | main/dll/DIM/DIM2snowball.c | main/dll/DIM/dll_01D1_dimtruthhornice.c | container w/ 0x1CD,0x1CF,0x1D0,0x1D5,0x1D6,0x1D7,+1 more |
+| 0x1B6 | SC_levelcontrol | CONFIRMED | main/dll/dll_01B6_sclevelcon.c | main/dll/SC/dll_01B6_sclevelcontrol.c | — |
+| 0x1B7 | SC_MusicTree (+SC_BirchTre) | CONFIRMED | main/dll/dll_01B7_scmusictre.c | main/dll/SC/dll_01B7_scmusictree.c | — |
+| 0x1B8 | SC_totempole | CONFIRMED | main/dll/dll_01B8_sctotempol.c | main/dll/SC/dll_01B8_sctotempole.c | — |
+| 0x1B9 | SC_Cloudrunnera | CONFIRMED | main/dll/dll_01B9_sccloudrun.c | main/dll/SC/dll_01B9_sccloudrunnera.c | — |
+| 0x1BA | SC_totempuzzle | CONFIRMED | main/dll/dll_01BA_sctotempuzzle.c | main/dll/SC/dll_01BA_sctotempuzzle.c | — |
+| 0x1BB | SC_totembond | CONFIRMED | main/dll/dll_01BB_sctotembond.c | main/dll/SC/dll_01BB_sctotembond.c | — |
+| 0x1BC | SC_totemstrength | CONFIRMED | main/dll/dll_01BC_sctotemstr.c | main/dll/SC/dll_01BC_sctotemstrength.c | — |
+| 0x1BD | paymentkiosk (+SC_paypoint, SPWell) | GUESSED | main/dll/dll_01BD_scpaypoint.c | main/dll/dll_01BD_paymentkiosk.c | — |
+| 0x1BE | DIMLava (+DIMLavaBall, DIMLavaDebr) | GUESSED | main/dll/dll_01BE_dimlavaball.c | main/dll/DIM/dll_01BE_dimlava.c | — |
+| 0x1BF | DIMLavaBall | RAW | main/dll/dll_01BF_dimlavaball.c | main/dll/DIM/dll_01BF_dimlavaball.c | — |
+| 0x1C0 | DIMLogFire (+DIMLogFireR) | COMPLETE | main/dll/dll_01C0_dimlogfire.c | main/dll/DIM/dll_01C0_dimlogfire.c | — |
+| 0x1C1 | DIMSnowBall | CONFIRMED | main/dll/dll_01C1_dimsnowball.c | main/dll/DIM/dll_01C1_dimsnowball.c | — |
+| 0x1C2 | DIMSnowBall1c2 | CONFIRMED | main/dll/dll_01C2_dimsnowball.c | main/dll/DIM/dll_01C2_dimsnowball1c2.c | — |
+| 0x1C3 | DIMGate (+DIM2BossDoo) | COMPLETE | main/dll/dll_01C3_dimgate.c | main/dll/DIM/dll_01C3_dimgate.c | — |
+| 0x1C4 | DIMIceWall | COMPLETE | main/dll/dll_01C4_dimicewall.c | main/dll/DIM/dll_01C4_dimicewall.c | — |
+| 0x1C5 | DIMBarrier (+DIM2CannonT) | COMPLETE | main/dll/dll_01C5_dimbarrier.c | main/dll/DIM/dll_01C5_dimbarrier.c | — |
+| 0x1C6 | DIMCannon (+DIMCannonBa) | COMPLETE | main/dll/dll_01C6_dimcannon.c | main/dll/DIM/dll_01C6_dimcannon.c | — |
+| 0x1C7 | DIMLavaSmash | CONFIRMED | main/dll/dll_01C7_dimlavasmas.c | main/dll/DIM/dll_01C7_dimlavasmash.c | — |
+| 0x1C8 | DIMBridgeCogmai | CONFIRMED | main/dll/dll_01C8_dimbridgeco.c | main/dll/DIM/dll_01C8_dimbridgecogmai.c | — |
+| 0x1C9 | DIMDismountpoint | CONFIRMED | main/dll/dll_01C9_dimdismount.c | main/dll/DIM/dll_01C9_dimdismountpoint.c | — |
+| 0x1CA | DIMExplosion | CONFIRMED | main/dll/dll_01CA_dimexplosio.c | main/dll/DIM/dll_01CA_dimexplosion.c | — |
+| 0x1CB | DIMWoodDoor2 | CONFIRMED | main/dll/dll_01CB_dimwooddoor.c | main/dll/DIM/dll_01CB_dimwooddoor2.c | — |
+| 0x1CC | DIMMagicBridge | CONFIRMED | main/dll/dll_01CC_dimmagicbri.c | main/dll/DIM/dll_01CC_dimmagicbridge.c | — |
+| 0x1CD | DIM_LevelControl | CONFIRMED | main/dll/dll_01CD_dimlevelco.c | main/dll/DIM/dll_01CD_dimlevelcontrol.c | — |
+| 0x1CE | — | NO-RETAIL-NAME | main/dll/dll_01CE_dll1ce.c | = (canonical) | — |
+| 0x1CF | — | NO-RETAIL-NAME | main/dll/dll_01CF_dll1cf.c | = (canonical) | — |
+| 0x1D0 | DIM_tricky | COMPLETE | main/dll/dll_01D0_dimtricky.c | main/dll/DIM/dll_01D0_dimtricky.c | — |
+| 0x1D1 | DIMTruthHornice | CONFIRMED | main/dll/dll_01D1_dimtruthhor.c | main/dll/DIM/dll_01D1_dimtruthhornice.c | — |
 | 0x1D2 | WORLDplanet | CONFIRMED | main/worldplanet.c | main/dll/dll_01D2_worldplanet.c | engine/SDK host: main/worldplanet.c |
 | 0x1D3 | worldobj (+WORLDcloudr, WORLDdragro, WORLDwalled, WORLDdarkic, WORLDcloudl, WORLDpath1, WORLDpath2, WORLDpath3, WORLDpath4, WORLDpath5, WORLDpath6, WORLDpath7, WORLDpath8, WORLDarwing, WORLDgreatf, WORLDsun, WORLDsunray, WORLDpepper, WORLDsunfla, WORLDComet, WORLDastGen, WORLDhalo, WORLDhalobr, WORLDarrow) | CONFIRMED | main/worldobj.c | main/dll/dll_01D3_worldobj.c | engine/SDK host: main/worldobj.c |
 | 0x1D4 | WORLDAsteroids | CONFIRMED | main/worldasteroids.c | main/dll/dll_01D4_worldasteroids.c | engine/SDK host: main/worldasteroids.c |
-| 0x1D5 | DIM2Conveyor | CONFIRMED | main/dll/DIM/DIM2snowball.c | main/dll/DIM/dll_01D5_dim2conveyor.c | container w/ 0x1CD,0x1CF,0x1D0,0x1D1,0x1D6,0x1D7,+1 more |
-| 0x1D6 | — | NO-RETAIL-NAME | main/dll/DIM/DIM2snowball.c | main/dll/DIM/dll_01D6_DIM2snowball.c | container w/ 0x1CD,0x1CF,0x1D0,0x1D1,0x1D5,0x1D7,+1 more; container stem, tentative |
-| 0x1D7 | DIM2SnowBall | CONFIRMED | main/dll/DIM/DIM2snowball.c | main/dll/DIM/dll_01D7_dim2snowball.c | container w/ 0x1CD,0x1CF,0x1D0,0x1D1,0x1D5,0x1D6,+1 more |
-| 0x1D8 | DIM2PathGenerator | CONFIRMED | main/dll/DIM/DIM2snowball.c | main/dll/DIM/dll_01D8_dim2pathgenerator.c | container w/ 0x1CD,0x1CF,0x1D0,0x1D1,0x1D5,0x1D6,+1 more |
-| 0x1D9 | DIM2PrisonMammoth | CONFIRMED | main/dll/DIM/dll_01D9_dim2prisonmammoth.c | = (canonical) | — |
-| 0x1DA | — | NO-RETAIL-NAME | main/dll/DIM/DIM2projrock.c | main/dll/DIM/dll_01DA_DIM2projrock.c | container w/ 0x1DB,0x1DC,0x1DD,0x1DE,0x1DF; container stem, tentative |
-| 0x1DB | — | NO-RETAIL-NAME | main/dll/DIM/DIM2projrock.c | main/dll/DIM/dll_01DB_DIM2projrock.c | container w/ 0x1DA,0x1DC,0x1DD,0x1DE,0x1DF; container stem, tentative |
-| 0x1DC | DIM2IceFloe | CONFIRMED | main/dll/DIM/DIM2projrock.c | main/dll/DIM/dll_01DC_dim2icefloe.c | container w/ 0x1DA,0x1DB,0x1DD,0x1DE,0x1DF |
-| 0x1DD | DIM2Icicle | COMPLETE | main/dll/DIM/DIM2projrock.c | main/dll/DIM/dll_01DD_dim2icicle.c | container w/ 0x1DA,0x1DB,0x1DC,0x1DE,0x1DF |
-| 0x1DE | DIM2LavaControl | CONFIRMED | main/dll/DIM/DIM2projrock.c | main/dll/DIM/dll_01DE_dim2lavacontrol.c | container w/ 0x1DA,0x1DB,0x1DC,0x1DD,0x1DF |
-| 0x1DF | — | NO-RETAIL-NAME | main/dll/DIM/DIM2projrock.c | main/dll/DIM/dll_01DF_DIM2projrock.c | container w/ 0x1DA,0x1DB,0x1DC,0x1DD,0x1DE; container stem, tentative |
-| 0x1E0 | DIM_Boss | COMPLETE | main/dll/DIM/dll_01E0_dimboss.c | = (canonical) | — |
-| 0x1E1 | DIM_BossGut | CONFIRMED | main/dll/DIM/dll_01E1_dimbossgut.c | = (canonical) | — |
-| 0x1E2 | DIM_BossTonsil | CONFIRMED | main/dll/DIM/dll_01E2_dimbosstonsil.c | = (canonical) | — |
-| 0x1E3 | DIM_BossGut2 | CONFIRMED | main/dll/DF/rope.c | main/dll/DF/dll_01E3_dimbossgut2.c | container w/ 0x1E4,0x1E5,0x1E6 |
-| 0x1E4 | MAGICMaker | COMPLETE | main/dll/DF/rope.c | main/dll/DF/dll_01E4_magicmaker.c | container w/ 0x1E3,0x1E5,0x1E6 |
-| 0x1E5 | DIM_BossSpit | CONFIRMED | main/dll/DF/rope.c | main/dll/DF/dll_01E5_dimbossspit.c | container w/ 0x1E3,0x1E4,0x1E6 |
-| 0x1E6 | DIMbosscrackpar | CONFIRMED | main/dll/DF/rope.c | main/dll/DF/dll_01E6_dimbosscrackpar.c | container w/ 0x1E3,0x1E4,0x1E5 |
-| 0x1E7 | DIMbossfire (+MMP_CraterF, CraterFlame) | CONFIRMED | main/dll/DF/DFcradle.c | main/dll/DF/dll_01E7_dimbossfire.c | container w/ 0x174 |
-| 0x1E8 | SB_Galleon | COMPLETE | main/dll/DB/DBstealerworm.c | main/dll/DB/dll_01E8_sbgalleon.c | container w/ 0x1E9,0x1EA,0x1EB |
-| 0x1E9 | SB_Propeller | CONFIRMED | main/dll/DB/DBstealerworm.c | main/dll/DB/dll_01E9_sbpropeller.c | container w/ 0x1E8,0x1EA,0x1EB |
-| 0x1EA | SB_ShipHead | CONFIRMED | main/dll/DB/DBstealerworm.c | main/dll/DB/dll_01EA_sbshiphead.c | container w/ 0x1E8,0x1E9,0x1EB |
-| 0x1EB | SB_ShipMast | CONFIRMED | main/dll/DB/DBstealerworm.c | main/dll/DB/dll_01EB_sbshipmast.c | container w/ 0x1E8,0x1E9,0x1EA |
-| 0x1EC | SB_ShipGun | COMPLETE | main/dll/TREX/TREX_levelcontrol.c | main/dll/TREX/dll_01EC_sbshipgun.c | container w/ 0x1EE |
-| 0x1ED | SB_FireBall | CONFIRMED | main/dll/TREX/TREX_trex.c | main/dll/TREX/dll_01ED_sbfireball.c | container w/ 0x1EF,0x1F0,0x1F1,0x1F2,0x1F3,0x1F4,+4 more |
-| 0x1EE | SB_CannonBall | CONFIRMED | main/dll/TREX/TREX_levelcontrol.c | main/dll/TREX/dll_01EE_sbcannonball.c | container w/ 0x1EC |
-| 0x1EF | SB_CloudBall | CONFIRMED | main/dll/TREX/TREX_trex.c | main/dll/TREX/dll_01EF_sbcloudball.c | container w/ 0x1ED,0x1F0,0x1F1,0x1F2,0x1F3,0x1F4,+4 more |
-| 0x1F0 | SB_KyteCage | CONFIRMED | main/dll/TREX/TREX_trex.c | main/dll/TREX/dll_01F0_sbkytecage.c | container w/ 0x1ED,0x1EF,0x1F1,0x1F2,0x1F3,0x1F4,+4 more |
-| 0x1F1 | SB_SeqDoor (+SB_SeqDoor2, SB_DeckDoor) | COMPLETE | main/dll/TREX/TREX_trex.c | main/dll/TREX/dll_01F1_sbseqdoor.c | container w/ 0x1ED,0x1EF,0x1F0,0x1F2,0x1F3,0x1F4,+4 more |
-| 0x1F2 | SB_CageKyte | CONFIRMED | main/dll/TREX/TREX_trex.c | main/dll/TREX/dll_01F2_sbcagekyte.c | container w/ 0x1ED,0x1EF,0x1F0,0x1F1,0x1F3,0x1F4,+4 more |
-| 0x1F3 | SB_MiniFire | CONFIRMED | main/dll/TREX/TREX_trex.c | main/dll/TREX/dll_01F3_sbminifire.c | container w/ 0x1ED,0x1EF,0x1F0,0x1F1,0x1F2,0x1F4,+4 more |
-| 0x1F4 | Lamp (+CF_Lamp, SB_Lamp) | CONFIRMED | main/dll/TREX/TREX_trex.c | main/dll/TREX/dll_01F4_lamp.c | container w/ 0x1ED,0x1EF,0x1F0,0x1F1,0x1F2,0x1F3,+4 more |
-| 0x1F5 | ShipBattle (+generalscal, CF_generals, NW_GeneralS, SB_FireBall) | GUESSED | main/dll/TREX/TREX_trex.c | main/dll/TREX/dll_01F5_shipbattle.c | container w/ 0x1ED,0x1EF,0x1F0,0x1F1,0x1F2,0x1F3,+4 more |
-| 0x1F6 | Flag (+DIMFlag, SB_Wheel, SB_Sail, SB_ShipFlag) | CONFIRMED | main/dll/TREX/TREX_trex.c | main/dll/TREX/dll_01F6_flag.c | container w/ 0x1ED,0x1EF,0x1F0,0x1F1,0x1F2,0x1F3,+4 more |
-| 0x1F7 | SB_ShipGunBroke | CONFIRMED | main/dll/TREX/TREX_trex.c | main/dll/TREX/dll_01F7_sbshipgunbroke.c | container w/ 0x1ED,0x1EF,0x1F0,0x1F1,0x1F2,0x1F3,+4 more |
-| 0x1F8 | WM_Galleon | COMPLETE | main/dll/WC/WClaser.c | main/dll/WC/dll_01F8_wmgalleon.c | container w/ 0x1FA,0x1FB |
-| 0x1F9 | WM_ObjCreator | CONFIRMED | main/dll/WC/dll_01F9_wmobjcreator.c | = (canonical) | — |
-| 0x1FA | WM_seqobject | CONFIRMED | main/dll/WC/WClaser.c | main/dll/WC/dll_01FA_wmseqobject.c | container w/ 0x1F8,0x1FB |
-| 0x1FB | — | NO-RETAIL-NAME | main/dll/WC/WClaser.c | main/dll/WC/dll_01FB_WClaser.c | container w/ 0x1F8,0x1FA; container stem, tentative |
-| 0x1FC | LaserBeam (+WM_LaserBea, ECSH_LaserB) | CONFIRMED | main/dll/ARW/dll_01FC_laserbeam.c | = (canonical) | — |
-| 0x1FD | WM_LaserTarget | CONFIRMED | main/dll/ARW/dll_01FD_wmlasertarget.c | = (canonical) | — |
-| 0x1FE | PressureSwitch (+CFPressureS, DFP_PuzzleP, WM_Pressure, ECSH_Pressu) | CONFIRMED | main/dll/ARW/dll_01FE_pressureswitch.c | = (canonical) | — |
-| 0x1FF | — | NO-RETAIL-NAME | main/dll/ARW/dll_01FF_dll1ff.c | = (canonical) | — |
-| 0x200 | — | NO-RETAIL-NAME | main/dll/ARW/dll_0200_dll200.c | = (canonical) | — |
-| 0x201 | WM_colrise | COMPLETE | main/dll/ARW/dll_0201_wmcolrise.c | = (canonical) | — |
+| 0x1D5 | DIM2Conveyor | CONFIRMED | main/dll/dll_01D5_dim2conveyo.c | main/dll/DIM/dll_01D5_dim2conveyor.c | — |
+| 0x1D6 | — | NO-RETAIL-NAME | main/dll/dll_01D6_dll1d6.c | = (canonical) | — |
+| 0x1D7 | DIM2SnowBall | CONFIRMED | main/dll/dll_01D7_dim2snowbal.c | main/dll/DIM/dll_01D7_dim2snowball.c | — |
+| 0x1D8 | DIM2PathGenerator | CONFIRMED | main/dll/dll_01D8_dim2pathgen.c | main/dll/DIM/dll_01D8_dim2pathgenerator.c | — |
+| 0x1D9 | DIM2PrisonMammoth | CONFIRMED | main/dll/dll_01D9_dim2prisonmammoth.c | main/dll/DIM/dll_01D9_dim2prisonmammoth.c | — |
+| 0x1DA | — | NO-RETAIL-NAME | main/dll/dll_01DA_dll1da.c | = (canonical) | — |
+| 0x1DB | — | NO-RETAIL-NAME | main/dll/dll_01DB_dll1db.c | = (canonical) | — |
+| 0x1DC | DIM2IceFloe | CONFIRMED | main/dll/dll_01DC_dim2icefloe.c | main/dll/DIM/dll_01DC_dim2icefloe.c | — |
+| 0x1DD | DIM2Icicle | COMPLETE | main/dll/dll_01DD_dim2icicle.c | main/dll/DIM/dll_01DD_dim2icicle.c | — |
+| 0x1DE | DIM2LavaControl | CONFIRMED | main/dll/dll_01DE_dim2lavacon.c | main/dll/DIM/dll_01DE_dim2lavacontrol.c | — |
+| 0x1DF | — | NO-RETAIL-NAME | main/dll/dll_01DF_dll1df.c | = (canonical) | — |
+| 0x1E0 | DIM_Boss | COMPLETE | main/dll/dll_01E0_dimboss.c | main/dll/DIM/dll_01E0_dimboss.c | — |
+| 0x1E1 | DIM_BossGut | CONFIRMED | main/dll/dll_01E1_dimbossgut.c | main/dll/DIM/dll_01E1_dimbossgut.c | — |
+| 0x1E2 | DIM_BossTonsil | CONFIRMED | main/dll/dll_01E2_dimbosstonsil.c | main/dll/DIM/dll_01E2_dimbosstonsil.c | — |
+| 0x1E3 | DIM_BossGut2 | CONFIRMED | main/dll/dll_01E3_dimbossgut.c | main/dll/DIM/dll_01E3_dimbossgut2.c | — |
+| 0x1E4 | MAGICMaker | COMPLETE | main/dll/dll_01E4_magicmaker.c | = (canonical) | — |
+| 0x1E5 | DIM_BossSpit | CONFIRMED | main/dll/dll_01E5_dimbossspi.c | main/dll/DIM/dll_01E5_dimbossspit.c | — |
+| 0x1E6 | DIMbosscrackpar | CONFIRMED | main/dll/dll_01E6_dimbosscrac.c | main/dll/DIM/dll_01E6_dimbosscrackpar.c | — |
+| 0x1E7 | DIMbossfire (+MMP_CraterF, CraterFlame) | CONFIRMED | main/dll/dll_01E7_dimbossfire.c | main/dll/DIM/dll_01E7_dimbossfire.c | — |
+| 0x1E8 | SB_Galleon | COMPLETE | main/dll/dll_01E8_sbgalleon.c | main/dll/SB/dll_01E8_sbgalleon.c | — |
+| 0x1E9 | SB_Propeller | CONFIRMED | main/dll/dll_01E9_sbpropelle.c | main/dll/SB/dll_01E9_sbpropeller.c | — |
+| 0x1EA | SB_ShipHead | CONFIRMED | main/dll/dll_01EA_sbshiphead.c | main/dll/SB/dll_01EA_sbshiphead.c | — |
+| 0x1EB | SB_ShipMast | CONFIRMED | main/dll/dll_01EB_sbshipmast.c | main/dll/SB/dll_01EB_sbshipmast.c | — |
+| 0x1EC | SB_ShipGun | COMPLETE | main/dll/dll_01EC_sbshipgun.c | main/dll/SB/dll_01EC_sbshipgun.c | — |
+| 0x1ED | SB_FireBall | CONFIRMED | main/dll/dll_01ED_sbfireball.c | main/dll/SB/dll_01ED_sbfireball.c | — |
+| 0x1EE | SB_CannonBall | CONFIRMED | main/dll/dll_01EE_sbcannonba.c | main/dll/SB/dll_01EE_sbcannonball.c | — |
+| 0x1EF | SB_CloudBall | CONFIRMED | main/dll/dll_01EF_sbcloudbal.c | main/dll/SB/dll_01EF_sbcloudball.c | — |
+| 0x1F0 | SB_KyteCage | CONFIRMED | main/dll/dll_01F0_sbkytecage.c | main/dll/SB/dll_01F0_sbkytecage.c | — |
+| 0x1F1 | SB_SeqDoor (+SB_SeqDoor2, SB_DeckDoor) | COMPLETE | main/dll/dll_01F1_sbseqdoor.c | main/dll/SB/dll_01F1_sbseqdoor.c | — |
+| 0x1F2 | SB_CageKyte | CONFIRMED | main/dll/dll_01F2_sbcagekyte.c | main/dll/SB/dll_01F2_sbcagekyte.c | — |
+| 0x1F3 | SB_MiniFire | CONFIRMED | main/dll/dll_01F3_sbminifire.c | main/dll/SB/dll_01F3_sbminifire.c | — |
+| 0x1F4 | Lamp (+CF_Lamp, SB_Lamp) | CONFIRMED | main/dll/dll_01F4_cflamp.c | main/dll/dll_01F4_lamp.c | — |
+| 0x1F5 | ShipBattle (+generalscal, CF_generals, NW_GeneralS, SB_FireBall) | GUESSED | main/dll/dll_01F5_generalscal.c | main/dll/dll_01F5_shipbattle.c | — |
+| 0x1F6 | Flag (+DIMFlag, SB_Wheel, SB_Sail, SB_ShipFlag) | CONFIRMED | main/dll/dll_01F6_dimflag.c | main/dll/dll_01F6_flag.c | — |
+| 0x1F7 | SB_ShipGunBroke | CONFIRMED | main/dll/dll_01F7_sbshipgunb.c | main/dll/SB/dll_01F7_sbshipgunbroke.c | — |
+| 0x1F8 | WM_Galleon | COMPLETE | main/dll/dll_01F8_wmgalleon.c | main/dll/WM/dll_01F8_wmgalleon.c | — |
+| 0x1F9 | WM_ObjCreator | CONFIRMED | main/dll/dll_01F9_wmobjcreator.c | main/dll/WM/dll_01F9_wmobjcreator.c | — |
+| 0x1FA | WM_seqobject | CONFIRMED | main/dll/dll_01FA_wmseqobjec.c | main/dll/WM/dll_01FA_wmseqobject.c | — |
+| 0x1FB | — | NO-RETAIL-NAME | main/dll/dll_01FB_dll1fb.c | = (canonical) | — |
+| 0x1FC | LaserBeam (+WM_LaserBea, ECSH_LaserB) | CONFIRMED | main/dll/dll_01FC_laserbeam.c | = (canonical) | — |
+| 0x1FD | WM_LaserTarget | CONFIRMED | main/dll/dll_01FD_wmlasertarget.c | main/dll/WM/dll_01FD_wmlasertarget.c | — |
+| 0x1FE | PressureSwitch (+CFPressureS, DFP_PuzzleP, WM_Pressure, ECSH_Pressu) | CONFIRMED | main/dll/dll_01FE_pressureswitch.c | = (canonical) | — |
+| 0x1FF | — | NO-RETAIL-NAME | main/dll/dll_01FF_dll1ff.c | = (canonical) | — |
+| 0x200 | — | NO-RETAIL-NAME | main/dll/dll_0200_dll200.c | = (canonical) | — |
+| 0x201 | WM_colrise | COMPLETE | main/dll/dll_0201_wmcolrise.c | main/dll/WM/dll_0201_wmcolrise.c | — |
 | 0x202 | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
 | 0x203 | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
-| 0x204 | WM_Torch | COMPLETE | main/dll/ARW/dll_0204_wmtorch.c | = (canonical) | — |
+| 0x204 | WM_Torch | COMPLETE | main/dll/dll_0204_wmtorch.c | main/dll/WM/dll_0204_wmtorch.c | — |
 | 0x205 | WM_Vein | COMPLETE | *(none)* | — | no .text fns (descriptor data only) |
-| 0x206 | LightSource (+LINKPoleFla, WM_WallTorc, HangingLigh, PoleLight, PoleFlame) | CONFIRMED | main/dll/LGT/dll_0206_lightsource.c | = (canonical) | — |
-| 0x207 | WM_Worm | COMPLETE | main/dll/LGT/dll_0207_wmworm.c | = (canonical) | — |
+| 0x206 | LightSource (+LINKPoleFla, WM_WallTorc, HangingLigh, PoleLight, PoleFlame) | CONFIRMED | main/dll/dll_0206_lightsource.c | = (canonical) | — |
+| 0x207 | WM_Worm | COMPLETE | main/dll/dll_0207_wmworm.c | main/dll/WM/dll_0207_wmworm.c | — |
 | 0x208 | WM_Wallpowe | RAW | *(none)* | — | no .text fns (descriptor data only) |
-| 0x209 | WM_LevelControl | CONFIRMED | main/dll/WM/dll_0209_wmlevelcontrol.c | = (canonical) | — |
-| 0x20A | WM_GeneralScales | CONFIRMED | main/dll/WM/dll_020A_wmgeneralscales.c | = (canonical) | — |
-| 0x20B | FireFly | COMPLETE | main/dll/WM/dll_020B_firefly.c | = (canonical) | — |
-| 0x20C | WM_spiritplace | CONFIRMED | main/dll/WM/dll_020C_wmspiritplace.c | = (canonical) | — |
-| 0x20D | WM_seqpoint | CONFIRMED | main/dll/WM/dll_020D_wmseqpoint.c | = (canonical) | — |
-| 0x20E | WM_sun (+WM_Crystal) | COMPLETE | main/dll/WM/dll_020E_wmsun.c | = (canonical) | — |
-| 0x20F | WM_SpiritSet | CONFIRMED | main/dll/WM/dll_020F_wmspiritset.c | = (canonical) | — |
-| 0x210 | WM_Planets (+WM_PlanetsS) | COMPLETE | main/dll/WM/dll_0210_wmplanets.c | = (canonical) | — |
-| 0x211 | WM_WallCrawler (+DR_BigSkeet, DR_SmallSke) | CONFIRMED | main/dll/WM/dll_0211_wmwallcrawler.c | = (canonical) | — |
+| 0x209 | WM_LevelControl | CONFIRMED | main/dll/dll_0209_wmlevelcontrol.c | main/dll/WM/dll_0209_wmlevelcontrol.c | — |
+| 0x20A | WM_GeneralScales | CONFIRMED | main/dll/dll_020A_wmgeneralscales.c | main/dll/WM/dll_020A_wmgeneralscales.c | — |
+| 0x20B | FireFly | COMPLETE | main/dll/dll_020B_firefly.c | = (canonical) | — |
+| 0x20C | WM_spiritplace | CONFIRMED | main/dll/dll_020C_wmspiritplace.c | main/dll/WM/dll_020C_wmspiritplace.c | — |
+| 0x20D | WM_seqpoint | CONFIRMED | main/dll/dll_020D_wmseqpoint.c | main/dll/WM/dll_020D_wmseqpoint.c | — |
+| 0x20E | WM_sun (+WM_Crystal) | COMPLETE | main/dll/dll_020E_wmsun.c | main/dll/WM/dll_020E_wmsun.c | — |
+| 0x20F | WM_SpiritSet | CONFIRMED | main/dll/dll_020F_wmspiritset.c | main/dll/WM/dll_020F_wmspiritset.c | — |
+| 0x210 | WM_Planets (+WM_PlanetsS) | COMPLETE | main/dll/dll_0210_wmplanets.c | main/dll/WM/dll_0210_wmplanets.c | — |
+| 0x211 | WM_WallCrawler (+DR_BigSkeet, DR_SmallSke) | CONFIRMED | main/dll/dll_0211_wmwallcrawler.c | main/dll/WM/dll_0211_wmwallcrawler.c | — |
 | 0x212 | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
 | 0x213 | WM_VConsole | RAW | *(none)* | — | no .text fns (descriptor data only) |
 | 0x214 | WM_TransTop | RAW | *(none)* | — | no .text fns (descriptor data only) |
-| 0x215 | WM_newcrystal | CONFIRMED | main/dll/WM/dll_0215_wmnewcrystal.c | = (canonical) | — |
-| 0x216 | VFP_LevelControl | CONFIRMED | main/dll/VF/dll_0216_vfplevelcontrol.c | = (canonical) | — |
-| 0x217 | VFP_ObjCreator | CONFIRMED | main/dll/VF/dll_0217_vfpobjcreator.c | = (canonical) | — |
-| 0x218 | VFP_MiniFire | CONFIRMED | main/dll/VF/dll_0218_vfpminifire.c | = (canonical) | — |
-| 0x219 | — | NO-RETAIL-NAME | main/dll/VF/dll_0219.c | = (canonical) | — |
-| 0x21A | VFP_statueball | CONFIRMED | main/dll/VF/dll_021A_vfpstatueball.c | = (canonical) | — |
-| 0x21B | — | NO-RETAIL-NAME | main/dll/VF/dll_021B.c | = (canonical) | — |
-| 0x21C | VFP_Ladders | CONFIRMED | main/dll/VF/dll_021C_vfpladders.c | = (canonical) | — |
-| 0x21D | VFPLift (+VFPLift1, VFPLift2, VFPLift3) | CONFIRMED | main/dll/VF/dll_021D_vfplift.c | = (canonical) | — |
+| 0x215 | WM_newcrystal | CONFIRMED | main/dll/dll_0215_wmnewcrystal.c | main/dll/WM/dll_0215_wmnewcrystal.c | — |
+| 0x216 | VFP_LevelControl | CONFIRMED | main/dll/dll_0216_vfplevelcontrol.c | main/dll/VF/dll_0216_vfplevelcontrol.c | — |
+| 0x217 | VFP_ObjCreator | CONFIRMED | main/dll/dll_0217_vfpobjcreator.c | main/dll/VF/dll_0217_vfpobjcreator.c | — |
+| 0x218 | VFP_MiniFire | CONFIRMED | main/dll/dll_0218_vfpminifire.c | main/dll/VF/dll_0218_vfpminifire.c | — |
+| 0x219 | — | NO-RETAIL-NAME | main/dll/dll_0219.c | = (canonical) | — |
+| 0x21A | VFP_statueball | CONFIRMED | main/dll/dll_021A_vfpstatueball.c | main/dll/VF/dll_021A_vfpstatueball.c | — |
+| 0x21B | — | NO-RETAIL-NAME | main/dll/dll_021B.c | = (canonical) | — |
+| 0x21C | VFP_Ladders | CONFIRMED | main/dll/dll_021C_vfpladders.c | main/dll/VF/dll_021C_vfpladders.c | — |
+| 0x21D | VFPLift (+VFPLift1, VFPLift2, VFPLift3) | CONFIRMED | main/dll/dll_021D_vfplift.c | main/dll/VF/dll_021D_vfplift.c | — |
 | 0x21E | VFP_Block1 | COMPLETE | main/light.c | main/dll/VF/dll_021E_vfpblock1.c | engine/SDK host: main/light.c |
 | 0x21F | VFP_Platform (+VFPLavaBloc) | CONFIRMED | main/light.c | main/dll/VF/dll_021F_vfpplatform.c | engine/SDK host: main/light.c |
 | 0x220 | VFP_DoorSwitch (+VFP_LiftInd) | CONFIRMED | main/light.c | main/dll/VF/dll_0220_vfpdoorswitch.c | engine/SDK host: main/light.c |
@@ -615,21 +597,21 @@ Expansion status over the 448 named dlls: COMPLETE 116, CONFIRMED 276, GUESSED 3
 | 0x226 | VFP_lavapool | CONFIRMED | main/main.c | main/dll/VF/dll_0226_vfplavapool.c | engine/SDK host: main/main.c |
 | 0x227 | VFP_lavastar | CONFIRMED | main/main.c | main/dll/VF/dll_0227_vfplavastar.c | engine/SDK host: main/main.c |
 | 0x228 | VFP_SpellPlace (+VFPSpPl) | CONFIRMED | main/main.c | main/dll/VF/dll_0228_vfpspellplace.c | engine/SDK host: main/main.c |
-| 0x229 | DFP_LevelControl | CONFIRMED | main/dll/anim.c | main/dll/DF/dll_0229_dfplevelcontrol.c | container w/ 0x22A,0x22B,0x22C,0x22D,0x22E,0x230,+5 more |
-| 0x22A | DFP_ObjCreator | CONFIRMED | main/dll/anim.c | main/dll/DF/dll_022A_dfpobjcreator.c | container w/ 0x229,0x22B,0x22C,0x22D,0x22E,0x230,+5 more |
-| 0x22B | DFP_Torch | COMPLETE | main/dll/anim.c | main/dll/DF/dll_022B_dfptorch.c | container w/ 0x229,0x22A,0x22C,0x22D,0x22E,0x230,+5 more |
-| 0x22C | — | NO-RETAIL-NAME | main/dll/anim.c | main/dll/dll_022C_anim.c | container w/ 0x229,0x22A,0x22B,0x22D,0x22E,0x230,+5 more; container stem, tentative |
-| 0x22D | DFP_seqpoint | CONFIRMED | main/dll/anim.c | main/dll/DF/dll_022D_dfpseqpoint.c | container w/ 0x229,0x22A,0x22B,0x22C,0x22E,0x230,+5 more |
-| 0x22E | DFP_DoorSwitch (+DFPSpDA) | CONFIRMED | main/dll/anim.c | main/dll/DF/dll_022E_dfpdoorswitch.c | container w/ 0x229,0x22A,0x22B,0x22C,0x22D,0x230,+5 more |
-| 0x22F | DFP_floorbar | CONFIRMED | main/dll/baddie/dll_022F_dfpfloorbar.c | = (canonical) | — |
-| 0x230 | DFP_wallbar | RAW | main/dll/anim.c | main/dll/DF/dll_0230_dfpwallbar.c | container w/ 0x229,0x22A,0x22B,0x22C,0x22D,0x22E,+5 more |
-| 0x231 | DFP_ForceAw | RAW | main/dll/TrickyCurve.c | main/dll/DF/dll_0231_dfpforceaw.c | container w/ 0x232 |
-| 0x232 | DFP_RotateP | RAW | main/dll/TrickyCurve.c | main/dll/DF/dll_0232_dfprotatep.c | container w/ 0x231 |
-| 0x233 | DFP_Statue1 | CONFIRMED | main/dll/crate2.c | main/dll/DF/dll_0233_dfpstatue1.c | container w/ 0x234 |
-| 0x234 | DFP_PerchSw | RAW | main/dll/crate2.c | main/dll/DF/dll_0234_dfpperchsw.c | container w/ 0x233 |
-| 0x235 | DFP_TargetBlock | CONFIRMED | main/dll/DF/dll_0235_dfptargetblock.c | = (canonical) | — |
-| 0x236 | DFP_LaserBe | CONFIRMED | main/dll/CF/dll_0236_dfplaserbe.c | = (canonical) | — |
-| 0x237 | DFPSpPl | COMPLETE | main/dll/CF/dll_0237_dfpsppl.c | = (canonical) | — |
+| 0x229 | DFP_LevelControl | CONFIRMED | main/dll/dll_0229_dfplevelco.c | main/dll/DF/dll_0229_dfplevelcontrol.c | — |
+| 0x22A | DFP_ObjCreator | CONFIRMED | main/dll/dll_022A_dfpobjcrea.c | main/dll/DF/dll_022A_dfpobjcreator.c | — |
+| 0x22B | DFP_Torch | COMPLETE | main/dll/dll_022B_dfptorch.c | main/dll/DF/dll_022B_dfptorch.c | — |
+| 0x22C | — | NO-RETAIL-NAME | main/dll/dll_022C_dll22c.c | = (canonical) | — |
+| 0x22D | DFP_seqpoint | CONFIRMED | main/dll/dll_022D_dfpseqpoin.c | main/dll/DF/dll_022D_dfpseqpoint.c | — |
+| 0x22E | DFP_DoorSwitch (+DFPSpDA) | CONFIRMED | main/dll/dll_022E_dfpdoorswi.c | main/dll/DF/dll_022E_dfpdoorswitch.c | — |
+| 0x22F | DFP_floorbar | CONFIRMED | main/dll/dll_022F_dfpfloorbar.c | main/dll/DF/dll_022F_dfpfloorbar.c | — |
+| 0x230 | DFP_wallbar | RAW | main/dll/dll_0230_dfpwallbar.c | main/dll/DF/dll_0230_dfpwallbar.c | — |
+| 0x231 | DFP_ForceAw | RAW | main/dll/dll_0231_dfpforceaw.c | main/dll/DF/dll_0231_dfpforceaw.c | — |
+| 0x232 | DFP_RotateP | RAW | main/dll/dll_0232_dfprotatep.c | main/dll/DF/dll_0232_dfprotatep.c | — |
+| 0x233 | DFP_Statue1 | CONFIRMED | main/dll/dll_0233_dfpstatue1.c | main/dll/DF/dll_0233_dfpstatue1.c | — |
+| 0x234 | DFP_PerchSw | RAW | main/dll/dll_0234_dfpperchsw.c | main/dll/DF/dll_0234_dfpperchsw.c | — |
+| 0x235 | DFP_TargetBlock | CONFIRMED | main/dll/dll_0235_dfptargetblock.c | main/dll/DF/dll_0235_dfptargetblock.c | — |
+| 0x236 | DFP_LaserBe | CONFIRMED | main/dll/dll_0236_dfplaserbe.c | main/dll/DF/dll_0236_dfplaserbe.c | — |
+| 0x237 | DFPSpPl | COMPLETE | main/dll/dll_0237_dfpsppl.c | main/dll/DF/dll_0237_dfpsppl.c | — |
 | 0x238 | LINKA_levco | RAW | main/dll/dll_0238_linkalevco.c | = (canonical) | — |
 | 0x239 | DFP_TextblockObj (+KP_textbloc) | CONFIRMED | main/textblock.c | main/dll/DF/dll_0239_dfptextblockobj.c | engine/SDK host: main/textblock.c |
 | 0x23A | DFP_Platform1 | CONFIRMED | main/platform1.c | main/dll/DF/dll_023A_dfpplatform1.c | engine/SDK host: main/platform1.c |
@@ -637,11 +619,11 @@ Expansion status over the 448 named dlls: COMPLETE 116, CONFIRMED 276, GUESSED 3
 | 0x23C | DFP_PowerSl | CONFIRMED | main/dfppowersl.c | main/dll/DF/dll_023C_dfppowersl.c | engine/SDK host: main/dfppowersl.c |
 | 0x23D | DBPointMum | COMPLETE | *(none)* | — | no .text fns (descriptor data only) |
 | 0x23E | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
-| 0x23F | DB_egg | COMPLETE | main/dll/anim.c | main/dll/DB/dll_023F_dbegg.c | container w/ 0x229,0x22A,0x22B,0x22C,0x22D,0x22E,+5 more |
-| 0x240 | GCRobotBlast | CONFIRMED | main/dll/anim.c | main/dll/dll_0240_gcrobotblast.c | container w/ 0x229,0x22A,0x22B,0x22C,0x22D,0x22E,+5 more |
-| 0x241 | DrakorEnergy | CONFIRMED | main/dll/anim.c | main/dll/dll_0241_drakorenergy.c | container w/ 0x229,0x22A,0x22B,0x22C,0x22D,0x22E,+5 more |
-| 0x242 | DBstealerworm | CONFIRMED | main/dll/anim.c | main/dll/DB/dll_0242_dbstealerworm.c | container w/ 0x229,0x22A,0x22B,0x22C,0x22D,0x22E,+5 more |
-| 0x243 | DBHoleControl1 | CONFIRMED | main/dll/anim.c | main/dll/DB/dll_0243_dbholecontrol1.c | container w/ 0x229,0x22A,0x22B,0x22C,0x22D,0x22E,+5 more |
+| 0x23F | DB_egg | COMPLETE | main/dll/dll_023F_dbegg.c | main/dll/DB/dll_023F_dbegg.c | — |
+| 0x240 | GCRobotBlast | CONFIRMED | main/dll/dll_0240_gcrobotblas.c | main/dll/dll_0240_gcrobotblast.c | — |
+| 0x241 | DrakorEnergy | CONFIRMED | main/dll/dll_0241_drakorenerg.c | main/dll/dll_0241_drakorenergy.c | — |
+| 0x242 | DBstealerworm | CONFIRMED | main/dll/dll_0242_dbstealerwo.c | main/dll/DB/dll_0242_dbstealerworm.c | — |
+| 0x243 | DBHoleControl1 | CONFIRMED | main/dll/dll_0243_dbholecontr.c | main/dll/DB/dll_0243_dbholecontrol1.c | — |
 | 0x244 | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
 | 0x245 | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
 | 0x246 | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
@@ -651,102 +633,102 @@ Expansion status over the 448 named dlls: COMPLETE 116, CONFIRMED 276, GUESSED 3
 | 0x24A | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
 | 0x24B | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
 | 0x24C | BossDrakor__free | CONFIRMED | *(none)* | — | no .text fns (descriptor data only) |
-| 0x24D | BossDrakor | COMPLETE | main/dll/DR/dll_024D_bossdrakor.c | = (canonical) | — |
-| 0x24E | drakord_thornbush (+BossDrakorD, ThornBush) | GUESSED | main/dll/DR/dll_024E_drakordthornbush.c | = (canonical) | — |
-| 0x24F | KT_RexLevel | CONFIRMED | main/dll/DR/dll_024F_ktrexlevel.c | = (canonical) | — |
-| 0x250 | KT_Rex | COMPLETE | main/dll/DR/dll_0250_ktrex.c | = (canonical) | — |
-| 0x251 | KT_RexFloorswitch | CONFIRMED | main/dll/DR/dll_0251_ktrexfloorswitch.c | = (canonical) | — |
-| 0x252 | KT_Lazerwall | CONFIRMED | main/dll/DR/dll_0252_ktlazerwall.c | = (canonical) | — |
-| 0x253 | KT_Lazerlight | CONFIRMED | main/dll/DR/dll_0253_ktlazerlight.c | = (canonical) | — |
-| 0x254 | KT_Fallingrocks | CONFIRMED | main/dll/DR/dll_0254_ktfallingrocks.c | = (canonical) | — |
-| 0x255 | SnowBike (+CRSnowBike, CRSnowClawB, IMSnowBike, IMSnowClawB) | CONFIRMED | main/dll/BW/dll_0255_snowbike.c | = (canonical) | — |
-| 0x256 | DIMSnowHorn1 | CONFIRMED | main/dll/DIM/dll_0256_dimsnowhorn1.c | = (canonical) | — |
-| 0x257 | DR_EarthWarrior | CONFIRMED | main/dll/DR/dll_0257_drearthwarrior.c | = (canonical) | — |
-| 0x258 | DR_CloudRunner | CONFIRMED | main/dll/DR/dll_0258_drcloudrunner.c | = (canonical) | — |
-| 0x259 | SB_Cloudrunner | CONFIRMED | main/dll/WC/dll_0259_sbcloudrunner.c | = (canonical) | — |
-| 0x25A | StaticCamera | CONFIRMED | main/dll/genprops.c | main/dll/dll_025A_staticcamera.c | container w/ 0x0C6,0x0C7,0x0C8,0x0DB,0x0DC,0x0DD,+12 more |
-| 0x25B | MSPlantingS | RAW | main/dll/DIM/DIMlogfire.c | main/dll/DIM/dll_025B_msplantings.c | container w/ 0x184,0x185,0x186 |
+| 0x24D | BossDrakor | COMPLETE | main/dll/dll_024D_bossdrakor.c | = (canonical) | — |
+| 0x24E | drakord_thornbush (+BossDrakorD, ThornBush) | GUESSED | main/dll/dll_024E_drakordthornbush.c | = (canonical) | — |
+| 0x24F | KT_RexLevel | CONFIRMED | main/dll/dll_024F_ktrexlevel.c | main/dll/DR/dll_024F_ktrexlevel.c | — |
+| 0x250 | KT_Rex | COMPLETE | main/dll/dll_0250_ktrex.c | main/dll/DR/dll_0250_ktrex.c | — |
+| 0x251 | KT_RexFloorswitch | CONFIRMED | main/dll/dll_0251_ktrexfloorswitch.c | main/dll/DR/dll_0251_ktrexfloorswitch.c | — |
+| 0x252 | KT_Lazerwall | CONFIRMED | main/dll/dll_0252_ktlazerwall.c | main/dll/DR/dll_0252_ktlazerwall.c | — |
+| 0x253 | KT_Lazerlight | CONFIRMED | main/dll/dll_0253_ktlazerlight.c | main/dll/DR/dll_0253_ktlazerlight.c | — |
+| 0x254 | KT_Fallingrocks | CONFIRMED | main/dll/dll_0254_ktfallingrocks.c | main/dll/DR/dll_0254_ktfallingrocks.c | — |
+| 0x255 | SnowBike (+CRSnowBike, CRSnowClawB, IMSnowBike, IMSnowClawB) | CONFIRMED | main/dll/dll_0255_snowbike.c | = (canonical) | — |
+| 0x256 | DIMSnowHorn1 | CONFIRMED | main/dll/dll_0256_dimsnowhorn1.c | main/dll/DIM/dll_0256_dimsnowhorn1.c | — |
+| 0x257 | DR_EarthWarrior | CONFIRMED | main/dll/dll_0257_drearthwarrior.c | main/dll/DR/dll_0257_drearthwarrior.c | — |
+| 0x258 | DR_CloudRunner | CONFIRMED | main/dll/dll_0258_drcloudrunner.c | main/dll/DR/dll_0258_drcloudrunner.c | — |
+| 0x259 | SB_Cloudrunner | CONFIRMED | main/dll/dll_0259_sbcloudrunner.c | main/dll/SB/dll_0259_sbcloudrunner.c | — |
+| 0x25A | StaticCamera | CONFIRMED | main/dll/dll_025A_staticcamer.c | main/dll/dll_025A_staticcamera.c | — |
+| 0x25B | MSPlantingS | RAW | main/dll/dll_025B_msplantings.c | = (canonical) | — |
 | 0x25C | SnowClaw (+CRSnowClaw, CRSnowClaw2, CRSnowClaw3, IMSnowClaw, IMSnowClaw2) | CONFIRMED | main/snowclaw.c | main/dll/dll_025C_snowclaw.c | engine/SDK host: main/snowclaw.c |
 | 0x25D | CRCloudRace | CONFIRMED | main/crcloudrace.c | main/dll/CR/dll_025D_crcloudrace.c | engine/SDK host: main/crcloudrace.c |
 | 0x25E | CRSpellstone (+DrakorSpell) | CONFIRMED | main/spellstone.c | main/dll/CR/dll_025E_crspellstone.c | engine/SDK host: main/spellstone.c |
 | 0x25F | CRFuelTank | COMPLETE | main/crfueltank.c | main/dll/CR/dll_025F_crfueltank.c | engine/SDK host: main/crfueltank.c |
 | 0x260 | ProximityMine (+CRDropBomb) | CONFIRMED | main/proximitymine_update.c | main/dll/dll_0260_proximitymine.c | engine/SDK host: main/proximitymine_update.c |
-| 0x261 | DR_LaserCannon | CONFIRMED | main/dll/DR/dll_0261_drlasercannon.c | = (canonical) | — |
-| 0x262 | DrakorMissile (+DRbullet) | CONFIRMED | main/dll/DR/dll_0262_drakormissile.c | = (canonical) | — |
-| 0x263 | GM_MazeWell | CONFIRMED | main/dll/DR/dll_0263_gmmazewell.c | = (canonical) | — |
+| 0x261 | DR_LaserCannon | CONFIRMED | main/dll/dll_0261_drlasercannon.c | main/dll/DR/dll_0261_drlasercannon.c | — |
+| 0x262 | DrakorMissile (+DRbullet) | CONFIRMED | main/dll/dll_0262_drakormissile.c | = (canonical) | — |
+| 0x263 | GM_MazeWell | CONFIRMED | main/dll/dll_0263_gmmazewell.c | = (canonical) | — |
 | 0x264 | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
-| 0x265 | DR_Creator | COMPLETE | main/dll/DR/dll_0265_drcreator.c | = (canonical) | — |
-| 0x266 | KytesMum | COMPLETE | main/dll/DR/dll_0266_kytesmum.c | = (canonical) | — |
+| 0x265 | DR_Creator | COMPLETE | main/dll/dll_0265_drcreator.c | main/dll/DR/dll_0265_drcreator.c | — |
+| 0x266 | KytesMum | COMPLETE | main/dll/dll_0266_kytesmum.c | = (canonical) | — |
 | 0x267 | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
-| 0x268 | DR_CageControl | CONFIRMED | main/dll/DR/dll_0268_drcagecontrol.c | = (canonical) | — |
-| 0x269 | ExplodePlan (+CCFoundGold, DR_ExplodeD) | CONFIRMED | main/dll/DR/dll_0269_explodeplan.c | = (canonical) | — |
+| 0x268 | DR_CageControl | CONFIRMED | main/dll/dll_0268_drcagecontrol.c | main/dll/DR/dll_0268_drcagecontrol.c | — |
+| 0x269 | ExplodePlan (+CCFoundGold, DR_ExplodeD) | CONFIRMED | main/dll/dll_0269_explodeplan.c | = (canonical) | — |
 | 0x26A | DR_Geezer | COMPLETE | *(none)* | — | no .text fns (descriptor data only) |
-| 0x26B | DR_Chimmey | COMPLETE | main/dll/DR/dll_026B_drchimmey.c | = (canonical) | — |
-| 0x26C | DR_CageWith (+DR_CageNoRo, DR_CageRope) | CONFIRMED | main/dll/DR/dll_026C_drcagewith.c | = (canonical) | — |
+| 0x26B | DR_Chimmey | COMPLETE | main/dll/dll_026B_drchimmey.c | main/dll/DR/dll_026B_drchimmey.c | — |
+| 0x26C | DR_CageWith (+DR_CageNoRo, DR_CageRope) | CONFIRMED | main/dll/dll_026C_drcagewith.c | main/dll/DR/dll_026C_drcagewith.c | — |
 | 0x26D | DR_Vines | COMPLETE | *(none)* | — | no .text fns (descriptor data only) |
-| 0x26E | DR_Shackle (+DR_BigShack) | COMPLETE | main/dll/DR/dll_026E_drshackle.c | = (canonical) | — |
-| 0x26F | DR_Generator (+DR_WallGene) | CONFIRMED | main/dll/DR/dll_026F_drgenerator.c | = (canonical) | — |
+| 0x26E | DR_Shackle (+DR_BigShack) | COMPLETE | main/dll/dll_026E_drshackle.c | main/dll/DR/dll_026E_drshackle.c | — |
+| 0x26F | DR_Generator (+DR_WallGene) | CONFIRMED | main/dll/dll_026F_drgenerator.c | main/dll/DR/dll_026F_drgenerator.c | — |
 | 0x270 | DR_Rock | COMPLETE | *(none)* | — | no .text fns (descriptor data only) |
-| 0x271 | DrakorHoverpad (+DR_PushCart) | CONFIRMED | main/dll/DR/dll_0271_drakorhoverpad.c | = (canonical) | — |
-| 0x272 | HighTop (+CC_HighTop, DR_HighTop) | CONFIRMED | main/dll/DR/dll_0272_hightop.c | = (canonical) | — |
+| 0x271 | DrakorHoverpad (+DR_PushCart) | CONFIRMED | main/dll/dll_0271_drakorhoverpad.c | = (canonical) | — |
+| 0x272 | HighTop (+CC_HighTop, DR_HighTop) | CONFIRMED | main/dll/dll_0272_hightop.c | = (canonical) | — |
 | 0x273 | FirePipe (+BossDrakorF, FireHole, FlameMuzzle, IceHole, SteamHoleNo, SteamHoleFi, SteamHoleDe) | COMPLETE | main/dll/dll_0273_firepipe.c | = (canonical) | — |
 | 0x274 | DR_pulley | COMPLETE | *(none)* | — | no .text fns (descriptor data only) |
 | 0x275 | DR_cradle | COMPLETE | *(none)* | — | no .text fns (descriptor data only) |
 | 0x276 | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
 | 0x277 | CFWindLiftL | RAW | *(none)* | — | no .text fns (descriptor data only) |
 | 0x278 | DRCollapseP (+DRPlatformC) | RAW | *(none)* | — | no .text fns (descriptor data only) |
-| 0x279 | DR_EnergyDisc | CONFIRMED | main/dll/DR/dll_0279_drenergydisc.c | = (canonical) | — |
+| 0x279 | DR_EnergyDisc | CONFIRMED | main/dll/dll_0279_drenergydisc.c | main/dll/DR/dll_0279_drenergydisc.c | — |
 | 0x27A | DR_Collapse | RAW | *(none)* | — | no .text fns (descriptor data only) |
 | 0x27B | DR_CaveIn (+DR_CaveInFl) | COMPLETE | *(none)* | — | no .text fns (descriptor data only) |
-| 0x27C | DR_LightBea | CONFIRMED | main/dll/DR/dll_027C_drlightbea.c | = (canonical) | — |
+| 0x27C | DR_LightBea | CONFIRMED | main/dll/dll_027C_drlightbea.c | main/dll/DR/dll_027C_drlightbea.c | — |
 | 0x27D | — | NO-RETAIL-NAME | *(none)* | — | no .text fns (descriptor data only) |
-| 0x27E | DRMusicCont | CONFIRMED | main/dll/DR/dll_027E_drmusiccont.c | = (canonical) | — |
+| 0x27E | DRMusicCont | CONFIRMED | main/dll/dll_027E_drmusiccont.c | main/dll/DR/dll_027E_drmusiccont.c | — |
 | 0x27F | DR_LightHal (+DR_LightPol, DR_LightLam) | RAW | *(none)* | — | no .text fns (descriptor data only) |
-| 0x280 | DR_CloudPer | CONFIRMED | main/dll/DR/dll_0280_drcloudper.c | = (canonical) | — |
-| 0x281 | DR_EarthCal | CONFIRMED | main/dll/DR/dll_0281_drearthcal.c | = (canonical) | — |
+| 0x280 | DR_CloudPer | CONFIRMED | main/dll/dll_0280_drcloudper.c | main/dll/DR/dll_0280_drcloudper.c | — |
+| 0x281 | DR_EarthCal | CONFIRMED | main/dll/dll_0281_drearthcal.c | main/dll/DR/dll_0281_drearthcal.c | — |
 | 0x282 | BarrelGener | CONFIRMED | main/dll/dll_0282_barrelgener.c | = (canonical) | — |
-| 0x283 | DR_BarrelGr | CONFIRMED | main/dll/DR/dll_0283_drbarrelgr.c | = (canonical) | — |
-| 0x284 | shopitem (+SPFruitSmal, SPEggSmall, SPFruitLarg, SPEggLarge, SPBombSpore, SPMoonSeed, SPLantern, SPBlueArtef, SPBlueMushr, SPSwapGift, SPPda, SPBinocular, SPFireFly, SPFuelCell, SPSidekickB, SPDusterHol, SPStaffHitB, SPMapTTH, SPMapMMP, SPMapLF, SPMapCRF, SPMapDIM, SPMapWC, SPMapDR, SPMapKP, SPMapOFP, SPMapSW, SPMapVFP, SPMapCC, SPReplayDis) | GUESSED | main/dll/DR/DRpushcart.c | main/dll/DR/dll_0284_shopitem.c | container w/ 0x286 |
-| 0x285 | SPShop | CONFIRMED | main/dll/TREX/TREX_trex.c | main/dll/TREX/dll_0285_spshop.c | container w/ 0x1ED,0x1EF,0x1F0,0x1F1,0x1F2,0x1F3,+4 more |
-| 0x286 | SPShopKeeper | CONFIRMED | main/dll/DR/DRpushcart.c | main/dll/DR/dll_0286_spshopkeeper.c | container w/ 0x284 |
-| 0x287 | SPScarab | COMPLETE | main/dll/DR/dll_0287_spscarab.c | = (canonical) | — |
-| 0x288 | SPDrape | COMPLETE | main/dll/DR/DRsimplehuman.c | main/dll/DR/dll_0288_spdrape.c | container w/ 0x289 |
-| 0x289 | SPitembeam | COMPLETE | main/dll/DR/DRsimplehuman.c | main/dll/DR/dll_0289_spitembeam.c | container w/ 0x288 |
-| 0x28A | WCEarthWalker (+WCKingEarth, WM_deaddino) | CONFIRMED | main/dll/WC/dll_028A_wcearthwalker.c | = (canonical) | — |
+| 0x283 | DR_BarrelGr | CONFIRMED | main/dll/dll_0283_drbarrelgr.c | main/dll/DR/dll_0283_drbarrelgr.c | — |
+| 0x284 | shopitem (+SPFruitSmal, SPEggSmall, SPFruitLarg, SPEggLarge, SPBombSpore, SPMoonSeed, SPLantern, SPBlueArtef, SPBlueMushr, SPSwapGift, SPPda, SPBinocular, SPFireFly, SPFuelCell, SPSidekickB, SPDusterHol, SPStaffHitB, SPMapTTH, SPMapMMP, SPMapLF, SPMapCRF, SPMapDIM, SPMapWC, SPMapDR, SPMapKP, SPMapOFP, SPMapSW, SPMapVFP, SPMapCC, SPReplayDis) | GUESSED | main/dll/dll_0284_spfruitsmal.c | main/dll/dll_0284_shopitem.c | — |
+| 0x285 | SPShop | CONFIRMED | main/dll/dll_0285_spshop.c | main/dll/SP/dll_0285_spshop.c | — |
+| 0x286 | SPShopKeeper | CONFIRMED | main/dll/dll_0286_spshopkeepe.c | main/dll/SP/dll_0286_spshopkeeper.c | — |
+| 0x287 | SPScarab | COMPLETE | main/dll/dll_0287_spscarab.c | main/dll/SP/dll_0287_spscarab.c | — |
+| 0x288 | SPDrape | COMPLETE | main/dll/dll_0288_spdrape.c | main/dll/SP/dll_0288_spdrape.c | — |
+| 0x289 | SPitembeam | COMPLETE | main/dll/dll_0289_spitembeam.c | main/dll/SP/dll_0289_spitembeam.c | — |
+| 0x28A | WCEarthWalker (+WCKingEarth, WM_deaddino) | CONFIRMED | main/dll/dll_028A_wcearthwalker.c | main/dll/WC/dll_028A_wcearthwalker.c | — |
 | 0x28B | — | NO-RETAIL-NAME | main/dll/dll_028B.c | = (canonical) | — |
-| 0x28C | WCBouncyCra | CONFIRMED | main/dll/WC/dll_028C_wcbouncycra.c | = (canonical) | — |
-| 0x28D | WCLevelCont | CONFIRMED | main/dll/WC/dll_028D_wclevelcont.c | = (canonical) | — |
-| 0x28E | WCBeacon | COMPLETE | main/dll/WC/dll_028E_wcbeacon.c | = (canonical) | — |
-| 0x28F | WCPressureS | CONFIRMED | main/dll/WC/dll_028F_wcpressures.c | = (canonical) | — |
-| 0x290 | WCPushBlock | CONFIRMED | main/dll/WC/dll_0290_wcpushblock.c | = (canonical) | — |
-| 0x291 | WCTile | COMPLETE | main/dll/WC/dll_0291_wctile.c | = (canonical) | — |
-| 0x292 | WCTrexStatu | CONFIRMED | main/dll/WC/dll_0292_wctrexstatu.c | = (canonical) | — |
+| 0x28C | WCBouncyCra | CONFIRMED | main/dll/dll_028C_wcbouncycra.c | main/dll/WC/dll_028C_wcbouncycra.c | — |
+| 0x28D | WCLevelCont | CONFIRMED | main/dll/dll_028D_wclevelcont.c | main/dll/WC/dll_028D_wclevelcont.c | — |
+| 0x28E | WCBeacon | COMPLETE | main/dll/dll_028E_wcbeacon.c | main/dll/WC/dll_028E_wcbeacon.c | — |
+| 0x28F | WCPressureS | CONFIRMED | main/dll/dll_028F_wcpressures.c | main/dll/WC/dll_028F_wcpressures.c | — |
+| 0x290 | WCPushBlock | CONFIRMED | main/dll/dll_0290_wcpushblock.c | main/dll/WC/dll_0290_wcpushblock.c | — |
+| 0x291 | WCTile | COMPLETE | main/dll/dll_0291_wctile.c | main/dll/WC/dll_0291_wctile.c | — |
+| 0x292 | WCTrexStatu | CONFIRMED | main/dll/dll_0292_wctrexstatu.c | main/dll/WC/dll_0292_wctrexstatu.c | — |
 | 0x293 | SunTemple (+CFSunTemple, WCInvUseObj, WCSunTemple) | CONFIRMED | main/dll/dll_0293_suntemple.c | = (canonical) | — |
-| 0x294 | wctemple (+WCMoonTempl, WCSunTemple) | GUESSED | main/dll/WC/dll_0294_wctemple.c | = (canonical) | — |
-| 0x295 | WCApertureS | CONFIRMED | main/dll/WC/dll_0295_wcapertures.c | = (canonical) | — |
-| 0x296 | WCTempleDia | CONFIRMED | main/dll/WC/dll_0296_wctempledia.c | = (canonical) | — |
-| 0x297 | WCTempleBri | CONFIRMED | main/dll/WC/dll_0297_wctemplebri.c | = (canonical) | — |
-| 0x298 | WCFloorTile | CONFIRMED | main/dll/WC/dll_0298_wcfloortile.c | = (canonical) | — |
+| 0x294 | wctemple (+WCMoonTempl, WCSunTemple) | GUESSED | main/dll/dll_0294_wctemple.c | = (canonical) | — |
+| 0x295 | WCApertureS | CONFIRMED | main/dll/dll_0295_wcapertures.c | main/dll/WC/dll_0295_wcapertures.c | — |
+| 0x296 | WCTempleDia | CONFIRMED | main/dll/dll_0296_wctempledia.c | main/dll/WC/dll_0296_wctempledia.c | — |
+| 0x297 | WCTempleBri | CONFIRMED | main/dll/dll_0297_wctemplebri.c | main/dll/WC/dll_0297_wctemplebri.c | — |
+| 0x298 | WCFloorTile | CONFIRMED | main/dll/dll_0298_wcfloortile.c | main/dll/WC/dll_0298_wcfloortile.c | — |
 | 0x299 | — | NO-RETAIL-NAME | main/dll/dll_0299.c | = (canonical) | — |
-| 0x29A | ARWArwing | COMPLETE | main/dll/ARW/dll_029A_arwarwing.c | = (canonical) | — |
-| 0x29B | arwingandrossstuff (+rapidFireLa, ANDAsteroid, ANDSuckAste, AndrossRing, ARWArwingLa) | GUESSED | main/dll/ARW/dll_029B_arwingandrossstuff.c | = (canonical) | — |
-| 0x29C | ARWArwingBo | CONFIRMED | main/dll/ARW/dll_029C_arwarwingbo.c | = (canonical) | — |
-| 0x29D | ARWArwingGu (+ARWArwingBo, ARWArwingRo) | CONFIRMED | main/dll/ARW/dll_029D_arwarwinggu.c | = (canonical) | — |
+| 0x29A | ARWArwing | COMPLETE | main/dll/dll_029A_arwarwing.c | main/dll/ARW/dll_029A_arwarwing.c | — |
+| 0x29B | arwingandrossstuff (+rapidFireLa, ANDAsteroid, ANDSuckAste, AndrossRing, ARWArwingLa) | GUESSED | main/dll/dll_029B_arwingandrossstuff.c | = (canonical) | — |
+| 0x29C | ARWArwingBo | CONFIRMED | main/dll/dll_029C_arwarwingbo.c | main/dll/ARW/dll_029C_arwarwingbo.c | — |
+| 0x29D | ARWArwingGu (+ARWArwingBo, ARWArwingRo) | CONFIRMED | main/dll/dll_029D_arwarwinggu.c | main/dll/ARW/dll_029D_arwarwinggu.c | — |
 | 0x29E | — | NO-RETAIL-NAME | main/dll/dll_029E_Dummy29E.c | = (canonical) | — |
-| 0x29F | ARWBombColl (+ARWLaserCol, ARWContaine, ARWSporeCol, ARWDinoEggC, ARWMoonSeed) | CONFIRMED | main/dll/ARW/dll_029F_arwbombcoll.c | = (canonical) | — |
+| 0x29F | ARWBombColl (+ARWLaserCol, ARWContaine, ARWSporeCol, ARWDinoEggC, ARWMoonSeed) | CONFIRMED | main/dll/dll_029F_arwbombcoll.c | main/dll/ARW/dll_029F_arwbombcoll.c | — |
 | 0x2A0 | Ring (+WCSunRing, WCMoonRing, ANDSilverRi, ARWGoldRing, ARWSilverRi) | CONFIRMED | main/dll/dll_02A0_ring.c | = (canonical) | — |
-| 0x2A1 | ARWLevelCon | CONFIRMED | main/dll/ARW/dll_02A1_arwlevelcon.c | = (canonical) | — |
-| 0x2A2 | ARWSpeedStr | CONFIRMED | main/dll/ARW/dll_02A2_arwspeedstr.c | = (canonical) | — |
+| 0x2A1 | ARWLevelCon | CONFIRMED | main/dll/dll_02A1_arwlevelcon.c | main/dll/ARW/dll_02A1_arwlevelcon.c | — |
+| 0x2A2 | ARWSpeedStr | CONFIRMED | main/dll/dll_02A2_arwspeedstr.c | main/dll/ARW/dll_02A2_arwspeedstr.c | — |
 | 0x2A3 | — | NO-RETAIL-NAME | main/dll/dll_02A3.c | = (canonical) | — |
 | 0x2A4 | — | NO-RETAIL-NAME | main/dll/dll_02A4.c | = (canonical) | — |
-| 0x2A5 | ARWGenerato | CONFIRMED | main/dll/ARW/dll_02A5_arwgenerato.c | = (canonical) | — |
-| 0x2A6 | ARWSquadron (+ARWBigAster, ARWSmallAst, ARWMobileGu, ARWGroundGu, ARWShipFly, ARWShipTwin, ARWShipAnge) | CONFIRMED | main/dll/ARW/dll_02A6_arwsquadron.c | = (canonical) | — |
-| 0x2A7 | ARWProximit (+ARWTimedMin) | CONFIRMED | main/dll/ARW/dll_02A7_arwproximit.c | = (canonical) | — |
-| 0x2A8 | ARWBlocker (+ARWBlockerS) | COMPLETE | main/dll/ARW/dll_02A8_arwblocker.c | = (canonical) | — |
-| 0x2A9 | LGTPointLight (+CF_WallTorc) | CONFIRMED | main/dll/LGT/dll_02A9_lgtpointlight.c | = (canonical) | — |
-| 0x2AA | LGTDirectionallight | CONFIRMED | main/dll/LGT/dll_02AA_lgtdirectionallight.c | = (canonical) | — |
-| 0x2AB | LGTProjectedlight | CONFIRMED | main/dll/LGT/dll_02AB_lgtprojectedlight.c | = (canonical) | — |
-| 0x2AC | LGTControlLight | CONFIRMED | main/dll/LGT/dll_02AC_lgtcontrollight.c | = (canonical) | — |
+| 0x2A5 | ARWGenerato | CONFIRMED | main/dll/dll_02A5_arwgenerato.c | main/dll/ARW/dll_02A5_arwgenerato.c | — |
+| 0x2A6 | ARWSquadron (+ARWBigAster, ARWSmallAst, ARWMobileGu, ARWGroundGu, ARWShipFly, ARWShipTwin, ARWShipAnge) | CONFIRMED | main/dll/dll_02A6_arwsquadron.c | main/dll/ARW/dll_02A6_arwsquadron.c | — |
+| 0x2A7 | ARWProximit (+ARWTimedMin) | CONFIRMED | main/dll/dll_02A7_arwproximit.c | main/dll/ARW/dll_02A7_arwproximit.c | — |
+| 0x2A8 | ARWBlocker (+ARWBlockerS) | COMPLETE | main/dll/dll_02A8_arwblocker.c | main/dll/ARW/dll_02A8_arwblocker.c | — |
+| 0x2A9 | LGTPointLight (+CF_WallTorc) | CONFIRMED | main/dll/dll_02A9_lgtpointlight.c | main/dll/LGT/dll_02A9_lgtpointlight.c | — |
+| 0x2AA | LGTDirectionallight | CONFIRMED | main/dll/dll_02AA_lgtdirectionallight.c | main/dll/LGT/dll_02AA_lgtdirectionallight.c | — |
+| 0x2AB | LGTProjectedlight | CONFIRMED | main/dll/dll_02AB_lgtprojectedlight.c | main/dll/LGT/dll_02AB_lgtprojectedlight.c | — |
+| 0x2AC | LGTControlLight | CONFIRMED | main/dll/dll_02AC_lgtcontrollight.c | main/dll/LGT/dll_02AC_lgtcontrollight.c | — |
 | 0x2AD | softbody (+LINKSnowGra, SH_YellowWh, SH_BlueWhit, SH_RedYello, SH_BlueFlow, WM_drape, DFSH_Spirit, BlueFernFlo, WhiteFernFl, YellowFernF, AlienSpore, BlueFlowerP, BlueWhiteFl, RedYellowFl, YellowWhite, BullRush, BullRushClu, LongGrassCl, DragonRockG, AlienGrassC, SnowGrass, SnowBullrus, HangingPlan, WaterLillyL) | GUESSED | main/dll/dll_02AD_softbody.c | = (canonical) | — |
 | 0x2AE | WaterFlowWe | CONFIRMED | main/dll/dll_02AE_waterflowwe.c | = (canonical) | — |
 | 0x2AF | Tree (+SH_FernTree, FernTree, smallfern, tallpalmtre, JungleTree, RootPlant, SnowTree1, SnowTree2, SnowTree3, SnowTree4, SnowFruitTr) | CONFIRMED | main/dll/dll_02AF_tree.c | = (canonical) | — |
@@ -766,7 +748,7 @@ Expansion status over the 448 named dlls: COMPLETE 116, CONFIRMED 276, GUESSED 3
 | 0x2BD | androsshand (+Androssleft, Androssrigh) | CONFIRMED | main/dll/dll_02BD_androsshand.c | = (canonical) | — |
 | 0x2BE | AndrossBrain | CONFIRMED | main/dll/dll_02BE_androssbrain.c | = (canonical) | — |
 | 0x2BF | AndrossLigh | CONFIRMED | main/dll/dll_02BF_androssligh.c | = (canonical) | — |
-| 0x2C0 | Front (+FrontFox, FrontPeppy, FrontSlippy, FrontRob, FrontFalco, FrontPilots, FrontPlanet) | GUESSED | main/dll/baddie/Tumbleweed.c | main/dll/baddie/dll_02C0_front.c | container w/ 0x031,0x03F,0x040,0x041 |
+| 0x2C0 | Front (+FrontFox, FrontPeppy, FrontSlippy, FrontRob, FrontFalco, FrontPilots, FrontPlanet) | GUESSED | main/dll/dll_02C0_frontfox.c | main/dll/dll_02C0_front.c | — |
 
 ## Name-conflict resolutions
 
@@ -783,26 +765,26 @@ descriptive family name (e.g. `collectible`, `softbody`).
 
 | dll | retail name(s) | dominant fn prefix | class | host |
 |---|---|---|---|---|
-| 0x0D6 | KaldachomMe | `kaldachompme_*` | cross-dll (names dll 0x0D5) | main/dll/wallanimator.c |
-| 0x0D7 | KaldachomSp, FireCrawler | `kaldachompspit_*` | cross-dll (names dll 0x0D5) | main/dll/wallanimator.c |
-| 0x11C | LINKStaffLe, StaffAction, StaffBoostP, StaffBoulde, StaffLeverO, StaffLeverT | `staffactivated_*` | cross-dll (names dll 0x0E2) | main/dll/CF/dll_011C_staffactivated.c |
-| 0x230 | DFP_wallbar | `chuka_*` | cross-dll (names dll 0x0CD) | main/dll/anim.c |
-| 0x231 | DFP_ForceAw | `TrickyCurve_*` | cross-dll (names dll 0x0C4) | main/dll/TrickyCurve.c |
-| 0x232 | DFP_RotateP | `sfxplayer_*` | cross-dll (names dll 0x133) | main/dll/TrickyCurve.c |
-| 0x294 | WCMoonTempl, WCSunTemple | `wctemple_*` | cross-dll (names dll 0x0FB,0x110,0x112,0x296,0x297) | main/dll/WC/dll_0294_wctemple.c |
+| 0x0D6 | KaldachomMe | `kaldachompme_*` | cross-dll (names dll 0x0D5) | main/dll/dll_00D6_kaldachomme.c |
+| 0x0D7 | KaldachomSp, FireCrawler | `kaldachompspit_*` | cross-dll (names dll 0x0D5) | main/dll/dll_00D7_kaldachomsp.c |
+| 0x11C | LINKStaffLe, StaffAction, StaffBoostP, StaffBoulde, StaffLeverO, StaffLeverT | `staffactivated_*` | cross-dll (names dll 0x0E2) | main/dll/dll_011C_staffactivated.c |
+| 0x230 | DFP_wallbar | `chuka_*` | cross-dll (names dll 0x0CD) | main/dll/dll_0230_dfpwallbar.c |
+| 0x231 | DFP_ForceAw | `TrickyCurve_*` | cross-dll (names dll 0x0C4) | main/dll/dll_0231_dfpforceaw.c |
+| 0x232 | DFP_RotateP | `sfxplayer_*` | cross-dll (names dll 0x133) | main/dll/dll_0232_dfprotatep.c |
+| 0x294 | WCMoonTempl, WCSunTemple | `wctemple_*` | cross-dll (names dll 0x0FB,0x110,0x112,0x296,0x297) | main/dll/dll_0294_wctemple.c |
 | 0x2BD | Androssleft, Androssrigh | `androsshand_*` | cross-dll (names dll 0x2BC) | main/dll/dll_02BD_androsshand.c |
 | 0x0C9 | GuardClaw, GCRobotPatr, Vambat, Firebat, HagabonMK2, Mikaladon, SpittingEba, MutatedEba, snowworm, snowworm_ba, Whirlpool, Rachnop, PinPon, WB, Weevil, BattleDroid, Kooshy, HoodedZyck, FireCrawler, RedEye, ShadowHunte, SwampStride, sharpclawSn, sharpclawGr, sharpclawSo, sharpclawCo, sharpclawAs, sharpclawSh, BossGeneral | `enemy_*` | unrelated | main/dll/dll_00C9_enemy.c |
 | 0x0ED | CFCloudCalP, CFPickKryst, CFPowerCrys, CFPowerRoom, CFExplosive, CF_ChestSpe, WCSunStone, WCMoonStone, WCGoldTrexT, WCSilverTre, DIMBridgeCo, DIMShackleK, DIMAlpineRo, DIMTruthHor, DIM2CellKey, DIM2SilverK, DIM2GoldKey, CCfireCryst, CCgoldbar, NW_SmallSca, NW_trickyba, NW_alpinero, SH_MediumSc, SH_LargeSca, SH_MMPkey, SH_NWkey, SC_block_tr, SC_block_sq, SC_block_ci, SB_Key, SB_Spellsto, WM_MediumSc, WM_consoles, GM_TokenPic, PadlockKey, GuardPass, Spellstone, EnergyEgg, Apple, MoonSeedCol, WM_PureMagi | `collectible_*` | unrelated | main/dll/dll_00ED_collectible.c |
-| 0x108 | EndObject | `Dummy108_*` | unrelated | main/dll/CF/dll_0108_endobject.c |
-| 0x10E | DieDuster, DieFox, DieKrystal | `deathseq_*` | unrelated | main/dll/CF/dll_010E_deathseq.c |
-| 0x11A | DRDebrisGir, DRDebrisPip, LINKSnowTre, LINKSnowLog, nw_testobj, SC_DummyTri, SC_DummySqu, SC_DummyCir, SC_throne, AlienTreePa, SnowBush, SnowLog, SulphurCrys, CobwebCorne, CobwebCeili, CobwebEdge, GrassWeedCl, GrassSupaCh, FernBush, FernCurly, WaterLillyF | `decoration11a_*` | unrelated | main/dll/CF/dll_011A_decoration11a.c |
-| 0x1BD | SC_paypoint, SPWell | `paymentkiosk_*` | unrelated | main/dll/VF/platform1.c |
-| 0x1F5 | generalscal, CF_generals, NW_GeneralS, SB_FireBall | `ShipBattle_*` | unrelated | main/dll/TREX/TREX_trex.c |
-| 0x237 | DFPSpPl | `laserObj_*` | unrelated | main/dll/CF/dll_0237_dfpsppl.c |
+| 0x108 | EndObject | `Dummy108_*` | unrelated | main/dll/dll_0108_endobject.c |
+| 0x10E | DieDuster, DieFox, DieKrystal | `deathseq_*` | unrelated | main/dll/dll_010E_deathseq.c |
+| 0x11A | DRDebrisGir, DRDebrisPip, LINKSnowTre, LINKSnowLog, nw_testobj, SC_DummyTri, SC_DummySqu, SC_DummyCir, SC_throne, AlienTreePa, SnowBush, SnowLog, SulphurCrys, CobwebCorne, CobwebCeili, CobwebEdge, GrassWeedCl, GrassSupaCh, FernBush, FernCurly, WaterLillyF | `decoration11a_*` | unrelated | main/dll/dll_011A_decoration11a.c |
+| 0x1BD | SC_paypoint, SPWell | `paymentkiosk_*` | unrelated | main/dll/dll_01BD_scpaypoint.c |
+| 0x1F5 | generalscal, CF_generals, NW_GeneralS, SB_FireBall | `ShipBattle_*` | unrelated | main/dll/dll_01F5_generalscal.c |
+| 0x237 | DFPSpPl | `laserObj_*` | unrelated | main/dll/dll_0237_dfpsppl.c |
 | 0x238 | LINKA_levco | `fireObj_*` | unrelated | main/dll/dll_0238_linkalevco.c |
-| 0x284 | SPFruitSmal, SPEggSmall, SPFruitLarg, SPEggLarge, SPBombSpore, SPMoonSeed, SPLantern, SPBlueArtef, SPBlueMushr, SPSwapGift, SPPda, SPBinocular, SPFireFly, SPFuelCell, SPSidekickB, SPDusterHol, SPStaffHitB, SPMapTTH, SPMapMMP, SPMapLF, SPMapCRF, SPMapDIM, SPMapWC, SPMapDR, SPMapKP, SPMapOFP, SPMapSW, SPMapVFP, SPMapCC, SPReplayDis | `shopitem_*` | unrelated | main/dll/DR/DRpushcart.c |
+| 0x284 | SPFruitSmal, SPEggSmall, SPFruitLarg, SPEggLarge, SPBombSpore, SPMoonSeed, SPLantern, SPBlueArtef, SPBlueMushr, SPSwapGift, SPPda, SPBinocular, SPFireFly, SPFuelCell, SPSidekickB, SPDusterHol, SPStaffHitB, SPMapTTH, SPMapMMP, SPMapLF, SPMapCRF, SPMapDIM, SPMapWC, SPMapDR, SPMapKP, SPMapOFP, SPMapSW, SPMapVFP, SPMapCC, SPReplayDis | `shopitem_*` | unrelated | main/dll/dll_0284_spfruitsmal.c |
 | 0x2AD | LINKSnowGra, SH_YellowWh, SH_BlueWhit, SH_RedYello, SH_BlueFlow, WM_drape, DFSH_Spirit, BlueFernFlo, WhiteFernFl, YellowFernF, AlienSpore, BlueFlowerP, BlueWhiteFl, RedYellowFl, YellowWhite, BullRush, BullRushClu, LongGrassCl, DragonRockG, AlienGrassC, SnowGrass, SnowBullrus, HangingPlan, WaterLillyL | `softbody_*` | unrelated | main/dll/dll_02AD_softbody.c |
-| 0x2C0 | FrontFox, FrontPeppy, FrontSlippy, FrontRob, FrontFalco, FrontPilots, FrontPlanet | `titlescreen_*` | unrelated | main/dll/baddie/Tumbleweed.c |
+| 0x2C0 | FrontFox, FrontPeppy, FrontSlippy, FrontRob, FrontFalco, FrontPilots, FrontPlanet | `titlescreen_*` | unrelated | main/dll/dll_02C0_frontfox.c |
 
 ## Appendix: canonical-format files whose proposal differs
 
@@ -811,7 +793,275 @@ a DIFFERENT name/id (truncation expansions, id mislabels, stem-vs-def
 choices). These need owner sign-off before renaming — the current
 name was a deliberate choice by a previous carve:
 
-(none)
+| dll | current | proposed | expansion |
+|---|---|---|---|
+| 0x0C6 | main/dll/dll_00C6_animdummy.c | main/dll/dll_00C6_animatedobj.c | GUESSED |
+| 0x0C7 | main/dll/dll_00C7_dim2roofrub.c | main/dll/DIM/dll_00C7_dim2roofrub.c | CONFIRMED |
+| 0x0C8 | main/dll/dll_00C8_depthoffiel.c | main/dll/dll_00C8_depthoffieldpoint.c | CONFIRMED |
+| 0x0D7 | main/dll/dll_00D7_kaldachomsp.c | main/dll/dll_00D7_kaldachompspit.c | GUESSED |
+| 0x0DA | main/dll/dll_00DA_pollenfragm.c | main/dll/dll_00DA_pollenfragment.c | CONFIRMED |
+| 0x0DC | main/dll/dll_00DC_mikabombsha.c | main/dll/dll_00DC_mikabombshadow.c | CONFIRMED |
+| 0x0DD | main/dll/dll_00DD_gcbaddieshi.c | main/dll/dll_00DD_gcbaddieshield.c | CONFIRMED |
+| 0x0DE | main/dll/dll_00DE_baddieinter.c | main/dll/dll_00DE_baddieinterestp.c | CONFIRMED |
+| 0x0E2 | main/dll/dll_00E2_sword.c | main/dll/dll_00E2_staff.c | COMPLETE |
+| 0x0E3 | main/dll/dll_00E3_projball.c | main/dll/dll_00E3_fireball.c | GUESSED |
+| 0x0E4 | main/dll/dll_00E4_flamethrowe.c | main/dll/dll_00E4_flamethrowerspe.c | CONFIRMED |
+| 0x0E5 | main/dll/dll_00E5_foxshield.c | main/dll/dll_00E5_shield.c | CONFIRMED |
+| 0x0E6 | main/dll/dll_00E6_restartmark.c | main/dll/dll_00E6_restartmarker.c | CONFIRMED |
+| 0x0F0 | main/dll/dll_00F0_mmpwarppoi.c | main/dll/dll_00F0_warppoint.c | COMPLETE |
+| 0x0F9 | main/dll/dll_00F9_drprojectil.c | main/dll/dll_00F9_projectileswitch.c | CONFIRMED |
+| 0x0FA | main/dll/dll_00FA_invisiblehi.c | main/dll/dll_00FA_invisiblehitswitch.c | CONFIRMED |
+| 0x0FB | main/dll/dll_00FB_wctemplepre.c | main/dll/dll_00FB_pressureswitchfb.c | CONFIRMED |
+| 0x0FF | main/dll/dll_00FF_magicdustsm.c | main/dll/dll_00FF_magicdust.c | CONFIRMED |
+| 0x10F | main/dll/dll_010F_mmpbridge.c | main/dll/MMP/dll_010F_mmpbridge.c | COMPLETE |
+| 0x110 | main/dll/dll_0110_ktrexdoorp.c | main/dll/dll_0110_door.c | CONFIRMED |
+| 0x111 | main/dll/dll_0111_cfpowerlock.c | main/dll/dll_0111_doorlock.c | GUESSED |
+| 0x112 | main/dll/dll_0112_bossdrakor.c | main/dll/dll_0112_seqobject.c | CONFIRMED |
+| 0x113 | main/dll/dll_0113_cameranewse.c | main/dll/dll_0113_seqobj2.c | GUESSED |
+| 0x114 | main/dll/dll_0114_immultiseq.c | main/dll/IM/dll_0114_immultiseq.c | COMPLETE |
+| 0x116 | main/dll/dll_0116_wmcolumn.c | main/dll/WM/dll_0116_wmcolumn.c | COMPLETE |
+| 0x122 | main/dll/dll_0122_cctestinfot.c | main/dll/CC/dll_0122_cctestinfot.c | CONFIRMED |
+| 0x126 | main/dll/dll_0126_trigpnt.c | main/dll/dll_0126_trigger.c | CONFIRMED |
+| 0x128 | main/dll/dll_0128_kttorch.c | main/dll/DR/dll_0128_kttorch.c | COMPLETE |
+| 0x12A | main/dll/dll_012A_cfcrate.c | main/dll/CF/dll_012A_cfcrate.c | COMPLETE |
+| 0x12E | main/dll/dll_012E_laserturret.c | main/dll/CF/dll_012E_cflightwall.c | CONFIRMED |
+| 0x12F | main/dll/dll_012F_nwcallofeld.c | main/dll/dll_012F_barrelpad.c | COMPLETE |
+| 0x131 | main/dll/dll_0131_cfdoorligh.c | main/dll/CF/dll_0131_cfdoorlight.c | CONFIRMED |
+| 0x132 | main/dll/dll_0132_waterfallsp.c | main/dll/dll_0132_waterfallspray.c | CONFIRMED |
+| 0x136 | main/dll/dll_0136_waveanimato.c | main/dll/dll_0136_waveanimator.c | CONFIRMED |
+| 0x137 | main/dll/dll_0137_alphaanimat.c | main/dll/dll_0137_alphaanimator.c | CONFIRMED |
+| 0x138 | main/dll/dll_0138_groundanima.c | main/dll/dll_0138_groundanimator.c | CONFIRMED |
+| 0x13D | main/dll/dll_013D_explodeanim.c | main/dll/dll_013D_explodeanimator.c | CONFIRMED |
+| 0x13E | main/dll/dll_013E_dimbossices.c | main/dll/DIM/dll_013E_dimbossicesmash.c | CONFIRMED |
+| 0x13F | main/dll/dll_013F_texframeani.c | main/dll/dll_013F_texframeanimator.c | CONFIRMED |
+| 0x142 | main/dll/dll_0142_felevcontro.c | main/dll/dll_0142_felevcontrol.c | CONFIRMED |
+| 0x145 | main/dll/dll_0145_cloudprison.c | main/dll/dll_0145_cloudprisoncontrol.c | CONFIRMED |
+| 0x148 | main/dll/dll_0148_cfguardian.c | main/dll/CF/dll_0148_cfguardian.c | COMPLETE |
+| 0x149 | main/dll/dll_0149_cfwindlift.c | main/dll/CF/dll_0149_cfwindlift.c | CONFIRMED |
+| 0x14A | main/dll/dll_014A_cfpowerbase.c | main/dll/CF/dll_014A_cfpowerbase.c | CONFIRMED |
+| 0x14B | main/dll/dll_014B_cfmaincrystal.c | main/dll/CF/dll_014B_cfmaincrystal.c | CONFIRMED |
+| 0x14E | main/dll/dll_014E_cfprisonguard.c | main/dll/CF/dll_014E_cfprisonguard.c | CONFIRMED |
+| 0x14F | main/dll/dll_014F_cfprisonuncle.c | main/dll/CF/dll_014F_cfprisonuncle.c | CONFIRMED |
+| 0x153 | main/dll/dll_0153_cfperch.c | main/dll/CF/dll_0153_cfperch.c | COMPLETE |
+| 0x154 | main/dll/dll_0154_cfprisoncage.c | main/dll/CF/dll_0154_cfprisoncage.c | CONFIRMED |
+| 0x15B | main/dll/dll_015B_cfforcefiel.c | main/dll/CF/dll_015B_cfforcefield.c | CONFIRMED |
+| 0x15D | main/dll/dll_015D_cfslidedoor.c | main/dll/dll_015D_slidingdoor.c | GUESSED |
+| 0x15F | main/dll/dll_015F_cfattractor.c | main/dll/dll_015F_attractor.c | CONFIRMED |
+| 0x162 | main/dll/dll_0162_cfmagicwall.c | main/dll/CF/dll_0162_cfmagicwall.c | CONFIRMED |
+| 0x164 | main/dll/dll_0164_cflevelcont.c | main/dll/CF/dll_0164_cflevelcontrol.c | CONFIRMED |
+| 0x166 | main/dll/dll_0166_cfbrokengra.c | main/dll/dll_0166_exploded.c | GUESSED |
+| 0x167 | main/dll/dll_0167_spiritdoorl.c | main/dll/dll_0167_spiritdoorlock.c | CONFIRMED |
+| 0x169 | main/dll/dll_0169_imicemounta.c | main/dll/IM/dll_0169_imicemountain.c | CONFIRMED |
+| 0x16A | main/dll/dll_016A_crrockfall.c | main/dll/CR/dll_016A_crrockfall.c | COMPLETE |
+| 0x16B | main/dll/dll_016B_dimmagiclig.c | main/dll/dll_016B_magiclight.c | CONFIRMED |
+| 0x16D | main/dll/dll_016D_imicepillar.c | main/dll/IM/dll_016D_imicepillar.c | CONFIRMED |
+| 0x16E | main/dll/dll_016E_imanimspace.c | main/dll/IM/dll_016E_imanimspacecraft.c | CONFIRMED |
+| 0x16F | main/dll/dll_016F_imspacethru.c | main/dll/IM/dll_016F_imspacethruster.c | CONFIRMED |
+| 0x170 | main/dll/dll_0170_imspacering.c | main/dll/IM/dll_0170_imspacering.c | CONFIRMED |
+| 0x171 | main/dll/dll_0171_imspacering.c | main/dll/IM/dll_0171_imspaceringgen.c | CONFIRMED |
+| 0x172 | main/dll/dll_0172_linkblevco.c | main/dll/dll_0172_linkblevcontrol.c | CONFIRMED |
+| 0x173 | main/dll/dll_0173_linklevcon.c | main/dll/dll_0173_linklevcontrol.c | CONFIRMED |
+| 0x174 | main/dll/dll_0174_ccriverflow.c | main/dll/CC/dll_0174_ccriverflow.c | CONFIRMED |
+| 0x175 | main/dll/dll_0175_dfropenode.c | main/dll/DF/dll_0175_dfropenode.c | COMPLETE |
+| 0x177 | main/dll/dll_0177_dfshdoor2speci.c | main/dll/DF/dll_0177_dfshdoor2speci.c | CONFIRMED |
+| 0x178 | main/dll/dll_0178_dfshshrine.c | main/dll/DF/dll_0178_dfshshrine.c | CONFIRMED |
+| 0x179 | main/dll/dll_0179_dfshobjcreator.c | main/dll/DF/dll_0179_dfshobjcreator.c | CONFIRMED |
+| 0x17B | main/dll/dll_017B_dfshlaserbeam.c | main/dll/DF/dll_017B_dfshlaserbeam.c | CONFIRMED |
+| 0x17D | main/dll/dll_017D_dim2barrel.c | main/dll/dll_017D_rollingbarrel.c | GUESSED |
+| 0x17E | main/dll/dll_017E_mmplevelco.c | main/dll/MMP/dll_017E_mmplevelcontrol.c | CONFIRMED |
+| 0x17F | main/dll/dll_017F_msbush.c | main/dll/dll_017F_moonseedbush.c | GUESSED |
+| 0x180 | main/dll/dll_0180_mmpasteroi.c | main/dll/MMP/dll_0180_mmpasteroidre.c | CONFIRMED |
+| 0x181 | main/dll/dll_0181_mmptrenchf.c | main/dll/MMP/dll_0181_mmptrenchfx.c | CONFIRMED |
+| 0x182 | main/dll/dll_0182_mmpmoonroc.c | main/dll/MMP/dll_0182_mmpmoonrock.c | CONFIRMED |
+| 0x183 | main/dll/dll_0183_mmpgyserve.c | main/dll/MMP/dll_0183_mmpgyservent.c | CONFIRMED |
+| 0x184 | main/dll/dll_0184_dimanimshar.c | main/dll/dll_0184_animsharpclaw.c | CONFIRMED |
+| 0x185 | main/dll/dll_0185_ccgasvent.c | main/dll/CC/dll_0185_ccgasvent.c | COMPLETE |
+| 0x186 | main/dll/dll_0186_ccgasventco.c | main/dll/CC/dll_0186_ccgasventcontrol.c | CONFIRMED |
+| 0x187 | main/dll/dll_0187_ccqueen.c | main/dll/CC/dll_0187_ccqueen.c | COMPLETE |
+| 0x188 | main/dll/dll_0188_cclightfoot.c | main/dll/CC/dll_0188_cclightfoot.c | CONFIRMED |
+| 0x189 | main/dll/dll_0189_ccsharpclaw.c | main/dll/CC/dll_0189_ccsharpclawpad.c | CONFIRMED |
+| 0x18A | main/dll/dll_018A_ccpedstal.c | main/dll/CC/dll_018A_ccpedstal.c | COMPLETE |
+| 0x18B | main/dll/dll_018B_cclevcontro.c | main/dll/CC/dll_018B_cclevcontrol.c | CONFIRMED |
+| 0x18C | main/dll/dll_018C_mmshshrine.c | main/dll/mmshrine/dll_018C_mmshshrine.c | CONFIRMED |
+| 0x18D | main/dll/dll_018D_mmshscales.c | main/dll/mmshrine/dll_018D_mmshscales.c | CONFIRMED |
+| 0x18E | main/dll/dll_018E_mmshwaters.c | main/dll/mmshrine/dll_018E_mmshwaterspike.c | CONFIRMED |
+| 0x191 | main/dll/dll_0191_ecshcreato.c | main/dll/dll_0191_ecshcreator.c | CONFIRMED |
+| 0x193 | main/dll/dll_0193_gpshobjcre.c | main/dll/dll_0193_gpshobjcreator.c | CONFIRMED |
+| 0x198 | main/dll/dll_0198_nwshlevcon.c | main/dll/NW/dll_0198_nwshlevcon.c | CONFIRMED |
+| 0x19F | main/dll/dll_019F_nwtreebrid.c | main/dll/NW/dll_019F_nwtreebrid.c | RAW |
+| 0x1A0 | main/dll/dll_01A0_nwgeyser.c | main/dll/NW/dll_01A0_nwgeyser.c | COMPLETE |
+| 0x1A1 | main/dll/dll_01A1_nwmammoth.c | main/dll/NW/dll_01A1_nwmammoth.c | CONFIRMED |
+| 0x1A2 | main/dll/dll_01A2_nwtricky.c | main/dll/NW/dll_01A2_nwtricky.c | COMPLETE |
+| 0x1A3 | main/dll/dll_01A3_nwanimice1.c | main/dll/NW/dll_01A3_nwanimice.c | CONFIRMED |
+| 0x1A4 | main/dll/dll_01A4_nwice1.c | main/dll/NW/dll_01A4_nwice.c | CONFIRMED |
+| 0x1A5 | main/dll/dll_01A5_nwlevcontr.c | main/dll/NW/dll_01A5_nwlevcontrol.c | CONFIRMED |
+| 0x1A6 | main/dll/dll_01A6_shtricky.c | main/dll/SH/dll_01A6_shtricky.c | COMPLETE |
+| 0x1A8 | main/dll/dll_01A8_shkillermushroom.c | main/dll/SH/dll_01A8_shkillermushroom.c | GUESSED |
+| 0x1AA | main/dll/dll_01AA_bombplantsp.c | main/dll/dll_01AA_bombplantspore.c | CONFIRMED |
+| 0x1AB | main/dll/dll_01AB_bombplantin.c | main/dll/dll_01AB_bombplantingspot.c | CONFIRMED |
+| 0x1AC | main/dll/dll_01AC_shqueenearthwalker.c | main/dll/SH/dll_01AC_shqueenearthwalker.c | CONFIRMED |
+| 0x1AD | main/dll/dll_01AD_shthorntail.c | main/dll/SH/dll_01AD_shthorntail.c | CONFIRMED |
+| 0x1AE | main/dll/dll_01AE_shlevelcontrol.c | main/dll/SH/dll_01AE_shlevelcontrol.c | CONFIRMED |
+| 0x1AF | main/dll/dll_01AF_shswaplift.c | main/dll/SH/dll_01AF_shswaplift.c | RAW |
+| 0x1B0 | main/dll/dll_01B0_shswapston.c | main/dll/SH/dll_01B0_shswapston.c | RAW |
+| 0x1B1 | main/dll/dll_01B1_shstaff.c | main/dll/SH/dll_01B1_shstaff.c | COMPLETE |
+| 0x1B2 | main/dll/dll_01B2_shstaffhaz.c | main/dll/SH/dll_01B2_shstaffhaze.c | CONFIRMED |
+| 0x1B3 | main/dll/dll_01B3_shbeacon.c | main/dll/SH/dll_01B3_shbeacon.c | COMPLETE |
+| 0x1B4 | main/dll/dll_01B4_shemptytum.c | main/dll/SH/dll_01B4_shemptytumblew.c | CONFIRMED |
+| 0x1B6 | main/dll/dll_01B6_sclevelcon.c | main/dll/SC/dll_01B6_sclevelcontrol.c | CONFIRMED |
+| 0x1B7 | main/dll/dll_01B7_scmusictre.c | main/dll/SC/dll_01B7_scmusictree.c | CONFIRMED |
+| 0x1B8 | main/dll/dll_01B8_sctotempol.c | main/dll/SC/dll_01B8_sctotempole.c | CONFIRMED |
+| 0x1B9 | main/dll/dll_01B9_sccloudrun.c | main/dll/SC/dll_01B9_sccloudrunnera.c | CONFIRMED |
+| 0x1BA | main/dll/dll_01BA_sctotempuzzle.c | main/dll/SC/dll_01BA_sctotempuzzle.c | CONFIRMED |
+| 0x1BB | main/dll/dll_01BB_sctotembond.c | main/dll/SC/dll_01BB_sctotembond.c | CONFIRMED |
+| 0x1BC | main/dll/dll_01BC_sctotemstr.c | main/dll/SC/dll_01BC_sctotemstrength.c | CONFIRMED |
+| 0x1BD | main/dll/dll_01BD_scpaypoint.c | main/dll/dll_01BD_paymentkiosk.c | GUESSED |
+| 0x1BE | main/dll/dll_01BE_dimlavaball.c | main/dll/DIM/dll_01BE_dimlava.c | GUESSED |
+| 0x1BF | main/dll/dll_01BF_dimlavaball.c | main/dll/DIM/dll_01BF_dimlavaball.c | RAW |
+| 0x1C0 | main/dll/dll_01C0_dimlogfire.c | main/dll/DIM/dll_01C0_dimlogfire.c | COMPLETE |
+| 0x1C1 | main/dll/dll_01C1_dimsnowball.c | main/dll/DIM/dll_01C1_dimsnowball.c | CONFIRMED |
+| 0x1C2 | main/dll/dll_01C2_dimsnowball.c | main/dll/DIM/dll_01C2_dimsnowball1c2.c | CONFIRMED |
+| 0x1C3 | main/dll/dll_01C3_dimgate.c | main/dll/DIM/dll_01C3_dimgate.c | COMPLETE |
+| 0x1C4 | main/dll/dll_01C4_dimicewall.c | main/dll/DIM/dll_01C4_dimicewall.c | COMPLETE |
+| 0x1C5 | main/dll/dll_01C5_dimbarrier.c | main/dll/DIM/dll_01C5_dimbarrier.c | COMPLETE |
+| 0x1C6 | main/dll/dll_01C6_dimcannon.c | main/dll/DIM/dll_01C6_dimcannon.c | COMPLETE |
+| 0x1C7 | main/dll/dll_01C7_dimlavasmas.c | main/dll/DIM/dll_01C7_dimlavasmash.c | CONFIRMED |
+| 0x1C8 | main/dll/dll_01C8_dimbridgeco.c | main/dll/DIM/dll_01C8_dimbridgecogmai.c | CONFIRMED |
+| 0x1C9 | main/dll/dll_01C9_dimdismount.c | main/dll/DIM/dll_01C9_dimdismountpoint.c | CONFIRMED |
+| 0x1CA | main/dll/dll_01CA_dimexplosio.c | main/dll/DIM/dll_01CA_dimexplosion.c | CONFIRMED |
+| 0x1CB | main/dll/dll_01CB_dimwooddoor.c | main/dll/DIM/dll_01CB_dimwooddoor2.c | CONFIRMED |
+| 0x1CC | main/dll/dll_01CC_dimmagicbri.c | main/dll/DIM/dll_01CC_dimmagicbridge.c | CONFIRMED |
+| 0x1CD | main/dll/dll_01CD_dimlevelco.c | main/dll/DIM/dll_01CD_dimlevelcontrol.c | CONFIRMED |
+| 0x1D0 | main/dll/dll_01D0_dimtricky.c | main/dll/DIM/dll_01D0_dimtricky.c | COMPLETE |
+| 0x1D1 | main/dll/dll_01D1_dimtruthhor.c | main/dll/DIM/dll_01D1_dimtruthhornice.c | CONFIRMED |
+| 0x1D5 | main/dll/dll_01D5_dim2conveyo.c | main/dll/DIM/dll_01D5_dim2conveyor.c | CONFIRMED |
+| 0x1D7 | main/dll/dll_01D7_dim2snowbal.c | main/dll/DIM/dll_01D7_dim2snowball.c | CONFIRMED |
+| 0x1D8 | main/dll/dll_01D8_dim2pathgen.c | main/dll/DIM/dll_01D8_dim2pathgenerator.c | CONFIRMED |
+| 0x1D9 | main/dll/dll_01D9_dim2prisonmammoth.c | main/dll/DIM/dll_01D9_dim2prisonmammoth.c | CONFIRMED |
+| 0x1DC | main/dll/dll_01DC_dim2icefloe.c | main/dll/DIM/dll_01DC_dim2icefloe.c | CONFIRMED |
+| 0x1DD | main/dll/dll_01DD_dim2icicle.c | main/dll/DIM/dll_01DD_dim2icicle.c | COMPLETE |
+| 0x1DE | main/dll/dll_01DE_dim2lavacon.c | main/dll/DIM/dll_01DE_dim2lavacontrol.c | CONFIRMED |
+| 0x1E0 | main/dll/dll_01E0_dimboss.c | main/dll/DIM/dll_01E0_dimboss.c | COMPLETE |
+| 0x1E1 | main/dll/dll_01E1_dimbossgut.c | main/dll/DIM/dll_01E1_dimbossgut.c | CONFIRMED |
+| 0x1E2 | main/dll/dll_01E2_dimbosstonsil.c | main/dll/DIM/dll_01E2_dimbosstonsil.c | CONFIRMED |
+| 0x1E3 | main/dll/dll_01E3_dimbossgut.c | main/dll/DIM/dll_01E3_dimbossgut2.c | CONFIRMED |
+| 0x1E5 | main/dll/dll_01E5_dimbossspi.c | main/dll/DIM/dll_01E5_dimbossspit.c | CONFIRMED |
+| 0x1E6 | main/dll/dll_01E6_dimbosscrac.c | main/dll/DIM/dll_01E6_dimbosscrackpar.c | CONFIRMED |
+| 0x1E7 | main/dll/dll_01E7_dimbossfire.c | main/dll/DIM/dll_01E7_dimbossfire.c | CONFIRMED |
+| 0x1E8 | main/dll/dll_01E8_sbgalleon.c | main/dll/SB/dll_01E8_sbgalleon.c | COMPLETE |
+| 0x1E9 | main/dll/dll_01E9_sbpropelle.c | main/dll/SB/dll_01E9_sbpropeller.c | CONFIRMED |
+| 0x1EA | main/dll/dll_01EA_sbshiphead.c | main/dll/SB/dll_01EA_sbshiphead.c | CONFIRMED |
+| 0x1EB | main/dll/dll_01EB_sbshipmast.c | main/dll/SB/dll_01EB_sbshipmast.c | CONFIRMED |
+| 0x1EC | main/dll/dll_01EC_sbshipgun.c | main/dll/SB/dll_01EC_sbshipgun.c | COMPLETE |
+| 0x1ED | main/dll/dll_01ED_sbfireball.c | main/dll/SB/dll_01ED_sbfireball.c | CONFIRMED |
+| 0x1EE | main/dll/dll_01EE_sbcannonba.c | main/dll/SB/dll_01EE_sbcannonball.c | CONFIRMED |
+| 0x1EF | main/dll/dll_01EF_sbcloudbal.c | main/dll/SB/dll_01EF_sbcloudball.c | CONFIRMED |
+| 0x1F0 | main/dll/dll_01F0_sbkytecage.c | main/dll/SB/dll_01F0_sbkytecage.c | CONFIRMED |
+| 0x1F1 | main/dll/dll_01F1_sbseqdoor.c | main/dll/SB/dll_01F1_sbseqdoor.c | COMPLETE |
+| 0x1F2 | main/dll/dll_01F2_sbcagekyte.c | main/dll/SB/dll_01F2_sbcagekyte.c | CONFIRMED |
+| 0x1F3 | main/dll/dll_01F3_sbminifire.c | main/dll/SB/dll_01F3_sbminifire.c | CONFIRMED |
+| 0x1F4 | main/dll/dll_01F4_cflamp.c | main/dll/dll_01F4_lamp.c | CONFIRMED |
+| 0x1F5 | main/dll/dll_01F5_generalscal.c | main/dll/dll_01F5_shipbattle.c | GUESSED |
+| 0x1F6 | main/dll/dll_01F6_dimflag.c | main/dll/dll_01F6_flag.c | CONFIRMED |
+| 0x1F7 | main/dll/dll_01F7_sbshipgunb.c | main/dll/SB/dll_01F7_sbshipgunbroke.c | CONFIRMED |
+| 0x1F8 | main/dll/dll_01F8_wmgalleon.c | main/dll/WM/dll_01F8_wmgalleon.c | COMPLETE |
+| 0x1F9 | main/dll/dll_01F9_wmobjcreator.c | main/dll/WM/dll_01F9_wmobjcreator.c | CONFIRMED |
+| 0x1FA | main/dll/dll_01FA_wmseqobjec.c | main/dll/WM/dll_01FA_wmseqobject.c | CONFIRMED |
+| 0x1FD | main/dll/dll_01FD_wmlasertarget.c | main/dll/WM/dll_01FD_wmlasertarget.c | CONFIRMED |
+| 0x201 | main/dll/dll_0201_wmcolrise.c | main/dll/WM/dll_0201_wmcolrise.c | COMPLETE |
+| 0x204 | main/dll/dll_0204_wmtorch.c | main/dll/WM/dll_0204_wmtorch.c | COMPLETE |
+| 0x207 | main/dll/dll_0207_wmworm.c | main/dll/WM/dll_0207_wmworm.c | COMPLETE |
+| 0x209 | main/dll/dll_0209_wmlevelcontrol.c | main/dll/WM/dll_0209_wmlevelcontrol.c | CONFIRMED |
+| 0x20A | main/dll/dll_020A_wmgeneralscales.c | main/dll/WM/dll_020A_wmgeneralscales.c | CONFIRMED |
+| 0x20C | main/dll/dll_020C_wmspiritplace.c | main/dll/WM/dll_020C_wmspiritplace.c | CONFIRMED |
+| 0x20D | main/dll/dll_020D_wmseqpoint.c | main/dll/WM/dll_020D_wmseqpoint.c | CONFIRMED |
+| 0x20E | main/dll/dll_020E_wmsun.c | main/dll/WM/dll_020E_wmsun.c | COMPLETE |
+| 0x20F | main/dll/dll_020F_wmspiritset.c | main/dll/WM/dll_020F_wmspiritset.c | CONFIRMED |
+| 0x210 | main/dll/dll_0210_wmplanets.c | main/dll/WM/dll_0210_wmplanets.c | COMPLETE |
+| 0x211 | main/dll/dll_0211_wmwallcrawler.c | main/dll/WM/dll_0211_wmwallcrawler.c | CONFIRMED |
+| 0x215 | main/dll/dll_0215_wmnewcrystal.c | main/dll/WM/dll_0215_wmnewcrystal.c | CONFIRMED |
+| 0x216 | main/dll/dll_0216_vfplevelcontrol.c | main/dll/VF/dll_0216_vfplevelcontrol.c | CONFIRMED |
+| 0x217 | main/dll/dll_0217_vfpobjcreator.c | main/dll/VF/dll_0217_vfpobjcreator.c | CONFIRMED |
+| 0x218 | main/dll/dll_0218_vfpminifire.c | main/dll/VF/dll_0218_vfpminifire.c | CONFIRMED |
+| 0x21A | main/dll/dll_021A_vfpstatueball.c | main/dll/VF/dll_021A_vfpstatueball.c | CONFIRMED |
+| 0x21C | main/dll/dll_021C_vfpladders.c | main/dll/VF/dll_021C_vfpladders.c | CONFIRMED |
+| 0x21D | main/dll/dll_021D_vfplift.c | main/dll/VF/dll_021D_vfplift.c | CONFIRMED |
+| 0x229 | main/dll/dll_0229_dfplevelco.c | main/dll/DF/dll_0229_dfplevelcontrol.c | CONFIRMED |
+| 0x22A | main/dll/dll_022A_dfpobjcrea.c | main/dll/DF/dll_022A_dfpobjcreator.c | CONFIRMED |
+| 0x22B | main/dll/dll_022B_dfptorch.c | main/dll/DF/dll_022B_dfptorch.c | COMPLETE |
+| 0x22D | main/dll/dll_022D_dfpseqpoin.c | main/dll/DF/dll_022D_dfpseqpoint.c | CONFIRMED |
+| 0x22E | main/dll/dll_022E_dfpdoorswi.c | main/dll/DF/dll_022E_dfpdoorswitch.c | CONFIRMED |
+| 0x22F | main/dll/dll_022F_dfpfloorbar.c | main/dll/DF/dll_022F_dfpfloorbar.c | CONFIRMED |
+| 0x230 | main/dll/dll_0230_dfpwallbar.c | main/dll/DF/dll_0230_dfpwallbar.c | RAW |
+| 0x231 | main/dll/dll_0231_dfpforceaw.c | main/dll/DF/dll_0231_dfpforceaw.c | RAW |
+| 0x232 | main/dll/dll_0232_dfprotatep.c | main/dll/DF/dll_0232_dfprotatep.c | RAW |
+| 0x233 | main/dll/dll_0233_dfpstatue1.c | main/dll/DF/dll_0233_dfpstatue1.c | CONFIRMED |
+| 0x234 | main/dll/dll_0234_dfpperchsw.c | main/dll/DF/dll_0234_dfpperchsw.c | RAW |
+| 0x235 | main/dll/dll_0235_dfptargetblock.c | main/dll/DF/dll_0235_dfptargetblock.c | CONFIRMED |
+| 0x236 | main/dll/dll_0236_dfplaserbe.c | main/dll/DF/dll_0236_dfplaserbe.c | CONFIRMED |
+| 0x237 | main/dll/dll_0237_dfpsppl.c | main/dll/DF/dll_0237_dfpsppl.c | COMPLETE |
+| 0x23F | main/dll/dll_023F_dbegg.c | main/dll/DB/dll_023F_dbegg.c | COMPLETE |
+| 0x240 | main/dll/dll_0240_gcrobotblas.c | main/dll/dll_0240_gcrobotblast.c | CONFIRMED |
+| 0x241 | main/dll/dll_0241_drakorenerg.c | main/dll/dll_0241_drakorenergy.c | CONFIRMED |
+| 0x242 | main/dll/dll_0242_dbstealerwo.c | main/dll/DB/dll_0242_dbstealerworm.c | CONFIRMED |
+| 0x243 | main/dll/dll_0243_dbholecontr.c | main/dll/DB/dll_0243_dbholecontrol1.c | CONFIRMED |
+| 0x24F | main/dll/dll_024F_ktrexlevel.c | main/dll/DR/dll_024F_ktrexlevel.c | CONFIRMED |
+| 0x250 | main/dll/dll_0250_ktrex.c | main/dll/DR/dll_0250_ktrex.c | COMPLETE |
+| 0x251 | main/dll/dll_0251_ktrexfloorswitch.c | main/dll/DR/dll_0251_ktrexfloorswitch.c | CONFIRMED |
+| 0x252 | main/dll/dll_0252_ktlazerwall.c | main/dll/DR/dll_0252_ktlazerwall.c | CONFIRMED |
+| 0x253 | main/dll/dll_0253_ktlazerlight.c | main/dll/DR/dll_0253_ktlazerlight.c | CONFIRMED |
+| 0x254 | main/dll/dll_0254_ktfallingrocks.c | main/dll/DR/dll_0254_ktfallingrocks.c | CONFIRMED |
+| 0x256 | main/dll/dll_0256_dimsnowhorn1.c | main/dll/DIM/dll_0256_dimsnowhorn1.c | CONFIRMED |
+| 0x257 | main/dll/dll_0257_drearthwarrior.c | main/dll/DR/dll_0257_drearthwarrior.c | CONFIRMED |
+| 0x258 | main/dll/dll_0258_drcloudrunner.c | main/dll/DR/dll_0258_drcloudrunner.c | CONFIRMED |
+| 0x259 | main/dll/dll_0259_sbcloudrunner.c | main/dll/SB/dll_0259_sbcloudrunner.c | CONFIRMED |
+| 0x25A | main/dll/dll_025A_staticcamer.c | main/dll/dll_025A_staticcamera.c | CONFIRMED |
+| 0x261 | main/dll/dll_0261_drlasercannon.c | main/dll/DR/dll_0261_drlasercannon.c | CONFIRMED |
+| 0x265 | main/dll/dll_0265_drcreator.c | main/dll/DR/dll_0265_drcreator.c | COMPLETE |
+| 0x268 | main/dll/dll_0268_drcagecontrol.c | main/dll/DR/dll_0268_drcagecontrol.c | CONFIRMED |
+| 0x26B | main/dll/dll_026B_drchimmey.c | main/dll/DR/dll_026B_drchimmey.c | COMPLETE |
+| 0x26C | main/dll/dll_026C_drcagewith.c | main/dll/DR/dll_026C_drcagewith.c | CONFIRMED |
+| 0x26E | main/dll/dll_026E_drshackle.c | main/dll/DR/dll_026E_drshackle.c | COMPLETE |
+| 0x26F | main/dll/dll_026F_drgenerator.c | main/dll/DR/dll_026F_drgenerator.c | CONFIRMED |
+| 0x279 | main/dll/dll_0279_drenergydisc.c | main/dll/DR/dll_0279_drenergydisc.c | CONFIRMED |
+| 0x27C | main/dll/dll_027C_drlightbea.c | main/dll/DR/dll_027C_drlightbea.c | CONFIRMED |
+| 0x27E | main/dll/dll_027E_drmusiccont.c | main/dll/DR/dll_027E_drmusiccont.c | CONFIRMED |
+| 0x280 | main/dll/dll_0280_drcloudper.c | main/dll/DR/dll_0280_drcloudper.c | CONFIRMED |
+| 0x281 | main/dll/dll_0281_drearthcal.c | main/dll/DR/dll_0281_drearthcal.c | CONFIRMED |
+| 0x283 | main/dll/dll_0283_drbarrelgr.c | main/dll/DR/dll_0283_drbarrelgr.c | CONFIRMED |
+| 0x284 | main/dll/dll_0284_spfruitsmal.c | main/dll/dll_0284_shopitem.c | GUESSED |
+| 0x285 | main/dll/dll_0285_spshop.c | main/dll/SP/dll_0285_spshop.c | CONFIRMED |
+| 0x286 | main/dll/dll_0286_spshopkeepe.c | main/dll/SP/dll_0286_spshopkeeper.c | CONFIRMED |
+| 0x287 | main/dll/dll_0287_spscarab.c | main/dll/SP/dll_0287_spscarab.c | COMPLETE |
+| 0x288 | main/dll/dll_0288_spdrape.c | main/dll/SP/dll_0288_spdrape.c | COMPLETE |
+| 0x289 | main/dll/dll_0289_spitembeam.c | main/dll/SP/dll_0289_spitembeam.c | COMPLETE |
+| 0x28A | main/dll/dll_028A_wcearthwalker.c | main/dll/WC/dll_028A_wcearthwalker.c | CONFIRMED |
+| 0x28C | main/dll/dll_028C_wcbouncycra.c | main/dll/WC/dll_028C_wcbouncycra.c | CONFIRMED |
+| 0x28D | main/dll/dll_028D_wclevelcont.c | main/dll/WC/dll_028D_wclevelcont.c | CONFIRMED |
+| 0x28E | main/dll/dll_028E_wcbeacon.c | main/dll/WC/dll_028E_wcbeacon.c | COMPLETE |
+| 0x28F | main/dll/dll_028F_wcpressures.c | main/dll/WC/dll_028F_wcpressures.c | CONFIRMED |
+| 0x290 | main/dll/dll_0290_wcpushblock.c | main/dll/WC/dll_0290_wcpushblock.c | CONFIRMED |
+| 0x291 | main/dll/dll_0291_wctile.c | main/dll/WC/dll_0291_wctile.c | COMPLETE |
+| 0x292 | main/dll/dll_0292_wctrexstatu.c | main/dll/WC/dll_0292_wctrexstatu.c | CONFIRMED |
+| 0x295 | main/dll/dll_0295_wcapertures.c | main/dll/WC/dll_0295_wcapertures.c | CONFIRMED |
+| 0x296 | main/dll/dll_0296_wctempledia.c | main/dll/WC/dll_0296_wctempledia.c | CONFIRMED |
+| 0x297 | main/dll/dll_0297_wctemplebri.c | main/dll/WC/dll_0297_wctemplebri.c | CONFIRMED |
+| 0x298 | main/dll/dll_0298_wcfloortile.c | main/dll/WC/dll_0298_wcfloortile.c | CONFIRMED |
+| 0x29A | main/dll/dll_029A_arwarwing.c | main/dll/ARW/dll_029A_arwarwing.c | COMPLETE |
+| 0x29C | main/dll/dll_029C_arwarwingbo.c | main/dll/ARW/dll_029C_arwarwingbo.c | CONFIRMED |
+| 0x29D | main/dll/dll_029D_arwarwinggu.c | main/dll/ARW/dll_029D_arwarwinggu.c | CONFIRMED |
+| 0x29F | main/dll/dll_029F_arwbombcoll.c | main/dll/ARW/dll_029F_arwbombcoll.c | CONFIRMED |
+| 0x2A1 | main/dll/dll_02A1_arwlevelcon.c | main/dll/ARW/dll_02A1_arwlevelcon.c | CONFIRMED |
+| 0x2A2 | main/dll/dll_02A2_arwspeedstr.c | main/dll/ARW/dll_02A2_arwspeedstr.c | CONFIRMED |
+| 0x2A5 | main/dll/dll_02A5_arwgenerato.c | main/dll/ARW/dll_02A5_arwgenerato.c | CONFIRMED |
+| 0x2A6 | main/dll/dll_02A6_arwsquadron.c | main/dll/ARW/dll_02A6_arwsquadron.c | CONFIRMED |
+| 0x2A7 | main/dll/dll_02A7_arwproximit.c | main/dll/ARW/dll_02A7_arwproximit.c | CONFIRMED |
+| 0x2A8 | main/dll/dll_02A8_arwblocker.c | main/dll/ARW/dll_02A8_arwblocker.c | COMPLETE |
+| 0x2A9 | main/dll/dll_02A9_lgtpointlight.c | main/dll/LGT/dll_02A9_lgtpointlight.c | CONFIRMED |
+| 0x2AA | main/dll/dll_02AA_lgtdirectionallight.c | main/dll/LGT/dll_02AA_lgtdirectionallight.c | CONFIRMED |
+| 0x2AB | main/dll/dll_02AB_lgtprojectedlight.c | main/dll/LGT/dll_02AB_lgtprojectedlight.c | CONFIRMED |
+| 0x2AC | main/dll/dll_02AC_lgtcontrollight.c | main/dll/LGT/dll_02AC_lgtcontrollight.c | CONFIRMED |
+| 0x2C0 | main/dll/dll_02C0_frontfox.c | main/dll/dll_02C0_front.c | GUESSED |
 
 ## Appendix: current `dll_XXXX` files whose id != descriptor id
 
@@ -819,10 +1069,7 @@ The number embedded in the filename does not match the
 gResourceDescriptors index of any dll the unit hosts (drift-era or
 mislabeled files — the rename campaign must renumber these):
 
-| unit | file id | actually hosts |
-|---|---|---|
-| main/dll/CAM/dll_5B.c | 0x05B | 0x044, 0x046, 0x048 |
-| main/dll/dll_66.c | 0x066 | 0x0AB, 0x0AC, 0x0AD, 0x0AE, 0x0AF, 0x0B0, 0x0B1, 0x0B3, 0x0B8, 0x0B9, 0x0BA |
+(none)
 
 ## Appendix: same-stem headers that must move with a rename
 
@@ -831,289 +1078,25 @@ mislabeled files — the rename campaign must renumber these):
 same commit. Counted for rename-ready/canonical-variant dlls only —
 blocked units will surface more when carved.
 
-(none)
-
-## Appendix: CF/ lane-homing audit (retail-placement census)
-
-Lane DIRECTORIES are project organization, not retail data, but they
-should reflect retail PLACEMENT EVIDENCE rather than drift-era donor-file
-inheritance (the carve donor for a unit landed it in CF/ regardless of
-whether the object is Cloud-Runner-Fortress content). This appendix
-re-homes every `src/main/dll/CF/` unit from retail truth.
-
-**Method** (`tools/cf_lane_homing.py`, reproducible from the retail ISO):
-1. Decompress every `<map>.romlist.zlb` from the ISO FST (ZLB = zlib
-   *with* header after the 16-byte ZLB header). Parse placement records
-   (`>h` romlist TYPE at +0, length-in-WORDS u8 at +2).
-2. Reverse-map romlist-type → def via OBJINDEX.bin, def → handling DLL id
-   (`>H` at def+0x50) and retail name (def+0x91) via OBJECTS.bin/.tab.
-3. Map each CF/ unit → its DLL id(s) via gResourceDescriptors
-   (0x802C6300) → text-fn addresses → splits.txt unit.
-4. Census each DLL id's placements across maps; classify CF-family maps
-   = the Cloud-Runner-Fortress set (`fortress`, `clouddungeon`,
-   `cloudrace`, `cloudjoin`, `cloudtrap`, `cloudtreasure`,
-   `cloudrunnermap`, `cf*` = cfcolumn/cfdungeonblock/cfgalleon/cfgangplank/
-   cfledge/cfliftplat/cfprisoncage/cfprisondoor).
-
-**Homing rule** (applied uniformly): a unit **STAYS** in CF/ iff
-(a) a CF-family map is its single #1 placement map, OR
-(b) its canonical (first) retail def name is CF*-prefixed
-    (name-prefix rule has precedence per the manifest header), OR
-(c) it has no retail name AND no placements (a CF address-lane orphan/
-    helper sliver with no descriptor or no spawn — no evidence to move).
-Otherwise it **MOVES → `main/dll/` root** (runtime-spawned globals with
-0 placements, or objects placed predominantly/entirely at non-CF maps,
-or shared multi-map global DLLs). Prefixed names for lanes whose dir does
-NOT exist (CC/, KT/, MagicCave/, DFP/ — each <3 residents, not created)
-go to root, not a fabricated dir.
-
-placements column = total / CF-family / other. The `cfprisoncage`/
-`cfprisondoor`/`cfgalleon` romlists are tiny setup-point lists, so the
-fortress map (24 KB romlist) carries the real CF placement signal.
-
-| unit | dll id(s) | canonical retail name | placements (tot/CF/other) | top non-CF maps | verdict | rationale |
-|---|---|---|---|---|---|---|
-| `staffactivated_helpers.c` (was `CFPrisonGuard.c`) | — | — (helper, no descriptor) | 0 / 0 / 0 | — | **STAY** | front sliver of the staffactivated (0x11C) DLL TU `[801899B4-80189F5C]` — bulk `staffactivated_*` fns + the player.c-facing `cfPrisonGuard_*` lift/gamebit API; no own descriptor. RENAMED off the CamelCase `CFPrisonGuard.c` that collided with the unrelated real `dll_014E_cfprisonguard.c` (per the no-descriptor helper-TU rule) |
-| `dll_00E7_flammablevine.c` | 0xE7 | CCeyeVines (2 defs) | 6 / 0 / 6 | capeclaw×2, wallcity×2, linkj×1 | **MOVE → dll/** | CCeyeVines/BurnableVin vine; #1 map capeclaw — no CF placement |
-| `dll_00EC_infopoint.c` | 0xEC | InfoPoint (1 defs) | 0 / 0 / 0 | — | **MOVE → dll/** | InfoPoint generic marker, 0 placements (runtime/global) |
-| `dll_0106_scarab.c` | 0x106 | GreenScarab (5 defs) | 0 / 0 / 0 | — | **MOVE → dll/** | Scarab family runtime-spawned globals, 0 placements — flagship donor case |
-| `dll_0107_unused.c` | 0x107 | — | 0 / 0 / 0 | — | **STAY** | no retail name + 0 placements; CF address-lane orphan, no evidence to move |
-| `dll_0108_endobject.c` | 0x108 | EndObject (1 defs) | 1 / 0 / 1 | temple×1 | **MOVE → dll/** | EndObject sequence global, #1 map temple — runtime global |
-| `dll_0109_unk.c` | 0x109 | — | 0 / 0 / 0 | — | **STAY** | no retail name + 0 placements; CF address-lane orphan |
-| `dll_010A_fallladders.c` | 0x10A | Fall_Ladder (1 defs) | 3 / 3 / 0 | — | **STAY** | Fall_Ladders 3× fortress (CF) ONLY — genuine CF content |
-| `dll_010B_fireflylantern.c` | 0x10B | FireFlyLant (1 defs) | 0 / 0 / 0 | — | **MOVE → dll/** | FireFlyLantern runtime global, 0 placements |
-| `dll_010C_lanternfirefly.c` | 0x10C | LanternFire (1 defs) | 0 / 0 / 0 | — | **MOVE → dll/** | LanternFireFly runtime global, 0 placements |
-| `dll_010D_portalspelldoor.c` | 0x10D | PortalSpell (1 defs) | 6 / 0 / 6 | wallcity×2, capeclaw×1, dfptop×1 | **MOVE → dll/** | PortalSpelldoor #1 map wallcity, 5 non-CF maps — spread global |
-| `dll_010E_deathseq.c` | 0x10E | DieDuster (3 defs) | 0 / 0 / 0 | — | **MOVE → dll/** | DieDuster/DieFox/DieKrystal death-seq global, 0 placements |
-| `dll_0119_coldwatercontrol.c` | 0x119 | coldWaterCo (1 defs) | 3 / 0 / 3 | snowmines×1, snowmines2×1, wastes×1 | **MOVE → dll/** | coldWaterControl #1 snowmines — ice/desert, no CF |
-| `dll_011A_decoration11a.c` | 0x11A | DRDebrisGir (21 defs) | 387 / 40 / 347 | finalboss×141, newicemount×39, moonpass×26 | **MOVE → dll/** | generic decoration DLL, 23 def names / 18 non-CF maps (#1 finalboss×141) — shared global |
-| `dll_011B_landedarwing.c` | 0x11B | Landed_Arwi (1 defs) | 7 / 1 / 6 | warlock×2, dragrock×1, hollow×1 | **MOVE → dll/** | Landed_Arwing #1 map warlock; CF 1/7 — not CF-dominant |
-| `dll_011C_staffactivated.c` | 0x11C | LINKStaffLe (6 defs) | 115 / 19 / 96 | swapcircle×15, hollow×11, wastes×9 | **MOVE → dll/** | staff puzzle objs #1 swapcircle (fortress #2=13); 19/115 CF / 25 maps — reused, not predominant |
-| `dll_011D_treasurechest.c` | 0x11D | TreasureChe (2 defs) | 11 / 3 / 8 | snowmines×4, snowmines2×2, wallcity×2 | **MOVE → dll/** | TreasureChest #1 snowmines (fortress #2=3); 3/11 CF — spread |
-| `dll_011E_magiccavebottom.c` | 0x11E | MagicCaveBo (1 defs) | 2 / 0 / 2 | magicave×2 | **MOVE → dll/** | MagicCaveBottom magicave only; MagicCave dir absent (<3 residents) → root |
-| `dll_011F_magiccavetop.c` | 0x11F | MagicCaveTo (1 defs) | 9 / 0 / 9 | hollow×3, capeclaw×1, hollow2×1 | **MOVE → dll/** | MagicCaveTop #1 hollow; MagicCave dir absent → root |
-| `dll_0120_trickyguardspot.c` | 0x120 | TrickyGuard (1 defs) | 4 / 0 / 4 | hollow×4 | **MOVE → dll/** | TrickyGuardspot hollow only — no CF |
-| `dll_0121_infotext.c` | 0x121 | LINKF_InfoT (8 defs) | 14 / 0 / 14 | hollow×4, linkf×2, linkg×2 | **MOVE → dll/** | InfoText shared LINK/MMP/DIM/NW/SH/VFP (8 defs) — shared global |
-| `dll_0122_cctestinfot.c` | 0x122 | CCTestInfot (1 defs) | 0 / 0 / 0 | — | **MOVE → dll/** | CCTestInfot Cape Claw test marker, 0 placements; CC dir absent |
-| `dll_0123_fuelcell.c` | 0x123 | fuelCell (1 defs) | 77 / 0 / 77 | hollow×16, wastes×14, temple×8 | **MOVE → dll/** | fuelCell 14 non-CF maps (#1 hollow×16) — shared global |
-| `dll_0124_deathgas.c` | 0x124 | deathGas (2 defs) | 2 / 1 / 1 | linke×1 | **STAY** | deathGas #1 map fortress (CF), 1×fortress + 1×linke — CF top, small-N |
-| `dll_0127_dll127.c` | 0x127 | — | 0 / 0 / 0 | — | **STAY** | no retail name + 0 placements; CF address-lane orphan |
-| `dll_0128_kttorch.c` | 0x128 | KT_Torch (10 defs) | 25 / 0 / 25 | snowmines×14, snowmines2×5, trexboss×4 | **MOVE → dll/** | KT_Torch+DIM/WC/Trex door/torch DLL #1 snowmines; KT dir absent — shared global |
-| `dll_0129_campfire.c` | 0x129 | CampFire (1 defs) | 4 / 0 / 4 | wastes×3, linkb×1 | **MOVE → dll/** | CampFire #1 wastes — no CF |
-| `dll_012A_cfcrate.c` | 0x12A | CFCrate (37 defs) | 42 / 0 / 42 | kraztest×18, linkf×16, temple×3 | **STAY** | canonical CFCrate (CF* prefix) — name-prefix rule precedence (shared-asset DLL but CF-named primary) |
-| `dll_012B_fxemit.c` | 0x12B | FXEmit (1 defs) | 189 / 15 / 174 | kraztest×36, temple×34, wgshrine×17 | **MOVE → dll/** | FXEmit #1 kraztest; 15/189 CF (8%) — general effect emitter, not predominantly CF |
-| `dll_012C_transporter.c` | 0x12C | KP_Transpor (2 defs) | 35 / 0 / 35 | kraztest×5, warlock×5, mazecave×4 | **MOVE → dll/** | Transporter 20 non-CF maps (#1 kraztest) — spread global |
-| `dll_012D_lfxemitter.c` | 0x12D | LFXEmitter (1 defs) | 2 / 0 / 2 | trexboss×2 | **MOVE → dll/** | LFXEmitter trexboss only — no CF |
-| `dll_0130_areafxemit.c` | 0x130 | AreaFXEmit (2 defs) | 56 / 5 / 51 | moonpass×10, galleonship×7, hollow2×6 | **MOVE → dll/** | AreaFXEmit #1 moonpass; 5/56 CF (9%) — general area-effect emitter |
-| `dll_0236_dfplaserbe.c` | 0x236 | DFP_LaserBe (1 defs) | 0 / 0 / 0 | — | **MOVE → dll/** | DFP_LaserBe (Dark Fortress Pit) 0 placements; DFP dir absent — not CF |
-| `dll_0237_dfpsppl.c` | 0x237 | DFPSpPl (1 defs) | 2 / 0 / 2 | kraztest×2 | **MOVE → dll/** | DFPSpPl (Dark Fortress Pit) kraztest only; DFP dir absent — not CF |
-| `warppad.c` | — | — (helper, no descriptor) | 0 / 0 / 0 | — | **STAY** | `warpPad_*` helper sliver in CF address-lane (between lfxemitter/transporter), no own descriptor |
-
-**Summary: 8 STAY, 27 MOVE → `main/dll/` root.**
-
-STAY (genuinely CF): `dll_010A_fallladders` (fortress-only),
-`dll_0124_deathgas` (fortress top), `dll_012A_cfcrate` (CFCrate name),
-`staffactivated_helpers` (was `CFPrisonGuard`; staffactivated 0x11C
-front helper sliver), `dll_0107_unused` / `dll_0109_unk` /
-`dll_0127_dll127` / `warppad` (no-name CF address-lane orphans).
-
-The MOVE set includes every mission-named runtime global — Scarab (0x106),
-EndObject (0x108), PortalSpelldoor (0x10D), Transporter (0x12C),
-FireFlyLantern/LanternFireFly (0x10B/0x10C) — none of which has any CF
-placement. Pure `git mv` of the `.c` only; headers stay in
-`include/main/dll/CF/` (includes are `-I include` root-relative, so moved
-`.c` files keep valid include paths with zero edits — byte-neutral).
-
-Headers NOT moved (shared web inside CF/): `dll_012B_fxemit.h` (also
-included by the staying `dll_012A_cfcrate.c` + `CFchuckobj.h`),
-`dll_012C_transporter.h`, `treasureRelated0177.h` (shared
-campfire/kttorch/dll127), `lanternfirefly_state.h` (in `CFcrystal.h`),
-and the shared `CFguardian.h`/`windlift.h`/`CFcrystal.h`/`CFchuckobj.h`/
-`warp_pad.h` headers. These keep their `main/dll/CF/...` include paths.
-
-**Cross-lane observation** (read-only — a project-wide homing pass is a
-separate follow-up): the same donor-inheritance problem visibly exists in
-other lane dirs. `DR/dll_014E_cfprisonguard.c` is a CF-named DLL homed to
-DR/ by address-lane inheritance; `DR/dll_0149_cfwindlift.c` is the
-manifest's own cited precedent for "address-lane beats name prefix."
-The manifest's lane-dir rule (address-lane ownership) directly conflicts
-with retail-placement homing — resolving that project-wide would re-home
-dozens of units across DR/, DIM/, WC/, etc. by the same census method.
-
-## Appendix: CF/ lane-homing audit — INBOUND pass (re-home INTO CF/)
-
-The inverse of the outbound pass: every single-DLL unit project-wide
-OUTSIDE `src/main/dll/CF/` was censused against all 124 retail romlists,
-and units that retail evidence homes INTO CF/ were moved in.
-
-**Method** (`tools/cf_lane_homing.py --all`, generalizes the outbound CF
-mode): census EVERY single-DLL unit under `main/dll/` — retail def
-name(s), DLL id(s), placement distribution across maps — via the same
-gResourceDescriptors → text-fn → splits.txt unit reverse-map. Units
-mapping to >1 DLL id are multi-DLL CONTAINERS, excluded from re-homing
-(they can't move until carved). The verdict uses the unit's MANIFEST
-CANONICAL primary name (the chosen identity), not the first OBJECTS.bin
-sub-def — this is what distinguishes a genuine CF unit from a generic
-multi-def shared global whose #1 placement map is coincidentally
-CF-family.
-
-**Inbound rule** (faithful mirror of the outbound STAY rule): a non-CF/
-single-DLL unit **MOVES → CF/** iff its manifest-canonical primary name
-is `CF*`-prefixed. (The placement-only criterion — "a CF-family map is
-the single #1 placement map" — is subsumed: every unit it would flag
-that ISN'T also CF*-canonical is a generic multi-def shared global, the
-same class the outbound pass kept OUT of CF, e.g. `enemy`/`collectible`/
-`LargeCrate`/`explodable`. See the "candidates rejected" note below.)
-
-placements column = total / CF-family / other.
-
-| unit | dll id | manifest canonical | placements (tot/CF/other) | top maps | verdict |
-|---|---|---|---|---|---|
-| `DR/dll_0148_cfguardian.c` | 0x148 | CFGuardian | 2 / 2 / 0 | clouddungeon×1, fortress×1 | **MOVE → CF/** |
-| `DR/dll_0149_cfwindlift.c` | 0x149 | CFWindLift (+CFTreasWind) | 33 / 5 / 28 | gpshrine×9, warlock×7, moonpass×5, fortress×4 | **MOVE → CF/** |
-| `DR/dll_014A_cfpowerbase.c` | 0x14A | CFPowerBase | 3 / 3 / 0 | fortress×3 | **MOVE → CF/** |
-| `DR/dll_014B_cfmaincrystal.c` | 0x14B | CFMainCrystal | 2 / 2 / 0 | fortress×2 | **MOVE → CF/** |
-| `DR/dll_014E_cfprisonguard.c` | 0x14E | CFPrisonGuard | 1 / 1 / 0 | clouddungeon×1 | **MOVE → CF/** |
-| `DR/dll_014F_cfprisonuncle.c` | 0x14F | CFPrisonUncle | 1 / 1 / 0 | clouddungeon×1 | **MOVE → CF/** |
-| `DR/dll_0153_cfperch.c` | 0x153 | CFPerch | 1 / 1 / 0 | clouddungeon×1 | **MOVE → CF/** |
-| `DR/dll_0154_cfprisoncage.c` | 0x154 | CFPrisonCage (+CFCageSwitc) | 4 / 4 / 0 | clouddungeon×4 | **MOVE → CF/** |
-
-**Summary: 8 MOVE → CF/.** All eight are CF*-canonical single-DLL units
-mis-homed to `DR/` by drift-era address-lane inheritance (DR/ owns the
-0x148–0x15A address run; the CFWindLift case is the manifest header's
-own cited "address-lane beats name prefix" precedent — which this
-retail-evidence pass overrides). Every one is 100%-CF or CF-majority by
-placement (`CFWindLift`'s 33 placements span Cloud-Runner shrine/quest
-maps; the others place at fortress/clouddungeon only). Pure `git mv` of
-the `.c`; no same-stem headers exist for these eight, and all includes
-are `-I include` root-relative (`main/dll/cfguardian_state.h`,
-`main/dll/DR/sandwormBoss.h`, …) so they stay valid with zero edits —
-byte-neutral.
-
-**Candidates REJECTED (placement #1-map is CF-family but unit is a
-shared global — stay put, exactly as the outbound pass treated
-`decoration11a`):**
-
-| unit | manifest canonical | #defs | #1 map | why not CF |
-|---|---|---|---|---|
-| `dll/dll_00C9_enemy.c` | enemy | 29 | fortress×46 | engine enemy DLL, 350 placements / 24 maps — fortress is coincidental #1 |
-| `dll/dll_00ED_collectible.c` | collectible | 44 | snowmines×20 | engine collectible DLL spanning every lane; CF sub-defs are 6/58 |
-| `dll/dll_00F4_doorf4.c` | doorf4 | 15 | temple×11 | generic door DLL (VFP/DFP/WM/…); CF 1/16 |
-| `dll/dll_0105_largecrate.c` | LargeCrate | 4 | fortress×47 | generic crate, 402 placements everywhere; fortress is coincidental #1 |
-| `DR/dll_015A_explodable.c` | explodable | 13 | dragrock×6 | generic explodable-wall DLL (DIM2/LINKE/CC/NW/SH/DR); CF 6/38 |
-| `DR/dll_014C_babycloudrunner.c` | babycloudrunner | 3 | newicemount×6 | CFCloudBaby sub-def, but #1 map non-CF + an SH sub-def; manifest canon is a generic stem |
-| `DR/dll_0266_kytesmum.c` | KytesMum | 1 | fortress×1 | Cloud-Runner NPC but name NOT CF*-prefixed, N=1; DR/ is a defensible home |
-| `LGT/dll_02A9_lgtpointlight.c` | LGTPointLight | 2 | temple×22 | generic point light, 125 placements / 18 maps; CF_WallTorc sub-def 15/125 |
-| `LGT/dll_02AC_lgtcontrollight.c` | LGTControlLight | 1 | clouddungeon×2 | LGT-named control light (LGT/ correct), N=2 |
-| `ARW/dll_01FE_pressureswitch.c` | PressureSwitch | 4 | mmshrine×3 | generic pressure switch (DFP/WM/ECSH); CFPressureS 2/11 |
-| `BW/dll_0255_snowbike.c` | SnowBike | 7 | cloudrace×4 | CR (Cloud-Runner-RACE) sub-defs but generic SnowBike canon; CR/ is its own lane |
-| `WM/dll_020A_wmgeneralscales.c` | WM_GeneralScales | 1 | cloudrace×1 | WM-named (WM/ correct), N=2 |
-| `dll/dll_0293_suntemple.c` | SunTemple | 4 | wallcity×4 | WCSunTemple sub-defs, #1 map WC (wallcity) |
-
-**Blocked-on-carve (CF-named defs inside multi-DLL CONTAINERS — cannot
-move until the container is carved into per-DLL files):**
-
-| container (dir) | CF-named DLL id(s) | example CF defs |
+| dll | current unit | header |
 |---|---|---|
-| `dll/mmp_asteroid_re.c` (root) | 0x12E, 0x131 | CFLightWall, CFLightPill, CFDungeonLi, CFGCrubble*, CF_DoorLigh (per manifest) |
-| `dll/cfguardian.c` (root) | 0x110, 0x111 | CFPrisonDoo, CFTreasureD, CFMainDoorA, CFBrokenPil, CFPowerLock, CFDoubleSwi |
-| `dll/genprops.c` (root) | 0xC6 | CFAnimCloud, CFPrisonCag, CFPowerDoor, CFPowerCrys, CFAnimBaby, CFMainDoorB, CFBrokenPil |
-| `dll/alphaanim.c` (root) | 0x112 | CFGoldenPer, CFseqobject, CFRaceSeqob, CF_BobbingC, CFLandingPa |
-| `IM/IMicicle.c` (IM) | 0x15B, 0x15D, 0x15F, 0x162, 0x164, 0x166 | CFForceFiel, CFSlideDoor, CFAttractor, CFMagicWall, CFLevelCont, CFbrokenGra |
-| `TREX/TREX_trex.c` (TREX) | 0x1F4, 0x1F5 | CF_Lamp, CF_generals |
-| `dll/cfprisonuncle.c` (root) | 0x118 | (id 0x118, #1 map fortress) |
-
-(`cfguardian.c` / `cfprisonuncle.c` at the dll/ ROOT are the v1.1-named
-donor CONTAINERS hosting many CF defs — distinct from the eight DR/
-single-DLL `dll_014X_*` units moved above.)
-
-### Final `src/main/dll/CF/` listing (after inbound moves)
-
-8 prior residents (`staffactivated_helpers.c` [was `CFPrisonGuard.c`],
-`dll_0107_unused.c`, `dll_0109_unk.c`, `dll_010A_fallladders.c`,
-`dll_0124_deathgas.c`, `dll_0127_dll127.c`, `dll_012A_cfcrate.c`,
-`warppad.c`) + 8 inbound
-(`dll_0148_cfguardian.c`, `dll_0149_cfwindlift.c`,
-`dll_014A_cfpowerbase.c`, `dll_014B_cfmaincrystal.c`,
-`dll_014E_cfprisonguard.c`, `dll_014F_cfprisonuncle.c`,
-`dll_0153_cfperch.c`, `dll_0154_cfprisoncage.c`) = **16 CF/ residents.**
-
-## Appendix: project-wide lane-mismatch census (homing roadmap)
-
-`tools/cf_lane_homing.py --all` now censuses every single-DLL unit's
-evidenced lane (manifest-canonical name prefix → existing lane dir) vs
-its current dir. Beyond the 8 INBOUND-CF above, **10 units** sit in a
-lane dir contradicting their name-prefix evidence — the roadmap for the
-project-wide homing follow-up (same byte-neutral `git mv` mechanics):
-
-| unit | manifest canonical | current dir | evidenced lane | top map |
-|---|---|---|---|---|
-| `ARW/dll_01FD_wmlasertarget.c` | WM_LaserTarget | ARW | WM | warlock×1 |
-| `ARW/dll_0201_wmcolrise.c` | WM_colrise | ARW | WM | warlock×2 |
-| `ARW/dll_0204_wmtorch.c` | WM_Torch | ARW | WM | (no placements) |
-| `LGT/dll_0207_wmworm.c` | WM_Worm | LGT | WM | (no placements) |
-| `WC/dll_01F9_wmobjcreator.c` | WM_ObjCreator | WC | WM | (no placements) |
-| `IM/dll_01AE_shlevelcontrol.c` | SH_LevelControl | IM | SH | hollow×1 |
-| `IM/dll_01AF_shswaplift.c` | SH_swaplift | IM | SH | hollow×1 |
-| `SC/dll_01AD_shthorntail.c` | SH_thorntail | SC | SH | hollow×56 |
-| `SC/dll_01B0_shswapston.c` | SH_swapston | SC | SH | hollow×1 |
-| `dll/dll_0195_dbshshrine.c` | DBSH_Shrine | (root) | DB | dbshrine×1 |
-
-These are NAME-prefix mismatches (the unit sits in a lane dir whose
-prefix it doesn't carry); a full project-wide pass would also re-evaluate
-the address-lane-vs-placement question for the multi-DLL containers
-(`tools/cf_lane_homing.py --all` lists all 77). This inbound pass moves
-only the 8 CF cases; the table above is the documented roadmap, not yet
-executed.
-
-## Appendix: name-collision census (helper/donor `.c` vs canonical `dll_XXXX_<stem>.c`)
-
-Every `src/main/dll/**/*.c` whose stem (CamelCase or lowercase, no
-`dll_` prefix) matches a canonical `dll_XXXX_<stem>.c` case-insensitively.
-The mission distinguishes the GENUINE helper-vs-real-DLL collision (a
-NO-descriptor sliver named after an UNRELATED real DLL — rename now) from
-the much larger content-mislabel / donor-inheritance class (a deferred
-project-wide forensic homing pass). 23 collisions found; **1 renamed, 22
-deferred** (rationale per class below).
-
-**RENAMED (genuine no-descriptor helper collision):**
-- `CF/CFPrisonGuard.c` → `CF/staffactivated_helpers.c` — no descriptor;
-  content is the staffactivated (0x11C) DLL's front sliver; collided with
-  the unrelated real `CF/dll_014E_cfprisonguard.c` (0x14E). The
-  `cfPrisonGuard_*` fn prefix is KEPT (CONFIRMED-grade: genuine
-  player.c-facing prison-guard-lift API, not drift).
-
-**DEFERRED — content-mislabeled donor files (own a descriptor; the FILENAME
-contradicts the file's CONTENT; need per-file forensic content homing +
-descriptor renumber — the manifest's deferred project-wide homing pass,
-NOT a style-only rename):**
-- `cfguardian.c` (content `pressureswitchfb_*`/`mmp_bridge_*`, DLL 0xFB) —
-  vs real `CF/dll_0148_cfguardian.c`
-- `cfprisonuncle.c` (content `MagicPlant_*`/`duster_*`) — vs real
-  `CF/dll_014F_cfprisonuncle.c`
-- `DR/hightop.c` (content `cloudprisoncontrol_*`/`Trigger_*`) — vs real
-  `DR/dll_0272_hightop.c`
-- `DR/DRcloudrunner.c` (content `sc_*`) — vs real `DR/dll_0258_drcloudrunner.c`
-- `pressureSwitch.c` (content `hagabon_*`/`swarmbaddie_*`) — vs real
-  `ARW/dll_01FE_pressureswitch.c`
-- `wallanimator.c` (content `kaldachompspit_*`/`kaldachompme_*`) — vs real
-  `MMP/dll_013B_wallanimator.c`
-- `scarab.c` (descriptor-owning, donor-named) — vs real `dll_0106_scarab.c`
-- `baddie/Tumbleweed.c` (multi-DLL container, `titlescreen_*` etc.) — vs
-  real `dll_00D2_tumbleweed.c`
-
-**DEFERRED — donor/sliver files matching a same-themed canonical DLL
-(likely the same DLL's other-address portion or a same-family donor; honest
-content name + STAY/MOVE verdict each needs its own evidence, low style-only
-ROI):** `cfperch.c`, `DR/DRshackle.c`, `LGT/LGTcontrollight.c`,
-`SH/SHthorntail.c` (note: collides with `SC/dll_01AD_shthorntail.c` — a
-lane-dir cross-match too), `WC/WCbeacon.c`, `WC/WCpushblock.c`,
-`baddie/wispBaddie.c`, `blasted.c`, `fireflyLantern.c`, `infopoint.c`,
-`landedArwing.c`, `smallbasket.c`, `tricky.c`, `tumbleweedbush.c`.
-
-`CF/warppad.c` was checked and ALREADY CONFORMS to the no-descriptor
-helper-TU rule (lowercase, no `dll_` prefix, descriptive `warppad` stem,
-no collision) — no rename. The 22 deferred entries are tracked here as the
-documented follow-up; renaming them requires the forensic content verdict
-+ descriptor-renumber work the manifest defers project-wide, not a
-mechanical style fix.
+| 0x12A | main/dll/dll_012A_cfcrate.c | include/main/dll/CF/dll_012A_cfcrate.h |
+| 0x17B | main/dll/dll_017B_dfshlaserbeam.c | include/main/dll/dll_017B_dfshlaserbeam.h |
+| 0x18C | main/dll/dll_018C_mmshshrine.c | include/main/dll/dll_018C_mmshshrine.h |
+| 0x198 | main/dll/dll_0198_nwshlevcon.c | include/main/dll/dll_0198_nwshlevcon.h |
+| 0x19F | main/dll/dll_019F_nwtreebrid.c | include/main/dll/dll_019F_nwtreebrid.h |
+| 0x1A0 | main/dll/dll_01A0_nwgeyser.c | include/main/dll/dll_01A0_nwgeyser.h |
+| 0x1A1 | main/dll/dll_01A1_nwmammoth.c | include/main/dll/dll_01A1_nwmammoth.h |
+| 0x1A8 | main/dll/dll_01A8_shkillermushroom.c | include/main/dll/dll_01A8_shkillermushroom.h |
+| 0x1AC | main/dll/dll_01AC_shqueenearthwalker.c | include/main/dll/SH/dll_01AC_shqueenearthwalker.h |
+| 0x1AE | main/dll/dll_01AE_shlevelcontrol.c | include/main/dll/IM/dll_01AE_shlevelcontrol.h |
+| 0x1B0 | main/dll/dll_01B0_shswapston.c | include/main/dll/SC/dll_01B0_shswapston.h |
+| 0x1E0 | main/dll/dll_01E0_dimboss.c | include/main/dll/DIM/dll_01E0_dimboss.h |
+| 0x1E1 | main/dll/dll_01E1_dimbossgut.c | include/main/dll/DIM/dll_01E1_dimbossgut.h |
+| 0x1E2 | main/dll/dll_01E2_dimbosstonsil.c | include/main/dll/dll_01E2_dimbosstonsil.h |
+| 0x1F9 | main/dll/dll_01F9_wmobjcreator.c | include/main/dll/WC/dll_01F9_wmobjcreator.h |
+| 0x207 | main/dll/dll_0207_wmworm.c | include/main/dll/LGT/dll_0207_wmworm.h |
+| 0x22F | main/dll/dll_022F_dfpfloorbar.c | include/main/dll/baddie/dll_022F_dfpfloorbar.h |
+| 0x235 | main/dll/dll_0235_dfptargetblock.c | include/main/dll/dll_0235_dfptargetblock.h |
+| 0x259 | main/dll/dll_0259_sbcloudrunner.c | include/main/dll/WC/dll_0259_sbcloudrunner.h |
+| 0x287 | main/dll/dll_0287_spscarab.c | include/main/dll/DR/dll_0287_spscarab.h |

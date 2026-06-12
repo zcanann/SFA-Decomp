@@ -911,7 +911,7 @@ main/dll/dll_0040_credits.c:
 main/dll/dll_0041_warpstoneui.c:
 	.text       start:0x801343CC end:0x80134870
 
-main/dll/dll_02C0_frontfox.c:
+main/dll/dll_02C0_front.c:
 	.text       start:0x80134870 end:0x80136A40
 
 main/dll/dll_80136A40.c:
@@ -1050,7 +1050,7 @@ main/dll/dll_00D5_kaldachom.c:
 main/dll/dll_00D6_kaldachomme.c:
 	.text       start:0x80169360 end:0x801696D4
 
-main/dll/dll_00D7_kaldachomsp.c:
+main/dll/dll_00D7_kaldachompspit.c:
 	.text       start:0x801696D4 end:0x80169EF4
 
 main/dll/dll_00D8_pinponspike.c:
@@ -1059,49 +1059,49 @@ main/dll/dll_00D8_pinponspike.c:
 main/dll/dll_00D9_pollen.c:
 	.text       start:0x8016A3C8 end:0x8016A8E0
 
-main/dll/dll_00DA_pollenfragm.c:
+main/dll/dll_00DA_pollenfragment.c:
 	.text       start:0x8016A8E0 end:0x8016B230
 
 main/dll/dll_00DB_mikabomb.c:
 	.text       start:0x8016B230 end:0x8016B710
 
-main/dll/dll_00DC_mikabombsha.c:
+main/dll/dll_00DC_mikabombshadow.c:
 	.text       start:0x8016B710 end:0x8016B898
 
-main/dll/dll_025A_staticcamer.c:
+main/dll/dll_025A_staticcamera.c:
 	.text       start:0x8016B898 end:0x8016B99C
 
-main/dll/dll_00DD_gcbaddieshi.c:
+main/dll/dll_00DD_gcbaddieshield.c:
 	.text       start:0x8016B99C end:0x8016BB10
 
-main/dll/dll_00DE_baddieinter.c:
+main/dll/dll_00DE_baddieinterestp.c:
 	.text       start:0x8016BB10 end:0x8016BE70
 
-main/dll/dll_00C6_animdummy.c:
+main/dll/dll_00C6_animatedobj.c:
 	.text       start:0x8016BE70 end:0x8016C4AC
 
 main/dll/dll_00C7_dim2roofrub.c:
 	.text       start:0x8016C4AC end:0x8016CD48
 
-main/dll/dll_00C8_depthoffiel.c:
+main/dll/dll_00C8_depthoffieldpoint.c:
 	.text       start:0x8016CD48 end:0x8016CEE8
 
-main/dll/dll_00E2_sword.c:
+main/dll/dll_00E2_staff.c:
 	.text       start:0x8016CEE8 end:0x8016F16C
 
-main/dll/dll_00E3_projball.c:
+main/dll/dll_00E3_fireball.c:
 	.text       start:0x8016F16C end:0x80170004
 
-main/dll/dll_00E4_flamethrowe.c:
+main/dll/dll_00E4_flamethrowerspe.c:
 	.text       start:0x80170004 end:0x801702D4
 
-main/dll/dll_00E5_foxshield.c:
+main/dll/dll_00E5_shield.c:
 	.text       start:0x801702D4 end:0x80171300
 
 main/dll/dll_0125_curve.c:
 	.text       start:0x80171300 end:0x801713D8
 
-main/dll/dll_00E6_restartmark.c:
+main/dll/dll_00E6_restartmarker.c:
 	.text       start:0x801713D8 end:0x801713FC
 
 main/dll/dll_00F7_dllf7.c:
@@ -1122,7 +1122,7 @@ main/dll/dll_00E9_setuppoint.c:
 main/dll/dll_00ED_collectible.c:
 	.text       start:0x80171D14 end:0x80173224
 
-main/dll/dll_00FF_magicdustsm.c:
+main/dll/dll_00FF_magicdust.c:
 	.text       start:0x80173224 end:0x80173F80
 
 main/dll/dll_00EE_effectbox.c:
@@ -1134,7 +1134,7 @@ main/dll/dll_80174438.c:
 main/dll/dll_00EF_pushable.c:
 	.text       start:0x80174A80 end:0x80176FC4
 
-main/dll/dll_00F0_mmpwarppoi.c:
+main/dll/dll_00F0_warppoint.c:
 	.text       start:0x80176FC4 end:0x8017779C
 
 main/dll/dll_00F1_invhit.c:
@@ -1158,31 +1158,31 @@ main/dll/dll_00F6_area.c:
 main/dll/dll_00F8_levelname.c:
 	.text       start:0x8017A048 end:0x8017A350
 
-main/dll/dll_00F9_drprojectil.c:
+main/dll/dll_00F9_projectileswitch.c:
 	.text       start:0x8017A350 end:0x8017A8EC
 
-main/dll/dll_00FA_invisiblehi.c:
+main/dll/dll_00FA_invisiblehitswitch.c:
 	.text       start:0x8017A8EC end:0x8017AC2C
 
 main/dll/dll_147.c:
 	.text       start:0x8017AC2C end:0x8017AC2C
 
-main/dll/dll_00FB_wctemplepre.c:
+main/dll/dll_00FB_pressureswitchfb.c:
 	.text       start:0x8017AC2C end:0x8017B5C8
 
-main/dll/dll_0110_ktrexdoorp.c:
+main/dll/dll_0110_door.c:
 	.text       start:0x8017B5C8 end:0x8017BB80
 
 main/dll/dll_010F_mmpbridge.c:
 	.text       start:0x8017BB80 end:0x8017BCF8
 
-main/dll/dll_0111_cfpowerlock.c:
+main/dll/dll_0111_doorlock.c:
 	.text       start:0x8017BCF8 end:0x8017C294
 
-main/dll/dll_0112_bossdrakor.c:
+main/dll/dll_0112_seqobject.c:
 	.text       start:0x8017C294 end:0x8017C7A4
 
-main/dll/dll_0113_cameranewse.c:
+main/dll/dll_0113_seqobj2.c:
 	.text       start:0x8017C7A4 end:0x8017CBDC
 
 main/dll/dll_0114_immultiseq.c:
@@ -1342,13 +1342,13 @@ main/dll/dll_012C_transporter.c:
 main/dll/moonseedbush.c:
 	.text       start:0x80191A70 end:0x80191A70
 
-main/dll/dll_012E_laserturret.c:
+main/dll/dll_012E_cflightwall.c:
 	.text       start:0x80191A70 end:0x80191B60
 
-main/dll/dll_012F_nwcallofeld.c:
+main/dll/dll_012F_barrelpad.c:
 	.text       start:0x80191B60 end:0x80191D00
 
-main/dll/dll_0131_cfdoorligh.c:
+main/dll/dll_0131_cfdoorlight.c:
 	.text       start:0x80191D00 end:0x80191F2C
 
 main/dll/holoPoint.c:
@@ -1360,13 +1360,13 @@ main/dll/dll_0134_texscroll2.c:
 main/dll/dll_0135_texscroll.c:
 	.text       start:0x801922E4 end:0x80192394
 
-main/dll/dll_0136_waveanimato.c:
+main/dll/dll_0136_waveanimator.c:
 	.text       start:0x80192394 end:0x80192A68
 
-main/dll/dll_0137_alphaanimat.c:
+main/dll/dll_0137_alphaanimator.c:
 	.text       start:0x80192A68 end:0x80193100
 
-main/dll/dll_0138_groundanima.c:
+main/dll/dll_0138_groundanimator.c:
 	.text       start:0x80193100 end:0x80193DBC
 
 main/dll/dll_0139_hitanimator.c:
@@ -1381,13 +1381,13 @@ main/dll/dll_013B_wallanimator.c:
 main/dll/dll_013C_xyzanimator.c:
 	.text       start:0x801948C0 end:0x801962C8
 
-main/dll/dll_013D_explodeanim.c:
+main/dll/dll_013D_explodeanimator.c:
 	.text       start:0x801962C8 end:0x80196520
 
-main/dll/dll_013E_dimbossices.c:
+main/dll/dll_013E_dimbossicesmash.c:
 	.text       start:0x80196520 end:0x8019718C
 
-main/dll/dll_013F_texframeani.c:
+main/dll/dll_013F_texframeanimator.c:
 	.text       start:0x8019718C end:0x8019742C
 
 main/dll/dll_0140_fogcontrol.c:
@@ -1396,7 +1396,7 @@ main/dll/dll_0140_fogcontrol.c:
 main/dll/dll_0141_lightning.c:
 	.text       start:0x801978A0 end:0x80197DA8
 
-main/dll/dll_0132_waterfallsp.c:
+main/dll/dll_0132_waterfallspray.c:
 	.text       start:0x80197DA8 end:0x80198194
 
 main/dll/dll_0133_sfxplayer.c:
@@ -1408,10 +1408,10 @@ main/dll/dll_80198A00.c:
 main/dll/MMP_gyservent.c:
 	.text       start:0x80198FA4 end:0x801993B0
 
-main/dll/dll_0126_trigpnt.c:
+main/dll/dll_0126_trigger.c:
 	.text       start:0x801993B0 end:0x8019AA7C
 
-main/dll/dll_0145_cloudprison.c:
+main/dll/dll_0145_cloudprisoncontrol.c:
 	.text       start:0x8019AA7C end:0x8019AE3C
 
 main/dll/dll_0148_cfguardian.c:
@@ -1456,49 +1456,49 @@ main/dll/dll_0159_blasted.c:
 main/dll/dll_015A_explodable.c:
 	.text       start:0x801A2BDC end:0x801A39B4
 
-main/dll/dll_015B_cfforcefiel.c:
+main/dll/dll_015B_cfforcefield.c:
 	.text       start:0x801A39B4 end:0x801A3E9C
 
-main/dll/dll_015D_cfslidedoor.c:
+main/dll/dll_015D_slidingdoor.c:
 	.text       start:0x801A3E9C end:0x801A41D8
 
-main/dll/dll_015F_cfattractor.c:
+main/dll/dll_015F_attractor.c:
 	.text       start:0x801A41D8 end:0x801A4380
 
 main/dll/dll_0162_cfmagicwall.c:
 	.text       start:0x801A4380 end:0x801A4524
 
-main/dll/dll_0164_cflevelcont.c:
+main/dll/dll_0164_cflevelcontrol.c:
 	.text       start:0x801A4524 end:0x801A4DB8
 
-main/dll/dll_0166_cfbrokengra.c:
+main/dll/dll_0166_exploded.c:
 	.text       start:0x801A4DB8 end:0x801A57E8
 
-main/dll/dll_0167_spiritdoorl.c:
+main/dll/dll_0167_spiritdoorlock.c:
 	.text       start:0x801A57E8 end:0x801A5D88
 
-main/dll/dll_017D_dim2barrel.c:
+main/dll/dll_017D_rollingbarrel.c:
 	.text       start:0x801A5D88 end:0x801A6638
 
-main/dll/dll_017E_mmplevelco.c:
+main/dll/dll_017E_mmplevelcontrol.c:
 	.text       start:0x801A6638 end:0x801A6C28
 
-main/dll/dll_017F_msbush.c:
+main/dll/dll_017F_moonseedbush.c:
 	.text       start:0x801A6C28 end:0x801A6F4C
 
-main/dll/dll_0180_mmpasteroi.c:
+main/dll/dll_0180_mmpasteroidre.c:
 	.text       start:0x801A6F4C end:0x801A78C8
 
-main/dll/dll_0182_mmpmoonroc.c:
+main/dll/dll_0182_mmpmoonrock.c:
 	.text       start:0x801A78C8 end:0x801A8A40
 
-main/dll/dll_0181_mmptrenchf.c:
+main/dll/dll_0181_mmptrenchfx.c:
 	.text       start:0x801A8A40 end:0x801A8E24
 
-main/dll/dll_0183_mmpgyserve.c:
+main/dll/dll_0183_mmpgyservent.c:
 	.text       start:0x801A8E24 end:0x801A8F88
 
-main/dll/dll_0184_dimanimshar.c:
+main/dll/dll_0184_animsharpclaw.c:
 	.text       start:0x801A8F88 end:0x801A9468
 
 main/dll/dll_025B_msplantings.c:
@@ -1507,7 +1507,7 @@ main/dll/dll_025B_msplantings.c:
 main/dll/dll_0185_ccgasvent.c:
 	.text       start:0x801A9E74 end:0x801A9FA8
 
-main/dll/dll_0186_ccgasventco.c:
+main/dll/dll_0186_ccgasventcontrol.c:
 	.text       start:0x801A9FA8 end:0x801AA558
 
 main/dll/dll_0187_ccqueen.c:
@@ -1516,25 +1516,25 @@ main/dll/dll_0187_ccqueen.c:
 main/dll/dll_0188_cclightfoot.c:
 	.text       start:0x801AA734 end:0x801AB468
 
-main/dll/dll_0189_ccsharpclaw.c:
+main/dll/dll_0189_ccsharpclawpad.c:
 	.text       start:0x801AB468 end:0x801AB6F8
 
 main/dll/dll_018A_ccpedstal.c:
 	.text       start:0x801AB6F8 end:0x801ABA84
 
-main/dll/dll_018B_cclevcontro.c:
+main/dll/dll_018B_cclevcontrol.c:
 	.text       start:0x801ABA84 end:0x801AC01C
 
 main/dll/dll_801AC01C.c:
 	.text       start:0x801AC01C end:0x801AC248
 
-main/dll/dll_0169_imicemounta.c:
+main/dll/dll_0169_imicemountain.c:
 	.text       start:0x801AC248 end:0x801ACCFC
 
 main/dll/dll_016A_crrockfall.c:
 	.text       start:0x801ACCFC end:0x801AD440
 
-main/dll/dll_016B_dimmagiclig.c:
+main/dll/dll_016B_magiclight.c:
 	.text       start:0x801AD440 end:0x801AD7E4
 
 main/dll/dll_016C_dll16c.c:
@@ -1543,25 +1543,25 @@ main/dll/dll_016C_dll16c.c:
 main/dll/dll_016D_imicepillar.c:
 	.text       start:0x801AE0EC end:0x801AE144
 
-main/dll/dll_016E_imanimspace.c:
+main/dll/dll_016E_imanimspacecraft.c:
 	.text       start:0x801AE144 end:0x801AE508
 
-main/dll/dll_016F_imspacethru.c:
+main/dll/dll_016F_imspacethruster.c:
 	.text       start:0x801AE508 end:0x801AE984
 
 main/dll/dll_0170_imspacering.c:
 	.text       start:0x801AE984 end:0x801AEAE4
 
-main/dll/dll_0171_imspacering.c:
+main/dll/dll_0171_imspaceringgen.c:
 	.text       start:0x801AEAE4 end:0x801AEE2C
 
-main/dll/dll_0172_linkblevco.c:
+main/dll/dll_0172_linkblevcontrol.c:
 	.text       start:0x801AEE2C end:0x801AF568
 
-main/dll/dll_0173_linklevcon.c:
+main/dll/dll_0173_linklevcontrol.c:
 	.text       start:0x801AF568 end:0x801AF9E4
 
-main/dll/dll_01BE_dimlavaball.c:
+main/dll/dll_01BE_dimlava.c:
 	.text       start:0x801AF9E4 end:0x801B02BC
 
 main/dll/dll_01BF_dimlavaball.c:
@@ -1576,7 +1576,7 @@ main/dll/dll_01C1_dimsnowball.c:
 dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c:
 	.text       start:0x801B13E8 end:0x801B13E8
 
-main/dll/dll_01C2_dimsnowball.c:
+main/dll/dll_01C2_dimsnowball1c2.c:
 	.text       start:0x801B13E8 end:0x801B15D8
 
 main/dll/dll_01C3_dimgate.c:
@@ -1597,28 +1597,28 @@ main/dll/DIMwooddoor.c:
 main/dll/dll_01C6_dimcannon.c:
 	.text       start:0x801B2550 end:0x801B3344
 
-main/dll/dll_01C7_dimlavasmas.c:
+main/dll/dll_01C7_dimlavasmash.c:
 	.text       start:0x801B3344 end:0x801B3768
 
-main/dll/dll_01C8_dimbridgeco.c:
+main/dll/dll_01C8_dimbridgecogmai.c:
 	.text       start:0x801B3768 end:0x801B3A68
 
-main/dll/dll_01C9_dimdismount.c:
+main/dll/dll_01C9_dimdismountpoint.c:
 	.text       start:0x801B3A68 end:0x801B3DE4
 
-main/dll/dll_01CA_dimexplosio.c:
+main/dll/dll_01CA_dimexplosion.c:
 	.text       start:0x801B3DE4 end:0x801B57BC
 
-main/dll/dll_01CB_dimwooddoor.c:
+main/dll/dll_01CB_dimwooddoor2.c:
 	.text       start:0x801B57BC end:0x801B5A28
 
 main/dll/dll_01CE_dll1ce.c:
 	.text       start:0x801B5A28 end:0x801B5D48
 
-main/dll/dll_01CC_dimmagicbri.c:
+main/dll/dll_01CC_dimmagicbridge.c:
 	.text       start:0x801B5D48 end:0x801B63F4
 
-main/dll/dll_01CD_dimlevelco.c:
+main/dll/dll_01CD_dimlevelcontrol.c:
 	.text       start:0x801B63F4 end:0x801B6B44
 
 main/dll/dll_01CF_dll1cf.c:
@@ -1627,19 +1627,19 @@ main/dll/dll_01CF_dll1cf.c:
 main/dll/dll_01D0_dimtricky.c:
 	.text       start:0x801B6C2C end:0x801B6D40
 
-main/dll/dll_01D1_dimtruthhor.c:
+main/dll/dll_01D1_dimtruthhornice.c:
 	.text       start:0x801B6D40 end:0x801B7154
 
-main/dll/dll_01D5_dim2conveyo.c:
+main/dll/dll_01D5_dim2conveyor.c:
 	.text       start:0x801B7154 end:0x801B75B8
 
 main/dll/dll_01D6_dll1d6.c:
 	.text       start:0x801B75B8 end:0x801B7D48
 
-main/dll/dll_01D7_dim2snowbal.c:
+main/dll/dll_01D7_dim2snowball.c:
 	.text       start:0x801B7D48 end:0x801B837C
 
-main/dll/dll_01D8_dim2pathgen.c:
+main/dll/dll_01D8_dim2pathgenerator.c:
 	.text       start:0x801B837C end:0x801B8798
 
 main/dll/dll_01DA_dll1da.c:
@@ -1654,7 +1654,7 @@ main/dll/dll_01DC_dim2icefloe.c:
 main/dll/dll_01DD_dim2icicle.c:
 	.text       start:0x801B93FC end:0x801B9810
 
-main/dll/dll_01DE_dim2lavacon.c:
+main/dll/dll_01DE_dim2lavacontrol.c:
 	.text       start:0x801B9810 end:0x801B9CB4
 
 main/dll/dll_01DF_dll1df.c:
@@ -1689,16 +1689,16 @@ main/dll/dll_01E2_dimbosstonsil.c:
 main/dll/mmsh_waterspike.c:
 	.text       start:0x801BEEA0 end:0x801BF048
 
-main/dll/dll_01E3_dimbossgut.c:
+main/dll/dll_01E3_dimbossgut2.c:
 	.text       start:0x801BF048 end:0x801BF8D8
 
-main/dll/dll_01E5_dimbossspi.c:
+main/dll/dll_01E5_dimbossspit.c:
 	.text       start:0x801BF8D8 end:0x801BFFF4
 
 main/dll/dll_01E4_magicmaker.c:
 	.text       start:0x801BFFF4 end:0x801C02B8
 
-main/dll/dll_01E6_dimbosscrac.c:
+main/dll/dll_01E6_dimbosscrackpar.c:
 	.text       start:0x801C02B8 end:0x801C04B8
 
 main/dll/dll_01E7_dimbossfire.c:
@@ -1743,19 +1743,19 @@ main/dll/dll_018C_mmshshrine.c:
 main/dll/dll_018D_mmshscales.c:
 	.text       start:0x801C53A0 end:0x801C578C
 
-main/dll/dll_018E_mmshwaters.c:
+main/dll/dll_018E_mmshwaterspike.c:
 	.text       start:0x801C578C end:0x801C5990
 
 main/dll/dll_018F_ecshshrine.c:
 	.text       start:0x801C5990 end:0x801C6E0C
 
-main/dll/dll_0191_ecshcreato.c:
+main/dll/dll_0191_ecshcreator.c:
 	.text       start:0x801C6E0C end:0x801C70F0
 
 main/dll/dll_0192_gpshshrine.c:
 	.text       start:0x801C70F0 end:0x801C8084
 
-main/dll/dll_0193_gpshobjcre.c:
+main/dll/dll_0193_gpshobjcreator.c:
 	.text       start:0x801C8084 end:0x801C82C8
 
 main/dll/dll_0194_gpshscene.c:
@@ -1812,13 +1812,13 @@ main/dll/dll_01A1_nwmammoth.c:
 main/dll/dll_01A2_nwtricky.c:
 	.text       start:0x801CF78C end:0x801CFB24
 
-main/dll/dll_01A3_nwanimice1.c:
+main/dll/dll_01A3_nwanimice.c:
 	.text       start:0x801CFB24 end:0x801CFBB4
 
-main/dll/dll_01A4_nwice1.c:
+main/dll/dll_01A4_nwice.c:
 	.text       start:0x801CFBB4 end:0x801CFD68
 
-main/dll/dll_01A5_nwlevcontr.c:
+main/dll/dll_01A5_nwlevcontrol.c:
 	.text       start:0x801CFD68 end:0x801D069C
 
 main/dll/dll_01A6_shtricky.c:
@@ -1842,10 +1842,10 @@ main/dll/dll_01A8_shkillermushroom.c:
 main/dll/dll_01A9_bombplant.c:
 	.text       start:0x801D286C end:0x801D3378
 
-main/dll/dll_01AA_bombplantsp.c:
+main/dll/dll_01AA_bombplantspore.c:
 	.text       start:0x801D3378 end:0x801D3FF4
 
-main/dll/dll_01AB_bombplantin.c:
+main/dll/dll_01AB_bombplantingspot.c:
 	.text       start:0x801D3FF4 end:0x801D4198
 
 main/dll/dll_801D4198.c:
@@ -1890,25 +1890,25 @@ main/dll/dll_01AF_shswaplift.c:
 main/dll/dll_01B1_shstaff.c:
 	.text       start:0x801D9B1C end:0x801DA8C4
 
-main/dll/dll_01B2_shstaffhaz.c:
+main/dll/dll_01B2_shstaffhaze.c:
 	.text       start:0x801DA8C4 end:0x801DA954
 
 main/dll/dll_01B3_shbeacon.c:
 	.text       start:0x801DA954 end:0x801DAFA4
 
-main/dll/dll_01B4_shemptytum.c:
+main/dll/dll_01B4_shemptytumblew.c:
 	.text       start:0x801DAFA4 end:0x801DB098
 
-main/dll/dll_01B6_sclevelcon.c:
+main/dll/dll_01B6_sclevelcontrol.c:
 	.text       start:0x801DB098 end:0x801DBFA0
 
-main/dll/dll_01B7_scmusictre.c:
+main/dll/dll_01B7_scmusictree.c:
 	.text       start:0x801DBFA0 end:0x801DC8D4
 
-main/dll/dll_01B8_sctotempol.c:
+main/dll/dll_01B8_sctotempole.c:
 	.text       start:0x801DC8D4 end:0x801DCC70
 
-main/dll/dll_01B9_sccloudrun.c:
+main/dll/dll_01B9_sccloudrunnera.c:
 	.text       start:0x801DCC70 end:0x801DD170
 
 main/dll/dll_801DD170.c:
@@ -1920,10 +1920,10 @@ main/dll/dll_01BA_sctotempuzzle.c:
 main/dll/dll_01BB_sctotembond.c:
 	.text       start:0x801DDA28 end:0x801DE430
 
-main/dll/dll_01BC_sctotemstr.c:
+main/dll/dll_01BC_sctotemstrength.c:
 	.text       start:0x801DE430 end:0x801DF110
 
-main/dll/dll_01BD_scpaypoint.c:
+main/dll/dll_01BD_paymentkiosk.c:
 	.text       start:0x801DF110 end:0x801DF4AC
 
 main/dll/draghead.c:
@@ -1935,7 +1935,7 @@ main/dll/lavaflow.c:
 main/dll/dll_0143_feseqobject.c:
 	.text       start:0x801DF4AC end:0x801DF934
 
-main/dll/dll_0142_felevcontro.c:
+main/dll/dll_0142_felevcontrol.c:
 	.text       start:0x801DF934 end:0x801DF9AC
 
 main/dll/dll_0144_dll144.c:
@@ -1962,7 +1962,7 @@ main/dll/DBdustgeezer.c:
 main/dll/dll_01E8_sbgalleon.c:
 	.text       start:0x801E1588 end:0x801E2570
 
-main/dll/dll_01E9_sbpropelle.c:
+main/dll/dll_01E9_sbpropeller.c:
 	.text       start:0x801E2570 end:0x801E2B28
 
 main/dll/dll_01EA_sbshiphead.c:
@@ -1974,13 +1974,13 @@ main/dll/dll_01EB_sbshipmast.c:
 main/dll/dll_01EC_sbshipgun.c:
 	.text       start:0x801E341C end:0x801E3D30
 
-main/dll/dll_01EE_sbcannonba.c:
+main/dll/dll_01EE_sbcannonball.c:
 	.text       start:0x801E3D30 end:0x801E4288
 
 main/dll/dll_01ED_sbfireball.c:
 	.text       start:0x801E4288 end:0x801E45AC
 
-main/dll/dll_01EF_sbcloudbal.c:
+main/dll/dll_01EF_sbcloudball.c:
 	.text       start:0x801E45AC end:0x801E4AC0
 
 main/dll/dll_01F0_sbkytecage.c:
@@ -1995,16 +1995,16 @@ main/dll/dll_01F1_sbseqdoor.c:
 main/dll/dll_01F3_sbminifire.c:
 	.text       start:0x801E519C end:0x801E55B8
 
-main/dll/dll_01F5_generalscal.c:
+main/dll/dll_01F5_shipbattle.c:
 	.text       start:0x801E55B8 end:0x801E59AC
 
-main/dll/dll_01F4_cflamp.c:
+main/dll/dll_01F4_lamp.c:
 	.text       start:0x801E59AC end:0x801E5DC4
 
-main/dll/dll_01F6_dimflag.c:
+main/dll/dll_01F6_flag.c:
 	.text       start:0x801E5DC4 end:0x801E5F74
 
-main/dll/dll_01F7_sbshipgunb.c:
+main/dll/dll_01F7_sbshipgunbroke.c:
 	.text       start:0x801E5F74 end:0x801E6050
 
 main/dll/dll_0285_spshop.c:
@@ -2019,10 +2019,10 @@ main/dll/TREX_Lazerwall.c:
 main/dll/DRlaserturret.c:
 	.text       start:0x801E6B10 end:0x801E76A0
 
-main/dll/dll_0286_spshopkeepe.c:
+main/dll/dll_0286_spshopkeeper.c:
 	.text       start:0x801E76A0 end:0x801E832C
 
-main/dll/dll_0284_spfruitsmal.c:
+main/dll/dll_0284_shopitem.c:
 	.text       start:0x801E832C end:0x801E8EA4
 
 main/dll/dll_0287_spscarab.c:
@@ -2074,7 +2074,7 @@ main/dll/WCdial.c:
 main/dll/dll_01F8_wmgalleon.c:
 	.text       start:0x801EFF7C end:0x801F06D8
 
-main/dll/dll_01FA_wmseqobjec.c:
+main/dll/dll_01FA_wmseqobject.c:
 	.text       start:0x801F06D8 end:0x801F0900
 
 main/dll/dll_01FB_dll1fb.c:
@@ -2182,31 +2182,31 @@ main/main.c:
 main/dll/dll_023F_dbegg.c:
 	.text       start:0x801FE118 end:0x801FF884
 
-main/dll/dll_0240_gcrobotblas.c:
+main/dll/dll_0240_gcrobotblast.c:
 	.text       start:0x801FF884 end:0x801FF9B0
 
-main/dll/dll_0241_drakorenerg.c:
+main/dll/dll_0241_drakorenergy.c:
 	.text       start:0x801FF9B0 end:0x801FFE18
 
-main/dll/dll_0242_dbstealerwo.c:
+main/dll/dll_0242_dbstealerworm.c:
 	.text       start:0x801FFE18 end:0x80203C78
 
-main/dll/dll_0243_dbholecontr.c:
+main/dll/dll_0243_dbholecontrol1.c:
 	.text       start:0x80203C78 end:0x80204098
 
-main/dll/dll_0229_dfplevelco.c:
+main/dll/dll_0229_dfplevelcontrol.c:
 	.text       start:0x80204098 end:0x80204970
 
-main/dll/dll_022A_dfpobjcrea.c:
+main/dll/dll_022A_dfpobjcreator.c:
 	.text       start:0x80204970 end:0x80204B54
 
 main/dll/dll_022C_dll22c.c:
 	.text       start:0x80204B54 end:0x802050C4
 
-main/dll/dll_022E_dfpdoorswi.c:
+main/dll/dll_022E_dfpdoorswitch.c:
 	.text       start:0x802050C4 end:0x80205168
 
-main/dll/dll_022D_dfpseqpoin.c:
+main/dll/dll_022D_dfpseqpoint.c:
 	.text       start:0x80205168 end:0x802057CC
 
 main/dll/dll_022B_dfptorch.c:
