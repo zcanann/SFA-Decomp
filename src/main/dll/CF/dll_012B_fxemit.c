@@ -1,4 +1,4 @@
-#include "main/dll/CF/CFTreasSharpy.h"
+#include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/expgfx.h"
 #include "main/resource.h"
 
@@ -510,7 +510,7 @@ void fxemit_update(FxEmitObject* obj)
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
-#include "main/dll/CF/CFTreasSharpy.h"
+#include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 

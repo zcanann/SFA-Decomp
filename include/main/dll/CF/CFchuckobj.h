@@ -2,7 +2,7 @@
 #define MAIN_DLL_CF_CFCHUCKOBJ_H_
 
 #include "ghidra_import.h"
-#include "main/dll/CF/CFTreasSharpy.h"
+#include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 

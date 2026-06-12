@@ -708,10 +708,10 @@ main/dll/CF/CFBaby.c:
 main/dll/CF/CFPrisonGuard.c:
 	.text       start:0x801899B4 end:0x80189F5C
 
-main/dll/CF/dll_011C_linkstaffle.c:
+main/dll/CF/dll_011C_staffactivated.c:
 	.text       start:0x80189F5C end:0x8018A8BC
 
-main/dll/CF/dll_011D_treasureche.c:
+main/dll/CF/dll_011D_treasurechest.c:
 	.text       start:0x8018A8BC end:0x8018ADB4
 
 main/dll/CF/CFtoggleswitch.c:
@@ -726,16 +726,16 @@ main/dll/CF/treasureRelated0177.c:
 main/dll/CF/dll_17A.c:
 	.text       start:0x8018D6E8 end:0x8018D6E8
 
-main/dll/CF/CFlevelControl.c:
+main/dll/CF/dll_012A_cfcrate.c:
 	.text       start:0x8018D6E8 end:0x8018E6C4
 
-main/dll/CF/CFTreasSharpy.c:
+main/dll/CF/dll_012B_fxemit.c:
 	.text       start:0x8018E6C4 end:0x8018F148
 
 main/dll/CF/CFchuckobj.c:
 	.text       start:0x8018F148 end:0x80190BD4
 
-main/dll/CF/CFwalltorch.c:
+main/dll/CF/dll_012C_transporter.c:
 	.text       start:0x80190BD4 end:0x80191A70
 
 main/dll/moonseedbush.c:
@@ -1256,11 +1256,11 @@ main/dll/zBomb.c:
 	.text       start:0x80208508 end:0x80208FDC
 	.data       start:0x80329B78 end:0x80329BC0
 
-main/dll/CF/laser_unsupported.c:
+main/dll/CF/dll_0236_dfplaserbe.c:
 	.text       start:0x80208FDC end:0x802090A8
 	.data       start:0x80329BC0 end:0x80329C48
 
-main/dll/CF/laserObj.c:
+main/dll/CF/dll_0237_dfpsppl.c:
 	.text       start:0x802090A8 end:0x8020930C
 	.data       start:0x80329C48 end:0x80329C80
 

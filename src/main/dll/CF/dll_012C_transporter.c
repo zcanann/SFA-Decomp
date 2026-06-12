@@ -1,4 +1,4 @@
-#include "main/dll/CF/CFwalltorch.h"
+#include "main/dll/CF/dll_012C_transporter.h"
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/dll/CF/warp_pad.h"
 #include "main/game_object.h"
@@ -375,7 +375,7 @@ void transporter_render(void)
 }
 
 /* === moved from main/dll/mmp_asteroid_re.c [801916A0-80191A70) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/CF/CFwalltorch.h"
+#include "main/dll/CF/dll_012C_transporter.h"
 #include "main/dll/CF/warp_pad.h"
 #include "main/game_object.h"
 

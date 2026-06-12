@@ -158,7 +158,7 @@ void cfccrate_free(int obj)
 
 /* === merged from main/dll/CF/dll_179.c [8018D728-8018D8DC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
-#include "main/dll/CF/CFTreasSharpy.h"
+#include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/effect_interfaces.h"
 
 extern uint GameBit_Get(int eventId);
@@ -233,9 +233,9 @@ void cfccrate_hitDetect(void)
 {
 }
 
-#include "main/dll/CF/CFlevelControl.h"
+#include "main/dll/CF/dll_012A_cfcrate.h"
 #include "main/game_object.h"
-#include "main/dll/CF/CFTreasSharpy.h"
+#include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/objseq.h"
 
 typedef struct CfccratePlacement
@@ -481,7 +481,7 @@ void cfccrate_update(int obj)
 }
 
 /* === moved from main/dll/CF/CFTreasSharpy.c [8018E0A4-8018E6C4) (TU re-split, docs/boundary_audit.md) === */
-#include "main/dll/CF/CFTreasSharpy.h"
+#include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/dll/CF/dll_179.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
