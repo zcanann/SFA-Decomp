@@ -65,45 +65,12 @@ extern void dimlavasmash_setBlockSurfaceFlags(int* block, int mode, int v);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern int* mapGetBlock(int idx);
 
-void dimlavasmash_init(s16* obj, s8* def)
-{
-    ObjAnimComponent* objAnim;
-    int* block;
-    char* inner;
-
-    objAnim = (ObjAnimComponent*)obj;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x18] << 8);
-    ((GameObject*)obj)->animEventCallback = (void*)dimlavasmash_SeqFn;
-    inner = ((GameObject*)obj)->extra;
-    *(u8*)(inner + 1) = (u8)((DimlavasmashObjectDef*)def)->unk1A;
-    *(s8*)(inner + 0) = (s8)((DimlavasmashObjectDef*)def)->unk1C;
-    *(u8*)(inner + 2) = (u8)GameBit_Get(((DimlavasmashObjectDef*)def)->unk1E);
-    if (*(u8*)(inner + 2) == 1)
-    {
-        block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                                ((GameObject*)obj)->anim.localPosZ));
-        if (block != NULL)
-        {
-            dimlavasmash_setBlockSurfaceFlags(block, 1, *(u8*)(inner + 1));
-            dimlavasmash_setBlockSurfaceFlags(block, 0, *(u8*)(inner + 1) + 1);
-        }
-    }
-    objAnim->bankIndex = def[0x19];
-    {
-        s16* p = *(s16**)&((GameObject*)obj)->anim.hitReactState;
-        p[0x30] = (s16)(p[0x30] & ~1);
-    }
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
-}
+void dimlavasmash_init(s16* obj, s8* def);
 
 /* Trivial 4b 0-arg blr leaves. */
-void dimlavasmash_release(void)
-{
-}
+void dimlavasmash_release(void);
 
-void dimlavasmash_initialise(void)
-{
-}
+void dimlavasmash_initialise(void);
 
 void dimbridgecogmai_hitDetect(void)
 {

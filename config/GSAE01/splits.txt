@@ -857,10 +857,10 @@ main/dll/DIM/DIMwooddoor.c:
 	.text       start:0x801B1FF4 end:0x801B2550
 
 main/dll/DIM/DIMlevcontrol.c:
-	.text       start:0x801B2550 end:0x801B3658
+	.text       start:0x801B2550 end:0x801B3768
 
 main/dll/DIM/DIM2conveyor.c:
-	.text       start:0x801B3658 end:0x801B3DE4
+	.text       start:0x801B3768 end:0x801B3DE4
 
 main/dll/DIM/DIM2flameburst.c:
 	.text       start:0x801B3DE4 end:0x801B6464

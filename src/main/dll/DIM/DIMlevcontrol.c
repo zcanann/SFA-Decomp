@@ -438,7 +438,6 @@ int dimcannon_getObjectTypeId(int* obj)
 extern int ObjHits_GetPriorityHit(int obj, int* out, int* a, int* b);
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
-extern int mapGetBlock(void);
 extern int mapBlockFn_800606ec(int arg1, int idx);
 extern int mapBlockFn_80060678(void);
 extern int fn_8006070C(int arg1, int idx);
@@ -490,6 +489,7 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
 
 int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
+    extern int mapGetBlock(void);
     int* def;
     int hit;
     int block;
@@ -636,7 +636,6 @@ extern void DIMwooddoor_updateFallingDebris(int* obj);
 extern void DIMwooddoor_updateShardAim(int* obj, f32 a, f32 b, f32 c, f32 d);
 extern void DIMwooddoor_spawnShard(int* obj, int p2);
 extern f32 getXZDistance(f32 * a, f32 * b);
-extern void* Obj_GetPlayerObject(void);
 extern void* fn_802972A8(void* player);
 extern void buttonDisable(int chan, int mask);
 extern u8 framesThisStep;
@@ -651,6 +650,7 @@ extern f32 lbl_803DBEF4;
  * tracking -> firing -> spent, plus the 0x1d6 falling-debris sub-variant. */
 void dimcannon_update(int* obj)
 {
+    extern void* Obj_GetPlayerObject(void);
     char* state;
     void* player;
     int* src = *(int**)&((GameObject*)obj)->anim.placementData;
@@ -829,6 +829,7 @@ extern f32 lbl_803DBEFC;
  * exits on B or after the post-completion delay. */
 int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 {
+    extern void* Obj_GetPlayerObject(void);
     int* src = *(int**)&((GameObject*)obj)->anim.placementData;
     char* state;
     int camMode;
@@ -1004,3 +1005,172 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 
     return 0;
 }
+
+/* === moved from main/dll/DIM/DIM2conveyor.c [801B3658-801B3768) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/DIM/DIM2conveyor.h"
+#include "main/dll/DIM/DIMlevcontrol.h"
+#include "main/game_object.h"
+#include "main/objanim_internal.h"
+#include "main/objseq.h"
+
+typedef struct DimbridgecogmaiObjectDef
+{
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    u8 pad1A[0x1C - 0x1A];
+    u8 unk1C;
+    u8 pad1D[0x20 - 0x1D];
+} DimbridgecogmaiObjectDef;
+
+
+typedef struct DimlavasmashObjectDef
+{
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+} DimlavasmashObjectDef;
+
+
+typedef struct DimbridgecogmaiPlacement
+{
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+} DimbridgecogmaiPlacement;
+
+
+typedef struct DimdismountpointState
+{
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+} DimdismountpointState;
+
+
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+
+/*
+ * --INFO--
+ *
+ * Function: dimlavasmash_init
+ * EN v1.0 Address: 0x801B3658
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801B367C
+ * EN v1.1 Size: 636b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+
+void dimlavasmash_init(s16* obj, s8* def)
+{
+    extern int* mapGetBlock(int idx);
+    extern void dimlavasmash_setBlockSurfaceFlags(int* block, int mode, int v);
+    ObjAnimComponent* objAnim;
+    int* block;
+    char* inner;
+
+    objAnim = (ObjAnimComponent*)obj;
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x18] << 8);
+    ((GameObject*)obj)->animEventCallback = (void*)dimlavasmash_SeqFn;
+    inner = ((GameObject*)obj)->extra;
+    *(u8*)(inner + 1) = (u8)((DimlavasmashObjectDef*)def)->unk1A;
+    *(s8*)(inner + 0) = (s8)((DimlavasmashObjectDef*)def)->unk1C;
+    *(u8*)(inner + 2) = (u8)GameBit_Get(((DimlavasmashObjectDef*)def)->unk1E);
+    if (*(u8*)(inner + 2) == 1)
+    {
+        block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                                                ((GameObject*)obj)->anim.localPosZ));
+        if (block != NULL)
+        {
+            dimlavasmash_setBlockSurfaceFlags(block, 1, *(u8*)(inner + 1));
+            dimlavasmash_setBlockSurfaceFlags(block, 0, *(u8*)(inner + 1) + 1);
+        }
+    }
+    objAnim->bankIndex = def[0x19];
+    {
+        s16* p = *(s16**)&((GameObject*)obj)->anim.hitReactState;
+        p[0x30] = (s16)(p[0x30] & ~1);
+    }
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
+}
+
+/* Trivial 4b 0-arg blr leaves. */
+void dimlavasmash_release(void)
+{
+}
+
+void dimlavasmash_initialise(void)
+{
+}
+
+void dimbridgecogmai_hitDetect(void);
+
+void dimbridgecogmai_initialise(void);
+
+void dimdismountpoint_hitDetect(void);
+
+void dimdismountpoint_release(void);
+
+void dimdismountpoint_initialise(void);
+
+extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
+extern void objRenderFn_80041018(int obj);
+extern f32 lbl_803E4910;
+
+void dimdismountpoint_update(int* obj);
+
+extern f32 lbl_803E4908;
+extern f32 lbl_803E4914;
+extern f32 lbl_803E4918;
+extern f32 mathSinf(f32 x);
+extern f32 mathCosf(f32 x);
+extern unsigned long GameBit_Set(int eventId, int value);
+
+void dimdismountpoint_init(u8* obj, u8* params);
+
+/* 8b "li r3, N; blr" returners. */
+int dimbridgecogmai_getExtraSize(void);
+int dimbridgecogmai_getObjectTypeId(void);
+int dimdismountpoint_getExtraSize(void);
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E4900;
+extern void objRenderFn_8003b8f4(f32);
+
+void dimbridgecogmai_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+void dimbridgecogmai_free(int x);
+void dimdismountpoint_free(int x);
+
+void dimbridgecogmai_release(void);
+
+int dimdismountpoint_getObjectTypeId(void);
+
+void dimbridgecogmai_init(int* obj, int* def);
+
+extern f32 lbl_803E490C;
+
+void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
+
+int dimbridgecogmai_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+
+extern ObjectTriggerInterface** gObjectTriggerInterface;
+
+void dimbridgecogmai_update(int* obj);
+
+void dimdismountpoint_func11(int obj, int flag);
+
+
+int dimdismountpoint_setScale(int obj);
