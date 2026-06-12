@@ -178,73 +178,7 @@ extern f32 lbl_803E3B94;
  */
 #pragma scheduling off
 #pragma peephole off
-void dll_CA_update(int obj, int p2, int p3)
-{
-    extern void Sfx_PlayFromObject(int obj, int sfx);
-    extern int fn_8015D3C0(int obj, int sub, int sub2);
-    extern void mediumbasket_updateControlEffects(int obj, int sub);
-    extern void mediumbasket_tryAcquireTarget(int obj, int sub, int sub2);
-    extern void mediumbasket_updateTargetMotion(int obj, int sub, int sub2);
-    extern int* gBaddieControlInterface;
-    extern MapEventInterface** gMapEventInterface;
-    extern ObjectTriggerInterface** gObjectTriggerInterface;
-    extern f32 lbl_803E2D14;
-    extern f32 lbl_803E2D90;
-    extern f32 lbl_803E2DB8;
-    GroundBaddieState* sub;
-    int setup;
-
-    sub = ((GameObject*)obj)->extra;
-    setup = *(int*)&((GameObject*)obj)->anim.placementData;
-    if (((GameObject*)obj)->unkF4 != 0)
-    {
-        if ((sub->baddie.substate != 3 || (sub->configFlags & 1) != 0) &&
-            (*gMapEventInterface)->isTimedEventActive(((ObjPlacement*)setup)->mapId) != 0)
-        {
-            (*(void (**)(int, int, int, int, int, int, int, f32))(*(int*)gBaddieControlInterface +
-                0x58))(
-                obj, setup, (int)sub, 14, 8, 0x102, 0x26, lbl_803E2DB8);
-            sub->targetState = 0;
-            Sfx_PlayFromObject(obj, SFXfoxcom_find);
-            ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2D14, 0x10);
-            *(s8*)&sub->baddie.moveDone = 0;
-            ((GameObject*)obj)->anim.alpha = 0xff;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-        }
-    }
-    else if (((GameObject*)obj)->unkF8 == 0)
-    {
-        ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)setup)->posX;
-        ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
-        ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
-        (*gObjectTriggerInterface)->runSequence(*(s8*)(setup + 0x2e), (void*)obj, -1);
-        ((GameObject*)obj)->unkF8 = 1;
-    }
-    else
-    {
-        if ((*(int (**)(int, int, int))(*(int*)gBaddieControlInterface + 0x30))(obj, (int)sub, 0) == 0)
-        {
-            sub->targetState = 0;
-        }
-        else
-        {
-            fn_8015D3C0(obj, (int)sub, (int)sub);
-            mediumbasket_updateControlEffects(obj, (int)sub);
-            if (sub->targetState == 0)
-            {
-                mediumbasket_tryAcquireTarget(obj, (int)sub, (int)sub);
-            }
-            else
-            {
-                mediumbasket_updateTargetMotion(obj, (int)sub, (int)sub);
-            }
-            if ((sub->configFlags & 2) != 0)
-            {
-                ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY - lbl_803E2D90;
-            }
-        }
-    }
-}
+void dll_CA_update(int obj, int p2, int p3);
 
 /*
  * --INFO--
@@ -727,42 +661,7 @@ void fn_8015DAE8(void)
 }
 #pragma dont_inline reset
 
-void dll_CA_init(int obj, u8* p, int flags)
-{
-    extern int* gBaddieControlInterface;
-    extern int* gPlayerInterface;
-    extern f64 lbl_803E2D08;
-    extern f32 lbl_803E2D14;
-    extern f32 lbl_803E2D24;
-    extern f32 lbl_803E2D54;
-    extern f32 lbl_803E2DB8;
-    GroundBaddieState* sub;
-    u8 mode;
-
-    sub = ((GameObject*)obj)->extra;
-    mode = 6;
-    if (flags != 0)
-    {
-        mode |= 1;
-    }
-    if ((*(u8*)(p + 0x2b) & 0x20) == 0)
-    {
-        mode |= 8;
-    }
-    (*(void (**)(int, u8*, int, int, int, int, u8, f32))(*(int*)gBaddieControlInterface + 0x58))(
-        obj, p, (int)sub, 14, 8, 0x102, mode, lbl_803E2DB8);
-    ((GameObject*)obj)->animEventCallback = NULL;
-    if (lbl_803E2D24 * (f32)(u32)sub->aggroRange < lbl_803E2D54
-    )
-    {
-        *(s16*)&sub->aggroRange = 0x6e;
-    }
-    ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2D14, 0);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-    (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, (int)sub, 0);
-    sub->baddie.substate = 0;
-    *(s8*)&sub->baddie.physicsActive = 0;
-}
+void dll_CA_init(int obj, u8* p, int flags);
 
 int fn_8015E5DC(short* obj, GroundBaddieState* p)
 {
@@ -2468,9 +2367,7 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void dll_CA_release_nop(void)
-{
-}
+void dll_CA_release_nop(void);
 
 void dll_CE_hitDetect_nop(void)
 {
@@ -2678,7 +2575,7 @@ void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 /* plain forwarder. */
 extern void Camera_DisableViewYOffset(void);
-void dll_CA_initialise(void) { fn_8015DAE8(); }
+void dll_CA_initialise(void);
 void iceball_free(void) { Camera_DisableViewYOffset(); }
 
 

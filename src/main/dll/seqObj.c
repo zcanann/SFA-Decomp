@@ -1,3 +1,534 @@
+/* === moved from main/dll/pressureSwitch.c [8014F620-8014F9E8) (TU re-split, docs/boundary_audit.md) === */
+#include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/dll/pressureSwitch.h"
+#include "main/effect_interfaces.h"
+#include "main/mapEvent.h"
+#include "main/objanim.h"
+#include "main/objanim_internal.h"
+#include "main/game_object.h"
+#include "main/objfx.h"
+#include "main/objhits_types.h"
+
+typedef struct HagabonPlacement
+{
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+    u8 pad18[0x19 - 0x18];
+    s8 unk19;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} HagabonPlacement;
+
+
+extern undefined4 FUN_80006b0c();
+extern undefined4 FUN_80006b14();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
+extern undefined4 ObjHits_SetHitVolumeSlot();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
+extern int ObjHits_GetPriorityHitWithPosition();
+extern undefined8 ObjGroup_RemoveObject();
+
+extern MapEventInterface** gMapEventInterface;
+extern undefined4 DAT_803de6d0;
+extern f64 DOUBLE_803e32d8;
+extern f64 DOUBLE_803e32e0;
+extern f64 DOUBLE_803e3340;
+extern f32 lbl_803DC074;
+extern f32 lbl_803DDA58;
+extern f32 lbl_803DDA5C;
+extern f32 lbl_803E32A0;
+extern f32 lbl_803E32A4;
+extern f32 lbl_803E32A8;
+extern f32 lbl_803E32AC;
+extern f32 lbl_803E32B0;
+extern f32 lbl_803E32BC;
+extern f32 lbl_803E32C0;
+extern f32 lbl_803E32C4;
+extern f32 lbl_803E32C8;
+extern f32 lbl_803E32CC;
+extern f32 lbl_803E32D0;
+extern f32 lbl_803E32D4;
+extern f32 lbl_803E32E8;
+extern f32 lbl_803E32EC;
+extern f32 lbl_803E32F0;
+extern f32 lbl_803E32F4;
+extern f32 lbl_803E32FC;
+extern f32 lbl_803E3300;
+extern f32 lbl_803E3304;
+extern f32 lbl_803E3308;
+extern f32 lbl_803E330C;
+extern f32 lbl_803E3310;
+extern f32 lbl_803E3314;
+extern f32 lbl_803E3318;
+extern f32 lbl_803E331C;
+extern f32 lbl_803E3320;
+extern f32 lbl_803E3324;
+extern f32 lbl_803E3328;
+extern f32 lbl_803E332C;
+extern f32 lbl_803E3330;
+extern f32 lbl_803E3334;
+extern f32 lbl_803E3348;
+extern f32 lbl_803E334C;
+extern f32 lbl_803E3350;
+extern f32 lbl_803E3354;
+extern f32 lbl_803E3358;
+extern f32 lbl_803E335C;
+extern f32 lbl_803E3360;
+extern f32 lbl_803E3364;
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8014e1dc
+ * EN v1.0 Address: 0x8014E1DC
+ * EN v1.0 Size: 52b
+ * EN v1.1 Address: 0x8014E604
+ * EN v1.1 Size: 52b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void pressureSwitch_freeSharedResource(void);
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8014e210
+ * EN v1.0 Address: 0x8014E210
+ * EN v1.0 Size: 52b
+ * EN v1.1 Address: 0x8014E638
+ * EN v1.1 Size: 56b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void pressureSwitch_ensureSharedResource(void);
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8014e248
+ * EN v1.0 Address: 0x8014E248
+ * EN v1.0 Size: 96b
+ * EN v1.1 Address: 0x8014EBD8
+ * EN v1.1 Size: 96b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8014e374
+ * EN v1.0 Address: 0x8014E374
+ * EN v1.0 Size: 52b
+ * EN v1.1 Address: 0x8014ED20
+ * EN v1.1 Size: 52b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8014e3a8
+ * EN v1.0 Address: 0x8014E3A8
+ * EN v1.0 Size: 1264b
+ * EN v1.1 Address: 0x8014ED54
+ * EN v1.1 Size: 1168b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8014ede0
+ * EN v1.0 Address: 0x8014EDE0
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8014F6E0
+ * EN v1.1 Size: 680b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+
+
+/*
+ * --INFO--
+ *
+ * Function: FUN_8014ede4
+ * EN v1.0 Address: 0x8014EDE4
+ * EN v1.0 Size: 380b
+ * EN v1.1 Address: 0x8014F988
+ * EN v1.1 Size: 300b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling on
+#pragma peephole on
+
+
+/* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
+void hagabon_release(void);
+
+void hagabon_initialise(void);
+
+void swarmbaddie_hitDetect(void);
+
+void swarmbaddie_release(void);
+
+void swarmbaddie_initialise(void);
+
+void wispbaddie_hitDetect(void)
+{
+}
+
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_StopFromObject(int obj, u16 sfxId);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern void mm_free(void* p);
+extern void objRenderFn_8003b8f4(f32);
+extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
+extern f32 lbl_803E2608;
+extern f32 lbl_803E260C;
+extern f32 lbl_803E2610;
+extern f32 lbl_803E2614;
+extern f32 lbl_803E2618;
+extern f32 lbl_803E261C;
+extern f32 lbl_803E2620;
+extern f32 lbl_803E2624;
+extern f32 lbl_803E2628;
+extern f32 lbl_803E262C;
+extern f32 lbl_803E2630;
+extern f32 lbl_803E2634;
+extern f32 lbl_803E2638;
+extern f32 lbl_803E263C;
+extern f32 lbl_803E2650;
+extern f32 lbl_803E2654;
+extern f64 lbl_803E2640; /* int->float magic */
+extern f64 lbl_803E2648; /* int->float magic */
+extern f32 lbl_803E2658;
+extern f32 lbl_803E265C;
+extern f32 lbl_803E2660;
+extern f32 lbl_803E2664;
+extern f32 lbl_803E2668;
+extern f32 lbl_803E266C;
+extern f32 lbl_803E2670;
+extern f32 lbl_803E2674;
+extern f32 lbl_803E2678;
+extern f32 lbl_803E267C;
+extern f32 lbl_803E2680;
+extern f32 lbl_803E2684;
+extern f32 lbl_803E2688;
+extern f32 lbl_803E268C;
+extern f32 lbl_803E2690;
+extern f32 lbl_803E2694;
+extern f32 lbl_803E2698;
+extern f32 lbl_803E269C;
+extern f32 lbl_803E26A0;
+extern f32 lbl_803E26A4;
+extern f64 lbl_803E26A8; /* int->float magic */
+extern f32 lbl_803E26B0;
+extern f32 lbl_803E26B4;
+extern f32 lbl_803E26B8;
+extern f32 lbl_803E26BC;
+extern f32 lbl_803E26C0;
+extern f32 lbl_803E26C4;
+extern f32 lbl_803E26C8;
+extern f32 lbl_803E26CC;
+extern f32 lbl_803E26D0;
+extern f32 lbl_803E26D4;
+extern f32 lbl_803E26D8;
+extern f32 lbl_803E26DC;
+extern f32 lbl_803E26E0;
+extern f32 lbl_803E26E4;
+extern f32 lbl_803E26E8;
+extern f32 lbl_803E26EC;
+extern f32 lbl_803E26F0;
+extern f32 lbl_803E26F4;
+extern f32 lbl_803E26F8;
+extern f32 lbl_803E26FC;
+extern f64 lbl_803E2700;
+extern int lbl_803DBC78;
+extern int lbl_803DBC80;
+extern void* mmAlloc(int size, int heap, int flags);
+extern void* memset(void* dst, int val, u32 n);
+extern EffectInterface** gPartfxInterface;
+extern int lbl_803DBC70;
+extern int lbl_803DDA60;
+extern int lbl_803DDA68;
+extern f32 timeDelta;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern int Obj_GetPlayerObject(void);
+extern int Curve_AdvanceAlongPath(int curve, f32 t);
+extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern f32 sqrtf(f32 x);
+extern f32 mathSinf(f32 x);
+extern int getAngle(f32 dx, f32 dz);
+extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
+
+typedef union PressureSwitchIntToDouble
+{
+    u64 bits;
+    f64 value;
+} PressureSwitchIntToDouble;
+
+#define SWARMBADDIE_FLAG_PATH_NEEDS_LINK 0x01
+#define SWARMBADDIE_FLAG_CHASE_PLAYER 0x02
+#define SWARMBADDIE_FLAG_RETURN_TO_PATH 0x04
+
+typedef struct SwarmBaddieState
+{
+    int curve;
+    int player;
+    f32 curveStep;
+    f32 playerDistance;
+    f32 pathDistance;
+    f32 chaseRadius;
+    f32 hitVolumeEnvelope;
+    u8 flags;
+    u8 pad1d;
+    s16 yawWavePhase;
+    s16 rollWavePhase;
+    u8 pad22[2];
+} SwarmBaddieState;
+
+/* Per-object extra state for Hagabon (hagabon_getExtraSize == 0x28). */
+typedef struct HagabonState
+{
+    int curve;
+    int player;
+    f32 curveStep;
+    f32 animSpeed;
+    f32 playerDistance;
+    f32 pathDistance;
+    f32 chaseRadius;
+    u8 pad1C[4];
+    u16 wavePhaseA; /* yaw wave */
+    u16 wavePhaseB; /* shared bob wave */
+    u16 wavePhaseC; /* pitch wave */
+    u8 flags;
+    u8 pad27;
+} HagabonState;
+
+STATIC_ASSERT(sizeof(HagabonState) == 0x28);
+STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
+STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
+
+void fn_8014E1DC(int obj, HagabonState* state);
+
+void hagabon_hitDetect(int obj);
+
+void swarmbaddie_free(int obj);
+
+void wispbaddie_free(int obj)
+{
+    void** state = ((GameObject*)obj)->extra;
+    ObjGroup_RemoveObject(obj, 3);
+    if (*state != NULL)
+    {
+        mm_free(*state);
+        *state = NULL;
+    }
+}
+
+void hagabon_free(int obj);
+
+void swarmbaddie_init(int obj, int data, int skip_alloc);
+
+void hagabon_init(int obj, int data, int skip_alloc);
+
+void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+
+/* 8b "li r3, N; blr" returners. */
+int hagabon_getExtraSize(void);
+int hagabon_getObjectTypeId(void);
+int swarmbaddie_getExtraSize(void);
+int swarmbaddie_getObjectTypeId(void);
+int wispbaddie_getExtraSize(void) { return 0x2c; }
+int wispbaddie_getObjectTypeId(void) { return 0x9; }
+
+void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void wispbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+
+void fn_8014EE8C(int obj, SwarmBaddieState* state);
+
+void fn_8014F620(int obj, int* state)
+{
+    int curve;
+    int done;
+    f32 step;
+    f32 wave;
+
+    curve = state[0];
+    *(s16*)((u8*)state + 0x26) += (s16)(lbl_803E26D0 * timeDelta);
+    *(s16*)(state + 10) += (s16)(lbl_803E26D4 * timeDelta);
+
+    wave = lbl_803E26D8 + mathSinf((lbl_803E26DC * (f32) * (s16*)((u8*)state + 0x26)) /
+        lbl_803E26E0);
+    done = Curve_AdvanceAlongPath(curve, *(f32*)(state + 2) * wave);
+    if (((done != 0) || (*(int*)(curve + 0x10) != lbl_803DDA68)) &&
+        ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
+        ((*gRomCurveInterface)->initCurve((void*)state[0], (void*)obj, lbl_803E26E4,
+                                          &lbl_803DBC80, -1) != 0))
+    {
+        *(u8*)((u8*)state + 0x24) = *(u8*)((u8*)state + 0x24) & ~1;
+    }
+    lbl_803DDA68 = *(int*)(curve + 0x10);
+
+    if ((*(u8*)((u8*)state + 0x24) & 2) != 0)
+    {
+        ((GameObject*)obj)->anim.velocityX =
+            lbl_803E26E8 * (*(f32*)(state[1] + 0xc) - ((GameObject*)obj)->anim.localPosX) +
+            ((GameObject*)obj)->anim.velocityX;
+
+        wave = mathSinf((lbl_803E26DC * (f32) * (s16*)(state + 10)) /
+            lbl_803E26E0);
+        ((GameObject*)obj)->anim.velocityY =
+            ((lbl_803E26F0 * wave + (lbl_803E26EC + *(f32*)(state[1] + 0x10))) -
+                ((GameObject*)obj)->anim.localPosY) * lbl_803E26E8 +
+            ((GameObject*)obj)->anim.velocityY;
+        ((GameObject*)obj)->anim.velocityZ =
+            lbl_803E26E8 * (*(f32*)(state[1] + 0x14) - ((GameObject*)obj)->anim.localPosZ) +
+            ((GameObject*)obj)->anim.velocityZ;
+    }
+    else
+    {
+        ((GameObject*)obj)->anim.velocityX = lbl_803E26E8 * (*(f32*)(curve + 0x68) - ((GameObject*)obj)->anim.localPosX)
+            +
+            ((GameObject*)obj)->anim.velocityX;
+
+        wave = mathSinf((lbl_803E26DC * (f32) * (s16*)(state + 10)) /
+            lbl_803E26E0);
+        ((GameObject*)obj)->anim.velocityY =
+            ((lbl_803E26F0 * wave + *(f32*)(curve + 0x6c)) - ((GameObject*)obj)->anim.localPosY) *
+            lbl_803E26E8 +
+            ((GameObject*)obj)->anim.velocityY;
+        ((GameObject*)obj)->anim.velocityZ = lbl_803E26E8 * (*(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.localPosZ)
+            +
+            ((GameObject*)obj)->anim.velocityZ;
+    }
+
+    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (step = lbl_803E26F4);
+    ((GameObject*)obj)->anim.velocityY *= step;
+    ((GameObject*)obj)->anim.velocityZ *= step;
+
+    if (((GameObject*)obj)->anim.velocityX > *(f32*)&lbl_803E26F8)
+    {
+        ((GameObject*)obj)->anim.velocityX = lbl_803E26F8;
+    }
+    if (((GameObject*)obj)->anim.velocityY > *(f32*)&lbl_803E26F8)
+    {
+        ((GameObject*)obj)->anim.velocityY = lbl_803E26F8;
+    }
+    if (((GameObject*)obj)->anim.velocityZ > *(f32*)&lbl_803E26F8)
+    {
+        ((GameObject*)obj)->anim.velocityZ = lbl_803E26F8;
+    }
+    if (((GameObject*)obj)->anim.velocityX < *(f32*)&lbl_803E26FC)
+    {
+        ((GameObject*)obj)->anim.velocityX = lbl_803E26FC;
+    }
+    if (((GameObject*)obj)->anim.velocityY < *(f32*)&lbl_803E26FC)
+    {
+        ((GameObject*)obj)->anim.velocityY = lbl_803E26FC;
+    }
+    if (((GameObject*)obj)->anim.velocityZ < *(f32*)&lbl_803E26FC)
+    {
+        ((GameObject*)obj)->anim.velocityZ = lbl_803E26FC;
+    }
+
+    objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
+            ((GameObject*)obj)->anim.velocityZ * timeDelta);
+}
+
+void swarmbaddie_update(int obj);
+
+void hagabon_update(int obj);
+
+
+ObjectDescriptor gHagabonObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)hagabon_initialise,
+    (ObjectDescriptorCallback)hagabon_release,
+    0,
+    (ObjectDescriptorCallback)hagabon_init,
+    (ObjectDescriptorCallback)hagabon_update,
+    (ObjectDescriptorCallback)hagabon_hitDetect,
+    (ObjectDescriptorCallback)hagabon_render,
+    (ObjectDescriptorCallback)hagabon_free,
+    (ObjectDescriptorCallback)hagabon_getObjectTypeId,
+    hagabon_getExtraSize,
+};
+
+ObjectDescriptor gSwarmBaddieObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)swarmbaddie_initialise,
+    (ObjectDescriptorCallback)swarmbaddie_release,
+    0,
+    (ObjectDescriptorCallback)swarmbaddie_init,
+    (ObjectDescriptorCallback)swarmbaddie_update,
+    (ObjectDescriptorCallback)swarmbaddie_hitDetect,
+    (ObjectDescriptorCallback)swarmbaddie_render,
+    (ObjectDescriptorCallback)swarmbaddie_free,
+    (ObjectDescriptorCallback)swarmbaddie_getObjectTypeId,
+    swarmbaddie_getExtraSize,
+};
+
+/* segment pragma-stack balance (re-split): */
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma scheduling reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+#pragma peephole reset
+
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -20,7 +551,6 @@ extern int Obj_GetPlayerObject(void);
 extern undefined8 ObjGroup_RemoveObject();
 extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern f32 Vec_distance(f32 * a, f32 * b);
 extern void doRumble(f32 duration);
 extern void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude);
 extern undefined4 FUN_8014d3d0();
@@ -86,10 +616,7 @@ extern EffectInterface** gPartfxInterface;
 extern int lbl_803DBC80;
 extern void* PTR_DAT_8031fdc4;
 extern f32 sqrtf(f32 x);
-extern void fn_8014F620(int obj, WispBaddieState* state);
 
-extern void wispbaddie_free(void);
-extern void wispbaddie_render(void);
 extern void wispbaddie_hitDetect(void);
 extern void wispbaddie_init(int obj, int setup, int initialised);
 extern int wispbaddie_getObjectTypeId(void);
@@ -97,6 +624,7 @@ extern int wispbaddie_getExtraSize(void);
 
 void wispbaddie_update(int obj)
 {
+    extern void fn_8014F620(int obj, WispBaddieState* state); /* #57 */
     WispBaddieState* state;
     int curve;
     int hit;
@@ -747,6 +1275,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent)
 
 void fn_8015039C(int obj, int animState)
 {
+    extern f32 Vec_distance(f32 * a, f32 * b); /* #57 */
     int player;
     f32 distance;
     f32 rumbleFalloff;

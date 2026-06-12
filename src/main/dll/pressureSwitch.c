@@ -236,9 +236,7 @@ void swarmbaddie_initialise(void)
 {
 }
 
-void wispbaddie_hitDetect(void)
-{
-}
+void wispbaddie_hitDetect(void);
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, u16 sfxId);
@@ -538,16 +536,7 @@ void swarmbaddie_free(int obj)
     }
 }
 
-void wispbaddie_free(int obj)
-{
-    void** state = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, 3);
-    if (*state != NULL)
-    {
-        mm_free(*state);
-        *state = NULL;
-    }
-}
+void wispbaddie_free(int obj);
 
 void hagabon_free(int obj)
 {
@@ -641,11 +630,11 @@ int hagabon_getExtraSize(void) { return 0x28; }
 int hagabon_getObjectTypeId(void) { return 0xb; }
 int swarmbaddie_getExtraSize(void) { return 0x24; }
 int swarmbaddie_getObjectTypeId(void) { return 0x9; }
-int wispbaddie_getExtraSize(void) { return 0x2c; }
-int wispbaddie_getObjectTypeId(void) { return 0x9; }
+int wispbaddie_getExtraSize(void);
+int wispbaddie_getObjectTypeId(void);
 
 void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
-void wispbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+void wispbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void fn_8014EE8C(int obj, SwarmBaddieState* state)
 {
@@ -732,94 +721,7 @@ void fn_8014EE8C(int obj, SwarmBaddieState* state)
             mathSinf((lbl_803E26A0 * (f32)state->rollWavePhase) / lbl_803E26A4)));
 }
 
-void fn_8014F620(int obj, int* state)
-{
-    int curve;
-    int done;
-    f32 step;
-    f32 wave;
-
-    curve = state[0];
-    *(s16*)((u8*)state + 0x26) += (s16)(lbl_803E26D0 * timeDelta);
-    *(s16*)(state + 10) += (s16)(lbl_803E26D4 * timeDelta);
-
-    wave = lbl_803E26D8 + mathSinf((lbl_803E26DC * (f32) * (s16*)((u8*)state + 0x26)) /
-        lbl_803E26E0);
-    done = Curve_AdvanceAlongPath(curve, *(f32*)(state + 2) * wave);
-    if (((done != 0) || (*(int*)(curve + 0x10) != lbl_803DDA68)) &&
-        ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
-        ((*gRomCurveInterface)->initCurve((void*)state[0], (void*)obj, lbl_803E26E4,
-                                          &lbl_803DBC80, -1) != 0))
-    {
-        *(u8*)((u8*)state + 0x24) = *(u8*)((u8*)state + 0x24) & ~1;
-    }
-    lbl_803DDA68 = *(int*)(curve + 0x10);
-
-    if ((*(u8*)((u8*)state + 0x24) & 2) != 0)
-    {
-        ((GameObject*)obj)->anim.velocityX =
-            lbl_803E26E8 * (*(f32*)(state[1] + 0xc) - ((GameObject*)obj)->anim.localPosX) +
-            ((GameObject*)obj)->anim.velocityX;
-
-        wave = mathSinf((lbl_803E26DC * (f32) * (s16*)(state + 10)) /
-            lbl_803E26E0);
-        ((GameObject*)obj)->anim.velocityY =
-            ((lbl_803E26F0 * wave + (lbl_803E26EC + *(f32*)(state[1] + 0x10))) -
-                ((GameObject*)obj)->anim.localPosY) * lbl_803E26E8 +
-            ((GameObject*)obj)->anim.velocityY;
-        ((GameObject*)obj)->anim.velocityZ =
-            lbl_803E26E8 * (*(f32*)(state[1] + 0x14) - ((GameObject*)obj)->anim.localPosZ) +
-            ((GameObject*)obj)->anim.velocityZ;
-    }
-    else
-    {
-        ((GameObject*)obj)->anim.velocityX = lbl_803E26E8 * (*(f32*)(curve + 0x68) - ((GameObject*)obj)->anim.localPosX)
-            +
-            ((GameObject*)obj)->anim.velocityX;
-
-        wave = mathSinf((lbl_803E26DC * (f32) * (s16*)(state + 10)) /
-            lbl_803E26E0);
-        ((GameObject*)obj)->anim.velocityY =
-            ((lbl_803E26F0 * wave + *(f32*)(curve + 0x6c)) - ((GameObject*)obj)->anim.localPosY) *
-            lbl_803E26E8 +
-            ((GameObject*)obj)->anim.velocityY;
-        ((GameObject*)obj)->anim.velocityZ = lbl_803E26E8 * (*(f32*)(curve + 0x70) - ((GameObject*)obj)->anim.localPosZ)
-            +
-            ((GameObject*)obj)->anim.velocityZ;
-    }
-
-    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (step = lbl_803E26F4);
-    ((GameObject*)obj)->anim.velocityY *= step;
-    ((GameObject*)obj)->anim.velocityZ *= step;
-
-    if (((GameObject*)obj)->anim.velocityX > *(f32*)&lbl_803E26F8)
-    {
-        ((GameObject*)obj)->anim.velocityX = lbl_803E26F8;
-    }
-    if (((GameObject*)obj)->anim.velocityY > *(f32*)&lbl_803E26F8)
-    {
-        ((GameObject*)obj)->anim.velocityY = lbl_803E26F8;
-    }
-    if (((GameObject*)obj)->anim.velocityZ > *(f32*)&lbl_803E26F8)
-    {
-        ((GameObject*)obj)->anim.velocityZ = lbl_803E26F8;
-    }
-    if (((GameObject*)obj)->anim.velocityX < *(f32*)&lbl_803E26FC)
-    {
-        ((GameObject*)obj)->anim.velocityX = lbl_803E26FC;
-    }
-    if (((GameObject*)obj)->anim.velocityY < *(f32*)&lbl_803E26FC)
-    {
-        ((GameObject*)obj)->anim.velocityY = lbl_803E26FC;
-    }
-    if (((GameObject*)obj)->anim.velocityZ < *(f32*)&lbl_803E26FC)
-    {
-        ((GameObject*)obj)->anim.velocityZ = lbl_803E26FC;
-    }
-
-    objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
-            ((GameObject*)obj)->anim.velocityZ * timeDelta);
-}
+void fn_8014F620(int obj, int* state);
 
 void swarmbaddie_update(int obj)
 {
