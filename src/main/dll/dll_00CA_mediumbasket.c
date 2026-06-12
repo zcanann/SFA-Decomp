@@ -457,10 +457,12 @@ FUN_8015c1b4(undefined8 param_1, double param_2, double param_3, undefined8 para
 {
     float fVar1;
     int iVar2;
+    ObjHitsPriorityState* hitState;
 
     iVar2 = *(int*)&((GameObject*)param_9)->extra;
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)param_9)->anim.hitReactState)->hitVolumePriority = 10;
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)param_9)->anim.hitReactState)->hitVolumeId = 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
+    hitState->hitVolumePriority = 10;
+    hitState->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(param_9);
     if (*(byte*)(iVar2 + 0x406) < 0x33)
     {
@@ -614,12 +616,12 @@ int mediumbasket_updateOpenState(int obj, int p)
     extern f32 lbl_803E2D78;
     GroundBaddieState* sub;
     int sub_40c;
-    int p54;
+    ObjHitsPriorityState* hitState;
 
     sub = ((GameObject*)obj)->extra;
     sub_40c = *(int*)&sub->control;
-    p54 = *(int*)&((GameObject*)obj)->anim.hitReactState;
-    ((ObjHitsPriorityState*)p54)->flags |= 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState->flags |= 1;
     ((GroundBaddieState*)p)->baddie.physicsActive = 1;
     if (*(char*)&((GroundBaddieState*)p)->baddie.moveJustStartedA != '\0')
     {
@@ -667,17 +669,15 @@ int mediumbasket_updateOpenHitState(int obj, int p)
     extern f32 lbl_803E2D80;
     GroundBaddieState* sub;
     int sub_40c;
-    int p54;
+    ObjHitsPriorityState* hitState;
 
     sub = ((GameObject*)obj)->extra;
     sub_40c = *(int*)&sub->control;
-    p54 = *(int*)&((GameObject*)obj)->anim.hitReactState;
-    ((ObjHitsPriorityState*)p54)->flags |= 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState->flags |= 1;
     ((GroundBaddieState*)p)->baddie.physicsActive = 1;
-    p54 = *(int*)&((GameObject*)obj)->anim.hitReactState;
-    *(u8*)&((ObjHitsPriorityState*)p54)->hitVolumePriority = 9;
-    p54 = *(int*)&((GameObject*)obj)->anim.hitReactState;
-    *(u8*)&((ObjHitsPriorityState*)p54)->hitVolumeId = 1;
+    hitState->hitVolumePriority = 9;
+    hitState->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if (*(char*)&((GroundBaddieState*)p)->baddie.moveJustStartedA != '\0')
     {
@@ -794,11 +794,13 @@ FUN_8015ca54(undefined8 param_1, double param_2, double param_3, undefined8 para
 {
     uint uVar1;
     int iVar2;
+    ObjHitsPriorityState* hitState;
 
     iVar2 = *(int*)&((GameObject*)param_9)->extra;
     *(byte*)(*(int*)(iVar2 + 0x40c) + 0x44) = *(byte*)(*(int*)(iVar2 + 0x40c) + 0x44) | 4;
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)param_9)->anim.hitReactState)->hitVolumePriority = 10;
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)param_9)->anim.hitReactState)->hitVolumeId = 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
+    hitState->hitVolumePriority = 10;
+    hitState->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(param_9);
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
@@ -855,11 +857,13 @@ FUN_8015cd2c(undefined8 param_1, double param_2, double param_3, undefined8 para
 {
     uint uVar1;
     int iVar2;
+    ObjHitsPriorityState* hitState;
 
     iVar2 = *(int*)&((GameObject*)param_9)->extra;
     *(byte*)(*(int*)(iVar2 + 0x40c) + 0x44) = *(byte*)(*(int*)(iVar2 + 0x40c) + 0x44) | 4;
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)param_9)->anim.hitReactState)->hitVolumePriority = 10;
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)param_9)->anim.hitReactState)->hitVolumeId = 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
+    hitState->hitVolumePriority = 10;
+    hitState->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(param_9);
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
@@ -953,10 +957,12 @@ FUN_8015d19c(undefined8 param_1, double param_2, double param_3, undefined8 para
              undefined4 param_15, undefined4 param_16)
 {
     int iVar1;
+    ObjHitsPriorityState* hitState;
 
     iVar1 = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)param_9)->anim.hitReactState)->hitVolumePriority = 10;
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)param_9)->anim.hitReactState)->hitVolumeId = 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
+    hitState->hitVolumePriority = 10;
+    hitState->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(param_9);
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
@@ -987,6 +993,7 @@ FUN_8015d324(undefined8 param_1, double param_2, double param_3, undefined8 para
 {
     extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
     int iVar1;
+    ObjHitsPriorityState* hitState;
 
     iVar1 = *(int*)&((GameObject*)param_9)->extra;
     if ((*(short*)(param_10 + 0x276) != 4) && (*(char*)(param_10 + 0x27a) != '\0'))
@@ -998,7 +1005,8 @@ FUN_8015d324(undefined8 param_1, double param_2, double param_3, undefined8 para
     *(byte*)(*(int*)(iVar1 + 0x40c) + 0x44) = *(byte*)(*(int*)(iVar1 + 0x40c) + 0x44) | 0xc;
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
-        (*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->flags &= ~1;
+        hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
+        hitState->flags &= ~1;
         *(float*)(param_10 + 0x2a0) = lbl_803E39D0;
         *(float*)(param_10 + 0x280) = lbl_803E39AC;
     }
@@ -1026,10 +1034,12 @@ FUN_8015d518(undefined8 param_1, double param_2, double param_3, undefined8 para
     extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
     int iVar1;
     int iVar2;
+    ObjHitsPriorityState* hitState;
 
     iVar2 = *(int*)&((GameObject*)param_9)->extra;
     iVar1 = *(int*)(iVar2 + 0x40c);
-    (*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->flags |= 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
+    hitState->flags |= 1;
     *(undefined*)(param_10 + 0x25f) = 1;
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
@@ -1076,13 +1086,15 @@ FUN_8015d6ec(undefined8 param_1, double param_2, double param_3, undefined8 para
     extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
     int iVar1;
     int iVar2;
+    ObjHitsPriorityState* hitState;
 
     iVar2 = *(int*)&((GameObject*)param_9)->extra;
     iVar1 = *(int*)(iVar2 + 0x40c);
-    (*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->flags |= 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
+    hitState->flags |= 1;
     *(undefined*)(param_10 + 0x25f) = 1;
-    (*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->hitVolumePriority = 9;
-    (*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->hitVolumeId = 1;
+    hitState->hitVolumePriority = 9;
+    hitState->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(param_9);
     if (*(char*)(param_10 + 0x27a) != '\0')
     {
@@ -1236,9 +1248,11 @@ int mediumbasket_updateContactHitState(int obj, int state)
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     int control;
     f32 noBlend;
+    ObjHitsPriorityState* hitState;
 
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 10;
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState->hitVolumePriority = 10;
+    hitState->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if (sub->aggression > 0x32)
     {
@@ -1397,10 +1411,12 @@ int mediumbasket_stateHandlerA06(int obj, int state)
     extern int* gPlayerInterface; /* #57 */
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     int choice;
+    ObjHitsPriorityState* hitState;
 
     *(u8*)(*(int*)&sub->control + 0x44) |= 4;
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 10;
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState->hitVolumePriority = 10;
+    hitState->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
@@ -1453,10 +1469,12 @@ int mediumbasket_stateHandlerA05(int obj, int state)
     extern int* gPlayerInterface; /* #57 */
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     int choice;
+    ObjHitsPriorityState* hitState;
 
     *(u8*)(*(int*)&sub->control + 0x44) |= 4;
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 10;
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState->hitVolumePriority = 10;
+    hitState->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
@@ -1534,9 +1552,11 @@ int mediumbasket_updateImpactHitState(int obj, int state)
 {
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     int control = *(int*)&sub->control;
+    ObjHitsPriorityState* hitState;
 
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 10;
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState->hitVolumePriority = 10;
+    hitState->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
@@ -1562,7 +1582,7 @@ int mediumbasket_updateHideResetState(int obj, int state)
 {
     extern undefined4 GameBit_Set(int eventId, int value); /* #57 */
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
-    int hitState;
+    ObjHitsPriorityState* hitState;
 
     if (((GroundBaddieState*)state)->baddie.unk276 != 4 && (s8)((GroundBaddieState*)state)->baddie.moveJustStartedA !=
         0)
@@ -1573,8 +1593,8 @@ int mediumbasket_updateHideResetState(int obj, int state)
     *(u8*)(*(int*)&sub->control + 0x44) |= 0xc;
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
-        hitState = *(int*)&((GameObject*)obj)->anim.hitReactState;
-        ((ObjHitsPriorityState*)hitState)->flags &= ~1;
+        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState->flags &= ~1;
         ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E2D38;
         ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E2D14;
     }
@@ -2183,13 +2203,16 @@ void mediumbasket_leaveWhirlpoolGroup(int obj, GroundBaddieState* state)
 
 void mediumbasket_enterWhirlpoolGroup(int obj, GroundBaddieState* state)
 {
+    ObjHitsPriorityState* hitState;
+
     if (state->baddie.inWhirlpoolGroup == 0)
     {
         ObjGroup_AddObject(obj, 80);
         state->baddie.inWhirlpoolGroup = 1;
     }
     ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState->suppressOutgoingHits = 0;
     ((GameObject*)obj)->anim.rotX -= 256;
 }
 
