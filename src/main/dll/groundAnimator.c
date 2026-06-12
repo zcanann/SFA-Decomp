@@ -5,6 +5,7 @@
 #include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
+#include "main/objanim_update.h"
 #include "main/objseq.h"
 
 typedef struct Dll115Placement
@@ -63,7 +64,7 @@ extern f32 Vec_distance(float* posA, float* posB);
 extern int Obj_GetPlayerObject(void);
 extern uint playerGetStateFlag310(int obj);
 extern void setAButtonIcon(int param_1);
-extern void dll_115_seqFn(void);
+extern int dll_115_seqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern undefined4* gCarryableInterface;

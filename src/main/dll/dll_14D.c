@@ -239,8 +239,8 @@ void dll_14D_initialise_nop(void)
 }
 
 extern void dll_14D_update();
-extern void dll_14D_hitDetect();
-extern void dll_14D_render();
+extern void dll_14D_hitDetect(int param_1);
+extern void dll_14D_render(int p1, int p2, int p3, int p4, s8 visible);
 extern void dll_14D_free_nop();
 extern int dll_14D_getObjectTypeId(void);
 extern int dll_14D_getExtraSize_ret_8(void);

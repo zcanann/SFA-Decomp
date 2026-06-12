@@ -577,7 +577,7 @@ void mmp_bridge_initialise(void)
 }
 
 extern f32 lbl_803E3778;
-extern void pressureswitchfb_updateStateMode(int obj, int p2, int stateParam);
+extern undefined4 pressureswitchfb_updateStateMode(int obj, undefined4 param_2, int stateParam);
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 extern void fn_80137948(char* fmt, ...);
 

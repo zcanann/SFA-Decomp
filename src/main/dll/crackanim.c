@@ -478,8 +478,8 @@ void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 extern void dll_FC_initialise_nop(void);
 extern void dll_FC_release_nop(void);
-extern void dll_FC_init(void);
-extern void dll_FC_update(void);
+extern void dll_FC_init(int obj, int objDef);
+extern void dll_FC_update(int obj);
 extern void dll_FC_hitDetect(int* obj);
 
 extern void objRenderFn_80041018(int* obj);
