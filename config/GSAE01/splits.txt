@@ -897,8 +897,14 @@ main/dll/MMP/MMP_gyservent.c:
 main/dll/DR/hightop.c:
 	.text       start:0x801993B0 end:0x8019B1D8
 
+main/dll/DR/dll_0148_cfguardian.c:
+	.text       start:0x8019B1D8 end:0x8019C784
+
+main/dll/DR/dll_0149_cfwindlift.c:
+	.text       start:0x8019C784 end:0x8019D578
+
 main/dll/DR/sandwormBoss.c:
-	.text       start:0x8019B1D8 end:0x801A0B14
+	.text       start:0x8019D578 end:0x801A0B14
 
 main/dll/DR/dll_0158_gunpowderbarrel.c:
 	.text       start:0x801A0B14 end:0x801A27B8

@@ -1089,6 +1089,8 @@ config.libs = [
             Object(NonMatching, "main/dll/MMP/MMP_moonrock.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/MMP/MMP_gyservent.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/DR/hightop.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/DR/dll_0148_cfguardian.c"),
+            Object(NonMatching, "main/dll/DR/dll_0149_cfwindlift.c"),
             Object(NonMatching, "main/dll/DR/sandwormBoss.c"),
             Object(NonMatching, "main/dll/DR/dll_0158_gunpowderbarrel.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/DR/dll_0159_blasted.c", cflags=cflags_dll_noopt),

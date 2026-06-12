@@ -1,3 +1,10 @@
+/*
+ * sandwormBoss.c - still a 10-DLL container (0x14A CFPowerBase .. 0x157
+ * SpiritDoorSpirit) covering [8019D578-801A0B14); see
+ * docs/boundary_audit.md. The 0x148/0x149 head was carved to
+ * DR/dll_0148_cfguardian.c + DR/dll_0149_cfwindlift.c (skeleton-copy:
+ * their defs here are collapsed to prototypes).
+ */
 #include "main/dll/cfguardian_state.h"
 #include "ghidra_import.h"
 #include "main/camera_interface.h"
@@ -764,13 +771,9 @@ void FUN_8019f1dc(void)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void cfguardian_release(void)
-{
-}
+void cfguardian_release(void);
 
-void cfguardian_initialise(void)
-{
-}
+void cfguardian_initialise(void);
 
 typedef struct
 {
@@ -800,50 +803,7 @@ sizeof
 
 #pragma scheduling off
 #pragma peephole off
-void cfguardian_init(int* obj, u8* params)
-{
-    CfGuardianState * sub;
-    GuardianVec stk1;
-    GuardianVec stk2;
-
-    sub = ((GameObject*)obj)->extra;
-    stk1 = lbl_802C22C0;
-    stk2 = lbl_802C22CC;
-    if (sub == NULL) return;
-    ObjMsg_AllocQueue(obj, 4);
-    sub->questState = (u8)GameBit_Get(0x4b);
-    ((GameObject*)obj)->unkF4 = 1;
-    ((GameObject*)obj)->animEventCallback = (void*)cfguardian_SeqFn;
-    *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    sub->landingPhase = 0;
-    sub->moveSpeed = lbl_803E4110;
-    sub->unkA90 = 6;
-    sub->flagsA9B = 0;
-    sub->flags611 = (u8)(sub->flags611 | 0x28);
-    sub->chatterState = 1;
-    sub->chatterAlt = 0;
-    sub->chatterPick = 0;
-    if (GameBit_Get(0x57) != 0)
-    {
-        sub->questState = 4;
-        if ((s8)params[0x19] == 0)
-        {
-            ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | 0x4000);
-            Obj_RemoveFromUpdateList(obj);
-        }
-    }
-    else if (GameBit_Get(0x60) != 0 && (s8)params[0x19] == 0)
-    {
-        sub->questState = 4;
-        dll_2E_func0A(8, obj);
-    }
-    ObjHits_EnableObject(obj);
-    dll_2E_func05(obj, (u8*)sub, -0x2000, 0x2800, 4);
-    dll_2E_func08((u8*)sub, 0x12c, 0x64);
-    dll_2E_func09((u8*)sub, &stk2, &stk1, 4);
-    objSeqInitFn_80080078(lbl_8032284C, 0xf);
-    sub->flags611 = (u8)(sub->flags611 | 0x2);
-}
+void cfguardian_init(int* obj, u8* params);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -865,38 +825,7 @@ extern void playerAddRemoveMagic(void* player, int n);
  * tops the player back up. Returns 1 if the move was consumed. */
 #pragma scheduling off
 #pragma peephole off
-int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    int* sel;
-    GuardianMsg stk;
-    CfGuardianState * sub = ((GameObject*)obj)->extra;
-    stk = lbl_802C22D8;
-    if (((GameObject*)obj)->seqIndex < 0)
-    {
-        saveGame_saveObjectPos((int)obj);
-        return 0;
-    }
-    if (sub->questState != 6)
-    {
-        sel = &stk.a;
-    }
-    else
-    {
-        sel = &stk.c;
-    }
-    if (animatedObjGetSeqId((int*)animUpdate) != 0x283)
-    {
-        if (dll_2E_func07(obj, animUpdate, (u8*)sub, (s16)sel[0], (s16)sel[1]) != 0)
-        {
-            return 1;
-        }
-    }
-    if (animUpdate->triggerCommand == 2)
-    {
-        playerAddRemoveMagic(Obj_GetPlayerObject(), 0xa);
-    }
-    return 0;
-}
+int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1063,17 +992,11 @@ int babycloudrunner_func0B(void* p)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void windlift_hitDetect(void)
-{
-}
+void windlift_hitDetect(void);
 
-void windlift_release(void)
-{
-}
+void windlift_release(void);
 
-void windlift_initialise(void)
-{
-}
+void windlift_initialise(void);
 
 void cfpowerbase_free(void)
 {
@@ -1770,10 +1693,10 @@ void spiritdoorspirit_initialise(void)
 }
 
 /* 8b "li r3, N; blr" returners. */
-int cfguardian_getExtraSize(void) { return 0xa9c; }
-int cfguardian_getObjectTypeId(void) { return 0x41; }
-int windlift_getExtraSize(void) { return 0x178; }
-int windlift_getObjectTypeId(void) { return 0x0; }
+int cfguardian_getExtraSize(void);
+int cfguardian_getObjectTypeId(void);
+int windlift_getExtraSize(void);
+int windlift_getObjectTypeId(void);
 int cfpowerbase_getExtraSize(void) { return 0x6; }
 int cfpowerbase_getObjectTypeId(void) { return 0x1; }
 int cfmaincrystal_getExtraSize(void) { return 0x160; }
@@ -1797,11 +1720,7 @@ extern f32 lbl_803E41D0;
 extern f32 lbl_803E4210;
 extern f32 lbl_803E42B0;
 #pragma peephole off
-void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E4190);
-}
+void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -1914,7 +1833,7 @@ int fn_801A04F4(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 /* plain forwarder. */
 extern int waterSpellStone1Fn_8019b4c8();
-void cfguardian_update(void) { waterSpellStone1Fn_8019b4c8(); }
+void cfguardian_update(void);
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern f32 lbl_803E42B8;
@@ -2100,15 +2019,7 @@ void gcrobotlightbea_free(int* obj)
     }
 }
 
-void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    int* state = ((GameObject*)obj)->extra;
-    if ((s32)visible != 0)
-    {
-        objRenderFn_8003b8f4(lbl_803E4130);
-        dll_2E_func06(obj, state, 0);
-    }
-}
+void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 void cfprisoncage_hitDetect(int* obj)
 {
@@ -2147,33 +2058,9 @@ void cfprisoncage_init(int* obj, u8* def)
     }
 }
 
-void windlift_free(int* obj)
-{
-    void* p = Obj_GetPlayerObject();
-    if (p == NULL || fn_80296214(p) == lbl_803E416C)
-    {
-        Music_Trigger(189, 0);
-    }
-    ObjGroup_RemoveObject(obj, 73);
-}
+void windlift_free(int* obj);
 
-void cfguardian_free(int* obj, int p2)
-{
-    char* state = ((GameObject*)obj)->extra;
-    if (p2 == 0)
-    {
-        int i;
-        for (i = 0; i < 6; i++)
-        {
-            int* sub = *(int**)&((CfguardianState*)state)->unk68C;
-            if (sub != NULL)
-            {
-                Obj_FreeObject(sub);
-            }
-            state += 4;
-        }
-    }
-}
+void cfguardian_free(int* obj, int p2);
 
 
 void cfprisonuncle_init(int* obj)
@@ -2196,50 +2083,11 @@ void cfprisonuncle_init(int* obj)
 #pragma scheduling reset
 
 /* copy 3 floats within same struct */
-void cfguardian_hitDetect(int* obj)
-{
-    ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
-}
+void cfguardian_hitDetect(int* obj);
 
 #pragma scheduling off
 #pragma dont_inline on
-int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4)
-{
-    int* result = NULL;
-    int local[2];
-    int found;
-
-    if (p4 == 1)
-    {
-        local[0] = 0;
-        local[1] = 0;
-    }
-    else
-    {
-        local[0] = 25;
-        local[1] = 21;
-    }
-
-    found = (*gRomCurveInterface)->find(
-        local, 2, p2,
-        ((GameObject*)obj)->anim.localPosX,
-        ((GameObject*)obj)->anim.localPosY,
-        ((GameObject*)obj)->anim.localPosZ);
-
-    if (found > -1)
-    {
-        result = (int*)(*gRomCurveInterface)->getById(found);
-        if (outVec != NULL)
-        {
-            *(f32*)((char*)outVec + 0) = *(f32*)((char*)result + 8);
-            *(f32*)((char*)outVec + 4) = *(f32*)((char*)result + 12);
-            *(f32*)((char*)outVec + 8) = *(f32*)((char*)result + 16);
-        }
-    }
-    return result;
-}
+int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
 #pragma dont_inline reset
 #pragma scheduling reset
 
@@ -2517,48 +2365,7 @@ extern f32 lbl_803E4128;
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
-{
-    f32 dist;
-    f32 dx;
-    f32 dy;
-    f32 dz;
-    s16 d;
-    if (target == NULL)
-    {
-        return 0;
-    }
-    dx = ((GameObject*)target)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-    dy = ((GameObject*)target)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-    dz = ((GameObject*)target)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
-    dist = sqrtf(dz * dz + (dx * dx + dy * dy));
-    if (dist < lbl_803E4124 * speed)
-    {
-        return 1;
-    }
-    normalize(&dx, &dy, &dz);
-    ((GameObject*)obj)->anim.velocityX = timeDelta * (dx * speed);
-    ((GameObject*)obj)->anim.velocityY = timeDelta * (dy * speed);
-    ((GameObject*)obj)->anim.velocityZ = timeDelta * (dz * speed);
-    d = (*(s16*)target + 0x8000) - (u16) * (s16*)obj;
-    if (d > 0x8000)
-    {
-        d = d - 0xffff;
-    }
-    if (d < -0x8000)
-    {
-        d = d + 0xffff;
-    }
-    *(s16*)obj = (f32) * (s16*)obj + ((lbl_803E4128 + (f32)d) * (speed * timeDelta)) / dist;
-    objMove((int)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
-            ((GameObject*)obj)->anim.velocityZ);
-    if (((GameObject*)obj)->anim.currentMove != 0x1a)
-    {
-        ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
-    }
-    ((int(*)(int*, f32, int))ObjAnim_SampleRootCurvePhase)(obj, speed, p4);
-    return 0;
-}
+int fn_8019B1D8(int* obj, int* target, f32 speed, int p4);
 #pragma peephole reset
 #pragma scheduling reset
 #pragma dont_inline reset
@@ -2604,66 +2411,7 @@ typedef struct
  * gamebits and clear all 14 rider slots. */
 #pragma scheduling off
 #pragma peephole off
-void windlift_init(int* obj, u8* def)
-{
-    int i;
-    WindLiftSub* sub = ((GameObject*)obj)->extra;
-    sub->seqId = ((WindliftObjectDef*)def)->seqId;
-    sub->duration = seqStreamLookupFn_8007fff8(lbl_80322A48, 4, sub->seqId);
-    sub->gamebit = seqStreamLookupFn_8007fff8(lbl_80322A68, 3, sub->seqId);
-    if (sub->gamebit == 0)
-    {
-        sub->gamebit = -1;
-    }
-    if (sub->duration == 0)
-    {
-        sub->duration = 100;
-    }
-    sub->delay = ((WindliftObjectDef*)def)->delay;
-    sub->timer = 0;
-    if (*(s8*)(def + 0x19) != 0)
-    {
-        sub->liftHeight = lbl_803E41C8 * (f32) * (s8*)(def + 0x19);
-    }
-    else
-    {
-        sub->liftHeight = lbl_803E41CC;
-    }
-    ((GameObject*)obj)->anim.rootMotionScale = (*(f32*)(*(char**)&((GameObject*)obj)->anim.modelInstance + 4) * sub->
-        liftHeight) / lbl_803E41CC;
-    if (GameBit_Get(0x57) != 0 || sub->duration >= 0xa)
-    {
-        sub->timer = 0x3c;
-    }
-    sub->active = 1;
-    if (sub->gamebit != -1)
-    {
-        if (GameBit_Get(sub->gamebit) != 0)
-        {
-            sub->timer = 0x3c;
-        }
-        else
-        {
-            sub->active = 0;
-            ((GameObject*)obj)->anim.alpha = 0;
-        }
-    }
-    {
-        f32 v2 = lbl_803E416C;
-        f32 v1 = lbl_803E4168;
-        for (i = 0; i < 14; i++)
-        {
-            sub->slots[i].b10 = 0;
-            sub->slots[i].b10 &= ~0xf1;
-            sub->slots[i].f4 = v1;
-            sub->slots[i].fc = v2;
-            sub->slots[i].f8 = v2;
-            sub->slots[i].i0 = 0;
-            sub->slots[i].b11 = 0;
-        }
-    }
-    ObjGroup_AddObject(obj, 0x49);
-}
+void windlift_init(int* obj, u8* def);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -2972,206 +2720,7 @@ extern f32 lbl_803E41B8;
  * oscillation damping and player-mode handoff. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int pm, uint dur, f32 height)
-{
-    char* player;
-    f32 dy;
-    f32 dist;
-    f32 factor;
-    f32 scale;
-    u8 flags;
-    u8 fl;
-    int fe;
-    player = (char*)Obj_GetPlayerObject();
-    dy = ((GameObject*)rider)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-    if (dy < lbl_803E416C)
-    {
-        return;
-    }
-    dist = Vec_xzDistance((char*)rider + 0x18, (char*)obj + 0x18);
-    if (dist > lbl_803E4170 + height && (slot->b10 & 0xe0) == 0)
-    {
-        return;
-    }
-    flags = slot->b10;
-    if ((flags & 0x80) != 0 && gb != 0)
-    {
-        return;
-    }
-    if (dist < height)
-    {
-        if ((flags & 0xe0) == 0 || (flags & 0x80) != 0)
-        {
-            if (gb != 0 && (!flags & 0x80) != 0 && dy < lbl_803E4174)
-            {
-                slot->b10 |= 0x80;
-                return;
-            }
-            if ((flags & 0x2) != 0)
-            {
-                if (dy / pull > lbl_803E4178)
-                {
-                    slot->b10 |= 0x4;
-                    slot->b10 &= ~0x8;
-                }
-                else
-                {
-                    slot->b10 |= 0x8;
-                    slot->b10 &= ~0x4;
-                }
-                slot->b10 &= ~0x2;
-            }
-            if (gb == 0)
-            {
-                slot->b10 |= 0x40;
-                slot->b10 &= ~0x20;
-                ObjMsg_SendToObject(rider, 0xf, obj, (((slot->b10 & 0xe0) >> 4) << 8) | dur);
-                slot->b10 &= ~0x80;
-            }
-            else
-            {
-                if (dy > lbl_803E417C)
-                {
-                    ObjMsg_SendToObject(rider, 0xf, obj, (((slot->b10 & 0xe0) >> 4) << 8) | dur);
-                }
-                slot->b10 |= 0x20;
-                slot->b10 &= ~0x40;
-            }
-        }
-        scale = lbl_803E4180;
-        fl = slot->b10;
-        fe = fl & 0xe;
-        if (fe != 0 && (fl & 8) != 0 && gb == 0)
-        {
-            pull = pull * lbl_803E4184;
-        }
-        pull = pull * lbl_803E4184;
-        if (pull <= lbl_803E4170)
-        {
-            return;
-        }
-        if (dy < lbl_803E4188)
-        {
-            dy = lbl_803E4188;
-        }
-        if (gb == 0)
-        {
-            f32 lim = pull - (pull / lbl_803E418C) * (slot->fc * (slot->fc * slot->fc));
-            f32 t;
-            if (dy > lim)
-            {
-                t = lbl_803E416C;
-            }
-            else
-            {
-                f32 d = lim - dy;
-                if (d > lbl_803E4174)
-                {
-                    t = lbl_803E4190;
-                }
-                else
-                {
-                    t = d / lbl_803E4174;
-                }
-            }
-            factor = t;
-            slot->b10 |= 1;
-            if (((slot->fc < lbl_803E4194 && slot->b11 % 2 != 0)
-                    || (slot->fc > lbl_803E4198 && slot->b11 % 2 == 0))
-                && (slot->b10 & 8) != 0)
-            {
-                if (slot->b11++ > 2)
-                {
-                    slot->b10 &= ~0x8;
-                    slot->b10 |= 0x4;
-                }
-            }
-        }
-        else
-        {
-            f32 v = slot->fc;
-            f32 thr;
-            if (fe != 0)
-            {
-                thr = lbl_803E4168;
-            }
-            else
-            {
-                thr = lbl_803E419C;
-            }
-            if (v > thr)
-            {
-                slot->b11 = 1;
-            }
-            scale = scale * lbl_803E41A0;
-            if (slot->b11 == 0)
-            {
-                f32 c;
-                if ((slot->b10 & 0xe) != 0)
-                {
-                    c = lbl_803E4190 - dy / (lbl_803E41A4 * pull);
-                }
-                else
-                {
-                    c = lbl_803E4190 - dy / (lbl_803E41A8 * pull);
-                }
-                if (c < lbl_803E416C)
-                {
-                    c = lbl_803E416C;
-                }
-                factor = c * c;
-            }
-            else
-            {
-                factor = lbl_803E41AC;
-            }
-        }
-        slot->f8 = scale * factor - lbl_803E41B0;
-        slot->fc = slot->fc + slot->f8;
-        if (slot->fc > lbl_803E41B4)
-        {
-            slot->fc = lbl_803E41B4;
-        }
-        if (lbl_803E416C == slot->fc)
-        {
-            slot->fc = lbl_803E41B8;
-        }
-        if (dy < lbl_803E4174 && gb != 0)
-        {
-            slot->fc = lbl_803E416C;
-            slot->b11 = 0;
-            ObjMsg_SendToObject(rider, 0x10, obj, gb);
-            slot->b10 |= 0x80;
-            if (pm != 0)
-            {
-                ((GameObject*)player)->anim.velocityY = lbl_803E416C;
-            }
-        }
-        if (pm != 0)
-        {
-            fn_80296220(rider, slot->fc);
-        }
-        else
-        {
-            ((GameObject*)rider)->anim.localPosY = slot->fc * timeDelta + ((GameObject*)rider)->anim.localPosY;
-            ((GameObject*)rider)->anim.velocityY = slot->fc * timeDelta;
-        }
-    }
-    else
-    {
-        if (pm != 0)
-        {
-            fn_80296220(rider, lbl_803E416C);
-        }
-        if (pm == 0)
-        {
-            ObjMsg_SendToObject(rider, 0x10, obj, gb);
-            slot->b10 &= ~0xf1;
-            slot->fc = lbl_803E416C;
-            slot->b11 = 0;
-        }
-    }
-}
+void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int pm, uint dur, f32 height);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -3184,153 +2733,7 @@ extern f32 lbl_803E41BC;
  * physics on each. */
 #pragma scheduling off
 #pragma peephole off
-void windlift_update(int* obj)
-{
-    u8* def;
-    WindLiftSub* sub = ((GameObject*)obj)->extra;
-    int level;
-    int gb2;
-    char* player;
-    f32 pull;
-    int idx;
-    int j;
-    int found;
-    int count;
-    int** objs;
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (sub->active)
-    {
-        level = (int)(lbl_803E41BC * timeDelta + (f32)(int)((GameObject*)obj)->anim.alpha);
-        if (sub->gamebit != -1 && GameBit_Get(sub->gamebit) == 0)
-        {
-            sub->active = 0;
-        }
-    }
-    else
-    {
-        level = (int)-(lbl_803E41BC * timeDelta - (f32)(int)((GameObject*)obj)->anim.alpha);
-        if (sub->gamebit != -1 && GameBit_Get(sub->gamebit) != 0)
-        {
-            sub->active = 1;
-        }
-    }
-    ((GameObject*)obj)->anim.alpha = (level < 0) ? 0 : ((level > 0xff) ? 0xff : level);
-    if ((GameBit_Get(0x57) != 0 || sub->duration > 0xa) && sub->active)
-    {
-        int t = sub->timer;
-        sub->timer = t + 1;
-        if (t < 0x3c && GameBit_Get(sub->seqId) == 0)
-        {
-            *(s16*)obj -= ((framesThisStep * 100) * (sub->timer * sub->timer)) / 0x3c;
-            Obj_SetActiveModelIndex(obj, 0);
-            return;
-        }
-        Obj_SetActiveModelIndex(obj, 1);
-        gb2 = GameBit_Get(sub->delay);
-        {
-            int m = (u16)framesThisStep * 0xb6;
-            *(s16*)obj -= m * ((gb2 << 2) + 0xe);
-        }
-        pull = (f32)((WindliftPlacement*)def)->unk1A;
-        player = (char*)Obj_GetPlayerObject();
-        if (GameBit_Get(sub->seqId) != 0)
-        {
-            if (!sub->musicOn)
-            {
-                sub->musicOn = 1;
-                Music_Trigger(0xbd, 1);
-            }
-            if (player != NULL)
-            {
-                fn_8019C784(obj, (int*)player, &sub->slots[0], pull, gb2, 1, sub->duration, sub->liftHeight);
-            }
-        }
-        else
-        {
-            if (sub->musicOn)
-            {
-                Music_Trigger(0xbd, 0);
-                sub->musicOn = 0;
-            }
-            if ((sub->slots[0].b10 & 0xe0) != 0)
-            {
-                u8 b;
-                fn_80296220((int*)player, lbl_803E416C);
-                b = sub->slots[0].b10;
-                if ((b & 0xe) != 0)
-                {
-                    sub->slots[0].b10 = b | 2;
-                }
-                sub->slots[0].fc = lbl_803E416C;
-                sub->slots[0].b11 = 0;
-                sub->slots[0].b10 &= ~0xf1;
-            }
-        }
-        objs = (int**)ObjGroup_GetObjects(0x16, &count);
-        count = count + 1;
-        if (count > 0xe)
-        {
-            count = 0xe;
-        }
-        for (j = 1; j < 14; j++)
-        {
-            sub->slots[j].link14 = -1;
-        }
-        for (idx = 1; idx < count; idx++)
-        {
-            found = -1;
-            for (j = 1; j < 14; j++)
-            {
-                if ((u32)sub->slots[j].i0 == (u32) * objs)
-                {
-                    found = j;
-                }
-            }
-            if (found == -1)
-            {
-                for (j = 1; j < 0xe; j++)
-                {
-                    if ((u32)sub->slots[j].i0 == 0)
-                    {
-                        found = j;
-                        sub->slots[j].b10 = 0;
-                        sub->slots[j].b10 &= ~0xf1;
-                        sub->slots[j].f4 = lbl_803E4168;
-                        sub->slots[j].fc = lbl_803E416C;
-                        sub->slots[j].f8 = lbl_803E416C;
-                        sub->slots[j].i0 = 0;
-                        sub->slots[j].b11 = 0;
-                        j = 2000;
-                    }
-                }
-                if (found == -1)
-                {
-                    return;
-                }
-                sub->slots[found].i0 = (int)*objs;
-            }
-            sub->slots[found].link14 = found;
-            {
-                int* rider = *objs;
-                if ((((GameObject*)rider)->objectFlags & 0x1000) != 0)
-                {
-                    objs++;
-                }
-                else if (rider != NULL)
-                {
-                    fn_8019C784(obj, *objs++, &sub->slots[found], pull, gb2, 0, sub->duration, sub->liftHeight);
-                }
-            }
-        }
-        for (j = 1; j < 14; j++)
-        {
-            if (sub->slots[j].link14 == -1)
-            {
-                sub->slots[j].i0 = 0;
-            }
-        }
-    }
-}
+void windlift_update(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -3894,420 +3297,6 @@ extern f32 lbl_803E412C;
  * idle chatter. */
 #pragma scheduling off
 #pragma peephole off
-int waterSpellStone1Fn_8019b4c8(int* obj)
-{
-    u8* def;
-    char* player;
-    CfGuardianState * sub;
-    u8 evbuf[0x1c];
-    f32 v[3];
-    f32 k;
-    f32 nearDist = lbl_803E412C;
-    f32 ground = lbl_803E4130;
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    evbuf[0x1b] = 0;
-    sub = ((GameObject*)obj)->extra;
-    sub->flagsA9B &= ~0x2;
-    sub->moveSpeed = lbl_803E4134;
-    player = (char*)Obj_GetPlayerObject();
-    ObjTrigger_UpdateIdBlockFlag((int)obj);
-    if (*(s8*)(def + 0x19) == 1 && GameBit_Get(0x57) == 0)
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-        return 0;
-    }
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
-    switch (sub->questState)
-    {
-    case 0:
-        if (sub->chatterState == 2)
-        {
-            sub->chatterState = 1;
-        }
-        if (GameBit_Get(0x94f) != 0)
-        {
-            sub->questState = 1;
-        }
-        break;
-    case 1:
-        if (sub->chatterState == 2)
-        {
-            sub->chatterState = 1;
-        }
-        if (GameBit_Get(0x4e) != 0)
-        {
-            sub->questState = 3;
-            ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
-            ((GameObject*)obj)->unkF4 = 0;
-            GameBit_Set(0x48, 1);
-            sub->flagsA9B |= 1;
-        }
-        break;
-    case 2:
-        if (sub->chatterState == 2)
-        {
-            sub->chatterState = 1;
-        }
-        sub->flagsA9B |= 2;
-        if (fn_8019AF64(obj, (u8*)sub + 0x6bc, lbl_803E4138, 0, (u8*)sub + 0x7fc) != 0)
-        {
-            sub->flagsA9B &= ~1;
-            sub->questState = 4;
-        }
-        break;
-    case 3:
-        (*gObjectTriggerInterface)->runSequence(2, obj, -1);
-        GameBit_Set(0x60, 1);
-        sub->questState = 2;
-        break;
-    case 4:
-        if (GameBit_Get(0x57) != 0)
-        {
-            if (*(s8*)(def + 0x19) != 1)
-            {
-                sub->questState = 0xf;
-                sub->chatterAlt = 0;
-            }
-            else
-            {
-                sub->questState = 0xe;
-                sub->chatterAlt = 0;
-            }
-        }
-        else if (sub->chatterState == 2)
-        {
-            sub->chatterState = 1;
-            sub->chatterAlt = (s8)((sub->chatterAlt + 1) % 2);
-        }
-        break;
-    case 6:
-        if (sub->landingPhase == 0)
-        {
-            if (sub->chatterState == 2)
-            {
-                sub->chatterState = 1;
-            }
-        }
-        else
-        {
-            if (sub->landingPhase >= 2)
-            {
-                ((GameObject*)obj)->anim.velocityX = lbl_803E4110;
-                ((GameObject*)obj)->anim.velocityZ = lbl_803E4110;
-                ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)
-                    ->anim.localPosY;
-                hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                     ((GameObject*)obj)->anim.localPosZ, &ground, 0);
-                *(s16*)obj = (s16)((0xc0 << (*(s16*)obj + 8)) >> 1);
-                (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~0x400;
-                if (ground <= lbl_803E4130)
-                {
-                    sub->landingPhase = 2;
-                    ((GameObject*)obj)->anim.localPosY -= ground;
-                    sub->chatterState = 1;
-                    ((GameObject*)obj)->unkF4 = 0;
-                    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4110, 0);
-                    {
-                        char* pt = (char*)findRomCurvePointNearObject(obj, 0, 0, 2);
-                        f32 d;
-                        sub->homeX = *(f32*)(pt + 8);
-                        sub->homeY = *(f32*)(pt + 0xc);
-                        sub->homeZ = *(f32*)(pt + 0x10);
-                        sub->homeYaw = (s16)(*(s8*)(pt + 0x2c) << 8);
-                        d = sub->homeY - ((GameObject*)obj)->anim.localPosY;
-                        d = (d >= lbl_803E4110) ? d : -d;
-                        if (d < lbl_803E413C)
-                        {
-                            ObjGroup_AddObject(obj, 0x16);
-                            sub->questState = 7;
-                            ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
-                        }
-                    }
-                }
-                else
-                {
-                    ((GameObject*)obj)->anim.velocityY -= lbl_803E4140;
-                }
-            }
-            else
-            {
-                f32 w = lbl_803E4144 * ((GameObject*)obj)->anim.velocityY;
-                w = (w >= lbl_803E4110) ? w : -w;
-                *(s16*)obj = (f32) * (s16*)obj + w;
-                sub->moveSpeed = lbl_803E4148;
-                if (GameBit_Get(0x8e9) != 0)
-                {
-                    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4110, 0);
-                    ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
-                    ((GameObject*)obj)->anim.velocityY = lbl_803E4110;
-                    ObjGroup_RemoveObject(obj, 0x16);
-                    ((GameObject*)obj)->anim.velocityX = lbl_803E4110;
-                    ((GameObject*)obj)->anim.velocityY = lbl_803E414C;
-                    ((GameObject*)obj)->anim.velocityZ = lbl_803E4110;
-                    sub->landingPhase = 2;
-                    sub->flagsA9B &= ~1;
-                }
-            }
-            if (sub->landingPhase < 2)
-            {
-                ((GameObject*)obj)->anim.localPosX = timeDelta * ((GameObject*)obj)->anim.velocityX + ((GameObject*)obj)
-                    ->anim.localPosX;
-                ((GameObject*)obj)->anim.localPosZ = timeDelta * ((GameObject*)obj)->anim.velocityZ + ((GameObject*)obj)
-                    ->anim.localPosZ;
-                if (sub->bounceLatch != 0)
-                {
-                    ((GameObject*)obj)->anim.velocityX = lbl_803E4150 * -((GameObject*)obj)->anim.velocityX;
-                    ((GameObject*)obj)->anim.velocityZ = lbl_803E4150 * -((GameObject*)obj)->anim.velocityZ;
-                }
-                v[0] = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj)->anim.previousLocalPosX;
-                v[1] = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj)->anim.previousLocalPosY;
-                v[2] = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ;
-                k = lbl_803E4154 * oneOverTimeDelta;
-                v[0] = v[0] * k;
-                v[1] = v[1] * k;
-                v[2] = v[2] * k;
-                ((GameObject*)obj)->anim.velocityX = v[0] + ((GameObject*)obj)->anim.velocityX;
-                ((GameObject*)obj)->anim.velocityY = v[1] + ((GameObject*)obj)->anim.velocityY;
-                ((GameObject*)obj)->anim.velocityZ = v[2] + ((GameObject*)obj)->anim.velocityZ;
-                ((GameObject*)obj)->anim.velocityX = lbl_803E4138 * ((GameObject*)obj)->anim.velocityX;
-                ((GameObject*)obj)->anim.velocityY = lbl_803E4138 * ((GameObject*)obj)->anim.velocityY;
-                ((GameObject*)obj)->anim.velocityZ = lbl_803E4138 * ((GameObject*)obj)->anim.velocityZ;
-            }
-        }
-        break;
-    case 7:
-        if (sub->chatterState == 2)
-        {
-            sub->chatterState = 1;
-        }
-        sub->flagsA9B |= 2;
-        if (fn_8019AF64(obj, (u8*)sub + 0x6bc, lbl_803E4138, 1, (u8*)sub + 0x7fc) != 0)
-        {
-            sub->questState = 8;
-            ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
-        }
-        break;
-    case 8:
-        if ((void*)ObjGroup_FindNearestObject(3, obj, &nearDist) != NULL && nearDist < lbl_803E4158)
-        {
-            dll_2E_func04(sub);
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 0x10;
-        }
-        if (nearDist > lbl_803E4158 && Vec_xzDistance(player + 0x18, (char*)obj + 0x18) < lbl_803E413C)
-        {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x10;
-            if ((sub->flagsA9B & 4) == 0 && lbl_80322954[sub->questState] != 0)
-            {
-                dll_2E_func0C(0xf, (u8*)sub + 0xa68);
-                sub->flagsA9B |= 5;
-                lbl_80322954[sub->questState] = 0;
-            }
-            if (sub->chatterState == 2)
-            {
-                sub->chatterState = 1;
-                sub->chatterAlt = (s8)((sub->chatterAlt + 1) % 2);
-            }
-        }
-        else
-        {
-            if ((sub->flagsA9B & 4) == 0 && lbl_80322954[sub->questState] != 0xe)
-            {
-                sub->chatterState = 2;
-                sub->flagsA9B |= 5;
-                dll_2E_func0A(0xe, (int*)((u8*)sub + 0xa68));
-                lbl_80322954[sub->questState] = 0xe;
-            }
-        }
-        if ((sub->flagsA9B & 4) != 0
-            && fn_8019B1D8(obj, (int*)((u8*)sub + 0xa68), lbl_803E4128, (int)((u8*)sub + 0x7fc)) != 0)
-        {
-            ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
-            sub->flagsA9B &= ~0x5;
-        }
-        if (GameBit_Get(0x43) != 0)
-        {
-            sub->questState = 9;
-            sub->chatterAlt = 0;
-        }
-        break;
-    case 9:
-        if ((void*)ObjGroup_FindNearestObject(3, obj, &nearDist) != NULL && nearDist < lbl_803E4158)
-        {
-            dll_2E_func04(sub);
-        }
-        if (nearDist > lbl_803E4158 && Vec_xzDistance(player + 0x18, (char*)obj + 0x18) < lbl_803E413C)
-        {
-            if ((sub->flagsA9B & 4) == 0 && lbl_80322954[sub->questState] != 0)
-            {
-                dll_2E_func0C(0xf, (u8*)sub + 0xa68);
-                sub->flagsA9B |= 5;
-                lbl_80322954[sub->questState] = 0;
-            }
-            if (sub->chatterState == 2)
-            {
-                sub->chatterState = 1;
-                sub->chatterAlt = (s8)((sub->chatterAlt + 1) % 2);
-            }
-        }
-        else
-        {
-            if ((sub->flagsA9B & 4) == 0 && lbl_80322954[sub->questState] != 0xe)
-            {
-                sub->chatterState = 2;
-                sub->flagsA9B |= 5;
-                dll_2E_func0A(0xe, (int*)((u8*)sub + 0xa68));
-                lbl_80322954[sub->questState] = 0xe;
-            }
-        }
-        if ((sub->flagsA9B & 4) != 0
-            && fn_8019B1D8(obj, (int*)((u8*)sub + 0xa68), lbl_803E4128, (int)((u8*)sub + 0x7fc)) != 0)
-        {
-            ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
-            sub->flagsA9B &= ~0x5;
-        }
-        if (GameBit_Get(0x4be) != 0)
-        {
-            sub->questState = 0xa;
-            ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
-            ((GameObject*)obj)->unkF4 = 0;
-        }
-        break;
-    case 10:
-        if (sub->chatterState == 2)
-        {
-            sub->chatterState = 1;
-        }
-        sub->flagsA9B |= 2;
-        if (fn_8019AF64(obj, (u8*)sub + 0x6bc, lbl_803E415C, 2, (u8*)sub + 0x7fc) != 0)
-        {
-            sub->questState = 0xb;
-        }
-        break;
-    case 11:
-        if (sub->chatterState == 2)
-        {
-            sub->chatterState = 1;
-        }
-        ((GameObject*)obj)->anim.alpha = 0;
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
-        Obj_RemoveFromUpdateList(obj);
-        ((GameObject*)obj)->anim.flags |= 0x4000;
-        sub->questState = 0xf;
-        break;
-    case 12:
-        if (sub->chatterState == 2)
-        {
-            sub->chatterState = 1;
-        }
-        if (GameBit_Get(0x4b7) != 0)
-        {
-            (*gCameraInterface)->setTarget((int)obj);
-            (*gObjectTriggerInterface)->runSequence(0xb, obj, -1);
-            GameBit_Set(0x4b7, 0);
-        }
-        if (GameBit_Get(0x49a) != 0)
-        {
-            sub->questState = 0xd;
-        }
-        break;
-    case 13:
-        if (sub->chatterState == 2)
-        {
-            sub->chatterState = 1;
-        }
-        if (GameBit_Get(0x4b7) != 0)
-        {
-            (*gCameraInterface)->setTarget((int)obj);
-            (*gObjectTriggerInterface)->runSequence(0xa, obj, -1);
-            GameBit_Set(0x4b7, 0);
-        }
-        if (GameBit_Get(0x4aa) != 0)
-        {
-            sub->questState = 0xe;
-        }
-        break;
-    case 14:
-        if (sub->chatterState == 2)
-        {
-            sub->chatterState = 1;
-        }
-        break;
-    case 15:
-        ((GameObject*)obj)->anim.flags |= 0x4000;
-        Obj_RemoveFromUpdateList(obj);
-        (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
-        break;
-    }
-    dll_2E_func03(obj, sub);
-    if (ObjTrigger_IsSet(obj) != 0)
-    {
-        buttonDisable(0, 0x100);
-        if ((*gGameUIInterface)->isEventReady(0x2e8) != 0)
-        {
-            GameBit_Set(0x4ab, 1);
-        }
-        else if (sub->chatterState == 1)
-        {
-            int* tbl = (int*)seqStreamLookupFn_8007fff8(lbl_8032284C, 0xf, sub->questState);
-            int pick;
-            if (fn_80296A14((int)player) > 3)
-            {
-                pick = tbl[0];
-            }
-            else
-            {
-                pick = tbl[1];
-            }
-            if (sub->chatterPick % 2 != 0 && tbl[2] != -1)
-            {
-                pick = tbl[2];
-            }
-            sub->chatterPick += 1;
-            if (pick != -1)
-            {
-                sub->chatterState = 2;
-                (*gObjectTriggerInterface)->runSequence(pick, obj, -1);
-            }
-        }
-    }
-    if (GameBit_Get(0x902) != 0)
-    {
-        int* tbl2 = (int*)seqStreamLookupFn_8007fff8(lbl_8032284C, 0xf, sub->questState);
-        if (tbl2[0] != -1)
-        {
-            sub->chatterState = 2;
-            (*gObjectTriggerInterface)->runSequence(tbl2[0], obj, -1);
-            GameBit_Set(0x902, 0);
-        }
-    }
-    {
-        int mv = lbl_80322954[sub->questState];
-        if (mv != -1 && (sub->flagsA9B & 1) == 0 && ((GameObject*)obj)->anim.currentMove != mv)
-        {
-            ObjAnim_SetCurrentMove((int)obj, mv, lbl_803E4110, 0);
-            ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x50);
-        }
-    }
-    if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, sub->moveSpeed, (f32)framesThisStep,
-                                                                    evbuf) != 0
-        && (sub->flagsA9B & 1) != 0
-        && ((GameObject*)obj)->anim.currentMove != 0x1a
-        && ((GameObject*)obj)->anim.currentMove != 9)
-    {
-        sub->flagsA9B &= ~1;
-    }
-    fn_8019AE3C(obj, evbuf, &lbl_803DBE20);
-    if (randFn_80080100(0x3c) != 0)
-    {
-        objAudioFn_800393f8((int)obj, (u8*)sub + 0x624, 0xdf, 0x1000, -1, 0);
-    }
-    objAnimFn_80038f38((int)obj, (u8*)sub + 0x624);
-    characterDoEyeAnims(obj, (u8*)sub + 0x654);
-    if (sub->questState != GameBit_Get(0x4b))
-    {
-        GameBit_Set(0x4b);
-    }
-    return 0;
-}
+int waterSpellStone1Fn_8019b4c8(int* obj);
 #pragma peephole reset
 #pragma scheduling reset
