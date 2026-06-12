@@ -510,6 +510,7 @@ FUN_80160aa4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 {
     int iVar1;
     undefined4 uVar2;
+    ObjHitsPriorityState* hitState;
 
     if (*(char*)(param_10 + 0x27b) == '\0')
     {
@@ -532,7 +533,8 @@ FUN_80160aa4(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
         *(undefined4*)(param_10 + 0x2d0) = 0;
         *(undefined*)(param_10 + 0x25f) = 0;
         *(undefined*)(param_10 + 0x349) = 0;
-        (*(ObjHitsPriorityState**)&((GameObject*)param_9)->anim.hitReactState)->flags &= ~1;
+        hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
+        hitState->flags &= ~1;
         *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_9)->anim.resetHitboxMode |
             8;
         uVar2 = 0;
@@ -655,6 +657,7 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
     undefined4 uVar3;
     int iVar4;
     double dVar5;
+    ObjHitsPriorityState* hitState;
     float local_48;
     float local_44;
     float local_40;
@@ -664,8 +667,9 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
     uint uStack_2c;
 
     iVar4 = *(int*)(*(int*)&((GameObject*)param_9)->extra + 0x40c);
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)param_9)->anim.hitReactState)->hitVolumePriority = 9;
-    ((ObjHitsPriorityState*)*(int*)&((GameObject*)param_9)->anim.hitReactState)->hitVolumeId = 1;
+    hitState = (ObjHitsPriorityState*)((GameObject*)param_9)->anim.hitReactState;
+    hitState->hitVolumePriority = 9;
+    hitState->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(param_9);
     uVar1 = randomGetRange(0, 100);
     if ((int)uVar1 < 0x32)
