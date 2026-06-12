@@ -10,11 +10,10 @@
 #include "main/dll/gfxemit_state.h"
 #include "main/dll/dll_00ED_collectible.h"
 #include "main/objanim_internal.h"
-#include "main/objhits_types.h"
+#include "main/objhits.h"
 #include "main/obj_placement.h"
 #include "main/dll/collectible_state.h"
 
-extern undefined4 ObjHits_EnableObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
@@ -615,7 +614,6 @@ void collectible_func10(int* obj, f32 f1, f32 f2, f32 f3)
 
 void collectible_func0B(int* obj, int flag)
 {
-    extern undefined8 ObjHits_DisableObject(); /* #57 */
     char* inner = (char*)((int**)obj)[0xb8 / 4];
     *(u8*)(inner + 0xf) = (u8)flag;
     if (flag != 0)
@@ -718,7 +716,6 @@ void staff_update(int* obj);
 
 void fn_80171E5C(int* obj)
 {
-    extern undefined8 ObjHits_DisableObject(); /* #57 */
     extern void itemPickupDoParticleFx(int* obj, f32 f, int a, int b); /* #57 */
     extern void Sfx_PlayFromObject(int* obj, int sfx); /* #57 */
     extern void* Obj_GetPlayerObject(void); /* #57 */
@@ -1159,12 +1156,12 @@ void collectible_update(int obj)
 {
     extern void fn_80172144(int obj); /* #57 */
     extern void Obj_FreeObject(int obj); /* #57 */
-    extern void ObjHits_DisableObject(int obj); /* #57 */
     extern void itemPickupDoParticleFx(int obj, f32 scale, int a, int b); /* #57 */
     extern void fn_80171E5C(int obj); /* #57 */
     extern u8* Obj_GetPlayerObject(void); /* #57 */
     extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f); /* #57 */
     u8* state = ((GameObject*)obj)->extra;
+    ObjHitsPriorityState* hitState;
     int msgParam;
     int msg;
     int t;
@@ -1252,7 +1249,8 @@ void collectible_update(int obj)
     {
         if (((GameObject*)obj)->anim.hitReactState != NULL)
         {
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags |= 0x100;
+            hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+            hitState->flags |= 0x100;
         }
         ObjHits_DisableObject(obj);
         if (((GfxEmitState*)state)->hideGameBit != -1 && GameBit_Get((s32)((GfxEmitState*)state)->hideGameBit) == 0)
