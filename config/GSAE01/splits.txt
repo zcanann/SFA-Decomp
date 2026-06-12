@@ -2029,8 +2029,14 @@ main/dll/dll_0287_spscarab.c:
 	.text       start:0x801E8EA4 end:0x801E9328
 	.data       start:0x80328418 end:0x80328450
 
-main/dll/DRsimplehuman.c:
-	.text       start:0x801E9328 end:0x801E9C00
+main/dll/dll_0288_spdrape.c:
+	.text       start:0x801E9328 end:0x801E97DC
+
+main/dll/dll_0289_spitembeam.c:
+	.text       start:0x801E97DC end:0x801E991C
+
+main/dll/dll_801E991C.c:
+	.text       start:0x801E991C end:0x801E9C00
 
 main/dll/DRcloudcage.c:
 	.text       start:0x801E9C00 end:0x801EA854

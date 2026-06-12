@@ -328,10 +328,7 @@ void spdrape_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void spitembeam_init(int obj)
-{
-    ((GameObject*)obj)->objectFlags = (ushort)(((GameObject*)obj)->objectFlags | 0x6000);
-}
+void spitembeam_init(int obj);
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -343,68 +340,25 @@ void spdrape_initialise(void)
 {
 }
 
-void spitembeam_free(void)
-{
-}
+void spitembeam_free(void);
 
-void spitembeam_render(void)
-{
-}
+void spitembeam_render(void);
 
-void spitembeam_hitDetect(void)
-{
-}
+void spitembeam_hitDetect(void);
 
-void spitembeam_release(void)
-{
-}
+void spitembeam_release(void);
 
-void spitembeam_initialise(void)
-{
-}
+void spitembeam_initialise(void);
 
 extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
 extern int* objFindTexture(int* obj, int a, int b);
 extern f32 lbl_803E5AD8;
 
-void spitembeam_update(int* obj)
-{
-    int* target;
-    u8* def;
-    int* tex;
-    f32 d;
-
-    target = *(int**)&((GameObject*)obj)->unkF4;
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    d = lbl_803E5AD8;
-    if (target == NULL)
-    {
-        *(int**)&((GameObject*)obj)->unkF4 = ObjGroup_FindNearestObject(9, obj, &d);
-    }
-    else
-    {
-        if (((int(*)(int*, s16))(**(int***)((char*)target + 0x68))[10])(target, ((SpitembeamPlacement*)def)->unk1A) == 0
-            || ((int(*)(int*, s16))(**(int***)((char*)target + 0x68))[11])(target, ((SpitembeamPlacement*)def)->unk1A)
-            != 0)
-        {
-            ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-            ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x8000);
-        }
-        tex = objFindTexture(obj, 0, 0);
-        if (tex != NULL)
-        {
-            *(s16*)((char*)tex + 8) += 8;
-            if (*(s16*)((char*)tex + 8) > 0x400)
-            {
-                *(s16*)((char*)tex + 8) -= 0x400;
-            }
-        }
-    }
-}
+void spitembeam_update(int* obj);
 
 /* 8b "li r3, N; blr" returners. */
-int spitembeam_getExtraSize(void) { return 0x0; }
-int spitembeam_getObjectTypeId(void) { return 0x0; }
+int spitembeam_getExtraSize(void);
+int spitembeam_getObjectTypeId(void);
 
 extern f32 lbl_803E5AC0;
 extern f32 lbl_803E5AC4;
@@ -518,65 +472,5 @@ extern f32 playerMapOffsetZ;
  * EN v1.0 Size: 740b
  */
 #pragma opt_common_subs off
-void fn_801E991C(int p1, char* table)
-{
-    u8 r;
-    u8 g;
-    u8 b;
-    ShColor color;
-    char* p;
-    int i;
-
-    color = lbl_803E5AE4;
-    selectTexture(lbl_803DDC60, 0);
-    textureSetupFn_800799c0();
-    geomDrawFn_800796f0();
-    textRenderSetupFn_80079804();
-    GXSetTevColor(2, color);
-    gxSetZMode_(1, 3, 0);
-    GXSetBlendMode(1, 4, 5, 5);
-    gxSetPeControl_ZCompLoc_(1);
-    GXSetAlphaCompare(7, 0, 0, 7, 0);
-    GXSetCullMode(0);
-    GXClearVtxDesc();
-    GXSetVtxDesc(9, 1);
-    GXSetVtxDesc(0xb, 1);
-    GXSetVtxDesc(0xd, 1);
-    GXLoadPosMtxImm(Camera_GetViewMatrix(), 0);
-    GXSetCurrentMtx(0);
-    getAmbientColor(0, &r, &g, &b);
-    p = table;
-    for (i = 0; i < 9; i++)
-    {
-        if (((*(u8*)(p + 0x4ce) & 1) != 0) && (*(s16*)(p + 0x4cc) >= 4))
-        {
-            int j = 0;
-            f32* verts;
-            f32 u1, u0;
-            verts = *(f32**)(p + 0x4c8);
-            u0 = lbl_803E5AE8;
-            u1 = lbl_803E5AEC;
-            for (; j < *(s16*)(p + 0x4cc) - 2; j += 2)
-            {
-                GXBegin(0x80, 2, 4);
-                shPos3f32(verts[0] - playerMapOffsetX, verts[0 + 1], verts[0 + 2] - playerMapOffsetZ);
-                shColor4u8(r, g, b, (u8) * (s16*)((char*)verts + 0xc));
-                shTexCoord2f32(u0, u0);
-                GXWGFifo.f32 = u0;
-                shPos3f32(verts[4] - playerMapOffsetX, verts[4 + 1], verts[4 + 2] - playerMapOffsetZ);
-                shColor4u8(r, g, b, (u8) * (s16*)((char*)verts + 0x1c));
-                shTexCoord2f32(u1, u0);
-                shPos3f32(verts[0xc] - playerMapOffsetX, verts[0xc + 1], verts[0xc + 2] - playerMapOffsetZ);
-                shColor4u8(r, g, b, (u8) * (s16*)((char*)verts + 0x3c));
-                shTexCoord2f32(u1, u0);
-                shPos3f32(verts[8] - playerMapOffsetX, verts[8 + 1], verts[8 + 2] - playerMapOffsetZ);
-                shColor4u8(r, g, b, (u8) * (s16*)((char*)verts + 0x2c));
-                shTexCoord2f32(u0, u0);
-                GXWGFifo.f32 = u0;
-                verts += 8;
-            }
-        }
-        p += 8;
-    }
-}
+void fn_801E991C(int p1, char* table);
 #pragma opt_common_subs reset
