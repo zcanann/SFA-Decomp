@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "global.h"
+#include "main/dll/curve_walker.h"
 
 /*
  * TrickyState - the obj+0xB8 extra record for the Tricky sidekick handlers
@@ -140,9 +141,11 @@ typedef struct TrickyState {
     f32 unk408;
     f32 unk40C;
     f32 unk410;
-    u8 pad414[0x4A0 - 0x414];
-    int unk4A0;
-    u8 pad4A4[0x528 - 0x4A4];
+    u8 pad414[0x418 - 0x414];
+    void *routeSeedNode; /* candidate route node chosen before seeding route */
+    u8 routeSeedDir;
+    u8 pad41D[0x420 - 0x41D];
+    RomCurveWalker route;
     u8 unk528;
     u8 pad529[3];
     void *unk52C;
@@ -212,6 +215,9 @@ typedef struct TrickyState {
 STATIC_ASSERT(sizeof(TrickyState) == 0x840);
 STATIC_ASSERT(offsetof(TrickyState, stateFlags) == 0x54);
 STATIC_ASSERT(offsetof(TrickyState, pathRotY) == 0x290);
+STATIC_ASSERT(offsetof(TrickyState, routeSeedNode) == 0x418);
+STATIC_ASSERT(offsetof(TrickyState, route) == 0x420);
+STATIC_ASSERT(offsetof(TrickyState, route.reverse) == 0x4A0);
 STATIC_ASSERT(offsetof(TrickyState, lastContactObj) == 0x360);
 STATIC_ASSERT(offsetof(TrickyState, hitCooldown) == 0x370);
 STATIC_ASSERT(offsetof(TrickyState, previousPathPoint) == 0x6F0);
