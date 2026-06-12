@@ -6,6 +6,7 @@
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/seqObj11D.h"
+#include "main/objhits.h"
 #include "main/object_transform.h"
 #include "main/objseq.h"
 
@@ -429,6 +430,7 @@ void fn_801513AC(int obj, u8* state)
 void fn_8015165C(int obj, u8* state)
 {
     u8* player;
+    ObjHitsPriorityState* hitState;
     u8* p28;
     u8* p20;
     u8 t;
@@ -490,25 +492,23 @@ void fn_8015165C(int obj, u8* state)
                 }
             }
         }
-        ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 0;
-        ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 0;
+        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState->hitVolumePriority = 0;
+        hitState->hitVolumeId = 0;
         if (((GameObject*)obj)->anim.currentMove == p20[8])
         {
-            ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(
-                p20 + 4);
-            ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = (s8)p20[9];
+            hitState->hitVolumePriority = (s8) * (int*)(p20 + 4);
+            hitState->hitVolumeId = (s8)p20[9];
         }
         if (((GameObject*)obj)->anim.currentMove == p20[0x14])
         {
-            ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(
-                p20 + 0x10);
-            ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = (s8)p20[0x15];
+            hitState->hitVolumePriority = (s8) * (int*)(p20 + 0x10);
+            hitState->hitVolumeId = (s8)p20[0x15];
         }
         if (((GameObject*)obj)->anim.currentMove == p20[0x20])
         {
-            ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(
-                p20 + 0x1c);
-            ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = (s8)p20[0x21];
+            hitState->hitVolumePriority = (s8) * (int*)(p20 + 0x1c);
+            hitState->hitVolumeId = (s8)p20[0x21];
         }
         if ((state[0x323] & 8) == 0)
         {
