@@ -43,7 +43,7 @@ extern f32 lbl_803E2448;
 extern f32 lbl_803E23F8;
 extern f32 lbl_803E2450;
 extern f32 getXZDistance(f32 * a, f32 * b);
-extern void RomCurve_stepClamped(int state, f32 dt);
+extern void RomCurve_stepClamped(RomCurveWalker *state, f32 dt);
 extern f32 lbl_803E23E8;
 extern f32 lbl_803E2418;
 extern f32 lbl_803E2420;
@@ -306,25 +306,25 @@ void trickyUpdateCollisionAndPathState(u8* obj)
 }
 
 #pragma peephole on
-int trickyAdvanceRouteTargetAhead(f32 param_1, int param_2, int param_3)
+int trickyAdvanceRouteTargetAhead(int obj, RomCurveWalker *route, f32 speed)
 {
     f32 limit;
-    f32 maxSq, dist, f29_val;
+    f32 maxSq, dist, step;
     int iter;
     int result;
     f32 tmp;
 
     result = 0;
-    tmp = lbl_803E244C * (param_1 * timeDelta);
+    tmp = lbl_803E244C * (speed * timeDelta);
     maxSq = tmp * tmp;
-    dist = getXZDistance((f32*)(param_3 + 0x68), (f32*)(param_2 + 0x18));
-    if (*(int*)(param_3 + 0x80) != 0)
+    dist = getXZDistance(&route->posX, (f32*)(obj + 0x18));
+    if (route->reverse != 0)
     {
-        f29_val = lbl_803E2448;
+        step = lbl_803E2448;
     }
     else
     {
-        f29_val = lbl_803E23F8;
+        step = lbl_803E23F8;
     }
     iter = 0;
     limit = lbl_803E2424;
@@ -335,8 +335,8 @@ int trickyAdvanceRouteTargetAhead(f32 param_1, int param_2, int param_3)
             return result;
         }
         result = 1;
-        RomCurve_stepClamped(param_3, f29_val);
-        dist = getXZDistance((f32*)(param_3 + 0x68), (f32*)(param_2 + 0x18));
+        RomCurve_stepClamped(route, step);
+        dist = getXZDistance(&route->posX, (f32*)(obj + 0x18));
     }
     return 1;
 }

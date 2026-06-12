@@ -1,6 +1,7 @@
 #include "main/dll/cannonball.h"
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
+#include "main/dll/baddie/skeetla.h"
 #include "main/dll/rom_curve_interface.h"
 
 #define CANNONBALL_INIT_DONE 0x0a
@@ -26,7 +27,6 @@ extern void curveFn_800da23c(void* route, int node);
 extern void RomCurve_stepClamped(float* route, float speed);
 extern void fn_800DA980(void* route, int curve, int fromNode, int toNode);
 extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
-extern void trickyAdvanceRouteTargetAhead(int obj, void* route, float speed);
 extern void trickyMove(int obj, void* moveState);
 extern void trickyFn_8013b368(int obj1, int obj2, float arg);
 
@@ -147,7 +147,7 @@ void trickyFn_80141290(int obj, int ball)
         }
 
         *(float*)(ball + CANNONBALL_SPEED) = speed;
-        trickyAdvanceRouteTargetAhead(obj, (void*)(ball + CANNONBALL_ROUTE), *(float*)(ball + CANNONBALL_SPEED));
+        trickyAdvanceRouteTargetAhead(obj, (RomCurveWalker*)(ball + CANNONBALL_ROUTE), *(float*)(ball + CANNONBALL_SPEED));
         trickyMove(obj, (void*)(ball + CANNONBALL_MOVE_STATE));
 
         if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)obj)->anim.worldPosX, (void*)0) != 0)

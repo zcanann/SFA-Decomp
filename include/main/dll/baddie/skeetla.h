@@ -2,8 +2,10 @@
 #define MAIN_DLL_BADDIE_SKEETLA_H_
 
 #include "ghidra_import.h"
+#include "main/dll/curve_walker.h"
 
 void trickyUpdateCollisionAndPathState(u8 *obj);
+int trickyAdvanceRouteTargetAhead(int obj, RomCurveWalker *route, f32 speed);
 undefined4 FUN_80139800(double param_1,int param_2,float *param_3);
 int FUN_80139910(ushort *param_1,ushort param_2);
 void FUN_80139a48(void);
