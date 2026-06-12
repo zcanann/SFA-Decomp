@@ -85,8 +85,6 @@ extern void Curve_BuildHermiteCoeffs(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -102,8 +100,6 @@ extern void Curve_BuildHermiteCoeffs(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -119,8 +115,6 @@ extern void Curve_BuildHermiteCoeffs(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -136,6 +130,8 @@ extern void Curve_BuildHermiteCoeffs(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801b9cc4(int param_1)
 {
     char* pcVar1;
@@ -156,11 +152,11 @@ void FUN_801b9cc4(int param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void dll_1DA_release(void);
 
 
+#pragma scheduling off
+#pragma peephole off
 void dim2icefloe_free(void)
 {
 }

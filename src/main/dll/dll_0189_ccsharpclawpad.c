@@ -75,8 +75,6 @@ extern f32 lbl_803E5360;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -91,8 +89,6 @@ extern f32 lbl_803E5360;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -192,7 +188,6 @@ void cclevcontrol_free(void);
 
 
 #pragma dont_inline on
-#pragma scheduling on
 #pragma dont_inline reset
 
 
@@ -202,7 +197,6 @@ void cclevcontrol_free(void);
  * 0x10 flag and (if the obj's trigger 0xa9 is set) fires vtable[0x12],
  * decrements the gamebit, and flags state2[0x6] bit 0. If gbit 0xa9 is
  * clear, sets the obj[0xaf] 0x10 flag instead. */
-#pragma scheduling off
 
 extern int ObjTrigger_IsSet(int obj);
 
@@ -218,7 +212,6 @@ extern int ObjTrigger_IsSet(int obj);
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
 
 
-#pragma peephole on
 
 
 extern f32 lbl_803E46A8;
@@ -243,7 +236,6 @@ typedef struct SharpClawPadParticleArgs
     f32 offset[3];
 } SharpClawPadParticleArgs;
 
-#pragma peephole off
 void ccsharpclawpad_update(int obj)
 {
     extern void* Obj_GetPlayerObject(void);

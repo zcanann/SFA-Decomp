@@ -88,15 +88,9 @@ void FUN_801c5990(undefined8 param_1, undefined8 param_2, double param_3, undefi
     return;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801C5990(MmShrineAnimObj* obj);
 
 /* segment pragma-stack balance (re-split): */
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/game_object.h"
 #include "main/objseq.h"
@@ -153,6 +147,8 @@ extern int GameBit_Get(int bit);
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_801c6e04(undefined8 param_1, double param_2, double param_3, undefined8 param_4,
                   undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8,
                   undefined2* param_9)

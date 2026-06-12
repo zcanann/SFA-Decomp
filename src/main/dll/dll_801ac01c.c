@@ -70,8 +70,6 @@ extern f32 lbl_803E5360;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -86,8 +84,6 @@ extern f32 lbl_803E5360;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -170,15 +166,12 @@ int cclightfoot_getExtraSize(void);
 /* Drift-recovery: add new fns with v1.0 names. */
 
 
-#pragma scheduling off
-#pragma peephole off
 
 
 /* ObjLink_DetachChild and Obj_FreeObject already declared in earlier extern blocks */
 
 
 #pragma dont_inline on
-#pragma scheduling on
 #pragma dont_inline reset
 
 
@@ -188,7 +181,6 @@ int cclightfoot_getExtraSize(void);
  * 0x10 flag and (if the obj's trigger 0xa9 is set) fires vtable[0x12],
  * decrements the gamebit, and flags state2[0x6] bit 0. If gbit 0xa9 is
  * clear, sets the obj[0xaf] 0x10 flag instead. */
-#pragma scheduling off
 
 
 /* ccpedstal_updateAltVariant: ccpedstal alt-variant think-routine. Toggles obj[0xaf]
@@ -204,7 +196,7 @@ extern void* fn_802972A8(void* obj);
 extern int mapGetDirIdx(int a);
 extern void lockLevel(int idx, int flag);
 
-#pragma peephole on
+#pragma scheduling off
 void fn_801AC01C(int obj)
 {
     extern void* Obj_GetPlayerObject(void);
@@ -278,7 +270,6 @@ void fn_801AC108(int obj, int param2)
 extern f32 lbl_803E46A8;
 
 
-#pragma peephole off
 
 #include "main/dll/SC/SCtotemlogpuz.h"
 

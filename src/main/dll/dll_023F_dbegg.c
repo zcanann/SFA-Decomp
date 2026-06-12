@@ -1,6 +1,4 @@
 /* DLL 0x023F (dbegg) — DB egg and Dragon Fire Palace objects [0x801FE118-0x801FF884). */
-#pragma scheduling on
-#pragma peephole on
 #include "main/game_object.h"
 #include "main/dll/dll22cstate_struct.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"
@@ -32,8 +30,6 @@ extern void GameBit_Set(int eventId, int value);
  * PAL Size: TODO
  */
 
-#pragma scheduling off
-#pragma peephole off
 void dbegg_processMessages(int obj)
 {
     extern int gameBitIncrement(int);
@@ -109,8 +105,6 @@ void dbegg_processMessages(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 
@@ -119,29 +113,21 @@ int dbegg_getExtraSize(void) { return 0x124; }
 int dbegg_getObjectTypeId(void) { return 0x8; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
 void dbegg_free(int x) { ObjGroup_RemoveObject(x, 0x24); }
-#pragma scheduling reset
 
 /* plain forwarder. */
 
 /* fn_X(lbl); lbl = 0; */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* dll_224_hitDetect: render iff obj->field_0x74 set. */
 
 /* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
-#pragma scheduling off
-#pragma peephole off
 void dll_224_update(void* param_1);
-#pragma peephole reset
-#pragma scheduling reset
 
 /* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
-#pragma scheduling off
-#pragma scheduling reset
 
+#pragma scheduling on
+#pragma peephole on
 int dbegg_setScale(int obj)
 {
     u8* inner = ((GameObject*)obj)->extra;
@@ -214,10 +200,8 @@ void dbegg_setupFromDef(int obj, u8* state)
         *(f32*)state = fz;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
+#pragma peephole on
 int dbegg_func0B(int obj, f32* v)
 {
     char* inner = ((GameObject*)obj)->extra;
@@ -230,22 +214,12 @@ int dbegg_func0B(int obj, f32* v)
     }
     return 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
 
 extern void objRenderFn_8003b8f4(f32);
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E61CC;
-#pragma scheduling off
 #pragma peephole off
 void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
@@ -259,23 +233,17 @@ void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
-#pragma scheduling off
-#pragma peephole off
 void dll_224_init(void* obj, void* other);
 
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
                               int p10);
 extern f32 lbl_803E6218;
 extern f32 lbl_803E621C;
 
-#pragma scheduling off
+#pragma peephole on
 void dbegg_hitDetect(int obj)
 {
     u8* state;
@@ -307,7 +275,6 @@ void dbegg_hitDetect(int obj)
     ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
 }
-#pragma scheduling reset
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
 
@@ -327,43 +294,16 @@ extern f32 mathCosf(f32 x);
 extern f32 sqrtf(f32 x);
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int*** listOut, int p6, int p7);
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 #pragma opt_loop_invariants off
+#pragma peephole off
 int fn_801FE560(int obj, f32* out, f32 a, f32 b, int flag)
 {
     f32 water;
@@ -491,10 +431,8 @@ int fn_801FE560(int obj, f32* out, f32 a, f32 b, int flag)
 }
 #pragma opt_loop_invariants reset
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
+#pragma peephole on
 void fn_801FE774(int cam, f32* vel)
 {
     f32 limit;
@@ -551,9 +489,6 @@ void fn_801FE774(int cam, f32* vel)
         }
     }
 }
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
 
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -688,6 +623,7 @@ extern f32 lbl_803E7010;
  * PAL Size: TODO
  */
 undefined4
+#pragma peephole off
 FUN_80200558(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9, int param_10,
              undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14,

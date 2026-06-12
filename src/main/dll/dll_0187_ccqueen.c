@@ -82,8 +82,6 @@ extern f32 lbl_803E5360;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ccqueen_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern undefined4 ccqueen_render();
@@ -105,8 +103,6 @@ void ccqueen_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -122,6 +118,8 @@ void ccqueen_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801aaa6c(double param_1, int param_2, int param_3)
 {
     if ((double)lbl_803E530C == param_1)
@@ -189,15 +187,12 @@ int cclightfoot_getExtraSize(void);
 /* Drift-recovery: add new fns with v1.0 names. */
 
 
-#pragma scheduling off
-#pragma peephole off
 
 
 /* ObjLink_DetachChild and Obj_FreeObject already declared in earlier extern blocks */
 
 
 #pragma dont_inline on
-#pragma scheduling on
 #pragma dont_inline reset
 
 
@@ -207,7 +202,6 @@ int cclightfoot_getExtraSize(void);
  * 0x10 flag and (if the obj's trigger 0xa9 is set) fires vtable[0x12],
  * decrements the gamebit, and flags state2[0x6] bit 0. If gbit 0xa9 is
  * clear, sets the obj[0xaf] 0x10 flag instead. */
-#pragma scheduling off
 
 
 /* ccpedstal_updateAltVariant: ccpedstal alt-variant think-routine. Toggles obj[0xaf]
@@ -231,6 +225,8 @@ typedef struct
 extern _S16x3 lbl_803E4650;
 extern _S16x3 lbl_803E4658;
 
+#pragma scheduling off
+#pragma peephole off
 void ccqueen_init(int* obj, u8* init)
 {
     u8* sub;
@@ -284,10 +280,8 @@ void ccqueen_update(int* obj)
 int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 
-#pragma peephole on
 
 
-#pragma peephole off
 
 #include "main/dll/SC/SCtotemlogpuz.h"
 

@@ -263,8 +263,6 @@ void fn_80198DE8(u8* obj, int seqArg)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -280,8 +278,6 @@ void fn_80198DE8(u8* obj, int seqArg)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -297,8 +293,6 @@ void fn_80198DE8(u8* obj, int seqArg)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -314,8 +308,6 @@ void fn_80198DE8(u8* obj, int seqArg)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -331,13 +323,9 @@ void fn_80198DE8(u8* obj, int seqArg)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void WaterFallSpray_render(void);
 
 /* 8b "li r3, N; blr" returners. */

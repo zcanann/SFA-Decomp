@@ -77,8 +77,6 @@ extern f32 lbl_803E5360;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -93,8 +91,6 @@ extern f32 lbl_803E5360;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -110,6 +106,8 @@ extern f32 lbl_803E5360;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801aaa6c(double param_1, int param_2, int param_3)
 {
     if ((double)lbl_803E530C == param_1)
@@ -184,9 +182,9 @@ extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, i
 extern f32 lbl_803E46C8;
 
 
+
 #pragma scheduling off
 #pragma peephole off
-
 void cclevcontrol_free(void)
 {
     envFxActFn_800887f8(0);
@@ -243,7 +241,6 @@ void cclevcontrol_init(int* obj)
 extern f32 lbl_803E4674;
 
 #pragma dont_inline on
-#pragma scheduling on
 #pragma dont_inline reset
 
 
@@ -253,7 +250,6 @@ extern f32 lbl_803E4674;
  * 0x10 flag and (if the obj's trigger 0xa9 is set) fires vtable[0x12],
  * decrements the gamebit, and flags state2[0x6] bit 0. If gbit 0xa9 is
  * clear, sets the obj[0xaf] 0x10 flag instead. */
-#pragma scheduling off
 
 
 /* ccpedstal_updateAltVariant: ccpedstal alt-variant think-routine. Toggles obj[0xaf]
@@ -265,13 +261,11 @@ extern f32 lbl_803E4674;
  * match target's layout. */
 
 
-#pragma peephole on
 
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 
-#pragma peephole off
 
 #include "main/dll/SC/SCtotemlogpuz.h"
 

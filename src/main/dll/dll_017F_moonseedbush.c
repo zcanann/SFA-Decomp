@@ -1,6 +1,4 @@
 /* DLL 0x17F — moon seed bush / MMP asteroid objects [801A6638-801A6778) */
-#pragma scheduling off
-#pragma peephole off
 #include "main/objseq.h"
 #include "main/dll/mmptrenchfxstate_struct.h"
 #include "main/dll/moonseedbushstate_struct.h"
@@ -26,15 +24,9 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 
-#pragma peephole on
 
-#pragma peephole off
 
-#pragma scheduling reset
-#pragma peephole reset
 /* segment pragma-stack balance (re-split): */
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/dll/MMP/mmp_asteroid_re_state.h"
 #include "main/dll/MMP/mmp_moonrock_state.h"
@@ -253,13 +245,11 @@ void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-#pragma peephole reset
 
 extern f32 lbl_803E44D4;
 extern f32 lbl_803E44D8;
 
 #pragma scheduling off
-#pragma peephole off
 void MoonSeedBush_update(int obj)
 {
     MoonSeedBushState* state = ((GameObject*)obj)->extra;
@@ -284,13 +274,9 @@ void MoonSeedBush_update(int obj)
     }
     state->flags &= ~1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int mapGetDirIdx(int);
 
-#pragma scheduling off
-#pragma peephole off
 int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern undefined4 GameBit_Set(int eventId, int value);
@@ -327,12 +313,8 @@ int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return state->seedState != 2;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
-#pragma scheduling off
-#pragma peephole off
 void MoonSeedBush_init(int obj, int data)
 {
     MoonSeedBushState* state = ((GameObject*)obj)->extra;
@@ -356,8 +338,6 @@ void MoonSeedBush_init(int obj, int data)
         state->seedState = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void saveGame_saveObjectPos(int obj);
 

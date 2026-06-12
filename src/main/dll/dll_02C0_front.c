@@ -360,8 +360,6 @@ void titlescreen_release(void)
     while (i < 19);
     lbl_803DD992 = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern s8 lbl_803DBC08;
 extern s8 lbl_803DBC09;
@@ -384,8 +382,6 @@ extern void PSMTXIdentity(void*);
  * bytes, load the main texture (asset 0x647 or 0xC5 depending on
  * lbl_803DC968), identity the matrix, then load the 19-entry texture
  * table from the id list at lbl_8031CDE8 into lbl_803A9F98. */
-#pragma scheduling off
-#pragma peephole off
 void titlescreen_initialise(void)
 {
     int i;
@@ -415,8 +411,6 @@ void titlescreen_initialise(void)
     lbl_803DD9B0 = lbl_803E2318;
     lbl_803DD9AB = 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 lbl_803DD9AA;
 extern int lbl_803DD9A4;
@@ -425,8 +419,6 @@ extern void objRenderFn_8003b8f4(f32);
 /* EN v1.0 0x80135C2C  size: 152b  titlescreen_render: when visible and
  * ready, render via objRenderFn; once the credits flag fires, set the
  * one-shot trigger 0x57 and release the attract-mode movie buffers. */
-#pragma scheduling off
-#pragma peephole off
 void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -441,8 +433,6 @@ void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     n_attractmode_releaseMovieBuffers();
     lbl_803DD9A4 = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct TitleAnimMoves
 {
@@ -457,8 +447,6 @@ extern void AttractMovie_DrawTextureCallback(void);
  * state from its descriptor id (obj->_46), pick the anim move and blend
  * float per id range, and for the attract id install the movie draw
  * callback. */
-#pragma scheduling off
-#pragma peephole off
 void titlescreen_init(u8* obj, u8* p)
 {
     u8* a = ((GameObject*)obj)->extra;
@@ -489,8 +477,6 @@ void titlescreen_init(u8* obj, u8* p)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E23E8;
 
@@ -509,8 +495,6 @@ extern int sprintf(char* buf, const char* fmt, ...);
 extern f32 lbl_803E22A0;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80133F70(void* obj)
 {
     char buf[12];
@@ -542,8 +526,6 @@ void fn_80133F70(void* obj)
     }
     sprintf(buf, lbl_803DBBF0, b);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -561,7 +543,7 @@ extern int* Obj_GetActiveModel(void* obj);
 /* EN v1.0 0x80135820  size: 136b  Set up the title-screen translation
  * matrix at lbl_803A9FE4 and derive the three normalized cursor
  * positions from the supplied (a, b) coordinates. */
-#pragma scheduling off
+#pragma peephole on
 void titleScreenPositionElements(f32 a, f32 b)
 {
     PSMTXTrans(lbl_803A9FE4, a, b, lbl_803E22F8);
@@ -569,7 +551,6 @@ void titleScreenPositionElements(f32 a, f32 b)
     lbl_803DD9B4 = (a - lbl_803E234C) / lbl_803E2350;
     lbl_803DD9B0 = lbl_803E2318 - lbl_803DD9C8;
 }
-#pragma scheduling reset
 
 extern void* lbl_803DD960;
 /* lbl_803DD940 declared later as void* */
@@ -584,6 +565,7 @@ extern f32 lbl_803E2408;
 
 /* EN v1.0 0x801368A4  size: 32b  Two-byte state push: if arg differs
  * from lbl_803DD991, save old to lbl_803DBC09 and set new. */
+#pragma scheduling on
 void titleScreenFn_801368a4(s8 arg)
 {
     u8 cur = lbl_803DD991;
@@ -631,10 +613,10 @@ void creditsStart(void)
     lbl_803DD998 = 0;
     lbl_803DD9AA = 0;
 }
-#pragma scheduling reset
 
 /* EN v1.0 0x80134BE8  size: 60b  Predicate. Returns 1 when the value
  * from getCurUiDll is in {2..6} or equals 7, else 0. */
+#pragma scheduling on
 int gameTextFn_80134be8(void)
 {
     int x = getCurUiDll();
@@ -721,8 +703,6 @@ void titleScreenShowCopyright(u8 arg)
     }
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void GXLoadPosMtxImm(f32* matrix, s32 slot);
 extern void GXSetCurrentMtx(int id);
@@ -737,8 +717,6 @@ extern f32 hudMatrix[];
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
-#pragma scheduling off
-#pragma peephole off
 void titleScreenTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1)
 {
     GXLoadPosMtxImm((f32*)lbl_803A9FE4, 0);
@@ -771,12 +749,8 @@ void titleScreenTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32
     GXWGFifo.f32 = v1;
     Camera_RebuildProjectionMatrix();
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
-#pragma scheduling off
-#pragma peephole off
 void nameEntryTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1)
 {
     GXLoadPosMtxImm((f32*)lbl_803A9FE4, 0);
@@ -812,8 +786,6 @@ void nameEntryTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u
     GXSetScissor(0, 0, 0x280, 0x1e0);
     Camera_RebuildProjectionMatrix();
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern f32 lbl_803E2354;
@@ -839,8 +811,6 @@ void fn_80134870(int obj, u8* arr);
  * screen actor anim state machine, the per-actor footstep/voice sfx flag
  * grid at lbl_803A9F50, the random blink blend, and the one-shot envfx/sky
  * setup. */
-#pragma scheduling off
-#pragma peephole off
 void titlescreen_update(u8* obj)
 {
     extern int randomGetRange(int min, int max);
@@ -1157,11 +1127,7 @@ void titlescreen_update(u8* obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80134870(int obj, u8* arr)
 {
     int i;
@@ -1213,8 +1179,6 @@ void fn_80134870(int obj, u8* arr)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern u16 lbl_803DBC0A;
@@ -1232,8 +1196,6 @@ typedef struct
 
 extern CreditEntry gCreditEntries[];
 
-#pragma scheduling off
-#pragma peephole off
 void creditsStart_(void)
 {
     u8 alpha;
@@ -1288,31 +1250,20 @@ void creditsStart_(void)
         lbl_803DD996 = 0;
     }
 }
-#pragma peephole reset
 
 extern void CMenu_SetFadeCounter(int v);
 
 
-#pragma peephole off
-#pragma peephole reset
 
 
-#pragma peephole off
-#pragma peephole reset
 
 
-#pragma peephole off
-#pragma peephole reset
 
 
 extern int ObjGroup_FindNearestObject(int type, int obj, f32* distOut);
 
-#pragma peephole off
-#pragma peephole reset
 
 
-#pragma peephole off
-#pragma peephole reset
 
 extern void drawScaledTexture(char* tex, f32 x, f32 y, int alpha, int s, int w, int h, int mode);
 extern s16 fn_80130124(void);
@@ -1332,7 +1283,6 @@ extern f32 lbl_803E2338;
 extern f32 lbl_803E233C;
 extern f32 lbl_803E2340;
 
-#pragma peephole off
 void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
 {
     int xb;
@@ -1473,7 +1423,6 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
                     0xff, 0xff);
     }
 }
-#pragma peephole reset
 
 extern u16* debugFrameBuffer;
 
@@ -1481,12 +1430,8 @@ extern u16* debugFrameBuffer;
  * Clears the debug framebuffer, prints the exception type, DSISR/SRR0,
  * stack trace and GPR dump via debugPrintfxy, draws the underline and
  * box pixels directly into the framebuffer, and flips buffers forever. */
-#pragma peephole off
-#pragma peephole reset
 
 
 /* EN v1.0 0x801375C8  size: 736b  debugPrintDraw: lay out the debug log
  * twice (measure pass then draw pass), drawing the backing rect between
  * the passes when the log produced any extent. */
-#pragma peephole off
-#pragma peephole reset

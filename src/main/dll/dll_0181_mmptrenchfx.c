@@ -1,6 +1,4 @@
 /* DLL 0x0181 — mmptrenchfx. TU: 0x801A6638–0x801A6778. */
-#pragma scheduling off
-#pragma peephole off
 #include "main/objseq.h"
 #include "main/dll/mmptrenchfxstate_struct.h"
 #include "main/dll/moonseedbushstate_struct.h"
@@ -24,15 +22,9 @@ extern f32 timeDelta;
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 
-#pragma peephole on
 
-#pragma peephole off
 
-#pragma scheduling reset
-#pragma peephole reset
 /* segment pragma-stack balance (re-split): */
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/dll/MMP/mmp_asteroid_re_state.h"
 #include "main/dll/MMP/mmp_moonrock_state.h"
@@ -252,7 +244,6 @@ void mmp_trenchfx_init(int obj, int data)
     *(s16*)obj = v;
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E45C0;
 }
-#pragma peephole reset
 
 /* ObjGroup_RemoveObject + vtable[4] tail-call. */
 extern int* gCarryableInterface;
@@ -261,12 +252,8 @@ extern int* gCarryableInterface;
 extern void vecRotateZXY(void* in, void* out);
 
 
-#pragma scheduling off
-#pragma peephole off
 
 void mmp_trenchfx_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void fn_801A7D74(int obj, u8 a, u8 b);
 
@@ -276,7 +263,6 @@ extern f32 lbl_803E45B0;
 extern f32 lbl_803E45B4;
 
 #pragma scheduling off
-#pragma peephole off
 void mmp_trenchfx_update(int obj)
 {
     MmpTrenchfxState* state = ((GameObject*)obj)->extra;
@@ -322,8 +308,6 @@ void mmp_trenchfx_update(int obj)
                                          NULL);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
 

@@ -72,8 +72,6 @@ extern void setAButtonIcon(int iconId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -89,8 +87,6 @@ extern void setAButtonIcon(int iconId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -106,8 +102,6 @@ extern void setAButtonIcon(int iconId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -123,6 +117,8 @@ extern void setAButtonIcon(int iconId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8018f650(void)
 {
     byte bVar1;
@@ -364,8 +360,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -381,8 +375,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -398,8 +390,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -415,8 +405,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -432,8 +420,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -449,8 +435,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*

@@ -94,8 +94,6 @@ typedef struct Dll1DFState
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -111,8 +109,6 @@ typedef struct Dll1DFState
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -128,8 +124,6 @@ typedef struct Dll1DFState
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -145,6 +139,8 @@ typedef struct Dll1DFState
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801b9cc4(int param_1)
 {
     char* pcVar1;
@@ -165,8 +161,6 @@ void FUN_801b9cc4(int param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void dll_1DA_release(void);
 
 
@@ -187,6 +181,8 @@ void dll_1DA_release(void);
  * from distance/anim-state via the interface vtables. */
 
 
+#pragma scheduling off
+#pragma peephole off
 void dll_1DF_free(void)
 {
 }

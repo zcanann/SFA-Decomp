@@ -73,8 +73,6 @@ extern f32 lbl_803E5360;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -89,8 +87,6 @@ extern f32 lbl_803E5360;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -106,6 +102,8 @@ extern f32 lbl_803E5360;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801aaa6c(double param_1, int param_2, int param_3)
 {
     if ((double)lbl_803E530C == param_1)
@@ -175,8 +173,6 @@ int cclevcontrol_getExtraSize(void);
 /* Drift-recovery: add new fns with v1.0 names. */
 
 
-#pragma scheduling off
-#pragma peephole off
 
 
 /* ObjLink_DetachChild and Obj_FreeObject already declared in earlier extern blocks */
@@ -186,6 +182,8 @@ extern void ccpedstal_updateGameBitGate(int obj, u8* state2);
 extern void ccpedstal_updateAltVariant(int obj, u8* state2);
 extern void fn_8002B6D8(void* obj, int p2, int p3, int p4, int p5, int p6);
 
+#pragma scheduling off
+#pragma peephole off
 void ccpedstal_init(int* obj, u8* params)
 {
     u8* state = ((GameObject*)obj)->extra;
@@ -213,7 +211,6 @@ void cclevcontrol_init(int* obj);
 
 
 #pragma dont_inline on
-#pragma scheduling on
 #pragma dont_inline reset
 
 extern void Obj_SetActiveModelIndex(int obj, int idx);
@@ -225,7 +222,6 @@ extern void gameBitDecrement(int id);
  * 0x10 flag and (if the obj's trigger 0xa9 is set) fires vtable[0x12],
  * decrements the gamebit, and flags state2[0x6] bit 0. If gbit 0xa9 is
  * clear, sets the obj[0xaf] 0x10 flag instead. */
-#pragma scheduling off
 void ccpedstal_updateGameBitGate(int obj, u8* state2)
 {
     if (GameBit_Get(*(s16*)(state2 + 0x4)) != 0)
@@ -335,10 +331,8 @@ void ccpedstal_update(int obj)
 
 extern void* fn_802972A8(void* obj);
 
-#pragma peephole on
 
 
-#pragma peephole off
 
 #include "main/dll/SC/SCtotemlogpuz.h"
 

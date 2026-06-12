@@ -277,8 +277,6 @@ void MoonSeedPlantingSpot_init(int* obj, u8* init)
     }
     sub[1] = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 void ccgasvent_render(void);
 
 /* 8b "li r3, N; blr" returners. */
@@ -293,22 +291,16 @@ int ccgasvent_getExtraSize(void);
 extern void objRenderFn_8003b8f4(f32);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
 void MoonSeedPlantingSpot_free(int x) { ObjGroup_RemoveObject(x, 0x2e); }
 void ccgasvent_free(int x);
-#pragma scheduling reset
 
 
-#pragma scheduling off
-#pragma peephole off
 int MoonSeedPlantingSpot_SeqFn(int obj)
 {
     obj = *(int*)&((GameObject*)obj)->extra;
     *(u8*)(obj + 1) = (u8)((uint) * (u8*)(obj + 1) | 1);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* CCGasVentControl_SeqFn: trampoline to CCGasVentControlFn_801a9fd0 passing (obj, obj->extra), returns 0. */
 extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
@@ -332,8 +324,6 @@ extern f32 lbl_803E4600;
 extern f32 lbl_803E4604;
 extern f32 lbl_803E4608;
 
-#pragma scheduling off
-#pragma peephole off
 void MoonSeedPlantingSpot_update(int obj)
 {
     int ex = *(int*)&((GameObject*)obj)->extra;
@@ -486,14 +476,10 @@ void MoonSeedPlantingSpot_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int Obj_AllocObjectSetup(int size, int type);
 
 
-#pragma scheduling off
-#pragma peephole off
 int MoonSeedPlantingSpot_setScale(int* obj, int arg)
 {
     int* sub;
@@ -532,8 +518,6 @@ int MoonSeedPlantingSpot_setScale(int* obj, int arg)
     }
     return ret;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E45D8;
 extern f32 lbl_803E45E0;
@@ -541,8 +525,6 @@ extern f32 lbl_803E45E4;
 extern f32 mathSinf(f32 x);
 extern void fn_8003B608(int r, int g, int b);
 
-#pragma scheduling off
-#pragma peephole off
 void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     u8* inner = ((GameObject*)p1)->extra;
@@ -576,8 +558,6 @@ void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visi
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E45DC);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void objSetSlot(void* obj, int slot);
 

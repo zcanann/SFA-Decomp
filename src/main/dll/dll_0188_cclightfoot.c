@@ -84,8 +84,6 @@ extern f32 lbl_803E5360;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--
@@ -100,8 +98,6 @@ extern f32 lbl_803E5360;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -117,6 +113,8 @@ extern f32 lbl_803E5360;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801aaa6c(double param_1, int param_2, int param_3)
 {
     if ((double)lbl_803E530C == param_1)
@@ -185,10 +183,10 @@ int ccsharpclawpad_getExtraSize(void);
 /* Drift-recovery: add new fns with v1.0 names. */
 
 
+
+
 #pragma scheduling off
 #pragma peephole off
-
-
 void cclightfoot_init(int* obj, int* def)
 {
     *(s16*)obj = (s16)((u32) * (u8*)((char*)def + 26) << 8);
@@ -268,7 +266,6 @@ extern void Obj_SetActiveModelIndex(int obj, int idx);
  * 0x10 flag and (if the obj's trigger 0xa9 is set) fires vtable[0x12],
  * decrements the gamebit, and flags state2[0x6] bit 0. If gbit 0xa9 is
  * clear, sets the obj[0xaf] 0x10 flag instead. */
-#pragma scheduling off
 
 extern int ObjTrigger_IsSet(int obj);
 
@@ -284,6 +281,7 @@ extern WaterfxInterface** gWaterfxInterface;
 extern f32 lbl_803E4670;
 
 
+#pragma scheduling off
 int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern undefined4 ObjLink_DetachChild();
@@ -317,14 +315,12 @@ int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 void ccpedstal_update(int obj);
 
 
-#pragma peephole on
 
 
 extern int playerIsDisguised(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 
-#pragma peephole off
 
 #include "main/dll/SC/SCtotemlogpuz.h"
 

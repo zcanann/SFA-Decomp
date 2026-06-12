@@ -1,6 +1,4 @@
 /* DLL 0x0183 — MMP geyser-vent objects [801A6638-801A6778) */
-#pragma scheduling off
-#pragma peephole off
 #include "main/objseq.h"
 #include "main/dll/mmptrenchfxstate_struct.h"
 #include "main/dll/moonseedbushstate_struct.h"
@@ -28,15 +26,9 @@ extern u8 framesThisStep;
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 
-#pragma peephole on
 
-#pragma peephole off
 
-#pragma scheduling reset
-#pragma peephole reset
 /* segment pragma-stack balance (re-split): */
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/dll/MMP/mmp_asteroid_re_state.h"
 #include "main/dll/MMP/mmp_moonrock_state.h"
@@ -270,12 +262,8 @@ void mmp_gyservent_update(int obj)
         Sfx_KeepAliveLoopedObjectSound(obj, 0x450);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
-#pragma scheduling off
-#pragma peephole off
 void mmp_gyservent_init(int obj)
 {
     ((GameObject*)obj)->objectFlags |= 0x6000;
@@ -285,6 +273,4 @@ void mmp_gyservent_init(int obj)
 }
 
 void mmp_trenchfx_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-#pragma peephole reset
-#pragma scheduling reset
 

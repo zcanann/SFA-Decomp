@@ -1,6 +1,4 @@
 /* DLL 0x0180 (mmpasteroidre) — MMP asteroid re-entry object [0x801A6F4C-0x801A78C8). */
-#pragma scheduling off
-#pragma peephole off
 #include "main/objseq.h"
 #include "main/dll/mmptrenchfxstate_struct.h"
 #include "main/dll/moonseedbushstate_struct.h"
@@ -30,15 +28,9 @@ extern f32 timeDelta;
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 
-#pragma peephole on
 
-#pragma peephole off
 
-#pragma scheduling reset
-#pragma peephole reset
 /* segment pragma-stack balance (re-split): */
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/dll/MMP/mmp_asteroid_re_state.h"
 #include "main/dll/MMP/mmp_moonrock_state.h"
@@ -237,14 +229,13 @@ int mmp_moonrock_getExtraSize(void);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E44F8;
-#pragma peephole off
 
+#pragma peephole off
 void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E44F8);
 }
-#pragma peephole reset
 
 extern f32 lbl_803E44D4;
 
@@ -256,7 +247,6 @@ extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 
 
 #pragma scheduling off
-#pragma peephole off
 int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern undefined4 GameBit_Set(int eventId, int value);
@@ -303,11 +293,7 @@ int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState* animUpdate)
     mmp_asteroid_re_update(obj);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void mmp_asteroid_re_init(int obj)
 {
     MmpAsteroidReState * state = ((GameObject*)obj)->extra;
@@ -345,8 +331,6 @@ void mmp_asteroid_re_init(int obj)
         state->baseY2 = v;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
@@ -373,8 +357,6 @@ extern f32 lbl_803E4534;
 extern f32 lbl_803E4538;
 extern f32 lbl_803E453C;
 
-#pragma scheduling off
-#pragma peephole off
 void mmp_asteroid_re_update(int obj)
 {
     extern void CameraShake_Start(f32 a, f32 b, f32 c);
@@ -500,8 +482,6 @@ void mmp_asteroid_re_update(int obj)
     }
     state->eventFlags &= ~0x80;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
 

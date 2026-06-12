@@ -1,6 +1,4 @@
 /* DLL 0x0182 — MMP moon-rock objects [801A6638-801A6778) */
-#pragma scheduling off
-#pragma peephole off
 #include "main/objseq.h"
 #include "main/dll/mmptrenchfxstate_struct.h"
 #include "main/dll/moonseedbushstate_struct.h"
@@ -31,15 +29,9 @@ extern f32 timeDelta;
 /* render-with-objRenderFn_8003b8f4 pattern. */
 
 
-#pragma peephole on
 
-#pragma peephole off
 
-#pragma scheduling reset
-#pragma peephole reset
 /* segment pragma-stack balance (re-split): */
-#pragma peephole reset
-#pragma peephole reset
 
 #include "main/dll/MMP/mmp_asteroid_re_state.h"
 #include "main/dll/MMP/mmp_moonrock_state.h"
@@ -116,6 +108,8 @@ extern f32 lbl_803E5180;
  * PAL Size: TODO
  */
 undefined4
+#pragma scheduling on
+#pragma peephole on
 FUN_801a68b8(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
              undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10
              , ObjAnimUpdateState* animUpdate, undefined4 param_12, undefined4 param_13, undefined4 param_14,
@@ -351,8 +345,6 @@ void fn_801A7B10(int obj)
         ((GameObject*)obj)->anim.velocityZ = c;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern void saveGame_saveObjectPos(int obj);
@@ -364,8 +356,6 @@ extern f32 lbl_803E4550;
 extern f32 lbl_803E4558;
 
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 void fn_801A79E0(int obj)
 {
     extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
@@ -397,10 +387,10 @@ void fn_801A79E0(int obj)
         saveGame_saveObjectPos(obj);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
+#pragma scheduling on
+#pragma peephole on
 void fn_801A80C4(int obj, f32 x, f32 y, f32 z)
 {
     ((GameObject*)obj)->anim.localPosX = x;
@@ -422,10 +412,8 @@ void mmp_moonrock_free(int obj)
     ObjGroup_RemoveObject((uint)obj, 4);
     (*(void (*)(int))(*(int*)(*gCarryableInterface + 0x10)))(obj);
 }
-#pragma scheduling reset
 
 extern f32 lbl_803E457C;
-#pragma scheduling off
 void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if ((*(int (*)(int, int))(*(int*)(*gCarryableInterface + 0xC)))(obj, (s32)visible) != 0)
@@ -434,7 +422,6 @@ void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             (obj, p2, p3, p4, p5, lbl_803E457C);
     }
 }
-#pragma scheduling reset
 
 extern void vecRotateZXY(void* in, void* out);
 extern f32 lbl_803E456C;
@@ -443,7 +430,6 @@ extern f32 lbl_803E4574;
 extern f32 lbl_803E4578;
 
 #pragma dont_inline on
-#pragma scheduling off
 #pragma peephole off
 void fn_801A7CC4(int obj)
 {
@@ -476,12 +462,8 @@ void fn_801A7CC4(int obj)
     vecRotateZXY(&stk, (void*)(obj + 0x24));
     state->flags |= 0x40;
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801A80F0(int obj, u8 flag)
 {
     MmpMoonrockState * state = ((GameObject*)obj)->extra;
@@ -496,8 +478,6 @@ void fn_801A80F0(int obj, u8 flag)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x8;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern void fn_801A7D74(int obj, u8 a, u8 b);
@@ -505,8 +485,6 @@ extern void fn_801A7D74(int obj, u8 a, u8 b);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, f32*** out, int a, int b);
 extern f32 lbl_803E4548;
 
-#pragma scheduling off
-#pragma peephole off
 int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32* out1, int* out2)
 {
     f32** results;
@@ -528,11 +506,7 @@ int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32* out1, int* out2)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void mmp_moonrock_init(int obj, int param2)
 {
     extern undefined4 ObjGroup_AddObject();
@@ -569,15 +543,11 @@ void mmp_moonrock_init(int obj, int param2)
     ObjHits_DisableObject(obj);
     fn_801A7D74(obj, 1, 2);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int* ObjList_GetObjects(int* idx, int* count);
 extern void setAButtonIcon(int icon);
 extern f32 lbl_803E4580;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801A7D74(int obj, u8 a, u8 b)
 {
     extern void Sfx_PlayFromObject(int obj, u16 sfxId);
@@ -716,8 +686,6 @@ void fn_801A7D74(int obj, u8 a, u8 b)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern char lbl_803AC930[];
 
@@ -739,8 +707,6 @@ extern f32 lbl_803E4598;
 extern f32 lbl_803E459C;
 extern f32 lbl_803E45A0;
 
-#pragma scheduling off
-#pragma peephole off
 void mmp_moonrock_update(int obj)
 {
     extern void Sfx_PlayFromObject(int obj, u16 sfxId);
@@ -930,5 +896,3 @@ void mmp_moonrock_update(int obj)
     d = (int)(((GameObject*)obj)->anim.localPosY - state->baseY);
     (*gPartfxInterface)->spawnObject((void*)obj, 0x723, lbl_803AC918, 0x200001, -1, &d);
 }
-#pragma peephole reset
-#pragma scheduling reset

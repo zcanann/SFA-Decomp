@@ -108,8 +108,6 @@ typedef struct Dim2lavacontrolState
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -125,8 +123,6 @@ typedef struct Dim2lavacontrolState
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 
 
 /*
@@ -142,8 +138,6 @@ typedef struct Dim2lavacontrolState
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 
 
 /*
@@ -159,6 +153,8 @@ typedef struct Dim2lavacontrolState
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801b9cc4(int param_1)
 {
     char* pcVar1;
@@ -179,8 +175,6 @@ void FUN_801b9cc4(int param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-#pragma scheduling off
-#pragma peephole off
 void dll_1DA_release(void);
 
 
@@ -212,6 +206,8 @@ int dll_1DF_getExtraSize(void);
 extern f32 lbl_803E4B90;
 
 
+#pragma scheduling off
+#pragma peephole off
 void dim2lavacontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;

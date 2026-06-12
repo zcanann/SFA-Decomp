@@ -92,6 +92,8 @@ extern s8 lbl_803DD944;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80132034(void)
 {
     bool bVar1;
@@ -362,11 +364,7 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
     }
     *(u32*)(b + 0x54) = *(u32*)(b + 0x54) & ~0x1000;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int trickySelectQueuedCommandTarget(u8* state, int commandType)
 {
     extern f32 getXZDistance(f32 * a, f32 * b);
@@ -434,15 +432,11 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
     state[0xa] = 0;
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* EN v1.0 0x80138F14  size: 100b  GameBit-gated bit toggle on
  * obj->_b8->_54: requires GameBit_Get(0x4E4); sets bit 0x10000 then
  * checks bit 0x10. Returns 1 only when the post-OR check passes. */
-#pragma peephole off
-#pragma scheduling off
 int trickyFn_80138f14(u8* obj)
 {
     u8* b = ((GameObject*)obj)->extra;
@@ -456,8 +450,6 @@ int trickyFn_80138f14(u8* obj)
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern f32 lbl_803E2344;
 
@@ -481,7 +473,7 @@ extern int vsprintf(char* s, const char* format, va_list arg);
  * getScreenResolution, primes the two float counters, clears two state bytes,
  * acquires three sized buffers (605/1/2 bytes) and primes the
  * debugLogEnd cursor to the start of the 0x1100-byte arena. */
-#pragma scheduling off
+#pragma peephole on
 void fn_80137998(void)
 {
     getScreenResolution();
@@ -494,13 +486,11 @@ void fn_80137998(void)
     lbl_803DDA1C = textureLoadAsset(2);
     debugLogEnd = debugLogBuffer;
 }
-#pragma scheduling reset
 
 /* EN v1.0 0x80137520  size: 128b  Emit a SetColor record (tag 0x81 +
  * 4 RGBA bytes + 0 terminator) into the debug log; aborts when the
  * record counter at lbl_803DD9E4 has already exceeded 0xFA. */
 extern int lbl_803DD9E4;
-#pragma scheduling off
 void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
 {
     int n;
@@ -527,7 +517,6 @@ void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
     debugLogEnd = p + 1;
     *p = 0;
 }
-#pragma scheduling reset
 
 extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
 extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
@@ -537,7 +526,6 @@ extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
  *   - bit 0x40 of obj->_b8->_58 is clear,
  *   - the target halfword obj->_a0 is OUTSIDE the [41, 47] window,
  *   - Sfx_IsPlayingFromObjectChannel(obj, 16) returns 0. */
-#pragma scheduling off
 #pragma peephole off
 int fn_80138920(u8* obj, int arg1, int arg2)
 {
@@ -556,8 +544,6 @@ int fn_80138920(u8* obj, int arg1, int arg2)
     objAudioFn_800393f8(obj, b + 936, arg1, arg2, -1, 0);
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int Obj_AllocObjectSetup(int a, int b);
 
@@ -568,8 +554,6 @@ extern int sprintf(char* buf, const char* fmt, ...);
 extern f32 lbl_803E22A0;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80133F70(void* obj)
 {
     char buf[12];
@@ -601,15 +585,13 @@ void fn_80133F70(void* obj)
     }
     sprintf(buf, lbl_803DBBF0, b);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 extern int* Obj_GetActiveModel(void* obj);
 
 
 /* Variadic debug logger: append formatted text while the debug arena has room. */
-#pragma scheduling off
+#pragma peephole on
 void debugPrintf(char* fmt, ...)
 {
     va_list args;
@@ -620,9 +602,9 @@ void debugPrintf(char* fmt, ...)
         vsprintf(debugLogEnd, fmt, args);
     }
 }
-#pragma scheduling reset
 
 /* Variadic debug-print sink: retail keeps only the ABI varargs spill frame. */
+#pragma scheduling on
 void fn_80137948(char* fmt, ...)
 {
 }
@@ -697,12 +679,12 @@ void fn_801375A0(void)
     xp = lbl_803DDA00 & 0xffff;
     debugPrintXpos = (u16)xp;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58.
  * 83% -- target has a leading `clrlwi r4,r4,24` that MWCC elides since
  * the rlwimi only uses bit 0 of r4. No C form found to force it. */
+#pragma scheduling on
+#pragma peephole on
 void fn_80138908(int* obj, u8 v)
 {
     u8* x = ((GameObject*)obj)->extra;
@@ -733,14 +715,12 @@ void fn_801388D0(s16 a, u32 b, u32 c, u32 d)
     lbl_803DDA34 = d;
     OSResumeThread(lbl_803AB118);
 }
-#pragma scheduling reset
 
 
 extern void OSSetErrorHandler(int kind, void* handler);
 extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
 extern void fn_80137DF8(void);
 extern u8 lbl_803AB428[];
-#pragma scheduling off
 void fn_80137D28(void)
 {
     OSSetErrorHandler(0, (void*)fn_801388D0);
@@ -753,9 +733,7 @@ void fn_80137D28(void)
     OSSetErrorHandler(5, (void*)fn_801388D0);
     OSCreateThread(lbl_803AB118, (void*)fn_80137DF8, 0, lbl_803AB428 + 4096, 4096, 0, 1);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
 {
     extern int dll_19_func1B(int);
@@ -847,9 +825,7 @@ int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
     }
     return closest;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 int fn_80138D7C(int obj, int p2)
 {
@@ -900,8 +876,6 @@ int fn_80138D7C(int obj, int p2)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
 extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);
@@ -925,8 +899,6 @@ extern f32 lbl_803E23F8;
  * (s8)data[0] / (s8)data[1] with acceleration lbl_803E23E4 and damping
  * lbl_803E23F0, clamps to [0, lbl_803E23E8], and pushes the result to the
  * model's blend channel 1 as `lbl_803E23F8 * weight - lbl_803E23E8`. */
-#pragma scheduling off
-#pragma peephole off
 void Tricky_updateBlendChannelWeight(int obj, u8* state)
 {
     extern void* Obj_GetActiveModel(int obj);
@@ -1007,8 +979,6 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
             lbl_803E23F8 * *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) - lbl_803E23E8);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803DD99C;
 
@@ -1024,8 +994,6 @@ typedef struct
     u8 s3 : 2;
 } AnimSlots;
 
-#pragma scheduling off
-#pragma peephole off
 void objAnimFreeChildren(int a, int b, void** c)
 {
     char buf[4];
@@ -1078,29 +1046,19 @@ void objAnimFreeChildren(int a, int b, void** c)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u16 lbl_803DBC0A;
 
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
 
 
-#pragma peephole off
-#pragma peephole reset
 
 
-#pragma peephole off
-#pragma peephole reset
 
 extern u8 enableDebugText;
 extern u16* debugDrawFrameBuffer;
 extern void DCStoreRange(void* p, u32 nBytes);
 
-#pragma peephole off
 void fn_80137A00(int p1, int p2, u8* grid, int p4)
 {
     int i;
@@ -1150,12 +1108,12 @@ void fn_80137A00(int p1, int p2, u8* grid, int p4)
         }
     }
 }
-#pragma peephole reset
 
 extern u16* externalFrameBuffer1;
 extern u16* externalFrameBuffer0;
 extern u8 lbl_8031D060[];
 
+#pragma peephole on
 void debugPrintfxy(int x, int y, char* fmt, ...)
 {
     int xx;
@@ -1298,8 +1256,6 @@ int fn_80136A40(int p1, int c)
 extern int getButtonsHeld(int p);
 extern int ObjGroup_FindNearestObject(int type, int obj, f32* distOut);
 
-#pragma peephole off
-#pragma peephole reset
 
 extern void GXSetTevColor(int id, int* color);
 extern void setTextColor(int p);
@@ -1518,12 +1474,9 @@ int fn_80136E00(int p1, u8* p)
     }
     return p - start;
 }
-#pragma peephole reset
 
 extern void drawScaledTexture(char* tex, f32 x, f32 y, int alpha, int s, int w, int h, int mode);
 
-#pragma peephole off
-#pragma peephole reset
 
 extern u16* debugFrameBuffer;
 extern char lbl_803DBC18;
@@ -1546,7 +1499,6 @@ extern void VIWaitForRetrace(void);
  * Clears the debug framebuffer, prints the exception type, DSISR/SRR0,
  * stack trace and GPR dump via debugPrintfxy, draws the underline and
  * box pixels directly into the framebuffer, and flips buffers forever. */
-#pragma peephole off
 void fn_80137DF8(void)
 {
     char* strs = (char*)lbl_8031D060;
@@ -1787,7 +1739,6 @@ void fn_80137DF8(void)
         }
     }
 }
-#pragma peephole reset
 
 extern u16 lbl_803DD9F4;
 extern u32 lbl_803DDA04;
@@ -1796,7 +1747,6 @@ extern u32 lbl_803DD9FC;
 /* EN v1.0 0x801375C8  size: 736b  debugPrintDraw: lay out the debug log
  * twice (measure pass then draw pass), drawing the backing rect between
  * the passes when the log produced any extent. */
-#pragma peephole off
 void debugPrintDraw(int ctx)
 {
     u8* p;
@@ -1890,4 +1840,3 @@ void debugPrintDraw(int ctx)
     debugLogEnd = debugLogBuffer;
     lbl_803DD9E4 = 0;
 }
-#pragma peephole reset

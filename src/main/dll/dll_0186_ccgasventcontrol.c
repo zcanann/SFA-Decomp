@@ -56,6 +56,8 @@ extern f32 lbl_803E524C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801a8f88(void)
 {
     int iVar1;
@@ -185,20 +187,18 @@ int ccqueen_getExtraSize(void);
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4620;
-#pragma peephole off
 
+#pragma peephole off
 void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4620);
 }
-#pragma peephole reset
 
 
 /* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 extern void disableHeavyFog(void);
 #pragma scheduling off
-#pragma peephole off
 void ccgasventcontrol_free(int obj)
 {
     char* inner = ((GameObject*)obj)->extra;
@@ -220,19 +220,16 @@ void ccgasventcontrol_init(int obj, u8* p)
         *(u8*)inner = 7;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* CCGasVentControl_SeqFn: trampoline to CCGasVentControlFn_801a9fd0 passing (obj, obj->extra), returns 0. */
 extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
-#pragma scheduling off
+#pragma peephole on
 int CCGasVentControl_SeqFn(int obj)
 {
     CCGasVentControlFn_801a9fd0(obj, *(int*)&((GameObject*)obj)->extra);
     return 0;
 }
-#pragma scheduling reset
 
 extern int* ObjGroup_GetObjects(int group, int* count);
 extern f32 lbl_803E4618;
@@ -249,7 +246,6 @@ extern f32 lbl_803E4638;
 extern f32 lbl_803E463C;
 extern f32 lbl_803E4640;
 
-#pragma scheduling off
 #pragma peephole off
 void ccgasventcontrol_update(int obj)
 {
@@ -353,8 +349,6 @@ void ccgasventcontrol_update(int obj)
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 getXZDistance(f32 * a, f32 * b);
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
@@ -362,8 +356,6 @@ extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_SetObjectSfxVolume(int obj, int sound, int vol, f32 v);
 extern f32 lbl_803E461C;
 
-#pragma scheduling off
-#pragma peephole off
 u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
 {
     u8 i;
@@ -403,8 +395,6 @@ u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
     }
     return count;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int getTrickyObject(void);
 

@@ -220,12 +220,10 @@ void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-#pragma peephole reset
 
 
 /* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 #pragma scheduling off
-#pragma peephole off
 void animsharpclaw_free(int obj)
 {
     char* inner;
@@ -241,15 +239,13 @@ void animsharpclaw_free(int obj)
     (*(void (*)(int, int, int, int, int))(*(int*)(*gTitleMenuControlInterface + 0x8)))(obj, 0xffff, 0, 0, 0);
     Sfx_StopObjectChannel(obj, 0x7f);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 
-#pragma scheduling off
 #pragma dont_inline on
+#pragma peephole on
 int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
 {
     int i;
@@ -287,14 +283,12 @@ int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
 extern f32 lbl_803E4610;
 
 
 extern void objSetSlot(void* obj, int slot);
 
-#pragma scheduling off
 #pragma peephole off
 void animsharpclaw_init(int* obj, u8* init)
 {
@@ -335,13 +329,9 @@ void animsharpclaw_init(int* obj, u8* init)
         ((GameObject*)obj)->anim.modelState->shadowTintB = 0x96;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 framesThisStep;
 
-#pragma scheduling off
-#pragma peephole off
 void animsharpclaw_update(int* obj)
 {
     int* found;
@@ -400,5 +390,3 @@ void animsharpclaw_update(int* obj)
     }
     ((GameObject*)obj)->seqIndex = -1;
 }
-#pragma peephole reset
-#pragma scheduling reset

@@ -1,6 +1,4 @@
 /* DLL 0x22E — DFP door switch object [801FE118-801FEB30) */
-#pragma scheduling on
-#pragma peephole on
 #include "main/game_object.h"
 #include "main/dll/dll22cstate_struct.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"
@@ -29,120 +27,48 @@
  * PAL Size: TODO
  */
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 
 /* 8b "li r3, N; blr" returners. */
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* plain forwarder. */
 
 /* fn_X(lbl); lbl = 0; */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* dll_224_hitDetect: render iff obj->field_0x74 set. */
 
 /* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 /* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
-#pragma scheduling off
-#pragma scheduling reset
 
 /* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
-#pragma scheduling off
-#pragma peephole off
 
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 #pragma opt_loop_invariants off
 #pragma opt_loop_invariants reset
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
-#pragma scheduling reset
-#pragma peephole reset
 
 #include "main/obj_placement.h"
 #include "main/game_object.h"
