@@ -1,7 +1,18 @@
-/* DLL 0x0116 — wmcolumn / doorlock group. TU: 0x8017CF90–0x8017D0D4. */
-#include "main/dll/alphaanim.h"
+/*
+ * wmcolumn (DLL 0x0116) - the carryable WM column. TU: 0x8017D37C-0x8017D818
+ * (wm_column_* only; .text-only split, the descriptors live in the auto data
+ * unit).
+ *
+ * NOTE: everything below the descriptors (FUN_8017db40, FUN_8017de58,
+ * FUN_8017e15c, FUN_8017e3c0 + gAppleOnTreeObjDescriptor/jumptable_803214DC)
+ * is v1.1-drift appleontree content in dll_0117's address range
+ * (0x8017D818-0x8017EC10). The bodies are dead weight here (never linked,
+ * never scored) but dll_0117_appleontree.c still references the FUN_ names
+ * at its unmatched call sites, so they stay until that unit's recovery maps
+ * them onto fn_8017D854 / appleontree_handleCollectableHit / fn_8017DCD4 /
+ * fn_8017DF34.
+ */
 #include "main/dll/appleontreestate_struct.h"
-#include "main/game_object.h"
 #include "main/objseq.h"
 
 extern uint GameBit_Get(int eventId);
@@ -9,18 +20,10 @@ extern undefined8 ObjGroup_RemoveObject();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-/* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
- * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read
- * its GameBit, compare against the def[0x30] mask bit for that slot, and
- * if the polarity flips (GameBit != mask bit) end the current sequence.
- * Always latches state[1] bit 0 before returning 0. */
-
 #include "main/dll/groundanimator_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/groundAnimator.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/objanim_internal.h"
 #include "main/objseq.h"
 
 typedef struct WmColumnPlacement

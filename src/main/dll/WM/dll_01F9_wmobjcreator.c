@@ -1,10 +1,8 @@
 /* DLL 0x1F9 - WMObjCreator [801EF360-801EF3A8) */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
-#include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/resource.h"
 
 extern uint GameBit_Get(int eventId);
 

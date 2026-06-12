@@ -3,9 +3,6 @@
 #include "main/dll/dll200state_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/dll/ARW/ARWarwingattachment.h"
-#include "main/objHitReact.h"
-#include "main/objseq.h"
 #include "main/resource.h"
 
 STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);

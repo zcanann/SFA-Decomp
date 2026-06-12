@@ -6,7 +6,7 @@
  * LAST in this file so MWCC cannot inline it into wmlevelcontrol_update
  * (the target keeps it as an extern call).
  */
-#include "main/dll/LGT/dll_0207_wmworm.h"
+#include "main/dll/WM/dll_0207_wmworm.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
 typedef struct WmlevelcontrolState

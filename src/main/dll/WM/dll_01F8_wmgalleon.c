@@ -1,14 +1,10 @@
-/* DLL 0x01F8 (wmgalleon) — WM galleon and object creator [0x801EFF7C-0x801F06D8). */
+/* DLL 0x01F8 (wmgalleon) - WM galleon and object creator [0x801EFF7C-0x801F06D8). */
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
-#include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
-#include "main/dll/WC/WClaser.h"
-#include "main/objlib.h"
 #include "main/objseq.h"
-#include "main/screen_transition.h"
 
 /* WM_ObjCreator per-object extra state (four s16 slots). */
 typedef struct WmObjCreatorState

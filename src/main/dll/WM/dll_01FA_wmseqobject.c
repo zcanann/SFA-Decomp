@@ -1,10 +1,6 @@
-/* DLL 0x01FA — wmseqobject / WM_ObjCreator group. TU: 0x801EFF7C–0x801F02F0. */
+/* DLL 0x01FA - wmseqobject / WM_ObjCreator group. TU: 0x801EFF7C-0x801F02F0. */
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
-#include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
-#include "main/game_object.h"
-#include "main/mapEventTypes.h"
-#include "main/resource.h"
 
 /* WM_ObjCreator per-object extra state (four s16 slots). */
 typedef struct WmObjCreatorState
@@ -55,7 +51,6 @@ extern u32 randomGetRange(int min, int max);
 
 /* 8b "li r3, N; blr" returners. */
 
-#include "main/dll/WC/WClaser.h"
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"

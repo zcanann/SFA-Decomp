@@ -1,5 +1,5 @@
-#ifndef MAIN_DLL_LGT_LGTDIRECTIONALLIGHT_H_
-#define MAIN_DLL_LGT_LGTDIRECTIONALLIGHT_H_
+#ifndef MAIN_DLL_WM_DLL_0207_WMWORM_H_
+#define MAIN_DLL_WM_DLL_0207_WMWORM_H_
 
 #include "ghidra_import.h"
 #include "main/game_object.h"
@@ -47,4 +47,4 @@ void wmlevelcontrol_free(int obj);
 void wmlevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void wmlevelcontrol_hitDetect(void);
 
-#endif /* MAIN_DLL_LGT_LGTDIRECTIONALLIGHT_H_ */
+#endif /* MAIN_DLL_WM_DLL_0207_WMWORM_H_ */

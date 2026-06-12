@@ -1,6 +1,6 @@
 /*
- * DLL 0x0215 — wmnewcrystal (gResourceDescriptors[0x215]): the blue/green power
- * crystals at Krazoa Palace (map 'warlock'). TU: 0x801F943C–0x801F9804.
+ * DLL 0x0215 - wmnewcrystal (gResourceDescriptors[0x215]): the blue/green power
+ * crystals at Krazoa Palace (map 'warlock'). TU: 0x801F943C-0x801F9804.
  * The warlock romlist places all three variants (defs 890/891/892 'WM_newcrystal',
  * types 0x783 blue / 0x784 green / 0x785): Krystal's crystal-prison set seen in
  * the finale. While the active game bit is set, the blue crystal runs its two glow
@@ -8,7 +8,7 @@
  * is granted) and the green crystal sprays directional bursts from its two path
  * points. Sequence event 1 is the on-camera finale detonation: the object is pulled
  * 100 units toward the camera, blown up via the shared spawnExplosion() (the same
- * engine routine — and therefore the same effect and sound — as the gunpowder
+ * engine routine - and therefore the same effect and sound - as the gunpowder
  * barrels), and hidden. Event 2 retires the green crystal's bursts.
  */
 #include "main/dll/WM/wm_shared.h"

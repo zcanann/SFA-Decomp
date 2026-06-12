@@ -1,8 +1,6 @@
-/* DLL 0x0207 — wmworm (WarpZone Module worm enemy). TU: 0x801F3C2C–0x801F3F18. */
+/* DLL 0x0207 - wmworm (WarpZone Module worm enemy). TU: 0x801F3C2C-0x801F3F18. */
 #include "main/dll_000A_expgfx.h"
-#include "main/effect_interfaces.h"
-#include "main/game_object.h"
-#include "main/dll/LGT/dll_0207_wmworm.h"
+#include "main/dll/WM/dll_0207_wmworm.h"
 
 extern undefined4 FUN_8001753c();
 extern void* Obj_GetPlayerObject(void);
