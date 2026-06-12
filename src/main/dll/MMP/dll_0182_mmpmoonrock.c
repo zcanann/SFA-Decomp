@@ -3,12 +3,11 @@
 #include "main/dll/mmptrenchfxstate_struct.h"
 #include "main/dll/moonseedbushstate_struct.h"
 #include "main/dll/IM/IMspacecraft.h"
+#include "main/objhits.h"
 
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern u32 randomGetRange(int min, int max);
 extern u32 GameBit_Get(int eventId);
-
-extern int ObjHits_GetPriorityHit(int obj, int* outHitObj, int* outB, u32* outC);
 
 extern void objRenderFn_8003b8f4(f32 v);
 
@@ -73,7 +72,6 @@ STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
 extern undefined8 FUN_80006728();
 extern uint GameBit_Get(int eventId);
 extern int FUN_80017a98();
-extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_8005d0ac();
 
 extern EffectInterface** gPartfxInterface;
@@ -203,8 +201,6 @@ extern f32 lbl_803E4568;
 #pragma peephole off
 void fn_801A7B10(int obj)
 {
-    extern undefined4 ObjHits_EnableObject();
-    extern undefined4 ObjHits_SetHitVolumeSlot();
     extern int fn_801A78C8(int obj, f32 x, f32 y, f32 z, f32 y2, f32* out1, int* out2);
     MmpMoonrockState * state = ((GameObject*)obj)->extra;
     int auStack_14[1];
@@ -312,8 +308,10 @@ void fn_801A79E0(int obj)
     int auStack_14[21];
     int local_18;
     MmpMoonrockState * state;
+    ObjHitsPriorityState* hitState;
     int ret;
     state = ((GameObject*)obj)->extra;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     ret = ObjHits_GetPriorityHit(obj, &local_18, (int*)0, (int*)0);
     if (ret == 0)
     {
@@ -322,8 +320,7 @@ void fn_801A79E0(int obj)
                                  0xff, 0);
     }
     if ((ret != 0) ||
-        (((*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->contactFlags != 0 && (state->flags & 0x40)
-                != 0) ||
+        ((hitState->contactFlags != 0 && (state->flags & 0x40) != 0) ||
             (state->flags & 0x100) != 0))
     {
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + lbl_803E4550;
@@ -456,7 +453,6 @@ int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32* out1, int* out2)
 void mmp_moonrock_init(int obj, int param2)
 {
     extern undefined4 ObjGroup_AddObject();
-    extern undefined4 ObjHits_DisableObject();
     MmpMoonrockState * state = ((GameObject*)obj)->extra;
     u8 kind;
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
@@ -656,7 +652,6 @@ void mmp_moonrock_update(int obj)
     extern void Sfx_PlayFromObject(int obj, u16 sfxId);
     extern void* Obj_GetPlayerObject(void);
     extern void* ObjGroup_GetObjects();
-    extern undefined4 ObjHits_DisableObject();
     MmpMoonrockState * state = ((GameObject*)obj)->extra;
     int def = *(int*)&((GameObject*)obj)->anim.placementData;
     u8 grabbed;
