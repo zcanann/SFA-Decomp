@@ -10,6 +10,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2flameburst.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 
@@ -217,6 +218,7 @@ void fn_explosion_release_v11_unused(uint param_1)
     int iVar5;
     char* pcVar6;
     short* psVar7;
+    ObjHitsPriorityState* hitState;
 
     psVar7 = *(short**)&((GameObject*)param_1)->anim.placementData;
     pcVar6 = ((GameObject*)param_1)->extra;
@@ -270,7 +272,8 @@ void fn_explosion_release_v11_unused(uint param_1)
         {
             iVar4 = 0;
         }
-        (*(ObjHitsPriorityState**)&((GameObject*)param_1)->anim.hitReactState)->flags &= ~1;
+        hitState = (ObjHitsPriorityState*)((GameObject*)param_1)->anim.hitReactState;
+        hitState->flags &= ~1;
         ((GameObject*)param_1)->anim.alpha = iVar4;
     }
     return;
@@ -405,6 +408,7 @@ void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dimwooddoor2_init(u8* obj, u8* params)
 {
     DimWoodDoor2State* sub;
+    ObjHitsPriorityState* hitState;
     f32 fz;
     *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8
     )
@@ -418,7 +422,8 @@ void dimwooddoor2_init(u8* obj, u8* params)
     if (GameBit_Get(*(s16*)(params + 0x1e)) != 0)
     {
         sub->burnState = 0;
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState->flags &= ~1;
         ((GameObject*)obj)->anim.alpha = 0;
     }
 }
@@ -442,6 +447,7 @@ void dimwooddoor2_update(int* obj)
 {
     int* q = *(int**)&((GameObject*)obj)->anim.placementData;
     DimWoodDoor2State* sub = ((GameObject*)obj)->extra;
+    ObjHitsPriorityState* hitState;
     ObjAnim_AdvanceCurrentMove(sub->animSpeed, timeDelta, (int)obj, 0);
     ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + sub->riseSpeed;
     {
@@ -456,10 +462,9 @@ void dimwooddoor2_update(int* obj)
     if ((s8)sub->burnState <= 0 && *(s16*)q == 0x338 && ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E49DC)
     {
         int v = ((GameObject*)obj)->anim.alpha - framesThisStep * 16;
-        int* q2;
         if (v < 0) v = 0;
-        q2 = *(int**)&((GameObject*)obj)->anim.hitReactState;
-        ((ObjHitsPriorityState*)q2)->flags = (s16)(((ObjHitsPriorityState*)q2)->flags & ~1);
+        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState->flags &= ~1;
         ((GameObject*)obj)->anim.alpha = (u8)v;
     }
     else

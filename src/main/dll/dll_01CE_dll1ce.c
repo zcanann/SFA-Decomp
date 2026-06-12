@@ -10,6 +10,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2flameburst.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 
@@ -220,6 +221,7 @@ void fn_explosion_release_v11_unused(uint param_1)
     int iVar5;
     char* pcVar6;
     short* psVar7;
+    ObjHitsPriorityState* hitState;
 
     psVar7 = *(short**)&((GameObject*)param_1)->anim.placementData;
     pcVar6 = ((GameObject*)param_1)->extra;
@@ -273,7 +275,8 @@ void fn_explosion_release_v11_unused(uint param_1)
         {
             iVar4 = 0;
         }
-        (*(ObjHitsPriorityState**)&((GameObject*)param_1)->anim.hitReactState)->flags &= ~1;
+        hitState = (ObjHitsPriorityState*)((GameObject*)param_1)->anim.hitReactState;
+        hitState->flags &= ~1;
         ((GameObject*)param_1)->anim.alpha = iVar4;
     }
     return;
@@ -418,6 +421,7 @@ void dll_1CE_free(void)
 void dll_1CE_init(u8* obj, u8* params)
 {
     Dll1CEState* sub;
+    ObjHitsPriorityState* hitState;
     *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8
     )
     ;
@@ -427,7 +431,8 @@ void dll_1CE_init(u8* obj, u8* params)
     if (GameBit_Get(*(s16*)(params + 0x1e)) != 0)
     {
         sub->igniteCountdown = 0;
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~1;
+        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState->flags &= ~1;
         ((GameObject*)obj)->anim.alpha = 0;
     }
     sub->openVelocity = lbl_803E49F0;
@@ -452,11 +457,12 @@ void dll_1CE_update(int* obj)
 {
     int* q = *(int**)&((GameObject*)obj)->anim.placementData;
     Dll1CEState* sub = ((GameObject*)obj)->extra;
+    ObjHitsPriorityState* hitState;
     if (((GameObject*)obj)->anim.alpha == 0) return;
     if ((s8)sub->igniteCountdown <= 0)
     {
-        int* q2 = *(int**)&((GameObject*)obj)->anim.hitReactState;
-        ((ObjHitsPriorityState*)q2)->flags = (s16)(((ObjHitsPriorityState*)q2)->flags & ~1);
+        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState->flags &= ~1;
         if (sub->opened == 1)
         {
             sub->openProgress = sub->openVelocity * timeDelta + sub->openProgress;

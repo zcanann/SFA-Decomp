@@ -11,6 +11,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2flameburst.h"
+#include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 
@@ -307,6 +308,7 @@ void fn_explosion_release_v11_unused(uint param_1)
     int iVar5;
     char* pcVar6;
     short* psVar7;
+    ObjHitsPriorityState* hitState;
 
     psVar7 = *(short**)&((GameObject*)param_1)->anim.placementData;
     pcVar6 = ((GameObject*)param_1)->extra;
@@ -360,7 +362,8 @@ void fn_explosion_release_v11_unused(uint param_1)
         {
             iVar4 = 0;
         }
-        (*(ObjHitsPriorityState**)&((GameObject*)param_1)->anim.hitReactState)->flags &= ~1;
+        hitState = (ObjHitsPriorityState*)((GameObject*)param_1)->anim.hitReactState;
+        hitState->flags &= ~1;
         ((GameObject*)param_1)->anim.alpha = iVar4;
     }
     return;
