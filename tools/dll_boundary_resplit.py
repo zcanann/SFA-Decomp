@@ -568,7 +568,7 @@ def project(text, keep_names):
 
 def prune_unused_externs(seg_text, keep_names):
     """Drop top-level extern/proto decls from a MOVE/CARVE segment whose
-    declared name is referenced by NONE of the kept fn bodies. These are
+    declared name is referenced NOWHERE in the RETAINED segment. These are
     dead drift-era phantoms (v1.1 FUN_xxxx, donor-local helper externs the
     moved fns don't call) the projection drags along verbatim. Carrying a
     dead extern into the owner is harmless UNLESS its signature conflicts
@@ -577,28 +577,29 @@ def prune_unused_externs(seg_text, keep_names):
     auto-fix because the resulting error is not a redecl. Pruning the dead
     decl removes the conflict at the source. Only extern/proto are touched
     (typedef/tagdef/vardef/define kept: transitive-dep and reconcile-safe).
-    Byte-neutral for the owner: an extern no kept fn references emits no
-    code and only matters if it perturbs another decl's visibility."""
+
+    The reference scan is over the ENTIRE retained segment EXCEPT the
+    extern/proto decl lines themselves — not just kept fn bodies — so a
+    decl referenced by a RETAINED descriptor/jump-table initializer (a
+    vardef like gAppleOnTreeObjDescriptor referencing appleontree_init /
+    appleontree_update + K) is kept (r8017AC2C)."""
     lines = seg_text.split("\n")
-    spans = {n: (h, e) for n, h, e in parse_fn_spans(seg_text)}
-    parts = []
-    for n in keep_names:
-        if n in spans:
-            h, e = spans[n]
-            parts.append("\n".join(lines[h:e + 1]))
-    bodies = "\n".join(parts)
+    decl_lines = set()
+    for kind, name, h, e in parse_top_items(seg_text):
+        if kind in ("extern", "proto") and name:
+            decl_lines.update(range(h, e + 1))
+    scan = "\n".join(l for i, l in enumerate(lines) if i not in decl_lines)
+    dropped = []
     drop = set()
     for kind, name, h, e in parse_top_items(seg_text):
         if kind in ("extern", "proto") and name:
-            if not re.search(r"\b%s\b" % re.escape(name), bodies):
+            if not re.search(r"\b%s\b" % re.escape(name), scan):
                 drop.update(range(h, e + 1))
+                dropped.append(name)
     if not drop:
         return seg_text, []
     out = [l for i, l in enumerate(lines) if i not in drop]
-    dropped = sorted({name for kind, name, h, e in parse_top_items(seg_text)
-                      if kind in ("extern", "proto") and name
-                      and not re.search(r"\b%s\b" % re.escape(name), bodies)})
-    return "\n".join(out), dropped
+    return "\n".join(out), sorted(set(dropped))
 
 
 def defined_fns(text):
