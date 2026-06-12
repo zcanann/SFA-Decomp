@@ -3,6 +3,7 @@
 #include "main/audio/sfx.h"
 #include "main/objlib.h"
 #include "main/effect_interfaces.h"
+#include "main/objtexture.h"
 
 extern void modelLightStruct_freeSlot(void* handle);
 extern void objRenderFn_8003b8f4(void* obj, undefined4 param_2, undefined4 param_3, undefined4 param_4,
@@ -21,7 +22,6 @@ extern int timerCountDown(void* timer);
 extern int objUpdateOpacity(void* obj);
 extern int hitDetectFn_800658a4(void* obj, f32 x, f32 y, f32 z, f32* out, int flag);
 extern ProximityMineEffect* modelLightStruct_createPointLight(void* obj, int r, int g, int b, int a);
-extern int* objFindTexture(void* obj, int a, int b);
 extern void modelLightStruct_setupGlow(void* light, int a, int b, int c, int d, u8 e, f32 f);
 extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
 extern void* Obj_GetPlayerObject(void);
@@ -191,14 +191,14 @@ void proximitymine_update(ProximityMineObject* obj)
         if (state->effectHandle == NULL)
         {
             int brightness;
-            int* tex;
+            ObjTextureRuntimeSlot* tex;
 
             state->effectHandle = modelLightStruct_createPointLight(obj, 0xff, 0, 0, 0);
             tex = objFindTexture(obj, 0, 0);
             if (tex != NULL)
             {
-                *tex = (*tex + 0x10) % 512;
-                brightness = *tex >> 8;
+                tex->textureId = (tex->textureId + 0x10) % 512;
+                brightness = tex->textureId >> 8;
             }
             else
             {

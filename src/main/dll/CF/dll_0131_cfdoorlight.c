@@ -9,6 +9,7 @@
  */
 #include "main/game_object.h"
 #include "main/obj_placement.h"
+#include "main/objtexture.h"
 
 typedef struct CfDoorLightFlags
 {
@@ -52,7 +53,6 @@ STATIC_ASSERT(offsetof(CfDoorLightMapData, triggerEvent) == 0x20);
 
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern void* objFindTexture(void* obj, int target, int param_3);
 
 int cf_doorlight_getExtraSize(void) { return sizeof(CfDoorLightState); }
 
@@ -76,7 +76,7 @@ void cf_doorlight_update(int obj)
 {
     CfDoorLightState* state;
     CfDoorLightMapData* def;
-    int* textureFrame;
+    ObjTextureRuntimeSlot* textureFrame;
 
     state = ((GameObject*)obj)->extra;
     def = (CfDoorLightMapData*)((GameObject*)obj)->anim.placement;
@@ -109,7 +109,7 @@ void cf_doorlight_update(int obj)
                     state->currentFrame = state->resetFrame;
                 }
             }
-            *textureFrame = state->currentFrame;
+            textureFrame->textureId = state->currentFrame;
         }
     }
 }

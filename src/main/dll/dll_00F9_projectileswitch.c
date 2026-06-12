@@ -6,6 +6,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/screenOverlay.h"
 #include "main/objanim_internal.h"
+#include "main/objtexture.h"
 
 extern void GameBit_Set(int gameBit, int value);
 
@@ -30,7 +31,6 @@ extern u8 framesThisStep;
 
 extern void GameBit_Set(int eventId, int value);
 extern void Sfx_PlayFromObject(int obj, int soundId);
-extern void* objFindTexture(int obj, int a, int b);
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, float arg);
 extern int seqStreamLookupFn_8007fff8(void* table, int mode, int seq);
 extern void fn_8003B608(u32 a, u32 b, u32 c);
@@ -121,7 +121,7 @@ void ProjectileSwitch_hitDetect(int obj)
     int hitId;
     int hit;
     int hitObj;
-    void* tex;
+    ObjTextureRuntimeSlot* tex;
     int isSpecial;
 
     state2 = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -152,10 +152,10 @@ void ProjectileSwitch_hitDetect(int obj)
         {
             Sfx_PlayFromObject(obj, SFXmn_cling01);
         }
-        tex = objFindTexture(obj, 0, 0);
+        tex = objFindTexture((void*)obj, 0, 0);
         if (tex != 0)
         {
-            *(int*)tex = 0;
+            tex->textureId = 0;
         }
         *(u8*)state = 0;
         GameBit_Set((int)*(short*)(state + 2), 0);
@@ -171,10 +171,10 @@ void ProjectileSwitch_hitDetect(int obj)
         {
             Sfx_PlayFromObject(obj, SFXms_windlift_loop);
         }
-        tex = objFindTexture(obj, 0, 0);
+        tex = objFindTexture((void*)obj, 0, 0);
         if (tex != 0)
         {
-            *(int*)tex = 0x100;
+            tex->textureId = 0x100;
         }
         *(u8*)state = 1;
         GameBit_Set((int)*(short*)(state + 2), 1);
@@ -192,7 +192,7 @@ void ProjectileSwitch_update(int obj)
     extern uint GameBit_Get(int eventId);
     int state;
     int state2;
-    void* tex;
+    ObjTextureRuntimeSlot* tex;
 
     state = *(int*)&((GameObject*)obj)->extra;
     if (*(u8*)state != 0)
@@ -200,8 +200,8 @@ void ProjectileSwitch_update(int obj)
         if (GameBit_Get((int)*(short*)(state + 2)) == 0)
         {
             state2 = *(int*)&((GameObject*)obj)->extra;
-            tex = objFindTexture(obj, 0, 0);
-            if (tex != 0) *(int*)tex = 0;
+            tex = objFindTexture((void*)obj, 0, 0);
+            if (tex != 0) tex->textureId = 0;
             *(u8*)state2 = 0;
         }
     }
@@ -210,8 +210,8 @@ void ProjectileSwitch_update(int obj)
         if (GameBit_Get((int)*(short*)(state + 2)) != 0)
         {
             state2 = *(int*)&((GameObject*)obj)->extra;
-            tex = objFindTexture(obj, 0, 0);
-            if (tex != 0) *(int*)tex = 0x100;
+            tex = objFindTexture((void*)obj, 0, 0);
+            if (tex != 0) tex->textureId = 0x100;
             *(u8*)state2 = 1;
         }
     }
@@ -236,7 +236,7 @@ void ProjectileSwitch_init(int obj, u8* initData)
     int state;
     u8* linkObj;
     u8* linkSub;
-    void* tex;
+    ObjTextureRuntimeSlot* tex;
 
     objAnim = (ObjAnimComponent*)obj;
     state = *(int*)&((GameObject*)obj)->extra;
@@ -282,15 +282,15 @@ void ProjectileSwitch_init(int obj, u8* initData)
     if (*(u8*)state != 0)
     {
         state = *(int*)&((GameObject*)obj)->extra;
-        tex = objFindTexture(obj, 0, 0);
-        if (tex != 0) *(int*)tex = 0x100;
+        tex = objFindTexture((void*)obj, 0, 0);
+        if (tex != 0) tex->textureId = 0x100;
         *(u8*)state = 1;
     }
     else
     {
         state = *(int*)&((GameObject*)obj)->extra;
-        tex = objFindTexture(obj, 0, 0);
-        if (tex != 0) *(int*)tex = 0;
+        tex = objFindTexture((void*)obj, 0, 0);
+        if (tex != 0) tex->textureId = 0;
         *(u8*)state = 0;
     }
     if ((initData[0x23] & 1) == 0)
