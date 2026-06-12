@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/dll/obj_types.h"
 #include "main/audio/sfx.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -176,17 +177,7 @@ typedef struct ObjPathPoint
     s8 modelIndex[6];
 } ObjPathPoint;
 
-typedef struct ObjPathTransform
-{
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    u8 pad06[2];
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} ObjPathTransform;
+
 
 /*
  * --INFO--

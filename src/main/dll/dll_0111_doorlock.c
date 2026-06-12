@@ -1,5 +1,6 @@
 /* === merged from main/dll/texScroll.c [8017AC2C-8017ADB4) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
+#include "main/dll/door_types.h"
 
 extern undefined8 ObjGroup_RemoveObject();
 
@@ -445,10 +446,7 @@ void doorlock_update(int obj)
 extern uint GameBit_Get(int eventId);
 
 
-typedef struct DoorLockState
-{
-    u8 unlocked;
-} DoorLockState;
+
 
 
 

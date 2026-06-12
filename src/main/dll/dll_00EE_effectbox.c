@@ -1,5 +1,6 @@
 /* === moved from main/dll/texframeanimator.c [80173224-801732A4) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/magic_types.h"
 /* IDENTITY NOTE: this TU contains the COLLECTIBLE/MAGICDUST family; the
  * real texframeanimator_* symbols live in MMP_asteroid.c (symbols.txt-
  * verified). File rename parked as a repo-owner proposal. */
@@ -92,28 +93,7 @@ extern u8* Obj_GetPlayerObject(void);
 
 
 /* magicdust extra block (collectible sparkle state; tail of the pickup record). */
-typedef struct MagicDustState
-{
-    u8 unk00[0x6C];
-    f32 unk6C;
-    u8 unk70[0x25B - 0x70];
-    u8 unk25B;
-    u8 unk25C[5];
-    s8 unk261;
-    u8 unk262[6];
-    f32 unk268;
-    f32 burstTimer; /* counts down to the next 30-particle burst */
-    u16 burstEffectId;
-    u16 ambientEffectId; /* partfx effect id */
-    s16 sfxId; /* collect sfx id */
-    s16 unk276;
-    s16 ambientTimer;
-    u8 flags27A; /* bits 8/0x10/0x40 observed; &0xFA clear on collect */
-    u8 bounceCount;
-    u8 mode; /* particle color row */
-    u8 unk27D[3];
-    u16 unk280;
-} MagicDustState;
+
 
 STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
 

@@ -1,5 +1,6 @@
 /* === moved from main/dll/WC/WCpressureSwitch.c [801EFF7C-801F02F0) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
+#include "main/dll/wm_types.h"
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -7,13 +8,7 @@
 #include "main/resource.h"
 
 /* WM_ObjCreator per-object extra state (four s16 slots). */
-typedef struct WmObjCreatorState
-{
-    s16 gameBit; /* 0x00: spawn gate, -1 = always */
-    s16 spawnPeriod; /* 0x02 */
-    s16 spawnTimer; /* 0x04 */
-    s16 spawnJitter; /* 0x06: randomGetRange(0, jitter) added per cycle */
-} WmObjCreatorState;
+
 
 STATIC_ASSERT(sizeof(WmObjCreatorState) == 0x8);
 

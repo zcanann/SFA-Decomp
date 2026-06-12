@@ -1,5 +1,6 @@
 /* === moved from main/dll/xyzanimator.c [8016B230-8016B2E0) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/xyzanimator.h"
+#include "main/dll/genpropswgpipe_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
@@ -2420,15 +2421,7 @@ extern void quakeSpellTextureFn_8007366c(int param);
 void staff_hitDetectGeometry(int* obj);
 #pragma opt_common_subs reset
 
-typedef union
-{
-    u8 u8;
-    u16 u16;
-    u32 u32;
-    s16 s16;
-    s32 s32;
-    f32 f32;
-} GenPropsWGPipe;
+
 
 volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
 

@@ -1,5 +1,6 @@
 /* === merged from main/dll/mmshrine/animobj1C0.c [801C5990-801C5ED8) (TU re-split, docs/boundary_audit.md) === */
 #include "main/game_object.h"
+#include "main/dll/mmshrineanimobj_struct.h"
 #include "main/objseq.h"
 
 #include "main/dll/mmshrine/ecsh_shrine_state.h"
@@ -29,25 +30,7 @@ extern f32 lbl_803E4FC8;
 extern f32 lbl_803E5C00;
 extern f32 lbl_803E5C10;
 
-typedef struct MmShrineAnimObj
-{
-    s16 yaw;
-    s16 pitch;
-    s16 roll;
-    s16 flags;
-    u8 pad08[0x8];
-    f32 posY;
-    u8 pad14[0x4];
-    f32 posX;
-    u8 pad1C[0x4];
-    f32 posZ;
-    u8 pad24[0x12];
-    u8 fadeAlpha;
-    u8 pad37[0x15];
-    u8* config;
-    u8 pad50[0x68];
-    u8* state;
-} MmShrineAnimObj;
+
 
 typedef struct MmShrineAnimState
 {

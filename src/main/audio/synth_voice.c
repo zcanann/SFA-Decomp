@@ -1,4 +1,5 @@
 #include "main/audio/inp_ctrl.h"
+#include "main/dll/synthfade_struct.h"
 #include "main/audio/inp_midi.h"
 
 typedef struct SynthDelayedNode
@@ -21,23 +22,7 @@ typedef void (*SynthDelayedBucketCallback)(int voiceIndex);
 #define SYNTH_VOICE_SLOT_SIZE 0x404
 #define SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET 0x11c
 
-typedef struct SynthFade
-{
-    f32 current;
-    f32 target;
-    f32 start;
-    f32 progress;
-    f32 progressStep;
-    f32 auxCurrent;
-    f32 auxTarget;
-    f32 auxStart;
-    f32 auxProgress;
-    f32 auxProgressStep;
-    u32 handle;
-    u8 delayAction;
-    u8 type;
-    u8 pad[2];
-} SynthFade;
+
 
 extern u8 gSynthDelayBucketCursor;
 extern void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay);

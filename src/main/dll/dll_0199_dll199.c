@@ -1,24 +1,12 @@
 /* === moved from main/dll/explosion.c [801CA9C0-801CAD80) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/dll_0198_nwshlevcon.h"
+#include "main/dll/dll199state_struct.h"
+#include "main/dll/dll197state_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-typedef struct Dll197State
-{
-    u8 pad0[0x2 - 0x0];
-    s16 unk2;
-    s16 unk4;
-    u8 pad6[0x8 - 0x6];
-    s16 unk8;
-    s16 unkA;
-    u8 unkC;
-    u8 unkD;
-    u8 unkE;
-    u8 unkF;
-    u8 unk10;
-    u8 pad11[0x18 - 0x11];
-} Dll197State;
+
 
 
 
@@ -288,18 +276,7 @@ typedef struct Dll199ObjectDef
 } Dll199ObjectDef;
 
 
-typedef struct Dll199State
-{
-    u8 pad0[0x2 - 0x0];
-    s16 unk2;
-    u8 pad4[0xE - 0x4];
-    u8 unkE;
-    u8 unkF;
-    u8 unk10;
-    u8 pad11[0x12 - 0x11];
-    u8 unk12;
-    u8 pad13[0x18 - 0x13];
-} Dll199State;
+
 
 
 extern u32 GameBit_Get(int eventId);

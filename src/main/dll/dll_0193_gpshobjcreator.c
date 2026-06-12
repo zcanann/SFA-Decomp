@@ -1,5 +1,6 @@
 /* === moved from main/dll/mmshrine/shrine1C2.c [801C70F0-801C7724) (TU re-split, docs/boundary_audit.md) === */
 #include "main/obj_placement.h"
+#include "main/dll/gpshshrineflags_struct.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/mmshrine/shrine1C2.h"
@@ -118,17 +119,7 @@ typedef struct GpshObjcreatorObjectDef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct
-{
-    u8 b80 : 1;
-    u8 b40 : 1;
-    u8 b20 : 1;
-    u8 b10 : 1;
-    u8 b08 : 1;
-    u8 b04 : 1;
-    u8 b02 : 1;
-    u8 b01 : 1;
-} GpshShrineFlags;
+
 
 
 

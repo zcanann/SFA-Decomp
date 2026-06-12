@@ -1,5 +1,9 @@
 /* === moved from main/dll/DIM/DIMcannon.c [801B0670-801B0924) (TU re-split, docs/boundary_audit.md) === */
 #include "main/audio/sfx_ids.h"
+#include "main/dll/lavaball1bfstate_struct.h"
+#include "main/dll/lavaball1bestate_struct.h"
+#include "main/dll/linklevcontrolstate_struct.h"
+#include "main/dll/im_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMcannon.h"
@@ -11,67 +15,27 @@
 
 
 /* imanimspacecraft_getExtraSize == 0x4. */
-typedef struct ImAnimSpacecraftState
-{
-    s16 blinkTimer; /* 0x00 */
-    u8 maskBits; /* 0x02: per-event toggle bits (bit4..6 = group) */
-    u8 flags; /* 0x03: 2 = blink phase, 4/8 = SeqFn toggles */
-} ImAnimSpacecraftState;
+
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
 /* imspacethruster_getExtraSize == 0xc. */
-typedef struct ImSpaceThrusterState
-{
-    u8 kind; /* 0x00: thruster slot from def+0x19 */
-    u8 phase; /* 0x01 */
-    s16 blendTimer; /* 0x02 */
-    void* bufA; /* 0x04: mmAlloc'd getTabEntry rows */
-    void* bufB; /* 0x08 */
-} ImSpaceThrusterState;
+
 
 STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
 
 /* link_levcontrol_getExtraSize == 0x10. */
-typedef struct LinkLevControlState
-{
-    s8 areaCell; /* 0x00 */
-    u8 pad01[3];
-    int unk04; /* 0x04: init -1 */
-    int musicTrack; /* 0x08 */
-    int latch; /* 0x0c: SCGameBitLatch block */
-} LinkLevControlState;
+
 
 STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
 
 /* lavaball1be extra (getExtraSize 0x14 for the non-0x1fa variant). */
-typedef struct Lavaball1beState
-{
-    char* targetObj; /* 0x00: ObjList_FindObjectById(linkedId) */
-    u8* light; /* 0x04 */
-    f32 floorY; /* 0x08: spawn height; falling below it re-arms */
-    int linkedId; /* 0x0c */
-    u8 flags; /* 0x10: 8 = ticked, 0x10 = dormant, 0x20 = whistle sfx */
-    u8 explodeCooldown; /* 0x11 */
-    u8 pad12[2];
-} Lavaball1beState;
+
 
 STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 /* lavaball1bf_getExtraSize == 0x1c (launcher). */
-typedef struct Lavaball1bfState
-{
-    u8 pad00[8];
-    int* spawnedObj; /* 0x08: the 0x18d cannon object */
-    f32 fireTimer; /* 0x0c */
-    f32 firePeriod; /* 0x10 */
-    s16 gateA; /* 0x14 */
-    s16 pending; /* 0x16 */
-    u8 gateB; /* 0x18 */
-    u8 pad19;
-    u8 gbState; /* 0x1a */
-    u8 soloLatch; /* 0x1b */
-} Lavaball1bfState;
+
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 

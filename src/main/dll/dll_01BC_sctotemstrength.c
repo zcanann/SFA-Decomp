@@ -1,4 +1,5 @@
 #include "main/dll/paymentkiosk.h"
+#include "main/dll/feseqobjecteffectparams_struct.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/VF/platform1.h"
@@ -534,17 +535,7 @@ extern uint GameBit_Get(int eventId);
  * PAL Size: TODO
  */
 
-typedef struct FEseqobjectEffectParams
-{
-    s16 xRot;
-    s16 yRot;
-    s16 variant;
-    s16 pad06;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} FEseqobjectEffectParams;
+
 
 #pragma scheduling on
 #pragma peephole on

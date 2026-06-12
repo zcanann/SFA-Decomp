@@ -1,5 +1,7 @@
 /* === moved from main/dll/DR/DRearthwalk.c [801DAFA4-801DAFDC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/DR/DRearthwalk.h"
+#include "main/dll/snowflags22_struct.h"
+#include "main/dll/sc_types.h"
 
 
 
@@ -72,35 +74,13 @@
 
 
 
-typedef struct ScLevelcontrolProcessAnimEventsState
-{
-    u8 pad0[0x1D - 0x0];
-    s8 unk1D;
-    u8 pad1E[0x20 - 0x1E];
-} ScLevelcontrolProcessAnimEventsState;
+
 
 
 
 
 /* sc_levelcontrol_getExtraSize == 0x24 (CloudRunner race level control). */
-typedef struct ScLevelControlState
-{
-    f32 fogNear; /* 0x00: enableHeavyFog base */
-    f32 fog04; /* 0x04 */
-    f32 fog08; /* 0x08 */
-    f32 fog0C; /* 0x0c */
-    f32 timer10; /* 0x10 */
-    f32 fadeTimer; /* 0x14 */
-    u8 pad18[4];
-    u8 musicStep; /* 0x1c: index into the lbl_803DC060 cue table */
-    u8 mode; /* 0x1d: anim-event mode latch */
-    u8 areaCell; /* 0x1e: 0xff until the player enters map 0xe */
-    u8 flags1F; /* 0x1f */
-    u8 musicTrack; /* 0x20 */
-    s8 unk21; /* 0x21 */
-    u8 flags22; /* 0x22: SnowFlags22 overlay (bit 7) */
-    u8 pad23;
-} ScLevelControlState;
+
 
 STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 
@@ -468,11 +448,7 @@ extern f32 lbl_803E5574;
 extern f32 lbl_803E5578;
 extern f32 lbl_803E557C;
 
-typedef struct
-{
-    u8 bit7 : 1;
-    u8 lo : 7;
-} SnowFlags22;
+
 
 void sc_levelcontrol_init(int obj)
 {

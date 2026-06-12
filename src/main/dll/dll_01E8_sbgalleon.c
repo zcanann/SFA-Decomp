@@ -1,4 +1,6 @@
 #include "main/obj_placement.h"
+#include "main/dll/sbshipheadstate_struct.h"
+#include "main/dll/sbpropellerstate_struct.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -8,26 +10,12 @@
 #include "main/dll/DB/sbgalleon_state.h"
 
 /* SB_Propeller_getExtraSize == 0x10. */
-typedef struct SBPropellerState
-{
-    f32 smokeTimer; /* 0x00: countdown to the next smoke burst */
-    f32 spinBlend; /* 0x04 */
-    int spinRate; /* 0x08: init 1200 */
-    s8 health; /* 0x0c: init 4 */
-    u8 pad0D[3];
-} SBPropellerState;
+
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
 /* SB_ShipHead_getExtraSize == 0x10. */
-typedef struct SBShipHeadState
-{
-    int target; /* 0x00: the 0x8c galleon-side object */
-    s8 health; /* 0x04: init 4 */
-    u8 pad05[3];
-    f32 swayA; /* 0x08 */
-    f32 swayB; /* 0x0c */
-} SBShipHeadState;
+
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 

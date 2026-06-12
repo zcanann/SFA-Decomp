@@ -1,5 +1,8 @@
 /* === moved from main/dll/autoTransporter.c [801793A4-801797A4) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/dll_00F4_doorf4.h"
+#include "main/dll/levelnamestate_struct.h"
+#include "main/dll/doorf4state_struct.h"
+#include "main/dll/door_types.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 
@@ -7,22 +10,7 @@
  * Per-object extra state for the doorf4 auto door
  * (doorf4_getExtraSize == 0x24).
  */
-typedef struct DoorF4State
-{
-    f32 cosYaw; /* cos/sin of spawn yaw; door plane normal */
-    f32 sinYaw;
-    f32 planeD; /* -(cos*x + sin*z) plane offset */
-    f32 openRange; /* per-type approach distance */
-    int gameBitA; /* params+0x1E; open latch */
-    int gameBitB; /* per-type (68/152/-1) secondary gate */
-    int unk18; /* params+0x20 */
-    u16 sfxOpen; /* 830 for types 318/890 */
-    u16 sfxClose; /* 831 */
-    u8 active; /* gamebit-derived open state */
-    u8 triggerLatch;
-    u8 toggled;
-    u8 pad23;
-} DoorF4State;
+
 
 STATIC_ASSERT(sizeof(DoorF4State) == 0x24);
 
@@ -33,12 +21,7 @@ STATIC_ASSERT(sizeof(DoorF4State) == 0x24);
  */
 #include "main/dll/sidekickball_state.h"
 
-typedef struct Doorf4State
-{
-    u8 pad0[0x1C - 0x0];
-    u16 unk1C;
-    u8 pad1E[0x24 - 0x1E];
-} Doorf4State;
+
 
 
 extern undefined4 FUN_80006728();
@@ -687,16 +670,7 @@ u8 trickyBallMove(u8* obj)
 #include "main/dll/path_control_interface.h"
 #include "main/dll/tframeanimator_state.h"
 
-typedef struct LevelnameState
-{
-    u8 pad0[0x8 - 0x0];
-    s32 unk8;
-    u8 padC[0xE - 0xC];
-    s16 unkE;
-    s16 unk10;
-    s16 unk12;
-    u8 pad14[0x18 - 0x14];
-} LevelnameState;
+
 
 
 extern void* memset(void* dest, int value, u32 size);

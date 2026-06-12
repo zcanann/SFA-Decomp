@@ -1,4 +1,5 @@
 #include "main/audio/synth_volume.h"
+#include "main/dll/synthfade_struct.h"
 
 extern void voiceKill(u8 voiceIdx);
 extern void macSampleEndNotify(void);
@@ -29,23 +30,7 @@ extern f32 lbl_803E77D4;
 #define SYNTH_FADE_ACTION_DISABLED 4
 #define SYNTH_INVALID_LINK_ID 0xffffffff
 
-typedef struct SynthFade
-{
-    f32 current;
-    f32 target;
-    f32 start;
-    f32 progress;
-    f32 progressStep;
-    f32 auxCurrent;
-    f32 auxTarget;
-    f32 auxStart;
-    f32 auxProgress;
-    f32 auxProgressStep;
-    u32 handle;
-    u8 delayAction;
-    u8 type;
-    u8 pad[2];
-} SynthFade;
+
 
 extern void synthDispatchFadeAction(SynthFade* fade);
 
