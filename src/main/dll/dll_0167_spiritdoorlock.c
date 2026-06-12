@@ -2,6 +2,7 @@
 #include "main/camera_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
+#include "main/objtexture.h"
 #include "main/objseq.h"
 #include "main/dll/IM/IMspacecraft.h"
 
@@ -19,7 +20,6 @@ extern void modelLightStruct_setDistanceAttenuation(void* p, f32 a, f32 b);
 
 extern void ObjHits_DisableObject(int obj);
 extern int* ObjGroup_GetObjects(int groupId, int* outCount);
-extern int* objFindTexture(int obj, int a, int b);
 extern void Obj_TransformLocalVectorByWorldMatrix(int obj, f32* in, f32* out);
 extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
 
@@ -187,7 +187,7 @@ void SpiritDoorLock_update(int obj)
     {
         int cam_state;
         int* list_ptr;
-        int* piTex;
+        ObjTextureRuntimeSlot* piTex;
         int i;
         s16 angle;
         s16 stride;
@@ -223,18 +223,18 @@ void SpiritDoorLock_update(int obj)
             GameBit_Set(descriptor->doneGameBit, 1);
             ObjHits_DisableObject(obj);
         }
-        piTex = objFindTexture(obj, 0, 0);
+        piTex = objFindTexture((void*)obj, 0, 0);
         if (piTex != NULL)
         {
-            *(s16*)((char*)piTex + 0xa) = (s16)(*(s16*)((char*)piTex + 0xa) + lbl_803DBED4 * (s32)framesThisStep);
-            *(s16*)((char*)piTex + 0x8) = (s16)(*(s16*)((char*)piTex + 0x8) + lbl_803DBED4 * (s32)framesThisStep);
-            if ((s32) * (s16*)((char*)piTex + 0xa) > (s32)(lbl_803DBED8 << 8))
+            piTex->offsetT = (s16)(piTex->offsetT + lbl_803DBED4 * (s32)framesThisStep);
+            piTex->offsetS = (s16)(piTex->offsetS + lbl_803DBED4 * (s32)framesThisStep);
+            if ((s32)piTex->offsetT > (s32)(lbl_803DBED8 << 8))
             {
-                *(s16*)((char*)piTex + 0xa) = (s16)(*(s16*)((char*)piTex + 0xa) - (lbl_803DBED8 << 8));
+                piTex->offsetT = (s16)(piTex->offsetT - (lbl_803DBED8 << 8));
             }
-            if ((s32) * (s16*)((char*)piTex + 0x8) > (s32)(lbl_803DBED8 << 8))
+            if ((s32)piTex->offsetS > (s32)(lbl_803DBED8 << 8))
             {
-                *(s16*)((char*)piTex + 0x8) = (s16)(*(s16*)((char*)piTex + 0x8) - (lbl_803DBED8 << 8));
+                piTex->offsetS = (s16)(piTex->offsetS - (lbl_803DBED8 << 8));
             }
         }
         if (((GameObject*)obj)->anim.alpha < 0xff)

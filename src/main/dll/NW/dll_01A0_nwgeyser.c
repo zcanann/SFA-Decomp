@@ -1,6 +1,7 @@
 #include "main/mapEvent.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
+#include "main/objtexture.h"
 #include "main/objseq.h"
 #include "main/dll/dll_01A0_nwgeyser.h"
 
@@ -18,7 +19,6 @@ extern f32 lbl_803E5210;
 
 void fn_801CDF94(int obj, int state, int flag);
 
-extern int objFindTexture(int* obj, int idx, int p3);
 extern f32 lbl_803E5200;
 extern f32 timeDelta;
 extern void fn_8003A168(int obj, void* p);
@@ -63,7 +63,7 @@ void nw_geyser_update(int obj)
 
 int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int* tex0;
+    ObjTextureRuntimeSlot* tex0;
     u8* animUpdateBytes;
 
     animUpdateBytes = (u8*)animUpdate;
@@ -71,12 +71,12 @@ int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         animUpdateBytes[0x90] = (u8)(animUpdateBytes[0x90] | 4);
     }
-    tex0 = (int*)objFindTexture(obj, 0, 0);
+    tex0 = objFindTexture(obj, 0, 0);
     objFindTexture(obj, 1, 0);
-    *(s16*)((char*)tex0 + 0xa) = (s16)(*(s16*)((char*)tex0 + 0xa) + (s32)(lbl_803E5200 * timeDelta));
-    if (*(s16*)((char*)tex0 + 0xa) > 0x4e80)
+    tex0->offsetT = (s16)(tex0->offsetT + (s32)(lbl_803E5200 * timeDelta));
+    if (tex0->offsetT > 0x4e80)
     {
-        *(s16*)((char*)tex0 + 0xa) -= 0x4e80;
+        tex0->offsetT -= 0x4e80;
     }
     animUpdate->hitVolumePair = (s16)(animUpdate->activeHitVolumePair & ~0x40);
     animUpdate->sequenceEventActive = 0;

@@ -9,6 +9,7 @@
 #include "main/dll/seqObj11E.h"
 #include "main/dll/baddie_state.h"
 #include "main/objseq.h"
+#include "main/objtexture.h"
 
 extern bool FUN_800067f8();
 extern undefined4 FUN_8000680c();
@@ -137,7 +138,6 @@ extern int Curve_AdvanceAlongPath(u8* curve, f32 t);
 extern u8 lbl_803DBCA8;
 extern int fn_801A0174(int* obj);
 extern int* Obj_GetPlayerObject(void);
-extern int* objFindTexture(int* obj, int a, int b);
 extern void fn_8014CF7C(void* p1, void* p2, f32 f1, f32 f2, int p5, int p6);
 extern void fn_8014D08C(void* p1, void* p2, int p3, f32 f1, int p5, int p6);
 extern void objfx_spawnLightPulse(int* obj, f32 scale, int a, int b, int c, f32 v, void* params);
@@ -328,16 +328,16 @@ void fn_80152514(int* obj, u8* state)
         child2 = ((GameObject*)obj)->childObjs[0];
         if (child2 != 0)
         {
-            int* tex = objFindTexture(child2, 0, 0);
+            ObjTextureRuntimeSlot* tex = objFindTexture(child2, 0, 0);
             int v;
             if (tex != 0)
             {
-                v = *(s16*)((char*)tex + 8) - 0x3c;
+                v = tex->offsetS - 0x3c;
                 if (v < 0)
                 {
                     v += 0x2710;
                 }
-                *(s16*)((char*)tex + 8) = v;
+                tex->offsetS = v;
             }
         }
         else

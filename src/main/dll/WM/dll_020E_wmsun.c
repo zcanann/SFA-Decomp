@@ -38,6 +38,7 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/obj_placement.h"
+#include "main/objtexture.h"
 
 #define WM_SUN_GLARE_COUNT 20
 
@@ -95,7 +96,6 @@ extern s16 lbl_803DDCAC;
 extern s16 lbl_803DDCAE;
 extern s16 lbl_803DDCB0;
 
-extern int objFindTexture(int obj, int idx, int p3);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
 extern f32 lbl_803E5F20; /* 0.0f */
 extern f32 lbl_803E5F78; /* 0.00375f */
@@ -342,7 +342,7 @@ void wmsun_update(int obj)
     s16 thresh;
     s16 mult;
     f32 spd;
-    int t;
+    ObjTextureRuntimeSlot* t;
     s8 c;
     u8 b;
     s16 v;
@@ -359,13 +359,13 @@ void wmsun_update(int obj)
         }
         else
         {
-            t = objFindTexture(obj, 1, 0);
-            if ((u32)t != 0)
+            t = objFindTexture((void*)obj, 1, 0);
+            if (t != NULL)
             {
-                *(s16*)(t + 10) -= 0x10;
-                if (*(s16*)(t + 10) < -0x3e0)
+                t->offsetT -= 0x10;
+                if (t->offsetT < -0x3e0)
                 {
-                    *(s16*)(t + 10) = 0;
+                    t->offsetT = 0;
                 }
             }
             if (GameBit_Get(0x21b) != 0)
@@ -438,13 +438,13 @@ void wmsun_update(int obj)
                 v = 0xfa;
             }
             objAnim->alpha = v;
-            t = objFindTexture(obj, 0, 0);
-            if ((u32)t != 0)
+            t = objFindTexture((void*)obj, 0, 0);
+            if (t != NULL)
             {
-                *(s16*)(t + 8) = *(s16*)(t + 8) - framesThisStep * 8;
-                if (*(s16*)(t + 8) < -0x3e0)
+                t->offsetS = t->offsetS - framesThisStep * 8;
+                if (t->offsetS < -0x3e0)
                 {
-                    *(s16*)(t + 8) = 0;
+                    t->offsetS = 0;
                 }
             }
         }
