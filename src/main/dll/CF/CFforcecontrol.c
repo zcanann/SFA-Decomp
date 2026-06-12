@@ -573,7 +573,8 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
                 }
                 if (pickCount != 0)
                 {
-                    pickCount = randomGetRange(0, (u8)(pickCount - 1));
+                    pickCount--;
+                    pickCount = randomGetRange(0, pickCount);
                     angle = -(lbl_803E3CE8 * (Vec_distance(((GameObjPos*)candidates[pickCount])->pos2,
                                                            ((GameObjPos*)obj)->pos2) / lbl_803E3CE0) - lbl_803E3CE4);
                     mode = 0xff;
