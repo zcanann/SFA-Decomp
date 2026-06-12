@@ -387,24 +387,20 @@ void sc_totemstrength_initialise(void)
 {
 }
 
-void paymentkiosk_free(void)
-{
-}
+void paymentkiosk_free(void);
 
-void paymentkiosk_hitDetect(void)
-{
-}
+void paymentkiosk_hitDetect(void);
 
 /* 8b "li r3, N; blr" returners. */
 int sc_totemstrength_getExtraSize(void) { return 0x34; }
 int sc_totemstrength_getObjectTypeId(void) { return 0x0; }
-int paymentkiosk_getExtraSize(void) { return 0x3; }
-int paymentkiosk_getObjectTypeId(void) { return 0x1; }
+int paymentkiosk_getExtraSize(void);
+int paymentkiosk_getObjectTypeId(void);
 
 /* render-with-fn(lbl) (no visibility check). */
 extern void objRenderFn_8003b8f4(f32);
 void sc_totemstrength_render(void) { objRenderFn_8003b8f4(lbl_803E567C); }
-void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void sc_totemstrength_init(int* obj)
 {
@@ -519,122 +515,13 @@ void sc_totemstrength_update(u8* obj)
 }
 
 /* EN v1.0 0x801DF110  size: 220b  PaymentKiosk_testEvent. */
-u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
-{
-    PaymentKioskMapData* setup = (PaymentKioskMapData*)((GameObject*)obj)->anim.placementData;
-    PaymentKioskState* st = ((GameObject*)obj)->extra;
-    int player;
-    u32 r;
-
-    player = (int)Obj_GetPlayerObject();
-    r = getButtonsJustPressed(0);
-    if ((r & 0x100) == 0)
-    {
-        r = 0;
-    }
-    else
-    {
-        st->promptState = 0;
-        if (playerGetMoney(player) >= setup->price)
-        {
-            r = 1;
-            st->promptState = 0;
-        }
-        else
-        {
-            r = 0;
-            st->promptState = 2;
-        }
-        switch (ev)
-        {
-        case 0x14:
-            r = !(1 - r);
-            break;
-        case 0x15:
-            r = !r;
-            break;
-        default:
-            r = 0;
-            break;
-        }
-    }
-    return r;
-}
+u32 PaymentKiosk_testEvent(int obj, int p2, int ev);
 
 /* EN v1.0 0x801DF1EC  size: 280b  PaymentKiosk_SeqFn. */
-int PaymentKiosk_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    extern void GameBit_Set(int eventId, int value);
-    PaymentKioskState* st = ((GameObject*)obj)->extra;
-    PaymentKioskMapData* setup = (PaymentKioskMapData*)((GameObject*)obj)->anim.placementData;
-    int player;
-    int i;
-    u8 ev;
-    player = (int)Obj_GetPlayerObject();
-    animUpdate->conditionCallback = (ObjAnimSequenceConditionCallback)PaymentKiosk_testEvent;
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        ev = animUpdate->eventIds[i];
-        switch (ev)
-        {
-        case 2:
-            GameBit_Set(setup->gameBit, 1);
-            playerAddMoney(player, -setup->price);
-            st->payState = 2;
-            break;
-        case 1:
-            st->promptState = 1;
-            break;
-        }
-    }
-    gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-    if (st->promptState == 1)
-    {
-        gameTextShow(lbl_80327AF0[st->textVariant].approachText);
-    }
-    else if (st->promptState == 2)
-    {
-        gameTextShow(lbl_80327AF0[st->textVariant].poorText);
-    }
-    return 0;
-}
+int PaymentKiosk_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 /* EN v1.0 0x801DF328  size: 276b  paymentkiosk_update. */
-void paymentkiosk_update(int obj)
-{
-    PaymentKioskState* st = ((GameObject*)obj)->extra;
-    PaymentKioskMapData* setup = (PaymentKioskMapData*)((GameObject*)obj)->anim.placementData;
-    u8 b = st->payState;
-
-    switch (b)
-    {
-    case 0:
-        if (setup->gameBit != -1 && GameBit_Get(setup->gameBit) != 0)
-        {
-            st->payState = 2;
-        }
-        else
-        {
-            st->payState = 1;
-        }
-        break;
-    case 1:
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 1) != 0)
-        {
-            (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-        }
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~8);
-        break;
-    case 2:
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | 8);
-        break;
-    }
-    st->promptState = 0;
-    if ((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0 && *(void**)(obj + 0x74) != NULL)
-    {
-        objRenderFn_80041018(obj);
-    }
-}
+void paymentkiosk_update(int obj);
 
 /* === moved from main/dll/DB/DBrockfall.c [801DF43C-801DF4AC) (TU re-split, docs/boundary_audit.md) === */
 #include "main/dll/paymentkiosk.h"
@@ -663,22 +550,7 @@ extern uint GameBit_Get(int eventId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void paymentkiosk_init(int obj, PaymentKioskMapData* initData)
-{
-    register int self = obj;
-    register PaymentKioskMapData* setup = initData;
-    register PaymentKioskState* state = ((GameObject*)self)->extra;
-    u32 secondaryFlag;
-
-    ((GameObject*)self)->animEventCallback = (void*)PaymentKiosk_SeqFn;
-    *(short*)self = (short)((int)setup->facingByte << 8);
-    state->payState = 0;
-    ((GameObject*)self)->objectFlags = (u16)(((GameObject*)self)->objectFlags | 0x6000);
-    *(u8*)&((GameObject*)self)->anim.resetHitboxMode =
-        (u8)(*(u8*)&((GameObject*)self)->anim.resetHitboxMode | 0x8);
-    secondaryFlag = (((GameObject*)self)->anim.seqId == PAYMENT_KIOSK_WELL_TEXT_SEQ_ID) ? 1 : 0;
-    state->textVariant = (u8)secondaryFlag;
-}
+void paymentkiosk_init(int obj, PaymentKioskMapData* initData);
 
 typedef struct FEseqobjectEffectParams
 {
@@ -755,13 +627,9 @@ static int FEseqobject_findControlObject(void);
 /* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
-void paymentkiosk_release(void)
-{
-}
+void paymentkiosk_release(void);
 
-void paymentkiosk_initialise(void)
-{
-}
+void paymentkiosk_initialise(void);
 
 
 
