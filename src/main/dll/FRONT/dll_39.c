@@ -31,7 +31,7 @@ extern void VIWaitForRetrace(void);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
-extern undefined4* gTitleMenuLinkInterface;
+extern TitleMenuControl* gTitleMenuLinkInterface;
 extern int lbl_803DD5F8;
 extern s8 lbl_803DD5FC;
 extern f32 lbl_803DD600;
@@ -394,8 +394,8 @@ void TitleMenu_render(u8* param_1)
                                     lbl_803E1D18);
         gameTextBoxFn_80134d40(0, 0, 0);
         (*gScreenTransitionInterface)->getProgress();
-        (*(code*)(*gTitleMenuLinkInterface + 0x30))(0xff);
-        (*(code*)(*gTitleMenuLinkInterface + 0x10))(param_1);
+        (*(code*)((int)gTitleMenuLinkInterface->vtable + 0x30))(0xff);
+        (*(code*)((int)gTitleMenuLinkInterface->vtable + 0x10))(param_1);
         gameTextSetDrawFunc(0);
         titleScreenShowCopyright(gAttractMoviePlaybackEnabled);
     }

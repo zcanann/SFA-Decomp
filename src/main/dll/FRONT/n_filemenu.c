@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/camera_interface.h"
 #include "main/dll/FRONT/n_filemenu.h"
 #include "main/dll/FRONT/dll_39.h"
 
@@ -52,12 +53,12 @@ extern u8 gTitleMenuPanelOpen;
 extern u8 gAttractMovieLoopCompleted;
 extern s32 gAttractMovieIdleFrameCount;
 extern u8 lbl_803DD6F8;
-extern TitleMenuControl* gCameraInterface;
+extern CameraInterface** gCameraInterface;
 extern TitleMenuControl* gTitleMenuLinkInterface;
 extern f32 lbl_803E1D28;
 
-#define TitleMenu_GetMenuId() (*(int (**)(void))((int)gCameraInterface->vtable + 0x10))()
-#define TitleMenu_SetMenuState(state, arg) (*(void (**)(int, int))((int)gCameraInterface->vtable + 0x60))(state,arg)
+#define TitleMenu_GetMenuId() (*(int (**)(void))((int)*gCameraInterface + 0x10))()
+#define TitleMenu_SetMenuState(state, arg) (*(void (**)(int, int))((int)*gCameraInterface + 0x60))(state,arg)
 #define TitleMenu_GetFadeState() (*(int (**)(void))((int)gTitleMenuLinkInterface->vtable + 0xc))()
 #define TitleMenu_GetSelection() (*(int (**)(void))((int)gTitleMenuLinkInterface->vtable + 0x14))()
 #define TitleMenu_BindEntries() (*(void (**)(TitleMenuTextEntry *))((int)gTitleMenuLinkInterface->vtable + 0x2c))(lbl_8031A214)
