@@ -9,6 +9,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objhits.h"
 #include "main/resource.h"
 
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
@@ -17,13 +18,7 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
-extern undefined4 ObjHitbox_SetCapsuleBounds();
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined8 ObjHits_MarkObjectPositionDirty();
-extern undefined8 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHit();
+extern void ObjHitbox_SetCapsuleBounds(int obj, s16 radius, s16 verticalMin, s16 verticalMax);
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 Obj_GetYawDeltaToObject();
@@ -166,7 +161,6 @@ void fn_80185B74(int obj)
     extern int buttonDisable(int p1, int p2);
     extern u32 getButtonsJustPressed(int controller);
     extern f32 getXZDistance(void* a, void* b);
-    extern void ObjHits_ClearHitVolumes(int obj);
     typedef struct
     {
         s16 ang;
