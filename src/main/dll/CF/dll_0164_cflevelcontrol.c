@@ -1,4 +1,4 @@
-/* DLL 0x0164 - cflevelcontrol (CloudRunner Fortress level controller). TU: 0x801A4524–0x801A4DB8. */
+/* DLL 0x0164 - cflevelcontrol (CloudRunner Fortress level controller). TU: 0x801A4524-0x801A4DB8. */
 #include "main/dll/DR/dll_015A_explodable.h"
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
