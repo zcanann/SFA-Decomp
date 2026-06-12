@@ -186,14 +186,8 @@ main/dll/dll_00B4_projenergise1.c:
 main/dll/dll_00B5_projenergise2.c:
 	.text       start:0x801007F0 end:0x80100828
 
-main/dll/dll_6D.c:
-	.text       start:0x80100828 end:0x80100858
-
-main/dll/dll_6E.c:
-	.text       start:0x80100858 end:0x8010085C
-
-main/dll/dll_6F.c:
-	.text       start:0x8010085C end:0x80100860
+main/dll/dll_00B2_projrobotfire.c:
+	.text       start:0x80100828 end:0x80100860
 
 main/dll/dll_70.c:
 	.text       start:0x80100860 end:0x80100890
