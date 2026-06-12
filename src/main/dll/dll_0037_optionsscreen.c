@@ -3,14 +3,6 @@
 #include "main/dll/debug/dimenu.h"
 #include "main/screen_transition.h"
 
-typedef struct WeirdMenuWork
-{
-    u8 pad0[0x16 - 0x0];
-    u16 unk16;
-    u8 pad18[0x52 - 0x18];
-    u16 unk52;
-    u8 pad54[0x78 - 0x54];
-} WeirdMenuWork;
 
 
 extern undefined8 FUN_80006b84();
@@ -18,7 +10,6 @@ extern undefined4 FUN_80017a98();
 extern undefined4 FUN_80053c98();
 extern undefined4 saveFileStruct_setCheatActive();
 extern u8* getSaveFileStruct();
-extern void saveGame_save();
 extern undefined4 languageMenuInit();
 
 extern undefined4 DAT_803dc070;
@@ -407,57 +398,23 @@ void OptionsScreen_release(void)
 
 void WeirdUnusedMenu_render(void);
 
-void WeirdUnusedMenu_frameEnd(void);
 
-void Dummy39_render(void);
 
-void Dummy39_frameEnd(void);
 
-void Dummy3A_render(void);
 
-void Dummy3A_frameEnd(void);
 
-void Dummy3A_release(void);
 
-void Dummy3A_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int Dummy3A_frameStart(void);
 
 /* Pattern wrappers. */
-extern u8 lbl_803DD728;
-void Dummy39_initialise(void);
 
-extern u32 lbl_803DD72C;
-extern void textureFree(u32);
-void Dummy39_release(void);
 
-extern u32 lbl_803DD714, lbl_803DD718, lbl_803DD71C;
-extern void warpToMap(int mapId, int spawnId);
-extern void cutsceneExit(void);
-extern void buttonDisable(int index, int flags);
-extern f32 timeDelta;
-extern f32 lbl_803E1DF0;
-extern s8 lbl_803DD712;
-extern s16 lbl_803DD710;
-extern u8 lbl_803DD713;
-extern u32 lbl_8031AD20[];
 #pragma scheduling off
 #pragma peephole off
-int WeirdUnusedMenu_run(void);
 
-void WeirdUnusedMenu_release(void);
 
-extern u32 lbl_803DD720;
-extern u32 lbl_8031AD98[];
-extern u32 textureLoadAsset(int);
-extern int Obj_GetPlayerObject(void);
 
-int Dummy39_run(void);
 
-extern s16 lbl_803DD8C2;
-extern void Sfx_PlayFromObjectLimited(int obj, u16 sfx, int);
 #pragma peephole on
-void cMenuPlaySelectedItemSfx(int obj);
 
-void WeirdUnusedMenu_initialise(void);
