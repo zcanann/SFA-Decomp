@@ -1284,15 +1284,14 @@ void DIMSnowHorn1_update(int obj)
     s16 d;
     u32 flip;
     int flags;
+    ObjHitsPriorityState* hitState;
 
     data = *(int*)&((GameObject*)obj)->extra;
+    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     *(s16*)((char*)data + 0xa86) = 5;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~8;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->trackContactMask = 9;
-    {
-        u8* fp = base + 0x94;
-        flags = fp[((DIMSnowHorn1State*)data)->baddie.controlMode];
-    }
+    hitState->trackContactMask = 9;
+    flags = ((SnowHornFlags*)(base + ((DIMSnowHorn1State*)data)->baddie.controlMode))->flag;
     if (!(flags & 8))
     {
         ObjHitReactEntry* arm;
@@ -1550,7 +1549,8 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
     }
     if (((GameObject*)obj)->anim.hitReactState != NULL)
     {
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->trackContactMask = 9;
+        ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState->trackContactMask = 9;
     }
     (*(void (*)(int, int, int, int))(*(int*)(*gPlayerInterface + 0x4)))(obj, (int)inner, 0xc, 1);
     inner->baddie.gravity = lbl_803E82B8;
