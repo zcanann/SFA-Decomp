@@ -2162,9 +2162,11 @@ main/dll/dll_0232_dfprotatep.c:
 main/dll/crate.c:
 	.text       start:0x80208098 end:0x802081F4
 
-main/dll/crate2.c:
-	.text       start:0x802081F4 end:0x80208508
-	.data       start:0x80329AD8 end:0x80329B78
+main/dll/dll_0233_dfpstatue1.c:
+	.text       start:0x802081F4 end:0x8020848C
+
+main/dll/dll_0234_dfpperchsw.c:
+	.text       start:0x8020848C end:0x80208508
 
 main/dll/dll_0235_dfptargetblock.c:
 	.text       start:0x80208508 end:0x80208FDC
