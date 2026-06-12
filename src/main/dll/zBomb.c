@@ -1,3 +1,351 @@
+/* === merged from main/dll/door.c [80208508-802086C4) (TU re-split, docs/boundary_audit.md) === */
+#include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
+#include "main/dll/door.h"
+#include "main/dll/fruit.h"
+
+extern undefined4 FUN_80006b4c();
+extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit,
+                              DfpTargetBlockObject* obj, int flags, int mask, int arg9, int arg10);
+extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
+extern void objRenderFn_8003b8f4(int obj, float param_2);
+extern undefined4 sfxplayer_updateState();
+
+extern undefined4 DAT_803add98;
+extern undefined4 DAT_803add9c;
+extern undefined4 DAT_803adda0;
+extern undefined4 DAT_803adda4;
+extern undefined4 DAT_803adda8;
+extern undefined4 DAT_803addac;
+extern undefined4 DAT_803addb0;
+extern undefined4 DAT_803addb4;
+extern f32 lbl_803E6488;
+extern f32 lbl_803E648C;
+extern f32 lbl_803E6490;
+
+#define DFPTARGETBLOCK_POINT_OFFSET_X 0x04
+#define DFPTARGETBLOCK_POINT_OFFSET_Y 0x08
+#define DFPTARGETBLOCK_POINT_OFFSET_Z 0x0C
+#define DFPTARGETBLOCK_POINT_STRIDE 0x0C
+
+void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetBlockCollisionPoints* collisionPoints);
+
+/*
+ * --INFO--
+ *
+ * Function: dfptargetblock_getExtraSize
+ * EN v1.0 Address: 0x80208660
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x8020874C
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dfptargetblock_getExtraSize(void)
+{
+    return 0x6c;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfptargetblock_getObjectTypeId
+ * EN v1.0 Address: 0x80208668
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x80208754
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dfptargetblock_getObjectTypeId(void)
+{
+    return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfptargetblock_free
+ * EN v1.0 Address: 0x80208670
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8020875C
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfptargetblock_free(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfptargetblock_render
+ * EN v1.0 Address: 0x80208674
+ * EN v1.0 Size: 80b
+ * EN v1.1 Address: 0x80208760
+ * EN v1.1 Size: 80b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfptargetblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    DfpTargetBlockAudioState* state;
+
+    state = ((GameObject*)obj)->extra;
+    if (state->completionSfxReady != 0) return;
+    if (state->stateSfxReady == 0) return;
+    if (state->mode != DFPTARGETBLOCK_AUDIO_MODE_SETTLED)
+    {
+        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E6490);
+    }
+    else
+    {
+        return;
+    }
+}
+
+/* === merged from main/dll/fruit.c [802086C4-80208B70) (TU re-split, docs/boundary_audit.md) === */
+#include "main/mapEvent.h"
+#include "main/effect_interfaces.h"
+#include "main/dll/door.h"
+#include "main/dll/fruit.h"
+
+
+typedef struct DfpTargetBlockPartfxArgs
+{
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    s16 pad06;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} DfpTargetBlockPartfxArgs;
+
+extern int ObjHits_GetPriorityHit(DfpTargetBlockObject* obj, DfpTargetBlockObject** hitObj,
+                                  int* priority, int flags);
+extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
+extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject* obj, u16 sfxId);
+extern f32 sqrtf(f32 value);
+
+extern MapEventInterface** gMapEventInterface;
+extern EffectInterface** gPartfxInterface;
+extern f32 timeDelta;
+extern f32 lbl_803DDCF8;
+extern f32 lbl_803DDCFC;
+extern f32 lbl_803E648C;
+extern f32 lbl_803E6490;
+extern f32 lbl_803E6494;
+extern f32 lbl_803E6498;
+extern f32 lbl_803E649C;
+extern f32 lbl_803E64A0;
+extern f32 lbl_803E64A4;
+extern f32 lbl_803E64A8;
+extern f32 lbl_803E64AC;
+extern f32 lbl_803E64B0;
+extern f32 lbl_803E64B4;
+extern f32 lbl_803E64B8;
+extern f32 lbl_803E64BC;
+extern f32 lbl_803E64C0;
+
+static inline void dfptargetblock_resetToHome(DfpTargetBlockObject* obj, DfpTargetBlockHome* home,
+                                              DfpTargetBlockAudioState* state)
+{
+    f32 zero;
+
+    obj->x = home->x;
+    obj->z = home->z;
+    zero = lbl_803E648C;
+    obj->velX = zero;
+    obj->velZ = zero;
+    state->mode = DFPTARGETBLOCK_AUDIO_MODE_RESETTING;
+    obj->y = home->y - lbl_803E64AC;
+    Sfx_PlayFromObject(obj, DFPTARGETBLOCK_RESET_SFX);
+}
+
+static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj,
+                                               DfpTargetBlockAudioState* state, f32 threshold)
+{
+    f32 dx;
+    f32 dz;
+
+    dx = obj->x - lbl_803DDCF8;
+    dz = obj->z - lbl_803DDCFC;
+    if ((lbl_803E648C == dx) && (lbl_803E648C == dz))
+    {
+        state->mode = DFPTARGETBLOCK_AUDIO_MODE_LOWERING;
+    }
+    else if (sqrtf(dx * dx + dz * dz) < threshold)
+    {
+        state->mode = DFPTARGETBLOCK_AUDIO_MODE_LOWERING;
+    }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfptargetblock_hitDetect
+ * EN v1.0 Address: 0x802086C4
+ * EN v1.0 Size: 1196b
+ * EN v1.1 Address: 0x802086D0
+ * EN v1.1 Size: 348b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
+{
+    DfpTargetBlockAudioState* state;
+    DfpTargetBlockHome* home;
+    DfpTargetBlockObject* hitObj;
+    DfpTargetBlockPartfxArgs effect;
+    int priority;
+    int hitType;
+    int mode;
+    f32 velX;
+    f32 velZ;
+    f32 dx;
+    f32 dz;
+    int i;
+
+    priority = -1;
+    state = obj->state;
+    home = obj->home;
+
+    if (obj->objectType == DFPTARGETBLOCK_HOME_OBJECT_TYPE)
+    {
+        lbl_803DDCF8 = obj->x;
+        lbl_803DDCFC = obj->z;
+        return;
+    }
+
+    if ((state->completionSfxReady != 0) || (state->stateSfxReady == 0) ||
+        (state->mode == DFPTARGETBLOCK_AUDIO_MODE_SETTLED) ||
+        (state->mode == DFPTARGETBLOCK_AUDIO_MODE_LOWERING))
+    {
+        return;
+    }
+
+    obj->prevX = obj->x;
+    obj->prevY = obj->y;
+    obj->prevZ = obj->z;
+
+    hitObj = NULL;
+    hitType = ObjHits_GetPriorityHit(obj, &hitObj, &priority, 0);
+    if ((hitType != 0) && (hitObj != NULL) && (hitType == DFPTARGETBLOCK_HIT_TYPE_PUSH) &&
+        (hitType == DFPTARGETBLOCK_HIT_TYPE_PUSH))
+    {
+        Sfx_PlayFromObject(obj, DFPTARGETBLOCK_IMPACT_SFX);
+        velX = hitObj->velX;
+        velZ = hitObj->velZ;
+        if (velX < lbl_803E648C)
+        {
+            velX *= lbl_803E6494;
+        }
+        if (velZ < lbl_803E648C)
+        {
+            velZ *= lbl_803E6494;
+        }
+        if (velX <= velZ)
+        {
+            hitObj->velX = *(f32 *)&lbl_803E648C;
+        }
+        else
+        {
+            hitObj->velZ = *(f32 *)&lbl_803E648C;
+        }
+        obj->velX = hitObj->velX * lbl_803E6498;
+        obj->velZ = hitObj->velZ * lbl_803E6498;
+    }
+
+    obj->x = obj->velX * timeDelta + obj->x;
+    obj->z = obj->velZ * timeDelta + obj->z;
+
+    if (lbl_803E648C != obj->velX)
+    {
+        Sfx_KeepAliveLoopedObjectSound(obj, DFPTARGETBLOCK_LOOP_SFX);
+        velX = obj->velX;
+        if (velX < lbl_803E648C)
+        {
+            if (velX >= lbl_803E648C)
+            {
+                obj->velX = lbl_803E648C;
+            }
+        }
+        else if ((velX > lbl_803E648C) && (velX <= lbl_803E648C))
+        {
+            obj->velX = lbl_803E648C;
+        }
+    }
+
+    if (lbl_803E648C != obj->velZ)
+    {
+        Sfx_KeepAliveLoopedObjectSound(obj, DFPTARGETBLOCK_LOOP_SFX);
+        velZ = obj->velZ;
+        if (velZ < lbl_803E648C)
+        {
+            if (velZ >= lbl_803E648C)
+            {
+                obj->velZ = lbl_803E648C;
+            }
+        }
+        else if ((velZ > lbl_803E648C) && (velZ <= lbl_803E648C))
+        {
+            obj->velZ = lbl_803E648C;
+        }
+    }
+
+    dfptargetblock_resolveCollisionPoints(obj, (DfpTargetBlockCollisionPoints*)state);
+
+    dx = home->x - obj->x;
+    dz = home->z - obj->z;
+    mode = (*gMapEventInterface)->getMode(obj->mapId);
+
+    if (mode == 1)
+    {
+        if ((lbl_803E649C < dx) || (dx < lbl_803E64A0) || (dz < lbl_803E64A4) ||
+            (lbl_803E64A8 < dz))
+        {
+            dfptargetblock_resetToHome(obj, home, state);
+        }
+        dfptargetblock_checkSettled(obj, state, lbl_803E64B0);
+    }
+    else if (mode == 2)
+    {
+        if ((lbl_803E64B4 < dx) || (dx < lbl_803E64B8) || (dz < lbl_803E64A4) ||
+            (lbl_803E64BC < dz))
+        {
+            dfptargetblock_resetToHome(obj, home, state);
+
+            effect.x = obj->x;
+            effect.y = obj->y;
+            effect.z = obj->z;
+            effect.scale = lbl_803E6490;
+            effect.rotZ = 0;
+            effect.rotY = 0;
+            effect.rotX = 0;
+
+            for (i = 0; i < DFPTARGETBLOCK_RESET_PARTICLE_COUNT; i++)
+            {
+                (*gPartfxInterface)->spawnObject(obj, DFPTARGETBLOCK_RESET_PARTICLE_ID,
+                                                 &effect, DFPTARGETBLOCK_RESET_PARTICLE_MODE, -1, NULL);
+            }
+        }
+        dfptargetblock_checkSettled(obj, state, lbl_803E64C0);
+    }
+}
+
 #include "main/game_object.h"
 #include "main/dll/fruit.h"
 #include "main/dll/path_control_interface.h"
@@ -218,3 +566,65 @@ ObjectDescriptor10WithPadding gDfptargetblockObjDescriptor = {
     },
     0,
 };
+
+
+/* === helper-last relocation (re-split inline suppression; defs moved below their callers to suppress cross-TU-merge auto-inlining) === */
+/*
+ * --INFO--
+ *
+ * Function: dfptargetblock_resolveCollisionPoints
+ * EN v1.0 Address: 0x80208508
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x802085F4
+ * EN v1.1 Size: 212b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj,
+                                           DfpTargetBlockCollisionPoints* collisionPoints)
+{
+    u8* point;
+    f32 probe[3];
+    u8 hit[0x54];
+    f32 originalX;
+    f32 originalZ;
+    f32 deltaX;
+    f32 deltaZ;
+    int i;
+
+    i = 0;
+    point = collisionPoints->pointData;
+    while (i < collisionPoints->count)
+    {
+        probe[0] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_X) + obj->x;
+        originalX = probe[0];
+        probe[1] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Y) + obj->y;
+        probe[2] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Z) + obj->z;
+        originalZ = probe[2];
+        if (objBboxFn_800640cc(&obj->x, probe, lbl_803E6488, 1, hit, obj, 8, -1, 0, 0) != 0)
+        {
+            deltaX = probe[0] - originalX;
+            deltaZ = probe[2] - originalZ;
+            if (lbl_803E648C != obj->velX)
+            {
+                obj->x = obj->x + deltaX;
+            }
+            if (lbl_803E648C != obj->velZ)
+            {
+                obj->z = obj->z + deltaZ;
+            }
+            {
+                f32 zero = lbl_803E648C;
+                obj->velX = zero;
+                obj->velY = zero;
+                obj->velZ = zero;
+            }
+            Sfx_PlayFromObject(obj, SFXfoot_dirt_scuff);
+            return;
+        }
+        point += DFPTARGETBLOCK_POINT_STRIDE;
+        i++;
+    }
+}
