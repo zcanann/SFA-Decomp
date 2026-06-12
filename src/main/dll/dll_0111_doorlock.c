@@ -215,7 +215,8 @@ void doorlock_update(int obj)
             }
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
         }
-        if (((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0) && (*(void**)(obj + 0x74) != NULL))
+        if (((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0) &&
+            (((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL))
         {
             objRenderFn_80041018((int*)obj);
         }

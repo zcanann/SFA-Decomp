@@ -156,7 +156,8 @@ void paymentkiosk_update(int obj)
         break;
     }
     st->promptState = 0;
-    if ((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0 && *(void**)(obj + 0x74) != NULL)
+    if ((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0 &&
+        ((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL)
     {
         objRenderFn_80041018(obj);
     }

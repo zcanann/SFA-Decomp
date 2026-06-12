@@ -34,9 +34,9 @@ void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void dll_FC_hitDetect(int* obj)
 {
     extern void objRenderFn_80041018(int* obj); /* #57 */
-    int* state = (int*)obj[0x50 / 4];
-    if (((u32)state[0x44 / 4] & 1u) == 0u) return;
-    if (*(void**)((char*)obj + 0x74) == NULL) return;
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    if ((objAnim->modelInstance->flags & 1u) == 0u) return;
+    if (objAnim->hitVolumeTransforms == NULL) return;
     objRenderFn_80041018(obj);
 }
 

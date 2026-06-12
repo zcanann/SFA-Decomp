@@ -273,7 +273,7 @@ void wmspiritplace_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void wmspiritplace_hitDetect(GameObject* obj)
 {
-    if (obj->anim.unk74 != NULL)
+    if (obj->anim.hitVolumeTransforms != NULL)
     {
         objRenderFn_80041018((int)obj);
     }

@@ -33,7 +33,8 @@ extern void dll_14D_free_nop();
 
 void dll_14D_hitDetect(int param_1)
 {
-    if (((((ObjAnimComponent*)param_1)->modelInstance->flags & 1) != 0) && (*(uint*)(param_1 + 0x74) != 0))
+    if (((((ObjAnimComponent*)param_1)->modelInstance->flags & 1) != 0) &&
+        (((ObjAnimComponent*)param_1)->hitVolumeTransforms != NULL))
     {
         objRenderFn_80041018();
     }

@@ -243,7 +243,7 @@ void transporter_hitDetect(int obj)
         *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
             (u32) * (u8*)&((GameObject*)self)->anim.resetHitboxMode & 0xffffffe7);
         state->flags = (u8)((u32)state->flags | 1);
-        if (*(u32*)(self + 0x74) != 0)
+        if (((GameObject*)self)->anim.hitVolumeTransforms != NULL)
         {
             objRenderFn_80041018(self);
         }
@@ -274,7 +274,7 @@ void transporter_hitDetect(int obj)
                 (u32) * (u8*)&((GameObject*)self)->anim.resetHitboxMode & 0xffffffe7);
             state->flags = (u8)((u32)state->flags | 1);
         }
-        if (*(u32*)(self + 0x74) != 0)
+        if (((GameObject*)self)->anim.hitVolumeTransforms != NULL)
         {
             objRenderFn_80041018(self);
         }
