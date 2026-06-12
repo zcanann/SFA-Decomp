@@ -158,8 +158,8 @@ void FUN_801a1230(int param_1, char param_2)
     hitState = (ObjHitsPriorityState*)((GameObject*)param_1)->anim.hitReactState;
     if (param_2 == '\0')
     {
-        hitState->lateralResponseWeight = *(u8*)(*(int*)&((GameObject*)param_1)->anim.modelInstance + 99);
-        hitState->axialResponseWeight = *(u8*)(*(int*)&((GameObject*)param_1)->anim.modelInstance + 100);
+        hitState->lateralResponseWeight = ((GameObject*)param_1)->anim.modelInstance->lateralResponseWeight;
+        hitState->axialResponseWeight = ((GameObject*)param_1)->anim.modelInstance->axialResponseWeight;
         *(byte*)(iVar2 + 0x4a) = *(byte*)(iVar2 + 0x4a) & 0x7f;
         *(byte*)&((GameObject*)param_1)->anim.resetHitboxMode = *(byte*)&((GameObject*)param_1)->anim.resetHitboxMode &
             0xf7;
