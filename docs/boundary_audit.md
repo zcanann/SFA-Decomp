@@ -197,44 +197,109 @@ cut count **125 -> 66**.
   inline suppression; zBomb kept as survivor for its .data descriptor
   claim) merged.
 
-### Flagged cases (mechanically unrecoverable - manual follow-up)
+### Flagged cases — STATUS (campaign June 2026)
 
-Every case below was attempted and auto-reverted; the tree is untouched.
-The dominant blocker classes are REAL import drift, not tool gaps: the two
-sides of a drift boundary disagree about a shared symbol's type, so no
-merge can compile both forms at file scope (MWCC errors even on IDENTICAL
-typedef/struct-tag redefinitions, and its tolerance for incompatible
-block-scope redecls is type-pair-dependent: fn pointer-return pairs OK,
-void-vs-int returns and all object decls rejected).
+The audit started at 132 cut descriptors; a long re-split campaign drove it to
+32, then the June-2026 push (this section) drove it to **2 remaining cuts**
+(both genuinely irreducible or SDK-gated — see below). Every drift-typedef /
+def-vs-header / typed-interface / inline-cascade blocker in the historical
+flagged table BELOW has been RESOLVED — the prep pattern is in the per-case
+`re-split: TU-align` + `resplit prep:` commits (`git log --grep 're-split:'`).
 
-| case | DLLs | blocker |
+The prep recipes that cracked the historical blockers, for reuse:
+- **dead drift externs in the projection** → tool now prunes any top-level
+  extern/proto no kept fn body AND no retained descriptor initializer
+  references (`prune_unused_externs`).
+- **identical duplicate externs** ("illegal name overloading" on a redundant
+  file-scope decl) → tool drops them in `reconcile_segment`.
+- **return-type-on-own-line Ghidra phantoms** (`undefined4\nFUN_xxxx(...)`) →
+  tool parses the real name + collapses the type line (`parse_fn_spans`).
+- **moved-fn auto-inline into its owner caller** → tool's `compute_demote`
+  now flags moved fns even when address-order assembly puts them in the
+  owner's segment region; the regressed caller no longer vetoes the demote.
+  When `dont_inline` in the donor is byte-neutral (the fn has no in-donor
+  caller AND doesn't inline its own leaves), the cleaner prep is a per-fn
+  `#pragma dont_inline on/reset` in the donor (byte-verified).
+- **typed-interface globals** (gTitleMenuLinkInterface, gCameraInterface) →
+  align the file-scope type to the donor's canonical form, spell the owner's
+  uses via the equivalent cast (`(int)*p` == `(int)p->vtable` when vtable is
+  the first member); byte-verify.
+- **fn-vs-array load-bearing extern** (appleontree_update `u8[]` jump table) →
+  declare the fn and spell the table `(u8*)fn + K`; byte-neutral, lets the
+  descriptor coexist with the fn def in one TU.
+- **dual struct-view of a shared global** (lbl_803A9458 LinkMenuItemDB vs
+  LinkMenuItem; linkTextures u8[0x30] vs LinkTexture[6]) → block-scope the
+  donor's view into its fns and drop the file-scope decl (or cast the
+  struct-view accesses through a u8[] base); byte-verify.
+- **dead/used objlib drift decls in a shared header** (vf_shared.h's
+  undefined4()/undefined8() forms colliding with objlib.h in a merged TU) →
+  drop the dead ones; #57-block-scope the used ones into their consumers,
+  then drop from the header. Full-project .o-hash A/B gates it.
+- **header decl arity drift** (anim.h dbegg `(void)` vs main.c defs) → align
+  the header decl to the def (the unit is usually the only consumer).
+- **descriptor-fn decl arity drift** (dll_FC_update `(void)` etc., all used
+  only as `(ObjectDescriptorCallback)` casts) → align each extern to its def.
+
+| case | DLLs | status |
 |---|---|---|
-| r8008EE18 | 0x009 | gamecube.c (MSL/SDK lane) hosts the dll's stubs - SDK-side splits change needed (pre-existing class d) |
-| r800C8008 | 0x003,0x00F,0x014 | objfsa.c in-file `typedef RomCurveSegmentProjection` vs curves.h header (tag redef); partfx chain otherwise mechanizable |
-| r8010847C | 0x019,0x02E,0x047-0x04D | conflicting `typedef Dll19State` moveLib.c vs camDebug donor |
-| r801159E4 | 0x033,0x034 | n_filemenu.c: moved fns reference `gTitleMenuLinkInterface` whose decl environment doesn't transplant |
-| r8011CD54 | 0x000,0x03C | conflicting `typedef LinkMenuItem` (baddie/dll_DA.c) |
-| r8014E1DC | 0x0CA,0x0E1 | mediumbasket.c decl conflicts after scarab head move |
-| r80161F0C | 0x0CF,0x0D2,0x0D3 | DUPLICATE fn definition `cannonclaw_release` in ladders.c and barrel.c (drift double-decomp) |
-| r80169360 | 0x0D7,0x0DB,0x0ED,0x0EF,0x0FF | `kaldachompspit_render` def vs header decl signature disagreement |
-| r8017AC2C | 0x0FB,0x0FC,0x0FD,0x111,0x115,0x117 | `doorlock_free` def vs header decl (cfguardian.c) |
-| r80191F2C | 0x136,0x13B,0x13C,0x141 | `waveanimator_modelMtxFn` def vs header proto (mmp_barrel) |
-| r801993B0 | 0x148 | hightop.c tail move into dll_0148_cfguardian.c: decl conflicts (the 0x8019B1D8 cut stays) |
-| r801A2BDC | 0x15B | `cfforcefield_render` def vs IMicicle-side header decl |
-| r801AC248 | 0x16D,0x1C0,0x1C1,0x1C2 | `imicepillar_render` def vs DIMcannon-side header decl |
-| r801C5990 | 0x18F,0x190,0x192 | conflicting `typedef EcshShrineState` (shrine1C2.c) |
-| r801CD7DC | 0x19F,0x1A1,0x1A2 | worldobj.c `gGameUIInterface` typed-interface extern conflicts |
-| r801D4CD0 | 0x1AD,0x1AE,0x1B0,0x1B1,0x1B4,0x1B7 | `sc_musictree_update` def (DRcloudrunner.c) vs CRsnowbike-side decl; SH/SC chain otherwise mechanizable |
-| r801E76A0 | 0x255,0x287,0x288 | conflicting `typedef SnowBikeFlags` (BWalphaanim.c) |
-| r801CFD68(2) | 0x1A7,0x1A8,0x1A9,0x1AA | conflicting `typedef EdiblemushroomState` (NWmammoth.c); NW/SH mushroom chain otherwise mechanizable |
-| r801F33B4 | 0x206,0x207 | `LightSourceState` tag redefined via LGTpointlight header vs dll_801F33B4.c in-file typedef |
-| r801FB9AC | 0x21E,0x224,0x22F,0x230,0x23F | light.c/main.c VFP engine-file extraction (mission class d) + `ObjHits_SyncObjectPositionIfDirty` header conflict |
+| r8010847C | 0x019,0x02E,0x047-0x04D | RESOLVED (3ce84636b) |
+| r801159E4 | 0x033,0x034 | RESOLVED (c202818f3) |
+| r8011CD54 | 0x000,0x03C | RESOLVED (da5ec715e) |
+| r8014E1DC | 0x0CA,0x0E1 | RESOLVED (775aeddb3) |
+| r80161F0C | 0x0CF,0x0D2,0x0D3 | RESOLVED (ea604c844) |
+| r80169360 | 0x0D7,0x0DB,0x0ED,0x0EF,0x0FF | RESOLVED (prior campaign) |
+| r8017AC2C | 0x0FB,0x0FC,0x0FD,0x111,0x115,0x117 | RESOLVED (67156a840) |
+| r80191F2C | 0x136,0x13B,0x13C,0x141 | RESOLVED (prior campaign) |
+| r801993B0 | 0x148 | RESOLVED (79f7f619c) |
+| r801A2BDC | 0x15B | RESOLVED (prior campaign) |
+| r801AC248 | 0x16D,0x1C0,0x1C1,0x1C2 | RESOLVED (51a91a93e) |
+| r801C5990 | 0x18F,0x190,0x192 | RESOLVED (8cb0c8a9a) |
+| r801CD7DC | 0x19F,0x1A1,0x1A2 | RESOLVED (93e00ff36) |
+| r801D4CD0 | 0x1AD,0x1AE,0x1B0,0x1B1,0x1B4,0x1B7 | RESOLVED (f0d42f346) |
+| r801E76A0 | 0x255,0x287,0x288 | RESOLVED (87dfded25) |
+| r801CFD68 | 0x1A7,0x1A8,0x1A9,0x1AA | RESOLVED (1ba617873) |
+| r801F33B4 | 0x206,0x207 | RESOLVED (21fcab956) |
+| r801FB9AC | 0x21E,0x224,0x22F,0x230,0x23F | RESOLVED (887fa72dd) |
 
-The fix pattern for the def-vs-header rows: reconcile the symbol's REAL
-signature first (recipe #84 cross-caller arbitration), land that as its own
-conservation-gated commit, then re-run the case - the tool will pick it up
-from the live audit. The conflicting-typedef rows want the struct moved to
-a shared header (or the two copies textually unified) first.
+### Remaining (proven-irreducible / SDK-gated)
+
+| case | DLLs | status |
+|---|---|---|
+| r8008EE18 | 0x009 | IRREDUCIBLE — descriptor legitimately spans two TUs |
+| r800C8008 | 0x003,0x00F,0x014 | OPEN — large inline/frame cascade in the curves chain |
+
+**r8008EE18 (0x009) — IRREDUCIBLE, not a drift cut.** The dll 0x009
+descriptor `lbl_8030F7E8` (auto_07 data) legitimately points its tail slots
+(slot 11/12/13 = the getObjectTypeId/getExtraSize-family) at the THREE MSL SDK
+functions `__end_critical_region` / `__begin_critical_region` /
+`__kill_critical_regions` (80094494-800944A0), with its body slots pointing at
+cloudaction.c's fns. The SDK fns correctly live in
+`dolphin/MSL_C/PPCEABI/bare/H/gamecube.c` (a MatchingFor SDK unit) and CANNOT
+move into cloudaction.c without breaking the SDK unit's link/match. The audit
+flags it because the descriptor's fn-pointer span crosses the gamecube|
+cloudaction boundary, but that span is a legitimate two-TU reference, not a
+unit-boundary error. No conservation-preserving move exists. Leave as-is.
+
+**r800C8008 (0x003,0x00F,0x014) — OPEN, large inline/frame cascade.** The
+partfx→curves chain (df_partfx→dim_partfx, objfsa→df_partfx, curves→objfsa, a
+32-fn move into objfsa) now COMPILES cleanly with the current tool (the old
+RomCurveSegmentProjection tag-redef and illegal-name-overloading blockers are
+fixed). It fails the conservation gate: ~11+ fns regress, both objfsa OWNER
+fns (RomCurve_func2C 90.6→80.8, func29 99.3→75.9, goNextPoint, get) AND moved
+curves fns (curves_distFn15 90.6→57.8, distXZ 89→34, findByIdWithIndex
+100→44.5, …). Diagnosis so far: RomCurve_func2C's call set is UNCHANGED (not an
+inline-victim) but its FRAME grows -160→-208 (+48B, a #67-class conversion-temp
+/ struct-local change) — so the regressions are decl-environment / frame /
+coloring driven by the chained merge, not simple auto-inline (compute_demote
+returns empty: the inlined callees, when present, append AFTER their callers so
+can't inline upward). curves_distFn15 additionally needs #84 cross-caller
+signature arbitration (per the original handoff). This is the genuinely-hard
+remaining case: it wants per-fn frame/coloring reconciliation across the 32-fn
+move, not a single prep. Banked for a focused follow-up.
+
+The historical fix patterns (now all proven) are above; the remaining open
+case wants per-fn #67 frame analysis + #84 signature arbitration before the
+tool can land it conservation-EXACT.
 
 ## Complete cut table (132 descriptors, pre-surgery)
 
