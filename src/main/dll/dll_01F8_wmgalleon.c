@@ -222,20 +222,12 @@ extern void objSetSlot(int* obj, int slot);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);
 extern void fn_80065574(int a, int* obj, int b);
 extern void fn_80296BBC(int player);
-extern void buttonDisable(int controller, int mask);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern ScreenTransitionInterface** gScreenTransitionInterface;
 
-extern f32 timeDelta;
-extern u8 lbl_803DDC78;
 extern f32 lbl_803E5CEC;
 extern f32 lbl_803E5CF0;
 extern f32 lbl_803E5CF4;
-extern f32 lbl_803E5CF8;
-extern f32 lbl_803E5D00;
-extern f32 lbl_803E5D04;
-extern f32 lbl_803E5D08;
 
 #define OBJ_U8(obj, offset) (*(u8 *)((u8 *)(obj) + (offset)))
 #define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
@@ -249,8 +241,6 @@ extern f32 lbl_803E5D08;
     (*gMapEventInterface)->setAnimEvent((mapId), (eventId), (value))
 #define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
     (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
-#define SCREEN_TRANSITION_START(kind, value) \
-    (*gScreenTransitionInterface)->step((kind), (value))
 
 typedef struct Dll1FBSetup
 {
@@ -433,41 +423,22 @@ void WM_Galleon_initialise(void)
 
 int WM_seqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
-int WM_seqobject_getExtraSize(void);
-int WM_seqobject_getObjectTypeId(void);
 
-void WM_seqobject_free(void);
 
-void WM_seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void WM_seqobject_hitDetect(void);
 
-void WM_seqobject_update(int* obj);
 
-void WM_seqobject_init(int* obj, s8* def);
 
-void WM_seqobject_release(void);
 
-void WM_seqobject_initialise(void);
 
-int dll_1FB_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
-int dll_1FB_getExtraSize_ret_12(void);
-int dll_1FB_getObjectTypeId(void);
 
-void dll_1FB_free_nop(void);
 
-void dll_1FB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void dll_1FB_hitDetect_nop(void);
 
-void dll_1FB_update(int* obj);
 
-void dll_1FB_init(int* obj, u8* def);
 
-void dll_1FB_release_nop(void);
 
-void dll_1FB_initialise_nop(void);
 
 
 

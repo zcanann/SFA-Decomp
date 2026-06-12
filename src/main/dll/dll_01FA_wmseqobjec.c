@@ -48,34 +48,10 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
-extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
-
-extern u32 lbl_803DC0F0;
-extern u8 framesThisStep;
-extern s8 lbl_803DDC70;
-extern int* gScreensInterface;
-extern undefined4* lbl_803DCA94;
-extern void* lbl_803DDC74;
-extern f32 lbl_803E5CE8;
 
 
-#define WM_GALLEON_GAMEBIT_CUTSCENE_DONE 0x429
-#define WM_GALLEON_GAMEBIT_CLEAR_DOOR 0xD1
-#define WM_GALLEON_COMMAND_OPENED 1
-#define WM_GALLEON_COMMAND_CLEAR_LACTIONS 2
-#define WM_GALLEON_COMMAND_SCREEN_FADE 3
-#define WM_GALLEON_COMMAND_ACTION_12 4
-#define WM_GALLEON_COMMAND_ACTION_13 5
-#define WM_GALLEON_COMMAND_CLEAR_MAP_EVENTS 6
-#define WM_GALLEON_COMMAND_SHOW_MODEL 7
-#define WM_GALLEON_COMMAND_HIDE_MODEL 8
-#define WM_GALLEON_COMMAND_ACTION_11 9
-#define WM_GALLEON_ACTION_OPENED 10
-#define WM_GALLEON_ACTION_11 11
-#define WM_GALLEON_ACTION_12 12
-#define WM_GALLEON_ACTION_13 13
 
-#define OBJ_U8(obj, offset) (*(u8 *)((u8 *)(obj) + (offset)))
+
 #define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
 #define OBJ_S32(obj, offset) (*(s32 *)((u8 *)(obj) + (offset)))
 
@@ -98,19 +74,12 @@ extern f32 lbl_803E5CE8;
 /* Trivial 4b 0-arg blr leaves. */
 
 
-void WM_Galleon_hitDetect(void);
 
-void WM_Galleon_free(int* obj, int leavingMap);
 
-void WM_Galleon_render(void* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 /* 8b "li r3, N; blr" returners. */
-int WM_Galleon_getExtraSize(void);
-int WM_Galleon_getObjectTypeId(void);
 
-void WM_ObjCreator_init(int* obj, s8* def);
 
-int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
 #include "main/dll/WC/WClaser.h"
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
@@ -122,36 +91,17 @@ int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-extern int Obj_GetPlayerObject(void);
-extern void objSetSlot(int* obj, int slot);
-extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);
-extern void fn_80065574(int a, int* obj, int b);
-extern void fn_80296BBC(int player);
-extern void buttonDisable(int controller, int mask);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 
-extern f32 timeDelta;
 extern u8 lbl_803DDC78;
-extern f32 lbl_803E5CEC;
-extern f32 lbl_803E5CF0;
-extern f32 lbl_803E5CF4;
 extern f32 lbl_803E5CF8;
-extern f32 lbl_803E5D00;
-extern f32 lbl_803E5D04;
-extern f32 lbl_803E5D08;
 
-#define OBJ_U8(obj, offset) (*(u8 *)((u8 *)(obj) + (offset)))
 #define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
 #define OBJ_S32(obj, offset) (*(s32 *)((u8 *)(obj) + (offset)))
-#define OBJ_F32(obj, offset) (*(f32 *)((u8 *)(obj) + (offset)))
 #define OBJ_PTR(obj, offset) (*(void **)((u8 *)(obj) + (offset)))
 
-#define MAP_EVENT_TEST(mapId, eventId) \
-    (*gMapEventInterface)->getAnimEvent((mapId), (eventId))
-#define MAP_EVENT_SET(mapId, eventId, value) \
-    (*gMapEventInterface)->setAnimEvent((mapId), (eventId), (value))
 #define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
     (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
 #define SCREEN_TRANSITION_START(kind, value) \
@@ -217,13 +167,9 @@ STATIC_ASSERT(offsetof(WMGalleonSetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(WMSeqObjectSetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
 
-void WM_Galleon_update(int* obj);
 
-void WM_Galleon_init(int* obj, WMGalleonSetup* setup);
 
-void WM_Galleon_release(void);
 
-void WM_Galleon_initialise(void);
 
 int WM_seqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -354,22 +300,13 @@ void WM_seqobject_initialise(void)
 
 int dll_1FB_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
-int dll_1FB_getExtraSize_ret_12(void);
-int dll_1FB_getObjectTypeId(void);
 
-void dll_1FB_free_nop(void);
 
-void dll_1FB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-void dll_1FB_hitDetect_nop(void);
 
-void dll_1FB_update(int* obj);
 
-void dll_1FB_init(int* obj, u8* def);
 
-void dll_1FB_release_nop(void);
 
-void dll_1FB_initialise_nop(void);
 
 
 
