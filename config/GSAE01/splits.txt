@@ -1325,8 +1325,14 @@ main/dll/dll_012C_transporter.c:
 main/dll/moonseedbush.c:
 	.text       start:0x80191A70 end:0x80191A70
 
-main/dll/mmp_asteroid_re.c:
-	.text       start:0x80191A70 end:0x80191F2C
+main/dll/dll_012E_laserturret.c:
+	.text       start:0x80191A70 end:0x80191B60
+
+main/dll/dll_012F_nwcallofeld.c:
+	.text       start:0x80191B60 end:0x80191D00
+
+main/dll/dll_0131_cfdoorligh.c:
+	.text       start:0x80191D00 end:0x80191F2C
 
 main/dll/holoPoint.c:
 	.text       start:0x80191F2C end:0x80191F2C

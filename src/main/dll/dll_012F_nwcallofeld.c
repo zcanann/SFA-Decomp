@@ -96,25 +96,15 @@ typedef struct BarrelPadParticleArgs
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void cflightwall_free(void)
-{
-}
+void cflightwall_free(void);
 
-void cflightwall_hitDetect(void)
-{
-}
+void cflightwall_hitDetect(void);
 
-void cflightwall_update(void)
-{
-}
+void cflightwall_update(void);
 
-void cflightwall_release(void)
-{
-}
+void cflightwall_release(void);
 
-void cflightwall_initialise(void)
-{
-}
+void cflightwall_initialise(void);
 
 void barrelpad_free(void)
 {
@@ -132,33 +122,23 @@ void barrelpad_initialise(void)
 {
 }
 
-void cf_doorlight_free(void)
-{
-}
+void cf_doorlight_free(void);
 
-void cf_doorlight_render(void)
-{
-}
+void cf_doorlight_render(void);
 
-void cf_doorlight_hitDetect(void)
-{
-}
+void cf_doorlight_hitDetect(void);
 
-void cf_doorlight_release(void)
-{
-}
+void cf_doorlight_release(void);
 
-void cf_doorlight_initialise(void)
-{
-}
+void cf_doorlight_initialise(void);
 
 /* 8b "li r3, N; blr" returners. */
-int cflightwall_getExtraSize(void) { return 0x0; }
-int cflightwall_getObjectTypeId(void) { return 0x0; }
+int cflightwall_getExtraSize(void);
+int cflightwall_getObjectTypeId(void);
 int barrelpad_getExtraSize(void) { return 0x0; }
 int barrelpad_getObjectTypeId(void) { return 0x0; }
-int cf_doorlight_getExtraSize(void) { return 0x18; }
-int cf_doorlight_getObjectTypeId(void) { return 0x0; }
+int cf_doorlight_getExtraSize(void);
+int cf_doorlight_getObjectTypeId(void);
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3EE8;
@@ -173,7 +153,7 @@ extern f32 lbl_803E3F18;
 extern f32 lbl_803E3F1C;
 extern f32 lbl_803E3F20;
 extern f32 lbl_803E3F24;
-void cflightwall_render(void) { objRenderFn_8003b8f4(lbl_803E3EE8); }
+void cflightwall_render(void);
 void barrelpad_render(void) { objRenderFn_8003b8f4(lbl_803E3F00); }
 
 void barrelpad_update(s16* obj)
@@ -220,85 +200,8 @@ void barrelpad_init(s16* obj, u8* def)
 extern f32 lbl_803E3EEC;
 extern f32 lbl_803E3EF0;
 
-void cflightwall_init(s16* obj, u8* def)
-{
-    ((GameObject*)obj)->anim.rotZ = (s16)((s32)def[0x18] << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)((s32)def[0x19] << 8);
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1a] << 8);
-    if (def[0x1b] != 0)
-    {
-        ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)
-        def[0x1b] / lbl_803E3EEC;
-        if (((GameObject*)obj)->anim.rootMotionScale == lbl_803E3EF0)
-        {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3EE8;
-        }
-        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * *(f32*)((char*)*(int**)&((
-            GameObject*)obj)->anim.modelInstance + 4);
-    }
-    ((GameObject*)obj)->objectFlags |= 0xA000;
-}
+void cflightwall_init(s16* obj, u8* def);
 
-void cf_doorlight_update(int obj)
-{
-    CfDoorLightState* state;
-    CfDoorLightDef* def;
-    int* textureFrame;
+void cf_doorlight_update(int obj);
 
-    state = ((GameObject*)obj)->extra;
-    def = *(CfDoorLightDef**)&((GameObject*)obj)->anim.placementData;
-    if ((((state->flags >> 5) & 1) == 0) && (GameBit_Get(def->triggerEvent) != 0) &&
-        (((state->flags >> 6) & 1) == 0))
-    {
-        state->flags = (state->flags & ~0x20) | 0x20;
-        state->currentFrame = 0;
-    }
-    if (((state->flags >> 5) & 1) != 0)
-    {
-        textureFrame = objFindTexture((void*)obj, state->textureId, 0);
-        if (textureFrame != 0)
-        {
-            state->currentFrame += state->frameStep;
-            if (state->currentFrame < 0)
-            {
-                state->currentFrame = 0;
-            }
-            else if (state->currentFrame > state->maxFrame)
-            {
-                if (def->doneEvent == -1)
-                {
-                    state->currentFrame = state->resetFrame;
-                }
-                else
-                {
-                    GameBit_Set(def->doneEvent, 1);
-                    state->flags = state->flags & ~0x20;
-                    state->flags = (state->flags & ~0x40) | 0x40;
-                    state->currentFrame = state->maxFrame;
-                }
-            }
-            *textureFrame = state->currentFrame;
-        }
-    }
-}
-
-void cf_doorlight_init(int* obj, s8* def)
-{
-    register CfDoorLightState* state = ((GameObject*)obj)->extra;
-    u32 b;
-    state->textureId = 0;
-    *(s16*)obj = (s16)((s32)def[0x19] << 9);
-    state->maxFrame = (int)((CfDoorlightObjectDef*)def)->unk1A << 8;
-    state->frameStep = (u8)((CfDoorlightObjectDef*)def)->frameStep;
-    state->resetFrame = (int)def[0x18] << 8;
-    b = (u32)(u8)
-    GameBit_Get(((CfDoorLightDef*)def)->doneEvent);
-    state->flags = (u8)((state->flags & ~0x40) | ((b & 1) << 6));
-    if (((u32)state->flags >> 6) & 1)
-    {
-        state->currentFrame = state->maxFrame;
-        state->flags |= 0x20;
-    }
-    ((GameObject*)obj)->objectFlags |= 0x2000;
-    ((GameObject*)obj)->objectFlags |= 0x4000;
-}
+void cf_doorlight_init(int* obj, s8* def);
