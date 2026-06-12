@@ -2,7 +2,9 @@
 #define MAIN_OBJPRINT_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_internal.h"
 
+ObjTextureRuntimeSlot *objFindTexture(void *obj, int target, int unusedMaterialIndex);
 void objAnimFn_80038f38(int param_1,char *param_2);
 void FUN_80039130(uint param_1,int *param_2);
 void FUN_800392e0(undefined4 *param_1);

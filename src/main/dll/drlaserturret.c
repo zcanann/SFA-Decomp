@@ -3,6 +3,7 @@
 #include "main/gamebits.h"
 #include "main/objanim.h"
 #include "main/objhits.h"
+#include "main/objprint.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
@@ -16,7 +17,6 @@ extern uint getButtonsJustPressed(int);
 extern int randomGetRange(int lo, int hi);
 extern void* Obj_GetPlayerObject(void);
 extern int ObjTrigger_IsSet(void*);
-extern void* objFindTexture(void* obj, int idx, int flags);
 extern int hitDetectFn_80065e50(void* obj, float x, float y, float z, void* out, int p5, int p6);
 extern void hudFn_8011f38c(int);
 extern void hudFn_8011f6f0(int);
@@ -277,7 +277,7 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
     int btn;
     int slot;
     char nudge;
-    int* texture;
+    ObjTextureRuntimeSlot* texture;
 
     state = obj->state;
     if (dispatch == DR_LASERTURRET_PROMPT_COUNT)
@@ -307,14 +307,14 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         }
         v9d0 = state->countValue;
         texture = objFindTexture(obj, DR_LASERTURRET_ONES_TEXTURE_SLOT, 0);
-        *texture = (v9d0 - v9d0 / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+        texture->textureId = (v9d0 - v9d0 / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         texture = objFindTexture(obj, DR_LASERTURRET_TENS_TEXTURE_SLOT, 0);
         slot = v9d0 / 10;
-        *texture = (slot - slot / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+        texture->textureId = (slot - slot / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         slot = slot / 10;
         if (slot > DR_LASERTURRET_MAX_DIGIT) slot = DR_LASERTURRET_MAX_DIGIT;
         texture = objFindTexture(obj, DR_LASERTURRET_HUNDREDS_TEXTURE_SLOT, 0);
-        *texture = slot << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+        texture->textureId = slot << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
     }
     else if (dispatch == DR_LASERTURRET_PROMPT_DIGIT_COUNT)
     {
@@ -344,14 +344,14 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
         {
             u8 v = state->digitCount;
             texture = objFindTexture(obj, DR_LASERTURRET_ONES_TEXTURE_SLOT, 0);
-            *texture = (v - v / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+            texture->textureId = (v - v / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
             texture = objFindTexture(obj, DR_LASERTURRET_TENS_TEXTURE_SLOT, 0);
             slot = v / 10;
-            *texture = (slot - slot / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+            texture->textureId = (slot - slot / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
             slot = slot / 10;
             if (slot > DR_LASERTURRET_MAX_DIGIT) slot = DR_LASERTURRET_MAX_DIGIT;
             texture = objFindTexture(obj, DR_LASERTURRET_HUNDREDS_TEXTURE_SLOT, 0);
-            *texture = slot << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+            texture->textureId = slot << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         }
         btn = getButtonsJustPressed(0);
         if ((btn & DR_LASERTURRET_BUTTON_CANCEL) != 0)
