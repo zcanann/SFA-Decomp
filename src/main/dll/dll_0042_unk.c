@@ -55,8 +55,8 @@ extern f32 lbl_803E1708;
 extern f32 lbl_803E170C;
 extern void camcontrol_traceMove(f32 radius, f32* from, void* to, f32* out, void* work, int a,
                                  int b, int c);
-extern void camcontrol_updateTargetAction(int camera, int obj);
-extern void camMoveFn_80104040(int camera, int obj);
+extern void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target);
+extern void camMoveFn_80104040(CameraObject* camera, GameObject* target);
 extern void camcontrol_updateModeSettings(int camera);
 extern int EmissionController_IsLingering(int obj);
 extern void fn_8029656C(int obj, float* out);
@@ -756,7 +756,7 @@ void camstatic_update(CameraObject* camera)
     }
     camera->unk13E = 0;
     camcontrol_updateModeSettings((int)camera);
-    camMoveFn_80104040((int)camera, (int)target);
+    camMoveFn_80104040(camera, target);
     firstperson_updatePosition(camera, &target->anim);
     Obj_TransformLocalPointToWorld(camera->anim.localPosX, camera->anim.localPosY,
                                    camera->anim.localPosZ, &camera->anim.worldPosX,
@@ -884,7 +884,7 @@ void camstatic_update(CameraObject* camera)
                              lbl_803E16A4 /
                              (f32)(u32)gCamcontrolModeSettings->yawResponseFrames, timeDelta);
     camera->anim.rotY = camera->anim.rotY + (short)val;
-    camcontrol_updateTargetAction((int)camera, (int)target);
+    camcontrol_updateTargetAction(camera, target);
     val = (int)interpolate((f32)camera->anim.rotZ, lbl_803E1730, timeDelta);
     camera->anim.rotZ = camera->anim.rotZ - (short)val;
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY,

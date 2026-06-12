@@ -460,7 +460,7 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
     return result;
 }
 
-void camMoveFn_80104040(int cam, short* tgt)
+void camMoveFn_80104040(CameraObject* camera, GameObject* target)
 {
     float path[39];
     float endPts[39];
@@ -487,23 +487,24 @@ void camMoveFn_80104040(int cam, short* tgt)
     u8 blocked;
     s16 spin;
 
-    Obj_TransformLocalPointToWorld(*(f32*)(cam + 0xc), *(f32*)(cam + 0x10), *(f32*)(cam + 0x14),
-                                   (f32*)(cam + 0x18), (f32*)(cam + 0x1c), (f32*)(cam + 0x20),
-                                   *(int*)(cam + 0x30));
+    Obj_TransformLocalPointToWorld(camera->anim.localPosX, camera->anim.localPosY,
+                                   camera->anim.localPosZ, &camera->anim.worldPosX,
+                                   &camera->anim.worldPosY, &camera->anim.worldPosZ,
+                                   (int)camera->anim.parent);
     lbl_803DD528 = 0;
-    if (((GameObject*)tgt)->anim.classId == 1)
+    if (target->anim.classId == 1)
     {
-        cameraGetPrevPos2((int)tgt, &prev[0], &prev[1], &prev[2]);
+        cameraGetPrevPos2((int)target, &prev[0], &prev[1], &prev[2]);
     }
     else
     {
-        prev[0] = ((GameObject*)tgt)->anim.worldPosX;
-        prev[1] = ((GameObject*)tgt)->anim.worldPosY + cameraMtxVar57->targetHeight;
-        prev[2] = ((GameObject*)tgt)->anim.worldPosZ;
+        prev[0] = target->anim.worldPosX;
+        prev[1] = target->anim.worldPosY + cameraMtxVar57->targetHeight;
+        prev[2] = target->anim.worldPosZ;
     }
-    path[0] = *(f32*)(cam + 0x18);
-    path[1] = *(f32*)(cam + 0x1c);
-    path[2] = *(f32*)(cam + 0x20);
+    path[0] = camera->anim.worldPosX;
+    path[1] = camera->anim.worldPosY;
+    path[2] = camera->anim.worldPosZ;
     dx = path[0] - prev[0];
     dz = path[2] - prev[2];
     i = 1;
@@ -522,18 +523,18 @@ void camMoveFn_80104040(int cam, short* tgt)
         sinv = mathCosf(rad);
         t = dx * sinv - dz * cosv;
         z = t * cosv + dz * sinv;
-        z = z + ((GameObject*)tgt)->anim.worldPosZ;
-        p[0] = t + ((GameObject*)tgt)->anim.worldPosX;
-        p[1] = *(f32*)(cam + 0x1c);
+        z = z + target->anim.worldPosZ;
+        p[0] = t + target->anim.worldPosX;
+        p[1] = camera->anim.worldPosY;
         p[2] = z;
         rad = (kA * (f32)(s16)(-i * 0xaaa)) / kB;
         cosv = mathSinf(rad);
         sinv = mathCosf(rad);
         t = dx * sinv - dz * cosv;
         z = t * cosv + dz * sinv;
-        z = z + ((GameObject*)tgt)->anim.worldPosZ;
-        p[3] = t + ((GameObject*)tgt)->anim.worldPosX;
-        p[4] = *(f32*)(cam + 0x1c);
+        z = z + target->anim.worldPosZ;
+        p[3] = t + target->anim.worldPosX;
+        p[4] = camera->anim.worldPosY;
         p[5] = z;
         ang = ang + 0x1554;
         p = p + 6;
@@ -549,7 +550,7 @@ void camMoveFn_80104040(int cam, short* tgt)
     }
     hitDetect_calcSweptSphereBounds(bounds, (float*)path, endPts, radii, 0xd);
     hitDetectFn_800691c0(0, bounds, 0x248, 1);
-    trace = camcontrol_traceMove(prev, (float*)(cam + 0x18), (float*)0x0, box, 7,
+    trace = camcontrol_traceMove(prev, &camera->anim.worldPosX, (float*)0x0, box, 7,
                                  '\0', '\0', lbl_803E16A0);
     blocked = 0;
     if (trace == 0)
@@ -560,7 +561,7 @@ void camMoveFn_80104040(int cam, short* tgt)
     if (blocked != 0)
     {
         cameraMtxVar57->wallAvoidanceFlags.b7 = 0;
-        if (cameraFn_80103b40((short*)cam, outA, outB, (int)tgt[0]) == 0)
+        if (cameraFn_80103b40((short*)camera, outA, outB, target->anim.rotX) == 0)
         {
             cameraMtxVar57->avoidanceYawOffset = lbl_803E16AC;
         }
@@ -575,9 +576,9 @@ void camMoveFn_80104040(int cam, short* tgt)
             cosv = mathSinf(rad);
             sinv = mathCosf(rad);
             t = dx * sinv - dz * cosv;
-            *(f32*)(cam + 0x18) = t + ((GameObject*)tgt)->anim.worldPosX;
+            camera->anim.worldPosX = t + target->anim.worldPosX;
             z = t * cosv + dz * sinv;
-            *(f32*)(cam + 0x20) = z + ((GameObject*)tgt)->anim.worldPosZ;
+            camera->anim.worldPosZ = z + target->anim.worldPosZ;
         }
         cameraMtxVar57->avoidanceYawOffset = cameraMtxVar57->avoidanceYawOffset * lbl_803E16C4;
         if ((cameraMtxVar57->avoidanceYawOffset < lbl_803E16C8) &&
@@ -586,9 +587,10 @@ void camMoveFn_80104040(int cam, short* tgt)
             cameraMtxVar57->avoidanceYawOffset = lbl_803E16AC;
         }
     }
-    Obj_TransformWorldPointToLocal(*(f32*)(cam + 0x18), *(f32*)(cam + 0x1c), *(f32*)(cam + 0x20),
-                                   (f32*)(cam + 0xc), (f32*)(cam + 0x10), (f32*)(cam + 0x14),
-                                   *(int*)(cam + 0x30));
+    Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY,
+                                   camera->anim.worldPosZ, &camera->anim.localPosX,
+                                   &camera->anim.localPosY, &camera->anim.localPosZ,
+                                   (int)camera->anim.parent);
 }
 
 void camcontrol_updateModeSettings(int camera)

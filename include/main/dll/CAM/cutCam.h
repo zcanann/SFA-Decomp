@@ -24,7 +24,7 @@ undefined camcontrol_traceFromTarget(float *fromPos,GameObject *target,float *ou
 undefined camcontrol_getTargetPosition(int param_1,void *param_2,void *param_3,void *param_4);
 void camcontrol_updateTargetAction(CameraObject *camera,GameObject *target);
 int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle);
-void camMoveFn_80104040(int cam, short *tgt);
+void camMoveFn_80104040(CameraObject *camera, GameObject *target);
 void camcontrol_updateModeSettings(int camera);
 void doNothing_80103660(void);
 
