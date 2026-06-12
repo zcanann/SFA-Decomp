@@ -170,7 +170,7 @@ void doorf4_initialise(void)
 /* 8b "li r3, N; blr" returners. */
 int doorf4_getExtraSize(void) { return 0x24; }
 int doorf4_getObjectTypeId(void) { return 0x1; }
-int sidekickball_getExtraSize(void) { return 0x2cc; }
+int sidekickball_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3680;
@@ -182,9 +182,9 @@ void doorf4_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E3680);
 }
 
-int fn_801793A4(int* obj) { return *((u8*)((int**)obj)[0xb8 / 4] + 0x274) == 0; }
+int fn_801793A4(int* obj);
 
-void sidekickball_free(int obj) { GameBit_Set(0x3F8, 1); }
+void sidekickball_free(int obj);
 
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
@@ -204,59 +204,20 @@ void doorf4_free(int obj)
 
 extern f32 lbl_803E36A0;
 
-void sidekickball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    if (((GameObject*)obj)->unkF8 == 0 || visible == -1)
-    {
-        objRenderFn_8003b8f4(lbl_803E36A0);
-    }
-}
+void sidekickball_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
 extern f32 lbl_803E369C;
 extern void ObjHits_DisableObject(int* obj);
 extern void ObjHits_EnableObject(int* obj);
 extern void ObjHits_SyncObjectPositionIfDirty(int* obj);
 
-void fn_8017962C(int* obj)
-{
-    SidekickBallState* state = ((GameObject*)obj)->extra;
-    u8 b = state->ballMode;
-    if (b != 3 && b != 2) return;
-    state->fadeTimer = lbl_803E369C;
-}
+void fn_8017962C(int* obj);
 
-int fn_80179650(int* obj)
-{
-    int r = 0;
-    u8 b = (*(SidekickBallState**)&((GameObject*)obj)->extra)->ballMode;
-    if (b == 2 || b == 1) r = 1;
-    return r;
-}
+int fn_80179650(int* obj);
 
-void fn_80179678(int* obj)
-{
-    SidekickBallState* state = ((GameObject*)obj)->extra;
-    state->fadeTimer = lbl_803E369C;
-    state->ballMode = 0;
-    ObjHits_DisableObject(obj);
-    state->unk25B = 0;
-}
+void fn_80179678(int* obj);
 
-void fn_801796BC(int* obj, f32 a, f32 b, f32 c)
-{
-    SidekickBallState* state = ((GameObject*)obj)->extra;
-    state->ballMode = 3;
-    state->fadeTimer = lbl_803E369C;
-    *(f32*)((char*)obj + 36) = a;
-    ((GameObject*)obj)->anim.velocityY = b;
-    ((GameObject*)obj)->anim.velocityZ = c;
-    ObjHits_EnableObject(obj);
-    ObjHits_SyncObjectPositionIfDirty(obj);
-    state->unk25B = 1;
-    state->launchX = ((GameObject*)obj)->anim.localPosX;
-    state->launchY = ((GameObject*)obj)->anim.localPosY;
-    state->launchZ = ((GameObject*)obj)->anim.localPosZ;
-}
+void fn_801796BC(int* obj, f32 a, f32 b, f32 c);
 
 extern int* Obj_GetPlayerObject(void);
 extern void getYButtonItem(s16 * out);
@@ -273,98 +234,7 @@ extern f32 lbl_803E3694;
 extern f32 lbl_803E3698;
 extern f32 lbl_803E36A4;
 
-void trickyBallFn_801793b8(int* obj, u8* params)
-{
-    int* player;
-    int* playerState;
-    s16 yItem;
-    u32 btns;
-    f32 lcl[6];
-
-    player = Obj_GetPlayerObject();
-    playerState = ((GameObject*)player)->extra;
-
-    if (params[0x2c8] == 1) goto end;
-
-    if (params[0x2c9] == 0)
-    {
-        params[0x2c9] = 1;
-        if (params[0x2c9] == 0) goto end;
-        params[0x2ca] = 1;
-        goto end;
-    }
-
-    ObjHits_DisableObject(obj);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;
-
-    getYButtonItem(&yItem);
-    btns = getButtonsJustPressed(0);
-    if ((btns & 0x100) != 0 || (yItem == 5 && (getButtonsJustPressed(0) & 0x800) != 0))
-    {
-        if (fn_80295BF0(player) != 0)
-        {
-            params[0x2ca] = 0;
-        }
-        else
-        {
-            Sfx_PlayFromObject(0, 0x10a);
-        }
-    }
-
-    if (((GameObject*)obj)->unkF8 == 1)
-    {
-        params[0x2c9] = 2;
-    }
-    if (params[0x2c9] != 2) goto end;
-    if (((GameObject*)obj)->unkF8 != 0) goto end;
-
-    if (fn_8029669C(player) == 0)
-    {
-        params[0x2c9] = 0;
-        params[0x2ca] = 0;
-        *(f32*)((char*)params + 0x26c) = lbl_803E36A4;
-        params[0x274] = 5;
-        goto end;
-    }
-
-    params[0x2c9] = 0;
-    params[0x2c8] = 1;
-
-    {
-        f32 k = lbl_803E3688;
-        ((GameObject*)obj)->anim.velocityY =
-            k * (lbl_803E3690 * *(f32*)((char*)playerState + 0x298) + lbl_803E368C);
-        ((GameObject*)obj)->anim.velocityZ =
-            k * (lbl_803E3698 * *(f32*)((char*)playerState + 0x298) + lbl_803E3694);
-    }
-
-    ((GameObject*)lcl)->anim.localPosX = lbl_803E369C;
-    ((GameObject*)lcl)->anim.localPosY = lbl_803E369C;
-    ((GameObject*)lcl)->anim.localPosZ = lbl_803E369C;
-    ((GameObject*)lcl)->anim.rootMotionScale = lbl_803E36A0;
-    ((GameObject*)lcl)->anim.rotZ = 0;
-    ((GameObject*)lcl)->anim.rotY = 0;
-    if (((GameObject*)player)->anim.parent != NULL)
-    {
-        *(s16*)lcl = (s16)(*(s16*)*(int**)&((GameObject*)player)->anim.parent + *(s16*)player);
-    }
-    else
-    {
-        *(s16*)lcl = *(s16*)player;
-    }
-    vecRotateZXY(lcl, &((GameObject*)obj)->anim.velocityX);
-
-    fn_801796BC(obj,
-                ((GameObject*)obj)->anim.velocityX,
-                ((GameObject*)obj)->anim.velocityY,
-                ((GameObject*)obj)->anim.velocityZ);
-
-end:
-    if (params[0x2ca] != 0)
-    {
-        ObjMsg_SendToObject(player, 0x100010, obj, 0);
-    }
-}
+void trickyBallFn_801793b8(int* obj, u8* params);
 
 extern u32 GameBit_Get(int eventId);
 

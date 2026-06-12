@@ -1,3 +1,127 @@
+/* === moved from main/dll/tFrameAnimator.c [8017A350-8017A38C) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/tFrameAnimator.h"
+#include "main/game_object.h"
+#include "main/dll/path_control_interface.h"
+#include "main/dll/tframeanimator_state.h"
+#include "main/objanim_internal.h"
+#include "main/objlib.h"
+#include "main/objanim_update.h"
+
+typedef struct LevelnameState
+{
+    u8 pad0[0x8 - 0x0];
+    s32 unk8;
+    u8 padC[0xE - 0xC];
+    s16 unkE;
+    s16 unk10;
+    s16 unk12;
+    u8 pad14[0x18 - 0x14];
+} LevelnameState;
+
+
+extern void* memset(void* dest, int value, u32 size);
+extern int* Obj_GetPlayerObject(void);
+extern void GameBit_Set(int gameBit, int value);
+extern int* gameTextGet(int textId);
+
+extern u8 lbl_80320F30[];
+extern f32 lbl_803E369C;
+
+int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+
+/*
+ * --INFO--
+ *
+ * Function: sidekickball_init
+ * EN v1.0 Address: 0x80179EB0
+ * EN v1.0 Size: 1220b
+ * EN v1.1 Address: 0x80179F40
+ * EN v1.1 Size: 1204b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined4 sidekickball_init(int obj);
+
+
+int area_getExtraSize(void);
+int area_getObjectTypeId(void);
+
+void area_free(void);
+
+void area_render(void);
+
+void area_hitDetect(void);
+
+void area_update(void);
+
+/* obj->u16_X |= MASK */
+void area_init(u16* obj);
+
+void area_release(void);
+
+void area_initialise(void);
+
+/* Trivial 4b 0-arg blr leaves. */
+void levelname_free(void);
+
+void levelname_render(void);
+
+void levelname_hitDetect(void);
+
+void levelname_release(void);
+
+void levelname_initialise(void);
+
+extern u8 framesThisStep;
+extern f32 Vec_distance(f32 * a, f32 * b);
+extern f32 mathSinf(f32 v);
+extern f32 lbl_803E36E0;
+extern f32 lbl_803E36E4;
+extern f32 lbl_803E36E8;
+
+void levelname_update(int* obj);
+
+void levelname_init(int obj, int objDef);
+
+void ProjectileSwitch_free(void)
+{
+}
+
+/* 8b "li r3, N; blr" returners. */
+int levelname_getExtraSize(void);
+int levelname_getObjectTypeId(void);
+int ProjectileSwitch_getExtraSize(void) { return 0x8; }
+
+int ProjectileSwitch_getObjectTypeId(int* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    int v = (int)*(u8*)((char*)*(int**)&((GameObject*)obj)->anim.placementData + 0x1e) >> 2;
+    int max = objAnim->modelInstance->modelCount;
+    if (v >= max)
+    {
+        v = 0;
+    }
+    return ((u32)v << 11) | 0x400;
+}
+
+int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+
+ObjectDescriptor gAreaObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)area_initialise,
+    (ObjectDescriptorCallback)area_release,
+    0,
+    (ObjectDescriptorCallback)area_init,
+    (ObjectDescriptorCallback)area_update,
+    (ObjectDescriptorCallback)area_hitDetect,
+    (ObjectDescriptorCallback)area_render,
+    (ObjectDescriptorCallback)area_free,
+    (ObjectDescriptorCallback)area_getObjectTypeId,
+    area_getExtraSize,
+};
+
 #include "ghidra_import.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
@@ -59,9 +183,7 @@ typedef struct InvisibleHitSwitchState
 } InvisibleHitSwitchState;
 
 
-extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern void ObjHitbox_SetSphereRadius(int obj, short radius);
 extern int ObjHits_GetPriorityHit(int obj, int* outArr, int* outA, uint* outB);
 extern void Sfx_PlayFromObject(int obj, int soundId);
 extern void* objFindTexture(int obj, int a, int b);
@@ -198,6 +320,7 @@ void ProjectileSwitch_hitDetect(int obj)
  */
 void ProjectileSwitch_update(int obj)
 {
+    extern uint GameBit_Get(int eventId);
     int state;
     int state2;
     void* tex;
@@ -245,6 +368,8 @@ void ProjectileSwitch_update(int obj)
  */
 void ProjectileSwitch_init(int obj, u8* initData)
 {
+    extern uint GameBit_Get(int eventId);
+    extern void ObjHitbox_SetSphereRadius(int obj, short radius);
     ObjAnimComponent* objAnim;
     int state;
     u8* linkObj;
@@ -336,6 +461,7 @@ int InvisibleHitSwitch_getExtraSize(void) { return 0xc; }
  */
 void InvisibleHitSwitch_update(int obj)
 {
+    extern uint GameBit_Get(int eventId);
     int state2;
     int state;
     int hitId;
@@ -419,5 +545,66 @@ void InvisibleHitSwitch_update(int obj)
                     (f32)((InvisibleHitSwitchPlacement*)state2)->unk1A;
             }
         }
+    }
+}
+
+/* === merged from main/dll/cloudprisoncontrol.c [8017AB20-8017AC2C) (TU re-split, docs/boundary_audit.md) === */
+#include "main/dll/cloudprisoncontrol.h"
+#include "main/game_object.h"
+
+
+extern f32 lbl_803E3750;
+
+/*
+ * --INFO--
+ *
+ * Function: InvisibleHitSwitch_init
+ * EN v1.0 Address: 0x8017AB20
+ * EN v1.0 Size: 268b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void InvisibleHitSwitch_init(int obj, u8* param_2)
+{
+    extern int GameBit_Get(int bitId);
+    extern void ObjHitbox_SetSphereRadius(int obj, int radius);
+    u8* info;
+
+    info = (u8*)*(int*)&((GameObject*)obj)->extra;
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
+    if (param_2[0x1d] == 0)
+    {
+        ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
+    }
+    else
+    {
+        {
+            f32 v = (f32)(u32)param_2[0x1d] * *(f32
+            *
+            )
+            (*(int*)&((GameObject*)obj)->anim.modelInstance + 4);
+            ((GameObject*)obj)->anim.rootMotionScale = v * lbl_803E3750;
+        }
+    }
+    ObjHitbox_SetSphereRadius(
+        obj,
+        (s16)((param_2[0x1d] * (int)*(u8*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x62)) / 64));
+    info[0] = (u8)GameBit_Get(*(s16*)(param_2 + 0x18));
+    switch ((param_2[0x23] & 0xe) >> 1)
+    {
+    case 0:
+    default:
+        info[1] = 5;
+        break;
+    case 1:
+        info[1] = 0x10;
+        break;
+    case 2:
+        info[1] = 0x15;
+        break;
     }
 }

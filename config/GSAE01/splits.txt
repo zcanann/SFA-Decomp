@@ -660,23 +660,17 @@ main/dll/transporter.c:
 	.text       start:0x801755CC end:0x80178338
 
 main/dll/autoTransporter.c:
-	.text       start:0x80178338 end:0x801797A4
-
-main/dll/sidekickball.c:
-	.text       start:0x801797A4 end:0x80179A2C
+	.text       start:0x80178338 end:0x801793A4
 
 main/dll/fogcontrol.c:
-	.text       start:0x80179A2C end:0x80179EB0
+	.text       start:0x801793A4 end:0x8017A00C
 
 main/dll/tFrameAnimator.c:
-	.text       start:0x80179EB0 end:0x8017A38C
+	.text       start:0x8017A00C end:0x8017A350
 	.data       start:0x80320F98 end:0x80320FD0
 
 main/dll/screenOverlay.c:
-	.text       start:0x8017A38C end:0x8017AB20
-
-main/dll/cloudprisoncontrol.c:
-	.text       start:0x8017AB20 end:0x8017AC2C
+	.text       start:0x8017A350 end:0x8017AC2C
 
 main/dll/texScroll.c:
 	.text       start:0x8017AC2C end:0x8017ADB4

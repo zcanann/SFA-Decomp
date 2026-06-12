@@ -42,30 +42,7 @@ int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 sidekickball_init(int obj)
-{
-    u8 pathFlag;
-    u8* state;
-    int objDef;
-
-    state = ((GameObject*)obj)->extra;
-    pathFlag = 5;
-    memset(state, 0, 0x2cc);
-    Obj_GetPlayerObject();
-    state[0x274] = 0;
-    ((TFrameAnimatorState*)state)->unk26C = lbl_803E369C;
-    ((GameObject*)obj)->objectFlags |= 0x2000;
-    objDef = *(int*)&((GameObject*)obj)->anim.hitReactState;
-    ((TFrameAnimatorState*)state)->primaryRadius = (f32)((ObjHitsPriorityState*)objDef)->primaryRadius;
-    (*gPathControlInterface)->init(state, 0, 0x40007, 1);
-    (*gPathControlInterface)->setLocalPointCollision(state, 1, lbl_80320F30, state + 0x268, 1);
-    (*gPathControlInterface)->setup(state, 1, lbl_80320F30, state + 0x268, &pathFlag);
-    (*gPathControlInterface)->attachObject((void*)obj, state);
-    ObjHits_DisableObject(obj);
-    state[0x25b] = 0;
-    ObjMsg_AllocQueue((void*)obj, 1);
-    GameBit_Set(0x3f8, 0);
-}
+undefined4 sidekickball_init(int obj);
 
 
 int area_getExtraSize(void) { return 0x0; }
@@ -212,26 +189,14 @@ void levelname_init(int obj, int objDef)
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
-void ProjectileSwitch_free(void)
-{
-}
+void ProjectileSwitch_free(void);
 
 /* 8b "li r3, N; blr" returners. */
 int levelname_getExtraSize(void) { return 0x18; }
 int levelname_getObjectTypeId(void) { return 0x0; }
-int ProjectileSwitch_getExtraSize(void) { return 0x8; }
+int ProjectileSwitch_getExtraSize(void);
 
-int ProjectileSwitch_getObjectTypeId(int* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    int v = (int)*(u8*)((char*)*(int**)&((GameObject*)obj)->anim.placementData + 0x1e) >> 2;
-    int max = objAnim->modelInstance->modelCount;
-    if (v >= max)
-    {
-        v = 0;
-    }
-    return ((u32)v << 11) | 0x400;
-}
+int ProjectileSwitch_getObjectTypeId(int* obj);
 
 int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
