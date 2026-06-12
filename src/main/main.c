@@ -3,6 +3,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/gamebits.h"
 #include "main/main.h"
+#include "main/objtexture.h"
 #include "main/objlib.h"
 #include "main/resource.h"
 
@@ -44,8 +45,20 @@ extern f32 lbl_803E6194;
 extern f32 lbl_803E6198;
 extern f32 lbl_803E61B0;
 extern f32 lbl_803E61B4;
+extern f64 lbl_803E61B8;
+extern f32 lbl_803E61E0;
+extern f32 lbl_803E61E4;
+extern f32 lbl_803E61E8;
+extern f32 lbl_803E61EC;
+extern f32 lbl_803E61F0;
+extern f32 lbl_803E61F4;
+extern f32 lbl_803E61F8;
+extern f32 lbl_803E61FC;
+extern f32 lbl_803E6200;
+extern f32 lbl_803E6204;
+extern f32 lbl_803E6208;
+extern f64 lbl_803E6210;
 extern void* getTrickyObject(void);
-extern int* objFindTexture(int obj, int idx, int p3);
 extern f32 mathSinf(f32 x);
 
 void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
@@ -296,7 +309,7 @@ void fn_801FD6B4(int obj)
     int def;
     f32 speed;
     f32 c;
-    int* tex;
+    ObjTextureRuntimeSlot* tex;
     f32 v;
     struct
     {
@@ -345,27 +358,25 @@ void fn_801FD6B4(int obj)
     *(s8*)&((GameObject*)obj)->anim.alpha = (int)((speed < lbl_803E616C)
                                                       ? lbl_803E616C
                                                       : ((speed > lbl_803E6170) ? lbl_803E6170 : speed));
-    tex = objFindTexture(obj, 0, 0);
+    tex = objFindTexture((void*)obj, 0, 0);
     if (tex != NULL)
     {
-        v = (f32)(int) * (s16*)((u8*)tex + 0xa) + lbl_803E6160;
+        v = (f32)(int)tex->offsetT + lbl_803E6160;
         if (v >= lbl_803E6194)
         {
             v -= lbl_803E6194;
         }
-        *(s16*)((u8*)tex + 0xa) = (s16)(int)
-        v;
+        tex->offsetT = (s16)(int)v;
     }
-    tex = objFindTexture(obj, 1, 0);
+    tex = objFindTexture((void*)obj, 1, 0);
     if (tex != NULL)
     {
-        v = (f32)(int) * (s16*)((u8*)tex + 0xa) + lbl_803E6198;
+        v = (f32)(int)tex->offsetT + lbl_803E6198;
         if (v >= lbl_803E6194)
         {
             v -= lbl_803E6194;
         }
-        *(s16*)((u8*)tex + 0xa) = (s16)(int)
-        v;
+        tex->offsetT = (s16)(int)v;
     }
 }
 

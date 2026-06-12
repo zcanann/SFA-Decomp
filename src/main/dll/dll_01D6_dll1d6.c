@@ -11,6 +11,7 @@
 #include "main/dll/dll1d6state_struct.h"
 #include "main/dll/explosion_state.h"
 #include "main/effect_interfaces.h"
+#include "main/objtexture.h"
 #include "main/objseq.h"
 
 /*
@@ -290,12 +291,11 @@ void dll_1D6_init(int* obj, u8* params)
 
 void dll_1D6_update(int* obj)
 {
-    extern int* objFindTexture(int* obj, int a, int b);
     extern int Sfx_PlayFromObject(int obj, int sfxId);
     Dll1D6State* extra;
     int* def;
     int* model;
-    int* tex;
+    ObjTextureRuntimeSlot* tex;
     int* player;
     f32 mtx[20];
     s16 ang[6];
@@ -359,21 +359,21 @@ void dll_1D6_update(int* obj)
     }
     tex = objFindTexture(obj, 0, 0);
     {
-        s16 v = -*(s16*)((char*)tex + 0xa) + 256;
+        s16 v = -tex->offsetT + 256;
         if (v > 2048)
         {
             v = v - 2048;
         }
-        *(s16*)((char*)tex + 0xa) = -v;
+        tex->offsetT = -v;
     }
     tex = objFindTexture(obj, 1, 0);
     {
-        s16 v = -*(s16*)((char*)tex + 0xa) + 160;
+        s16 v = -tex->offsetT + 160;
         if (v > 2048)
         {
             v = v - 2048;
         }
-        *(s16*)((char*)tex + 0xa) = -v;
+        tex->offsetT = -v;
     }
     player = (int*)Obj_GetPlayerObject();
     mtx[0] = -((GameObject*)obj)->anim.localPosX;

@@ -14,6 +14,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2flameburst.h"
 #include "main/objhits.h"
+#include "main/objtexture.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 
@@ -116,7 +117,6 @@ extern void* Obj_GetPlayerObject(void);
 extern void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
 extern void dimmagicbridge_updateVertexWave(int obj, u8* sub);
 extern int EmissionController_IsLingering(void* player);
-extern void* objFindTexture(int obj, int a, int b);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 lbl_803E4A00;
@@ -534,25 +534,25 @@ void dimwooddoor2_init(u8* obj, u8* params);
 #pragma dont_inline on
 void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
 {
-    u8* tex;
+    ObjTextureRuntimeSlot* tex;
     s32 v;
 
-    tex = (u8*)objFindTexture(arg1, 0, 0);
-    *(s16*)(tex + 10) += 0x14;
-    if (*(s16*)(tex + 10) > 10000)
+    tex = objFindTexture((void*)arg1, 0, 0);
+    tex->offsetT = (s16)(tex->offsetT + 0x14);
+    if (tex->offsetT > 10000)
     {
-        *(s16*)(tex + 10) -= 10000;
+        tex->offsetT = (s16)(tex->offsetT - 10000);
     }
-    *(s16*)(tex + 8) += 10;
-    if (*(s16*)(tex + 8) > 10000)
+    tex->offsetS = (s16)(tex->offsetS + 10);
+    if (tex->offsetS > 10000)
     {
-        *(s16*)(tex + 8) -= 10000;
+        tex->offsetS = (s16)(tex->offsetS - 10000);
     }
-    tex = (u8*)objFindTexture(arg1, 1, 0);
-    *(s16*)(tex + 10) += 0x1e;
-    if (*(s16*)(tex + 10) > 10000)
+    tex = objFindTexture((void*)arg1, 1, 0);
+    tex->offsetT = (s16)(tex->offsetT + 0x1e);
+    if (tex->offsetT > 10000)
     {
-        *(s16*)(tex + 10) -= 10000;
+        tex->offsetT = (s16)(tex->offsetT - 10000);
     }
     v = (s32) * (u16*)(obj + 0x60) + (s32)framesThisStep * 0x100;
     if (v > 0xffff) v = v - 0xffff;

@@ -7,6 +7,7 @@
 #include "main/dll/dll16cstate_struct.h"
 #include "main/dll/magiclightstate_struct.h"
 #include "main/dll/crrockfall_types.h"
+#include "main/objtexture.h"
 #include "main/objseq.h"
 
 /*
@@ -135,7 +136,6 @@ extern void ObjModel_SetBlendChannelWeight(int* model, int channel, f32 weight);
 extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4, lbl_803E4798, lbl_803E4788;
 extern s16 lbl_80323818[], lbl_80323824[];
 extern void mm_free(void* p);
-extern int* objFindTexture(int* obj, int a, int b);
 extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;
 
 static inline int* DIMcannon_GetActiveModel(void* obj)
@@ -340,7 +340,7 @@ void imspacethruster_update(int* obj)
     ImSpaceThrusterState* state;
     int mode;
     s16 v;
-    int* tex;
+    ObjTextureRuntimeSlot* tex;
 
     state = ((GameObject*)obj)->extra;
     if (((GameObject*)obj)->anim.parent != NULL)
@@ -404,21 +404,21 @@ void imspacethruster_update(int* obj)
                 *(int*)&((GameObject*)obj)->anim.parent, a, state->kind);
         }
         tex = objFindTexture(obj, 0, 0);
-        v = -*(s16*)((char*)tex + 0xa);
+        v = -tex->offsetT;
         v += 0x100;
         if (v > 0x800)
         {
             v -= 0x800;
         }
-        *(s16*)((char*)tex + 0xa) = -v;
+        tex->offsetT = -v;
         tex = objFindTexture(obj, 1, 0);
-        v = -*(s16*)((char*)tex + 0xa);
+        v = -tex->offsetT;
         v += 0xa0;
         if (v > 0x800)
         {
             v -= 0x800;
         }
-        *(s16*)((char*)tex + 0xa) = -v;
+        tex->offsetT = -v;
     }
 }
 

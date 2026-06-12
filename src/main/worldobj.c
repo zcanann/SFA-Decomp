@@ -2,6 +2,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
+#include "main/objtexture.h"
 #include "main/screen_transition.h"
 #include "main/worldobj.h"
 
@@ -95,7 +96,6 @@ extern void modelLightStruct_setDirection(int light, f32 a, f32 b, f32 c);
 extern void objfx_spawnFlaggedTrailBurst(int obj, f32 scale, int a, int b, int c, void* vec);
 extern void ObjLink_AttachChild(int obj, int child, int slot);
 extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32* x, f32* y, f32* z, int flag);
-extern int objFindTexture(int obj, int a, int b);
 extern u8* Camera_GetCurrentViewSlot(void);
 extern f32 lbl_8032A200[];
 extern f32 lbl_803E667C;
@@ -284,7 +284,7 @@ void worldobj_update(int obj)
     int tmp;
     u8 i;
     int child;
-    int tex;
+    ObjTextureRuntimeSlot* tex;
     u8* view;
     f32 dx;
     f32 dy;
@@ -374,16 +374,16 @@ void worldobj_update(int obj)
             ((GameObject*)obj)->unkF8 = ObjList_FindObjectById(0x4325b);
             ObjLink_AttachChild(obj, ((GameObject*)obj)->unkF8, 0);
         }
-        tex = objFindTexture(obj, 0, 0);
-        if ((void*)tex != NULL)
+        tex = objFindTexture((void*)obj, 0, 0);
+        if (tex != NULL)
         {
-            tmp = (s16) - *(s16*)(tex + 8);
+            tmp = (s16)-tex->offsetS;
             tmp -= 2;
             if ((s16)tmp < 0)
             {
                 tmp += 0x2710;
             }
-            *(s16*)(tex + 8) = (s16) - tmp;
+            tex->offsetS = (s16)-tmp;
         }
         break;
     case 0x5dd:

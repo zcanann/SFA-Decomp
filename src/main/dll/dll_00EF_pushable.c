@@ -7,11 +7,11 @@
 #include "main/obj_placement.h"
 #include "main/dll/dll_00EF_pushable.h"
 #include "main/objhits.h"
+#include "main/objtexture.h"
 #include "main/objseq.h"
 
 extern uint GameBit_Get(int bit);
 extern u32 randomGetRange(int min, int max);
-extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
 extern int ObjMsg_Pop(int obj, int* outMessage, int* outSender, int* outParam);
 extern f32 sqrtf(f32 x);
 
@@ -100,7 +100,7 @@ void fn_80174A80(int obj, PushableState* ext)
 {
     extern void GameBit_Set(int bit, int value); /* #57 */
     int def;
-    u8* tex;
+    ObjTextureRuntimeSlot* tex;
     f32 f;
     f32 v;
     f32 lim;
@@ -121,7 +121,7 @@ void fn_80174A80(int obj, PushableState* ext)
     ext->unk_F0 = f;
     ext->nearestObj = NULL;
     GameBit_Set(ext->gameBit, 0);
-    tex = (u8*)objFindTexture(obj, 0, 0);
+    tex = objFindTexture((void*)obj, 0, 0);
 
     ext->eyePosX = ext->eyePosX + ext->eyeDriftSpeedX;
     v = ext->eyePosX;
@@ -147,9 +147,9 @@ void fn_80174A80(int obj, PushableState* ext)
         ext->eyePosY = lim;
     }
 
-    tex[0xc] = 10;
-    tex[0xd] = 10;
-    tex[0xe] = 10;
+    tex->colorR = 10;
+    tex->colorG = 10;
+    tex->colorB = 10;
 }
 
 typedef struct Dll138PoseCopy
@@ -254,10 +254,10 @@ void fn_80174BFC(int obj, int ext)
                                 ((PushableState*)ext)->flags &= ~1;
                                 if (hit.id == ((PushableState*)ext)->requiredHitId)
                                 {
-                                    int* tex = objFindTexture(obj, 0, 0);
+                                    ObjTextureRuntimeSlot* tex = objFindTexture((void*)obj, 0, 0);
                                     if (tex != NULL)
                                     {
-                                        *tex = 0x100;
+                                        tex->textureId = 0x100;
                                     }
                                     GameBit_Set(*(s16*)(def + 0x18), 1);
                                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= 8;

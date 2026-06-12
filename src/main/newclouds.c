@@ -3,6 +3,7 @@
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/object_transform.h"
+#include "main/objtexture.h"
 #include "main/resource.h"
 
 typedef struct LightningEffect
@@ -340,7 +341,6 @@ void newclouds_snowKillSnowCloud(int cloudId, int flag)
 
 extern int ObjModel_GetRenderOp(int model, int x);
 extern int Shader_getLayer(int renderOp, int x);
-extern int* objFindTexture(int obj, int idx, int p3);
 extern void* textureIdxToPtr(int idx);
 extern void* lbl_8039AB28[];
 extern f32 lbl_803DF2B0;
@@ -349,19 +349,19 @@ extern f32 lbl_803DF2B4;
 #pragma dont_inline off
 void* cloudGetLayerTextureSize(f32* out1, f32* out2)
 {
-    int* tex;
+    ObjTextureRuntimeSlot* tex;
     int* layer;
 
     if (lbl_8039AB28[0] != NULL)
     {
         layer = (int*)Shader_getLayer(
             ObjModel_GetRenderOp(*(int*)Obj_GetActiveModel(lbl_8039AB28[0]), 0), 0);
-        tex = objFindTexture((int)lbl_8039AB28[0], 0, 0);
+        tex = objFindTexture(lbl_8039AB28[0], 0, 0);
         if (tex != NULL)
         {
             f32 scale = lbl_803DF2B0;
-            *out1 = scale * (f32) * (s16*)((char*)tex + 8);
-            *out2 = scale * (f32) * (s16*)((char*)tex + 10);
+            *out1 = scale * (f32)tex->offsetS;
+            *out2 = scale * (f32)tex->offsetT;
         }
         else
         {

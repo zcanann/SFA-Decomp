@@ -8,6 +8,7 @@
 #include "main/dll/dll16cstate_struct.h"
 #include "main/dll/magiclightstate_struct.h"
 #include "main/dll/crrockfall_types.h"
+#include "main/objtexture.h"
 #include "main/objseq.h"
 
 /*
@@ -141,7 +142,6 @@ extern f32 lbl_803E4788;
 extern void Music_Trigger(int id, int p2);
 extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4, lbl_803E4798, lbl_803E4788;
 extern int ObjList_FindObjectById(int id);
-extern int* objFindTexture(int* obj, int a, int b);
 extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C;
 extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;
 
@@ -339,11 +339,11 @@ int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     ImAnimSpacecraftState* state;
     int i;
-    int* tex;
+    ObjTextureRuntimeSlot* tex;
 
     state = ((GameObject*)obj)->extra;
     tex = objFindTexture(obj, 1, 0);
-    *tex = ((state->flags >> 1 & 1) ^ 1) << 8;
+    tex->textureId = ((state->flags >> 1 & 1) ^ 1) << 8;
     if (!(state->flags & 2))
     {
         if ((state->blinkTimer -= framesThisStep) < 0)
@@ -368,7 +368,7 @@ int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         (*gPartfxInterface)->spawnObject(obj, 0x133, lbl_803AC948, 4, -1, NULL);
     }
     tex = objFindTexture(obj, 0, 0);
-    *tex = 0x100;
+    tex->textureId = 0x100;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
         u32 ev = animUpdate->eventIds[i];

@@ -19,6 +19,7 @@ extern uint GameBit_Get(int eventId);
 #include "main/dll/path_control_interface.h"
 #include "main/dll/pushable.h"
 #include "main/objanim_internal.h"
+#include "main/objtexture.h"
 #include "main/game_object.h"
 #include "main/resource.h"
 
@@ -35,7 +36,6 @@ extern void* getTrickyObject(void);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int fn_80295A04(void* player, int p2);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32* dist);
-extern int* objFindTexture(int obj, int a, int b);
 extern void fn_80175428(int obj, int p2);
 extern f32 lbl_803E352C;
 extern f64 lbl_803E3530;
@@ -57,7 +57,6 @@ extern f32 lbl_803E3528;
 
 void fn_80174588(int obj, PushableState* p2)
 {
-    extern int*objFindTexture(int, int, int);
     int data = *(int*)&((GameObject*)obj)->anim.placementData;
 
     switch (*(int*)(data + 0x14))
@@ -77,12 +76,12 @@ void fn_80174588(int obj, PushableState* p2)
 
     if (GameBit_Get(*(s16*)(data + 0x18)) != 0)
     {
-        int* tex;
+        ObjTextureRuntimeSlot* tex;
         p2->flags = (u16)(p2->flags | 0x80);
-        tex = objFindTexture(obj, 0, 0);
+        tex = objFindTexture((void*)obj, 0, 0);
         if (tex != NULL)
         {
-            *tex = 256;
+            tex->textureId = 256;
         }
     }
 }
@@ -126,7 +125,7 @@ int fn_80174438(int obj, PushableState* state)
 int fn_80174668(int obj, PushableState* state)
 {
     u8 flag;
-    int* tex;
+    ObjTextureRuntimeSlot* tex;
     void* effectResource;
     f32 dy;
     f32 dx;
@@ -192,7 +191,7 @@ int fn_80174668(int obj, PushableState* state)
         flag = 1;
         GameBit_Set(0x1c9, 1);
     }
-    tex = (int*)objFindTexture(obj, 0, 0);
+    tex = objFindTexture((void*)obj, 0, 0);
     state->blinkPhase = state->blinkStep * timeDelta + state->blinkPhase;
     if (state->blinkPhase >= state->blinkInterval)
     {
@@ -244,12 +243,9 @@ int fn_80174668(int obj, PushableState* state)
             }
             p1 = state->eyePosX * (lbl_803E3570 + state->blinkPhase);
             p2 = state->eyePosY * (lbl_803E3570 + state->blinkPhase);
-            *(u8*)((char*)tex + 0xc) = (u8)(int)
-            state->eyeOpenAmount;
-            *(u8*)((char*)tex + 0xd) = (u8)(int)
-            p1;
-            *(u8*)((char*)tex + 0xe) = (u8)(int)
-            p2;
+            tex->colorR = (u8)(int)state->eyeOpenAmount;
+            tex->colorG = (u8)(int)p1;
+            tex->colorB = (u8)(int)p2;
         }
     }
     return 0;
