@@ -133,81 +133,7 @@ extern f32 lbl_803E4D1C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossgut2_updateTracking(int obj, int state)
-{
-    int curve;
-    int r30v;
-    s16 delta;
-    s16 angle;
-    int q;
-    f32 fv;
-    int player;
-    int rel;
-
-    curve = ((Dimbossgut2State*)state)->unk40C;
-    r30v = ((Dimbossgut2State*)state)->unk3DC;
-    if ((((Dimbossgut2State*)state)->unk400 & 8) != 0)
-    {
-        if ((Curve_AdvanceAlongPath(r30v, *(f32*)(curve + 0x10)) != 0) || (*(int*)(r30v + 0x10) != 0))
-        {
-            if ((*gRomCurveInterface)->goNextPoint((void*)r30v) != 0)
-            {
-                ((Dimbossgut2State*)state)->unk400 = ((Dimbossgut2State*)state)->unk400 & ~0x8;
-            }
-        }
-        angle = (s16)(getAngle(*(f32*)(r30v + 0x74), *(f32*)(r30v + 0x7c)) + 0x8000);
-        delta = (s16)(angle - (u16) * (s16*)obj);
-        if (delta > 0x8000)
-        {
-            delta = (s16)(delta - 0xffff);
-        }
-        if (delta < -0x8000)
-        {
-            delta = (s16)(delta + 0xffff);
-        }
-        *(s16*)obj = angle;
-        *(f32*)(curve + 4) = *(f32*)(curve + 4) + (f32)(delta >> 4);
-        if (*(f32*)(curve + 0x10) < lbl_803E4D14)
-        {
-            *(f32*)(curve + 0x10) = *(f32*)(curve + 0x10) + lbl_803E4D18;
-        }
-        q = delta / 0xb6;
-        if (q < 0)
-        {
-            q = -q;
-        }
-        fv = (f32)(s32)
-        q * lbl_803E4CD4;
-        if (fv > lbl_803E4CF0)
-        {
-            *(f32*)(curve + 0x10) = *(f32*)(curve + 0x10) / fv;
-            *(f32*)(curve + 8) = *(f32*)(curve + 8) + lbl_803E4D1C;
-        }
-        if (*(f32*)(curve + 8) > lbl_803E4CD8)
-        {
-            *(f32*)(curve + 8) = *(f32*)(curve + 8) / lbl_803E4D10;
-        }
-        ((GameObject*)obj)->anim.localPosX = *(f32*)(r30v + 0x68);
-        ((GameObject*)obj)->anim.localPosZ = *(f32*)(r30v + 0x70);
-    }
-    else
-    {
-        player = Obj_GetPlayerObject();
-        rel = (int)(u16)getAngle(-(*(f32*)(player + 0x18) - ((GameObject*)obj)->anim.worldPosX),
-                                 -(*(f32*)(player + 0x20) - ((GameObject*)obj)->anim.worldPosZ)) -
-            (int)(u16) * (s16*)obj;
-        if (rel > 0x8000)
-        {
-            rel = rel - 0xffff;
-        }
-        if (rel < -0x8000)
-        {
-            rel = rel + 0xffff;
-        }
-        *(s16*)obj = (s16)(*(s16*)(long)obj + rel * (u8)framesThisStep / 3);
-    }
-    return;
-}
+void dimbossgut2_updateTracking(int obj, int state);
 
 /*
  * --INFO--
@@ -222,29 +148,7 @@ void dimbossgut2_updateTracking(int obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossgut2_free(int arg9)
-{
-    int obj = arg9;
-    uint handle;
-    int state;
-    void* childObj;
-
-    state = *(int*)&((GameObject*)obj)->extra;
-    handle = *(uint*)(((Dimbossgut2State*)state)->unk40C + 0x18);
-    if (handle != 0)
-    {
-        ModelLightStruct_free((void*)handle);
-    }
-    ObjGroup_RemoveObject(obj, 3);
-    childObj = ((GameObject*)obj)->childObjs[0];
-    if (childObj != 0)
-    {
-        Obj_FreeObject((int)childObj);
-        *(undefined4*)(obj + 200) = 0;
-    }
-    (*(void (*)(int, int, int))(*(int*)(*gBaddieControlInterface + 0x40)))(obj, state, 0);
-    return;
-}
+void dimbossgut2_free(int arg9);
 
 /*
  * --INFO--
@@ -259,23 +163,7 @@ void dimbossgut2_free(int arg9)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossgut2_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
-{
-    u8* light;
-
-    light = ((GameObject*)obj)->extra;
-    if (visible != 0)
-    {
-        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, param_2, param_3, param_4, param_5,
-                                                                      lbl_803E4CF0);
-        light = *(u8**)(((Dimbossgut2State*)light)->unk40C + 0x18);
-        if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0))
-        {
-            queueGlowRender(light);
-        }
-    }
-    return;
-}
+void dimbossgut2_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible);
 
 /*
  * --INFO--
@@ -290,91 +178,7 @@ void dimbossgut2_render(int obj, int param_2, int param_3, int param_4, int para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossgut2_update(int obj)
-{
-    int state;
-    int iVar;
-    uint uval;
-    uint n;
-    float* pfVar4;
-    int val;
-    f32 fdiff;
-    f32 fscale;
-    u8* p;
-    uint msgB;
-    uint msgA;
-    uint msgC;
-    struct
-    {
-        u8 pad[8];
-        f32 f54;
-        f32 f50;
-        f32 f4c;
-        f32 f48;
-    } stk;
-
-    state = *(int*)&((GameObject*)obj)->extra;
-    if ((((GameObject*)obj)->unkF4 == 0) &&
-        ((((GameObject*)obj)->anim.parent != NULL ||
-            (iVar = objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                        ((GameObject*)obj)->anim.localPosZ),
-                iVar >= 0))))
-    {
-        msgC = 0;
-        do
-        {
-            iVar = ObjMsg_Pop(obj, &msgA, &msgB, &msgC);
-        }
-        while (iVar != 0);
-        pfVar4 = *(float**)&((Dimbossgut2State*)state)->unk40C;
-        if ((*pfVar4 < lbl_803E4CD0) && (pfVar4[4] < lbl_803E4CD4))
-        {
-            fdiff = pfVar4[3] - ((GameObject*)obj)->anim.localPosY;
-            if (fdiff < lbl_803E4CD8)
-            {
-                fdiff = -fdiff;
-            }
-            if ((fdiff < lbl_803E4CDC) &&
-                (stk.f4c = pfVar4[3], uval = randomGetRange(0x1e, 0x3c),
-                    (int)(uint) * (u16*)((int)pfVar4 + 0x16) > (int)uval))
-            {
-                fscale = lbl_803E4CE0 * pfVar4[4];
-                stk.f50 = ((GameObject*)obj)->anim.localPosX -
-                    fscale * mathSinf(lbl_803E4CE4 * (f32) * (s16*)obj / lbl_803E4CE8);
-                stk.f48 = ((GameObject*)obj)->anim.localPosZ -
-                    fscale * mathCosf(lbl_803E4CE4 * (f32) * (s16*)obj / lbl_803E4CE8);
-                stk.f54 = lbl_803E4CEC * (lbl_803E4CF0 - fdiff / lbl_803E4CDC);
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x32b, &stk, 1, -1,
-                                                 NULL);
-                *(u16*)((int)pfVar4 + 0x16) = 0;
-            }
-        }
-        *(u16*)((int)pfVar4 + 0x16) += (u8)framesThisStep;
-        fn_801BEEA0((s16*)obj, (u8*)state);
-        dimbossgut2_updateTracking(obj, state);
-        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E4D20, timeDelta, NULL);
-        ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 9;
-        ((ObjHitsPriorityState*)*(int*)&((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
-        ObjHits_RegisterActiveHitVolumeObject(obj);
-        val = ((Dimbossgut2State*)state)->unk40C;
-        p = *(u8**)(val + 0x18);
-        if ((p != NULL) && (p[0x2f8] != 0) && (p[0x4c] != 0))
-        {
-            n = (p[0x2f9] + *(s8*)(p + 0x2fa)) & 0xffff;
-            if (0xc < n)
-            {
-                n = (n + randomGetRange(-12, 12)) & 0xffff;
-                if (0xff < n)
-                {
-                    n = 0xff;
-                    *(u8*)(*(int*)(val + 0x18) + 0x2fa) = 0;
-                }
-            }
-            *(u8*)(*(int*)(val + 0x18) + 0x2f9) = (u8)n;
-        }
-    }
-    return;
-}
+void dimbossgut2_update(int obj);
 
 /*
  * --INFO--
@@ -403,66 +207,7 @@ extern f32 lbl_803E4D2C;
 extern f32 lbl_803E4D30;
 extern f32 lbl_803E4D04;
 
-void dimbossgut2_init(int obj, int def, int p3)
-{
-    int state;
-    int p;
-    int count;
-    int i;
-    int* list;
-    u8 flags;
-    f32 z;
-
-    state = *(int*)&((GameObject*)obj)->extra;
-    flags = 0x16;
-    if (p3 != 0)
-    {
-        flags |= 1;
-    }
-    (*(void (*)(int, int, int, int, int, int, u8, f32))(*(int*)(*gBaddieControlInterface + 0x58)))(
-        obj, def, state, 0, 0, 0x102, flags, lbl_803E4CE0);
-    ((GameObject*)obj)->animEventCallback = NULL;
-    p = ((Dimbossgut2State*)state)->unk40C;
-    z = lbl_803E4CD8;
-    *(f32*)(p + 0x0) = z;
-    *(f32*)(p + 0x4) = z;
-    *(s16*)(p + 0x14) = randomGetRange(-0x7fff, 0x7fff);
-    z = lbl_803E4CD8;
-    *(f32*)(p + 0x8) = z;
-    *(s16*)(p + 0x16) = 0;
-    *(f32*)(p + 0x10) = z;
-    count = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                 ((GameObject*)obj)->anim.localPosZ, &list, 0, 0);
-    *(f32*)(p + 0xc) = lbl_803E4CD8;
-    if (count != 0)
-    {
-        *(f32*)(p + 0xc) = lbl_803E4D24;
-        for (i = 0; i < count; i++)
-        {
-            f32 d = *(f32*)list[i] - ((GameObject*)obj)->anim.localPosY;
-            if (*(s8*)(list[i] + 0x14) == 0xe)
-            {
-                if (d > *(f32*)(p + 0xc))
-                {
-                    *(f32*)(p + 0xc) = d;
-                }
-            }
-        }
-    }
-    *(f32*)(p + 0xc) += ((GameObject*)obj)->anim.localPosY;
-    ObjAnim_SetCurrentMove(obj, 0, (f32)(int)randomGetRange(0, 0x63) / lbl_803E4D28, 0);
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E4D20, timeDelta, NULL);
-    *(int*)(p + 0x18) = (int)objCreateLight(obj, 1);
-    if (*(void**)(p + 0x18) != NULL)
-    {
-        modelLightStruct_setLightKind(*(int*)(p + 0x18), 2);
-        modelLightStruct_setDiffuseColor(*(int*)(p + 0x18), 0, 255, 0, 0);
-        lightSetFieldBC_8001db14(*(int*)(p + 0x18), 1);
-        modelLightStruct_setDistanceAttenuation(*(int*)(p + 0x18), lbl_803E4D2C, lbl_803E4CE0);
-        modelLightStruct_setupGlow(*(int*)(p + 0x18), 0, 0, 255, 0, 127, lbl_803E4D30);
-        modelLightStruct_setGlowProjectionRadius(*(int*)(p + 0x18), lbl_803E4D04);
-    }
-}
+void dimbossgut2_init(int obj, int def, int p3);
 
 /*
  * --INFO--
@@ -749,21 +494,13 @@ void DIMbossspit_init(int obj)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void dimbossgut2_func11(void)
-{
-}
+void dimbossgut2_func11(void);
 
-void dimbossgut2_hitDetect(void)
-{
-}
+void dimbossgut2_hitDetect(void);
 
-void dimbossgut2_release(void)
-{
-}
+void dimbossgut2_release(void);
 
-void dimbossgut2_initialise(void)
-{
-}
+void dimbossgut2_initialise(void);
 
 void DIMbossspit_hitDetect(void)
 {
@@ -777,37 +514,21 @@ void DIMbossspit_initialise(void)
 {
 }
 
-void magicmaker_free(void)
-{
-}
+void magicmaker_free(void);
 
-void magicmaker_hitDetect(void)
-{
-}
+void magicmaker_hitDetect(void);
 
-void magicmaker_init(void)
-{
-}
+void magicmaker_init(void);
 
-void magicmaker_release(void)
-{
-}
+void magicmaker_release(void);
 
-void magicmaker_initialise(void)
-{
-}
+void magicmaker_initialise(void);
 
-void dimbosscrackpar_hitDetect(void)
-{
-}
+void dimbosscrackpar_hitDetect(void);
 
-void dimbosscrackpar_release(void)
-{
-}
+void dimbosscrackpar_release(void);
 
-void dimbosscrackpar_initialise(void)
-{
-}
+void dimbosscrackpar_initialise(void);
 
 /*
  * --INFO--
@@ -832,117 +553,19 @@ extern u16 lbl_80325CE8[];
 extern f32 lbl_803E4D8C;
 extern f32 lbl_803E4D88;
 
-void magicmaker_update(int obj)
-{
-    int def;
-    char* newobj;
-    int n;
-    int count;
-    int* objs;
-    int i;
-    int j;
-    char* setup;
-    int o;
-
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
-    if (Obj_IsLoadingLocked() != 0)
-    {
-        if ((u32)GameBit_Get(0x26b) != 0u)
-        {
-            GameBit_Set(0x26b, 0);
-            objs = ObjGroup_GetObjects(4, &count);
-            n = 0;
-            for (i = 0; i < count; i++)
-            {
-                o = *objs;
-                for (j = 0; j < 6; j++)
-                {
-                    if (*(s16*)(o + 0x46) == lbl_80325CE8[j])
-                    {
-                        n++;
-                    }
-                }
-                objs++;
-            }
-            if (n < 10)
-            {
-                setup = Obj_AllocObjectSetup(0x30, lbl_80325CE8[randomGetRange(0, 5)]);
-                if (setup != NULL)
-                {
-                    *(u8*)(setup + 0x1a) = 0x14;
-                    *(s16*)(setup + 0x2c) = -1;
-                    *(s16*)(setup + 0x1c) = -1;
-                    ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX + (f32)(int)
-                    randomGetRange(-0x15e, 0x15e);
-                    ((ObjPlacement*)setup)->posY = lbl_803E4D8C + ((GameObject*)obj)->anim.localPosY;
-                    ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ + (f32)(int)
-                    randomGetRange(-0x15e, 0x15e);
-                    *(s16*)(setup + 0x24) = -1;
-                    *(u8*)(setup + 0x4) = ((MagicmakerPlacement*)def)->unk4;
-                    *(u8*)(setup + 0x6) = ((MagicmakerPlacement*)def)->unk6;
-                    *(u8*)(setup + 0x5) = ((MagicmakerPlacement*)def)->unk5;
-                    *(u8*)(setup + 0x7) = ((MagicmakerPlacement*)def)->unk7;
-                    *(s16*)(setup + 0x2e) = 3;
-                    newobj = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                             *(int*)&((GameObject*)obj)->anim.parent);
-                    if (newobj != NULL)
-                    {
-                        i = 3;
-                        do
-                        {
-                            hitDetectFn_80097070(newobj, lbl_803E4D88, 2, 2, 0x64, 0);
-                            i--;
-                        }
-                        while (i != 0);
-                    }
-                }
-            }
-        }
-    }
-}
+void magicmaker_update(int obj);
 
 extern f32 lbl_803E4D98;
 
-int dimbosscrackpar_SeqFn(int* obj)
-{
-    int* side = *(int**)&((GameObject*)obj)->anim.placementData;
-    if ((u32)GameBit_Get(((DimbosscrackparPlacement*)side)->unk1E) == 0u)
-    {
-        return 0;
-    }
-    (*gPartfxInterface)->spawnObject(
-        obj, ((DimbosscrackparPlacement*)side)->unk1A + 1222, NULL, 2, -1, NULL);
-    (*gPartfxInterface)->spawnObject(obj, 1224, NULL, 2, -1, NULL);
-    return 0;
-}
+int dimbosscrackpar_SeqFn(int* obj);
 
-void dimbosscrackpar_update(int* obj)
-{
-    int* side = *(int**)&((GameObject*)obj)->anim.placementData;
-    if ((u32)GameBit_Get(((DimbosscrackparPlacement*)side)->unk1E) != 0u)
-    {
-        (*gPartfxInterface)->spawnObject(
-            obj, ((DimbosscrackparPlacement*)side)->unk1A + 1222, NULL, 2, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, 1224, NULL, 2, -1, NULL);
-    }
-}
+void dimbosscrackpar_update(int* obj);
 
-void dimbosscrackpar_free(int* obj)
-{
-    (*gExpgfxInterface)->freeSource2((u32)obj);
-}
+void dimbosscrackpar_free(int* obj);
 
-void dimbosscrackpar_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+void dimbosscrackpar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void dimbosscrackpar_init(s16* obj, s8* def)
-{
-    ((GameObject*)obj)->anim.rotX = 0;
-    ((GameObject*)obj)->anim.rootMotionScale = lbl_803E4D98;
-    ((GameObject*)obj)->animEventCallback = (void*)dimbosscrackpar_SeqFn;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x24] << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)((s32)def[0x23] << 8);
-    ((GameObject*)obj)->anim.rotZ = (s16)((s32)def[0x22] << 8);
-}
+void dimbosscrackpar_init(s16* obj, s8* def);
 
 void dimbossfire_hitDetect(void);
 
@@ -962,20 +585,16 @@ void dimbossfire_hitDetect(void);
 
 
 /* 8b "li r3, N; blr" returners. */
-int dimbossgut2_setScale(void) { return 0x0; }
-int dimbossgut2_getExtraSize(void) { return 0x42c; }
-int dimbossgut2_getObjectTypeId(void) { return 0x49; }
+int dimbossgut2_setScale(void);
+int dimbossgut2_getExtraSize(void);
+int dimbossgut2_getObjectTypeId(void);
 int DIMbossspit_getExtraSize(void) { return 0x8; }
 int DIMbossspit_getObjectTypeId(void) { return 0x0; }
-int magicmaker_getExtraSize(void) { return 0x0; }
-int magicmaker_getObjectTypeId(void) { return 0x0; }
-int dimbosscrackpar_getExtraSize(void) { return 0x0; }
-int dimbosscrackpar_getObjectTypeId(void) { return 0x0; }
+int magicmaker_getExtraSize(void);
+int magicmaker_getObjectTypeId(void);
+int dimbosscrackpar_getExtraSize(void);
+int dimbosscrackpar_getObjectTypeId(void);
 int dimbossfire_getExtraSize(void);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) objRenderFn_8003b8f4(lbl_803E4D88);
-}
+void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible);

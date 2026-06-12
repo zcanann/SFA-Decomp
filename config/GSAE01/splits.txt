@@ -1619,8 +1619,17 @@ main/dll/dll_01E2_dimbosstonsil.c:
 main/dll/mmsh_waterspike.c:
 	.text       start:0x801BEEA0 end:0x801BF048
 
-main/dll/rope.c:
-	.text       start:0x801BF048 end:0x801C04B8
+main/dll/dll_01E3_dimbossgut.c:
+	.text       start:0x801BF048 end:0x801BF8D8
+
+main/dll/dll_01E5_dimbossspi.c:
+	.text       start:0x801BF8D8 end:0x801BFFF4
+
+main/dll/dll_01E4_magicmaker.c:
+	.text       start:0x801BFFF4 end:0x801C02B8
+
+main/dll/dll_01E6_dimbosscrac.c:
+	.text       start:0x801C02B8 end:0x801C04B8
 
 main/dll/DFcradle.c:
 	.text       start:0x801C04B8 end:0x801C0E60
