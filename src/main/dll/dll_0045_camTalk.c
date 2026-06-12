@@ -19,9 +19,6 @@ void CameraModeBike_copyToCurrent(f32* param_1)
     lbl_803DD540->pitchTarget = param_1[3];
 }
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* fn_X(lbl); lbl = 0; */
 void CameraModeBike_free(void)
 {
     mm_free(lbl_803DD540);
@@ -69,8 +66,6 @@ extern f32 lbl_803E17C4;
 extern f32 lbl_803E17C8;
 extern f32 lbl_803E17CC;
 extern f32 lbl_803E17D0;
-
-/* FUN_80107b4c removed: in v1.0 this address is the start of CameraModeBike_update. */
 
 #pragma peephole on
 void CameraModeBike_update(CameraObject* camera)
@@ -332,7 +327,6 @@ void firstPersonExit(CameraObject* camera)
     curvesMove(&lbl_803DD548->viewCurve);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void CameraModeBike_release(void)
 {
 }

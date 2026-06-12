@@ -16,18 +16,13 @@ void area_hitDetect(void);
 
 void area_update(void);
 
-/* obj->u16_X |= MASK */
 void area_init(u16* obj);
 
 void area_release(void);
 
 void area_initialise(void);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 extern u8 framesThisStep;
-
-/* 8b "li r3, N; blr" returners. */
 
 ObjectDescriptor gAreaObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
@@ -80,9 +75,6 @@ extern f32 lbl_803E3734;
 extern f32 lbl_803E3738;
 extern f32 lbl_803E373C;
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
 int InvisibleHitSwitch_getExtraSize(void) { return 0xc; }
 
 void InvisibleHitSwitch_update(int obj)
@@ -137,7 +129,6 @@ void InvisibleHitSwitch_update(int obj)
             }
             else if (lbl_803E3730 < ((InvisibleHitSwitchState*)state)->unk8)
             {
-                /* nothing */
             }
             else
             {

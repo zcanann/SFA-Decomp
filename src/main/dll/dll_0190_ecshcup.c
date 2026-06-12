@@ -7,18 +7,14 @@ extern void* Obj_GetPlayerObject(void);
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern f32 timeDelta;
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void ecsh_cup_hitDetect(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int gpsh_scene_getExtraSize(void);
 int ecsh_cup_getExtraSize(void) { return 0x30; }
 int ecsh_cup_getObjectTypeId(void) { return 0x0; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5048;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5060;

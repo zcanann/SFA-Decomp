@@ -654,7 +654,6 @@ void FUN_800ea9b8(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void SaveGame_func08_nop(void);
 
 void Dummy58_release(void)
@@ -667,7 +666,6 @@ void Dummy58_initialise(void)
 
 void dll_69_func01_nop(void);
 
-/* 8b "li r3, N; blr" returners. */
 int Dummy58_func03_ret_0(void) { return 0x0; }
 int Dummy6C_func03_ret_0(void);
 
@@ -688,7 +686,5 @@ enum
     SAVEGAME_EMPTY_TASK_HINT = -1,
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
-
-/* conditional init/free pair. */
 
 void dll_60_func03(u8* sourceObj, int variant, u8* posSource, uint flags);

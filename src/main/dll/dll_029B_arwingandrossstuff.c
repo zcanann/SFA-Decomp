@@ -2,7 +2,6 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
-
 typedef union ArwProjectileParam0
 {
     f32 scalar;
@@ -186,7 +185,6 @@ void arwingandrossstuff_init(int obj, u8* setup)
     case 0x80d:
         state->rotZSpeed = randomGetRange(-0x1f4, 0x1f4);
         state->rotYSpeed = randomGetRange(-0x1f4, 0x1f4);
-    /* fallthrough */
     case 0x6ae:
     case 0x7e4:
         ObjHits_SetTargetMask(obj, 4);

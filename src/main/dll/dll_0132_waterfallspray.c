@@ -27,8 +27,6 @@ typedef struct WaterFallSprayState
 extern u8* Obj_GetPlayerObject(void);
 extern f32 sqrtf(f32 value);
 
-/* lightning_free: ObjGroup_RemoveObject + free of obj->_b8->_0 if non-null. */
-
 /* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
  * lightningRender(handle). */
 
@@ -176,12 +174,10 @@ void sfxplayerObj_init(u8* obj, u8* data);
  * it and stop two sfx loops (data->_1a and data->_22). Mode depends on
  * data->_1d: 1 → Sfx_RemoveLoopedObjectSound, else Sfx_StopFromObject. */
 
-/* Trivial 4b 0-arg blr leaves. */
 void WaterFallSpray_render(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int WaterFallSpray_getExtraSize(void) { return 0x8; }
 int sfxplayerObj_getExtraSize(void);
 

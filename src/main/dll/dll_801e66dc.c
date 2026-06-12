@@ -59,17 +59,13 @@ void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8
 {
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void SB_FireBall_release(void);
 
-/* 8b "li r3, N; blr" returners. */
 int fn_801E66DC(void) { return 0x0; }
 int fn_801E66E4(void) { return 0x0; }
 
-/* 16b chained patterns. */
 s32 shop_getStateField1(int* obj);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E59D8;
 extern f32 lbl_803E59DC;
 extern int* gBoneParticleEffectInterface;
@@ -130,8 +126,6 @@ void Lamp_free(int* obj);
 
 /* EN v1.0 0x801E6050  size: 44b  Triple s8 fan-out: write obj->_b8[2/3/4]
  * (sign-extended) into *out_b3, *out_b2, *out_b4. */
-
-/* shop_getItem* helpers -- table lookup */
 
 /* EN v1.0 0x801E6358  size: 104b  Returns 1 unless the item's
  * "available" GameBit gate (lbl_80327FD0[idx*12 + 6]) is present and

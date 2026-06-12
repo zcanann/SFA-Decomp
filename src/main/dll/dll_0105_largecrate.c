@@ -530,7 +530,6 @@ void largecrate_init(int obj, u8* initData)
     LargeCrateVariantRemap constArrB;
     short id;
 
-    /* copy two constant blobs to stack (used as lookup arrays) */
     constArrA = lbl_802C2280;
     constArrB = lbl_802C228C;
 

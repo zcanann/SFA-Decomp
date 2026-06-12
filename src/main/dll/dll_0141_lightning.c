@@ -9,12 +9,8 @@ extern undefined4 ObjGroup_AddObject();
 
 extern f32 timeDelta;
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
 int lightning_getExtraSize(void) { return 0x28; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4048;
 extern void objRenderFn_8003b8f4(f32);
 
@@ -54,7 +50,6 @@ extern f32 lbl_803E408C;
 extern f32 lbl_803E4090;
 extern f32 lbl_803E40A0;
 
-/* lightning_free: ObjGroup_RemoveObject + free of obj->_b8->_0 if non-null. */
 extern void mm_free(void* p);
 
 void lightning_free(u8* obj, int p2)
@@ -248,7 +243,3 @@ void WaterFallSpray_free(u8* obj);
 /* sfxplayerObj_free: bit-0 of obj->_b8->_4 gates teardown. When set, clear
  * it and stop two sfx loops (data->_1a and data->_22). Mode depends on
  * data->_1d: 1 → Sfx_RemoveLoopedObjectSound, else Sfx_StopFromObject. */
-
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */

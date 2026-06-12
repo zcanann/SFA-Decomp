@@ -239,7 +239,6 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void imicemountain_free(void);
 
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
@@ -258,15 +257,12 @@ void dll_16C_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int imicemountain_getExtraSize(void);
 int dll_16C_getExtraSize(void) { return 0x24; }
 int dll_16C_getObjectTypeId(void) { return 0x3; }
 
-/* Pattern wrappers. */
 extern void* lbl_803DDB40;
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 extern void Obj_FreeObject(int*);
@@ -277,10 +273,8 @@ void dll_16C_free(int* obj)
     if (p != NULL) Obj_FreeObject(p);
 }
 
-/* conditional init/free pair. */
 void crrockfall_release(void);
 
-/* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, sync its transform into obj. */
 extern void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
 #pragma scheduling off
 #pragma peephole off
@@ -350,7 +344,6 @@ void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-/* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
 #pragma peephole on
 void dll_16C_init(void* obj, void* arg2)
 {

@@ -637,7 +637,6 @@ void sfxplayer_free(int obj, int arg1)
 
 #undef SFXPLAYER_UPDATE_EFFECT_HANDLE_POS
 
-/* Trivial 4b 0-arg blr leaves. */
 void TrickyCurve_render(void);
 
 void sfxplayer_render(void)
@@ -648,7 +647,6 @@ void sfxplayer_hitDetect(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int TrickyCurve_getExtraSize(void);
 int sfxplayer_getExtraSize(void) { return 0xa; }
 int sfxplayer_getObjectTypeId(void) { return 0x0; }

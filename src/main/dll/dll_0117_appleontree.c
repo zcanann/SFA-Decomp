@@ -63,8 +63,6 @@ u32 jumptable_803214DC[] = {
     (u32)((u8*)appleontree_update + 0x71C),
 };
 
-/* appleontree extra block (size 0x64 = appleontree_getExtraSize). */
-
 void appleontree_func0B(int obj, float* pos)
 {
     AppleOnTreeState* state = ((GameObject*)obj)->extra;
@@ -138,15 +136,12 @@ void appleontree_handleCollectableHit(int obj)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void appleontree_setScale(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int appleontree_getExtraSize(void) { return 0x64; }
 
-/* Pattern wrappers. */
 u8 appleontree_modelMtxFn(int* obj) { return ((AppleOnTreeState*)((int**)obj)[0xb8 / 4])->unk3A; }
 
 void appleontree_free(int* obj)
@@ -164,7 +159,6 @@ void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-/* v1.0 ground-animator drop physics (drift twins of FUN_8017db40/FUN_8017e15c/FUN_8017e3c0). */
 extern f32 timeDelta;
 extern f32 sqrtf(f32);
 extern int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* out, int flag);
@@ -935,14 +929,10 @@ void appleontree_init(int obj, int def)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_FC_free_nop(void);
 
-/* 8b "li r3, N; blr" returners. */
 int dll_FC_getExtraSize_ret_8(void);
 int dll_FC_getObjectTypeId(void);
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 
 void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 

@@ -434,7 +434,6 @@ void warpPadFn_8019042c(int obj)
     }
 }
 
-/* Drift-recovery: add new fns with v1.0 names. */
 extern u8 lbl_803AC7B0[];
 
 void warpPadPlayerStandingOn(int obj)
@@ -526,7 +525,3 @@ updateTimer:
 }
 
 void areafxemit_free(AreaFxEmitObject* obj);
-
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */

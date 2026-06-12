@@ -1966,7 +1966,6 @@ int mathFn_800dbff0(float* point)
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void player_release(void);
 
 #pragma scheduling on
@@ -1979,21 +1978,14 @@ void doNothing_onTrickyInit(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int dll_12_func06_ret_0(void);
 
-/* sda21 accessors. */
-
-/* Pattern wrappers. */
-
-/* player_init: memset constructor */
 extern void* memset(void* dst, int val, u32 n);
 extern f32 lbl_803E05C8;
 extern f32 lbl_803E05CC;
 extern f32 lbl_803E05F4;
 extern int Curve_AdvanceAlongPath(float* p, f32 dt);
 
-/* fn_800D9F38 ? large init updating multiple float fields based on b's bytes */
 extern f32 lbl_803E05D0;
 extern f32 lbl_803E05D4;
 extern f32 lbl_803E05D8;
@@ -2010,7 +2002,6 @@ int fn_800D9F38(void* a, void* b)
     *(void**)(A + 0xa4) = b;
     if (*(int*)(A + 0x80) != 0)
     {
-        /* branch1 */
         f32 t;
         *(f32*)(A + 0xa8) = *(f32*)(B + 0x8);
         t = (float)(u32) * (u8*)(B + 0x2e) *
@@ -2027,7 +2018,6 @@ int fn_800D9F38(void* a, void* b)
     }
     else
     {
-        /* branch2 */
         f32 t;
         *(f32*)(A + 0xbc) = *(f32*)(B + 0x8);
         t = (float)(u32) * (u8*)(B + 0x2e) *
@@ -2045,13 +2035,11 @@ int fn_800D9F38(void* a, void* b)
     return 0;
 }
 
-/* player_updateVel */
 extern f32 lbl_803E05A4;
 extern void fn_800D915C(int pos, int* obj, void* fnTable, f32 fval);
 
 void player_updateVel(char* p, char* obj, int unused);
 
-/* RomCurve_setA4: similar to fn_800D9F38 branch2 with different consts */
 extern f32 lbl_803E0610;
 extern f32 lbl_803E0614;
 extern f32 lbl_803E0618;
@@ -2944,7 +2932,6 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
     return candidateIds[selectedIndex];
 }
 
-/* RomCurve_stepClamped: keep the curve phase just inside the endpoints, then advance it. */
 #pragma peephole on
 void RomCurve_stepClamped(float* state, f32 dt)
 {
@@ -3677,12 +3664,8 @@ int RomCurve_func16(double x, double y, double z)
     return -1;
 }
 
-/* UIController dispatch through the shared GameUI interface. */
 extern u8 gameTimerIsRunning(void* p, int a, int b);
 
-/* player_setState */
-
-/* walkPath_writeU16LE: split a path id into two little-endian bytes. */
 void walkPath_writeU16LE(u32 v, u8* dst)
 {
     v = v & 0xffff;
@@ -3690,7 +3673,6 @@ void walkPath_writeU16LE(u32 v, u8* dst)
     dst[1] = (u8)((s32)v >> 8);
 }
 
-/* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
 #pragma scheduling on
 void fn_800D9EE8(float* p)
 {
@@ -3749,7 +3731,6 @@ void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval);
 
 extern f32 vec3f_distanceSquared(f32 * posA, f32 * posB);
 
-/* Hcurves keeps the ROM curve definitions sorted by id for binary searches. */
 extern f32 gFloatHalf;
 extern f32 lbl_803E12B8;
 extern f32 lbl_803E065C;
@@ -5501,15 +5482,8 @@ void curves_addCurveDef(RomCurveDef* curve)
 #pragma dont_inline on
 #pragma dont_inline reset
 
-/* Forward active hit-segment bounds to ObjHits with the state-derived target mask. */
-
-/* Extended local-point collision setup with a secondary hit type. */
-
-/* Basic local-point collision setup used by path control. */
-
 extern SaveData saveData;
 
-/* Trivial 4b 0-arg blr leaves. */
 void curves_release(void)
 {
 }
@@ -5520,7 +5494,6 @@ void RomCurve_initialise(void)
 
 void loadSaveSettings(void);
 
-/* Pattern wrappers. */
 void curves_initialise(void) { nRomCurves = 0x0; }
 
 void RomCurve_func0D(RomCurveDef** startOut, RomCurveDef** endOut)
@@ -5529,24 +5502,16 @@ void RomCurve_func0D(RomCurveDef** startOut, RomCurveDef** endOut)
     *endOut = gRomCurveLastFindEnd;
 }
 
-/* getSaveFileStruct: return &saveData (lis/addi). */
 void* getSaveFileStruct(void);
 
-/* getLastSavedGameTexts: return (u8*)&gSaveGameData + 0x558. Array form forces lis/addi. */
-
-/* RomCurve_getCurves: *outCount = nRomCurves; return romCurves. */
 void* RomCurve_getCurves(int* outCount)
 {
     *outCount = nRomCurves;
     return romCurves;
 }
 
-/* isCheatUnlocked: return registeredDebugOptions & (1 << (idx & 0xff)). */
 int isCheatUnlocked(u8 idx);
 
-/* saveFileStruct_unlockCheat: set bit (1 << (idx & 0xff)) in registeredDebugOptions. */
-
-/* curves_findByAction: scan romCurves for matching action curves, return curve id. */
 int curves_findByAction(int act)
 {
     int i;

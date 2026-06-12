@@ -20,7 +20,6 @@ extern f32 lbl_803E38A8;
 
 void MagicPlant_update(int obj);
 
-/* 8b "li r3, N; blr" returners. */
 int MagicPlant_getExtraSize(void);
 int trickywarp_getExtraSize(void);
 int duster_getExtraSize(void);
@@ -43,13 +42,8 @@ STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
 STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
 STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 
-/* gCameraInterface: vtable pointer used for state-machine dispatches. */
-
-/* MagicPlant_SeqFn: vtable[0x13]() with obj passed through implicitly, return 0. */
-
 u32 MagicPlant_getObjectTypeId(MagicPlantObject* obj);
 
-/* obj->u16_X |= MASK */
 void StayPoint_init(u16* obj)
 {
     u32 v;

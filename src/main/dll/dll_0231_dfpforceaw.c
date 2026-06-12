@@ -575,7 +575,6 @@ void sfxplayer_updateEffectHandlePositions(short* obj)
 
 #undef SFXPLAYER_UPDATE_EFFECT_HANDLE_POS
 
-/* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
 void TrickyCurve_render(void)
@@ -596,7 +595,6 @@ void TrickyCurve_initialise(void)
 
 void sfxplayer_render(void);
 
-/* 8b "li r3, N; blr" returners. */
 int TrickyCurve_getExtraSize(void) { return 0x14; }
 int TrickyCurve_getObjectTypeId(void) { return 0x0; }
 int sfxplayer_getExtraSize(void);

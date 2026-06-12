@@ -32,8 +32,6 @@ extern f32 lbl_803E0E84;
 extern f32 lbl_803E0E88;
 extern f32 lbl_803E0E8C;
 
-/* Effect16_func04 is defined further below (full recovered body). */
-
 undefined4
 FUN_800c8110(int param_1, undefined4 param_2, undefined2* param_3, uint param_4, u8 param_5,
              int param_6)
@@ -446,7 +444,6 @@ undefined4 FUN_800c9030(uint param_1, int* param_2)
     return (&DAT_8039d0bc)[iVar3 * 2];
 }
 
-/* sda21 globals used by leaf accessors below. */
 extern s16 lbl_803DD414;
 extern s16 lbl_803DD416;
 
@@ -459,7 +456,6 @@ typedef struct PartFxKV
 extern f32 lbl_803E04E8;
 extern f32 lbl_803E0500;
 
-/* Globals for tick functions Effect16_func05 / Effect17_func05 / Effect18_func05 / Effect19_func05 / Effect20_func05. */
 extern f32 timeDelta;
 extern f32 mathSinf(f32 x);
 
@@ -476,7 +472,6 @@ typedef struct PartFxNode
     s32 _0x20;
 } PartFxNode;
 
-/* Binary search for key in lbl_8039C458 (count = lbl_803DD410). */
 #pragma dont_inline on
 u32 Checkpoint_find(s32 key, s32* idx_out)
 {
@@ -516,7 +511,6 @@ extern f32 lbl_803E04E0;
 extern f32 lbl_803E04E4;
 extern f32 mathCosf(f32 x);
 
-/* Build particle quad positions from a checkpoint pair. */
 #pragma dont_inline off
 s32 fn_800D55BC(u8* p, s32 idx, f32* out1, f32* out2, f32* out3, u8 mode, f32 fa, f32 fb)
 {
@@ -650,7 +644,6 @@ s32 fn_800D55BC(u8* p, s32 idx, f32* out1, f32* out2, f32* out3, u8 mode, f32 fa
     return ret;
 }
 
-/* Set *p to lbl_803DD414 (sign-extended) and return lbl_803DD418. */
 u32 Checkpoint_func0E(s32* p)
 {
     extern u32 lbl_803DD418; /* #57 */
@@ -658,7 +651,6 @@ u32 Checkpoint_func0E(s32* p)
     return lbl_803DD418;
 }
 
-/* Swap lbl_803DD418 with lbl_803DD41C; copy 416 into 414 then clear 416. */
 void fn_800D6584(void)
 {
     extern u32 lbl_803DD418; /* #57 */
@@ -679,7 +671,6 @@ typedef struct PartFxItem
     s32 _0x1c;
 } PartFxItem;
 
-/* NOTE: 96.8% ? register choice differs (r5 vs r7 for rank). */
 s32 Checkpoint_func0F(PartFxItem* p)
 {
     extern u32 lbl_803DD418; /* #57 */
@@ -708,7 +699,6 @@ s32 Checkpoint_func0F(PartFxItem* p)
     return rank;
 }
 
-/* Find item in lbl_803DD418 array whose rank equals target_rank. */
 PartFxItem* Checkpoint_func10(s32 target_rank)
 {
     extern u32 lbl_803DD418; /* #57 */
@@ -750,7 +740,6 @@ PartFxItem* Checkpoint_func10(s32 target_rank)
     return 0;
 }
 
-/* Init random offsets / chain advance with lookup. */
 void Checkpoint_func0A(s32 key, f32* out_vec, u8* flag_byte)
 {
     s32 local_idx;
@@ -807,7 +796,6 @@ void Checkpoint_func0A(s32 key, f32* out_vec, u8* flag_byte)
     }
 }
 
-/* Walk a chain via Checkpoint_find lookups starting from o->_0x10. */
 void Checkpoint_func0C(PartFxNode* o)
 {
     s32 local_idx;
@@ -840,7 +828,6 @@ void Checkpoint_func0D(u32 v)
     ((u32*)lbl_803DD41C)[lbl_803DD416++] = v;
 }
 
-/* Tick: counter1, counter2 + rate*timeDelta; clamp; periodic sin. */
 void Effect16_func05(void);
 
 /*
@@ -851,18 +838,12 @@ void Effect16_func05(void);
  * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
  */
 
-/* ---- Effect20_func04 (FUN_800cd430, v1.0) ---- */
-
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
 int Checkpoint_func09_ret_1(void) { return 0x1; }
 
 extern f32 lbl_803E0504;
 extern f32 lbl_803E0508;
 extern f32 Curve_EvalHermite(f32* values, f32 t, f32* outTangent);
 
-/* Advance along the checkpoint curve by dist; write position/angles to out. */
 s32 Checkpoint_func08(u8* out, u8* o, f32 dist, s32 p3, u8 flag)
 {
     extern u16 getAngle(f32 a, f32 b); /* #57 */
@@ -1008,7 +989,6 @@ void Checkpoint_onGameLoop(void)
     lbl_803DD416 = 0;
 }
 
-/* segment pragma-stack balance (re-split): */
 #pragma dont_inline reset
 #pragma dont_inline reset
 
@@ -1127,33 +1107,14 @@ int Checkpoint_func07(int* obj, int* state)
 }
 #pragma opt_common_subs reset
 
-/* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling on
 #pragma peephole on
 void Checkpoint_release(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
-
-/* sda21 accessors. */
-
-/* Pattern wrappers. */
 void Checkpoint_reset(void) { extern u32 lbl_803DD410; /* #57 */ lbl_803DD410 = 0x0; }
 
-/* 12b 3-insn patterns. */
-
-/* misc 8b leaves */
-
-/* Pattern wrappers. */
-
-/* sda21 writers. */
-
-/* fcmp-eq-to-bool. */
-
-/* multi-store leaf (single float broadcast). */
-
-/* Checkpoint table initialiser. */
 extern u32 lbl_8039CA98[];
 
 #pragma opt_common_subs off

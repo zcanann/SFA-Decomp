@@ -652,7 +652,6 @@ void camcontrol_updateModeSettings(int camera)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void doNothing_80103660(void)
 {
 }

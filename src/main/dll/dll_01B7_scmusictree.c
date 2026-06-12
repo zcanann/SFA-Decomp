@@ -27,10 +27,6 @@ typedef struct ScMusictreeSpawnAmbientEffectPlacement
     u8 pad23[0x28 - 0x23];
 } ScMusictreeSpawnAmbientEffectPlacement;
 
-/* sc_levelcontrol_getExtraSize == 0x24 (CloudRunner race level control). */
-
-/* Trivial 4b 0-arg blr leaves. */
-
 void sc_musictree_free(void)
 {
 }
@@ -39,13 +35,9 @@ void sc_musictree_hitDetect(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int sc_musictree_getExtraSize(void) { return 0x50; }
 int sc_musictree_getObjectTypeId(void) { return 0x0; }
 
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 extern void fn_8003B608(int a, int b, int c);

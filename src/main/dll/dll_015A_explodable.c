@@ -190,8 +190,6 @@ FUN_801a32d4(undefined8 param_1, undefined8 param_2, double param_3, undefined8 
     return uVar3;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void explodable_render(void)
 {
 }
@@ -220,9 +218,6 @@ typedef struct ExplodablePlacement
     s16 activateGameBit;
     u8 pad42[0x48 - 0x42];
 } ExplodablePlacement;
-
-/* explodable_getExtraSize == 0x6e8 (gas-vent explodable). */
-/* Per-fragment record inside DrExplodableState (stride 0x70). */
 
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 

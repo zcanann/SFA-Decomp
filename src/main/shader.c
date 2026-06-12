@@ -587,11 +587,9 @@ undefined4 FUN_80057690(int param_1)
     return uVar3;
 }
 
-/* 8b "li r3, N; blr" returners. */
 int return0_80056694(void) { return 0x0; }
 int return0_8005669C(void) { return 0x0; }
 
-/* 12b 3-insn patterns. */
 extern s8 curMapLayer;
 extern s8 curMapType;
 extern s16 lbl_803DCEB4;
@@ -600,7 +598,6 @@ extern u32 renderFlags;
 s32 getCurMapLayer(void) { return curMapLayer; }
 s32 getCurMapType(void) { return curMapType; }
 
-/* 20b reset triplet. */
 void mapReloadWithFadeout(void)
 {
     curMapType = 0;
@@ -608,7 +605,6 @@ void mapReloadWithFadeout(void)
     lbl_803DCEB4 = 0;
 }
 
-/* 16b sda lookup. */
 extern int lbl_803DCE6C;
 
 void* mapTextureOverrideGetEntry(int idx)
@@ -616,7 +612,6 @@ void* mapTextureOverrideGetEntry(int idx)
     return (void*)(lbl_803DCE6C + (idx << 4));
 }
 
-/* 32b two-stage table lookup via lis/addi/lwz. */
 extern int lbl_803822A0[5];
 
 void* fn_80059334(int a, int b)
@@ -625,7 +620,6 @@ void* fn_80059334(int a, int b)
     return (char*)base + (a + (b << 4)) * 12;
 }
 
-/* 48b paired float reads scaled by sda21 constant. */
 extern int lbl_803DCE68;
 extern f32 lbl_803DEBC8;
 
@@ -639,7 +633,6 @@ void mapTextureScrollGetOffset(int idx, float* outX, float* outY)
     *outY = *(f32*)(base + 4) / divisor;
 }
 
-/* 52b layer clamp pair. */
 void goToPrevMapLayer(void)
 {
     curMapLayer--;
@@ -698,7 +691,6 @@ void mapBlockFn_80059c2c(u8* outFlags)
     }
 }
 
-/* 136b 5-plane view-frustum sphere visibility test. */
 extern f32 lbl_803DEBCC;
 extern char gViewFrustumPlanes[];
 
@@ -718,7 +710,6 @@ int ViewFrustum_IsSphereVisible(float* center, float radius)
     return 1;
 }
 
-/* 112b indexed teardown/free of map block. */
 extern char lbl_803822C8[];
 extern void* gLoadedRomListPages[];
 extern void defStartFn_8005972c(char* p1, u32* p2, int idx, int flag);
@@ -736,7 +727,6 @@ void fn_80059A50(int param_1)
     }
 }
 
-/* 96b camera-pos gated load. */
 extern f32 lbl_803DCE5C;
 extern f32 lbl_803DCE60;
 extern f32 lbl_803DCE64;
@@ -755,7 +745,6 @@ void loadMapForCameraPos(float x, float y, float z)
     }
 }
 
-/* 80b current map block lookup. */
 extern int lbl_803DB648;
 extern void* lbl_803DCEA0;
 
@@ -783,7 +772,6 @@ void* mapBlockFn_800592e4(void)
     }
 }
 
-/* 104b conditional gameTextLoadDir caller. */
 extern int lbl_803DCEC4;
 extern int lbl_803DCEC8;
 extern s8 lbl_8030E55C[];

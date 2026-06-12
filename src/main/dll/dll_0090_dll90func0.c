@@ -217,7 +217,6 @@ void dll_90_func03(int sourceObj, int variant, int posSource, uint flags)
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, (u8*)(int)lbl_80316E30, 0x10, base + 0xb4, 0x45, 0);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_7C_func01_nop(void);
 
 void dll_90_func01_nop(void)

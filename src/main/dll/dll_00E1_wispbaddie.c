@@ -14,7 +14,6 @@ extern undefined8 ObjGroup_RemoveObject();
 
 extern f32 lbl_803DC074;
 
-/* Trivial 4b 0-arg blr leaves. */
 void hagabon_release(void);
 
 void hagabon_initialise(void);
@@ -55,8 +54,6 @@ extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 
-/* Per-object extra state for Hagabon (hagabon_getExtraSize == 0x28). */
-
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
@@ -84,7 +81,6 @@ void hagabon_init(int obj, int data, int skip_alloc);
 
 void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-/* 8b "li r3, N; blr" returners. */
 int hagabon_getExtraSize(void);
 int hagabon_getObjectTypeId(void);
 int swarmbaddie_getExtraSize(void);
@@ -600,7 +596,6 @@ ObjectDescriptor gWispBaddieObjDescriptor = {
     wispbaddie_getExtraSize,
 };
 
-/* Trivial 4b 0-arg blr leaves. */
 void fn_8014FF20(void)
 {
 }

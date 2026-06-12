@@ -75,7 +75,6 @@ void hwSyncSampleMem(void)
     aramSyncTransferQueue();
 }
 
-/* Pattern wrappers. */
 void hwFrameDone(void)
 {
 }

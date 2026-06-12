@@ -3,8 +3,6 @@
 #include "main/dll/CAM/camcombat_state.h"
 #include "main/mm.h"
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void CameraModeCombat_copyToCurrent_nop(void)
 {
 }
@@ -568,7 +566,6 @@ extern int shipBattleFn_801eed24(int focus);
 
 void CameraModeShipBattle_update(short* cam);
 
-/* Trivial 4b 0-arg blr leaves. */
 void CameraModeCombat_release(void)
 {
 }
@@ -578,5 +575,3 @@ void CameraModeCombat_initialise(void)
 }
 
 void CameraModeShipBattle_copyToCurrent_nop(void);
-
-/* fn_X(lbl); lbl = 0; */

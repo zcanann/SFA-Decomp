@@ -9,11 +9,7 @@
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/dll/DB/sbgalleon_state.h"
 
-/* SB_Propeller_getExtraSize == 0x10. */
-
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
-
-/* SB_ShipHead_getExtraSize == 0x10. */
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
@@ -317,7 +313,6 @@ void SB_Propeller_update(int obj);
 
 extern u32 getSbGalleon(void);
 
-/* Trivial 4b 0-arg blr leaves. */
 void SB_Galleon_release(void)
 {
 }
@@ -328,32 +323,20 @@ void SB_Galleon_initialise(void)
 
 void SB_ShipMast_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int SB_Galleon_getExtraSize(void) { return 0xb4; }
 int SB_Galleon_getObjectTypeId(void) { return 0x0; }
 int SB_Propeller_getExtraSize(void);
 
-/* sda21 accessors. */
 extern u32 gSbGalleon;
 u32 getSbGalleon(void) { return gSbGalleon; }
 u32 fn_801E2570(void);
 
-/* Pattern wrappers. */
 u8 SB_Galleon_render2(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x79); }
 
-/* 16b chained patterns. */
 s32 SB_Galleon_func0B(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x2b); }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* SB_Propeller_hitDetect: guard on 0x46 == 0x69c, copy halfword from sda21 ptr. */
-
-/* SB_ShipGun_free: expgfx interface freeObject callback. */
-
-/* SB_Galleon_setScale: state machine; advance counter, optionally play sfx. */
 int SB_Galleon_setScale(int obj)
 {
     s8* p = (s8*)((int**)obj)[0xb8 / 4];
@@ -378,7 +361,6 @@ int SB_Galleon_setScale(int obj)
     return 0;
 }
 
-/* SB_Galleon_hitDetect: per-step expgfx spawn loop. */
 extern f32 lbl_803E57FC;
 extern f32 lbl_803E5800;
 extern f32 lbl_803E5804;
@@ -543,7 +525,6 @@ void SB_Galleon_init(int obj)
     Music_Trigger(((SBGalleonState*)p)->musicIdB, 1);
 }
 
-/* SB_Galleon_free: textureFree manager textures, ObjGroup_RemoveObject, kill music, set bit. */
 extern void textureFree(void* tex);
 
 void SB_Galleon_free(int obj, int p2)
@@ -570,14 +551,10 @@ void SB_Galleon_free(int obj, int p2)
     GameBit_Set(0xac8, 1);
 }
 
-/* SB_ShipHead_init: add to group, alloc msg queue, set state + bias positions. */
 extern void ObjMsg_AllocQueue(int obj, int n);
 
 void SB_ShipHead_init(int obj);
 
-/* SB_ShipGun_render: conditional render with multiple flag checks. */
-
-/* SB_Galleon_modelMtxFn: returns -2 / -1 / state byte depending on flags. */
 int SB_Galleon_modelMtxFn(int* obj)
 {
     u8* p = (u8*)((int**)obj)[0xb8 / 4];
@@ -596,7 +573,6 @@ int SB_Galleon_modelMtxFn(int* obj)
     return (s8)b;
 }
 
-/* SB_Galleon_func0E: state byte == 1 -> compute from 0x7c; else return 0x640. */
 int SB_Galleon_func0E(int* obj)
 {
     register s8* p = (s8*)((int**)obj)[0xb8 / 4];

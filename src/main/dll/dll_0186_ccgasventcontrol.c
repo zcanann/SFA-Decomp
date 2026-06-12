@@ -146,14 +146,11 @@ FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void animsharpclaw_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int ccgasventcontrol_getExtraSize(void) { return 0x10; }
 int ccqueen_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4620;
 
@@ -164,7 +161,6 @@ void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4620);
 }
 
-/* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 extern void disableHeavyFog(void);
 #pragma scheduling off
 void ccgasventcontrol_free(int obj)
@@ -189,7 +185,6 @@ void ccgasventcontrol_init(int obj, u8* p)
     }
 }
 
-/* CCGasVentControl_SeqFn: trampoline to CCGasVentControlFn_801a9fd0 passing (obj, obj->extra), returns 0. */
 extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
 #pragma peephole on
 int CCGasVentControl_SeqFn(int obj)

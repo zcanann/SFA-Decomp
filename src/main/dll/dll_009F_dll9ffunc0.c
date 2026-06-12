@@ -228,8 +228,6 @@ extern u8 lbl_803186B0[];
 
 void dll_A0_func03(u8* sourceObj, int variant, int posSource, uint flags);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dll_9F_func01_nop(void)
 {
 }
@@ -239,5 +237,3 @@ void dll_9F_func00_nop(void)
 }
 
 void dll_A0_func01_nop(void);
-
-/* 8b "li r3, N; blr" returners. */

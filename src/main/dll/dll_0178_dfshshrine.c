@@ -476,7 +476,6 @@ void dfsh_shrine_update(int obj)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dfsh_shrine_hitDetect(void)
 {
 }
@@ -535,7 +534,3 @@ void dfsh_shrine_init(int* obj, DfshShrinePlacement* init)
 }
 
 void SpiritPrize_hitDetect(void);
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */

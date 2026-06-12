@@ -1,33 +1,11 @@
 /* DIM wood door falling debris updater [801B13E8-801B13F0) */
 #include "ghidra_import.h"
 
-
-
-
-
-
-
-
-
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIMExplosion.h"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 typedef struct DIMwooddoorUpdateFallingDebrisState
 {
@@ -45,34 +23,7 @@ typedef struct DIMwooddoorUpdateFallingDebrisState
     u8 padC[0x10 - 0xC];
 } DIMwooddoorUpdateFallingDebrisState;
 
-
 extern uint GameBit_Get(int eventId);
-
-
-/* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
-
-
-
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
-
-
-
-
-
 
 /* dimgate_update: open the gate (hitbox state 1->2) once a type-399 object is
  * present in the trigger list, latching the gamebit. */
@@ -81,7 +32,6 @@ extern u8 framesThisStep;
 
 /* dimbarrier_update: while a live type-470 object is in the list, count down the
  * arm timer; on expiry fade the barrier out and latch its gamebit. */
-
 
 /* dimsnowball1c2_update: on a timer, if loading allows and the player is clear,
  * spawn a rolling snowball seeded from the placement params. */

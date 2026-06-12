@@ -39,7 +39,6 @@ extern void vecRotateZXY(void* angles, void* outVec);
 
 void MagicPlant_update(int obj);
 
-/* 8b "li r3, N; blr" returners. */
 int MagicPlant_getExtraSize(void);
 int trickywarp_getExtraSize(void);
 int duster_getExtraSize(void) { return 0x20; }
@@ -69,14 +68,10 @@ int duster_SeqFn(u8* obj)
     return 0;
 }
 
-/* gCameraInterface: vtable pointer used for state-machine dispatches. */
 extern void* gCameraInterface;
-
-/* MagicPlant_SeqFn: vtable[0x13]() with obj passed through implicitly, return 0. */
 
 u32 MagicPlant_getObjectTypeId(MagicPlantObject* obj);
 
-/* obj->u16_X |= MASK */
 void StayPoint_init(u16* obj);
 
 extern void objRenderFn_8003b8f4(int obj, float arg);

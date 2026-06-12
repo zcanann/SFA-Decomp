@@ -322,12 +322,6 @@ int Effect12_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
 
 extern f32 lbl_803E0000;
 
-/* sda21 externs for Effect10_func05 tick. */
-
-/* Advance two periodic counters; compute sin of phase. */
-
-/* Trivial 4b 0-arg blr leaves. */
-
 void Effect12_func05_nop(void)
 {
 }

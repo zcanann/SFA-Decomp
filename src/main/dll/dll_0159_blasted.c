@@ -208,7 +208,6 @@ void blasted_update(int obj)
 
 extern int timerCountDown(void* p);
 
-/* ================================================================ */
 /* Tail of the TU (0x801A2AF8..0x801A2BDC) - formerly the head of
  * gasventControl.c. */
 
@@ -254,7 +253,6 @@ void blasted_init(int obj, int placement)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void blasted_release(void)
 {
 }

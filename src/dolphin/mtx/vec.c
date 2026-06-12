@@ -152,8 +152,6 @@ asm void PSVECCrossProduct(register const Vec *a, register const Vec *b, registe
 #endif // clang-format on
 }
 
-/* C_VECHalfAngle uses lbl_803E7650 (was wrongly named lbl_803E82E8) */
-
 asm void C_VECHalfAngle(const Vec *a, const Vec *b, Vec *half)
 {
     nofralloc

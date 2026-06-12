@@ -91,8 +91,6 @@ void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void VFP_lavapool_free_nop(void)
 {
 }
@@ -137,7 +135,6 @@ void vfpspellplace_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int vfpflamepoint_getExtraSize(void) { return 0x8; }
 int return1_801FDA08(void) { return 0x1; }
 int VFP_lavapool_getExtraSize_ret_24(void) { return 0x18; }
@@ -148,11 +145,9 @@ int vfpspellplace_getExtraSize(void) { return 0x6; }
 int vfpspellplace_getObjectTypeId(void) { return 0x0; }
 int dbegg_getExtraSize(void);
 
-/* plain forwarder. */
 extern void fn_801FD6B4(int obj);
 void VFP_lavapool_update(int obj) { fn_801FD6B4(obj); }
 
-/* fn_X(lbl); lbl = 0; */
 extern void* lbl_803DDCD8;
 #pragma scheduling off
 void vfplavastar_release(void)
@@ -161,7 +156,6 @@ void vfplavastar_release(void)
     lbl_803DDCD8 = NULL;
 }
 
-/* dll_224_hitDetect: render iff obj->field_0x74 set. */
 extern void objRenderFn_80041018(void* obj);
 
 typedef struct
@@ -173,7 +167,6 @@ typedef struct
     u8 noCheck : 1; /* 0x5 bit 6 */
 } VfpFlamePointData;
 
-/* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
 int fn_801FD4A8(void* obj, int x)
 {
     u8* extra = ((GameObject*)obj)->extra;
@@ -188,7 +181,6 @@ int fn_801FD4A8(void* obj, int x)
 
 int dbegg_setScale(int obj);
 
-/* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
 extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
 
 void vfplavastar_initialise(void)
@@ -218,8 +210,6 @@ void VFP_lavapool_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 
 extern f32 lbl_803E61CC;
 
-/* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
-
 void vfpflamepoint_init(int* obj, s8* def)
 {
     VfpFlamePointData* d = (VfpFlamePointData*)obj[0xb8 / 4];
@@ -232,8 +222,6 @@ void vfpflamepoint_init(int* obj, s8* def)
 
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
                               int p10);
-
-/* ==== v1.0 recovered functions (drift additions) ==== */
 
 extern f32 timeDelta;
 extern f32 lbl_803DDCD0;

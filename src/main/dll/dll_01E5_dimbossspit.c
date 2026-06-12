@@ -286,7 +286,6 @@ void DIMbossspit_init(int obj)
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dimbossgut2_func11(void);
 
 void DIMbossspit_hitDetect(void)
@@ -303,9 +302,6 @@ void DIMbossspit_initialise(void)
 
 void magicmaker_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int DIMbossspit_getExtraSize(void) { return 0x8; }
 int DIMbossspit_getObjectTypeId(void) { return 0x0; }
 int magicmaker_getExtraSize(void);
-
-/* render-with-objRenderFn_8003b8f4 pattern. */

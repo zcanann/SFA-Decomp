@@ -389,7 +389,6 @@ FUN_80162b78(undefined8 param_1, double param_2, double param_3, undefined8 para
     return uVar1;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void grimble_release(void);
 
 void cannonclaw_free(void)
@@ -400,7 +399,6 @@ void cannonclaw_hitDetect(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int grimble_animEventCallback(void);
 int grimble_getExtraSize(void);
 int grimble_getObjectTypeId(void);
@@ -501,7 +499,6 @@ void cannonclaw_update(u8* obj)
     ObjHits_DisableObject(obj);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void cannonclaw_release(void)
 {
 }
@@ -520,19 +517,13 @@ void tumbleweedbush_initialise(void);
 
 void tumbleweedbush_init(u8* obj, u8* params, int param3);
 
-/* 8b "li r3, N; blr" returners. */
 int tumbleweedbush_getExtraSize(void);
 int tumbleweedbush_getObjectTypeId(void);
 
 void tumbleweedbush_update(int* obj);
 
-/* 16b chained patterns. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
 void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-/* byte-to-short shift8 pattern. */
 void cannonclaw_init(s16* dst, void* src)
 {
     s8 v = *((s8*)src + 0x28);

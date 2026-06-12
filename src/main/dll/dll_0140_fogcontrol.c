@@ -43,24 +43,14 @@ typedef struct FogcontrolPlacement
 
 extern f32 timeDelta;
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void fogcontrol_hitDetect(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int fogcontrol_getExtraSize(void) { return 0x8; }
 int fogcontrol_getObjectTypeId(void) { return 0x0; }
 int lightning_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* state encode: ((obj->_X)->_Y << shift) | const. */
-
-/* Drift-recovery: add new fns with v1.0 names. */
 extern void disableHeavyFog(void);
 
 void fogcontrol_free(int* obj)

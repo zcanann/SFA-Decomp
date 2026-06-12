@@ -6,9 +6,6 @@ extern u32 GameBit_Get(int bit);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
 int cfccrate_getExtraSize(void) { return 0x4c; }
 int cfccrate_getObjectTypeId(void) { return 0x1; }
 

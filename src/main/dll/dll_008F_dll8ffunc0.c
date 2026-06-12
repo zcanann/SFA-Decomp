@@ -155,8 +155,6 @@ void dll_8F_func03(int sourceObj, int variant, int posSource, uint flags)
 
 void dll_90_func03(int sourceObj, int variant, int posSource, uint flags);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dll_8F_func01_nop(void)
 {
 }

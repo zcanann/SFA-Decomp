@@ -46,7 +46,6 @@ MessageBufferID TRKTestForPacket(void) {
                     break;
                 }
                 gTRKFramingState.receiveState = DSRECV_InFrame;
-                /* fallthrough */
             case DSRECV_InFrame:
                 if (sp8 == 0x7E) {
                     if (gTRKFramingState.isEscape) {

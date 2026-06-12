@@ -29,7 +29,6 @@ void bombplant_hitDetect(void)
 {
 }
 
-/* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E5370;
 extern void objRenderFn_8003b8f4(f32);
 void bombplant_render(void) { objRenderFn_8003b8f4(lbl_803E5370); }
@@ -395,7 +394,6 @@ void bombplant_update(void* obj)
 
     case 0:
         Sfx_KeepAliveLoopedObjectSound(obj, 0x3fd);
-    /* fallthrough */
     default:
         param = ((GameObject*)obj)->anim.placementData;
         if ((((BombPlantState*)state)->flags & 0x2) != 0)

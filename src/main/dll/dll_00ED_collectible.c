@@ -20,8 +20,6 @@ extern u32 GameBit_Get(int eventId);
 
 void mikabombshadow_update(int* obj);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void staff_func0F(void);
 
 void staff_func0B(void);
@@ -54,7 +52,6 @@ void shield_initialise(void);
 
 void shield_free(int obj);
 
-/* 8b "li r3, N; blr" returners. */
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void);
 int depthoffieldpoint_getExtraSize(void);
@@ -505,24 +502,15 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-/* Pattern wrappers. */
 s16 staff_getHitReactValue(int* obj);
 u8 collectible_func0F(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x1e); }
 
-/* 16b chained patterns. */
 s32 staff_func16(int* obj);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* render-with-fn(lbl) (no visibility check). */
 void flamethrowerspe_render(void);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* misc 8b leaves */
 int collectible_setScale(int* obj) { return ((GameObject*)obj)->unkF4; }
 
-/* misc 16b 4-insn patterns. */
 void objSetAnimField48to0(int* obj);
 
 void flamethrowerspe_func0B(int* obj);
@@ -656,15 +644,11 @@ extern f32 sqrtf(f32 x);
 
 void shield_update(int* obj);
 
-/* dll_F7 (bouncing prop) object extra-state */
-
 void dll_F7_update(int* obj);
 
 void staff_initialise(void);
 
 void shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-/* per-swipe trail record (stride 0x18, 3 records) */
 
 void staff_hitDetectGeometry(int* obj);
 
@@ -860,7 +844,6 @@ extern f32 fastFloorf(f32 v);
 
 void staff_setupSwipe(int p1, int p2, int p3, int p4);
 
-/* segment pragma-stack balance (re-split): */
 #pragma opt_common_subs reset
 
 #include "main/audio/sfx_ids.h"
@@ -1513,7 +1496,4 @@ void collectible_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E34B0;

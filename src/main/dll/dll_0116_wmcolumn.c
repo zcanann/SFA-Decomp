@@ -9,16 +9,6 @@ extern undefined8 ObjGroup_RemoveObject();
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* Drift-recovery: add new fns with v1.0 names. */
-
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read
  * its GameBit, compare against the def[0x30] mask bit for that slot, and
@@ -288,8 +278,6 @@ u32 jumptable_803214DC[] = {
     (u32)((u8*)appleontree_update + 0x6C8),
     (u32)((u8*)appleontree_update + 0x71C),
 };
-
-/* appleontree extra block (size 0x64 = appleontree_getExtraSize). */
 
 STATIC_ASSERT(offsetof(AppleOnTreeState, healthRestore) == 0x38);
 STATIC_ASSERT(offsetof(AppleOnTreeState, unk50) == 0x50);
@@ -695,17 +683,12 @@ undefined4 FUN_8017e3c0(double param_1, undefined2* param_2, int param_3)
     return uVar4;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void appleontree_setScale(void);
 
-/* 8b "li r3, N; blr" returners. */
 int appleontree_getExtraSize(void);
 
-/* Pattern wrappers. */
 u8 appleontree_modelMtxFn(int* obj);
 
 void appleontree_free(int* obj);
 
 void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
-
-/* v1.0 ground-animator drop physics (drift twins of FUN_8017db40/FUN_8017e15c/FUN_8017e3c0). */

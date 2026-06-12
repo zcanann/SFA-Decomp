@@ -105,8 +105,6 @@ void FUN_8013651c(int param_1)
 extern u8 warpstoneUIState;
 extern u8 showCredits;
 
-/* 4-byte and 8-byte trivial leaves. */
-
 void WarpstoneUI_frameEnd(void)
 {
 }
@@ -210,15 +208,11 @@ void fn_80133F70(void* obj)
 
 extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 
-/* Variadic debug-print sink: retail keeps only the ABI varargs spill frame. */
-
 /* EN v1.0 0x80133EA4  size: 156b  Two-step shutdown helper. Releases
  * the buffers at minimapTexture and lbl_803DD940 (the first only if
  * non-null), then walks the 2-slot live-objects table at lbl_803DBBC8
  * tearing down each non-null entry via Obj_FreeObject. Both buffer
  * pointers are zeroed at the end. */
-
-/* lbl_803DD940 declared later as void* */
 
 /* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960
  * via textureFree. */

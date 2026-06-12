@@ -4,11 +4,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/objseq.h"
 
-/* SB_Propeller_getExtraSize == 0x10. */
-
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
-
-/* SB_ShipHead_getExtraSize == 0x10. */
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
@@ -27,41 +23,19 @@ extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
 extern f32 sqrtf(f32);
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
 int SB_ShipGun_getExtraSize(void) { return 0x10; }
 
-/* sda21 accessors. */
 extern u32 gSbGalleon;
 
-/* Pattern wrappers. */
-
-/* 16b chained patterns. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* SB_Propeller_hitDetect: guard on 0x46 == 0x69c, copy halfword from sda21 ptr. */
-
-/* SB_ShipGun_free: expgfx interface freeObject callback. */
 void SB_ShipGun_free(int param_1)
 {
     (*gExpgfxInterface)->freeSource2((u32)param_1);
 }
 
-/* SB_Galleon_setScale: state machine; advance counter, optionally play sfx. */
-
-/* SB_Galleon_hitDetect: per-step expgfx spawn loop. */
 extern f32 lbl_803E57FC;
 
-/* SB_Galleon_free: textureFree manager textures, ObjGroup_RemoveObject, kill music, set bit. */
-
-/* SB_ShipHead_init: add to group, alloc msg queue, set state + bias positions. */
-
-/* SB_ShipGun_render: conditional render with multiple flag checks. */
 extern f32 lbl_803E5888;
 
 void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -431,7 +405,6 @@ void SB_ShipGun_update(int obj)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void SB_CannonBall_release(void);
 
 void SB_ShipGun_init(int obj)
@@ -444,7 +417,4 @@ void SB_ShipGun_init(int obj)
     ((SBShipGunState*)state)->unkE = 0;
 }
 
-/* 8b "li r3, N; blr" returners. */
 int SB_CannonBall_getExtraSize(void);
-
-/* render-with-objRenderFn_8003b8f4 pattern. */

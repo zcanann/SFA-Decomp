@@ -113,7 +113,6 @@ int wmgeneralscales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void wmgeneralscales_hitDetect(void)
 {
 }
@@ -130,7 +129,6 @@ void wmgeneralscales_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int wmgeneralscales_getExtraSize(void) { return 0x8; }
 int wmgeneralscales_getObjectTypeId(void) { return 0x9; }
 

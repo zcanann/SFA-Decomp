@@ -8,10 +8,6 @@
 #include "main/dll/modgfx.h"
 #include "main/resource.h"
 
-/* per-channel vertex-scale blend record (state+0x30, stride 0x18, 2 channels) */
-
-/* per-channel vertex-alpha blend record (state+0xAC, stride 8, 2 channels) */
-
 STATIC_ASSERT(offsetof(ModgfxState, vertexBuffers) == 0x78);
 STATIC_ASSERT(offsetof(ModgfxState, alphaChannels) == 0xAC);
 STATIC_ASSERT(offsetof(ModgfxState, blendColorR) == 0xBC);
@@ -20,8 +16,6 @@ STATIC_ASSERT(offsetof(ModgfxState, posCurX) == 0x60);
 STATIC_ASSERT(offsetof(ModgfxState, activeChannel) == 0xFC);
 STATIC_ASSERT(offsetof(ModgfxState, rotStepZ) == 0x100);
 STATIC_ASSERT(offsetof(ModgfxState, rotOffsetZ) == 0x106);
-
-/* vertex-group command payload handed to the updateVertex* handlers */
 
 static inline int* Modgfx_GetActiveModel(void* obj)
 {
@@ -1308,7 +1302,6 @@ FUN_800a3924(int param_1, undefined4 param_2, ExpgfxAttachedSourceState* param_3
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void projgfx_func07_nop(void);
 
 void projgfx_func06_nop(void);
@@ -1333,7 +1326,6 @@ void Effect1_initialise(void)
 
 void Effect2_func03_nop(void);
 
-/* 8b "li r3, N; blr" returners. */
 int projgfx_getObjectTypeId(void);
 
 void projgfx_release_doUnsupported(void);
@@ -1341,7 +1333,6 @@ void projgfx_release_doUnsupported(void);
 int projgfx_rayhit_doUnsupported(void);
 int projgfx_setzscale_doUnsupported(void);
 
-/* Pattern wrappers. */
 int projgfx_func04_ret_m1(void);
 
 ObjectDescriptor11 projgfx_funcs = {
@@ -1473,7 +1464,6 @@ extern f32 lbl_803DF884;
     spawnParams = (s16 *)&lbl_8039C338;             \
   } while (0)
 
-/* ---- partfx_spawnObject (FUN_800a4df4, v1.0) ---- */
 extern void vecRotateZXY(void* obj, f32* vec);
 
 #undef FILL338
@@ -1511,8 +1501,6 @@ extern f32 lbl_803DF9D4;
 
 #undef FILL350
 
-/* ===== (1) extern declarations needed by Effect1_func04 ===== */
-/* lbl_803DF720/724/728/730 already declared in modgfx.c; the rest are new. */
 extern f32 lbl_803DB7B0;
 extern f32 lbl_803DB7B4;
 // VERIFY lbl_803DF720 may already exist in modgfx.c
@@ -1595,7 +1583,6 @@ extern f32 lbl_803DF850;
 extern f32 lbl_803DF854;
 extern f32 lbl_803DF858;
 extern FxNode9 lbl_8039C320;
-/* lbl_803DF860 = int->f64 magic bias (.sdata2), auto-emitted; do NOT declare. */
 /* MtxBuildArg, vecRotateZXY, randFn_80080100, gExpgfxInterface, randomGetRange
    already declared in modgfx.c. */
 
@@ -1611,7 +1598,6 @@ extern FxNode9 lbl_8039C320;
     spawnParams = (s16 *)&lbl_8039C320;             \
   } while (0)
 
-/* ===== (3) function ===== */
 #pragma peephole off
 int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFlags,
                    u8 modelId, s16* extraArgs)
@@ -2751,7 +2737,6 @@ int Effect1_func04(void* sourceObj, int effectId, s16* spawnParams, u32 spawnFla
     default: /* L_800B2F6C */
         return -1;
     }
-    /* ===== common dispatch tail (L_800B2F74) ===== */
     cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
     if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) cfg.behaviorFlags ^= 2LL;
     if ((cfg.behaviorFlags & 1) != 0)

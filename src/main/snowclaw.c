@@ -182,7 +182,6 @@ void snowclaw_init(int* obj, u8* init)
     case 0x4d3:
         ((SnowclawState*)inner)->moveTablePtr = (int)(table + 0x54);
         ((SnowclawState*)inner)->moveIdBase = 0x400;
-    /* fall through */
     case 0x3e8:
         ((SnowclawState*)inner)->moveTablePtr = (int)(table + 0x5c);
         ((SnowclawState*)inner)->moveIdBase = 0x400;

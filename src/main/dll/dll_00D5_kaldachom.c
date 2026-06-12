@@ -337,12 +337,10 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void kaldachom_func0B(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners and small wrappers. */
 s16 kaldachom_setScale(int* obj) { return *(s16*)((char*)((int**)obj)[0xb8 / 4] + 0x274); }
 int kaldachom_getExtraSize(void) { return sizeof(CampfireState); }
 int kaldachom_getObjectTypeId(void) { return 0x49; }

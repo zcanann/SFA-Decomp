@@ -20,7 +20,6 @@ void bossdrakor_initialise(void)
 {
 }
 
-
 typedef struct BossdrakorPlacement
 {
     u8 pad0[0x19 - 0x0];
@@ -29,7 +28,6 @@ typedef struct BossdrakorPlacement
     s16 unk1C;
     s16 unk1E;
 } BossdrakorPlacement;
-
 
 /* bossdrakor_getExtraSize == 0x1a4. */
 typedef struct BossDrakorState
@@ -683,7 +681,6 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
         {
             ((BossDrakorState*)state)->curveFollowState = 1;
         }
-    /* fall through */
     case 24:
         found = ObjGroup_FindNearestObject(0x46, obj, 0);
         if (found != 0)

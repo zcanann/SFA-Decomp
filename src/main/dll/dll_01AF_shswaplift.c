@@ -7,7 +7,6 @@ extern void objRenderFn_8003b8f4(f32);
 
 extern f32 lbl_803E54C8;
 
-/* Trivial 4b 0-arg blr leaves. */
 void warpstonelift_free(void)
 {
 }
@@ -24,7 +23,6 @@ void warpstonelift_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int warpstonelift_getExtraSize(void) { return 0x1; }
 int warpstonelift_getObjectTypeId(void) { return 0x0; }
 int sh_staff_getExtraSize(void);
@@ -129,7 +127,6 @@ void warpstonelift_update(u8* obj)
     }
 }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 void warpstonelift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;

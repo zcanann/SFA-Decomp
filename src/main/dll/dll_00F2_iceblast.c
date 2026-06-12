@@ -39,9 +39,6 @@ extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E42BC;
-/* pushable_setScale: real v1.0 body defined at end of file (old v1.1 misimport removed). */
-
-/* pushable_render: recovered v1.0 body defined at end of file. */
 
 undefined4
 FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
@@ -131,7 +128,6 @@ FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return uVar3;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void invhit_hitDetect(void);
 
 void iceblast_free(void)
@@ -152,14 +148,10 @@ void iceblast_initialise(void)
 
 extern unsigned long GameBit_Set(int eventId, int value);
 
-/* 8b "li r3, N; blr" returners. */
 int iceblast_getExtraSize(void) { return 0x4; }
 int iceblast_getObjectTypeId(void) { return 0x0; }
 int flameblast_getExtraSize(void);
 
-/* 16b chained patterns. */
-
-/* render-with-fn(lbl) (no visibility check). */
 extern void objRenderFn_8003b8f4(int* obj, int a, int b, int c, int d, f32 scale);
 extern f32 lbl_803E3600;
 void iceblast_render(int* obj, int a, int b, int c, int d) { objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E3600); }

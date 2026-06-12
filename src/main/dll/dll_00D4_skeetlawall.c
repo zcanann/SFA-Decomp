@@ -8,8 +8,6 @@ extern f32 lbl_803E3058;
 
 extern void skeetlawall_setScale(int* obj, f32* outVec, u8* outByte);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void skeetlawall_free(void)
 {
 }
@@ -30,7 +28,6 @@ void skeetlawall_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int skeetlawall_getExtraSize(void) { return 0x7; }
 int skeetlawall_getObjectTypeId(void) { return 0x0; }
 

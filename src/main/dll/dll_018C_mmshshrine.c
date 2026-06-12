@@ -398,7 +398,6 @@ extern u8 lbl_803DB411;
 
 void mmsh_scales_update(int objArg);
 
-/* Trivial 4b 0-arg blr leaves. */
 void mmsh_shrine_release(void)
 {
 }
@@ -408,7 +407,3 @@ void mmsh_shrine_initialise(void)
 }
 
 void mmsh_scales_hitDetect(void);
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */

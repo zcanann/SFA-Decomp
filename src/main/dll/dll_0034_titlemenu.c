@@ -274,7 +274,6 @@ void TitleMenu_render(u8* param_1)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void TitleMenu_frameEnd(void)
 {
 }

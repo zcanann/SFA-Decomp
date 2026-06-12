@@ -2,25 +2,11 @@
 #include "ghidra_import.h"
 #include "main/dll/dimicewallstate_struct.h"
 
-
-
-
-
-
-
-
-
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIMExplosion.h"
-
-
-
-
-
-
 
 typedef struct DimicewallPlacement
 {
@@ -32,43 +18,12 @@ typedef struct DimicewallPlacement
     s16 unk1E;
 } DimicewallPlacement;
 
-
-
-
-
-
-
-
-
-
-
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
 
-
-/* Trivial 4b 0-arg blr leaves. */
-
-
-
-
-
-
-
-
-
-
-
-
-/* 8b "li r3, N; blr" returners. */
 int dimicewall_getExtraSize(void) { return 0x2; }
 int dimbarrier_getExtraSize(void);
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-
-
-
 
 void dimicewall_init(int obj, s8* p)
 {
@@ -83,7 +38,6 @@ void dimicewall_init(int obj, s8* p)
 }
 
 void dimgate_init(int obj, s8* p_unused_passthrough);
-
 
 int fn_801B17F4(int obj, int delta)
 {
@@ -101,10 +55,8 @@ extern int Sfx_PlayFromObject(int obj, int sfx);
 /* dimbarrier_update: while a live type-470 object is in the list, count down the
  * arm timer; on expiry fade the barrier out and latch its gamebit. */
 
-
 /* dimsnowball1c2_update: on a timer, if loading allows and the player is clear,
  * spawn a rolling snowball seeded from the placement params. */
-
 
 /* DIMwooddoor_updateFallingDebris: integrate the falling debris under gravity, spin it, and on
  * contact (or scripted trigger) fire the explosion and start the despawn timer. */

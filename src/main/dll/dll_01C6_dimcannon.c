@@ -264,7 +264,6 @@ void FUN_801b2550(undefined8 param_1, undefined8 param_2, double param_3, undefi
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
 void dimcannon_hitDetect(void)
@@ -353,7 +352,6 @@ extern int ObjHits_GetPriorityHit(int obj, int* out, int* a, int* b);
 extern void Sfx_PlayFromObject(int obj, int sfx);
 
 #pragma dont_inline on
-/* Toggle collision/render surface flags for matching block polys and layers. */
 #pragma dont_inline reset
 
 extern void* lbl_803DDB50;
@@ -835,13 +833,6 @@ int fn_801B2550(int* obj, int p2, ObjAnimUpdateState* animUpdate)
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-/* Trivial 4b 0-arg blr leaves. */
-
 extern unsigned long GameBit_Set(int eventId, int value);
 
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */

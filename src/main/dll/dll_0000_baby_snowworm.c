@@ -261,8 +261,6 @@ void GameUI_unselectAllItems(void)
     lbl_803DD8B8 = 0;
 }
 
-/* GameUI_gameTextShowNpcDialogue declared at end of file (needs externs declared below). */
-
 /* EN v1.0 0x8012DDB8  size: 32b  Set lbl_803DD776 to 1 if (u8)param is
  * nonzero else 0. */
 void fn_8012DDB8(u32 val)
@@ -273,7 +271,6 @@ void fn_8012DDB8(u32 val)
         lbl_803DD776 = 0;
 }
 
-/* Wider sbss/sdata extents touched by the larger v1.0 leaves below. */
 extern u8 framesThisStep;
 extern s32 lbl_803DBA5C;
 extern f32 lbl_803DBAA4;
@@ -4664,7 +4661,6 @@ void GameUI_update(void)
                                 lbl_803DD8A4 |= 0x80000;
                                 break;
                             }
-                        /* fallthrough */
                         case 1:
                             if (trickyBitFn_801241cc(*(int*)&lbl_8031B5D8[0x10], 0) == 0 &&
                                 trickyBitFn_801241cc(*(int*)&lbl_8031B5D8[0], 0) != 0)
@@ -4876,8 +4872,6 @@ void GameUI_update(void)
         Obj_ResetObjectSystem();
     }
 }
-
-/* segment pragma-stack balance (re-split): */
 
 extern void textureFree(void* p);
 

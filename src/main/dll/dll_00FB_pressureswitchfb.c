@@ -437,7 +437,6 @@ void pressureswitchfb_update(int obj)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void mmp_bridge_free(void);
 
 extern f32 lbl_803E3778;
@@ -527,7 +526,6 @@ void pressureswitchfb_init(u8* obj, u8* params)
     ((GameObject*)obj)->animEventCallback = (void*)pressureswitchfb_updateStateMode;
 }
 
-/* 8b "li r3, N; blr" returners. */
 int Door_getExtraSize(void);
 
 /* render-with-fn(lbl) (no visibility check). */
@@ -542,16 +540,6 @@ int Door_getExtraSize(void);
 #include "main/objseq.h"
 
 extern uint GameBit_Get(int eventId);
-
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* Drift-recovery: add new fns with v1.0 names. */
 
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read

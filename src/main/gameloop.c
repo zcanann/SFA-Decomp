@@ -14,8 +14,6 @@
 extern undefined8 camcontrol_playTargetTypeSfx();
 extern undefined8 runLoadingScreens();
 
-/* moved below GameTextSlot/global declarations */
-
 undefined2*
 FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -61,7 +59,6 @@ FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/* Pattern wrappers. */
 void doNothing_8001F678(void)
 {
 }
@@ -77,12 +74,9 @@ void doNothing_onSaveSelectScreenExit(void)
 int return1_800202BC(void) { return 0x1; }
 int return0_8002969C(void);
 
-/* ObjModel/model-file accessors. */
-
 extern void* gBoneParticleEffectInterface;
 extern u8 framesThisStep;
 
-/* Global game-state / text accessors. */
 extern u8 gameState;
 extern u8 timeStop;
 extern u8 shouldResetNextFrame;
@@ -152,7 +146,6 @@ void crash(void)
     *(u8*)0 = 0;
 }
 
-/* Simple field/global accessors. */
 extern int lbl_803DCAE8[2];
 extern u8 lbl_803DCA48;
 

@@ -557,13 +557,9 @@ int Effect14_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
   return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
 
-/* sda21 externs for Effect10_func05 tick. */
 extern f32 lbl_803DB838;
 
-/* Advance two periodic counters; compute sin of phase. */
 void Effect10_func05(void);
-
-/* Trivial 4b 0-arg blr leaves. */
 
 void Effect14_func05_nop(void)
 {

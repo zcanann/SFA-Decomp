@@ -87,7 +87,6 @@ STATIC_ASSERT(offsetof(WmSunState, glareParams) == 0x08);
 STATIC_ASSERT(offsetof(WmSunState, renderEnabled) == 0x0D);
 STATIC_ASSERT(sizeof(WmSunState) == 0x10);
 
-/* the anim-event callback (all variants) */
 #pragma peephole on
 int wmsun_SeqFn(int p1, int p2, ObjAnimUpdateState* actor)
 {
@@ -358,7 +357,6 @@ void wmsun_update(int obj)
         }
         return;
     }
-    /* WM_sun (0x2BD) */
     if (GameBit_Get(0x38f) != 0)
     {
         c = objAnim->bankIndex;

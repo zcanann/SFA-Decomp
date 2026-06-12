@@ -19,8 +19,6 @@ STATIC_ASSERT(sizeof(DfshShrinePlacement) == 0x24);
 STATIC_ASSERT(offsetof(DfshShrinePlacement, initialYaw) == 0x18);
 STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dfsh_objcreator_free(void)
 {
 }
@@ -29,12 +27,10 @@ void dfsh_objcreator_hitDetect(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int SpiritPrize_getExtraSize(void);
 int dfsh_objcreator_getExtraSize(void) { return 0x4; }
 int dfsh_objcreator_getObjectTypeId(void) { return 0x0; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4EB8;
 
 void dfsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -152,7 +148,3 @@ void dfsh_objcreator_init(int obj, s8* def)
     *(u8*)((char*)obj + 0x37) = 0xFF;
     ((GameObject*)obj)->anim.alpha = 0xFF;
 }
-
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */

@@ -29,15 +29,7 @@ extern u32 randomGetRange(int min, int max);
 extern undefined4 fn_80174BFC();
 extern u8* Obj_GetPlayerObject(void);
 
-/* magicdust extra block (collectible sparkle state; tail of the pickup record). */
-
 STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
-
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 
 void fn_80174588(int obj, PushableState* p2)
 {

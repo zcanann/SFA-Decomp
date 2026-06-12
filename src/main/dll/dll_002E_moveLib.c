@@ -219,16 +219,12 @@ void FUN_80114b10(int param_1, undefined4* param_2, undefined2 param_3, undefine
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_19_func04_nop(void);
 
-/* 8b "li r3, N; blr" returners. */
 int dll_2E_func0F_ret_0(void) { return 0x0; }
 
-/* 12b chained getters. */
 f32 dll_19_func0B(int* obj);
 
-/* misc 8b leaves */
 void fn_80113F94(int* p, f32 v) { *(f32*)((char*)p + 0x614) = v; }
 void dll_2E_func04(int* p, int v) { *(int*)((char*)p + 0x608) = v; }
 
@@ -685,8 +681,6 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
     return 0;
 }
 
-/* segment pragma-stack balance (re-split): */
-
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern u32 randomGetRange(int min, int max);
 extern int ObjGroup_FindNearestObject();
@@ -1081,7 +1075,6 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
     return 1;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_2E_release_nop(void)
 {
 }

@@ -535,7 +535,6 @@ void FUN_8019f1dc(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void cfguardian_release(void);
 
 /* Per-object extra state for the CloudRunner guardian
@@ -569,8 +568,6 @@ STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
 STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 
-/* spiritdoorspirit_getExtraSize == 0x1. */
-
 void cfperch_render(void)
 {
 }
@@ -589,14 +586,10 @@ void cfperch_initialise(void)
 
 void cfprisoncage_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int cfperch_getExtraSize(void) { return 0x0; }
 int cfperch_getObjectTypeId(void) { return 0x0; }
 int cfprisoncage_getExtraSize(void);
 
-/* chained byte bit-extract. */
-
-/* GameBit-gated byte write. */
 #pragma scheduling off
 int fn_801A04F4(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -607,12 +600,7 @@ int fn_801A04F4(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-/* plain forwarder. */
 extern int waterSpellStone1Fn_8019b4c8();
-
-/* Drift-recovery: add new fns with v1.0 names. */
-/* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
-/* ObjMsg_AllocQueue already declared as undefined */
 
 #pragma peephole off
 void cfperch_init(int* obj)

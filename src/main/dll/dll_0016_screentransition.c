@@ -15,41 +15,28 @@ void FUN_800d7780(undefined param_1)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void Checkpoint_release(void);
 
-/* 8b "li r3, N; blr" returners. */
-
-/* sda21 accessors. */
 extern u8 lbl_803DD42D;
 u8 screenTransition_func07(void) { return lbl_803DD42D; }
 
-/* Pattern wrappers. */
 extern u32 lbl_803DD410;
 
-/* 12b 3-insn patterns. */
-
-/* misc 8b leaves */
 extern f32 screenTransitionAlpha;
 f32 screenTransition_getAlpha(void) { return screenTransitionAlpha; }
 
-/* Pattern wrappers. */
 int Dummy04_func03_ret_m1(void);
 
-/* sda21 writers. */
 extern u8 screenTransitionPause;
 #pragma peephole off
 void setScreenTransitionPause(u32 pause) { screenTransitionPause = (u8)pause; }
 #pragma peephole reset
 
-/* fcmp-eq-to-bool. */
 extern f32 lbl_803E0558;
 u32 isScreenTransitionActive(void) { return lbl_803E0558 == screenTransitionAlpha; }
 
-/* multi-store leaf (single float broadcast). */
 extern f32 lbl_803E0570;
 
-/* Checkpoint table initialiser. */
 extern f32 lbl_803E0564;
 extern f32 lbl_803E0560;
 extern f32 lbl_803E055C;
@@ -371,7 +358,6 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
 
 extern f64 lbl_803E0520;
 
-/* segment pragma-stack balance (re-split): */
 #pragma scheduling reset
 #pragma scheduling reset
 #pragma scheduling reset
@@ -413,25 +399,11 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
 
 #pragma peephole off
 
-/* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling on
 #pragma peephole on
 
-/* 8b "li r3, N; blr" returners. */
-
-/* sda21 accessors. */
-
-/* Pattern wrappers. */
-
-/* player_init: memset constructor */
 #pragma scheduling off
 #pragma peephole off
-
-/* fn_800D9F38 ? large init updating multiple float fields based on b's bytes */
-
-/* player_updateVel */
-
-/* RomCurve_setA4: similar to fn_800D9F38 branch2 with different consts */
 
 #pragma scheduling on
 #pragma peephole on
@@ -439,7 +411,6 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
 #pragma scheduling off
 #pragma peephole off
 
-/* RomCurve_stepClamped: keep the curve phase just inside the endpoints, then advance it. */
 #pragma peephole on
 
 #pragma peephole off
@@ -448,18 +419,12 @@ static inline u8 Objfsa_IsWalkGroupActive(int groupIndex);
 
 #pragma peephole off
 
-/* UIController dispatch through the shared GameUI interface. */
 #pragma scheduling on
 #pragma peephole on
 
 #pragma scheduling off
 #pragma peephole off
 
-/* player_setState */
-
-/* walkPath_writeU16LE: split a path id into two little-endian bytes. */
-
-/* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
 #pragma scheduling on
 
 #pragma scheduling off

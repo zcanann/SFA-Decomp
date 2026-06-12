@@ -12,8 +12,6 @@ typedef struct
 
 extern ModgfxInterface** gModgfxInterface;
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dll_99_func01_nop(void)
 {
 }

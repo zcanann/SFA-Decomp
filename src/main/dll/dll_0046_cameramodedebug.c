@@ -102,8 +102,6 @@ void CameraModeDebug_init(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void CameraModeDebug_copyToCurrent_nop(void)
 {
 }
@@ -118,7 +116,6 @@ void CameraModeDebug_initialise_nop(void)
 
 void CameraModeStatic_copyToCurrent_nop(void);
 
-/* fn_X(lbl); lbl = 0; */
 void CameraModeDebug_free(void)
 {
     mm_free(lbl_803DD550);

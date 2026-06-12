@@ -25,15 +25,12 @@ typedef struct ShBeaconPlacement
     u8 pad22[0x28 - 0x22];
 } ShBeaconPlacement;
 
-/* sh_beacon_getExtraSize == 0x18. */
-
 STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
 extern uint GameBit_Get(int eventId);
 
 extern f32 timeDelta;
 
-/* 8b "li r3, N; blr" returners. */
 int sh_beacon_getExtraSize(void) { return 0x18; }
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
@@ -43,11 +40,6 @@ extern void ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int
 extern f32 lbl_803E5528;
 extern f32 lbl_803E552C;
 
-/* 96b: render via objRenderFn + fn_80098B18 with 3-float local. */
-
-/* 48b: free if 0x4000 flag set. */
-
-/* 120b: tick a float timer; on wrap optionally trigger an effect. */
 int sh_beacon_SeqFn(int obj)
 {
     int extra = *(int*)&((GameObject*)obj)->extra;
@@ -63,14 +55,12 @@ int sh_beacon_SeqFn(int obj)
     return 0;
 }
 
-/* 20b: reset extra->field_0x8 = lbl_803E552C, return 1. */
 int fn_801DA9CC(int obj)
 {
     ((ShBeaconState*)*(int*)&((GameObject*)obj)->extra)->fadeTimer = lbl_803E552C;
     return 1;
 }
 
-/* 112b: vtable cleanup then maybe Obj_FreeObject. */
 void sh_beacon_free(int obj, int param_2)
 {
     int extra = *(int*)&((GameObject*)obj)->extra;
@@ -85,7 +75,6 @@ void sh_beacon_free(int obj, int param_2)
     }
 }
 
-/* 56b: single-call hit-effect poll. */
 void sh_emptytumblew_update(int obj);
 
 /* TODO stubs to align function set with v1.0 asm. Bodies are large

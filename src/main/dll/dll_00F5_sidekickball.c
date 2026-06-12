@@ -82,12 +82,8 @@ extern f32 lbl_803E431C;
 
 void FUN_80178338(undefined4 param_1);
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
 int sidekickball_getExtraSize(void) { return 0x2cc; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3680;
 extern void objRenderFn_8003b8f4(f32);
 
@@ -159,7 +155,6 @@ extern u32 getButtonsJustPressed(int controller);
 extern int fn_80295BF0(int* player);
 extern int fn_8029669C(int* player);
 extern void vecRotateZXY(void* inParams, f32* outVec);
-/* extern void ObjMsg_SendToObject(int *target, int msg, int *src, int p4); -- already declared */
 extern f32 lbl_803E3688;
 extern f32 lbl_803E368C;
 extern f32 lbl_803E3690;
@@ -359,7 +354,6 @@ void sidekickball_update(u8* self)
         return;
     case SIDEKICK_BALL_MOVING:
         trickyBallMove(self);
-    /* fallthrough */
     case SIDEKICK_BALL_HELD:
         self[0xAF] = (u8)(self[0xAF] & ~0x8);
         gotHit = 0;
@@ -660,14 +654,12 @@ void area_hitDetect(void);
 
 void area_update(void);
 
-/* obj->u16_X |= MASK */
 void area_init(u16* obj);
 
 void area_release(void);
 
 void area_initialise(void);
 
-/* Trivial 4b 0-arg blr leaves. */
 void levelname_free(void);
 
 void levelname_render(void);
@@ -689,7 +681,6 @@ void levelname_update(int* obj);
 
 void ProjectileSwitch_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int levelname_getExtraSize(void);
 int levelname_getObjectTypeId(void);
 int ProjectileSwitch_getExtraSize(void);

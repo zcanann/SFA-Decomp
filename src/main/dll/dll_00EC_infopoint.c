@@ -310,7 +310,6 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     while (true);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void flammablevine_release(void);
 
 void infopoint_free(void)
@@ -327,14 +326,10 @@ void infopoint_initialise(void)
 
 void decoration11a_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int infopoint_getExtraSize(void) { return 0x20; }
 int infopoint_getObjectTypeId(void) { return 0x0; }
 int decoration11a_getExtraSize(void);
 
-/* Carryable impact state machine that spawns break particles, hides, then respawns. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3B70;
 
@@ -348,17 +343,6 @@ void infopoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* Fall_Ladders_free: expgfx interface freeObject callback. */
-
-/* coldwatercontrol_init: set float field + OR flag bits. */
-
-/* landed_arwing_free: free child object + detach link. */
-
-/* landed_arwing_render: visible-guarded render with extra call. */
-
-/* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
 extern void buttonDisable(int p1, int mask);
 
 void infopoint_update(int obj)
@@ -370,12 +354,7 @@ void infopoint_update(int obj)
     }
 }
 
-/* landed_arwing_init: flag bits, counter, conditional unlock, set callback. */
 void landed_arwing_init(int obj, int param);
-
-/* landed arwing hit/animation step: handles impact reactions and spawned debris. */
-
-/* landed arwing material flags: mirrors game bits into the damaged texture state. */
 
 #pragma dont_inline on
 #pragma dont_inline reset

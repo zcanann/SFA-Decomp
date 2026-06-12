@@ -352,8 +352,6 @@ typedef struct BabyCloudRunnerState
 
 STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 /* Per-object extra state for the CloudRunner guardian
  * (cfguardian_getExtraSize == 0xa9c). */
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
@@ -436,12 +434,10 @@ typedef struct WindliftObjectDef
 
 extern u8 framesThisStep;
 
-/* 8b "li r3, N; blr" returners. */
 int windlift_getExtraSize(void) { return 0x178; }
 int windlift_getObjectTypeId(void) { return 0x0; }
 int cfpowerbase_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4190;
 #pragma peephole off
 void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -452,15 +448,8 @@ void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-/* chained byte bit-extract. */
-
-/* plain forwarder. */
-
-/* Drift-recovery: add new fns with v1.0 names. */
 extern f32 lbl_803E416C;
-/* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
 extern f32 fn_80296214(void* p);
-/* ObjMsg_AllocQueue already declared as undefined */
 extern void Music_Trigger(int a, int b);
 
 #pragma scheduling off

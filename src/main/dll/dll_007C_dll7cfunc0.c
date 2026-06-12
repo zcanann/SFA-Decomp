@@ -242,7 +242,6 @@ void dll_7C_func03(int sourceObj, int variant, int posSource, uint flags)
 
 int dll_7D_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5, f32* arg6);
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_7C_func01_nop(void)
 {
 }

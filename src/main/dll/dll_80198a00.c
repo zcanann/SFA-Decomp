@@ -24,8 +24,6 @@ extern const char sMoonrockTriggerIdentFormat[];
 
 #define MOONROCK_ANGLE_TO_RADIANS(angle) ((lbl_803E40C8 * (f32)(s32)(-(angle))) / lbl_803E40CC)
 
-/* lightning_free: ObjGroup_RemoveObject + free of obj->_b8->_0 if non-null. */
-
 /* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
  * lightningRender(handle). */
 
@@ -216,7 +214,4 @@ void fn_80198DE8(u8* obj, int seqArg)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void WaterFallSpray_render(void);
-
-/* 8b "li r3, N; blr" returners. */

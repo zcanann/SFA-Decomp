@@ -4,13 +4,6 @@
 
 extern undefined4 ObjGroup_AddObject();
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* explodable_getExtraSize == 0x6e8 (gas-vent explodable). */
-/* Per-fragment record inside DrExplodableState (stride 0x70). */
-
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 
 STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
@@ -86,7 +79,6 @@ FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void cfforcefield_release(void);
 
 void attractor_hitDetect(void)
@@ -107,14 +99,10 @@ void attractor_initialise(void)
 
 void cfmagicwall_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int attractor_getExtraSize(void) { return 0x0; }
 int attractor_getObjectTypeId(void) { return 0x0; }
 int cfmagicwall_getExtraSize(void);
 
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E43D0;
 extern void* Obj_GetPlayerObject(void);
@@ -127,15 +115,10 @@ void attractor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void cfmagicwall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 void attractor_free(int x) { ObjGroup_RemoveObject(x, 0x1e); }
 
-/* state encode: ((obj->_X)->_Y << shift) | const. */
 u32 exploded_getObjectTypeId(ExplodedObject* obj);
 
-/* byte-to-short shift8 pattern. */
-
-/* attractor_setScale: branch on s8 flag at +0x19 of obj->_4C; if set return s16 at +0x1a, else 0. */
 int attractor_setScale(int* obj)
 {
     int* p = (int*)((int**)obj)[0x4c / 4];
@@ -146,7 +129,6 @@ int attractor_setScale(int* obj)
     return 0;
 }
 
-/* attractor_init: ObjGroup_AddObject(obj, 0x1e); byte<<8 -> sth at obj. */
 void attractor_init(s16* obj, void* data)
 {
     ObjGroup_AddObject(obj, 0x1e);
@@ -211,8 +193,6 @@ void attractor_func0B(u8* obj, void** out)
  * lbl_803E43C0 and obj->_50->[4], stash at obj+0x8; then clear bits 5..7 of
  * obj->_b8->_0. */
 void slidingdoor_init(u8* obj, u8* data);
-
-/* cfforcefield_init: byte<<8 sth; insert GameBit_Get bit into bit-7 of *(u8*)obj->_B8; storeZeroToFloatParam. */
 
 /* Exploded debris setup: seed object angles, linear velocity, angular velocity,
  * ground clearance, and the randomized lifetime countdown. */

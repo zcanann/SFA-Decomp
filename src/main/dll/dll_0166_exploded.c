@@ -5,13 +5,6 @@
 
 extern u32 randomGetRange(int min, int max);
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* explodable_getExtraSize == 0x6e8 (gas-vent explodable). */
-/* Per-fragment record inside DrExplodableState (stride 0x70). */
-
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 
 STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
@@ -89,7 +82,6 @@ FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void cfforcefield_release(void);
 
 void exploded_free(void)
@@ -108,14 +100,11 @@ void exploded_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int slidingdoor_getExtraSize(void);
 int exploded_getExtraSize(void) { return 0x6c; }
 
-/* Pattern wrappers. */
 u8 exploded_setScale(int* obj) { return ((ExplodedObjectState*)((int**)obj)[0xb8 / 4])->explodePhase; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E43BC;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E43F4;
@@ -128,17 +117,9 @@ void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void cfmagicwall_update(int obj);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* state encode: ((obj->_X)->_Y << shift) | const. */
 u32 exploded_getObjectTypeId(ExplodedObject* obj) { return (obj->mapData->objectTypeTag << 11) | 0x400; }
 
-/* byte-to-short shift8 pattern. */
 void cfmagicwall_init(s16* dst, void* src);
-
-/* attractor_setScale: branch on s8 flag at +0x19 of obj->_4C; if set return s16 at +0x1a, else 0. */
-
-/* attractor_init: ObjGroup_AddObject(obj, 0x1e); byte<<8 -> sth at obj. */
 
 extern u8 framesThisStep;
 
@@ -241,8 +222,6 @@ void attractor_func0B(u8* obj, void** out);
  * slidingdoor_SeqFn as obj->thinkRoutine; convert data[0x21] to f32, scale by
  * lbl_803E43C0 and obj->_50->[4], stash at obj+0x8; then clear bits 5..7 of
  * obj->_b8->_0. */
-
-/* cfforcefield_init: byte<<8 sth; insert GameBit_Get bit into bit-7 of *(u8*)obj->_B8; storeZeroToFloatParam. */
 
 extern void Obj_TransformLocalPointByWorldMatrix(void* obj, void* state, f32* out, int flags);
 extern void fn_80065684(double x, double y, double z, void* obj, f32* out, int flags);

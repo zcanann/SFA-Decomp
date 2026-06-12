@@ -41,12 +41,7 @@ FUN_8011dafc(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void OptionsScreen_frameEnd(void);
-
-/* 8b "li r3, N; blr" returners. */
-
-/* Pattern wrappers. */
 
 extern s16 lbl_803DD8C2;
 extern void Sfx_PlayFromObjectLimited(int obj, u16 sfx, int);

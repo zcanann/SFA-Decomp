@@ -2,12 +2,7 @@
 #include "main/game_object.h"
 #include "main/dll/beaconflags_types.h"
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
 int sh_staff_getExtraSize(void) { return 0x74; }
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 
 void sh_staff_free(int* obj, int p2)
 {
@@ -71,8 +66,6 @@ typedef struct ShStaffPlacement
     u8 unk19;
     u8 pad1A[0x20 - 0x1A];
 } ShStaffPlacement;
-
-/* sh_beacon_getExtraSize == 0x18. */
 
 STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
@@ -336,20 +329,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-/* 8b "li r3, N; blr" returners. */
 int sh_beacon_getExtraSize(void);
-
-/* 96b: render via objRenderFn + fn_80098B18 with 3-float local. */
-
-/* 48b: free if 0x4000 flag set. */
-
-/* 120b: tick a float timer; on wrap optionally trigger an effect. */
-
-/* 20b: reset extra->field_0x8 = lbl_803E552C, return 1. */
-
-/* 112b: vtable cleanup then maybe Obj_FreeObject. */
-
-/* 56b: single-call hit-effect poll. */
 
 /* TODO stubs to align function set with v1.0 asm. Bodies are large
  * state-machine and animation logic; filling them is a follow-up task. */

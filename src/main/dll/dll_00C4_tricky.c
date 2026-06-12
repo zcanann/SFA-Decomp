@@ -1660,7 +1660,6 @@ void Tricky_update(int obj)
     }
 }
 
-/* Tricky_init: 536b - initialize Tricky state, command callback, and path controller. */
 void Tricky_init(int obj)
 {
     int state;
@@ -1714,7 +1713,6 @@ void Tricky_init(int obj)
     ((TrickyState*)state)->unkD = -1;
 }
 
-/* Tricky_resumeAfterCommand: resume Tricky visibility, collision, and fade after command finish. */
 void Tricky_resumeAfterCommand(int obj, int state)
 {
     u8 moveId;
@@ -1757,7 +1755,6 @@ void Tricky_resumeAfterCommand(int obj, int state)
     }
 }
 
-/* trickyFn_80148d8c: 828b - handle Tricky's completed-command fade and reward spawning. */
 void trickyFn_80148d8c(int obj, int state)
 {
     int setup;
@@ -1873,7 +1870,6 @@ void trickyFn_80148d8c(int obj, int state)
     }
 }
 
-/* collectibleFn_80149cec: 876b - spawn or reposition Tricky reward objects from packed command bits. */
 int collectibleFn_80149cec(int obj, int state, int spawnBits, u32 useAltMode, u32 mode)
 {
     u32 commandSpawnIds[2];
@@ -2378,7 +2374,6 @@ void baddie_updateWhileFrozen(int obj, u8* state, u8 fromHit)
     }
 }
 
-/* baddieInstantiateWeapon: 248b - refresh Tricky's attached child object when its setup id changes. */
 void baddieInstantiateWeapon(int obj, int state)
 {
     int parentSetup;
@@ -2414,7 +2409,6 @@ void baddieInstantiateWeapon(int obj, int state)
     }
 }
 
-/* baddieTargetFn_8014a150: 436b - line-of-sight and bbox visibility check between Tricky and a target. */
 u8 baddieTargetFn_8014a150(int obj, int state, void* from, void* to)
 {
     u8 traceHit[4];
@@ -2472,7 +2466,6 @@ u8 baddieTargetFn_8014a150(int obj, int state, void* from, void* to)
     return visible;
 }
 
-/* baddieFn_8014a304: 760b - update Tricky's four quadrant line-of-sight state bits. */
 void baddieFn_8014a304(f32 radius, int obj, int state)
 {
     u8 traceHit[4];
@@ -2566,7 +2559,6 @@ void baddieFn_8014a304(f32 radius, int obj, int state)
 
 void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* nearestSpecialY);
 
-/* Tricky_applyFloorResponse: apply Tricky floor response and movement-control callbacks. */
 void Tricky_applyFloorResponse(int obj, int state)
 {
     f32 nearestFloorY;
@@ -2643,7 +2635,6 @@ void Tricky_applyFloorResponse(int obj, int state)
     }
 }
 
-/* Tricky_findNearbyFloorHeights: find nearby floor heights and special surface deltas for Tricky. */
 void Tricky_findNearbyFloorHeights(int obj, int state, f32* nearestFloorY, f32* nearestSpecialY)
 {
     int hitList[2];
@@ -2921,14 +2912,11 @@ void FUN_80147884(undefined8 param_1, undefined8 param_2, undefined8 param_3, un
     return;
 }
 
-/* 8b "li r3, N; blr" returners. */
 int Tricky_getExtraSize(void) { return 0x83c; }
 
-/* misc 16b 4-insn patterns. */
 u8 Tricky_func0E(int* obj) { return *((u8*)((int**)obj)[0xb8 / 4][0x0 / 4] + 0x1); }
 u8 Tricky_render2(int* obj) { return *((u8*)((int**)obj)[0xb8 / 4][0x0 / 4] + 0x0); }
 
-/* Tricky_getCurrentCommandType: 24b - write state command byte 0xd to the outparam. */
 int Tricky_getCurrentCommandType(int* obj, int* out)
 {
     *out = *((s8*)obj[0xb8 / 4] + 0xd);
@@ -2940,7 +2928,6 @@ extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern void walkPath_writeU16LE(int pathId, u8* out);
 extern int Objfsa_FindNearestEnabledCurveType24(void* pos, int param_2, int param_3);
 
-/* trickyFn_801451d8: 300b - seed Tricky's path state and ensure the helper object exists. */
 int trickyFn_801451d8(int obj, int state)
 {
     u8 pathBytes[16];
@@ -2984,7 +2971,6 @@ int trickyFn_801451d8(int obj, int state)
     }
 }
 
-/* Tricky_func11: 72b - if GameBit_Get(0x4e4), OR 0x10000 into obj->_b8->_54. */
 void Tricky_func11(int* obj)
 {
     register int* p = (int*)obj[0xb8 / 4];
@@ -2994,7 +2980,6 @@ void Tricky_func11(int* obj)
     }
 }
 
-/* Tricky_func13: 40b - lbz/cmplwi(8/0xe) selector returning 1 or 0. */
 int Tricky_func13(int* obj)
 {
     u8 v = *((u8*)obj[0xb8 / 4] + 8);
@@ -3002,7 +2987,6 @@ int Tricky_func13(int* obj)
     return 0;
 }
 
-/* Tricky_func12: 36b - cmpwi(5) selector returning 1 or 0. */
 int Tricky_func12(int* obj)
 {
     u8 v;
@@ -3020,7 +3004,6 @@ int Tricky_func12(int* obj)
     return r;
 }
 
-/* Tricky_func10: enter state 10 against targetObj, or queue it while Tricky is busy. */
 int Tricky_func10(int* obj, int targetObj)
 {
     int* state = (int*)obj[0xb8 / 4];
@@ -3053,7 +3036,6 @@ int Tricky_func10(int* obj, int targetObj)
     return 1;
 }
 
-/* Tricky_func0F: start or refresh state 5 against a nearby curve target. */
 void Tricky_func0F(int* obj, int commandEnabled, int targetObj)
 {
     register int* state = (int*)obj[0xb8 / 4];
@@ -3096,7 +3078,6 @@ void Tricky_func0F(int* obj, int commandEnabled, int targetObj)
     }
 }
 
-/* Tricky_getAvailableCommands: 124b - GameBit_Get cascade returning command flags. */
 int Tricky_getAvailableCommands(void)
 {
     int r = 0;
@@ -3110,12 +3091,10 @@ int Tricky_getAvailableCommands(void)
     return r;
 }
 
-/* trickyReportError: 80b - varargs OSReport-style stub. */
 void trickyReportError(const char* fmt, ...)
 {
 }
 
-/* trickyDebugPrint: 80b - varargs OSReport-style stub. */
 void trickyDebugPrint(const char* fmt, ...)
 {
 }
@@ -3124,7 +3103,6 @@ extern f32 lbl_803E25A4;
 extern f32 lbl_803E2500;
 extern f32 lbl_803E2418;
 
-/* Tricky_findNearestGroup4BObject: find nearest object within distance threshold. */
 u8* Tricky_findNearestGroup4BObject(u8* obj, TrickyState* state)
 {
     int* objs;
@@ -3157,7 +3135,6 @@ u8* Tricky_findNearestGroup4BObject(u8* obj, TrickyState* state)
     return result;
 }
 
-/* trickyFn_80144f50: 648b - update Tricky's water/out-of-water probe and animation. */
 void trickyFn_80144f50(int obj, int state)
 {
     int sfxState;
@@ -3237,7 +3214,6 @@ void trickyFn_80144f50(int obj, int state)
     }
 }
 
-/* frozenEnemyFn_80149bb4: 312b - flag bits to byte field. */
 void frozenEnemyFn_80149bb4(int* obj, u32 flags, f32 f, u16 val)
 {
     *((u8*)obj + 0x2f1) = 0;

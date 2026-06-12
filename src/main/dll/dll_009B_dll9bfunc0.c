@@ -2,12 +2,6 @@
 #include "main/dll/screenfx_types.h"
 #include "main/dll/screens.h"
 
-/* dll_9A_func03 rewritten below (after shared screen-fx typedefs). */
-
- /* 0x18 */
-
- /* 0x60 */
-
 extern u8 lbl_80317BD8[];
 extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E13A0;
@@ -175,8 +169,6 @@ void dll_9B_func03(int a, int b, int p, uint flags)
 extern u8 lbl_80317E00[];
 
 void dll_9C_func03(int a, int b, int p, uint flags);
-
-/* Trivial nops */
 
 void dll_9B_func01_nop(void)
 {

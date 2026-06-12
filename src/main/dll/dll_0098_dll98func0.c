@@ -14,8 +14,6 @@ extern ModgfxInterface** gModgfxInterface;
 
 extern u32 randomGetRange(int min, int max);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dll_98_func01_nop(void)
 {
 }

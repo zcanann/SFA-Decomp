@@ -936,7 +936,6 @@ void FUN_801c6e04(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void ecsh_shrine_release(void)
 {
 }
@@ -947,11 +946,7 @@ void ecsh_shrine_initialise(void)
 
 void ecsh_creator_free(void);
 
-/* 8b "li r3, N; blr" returners. */
-
 extern void ModelLightStruct_free(void* light);
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 
 extern int objCreateLight(int a, int b);
 extern int lbl_803DDBC0;

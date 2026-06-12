@@ -182,7 +182,6 @@ void FUN_801c6e04(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void ecsh_shrine_release(void);
 
 void ecsh_creator_free(void)
@@ -203,12 +202,10 @@ void ecsh_creator_initialise(void)
 
 void gpsh_shrine_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int ecsh_creator_getExtraSize(void) { return 0xa; }
 int ecsh_creator_getObjectTypeId(void) { return 0x0; }
 int gpsh_shrine_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4FF8;
 
 void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)

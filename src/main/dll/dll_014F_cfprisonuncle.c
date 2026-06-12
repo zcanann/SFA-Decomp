@@ -541,7 +541,6 @@ void FUN_8019f1dc(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void cfguardian_release(void);
 
 /* Per-object extra state for the CloudRunner guardian
@@ -577,8 +576,6 @@ STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
  * (gcrobotlightbea_getExtraSize == 0xc). */
 
 STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
-
-/* spiritdoorspirit_getExtraSize == 0x1. */
 
 void cfprisonuncle_free(void)
 {
@@ -667,14 +664,10 @@ void cfprisonuncle_update(int* obj)
 }
 void gcrobotlightbea_render(void);
 
-/* 8b "li r3, N; blr" returners. */
 int cfprisonuncle_getExtraSize(void) { return 0xa8; }
 int cfprisonuncle_getObjectTypeId(void) { return 0x9; }
 int gcrobotlightbea_getExtraSize(void);
 
-/* chained byte bit-extract. */
-
-/* state-transition: kicks player into mode 2 when sandworm not yet eaten. */
 #pragma scheduling on
 int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -688,12 +681,7 @@ int fn_8019FC84(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-/* plain forwarder. */
 extern int waterSpellStone1Fn_8019b4c8();
-
-/* Drift-recovery: add new fns with v1.0 names. */
-/* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
-/* ObjMsg_AllocQueue already declared as undefined */
 
 #pragma scheduling off
 void cfprisonuncle_init(int* obj)
@@ -712,7 +700,6 @@ void cfprisonuncle_init(int* obj)
     }
 }
 
-/* copy 3 floats within same struct */
 void cfguardian_hitDetect(int* obj);
 
 extern int objUpdateOpacity(int sub);

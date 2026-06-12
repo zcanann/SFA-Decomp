@@ -347,7 +347,6 @@ void FUN_801b5d00(int param_1, int param_2)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void explosion_hitDetect(void);
 
 void dll_1CE_hitDetect(void)
@@ -364,12 +363,10 @@ void dll_1CE_initialise(void)
 
 void dimmagicbridge_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int dll_1CE_getExtraSize(void) { return 0xc; }
 int dll_1CE_getObjectTypeId(void) { return 0x0; }
 int dimmagicbridge_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
 extern f32 lbl_803E49E8;
 
@@ -383,7 +380,6 @@ void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-/* conditional init/free pair. */
 extern void* lbl_803DDB78;
 #pragma scheduling on
 #pragma peephole on
@@ -429,13 +425,8 @@ void dll_1CE_init(u8* obj, u8* params)
     sub->openVelocity = lbl_803E49F0;
 }
 
-/* explosion_free: model-light release if present. */
 extern void ModelLightStruct_free(void*);
 void explosion_free(int obj);
-
-/* explosion_getObjectTypeId: tile/index lookup capped by table count. */
-
-/* dim_levelcontrol_free: gameplay music + time-of-day reset. */
 
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */

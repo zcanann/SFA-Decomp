@@ -342,7 +342,6 @@ void TitleMenuItem_initialise(void)
     slots[5] = 0;
 }
 
-/* Drift-recovery: add new fns with v1.0 names. */
 extern void* textureLoadAsset(int id);
 extern void textureFree(void* p);
 extern void* mmAlloc(int size, int heap, int flags);

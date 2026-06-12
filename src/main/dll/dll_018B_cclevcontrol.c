@@ -7,9 +7,6 @@
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 extern f32 timeDelta;
@@ -76,15 +73,12 @@ FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* 8b "li r3, N; blr" returners. */
 int cclightfoot_getExtraSize(void);
 int cclevcontrol_getExtraSize(void) { return 0x10; }
 
-/* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E46CC;
 void cclevcontrol_render(void) { objRenderFn_8003b8f4(lbl_803E46CC); }
 
-/* Drift-recovery: add new fns with v1.0 names. */
 extern void envFxActFn_800887f8(int a);
 extern void Music_Trigger(int a, int b);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
@@ -108,8 +102,6 @@ int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-
-/* ObjLink_DetachChild and Obj_FreeObject already declared in earlier extern blocks */
 
 void cclightfoot_free(int* obj, int p2);
 

@@ -14,7 +14,6 @@ extern void Obj_FreeObject(int obj);
 extern void gameBitDecrement(int eventId);
 extern void GameBit_Set(int eventId, int value);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -59,8 +58,6 @@ int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-/* 8b "li r3, N; blr" returners. */
-/* 8b "li r3, N; blr" returners. */
 int FireFlyLantern_getExtraSize(void) { return 0x24; }
 int FireFlyLantern_getObjectTypeId(void) { return 0x8; }
 
@@ -77,7 +74,6 @@ void FireFlyLantern_free(int obj)
     ObjGroup_RemoveObject(obj, 15);
 }
 
-/* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3AF0;
 void FireFlyLantern_render(void) { objRenderFn_8003b8f4(lbl_803E3AF0); }
 
@@ -173,7 +169,6 @@ void FireFlyLantern_init(int obj, int def)
     }
 }
 
-/* Placed last (anti-inline; the init caller above used an extern bl). */
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int loadObjectAtObject(int* obj, void* setup);

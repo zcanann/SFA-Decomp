@@ -75,7 +75,6 @@ typedef struct SnowBikeSetTypeState
     u8 pad4C4[0x4C8 - 0x4C4];
 } SnowBikeSetTypeState;
 
-/* Trivial 4b 0-arg blr leaves. */
 void SnowBike_func17(void)
 {
 }
@@ -84,13 +83,11 @@ void SnowBike_func16(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int SnowBike_func0E(void) { return 0x2; }
 int SnowBike_render2(void) { return 0x0; }
 int SnowBike_getExtraSize(void) { return 0x59c; }
 int SnowBike_getObjectTypeId(void) { return 0x3; }
 
-/* Pattern wrappers. */
 u8 SnowBike_func0B(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x420); }
 
 void SnowBike_mount(int obj, f32* x, f32* y, f32* z)
@@ -404,7 +401,6 @@ void SnowBike_free(int obj)
     }
 }
 
-/* 16b chained patterns. */
 s32 SnowBike_func14(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x422); }
 s32 SnowBike_getType(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x421); }
 

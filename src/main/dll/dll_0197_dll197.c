@@ -47,7 +47,6 @@ STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
 STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);
 STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_197_hitDetect(void)
 {
 }
@@ -205,11 +204,9 @@ void dll_197_update(int obj)
     }
 }
 
-/* 8b "li r3, N; blr" returners. */
 int dll_197_getExtraSize(void) { return 0x10; }
 int dll_197_getObjectTypeId(void) { return 0x1; }
 
-/* Render-side line-of-sight particle callback for the cup object. */
 extern f32 lbl_803E5120;
 extern f32 lbl_803E5124;
 extern f32 lbl_803E5128;
@@ -371,7 +368,6 @@ void dll_197_init(int obj, int data)
 
 void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_197_release(void)
 {
 }
@@ -381,7 +377,3 @@ void dll_197_initialise(void)
 }
 
 void nwsh_levcon_hitDetect(void);
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */

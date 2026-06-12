@@ -3,22 +3,6 @@
 #include "main/dll/sclevelcontrolprocessanimeventsstate_struct.h"
 #include "main/dll/sclevelcontrolstate_types.h"
 
-/* sh_beacon_getExtraSize == 0x18. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* 96b: render via objRenderFn + fn_80098B18 with 3-float local. */
-
-/* 48b: free if 0x4000 flag set. */
-
-/* 120b: tick a float timer; on wrap optionally trigger an effect. */
-
-/* 20b: reset extra->field_0x8 = lbl_803E552C, return 1. */
-
-/* 112b: vtable cleanup then maybe Obj_FreeObject. */
-
-/* 56b: single-call hit-effect poll. */
-
 /* TODO stubs to align function set with v1.0 asm. Bodies are large
  * state-machine and animation logic; filling them is a follow-up task. */
 
@@ -30,8 +14,6 @@
 #include "main/screen_transition.h"
 
 #include "global.h"
-
-/* sc_levelcontrol_getExtraSize == 0x24 (CloudRunner race level control). */
 
 STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 
@@ -147,7 +129,6 @@ void sc_levelcontrol_setAnimEventState(int obj, undefined value)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
 void sc_levelcontrol_hitDetect(void)
@@ -162,14 +143,11 @@ void sc_levelcontrol_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int sc_levelcontrol_getExtraSize(void) { return 0x24; }
 int sc_levelcontrol_getObjectTypeId(void) { return 0x0; }
 
-/* Pattern wrappers. */
 u8 sc_levelcontrol_getAnimEventState(int* obj) { return *(u8*)((char*)((int**)obj)[0xb8 / 4] + 0x1d); }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5554;
 extern void objRenderFn_8003b8f4(f32);
 

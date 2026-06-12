@@ -52,7 +52,6 @@ void pressureSwitch_ensureSharedResource(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void hagabon_release(void)
 {
 }
@@ -116,8 +115,6 @@ typedef union PressureSwitchIntToDouble
     u64 bits;
     f64 value;
 } PressureSwitchIntToDouble;
-
-/* Per-object extra state for Hagabon (hagabon_getExtraSize == 0x28). */
 
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
@@ -344,7 +341,6 @@ void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-/* 8b "li r3, N; blr" returners. */
 int hagabon_getExtraSize(void) { return 0x28; }
 int hagabon_getObjectTypeId(void) { return 0xb; }
 int swarmbaddie_getExtraSize(void);

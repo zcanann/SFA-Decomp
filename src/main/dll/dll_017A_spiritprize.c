@@ -47,8 +47,6 @@ STATIC_ASSERT(sizeof(DfshShrinePlacement) == 0x24);
 STATIC_ASSERT(offsetof(DfshShrinePlacement, initialYaw) == 0x18);
 STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 extern void* objCreateLight(int* obj, int v);
 
 void SpiritPrize_hitDetect(void)
@@ -162,12 +160,9 @@ void SpiritPrize_init(int* obj, u8* init)
 
 void dfsh_objcreator_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int SpiritPrize_getExtraSize(void) { return 0x14c; }
 int SpiritPrize_getObjectTypeId(void) { return 0x8; }
 int dfsh_objcreator_getExtraSize(void);
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 
 void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {

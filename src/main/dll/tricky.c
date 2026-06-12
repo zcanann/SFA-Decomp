@@ -235,7 +235,6 @@ void FUN_8011eb10(ushort param_1)
     return;
 }
 
-/* sda21 accessors. */
 extern u8 pauseMenuState;
 extern u8 lbl_803DD7B3;
 extern u8 lbl_803DD792;
@@ -247,7 +246,6 @@ void hudFn_8011f38c(u8 x) { lbl_803DD792 = x; }
 void hudFn_8011f6f0(u8 x) { lbl_803DD75A = x; }
 void GameUI_func0E(u8 x) { lbl_803DBA88 = x; }
 
-/* sth (s16 store) of zero-extended u8 -- extsh + sth pattern */
 extern s16 lbl_803DD76E;
 
 void fn_8011F6D4(u32 x)
@@ -256,7 +254,6 @@ void fn_8011F6D4(u32 x)
     x;
 }
 
-/* forceAButtonIcon: extsh + sth aButtonIcon */
 extern s16 aButtonIcon;
 #pragma scheduling off
 #pragma peephole off
@@ -265,7 +262,6 @@ void forceAButtonIcon(int x)
     aButtonIcon = (s16)x;
 }
 
-/* resetYbutton: zero out two halfwords */
 extern s16 yButtonItemTextureId;
 extern u16 yButtonState;
 
@@ -275,7 +271,6 @@ void resetYbutton(void)
     yButtonItemTextureId = -1;
 }
 
-/* setBButtonIcon: stb if zero */
 extern u8 bButtonIcon;
 
 void setBButtonIcon(int x)
@@ -286,7 +281,6 @@ void setBButtonIcon(int x)
     }
 }
 
-/* setAButtonIcon: sth if aButtonIcon == 0 */
 void setAButtonIcon(int x)
 {
     if (aButtonIcon == 0)
@@ -295,7 +289,6 @@ void setAButtonIcon(int x)
     }
 }
 
-/* fearTestMeterSetRange: store the outer/inner half-widths and marker X. */
 extern u8 fearTestMeterOuterHalfWidth;
 extern u8 fearTestMeterInnerHalfWidth;
 extern s16 fearTestMeterMarkerX;
@@ -307,7 +300,6 @@ void fearTestMeterSetRange(u8 a, u8 b, s16 c)
     fearTestMeterMarkerX = c;
 }
 
-/* GameUI_airMeterSetField24: store float at *p + 0x24 if p non-null */
 extern void* airMeter;
 
 void GameUI_airMeterSetField24(float v)
@@ -317,7 +309,6 @@ void GameUI_airMeterSetField24(float v)
     *(f32*)((char*)p + 0x24) = v;
 }
 
-/* cutSceneFn_8011dd30: init / setup */
 extern void cutsceneFadeInOut(int x);
 extern void setTimeStop(int x);
 extern void pauseMenuInit(void);
@@ -340,7 +331,6 @@ void cutSceneFn_8011dd30(void)
     lbl_803DD7D8 = 1;
 }
 
-/* GameUI_setInputOverride */
 extern int lbl_803DD8A0;
 extern s16 lbl_803DD89E;
 extern s16 lbl_803DD89C;
@@ -362,7 +352,6 @@ void GameUI_setInputOverride(int x, s16 a, s16 b)
     lbl_803DD8AC = 1;
 }
 
-/* arwingHudSetVisible */
 extern u8 arwingHudVisible;
 extern s16 arwingHudAlpha;
 
@@ -380,7 +369,6 @@ void arwingHudSetVisible(u32 x)
     arwingHudAlpha = (s16)0xff;
 }
 
-/* getYButtonItem: read yButtonState; if non-zero, set *out = yButtonItem; return yButtonState */
 extern u16 yButtonItem;
 #pragma scheduling on
 u16 getYButtonItem(s16* out)

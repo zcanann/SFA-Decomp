@@ -67,10 +67,8 @@ void dbegg_processMessages(int obj)
                     hbuf[0] = *(s16*)msgArg;
                     vecRotateZXY(buf, obj + 0x24);
                 }
-            /* fallthrough */
             case 16:
                 ObjGroup_AddObject(obj, 36);
-            /* fallthrough */
             case 20:
                 *(u8*)(sub + 0x118) = 5;
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
@@ -92,25 +90,12 @@ void dbegg_processMessages(int obj)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
 int dbegg_getExtraSize(void) { return 0x124; }
 int dbegg_getObjectTypeId(void) { return 0x8; }
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 void dbegg_free(int x) { ObjGroup_RemoveObject(x, 0x24); }
 
-/* plain forwarder. */
-
-/* fn_X(lbl); lbl = 0; */
-
-/* dll_224_hitDetect: render iff obj->field_0x74 set. */
-
-/* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
 void dll_224_update(void* param_1);
-
-/* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
 
 #pragma scheduling on
 #pragma peephole on
@@ -120,7 +105,6 @@ int dbegg_setScale(int obj)
     return inner[0x118] != 3 ? 1 : 0;
 }
 
-/* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
 extern f32 lbl_803E61C8;
 extern f32 lbl_803E61D0;
 extern int fn_801FE560(int obj, f32* out, f32 a, f32 b, int p3);
@@ -218,7 +202,6 @@ void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-/* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
 void dll_224_init(void* obj, void* other);
 
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
@@ -258,8 +241,6 @@ void dbegg_hitDetect(int obj)
     ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
 }
-
-/* ==== v1.0 recovered functions (drift additions) ==== */
 
 extern f32 lbl_803E61E0;
 extern f32 lbl_803E61E4;
@@ -487,31 +468,17 @@ void fn_801FE774(int cam, f32* vel)
 
 STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
 
-/* dfplevelcontrol extra block (extraSize 0xC). */
-
 STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
-
-/* dfpobjcreator extra block (extraSize 0x1C). */
 
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 
-/* DFP_Torch extra block (extraSize 0x10). */
-
 STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
-
-/* dll_22C (raising platform) extra block (extraSize 0x10). */
 
 STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
 
-/* dbegg extra block: rom-curve walker + egg mode machine. */
-
 STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
 
-/* dfpseqpoint extra block (extraSize 0x10). */
-
 STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
-
-/* drakorenergy extra block (extraSize 0xC). */
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
@@ -543,11 +510,7 @@ typedef struct DbeggPlacement
     u8 pad2F[0x30 - 0x2F];
 } DbeggPlacement;
 
-/* GCRobotBlast extra block (extraSize 0x8). */
-
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
-
-/* dbholecontrol1 extra block (extraSize 0xC). */
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
@@ -998,7 +961,6 @@ void FUN_80204320(int param_1, int param_2, int param_3, int param_4, int param_
 
 void fn_80204320(int obj);
 
-/* Trivial 4b 0-arg blr leaves. */
 void dbegg_release(void)
 {
 }
@@ -1013,27 +975,6 @@ extern void Obj_RemoveFromUpdateList(int* obj);
 
 extern u8 lbl_80329514[];
 
-/* 8b "li r3, N; blr" returners. */
-
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* plain forwarder. */
-
-/* OSReport(string) wrappers. */
-
-/* alpha-flag predicate: returns 7 on fire/clear, 0 on idle */
-
-/* baddie anim update: fires vtable[0x13] when flag set */
-
-/* anim progress accumulator */
-
-/* clear list-actions wrapper: notifies vtable[6] then resets getLActions */
-
-/* timed counter: decrement (p1->b8)->0 by timeDelta, then notify */
 extern f32 timeDelta;
 
 void dbegg_init(int obj)

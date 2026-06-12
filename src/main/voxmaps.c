@@ -1090,7 +1090,6 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
         {
             if (navState++ < nav->maxIters)
             {
-                /* keep stepping next frame */
             }
             else
             {

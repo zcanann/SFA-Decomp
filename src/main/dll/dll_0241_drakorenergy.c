@@ -14,29 +14,7 @@
 
 extern uint GameBit_Get(int eventId);
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* plain forwarder. */
-
-/* fn_X(lbl); lbl = 0; */
-
-/* dll_224_hitDetect: render iff obj->field_0x74 set. */
-
-/* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
-
-/* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
-
-/* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
-
 extern void objRenderFn_8003b8f4(f32);
-
-/* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
-
-/* ==== v1.0 recovered functions (drift additions) ==== */
 
 extern f32 mathSinf(f32 x);
 
@@ -61,31 +39,17 @@ extern f32 mathSinf(f32 x);
 
 STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
 
-/* dfplevelcontrol extra block (extraSize 0xC). */
-
 STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
-
-/* dfpobjcreator extra block (extraSize 0x1C). */
 
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 
-/* DFP_Torch extra block (extraSize 0x10). */
-
 STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
-
-/* dll_22C (raising platform) extra block (extraSize 0x10). */
 
 STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
 
-/* dbegg extra block: rom-curve walker + egg mode machine. */
-
 STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
 
-/* dfpseqpoint extra block (extraSize 0x10). */
-
 STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
-
-/* drakorenergy extra block (extraSize 0xC). */
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
@@ -114,11 +78,7 @@ typedef struct DrakorenergyPlacement
     u8 pad2F[0x30 - 0x2F];
 } DrakorenergyPlacement;
 
-/* GCRobotBlast extra block (extraSize 0x8). */
-
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
-
-/* dbholecontrol1 extra block (extraSize 0xC). */
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
@@ -567,8 +527,6 @@ void FUN_80204320(int param_1, int param_2, int param_3, int param_4, int param_
 
 void fn_80204320(int obj);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void DrakorEnergy_func0B_nop(void)
 {
 }
@@ -615,14 +573,9 @@ void drakorenergy_init(int* obj, u8* init)
 
 void dbstealerworm_release(void);
 
-/* 8b "li r3, N; blr" returners. */
 int drakorenergy_getExtraSize(void) { return 0xc; }
 int drakorenergy_getObjectTypeId(void) { return 0x0; }
 int dbstealerworm_getExtraSize(void);
-
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 
 extern f32 lbl_803E6278;
 
@@ -638,24 +591,10 @@ void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 
 extern int gDBStealerWormStateHandlersA[];
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* plain forwarder. */
-
-/* OSReport(string) wrappers. */
-
 int DrakorEnergy_setScale(int* obj) { return ((DrakorEnergyState*)((int**)obj)[0xb8 / 4])->mode == 0; }
 
-/* alpha-flag predicate: returns 7 on fire/clear, 0 on idle */
 int dbstealerworm_stateHandlerB00(int p1, int p2);
 
-/* baddie anim update: fires vtable[0x13] when flag set */
-
-/* anim progress accumulator */
-
-/* clear list-actions wrapper: notifies vtable[6] then resets getLActions */
-
-/* timed counter: decrement (p1->b8)->0 by timeDelta, then notify */
 extern f32 timeDelta;
 
 void drakorenergy_update(int obj)

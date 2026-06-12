@@ -144,7 +144,6 @@ void SaveSelectScreen_release(void)
     while (i < 10);
 }
 
-/* Stubs for as-yet-unmatched functions. */
 #pragma dont_inline on
 void saveFileSelect_init(int param_1, int param_2)
 {
@@ -799,7 +798,6 @@ void SaveSelectScreen_initialise(void)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void SaveSelectScreen_frameEnd_nop(void)
 {
 }

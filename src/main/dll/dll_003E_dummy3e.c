@@ -49,8 +49,6 @@ extern u8 linkTextures[0x30];
 
 /* EN v1.0 0x80131FE0  size: 40b  Zero 6 u32s at lbl_803A9DB8. */
 
-/* Drift-recovery: add new fns with v1.0 names. */
-
 /* EN v1.0 0x80131D14  size: 168b  Create text-window title menu item. */
 
 /* EN v1.0 0x80131DBC  size: 164b  Create simple title menu item. */

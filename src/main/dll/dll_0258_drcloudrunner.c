@@ -3,9 +3,7 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 
-/* DR_CloudRunner_getExtraSize == 0xbc8; BaddieState head + family tail. */
 STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
-
 
 #include "main/audio/sfx_ids.h"
 
@@ -16,7 +14,6 @@ typedef struct DRCloudRunnerPlacement
     u8 pad1C[0x1E - 0x1C];
     s16 unk1E;
 } DRCloudRunnerPlacement;
-
 
 typedef struct DRCloudRunnerState
 {
@@ -399,7 +396,6 @@ typedef struct
     f32 y;
     f32 z;
 } Vec3x;
-
 
 int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
 {

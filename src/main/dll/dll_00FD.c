@@ -14,17 +14,13 @@ void dll_14D_hitDetect(int param_1)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dll_14D_free_nop(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int dll_14D_getExtraSize_ret_8(void) { return 0x8; }
 int dll_14D_getObjectTypeId(void) { return 0x0; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3850;
 extern void objRenderFn_8003b8f4(f32);
 
@@ -230,7 +226,6 @@ void fn_8017F334(int obj, void* setup, void* stateArg)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_14D_release_nop(void)
 {
 }

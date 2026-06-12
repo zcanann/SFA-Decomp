@@ -753,7 +753,6 @@ void* Camera_GetFollowPos(void)
     return gCamcontrolCurrentHandler;
 }
 
-/* sda21 accessors. */
 u32 Camera_getMode(void) { return gCamcontrolActiveActionId; }
 u32 Camera_get(void) { return (u32)pCamera; }
 

@@ -174,7 +174,6 @@ void wmlevelcontrol_init(int obj)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void wmlevelcontrol_release(void)
 {
 }
@@ -231,7 +230,6 @@ extern f32 lbl_803E5E7C;
 extern f32 lbl_803E5E80;
 extern f32 lbl_803E5E84;
 
-/* 8b "li r3, N; blr" returners. */
 int wmlevelcontrol_getExtraSize(void) { return 0x1c; }
 int wmlevelcontrol_getObjectTypeId(void) { return 0x0; }
 
@@ -244,7 +242,6 @@ void wmlevelcontrol_free(int obj)
     GameBit_Set(0x390, 1);
 }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 void wmlevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)

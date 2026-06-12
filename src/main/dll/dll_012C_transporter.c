@@ -47,7 +47,6 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 (*gMapEventInterface)->setAnimEvent(7, 7, 1);
                 (*gMapEventInterface)->setAnimEvent(7, 10, 1);
                 (*gMapEventInterface)->setAnimEvent(10, 7, 0);
-            /* fallthrough */
             case 0x48506:
             case 0x4977d:
                 loadMapAndParent(7);
@@ -202,7 +201,6 @@ int Transporter_SeqFn(int* obj, int p2, ObjAnimUpdateState* animUpdate)
                 getEnvfxActImmediately(obj, obj, 0x239, 0);
                 skyFn_80088c94(1, 1);
                 skyFn_80088e54(0, lbl_803E3E98);
-            /* fallthrough */
             case 0x4cb84:
                 GameBit_Set(0xef6, 0);
                 break;
@@ -283,7 +281,6 @@ void transporter_hitDetect(int obj)
         return;
     }
 
-    /* Branch C */
     if ((state->flags & 0x40) != 0)
     {
         *(u8*)&((GameObject*)self)->anim.resetHitboxMode = (u8)(
@@ -399,9 +396,4 @@ void transporter_init(int obj, u8* params)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3EE8;

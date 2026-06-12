@@ -239,7 +239,6 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void imicemountain_free(void);
 
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
@@ -319,13 +318,9 @@ void magiclight_init(int* obj, u8* params)
 }
 void dll_16C_release(void);
 
-/* 8b "li r3, N; blr" returners. */
 int magiclight_getObjectTypeId(void) { return 0x0; }
 int dll_16C_getExtraSize(void);
 
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E473C;
 extern void objRenderFn_8003b8f4(f32);
 
@@ -368,7 +363,6 @@ void magiclight_update(int obj)
     }
 }
 
-/* if (o->_X == K) return A; else return B; */
 #pragma scheduling on
 int magiclight_getExtraSize(int* obj)
 {
@@ -377,8 +371,6 @@ int magiclight_getExtraSize(int* obj)
 }
 
 extern void Obj_FreeObject(int*);
-
-/* conditional init/free pair. */
 
 extern float Vec_distance(float* a, float* b);
 extern f32 lbl_803E4738;

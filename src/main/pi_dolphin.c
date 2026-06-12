@@ -3735,14 +3735,11 @@ void FUN_8004bc68(char param_1)
     return;
 }
 
-/* sda21 accessors. */
 extern u8 lbl_803DCD28;
 u8 isHeavyFogEnabled(void) { return lbl_803DCD28; }
 
-/* lbl = N (byte) */
 void disableHeavyFog(void) { lbl_803DCD28 = 0x0; }
 
-/* *p1 = lbl1; *p2 = lbl2; (f32) */
 extern f32 lbl_803DCD44;
 extern f32 lbl_803DCD40;
 

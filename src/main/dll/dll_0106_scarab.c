@@ -11,15 +11,9 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
-/* scarab_getExtraSize == 0x34 (collectible money beetle). */
-
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
-/* dll_107_getExtraSize == 0x2c (CF wind lift / blow vent). */
-
 STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
-
-/* portalspelldoor_getExtraSize == 0x10. */
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
@@ -609,9 +603,6 @@ void scarab_init(int* obj, u8* def)
     ObjMsg_AllocQueue(obj, 2);
 }
 
-/* ================================================================ */
-/* [0x801845FC..0x80184930) - formerly CFguardian.c. */
-
 extern undefined4 FUN_80006b14();
 extern int Obj_GetActiveModel(int obj);
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -759,9 +750,6 @@ void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 }
-
-/* ================================================================ */
-/* [0x801843C0..0x801845FC) - formerly the tail of cfforcefield.c. */
 
 int objHitboxFn_801843c0(int obj)
 {

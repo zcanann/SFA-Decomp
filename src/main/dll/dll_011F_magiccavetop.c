@@ -45,13 +45,8 @@ typedef struct MagiccavetopState
     u8 pad8[0xC - 0x8];
 } MagiccavetopState;
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
 int magiccavetop_getExtraSize(void) { return 0xc; }
 int trickyguardspot_getExtraSize(void);
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 
 extern f32 timeDelta;
 

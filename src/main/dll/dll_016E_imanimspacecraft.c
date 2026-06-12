@@ -65,22 +65,10 @@ extern undefined4 FUN_80017ac8();
 
 void imicepillar_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int imicepillar_getExtraSize(void);
 int imicepillar_getObjectTypeId(void);
 
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
-/* if (o->_X == K) return A; else return B; */
-
-/* conditional init/free pair. */
-
-/* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, sync its transform into obj. */
-
-/* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
 
 extern void warpToMap(int mapId, int flags);
 
@@ -130,23 +118,13 @@ extern u8 lbl_803236B8[];
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
-/* imanimspacecraft_getExtraSize == 0x4. */
-
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
-
-/* imspacethruster_getExtraSize == 0xc. */
 
 STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
 
-/* link_levcontrol_getExtraSize == 0x10. */
-
 STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
 
-/* lavaball1be extra (getExtraSize 0x14 for the non-0x1fa variant). */
-
 STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
-
-/* lavaball1bf_getExtraSize == 0x1c (launcher). */
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
@@ -243,7 +221,6 @@ void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void imicepillar_hitDetect(void);
 
 void imicepillar_update(void);
@@ -291,23 +268,16 @@ void imanimspacecraft_initialise(void)
 
 void imspacethruster_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int imanimspacecraft_getExtraSize(void) { return 0x4; }
 int imanimspacecraft_getObjectTypeId(void) { return 0x0; }
 int imspacethruster_getExtraSize(void);
 
-/* Pattern wrappers. */
-
-/* Init: clear obj->_F4 and record obj globally in lbl_803DDB48. */
-
-/* If obj->_F4 == 0, set it to 1; else early-return. */
 void imanimspacecraft_update(int* obj)
 {
     if (((GameObject*)obj)->unkF4 != 0) return;
     ((GameObject*)obj)->unkF4 = 1;
 }
 
-/* Free: call vtable[6] on obj through global dll-services pointer. */
 void imanimspacecraft_free(int* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -332,7 +302,6 @@ void imanimspacecraft_init(int* obj)
     GameBit_Set(0xbef, 1);
 }
 
-/* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
 int imanimspacecraft_setScale(int* obj, int bitIdx)
 {
     ImAnimSpacecraftState* p = (ImAnimSpacecraftState*)((GameObject*)obj)->extra;
@@ -345,12 +314,8 @@ int imanimspacecraft_setScale(int* obj, int bitIdx)
     }
 }
 
-/* lavaball1bf "consume" hook: only clear pending flag if both gates set. */
 void lavaball1bf_func11(int* obj);
 
-/* lavaball1bf "request" hook: set pending if gated, return success. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4780;
 extern f32 lbl_803E4788;
 
@@ -364,9 +329,6 @@ void imanimspacecraft_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void imspacethruster_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-/* if (o->_X == K) return A; else return B;  pattern. */
-
-/* chained byte mask. */
 u32 imanimspacecraft_func0B(int* obj) { return *((u8*)((int**)obj)[0xb8 / 4] + 0x3) & 0x4; }
 u32 lavaball1be_func11(int* obj);
 

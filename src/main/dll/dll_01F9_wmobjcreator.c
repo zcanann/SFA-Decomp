@@ -5,8 +5,6 @@ extern uint GameBit_Get(int eventId);
 
 extern EffectInterface** gPartfxInterface;
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void WM_ObjCreator_free(void)
 {
 }
@@ -15,12 +13,10 @@ void WM_ObjCreator_hitDetect(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int fn_801EEDAC(void);
 int WM_ObjCreator_getExtraSize(void) { return 0x8; }
 int WM_ObjCreator_getObjectTypeId(void) { return 0x0; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5CC8;
 
 void WM_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -31,12 +27,6 @@ void WM_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 extern f32 lbl_803E5C70;
-
-/* copy 3 floats from struct to out args */
-
-/* virtual call through obj[0xb8][0x10] context, vtable double-deref at +0x68 */
-
-/* copy 3 floats from obj->b8 [0x4c..0x54] to out args */
 
 /* Path-follow steering update for the cloudrunner block (target 0x801EE668;
  * Ghidra split this body as FUN_801eeafc). */
@@ -388,7 +378,6 @@ void WM_ObjCreator_update(int obj)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void WM_ObjCreator_release(void)
 {
 }
@@ -398,8 +387,6 @@ void WM_ObjCreator_initialise(void)
 }
 
 void WM_Galleon_hitDetect(void);
-
-/* 8b "li r3, N; blr" returners. */
 
 void WM_ObjCreator_init(int* obj, s8* def)
 {

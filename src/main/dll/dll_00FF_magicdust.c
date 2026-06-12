@@ -21,10 +21,8 @@ void magicdust_free(int param_1)
     return;
 }
 
-/* 8b "li r3, N; blr" returners. */
 int magicdust_getExtraSize(void) { return 0x288; }
 
-/* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E34B0;
 extern void objRenderFn_8003b8f4(f32);
 void magicdust_render(void) { objRenderFn_8003b8f4(lbl_803E34B0); }
@@ -82,8 +80,6 @@ extern u8* Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32 x);
 extern void objMove(f32 a, f32 b, f32 c, int obj);
-
-/* magicdust extra block (collectible sparkle state; tail of the pickup record). */
 
 STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
 
@@ -462,9 +458,3 @@ void magicdust_init(int obj, int placement)
 }
 
 extern void fn_8002B758(void);
-
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */

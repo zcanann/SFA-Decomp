@@ -20,14 +20,9 @@ extern void* mapGetBlock(int idx);
 
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 
-/* alphaanimator_getExtraSize == 0x1c. */
-
 STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 
-/* groundanimator_getExtraSize == 0x30. */
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
-
-/* visanimator_getExtraSize == 0x5. */
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
@@ -119,14 +114,10 @@ void FUN_80192488(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void waveanimator_update(void);
 
-/* 8b "li r3, N; blr" returners. */
 int hitanimator_getExtraSize(void) { return 0x4; }
 int visanimator_getExtraSize(void);
-
-/* Pattern wrappers. */
 
 extern void hitAnimatorFn_80193dbc(void* block, HitAnimatorObject* obj, HitAnimatorState* vstate,
                                    HitAnimatorPlacement* desc);

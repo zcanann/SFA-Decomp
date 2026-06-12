@@ -6,11 +6,6 @@
 #include "main/dll/sbcloudballstate_struct.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 #include "ghidra_import.h"
@@ -66,7 +61,6 @@ void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8
 {
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void SB_FireBall_release(void);
 
 void SB_ShipGunBroke_free(void)
@@ -91,14 +85,10 @@ void SB_ShipGunBroke_initialise(void)
 
 void shop_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int SB_ShipGunBroke_getExtraSize(void) { return 0x1; }
 int SB_ShipGunBroke_getObjectTypeId(void) { return 0x0; }
 int shop_getExtraSize(void);
 
-/* 16b chained patterns. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern int GameBit_Get(int);
 
 /* Stubs added to align function set with v1.0 asm. Source had Ghidra FUN_xxx
@@ -142,8 +132,6 @@ void ShipBattle_free(int* obj);
 
 /* EN v1.0 0x801E6050  size: 44b  Triple s8 fan-out: write obj->_b8[2/3/4]
  * (sign-extended) into *out_b3, *out_b2, *out_b4. */
-
-/* shop_getItem* helpers -- table lookup */
 
 /* EN v1.0 0x801E6358  size: 104b  Returns 1 unless the item's
  * "available" GameBit gate (lbl_80327FD0[idx*12 + 6]) is present and

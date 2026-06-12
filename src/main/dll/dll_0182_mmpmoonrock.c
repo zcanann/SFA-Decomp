@@ -4,7 +4,6 @@
 #include "main/dll/moonseedbushstate_struct.h"
 #include "main/dll/IM/IMspacecraft.h"
 
-/* SDK / engine externs */
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
 extern u32 randomGetRange(int min, int max);
 extern u32 GameBit_Get(int eventId);
@@ -169,7 +168,6 @@ FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void MMP_levelcontrol_release(void);
 
 void mmp_moonrock_hitDetect(void)
@@ -186,12 +184,10 @@ void mmp_moonrock_initialise(void)
 
 void mmp_trenchfx_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int mmp_moonrock_getExtraSize(void) { return 0x30; }
 int mmp_moonrock_getObjectTypeId(void) { return 0x0; }
 int mmp_trenchfx_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 extern int objPosToMapBlockIdx(double x, double y, double z);
@@ -353,10 +349,8 @@ void fn_801A80C4(int obj, f32 x, f32 y, f32 z)
     saveGame_saveObjectPos(obj);
 }
 
-/* mmp_trenchfx_free: expgfx interface freeObject callback. */
 void mmp_trenchfx_free(int obj);
 
-/* ObjGroup_RemoveObject + vtable[4] tail-call. */
 extern int* gCarryableInterface;
 #pragma scheduling off
 void mmp_moonrock_free(int obj)

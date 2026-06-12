@@ -262,7 +262,6 @@ void FUN_801b2550(undefined8 param_1, undefined8 param_2, double param_3, undefi
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dimcannon_hitDetect(void);
 
 extern void objRenderFn_8003b8f4(f32 x);
@@ -308,7 +307,6 @@ void dimlavasmash_update(int* obj)
     }
 }
 
-/* 8b "li r3, N; blr" returners. */
 int dimlavasmash_getExtraSize(void) { return 0x3; }
 int dimlavasmash_getObjectTypeId(void) { return 0x0; }
 
@@ -349,7 +347,6 @@ extern int fn_8006070C(int arg1, int idx);
 extern int Shader_getLayer(int layer, int idx);
 
 #pragma dont_inline on
-/* Toggle collision/render surface flags for matching block polys and layers. */
 void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
 {
     int i;
@@ -495,7 +492,6 @@ void dimlavasmash_init(s16* obj, s8* def)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x2000);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dimlavasmash_release(void)
 {
 }
@@ -508,9 +504,4 @@ extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
 
 extern unsigned long GameBit_Set(int eventId, int value);
 
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */

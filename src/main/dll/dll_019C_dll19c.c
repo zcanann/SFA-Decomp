@@ -5,11 +5,6 @@
 #include "main/dll/torch1cd_state.h"
 #include "main/effect_interfaces.h"
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 #include "main/obj_placement.h"
@@ -36,8 +31,6 @@ typedef struct Dll19CPlacement
 extern uint GameBit_Get(int eventId);
 extern u8 framesThisStep;
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dll_19C_free(void)
 {
 }
@@ -56,12 +49,10 @@ void dll_19C_initialise(void)
 
 void dll_19D_render(void);
 
-/* 8b "li r3, N; blr" returners. */
 int dll_19C_getExtraSize(void) { return 0x8; }
 int dll_19C_getObjectTypeId(void) { return 0x0; }
 int dll_19D_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E51B0;
 void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -69,7 +60,6 @@ void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E51B0);
 }
 
-/* Stubs to align function set with v1.0 asm. */
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int type);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);

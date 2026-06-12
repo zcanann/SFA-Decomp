@@ -3,7 +3,6 @@
 
 int inpGetSurPanning(McmdVoiceState* state)
 {
-    /* recipe #57: int return - the inp_ctrl.h u16 prototype adds clrlwi */
     extern int _GetInputValue(McmdVoiceState* state, McmdInputSlot* slot, u8 midiSlot, u8 midiEvent);
     int flags;
 

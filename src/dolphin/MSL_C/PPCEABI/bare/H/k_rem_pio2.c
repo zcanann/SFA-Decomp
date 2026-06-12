@@ -1,4 +1,3 @@
-/* @(#)k_rem_pio2.c 1.3 95/01/18 */
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -168,34 +167,28 @@ twon24  =  5.96046447753906250000e-08; /* 0x3E700000, 0x00000000 */
 	int jz,jx,jv,jp,jk,carry,n,iq[20],i,j,k,m,q0,ih;
 	double z,fw,f[20],fq[20],q[20];
 
-    /* initialize jk*/
 	jk = init_jk[prec];
 	jp = jk;
 
-    /* determine jx,jv,q0, note that 3>q0 */
 	jx =  nx-1;
 	jv = (e0-3)/24; if(jv<0) jv=0;
 	q0 =  e0-24*(jv+1);
 
-    /* set up f[0] to f[jx+jk] where f[jx+jk] = ipio2[jv+jk] */
 	j = jv-jx; m = jx+jk;
 	for(i=0;i<=m;i++,j++) f[i] = (j<0)? zero : (double) ipio2[j];
 
-    /* compute q[0],q[1],...q[jk] */
 	for (i=0;i<=jk;i++) {
 	    for(j=0,fw=0.0;j<=jx;j++) fw += x[j]*f[jx+i-j]; q[i] = fw;
 	}
 
 	jz = jk;
 recompute:
-    /* distill q[] into iq[] reversingly */
 	for(i=0,j=jz,z=q[jz];j>0;i++,j--) {
 	    fw    =  (double)((int)(twon24* z));
 	    iq[i] =  (int)(z-two24*fw);
 	    z     =  q[j-1]+fw;
 	}
 
-    /* compute n */
 	z  = ldexp(z,q0);		/* actual value of z */
 	z -= 8.0*floor(z*0.125);		/* trim off integer >= 8 */
 	n  = (int) z;
@@ -233,7 +226,6 @@ recompute:
 	    }
 	}
 
-    /* check if recomputation is needed */
 	if(z==zero) {
 	    j = 0;
 	    for (i=jz-1;i>=jk;i--) j |= iq[i];
@@ -250,7 +242,6 @@ recompute:
 	    }
 	}
 
-    /* chop off zero terms */
 	if(z==0.0) {
 	    jz -= 1; q0 -= 24;
 	    while(iq[jz]==0) { jz--; q0-=24;}
@@ -264,19 +255,16 @@ recompute:
 	    } else iq[jz] = (int) z ;
 	}
 
-    /* convert integer "bit" chunk to floating-point value */
 	fw = ldexp(one,q0);
 	for(i=jz;i>=0;i--) {
 	    q[i] = fw*(double)iq[i]; fw*=twon24;
 	}
 
-    /* compute PIo2[0,...,jp]*q[jz,...,0] */
 	for(i=jz;i>=0;i--) {
 	    for(fw=0.0,k=0;k<=jp&&k<=jz-i;k++) fw += PIo2[k]*q[i+k];
 	    fq[jz-i] = fw;
 	}
 
-    /* compress fq[] into y[] */
 	switch(prec) {
 	    case 0:
 		fw = 0.0;

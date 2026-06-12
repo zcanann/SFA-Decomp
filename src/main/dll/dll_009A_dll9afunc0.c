@@ -4,12 +4,6 @@
 
 extern u32 randomGetRange(int min, int max);
 
-/* dll_9A_func03 rewritten below (after shared screen-fx typedefs). */
-
- /* 0x18 */
-
- /* 0x60 */
-
 extern ModgfxInterface** gModgfxInterface;
 
 typedef struct
@@ -248,7 +242,6 @@ void dll_9A_func03(int a, int b, int p, uint flags)
 
 void dll_9B_func03(int a, int b, int p, uint flags);
 
-/* Trivial nops */
 void dll_9A_func01_nop(void)
 {
 }

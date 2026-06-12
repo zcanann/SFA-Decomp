@@ -924,11 +924,9 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
         if (((u8*)obj_a)[0x37] >= 0xFF
             && (((ModelRenderOp *)renderOp)->flags & 0x40000000) == 0
             && ((ModelRenderOp *)renderOp)->alpha >= 0xFF) {
-            /* opaque path */
             flags2 = ((ModelRenderOp *)renderOp)->flags;
             modelFlags = ((ModelRenderOp *)renderOp)->flags;
             if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
-                /* alpha-test path */
                 int a = fn_8003BB74();
                 int b = fn_8003BB74();
                 GXSetBlendMode(0, 1, 0, 5);
@@ -965,7 +963,6 @@ void renderWhirlpool(void* obj_a, void** obj_b, int slot)
                 GXSetAlphaCompare(7, 0, 0, 7, 0);
             }
         } else {
-            /* translucent path */
             if ((((ModelFileHeader *)model)->flags & 0x400) != 0) {
                 GXSetBlendMode(1, 4, 5, 5);
                 if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
@@ -1055,7 +1052,6 @@ void screenImageDraw(u8 alpha)
     GXLoadTexMtxImm(mtx_60, 0x21, 1);
     GXSetTexCoordGen2(2, 1, 4, 0x21, 0, 0x7d);
 
-    /* TEV stage 0 */
     GXSetTevOrder(0, 0xFF, 0xFF, 0xFF);
     GXSetTevDirect(0);
     GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xF);
@@ -1064,7 +1060,6 @@ void screenImageDraw(u8 alpha)
     GXSetTevColorOp(0, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
 
-    /* IndTex 0 */
     GXSetIndTexOrder(0, 1, 1);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, lbl_8030EA70, -3);
@@ -1075,7 +1070,6 @@ void screenImageDraw(u8 alpha)
     GXSetIndTexMtx(2, lbl_8030EA88, -3);
     GXSetTevIndirect(2, 1, 0, 7, 2, 0, 0, 0, 0, 1);
 
-    /* Stage 1 */
     GXSetTevOrder(1, 0xFF, 0xFF, 8);
     GXSetTevColorIn(1, 0xF, 0xF, 0xF, 0xF);
     GXSetTevAlphaIn(1, 7, 7, 7, 5);
@@ -1083,7 +1077,6 @@ void screenImageDraw(u8 alpha)
     GXSetTevColorOp(1, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
 
-    /* Stage 2 */
     GXSetTevOrder(2, 0, 0, 8);
     GXSetTevColorIn(2, 0xF, 0xF, 0xF, 8);
     GXSetTevAlphaIn(2, 0, 7, 7, 5);
@@ -1091,7 +1084,6 @@ void screenImageDraw(u8 alpha)
     GXSetTevColorOp(2, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(2, 0, 0, 3, 1, 0);
 
-    /* Stage 3 */
     GXSetTevKColorSel(3, 0xC);
     GXSetTevKAlphaSel(3, 0x4);
     GXSetTevDirect(3);
@@ -1102,7 +1094,6 @@ void screenImageDraw(u8 alpha)
     GXSetTevColorOp(3, 0, 0, 0, 1, 1);
     GXSetTevAlphaOp(3, 1, 0, 1, 1, 1);
 
-    /* Stage 4 */
     GXSetTevKColorSel(4, 0xD);
     GXSetTevKAlphaSel(4, 0x4);
     GXSetTevDirect(4);
@@ -1113,7 +1104,6 @@ void screenImageDraw(u8 alpha)
     GXSetTevColorOp(4, 0, 0, 0, 1, 1);
     GXSetTevAlphaOp(4, 1, 0, 1, 1, 2);
 
-    /* Stage 5 */
     GXSetTevKColorSel(5, 0xE);
     GXSetTevDirect(5);
     GXSetTevOrder(5, 0xFF, 0xFF, 0xFF);
@@ -1123,7 +1113,6 @@ void screenImageDraw(u8 alpha)
     GXSetTevColorOp(5, 0, 0, 0, 1, 2);
     GXSetTevAlphaOp(5, 0, 0, 0, 1, 0);
 
-    /* Stage 6 */
     GXSetTevKColorSel(6, 0xF);
     GXSetTevKAlphaSel(6, 0x4);
     GXSetTevColor(3, lbl_803DB6E0);
@@ -1135,7 +1124,6 @@ void screenImageDraw(u8 alpha)
     GXSetTevColorOp(6, 0, 0, 0, 1, 2);
     GXSetTevAlphaOp(6, 0, 0, 0, 1, 0);
 
-    /* Stage 7 */
     GXSetTevKAlphaSel(7, 0x1C);
     GXSetTevDirect(7);
     GXSetTevOrder(7, 0xFF, 0xFF, 0xFF);
@@ -1539,7 +1527,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
     GXSetTexCoordGen2(1, 1, 4, 0x3C, 0, 0x7D);
 
-    /* Build cylinder matrix */
     PSMTXTrans(mtx_a0, gSynthDelayedActionWord0 * (-proj5) - gSynthDelayedActionWord0,
                        gSynthDelayedActionWord0 * proj4 - gSynthDelayedActionWord0,
                        lbl_803DEEDC);
@@ -1550,7 +1537,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     GXLoadTexMtxImm(mtx_d0, 0x1e, 1);
     GXSetTexCoordGen2(2, 1, 4, 0x1e, 0, 0x7d);
 
-    /* Compute scaled radius (with rsqrt refinement when positive) */
     {
         f32 r2 = lbl_803DB6C8 / radius;
         f32 sr;
@@ -1569,17 +1555,14 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
         c1.a = (u8)(s32)(lbl_803DEF1C.y * sr);
     }
 
-    /* Stage K-color setup */
     GXSetTevKColor(0, c0);
     GXSetTevKColor(1, c1);
     GXSetTevKColor(2, c2);
     GXSetTevColor(1, c3);
 
-    /* Third texture for indirect */
     fn_8006C534(&handle3);
     selectTexture(handle3, 3);
 
-    /* Indirect tex matrix scale */
     {
         f32 ind_s = lbl_803DB6CC / radius;
         if (ind_s > gSynthDelayedActionWord0) ind_s = gSynthDelayedActionWord0;
@@ -1591,7 +1574,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
         indMtx[5] = lbl_803DEEDC;
     }
 
-    /* Build indirect tex matrix */
     PSMTXTrans(mtx_a0, gSynthDelayedActionWord0 * (-proj5) - gSynthDelayedActionWord0,
                        gSynthDelayedActionWord0 * proj4 - gSynthDelayedActionWord0,
                        lbl_803DEEDC);
@@ -1608,7 +1590,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, (f32(*)[3])indMtx, 1);
 
-    /* Indirect for stages 2, 3, 4 */
     GXSetTevIndirect(2, 0, 0, 7, 1, 0, 0, 0, 0, 0);
     GXSetTevIndirect(3, 0, 0, 7, 1, 0, 0, 0, 0, 0);
     GXSetTevIndirect(4, 0, 0, 7, 1, 0, 0, 0, 0, 0);
@@ -1620,7 +1601,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     GXSetNumChans(0);
     GXSetNumTevStages(6);
 
-    /* Stage 0 */
     GXSetTevKAlphaSel(0, 0x1C);
     GXSetTevDirect(0);
     GXSetTevOrder(0, 1, 1, 0xFF);
@@ -1630,7 +1610,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     GXSetTevColorOp(0, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(0, 1, 0, 2, 1, 3);
 
-    /* Stage 1 */
     GXSetTevKAlphaSel(1, 0x1C);
     GXSetTevDirect(1);
     GXSetTevOrder(1, 1, 1, 0xFF);
@@ -1640,7 +1619,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     GXSetTevColorOp(1, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(1, 1, 0, 2, 1, 0);
 
-    /* Stage 2 */
     GXSetTevKColorSel(2, 0x0C);
     GXSetTevOrder(2, 0, 0, 0xFF);
     GXSetTevColorIn(2, 0xF, 0x8, 0xE, 0x2);
@@ -1649,7 +1627,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     GXSetTevColorOp(2, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(2, 0, 0, 2, 1, 0);
 
-    /* Stage 3 */
     GXSetTevKColorSel(3, 0x0D);
     GXSetTevKAlphaSel(3, 0x1D);
     GXSetTevOrder(3, 0, 0, 0xFF);
@@ -1659,7 +1636,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     GXSetTevColorOp(3, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(3, 0, 0, 2, 1, 3);
 
-    /* Stage 4 */
     GXSetTevKColorSel(4, 0x0E);
     GXSetTevOrder(4, 0, 0, 0xFF);
     GXSetTevColorIn(4, 0xF, 0x8, 0xE, 0);
@@ -1668,7 +1644,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     GXSetTevColorOp(4, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(4, 0, 0, 2, 1, 0);
 
-    /* Stage 5 */
     GXSetTevDirect(5);
     GXSetTevOrder(5, 2, 2, 0xFF);
     GXSetTevColorIn(5, 0xF, 0xF, 0xF, 0);
@@ -2447,7 +2422,6 @@ u32 objCallback_80074d04(int handle, void* model)
     GXLoadTexMtxImm(mtx_ec, 0x21, 1);
     GXSetTexCoordGen2(1, 1, 4, 0x21, 0, 0x7d);
 
-    /* indMtx_44 (6 floats) -- first ind matrix */
     {
         f32 v = gSynthDelayedActionWord0 * f31_val;
         indMtx_44[0] = v;
@@ -2470,7 +2444,6 @@ u32 objCallback_80074d04(int handle, void* model)
     GXLoadTexMtxImm(mtx_bc, 0x24, 1);
     GXSetTexCoordGen2(2, 1, 4, 0x24, 0, 0x7d);
 
-    /* indMtx_2c -- second ind matrix */
     {
         f32 v44 = lbl_803DEF44 * f31_val;
         f32 v48 = lbl_803DEF48 * f31_val;
@@ -2486,7 +2459,6 @@ u32 objCallback_80074d04(int handle, void* model)
     GXSetIndTexMtx(2, (f32(*)[3])indMtx_2c, -4);
     GXSetTevIndirect(1, 1, 1, 7, 2, 0, 0, 0, 0, 1);
 
-    /* buf_8c_2 -- third tex matrix at slot 0x55 */
     buf_8c_2[0] = lbl_803DB6AC;
     buf_8c_2[1] = lbl_803DEEDC;
     buf_8c_2[2] = lbl_803DEEDC;
@@ -2526,7 +2498,6 @@ u32 objCallback_80074d04(int handle, void* model)
     GXSetTevColorOp(1, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
 
-    /* Set TEV K-color from handle (alpha) */
     ((u8*)&temp)[3] = ((u8*)(int)handle)[0x37];
     GXSetTevKColor(0, temp);
     GXSetTevKAlphaSel(2, 0x1c);
@@ -3631,13 +3602,11 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, double scale)
     int stage_base;
     f32 f31_val;
 
-    /* Copy table from lbl_802C1EA8 */
     {
         u32* src = (u32*)(lbl_802C1EA8 + 0x18);
         u32* dst1 = (u32*)buf_c4; /* +0xC4 in stack */
         int i;
         for (i = 0; i < 7; i++) dst1[i] = src[i];
-        /* additional unrolled copies to scattered slots */
         {
             u32* src2 = (u32*)(lbl_802C1EA8 + 0x34);
             u32* dst2 = (u32*)buf_a8;
@@ -3686,13 +3655,11 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, double scale)
     }
     if (stage_idx < 0) stage_idx = 0;
 
-    /* Set TevColor 1 = (0x7F, 0x7F, 0x7F, 0) */
     ((u8*)&color2)[0] = 0x7F;
     ((u8*)&color2)[1] = 0x7F;
     ((u8*)&color2)[2] = 0x7F;
     GXSetTevColor(1, color2);
 
-    /* Modify node[3] (alpha-like) */
     node[3] = (u8)((node[3] >> 1) + (node[3] >> 2));
     ((u8*)&temp)[0] = node[3];
     ((u8*)&temp)[1] = node[3];
@@ -3747,7 +3714,6 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, double scale)
     GXSetTevColorOp(stage_base, 8, 0, 0, 1, 0);
     GXSetTevAlphaOp(stage_base, 0, 0, 0, 1, 0);
 
-    /* Build second tex matrix (slot 0x21) */
     vec3[0] = mtx[0][3];
     vec3[1] = mtx[1][3];
     vec3[2] = mtx[2][3];
@@ -4434,7 +4400,6 @@ void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 a
     GXLoadTexMtxImm(mtx_58, 0x21, 1);
     GXSetTexCoordGen2(2, 1, 4, 0x21, 0, 0x7d);
 
-    /* TEV stages 0..5 */
     GXSetTevKColor(0, c_K0);
     GXSetTevKAlphaSel(0, 0x1C);
     GXSetTevDirect(0);
@@ -4894,7 +4859,6 @@ void doBlurFilter(double wx, double wy, double wz, char param4, char param5)
 
     stage_base = 0;
     if ((u8)param5 != 0) {
-        /* path C: 7 stages, all literal indices */
         GXSetTevKAlphaSel(1, 0x1C);
         GXSetNumTevStages(7);
 
@@ -4960,7 +4924,6 @@ void doBlurFilter(double wx, double wy, double wz, char param4, char param5)
         GXSetTevAlphaOp(6, 0, 0, 0, 1, 0);
     } else {
         if ((u8)param4 == 0) {
-            /* full setup with stage 0 */
             GXSetTevKAlphaSel(1, 0x1C);
             GXSetNumTevStages(7);
 
@@ -5169,13 +5132,11 @@ void fn_8007BD8C(int handle1, int handle2)
     }
     GXSetTevKColorSel(2, 0xE);
 
-    /* Modify temp[0..2] /= 4 */
     ((u8*)&temp)[0] = (u8)((s8)((u8*)&temp)[0] >> 2);
     ((u8*)&temp)[1] = (u8)((s8)((u8*)&temp)[1] >> 2);
     ((u8*)&temp)[2] = (u8)((s8)((u8*)&temp)[2] >> 2);
     GXSetTevColor(1, temp);
 
-    /* Add 0xC0 */
     ((u8*)&temp)[0] = (u8)(((u8*)&temp)[0] + 0xC0);
     ((u8*)&temp)[1] = (u8)(((u8*)&temp)[1] + 0xC0);
     ((u8*)&temp)[2] = (u8)(((u8*)&temp)[2] + 0xC0);
@@ -5538,7 +5499,6 @@ void gxTextureSetupFn_8007cf7c(void)
     GXSetIndTexMtx(2, (f32(*)[3])indMtx_3c, -4);
     GXSetTevIndirect(1, 1, 1, 7, 2, 0, 0, 0, 0, 1);
 
-    /* Color setup */
     if (isHeavyFogEnabled() != 0) {
         ((u8*)&lbl_803DB67C)[0] = ((u8*)&lbl_803DD01C)[0];
         ((u8*)&lbl_803DB67C)[1] = ((u8*)&lbl_803DD01C)[1];

@@ -5,14 +5,7 @@
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
-/* Drift-recovery: add new fns with v1.0 names. */
 
 extern f32 timeDelta;
 
@@ -29,8 +22,6 @@ extern undefined4 ObjHits_SetHitVolumeSlot();
 extern void queueGlowRender(void* effect);
 
 extern f32 lbl_803E3D78;
-
-/* Trivial 4b 0-arg blr leaves. */
 
 extern int* gSHthorntailAnimationInterface;
 extern void modelLightStruct_setEnabled(int light, int arg, f32 f);
@@ -253,9 +244,6 @@ void campfire_render(int obj, int param_2, int param_3, int param_4, int param_5
 
 void kt_torch_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int campfire_getExtraSize(void) { return 0x14; }
 int campfire_getObjectTypeId(void) { return 0x1; }
 int kt_torch_getExtraSize(void);
-
-/* render-with-objRenderFn_8003b8f4 pattern. */

@@ -138,8 +138,6 @@ void FUN_8013651c(int param_1)
 extern u8 warpstoneUIState;
 extern u8 showCredits;
 
-/* 4-byte and 8-byte trivial leaves. */
-
 void reportAllocFail(void)
 {
 }
@@ -455,7 +453,6 @@ void fn_80133F70(void* obj)
 extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 extern int* Obj_GetActiveModel(void* obj);
 
-/* Variadic debug logger: append formatted text while the debug arena has room. */
 #pragma peephole on
 void debugPrintf(char* fmt, ...)
 {
@@ -468,7 +465,6 @@ void debugPrintf(char* fmt, ...)
     }
 }
 
-/* Variadic debug-print sink: retail keeps only the ABI varargs spill frame. */
 #pragma scheduling on
 void fn_80137948(char* fmt, ...)
 {
@@ -481,7 +477,6 @@ void fn_80137948(char* fmt, ...)
  * pointers are zeroed at the end. */
 void Minimap_release(void);
 
-/* lbl_803DD940 declared later as void* */
 extern f32 lbl_803E2408;
 
 /* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960

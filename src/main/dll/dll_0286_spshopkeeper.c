@@ -7,11 +7,7 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-/* shopitem_getExtraSize == 0xec (spline-following pushcart item). */
-
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
-
-/* shopkeeper_getExtraSize == 0x9d8. */
 
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
@@ -139,7 +135,6 @@ void shopkeeper_render(int obj, int param_2, int param_3, int param_4, int param
 
 int fn_801E86F4(int obj, int p2, ObjSeqState* seq);
 
-/* Trivial 4b 0-arg blr leaves. */
 void shopkeeper_hitDetect(void)
 {
 }
@@ -150,7 +145,6 @@ void shopkeeper_release(void)
 
 void shopitem_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int shopkeeper_getExtraSize(void) { return 0x9d8; }
 int shopkeeper_getObjectTypeId(void) { return 0x0; }
 int shopitem_getExtraSize(void);

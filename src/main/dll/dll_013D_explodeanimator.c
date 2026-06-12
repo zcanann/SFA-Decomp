@@ -45,7 +45,6 @@ typedef struct ExplodeanimatorPlacement
     u8 pad36[0x38 - 0x36];
 } ExplodeanimatorPlacement;
 
-/* Trivial 4b 0-arg blr leaves. */
 void explodeanimator_render(void)
 {
 }
@@ -96,20 +95,13 @@ void explodeanimator_update(int* obj)
 
 void dimbossicesmash_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int explodeanimator_getExtraSize(void) { return 0x4; }
 int explodeanimator_getObjectTypeId(void) { return 0x0; }
 int dimbossicesmash_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 void explodeanimator_free(int x) { ObjGroup_RemoveObject(x, 0x1a); }
 
-/* state encode: ((obj->_X)->_Y << shift) | const. */
 u32 dimbossicesmash_getObjectTypeId(int* obj);
-
-/* Drift-recovery: add new fns with v1.0 names. */
 
 void explodeanimator_init(int* obj, int* def)
 {

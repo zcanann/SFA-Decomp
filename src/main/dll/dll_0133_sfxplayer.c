@@ -30,8 +30,6 @@ extern f32 lbl_803E40B8;
 extern u8* Obj_GetPlayerObject(void);
 extern int getCurSeqNo(void);
 
-/* lightning_free: ObjGroup_RemoveObject + free of obj->_b8->_0 if non-null. */
-
 /* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
  * lightningRender(handle). */
 
@@ -262,9 +260,6 @@ void sfxplayerObj_update(u8* obj)
 
 void fn_80198A00(u8* obj, int seqArg);
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
 int sfxplayerObj_getExtraSize(void) { return 0x8; }
 
 int WaterFallSpray_SeqFn(int* obj);

@@ -32,8 +32,6 @@ typedef struct TexframeanimatorPlacement
     s16 unk3E;
 } TexframeanimatorPlacement;
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void texframeanimator_free(void)
 {
 }
@@ -150,13 +148,11 @@ void texframeanimator_init(int* obj, u8* params)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x4000);
 }
 
-/* 8b "li r3, N; blr" returners. */
 int explodeanimator_getExtraSize(void);
 int texframeanimator_getExtraSize(void) { return 0x18; }
 int texframeanimator_getObjectTypeId(void) { return 0x0; }
 int fogcontrol_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4060;
 
 void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -165,11 +161,6 @@ void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4060);
 }
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 void explodeanimator_free(int x);
-
-/* state encode: ((obj->_X)->_Y << shift) | const. */
-
-/* Drift-recovery: add new fns with v1.0 names. */
 
 /* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */

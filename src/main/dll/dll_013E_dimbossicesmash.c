@@ -48,8 +48,6 @@ typedef struct DimbossicesmashPlacement
 
 extern f32 timeDelta;
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dimbossicesmash_hitDetect(void)
 {
 }
@@ -66,11 +64,9 @@ void texframeanimator_free(void);
 
 extern u8 framesThisStep;
 
-/* 8b "li r3, N; blr" returners. */
 int dimbossicesmash_getExtraSize(void) { return 0x2a0; }
 int texframeanimator_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4048;
 
 void dimbossicesmash_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -81,12 +77,8 @@ void dimbossicesmash_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* state encode: ((obj->_X)->_Y << shift) | const. */
 u32 dimbossicesmash_getObjectTypeId(int* obj) { return (*((u8*)((int**)obj)[0x4c / 4] + 0x18) << 11) | 0x400; }
 
-/* Drift-recovery: add new fns with v1.0 names. */
 extern void disableHeavyFog(void);
 
 void dimbossicesmash_free(int* obj)

@@ -463,7 +463,6 @@ ObjectDescriptor10WithPadding gDfptargetblockObjDescriptor = {
     0,
 };
 
-/* === helper-last relocation (re-split inline suppression; defs moved below their callers to suppress cross-TU-merge auto-inlining) === */
 void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj,
                                            DfpTargetBlockCollisionPoints* collisionPoints)
 {

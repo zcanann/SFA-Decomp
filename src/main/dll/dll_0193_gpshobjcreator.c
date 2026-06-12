@@ -9,13 +9,7 @@
 
 extern f32 timeDelta;
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
 extern void objRenderFn_8003b8f4(f32);
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 
 extern u8 Obj_IsLoadingLocked(void);
 
@@ -44,8 +38,6 @@ typedef struct GpshObjcreatorObjectDef
     s8 unk1E;
     u8 pad1F[0x20 - 0x1F];
 } GpshObjcreatorObjectDef;
-
-/* Trivial 4b 0-arg blr leaves. */
 
 void gpsh_objcreator_free(void)
 {
@@ -119,12 +111,10 @@ void gpsh_objcreator_update(int* obj)
 
 void gpsh_scene_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int gpsh_objcreator_getExtraSize(void) { return 0x8; }
 int gpsh_objcreator_getObjectTypeId(void) { return 0x0; }
 int gpsh_scene_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5048;
 
 void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)

@@ -74,16 +74,9 @@ FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* 8b "li r3, N; blr" returners. */
 int cclightfoot_getExtraSize(void);
 int ccpedstal_getExtraSize(void) { return 0x8; }
 int cclevcontrol_getExtraSize(void);
-
-/* render-with-fn(lbl) (no visibility check). */
-
-/* Drift-recovery: add new fns with v1.0 names. */
-
-/* ObjLink_DetachChild and Obj_FreeObject already declared in earlier extern blocks */
 
 extern void ccpedstal_updateGameBitGate(int obj, u8* state2);
 extern void ccpedstal_updateAltVariant(int obj, u8* state2);

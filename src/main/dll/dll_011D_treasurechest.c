@@ -62,7 +62,6 @@ int treasurechest_getObjectTypeId(void)
     return 0;
 }
 
-/* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3C20;
 extern void objRenderFn_8003b8f4(f32);
 void treasurechest_render(void) { objRenderFn_8003b8f4(lbl_803E3C20); }

@@ -14,15 +14,9 @@ typedef struct PortalspelldoorPlacement
     s16 unk1E;
 } PortalspelldoorPlacement;
 
-/* scarab_getExtraSize == 0x34 (collectible money beetle). */
-
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
-/* dll_107_getExtraSize == 0x2c (CF wind lift / blow vent). */
-
 STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
-
-/* portalspelldoor_getExtraSize == 0x10. */
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
@@ -112,7 +106,6 @@ void portalspelldoor_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int portalspelldoor_getExtraSize(void) { return 0x10; }
 int portalspelldoor_getObjectTypeId(void) { return 0x0; }
 
@@ -141,7 +134,6 @@ void portalspelldoor_init(u8* obj, u8* data)
     sub->openTimer = -1;
 }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3A88;
 extern void objRenderFn_8003b8f4(f32);
 

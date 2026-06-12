@@ -511,7 +511,6 @@ void fn_8013FBE4(int obj, register int state)
         ((WeaponNibble*)(state + 0x700))->hi = newBit;
         *(int*)&((TrickyState*)state)->unk710 = 0;
         ((TrickyState*)state)->substate = 1;
-    /* fall through */
     case 1:
         currentBit = GameBit_Get(0x48b);
         bitIndex = ((WeaponNibble*)(state + 0x700))->hi;

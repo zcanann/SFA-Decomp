@@ -1,4 +1,3 @@
-/* DLL 0x3C - TumbleweedBush [80130124-80130888) */
 #pragma scheduling on
 #pragma peephole on
 #include "main/dll/baddie/dll_003B_menu.h"
@@ -681,7 +680,6 @@ extern void fn_8001BDD4(int);
 
 /* EN v1.0 0x80131FE0  size: 40b  Zero 6 u32s at lbl_803A9DB8. */
 
-/* Drift-recovery: add new fns with v1.0 names. */
 extern void fn_8001BE2C(int mode);
 extern void* memcpy(void* dst, const void* src, int size);
 extern void padFn_80014b18(int value);
@@ -856,7 +854,6 @@ void Link_free(void)
     lbl_803DD911 = 0;
 }
 
-/* === helper-last relocation (re-split inline suppression; defs moved below their callers to suppress cross-TU-merge auto-inlining) === */
 void linkDrawFn_801302c0(void)
 {
     extern s8 lbl_803DD911; /* #57 */

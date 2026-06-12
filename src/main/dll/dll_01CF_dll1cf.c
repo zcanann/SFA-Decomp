@@ -56,14 +56,6 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* conditional init/free pair. */
-
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
 
@@ -74,12 +66,6 @@ extern undefined4 GameBit_Set(int eventId, int value);
 
 /* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
  * and using mask 0x6000 + initial state byte 3 at +0. */
-
-/* explosion_free: model-light release if present. */
-
-/* explosion_getObjectTypeId: tile/index lookup capped by table count. */
-
-/* dim_levelcontrol_free: gameplay music + time-of-day reset. */
 
 /* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
  * every 16 frames, and ramp each active slot's alpha toward full; then update
@@ -110,19 +96,11 @@ typedef struct Dll1CFObjectDef
     s16 unk1E;
 } Dll1CFObjectDef;
 
-/* dim2conveyor_getExtraSize == 0x14. */
-
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
-
-/* dll_1D6_getExtraSize == 0x20 (crusher platform). */
 
 STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
 
-/* dimtruthhornice_getExtraSize == 0x8. */
-
 STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
-
-/* dim2snowball_getExtraSize == 0xb0 (curve walker head + roll state). */
 
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
@@ -192,7 +170,6 @@ void FUN_801b7314(int param_1, undefined4 param_2, float* param_3, float* param_
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
 void dll_1CF_free(void)
@@ -217,14 +194,10 @@ void dll_1CF_initialise(void)
 
 void dim_tricky_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int dll_1CF_getExtraSize(void) { return 0x0; }
 int dll_1CF_getObjectTypeId(void) { return 0x0; }
 int dim_tricky_getExtraSize(void);
 
-/* 16b chained patterns. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4A30;
 
 void dll_1CF_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -235,14 +208,6 @@ void dll_1CF_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void dim2conveyor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-/* render-with-fn(lbl) (no visibility check). */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* dim2conveyor_setScale: per-area scale/sign + music latch for two specific map ids. */
-
-/* dim2pathgenerator hitDetect: on hit type 0xE, scale velocity by const and SFX. */
 
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if the signed result dropped to or below 0. */

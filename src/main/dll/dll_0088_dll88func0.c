@@ -126,8 +126,6 @@ void dll_88_func03(int sourceObj, int variant, int posSource, uint flags)
 
 void dll_89_func03(int sourceObj, int variant, int posSource, uint flags);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dll_88_func01_nop(void)
 {
 }

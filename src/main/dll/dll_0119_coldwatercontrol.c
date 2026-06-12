@@ -298,24 +298,13 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     while (true);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void flammablevine_release(void);
 
-/* 8b "li r3, N; blr" returners. */
 int coldwatercontrol_getExtraSize(void) { return 0x8; }
 int infopoint_getExtraSize(void);
 
 extern f32 timeDelta;
 
-/* Carryable impact state machine that spawns break particles, hides, then respawns. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* Fall_Ladders_free: expgfx interface freeObject callback. */
-
-/* coldwatercontrol_init: set float field + OR flag bits. */
 extern f32 lbl_803E3B68;
 extern f32 lbl_803E3B6C;
 extern int fn_80295C40(int obj);
@@ -368,19 +357,8 @@ void coldwatercontrol_init(int obj)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x6000);
 }
 
-/* landed_arwing_free: free child object + detach link. */
 extern void Obj_FreeObject(int obj);
 void landed_arwing_free(int obj);
-
-/* landed_arwing_render: visible-guarded render with extra call. */
-
-/* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
-
-/* landed_arwing_init: flag bits, counter, conditional unlock, set callback. */
-
-/* landed arwing hit/animation step: handles impact reactions and spawned debris. */
-
-/* landed arwing material flags: mirrors game bits into the damaged texture state. */
 
 #pragma dont_inline on
 #pragma dont_inline reset

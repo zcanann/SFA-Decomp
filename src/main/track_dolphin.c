@@ -1167,31 +1167,25 @@ void FUN_80064384(int param_1)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void doNothing_80062A50(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int return0_80060B90(void) { return 0x0; }
 
-/* Pattern wrappers. */
 extern s8 lbl_803DB658;
 extern u8 mapBlockFlag;
 void fn_800628CC(void) { lbl_803DB658 = 0x1; }
 void setMapBlockFlag(void) { mapBlockFlag = 0x1; }
 
-/* arr indexing: obj->arr + idx*size */
 void* mapBlockFn_800606ec(int* obj, int idx) { return (char*)((int**)obj)[0x50 / 4] + idx * 0x14; }
 void* fn_800606FC(int* obj, int idx) { return (char*)((int**)obj)[0x68 / 4] + idx * 0x1c; }
 void* fn_8006070C(int* obj, int idx) { return (char*)((int**)obj)[0x64 / 4] + idx * 0x44; }
 
-/* arr indexing pow2. */
 #pragma dont_inline on
 void* fn_800606DC(int* obj, int idx) { return (char*)((int**)obj)[0x4c / 4] + idx * 8; }
 #pragma dont_inline reset
 
-/* 4-way sda21 to indirect-pointer broadcast. */
 extern u32 lbl_803DCE08;
 extern u32 lbl_803DCE0C;
 extern u32 lbl_803DCE10;
@@ -1205,13 +1199,11 @@ void fn_80060490(u32* a, u32* b, u32* c, u32* d)
     *d = lbl_803DCE14;
 }
 
-/* extsb-then-stb (asm to preserve the extsb MWCC strips). */
 void setShadowFlag_803db658(s32 v)
 {
     lbl_803DB658 = (s8)v;
 }
 
-/* tables exposed through wide stubs below. */
 extern u8 lbl_803DCF6C;
 extern u32 lbl_803DCF30;
 extern u8 lbl_8038DE44[];
@@ -1228,7 +1220,6 @@ typedef struct TrackBlockDescriptor
 } TrackBlockDescriptor;
 
 extern TrackBlockDescriptor gTrackBlockDescriptors[];
-/* fn_80069944 -- store sbss byte into *p1 and return a fixed table base. */
 #pragma dont_inline on
 void* fn_80069944(u32* outVal)
 {
@@ -1237,7 +1228,6 @@ void* fn_80069944(u32* outVal)
 }
 #pragma dont_inline reset
 
-/* fn_80069958 -- write a fixed table base address into *out. */
 #pragma dont_inline on
 void fn_80069958(void** out)
 {

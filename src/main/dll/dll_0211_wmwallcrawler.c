@@ -98,7 +98,6 @@ enum
     WMWALLCRAWLER_MODE_DIE = 6      /* death anim, then free/hide */
 };
 
-
 int wmwallcrawler_getExtraSize(void) { return sizeof(WmwallcrawlerState); }
 
 int wmwallcrawler_getObjectTypeId(void) { return 0x0; }
@@ -110,7 +109,6 @@ void wmwallcrawler_release(void)
 void wmwallcrawler_initialise(void)
 {
 }
-
 
 extern int getTrickyObject(void);
 extern void Obj_RemoveFromUpdateList(int obj);
@@ -261,7 +259,6 @@ void wmwallcrawler_update(int obj)
                     return;
                 }
             }
-            /* all six progress bits 0x2AA-0x2AF set -> crawlers gone for good */
             for (k = 0; k < 6; k++)
             {
                 sum += GameBit_Get(k + 0x2aa);
@@ -661,7 +658,6 @@ typedef struct
     f32 m8, mc, m10, m14;
 } WcXf;
 
-/* pitch/roll the crawler to match the floor record's normal (floorData[1..3]) */
 void wmwallcrawler_alignToFloorNormal(int obj, f32* floorData)
 {
     WcXf mtx;

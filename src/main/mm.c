@@ -2,8 +2,6 @@
 
 extern void mm_free(void* ptr);
 
-/* moved below GameTextSlot/global declarations */
-
 undefined2*
 FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -45,12 +43,6 @@ FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/* Pattern wrappers. */
-
-/* ObjModel/model-file accessors. */
-
-/* Global game-state / text accessors. */
-
 int roundUpTo4(int x)
 {
     int r = x & 3;
@@ -91,7 +83,6 @@ int roundUpTo32(int x)
     return x;
 }
 
-/* Simple field/global accessors. */
 extern u8 lbl_803DCB10;
 
 extern void* mmAlloc(int size, int type, int flag);

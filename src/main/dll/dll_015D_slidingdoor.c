@@ -3,13 +3,6 @@
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* explodable_getExtraSize == 0x6e8 (gas-vent explodable). */
-/* Per-fragment record inside DrExplodableState (stride 0x70). */
-
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 
 STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
@@ -98,7 +91,6 @@ FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void cfforcefield_release(void);
 
 void slidingdoor_free(void)
@@ -119,14 +111,10 @@ void slidingdoor_initialise(void)
 
 void attractor_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int slidingdoor_getExtraSize(void) { return 0x1; }
 int slidingdoor_getObjectTypeId(void) { return 0x0; }
 int attractor_getExtraSize(void);
 
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E43BC;
 extern void objRenderFn_8003b8f4(f32);
 extern void* Obj_GetPlayerObject(void);
@@ -138,16 +126,6 @@ void slidingdoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void attractor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* state encode: ((obj->_X)->_Y << shift) | const. */
-
-/* byte-to-short shift8 pattern. */
-
-/* attractor_setScale: branch on s8 flag at +0x19 of obj->_4C; if set return s16 at +0x1a, else 0. */
-
-/* attractor_init: ObjGroup_AddObject(obj, 0x1e); byte<<8 -> sth at obj. */
 
 extern f32 lbl_803E43B8;
 extern f32 lbl_803E43C0;
@@ -318,8 +296,6 @@ void slidingdoor_init(u8* obj, u8* data)
 }
 
 extern void loadMapAndParent(int mapId);
-
-/* cfforcefield_init: byte<<8 sth; insert GameBit_Get bit into bit-7 of *(u8*)obj->_B8; storeZeroToFloatParam. */
 
 /* Exploded debris setup: seed object angles, linear velocity, angular velocity,
  * ground clearance, and the randomized lifetime countdown. */

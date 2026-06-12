@@ -1,12 +1,6 @@
 /* DLL 0x10E - DeathSeq [8018BC48-8018BC50) */
 #include "main/objseq.h"
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
 extern f32 timeDelta;
 
 #include "main/game_ui_interface.h"
@@ -45,7 +39,6 @@ void deathseq_init(int* obj)
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x400);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void deathseq_render(void)
 {
 }
@@ -64,14 +57,10 @@ void deathseq_initialise(void)
 
 void dll_127_free_nop(void);
 
-/* 8b "li r3, N; blr" returners. */
 int deathseq_getExtraSize(void) { return 0x24; }
 int deathseq_getObjectTypeId(void) { return 0x0; }
 int dll_127_getExtraSize_ret_0(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* Drift-recovery: add new fns with v1.0 names. */
 extern void setPendingMapLoad(int v);
 extern void removeButtonObject(int* obj);
 

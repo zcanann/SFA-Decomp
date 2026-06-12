@@ -9,11 +9,7 @@
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/dll/DB/sbgalleon_state.h"
 
-/* SB_Propeller_getExtraSize == 0x10. */
-
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
-
-/* SB_ShipHead_getExtraSize == 0x10. */
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
@@ -185,22 +181,14 @@ void SB_Propeller_init(int obj, int arg2)
 
 void SB_ShipHead_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible);
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
 int SB_Propeller_getExtraSize(void) { return 0x10; }
 int SB_ShipHead_getExtraSize(void);
 
-/* sda21 accessors. */
 extern u32 lbl_803DDC40;
 u32 fn_801E2570(void) { return lbl_803DDC40; }
 
-/* Pattern wrappers. */
 u8 SB_Galleon_render2(int* obj);
 
-/* 16b chained patterns. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 void SB_Propeller_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -211,28 +199,10 @@ void SB_Propeller_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void SB_ShipMast_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* SB_Propeller_hitDetect: guard on 0x46 == 0x69c, copy halfword from sda21 ptr. */
 void SB_Propeller_hitDetect(int obj)
 {
     if (((GameObject*)obj)->anim.seqId != 0x69c) return;
     ((GameObject*)obj)->anim.rotZ = *(s16*)(lbl_803DDC40 + 4);
 }
 
-/* SB_ShipGun_free: expgfx interface freeObject callback. */
 void SB_ShipGun_free(int param_1);
-
-/* SB_Galleon_setScale: state machine; advance counter, optionally play sfx. */
-
-/* SB_Galleon_hitDetect: per-step expgfx spawn loop. */
-
-/* SB_Galleon_free: textureFree manager textures, ObjGroup_RemoveObject, kill music, set bit. */
-
-/* SB_ShipHead_init: add to group, alloc msg queue, set state + bias positions. */
-
-/* SB_ShipGun_render: conditional render with multiple flag checks. */
-
-/* SB_Galleon_modelMtxFn: returns -2 / -1 / state byte depending on flags. */
-
-/* SB_Galleon_func0E: state byte == 1 -> compute from 0x7c; else return 0x640. */

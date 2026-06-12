@@ -5,7 +5,6 @@
  */
 #include "main/dll_000A_expgfx.h"
 
-/* Trivial 4b 0-arg blr leaves. */
 void Dummy108_free(void)
 {
 }
@@ -34,7 +33,6 @@ void Dummy108_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int Dummy108_getExtraSize(void) { return 0x0; }
 int Dummy108_getObjectTypeId(void) { return 0x0; }
 

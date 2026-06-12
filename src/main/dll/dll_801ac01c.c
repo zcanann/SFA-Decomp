@@ -68,12 +68,7 @@ FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* 8b "li r3, N; blr" returners. */
 int cclightfoot_getExtraSize(void);
-
-/* render-with-fn(lbl) (no visibility check). */
-
-/* Drift-recovery: add new fns with v1.0 names. */
 
 /* ccpedstal_updateGameBitGate: state2-driven model + trigger gate. If state2's gamebit at
  * +0x4 is set, latches obj[0xaf] bit 8 and selects model index 1.

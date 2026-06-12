@@ -284,7 +284,6 @@ void synthUpdateJobTable(void)
     }
 }
 
-/* Pattern wrappers. */
 void doNothing_802737E8(void)
 {
 }

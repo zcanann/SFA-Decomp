@@ -19,14 +19,12 @@ void area_hitDetect(void);
 
 void area_update(void);
 
-/* obj->u16_X |= MASK */
 void area_init(u16* obj);
 
 void area_release(void);
 
 void area_initialise(void);
 
-/* Trivial 4b 0-arg blr leaves. */
 void levelname_free(void)
 {
 }
@@ -136,7 +134,6 @@ void levelname_init(int obj, int objDef)
 
 void ProjectileSwitch_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int levelname_getExtraSize(void) { return 0x18; }
 int levelname_getObjectTypeId(void) { return 0x0; }
 int ProjectileSwitch_getExtraSize(void);

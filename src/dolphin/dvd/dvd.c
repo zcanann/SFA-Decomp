@@ -28,7 +28,6 @@ static OSAlarm ResetAlarm;
 
 static BOOL DVDInitialized = FALSE;
 
-/* States */
 static void stateReadingFST();
 static void stateTimeout();
 static void stateGettingError();
@@ -43,7 +42,6 @@ static void stateMotorStopped();
 void stateReady();
 void stateBusy(DVDCommandBlock* block);
 
-/* Callbacks */
 static void cbForStateReadingFST(u32 intType);
 static void cbForStateError(u32 intType);
 static void cbForStateGettingError(u32 intType);

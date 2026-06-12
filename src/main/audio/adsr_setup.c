@@ -28,7 +28,6 @@ int fn_8027A660(int state)
                 adsr->currentDelta = 0x7fff0000 / adsr->aTime;
                 break;
             }
-        /* fall through */
         case 1:
             if ((adsr->cnt = adsr->dTime) != 0)
             {
@@ -38,7 +37,6 @@ int fn_8027A660(int state)
                     -((0x7fff0000 - (adsr->sLevel << 16)) / adsr->dTime);
                 break;
             }
-        /* fall through */
         case 2:
             if (adsr->sLevel != 0)
             {
@@ -47,7 +45,6 @@ int fn_8027A660(int state)
                 adsr->currentDelta = 0;
                 break;
             }
-        /* fall through */
         case 4:
             adsr->currentVolume = 0;
             ret = 1;
@@ -74,7 +71,6 @@ int fn_8027A660(int state)
                 }
                 break;
             }
-        /* fall through */
         case 1:
             adsr->cnt =
                 adsr->dTime * (((0xc1 - (u32)adsr->sLevel) << 16) / 0xc1) >> 16;
@@ -87,7 +83,6 @@ int fn_8027A660(int state)
                     -(((0xc1 - (u32)adsr->sLevel) << 16) / adsr->cnt);
                 break;
             }
-        /* fall through */
         case 2:
             if (adsr->sLevel != 0)
             {
@@ -103,7 +98,6 @@ int fn_8027A660(int state)
                 adsr->currentDelta = 0;
                 break;
             }
-        /* fall through */
         case 4:
             adsr->currentVolume = 0;
             ret = 1;

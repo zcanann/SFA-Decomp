@@ -19,8 +19,6 @@ typedef struct BarrelPadParticleArgs
  * obj->_af |= 8 (redundant with the unconditional prologue store).
  */
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void barrelpad_free(void)
 {
 }
@@ -39,12 +37,10 @@ void barrelpad_initialise(void)
 
 void cf_doorlight_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int barrelpad_getExtraSize(void) { return 0x0; }
 int barrelpad_getObjectTypeId(void) { return 0x0; }
 int cf_doorlight_getExtraSize(void);
 
-/* render-with-fn(lbl) (no visibility check). */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3F00;
 extern f32 lbl_803E3F04;

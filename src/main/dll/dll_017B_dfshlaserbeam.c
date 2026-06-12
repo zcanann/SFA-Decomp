@@ -26,7 +26,6 @@ void DFSH_LaserBeam_init(int* obj)
 
 void dfsh_objcreator_init(int obj, s8* def);
 
-/* Trivial 4b 0-arg blr leaves. */
 void DFSH_LaserBeam_render(void)
 {
 }
@@ -35,7 +34,6 @@ void DFSH_LaserBeam_hitDetect(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int DFSH_LaserBeam_getExtraSize(void) { return 0x4c; }
 int DFSH_LaserBeam_getObjectTypeId(void) { return 0x0; }
 
@@ -445,7 +443,6 @@ void DFSH_LaserBeam_free(void* objArg, void* configArg)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void DFSH_LaserBeam_release(void)
 {
 }

@@ -7,8 +7,6 @@
 #include "main/objHitReact.h"
 #include "main/objseq.h"
 
-/* Per-object extra state for the WM laser beam emitter. */
-
 STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
 
 /* pressureswitch_getExtraSize == 0x8. */
@@ -49,8 +47,6 @@ typedef struct Dll1FFState
     u8 sendFlag; /* 0x6 */
     u8 pad7;
 } Dll1FFState;
-
-/* dll_200_getExtraSize == 0x28 (kid attachment actor). */
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
@@ -210,8 +206,6 @@ void FUN_801f2b94(short* param_1)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
-
 extern f32 lbl_803E5D78;
 
 void dll_1FF_free_nop(void)
@@ -234,26 +228,19 @@ extern void Obj_SetActiveModelIndex(int* obj, int idx);
 
 extern f32 timeDelta;
 
-/* 8b "li r3, N; blr" returners. */
 int dll_1FF_getExtraSize_ret_8(void) { return 0x8; }
 int dll_200_getExtraSize_ret_40(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
-/* if (o->_X == K) return A; else return B; */
 int dll_1FF_getObjectTypeId(int* obj)
 {
     if (((GameObject*)obj)->anim.seqId == 0x146) return 0x2;
     return 0x0;
 }
 
-/* init pattern: short=-1; byte=0; return 0; */
-
-/* fn_X(lbl); lbl = 0; */
 void LaserBeam_release(void);
 
-/* dll_1FF_init: stash (s8 b[0x18] << 8) into a[0] and -0x8000 into a[1]. */
 void dll_1FF_init(s16* a, s8* b)
 {
     a[0] = (s16)((s32)b[0x18] << 8);

@@ -28,7 +28,6 @@ static TRKExceptionStatus gTRKExceptionStatus = { { 0, 0, 0 }, TRUE, 0 };
 
 static TRKStepStatus gTRKStepStatus = { FALSE, DSSTEP_IntoCount, 0, 0 };
 
-
 typedef struct DSCPUType {
 	u8 cpuMajor;
 	u8 cpuMinor;
@@ -1181,7 +1180,6 @@ BOOL TRKTargetStop()
 
 static inline DSError TRKPPCAccessSPR(void* value, u32 spr_register_num, BOOL read)
 {
-	/* Initialize instruction array with nop */
 
 	u32 access_func[10] = { INSTR_NOP, INSTR_NOP, INSTR_NOP, INSTR_NOP, INSTR_NOP, INSTR_NOP, INSTR_NOP, INSTR_NOP, INSTR_NOP, INSTR_NOP };
 	/*

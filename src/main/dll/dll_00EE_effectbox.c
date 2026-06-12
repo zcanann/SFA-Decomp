@@ -5,9 +5,6 @@
 
 extern uint GameBit_Get(int eventId);
 
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-fn(lbl) (no visibility check). */
 extern void objRenderFn_8003b8f4(f32);
 
 #include "main/audio/sfx_ids.h"
@@ -42,8 +39,6 @@ extern f32 mathSinf(f32 x);
 extern void* ObjGroup_GetObjects();
 extern u8* Obj_GetPlayerObject(void);
 
-/* magicdust extra block (collectible sparkle state; tail of the pickup record). */
-
 STATIC_ASSERT(offsetof(MagicDustState, flags27A) == 0x27A);
 
 extern void fn_8002B758(void);
@@ -53,7 +48,6 @@ void effectbox_free(void)
     fn_8002B758();
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void effectbox_hitDetect(void)
 {
 }
@@ -90,11 +84,9 @@ void effectbox_init(int obj, int* def)
     ((GameObject*)obj)->objectFlags = (u16)v;
 }
 
-/* 8b "li r3, N; blr" returners. */
 int effectbox_getExtraSize(void) { return 0x0; }
 int effectbox_getObjectTypeId(void) { return 0x0; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3508;
 
 void effectbox_render(int p1, int p2, int p3, int p4, int p5, s8 visible)

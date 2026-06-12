@@ -16,7 +16,6 @@ typedef struct TrickyguardspotPlacement
     s16 unk1E;
 } TrickyguardspotPlacement;
 
-/* Trivial 4b 0-arg blr leaves. */
 void trickyguardspot_render(void)
 {
 }
@@ -78,12 +77,10 @@ void trickyguardspot_update(TrickyGuardSpotObject* obj)
     GameBit_Set(((TrickyguardspotPlacement*)def)->unk1E, flags->trickyInRange);
 }
 
-/* 8b "li r3, N; blr" returners. */
 int magiccavetop_getExtraSize(void);
 int trickyguardspot_getExtraSize(void) { return 0x8; }
 int infotext_getExtraSize(void);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 void trickyguardspot_free(TrickyGuardSpotObject* obj) { ObjGroup_RemoveObject(obj, TRICKY_GUARD_SPOT_GROUP); }
 
 extern void ObjGroup_AddObject(int obj, int g);

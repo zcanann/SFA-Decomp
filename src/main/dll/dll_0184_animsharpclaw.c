@@ -158,7 +158,6 @@ FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void animsharpclaw_hitDetect(void)
 {
 }
@@ -173,12 +172,10 @@ void animsharpclaw_initialise(void)
 
 void MoonSeedPlantingSpot_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int animsharpclaw_getExtraSize(void) { return 0x140; }
 int animsharpclaw_getObjectTypeId(void) { return 0xb; }
 int MoonSeedPlantingSpot_render2(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E45C8;
 extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
@@ -190,7 +187,6 @@ void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-/* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 #pragma scheduling off
 void animsharpclaw_free(int obj)
 {

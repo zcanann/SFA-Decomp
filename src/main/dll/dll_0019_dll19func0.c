@@ -162,7 +162,6 @@ void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void CameraModeNpcSpeak_release(void);
 
 #pragma scheduling off
@@ -270,10 +269,6 @@ void dll_19_func12(int* p1, int* p2, u8 flag)
 
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
-/* misc 8b leaves */
-
-/* fn_X(lbl); lbl = 0; */
-
 void fn_801101E8(void)
 {
     extern void mm_free(u32); /* #57 */
@@ -288,7 +283,6 @@ void dll_19_func11(void)
     (void)(*gCameraInterface)->getOverrideTarget();
 }
 
-/* baddie spawn/visibility predicate */
 extern int objPosToMapBlockIdx(double x, double y, double z);
 
 int dll_19_func0E(int p1, int p2, u8 b)
@@ -309,7 +303,6 @@ int dll_19_func0E(int p1, int p2, u8 b)
     return 1;
 }
 
-/* compute progress ratio (signed numerator / unsigned denominator) */
 extern f32 lbl_803E1C2C;
 
 f32 dll_19_func1A(int obj)
@@ -328,7 +321,6 @@ f32 dll_19_func1A(int obj)
     return lbl_803E1C2C;
 }
 
-/* baddie state reset */
 extern void ObjHits_SetHitVolumeSlot(void* obj, int animObjId, int frame, int flags);
 
 void dll_19_func0D(int p1, int p2, f32 fval, s8 b)
@@ -358,7 +350,6 @@ extern ObjPlacement* Obj_AllocObjectSetup(int size, int id);
 extern GameObject* Obj_SetupObject(ObjPlacement* setup, int mode, int mapLayer, int objIndex, int parent);
 extern u8 lbl_802C2190[];
 
-/* dll_19_func19  addr=0x80111EB4  size=0x100  linkage=global */
 void dll_19_func19(u8* cam, u8* ctx)
 {
     struct Cfg8
@@ -403,7 +394,6 @@ void dll_19_func19(u8* cam, u8* ctx)
 
 extern int* gPlayerInterface;
 
-/* dll_19_func0C  addr=0x80112D80  size=0x114  linkage=global */
 #pragma dont_inline on
 void dll_19_func0C(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, int p8, s8 p9)
 {
@@ -445,16 +435,11 @@ void dll_19_func0C(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, int p
 
 extern f32 lbl_803E1B78;
 
-/* CameraModePerv_update  addr=0x80110CB0  size=0x10C  linkage=global */
-
-/* CameraModeForceBehind_init  addr=0x801100B8  size=0x124  linkage=global */
-
 extern int Obj_GetPlayerObject(void);
 extern int fn_80295A04(int obj, int a);
 extern int fn_80296AE8(int obj);
 extern f32 lbl_803E1C48;
 
-/* dll_19_func13  addr=0x8011313C  size=0x13C  linkage=global */
 int dll_19_func13(int p1, u8* p2, f32 f, int p4)
 {
     extern f32 lbl_803E1C68; /* #57 */
@@ -502,7 +487,6 @@ int dll_19_func13(int p1, u8* p2, f32 f, int p4)
 
 extern f32 lbl_803E1C6C;
 
-/* dll_19_func10  addr=0x80113398  size=0x16C  linkage=global */
 int dll_19_func10(int p1, u8* p2, int p3, int p4, s16 p5, f32* p6, f32* p7, int* p8)
 {
     extern f32 lbl_803E1C68; /* #57 */
@@ -551,9 +535,6 @@ int dll_19_func10(int p1, u8* p2, int p3, int p4, s16 p5, f32* p6, f32* p7, int*
 
 extern f32 lbl_803E1AC0;
 
-/* CameraModeCrawl_copyToCurrent  addr=0x8010F540  size=0x1E0  linkage=global */
-
-/* dll_19_func17  addr=0x80112544  size=0x19C  linkage=global */
 int dll_19_func17(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, s16 p8)
 {
     u32 msgData;
@@ -606,13 +587,10 @@ int dll_19_func17(int p1, u8* p2, u8* p3, s16 p4, u8* p5, s16 p6, s16 p7, s16 p8
 
 extern s16* objModelGetVecFn_800395d8(int obj, int idx);
 
-/* CameraModeCannon_update  addr=0x8010FA84  size=0x168  linkage=global */
-
 extern f32 fn_8029610C(int obj);
 extern void voxmaps_worldToGrid(f32* pos, int* grid);
 extern f32 lbl_803E1C64;
 
-/* dll_19_func14  addr=0x80112E94  size=0x2A8  linkage=global */
 int dll_19_func14(u8* p1, u8* p2, f32 frange, int p4)
 {
     extern f32 lbl_803E1C68; /* #57 */
@@ -732,7 +710,6 @@ extern f32 lbl_803E1C44;
 extern f32 lbl_803E1C4C;
 extern f32 lbl_803E1C50;
 
-/* dll_19_func16  addr=0x801126E0  size=0x348  linkage=global */
 int dll_19_func16(u8* p1, u8* p2, int p3, int p4, int* p5, u8* p6, s16 p7, u8* p8)
 {
     u8* state = *(u8**)(p1 + 184);
@@ -864,7 +841,6 @@ extern f32 lbl_803E1C5C;
 extern f32 lbl_803E1C60;
 extern GameObject* lbl_803DD5E4;
 
-/* dll_19_func15  addr=0x80112A28  size=0x358  linkage=global */
 int dll_19_func15(u8* p1, int p2, int p3, int p4)
 {
     GameObject* source = (GameObject*)p1;
@@ -998,7 +974,6 @@ extern u8 lbl_8031A048[];
 extern u32 lbl_803DB9E0;
 extern u32 lbl_803DD5E0;
 
-/* dll_19_func18  addr=0x80112098  size=0x47C  linkage=global */
 void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, int p7)
 {
     u8 flags = (u8)p7;
@@ -1142,14 +1117,6 @@ void dll_19_func18(int p1, u8* p2, u8* p3, int p4, int p5, int p6, f32 fparam, i
 }
 
 extern f32 lbl_803E1AD0;
-
-/* CameraModeCrawl_update  addr=0x8010F74C  size=0x2B8  linkage=global */
-
-/* CameraModeCloudRunner_update  addr=0x80110214  size=0x36C  linkage=global */
-
-/* CameraModeForceBehind_update  addr=0x8010FC7C  size=0x43C  linkage=global */
-
-/* dll_54_update  addr=0x801106E4  size=0x490  linkage=global */
 
 extern void fn_8010DB7C(GameObject * target, f32 * a, f32 * b, f32 * c);
 
@@ -1301,7 +1268,6 @@ int dll_19_func0F(int obj, char* state, char* st, int p4, int p5, s16 p6)
     return 1;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_19_func04_nop(void)
 {
 }
@@ -1310,13 +1276,9 @@ void dll_19_func03_nop(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int dll_19_func09_ret_0(void) { return 0x0; }
 
-/* 12b chained getters. */
 f32 dll_19_func0B(int* obj) { return *(f32*)((char*)((int**)obj)[0xb8 / 4] + 0x3e4); }
-
-/* misc 8b leaves */
 
 u16 dll_19_func0A(int obj)
 {
@@ -1565,5 +1527,4 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char* st)
 /* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
  * given speed, snapping when close, easing yaw and pacing the walk anim. */
 
-/* === helper-last relocation (re-split inline suppression; defs moved below their callers to suppress cross-TU-merge auto-inlining) === */
 void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);

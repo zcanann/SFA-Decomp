@@ -16,7 +16,6 @@ extern void pauseMenuDrawElement(void* tex, f32 a, f32 b, s16 x, u8 alpha, s32 m
 
 extern u8 hudTextures[0x198];
 
-/* callees */
 extern void* Obj_GetPlayerObject(void);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern void drawRect(int w, int h, f32 a, f32 b);
@@ -65,7 +64,6 @@ extern u8 sLanguageNameTable[];
 extern u8 lbl_802C8680[];
 extern int lbl_803A9364[];
 
-/* .sbss / .sdata / .sdata2 scalars (sda21) */
 extern f32 lbl_803DD748;
 extern f32 lbl_803DD74C;
 extern s16 lbl_803DD750;
@@ -184,7 +182,6 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         gameTextLoadDir(0xb);
         gameTextFn_80016810(0x3dd, 0xc8, 0x12c);
-    /* fall through */
     case 2:
         pauseMenuDoSave();
         break;

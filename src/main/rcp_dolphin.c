@@ -700,7 +700,6 @@ void FUN_80053c98(undefined8 param_1, double param_2, double param_3, undefined8
 {
 }
 
-/* sda21 accessors. */
 extern u32 bEnableColorFilter;
 extern u8 bEnableViewFinderHud;
 extern u8 bEnableSpiritVision;
@@ -722,13 +721,11 @@ void setMotionBlur(u8 enabled, f32 amount)
     lbl_803DB62C = amount;
 }
 
-/* Pattern wrappers. */
 extern u8 bEnableDistortionFilter;
 extern u8 bEnableBlurFilter;
 void Rcp_DisableDistortionFilter(void) { bEnableDistortionFilter = 0x0; }
 void Rcp_DisableBlurFilter(void) { bEnableBlurFilter = 0x0; }
 
-/* misc 8b leaves */
 void fn_800541A4(s16* p, s16 v) { *(s16*)((char*)p + 0x14) = v; }
 
 extern u32 lbl_803DCDA8;

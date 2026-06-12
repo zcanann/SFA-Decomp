@@ -36,7 +36,6 @@ void pressureSwitch_ensureSharedResource(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void hagabon_release(void);
 
 void hagabon_initialise(void);
@@ -93,8 +92,6 @@ extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, in
 #define SWARMBADDIE_FLAG_PATH_NEEDS_LINK 0x01
 #define SWARMBADDIE_FLAG_CHASE_PLAYER 0x02
 
-/* Per-object extra state for Hagabon (hagabon_getExtraSize == 0x28). */
-
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
@@ -143,7 +140,6 @@ void hagabon_init(int obj, int data, int skip_alloc);
 
 void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
-/* 8b "li r3, N; blr" returners. */
 int hagabon_getExtraSize(void);
 int hagabon_getObjectTypeId(void);
 int swarmbaddie_getExtraSize(void) { return 0x24; }

@@ -17,8 +17,6 @@ void FUN_801cacd4(int param_1, int param_2, int param_3, int param_4, int param_
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
-
 #pragma scheduling off
 #pragma peephole off
 void nwsh_levcon_hitDetect(void)
@@ -33,11 +31,9 @@ void nwsh_levcon_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int nwsh_levcon_getExtraSize(void) { return 0x0; }
 int nwsh_levcon_getObjectTypeId(void) { return 0x0; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5150;
 extern void objRenderFn_8003b8f4(f32);
 

@@ -67,7 +67,6 @@ void FUN_80178338(undefined4 param_1)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
 void doorf4_hitDetect(void)
@@ -82,11 +81,9 @@ void doorf4_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int doorf4_getExtraSize(void) { return 0x24; }
 int doorf4_getObjectTypeId(void) { return 0x1; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3680;
 extern void objRenderFn_8003b8f4(f32);
 
@@ -118,7 +115,6 @@ extern f32 lbl_803E36A0;
 
 extern int* Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-/* extern void ObjMsg_SendToObject(int *target, int msg, int *src, int p4); -- already declared */
 
 extern u32 GameBit_Get(int eventId);
 
@@ -521,7 +517,6 @@ int doorf4_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                         break;
                     }
                 }
-            /* fall through */
             case 3:
                 if (sub->sfxOpen != 0)
                 {

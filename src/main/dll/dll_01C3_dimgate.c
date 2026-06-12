@@ -1,21 +1,11 @@
 /* DLL 0x01C3 — dimgate (Dinosaur Island Mission gate). TU: 0x801B15D8–0x801B17F4. */
 #include "ghidra_import.h"
 
-
-
-
-
-
-
-
-
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIMExplosion.h"
-
-
 
 typedef struct DimgatePlacement
 {
@@ -23,28 +13,9 @@ typedef struct DimgatePlacement
     s16 unk1E;
 } DimgatePlacement;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern void ObjHitbox_SetStateIndex(int obj, ObjHitsPriorityState* hitState, int stateIndex);
-
-
-/* Trivial 4b 0-arg blr leaves. */
-
-
-
 
 void dimgate_free(void)
 {
@@ -64,19 +35,13 @@ void dimgate_initialise(void)
 
 void dimbarrier_free(void);
 
-
-
-
-/* 8b "li r3, N; blr" returners. */
 int dimgate_SeqFn(void) { return 0x0; }
 int dimgate_getExtraSize(void) { return 0x1; }
 int dimgate_getObjectTypeId(void) { return 0x0; }
 int dimicewall_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4878;
-
 
 void dimgate_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -85,8 +50,6 @@ void dimgate_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void dimbarrier_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-
 
 void dimgate_init(int obj, s8* p_unused_passthrough)
 {
@@ -109,7 +72,6 @@ void dimgate_init(int obj, s8* p_unused_passthrough)
 }
 
 void dimbarrier_init(int obj, s8* p);
-
 
 /* dimgate_update: open the gate (hitbox state 1->2) once a type-399 object is
  * present in the trigger list, latching the gamebit. */
@@ -169,14 +131,11 @@ extern int Sfx_PlayFromObject(int obj, int sfx);
 /* dimbarrier_update: while a live type-470 object is in the list, count down the
  * arm timer; on expiry fade the barrier out and latch its gamebit. */
 
-
 /* dimsnowball1c2_update: on a timer, if loading allows and the player is clear,
  * spawn a rolling snowball seeded from the placement params. */
 
-
 /* DIMwooddoor_updateFallingDebris: integrate the falling debris under gravity, spin it, and on
  * contact (or scripted trigger) fire the explosion and start the despawn timer. */
-
 
 /* dimicewall_update: on shatter, emit two snow particle bursts and latch the
  * gamebit; otherwise let Tricky push through it. */

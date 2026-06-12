@@ -96,14 +96,12 @@ void FUN_80169a44(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
 void kaldachompspit_hitDetect(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int kaldachompspit_getExtraSize(void) { return 0x4; }
 int kaldachompspit_getObjectTypeId(void) { return 0x0; }
 
@@ -300,8 +298,6 @@ void kaldachompspit_burst(int obj)
 #include "main/objhits_types.h"
 #include "main/game_object.h"
 
-/* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
-
 extern void* objCreateLight(int obj, int kind);
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
@@ -365,7 +361,6 @@ void kaldachompspit_init(int obj)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void kaldachompspit_release(void)
 {
 }
@@ -375,10 +370,6 @@ void kaldachompspit_initialise(void)
 }
 
 void mikabomb_hitDetect(void);
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -515,7 +506,5 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     (ObjectDescriptorCallback)pollenfragment_getObjectTypeId,
     pollenfragment_getExtraSize,
 };
-
-/* ==== v1.0 recovered functions (drift additions) ==== */
 
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);

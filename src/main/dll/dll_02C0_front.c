@@ -131,8 +131,6 @@ extern u32 lbl_803DD9BC;
 extern u8 lbl_803DD9AB;
 extern u8 showCredits;
 
-/* 4-byte and 8-byte trivial leaves. */
-
 u8 shouldShowCredits(void) { return showCredits; }
 
 /* EN v1.0 0x801334D4  size: 12b  u16-narrow getter for lbl_803DD938. */
@@ -399,8 +397,6 @@ extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int* Obj_GetActiveModel(void* obj);
 
-/* Variadic debug-print sink: retail keeps only the ABI varargs spill frame. */
-
 /* EN v1.0 0x80133EA4  size: 156b  Two-step shutdown helper. Releases
  * the buffers at minimapTexture and lbl_803DD940 (the first only if
  * non-null), then walks the 2-slot live-objects table at lbl_803DBBC8
@@ -420,7 +416,6 @@ void titleScreenPositionElements(f32 a, f32 b)
 }
 
 extern void* lbl_803DD960;
-/* lbl_803DD940 declared later as void* */
 extern f32 lbl_803E2408;
 
 /* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960

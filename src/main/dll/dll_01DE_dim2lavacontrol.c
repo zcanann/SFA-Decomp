@@ -7,19 +7,11 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-/* dim2conveyor_getExtraSize == 0x14. */
-
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
-
-/* dll_1D6_getExtraSize == 0x20 (crusher platform). */
 
 STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
 
-/* dimtruthhornice_getExtraSize == 0x8. */
-
 STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
-
-/* dim2snowball_getExtraSize == 0xb0 (curve walker head + roll state). */
 
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
@@ -92,16 +84,9 @@ void FUN_801b9cc4(int param_1)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_1DA_release(void);
 
 extern u32 GameBit_Get(int id);
-
-/* dim2icefloe: per-frame curve-follow update + path-param init. */
-
-/* dim2icicle_update: state machine -- wait for hit, shake, drop into water, melt. */
-
-/* dll_1DB_update: geyser state machine driven by player standing on it. */
 
 /* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
  * fall, land on contact object, clamp to floor height. */
@@ -109,11 +94,9 @@ extern u32 GameBit_Get(int id);
 /* fn_801B9ECC: DIM boss player-vs-baddie reaction dispatcher -- picks a player anim
  * from distance/anim-state via the interface vtables. */
 
-/* 8b "li r3, N; blr" returners. */
 int dim2lavacontrol_getExtraSize(void) { return 0x10; }
 int dll_1DF_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4B90;
 
 #pragma scheduling off
@@ -125,8 +108,6 @@ void dim2lavacontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void dll_1DF_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-/* dll_1DA_init: stash obj->f10 into *(obj->p_B8), then bump obj->f10 by a constant step. */
 
 /* dll_1DF_init: similar romlist param init, but reads three u8 fields, packs to s16
  *              fields, and on a u8 flag does a u32->f32 conversion (MWCC emits the
@@ -156,7 +137,6 @@ void dim2lavacontrol_setScale(void* obj)
     }
 }
 
-/* dim2lavacontrol_free: stop lava sfx, kill the lava music track, refresh time-of-day. */
 extern void fn_8004C1E4(int sfxId, f32 vol);
 extern void timeOfDayFn_80055000(void);
 

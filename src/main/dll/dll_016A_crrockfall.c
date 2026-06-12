@@ -241,7 +241,6 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void imicemountain_free(void);
 
 #define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
@@ -261,16 +260,13 @@ void crrockfall_hitDetect(void)
 
 void magiclight_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int crrockfall_getExtraSize(void) { return 0x14; }
 int crrockfall_getObjectTypeId(void) { return 0x0; }
 int magiclight_getObjectTypeId(void);
 
-/* Pattern wrappers. */
 extern void* lbl_803DDB40;
 void crrockfall_initialise(void) { lbl_803DDB40 = NULL; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E46D8;
 extern f32 lbl_803E4708;
 extern void objRenderFn_8003b8f4(f32);
@@ -328,7 +324,6 @@ f32 fn_801ACCFC(int obj)
 
 void magiclight_free(int obj);
 
-/* conditional init/free pair. */
 #pragma scheduling on
 #pragma peephole on
 void crrockfall_release(void)
@@ -340,7 +335,6 @@ void crrockfall_release(void)
     lbl_803DDB40 = NULL;
 }
 
-/* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, sync its transform into obj. */
 extern void dll_16C_syncSubObjectTransform(void* a, void* b, int c, int d, int e, int f, int g, int h, int i);
 
 extern float Vec_distance(float* a, float* b);

@@ -30,17 +30,13 @@ typedef struct NwIceState
     int* linkedObj;
 } NwIceState;
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void nw_ice_render(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int nw_animice_SeqFn(void);
 int nw_ice_getExtraSize(void) { return 0x4; }
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 void nw_animice_free(int x);
 void nw_ice_free(int x) { ObjGroup_RemoveObject(x, 0x3c); }
 
@@ -104,7 +100,6 @@ void nw_ice_update(int* obj)
     }
 }
 
-/* call(x, N) wrappers. */
 void nw_ice_init(int x) { ObjGroup_AddObject(x, 0x3c); }
 
 void nw_tricky_init(int* obj);

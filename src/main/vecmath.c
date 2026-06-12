@@ -2,8 +2,6 @@
 
 extern f32 powfBitEstimate(f32 x, f32 y);
 
-/* moved below GameTextSlot/global declarations */
-
 undefined2*
 FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -46,14 +44,6 @@ FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
 {
     return 0;
 }
-
-/* Pattern wrappers. */
-
-/* ObjModel/model-file accessors. */
-
-/* Global game-state / text accessors. */
-
-/* Simple field/global accessors. */
 
 extern int randomGetRange(int lo, int hi);
 

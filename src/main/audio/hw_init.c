@@ -182,7 +182,6 @@ void hwInitSamplePlayback(int slot, u16 value70, u32* values, u32 resetAdsr, u32
         entry = dspVoice;
         entry += inputOffset;
         entry += offset;
-        /* raw pair: member form CSEs the field address (addi+stw 0) */
         flags |= *(u32*)(entry + 0x24) & 0x20;
         *(u32*)(entry + 0x24) = zero;
         inputOffset += 4;

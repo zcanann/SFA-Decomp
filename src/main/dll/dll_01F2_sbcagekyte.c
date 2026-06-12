@@ -63,7 +63,6 @@ void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8
 {
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void SB_FireBall_release(void);
 
 void SB_CageKyte_free(void)
@@ -84,14 +83,10 @@ void SB_CageKyte_initialise(void)
 
 void SB_SeqDoor_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int SB_CageKyte_getExtraSize(void) { return 0x2; }
 int SB_CageKyte_getObjectTypeId(void) { return 0x1; }
 int SB_SeqDoor_getExtraSize(void);
 
-/* 16b chained patterns. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern int GameBit_Get(int);
 int SB_SeqDoor_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
@@ -167,8 +162,6 @@ void SB_CloudBall_free(int* obj);
 
 /* EN v1.0 0x801E6050  size: 44b  Triple s8 fan-out: write obj->_b8[2/3/4]
  * (sign-extended) into *out_b3, *out_b2, *out_b4. */
-
-/* shop_getItem* helpers -- table lookup */
 
 /* EN v1.0 0x801E6358  size: 104b  Returns 1 unless the item's
  * "available" GameBit gate (lbl_80327FD0[idx*12 + 6]) is present and

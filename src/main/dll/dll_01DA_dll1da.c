@@ -8,19 +8,11 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-/* dim2conveyor_getExtraSize == 0x14. */
-
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
-
-/* dll_1D6_getExtraSize == 0x20 (crusher platform). */
 
 STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
 
-/* dimtruthhornice_getExtraSize == 0x8. */
-
 STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
-
-/* dim2snowball_getExtraSize == 0xb0 (curve walker head + roll state). */
 
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
@@ -35,20 +27,14 @@ extern undefined4 GameBit_Set(int eventId, int value);
 
 extern f32 timeDelta;
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dll_1DA_free(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int dimtruthhornice_getExtraSize(void);
 int dll_1DA_getExtraSize(void) { return 0x8; }
 int dll_1DA_getObjectTypeId(void) { return 0x0; }
 
-/* 16b chained patterns. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4A30;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4AD8;
@@ -59,19 +45,13 @@ void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4AD8);
 }
 
-/* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E4A38;
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* dim2conveyor_setScale: per-area scale/sign + music latch for two specific map ids. */
 
 extern int ObjHits_GetPriorityHit(int obj, void** outHitObj, int* outSphereIdx, uint* outHitVolume);
 extern float Vec_distance(float* a, float* b);
 extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803E4ADC;
 
-/* dim2pathgenerator hitDetect: on hit type 0xE, scale velocity by const and SFX. */
 void dll_1DA_hitDetect(int obj)
 {
     extern int Sfx_PlayFromObject(int obj, int sfxId);
@@ -134,7 +114,6 @@ void FUN_801b9cc4(int param_1)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
 void dll_1DA_release(void)
@@ -146,12 +125,6 @@ void dll_1DA_initialise(void)
 }
 
 void dll_1DB_free(void);
-
-/* dim2icefloe: per-frame curve-follow update + path-param init. */
-
-/* dim2icicle_update: state machine -- wait for hit, shake, drop into water, melt. */
-
-/* dll_1DB_update: geyser state machine driven by player standing on it. */
 
 /* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
  * fall, land on contact object, clamp to floor height. */
@@ -275,11 +248,6 @@ extern int* gBaddieControlInterface;
 
 int fn_801B9ECC(int a, int obj);
 
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* dll_1DA_init: stash obj->f10 into *(obj->p_B8), then bump obj->f10 by a constant step. */
 void dll_1DA_init(void* obj)
 {
     *(*(f32**)&((GameObject*)obj)->extra) = ((GameObject*)obj)->anim.localPosY;
@@ -298,8 +266,6 @@ void dll_1DF_init(void* obj, void* p);
 /* dim2lavacontrol_setScale: every-frame tick -- if not already "armed" (bit 0 of
  *   sub.b2 is clear), decrement sub.b0 counter; when it hits 0 set the armed bit
  *   and tell the game-event tracker (via param.s16_1E) that this trigger fired. */
-
-/* dim2lavacontrol_free: stop lava sfx, kill the lava music track, refresh time-of-day. */
 
 /* dll_1DF_update: per-frame texture-color update + proximity-driven expgfx trigger.
  *   - objFindTexture(obj,0,0); if non-null and obj.s16_46 == 209 set tex.color

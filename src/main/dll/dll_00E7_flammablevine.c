@@ -329,7 +329,6 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     while (true);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void flammablevine_release(void)
 {
 }
@@ -340,7 +339,6 @@ void flammablevine_initialise(void)
 
 void dll_109_hitDetect_nop(void);
 
-/* 8b "li r3, N; blr" returners. */
 int flammablevine_getExtraSize(void) { return 0x14; }
 int flammablevine_getObjectTypeId(void) { return 0x0; }
 int dll_109_getExtraSize_ret_16(void);
@@ -348,9 +346,6 @@ int dll_109_getExtraSize_ret_16(void);
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-/* Carryable impact state machine that spawns break particles, hides, then respawns. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3AF8;
 extern f32 lbl_803E3AFC;
 extern f32 lbl_803E3B00;
@@ -384,7 +379,6 @@ void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void infopoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 void flammablevine_free(int x) { ObjGroup_RemoveObject(x, 0x31); }
 
 void flammablevine_hitDetect(int obj)
@@ -583,22 +577,7 @@ checked_vine_use:
     }
 }
 
-/* Fall_Ladders_free: expgfx interface freeObject callback. */
 void Fall_Ladders_free(int obj);
-
-/* coldwatercontrol_init: set float field + OR flag bits. */
-
-/* landed_arwing_free: free child object + detach link. */
-
-/* landed_arwing_render: visible-guarded render with extra call. */
-
-/* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
-
-/* landed_arwing_init: flag bits, counter, conditional unlock, set callback. */
-
-/* landed arwing hit/animation step: handles impact reactions and spawned debris. */
-
-/* landed arwing material flags: mirrors game bits into the damaged texture state. */
 
 #pragma dont_inline on
 #pragma dont_inline reset

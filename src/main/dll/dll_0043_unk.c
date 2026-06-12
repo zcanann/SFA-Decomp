@@ -72,7 +72,6 @@ void camcontrol_releasePathState(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void CameraModeStaffAnim_copyToCurrent_nop(void)
 {
 }
@@ -428,7 +427,6 @@ void CameraModeStaffAnim_init(CameraObject* camera, undefined4 param_2, u8* sett
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void CameraModeStaffAnim_release(void)
 {
 }
@@ -436,5 +434,3 @@ void CameraModeStaffAnim_release(void)
 void CameraModeStaffAnim_initialise(void)
 {
 }
-
-/* fn_X(lbl); lbl = 0; */

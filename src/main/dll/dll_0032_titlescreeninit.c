@@ -197,7 +197,6 @@ void initLoadingScreenTextures(void)
     lbl_803DD5E8 = 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void TitleScreenInit_render(void)
 {
 }

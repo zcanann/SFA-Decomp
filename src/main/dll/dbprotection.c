@@ -915,7 +915,6 @@ void DBprotection_updateEnvfxGameBits(u8* state)
     }
 }
 
-/* 16b chained patterns. */
 int DBprotection_getCameraState(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x70); }
 
 void DBprotection_updateShield(int* obj)

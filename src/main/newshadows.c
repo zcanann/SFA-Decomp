@@ -166,7 +166,6 @@ extern f32 lbl_803DFA40;
 
 extern void DCFlushRange(void* addr, u32 nBytes);
 
-/* Box-blur a square tiled texture in place (8-bit and 16-bit texel paths). */
 void fn_8006A028(u8* texData, int size, int window, u32 fill)
 {
     u8 blurred[128];
@@ -1391,7 +1390,6 @@ void FUN_8006dca8(undefined8 param_1, double param_2, undefined4 param_3, undefi
     return;
 }
 
-/* sda21 accessors. */
 extern u32 lbl_803DCFD4;
 extern char* lbl_803DCF7C;
 extern u32 lbl_803DCF94;
@@ -1403,7 +1401,6 @@ u32 getTextureFn_8006c744(void) { return lbl_803DCF94; }
 u32 fn_8006C74C(void) { return lbl_803DCF98; }
 u32 fn_8006C754(void) { return lbl_803DCF90; }
 
-/* Pattern wrappers. */
 extern u32 lbl_803DCFC4;
 extern u32 lbl_803DCFC8;
 extern u32 lbl_803DCFB0;
@@ -1427,7 +1424,6 @@ void fn_8006C5CC(u32* p) { *p = lbl_803DCFD8; }
 void getReflectionTexture2(u32* p) { *p = lbl_803DCFDC; }
 void getTextureFn_8006c5e4(u32* p) { *p = lbl_803DCFE0; }
 
-/* *p1 = lbl1; *p2 = lbl2; (f32) */
 extern f32 lbl_803DCFAC;
 extern f32 lbl_803DCFA8;
 
@@ -1437,11 +1433,9 @@ void newshadows_getReflectionScrollOffsets(f32* p1, f32* p2)
     *p2 = lbl_803DCFA8;
 }
 
-/* misc 8b leaves */
 extern f32 lbl_803DCFA4;
 f32 fn_8006C670(void) { return lbl_803DCFA4; }
 
-/* fn_X(lbl); lbl = 0; */
 extern void mm_free(u32);
 
 void fn_8006CB24(void)
@@ -1450,7 +1444,6 @@ void fn_8006CB24(void)
     lbl_803DCFBC = 0;
 }
 
-/* Three-out info getter:  *p1 = &lbl; *p2 = 4; *p3 = 8; */
 extern u8 lbl_8038E1E8[0x80];
 #pragma scheduling off
 #pragma peephole off
@@ -1461,7 +1454,6 @@ void fn_8006C4C0(int* p1, int* p2, int* p3)
     *p3 = 8;
 }
 
-/* Two-out info getter:  *p1 = &lbl; *p2 = 0x10; */
 extern u8 lbl_8038E268[0x40];
 
 void textureFn_8006c4e0(int* p1, int* p2)
@@ -1470,7 +1462,6 @@ void textureFn_8006c4e0(int* p1, int* p2)
     *p2 = 0x10;
 }
 
-/* Trivial GXLoadTexObj wrapper at offset 0x20 of sda21 pointer. */
 extern u32 lbl_803DCFD0;
 extern void GXLoadTexObj(void* obj, int id);
 extern void GXLoadTexObjPreLoaded(void* obj, void* region, int id);
@@ -1480,7 +1471,6 @@ void fn_8006C678(int id)
     GXLoadTexObj((char*)lbl_803DCFD0 + 0x20, id);
 }
 
-/* PreLoaded-or-direct wrapper based on byte 0x48 of sda21 pointer.  Variant A. */
 extern u32 lbl_803DCFCC;
 
 void fn_8006C6A4(int id)
@@ -1497,7 +1487,6 @@ void fn_8006C6A4(int id)
     }
 }
 
-/* PreLoaded-or-direct wrapper using lbl_803DCF7C as base. */
 void selectReflectionTexture(int id)
 {
     register int idCopy = id;
@@ -1512,7 +1501,6 @@ void selectReflectionTexture(int id)
     }
 }
 
-/* PreLoaded-or-direct wrapper using lbl_803DCFE4 as base. */
 extern u32 lbl_803DCFE4;
 
 void textureFn_8006c75c(int id)
@@ -1554,7 +1542,6 @@ void findSomething(void* needle)
     }
 }
 
-/* Cycles a 3-element table, then samples 3 fields from obj->0x64 ptr block. */
 extern u8 lbl_803DCF8C;
 extern u32 lbl_8038E1DC[3];
 
@@ -1569,7 +1556,6 @@ void objShadowFn_8006c5f0(int obj, u32* outTable, f32* outF, int* outX, int* out
     *outY = (int)modelState->shadowOffsetY;
 }
 
-/* Allocate a 512x512 texture (1bpp?), set field, flush. */
 extern void* textureAlloc(int w, int h, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 
 void* textureAlloc512(void)
@@ -1580,7 +1566,6 @@ void* textureAlloc512(void)
     return tex;
 }
 
-/* Draw the reflection texture and copy to the reflection2 region. */
 extern f32 lbl_803DED28;
 extern void drawTexture(void* p, f32 f1, f32 f2, int a, int b);
 extern void GXSetTexCopySrc(u16 left, u16 top, u16 wd, u16 ht);
@@ -1603,7 +1588,6 @@ void drawReflectionTexture(void)
     }
 }
 
-/* Copy the frame buffer into both reflection textures, optionally preload. */
 extern void GXInvalidateTexAll(void);
 extern void GXPixModeSync(void);
 

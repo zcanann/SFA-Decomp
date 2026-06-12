@@ -39,7 +39,6 @@ extern f32 lbl_803E2FF8;
 extern f32 lbl_803E2FFC;
 extern f32 lbl_803E3000;
 
-/* 8b "li r3, N; blr" returners. */
 int LandedArwing_ReturnZero(void) { return 0x0; }
 
 int LandedArwing_TriggerLaunchTarget(int obj, int target)

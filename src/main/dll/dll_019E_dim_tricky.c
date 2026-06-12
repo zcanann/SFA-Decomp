@@ -5,16 +5,10 @@
 extern ModgfxInterface** gModgfxInterface;
 extern u8 framesThisStep;
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
 int dll_19E_getExtraSize(void) { return 0x10; }
 int dll_19E_getObjectTypeId(void) { return 0x1; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E51B0;
-
-/* Stubs to align function set with v1.0 asm. */
 
 /*
  * Function: dll_19C_init
@@ -165,7 +159,6 @@ void dll_19E_render(int obj, int param_2, int param_3, int param_4,
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_19E_hitDetect(void)
 {
 }
@@ -398,7 +391,6 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
     state->delayTimer = 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_19E_release(void)
 {
 }

@@ -35,8 +35,6 @@ typedef struct Dim2prisonmammothState
     u8 pad5FD[0x604 - 0x5FD];
 } Dim2prisonmammothState;
 
-/* DLL 0x76 (DIMSnowHorn1 / dim2prisonmammoth) fragment: head/vtable live in placeholder_802BACC0 + placeholder_802BB4B0; consolidate when those adjacent units are graduated. */
-
 extern void fn_8003A168(int obj, int q);
 extern void characterDoEyeAnims(int obj, int q);
 extern void buttonDisable(int a, int b);
@@ -75,7 +73,6 @@ extern ObjHitReactEntry lbl_803351A8[];
 extern f32 timeDelta;
 extern void saveGame_saveObjectPos(int obj);
 
-/* Pattern wrappers. */
 int dim2prisonmammoth_defaultStateHandler(void) { return 0x0; }
 
 int dim2prisonmammoth_getExtraSize(void) { return 0x604; }

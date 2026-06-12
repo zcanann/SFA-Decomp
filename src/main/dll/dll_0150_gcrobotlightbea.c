@@ -537,7 +537,6 @@ void FUN_8019f1dc(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void cfguardian_release(void);
 
 /* Per-object extra state for the CloudRunner guardian
@@ -572,8 +571,6 @@ STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
  * (gcrobotlightbea_getExtraSize == 0xc). */
 
 STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
-
-/* spiritdoorspirit_getExtraSize == 0x1. */
 
 void gcrobotlightbea_render(void)
 {
@@ -621,20 +618,13 @@ void gcrobotlightbea_hitDetect(int* obj)
 }
 void cfperch_render(void);
 
-/* 8b "li r3, N; blr" returners. */
 int gcrobotlightbea_getExtraSize(void) { return 0xc; }
 int gcrobotlightbea_getObjectTypeId(void) { return 0x0; }
 int cfperch_getExtraSize(void);
 
-/* chained byte bit-extract. */
 u32 fn_801A0174(int* obj) { return (((GcRobotLightBeaState*)((int**)obj)[0xb8 / 4])->hitFlags >> 7) & 1; }
 
-/* plain forwarder. */
-
-/* Drift-recovery: add new fns with v1.0 names. */
 extern void modelLightStruct_freeSlot(int* p);
-/* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
-/* ObjMsg_AllocQueue already declared as undefined */
 
 void gcrobotlightbea_init(int* obj)
 {

@@ -661,8 +661,6 @@ void FUN_8013651c(int param_1)
 
 extern u8 warpstoneUIState;
 
-/* 4-byte and 8-byte trivial leaves. */
-
 /* EN v1.0 0x801334D4  size: 12b  u16-narrow getter for lbl_803DD938. */
 u16 getMinimapY(void) { return (u16)lbl_803DD938; }
 
@@ -837,8 +835,6 @@ void fn_80133718(void)
     viewFn_80129c74();
 }
 
-/* Variadic debug-print sink: retail keeps only the ABI varargs spill frame. */
-
 /* EN v1.0 0x80133EA4  size: 156b  Two-step shutdown helper. Releases
  * the buffers at minimapTexture and lbl_803DD940 (the first only if
  * non-null), then walks the 2-slot live-objects table at lbl_803DBBC8
@@ -868,7 +864,6 @@ void Minimap_release(void)
 }
 
 extern void* lbl_803DD960;
-/* lbl_803DD940 declared later as void* */
 
 /* EN v1.0 0x80133F40  size: 48b  Acquire a 0xBE5-byte buffer via
  * textureLoadAsset into lbl_803DD940; reset frame counter at lbl_803DD938. */

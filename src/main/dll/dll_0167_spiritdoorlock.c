@@ -5,7 +5,6 @@
 #include "main/objseq.h"
 #include "main/dll/IM/IMspacecraft.h"
 
-/* SDK / engine externs */
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern f32 Vec_xzDistance(f32 * a, f32 * b);
@@ -23,7 +22,6 @@ extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern int* objFindTexture(int obj, int a, int b);
 extern void Obj_TransformLocalVectorByWorldMatrix(int obj, f32* in, f32* out);
 extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
-
 
 extern void objRenderFn_8003b8f4(f32 v);
 
@@ -45,8 +43,6 @@ extern f32 lbl_803E4450;
 extern f32 lbl_803E4454;
 extern f32 lbl_803E4458;
 
-
-/* Trivial 4b 0-arg blr leaves. */
 void SpiritDoorLock_hitDetect(void)
 {
 }
@@ -61,22 +57,15 @@ void SpiritDoorLock_initialise(void)
 
 void RollingBarrel_hitDetect(void);
 
-
-
-/* 8b "li r3, N; blr" returners. */
 int SpiritDoorLock_getExtraSize(void) { return SPIRITDOORLOCK_EXTRA_SIZE; }
 int SpiritDoorLock_getObjectTypeId(void) { return 0x0; }
 int RollingBarrel_getExtraSize(void);
 
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4440);
 }
-
 
 void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 
@@ -89,9 +78,7 @@ void SpiritDoorLock_free(int obj)
     }
 }
 
-
 void RollingBarrel_free(int obj);
-
 
 void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode)
 {
@@ -258,5 +245,3 @@ void SpiritDoorLock_update(int obj)
 }
 
 void RollingBarrel_update(int obj);
-
-

@@ -191,7 +191,6 @@ void sc_totempuzzle_hitDetect(void)
 {
 }
 
-/* ================================================================ */
 /* Tail of the TU (0x801DD46C..0x801DDA28) - formerly the head of
  * dll_01BB_sctotembond.c (the drift boundary at 0x801DD46C cut dll
  * 0x1BA between hitDetect and update; real edge = initialise end). */
@@ -352,7 +351,6 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
     state->angle;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void sc_totempuzzle_release(void)
 {
 }

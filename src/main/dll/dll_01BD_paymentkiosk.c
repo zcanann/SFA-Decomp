@@ -11,8 +11,6 @@ extern u8* Obj_GetPlayerObject(void);
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void paymentkiosk_free(void)
 {
 }
@@ -21,12 +19,10 @@ void paymentkiosk_hitDetect(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int sc_totemstrength_getExtraSize(void);
 int paymentkiosk_getExtraSize(void) { return 0x3; }
 int paymentkiosk_getObjectTypeId(void) { return 0x1; }
 
-/* render-with-fn(lbl) (no visibility check). */
 extern void objRenderFn_8003b8f4(f32);
 void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
@@ -199,7 +195,6 @@ static void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams* params);
 
 static int FEseqobject_findControlObject(void);
 
-/* Trivial 4b 0-arg blr leaves. */
 void paymentkiosk_release(void)
 {
 }
@@ -209,12 +204,6 @@ void paymentkiosk_initialise(void)
 }
 
 void dll_144_free(void);
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* call(x, N) wrappers. */
 
 /*
  * Function: FEseqobject_init

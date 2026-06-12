@@ -17,8 +17,6 @@
 
 extern void mm_free(void* ptr);
 
-/* moved below GameTextSlot/global declarations */
-
 undefined2*
 FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -62,7 +60,6 @@ FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/* Pattern wrappers. */
 void doNothing_afterRenderObject(void)
 {
 }
@@ -74,8 +71,6 @@ void doNothing_beforeRenderObject(void)
 void fn_8002B85C(void)
 {
 }
-
-/* ObjModel/model-file accessors. */
 
 void* ObjModel_GetRenderOp(u8* model, int renderOpIndex);
 
@@ -318,8 +313,6 @@ void Obj_StartModelFadeIn(u8* obj, int frames)
     }
 }
 
-/* Global game-state / text accessors. */
-
 #pragma scheduling on
 #pragma peephole on
 int objIsFrozen(u8* obj)
@@ -337,8 +330,6 @@ int roundUpTo4(int x);
 int roundUpTo8(int x);
 
 int roundUpTo32(int x);
-
-/* Simple field/global accessors. */
 
 extern void* mmAlloc(int size, int type, int flag);
 extern void* memset(void* dst, int val, int n);

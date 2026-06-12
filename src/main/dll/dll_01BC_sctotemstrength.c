@@ -356,7 +356,6 @@ done:
     return ret;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void sc_totemstrength_free(void)
 {
 }
@@ -375,12 +374,10 @@ void sc_totemstrength_initialise(void)
 
 void paymentkiosk_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int sc_totemstrength_getExtraSize(void) { return 0x34; }
 int sc_totemstrength_getObjectTypeId(void) { return 0x0; }
 int paymentkiosk_getExtraSize(void);
 
-/* render-with-fn(lbl) (no visibility check). */
 extern void objRenderFn_8003b8f4(f32);
 void sc_totemstrength_render(void) { objRenderFn_8003b8f4(lbl_803E567C); }
 void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
@@ -504,14 +501,6 @@ extern uint GameBit_Get(int eventId);
 static void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams* params);
 
 static int FEseqobject_findControlObject(void);
-
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* call(x, N) wrappers. */
 
 /*
  * Function: FEseqobject_init

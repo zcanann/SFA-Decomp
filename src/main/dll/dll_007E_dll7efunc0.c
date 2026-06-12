@@ -142,8 +142,6 @@ void dll_7E_func03(int sourceObj, int variant, int posSource, uint flags, undefi
 
 void dll_7F_func03(int sourceObj, int variant, int posSource, uint flags);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dll_7E_func01_nop(void)
 {
 }

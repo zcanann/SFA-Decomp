@@ -558,7 +558,6 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, uint flags, u8 srcBy
 
 extern EffectSrcParams lbl_8039C3C8;
 
-/* sda21 externs for Effect10_func05 tick. */
 extern f32 lbl_803DB838;
 extern f32 lbl_803DB83C;
 extern s32 lbl_803DD3B0;
@@ -571,7 +570,6 @@ extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 mathSinf(f32 x);
 
-/* Advance two periodic counters; compute sin of phase. */
 void Effect10_func05(void)
 {
   f32 sum;
@@ -602,7 +600,6 @@ void Effect10_func05(void)
   lbl_803DD3B8 = mathSinf(lbl_803DFF30 * (f32)(s16)lbl_803DD3B4 / lbl_803DFF34);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void Effect10_func03_nop(void)
 {
 }

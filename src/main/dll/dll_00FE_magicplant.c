@@ -320,7 +320,6 @@ void MagicPlant_update(int obj)
     ((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)(obj, state->animStepScale, timeDelta, NULL);
 }
 
-/* 8b "li r3, N; blr" returners. */
 int MagicPlant_getExtraSize(void) { return 0x10; }
 int trickywarp_getExtraSize(void);
 int duster_getExtraSize(void);
@@ -343,10 +342,8 @@ STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
 STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
 STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 
-/* gCameraInterface: vtable pointer used for state-machine dispatches. */
 extern void* gCameraInterface;
 
-/* MagicPlant_SeqFn: vtable[0x13]() with obj passed through implicitly, return 0. */
 int MagicPlant_SeqFn(u8* obj)
 {
     (*(void (***)(u8*))gCameraInterface)[0x13](obj);
@@ -360,7 +357,6 @@ u32 MagicPlant_getObjectTypeId(MagicPlantObject* obj)
     return (setup->modelIndex << MAGICPLANT_OBJECT_TYPE_MODEL_SHIFT) | MAGICPLANT_OBJECT_TYPE_BASE;
 }
 
-/* obj->u16_X |= MASK */
 void StayPoint_init(u16* obj);
 
 extern void objRenderFn_8003b8f4(int obj, float arg);

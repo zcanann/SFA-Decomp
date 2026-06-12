@@ -290,7 +290,6 @@ void seqObj2_init(short* param_1, int param_2)
 {
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void seqobj2_render(void);
 
 void immultiseq_hitDetect(void)
@@ -338,12 +337,10 @@ void immultiseq_init(int* obj, IMMultiSeqPlacement* params)
 
 void dll_115_hitDetect_nop(void);
 
-/* 8b "li r3, N; blr" returners. */
 int immultiseq_getExtraSize(void) { return 0x2; }
 int immultiseq_getObjectTypeId(void) { return 0x0; }
 int dll_115_getExtraSize_ret_2(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E37A8;
 
@@ -355,11 +352,8 @@ void immultiseq_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 void immultiseq_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 void dll_115_free(int x);
-
-/* Drift-recovery: add new fns with v1.0 names. */
 
 extern int GameBit_Set(int eventId, int value);
 

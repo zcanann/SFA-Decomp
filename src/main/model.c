@@ -14,8 +14,6 @@ extern void gxSetZMode_(u32 enable, int func, u32 update);
 extern void gxSetPeControl_ZCompLoc_(u32 beforeTex);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 
-/* moved below GameTextSlot/global declarations */
-
 undefined2*
 FUN_80017460(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4,
              undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, uint param_9
@@ -59,11 +57,8 @@ FUN_80017998(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/* Pattern wrappers. */
 int return0_8002969C(void) { return 0x0; }
 int return0_8002A5B8(void) { return 0x0; }
-
-/* ObjModel/model-file accessors. */
 
 #pragma scheduling off
 #pragma peephole off
@@ -211,8 +206,6 @@ int ObjModel_GetUnpackedResourceSize(u8* resource, int baseSize)
     return baseSize + resource[8] * resource[7];
 }
 
-/* Global game-state / text accessors. */
-
 int getHudHiddenFrameCount(void);
 
 #pragma scheduling on
@@ -229,8 +222,6 @@ int roundUpTo8(int x);
 int roundUpTo16(int x);
 
 int roundUpTo32(int x);
-
-/* Simple field/global accessors. */
 
 void fn_80026C30(u8* p, u8 v)
 {

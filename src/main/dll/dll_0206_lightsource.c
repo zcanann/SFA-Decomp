@@ -17,25 +17,11 @@ typedef struct LightsourceState
     u8 pad2F9[0x300 - 0x2F9];
 } LightsourceState;
 
-/* Per-object extra state for the WM laser beam emitter. */
-
 STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
-
-/* pressureswitch_getExtraSize == 0x8. */
-
-/* wmlasertarget_getExtraSize == 0x4. */
-
-/* WM_colrise_getExtraSize == 0x4. */
-
-/* wmtorch_getExtraSize == 0x10. */
 
 /* lightsource_getExtraSize == 0x1c.  LightSourceState lives in the shared
  * LGTpointlight header (same 0x206 DLL); this fragment's 0x0C timer is the
  * header's unk0C field. */
-
-/* dll_1FF_getExtraSize == 0x8 (grabbable hook). */
-
-/* dll_200_getExtraSize == 0x28 (kid attachment actor). */
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
@@ -196,8 +182,6 @@ void FUN_801f2b94(short* param_1)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
-
 extern f32 lbl_803E5D78;
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -207,12 +191,10 @@ void lightsource_hitDetect(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int dll_1FF_getExtraSize_ret_8(void);
 int lightsource_getExtraSize(void) { return 0x1c; }
 int lightsource_getObjectTypeId(void) { return 0x1; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5D58;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5E08;
@@ -232,14 +214,7 @@ void lightsource_render(void* obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-/* if (o->_X == K) return A; else return B; */
 int dll_1FF_getObjectTypeId(int* obj);
-
-/* init pattern: short=-1; byte=0; return 0; */
-
-/* fn_X(lbl); lbl = 0; */
-
-/* dll_1FF_init: stash (s8 b[0x18] << 8) into a[0] and -0x8000 into a[1]. */
 
 extern int GameBit_Get(int id);
 
@@ -422,7 +397,6 @@ void lightsource_update(int obj)
 #pragma opt_common_subs off
 #pragma opt_common_subs reset
 
-/* segment pragma-stack balance (re-split): */
 #pragma opt_strength_reduction reset
 #pragma opt_strength_reduction reset
 
@@ -609,7 +583,6 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
     state->sparkTimer = lbl_803E5E08;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void lightsource_release(void)
 {
 }
@@ -619,5 +592,3 @@ void lightsource_initialise(void)
 }
 
 void wmworm_hitDetect(void);
-
-/* 8b "li r3, N; blr" returners. */

@@ -54,42 +54,24 @@
 
 STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
 
-/* dfplevelcontrol extra block (extraSize 0xC). */
-
 STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
-
-/* dfpobjcreator extra block (extraSize 0x1C). */
 
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 
-/* DFP_Torch extra block (extraSize 0x10). */
-
 STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
-
-/* dll_22C (raising platform) extra block (extraSize 0x10). */
 
 STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
 
-/* dbegg extra block: rom-curve walker + egg mode machine. */
-
 STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
 
-/* dfpseqpoint extra block (extraSize 0x10). */
-
 STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
-
-/* drakorenergy extra block (extraSize 0xC). */
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
 /* chuka extra block (extraSize 0xC). */
 #include "main/dll/baddie/chuka.h"
 
-/* GCRobotBlast extra block (extraSize 0x8). */
-
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
-
-/* dbholecontrol1 extra block (extraSize 0xC). */
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
@@ -537,8 +519,6 @@ void FUN_80204320(int param_1, int param_2, int param_3, int param_4, int param_
 
 void fn_80204320(int obj);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 extern u8 lbl_80329514[];
 
 void doorswitch_render(void)
@@ -559,20 +539,10 @@ void doorswitch_initialise(void)
 
 void dfpseqpoint_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int doorswitch_getExtraSize(void) { return 0x0; }
 int doorswitch_getObjectTypeId(void) { return 0x0; }
 int dfpseqpoint_getExtraSize(void);
 
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* plain forwarder. */
-
-/* OSReport(string) wrappers. */
 extern void OSReport(const char* fmt, ...);
 void doorswitch_free(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 void doorswitch_update(void) { OSReport(sDoorswitchInitNoLongerSupported); }
@@ -580,15 +550,6 @@ void doorswitch_init(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 
 int DrakorEnergy_setScale(int* obj);
 
-/* alpha-flag predicate: returns 7 on fire/clear, 0 on idle */
-
-/* baddie anim update: fires vtable[0x13] when flag set */
-
-/* anim progress accumulator */
-
-/* clear list-actions wrapper: notifies vtable[6] then resets getLActions */
-
-/* timed counter: decrement (p1->b8)->0 by timeDelta, then notify */
 extern f32 timeDelta;
 
 #include "main/dll/baddie/chuka.h"

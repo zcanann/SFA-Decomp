@@ -196,7 +196,6 @@ void dfropenode_func0B(f32 phase, int obj, float* xOut, float* yOut, float* zOut
  * Start from the current EN split window and the surrounding corridor.
  */
 
-/* dfropenode_setScale: copy 4 floats from obj->_b8[0x1c..0x28] to *out_dst[0..0xc]. */
 #pragma scheduling on
 #pragma peephole on
 void dfropenode_setScale(int* obj, f32* out)

@@ -15,8 +15,6 @@ extern ModgfxInterface** gModgfxInterface;
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dll_96_func01_nop(void)
 {
 }

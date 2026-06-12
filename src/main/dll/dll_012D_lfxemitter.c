@@ -263,7 +263,6 @@ void FUN_8018f650(void)
 
 void warpPadFn_8019042c(int obj);
 
-/* Drift-recovery: add new fns with v1.0 names. */
 extern u8 lbl_803AC7B0[];
 extern void mm_free(void* p);
 
@@ -440,7 +439,6 @@ void lfxemitter_free(LfxEmitterObject* obj)
     ObjGroup_RemoveObject((int)obj, LFXEMITTER_OBJ_GROUP);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void fxemit_release(void);
 
 void lfxemitter_render(void)
@@ -455,7 +453,6 @@ void lfxemitter_release(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int areafxemit_getExtraSize(void);
 int lfxemitter_getExtraSize(void) { return 0x124; }
 int lfxemitter_getObjectTypeId(void) { return 0x0; }

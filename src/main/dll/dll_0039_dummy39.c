@@ -44,7 +44,6 @@ FUN_8011dafc(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void OptionsScreen_frameEnd(void);
 
 void Dummy39_render(void)
@@ -57,9 +56,6 @@ void Dummy39_frameEnd(void)
 
 void Dummy3A_render(void);
 
-/* 8b "li r3, N; blr" returners. */
-
-/* Pattern wrappers. */
 extern u8 lbl_803DD728;
 void Dummy39_initialise(void) { lbl_803DD728 = 0x28; }
 

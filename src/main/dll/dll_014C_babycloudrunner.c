@@ -621,7 +621,6 @@ void FUN_8019f1dc(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void cfguardian_release(void);
 
 /* Per-object extra state for the CloudRunner guardian
@@ -763,8 +762,6 @@ STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
 STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 
-/* spiritdoorspirit_getExtraSize == 0x1. */
-
 #pragma scheduling on
 #pragma peephole on
 void babycloudrunner_hitDetect(void)
@@ -783,17 +780,8 @@ void cfprisonguard_free(void);
 
 extern void objAudioFn_80039270(int obj, void* p, int id);
 
-/* 8b "li r3, N; blr" returners. */
 int babycloudrunner_getExtraSize(void) { return 0x248; }
 int cfprisonguard_getExtraSize(void);
-
-/* chained byte bit-extract. */
-
-/* plain forwarder. */
-
-/* Drift-recovery: add new fns with v1.0 names. */
-/* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
-/* ObjMsg_AllocQueue already declared as undefined */
 
 int babycloudrunner_getObjectTypeId(void) { return 0; }
 

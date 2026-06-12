@@ -657,7 +657,6 @@ void FUN_800ea9b8(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void SaveGame_func08_nop(void);
 
 void screens_release(void)
@@ -666,19 +665,6 @@ void screens_release(void)
 
 void Carryable_release(void);
 
-/* 8b "li r3, N; blr" returners. */
-
-/* sda21 accessors. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* lbl = N (byte) */
-
-/* 12b 3-insn patterns. */
-
-/* misc 8b leaves */
-
-/* if (lbl) fn(lbl); */
 extern void mm_free(u32);
 
 enum
@@ -695,7 +681,6 @@ u8 getNextTaskHintText(void)
     return p[5];
 }
 
-/* conditional init/free pair. */
 void SaveGame_gplayClearRestartPoint(void);
 
 extern u32 lbl_803DD4A0;

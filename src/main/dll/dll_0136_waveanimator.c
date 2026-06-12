@@ -44,14 +44,9 @@ extern void objRenderFn_8003b8f4(f32);
 
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 
-/* alphaanimator_getExtraSize == 0x1c. */
-
 STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 
-/* groundanimator_getExtraSize == 0x30. */
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
-
-/* visanimator_getExtraSize == 0x5. */
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
@@ -153,7 +148,6 @@ void FUN_80192488(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void waveanimator_update(void)
 {
 }
@@ -168,14 +162,10 @@ void waveanimator_initialise(void)
 
 void alphaanimator_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int waveanimator_getExtraSize(void) { return 0x3c; }
 int waveanimator_getObjectTypeId(void) { return 0x0; }
 int alphaanimator_getExtraSize(void);
 
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3F70;
 #pragma peephole off
 void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -185,8 +175,6 @@ void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-/* wall variant: hashes lha to byte */
 
 void waveanimator_setScale(int* obj, f32 fval)
 {

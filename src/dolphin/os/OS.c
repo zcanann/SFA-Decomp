@@ -49,7 +49,6 @@ extern u32 __PADSpec;
 extern BOOL __DBIsExceptionMarked(__OSException);
 static void OSExceptionInit(void);
 
-/* clang-format off */
 asm void __OSFPRInit(void)
 {
     nofralloc
@@ -135,7 +134,6 @@ SkipPairedSingles:
 
     blr
 }
-/* clang-format on */
 
 u32 OSGetConsoleType()
 {
@@ -387,7 +385,6 @@ void __OSDBJUMPEND(void);
 
 #define NOP 0x60000000
 
-
 static void OSExceptionInit(void)
 {
     __OSException exception;
@@ -471,7 +468,6 @@ static void OSExceptionInit(void)
 
 static asm void __OSDBIntegrator(void)
 {
-    /* clang-format off */
     nofralloc
 entry __OSDBINTSTART
     li      r5, OS_DBINTERFACE_ADDR
@@ -484,17 +480,14 @@ entry __OSDBINTSTART
     mtmsr   r3
     blr
 entry __OSDBINTEND
-    /* clang-format on */
 }
 
 static asm void __OSDBJump(void) {
-    /* clang-format off */
 
     nofralloc
 entry __OSDBJUMPSTART
     bla     OS_DBJUMPPOINT_ADDR
 entry __OSDBJUMPEND
-    /* clang-format on */
 
 }
 
@@ -513,7 +506,6 @@ __OSExceptionHandler __OSGetExceptionHandler(__OSException exception)
 
 static asm void OSExceptionVector(void)
 {
-    /* clang-format off */
     nofralloc
 
 entry __OSEVStart
@@ -593,13 +585,11 @@ recoverable:
 
 entry __OSEVEnd
     nop
-    /* clang-format on */
 }
 
 void __OSUnhandledException(__OSException exception, OSContext *context, u32 dsisr, u32 dar);
 asm void OSDefaultExceptionHandler(register __OSException exception, register OSContext *context)
 {
-    /* clang-format off */
     nofralloc
     OS_EXCEPTION_SAVE_GPRS(context)
     mfdsisr r5
@@ -607,7 +597,6 @@ asm void OSDefaultExceptionHandler(register __OSException exception, register OS
 
     stwu    r1,-8(r1)
     b       __OSUnhandledException
-    /* clang-foramt on */
 }
 
 void __OSPSInit(void)

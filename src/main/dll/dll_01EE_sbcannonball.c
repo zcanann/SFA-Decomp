@@ -5,11 +5,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/objseq.h"
 
-/* SB_Propeller_getExtraSize == 0x10. */
-
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
-
-/* SB_ShipHead_getExtraSize == 0x10. */
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
@@ -19,17 +15,6 @@ extern f32 timeDelta;
 
 extern u8 framesThisStep;
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* sda21 accessors. */
-
-/* Pattern wrappers. */
-
-/* 16b chained patterns. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
@@ -77,7 +62,6 @@ typedef struct SBCannonBallState
 
 extern void ModelLightStruct_free(void* effect);
 
-/* Trivial 4b 0-arg blr leaves. */
 void SB_CannonBall_release(void)
 {
 }
@@ -88,7 +72,6 @@ void SB_CannonBall_initialise(void)
 
 void SB_ShipGun_init(int obj);
 
-/* 8b "li r3, N; blr" returners. */
 int SB_CannonBall_getExtraSize(void) { return SB_CANNONBALL_EXTRA_SIZE; }
 int SB_CannonBall_getObjectTypeId(void) { return 0x0; }
 
@@ -107,7 +90,6 @@ void SB_CannonBall_free(int obj)
 
 int SB_FireBall_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E58B0;
 
 void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)

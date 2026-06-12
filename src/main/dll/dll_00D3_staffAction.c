@@ -796,12 +796,10 @@ void FUN_80166c6c(int param_1, int param_2, float* param_3, float* param_4)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_D3_hitDetect_nop(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int dll_D3_getExtraSize_ret_1188(void) { return 0x4a4; }
 int dll_D3_getObjectTypeId(void) { return 0x49; }
 
@@ -1546,7 +1544,6 @@ void dll_D3_initialise(void)
     gLandedArwingDefaultStateHandler = LandedArwing_ReturnZero;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_D3_release_nop(void)
 {
 }
@@ -1561,7 +1558,6 @@ void skeetlawall_release(void);
 
 void skeetlawall_initialise(void);
 
-/* 8b "li r3, N; blr" returners. */
 int skeetlawall_getExtraSize(void);
 int skeetlawall_getObjectTypeId(void);
 

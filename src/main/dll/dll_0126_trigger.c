@@ -1049,7 +1049,6 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
 void Trigger_render(void)
@@ -1150,16 +1149,9 @@ void Trigger_init(u8* obj, u8* params)
 
 void cloudprisoncontrol_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int Trigger_getExtraSize(void) { return 0xac; }
 int Trigger_getObjectTypeId(void) { return 0x0; }
 int cloudprisoncontrol_getExtraSize(void);
-
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* call(x, N) wrappers. */
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 

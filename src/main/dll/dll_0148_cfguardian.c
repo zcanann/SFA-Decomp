@@ -8,16 +8,6 @@
 #include "main/dll/cfmaincrystalstate_types.h"
 #include "main/dll/rom_curve_interface.h"
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* call(x, N) wrappers. */
-
 int cfguardian_setScale(int* obj)
 {
     return (*(u8*)(*(int*)&((GameObject*)obj)->extra + 0xa9b) & 0x2) == 0;
@@ -171,7 +161,6 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
     }
     return ret;
 }
-/* segment pragma-stack balance (re-split): */
 
 /*
  * CFGuardian (DLL 0x148) - CloudRunner Fortress guardian (head fragment).
@@ -538,7 +527,6 @@ typedef struct BabyCloudRunnerState
 
 STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 
-/* Trivial 4b 0-arg blr leaves. */
 void cfguardian_release(void)
 {
 }
@@ -704,23 +692,16 @@ typedef struct CfguardianState
 
 extern u8 framesThisStep;
 
-/* 8b "li r3, N; blr" returners. */
 int cfguardian_getExtraSize(void) { return 0xa9c; }
 int cfguardian_getObjectTypeId(void) { return 0x41; }
 int windlift_getExtraSize(void);
 
-/* chained byte bit-extract. */
-
-/* plain forwarder. */
 extern int waterSpellStone1Fn_8019b4c8();
 void cfguardian_update(void) { waterSpellStone1Fn_8019b4c8(); }
 
-/* Drift-recovery: add new fns with v1.0 names. */
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E4130;
-/* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
 extern void dll_2E_func06(int* a, int* b, int c);
-/* ObjMsg_AllocQueue already declared as undefined */
 
 void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -754,7 +735,6 @@ void cfguardian_free(int* obj, int p2)
 
 void cfprisonuncle_init(int* obj);
 
-/* copy 3 floats within same struct */
 #pragma scheduling on
 #pragma peephole on
 void cfguardian_hitDetect(int* obj)

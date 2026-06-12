@@ -24,8 +24,6 @@ typedef struct MmshWaterspikeObjectDef
 
 extern u32 randomGetRange(int min, int max);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void mmsh_waterspike_free(void)
 {
 }
@@ -42,13 +40,11 @@ void mmsh_waterspike_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int mmsh_scales_getExtraSize(void);
 int mmsh_waterspike_getExtraSize(void) { return 0x0; }
 int mmsh_waterspike_getObjectTypeId(void) { return 0x0; }
 void mmsh_waterspike_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4F68;
 extern void objRenderFn_8003b8f4(f32);
 

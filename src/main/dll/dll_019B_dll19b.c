@@ -104,16 +104,13 @@ int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_19B_hitDetect(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int dll_19B_getExtraSize(void) { return 0x18; }
 int dll_19B_getObjectTypeId(void) { return 0x0; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5188;
 extern void objRenderFn_8003b8f4(f32);
 
@@ -390,7 +387,6 @@ void dll_19B_update(int obj)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_19B_release(void)
 {
 }
@@ -400,12 +396,6 @@ void dll_19B_initialise(void)
 }
 
 void dll_19C_free(void);
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* Stubs to align function set with v1.0 asm. */
 
 void dll_19B_init(u8* obj, u8* params)
 {

@@ -187,7 +187,6 @@ void spdrape_update(int obj)
 
 void spitembeam_init(int obj);
 
-/* Trivial 4b 0-arg blr leaves. */
 void spdrape_release(void)
 {
 }
@@ -197,8 +196,6 @@ void spdrape_initialise(void)
 }
 
 void spitembeam_free(void);
-
-/* 8b "li r3, N; blr" returners. */
 
 extern f32 lbl_803E5AC0;
 extern f32 lbl_803E5AC4;

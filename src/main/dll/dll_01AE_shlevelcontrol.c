@@ -966,10 +966,7 @@ void sh_levelcontrol_update(int obj)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void warpstonelift_free(void);
-
-/* 8b "li r3, N; blr" returners. */
 
 extern int getSaveGameLoadStatus(void);
 extern void timeOfDayFn_80055000(void);
@@ -1033,5 +1030,3 @@ void sh_levelcontrol_init(int obj)
 }
 
 void warpstonelift_init(int obj, s8* def);
-
-/* render-with-objRenderFn_8003b8f4 pattern. */

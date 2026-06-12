@@ -36,7 +36,6 @@ extern int ObjGroup_FindNearestObject(int group, u8* obj, f32* outDistance);
 extern int ObjHits_PollPriorityHitWithCooldown(u8* obj, f32* cooldown, void** outObj, f32* outPos);
 extern int trickyDebugPrint(const char* fmt, ...);
 
-/* trickyUpdateCollisionAndPathState  addr=0x8013939C  size=0x498  linkage=global */
 #pragma peephole off
 void trickyUpdateCollisionAndPathState(u8* obj)
 {
@@ -230,7 +229,6 @@ extern f32 lbl_803E2450;
 extern f32 getXZDistance(f32 * a, f32 * b);
 extern void RomCurve_stepClamped(int state, f32 dt);
 
-/* trickyAdvanceRouteTargetAhead  addr=0x80139834  size=0xFC  linkage=global */
 #pragma peephole on
 int trickyAdvanceRouteTargetAhead(f32 param_1, int param_2, int param_3)
 {
@@ -267,7 +265,6 @@ int trickyAdvanceRouteTargetAhead(f32 param_1, int param_2, int param_3)
     return 1;
 }
 
-/* trickyTurnTowardYaw  addr=0x80139930  size=0x15C  linkage=global */
 #pragma peephole off
 int trickyTurnTowardYaw(u8* obj, s16 targetYaw)
 {
@@ -441,7 +438,6 @@ static void skeetla_playFootstepSfx(u8* obj, u16 sfxId)
     }
 }
 
-/* trickyMove  addr=0x80139A8C  size=0x964  linkage=global */
 #pragma scheduling off
 #pragma peephole off
 int trickyMove(u8* obj, f32* targetPos)
@@ -650,7 +646,6 @@ int trickyMove(u8* obj, f32* targetPos)
     return 1;
 }
 
-/* objAnimFn_8013a3f0  addr=0x8013A3F0  size=0xFC  linkage=global */
 int objAnimFn_8013a3f0(f32 speed, int obj, int newState, u32 flags)
 {
     int t = *(int*)&((GameObject*)obj)->extra;
@@ -726,7 +721,6 @@ static void* skeetla_validateRouteEntry(void* entry)
     return entry;
 }
 
-/* trickyFindNearestLinkedRouteEntry  addr=0x8013A4EC  size=0x1D0  linkage=global */
 #pragma scheduling off
 #pragma peephole off
 void* trickyFindNearestLinkedRouteEntry(u8* context, u8* routeDef, int linkSelector, int routeFlagValue)
@@ -802,7 +796,6 @@ extern int fn_8004B218(void* search, int timeout);
 extern void fn_8004B31C(void* search, u32 route, int objId, int pathId, int routeFlags);
 
 #pragma dont_inline on
-/* trickyFindPathRouteEntry  addr=0x8013A6BC  size=0x138  linkage=global */
 void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId)
 {
     void* entry;
@@ -851,7 +844,6 @@ void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId)
 }
 #pragma dont_inline reset
 
-/* trickyFindReachableRouteIndex  addr=0x8013A7F4  size=0x1D4  linkage=global */
 int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pathId)
 {
     s8 status[8];
@@ -923,7 +915,6 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
     return -1;
 }
 
-/* trickySelectRouteEntry  addr=0x8013A9C8  size=0x184  linkage=global */
 #pragma peephole on
 void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
 {
@@ -978,7 +969,6 @@ void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
     return entry;
 }
 
-/* trickyRankLinkedRouteCandidates  addr=0x8013AB4C  size=0x2B0  linkage=global */
 #pragma peephole off
 void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelector, void** outRoutes)
 {
@@ -1117,7 +1107,6 @@ typedef struct SkeetlaParticleSpawnArgs
 
 extern EffectInterface** gPartfxInterface;
 
-/* skeetla_spawnLinkedSparks  addr=0x8013ADFC  size=0x1E4  linkage=global */
 void skeetla_spawnLinkedSparks(u8* obj)
 {
     u8* state;
@@ -1174,7 +1163,6 @@ void skeetla_spawnLinkedSparks(u8* obj)
     }
 }
 
-/* trickyAdjustStepAroundPoint  addr=0x8013AFE0  size=0x200  linkage=global */
 #pragma peephole on
 void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* center, f32 minDistance, f32 moveDistance)
 {
@@ -1260,7 +1248,6 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
     end[2] = center[2] + (dz * adjustedDistance);
 }
 
-/* trickyApplyObjectAvoidanceToStep  addr=0x8013B1E0  size=0x188  linkage=global */
 extern void** ObjGroup_GetObjects(int group, int* countOut);
 extern void** ObjList_GetObjects(int* startIndex, int* objectCount);
 

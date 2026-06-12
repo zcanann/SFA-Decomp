@@ -842,14 +842,11 @@ void FUN_8014ccb8(double param_1, double param_2, double param_3, int param_4, i
     return;
 }
 
-/* 8b "li r3, N; blr" returners. */
 int Baddie_EnemygetExtraSize(void) { return 0x370; }
 int enemy_getObjectTypeId(void) { return 0x14b; }
 
-/* 12b 3-insn patterns. */
 void fn_8014C66C(int* obj, int x) { *(int*)((char*)((int**)obj)[0xb8 / 4] + 0x29c) = x; }
 
-/* Drift-recovery: add new fns with v1.0 names. */
 extern f32 lbl_803E2598;
 
 #pragma scheduling off
@@ -1898,7 +1895,6 @@ void FUN_8014d4c8(double param_1, double param_2, double param_3, undefined8 par
     return;
 }
 
-/* conditional init/free pair. */
 extern void* lbl_803DDA50;
 
 void enemy_release(void)

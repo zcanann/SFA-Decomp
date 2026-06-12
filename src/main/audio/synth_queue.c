@@ -50,7 +50,6 @@ extern void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value);
 extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 extern void inpResetChannelDefaults(u8 a, u8 b);
 
-
 /*
  * Start playback of a sequence arrangement (seqStartPlay).
  *
@@ -422,7 +421,6 @@ done:
         voice = &gSynthVoices[found];
         if (voice->state != 1) return;
 
-        /* Unlink from queued list */
         if (voice->prev != 0)
         {
             voice->prev->next = voice->next;
@@ -436,7 +434,6 @@ done:
             voice->next->prev = voice->prev;
         }
 
-        /* Push to allocated list head */
         if ((voice->next = gSynthAllocatedVoices) != 0)
         {
             gSynthAllocatedVoices->prev = voice;
@@ -445,7 +442,6 @@ done:
         gSynthAllocatedVoices = voice;
         voice->state = 2;
 
-        /* Walk two callback lists */
         {
             SynthVoice* base = voice;
             for (i = 0; i < 2; i++)

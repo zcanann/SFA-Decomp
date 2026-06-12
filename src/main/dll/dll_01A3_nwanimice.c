@@ -9,7 +9,6 @@ extern undefined8 ObjGroup_RemoveObject();
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
-/* Trivial 4b 0-arg blr leaves. */
 void nw_animice_render(void)
 {
 }
@@ -32,17 +31,13 @@ void nw_animice_initialise(void)
 
 void nw_ice_render(void);
 
-/* 8b "li r3, N; blr" returners. */
 int nw_animice_SeqFn(void) { return 0x0; }
 int nw_animice_getExtraSize(void) { return 0x0; }
 int nw_animice_getObjectTypeId(void) { return 0x0; }
 int nw_ice_getExtraSize(void);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 void nw_animice_free(int x) { ObjGroup_RemoveObject(x, 0x3d); }
 void nw_ice_free(int x);
-
-/* call(x, N) wrappers. */
 
 void nw_animice_init(int* obj)
 {

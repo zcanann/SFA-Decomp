@@ -21,7 +21,6 @@ void area_update(void)
 {
 }
 
-/* obj->u16_X |= MASK */
 void area_init(u16* obj)
 {
     u32 v;
@@ -38,10 +37,7 @@ void area_initialise(void)
 {
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void levelname_free(void);
-
-/* 8b "li r3, N; blr" returners. */
 
 ObjectDescriptor gAreaObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

@@ -135,7 +135,6 @@ void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void CameraModeNpcSpeak_release(void);
 
 #pragma scheduling off
@@ -193,10 +192,6 @@ extern f32 timeDelta;
 
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
-/* misc 8b leaves */
-
-/* fn_X(lbl); lbl = 0; */
-
 void fn_801101E8(void)
 {
     extern void mm_free(u32); /* #57 */
@@ -206,19 +201,8 @@ void fn_801101E8(void)
 
 void CameraModeCloudRunner_free(void);
 
-/* baddie spawn/visibility predicate */
-
-/* compute progress ratio (signed numerator / unsigned denominator) */
-
-/* baddie state reset */
-
-/* dll_19_func19  addr=0x80111EB4  size=0x100  linkage=global */
-
-/* dll_19_func0C  addr=0x80112D80  size=0x114  linkage=global */
 #pragma dont_inline on
 #pragma dont_inline reset
-
-/* CameraModePerv_update  addr=0x80110CB0  size=0x10C  linkage=global */
 
 extern f32 lbl_803E1B00;
 extern f32 lbl_803E1B04;
@@ -233,7 +217,6 @@ extern f32 interpolate(f32 cur, f32 target, f32 t);
 extern void fn_8029697C(int state, s16* a, s16* b);
 extern f32 lbl_803E1B18;
 
-/* CameraModeForceBehind_init  addr=0x801100B8  size=0x124  linkage=global */
 void CameraModeForceBehind_init(u8* obj, int p2, f32* p3)
 {
     CameraObject* camera = (CameraObject*)obj;
@@ -273,29 +256,6 @@ void CameraModeForceBehind_init(u8* obj, int p2, f32* p3)
 
 extern int Obj_GetPlayerObject(void);
 
-/* dll_19_func13  addr=0x8011313C  size=0x13C  linkage=global */
-
-/* dll_19_func10  addr=0x80113398  size=0x16C  linkage=global */
-
-/* CameraModeCrawl_copyToCurrent  addr=0x8010F540  size=0x1E0  linkage=global */
-
-/* dll_19_func17  addr=0x80112544  size=0x19C  linkage=global */
-
-/* CameraModeCannon_update  addr=0x8010FA84  size=0x168  linkage=global */
-
-/* dll_19_func14  addr=0x80112E94  size=0x2A8  linkage=global */
-
-/* dll_19_func16  addr=0x801126E0  size=0x348  linkage=global */
-
-/* dll_19_func15  addr=0x80112A28  size=0x358  linkage=global */
-
-/* dll_19_func18  addr=0x80112098  size=0x47C  linkage=global */
-
-/* CameraModeCrawl_update  addr=0x8010F74C  size=0x2B8  linkage=global */
-
-/* CameraModeCloudRunner_update  addr=0x80110214  size=0x36C  linkage=global */
-
-/* CameraModeForceBehind_update  addr=0x8010FC7C  size=0x43C  linkage=global */
 void CameraModeForceBehind_update(u8* obj)
 {
     extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int mtx); /* #57 */
@@ -391,14 +351,6 @@ extern int ObjList_GetObjects(int* idx, int* count);
 
 #include "main/dll/dll19_state.h"
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* 12b chained getters. */
-
-/* misc 8b leaves */
-
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */
 
@@ -434,5 +386,3 @@ extern f32 mathCosf(f32 x);
 
 /* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
  * given speed, snapping when close, easing yaw and pacing the walk anim. */
-
-/* === helper-last relocation (re-split inline suppression; defs moved below their callers to suppress cross-TU-merge auto-inlining) === */

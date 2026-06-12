@@ -18,8 +18,6 @@ extern void lightSetFieldBC_8001db14(int light, int v);
 extern void modelLightStruct_setLightKind(int light, int v);
 extern void modelLightStruct_setDiffuseColor(int light, int a, int b, int c, int d);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dimbossfire_hitDetect(void)
 {
 }
@@ -42,12 +40,10 @@ void dimbossfire_free(int obj)
 
 void dimbossfire_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
-/* 8b "li r3, N; blr" returners. */
 int dimbossgut2_setScale(void);
 int dimbossfire_getExtraSize(void) { return 0x14; }
 int dimbossfire_getObjectTypeId(void) { return 0x0; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 #include "main/audio/sfx_ids.h"

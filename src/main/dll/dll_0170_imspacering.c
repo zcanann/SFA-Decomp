@@ -67,22 +67,10 @@ extern u32 randomGetRange(int min, int max);
 
 void imicepillar_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int imicepillar_getExtraSize(void);
 int imicepillar_getObjectTypeId(void);
 
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
-/* if (o->_X == K) return A; else return B; */
-
-/* conditional init/free pair. */
-
-/* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, sync its transform into obj. */
-
-/* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
 
 extern void warpToMap(int mapId, int flags);
 
@@ -132,23 +120,13 @@ extern u8 lbl_803236B8[];
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
-/* imanimspacecraft_getExtraSize == 0x4. */
-
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
-
-/* imspacethruster_getExtraSize == 0xc. */
 
 STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
 
-/* link_levcontrol_getExtraSize == 0x10. */
-
 STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
 
-/* lavaball1be extra (getExtraSize 0x14 for the non-0x1fa variant). */
-
 STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
-
-/* lavaball1bf_getExtraSize == 0x1c (launcher). */
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
@@ -243,7 +221,6 @@ void FUN_801ae184(undefined4 param_1, undefined4 param_2, undefined4 param_3, un
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void imicepillar_hitDetect(void);
 
 void imicepillar_update(void);
@@ -291,27 +268,12 @@ void imspacering_initialise(void)
 
 void imspaceringgen_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int imspacering_getExtraSize(void) { return 0x0; }
 int imspacering_getObjectTypeId(void) { return 0x0; }
 int imspaceringgen_getExtraSize(void);
 
-/* Pattern wrappers. */
 extern u32 lbl_803DDB48;
 
-/* Init: clear obj->_F4 and record obj globally in lbl_803DDB48. */
-
-/* If obj->_F4 == 0, set it to 1; else early-return. */
-
-/* Free: call vtable[6] on obj through global dll-services pointer. */
-
-/* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
-
-/* lavaball1bf "consume" hook: only clear pending flag if both gates set. */
-
-/* lavaball1bf "request" hook: set pending if gated, return success. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E47B8;
 
 void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
@@ -323,10 +285,6 @@ void imspacering_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-/* if (o->_X == K) return A; else return B;  pattern. */
-
-/* chained byte mask. */
 
 extern void Music_Trigger(int id, int p2);
 

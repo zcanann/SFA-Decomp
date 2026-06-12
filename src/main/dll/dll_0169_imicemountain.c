@@ -240,7 +240,6 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void imicemountain_free(void)
 {
 }
@@ -337,14 +336,10 @@ void imicemountain_init(int* obj)
 #undef MEVT_QUERY
 void crrockfall_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int imicemountain_getExtraSize(void) { return 0x14; }
 int imicemountain_getObjectTypeId(void) { return 0x0; }
 int crrockfall_getExtraSize(void);
 
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E46D8;
 extern void objRenderFn_8003b8f4(f32);
 #pragma scheduling on
@@ -354,8 +349,6 @@ void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0) objRenderFn_8003b8f4(lbl_803E46D8);
 }
-
-/* conditional init/free pair. */
 
 #pragma scheduling off
 #pragma peephole on

@@ -88,7 +88,6 @@ void mmsh_scales_update(int objArg)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void mmsh_shrine_release(void);
 
 void mmsh_scales_hitDetect(void)
@@ -105,12 +104,10 @@ void mmsh_scales_initialise(void)
 
 void mmsh_waterspike_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int mmsh_scales_getExtraSize(void) { return 0x140; }
 int mmsh_scales_getObjectTypeId(void) { return 0xb; }
 int mmsh_waterspike_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4F68;
 extern void objRenderFn_8003b8f4(f32);
 

@@ -1,4 +1,3 @@
-/* @(#)e_fmod.c 1.3 95/01/18 */
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -42,7 +41,6 @@ static double one = 1.0, Zero[] = {0.0, -0.0,};
 	hx ^=sx;		/* |x| */
 	hy &= 0x7fffffff;	/* |y| */
 
-    /* purge off exception values */
 	if((hy|ly)==0||(hx>=0x7ff00000)||	/* y=0,or x not finite */
 	  ((hy|((ly|-ly)>>31))>0x7ff00000))	/* or y is NaN */
 	    return (x*y)/(x*y);
@@ -52,7 +50,6 @@ static double one = 1.0, Zero[] = {0.0, -0.0,};
 		return Zero[(unsigned)sx>>31];	/* |x|=|y| return x*0*/
 	}
 
-    /* determine ix = ilogb(x) */
 	if(hx<0x00100000) {	/* subnormal x */
 	    if(hx==0) {
 		for (ix = -1043, i=lx; i>0; i<<=1) ix -=1;
@@ -61,7 +58,6 @@ static double one = 1.0, Zero[] = {0.0, -0.0,};
 	    }
 	} else ix = (hx>>20)-1023;
 
-    /* determine iy = ilogb(y) */
 	if(hy<0x00100000) {	/* subnormal y */
 	    if(hy==0) {
 		for (iy = -1043, i=ly; i>0; i<<=1) iy -=1;
@@ -70,7 +66,6 @@ static double one = 1.0, Zero[] = {0.0, -0.0,};
 	    }
 	} else iy = (hy>>20)-1023;
 
-    /* set up {hx,lx}, {hy,ly} and align y to x */
 	if(ix >= -1022) 
 	    hx = 0x00100000|(0x000fffff&hx);
 	else {		/* subnormal x, shift x to normal */
@@ -96,7 +91,6 @@ static double one = 1.0, Zero[] = {0.0, -0.0,};
 	    }
 	}
 
-    /* fix point fmod */
 	n = ix - iy;
 	while(n--) {
 	    hz=hx-hy;lz=lx-ly; if(lx<ly) hz -= 1;
@@ -110,7 +104,6 @@ static double one = 1.0, Zero[] = {0.0, -0.0,};
 	hz=hx-hy;lz=lx-ly; if(lx<ly) hz -= 1;
 	if(hz>=0) {hx=hz;lx=lz;}
 
-    /* convert back to floating value and restore the sign */
 	if((hx|lx)==0) 			/* return sign(x)*0 */
 	    return Zero[(unsigned)sx>>31];	
 	while(hx<0x00100000) {		/* normalize x */

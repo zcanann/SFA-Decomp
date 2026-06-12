@@ -4,7 +4,6 @@
 extern int DBVerbose;
 extern const char sDBExceptionDestinationMessage[];
 
-
 void DBInit(void) {
   __DBInterface = (DBInterface*)OSPhysicalToCached(OS_DBINTERFACE_ADDR);
   __DBInterface->ExceptionDestination = (void (*)())OSCachedToPhysical(__DBExceptionDestination);
@@ -20,7 +19,6 @@ void __DBExceptionDestinationAux(void) {
   PPCHalt();
 }
 
-/* clang-format off */
 asm void __DBExceptionDestination(void) {
     nofralloc
     mfmsr       r3
@@ -29,7 +27,6 @@ asm void __DBExceptionDestination(void) {
 
     b __DBExceptionDestinationAux
 }
-/* clang-format on */
 
 BOOL __DBIsExceptionMarked(__OSException exception) {
   u32 mask = 1 << exception;

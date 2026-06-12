@@ -4,7 +4,6 @@
 #include "main/dll/moonseedbushstate_struct.h"
 #include "main/dll/IM/IMspacecraft.h"
 
-/* SDK / engine externs */
 extern u32 randomGetRange(int min, int max);
 extern u32 GameBit_Get(int eventId);
 
@@ -22,19 +21,12 @@ extern f32 lbl_803E44C4;
 extern f32 lbl_803DDB28;
 extern int lbl_803DDB2C;
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void MMP_levelcontrol_hitDetect(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int MMP_levelcontrol_getExtraSize(void) { return 0x0; }
 int MMP_levelcontrol_getObjectTypeId(void) { return 0x0; }
-
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 
 void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -321,7 +313,6 @@ FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void MMP_levelcontrol_release(void)
 {
 }
@@ -332,9 +323,6 @@ void MMP_levelcontrol_initialise(void)
 
 void MoonSeedBush_free(void);
 
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 extern int mapGetDirIdx(int);

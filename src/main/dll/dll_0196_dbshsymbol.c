@@ -297,12 +297,7 @@ void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     objRenderFn_8003b8f4(lbl_803E5104);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_197_hitDetect(void);
-
-/* 8b "li r3, N; blr" returners. */
-
-/* Render-side line-of-sight particle callback for the cup object. */
 
 extern f32 lbl_803E5118;
 
@@ -328,9 +323,3 @@ void dbsh_symbol_init(int* obj)
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/resource.h"
-
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */

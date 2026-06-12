@@ -206,7 +206,6 @@ int drshackle_updateAttachedPosition(int obj, int state)
         return drshackle_updateSwingBlend(obj, state) != 0;
     }
 
-    /* mapBlockIdx <= -1 path */
     hitResult = (*(int (**)(int, int, f32, u8, int, int))(*gCheckpointInterface + 0x18))(
         state, state + DRSHACKLE_COLLIDER_OFFSET, timeDelta * fn_801EA678(obj, state),
         *(u8*)(state + DRSHACKLE_COLLIDER_MODE_OFFSET), 1, 0);

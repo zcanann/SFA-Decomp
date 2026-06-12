@@ -2301,7 +2301,6 @@ int fn_802A1CA8(int obj, int state)
                 ((lbl_803DE43C - (buf2[1] - buf1[1])) - (lbl_803DE438 + buf1[1])) +
                 lbl_803DE438;
         }
-    /* fall through */
     case 10:
     case 11:
         if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x200) != 0)
@@ -2365,7 +2364,6 @@ int fn_802A1CA8(int obj, int state)
             }
             goto finish;
         }
-    /* fall through */
     default:
         if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x80) != 0)
         {
@@ -2749,7 +2747,6 @@ int fn_802A0680(int obj, int state)
         }
         ((GameObject*)obj)->anim.localPosY = *(f32*)((char*)inner + 0x76c);
         ph = lbl_803E7FF8;
-    /* fall through */
     case 0x15:
     case 0x16:
         {
@@ -2765,7 +2762,6 @@ int fn_802A0680(int obj, int state)
         }
         oldSpd = ((GameObject*)obj)->anim.currentMoveProgress;
         ((GameObject*)obj)->anim.currentMoveProgress = 1.0f;
-    /* fall through */
     default:
         if (1.0f == ((GameObject*)obj)->anim.currentMoveProgress)
         {
@@ -5355,7 +5351,6 @@ int fn_8029AF9C(int obj, int state)
     return 0;
 }
 
-
 extern f32 lbl_803E7FB8;
 
 int fn_8029BDB4(int obj, int state, f32 fv)
@@ -7129,7 +7124,6 @@ typedef struct
     int a[6];
 } UiMsgBlock;
 
-
 void playerUpdate(int obj)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
@@ -7714,7 +7708,6 @@ void fn_802B0EA4(int obj, int inner, int state)
     *(u32*)((char*)inner + 0x360) &= ~0x1800000LL;
 }
 
-
 extern s16 lbl_803DC6CC[4];
 extern f32 lbl_803E8084;
 extern f32 lbl_803E8088;
@@ -8075,7 +8068,6 @@ int fn_802A6694(int obj, int state, f32 fv)
     }
     return 0;
 }
-
 
 extern void fn_80026C54(int a);
 
@@ -8818,7 +8810,6 @@ void fn_802AFB0C(int obj, int inner, int state)
         lbl_803DE474 = 0;
     }
 }
-
 
 void fn_802B249C(int obj, int inner, int state)
 {

@@ -5,7 +5,6 @@
 #include "main/objseq.h"
 #include "main/dll/IM/IMspacecraft.h"
 
-/* SDK / engine externs */
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32 * a, f32 * b);
 extern u32 randomGetRange(int min, int max);
@@ -31,7 +30,6 @@ extern void doRumble(f32 v);
 
 extern void objRenderFn_8003b8f4(f32 v);
 
-
 extern f32 timeDelta;
 extern s16 lbl_803DDB20;
 
@@ -55,11 +53,6 @@ extern f32 lbl_803E44B0;
 extern f32 lbl_803E44B4;
 extern f32 lbl_803E44B8;
 
-
-/* Trivial 4b 0-arg blr leaves. */
-
-
-
 void RollingBarrel_hitDetect(void)
 {
 }
@@ -68,18 +61,13 @@ void RollingBarrel_release(void)
 {
 }
 
-
-/* 8b "li r3, N; blr" returners. */
 int SpiritDoorLock_getExtraSize(void);
 int RollingBarrel_getExtraSize(void) { return ROLLINGBARREL_EXTRA_SIZE; }
 int RollingBarrel_getObjectTypeId(void) { return 0x0; }
 
-/* Pattern wrappers. */
 void RollingBarrel_initialise(void) { lbl_803DDB20 = 0x0; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
 
 void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
@@ -91,7 +79,6 @@ void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 }
 
 void SpiritDoorLock_free(int obj);
-
 
 void RollingBarrel_free(int obj)
 {
@@ -143,7 +130,6 @@ void RollingBarrel_init(int obj, RollingBarrelMapData* params)
 }
 
 void SpiritDoorLock_init(int obj, SpiritDoorLockMapData* params, int mode);
-
 
 #pragma peephole on
 void RollingBarrel_update(int obj)
@@ -314,7 +300,6 @@ void RollingBarrel_update(int obj)
         ObjHits_SetHitVolumeSlot(obj, state->hitVolumeSlot, 0, 0);
     }
 }
-
 
 #pragma peephole off
 void fn_801A5D88(int obj, int explosionVariant)

@@ -53,7 +53,6 @@ void fn_801EC1AC(int obj, int state)
         Sfx_PlayFromObject(obj, 0x45f);
     }
 
-    /* Damping #1: update 0x430 (rotation/angle) */
     target = lbl_803E5AE8;
     if (flags->b6 != 0)
     {
@@ -65,7 +64,6 @@ void fn_801EC1AC(int obj, int state)
                       : ((rate > lbl_803E5B8C) ? lbl_803E5B8C : rate);
     *(f32*)(state + 0x430) = clampedRate * timeDelta + *(f32*)((int)state + 0x430);
 
-    /* Velocity calc on 0x4a8 */
     target = lbl_803E5AE8;
     if (flags->b4 != 0)
     {
@@ -92,7 +90,6 @@ void fn_801EC1AC(int obj, int state)
     }
     *(f32*)(state + 0x4a8) = (*(f32*)(state + 0x430) + target) * timeDelta;
 
-    /* Two TransformPoint calls reusing the same out_x/out_y/out_z buffer */
     Matrix_TransformPoint((void*)(state + 0x6c),
                           *(f32*)(state + 0x4a0),
                           *(f32*)(state + 0x4a4),
@@ -103,7 +100,6 @@ void fn_801EC1AC(int obj, int state)
                           &out[0], &out[1], &out[2]);
     PSVECAdd(out, (void*)(state + 0x494), (void*)(state + 0x494));
 
-    /* 0x414 update with negated 0x45c * 0x52c then powfBitEstimate */
     *(f32*)(state + 0x414) =
         (-*(f32*)(state + 0x45c) * *(f32*)(state + 0x52c)) * timeDelta +
         *(f32*)(state + 0x414);
@@ -111,7 +107,6 @@ void fn_801EC1AC(int obj, int state)
         powfBitEstimate(*(f32*)(state + 0x530), timeDelta) *
         *(f32*)(state + 0x414);
 
-    /* Clamp 0x414 to [-0x534, 0x534] */
     {
         f32 lim;
         f32 v;
@@ -155,7 +150,6 @@ void fn_801EC1AC(int obj, int state)
             (f32)(s32) * (s16*)((int)state + 0x40c));
     }
 
-    /* Bit 7 (>>7 & 1) check on 0x428 = mask 0x80 = flags->b7 (first bitfield = MSB) */
     if (flags->b7 != 0)
     {
         *(f32*)(state + 0x584) =
@@ -170,7 +164,6 @@ void fn_801EC1AC(int obj, int state)
             *(f32*)(state + 0x584) * timeDelta;
     }
 
-    /* Bit 1 (>>1 & 1) check on 0x428 = mask 0x02 = flags->b1 (7th bitfield) */
     if (flags->b1 == 0)
     {
         vec_args[0] = *(f32*)(state + 0x414);
@@ -180,7 +173,6 @@ void fn_801EC1AC(int obj, int state)
         (*gCameraInterface)->releaseAction(vec_args, 0x10);
     }
 
-    /* Clamp 0x494 to [-0x47c, 0x47c] */
     {
         f32 lim;
         f32 v;
@@ -197,7 +189,6 @@ void fn_801EC1AC(int obj, int state)
         }
     }
 
-    /* Clamp 0x498 to [-0x480, lbl_803E5AEC] */
     {
         f32 v = *(f32*)(state + 0x498);
         f32 lim = -*(f32*)(state + 0x480);
@@ -214,7 +205,6 @@ void fn_801EC1AC(int obj, int state)
         }
     }
 
-    /* Clamp 0x49c to [-0x484, 0x484] */
     {
         f32 lim;
         f32 v;

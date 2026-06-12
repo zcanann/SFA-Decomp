@@ -77,8 +77,6 @@ extern f32 lbl_803E5CE8;
 #define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
 #define OBJ_S32(obj, offset) (*(s32 *)((u8 *)(obj) + (offset)))
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void WM_Galleon_hitDetect(void)
 {
 }
@@ -124,7 +122,6 @@ void WM_Galleon_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-/* 8b "li r3, N; blr" returners. */
 int WM_Galleon_getExtraSize(void) { return 0x10; }
 int WM_Galleon_getObjectTypeId(void) { return 0x0; }
 

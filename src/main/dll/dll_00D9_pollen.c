@@ -15,8 +15,6 @@ extern uint FUN_8007f6c8();
 extern undefined4 FUN_8007f718();
 extern undefined4 FUN_8008112c();
 
-/* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
-
 extern EffectInterface** gPartfxInterface;
 extern f32 lbl_803E3DF4;
 extern f32 lbl_803E3DF8;
@@ -124,8 +122,6 @@ void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void pinponspike_render(void);
 
 void pinponspike_hitDetect(void);
@@ -180,7 +176,6 @@ void pollen_hitDetect(int obj)
 
 void pollenfragment_free(int obj);
 
-/* 8b "li r3, N; blr" returners. */
 int pinponspike_getExtraSize(void);
 int pinponspike_getObjectTypeId(void);
 int pollen_getExtraSize(void) { return 0x14; }
@@ -188,7 +183,6 @@ int pollen_getObjectTypeId(void) { return 0x0; }
 int pollenfragment_getExtraSize(void);
 int pollenfragment_getObjectTypeId(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3138;
 extern void objRenderFn_8003b8f4(f32);
 
@@ -366,8 +360,6 @@ void pollen_init(int* obj)
         }
     }
 }
-
-/* ==== v1.0 recovered functions (drift additions) ==== */
 
 extern f32 timeDelta;
 extern f32 lbl_803E3140;

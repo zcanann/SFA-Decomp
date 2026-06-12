@@ -204,8 +204,6 @@ void updateVisibleGeometry(void)
     frustumPlanes_updateAabbCornerIndices((FrustumPlane*)gViewFrustumPlanes, 5);
 }
 
-/* old v1.1 body removed */
-
 undefined4 FUN_8005af70(int param_1)
 {
     if ((-1 < param_1) && (param_1 < (int)(uint)DAT_803ddb18))
@@ -1232,7 +1230,6 @@ void sceneRender(void)
     renderFlags &= ~2LL;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void doNothing_beforeTitleScreen(void)
 {
 }
@@ -1245,13 +1242,11 @@ void doNothing_8005D14C(void)
 {
 }
 
-/* return (lbl & 1<<bit). */
 u32 getDrawDistanceFlag_8005cd48(void) { return renderFlags & 0x10000; }
 u32 isWidescreen(void) { return renderFlags & 0x8; }
 u32 shouldDrawShadows(void) { return renderFlags & 0x80; }
 u32 shouldDrawClouds(void) { return renderFlags & 0x10; }
 
-/* return (lbl >> bit) & 1 via cntlzw-equivalent (rlwinm; neg; or; srwi). */
 u32 isOvercast(void)
 {
     u32 v = renderFlags & 0x40000;
@@ -1259,7 +1254,6 @@ u32 isOvercast(void)
     return t;
 }
 
-/* Toggle a renderFlags bit based on a boolean argument. */
 void gameFlagFn_8005cd24(int v)
 {
     if (v != 0) renderFlags |= 0x20000;
@@ -1296,7 +1290,6 @@ void setPendingMapLoad(int v)
     else renderFlags &= ~0x1000;
 }
 
-/* Return the loaded romlist page table. */
 extern u8 gLoadedRomListPages[0x1e0];
 
 void* RomList_GetLoadedPages(void)
@@ -1368,7 +1361,6 @@ int objPosToMapBlockIdx(f32 x, f32 y, f32 z)
     return -1;
 }
 
-/* Drop-arg-1 trampoline:  fn(_, a, b, c) -> fn_800704FC(a, b, c). */
 extern void fn_800704FC(int a, int b, int c);
 
 void fn_8005D0BC(int unused, int a, int b, int c)
@@ -1376,7 +1368,6 @@ void fn_8005D0BC(int unused, int a, int b, int c)
     fn_800704FC(a, b, c);
 }
 
-/* Drop-arg-1 trampoline:  fn(_, a, b, c, d) -> _gxSetTevColor1/2(a, b, c, d). */
 extern void _gxSetTevColor1(int a, int b, int c, int d);
 extern void _gxSetTevColor2(int a, int b, int c, int d);
 
@@ -1390,7 +1381,6 @@ void setTextColor(int unused, int a, int b, int c, int d)
     _gxSetTevColor2(a, b, c, d);
 }
 
-/* Map-block accessors backed by a per-layer table + indirect block list. */
 extern u8 lbl_803DCE98; /* count of allocated blocks */
 void* mapGetBlockIdx(int layer)
 {
@@ -1413,7 +1403,6 @@ void* mapGetBlockAtPos(int x, int y, int layer)
     return lbl_803DCE9C[idx];
 }
 
-/* Set widescreen flag and switch camera to 16:9 (1.7777) or 4:3 (1.3333). */
 extern f32 shdwChanged_803DEC18;
 extern f32 widescreenAspect_803DEC1C;
 extern f32 lbl_803DB670;
@@ -1434,7 +1423,6 @@ int setWidescreen(u8 v)
     return 0;
 }
 
-/* Toggle renderFlags + env byte for "draw lights" / "draw clouds-and-lights". */
 extern void* saveGameGetEnvState(void);
 
 void setDrawLights(int v)

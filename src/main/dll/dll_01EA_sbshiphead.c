@@ -9,11 +9,7 @@
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/dll/DB/sbgalleon_state.h"
 
-/* SB_Propeller_getExtraSize == 0x10. */
-
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
-
-/* SB_ShipHead_getExtraSize == 0x10. */
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
@@ -268,38 +264,18 @@ void SB_ShipHead_update(int obj)
     lbl_803DDC48 = state;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void SB_Galleon_release(void);
 
-/* 8b "li r3, N; blr" returners. */
 int SB_ShipHead_getExtraSize(void) { return 0x10; }
 int SB_ShipHead_getObjectTypeId(void) { return 0x1; }
 int SB_ShipMast_getExtraSize(void);
 
-/* sda21 accessors. */
 u32 getSbGalleon(void);
 
-/* Pattern wrappers. */
-
-/* 16b chained patterns. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 void SB_ShipHead_free(int x) { ObjGroup_RemoveObject(x, 0x3); }
 
-/* SB_Propeller_hitDetect: guard on 0x46 == 0x69c, copy halfword from sda21 ptr. */
 void SB_Propeller_hitDetect(int obj);
 
-/* SB_ShipGun_free: expgfx interface freeObject callback. */
-
-/* SB_Galleon_setScale: state machine; advance counter, optionally play sfx. */
-
-/* SB_Galleon_hitDetect: per-step expgfx spawn loop. */
-
-/* SB_Galleon_free: textureFree manager textures, ObjGroup_RemoveObject, kill music, set bit. */
-
-/* SB_ShipHead_init: add to group, alloc msg queue, set state + bias positions. */
 extern void ObjMsg_AllocQueue(int obj, int n);
 extern f32 lbl_803E5830;
 extern f32 lbl_803E5838;
@@ -314,11 +290,6 @@ void SB_ShipHead_init(int obj)
     ((SBShipHeadState*)p)->swayA = ((SBShipHeadState*)p)->swayA + lbl_803E5838;
 }
 
-/* SB_ShipGun_render: conditional render with multiple flag checks. */
 extern f32 lbl_803E5888;
 
 void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-
-/* SB_Galleon_modelMtxFn: returns -2 / -1 / state byte depending on flags. */
-
-/* SB_Galleon_func0E: state byte == 1 -> compute from 0x7c; else return 0x640. */

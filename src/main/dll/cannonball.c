@@ -224,7 +224,6 @@ void trickyFn_80141290(int obj, int ball)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void fn_8014187C(void)
 {
 }

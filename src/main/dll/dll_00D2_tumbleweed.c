@@ -294,8 +294,6 @@ void tumbleweed_update(int obj)
     tumbleweed_updateEffects(obj);
 }
 
-/* 8b "li r3, N; blr" returners. */
-
 void tumbleweed_updateStateMachine(int obj)
 {
     extern void tumbleweed_updateRollingMotion(int obj, int aux); /* #57 */

@@ -181,14 +181,7 @@ void nw_tricky_update(int* obj)
 }
 #pragma opt_loop_invariants reset
 
-/* Trivial 4b 0-arg blr leaves. */
 void nw_animice_render(void);
-
-/* 8b "li r3, N; blr" returners. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* call(x, N) wrappers. */
 
 void nw_tricky_init(int* obj)
 {

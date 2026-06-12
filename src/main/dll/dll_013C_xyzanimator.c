@@ -259,7 +259,6 @@ void xyzanimator_free(int obj, int param_2)
     return;
 }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3FF8;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4004;
@@ -743,18 +742,7 @@ done_lbl:
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void explodeanimator_render(void);
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* state encode: ((obj->_X)->_Y << shift) | const. */
-
-/* Drift-recovery: add new fns with v1.0 names. */
 
 void xyzanimator_init(int obj)
 {

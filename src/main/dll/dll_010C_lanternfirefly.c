@@ -9,8 +9,6 @@
 #include "main/game_object.h"
 #include "main/dll/CF/windlift.h"
 
-
-
 typedef struct LanternFireFlyPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -21,25 +19,13 @@ typedef struct LanternFireFlyPlacement
     u8 pad1E[0x20 - 0x1E];
 } LanternFireFlyPlacement;
 
-
-/* scarab_getExtraSize == 0x34 (collectible money beetle). */
-
-
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
-
-/* dll_107_getExtraSize == 0x2c (CF wind lift / blow vent). */
-
 
 STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
-/* portalspelldoor_getExtraSize == 0x10. */
-
-
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
-
 extern undefined4 ObjGroup_AddObject();
-
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
@@ -60,7 +46,6 @@ extern void vecRotateZXY(void* rotation, f32* outVec);
 extern int gameBitIncrement(int eventId);
 extern f32 Vec_distance(void* a, void* b);
 
-/* 8b "li r3, N; blr" returners. */
 int LanternFireFly_getExtraSize(void) { return 0x74; }
 int LanternFireFly_getObjectTypeId(void) { return 0x0; }
 
@@ -73,7 +58,6 @@ void LanternFireFly_modelMtxFn(u8* obj, f32 a, f32 b, f32 c)
     sub->anchorY = b;
     sub->anchorZ = c;
 }
-
 
 void LanternFireFly_func0B(int obj)
 {
@@ -129,8 +113,6 @@ void LanternFireFly_func0B(int obj)
     gameBitIncrement(0x698);
 }
 
-
-
 /* LanternFireFly_setScale: subtract sub->_54..5c from vec[0..2] (overwriting
  * vec), copy the result to sub->_34..3c, set sub->_6c = 4. */
 void LanternFireFly_setScale(u8* obj, f32* vec)
@@ -168,9 +150,6 @@ void LanternFireFly_free(u8* obj, int p2)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-/* ================================================================ */
-/* [0x80186B94..0x801871C8) - formerly the head of CFcrystal.c. */
-
 extern undefined4 FUN_800068c4();
 extern void gameBitDecrement(int eventId);
 
@@ -196,7 +175,6 @@ extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern f32 sqrtf(f32 value);
 extern f32 mathSinf(f32 value);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 void LanternFireFly_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -214,7 +192,6 @@ void LanternFireFly_hitDetect(void)
 
 #define LANTERN_FIREFLY_MODE(state) (((u32)(state)->modeFlags >> 6) & 3)
 #define LANTERN_FIREFLY_IS_ACTIVE(state) (LANTERN_FIREFLY_MODE(state) == 1u)
-
 
 void LanternFireFly_update(int obj)
 {

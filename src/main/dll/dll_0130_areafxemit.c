@@ -604,8 +604,6 @@ void areafxemit_free(AreaFxEmitObject* obj)
 
 void lfxemitter_free(LfxEmitterObject* obj);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void areafxemit_hitDetect(void)
 {
 }
@@ -620,7 +618,6 @@ void areafxemit_initialise(void)
 
 void lfxemitter_render(void);
 
-/* 8b "li r3, N; blr" returners. */
 int areafxemit_getExtraSize(void) { return 0x20; }
 int areafxemit_getObjectTypeId(void) { return 0x0; }
 int lfxemitter_getExtraSize(void);

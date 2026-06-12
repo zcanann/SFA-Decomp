@@ -67,8 +67,6 @@ void dll_8A_func03(int sourceObj, int variant, int posSource, uint flags)
 
 void dll_8B_func03(int sourceObj, int variant, int posSource, uint flags, undefined4 arg5, f32* arg6);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dll_8A_func01_nop(void)
 {
 }

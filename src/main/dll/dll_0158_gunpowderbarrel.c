@@ -603,7 +603,6 @@ void gunpowderbarrel_updatePhysics(int* obj)
     ((GpbFlags4A*)(sub + 0x4a))->wasOnGround = ((GpbFlags4A*)(sub + 0x4a))->onGround;
 }
 
-/* ================================================================ */
 /* Tail of the TU (0x801A1A60..0x801A27B8) - formerly the head of
  * cannontargetControl.c (now dll_0159_blasted.c). */
 
@@ -732,7 +731,6 @@ void gunpowderbarrel_hitDetect(int param_1)
     state->throwVelX = lbl_803E4330 * state->throwVelX;
     state->throwVelY = lbl_803E4330 * state->throwVelY;
     state->throwVelZ = lbl_803E4330 * state->throwVelZ;
-    /* mark sp1c live: target stores into sp+0x1c..0x24 the dx/dy/dz */
     (void)sp1c;
 
     if (state->impactSoundCooldown > lbl_803E4334)
@@ -1130,14 +1128,12 @@ void gunpowderbarrel_update(int obj)
     }
 }
 
-/* ================================================================ */
 /* Head of the TU (0x801A0B14..0x801A1230) - formerly the
  * gunpowder-barrel helper group inside sandwormBoss.c. Placed LAST in
  * this file so none of the small helpers can be auto-inlined into the
  * update/hitDetect callers above (they were extern bls before the
  * re-split, and the retail unit keeps the bls). */
 
-/* chained byte bit-extract (file-default on/on in the old donor). */
 u32 gunpowderbarrel_isHeld(int* obj) { return (((GunpowderBarrelState*)((int**)obj)[0xb8 / 4])->heldFlags >> 5) & 1; }
 
 typedef struct

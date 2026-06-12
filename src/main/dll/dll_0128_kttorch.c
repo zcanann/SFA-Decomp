@@ -4,14 +4,7 @@
 
 extern uint GameBit_Get(int eventId);
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-
-/* Drift-recovery: add new fns with v1.0 names. */
 
 extern f32 timeDelta;
 
@@ -32,8 +25,6 @@ extern u32 GameBit_Get(int bit);
 
 extern f32 lbl_803E3DB0;
 extern f32 lbl_803E3DB4;
-
-/* Trivial 4b 0-arg blr leaves. */
 
 extern f32 lbl_803E3DC0;
 extern f32 lbl_803E3DC4;
@@ -123,12 +114,10 @@ void kt_torch_update(int obj)
     }
 }
 
-/* 8b "li r3, N; blr" returners. */
 int campfire_getExtraSize(void);
 int kt_torch_getExtraSize(void) { return 0x0; }
 int kt_torch_getObjectTypeId(void) { return 0x0; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 void kt_torch_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;

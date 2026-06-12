@@ -387,5 +387,4 @@ void staffactivated_init(int obj, int setup)
     }
 }
 
-/* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3C20;

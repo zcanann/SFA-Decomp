@@ -7,13 +7,11 @@ typedef struct GmmazewellClearPendingTriggerCallbackState
     s32 unk4;
 } GmmazewellClearPendingTriggerCallbackState;
 
-
 typedef struct GmmazewellState
 {
     u8 pad0[0x4 - 0x0];
     s32 unk4;
 } GmmazewellState;
-
 
 int gmmazewell_getExtraSize(void) { return 0x8; }
 
@@ -51,7 +49,6 @@ int gmmazewell_clearPendingTriggerCallback(int obj, int unused, ObjAnimUpdateSta
     }
     return 0;
 }
-
 
 void gmmazewell_update(void* obj)
 {
@@ -122,7 +119,6 @@ checkValue:
                     {
                     case 3:
                         ((GmmazewellState*)runtime)->unk4 = 1316;
-                    /* fall through */
                     case 0:
                     case 1:
                     case 2:

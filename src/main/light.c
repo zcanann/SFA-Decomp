@@ -165,7 +165,6 @@ int FUN_801fc4f4(void)
     return 4;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void vfpblock1_release(void)
 {
 }
@@ -250,7 +249,6 @@ void dll_224_free_nop(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int vfpplatform_getExtraSize(void) { return 0x6; }
 int vfpplatform_getObjectTypeId(void) { return 0x0; }
 int vfpdoorswitch_getExtraSize(void) { return 0x4; }
@@ -265,7 +263,6 @@ int vfpcoreplat_getObjectTypeId(void) { return 0x0; }
 int dll_224_getExtraSize_ret_6(void) { return 0x6; }
 int dll_224_getObjectTypeId(void) { return 0x0; }
 
-/* "tail-call into (**gExpgfxInterface)[6]" free stub. */
 void vfpplatform_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -436,7 +433,6 @@ void seqpoint_init(int obj, int data)
     ((GameObject*)obj)->objectFlags |= 0x2000;
 }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E6128;
 
 void seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -457,7 +453,6 @@ void vfpplatform_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-/* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E611C;
 extern f32 lbl_803E6140;
 void vfpdoorswitch_render(void) { objRenderFn_8003b8f4(lbl_803E611C); }
@@ -1073,7 +1068,6 @@ void vfpplatform_update(int obj)
 
 void FUN_801fd398(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9);
 
-/* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling on
 #pragma peephole on
 void dll_224_release_nop(void)
@@ -1084,12 +1078,6 @@ void dll_224_initialise_nop(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
-
-/* plain forwarder. */
-
-/* dll_224_hitDetect: render iff obj->field_0x74 set. */
-
 void dll_224_hitDetect(void* obj)
 {
     extern void objRenderFn_80041018(void* obj); /* #57 */
@@ -1099,7 +1087,6 @@ void dll_224_hitDetect(void* obj)
     }
 }
 
-/* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
 #pragma scheduling off
 #pragma peephole off
 void dll_224_update(void* param_1)
@@ -1128,7 +1115,6 @@ void dll_224_update(void* param_1)
     spellStoneUseFn_801fd270(obj);
 }
 
-/* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
 void dll_224_init(void* obj, void* other)
 {
     s16* extra = ((GameObject*)obj)->extra;

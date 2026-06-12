@@ -369,7 +369,6 @@ void FUN_801b5d00(int param_1, int param_2)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void explosion_hitDetect(void)
 {
 }
@@ -378,14 +377,10 @@ void dimwooddoor2_free(void);
 
 extern int Obj_GetActiveModel(int obj);
 
-/* 8b "li r3, N; blr" returners. */
 int explosion_getExtraSize(void) { return 0xa60; }
 int dimwooddoor2_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
-
-/* conditional init/free pair. */
 
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
@@ -399,7 +394,6 @@ extern void dimmagicbridge_updateVertexWave(int obj, u8* sub);
 /* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
  * and using mask 0x6000 + initial state byte 3 at +0. */
 
-/* explosion_free: model-light release if present. */
 extern void ModelLightStruct_free(void*);
 void explosion_free(int obj)
 {
@@ -410,7 +404,6 @@ void explosion_free(int obj)
     }
 }
 
-/* explosion_getObjectTypeId: tile/index lookup capped by table count. */
 #pragma scheduling off
 int explosion_getObjectTypeId(int obj)
 {
@@ -423,7 +416,6 @@ int explosion_getObjectTypeId(int obj)
     return (idx << 11) | 0x400;
 }
 
-/* dim_levelcontrol_free: gameplay music + time-of-day reset. */
 extern void Music_Trigger(s32 triggerId, s32 mode);
 
 void dim_levelcontrol_free(int p1);

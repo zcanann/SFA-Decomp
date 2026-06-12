@@ -4,13 +4,9 @@
 
 extern CameraModeClimbState* lbl_803DD578;
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void CameraModeClimb_copyToCurrent_nop(void)
 {
 }
-
-/* fn_X(lbl); lbl = 0; */
 
 void CameraModeClimb_free(void)
 {

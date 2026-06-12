@@ -16,14 +16,11 @@ void area_hitDetect(void);
 
 void area_update(void);
 
-/* obj->u16_X |= MASK */
 void area_init(u16* obj);
 
 void area_release(void);
 
 void area_initialise(void);
-
-/* Trivial 4b 0-arg blr leaves. */
 
 extern u8 framesThisStep;
 
@@ -31,7 +28,6 @@ void ProjectileSwitch_free(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int levelname_getExtraSize(void);
 int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 
@@ -147,7 +143,6 @@ void ProjectileSwitch_hitDetect(int obj)
 
     if (*(u8*)state != 0)
     {
-        /* deactivate */
         if ((((ProjectileSwitchPlacement*)state2)->unk1E & 3) != 1) return;
         state = *(int*)&((GameObject*)obj)->extra;
         if (((GameObject*)obj)->anim.mapEventSlot == 0x2c)
@@ -168,7 +163,6 @@ void ProjectileSwitch_hitDetect(int obj)
     }
     else
     {
-        /* activate */
         state = *(int*)&((GameObject*)obj)->extra;
         if (((GameObject*)obj)->anim.mapEventSlot == 0x2c)
         {
@@ -309,7 +303,6 @@ void ProjectileSwitch_init(int obj, u8* initData)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void ProjectileSwitch_release(void)
 {
 }
@@ -318,7 +311,6 @@ void ProjectileSwitch_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int InvisibleHitSwitch_getExtraSize(void);
 
 #include "main/game_object.h"

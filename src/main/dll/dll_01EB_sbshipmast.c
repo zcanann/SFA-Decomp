@@ -9,19 +9,13 @@
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/dll/DB/sbgalleon_state.h"
 
-/* SB_Propeller_getExtraSize == 0x10. */
-
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
-
-/* SB_ShipHead_getExtraSize == 0x10. */
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
 extern undefined8 ObjGroup_RemoveObject();
 
 extern u8 framesThisStep;
-
-/* Trivial 4b 0-arg blr leaves. */
 
 void SB_ShipMast_free(void)
 {
@@ -98,19 +92,11 @@ void SB_ShipMast_update(int* obj)
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, speed, (f32)(u32)framesThisStep, NULL);
 }
 
-/* 8b "li r3, N; blr" returners. */
 int SB_Galleon_getExtraSize(void);
 int SB_ShipMast_getExtraSize(void) { return 0x0; }
 int SB_ShipMast_getObjectTypeId(void) { return 0x0; }
 int SB_ShipGun_getExtraSize(void);
 
-/* sda21 accessors. */
-
-/* Pattern wrappers. */
-
-/* 16b chained patterns. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5868;
 
@@ -120,23 +106,4 @@ void SB_ShipMast_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E5868);
 }
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 void SB_ShipHead_free(int x);
-
-/* SB_Propeller_hitDetect: guard on 0x46 == 0x69c, copy halfword from sda21 ptr. */
-
-/* SB_ShipGun_free: expgfx interface freeObject callback. */
-
-/* SB_Galleon_setScale: state machine; advance counter, optionally play sfx. */
-
-/* SB_Galleon_hitDetect: per-step expgfx spawn loop. */
-
-/* SB_Galleon_free: textureFree manager textures, ObjGroup_RemoveObject, kill music, set bit. */
-
-/* SB_ShipHead_init: add to group, alloc msg queue, set state + bias positions. */
-
-/* SB_ShipGun_render: conditional render with multiple flag checks. */
-
-/* SB_Galleon_modelMtxFn: returns -2 / -1 / state byte depending on flags. */
-
-/* SB_Galleon_func0E: state byte == 1 -> compute from 0x7c; else return 0x640. */

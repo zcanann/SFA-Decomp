@@ -5,18 +5,12 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-/* shopitem_getExtraSize == 0xec (spline-following pushcart item). */
-
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
-
-/* shopkeeper_getExtraSize == 0x9d8. */
 
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
 extern void Stack_Free();
-
-/* Trivial 4b 0-arg blr leaves. */
 
 void spscarab_render(void)
 {
@@ -26,7 +20,6 @@ void spscarab_hitDetect(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int shopkeeper_getExtraSize(void);
 int spscarab_getExtraSize(void) { return 0x14; }
 int spscarab_getObjectTypeId(void) { return 0x0; }

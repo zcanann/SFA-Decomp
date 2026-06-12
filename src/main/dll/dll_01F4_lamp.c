@@ -13,11 +13,6 @@ extern void Sfx_StopObjectChannel();
 extern u8 framesThisStep;
 extern EffectInterface** gPartfxInterface;
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 extern f32 timeDelta;
@@ -78,16 +73,11 @@ void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8
 {
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void SB_FireBall_release(void);
 
-/* 8b "li r3, N; blr" returners. */
 int Lamp_getExtraSize(void) { return 0x1; }
 int Flag_getExtraSize(void);
 
-/* 16b chained patterns. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5978;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
@@ -252,8 +242,6 @@ void SB_CageKyte_init(int p);
 
 /* EN v1.0 0x801E6050  size: 44b  Triple s8 fan-out: write obj->_b8[2/3/4]
  * (sign-extended) into *out_b3, *out_b2, *out_b4. */
-
-/* shop_getItem* helpers -- table lookup */
 
 /* EN v1.0 0x801E6358  size: 104b  Returns 1 unless the item's
  * "available" GameBit gate (lbl_80327FD0[idx*12 + 6]) is present and

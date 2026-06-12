@@ -1291,16 +1291,12 @@ void FUN_800ea9b8(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void SaveGame_func08_nop(void)
 {
 }
 
 void screens_release(void);
 
-/* 8b "li r3, N; blr" returners. */
-
-/* sda21 accessors. */
 u8 getSaveGameLoadStatus(void) { return saveGameLoadStatus; }
 
 void setSaveGameLoadingFlag(void) { if (saveGameLoadStatus == 2) saveGameLoadStatus = 1; }
@@ -1308,17 +1304,10 @@ s32 isSaveGameLoading(void) { return saveGameLoadStatus == 2; }
 
 void Carryable_init(int obj, int state);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* lbl = N (byte) */
 void clearSaveGameLoadingFlag(void) { saveGameLoadStatus = 0x0; }
 
-/* 12b 3-insn patterns. */
 s32 Carryable_isHeld(u8* obj);
 
-/* misc 8b leaves */
-
-/* if (lbl) fn(lbl); */
 extern void mm_free(u32);
 void SaveGame_release(void) { if (pRestartPoint != 0) mm_free(pRestartPoint); }
 
@@ -1374,7 +1363,6 @@ void SaveGame_initialise(void)
 
 extern void* getLastSavedGameTexts(void);
 
-/* conditional init/free pair. */
 void SaveGame_gplayClearRestartPoint(void)
 {
     if (pRestartPoint != 0)

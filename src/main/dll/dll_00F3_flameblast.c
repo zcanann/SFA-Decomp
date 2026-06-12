@@ -34,9 +34,6 @@ extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E42BC;
-/* pushable_setScale: real v1.0 body defined at end of file (old v1.1 misimport removed). */
-
-/* pushable_render: recovered v1.0 body defined at end of file. */
 
 undefined4
 FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
@@ -126,10 +123,8 @@ FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return uVar3;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void invhit_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int flameblast_getExtraSize(void) { return 0x14; }
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
@@ -148,14 +143,12 @@ void flameblast_render(int* obj)
     fn_80098B18((int)obj, f, 2, 0, 0, (int)vec);
 }
 
-/* 16b chained patterns. */
 void objSetAnimSpeedTo1(int* obj)
 {
     u8 v = 0x1;
     *((u8*)((int**)obj)[0xb8 / 4] + 0x10) = v;
 }
 
-/* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E35E8;
 
 extern f32 timeDelta;

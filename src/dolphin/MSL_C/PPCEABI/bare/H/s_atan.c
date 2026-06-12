@@ -1,4 +1,3 @@
-/* @(#)s_atan.c 1.3 95/01/18 */
 /**
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -128,10 +127,8 @@ double x;
 			}
 		}
 	}
-	/* end of argument reduction */
 	z = x * x;
 	w = z * z;
-	/* break sum from i=0 to 10 aT[i]z**(i+1) into odd and even poly */
 	s1 = z
 	     * (aT[0]
 	        + w

@@ -5,8 +5,6 @@
 
 extern u32 randomGetRange(int min, int max);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 #pragma scheduling on
 #pragma peephole on
 void cfforcefield_free(void)
@@ -20,11 +18,6 @@ void cfforcefield_render(void)
 void cfforcefield_hitDetect(void)
 {
 }
-
-/* 8b "li r3, N; blr" returners. */
-
-/* explodable_getExtraSize == 0x6e8 (gas-vent explodable). */
-/* Per-fragment record inside DrExplodableState (stride 0x70). */
 
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 
@@ -262,7 +255,6 @@ FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void cfforcefield_release(void)
 {
 }
@@ -274,22 +266,6 @@ void cfforcefield_initialise(void)
 void slidingdoor_free(void);
 
 extern void storeZeroToFloatParam(void* p);
-
-/* 8b "li r3, N; blr" returners. */
-
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* state encode: ((obj->_X)->_Y << shift) | const. */
-
-/* byte-to-short shift8 pattern. */
-
-/* attractor_setScale: branch on s8 flag at +0x19 of obj->_4C; if set return s16 at +0x1a, else 0. */
-
-/* attractor_init: ObjGroup_AddObject(obj, 0x1e); byte<<8 -> sth at obj. */
 
 /* slidingdoor_SeqFn: slidingdoor "think" routine. Tracks whether the player or
  * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
@@ -314,7 +290,6 @@ extern void storeZeroToFloatParam(void* p);
  * lbl_803E43C0 and obj->_50->[4], stash at obj+0x8; then clear bits 5..7 of
  * obj->_b8->_0. */
 
-/* cfforcefield_init: byte<<8 sth; insert GameBit_Get bit into bit-7 of *(u8*)obj->_B8; storeZeroToFloatParam. */
 void cfforcefield_init(s16* obj, void* data)
 {
     typedef struct ForceFieldInitFlags

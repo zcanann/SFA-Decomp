@@ -3,8 +3,6 @@
 #include "main/dll/CAM/camcombat_state.h"
 #include "main/mm.h"
 
-/* Trivial 4b 0-arg blr leaves. */
-
 extern f32 timeDelta;
 
 #include "main/dll/CAM/camdrakor.h"
@@ -166,7 +164,6 @@ void CameraModeShipBattle_init(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void CameraModeCombat_release(void);
 
 void CameraModeShipBattle_copyToCurrent_nop(void)
@@ -183,7 +180,6 @@ void CameraModeShipBattle_initialise(void)
 
 void CameraModeClimb_copyToCurrent_nop(void);
 
-/* fn_X(lbl); lbl = 0; */
 void CameraModeShipBattle_free(void)
 {
     mm_free(lbl_803DD570);

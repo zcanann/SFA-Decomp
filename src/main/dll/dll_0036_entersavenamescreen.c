@@ -72,7 +72,6 @@ void EnterSaveNameScreen_render(void)
     titleScreenShowCopyright(0);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void EnterSaveNameScreen_frameEnd(void)
 {
 }

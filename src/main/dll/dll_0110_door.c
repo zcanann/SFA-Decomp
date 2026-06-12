@@ -47,20 +47,15 @@ extern int* objFindTexture(int* obj, int a, int b);
 extern u32 GameBit_Get(int eventId);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 
-/* 8b "li r3, N; blr" returners. */
 int Door_getExtraSize(void) { return 0x8; }
 int mmp_bridge_getExtraSize(void);
 
-/* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3780;
 extern void objRenderFn_8003b8f4(f32);
 void Door_render(void) { objRenderFn_8003b8f4(lbl_803E3780); }
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 void doorlock_free(int x);
 
 int Door_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
@@ -297,16 +292,6 @@ int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 #include "main/objseq.h"
 
 extern uint GameBit_Get(int eventId);
-
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* Drift-recovery: add new fns with v1.0 names. */
 
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read

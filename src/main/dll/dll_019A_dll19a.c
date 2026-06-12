@@ -4,11 +4,6 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 #include "main/obj_placement.h"
@@ -114,7 +109,6 @@ void dll_19A_update(int obj)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_199_release(void);
 
 void dll_19A_free(void)
@@ -133,7 +127,6 @@ void dll_19A_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int dll_19A_getExtraSize(void) { return 0x4; }
 int dll_19A_getObjectTypeId(void) { return 0x0; }
 
@@ -148,7 +141,6 @@ void dll_19A_init(int obj, s8* def)
     ((GameObject*)obj)->anim.alpha = 0xFF;
 }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5180;
 
 void dll_19A_render(int p1, int p2, int p3, int p4, int p5, s8 visible)

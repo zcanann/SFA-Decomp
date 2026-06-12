@@ -8,21 +8,15 @@ extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_8003b818();
 
-/* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
-
 extern EffectInterface** gPartfxInterface;
-
-/* Trivial 4b 0-arg blr leaves. */
 
 void mikabomb_hitDetect(void);
 
 void mikabomb_free(int obj, int mode);
 
-/* 8b "li r3, N; blr" returners. */
 int mikabomb_getExtraSize(void);
 int mikabomb_getObjectTypeId(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
@@ -167,8 +161,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     (ObjectDescriptorCallback)pollenfragment_getObjectTypeId,
     pollenfragment_getExtraSize,
 };
-
-/* ==== v1.0 recovered functions (drift additions) ==== */
 
 extern f32 timeDelta;
 extern void* Obj_GetPlayerObject(void);
@@ -1117,7 +1109,6 @@ LAB_801725bc:
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void mikabomb_release(void);
 
 void mikabomb_initialise(void);
@@ -1224,7 +1215,6 @@ void checkpoint4_release(void);
 
 void checkpoint4_initialise(void);
 
-/* 8b "li r3, N; blr" returners. */
 int mikabombshadow_getExtraSize(void);
 int mikabombshadow_getObjectTypeId(void);
 int StaticCamera_getExtraSize(void);
@@ -1714,14 +1704,11 @@ typedef struct StaffState
     s8 fieldB9;
 } StaffState;
 
-/* Pattern wrappers. */
 s16 staff_getHitReactValue(int* obj) { return ((StaffState*)((int**)obj)[0xb8 / 4])->hitReactValue; }
 u8 fn_8016F16C(int* obj);
 
-/* 16b chained patterns. */
 s32 staff_func16(int* obj) { return ((StaffState*)((int**)obj)[0xb8 / 4])->fieldB9; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E31E8;
 
 void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
@@ -1732,16 +1719,11 @@ void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void gcbaddieshield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
-/* render-with-fn(lbl) (no visibility check). */
 void flamethrowerspe_render(void);
 void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 void StaticCamera_free(int x);
 
-/* misc 8b leaves */
-
-/* misc 16b 4-insn patterns. */
 void objSetAnimField48to0(int* obj)
 {
     s32 v = 0x0;
@@ -1753,7 +1735,6 @@ void flamethrowerspe_func0B(int* obj);
 extern void quakeSpellFn_8016cee8(int* obj, int* x);
 void playerRenderQuakeSpell(int* obj) { quakeSpellFn_8016cee8(obj, ((GameObject*)obj)->ownerObj); }
 
-/* state-byte setters / leaf writers. */
 #pragma dont_inline on
 void staffSetGlow(int* obj, u8 a, u8 b)
 {
@@ -2027,8 +2008,6 @@ void fireball_update(int* obj);
 void fireball_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 void shield_update(int* obj);
-
-/* dll_F7 (bouncing prop) object extra-state */
 
 extern void Sfx_PlayAtPositionFromObject(int* obj, f32 x, f32 y, f32 z, int sfx);
 

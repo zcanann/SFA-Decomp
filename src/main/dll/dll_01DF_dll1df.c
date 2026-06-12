@@ -8,19 +8,11 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
-/* dim2conveyor_getExtraSize == 0x14. */
-
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
-
-/* dll_1D6_getExtraSize == 0x20 (crusher platform). */
 
 STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
 
-/* dimtruthhornice_getExtraSize == 0x8. */
-
 STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
-
-/* dim2snowball_getExtraSize == 0xb0 (curve walker head + roll state). */
 
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
@@ -78,14 +70,7 @@ void FUN_801b9cc4(int param_1)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_1DA_release(void);
-
-/* dim2icefloe: per-frame curve-follow update + path-param init. */
-
-/* dim2icicle_update: state machine -- wait for hit, shake, drop into water, melt. */
-
-/* dll_1DB_update: geyser state machine driven by player standing on it. */
 
 /* dll_1DA_update: rolling-rock physics -- damp velocity, bounce off geometry normal,
  * fall, land on contact object, clamp to floor height. */
@@ -111,12 +96,10 @@ void dll_1DF_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int dll_1DB_getExtraSize(void);
 int dll_1DF_getExtraSize(void) { return 0x28; }
 int dll_1DF_getObjectTypeId(void) { return 0x0; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4B08;
 extern f32 lbl_803E4B98;
 
@@ -126,7 +109,6 @@ void dll_1DF_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4B98);
 }
 
-/* dll_1DA_init: stash obj->f10 into *(obj->p_B8), then bump obj->f10 by a constant step. */
 void dll_1DA_init(void* obj);
 
 /* dll_1DF_init: similar romlist param init, but reads three u8 fields, packs to s16
@@ -164,8 +146,6 @@ void dll_1DF_init(void* obj, void* p)
  *   sub.b2 is clear), decrement sub.b0 counter; when it hits 0 set the armed bit
  *   and tell the game-event tracker (via param.s16_1E) that this trigger fired. */
 void dim2lavacontrol_setScale(void* obj);
-
-/* dim2lavacontrol_free: stop lava sfx, kill the lava music track, refresh time-of-day. */
 
 /* dll_1DF_update: per-frame texture-color update + proximity-driven expgfx trigger.
  *   - objFindTexture(obj,0,0); if non-null and obj.s16_46 == 209 set tex.color

@@ -248,10 +248,8 @@ void FUN_80169a44(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void kaldachompspit_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int kaldachompspit_getExtraSize(void);
 int kaldachompspit_getObjectTypeId(void);
 
@@ -270,18 +268,11 @@ void kaldachompspit_update(int obj);
 #include "main/objhits_types.h"
 #include "main/game_object.h"
 
-/* pollenfragment extra block (head; timers at 0x20/0x24 stay raw addr args). */
-
 void kaldachompspit_init(int obj);
 
-/* Trivial 4b 0-arg blr leaves. */
 void kaldachompspit_release(void);
 
 void kaldachompspit_initialise(void);
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -418,5 +409,3 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     (ObjectDescriptorCallback)pollenfragment_getObjectTypeId,
     pollenfragment_getExtraSize,
 };
-
-/* ==== v1.0 recovered functions (drift additions) ==== */

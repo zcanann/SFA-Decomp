@@ -3,14 +3,11 @@
 #include "dolphin/thp/THPPlayer.h"
 #include "string.h"
 
-/* DVDRead: sync DVD read (distinct from DVDReadPrio) */
 extern s32 DVDRead(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset);
 extern s32 THPVideoDecode(void* file, void* tileY, void* tileU, void* tileV, void* work);
 
-/* External functions */
 extern void AttractMovieAudio_DmaCallback(void);
 
-/* BSS objects (lis+addi addressing) */
 extern char lbl_803A57C0[0x50C];
 extern char lbl_803A5F08[0x1000];
 extern OSThread lbl_803A6F08;
@@ -23,13 +20,10 @@ extern OSMessageQueue lbl_803A7328;
 extern OSThread lbl_803A8348;
 extern char lbl_803A5D20[0x40];
 
-/* SDATA string (SDA21) */
 extern char lbl_803DB9E8;
 
-/* Float constant (sdata2) */
 extern f32 lbl_803E1D54;
 
-/* SBSS dword flags (SDA21) */
 extern s32 lbl_803DD660;
 extern AIDCallback lbl_803DD668;
 extern s32 lbl_803DD66C;
@@ -41,14 +35,10 @@ extern s32 lbl_803DD690;
 extern s32 lbl_803DD694;
 extern u32 gAttractMovieIdleFrameCount;
 
-/* Forward declarations needed by OSCreateThread */
 void THPRead_Reader(void);
 void AttractMovieVideo_DecoderForOnMemory(void*);
 void AttractMovieVideo_Decoder(void);
 
-/* ------------------------------------------------------------------ */
-/* movieLoad (748 bytes)                                                */
-/* ------------------------------------------------------------------ */
 BOOL movieLoad(const char* fileName, void* param2)
 {
     AttractMovieAudioInfo* audioInfo; /* r28 */
@@ -161,9 +151,6 @@ BOOL movieLoad(const char* fileName, void* param2)
     return 1;
 }
 
-/* ------------------------------------------------------------------ */
-/* AttractMovieAudio_Shutdown (76 bytes)                               */
-/* ------------------------------------------------------------------ */
 void AttractMovieAudio_Shutdown(void)
 {
     u32 saved = OSDisableInterrupts();
@@ -175,9 +162,6 @@ void AttractMovieAudio_Shutdown(void)
     lbl_803DD660 = 0;
 }
 
-/* ------------------------------------------------------------------ */
-/* AttractMovieAudio_Init (288 bytes)                                  */
-/* ------------------------------------------------------------------ */
 BOOL AttractMovieAudio_Init(int audioMode)
 {
     register char* base;
@@ -228,17 +212,11 @@ BOOL AttractMovieAudio_Init(int audioMode)
     return 1;
 }
 
-/* ------------------------------------------------------------------ */
-/* PushReadedBuffer2 (48 bytes)                                        */
-/* ------------------------------------------------------------------ */
 void PushReadedBuffer2(OSMessage msg)
 {
     OSSendMessage(&lbl_803A7290, msg, OS_MESSAGE_BLOCK);
 }
 
-/* ------------------------------------------------------------------ */
-/* PopReadedBuffer2 (52 bytes)                                         */
-/* ------------------------------------------------------------------ */
 #pragma dont_inline on
 OSMessage PopReadedBuffer2(void)
 {
@@ -248,9 +226,6 @@ OSMessage PopReadedBuffer2(void)
 }
 #pragma dont_inline reset
 
-/* ------------------------------------------------------------------ */
-/* PushFreeReadBuffer (48 bytes)                                       */
-/* ------------------------------------------------------------------ */
 #pragma dont_inline on
 void PushFreeReadBuffer(OSMessage msg)
 {
@@ -258,9 +233,6 @@ void PushFreeReadBuffer(OSMessage msg)
 }
 #pragma dont_inline reset
 
-/* ------------------------------------------------------------------ */
-/* PopReadedBuffer (52 bytes)                                          */
-/* ------------------------------------------------------------------ */
 #pragma dont_inline on
 OSMessage PopReadedBuffer(void)
 {
@@ -270,9 +242,6 @@ OSMessage PopReadedBuffer(void)
 }
 #pragma dont_inline reset
 
-/* ------------------------------------------------------------------ */
-/* THPRead_Reader (248 bytes) - DVD-read thread                        */
-/* ------------------------------------------------------------------ */
 void THPRead_Reader(void)
 {
     char* base = lbl_803A5F08;
@@ -330,9 +299,6 @@ void THPRead_Reader(void)
     }
 }
 
-/* ------------------------------------------------------------------ */
-/* ReadThreadCancel (60 bytes)                                         */
-/* ------------------------------------------------------------------ */
 void ReadThreadCancel(void)
 {
     if (lbl_803DD688 != 0)
@@ -342,9 +308,6 @@ void ReadThreadCancel(void)
     }
 }
 
-/* ------------------------------------------------------------------ */
-/* ReadThreadStart (52 bytes)                                          */
-/* ------------------------------------------------------------------ */
 void ReadThreadStart(void)
 {
     if (lbl_803DD688 != 0)
@@ -353,9 +316,6 @@ void ReadThreadStart(void)
     }
 }
 
-/* ------------------------------------------------------------------ */
-/* CreateReadThread (156 bytes)                                        */
-/* ------------------------------------------------------------------ */
 BOOL CreateReadThread(OSPriority priority)
 {
     char* base = lbl_803A5F08;
@@ -374,9 +334,6 @@ BOOL CreateReadThread(OSPriority priority)
     return 1;
 }
 
-/* ------------------------------------------------------------------ */
-/* PopDecodedTextureSet (68 bytes)                                     */
-/* ------------------------------------------------------------------ */
 OSMessage PopDecodedTextureSet(s32 flags)
 {
     OSMessage msg;
@@ -387,17 +344,11 @@ OSMessage PopDecodedTextureSet(s32 flags)
     return (OSMessage)0;
 }
 
-/* ------------------------------------------------------------------ */
-/* PushFreeTextureSet (48 bytes)                                       */
-/* ------------------------------------------------------------------ */
 void PushFreeTextureSet(OSMessage msg)
 {
     OSSendMessage(&lbl_803A7328, msg, OS_MESSAGE_NOBLOCK);
 }
 
-/* ------------------------------------------------------------------ */
-/* AttractMovieVideo_Decode (328 bytes) - video decode frame           */
-/* ------------------------------------------------------------------ */
 void AttractMovieVideo_Decode(void* param)
 {
     AttractMoviePlayer* player; /* 1st function-scope callee-saved → r31 */
@@ -405,7 +356,6 @@ void AttractMovieVideo_Decode(void* param)
     u32 i; /* 3rd → r29 */
     u32* compSizes; /* 4th → r28 */
     char* dvdData; /* 5th → r27 */
-    /* param (function arg) → r26 auto */
 
     db = lbl_803A72F0;
     compSizes = (u32*)(((AttractMovieReadBuffer*)param)->ptr + 8);
@@ -468,9 +418,6 @@ void AttractMovieVideo_Decode(void* param)
     }
 }
 
-/* ------------------------------------------------------------------ */
-/* AttractMovieVideo_DecoderForOnMemory (316 bytes)                    */
-/* ------------------------------------------------------------------ */
 void AttractMovieVideo_DecoderForOnMemory(void* param)
 {
     AttractMoviePlayer* player = &lbl_803A5D60; /* r31 */
@@ -500,7 +447,6 @@ void AttractMovieVideo_DecoderForOnMemory(void* param)
                         {
                             break; /* pos==cols-1, not looping: go to decode */
                         }
-                        /* looping: update cur and frameSize */
                         frameSize = *(u32*)cur;
                         cur = player->loopFrame;
                     }
@@ -515,7 +461,6 @@ void AttractMovieVideo_DecoderForOnMemory(void* param)
             }
         }
 
-        /* Store i adjacent to cur on stack so AttractMovieVideo_Decode can read it as param[1] */
         *(s32*)(&cur + 1) = i;
         AttractMovieVideo_Decode(&cur);
 
@@ -547,9 +492,6 @@ void AttractMovieVideo_DecoderForOnMemory(void* param)
     }
 }
 
-/* ------------------------------------------------------------------ */
-/* AttractMovieVideo_Decoder (204 bytes)                               */
-/* ------------------------------------------------------------------ */
 void AttractMovieVideo_Decoder(void)
 {
     AttractMoviePlayer* player = &lbl_803A5D60; /* r31 */
@@ -592,9 +534,6 @@ void AttractMovieVideo_Decoder(void)
     }
 }
 
-/* ------------------------------------------------------------------ */
-/* VideoDecodeThreadCancel (60 bytes)                                  */
-/* ------------------------------------------------------------------ */
 void VideoDecodeThreadCancel(void)
 {
     if (lbl_803DD690 != 0)
@@ -604,9 +543,6 @@ void VideoDecodeThreadCancel(void)
     }
 }
 
-/* ------------------------------------------------------------------ */
-/* VideoDecodeThreadStart (52 bytes)                                   */
-/* ------------------------------------------------------------------ */
 void VideoDecodeThreadStart(void)
 {
     if (lbl_803DD690 != 0)
@@ -615,9 +551,6 @@ void VideoDecodeThreadStart(void)
     }
 }
 
-/* ------------------------------------------------------------------ */
-/* CreateVideoDecodeThread (200 bytes)                                 */
-/* ------------------------------------------------------------------ */
 #pragma peephole on
 BOOL CreateVideoDecodeThread(OSPriority param_1, u32 param_2)
 {

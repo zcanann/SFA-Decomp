@@ -4,7 +4,6 @@
 #include "main/dll/moonseedbushstate_struct.h"
 #include "main/dll/IM/IMspacecraft.h"
 
-/* SDK / engine externs */
 extern u32 randomGetRange(int min, int max);
 extern u32 GameBit_Get(int eventId);
 
@@ -153,7 +152,6 @@ FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void MMP_levelcontrol_release(void);
 
 void mmp_trenchfx_hitDetect(void)
@@ -170,12 +168,10 @@ void mmp_trenchfx_initialise(void)
 
 void mmp_gyservent_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int mmp_trenchfx_getExtraSize(void) { return 0x30; }
 int mmp_trenchfx_getObjectTypeId(void) { return 0x0; }
 int mmp_gyservent_getExtraSize(void);
 
-/* mmp_trenchfx_free: expgfx interface freeObject callback. */
 void mmp_trenchfx_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -203,7 +199,6 @@ void mmp_trenchfx_init(int obj, int data)
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E45C0;
 }
 
-/* ObjGroup_RemoveObject + vtable[4] tail-call. */
 extern int* gCarryableInterface;
 
 extern void vecRotateZXY(void* in, void* out);

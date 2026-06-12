@@ -36,8 +36,6 @@ static int FEseqobject_findControlObject(void)
 
 int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void FElevControl_free(void);
 
 void FElevControl_hitDetect(void);
@@ -70,14 +68,12 @@ void dll_144_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int FEseqobject_getExtraSize(void);
 int FElevControl_getExtraSize(void);
 int FElevControl_getObjectTypeId(void);
 int dll_144_getExtraSize(void) { return 0x0; }
 int dll_144_getObjectTypeId(void) { return 0x0; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E56C0;
 
@@ -89,7 +85,6 @@ void dll_144_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E56C0);
 }
 
-/* call(x, N) wrappers. */
 void FElevControl_init(int x);
 
 /*

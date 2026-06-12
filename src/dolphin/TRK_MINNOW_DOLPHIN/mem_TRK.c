@@ -63,5 +63,3 @@ void TRK_fill_mem(void *dest, int value, unsigned long length)
 #undef cDest
 #undef lDest
 }
-
-/* TRK_memcpy and TRK_memset live in Runtime.PPCEABI.H/mem_TRK.s (.init section) */

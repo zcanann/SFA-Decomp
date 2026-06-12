@@ -1,10 +1,8 @@
 #include "main/dll/crate2.h"
 
-
 int dfpstatue1_getExtraSize(void);
 int dfpstatue1_getObjectTypeId(void);
 
-/* Trivial 4b 0-arg blr leaves. */
 void dfpstatue1_free(void);
 
 void dfpstatue1_render(void);
@@ -34,7 +32,6 @@ void dfperchwitch_hitDetect(void)
 {
 }
 
-/* OSReport(string) wrappers. */
 extern void OSReport(const char* fmt, ...);
 void dfperchwitch_update(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
 void dfperchwitch_init(void) { OSReport(sDfperchwitchInitNoLongerSupported); }

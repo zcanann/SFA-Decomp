@@ -538,7 +538,6 @@ void FUN_8019f1dc(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void cfguardian_release(void);
 
 /* Per-object extra state for the CloudRunner guardian
@@ -587,8 +586,6 @@ STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
  * (gcrobotlightbea_getExtraSize == 0xc). */
 
 STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
-
-/* spiritdoorspirit_getExtraSize == 0x1. */
 
 /* EN v1.0 0x8019D8B4  size: 308b  cfpowerbase_init: seed header and the
  * sub's type from spawn params, map the type id (0x54..0x56) to a model
@@ -670,12 +667,10 @@ void cfpowerbase_update(int* obj)
 }
 void cfmaincrystal_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int cfpowerbase_getExtraSize(void) { return 0x6; }
 int cfpowerbase_getObjectTypeId(void) { return 0x1; }
 int cfmaincrystal_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E41D0;
 
 #pragma scheduling on
@@ -686,13 +681,6 @@ void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-/* chained byte bit-extract. */
-
-/* plain forwarder. */
-
-/* Drift-recovery: add new fns with v1.0 names. */
-/* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
 
 #pragma scheduling off
 int cfpowerbase_SeqFn(int p1, int unused, ObjAnimUpdateState* animUpdate)

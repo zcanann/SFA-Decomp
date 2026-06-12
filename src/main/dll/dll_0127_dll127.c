@@ -1,8 +1,6 @@
 #include "main/game_object.h"
 #include "main/screen_transition.h"
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dll_127_free_nop(void)
 {
 }
@@ -11,12 +9,10 @@ void dll_127_hitDetect_nop(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int fuelcell_getExtraSize(void);
 int dll_127_getExtraSize_ret_0(void) { return 0x0; }
 int dll_127_getObjectTypeId(void) { return 0x13; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3D60;
 extern void objRenderFn_8003b8f4(f32);
 
@@ -26,7 +22,6 @@ void dll_127_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E3D60);
 }
 
-/* Drift-recovery: add new fns with v1.0 names. */
 extern void setPendingMapLoad(int v);
 
 #include "main/dll/CF/treasureRelated0177.h"
@@ -98,7 +93,6 @@ void dll_127_init(short* param_1, int param_2)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_127_release_nop(void)
 {
 }
@@ -108,7 +102,3 @@ void dll_127_initialise_nop(void)
 }
 
 extern int* gSHthorntailAnimationInterface;
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */

@@ -10,14 +10,9 @@
 
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 
-/* alphaanimator_getExtraSize == 0x1c. */
-
 STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 
-/* groundanimator_getExtraSize == 0x30. */
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
-
-/* visanimator_getExtraSize == 0x5. */
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
@@ -35,18 +30,8 @@ u8 wallanimator_func0B(int* obj)
 
 extern void mm_free(void* p);
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* Pattern wrappers. */
-
-/* 16b chained patterns. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
-/* wall variant: hashes lha to byte */
 u8 wallanimator_modelMtxFn(int* obj) { return (u8) * (s16*)((char*)((int**)obj)[0x4c / 4] + 0x1c); }
 
 extern f32 lbl_803E3F98;
@@ -206,7 +191,6 @@ int wallanimator_getExtraSize(void)
     return 8;
 }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3FF8;
 
 void wallanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)

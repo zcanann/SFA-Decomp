@@ -533,7 +533,6 @@ void FUN_8019f1dc(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void cfguardian_release(void);
 
 /* Per-object extra state for the CloudRunner guardian
@@ -571,8 +570,6 @@ STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
 STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 
-/* spiritdoorspirit_getExtraSize == 0x1. */
-
 void cfmaincrystal_hitDetect(void)
 {
 }
@@ -589,12 +586,10 @@ void babycloudrunner_hitDetect(void);
 
 extern u8 framesThisStep;
 
-/* 8b "li r3, N; blr" returners. */
 int cfmaincrystal_getExtraSize(void) { return 0x160; }
 int cfmaincrystal_getObjectTypeId(void) { return 0x1; }
 int babycloudrunner_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4210;
 
 #pragma peephole off
@@ -605,14 +600,6 @@ void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-/* chained byte bit-extract. */
-
-/* plain forwarder. */
-
-/* Drift-recovery: add new fns with v1.0 names. */
-/* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
-/* ObjMsg_AllocQueue already declared as undefined */
 
 #pragma scheduling off
 void cfmaincrystal_free(int* obj)

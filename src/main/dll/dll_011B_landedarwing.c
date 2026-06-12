@@ -346,10 +346,8 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     while (true);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void flammablevine_release(void);
 
-/* 8b "li r3, N; blr" returners. */
 int landed_arwing_getExtraSize(void) { return 0x1c; }
 
 extern f32 timeDelta;
@@ -357,18 +355,8 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
 
-/* Carryable impact state machine that spawns break particles, hides, then respawns. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* Fall_Ladders_free: expgfx interface freeObject callback. */
-
-/* coldwatercontrol_init: set float field + OR flag bits. */
-
-/* landed_arwing_free: free child object + detach link. */
 extern void Obj_FreeObject(int obj);
 #pragma scheduling off
 #pragma peephole off
@@ -383,7 +371,6 @@ void landed_arwing_free(int obj)
     }
 }
 
-/* landed_arwing_render: visible-guarded render with extra call. */
 extern f32 lbl_803E3BA4;
 extern void landed_arwing_renderPathEffects(int obj);
 
@@ -814,12 +801,10 @@ void landed_arwing_update(int obj)
     }
 }
 
-/* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
 extern void buttonDisable(int p1, int mask);
 
 void infopoint_update(int obj);
 
-/* landed_arwing_init: flag bits, counter, conditional unlock, set callback. */
 void landed_arwing_init(int obj, int param)
 {
     int* p = ((int**)obj)[0xb8 / 4];
@@ -838,7 +823,6 @@ extern f32 lbl_803E3BC0;
 extern f32 lbl_803E3BC4;
 extern int* objFindTexture(int obj, int textureIndex, int materialIndex);
 
-/* landed arwing hit/animation step: handles impact reactions and spawned debris. */
 void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state)
 {
     int i;
@@ -923,7 +907,6 @@ void landed_arwing_updateHitReaction(int obj, CFLandedArwingState* state)
                                                                   &events);
 }
 
-/* landed arwing material flags: mirrors game bits into the damaged texture state. */
 void landed_arwing_updateDamageTexture(int obj, CFLandedArwingState* state)
 {
     int def;

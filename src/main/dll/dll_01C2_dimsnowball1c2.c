@@ -2,13 +2,6 @@
 #include "ghidra_import.h"
 #include "main/dll/dimicewallstate_struct.h"
 
-
-
-
-
-
-
-
 int dimsnowball1c2_getExtraSize(void)
 {
     return 4;
@@ -20,10 +13,6 @@ int dimsnowball1c2_getExtraSize(void)
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIMExplosion.h"
 
-
-
-
-
 typedef struct Dimsnowball1c2State
 {
     s8 unk0;
@@ -31,9 +20,6 @@ typedef struct Dimsnowball1c2State
     s16 unk2;
     u8 pad4[0x8 - 0x4];
 } Dimsnowball1c2State;
-
-
-
 
 typedef struct Dimsnowball1c2Placement
 {
@@ -53,18 +39,8 @@ typedef struct Dimsnowball1c2Placement
     s16 unk1E;
 } Dimsnowball1c2Placement;
 
-
-
-
-
-
-
-
-
 extern u32 randomGetRange(int min, int max);
 
-
-/* Trivial 4b 0-arg blr leaves. */
 void dimsnowball1c2_free(void)
 {
 }
@@ -83,18 +59,9 @@ void dimsnowball1c2_initialise(void)
 
 void dimgate_free(void);
 
-
-
-
-
-
-
-
-/* 8b "li r3, N; blr" returners. */
 int dimsnowball1c2_getObjectTypeId(void) { return 0x0; }
 int dimgate_SeqFn(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4860;
 extern void objRenderFn_8003b8f4(f32);
 
@@ -105,7 +72,6 @@ void dimsnowball1c2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void dimgate_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
 
 void dimsnowball1c2_init(int obj, u8* p)
 {
@@ -118,9 +84,6 @@ void dimsnowball1c2_init(int obj, u8* p)
 }
 
 void dimicewall_init(int obj, s8* p);
-
-
-
 
 /* dimgate_update: open the gate (hitbox state 1->2) once a type-399 object is
  * present in the trigger list, latching the gamebit. */
@@ -177,7 +140,6 @@ extern void objMove(int* obj, f32 x, f32 y, f32 z);
 
 /* DIMwooddoor_updateFallingDebris: integrate the falling debris under gravity, spin it, and on
  * contact (or scripted trigger) fire the explosion and start the despawn timer. */
-
 
 /* dimicewall_update: on shatter, emit two snow particle bursts and latch the
  * gamebit; otherwise let Tricky push through it. */

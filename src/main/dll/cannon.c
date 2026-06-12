@@ -93,12 +93,6 @@ extern int trickyFn_8013b368(void* p1, f32 f, void* p2);
 
 int trickyGuardFindBaddieTarget(TrickyRuntime * state);
 
-/* FUN_8013ffb8 removed: in v1.0 this address is the start of trickyGuard. */
-
-/* FUN_8013ffbc removed: duplicate of trickyGuardFindBaddieTarget. */
-
-/* FUN_801400fc removed: duplicate of trickyGuard. */
-
 extern int trickyDebugPrint(const char* fmt, ...);
 extern int Objfsa_FindNearestCurveType24(float* pos, int p2, int p3);
 extern int trickyUpdateApproachSpeed(int p1, int p2, f32 f, void* target, int p4);
@@ -596,7 +590,6 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
             trickyState->guardState = 2;
             break;
         }
-    /* falls through into case 5 */
     case 5:
         trickyDebugPrint(strBase + 0x694);
         if ((double)obj->currentMoveProgress >= (double)lbl_803E24D0)
@@ -769,7 +762,6 @@ int trickyGuardFindBaddieTarget(TrickyRuntime* trickyState)
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void fn_8014128C(void)
 {
 }

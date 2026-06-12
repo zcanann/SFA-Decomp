@@ -3,12 +3,6 @@
 
 extern uint GameBit_Get(int eventId);
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
 extern f32 timeDelta;
 
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
@@ -30,16 +24,11 @@ extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
 int fuelcell_getExtraSize(void) { return 0x60; }
 int deathseq_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
-/* Drift-recovery: add new fns with v1.0 names. */
 extern void ObjModel_SetPostRenderCallback(void* model, void* cb);
 extern void mm_free_(void* ptr);
 

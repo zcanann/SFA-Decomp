@@ -79,7 +79,6 @@ void FUN_801ee668(ushort* param_1, int param_2)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
 void fn_801EED7C(void)
@@ -108,7 +107,6 @@ void SB_CloudRunner_initialise(void)
 
 void WM_ObjCreator_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int fn_801EEDAC(void) { return 0x0; }
 int fn_801EEDD8(void) { return 0x2; }
 int fn_801EEDFC(void) { return 0x0; }
@@ -119,7 +117,6 @@ int SB_CloudRunner_getExtraSize(void) { return 0x84; }
 int SB_CloudRunner_getObjectTypeId(void) { return 0x43; }
 int WM_ObjCreator_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 extern f32 lbl_803E5C70;
@@ -131,7 +128,6 @@ f32 fn_801EEDB4(int unused, f32* p)
     return v;
 }
 
-/* copy 3 floats from struct to out args */
 void fn_801EEDE0(int* src, f32* out_x, f32* out_y, f32* out_z)
 {
     *out_x = *(f32*)((char*)src + 0xc);
@@ -139,7 +135,6 @@ void fn_801EEDE0(int* src, f32* out_x, f32* out_y, f32* out_z)
     *out_z = *(f32*)((char*)src + 0x14);
 }
 
-/* virtual call through obj[0xb8][0x10] context, vtable double-deref at +0x68 */
 void shipBattleFn_801eed24(void* obj)
 {
     void* this_ = *(void**)((char*)(*(void**)&((GameObject*)obj)->extra) + 0x10);
@@ -148,7 +143,6 @@ void shipBattleFn_801eed24(void* obj)
     fn(this_);
 }
 
-/* copy 3 floats from obj->b8 [0x4c..0x54] to out args */
 void fn_801EED5C(int* obj, f32* x, f32* y, f32* z)
 {
     char* p = ((GameObject*)obj)->extra;

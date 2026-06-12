@@ -29,10 +29,6 @@ ObjectDescriptor gSPScarabObjDescriptor = {
 #include "main/game_object.h"
 #include "main/dll/DR/DRsimplehuman.h"
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
 volatile ShWGPipe GXWGFifo : (0xCC008000);
 
 static inline void shPos3f32(const f32 x, const f32 y, const f32 z)

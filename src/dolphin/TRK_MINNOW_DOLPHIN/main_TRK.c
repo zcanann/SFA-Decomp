@@ -1,4 +1,3 @@
-/* TODO: restore stripped imported address metadata if needed. */
 
 /**
  * main_TRK.c

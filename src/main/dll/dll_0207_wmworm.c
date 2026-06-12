@@ -1,13 +1,10 @@
 /* DLL 0x0207 — wmworm (WarpZone Module worm enemy). TU: 0x801F3C2C–0x801F3F18. */
 #include "main/dll_000A_expgfx.h"
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void wmworm_hitDetect(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int wmworm_getExtraSize(void) { return 0x1c; }
 int wmworm_getObjectTypeId(void) { return 0x0; }
 
@@ -130,7 +127,6 @@ void wmworm_init(GameObject* obj, WmWormSetup* setup)
     state->homeZ = obj->anim.localPosZ;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void wmworm_release(void)
 {
 }

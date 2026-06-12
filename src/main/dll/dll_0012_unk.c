@@ -1233,8 +1233,6 @@ static inline int Objfsa_FindRomCurveById(int curveId)
 
 f32 curves_lengthFn24(u32 a, u32 b, f32* posA, f32* posB, f32 t1, f32 t2);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dll_12_func0A_nop(void)
 {
 }
@@ -1269,28 +1267,19 @@ void Dummy12_initialise(void)
 
 void doNothing_onTrickyFree(void);
 
-/* 8b "li r3, N; blr" returners. */
 int dll_12_func06_ret_0(void) { return 0x0; }
 
-/* sda21 accessors. */
 extern u32 playerOverride;
 
-/* Pattern wrappers. */
 extern u32 lbl_803DD458;
 void dll_12_func09(void) { lbl_803DD458 = 0x3; }
 
-/* player_init: memset constructor */
 extern void* memset(void* dst, int val, u32 n);
 void player_init(int unused, void* obj, int a, int b);
 
-/* fn_800D9F38 ? large init updating multiple float fields based on b's bytes */
 extern f32 lbl_803E05D0;
 extern f32 lbl_803E05D4;
 extern f32 lbl_803E05D8;
-
-/* player_updateVel */
-
-/* RomCurve_setA4: similar to fn_800D9F38 branch2 with different consts */
 
 static inline f32 RomCurveNode_GetHermiteTangent(void* node, int angleOffset, int useSin)
 {
@@ -1332,8 +1321,6 @@ int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
 #include "main/objlib.h"
 #include "main/game_object.h"
 
-/* Hcurves keeps the ROM curve definitions sorted by id for binary searches. */
-
 static inline u32 RomCurve_GetId(RomCurveDef* curve);
 
 static inline int RomCurve_IsLinkIdValid(int linkId);
@@ -1347,28 +1334,6 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve);
 /*
  * Retail source-tag string: Hcurves.c: MAX_ROMCURVES exceeded!!
  */
-
-/* Forward active hit-segment bounds to ObjHits with the state-derived target mask. */
-
-/* Extended local-point collision setup with a secondary hit type. */
-
-/* Basic local-point collision setup used by path control. */
-
-/* Trivial 4b 0-arg blr leaves. */
-
-/* Pattern wrappers. */
-
-/* getSaveFileStruct: return &saveData (lis/addi). */
-
-/* getLastSavedGameTexts: return (u8*)&gSaveGameData + 0x558. Array form forces lis/addi. */
-
-/* RomCurve_getCurves: *outCount = nRomCurves; return romCurves. */
-
-/* isCheatUnlocked: return registeredDebugOptions & (1 << (idx & 0xff)). */
-
-/* saveFileStruct_unlockCheat: set bit (1 << (idx & 0xff)) in registeredDebugOptions. */
-
-/* curves_findByAction: scan romCurves for matching action curves, return curve id. */
 
 /* RomCurve_segmentIntersectsOriginRayXZ: 2D segment-intersection predicate.
  * Returns 1 if the segment between (x, z) and the origin in the xz-plane

@@ -9,7 +9,6 @@
  * obj->_af |= 8 (redundant with the unconditional prologue store).
  */
 
-/* Trivial 4b 0-arg blr leaves. */
 void cflightwall_free(void)
 {
 }
@@ -32,12 +31,10 @@ void cflightwall_initialise(void)
 
 void barrelpad_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int cflightwall_getExtraSize(void) { return 0x0; }
 int cflightwall_getObjectTypeId(void) { return 0x0; }
 int barrelpad_getExtraSize(void);
 
-/* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3EE8;
 extern void objRenderFn_8003b8f4(f32);
 void cflightwall_render(void) { objRenderFn_8003b8f4(lbl_803E3EE8); }

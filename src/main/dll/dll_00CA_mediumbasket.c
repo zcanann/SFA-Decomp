@@ -1988,10 +1988,8 @@ void fn_8015D3C0(int obj, int sub, int state)
 }
 #pragma fp_contract reset
 
-/* Pattern wrappers. */
 s16 dll_CA_setScale(int* obj) { return *(s16*)((char*)((int**)obj)[0xb8 / 4] + 0x274); }
 
-/* 8b "li r3, N; blr" returners. */
 int dll_CA_getExtraSize_ret_1112(void) { return 0x458; }
 int dll_CA_getObjectTypeId(void) { return 0x49; }
 
@@ -2436,7 +2434,6 @@ static inline u8 scarab_isObjectInList(void* o);
 #pragma dont_inline on
 #pragma dont_inline reset
 
-/* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling on
 #pragma peephole on
 void dll_CA_release_nop(void)
@@ -2468,51 +2465,23 @@ void iceball_release(void);
 
 void iceball_initialise(void);
 
-/* 8b "li r3, N; blr" returners. */
 int chukchuk_getExtraSize(void);
 int chukchuk_getObjectTypeId(void);
 int iceball_getExtraSize(void);
 int iceball_getObjectTypeId(void);
 
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
 void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-/* plain forwarder. */
 void dll_CA_initialise(void) { fn_8015DAE8(); }
 void iceball_free(void);
 
 void chukchuk_update(short* obj);
 
-/* chukchuk_setScale (52B). If low-byte of arg2 (u8) == 0x80, call Sfx_PlayFromObject(obj, SFXkr_jump1). */
 void chukchuk_setScale(int obj, int v);
 
-/* iceball_init (60B). Sets ->f4 = 0xb4, calls ObjHits_DisableObject(obj), then stb 0xff at 0x36. */
 void iceball_init(void* obj);
-
-/* fn_8016050C (32B). Returns 3 if (s8)obj[0x354] < 1 else 6. */
-
-/* grimble_stateHandlerB03 (32B). Returns 5 if (s8)obj[0x354] < 1 else 1. */
-
-/* fn_8015E00C (56B). Two-tier select: <1 -> 3, else if obj[0x346]!=0 -> 6 else 0. */
-
-/* grimble_stateHandlerB05 (92B). If obj2->27b != 0, clear obj->b8->405, call GameBit_Set twice. */
-
-/* fn_801603E8 (84B). If obj2->27b != 0, vtable call through gBaddieControlInterface with (obj, x->unk3F0, -1, 0). */
-
-/* dll_CB_hitDetect (60B). Vtable dispatch through gPlayerInterface with extra args (obj->b8, lbl_803AC5E8). */
-
-/* dll_CB_render (64B). Render variant: if visible && !obj->f4 then objRenderFn(lbl_803E2E8C). */
-
-/* fn_801605A8 (44B). Writes float+state fields into obj and copies two halfwords to out. */
-
-/* fn_80160690 (96B). Like fn_801605A8 but with extra stfs at 0x2a0 and a vtable call. */
-
-/* Drift-recovery: add new fns with v1.0 names to capture asm symbols. */
 
 ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
     {

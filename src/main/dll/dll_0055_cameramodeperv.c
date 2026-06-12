@@ -133,7 +133,6 @@ void FUN_801115e0(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void CameraModeNpcSpeak_release(void);
 
 #pragma scheduling off
@@ -205,10 +204,6 @@ void CameraModeCannon_init(int* p1, int unused, int* p3);
 
 extern CameraModeCloudRunnerState* lbl_803DD5B8;
 
-/* misc 8b leaves */
-
-/* fn_X(lbl); lbl = 0; */
-
 void fn_801101E8(void)
 {
     extern void mm_free(u32); /* #57 */
@@ -227,15 +222,6 @@ void CameraModePerv_free(void)
 
 void dll_19_func11(void);
 
-/* baddie spawn/visibility predicate */
-
-/* compute progress ratio (signed numerator / unsigned denominator) */
-
-/* baddie state reset */
-
-/* dll_19_func19  addr=0x80111EB4  size=0x100  linkage=global */
-
-/* dll_19_func0C  addr=0x80112D80  size=0x114  linkage=global */
 #pragma dont_inline on
 #pragma dont_inline reset
 
@@ -245,7 +231,6 @@ extern f32 lbl_803E1B80;
 extern f32 lbl_803E1B84;
 extern f32 lbl_803E1B88;
 
-/* CameraModePerv_update  addr=0x80110CB0  size=0x10C  linkage=global */
 void CameraModePerv_update(u8* obj)
 {
     CameraObject* camera = (CameraObject*)obj;
@@ -318,14 +303,6 @@ extern f32 lbl_803E1B00;
 
 #include "main/dll/dll19_state.h"
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* 12b chained getters. */
-
-/* misc 8b leaves */
-
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */
 
@@ -361,5 +338,3 @@ extern f32 mathCosf(f32 x);
 
 /* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
  * given speed, snapping when close, easing yaw and pacing the walk anim. */
-
-/* === helper-last relocation (re-split inline suppression; defs moved below their callers to suppress cross-TU-merge auto-inlining) === */

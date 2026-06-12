@@ -21,14 +21,9 @@ extern void* mapGetBlock(int idx);
 
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 
-/* alphaanimator_getExtraSize == 0x1c. */
-
 STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 
-/* groundanimator_getExtraSize == 0x30. */
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
-
-/* visanimator_getExtraSize == 0x5. */
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
@@ -118,7 +113,6 @@ void FUN_80192488(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void waveanimator_update(void);
 
 void visanimator_free(void)
@@ -141,12 +135,10 @@ void visanimator_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int waveanimator_getExtraSize(void);
 int visanimator_getExtraSize(void) { return 0x5; }
 int visanimator_getObjectTypeId(void) { return 0x0; }
 
-/* Pattern wrappers. */
 u8 groundanimator_modelMtxFn(int* obj);
 
 #pragma scheduling off

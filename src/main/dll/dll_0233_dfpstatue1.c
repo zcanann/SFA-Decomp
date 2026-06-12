@@ -60,7 +60,6 @@ void dfpstatue1_updateState(DfpStatue1Object* obj)
 int dfpstatue1_getExtraSize(void) { return 0xa; }
 int dfpstatue1_getObjectTypeId(void) { return 0x0; }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dfpstatue1_free(void)
 {
 }
@@ -111,7 +110,6 @@ void dfperchwitch_render(void);
 
 void dfperchwitch_hitDetect(void);
 
-/* OSReport(string) wrappers. */
 void dfperchwitch_update(void);
 void dfperchwitch_init(void);
 

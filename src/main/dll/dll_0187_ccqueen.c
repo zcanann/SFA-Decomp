@@ -7,10 +7,8 @@
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 
-/* 8b "li r3, N; blr" returners. */
 int ccqueen_getExtraSize(void) { return 0x654; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E45C8;
 extern void objRenderFn_8003b8f4(f32);
 
@@ -89,14 +87,7 @@ FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* 8b "li r3, N; blr" returners. */
 int cclightfoot_getExtraSize(void);
-
-/* render-with-fn(lbl) (no visibility check). */
-
-/* Drift-recovery: add new fns with v1.0 names. */
-
-/* ObjLink_DetachChild and Obj_FreeObject already declared in earlier extern blocks */
 
 #pragma dont_inline on
 #pragma dont_inline reset

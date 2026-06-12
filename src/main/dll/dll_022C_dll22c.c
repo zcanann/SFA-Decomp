@@ -15,24 +15,6 @@
 
 extern uint GameBit_Get(int eventId);
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* plain forwarder. */
-
-/* fn_X(lbl); lbl = 0; */
-
-/* dll_224_hitDetect: render iff obj->field_0x74 set. */
-
-/* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
-
-/* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
-
-/* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
-
 extern void objRenderFn_8003b8f4(f32);
 
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
@@ -58,42 +40,24 @@ extern void objRenderFn_8003b8f4(f32);
 
 STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
 
-/* dfplevelcontrol extra block (extraSize 0xC). */
-
 STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
-
-/* dfpobjcreator extra block (extraSize 0x1C). */
 
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 
-/* DFP_Torch extra block (extraSize 0x10). */
-
 STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
-
-/* dll_22C (raising platform) extra block (extraSize 0x10). */
 
 STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
 
-/* dbegg extra block: rom-curve walker + egg mode machine. */
-
 STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
 
-/* dfpseqpoint extra block (extraSize 0x10). */
-
 STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
-
-/* drakorenergy extra block (extraSize 0xC). */
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
 /* chuka extra block (extraSize 0xC). */
 #include "main/dll/baddie/chuka.h"
 
-/* GCRobotBlast extra block (extraSize 0x8). */
-
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
-
-/* dbholecontrol1 extra block (extraSize 0xC). */
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
@@ -559,7 +523,6 @@ void dll_22C_init(int obj, char* p)
     ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | 0x2000;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dbegg_release(void);
 
 extern u8 lbl_80329514[];
@@ -578,15 +541,11 @@ void dll_22C_initialise_nop(void)
 
 void doorswitch_render(void);
 
-/* 8b "li r3, N; blr" returners. */
 int dll_22C_SeqFn(void) { return 0x0; }
 int dll_22C_getExtraSize_ret_16(void) { return 0x10; }
 int dll_22C_getObjectTypeId(void) { return 0x0; }
 int doorswitch_getExtraSize(void);
 
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E6398;
 
 void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -597,26 +556,12 @@ void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* plain forwarder. */
-
-/* OSReport(string) wrappers. */
-
-/* alpha-flag predicate: returns 7 on fire/clear, 0 on idle */
-
-/* baddie anim update: fires vtable[0x13] when flag set */
-
-/* anim progress accumulator */
-
-/* clear list-actions wrapper: notifies vtable[6] then resets getLActions */
 void fn_80204B6C(int p1)
 {
     (*gExpgfxInterface)->freeSource2((u32)p1);
     getLActions(p1, p1, 0, 0, 0, 0);
 }
 
-/* timed counter: decrement (p1->b8)->0 by timeDelta, then notify */
 extern void fn_802960E8(void* playerObj, int p2);
 extern f32 timeDelta;
 

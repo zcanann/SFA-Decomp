@@ -32,7 +32,6 @@ int warpstone_getObjectTypeId(void)
     return 0x48;
 }
 
-/* void f() { fn_X(N); } pattern. */
 extern void loadUiDll(s32);
 void warpstone_loadBaseUi(void) { loadUiDll(0x1); }
 

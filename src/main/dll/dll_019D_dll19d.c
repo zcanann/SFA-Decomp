@@ -4,11 +4,6 @@
 #include "main/dll/torch1cd_state.h"
 #include "main/effect_interfaces.h"
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 #include "main/obj_placement.h"
@@ -49,8 +44,6 @@ extern undefined4 getLActions();
 extern f32 timeDelta;
 extern u8 framesThisStep;
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dll_19D_render(void)
 {
 }
@@ -63,15 +56,12 @@ void dll_19D_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int dll_19C_getExtraSize(void);
 int dll_19D_getExtraSize(void) { return 0x38; }
 int dll_19D_getObjectTypeId(void) { return 0x0; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E51B0;
 
-/* Stubs to align function set with v1.0 asm. */
 extern void ObjHits_ClearHitVolumes(int obj);
 extern void Obj_FreeObject(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfx);

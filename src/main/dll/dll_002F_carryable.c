@@ -671,7 +671,6 @@ void FUN_800ea9b8(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void SaveGame_func08_nop(void);
 
 void Carryable_release(void)
@@ -684,10 +683,6 @@ void Carryable_initialise(void)
 
 void dll_59_func01_nop(void);
 
-/* 8b "li r3, N; blr" returners. */
-
-/* sda21 accessors. */
-
 void Carryable_init(int obj, int state)
 {
     ObjGroup_AddObject(obj, 0x10);
@@ -698,13 +693,10 @@ void Carryable_init(int obj, int state)
     *(undefined4*)(obj + 0xf8) = 0;
 }
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 void Carryable_free(int x) { ObjGroup_RemoveObject(x, 0x10); }
 
-/* lbl = N (byte) */
 void clearSaveGameLoadingFlag(void);
 
-/* 12b 3-insn patterns. */
 s32 Carryable_isHeld(u8* obj) { return *(s8*)(obj + 0x5); }
 s32 Carryable_getFlag01(u8* state) { return state[7] & 1; }
 
@@ -746,10 +738,8 @@ void Carryable_setFlag02Inverted(u8* state, u8 clear)
     }
 }
 
-/* misc 8b leaves */
 u8 Carryable_getSurfaceType(u8* state) { return state[8]; }
 
-/* if (lbl) fn(lbl); */
 extern void mm_free(u32);
 
 enum
@@ -757,8 +747,6 @@ enum
     SAVEGAME_EMPTY_TASK_HINT = -1,
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
-
-/* conditional init/free pair. */
 
 extern void* Obj_GetPlayerObject(void);
 extern int fn_802966D4(int obj, int* out);

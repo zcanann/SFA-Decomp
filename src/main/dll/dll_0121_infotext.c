@@ -10,15 +10,10 @@
 
 extern int ObjTrigger_IsSet();
 
-/* Trivial 4b 0-arg blr leaves. */
-
 extern void objRenderFn_80041018(int obj);
 
-/* 8b "li r3, N; blr" returners. */
 int infotext_getExtraSize(void) { return 0x4; }
 int cctestinfot_getExtraSize(void);
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 
 extern void objSetHintTextIdx(int obj, int idx);
 

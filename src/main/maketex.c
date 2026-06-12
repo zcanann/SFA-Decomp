@@ -298,7 +298,6 @@ u8 FUN_8007f7c0(void)
     return DAT_803ddd0c;
 }
 
-/* sda21 accessors. */
 extern u8 curSeqNo;
 extern u32 focusedNpc;
 extern s16 seqGlobal2;
@@ -313,17 +312,14 @@ s16 ObjSeq_getGlobal1(void) { return seqGlobal1; }
 void ObjSeq_setGlobal3(u8 x) { seqGlobal3 = x; }
 u8 ObjSeq_getGlobal3(void) { return seqGlobal3; }
 
-/* Pattern wrappers. */
 extern u32 lbl_803DB700;
 void cardSetStatusNoCard2(void) { lbl_803DB700 = 0x3; }
 
-/* lbl = N (byte) */
 void clearCurSeqNo(void) { curSeqNo = 0x0; }
 
 extern f32 lbl_803DEFA0;
 void storeZeroToFloatParam(f32* p) { *p = lbl_803DEFA0; }
 
-/* misc 16b 4-insn patterns. */
 extern u32 lbl_803DB714;
 extern u32 lbl_803DB71C;
 
@@ -344,10 +340,8 @@ extern s16 lbl_803DD0E4;
 extern f32 lbl_803DD0E0;
 extern s16 lbl_8030ECF8[];
 
-/* fn_80080150 (28b): float-not-equal predicate */
 int fn_80080150(f32* p) { return lbl_803DEFA0 != *p; }
 
-/* fn_8008020C (40b): record positional + flags */
 void fn_8008020C(s16 a, s16 b, s16 c, f32 x, f32 y, f32 z, f32 w)
 {
     lbl_803DD0F8 = 1;
@@ -360,7 +354,6 @@ void fn_8008020C(s16 a, s16 b, s16 c, f32 x, f32 y, f32 z, f32 w)
     lbl_803DD0E0 = w;
 }
 
-/* fn_8007FE04 (112b): array remove-and-swap by value */
 int fn_8007FE04(int* arr, int* count_ptr, int target)
 {
     int i;
@@ -392,7 +385,6 @@ found:
     return i;
 }
 
-/* fn_80080360 (36b): write u16 indexed by signed byte * 2 */
 int fn_80080360(int p, int val)
 {
     lbl_8030ECF8[(s8) * (u8*)(p + 0x57)] = (s16)val;

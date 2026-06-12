@@ -124,7 +124,6 @@ void enemymushroom_initialise(void)
 {
 }
 
-/* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E5370;
 
 extern f32 lbl_803E5350;

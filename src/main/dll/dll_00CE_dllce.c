@@ -1542,7 +1542,6 @@ FUN_80161ea0(undefined8 param_1, double param_2, double param_3, undefined8 para
     return uVar3;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_CA_release_nop(void);
 
 void dll_CE_hitDetect_nop(void)
@@ -1576,7 +1575,6 @@ void iceball_release(void);
 
 void iceball_initialise(void);
 
-/* 8b "li r3, N; blr" returners. */
 int dll_CE_getExtraSize_ret_1052(void) { return 0x41c; }
 int dll_CE_getObjectTypeId(void) { return 0x49; }
 int chukchuk_getExtraSize(void);
@@ -1584,33 +1582,23 @@ int chukchuk_getObjectTypeId(void);
 int iceball_getExtraSize(void);
 int iceball_getObjectTypeId(void);
 
-/* Pattern wrappers. */
 s16 dll_CE_setScale(int* obj) { return *(s16*)((char*)((int**)obj)[0xb8 / 4] + 0x274); }
 s16 dll_CB_setScale(int* obj);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-/* plain forwarder. */
 void iceball_free(void);
 
 void chukchuk_update(short* obj);
 
-/* chukchuk_setScale (52B). If low-byte of arg2 (u8) == 0x80, call Sfx_PlayFromObject(obj, SFXkr_jump1). */
 void chukchuk_setScale(int obj, int v);
 
-/* iceball_init (60B). Sets ->f4 = 0xb4, calls ObjHits_DisableObject(obj), then stb 0xff at 0x36. */
 void iceball_init(void* obj);
 
-/* fn_8016050C (32B). Returns 3 if (s8)obj[0x354] < 1 else 6. */
-
-/* grimble_stateHandlerB03 (32B). Returns 5 if (s8)obj[0x354] < 1 else 1. */
-
-/* fn_8015E00C (56B). Two-tier select: <1 -> 3, else if obj[0x346]!=0 -> 6 else 0. */
 #pragma peephole off
 int fn_8015E00C(int p1, u8* obj)
 {
@@ -1619,25 +1607,14 @@ int fn_8015E00C(int p1, u8* obj)
     return 0;
 }
 
-/* grimble_stateHandlerB05 (92B). If obj2->27b != 0, clear obj->b8->405, call GameBit_Set twice. */
 extern void GameBit_Set(int eventId, int value);
 int grimble_stateHandlerB05(int* obj, u8* obj2);
 
-/* fn_801603E8 (84B). If obj2->27b != 0, vtable call through gBaddieControlInterface with (obj, x->unk3F0, -1, 0). */
 extern undefined4* gBaddieControlInterface;
 
-/* dll_CB_hitDetect (60B). Vtable dispatch through gPlayerInterface with extra args (obj->b8, lbl_803AC5E8). */
 extern undefined4* gPlayerInterface;
 
-/* dll_CB_render (64B). Render variant: if visible && !obj->f4 then objRenderFn(lbl_803E2E8C). */
-
-/* fn_801605A8 (44B). Writes float+state fields into obj and copies two halfwords to out. */
-
-/* fn_80160690 (96B). Like fn_801605A8 but with extra stfs at 0x2a0 and a vtable call. */
-
 extern f32 lbl_803E2DC8;
-
-/* Drift-recovery: add new fns with v1.0 names to capture asm symbols. */
 
 #pragma scheduling off
 int fn_8015DE50(int* obj, GroundBaddieState* state)

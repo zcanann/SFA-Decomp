@@ -307,7 +307,6 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     while (true);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void flammablevine_release(void);
 
 void Fall_Ladders_render(void)
@@ -328,7 +327,6 @@ void Fall_Ladders_initialise(void)
 
 void infopoint_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int Fall_Ladders_SeqFn(void) { return 0x0; }
 int Fall_Ladders_getExtraSize(void) { return 0xc; }
 int Fall_Ladders_getObjectTypeId(void) { return 0x0; }
@@ -347,32 +345,14 @@ typedef struct FallLaddersState
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 
-/* Carryable impact state machine that spawns break particles, hides, then respawns. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* Fall_Ladders_free: expgfx interface freeObject callback. */
 void Fall_Ladders_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-/* coldwatercontrol_init: set float field + OR flag bits. */
 extern f32 lbl_803E3B68;
 
 void coldwatercontrol_init(int obj);
-
-/* landed_arwing_free: free child object + detach link. */
-
-/* landed_arwing_render: visible-guarded render with extra call. */
-
-/* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
-
-/* landed_arwing_init: flag bits, counter, conditional unlock, set callback. */
-
-/* landed arwing hit/animation step: handles impact reactions and spawned debris. */
 
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
 extern f32 lbl_803E3B50;

@@ -13,8 +13,6 @@ typedef struct WMColrisePlacement
     f32 unkC;
 } WMColrisePlacement;
 
-/* Per-object extra state for the WM laser beam emitter. */
-
 STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
 
 /* pressureswitch_getExtraSize == 0x8. */
@@ -50,10 +48,6 @@ typedef struct LightSourceState
 } LightSourceState;
 
 STATIC_ASSERT(sizeof(LightSourceState) == 0x1c);
-
-/* dll_1FF_getExtraSize == 0x8 (grabbable hook). */
-
-/* dll_200_getExtraSize == 0x28 (kid attachment actor). */
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
@@ -213,8 +207,6 @@ void FUN_801f2b94(short* param_1)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
-
 extern f32 lbl_803E5D78;
 
 void WM_colrise_free(void)
@@ -317,12 +309,10 @@ void WM_colrise_update(int* obj)
 
 void wmtorch_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int WM_colrise_getExtraSize(void) { return 0x4; }
 int WM_colrise_getObjectTypeId(void) { return 0x0; }
 int wmtorch_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5DC8;
 
@@ -332,10 +322,7 @@ void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E5DC8);
 }
 
-/* if (o->_X == K) return A; else return B; */
 int dll_1FF_getObjectTypeId(int* obj);
-
-/* init pattern: short=-1; byte=0; return 0; */
 
 int WM_colrise_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -344,10 +331,7 @@ int WM_colrise_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-/* fn_X(lbl); lbl = 0; */
 void LaserBeam_release(void);
-
-/* dll_1FF_init: stash (s8 b[0x18] << 8) into a[0] and -0x8000 into a[1]. */
 
 void WM_colrise_init(s16* a, s8* b)
 {

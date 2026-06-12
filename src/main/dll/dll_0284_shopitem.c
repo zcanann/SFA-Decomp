@@ -21,11 +21,7 @@ typedef struct ShopitemPlacement
     u8 pad1A[0x20 - 0x1A];
 } ShopitemPlacement;
 
-/* shopitem_getExtraSize == 0xec (spline-following pushcart item). */
-
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
-
-/* shopkeeper_getExtraSize == 0x9d8. */
 
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
@@ -135,7 +131,6 @@ int fn_801E86F4(int obj, int p2, ObjSeqState* seq)
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void shopkeeper_hitDetect(void);
 
 void shopitem_hitDetect(void)
@@ -152,7 +147,6 @@ void shopitem_initialise(void)
 
 void spscarab_render(void);
 
-/* 8b "li r3, N; blr" returners. */
 int shopitem_getExtraSize(void) { return 0xec; }
 int shopitem_getObjectTypeId(void) { return 0x0; }
 int spscarab_getExtraSize(void);

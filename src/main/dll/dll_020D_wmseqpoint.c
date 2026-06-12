@@ -158,7 +158,6 @@ void wmseqpoint_onSeqFree(int obj)
     }
 }
 
-
 int wmseqpoint_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
 {
     WmSeqPointState* state;
@@ -266,7 +265,6 @@ void wmseqpoint_update(int obj)
     int player;
     int target;
     int i;
-    /* u8 return drops the narrowing node at the skyEnabledLatch store */
     extern u8 getSkyColorFn_80088e08(int skyId);
 
     player = (int)Obj_GetPlayerObject();

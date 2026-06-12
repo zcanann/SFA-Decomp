@@ -329,7 +329,6 @@ void firefly_init(int obj, int def)
     }
 }
 
-/* Pattern wrappers. */
 int firefly_getExtraSize(void) { return FIREFLY_EXTRA_SIZE; }
 int firefly_getObjectTypeId(void) { return 0x0; }
 

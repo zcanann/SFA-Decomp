@@ -8,18 +8,14 @@
 
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dll_199_hitDetect(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int nwsh_levcon_getExtraSize(void);
 int dll_199_getExtraSize(void) { return 0x14; }
 int dll_199_getObjectTypeId(void) { return 0x0; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5150;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5158;
@@ -476,7 +472,6 @@ void dll_199_init(int obj, int def)
 
 extern u8 Obj_IsLoadingLocked(void);
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_199_release(void)
 {
 }
@@ -486,7 +481,3 @@ void dll_199_initialise(void)
 }
 
 void dll_19A_free(void);
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */

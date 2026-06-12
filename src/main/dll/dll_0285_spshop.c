@@ -8,11 +8,6 @@
 
 extern u32 randomGetRange(int min, int max);
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 #include "ghidra_import.h"
@@ -93,7 +88,6 @@ void FUN_801e55c0(undefined8 param_1, double param_2, double param_3, undefined8
 {
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void SB_FireBall_release(void);
 
 void shop_hitDetect(void)
@@ -108,17 +102,14 @@ void shop_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int SB_CloudBall_getExtraSize(void);
 int shop_getExtraSize(void) { return 0x5; }
 int shop_getObjectTypeId(void) { return 0x0; }
 int fn_801E66DC(void);
 
-/* 16b chained patterns. */
 s32 shop_getStateField1(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x1); }
 s32 shop_setScale(int* obj) { return *(s8*)((char*)((int**)obj)[0xb8 / 4] + 0x0); }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E58E8;
 extern f32 lbl_803E59C8;
 extern int GameBit_Get(int);
@@ -248,7 +239,6 @@ void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4)
     *out_b4 = b[4];
 }
 
-/* shop_getItem* helpers -- table lookup */
 int shop_getItemPrice(int p, int idx)
 {
     if (idx >= 0 && idx < 0x3c)

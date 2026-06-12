@@ -129,7 +129,6 @@ u32 synthSendKeyOff(u32 handle)
     return found;
 }
 
-/* Stub kept so synth_control.c can link; not in v1.0 binary at this address. */
 void synthDispatchDelayedAction(SynthFade* fade)
 {
     (void)fade;

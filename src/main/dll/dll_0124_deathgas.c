@@ -3,12 +3,7 @@
 
 extern uint GameBit_Get(int eventId);
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
 int deathgas_getExtraSize(void) { return 0x10; }
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 
 extern void objSetHintTextIdx(int obj, int idx);
 
@@ -24,13 +19,6 @@ extern f32 timeDelta;
 extern undefined4 ObjHits_RecordObjectHit();
 extern undefined8 ObjGroup_RemoveObject();
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* Drift-recovery: add new fns with v1.0 names. */
 extern f32 lbl_803E3CC0;
 
 typedef struct

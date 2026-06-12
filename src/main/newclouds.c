@@ -103,7 +103,6 @@ void newclouds_initialise(void)
     lbl_803DD1C0 = 0;
 }
 
-/* Pattern wrappers. */
 void dll_07_func0A_nop(void)
 {
 }

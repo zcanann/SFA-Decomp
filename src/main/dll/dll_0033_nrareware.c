@@ -8,8 +8,6 @@ extern u8 lbl_803DD608;
 extern f32 lbl_803E1D08;
 extern f32 lbl_803E1D0C;
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void n_rareware_render(void)
 {
     extern u8 lbl_803DD609; /* #57 */
@@ -117,5 +115,3 @@ void n_rareware_initialise(void)
     lbl_803DD609 = 0;
     lbl_803DD608 = 0;
 }
-
-/* Trivial 4b 0-arg blr leaves. */

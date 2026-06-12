@@ -41,7 +41,6 @@ void spitembeam_init(int obj)
     ((GameObject*)obj)->objectFlags = (ushort)(((GameObject*)obj)->objectFlags | 0x6000);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void spdrape_release(void);
 
 void spitembeam_free(void)
@@ -103,7 +102,6 @@ void spitembeam_update(int* obj)
     }
 }
 
-/* 8b "li r3, N; blr" returners. */
 int spitembeam_getExtraSize(void) { return 0x0; }
 int spitembeam_getObjectTypeId(void) { return 0x0; }
 

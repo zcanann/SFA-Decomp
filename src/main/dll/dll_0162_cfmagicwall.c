@@ -3,13 +3,6 @@
 #include "main/dll/drexplodable_types.h"
 #include "main/obj_placement.h"
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* explodable_getExtraSize == 0x6e8 (gas-vent explodable). */
-/* Per-fragment record inside DrExplodableState (stride 0x70). */
-
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 
 STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
@@ -95,7 +88,6 @@ FUN_801a4810(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void cfforcefield_release(void);
 
 void cfmagicwall_free(void)
@@ -116,14 +108,10 @@ void cfmagicwall_initialise(void)
 
 void cflevelcontrol_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int cfmagicwall_getExtraSize(void) { return 0x0; }
 int cfmagicwall_getObjectTypeId(void) { return 0x0; }
 int cflevelcontrol_getExtraSize(void);
 
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E43D8;
 extern f32 lbl_803E43DC;
@@ -193,11 +181,6 @@ void cfmagicwall_update(int obj)
 
 extern int ObjList_FindObjectById(int objectId);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* state encode: ((obj->_X)->_Y << shift) | const. */
-
-/* byte-to-short shift8 pattern. */
 void cfmagicwall_init(s16* dst, void* src)
 {
     s8 v = *((s8*)src + 0x18);
@@ -205,10 +188,7 @@ void cfmagicwall_init(s16* dst, void* src)
     *dst = t;
 }
 
-/* attractor_setScale: branch on s8 flag at +0x19 of obj->_4C; if set return s16 at +0x1a, else 0. */
 int attractor_setScale(int* obj);
-
-/* attractor_init: ObjGroup_AddObject(obj, 0x1e); byte<<8 -> sth at obj. */
 
 /* slidingdoor_SeqFn: slidingdoor "think" routine. Tracks whether the player or
  * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
@@ -232,8 +212,6 @@ int attractor_setScale(int* obj);
  * slidingdoor_SeqFn as obj->thinkRoutine; convert data[0x21] to f32, scale by
  * lbl_803E43C0 and obj->_50->[4], stash at obj+0x8; then clear bits 5..7 of
  * obj->_b8->_0. */
-
-/* cfforcefield_init: byte<<8 sth; insert GameBit_Get bit into bit-7 of *(u8*)obj->_B8; storeZeroToFloatParam. */
 
 /* Exploded debris setup: seed object angles, linear velocity, angular velocity,
  * ground clearance, and the randomized lifetime countdown. */

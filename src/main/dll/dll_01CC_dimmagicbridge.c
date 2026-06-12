@@ -361,7 +361,6 @@ void FUN_801b5d00(int param_1, int param_2)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void explosion_hitDetect(void);
 
 void dimmagicbridge_free(void)
@@ -461,13 +460,11 @@ void dimmagicbridge_init(u8* obj, u8* params)
     }
 }
 
-/* 8b "li r3, N; blr" returners. */
 int explosion_getExtraSize(void);
 int dimmagicbridge_getExtraSize(void) { return 0x68; }
 int dimmagicbridge_getObjectTypeId(void) { return 0x0; }
 int dim_levelcontrol_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
 extern f32 lbl_803E4A18;
 
@@ -478,8 +475,6 @@ void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-/* conditional init/free pair. */
 
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
@@ -521,12 +516,6 @@ void dimmagicbridge_update(int obj)
 /* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
  * and using mask 0x6000 + initial state byte 3 at +0. */
 void dimwooddoor2_init(u8* obj, u8* params);
-
-/* explosion_free: model-light release if present. */
-
-/* explosion_getObjectTypeId: tile/index lookup capped by table count. */
-
-/* dim_levelcontrol_free: gameplay music + time-of-day reset. */
 
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */

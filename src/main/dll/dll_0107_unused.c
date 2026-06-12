@@ -11,15 +11,9 @@
 #include "main/audio/sfx_ids.h"
 #include "main/resource.h"
 
-/* scarab_getExtraSize == 0x34 (collectible money beetle). */
-
 STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
-/* dll_107_getExtraSize == 0x2c (CF wind lift / blow vent). */
-
 STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
-
-/* portalspelldoor_getExtraSize == 0x10. */
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
@@ -493,7 +487,6 @@ void fn_801862CC(int obj, int p)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void dll_107_hitDetect_nop(void)
 {
 }
@@ -506,7 +499,6 @@ void dll_107_initialise_nop(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int dll_107_getExtraSize_ret_44(void) { return 0x2c; }
 int dll_107_getObjectTypeId(void) { return 0x0; }
 

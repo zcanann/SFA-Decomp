@@ -129,8 +129,6 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void FEseqobject_free(void)
 {
 }
@@ -157,13 +155,11 @@ void FElevControl_release(void);
 
 void FElevControl_initialise(void);
 
-/* 8b "li r3, N; blr" returners. */
 int FEseqobject_getExtraSize(void) { return 0x1; }
 int FEseqobject_getObjectTypeId(void) { return 0x0; }
 int FElevControl_getExtraSize(void);
 int FElevControl_getObjectTypeId(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -174,7 +170,6 @@ void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-/* call(x, N) wrappers. */
 void FElevControl_init(int x);
 
 /*

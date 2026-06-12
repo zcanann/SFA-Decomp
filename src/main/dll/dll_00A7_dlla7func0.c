@@ -215,8 +215,6 @@ extern u32 randomGetRange(int min, int max);
 
 void dll_A6_func03(short* sourceObj, int variant, u8* posSource, uint flags);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dll_A7_func01_nop(void)
 {
 }
@@ -226,5 +224,3 @@ void dll_A7_func00_nop(void)
 }
 
 void dll_A8_func01_nop(void);
-
-/* 8b "li r3, N; blr" returners. */

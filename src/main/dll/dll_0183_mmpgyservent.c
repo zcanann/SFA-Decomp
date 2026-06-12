@@ -4,7 +4,6 @@
 #include "main/dll/moonseedbushstate_struct.h"
 #include "main/dll/IM/IMspacecraft.h"
 
-/* SDK / engine externs */
 extern u32 randomGetRange(int min, int max);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern u32 GameBit_Get(int eventId);
@@ -164,7 +163,6 @@ FUN_801a7874(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void MMP_levelcontrol_release(void);
 
 void mmp_gyservent_free(void)
@@ -187,12 +185,10 @@ void mmp_gyservent_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int MoonSeedBush_getExtraSize(void);
 int mmp_gyservent_getExtraSize(void) { return 0x0; }
 int mmp_gyservent_getObjectTypeId(void) { return 0x0; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E44D0;
 extern void objRenderFn_8003b8f4(f32);
 

@@ -29,7 +29,6 @@ void FUN_801638bc(int param_1, int param_2, int param_3, int param_4, int param_
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void cannonclaw_release(void);
 
 #pragma scheduling off
@@ -114,7 +113,6 @@ void tumbleweedbush_init(u8* obj, u8* params, int param3)
     }
 }
 
-/* 8b "li r3, N; blr" returners. */
 int tumbleweedbush_getExtraSize(void) { return 0x54; }
 int tumbleweedbush_getObjectTypeId(void) { return 0x0; }
 
@@ -198,14 +196,12 @@ void tumbleweedbush_update(int* obj)
     }
 }
 
-/* 16b chained patterns. */
 void fn_80163980(int* obj)
 {
     u8 v = 0x7;
     *((u8*)((int**)obj)[0xb8 / 4] + 0x278) = v;
 }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E2F44;
 extern void objRenderFn_8003b8f4(f32);
 
@@ -215,7 +211,6 @@ void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0) objRenderFn_8003b8f4(lbl_803E2F44);
 }
 
-/* byte-to-short shift8 pattern. */
 void cannonclaw_init(s16* dst, void* src);
 
 /* tumbleweedbush_findNearestActive: scan all type-0x31 objects, pick the closest one whose

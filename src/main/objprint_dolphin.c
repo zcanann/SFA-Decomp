@@ -2390,7 +2390,6 @@ undefined4 FUN_80043E64(uint* param_1, int param_2, int param_3)
     return 1;
 }
 
-/* sda21 accessors. */
 extern u32 curObjMtx;
 extern u8 lbl_803DCC29;
 extern u32 lbl_803DCC74;
@@ -2398,7 +2397,6 @@ void objSetMtxFn_800412d4(u32 x) { curObjMtx = x; }
 void set_shadowFlag_803dcc29(u8 x) { lbl_803DCC29 = x; }
 u32 isRomListLoading(void) { return lbl_803DCC74; }
 
-/* Pattern wrappers. */
 extern u32 lbl_803DCC70;
 void clearForceLoadImmediately(void) { lbl_803DCC70 = 0x0; }
 void setForceLoadImmediately(void) { lbl_803DCC70 = 0x1; }
@@ -5648,7 +5646,6 @@ void dvdReadCb_80041d30(s32 result, void* fileInfo)
     }
 }
 
-/* Resource read-completion callbacks: close DVD, recycle file slot, mark loaded-flag. */
 void animReadCb(s32 result, void* fileInfo)
 {
     if (result < 0)

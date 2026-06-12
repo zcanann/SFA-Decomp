@@ -167,7 +167,6 @@ FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void animsharpclaw_hitDetect(void);
 
 void MoonSeedPlantingSpot_hitDetect(void)
@@ -246,7 +245,6 @@ void MoonSeedPlantingSpot_init(int* obj, u8* init)
 }
 void ccgasvent_render(void);
 
-/* 8b "li r3, N; blr" returners. */
 int MoonSeedPlantingSpot_render2(void) { return 0x2; }
 int MoonSeedPlantingSpot_modelMtxFn(void) { return 0x0; }
 int MoonSeedPlantingSpot_func0B(void) { return 0x0; }
@@ -254,10 +252,8 @@ int MoonSeedPlantingSpot_getExtraSize(void) { return 0x18; }
 int MoonSeedPlantingSpot_getObjectTypeId(void) { return 0x1; }
 int ccgasvent_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 void MoonSeedPlantingSpot_free(int x) { ObjGroup_RemoveObject(x, 0x2e); }
 void ccgasvent_free(int x);
 
@@ -268,7 +264,6 @@ int MoonSeedPlantingSpot_SeqFn(int obj)
     return 0;
 }
 
-/* CCGasVentControl_SeqFn: trampoline to CCGasVentControlFn_801a9fd0 passing (obj, obj->extra), returns 0. */
 extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
 
 extern f32 timeDelta;

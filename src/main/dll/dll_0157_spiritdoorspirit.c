@@ -537,7 +537,6 @@ void FUN_8019f1dc(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void cfguardian_release(void);
 
 /* Per-object extra state for the CloudRunner guardian
@@ -605,27 +604,17 @@ void spiritdoorspirit_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int cfguardian_getExtraSize(void);
 int spiritdoorspirit_getExtraSize(void) { return 0x1; }
 int spiritdoorspirit_getObjectTypeId(void) { return 0x0; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4190;
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
 void spiritdoorspirit_free(int x) { ObjGroup_RemoveObject(x, 0x4e); }
 #pragma scheduling reset
 
-/* chained byte bit-extract. */
-
-/* plain forwarder. */
-
-/* Drift-recovery: add new fns with v1.0 names. */
 extern f32 lbl_803E42B8;
-/* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
-/* ObjMsg_AllocQueue already declared as undefined */
 
 #pragma scheduling off
 #pragma peephole off

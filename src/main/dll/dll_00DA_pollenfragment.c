@@ -149,8 +149,6 @@ void FUN_8016b228(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void pinponspike_render(void);
 
 void pinponspike_hitDetect(void);
@@ -194,7 +192,6 @@ void pollenfragment_free(int obj)
 
 void mikabomb_free(int obj, int mode);
 
-/* 8b "li r3, N; blr" returners. */
 int pinponspike_getExtraSize(void);
 int pinponspike_getObjectTypeId(void);
 int pollen_getExtraSize(void);
@@ -203,7 +200,6 @@ int pollenfragment_getExtraSize(void) { return 0x28; }
 int pollenfragment_getObjectTypeId(void) { return 0x0; }
 int mikabomb_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 
 void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);

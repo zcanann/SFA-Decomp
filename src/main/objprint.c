@@ -1211,7 +1211,6 @@ void FUN_8003c10c(int param_1, int* param_2)
     return;
 }
 
-/* sda21 accessors. */
 extern u32 lbl_803DCC10;
 extern u8 lbl_803DCC3C;
 void fn_8003B950(u32 x) { lbl_803DCC10 = x; }
@@ -1229,13 +1228,11 @@ void fn_8003B608(s16 a, s16 b, s16 c)
     lbl_803DCC08 = 1;
 }
 
-/* 12b "*p = -1" */
 void fn_80039264(s32* p)
 {
     *p = -1;
 }
 
-/* 12b sda accessor return */
 extern int lbl_802CAE88[10];
 
 void* seqFn_800394a0(void)
@@ -1243,7 +1240,6 @@ void* seqFn_800394a0(void)
     return lbl_802CAE88;
 }
 
-/* 40b 4-byte field setter triplet+flag. */
 extern u8 lbl_803DCC09;
 extern u8 lbl_803DCC0A;
 extern u8 lbl_803DCC0B;
@@ -1330,7 +1326,6 @@ void fn_8003B5E0(int a, int b, int c, u8 d)
     lbl_803DCC0A = d;
 }
 
-/* 100b texture lookup by byte tag. */
 void* objFindTexture(void* obj, int target)
 {
     void* result = NULL;
@@ -1358,7 +1353,6 @@ void* objFindTexture(void* obj, int target)
     return result;
 }
 
-/* 60b objRenderShadow guard. */
 extern void objRenderShadow(void* obj);
 
 void objRenderShadowIfVisible(void* obj)

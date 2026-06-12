@@ -150,7 +150,4 @@ int fn_8010A47C(int curve, int* count, int tag)
     return curve;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void CameraModeViewfinder_release(void);
-
-/* fn_X(lbl); lbl = 0; */

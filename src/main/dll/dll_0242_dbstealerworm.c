@@ -14,29 +14,7 @@
 
 extern uint GameBit_Get(int eventId);
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* plain forwarder. */
-
-/* fn_X(lbl); lbl = 0; */
-
-/* dll_224_hitDetect: render iff obj->field_0x74 set. */
-
-/* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
-
-/* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
-
-/* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
-
 extern void objRenderFn_8003b8f4(f32);
-
-/* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
-
-/* ==== v1.0 recovered functions (drift additions) ==== */
 
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
@@ -63,31 +41,17 @@ extern f32 sqrtf(f32 x);
 
 STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
 
-/* dfplevelcontrol extra block (extraSize 0xC). */
-
 STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
-
-/* dfpobjcreator extra block (extraSize 0x1C). */
 
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 
-/* DFP_Torch extra block (extraSize 0x10). */
-
 STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
-
-/* dll_22C (raising platform) extra block (extraSize 0x10). */
 
 STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
 
-/* dbegg extra block: rom-curve walker + egg mode machine. */
-
 STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
 
-/* dfpseqpoint extra block (extraSize 0x10). */
-
 STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
-
-/* drakorenergy extra block (extraSize 0xC). */
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
@@ -119,11 +83,7 @@ typedef struct DbstealerwormPlacement
     u8 pad2F[0x30 - 0x2F];
 } DbstealerwormPlacement;
 
-/* GCRobotBlast extra block (extraSize 0x8). */
-
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
-
-/* dbholecontrol1 extra block (extraSize 0xC). */
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
@@ -919,8 +879,6 @@ void FUN_80204320(int param_1, int param_2, int param_3, int param_4, int param_
 
 void fn_80204320(int obj);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dbstealerworm_release(void)
 {
 }
@@ -997,15 +955,12 @@ void dbstealerworm_free(int* obj)
 
 void dbholecontrol1_init(int* obj, u8* params);
 
-/* 8b "li r3, N; blr" returners. */
 int dbstealerworm_getExtraSize(void) { return 0x460; }
 int dbstealerworm_getObjectTypeId(void) { return 0x49; }
 int dbholecontrol1_getExtraSize(void);
 
-/* Pattern wrappers. */
 s16 DBstealerworm_setScale(int* obj) { return ((BaddieState*)((int**)obj)[0xb8 / 4])->controlMode; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E6390;
 
 extern int gDBStealerWormStateHandlersA[];
@@ -1018,16 +973,11 @@ void dbstealerworm_hitDetect(int obj)
 
 void GCRobotBlast_init(int obj, s8* p);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* plain forwarder. */
 extern void DBstealerwo_setFuncPtrs_80203c78(void);
 void dbstealerworm_initialise(void) { DBstealerwo_setFuncPtrs_80203c78(); }
 
-/* OSReport(string) wrappers. */
 extern void OSReport(const char* fmt, ...);
 
-/* alpha-flag predicate: returns 7 on fire/clear, 0 on idle */
 int dbstealerworm_stateHandlerB00(int p1, int p2)
 {
     BaddieState* p = (BaddieState*)p2;
@@ -1046,7 +996,6 @@ int dbstealerworm_stateHandlerB00(int p1, int p2)
     return 0;
 }
 
-/* baddie anim update: fires vtable[0x13] when flag set */
 int dbstealerworm_stateHandlerB03(int p1, int p2)
 {
     GroundBaddieState* state = ((GameObject*)p1)->extra;
@@ -1058,7 +1007,6 @@ int dbstealerworm_stateHandlerB03(int p1, int p2)
     return 0;
 }
 
-/* anim progress accumulator */
 extern f32 lbl_803E62BC;
 
 int dbstealerworm_stateHandlerB01(int p1, int p2)
@@ -1073,10 +1021,8 @@ int dbstealerworm_stateHandlerB01(int p1, int p2)
     return 0;
 }
 
-/* clear list-actions wrapper: notifies vtable[6] then resets getLActions */
 void fn_80204B6C(int p1);
 
-/* timed counter: decrement (p1->b8)->0 by timeDelta, then notify */
 extern f32 timeDelta;
 
 int dbstealerworm_stateHandlerA00(int obj, int p2)

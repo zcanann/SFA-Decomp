@@ -12,12 +12,8 @@ extern void* Obj_GetPlayerObject(void);
 
 extern int ObjTrigger_IsSet();
 
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
 int cctestinfot_getExtraSize(void) { return 0x8; }
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 void trickyguardspot_free(TrickyGuardSpotObject* obj);
 
 extern void objSetHintTextIdx(int obj, int idx);

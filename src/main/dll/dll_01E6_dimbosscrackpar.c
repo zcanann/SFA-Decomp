@@ -16,8 +16,6 @@ typedef struct DimbosscrackparPlacement
 
 extern EffectInterface** gPartfxInterface;
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void dimbosscrackpar_hitDetect(void)
 {
 }
@@ -79,9 +77,6 @@ void dimbosscrackpar_init(s16* obj, s8* def)
 
 void dimbossfire_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int dimbosscrackpar_getExtraSize(void) { return 0x0; }
 int dimbosscrackpar_getObjectTypeId(void) { return 0x0; }
 int dimbossfire_getExtraSize(void);
-
-/* render-with-objRenderFn_8003b8f4 pattern. */

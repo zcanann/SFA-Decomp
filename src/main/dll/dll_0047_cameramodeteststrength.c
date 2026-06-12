@@ -158,12 +158,9 @@ void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject* camera, f32* po
                                     (f64)lbl_803E18B4, (f64)lbl_803E18B8);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void CameraModeTestStrength_copyToCurrent_nop(void)
 {
 }
-
-/* fn_X(lbl); lbl = 0; */
 
 void CameraModeTestStrength_free(void)
 {
@@ -494,7 +491,6 @@ void CameraModeTestStrength_init(short* cam, int param2, int* param3)
     lbl_803DD560->pathProgress = t;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void CameraModeTestStrength_release(void)
 {
 }

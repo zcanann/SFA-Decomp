@@ -45,18 +45,13 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 
 extern u32 GameBit_Get(int eventId);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 __declspec(section ".sdata") extern char lbl_803DBD90[];
 
-/* 8b "li r3, N; blr" returners. */
 int doorlock_getExtraSize(void) { return 0x1; }
 
-/* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3780;
 extern void objRenderFn_8003b8f4(f32);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 void doorlock_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 
 void mmp_bridge_init(int* obj);
@@ -275,16 +270,6 @@ void doorlock_init(short* obj, DoorLockPlacement* config)
 }
 
 undefined4 FUN_8017c608(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, int param_9, undefined4 param_10 , ObjAnimUpdateState* animUpdate, undefined4 param_12, int param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
-
-/* Trivial 4b 0-arg blr leaves. */
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* Drift-recovery: add new fns with v1.0 names. */
 
 /* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read

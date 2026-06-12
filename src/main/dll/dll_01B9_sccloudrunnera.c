@@ -3,8 +3,6 @@
 #include "main/dll/scmusictreesetup_struct.h"
 #include "main/game_object.h"
 
-/* sc_levelcontrol_getExtraSize == 0x24 (CloudRunner race level control). */
-
 extern void objRenderFn_8003b8f4(f32);
 extern void Sfx_PlayFromObject(int a, int b);
 extern u8 Obj_IsLoadingLocked(void);

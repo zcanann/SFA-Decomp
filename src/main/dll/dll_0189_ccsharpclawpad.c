@@ -7,8 +7,6 @@
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 
-/* 8b "li r3, N; blr" returners. */
-
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int id);
 
@@ -72,14 +70,9 @@ FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* 8b "li r3, N; blr" returners. */
 int cclightfoot_getExtraSize(void);
 int ccsharpclawpad_getExtraSize(void) { return 0x4; }
 int ccpedstal_getExtraSize(void);
-
-/* render-with-fn(lbl) (no visibility check). */
-
-/* Drift-recovery: add new fns with v1.0 names. */
 
 #pragma scheduling off
 #pragma peephole off
@@ -90,8 +83,6 @@ void ccsharpclawpad_init(int* obj, int* def)
 }
 
 void cclevcontrol_free(void);
-
-/* ObjLink_DetachChild and Obj_FreeObject already declared in earlier extern blocks */
 
 #pragma dont_inline on
 #pragma dont_inline reset

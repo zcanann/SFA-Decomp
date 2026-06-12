@@ -656,7 +656,6 @@ void FUN_800ea9b8(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void SaveGame_func08_nop(void);
 
 void dll_5E_func01_nop(void)
@@ -688,8 +687,6 @@ enum
     SAVEGAME_EMPTY_TASK_HINT = -1,
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
-
-/* conditional init/free pair. */
 
 void dll_60_func03(u8* sourceObj, int variant, u8* posSource, uint flags);
 

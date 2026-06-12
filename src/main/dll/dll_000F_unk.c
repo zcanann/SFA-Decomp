@@ -20,21 +20,14 @@ void FUN_800d7780(undefined param_1)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void Checkpoint_release(void);
 
 void dll_0F_func19_nop(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int Dummy04_func24_ret_0(void);
 
-/* sda21 accessors. */
-
-/* Pattern wrappers. */
-
-/* 12b 3-insn patterns. */
 extern u32 lbl_803DD43C;
 extern u32 lbl_803DD438;
 
@@ -44,14 +37,8 @@ void player_setAnimIds(int unused1, int unused2, u32 a, u32 b)
     lbl_803DD438 = b;
 }
 
-/* misc 8b leaves */
 extern f32 screenTransitionAlpha;
 
-/* Pattern wrappers. */
-
-/* fcmp-eq-to-bool. */
-
-/* multi-store leaf (single float broadcast). */
 extern f32 lbl_803E0570;
 
 void player_clearXZvel(int* obj, int* state)
@@ -64,7 +51,6 @@ void player_clearXZvel(int* obj, int* state)
     ((BaddieState*)state)->animSpeedB = z;
 }
 
-/* Checkpoint table initialiser. */
 extern u32 lbl_8039CA98[];
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern f32 lbl_803E0588;
@@ -690,7 +676,6 @@ void player_setScale(f32 dt, short* moveState, uint* obj, uint flags)
 
 undefined4 FUN_800d9de0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefined8 param_4, undefined8 param_5, undefined8 param_6, undefined8 param_7, undefined8 param_8, float* param_9, float param_10, undefined4 param_11, undefined4 param_12, undefined4 param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16);
 
-/* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling on
 #pragma peephole on
 void player_release(void)
@@ -701,15 +686,9 @@ void player_initialise(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
-
-/* sda21 accessors. */
 extern u32 playerOverride;
 void player_setOverride(u32 x) { playerOverride = x; }
 
-/* Pattern wrappers. */
-
-/* player_init: memset constructor */
 extern void* memset(void* dst, int val, u32 n);
 extern f32 lbl_803E05BC;
 #pragma scheduling off
@@ -727,11 +706,8 @@ void player_init(int unused, void* obj, int a, int b)
     *(u8*)((char*)obj + 0x358) = 0;
 }
 
-/* fn_800D9F38 ? large init updating multiple float fields based on b's bytes */
-
 int fn_800D9F38(void* a, void* b);
 
-/* player_updateVel */
 extern u8 lbl_803DD44E;
 extern u8 lbl_803DD44F;
 extern u8 lbl_803DD450;
@@ -1068,16 +1044,10 @@ void player_updateVel(char* p, char* obj, int unused)
     }
 }
 
-/* RomCurve_setA4: similar to fn_800D9F38 branch2 with different consts */
 extern f32 lbl_803E0610;
 
 void RomCurve_setA4(void* a, void* b);
 
-/* RomCurve_stepClamped: keep the curve phase just inside the endpoints, then advance it. */
-
-/* UIController dispatch through the shared GameUI interface. */
-
-/* player_setState */
 void player_setState(void* ctx, void* p, int new_state)
 {
     void* q;
@@ -1104,10 +1074,7 @@ end:
     if (q != 0) *(u8*)((char*)q + 0x70) = 0;
 }
 
-/* walkPath_writeU16LE: split a path id into two little-endian bytes. */
 void walkPath_writeU16LE(u32 v, u8* dst);
-
-/* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
 
 void fn_800D915C(int p1, int* obj, void* fnTable, f32 fval)
 {

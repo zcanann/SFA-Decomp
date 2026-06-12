@@ -27,7 +27,6 @@ extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
 extern f32 PSVECMag(f32 * v);
 extern f32 sqrtf(f32 x);
 
-/* Hcurves keeps the ROM curve definitions sorted by id for binary searches. */
 extern u32 sCurvesCachedHitCount;
 extern u32 sCurvesCachedHitObj;
 extern f32 lbl_803E0678;
@@ -1668,7 +1667,6 @@ void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoin
     state->flags |= CURVES_COLLISION_STATE_HIT_SEGMENTS;
 }
 
-/* Forward active hit-segment bounds to ObjHits with the state-derived target mask. */
 extern void hitDetectFn_800691c0(void* a, void* b, u8 mask, int e);
 
 void dll_15_func07(void* arg1, CurvesCollisionState* state)
@@ -1689,7 +1687,6 @@ void dll_15_func07(void* arg1, CurvesCollisionState* state)
     }
 }
 
-/* Extended local-point collision setup with a secondary hit type. */
 void curves_setLocalPointCollisionEx(CurvesCollisionState* state, int pointCount,
                                      f32* localPointPositions, f32* localPointRadii,
                                      int primaryHitType, int secondaryHitType)
@@ -1704,7 +1701,6 @@ void curves_setLocalPointCollisionEx(CurvesCollisionState* state, int pointCount
     state->activeTimer = 0xa;
 }
 
-/* Basic local-point collision setup used by path control. */
 void dll_15_func04(CurvesCollisionState* state, int pointCount, f32* localPointPositions,
                    f32* localPointRadii, int primaryHitType)
 {
@@ -1763,8 +1759,6 @@ void saveFileStruct_setCheatActive(uint optionIndex, u8 active)
     }
 }
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void RomCurve_initialise(void);
 
 void dll_15_release_nop(void)
@@ -1794,14 +1788,10 @@ void loadSaveSettings(void)
     audioSetVolumes(saveData.speechVolume, 10, 0, 0, 1);
 }
 
-/* Pattern wrappers. */
-
 void RomCurve_func0D(RomCurveDef** startOut, RomCurveDef** endOut);
 
-/* getSaveFileStruct: return &saveData (lis/addi). */
 void* getSaveFileStruct(void) { return &saveData; }
 
-/* getLastSavedGameTexts: return (u8*)&gSaveGameData + 0x558. Array form forces lis/addi. */
 extern u8 gSaveGameData[];
 void* getLastSavedGameTexts(void) { return gSaveGameData + 0x558; }
 
@@ -1844,7 +1834,6 @@ int pushable_savePos(int obj)
     return 0;
 }
 
-/* RomCurve_getCurves: *outCount = nRomCurves; return romCurves. */
 void* RomCurve_getCurves(int* outCount);
 
 void saveFileStruct_resetVolumes(void)
@@ -1854,7 +1843,6 @@ void saveFileStruct_resetVolumes(void)
     saveData.speechVolume = 0x7f;
 }
 
-/* isCheatUnlocked: return registeredDebugOptions & (1 << (idx & 0xff)). */
 int isCheatUnlocked(u8 idx)
 {
     SaveData* p = &saveData;
@@ -1863,7 +1851,6 @@ int isCheatUnlocked(u8 idx)
     return reg & mask;
 }
 
-/* saveFileStruct_unlockCheat: set bit (1 << (idx & 0xff)) in registeredDebugOptions. */
 void saveFileStruct_unlockCheat(u8 idx)
 {
     SaveData* p = &saveData;
@@ -1886,8 +1873,6 @@ int saveFileStruct_isCheatActive(u8 idx)
     }
     return 0;
 }
-
-/* curves_findByAction: scan romCurves for matching action curves, return curve id. */
 
 /* RomCurve_segmentIntersectsOriginRayXZ: 2D segment-intersection predicate.
  * Returns 1 if the segment between (x, z) and the origin in the xz-plane

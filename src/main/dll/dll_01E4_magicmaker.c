@@ -18,8 +18,6 @@ typedef struct MagicmakerPlacement
 extern int randomGetRange(int min, int max);
 extern void objRenderFn_8003b8f4(f32 scale);
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void magicmaker_free(void)
 {
 }
@@ -123,12 +121,10 @@ void magicmaker_update(int obj)
 
 extern f32 lbl_803E4D98;
 
-/* 8b "li r3, N; blr" returners. */
 int magicmaker_getExtraSize(void) { return 0x0; }
 int magicmaker_getObjectTypeId(void) { return 0x0; }
 int dimbosscrackpar_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;

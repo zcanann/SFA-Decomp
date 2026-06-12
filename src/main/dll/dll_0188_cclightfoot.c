@@ -10,8 +10,6 @@ extern u32 randomGetRange(int min, int max);
 extern int ObjHits_GetPriorityHit();
 extern undefined4 ObjLink_AttachChild();
 
-/* 8b "li r3, N; blr" returners. */
-
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int id);
 
@@ -82,13 +80,8 @@ FUN_801abf38(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* 8b "li r3, N; blr" returners. */
 int cclightfoot_getExtraSize(void) { return 0x18; }
 int ccsharpclawpad_getExtraSize(void);
-
-/* render-with-fn(lbl) (no visibility check). */
-
-/* Drift-recovery: add new fns with v1.0 names. */
 
 #pragma scheduling off
 #pragma peephole off
@@ -100,8 +93,6 @@ void cclightfoot_init(int* obj, int* def)
 }
 
 int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-
-/* ObjLink_DetachChild and Obj_FreeObject already declared in earlier extern blocks */
 
 void cclightfoot_free(int* obj, int p2)
 {

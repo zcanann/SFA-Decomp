@@ -542,7 +542,6 @@ void FUN_8019f1dc(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void cfguardian_release(void);
 
 /* Per-object extra state for the CloudRunner guardian
@@ -687,7 +686,6 @@ void cfprisonuncle_free(void);
 
 extern u8 framesThisStep;
 
-/* 8b "li r3, N; blr" returners. */
 int cfprisonguard_getExtraSize(void) { return 0x3c; }
 int cfprisonguard_getObjectTypeId(void) { return 0x49; }
 int cfprisonuncle_getExtraSize(void);
@@ -722,14 +720,6 @@ void cfprisonguard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 }
-
-/* chained byte bit-extract. */
-
-/* plain forwarder. */
-
-/* Drift-recovery: add new fns with v1.0 names. */
-/* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
-/* ObjMsg_AllocQueue already declared as undefined */
 
 void cfprisonguard_hitDetect(int* obj)
 {

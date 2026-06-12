@@ -134,29 +134,24 @@ FUN_801a9408(undefined8 param_1, double param_2, double param_3, undefined8 para
     return 0;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void animsharpclaw_hitDetect(void);
 
 void ccgasvent_render(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int animsharpclaw_getExtraSize(void);
 int ccgasvent_getExtraSize(void) { return 0x1; }
 int ccgasventcontrol_getExtraSize(void);
 
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
 void ccgasvent_free(int x) { ObjGroup_RemoveObject(x, 0x3f); }
 #pragma scheduling reset
 
-/* call(x, N) wrappers. */
 #pragma scheduling off
 void ccgasvent_init(int x) { ObjGroup_AddObject(x, 0x3f); }
 #pragma scheduling reset
 
-/* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 extern void disableHeavyFog(void);
 
 extern f32 lbl_803E4610;

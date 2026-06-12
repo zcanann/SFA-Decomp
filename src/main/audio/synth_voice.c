@@ -13,7 +13,6 @@ typedef struct SynthDelayedNode
 
 typedef void (*SynthDelayedBucketCallback)(int voiceIndex);
 
-
 #define SYNTH_FADE_COUNT 0x20
 #define SYNTH_FADE_TABLE_OFFSET 0x5d4
 #define SYNTH_FADE_DELAY_ACTION_FREE_HANDLE 1
@@ -21,8 +20,6 @@ typedef void (*SynthDelayedBucketCallback)(int voiceIndex);
 #define SYNTH_FADE_DELAY_ACTION_CLEAR_MIX 3
 #define SYNTH_VOICE_SLOT_SIZE 0x404
 #define SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET 0x11c
-
-
 
 extern u8 gSynthDelayBucketCursor;
 extern void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay);
@@ -371,7 +368,6 @@ int synthStartSound(u32 id, u8 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 mi
     return -1;
 }
 
-
 /*
  * Low-precision per-voice update: LFOs, vibrato, pitch sweeps, pan ramps,
  * pitch bend/portamento and final pitch computation (LowPrecisionHandler).
@@ -549,7 +545,6 @@ void LowPrecisionHandler(int voice)
             {
                 if ((HWVOICE_FLAGS(sv) & 0x400) == 0)
                 {
-                    /* synthInitPortamento, inlined */
                     if ((HWVOICE_FLAGS(sv) & 0x20000) == 0)
                     {
                         if (sv->portType == 1)
@@ -577,7 +572,6 @@ void LowPrecisionHandler(int voice)
         }
     }
 
-    /* apply_portamento, inlined */
     if ((HWVOICE_FLAGS(sv) & 0x400) != 0 && (s32)((sv->portDuration - sv->portTime) >> 8) > 0)
     {
         u32 old_portCurPitch = sv->portCurPitch;
@@ -600,7 +594,6 @@ void LowPrecisionHandler(int voice)
         ccents += sv->pitchADSRRange * (sv->pitchADSR.currentVolume >> 16) >> 7;
     }
 
-    /* convert_cents, inlined */
     cpitch = voiceGetPitchRatio(ccents >> 16, sv->sInfo) << 16;
     if ((j = ccents & 0xFFFF) != 0)
     {
@@ -612,7 +605,6 @@ void LowPrecisionHandler(int voice)
     synthQueueDelayedUpdate((SynthDelayedNode*)sv, 0, 0xF00);
 
 end:
-    /* UpdateTimeMIDICtrl, inlined */
     if (sv->timeUsedByInput != 0)
     {
         sv->timeUsedByInput = 0;

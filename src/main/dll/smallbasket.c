@@ -143,14 +143,12 @@ void FUN_8015a6c0(uint param_1, int param_2)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 #pragma scheduling off
 #pragma peephole off
 void smallbasket_nop(void)
 {
 }
 
-/* call(x, N) wrappers. */
 void smallbasket_stopLoopSfx(int x) { Sfx_StopFromObject(x, 0x3e8); }
 
 extern f32 lbl_803E2CC0;
@@ -164,7 +162,6 @@ extern int* Obj_AllocObjectSetup(int p1, int p2);
 extern int* Obj_SetupObject(int* obj, int p1, int p2, int p3, int p4);
 extern void firepipe_setLinkedUpdateFlag(int* obj);
 
-/* Spawns the linked firepipe child object and attaches it to this basket. */
 void smallbasket_spawnLinkedFirepipe(int* obj)
 {
     int* child;
@@ -227,7 +224,6 @@ extern void smallbasket_playReactionEffects(int* obj, int* st);
 
 extern f32 lbl_803E2CB8;
 
-/* Handles reaction event commands and updates the current reaction cue. */
 void smallbasket_handleReactionEvent(int obj, int* st, int p3, int cmd, int p5, int sub)
 {
     u8* base;
@@ -278,7 +274,6 @@ void smallbasket_handleReactionEvent(int obj, int* st, int p3, int cmd, int p5, 
     Sfx_PlayFromObject(obj, SFXen_blkscrp6);
 }
 
-/* Applies the current reaction table entry, then emits its effects. */
 void smallbasket_applyReactionState(int* obj, int* st)
 {
     u8* t1;
@@ -310,7 +305,6 @@ void smallbasket_applyReactionState(int* obj, int* st)
     smallbasket_playReactionEffects(obj, st);
 }
 
-/* Plays reaction SFX/particles selected by the object reaction state. */
 void smallbasket_playReactionEffects(int* obj, int* st)
 {
     u16 flag = 0;
@@ -381,7 +375,6 @@ void smallbasket_playReactionEffects(int* obj, int* st)
     }
 }
 
-/* Initializes the tail-model variant state. */
 void smallbasket_initTailModelState(int* obj, int* st)
 {
     u8* tab;
@@ -414,7 +407,6 @@ void smallbasket_initTailModelState(int* obj, int* st)
     *(int*)((char*)obj + 0x108) = (int)&baddieAfterUpdateBonesCb;
 }
 
-/* Initializes a scaled smallbasket variant from placement params. */
 void smallbasket_initScaledVariantState(int* obj, int* st)
 {
     f32 ratio;
@@ -461,7 +453,6 @@ extern f32 fn_802943F4(f32 a);
 extern void PSMTXRotRad(f32* mtx, int axis, f32 angle);
 extern void PSMTXMultVecSR(f32 * mtx, f32 * in, f32 * out);
 
-/* Rotates a vector around the Y axis by an integer-degree value. */
 void smallbasket_rotateVectorYaw(int p1, int p2, f32* vec, f32 f1, int p5, u32 int_deg)
 {
     f32 mtx[12];
@@ -474,12 +465,10 @@ void smallbasket_rotateVectorYaw(int p1, int p2, f32* vec, f32 f1, int p5, u32 i
     PSMTXMultVecSR(mtx, vec, vec);
 }
 
-/* Handles hit-state events and restarts the impact SFX. */
 void smallbasket_handleHitStateEvent(int obj, int* st, int p3, int cmd)
 {
     if (cmd == 0x11)
     {
-        /* fall through */
     }
     else if (cmd == 0x10)
     {
@@ -494,7 +483,6 @@ void smallbasket_handleHitStateEvent(int obj, int* st, int p3, int cmd)
     }
 }
 
-/* Initializes the state used by the alternate smallbasket variant. */
 void smallbasket_initVariantState(int* obj, int* st)
 {
     ((BaddieState*)st)->speedScale = lbl_803E2CC0;

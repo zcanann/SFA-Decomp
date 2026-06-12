@@ -38,14 +38,9 @@ typedef struct AlphaanimatorPlacement
 
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 
-/* alphaanimator_getExtraSize == 0x1c. */
-
 STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 
-/* groundanimator_getExtraSize == 0x30. */
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
-
-/* visanimator_getExtraSize == 0x5. */
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
@@ -145,7 +140,6 @@ void FUN_80192488(void)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void waveanimator_update(void);
 
 void alphaanimator_hitDetect(void)
@@ -162,14 +156,10 @@ void alphaanimator_initialise(void)
 
 void visanimator_free(void);
 
-/* 8b "li r3, N; blr" returners. */
 int alphaanimator_getExtraSize(void) { return 0x1c; }
 int alphaanimator_getObjectTypeId(void) { return 0x0; }
 int groundanimator_getExtraSize(void);
 
-/* Pattern wrappers. */
-
-/* 16b chained patterns. */
 #pragma scheduling off
 void alphaanimator_init(int* obj)
 {
@@ -177,7 +167,6 @@ void alphaanimator_init(int* obj)
     *(s8*)&((AlphaAnimatorState*)((int**)obj)[0xb8 / 4])->prevGate = v;
 }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3F70;
 extern f32 lbl_803E3F78;
 

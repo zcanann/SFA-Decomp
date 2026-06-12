@@ -1013,7 +1013,6 @@ void FUN_8019ae30(undefined8 param_1, double param_2, double param_3, undefined8
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void Trigger_render(void);
 
 #pragma scheduling off
@@ -1030,16 +1029,13 @@ void cloudprisoncontrol_release(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int Trigger_getExtraSize(void);
 int cloudprisoncontrol_getExtraSize(void) { return 0x0; }
 int cloudprisoncontrol_getObjectTypeId(void) { return 0x0; }
 
-/* Pattern wrappers. */
 extern s8 lbl_803DBE08;
 void cloudprisoncontrol_initialise(void) { lbl_803DBE08 = 0x1; }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4108;
 extern void objRenderFn_8003b8f4(f32);
 
@@ -1049,7 +1045,6 @@ void cloudprisoncontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visibl
     if (v != 0) objRenderFn_8003b8f4(lbl_803E4108);
 }
 
-/* call(x, N) wrappers. */
 void cloudprisoncontrol_init(int x) { ObjMsg_AllocQueue(x, 0xa); }
 
 int cfguardian_setScale(int* obj);

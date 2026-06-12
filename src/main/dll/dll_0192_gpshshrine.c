@@ -16,13 +16,10 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern ScreenTransitionInterface** gScreenTransitionInterface;
 extern f32 timeDelta;
 
-/* Trivial 4b 0-arg blr leaves. */
-
 void gpsh_shrine_hitDetect(void)
 {
 }
 
-/* 8b "li r3, N; blr" returners. */
 int ecsh_creator_getExtraSize(void);
 int gpsh_shrine_getExtraSize(void) { return 0x18; }
 int gpsh_shrine_getObjectTypeId(void) { return 0x0; }
@@ -81,7 +78,6 @@ void gpsh_shrine_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4FF8;
 
 extern void fn_80296518(int* player, int a, int b);
@@ -527,7 +523,6 @@ void gpsh_shrine_init(int* obj, int* def)
     GameBit_Set(0xefa, 1);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void gpsh_shrine_release(void)
 {
 }
@@ -537,7 +532,3 @@ void gpsh_shrine_initialise(void)
 }
 
 void gpsh_objcreator_free(void);
-
-/* 8b "li r3, N; blr" returners. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */

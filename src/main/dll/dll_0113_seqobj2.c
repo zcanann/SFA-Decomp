@@ -288,7 +288,6 @@ void seqObj2_init(short* param_1, int param_2)
 {
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void seqobj2_render(void)
 {
 }
@@ -307,18 +306,12 @@ void SeqObj2_initialise(void)
 
 void immultiseq_hitDetect(void);
 
-/* 8b "li r3, N; blr" returners. */
 int seqobj2_getExtraSize(void) { return 0x1; }
 int seqobj2_getObjectTypeId(void) { return 0x0; }
 int immultiseq_getExtraSize(void);
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 void seqobj2_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 void immultiseq_free(int x);
-
-/* Drift-recovery: add new fns with v1.0 names. */
 
 extern void OSReport(const char* fmt, ...);
 extern const char sSeqObjNeedBitUsedBitFormat[];

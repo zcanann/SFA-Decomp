@@ -47,9 +47,6 @@ extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E42BC;
-/* pushable_setScale: real v1.0 body defined at end of file (old v1.1 misimport removed). */
-
-/* pushable_render: recovered v1.0 body defined at end of file. */
 
 undefined4
 FUN_80176920(undefined8 param_1, double param_2, double param_3, undefined8 param_4, undefined8 param_5,
@@ -139,19 +136,13 @@ FUN_801778e0(undefined8 param_1, undefined8 param_2, undefined8 param_3, undefin
     return uVar3;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void invhit_hitDetect(void);
 
 extern unsigned long GameBit_Set(int eventId, int value);
 
-/* 8b "li r3, N; blr" returners. */
 int WarpPoint_getExtraSize(void) { return 0x10; }
 int WarpPoint_getObjectTypeId(void) { return 0x1; }
 int invhit_getExtraSize(void);
-
-/* 16b chained patterns. */
-
-/* render-with-fn(lbl) (no visibility check). */
 
 #pragma scheduling off
 #pragma peephole off

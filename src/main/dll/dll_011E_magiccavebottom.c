@@ -29,13 +29,7 @@ void treasurechest_init(int* obj);
 
 extern int ObjTrigger_IsSet();
 
-/* Trivial 4b 0-arg blr leaves. */
-
 extern void objRenderFn_80041018(int obj);
-
-/* 8b "li r3, N; blr" returners. */
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
 
 extern void envFxActFn_800887f8(int a);
 extern void getEnvfxAct(int* obj, int* target, int id, int p);

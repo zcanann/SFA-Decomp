@@ -2,23 +2,8 @@
 #include "main/dll/sclevelcontrolprocessanimeventsstate_struct.h"
 #include "main/dll/sclevelcontrolstate_types.h"
 
-/* sh_beacon_getExtraSize == 0x18. */
-
-/* 8b "li r3, N; blr" returners. */
-
 extern int lbl_803DDC00;
 
-/* 96b: render via objRenderFn + fn_80098B18 with 3-float local. */
-
-/* 48b: free if 0x4000 flag set. */
-
-/* 120b: tick a float timer; on wrap optionally trigger an effect. */
-
-/* 20b: reset extra->field_0x8 = lbl_803E552C, return 1. */
-
-/* 112b: vtable cleanup then maybe Obj_FreeObject. */
-
-/* 56b: single-call hit-effect poll. */
 void sh_emptytumblew_update(int obj)
 {
     extern void ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d, int e, void* f); /* #57 */
@@ -37,8 +22,6 @@ void sh_emptytumblew_update(int obj)
 #include "main/screen_transition.h"
 
 #include "global.h"
-
-/* sc_levelcontrol_getExtraSize == 0x24 (CloudRunner race level control). */
 
 STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 
@@ -171,14 +154,7 @@ void sc_levelcontrol_setAnimEventState(int obj, undefined value)
     return;
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void sc_levelcontrol_hitDetect(void);
-
-/* 8b "li r3, N; blr" returners. */
-
-/* Pattern wrappers. */
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
 
 #pragma dont_inline on
 #pragma dont_inline reset

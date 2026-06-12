@@ -307,7 +307,6 @@ FUN_80189054(undefined8 param_1, double param_2, double param_3, undefined8 para
     while (true);
 }
 
-/* Trivial 4b 0-arg blr leaves. */
 void flammablevine_release(void);
 
 void dll_109_hitDetect_nop(void)
@@ -324,7 +323,6 @@ void dll_109_initialise_nop(void)
 
 void Fall_Ladders_render(void);
 
-/* 8b "li r3, N; blr" returners. */
 int dll_109_getExtraSize_ret_16(void) { return 0x10; }
 int dll_109_getObjectTypeId(void) { return 0x0; }
 int Fall_Ladders_SeqFn(void);
@@ -347,7 +345,6 @@ extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int ViewFrustum_IsSphereVisible(f32* pos, f32 radius);
 
-/* Carryable impact state machine that spawns break particles, hides, then respawns. */
 #pragma scheduling off
 #pragma peephole off
 void carryable_break_respawn_update(int obj)
@@ -410,27 +407,8 @@ void carryable_break_respawn_update(int obj)
     }
 }
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3AF8;
 extern void objRenderFn_8003b8f4(f32);
-
-/* ObjGroup_RemoveObject(x, N) wrappers. */
-
-/* Fall_Ladders_free: expgfx interface freeObject callback. */
-
-/* coldwatercontrol_init: set float field + OR flag bits. */
-
-/* landed_arwing_free: free child object + detach link. */
-
-/* landed_arwing_render: visible-guarded render with extra call. */
-
-/* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
-
-/* landed_arwing_init: flag bits, counter, conditional unlock, set callback. */
-
-/* landed arwing hit/animation step: handles impact reactions and spawned debris. */
-
-/* landed arwing material flags: mirrors game bits into the damaged texture state. */
 
 void dll_109_init(int obj, u8* p)
 {
