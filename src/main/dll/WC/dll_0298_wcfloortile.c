@@ -3,7 +3,8 @@
 #include "main/dll/ARW/arwing_state.h"
 
 #include "main/audio/sfx_ids.h"
-
+#include "main/objhits.h"
+#include "main/obj_placement.h"
 /* wcfloortile_getExtraSize == 0x8. */
 typedef struct WcFloorTileState
 {
