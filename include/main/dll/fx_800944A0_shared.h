@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/objtexture.h"
 #include "main/resource.h"
 
 /* typedefs (verbatim from placeholder_800944A0) */
@@ -164,7 +165,6 @@ extern int lbl_803DD1F0;
 extern u8 gWaterfxPendingImpactPositionValid;
 extern u8 lbl_8039AB28[];
 extern f32 gWaterfxPendingImpactPosition[];
-extern int objFindTexture(int name, int a, int b);
 extern f32 PSVECSquareDistance(f32 *a, f32 *b);
 extern void *memset(void *dst, int c, int n);
 extern void Obj_FreeObject(int obj);

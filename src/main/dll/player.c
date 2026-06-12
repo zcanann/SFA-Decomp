@@ -9612,7 +9612,7 @@ void fn_802A93F4(int obj, int p2, int p3)
     f32 dist;
     void* found;
     s16* vec;
-    int* tex;
+    ObjTextureRuntimeSlot* tex;
     dist = lbl_803E80CC;
     ((GameObject*)obj)->anim.rootMotionScale = lbl_803E7EE0;
     viewFinderSetZoom(Camera_GetFovY());
@@ -9679,12 +9679,12 @@ void fn_802A93F4(int obj, int p2, int p3)
         vec[2] = 0;
     }
     ObjModel_ClearBlendChannels(Obj_GetActiveModel(obj));
-    tex = objFindTexture(obj, 1, 0);
-    *(s16*)((char*)tex + 0x8) = 0;
-    *(s16*)((char*)tex + 0xa) = 0;
-    tex = objFindTexture(obj, 0, 0);
-    *(s16*)((char*)tex + 0x8) = 0;
-    *(s16*)((char*)tex + 0xa) = 0;
+    tex = objFindTexture((void*)obj, 1, 0);
+    tex->offsetS = 0;
+    tex->offsetT = 0;
+    tex = objFindTexture((void*)obj, 0, 0);
+    tex->offsetS = 0;
+    tex->offsetT = 0;
 }
 
 void fn_802A9D0C(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
@@ -16604,15 +16604,15 @@ void fn_802B0920(int obj, int state)
     }
     else
     {
-        int* t5 = objFindTexture(obj, 5, 0);
-        int* t4 = objFindTexture(obj, 4, 0);
+        ObjTextureRuntimeSlot* t5 = objFindTexture((void*)obj, 5, 0);
+        ObjTextureRuntimeSlot* t4 = objFindTexture((void*)obj, 4, 0);
         if (t5 != NULL)
         {
-            *t5 = 0x200;
+            t5->textureId = 0x200;
         }
         if (t4 != NULL)
         {
-            *t4 = 0x200;
+            t4->textureId = 0x200;
         }
     }
     if ((((PlayerState*)state)->flags360 & 0x2000000) == 0)

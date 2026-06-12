@@ -267,16 +267,16 @@ void renderClouds(int a, int b, int c, int d)
 
 void cloudaction_func05(void)
 {
-    char* tex;
+    ObjTextureRuntimeSlot* tex;
     if (*(void**)lbl_8039AB28 != NULL)
     {
-        tex = (char*)objFindTexture(*(int*)lbl_8039AB28, 0, 0);
+        tex = objFindTexture(*(void**)lbl_8039AB28, 0, 0);
         if (tex != NULL)
         {
-            *(s16*)(tex + 8) -= lbl_8039AB28[0x18];
-            if (*(s16*)(tex + 8) < -0x2710)
+            tex->offsetS -= lbl_8039AB28[0x18];
+            if (tex->offsetS < -0x2710)
             {
-                *(s16*)(tex + 8) += 0x2710;
+                tex->offsetS += 0x2710;
             }
         }
     }

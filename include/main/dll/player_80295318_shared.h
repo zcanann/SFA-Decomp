@@ -9,6 +9,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objanim_update.h"
+#include "main/objtexture.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/dll/path_control_interface.h"
@@ -747,7 +748,6 @@ extern f32 Camera_GetFovY(void);
 extern void viewFinderSetZoom(f32 zoom);
 extern void fn_80026C30(int obj, int flag);
 extern int ObjModel_ClearBlendChannels();
-extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
 extern void *lbl_803DE444;
 extern f32 lbl_803E80CC;
 extern f32 lbl_803E80D0;
